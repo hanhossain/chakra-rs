@@ -149,7 +149,7 @@ MemoryProfiler::WithArenaUsageSummary(bool liveOnly, THandler handler)
     AUTO_NESTED_HANDLED_EXCEPTION_TYPE(ExceptionType_DisableCheck);
 
     PageAllocator tempPageAlloc(nullptr, Js::Configuration::Global.flags);
-    ArenaAllocator tempAlloc(_u("MemoryProfiler"), &tempPageAlloc, Js::Throw::OutOfMemory);
+    ArenaAllocator tempAlloc(u"MemoryProfiler", &tempPageAlloc, Js::Throw::OutOfMemory);
     LPWSTR * name = nullptr;
     ArenaMemoryDataSummary ** summaries = nullptr;
     int count = CreateArenaUsageSummary(&tempAlloc, liveOnly, &name, &summaries);

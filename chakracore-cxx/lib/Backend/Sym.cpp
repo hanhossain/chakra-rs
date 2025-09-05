@@ -1054,11 +1054,11 @@ Sym::Dump(IRDumpFlags flags, const ValueType valueType) const
     {
         if (this->IsStackSym() && this->AsStackSym()->IsArgSlotSym())
         {
-            Output::Print(_u("arg "));
+            Output::Print(u"arg ");
         }
         else if (this->IsStackSym() && this->AsStackSym()->IsParamSlotSym())
         {
-            Output::Print(_u("param "));
+            Output::Print(u"param ");
         }
     }
     else if (this->IsStackSym())
@@ -1069,13 +1069,13 @@ Sym::Dump(IRDumpFlags flags, const ValueType valueType) const
         {
             if (stackSym->m_isInlinedArgSlot)
             {
-                Output::Print(_u("iarg%d"), stackSym->GetArgSlotNum());
+                Output::Print(u"iarg%d", stackSym->GetArgSlotNum());
             }
             else
             {
-                Output::Print(_u("arg%d"), stackSym->GetArgSlotNum());
+                Output::Print(u"arg%d", stackSym->GetArgSlotNum());
             }
-            Output::Print(_u("(s%d)"), m_id);
+            Output::Print(u"(s%d)", m_id);
         }
         else if (stackSym->IsParamSlotSym())
         {
@@ -1084,29 +1084,29 @@ Sym::Dump(IRDumpFlags flags, const ValueType valueType) const
                 switch (stackSym->GetParamSlotNum())
                 {
                 case 1:
-                    Output::Print(_u("callInfo"));
+                    Output::Print(u"callInfo");
                     break;
                 case 2:
-                    Output::Print(_u("funcInfo"));
+                    Output::Print(u"funcInfo");
                     break;
                 case 3:
-                    Output::Print(_u("genObj"));
+                    Output::Print(u"genObj");
                     break;
                 case 4:
-                    Output::Print(_u("genFrame"));
+                    Output::Print(u"genFrame");
                     break;
                 default:
-                    Output::Print(_u("implPrm%d"), stackSym->GetParamSlotNum());
+                    Output::Print(u"implPrm%d", stackSym->GetParamSlotNum());
                 }
             }
             else
             {
-                Output::Print(_u("prm%d"), stackSym->GetParamSlotNum());
+                Output::Print(u"prm%d", stackSym->GetParamSlotNum());
             }
         }
         else
         {
-            Output::Print(_u("s%d"), m_id);
+            Output::Print(u"s%d", m_id);
 
             if (Js::Configuration::Global.flags.Debug && stackSym->HasByteCodeRegSlot())
             {
@@ -1119,7 +1119,7 @@ Sym::Dump(IRDumpFlags flags, const ValueType valueType) const
                         {
                             uint index = stackSym->GetByteCodeRegSlot() - stackSym->GetByteCodeFunc()->GetJITFunctionBody()->GetConstCount();
                             Js::PropertyId propertyId = functionBody->GetPropertyIdOnRegSlotsContainer()->propertyIdsForRegSlots[index];
-                            Output::Print(_u("(%s)"), stackSym->GetByteCodeFunc()->GetInProcThreadContext()->GetPropertyRecord(propertyId)->GetBuffer());
+                            Output::Print(u"(%s)", stackSym->GetByteCodeFunc()->GetInProcThreadContext()->GetPropertyRecord(propertyId)->GetBuffer());
                         }
                     }
                 }
@@ -1128,7 +1128,7 @@ Sym::Dump(IRDumpFlags flags, const ValueType valueType) const
             {
                 if (stackSym->HasObjectTypeSym() && !SimpleForm)
                 {
-                    Output::Print(_u("<s%d>"), stackSym->GetObjectTypeSym()->m_id);
+                    Output::Print(u"<s%d>", stackSym->GetObjectTypeSym()->m_id);
                 }
             }
             else
@@ -1136,14 +1136,14 @@ Sym::Dump(IRDumpFlags flags, const ValueType valueType) const
                 StackSym const *varSym = stackSym->GetVarEquivSym_NoCreate();
                 if (varSym)
                 {
-                    Output::Print(_u("(s%d)"), varSym->m_id);
+                    Output::Print(u"(s%d)", varSym->m_id);
                 }
             }
             if (!SimpleForm)
             {
                 if (stackSym->m_builtInIndex != Js::BuiltinFunction::None)
                 {
-                    Output::Print(_u("[ffunc]"));
+                    Output::Print(u"[ffunc]");
                 }
             }
             IR::Opnd::DumpValueType(valueType);
@@ -1155,7 +1155,7 @@ Sym::Dump(IRDumpFlags flags, const ValueType valueType) const
 
         if (!SimpleForm)
         {
-            Output::Print(_u("s%d("), m_id);
+            Output::Print(u"s%d(", m_id);
         }
 
         switch (propertySym->m_fieldKind)
@@ -1164,22 +1164,22 @@ Sym::Dump(IRDumpFlags flags, const ValueType valueType) const
             propertySym->m_stackSym->Dump(flags, valueType);
             if (JITManager::GetJITManager()->IsOOPJITEnabled())
             {
-                Output::Print(_u("->#%d"), propertySym->m_propertyId);
+                Output::Print(u"->#%d", propertySym->m_propertyId);
             }
             else
             {
                 Js::PropertyRecord const* fieldName = propertySym->m_func->GetInProcThreadContext()->GetPropertyRecord(propertySym->m_propertyId);
-                Output::Print(_u("->%s"), fieldName->GetBuffer());
+                Output::Print(u"->%s", fieldName->GetBuffer());
             }
             break;
         case PropertyKindSlots:
         case PropertyKindSlotArray:
             propertySym->m_stackSym->Dump(flags, valueType);
-            Output::Print(_u("[%d]"), propertySym->m_propertyId);
+            Output::Print(u"[%d]", propertySym->m_propertyId);
             break;
         case PropertyKindLocalSlots:
             propertySym->m_stackSym->Dump(flags, valueType);
-            Output::Print(_u("l[%d]"), propertySym->m_propertyId);
+            Output::Print(u"l[%d]", propertySym->m_propertyId);
             break;
         default:
             AssertMsg(0, "Unknown field kind");
@@ -1188,7 +1188,7 @@ Sym::Dump(IRDumpFlags flags, const ValueType valueType) const
 
         if (!SimpleForm)
         {
-            Output::Print(_u(")"));
+            Output::Print(u")");
         }
     }
 }

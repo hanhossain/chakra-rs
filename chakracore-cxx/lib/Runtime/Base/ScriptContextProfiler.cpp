@@ -39,7 +39,7 @@ namespace Js
     ScriptContextProfiler::Initialize(PageAllocator * pageAllocator, Recycler * recycler)
     {
         Assert(!IsInitialized());
-        profilerArena = HeapNew(ArenaAllocator, _u("Profiler"), pageAllocator, Js::Throw::OutOfMemory);
+        profilerArena = HeapNew(ArenaAllocator, u"Profiler", pageAllocator, Js::Throw::OutOfMemory);
         profiler = Anew(profilerArena, Profiler, profilerArena);
         if (recycler)
         {

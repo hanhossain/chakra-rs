@@ -146,7 +146,7 @@ namespace Js
     char16_t* FunctionProxy::GetDebugNumberSet(wchar(&bufferToWriteTo)[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE]) const
     {
         // (#%u.%u), #%u --> (source file Id . function Id) , function Number
-        int len = swprintf_s(bufferToWriteTo, MAX_FUNCTION_BODY_DEBUG_STRING_SIZE, _u(" (#%d.%u), #%u"),
+        int len = swprintf_s(bufferToWriteTo, MAX_FUNCTION_BODY_DEBUG_STRING_SIZE, u" (#%d.%u), #%u",
             (int)this->GetSourceContextId(), this->GetLocalFunctionId(), this->GetFunctionNumber());
         Assert(len > 8);
         return bufferToWriteTo;
@@ -167,19 +167,19 @@ namespace Js
     LPCUTF8
     ParseableFunctionInfo::GetSource(const char16_t* reason) const
     {
-        return this->GetUtf8SourceInfo()->GetSource(reason == nullptr ? _u("ParseableFunctionInfo::GetSource") : reason) + this->StartOffset();
+        return this->GetUtf8SourceInfo()->GetSource(reason == nullptr ? u"ParseableFunctionInfo::GetSource" : reason) + this->StartOffset();
     }
 
     LPCUTF8
         ParseableFunctionInfo::GetToStringSource(const  char16_t* reason) const
     {
-        return this->GetUtf8SourceInfo()->GetSource(reason == nullptr ? _u("ParseableFunctionInfo::GetToStringSource") : reason) + this->PrintableStartOffset();
+        return this->GetUtf8SourceInfo()->GetSource(reason == nullptr ? u"ParseableFunctionInfo::GetToStringSource" : reason) + this->PrintableStartOffset();
     }
 
     LPCUTF8
     ParseableFunctionInfo::GetStartOfDocument(const char16_t* reason) const
     {
-        return this->GetUtf8SourceInfo()->GetSource(reason == nullptr ? _u("ParseableFunctionInfo::GetStartOfDocument") : reason);
+        return this->GetUtf8SourceInfo()->GetSource(reason == nullptr ? u"ParseableFunctionInfo::GetStartOfDocument" : reason);
     }
 
     bool
@@ -970,9 +970,9 @@ namespace Js
         this->UnlockCounters();
 #endif
 
-        PHASE_PRINT_TRACE(Js::RedeferralPhase, this, _u("Redeferring function %d.%d: %s\n"),
+        PHASE_PRINT_TRACE(Js::RedeferralPhase, this, u"Redeferring function %d.%d: %s\n",
                           GetSourceContextId(), GetLocalFunctionId(),
-                          GetDisplayName() ? GetDisplayName() : _u("Anonymous function)"));
+                          GetDisplayName() ? GetDisplayName() : u"Anonymous function)");
 
         ParseableFunctionInfo * parseableFunctionInfo =
             Js::ParseableFunctionInfo::NewDeferredFunctionFromFunctionBody(this);
@@ -1746,11 +1746,11 @@ namespace Js
         uint newFunctionNumber = scriptContext->GetThreadContext()->NewFunctionNumber();
         if (!sourceInfo->GetSourceContextInfo()->IsDynamic())
         {
-            PHASE_PRINT_TESTTRACE1(Js::DeferParsePhase, _u("Function was deferred from parsing - ID: %d; Display Name: %s; Utf8SourceInfo ID: %d; Source Length: %d; Source Url:%s\n"), newFunctionNumber, displayName, sourceInfo->GetSourceInfoId(), sourceInfo->GetCchLength(), sourceInfo->GetSourceContextInfo()->url);
+            PHASE_PRINT_TESTTRACE1(Js::DeferParsePhase, u"Function was deferred from parsing - ID: %d; Display Name: %s; Utf8SourceInfo ID: %d; Source Length: %d; Source Url:%s\n", newFunctionNumber, displayName, sourceInfo->GetSourceInfoId(), sourceInfo->GetCchLength(), sourceInfo->GetSourceContextInfo()->url);
         }
         else
         {
-            PHASE_PRINT_TESTTRACE1(Js::DeferParsePhase, _u("Function was deferred from parsing - ID: %d; Display Name: %s; Utf8SourceInfo ID: %d; Source Length: %d;\n"), newFunctionNumber, displayName, sourceInfo->GetSourceInfoId(), sourceInfo->GetCchLength());
+            PHASE_PRINT_TESTTRACE1(Js::DeferParsePhase, u"Function was deferred from parsing - ID: %d; Display Name: %s; Utf8SourceInfo ID: %d; Source Length: %d;\n", newFunctionNumber, displayName, sourceInfo->GetSourceInfoId(), sourceInfo->GetCchLength());
         }
 
         // When generating a new defer parse function, we always use a new function number
@@ -2169,7 +2169,7 @@ namespace Js
         Recycler * recycler = this->GetScriptContext()->GetRecycler();
         FunctionTypeWeakRef* weakRef = recycler->CreateWeakReferenceHandle(functionType);
         typeList->SetAtFirstFreeSpot(weakRef);
-        OUTPUT_TRACE(Js::ExpirableCollectPhase, _u("Registered type 0x%p on function body %p, count = %d\n"), functionType, this, typeList->Count());
+        OUTPUT_TRACE(Js::ExpirableCollectPhase, u"Registered type 0x%p on function body %p, count = %d\n", functionType, this, typeList->Count());
     }
 
     void DeferDeserializeFunctionInfo::SetDisplayName(const char16_t* displayName)
@@ -2311,11 +2311,11 @@ namespace Js
 
                 if (!this->GetSourceContextInfo()->IsDynamic())
                 {
-                    PHASE_PRINT_TESTTRACE1(Js::DeferParsePhase, _u("TestTrace: Deferred function parsed - ID: %d; Display Name: %s; Length: %d; Nested Function Count: %d; Utf8SourceInfo: %d; Source Length: %d; Is Top Level: %s; Source Url: %s\n"), m_functionNumber, this->GetDisplayName(), this->m_cchLength, this->GetNestedCount(), this->m_utf8SourceInfo->GetSourceInfoId(), this->m_utf8SourceInfo->GetCchLength(), this->GetIsTopLevel() ? _u("True") : _u("False"), this->GetSourceContextInfo()->url);
+                    PHASE_PRINT_TESTTRACE1(Js::DeferParsePhase, u"TestTrace: Deferred function parsed - ID: %d; Display Name: %s; Length: %d; Nested Function Count: %d; Utf8SourceInfo: %d; Source Length: %d; Is Top Level: %s; Source Url: %s\n", m_functionNumber, this->GetDisplayName(), this->m_cchLength, this->GetNestedCount(), this->m_utf8SourceInfo->GetSourceInfoId(), this->m_utf8SourceInfo->GetCchLength(), this->GetIsTopLevel() ? u"True" : u"False", this->GetSourceContextInfo()->url);
                 }
                 else
                 {
-                    PHASE_PRINT_TESTTRACE1(Js::DeferParsePhase, _u("TestTrace: Deferred function parsed - ID: %d; Display Name: %s; Length: %d; Nested Function Count: %d; Utf8SourceInfo: %d; Source Length: %d\n; Is Top Level: %s;"), m_functionNumber, this->GetDisplayName(), this->m_cchLength, this->GetNestedCount(),  this->m_utf8SourceInfo->GetSourceInfoId(), this->m_utf8SourceInfo->GetCchLength(), this->GetIsTopLevel() ? _u("True") : _u("False"));
+                    PHASE_PRINT_TESTTRACE1(Js::DeferParsePhase, u"TestTrace: Deferred function parsed - ID: %d; Display Name: %s; Length: %d; Nested Function Count: %d; Utf8SourceInfo: %d; Source Length: %d\n; Is Top Level: %s;", m_functionNumber, this->GetDisplayName(), this->m_cchLength, this->GetNestedCount(),  this->m_utf8SourceInfo->GetSourceInfoId(), this->m_utf8SourceInfo->GetCchLength(), this->GetIsTopLevel() ? u"True" : u"False");
                 }
 
                 if (!this->GetIsTopLevel() &&
@@ -2378,7 +2378,7 @@ namespace Js
                         || m_scriptContext->IsScriptContextInSourceRundownOrDebugMode()
                         || m_isAsmjsMode);
 #endif
-                    OUTPUT_TRACE(Js::DebuggerPhase, _u("Full nested reparse of function: %s (%s)\n"), funcBody->GetDisplayName(), funcBody->GetDebugNumberSet(debugStringBuffer));
+                    OUTPUT_TRACE(Js::DebuggerPhase, u"Full nested reparse of function: %s (%s)\n", funcBody->GetDisplayName(), funcBody->GetDebugNumberSet(debugStringBuffer));
 
                     if (funcBody->GetByteCode())
                     {
@@ -2510,7 +2510,7 @@ namespace Js
                         }
                         else
                         {
-                            TRACE_BYTECODE(_u("\nDeferred parse %s\n"), funcBody->GetDisplayName());
+                            TRACE_BYTECODE(u"\nDeferred parse %s\n", funcBody->GetDisplayName());
                             Js::AutoDynamicCodeReference dynamicFunctionReference(m_scriptContext);
 
                             bool forceNoNative = isDebugOrAsmJsReparse ? this->GetScriptContext()->IsInterpreted() : false;
@@ -2629,11 +2629,11 @@ namespace Js
 
         if (!this->GetSourceContextInfo()->IsDynamic())
         {
-            PHASE_PRINT_TESTTRACE1(Js::DeferParsePhase, _u("TestTrace: Deferred function parsed - ID: %d; Display Name: %s; Length: %d; Nested Function Count: %d; Utf8SourceInfo: %d; Source Length: %d; Is Top Level: %s; Source Url: %s\n"), m_functionNumber, this->GetDisplayName(), this->m_cchLength, this->GetNestedCount(), this->m_utf8SourceInfo->GetSourceInfoId(), this->m_utf8SourceInfo->GetCchLength(), this->GetIsTopLevel() ? _u("True") : _u("False"), this->GetSourceContextInfo()->url);
+            PHASE_PRINT_TESTTRACE1(Js::DeferParsePhase, u"TestTrace: Deferred function parsed - ID: %d; Display Name: %s; Length: %d; Nested Function Count: %d; Utf8SourceInfo: %d; Source Length: %d; Is Top Level: %s; Source Url: %s\n", m_functionNumber, this->GetDisplayName(), this->m_cchLength, this->GetNestedCount(), this->m_utf8SourceInfo->GetSourceInfoId(), this->m_utf8SourceInfo->GetCchLength(), this->GetIsTopLevel() ? u"True" : u"False", this->GetSourceContextInfo()->url);
         }
         else
         {
-            PHASE_PRINT_TESTTRACE1(Js::DeferParsePhase, _u("TestTrace: Deferred function parsed - ID: %d; Display Name: %s; Length: %d; Nested Function Count: %d; Utf8SourceInfo: %d; Source Length: %d\n; Is Top Level: %s;"), m_functionNumber, this->GetDisplayName(), this->m_cchLength, this->GetNestedCount(), this->m_utf8SourceInfo->GetSourceInfoId(), this->m_utf8SourceInfo->GetCchLength(), this->GetIsTopLevel() ? _u("True") : _u("False"));
+            PHASE_PRINT_TESTTRACE1(Js::DeferParsePhase, u"TestTrace: Deferred function parsed - ID: %d; Display Name: %s; Length: %d; Nested Function Count: %d; Utf8SourceInfo: %d; Source Length: %d\n; Is Top Level: %s;", m_functionNumber, this->GetDisplayName(), this->m_cchLength, this->GetNestedCount(), this->m_utf8SourceInfo->GetSourceInfoId(), this->m_utf8SourceInfo->GetCchLength(), this->GetIsTopLevel() ? u"True" : u"False");
         }
 
 #if ENABLE_PROFILE_INFO
@@ -2717,11 +2717,11 @@ namespace Js
     const char16_t* FunctionProxy::WrapWithBrackets(const char16_t* name, charcount_t sz, ScriptContext* scriptContext)
     {
         char16_t * wrappedName = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, sz + 3); //[]\0
-        wrappedName[0] = _u('[');
+        wrappedName[0] = u'[';
         char16_t *next = wrappedName;
         js_wmemcpy_s(++next, sz, name, sz);
-        wrappedName[sz + 1] = _u(']');
-        wrappedName[sz + 2] = _u('\0');
+        wrappedName[sz + 1] = u']';
+        wrappedName[sz + 2] = u'\0';
         return wrappedName;
 
     }
@@ -2756,7 +2756,7 @@ namespace Js
         Assert(name[nameLength - 1] == ']');
         char16_t * finalshorterName = RecyclerNewArrayLeaf(this->GetScriptContext()->GetRecycler(), char16_t, *shortNameLength);
         js_wmemcpy_s(finalshorterName, *shortNameLength, shortName, *shortNameLength - 1); // we don't want the last character in shorterName
-        finalshorterName[*shortNameLength - 1] = _u('\0');
+        finalshorterName[*shortNameLength - 1] = u'\0';
         *shortNameLength = *shortNameLength - 1;
         return finalshorterName;
     }
@@ -2786,7 +2786,7 @@ namespace Js
 
         if (srcName == nullptr)
         {
-            *destName = (_u(""));
+            *destName = (u"");
             return false;
         }
         else if (IsConstantFunctionName(srcName) || (flags & SetDisplayNameFlagsDontCopy) != 0)
@@ -2801,7 +2801,7 @@ namespace Js
 
             *destName = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, numCharacters);
             js_wmemcpy_s((char16_t *)*destName, numCharacters, srcName, numCharacters);
-            ((char16_t *)(*destName))[numCharacters - 1] = _u('\0');
+            ((char16_t *)(*destName))[numCharacters - 1] = u'\0';
 
             return true;
         }
@@ -3003,7 +3003,7 @@ namespace Js
         if (start > end) return false;
         charcount_t cchLength = end - start;
         if (start < this->m_cchStartOffset || cchLength > this->m_cchLength) return false;
-        LPCUTF8 src = this->GetSource(_u("FunctionBody::HasLineBreak"));
+        LPCUTF8 src = this->GetSource(u"FunctionBody::HasLineBreak");
         LPCUTF8 last = src + this->LengthInBytes();
         size_t offset = this->LengthInBytes() == this->m_cchLength ?
             start - this->m_cchStartOffset :
@@ -3109,15 +3109,15 @@ namespace Js
 #endif
         if(!!pnodeFnc->ChildCallsEval() != this->GetChildCallsEval())
         {
-            OUTPUT_VERBOSE_TRACE(Js::DebuggerPhase, _u("Child calls eval is different on debug reparse: %s(%s)\n"), this->GetExternalDisplayName(), this->GetDebugNumberSet(debugStringBuffer));
+            OUTPUT_VERBOSE_TRACE(Js::DebuggerPhase, u"Child calls eval is different on debug reparse: %s(%s)\n", this->GetExternalDisplayName(), this->GetDebugNumberSet(debugStringBuffer));
         }
         if(!!pnodeFnc->CallsEval() != this->GetCallsEval())
         {
-            OUTPUT_VERBOSE_TRACE(Js::DebuggerPhase, _u("Calls eval is different on debug reparse: %s(%s)\n"), this->GetExternalDisplayName(), this->GetDebugNumberSet(debugStringBuffer));
+            OUTPUT_VERBOSE_TRACE(Js::DebuggerPhase, u"Calls eval is different on debug reparse: %s(%s)\n", this->GetExternalDisplayName(), this->GetDebugNumberSet(debugStringBuffer));
         }
         if(!!pnodeFnc->HasReferenceableBuiltInArguments() != this->HasReferenceableBuiltInArguments())
         {
-            OUTPUT_VERBOSE_TRACE(Js::DebuggerPhase, _u("Referenceable Built in args is different on debug reparse: %s(%s)\n"), this->GetExternalDisplayName(), this->GetDebugNumberSet(debugStringBuffer));
+            OUTPUT_VERBOSE_TRACE(Js::DebuggerPhase, u"Referenceable Built in args is different on debug reparse: %s(%s)\n", this->GetExternalDisplayName(), this->GetDebugNumberSet(debugStringBuffer));
         }
 
         pnodeFnc->SetChildCallsEval(this->GetChildCallsEval());
@@ -3515,7 +3515,7 @@ namespace Js
             {
                 if (Configuration::Global.flags.Dump.IsEnabled(DynamicProfilePhase, this->GetSourceContextId(), this->GetLocalFunctionId()))
                 {
-                    Output::Print(_u("Loaded:"));
+                    Output::Print(u"Loaded:");
                     this->dynamicProfileInfo->Dump(this);
                 }
             }
@@ -3973,7 +3973,7 @@ namespace Js
         if (PHASE_TRACE1(Js::JITLoopBodyPhase))
         {
             DumpFunctionId(true);
-            Output::Print(_u(": %-20s LoopBody EntryPt  Loop: %2d Address : %x\n"), GetDisplayName(), loopNum, entryPoint);
+            Output::Print(u": %-20s LoopBody EntryPt  Loop: %2d Address : %x\n", GetDisplayName(), loopNum, entryPoint);
             Output::Flush();
         }
 #endif
@@ -4468,7 +4468,7 @@ namespace Js
         {
             char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
-            Output::Print(_u("%s (%s) :\n"), this->GetDisplayName(), this->GetDebugNumberSet(debugStringBuffer));
+            Output::Print(u"%s (%s) :\n", this->GetDisplayName(), this->GetDebugNumberSet(debugStringBuffer));
             this->GetScopeObjectChain()->pScopeChain->Map( [=] (uint index, DebuggerScope* scope )
             {
                 scope->Dump();
@@ -4485,7 +4485,7 @@ namespace Js
             auto& nativeOffsetMaps = this->GetNativeEntryPointData()->GetNativeOffsetMaps();
             if (nativeOffsetMaps.Count() > 0)
             {
-                Output::Print(_u("Native Map: baseAddr: 0x%0Ix, size: 0x%0Ix\nstatementId, offset range, address range\n"),
+                Output::Print(u"Native Map: baseAddr: 0x%0Ix, size: 0x%0Ix\nstatementId, offset range, address range\n",
                     this->GetNativeAddress(),
                     this->GetCodeSize());
 
@@ -4495,7 +4495,7 @@ namespace Js
                 {
                     const NativeEntryPointData::NativeOffsetMap* map = &nativeOffsetMaps.Item(i);
 
-                    Output::Print(_u("S%4d, (%5d, %5d)  (0x%012Ix, 0x%012Ix)\n"), map->statementIndex,
+                    Output::Print(u"S%4d, (%5d, %5d)  (0x%012Ix, 0x%012Ix)\n", map->statementIndex,
                         map->nativeOffsetSpan.begin,
                         map->nativeOffsetSpan.end,
                         map->nativeOffsetSpan.begin + this->GetNativeAddress(),
@@ -4512,13 +4512,13 @@ namespace Js
         StatementMapList * pStatementMaps = this->GetStatementMaps();
         if (pStatementMaps)
         {
-            Output::Print(_u("Statement Map:\nstatementId, SourceSpan, ByteCodeSpan\n"));
+            Output::Print(u"Statement Map:\nstatementId, SourceSpan, ByteCodeSpan\n");
             int count = pStatementMaps->Count();
             for(int i = 0; i < count; i++)
             {
                 StatementMap* map = pStatementMaps->Item(i);
 
-                Output::Print(_u("S%4d, (C%5d, C%5d)  (B%5d, B%5d) Inner=%d\n"), i,
+                Output::Print(u"S%4d, (C%5d, C%5d)  (B%5d, B%5d) Inner=%d\n", i,
                                                       map->sourceSpan.begin,
                                                       map->sourceSpan.end,
                                                       map->byteCodeSpan.begin,
@@ -4535,7 +4535,7 @@ namespace Js
         SmallSpanSequence * nativeThrowSpanSequence = this->GetNativeEntryPointData()->GetNativeThrowSpanSequence();
         if (nativeThrowSpanSequence)
         {
-            Output::Print(_u("Native Throw Map: baseAddr: 0x%0Ix, size: 0x%Ix\nstatementId, offset range, address range\n"),
+            Output::Print(u"Native Throw Map: baseAddr: 0x%0Ix, size: 0x%Ix\nstatementId, offset range, address range\n",
                           this->GetNativeAddress(),
                           this->GetCodeSize());
 
@@ -4546,7 +4546,7 @@ namespace Js
                 StatementData data;
                 if (nativeThrowSpanSequence->Item(i, iter, data))
                 {
-                    Output::Print(_u("S%4d, (%5d -----)  (0x%012Ix --------)\n"), data.sourceBegin, // statementIndex
+                    Output::Print(u"S%4d, (%5d -----)  (0x%012Ix --------)\n", data.sourceBegin, // statementIndex
                         data.bytecodeBegin, // nativeOffset
                         data.bytecodeBegin + this->GetNativeAddress());
                 }
@@ -4577,10 +4577,10 @@ namespace Js
         uint32_t line;
         int32_t col;
 
-        LPCUTF8 source = GetStartOfDocument(_u("FunctionBody::PrintStatementSourceLineFromStartOffset"));
+        LPCUTF8 source = GetStartOfDocument(u"FunctionBody::PrintStatementSourceLineFromStartOffset");
         Utf8SourceInfo* sourceInfo = this->GetUtf8SourceInfo();
         Assert(sourceInfo != nullptr);
-        LPCUTF8 sourceInfoSrc = sourceInfo->GetSource(_u("FunctionBody::PrintStatementSourceLineFromStartOffset"));
+        LPCUTF8 sourceInfoSrc = sourceInfo->GetSource(u"FunctionBody::PrintStatementSourceLineFromStartOffset");
         if(!sourceInfoSrc)
         {
             Assert(sourceInfo->GetIsLibraryCode());
@@ -4588,9 +4588,9 @@ namespace Js
         }
         if( source != sourceInfoSrc )
         {
-            Output::Print(_u("\nDETECTED MISMATCH:\n"));
-            Output::Print(_u("GetUtf8SourceInfo()->GetSource(): 0x%08X: %.*s ...\n"), sourceInfo, 16, sourceInfo);
-            Output::Print(_u("GetStartOfDocument():             0x%08X: %.*s ...\n"), source, 16, source);
+            Output::Print(u"\nDETECTED MISMATCH:\n");
+            Output::Print(u"GetUtf8SourceInfo()->GetSource(): 0x%08X: %.*s ...\n", sourceInfo, 16, sourceInfo);
+            Output::Print(u"GetStartOfDocument():             0x%08X: %.*s ...\n", source, 16, source);
 
             AssertMsg(false, "Non-matching start of document");
         }
@@ -4604,20 +4604,20 @@ namespace Js
             {
                 color = Output::SetConsoleForeground(12);
             }
-            Output::Print(_u("\n\n  Line %3d: "), line + 1);
+            Output::Print(u"\n\n  Line %3d: ", line + 1);
             // Need to match up cchStartOffset to appropriate cbStartOffset given function's cbStartOffset and cchStartOffset
             size_t utf8SrcStartIdx = utf8::CharacterIndexToByteIndex(source, sourceInfo->GetCbLength(), cchStartOffset, this->m_cbStartOffset, this->m_cchStartOffset);
             size_t utf8SrcEndIdx = StartOffset() + LengthInBytes();
             char16_t* utf16Buf = HeapNewArray(char16_t, utf8SrcEndIdx - utf8SrcStartIdx + 2); 
             size_t utf16BufSz = utf8::DecodeUnitsIntoAndNullTerminateNoAdvance(utf16Buf, source + utf8SrcStartIdx, source + utf8SrcEndIdx, utf8::DecodeOptions::doDefault);
             Assert(utf16BufSz <= utf8SrcEndIdx - utf8SrcStartIdx);
-            for (size_t i = 0; i < utf16BufSz && utf16Buf[i] != _u('\n') && utf16Buf[i] != _u('\r'); i++)
+            for (size_t i = 0; i < utf16BufSz && utf16Buf[i] != u'\n' && utf16Buf[i] != u'\r'; i++)
             {
-                Output::Print(_u("%lc"), utf16Buf[i]);
+                Output::Print(u"%lc", utf16Buf[i]);
             }
             HeapDeleteArray(utf8SrcEndIdx - utf8SrcStartIdx + 2, utf16Buf);
-            Output::Print(_u("\n"));
-            Output::Print(_u("  Col %4d:%s^\n"), col + 1, ((col+1)<10000) ? _u(" ") : _u(""));
+            Output::Print(u"\n");
+            Output::Print(u"  Col %4d:%s^\n", col + 1, ((col+1)<10000) ? u" " : u"");
 
             if (color != 0)
             {
@@ -4684,10 +4684,10 @@ namespace Js
         // get source info
         //
 
-        LPCUTF8 source = GetStartOfDocument(_u("IR Viewer FunctionBody::GetSourceLineFromStartOffset"));
+        LPCUTF8 source = GetStartOfDocument(u"IR Viewer FunctionBody::GetSourceLineFromStartOffset");
         Utf8SourceInfo* sourceInfo = this->GetUtf8SourceInfo();
         Assert(sourceInfo != nullptr);
-        LPCUTF8 sourceInfoSrc = sourceInfo->GetSource(_u("IR Viewer FunctionBody::GetSourceLineFromStartOffset"));
+        LPCUTF8 sourceInfoSrc = sourceInfo->GetSource(u"IR Viewer FunctionBody::GetSourceLineFromStartOffset");
         if (!sourceInfoSrc)
         {
             Assert(sourceInfo->GetIsLibraryCode());
@@ -4695,9 +4695,9 @@ namespace Js
         }
         if (source != sourceInfoSrc)
         {
-            Output::Print(_u("\nDETECTED MISMATCH:\n"));
-            Output::Print(_u("GetUtf8SourceInfo()->GetSource(): 0x%08X: %.*s ...\n"), sourceInfo, 16, sourceInfo);
-            Output::Print(_u("GetStartOfDocument():             0x%08X: %.*s ...\n"), source, 16, source);
+            Output::Print(u"\nDETECTED MISMATCH:\n");
+            Output::Print(u"GetUtf8SourceInfo()->GetSource(): 0x%08X: %.*s ...\n", sourceInfo, 16, sourceInfo);
+            Output::Print(u"GetStartOfDocument():             0x%08X: %.*s ...\n", source, 16, source);
 
             AssertMsg(false, "Non-matching start of document");
         }
@@ -4990,7 +4990,7 @@ namespace Js
 #if DBG
         if (m_iProfileSession >= m_scriptContext->GetProfileSession())
         {
-            OUTPUT_TRACE_DEBUGONLY(Js::ScriptProfilerPhase, _u("FunctionBody::ReportFunctionCompiled, Duplicate compile event (%d < %d) for FunctionNumber : %d\n"),
+            OUTPUT_TRACE_DEBUGONLY(Js::ScriptProfilerPhase, u"FunctionBody::ReportFunctionCompiled, Duplicate compile event (%d < %d) for FunctionNumber : %d\n",
                 m_iProfileSession, m_scriptContext->GetProfileSession(), m_functionNumber);
         }
 
@@ -5055,7 +5055,7 @@ namespace Js
 #if DBG
         if (!this->HasValidEntryPoint())
         {
-            OUTPUT_TRACE_DEBUGONLY(Js::ScriptProfilerPhase, _u("FunctionBody::SetEntryToProfileMode, Assert due to HasValidEntryPoint(), directEntrypoint : 0x%0IX, originalentrypoint : 0x%0IX\n"),
+            OUTPUT_TRACE_DEBUGONLY(Js::ScriptProfilerPhase, u"FunctionBody::SetEntryToProfileMode, Assert due to HasValidEntryPoint(), directEntrypoint : 0x%0IX, originalentrypoint : 0x%0IX\n",
                 this->GetDefaultEntryPointInfo()->jsMethod, this->GetOriginalEntryPoint());
 
             AssertMsg(false, "Not a valid EntryPoint");
@@ -5298,7 +5298,7 @@ namespace Js
         this->SetReparsed(true);
 #if DBG
         char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-        OUTPUT_VERBOSE_TRACE(Js::DebuggerPhase, _u("Regenerate Due To Debug Mode: function %s (%s) from script context %p\n"),
+        OUTPUT_VERBOSE_TRACE(Js::DebuggerPhase, u"Regenerate Due To Debug Mode: function %s (%s) from script context %p\n",
             this->GetDisplayName(), this->GetDebugNumberSet(debugStringBuffer), m_scriptContext);
 
         this->UnlockCounters(); // assuming background jit is stopped and allow the counter setters access again
@@ -5751,16 +5751,16 @@ namespace Js
     {
         int indent = (GetScopeDepth() - 1) * 4;
 
-        Output::Print(indent, _u("Begin scope: Address: %p Type: %s Location: %d Sibling: %p Range: [%d, %d]\n "), this, GetDebuggerScopeTypeString(scopeType), scopeLocation, PointerValue(this->siblingScope), range.begin, range.end);
+        Output::Print(indent, u"Begin scope: Address: %p Type: %s Location: %d Sibling: %p Range: [%d, %d]\n ", this, GetDebuggerScopeTypeString(scopeType), scopeLocation, PointerValue(this->siblingScope), range.begin, range.end);
         if (this->HasProperties())
         {
             this->scopeProperties->Map( [=] (int i, Js::DebuggerScopeProperty& scopeProperty) {
-                Output::Print(indent, _u("%s(%d) Location: %d Const: %s Initialized: %d\n"), ThreadContext::GetContextForCurrentThread()->GetPropertyName(scopeProperty.propId)->GetBuffer(),
-                    scopeProperty.propId, scopeProperty.location, scopeProperty.IsConst() ? _u("true"): _u("false"), scopeProperty.byteCodeInitializationOffset);
+                Output::Print(indent, u"%s(%d) Location: %d Const: %s Initialized: %d\n", ThreadContext::GetContextForCurrentThread()->GetPropertyName(scopeProperty.propId)->GetBuffer(),
+                    scopeProperty.propId, scopeProperty.location, scopeProperty.IsConst() ? u"true": u"false", scopeProperty.byteCodeInitializationOffset);
             });
         }
 
-        Output::Print(_u("\n"));
+        Output::Print(u"\n");
     }
 
     // Returns the debugger scope type in string format.
@@ -5769,30 +5769,30 @@ namespace Js
         switch (scopeType)
         {
         case DiagExtraScopesType::DiagBlockScopeDirect:
-            return _u("DiagBlockScopeDirect");
+            return u"DiagBlockScopeDirect";
         case DiagExtraScopesType::DiagBlockScopeInObject:
-            return _u("DiagBlockScopeInObject");
+            return u"DiagBlockScopeInObject";
         case DiagExtraScopesType::DiagBlockScopeInSlot:
-            return _u("DiagBlockScopeInSlot");
+            return u"DiagBlockScopeInSlot";
         case DiagExtraScopesType::DiagBlockScopeRangeEnd:
-            return _u("DiagBlockScopeRangeEnd");
+            return u"DiagBlockScopeRangeEnd";
         case DiagExtraScopesType::DiagCatchScopeDirect:
-            return _u("DiagCatchScopeDirect");
+            return u"DiagCatchScopeDirect";
         case DiagExtraScopesType::DiagCatchScopeInObject:
-            return _u("DiagCatchScopeInObject");
+            return u"DiagCatchScopeInObject";
         case DiagExtraScopesType::DiagCatchScopeInSlot:
-            return _u("DiagCatchScopeInSlot");
+            return u"DiagCatchScopeInSlot";
         case DiagExtraScopesType::DiagUnknownScope:
-            return _u("DiagUnknownScope");
+            return u"DiagUnknownScope";
         case DiagExtraScopesType::DiagWithScope:
-            return _u("DiagWithScope");
+            return u"DiagWithScope";
         case DiagExtraScopesType::DiagParamScope:
-            return _u("DiagParamScope");
+            return u"DiagParamScope";
         case DiagExtraScopesType::DiagParamScopeInObject:
-            return _u("DiagParamScopeInObject");
+            return u"DiagParamScopeInObject";
         default:
             AssertMsg(false, "Missing a debug scope type.");
-            return _u("");
+            return u"";
         }
     }
 #endif
@@ -6381,7 +6381,7 @@ namespace Js
             if (PHASE_VERBOSE_TRACE1(Js::PolymorphicInlineCachePhase))
             {
                 this->DumpFullFunctionName();
-                Output::Print(_u(": New PIC, index = %d, size = %d\n"), index, MinPolymorphicInlineCacheSize);
+                Output::Print(u": New PIC, index = %d, size = %d\n", index, MinPolymorphicInlineCacheSize);
             }
 
 #endif
@@ -6390,7 +6390,7 @@ namespace Js
 #endif
             PHASE_PRINT_INTRUSIVE_TESTTRACE1(
                 Js::PolymorphicInlineCachePhase,
-                _u("TestTrace PIC:  New, Function %s (%s), 0x%x, index = %d, size = %d\n"), this->GetDisplayName(), this->GetDebugNumberSet(debugStringBuffer), polymorphicInlineCache, index, MinPolymorphicInlineCacheSize);
+                u"TestTrace PIC:  New, Function %s (%s), 0x%x, index = %d, size = %d\n", this->GetDisplayName(), this->GetDebugNumberSet(debugStringBuffer), polymorphicInlineCache, index, MinPolymorphicInlineCacheSize);
 
             uint indexInPolymorphicCache = polymorphicInlineCache->GetInlineCacheIndexForType(inlineCache->GetType());
             inlineCache->CopyTo(propertyId, m_scriptContext, &(polymorphicInlineCache->GetInlineCaches()[indexInPolymorphicCache]));
@@ -6414,7 +6414,7 @@ namespace Js
         if (PHASE_VERBOSE_TRACE1(Js::PolymorphicInlineCachePhase))
         {
             this->DumpFullFunctionName();
-            Output::Print(_u(": Bigger PIC, index = %d, oldSize = %d, newSize = %d\n"), index, polymorphicInlineCacheSize, newPolymorphicInlineCacheSize);
+            Output::Print(u": Bigger PIC, index = %d, oldSize = %d, newSize = %d\n", index, polymorphicInlineCacheSize, newPolymorphicInlineCacheSize);
         }
 #endif
 #if PHASE_PRINT_INTRUSIVE_TESTTRACE1
@@ -6422,7 +6422,7 @@ namespace Js
 #endif
         PHASE_PRINT_INTRUSIVE_TESTTRACE1(
             Js::PolymorphicInlineCachePhase,
-            _u("TestTrace PIC:  Bigger, Function %s (%s), 0x%x, index = %d, size = %d\n"), this->GetDisplayName(), this->GetDebugNumberSet(debugStringBuffer), newPolymorphicInlineCache, index, newPolymorphicInlineCacheSize);
+            u"TestTrace PIC:  Bigger, Function %s (%s), 0x%x, index = %d, size = %d\n", this->GetDisplayName(), this->GetDebugNumberSet(debugStringBuffer), newPolymorphicInlineCache, index, newPolymorphicInlineCacheSize);
         return newPolymorphicInlineCache;
     }
 
@@ -7085,10 +7085,10 @@ namespace Js
 
         char16_t functionIdString[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
         Output::Print(
-            _u("ExecutionMode - ")
-                _u("function: %s (%s), ")
-                _u("mode: %S, ")
-                _u("size: %u, "),
+            u"ExecutionMode - "
+                u"function: %s (%s), "
+                u"mode: %S, "
+                u"size: %u, ",
             GetDisplayName(),
                 GetDebugNumberSet(functionIdString),
             ExecutionModeName(executionState.GetExecutionMode()),
@@ -7098,10 +7098,10 @@ namespace Js
 
         if(eventDescription)
         {
-            Output::Print(_u(", event: %S"), eventDescription);
+            Output::Print(u", event: %S", eventDescription);
         }
 
-        Output::Print(_u("\n"));
+        Output::Print(u"\n");
         Output::Flush();
     }
 
@@ -7920,7 +7920,7 @@ namespace Js
     {
         char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
-        Output::Print(_u("Function %s (%s)"), this->GetDisplayName(), this->GetDebugNumberSet(debugStringBuffer));
+        Output::Print(u"Function %s (%s)", this->GetDisplayName(), this->GetDebugNumberSet(debugStringBuffer));
     }
 
     void FunctionBody::DumpFunctionId(bool pad)
@@ -7930,17 +7930,17 @@ namespace Js
         {
             if (this->IsDynamicScript())
             {
-                Output::Print(pad? _u("Dy.%-3d") : _u("Dyn#%d"), this->GetLocalFunctionId());
+                Output::Print(pad? u"Dy.%-3d" : u"Dyn#%d", this->GetLocalFunctionId());
             }
             else
             {
                 // Function from LoadFile
-                Output::Print(pad? _u("%-5d") : _u("#%d"), this->GetLocalFunctionId());
+                Output::Print(pad? u"%-5d" : u"#%d", this->GetLocalFunctionId());
             }
         }
         else
         {
-            Output::Print(pad? _u("%2d.%-3d") : _u("#%d.%d"), sourceContextId, this->GetLocalFunctionId());
+            Output::Print(pad? u"%2d.%-3d" : u"#%d.%d", sourceContextId, this->GetLocalFunctionId());
         }
     }
 
@@ -7960,10 +7960,10 @@ namespace Js
     /*static*/
     void FunctionBody::GetShortNameFromUrl(LPCWSTR pchUrl, _Out_writes_z_(cchBuffer) LPWSTR pchShortName, size_t cchBuffer)
     {
-        LPCWSTR pchFile = wcsrchr(pchUrl, _u('/'));
+        LPCWSTR pchFile = wcsrchr(pchUrl, u'/');
         if (pchFile == nullptr)
         {
-            pchFile = wcsrchr(pchUrl, _u('\\'));
+            pchFile = wcsrchr(pchUrl, u'\\');
         }
 
         LPCWSTR pchToCopy = pchUrl;
@@ -8392,7 +8392,7 @@ namespace Js
             }
             else
             {
-                OUTPUT_TRACE2(Js::LazyBailoutPhase, this->GetFunctionBody(), _u("Lazy bailout - Invalidation due to property: %s \n"), scriptContext->GetPropertyName(propertyId)->GetBuffer());
+                OUTPUT_TRACE2(Js::LazyBailoutPhase, this->GetFunctionBody(), u"Lazy bailout - Invalidation due to property: %s \n", scriptContext->GetPropertyName(propertyId)->GetBuffer());
                 this->Invalidate(true);
                 return;
             }
@@ -8794,9 +8794,9 @@ namespace Js
             if (PHASE_TRACE1(Js::LazyBailoutPhase))
             {
 #if DBG
-                Output::Print(_u("On stack lazy bailout. Property: %s Old IP: 0x%x New IP: 0x%x "), propertyRecord->GetBuffer(), instructionPointer, lazyBailOutThunkAddress);
+                Output::Print(u"On stack lazy bailout. Property: %s Old IP: 0x%x New IP: 0x%x ", propertyRecord->GetBuffer(), instructionPointer, lazyBailOutThunkAddress);
                 record.Dump(functionBody);
-                Output::Print(_u("\n"));
+                Output::Print(u"\n");
 #endif
             }
         }
@@ -9237,7 +9237,7 @@ namespace Js
         FunctionEntryPointInfo* entryPoint = functionBody->GetDefaultFunctionEntryPointInfo();
         if (entryPoint->IsCodeGenPending())
         {
-            OUTPUT_TRACE(Js::LazyBailoutPhase, _u("Skipping creating new entrypoint as one is already pending\n"));
+            OUTPUT_TRACE(Js::LazyBailoutPhase, u"Skipping creating new entrypoint as one is already pending\n");
         }
         else
         {
@@ -9355,14 +9355,14 @@ namespace Js
                 newEntryPoint = defaultEntryPointInfo;
             }
 
-            OUTPUT_TRACE(Js::ExpirableCollectPhase,  _u("Expiring 0x%p\n"), this);
+            OUTPUT_TRACE(Js::ExpirableCollectPhase,  u"Expiring 0x%p\n", this);
             this->functionProxy->MapFunctionObjectTypes([&] (ScriptFunctionType* functionType)
             {
                 Assert(functionType->GetTypeId() == TypeIds_Function);
 
                 if (functionType->GetEntryPointInfo() == this)
                 {
-                    OUTPUT_TRACE(Js::ExpirableCollectPhase, _u("Type 0x%p uses this entry point- switching to default entry point\n"), this);
+                    OUTPUT_TRACE(Js::ExpirableCollectPhase, u"Type 0x%p uses this entry point- switching to default entry point\n", this);
                     functionType->SetEntryPointInfo(newEntryPoint);
                     // we are allowed to replace the entry point on the type only if it's
                     // directly using the jitted code or a type is referencing this entry point
@@ -9524,7 +9524,7 @@ namespace Js
         }
         funcBody->DumpFullFunctionName();
         Output::SkipToColumn(55);
-        Output::Print(_u("Calls:%6d  Loads:%9d  Stores:%9d  Total refs:%9d\n"), this->callCountStats,
+        Output::Print(u"Calls:%6d  Loads:%9d  Stores:%9d  Total refs:%9d\n", this->callCountStats,
             loads, stores, loads + stores);
     }
 #endif
@@ -9587,7 +9587,7 @@ namespace Js
     }
 
 
-    static const char16_t LoopWStr[] = _u("Loop");
+    static const char16_t LoopWStr[] = u"Loop";
     size_t FunctionBody::GetLoopBodyName(uint loopNumber, _Out_writes_opt_z_(sizeInChars) char16_t* displayName, _In_ size_t sizeInChars)
     {
         const char16_t* functionName = this->GetExternalDisplayName();
@@ -9596,7 +9596,7 @@ namespace Js
         {
             return length;
         }
-        int charsWritten = swprintf_s(displayName, length, _u("%s%s%u"), functionName, LoopWStr, loopNumber + 1);
+        int charsWritten = swprintf_s(displayName, length, u"%s%s%u", functionName, LoopWStr, loopNumber + 1);
         Assert(charsWritten != -1);
         return charsWritten + /*nullptr*/ 1;
     }

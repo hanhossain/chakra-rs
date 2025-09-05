@@ -238,7 +238,7 @@ public:
     static void SortTypesAndPolymorphicInfo(Js::Type ** types, ObjTypeSpecPolymorphicInfo * info, uint16 * pTypeCount);
 
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
-    const char16_t* GetCacheLayoutString() const { return _u("ObjTypeSpecFldInfo"); }
+    const char16_t* GetCacheLayoutString() const { return u"ObjTypeSpecFldInfo"; }
 #endif
 
 private:

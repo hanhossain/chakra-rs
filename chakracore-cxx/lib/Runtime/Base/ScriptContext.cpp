@@ -39,7 +39,7 @@
 #include "Language/SimpleDataCacheWrapper.h"
 #include "Core/CRC.h"
 
-#define IsTrueOrFalse(value)     ((value) ? _u("True") : _u("False"))
+#define IsTrueOrFalse(value)     ((value) ? u"True" : u"False")
 
 namespace Js
 {
@@ -124,18 +124,18 @@ namespace Js
         asmJsInterpreterThunkEmitter(nullptr),
         asmJsCodeGenerator(nullptr),
 #endif
-        generalAllocator(_u("SC-General"), threadContext->GetPageAllocator(), Throw::OutOfMemory),
-        dynamicProfileInfoAllocator(_u("SC-DynProfileInfo"), threadContext->GetPageAllocator(), Throw::OutOfMemory),
+        generalAllocator(u"SC-General", threadContext->GetPageAllocator(), Throw::OutOfMemory),
+        dynamicProfileInfoAllocator(u"SC-DynProfileInfo", threadContext->GetPageAllocator(), Throw::OutOfMemory),
 #ifdef SEPARATE_ARENA
-        sourceCodeAllocator(_u("SC-Code"), threadContext->GetPageAllocator(), Throw::OutOfMemory),
-        regexAllocator(_u("SC-Regex"), threadContext->GetPageAllocator(), Throw::OutOfMemory),
+        sourceCodeAllocator(u"SC-Code", threadContext->GetPageAllocator(), Throw::OutOfMemory),
+        regexAllocator(u"SC-Regex", threadContext->GetPageAllocator(), Throw::OutOfMemory),
 #endif
 #ifdef NEED_MISC_ALLOCATOR
-        miscAllocator(_u("GC-Misc"), threadContext->GetPageAllocator(), Throw::OutOfMemory),
+        miscAllocator(u"GC-Misc", threadContext->GetPageAllocator(), Throw::OutOfMemory),
 #endif
-        inlineCacheAllocator(_u("SC-InlineCache"), threadContext->GetPageAllocator(), Throw::OutOfMemory),
-        isInstInlineCacheAllocator(_u("SC-IsInstInlineCache"), threadContext->GetPageAllocator(), Throw::OutOfMemory),
-        enumeratorCacheAllocator(_u("SC-EnumeratorCache"), threadContext->GetPageAllocator(), Throw::OutOfMemory),
+        inlineCacheAllocator(u"SC-InlineCache", threadContext->GetPageAllocator(), Throw::OutOfMemory),
+        isInstInlineCacheAllocator(u"SC-IsInstInlineCache", threadContext->GetPageAllocator(), Throw::OutOfMemory),
+        enumeratorCacheAllocator(u"SC-EnumeratorCache", threadContext->GetPageAllocator(), Throw::OutOfMemory),
         hasUsedInlineCache(false),
         hasProtoOrStoreFieldInlineCache(false),
         hasIsInstInlineCache(false),
@@ -183,7 +183,7 @@ namespace Js
         , fieldAccessStatsByFunctionNumber(nullptr)
 #endif
         , webWorkerId(Js::Constants::NonWebWorkerContextId)
-        , url(_u(""))
+        , url(u"")
         , startupComplete(false)
 #ifdef EDIT_AND_CONTINUE
         , activeScriptEditQuery(nullptr)
@@ -562,7 +562,7 @@ namespace Js
 
         char16_t* urlCopy = AnewArray(this->GeneralAllocator(), char16_t, length);
         js_memcpy_s(urlCopy, (length - 1) * sizeof(char16_t), bstrUrl, (length - 1) * sizeof(char16_t));
-        urlCopy[length - 1] = _u('\0');
+        urlCopy[length - 1] = u'\0';
 
         this->url = urlCopy;
 #ifdef LEAK_REPORT
@@ -605,7 +605,7 @@ namespace Js
 #if DBG_DUMP
         if (Js::Configuration::Global.flags.TraceWin8Allocations)
         {
-            Output::Print(_u("MemoryTrace: ScriptContext Close\n"));
+            Output::Print(u"MemoryTrace: ScriptContext Close\n");
             Output::Flush();
         }
 #endif
@@ -942,83 +942,83 @@ namespace Js
 #ifdef PROFILE_TYPES
     void ScriptContext::ProfileTypes()
     {
-        Output::Print(_u("===============================================================================\n"));
-        Output::Print(_u("Types Profile %s\n"), this->url);
-        Output::Print(_u("-------------------------------------------------------------------------------\n"));
-        Output::Print(_u("Dynamic Type Conversions:\n"));
-        Output::Print(_u("    Null to Simple                 %8d\n"), convertNullToSimpleCount);
-        Output::Print(_u("    Deferred to SimpleMap          %8d\n"), convertDeferredToSimpleDictionaryCount);
-        Output::Print(_u("    Simple to Map                  %8d\n"), convertSimpleToDictionaryCount);
-        Output::Print(_u("    Simple to SimpleMap            %8d\n"), convertSimpleToSimpleDictionaryCount);
-        Output::Print(_u("    Path to SimpleMap (set)        %8d\n"), convertPathToDictionaryExceededLengthCount);
-        Output::Print(_u("    Path to SimpleMap (delete)     %8d\n"), convertPathToDictionaryDeletedCount);
-        Output::Print(_u("    Path to SimpleMap (attribute)  %8d\n"), convertPathToDictionaryAttributesCount);
-        Output::Print(_u("    Path to SimpleMap (item attr)  %8d\n"), convertPathToDictionaryItemAttributesCount);
-        Output::Print(_u("    Path to SimpleMap (proto)      %8d\n"), convertPathToDictionaryProtoCount);
-        Output::Print(_u("    Path to SimpleMap (no root)    %8d\n"), convertPathToDictionaryNoRootCount);
-        Output::Print(_u("    Path to SimpleMap (reset)      %8d\n"), convertPathToDictionaryResetCount);
-        Output::Print(_u("    Path to Map (accessor)         %8d\n"), convertPathToDictionaryAccessorsCount);
-        Output::Print(_u("    Path to Map (item accessor)    %8d\n"), convertPathToDictionaryItemAccessorsCount);
-        Output::Print(_u("    Path to Map (extensions)       %8d\n"), convertPathToDictionaryExtensionsCount);
-        Output::Print(_u("    Path to SimpleMap              %8d\n"), convertPathToSimpleDictionaryCount);
-        Output::Print(_u("    SimplePath to Path             %8d\n"), convertSimplePathToPathCount);
-        Output::Print(_u("    Shared SimpleMap to non-shared %8d\n"), convertSimpleSharedDictionaryToNonSharedCount);
-        Output::Print(_u("    Deferred to Map                %8d\n"), convertDeferredToDictionaryCount);
-        Output::Print(_u("    SimpleMap to Map               %8d\n"), convertSimpleDictionaryToDictionaryCount);
-        Output::Print(_u("    Path Cache Hits                %8d\n"), cacheCount);
-        Output::Print(_u("    Path Branches                  %8d\n"), branchCount);
-        Output::Print(_u("    Path Promotions                %8d\n"), promoteCount);
-        Output::Print(_u("    Path Length (max)              %8d\n"), maxPathLength);
-        Output::Print(_u("    PathTypeHandlers               %8d\n"), pathTypeHandlerCount);
-        Output::Print(_u("\n"));
-        Output::Print(_u("Type Statistics:                   %8s   %8s\n"), _u("Types"), _u("Instances"));
-        Output::Print(_u("    Undefined                      %8d   %8d\n"), typeCount[TypeIds_Undefined], instanceCount[TypeIds_Undefined]);
-        Output::Print(_u("    Null                           %8d   %8d\n"), typeCount[TypeIds_Null], instanceCount[TypeIds_Null]);
-        Output::Print(_u("    Boolean                        %8d   %8d\n"), typeCount[TypeIds_Boolean], instanceCount[TypeIds_Boolean]);
-        Output::Print(_u("    Integer                        %8d   %8d\n"), typeCount[TypeIds_Integer], instanceCount[TypeIds_Integer]);
-        Output::Print(_u("    Number                         %8d   %8d\n"), typeCount[TypeIds_Number], instanceCount[TypeIds_Number]);
-        Output::Print(_u("    String                         %8d   %8d\n"), typeCount[TypeIds_String], instanceCount[TypeIds_String]);
-        Output::Print(_u("    Object                         %8d   %8d\n"), typeCount[TypeIds_Object], instanceCount[TypeIds_Object]);
-        Output::Print(_u("    Function                       %8d   %8d\n"), typeCount[TypeIds_Function], instanceCount[TypeIds_Function]);
-        Output::Print(_u("    Array                          %8d   %8d\n"), typeCount[TypeIds_Array], instanceCount[TypeIds_Array]);
-        Output::Print(_u("    Date                           %8d   %8d\n"), typeCount[TypeIds_Date], instanceCount[TypeIds_Date]);
-        Output::Print(_u("    Symbol                         %8d   %8d\n"), typeCount[TypeIds_Symbol], instanceCount[TypeIds_Symbol]);
-        Output::Print(_u("    RegEx                          %8d   %8d\n"), typeCount[TypeIds_RegEx], instanceCount[TypeIds_RegEx]);
-        Output::Print(_u("    Error                          %8d   %8d\n"), typeCount[TypeIds_Error], instanceCount[TypeIds_Error]);
-        Output::Print(_u("    Proxy                          %8d   %8d\n"), typeCount[TypeIds_Proxy], instanceCount[TypeIds_Proxy]);
-        Output::Print(_u("    BooleanObject                  %8d   %8d\n"), typeCount[TypeIds_BooleanObject], instanceCount[TypeIds_BooleanObject]);
-        Output::Print(_u("    NumberObject                   %8d   %8d\n"), typeCount[TypeIds_NumberObject], instanceCount[TypeIds_NumberObject]);
-        Output::Print(_u("    StringObject                   %8d   %8d\n"), typeCount[TypeIds_StringObject], instanceCount[TypeIds_StringObject]);
-        Output::Print(_u("    SymbolObject                   %8d   %8d\n"), typeCount[TypeIds_SymbolObject], instanceCount[TypeIds_SymbolObject]);
-        Output::Print(_u("    GlobalObject                   %8d   %8d\n"), typeCount[TypeIds_GlobalObject], instanceCount[TypeIds_GlobalObject]);
-        Output::Print(_u("    Enumerator                     %8d   %8d\n"), typeCount[TypeIds_Enumerator], instanceCount[TypeIds_Enumerator]);
-        Output::Print(_u("    Int8Array                      %8d   %8d\n"), typeCount[TypeIds_Int8Array], instanceCount[TypeIds_Int8Array]);
-        Output::Print(_u("    Uint8Array                     %8d   %8d\n"), typeCount[TypeIds_Uint8Array], instanceCount[TypeIds_Uint8Array]);
-        Output::Print(_u("    Uint8ClampedArray              %8d   %8d\n"), typeCount[TypeIds_Uint8ClampedArray], instanceCount[TypeIds_Uint8ClampedArray]);
-        Output::Print(_u("    Int16Array                     %8d   %8d\n"), typeCount[TypeIds_Int16Array], instanceCount[TypeIds_Int16Array]);
-        Output::Print(_u("    Int16Array                     %8d   %8d\n"), typeCount[TypeIds_Uint16Array], instanceCount[TypeIds_Uint16Array]);
-        Output::Print(_u("    Int32Array                     %8d   %8d\n"), typeCount[TypeIds_Int32Array], instanceCount[TypeIds_Int32Array]);
-        Output::Print(_u("    Uint32Array                    %8d   %8d\n"), typeCount[TypeIds_Uint32Array], instanceCount[TypeIds_Uint32Array]);
-        Output::Print(_u("    Float32Array                   %8d   %8d\n"), typeCount[TypeIds_Float32Array], instanceCount[TypeIds_Float32Array]);
-        Output::Print(_u("    Float64Array                   %8d   %8d\n"), typeCount[TypeIds_Float64Array], instanceCount[TypeIds_Float64Array]);
-        Output::Print(_u("    DataView                       %8d   %8d\n"), typeCount[TypeIds_DataView], instanceCount[TypeIds_DataView]);
-        Output::Print(_u("    ModuleRoot                     %8d   %8d\n"), typeCount[TypeIds_ModuleRoot], instanceCount[TypeIds_ModuleRoot]);
-        Output::Print(_u("    HostObject                     %8d   %8d\n"), typeCount[TypeIds_HostObject], instanceCount[TypeIds_HostObject]);
-        Output::Print(_u("    HostDispatch                   %8d   %8d\n"), typeCount[TypeIds_HostDispatch], instanceCount[TypeIds_HostDispatch]);
-        Output::Print(_u("    Arguments                      %8d   %8d\n"), typeCount[TypeIds_Arguments], instanceCount[TypeIds_Arguments]);
-        Output::Print(_u("    ActivationObject               %8d   %8d\n"), typeCount[TypeIds_ActivationObject], instanceCount[TypeIds_ActivationObject]);
-        Output::Print(_u("    Map                            %8d   %8d\n"), typeCount[TypeIds_Map], instanceCount[TypeIds_Map]);
-        Output::Print(_u("    Set                            %8d   %8d\n"), typeCount[TypeIds_Set], instanceCount[TypeIds_Set]);
-        Output::Print(_u("    WeakMap                        %8d   %8d\n"), typeCount[TypeIds_WeakMap], instanceCount[TypeIds_WeakMap]);
-        Output::Print(_u("    WeakSet                        %8d   %8d\n"), typeCount[TypeIds_WeakSet], instanceCount[TypeIds_WeakSet]);
-        Output::Print(_u("    ArrayIterator                  %8d   %8d\n"), typeCount[TypeIds_ArrayIterator], instanceCount[TypeIds_ArrayIterator]);
-        Output::Print(_u("    MapIterator                    %8d   %8d\n"), typeCount[TypeIds_MapIterator], instanceCount[TypeIds_MapIterator]);
-        Output::Print(_u("    SetIterator                    %8d   %8d\n"), typeCount[TypeIds_SetIterator], instanceCount[TypeIds_SetIterator]);
-        Output::Print(_u("    StringIterator                 %8d   %8d\n"), typeCount[TypeIds_StringIterator], instanceCount[TypeIds_StringIterator]);
-        Output::Print(_u("    Generator                      %8d   %8d\n"), typeCount[TypeIds_Generator], instanceCount[TypeIds_Generator]);
-        Output::Print(_u("    AsyncGenerator                 %8d   %8d\n"), typeCount[TypeIds_AsyncGenerator], instanceCount[TypeIds_AsyncGenerator]);
+        Output::Print(u"===============================================================================\n");
+        Output::Print(u"Types Profile %s\n", this->url);
+        Output::Print(u"-------------------------------------------------------------------------------\n");
+        Output::Print(u"Dynamic Type Conversions:\n");
+        Output::Print(u"    Null to Simple                 %8d\n", convertNullToSimpleCount);
+        Output::Print(u"    Deferred to SimpleMap          %8d\n", convertDeferredToSimpleDictionaryCount);
+        Output::Print(u"    Simple to Map                  %8d\n", convertSimpleToDictionaryCount);
+        Output::Print(u"    Simple to SimpleMap            %8d\n", convertSimpleToSimpleDictionaryCount);
+        Output::Print(u"    Path to SimpleMap (set)        %8d\n", convertPathToDictionaryExceededLengthCount);
+        Output::Print(u"    Path to SimpleMap (delete)     %8d\n", convertPathToDictionaryDeletedCount);
+        Output::Print(u"    Path to SimpleMap (attribute)  %8d\n", convertPathToDictionaryAttributesCount);
+        Output::Print(u"    Path to SimpleMap (item attr)  %8d\n", convertPathToDictionaryItemAttributesCount);
+        Output::Print(u"    Path to SimpleMap (proto)      %8d\n", convertPathToDictionaryProtoCount);
+        Output::Print(u"    Path to SimpleMap (no root)    %8d\n", convertPathToDictionaryNoRootCount);
+        Output::Print(u"    Path to SimpleMap (reset)      %8d\n", convertPathToDictionaryResetCount);
+        Output::Print(u"    Path to Map (accessor)         %8d\n", convertPathToDictionaryAccessorsCount);
+        Output::Print(u"    Path to Map (item accessor)    %8d\n", convertPathToDictionaryItemAccessorsCount);
+        Output::Print(u"    Path to Map (extensions)       %8d\n", convertPathToDictionaryExtensionsCount);
+        Output::Print(u"    Path to SimpleMap              %8d\n", convertPathToSimpleDictionaryCount);
+        Output::Print(u"    SimplePath to Path             %8d\n", convertSimplePathToPathCount);
+        Output::Print(u"    Shared SimpleMap to non-shared %8d\n", convertSimpleSharedDictionaryToNonSharedCount);
+        Output::Print(u"    Deferred to Map                %8d\n", convertDeferredToDictionaryCount);
+        Output::Print(u"    SimpleMap to Map               %8d\n", convertSimpleDictionaryToDictionaryCount);
+        Output::Print(u"    Path Cache Hits                %8d\n", cacheCount);
+        Output::Print(u"    Path Branches                  %8d\n", branchCount);
+        Output::Print(u"    Path Promotions                %8d\n", promoteCount);
+        Output::Print(u"    Path Length (max)              %8d\n", maxPathLength);
+        Output::Print(u"    PathTypeHandlers               %8d\n", pathTypeHandlerCount);
+        Output::Print(u"\n");
+        Output::Print(u"Type Statistics:                   %8s   %8s\n", u"Types", u"Instances");
+        Output::Print(u"    Undefined                      %8d   %8d\n", typeCount[TypeIds_Undefined], instanceCount[TypeIds_Undefined]);
+        Output::Print(u"    Null                           %8d   %8d\n", typeCount[TypeIds_Null], instanceCount[TypeIds_Null]);
+        Output::Print(u"    Boolean                        %8d   %8d\n", typeCount[TypeIds_Boolean], instanceCount[TypeIds_Boolean]);
+        Output::Print(u"    Integer                        %8d   %8d\n", typeCount[TypeIds_Integer], instanceCount[TypeIds_Integer]);
+        Output::Print(u"    Number                         %8d   %8d\n", typeCount[TypeIds_Number], instanceCount[TypeIds_Number]);
+        Output::Print(u"    String                         %8d   %8d\n", typeCount[TypeIds_String], instanceCount[TypeIds_String]);
+        Output::Print(u"    Object                         %8d   %8d\n", typeCount[TypeIds_Object], instanceCount[TypeIds_Object]);
+        Output::Print(u"    Function                       %8d   %8d\n", typeCount[TypeIds_Function], instanceCount[TypeIds_Function]);
+        Output::Print(u"    Array                          %8d   %8d\n", typeCount[TypeIds_Array], instanceCount[TypeIds_Array]);
+        Output::Print(u"    Date                           %8d   %8d\n", typeCount[TypeIds_Date], instanceCount[TypeIds_Date]);
+        Output::Print(u"    Symbol                         %8d   %8d\n", typeCount[TypeIds_Symbol], instanceCount[TypeIds_Symbol]);
+        Output::Print(u"    RegEx                          %8d   %8d\n", typeCount[TypeIds_RegEx], instanceCount[TypeIds_RegEx]);
+        Output::Print(u"    Error                          %8d   %8d\n", typeCount[TypeIds_Error], instanceCount[TypeIds_Error]);
+        Output::Print(u"    Proxy                          %8d   %8d\n", typeCount[TypeIds_Proxy], instanceCount[TypeIds_Proxy]);
+        Output::Print(u"    BooleanObject                  %8d   %8d\n", typeCount[TypeIds_BooleanObject], instanceCount[TypeIds_BooleanObject]);
+        Output::Print(u"    NumberObject                   %8d   %8d\n", typeCount[TypeIds_NumberObject], instanceCount[TypeIds_NumberObject]);
+        Output::Print(u"    StringObject                   %8d   %8d\n", typeCount[TypeIds_StringObject], instanceCount[TypeIds_StringObject]);
+        Output::Print(u"    SymbolObject                   %8d   %8d\n", typeCount[TypeIds_SymbolObject], instanceCount[TypeIds_SymbolObject]);
+        Output::Print(u"    GlobalObject                   %8d   %8d\n", typeCount[TypeIds_GlobalObject], instanceCount[TypeIds_GlobalObject]);
+        Output::Print(u"    Enumerator                     %8d   %8d\n", typeCount[TypeIds_Enumerator], instanceCount[TypeIds_Enumerator]);
+        Output::Print(u"    Int8Array                      %8d   %8d\n", typeCount[TypeIds_Int8Array], instanceCount[TypeIds_Int8Array]);
+        Output::Print(u"    Uint8Array                     %8d   %8d\n", typeCount[TypeIds_Uint8Array], instanceCount[TypeIds_Uint8Array]);
+        Output::Print(u"    Uint8ClampedArray              %8d   %8d\n", typeCount[TypeIds_Uint8ClampedArray], instanceCount[TypeIds_Uint8ClampedArray]);
+        Output::Print(u"    Int16Array                     %8d   %8d\n", typeCount[TypeIds_Int16Array], instanceCount[TypeIds_Int16Array]);
+        Output::Print(u"    Int16Array                     %8d   %8d\n", typeCount[TypeIds_Uint16Array], instanceCount[TypeIds_Uint16Array]);
+        Output::Print(u"    Int32Array                     %8d   %8d\n", typeCount[TypeIds_Int32Array], instanceCount[TypeIds_Int32Array]);
+        Output::Print(u"    Uint32Array                    %8d   %8d\n", typeCount[TypeIds_Uint32Array], instanceCount[TypeIds_Uint32Array]);
+        Output::Print(u"    Float32Array                   %8d   %8d\n", typeCount[TypeIds_Float32Array], instanceCount[TypeIds_Float32Array]);
+        Output::Print(u"    Float64Array                   %8d   %8d\n", typeCount[TypeIds_Float64Array], instanceCount[TypeIds_Float64Array]);
+        Output::Print(u"    DataView                       %8d   %8d\n", typeCount[TypeIds_DataView], instanceCount[TypeIds_DataView]);
+        Output::Print(u"    ModuleRoot                     %8d   %8d\n", typeCount[TypeIds_ModuleRoot], instanceCount[TypeIds_ModuleRoot]);
+        Output::Print(u"    HostObject                     %8d   %8d\n", typeCount[TypeIds_HostObject], instanceCount[TypeIds_HostObject]);
+        Output::Print(u"    HostDispatch                   %8d   %8d\n", typeCount[TypeIds_HostDispatch], instanceCount[TypeIds_HostDispatch]);
+        Output::Print(u"    Arguments                      %8d   %8d\n", typeCount[TypeIds_Arguments], instanceCount[TypeIds_Arguments]);
+        Output::Print(u"    ActivationObject               %8d   %8d\n", typeCount[TypeIds_ActivationObject], instanceCount[TypeIds_ActivationObject]);
+        Output::Print(u"    Map                            %8d   %8d\n", typeCount[TypeIds_Map], instanceCount[TypeIds_Map]);
+        Output::Print(u"    Set                            %8d   %8d\n", typeCount[TypeIds_Set], instanceCount[TypeIds_Set]);
+        Output::Print(u"    WeakMap                        %8d   %8d\n", typeCount[TypeIds_WeakMap], instanceCount[TypeIds_WeakMap]);
+        Output::Print(u"    WeakSet                        %8d   %8d\n", typeCount[TypeIds_WeakSet], instanceCount[TypeIds_WeakSet]);
+        Output::Print(u"    ArrayIterator                  %8d   %8d\n", typeCount[TypeIds_ArrayIterator], instanceCount[TypeIds_ArrayIterator]);
+        Output::Print(u"    MapIterator                    %8d   %8d\n", typeCount[TypeIds_MapIterator], instanceCount[TypeIds_MapIterator]);
+        Output::Print(u"    SetIterator                    %8d   %8d\n", typeCount[TypeIds_SetIterator], instanceCount[TypeIds_SetIterator]);
+        Output::Print(u"    StringIterator                 %8d   %8d\n", typeCount[TypeIds_StringIterator], instanceCount[TypeIds_StringIterator]);
+        Output::Print(u"    Generator                      %8d   %8d\n", typeCount[TypeIds_Generator], instanceCount[TypeIds_Generator]);
+        Output::Print(u"    AsyncGenerator                 %8d   %8d\n", typeCount[TypeIds_AsyncGenerator], instanceCount[TypeIds_AsyncGenerator]);
 #if !DBG
-        Output::Print(_u("    ** Instance statistics only available on debug builds...\n"));
+        Output::Print(u"    ** Instance statistics only available on debug builds...\n");
 #endif
         Output::Flush();
     }
@@ -1028,20 +1028,20 @@ namespace Js
 #ifdef PROFILE_OBJECT_LITERALS
     void ScriptContext::ProfileObjectLiteral()
     {
-        Output::Print(_u("===============================================================================\n"));
-        Output::Print(_u("    Object Lit Instances created.. %d\n"), objectLiteralInstanceCount);
-        Output::Print(_u("    Object Lit Path Types......... %d\n"), objectLiteralPathCount);
-        Output::Print(_u("    Object Lit Simple Map......... %d\n"), objectLiteralSimpleDictionaryCount);
-        Output::Print(_u("    Object Lit Max # of properties %d\n"), objectLiteralMaxLength);
-        Output::Print(_u("    Object Lit Promote count...... %d\n"), objectLiteralPromoteCount);
-        Output::Print(_u("    Object Lit Cache Hits......... %d\n"), objectLiteralCacheCount);
-        Output::Print(_u("    Object Lit Branch count....... %d\n"), objectLiteralBranchCount);
+        Output::Print(u"===============================================================================\n");
+        Output::Print(u"    Object Lit Instances created.. %d\n", objectLiteralInstanceCount);
+        Output::Print(u"    Object Lit Path Types......... %d\n", objectLiteralPathCount);
+        Output::Print(u"    Object Lit Simple Map......... %d\n", objectLiteralSimpleDictionaryCount);
+        Output::Print(u"    Object Lit Max # of properties %d\n", objectLiteralMaxLength);
+        Output::Print(u"    Object Lit Promote count...... %d\n", objectLiteralPromoteCount);
+        Output::Print(u"    Object Lit Cache Hits......... %d\n", objectLiteralCacheCount);
+        Output::Print(u"    Object Lit Branch count....... %d\n", objectLiteralBranchCount);
 
         for (int i = 0; i < TypePath::MaxPathTypeHandlerLength; i++)
         {
             if (objectLiteralCount[i] != 0)
             {
-                Output::Print(_u("    Object Lit properties [ %2d] .. %d\n"), i, objectLiteralCount[i]);
+                Output::Print(u"    Object Lit properties [ %2d] .. %d\n", i, objectLiteralCount[i]);
             }
         }
 
@@ -1453,7 +1453,7 @@ namespace Js
     {
         if (this->diagnosticArena == nullptr)
         {
-            this->diagnosticArena = HeapNew(ArenaAllocator, _u("Diagnostic"), this->GetThreadContext()->GetDebugManager()->GetDiagnosticPageAllocator(), Throw::OutOfMemory);
+            this->diagnosticArena = HeapNew(ArenaAllocator, u"Diagnostic", this->GetThreadContext()->GetDebugManager()->GetDiagnosticPageAllocator(), Throw::OutOfMemory);
         }
         Assert(this->diagnosticArena != nullptr);
         return this->diagnosticArena;
@@ -1753,7 +1753,7 @@ namespace Js
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
             if (PHASE_TRACE1(PropertyCachePhase))
             {
-                Output::Print(_u("PropertyRecord '%s' : Invalidating LdElem cache for type %p\n"), propertyRecordUsageCache->GetString(), type);
+                Output::Print(u"PropertyRecord '%s' : Invalidating LdElem cache for type %p\n", propertyRecordUsageCache->GetString(), type);
             }
 #endif
             cache->GetInlineCaches()[cache->GetInlineCacheIndexForType(type)].RemoveFromInvalidationListAndClear(this->GetThreadContext());
@@ -1764,7 +1764,7 @@ namespace Js
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
             if (PHASE_TRACE1(PropertyCachePhase))
             {
-                Output::Print(_u("PropertyRecord '%s' : Invalidating StElem cache for type %p\n"), propertyRecordUsageCache->GetString(), type);
+                Output::Print(u"PropertyRecord '%s' : Invalidating StElem cache for type %p\n", propertyRecordUsageCache->GetString(), type);
             }
 #endif
             cache->GetInlineCaches()[cache->GetInlineCacheIndexForType(type)].RemoveFromInvalidationListAndClear(this->GetThreadContext());
@@ -1931,10 +1931,10 @@ namespace Js
 #if DBG_DUMP && defined(PROFILE_MEM)
             if (Js::Configuration::Global.flags.TraceMemory.IsEnabled(Js::ParsePhase) && Configuration::Global.flags.Verbose)
             {
-                Output::Print(_u("Loading script.\n")
-                    _u("  Unicode (in bytes)    %u\n")
-                    _u("  UTF-8 size (in bytes) %u\n")
-                    _u("  Expected savings      %d\n"), length * sizeof(char16_t), cbNeeded, length * sizeof(char16_t) - cbNeeded);
+                Output::Print(u"Loading script.\n"
+                    u"  Unicode (in bytes)    %u\n"
+                    u"  UTF-8 size (in bytes) %u\n"
+                    u"  Expected savings      %d\n", length * sizeof(char16_t), cbNeeded, length * sizeof(char16_t) - cbNeeded);
             }
 #endif
 
@@ -2108,12 +2108,12 @@ namespace Js
         uint32_t blockByteCount = 0;
         DebugOnly(auto url = !srcInfo->sourceContextInfo->isHostDynamicDocument ? srcInfo->sourceContextInfo->url : this->GetUrl());
 
-        OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Trying to read parser state cache for '%s'\n"), url);
+        OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Trying to read parser state cache for '%s'\n", url);
 
         hr = pDataCache->SeekReadStreamToBlock(SimpleDataCacheWrapper::BlockType_ParserState, &blockByteCount);
         if (FAILED(hr))
         {
-            OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Failed to find parser state cache in the stream (hr = 0x%08lx) for '%s'\n"), hr, url);
+            OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Failed to find parser state cache in the stream (hr = 0x%08lx) for '%s'\n", hr, url);
             return hr;
         }
 
@@ -2121,15 +2121,15 @@ namespace Js
         hr = pDataCache->Read(&expectedCRC);
         if (FAILED(hr))
         {
-            OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Failed to read CRC value (hr = 0x%08lx) for '%s'\n"), hr, url);
+            OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Failed to read CRC value (hr = 0x%08lx) for '%s'\n", hr, url);
             return hr;
         }
 
-        OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Computed CRC value = 0x%08lx (expected CRC value = 0x%08lx) for '%s'\n"), sourceCRC, expectedCRC, url);
+        OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Computed CRC value = 0x%08lx (expected CRC value = 0x%08lx) for '%s'\n", sourceCRC, expectedCRC, url);
 
         if (expectedCRC != sourceCRC)
         {
-            OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Fail CRC check, discarding parser state cache for '%s'\n"), url);
+            OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Fail CRC check, discarding parser state cache for '%s'\n", url);
             return E_FAIL;
         }
 
@@ -2146,7 +2146,7 @@ namespace Js
 
         if (CONFIG_FLAG(CompressParserStateCache))
         {
-            BEGIN_TEMP_ALLOCATOR(tempAllocator, this, _u("ByteCodeSerializer"));
+            BEGIN_TEMP_ALLOCATOR(tempAllocator, this, u"ByteCodeSerializer");
             {
                 byte* compressedBuffer = AnewNoThrowArray(tempAllocator, byte, compressedBufferByteCount);
                 if (compressedBuffer == nullptr)
@@ -2158,20 +2158,20 @@ namespace Js
                 hr = pDataCache->ReadArray(compressedBuffer, compressedBufferByteCount);
                 if (FAILED(hr))
                 {
-                    OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Failed to read compressed parser state cache (wanted %lu bytes) (hr = 0x%08lx) for '%s'\n"), compressedBufferByteCount, hr, url);
+                    OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Failed to read compressed parser state cache (wanted %lu bytes) (hr = 0x%08lx) for '%s'\n", compressedBufferByteCount, hr, url);
                     goto ExitTempAllocator;
                 }
 
-                OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Successfully read compressed parser state cache (%lu bytes) for '%s'\n"), compressedBufferByteCount, url);
+                OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Successfully read compressed parser state cache (%lu bytes) for '%s'\n", compressedBufferByteCount, url);
 
                 hr = Js::CompressionUtilities::DecompressBuffer(alloc, compressedBuffer, compressedBufferByteCount, &decompressedBuffer, &decompressedBufferByteCount);
                 if (FAILED(hr))
                 {
-                    OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Failed to decompress parser state cache (hr = 0x%08lx) for '%s'\n"), hr, url);
+                    OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Failed to decompress parser state cache (hr = 0x%08lx) for '%s'\n", hr, url);
                     goto ExitTempAllocator;
                 }
 
-                OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Decompressed parser state cache %lu -> %lu bytes (%.2f%%) to stream for '%s'\n"), compressedBufferByteCount, decompressedBufferByteCount, (double)compressedBufferByteCount / decompressedBufferByteCount * 100.0, url);
+                OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Decompressed parser state cache %lu -> %lu bytes (%.2f%%) to stream for '%s'\n", compressedBufferByteCount, decompressedBufferByteCount, (double)compressedBufferByteCount / decompressedBufferByteCount * 100.0, url);
             }
 ExitTempAllocator:
             END_TEMP_ALLOCATOR(tempAllocator, this);
@@ -2194,12 +2194,12 @@ ExitTempAllocator:
             hr = pDataCache->ReadArray(decompressedBuffer, compressedBufferByteCount);
             if (FAILED(hr))
             {
-                OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Failed to read parser state cache (wanted %lu bytes) (hr = 0x%08lx) for '%s'\n"), decompressedBufferByteCount, hr, url);
+                OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Failed to read parser state cache (wanted %lu bytes) (hr = 0x%08lx) for '%s'\n", decompressedBufferByteCount, hr, url);
                 goto Error;
             }
         }
 
-        OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Successfully read parser state cache (%lu bytes) for '%s'\n"), decompressedBufferByteCount, url);
+        OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Successfully read parser state cache (%lu bytes) for '%s'\n", decompressedBufferByteCount, url);
 
         if (utf8SourceInfo != nullptr)
         {
@@ -2214,18 +2214,18 @@ ExitTempAllocator:
             utf8SourceInfo->SetByteCodeGenerationFlags(grfscr);
         }
 
-        OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Trying to deserialize parser state cache for '%s'\n"), url);
+        OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Trying to deserialize parser state cache for '%s'\n", url);
 
         FunctionBody* functionBody = nullptr;
         hr = Js::ByteCodeSerializer::DeserializeFromBuffer(this, grfscr, (ISourceHolder*) nullptr, srcInfo, decompressedBuffer, nativeModule, &functionBody, sourceIndex);
 
         if (FAILED(hr))
         {
-            OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Failed to deserialize parser state cache (hr = 0x%08lx) for '%s'\n"), hr, url);
+            OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Failed to deserialize parser state cache (hr = 0x%08lx) for '%s'\n", hr, url);
             goto Error;
         }
 
-        OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Successfully deserialized parser state cache for '%s'\n"), url);
+        OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Successfully deserialized parser state cache for '%s'\n", url);
 
         *func = functionBody->GetParseableFunctionInfo();
         *parserStateCacheBuffer = decompressedBuffer;
@@ -2266,9 +2266,9 @@ Error:
         {
             Assert(serializeParserStateCacheSize == 0);
 
-            OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Trying to serialize parser state cache for '%s'\n"), url);
+            OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Trying to serialize parser state cache for '%s'\n", url);
 
-            BEGIN_TEMP_ALLOCATOR(tempAllocator, this, _u("ByteCodeSerializer"));
+            BEGIN_TEMP_ALLOCATOR(tempAllocator, this, u"ByteCodeSerializer");
             hr = Js::ByteCodeSerializer::SerializeToBuffer(this,
                 tempAllocator, (uint32_t)cbLength, pszSrc, func->GetFunctionBody(),
                 func->GetHostSrcInfo(), &serializeParserStateCacheBuffer,
@@ -2277,22 +2277,22 @@ Error:
 
             if (FAILED(hr))
             {
-                OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Failed to serialize parser state cache (hr = 0x%08lx) for '%s'\n"), hr, url);
+                OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Failed to serialize parser state cache (hr = 0x%08lx) for '%s'\n", hr, url);
                 return hr;
             }
 
-            OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Successfully serialized parser state cache for '%s'\n"), url);
+            OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Successfully serialized parser state cache for '%s'\n", url);
         }
         else
         {
             Assert(serializeParserStateCacheSize != 0);
 
-            OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Skip serializing parser state cache since deserialized cache is available for '%s'\n"), url);
+            OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Skip serializing parser state cache since deserialized cache is available for '%s'\n", url);
         }
 
-        OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Trying to write parser state cache (%lu bytes) to stream for '%s'\n"), serializeParserStateCacheSize, url);
+        OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Trying to write parser state cache (%lu bytes) to stream for '%s'\n", serializeParserStateCacheSize, url);
 
-        BEGIN_TEMP_ALLOCATOR(tempAllocator, this, _u("ByteCodeSerializer"));
+        BEGIN_TEMP_ALLOCATOR(tempAllocator, this, u"ByteCodeSerializer");
         {
             byte* compressedBuffer = nullptr;
             size_t compressedSize = 0;
@@ -2303,11 +2303,11 @@ Error:
 
                 if (FAILED(hr))
                 {
-                    OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Failed to compress parser state cache (hr = 0x%08lx) for '%s'\n"), hr, url);
+                    OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Failed to compress parser state cache (hr = 0x%08lx) for '%s'\n", hr, url);
                     goto ExitTempAllocator;
                 }
 
-                OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Compressed parser state cache %lu -> %lu bytes (%.2f%%) to stream for '%s'\n"), serializeParserStateCacheSize, compressedSize, (double)compressedSize / serializeParserStateCacheSize * 100.0, url);
+                OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Compressed parser state cache %lu -> %lu bytes (%.2f%%) to stream for '%s'\n", serializeParserStateCacheSize, compressedSize, (double)compressedSize / serializeParserStateCacheSize * 100.0, url);
             }
             else
             {
@@ -2320,17 +2320,17 @@ Error:
 
             if (FAILED(hr))
             {
-                OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Failed to write a block to the parser state cache data stream (hr = 0x%08lx) for '%s'\n"), hr, url);
+                OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Failed to write a block to the parser state cache data stream (hr = 0x%08lx) for '%s'\n", hr, url);
                 goto ExitTempAllocator;
             }
 
-            OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Computed CRC value = 0x%08lx for '%s'\n"), sourceCRC, url);
+            OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Computed CRC value = 0x%08lx for '%s'\n", sourceCRC, url);
 
             hr = pDataCache->Write(sourceCRC);
 
             if (FAILED(hr))
             {
-                OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Failed to write CRC data to the data stream (hr = 0x%08lx) for '%s'\n"), hr, url);
+                OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Failed to write CRC data to the data stream (hr = 0x%08lx) for '%s'\n", hr, url);
                 goto ExitTempAllocator;
             }
 
@@ -2338,7 +2338,7 @@ Error:
 
             if (FAILED(hr))
             {
-                OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Failed to write compressed parser state cache (hr = 0x%08lx) for '%s'\n"), hr, url);
+                OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Failed to write compressed parser state cache (hr = 0x%08lx) for '%s'\n", hr, url);
                 goto ExitTempAllocator;
             }
         }
@@ -2350,7 +2350,7 @@ ExitTempAllocator:
             return hr;
         }
 
-        OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Successfully wrote parser state cache for '%s'\n"), url);
+        OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Successfully wrote parser state cache for '%s'\n", url);
 #endif
 
         return hr;
@@ -2477,8 +2477,8 @@ ExitTempAllocator:
             {
                 Js::FunctionBody *functionBody = (*function)->GetFunctionBody();
                 const Js::Utf8SourceInfo *sourceInfo = functionBody->GetUtf8SourceInfo();
-                size_t cSourceCodeLength = sourceInfo->GetCbLength(_u("JsSerializeParserState"));
-                LPCUTF8 utf8Code = sourceInfo->GetSource(_u("JsSerializeParserState"));
+                size_t cSourceCodeLength = sourceInfo->GetCbLength(u"JsSerializeParserState");
+                LPCUTF8 utf8Code = sourceInfo->GetSource(u"JsSerializeParserState");
                 uint32_t dwFlags = GENERATE_BYTE_CODE_PARSER_STATE;
 
                 return Js::ByteCodeSerializer::SerializeToBuffer(this,
@@ -2577,7 +2577,7 @@ ExitTempAllocator:
         HRESULT hr;
 
         // Get the source code to keep it alive during the bytecode generation process
-        LPCUTF8 source = this->GetSource(sourceIndex)->GetSource(_u("ScriptContext::GenerateRootFunction"));
+        LPCUTF8 source = this->GetSource(sourceIndex)->GetSource(u"ScriptContext::GenerateRootFunction");
         Assert(source != nullptr); // Source should not have been reclaimed by now
 
         // Generate bytecode and native code
@@ -2702,7 +2702,7 @@ ExitTempAllocator:
         bool fNew = false;
         if (this->interpreterArena == nullptr)
         {
-            this->interpreterArena = this->GetRecycler()->CreateGuestArena(_u("Interpreter"), Throw::OutOfMemory);
+            this->interpreterArena = this->GetRecycler()->CreateGuestArena(u"Interpreter", Throw::OutOfMemory);
             fNew = true;
         }
         *ppAlloc = this->interpreterArena;
@@ -2824,11 +2824,11 @@ ExitTempAllocator:
             charcount_t len = key.str.GetLength();
             if (dict->TryGetValue(key, ppFuncScript))
             {
-                Output::Print(_u("EvalMap cache hit:\t source size = %d\n"), len);
+                Output::Print(u"EvalMap cache hit:\t source size = %d\n", len);
             }
             else
             {
-                Output::Print(_u("EvalMap cache miss:\t source size = %d\n"), len);
+                Output::Print(u"EvalMap cache miss:\t source size = %d\n", len);
             }
         }
 #endif
@@ -2969,7 +2969,7 @@ ExitTempAllocator:
 
         if (this->Cache()->dynamicSourceContextInfoMap->Count() > INMEMORY_CACHE_MAX_PROFILE_MANAGER)
         {
-            OUTPUT_TRACE(Js::DynamicProfilePhase, _u("Max of dynamic script profile info reached.\n"));
+            OUTPUT_TRACE(Js::DynamicProfilePhase, u"Max of dynamic script profile info reached.\n");
             return this->Cache()->noContextSourceContextInfo;
         }
 
@@ -3038,7 +3038,7 @@ ExitTempAllocator:
         size_t length = charCount + 1; // Add 1 for the NULL.
         char16_t* copy = AnewArray(alloc, char16_t, length);
         js_wmemcpy_s(copy, length, str, charCount);
-        copy[length - 1] = _u('\0');
+        copy[length - 1] = u'\0';
         return copy;
     }
 
@@ -3269,12 +3269,12 @@ ExitTempAllocator:
             return ACTIVPROF_E_PROFILER_PRESENT;
         }
 
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, _u("ScriptContext::RegisterProfileProbe\n"));
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, _u("Info\nThunks Address :\n"));
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, _u("DefaultEntryThunk : 0x%08X, CrossSite::DefaultThunk : 0x%08X, DefaultDeferredParsingThunk : 0x%08X\n"), DefaultEntryThunk, CrossSite::DefaultThunk, DefaultDeferredParsingThunk);
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, _u("ProfileEntryThunk : 0x%08X, CrossSite::ProfileThunk : 0x%08X, ProfileDeferredParsingThunk : 0x%08X, ProfileDeferredDeserializeThunk : 0x%08X,\n"), ProfileEntryThunk, CrossSite::ProfileThunk, ProfileDeferredParsingThunk, ProfileDeferredDeserializeThunk);
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, _u("ScriptType :\n"));
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, _u("PROFILER_SCRIPT_TYPE_USER : 0, PROFILER_SCRIPT_TYPE_DYNAMIC : 1, PROFILER_SCRIPT_TYPE_NATIVE : 2, PROFILER_SCRIPT_TYPE_DOM : 3\n"));
+        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::RegisterProfileProbe\n");
+        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"Info\nThunks Address :\n");
+        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"DefaultEntryThunk : 0x%08X, CrossSite::DefaultThunk : 0x%08X, DefaultDeferredParsingThunk : 0x%08X\n", DefaultEntryThunk, CrossSite::DefaultThunk, DefaultDeferredParsingThunk);
+        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ProfileEntryThunk : 0x%08X, CrossSite::ProfileThunk : 0x%08X, ProfileDeferredParsingThunk : 0x%08X, ProfileDeferredDeserializeThunk : 0x%08X,\n", ProfileEntryThunk, CrossSite::ProfileThunk, ProfileDeferredParsingThunk, ProfileDeferredDeserializeThunk);
+        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptType :\n");
+        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"PROFILER_SCRIPT_TYPE_USER : 0, PROFILER_SCRIPT_TYPE_DYNAMIC : 1, PROFILER_SCRIPT_TYPE_NATIVE : 2, PROFILER_SCRIPT_TYPE_DOM : 3\n");
 
         HRESULT hr = pProfileCallback->Initialize(dwContext);
         if (SUCCEEDED(hr))
@@ -3355,7 +3355,7 @@ ExitTempAllocator:
             return ACTIVPROF_E_PROFILER_ABSENT;
         }
 
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, _u("ScriptContext::DeRegisterProfileProbe\n"));
+        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::DeRegisterProfileProbe\n");
 
 #if ENABLE_NATIVE_CODEGEN
         // Acquire the code gen working queue - we are going to change the thunks
@@ -3434,7 +3434,7 @@ ExitTempAllocator:
             return ACTIVPROF_E_PROFILER_ABSENT;
         }
 
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, _u("ScriptContext::RegisterScript, fRegisterScript : %s, IsFunctionDefer : %s\n"), IsTrueOrFalse(fRegisterScript), IsTrueOrFalse(proxy->IsDeferred()));
+        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::RegisterScript, fRegisterScript : %s, IsFunctionDefer : %s\n", IsTrueOrFalse(fRegisterScript), IsTrueOrFalse(proxy->IsDeferred()));
 
         AssertMsg(proxy != nullptr, "Function body cannot be null when calling reporting");
         AssertMsg(proxy->GetScriptContext() == this, "wrong script context while reporting the function?");
@@ -3457,7 +3457,7 @@ ExitTempAllocator:
     {
         AssertMsg(m_pProfileCallback != nullptr, "Called register scripts when we don't have profile callback");
 
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, _u("ScriptContext::RegisterAllScripts started\n"));
+        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::RegisterAllScripts started\n");
 
         // Future Work: Once Utf8SourceInfo can generate the debug document text without requiring a function body,
         // this code can be considerably simplified to doing the following:
@@ -3484,7 +3484,7 @@ ExitTempAllocator:
             pFuncBody->RegisterFunction(TRUE, TRUE); // Ignore potential failure (worst case is not profiling).
         });
 
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, _u("ScriptContext::RegisterAllScripts ended\n"));
+        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::RegisterAllScripts ended\n");
         return S_OK;
     }
 #endif // ENABLE_SCRIPT_PROFILING
@@ -3548,7 +3548,7 @@ ExitTempAllocator:
 #endif // ENABLE_NATIVE_CODEGEN
     HRESULT ScriptContext::OnDebuggerAttached()
     {
-        OUTPUT_TRACE(Js::DebuggerPhase, _u("ScriptContext::OnDebuggerAttached: start 0x%p\n"), this);
+        OUTPUT_TRACE(Js::DebuggerPhase, u"ScriptContext::OnDebuggerAttached: start 0x%p\n", this);
 
         Js::StepController* stepController = &this->GetThreadContext()->GetDebugManager()->stepController;
         if (stepController->IsActive())
@@ -3597,7 +3597,7 @@ ExitTempAllocator:
         HRESULT hrEntryPointUpdate = S_OK;
         BEGIN_TRANSLATE_OOM_TO_HRESULT_NESTED
 #ifdef ASMJS_PLAT
-            TempArenaAllocatorObject* tmpAlloc = GetTemporaryAllocator(_u("DebuggerTransition"));
+            TempArenaAllocatorObject* tmpAlloc = GetTemporaryAllocator(u"DebuggerTransition");
             debugTransitionAlloc = tmpAlloc->GetAllocator();
 
             asmJsEnvironmentMap = Anew(debugTransitionAlloc, AsmFunctionMap, debugTransitionAlloc);
@@ -3647,7 +3647,7 @@ ExitTempAllocator:
             return hrEntryPointUpdate;
         }
 
-        OUTPUT_TRACE(Js::DebuggerPhase, _u("ScriptContext::OnDebuggerAttached: done 0x%p, hr = 0x%X\n"), this, hr);
+        OUTPUT_TRACE(Js::DebuggerPhase, u"ScriptContext::OnDebuggerAttached: done 0x%p, hr = 0x%X\n", this, hr);
 
         return hr;
     }
@@ -3655,7 +3655,7 @@ ExitTempAllocator:
     // Reverts the script context state back to the state before debugging began.
     HRESULT ScriptContext::OnDebuggerDetached()
     {
-        OUTPUT_TRACE(Js::DebuggerPhase, _u("ScriptContext::OnDebuggerDetached: start 0x%p\n"), this);
+        OUTPUT_TRACE(Js::DebuggerPhase, u"ScriptContext::OnDebuggerDetached: start 0x%p\n", this);
 
         Js::StepController* stepController = &this->GetThreadContext()->GetDebugManager()->stepController;
         if (stepController->IsActive())
@@ -3712,7 +3712,7 @@ ExitTempAllocator:
             return hrEntryPointUpdate;
         }
 
-        OUTPUT_TRACE(Js::DebuggerPhase, _u("ScriptContext::OnDebuggerDetached: done 0x%p, hr = 0x%X\n"), this, hr);
+        OUTPUT_TRACE(Js::DebuggerPhase, u"ScriptContext::OnDebuggerDetached: done 0x%p, hr = 0x%X\n", this, hr);
 
         return hr;
     }
@@ -3885,7 +3885,7 @@ ExitTempAllocator:
     {
         Assert(m_pProfileCallback != NULL);
 
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, _u("ScriptContext::RegisterBuiltinFunctions\n"));
+        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::RegisterBuiltinFunctions\n");
 
         HRESULT hr = S_OK;
         // Consider creating ProfileArena allocator instead of General allocator
@@ -3921,7 +3921,7 @@ ExitTempAllocator:
 #ifdef ENABLE_SCRIPT_DEBUGGING
     void ScriptContext::SetFunctionInRecyclerToProfileMode(bool enumerateNonUserFunctionsOnly/* = false*/)
     {
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, _u("ScriptContext::SetFunctionInRecyclerToProfileMode started (m_fTraceDomCall : %s)\n"), IsTrueOrFalse(IsTraceDomCall()));
+        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::SetFunctionInRecyclerToProfileMode started (m_fTraceDomCall : %s)\n", IsTrueOrFalse(IsTraceDomCall()));
 
         // Mark this script context isEnumeratingRecyclerObjects
         AutoEnumeratingRecyclerObjects enumeratingRecyclerObjects(this);
@@ -3930,7 +3930,7 @@ ExitTempAllocator:
 
         this->recycler->EnumerateObjects(JavascriptLibrary::EnumFunctionClass, &ScriptContext::RecyclerEnumClassEnumeratorCallback);
 
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, _u("ScriptContext::SetFunctionInRecyclerToProfileMode ended\n"));
+        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::SetFunctionInRecyclerToProfileMode ended\n");
     }
 
     void ScriptContext::UpdateRecyclerFunctionEntryPointsForDebugger()
@@ -4127,27 +4127,27 @@ ExitTempAllocator:
 #if ENABLE_DEBUG_CONFIG_OPTIONS
             char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 #endif
-            OUTPUT_TRACE(Js::ScriptProfilerPhase, _u("ScriptContext::RecyclerEnumClassEnumeratorCallback\n"));
-            OUTPUT_TRACE(Js::ScriptProfilerPhase, _u("\tFunctionProxy : 0x%08X, FunctionNumber : %s, DeferredParseAttributes : %d, EntryPoint : 0x%08X"),
+            OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::RecyclerEnumClassEnumeratorCallback\n");
+            OUTPUT_TRACE(Js::ScriptProfilerPhase, u"\tFunctionProxy : 0x%08X, FunctionNumber : %s, DeferredParseAttributes : %d, EntryPoint : 0x%08X",
                 (DWORD_PTR)proxy, proxy->GetDebugNumberSet(debugStringBuffer), proxy->GetAttributes(), (DWORD_PTR)entryPoint);
 #if ENABLE_NATIVE_CODEGEN
-            OUTPUT_TRACE(Js::ScriptProfilerPhase, _u(" (IsIntermediateCodeGenThunk : %s, isNative : %s)\n"),
+            OUTPUT_TRACE(Js::ScriptProfilerPhase, u" (IsIntermediateCodeGenThunk : %s, isNative : %s)\n",
                 IsTrueOrFalse(IsIntermediateCodeGenThunk(entryPoint)), IsTrueOrFalse(scriptContext->IsNativeAddress(entryPoint)));
 #endif
-            OUTPUT_TRACE(Js::ScriptProfilerPhase, _u("\n"));
+            OUTPUT_TRACE(Js::ScriptProfilerPhase, u"\n");
 #endif
 
 #if ENABLE_NATIVE_CODEGEN
             if (!IsIntermediateCodeGenThunk(entryPoint) && entryPoint != DynamicProfileInfo::EnsureDynamicProfileInfoThunk)
 #endif
             {
-                OUTPUT_TRACE(Js::ScriptProfilerPhase, _u("\t\tJs::ScriptContext::GetProfileModeThunk : 0x%08X\n"), (DWORD_PTR)Js::ScriptContext::GetProfileModeThunk(entryPoint));
+                OUTPUT_TRACE(Js::ScriptProfilerPhase, u"\t\tJs::ScriptContext::GetProfileModeThunk : 0x%08X\n", (DWORD_PTR)Js::ScriptContext::GetProfileModeThunk(entryPoint));
 
                 ScriptFunction * scriptFunction = VarTo<ScriptFunction>(pFunction);
                 scriptFunction->ChangeEntryPoint(proxy->GetDefaultEntryPointInfo(), Js::ScriptContext::GetProfileModeThunk(entryPoint));
 
 #if ENABLE_NATIVE_CODEGEN && defined(ENABLE_SCRIPT_PROFILING)
-                OUTPUT_TRACE(Js::ScriptProfilerPhase, _u("\tUpdated entrypoint : 0x%08X (isNative : %s)\n"), (DWORD_PTR)pFunction->GetEntryPoint(), IsTrueOrFalse(scriptContext->IsNativeAddress(entryPoint)));
+                OUTPUT_TRACE(Js::ScriptProfilerPhase, u"\tUpdated entrypoint : 0x%08X (isNative : %s)\n", (DWORD_PTR)pFunction->GetEntryPoint(), IsTrueOrFalse(scriptContext->IsNativeAddress(entryPoint)));
 #endif
             }
         }
@@ -4242,13 +4242,13 @@ ExitTempAllocator:
         char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 #endif
 
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, _u("ScriptContext::ProfileModeDeferredParse FunctionNumber : %s, startEntrypoint : 0x%08X\n"), (*functionRef)->GetFunctionProxy()->GetDebugNumberSet(debugStringBuffer), (*functionRef)->GetEntryPoint());
+        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::ProfileModeDeferredParse FunctionNumber : %s, startEntrypoint : 0x%08X\n", (*functionRef)->GetFunctionProxy()->GetDebugNumberSet(debugStringBuffer), (*functionRef)->GetEntryPoint());
 
         BOOL fParsed = FALSE;
         JavascriptMethod entryPoint = Js::JavascriptFunction::DeferredParseCore(functionRef, fParsed);
 
 #ifdef ENABLE_SCRIPT_PROFILING
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, _u("\t\tIsParsed : %s, updatedEntrypoint : 0x%08X\n"), IsTrueOrFalse(fParsed), entryPoint);
+        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"\t\tIsParsed : %s, updatedEntrypoint : 0x%08X\n", IsTrueOrFalse(fParsed), entryPoint);
 
         //To get the scriptContext we only need the functionProxy
         FunctionProxy *pRootBody = (*functionRef)->GetFunctionProxy();
@@ -4292,7 +4292,7 @@ ExitTempAllocator:
         char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 #endif
 
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, _u("ScriptContext::ProfileModeDeferredDeserialize FunctionNumber : %s\n"), function->GetFunctionProxy()->GetDebugNumberSet(debugStringBuffer));
+        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::ProfileModeDeferredDeserialize FunctionNumber : %s\n", function->GetFunctionProxy()->GetDebugNumberSet(debugStringBuffer));
 
         JavascriptMethod entryPoint = Js::JavascriptFunction::DeferredDeserialize(function);
 
@@ -4435,7 +4435,7 @@ ExitTempAllocator:
                 if (pBody && pBody->GetProfileSession() != pBody->GetScriptContext()->GetProfileSession())
                 {
                     char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-                    OUTPUT_TRACE_DEBUGONLY(Js::ScriptProfilerPhase, _u("ScriptContext::ProfileProbeThunk, ProfileSession does not match (%d != %d), functionNumber : %s, functionName : %s\n"),
+                    OUTPUT_TRACE_DEBUGONLY(Js::ScriptProfilerPhase, u"ScriptContext::ProfileProbeThunk, ProfileSession does not match (%d != %d), functionNumber : %s, functionName : %s\n",
                         pBody->GetProfileSession(), pBody->GetScriptContext()->GetProfileSession(), pBody->GetDebugNumberSet(debugStringBuffer), pBody->GetDisplayName());
                 }
                 AssertMsg(pBody == NULL || pBody->GetProfileSession() == pBody->GetScriptContext()->GetProfileSession(), "Function info wasn't reported for this profile session");
@@ -4459,8 +4459,8 @@ ExitTempAllocator:
                         // it is string because user had called in toString extract name from it
                         Assert(VarIs<JavascriptString>(sourceString));
                         const char16_t *pwszToString = ((JavascriptString *)sourceString)->GetSz();
-                        const char16_t *pwszNameStart = wcsstr(pwszToString, _u(" "));
-                        const char16_t *pwszNameEnd = wcsstr(pwszToString, _u("("));
+                        const char16_t *pwszNameStart = wcsstr(pwszToString, u" ");
+                        const char16_t *pwszNameEnd = wcsstr(pwszToString, u"(");
                         if (pwszNameStart == nullptr || pwszNameEnd == nullptr || ((int)(pwszNameEnd - pwszNameStart) <= 0))
                         {
                             functionNameLen = ((JavascriptString *)sourceString)->GetLength() + 1;
@@ -4531,8 +4531,8 @@ ExitTempAllocator:
                 function->IsLibraryCode() &&
                 !AutoRegisterIgnoreExceptionWrapper::IsRegistered(scriptContext->GetThreadContext());
 
-            OUTPUT_VERBOSE_TRACE(Js::DebuggerPhase, _u("DebugProfileProbeThunk: calling function: %s isWrapperRegistered=%d useDebugWrapper=%d\n"),
-                function->GetFunctionInfo()->HasBody() ? function->GetFunctionBody()->GetDisplayName() : _u("built-in/library"), AutoRegisterIgnoreExceptionWrapper::IsRegistered(scriptContext->GetThreadContext()), useDebugWrapper);
+            OUTPUT_VERBOSE_TRACE(Js::DebuggerPhase, u"DebugProfileProbeThunk: calling function: %s isWrapperRegistered=%d useDebugWrapper=%d\n",
+                function->GetFunctionInfo()->HasBody() ? function->GetFunctionBody()->GetDisplayName() : u"built-in/library", AutoRegisterIgnoreExceptionWrapper::IsRegistered(scriptContext->GetThreadContext()), useDebugWrapper);
 
             if (scriptContext->IsDebuggerRecording())
             {
@@ -4652,7 +4652,7 @@ ExitTempAllocator:
         // TODO : can we do a delay send of these events or can we send an event before doing all this stuff that could calculate overhead?
         Assert(m_pProfileCallback != NULL);
 
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, _u("ScriptContext::OnScriptCompiled scriptId : %d, ScriptType : %d\n"), scriptId, type);
+        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::OnScriptCompiled scriptId : %d, ScriptType : %d\n", scriptId, type);
 
         HRESULT hr = S_OK;
 
@@ -4678,7 +4678,7 @@ ExitTempAllocator:
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (scriptId != BuiltInFunctionsScriptId || Js::Configuration::Global.flags.Verbose)
         {
-            OUTPUT_TRACE(Js::ScriptProfilerPhase, _u("ScriptContext::OnFunctionCompiled scriptId : %d, functionId : %d, FunctionName : %s, FunctionNameHint : %s\n"), scriptId, functionId, pwszFunctionName, pwszFunctionNameHint);
+            OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::OnFunctionCompiled scriptId : %d, functionId : %d, FunctionName : %s, FunctionNameHint : %s\n", scriptId, functionId, pwszFunctionName, pwszFunctionNameHint);
         }
 #endif
 
@@ -4701,7 +4701,7 @@ ExitTempAllocator:
             return ACTIVPROF_E_PROFILER_ABSENT;
         }
 
-        OUTPUT_VERBOSE_TRACE(Js::ScriptProfilerPhase, _u("ScriptContext::OnFunctionEnter scriptId : %d, functionId : %d\n"), scriptId, functionId);
+        OUTPUT_VERBOSE_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::OnFunctionEnter scriptId : %d, functionId : %d\n", scriptId, functionId);
 
         HRESULT hr = S_OK;
 
@@ -4722,7 +4722,7 @@ ExitTempAllocator:
             return ACTIVPROF_E_PROFILER_ABSENT;
         }
 
-        OUTPUT_VERBOSE_TRACE(Js::ScriptProfilerPhase, _u("ScriptContext::OnFunctionExit scriptId : %d, functionId : %d\n"), scriptId, functionId);
+        OUTPUT_VERBOSE_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::OnFunctionExit scriptId : %d, functionId : %d\n", scriptId, functionId);
 
         HRESULT hr = S_OK;
 
@@ -4778,7 +4778,7 @@ ExitTempAllocator:
         if (pwszObjectName != NULL)
         {
             // Create name as "object.function"
-            swprintf_s(szTempName, 70, _u("%s.%s"), pwszObjectName, pwszFunctionName);
+            swprintf_s(szTempName, 70, u"%s.%s", pwszObjectName, pwszFunctionName);
             functionPropertyId = GetOrAddPropertyIdTracked(szTempName, (uint)wcslen(szTempName));
         }
 
@@ -5628,7 +5628,7 @@ ScriptContext::GetJitFuncRangeCache()
                 if (bytesWritten > 0)
                 {
                     JS_ETW(EventWriteJSCRIPT_PROFILE_SAVE(info->dwHostSourceContext, this, bytesWritten, isSaveOnClose));
-                    OUTPUT_TRACE(Js::DynamicProfilePhase, _u("Profile saving succeeded\n"));
+                    OUTPUT_TRACE(Js::DynamicProfilePhase, u"Profile saving succeeded\n");
                 }
             });
 #endif
@@ -5728,7 +5728,7 @@ ScriptContext::GetJitFuncRangeCache()
 #ifdef PROFILE_BAILOUT_RECORD_MEMORY
         if (Configuration::Global.flags.ProfileBailOutRecordMemory)
         {
-            Output::Print(_u("CodeSize: %6d\nBailOutRecord Size: %6d\nLocalOffsets Size: %6d\n"), codeSize, bailOutRecordBytes, bailOutOffsetBytes);
+            Output::Print(u"CodeSize: %6d\nBailOutRecord Size: %6d\nLocalOffsets Size: %6d\n", codeSize, bailOutRecordBytes, bailOutOffsetBytes);
         }
 #endif
 
@@ -5764,7 +5764,7 @@ ScriptContext::GetJitFuncRangeCache()
 #if DBG_DUMP
         if (PHASE_STATS1(Js::ByteCodePhase))
         {
-            Output::Print(_u(" Total Bytecode size: <%d, %d, %d> = %d\n"),
+            Output::Print(u" Total Bytecode size: <%d, %d, %d> = %d\n",
                 byteCodeDataSize,
                 byteCodeAuxiliaryDataSize,
                 byteCodeAuxiliaryContextDataSize,
@@ -5773,8 +5773,8 @@ ScriptContext::GetJitFuncRangeCache()
 
         if (Configuration::Global.flags.BytecodeHist)
         {
-            Output::Print(_u("ByteCode Histogram\n"));
-            Output::Print(_u("\n"));
+            Output::Print(u"ByteCode Histogram\n");
+            Output::Print(u"\n");
 
             uint total = 0;
             uint unique = 0;
@@ -5786,8 +5786,8 @@ ScriptContext::GetJitFuncRangeCache()
                     unique++;
                 }
             }
-            Output::Print(_u("%9u                     Total executed ops\n"), total);
-            Output::Print(_u("\n"));
+            Output::Print(u"%9u                     Total executed ops\n", total);
+            Output::Print(u"\n");
 
             uint max = UINT_MAX;
             double pctcume = 0.0;
@@ -5819,12 +5819,12 @@ ScriptContext::GetJitFuncRangeCache()
                         double pct = ((double)max) / total;
                         pctcume += pct;
 
-                        Output::Print(_u("%9u  %5.1lf  %5.1lf  %04x %s\n"), max, pct * 100, pctcume * 100, j, OpCodeUtil::GetOpCodeName(j));
+                        Output::Print(u"%9u  %5.1lf  %5.1lf  %04x %s\n", max, pct * 100, pctcume * 100, j, OpCodeUtil::GetOpCodeName(j));
                     }
                 }
             }
-            Output::Print(_u("\n"));
-            Output::Print(_u("Unique opcodes: %d\n"), unique);
+            Output::Print(u"\n");
+            Output::Print(u"Unique opcodes: %d\n", unique);
         }
 
 #endif
@@ -5847,15 +5847,15 @@ ScriptContext::GetJitFuncRangeCache()
             uint zeroInterpretedFunctions = 0;
             uint oneInterpretedFunctions = 0;
             uint nonZeroBytecodeFunctions = 0;
-            Output::Print(_u("Script Context: 0x%p Url: %s\n"), this, this->url);
+            Output::Print(u"Script Context: 0x%p Url: %s\n", this, this->url);
 
             FunctionBody* anyFunctionBody = this->FindFunction([](FunctionBody* body) { return body != nullptr; });
 
             if (anyFunctionBody)
             {
-                OUTPUT_VERBOSE_STATS(Js::BGJitPhase, _u("Function list\n"));
-                OUTPUT_VERBOSE_STATS(Js::BGJitPhase, _u("===============================\n"));
-                OUTPUT_VERBOSE_STATS(Js::BGJitPhase, _u("%-24s, %-8s, %-10s, %-10s, %-10s, %-10s, %-10s\n"), _u("Function"), _u("InterpretedCount"), _u("ByteCodeInLoopSize"), _u("ByteCodeSize"), _u("IsJitted"), _u("IsUsed"), _u("NativeCodeSize"));
+                OUTPUT_VERBOSE_STATS(Js::BGJitPhase, u"Function list\n");
+                OUTPUT_VERBOSE_STATS(Js::BGJitPhase, u"===============================\n");
+                OUTPUT_VERBOSE_STATS(Js::BGJitPhase, u"%-24s, %-8s, %-10s, %-10s, %-10s, %-10s, %-10s\n", u"Function", u"InterpretedCount", u"ByteCodeInLoopSize", u"ByteCodeSize", u"IsJitted", u"IsUsed", u"NativeCodeSize");
 
                 this->MapFunction([&](FunctionBody* body)
                 {
@@ -5869,15 +5869,15 @@ ScriptContext::GetJitFuncRangeCache()
                             char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
                             char rejit = entryPointIndex > 0 ? '*' : ' ';
                             isNativeCode = entryPoint->IsNativeCode() | isNativeCode;
-                            OUTPUT_VERBOSE_STATS(Js::BGJitPhase, _u("%-20s %16s %c, %8d , %10d , %10d, %-10s, %-10s, %10d\n"),
+                            OUTPUT_VERBOSE_STATS(Js::BGJitPhase, u"%-20s %16s %c, %8d , %10d , %10d, %-10s, %-10s, %10d\n",
                                 body->GetExternalDisplayName(),
                                 body->GetDebugNumberSet(debugStringBuffer),
                                 rejit,
                                 body->GetInterpretedCount(),
                                 body->GetByteCodeInLoopCount(),
                                 body->GetByteCodeCount(),
-                                entryPoint->IsNativeCode() ? _u("Jitted") : _u("Interpreted"),
-                                body->GetNativeEntryPointUsed() ? _u("Used") : _u("NotUsed"),
+                                entryPoint->IsNativeCode() ? u"Jitted" : u"Interpreted",
+                                body->GetNativeEntryPointUsed() ? u"Used" : u"NotUsed",
                                 entryPoint->IsNativeCode() ? entryPoint->GetCodeSize() : 0);
                         });
                     }
@@ -5939,15 +5939,15 @@ ScriptContext::GetJitFuncRangeCache()
                             {
                                 char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
                                 char rejit = index > 0 ? '*' : ' ';
-                                OUTPUT_VERBOSE_STATS(Js::BGJitPhase, _u("%-20s %16s %c, %8d , %10d , %10d, %-10s, %-10s, %10d\n"),
+                                OUTPUT_VERBOSE_STATS(Js::BGJitPhase, u"%-20s %16s %c, %8d , %10d , %10d, %-10s, %-10s, %10d\n",
                                     loopBodyName,
                                     body->GetDebugNumberSet(debugStringBuffer),
                                     rejit,
                                     header->interpretCount,
                                     header->GetByteCodeCount(),
                                     header->GetByteCodeCount(),
-                                    _u("Jitted"),
-                                    entryPoint->IsUsed() ? _u("Used") : _u("NotUsed"),
+                                    u"Jitted",
+                                    entryPoint->IsUsed() ? u"Used" : u"NotUsed",
                                     entryPoint->GetCodeSize());
                                 if (entryPoint->IsUsed())
                                 {
@@ -5959,14 +5959,14 @@ ScriptContext::GetJitFuncRangeCache()
                 });
             }
 
-            Output::Print(_u("**  SpeculativelyJitted: %6d FunctionsJitted: %6d JittedUsed: %6d Usage:%f ByteCodesJitted: %6d JitCodeUsed: %6d Usage: %f \n"),
+            Output::Print(u"**  SpeculativelyJitted: %6d FunctionsJitted: %6d JittedUsed: %6d Usage:%f ByteCodesJitted: %6d JitCodeUsed: %6d Usage: %f \n",
                 speculativeJitCount, funcJITCount, funcJitCodeUsed, ((float)(funcJitCodeUsed) / funcJITCount) * 100, bytecodeJITCount, jitCodeUsed, ((float)(jitCodeUsed) / bytecodeJITCount) * 100);
-            Output::Print(_u("** LoopJITCount: %6d LoopJitCodeUsed: %6d Usage: %f\n"),
+            Output::Print(u"** LoopJITCount: %6d LoopJitCodeUsed: %6d Usage: %f\n",
                 loopJITCount, loopJitCodeUsed, ((float)loopJitCodeUsed / loopJITCount) * 100);
-            Output::Print(_u("** TotalInterpretedCalls: %6d MaxFuncInterp: %6d  InterpretedHighPri: %6d \n"),
+            Output::Print(u"** TotalInterpretedCalls: %6d MaxFuncInterp: %6d  InterpretedHighPri: %6d \n",
                 interpretedCount, maxFuncInterpret, interpretedCallsHighPri);
-            Output::Print(_u("** ZeroInterpretedFunctions: %6d OneInterpretedFunctions: %6d ZeroInterpretedWithNonZeroBytecode: %6d \n "), zeroInterpretedFunctions, oneInterpretedFunctions, nonZeroBytecodeFunctions);
-            Output::Print(_u("** %-24s : %-10s %-10s %-10s %-10s %-10s\n"), _u("InterpretedCounts"), _u("Total"), _u("NativeCode"), _u("Used"), _u("Usage"), _u("Rejits"));
+            Output::Print(u"** ZeroInterpretedFunctions: %6d OneInterpretedFunctions: %6d ZeroInterpretedWithNonZeroBytecode: %6d \n ", zeroInterpretedFunctions, oneInterpretedFunctions, nonZeroBytecodeFunctions);
+            Output::Print(u"** %-24s : %-10s %-10s %-10s %-10s %-10s\n", u"InterpretedCounts", u"Total", u"NativeCode", u"Used", u"Usage", u"Rejits");
             uint low = 0;
             uint high = 0;
             for (uint i = 0; i < _countof(totalBuckets); i++)
@@ -5983,9 +5983,9 @@ ScriptContext::GetJitFuncRangeCache()
                 {
                     high = 100000;
                 }
-                Output::Print(_u("** %10d - %10d : %10d %10d %10d %7.2f %10d\n"), low, high, totalBuckets[i], nativeCodeBuckets[i], usedNativeCodeBuckets[i], ((float)usedNativeCodeBuckets[i] / nativeCodeBuckets[i]) * 100, rejits[i]);
+                Output::Print(u"** %10d - %10d : %10d %10d %10d %7.2f %10d\n", low, high, totalBuckets[i], nativeCodeBuckets[i], usedNativeCodeBuckets[i], ((float)usedNativeCodeBuckets[i] / nativeCodeBuckets[i]) * 100, rejits[i]);
             }
-            Output::Print(_u("\n\n"));
+            Output::Print(u"\n\n");
         }
 #undef MAX_BUCKETS
 #endif
@@ -5998,41 +5998,41 @@ ScriptContext::GetJitFuncRangeCache()
             char16_t buf[256];
 
             // Dump bailout data.
-            Output::Print(_u("%-40s %6s\n"), _u("Bailout Reason,"), _u("Count"));
+            Output::Print(u"%-40s %6s\n", u"Bailout Reason,", u"Count");
 
             bailoutReasonCounts->Map([&totalBailouts](uint kind, uint val) {
                 char16_t buf[256];
                 totalBailouts += val;
                 if (val != 0)
                 {
-                    swprintf_s(buf, _u("%S,"), GetBailOutKindName((IR::BailOutKind)kind));
-                    Output::Print(_u("%-40s %6d\n"), buf, val);
+                    swprintf_s(buf, u"%S,", GetBailOutKindName((IR::BailOutKind)kind));
+                    Output::Print(u"%-40s %6d\n", buf, val);
                 }
             });
 
 
-            Output::Print(_u("%-40s %6d\n"), _u("TOTAL,"), totalBailouts);
-            Output::Print(_u("\n\n"));
+            Output::Print(u"%-40s %6d\n", u"TOTAL,", totalBailouts);
+            Output::Print(u"\n\n");
 
             // Dump rejit data.
-            Output::Print(_u("%-40s %6s\n"), _u("Rejit Reason,"), _u("Count"));
+            Output::Print(u"%-40s %6s\n", u"Rejit Reason,", u"Count");
             for (uint i = 0; i < NumRejitReasons; ++i)
             {
                 totalRejits += rejitReasonCounts[i];
                 if (rejitReasonCounts[i] != 0)
                 {
-                    swprintf_s(buf, _u("%S,"), RejitReasonNames[i]);
-                    Output::Print(_u("%-40s %6d\n"), buf, rejitReasonCounts[i]);
+                    swprintf_s(buf, u"%S,", RejitReasonNames[i]);
+                    Output::Print(u"%-40s %6d\n", buf, rejitReasonCounts[i]);
                 }
             }
-            Output::Print(_u("%-40s %6d\n"), _u("TOTAL,"), totalRejits);
-            Output::Print(_u("\n\n"));
+            Output::Print(u"%-40s %6d\n", u"TOTAL,", totalRejits);
+            Output::Print(u"\n\n");
 
             // If in verbose mode, dump data for each FunctionBody
             if (CONFIG_FLAG(Verbose) && rejitStatsMap != nullptr)
             {
                 // Aggregated data
-                Output::Print(_u("%-30s %14s %14s\n"), _u("Function (#),"), _u("Bailout Count,"), _u("Rejit Count"));
+                Output::Print(u"%-30s %14s %14s\n", u"Function (#),", u"Bailout Count,", u"Rejit Count");
                 rejitStatsMap->Map([](Js::FunctionBody const *body, RejitStats *stats, RecyclerWeakReference<const Js::FunctionBody> const*) {
                     char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
                     for (uint i = 0; i < NumRejitReasons; ++i)
@@ -6044,49 +6044,49 @@ ScriptContext::GetJitFuncRangeCache()
 
                     char16_t buf[256];
 
-                    swprintf_s(buf, _u("%s (%s),"), body->GetExternalDisplayName(), (const_cast<Js::FunctionBody*>(body))->GetDebugNumberSet(debugStringBuffer)); //TODO Kount
-                    Output::Print(_u("%-30s %14d, %14d\n"), buf, stats->m_totalBailouts, stats->m_totalRejits);
+                    swprintf_s(buf, u"%s (%s),", body->GetExternalDisplayName(), (const_cast<Js::FunctionBody*>(body))->GetDebugNumberSet(debugStringBuffer)); //TODO Kount
+                    Output::Print(u"%-30s %14d, %14d\n", buf, stats->m_totalBailouts, stats->m_totalRejits);
 
                 });
-                Output::Print(_u("\n\n"));
+                Output::Print(u"\n\n");
 
                 // Per FunctionBody data
                 rejitStatsMap->Map([](Js::FunctionBody const *body, RejitStats *stats, RecyclerWeakReference<const Js::FunctionBody> const *) {
                     char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
                     char16_t buf[256];
 
-                    swprintf_s(buf, _u("%s (%s),"), body->GetExternalDisplayName(), (const_cast<Js::FunctionBody*>(body))->GetDebugNumberSet(debugStringBuffer)); //TODO Kount
-                    Output::Print(_u("%-30s\n\n"), buf);
+                    swprintf_s(buf, u"%s (%s),", body->GetExternalDisplayName(), (const_cast<Js::FunctionBody*>(body))->GetDebugNumberSet(debugStringBuffer)); //TODO Kount
+                    Output::Print(u"%-30s\n\n", buf);
 
                     // Dump bailout data
                     if (stats->m_totalBailouts != 0)
                     {
-                        Output::Print(_u("%10sBailouts:\n"), _u(""));
+                        Output::Print(u"%10sBailouts:\n", u"");
 
                         stats->m_bailoutReasonCounts->Map([](uint kind, uint val) {
                             if (val != 0)
                             {
                                 char16_t buf[256];
-                                swprintf_s(buf, _u("%S,"), GetBailOutKindName((IR::BailOutKind)kind));
-                                Output::Print(_u("%10s%-40s %6d\n"), _u(""), buf, val);
+                                swprintf_s(buf, u"%S,", GetBailOutKindName((IR::BailOutKind)kind));
+                                Output::Print(u"%10s%-40s %6d\n", u"", buf, val);
                             }
                         });
                     }
-                    Output::Print(_u("\n"));
+                    Output::Print(u"\n");
 
                     // Dump rejit data.
                     if (stats->m_totalRejits != 0)
                     {
-                        Output::Print(_u("%10sRejits:\n"), _u(""));
+                        Output::Print(u"%10sRejits:\n", u"");
                         for (uint i = 0; i < NumRejitReasons; ++i)
                         {
                             if (stats->m_rejitReasonCounts[i] != 0)
                             {
-                                swprintf_s(buf, _u("%S,"), RejitReasonNames[i]);
-                                Output::Print(_u("%10s%-40s %6d\n"), _u(""), buf, stats->m_rejitReasonCounts[i]);
+                                swprintf_s(buf, u"%S,", RejitReasonNames[i]);
+                                Output::Print(u"%10s%-40s %6d\n", u"", buf, stats->m_rejitReasonCounts[i]);
                             }
                         }
-                        Output::Print(_u("\n\n"));
+                        Output::Print(u"\n\n");
                     }
                 });
 
@@ -6114,12 +6114,12 @@ ScriptContext::GetJitFuncRangeCache()
                 if (PHASE_VERBOSE_STATS1(Js::ObjTypeSpecPhase))
                 {
                     FunctionBody* functionBody = entry->functionBodyWeakRef->Get();
-                    const char16_t* functionName = functionBody != nullptr ? functionBody->GetDisplayName() : _u("<unknown>");
-                    Output::Print(_u("FieldAccessStats: function %s (#%u): inline cache stats:\n"), functionName, functionNumber);
-                    Output::Print(_u("    overall: total %u, no profile info %u\n"), functionStats.totalInlineCacheCount, functionStats.noInfoInlineCacheCount);
-                    Output::Print(_u("    mono: total %u, empty %u, cloned %u\n"),
+                    const char16_t* functionName = functionBody != nullptr ? functionBody->GetDisplayName() : u"<unknown>";
+                    Output::Print(u"FieldAccessStats: function %s (#%u): inline cache stats:\n", functionName, functionNumber);
+                    Output::Print(u"    overall: total %u, no profile info %u\n", functionStats.totalInlineCacheCount, functionStats.noInfoInlineCacheCount);
+                    Output::Print(u"    mono: total %u, empty %u, cloned %u\n",
                         functionStats.monoInlineCacheCount, functionStats.emptyMonoInlineCacheCount, functionStats.clonedMonoInlineCacheCount);
-                    Output::Print(_u("    poly: total %u (high %u, low %u), null %u, empty %u, ignored %u, disabled %u, equivalent %u, non-equivalent %u, cloned %u\n"),
+                    Output::Print(u"    poly: total %u (high %u, low %u), null %u, empty %u, ignored %u, disabled %u, equivalent %u, non-equivalent %u, cloned %u\n",
                         functionStats.polyInlineCacheCount, functionStats.highUtilPolyInlineCacheCount, functionStats.lowUtilPolyInlineCacheCount,
                         functionStats.nullPolyInlineCacheCount, functionStats.emptyPolyInlineCacheCount, functionStats.ignoredPolyInlineCacheCount, functionStats.disabledPolyInlineCacheCount,
                         functionStats.equivPolyInlineCacheCount, functionStats.nonEquivPolyInlineCacheCount, functionStats.clonedPolyInlineCacheCount);
@@ -6129,11 +6129,11 @@ ScriptContext::GetJitFuncRangeCache()
             });
         }
 
-        Output::Print(_u("FieldAccessStats: totals\n"));
-        Output::Print(_u("    overall: total %u, no profile info %u\n"), globalStats.totalInlineCacheCount, globalStats.noInfoInlineCacheCount);
-        Output::Print(_u("    mono: total %u, empty %u, cloned %u\n"),
+        Output::Print(u"FieldAccessStats: totals\n");
+        Output::Print(u"    overall: total %u, no profile info %u\n", globalStats.totalInlineCacheCount, globalStats.noInfoInlineCacheCount);
+        Output::Print(u"    mono: total %u, empty %u, cloned %u\n",
             globalStats.monoInlineCacheCount, globalStats.emptyMonoInlineCacheCount, globalStats.clonedMonoInlineCacheCount);
-        Output::Print(_u("    poly: total %u (high %u, low %u), null %u, empty %u, ignored %u, disabled %u, equivalent %u, non-equivalent %u, cloned %u\n"),
+        Output::Print(u"    poly: total %u (high %u, low %u), null %u, empty %u, ignored %u, disabled %u, equivalent %u, non-equivalent %u, cloned %u\n",
             globalStats.polyInlineCacheCount, globalStats.highUtilPolyInlineCacheCount, globalStats.lowUtilPolyInlineCacheCount,
             globalStats.nullPolyInlineCacheCount, globalStats.emptyPolyInlineCacheCount, globalStats.ignoredPolyInlineCacheCount, globalStats.disabledPolyInlineCacheCount,
             globalStats.equivPolyInlineCacheCount, globalStats.nonEquivPolyInlineCacheCount, globalStats.clonedPolyInlineCacheCount);
@@ -6143,7 +6143,7 @@ ScriptContext::GetJitFuncRangeCache()
 #ifdef MISSING_PROPERTY_STATS
     if (PHASE_STATS1(Js::MissingPropertyCachePhase))
     {
-        Output::Print(_u("MissingPropertyStats: hits = %d, misses = %d, cache attempts = %d.\n"),
+        Output::Print(u"MissingPropertyStats: hits = %d, misses = %d, cache attempts = %d.\n",
             this->missingPropertyHits, this->missingPropertyMisses, this->missingPropertyCacheAttempts);
     }
 #endif
@@ -6152,7 +6152,7 @@ ScriptContext::GetJitFuncRangeCache()
 #ifdef INLINE_CACHE_STATS
         if (PHASE_STATS1(Js::PolymorphicInlineCachePhase))
         {
-            Output::Print(_u("%s,%s,%s,%s,%s,%s,%s,%s,%s\n"), _u("Function"), _u("Property"), _u("Kind"), _u("Accesses"), _u("Misses"), _u("Miss Rate"), _u("Collisions"), _u("Collision Rate"), _u("Slot Count"));
+            Output::Print(u"%s,%s,%s,%s,%s,%s,%s,%s,%s\n", u"Function", u"Property", u"Kind", u"Accesses", u"Misses", u"Miss Rate", u"Collisions", u"Collision Rate", u"Slot Count");
             cacheDataMap->Map([this](Js::PolymorphicInlineCache const *cache, InlineCacheData *data) {
                 cache->PrintStats(data);
             });
@@ -6163,11 +6163,11 @@ ScriptContext::GetJitFuncRangeCache()
         if (regexStatsDatabase != 0)
             regexStatsDatabase->Print(GetRegexDebugWriter());
 #endif
-        OUTPUT_STATS(Js::EmitterPhase, _u("Script Context: 0x%p Url: %s\n"), this, this->url);
-        OUTPUT_STATS(Js::EmitterPhase, _u("  Total thread committed code size = %d\n"), this->GetThreadContext()->GetCodeSize());
+        OUTPUT_STATS(Js::EmitterPhase, u"Script Context: 0x%p Url: %s\n", this, this->url);
+        OUTPUT_STATS(Js::EmitterPhase, u"  Total thread committed code size = %d\n", this->GetThreadContext()->GetCodeSize());
 
-        OUTPUT_STATS(Js::ParsePhase, _u("Script Context: 0x%p Url: %s\n"), this, this->url);
-        OUTPUT_STATS(Js::ParsePhase, _u("  Total ThreadContext source size %d\n"), this->GetThreadContext()->GetSourceSize());
+        OUTPUT_STATS(Js::ParsePhase, u"Script Context: 0x%p Url: %s\n", this, this->url);
+        OUTPUT_STATS(Js::ParsePhase, u"  Total ThreadContext source size %d\n", this->GetThreadContext()->GetSourceSize());
 #endif
 
         Output::Flush();
@@ -6509,7 +6509,7 @@ ScriptContext::GetJitFuncRangeCache()
         }
 
         Assert(EventEnabledJSCRIPT_STACKTRACE() || EventEnabledJSCRIPT_ASYNCCAUSALITY_STACKTRACE_V2() || PHASE_TRACE1(Js::StackFramesEventPhase));
-        BEGIN_TEMP_ALLOCATOR(tempAllocator, this, _u("StackTraceEvent"))
+        BEGIN_TEMP_ALLOCATOR(tempAllocator, this, u"StackTraceEvent")
         {
             JsUtil::List<StackFrameInfo, ArenaAllocator> stackFrames(tempAllocator);
             Js::JavascriptStackWalker walker(this);
@@ -6517,7 +6517,7 @@ ScriptContext::GetJitFuncRangeCache()
             Js::StringBuilder<ArenaAllocator> nameBuffer(tempAllocator);
             nameBuffer.Reset();
 
-            OUTPUT_TRACE(Js::StackFramesEventPhase, _u("Posting stack trace via ETW:\n"));
+            OUTPUT_TRACE(Js::StackFramesEventPhase, u"Posting stack trace via ETW:\n");
 
             ushort frameCount = walker.WalkUntil((ushort)maxFrameCount, [&](Js::JavascriptFunction* function, ushort frameIndex) -> bool
             {
@@ -6560,7 +6560,7 @@ ScriptContext::GetJitFuncRangeCache()
                     methodIdOrNameId,
                     isFrameIndex);
 
-                OUTPUT_TRACE(Js::StackFramesEventPhase, _u("Frame : Name : %s, LineNumber : %u, ColumnNumber : %u\n"), name, lineNumber, columnNumber);
+                OUTPUT_TRACE(Js::StackFramesEventPhase, u"Frame : Name : %s, LineNumber : %u, ColumnNumber : %u\n", name, lineNumber, columnNumber);
 
                 stackFrames.Add(frame);
 

@@ -33,18 +33,18 @@ namespace Js
         Var newTarget = args.GetNewTarget();
         bool isCtorSuperCall = JavascriptOperators::GetAndAssertIsConstructorSuperCall(args);
 
-        AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, _u("Promise"));
+        AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, u"Promise");
 
         // 1. If NewTarget is undefined, throw a TypeError exception.
         if ((callInfo.Flags & CallFlags_New) != CallFlags_New || (newTarget != nullptr && JavascriptOperators::IsUndefined(newTarget)))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_ClassConstructorCannotBeCalledWithoutNew, _u("Promise"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_ClassConstructorCannotBeCalledWithoutNew, u"Promise");
         }
 
         // 2. If IsCallable(executor) is false, throw a TypeError exception.
         if (args.Info.Count < 2 || !JavascriptConversion::IsCallable(args[1]))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedFunction, _u("Promise"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedFunction, u"Promise");
         }
         RecyclableObject* executor = VarTo<RecyclableObject>(args[1]);
 
@@ -118,14 +118,14 @@ namespace Js
 
     BOOL JavascriptPromise::GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
     {
-        stringBuilder->AppendCppLiteral(_u("[...]"));
+        stringBuilder->AppendCppLiteral(u"[...]");
 
         return TRUE;
     }
 
     BOOL JavascriptPromise::GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
     {
-        stringBuilder->AppendCppLiteral(_u("Promise"));
+        stringBuilder->AppendCppLiteral(u"Promise");
         return TRUE;
     }
 
@@ -143,7 +143,7 @@ namespace Js
 
         ScriptContext* scriptContext = function->GetScriptContext();
 
-        AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, _u("Promise.all"));
+        AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, u"Promise.all");
 
         // 1. Let C be the this value.
         Var constructor = args[0];
@@ -151,7 +151,7 @@ namespace Js
         // 2. If Type(C) is not Object, throw a TypeError exception.
         if (!JavascriptOperators::IsObject(constructor))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedObject, _u("Promise.all"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedObject, u"Promise.all");
         }
 
         JavascriptLibrary* library = scriptContext->GetLibrary();
@@ -274,7 +274,7 @@ namespace Js
 
         ScriptContext* scriptContext = function->GetScriptContext();
 
-        AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, _u("Promise.any"));
+        AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, u"Promise.any");
 
         // 1. Let C be the this value.
         Var C = args[0];
@@ -392,7 +392,7 @@ namespace Js
                 // 7.d.iii.1 Let error be a newly created AggregateError object.
                 JavascriptError* pError = library->CreateAggregateError();
                 JavascriptError::SetErrorsList(pError, errors, scriptContext);
-                JavascriptError::SetErrorMessage(pError, JSERR_PromiseAllRejected, _u(""), scriptContext);
+                JavascriptError::SetErrorMessage(pError, JSERR_PromiseAllRejected, u"", scriptContext);
                 JavascriptExceptionOperators::Throw(pError, scriptContext);
             }
         }
@@ -455,7 +455,7 @@ namespace Js
             JavascriptError* pError = library->CreateAggregateError();
             // b. Perform ! DefinePropertyOrThrow(error, "errors", Property Descriptor { [[Configurable]]: true, [[Enumerable]]: false, [[Writable]]: true, [[Value]]: ! CreateArrayFromList(errors) }).
             JavascriptError::SetErrorsList(pError, errors, scriptContext);
-            JavascriptError::SetErrorMessage(pError, JSERR_PromiseAllRejected, _u(""), scriptContext);
+            JavascriptError::SetErrorMessage(pError, JSERR_PromiseAllRejected, u"", scriptContext);
 
             // c. Return ? Call(promiseCapability.[[Reject]], undefined, << error >> ).
             return TryCallResolveOrRejectHandler(promiseCapability->GetReject(), pError, scriptContext);
@@ -472,7 +472,7 @@ namespace Js
 
         ScriptContext* scriptContext = function->GetScriptContext();
 
-        AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, _u("Promise.allSettled"));
+        AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, u"Promise.allSettled");
 
         // 1. Let C be the this value.
         Var constructor = args[0];
@@ -480,7 +480,7 @@ namespace Js
         // 2. If Type(C) is not Object, throw a TypeError exception.
         if (!JavascriptOperators::IsObject(constructor))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedObject, _u("Promise.allSettled"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedObject, u"Promise.allSettled");
         }
 
         JavascriptLibrary* library = scriptContext->GetLibrary();
@@ -608,20 +608,20 @@ namespace Js
 
         ScriptContext* scriptContext = function->GetScriptContext();
 
-        AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, _u("Promise.prototype.catch"));
+        AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, u"Promise.prototype.catch");
 
         RecyclableObject* promise;
 
         if (!JavascriptConversion::ToObject(args[0], scriptContext, &promise))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedObject, _u("Promise.prototype.catch"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedObject, u"Promise.prototype.catch");
         }
 
         Var funcVar = JavascriptOperators::GetProperty(promise, Js::PropertyIds::then, scriptContext);
 
         if (!JavascriptConversion::IsCallable(funcVar))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedFunction, _u("Promise.prototype.catch"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedFunction, u"Promise.prototype.catch");
         }
 
         Var onRejected;
@@ -658,7 +658,7 @@ namespace Js
 
         ScriptContext* scriptContext = function->GetScriptContext();
 
-        AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, _u("Promise.race"));
+        AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, u"Promise.race");
 
         // 1. Let C be the this value.
         Var constructor = args[0];
@@ -666,7 +666,7 @@ namespace Js
         // 2. If Type(C) is not Object, throw a TypeError exception.
         if (!JavascriptOperators::IsObject(constructor))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedObject, _u("Promise.race"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedObject, u"Promise.race");
         }
 
         Var undefinedVar = scriptContext->GetLibrary()->GetUndefined();
@@ -766,7 +766,7 @@ namespace Js
 
         ScriptContext* scriptContext = function->GetScriptContext();
 
-        AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, _u("Promise.reject"));
+        AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, u"Promise.reject");
 
         // 1. Let C be the this value.
         Var constructor = args[0];
@@ -774,7 +774,7 @@ namespace Js
         // 2. If Type(C) is not Object, throw a TypeError exception.
         if (!JavascriptOperators::IsObject(constructor))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedObject, _u("Promise.reject"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedObject, u"Promise.reject");
         }
 
         Var r;
@@ -803,7 +803,7 @@ namespace Js
 
         ScriptContext* scriptContext = function->GetScriptContext();
 
-        AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, _u("Promise.resolve"));
+        AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, u"Promise.resolve");
 
         Var x;
 
@@ -813,7 +813,7 @@ namespace Js
         // 2. If Type(C) is not Object, throw a TypeError exception.
         if (!JavascriptOperators::IsObject(constructor))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedObject, _u("Promise.resolve"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedObject, u"Promise.resolve");
         }
 
         if (args.Info.Count > 1)
@@ -864,11 +864,11 @@ namespace Js
 
         ScriptContext* scriptContext = function->GetScriptContext();
 
-        AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, _u("Promise.prototype.then"));
+        AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, u"Promise.prototype.then");
 
         if (args.Info.Count < 1 || !VarIs<JavascriptPromise>(args[0]))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedPromise, _u("Promise.prototype.then"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedPromise, u"Promise.prototype.then");
         }
 
         JavascriptLibrary* library = scriptContext->GetLibrary();
@@ -906,12 +906,12 @@ namespace Js
 
         ScriptContext* scriptContext = function->GetScriptContext();
 
-        AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, _u("Promise.prototype.finally"));
+        AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, u"Promise.prototype.finally");
         // 1. Let promise be the this value
         // 2. If Type(promise) is not Object, throw a TypeError exception
         if (args.Info.Count < 1 || !JavascriptOperators::IsObject(args[0]))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedObject, _u("Promise.prototype.finally"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedObject, u"Promise.prototype.finally");
         }
 
         JavascriptLibrary* library = scriptContext->GetLibrary();
@@ -959,7 +959,7 @@ namespace Js
         Var funcVar = JavascriptOperators::GetProperty(promise, Js::PropertyIds::then, scriptContext);
         if (!JavascriptConversion::IsCallable(funcVar))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedFunction, _u("Promise.prototype.finally"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedFunction, u"Promise.prototype.finally");
         }
         RecyclableObject* func = UnsafeVarTo<RecyclableObject>(funcVar);
 
@@ -1031,7 +1031,7 @@ namespace Js
 
         if (!JavascriptConversion::IsCallable(funcVar))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedFunction, _u("Promise.prototype.finally"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedFunction, u"Promise.prototype.finally");
         }
 
         RecyclableObject* func = VarTo<RecyclableObject>(funcVar);
@@ -1124,7 +1124,7 @@ namespace Js
             if (JavascriptConversion::SameValue(resolution, this))
             {
                 JavascriptError* selfResolutionError = scriptContext->GetLibrary()->CreateTypeError();
-                JavascriptError::SetErrorMessage(selfResolutionError, JSERR_PromiseSelfResolution, _u(""), scriptContext);
+                JavascriptError::SetErrorMessage(selfResolutionError, JSERR_PromiseSelfResolution, u"", scriptContext);
 
                 resolution = selfResolutionError;
                 isRejecting = true;
@@ -1220,7 +1220,7 @@ namespace Js
 
         if (!JavascriptOperators::IsUndefined(promiseCapability->GetResolve()) || !JavascriptOperators::IsUndefined(promiseCapability->GetReject()))
         {
-            JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_UnexpectedMetadataFailure, _u("Promise"));
+            JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_UnexpectedMetadataFailure, u"Promise");
         }
 
         promiseCapability->SetResolve(resolve);
@@ -1884,7 +1884,7 @@ namespace Js
 
         if (!JavascriptConversion::IsCallable(promiseCapability->GetResolve()) || !JavascriptConversion::IsCallable(promiseCapability->GetReject()))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_NeedFunction, _u("Promise"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_NeedFunction, u"Promise");
         }
 
         promiseCapability->SetPromise(promise);

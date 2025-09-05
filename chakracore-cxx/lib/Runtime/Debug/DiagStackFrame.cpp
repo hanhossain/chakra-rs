@@ -224,7 +224,7 @@ namespace Js
                         pCurrentFuncBody->SetIsNonUserCode(true);
                     }
                 }
-                OUTPUT_TRACE(Js::ConsoleScopePhase, _u("EvaluateImmediate strict = %d, libraryCode = %d, source = '%s'\n"),
+                OUTPUT_TRACE(Js::ConsoleScopePhase, u"EvaluateImmediate strict = %d, libraryCode = %d, source = '%s'\n",
                     this->IsStrictMode(), isLibraryCode, source);
                 resolvedObject->obj = this->DoEval(pfuncScript);
             }
@@ -242,15 +242,15 @@ namespace Js
         {
             if (Js::Constants::NoProperty == debugManager->mutationNewValuePid)
             {
-                debugManager->mutationNewValuePid = scriptContext->GetOrAddPropertyIdTracked(_u("$newValue$"), 10);
+                debugManager->mutationNewValuePid = scriptContext->GetOrAddPropertyIdTracked(u"$newValue$", 10);
             }
             if (Js::Constants::NoProperty == debugManager->mutationPropertyNamePid)
             {
-                debugManager->mutationPropertyNamePid = scriptContext->GetOrAddPropertyIdTracked(_u("$propertyName$"), 14);
+                debugManager->mutationPropertyNamePid = scriptContext->GetOrAddPropertyIdTracked(u"$propertyName$", 14);
             }
             if (Js::Constants::NoProperty == debugManager->mutationTypePid)
             {
-                debugManager->mutationTypePid = scriptContext->GetOrAddPropertyIdTracked(_u("$mutationType$"), 14);
+                debugManager->mutationTypePid = scriptContext->GetOrAddPropertyIdTracked(u"$mutationType$", 14);
             }
 
             AssertMsg(debugManager->mutationNewValuePid != Js::Constants::NoProperty, "Should have a valid mutationNewValuePid");
@@ -506,7 +506,7 @@ namespace Js
         {
             AssertMsg(FALSE, "Failed to get entry point for native address. Most likely the frame is old/gone.");
         }
-        OUTPUT_TRACE(Js::DebuggerPhase, _u("DiagNativeStackFrame::DiagNativeStackFrame: e.p(addr %p)=%p varOff=%d changedOff=%d\n"), codeAddr, entryPointInfo, m_localVarSlotsOffset, m_localVarChangedOffset);
+        OUTPUT_TRACE(Js::DebuggerPhase, u"DiagNativeStackFrame::DiagNativeStackFrame: e.p(addr %p)=%p varOff=%d changedOff=%d\n", codeAddr, entryPointInfo, m_localVarSlotsOffset, m_localVarChangedOffset);
     }
 
     JavascriptFunction* DiagNativeStackFrame::GetJavascriptFunction()

@@ -165,7 +165,7 @@ void TestObject::CreateFalseReferenceRandom(TestObject *val)
 StressTester::StressTester(Recycler *_recycler) : recycler(_recycler)
 {
     uint seed = (uint)time(NULL);
-    Output::Print(_u("Random seed: %u\n"), seed);
+    Output::Print(u"Random seed: %u\n", seed);
     srand(seed);
 }
 

@@ -122,7 +122,7 @@ namespace Js
         Assert(!allocator);
         Assert(!stack);
 
-        allocator = scriptContext->GetTemporaryAllocator(_u("StringCopyInfoStack"));
+        allocator = scriptContext->GetTemporaryAllocator(u"StringCopyInfoStack");
         Assert(allocator);
         stack = LargeStack<StringCopyInfo>::New(allocator->GetAllocator());
         Assert(stack);

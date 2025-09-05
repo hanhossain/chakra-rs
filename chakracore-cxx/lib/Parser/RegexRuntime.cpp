@@ -15,15 +15,15 @@ namespace UnifiedRegex
     {
         if (upper != CharCountFlag && lower == (CharCount)upper)
         {
-            w->Print(_u("[%u]"), lower);
+            w->Print(u"[%u]", lower);
         }
         else
         {
-            w->Print(_u("[%u-"), lower);
+            w->Print(u"[%u-", lower);
             if (upper == CharCountFlag)
-                w->Print(_u("inf]"));
+                w->Print(u"inf]");
             else
-                w->Print(_u("%u]"), (CharCount)upper);
+                w->Print(u"%u]", (CharCount)upper);
         }
     }
 #endif
@@ -74,7 +74,7 @@ namespace UnifiedRegex
         }
         if (w != 0)
         {
-            w->Print(_u("PUSH "));
+            w->Print(u"PUSH ");
             contStack.Top()->Print(w, input);
         }
     }
@@ -89,10 +89,10 @@ namespace UnifiedRegex
         {
             const Cont* top = contStack.Top();
             if (top == 0)
-                w->PrintEOL(_u("<empty stack>"));
+                w->PrintEOL(u"<empty stack>");
             else
             {
-                w->Print(_u("POP "));
+                w->Print(u"POP ");
                 top->Print(w, input);
             }
         }
@@ -108,10 +108,10 @@ namespace UnifiedRegex
         {
             const Cont* top = contStack.Top();
             if (top == 0)
-                w->PrintEOL(_u("<empty stack>"));
+                w->PrintEOL(u"<empty stack>");
             else
             {
-                w->Print(_u("UNPOP "));
+                w->Print(u"UNPOP ");
                 top->Print(w, input);
             }
         }
@@ -183,7 +183,7 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
             if (w != 0)
             {
-                w->PrintEOL(_u("CLEAR"));
+                w->PrintEOL(u"CLEAR");
             }
 #endif
             contStack.Clear();
@@ -212,7 +212,7 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
         if (w != 0)
         {
-            w->PrintEOL(_u("POP TO %llu"), (unsigned long long)info->contStackPosition);
+            w->PrintEOL(u"POP TO %llu", (unsigned long long)info->contStackPosition);
         }
 #endif
         contStack.PopTo(info->contStackPosition);
@@ -384,17 +384,17 @@ namespace UnifiedRegex
         size_t size = sizeof(*((T *)that));
         byte *endByte = startByte + size;
         byte *currentByte = startByte;
-        w->Print(_u("0x%p[+0x%03x](0x%03x) [%s]:"), startByte, offset, size, annotation);
+        w->Print(u"0x%p[+0x%03x](0x%03x) [%s]:", startByte, offset, size, annotation);
 
         for (; currentByte < endByte; ++currentByte)
         {
             if ((currentByte - endByte) % 4 == 0)
             {
-                w->Print(_u(" "), *currentByte);
+                w->Print(u" ", *currentByte);
             }
-            w->Print(_u("%02x"), *currentByte);
+            w->Print(u"%02x", *currentByte);
         }
-        w->PrintEOL(_u(""));
+        w->PrintEOL(u"");
     }
 
     template <>
@@ -409,16 +409,16 @@ namespace UnifiedRegex
         byte *startByte = (byte *)(&(start->tag));
         byte *endByte = startByte + size;
         byte *currentByte = startByte;
-        w->Print(_u("0x%p[+0x%03x](0x%03x) [%s]:"), startByte, offsetToData, size, annotation);
+        w->Print(u"0x%p[+0x%03x](0x%03x) [%s]:", startByte, offsetToData, size, annotation);
         for (; currentByte < endByte; ++currentByte)
         {
             if ((currentByte - endByte) % 4 == 0)
             {
-                w->Print(_u(" "), *currentByte);
+                w->Print(u" ", *currentByte);
             }
-            w->Print(_u("%02x"), *currentByte);
+            w->Print(u"%02x", *currentByte);
         }
-        w->PrintEOL(_u(""));
+        w->PrintEOL(u"");
     }
 
 #define PRINT_BYTES(InstType) \
@@ -435,19 +435,19 @@ namespace UnifiedRegex
 
 #define PRINT_MIXIN_COMMA(Mixin) \
     PRINT_MIXIN(Mixin); \
-    w->Print(_u(", "));
+    w->Print(u", ");
 
 #define PRINT_RE_BYTECODE_BEGIN(Name) \
-    w->Print(_u("L%04x: "), label); \
+    w->Print(u"L%04x: ", label); \
     if (REGEX_CONFIG_FLAG(RegexBytecodeDebug)) \
     { \
-        w->Print(_u("(0x%03x bytes) "), sizeof(*this)); \
+        w->Print(u"(0x%03x bytes) ", sizeof(*this)); \
     } \
     w->Print(_u(Name)); \
-    w->Print(_u("("));
+    w->Print(u"(");
 
 #define PRINT_RE_BYTECODE_MID() \
-    w->PrintEOL(_u(")")); \
+    w->PrintEOL(u")"); \
     if (REGEX_CONFIG_FLAG(RegexBytecodeDebug)) \
     { \
         w->Indent(); \
@@ -467,7 +467,7 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void BackupMixin::Print(DebugWriter* w, const char16_t* litbuf) const
     {
-        w->Print(_u("backup: "));
+        w->Print(u"backup: ");
         backup.Print(w);
     }
 #endif
@@ -475,7 +475,7 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void CharMixin::Print(DebugWriter* w, const char16_t* litbuf) const
     {
-        w->Print(_u("c: "));
+        w->Print(u"c: ");
         w->PrintQuotedChar(c);
     }
 #endif
@@ -483,9 +483,9 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void Char2Mixin::Print(DebugWriter* w, const char16_t* litbuf) const
     {
-        w->Print(_u("c0: "));
+        w->Print(u"c0: ");
         w->PrintQuotedChar(cs[0]);
-        w->Print(_u(", c1: "));
+        w->Print(u", c1: ");
         w->PrintQuotedChar(cs[1]);
     }
 #endif
@@ -493,11 +493,11 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void Char3Mixin::Print(DebugWriter* w, const char16_t* litbuf) const
     {
-        w->Print(_u("c0: "));
+        w->Print(u"c0: ");
         w->PrintQuotedChar(cs[0]);
-        w->Print(_u(", c1: "));
+        w->Print(u", c1: ");
         w->PrintQuotedChar(cs[1]);
-        w->Print(_u(", c2: "));
+        w->Print(u", c2: ");
         w->PrintQuotedChar(cs[2]);
     }
 #endif
@@ -505,13 +505,13 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void Char4Mixin::Print(DebugWriter* w, const char16_t* litbuf) const
     {
-        w->Print(_u("c0: "));
+        w->Print(u"c0: ");
         w->PrintQuotedChar(cs[0]);
-        w->Print(_u(", c1: "));
+        w->Print(u", c1: ");
         w->PrintQuotedChar(cs[1]);
-        w->Print(_u(", c2: "));
+        w->Print(u", c2: ");
         w->PrintQuotedChar(cs[2]);
-        w->Print(_u(", c3: "));
+        w->Print(u", c3: ");
         w->PrintQuotedChar(cs[3]);
     }
 #endif
@@ -521,12 +521,12 @@ namespace UnifiedRegex
     {
         if (isEquivClass)
         {
-            w->Print(_u("equivLiterals: "));
+            w->Print(u"equivLiterals: ");
             for (int i = 0; i < CaseInsensitive::EquivClassSize; i++)
             {
                 if (i > 0)
                 {
-                    w->Print(_u(", "));
+                    w->Print(u", ");
                 }
                 w->Print(_u("\""));
                 for (CharCount j = 0; j < length; j++)
@@ -538,7 +538,7 @@ namespace UnifiedRegex
         }
         else
         {
-            w->Print(_u("literal: "));
+            w->Print(u"literal: ");
             w->PrintQuotedString(litbuf + offset, length);
         }
     }
@@ -632,7 +632,7 @@ namespace UnifiedRegex
     void Char2LiteralScannerMixin::Print(DebugWriter* w, const char16_t * litbuf) const
     {
         Char2Mixin::Print(w, litbuf);
-        w->Print(_u(" (with two character literal scanner)"));
+        w->Print(u" (with two character literal scanner)");
     }
 #endif
 
@@ -668,7 +668,7 @@ namespace UnifiedRegex
     void ScannerMixinT<ScannerT>::Print(DebugWriter* w, const char16_t* litbuf, bool isEquivClass) const
     {
         LiteralMixin::Print(w, litbuf, isEquivClass);
-        w->Print(_u(" (with %s scanner)"), ScannerT::GetName());
+        w->Print(u" (with %s scanner)", ScannerT::GetName());
     }
 #endif
 
@@ -702,7 +702,7 @@ namespace UnifiedRegex
     void EquivScannerMixinT<lastPatCharEquivClassSize>::Print(DebugWriter* w, const char16_t* litbuf) const
     {
         __super::Print(w, litbuf, true);
-        w->Print(_u(" (last char equiv size:%d)"), lastPatCharEquivClassSize);
+        w->Print(u" (last char equiv size:%d)", lastPatCharEquivClassSize);
     }
 
     // explicit instantiation
@@ -743,16 +743,16 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void ScannersMixin::Print(DebugWriter* w, const char16_t* litbuf) const
     {
-        w->Print(_u("literals: {"));
+        w->Print(u"literals: {");
         for (int i = 0; i < numLiterals; i++)
         {
             if (i > 0)
             {
-                w->Print(_u(", "));
+                w->Print(u", ");
             }
             infos[i]->Print(w, litbuf);
         }
-        w->Print(_u("}"));
+        w->Print(u"}");
     }
 #endif
 
@@ -766,10 +766,10 @@ namespace UnifiedRegex
     template<bool IsNegation>
     void SetMixin<IsNegation>::Print(DebugWriter* w, const char16_t* litbuf) const
     {
-        w->Print(_u("set: "));
+        w->Print(u"set: ");
         if (IsNegation)
         {
-            w->Print(_u("not "));
+            w->Print(u"not ");
         }
         set.Print(w);
     }
@@ -778,7 +778,7 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void TrieMixin::Print(DebugWriter* w, const char16_t* litbuf) const
     {
-        w->PrintEOL(_u(""));
+        w->PrintEOL(u"");
         trie.Print(w);
     }
 #endif
@@ -786,14 +786,14 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void GroupMixin::Print(DebugWriter* w, const char16_t* litbuf) const
     {
-        w->Print(_u("groupId: %d"), groupId);
+        w->Print(u"groupId: %d", groupId);
     }
 #endif
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void ChompBoundedMixin::Print(DebugWriter* w, const char16_t* litbuf) const
     {
-        w->Print(_u("repeats: "));
+        w->Print(u"repeats: ");
         repeats.Print(w);
     }
 #endif
@@ -801,23 +801,23 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void JumpMixin::Print(DebugWriter* w, const char16_t* litbuf) const
     {
-        w->Print(_u("targetLabel: L%04x"), Inst::GetPrintLabel(targetLabel));
+        w->Print(u"targetLabel: L%04x", Inst::GetPrintLabel(targetLabel));
     }
 #endif
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void BodyGroupsMixin::Print(DebugWriter* w, const char16_t* litbuf) const
     {
-        w->Print(_u("minBodyGroupId: %d, maxBodyGroupId: %d"), minBodyGroupId, maxBodyGroupId);
+        w->Print(u"minBodyGroupId: %d, maxBodyGroupId: %d", minBodyGroupId, maxBodyGroupId);
     }
 #endif
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void BeginLoopBasicsMixin::Print(DebugWriter* w, const char16_t* litbuf) const
     {
-        w->Print(_u("loopId: %d, repeats: "), loopId);
+        w->Print(u"loopId: %d, repeats: ", loopId);
         repeats.Print(w);
-        w->Print(_u(", hasOuterLoops: %s"), hasOuterLoops ? _u("true") : _u("false"));
+        w->Print(u", hasOuterLoops: %s", hasOuterLoops ? u"true" : u"false");
     }
 #endif
 
@@ -825,80 +825,80 @@ namespace UnifiedRegex
     void BeginLoopMixin::Print(DebugWriter* w, const char16_t* litbuf) const
     {
         BeginLoopBasicsMixin::Print(w, litbuf);
-        w->Print(_u(", hasInnerNondet: %s, exitLabel: L%04x, "),
-            hasInnerNondet ? _u("true") : _u("false"), Inst::GetPrintLabel(exitLabel));
+        w->Print(u", hasInnerNondet: %s, exitLabel: L%04x, ",
+            hasInnerNondet ? u"true" : u"false", Inst::GetPrintLabel(exitLabel));
     }
 #endif
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void GreedyMixin::Print(DebugWriter* w, const char16_t* litbuf) const
     {
-        w->Print(_u("greedy: %s"), isGreedy ? _u("true") : _u("false"));
+        w->Print(u"greedy: %s", isGreedy ? u"true" : u"false");
     }
 #endif
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void RepeatLoopMixin::Print(DebugWriter* w, const char16_t* litbuf) const
     {
-        w->Print(_u("beginLabel: L%04x"), Inst::GetPrintLabel(beginLabel));
+        w->Print(u"beginLabel: L%04x", Inst::GetPrintLabel(beginLabel));
     }
 #endif
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void GreedyLoopNoBacktrackMixin::Print(DebugWriter* w, const char16_t* litbuf) const
     {
-        w->Print(_u("loopId: %d, exitLabel: L%04x"), loopId, exitLabel);
+        w->Print(u"loopId: %d, exitLabel: L%04x", loopId, exitLabel);
     }
 #endif
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void TryMixin::Print(DebugWriter* w, const char16_t* litbuf) const
     {
-        w->Print(_u("failLabel: L%04x"), Inst::GetPrintLabel(failLabel));
+        w->Print(u"failLabel: L%04x", Inst::GetPrintLabel(failLabel));
     }
 #endif
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void NegationMixin::Print(DebugWriter* w, const char16_t* litbuf) const
     {
-        w->Print(_u("isNegation: %s"), isNegation ? _u("true") : _u("false"));
+        w->Print(u"isNegation: %s", isNegation ? u"true" : u"false");
     }
 #endif
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void NextLabelMixin::Print(DebugWriter* w, const char16_t* litbuf) const
     {
-        w->Print(_u("nextLabel: L%04x"), Inst::GetPrintLabel(nextLabel));
+        w->Print(u"nextLabel: L%04x", Inst::GetPrintLabel(nextLabel));
     }
 #endif
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void FixedLengthMixin::Print(DebugWriter* w, const char16_t* litbuf) const
     {
-        w->Print(_u("length: %u"), length);
+        w->Print(u"length: %u", length);
     }
 #endif
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void FollowFirstMixin::Print(DebugWriter* w, const char16_t* litbuf) const
     {
-        w->Print(_u("followFirst: %c"), followFirst);
+        w->Print(u"followFirst: %c", followFirst);
     }
 #endif
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void NoNeedToSaveMixin::Print(DebugWriter* w, const char16_t* litbuf) const
     {
-        w->Print(_u("noNeedToSave: %s"), noNeedToSave ? _u("true") : _u("false"));
+        w->Print(u"noNeedToSave: %s", noNeedToSave ? u"true" : u"false");
     }
 #endif
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void SwitchCase::Print(DebugWriter* w) const
     {
-        w->Print(_u("case "));
+        w->Print(u"case ");
         w->PrintQuotedChar(c);
-        w->PrintEOL(_u(": Jump(L%04x)"), targetLabel);
+        w->PrintEOL(u": Jump(L%04x)", targetLabel);
     }
 #endif
 
@@ -1289,7 +1289,7 @@ namespace UnifiedRegex
             PRINT_RE_BYTECODE_BEGIN("BOITest");
         }
 
-        w->Print(_u("<hardFail>: %s"), canHardFail ? _u("true") : _u("false"));
+        w->Print(u"<hardFail>: %s", canHardFail ? u"true" : u"false");
 
         PRINT_RE_BYTECODE_MID();
         PRINT_RE_BYTECODE_END();
@@ -1337,7 +1337,7 @@ namespace UnifiedRegex
             PRINT_RE_BYTECODE_BEGIN("EOITest");
         }
 
-        w->Print(_u("<hardFail>: %s"), canHardFail ? _u("true") : _u("false"));
+        w->Print(u"<hardFail>: %s", canHardFail ? u"true" : u"false");
 
         PRINT_RE_BYTECODE_MID();
         PRINT_RE_BYTECODE_END();
@@ -4452,7 +4452,7 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void LoopInfo::Print(DebugWriter* w) const
     {
-        w->Print(_u("number: %u, startInputOffset: %u"), number, startInputOffset);
+        w->Print(u"number: %u, startInputOffset: %u", number, startInputOffset);
     }
 #endif
 
@@ -4469,12 +4469,12 @@ namespace UnifiedRegex
     {
         if (IsUndefined())
         {
-            w->Print(_u("<undefined> (%u)"), offset);
+            w->Print(u"<undefined> (%u)", offset);
         }
         else
         {
             w->PrintQuotedString(input + offset, (CharCount)length);
-            w->Print(_u(" (%u+%u)"), offset, (CharCount)length);
+            w->Print(u" (%u+%u)", offset, (CharCount)length);
         }
     }
 #endif
@@ -4482,7 +4482,7 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void AssertionInfo::Print(DebugWriter* w) const
     {
-        w->PrintEOL(_u("beginLabel: L%04x, startInputOffset: %u, contStackPosition: $llu"), beginLabel, startInputOffset, static_cast<unsigned long long>(contStackPosition));
+        w->PrintEOL(u"beginLabel: L%04x, startInputOffset: %u, contStackPosition: $llu", beginLabel, startInputOffset, static_cast<unsigned long long>(contStackPosition));
     }
 #endif
 
@@ -4500,7 +4500,7 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     int ResumeCont::Print(DebugWriter* w, const Char* const input) const
     {
-        w->PrintEOL(_u("Resume(origInputOffset: %u, origInstLabel: L%04x)"), origInputOffset, origInstLabel);
+        w->PrintEOL(u"Resume(origInputOffset: %u, origInstLabel: L%04x)", origInputOffset, origInstLabel);
         return sizeof(*this);
     }
 #endif
@@ -4533,9 +4533,9 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     int RestoreLoopCont::Print(DebugWriter* w, const Char* const input) const
     {
-        w->Print(_u("RestoreLoop(loopId: %d, "), loopId);
+        w->Print(u"RestoreLoop(loopId: %d, ", loopId);
         origLoopInfo.Print(w);
-        w->PrintEOL(_u(")"));
+        w->PrintEOL(u")");
         return sizeof(*this);
     }
 #endif
@@ -4553,9 +4553,9 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     int RestoreGroupCont::Print(DebugWriter* w, const Char* const input) const
     {
-        w->Print(_u("RestoreGroup(groupId: %d, "), groupId);
+        w->Print(u"RestoreGroup(groupId: %d, ", groupId);
         origGroupInfo.Print(w, input);
-        w->PrintEOL(_u(")"));
+        w->PrintEOL(u")");
         return sizeof(*this);
     }
 #endif
@@ -4573,7 +4573,7 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     int ResetGroupCont::Print(DebugWriter* w, const Char* const input) const
     {
-        w->PrintEOL(_u("ResetGroup(groupId: %d)"), groupId);
+        w->PrintEOL(u"ResetGroup(groupId: %d)", groupId);
         return sizeof(*this);
     }
 #endif
@@ -4591,7 +4591,7 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     int ResetGroupRangeCont::Print(DebugWriter* w, const Char* const input) const
     {
-        w->PrintEOL(_u("ResetGroupRange(fromGroupId: %d, toGroupId: %d)"), fromGroupId, toGroupId);
+        w->PrintEOL(u"ResetGroupRange(fromGroupId: %d, toGroupId: %d)", fromGroupId, toGroupId);
         return sizeof(*this);
     }
 #endif
@@ -4627,7 +4627,7 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     int RepeatLoopCont::Print(DebugWriter* w, const Char* const input) const
     {
-        w->PrintEOL(_u("RepeatLoop(beginLabel: L%04x, origInputOffset: %u)"), beginLabel, origInputOffset);
+        w->PrintEOL(u"RepeatLoop(beginLabel: L%04x, origInputOffset: %u)", beginLabel, origInputOffset);
         return sizeof(*this);
     }
 #endif
@@ -4654,7 +4654,7 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     int PopAssertionCont::Print(DebugWriter* w, const Char* const input) const
     {
-        w->PrintEOL(_u("PopAssertion()"));
+        w->PrintEOL(u"PopAssertion()");
         return sizeof(*this);
     }
 #endif
@@ -4704,7 +4704,7 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     int RewindLoopFixedCont::Print(DebugWriter* w, const Char* const input) const
     {
-        w->PrintEOL(_u("RewindLoopFixed(beginLabel: L%04x, tryingBody: %s)"), beginLabel, tryingBody ? _u("true") : _u("false"));
+        w->PrintEOL(u"RewindLoopFixed(beginLabel: L%04x, tryingBody: %s)", beginLabel, tryingBody ? u"true" : u"false");
         return sizeof(*this);
     }
 #endif
@@ -4745,7 +4745,7 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     int RewindLoopSetCont::Print(DebugWriter* w, const Char* const input) const
     {
-        w->PrintEOL(_u("RewindLoopSet(beginLabel: L%04x)"), beginLabel);
+        w->PrintEOL(u"RewindLoopSet(beginLabel: L%04x)", beginLabel);
         return sizeof(*this);
     }
 #endif
@@ -4822,7 +4822,7 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     int RewindLoopSetWithFollowFirstCont::Print(DebugWriter* w, const Char* const input) const
     {
-        w->PrintEOL(_u("RewindLoopSetWithFollowFirst(beginLabel: L%04x)"), beginLabel);
+        w->PrintEOL(u"RewindLoopSetWithFollowFirst(beginLabel: L%04x)", beginLabel);
         return sizeof(*this);
     }
 #endif
@@ -4884,7 +4884,7 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     int RewindLoopFixedGroupLastIterationCont::Print(DebugWriter* w, const Char* const input) const
     {
-        w->PrintEOL(_u("RewindLoopFixedGroupLastIteration(beginLabel: L%04x, tryingBody: %s)"), beginLabel, tryingBody ? _u("true") : _u("false"));
+        w->PrintEOL(u"RewindLoopFixedGroupLastIteration(beginLabel: L%04x, tryingBody: %s)", beginLabel, tryingBody ? u"true" : u"false");
         return sizeof(*this);
     }
 #endif
@@ -4898,7 +4898,7 @@ namespace UnifiedRegex
     {
         for (Iterator it(*this); it; ++it)
         {
-            w->Print(_u("%4llu: "), static_cast<unsigned long long>(it.Position()));
+            w->Print(u"%4llu: ", static_cast<unsigned long long>(it.Position()));
             it->Print(w, input);
         }
     }
@@ -5025,7 +5025,7 @@ namespace UnifiedRegex
             return;
         }
 
-        Output::Print(_u("Regex QC"));
+        Output::Print(u"Regex QC");
 
         static uint n = 0;
         static uint firstQcTime = 0;
@@ -5033,14 +5033,14 @@ namespace UnifiedRegex
         ++n;
         if (firstQcTime)
         {
-            Output::Print(_u(" - frequency: %0.1f"), static_cast<double>(n * 1000) / (now - firstQcTime));
+            Output::Print(u" - frequency: %0.1f", static_cast<double>(n * 1000) / (now - firstQcTime));
         }
         else
         {
             firstQcTime = now;
         }
 
-        Output::Print(_u("\n"));
+        Output::Print(u"\n");
         Output::Flush();
     }
 
@@ -5563,39 +5563,39 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void Matcher::Print(DebugWriter* w, const Char* const input, const CharCount inputLength, CharCount inputOffset, const uint8_t* instPointer, ContStack &contStack, AssertionStack &assertionStack) const
     {
-        w->PrintEOL(_u("Matcher {"));
+        w->PrintEOL(u"Matcher {");
         w->Indent();
-        w->Print(_u("program:      "));
+        w->Print(u"program:      ");
         w->PrintQuotedString(program->source, program->sourceLen);
         w->EOL();
-        w->Print(_u("inputPointer: "));
+        w->Print(u"inputPointer: ");
         if (inputLength == 0)
         {
-            w->PrintEOL(_u("<empty input>"));
+            w->PrintEOL(u"<empty input>");
         }
         else if (inputLength > 1024)
         {
-            w->PrintEOL(_u("<string too large>"));
+            w->PrintEOL(u"<string too large>");
         }
         else
         {
             w->PrintEscapedString(input, inputOffset);
             if (inputOffset >= inputLength)
             {
-                w->Print(_u("<<<>>>"));
+                w->Print(u"<<<>>>");
             }
             else
             {
-                w->Print(_u("<<<"));
+                w->Print(u"<<<");
                 w->PrintEscapedChar(input[inputOffset]);
-                w->Print(_u(">>>"));
+                w->Print(u">>>");
                 w->PrintEscapedString(input + inputOffset + 1, inputLength - inputOffset - 1);
             }
             w->EOL();
         }
         if (program->tag == Program::ProgramTag::BOIInstructionsTag || program->tag == Program::ProgramTag::InstructionsTag)
         {
-            w->Print(_u("instPointer: "));
+            w->Print(u"instPointer: ");
 
             const Inst* inst = (const Inst*)instPointer;
             switch (inst->tag)
@@ -5618,35 +5618,35 @@ namespace UnifiedRegex
                 __assume(false);
             }
 
-            w->PrintEOL(_u("groups:"));
+            w->PrintEOL(u"groups:");
             w->Indent();
             for (int i = 0; i < program->numGroups; i++)
             {
-                w->Print(_u("%d: "), i);
+                w->Print(u"%d: ", i);
                 groupInfos[i].Print(w, input);
                 w->EOL();
             }
             w->Unindent();
-            w->PrintEOL(_u("loops:"));
+            w->PrintEOL(u"loops:");
             w->Indent();
             for (int i = 0; i < program->numLoops; i++)
             {
-                w->Print(_u("%d: "), i);
+                w->Print(u"%d: ", i);
                 loopInfos[i].Print(w);
                 w->EOL();
             }
             w->Unindent();
-            w->PrintEOL(_u("contStack: (top to bottom)"));
+            w->PrintEOL(u"contStack: (top to bottom)");
             w->Indent();
             contStack.Print(w, input);
             w->Unindent();
-            w->PrintEOL(_u("assertionStack: (top to bottom)"));
+            w->PrintEOL(u"assertionStack: (top to bottom)");
             w->Indent();
             assertionStack.Print(w, this);
             w->Unindent();
         }
         w->Unindent();
-        w->PrintEOL(_u("}"));
+        w->PrintEOL(u"}");
         w->Flush();
     }
 #endif
@@ -5750,16 +5750,16 @@ namespace UnifiedRegex
     void Program::Print(DebugWriter* w)
     {
         const bool isBaselineMode = Js::Configuration::Global.flags.BaselineMode;
-        w->PrintEOL(_u("Program {"));
+        w->PrintEOL(u"Program {");
         w->Indent();
-        w->PrintEOL(_u("source:       %s"), PointerValue(source));
+        w->PrintEOL(u"source:       %s", PointerValue(source));
 
-        w->Print(_u("litbuf:       "));
+        w->Print(u"litbuf:       ");
         const char16_t *litbuf = this->rep.insts.litbuf;
         size_t litbufLen = 0;
         if (litbuf == nullptr)
         {
-            w->PrintEOL(_u("<NONE>"));
+            w->PrintEOL(u"<NONE>");
         }
         else
         {
@@ -5769,30 +5769,30 @@ namespace UnifiedRegex
                 const char16_t c = (char16_t)litbuf[i];
                 w->PrintEscapedChar(c);
             }
-            w->PrintEOL(_u(""));
+            w->PrintEOL(u"");
         }
-        w->PrintEOL(_u("litbufLen:    %u"), litbufLen);
+        w->PrintEOL(u"litbufLen:    %u", litbufLen);
 
-        w->Print(_u("flags:        "));
-        if ((flags & GlobalRegexFlag) != 0) w->Print(_u("global "));
-        if ((flags & MultilineRegexFlag) != 0) w->Print(_u("multiline "));
-        if ((flags & IgnoreCaseRegexFlag) != 0) w->Print(_u("ignorecase "));
-        if ((flags & DotAllRegexFlag) != 0) w->Print(_u("dotAll "));
-        if ((flags & UnicodeRegexFlag) != 0) w->Print(_u("unicode "));
-        if ((flags & StickyRegexFlag) != 0) w->Print(_u("sticky "));
+        w->Print(u"flags:        ");
+        if ((flags & GlobalRegexFlag) != 0) w->Print(u"global ");
+        if ((flags & MultilineRegexFlag) != 0) w->Print(u"multiline ");
+        if ((flags & IgnoreCaseRegexFlag) != 0) w->Print(u"ignorecase ");
+        if ((flags & DotAllRegexFlag) != 0) w->Print(u"dotAll ");
+        if ((flags & UnicodeRegexFlag) != 0) w->Print(u"unicode ");
+        if ((flags & StickyRegexFlag) != 0) w->Print(u"sticky ");
         w->EOL();
-        w->PrintEOL(_u("numGroups:    %d"), numGroups);
-        w->PrintEOL(_u("numLoops:     %d"), numLoops);
+        w->PrintEOL(u"numGroups:    %d", numGroups);
+        w->PrintEOL(u"numLoops:     %d", numLoops);
         switch (tag)
         {
         case ProgramTag::BOIInstructionsTag:
         case ProgramTag::InstructionsTag:
             {
-                w->PrintEOL(_u("instructions: {"));
+                w->PrintEOL(u"instructions: {");
                 w->Indent();
                 if (tag == ProgramTag::BOIInstructionsTag)
                 {
-                    w->PrintEOL(_u("       BOITest(hardFail: true)"));
+                    w->PrintEOL(u"       BOITest(hardFail: true)");
                 }
                 uint8_t* instsLim = rep.insts.insts + rep.insts.instsLen;
                 uint8_t* curr = rep.insts.insts;
@@ -5821,29 +5821,29 @@ namespace UnifiedRegex
                     }
                 }
                 w->Unindent();
-                w->PrintEOL(_u("}"));
+                w->PrintEOL(u"}");
             }
             break;
         case ProgramTag::SingleCharTag:
-            w->Print(_u("special form: <match single char "));
+            w->Print(u"special form: <match single char ");
             w->PrintQuotedChar(rep.singleChar.c);
-            w->PrintEOL(_u(">"));
+            w->PrintEOL(u">");
             break;
         case ProgramTag::BoundedWordTag:
-            w->PrintEOL(_u("special form: <match bounded word>"));
+            w->PrintEOL(u"special form: <match bounded word>");
             break;
         case ProgramTag::LeadingTrailingSpacesTag:
-            w->PrintEOL(_u("special form: <match leading/trailing spaces: minBegin=%d minEnd=%d>"),
+            w->PrintEOL(u"special form: <match leading/trailing spaces: minBegin=%d minEnd=%d>",
                 rep.leadingTrailingSpaces.beginMinMatch, rep.leadingTrailingSpaces.endMinMatch);
             break;
         case ProgramTag::OctoquadTag:
-            w->Print(_u("special form: <octoquad "));
+            w->Print(u"special form: <octoquad ");
             rep.octoquad.matcher->Print(w);
-            w->PrintEOL(_u(">"));
+            w->PrintEOL(u">");
             break;
         }
         w->Unindent();
-        w->PrintEOL(_u("}"));
+        w->PrintEOL(u"}");
     }
 #endif
 

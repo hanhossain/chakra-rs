@@ -130,7 +130,7 @@ Instr::TryOptimizeInstrWithFixedDataProperty(IR::Instr **pInstr, GlobOpt * globo
             IR::Instr* loadInstr = IR::Instr::NewConstantLoad(dataValueDstOpnd, (intptr_t)fixedValue, valType, instr->m_func);
 
             OUTPUT_VERBOSE_TRACE(Js::UseFixedDataPropsPhase,
-                _u("FixedFields: Replacing the source (fixed Data prop) with property id %u with 0x%x .\n"),
+                u"FixedFields: Replacing the source (fixed Data prop) with property id %u with 0x%x .\n",
                 propSymOpnd->GetPropertyId(), fixedValue);
 
             instr->InsertAfter(loadInstr);
@@ -4274,23 +4274,23 @@ GeneratorBailInInstr::New(IR::Instr* yieldInstr, Func* func)
 void
 Instr::DumpTestTrace()
 {
-    Output::Print(_u("opcode: %s "), Js::OpCodeUtil::GetOpCodeName(m_opcode));
+    Output::Print(u"opcode: %s ", Js::OpCodeUtil::GetOpCodeName(m_opcode));
     SymOpnd * symOpnd;
 
     if (this->m_opcode == Js::OpCode::NewScFunc || this->m_opcode == Js::OpCode::NewScGenFunc)
     {
-        Output::Print(_u("\n"));
+        Output::Print(u"\n");
         return;
     }
     Opnd * src1 = this->GetSrc1();
     if (!src1)
     {
-        Output::Print(_u("\n"));
+        Output::Print(u"\n");
         return;
     }
     if (src1->GetKind() != OpndKindSym)
     {
-        Output::Print(_u("\n"));
+        Output::Print(u"\n");
         return;
     }
 
@@ -4305,20 +4305,20 @@ Instr::DumpTestTrace()
             if (!JITManager::GetJITManager()->IsOOPJITEnabled())
             {
                 Js::PropertyRecord const* fieldName = propertySym->GetFunc()->GetInProcThreadContext()->GetPropertyRecord(propertySym->m_propertyId);
-                Output::Print(_u("field: %s "), fieldName->GetBuffer());
+                Output::Print(u"field: %s ", fieldName->GetBuffer());
                 break;
             }
             // else fall through
         case PropertyKindSlots:
-            Output::Print(_u("field: [%d] "), propertySym->m_propertyId);
+            Output::Print(u"field: [%d] ", propertySym->m_propertyId);
             break;
         case PropertyKindLocalSlots:
-            Output::Print(_u("field: l[%d] "), propertySym->m_propertyId);
+            Output::Print(u"field: l[%d] ", propertySym->m_propertyId);
             break;
         default:
             break;
         }
-        Output::Print(_u("\n"));
+        Output::Print(u"\n");
     }
 }
 
@@ -4348,18 +4348,18 @@ Instr::DumpFieldCopyPropTestTrace(bool inLandingPad)
     case Js::OpCode::TypeofElem:
 
         char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-        Output::Print(_u("TestTrace fieldcopyprop"));
+        Output::Print(u"TestTrace fieldcopyprop");
         if (inLandingPad)
         {
-            Output::Print(_u(" [%s]"), _u("in landing pad"));
+            Output::Print(u" [%s]", u"in landing pad");
         }
-        Output::Print(_u(": function %s (%s) "),
+        Output::Print(u": function %s (%s) ",
             this->m_func->GetJITFunctionBody()->GetDisplayName(),
             this->m_func->GetDebugNumberSet(debugStringBuffer));
 
         if (this->IsInlined())
         {
-            Output::Print(_u("inlined caller function %s (%s) "),
+            Output::Print(u"inlined caller function %s (%s) ",
                 this->m_func->GetTopFunc()->GetJITFunctionBody()->GetDisplayName(),
                 this->m_func->GetTopFunc()->GetDebugNumberSet(debugStringBuffer));
         }
@@ -4402,29 +4402,29 @@ Instr::DumpByteCodeOffset()
     if (m_func->HasByteCodeOffset())
     {
         Output::SkipToColumn(78);
-        Output::Print(_u("#"));
+        Output::Print(u"#");
         if (this->m_number != Js::Constants::NoByteCodeOffset)
         {
-            Output::Print(_u("%04x"), this->m_number);
-            Output::Print(this->IsCloned()? _u("*") : _u(" "));
+            Output::Print(u"%04x", this->m_number);
+            Output::Print(this->IsCloned()? u"*" : u" ");
         }
     }
     if (!this->m_func->IsTopFunc())
     {
         Output::SkipToColumn(78);
         char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-        Output::Print(_u(" Func #%s"), this->m_func->GetDebugNumberSet(debugStringBuffer));
+        Output::Print(u" Func #%s", this->m_func->GetDebugNumberSet(debugStringBuffer));
     }
 #ifdef BAILOUT_INJECTION
     if (this->bailOutByteCodeLocation != (uint)-1)
     {
         Output::SkipToColumn(85);
-        Output::Print(_u("@%4d"), this->bailOutByteCodeLocation);
+        Output::Print(u"@%4d", this->bailOutByteCodeLocation);
     }
 #endif
     if (this->m_opcode == Js::OpCode::InlineeStart)
     {
-        Output::Print(_u(" %s"), this->m_func->GetJITFunctionBody()->GetDisplayName());
+        Output::Print(u" %s", this->m_func->GetJITFunctionBody()->GetDisplayName());
     }
 }
 
@@ -4433,7 +4433,7 @@ Instr::DumpGlobOptInstrString()
 {
     if(this->globOptInstrString && !PHASE_OFF(Js::DumpGlobOptInstrPhase, m_func))
     {
-        Output::Print(_u("\n\n GLOBOPT INSTR: %s\n\n"), this->globOptInstrString);
+        Output::Print(u"\n\n GLOBOPT INSTR: %s\n\n", this->globOptInstrString);
     }
 }
 
@@ -4461,7 +4461,7 @@ Instr::Dump(IRDumpFlags flags)
             oldValue = Output::SetConsoleForeground(this->highlight);
         }
 #endif
-        Output::Print(_u("%s "), Js::OpCodeUtil::GetOpCodeName(m_opcode));
+        Output::Print(u"%s ", Js::OpCodeUtil::GetOpCodeName(m_opcode));
 #if DBG
         if (this->highlight != 0)
         {
@@ -4483,7 +4483,7 @@ Instr::Dump(IRDumpFlags flags)
         Assert(GetSrc1());
         if(GetSrc1()->IsIntConstOpnd())
         {
-            Output::Print(_u("%d"), GetSrc1()->AsIntConstOpnd()->GetValue());
+            Output::Print(u"%d", GetSrc1()->AsIntConstOpnd()->GetValue());
         }
         else
         {
@@ -4520,7 +4520,7 @@ Instr::Dump(IRDumpFlags flags)
             }
         }
 
-        Output::Print(_u(" %S "), useLessThanOrEqual ? "<=" : "<");
+        Output::Print(u" %S ", useLessThanOrEqual ? "<=" : "<");
         if(dumpSrc2)
         {
             GetSrc2()->Dump(flags, m_func);
@@ -4529,9 +4529,9 @@ Instr::Dump(IRDumpFlags flags)
         {
             if(dumpSrc2)
             {
-                Output::Print(_u(" %C "), usePlus ? '+' : '-');
+                Output::Print(u" %C ", usePlus ? '+' : '-');
             }
-            Output::Print(_u("%d"), offset);
+            Output::Print(u"%d", offset);
         }
 
         goto PrintByteCodeOffsetEtc;
@@ -4555,7 +4555,7 @@ Instr::Dump(IRDumpFlags flags)
         if ((dumpMarkTempNumber && (this->dstIsTempNumberTransferred || this->dstIsTempNumber))
             || (dumpMarkTempObject && this->dstIsTempObject))
         {
-            Output::Print(_u("["));
+            Output::Print(u"[");
 
             if (dumpMarkTempNumber)
             {
@@ -4564,11 +4564,11 @@ Instr::Dump(IRDumpFlags flags)
                     if (this->dstIsTempNumberTransferred)
                     {
                         Assert(this->dstIsTempNumber);
-                        Output::Print(_u("x"));
+                        Output::Print(u"x");
                     }
                     else if (this->dstIsTempNumber)
                     {
-                        Output::Print(_u("#"));
+                        Output::Print(u"#");
                     }
                 }
             }
@@ -4578,23 +4578,23 @@ Instr::Dump(IRDumpFlags flags)
                 {
                     if (this->dstIsTempObject)
                     {
-                        Output::Print(_u("o"));
+                        Output::Print(u"o");
                     }
                 }
             }
 
-            Output::Print(_u("tmp]"));
+            Output::Print(u"tmp]");
         }
         if(PHASE_DUMP(Js::TrackNegativeZeroPhase, m_func->GetTopFunc()) && !ShouldCheckForNegativeZero())
         {
-            Output::Print(_u("[-0]"));
+            Output::Print(u"[-0]");
         }
         if (PHASE_DUMP(Js::TypedArrayVirtualPhase, m_func->GetTopFunc()) && (!IsDstNotAlwaysConvertedToInt32() || !IsDstNotAlwaysConvertedToNumber()))
         {
             if (!IsDstNotAlwaysConvertedToInt32())
-                Output::Print(_u("[->i]"));
+                Output::Print(u"[->i]");
             else
-                Output::Print(_u("[->n]"));
+                Output::Print(u"[->n]");
 
         }
         if(PHASE_DUMP(Js::TrackIntOverflowPhase, m_func->GetTopFunc()))
@@ -4604,21 +4604,21 @@ Instr::Dump(IRDumpFlags flags)
             {
                 // ignoring 32-bits or more ?
                 if(ShouldCheckForNon32BitOverflow())
-                    Output::Print(_u("[OF %d]"), ignoreOverflowBitCount);
+                    Output::Print(u"[OF %d]", ignoreOverflowBitCount);
                 else
-                    Output::Print(_u("[OF]"));
+                    Output::Print(u"[OF]");
             }
         }
 
         if (this->isSafeToSpeculate)
         {
             Output::SkipToColumn(19);
-            Output::Print(_u("<=="));
+            Output::Print(u"<==");
         }
         else
         {
             Output::SkipToColumn(20);
-            Output::Print(_u("="));
+            Output::Print(u"=");
         }
     }
 
@@ -4642,7 +4642,7 @@ Instr::Dump(IRDumpFlags flags)
                 {
                     multiBranchInstr->MapMultiBrLabels([](IR::LabelInstr * labelInstr) -> void
                     {
-                        Output::Print(_u("$L%d "), labelInstr->m_id);
+                        Output::Print(u"$L%d ", labelInstr->m_id);
                     });
                 }
                 else
@@ -4652,21 +4652,21 @@ Instr::Dump(IRDumpFlags flags)
             }
             else
             {
-                Output::Print(_u("??"));
+                Output::Print(u"??");
             }
         }
         else
         {
-            Output::Print(_u("$L%d"), targetInstr->m_id);
+            Output::Print(u"$L%d", targetInstr->m_id);
         }
         if (this->GetSrc1() && labelPrinted)
         {
-            Output::Print(_u(", "));
+            Output::Print(u", ");
         }
     }
     else if (this->IsPragmaInstr() && this->m_opcode == Js::OpCode::StatementBoundary)
     {
-        Output::Print(_u("#%d"), this->AsPragmaInstr()->m_statementIndex);
+        Output::Print(u"#%d", this->AsPragmaInstr()->m_statementIndex);
     }
 
     // scope
@@ -4680,8 +4680,8 @@ Instr::Dump(IRDumpFlags flags)
             {
                 function = ((Js::ParseableFunctionInfo *)m_func->GetJITFunctionBody()->GetAddr())->GetNestedFunctionForExecution((uint)src1->AsIntConstOpnd()->GetValue())->GetParseableFunctionInfo();
             }
-            Output::Print(_u("func:%s()"), function ? function->GetDisplayName() : _u("???"));
-            Output::Print(_u(", env:"));
+            Output::Print(u"func:%s()", function ? function->GetDisplayName() : u"???");
+            Output::Print(u", env:");
             this->GetSrc2()->AsRegOpnd()->m_sym->Dump(flags);
         }
         else if (src1)
@@ -4690,7 +4690,7 @@ Instr::Dump(IRDumpFlags flags)
             Opnd * src2 = this->GetSrc2();
             if (src2)
             {
-                Output::Print(_u(", "));
+                Output::Print(u", ");
                 src2->Dump(flags, this->m_func);
             }
         }
@@ -4704,14 +4704,14 @@ Instr::Dump(IRDumpFlags flags)
             bool first = true;
             FOREACH_BITSET_IN_SPARSEBV(id, tempbcu->GetByteCodeUpwardExposedUsed())
             {
-                Output::Print(first? _u("s%d") : _u(", s%d"), id);
+                Output::Print(first? u"s%d" : u", s%d", id);
                 first = false;
             }
             NEXT_BITSET_IN_SPARSEBV;
         }
         if (tempbcu->propertySymUse)
         {
-            Output::Print(_u("  PropSym: %d"), tempbcu->propertySymUse->m_id);
+            Output::Print(u"  PropSym: %d", tempbcu->propertySymUse->m_id);
         }
     }
 
@@ -4729,19 +4729,19 @@ PrintByteCodeOffsetEtc:
             Output::SkipToColumn(85);
             if (!AsmDumpMode)
             {
-                Output::Print(_u("Bailout: #%04x"), bailOutInfo->bailOutOffset);
+                Output::Print(u"Bailout: #%04x", bailOutInfo->bailOutOffset);
             }
             if (!bailOutInfo->bailOutFunc->IsTopFunc())
             {
                 char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-                Output::Print(_u(" Func %s"), bailOutInfo->bailOutFunc->GetDebugNumberSet(debugStringBuffer));
+                Output::Print(u" Func %s", bailOutInfo->bailOutFunc->GetDebugNumberSet(debugStringBuffer));
             }
-            Output::Print(_u(" (%S)"), this->GetBailOutKindName());
+            Output::Print(u" (%S)", this->GetBailOutKindName());
         }
     }
     if ((flags & IRDumpFlags_SkipEndLine) == 0)
     {
-        Output::Print(_u("\n"));
+        Output::Print(u"\n");
     }
 }
 
@@ -4776,20 +4776,20 @@ LabelInstr::Dump(IRDumpFlags flags)
 #if DBG
     if (this->m_name != nullptr)
     {
-        Output::Print(_u("$L%d (%s):"), this->m_id, this->m_name);
+        Output::Print(u"$L%d (%s):", this->m_id, this->m_name);
     }
     else
 #endif
     {
-        Output::Print(_u("$L%d:"), this->m_id);
+        Output::Print(u"$L%d:", this->m_id);
     }
     if (this->isOpHelper)
     {
-        Output::Print(_u(" [helper]"));
+        Output::Print(u" [helper]");
     }
     if (this->m_isLoopTop)
     {
-        Output::Print(_u(" >>>>>>>>>>>>>  LOOP TOP  >>>>>>>>>>>>>"));
+        Output::Print(u" >>>>>>>>>>>>>  LOOP TOP  >>>>>>>>>>>>>");
     }
     if (this->IsProfiledLabelInstr())
     {
@@ -4797,13 +4797,13 @@ LabelInstr::Dump(IRDumpFlags flags)
         switch (this->AsProfiledLabelInstr()->loopImplicitCallFlags)
         {
         case Js::ImplicitCall_HasNoInfo:
-            Output::Print(_u("Implicit call: ???"));
+            Output::Print(u"Implicit call: ???");
             break;
         case Js::ImplicitCall_None:
-            Output::Print(_u("Implicit call: no"));
+            Output::Print(u"Implicit call: no");
             break;
         default:
-            Output::Print(_u("Implicit call: yes"));
+            Output::Print(u"Implicit call: yes");
             break;
         }
     }
@@ -4811,7 +4811,7 @@ LabelInstr::Dump(IRDumpFlags flags)
     {
         this->DumpByteCodeOffset();
     }
-    Output::Print(_u("\n"));
+    Output::Print(u"\n");
 }
 
 
@@ -4847,7 +4847,7 @@ Instr::Dump(int window)
     Instr * instr;
     int i;
 
-    Output::Print(_u("-------------------------------------------------------------------------------"));
+    Output::Print(u"-------------------------------------------------------------------------------");
 
     if (this == NULL)
     {
@@ -4862,7 +4862,7 @@ Instr::Dump(int window)
     {
         if (instr == this)
         {
-            Output::Print(_u("=>"));
+            Output::Print(u"=>");
         }
         instr->Dump();
     }
@@ -4891,7 +4891,7 @@ Instr::DumpString()
 void
 Instr::DumpRange(Instr *instrEnd)
 {
-    Output::Print(_u("-------------------------------------------------------------------------------\n"));
+    Output::Print(u"-------------------------------------------------------------------------------\n");
 
     FOREACH_INSTR_IN_RANGE(instr, this, instrEnd)
     {
@@ -4899,7 +4899,7 @@ Instr::DumpRange(Instr *instrEnd)
     }
     NEXT_INSTR_IN_RANGE;
 
-    Output::Print(_u("-------------------------------------------------------------------------------\n"));
+    Output::Print(u"-------------------------------------------------------------------------------\n");
 }
 
 #endif

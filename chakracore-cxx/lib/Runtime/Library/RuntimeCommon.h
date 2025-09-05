@@ -223,9 +223,9 @@ namespace Js
     typedef ConcatStringN<7> ConcatStringN7;
 
     template <char16_t L, char16_t R> class ConcatStringWrapping;
-    typedef ConcatStringWrapping<_u('['), _u(']')> ConcatStringWrappingSB;
-    typedef ConcatStringWrapping<_u('{'), _u('}')> ConcatStringWrappingB;
-    typedef ConcatStringWrapping<_u('"'), _u('"')> ConcatStringWrappingQ;
+    typedef ConcatStringWrapping<u'[', u']'> ConcatStringWrappingSB;
+    typedef ConcatStringWrapping<u'{', u'}'> ConcatStringWrappingB;
+    typedef ConcatStringWrapping<u'"', u'"'> ConcatStringWrappingQ;
 
 } // namespace Js.
 
@@ -246,17 +246,17 @@ namespace JSON
 //
 // Shared string literals
 //
-#define JS_DISPLAY_STRING_NAN           _u("NaN")
-#define JS_DISPLAY_STRING_DATE          _u("Date")
-#define JS_DISPLAY_STRING_INVALID_DATE  _u("Invalid Date")
-#define JS_DISPLAY_STRING_FUNCTION_ANONYMOUS        _u("function() {\n    [native code]\n}")
-#define JS_DISPLAY_STRING_FUNCTION_HEADER           _u("function ")
-#define JS_DISPLAY_STRING_FUNCTION_BODY             _u("() { [native code] }")
+#define JS_DISPLAY_STRING_NAN           u"NaN"
+#define JS_DISPLAY_STRING_DATE          u"Date"
+#define JS_DISPLAY_STRING_INVALID_DATE  u"Invalid Date"
+#define JS_DISPLAY_STRING_FUNCTION_ANONYMOUS        u"function() {\n    [native code]\n}"
+#define JS_DISPLAY_STRING_FUNCTION_HEADER           u"function "
+#define JS_DISPLAY_STRING_FUNCTION_BODY             u"() { [native code] }"
 
-#define JS_DIAG_TYPE_JavascriptRegExp               _u("Object, (Regular Expression)")
+#define JS_DIAG_TYPE_JavascriptRegExp               u"Object, (Regular Expression)"
 
-#define JS_DIAG_VALUE_JavascriptRegExpConstructor   _u("{...}")
-#define JS_DIAG_TYPE_JavascriptRegExpConstructor    _u("Object, (RegExp constructor)")
+#define JS_DIAG_VALUE_JavascriptRegExpConstructor   u"{...}"
+#define JS_DIAG_TYPE_JavascriptRegExpConstructor    u"Object, (RegExp constructor)"
 
 #include "Language/SimdUtils.h"
 

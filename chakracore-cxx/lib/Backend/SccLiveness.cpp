@@ -561,10 +561,10 @@ SCCLiveness::ProcessStackSymUse(StackSym * stackSym, IR::Instr * instr, int usag
     {
 #if DBG
         char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-        Output::Print(_u("Function: %s (%s)       "), this->func->GetJITFunctionBody()->GetDisplayName(), this->func->GetDebugNumberSet(debugStringBuffer));
-        Output::Print(_u("Reg: "));
+        Output::Print(u"Function: %s (%s)       ", this->func->GetJITFunctionBody()->GetDisplayName(), this->func->GetDebugNumberSet(debugStringBuffer));
+        Output::Print(u"Reg: ");
         stackSym->Dump();
-        Output::Print(_u("\n"));
+        Output::Print(u"\n");
         Output::Flush();
 #endif
         AnalysisAssertMsg(UNREACHED, "Uninitialized reg?");
@@ -892,12 +892,12 @@ void
 SCCLiveness::Dump()
 {
     this->func->DumpHeader();
-    Output::Print(_u("************   Liveness   ************\n"));
+    Output::Print(u"************   Liveness   ************\n");
 
     FOREACH_SLIST_ENTRY(Lifetime *, lifetime, &this->lifetimeList)
     {
         lifetime->sym->Dump();
-        Output::Print(_u(": live range %3d - %3d (XUserCall: %d, XCall: %d)\n"), lifetime->start, lifetime->end,
+        Output::Print(u": live range %3d - %3d (XUserCall: %d, XCall: %d)\n", lifetime->start, lifetime->end,
             lifetime->isLiveAcrossUserCalls,
             lifetime->isLiveAcrossCalls);
     }
@@ -906,7 +906,7 @@ SCCLiveness::Dump()
 
     FOREACH_INSTR_IN_FUNC(instr, func)
     {
-        Output::Print(_u("%3d > "), instr->GetNumber());
+        Output::Print(u"%3d > ", instr->GetNumber());
         instr->Dump();
     } NEXT_INSTR_IN_FUNC;
 }

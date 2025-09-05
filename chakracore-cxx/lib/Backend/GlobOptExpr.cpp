@@ -159,13 +159,13 @@ GlobOpt::GetHash(IR::Instr *instr, Value *src1Val, Value *src2Val, ExprAttribute
 #if DBG_DUMP
     if (!pHash->IsValid() && Js::Configuration::Global.flags.Trace.IsEnabled(Js::CSEPhase, this->func->GetSourceContextId(), this->func->GetLocalFunctionId()))
     {
-        Output::Print(_u(" >>>>  CSE: Value numbers too big to be hashed in function %s!\n"), this->func->GetJITFunctionBody()->GetDisplayName());
+        Output::Print(u" >>>>  CSE: Value numbers too big to be hashed in function %s!\n", this->func->GetJITFunctionBody()->GetDisplayName());
     }
 #endif
 #if ENABLE_DEBUG_CONFIG_OPTIONS
     if (!pHash->IsValid() && Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::CSEPhase, this->func->GetSourceContextId(), this->func->GetLocalFunctionId()))
     {
-        Output::Print(_u(" >>>>  CSE: Value numbers too big to be hashed in function %s!\n"), this->func->GetJITFunctionBody()->GetDisplayName());
+        Output::Print(u" >>>>  CSE: Value numbers too big to be hashed in function %s!\n", this->func->GetJITFunctionBody()->GetDisplayName());
     }
 #endif
 
@@ -751,14 +751,14 @@ GlobOpt::CSEOptimize(BasicBlock *block, IR::Instr * *const instrRef, Value **pSr
 #if DBG_DUMP
     if (Js::Configuration::Global.flags.Trace.IsEnabled(Js::CSEPhase, this->func->GetSourceContextId(), this->func->GetLocalFunctionId()))
     {
-        Output::Print(_u(" --- CSE (%s): "), this->func->GetJITFunctionBody()->GetDisplayName());
+        Output::Print(u" --- CSE (%s): ", this->func->GetJITFunctionBody()->GetDisplayName());
         instr->Dump();
     }
 #endif
 #if ENABLE_DEBUG_CONFIG_OPTIONS
     if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::CSEPhase, this->func->GetSourceContextId(), this->func->GetLocalFunctionId()))
     {
-        Output::Print(_u(" --- CSE (%s): %s\n"), this->func->GetJITFunctionBody()->GetDisplayName(), Js::OpCodeUtil::GetOpCodeName(instr->m_opcode));
+        Output::Print(u" --- CSE (%s): %s\n", this->func->GetJITFunctionBody()->GetDisplayName(), Js::OpCodeUtil::GetOpCodeName(instr->m_opcode));
     }
 #endif
 
@@ -922,6 +922,6 @@ GlobOpt::CanCSEArrayStore(IR::Instr *instr)
 void
 DumpExpr(ExprHash hash)
 {
-    Output::Print(_u("Opcode: %10s   src1Val: %d  src2Val: %d\n"), Js::OpCodeUtil::GetOpCodeName(HashToOpCode[(int)hash.GetOpcode()]), hash.GetSrc1ValueNumber(), hash.GetSrc2ValueNumber());
+    Output::Print(u"Opcode: %10s   src1Val: %d  src2Val: %d\n", Js::OpCodeUtil::GetOpCodeName(HashToOpCode[(int)hash.GetOpcode()]), hash.GetSrc1ValueNumber(), hash.GetSrc2ValueNumber());
 }
 #endif

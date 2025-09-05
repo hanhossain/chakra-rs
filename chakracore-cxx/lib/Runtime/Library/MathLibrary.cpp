@@ -9,7 +9,7 @@
 
 #include <math.h>
 
-const LPCWSTR UCrtC99MathApis::LibraryName = _u("api-ms-win-crt-math-l1-1-0.dll");
+const LPCWSTR UCrtC99MathApis::LibraryName = u"api-ms-win-crt-math-l1-1-0.dll";
 
 void UCrtC99MathApis::Ensure()
 {

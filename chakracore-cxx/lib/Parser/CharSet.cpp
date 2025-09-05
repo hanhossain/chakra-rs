@@ -1487,7 +1487,7 @@ namespace UnifiedRegex
     // CAUTION: This method is very slow.
     void CharSet<char16_t>::Print(DebugWriter* w) const
     {
-        w->Print(_u("["));
+        w->Print(u"[");
         int start = -1;
         for (uint i = 0; i < NumChars; i++)
         {
@@ -1506,7 +1506,7 @@ namespace UnifiedRegex
                     if (i > (uint)(start + 1))
                     {
                         if (i  > (uint)(start + 2))
-                            w->Print(_u("-"));
+                            w->Print(u"-");
                         w->PrintEscapedChar(UTC(i - 1));
                     }
                     start = -1;
@@ -1516,10 +1516,10 @@ namespace UnifiedRegex
         if (start >= 0)
         {
             if ((uint)start < MaxUChar - 1)
-                w->Print(_u("-"));
+                w->Print(u"-");
             w->PrintEscapedChar(MaxChar);
         }
-        w->Print(_u("]"));
+        w->Print(u"]");
     }
 #endif
 
@@ -1732,12 +1732,12 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void CharSet<codepoint_t>::Print(DebugWriter* w) const
     {
-        w->Print(_u("Characters 0 - 65535"));
+        w->Print(u"Characters 0 - 65535");
 
         for (int i = 0; i < NumberOfPlanes; i++)
         {
             int base = (i + 1) * 0x10000;
-            w->Print(_u("Characters %d - %d"), base, base + 0xFFFF);
+            w->Print(u"Characters %d - %d", base, base + 0xFFFF);
             this->characterPlanes[i].Print(w);
         }
     }
@@ -1822,7 +1822,7 @@ namespace UnifiedRegex
     // CAUTION: This method is very slow.
     void RuntimeCharSet<char16_t>::Print(DebugWriter* w) const
     {
-        w->Print(_u("["));
+        w->Print(u"[");
         int start = -1;
         for (uint i = 0; i < NumChars; i++)
         {
@@ -1841,7 +1841,7 @@ namespace UnifiedRegex
                     if (i > (uint)(start + 1))
                     {
                         if (i  > (uint)(start + 2))
-                            w->Print(_u("-"));
+                            w->Print(u"-");
                         w->PrintEscapedChar(UTC(i - 1));
                     }
                     start = -1;
@@ -1851,10 +1851,10 @@ namespace UnifiedRegex
         if (start >= 0)
         {
             if ((uint)start < MaxUChar - 1)
-                w->Print(_u("-"));
+                w->Print(u"-");
             w->PrintEscapedChar(MaxChar);
         }
-        w->Print(_u("]"));
+        w->Print(u"]");
     }
 #endif
 

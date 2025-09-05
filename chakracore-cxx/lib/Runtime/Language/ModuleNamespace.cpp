@@ -342,13 +342,13 @@ namespace Js
 
     BOOL ModuleNamespace::GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
     {
-        stringBuilder->AppendCppLiteral(_u("{ModuleNamespaceObject}"));
+        stringBuilder->AppendCppLiteral(u"{ModuleNamespaceObject}");
         return TRUE;
     }
 
     BOOL ModuleNamespace::GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
     {
-        stringBuilder->AppendCppLiteral(_u("Object, (ModuleNamespaceObject)"));
+        stringBuilder->AppendCppLiteral(u"Object, (ModuleNamespaceObject)");
         return TRUE;
     }
 

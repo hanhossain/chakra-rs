@@ -771,7 +771,7 @@ void ValueInfo::Dump()
     {
         char typeStr[VALUE_TYPE_MAX_STRING_SIZE];
         Type().ToString(typeStr);
-        Output::Print(_u("%S"), typeStr);
+        Output::Print(u"%S", typeStr);
     }
 
     IntConstantBounds intConstantBounds;
@@ -779,33 +779,33 @@ void ValueInfo::Dump()
     {
         if (intConstantBounds.IsConstant())
         {
-            Output::Print(_u(" constant:%d"), intConstantBounds.LowerBound());
+            Output::Print(u" constant:%d", intConstantBounds.LowerBound());
             return;
         }
-        Output::Print(_u(" range:%d - %d"), intConstantBounds.LowerBound(), intConstantBounds.UpperBound());
+        Output::Print(u" range:%d - %d", intConstantBounds.LowerBound(), intConstantBounds.UpperBound());
     }
     else if (IsFloatConstant())
     {
-        Output::Print(_u(" constant:%g"), AsFloatConstant()->FloatValue());
+        Output::Print(u" constant:%g", AsFloatConstant()->FloatValue());
     }
     else if (IsJsType())
     {
         const JITTypeHolder type(AsJsType()->GetJsType());
-        type != nullptr ? Output::Print(_u("type: 0x%p, "), type->GetAddr()) : Output::Print(_u("type: null, "));
-        Output::Print(_u("type Set: "));
+        type != nullptr ? Output::Print(u"type: 0x%p, ", type->GetAddr()) : Output::Print(u"type: null, ");
+        Output::Print(u"type Set: ");
         Js::EquivalentTypeSet* typeSet = AsJsType()->GetJsTypeSet();
         if (typeSet != nullptr)
         {
             uint16 typeCount = typeSet->GetCount();
             for (uint16 ti = 0; ti < typeCount - 1; ti++)
             {
-                Output::Print(_u("0x%p, "), typeSet->GetType(ti));
+                Output::Print(u"0x%p, ", typeSet->GetType(ti));
             }
-            Output::Print(_u("0x%p"), typeSet->GetType(typeCount - 1));
+            Output::Print(u"0x%p", typeSet->GetType(typeCount - 1));
         }
         else
         {
-            Output::Print(_u("null"));
+            Output::Print(u"null");
         }
     }
     else if (IsArrayValueInfo())
@@ -813,24 +813,24 @@ void ValueInfo::Dump()
         const ArrayValueInfo *const arrayValueInfo = AsArrayValueInfo();
         if (arrayValueInfo->HeadSegmentSym())
         {
-            Output::Print(_u(" seg: "));
+            Output::Print(u" seg: ");
             arrayValueInfo->HeadSegmentSym()->Dump();
         }
         if (arrayValueInfo->HeadSegmentLengthSym())
         {
-            Output::Print(_u(" segLen: "));
+            Output::Print(u" segLen: ");
             arrayValueInfo->HeadSegmentLengthSym()->Dump();
         }
         if (arrayValueInfo->LengthSym())
         {
-            Output::Print(_u(" len: "));
+            Output::Print(u" len: ");
             arrayValueInfo->LengthSym()->Dump();
         }
     }
 
     if (this->GetSymStore())
     {
-        Output::Print(_u("\t\tsym:"));
+        Output::Print(u"\t\tsym:");
         this->GetSymStore()->Dump();
     }
 }

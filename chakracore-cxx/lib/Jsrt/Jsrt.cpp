@@ -3833,7 +3833,7 @@ JsErrorCode JsSerializeScriptCore(const byte *script, size_t cb,
         }
         Js::FunctionBody *functionBody = function->GetFunctionBody();
         const Js::Utf8SourceInfo *sourceInfo = functionBody->GetUtf8SourceInfo();
-        size_t cSourceCodeLength = sourceInfo->GetCbLength(_u("JsSerializeScript"));
+        size_t cSourceCodeLength = sourceInfo->GetCbLength(u"JsSerializeScript");
 
         // truncation of code length can lead to accessing random memory. Reject the call.
         if (cSourceCodeLength > DWORD_MAX)
@@ -3841,13 +3841,13 @@ JsErrorCode JsSerializeScriptCore(const byte *script, size_t cb,
             return JsErrorOutOfMemory;
         }
 
-        LPCUTF8 utf8Code = sourceInfo->GetSource(_u("JsSerializeScript"));
+        LPCUTF8 utf8Code = sourceInfo->GetSource(u"JsSerializeScript");
         uint32_t dwFlags = 0;
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         dwFlags = JsrtContext::GetCurrent()->GetRuntime()->IsSerializeByteCodeForLibrary() ? GENERATE_BYTE_CODE_BUFFER_LIBRARY : 0;
 #endif
 
-        BEGIN_TEMP_ALLOCATOR(tempAllocator, scriptContext, _u("ByteCodeSerializer"));
+        BEGIN_TEMP_ALLOCATOR(tempAllocator, scriptContext, u"ByteCodeSerializer");
         // We cast buffer size to uint32_t* because on Windows, uint32_t = unsigned long = unsigned int
         // On 64-bit clang on linux, this is not true, unsigned long is larger than unsigned int
         // However, the PAL defines uint32_t for us on linux as unsigned int so the cast is safe here.
@@ -5165,7 +5165,7 @@ CHAKRA_API JsSerializeParserStateCore(
         Js::Utf8SourceInfo* sourceInfo = nullptr;
         loadScriptFlag = (LoadScriptFlag)(loadScriptFlag | LoadScriptFlag_CreateParserState);
 
-        BEGIN_TEMP_ALLOCATOR(tempAllocator, scriptContext, _u("ByteCodeSerializer"));
+        BEGIN_TEMP_ALLOCATOR(tempAllocator, scriptContext, u"ByteCodeSerializer");
         // We cast buffer size to uint32_t* because on Windows, uint32_t = unsigned long = unsigned int
         // On 64-bit clang on linux, this is not true, unsigned long is larger than unsigned int
         // However, the PAL defines uint32_t for us on linux as unsigned int so the cast is safe here.
@@ -5181,7 +5181,7 @@ CHAKRA_API JsSerializeParserStateCore(
 
         Js::FunctionBody *functionBody = function->GetFunctionBody();
         sourceInfo = functionBody->GetUtf8SourceInfo();
-        size_t cSourceCodeLength = sourceInfo->GetCbLength(_u("JsSerializeParserState"));
+        size_t cSourceCodeLength = sourceInfo->GetCbLength(u"JsSerializeParserState");
 
         // truncation of code length can lead to accessing random memory. Reject the call.
         if (cSourceCodeLength > DWORD_MAX)

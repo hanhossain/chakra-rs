@@ -37,7 +37,7 @@ namespace Js
     {
         if (!PHASE_OFF1(IsConcatSpreadableCachePhase) && propertyId == PropertyIds::_symbolIsConcatSpreadable)
         {
-            OUTPUT_TRACE(Phase::IsConcatSpreadableCachePhase, _u("IsConcatSpreadableCache invalidated\n"));
+            OUTPUT_TRACE(Phase::IsConcatSpreadableCachePhase, u"IsConcatSpreadableCache invalidated\n");
             scriptContext->GetThreadContext()->GetIsConcatSpreadableCache()->Invalidate();
         }
     }

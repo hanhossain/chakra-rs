@@ -55,7 +55,7 @@ void LegalizeMD::LegalizeDst(IR::Instr * instr)
         // No legalization possible, just report error.
         if (forms != 0)
         {
-            IllegalInstr(instr, _u("Expected dst opnd"));
+            IllegalInstr(instr, u"Expected dst opnd");
         }
 #endif
         return;
@@ -68,7 +68,7 @@ void LegalizeMD::LegalizeDst(IR::Instr * instr)
         // No legalization possible, just report error.
         if (!(forms & L_RegMask))
         {
-            IllegalInstr(instr, _u("Unexpected reg dst"));
+            IllegalInstr(instr, u"Unexpected reg dst");
         }
 #endif
         break;
@@ -146,7 +146,7 @@ void LegalizeMD::LegalizeSrc(IR::Instr * instr, IR::Opnd * opnd, uint opndNum)
         // No legalization possible, just report error.
         if (forms != 0)
         {
-            IllegalInstr(instr, _u("Expected src %d opnd"), opndNum);
+            IllegalInstr(instr, u"Expected src %d opnd", opndNum);
         }
 #endif
         return;
@@ -159,7 +159,7 @@ void LegalizeMD::LegalizeSrc(IR::Instr * instr, IR::Opnd * opnd, uint opndNum)
 #ifdef DBG
         if (!(forms & L_RegMask))
         {
-            IllegalInstr(instr, _u("Unexpected reg as src%d opnd"), opndNum);
+            IllegalInstr(instr, u"Unexpected reg as src%d opnd", opndNum);
         }
 #endif
         break;
@@ -630,7 +630,7 @@ void LegalizeMD::IllegalInstr(IR::Instr * instr, const char16_t * msg, ...)
 {
     va_list argptr;
     va_start(argptr, msg);
-    Output::Print(_u("Illegal instruction: "));
+    Output::Print(u"Illegal instruction: ");
     instr->Dump();
     Output::Print(msg, argptr);
     Assert(UNREACHED);

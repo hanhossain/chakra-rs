@@ -124,14 +124,14 @@ namespace TTD
     {
         if(!this->HasValue())
         {
-            wprintf(_u("undef"));
+            wprintf(u"undef");
         }
         else
         {
-            wprintf(_u("BP: { bpId: %I64i, ctx: %I64u, topId: %I32u, fline: %I32u, fcolumn: %I32u, line: %I32u, column: %I32u }"), this->m_bpId, this->m_sourceScriptLogId, this->m_topLevelBodyId, this->m_functionLine, this->m_functionColumn, this->m_line, this->m_column);
+            wprintf(u"BP: { bpId: %I64i, ctx: %I64u, topId: %I32u, fline: %I32u, fcolumn: %I32u, line: %I32u, column: %I32u }", this->m_bpId, this->m_sourceScriptLogId, this->m_topLevelBodyId, this->m_functionLine, this->m_functionColumn, this->m_line, this->m_column);
             if(this->m_etime != -1)
             {
-                wprintf(_u(" TTDTime: { etime: %I64i, ftime: %I64i, ltime: %I64i }"), this->m_etime, this->m_ftime, this->m_ltime);
+                wprintf(u" TTDTime: { etime: %I64i, ftime: %I64i, ltime: %I64i }", this->m_etime, this->m_ftime, this->m_ltime);
             }
         }
     }
@@ -737,7 +737,7 @@ namespace TTD
             //Reset any step controller logic
             fb->GetScriptContext()->GetThreadContext()->GetDebugManager()->stepController.Deactivate();
 
-            throw TTD::TTDebuggerAbortException::CreateTopLevelAbortRequest(this->m_pendingTTDBP.GetRootEventTime(), this->m_pendingTTDMoveMode, _u("Reverse operation requested."));
+            throw TTD::TTDebuggerAbortException::CreateTopLevelAbortRequest(this->m_pendingTTDBP.GetRootEventTime(), this->m_pendingTTDMoveMode, u"Reverse operation requested.");
         }
     }
 
@@ -937,7 +937,7 @@ namespace TTD
                 fb->GetScriptContext()->GetThreadContext()->GetDebugManager()->stepController.Deactivate();
             }
 
-            throw TTD::TTDebuggerAbortException::CreateTopLevelAbortRequest(this->m_pendingTTDBP.GetRootEventTime(), this->m_pendingTTDMoveMode, _u("Last source info hit -- reset to requested."));
+            throw TTD::TTDebuggerAbortException::CreateTopLevelAbortRequest(this->m_pendingTTDBP.GetRootEventTime(), this->m_pendingTTDMoveMode, u"Last source info hit -- reset to requested.");
         }
     }
 

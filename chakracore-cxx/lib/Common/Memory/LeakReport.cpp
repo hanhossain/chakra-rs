@@ -86,10 +86,10 @@ LeakReport::StartSection(char16_t const * msg, va_list argptr)
     nestedSectionCount++;
 
 
-    Print(_u("--------------------------------------------------------------------------------\n"));
+    Print(u"--------------------------------------------------------------------------------\n");
     vfwprintf(file, msg, argptr);
-    Print(_u("\n"));
-    Print(_u("--------------------------------------------------------------------------------\n"));
+    Print(u"\n");
+    Print(u"--------------------------------------------------------------------------------\n");
 }
 
 void
@@ -132,23 +132,23 @@ LeakReport::EnsureLeakReportFile()
     }
 
     char16_t const * filename = Js::Configuration::Global.flags.LeakReport;
-    char16_t const * openMode = _u("w+");
+    char16_t const * openMode = u"w+";
     char16_t defaultFilename[_MAX_PATH];
     if (filename == nullptr)
     {
         // xplat-todo: Implement swprintf_s in the PAL
-        _snwprintf(defaultFilename, _countof(defaultFilename), _u("jsleakreport-%u.txt"), ::GetCurrentProcessId());
+        _snwprintf(defaultFilename, _countof(defaultFilename), u"jsleakreport-%u.txt", ::GetCurrentProcessId());
 
         filename = defaultFilename;
-        openMode = _u("a+");   // append mode
+        openMode = u"a+";   // append mode
     }
     if (_wfopen_s(&file, filename, openMode) != 0)
     {
         openReportFileFailed = true;
         return false;
     }
-    Print(_u("================================================================================\n"));
-    Print(_u("Chakra Leak Report - PID: %d\n"), ::GetCurrentProcessId());
+    Print(u"================================================================================\n");
+    Print(u"Chakra Leak Report - PID: %d\n", ::GetCurrentProcessId());
 
     return true;
 }
@@ -161,7 +161,7 @@ LeakReport::LogUrl(char16_t const * url, void * globalObject)
     size_t length = wcslen(url) + 1; // Add 1 for the NULL.
     char16_t* urlCopy = NoCheckHeapNewArray(char16_t, length);
     js_memcpy_s(urlCopy, (length - 1) * sizeof(char16_t), url, (length - 1) * sizeof(char16_t));
-    urlCopy[length - 1] = _u('\0');
+    urlCopy[length - 1] = u'\0';
 
     record->url = urlCopy;
     record->time = time(NULL);
@@ -202,11 +202,11 @@ LeakReport::DumpUrl(uint32_t tid)
     {
         if (curr->tid == tid)
         {
-            char16_t timeStr[26] = _u("00:00");
+            char16_t timeStr[26] = u"00:00";
 
             // xplat-todo: Need to implement _wasctime_s in the PAL
             timeStr[wcslen(timeStr) - 1] = 0;
-            Print(_u("%s - (%p, %p) %s\n"), timeStr, curr->scriptEngine, curr->globalObject, curr->url);
+            Print(u"%s - (%p, %p) %s\n", timeStr, curr->scriptEngine, curr->globalObject, curr->url);
             *pprev = curr->next;
             NoCheckHeapDeleteArray(wcslen(curr->url) + 1, curr->url);
             NoCheckHeapDelete(curr);

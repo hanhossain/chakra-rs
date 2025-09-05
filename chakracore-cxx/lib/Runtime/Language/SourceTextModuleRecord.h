@@ -59,7 +59,7 @@ namespace Js
         const char16_t *GetSpecifierSz() const
         {
             return this->normalizedSpecifier != nullptr ? 
-                VarTo<JavascriptString>(this->normalizedSpecifier)->GetSz() : _u("module"); 
+                VarTo<JavascriptString>(this->normalizedSpecifier)->GetSz() : u"module"; 
         }
 
         Var GetErrorObject() const { return errorObject; }

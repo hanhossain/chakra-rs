@@ -151,7 +151,7 @@ namespace Js
 
                 if( c >= 0xDC00 && c <= 0xDFFF )
                 {
-                    JavascriptError::ThrowURIError(scriptContext, JSERR_URIEncodeError /* TODO-ERROR: _u("NEED MESSAGE") */);
+                    JavascriptError::ThrowURIError(scriptContext, JSERR_URIEncodeError /* TODO-ERROR: u"NEED MESSAGE" */);
                 }
                 else if( c < 0xD800 || c > 0xDBFF )
                 {
@@ -162,13 +162,13 @@ namespace Js
                     ++k;
                     if(k == len)
                     {
-                        JavascriptError::ThrowURIError(scriptContext, JSERR_URIEncodeError /* TODO-ERROR: _u("NEED MESSAGE") */);
+                        JavascriptError::ThrowURIError(scriptContext, JSERR_URIEncodeError /* TODO-ERROR: u"NEED MESSAGE" */);
                     }
                     __analysis_assume(k < len); // because we throw exception if k==len
                     char16_t c1 = input[k];
                     if( c1 < 0xDC00 || c1 > 0xDFFF )
                     {
-                        JavascriptError::ThrowURIError(scriptContext, JSERR_URIEncodeError /* TODO-ERROR: _u("NEED MESSAGE") */);
+                        JavascriptError::ThrowURIError(scriptContext, JSERR_URIEncodeError /* TODO-ERROR: u"NEED MESSAGE" */);
                     }
                     uVal = (c - 0xD800) * 0x400 + (c1 - 0xDC00) + 0x10000;
                 }
@@ -190,7 +190,7 @@ namespace Js
         uint32 allocSize = UInt32Math::Add(outputLen, 1);
         char16_t* outURI = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, allocSize);
         char16_t* outCurrent = outURI;
-        const char16_t *hexStream = _u("0123456789ABCDEF");
+        const char16_t *hexStream = u"0123456789ABCDEF";
 
         for( uint32 k = 0; k < len; k++ )
         {
@@ -206,7 +206,7 @@ namespace Js
 #if DBG
                 if( c >= 0xDC00 && c <= 0xDFFF )
                 {
-                    JavascriptError::ThrowURIError(scriptContext, VBSERR_InternalError /* TODO-ERROR: _u("NEED MESSAGE") */);
+                    JavascriptError::ThrowURIError(scriptContext, VBSERR_InternalError /* TODO-ERROR: u"NEED MESSAGE" */);
                 }
 #endif
                 if( c < 0xD800 || c > 0xDBFF )
@@ -219,7 +219,7 @@ namespace Js
 #if DBG
                     if(k == len)
                     {
-                        JavascriptError::ThrowURIError(scriptContext, VBSERR_InternalError /* TODO-ERROR: _u("NEED MESSAGE") */);
+                        JavascriptError::ThrowURIError(scriptContext, VBSERR_InternalError /* TODO-ERROR: u"NEED MESSAGE" */);
                     }
 #endif
                     __analysis_assume(k < len);// because we throw exception if k==len
@@ -228,7 +228,7 @@ namespace Js
 #if DBG
                     if( c1 < 0xDC00 || c1 > 0xDFFF )
                     {
-                        JavascriptError::ThrowURIError(scriptContext, VBSERR_InternalError /* TODO-ERROR: _u("NEED MESSAGE") */);
+                        JavascriptError::ThrowURIError(scriptContext, VBSERR_InternalError /* TODO-ERROR: u"NEED MESSAGE" */);
                     }
 #endif
                     uVal = (c - 0xD800) * 0x400 + (c1 - 0xDC00) + 0x10000;
@@ -239,7 +239,7 @@ namespace Js
                 {
 #pragma prefast(disable: 26014, "buffer length was calculated earlier");
                     uint8_t val = bUTF8[j];
-                    *outCurrent++ = _u('%');
+                    *outCurrent++ = u'%';
                     *outCurrent++ = hexStream[(val >> 4)];
                     *outCurrent++ = hexStream[(val & 0xF)];
 #pragma prefast(default: 26014);
@@ -248,7 +248,7 @@ namespace Js
         }
         AssertMsg(outURI + outputLen == outCurrent, " URI out buffer out of sync");
         __analysis_assume(outputLen + 1 == allocSize);
-        outURI[outputLen] = _u('\0');
+        outURI[outputLen] = u'\0';
 
         return JavascriptString::NewWithBuffer(outURI, outputLen, scriptContext);
     }
@@ -303,7 +303,7 @@ namespace Js
                 uint32 start = k;
                 if( k + 2 >= len )
                 {
-                    JavascriptError::ThrowURIError(scriptContext, JSERR_URIDecodeError /* TODO-ERROR: _u("NEED MESSAGE") */);
+                    JavascriptError::ThrowURIError(scriptContext, JSERR_URIDecodeError /* TODO-ERROR: u"NEED MESSAGE" */);
                 }
 
                 // %-encoded components in a URI may only contain hexadecimal digits from the ASCII character set. 'swscanf_s'
@@ -331,7 +331,7 @@ namespace Js
 
                     if( n == 1 || n > UriHelper::MaxUTF8Len )
                     {
-                        JavascriptError::ThrowURIError(scriptContext, JSERR_URIDecodeError /* TODO-ERROR: _u("NEED MESSAGE") */);
+                        JavascriptError::ThrowURIError(scriptContext, JSERR_URIDecodeError /* TODO-ERROR: u"NEED MESSAGE" */);
                     }
 
                     uint8_t bOctets[UriHelper::MaxUTF8Len];
@@ -339,25 +339,25 @@ namespace Js
 
                     if( k + 3 * (n-1) >= len )
                     {
-                        JavascriptError::ThrowURIError(scriptContext, JSERR_URIDecodeError /* TODO-ERROR: _u("NEED MESSAGE") */);
+                        JavascriptError::ThrowURIError(scriptContext, JSERR_URIDecodeError /* TODO-ERROR: u"NEED MESSAGE" */);
                     }
 
                     for( int j = 1; j < n; j++ )
                     {
                         if( input[++k] != '%' )
                         {
-                            JavascriptError::ThrowURIError(scriptContext, JSERR_URIDecodeError /* TODO-ERROR: _u("NEED MESSAGE") */);
+                            JavascriptError::ThrowURIError(scriptContext, JSERR_URIDecodeError /* TODO-ERROR: u"NEED MESSAGE" */);
                         }
 
                         if(!DecodeByteFromHex(input[k + 1], input[k + 2], b))
                         {
-                            JavascriptError::ThrowURIError(scriptContext, JSERR_URIDecodeError /* TODO-ERROR: _u("NEED MESSAGE") */);
+                            JavascriptError::ThrowURIError(scriptContext, JSERR_URIDecodeError /* TODO-ERROR: u"NEED MESSAGE" */);
                         }
 
                         // The two leading bits should be 10 for a valid UTF-8 encoding
                         if( (b & 0xC0) != 0x80)
                         {
-                            JavascriptError::ThrowURIError(scriptContext, JSERR_URIDecodeError /* TODO-ERROR: _u("NEED MESSAGE") */);
+                            JavascriptError::ThrowURIError(scriptContext, JSERR_URIDecodeError /* TODO-ERROR: u"NEED MESSAGE" */);
                         }
                         k += 2;
 
@@ -368,7 +368,7 @@ namespace Js
 
                     if( uVal >= 0xD800 && uVal <= 0xDFFF)
                     {
-                        JavascriptError::ThrowURIError(scriptContext, JSERR_URIDecodeError /* TODO-ERROR: _u("NEED MESSAGE") */);
+                        JavascriptError::ThrowURIError(scriptContext, JSERR_URIDecodeError /* TODO-ERROR: u"NEED MESSAGE" */);
                     }
                     if( uVal < 0x10000 )
                     {
@@ -376,7 +376,7 @@ namespace Js
                     }
                     else if( uVal > 0x10ffff )
                     {
-                        JavascriptError::ThrowURIError(scriptContext, JSERR_URIDecodeError /* TODO-ERROR: _u("NEED MESSAGE") */);
+                        JavascriptError::ThrowURIError(scriptContext, JSERR_URIDecodeError /* TODO-ERROR: u"NEED MESSAGE" */);
                     }
                     else
                     {
@@ -423,7 +423,7 @@ namespace Js
                 Assert(!(k + 2 >= len));
                 if( k + 2 >= len )
                 {
-                    JavascriptError::ThrowURIError(scriptContext, VBSERR_InternalError /* TODO-ERROR: _u("NEED MESSAGE") */);
+                    JavascriptError::ThrowURIError(scriptContext, VBSERR_InternalError /* TODO-ERROR: u"NEED MESSAGE" */);
                 }
 #endif
                 // Let OACR know some things about 'k' that we checked just above, to let it know that we are not going to
@@ -436,7 +436,7 @@ namespace Js
                 {
 #if DBG
                     AssertMsg(false, "!DecodeByteFromHex(input[k + 1], input[k + 2], b)");
-                    JavascriptError::ThrowURIError(scriptContext, VBSERR_InternalError /* TODO-ERROR: _u("NEED MESSAGE") */);
+                    JavascriptError::ThrowURIError(scriptContext, VBSERR_InternalError /* TODO-ERROR: u"NEED MESSAGE" */);
 #endif
                 }
 
@@ -454,7 +454,7 @@ namespace Js
 
                     if( n == 1 || n > UriHelper::MaxUTF8Len )
                     {
-                        JavascriptError::ThrowURIError(scriptContext, VBSERR_InternalError /* TODO-ERROR: _u("NEED MESSAGE") */);
+                        JavascriptError::ThrowURIError(scriptContext, VBSERR_InternalError /* TODO-ERROR: u"NEED MESSAGE" */);
                     }
 
                     uint8_t bOctets[UriHelper::MaxUTF8Len];
@@ -464,7 +464,7 @@ namespace Js
                     Assert(!(k + 3 * (n-1) >= len));
                     if( k + 3 * (n-1) >= len )
                     {
-                        JavascriptError::ThrowURIError(scriptContext, VBSERR_InternalError /* TODO-ERROR: _u("NEED MESSAGE") */);
+                        JavascriptError::ThrowURIError(scriptContext, VBSERR_InternalError /* TODO-ERROR: u"NEED MESSAGE" */);
                     }
 #endif
                     // Let OACR know some things about 'k' that we checked just above, to let it know that we are not going to
@@ -480,7 +480,7 @@ namespace Js
                         Assert(!(input[k] != '%'));
                         if( input[k] != '%' )
                         {
-                            JavascriptError::ThrowURIError(scriptContext, VBSERR_InternalError /* TODO-ERROR: _u("NEED MESSAGE") */);
+                            JavascriptError::ThrowURIError(scriptContext, VBSERR_InternalError /* TODO-ERROR: u"NEED MESSAGE" */);
                         }
 #endif
 
@@ -488,7 +488,7 @@ namespace Js
                         {
 #if DBG
                             AssertMsg(false, "!DecodeByteFromHex(input[k + 1], input[k + 2], b)");
-                            JavascriptError::ThrowURIError(scriptContext, VBSERR_InternalError /* TODO-ERROR: _u("NEED MESSAGE") */);
+                            JavascriptError::ThrowURIError(scriptContext, VBSERR_InternalError /* TODO-ERROR: u"NEED MESSAGE" */);
 #endif
                         }
 
@@ -497,7 +497,7 @@ namespace Js
                         Assert(!((b & 0xC0) != 0x80));
                         if( (b & 0xC0) != 0x80)
                         {
-                            JavascriptError::ThrowURIError(scriptContext, VBSERR_InternalError /* TODO-ERROR: _u("NEED MESSAGE") */);
+                            JavascriptError::ThrowURIError(scriptContext, VBSERR_InternalError /* TODO-ERROR: u"NEED MESSAGE" */);
                         }
 #endif
 
@@ -512,7 +512,7 @@ namespace Js
                     Assert(!(uVal >= 0xD800 && uVal <= 0xDFFF));
                     if( uVal >= 0xD800 && uVal <= 0xDFFF)
                     {
-                        JavascriptError::ThrowURIError(scriptContext, VBSERR_InternalError /* TODO-ERROR: _u("NEED MESSAGE") */);
+                        JavascriptError::ThrowURIError(scriptContext, VBSERR_InternalError /* TODO-ERROR: u"NEED MESSAGE" */);
                     }
 #endif
 
@@ -525,7 +525,7 @@ namespace Js
                     else if( uVal > 0x10ffff )
                     {
                         AssertMsg(false, "uVal > 0x10ffff");
-                        JavascriptError::ThrowURIError(scriptContext, VBSERR_InternalError /* TODO-ERROR: _u("NEED MESSAGE") */);
+                        JavascriptError::ThrowURIError(scriptContext, VBSERR_InternalError /* TODO-ERROR: u"NEED MESSAGE" */);
                     }
 #endif
                     else
@@ -560,7 +560,7 @@ namespace Js
 
         AssertMsg(outURI + outputLen == outCurrent, " URI out buffer out of sync");
         __analysis_assume(outputLen + 1 == allocSize);
-        outURI[outputLen] = _u('\0');
+        outURI[outputLen] = u'\0';
 
         return JavascriptString::NewWithBuffer(outURI, outputLen, scriptContext);
     }

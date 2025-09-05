@@ -26,10 +26,10 @@ using namespace Js;
         {
             UnifiedRegex::DebugWriter* w = type->GetScriptContext()->GetRegexDebugWriter();
             if (pattern == 0)
-                w->PrintEOL(_u("// REGEX CREATE"));
+                w->PrintEOL(u"// REGEX CREATE");
             else
             {
-                w->Print(_u("// REGEX CREATE "));
+                w->Print(u"// REGEX CREATE ");
                 pattern->Print(w);
                 w->EOL();
             }
@@ -50,7 +50,7 @@ using namespace Js;
         if (REGEX_CONFIG_FLAG(RegexTracing))
         {
             UnifiedRegex::DebugWriter* w = type->GetScriptContext()->GetRegexDebugWriter();
-            w->PrintEOL(_u("REGEX CREATE"));
+            w->PrintEOL(u"REGEX CREATE");
         }
 #endif
     }
@@ -424,7 +424,7 @@ using namespace Js;
 
         if (!sourceOnly)
         {
-            builder->AppendChars(_u('/'));
+            builder->AppendChars(u'/');
         }
         if (pattern->IsLiteral())
         {
@@ -439,7 +439,7 @@ using namespace Js;
             //   - Line terminators need to be escaped since they're not allowed in a static regex
             if (str.GetLength() == 0)
             {
-                builder->AppendChars(_u("(?:)"));
+                builder->AppendChars(u"(?:)");
             }
             else
             {
@@ -452,15 +452,15 @@ using namespace Js;
                     {
                         switch(c)
                         {
-                            case _u('/'):
-                            case _u('\n'):
-                            case _u('\r'):
-                            case _u('\x2028'):
-                            case _u('\x2029'):
+                            case u'/':
+                            case u'\n':
+                            case u'\r':
+                            case u'\x2028':
+                            case u'\x2029':
                                 // Unescaped '/' or line terminator needs to be escaped
                                 break;
 
-                            case _u('\\'):
+                            case u'\\':
                                 // Escape sequence; the next character is escaped and shouldn't be escaped further
                                 escape = true;
                                 Assert(i + 1 < str.GetLength()); // cannot end in a '\'
@@ -479,22 +479,22 @@ using namespace Js;
                         escape = false;
                     }
 
-                    builder->AppendChars(_u('\\'));
+                    builder->AppendChars(u'\\');
                     switch(c)
                     {
                         // Line terminators need to be escaped. \<lineTerminator> is a special case, where \\n doesn't work
                         // since that means a '\' followed by an 'n'. We need to use \n instead.
-                        case _u('\n'):
-                            builder->AppendChars(_u('n'));
+                        case u'\n':
+                            builder->AppendChars(u'n');
                             break;
-                        case _u('\r'):
-                            builder->AppendChars(_u('r'));
+                        case u'\r':
+                            builder->AppendChars(u'r');
                             break;
-                        case _u('\x2028'):
-                            builder->AppendChars(_u("u2028"));
+                        case u'\x2028':
+                            builder->AppendChars(u"u2028");
                             break;
-                        case _u('\x2029'):
-                            builder->AppendChars(_u("u2029"));
+                        case u'\x2029':
+                            builder->AppendChars(u"u2029");
                             break;
 
                         default:
@@ -506,33 +506,33 @@ using namespace Js;
 
         if (!sourceOnly)
         {
-            builder->AppendChars(_u('/'));
+            builder->AppendChars(u'/');
 
             // Cross-browser compatibility - flags are listed in alphabetical order in the spec and by other browsers
             // If you change the order of the flags, don't forget to change it in EntryGetterFlags() and GetOptions() too.
             if (pattern->IsGlobal())
             {
-                builder->AppendChars(_u('g'));
+                builder->AppendChars(u'g');
             }
             if (pattern->IsIgnoreCase())
             {
-                builder->AppendChars(_u('i'));
+                builder->AppendChars(u'i');
             }
             if (pattern->IsMultiline())
             {
-                builder->AppendChars(_u('m'));
+                builder->AppendChars(u'm');
             }
             if (pattern->IsDotAll())
             {
-                builder->AppendChars(_u('s'));
+                builder->AppendChars(u's');
             }
             if (pattern->IsUnicode())
             {
-                builder->AppendChars(_u('u'));
+                builder->AppendChars(u'u');
             }
             if (pattern->IsSticky())
             {
-                builder->AppendChars(_u('y'));
+                builder->AppendChars(u'y');
             }
         }
 
@@ -546,7 +546,7 @@ using namespace Js;
         ARGUMENTS(args, callInfo);
         ScriptContext* scriptContext = function->GetScriptContext();
 
-        JavascriptRegExp* thisRegularExpression = GetJavascriptRegExp(args, _u("RegExp.prototype.compile"), scriptContext);
+        JavascriptRegExp* thisRegularExpression = GetJavascriptRegExp(args, u"RegExp.prototype.compile", scriptContext);
 
         UnifiedRegex::RegexPattern* pattern;
         UnifiedRegex::RegexPattern* splitPattern = nullptr;
@@ -631,7 +631,7 @@ using namespace Js;
 
         Assert(!(callInfo.Flags & CallFlags_New));
 
-        JavascriptRegExp * pRegEx = GetJavascriptRegExp(args, _u("RegExp.prototype.exec"), scriptContext);
+        JavascriptRegExp * pRegEx = GetJavascriptRegExp(args, u"RegExp.prototype.exec", scriptContext);
         JavascriptString * pStr = GetFirstStringArg(args, scriptContext);
         return RegexHelper::RegexExec(scriptContext, pRegEx, pStr, RegexHelper::IsResultNotUsed(callInfo.Flags));
     }
@@ -644,7 +644,7 @@ using namespace Js;
         ScriptContext* scriptContext = function->GetScriptContext();
         Assert(!(callInfo.Flags & CallFlags_New));
 
-        RecyclableObject *thisObj = GetThisObject(args, _u("RegExp.prototype.test"), scriptContext);
+        RecyclableObject *thisObj = GetThisObject(args, u"RegExp.prototype.test", scriptContext);
         JavascriptString* string = GetFirstStringArg(args, scriptContext);
         return RegexHelper::RegexTest(scriptContext, thisObj, string);
     }
@@ -659,7 +659,7 @@ using namespace Js;
         Assert(!(callInfo.Flags & CallFlags_New));
         Assert(args.Info.Count > 0);
 
-        PCWSTR const varName = _u("RegExp.prototype.toString");
+        PCWSTR const varName = u"RegExp.prototype.toString";
 
         const ScriptConfiguration* scriptConfig = scriptContext->GetConfig();
 
@@ -676,9 +676,9 @@ using namespace Js;
             CharCount length = source->GetLength() + flags->GetLength() + 2; // 2 for the two '/'s
             CompoundString *const builder =
                 CompoundString::NewWithCharCapacity(length, scriptContext->GetLibrary());
-            builder->Append(_u('/'));
+            builder->Append(u'/');
             builder->Append(source);
-            builder->Append(_u('/'));
+            builder->Append(u'/');
             builder->Append(flags);
             return builder;
         }
@@ -698,7 +698,7 @@ using namespace Js;
 
         ScriptContext* scriptContext = function->GetScriptContext();
 
-        PCWSTR const varName = _u("RegExp.prototype[Symbol.match]");
+        PCWSTR const varName = u"RegExp.prototype[Symbol.match]";
 
         RecyclableObject *thisObj = GetThisObject(args, varName, scriptContext);
         JavascriptString* string = GetFirstStringArg(args, scriptContext);
@@ -766,7 +766,7 @@ using namespace Js;
 
         ScriptContext* scriptContext = function->GetScriptContext();
 
-        PCWSTR varName = _u("RegExp.prototype[Symbol.replace]");
+        PCWSTR varName = u"RegExp.prototype[Symbol.replace]";
 
         RecyclableObject* thisObj = GetThisObject(args, varName, scriptContext);
         JavascriptString* string = GetFirstStringArg(args, scriptContext);
@@ -798,7 +798,7 @@ using namespace Js;
 
         ScriptContext* scriptContext = function->GetScriptContext();
 
-        PCWSTR const varName = _u("RegExp.prototype[Symbol.search]");
+        PCWSTR const varName = u"RegExp.prototype[Symbol.search]";
 
         RecyclableObject *thisObj = GetThisObject(args, varName, scriptContext);
         Var regEx = args[0];
@@ -825,7 +825,7 @@ using namespace Js;
 
         ScriptContext* scriptContext = function->GetScriptContext();
 
-        RecyclableObject *thisObj = GetThisObject(args, _u("RegExp.prototype[Symbol.match]"), scriptContext);
+        RecyclableObject *thisObj = GetThisObject(args, u"RegExp.prototype[Symbol.match]", scriptContext);
         JavascriptString* string = GetFirstStringArg(args, scriptContext);
 
         // TODO: SPEC DEVIATION
@@ -905,34 +905,34 @@ using namespace Js;
 
         ScriptContext* scriptContext = function->GetScriptContext();
 
-        RecyclableObject *thisObj = GetThisObject(args, _u("RegExp.prototype.flags"), scriptContext);
+        RecyclableObject *thisObj = GetThisObject(args, u"RegExp.prototype.flags", scriptContext);
         Var flags;
 
-        BEGIN_TEMP_ALLOCATOR(tempAlloc, scriptContext, _u("JavascriptRegExp"))
+        BEGIN_TEMP_ALLOCATOR(tempAlloc, scriptContext, u"JavascriptRegExp")
         {
             StringBuilder<ArenaAllocator> bs(tempAlloc, 5);
 
 #define APPEND_FLAG(propertyId, flag) AppendFlagForFlagsProperty(&bs, thisObj, propertyId, flag, scriptContext)
             // If you change the order of the flags, don't forget to change it in GetOptions() and ToString() too.
-            APPEND_FLAG(PropertyIds::global, _u('g'));
-            APPEND_FLAG(PropertyIds::ignoreCase, _u('i'));
-            APPEND_FLAG(PropertyIds::multiline, _u('m'));
+            APPEND_FLAG(PropertyIds::global, u'g');
+            APPEND_FLAG(PropertyIds::ignoreCase, u'i');
+            APPEND_FLAG(PropertyIds::multiline, u'm');
 
             ScriptConfiguration const * scriptConfig = scriptContext->GetConfig();
 
             if (scriptConfig->IsES6UnicodeExtensionsEnabled())
             {
-                APPEND_FLAG(PropertyIds::unicode, _u('u'));
+                APPEND_FLAG(PropertyIds::unicode, u'u');
             }
 
             if (scriptConfig->IsES2018RegExDotAllEnabled())
             {
-                APPEND_FLAG(PropertyIds::dotAll, _u('s'));
+                APPEND_FLAG(PropertyIds::dotAll, u's');
             }
 
             if (scriptConfig->IsES6RegExStickyEnabled())
             {
-                APPEND_FLAG(PropertyIds::sticky, _u('y'));
+                APPEND_FLAG(PropertyIds::sticky, u'y');
             }
 #undef APPEND_FLAG
 
@@ -969,7 +969,7 @@ using namespace Js;
             return scriptContext->GetLibrary()->GetUndefined();
         }
 
-        return GetJavascriptRegExp(args, _u("RegExp.prototype.options"), scriptContext)->GetOptions();
+        return GetJavascriptRegExp(args, u"RegExp.prototype.options", scriptContext)->GetOptions();
     }
 
     Var JavascriptRegExp::GetOptions()
@@ -977,34 +977,34 @@ using namespace Js;
         Var options;
 
         ScriptContext* scriptContext = this->GetLibrary()->GetScriptContext();
-        BEGIN_TEMP_ALLOCATOR(tempAlloc, scriptContext, _u("JavascriptRegExp"))
+        BEGIN_TEMP_ALLOCATOR(tempAlloc, scriptContext, u"JavascriptRegExp")
         {
             StringBuilder<ArenaAllocator> bs(tempAlloc, 4);
 
             // If you change the order of the flags, don't forget to change it in EntryGetterFlags() and ToString() too.
             if(GetPattern()->IsGlobal())
             {
-                bs.Append(_u('g'));
+                bs.Append(u'g');
             }
             if(GetPattern()->IsIgnoreCase())
             {
-                bs.Append(_u('i'));
+                bs.Append(u'i');
             }
             if(GetPattern()->IsMultiline())
             {
-                bs.Append(_u('m'));
+                bs.Append(u'm');
             }
             if(GetPattern()->IsDotAll())
             {
-                bs.Append(_u('s'));
+                bs.Append(u's');
             }
             if (GetPattern()->IsUnicode())
             {
-                bs.Append(_u('u'));
+                bs.Append(u'u');
             }
             if (GetPattern()->IsSticky())
             {
-                bs.Append(_u('y'));
+                bs.Append(u'y');
             }
             options = Js::JavascriptString::NewCopyBuffer(bs.Detach(), bs.Count(), scriptContext);
         }
@@ -1022,10 +1022,10 @@ using namespace Js;
         ScriptContext* scriptContext = function->GetScriptContext();
         if (ShouldApplyPrototypeWebWorkaround(args, scriptContext))
         {
-            return JavascriptString::NewCopyBuffer(_u("(?:)"), 4, scriptContext);
+            return JavascriptString::NewCopyBuffer(u"(?:)", 4, scriptContext);
         }
 
-        return GetJavascriptRegExp(args, _u("RegExp.prototype.source"), scriptContext)->ToString(true);
+        return GetJavascriptRegExp(args, u"RegExp.prototype.source", scriptContext)->ToString(true);
     }
 
 #define DEFINE_FLAG_GETTER(methodName, propertyName, patternMethodName) \
@@ -1041,7 +1041,7 @@ using namespace Js;
             return scriptContext->GetLibrary()->GetUndefined(); \
         }\
         \
-        JavascriptRegExp* pRegEx = GetJavascriptRegExp(args, _u("RegExp.prototype.") _u(#propertyName), scriptContext); \
+        JavascriptRegExp* pRegEx = GetJavascriptRegExp(args, u"RegExp.prototype." _u(#propertyName), scriptContext); \
         return pRegEx->GetLibrary()->CreateBoolean(pRegEx->GetPattern()->##patternMethodName##()); \
     }
 

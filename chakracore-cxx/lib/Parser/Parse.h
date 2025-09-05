@@ -316,10 +316,10 @@ protected:
     HashTbl * GetHashTbl() { return this->GetScanner()->GetHashTbl(); }
 
     LPCWSTR GetTokenString(tokens token);
-    __declspec(noreturn) void Error(HRESULT hr, LPCWSTR stringOne = _u(""), LPCWSTR stringTwo = _u(""));
+    __declspec(noreturn) void Error(HRESULT hr, LPCWSTR stringOne = u"", LPCWSTR stringTwo = u"");
 private:
     __declspec(noreturn) void Error(HRESULT hr, ParseNodePtr pnode);
-    __declspec(noreturn) void Error(HRESULT hr, charcount_t ichMin, charcount_t ichLim, LPCWSTR stringOne = _u(""), LPCWSTR stringTwo = _u(""));
+    __declspec(noreturn) void Error(HRESULT hr, charcount_t ichMin, charcount_t ichLim, LPCWSTR stringOne = u"", LPCWSTR stringTwo = u"");
     __declspec(noreturn) static void OutOfMemory();
 
     void EnsureStackAvailable();
@@ -440,9 +440,9 @@ public:
         switch(m_parseType)
         {
             case ParseType_Upfront:
-                return _u("Upfront");
+                return u"Upfront";
             case ParseType_Deferred:
-                return _u("Deferred");
+                return u"Deferred";
         }
         Assert(false);
         return NULL;
@@ -1104,7 +1104,7 @@ private:
     void AddToNodeList(ParseNode ** ppnodeList, ParseNode *** pppnodeLast, ParseNode * pnodeAdd);
     void AddToNodeListEscapedUse(ParseNode ** ppnodeList, ParseNode *** pppnodeLast, ParseNode * pnodeAdd);
 
-    void ChkCurTokNoScan(int tk, int wErr, LPCWSTR stringOne = _u(""), LPCWSTR stringTwo = _u(""))
+    void ChkCurTokNoScan(int tk, int wErr, LPCWSTR stringOne = u"", LPCWSTR stringTwo = u"")
     {
         if (m_token.tk != tk)
         {

@@ -38,7 +38,7 @@ void HostConfigFlags::Parse<BSTR>(ICmdLineArgsParser * parser, BSTR * bstr)
     *bstr = parser->GetCurrentString();
     if (*bstr == NULL)
     {
-        *bstr = SysAllocString(_u(""));
+        *bstr = SysAllocString(u"");
     }
 }
 
@@ -67,7 +67,7 @@ bool HostConfigFlags::ParseFlag(LPCWSTR flagsString, ICmdLineArgsParser * parser
 void HostConfigFlags::PrintUsageString()
 {
 #define FLAG(Type, Name, Desc, Default) \
-    wprintf(_u("%20ls          \t%ls\n"), _u(#Name), _u(#Desc));
+    wprintf(u"%20ls          \t%ls\n", _u(#Name), _u(#Desc));
 #include "HostConfigFlagsList.h"
 }
 
@@ -78,7 +78,7 @@ void HostConfigFlags::PrintUsage()
         pfnPrintUsage();
     }
 
-    wprintf(_u("\nHost Config Flags: \n\n"));
+    wprintf(u"\nHost Config Flags: \n\n");
     HostConfigFlags::PrintUsageString();
     ChakraRTInterface::PrintConfigFlagsUsageString();
 }
@@ -104,8 +104,8 @@ void HostConfigFlags::RemoveArg(int& argc, _Inout_updates_to_(argc, argc) LPWSTR
 
 void HostConfigFlags::HandleArgsFlag(int& argc, _Inout_updates_to_(argc, argc) LPWSTR argv[])
 {
-    const LPCWSTR argsFlag = _u("-args");
-    const LPCWSTR endArgsFlag = _u("-endargs");
+    const LPCWSTR argsFlag = u"-args";
+    const LPCWSTR endArgsFlag = u"-endargs";
     int argsFlagLen = static_cast<int>(wcslen(argsFlag));
     int i;
     for (i = 1; i < argc; i++)

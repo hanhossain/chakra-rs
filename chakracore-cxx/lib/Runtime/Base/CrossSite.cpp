@@ -35,7 +35,7 @@ namespace Js
         }
         if (PHASE_TRACE1(Js::Phase::MarshalPhase))
         {
-            Output::Print(_u("NeedMarshalVar: %p (var sc: %p, request sc: %p)\n"), instance, object->GetScriptContext(), requestContext);
+            Output::Print(u"NeedMarshalVar: %p (var sc: %p, request sc: %p)\n", instance, object->GetScriptContext(), requestContext);
         }
         if (DynamicType::Is(object->GetTypeId()))
         {
@@ -174,7 +174,7 @@ namespace Js
         {
             if (PHASE_TRACE1(Js::Phase::MarshalPhase))
             {
-                Output::Print(_u("MarshalVar: %p (var sc: %p, request sc: %p, requestWrapper: %d)\n"), object, object->GetScriptContext(), scriptContext, fRequestWrapper);
+                Output::Print(u"MarshalVar: %p (var sc: %p, request sc: %p, requestWrapper: %d)\n", object, object->GetScriptContext(), scriptContext, fRequestWrapper);
             }
 
             // Do not allow marshaling if a callable object is being marshalled into a high privileged
@@ -396,7 +396,7 @@ namespace Js
                 // if the current entrypoint is deferred parse we need to update it appropriately for the profiler mode.
                 entryPoint = Js::ScriptContext::GetProfileModeThunk(entryPoint);
             }
-            OUTPUT_TRACE(Js::ScriptProfilerPhase, _u("CrossSite::ProfileThunk FunctionNumber : %s, Entrypoint : 0x%08X\n"), funcInfo->GetFunctionProxy()->GetDebugNumberSet(debugStringBuffer), entryPoint);
+            OUTPUT_TRACE(Js::ScriptProfilerPhase, u"CrossSite::ProfileThunk FunctionNumber : %s, Entrypoint : 0x%08X\n", funcInfo->GetFunctionProxy()->GetDebugNumberSet(debugStringBuffer), entryPoint);
         }
         else
         {

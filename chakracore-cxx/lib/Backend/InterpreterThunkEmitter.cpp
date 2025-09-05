@@ -196,7 +196,7 @@ constexpr uint8_t HeaderSize = sizeof(InterpreterThunk);
 const uint8_t InterpreterThunkEmitter::ThunkSize = sizeof(Call);
 
 InterpreterThunkEmitter::InterpreterThunkEmitter(Js::ScriptContext* context, ArenaAllocator* allocator, CustomHeap::InProcCodePageAllocators * codePageAllocators, bool isAsmInterpreterThunk) :
-    emitBufferManager(allocator, codePageAllocators, /*scriptContext*/ nullptr, nullptr, _u("Interpreter thunk buffer"), GetCurrentProcess()),
+    emitBufferManager(allocator, codePageAllocators, /*scriptContext*/ nullptr, nullptr, u"Interpreter thunk buffer", GetCurrentProcess()),
     scriptContext(context),
     allocator(allocator),
     thunkCount(0),

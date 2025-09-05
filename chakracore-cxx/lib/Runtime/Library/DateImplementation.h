@@ -358,26 +358,26 @@ namespace Js {
         Assert(charCapacity >= 4);
         if (value < 10)
         {
-            buffer[0] = _u('0');
-            buffer[1] = _u('0');
-            buffer[2] = _u('0');
-            buffer[3] = static_cast<char16_t>(value + _u('0'));
+            buffer[0] = u'0';
+            buffer[1] = u'0';
+            buffer[2] = u'0';
+            buffer[3] = static_cast<char16_t>(value + u'0');
             buffer[4] = 0;
         }
         else if (value < 100)
         {
-            buffer[0] = _u('0');
-            buffer[1] = _u('0');
-            buffer[2] = static_cast<char16_t>((value / 10) + _u('0'));
-            buffer[3] = static_cast<char16_t>((value % 10) + _u('0'));
+            buffer[0] = u'0';
+            buffer[1] = u'0';
+            buffer[2] = static_cast<char16_t>((value / 10) + u'0');
+            buffer[3] = static_cast<char16_t>((value % 10) + u'0');
             buffer[4] = 0;
         }
         else if (value < 1000)
         {
-            buffer[0] = _u('0');
-            buffer[1] = static_cast<char16_t>((value / 100) + _u('0'));
-            buffer[2] = static_cast<char16_t>(((value / 10) % 10) + _u('0'));
-            buffer[3] = static_cast<char16_t>((value % 10) + _u('0'));
+            buffer[0] = u'0';
+            buffer[1] = static_cast<char16_t>((value / 100) + u'0');
+            buffer[2] = static_cast<char16_t>(((value / 10) % 10) + u'0');
+            buffer[3] = static_cast<char16_t>((value % 10) + u'0');
             buffer[4] = 0;
         }
         else
@@ -415,12 +415,12 @@ namespace Js {
         if( !(noDateTime & DateTimeFlag::NoDate))
         {
             bs->AppendChars(g_rgpszDay[pymd->wday]);
-            bs->AppendChars(_u(' '));
+            bs->AppendChars(u' ');
             bs->AppendChars(g_rgpszMonth[pymd->mon]);
-            bs->AppendChars(_u(' '));
+            bs->AppendChars(u' ');
             // sz - as %02d - output is "01" to "31"
             bs->AppendChars(static_cast<uint16_t>(pymd->mday + 1), 2, ConvertUInt16ToString_ZeroPad_2);
-            bs->AppendChars(_u(' '));
+            bs->AppendChars(u' ');
 
             // year is directly after day, month, daydigit for IE11+
             if ((pymd->year) > 0)
@@ -430,14 +430,14 @@ namespace Js {
             else
             {
                 int positiveYear = -(pymd->year); // pymd->year is negative
-                bs->AppendChars(_u('-'));
+                bs->AppendChars(u'-');
                 bs->AppendChars(positiveYear, 10, ConvertUInt32ToString_ZeroPad_4);
             }
 
             if(!(noDateTime & DateTimeFlag::NoTime))
             {
                 // append a space to delimit PART 2 - if to be outputted
-                bs->AppendChars(_u(' '));
+                bs->AppendChars(u' ');
             }
         }
 
@@ -446,25 +446,25 @@ namespace Js {
         {
             // sz - as %02d - HOUR
             bs->AppendChars(static_cast<uint16_t>(pymd->time / 3600000), 2, ConvertUInt16ToString_ZeroPad_2);
-            bs->AppendChars(_u(':'));
+            bs->AppendChars(u':');
             // sz - as %02d - MINUTE
             bs->AppendChars(static_cast<uint16_t>((pymd->time / 60000) % 60), 2, ConvertUInt16ToString_ZeroPad_2);
-            bs->AppendChars(_u(':'));
+            bs->AppendChars(u':');
             // sz - as %02d - SECOND
             bs->AppendChars(static_cast<uint16_t>((pymd->time / 1000) % 60), 2, ConvertUInt16ToString_ZeroPad_2);
 
-            bs->AppendChars(_u(" GMT"));
+            bs->AppendChars(u" GMT");
 
             // IE11+
             min = ptzd->offset;
             if (min < 0)
             {
-                bs->AppendChars(_u('-'));
+                bs->AppendChars(u'-');
                 min = -min;
             }
             else
             {
-                bs->AppendChars(_u('+'));
+                bs->AppendChars(u'+');
             }
 
             hour = min / 60;
@@ -475,7 +475,7 @@ namespace Js {
             // sz - as %02d - MIN
             bs->AppendChars(static_cast<uint16_t>(min), 2, ConvertUInt16ToString_ZeroPad_2);
 
-            bs->AppendChars(_u(" ("));
+            bs->AppendChars(u" (");
 
             // check the IsDaylightSavings?
             if (ptzd->fDst == false)
@@ -491,7 +491,7 @@ namespace Js {
                 bs->AppendChars(daylightName, static_cast<CharCount>(nameLength));
             }
 
-            bs->AppendChars(_u(')'));
+            bs->AppendChars(u')');
         }
 
         return bs;

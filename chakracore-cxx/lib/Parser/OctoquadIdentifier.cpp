@@ -379,7 +379,7 @@ namespace UnifiedRegex
         for (int i = 0; i < OctoquadIdentifier::NumPatterns; i++)
         {
             if (i > 0)
-                w->Print(_u("|"));
+                w->Print(u"|");
             for (int j = 0; j < TrigramInfo::PatternLength; j++)
             {
                 uint8_t v = (patterns[i] >> ((TrigramInfo::PatternLength - j - 1) * TrigramAlphabet::AlphaCount)) & 0xf;
@@ -391,7 +391,7 @@ namespace UnifiedRegex
                     n++;
                 }
                 if (n != 1)
-                    w->Print(_u("["));
+                    w->Print(u"[");
                 for (int k = 0; k < TrigramAlphabet::AlphaCount; k++)
                 {
                     if ((v & 1) == 1)
@@ -399,7 +399,7 @@ namespace UnifiedRegex
                     v >>= 1;
                 }
                 if (n != 1)
-                    w->Print(_u("]"));
+                    w->Print(u"]");
             }
         }
     }

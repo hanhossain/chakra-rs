@@ -1031,10 +1031,10 @@ GlobOptBlockData::MergeJsTypeValueInfo(JsTypeValueInfo * toValueInfo, JsTypeValu
 #if DBG_DUMP
     if (PHASE_TRACE(Js::ObjTypeSpecPhase, this->globOpt->func) || PHASE_TRACE(Js::EquivObjTypeSpecPhase, this->globOpt->func))
     {
-        Output::Print(_u("ObjTypeSpec: Merging type value info:\n"));
-        Output::Print(_u("    from (shared %d): "), fromValueInfo->GetIsShared());
+        Output::Print(u"ObjTypeSpec: Merging type value info:\n");
+        Output::Print(u"    from (shared %d): ", fromValueInfo->GetIsShared());
         fromValueInfo->Dump();
-        Output::Print(_u("\n    to (shared %d): "), toValueInfo->GetIsShared());
+        Output::Print(u"\n    to (shared %d): ", toValueInfo->GetIsShared());
         toValueInfo->Dump();
     }
 #endif
@@ -1044,9 +1044,9 @@ GlobOptBlockData::MergeJsTypeValueInfo(JsTypeValueInfo * toValueInfo, JsTypeValu
 #if DBG_DUMP
         if (PHASE_TRACE(Js::ObjTypeSpecPhase, this->globOpt->func) || PHASE_TRACE(Js::EquivObjTypeSpecPhase, this->globOpt->func))
         {
-            Output::Print(_u("\n    result (shared %d): "), toValueInfo->GetIsShared());
+            Output::Print(u"\n    result (shared %d): ", toValueInfo->GetIsShared());
             toValueInfo->Dump();
-            Output::Print(_u("\n"));
+            Output::Print(u"\n");
         }
 #endif
         return toValueInfo;
@@ -1064,9 +1064,9 @@ GlobOptBlockData::MergeJsTypeValueInfo(JsTypeValueInfo * toValueInfo, JsTypeValu
 #if DBG_DUMP
         if (PHASE_TRACE(Js::ObjTypeSpecPhase, this->globOpt->func) || PHASE_TRACE(Js::EquivObjTypeSpecPhase, this->globOpt->func))
         {
-            Output::Print(_u("\n    result (shared %d): "), mergedValueInfo->GetIsShared());
+            Output::Print(u"\n    result (shared %d): ", mergedValueInfo->GetIsShared());
             mergedValueInfo->Dump();
-            Output::Print(_u("\n"));
+            Output::Print(u"\n");
         }
 #endif
         return mergedValueInfo;
@@ -1078,9 +1078,9 @@ GlobOptBlockData::MergeJsTypeValueInfo(JsTypeValueInfo * toValueInfo, JsTypeValu
 #if DBG_DUMP
         if (PHASE_TRACE(Js::ObjTypeSpecPhase, this->globOpt->func) || PHASE_TRACE(Js::EquivObjTypeSpecPhase, this->globOpt->func))
         {
-            Output::Print(_u("\n    result (shared %d): "), toValueInfo->GetIsShared());
+            Output::Print(u"\n    result (shared %d): ", toValueInfo->GetIsShared());
             toValueInfo->Dump();
-            Output::Print(_u("\n"));
+            Output::Print(u"\n");
         }
 #endif
         return toValueInfo;
@@ -1217,7 +1217,7 @@ GlobOptBlockData::TrackArgumentsSym(IR::RegOpnd const* opnd)
     {
         char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
         char16_t debugStringBuffer2[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-        Output::Print(_u("Created a new alias s%d for arguments object in function %s(%s) topFunc %s(%s)\n"),
+        Output::Print(u"Created a new alias s%d for arguments object in function %s(%s) topFunc %s(%s)\n",
             opnd->m_sym->m_id,
             this->curFunc->GetJITFunctionBody()->GetDisplayName(),
             this->curFunc->GetDebugNumberSet(debugStringBuffer),

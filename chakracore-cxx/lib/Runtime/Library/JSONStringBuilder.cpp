@@ -34,8 +34,8 @@ void
 JSONStringBuilder::AppendEscapeSequence(_In_ const char16_t character)
 {
     // Convert character into a 4 digit hex code (e.g. \u0010)
-    this->AppendCharacter(_u('\\'));
-    this->AppendCharacter(_u('u'));
+    this->AppendCharacter(u'\\');
+    this->AppendCharacter(u'u');
     {
         char16_t buf[5];
         // Get hex value
@@ -46,11 +46,11 @@ JSONStringBuilder::AppendEscapeSequence(_In_ const char16_t character)
         switch (count)
         {
         case 1:
-            this->AppendCharacter(_u('0'));
+            this->AppendCharacter(u'0');
         case 2:
-            this->AppendCharacter(_u('0'));
+            this->AppendCharacter(u'0');
         case 3:
-            this->AppendCharacter(_u('0'));
+            this->AppendCharacter(u'0');
         default:
             this->AppendBuffer(buf, count);
             break;
@@ -64,41 +64,41 @@ JSONStringBuilder::EscapeAndAppendString(_In_ JavascriptString* str)
     const charcount_t strLength = str->GetLength();
 
     // Strings should be surrounded by double quotes
-    this->AppendCharacter(_u('"'));
+    this->AppendCharacter(u'"');
     const char16_t* bufferStart = str->GetString();
     for (const char16_t* index = bufferStart; index < bufferStart + strLength; ++index)
     {
         char16_t currentCharacter = *index;
         switch (currentCharacter)
         {
-        case _u('"'):
-        case _u('\\'):
+        case u'"':
+        case u'\\':
             // Special characters are escaped with a backslash
-            this->AppendCharacter(_u('\\'));
+            this->AppendCharacter(u'\\');
             this->AppendCharacter(currentCharacter);
             break;
-        case _u('\b'):
-            this->AppendCharacter(_u('\\'));
-            this->AppendCharacter(_u('b'));
+        case u'\b':
+            this->AppendCharacter(u'\\');
+            this->AppendCharacter(u'b');
             break;
-        case _u('\f'):
-            this->AppendCharacter(_u('\\'));
-            this->AppendCharacter(_u('f'));
+        case u'\f':
+            this->AppendCharacter(u'\\');
+            this->AppendCharacter(u'f');
             break;
-        case _u('\n'):
-            this->AppendCharacter(_u('\\'));
-            this->AppendCharacter(_u('n'));
+        case u'\n':
+            this->AppendCharacter(u'\\');
+            this->AppendCharacter(u'n');
             break;
-        case _u('\r'):
-            this->AppendCharacter(_u('\\'));
-            this->AppendCharacter(_u('r'));
+        case u'\r':
+            this->AppendCharacter(u'\\');
+            this->AppendCharacter(u'r');
             break;
-        case _u('\t'):
-            this->AppendCharacter(_u('\\'));
-            this->AppendCharacter(_u('t'));
+        case u'\t':
+            this->AppendCharacter(u'\\');
+            this->AppendCharacter(u't');
             break;
         default:
-            if (currentCharacter < _u(' ') || utf8::IsLowSurrogateChar(currentCharacter))
+            if (currentCharacter < u' ' || utf8::IsLowSurrogateChar(currentCharacter))
             {
                 this->AppendEscapeSequence(currentCharacter);
             }
@@ -127,7 +127,7 @@ JSONStringBuilder::EscapeAndAppendString(_In_ JavascriptString* str)
         }
     }
 
-    this->AppendCharacter(_u('"'));
+    this->AppendCharacter(u'"');
 }
 
 void
@@ -145,18 +145,18 @@ JSONStringBuilder::AppendObjectString(_In_ JSONObject* valueList)
     const uint elementCount = valueList->Count();
     if (elementCount == 0)
     {
-        this->AppendCharacter(_u('{'));
-        this->AppendCharacter(_u('}'));
+        this->AppendCharacter(u'{');
+        this->AppendCharacter(u'}');
         return;
     }
 
     const uint32 stepbackLevel = this->indentLevel;
     ++this->indentLevel;
 
-    this->AppendCharacter(_u('{'));
+    this->AppendCharacter(u'{');
     if (this->gap != nullptr)
     {
-        this->AppendCharacter(_u('\n'));
+        this->AppendCharacter(u'\n');
         this->AppendGap(indentLevel);
     }
 
@@ -167,20 +167,20 @@ JSONStringBuilder::AppendObjectString(_In_ JSONObject* valueList)
         {
             if (this->gap == nullptr)
             {
-                this->AppendCharacter(_u(','));
+                this->AppendCharacter(u',');
             }
             else
             {
-                this->AppendCharacter(_u(','));
-                this->AppendCharacter(_u('\n'));
+                this->AppendCharacter(u',');
+                this->AppendCharacter(u'\n');
                 this->AppendGap(indentLevel);
             }
         }
         this->EscapeAndAppendString(entry.propertyName);
-        this->AppendCharacter(_u(':'));
+        this->AppendCharacter(u':');
         if (this->gap != nullptr)
         {
-            this->AppendCharacter(_u(' '));
+            this->AppendCharacter(u' ');
         }
 
         this->AppendJSONPropertyString(&entry.propertyValue);
@@ -191,11 +191,11 @@ JSONStringBuilder::AppendObjectString(_In_ JSONObject* valueList)
 
     if (this->gap != nullptr)
     {
-        this->AppendCharacter(_u('\n'));
+        this->AppendCharacter(u'\n');
         this->AppendGap(stepbackLevel);
     }
 
-    this->AppendCharacter(_u('}'));
+    this->AppendCharacter(u'}');
 
     this->indentLevel = stepbackLevel;
 }
@@ -206,8 +206,8 @@ JSONStringBuilder::AppendArrayString(_In_ JSONArray* valueArray)
     uint32 length = valueArray->length;
     if (length == 0)
     {
-        this->AppendCharacter(_u('['));
-        this->AppendCharacter(_u(']'));
+        this->AppendCharacter(u'[');
+        this->AppendCharacter(u']');
         return;
     }
 
@@ -216,11 +216,11 @@ JSONStringBuilder::AppendArrayString(_In_ JSONArray* valueArray)
 
     JSONProperty* arr = valueArray->arr;
 
-    this->AppendCharacter(_u('['));
+    this->AppendCharacter(u'[');
 
     if (this->gap != nullptr)
     {
-        this->AppendCharacter(_u('\n'));
+        this->AppendCharacter(u'\n');
         this->AppendGap(indentLevel);
     }
 
@@ -230,12 +230,12 @@ JSONStringBuilder::AppendArrayString(_In_ JSONArray* valueArray)
     {
         if (this->gap == nullptr)
         {
-            this->AppendCharacter(_u(','));
+            this->AppendCharacter(u',');
         }
         else
         {
-            this->AppendCharacter(_u(','));
-            this->AppendCharacter(_u('\n'));
+            this->AppendCharacter(u',');
+            this->AppendCharacter(u'\n');
             this->AppendGap(indentLevel);
         }
         AppendJSONPropertyString(&arr[i]);
@@ -243,10 +243,10 @@ JSONStringBuilder::AppendArrayString(_In_ JSONArray* valueArray)
 
     if (this->gap != nullptr)
     {
-        this->AppendCharacter(_u('\n'));
+        this->AppendCharacter(u'\n');
         this->AppendGap(stepbackLevel);
     }
-    this->AppendCharacter(_u(']'));
+    this->AppendCharacter(u']');
 
     this->indentLevel = stepbackLevel;
 }
@@ -288,7 +288,7 @@ JSONStringBuilder::Build()
     this->AppendJSONPropertyString(this->jsonContent);
     // Null terminate the string
     AssertOrFailFast(this->currentLocation == endLocation);
-    *this->currentLocation = _u('\0');
+    *this->currentLocation = u'\0';
 }
 
 JSONStringBuilder::JSONStringBuilder(

@@ -35,7 +35,7 @@ namespace Js
             const char16_t byte = buffer[i];
             if (isNumeric)
             {
-                if (byte < _u('0') || byte > _u('9'))
+                if (byte < u'0' || byte > u'9')
                   isNumeric = false;
             }
 
@@ -101,7 +101,7 @@ namespace Js
 
     // Initialize all Internal property records
 #define INTERNALPROPERTY(name) \
-    const BuiltInPropertyRecord<1> InternalPropertyRecords::name = { PropertyRecord((PropertyId)InternalPropertyIds::name, (uint)InternalPropertyIds::name, false, 0, false), _u("") };
+    const BuiltInPropertyRecord<1> InternalPropertyRecords::name = { PropertyRecord((PropertyId)InternalPropertyIds::name, (uint)InternalPropertyIds::name, false, 0, false), u"" };
 #include "Library/InternalPropertyList.h"
 
     const PropertyRecord* InternalPropertyRecords::GetInternalPropertyName(PropertyId propertyId)
@@ -144,30 +144,30 @@ namespace Js
 #if DBG_DUMP
     void PropertyRecord::Dump(unsigned indent) const
     {
-        const auto padding(_u(""));
+        const auto padding(u"");
         const unsigned fieldIndent(indent + 2);
 
-        Output::Print(_u("%*sPropertyRecord (0x%p):\n"), indent, padding, this);
-        Output::Print(_u("%*spid: %d\n"), fieldIndent, padding, this->pid);
-        Output::Print(_u("%*shash: 0x%08x\n"), fieldIndent, padding, this->hash);
-        Output::Print(_u("%*sisNumeric: %d\n"), fieldIndent, padding, this->isNumeric);
-        Output::Print(_u("%*sIsBound: %d\n"), fieldIndent, padding, this->isBound);
-        Output::Print(_u("%*sIsSymbol: %d\n"), fieldIndent, padding, this->isSymbol);
-        Output::Print(_u("%*sbyteCount: %u\n"), fieldIndent, padding, this->byteCount);
+        Output::Print(u"%*sPropertyRecord (0x%p):\n", indent, padding, this);
+        Output::Print(u"%*spid: %d\n", fieldIndent, padding, this->pid);
+        Output::Print(u"%*shash: 0x%08x\n", fieldIndent, padding, this->hash);
+        Output::Print(u"%*sisNumeric: %d\n", fieldIndent, padding, this->isNumeric);
+        Output::Print(u"%*sIsBound: %d\n", fieldIndent, padding, this->isBound);
+        Output::Print(u"%*sIsSymbol: %d\n", fieldIndent, padding, this->isSymbol);
+        Output::Print(u"%*sbyteCount: %u\n", fieldIndent, padding, this->byteCount);
         if (this->isNumeric)
         {
-            Output::Print(_u("%*sbuffer (numeric): %u\n"), fieldIndent, padding, this->GetNumericValue());
+            Output::Print(u"%*sbuffer (numeric): %u\n", fieldIndent, padding, this->GetNumericValue());
         }
         else
         {
-            Output::Print(_u("%*sbuffer (string): %s\n"), fieldIndent, padding, this->GetBuffer());
+            Output::Print(u"%*sbuffer (string): %s\n", fieldIndent, padding, this->GetBuffer());
         }
     }
 #endif
 
     // Initialize all BuiltIn property records
-    const BuiltInPropertyRecord<1> BuiltInPropertyRecords::EMPTY = { PropertyRecord(PropertyIds::_none, 0, false, 0, false), _u("") };
-#define ENTRY_INTERNAL_SYMBOL(n) const BuiltInPropertyRecord<ARRAYSIZE(_u("<") _u(#n) _u(">"))> BuiltInPropertyRecords::n = { PropertyRecord(PropertyIds::n, (uint)PropertyIds::n, false, (ARRAYSIZE(_u("<") _u(#n) _u(">")) - 1) * sizeof(char16_t), true), _u("<") _u(#n) _u(">") };
+    const BuiltInPropertyRecord<1> BuiltInPropertyRecords::EMPTY = { PropertyRecord(PropertyIds::_none, 0, false, 0, false), u"" };
+#define ENTRY_INTERNAL_SYMBOL(n) const BuiltInPropertyRecord<ARRAYSIZE(u"<" _u(#n) u">")> BuiltInPropertyRecords::n = { PropertyRecord(PropertyIds::n, (uint)PropertyIds::n, false, (ARRAYSIZE(u"<" _u(#n) u">") - 1) * sizeof(char16_t), true), u"<" _u(#n) u">" };
 #define ENTRY_SYMBOL(n, d) const BuiltInPropertyRecord<ARRAYSIZE(d)> BuiltInPropertyRecords::n = { PropertyRecord(PropertyIds::n, 0, false, (ARRAYSIZE(d) - 1) * sizeof(char16_t), true), d };
 #define ENTRY2(n, s) const BuiltInPropertyRecord<ARRAYSIZE(s)> BuiltInPropertyRecords::n = { PropertyRecord(PropertyIds::n, 0, false, (ARRAYSIZE(s) - 1) * sizeof(char16_t), false), s };
 #define ENTRY(n) ENTRY2(n, _u(#n))

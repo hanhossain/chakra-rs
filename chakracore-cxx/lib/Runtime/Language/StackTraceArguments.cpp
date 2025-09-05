@@ -102,24 +102,24 @@ namespace Js {
             argumentsTypes &= ~fTooManyArgs;
             if (!calleIsGlobalFunction)
             {
-                stringBuilder->AppendChars(_u('('));
+                stringBuilder->AppendChars(u'(');
             }
             for (unsigned long i = 0; i < MaxNumberOfDisplayedArgumentsInStack && argumentsTypes != 0; i ++)
             {
                 if (i > 0)
                 {
-                    stringBuilder->AppendChars(_u(", "));
+                    stringBuilder->AppendChars(u", ");
                 }
                 stringBuilder->AppendChars(TypeCodeToTypeName(argumentsTypes & 7, scriptContext)); // we use 3 bits to store one code
                 argumentsTypes >>= 3;
             }
             if (toManyArgs)
             {
-                stringBuilder->AppendChars(_u(", ..."));
+                stringBuilder->AppendChars(u", ...");
             }
             if (!calleIsGlobalFunction)
             {
-                stringBuilder->AppendChars(_u(')'));
+                stringBuilder->AppendChars(u')');
             }
             *outResult = stringBuilder->GetString();
         }

@@ -1145,7 +1145,7 @@ LEnd:
         // if so, jump over one more character. Note also that if lwAdj is zero, there may or may not be a decimal point, and
         // pchLimDig would only need to jump over a decimal point if it exists.
         if (-lwAdj <= numExcessiveDigits &&
-            (lwAdj != 0 || pchLimDig[-1] == _u('.')))
+            (lwAdj != 0 || pchLimDig[-1] == u'.'))
         {
             // Need to jump over the decimal point
             --pchLimDig;
@@ -2355,7 +2355,7 @@ int Js::NumberUtilities::FDblToStr(double dbl, Js::NumberUtilities::FormatType f
         {
             n = 4; //(int)wcslen(OLESTR("NaN")) + 1;
             if( cchDst >= n )
-                wcscpy_s(pchDst, cchDst, _u("NaN"));
+                wcscpy_s(pchDst, cchDst, u"NaN");
         }
         else
         {
@@ -2370,7 +2370,7 @@ int Js::NumberUtilities::FDblToStr(double dbl, Js::NumberUtilities::FormatType f
             {
                 if (neg)
                     *pchDst++ = '-';
-                wcscpy_s(pchDst, cchDst - neg, _u("Infinity"));
+                wcscpy_s(pchDst, cchDst - neg, u"Infinity");
             }
         }
         return n;
@@ -2468,7 +2468,7 @@ BOOL Js::NumberUtilities::FDblToStr(double dbl, __out_ecount(cchDst) char16_t *p
     if (!Js::NumberUtilities::IsFinite(dbl))
     {
         if (Js::NumberUtilities::IsNan(dbl))
-            return 0 == wcscpy_s(pchDst, cchDst, _u("NaN"));
+            return 0 == wcscpy_s(pchDst, cchDst, u"NaN");
         else
         {
             if (dbl < 0)
@@ -2478,7 +2478,7 @@ BOOL Js::NumberUtilities::FDblToStr(double dbl, __out_ecount(cchDst) char16_t *p
                 cchDst--;
             }
 
-            return 0 == wcscpy_s(pchDst, cchDst, _u("Infinity"));
+            return 0 == wcscpy_s(pchDst, cchDst, u"Infinity");
         }
     }
 

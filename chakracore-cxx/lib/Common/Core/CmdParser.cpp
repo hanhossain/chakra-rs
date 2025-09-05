@@ -40,7 +40,7 @@ CmdLineArgsParser::ParseString(__inout_ecount(ceBuffer) LPWSTR buffer, size_t ce
         {
             if(0 == CurChar())
             {
-                throw Exception(_u("Unmatched quote"));
+                throw Exception(u"Unmatched quote");
             }
 
             //
@@ -48,7 +48,7 @@ CmdLineArgsParser::ParseString(__inout_ecount(ceBuffer) LPWSTR buffer, size_t ce
             //
             if (len >= ceBuffer - 1)
             {
-                throw Exception(_u("String token too large to parse"));
+                throw Exception(u"String token too large to parse");
             }
 
             out[len++] = CurChar();
@@ -85,7 +85,7 @@ CmdLineArgsParser::ParseString(__inout_ecount(ceBuffer) LPWSTR buffer, size_t ce
             default:
                 if (len >= MaxTokenSize - 1)
                 {
-                    throw Exception(_u("String token too large to parse"));
+                    throw Exception(u"String token too large to parse");
                 }
                 out[len++] = CurChar();
                 NextChar();
@@ -95,7 +95,7 @@ CmdLineArgsParser::ParseString(__inout_ecount(ceBuffer) LPWSTR buffer, size_t ce
 
     if(0 == len)
     {
-        throw Exception(_u("String Token Expected"));
+        throw Exception(u"String Token Expected");
     }
 
     out[len] = '\0';
@@ -177,7 +177,7 @@ CmdLineArgsParser::ParseInteger()
     }
     if(!IsDigit())
     {
-        throw Exception(_u("Integer Expected"));
+        throw Exception(u"Integer Expected");
     }
 
     int base = 10;
@@ -215,7 +215,7 @@ CmdLineArgsParser::ParseInteger()
         if(result < 0)
         {
             // overflow or underflow in case sign = -1
-            throw Exception(_u("Integer too large to parse"));
+            throw Exception(u"Integer too large to parse");
         }
 
         NextChar();
@@ -247,12 +247,12 @@ CmdLineArgsParser::ParseRange(Js::Range *pRange, Js::Range *oppositeRange)
 
         if (r1.sourceContextId > r2.sourceContextId)
         {
-            throw Exception(_u("Left source index must be smaller than the Right source Index"));
+            throw Exception(u"Left source index must be smaller than the Right source Index");
         }
         if ((r1.sourceContextId == r2.sourceContextId) &&
             (r1.functionId > r2.functionId))
         {
-            throw Exception(_u("Left functionId must be smaller than the Right functionId when Source file is the same"));
+            throw Exception(u"Left functionId must be smaller than the Right functionId when Source file is the same");
         }
 
         pRange->Add(r1, r2, oppositeRange);
@@ -268,7 +268,7 @@ CmdLineArgsParser::ParseRange(Js::Range *pRange, Js::Range *oppositeRange)
             break;
 
         default:
-            throw Exception(_u("Unexpected character while parsing Range"));
+            throw Exception(u"Unexpected character while parsing Range");
         }
         break;
 
@@ -284,7 +284,7 @@ CmdLineArgsParser::ParseRange(Js::Range *pRange, Js::Range *oppositeRange)
         break;
 
     default:
-        throw Exception(_u("Unexpected character while parsing Range"));
+        throw Exception(u"Unexpected character while parsing Range");
     }
 
 }
@@ -304,7 +304,7 @@ CmdLineArgsParser::ParseNumberRange(Js::NumberRange *pRange)
 
         if (start > end)
         {
-            throw Exception(_u("Range start must be less than range end"));
+            throw Exception(u"Range start must be less than range end");
         }
 
         pRange->Add(start, end);
@@ -320,7 +320,7 @@ CmdLineArgsParser::ParseNumberRange(Js::NumberRange *pRange)
             break;
 
         default:
-            throw Exception(_u("Unexpected character while parsing Range"));
+            throw Exception(u"Unexpected character while parsing Range");
         }
         break;
 
@@ -336,7 +336,7 @@ CmdLineArgsParser::ParseNumberRange(Js::NumberRange *pRange)
         break;
 
     default:
-        throw Exception(_u("Unexpected character while parsing Range"));
+        throw Exception(u"Unexpected character while parsing Range");
     }
 
 }
@@ -359,7 +359,7 @@ CmdLineArgsParser::ParsePhase(Js::Phases *pPhaseList, Js::Phases *oppositePhase)
     Phase phase = ConfigFlagsTable::GetPhase(ParseString(buffer));
     if(InvalidPhase == phase)
     {
-        throw Exception(_u("Invalid phase :"));
+        throw Exception(u"Invalid phase :");
     }
 
     pPhaseList->Enable(phase);
@@ -469,11 +469,11 @@ CmdLineArgsParser::ParseBoolean()
 {
     if (CurChar() == ':')
     {
-        throw Exception(_u("':' not expected with a boolean flag"));
+        throw Exception(u"':' not expected with a boolean flag");
     }
     else if (CurChar() != '-' && CurChar() != ' ' && CurChar() != 0)
     {
-        throw Exception(_u("Invalid character after boolean flag"));
+        throw Exception(u"Invalid character after boolean flag");
     }
     else
     {
@@ -497,7 +497,7 @@ CmdLineArgsParser::GetCurrentString()
         NextChar();
         return nullptr;
     default:
-        throw Exception(_u("Expected ':'"));
+        throw Exception(u"Expected ':'");
     }
 }
 
@@ -536,7 +536,7 @@ CmdLineArgsParser::ParseFlag()
                 return;
             }
         }
-        throw Exception(_u("Invalid Flag"));
+        throw Exception(u"Invalid Flag");
     }
 
 
@@ -604,7 +604,7 @@ CmdLineArgsParser::ParseFlag()
         case 0:
             break;
         default:
-            throw Exception(_u("Expected ':'"));
+            throw Exception(u"Expected ':'");
         }
     }
 }
@@ -632,7 +632,7 @@ CmdLineArgsParser::Parse(int argc, __in_ecount(argc) LPWSTR argv[])
 
     if(this->flagTable.Filename == nullptr)
     {
-        this->flagTable.Filename = _u("ttdSentinal.js");
+        this->flagTable.Filename = u"ttdSentinal.js";
     }
 
     return err;
@@ -668,7 +668,7 @@ int CmdLineArgsParser::Parse(LPWSTR oneArg) throw()
         default:
             if(NULL != this->flagTable.Filename)
             {
-                throw Exception(_u("Duplicate filename entry"));
+                throw Exception(u"Duplicate filename entry");
             }
 
             this->flagTable.Filename = ParseString(buffer, MaxTokenSize, false);
@@ -677,7 +677,7 @@ int CmdLineArgsParser::Parse(LPWSTR oneArg) throw()
     }
     catch(Exception &exp)
     {
-        Output::Print(_u("%s : %s\n"), (LPCWSTR)exp, oneArg);
+        Output::Print(u"%s : %s\n", (LPCWSTR)exp, oneArg);
         err = -1;
     }
     return err;

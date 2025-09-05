@@ -640,7 +640,7 @@ using namespace Js;
 
         if(PHASE_TRACE_StringConcat)
         {
-            Output::Print(_u("CompoundString::SwitchToPointerMode()\n"));
+            Output::Print(u"CompoundString::SwitchToPointerMode()\n");
             Output::Flush();
         }
     }
@@ -1004,7 +1004,7 @@ using namespace Js;
             case 0:
             {
                 Unreference();
-                const char16_t *const buffer = _u("");
+                const char16_t *const buffer = u"";
                 SetBuffer(buffer);
                 LiteralStringWithPropertyStringPtr::ConvertString(this);
                 return buffer;
@@ -1023,7 +1023,7 @@ using namespace Js;
             }
         }
 
-        if(OwnsLastBlock() && HasOnlyDirectChars() && !lastBlock && TryAppendGeneric(_u('\0'), this)) // GetSz() requires null termination
+        if(OwnsLastBlock() && HasOnlyDirectChars() && !lastBlock && TryAppendGeneric(u'\0', this)) // GetSz() requires null termination
         {
             // There is no last block. Only the buffer was allocated, and is held in 'lastBlockInfo'. Since this string owns the
             // last block, has only direct chars, and the buffer was allocated directly (buffer pointer is not an internal
@@ -1037,9 +1037,9 @@ using namespace Js;
         }
 
         char16_t *const buffer = RecyclerNewArrayLeaf(GetScriptContext()->GetRecycler(), char16_t, SafeSzSize(totalCharLength));
-        buffer[totalCharLength] = _u('\0'); // GetSz() requires null termination
+        buffer[totalCharLength] = u'\0'; // GetSz() requires null termination
         Copy<CompoundString>(buffer, totalCharLength);
-        Assert(buffer[totalCharLength] == _u('\0'));
+        Assert(buffer[totalCharLength] == u'\0');
         Unreference();
         SetBuffer(buffer);
         LiteralStringWithPropertyStringPtr::ConvertString(this);

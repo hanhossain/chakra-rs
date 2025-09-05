@@ -76,7 +76,7 @@ Var JavascriptObject::EntryHasOwnProperty(RecyclableObject* function, CallInfo c
     RecyclableObject* dynamicObject = nullptr;
     if (FALSE == JavascriptConversion::ToObject(args[0], scriptContext, &dynamicObject))
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NullOrUndefined, _u("Object.prototype.hasOwnProperty"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NullOrUndefined, u"Object.prototype.hasOwnProperty");
     }
 
     Var propertyName = args.Info.Count == 1 ? scriptContext->GetLibrary()->GetUndefined() : args[1];
@@ -108,7 +108,7 @@ Var JavascriptObject::EntryHasOwn(RecyclableObject* function, CallInfo callInfo,
     // first parameter must exist and be an object coercible or throw type error
     if (args.Info.Count < 2 || FALSE == JavascriptConversion::ToObject(args[1], scriptContext, &dynamicObject))
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedObject, _u("Object.hasOwn"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedObject, u"Object.hasOwn");
     }
 
     // if there is only one parameter use undefined as the property to query
@@ -142,7 +142,7 @@ Var JavascriptObject::EntryPropertyIsEnumerable(RecyclableObject* function, Call
     RecyclableObject* dynamicObject = nullptr;
     if (FALSE == JavascriptConversion::ToObject(args[0], scriptContext, &dynamicObject))
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NullOrUndefined, _u("Object.prototype.propertyIsEnumerable"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NullOrUndefined, u"Object.prototype.propertyIsEnumerable");
     }
 
     if (args.Info.Count >= 2)
@@ -344,7 +344,7 @@ Var JavascriptObject::EntryIsPrototypeOf(RecyclableObject* function, CallInfo ca
     RecyclableObject* dynamicObject = nullptr;
     if (FALSE == JavascriptConversion::ToObject(args[0], scriptContext, &dynamicObject))
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NullOrUndefined, _u("Object.prototype.isPrototypeOf"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NullOrUndefined, u"Object.prototype.isPrototypeOf");
     }
     RecyclableObject* value = VarTo<RecyclableObject>(args[1]);
 
@@ -380,13 +380,13 @@ Var JavascriptObject::EntryToLocaleString(RecyclableObject* function, CallInfo c
 
     if (FALSE == JavascriptConversion::ToObject(thisValue, scriptContext, &dynamicObject))
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NullOrUndefined, _u("Object.prototype.toLocaleString"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NullOrUndefined, u"Object.prototype.toLocaleString");
     }
 
     Var toStringVar = nullptr;
     if (!JavascriptOperators::GetProperty(thisValue, dynamicObject, Js::PropertyIds::toString, &toStringVar, scriptContext) || !JavascriptConversion::IsCallable(toStringVar))
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedFunction, _u("Object.prototype.toLocaleString"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedFunction, u"Object.prototype.toLocaleString");
     }
 
     RecyclableObject* toStringFunc = VarTo<RecyclableObject>(toStringVar);
@@ -450,7 +450,7 @@ Var JavascriptObject::GetToStringTagValue(RecyclableObject *thisArg, ScriptConte
 #if DBG_DUMP
         if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
         {
-            CacheOperators::TraceCache(cache, _u("PatchGetValue"), toStringTagId, scriptContext, thisArg);
+            CacheOperators::TraceCache(cache, u"PatchGetValue", toStringTagId, scriptContext, thisArg);
         }
 #endif
         return JavascriptOperators::GetProperty(thisArg, thisArg, toStringTagId, scriptContext, &info);
@@ -482,8 +482,8 @@ JavascriptString* JavascriptObject::ToStringTagHelper(Var thisArg, ScriptContext
     // 17. Return the String that is the result of concatenating "[object ", tag, and "]".
     auto buildToString = [&scriptContext](Var tag) {
         JavascriptString *tagStr = VarTo<JavascriptString>(tag);
-        const char16_t objectStartString[9] = _u("[object ");
-        const char16_t objectEndString[1] = { _u(']') };
+        const char16_t objectStartString[9] = u"[object ";
+        const char16_t objectEndString[1] = { u']' };
         CompoundString *const cs = CompoundString::NewWithCharCapacity(_countof(objectStartString)
             + _countof(objectEndString) + tagStr->GetLength(), scriptContext->GetLibrary());
 
@@ -644,7 +644,7 @@ Var JavascriptObject::EntryValueOf(RecyclableObject* function, CallInfo callInfo
     // throw a TypeError if TypeId is null or undefined, and apply ToObject to the 'this' value otherwise.
     if (JavascriptOperators::IsUndefinedOrNull(args[0]))
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NullOrUndefined, _u("Object.prototype.valueOf"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NullOrUndefined, u"Object.prototype.valueOf");
     }
     else
     {
@@ -798,7 +798,7 @@ Var JavascriptObject::EntryGetPrototypeOf(RecyclableObject* function, CallInfo c
     // 2. ReturnIfAbrupt(obj).
     if (args.Info.Count < 2 || !JavascriptConversion::ToObject(args[1], scriptContext, &object))
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedObject, _u("Object.getPrototypeOf"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedObject, u"Object.getPrototypeOf");
     }
 
     // 3. Return obj.[[GetPrototypeOf]]().
@@ -832,7 +832,7 @@ Var JavascriptObject::EntrySetPrototypeOf(RecyclableObject* function, CallInfo c
 
     if (errCode != NOERROR)
     {
-        JavascriptError::ThrowTypeError(scriptContext, errCode, _u("Object.setPrototypeOf"));
+        JavascriptError::ThrowTypeError(scriptContext, errCode, u"Object.setPrototypeOf");
     }
 
     // 4. If Type(O) is not Object, return O.
@@ -1305,7 +1305,7 @@ Var JavascriptObject::EntryDefineProperty(RecyclableObject* function, CallInfo c
 
     if (args.Info.Count < 2 || !JavascriptOperators::IsObject(args[1]))
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedObject, _u("Object.defineProperty"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedObject, u"Object.defineProperty");
     }
 
 #if ENABLE_COPYONACCESS_ARRAY
@@ -1359,7 +1359,7 @@ Var JavascriptObject::EntryDefineProperties(RecyclableObject* function, CallInfo
 
     if (args.Info.Count < 2 || !JavascriptOperators::IsObject(args[1]))
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedObject, _u("Object.defineProperties"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedObject, u"Object.defineProperties");
     }
 
 #if ENABLE_COPYONACCESS_ARRAY
@@ -1380,7 +1380,7 @@ Var JavascriptObject::EntryDefineProperties(RecyclableObject* function, CallInfo
     RecyclableObject* properties = nullptr;
     if (FALSE == JavascriptConversion::ToObject(propertiesVar, scriptContext, &properties))
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NullOrUndefined, _u("Object.defineProperties"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NullOrUndefined, u"Object.defineProperties");
     }
 
     return DefinePropertiesHelper(object, properties, scriptContext);
@@ -1406,14 +1406,14 @@ Var JavascriptObject::EntryDefineGetter(RecyclableObject* function, CallInfo cal
     RecyclableObject* obj = nullptr;
     if (!JavascriptConversion::ToObject(args[0], scriptContext, &obj))
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NullOrUndefined, _u("Object.prototype.__defineGetter__"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NullOrUndefined, u"Object.prototype.__defineGetter__");
     }
 
     Var getterFunc = args.Info.Count > 2 ? args[2] : obj->GetLibrary()->GetUndefined();
 
     if (!JavascriptConversion::IsCallable(getterFunc))
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedFunction, _u("Object.prototype.__defineGetter__"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedFunction, u"Object.prototype.__defineGetter__");
     }
 
     Var propertyKey = args.Info.Count > 1 ? args[1] : obj->GetLibrary()->GetUndefined();
@@ -1447,14 +1447,14 @@ Var JavascriptObject::EntryDefineSetter(RecyclableObject* function, CallInfo cal
     RecyclableObject* obj = nullptr;
     if (!JavascriptConversion::ToObject(args[0], scriptContext, &obj))
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NullOrUndefined, _u("Object.prototype.__defineSetter__"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NullOrUndefined, u"Object.prototype.__defineSetter__");
     }
 
     Var setterFunc = args.Info.Count > 2 ? args[2] : obj->GetLibrary()->GetUndefined();
 
     if (!JavascriptConversion::IsCallable(setterFunc))
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedFunction, _u("Object.prototype.__defineSetter__"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedFunction, u"Object.prototype.__defineSetter__");
     }
 
     Var propertyKey = args.Info.Count > 1 ? args[1] : obj->GetLibrary()->GetUndefined();
@@ -1484,7 +1484,7 @@ Var JavascriptObject::EntryLookupGetter(RecyclableObject* function, CallInfo cal
     RecyclableObject* obj = nullptr;
     if (!JavascriptConversion::ToObject(args[0], scriptContext, &obj))
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NullOrUndefined, _u("Object.prototype.__lookupGetter__"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NullOrUndefined, u"Object.prototype.__lookupGetter__");
     }
 
     Var propertyKey = args.Info.Count > 1 ? args[1] : obj->GetLibrary()->GetUndefined();
@@ -1517,7 +1517,7 @@ Var JavascriptObject::EntryLookupSetter(RecyclableObject* function, CallInfo cal
     RecyclableObject* obj = nullptr;
     if (!JavascriptConversion::ToObject(args[0], scriptContext, &obj))
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NullOrUndefined, _u("Object.prototype.__lookupSetter__"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NullOrUndefined, u"Object.prototype.__lookupSetter__");
     }
 
     Var propertyKey = args.Info.Count > 1 ? args[1] : obj->GetLibrary()->GetUndefined();
@@ -1568,7 +1568,7 @@ Var JavascriptObject::EntryAssign(RecyclableObject* function, CallInfo callInfo,
     RecyclableObject* to = nullptr;
     if (args.Info.Count == 1 || !JavascriptConversion::ToObject(args[1], scriptContext, &to))
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedObject, _u("Object.assign"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedObject, u"Object.assign");
     }
 
     if (args.Info.Count < 3)
@@ -1590,7 +1590,7 @@ Var JavascriptObject::EntryAssign(RecyclableObject* function, CallInfo callInfo,
 
 template <bool assign>
 PCWSTR GetCopyDataPropertiesEntryName() {
-    return assign ? _u("Object.assign") : _u("Object.Spread");
+    return assign ? u"Object.assign" : u"Object.Spread";
 }
 
 /*static*/
@@ -1831,13 +1831,13 @@ Var JavascriptObject::EntryCreate(RecyclableObject* function, CallInfo callInfo,
 
     if (args.Info.Count < 2)
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NotObjectOrNull, _u("Object.create"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NotObjectOrNull, u"Object.create");
     }
 
     Var protoVar = args[1];
     if (!JavascriptOperators::IsObjectOrNull(protoVar))
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NotObjectOrNull, _u("Object.create"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NotObjectOrNull, u"Object.create");
     }
 
     RecyclableObject* protoObj = VarTo<RecyclableObject>(protoVar);
@@ -1856,7 +1856,7 @@ Var JavascriptObject::EntryCreate(RecyclableObject* function, CallInfo callInfo,
         RecyclableObject* properties = nullptr;
         if (FALSE == JavascriptConversion::ToObject(args[2], scriptContext, &properties))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NullOrUndefined, _u("Object.create"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NullOrUndefined, u"Object.create");
         }
         return DefinePropertiesHelper(object, properties, scriptContext);
     }
@@ -2108,10 +2108,10 @@ void JavascriptObject::ModifyGetterSetterFuncName(const PropertyRecord * propert
 
         if (descriptor.GetterSpecified()
             && Js::VarIs<Js::ScriptFunction>(descriptor.GetGetter())
-            && _wcsicmp(Js::VarTo<Js::ScriptFunction>(descriptor.GetGetter())->GetFunctionProxy()->GetDisplayName(), _u("get")) == 0)
+            && _wcsicmp(Js::VarTo<Js::ScriptFunction>(descriptor.GetGetter())->GetFunctionProxy()->GetDisplayName(), u"get") == 0)
         {
             // modify to name.get
-            const char16_t* finalName = ConstructName(propertyRecord, _u(".get"), scriptContext);
+            const char16_t* finalName = ConstructName(propertyRecord, u".get", scriptContext);
             if (finalName != nullptr)
             {
                 FunctionProxy::SetDisplayNameFlags flags = (FunctionProxy::SetDisplayNameFlags) (FunctionProxy::SetDisplayNameFlagsDontCopy | FunctionProxy::SetDisplayNameFlagsRecyclerAllocated);
@@ -2123,10 +2123,10 @@ void JavascriptObject::ModifyGetterSetterFuncName(const PropertyRecord * propert
 
         if (descriptor.SetterSpecified()
             && Js::VarIs<Js::ScriptFunction>(descriptor.GetSetter())
-            && _wcsicmp(Js::VarTo<Js::ScriptFunction>(descriptor.GetSetter())->GetFunctionProxy()->GetDisplayName(), _u("set")) == 0)
+            && _wcsicmp(Js::VarTo<Js::ScriptFunction>(descriptor.GetSetter())->GetFunctionProxy()->GetDisplayName(), u"set") == 0)
         {
             // modify to name.set
-            const char16_t* finalName = ConstructName(propertyRecord, _u(".set"), scriptContext);
+            const char16_t* finalName = ConstructName(propertyRecord, u".set", scriptContext);
             if (finalName != nullptr)
             {
                 FunctionProxy::SetDisplayNameFlags flags = (FunctionProxy::SetDisplayNameFlags) (FunctionProxy::SetDisplayNameFlagsDontCopy | FunctionProxy::SetDisplayNameFlagsRecyclerAllocated);

@@ -10,14 +10,14 @@ namespace Js
 #if DBG_DUMP || ENABLE_DEBUG_CONFIG_OPTIONS
     char16_t const * const OpCodeUtilAsmJs::OpCodeAsmJsNames[] =
     {
-#define DEF_OP(x, y, ...) _u("") STRINGIZEW(x) _u(""),
+#define DEF_OP(x, y, ...) u"" STRINGIZEW(x) u"",
 #include "OpCodeListAsmJs.h"
 #undef DEF_OP
     };
 
     char16_t const * const OpCodeUtilAsmJs::ExtendedOpCodeAsmJsNames[] =
     {
-#define DEF_OP(x, y, ...) _u("") STRINGIZEW(x) _u(""),
+#define DEF_OP(x, y, ...) u"" STRINGIZEW(x) u"",
 #include "ExtendedOpCodeListAsmJs.h"
 #undef DEF_OP
     };
@@ -37,13 +37,13 @@ namespace Js
             __analysis_assume(opIndex < _countof(ExtendedOpCodeAsmJsNames));
             return ExtendedOpCodeAsmJsNames[opIndex];
         }
-        return _u("<NotAvail>");
+        return u"<NotAvail>";
     }
 
 #else
     wchar const * OpCodeUtilAsmJs::GetOpCodeName(OpCodeAsmJs op)
     {
-        return _u("<NotAvail>");
+        return u"<NotAvail>";
     }
 #endif
 

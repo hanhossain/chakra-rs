@@ -569,7 +569,7 @@ namespace Js
         funcBody = deferParseFunction->ParseAsmJs(&ps, &se, &parseTree);
         fncNode->funcInfo->byteCodeFunction = funcBody;
 
-        TRACE_BYTECODE(_u("\nDeferred parse %s\n"), funcBody->GetDisplayName());
+        TRACE_BYTECODE(u"\nDeferred parse %s\n", funcBody->GetDisplayName());
         if (parseTree && parseTree->nop == knopProg)
         {
             auto body = parseTree->pnodeBody;
@@ -583,10 +583,10 @@ namespace Js
                 }
             }
         }
-        GetByteCodeGenerator()->PushFuncInfo(_u("Start asm.js AST prepass"), fncNode->funcInfo);
+        GetByteCodeGenerator()->PushFuncInfo(u"Start asm.js AST prepass", fncNode->funcInfo);
         BindArguments(fncNode->pnodeParams);
         ASTPrepass(pnodeBody, func);
-        GetByteCodeGenerator()->PopFuncInfo(_u("End asm.js AST prepass"));
+        GetByteCodeGenerator()->PopFuncInfo(u"End asm.js AST prepass");
 
         fncNode->pnodeBody = pnodeBody;
 
@@ -594,7 +594,7 @@ namespace Js
         {
             // body should never be null if parsing succeeded
             Assert(UNREACHED);
-            return Fail(fncNode, _u("Function should always have parse nodes"));
+            return Fail(fncNode, u"Function should always have parse nodes");
         }
 
         // Check if this function requires a bigger Ast
@@ -631,7 +631,7 @@ namespace Js
 
         if (!func->EnsureArgCount(numArguments))
         {
-            return Fail(argNode, _u("Cannot have variable number of arguments"));
+            return Fail(argNode, u"Cannot have variable number of arguments");
         }
 
         ArgSlot index = 0;
@@ -639,13 +639,13 @@ namespace Js
         {
             if (pnode->nop != knopList)
             {
-                return Fail(pnode, _u("Missing assignment statement for argument"));
+                return Fail(pnode, u"Missing assignment statement for argument");
             }
 
 
             if (!ParserWrapper::IsDefinition(argNode))
             {
-                return Fail(argNode, _u("duplicate argument name not allowed"));
+                return Fail(argNode, u"duplicate argument name not allowed");
             }
 
             PropertyName argName = argNode->name();
@@ -658,13 +658,13 @@ namespace Js
             AsmJsVarBase* var = func->DefineVar(argName, true);
             if (!var)
             {
-                return Fail(argNode, _u("Failed to define var"));
+                return Fail(argNode, u"Failed to define var");
             }
 
             ParseNode* argDefinition = ParserWrapper::GetBinaryLeft(pnode);
             if (argDefinition->nop != knopAsg)
             {
-                return Fail(argDefinition, _u("Expecting an assignment"));
+                return Fail(argDefinition, u"Expecting an assignment");
             }
 
             ParseNode* lhs = ParserWrapper::GetBinaryLeft(argDefinition);
@@ -674,7 +674,7 @@ namespace Js
 
             if (!NodeDefineThisArgument(lhs, var))
             {
-                return Fail(lhs, _u("Defining wrong argument"));
+                return Fail(lhs, u"Defining wrong argument");
             }
 
             if (rhs->nop == knopPos)
@@ -687,7 +687,7 @@ namespace Js
 
                 if (!NodeDefineThisArgument(argSym, var))
                 {
-                    return Fail(lhs, _u("Defining wrong argument"));
+                    return Fail(lhs, u"Defining wrong argument");
                 }
             }
             else if (rhs->nop == knopOr)
@@ -700,11 +700,11 @@ namespace Js
                 // validate stmt
                 if (!NodeDefineThisArgument(argSym, var))
                 {
-                    return Fail(lhs, _u("Defining wrong argument"));
+                    return Fail(lhs, u"Defining wrong argument");
                 }
                 if (intSym->nop != knopInt || intSym->AsParseNodeInt()->lw != 0)
                 {
-                    return Fail(lhs, _u("Or value must be 0 when defining arguments"));
+                    return Fail(lhs, u"Or value must be 0 when defining arguments");
                 }
             }
             else if (rhs->nop == knopCall)
@@ -712,45 +712,45 @@ namespace Js
                 ParseNodeCall* callNode = rhs->AsParseNodeCall();
                 if (callNode->pnodeTarget->nop != knopName)
                 {
-                    return Fail(rhs, _u("call should be for fround"));
+                    return Fail(rhs, u"call should be for fround");
                 }
                 AsmJsFunctionDeclaration* funcDecl = this->LookupFunction(callNode->pnodeTarget->name());
 
                 if (!funcDecl)
-                    return Fail(rhs, _u("Cannot resolve function for argument definition, or wrong function"));
+                    return Fail(rhs, u"Cannot resolve function for argument definition, or wrong function");
 
                 if (AsmJsMathFunction::Is(funcDecl))
                 {
                     if (!AsmJsMathFunction::IsFround(funcDecl))
                     {
-                        return Fail(rhs, _u("call should be for fround"));
+                        return Fail(rhs, u"call should be for fround");
                     }
                     var->SetVarType(AsmJsVarType::Float);
                     var->SetLocation(func->AcquireRegister<float>());
                 }
                 else
                 {
-                    return Fail(rhs, _u("Wrong function used for argument definition"));
+                    return Fail(rhs, u"Wrong function used for argument definition");
                 }
 
                 if (callNode->argCount == 0 || !NodeDefineThisArgument(callNode->pnodeArgs, var))
                 {
-                    return Fail(lhs, _u("Defining wrong argument"));
+                    return Fail(lhs, u"Defining wrong argument");
                 }
             }
             else
             {
-                return Fail(rhs, _u("arguments are not casted as valid Asm.js type"));
+                return Fail(rhs, u"arguments are not casted as valid Asm.js type");
             }
 
             if (PHASE_TRACE1(ByteCodePhase))
             {
-                Output::Print(_u("    Argument [%s] Valid"), argName->Psz());
+                Output::Print(u"    Argument [%s] Valid", argName->Psz());
             }
 
             if (!func->EnsureArgType(var, index++))
             {
-                return Fail(rhs, _u("Unexpected argument type"));
+                return Fail(rhs, u"Unexpected argument type");
             }
 
             argNode = ParserWrapper::NextVar(argNode);
@@ -794,7 +794,7 @@ namespace Js
                 bool isFroundInit = false;
                 if (!pnodeInit)
                 {
-                    return Fail(decl, _u("The righthand side of a var declaration missing an initialization (empty)"));
+                    return Fail(decl, u"The righthand side of a var declaration missing an initialization (empty)");
                 }
 
                 if (pnodeInit->nop == knopName)
@@ -802,36 +802,36 @@ namespace Js
                     declSym = LookupIdentifier(pnodeInit->name(), func);
                     if ((!AsmJsVar::Is(declSym) && !AsmJsMathConst::Is(declSym)) || declSym->isMutable())
                     {
-                        return Fail(decl, _u("Var declaration with non-constant"));
+                        return Fail(decl, u"Var declaration with non-constant");
                     }
                 }
                 else if (pnodeInit->nop == knopCall)
                 {
                     if (pnodeInit->AsParseNodeCall()->pnodeTarget->nop != knopName)
                     {
-                        return Fail(decl, _u("Var declaration with something else than a literal value|fround call"));
+                        return Fail(decl, u"Var declaration with something else than a literal value|fround call");
                     }
                     AsmJsFunctionDeclaration* funcDecl = this->LookupFunction(pnodeInit->AsParseNodeCall()->pnodeTarget->name());
 
                     if (!funcDecl)
-                        return Fail(pnodeInit, _u("Cannot resolve function name"));
+                        return Fail(pnodeInit, u"Cannot resolve function name");
 
                     if (AsmJsMathFunction::Is(funcDecl))
                     {
                         if (!AsmJsMathFunction::IsFround(funcDecl) || !ParserWrapper::IsFroundNumericLiteral(pnodeInit->AsParseNodeCall()->pnodeArgs))
                         {
-                            return Fail(decl, _u("Var declaration with something else than a literal value|fround call"));
+                            return Fail(decl, u"Var declaration with something else than a literal value|fround call");
                         }
                         isFroundInit = true;
                     }
                     else
                     {
-                        return Fail(varNode, _u("Unknown function call on var declaration"));
+                        return Fail(varNode, u"Unknown function call on var declaration");
                     }
                 }
                 else if (pnodeInit->nop != knopInt && pnodeInit->nop != knopFlt)
                 {
-                    return Fail(decl, _u("Var declaration with something else than a literal value|fround call"));
+                    return Fail(decl, u"Var declaration with something else than a literal value|fround call");
                 }
                 if (!AsmJSCompiler::CheckIdentifier(*this, decl, decl->name()))
                 {
@@ -842,13 +842,13 @@ namespace Js
                 AsmJsVar* var = (AsmJsVar*)func->DefineVar(decl->name(), false);
                 if (!var)
                 {
-                    return Fail(decl, _u("Failed to define var"));
+                    return Fail(decl, u"Failed to define var");
                 }
                 // If we are declaring a var that we previously used in an initializer, that value will be undefined
                 // so we need to throw an error.
                 if (initializerBV.Test(var->GetName()->GetPropertyId()))
                 {
-                    return Fail(decl, _u("Cannot declare a var after using it in an initializer"));
+                    return Fail(decl, u"Cannot declare a var after using it in an initializer");
                 }
                 RegSlot loc = Constants::NoRegister;
                 if (pnodeInit->nop == knopInt)
@@ -876,7 +876,7 @@ namespace Js
                 {
                     if (pnodeInit->AsParseNodeFloat()->maybeInt)
                     {
-                        return Fail(decl, _u("Var declaration with integer literal outside range [-2^31, 2^32)"));
+                        return Fail(decl, u"Var declaration with integer literal outside range [-2^31, 2^32)");
                     }
                     var->SetVarType(AsmJsVarType::Double);
                     var->SetLocation(func->AcquireRegister<double>());
@@ -958,7 +958,7 @@ namespace Js
 
                 if (loc == Constants::NoRegister && pnodeInit->nop != knopName)
                 {
-                    return Fail(decl, _u("Cannot find Register constant for var"));
+                    return Fail(decl, u"Cannot find Register constant for var");
                 }
             }
 
@@ -1197,7 +1197,7 @@ namespace Js
     AsmJsModuleCompiler::AsmJsModuleCompiler(ExclusiveContext *cx, AsmJSParser &parser) :
         mCx(cx)
         , mCurrentParserNode(parser)
-        , mAllocator(_u("Asmjs"), cx->scriptContext->GetThreadContext()->GetPageAllocator(), Throw::OutOfMemory)
+        , mAllocator(u"Asmjs", cx->scriptContext->GetThreadContext()->GetPageAllocator(), Throw::OutOfMemory)
         , mModuleFunctionName(nullptr)
         , mStandardLibraryMathNames(&mAllocator)
         , mStandardLibraryArrayNames(&mAllocator)
@@ -1507,7 +1507,7 @@ namespace Js
         AsmJsModuleExport * foundExport;
         if (mExports.TryGetReference(name->GetPropertyId(), &foundExport))
         {
-            AsmJSCompiler::OutputMessage(GetScriptContext(), DEIT_GENERAL, _u("Warning: redefining export"));
+            AsmJSCompiler::OutputMessage(GetScriptContext(), DEIT_GENERAL, u"Warning: redefining export");
             foundExport->location = location;
             return true;
         }
@@ -1541,7 +1541,7 @@ namespace Js
             AsmJsFunctionTable* funcTable = mFunctionTableArray.Item(i);
             if (!funcTable->IsDefined())
             {
-                AsmJSCompiler::OutputError(GetScriptContext(), _u("Function table %s was used in a function but does not appear in the module"), funcTable->GetName()->Psz());
+                AsmJSCompiler::OutputError(GetScriptContext(), u"Function table %s was used in a function but does not appear in the module", funcTable->GetName()->Psz());
                 return false;
             }
         }
@@ -1599,9 +1599,9 @@ namespace Js
     }
 
     static const char16_t* AsmPhaseNames[AsmJsCompilation::Phases_COUNT] = {
-    _u("Module"),
-    _u("ByteCode"),
-    _u("TemplateJIT"),
+    u"Module",
+    u"ByteCode",
+    u"TemplateJIT",
     };
 
     void AsmJsModuleCompiler::PrintCompileTrace() const
@@ -1609,14 +1609,14 @@ namespace Js
         // for testtrace, don't print time so that it can be used for baselines
         if (PHASE_TESTTRACE1(AsmjsPhase))
         {
-            AsmJSCompiler::OutputMessage(GetScriptContext(), DEIT_ASMJS_SUCCEEDED, _u("Successfully compiled asm.js code"));
+            AsmJSCompiler::OutputMessage(GetScriptContext(), DEIT_ASMJS_SUCCEEDED, u"Successfully compiled asm.js code");
         }
         else
         {
             unsigned long us = GetCompileTime();
             unsigned long ms = us / 1000;
             us = us % 1000;
-            AsmJSCompiler::OutputMessage(GetScriptContext(), DEIT_ASMJS_SUCCEEDED, _u("Successfully compiled asm.js code (total compilation time %llu.%llums)"), ms, us);
+            AsmJSCompiler::OutputMessage(GetScriptContext(), DEIT_ASMJS_SUCCEEDED, u"Successfully compiled asm.js code (total compilation time %llu.%llums)", ms, us);
         }
 
         if (PHASE_TRACE1(AsmjsPhase))
@@ -1626,7 +1626,7 @@ namespace Js
                 unsigned long us = mPhaseCompileTime[i].ToMicroseconds();
                 unsigned long ms = us / 1000;
                 us = us % 1000;
-                Output::Print(_u("%20s : %llu.%llums\n"), AsmPhaseNames[i], ms, us);
+                Output::Print(u"%20s : %llu.%llums\n", AsmPhaseNames[i], ms, us);
             }
             Output::Flush();
         }

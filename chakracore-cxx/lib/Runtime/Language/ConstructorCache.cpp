@@ -210,7 +210,7 @@ namespace Js
 #if DBG_DUMP
     void ConstructorCache::Dump() const
     {
-        Output::Print(_u("guard value or type = 0x%p, script context = 0x%p, pending type = 0x%p, slots = %d, inline slots = %d, populated = %d, polymorphic = %d, update cache = %d, update type = %d, skip default = %d, no return = %d"),
+        Output::Print(u"guard value or type = 0x%p, script context = 0x%p, pending type = 0x%p, slots = %d, inline slots = %d, populated = %d, polymorphic = %d, update cache = %d, update type = %d, skip default = %d, no return = %d",
             this->GetRawGuardValue(), this->GetScriptContext(), this->GetPendingType(), this->GetSlotCount(), this->GetInlineSlotCount(),
             this->IsPopulated(), this->IsPolymorphic(), this->GetUpdateCacheAfterCtor(), this->GetTypeUpdatePending(),
             this->GetSkipDefaultNewObject(), this->GetCtorHasNoExplicitReturnValue());

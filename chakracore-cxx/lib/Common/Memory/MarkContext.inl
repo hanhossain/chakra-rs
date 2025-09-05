@@ -13,12 +13,12 @@ bool MarkContext::AddMarkedObject(void * objectAddress, size_t objectSize)
     Assert(objectSize > 0);
     Assert(objectSize % sizeof(void *) == 0);
 
-    FAULTINJECT_MEMORY_MARK_NOTHROW(_u("AddMarkedObject"), objectSize);
+    FAULTINJECT_MEMORY_MARK_NOTHROW(u"AddMarkedObject", objectSize);
 
 #if DBG_DUMP
     if (recycler->forceTraceMark || recycler->GetRecyclerFlagsTable().Trace.IsEnabled(Js::MarkPhase))
     {
-        Output::Print(_u(" %p"), objectAddress);
+        Output::Print(u" %p", objectAddress);
     }
 #endif
 
@@ -34,7 +34,7 @@ bool MarkContext::AddMarkedObject(void * objectAddress, size_t objectSize)
 #ifdef RECYCLER_VISITED_HOST
 inline bool MarkContext::AddPreciselyTracedObject(IRecyclerVisitedObject* obj)
 {
-    FAULTINJECT_MEMORY_MARK_NOTHROW(_u("AddPreciselyTracedObject"), 0);
+    FAULTINJECT_MEMORY_MARK_NOTHROW(u"AddPreciselyTracedObject", 0);
 
     return preciseStack.Push(obj);
 }
@@ -52,7 +52,7 @@ bool MarkContext::AddTrackedObject(FinalizableObject * obj)
     Assert(!recycler->inPartialCollectMode);
 #endif
 
-    FAULTINJECT_MEMORY_MARK_NOTHROW(_u("AddTrackedObject"), 0);
+    FAULTINJECT_MEMORY_MARK_NOTHROW(u"AddTrackedObject", 0);
 
     return trackStack.Push(obj);
 }
@@ -73,7 +73,7 @@ void MarkContext::ScanMemory(void ** obj, size_t byteCount
 #if DBG_DUMP
     if (recycler->forceTraceMark || recycler->GetRecyclerFlagsTable().Trace.IsEnabled(Js::MarkPhase))
     {
-        Output::Print(_u("Scanning %p(%8d): "), obj, byteCount);
+        Output::Print(u"Scanning %p(%8d): ", obj, byteCount);
     }
 #endif
 
@@ -132,7 +132,7 @@ void MarkContext::ScanMemory(void ** obj, size_t byteCount
 #if DBG_DUMP
     if (recycler->forceTraceMark || recycler->GetRecyclerFlagsTable().Trace.IsEnabled(Js::MarkPhase))
     {
-        Output::Print(_u("\n"));
+        Output::Print(u"\n");
         Output::Flush();
     }
 #endif

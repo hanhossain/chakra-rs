@@ -165,7 +165,7 @@ namespace Js
             return false;
         });
 
-        OUTPUT_TRACE(Js::DebuggerPhase, _u("ProbeContainer::UpdateFramePointers: detected %d frames (this=%p, fMatchWithCurrentScriptContext=%d)\n"),
+        OUTPUT_TRACE(Js::DebuggerPhase, u"ProbeContainer::UpdateFramePointers: detected %d frames (this=%p, fMatchWithCurrentScriptContext=%d)\n",
             tempFramePointers->Count(), this, fMatchWithCurrentScriptContext);
 
         while (tempFramePointers->Count())
@@ -209,7 +209,7 @@ namespace Js
             pHaltState->topFrame->SetIsTopFrame();
         }
 
-        OUTPUT_TRACE(Js::DebuggerPhase, _u("ProbeContainer::InitializeLocation (end): this=%p, pHaltState=%p, fMatch=%d, topFrame=%p\n"),
+        OUTPUT_TRACE(Js::DebuggerPhase, u"ProbeContainer::InitializeLocation (end): this=%p, pHaltState=%p, fMatch=%d, topFrame=%p\n",
             this, pHaltState, fMatchWithCurrentScriptContext, pHaltState->topFrame);
 
         return true;
@@ -217,7 +217,7 @@ namespace Js
 
     void ProbeContainer::DestroyLocation()
     {
-        OUTPUT_TRACE(Js::DebuggerPhase, _u("ProbeContainer::DestroyLocation (start): this=%p, IsNextStatementChanged=%d, haltCallbackProbe=%p\n"),
+        OUTPUT_TRACE(Js::DebuggerPhase, u"ProbeContainer::DestroyLocation (start): this=%p, IsNextStatementChanged=%d, haltCallbackProbe=%p\n",
             this, this->IsNextStatementChanged, haltCallbackProbe);
 
         if (IsNextStatementChanged)
@@ -252,7 +252,7 @@ namespace Js
     {
         if (!haltCallbackProbe || haltCallbackProbe->IsInClosedState() || debugManager->IsAtDispatchHalt())
         {
-            OUTPUT_VERBOSE_TRACE(Js::DebuggerPhase, _u("ProbeContainer::CanDispatchHalt: Not in break mode. pHaltState = %p\n"), pHaltState);
+            OUTPUT_VERBOSE_TRACE(Js::DebuggerPhase, u"ProbeContainer::CanDispatchHalt: Not in break mode. pHaltState = %p\n", pHaltState);
             return false;
         }
         return true;
@@ -260,7 +260,7 @@ namespace Js
 
     void ProbeContainer::DispatchStepHandler(InterpreterHaltState* pHaltState, OpCode* pOriginalOpcode)
     {
-        OUTPUT_TRACE(Js::DebuggerPhase, _u("ProbeContainer::DispatchStepHandler: start: this=%p, pHaltState=%p, pOriginalOpcode=0x%x\n"), this, pHaltState, pOriginalOpcode);
+        OUTPUT_TRACE(Js::DebuggerPhase, u"ProbeContainer::DispatchStepHandler: start: this=%p, pHaltState=%p, pOriginalOpcode=0x%x\n", this, pHaltState, pOriginalOpcode);
 
         if (!CanDispatchHalt(pHaltState))
         {
@@ -270,7 +270,7 @@ namespace Js
         TryFinally([&]()
           {
             InitializeLocation(pHaltState);
-            OUTPUT_TRACE(Js::DebuggerPhase, _u("ProbeContainer::DispatchStepHandler: initialized location: pHaltState=%p, pHaltState->IsValid()=%d\n"),
+            OUTPUT_TRACE(Js::DebuggerPhase, u"ProbeContainer::DispatchStepHandler: initialized location: pHaltState=%p, pHaltState->IsValid()=%d\n",
                 pHaltState, pHaltState->IsValid());
 
             if (pHaltState->IsValid()) // Only proceed if we find a valid top frame and that is the executing function
@@ -303,12 +303,12 @@ namespace Js
             DestroyLocation();
           });
 
-        OUTPUT_TRACE(Js::DebuggerPhase, _u("ProbeContainer::DispatchStepHandler: end: pHaltState=%p\n"), pHaltState);
+        OUTPUT_TRACE(Js::DebuggerPhase, u"ProbeContainer::DispatchStepHandler: end: pHaltState=%p\n", pHaltState);
     }
 
     void ProbeContainer::DispatchAsyncBreak(InterpreterHaltState* pHaltState)
     {
-        OUTPUT_TRACE(Js::DebuggerPhase, _u("ProbeContainer::DispatchAsyncBreak: start: this=%p, pHaltState=%p\n"), this, pHaltState);
+        OUTPUT_TRACE(Js::DebuggerPhase, u"ProbeContainer::DispatchAsyncBreak: start: this=%p, pHaltState=%p\n", this, pHaltState);
 
         if (!this->pAsyncHaltCallback || !CanDispatchHalt(pHaltState))
         {
@@ -318,7 +318,7 @@ namespace Js
         TryFinally([&]()
         {
             InitializeLocation(pHaltState, /* We don't need to match script context, stop at any available script function */ false);
-            OUTPUT_TRACE(Js::DebuggerPhase, _u("ProbeContainer::DispatchAsyncBreak: initialized location: pHaltState=%p, pHaltState->IsValid()=%d\n"),
+            OUTPUT_TRACE(Js::DebuggerPhase, u"ProbeContainer::DispatchAsyncBreak: initialized location: pHaltState=%p, pHaltState->IsValid()=%d\n",
                 pHaltState, pHaltState->IsValid());
 
             if (pHaltState->IsValid())
@@ -327,7 +327,7 @@ namespace Js
                 debugManager->asyncBreakController.Activate(this->pAsyncHaltCallback);
                 if (debugManager->asyncBreakController.IsAtStoppingLocation(pHaltState))
                 {
-                    OUTPUT_TRACE(Js::DebuggerPhase, _u("ProbeContainer::DispatchAsyncBreak: IsAtStoppingLocation: pHaltState=%p\n"), pHaltState);
+                    OUTPUT_TRACE(Js::DebuggerPhase, u"ProbeContainer::DispatchAsyncBreak: IsAtStoppingLocation: pHaltState=%p\n", pHaltState);
 
                     pHaltState->GetFunction()->CheckAndRegisterFuncToDiag(pScriptContext);
 
@@ -341,12 +341,12 @@ namespace Js
             DestroyLocation();
         });
 
-        OUTPUT_TRACE(Js::DebuggerPhase, _u("ProbeContainer::DispatchAsyncBreak: end: pHaltState=%p\n"), pHaltState);
+        OUTPUT_TRACE(Js::DebuggerPhase, u"ProbeContainer::DispatchAsyncBreak: end: pHaltState=%p\n", pHaltState);
     }
 
     void ProbeContainer::DispatchInlineBreakpoint(InterpreterHaltState* pHaltState)
     {
-        OUTPUT_TRACE(Js::DebuggerPhase, _u("ProbeContainer::DispatchInlineBreakpoint: start: this=%p, pHaltState=%p\n"), this, pHaltState);
+        OUTPUT_TRACE(Js::DebuggerPhase, u"ProbeContainer::DispatchInlineBreakpoint: start: this=%p, pHaltState=%p\n", this, pHaltState);
 
         if (!CanDispatchHalt(pHaltState))
         {
@@ -358,7 +358,7 @@ namespace Js
         TryFinally([&]()
         {
             InitializeLocation(pHaltState);
-            OUTPUT_TRACE(Js::DebuggerPhase, _u("ProbeContainer::DispatchInlineBreakpoint: initialized location: pHaltState=%p, pHaltState->IsValid()=%d\n"),
+            OUTPUT_TRACE(Js::DebuggerPhase, u"ProbeContainer::DispatchInlineBreakpoint: initialized location: pHaltState=%p, pHaltState->IsValid()=%d\n",
                 pHaltState, pHaltState->IsValid());
 
             Assert(pHaltState->IsValid());
@@ -384,16 +384,16 @@ namespace Js
             DestroyLocation();
         });
 
-        OUTPUT_TRACE(Js::DebuggerPhase, _u("ProbeContainer::DispatchInlineBreakpoint: end: pHaltState=%p\n"), pHaltState);
+        OUTPUT_TRACE(Js::DebuggerPhase, u"ProbeContainer::DispatchInlineBreakpoint: end: pHaltState=%p\n", pHaltState);
     }
 
     bool ProbeContainer::DispatchExceptionBreakpoint(InterpreterHaltState* pHaltState)
     {
-        OUTPUT_TRACE(Js::DebuggerPhase, _u("ProbeContainer::DispatchExceptionBreakpoint: start: this=%p, pHaltState=%p\n"), this, pHaltState);
+        OUTPUT_TRACE(Js::DebuggerPhase, u"ProbeContainer::DispatchExceptionBreakpoint: start: this=%p, pHaltState=%p\n", this, pHaltState);
         bool fSuccess = false;
         if (!haltCallbackProbe || haltCallbackProbe->IsInClosedState() || debugManager->IsAtDispatchHalt())
         {
-            OUTPUT_TRACE(Js::DebuggerPhase, _u("ProbeContainer::DispatchExceptionBreakpoint: not in break mode: pHaltState=%p\n"), pHaltState);
+            OUTPUT_TRACE(Js::DebuggerPhase, u"ProbeContainer::DispatchExceptionBreakpoint: not in break mode: pHaltState=%p\n", pHaltState);
             // Will not be able to handle multiple break-hits.
             return fSuccess;
         }
@@ -408,7 +408,7 @@ namespace Js
         TryFinally([&]()
         {
             InitializeLocation(pHaltState, false);
-            OUTPUT_TRACE(Js::DebuggerPhase, _u("ProbeContainer::DispatchExceptionBreakpoint: initialized location: pHaltState=%p, IsInterpreterFrame=%d\n"),
+            OUTPUT_TRACE(Js::DebuggerPhase, u"ProbeContainer::DispatchExceptionBreakpoint: initialized location: pHaltState=%p, IsInterpreterFrame=%d\n",
                 pHaltState, pHaltState->IsValid(), pHaltState->topFrame && pHaltState->topFrame->IsInterpreterFrame());
 
             // The ByteCodeReader should be available at this point, but because of possibility of garbled frame, we shouldn't hit AV
@@ -442,7 +442,7 @@ namespace Js
                 // So in that case we will consider the top function's context and break on that context.
                 if (pTopFuncContext != pScriptContext)
                 {
-                    OUTPUT_TRACE(Js::DebuggerPhase, _u("ProbeContainer::DispatchExceptionBreakpoint: top function's context is different from the current context: pHaltState=%p, haltCallbackProbe=%p\n"),
+                    OUTPUT_TRACE(Js::DebuggerPhase, u"ProbeContainer::DispatchExceptionBreakpoint: top function's context is different from the current context: pHaltState=%p, haltCallbackProbe=%p\n",
                         pHaltState, pTopFuncContext->GetDebugContext()->GetProbeContainer()->haltCallbackProbe);
                     if (pTopFuncContext->GetDebugContext()->GetProbeContainer()->haltCallbackProbe)
                     {
@@ -471,14 +471,14 @@ namespace Js
             DestroyLocation();
         });
 
-        OUTPUT_TRACE(Js::DebuggerPhase, _u("ProbeContainer::DispatchExceptionBreakpoint: end: pHaltState=%p, fSuccess=%d\n"), pHaltState, fSuccess);
+        OUTPUT_TRACE(Js::DebuggerPhase, u"ProbeContainer::DispatchExceptionBreakpoint: end: pHaltState=%p, fSuccess=%d\n", pHaltState, fSuccess);
         return fSuccess;
     }
 
     void ProbeContainer::DispatchDOMMutationBreakpoint()
     {
         InterpreterHaltState haltState(STOP_DOMMUTATIONBREAKPOINT, /*_executingFunction*/nullptr);
-        OUTPUT_TRACE(Js::DebuggerPhase, _u("ProbeContainer::DispatchDOMMutationBreakpoint: start: this=%p, pHaltState=%p\n"), this, haltState);
+        OUTPUT_TRACE(Js::DebuggerPhase, u"ProbeContainer::DispatchDOMMutationBreakpoint: start: this=%p, pHaltState=%p\n", this, haltState);
         if (!CanDispatchHalt(&haltState))
         {
             return;
@@ -488,7 +488,7 @@ namespace Js
         TryFinally([&]()
         {
             InitializeLocation(&haltState);
-            OUTPUT_TRACE(Js::DebuggerPhase, _u("ProbeContainer::DispatchDOMMutationBreakpoint: initialized location: pHaltState=%p, pHaltState->IsValid()=%d\n"),
+            OUTPUT_TRACE(Js::DebuggerPhase, u"ProbeContainer::DispatchDOMMutationBreakpoint: initialized location: pHaltState=%p, pHaltState->IsValid()=%d\n",
                 haltState, haltState.IsValid());
 
             if (haltState.IsValid())
@@ -524,7 +524,7 @@ namespace Js
     {
         Assert(pHaltState->stopType == STOP_MUTATIONBREAKPOINT);
 
-        OUTPUT_TRACE(Js::DebuggerPhase, _u("ProbeContainer::DispatchMutationBreakpoint: start: this=%p, pHaltState=%p\n"), this, pHaltState);
+        OUTPUT_TRACE(Js::DebuggerPhase, u"ProbeContainer::DispatchMutationBreakpoint: start: this=%p, pHaltState=%p\n", this, pHaltState);
         if (!CanDispatchHalt(pHaltState))
         {
             return;
@@ -536,7 +536,7 @@ namespace Js
         TryFinally([&]()
         {
             InitializeLocation(pHaltState);
-            OUTPUT_TRACE(Js::DebuggerPhase, _u("ProbeContainer::DispatchMutationBreakpoint: initialized location: pHaltState=%p, pHaltState->IsValid()=%d\n"),
+            OUTPUT_TRACE(Js::DebuggerPhase, u"ProbeContainer::DispatchMutationBreakpoint: initialized location: pHaltState=%p, pHaltState->IsValid()=%d\n",
                 pHaltState, pHaltState->IsValid());
 
             if (pHaltState->IsValid())
@@ -940,7 +940,7 @@ namespace Js
 
     void ProbeContainer::AsyncActivate(HaltCallback* haltCallback)
     {
-        OUTPUT_TRACE(Js::DebuggerPhase, _u("Async break activated\n"));
+        OUTPUT_TRACE(Js::DebuggerPhase, u"Async break activated\n");
         InterlockedExchangePointer((void **)&this->pAsyncHaltCallback, haltCallback);
 
         Assert(debugManager);

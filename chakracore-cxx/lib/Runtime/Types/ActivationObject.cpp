@@ -98,13 +98,13 @@ namespace Js
 
     BOOL ActivationObject::GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
     {
-        stringBuilder->AppendCppLiteral(_u("{ActivationObject}"));
+        stringBuilder->AppendCppLiteral(u"{ActivationObject}");
         return TRUE;
     }
 
     BOOL ActivationObject::GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
     {
-        stringBuilder->AppendCppLiteral(_u("Object, (ActivationObject)"));
+        stringBuilder->AppendCppLiteral(u"Object, (ActivationObject)");
         return TRUE;
     }
 

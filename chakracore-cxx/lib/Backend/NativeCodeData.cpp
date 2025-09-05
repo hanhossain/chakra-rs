@@ -84,7 +84,7 @@ NativeCodeData::AddFixupEntry(void* targetAddr, void* targetStartAddr, void* add
 #if DBG
     if (PHASE_TRACE1(Js::NativeCodeDataPhase))
     {
-        Output::Print(_u("NativeCodeData Add Fixup: %p(%p+%d, chunk:%p)  -->  %p(chunk:%p)  %S\n"),
+        Output::Print(u"NativeCodeData Add Fixup: %p(%p+%d, chunk:%p)  -->  %p(chunk:%p)  %S\n",
             addrToFixup, startAddress, entry->addrOffset, (void*)chunk, targetAddr, (void*)targetChunk, chunk->dataType);
     }
 #endif
@@ -132,7 +132,7 @@ NativeCodeData::AddFixupEntryForPointerArray(void* startAddress, DataChunk * chu
 #if DBG
         if (PHASE_TRACE1(Js::NativeCodeDataPhase))
         {
-            Output::Print(_u("NativeCodeData Add Fixup: %p[%d](+%d, chunk:%p)  -->  %p(chunk:%p)  %S\n"),
+            Output::Print(u"NativeCodeData Add Fixup: %p[%d](+%d, chunk:%p)  -->  %p(chunk:%p)  %S\n",
                 startAddress, i, entry->addrOffset, (void*)chunk, targetAddr, (void*)targetChunk, chunk->dataType);
         }
 #endif
@@ -145,9 +145,9 @@ NativeCodeData::GetDataDescription(void* data, JitArenaAllocator * alloc)
     auto chunk = GetDataChunk(data);
     char16_t buf[1024] = { 0 };
 #if DBG
-    swprintf_s(buf, _u("%hs, NativeCodeData: index: %x, len: %x, offset: +%x"), chunk->dataType, chunk->allocIndex, chunk->len, chunk->offset);
+    swprintf_s(buf, u"%hs, NativeCodeData: index: %x, len: %x, offset: +%x", chunk->dataType, chunk->allocIndex, chunk->len, chunk->offset);
 #else
-    swprintf_s(buf, _u("NativeCodeData: index: %x, len: %x, offset: +%x"), chunk->allocIndex, chunk->len, chunk->offset);
+    swprintf_s(buf, u"NativeCodeData: index: %x, len: %x, offset: +%x", chunk->allocIndex, chunk->len, chunk->offset);
 #endif
     auto len = wcslen(buf) + 1;
     auto desc = JitAnewArray(alloc, char16_t, len);

@@ -392,7 +392,7 @@ public:
     void Dump()
     {
         bool printed = false;
-        Output::Print(_u("["));
+        Output::Print(u"[");
         for (indexType i = 0; i < maxIndex / numPerSegment; i++)
         {
             if (backingStore[i] == nullptr)
@@ -407,14 +407,14 @@ public:
                 {
                     if (printed)
                     {
-                        Output::Print(_u(", "));
+                        Output::Print(u", ");
                     }
-                    Output::Print(_u("%u <= %u"), local, index);
+                    Output::Print(u"%u <= %u", local, index);
                     printed = true;
                 }
             }
         }
-        Output::Print(_u("]\n"));
+        Output::Print(u"]\n");
     }
 #endif
 };

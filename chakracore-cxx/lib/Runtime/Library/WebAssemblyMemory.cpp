@@ -31,11 +31,11 @@ void WebAssemblyMemory::CheckLimits(ScriptContext * scriptContext, uint32 initia
     }
     if (initial > Wasm::Limits::GetMaxMemoryInitialPages())
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_Invalid, _u("descriptor.initial"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_Invalid, u"descriptor.initial");
     }
     if (maximum > Wasm::Limits::GetMaxMemoryMaximumPages())
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_Invalid, _u("descriptor.maximum"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_Invalid, u"descriptor.maximum");
     }
 }
 
@@ -67,19 +67,19 @@ WebAssemblyMemory::NewInstance(RecyclableObject* function, CallInfo callInfo, ..
 
     if (!(callInfo.Flags & CallFlags_New) || (newTarget && JavascriptOperators::IsUndefinedObject(newTarget)))
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_ClassConstructorCannotBeCalledWithoutNew, _u("WebAssembly.Memory"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_ClassConstructorCannotBeCalledWithoutNew, u"WebAssembly.Memory");
     }
 
     if (args.Info.Count < 2 || !JavascriptOperators::IsObject(args[1]))
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_NeedObject, _u("descriptor"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_NeedObject, u"descriptor");
     }
     DynamicObject * memoryDescriptor = VarTo<DynamicObject>(args[1]);
 
     Var initVar = JavascriptOperators::OP_GetProperty(memoryDescriptor, PropertyIds::initial, scriptContext);
     if (Js::JavascriptOperators::IsUndefined(initVar))
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_NeedNumber, _u("descriptor.initial"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_NeedNumber, u"descriptor.initial");
     }
     uint32 initial = WebAssembly::ToNonWrappingUint32(initVar, scriptContext);
 
@@ -226,38 +226,38 @@ void WebAssemblyMemory::TraceMemWrite(WebAssemblyMemory* mem, uint32 index, uint
     JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Op_WasmMemoryTraceWrite);
     // Must call after the write
     Assert(mem);
-    Output::Print(_u("#%04x "), bytecodeOffset);
+    Output::Print(u"#%04x ", bytecodeOffset);
     unsigned long bigIndex = (unsigned long)index + (unsigned long)offset;
     if (index >= mem->m_buffer->GetByteLength())
     {
-        Output::Print(_u("WasmMemoryTrace:: Writing out of bounds. %llu >= %u\n"), bigIndex, mem->m_buffer->GetByteLength());
+        Output::Print(u"WasmMemoryTrace:: Writing out of bounds. %llu >= %u\n", bigIndex, mem->m_buffer->GetByteLength());
     }
     if (offset)
     {
-        Output::Print(_u("WasmMemoryTrace:: buf[%u + %u (%llu)]"), index, offset, bigIndex);
+        Output::Print(u"WasmMemoryTrace:: buf[%u + %u (%llu)]", index, offset, bigIndex);
     }
     else
     {
-        Output::Print(_u("WasmMemoryTrace:: buf[%u]"), index);
+        Output::Print(u"WasmMemoryTrace:: buf[%u]", index);
     }
     uint8_t* buffer = mem->m_buffer->GetBuffer();
     switch (viewType)
     {
     case ArrayBufferView::ViewType::TYPE_INT8_TO_INT64:
-    case ArrayBufferView::ViewType::TYPE_INT8: Output::Print(_u(".int8_t = %d\n"), *(int8_t*)(buffer + bigIndex)); break;
+    case ArrayBufferView::ViewType::TYPE_INT8: Output::Print(u".int8_t = %d\n", *(int8_t*)(buffer + bigIndex)); break;
     case ArrayBufferView::ViewType::TYPE_UINT8_TO_INT64:
-    case ArrayBufferView::ViewType::TYPE_UINT8: Output::Print(_u(".uint8_t = %u\n"), *(uint8_t*)(buffer + bigIndex)); break;
+    case ArrayBufferView::ViewType::TYPE_UINT8: Output::Print(u".uint8_t = %u\n", *(uint8_t*)(buffer + bigIndex)); break;
     case ArrayBufferView::ViewType::TYPE_INT16_TO_INT64:
-    case ArrayBufferView::ViewType::TYPE_INT16: Output::Print(_u(".int16 = %d\n"), *(int16*)(buffer + bigIndex)); break;
+    case ArrayBufferView::ViewType::TYPE_INT16: Output::Print(u".int16 = %d\n", *(int16*)(buffer + bigIndex)); break;
     case ArrayBufferView::ViewType::TYPE_UINT16_TO_INT64:
-    case ArrayBufferView::ViewType::TYPE_UINT16: Output::Print(_u(".uint16 = %u\n"), *(uint16*)(buffer + bigIndex)); break;
+    case ArrayBufferView::ViewType::TYPE_UINT16: Output::Print(u".uint16 = %u\n", *(uint16*)(buffer + bigIndex)); break;
     case ArrayBufferView::ViewType::TYPE_INT32_TO_INT64:
-    case ArrayBufferView::ViewType::TYPE_INT32: Output::Print(_u(".int32 = %d\n"), *(int32*)(buffer + bigIndex)); break;
+    case ArrayBufferView::ViewType::TYPE_INT32: Output::Print(u".int32 = %d\n", *(int32*)(buffer + bigIndex)); break;
     case ArrayBufferView::ViewType::TYPE_UINT32_TO_INT64:
-    case ArrayBufferView::ViewType::TYPE_UINT32: Output::Print(_u(".uint32 = %u\n"), *(uint32*)(buffer + bigIndex)); break;
-    case ArrayBufferView::ViewType::TYPE_FLOAT32: Output::Print(_u(".f32 = %.4f\n"), *(float*)(buffer + bigIndex)); break;
-    case ArrayBufferView::ViewType::TYPE_FLOAT64: Output::Print(_u(".f64 = %.8f\n"), *(double*)(buffer + bigIndex)); break;
-    case ArrayBufferView::ViewType::TYPE_INT64: Output::Print(_u(".long = %lld\n"), *(long*)(buffer + bigIndex)); break;
+    case ArrayBufferView::ViewType::TYPE_UINT32: Output::Print(u".uint32 = %u\n", *(uint32*)(buffer + bigIndex)); break;
+    case ArrayBufferView::ViewType::TYPE_FLOAT32: Output::Print(u".f32 = %.4f\n", *(float*)(buffer + bigIndex)); break;
+    case ArrayBufferView::ViewType::TYPE_FLOAT64: Output::Print(u".f64 = %.8f\n", *(double*)(buffer + bigIndex)); break;
+    case ArrayBufferView::ViewType::TYPE_INT64: Output::Print(u".long = %lld\n", *(long*)(buffer + bigIndex)); break;
     default:
         CompileAssert(ArrayBufferView::ViewType::TYPE_COUNT == 15);
         Assert(UNREACHED);

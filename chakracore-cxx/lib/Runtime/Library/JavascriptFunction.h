@@ -275,9 +275,9 @@ namespace Js
     {
         auto library = scriptContext->GetLibrary();
         String sourceString;
-        sourceString = library->CreateStringFromCppLiteral(JS_DISPLAY_STRING_FUNCTION_HEADER); //_u("function ")
+        sourceString = library->CreateStringFromCppLiteral(JS_DISPLAY_STRING_FUNCTION_HEADER); //u"function "
         sourceString = StringHelper::Concat(sourceString, name);
-        sourceString = StringHelper::Concat(sourceString, library->CreateStringFromCppLiteral(JS_DISPLAY_STRING_FUNCTION_BODY)); //_u("() { [native code] }")
+        sourceString = StringHelper::Concat(sourceString, library->CreateStringFromCppLiteral(JS_DISPLAY_STRING_FUNCTION_BODY)); //u"() { [native code] }"
         return sourceString;
     }
 

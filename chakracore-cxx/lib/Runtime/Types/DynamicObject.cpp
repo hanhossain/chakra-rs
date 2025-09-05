@@ -590,7 +590,7 @@ namespace Js
 
         if (PHASE_TRACE1(Js::ObjectHeaderInliningPhase))
         {
-            Output::Print(_u("ObjectHeaderInlining: De-optimizing the object.\n"));
+            Output::Print(u"ObjectHeaderInlining: De-optimizing the object.\n");
             Output::Flush();
         }
 
@@ -860,7 +860,7 @@ namespace Js
         {
             if (PHASE_TRACE1(ObjectCopyPhase))
             {
-                Output::Print(_u("ObjectCopy: Can't copy: inline slot capacity doesn't match, from: %u, to: %u\n"),
+                Output::Print(u"ObjectCopy: Can't copy: inline slot capacity doesn't match, from: %u, to: %u\n",
                     from->GetTypeHandler()->GetInlineSlotCapacity(),
                     this->GetTypeHandler()->GetInlineSlotCapacity());
             }
@@ -870,7 +870,7 @@ namespace Js
         {
             if (PHASE_TRACE1(ObjectCopyPhase))
             {
-                Output::Print(_u("ObjectCopy: Can't copy: from obj does not have copyable type handler\n"));
+                Output::Print(u"ObjectCopy: Can't copy: from obj does not have copyable type handler\n");
             }
             return false;
         }
@@ -878,7 +878,7 @@ namespace Js
         {
             if (PHASE_TRACE1(ObjectCopyPhase))
             {
-                Output::Print(_u("ObjectCopy: Can't copy: to obj has object array\n"));
+                Output::Print(u"ObjectCopy: Can't copy: to obj has object array\n");
             }
             return false;
         }
@@ -886,7 +886,7 @@ namespace Js
         {
             if (PHASE_TRACE1(ObjectCopyPhase))
             {
-                Output::Print(_u("ObjectCopy: Can't copy: Don't have same inline slot offset\n"));
+                Output::Print(u"ObjectCopy: Can't copy: Don't have same inline slot offset\n");
             }
             return false;
         }
@@ -894,7 +894,7 @@ namespace Js
         {
             if (PHASE_TRACE1(ObjectCopyPhase))
             {
-                Output::Print(_u("ObjectCopy: Can't copy: Prototypes don't match\n"));
+                Output::Print(u"ObjectCopy: Can't copy: Prototypes don't match\n");
             }
             return false;
         }
@@ -902,7 +902,7 @@ namespace Js
         {
             if (PHASE_TRACE1(ObjectCopyPhase))
             {
-                Output::Print(_u("ObjectCopy: Can't copy: from obj is External\n"));
+                Output::Print(u"ObjectCopy: Can't copy: from obj is External\n");
             }
             return false;
         }
@@ -910,7 +910,7 @@ namespace Js
         {
             if (PHASE_TRACE1(ObjectCopyPhase))
             {
-                Output::Print(_u("ObjectCopy: Can't copy: from obj is from different ScriptContext\n"));
+                Output::Print(u"ObjectCopy: Can't copy: from obj is from different ScriptContext\n");
             }
             return false;
         }
@@ -942,7 +942,7 @@ namespace Js
         {
             if (PHASE_TRACE1(ObjectCopyPhase))
             {
-                Output::Print(_u("ObjectCopy: Can't copy: failed to share type\n"));
+                Output::Print(u"ObjectCopy: Can't copy: failed to share type\n");
             }
             return false;
         }
@@ -973,7 +973,7 @@ namespace Js
         }
         if (PHASE_TRACE1(ObjectCopyPhase))
         {
-            Output::Print(_u("ObjectCopy succeeded\n"));
+            Output::Print(u"ObjectCopy succeeded\n");
         }
 
         return true;

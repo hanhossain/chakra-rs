@@ -255,18 +255,18 @@ public:
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
             if (PHASE_VERBOSE_TRACE1(FixMethodPropsPhase))
             {
-                Output::Print(_u("FixedFields: TypePath::Branch: singleton: 0x%p(0x%p)\n"), PointerValue(this->singletonInstance), this->singletonInstance->Get());
-                Output::Print(_u("   fixed fields:"));
+                Output::Print(u"FixedFields: TypePath::Branch: singleton: 0x%p(0x%p)\n", PointerValue(this->singletonInstance), this->singletonInstance->Get());
+                Output::Print(u"   fixed fields:");
 
                 for (PropertyIndex i = 0; i < GetPathLength(); i++)
                 {
-                    Output::Print(_u(" %s %d%d%d,"), GetPropertyId(i)->GetBuffer(),
+                    Output::Print(u" %s %d%d%d,", GetPropertyId(i)->GetBuffer(),
                         i < GetMaxInitializedLength() ? 1 : 0,
                         GetIsFixedFieldAt(i, GetPathLength()) ? 1 : 0,
                         GetIsUsedFixedFieldAt(i, GetPathLength()) ? 1 : 0);
                 }
 
-                Output::Print(_u("\n"));
+                Output::Print(u"\n");
             }
 #endif
 
@@ -314,19 +314,19 @@ public:
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
         if (PHASE_VERBOSE_TRACE1(FixMethodPropsPhase))
         {
-            Output::Print(_u("FixedFields: TypePath::AddInternal: singleton = 0x%p(0x%p)\n"),
+            Output::Print(u"FixedFields: TypePath::AddInternal: singleton = 0x%p(0x%p)\n",
                 PointerValue(this->singletonInstance), this->singletonInstance != nullptr ? this->singletonInstance->Get() : nullptr);
-            Output::Print(_u("   fixed fields:"));
+            Output::Print(u"   fixed fields:");
 
             for (PropertyIndex i = 0; i < GetPathLength(); i++)
             {
-                Output::Print(_u(" %s %d%d%d,"), GetPropertyId(i)->GetBuffer(),
+                Output::Print(u" %s %d%d%d,", GetPropertyId(i)->GetBuffer(),
                     i < GetMaxInitializedLength() ? 1 : 0,
                     GetIsFixedFieldAt(i, GetPathLength()) ? 1 : 0,
                     GetIsUsedFixedFieldAt(i, GetPathLength()) ? 1 : 0);
             }
 
-            Output::Print(_u("\n"));
+            Output::Print(u"\n");
         }
 #endif
 

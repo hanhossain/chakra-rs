@@ -12,8 +12,8 @@ namespace PlatformAgnostic
 namespace Arrays
 {
 
-    static char16_t commaSeparator = _u(',');
-    static char16_t semicolonSeparator = _u(';');
+    static char16_t commaSeparator = u',';
+    static char16_t semicolonSeparator = u';';
 
     ArrayLocalization::ArrayLocalization()
     {

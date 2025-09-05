@@ -8,7 +8,7 @@
 
 void TTDAbort_unrecoverable_error(const char* msg)
 {
-    Output::Print(_u("TTD assert failed: %S\n"), msg);
+    Output::Print(u"TTD assert failed: %S\n", msg);
 
     int scenario = 101;
     ReportFatalException(NULL, E_UNEXPECTED, Fatal_TTDAbort, scenario);
@@ -181,7 +181,7 @@ namespace TTD
                     nbuff[curr] = str[i];
                     curr++;
                 }
-                nbuff[curr] = _u('\0');
+                nbuff[curr] = u'\0';
             }
 
             this->m_contents = nbuff;
@@ -200,7 +200,7 @@ namespace TTD
                 this->m_optFormatBuff = TT_HEAP_ALLOC_ARRAY_ZERO(char16_t, 64);
             }
 
-            swprintf_s(this->m_optFormatBuff, 32, _u("%I64u"), val); //64 char16s is 32 words
+            swprintf_s(this->m_optFormatBuff, 32, u"%I64u", val); //64 char16s is 32 words
 
             this->Append(this->m_optFormatBuff);
         }
@@ -220,7 +220,7 @@ namespace TTD
             }
             TTDAssert(i + 1 == strCount, "Our indexing is off.");
 
-            buff[i] = _u('\0');
+            buff[i] = u'\0';
             this->Append(buff);
 
             TT_HEAP_FREE_ARRAY(char16_t, buff, (size_t)strCount);

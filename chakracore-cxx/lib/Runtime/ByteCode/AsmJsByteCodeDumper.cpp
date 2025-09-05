@@ -19,7 +19,7 @@ namespace Js
         StatementReader<FunctionBody::StatementMapList> statementReader;
         statementReader.Create(body);
         body->DumpFullFunctionName();
-        Output::Print(_u(" Asm.js ("));
+        Output::Print(u" Asm.js (");
         AsmJsFunctionInfo* funcInfo = body->GetAsmJsFunctionInfo();
         const ArgSlot argCount = funcInfo->GetArgCount();
         for (ArgSlot i = 0; i < argCount; i++)
@@ -27,42 +27,42 @@ namespace Js
             AsmJsVarType var = funcInfo->GetArgType(i);
             if (i > 0)
             {
-                Output::Print(_u(", "));
+                Output::Print(u", ");
             }
             if (var.isDouble())
             {
-                Output::Print(_u("+In%hu"), i);
+                Output::Print(u"+In%hu", i);
             }
             else if (var.isFloat())
             {
-                Output::Print(_u("flt(In%hu)"), i);
+                Output::Print(u"flt(In%hu)", i);
             }
             else if (var.isInt())
             {
-                Output::Print(_u("In%hu|0"), i);
+                Output::Print(u"In%hu|0", i);
             }
             else if (var.isInt64())
             {
-                Output::Print(_u("long(In%hu)"), i);
+                Output::Print(u"long(In%hu)", i);
             }
             else if (var.isSIMD())
             {
                 switch (var.which())
                 {
                 case AsmJsType::Int32x4:
-                    Output::Print(_u("I4(In%hu)"), i);
+                    Output::Print(u"I4(In%hu)", i);
                     break;
                 case AsmJsType::Int8x16:
-                    Output::Print(_u("I16(In%hu)"), i);
+                    Output::Print(u"I16(In%hu)", i);
                     break;
                 case AsmJsType::Float32x4:
-                    Output::Print(_u("F4(In%hu)"), i);
+                    Output::Print(u"F4(In%hu)", i);
                     break;
                 case AsmJsType::Float64x2:
-                    Output::Print(_u("D2(In%hu)"), i);
+                    Output::Print(u"D2(In%hu)", i);
                     break;
                 case AsmJsType::Int64x2:
-                    Output::Print(_u("I2(In%hu)"), i);
+                    Output::Print(u"I2(In%hu)", i);
                     break;
                 }
             }
@@ -72,8 +72,8 @@ namespace Js
             }
         }
 
-        Output::Print(_u(") "));
-        Output::Print(_u("(size: %d [%d])\n"), body->GetByteCodeCount(), body->GetByteCodeWithoutLDACount());
+        Output::Print(u") ");
+        Output::Print(u"(size: %d [%d])\n", body->GetByteCodeCount(), body->GetByteCodeWithoutLDACount());
 
         if (!typedRegister && asmFunc)
         {
@@ -92,7 +92,7 @@ namespace Js
 
         if (typedRegister)
         {
-            Output::Print(_u("    Implicit Arg Ins:\n    ======== =====\n    "));
+            Output::Print(u"    Implicit Arg Ins:\n    ======== =====\n    ");
             uint32 iArgs[WAsmJs::LIMIT];
             typedRegister->GetArgumentStartIndex(iArgs);
             uint32 iArg = iArgs[WAsmJs::INT32];
@@ -105,31 +105,31 @@ namespace Js
                 AsmJsVarType var = funcInfo->GetArgType(i);
                 if (var.isDouble())
                 {
-                    Output::Print(_u(" D%d  In%d"), dArg++, i);
+                    Output::Print(u" D%d  In%d", dArg++, i);
                 }
                 else if (var.isFloat())
                 {
-                    Output::Print(_u(" F%d  In%d"), fArg++, i);
+                    Output::Print(u" F%d  In%d", fArg++, i);
                 }
                 else if (var.isInt())
                 {
-                    Output::Print(_u(" I%d  In%d"), iArg++, i);
+                    Output::Print(u" I%d  In%d", iArg++, i);
                 }
                 else if (var.isInt64())
                 {
-                    Output::Print(_u(" L%d  In%d"), lArg++, i);
+                    Output::Print(u" L%d  In%d", lArg++, i);
                 }
                 else if (var.isSIMD())
                 {
-                    Output::Print(_u(" SIMD%d  In%d"), simdArg++, i);
+                    Output::Print(u" SIMD%d  In%d", simdArg++, i);
                 }
                 else
                 {
                     Assert(UNREACHED);
                 }
-                Output::Print(_u("\n    "));
+                Output::Print(u"\n    ");
             }
-            Output::Print(_u("\n"));
+            Output::Print(u"\n");
         }
 
         uint32 statementIndex = 0;
@@ -148,7 +148,7 @@ namespace Js
                 Assert(reader.GetCurrentOffset() == body->GetByteCode()->GetLength());
                 break;
             }
-            Output::Print(_u("    %04x %2s"), byteOffset, layoutSize == LargeLayout ? _u("L-") : layoutSize == MediumLayout ? _u("M-") : _u(""));
+            Output::Print(u"    %04x %2s", byteOffset, layoutSize == LargeLayout ? u"L-" : layoutSize == MediumLayout ? u"M-" : u"");
             DumpOp(op, layoutSize, reader, body);
             if (Js::Configuration::Global.flags.Verbose)
             {
@@ -157,13 +157,13 @@ namespace Js
                 Output::SkipToColumn(70);
                 if (layoutSize == LargeLayout)
                 {
-                    Output::Print(_u("%02X "),
+                    Output::Print(u"%02X ",
                         op > Js::OpCodeAsmJs::MaxByteSizedOpcodes ?
                         Js::OpCodeAsmJs::ExtendedLargeLayoutPrefix : Js::OpCodeAsmJs::LargeLayoutPrefix);
                 }
                 else if (layoutSize == MediumLayout)
                 {
-                    Output::Print(_u("%02X "),
+                    Output::Print(u"%02X ",
                         op > Js::OpCodeAsmJs::MaxByteSizedOpcodes ?
                         Js::OpCodeAsmJs::ExtendedMediumLayoutPrefix : Js::OpCodeAsmJs::MediumLayoutPrefix);
                 }
@@ -172,29 +172,29 @@ namespace Js
                     Assert(layoutSize == SmallLayout);
                     if (op > Js::OpCodeAsmJs::MaxByteSizedOpcodes)
                     {
-                        Output::Print(_u("%02X "), Js::OpCodeAsmJs::ExtendedOpcodePrefix);
+                        Output::Print(u"%02X ", Js::OpCodeAsmJs::ExtendedOpcodePrefix);
                     }
                     else
                     {
-                        Output::Print(_u("   "));
+                        Output::Print(u"   ");
                         layoutStart--; // don't have a prefix
                     }
                 }
 
-                Output::Print(_u("%02x"), (byte)op);
+                Output::Print(u"%02x", (byte)op);
                 for (int i = layoutStart; i < endByteOffset; i++)
                 {
-                    Output::Print(_u(" %02x"), reader.GetRawByte(i));
+                    Output::Print(u" %02x", reader.GetRawByte(i));
                 }
             }
-            Output::Print(_u("\n"));
+            Output::Print(u"\n");
         }
         if (statementReader.AtStatementBoundary(&reader))
         {
             body->PrintStatementSourceLine(statementIndex);
             statementIndex = statementReader.MoveNextStatementBoundary();
         }
-        Output::Print(_u("\n"));
+        Output::Print(u"\n");
         Output::Flush();
     }
 
@@ -206,13 +206,13 @@ namespace Js
         {
             char16_t buf[32];
             WAsmJs::RegisterSpace::GetTypeDebugName(type, buf, 32);
-            Output::Print(_u("    Constant %s:\n    ======== =======\n    "), buf);
+            Output::Print(u"    Constant %s:\n    ======== =======\n    ", buf);
             WAsmJs::RegisterSpace::GetTypeDebugName(type, buf, 32, true);
             for (uint i = 0; i < nConsts; i++)
             {
-                Output::Print(_u(" %s%d  "), buf, i);
+                Output::Print(u" %s%d  ", buf, i);
                 printValFunc(*constTable);
-                Output::Print(_u("\n    "));
+                Output::Print(u"\n    ");
                 ++constTable;
             }
         }
@@ -236,15 +236,15 @@ namespace Js
                 byte* tableOffseted = table + offset;
                 switch (type)
                 {
-                case WAsmJs::INT32:   PrintTypedConstants<int>(tableOffseted, type, constCount, [](int v) {Output::Print(_u("%d"), v);}); break;
-                case WAsmJs::INT64:   PrintTypedConstants<long>(tableOffseted, type, constCount, [](long v) {Output::Print(_u("%lld"), v);}); break;
-                case WAsmJs::FLOAT32: PrintTypedConstants<float>(tableOffseted, type, constCount, [](float v) {Output::Print(_u("%.4f"), v);}); break;
-                case WAsmJs::FLOAT64: PrintTypedConstants<double>(tableOffseted, type, constCount, [](double v) {Output::Print(_u("%.4f"), v);}); break;
+                case WAsmJs::INT32:   PrintTypedConstants<int>(tableOffseted, type, constCount, [](int v) {Output::Print(u"%d", v);}); break;
+                case WAsmJs::INT64:   PrintTypedConstants<long>(tableOffseted, type, constCount, [](long v) {Output::Print(u"%lld", v);}); break;
+                case WAsmJs::FLOAT32: PrintTypedConstants<float>(tableOffseted, type, constCount, [](float v) {Output::Print(u"%.4f", v);}); break;
+                case WAsmJs::FLOAT64: PrintTypedConstants<double>(tableOffseted, type, constCount, [](double v) {Output::Print(u"%.4f", v);}); break;
                 case WAsmJs::SIMD:    PrintTypedConstants<AsmJsSIMDValue>(tableOffseted, type, constCount, [](AsmJsSIMDValue v) {
-                    Output::Print(_u("\n       I32(%d, %d, %d, %d),"), v.i32[SIMD_X], v.i32[SIMD_Y], v.i32[SIMD_Z], v.i32[SIMD_W]);
-                    Output::Print(_u("\n       F32(%.4f, %.4f, %.4f, %.4f),"), v.f32[SIMD_X], v.f32[SIMD_Y], v.f32[SIMD_Z], v.f32[SIMD_W]);
-                    Output::Print(_u("\n       D64(%.4f, %.4f),"), v.f64[SIMD_X], v.f64[SIMD_Y]);
-                    Output::Print(_u("\n       I8(%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d)"),
+                    Output::Print(u"\n       I32(%d, %d, %d, %d),", v.i32[SIMD_X], v.i32[SIMD_Y], v.i32[SIMD_Z], v.i32[SIMD_W]);
+                    Output::Print(u"\n       F32(%.4f, %.4f, %.4f, %.4f),", v.f32[SIMD_X], v.f32[SIMD_Y], v.f32[SIMD_Z], v.f32[SIMD_W]);
+                    Output::Print(u"\n       D64(%.4f, %.4f),", v.f64[SIMD_X], v.f64[SIMD_Y]);
+                    Output::Print(u"\n       I8(%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d)",
                                   v.i8[0], v.i8[1], v.i8[2], v.i8[3], v.i8[4], v.i8[5], v.i8[6], v.i8[7],
                                   v.i8[8], v.i8[9], v.i8[10], v.i8[11], v.i8[12], v.i8[13], v.i8[14], v.i8[15]);
                     });
@@ -254,13 +254,13 @@ namespace Js
                     break;
                 }
             }
-            Output::Print(_u("\n"));
+            Output::Print(u"\n");
         }
     }
 
     void AsmJsByteCodeDumper::DumpOp(OpCodeAsmJs op, LayoutSize layoutSize, ByteCodeReader& reader, FunctionBody* dumpFunction)
     {
-        Output::Print(_u("%-20s"), OpCodeUtilAsmJs::GetOpCodeName(op));
+        Output::Print(u"%-20s", OpCodeUtilAsmJs::GetOpCodeName(op));
         OpLayoutTypeAsmJs nType = OpCodeUtilAsmJs::GetOpCodeLayout(op);
         switch (layoutSize * OpLayoutTypeAsmJs::Count + nType)
         {
@@ -289,93 +289,93 @@ namespace Js
 
     void AsmJsByteCodeDumper::DumpIntReg(RegSlot reg)
     {
-        Output::Print(_u(" I%d "), (int)reg);
+        Output::Print(u" I%d ", (int)reg);
     }
 
     void AsmJsByteCodeDumper::DumpLongReg(RegSlot reg)
     {
-        Output::Print(_u(" L%d "), (int)reg);
+        Output::Print(u" L%d ", (int)reg);
     }
 
     void AsmJsByteCodeDumper::DumpDoubleReg(RegSlot reg)
     {
-        Output::Print(_u(" D%d "), (int)reg);
+        Output::Print(u" D%d ", (int)reg);
     }
 
     void AsmJsByteCodeDumper::DumpFloatReg(RegSlot reg)
     {
-        Output::Print(_u(" F%d "), (int)reg);
+        Output::Print(u" F%d ", (int)reg);
     }
     void AsmJsByteCodeDumper::DumpR8Float(float value)
     {
-        Output::Print(_u(" float:%f "), value);
+        Output::Print(u" float:%f ", value);
     }
 
     // Float32x4
     void AsmJsByteCodeDumper::DumpFloat32x4Reg(RegSlot reg)
     {
-        Output::Print(_u(" F4_%d "), (int)reg);
+        Output::Print(u" F4_%d ", (int)reg);
     }
 
     // Int32x4
     void AsmJsByteCodeDumper::DumpInt32x4Reg(RegSlot reg)
     {
-        Output::Print(_u(" I4_%d "), (int)reg);
+        Output::Print(u" I4_%d ", (int)reg);
     }
 
     void AsmJsByteCodeDumper::DumpUint32x4Reg(RegSlot reg)
     {
-        Output::Print(_u(" U4_%d "), (int)reg);
+        Output::Print(u" U4_%d ", (int)reg);
     }
 
     void AsmJsByteCodeDumper::DumpInt16x8Reg(RegSlot reg)
     {
-        Output::Print(_u(" I8_%d "), (int)reg);
+        Output::Print(u" I8_%d ", (int)reg);
     }
 
     // Int8x16
     void AsmJsByteCodeDumper::DumpInt8x16Reg(RegSlot reg)
     {
-        Output::Print(_u(" I16_%d "), (int)reg);
+        Output::Print(u" I16_%d ", (int)reg);
     }
 
     void AsmJsByteCodeDumper::DumpUint16x8Reg(RegSlot reg)
     {
-        Output::Print(_u(" U8_%d "), (int)reg);
+        Output::Print(u" U8_%d ", (int)reg);
     }
 
     void AsmJsByteCodeDumper::DumpUint8x16Reg(RegSlot reg)
     {
-        Output::Print(_u(" U16_%d "), (int)reg);
+        Output::Print(u" U16_%d ", (int)reg);
     }
     // Bool32x4
     void AsmJsByteCodeDumper::DumpBool32x4Reg(RegSlot reg)
     {
-        Output::Print(_u(" B4_%d "), (int)reg);
+        Output::Print(u" B4_%d ", (int)reg);
     }
 
     // Bool16x8
     void AsmJsByteCodeDumper::DumpBool16x8Reg(RegSlot reg)
     {
-        Output::Print(_u(" B8_%d "), (int)reg);
+        Output::Print(u" B8_%d ", (int)reg);
     }
 
     // Bool32x4
     void AsmJsByteCodeDumper::DumpBool8x16Reg(RegSlot reg)
     {
-        Output::Print(_u(" B16_%d "), (int)reg);
+        Output::Print(u" B16_%d ", (int)reg);
     }
 
     // Float64x2
     void AsmJsByteCodeDumper::DumpFloat64x2Reg(RegSlot reg)
     {
-        Output::Print(_u(" D2_%d "), (int)reg);
+        Output::Print(u" D2_%d ", (int)reg);
     }
 
     // Int64x2
     void AsmJsByteCodeDumper::DumpInt64x2Reg(RegSlot reg)
     {
-        Output::Print(_u(" I2_%d "), (int)reg);
+        Output::Print(u" I2_%d ", (int)reg);
     }
 
     template <class T>
@@ -396,112 +396,112 @@ namespace Js
                 {
                     uint funcIndex = data->SlotIndex - wasmInfo->m_module->GetFuncOffset();
                     auto loadedFunc = wasmInfo->m_module->GetWasmFunctionInfo(funcIndex);
-                    Output::Print(_u(" R%d = %s"), data->Value, loadedFunc->GetBody()->GetDisplayName());
+                    Output::Print(u" R%d = %s", data->Value, loadedFunc->GetBody()->GetDisplayName());
                     break;
                 }
             }
 #endif
-            Output::Print(_u(" R%d = R%d[%d]"), data->Value, data->Instance, data->SlotIndex);
+            Output::Print(u" R%d = R%d[%d]", data->Value, data->Instance, data->SlotIndex);
             break;
         }
         case OpCodeAsmJs::LdArr_Func:
         case OpCodeAsmJs::LdArr_WasmFunc:
-            Output::Print(_u(" R%d = R%d[I%d]"), data->Value, data->Instance, data->SlotIndex);
+            Output::Print(u" R%d = R%d[I%d]", data->Value, data->Instance, data->SlotIndex);
             break;
         case OpCodeAsmJs::StSlot_Int:
-            Output::Print(_u(" R%d[%d] = I%d"), data->Instance, data->SlotIndex, data->Value);
+            Output::Print(u" R%d[%d] = I%d", data->Instance, data->SlotIndex, data->Value);
             break;
         case OpCodeAsmJs::StSlot_Long:
-            Output::Print(_u(" R%d[%d] = L%d"), data->Instance, data->SlotIndex, data->Value);
+            Output::Print(u" R%d[%d] = L%d", data->Instance, data->SlotIndex, data->Value);
             break;
         case OpCodeAsmJs::StSlot_Flt:
-            Output::Print(_u(" R%d[%d] = F%d"), data->Instance, data->SlotIndex, data->Value);
+            Output::Print(u" R%d[%d] = F%d", data->Instance, data->SlotIndex, data->Value);
             break;
         case OpCodeAsmJs::StSlot_Db:
-            Output::Print(_u(" R%d[%d] = D%d"), data->Instance, data->SlotIndex, data->Value);
+            Output::Print(u" R%d[%d] = D%d", data->Instance, data->SlotIndex, data->Value);
             break;
         case OpCodeAsmJs::LdSlot_Int:
-            Output::Print(_u(" I%d = R%d[%d]"), data->Value, data->Instance, data->SlotIndex);
+            Output::Print(u" I%d = R%d[%d]", data->Value, data->Instance, data->SlotIndex);
             break;
         case OpCodeAsmJs::LdSlot_Long:
-            Output::Print(_u(" L%d = R%d[%d]"), data->Value, data->Instance, data->SlotIndex);
+            Output::Print(u" L%d = R%d[%d]", data->Value, data->Instance, data->SlotIndex);
             break;
         case OpCodeAsmJs::LdSlot_Flt:
-            Output::Print(_u(" F%d = R%d[%d]"), data->Value, data->Instance, data->SlotIndex);
+            Output::Print(u" F%d = R%d[%d]", data->Value, data->Instance, data->SlotIndex);
             break;
         case OpCodeAsmJs::LdSlot_Db:
-            Output::Print(_u(" D%d = R%d[%d]"), data->Value, data->Instance, data->SlotIndex);
+            Output::Print(u" D%d = R%d[%d]", data->Value, data->Instance, data->SlotIndex);
             break;
         case OpCodeAsmJs::Simd128_LdSlot_F4:
-            Output::Print(_u(" F4_%d = R%d[%d]"), data->Value, data->Instance, data->SlotIndex);
+            Output::Print(u" F4_%d = R%d[%d]", data->Value, data->Instance, data->SlotIndex);
             break;
         case OpCodeAsmJs::Simd128_LdSlot_I4:
-            Output::Print(_u(" I4_%d = R%d[%d]"), data->Value, data->Instance, data->SlotIndex);
+            Output::Print(u" I4_%d = R%d[%d]", data->Value, data->Instance, data->SlotIndex);
             break;
         case OpCodeAsmJs::Simd128_LdSlot_I8:
-            Output::Print(_u(" I8_%d = R%d[%d]"), data->Value, data->Instance, data->SlotIndex);
+            Output::Print(u" I8_%d = R%d[%d]", data->Value, data->Instance, data->SlotIndex);
             break;
         case OpCodeAsmJs::Simd128_LdSlot_I16:
-            Output::Print(_u(" I16_%d = R%d[%d]"), data->Value, data->Instance, data->SlotIndex);
+            Output::Print(u" I16_%d = R%d[%d]", data->Value, data->Instance, data->SlotIndex);
             break;
         case OpCodeAsmJs::Simd128_LdSlot_U4:
-            Output::Print(_u(" U4_%d = R%d[%d]"), data->Value, data->Instance, data->SlotIndex);
+            Output::Print(u" U4_%d = R%d[%d]", data->Value, data->Instance, data->SlotIndex);
             break;
         case OpCodeAsmJs::Simd128_LdSlot_U8:
-            Output::Print(_u(" U8_%d = R%d[%d]"), data->Value, data->Instance, data->SlotIndex);
+            Output::Print(u" U8_%d = R%d[%d]", data->Value, data->Instance, data->SlotIndex);
             break;
         case OpCodeAsmJs::Simd128_LdSlot_U16:
-            Output::Print(_u(" U16_%d = R%d[%d]"), data->Value, data->Instance, data->SlotIndex);
+            Output::Print(u" U16_%d = R%d[%d]", data->Value, data->Instance, data->SlotIndex);
             break;
         case OpCodeAsmJs::Simd128_LdSlot_B4:
-            Output::Print(_u(" B4_%d = R%d[%d]"), data->Value, data->Instance, data->SlotIndex);
+            Output::Print(u" B4_%d = R%d[%d]", data->Value, data->Instance, data->SlotIndex);
             break;
         case OpCodeAsmJs::Simd128_LdSlot_B8:
-            Output::Print(_u(" B8_%d = R%d[%d]"), data->Value, data->Instance, data->SlotIndex);
+            Output::Print(u" B8_%d = R%d[%d]", data->Value, data->Instance, data->SlotIndex);
             break;
         case OpCodeAsmJs::Simd128_LdSlot_B16:
-            Output::Print(_u(" B16_%d = R%d[%d]"), data->Value, data->Instance, data->SlotIndex);
+            Output::Print(u" B16_%d = R%d[%d]", data->Value, data->Instance, data->SlotIndex);
             break;
 #if 0
         case OpCodeAsmJs::Simd128_LdSlot_D2:
-            Output::Print(_u(" D2_%d = R%d[%d]"), data->Value, data->Instance, data->SlotIndex);
+            Output::Print(u" D2_%d = R%d[%d]", data->Value, data->Instance, data->SlotIndex);
             break;
 
 #endif // 0
 
         case OpCodeAsmJs::Simd128_StSlot_F4:
-            Output::Print(_u(" R%d[%d]  = F4_%d"), data->Instance, data->SlotIndex, data->Value);
+            Output::Print(u" R%d[%d]  = F4_%d", data->Instance, data->SlotIndex, data->Value);
             break;
         case OpCodeAsmJs::Simd128_StSlot_I4:
-            Output::Print(_u(" R%d[%d]  = I4_%d"), data->Instance, data->SlotIndex, data->Value);
+            Output::Print(u" R%d[%d]  = I4_%d", data->Instance, data->SlotIndex, data->Value);
             break;
         case OpCodeAsmJs::Simd128_StSlot_I8:
-            Output::Print(_u(" R%d[%d]  = I8_%d"), data->Instance, data->SlotIndex, data->Value);
+            Output::Print(u" R%d[%d]  = I8_%d", data->Instance, data->SlotIndex, data->Value);
             break;
         case OpCodeAsmJs::Simd128_StSlot_I16:
-            Output::Print(_u(" R%d[%d]  = I16_%d"), data->Instance, data->SlotIndex, data->Value);
+            Output::Print(u" R%d[%d]  = I16_%d", data->Instance, data->SlotIndex, data->Value);
             break;
         case OpCodeAsmJs::Simd128_StSlot_U4:
-            Output::Print(_u(" R%d[%d]  = U4_%d"), data->Instance, data->SlotIndex, data->Value);
+            Output::Print(u" R%d[%d]  = U4_%d", data->Instance, data->SlotIndex, data->Value);
             break;
         case OpCodeAsmJs::Simd128_StSlot_U8:
-            Output::Print(_u(" R%d[%d]  = U8_%d"), data->Instance, data->SlotIndex, data->Value);
+            Output::Print(u" R%d[%d]  = U8_%d", data->Instance, data->SlotIndex, data->Value);
             break;
         case OpCodeAsmJs::Simd128_StSlot_U16:
-            Output::Print(_u(" R%d[%d]  = U16_%d"), data->Instance, data->SlotIndex, data->Value);
+            Output::Print(u" R%d[%d]  = U16_%d", data->Instance, data->SlotIndex, data->Value);
             break;
         case OpCodeAsmJs::Simd128_StSlot_B4:
-            Output::Print(_u(" R%d[%d]  = B4_%d"), data->Instance, data->SlotIndex, data->Value);
+            Output::Print(u" R%d[%d]  = B4_%d", data->Instance, data->SlotIndex, data->Value);
             break;
         case OpCodeAsmJs::Simd128_StSlot_B8:
-            Output::Print(_u(" R%d[%d]  = B8_%d"), data->Instance, data->SlotIndex, data->Value);
+            Output::Print(u" R%d[%d]  = B8_%d", data->Instance, data->SlotIndex, data->Value);
             break;
         case OpCodeAsmJs::Simd128_StSlot_B16:
-            Output::Print(_u(" R%d[%d]  = B16_%d"), data->Instance, data->SlotIndex, data->Value);
+            Output::Print(u" R%d[%d]  = B16_%d", data->Instance, data->SlotIndex, data->Value);
             break;
 #if 0
         case OpCodeAsmJs::Simd128_StSlot_D2:
-            Output::Print(_u(" R%d[%d]  = D2_%d"), data->Instance, data->SlotIndex, data->Value);
+            Output::Print(u" R%d[%d]  = D2_%d", data->Instance, data->SlotIndex, data->Value);
             break;
 #endif // 0
 
@@ -518,35 +518,35 @@ namespace Js
         switch (type)
         {
         case ArrayBufferView::TYPE_INT8:
-            tag->heapTag = _u("HEAP8"); tag->valueTag = 'I';  break;
+            tag->heapTag = u"HEAP8"; tag->valueTag = 'I';  break;
         case ArrayBufferView::TYPE_UINT8:
-            tag->heapTag = _u("HEAPU8"); tag->valueTag = 'U'; break;
+            tag->heapTag = u"HEAPU8"; tag->valueTag = 'U'; break;
         case ArrayBufferView::TYPE_INT16:
-            tag->heapTag = _u("HEAP16"); tag->valueTag = 'I'; break;
+            tag->heapTag = u"HEAP16"; tag->valueTag = 'I'; break;
         case ArrayBufferView::TYPE_UINT16:
-            tag->heapTag = _u("HEAPU16"); tag->valueTag = 'U'; break;
+            tag->heapTag = u"HEAPU16"; tag->valueTag = 'U'; break;
         case ArrayBufferView::TYPE_INT32:
-            tag->heapTag = _u("HEAP32"); tag->valueTag = 'I'; break;
+            tag->heapTag = u"HEAP32"; tag->valueTag = 'I'; break;
         case ArrayBufferView::TYPE_UINT32:
-            tag->heapTag = _u("HEAPU32"); tag->valueTag = 'U'; break;
+            tag->heapTag = u"HEAPU32"; tag->valueTag = 'U'; break;
         case ArrayBufferView::TYPE_FLOAT32:
-            tag->heapTag = _u("HEAPF32"); tag->valueTag = 'F'; break;
+            tag->heapTag = u"HEAPF32"; tag->valueTag = 'F'; break;
         case ArrayBufferView::TYPE_FLOAT64:
-            tag->heapTag = _u("HEAPF64"); tag->valueTag = 'D'; break;
+            tag->heapTag = u"HEAPF64"; tag->valueTag = 'D'; break;
         case ArrayBufferView::TYPE_INT64:
-            tag->heapTag = _u("HEAPI64"); tag->valueTag = 'L'; break;
+            tag->heapTag = u"HEAPI64"; tag->valueTag = 'L'; break;
         case ArrayBufferView::TYPE_INT8_TO_INT64:
-            tag->heapTag = _u("HEAP8"); tag->valueTag = 'L'; break;
+            tag->heapTag = u"HEAP8"; tag->valueTag = 'L'; break;
         case ArrayBufferView::TYPE_UINT8_TO_INT64:
-            tag->heapTag = _u("HEAPU8"); tag->valueTag = 'L'; break;
+            tag->heapTag = u"HEAPU8"; tag->valueTag = 'L'; break;
         case ArrayBufferView::TYPE_INT16_TO_INT64:
-            tag->heapTag = _u("HEAP16"); tag->valueTag = 'L'; break;
+            tag->heapTag = u"HEAP16"; tag->valueTag = 'L'; break;
         case ArrayBufferView::TYPE_UINT16_TO_INT64:
-            tag->heapTag = _u("HEAPU16"); tag->valueTag = 'L'; break;
+            tag->heapTag = u"HEAPU16"; tag->valueTag = 'L'; break;
         case ArrayBufferView::TYPE_INT32_TO_INT64:
-            tag->heapTag = _u("HEAP32"); tag->valueTag = 'L'; break;
+            tag->heapTag = u"HEAP32"; tag->valueTag = 'L'; break;
         case ArrayBufferView::TYPE_UINT32_TO_INT64:
-            tag->heapTag = _u("HEAPU32"); tag->valueTag = 'L'; break;
+            tag->heapTag = u"HEAPU32"; tag->valueTag = 'L'; break;
         default:
             Assume(UNREACHED);
         }
@@ -560,13 +560,13 @@ namespace Js
         switch (op)
         {
         case OpCodeAsmJs::LdArr:
-            Output::Print(_u(" %c%d = %s[I%d]"), tag.valueTag, data->Value, tag.heapTag, data->SlotIndex); break;
+            Output::Print(u" %c%d = %s[I%d]", tag.valueTag, data->Value, tag.heapTag, data->SlotIndex); break;
         case OpCodeAsmJs::LdArrConst:
-            Output::Print(_u(" %c%d = %s[%d]"), tag.valueTag, data->Value, tag.heapTag, data->SlotIndex); break;
+            Output::Print(u" %c%d = %s[%d]", tag.valueTag, data->Value, tag.heapTag, data->SlotIndex); break;
         case OpCodeAsmJs::StArr:
-            Output::Print(_u(" %s[I%d] = %c%d"), tag.heapTag, data->SlotIndex, tag.valueTag, data->Value); break;
+            Output::Print(u" %s[I%d] = %c%d", tag.heapTag, data->SlotIndex, tag.valueTag, data->Value); break;
         case OpCodeAsmJs::StArrConst:
-            Output::Print(_u(" %s[%d] = %c%d"), tag.heapTag, data->SlotIndex, tag.valueTag, data->Value); break;
+            Output::Print(u" %s[%d] = %c%d", tag.heapTag, data->SlotIndex, tag.valueTag, data->Value); break;
         default:
             Assume(UNREACHED);
         }
@@ -581,10 +581,10 @@ namespace Js
         {
         case OpCodeAsmJs::LdArrWasm:
         case OpCodeAsmJs::LdArrAtomic:
-            Output::Print(_u(" %c%d = %s[I%d + %d]"), tag.valueTag, data->Value, tag.heapTag, data->SlotIndex, data->Offset); break;
+            Output::Print(u" %c%d = %s[I%d + %d]", tag.valueTag, data->Value, tag.heapTag, data->SlotIndex, data->Offset); break;
         case OpCodeAsmJs::StArrWasm:
         case OpCodeAsmJs::StArrAtomic:
-            Output::Print(_u(" %s[I%d + %d] = %c%d"), tag.heapTag, data->SlotIndex, data->Offset, tag.valueTag, data->Value); break;
+            Output::Print(u" %s[I%d + %d] = %c%d", tag.heapTag, data->SlotIndex, data->Offset, tag.valueTag, data->Value); break;
         default:
             Assume(UNREACHED);
         }
@@ -593,7 +593,7 @@ namespace Js
     void AsmJsByteCodeDumper::DumpStartCall(OpCodeAsmJs op, const unaligned OpLayoutStartCall* data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         Assert(op == OpCodeAsmJs::StartCall || op == OpCodeAsmJs::I_StartCall);
-        Output::Print(_u(" ArgSize: %d"), data->ArgCount);
+        Output::Print(u" ArgSize: %d", data->ArgCount);
     }
 
     template <class T>
@@ -602,9 +602,9 @@ namespace Js
         if (data->Return != Constants::NoRegister)
         {
             DumpReg((RegSlot)data->Return);
-            Output::Print(_u("="));
+            Output::Print(u"=");
         }
-        Output::Print(_u(" R%d(ArgCount: %d)"), data->Function, data->ArgCount);
+        Output::Print(u" R%d(ArgCount: %d)", data->Function, data->ArgCount);
     }
 
     template <class T>
@@ -613,9 +613,9 @@ namespace Js
         if (data->Return != Constants::NoRegister)
         {
             DumpReg((RegSlot)data->Return);
-            Output::Print(_u("="));
+            Output::Print(u"=");
         }
-        Output::Print(_u(" R%d(ArgCount: %d, profileId: %d)"), data->Function, data->ArgCount, data->profileId);
+        Output::Print(u" R%d(ArgCount: %d, profileId: %d)", data->Function, data->ArgCount, data->profileId);
     }
 
     template <class T>
@@ -1012,28 +1012,28 @@ namespace Js
         {
         case ArrayBufferView::TYPE_INT8:
         case ArrayBufferView::TYPE_INT8_TO_INT64:
-            heapTag = _u("HEAP8"); break;
+            heapTag = u"HEAP8"; break;
         case ArrayBufferView::TYPE_UINT8:
         case ArrayBufferView::TYPE_UINT8_TO_INT64:
-            heapTag = _u("HEAPU8"); break;
+            heapTag = u"HEAPU8"; break;
         case ArrayBufferView::TYPE_INT16:
         case ArrayBufferView::TYPE_INT16_TO_INT64:
-            heapTag = _u("HEAP16"); break;
+            heapTag = u"HEAP16"; break;
         case ArrayBufferView::TYPE_UINT16:
         case ArrayBufferView::TYPE_UINT16_TO_INT64:
-            heapTag = _u("HEAPU16"); break;
+            heapTag = u"HEAPU16"; break;
         case ArrayBufferView::TYPE_INT32:
         case ArrayBufferView::TYPE_INT32_TO_INT64:
-            heapTag = _u("HEAP32"); break;
+            heapTag = u"HEAP32"; break;
         case ArrayBufferView::TYPE_UINT32:
         case ArrayBufferView::TYPE_UINT32_TO_INT64:
-            heapTag = _u("HEAPU32"); break;
+            heapTag = u"HEAPU32"; break;
         case ArrayBufferView::TYPE_FLOAT32:
-            heapTag = _u("HEAPF32"); break;
+            heapTag = u"HEAPF32"; break;
         case ArrayBufferView::TYPE_FLOAT64:
-            heapTag = _u("HEAPF64"); break;
+            heapTag = u"HEAPF64"; break;
         case ArrayBufferView::TYPE_INT64:
-            heapTag = _u("HEAPI64"); break;
+            heapTag = u"HEAPI64"; break;
         default:
             Assert(false);
             __assume(false);
@@ -1052,13 +1052,13 @@ namespace Js
 #define SIMD_DUMP_REG(type) SIMD_DUMP_ARR_##type(data->Value)
 #define SIMD_DUMP_ARR_VALUE(type) \
         case OpCodeAsmJs::Simd128_LdArr_##type:\
-            SIMD_DUMP_REG(type); Output::Print(_u("= %s[I%d] "), heapTag, data->SlotIndex); break;\
+            SIMD_DUMP_REG(type); Output::Print(u"= %s[I%d] ", heapTag, data->SlotIndex); break;\
         case OpCodeAsmJs::Simd128_LdArrConst_##type:\
-            SIMD_DUMP_REG(type); Output::Print(_u("= %s[%d] "), heapTag, data->SlotIndex); break;\
+            SIMD_DUMP_REG(type); Output::Print(u"= %s[%d] ", heapTag, data->SlotIndex); break;\
         case OpCodeAsmJs::Simd128_StArr_##type:\
-            Output::Print(_u("%s[I%d] = "), heapTag, data->SlotIndex); SIMD_DUMP_REG(type); break;\
+            Output::Print(u"%s[I%d] = ", heapTag, data->SlotIndex); SIMD_DUMP_REG(type); break;\
         case OpCodeAsmJs::Simd128_StArrConst_##type:\
-            Output::Print(_u("%s[%d] = "), heapTag, data->SlotIndex); SIMD_DUMP_REG(type); break;\
+            Output::Print(u"%s[%d] = ", heapTag, data->SlotIndex); SIMD_DUMP_REG(type); break;\
 
         switch (op)
         {
@@ -1077,7 +1077,7 @@ namespace Js
         }
 
         // data width
-        Output::Print(_u(" %d bytes "), data->DataWidth);
+        Output::Print(u" %d bytes ", data->DataWidth);
     }
 }
 

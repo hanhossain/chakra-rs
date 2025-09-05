@@ -194,7 +194,7 @@ namespace Js
 
         if (args[0] == 0 || !JavascriptOperators::IsObject(args[0]))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedObject, _u("Error.prototype.toString"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedObject, u"Error.prototype.toString");
         }
 
         RecyclableObject* thisError = VarTo<RecyclableObject>(args[0]);
@@ -211,7 +211,7 @@ namespace Js
         }
         else
         {
-            outputStr = scriptContext->GetLibrary()->CreateStringFromCppLiteral(_u("Error"));
+            outputStr = scriptContext->GetLibrary()->CreateStringFromCppLiteral(u"Error");
         }
 
         // get error.message
@@ -230,7 +230,7 @@ namespace Js
 
         if (nameLen > 0 && msgLen > 0)
         {
-            outputStr = JavascriptString::Concat(outputStr, scriptContext->GetLibrary()->CreateStringFromCppLiteral(_u(": ")));
+            outputStr = JavascriptString::Concat(outputStr, scriptContext->GetLibrary()->CreateStringFromCppLiteral(u": "));
             outputStr = JavascriptString::Concat(outputStr, message);
         }
         else if (msgLen > 0)
@@ -370,7 +370,7 @@ namespace Js
         {
             messageString = scriptContext->GetLibrary()->GetEmptyString();
             // Set an empty string so we will return it as a runtime message with the error code
-            pError->originalRuntimeErrorMessage = _u("");
+            pError->originalRuntimeErrorMessage = u"";
         }
 
         JavascriptOperators::InitProperty(pError, PropertyIds::message, messageString);
@@ -463,7 +463,7 @@ namespace Js
                     for (size_t i = 0; i < msglen; i++)
                     {
                         Assert(outputIndex < len);
-                        if (message[i] == _u('%') && i + 1 < msglen && message[i+1] == _u('s'))
+                        if (message[i] == u'%' && i + 1 < msglen && message[i+1] == u's')
                         {
                             Assert(len - outputIndex >= varlen);
                             wcscpy_s(allocatedString + outputIndex, len - outputIndex, varName);
@@ -535,7 +535,7 @@ namespace Js
 
     BOOL JavascriptError::GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
     {
-        stringBuilder->AppendCppLiteral(_u("Error"));
+        stringBuilder->AppendCppLiteral(u"Error");
         return TRUE;
     }
 
@@ -564,7 +564,7 @@ namespace Js
 
         if (pMessage != NULL)
         {
-            *pMessage = _u("");  // default empty-string
+            *pMessage = u"";  // default empty-string
 
             // The message property always overrides any error message
             Var message = Js::JavascriptOperators::GetProperty(errorObject, Js::PropertyIds::message, scriptContext, NULL);

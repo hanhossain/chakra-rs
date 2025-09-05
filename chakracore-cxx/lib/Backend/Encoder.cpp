@@ -19,7 +19,7 @@
 void
 Encoder::Encode()
 {
-    NoRecoverMemoryArenaAllocator localArena(_u("BE-Encoder"), m_func->m_alloc->GetPageAllocator(), Js::Throw::OutOfMemory);
+    NoRecoverMemoryArenaAllocator localArena(u"BE-Encoder", m_func->m_alloc->GetPageAllocator(), Js::Throw::OutOfMemory);
     m_tempAlloc = &localArena;
 
 #if ENABLE_OOP_NATIVE_CODEGEN
@@ -233,9 +233,9 @@ Encoder::Encode()
                 Output::SkipToColumn(80);
                 for (uint8_t * current = m_pc; current < m_pc + count; current++)
                 {
-                    Output::Print(_u("%02X "), *current);
+                    Output::Print(u"%02X ", *current);
                 }
-                Output::Print(_u("\n"));
+                Output::Print(u"\n");
                 Output::Flush();
             }
 #endif
@@ -344,7 +344,7 @@ Encoder::Encode()
             {
                 if (hasPrintedForOpnds)
                 {
-                    Output::Print(_u(", "));
+                    Output::Print(u", ");
                 }
                 switch (opnd->m_kind)
                 {
@@ -352,7 +352,7 @@ Encoder::Encode()
                     AssertMsg(false, "Should be unreachable");
                     break;
                 case IR::OpndKindIntConst:
-                    Output::Print(_u("%lli"), (long long int)opnd->AsIntConstOpnd()->GetValue());
+                    Output::Print(u"%lli", (long long int)opnd->AsIntConstOpnd()->GetValue());
                     break;
                 case IR::OpndKindInt64Const:
                 case IR::OpndKindFloatConst:
@@ -361,45 +361,45 @@ Encoder::Encode()
                     AssertMsg(false, "Not Yet Implemented");
                     break;
                 case IR::OpndKindHelperCall:
-                    Output::Print(_u("%s"), IR::GetMethodName(opnd->AsHelperCallOpnd()->m_fnHelper));
+                    Output::Print(u"%s", IR::GetMethodName(opnd->AsHelperCallOpnd()->m_fnHelper));
                     break;
                 case IR::OpndKindSym:
-                    Output::Print(_u("SYM("));
+                    Output::Print(u"SYM(");
                     opnd->Dump(IRDumpFlags_SimpleForm, localScopeFuncForLambda);
-                    Output::Print(_u(")"));
+                    Output::Print(u")");
                     break;
                 case IR::OpndKindReg:
-                    Output::Print(_u("%S"), RegNames[opnd->AsRegOpnd()->GetReg()]);
+                    Output::Print(u"%S", RegNames[opnd->AsRegOpnd()->GetReg()]);
                     break;
                 case IR::OpndKindAddr:
-                    Output::Print(_u("0x%p"), opnd->AsAddrOpnd()->m_address);
+                    Output::Print(u"0x%p", opnd->AsAddrOpnd()->m_address);
                     break;
                 case IR::OpndKindIndir:
                 {
                     IR::IndirOpnd* indirOpnd = opnd->AsIndirOpnd();
                     IR::RegOpnd* baseOpnd = indirOpnd->GetBaseOpnd();
                     IR::RegOpnd* indexOpnd = indirOpnd->GetIndexOpnd();
-                    Output::Print(_u("["));
+                    Output::Print(u"[");
                     bool hasPrintedComponent = false;
                     if (baseOpnd != nullptr)
                     {
-                        Output::Print(_u("%S"), RegNames[baseOpnd->GetReg()]);
+                        Output::Print(u"%S", RegNames[baseOpnd->GetReg()]);
                         hasPrintedComponent = true;
                     }
                     if (indexOpnd != nullptr)
                     {
                         if (hasPrintedComponent)
                         {
-                            Output::Print(_u(" + "));
+                            Output::Print(u" + ");
                         }
-                        Output::Print(_u("%S * %u"), RegNames[indexOpnd->GetReg()], indirOpnd->GetScale());
+                        Output::Print(u"%S * %u", RegNames[indexOpnd->GetReg()], indirOpnd->GetScale());
                         hasPrintedComponent = true;
                     }
                     if (hasPrintedComponent)
                     {
-                        Output::Print(_u(" + "));
+                        Output::Print(u" + ");
                     }
-                    Output::Print(_u("(%i)]"), indirOpnd->GetOffset());
+                    Output::Print(u"(%i)]", indirOpnd->GetOffset());
                     break;
                 }
                 case IR::OpndKindLabel:
@@ -429,7 +429,7 @@ Encoder::Encode()
             case IR::InstrKindInstr:
             {
                 Output::SkipToColumn(4);
-                Output::Print(_u("%s "), Js::OpCodeUtil::GetOpCodeName(instr->m_opcode));
+                Output::Print(u"%s ", Js::OpCodeUtil::GetOpCodeName(instr->m_opcode));
                 Output::SkipToColumn(18);
                 IR::Opnd* dst = instr->GetDst();
                 IR::Opnd* src1 = instr->GetSrc1();
@@ -450,7 +450,7 @@ Encoder::Encode()
             }
             case IR::InstrKindBranch:
                 Output::SkipToColumn(4);
-                Output::Print(_u("%s "), Js::OpCodeUtil::GetOpCodeName(instr->m_opcode));
+                Output::Print(u"%s ", Js::OpCodeUtil::GetOpCodeName(instr->m_opcode));
                 Output::SkipToColumn(18);
                 if (instr->AsBranchInstr()->IsMultiBranch())
                 {
@@ -459,12 +459,12 @@ Encoder::Encode()
                 }
                 else
                 {
-                    Output::Print(_u("L%u"), instr->AsBranchInstr()->GetTarget()->m_id);
+                    Output::Print(u"L%u", instr->AsBranchInstr()->GetTarget()->m_id);
                 }
                 break;
             case IR::InstrKindProfiledLabel:
             case IR::InstrKindLabel:
-                Output::Print(_u("L%u:"), instr->AsLabelInstr()->m_id);
+                Output::Print(u"L%u:", instr->AsLabelInstr()->m_id);
                 break;
             case IR::InstrKindEntry:
             case IR::InstrKindExit:
@@ -478,7 +478,7 @@ Encoder::Encode()
                 Assert(false);
                 break;
             }
-            Output::SetAlignAndPrefix(60, _u("; "));
+            Output::SetAlignAndPrefix(60, u"; ");
             instr->Dump();
             Output::ResetAlignAndPrefix();
         } NEXT_INSTR_IN_FUNC;
@@ -507,9 +507,9 @@ Encoder::Encode()
     xdataSize = 0;
     pdataCount = 0;
 #endif
-    OUTPUT_VERBOSE_TRACE(Js::EmitterPhase, _u("PDATA count:%u\n"), pdataCount);
-    OUTPUT_VERBOSE_TRACE(Js::EmitterPhase, _u("Size of XDATA:%u\n"), xdataSize);
-    OUTPUT_VERBOSE_TRACE(Js::EmitterPhase, _u("Size of code:%u\n"), codeSize);
+    OUTPUT_VERBOSE_TRACE(Js::EmitterPhase, u"PDATA count:%u\n", pdataCount);
+    OUTPUT_VERBOSE_TRACE(Js::EmitterPhase, u"Size of XDATA:%u\n", xdataSize);
+    OUTPUT_VERBOSE_TRACE(Js::EmitterPhase, u"Size of code:%u\n", codeSize);
 
     TryCopyAndAddRelocRecordsForSwitchJumpTableEntries(m_encodeBuffer, codeSize, jumpTableListForSwitchStatement, totalJmpTableSizeInBytes);
 
@@ -669,7 +669,7 @@ Encoder::Encode()
         if (PHASE_TRACE(Js::TracePinnedTypesPhase, this->m_func))
         {
             char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-            Output::Print(_u("PinnedTypes: function %s(%s) pinned %d types.\n"),
+            Output::Print(u"PinnedTypes: function %s(%s) pinned %d types.\n",
                 this->m_func->GetJITFunctionBody()->GetDisplayName(), this->m_func->GetDebugNumberSet(debugStringBuffer), pinnedTypeRefCount);
             Output::Flush();
         }
@@ -930,9 +930,9 @@ Encoder::Encode()
             __analysis_assume(m_instrNumber < instrCount);
             instr->DumpGlobOptInstrString();
 #ifdef TARGET_64
-            Output::Print(_u("%12IX  "), m_offsetBuffer[m_instrNumber++] + (uint8_t *)m_func->GetJITOutput()->GetCodeAddress());
+            Output::Print(u"%12IX  ", m_offsetBuffer[m_instrNumber++] + (uint8_t *)m_func->GetJITOutput()->GetCodeAddress());
 #else
-            Output::Print(_u("%8IX  "), m_offsetBuffer[m_instrNumber++] + (uint8_t *)m_func->GetJITOutput()->GetCodeAddress());
+            Output::Print(u"%8IX  ", m_offsetBuffer[m_instrNumber++] + (uint8_t *)m_func->GetJITOutput()->GetCodeAddress());
 #endif
             instr->Dump();
         } NEXT_INSTR_IN_FUNC;
@@ -1323,7 +1323,7 @@ Encoder::ShortenBranchesAndLabelAlign(uint8_t **codeStart, ptrdiff_t *codeSize, 
 
     if (PHASE_TRACE(Js::BrShortenPhase, this->m_func))
     {
-        OUTPUT_VERBOSE_TRACE(Js::BrShortenPhase, _u("func: %s, bytes saved: %d, bytes saved %%:%.2f, total bytes saved: %d, total bytes saved%%: %.2f, BR shortened: %d\n"),
+        OUTPUT_VERBOSE_TRACE(Js::BrShortenPhase, u"func: %s, bytes saved: %d, bytes saved %%:%.2f, total bytes saved: %d, total bytes saved%%: %.2f, BR shortened: %d\n",
             this->m_func->GetJITFunctionBody()->GetDisplayName(), (*codeSize - newCodeSize), ((float)*codeSize - newCodeSize) / *codeSize * 100,
             globalTotalBytesSaved, ((float)globalTotalBytesSaved) / globalTotalBytesWithoutShortening * 100 , brShortenedCount);
         Output::Flush();
@@ -1447,7 +1447,7 @@ Encoder::ShortenBranchesAndLabelAlign(uint8_t **codeStart, ptrdiff_t *codeSize, 
             {
                 globalTotalBytesInserted += nop_count;
 
-                OUTPUT_VERBOSE_TRACE(Js::LoopAlignPhase, _u("func: %s, bytes inserted: %d, bytes inserted %%:%.4f, total bytes inserted:%d, total bytes inserted %%:%.4f\n"),
+                OUTPUT_VERBOSE_TRACE(Js::LoopAlignPhase, u"func: %s, bytes inserted: %d, bytes inserted %%:%.4f, total bytes inserted:%d, total bytes inserted %%:%.4f\n",
                     this->m_func->GetJITFunctionBody()->GetDisplayName(), nop_count, (float)nop_count / newCodeSize * 100, globalTotalBytesInserted, (float)globalTotalBytesInserted / (globalTotalBytesWithoutShortening - globalTotalBytesSaved) * 100);
                 Output::Flush();
             }
@@ -1636,10 +1636,10 @@ void Encoder::CopyMaps(OffsetList **m_origInlineeFrameRecords
 #if DBG_DUMP
 void Encoder::DumpInlineeFrameMap(size_t baseAddress)
 {
-    Output::Print(_u("Inlinee frame info mapping\n"));
-    Output::Print(_u("---------------------------------------\n"));
+    Output::Print(u"Inlinee frame info mapping\n");
+    Output::Print(u"---------------------------------------\n");
     m_inlineeFrameMap->Map([=](uint index, NativeOffsetInlineeFramePair& pair) {
-        Output::Print(_u("%Ix"), baseAddress + pair.offset);
+        Output::Print(u"%Ix", baseAddress + pair.offset);
         Output::SkipToColumn(20);
         if (pair.record)
         {
@@ -1647,9 +1647,9 @@ void Encoder::DumpInlineeFrameMap(size_t baseAddress)
         }
         else
         {
-            Output::Print(_u("<NULL>"));
+            Output::Print(u"<NULL>");
         }
-        Output::Print(_u("\n"));
+        Output::Print(u"\n");
     });
 }
 #endif
@@ -1664,9 +1664,9 @@ Encoder::SaveToLazyBailOutRecordList(IR::Instr* instr, uint32 currentOffset)
 #if DBG_DUMP
     if (PHASE_DUMP(Js::LazyBailoutPhase, m_func))
     {
-        Output::Print(_u("Offset: %u Instr: "), currentOffset);
+        Output::Print(u"Offset: %u Instr: ", currentOffset);
         instr->Dump();
-        Output::Print(_u("Bailout label: "));
+        Output::Print(u"Bailout label: ");
         bailOutInfo->bailOutInstr->Dump();
     }
 #endif

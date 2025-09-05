@@ -124,7 +124,7 @@ SmallHeapBlockAllocator<TBlockType>::InlinedAllocImpl(Recycler * recycler, size_
     AUTO_NO_EXCEPTION_REGION;
     if (canFaultInject)
     {
-        FAULTINJECT_MEMORY_NOTHROW(_u("InlinedAllocImpl"), sizeCat);
+        FAULTINJECT_MEMORY_NOTHROW(u"InlinedAllocImpl", sizeCat);
     }
 
     char * memBlock = (char *)freeObjectList;
@@ -228,7 +228,7 @@ SmallHeapBlockAllocator<TBlockType>::InlinedAllocImpl(Recycler * recycler, size_
 #ifdef RECYCLER_TRACE
             if (recycler->GetRecyclerFlagsTable().Trace.IsEnabled(Js::ConcurrentSweepPhase) && recycler->GetRecyclerFlagsTable().Trace.IsEnabled(Js::MemoryAllocationPhase) && CONFIG_FLAG_RELEASE(Verbose))
             {
-                Output::Print(_u("[**33**]FreeListAlloc: Object 0x%p from HeapBlock 0x%p used for allocation during ConcurrentSweep [CollectionState: %d] \n"), memBlock, heapBlock, static_cast<CollectionState>(recycler->collectionState));
+                Output::Print(u"[**33**]FreeListAlloc: Object 0x%p from HeapBlock 0x%p used for allocation during ConcurrentSweep [CollectionState: %d] \n", memBlock, heapBlock, static_cast<CollectionState>(recycler->collectionState));
             }
 #endif
         }

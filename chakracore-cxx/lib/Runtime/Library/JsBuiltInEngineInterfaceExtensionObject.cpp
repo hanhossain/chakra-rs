@@ -70,7 +70,7 @@ namespace Js
     void JsBuiltInEngineInterfaceExtensionObject::InitializePrototypes(ScriptContext * scriptContext)
     {
         JavascriptLibrary* library = scriptContext->GetLibrary();
-        JavascriptString * methodName = JavascriptString::NewWithSz(_u("ArrayIterator"), scriptContext);
+        JavascriptString * methodName = JavascriptString::NewWithSz(u"ArrayIterator", scriptContext);
         auto arrayIterator = JavascriptOperators::GetProperty(library->GetChakraLib(), JavascriptOperators::GetPropertyId(methodName, scriptContext), scriptContext);
         library->arrayIteratorPrototype = VarTo<DynamicObject>(JavascriptOperators::GetProperty(VarTo<DynamicObject>(arrayIterator), PropertyIds::prototype, scriptContext));
         library->arrayIteratorPrototypeBuiltinNextFunction = VarTo<JavascriptFunction>(JavascriptOperators::GetProperty(library->arrayIteratorPrototype, PropertyIds::next, scriptContext));
@@ -208,7 +208,7 @@ namespace Js
 #if DBG
     void JsBuiltInEngineInterfaceExtensionObject::DumpByteCode(JsBuiltInFile file)
     {
-        Output::Print(_u("Dumping JS Built Ins Byte Code:\n"));
+        Output::Print(u"Dumping JS Built Ins Byte Code:\n");
         switch (file)
         {
             #define fileCase(class, type, obj) \
@@ -223,7 +223,7 @@ namespace Js
 
     void JsBuiltInEngineInterfaceExtensionObject::DumpByteCode()
     {
-        Output::Print(_u("Dumping JS Built Ins Byte Code:\n"));
+        Output::Print(u"Dumping JS Built Ins Byte Code:\n");
         #define dumpOne(class, type, obj) \
         if (this->jsBuiltIn##class##_##type##Bytecode != nullptr) \
         { \

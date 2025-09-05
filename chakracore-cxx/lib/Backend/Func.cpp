@@ -371,7 +371,7 @@ Func::Codegen(JitArenaAllocator *alloc, JITTimeWorkItem * workItem,
             {
                 char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
                 Output::Print(
-                    _u("Rejit (compile-time): function: %s (%s) reason: %S\n"),
+                    u"Rejit (compile-time): function: %s (%s) reason: %S\n",
                     workItem->GetJITFunctionBody()->GetDisplayName(),
                     workItem->GetJITTimeInfo()->GetDebugNumberSet(debugStringBuffer),
                     ex.ReasonName());
@@ -441,7 +441,7 @@ Func::TryCodegen()
         // FlowGraph
         {
             // Scope for FlowGraph arena
-            NoRecoverMemoryJitArenaAllocator fgAlloc(_u("BE-FlowGraph"), m_alloc->GetPageAllocator(), Js::Throw::OutOfMemory);
+            NoRecoverMemoryJitArenaAllocator fgAlloc(u"BE-FlowGraph", m_alloc->GetPageAllocator(), Js::Throw::OutOfMemory);
 
             BEGIN_CODEGEN_PHASE(this, Js::FGBuildPhase);
 
@@ -666,7 +666,7 @@ Func::TryCodegen()
 #if DBG
             if (PHASE_TRACE1(Js::NativeCodeDataPhase))
             {
-                Output::Print(_u("NativeCodeData Server Buffer: %p, len: %x, chunk head: %p\n"), jitOutputData->buffer->data, jitOutputData->buffer->len, chunk);
+                Output::Print(u"NativeCodeData Server Buffer: %p, len: %x, chunk head: %p\n", jitOutputData->buffer->data, jitOutputData->buffer->len, chunk);
             }
 #endif
         }
@@ -1281,18 +1281,18 @@ Func::EndPhase(Js::Phase tag, bool dump)
     if(dump && (PHASE_DUMP(tag, this)
         || PHASE_DUMP(Js::BackEndPhase, this)))
     {
-        Output::Print(_u("-----------------------------------------------------------------------------\n"));
+        Output::Print(u"-----------------------------------------------------------------------------\n");
 
         if (IsLoopBody())
         {
-            Output::Print(_u("************   IR after %s (%S) Loop %d ************\n"),
+            Output::Print(u"************   IR after %s (%S) Loop %d ************\n",
                 Js::PhaseNames[tag],
                 ExecutionModeName(m_workItem->GetJitMode()),
                 m_workItem->GetLoopNumber());
         }
         else
         {
-            Output::Print(_u("************   IR after %s (%S)  ************\n"),
+            Output::Print(u"************   IR after %s (%S)  ************\n",
                 Js::PhaseNames[tag],
                 ExecutionModeName(m_workItem->GetJitMode()));
         }
@@ -2047,7 +2047,7 @@ Func::DumpFullFunctionName()
 {
     char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
-    Output::Print(_u("Function %s (%s)"), GetJITFunctionBody()->GetDisplayName(), GetDebugNumberSet(debugStringBuffer));
+    Output::Print(u"Function %s (%s)", GetJITFunctionBody()->GetDisplayName(), GetDebugNumberSet(debugStringBuffer));
 }
 #endif
 
@@ -2130,20 +2130,20 @@ Func::ShouldDoLazyBailOut() const
 void
 Func::DumpHeader()
 {
-    Output::Print(_u("-----------------------------------------------------------------------------\n"));
+    Output::Print(u"-----------------------------------------------------------------------------\n");
 
     DumpFullFunctionName();
 
     Output::SkipToColumn(50);
-    Output::Print(_u("Instr Count:%d"), GetInstrCount());
+    Output::Print(u"Instr Count:%d", GetInstrCount());
 
     if(m_codeSize > 0)
     {
-        Output::Print(_u("\t\tSize:%d\n\n"), m_codeSize);
+        Output::Print(u"\t\tSize:%d\n\n", m_codeSize);
     }
     else
     {
-        Output::Print(_u("\n\n"));
+        Output::Print(u"\n\n");
     }
 }
 

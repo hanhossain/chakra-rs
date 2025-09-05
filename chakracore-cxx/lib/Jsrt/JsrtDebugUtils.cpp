@@ -36,7 +36,7 @@ void JsrtDebugUtils::AddFileNameOrScriptTypeToObject(Js::DynamicObject* object, 
     else
     {
         // url can be nullptr if JsParseScript/JsRunScript didn't passed any
-        const char16_t* url = utf8SourceInfo->GetSourceContextInfo()->url == nullptr ? _u("") : utf8SourceInfo->GetSourceContextInfo()->url;
+        const char16_t* url = utf8SourceInfo->GetSourceContextInfo()->url == nullptr ? u"" : utf8SourceInfo->GetSourceContextInfo()->url;
         JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::fileName, url, wcslen(url), utf8SourceInfo->GetScriptContext());
     }
 }
@@ -60,7 +60,7 @@ void JsrtDebugUtils::AddSourceLengthAndTextToObject(Js::DynamicObject* object, J
     Js::FunctionBody::StatementMap* statementMap = functionBody->GetEnclosingStatementMapFromByteCode(byteCodeOffset);
     Assert(statementMap != nullptr);
 
-    LPCUTF8 source = functionBody->GetStartOfDocument(_u("Source for debugging"));
+    LPCUTF8 source = functionBody->GetStartOfDocument(u"Source for debugging");
     size_t cbLength = functionBody->GetUtf8SourceInfo()->GetCbLength();
     size_t startByte = utf8::CharacterIndexToByteIndex(source, cbLength, (const charcount_t)statementMap->sourceSpan.begin);
     size_t endByte = utf8::CharacterIndexToByteIndex(source, cbLength, (const charcount_t)statementMap->sourceSpan.end);
@@ -79,7 +79,7 @@ void JsrtDebugUtils::AddSourceLengthAndTextToObject(Js::DynamicObject* object, J
     }
     else
     {
-        JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::sourceText, _u(""), 1, functionBody->GetScriptContext());
+        JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::sourceText, u"", 1, functionBody->GetScriptContext());
     }
 }
 
@@ -105,7 +105,7 @@ void JsrtDebugUtils::AddSourceToObject(Js::DynamicObject * object, Js::Utf8Sourc
     }
     else
     {
-        JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::source, _u(""), 1, utf8SourceInfo->GetScriptContext());
+        JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::source, u"", 1, utf8SourceInfo->GetScriptContext());
     }
 }
 
@@ -329,7 +329,7 @@ void JsrtDebugUtils::AddPropertyType(Js::DynamicObject * object, Js::IDiagObject
         catch (const Js::JavascriptException& err)
         {
             err.GetAndClear();  // discard exception object
-            value = _u("");
+            value = u"";
         }
 
         JsrtDebugUtils::AddPropertyToObject(object, addDisplay ? JsrtDebugPropertyId::display : JsrtDebugPropertyId::value, value, wcslen(value), scriptContext);
@@ -434,9 +434,9 @@ const char16_t * JsrtDebugUtils::GetClassName(Js::TypeId typeId)
     case Js::TypeIds_MapIterator:
     case Js::TypeIds_SetIterator:
     case Js::TypeIds_StringIterator:
-                                            return _u("Object");
+                                            return u"Object";
 
-    case Js::TypeIds_Proxy:                 return _u("Proxy");
+    case Js::TypeIds_Proxy:                 return u"Proxy";
     case Js::TypeIds_Array:
     case Js::TypeIds_NativeIntArray:
 #if ENABLE_COPYONACCESS_ARRAY
@@ -446,51 +446,51 @@ const char16_t * JsrtDebugUtils::GetClassName(Js::TypeId typeId)
     case Js::TypeIds_ES5Array:
     case Js::TypeIds_CharArray:
     case Js::TypeIds_BoolArray:
-                                            return _u("Array");
+                                            return u"Array";
 
     case Js::TypeIds_Date:
-                                            return _u("Date");
+                                            return u"Date";
 
-    case Js::TypeIds_RegEx:                 return _u("RegExp");
-    case Js::TypeIds_Error:                 return _u("Error");
-    case Js::TypeIds_BooleanObject:         return _u("Boolean");
-    case Js::TypeIds_NumberObject:          return _u("Number");
-    case Js::TypeIds_StringObject:          return _u("String");
-    case Js::TypeIds_Arguments:             return _u("Object");
-    case Js::TypeIds_ArrayBuffer:           return _u("ArrayBuffer");
-    case Js::TypeIds_Int8Array:             return _u("Int8Array");
-    case Js::TypeIds_Uint8Array:            return _u("Uint8Array");
-    case Js::TypeIds_Uint8ClampedArray:     return _u("Uint8ClampedArray");
-    case Js::TypeIds_Int16Array:            return _u("Int16Array");
-    case Js::TypeIds_Uint16Array:           return _u("Uint16Array");
-    case Js::TypeIds_Int32Array:            return _u("Int32Array");
-    case Js::TypeIds_Uint32Array:           return _u("Uint32Array");
-    case Js::TypeIds_Float32Array:          return _u("Float32Array");
-    case Js::TypeIds_Float64Array:          return _u("Float64Array");
-    case Js::TypeIds_Int64Array:            return _u("Int64Array");
-    case Js::TypeIds_Uint64Array:           return _u("Uint64Array");
-    case Js::TypeIds_DataView:              return _u("DataView");
-    case Js::TypeIds_Map:                   return _u("Map");
-    case Js::TypeIds_Set:                   return _u("Set");
-    case Js::TypeIds_WeakMap:               return _u("WeakMap");
-    case Js::TypeIds_WeakSet:               return _u("WeakSet");
-    case Js::TypeIds_SymbolObject:          return _u("Symbol");
-    case Js::TypeIds_Generator:             return _u("Generator");
-    case Js::TypeIds_AsyncGenerator:        return _u("AsyncGenerator");
-    case Js::TypeIds_AsyncFromSyncIterator: return _u("AsyncFromSyncIterator");
-    case Js::TypeIds_Promise:               return _u("Promise");
-    case Js::TypeIds_GlobalObject:          return _u("Object");
-    case Js::TypeIds_SpreadArgument:        return _u("Spread");
+    case Js::TypeIds_RegEx:                 return u"RegExp";
+    case Js::TypeIds_Error:                 return u"Error";
+    case Js::TypeIds_BooleanObject:         return u"Boolean";
+    case Js::TypeIds_NumberObject:          return u"Number";
+    case Js::TypeIds_StringObject:          return u"String";
+    case Js::TypeIds_Arguments:             return u"Object";
+    case Js::TypeIds_ArrayBuffer:           return u"ArrayBuffer";
+    case Js::TypeIds_Int8Array:             return u"Int8Array";
+    case Js::TypeIds_Uint8Array:            return u"Uint8Array";
+    case Js::TypeIds_Uint8ClampedArray:     return u"Uint8ClampedArray";
+    case Js::TypeIds_Int16Array:            return u"Int16Array";
+    case Js::TypeIds_Uint16Array:           return u"Uint16Array";
+    case Js::TypeIds_Int32Array:            return u"Int32Array";
+    case Js::TypeIds_Uint32Array:           return u"Uint32Array";
+    case Js::TypeIds_Float32Array:          return u"Float32Array";
+    case Js::TypeIds_Float64Array:          return u"Float64Array";
+    case Js::TypeIds_Int64Array:            return u"Int64Array";
+    case Js::TypeIds_Uint64Array:           return u"Uint64Array";
+    case Js::TypeIds_DataView:              return u"DataView";
+    case Js::TypeIds_Map:                   return u"Map";
+    case Js::TypeIds_Set:                   return u"Set";
+    case Js::TypeIds_WeakMap:               return u"WeakMap";
+    case Js::TypeIds_WeakSet:               return u"WeakSet";
+    case Js::TypeIds_SymbolObject:          return u"Symbol";
+    case Js::TypeIds_Generator:             return u"Generator";
+    case Js::TypeIds_AsyncGenerator:        return u"AsyncGenerator";
+    case Js::TypeIds_AsyncFromSyncIterator: return u"AsyncFromSyncIterator";
+    case Js::TypeIds_Promise:               return u"Promise";
+    case Js::TypeIds_GlobalObject:          return u"Object";
+    case Js::TypeIds_SpreadArgument:        return u"Spread";
 #ifdef ENABLE_WASM
-    case Js::TypeIds_WebAssemblyModule:     return _u("WebAssembly.Module");
-    case Js::TypeIds_WebAssemblyInstance:   return _u("WebAssembly.Instance");
-    case Js::TypeIds_WebAssemblyMemory:     return _u("WebAssembly.Memory");
-    case Js::TypeIds_WebAssemblyTable:      return _u("WebAssembly.Table");
+    case Js::TypeIds_WebAssemblyModule:     return u"WebAssembly.Module";
+    case Js::TypeIds_WebAssemblyInstance:   return u"WebAssembly.Instance";
+    case Js::TypeIds_WebAssemblyMemory:     return u"WebAssembly.Memory";
+    case Js::TypeIds_WebAssemblyTable:      return u"WebAssembly.Table";
 #endif
     default:
         Assert(false);
     }
-    return _u("");
+    return u"";
 }
 
 const char16_t * JsrtDebugUtils::GetDebugPropertyName(JsrtDebugPropertyId propertyId)
@@ -502,6 +502,6 @@ const char16_t * JsrtDebugUtils::GetDebugPropertyName(JsrtDebugPropertyId proper
     }
 
     Assert(false);
-    return _u("");
+    return u"";
 }
 #endif

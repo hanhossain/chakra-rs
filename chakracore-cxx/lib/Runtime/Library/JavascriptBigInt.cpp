@@ -123,13 +123,13 @@ namespace Js
         length += length;// double size
         if (SIZE_MAX / sizeof(digit_t) < length) // overflow 
         {
-            JavascriptError::ThrowRangeError(this->GetScriptContext(), VBSERR_TypeMismatch, _u("Resize BigInt"));
+            JavascriptError::ThrowRangeError(this->GetScriptContext(), VBSERR_TypeMismatch, u"Resize BigInt");
         }
 
         digits = RecyclerNewArrayLeaf(this->GetScriptContext()->GetRecycler(), digit_t, length);
         if (NULL == digits)
         {
-            JavascriptError::ThrowRangeError(this->GetScriptContext(), VBSERR_TypeMismatch, _u("Resize BigInt"));
+            JavascriptError::ThrowRangeError(this->GetScriptContext(), VBSERR_TypeMismatch, u"Resize BigInt");
         }
 
         if (0 < m_length) // in this case, we need to copy old data over
@@ -563,7 +563,7 @@ namespace Js
         digit_t length = pbi1->m_length + pbi2->m_length;
         if (SIZE_MAX / sizeof(digit_t) < length) // overflow 
         {
-            JavascriptError::ThrowRangeError(pbi1->GetScriptContext(), VBSERR_TypeMismatch, _u("Multiply BigInt"));
+            JavascriptError::ThrowRangeError(pbi1->GetScriptContext(), VBSERR_TypeMismatch, u"Multiply BigInt");
         }
         JavascriptBigInt * pbi3 = JavascriptBigInt::CreateZeroWithLength(length, pbi1->GetScriptContext());
 

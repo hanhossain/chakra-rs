@@ -104,7 +104,7 @@ enum MethodType : uint16
             }                                                                                       \
             else                                                                                    \
             {                                                                                       \
-                functionNameArray[0] = _u('\0');                                                    \
+                functionNameArray[0] = u'\0';                                                    \
                 functionName = functionNameArray;                                                   \
             }                                                                                       \
         }                                                                                           \
@@ -181,7 +181,7 @@ enum MethodType : uint16
         }                                                                                                  \
         else                                                                                               \
         {                                                                                                  \
-            loopBodyNameArray[0] = _u('\0');                                                               \
+            loopBodyNameArray[0] = u'\0';                                                               \
             loopBodyName = loopBodyNameArray;                                                              \
         }                                                                                                  \
     }                                                                                                      \

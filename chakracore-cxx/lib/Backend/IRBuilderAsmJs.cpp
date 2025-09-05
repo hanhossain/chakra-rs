@@ -13,7 +13,7 @@ IRBuilderAsmJs::Build()
 {
     m_funcAlloc = m_func->m_alloc;
 
-    NoRecoverMemoryJitArenaAllocator localAlloc(_u("BE-IRBuilder"), m_funcAlloc->GetPageAllocator(), Js::Throw::OutOfMemory);
+    NoRecoverMemoryJitArenaAllocator localAlloc(u"BE-IRBuilder", m_funcAlloc->GetPageAllocator(), Js::Throw::OutOfMemory);
     m_tempAlloc = &localAlloc;
 
     uint32 offset;

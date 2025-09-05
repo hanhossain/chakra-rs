@@ -247,12 +247,12 @@ namespace Js
 
             if(IsPosInf(value))
             {
-                return scriptContext->GetLibrary()->CreateStringFromCppLiteral(_u("Infinity"));
+                return scriptContext->GetLibrary()->CreateStringFromCppLiteral(u"Infinity");
             }
             else
             {
                 AssertMsg(IsNegInf(value), "bad handling of infinite number");
-                return scriptContext->GetLibrary()->CreateStringFromCppLiteral(_u("-Infinity"));
+                return scriptContext->GetLibrary()->CreateStringFromCppLiteral(u"-Infinity");
             }
         }
         return nullptr;
@@ -261,7 +261,7 @@ namespace Js
     inline Var JavascriptNumber::FormatDoubleToString( double value, Js::NumberUtilities::FormatType formatType, int formatDigits, ScriptContext* scriptContext )
     {
         static const int bufSize = 256;
-        char16_t szBuffer[bufSize] = _u("");
+        char16_t szBuffer[bufSize] = u"";
         char16_t * psz = szBuffer;
         char16_t * pszToBeFreed = NULL;
         int nOut;

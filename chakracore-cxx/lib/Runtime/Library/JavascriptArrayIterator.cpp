@@ -38,7 +38,7 @@ namespace Js
 
         if (!VarIs<JavascriptArrayIterator>(thisObj))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedArrayIterator, _u("Array Iterator.prototype.next"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedArrayIterator, u"Array Iterator.prototype.next");
         }
 
         JavascriptArrayIterator* iterator = VarTo<JavascriptArrayIterator>(thisObj);

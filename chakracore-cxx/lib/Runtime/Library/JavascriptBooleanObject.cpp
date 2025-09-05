@@ -45,7 +45,7 @@ namespace Js
 
     BOOL JavascriptBooleanObject::GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
     {
-        stringBuilder->AppendCppLiteral(_u("Boolean, (Object)"));
+        stringBuilder->AppendCppLiteral(u"Boolean, (Object)");
         return TRUE;
     }
 

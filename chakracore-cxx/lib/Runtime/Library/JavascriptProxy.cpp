@@ -21,7 +21,7 @@ namespace Js
     {
         if (IsRevoked())
         {
-            JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_ErrorOnRevokedProxy, _u(""));
+            JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_ErrorOnRevokedProxy, u"");
         }
         return target;
     }
@@ -30,7 +30,7 @@ namespace Js
     {
         if (IsRevoked())
         {
-            JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_ErrorOnRevokedProxy, _u(""));
+            JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_ErrorOnRevokedProxy, u"");
         }
         return handler;
     }
@@ -46,7 +46,7 @@ namespace Js
         AssertMsg(args.Info.Count > 0, "Should always have implicit 'this'");
         if (!(args.Info.Flags & CallFlags_New))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_ErrorOnNew, _u("Proxy"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_ErrorOnNew, u"Proxy");
         }
 
         JavascriptProxy* proxy = JavascriptProxy::Create(scriptContext, args);
@@ -70,7 +70,7 @@ namespace Js
 
         if (!JavascriptOperators::IsObjectType(JavascriptOperators::GetTypeId(args[1])))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_InvalidProxyArgument, _u("target"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_InvalidProxyArgument, u"target");
         }
         target = VarTo<DynamicObject>(args[1]);
 #if ENABLE_COPYONACCESS_ARRAY
@@ -80,20 +80,20 @@ namespace Js
         {
             if (UnsafeVarTo<JavascriptProxy>(target)->IsRevoked())
             {
-                JavascriptError::ThrowTypeError(scriptContext, JSERR_InvalidProxyArgument, _u("target"));
+                JavascriptError::ThrowTypeError(scriptContext, JSERR_InvalidProxyArgument, u"target");
             }
         }
 
         if (!JavascriptOperators::IsObjectType(JavascriptOperators::GetTypeId(args[2])))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_InvalidProxyArgument, _u("handler"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_InvalidProxyArgument, u"handler");
         }
         handler = VarTo<DynamicObject>(args[2]);
         if (VarIs<JavascriptProxy>(handler))
         {
             if (UnsafeVarTo<JavascriptProxy>(handler)->IsRevoked())
             {
-                JavascriptError::ThrowTypeError(scriptContext, JSERR_InvalidProxyArgument, _u("handler"));
+                JavascriptError::ThrowTypeError(scriptContext, JSERR_InvalidProxyArgument, u"handler");
             }
         }
 
@@ -114,12 +114,12 @@ namespace Js
 
         ARGUMENTS(args, callInfo);
         ScriptContext* scriptContext = function->GetScriptContext();
-        AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, _u("Proxy.revocable"));
+        AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, u"Proxy.revocable");
 
         AssertMsg(args.Info.Count > 0, "Should always have implicit 'this'");
         if (args.Info.Flags & CallFlags_New)
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_ErrorOnNew, _u("Proxy.revocable"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_ErrorOnNew, u"Proxy.revocable");
         }
 
         JavascriptProxy* proxy = JavascriptProxy::Create(scriptContext, args);
@@ -144,13 +144,13 @@ namespace Js
 
         ARGUMENTS(args, callInfo);
         ScriptContext* scriptContext = function->GetScriptContext();
-        AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, _u("Proxy.revoke"));
+        AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, u"Proxy.revoke");
 
         AssertMsg(args.Info.Count > 0, "Should always have implicit 'this'");
         Var revokableProxy;
         if (!function->GetInternalProperty(function, Js::InternalPropertyIds::RevocableProxy, &revokableProxy, nullptr, scriptContext))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_InvalidProxyArgument, _u(""));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_InvalidProxyArgument, u"");
         }
         TypeId typeId = JavascriptOperators::GetTypeId(revokableProxy);
         if (typeId == TypeIds_Null)
@@ -159,7 +159,7 @@ namespace Js
         }
         if (typeId != TypeIds_Proxy)
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_InvalidProxyArgument, _u(""));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_InvalidProxyArgument, u"");
         }
         function->SetInternalProperty(Js::InternalPropertyIds::RevocableProxy, scriptContext->GetLibrary()->GetNull(), PropertyOperationFlags::PropertyOperation_Force, nullptr);
         (VarTo<JavascriptProxy>(revokableProxy))->RevokeObject();
@@ -209,7 +209,7 @@ namespace Js
         {
             if (!threadContext->RecordImplicitException())
                 return FALSE;
-            JavascriptError::ThrowTypeError(requestContext, JSERR_ErrorOnRevokedProxy, _u("getOwnPropertyDescriptor"));
+            JavascriptError::ThrowTypeError(requestContext, JSERR_ErrorOnRevokedProxy, u"getOwnPropertyDescriptor");
         }
         //3. Let target be the value of the[[ProxyTarget]] internal slot of O.
         Js::RecyclableObject *targetObj = this->MarshalTarget(requestContext);
@@ -242,7 +242,7 @@ namespace Js
         TypeId getResultTypeId = JavascriptOperators::GetTypeId(getResult);
         if (StaticType::Is(getResultTypeId) && getResultTypeId != TypeIds_Undefined)
         {
-            JavascriptError::ThrowTypeError(requestContext, JSERR_NeedObject, _u("getOwnPropertyDescriptor"));
+            JavascriptError::ThrowTypeError(requestContext, JSERR_NeedObject, u"getOwnPropertyDescriptor");
         }
         //11. Let targetDesc be the result of calling the[[GetOwnProperty]] internal method of target with argument P.
         //12. ReturnIfAbrupt(targetDesc).
@@ -264,13 +264,13 @@ namespace Js
             }
             if (!targetDescriptor.IsConfigurable())
             {
-                JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, _u("getOwnPropertyDescriptor"));
+                JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, u"getOwnPropertyDescriptor");
             }
 
             // do not use "target" here, the trap may have caused it to change
             if (!targetObj->IsExtensible())
             {
-                JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, _u("getOwnPropertyDescriptor"));
+                JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, u"getOwnPropertyDescriptor");
             }
 
             return FALSE;
@@ -293,19 +293,19 @@ namespace Js
         BOOL toProperty = JavascriptOperators::ToPropertyDescriptor(getResult, resultDescriptor, requestContext);
         if (!toProperty && isTargetExtensible)
         {
-            JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, _u("getOwnPropertyDescriptor"));
+            JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, u"getOwnPropertyDescriptor");
         }
 
         JavascriptOperators::CompletePropertyDescriptor(resultDescriptor, nullptr, requestContext);
         if (!JavascriptOperators::IsCompatiblePropertyDescriptor(*resultDescriptor, hasProperty ? &targetDescriptor : nullptr, !!isTargetExtensible, true, requestContext))
         {
-            JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, _u("getOwnPropertyDescriptor"));
+            JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, u"getOwnPropertyDescriptor");
         }
         if (!resultDescriptor->IsConfigurable())
         {
             if (!hasProperty || targetDescriptor.IsConfigurable())
             {
-                JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, _u("getOwnPropertyDescriptor"));
+                JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, u"getOwnPropertyDescriptor");
             }
         }
         resultDescriptor->SetFromProxy(true);
@@ -332,7 +332,7 @@ namespace Js
             // the proxy has been revoked; TypeError.
             if (!threadContext->RecordImplicitException())
                 return FALSE;
-            JavascriptError::ThrowTypeError(requestContext, JSERR_ErrorOnRevokedProxy, _u("get"));
+            JavascriptError::ThrowTypeError(requestContext, JSERR_ErrorOnRevokedProxy, u"get");
         }
 
         RecyclableObject *targetObj = this->MarshalTarget(requestContext);
@@ -371,7 +371,7 @@ namespace Js
             {
                 if (!JavascriptConversion::SameValue(getGetResult, targetDescriptor.GetValue()))
                 {
-                    JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, _u("get"));
+                    JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, u"get");
                 }
             }
             else if (targetDescriptor.GetterSpecified() || targetDescriptor.SetterSpecified())
@@ -380,7 +380,7 @@ namespace Js
                     targetDescriptor.GetGetter() == defaultAccessor &&
                     JavascriptOperators::GetTypeId(getGetResult) != TypeIds_Undefined)
                 {
-                    JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, _u("get"));
+                    JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, u"get");
                 }
             }
         }
@@ -415,7 +415,7 @@ namespace Js
             // the proxy has been revoked; TypeError.
             if (!threadContext->RecordImplicitException())
                 return FALSE;
-            JavascriptError::ThrowTypeError(requestContext, JSERR_ErrorOnRevokedProxy, _u("has"));
+            JavascriptError::ThrowTypeError(requestContext, JSERR_ErrorOnRevokedProxy, u"has");
         }
 
         Js::RecyclableObject *targetObj = this->MarshalTarget(requestContext);
@@ -454,7 +454,7 @@ namespace Js
             {
                 if (!targetDescriptor.IsConfigurable() || !targetObj->IsExtensible())
                 {
-                    JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, _u("has"));
+                    JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, u"has");
                 }
             }
         }
@@ -784,7 +784,7 @@ namespace Js
             // the proxy has been revoked; TypeError.
             if (!threadContext->RecordImplicitException())
                 return FALSE;
-            JavascriptError::ThrowTypeError(requestContext, JSERR_ErrorOnRevokedProxy, _u("deleteProperty"));
+            JavascriptError::ThrowTypeError(requestContext, JSERR_ErrorOnRevokedProxy, u"deleteProperty");
         }
 
         //4. Let target be the value of the[[ProxyTarget]] internal slot of O.
@@ -828,7 +828,7 @@ namespace Js
                 JavascriptError::ThrowTypeErrorVar(
                     requestContext, 
                     JSERR_ProxyHandlerReturnedFalse, 
-                    _u("deleteProperty"),
+                    u"deleteProperty",
                     threadContext->GetPropertyName(propertyId)->GetBuffer()
                 );
             }
@@ -847,7 +847,7 @@ namespace Js
         }
         if (!targetPropertyDescriptor.IsConfigurable())
         {
-            JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, _u("deleteProperty"));
+            JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, u"deleteProperty");
         }
         return TRUE;
     }
@@ -983,7 +983,7 @@ namespace Js
             // the proxy has been revoked; TypeError.
             if (!threadContext->RecordImplicitException())
                 return FALSE;
-            JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_ErrorOnRevokedProxy, _u("ownKeys"));
+            JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_ErrorOnRevokedProxy, u"ownKeys");
         }
 
         struct ProxyOwnkeysEnumerator : public JavascriptEnumerator
@@ -1068,7 +1068,7 @@ namespace Js
         if (IsRevoked())
         {
             // the proxy has been revoked; TypeError.
-            JavascriptError::ThrowTypeError(requestContext, JSERR_ErrorOnRevokedProxy, _u("equal"));
+            JavascriptError::ThrowTypeError(requestContext, JSERR_ErrorOnRevokedProxy, u"equal");
         }
         // Reject implicit call
         ThreadContext* threadContext = requestContext->GetThreadContext();
@@ -1089,7 +1089,7 @@ namespace Js
         if (IsRevoked())
         {
             // the proxy has been revoked; TypeError.
-            JavascriptError::ThrowTypeError(requestContext, JSERR_ErrorOnRevokedProxy, _u("strict equal"));
+            JavascriptError::ThrowTypeError(requestContext, JSERR_ErrorOnRevokedProxy, u"strict equal");
         }
         // Reject implicit call
         ThreadContext* threadContext = requestContext->GetThreadContext();
@@ -1151,7 +1151,7 @@ namespace Js
             // the proxy has been revoked; TypeError.
             if (!threadContext->RecordImplicitException())
                 return FALSE;
-            JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_ErrorOnRevokedProxy, _u("isExtensible"));
+            JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_ErrorOnRevokedProxy, u"isExtensible");
         }
 
         //3. Let target be the value of the[[ProxyTarget]] internal slot of O.
@@ -1184,7 +1184,7 @@ namespace Js
         BOOL targetIsExtensible = targetObj->IsExtensible();
         if (trapResult != targetIsExtensible)
         {
-            JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, _u("isExtensible"));
+            JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, u"isExtensible");
         }
         return trapResult;
     }
@@ -1214,7 +1214,7 @@ namespace Js
             // the proxy has been revoked; TypeError.
             if (!threadContext->RecordImplicitException())
                 return FALSE;
-            JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_ErrorOnRevokedProxy, _u("preventExtensions"));
+            JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_ErrorOnRevokedProxy, u"preventExtensions");
         }
         //3. Let target be the value of the[[ProxyTarget]] internal slot of O.
         Js::RecyclableObject *targetObj = this->MarshalTarget(requestContext);
@@ -1248,7 +1248,7 @@ namespace Js
             BOOL targetIsExtensible = targetObj->IsExtensible();
             if (targetIsExtensible)
             {
-                JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, _u("preventExtensions"));
+                JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, u"preventExtensions");
             }
         }
         return trapResult;
@@ -1473,7 +1473,7 @@ namespace Js
             // the proxy has been revoked; TypeError.
             if (!threadContext->RecordImplicitException())
                 return nullptr;
-            JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_ErrorOnRevokedProxy, _u("getPrototypeOf"));
+            JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_ErrorOnRevokedProxy, u"getPrototypeOf");
         }
 
         Js::RecyclableObject *targetObj = this->MarshalTarget(requestContext);
@@ -1493,11 +1493,11 @@ namespace Js
         TypeId prototypeTypeId = JavascriptOperators::GetTypeId(getPrototypeOfResult);
         if (!JavascriptOperators::IsObjectType(prototypeTypeId) && prototypeTypeId != TypeIds_Null)
         {
-            JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, _u("getPrototypeOf"));
+            JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, u"getPrototypeOf");
         }
         if (!targetObj->IsExtensible() && !JavascriptConversion::SameValue(getPrototypeOfResult, targetObj->GetPrototype()))
         {
-            JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, _u("getPrototypeOf"));
+            JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, u"getPrototypeOf");
         }
         return VarTo<RecyclableObject>(getPrototypeOfResult);
     }
@@ -1550,7 +1550,7 @@ namespace Js
             {
                 if (!threadContext->RecordImplicitException())
                     return FALSE;
-                JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_ErrorOnRevokedProxy, _u("setPrototypeOf"));
+                JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_ErrorOnRevokedProxy, u"setPrototypeOf");
             }
         }
 
@@ -1590,7 +1590,7 @@ namespace Js
         {
             if (!prototypeSetted && shouldThrow)
             {
-                JavascriptError::ThrowTypeError(requestContext, JSERR_ProxyTrapReturnedFalse, _u("setPrototypeOf"));
+                JavascriptError::ThrowTypeError(requestContext, JSERR_ProxyTrapReturnedFalse, u"setPrototypeOf");
             }
             return prototypeSetted;
         }
@@ -1599,7 +1599,7 @@ namespace Js
         {
             if (shouldThrow)
             {
-                JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, _u("setPrototypeOf"));
+                JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, u"setPrototypeOf");
             }
             return FALSE;
         }
@@ -1616,7 +1616,7 @@ namespace Js
             // the proxy has been revoked; TypeError.
             if (!threadContext->RecordImplicitException())
                 return nullptr;
-            JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_ErrorOnRevokedProxy, _u("toString"));
+            JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_ErrorOnRevokedProxy, u"toString");
         }
         return JavascriptObject::ToStringHelper(target, scriptContext);
     }
@@ -1651,7 +1651,7 @@ namespace Js
             // the proxy has been revoked; TypeError.
             if (!threadContext->RecordImplicitException())
                 return FALSE;
-            JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_ErrorOnRevokedProxy, _u("getTypeString"));
+            JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_ErrorOnRevokedProxy, u"getTypeString");
         }
         return proxy->target->GetDiagTypeString(stringBuilder, requestContext);
     }
@@ -1665,7 +1665,7 @@ namespace Js
             // the proxy has been revoked; TypeError.
             if (!threadContext->RecordImplicitException())
                 return nullptr;
-            JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_ErrorOnRevokedProxy, _u("toObject"));
+            JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_ErrorOnRevokedProxy, u"toObject");
         }
         return __super::ToObject(requestContext);
     }
@@ -1724,7 +1724,7 @@ namespace Js
             // the proxy has been revoked; TypeError.
             if (!threadContext->RecordImplicitException())
                 return FALSE;
-            JavascriptError::ThrowTypeError(requestContext, JSERR_ErrorOnRevokedProxy, _u("definePropertyDescriptor"));
+            JavascriptError::ThrowTypeError(requestContext, JSERR_ErrorOnRevokedProxy, u"definePropertyDescriptor");
         }
 
         //5. Let target be O.[[ProxyTarget]].
@@ -1762,7 +1762,7 @@ namespace Js
                 JavascriptError::ThrowTypeErrorVar(
                     requestContext,
                     JSERR_ProxyHandlerReturnedFalse,
-                    _u("defineProperty"),
+                    u"defineProperty",
                     requestContext->GetPropertyName(propId)->GetBuffer()
                 );
             }
@@ -1788,18 +1788,18 @@ namespace Js
         {
             if (!isExtensible || settingConfigFalse)
             {
-                JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, _u("defineProperty"));
+                JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, u"defineProperty");
             }
         }
         else
         {
             if (!JavascriptOperators::IsCompatiblePropertyDescriptor(descriptor, hasProperty? &targetDescriptor : nullptr, !!isExtensible, true, requestContext))
             {
-                JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, _u("defineProperty"));
+                JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, u"defineProperty");
             }
             if (settingConfigFalse && targetDescriptor.IsConfigurable())
             {
-                JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, _u("defineProperty"));
+                JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, u"defineProperty");
             }
         }
         return TRUE;
@@ -1836,7 +1836,7 @@ namespace Js
             // the proxy has been revoked; TypeError.
             if (!threadContext->RecordImplicitException())
                 return FALSE;
-            JavascriptError::ThrowTypeError(requestContext, JSERR_ErrorOnRevokedProxy, _u("set"));
+            JavascriptError::ThrowTypeError(requestContext, JSERR_ErrorOnRevokedProxy, u"set");
         }
 
         //4. Let target be the value of the[[ProxyTarget]] internal slot of O.
@@ -1901,7 +1901,7 @@ namespace Js
                 JavascriptError::ThrowTypeErrorVar(
                     requestContext,
                     JSERR_ProxyHandlerReturnedFalse,
-                    _u("set"),
+                    u"set",
                     requestContext->GetPropertyName(propertyId)->GetBuffer()
                 );
             }
@@ -1927,14 +1927,14 @@ namespace Js
                 if (!targetDescriptor.IsConfigurable() && !targetDescriptor.IsWritable() &&
                     !JavascriptConversion::SameValue(newValue, targetDescriptor.GetValue()))
                 {
-                    JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, _u("set"));
+                    JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, u"set");
                 }
             }
             else
             {
                 if (!targetDescriptor.IsConfigurable() && targetDescriptor.GetSetter() == requestContext->GetLibrary()->GetDefaultAccessorFunction())
                 {
-                    JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, _u("set"));
+                    JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, u"set");
                 }
             }
         }
@@ -2110,11 +2110,11 @@ namespace Js
         {
             if (args.Info.Flags & CallFlags_New)
             {
-                JavascriptError::ThrowTypeError(scriptContext, JSERR_NeedFunction, _u("construct"));
+                JavascriptError::ThrowTypeError(scriptContext, JSERR_NeedFunction, u"construct");
             }
             else
             {
-                JavascriptError::ThrowTypeError(scriptContext, JSERR_NeedFunction, _u("call"));
+                JavascriptError::ThrowTypeError(scriptContext, JSERR_NeedFunction, u"call");
             }
         }
 
@@ -2146,7 +2146,7 @@ namespace Js
         }
         if (!JavascriptConversion::IsCallable(targetObj))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_NeedFunction, _u("call"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_NeedFunction, u"call");
         }
 
         if (nullptr == callMethod)
@@ -2164,7 +2164,7 @@ namespace Js
             {
                 if (!JavascriptOperators::IsConstructor(targetObj))
                 {
-                    JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedFunction, _u("construct"));
+                    JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedFunction, u"construct");
                 }
 
                 // args.Values[0] will be null in the case where NewTarget is initially provided by proxy.
@@ -2296,7 +2296,7 @@ namespace Js
         {
             if (!Js::JavascriptOperators::IsObject(trapResult))
             {
-                JavascriptError::ThrowTypeError(scriptContext, JSERR_InconsistentTrapResult, _u("construct"));
+                JavascriptError::ThrowTypeError(scriptContext, JSERR_InconsistentTrapResult, u"construct");
             }
         }
         return trapResult;
@@ -2324,7 +2324,7 @@ namespace Js
             // the proxy has been revoked; TypeError.
             if (!threadContext->RecordImplicitException())
                 return nullptr;
-            JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_ErrorOnRevokedProxy, _u("ownKeys"));
+            JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_ErrorOnRevokedProxy, u"ownKeys");
         }
         AssertMsg(JavascriptOperators::IsObject(handlerObj), "Handler should be object.");
 
@@ -2375,7 +2375,7 @@ namespace Js
 
         if (!JavascriptOperators::IsObject(ownKeysResult))
         {
-            JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, _u("ownKeys"));
+            JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, u"ownKeys");
         }
         RecyclableObject* trapResultArray = VarTo<RecyclableObject>(ownKeysResult);
 
@@ -2462,7 +2462,7 @@ namespace Js
         const PropertyRecord* propertyRecord = nullptr;
         BOOL isTargetExtensible = FALSE;
 
-        BEGIN_TEMP_ALLOCATOR(tempAllocator, requestContext, _u("Runtime"))
+        BEGIN_TEMP_ALLOCATOR(tempAllocator, requestContext, u"Runtime")
         {
             // Dictionary containing intersection of keys present in targetKeys and trapResult
             Var lenValue = JavascriptOperators::OP_GetLength(trapResultArray, requestContext);
@@ -2556,7 +2556,7 @@ namespace Js
         // 21.
         if (isNonconfigurableKeyMissingFromTrapResult)
         {
-            JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, _u("ownKeys"));
+            JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, u"ownKeys");
         }
 
         // 22.
@@ -2568,13 +2568,13 @@ namespace Js
         // 23.
         if (isConfigurableKeyMissingFromTrapResult)
         {
-            JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, _u("ownKeys"));
+            JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, u"ownKeys");
         }
 
         // 24.
         if (isKeyMissingFromTargetResult)
         {
-            JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, _u("ownKeys"));
+            JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, u"ownKeys");
         }
 
         return trapResult;

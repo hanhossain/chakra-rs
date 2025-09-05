@@ -297,7 +297,7 @@ namespace TTD
             compareMap.DiagnosticAssert(t1->JsTypeId == t2->JsTypeId);
             compareMap.DiagnosticAssert(t1->ScriptContextLogId == t2->ScriptContextLogId);
 
-            NSSnapValues::AssertSnapEquivTTDVar_Special(t1->PrototypeVar, t2->PrototypeVar, compareMap, _u("prototype"));
+            NSSnapValues::AssertSnapEquivTTDVar_Special(t1->PrototypeVar, t2->PrototypeVar, compareMap, u"prototype");
 
             if(t1->TypeHandlerInfo == nullptr || t2->TypeHandlerInfo == nullptr)
             {

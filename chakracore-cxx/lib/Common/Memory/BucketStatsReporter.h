@@ -13,20 +13,20 @@ namespace Memory
 #ifdef DUMP_FRAGMENTATION_STATS
 template <ObjectInfoBits TBucketType>
 struct DumpBucketTypeName { static char16_t name[]; };
-template<> char16_t DumpBucketTypeName<NoBit>::name[] = _u("Normal ");
-template<> char16_t DumpBucketTypeName<LeafBit>::name[] = _u("Leaf   ");
-template<> char16_t DumpBucketTypeName<FinalizeBit>::name[] = _u("Fin    ");
+template<> char16_t DumpBucketTypeName<NoBit>::name[] = u"Normal ";
+template<> char16_t DumpBucketTypeName<LeafBit>::name[] = u"Leaf   ";
+template<> char16_t DumpBucketTypeName<FinalizeBit>::name[] = u"Fin    ";
 #ifdef RECYCLER_WRITE_BARRIER
-template<> char16_t DumpBucketTypeName<WithBarrierBit>::name[] = _u("NormWB ");
-template<> char16_t DumpBucketTypeName<FinalizableWithBarrierBit>::name[] = _u("FinWB  ");
+template<> char16_t DumpBucketTypeName<WithBarrierBit>::name[] = u"NormWB ";
+template<> char16_t DumpBucketTypeName<FinalizableWithBarrierBit>::name[] = u"FinWB  ";
 #endif
 #ifdef RECYCLER_VISITED_HOST
-template<> char16_t DumpBucketTypeName<RecyclerVisitedHostBit>::name[] = _u("Visited");
+template<> char16_t DumpBucketTypeName<RecyclerVisitedHostBit>::name[] = u"Visited";
 #endif
 template <typename TBlockType>
 struct DumpBlockTypeName { static char16_t name[]; };
-template<> char16_t DumpBlockTypeName<SmallAllocationBlockAttributes>::name[] = _u("(S)");
-template<> char16_t DumpBlockTypeName<MediumAllocationBlockAttributes>::name[] = _u("(M)");
+template<> char16_t DumpBlockTypeName<SmallAllocationBlockAttributes>::name[] = u"(S)";
+template<> char16_t DumpBlockTypeName<MediumAllocationBlockAttributes>::name[] = u"(M)";
 #endif  // DUMP_FRAGMENTATION_STATS
 
 template <ObjectInfoBits TBucketType>
@@ -149,10 +149,10 @@ public:
     {
         if (IsDumpEnabled())
         {
-            Output::Print(_u("[FRAG %d] Post-Collection State\n"), ::GetTickCount());
-            Output::Print(_u("---------------------------------------------------------------------------------------\n"));
-            Output::Print(_u("                  #Blk   #Objs    #Fin     ObjBytes   FreeBytes  TotalBytes UsedPercent\n"));
-            Output::Print(_u("---------------------------------------------------------------------------------------\n"));
+            Output::Print(u"[FRAG %d] Post-Collection State\n", ::GetTickCount());
+            Output::Print(u"---------------------------------------------------------------------------------------\n");
+            Output::Print(u"                  #Blk   #Objs    #Fin     ObjBytes   FreeBytes  TotalBytes UsedPercent\n");
+            Output::Print(u"---------------------------------------------------------------------------------------\n");
         }
     }
 
@@ -161,7 +161,7 @@ public:
     {
         if (IsDumpEnabled())
         {
-            Output::Print(_u("%-7s%s %4d : "),
+            Output::Print(u"%-7s%s %4d : ",
                 DumpBucketTypeName<TBucketType>::name, DumpBlockTypeName<TBlockAttributes>::name, sizeCat);
             stats.Dump();
         }
@@ -171,7 +171,7 @@ public:
     {
         if (IsDumpEnabled())
         {
-            Output::Print(_u("Large           : "));
+            Output::Print(u"Large           : ");
             stats.Dump();
         }
     }
@@ -180,8 +180,8 @@ public:
     {
         if (IsDumpEnabled())
         {
-            Output::Print(_u("---------------------------------------------------------------------------------------\n"));
-            Output::Print(_u("Total           : "));
+            Output::Print(u"---------------------------------------------------------------------------------------\n");
+            Output::Print(u"Total           : ");
             total.Dump();
         }
     }

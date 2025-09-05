@@ -36,7 +36,7 @@ namespace Js
         char16_t* target = RecyclerNewArrayLeaf(recycler, char16_t, allocSize);
 
         Copy<ConcatStringType>(target, GetLength());
-        target[GetLength()] = _u('\0');
+        target[GetLength()] = u'\0';
 
         SetBuffer(target);
         return JavascriptString::GetSz();

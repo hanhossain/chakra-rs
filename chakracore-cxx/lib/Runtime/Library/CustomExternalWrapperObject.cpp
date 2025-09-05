@@ -487,7 +487,7 @@ BOOL CustomExternalWrapperObject::GetPropertyDescriptorTrap(Js::PropertyId prope
     Js::TypeId getResultTypeId = Js::JavascriptOperators::GetTypeId(getResult);
     if (Js::StaticType::Is(getResultTypeId) && getResultTypeId != Js::TypeIds_Undefined)
     {
-        Js::JavascriptError::ThrowTypeError(requestContext, JSERR_NeedObject, _u("getOwnPropertyDescriptor"));
+        Js::JavascriptError::ThrowTypeError(requestContext, JSERR_NeedObject, u"getOwnPropertyDescriptor");
     }
 
     BOOL toProperty = Js::JavascriptOperators::ToPropertyDescriptor(getResult, resultDescriptor, requestContext);
@@ -571,18 +571,18 @@ BOOL CustomExternalWrapperObject::DefineOwnPropertyDescriptor(Js::RecyclableObje
     {
         if (!isExtensible || settingConfigFalse)
         {
-            Js::JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, _u("defineProperty"));
+            Js::JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, u"defineProperty");
         }
     }
     else
     {
         if (!Js::JavascriptOperators::IsCompatiblePropertyDescriptor(descriptor, hasProperty ? &targetDescriptor : nullptr, !!isExtensible, true, requestContext))
         {
-            Js::JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, _u("defineProperty"));
+            Js::JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, u"defineProperty");
         }
         if (settingConfigFalse && targetDescriptor.IsConfigurable())
         {
-            Js::JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, _u("defineProperty"));
+            Js::JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, u"defineProperty");
         }
     }
     return hasProperty;
@@ -1093,7 +1093,7 @@ BOOL CustomExternalWrapperObject::DeleteProperty(Js::PropertyId propertyId, Js::
     {
         if (flags & Js::PropertyOperation_StrictMode)
         {
-            Js::JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, _u("deleteProperty"));
+            Js::JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, u"deleteProperty");
         }
         return trapResult;
     }
@@ -1105,7 +1105,7 @@ BOOL CustomExternalWrapperObject::DeleteProperty(Js::PropertyId propertyId, Js::
     }
     if (!targetPropertyDescriptor.IsConfigurable())
     {
-        Js::JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, _u("deleteProperty"));
+        Js::JavascriptError::ThrowTypeError(requestContext, JSERR_InconsistentTrapResult, u"deleteProperty");
     }
     return TRUE;
 }

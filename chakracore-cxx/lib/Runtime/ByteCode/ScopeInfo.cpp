@@ -39,7 +39,7 @@ namespace Js
             this->SetNeedDeclaration(scopeSlot, sym->GetNeedDeclaration());
         }
 
-        TRACE_BYTECODE(_u("%12s %d\n"), sym->GetName().GetBuffer(), sym->GetScopeSlot());
+        TRACE_BYTECODE(u"%12s %d\n", sym->GetName().GetBuffer(), sym->GetScopeSlot());
     }
 
     inline void AddSlotCount(int& count, int addCount)
@@ -80,9 +80,9 @@ namespace Js
             scopeInfo->isClassConstructor = scope->GetFunc()->byteCodeFunction->GetFunctionInfo()->IsClassConstructor();
         }
 
-        TRACE_BYTECODE(_u("\nSave ScopeInfo: %s #symbols: %d %s\n"),
+        TRACE_BYTECODE(u"\nSave ScopeInfo: %s #symbols: %d %s\n",
             scope->GetFunc()->name, count,
-            scopeInfo->isObject ? _u("isObject") : _u(""));
+            scopeInfo->isObject ? u"isObject" : u"");
 
         MapSymbolData mapSymbolData = { byteCodeGenerator, scope->GetFunc(), 0 };
         scope->ForEachSymbol([&mapSymbolData, scopeInfo, scope](Symbol * sym)
@@ -294,7 +294,7 @@ namespace Js
                 Assert(parser);
                 parser->RestorePidRefForSym(sym);
 
-                TRACE_BYTECODE(_u("%12s %d\n"), sym->GetName().GetBuffer(), sym->GetScopeSlot());
+                TRACE_BYTECODE(u"%12s %d\n", sym->GetName().GetBuffer(), sym->GetScopeSlot());
             }
         }
         this->scope = scope;

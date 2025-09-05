@@ -17,18 +17,18 @@ namespace Js{
 
         if (!VarIs<ArrayBuffer>(bufferView))
         {
-            AsmJSCompiler::OutputError(scriptContext, _u("Asm.js Runtime Error : Buffer parameter is not an Array buffer"));
+            AsmJSCompiler::OutputError(scriptContext, u"Asm.js Runtime Error : Buffer parameter is not an Array buffer");
             return false;
         }
         JavascriptArrayBuffer* buffer = (JavascriptArrayBuffer*)bufferView;
         if (buffer->GetByteLength() <= info->GetMaxHeapAccess())
         {
-            AsmJSCompiler::OutputError(scriptContext, _u("Asm.js Runtime Error : Buffer bytelength is smaller than constant accesses"));
+            AsmJSCompiler::OutputError(scriptContext, u"Asm.js Runtime Error : Buffer bytelength is smaller than constant accesses");
             return false;
         }
         if (!buffer->IsValidAsmJsBufferLength(buffer->GetByteLength(), true))
         {
-            AsmJSCompiler::OutputError(scriptContext, _u("Asm.js Runtime Error : Buffer bytelength is not a valid size for asm.js"));
+            AsmJSCompiler::OutputError(scriptContext, u"Asm.js Runtime Error : Buffer bytelength is not a valid size for asm.js");
             return false;
         }
 
@@ -44,13 +44,13 @@ namespace Js{
         Assert(foreign);
         if (!VarIs<RecyclableObject>(foreign))
         {
-            AsmJSCompiler::OutputError(scriptContext, _u("Asm.js Runtime Error : FFI is not an object"));
+            AsmJSCompiler::OutputError(scriptContext, u"Asm.js Runtime Error : FFI is not an object");
             return false;
         }
         TypeId foreignObjType = VarTo<RecyclableObject>(foreign)->GetTypeId();
         if (StaticType::Is(foreignObjType) || TypeIds_Proxy == foreignObjType)
         {
-            AsmJSCompiler::OutputError(scriptContext, _u("Asm.js Runtime Error : FFI is not an object"));
+            AsmJSCompiler::OutputError(scriptContext, u"Asm.js Runtime Error : FFI is not an object");
             return false;
         }
         return true;
@@ -71,13 +71,13 @@ namespace Js{
         Assert(stdlib);
         if (!VarIs<RecyclableObject>(stdlib))
         {
-            AsmJSCompiler::OutputError(scriptContext, _u("Asm.js Runtime Error : StdLib is not an object"));
+            AsmJSCompiler::OutputError(scriptContext, u"Asm.js Runtime Error : StdLib is not an object");
             return false;
         }
         TypeId stdLibObjType = VarTo<RecyclableObject>(stdlib)->GetTypeId();
         if (StaticType::Is(stdLibObjType) || TypeIds_Proxy == stdLibObjType)
         {
-            AsmJSCompiler::OutputError(scriptContext, _u("Asm.js Runtime Error : StdLib is not an object"));
+            AsmJSCompiler::OutputError(scriptContext, u"Asm.js Runtime Error : StdLib is not an object");
             return false;
         }
 
@@ -87,7 +87,7 @@ namespace Js{
             Var asmInfinityObj = JavascriptOperators::OP_GetProperty(stdlib, PropertyIds::Infinity, scriptContext);
             if (!JavascriptConversion::SameValue(asmInfinityObj, library->GetPositiveInfinite()))
             {
-                AsmJSCompiler::OutputError(scriptContext, _u("Asm.js Runtime Error : Math constant Infinity is invalid"));
+                AsmJSCompiler::OutputError(scriptContext, u"Asm.js Runtime Error : Math constant Infinity is invalid");
                 return false;
             }
         }
@@ -96,7 +96,7 @@ namespace Js{
             Var asmNaNObj = JavascriptOperators::OP_GetProperty(stdlib, PropertyIds::NaN, scriptContext);
             if (!JavascriptConversion::SameValue(asmNaNObj, library->GetNaN()))
             {
-                AsmJSCompiler::OutputError(scriptContext, _u("Asm.js Runtime Error : Math constant NaN is invalid"));
+                AsmJSCompiler::OutputError(scriptContext, u"Asm.js Runtime Error : Math constant NaN is invalid");
                 return false;
             }
         }
@@ -113,7 +113,7 @@ namespace Js{
                 AsmJSMathBuiltinFunction mathBuiltinFunc = (AsmJSMathBuiltinFunction)i;
                 if (!CheckMathLibraryMethod(scriptContext, asmMathObject, mathBuiltinFunc))
                 {
-                    AsmJSCompiler::OutputError(scriptContext, _u("Asm.js Runtime Error : Math builtin function is invalid"));
+                    AsmJSCompiler::OutputError(scriptContext, u"Asm.js Runtime Error : Math builtin function is invalid");
                     return false;
                 }
             }
@@ -128,7 +128,7 @@ namespace Js{
             AsmJSTypedArrayBuiltinFunction arrayBuiltinFunc = (AsmJSTypedArrayBuiltinFunction)i;
             if (!CheckArrayLibraryMethod(scriptContext, stdlib, arrayBuiltinFunc))
             {
-                AsmJSCompiler::OutputError(scriptContext, _u("Asm.js Runtime Error : Array builtin function is invalid"));
+                AsmJSCompiler::OutputError(scriptContext, u"Asm.js Runtime Error : Array builtin function is invalid");
                 return false;
             }
         }

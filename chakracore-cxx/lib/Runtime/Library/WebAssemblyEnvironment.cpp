@@ -11,7 +11,7 @@ namespace Js
 {
 
 WebAssemblyEnvironment::WebAssemblyEnvironment(WebAssemblyModule* module):
-    m_alloc(_u("WebAssemblyEnvironment"), module->GetScriptContext()->GetThreadContext()->GetPageAllocator(), Js::Throw::OutOfMemory)
+    m_alloc(u"WebAssemblyEnvironment", module->GetScriptContext()->GetThreadContext()->GetPageAllocator(), Js::Throw::OutOfMemory)
 {
     this->module = module;
     ScriptContext* scriptContext = module->GetScriptContext();

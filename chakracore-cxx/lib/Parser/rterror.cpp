@@ -64,12 +64,12 @@ static _ResourceStr s_resourceStrs[] =
 #include <perrors.h>
 #undef LSC_ERROR_MSG
 
-    { IDS_COMPILATION_ERROR_SOURCE, _u("JavaScript compilation error") },
-    { IDS_RUNTIME_ERROR_SOURCE,     _u("JavaScript runtime error") },
-    { IDS_UNKNOWN_RUNTIME_ERROR,    _u("Unknown runtime error") },
+    { IDS_COMPILATION_ERROR_SOURCE, u"JavaScript compilation error" },
+    { IDS_RUNTIME_ERROR_SOURCE,     u"JavaScript runtime error" },
+    { IDS_UNKNOWN_RUNTIME_ERROR,    u"Unknown runtime error" },
 
-    { IDS_INFINITY,                 _u("Infinity") },
-    { IDS_MINUSINFINITY,            _u("-Infinity") }
+    { IDS_INFINITY,                 u"Infinity" },
+    { IDS_MINUSINFINITY,            u"-Infinity" }
 };
 
 static int compare_ResourceStr(const void* a, const void* b)

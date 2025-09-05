@@ -428,7 +428,7 @@ using namespace Js;
         ///
         if (args.Info.Count == 0 || !JavascriptConversion::IsCallable(args[0]))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedFunction, _u("Function.prototype.apply"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedFunction, u"Function.prototype.apply");
         }
 
         Var thisVar = NULL;
@@ -485,7 +485,7 @@ using namespace Js;
 
             if (!isNullOrUndefined && !JavascriptOperators::IsObject(argArray)) // ES5: throw if Type(argArray) is not Object
             {
-                JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedObject, _u("Function.prototype.apply"));
+                JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedObject, u"Function.prototype.apply");
             }
 
             long len;
@@ -603,7 +603,7 @@ using namespace Js;
         ///
         if (args.Info.Count == 0 || !JavascriptConversion::IsCallable(args[0]))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedFunction, _u("Function.prototype.bind"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedFunction, u"Function.prototype.bind");
         }
 
         BoundFunction* boundFunc = BoundFunction::New(scriptContext, args);
@@ -636,7 +636,7 @@ using namespace Js;
         uint argCount = args.Info.Count;
         if (argCount == 0 || !JavascriptConversion::IsCallable(args[0]))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedFunction, _u("Function.prototype.call"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedFunction, u"Function.prototype.call");
         }
 
         RecyclableObject *pFunc = VarTo<RecyclableObject>(args[0]);
@@ -1570,7 +1570,7 @@ dbl_align:
         AssertMsg(args.Info.Count > 0, "Should always have implicit 'this'");
         if (args.Info.Count == 0 || !VarIs<JavascriptFunction>(arg0))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedFunction, _u("Function.prototype.toString"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedFunction, u"Function.prototype.toString");
         }
         JavascriptFunction *pFunc = VarTo<JavascriptFunction>(arg0);
 
@@ -2718,7 +2718,7 @@ LABEL1:
             }
         }
 
-        return StackScriptFunction::EnsureBoxed(BOX_PARAM(funcCaller, nullptr, _u("caller")));
+        return StackScriptFunction::EnsureBoxed(BOX_PARAM(funcCaller, nullptr, u"caller"));
     }
 
     BOOL JavascriptFunction::GetCallerProperty(Var originalInstance, Var* value, ScriptContext* requestContext)
@@ -3068,14 +3068,14 @@ LABEL1:
         {
             // This is under DBG_DUMP so we can allow a check
             ParseableFunctionInfo* body = this->GetFunctionProxy() != nullptr ? this->GetFunctionProxy()->EnsureDeserialized() : nullptr;
-            const char16_t* ctorName = body != nullptr ? body->GetDisplayName() : _u("<unknown>");
+            const char16_t* ctorName = body != nullptr ? body->GetDisplayName() : u"<unknown>";
 
             char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
-            Output::Print(_u("CtorCache: before invalidating cache (0x%p) for ctor %s (%s): "), PointerValue(this->constructorCache), ctorName,
-                body ? body->GetDebugNumberSet(debugStringBuffer) : _u("(null)"));
+            Output::Print(u"CtorCache: before invalidating cache (0x%p) for ctor %s (%s): ", PointerValue(this->constructorCache), ctorName,
+                body ? body->GetDebugNumberSet(debugStringBuffer) : u"(null)");
             this->constructorCache->Dump();
-            Output::Print(_u("\n"));
+            Output::Print(u"\n");
             Output::Flush();
         }
 #endif
@@ -3087,13 +3087,13 @@ LABEL1:
         {
             // This is under DBG_DUMP so we can allow a check
             ParseableFunctionInfo* body = this->GetFunctionProxy() != nullptr ? this->GetFunctionProxy()->EnsureDeserialized() : nullptr;
-            const char16_t* ctorName = body != nullptr ? body->GetDisplayName() : _u("<unknown>");
+            const char16_t* ctorName = body != nullptr ? body->GetDisplayName() : u"<unknown>";
             char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
-            Output::Print(_u("CtorCache: after invalidating cache (0x%p) for ctor %s (%s): "), PointerValue(this->constructorCache), ctorName,
-                body ? body->GetDebugNumberSet(debugStringBuffer) : _u("(null)"));
+            Output::Print(u"CtorCache: after invalidating cache (0x%p) for ctor %s (%s): ", PointerValue(this->constructorCache), ctorName,
+                body ? body->GetDebugNumberSet(debugStringBuffer) : u"(null)");
             this->constructorCache->Dump();
-            Output::Print(_u("\n"));
+            Output::Print(u"\n");
             Output::Flush();
         }
 #endif
@@ -3122,7 +3122,7 @@ LABEL1:
                 {
                     utf8::DecodeOptions options = sourceInfo->IsCesu8() ? utf8::doAllowThreeByteSurrogates : utf8::doDefault;
                     charcount_t count = func->LengthInChars();
-                    LPCUTF8 pbStart = func->GetToStringSource(_u("JavascriptFunction::GetDiagValueString"));
+                    LPCUTF8 pbStart = func->GetToStringSource(u"JavascriptFunction::GetDiagValueString");
                     size_t cbLength = func->LengthInBytes();
                     PrintOffsets* printOffsets = func->GetPrintOffsets();
                     if (printOffsets != nullptr)
@@ -3163,7 +3163,7 @@ LABEL1:
 
     BOOL JavascriptFunction::GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
     {
-        stringBuilder->AppendCppLiteral(_u("Object, (Function)"));
+        stringBuilder->AppendCppLiteral(u"Object, (Function)");
         return TRUE;
     }
 
@@ -3190,11 +3190,11 @@ LABEL1:
         else if (func->GetIsAccessor())
         {
             const char16_t* accessorName = func->GetDisplayName();
-            if (accessorName[0] == _u('g'))
+            if (accessorName[0] == u'g')
             {
                 return JavascriptString::Concat(scriptContext->GetLibrary()->GetGetterFunctionPrefixString(), JavascriptString::NewCopyBuffer(name, length, scriptContext));
             }
-            AssertMsg(accessorName[0] == _u('s'), "should be a set");
+            AssertMsg(accessorName[0] == u's', "should be a set");
             return JavascriptString::Concat(scriptContext->GetLibrary()->GetSetterFunctionPrefixString(), JavascriptString::NewCopyBuffer(name, length, scriptContext));
         }
         return JavascriptString::NewCopyBuffer(name, length, scriptContext);
@@ -3429,7 +3429,7 @@ LABEL1:
         // todo:: make it work with inproc jit
         if (!JITManager::GetJITManager()->IsOOPJITEnabled())
         {
-            Output::Print(_u("Out of proc jit is necessary to repro using an encoded buffer"));
+            Output::Print(u"Out of proc jit is necessary to repro using an encoded buffer");
             Js::Throw::FatalInternalError();
         }
 

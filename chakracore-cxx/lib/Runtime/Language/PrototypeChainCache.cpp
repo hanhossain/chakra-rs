@@ -9,7 +9,7 @@ using namespace Js;
 
 template <typename T>
 ThreadCacheRegistry<T>::ThreadCacheRegistry(_In_ PageAllocator* pageAllocator) :
-    arena(_u("PrototypeChainCacheRegistry"), pageAllocator, Throw::OutOfMemory)
+    arena(u"PrototypeChainCacheRegistry", pageAllocator, Throw::OutOfMemory)
 {
 }
 

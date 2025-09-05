@@ -470,7 +470,7 @@ STRSAFEAPI StringVPrintfWorkerW(char16_t* pszDest, size_t cchDest, const char16_
         {
             // need to null terminate the string
             pszDest += cchMax;
-            *pszDest = _u('\0');
+            *pszDest = u'\0';
 
             // we have truncated pszDest
             hr = STRSAFE_E_INSUFFICIENT_BUFFER;
@@ -479,7 +479,7 @@ STRSAFEAPI StringVPrintfWorkerW(char16_t* pszDest, size_t cchDest, const char16_
         {
             // need to null terminate the string
             pszDest += cchMax;
-            *pszDest = _u('\0');
+            *pszDest = u'\0';
         }
     }
 

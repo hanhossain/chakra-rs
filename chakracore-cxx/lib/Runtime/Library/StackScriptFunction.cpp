@@ -32,9 +32,9 @@ namespace Js
         }
 
         PHASE_PRINT_TESTTRACE(Js::StackFuncPhase, function->GetFunctionProxy(),
-            _u("StackScriptFunction (%s): box and disable stack function: %s (function %s)\n"),
+            u"StackScriptFunction (%s): box and disable stack function: %s (function %s)\n",
             reason, function->GetFunctionProxy()->IsDeferredDeserializeFunction()?
-            _u("<DeferDeserialize>") : function->GetParseableFunctionInfo()->GetDisplayName(),
+            u"<DeferDeserialize>" : function->GetParseableFunctionInfo()->GetDisplayName(),
             function->GetFunctionProxy()->GetDebugNumberSet(debugStringBuffer));
 
         // During the box workflow we reset all the parents of all nested functions and up. If a fault occurs when the stack function
@@ -74,7 +74,7 @@ namespace Js
 
         ScriptContext * scriptContext = stackScriptFunction->GetScriptContext();
         ScriptFunction * boxedFunction;
-        BEGIN_TEMP_ALLOCATOR(tempAllocator, scriptContext, _u("BoxStackFunction"));
+        BEGIN_TEMP_ALLOCATOR(tempAllocator, scriptContext, u"BoxStackFunction");
         {
             BoxState state(tempAllocator, functionParent, scriptContext, returnAddress);
             state.Box();
@@ -89,7 +89,7 @@ namespace Js
     void StackScriptFunction::Box(Js::FunctionBody * parent, ScriptFunction ** functionRef)
     {
         ScriptContext * scriptContext = parent->GetScriptContext();
-        BEGIN_TEMP_ALLOCATOR(tempAllocator, scriptContext, _u("BoxStackFunction"));
+        BEGIN_TEMP_ALLOCATOR(tempAllocator, scriptContext, u"BoxStackFunction");
         {
             BoxState state(tempAllocator, parent, scriptContext);
             state.Box();
@@ -172,25 +172,25 @@ namespace Js
                     if (interpreterFrame)
                     {
                         Assert(!hasInlineeToBox);
-                        frameKind = walker.IsBailedOutFromInlinee()? _u("Interpreted from Inlined Bailout (Pending)") :
-                            walker.IsBailedOutFromFunction()? _u("Interpreted from Bailout") : _u("Interpreted");
+                        frameKind = walker.IsBailedOutFromInlinee()? u"Interpreted from Inlined Bailout (Pending)" :
+                            walker.IsBailedOutFromFunction()? u"Interpreted from Bailout" : u"Interpreted";
                     }
                     else if (walker.IsInlineFrame())
                     {
                         Assert(this->NeedBoxFrame(callerFunctionBody));
-                        frameKind = _u("Native Inlined (Pending)");
+                        frameKind = u"Native Inlined (Pending)";
                     }
                     else if (this->NeedBoxFrame(callerFunctionBody))
                     {
-                        frameKind = (hasInlineeToBox? _u("Native and Inlinee") : _u("Native"));
+                        frameKind = (hasInlineeToBox? u"Native and Inlinee" : u"Native");
                     }
                     else
                     {
-                        frameKind = _u("Native for Inlinee");
+                        frameKind = u"Native for Inlinee";
                     }
 
                     PHASE_PRINT_TESTTRACE(Js::StackFuncPhase, callerFunctionBody,
-                        _u("Boxing Frame [%s]: %s %s\n"), frameKind,
+                        u"Boxing Frame [%s]: %s %s\n", frameKind,
                         callerFunctionBody->GetDisplayName(), callerFunctionBody->GetDebugNumberSet(debugStringBuffer));
                 }
 #endif
@@ -713,17 +713,17 @@ namespace Js
         {
             char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
-            Output::Print(_u("Boxing StackScriptFunction Object: %s (function Id: %s)"),
+            Output::Print(u"Boxing StackScriptFunction Object: %s (function Id: %s)",
                 stackFunction->GetFunctionProxy()->IsDeferredDeserializeFunction()?
-                    _u("<DeferDeserialize>") : stackFunction->GetParseableFunctionInfo()->GetDisplayName(),
+                    u"<DeferDeserialize>" : stackFunction->GetParseableFunctionInfo()->GetDisplayName(),
                 stackFunction->GetFunctionProxy()->GetDebugNumberSet(debugStringBuffer));
             if (PHASE_VERBOSE_TESTTRACE(Js::StackFuncPhase, stackFunction->GetFunctionProxy()))
             {
-                Output::Print(_u(" %p\n"), stackFunction);
+                Output::Print(u" %p\n", stackFunction);
             }
             else
             {
-                Output::Print(_u("\n"));
+                Output::Print(u"\n");
             }
             Output::Flush();
         }
@@ -752,9 +752,9 @@ namespace Js
 
 
             PHASE_PRINT_VERBOSE_TRACE(Js::StackFuncPhase, functionProxy,
-                _u("Stack alloc nested function: %s %s (address: %p)\n"),
+                u"Stack alloc nested function: %s %s (address: %p)\n",
                     functionProxy->IsFunctionBody()?
-                        functionProxy->GetFunctionBody()->GetDisplayName() : _u("<deferred>"),
+                        functionProxy->GetFunctionBody()->GetDisplayName() : u"<deferred>",
                         functionProxy->GetDebugNumberSet(debugStringBuffer), stackFunction);
             return stackFunction;
         }

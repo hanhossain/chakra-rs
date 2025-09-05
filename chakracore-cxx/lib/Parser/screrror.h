@@ -72,7 +72,7 @@ public:
 
     void CopyInto(CompileScriptException* cse);
 
-    HRESULT ProcessError(IScanner * pScan, HRESULT hr, ParseNode * pnodeBase, LPCWSTR stringOne = _u(""), LPCWSTR stringTwo = _u(""));
+    HRESULT ProcessError(IScanner * pScan, HRESULT hr, ParseNode * pnodeBase, LPCWSTR stringOne = u"", LPCWSTR stringTwo = u"");
 
     friend class ActiveScriptError;
 };

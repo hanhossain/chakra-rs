@@ -11,7 +11,7 @@
     { \
         char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE]; \
         Output::Print( \
-            _u("Testtrace: %s function %s (%s): "), \
+            u"Testtrace: %s function %s (%s): ", \
             Js::PhaseNames[phase], \
             instr->m_func->GetJITFunctionBody()->GetDisplayName(), \
             instr->m_func->GetDebugNumberSet(debugStringBuffer)); \
@@ -572,7 +572,7 @@ void GlobOpt::ArraySrcOpt::CheckLoops()
 
 void GlobOpt::ArraySrcOpt::DoArrayChecks()
 {
-    TRACE_TESTTRACE_PHASE_INSTR(Js::ArrayCheckHoistPhase, instr, _u("Separating array checks with bailout\n"));
+    TRACE_TESTTRACE_PHASE_INSTR(Js::ArrayCheckHoistPhase, instr, u"Separating array checks with bailout\n");
 
     IR::Instr *bailOnNotArray = IR::Instr::New(Js::OpCode::BailOnNotArray, instr->m_func);
     bailOnNotArray->SetSrc1(baseOpnd);
@@ -586,10 +586,10 @@ void GlobOpt::ArraySrcOpt::DoArrayChecks()
         TRACE_PHASE_INSTR(
             Js::ArrayCheckHoistPhase,
             instr,
-            _u("Hoisting array checks with bailout out of loop %u to landing pad block %u\n"),
+            u"Hoisting array checks with bailout out of loop %u to landing pad block %u\n",
             hoistChecksOutOfLoop->GetLoopNumber(),
             hoistChecksOutOfLoop->landingPad->GetBlockNum());
-        TESTTRACE_PHASE_INSTR(Js::ArrayCheckHoistPhase, instr, _u("Hoisting array checks with bailout out of loop\n"));
+        TESTTRACE_PHASE_INSTR(Js::ArrayCheckHoistPhase, instr, u"Hoisting array checks with bailout out of loop\n");
 
         Assert(hoistChecksOutOfLoop->bailOutInfo);
         globOpt->EnsureBailTarget(hoistChecksOutOfLoop);
@@ -614,7 +614,7 @@ void GlobOpt::ArraySrcOpt::DoLengthLoad()
     Assert(baseValueType.IsArray());
     Assert(newLengthSym);
 
-    TRACE_TESTTRACE_PHASE_INSTR(Js::Phase::ArrayLengthHoistPhase, instr, _u("Separating array length load\n"));
+    TRACE_TESTTRACE_PHASE_INSTR(Js::Phase::ArrayLengthHoistPhase, instr, u"Separating array length load\n");
 
     // Create an initial value for the length
     globOpt->CurrentBlockData()->liveVarSyms->Set(newLengthSym->m_id);
@@ -652,10 +652,10 @@ void GlobOpt::ArraySrcOpt::DoLengthLoad()
         TRACE_PHASE_INSTR(
             Js::Phase::ArrayLengthHoistPhase,
             instr,
-            _u("Hoisting array length load out of loop %u to landing pad block %u\n"),
+            u"Hoisting array length load out of loop %u to landing pad block %u\n",
             hoistLengthLoadOutOfLoop->GetLoopNumber(),
             hoistLengthLoadOutOfLoop->landingPad->GetBlockNum());
-        TESTTRACE_PHASE_INSTR(Js::Phase::ArrayLengthHoistPhase, instr, _u("Hoisting array length load out of loop\n"));
+        TESTTRACE_PHASE_INSTR(Js::Phase::ArrayLengthHoistPhase, instr, u"Hoisting array length load out of loop\n");
 
         Assert(hoistLengthLoadOutOfLoop->bailOutInfo);
         globOpt->EnsureBailTarget(hoistLengthLoadOutOfLoop);
@@ -707,7 +707,7 @@ void GlobOpt::ArraySrcOpt::DoHeadSegmentLengthLoad()
     Assert(newHeadSegmentLengthSym);
     Assert(!headSegmentLengthValue);
 
-    TRACE_TESTTRACE_PHASE_INSTR(Js::ArraySegmentHoistPhase, instr, _u("Separating array segment length load\n"));
+    TRACE_TESTTRACE_PHASE_INSTR(Js::ArraySegmentHoistPhase, instr, u"Separating array segment length load\n");
 
     // Create an initial value for the head segment length
     globOpt->CurrentBlockData()->liveVarSyms->Set(newHeadSegmentLengthSym->m_id);
@@ -751,10 +751,10 @@ void GlobOpt::ArraySrcOpt::DoHeadSegmentLengthLoad()
         TRACE_PHASE_INSTR(
             Js::ArraySegmentHoistPhase,
             instr,
-            _u("Hoisting array segment length load out of loop %u to landing pad block %u\n"),
+            u"Hoisting array segment length load out of loop %u to landing pad block %u\n",
             hoistHeadSegmentLengthLoadOutOfLoop->GetLoopNumber(),
             hoistHeadSegmentLengthLoadOutOfLoop->landingPad->GetBlockNum());
-        TESTTRACE_PHASE_INSTR(Js::ArraySegmentHoistPhase, instr, _u("Hoisting array segment length load out of loop\n"));
+        TESTTRACE_PHASE_INSTR(Js::ArraySegmentHoistPhase, instr, u"Hoisting array segment length load out of loop\n");
 
         InsertInstrInLandingPad(loadHeadSegmentLength, hoistHeadSegmentLengthLoadOutOfLoop);
 
@@ -804,7 +804,7 @@ void GlobOpt::ArraySrcOpt::DoExtractBoundChecks()
             TRACE_PHASE_INSTR_VERBOSE(
                 Js::Phase::BoundCheckHoistPhase,
                 instr,
-                _u("Determining array bound check hoistability for index s%u\n"),
+                u"Determining array bound check hoistability for index s%u\n",
                 indexVarSym->m_id);
         }
         else
@@ -812,7 +812,7 @@ void GlobOpt::ArraySrcOpt::DoExtractBoundChecks()
             TRACE_PHASE_INSTR_VERBOSE(
                 Js::Phase::BoundCheckHoistPhase,
                 instr,
-                _u("Determining array bound check hoistability for index %d\n"),
+                u"Determining array bound check hoistability for index %d\n",
                 indexConstantBounds.LowerBound());
         }
 
@@ -863,12 +863,12 @@ void GlobOpt::ArraySrcOpt::DoLowerBoundCheck()
             TRACE_PHASE_INSTR(
                 Js::Phase::BoundCheckHoistPhase,
                 instr,
-                _u("Hoisting array lower bound check into existing bound check instruction in block %u\n"),
+                u"Hoisting array lower bound check into existing bound check instruction in block %u\n",
                 hoistBlock->GetBlockNum());
             TESTTRACE_PHASE_INSTR(
                 Js::Phase::BoundCheckHoistPhase,
                 instr,
-                _u("Hoisting array lower bound check into existing bound check instruction\n"));
+                u"Hoisting array lower bound check into existing bound check instruction\n");
         }
         else
         {
@@ -962,7 +962,7 @@ void GlobOpt::ArraySrcOpt::DoLowerBoundCheck()
                 TRACE_PHASE_INSTR(
                     Js::Phase::BoundCheckHoistPhase,
                     instr,
-                    _u("Hoisting array lower bound check out of loop %u to landing pad block %u, as (0 <= s%u + %d)\n"),
+                    u"Hoisting array lower bound check out of loop %u to landing pad block %u, as (0 <= s%u + %d)\n",
                     hoistInfo.Loop()->GetLoopNumber(),
                     landingPad->GetBlockNum(),
                     hoistInfo.IndexSym()->m_id,
@@ -970,7 +970,7 @@ void GlobOpt::ArraySrcOpt::DoLowerBoundCheck()
                 TESTTRACE_PHASE_INSTR(
                     Js::Phase::BoundCheckHoistPhase,
                     instr,
-                    _u("Hoisting array lower bound check out of loop\n"));
+                    u"Hoisting array lower bound check out of loop\n");
 
                 // Record the bound check instruction as available
                 const IntBoundCheck boundCheckInfo(
@@ -1069,13 +1069,13 @@ void GlobOpt::ArraySrcOpt::DoLowerBoundCheck()
         TRACE_PHASE_INSTR(
             Js::Phase::BoundCheckEliminationPhase,
             instr,
-            _u("Separating array lower bound check, as (0 <= s%u)\n"),
+            u"Separating array lower bound check, as (0 <= s%u)\n",
             indexVarSym->m_id);
 
         TESTTRACE_PHASE_INSTR(
             Js::Phase::BoundCheckEliminationPhase,
             instr,
-            _u("Separating array lower bound check\n"));
+            u"Separating array lower bound check\n");
 
         if (globOpt->DoBoundCheckHoist())
         {
@@ -1118,13 +1118,13 @@ void GlobOpt::ArraySrcOpt::DoUpperBoundCheck()
             TRACE_PHASE_INSTR(
                 Js::Phase::BoundCheckHoistPhase,
                 instr,
-                _u("Hoisting array upper bound check into existing bound check instruction in block %u\n"),
+                u"Hoisting array upper bound check into existing bound check instruction in block %u\n",
                 hoistBlock->GetBlockNum());
 
             TESTTRACE_PHASE_INSTR(
                 Js::Phase::BoundCheckHoistPhase,
                 instr,
-                _u("Hoisting array upper bound check into existing bound check instruction\n"));
+                u"Hoisting array upper bound check into existing bound check instruction\n");
         }
         else
         {
@@ -1224,7 +1224,7 @@ void GlobOpt::ArraySrcOpt::DoUpperBoundCheck()
                 TRACE_PHASE_INSTR(
                     Js::Phase::BoundCheckHoistPhase,
                     instr,
-                    _u("Hoisting array upper bound check out of loop %u to landing pad block %u, as (s%u <= s%u + %d)\n"),
+                    u"Hoisting array upper bound check out of loop %u to landing pad block %u, as (s%u <= s%u + %d)\n",
                     hoistInfo.Loop()->GetLoopNumber(),
                     landingPad->GetBlockNum(),
                     hoistInfo.IndexSym()->m_id,
@@ -1236,7 +1236,7 @@ void GlobOpt::ArraySrcOpt::DoUpperBoundCheck()
                 TRACE_PHASE_INSTR(
                     Js::Phase::BoundCheckHoistPhase,
                     instr,
-                    _u("Hoisting array upper bound check out of loop %u to landing pad block %u, as (%d <= s%u + %d)\n"),
+                    u"Hoisting array upper bound check out of loop %u to landing pad block %u, as (%d <= s%u + %d)\n",
                     hoistInfo.Loop()->GetLoopNumber(),
                     landingPad->GetBlockNum(),
                     hoistInfo.IndexConstantBounds().LowerBound(),
@@ -1247,7 +1247,7 @@ void GlobOpt::ArraySrcOpt::DoUpperBoundCheck()
             TESTTRACE_PHASE_INSTR(
                 Js::Phase::BoundCheckHoistPhase,
                 instr,
-                _u("Hoisting array upper bound check out of loop\n"));
+                u"Hoisting array upper bound check out of loop\n");
 
             // Record the bound check instruction as available
             const IntBoundCheck boundCheckInfo(
@@ -1395,7 +1395,7 @@ void GlobOpt::ArraySrcOpt::DoUpperBoundCheck()
             TRACE_PHASE_INSTR(
                 Js::Phase::BoundCheckEliminationPhase,
                 instr,
-                _u("Separating array upper bound check, as (s%u < s%u)\n"),
+                u"Separating array upper bound check, as (s%u < s%u)\n",
                 indexVarSym->m_id,
                 headSegmentLengthSym->m_id);
         }
@@ -1404,14 +1404,14 @@ void GlobOpt::ArraySrcOpt::DoUpperBoundCheck()
             TRACE_PHASE_INSTR(
                 Js::Phase::BoundCheckEliminationPhase,
                 instr,
-                _u("Separating array upper bound check, as (%d < s%u)\n"),
+                u"Separating array upper bound check, as (%d < s%u)\n",
                 indexOpnd ? indexOpnd->AsIntConstOpnd()->AsInt32() : baseOwnerIndir->GetOffset(),
                 headSegmentLengthSym->m_id);
         }
         TESTTRACE_PHASE_INSTR(
             Js::Phase::BoundCheckEliminationPhase,
             instr,
-            _u("Separating array upper bound check\n"));
+            u"Separating array upper bound check\n");
 
         if (globOpt->DoBoundCheckHoist())
         {
@@ -1603,7 +1603,7 @@ void GlobOpt::ArraySrcOpt::ShareBailOut()
 
 void GlobOpt::ArraySrcOpt::InsertHeadSegmentLoad()
 {
-    TRACE_TESTTRACE_PHASE_INSTR(Js::ArraySegmentHoistPhase, instr, _u("Separating array segment load\n"));
+    TRACE_TESTTRACE_PHASE_INSTR(Js::ArraySegmentHoistPhase, instr, u"Separating array segment load\n");
 
     Assert(newHeadSegmentSym);
     IR::RegOpnd *const headSegmentOpnd = IR::RegOpnd::New(newHeadSegmentSym, newHeadSegmentSym->GetType(), instr->m_func);
@@ -1649,11 +1649,11 @@ void GlobOpt::ArraySrcOpt::InsertHeadSegmentLoad()
         TRACE_PHASE_INSTR(
             Js::ArraySegmentHoistPhase,
             instr,
-            _u("Hoisting array segment load out of loop %u to landing pad block %u\n"),
+            u"Hoisting array segment load out of loop %u to landing pad block %u\n",
             hoistHeadSegmentLoadOutOfLoop->GetLoopNumber(),
             hoistHeadSegmentLoadOutOfLoop->landingPad->GetBlockNum());
 
-        TESTTRACE_PHASE_INSTR(Js::ArraySegmentHoistPhase, instr, _u("Hoisting array segment load out of loop\n"));
+        TESTTRACE_PHASE_INSTR(Js::ArraySegmentHoistPhase, instr, u"Hoisting array segment load out of loop\n");
 
         if (loadObjectArray)
         {
@@ -1958,7 +1958,7 @@ void GlobOpt::ArraySrcOpt::Optimize()
 
     const auto OnEliminated = [&](const Js::Phase phase, const char *const eliminatedLoad)
     {
-        TRACE_TESTTRACE_PHASE_INSTR(phase, instr, _u("Eliminating array %S\n"), eliminatedLoad);
+        TRACE_TESTTRACE_PHASE_INSTR(phase, instr, u"Eliminating array %S\n", eliminatedLoad);
     };
 
     OnEliminated(Js::Phase::ArrayCheckHoistPhase, "checks");
@@ -1994,7 +1994,7 @@ void GlobOpt::ArraySrcOpt::Optimize()
     {
         if (eliminatedLowerBoundCheck && eliminatedUpperBoundCheck)
         {
-            TRACE_TESTTRACE_PHASE_INSTR(Js::Phase::BoundCheckEliminationPhase, instr, _u("Eliminating IsIn\n"));
+            TRACE_TESTTRACE_PHASE_INSTR(Js::Phase::BoundCheckEliminationPhase, instr, u"Eliminating IsIn\n");
 
             globOpt->CaptureByteCodeSymUses(instr);
 

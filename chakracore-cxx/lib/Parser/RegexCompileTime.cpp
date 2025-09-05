@@ -284,10 +284,10 @@ namespace UnifiedRegex
     {
         if (firstSet != 0)
         {
-            w->PrintEOL(_u("<"));
+            w->PrintEOL(u"<");
             w->Indent();
 
-            w->Print(_u("features: {"));
+            w->Print(u"features: {");
             bool first = true;
             for (uint i = Empty; i <= Assertion; i++)
             {
@@ -296,64 +296,64 @@ namespace UnifiedRegex
                     if (first)
                         first = false;
                     else
-                        w->Print(_u(","));
+                        w->Print(u",");
                     switch (i)
                     {
-                    case Empty: w->Print(_u("Empty")); break;
-                    case BOL: w->Print(_u("BOL")); break;
-                    case EOL: w->Print(_u("EOL")); break;
-                    case WordBoundary: w->Print(_u("WordBoundary")); break;
-                    case MatchLiteral: w->Print(_u("MatchLiteral")); break;
-                    case MatchChar: w->Print(_u("MatchChar")); break;
-                    case Concat: w->Print(_u("Concat")); break;
-                    case Alt: w->Print(_u("Alt")); break;
-                    case DefineGroup: w->Print(_u("DefineGroup")); break;
-                    case MatchGroup: w->Print(_u("MatchGroup")); break;
-                    case Loop: w->Print(_u("Loop")); break;
-                    case MatchSet: w->Print(_u("MatchSet")); break;
-                    case Assertion: w->Print(_u("Assertion")); break;
+                    case Empty: w->Print(u"Empty"); break;
+                    case BOL: w->Print(u"BOL"); break;
+                    case EOL: w->Print(u"EOL"); break;
+                    case WordBoundary: w->Print(u"WordBoundary"); break;
+                    case MatchLiteral: w->Print(u"MatchLiteral"); break;
+                    case MatchChar: w->Print(u"MatchChar"); break;
+                    case Concat: w->Print(u"Concat"); break;
+                    case Alt: w->Print(u"Alt"); break;
+                    case DefineGroup: w->Print(u"DefineGroup"); break;
+                    case MatchGroup: w->Print(u"MatchGroup"); break;
+                    case Loop: w->Print(u"Loop"); break;
+                    case MatchSet: w->Print(u"MatchSet"); break;
+                    case Assertion: w->Print(u"Assertion"); break;
                     }
                 }
             }
-            w->PrintEOL(_u("}"));
+            w->PrintEOL(u"}");
 
-            w->Print(_u("firstSet: "));
+            w->Print(u"firstSet: ");
             firstSet->Print(w);
             if (isFirstExact)
-                w->Print(_u(" (exact)"));
+                w->Print(u" (exact)");
             w->EOL();
 
-            w->Print(_u("followSet: "));
+            w->Print(u"followSet: ");
             followSet->Print(w);
             w->EOL();
 
-            w->Print(_u("prevConsumes: "));
+            w->Print(u"prevConsumes: ");
             prevConsumes.Print(w);
             w->EOL();
 
-            w->Print(_u("thisConsumes: "));
+            w->Print(u"thisConsumes: ");
             thisConsumes.Print(w);
             w->EOL();
 
-            w->Print(_u("followConsumes: "));
+            w->Print(u"followConsumes: ");
             followConsumes.Print(w);
             w->EOL();
 
-            w->PrintEOL(_u("isThisIrrefutable: %s"), isThisIrrefutable ? _u("true") : _u("false"));
-            w->PrintEOL(_u("isFollowIrrefutable: %s"), isFollowIrrefutable ? _u("true") : _u("false"));
-            w->PrintEOL(_u("isWord: %s"), isWord ? _u("true") : _u("false"));
-            w->PrintEOL(_u("isThisWillNotProgress: %s"), isThisWillNotProgress ? _u("true") : _u("false"));
-            w->PrintEOL(_u("isThisWillNotRegress: %s"), isThisWillNotRegress ? _u("true") : _u("false"));
-            w->PrintEOL(_u("isPrevWillNotProgress: %s"), isPrevWillNotProgress ? _u("true") : _u("false"));
-            w->PrintEOL(_u("isPrevWillNotRegress: %s"), isPrevWillNotRegress ? _u("true") : _u("false"));
-            w->PrintEOL(_u("isDeterministic: %s"), isDeterministic ? _u("true") : _u("false"));
-            w->PrintEOL(_u("isNotInLoop: %s"), isNotInLoop ? _u("true") : _u("false"));
-            w->PrintEOL(_u("isNotNegated: %s"), isNotNegated ? _u("true") : _u("false"));
-            w->PrintEOL(_u("isAtLeastOnce: %s"), isAtLeastOnce ? _u("true") : _u("false"));
-            w->PrintEOL(_u("hasInitialHardFailBOI: %s"), hasInitialHardFailBOI ? _u("true") : _u("false"));
+            w->PrintEOL(u"isThisIrrefutable: %s", isThisIrrefutable ? u"true" : u"false");
+            w->PrintEOL(u"isFollowIrrefutable: %s", isFollowIrrefutable ? u"true" : u"false");
+            w->PrintEOL(u"isWord: %s", isWord ? u"true" : u"false");
+            w->PrintEOL(u"isThisWillNotProgress: %s", isThisWillNotProgress ? u"true" : u"false");
+            w->PrintEOL(u"isThisWillNotRegress: %s", isThisWillNotRegress ? u"true" : u"false");
+            w->PrintEOL(u"isPrevWillNotProgress: %s", isPrevWillNotProgress ? u"true" : u"false");
+            w->PrintEOL(u"isPrevWillNotRegress: %s", isPrevWillNotRegress ? u"true" : u"false");
+            w->PrintEOL(u"isDeterministic: %s", isDeterministic ? u"true" : u"false");
+            w->PrintEOL(u"isNotInLoop: %s", isNotInLoop ? u"true" : u"false");
+            w->PrintEOL(u"isNotNegated: %s", isNotNegated ? u"true" : u"false");
+            w->PrintEOL(u"isAtLeastOnce: %s", isAtLeastOnce ? u"true" : u"false");
+            w->PrintEOL(u"hasInitialHardFailBOI: %s", hasInitialHardFailBOI ? u"true" : u"false");
 
             w->Unindent();
-            w->PrintEOL(_u(">"));
+            w->PrintEOL(u">");
         }
     }
 #endif
@@ -614,15 +614,15 @@ namespace UnifiedRegex
         switch (tag)
         {
         case Empty:
-            w->Print(_u("Empty")); break;
+            w->Print(u"Empty"); break;
         case BOL:
-            w->Print(_u("BOL")); break;
+            w->Print(u"BOL"); break;
         case EOL:
-            w->Print(_u("EOL")); break;
+            w->Print(u"EOL"); break;
         default:
             Assert(false);
         }
-        w->PrintEOL(_u("()"));
+        w->PrintEOL(u"()");
         PrintAnnotations(w);
     }
 #endif
@@ -778,7 +778,7 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void WordBoundaryNode::Print(DebugWriter* w, const Char* litbuf) const
     {
-        w->PrintEOL(_u("WordBoundary(%s, %s, %s)"), isNegation ? _u("negative") : _u("positive"), mustIncludeEntering ? _u("entering") : _u("-"), mustIncludeLeaving ? _u("leaving") : _u("-"));
+        w->PrintEOL(u"WordBoundary(%s, %s, %s)", isNegation ? u"negative" : u"positive", mustIncludeEntering ? u"entering" : u"-", mustIncludeLeaving ? u"leaving" : u"-");
         PrintAnnotations(w);
     }
 #endif
@@ -1155,18 +1155,18 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void MatchLiteralNode::Print(DebugWriter* w, const Char* litbuf) const
     {
-        w->Print(_u("MatchLiteral("));
+        w->Print(u"MatchLiteral(");
         int skip = isEquivClass ? CaseInsensitive::EquivClassSize : 1;
         for (int i = 0; i < skip; i++)
         {
             if (i > 0)
-                w->Print(_u(", "));
+                w->Print(u", ");
             w->Print(_u("\""));
             for (CharCount j = 0; j < length; j++)
                 w->PrintEscapedChar(litbuf[offset + j * skip + i]);
             w->Print(_u("\""));
         }
-        w->PrintEOL(_u(")"));
+        w->PrintEOL(u")");
         PrintAnnotations(w);
     }
 #endif
@@ -1491,14 +1491,14 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void MatchCharNode::Print(DebugWriter* w, const Char* litbuf) const
     {
-        w->Print(_u("MatchChar("));
+        w->Print(u"MatchChar(");
         for (int i = 0; i < (isEquivClass ? CaseInsensitive::EquivClassSize : 1); i++)
         {
             if (i > 0)
-                w->Print(_u(", "));
+                w->Print(u", ");
             w->PrintQuotedChar(cs[i]);
         }
-        w->PrintEOL(_u(")"));
+        w->PrintEOL(u")");
         PrintAnnotations(w);
     }
 #endif
@@ -1769,9 +1769,9 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void MatchSetNode::Print(DebugWriter* w, const Char* litbuf) const
     {
-        w->Print(_u("MatchSet(%s, "), isNegation ? _u("negative") : _u("positive"));
+        w->Print(u"MatchSet(%s, ", isNegation ? u"negative" : u"positive");
         set.Print(w);
-        w->PrintEOL(_u(")"));
+        w->PrintEOL(u")");
         PrintAnnotations(w);
     }
 #endif
@@ -2096,14 +2096,14 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void ConcatNode::Print(DebugWriter* w, const Char* litbuf) const
     {
-        w->PrintEOL(_u("Concat()"));
+        w->PrintEOL(u"Concat()");
         PrintAnnotations(w);
-        w->PrintEOL(_u("{"));
+        w->PrintEOL(u"{");
         w->Indent();
         for (const ConcatNode *curr = this; curr != 0; curr = curr->tail)
             curr->head->Print(w, litbuf);
         w->Unindent();
-        w->PrintEOL(_u("}"));
+        w->PrintEOL(u"}");
     }
 #endif
 
@@ -3077,14 +3077,14 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void AltNode::Print(DebugWriter* w, const Char* litbuf) const
     {
-        w->PrintEOL(_u("Alt()"));
+        w->PrintEOL(u"Alt()");
         PrintAnnotations(w);
-        w->PrintEOL(_u("{"));
+        w->PrintEOL(u"{");
         w->Indent();
         for (const AltNode *curr = this; curr != 0; curr = curr->tail)
             curr->head->Print(w, litbuf);
         w->Unindent();
-        w->PrintEOL(_u("}"));
+        w->PrintEOL(u"}");
     }
 #endif
 
@@ -3360,13 +3360,13 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void DefineGroupNode::Print(DebugWriter* w, const Char* litbuf) const
     {
-        w->PrintEOL(_u("DefineGroup(%d)"), groupId);
+        w->PrintEOL(u"DefineGroup(%d)", groupId);
         PrintAnnotations(w);
-        w->PrintEOL(_u("{"));
+        w->PrintEOL(u"{");
         w->Indent();
         body->Print(w, litbuf);
         w->Unindent();
-        w->PrintEOL(_u("}"));
+        w->PrintEOL(u"}");
     }
 #endif
 
@@ -3504,7 +3504,7 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void MatchGroupNode::Print(DebugWriter* w, const Char* litbuf) const
     {
-        w->PrintEOL(_u("MatchGroup(%d)"), groupId);
+        w->PrintEOL(u"MatchGroup(%d)", groupId);
         PrintAnnotations(w);
     }
 #endif
@@ -4238,15 +4238,15 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void LoopNode::Print(DebugWriter* w, const Char* litbuf) const
     {
-        w->Print(_u("Loop("));
+        w->Print(u"Loop(");
         repeats.Print(w);
-        w->PrintEOL(_u(", %s)"), isGreedy ? _u("greedy") : _u("non-greedy"));
+        w->PrintEOL(u", %s)", isGreedy ? u"greedy" : u"non-greedy");
         PrintAnnotations(w);
-        w->PrintEOL(_u("{"));
+        w->PrintEOL(u"{");
         w->Indent();
         body->Print(w, litbuf);
         w->Unindent();
-        w->PrintEOL(_u("}"));
+        w->PrintEOL(u"}");
     }
 #endif
 
@@ -4487,13 +4487,13 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void AssertionNode::Print(DebugWriter* w, const Char* litbuf) const
     {
-        w->PrintEOL(_u("Assertion(%s)"), isNegation ? _u("negative") : _u("positive"));
+        w->PrintEOL(u"Assertion(%s)", isNegation ? u"negative" : u"positive");
         PrintAnnotations(w);
-        w->PrintEOL(_u("{"));
+        w->PrintEOL(u"{");
         w->Indent();
         body->Print(w, litbuf);
         w->Unindent();
-        w->PrintEOL(_u("}"));
+        w->PrintEOL(u"}");
     }
 #endif
 
@@ -4609,11 +4609,11 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
         if (w != 0 && REGEX_CONFIG_FLAG(RegexDebugAST))
         {
-            w->PrintEOL(_u("REGEX AST /%s/ {"), PointerValue(program->source));
+            w->PrintEOL(u"REGEX AST /%s/ {", PointerValue(program->source));
             w->Indent();
             root->Print(w, litbuf);
             w->Unindent();
-            w->PrintEOL(_u("}"));
+            w->PrintEOL(u"}");
             w->Flush();
         }
 #endif
@@ -4721,11 +4721,11 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
                     if (w != 0 && REGEX_CONFIG_FLAG(RegexDebugAST) && REGEX_CONFIG_FLAG(RegexDebugAnnotatedAST))
                     {
-                        w->PrintEOL(_u("REGEX ANNOTATED AST /%s/ {"), PointerValue(program->source));
+                        w->PrintEOL(u"REGEX ANNOTATED AST /%s/ {", PointerValue(program->source));
                         w->Indent();
                         root->Print(w, program->rep.insts.litbuf);
                         w->Unindent();
-                        w->PrintEOL(_u("}"));
+                        w->PrintEOL(u"}");
                         w->Flush();
                     }
 #endif
@@ -4794,7 +4794,7 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
         if (w != 0)
         {
-            w->PrintEOL(_u("REGEX PROGRAM /%s/"), PointerValue(program->source));
+            w->PrintEOL(u"REGEX PROGRAM /%s/", PointerValue(program->source));
             program->Print(w);
             w->Flush();
         }

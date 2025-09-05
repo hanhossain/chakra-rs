@@ -158,7 +158,7 @@ namespace Js
     public:
         void Dump(unsigned indent = 0) const override
         {
-            Output::Print(_u("%*sDeferredTypeHandler (0x%p): Dump unimplemented\n"), indent, _u(""), this);
+            Output::Print(u"%*sDeferredTypeHandler (0x%p): Dump unimplemented\n", indent, u"", this);
         }
 #endif
     };

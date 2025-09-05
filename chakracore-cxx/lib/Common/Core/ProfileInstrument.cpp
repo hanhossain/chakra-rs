@@ -314,7 +314,7 @@ namespace Js
 
                     Output::SkipToColumn(column);
 
-                    Output::Print(_u("%-*s %7.1f %5d %7.1f %5d %7.1f %7.1f %5d\n"),
+                    Output::Print(u"%-*s %7.1f %5d %7.1f %5d %7.1f %7.1f %5d\n",
                             (Profiler::PhaseNameWidth-column), PhaseNames[i],
                             (double)data->incl / freq ,                    // incl
                             int(data->incl * 100 / base->incl ),        // incl %
@@ -354,25 +354,25 @@ namespace Js
             if(!foundNode)
             {
                 foundNode = true;
-                Output::Print(_u("%-*s:%7s %5s %7s %5s %7s %7s %5s\n"),
+                Output::Print(u"%-*s:%7s %5s %7s %5s %7s %7s %5s\n",
                                 (Profiler::PhaseNameWidth-0),
-                                _u("Profiler Report"),
-                                _u("Incl"),
-                                _u("(%)"),
-                                _u("Excl"),
-                                _u("(%)"),
-                                _u("Max"),
-                                _u("Mean"),
-                                _u("Count")
+                                u"Profiler Report",
+                                u"Incl",
+                                u"(%)",
+                                u"Excl",
+                                u"(%)",
+                                u"Max",
+                                u"Mean",
+                                u"Count"
                                 );
-                Output::Print(_u("-------------------------------------------------------------------------------\n"));
+                Output::Print(u"-------------------------------------------------------------------------------\n");
             }
 
             UnitData *data      = baseNode->GetValue();
 
             if(0 == data->count)
             {
-                Output::Print(_u("The phase : %s was never started"), PhaseNames[baseTag]);
+                Output::Print(u"The phase : %s was never started", PhaseNames[baseTag]);
                 return;
             }
 
@@ -383,7 +383,7 @@ namespace Js
                 TypeNode *const parentNode = baseNode->GetParent();
                 Assert(parentNode);
 
-                Output::Print(_u("%-*s\n"), (Profiler::PhaseNameWidth-0), PhaseNames[parentTag]);
+                Output::Print(u"%-*s\n", (Profiler::PhaseNameWidth-0), PhaseNames[parentTag]);
                 indent += Profiler::TabWidth;
             }
 
@@ -391,7 +391,7 @@ namespace Js
             {
                 Output::SkipToColumn(indent);
             }
-            Output::Print(_u("%-*s %7.1f %5d %7.1f %5d %7.1f %7.1f %5d\n"),
+            Output::Print(u"%-*s %7.1f %5d %7.1f %5d %7.1f %7.1f %5d\n",
                     (Profiler::PhaseNameWidth-indent),
                     PhaseNames[baseTag],
                     (double)data->incl / freq ,                 // incl
@@ -409,7 +409,7 @@ namespace Js
 
         if(foundNode)
         {
-            Output::Print(_u("-------------------------------------------------------------------------------\n"));
+            Output::Print(u"-------------------------------------------------------------------------------\n");
             Output::Flush();
         }
     }

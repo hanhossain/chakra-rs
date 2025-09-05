@@ -552,7 +552,7 @@ namespace JsUtil
             this->parallelThreadData[i]->processor = this;
             // Make sure to create the thread suspended so the thread handle can be assigned before the thread starts running
             auto threadHandle = PlatformAgnostic::Thread::Create(0, &StaticThreadProc,
-                this->parallelThreadData[i], PlatformAgnostic::Thread::ThreadInitCreateSuspended, _u("Chakra Parallel Worker Thread"));
+                this->parallelThreadData[i], PlatformAgnostic::Thread::ThreadInitCreateSuspended, u"Chakra Parallel Worker Thread");
 
             if (threadHandle != PlatformAgnostic::Thread::InvalidHandle)
             {
@@ -600,7 +600,7 @@ namespace JsUtil
             }
             else
             {
-                this->parallelThreadData[i]->backgroundPageAllocator.debugName = _u("BackgroundJobProcessor thread");
+                this->parallelThreadData[i]->backgroundPageAllocator.debugName = u"BackgroundJobProcessor thread";
             }
 #endif
         }
@@ -623,7 +623,7 @@ namespace JsUtil
         this->parallelThreadData[0]->processor = this;
         this->parallelThreadData[0]->isWaitingForJobs = true;
 #if DBG_DUMP
-        this->parallelThreadData[0]->backgroundPageAllocator.debugName = _u("BackgroundJobProcessor");
+        this->parallelThreadData[0]->backgroundPageAllocator.debugName = u"BackgroundJobProcessor";
 #endif
         this->threadCount = 1;
 
@@ -1052,7 +1052,7 @@ namespace JsUtil
     {
         EDGE_ETW_INTERNAL(EventWriteJSCRIPT_NATIVECODEGEN_START(this, 0));
 
-        ArenaAllocator threadArena(_u("ThreadArena"), threadData->GetPageAllocator(), Js::Throw::OutOfMemory);
+        ArenaAllocator threadArena(u"ThreadArena", threadData->GetPageAllocator(), Js::Throw::OutOfMemory);
         threadData->threadArena = &threadArena;
 
         {
@@ -1328,7 +1328,7 @@ namespace JsUtil
 #if DBG && _M_IX86
         int callerEBP = *((int*)pEP->ContextRecord->Ebp);
 
-        Output::Print(_u("BackgroundJobProcessor: Uncaught exception: EIP: 0x%X  ExceptionCode: 0x%X  EBP: 0x%X  ReturnAddress: 0x%X  ReturnAddress2: 0x%X\n"),
+        Output::Print(u"BackgroundJobProcessor: Uncaught exception: EIP: 0x%X  ExceptionCode: 0x%X  EBP: 0x%X  ReturnAddress: 0x%X  ReturnAddress2: 0x%X\n",
             pEP->ExceptionRecord->ExceptionAddress, pEP->ExceptionRecord->ExceptionCode, pEP->ContextRecord->Eip,
             pEP->ContextRecord->Ebp, *((int*)pEP->ContextRecord->Ebp + 1), *((int*) callerEBP + 1));
 #endif
@@ -1434,22 +1434,22 @@ namespace JsUtil
 #if DBG_DUMP
     //Just for debugging purpose
     char16_t const * const  BackgroundJobProcessor::DebugThreadNames[16] = {
-        _u("BackgroundJobProcessor thread 1"),
-        _u("BackgroundJobProcessor thread 2"),
-        _u("BackgroundJobProcessor thread 3"),
-        _u("BackgroundJobProcessor thread 4"),
-        _u("BackgroundJobProcessor thread 5"),
-        _u("BackgroundJobProcessor thread 6"),
-        _u("BackgroundJobProcessor thread 7"),
-        _u("BackgroundJobProcessor thread 8"),
-        _u("BackgroundJobProcessor thread 9"),
-        _u("BackgroundJobProcessor thread 10"),
-        _u("BackgroundJobProcessor thread 11"),
-        _u("BackgroundJobProcessor thread 12"),
-        _u("BackgroundJobProcessor thread 13"),
-        _u("BackgroundJobProcessor thread 14"),
-        _u("BackgroundJobProcessor thread 15"),
-        _u("BackgroundJobProcessor thread 16") };
+        u"BackgroundJobProcessor thread 1",
+        u"BackgroundJobProcessor thread 2",
+        u"BackgroundJobProcessor thread 3",
+        u"BackgroundJobProcessor thread 4",
+        u"BackgroundJobProcessor thread 5",
+        u"BackgroundJobProcessor thread 6",
+        u"BackgroundJobProcessor thread 7",
+        u"BackgroundJobProcessor thread 8",
+        u"BackgroundJobProcessor thread 9",
+        u"BackgroundJobProcessor thread 10",
+        u"BackgroundJobProcessor thread 11",
+        u"BackgroundJobProcessor thread 12",
+        u"BackgroundJobProcessor thread 13",
+        u"BackgroundJobProcessor thread 14",
+        u"BackgroundJobProcessor thread 15",
+        u"BackgroundJobProcessor thread 16" };
 #endif
 #endif // ENABLE_BACKGROUND_JOB_PROCESSOR
 }

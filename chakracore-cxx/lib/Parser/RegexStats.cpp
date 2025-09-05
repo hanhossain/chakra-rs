@@ -8,8 +8,8 @@
 
 namespace UnifiedRegex
 {
-    const char16_t* RegexStats::PhaseNames[RegexStats::NumPhases] = { _u("parse"), _u("compile"), _u("execute") };
-    const char16_t* RegexStats::UseNames[RegexStats::NumUses] = { _u("match"), _u("exec"), _u("test"), _u("replace"), _u("split"), _u("search") };
+    const char16_t* RegexStats::PhaseNames[RegexStats::NumPhases] = { u"parse", u"compile", u"execute" };
+    const char16_t* RegexStats::UseNames[RegexStats::NumUses] = { u"match", u"exec", u"test", u"replace", u"split", u"search" };
 
     RegexStats::RegexStats(RegexPattern* pattern)
         : pattern(pattern)
@@ -29,7 +29,7 @@ namespace UnifiedRegex
     void RegexStats::Print(DebugWriter* w, RegexStats* totals, Ticks ticksPerMillisecond)
     {
         if (pattern == 0)
-            w->PrintEOL(_u("TOTAL"));
+            w->PrintEOL(u"TOTAL");
         else
             pattern->Print(w);
         w->EOL();
@@ -39,11 +39,11 @@ namespace UnifiedRegex
         {
             double ms = (double)phaseTicks[i] / (double)ticksPerMillisecond;
             if (totals == 0 || totals->phaseTicks[i] == 0)
-                w->PrintEOL(_u("%-12s: %10.4fms"), PhaseNames[i], ms);
+                w->PrintEOL(u"%-12s: %10.4fms", PhaseNames[i], ms);
             else
             {
                 double pc = (double)phaseTicks[i] * 100.0  / (double)totals->phaseTicks[i];
-                w->PrintEOL(_u("%-12s: %10.4fms (%10.4f%%)"), PhaseNames[i], ms, pc);
+                w->PrintEOL(u"%-12s: %10.4fms (%10.4f%%)", PhaseNames[i], ms, pc);
             }
         }
 
@@ -52,11 +52,11 @@ namespace UnifiedRegex
             if (useCounts[i] > 0)
             {
                 if (totals == 0 || totals->useCounts[i] == 0)
-                    w->PrintEOL(_u("#%-11s: %10I64u"), UseNames[i], useCounts[i]);
+                    w->PrintEOL(u"#%-11s: %10I64u", UseNames[i], useCounts[i]);
                 else
                 {
                     double pc = (double)useCounts[i] * 100.0 / (double)totals->useCounts[i];
-                    w->PrintEOL(_u("#%-11s: %10I64u   (%10.4f%%)"), UseNames[i], useCounts[i], pc);
+                    w->PrintEOL(u"#%-11s: %10I64u   (%10.4f%%)", UseNames[i], useCounts[i], pc);
                 }
             }
         }
@@ -65,52 +65,52 @@ namespace UnifiedRegex
         {
             double r = (double)numCompares * 100.0 / (double)inputLength;
             if (totals == 0 || totals->numCompares == 0)
-                w->PrintEOL(_u("numCompares : %10.4f%%"), r);
+                w->PrintEOL(u"numCompares : %10.4f%%", r);
             else
             {
                 double pc = (double)numCompares * 100.0 / (double)totals->numCompares;
-                w->PrintEOL(_u("numCompares : %10.4f%%  (%10.4f%%)"), r, pc);
+                w->PrintEOL(u"numCompares : %10.4f%%  (%10.4f%%)", r, pc);
             }
         }
 
         if (totals == 0 || totals->inputLength == 0)
-            w->PrintEOL(_u("inputLength : %10I64u"), inputLength);
+            w->PrintEOL(u"inputLength : %10I64u", inputLength);
         else
         {
             double pc = (double)inputLength * 100.0 / (double)totals->inputLength;
-            w->PrintEOL(_u("inputLength : %10I64u   (%10.4f%%)"), inputLength, pc);
+            w->PrintEOL(u"inputLength : %10I64u   (%10.4f%%)", inputLength, pc);
         }
 
         if (totals == 0 || totals->numPushes == 0)
-            w->PrintEOL(_u("numPushes   : %10I64u"), numPushes);
+            w->PrintEOL(u"numPushes   : %10I64u", numPushes);
         else
         {
             double pc = (double)numPushes * 100.0 / (double)totals->numPushes;
-            w->PrintEOL(_u("numPushes   : %10I64u   (%10.4f%%)"), numPushes, pc);
+            w->PrintEOL(u"numPushes   : %10I64u   (%10.4f%%)", numPushes, pc);
         }
 
         if (totals == 0 || totals->numPops == 0)
-            w->PrintEOL(_u("numPops     : %10I64u"), numPops);
+            w->PrintEOL(u"numPops     : %10I64u", numPops);
         else
         {
             double pc = (double)numPops * 100.0 / (double)totals->numPops;
-            w->PrintEOL(_u("numPops     : %10I64u   (%10.4f%%)"), numPops, pc);
+            w->PrintEOL(u"numPops     : %10I64u   (%10.4f%%)", numPops, pc);
         }
 
         if (totals == 0 || totals->stackHWM == 0)
-            w->PrintEOL(_u("stackHWM    : %10I64u"), stackHWM);
+            w->PrintEOL(u"stackHWM    : %10I64u", stackHWM);
         else
         {
             double pc = (double)stackHWM * 100.0 / (double)totals->stackHWM;
-            w->PrintEOL(_u("stackHWM    : %10I64u   (%10.4f%%)"), stackHWM, pc);
+            w->PrintEOL(u"stackHWM    : %10I64u   (%10.4f%%)", stackHWM, pc);
         }
 
         if (totals == 0 || totals->numInsts == 0)
-            w->PrintEOL(_u("numInsts    : %10I64u"), numInsts);
+            w->PrintEOL(u"numInsts    : %10I64u", numInsts);
         else
         {
             double pc = (double)numInsts * 100.0 / (double)totals->numInsts;
-            w->PrintEOL(_u("numInsts    : %10I64u   (%10.4f%%)"), numInsts, pc);
+            w->PrintEOL(u"numInsts    : %10I64u   (%10.4f%%)", numInsts, pc);
         }
 
         w->Unindent();
@@ -190,8 +190,8 @@ namespace UnifiedRegex
     {
         RegexStats totals(0);
 
-        Output::Print(_u("Regular Expression Statistics\n"));
-        Output::Print(_u("=============================\n"));
+        Output::Print(u"Regular Expression Statistics\n");
+        Output::Print(u"=============================\n");
 
         for (int i = 0; i < map->Count(); i++)
             totals.Add(map->GetValueAt(i));

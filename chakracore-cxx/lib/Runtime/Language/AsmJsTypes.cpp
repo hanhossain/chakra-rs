@@ -35,34 +35,34 @@ namespace Js
     {
         switch (which_)
         {
-        case Double:      return _u("double");
-        case MaybeDouble: return _u("double?");
-        case DoubleLit:   return _u("doublelit");
-        case Float:       return _u("float");
-        case Floatish:    return _u("floatish");
-        case FloatishDoubleLit: return _u("FloatishDoubleLit");
-        case MaybeFloat:  return _u("float?");
-        case Fixnum:      return _u("fixnum");
-        case Int:         return _u("int");
-        case Signed:      return _u("signed");
-        case Unsigned:    return _u("unsigned");
-        case Intish:      return _u("intish");
-        case Void:        return _u("void");
-        case Int32x4:     return _u("SIMD.Int32x4");
-        case Int64x2:     return _u("SIMD.Int64x2");
-        case Bool32x4:    return _u("SIMD.Bool32x4");
-        case Bool16x8:    return _u("SIMD.Bool16x8");
-        case Bool8x16:    return _u("SIMD.Bool8x16");
-        case Float32x4:   return _u("SIMD.Float32x4");
-        case Float64x2:   return _u("SIMD.Float64x2");
-        case Int16x8:     return _u("SIMD.Int16x8");
-        case Int8x16:     return _u("SIMD.Int8x16");
-        case Uint32x4:    return _u("SIMD.Uint32x4");
-        case Uint16x8:    return _u("SIMD.Uint16x8");
-        case Uint8x16:    return _u("SIMD.Uint8x16");
+        case Double:      return u"double";
+        case MaybeDouble: return u"double?";
+        case DoubleLit:   return u"doublelit";
+        case Float:       return u"float";
+        case Floatish:    return u"floatish";
+        case FloatishDoubleLit: return u"FloatishDoubleLit";
+        case MaybeFloat:  return u"float?";
+        case Fixnum:      return u"fixnum";
+        case Int:         return u"int";
+        case Signed:      return u"signed";
+        case Unsigned:    return u"unsigned";
+        case Intish:      return u"intish";
+        case Void:        return u"void";
+        case Int32x4:     return u"SIMD.Int32x4";
+        case Int64x2:     return u"SIMD.Int64x2";
+        case Bool32x4:    return u"SIMD.Bool32x4";
+        case Bool16x8:    return u"SIMD.Bool16x8";
+        case Bool8x16:    return u"SIMD.Bool8x16";
+        case Float32x4:   return u"SIMD.Float32x4";
+        case Float64x2:   return u"SIMD.Float64x2";
+        case Int16x8:     return u"SIMD.Int16x8";
+        case Int8x16:     return u"SIMD.Int8x16";
+        case Uint32x4:    return u"SIMD.Uint32x4";
+        case Uint16x8:    return u"SIMD.Uint16x8";
+        case Uint8x16:    return u"SIMD.Uint8x16";
         }
         Assert(false);
-        return _u("none");
+        return u"none";
     }
 
     bool AsmJsType::isSIMDType() const
@@ -741,7 +741,7 @@ namespace Js
         {
             if (PHASE_TRACE1(AsmjsPhase))
             {
-                Output::Print(_u("Variable redefinition: %s\n"), name->Psz());
+                Output::Print(u"Variable redefinition: %s\n", name->Psz());
             }
             return nullptr;
         }

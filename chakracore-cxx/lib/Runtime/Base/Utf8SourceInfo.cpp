@@ -48,8 +48,8 @@ namespace Js
 #ifdef ENABLE_SCRIPT_DEBUGGING
         if (!sourceHolder->IsDeferrable())
         {
-            this->debugModeSource = this->sourceHolder->GetSource(_u("Entering Debug Mode"));
-            this->debugModeSourceLength = this->sourceHolder->GetByteLength(_u("Entering Debug Mode"));
+            this->debugModeSource = this->sourceHolder->GetSource(u"Entering Debug Mode");
+            this->debugModeSourceLength = this->sourceHolder->GetByteLength(u"Entering Debug Mode");
             this->debugModeSourceIsEmpty = !this->HasSource() || this->debugModeSource == nullptr;
         }
 #endif
@@ -67,7 +67,7 @@ namespace Js
         else
 #endif
         {
-            return sourceHolder->GetSource(reason == nullptr ? _u("Utf8SourceInfo::GetSource") : reason);
+            return sourceHolder->GetSource(reason == nullptr ? u"Utf8SourceInfo::GetSource" : reason);
         }
     }
 
@@ -83,7 +83,7 @@ namespace Js
         else
 #endif
         {
-            return sourceHolder->GetByteLength(reason == nullptr ? _u("Utf8SourceInfo::GetSource") : reason);
+            return sourceHolder->GetByteLength(reason == nullptr ? u"Utf8SourceInfo::GetSource" : reason);
         }
     }
 
@@ -206,8 +206,8 @@ namespace Js
 #ifdef ENABLE_SCRIPT_DEBUGGING
         if (!isLibraryCode && scriptContext->IsScriptContextInDebugMode())
         {
-            toReturn->debugModeSource = sourceHolder->GetSource(_u("Debug Mode Loading"));
-            toReturn->debugModeSourceLength = sourceHolder->GetByteLength(_u("Debug Mode Loading"));
+            toReturn->debugModeSource = sourceHolder->GetSource(u"Debug Mode Loading");
+            toReturn->debugModeSourceLength = sourceHolder->GetByteLength(u"Debug Mode Loading");
             toReturn->debugModeSourceIsEmpty = toReturn->debugModeSource == nullptr || sourceHolder->IsEmpty();
         }
 #endif
@@ -254,8 +254,8 @@ namespace Js
     {
         if (this->m_lineOffsetCache == nullptr)
         {
-            LPCUTF8 sourceStart = this->GetSource(_u("Utf8SourceInfo::AllocateLineOffsetCache"));
-            LPCUTF8 sourceEnd = sourceStart + this->GetCbLength(_u("Utf8SourceInfo::AllocateLineOffsetCache"));
+            LPCUTF8 sourceStart = this->GetSource(u"Utf8SourceInfo::AllocateLineOffsetCache");
+            LPCUTF8 sourceEnd = sourceStart + this->GetCbLength(u"Utf8SourceInfo::AllocateLineOffsetCache");
 
             LPCUTF8 sourceAfterBOM = sourceStart;
             charcount_t startChar = FunctionBody::SkipByteOrderMark(sourceAfterBOM /* byref */);
@@ -293,8 +293,8 @@ namespace Js
         int line = 0;
         if (this->m_lineOffsetCache == nullptr)
         {
-            LPCUTF8 sourceStart = this->GetSource(_u("Utf8SourceInfo::AllocateLineOffsetCache"));
-            LPCUTF8 sourceEnd = sourceStart + this->GetCbLength(_u("Utf8SourceInfo::AllocateLineOffsetCache"));
+            LPCUTF8 sourceStart = this->GetSource(u"Utf8SourceInfo::AllocateLineOffsetCache");
+            LPCUTF8 sourceEnd = sourceStart + this->GetCbLength(u"Utf8SourceInfo::AllocateLineOffsetCache");
 
             LPCUTF8 sourceAfterBOM = sourceStart;
             lineCharOffset = FunctionBody::SkipByteOrderMark(sourceAfterBOM /* byref */);

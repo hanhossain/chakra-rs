@@ -30,7 +30,7 @@ namespace Wasm
 template<typename WriteFn>
 void WasmBytecodeGenerator::WriteTypeStack(WriteFn writefn) const
 {
-    writefn(_u("["));
+    writefn(u"[");
     int i = 0;
     while (m_evalStack.Peek(i).type != WasmTypes::Limit)
     {
@@ -43,12 +43,12 @@ void WasmBytecodeGenerator::WriteTypeStack(WriteFn writefn) const
         EmitInfo info = m_evalStack.Peek(i--);
         if (!isFirst)
         {
-            writefn(_u(", "));
+            writefn(u", ");
         }
         isFirst = false;
         writefn(GetTypeName(info.type));
     }
-    writefn(_u("]"));
+    writefn(u"]");
 }
 
 uint32 WasmBytecodeGenerator::WriteTypeStackToString(_Out_writes_(maxlen) char16_t* out, uint32 maxlen) const
@@ -67,7 +67,7 @@ uint32 WasmBytecodeGenerator::WriteTypeStackToString(_Out_writes_(maxlen) char16
             *(out + maxlen - i) = 0;
         }
         numwritten -= 5;
-        numwritten += _snwprintf_s(out + numwritten, maxlen - numwritten, _TRUNCATE, _u("...]"));
+        numwritten += _snwprintf_s(out + numwritten, maxlen - numwritten, _TRUNCATE, u"...]");
     }
     return numwritten;
 }
@@ -80,7 +80,7 @@ void WasmBytecodeGenerator::PrintTypeStack() const
 
 void WasmBytecodeGenerator::PrintOpBegin(WasmOp op)
 {
-    if (lastOpId == opId) Output::Print(_u("\r\n"));
+    if (lastOpId == opId) Output::Print(u"\r\n");
     lastOpId = ++opId;
     const int depth = m_blockInfos.Count() - 1;
     if (depth > 0)
@@ -91,13 +91,13 @@ void WasmBytecodeGenerator::PrintOpBegin(WasmOp op)
     {
         if (sigId < m_module->GetSignatureCount())
         {
-            Output::Print(_u(" "));
+            Output::Print(u" ");
             WasmSignature* sig = m_module->GetSignature(sigId);
             sig->Dump(64);
         }
         else
         {
-            Output::Print(_u(" invalid signature id %u"), sigId);
+            Output::Print(u" invalid signature id %u", sigId);
         }
     };
 
@@ -116,7 +116,7 @@ case wb##opname: \
     case wbBlock: 
         if (GetReader()->m_currentNode.block.IsSingleResult())
         {
-            Output::Print(_u(" () -> %s"), GetTypeName(GetReader()->m_currentNode.block.GetSingleResult()));
+            Output::Print(u" () -> %s", GetTypeName(GetReader()->m_currentNode.block.GetSingleResult()));
         }
         else
         {
@@ -124,8 +124,8 @@ case wb##opname: \
         }
         break;
     case wbBr:
-    case wbBrIf: Output::Print(_u(" depth: %u"), GetReader()->m_currentNode.br.depth); break;
-    case wbBrTable: Output::Print(_u(" %u cases, default: %u"), GetReader()->m_currentNode.brTable.numTargets, GetReader()->m_currentNode.brTable.defaultTarget); break;
+    case wbBrIf: Output::Print(u" depth: %u", GetReader()->m_currentNode.br.depth); break;
+    case wbBrTable: Output::Print(u" %u cases, default: %u", GetReader()->m_currentNode.brTable.numTargets, GetReader()->m_currentNode.brTable.defaultTarget); break;
     case wbCallIndirect: PrintSignature(GetReader()->m_currentNode.call.num); break;
     case wbCall:
     {
@@ -135,18 +135,18 @@ case wb##opname: \
             FunctionIndexTypes::Type funcType = GetReader()->m_currentNode.call.funcType;
             switch (funcType)
             {
-            case Wasm::FunctionIndexTypes::Invalid: Output::Print(_u(" (invalid) ")); break;
-            case Wasm::FunctionIndexTypes::ImportThunk: Output::Print(_u(" (thunk) ")); break;
-            case Wasm::FunctionIndexTypes::Function: Output::Print(_u(" (func) ")); break;
-            case Wasm::FunctionIndexTypes::Import: Output::Print(_u(" (import) ")); break;
-            default:  Output::Print(_u(" (unknown)")); break;
+            case Wasm::FunctionIndexTypes::Invalid: Output::Print(u" (invalid) "); break;
+            case Wasm::FunctionIndexTypes::ImportThunk: Output::Print(u" (thunk) "); break;
+            case Wasm::FunctionIndexTypes::Function: Output::Print(u" (func) "); break;
+            case Wasm::FunctionIndexTypes::Import: Output::Print(u" (import) "); break;
+            default:  Output::Print(u" (unknown)"); break;
             }
             auto func = this->m_module->GetWasmFunctionInfo(id);
             func->GetBody()->DumpFullFunctionName();
         }
         else
         {
-            Output::Print(_u(" invalid id %u"), id);
+            Output::Print(u" invalid id %u", id);
         }
         break;
     }
@@ -154,11 +154,11 @@ case wb##opname: \
     case wbGetLocal:
     case wbTeeLocal:
     case wbGetGlobal:
-    case wbSetGlobal: Output::Print(_u(" (%d)"), GetReader()->m_currentNode.var.num); break;
-    case wbI32Const: Output::Print(_u(" (%d, 0x%x)"), GetReader()->m_currentNode.cnst.i32, GetReader()->m_currentNode.cnst.i32); break;
-    case wbI64Const: Output::Print(_u(" (%lld, 0x%llx)"), GetReader()->m_currentNode.cnst.i64, GetReader()->m_currentNode.cnst.i64); break;
-    case wbF32Const: Output::Print(_u(" (%.4f)"), GetReader()->m_currentNode.cnst.f32); break;
-    case wbF64Const: Output::Print(_u(" (%.4f)"), GetReader()->m_currentNode.cnst.f64); break;
+    case wbSetGlobal: Output::Print(u" (%d)", GetReader()->m_currentNode.var.num); break;
+    case wbI32Const: Output::Print(u" (%d, 0x%x)", GetReader()->m_currentNode.cnst.i32, GetReader()->m_currentNode.cnst.i32); break;
+    case wbI64Const: Output::Print(u" (%lld, 0x%llx)", GetReader()->m_currentNode.cnst.i64, GetReader()->m_currentNode.cnst.i64); break;
+    case wbF32Const: Output::Print(u" (%.4f)", GetReader()->m_currentNode.cnst.f32); break;
+    case wbF64Const: Output::Print(u" (%.4f)", GetReader()->m_currentNode.cnst.f64); break;
 #define WASM_MEM_OPCODE(opname, ...) case wb##opname: // FallThrough
 #include "WasmBinaryOpCodes.h"
     {
@@ -167,13 +167,13 @@ case wb##opname: \
         switch (((!!alignment) << 1) | (!!offset))
         {
         case 0: // no alignment, no offset
-            Output::Print(_u(" [i]")); break;
+            Output::Print(u" [i]"); break;
         case 1: // no alignment, offset
-            Output::Print(_u(" [i + %u (0x%x)]"), offset, offset); break;
+            Output::Print(u" [i + %u (0x%x)]", offset, offset); break;
         case 2: // alignment, no offset
-            Output::Print(_u(" [i & ~0x%x]"), (1 << alignment) - 1); break;
+            Output::Print(u" [i & ~0x%x]", (1 << alignment) - 1); break;
         case 3: // alignment, offset
-            Output::Print(_u(" [i + %u (0x%x) & ~0x%x]"), offset, offset, (1 << alignment) - 1); break;
+            Output::Print(u" [i + %u (0x%x) & ~0x%x]", offset, offset, (1 << alignment) - 1); break;
         }
         break;
     }
@@ -187,9 +187,9 @@ void WasmBytecodeGenerator::PrintOpEnd()
     if (lastOpId == opId)
     {
         ++opId;
-        Output::Print(_u(" -> "));
+        Output::Print(u" -> ");
         PrintTypeStack();
-        Output::Print(_u("\r\n"));
+        Output::Print(u"\r\n");
     }
 }
 #endif
@@ -211,7 +211,7 @@ Js::AsmJsRetType WasmToAsmJs::GetAsmJsReturnType(WasmTypes::WasmType wasmType)
 #endif
     default:
         WasmTypes::CompileAssertCasesNoFailFast<WasmTypes::I32, WasmTypes::I64, WasmTypes::F32, WasmTypes::F64, WASM_V128_CHECK_TYPE>();
-        throw WasmCompilationException(_u("Unknown return type %u"), wasmType);
+        throw WasmCompilationException(u"Unknown return type %u", wasmType);
     }
 }
 
@@ -232,7 +232,7 @@ Js::AsmJsVarType WasmToAsmJs::GetAsmJsVarType(WasmTypes::WasmType wasmType)
 #endif
     default:
         WasmTypes::CompileAssertCasesNoFailFast<WasmTypes::I32, WasmTypes::I64, WasmTypes::F32, WasmTypes::F64, WASM_V128_CHECK_TYPE>();
-        throw WasmCompilationException(_u("Unknown var type %u"), wasmType);
+        throw WasmCompilationException(u"Unknown var type %u", wasmType);
     }
 }
 
@@ -266,7 +266,7 @@ Js::WebAssemblyModule* WasmModuleGenerator::GenerateModule()
         SectionCode sectionCode = sectionHeader.code;
         if (sectionCode == bSectLimit)
         {
-            TRACE_WASM(PHASE_TRACE1(Js::WasmSectionPhase), _u("Done reading module's sections"));
+            TRACE_WASM(PHASE_TRACE1(Js::WasmSectionPhase), u"Done reading module's sections");
             break;
         }
 
@@ -274,7 +274,7 @@ Js::WebAssemblyModule* WasmModuleGenerator::GenerateModule()
         SectionCode precedent = SectionInfo::All[sectionCode].precedent;
         if (precedent != bSectLimit && !visitedSections.Test(precedent))
         {
-            throw WasmCompilationException(_u("%s section missing before %s"),
+            throw WasmCompilationException(u"%s section missing before %s",
                 SectionInfo::All[precedent].name,
                 sectionHeader.name);
         }
@@ -285,14 +285,14 @@ Js::WebAssemblyModule* WasmModuleGenerator::GenerateModule()
         {
             if (sectionCode < nextExpectedSection)
             {
-                throw WasmCompilationException(_u("Invalid Section %s"), sectionHeader.name);
+                throw WasmCompilationException(u"Invalid Section %s", sectionHeader.name);
             }
             nextExpectedSection = SectionCode(sectionCode + 1);
         }
 
         if (!GetReader()->ProcessCurrentSection())
         {
-            throw WasmCompilationException(_u("Error while reading section %s"), sectionHeader.name);
+            throw WasmCompilationException(u"Error while reading section %s", sectionHeader.name);
         }
     }
 
@@ -332,15 +332,15 @@ Js::WebAssemblyModule* WasmModuleGenerator::GenerateModule()
     {
         int sourceId = (int)firstThunk->GetBody()->GetSourceContextId();
         char16_t range[64];
-        swprintf_s(range, 64, _u("%d.%d-%d.%d"),
+        swprintf_s(range, 64, u"%d.%d-%d.%d",
                    sourceId, firstThunk->GetBody()->GetLocalFunctionId(),
                    sourceId, lastThunk->GetBody()->GetLocalFunctionId());
         char16_t offFullJit[128];
-        swprintf_s(offFullJit, 128, _u("-off:fulljit:%s"), range);
+        swprintf_s(offFullJit, 128, u"-off:fulljit:%s", range);
         char16_t offSimpleJit[128];
-        swprintf_s(offSimpleJit, 128, _u("-off:simplejit:%s"), range);
+        swprintf_s(offSimpleJit, 128, u"-off:simplejit:%s", range);
         char16_t offLoopJit[128];
-        swprintf_s(offLoopJit, 128, _u("-off:jitloopbody:%s"), range);
+        swprintf_s(offLoopJit, 128, u"-off:jitloopbody:%s", range);
         char16_t* argv[] = { nullptr, offFullJit, offSimpleJit, offLoopJit };
         CmdLineArgsParser parser(nullptr);
         parser.Parse(ARRAYSIZE(argv), argv);
@@ -350,7 +350,7 @@ Js::WebAssemblyModule* WasmModuleGenerator::GenerateModule()
     // If we see a FunctionSignatures section we need to see a FunctionBodies section
     if (visitedSections.Test(bSectFunction) && !visitedSections.Test(bSectFunctionBodies))
     {
-        throw WasmCompilationException(_u("Missing required section: %s"), SectionInfo::All[bSectFunctionBodies].name);
+        throw WasmCompilationException(u"Missing required section: %s", SectionInfo::All[bSectFunctionBodies].name);
     }
 
     return m_module;
@@ -366,7 +366,7 @@ void WasmModuleGenerator::GenerateFunctionHeader(uint32 index)
     WasmFunctionInfo* wasmInfo = m_module->GetWasmFunctionInfo(index);
     if (!wasmInfo)
     {
-        throw WasmCompilationException(_u("Invalid function index %u"), index);
+        throw WasmCompilationException(u"Invalid function index %u", index);
     }
 
     const char16_t* functionName = nullptr;
@@ -390,7 +390,7 @@ void WasmModuleGenerator::GenerateFunctionHeader(uint32 index)
             {
                 nameLength = wasmExport->nameLength + 16;
                 char16_t * autoName = RecyclerNewArrayLeafZ(m_recycler, char16_t, nameLength);
-                nameLength = swprintf_s(autoName, nameLength, _u("%s[%u]"), wasmExport->name, wasmInfo->GetNumber());
+                nameLength = swprintf_s(autoName, nameLength, u"%s[%u]", wasmExport->name, wasmInfo->GetNumber());
                 functionName = autoName;
                 break;
             }
@@ -400,7 +400,7 @@ void WasmModuleGenerator::GenerateFunctionHeader(uint32 index)
     if (!functionName)
     {
         char16_t* autoName = RecyclerNewArrayLeafZ(m_recycler, char16_t, 32);
-        nameLength = swprintf_s(autoName, 32, _u("wasm-function[%u]"), wasmInfo->GetNumber());
+        nameLength = swprintf_s(autoName, 32, u"wasm-function[%u]", wasmInfo->GetNumber());
         functionName = autoName;
     }
 
@@ -471,7 +471,7 @@ void WasmModuleGenerator::GenerateFunctionHeader(uint32 index)
     }
     else
     {
-        throw WasmCompilationException(_u("Multi return values not supported"));
+        throw WasmCompilationException(u"Multi return values not supported");
     }
 }
 
@@ -493,7 +493,7 @@ void WasmBytecodeGenerator::ValidateFunction(Js::ScriptContext* scriptContext, W
 
 WasmBytecodeGenerator::WasmBytecodeGenerator(Js::ScriptContext* scriptContext, WasmReaderInfo* readerInfo, bool validateOnly) :
     m_scriptContext(scriptContext),
-    m_alloc(_u("WasmBytecodeGen"), scriptContext->GetThreadContext()->GetPageAllocator(), Js::Throw::OutOfMemory),
+    m_alloc(u"WasmBytecodeGen", scriptContext->GetThreadContext()->GetPageAllocator(), Js::Throw::OutOfMemory),
     m_evalStack(&m_alloc),
     mTypedRegisterAllocator(&m_alloc, AllocateRegisterSpace, Simd::IsEnabled() ? 0 : 1 << WAsmJs::SIMD),
     m_blockInfos(&m_alloc),
@@ -517,14 +517,14 @@ void WasmBytecodeGenerator::GenerateFunction()
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     if (DO_WASM_TRACE_BYTECODE)
     {
-        Output::Print(_u("Generate WebAssembly Bytecode: "));
+        Output::Print(u"Generate WebAssembly Bytecode: ");
         GetFunctionBody()->DumpFullFunctionName();
-        Output::Print(_u("\n"));
+        Output::Print(u"\n");
     }
 #endif
     if (PHASE_OFF(Js::WasmBytecodePhase, GetFunctionBody()))
     {
-        throw WasmCompilationException(_u("Compilation skipped"));
+        throw WasmCompilationException(u"Compilation skipped");
     }
     Js::AutoProfilingPhase functionProfiler(m_scriptContext, Js::WasmBytecodePhase);
     Unused(functionProfiler);
@@ -540,7 +540,7 @@ void WasmBytecodeGenerator::GenerateFunction()
         {
             if (gen)
             {
-                TRACE_WASM(PHASE_TRACE(Js::WasmBytecodePhase, gen->GetFunctionBody()), _u("\nHad Compilation error!"));
+                TRACE_WASM(PHASE_TRACE(Js::WasmBytecodePhase, gen->GetFunctionBody()), u"\nHad Compilation error!");
                 gen->GetReader()->FunctionEnd();
                 gen->m_originalWriter->Reset();
             }
@@ -579,7 +579,7 @@ void WasmBytecodeGenerator::GenerateFunction()
 
     if (!GetReader()->IsCurrentFunctionCompleted())
     {
-        throw WasmCompilationException(_u("Invalid function format"));
+        throw WasmCompilationException(u"Invalid function format");
     }
 
     autoCleanupGeneratorState.Complete();
@@ -658,7 +658,7 @@ void WasmBytecodeGenerator::EmitExpr(WasmOp op)
     {
 #define WASM_OPCODE(opname, opcode, sig, imp, wat) \
     case opcode: \
-        if (!imp) throw WasmCompilationException(_u("Operator %s is Not Yet Implemented"), _u(wat)); break;
+        if (!imp) throw WasmCompilationException(u"Operator %s is Not Yet Implemented", _u(wat)); break;
 #include "WasmBinaryOpCodes.h"
     default:
         break;
@@ -720,9 +720,9 @@ void WasmBytecodeGenerator::EmitExpr(WasmOp op)
         info = EmitIfElseExpr();
         break;
     case wbElse:
-        throw WasmCompilationException(_u("Unexpected else opcode"));
+        throw WasmCompilationException(u"Unexpected else opcode");
     case wbEnd:
-        throw WasmCompilationException(_u("Unexpected end opcode"));
+        throw WasmCompilationException(u"Unexpected end opcode");
     case wbBr:
         EmitBr();
         info = EmitInfo(WasmTypes::Any);
@@ -826,7 +826,7 @@ void WasmBytecodeGenerator::EmitExpr(WasmOp op)
         break;
 #include "WasmBinaryOpCodes.h"
     default:
-        throw WasmCompilationException(_u("Unknown expression's op 0x%X"), op);
+        throw WasmCompilationException(u"Unknown expression's op 0x%X", op);
     }
 
     PushEvalStack(info);
@@ -894,7 +894,7 @@ EmitInfo WasmBytecodeGenerator::EmitGetLocal()
     uint32 localIndex = GetReader()->m_currentNode.var.num;
     if (m_funcInfo->GetLocalCount() <= localIndex)
     {
-        throw WasmCompilationException(_u("%u is not a valid local"), localIndex);
+        throw WasmCompilationException(u"%u is not a valid local", localIndex);
     }
 
     WasmLocal local = m_locals[localIndex];
@@ -914,7 +914,7 @@ EmitInfo WasmBytecodeGenerator::EmitSetLocal(bool tee)
     uint32 localNum = GetReader()->m_currentNode.var.num;
     if (localNum >= m_funcInfo->GetLocalCount())
     {
-        throw WasmCompilationException(_u("%u is not a valid local"), localNum);
+        throw WasmCompilationException(u"%u is not a valid local", localNum);
     }
 
     WasmLocal local = m_locals[localNum];
@@ -973,7 +973,7 @@ void WasmBytecodeGenerator::EmitLoadConst(EmitInfo dst, WasmConstLitNode cnst)
 #endif
     default:
         WasmTypes::CompileAssertCasesNoFailFast<WasmTypes::I32, WasmTypes::I64, WasmTypes::F32, WasmTypes::F64, WASM_V128_CHECK_TYPE>();
-        throw WasmCompilationException(_u("Unknown type %u"), dst.type);
+        throw WasmCompilationException(u"Unknown type %u", dst.type);
     }
 }
 
@@ -987,7 +987,7 @@ void WasmBytecodeGenerator::EnsureStackAvailable()
 {
     if (!ThreadContext::IsCurrentStackAvailable(Js::Constants::MinStackCompile))
     {
-        throw WasmCompilationException(_u("Maximum supported nested blocks reached"));
+        throw WasmCompilationException(u"Maximum supported nested blocks reached");
     }
 }
 
@@ -1112,7 +1112,7 @@ PolymorphicEmitInfo WasmBytecodeGenerator::EmitCall()
         break;
     }
     case wbCallIndirect:
-        indirectIndexInfo = PopEvalStack(WasmTypes::I32, _u("Indirect call index must be int type"));
+        indirectIndexInfo = PopEvalStack(WasmTypes::I32, u"Indirect call index must be int type");
         signatureId = GetReader()->m_currentNode.call.num;
         calleeSignature = m_module->GetSignature(signatureId);
         break;
@@ -1122,7 +1122,7 @@ PolymorphicEmitInfo WasmBytecodeGenerator::EmitCall()
 
     const auto argOverflow = []
     {
-        throw WasmCompilationException(_u("Argument size too big"));
+        throw WasmCompilationException(u"Argument size too big");
     };
 
     // emit start call
@@ -1143,7 +1143,7 @@ PolymorphicEmitInfo WasmBytecodeGenerator::EmitCall()
     if (!Math::IsAligned<Js::ArgSlot>(argSize, sizeof(Js::Var)))
     {
         AssertMsg(UNREACHED, "Wasm argument size should always be Var aligned");
-        throw WasmCompilationException(_u("Internal Error"));
+        throw WasmCompilationException(u"Internal Error");
     }
 
     m_writer->AsmStartCall(startCallOp, argSize);
@@ -1154,7 +1154,7 @@ PolymorphicEmitInfo WasmBytecodeGenerator::EmitCall()
     EmitInfo* argsList = AnewArray(&m_alloc, EmitInfo, nArgs);
     for (int i = int(nArgs) - 1; i >= 0; --i)
     {
-        EmitInfo info = PopEvalStack(calleeSignature->GetParam((Js::ArgSlot)i), _u("Call argument does not match formal type"));
+        EmitInfo info = PopEvalStack(calleeSignature->GetParam((Js::ArgSlot)i), u"Call argument does not match formal type");
         // We can release the location of the arguments now, because we won't create new temps between start/call
         argsList[i] = info;
     }
@@ -1197,7 +1197,7 @@ PolymorphicEmitInfo WasmBytecodeGenerator::EmitCall()
             // Fall through
         default:
             WasmTypes::CompileAssertCasesNoFailFast<WasmTypes::I32, WasmTypes::I64, WasmTypes::F32, WasmTypes::F64, WASM_V128_CHECK_TYPE>();
-            throw WasmCompilationException(_u("Unknown argument type %u"), info.type);
+            throw WasmCompilationException(u"Unknown argument type %u", info.type);
         }
 
         m_writer->AsmReg2(argOp, argLoc, info.location);
@@ -1288,11 +1288,11 @@ PolymorphicEmitInfo WasmBytecodeGenerator::EmitCall()
                 break;
 #ifdef ENABLE_WASM_SIMD
             case WasmTypes::V128:
-                throw WasmCompilationException(_u("Return type: v128 not supported in import calls"));
+                throw WasmCompilationException(u"Return type: v128 not supported in import calls");
 #endif
             default:
                 WasmTypes::CompileAssertCasesNoFailFast<WasmTypes::I32, WasmTypes::I64, WasmTypes::F32, WasmTypes::F64, WASM_V128_CHECK_TYPE>();
-                throw WasmCompilationException(_u("Unknown call return type %u"), singleResType);
+                throw WasmCompilationException(u"Unknown call return type %u", singleResType);
             }
             Js::RegSlot location = GetRegisterSpace(singleResType)->AcquireTmpRegister();
             retInfo.SetInfo(EmitInfo(location, singleResType), 0);
@@ -1342,7 +1342,7 @@ PolymorphicEmitInfo WasmBytecodeGenerator::EmitIfElseExpr()
     Js::ByteCodeLabel falseLabel = m_writer->DefineLabel();
     Js::ByteCodeLabel endLabel = m_writer->DefineLabel();
 
-    EmitInfo checkExpr = PopEvalStack(WasmTypes::I32, _u("If expression must have type i32"));
+    EmitInfo checkExpr = PopEvalStack(WasmTypes::I32, u"If expression must have type i32");
     ReleaseLocation(&checkExpr);
 
     m_writer->AsmBrReg1(Js::OpCodeAsmJs::BrFalse_Int, falseLabel, checkExpr.location);
@@ -1369,7 +1369,7 @@ PolymorphicEmitInfo WasmBytecodeGenerator::EmitIfElseExpr()
     }
     else if (blockInfo->HasYield())
     {
-        throw WasmCompilationException(_u("Expected an else block when 'if' returns a value"));
+        throw WasmCompilationException(u"Expected an else block when 'if' returns a value");
     }
     m_writer->MarkAsmJsLabel(endLabel);
 
@@ -1383,7 +1383,7 @@ void WasmBytecodeGenerator::EmitBrTable()
     const uint32 defaultEntry = GetReader()->m_currentNode.brTable.defaultTarget;
 
     // Compile scrutinee
-    EmitInfo scrutineeInfo = PopStackPolymorphic(EmitInfo(WasmTypes::I32), _u("br_table expression must be of type i32")).GetInfo(0);
+    EmitInfo scrutineeInfo = PopStackPolymorphic(EmitInfo(WasmTypes::I32), u"br_table expression must be of type i32").GetInfo(0);
 
     m_writer->AsmReg2(Js::OpCodeAsmJs::BeginSwitch_Int, scrutineeInfo.location, scrutineeInfo.location);
     PolymorphicEmitInfo yieldValue;
@@ -1400,7 +1400,7 @@ void WasmBytecodeGenerator::EmitBrTable()
         BlockInfo* blockInfo = GetBlockInfo(target);
         if (!defaultBlockInfo->IsEquivalent(blockInfo))
         {
-            throw WasmCompilationException(_u("br_table target %u signature mismatch"));
+            throw WasmCompilationException(u"br_table target %u signature mismatch");
         }
         YieldToBlock(blockInfo, yieldValue);
         m_writer->AsmBrReg1Const1(Js::OpCodeAsmJs::Case_IntConst, blockInfo->label, scrutineeInfo.location, i);
@@ -1418,7 +1418,7 @@ EmitInfo WasmBytecodeGenerator::EmitGrowMemory()
 {
     SetUsesMemory(0);
 
-    EmitInfo info = PopEvalStack(WasmTypes::I32, _u("Invalid type for GrowMemory"));
+    EmitInfo info = PopEvalStack(WasmTypes::I32, u"Invalid type for GrowMemory");
 
     m_writer->AsmReg2(Js::OpCodeAsmJs::GrowMemory, info.location, info.location);
     return info;
@@ -1508,7 +1508,7 @@ void WasmBytecodeGenerator::CheckLaneIndex(Js::OpCodeAsmJs op, const uint index)
 
     if (index >= numLanes)
     {
-        throw WasmCompilationException(_u("index is out of range"));
+        throw WasmCompilationException(u"index is out of range");
     }
 }
 
@@ -1525,9 +1525,9 @@ EmitInfo WasmBytecodeGenerator::EmitReplaceLaneExpr(Js::OpCodeAsmJs op, const Wa
 
     const WasmTypes::WasmType resultType = signature[0];
     const WasmTypes::WasmType valueType = signature[1];
-    EmitInfo valueArg = PopEvalStack(valueType, _u("lane argument type mismatch"));
+    EmitInfo valueArg = PopEvalStack(valueType, u"lane argument type mismatch");
 
-    EmitInfo simdArg = PopEvalStack(WasmTypes::V128, _u("simd argument type mismatch"));
+    EmitInfo simdArg = PopEvalStack(WasmTypes::V128, u"simd argument type mismatch");
     Assert(resultType == WasmTypes::V128);
 
     EmitInfo indexInfo = EmitLaneIndex(op);
@@ -1572,7 +1572,7 @@ EmitInfo WasmBytecodeGenerator::EmitV8X16Shuffle()
     {
         if (indices[i] >= Simd::MAX_LANES * 2)
         {
-            throw WasmCompilationException(_u("%u-th shuffle lane index is larger than %u"), i, (Simd::MAX_LANES * 2 -1));
+            throw WasmCompilationException(u"%u-th shuffle lane index is larger than %u", i, (Simd::MAX_LANES * 2 -1));
         }
     }
 
@@ -1585,7 +1585,7 @@ EmitInfo WasmBytecodeGenerator::EmitExtractLaneExpr(Js::OpCodeAsmJs op, const Wa
     WasmTypes::WasmType resultType = signature[0];
     WasmTypes::WasmType simdArgType = signature[1];
 
-    EmitInfo simdArgInfo = PopEvalStack(simdArgType, _u("Argument should be of type V128"));
+    EmitInfo simdArgInfo = PopEvalStack(simdArgType, u"Argument should be of type V128");
     ReleaseLocation(&simdArgInfo);
 
     Js::RegSlot resultReg = GetRegisterSpace(resultType)->AcquireTmpRegister();
@@ -1611,15 +1611,15 @@ EmitInfo WasmBytecodeGenerator::EmitSimdMemAccess(Js::OpCodeAsmJs op, const Wasm
 
     if (alignment > naturalAlignment)
     {
-        throw WasmCompilationException(_u("alignment must not be larger than natural"));
+        throw WasmCompilationException(u"alignment must not be larger than natural");
     }
 
     EmitInfo rhsInfo;
     if (isStore)
     {
-        rhsInfo = PopEvalStack(type, _u("Invalid type for store op"));
+        rhsInfo = PopEvalStack(type, u"Invalid type for store op");
     }
-    EmitInfo exprInfo = PopEvalStack(WasmTypes::I32, _u("Index expression must be of type i32"));
+    EmitInfo exprInfo = PopEvalStack(WasmTypes::I32, u"Index expression must be of type i32");
 
     if (isStore)
     {
@@ -1654,18 +1654,18 @@ EmitInfo WasmBytecodeGenerator::EmitMemAccess(WasmOp wasmOp, const WasmTypes::Wa
 
     if (alignment > naturalAlignment)
     {
-        throw WasmCompilationException(_u("alignment must not be larger than natural"));
+        throw WasmCompilationException(u"alignment must not be larger than natural");
     }
     if (isAtomic && alignment != naturalAlignment)
     {
-        throw WasmCompilationException(_u("invalid alignment for atomic RW. Expected %u, got %u"), naturalAlignment, alignment);
+        throw WasmCompilationException(u"invalid alignment for atomic RW. Expected %u, got %u", naturalAlignment, alignment);
     }
 
     // Stores
     if (isStore)
     {
-        EmitInfo rhsInfo = PopEvalStack(type, _u("Invalid type for store op"));
-        EmitInfo exprInfo = PopEvalStack(WasmTypes::I32, _u("Index expression must be of type i32"));
+        EmitInfo rhsInfo = PopEvalStack(type, u"Invalid type for store op");
+        EmitInfo exprInfo = PopEvalStack(WasmTypes::I32, u"Index expression must be of type i32");
         Js::OpCodeAsmJs op = isAtomic ? Js::OpCodeAsmJs::StArrAtomic : Js::OpCodeAsmJs::StArrWasm;
         m_writer->WasmMemAccess(op, rhsInfo.location, exprInfo.location, offset, viewType);
         ReleaseLocation(&rhsInfo);
@@ -1675,7 +1675,7 @@ EmitInfo WasmBytecodeGenerator::EmitMemAccess(WasmOp wasmOp, const WasmTypes::Wa
     }
 
     // Loads
-    EmitInfo exprInfo = PopEvalStack(WasmTypes::I32, _u("Index expression must be of type i32"));
+    EmitInfo exprInfo = PopEvalStack(WasmTypes::I32, u"Index expression must be of type i32");
     ReleaseLocation(&exprInfo);
     Js::RegSlot resultReg = GetRegisterSpace(type)->AcquireTmpRegister();
     Js::OpCodeAsmJs op = isAtomic ? Js::OpCodeAsmJs::LdArrAtomic : Js::OpCodeAsmJs::LdArrWasm;
@@ -1701,9 +1701,9 @@ void WasmBytecodeGenerator::EmitReturnExpr(PolymorphicEmitInfo* explicitRetInfo)
 
 EmitInfo WasmBytecodeGenerator::EmitSelect()
 {
-    EmitInfo conditionInfo = PopEvalStack(WasmTypes::I32, _u("select condition must have i32 type"));
+    EmitInfo conditionInfo = PopEvalStack(WasmTypes::I32, u"select condition must have i32 type");
     EmitInfo falseInfo = PopValuePolymorphic();
-    EmitInfo trueInfo = PopEvalStack(falseInfo.type, _u("select operands must both have same type"));
+    EmitInfo trueInfo = PopEvalStack(falseInfo.type, u"select operands must both have same type");
     ReleaseLocation(&conditionInfo);
     ReleaseLocation(&falseInfo);
     ReleaseLocation(&trueInfo);
@@ -1762,7 +1762,7 @@ PolymorphicEmitInfo WasmBytecodeGenerator::EmitBrIf()
 {
     uint32 depth = GetReader()->m_currentNode.br.depth;
 
-    EmitInfo conditionInfo = PopEvalStack(WasmTypes::I32, _u("br_if condition must have i32 type"));
+    EmitInfo conditionInfo = PopEvalStack(WasmTypes::I32, u"br_if condition must have i32 type");
     ReleaseLocation(&conditionInfo);
 
     PolymorphicEmitInfo info;
@@ -1815,7 +1815,7 @@ Js::OpCodeAsmJs WasmBytecodeGenerator::GetLoadOp(WasmTypes::WasmType wasmType)
         }
     default:
         WasmTypes::CompileAssertCasesNoFailFast<WasmTypes::I32, WasmTypes::I64, WasmTypes::F32, WasmTypes::F64, WASM_V128_CHECK_TYPE>();
-        throw WasmCompilationException(_u("Unknown load operator %u"), wasmType);
+        throw WasmCompilationException(u"Unknown load operator %u", wasmType);
     }
 }
 
@@ -1851,7 +1851,7 @@ Js::OpCodeAsmJs WasmBytecodeGenerator::GetReturnOp(WasmTypes::WasmType type)
         }
     default:
         WasmTypes::CompileAssertCasesNoFailFast<WasmTypes::I32, WasmTypes::I64, WasmTypes::F32, WasmTypes::F64, WASM_V128_CHECK_TYPE>();
-        throw WasmCompilationException(_u("Unknown return type %u"), type);
+        throw WasmCompilationException(u"Unknown return type %u", type);
     }
     return retOp;
 }
@@ -1983,7 +1983,7 @@ void WasmBytecodeGenerator::YieldToBlock(BlockInfo* blockInfo, PolymorphicEmitIn
 
         if (!polyYieldInfo.IsEquivalent(polyExpr))
         {
-            throw WasmCompilationException(_u("Invalid yield type"));
+            throw WasmCompilationException(u"Invalid yield type");
         }
 
         if (!IsUnreachable())
@@ -2003,7 +2003,7 @@ BlockInfo* WasmBytecodeGenerator::GetBlockInfo(uint32 relativeDepth) const
 {
     if (relativeDepth >= (uint32)m_blockInfos.Count())
     {
-        throw WasmCompilationException(_u("Invalid branch target"));
+        throw WasmCompilationException(u"Invalid branch target");
     }
     return m_blockInfos.Peek(relativeDepth);
 }
@@ -2037,7 +2037,7 @@ WasmRegisterSpace* WasmBytecodeGenerator::GetRegisterSpace(WasmTypes::WasmType t
 #endif
     default:
         WasmTypes::CompileAssertCasesNoFailFast<WasmTypes::I32, WasmTypes::I64, WasmTypes::F32, WasmTypes::F64, WASM_V128_CHECK_TYPE>();
-        throw WasmCompilationException(_u("Unknown type %u"), type);
+        throw WasmCompilationException(u"Unknown type %u", type);
     }
 }
 
@@ -2075,7 +2075,7 @@ EmitInfo WasmBytecodeGenerator::PopEvalStack(WasmTypes::WasmType expectedType, c
     EmitInfo info = m_evalStack.Pop();
     if (info.type == WasmTypes::Limit)
     {
-        throw WasmCompilationException(_u("Reached end of stack"));
+        throw WasmCompilationException(u"Reached end of stack");
     }
     if (expectedType != WasmTypes::Any &&
         info.type != WasmTypes::Any &&
@@ -2083,7 +2083,7 @@ EmitInfo WasmBytecodeGenerator::PopEvalStack(WasmTypes::WasmType expectedType, c
     {
         if (!mismatchMessage)
         {
-            throw WasmCompilationException(_u("Type mismatch. Expected %s, got %s"), GetTypeName(expectedType), GetTypeName(info.type));
+            throw WasmCompilationException(u"Type mismatch. Expected %s, got %s", GetTypeName(expectedType), GetTypeName(info.type));
         }
         throw WasmCompilationException(mismatchMessage);
     }
@@ -2126,7 +2126,7 @@ void WasmBytecodeGenerator::ExitEvalStackScope(const BlockInfo* blockInfo)
         m_evalStack.Push(info);
         char16_t buf[512] = { 0 };
         WriteTypeStackToString(buf, 512);
-        throw WasmCompilationException(_u("Expected stack to be empty, but has %s"), buf);
+        throw WasmCompilationException(u"Expected stack to be empty, but has %s", buf);
     }
 }
 
@@ -2158,7 +2158,7 @@ void WasmBytecodeGenerator::SetUsesMemory(uint32 memoryIndex)
     Assert(memoryIndex == 0);
     if (!m_module->HasMemory() && !m_module->HasMemoryImport())
     {
-        throw WasmCompilationException(_u("unknown memory"));
+        throw WasmCompilationException(u"unknown memory");
     }
     GetFunctionBody()->GetAsmJsFunctionInfo()->SetUsesHeapBuffer(true);
 }

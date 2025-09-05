@@ -1385,7 +1385,7 @@ namespace Js
     // a DictionaryTypeHandlerBase instance.
     template <typename T> void ES5ArrayTypeHandlerBase<T>::Dump(unsigned indent) const
     {
-        Output::Print(_u("%*sES5ArrayTypeHandlerBase (0x%p): Dump unimplemented\n"), indent, _u(""), this);
+        Output::Print(u"%*sES5ArrayTypeHandlerBase (0x%p): Dump unimplemented\n", indent, u"", this);
     }
 #endif
 

@@ -52,7 +52,7 @@ namespace Js
             // Help the C++ optimizer by declaring that the cases we
             // have above are sufficient
 #if DBG_DUMP
-            Output::Print( _u("Dispatch to bad opcode : %s\n"), OpCodeUtilAsmJs::GetOpCodeName(op));
+            Output::Print( u"Dispatch to bad opcode : %s\n", OpCodeUtilAsmJs::GetOpCodeName(op));
             Output::Flush();
 #endif
             Assert( false );
@@ -76,7 +76,7 @@ namespace Js
             // Help the C++ optimizer by declaring that the cases we
             // have above are sufficient
 #if DBG_DUMP
-            Output::Print( _u("Dispatch to bad opcode : %s\n"), OpCodeUtilAsmJs::GetOpCodeName(op));
+            Output::Print( u"Dispatch to bad opcode : %s\n", OpCodeUtilAsmJs::GetOpCodeName(op));
             Output::Flush();
 #endif
             Assert( false );
@@ -100,7 +100,7 @@ namespace Js
             // Help the C++ optimizer by declaring that the cases we
             // have above are sufficient
 #if DBG_DUMP
-            Output::Print( _u("Dispatch to bad opcode : %s\n"), OpCodeUtilAsmJs::GetOpCodeName(op));
+            Output::Print( u"Dispatch to bad opcode : %s\n", OpCodeUtilAsmJs::GetOpCodeName(op));
             Output::Flush();
 #endif
             Assert( false );
@@ -119,7 +119,7 @@ namespace Js
 #if DBG_DUMP
         if (PHASE_TRACE(Js::AsmjsEncoderPhase, mFunctionBody))
         {
-            Output::Print(_u("%d.%d:Encoding "),
+            Output::Print(u"%d.%d:Encoding ",
                            this->mFunctionBody->GetSourceContextId(),
                            this->mFunctionBody->GetLocalFunctionId());
             AsmJsByteCodeDumper::DumpOp( op, layoutSize, mReader, mFunctionBody );
@@ -127,7 +127,7 @@ namespace Js
             {
                 mReader.SetIP( ip );
             }
-            Output::Print(_u("  at offset 0x%X (buffer size = 0x%X)\n"),
+            Output::Print(u"  at offset 0x%X (buffer size = 0x%X)\n",
                            bytecodeoffset, (int)(mPc-mEncodeBuffer));
             Output::Flush();
         }
@@ -179,7 +179,7 @@ namespace Js
 #ifdef ENABLE_WASM_SIMD
         mSimdOffset = asmInfo->GetSimdByteOffset() + GetOffset<Var>();
 #endif
-        NoRecoverMemoryArenaAllocator localAlloc(_u("BE-AsmJsEncoder"), GetPageAllocator(), Js::Throw::OutOfMemory);
+        NoRecoverMemoryArenaAllocator localAlloc(u"BE-AsmJsEncoder", GetPageAllocator(), Js::Throw::OutOfMemory);
         mLocalAlloc = &localAlloc;
 
         mRelocLabelMap = Anew( mLocalAlloc, RelocLabelMap, mLocalAlloc );
@@ -193,9 +193,9 @@ namespace Js
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if( PHASE_TRACE( Js::AsmjsEncoderPhase, mFunctionBody ) )
         {
-            Output::Print( _u("\n\n") );
+            Output::Print( u"\n\n" );
             functionBody->DumpFullFunctionName();
-            Output::Print( _u("\n StackSize = %d , Offsets: Var = %d, Int = %d, Double = %d\n"), mFunctionBody->GetAsmJsFunctionInfo()->GetTotalSizeinBytes(), GetOffset<Var>(), GetOffset<int>(), GetOffset<double>() );
+            Output::Print( u"\n StackSize = %d , Offsets: Var = %d, Int = %d, Double = %d\n", mFunctionBody->GetAsmJsFunctionInfo()->GetTotalSizeinBytes(), GetOffset<Var>(), GetOffset<int>(), GetOffset<double>() );
         }
 #endif
 
@@ -237,7 +237,7 @@ namespace Js
             // TODO: improve this once EntryPoint cleanup work is complete!
 #if 0
             const char16_t *const functionName = functionBody->GetDisplayName();
-            const char16_t *const suffix = _u("TJ");
+            const char16_t *const suffix = u"TJ";
             char16_t functionNameArray[256];
             const size_t functionNameCharLength = functionBody->GetDisplayNameLength();
             wcscpy_s(functionNameArray, 256, functionName);
@@ -286,7 +286,7 @@ namespace Js
 #if DBG_DUMP
             if( !label->labelSeen )
             {
-                Output::Print( _u("Label expected at bytecode offset 0x%x\n"), mRelocLabelMap->GetKeyAt( i ) );
+                Output::Print( u"Label expected at bytecode offset 0x%x\n", mRelocLabelMap->GetKeyAt( i ) );
                 Output::Flush();
             }
 #endif

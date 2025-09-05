@@ -29,7 +29,7 @@ namespace Js
 
         if (!VarIs<JavascriptListIterator>(thisObj))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedListIterator, _u("ListIterator.next"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedListIterator, u"ListIterator.next");
         }
 
         JavascriptListIterator* iterator = VarTo<JavascriptListIterator>(thisObj);

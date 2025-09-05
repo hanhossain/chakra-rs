@@ -65,10 +65,10 @@ namespace JsUtil
 #ifdef VERBOSE_EVAL_MAP
         void Dump()
         {
-            Output::Print(_u("Length: %d, writeIndex: %d, filled: %d\n"), size, writeIndex, filled);
+            Output::Print(u"Length: %d, writeIndex: %d, filled: %d\n", size, writeIndex, filled);
             for (uint i = 0; i < GetMaxIndex(); i++)
             {
-                Output::Print(_u("Item %d: %s\n"), i, entries[i].str.GetBuffer());
+                Output::Print(u"Item %d: %s\n", i, entries[i].str.GetBuffer());
             }
             Output::Flush();
         }

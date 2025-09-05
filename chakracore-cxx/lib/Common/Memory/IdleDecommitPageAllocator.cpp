@@ -55,13 +55,13 @@ IdleDecommitPageAllocator::EnterIdleDecommit()
 
     this->isUsed = false;
     this->hadDecommitTimer = hasDecommitTimer;
-    PAGE_ALLOC_VERBOSE_TRACE(_u("EnterIdleDecommit"));
+    PAGE_ALLOC_VERBOSE_TRACE(u"EnterIdleDecommit");
     if (hasDecommitTimer)
     {
         // Cancel the decommit timer
         Assert(this->maxFreePageCount == maxIdleDecommitFreePageCount);
         hasDecommitTimer = false;
-        PAGE_ALLOC_TRACE(_u("Cancel Decommit Timer"));
+        PAGE_ALLOC_TRACE(u"Cancel Decommit Timer");
     }
     else
     {
@@ -106,7 +106,7 @@ IdleDecommitPageAllocator::LeaveIdleDecommit(bool allowTimer)
             cs.Enter();
         }
 
-        PAGE_ALLOC_VERBOSE_TRACE(_u("LeaveIdleDecommit"));
+        PAGE_ALLOC_VERBOSE_TRACE(u"LeaveIdleDecommit");
         Assert(maxIdleDecommitFreePageCount != maxNonIdleDecommitFreePageCount);
 
         IdleDecommitSignal idleDecommitSignal = IdleDecommitSignal_None;
@@ -130,7 +130,7 @@ IdleDecommitPageAllocator::LeaveIdleDecommit(bool allowTimer)
             {
                 // Reschedule the timer
                 decommitTime = ::GetTickCount() + IdleDecommitTimeout;
-                PAGE_ALLOC_TRACE( _u("Schedule idle decommit at %d (%d)"), decommitTime, IdleDecommitTimeout);
+                PAGE_ALLOC_TRACE( u"Schedule idle decommit at %d (%d)", decommitTime, IdleDecommitTimeout);
             }
             else
             {
@@ -140,7 +140,7 @@ IdleDecommitPageAllocator::LeaveIdleDecommit(bool allowTimer)
                     idleDecommitSignal = IdleDecommitSignal_NeedSignal;
                 }
 
-                PAGE_ALLOC_TRACE(_u("Reschedule idle decommit at %d (%d)"), decommitTime, decommitTime - ::GetTickCount());
+                PAGE_ALLOC_TRACE(u"Reschedule idle decommit at %d (%d)", decommitTime, decommitTime - ::GetTickCount());
             }
 
         }
@@ -204,7 +204,7 @@ IdleDecommitPageAllocator::IdleDecommit()
     if (!cs.TryEnter())
     {
         // Failed to acquire the lock, wait for a variable time.
-        PAGE_ALLOC_TRACE(_u("IdleDecommit Retry"));
+        PAGE_ALLOC_TRACE(u"IdleDecommit Retry");
 
         // Varies the wait time between 11 - 99
         idleDecommitTryEnterWaitFactor++;
@@ -228,7 +228,7 @@ IdleDecommitPageAllocator::IdleDecommit()
         else
         {
             // Do the decommit in normal priority so that we don't block the main thread for too long
-            PAGE_ALLOC_TRACE(_u("IdleDecommit"));
+            PAGE_ALLOC_TRACE(u"IdleDecommit");
 #if DBG_DUMP
             idleDecommitCount++;
 #endif
@@ -288,7 +288,7 @@ void
 IdleDecommitPageAllocator::DumpStats() const
 {
     __super::DumpStats();
-    Output::Print(_u("  Idle Decommit Count       : %4d\n"),
+    Output::Print(u"  Idle Decommit Count       : %4d\n",
         this->idleDecommitCount);
 }
 #endif

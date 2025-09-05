@@ -28,7 +28,7 @@ namespace Js
 
     BOOL JavascriptSymbolObject::GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
     {
-        stringBuilder->AppendCppLiteral(_u("Symbol, (Object)"));
+        stringBuilder->AppendCppLiteral(u"Symbol, (Object)");
         return TRUE;
     }
 

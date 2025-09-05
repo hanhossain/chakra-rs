@@ -81,7 +81,7 @@ using namespace Js;
                 {
                     char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
-                    Output::Print(_u("Function object with inline cache: function number: (%s)\tfunction name: %s\n"),
+                    Output::Print(u"Function object with inline cache: function number: (%s)\tfunction name: %s\n",
                         functionBody->GetDebugNumberSet(debugStringBuffer), functionBody->GetDisplayName());
                     Output::Flush();
                 }
@@ -378,7 +378,7 @@ using namespace Js;
 
             charcount_t cch = pFuncBody->LengthInChars();
             size_t cbLength = pFuncBody->LengthInBytes();
-            LPCUTF8 pbStart = pFuncBody->GetToStringSource(_u("ScriptFunction::EnsureSourceString"));
+            LPCUTF8 pbStart = pFuncBody->GetToStringSource(u"ScriptFunction::EnsureSourceString");
             size_t cbPreludeLength = 0;
             // cch and cbLength refer to the length of the parse, which may be smaller than the length of the to-string function
             PrintOffsets* printOffsets = pFuncBody->GetPrintOffsets();
@@ -463,7 +463,7 @@ using namespace Js;
 
         //do the body path mark
         Js::FunctionBody* fb = TTD::JsSupport::ForceAndGetFunctionBody(this->GetParseableFunctionInfo());
-        rctxInfo->EnqueueNewFunctionBodyObject(this, fb, _u("!fbody"));
+        rctxInfo->EnqueueNewFunctionBodyObject(this, fb, u"!fbody");
 
         Js::FrameDisplay* environment = this->GetEnvironment();
         uint32 scopeCount = environment->GetLength();
@@ -516,17 +516,17 @@ using namespace Js;
 
         if(this->cachedScopeObj != nullptr)
         {
-            this->GetScriptContext()->TTDWellKnownInfo->EnqueueNewPathVarAsNeeded(this, this->cachedScopeObj, _u("_cachedScopeObj"));
+            this->GetScriptContext()->TTDWellKnownInfo->EnqueueNewPathVarAsNeeded(this, this->cachedScopeObj, u"_cachedScopeObj");
         }
 
         if (this->GetComputedNameVar() != nullptr)
         {
-            this->GetScriptContext()->TTDWellKnownInfo->EnqueueNewPathVarAsNeeded(this, this->GetComputedNameVar(), _u("_computedName"));
+            this->GetScriptContext()->TTDWellKnownInfo->EnqueueNewPathVarAsNeeded(this, this->GetComputedNameVar(), u"_computedName");
         }
 
         if (this->GetHomeObj() != nullptr)
         {
-            this->GetScriptContext()->TTDWellKnownInfo->EnqueueNewPathVarAsNeeded(this, this->GetHomeObj(), _u("_homeObj"));
+            this->GetScriptContext()->TTDWellKnownInfo->EnqueueNewPathVarAsNeeded(this, this->GetHomeObj(), u"_homeObj");
         }
     }
 

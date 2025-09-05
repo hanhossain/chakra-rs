@@ -51,7 +51,7 @@ namespace Js
 
         virtual ~DelayLoadWinRtString() { }
 
-        LPCTSTR GetLibraryName() const { return _u("api-ms-win-core-winrt-string-l1-1-0.dll"); }
+        LPCTSTR GetLibraryName() const { return u"api-ms-win-core-winrt-string-l1-1-0.dll"; }
 
         virtual HRESULT WindowsCreateString(_In_reads_opt_(length) const char16_t * sourceString, uint32_t length, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * string);
         virtual HRESULT WindowsCreateStringReference(_In_reads_opt_(length + 1) const char16_t * sourceString, uint32_t length, _Out_ HSTRING_HEADER * header, _Outptr_result_maybenull_ _Result_nullonfailure_  HSTRING * string);
@@ -77,7 +77,7 @@ namespace Js
 
         virtual ~DelayLoadWinRtFoundation() { }
 
-        LPCTSTR GetLibraryName() const { return _u("api-ms-win-core-winrt-l1-1-0.dll"); }
+        LPCTSTR GetLibraryName() const { return u"api-ms-win-core-winrt-l1-1-0.dll"; }
 
         HRESULT RoGetActivationFactory(
             HSTRING activatibleClassId,
@@ -101,7 +101,7 @@ namespace Js
         {
         }
 
-        LPCTSTR GetLibraryName() const { return _u("api-ms-win-core-processthreads-l1-1-3.dll"); }
+        LPCTSTR GetLibraryName() const { return u"api-ms-win-core-processthreads-l1-1-3.dll"; }
 
         BOOL GetProcessInformation(
             HANDLE hProcess,

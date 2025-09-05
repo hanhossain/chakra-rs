@@ -618,7 +618,7 @@ namespace Js
                 const int scannedCount =
                     swscanf_s(
                         static_cast<LPCWSTR>(ExecutionModeLimits),
-                        _u("%u.%u.%u.%u.%u"),
+                        u"%u.%u.%u.%u.%u",
                         &autoProfilingInterpreter0Limit,
                         &profilingInterpreter0Limit,
                         &autoProfilingInterpreter1Limit,
@@ -875,53 +875,53 @@ namespace Js
     void
     ConfigFlagsTable::PrintUsageString()
     {
-        Output::Print(_u("List of Phases:\n"));
+        Output::Print(u"List of Phases:\n");
         for(int i = 0; i < PhaseCount; i++)
         {
             if (i % 4 == 0)
             {
-                Output::Print(_u("\n  "));
+                Output::Print(u"\n  ");
             }
-            Output::Print(_u("%-40ls "), PhaseNames[i]);
+            Output::Print(u"%-40ls ", PhaseNames[i]);
         }
 
-        Output::Print(_u("\n\nList of flags:\n\n"));
+        Output::Print(u"\n\nList of flags:\n\n");
         for(int i = 0; i < FlagCount; i++)
         {
-            Output::Print(_u("%60ls "), FlagNames[i]);
+            Output::Print(u"%60ls ", FlagNames[i]);
             switch(GetFlagType(Flag(i)))
             {
             case InvalidFlagType:
                 break;
             case FlagString:
-                Output::Print(_u("[:String]        "));
+                Output::Print(u"[:String]        ");
                 break;
             case FlagPhases:
-                Output::Print(_u("[:Phase]         "));
+                Output::Print(u"[:Phase]         ");
                 break;
             case FlagNumber:
-                Output::Print(_u("[:Number]        "));
+                Output::Print(u"[:Number]        ");
                 break;
             case FlagBoolean:
-                Output::Print(_u("                 "));
+                Output::Print(u"                 ");
                 break;
             case FlagNumberSet:
-                Output::Print(_u("[:NumberSet]     "));
+                Output::Print(u"[:NumberSet]     ");
                 break;
             case FlagNumberPairSet:
-                Output::Print(_u("[:NumberPairSet] "));
+                Output::Print(u"[:NumberPairSet] ");
                 break;
             case FlagNumberTrioSet:
-                Output::Print(_u("[:NumberTrioSet] "));
+                Output::Print(u"[:NumberTrioSet] ");
                 break;
             case FlagNumberRange:
-                Output::Print(_u("[:NumberRange]   "));
+                Output::Print(u"[:NumberRange]   ");
                 break;
             default:
                 Assert(false);
                 __assume(false);
             }
-            Output::Print(_u("%ls\n"), FlagDescriptions[i]);
+            Output::Print(u"%ls\n", FlagDescriptions[i]);
         }
     }
 
@@ -987,28 +987,28 @@ namespace Js
 #define FLAG(type, name, ...) \
         if (IsEnabled(name##Flag)) \
         { \
-            Output::Print(_u("-%s"), _u(#name)); \
+            Output::Print(u"-%s", _u(#name)); \
             switch (Flag##type) \
             { \
             case FlagBoolean: \
                 if (!*GetAsBoolean(name##Flag)) \
                 { \
-                    Output::Print(_u("-")); \
+                    Output::Print(u"-"); \
                 } \
                 break; \
             case FlagString: \
                 if (GetAsString(name##Flag) != nullptr) \
                 { \
-                    Output::Print(_u(":%s"), (LPCWSTR)*GetAsString(name##Flag)); \
+                    Output::Print(u":%s", (LPCWSTR)*GetAsString(name##Flag)); \
                 } \
                 break; \
             case FlagNumber: \
-                Output::Print(_u(":%d"), *GetAsNumber(name##Flag)); \
+                Output::Print(u":%d", *GetAsNumber(name##Flag)); \
                 break; \
             default: \
                 break; \
             }; \
-            Output::Print(_u("\n")); \
+            Output::Print(u"\n"); \
         }
 
 #include "Interface/ConfigFlagsList.h"
@@ -1100,7 +1100,7 @@ namespace Js
         Boolean* settingAsBoolean = this->GetAsBoolean(flag);
         Assert(settingAsBoolean != nullptr);
 
-        Output::VerboseNote(_u("FLAG %s = %d\n"), FlagNames[(int) flag], value);
+        Output::VerboseNote(u"FLAG %s = %d\n", FlagNames[(int) flag], value);
         *settingAsBoolean = value;
 
         // check if parent flag
@@ -1116,7 +1116,7 @@ namespace Js
                 // if the parent flag is FALSE, the children flag values are FALSE (always - as disabled)
                 Boolean childValue = value == TRUE ? childDefaultValue : FALSE;
 
-                Output::VerboseNote(_u("FLAG %s = %d - setting child flag %s = %d\n"), FlagNames[(int) flag], value, FlagNames[(int) childFlag], childValue);
+                Output::VerboseNote(u"FLAG %s = %d - setting child flag %s = %d\n", FlagNames[(int) flag], value, FlagNames[(int) childFlag], childValue);
                 this->SetAsBoolean(childFlag, childValue);
 
                 // get next child flag
@@ -1229,7 +1229,7 @@ namespace Js
             {
                 Boolean childValue = value;
 
-                Output::VerboseNote(_u("FLAG %s = %d - setting child flag %s = %d\n"), FlagNames[(int) parentFlag], value, FlagNames[(int) childFlag], childValue);
+                Output::VerboseNote(u"FLAG %s = %d - setting child flag %s = %d\n", FlagNames[(int) parentFlag], value, FlagNames[(int) childFlag], childValue);
                 this->SetAsBoolean(childFlag, childValue);
             }
 

@@ -705,12 +705,12 @@ public:
     void Dump() const
     {
         bool hasBits = false;
-        Output::Print(_u("[  "));
+        Output::Print(u"[  ");
         for (BVIndex i = 0; i < wordCount; i++)
         {
             hasBits = this->data[i].Dump(i * BVUnit::BitsPerWord, hasBits);
         }
-        Output::Print(_u("]\n"));
+        Output::Print(u"]\n");
     }
 #endif
 };

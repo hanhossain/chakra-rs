@@ -151,7 +151,7 @@ JsValueRef WScriptJsrt::EchoCallback(JsValueRef callee, bool isConstructCall, Js
             {
                 if (i > 1)
                 {
-                    wprintf(_u(" "));
+                    wprintf(u" ");
                 }
                 charcount_t len;
                 LPWSTR ws = str.GetWideString(&len);
@@ -159,13 +159,13 @@ JsValueRef WScriptJsrt::EchoCallback(JsValueRef callee, bool isConstructCall, Js
                 charcount_t newIndex = 0;
                 for (charcount_t j = 0; j < len; j++)
                 {
-                    if (ws[j] != _u('\0'))
+                    if (ws[j] != u'\0')
                     {
                         wsNoNull[newIndex++] = ws[j];
                     }
                 }
-                wsNoNull[newIndex] = _u('\0');
-                wprintf(_u("%s"), wsNoNull);
+                wsNoNull[newIndex] = u'\0';
+                wprintf(u"%s", wsNoNull);
                 delete[] wsNoNull;
             }
         }
@@ -176,7 +176,7 @@ JsValueRef WScriptJsrt::EchoCallback(JsValueRef callee, bool isConstructCall, Js
         }
     }
 
-    wprintf(_u("\n"));
+    wprintf(u"\n");
     fflush(stdout);
 
     JsValueRef undefinedValue;
@@ -219,12 +219,12 @@ JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *argu
     HRESULT hr = E_FAIL;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     JsErrorCode errorCode = JsNoError;
-    LPCWSTR errorMessage = _u("");
+    LPCWSTR errorMessage = u"";
 
     if (argumentCount < 2 || argumentCount > 4)
     {
         errorCode = JsErrorInvalidArgument;
-        errorMessage = _u("Need more or fewer arguments for WScript.LoadScript");
+        errorMessage = u"Need more or fewer arguments for WScript.LoadScript";
     }
     else
     {
@@ -269,7 +269,7 @@ void WScriptJsrt::SetExceptionIf(JsErrorCode errorCode, LPCWSTR errorMessage)
             JsValueRef errorObject;
             JsValueRef errorMessageString;
 
-            if (wcscmp(errorMessage, _u("")) == 0)
+            if (wcscmp(errorMessage, u"") == 0)
             {
                 errorMessage = ConvertErrorCodeToMessage(errorCode);
             }
@@ -301,7 +301,7 @@ bool WriteHostObject(void * state, JsValueRef data)
 JsValueRef WScriptJsrt::SerializeObject(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
     JsErrorCode errorCode = JsNoError;
-    LPCWSTR errorMessage = _u("");
+    LPCWSTR errorMessage = u"";
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     HRESULT hr = S_OK;
     JsValueRef *transferVarsArray = nullptr;
@@ -309,7 +309,7 @@ JsValueRef WScriptJsrt::SerializeObject(JsValueRef callee, bool isConstructCall,
     if (argumentCount < 2)
     {
         errorCode = JsErrorInvalidArgument;
-        errorMessage = _u("Need an argument for WScript.Serialize");
+        errorMessage = u"Need an argument for WScript.Serialize";
     }
     else
     {
@@ -436,14 +436,14 @@ void BufferFreeFunction(void * state)
 JsValueRef WScriptJsrt::Deserialize(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
     JsErrorCode errorCode = JsNoError;
-    LPCWSTR errorMessage = _u("");
+    LPCWSTR errorMessage = u"";
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     JsValueRef * transferables = nullptr;
     HRESULT hr = S_OK;
     if (argumentCount < 2)
     {
         errorCode = JsErrorInvalidArgument;
-        errorMessage = _u("Need an argument for WScript.Deserialize");
+        errorMessage = u"Need an argument for WScript.Deserialize";
     }
     else
     {
@@ -493,13 +493,13 @@ JsValueRef WScriptJsrt::GetModuleNamespace(JsValueRef callee, bool isConstructCa
 {
     JsErrorCode errorCode = JsNoError;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
-    LPCWSTR errorMessage = _u("");
+    LPCWSTR errorMessage = u"";
     char fullPath[_MAX_PATH];
 
     if (argumentCount < 2)
     {
         errorCode = JsErrorInvalidArgument;
-        errorMessage = _u("Need an argument for WScript.GetModuleNamespace");
+        errorMessage = u"Need an argument for WScript.GetModuleNamespace";
     }
     else
     {
@@ -518,14 +518,14 @@ JsValueRef WScriptJsrt::GetModuleNamespace(JsValueRef callee, bool isConstructCa
                 if (moduleEntry == moduleRecordMap.end())
                 {
                     errorCode = JsErrorInvalidArgument;
-                    errorMessage = _u("Need to supply a path for an already loaded module for WScript.GetModuleNamespace");
+                    errorMessage = u"Need to supply a path for an already loaded module for WScript.GetModuleNamespace";
                 }
                 else
                 {
                     errorCode = ChakraRTInterface::JsGetModuleNamespace(moduleEntry->second, &returnValue);
                     if (errorCode == JsErrorModuleNotEvaluated)
                     {
-                        errorMessage = _u("GetModuleNamespace called with un-evaluated module");
+                        errorMessage = u"GetModuleNamespace called with un-evaluated module";
                     }
                 }
             }
@@ -550,13 +550,13 @@ JsValueRef WScriptJsrt::LoadScriptHelper(JsValueRef callee, bool isConstructCall
 {
     HRESULT hr = E_FAIL;
     JsErrorCode errorCode = JsNoError;
-    LPCWSTR errorMessage = _u("");
+    LPCWSTR errorMessage = u"";
     JsValueRef returnValue = JS_INVALID_REFERENCE;
 
     if (argumentCount < 2 || argumentCount > 4)
     {
         errorCode = JsErrorInvalidArgument;
-        errorMessage = _u("Need more or fewer arguments for WScript.LoadScript");
+        errorMessage = u"Need more or fewer arguments for WScript.LoadScript";
     }
     else
     {
@@ -687,7 +687,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, LPCSTR fileName,
 {
     HRESULT hr = E_FAIL;
     JsErrorCode errorCode = JsNoError;
-    LPCWSTR errorMessage = _u("Internal error.");
+    LPCWSTR errorMessage = u"Internal error.";
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     JsContextRef currentContext = JS_INVALID_REFERENCE;
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
@@ -822,7 +822,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, LPCSTR fileName,
     else
     {
         errorCode = JsErrorInvalidArgument;
-        errorMessage = _u("Unsupported argument type inject type.");
+        errorMessage = u"Unsupported argument type inject type.";
     }
 
 Error:
@@ -840,7 +840,7 @@ Error:
 
 JsValueRef WScriptJsrt::MonotonicNowCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    LPCWSTR errorMessage = _u("invalid call to WScript.monotonicNow");
+    LPCWSTR errorMessage = u"invalid call to WScript.monotonicNow";
     JsErrorCode errorCode = JsNoError;
     HRESULT hr = S_OK;
     JsValueRef result;
@@ -860,7 +860,7 @@ Error:
 
 JsValueRef WScriptJsrt::SetTimeoutCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    LPCWSTR errorMessage = _u("invalid call to WScript.SetTimeout");
+    LPCWSTR errorMessage = u"invalid call to WScript.SetTimeout";
     JsErrorCode errorCode = JsNoError;
     HRESULT hr = S_OK;
 
@@ -894,7 +894,7 @@ Error:
 
 JsValueRef WScriptJsrt::ClearTimeoutCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    LPCWSTR errorMessage = _u("invalid call to WScript.ClearTimeout");
+    LPCWSTR errorMessage = u"invalid call to WScript.ClearTimeout";
     JsErrorCode errorCode = JsNoError;
     HRESULT hr = S_OK;
 
@@ -930,7 +930,7 @@ void QueueDebugOperation(JsValueRef function, const DebugOperationFunc& operatio
 
 JsValueRef WScriptJsrt::AttachCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    LPCWSTR errorMessage = _u("WScript.Attach requires a function, like WScript.Attach(foo);");
+    LPCWSTR errorMessage = u"WScript.Attach requires a function, like WScript.Attach(foo);";
     JsErrorCode errorCode = JsNoError;
     HRESULT hr = S_OK;
     JsValueType argumentType = JsUndefined;
@@ -965,7 +965,7 @@ Error:
 
 JsValueRef WScriptJsrt::DetachCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    LPCWSTR errorMessage = _u("WScript.Detach requires a function, like WScript.Detach(foo);");
+    LPCWSTR errorMessage = u"WScript.Detach requires a function, like WScript.Detach(foo);";
     JsErrorCode errorCode = JsNoError;
     HRESULT hr = S_OK;
     JsValueType argumentType = JsUndefined;
@@ -1028,7 +1028,7 @@ JsValueRef WScriptJsrt::RequestAsyncBreakCallback(JsValueRef callee, bool isCons
     }
     else
     {
-        Helpers::LogError(_u("RequestAsyncBreak can only be called when debugger is attached"));
+        Helpers::LogError(u"RequestAsyncBreak can only be called when debugger is attached");
     }
 
     return JS_INVALID_REFERENCE;
@@ -1511,7 +1511,7 @@ JsValueRef WScriptJsrt::LoadBinaryFileCallback(JsValueRef callee,
             IfJsrtErrorSetGoLabel(ChakraRTInterface::JsGetArrayBufferStorage(arrayBuffer, &buffer, &bufferLength), ErrorStillFree);
             if (bufferLength < lengthBytes)
             {
-                fwprintf(stderr, _u("Array buffer size is insufficient to store the binary file.\n"));
+                fwprintf(stderr, u"Array buffer size is insufficient to store the binary file.\n");
             }
             else
             {
@@ -1586,7 +1586,7 @@ JsValueRef WScriptJsrt::BroadcastCallback(JsValueRef callee, bool isConstructCal
             }
             else
             {
-                fwprintf(stderr, _u("Couldn't create semaphore.\n"));
+                fwprintf(stderr, u"Couldn't create semaphore.\n");
                 fflush(stderr);
             }
 
@@ -1810,7 +1810,7 @@ bool WScriptJsrt::PrintException(LPCSTR fileName, JsErrorCode jsErrorCode, JsVal
 
             if (errorMessage.Initialize(exception) != JsNoError)
             {
-                fwprintf(stderr, _u("ERROR attempting to coerce error to string, using alternate handler\n"));
+                fwprintf(stderr, u"ERROR attempting to coerce error to string, using alternate handler\n");
                 bool hasException = false;
                 ChakraRTInterface::JsHasException(&hasException);
                 if (hasException)
@@ -1848,12 +1848,12 @@ bool WScriptJsrt::PrintException(LPCSTR fileName, JsErrorCode jsErrorCode, JsVal
                         IfJsrtErrorFail(CreatePropertyIdFromString("column", &columnPropertyId), false);
                         IfJsrtErrorFail(ChakraRTInterface::JsGetProperty(metaData, columnPropertyId, &columnProperty), false);
                         IfJsrtErrorFail(ChakraRTInterface::JsNumberToInt(columnProperty, &column), false);
-                        fwprintf(stderr, _u("%ls\n        at code (%S%S:%d:%d)\n"),
+                        fwprintf(stderr, u"%ls\n        at code (%S%S:%d:%d)\n",
                             errorMessage.GetWideString(), shortFileName, ext, line + 1, column + 1);
                     }
                     else
                     {
-                        fwprintf(stderr, _u("%ls\n\tat code (%S%S:\?\?:\?\?)\n"), errorMessage.GetWideString(), shortFileName, ext);
+                        fwprintf(stderr, u"%ls\n\tat code (%S%S:\?\?:\?\?)\n", errorMessage.GetWideString(), shortFileName, ext);
                     }
                     return true;
                 }
@@ -1881,7 +1881,7 @@ bool WScriptJsrt::PrintException(LPCSTR fileName, JsErrorCode jsErrorCode, JsVal
                 char shortFileName[_MAX_PATH];
                 char ext[_MAX_EXT];
                 _splitpath_s(fileName, nullptr, 0, nullptr, 0, shortFileName, _countof(shortFileName), ext, _countof(ext));
-                fwprintf(stderr, _u("%ls\n\tat code (%S%S:%d:%d)\n"),
+                fwprintf(stderr, u"%ls\n\tat code (%S%S:%d:%d)\n",
                     errorMessage.GetWideString(), shortFileName, ext, (int)line + 1,
                     (int)column + 1);
             }
@@ -1913,24 +1913,24 @@ bool WScriptJsrt::PrintException(LPCSTR fileName, JsErrorCode jsErrorCode, JsVal
 
                     // do not mix char/wchar. print them separately
                     fprintf(stderr, "thrown at %s%s:\n^\n", shortFileName, ext);
-                    fwprintf(stderr, _u("%ls\n"), errorMessage.GetWideString());
+                    fwprintf(stderr, u"%ls\n", errorMessage.GetWideString());
                 }
                 else
                 {
                     IfJsrtErrorFail(errorStack.Initialize(stackProperty), false);
-                    fwprintf(stderr, _u("%ls\n"), errorStack.GetWideString());
+                    fwprintf(stderr, u"%ls\n", errorStack.GetWideString());
                 }
             }
         }
         else
         {
-            fwprintf(stderr, _u("Error : %ls\n"), errorTypeString);
+            fwprintf(stderr, u"Error : %ls\n", errorTypeString);
         }
         return true;
     }
     else
     {
-        fwprintf(stderr, _u("Error : %ls\n"), errorTypeString);
+        fwprintf(stderr, u"Error : %ls\n", errorTypeString);
     }
     return false;
 }
@@ -1949,7 +1949,7 @@ WScriptJsrt::CallbackMessage::CallbackMessage(unsigned int time, JsValueRef func
     {
         // Simply report a fatal error and exit because continuing from this point would result in inconsistent state
         // and FailFast telemetry would not be useful.
-        wprintf(_u("FATAL ERROR: ChakraRTInterface::JsAddRef failed in WScriptJsrt::CallbackMessage::`ctor`. error=0x%x\n"), error);
+        wprintf(u"FATAL ERROR: ChakraRTInterface::JsAddRef failed in WScriptJsrt::CallbackMessage::`ctor`. error=0x%x\n", error);
         exit(1);
     }
 }
@@ -2174,7 +2174,7 @@ JsErrorCode WScriptJsrt::NotifyModuleReadyCallback(_In_opt_ JsModuleRecord refer
         {
             fileName.Initialize(specifier);
         }
-        wprintf(_u("NotifyModuleReadyCallback(exception) %S\n"), fileName.GetString());
+        wprintf(u"NotifyModuleReadyCallback(exception) %S\n", fileName.GetString());
     }
     
     if (moduleErrMap[referencingModule] != ErroredModule)
@@ -2224,11 +2224,11 @@ void WScriptJsrt::PromiseRejectionTrackerCallback(JsValueRef promise, JsValueRef
 
     if (!handled)
     {
-        wprintf(_u("Uncaught promise rejection\n"));
+        wprintf(u"Uncaught promise rejection\n");
     }
     else
     {
-        wprintf(_u("Promise rejection handled\n"));
+        wprintf(u"Promise rejection handled\n");
     }
 
     JsPropertyIdRef stackPropertyID; 
@@ -2244,7 +2244,7 @@ void WScriptJsrt::PromiseRejectionTrackerCallback(JsValueRef promise, JsValueRef
             if (error == JsNoError)
             {
                 AutoString str(stackStrValue);
-                wprintf(_u("%ls\n"), str.GetWideString());
+                wprintf(u"%ls\n", str.GetWideString());
             }
         }
     }
@@ -2257,7 +2257,7 @@ void WScriptJsrt::PromiseRejectionTrackerCallback(JsValueRef promise, JsValueRef
         if (error == JsNoError)
         {
             AutoString str(strValue);
-            wprintf(_u("%ls\n"), str.GetWideString());
+            wprintf(u"%ls\n", str.GetWideString());
         }
     }
 

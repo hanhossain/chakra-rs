@@ -1422,7 +1422,7 @@ namespace Js
             symbolSplit = nullptr;
         }
 
-        debuggerDeadZoneBlockVariableString = CreateStringFromCppLiteral(_u("[Uninitialized block variable]"));
+        debuggerDeadZoneBlockVariableString = CreateStringFromCppLiteral(u"[Uninitialized block variable]");
         defaultAccessorFunction = CreateNonProfiledFunction(&JavascriptOperators::EntryInfo::DefaultAccessor);
 
         if (scriptContext->GetConfig()->IsErrorStackTraceEnabled())
@@ -1495,22 +1495,22 @@ namespace Js
             //
             //TODO: when we formalize our telemetry library in JS land we will want to move these to a seperate Debug or Telemetry object instead of cluttering the global object
             //
-            AddFunctionToLibraryObjectWithPropertyName(globalObject, _u("telemetryLog"), &GlobalObject::EntryInfo::TelemetryLog, 3);
+            AddFunctionToLibraryObjectWithPropertyName(globalObject, u"telemetryLog", &GlobalObject::EntryInfo::TelemetryLog, 3);
 
-            AddFunctionToLibraryObjectWithPropertyName(globalObject, _u("enabledDiagnosticsTrace"), &GlobalObject::EntryInfo::EnabledDiagnosticsTrace, 1);
-            AddFunctionToLibraryObjectWithPropertyName(globalObject, _u("emitTTDLog"), &GlobalObject::EntryInfo::EmitTTDLog, 2);
+            AddFunctionToLibraryObjectWithPropertyName(globalObject, u"enabledDiagnosticsTrace", &GlobalObject::EntryInfo::EnabledDiagnosticsTrace, 1);
+            AddFunctionToLibraryObjectWithPropertyName(globalObject, u"emitTTDLog", &GlobalObject::EntryInfo::EmitTTDLog, 2);
         }
 #endif
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
-        AddFunctionToLibraryObjectWithPropertyName(globalObject, _u("chWriteTraceEvent"), &GlobalObject::EntryInfo::ChWriteTraceEvent, 1);
+        AddFunctionToLibraryObjectWithPropertyName(globalObject, u"chWriteTraceEvent", &GlobalObject::EntryInfo::ChWriteTraceEvent, 1);
 #endif
 
 #ifdef IR_VIEWER
         if (Js::Configuration::Global.flags.IsEnabled(Js::IRViewerFlag))
         {
-            AddFunctionToLibraryObjectWithPropertyName(globalObject, _u("parseIR"), &GlobalObject::EntryInfo::ParseIR, 1);
-            AddFunctionToLibraryObjectWithPropertyName(globalObject, _u("functionList"), &GlobalObject::EntryInfo::FunctionList, 1);
-            AddFunctionToLibraryObjectWithPropertyName(globalObject, _u("rejitFunction"), &GlobalObject::EntryInfo::RejitFunction, 2);
+            AddFunctionToLibraryObjectWithPropertyName(globalObject, u"parseIR", &GlobalObject::EntryInfo::ParseIR, 1);
+            AddFunctionToLibraryObjectWithPropertyName(globalObject, u"functionList", &GlobalObject::EntryInfo::FunctionList, 1);
+            AddFunctionToLibraryObjectWithPropertyName(globalObject, u"rejitFunction", &GlobalObject::EntryInfo::RejitFunction, 2);
         }
 #endif /* IR_VIEWER */
 
@@ -2182,7 +2182,7 @@ namespace Js
 
         if (scriptContext->GetConfig()->IsES6ToStringTagEnabled())
         {
-            library->AddMember(sharedArrayBufferPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(_u("SharedArrayBuffer")), PropertyConfigurable);
+            library->AddMember(sharedArrayBufferPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(u"SharedArrayBuffer"), PropertyConfigurable);
         }
 
         sharedArrayBufferPrototype->SetHasNoEnumerableProperties(true);
@@ -2211,7 +2211,7 @@ namespace Js
 
         if (atomicsObject->GetScriptContext()->GetConfig()->IsES6ToStringTagEnabled())
         {
-            library->AddMember(atomicsObject, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(_u("Atomics")), PropertyConfigurable);
+            library->AddMember(atomicsObject, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(u"Atomics"), PropertyConfigurable);
         }
 
         atomicsObject->SetHasNoEnumerableProperties(true);
@@ -2253,7 +2253,7 @@ namespace Js
 
         if (scriptContext->GetConfig()->IsES6ToStringTagEnabled())
         {
-            library->AddMember(arrayBufferPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(_u("ArrayBuffer")), PropertyConfigurable);
+            library->AddMember(arrayBufferPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(u"ArrayBuffer"), PropertyConfigurable);
         }
 
         arrayBufferPrototype->SetHasNoEnumerableProperties(true);
@@ -2306,7 +2306,7 @@ namespace Js
 
         if (scriptContext->GetConfig()->IsES6ToStringTagEnabled())
         {
-            library->AddMember(dataViewPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(_u("DataView")), PropertyConfigurable);
+            library->AddMember(dataViewPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(u"DataView"), PropertyConfigurable);
         }
 
         dataViewPrototype->SetHasNoEnumerableProperties(true);
@@ -2321,7 +2321,7 @@ namespace Js
         JavascriptLibrary* library = typedArrayConstructor->GetLibrary();
 
         library->AddMember(typedArrayConstructor, PropertyIds::length, TaggedInt::ToVarUnchecked(3), PropertyConfigurable);
-        library->AddMember(typedArrayConstructor, PropertyIds::name, library->CreateStringFromCppLiteral(_u("TypedArray")), PropertyConfigurable);
+        library->AddMember(typedArrayConstructor, PropertyIds::name, library->CreateStringFromCppLiteral(u"TypedArray"), PropertyConfigurable);
         library->AddMember(typedArrayConstructor, PropertyIds::prototype, library->typedArrayPrototype, PropertyNone);
 
         library->AddFunctionToLibraryObject(typedArrayConstructor, PropertyIds::from, &TypedArrayBase::EntryInfo::From, 1);
@@ -2509,7 +2509,7 @@ namespace Js
         bool hasNoEnumerableProperties = true;
         PropertyAttributes prototypeNameMessageAttributes = PropertyConfigurable | PropertyWritable;
 
-        library->AddMember(prototype, PropertyIds::name, library->CreateStringFromCppLiteral(_u("Error")), prototypeNameMessageAttributes);
+        library->AddMember(prototype, PropertyIds::name, library->CreateStringFromCppLiteral(u"Error"), prototypeNameMessageAttributes);
         library->AddMember(prototype, PropertyIds::message, library->GetEmptyString(), prototypeNameMessageAttributes);
         library->AddFunctionToLibraryObject(prototype, PropertyIds::toString, &JavascriptError::EntryInfo::ToString, 0);
 
@@ -2652,7 +2652,7 @@ namespace Js
 
         if (scriptContext->GetConfig()->IsES6ToStringTagEnabled())
         {
-            library->AddMember(symbolPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(_u("Symbol")), PropertyConfigurable);
+            library->AddMember(symbolPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(u"Symbol"), PropertyConfigurable);
         }
         scriptContext->SetBuiltInLibraryFunction(JavascriptSymbol::EntryInfo::ValueOf.GetOriginalEntryPoint(),
             library->AddFunctionToLibraryObject(symbolPrototype, PropertyIds::valueOf, &JavascriptSymbol::EntryInfo::ValueOf, 0));
@@ -2724,7 +2724,7 @@ namespace Js
         library->AddMember(promisePrototype, PropertyIds::constructor, library->promiseConstructor);
         if (scriptContext->GetConfig()->IsES6ToStringTagEnabled())
         {
-            library->AddMember(promisePrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(_u("Promise")), PropertyConfigurable);
+            library->AddMember(promisePrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(u"Promise"), PropertyConfigurable);
         }
         scriptContext->SetBuiltInLibraryFunction(JavascriptPromise::EntryInfo::Catch.GetOriginalEntryPoint(),
             library->AddFunctionToLibraryObject(promisePrototype, PropertyIds::catch_, &JavascriptPromise::EntryInfo::Catch, 1));
@@ -2757,7 +2757,7 @@ namespace Js
 
         library->AddMember(generatorFunctionConstructor, PropertyIds::length, TaggedInt::ToVarUnchecked(1), PropertyConfigurable);
         library->AddMember(generatorFunctionConstructor, PropertyIds::prototype, library->generatorFunctionPrototype, PropertyNone);
-        library->AddMember(generatorFunctionConstructor, PropertyIds::name, library->CreateStringFromCppLiteral(_u("GeneratorFunction")), PropertyConfigurable);
+        library->AddMember(generatorFunctionConstructor, PropertyIds::name, library->CreateStringFromCppLiteral(u"GeneratorFunction"), PropertyConfigurable);
 
         generatorFunctionConstructor->SetHasNoEnumerableProperties(true);
 
@@ -2774,7 +2774,7 @@ namespace Js
         library->AddMember(generatorFunctionPrototype, PropertyIds::prototype, library->generatorPrototype, PropertyConfigurable);
         if (scriptContext->GetConfig()->IsES6ToStringTagEnabled())
         {
-            library->AddMember(generatorFunctionPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(_u("GeneratorFunction")), PropertyConfigurable);
+            library->AddMember(generatorFunctionPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(u"GeneratorFunction"), PropertyConfigurable);
         }
         generatorFunctionPrototype->SetHasNoEnumerableProperties(true);
 
@@ -2791,7 +2791,7 @@ namespace Js
 
         library->AddMember(generatorPrototype, PropertyIds::constructor, library->generatorFunctionPrototype, PropertyConfigurable);
         if (scriptContext->GetConfig()->IsES6ToStringTagEnabled()) {
-            library->AddMember(generatorPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(_u("Generator")), PropertyConfigurable);
+            library->AddMember(generatorPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(u"Generator"), PropertyConfigurable);
         }
         library->AddMember(generatorPrototype, PropertyIds::return_, library->EnsureGeneratorReturnFunction(), PropertyBuiltInMethodDefaults);
         library->AddMember(generatorPrototype, PropertyIds::next, library->EnsureGeneratorNextFunction(), PropertyBuiltInMethodDefaults);
@@ -2891,7 +2891,7 @@ namespace Js
 
         library->AddMember(asyncFunctionConstructor, PropertyIds::length, TaggedInt::ToVarUnchecked(1), PropertyConfigurable);
         library->AddMember(asyncFunctionConstructor, PropertyIds::prototype, library->asyncFunctionPrototype, PropertyNone);
-        library->AddMember(asyncFunctionConstructor, PropertyIds::name, library->CreateStringFromCppLiteral(_u("AsyncFunction")), PropertyConfigurable);
+        library->AddMember(asyncFunctionConstructor, PropertyIds::name, library->CreateStringFromCppLiteral(u"AsyncFunction"), PropertyConfigurable);
 
         asyncFunctionConstructor->SetHasNoEnumerableProperties(true);
 
@@ -2907,7 +2907,7 @@ namespace Js
         library->AddMember(asyncFunctionPrototype, PropertyIds::constructor, library->asyncFunctionConstructor, PropertyConfigurable);
         if (scriptContext->GetConfig()->IsES6ToStringTagEnabled())
         {
-            library->AddMember(asyncFunctionPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(_u("AsyncFunction")), PropertyConfigurable);
+            library->AddMember(asyncFunctionPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(u"AsyncFunction"), PropertyConfigurable);
         }
         asyncFunctionPrototype->SetHasNoEnumerableProperties(true);
 
@@ -2922,7 +2922,7 @@ namespace Js
 
         library->AddMember(asyncGeneratorFunctionConstructor, PropertyIds::length, TaggedInt::ToVarUnchecked(1), PropertyConfigurable);
         library->AddMember(asyncGeneratorFunctionConstructor, PropertyIds::prototype, library->asyncGeneratorFunctionPrototype, PropertyNone);
-        library->AddMember(asyncGeneratorFunctionConstructor, PropertyIds::name, library->CreateStringFromCppLiteral(_u("AsyncGeneratorFunction")), PropertyConfigurable);
+        library->AddMember(asyncGeneratorFunctionConstructor, PropertyIds::name, library->CreateStringFromCppLiteral(u"AsyncGeneratorFunction"), PropertyConfigurable);
 
         asyncGeneratorFunctionConstructor->SetHasNoEnumerableProperties(true);
 
@@ -2940,7 +2940,7 @@ namespace Js
         library->AddMember(asyncGeneratorFunctionPrototype, PropertyIds::prototype, library->asyncGeneratorPrototype, PropertyConfigurable);
         if (scriptContext->GetConfig()->IsES6ToStringTagEnabled())
         {
-            library->AddMember(asyncGeneratorFunctionPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(_u("AsyncGeneratorFunction")), PropertyConfigurable);
+            library->AddMember(asyncGeneratorFunctionPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(u"AsyncGeneratorFunction"), PropertyConfigurable);
         }
         asyncGeneratorFunctionPrototype->SetHasNoEnumerableProperties(true);
 
@@ -2957,7 +2957,7 @@ namespace Js
         library->AddMember(asyncGeneratorPrototype, PropertyIds::constructor, library->asyncGeneratorFunctionPrototype, PropertyConfigurable);
         if (scriptContext->GetConfig()->IsES6ToStringTagEnabled())
         {
-            library->AddMember(asyncGeneratorPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(_u("AsyncGenerator")), PropertyConfigurable);
+            library->AddMember(asyncGeneratorPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(u"AsyncGenerator"), PropertyConfigurable);
         }
 
         library->AddMember(asyncGeneratorPrototype, PropertyIds::return_, library->EnsureAsyncGeneratorReturnFunction(), PropertyBuiltInMethodDefaults);
@@ -3215,7 +3215,7 @@ namespace Js
 
     void JavascriptLibrary::InitializeComplexThings()
     {
-        emptyRegexPattern = RegexHelper::CompileDynamic(scriptContext, _u(""), 0, _u(""), 0, false);
+        emptyRegexPattern = RegexHelper::CompileDynamic(scriptContext, u"", 0, u"", 0, false);
 
         Recycler *const recycler = GetRecycler();
 
@@ -3316,7 +3316,7 @@ namespace Js
 
         if (scriptContext->GetConfig()->IsES6ToStringTagEnabled())
         {
-            library->AddMember(mathObject, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(_u("Math")), PropertyConfigurable);
+            library->AddMember(mathObject, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(u"Math"), PropertyConfigurable);
         }
 
         DebugOnly(CheckRegisteredBuiltIns(builtinFuncs, scriptContext));
@@ -3338,7 +3338,7 @@ namespace Js
         library->AddMember(prototype, PropertyIds::constructor, library->webAssemblyTableConstructor);
         if (scriptContext->GetConfig()->IsES6ToStringTagEnabled())
         {
-            library->AddMember(prototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(_u("WebAssembly.Table")), PropertyConfigurable);
+            library->AddMember(prototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(u"WebAssembly.Table"), PropertyConfigurable);
         }
         scriptContext->SetBuiltInLibraryFunction(WebAssemblyTable::EntryInfo::Grow.GetOriginalEntryPoint(),
             library->AddFunctionToLibraryObject(prototype, PropertyIds::grow, &WebAssemblyTable::EntryInfo::Grow, 1));
@@ -3363,7 +3363,7 @@ namespace Js
 
         library->AddMember(constructor, PropertyIds::length, TaggedInt::ToVarUnchecked(1), PropertyConfigurable);
         library->AddMember(constructor, PropertyIds::prototype, library->webAssemblyTablePrototype, PropertyNone);
-        library->AddMember(constructor, PropertyIds::name, library->CreateStringFromCppLiteral(_u("Table")), PropertyConfigurable);
+        library->AddMember(constructor, PropertyIds::name, library->CreateStringFromCppLiteral(u"Table"), PropertyConfigurable);
 
         constructor->SetHasNoEnumerableProperties(true);
 
@@ -3380,7 +3380,7 @@ namespace Js
         library->AddMember(prototype, PropertyIds::constructor, library->webAssemblyMemoryConstructor);
         if (scriptContext->GetConfig()->IsES6ToStringTagEnabled())
         {
-            library->AddMember(prototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(_u("WebAssembly.Memory")), PropertyConfigurable);
+            library->AddMember(prototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(u"WebAssembly.Memory"), PropertyConfigurable);
         }
         scriptContext->SetBuiltInLibraryFunction(WebAssemblyMemory::EntryInfo::Grow.GetOriginalEntryPoint(),
             library->AddFunctionToLibraryObject(prototype, PropertyIds::grow, &WebAssemblyMemory::EntryInfo::Grow, 1));
@@ -3399,7 +3399,7 @@ namespace Js
 
         library->AddMember(constructor, PropertyIds::length, TaggedInt::ToVarUnchecked(1), PropertyConfigurable);
         library->AddMember(constructor, PropertyIds::prototype, library->webAssemblyMemoryPrototype, PropertyNone);
-        library->AddMember(constructor, PropertyIds::name, library->CreateStringFromCppLiteral(_u("Memory")), PropertyConfigurable);
+        library->AddMember(constructor, PropertyIds::name, library->CreateStringFromCppLiteral(u"Memory"), PropertyConfigurable);
 
         constructor->SetHasNoEnumerableProperties(true);
 
@@ -3417,7 +3417,7 @@ namespace Js
         library->AddAccessorsToLibraryObject(prototype, PropertyIds::exports, &WebAssemblyInstance::EntryInfo::GetterExports, nullptr);
         if (scriptContext->GetConfig()->IsES6ToStringTagEnabled())
         {
-            library->AddMember(prototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(_u("WebAssembly.Instance")), PropertyConfigurable);
+            library->AddMember(prototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(u"WebAssembly.Instance"), PropertyConfigurable);
         }
         prototype->SetHasNoEnumerableProperties(true);
 
@@ -3431,7 +3431,7 @@ namespace Js
 
         library->AddMember(constructor, PropertyIds::length, TaggedInt::ToVarUnchecked(1), PropertyConfigurable);
         library->AddMember(constructor, PropertyIds::prototype, library->webAssemblyInstancePrototype, PropertyNone);
-        library->AddMember(constructor, PropertyIds::name, library->CreateStringFromCppLiteral(_u("Instance")), PropertyConfigurable);
+        library->AddMember(constructor, PropertyIds::name, library->CreateStringFromCppLiteral(u"Instance"), PropertyConfigurable);
 
         constructor->SetHasNoEnumerableProperties(true);
 
@@ -3448,7 +3448,7 @@ namespace Js
         library->AddMember(prototype, PropertyIds::constructor, library->webAssemblyModuleConstructor);
         if (scriptContext->GetConfig()->IsES6ToStringTagEnabled())
         {
-            library->AddMember(prototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(_u("WebAssembly.Module")), PropertyConfigurable);
+            library->AddMember(prototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(u"WebAssembly.Module"), PropertyConfigurable);
         }
         prototype->SetHasNoEnumerableProperties(true);
 
@@ -3462,7 +3462,7 @@ namespace Js
 
         library->AddMember(constructor, PropertyIds::length, TaggedInt::ToVarUnchecked(1), PropertyConfigurable);
         library->AddMember(constructor, PropertyIds::prototype, library->webAssemblyModulePrototype, PropertyNone);
-        library->AddMember(constructor, PropertyIds::name, library->CreateStringFromCppLiteral(_u("Module")), PropertyConfigurable);
+        library->AddMember(constructor, PropertyIds::name, library->CreateStringFromCppLiteral(u"Module"), PropertyConfigurable);
 
         library->AddFunctionToLibraryObject(constructor, PropertyIds::exports, &WebAssemblyModule::EntryInfo::Exports, 1);
         library->AddFunctionToLibraryObject(constructor, PropertyIds::imports, &WebAssemblyModule::EntryInfo::Imports, 1);
@@ -3508,7 +3508,7 @@ namespace Js
         library->AddFunction(webAssemblyObject, PropertyIds::Memory, library->webAssemblyMemoryConstructor);
         library->AddFunction(webAssemblyObject, PropertyIds::Table, library->webAssemblyTableConstructor);
 
-        library->AddMember(webAssemblyObject, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(_u("WebAssembly")), PropertyConfigurable);
+        library->AddMember(webAssemblyObject, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(u"WebAssembly"), PropertyConfigurable);
 
         return true;
     }
@@ -3932,7 +3932,7 @@ namespace Js
 
 #if ENABLE_DEBUG_CONFIG_OPTIONS
     char16_t const * const JavascriptLibrary::LibraryFunctionName[] = {
-#define LIBRARY_FUNCTION(obj, name, argc, flags, entry) _u(#obj) _u(".") _u(#name),
+#define LIBRARY_FUNCTION(obj, name, argc, flags, entry) _u(#obj) u"." _u(#name),
 #include "LibraryFunction.h"
 #undef LIBRARY_FUNCTION
         0
@@ -4546,7 +4546,7 @@ namespace Js
 
         if (scriptContext->GetConfig()->IsES6ToStringTagEnabled())
         {
-            library->AddMember(mapPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(_u("Map")), PropertyConfigurable);
+            library->AddMember(mapPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(u"Map"), PropertyConfigurable);
         }
 
         mapPrototype->SetHasNoEnumerableProperties(true);
@@ -4597,7 +4597,7 @@ namespace Js
 
         if (scriptContext->GetConfig()->IsES6ToStringTagEnabled())
         {
-            library->AddMember(setPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(_u("Set")), PropertyConfigurable);
+            library->AddMember(setPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(u"Set"), PropertyConfigurable);
         }
 
         setPrototype->SetHasNoEnumerableProperties(true);
@@ -4637,7 +4637,7 @@ namespace Js
 
         if (scriptContext->GetConfig()->IsES6ToStringTagEnabled())
         {
-            library->AddMember(weakMapPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(_u("WeakMap")), PropertyConfigurable);
+            library->AddMember(weakMapPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(u"WeakMap"), PropertyConfigurable);
         }
 
         weakMapPrototype->SetHasNoEnumerableProperties(true);
@@ -4676,7 +4676,7 @@ namespace Js
 
         if (scriptContext->GetConfig()->IsES6ToStringTagEnabled())
         {
-            library->AddMember(weakSetPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(_u("WeakSet")), PropertyConfigurable);
+            library->AddMember(weakSetPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(u"WeakSet"), PropertyConfigurable);
         }
 
         weakSetPrototype->SetHasNoEnumerableProperties(true);
@@ -4730,7 +4730,7 @@ namespace Js
 
         if (scriptContext->GetConfig()->IsES6ToStringTagEnabled())
         {
-            library->AddMember(arrayIteratorPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(_u("Array Iterator")), PropertyConfigurable);
+            library->AddMember(arrayIteratorPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(u"Array Iterator"), PropertyConfigurable);
         }
 
         return true;
@@ -4749,7 +4749,7 @@ namespace Js
 
         if (scriptContext->GetConfig()->IsES6ToStringTagEnabled())
         {
-            library->AddMember(mapIteratorPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(_u("Map Iterator")), PropertyConfigurable);
+            library->AddMember(mapIteratorPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(u"Map Iterator"), PropertyConfigurable);
         }
 
         return true;
@@ -4767,7 +4767,7 @@ namespace Js
 
         if (scriptContext->GetConfig()->IsES6ToStringTagEnabled())
         {
-            library->AddMember(setIteratorPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(_u("Set Iterator")), PropertyConfigurable);
+            library->AddMember(setIteratorPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(u"Set Iterator"), PropertyConfigurable);
         }
 
         return true;
@@ -4785,7 +4785,7 @@ namespace Js
 
         if (scriptContext->GetConfig()->IsES6ToStringTagEnabled())
         {
-            library->AddMember(stringIteratorPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(_u("String Iterator")), PropertyConfigurable);
+            library->AddMember(stringIteratorPrototype, PropertyIds::_symbolToStringTag, library->CreateStringFromCppLiteral(u"String Iterator"), PropertyConfigurable);
         }
 
         return true;
@@ -5069,7 +5069,7 @@ namespace Js
 
         if (JSONObject->GetScriptContext()->GetConfig()->IsES6ToStringTagEnabled())
         {
-            library->AddMember(JSONObject, PropertyIds::_symbolToStringTag, JSONObject->GetLibrary()->CreateStringFromCppLiteral(_u("JSON")), PropertyConfigurable);
+            library->AddMember(JSONObject, PropertyIds::_symbolToStringTag, JSONObject->GetLibrary()->CreateStringFromCppLiteral(u"JSON"), PropertyConfigurable);
         }
 
         JSONObject->SetHasNoEnumerableProperties(true);
@@ -5792,7 +5792,7 @@ namespace Js
 #if DBG_DUMP
         if (Js::Configuration::Global.flags.Trace.IsEnabled(Js::HostPhase))
         {
-            Output::Print(_u("Create new external function: methodAddr= %p, propertyRecord= %p, propertyName= %s\n"),
+            Output::Print(u"Create new external function: methodAddr= %p, propertyRecord= %p, propertyName= %s\n",
                 this, nameId,
                 TaggedInt::Is(nameId) ? scriptContext->GetThreadContext()->GetPropertyName(TaggedInt::ToInt32(nameId))->GetBuffer() : ((JavascriptString *)nameId)->GetString());
         }
@@ -5843,8 +5843,8 @@ namespace Js
         // Append a delimiter and the rest of the items
         for (uint32 i = 1; i < arrayLength; i++)
         {
-            len = 3; // strlen(_u("${}"));
-            js_wmemcpy_s(ptr, remainingSpace, _u("${}"), len);
+            len = 3; // strlen(u"${}");
+            js_wmemcpy_s(ptr, remainingSpace, u"${}", len);
             ptr += len;
             remainingSpace -= len;
 
@@ -5858,7 +5858,7 @@ namespace Js
         }
 
         // Ensure string is terminated
-        key[keyLength - 1] = _u('\0');
+        key[keyLength - 1] = u'\0';
 
         return key;
     }
@@ -6782,7 +6782,7 @@ namespace Js
 #if DBG
         DynamicType* oldCachedType = nullptr;
         char16_t reason[1024];
-        swprintf_s(reason, 1024, _u("Cache not populated."));
+        swprintf_s(reason, 1024, u"Cache not populated.");
 #endif
         // Always use `TypeOfPrototypeObjectInlined` because we are creating DynamicType of TypeIds_Object
         AssertMsg(typeId == TypeIds_Object, "CreateObjectType() is used to create other objects. Please update cacheSlot for protoObjectCache first.");
@@ -6813,12 +6813,12 @@ namespace Js
 #if DBG
                         if (PHASE_VERBOSE_TRACE1(TypeShareForChangePrototypePhase))
                         {
-                            Output::Print(_u("TypeSharing: Reusing prototype [0x%p] object's InlineSlot cache 0x%p in CreateObject.\n"), prototype, dynamicType);
+                            Output::Print(u"TypeSharing: Reusing prototype [0x%p] object's InlineSlot cache 0x%p in CreateObject.\n", prototype, dynamicType);
                         }
                         else
                         {
 #endif
-                            Output::Print(_u("TypeSharing: Reusing prototype object's InlineSlot cache in __proto__.\n"));
+                            Output::Print(u"TypeSharing: Reusing prototype object's InlineSlot cache in __proto__.\n");
 #if DBG
                         }
 #endif
@@ -6832,7 +6832,7 @@ namespace Js
                 {
                     if (dynamicTypeHandler->IsObjectHeaderInlinedTypeHandler() != useObjectHeaderInlining)
                     {
-                        swprintf_s(reason, 1024, _u("useObjectHeaderInlining mismatch."));
+                        swprintf_s(reason, 1024, u"useObjectHeaderInlining mismatch.");
                     }
                     else
                     {
@@ -6841,7 +6841,7 @@ namespace Js
                             ? DynamicTypeHandler::RoundUpObjectHeaderInlinedInlineSlotCapacity(requestedInlineSlotCapacity)
                             : DynamicTypeHandler::RoundUpInlineSlotCapacity(requestedInlineSlotCapacity);
 
-                        swprintf_s(reason, 1024, _u("inlineSlotCapacity mismatch. Required = %d, Cached = %d"), requiredCapacity, cachedCapacity);
+                        swprintf_s(reason, 1024, u"inlineSlotCapacity mismatch. Required = %d, Cached = %d", requiredCapacity, cachedCapacity);
                     }
                 }
 #endif
@@ -6854,11 +6854,11 @@ namespace Js
         {
             if (dynamicType == nullptr)
             {
-                swprintf_s(reason, 1024, _u("cached type was null"));
+                swprintf_s(reason, 1024, u"cached type was null");
             }
             else if ((Js::Var)dynamicType == this->GetUndefined())
             {
-                swprintf_s(reason, 1024, _u("cached type was undefined"));
+                swprintf_s(reason, 1024, u"cached type was undefined");
             }
         }
         oldCachedType = dynamicType;
@@ -6874,12 +6874,12 @@ namespace Js
 #if DBG
                 if (PHASE_VERBOSE_TRACE1(TypeShareForChangePrototypePhase))
                 {
-                    Output::Print(_u("TypeSharing: Updating prototype [0x%p] object's InlineSlot cache from 0x%p to 0x%p in CreateObject. Reason = %s\n"), prototype, oldCachedType, dynamicType, reason);
+                    Output::Print(u"TypeSharing: Updating prototype [0x%p] object's InlineSlot cache from 0x%p to 0x%p in CreateObject. Reason = %s\n", prototype, oldCachedType, dynamicType, reason);
                 }
                 else
                 {
 #endif
-                    Output::Print(_u("TypeSharing: Updating prototype object's InlineSlot cache in CreateObject.\n"));
+                    Output::Print(u"TypeSharing: Updating prototype object's InlineSlot cache in CreateObject.\n");
 #if DBG
                 }
 #endif
@@ -7835,7 +7835,7 @@ namespace Js
             REG_OBJECTS_LIB_FUNC(fontsize, JavascriptString::EntryFontSize);
             REG_OBJECTS_LIB_FUNC(italics, JavascriptString::EntryItalics);
             REG_OBJECTS_LIB_FUNC(link, JavascriptString::EntryLink);
-            REG_OBJECTS_DYNAMIC_LIB_FUNC(_u("small"), 5, JavascriptString::EntrySmall);
+            REG_OBJECTS_DYNAMIC_LIB_FUNC(u"small", 5, JavascriptString::EntrySmall);
             REG_OBJECTS_LIB_FUNC(strike, JavascriptString::EntryStrike);
             REG_OBJECTS_LIB_FUNC(sub, JavascriptString::EntrySub);
             REG_OBJECTS_LIB_FUNC(sup, JavascriptString::EntrySup);
@@ -7853,7 +7853,7 @@ namespace Js
 
         REG_OBJECTS_LIB_FUNC(raw, JavascriptString::EntryRaw);
 
-        REG_OBJECTS_LIB_FUNC2(_symbolIterator, _u("[Symbol.iterator]"), JavascriptString::EntrySymbolIterator);
+        REG_OBJECTS_LIB_FUNC2(_symbolIterator, u"[Symbol.iterator]", JavascriptString::EntrySymbolIterator);
 
         REG_OBJECTS_LIB_FUNC(padStart, JavascriptString::EntryPadStart);
         REG_OBJECTS_LIB_FUNC(padEnd, JavascriptString::EntryPadEnd);
@@ -7917,7 +7917,7 @@ namespace Js
 
         DEFINE_OBJECT_NAME(WeakMap);
 
-        REG_OBJECTS_LIB_FUNC2(delete_, _u("delete"), JavascriptWeakMap::EntryDelete);
+        REG_OBJECTS_LIB_FUNC2(delete_, u"delete", JavascriptWeakMap::EntryDelete);
         REG_OBJECTS_LIB_FUNC(get, JavascriptWeakMap::EntryGet);
         REG_OBJECTS_LIB_FUNC(has, JavascriptWeakMap::EntryHas);
         REG_OBJECTS_LIB_FUNC(set, JavascriptWeakMap::EntrySet);
@@ -7933,7 +7933,7 @@ namespace Js
         DEFINE_OBJECT_NAME(WeakSet);
 
         REG_OBJECTS_LIB_FUNC(add, JavascriptWeakSet::EntryAdd);
-        REG_OBJECTS_LIB_FUNC2(delete_, _u("delete"), JavascriptWeakSet::EntryDelete);
+        REG_OBJECTS_LIB_FUNC2(delete_, u"delete", JavascriptWeakSet::EntryDelete);
         REG_OBJECTS_LIB_FUNC(has, JavascriptWeakSet::EntryHas);
 
         return hr;
@@ -7947,7 +7947,7 @@ namespace Js
         DEFINE_OBJECT_NAME(Map);
 
         REG_OBJECTS_LIB_FUNC(clear, JavascriptMap::EntryClear);
-        REG_OBJECTS_LIB_FUNC2(delete_, _u("delete"), JavascriptMap::EntryDelete);
+        REG_OBJECTS_LIB_FUNC2(delete_, u"delete", JavascriptMap::EntryDelete);
         REG_OBJECTS_LIB_FUNC(forEach, JavascriptMap::EntryForEach);
         REG_OBJECTS_LIB_FUNC(get, JavascriptMap::EntryGet);
         REG_OBJECTS_LIB_FUNC(has, JavascriptMap::EntryHas);
@@ -7969,7 +7969,7 @@ namespace Js
 
         REG_OBJECTS_LIB_FUNC(add, JavascriptSet::EntryAdd);
         REG_OBJECTS_LIB_FUNC(clear, JavascriptSet::EntryClear);
-        REG_OBJECTS_LIB_FUNC2(delete_, _u("delete"), JavascriptSet::EntryDelete);
+        REG_OBJECTS_LIB_FUNC2(delete_, u"delete", JavascriptSet::EntryDelete);
         REG_OBJECTS_LIB_FUNC(forEach, JavascriptSet::EntryForEach);
         REG_OBJECTS_LIB_FUNC(has, JavascriptSet::EntryHas);
 
@@ -7988,7 +7988,7 @@ namespace Js
 
         REG_OBJECTS_LIB_FUNC(valueOf, JavascriptSymbol::EntryValueOf);
         REG_OBJECTS_LIB_FUNC(toString, JavascriptSymbol::EntryToString);
-        REG_OBJECTS_LIB_FUNC2(for_, _u("for"), JavascriptSymbol::EntryFor);
+        REG_OBJECTS_LIB_FUNC2(for_, u"for", JavascriptSymbol::EntryFor);
         REG_OBJECTS_LIB_FUNC(keyFor, JavascriptSymbol::EntryKeyFor);
         REG_OBJECTS_LIB_FUNC(description, JavascriptSymbol::EntryDescription);
 
@@ -8002,7 +8002,7 @@ namespace Js
 
         DEFINE_OBJECT_NAME(Iterator);
 
-        REG_OBJECTS_LIB_FUNC2(_symbolIterator, _u("[Symbol.iterator]"), JavascriptIterator::EntrySymbolIterator);
+        REG_OBJECTS_LIB_FUNC2(_symbolIterator, u"[Symbol.iterator]", JavascriptIterator::EntrySymbolIterator);
 
         return hr;
     }
@@ -8100,7 +8100,7 @@ namespace Js
         DEFINE_OBJECT_NAME(Promise);
 
         REG_OBJECTS_LIB_FUNC(all, JavascriptPromise::EntryAll);
-        REG_OBJECTS_LIB_FUNC2(catch_, _u("catch"), JavascriptPromise::EntryCatch);
+        REG_OBJECTS_LIB_FUNC2(catch_, u"catch", JavascriptPromise::EntryCatch);
         REG_OBJECTS_LIB_FUNC(race, JavascriptPromise::EntryRace);
         REG_OBJECTS_LIB_FUNC(resolve, JavascriptPromise::EntryResolve);
         REG_OBJECTS_LIB_FUNC(then, JavascriptPromise::EntryThen);
@@ -8182,9 +8182,9 @@ namespace Js
         DEFINE_OBJECT_NAME(IRViewer);
 
         // TODO (t-doilij) move GlobalObject::EntryParseIR to JavascriptIRViewer::EntryParseIR
-        REG_LIB_FUNC_CORE(pwszObjectName, _u("parseIR"), scriptContext->GetOrAddPropertyIdTracked(_u("parseIR")), GlobalObject::EntryParseIR);
-        REG_LIB_FUNC_CORE(pwszObjectName, _u("functionList"), scriptContext->GetOrAddPropertyIdTracked(_u("functionList")), GlobalObject::EntryFunctionList);
-        REG_LIB_FUNC_CORE(pwszObjectName, _u("rejitFunction"), scriptContext->GetOrAddPropertyIdTracked(_u("rejitFunction")), GlobalObject::EntryRejitFunction);
+        REG_LIB_FUNC_CORE(pwszObjectName, u"parseIR", scriptContext->GetOrAddPropertyIdTracked(u"parseIR"), GlobalObject::EntryParseIR);
+        REG_LIB_FUNC_CORE(pwszObjectName, u"functionList", scriptContext->GetOrAddPropertyIdTracked(u"functionList"), GlobalObject::EntryFunctionList);
+        REG_LIB_FUNC_CORE(pwszObjectName, u"rejitFunction", scriptContext->GetOrAddPropertyIdTracked(u"rejitFunction"), GlobalObject::EntryRejitFunction);
 
         return hr;
     }

@@ -633,7 +633,7 @@ namespace TTD
             compareMap.DiagnosticAssert(Js::DynamicType::Is(sobj1->SnapType->JsTypeId) == Js::DynamicType::Is(sobj2->SnapType->JsTypeId));
             if(Js::DynamicType::Is(sobj1->SnapType->JsTypeId))
             {
-                compareMap.CheckConsistentAndAddPtrIdMapping_Special(sobj1->OptIndexedObjectArray, sobj2->OptIndexedObjectArray, _u("indexedObjectArray"));
+                compareMap.CheckConsistentAndAddPtrIdMapping_Special(sobj1->OptIndexedObjectArray, sobj2->OptIndexedObjectArray, u"indexedObjectArray");
 
                 const NSSnapType::SnapHandler* handler1 = sobj1->SnapType->TypeHandlerInfo;
                 JsUtil::BaseDictionary<long, int32, HeapAllocator> sobj1PidMap(&HeapAllocator::Instance);
@@ -838,12 +838,12 @@ namespace TTD
             compareMap.DiagnosticAssert(TTStringEQForDiagnostics(snapFuncInfo1->DebugFunctionName, snapFuncInfo2->DebugFunctionName));
 
             compareMap.CheckConsistentAndAddPtrIdMapping_FunctionBody(snapFuncInfo1->BodyRefId, snapFuncInfo2->BodyRefId);
-            compareMap.CheckConsistentAndAddPtrIdMapping_Special(snapFuncInfo1->ScopeId, snapFuncInfo2->ScopeId, _u("scopes"));
+            compareMap.CheckConsistentAndAddPtrIdMapping_Special(snapFuncInfo1->ScopeId, snapFuncInfo2->ScopeId, u"scopes");
 
-            compareMap.CheckConsistentAndAddPtrIdMapping_Special(snapFuncInfo1->CachedScopeObjId, snapFuncInfo2->CachedScopeObjId, _u("cachedScopeObj"));
-            compareMap.CheckConsistentAndAddPtrIdMapping_Special(snapFuncInfo1->HomeObjId, snapFuncInfo2->HomeObjId, _u("homeObject"));
+            compareMap.CheckConsistentAndAddPtrIdMapping_Special(snapFuncInfo1->CachedScopeObjId, snapFuncInfo2->CachedScopeObjId, u"cachedScopeObj");
+            compareMap.CheckConsistentAndAddPtrIdMapping_Special(snapFuncInfo1->HomeObjId, snapFuncInfo2->HomeObjId, u"homeObject");
 
-            NSSnapValues::AssertSnapEquivTTDVar_Special(snapFuncInfo1->ComputedNameInfo, snapFuncInfo2->ComputedNameInfo, compareMap, _u("computedName"));
+            NSSnapValues::AssertSnapEquivTTDVar_Special(snapFuncInfo1->ComputedNameInfo, snapFuncInfo2->ComputedNameInfo, compareMap, u"computedName");
         }
 #endif
 
@@ -878,7 +878,7 @@ namespace TTD
             TTDVar snapName1 = SnapObjectGetAddtlInfoAs<TTDVar, SnapObjectType::SnapExternalFunctionObject>(sobj1);
             TTDVar snapName2 = SnapObjectGetAddtlInfoAs<TTDVar, SnapObjectType::SnapExternalFunctionObject>(sobj2);
 
-            NSSnapValues::AssertSnapEquivTTDVar_Special(snapName1, snapName2, compareMap, _u("externalFunctionName"));
+            NSSnapValues::AssertSnapEquivTTDVar_Special(snapName1, snapName2, compareMap, u"externalFunctionName");
         }
 #endif
 
@@ -921,7 +921,7 @@ namespace TTD
             TTD_PTR_ID* revokeTrgt1 = SnapObjectGetAddtlInfoAs<TTD_PTR_ID*, SnapObjectType::SnapRuntimeRevokerFunctionObject>(sobj1);
             TTD_PTR_ID* revokeTrgt2 = SnapObjectGetAddtlInfoAs<TTD_PTR_ID*, SnapObjectType::SnapRuntimeRevokerFunctionObject>(sobj2);
 
-            compareMap.CheckConsistentAndAddPtrIdMapping_Special(*revokeTrgt1, *revokeTrgt2, _u("revokeTarget"));
+            compareMap.CheckConsistentAndAddPtrIdMapping_Special(*revokeTrgt1, *revokeTrgt2, u"revokeTarget");
         }
 #endif
 
@@ -1001,13 +1001,13 @@ namespace TTD
             SnapBoundFunctionInfo* snapBoundInfo1 = SnapObjectGetAddtlInfoAs<SnapBoundFunctionInfo*, SnapObjectType::SnapBoundFunctionObject>(sobj1);
             SnapBoundFunctionInfo* snapBoundInfo2 = SnapObjectGetAddtlInfoAs<SnapBoundFunctionInfo*, SnapObjectType::SnapBoundFunctionObject>(sobj2);
 
-            compareMap.CheckConsistentAndAddPtrIdMapping_Special(snapBoundInfo1->TargetFunction, snapBoundInfo2->TargetFunction, _u("targetFunction"));
-            compareMap.CheckConsistentAndAddPtrIdMapping_Special(snapBoundInfo1->BoundThis, snapBoundInfo2->BoundThis, _u("boundThis"));
+            compareMap.CheckConsistentAndAddPtrIdMapping_Special(snapBoundInfo1->TargetFunction, snapBoundInfo2->TargetFunction, u"targetFunction");
+            compareMap.CheckConsistentAndAddPtrIdMapping_Special(snapBoundInfo1->BoundThis, snapBoundInfo2->BoundThis, u"boundThis");
 
             compareMap.DiagnosticAssert(snapBoundInfo1->ArgCount == snapBoundInfo2->ArgCount);
             for(uint32 i = 0; i < snapBoundInfo1->ArgCount; ++i)
             {
-                NSSnapValues::AssertSnapEquivTTDVar_SpecialArray(snapBoundInfo1->ArgArray[i], snapBoundInfo2->ArgArray[i], compareMap, _u("boundArgs"), i);
+                NSSnapValues::AssertSnapEquivTTDVar_SpecialArray(snapBoundInfo1->ArgArray[i], snapBoundInfo2->ArgArray[i], compareMap, u"boundArgs", i);
             }
         }
 #endif
@@ -1196,7 +1196,7 @@ namespace TTD
             const SnapPromiseInfo* promiseInfo1 = SnapObjectGetAddtlInfoAs<SnapPromiseInfo*, SnapObjectType::SnapPromiseObject>(sobj1);
             const SnapPromiseInfo* promiseInfo2 = SnapObjectGetAddtlInfoAs<SnapPromiseInfo*, SnapObjectType::SnapPromiseObject>(sobj2);
 
-            NSSnapValues::AssertSnapEquivTTDVar_Special(promiseInfo1->Result, promiseInfo2->Result, compareMap, _u("result"));
+            NSSnapValues::AssertSnapEquivTTDVar_Special(promiseInfo1->Result, promiseInfo2->Result, compareMap, u"result");
 
             compareMap.DiagnosticAssert(promiseInfo1->ResolveReactionCount == promiseInfo2->ResolveReactionCount);
             for(uint32 i = 0; i < promiseInfo1->ResolveReactionCount; ++i)
@@ -1263,7 +1263,7 @@ namespace TTD
             SnapPromiseResolveOrRejectFunctionInfo* rrfInfo1 = SnapObjectGetAddtlInfoAs<SnapPromiseResolveOrRejectFunctionInfo*, SnapObjectType::SnapPromiseResolveOrRejectFunctionObject>(sobj1);
             SnapPromiseResolveOrRejectFunctionInfo* rrfInfo2 = SnapObjectGetAddtlInfoAs<SnapPromiseResolveOrRejectFunctionInfo*, SnapObjectType::SnapPromiseResolveOrRejectFunctionObject>(sobj2);
 
-            compareMap.CheckConsistentAndAddPtrIdMapping_Special(rrfInfo1->PromiseId, rrfInfo2->PromiseId, _u("promise"));
+            compareMap.CheckConsistentAndAddPtrIdMapping_Special(rrfInfo1->PromiseId, rrfInfo2->PromiseId, u"promise");
 
             compareMap.DiagnosticAssert(rrfInfo1->IsReject == rrfInfo2->IsReject);
             compareMap.DiagnosticAssert(rrfInfo1->AlreadyResolvedValue == rrfInfo2->AlreadyResolvedValue);
@@ -1316,7 +1316,7 @@ namespace TTD
             SnapPromiseReactionTaskFunctionInfo* rInfo1 = SnapObjectGetAddtlInfoAs<SnapPromiseReactionTaskFunctionInfo*, SnapObjectType::SnapPromiseReactionTaskFunctionObject>(sobj1);
             SnapPromiseReactionTaskFunctionInfo* rInfo2 = SnapObjectGetAddtlInfoAs<SnapPromiseReactionTaskFunctionInfo*, SnapObjectType::SnapPromiseReactionTaskFunctionObject>(sobj2);
 
-            NSSnapValues::AssertSnapEquivTTDVar_Special(rInfo1->Argument, rInfo2->Argument, compareMap, _u("argument"));
+            NSSnapValues::AssertSnapEquivTTDVar_Special(rInfo1->Argument, rInfo2->Argument, compareMap, u"argument");
             NSSnapValues::AssertSnapEquiv(&(rInfo1->Reaction), &(rInfo2->Reaction), compareMap);
         }
 #endif
@@ -1389,7 +1389,7 @@ namespace TTD
             compareMap.DiagnosticAssert(aInfo1->RemainingElementsValue == aInfo2->RemainingElementsValue);
             compareMap.DiagnosticAssert(aInfo1->AlreadyCalled == aInfo2->AlreadyCalled);
 
-            compareMap.CheckConsistentAndAddPtrIdMapping_Special(aInfo1->Values, aInfo2->Values, _u("values"));
+            compareMap.CheckConsistentAndAddPtrIdMapping_Special(aInfo1->Values, aInfo2->Values, u"values");
 
             compareMap.CheckConsistentAndAddPtrIdMapping_NoEnqueue(aInfo1->RemainingElementsWrapperId, aInfo2->RemainingElementsWrapperId);
         }
@@ -1477,7 +1477,7 @@ namespace TTD
             compareMap.DiagnosticAssert(aInfo1->AlreadyCalledValue == aInfo2->AlreadyCalledValue);
             compareMap.DiagnosticAssert(aInfo1->IsRejecting == aInfo2->IsRejecting);
 
-            compareMap.CheckConsistentAndAddPtrIdMapping_Special(aInfo1->Values, aInfo2->Values, _u("values"));
+            compareMap.CheckConsistentAndAddPtrIdMapping_Special(aInfo1->Values, aInfo2->Values, u"values");
 
             compareMap.CheckConsistentAndAddPtrIdMapping_NoEnqueue(aInfo1->RemainingElementsWrapperId, aInfo2->RemainingElementsWrapperId);
             compareMap.CheckConsistentAndAddPtrIdMapping_NoEnqueue(aInfo1->AlreadyCalledWrapperId, aInfo2->AlreadyCalledWrapperId);
@@ -1527,7 +1527,7 @@ namespace TTD
             TTDVar snapBoxedVar1 = SnapObjectGetAddtlInfoAs<TTDVar, SnapObjectType::SnapBoxedValueObject>(sobj1);
             TTDVar snapBoxedVar2 = SnapObjectGetAddtlInfoAs<TTDVar, SnapObjectType::SnapBoxedValueObject>(sobj2);
 
-            NSSnapValues::AssertSnapEquivTTDVar_Special(snapBoxedVar1, snapBoxedVar2, compareMap, _u("boxedVar"));
+            NSSnapValues::AssertSnapEquivTTDVar_Special(snapBoxedVar1, snapBoxedVar2, compareMap, u"boxedVar");
         }
 #endif
 
@@ -1806,8 +1806,8 @@ namespace TTD
                 compareMap.DiagnosticAssert(entry1->Index == entry2->Index);
                 compareMap.DiagnosticAssert(entry1->Attributes == entry2->Attributes);
 
-                NSSnapValues::AssertSnapEquivTTDVar_SpecialArray(entry1->Getter, entry2->Getter, compareMap, _u("es5Getter"), entry1->Index);
-                NSSnapValues::AssertSnapEquivTTDVar_SpecialArray(entry1->Setter, entry2->Setter, compareMap, _u("es5Setter"), entry1->Index);
+                NSSnapValues::AssertSnapEquivTTDVar_SpecialArray(entry1->Getter, entry2->Getter, compareMap, u"es5Getter", entry1->Index);
+                NSSnapValues::AssertSnapEquivTTDVar_SpecialArray(entry1->Setter, entry2->Setter, compareMap, u"es5Setter", entry1->Index);
             }
 
             compareMap.DiagnosticAssert(es5Info1->BasicArrayData->Length == es5Info2->BasicArrayData->Length);
@@ -1993,7 +1993,7 @@ namespace TTD
             compareMap.DiagnosticAssert(typedArrayInfo1->ByteOffset == typedArrayInfo2->ByteOffset);
             compareMap.DiagnosticAssert(typedArrayInfo1->Length == typedArrayInfo2->Length);
 
-            compareMap.CheckConsistentAndAddPtrIdMapping_Special(typedArrayInfo1->ArrayBufferAddr, typedArrayInfo2->ArrayBufferAddr, _u("arrayBuffer"));
+            compareMap.CheckConsistentAndAddPtrIdMapping_Special(typedArrayInfo1->ArrayBufferAddr, typedArrayInfo2->ArrayBufferAddr, u"arrayBuffer");
         }
 #endif
 
@@ -2092,7 +2092,7 @@ namespace TTD
             {
                 for(uint32 i = 0; i < setInfo1->SetSize; ++i)
                 {
-                    NSSnapValues::AssertSnapEquivTTDVar_SpecialArray(setInfo1->SetValueArray[i], setInfo2->SetValueArray[i], compareMap, _u("setValues"), i);
+                    NSSnapValues::AssertSnapEquivTTDVar_SpecialArray(setInfo1->SetValueArray[i], setInfo2->SetValueArray[i], compareMap, u"setValues", i);
                 }
             }
         }
@@ -2199,8 +2199,8 @@ namespace TTD
             {
                 for(uint32 i = 0; i < mapInfo1->MapSize; i += 2)
                 {
-                    NSSnapValues::AssertSnapEquivTTDVar_SpecialArray(mapInfo1->MapKeyValueArray[i], mapInfo2->MapKeyValueArray[i], compareMap, _u("mapKeys"), i);
-                    NSSnapValues::AssertSnapEquivTTDVar_SpecialArray(mapInfo1->MapKeyValueArray[i + 1], mapInfo2->MapKeyValueArray[i + 1], compareMap, _u("mapValues"), i);
+                    NSSnapValues::AssertSnapEquivTTDVar_SpecialArray(mapInfo1->MapKeyValueArray[i], mapInfo2->MapKeyValueArray[i], compareMap, u"mapKeys", i);
+                    NSSnapValues::AssertSnapEquivTTDVar_SpecialArray(mapInfo1->MapKeyValueArray[i + 1], mapInfo2->MapKeyValueArray[i + 1], compareMap, u"mapValues", i);
                 }
             }
         }
@@ -2244,8 +2244,8 @@ namespace TTD
             const SnapProxyInfo* proxyInfo1 = SnapObjectGetAddtlInfoAs<SnapProxyInfo*, SnapObjectType::SnapProxyObject>(sobj1);
             const SnapProxyInfo* proxyInfo2 = SnapObjectGetAddtlInfoAs<SnapProxyInfo*, SnapObjectType::SnapProxyObject>(sobj2);
 
-            compareMap.CheckConsistentAndAddPtrIdMapping_Special(proxyInfo1->HandlerId, proxyInfo2->HandlerId, _u("handlerId"));
-            compareMap.CheckConsistentAndAddPtrIdMapping_Special(proxyInfo1->TargetId, proxyInfo2->TargetId, _u("targetId"));
+            compareMap.CheckConsistentAndAddPtrIdMapping_Special(proxyInfo1->HandlerId, proxyInfo2->HandlerId, u"handlerId");
+            compareMap.CheckConsistentAndAddPtrIdMapping_Special(proxyInfo1->TargetId, proxyInfo2->TargetId, u"targetId");
         }
 #endif
 

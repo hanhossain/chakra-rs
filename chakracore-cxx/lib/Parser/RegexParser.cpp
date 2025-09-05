@@ -3003,7 +3003,7 @@ namespace UnifiedRegex
         if (REGEX_CONFIG_FLAG(RegexTracing))
         {
             DebugWriter* tw = this->scriptContext->GetRegexDebugWriter();
-            tw->Print(_u("// REGEX COMPILE "));
+            tw->Print(u"// REGEX COMPILE ");
             pattern->Print(tw);
             tw->EOL();
         }
@@ -3046,7 +3046,7 @@ namespace UnifiedRegex
     {
         Assert(program->source == 0);
 
-        program->source = const_cast<Char*>(_u(""));
+        program->source = const_cast<Char*>(u"");
         program->sourceLen = 0;
 
         program->numGroups = 1;

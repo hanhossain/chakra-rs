@@ -176,7 +176,7 @@ namespace Js
         if (!JavascriptConversion::IsCallable(returnMethod))
         {
             JavascriptError* typeError = library->CreateTypeError();
-            JavascriptError::SetErrorMessage(typeError, JSERR_NeedFunction, _u("AsyncFromSyncIteratorThrow.prototype.return"), scriptContext);
+            JavascriptError::SetErrorMessage(typeError, JSERR_NeedFunction, u"AsyncFromSyncIteratorThrow.prototype.return", scriptContext);
             return JavascriptPromise::CreateRejectedPromise(typeError, scriptContext);
         }
 
@@ -208,7 +208,7 @@ namespace Js
         if (!JavascriptOperators::IsObject(result))
         {
             JavascriptError* typeError = library->CreateTypeError();
-            JavascriptError::SetErrorMessage(typeError, JSERR_NonObjectFromIterable, _u("AsyncFromSyncIteratorThrow.prototype.return"), scriptContext);
+            JavascriptError::SetErrorMessage(typeError, JSERR_NonObjectFromIterable, u"AsyncFromSyncIteratorThrow.prototype.return", scriptContext);
             return JavascriptPromise::CreateRejectedPromise(typeError, scriptContext);   
         }
 
@@ -269,7 +269,7 @@ namespace Js
         {
 
             JavascriptError* typeError = library->CreateTypeError();
-            JavascriptError::SetErrorMessage(typeError, JSERR_NeedFunction, _u("AsyncFromSyncIteratorThrow.prototype.throw"), scriptContext);
+            JavascriptError::SetErrorMessage(typeError, JSERR_NeedFunction, u"AsyncFromSyncIteratorThrow.prototype.throw", scriptContext);
             return JavascriptPromise::CreateRejectedPromise(typeError, scriptContext);
         }
 
@@ -302,7 +302,7 @@ namespace Js
         if (!JavascriptOperators::IsObject(result))
         {
             JavascriptError* typeError = library->CreateTypeError();
-            JavascriptError::SetErrorMessage(typeError, JSERR_NonObjectFromIterable, _u("AsyncFromSyncIteratorThrow.prototype.throw"), scriptContext);
+            JavascriptError::SetErrorMessage(typeError, JSERR_NonObjectFromIterable, u"AsyncFromSyncIteratorThrow.prototype.throw", scriptContext);
             return JavascriptPromise::CreateRejectedPromise(typeError, scriptContext);   
         }
 

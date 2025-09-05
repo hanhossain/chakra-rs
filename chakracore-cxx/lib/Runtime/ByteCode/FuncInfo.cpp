@@ -3,7 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "RuntimeByteCodePch.h"
-#define IsTrueOrFalse(value)     ((value) ? _u("True") : _u("False"))
+#define IsTrueOrFalse(value)     ((value) ? u"True" : u"False")
 
 FuncInfo::FuncInfo(
     const char16_t *name,
@@ -116,7 +116,7 @@ FuncInfo::FuncInfo(
     }
     if (pnode && pnode->NestedFuncEscapes())
     {
-        this->SetHasMaybeEscapedNestedFunc(DebugOnly(_u("Child")));
+        this->SetHasMaybeEscapedNestedFunc(DebugOnly(u"Child"));
     }
 
     if (byteCodeFunction && !byteCodeFunction->IsDeferred() && byteCodeFunction->CanBeDeferred())
@@ -230,7 +230,7 @@ uint FuncInfo::FindOrAddRootObjectInlineCacheId(Js::PropertyId propertyId, bool 
 #if DBG_DUMP
 void FuncInfo::Dump()
 {
-    Output::Print(_u("FuncInfo: CallsEval:%s ChildCallsEval:%s HasArguments:%s HasHeapArguments:%s\n"),
+    Output::Print(u"FuncInfo: CallsEval:%s ChildCallsEval:%s HasArguments:%s HasHeapArguments:%s\n",
         IsTrueOrFalse(this->GetCallsEval()),
         IsTrueOrFalse(this->GetChildCallsEval()),
         IsTrueOrFalse(this->GetHasArguments()),
@@ -503,10 +503,10 @@ void FuncInfo::SetHasMaybeEscapedNestedFunc(DebugOnly(char16_t const * reason))
     if (PHASE_TESTTRACE(Js::StackFuncPhase, this->byteCodeFunction) && !hasEscapedUseNestedFunc)
     {
         char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-        char16_t const * r = _u("");
+        char16_t const * r = u"";
 
         DebugOnly(r = reason);
-        Output::Print(_u("HasMaybeEscapedNestedFunc (%s): %s (function %s)\n"),
+        Output::Print(u"HasMaybeEscapedNestedFunc (%s): %s (function %s)\n",
             r,
             this->byteCodeFunction->GetDisplayName(),
             this->byteCodeFunction->GetDebugNumberSet(debugStringBuffer));

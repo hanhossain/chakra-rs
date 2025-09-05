@@ -406,10 +406,10 @@ public:
     {
         if (!emptyStringPropertyRecord)
         {
-            emptyStringPropertyRecord = propertyMap->LookupWithKey(Js::HashedCharacterBuffer<char16_t>(_u(""), 0));
+            emptyStringPropertyRecord = propertyMap->LookupWithKey(Js::HashedCharacterBuffer<char16_t>(u"", 0));
             if (emptyStringPropertyRecord == nullptr)
             {
-                emptyStringPropertyRecord = this->UncheckedAddPropertyId(_u(""), 0, true);
+                emptyStringPropertyRecord = this->UncheckedAddPropertyId(u"", 0, true);
             }
         }
         return emptyStringPropertyRecord;

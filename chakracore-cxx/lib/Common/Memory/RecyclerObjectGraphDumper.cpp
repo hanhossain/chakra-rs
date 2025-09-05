@@ -38,7 +38,7 @@ void RecyclerObjectGraphDumper::BeginDumpObject(char16_t const * name, void * ad
 {
     Assert(dumpObjectName == nullptr);
     Assert(dumpObject == nullptr);
-    swprintf_s(tempObjectName, _countof(tempObjectName), _u("%s %p"), name, address);
+    swprintf_s(tempObjectName, _countof(tempObjectName), u"%s %p", name, address);
     dumpObjectName = tempObjectName;
 }
 
@@ -85,7 +85,7 @@ void RecyclerObjectGraphDumper::DumpObjectReference(void * objectAddress, bool r
         Output::Print(_u("\""));
         if (this->dumpObjectName)
         {
-            Output::Print(_u("%s"), this->dumpObjectName);
+            Output::Print(u"%s", this->dumpObjectName);
         }
         else
         {
@@ -93,7 +93,7 @@ void RecyclerObjectGraphDumper::DumpObjectReference(void * objectAddress, bool r
 #ifdef PROFILE_RECYCLER_ALLOC
             RecyclerObjectDumper::DumpObject(this->dumpObjectTypeInfo, this->dumpObjectIsArray, this->dumpObject);
 #else
-            Output::Print(_u("Address %p"), objectAddress);
+            Output::Print(u"Address %p", objectAddress);
 #endif
         }
 

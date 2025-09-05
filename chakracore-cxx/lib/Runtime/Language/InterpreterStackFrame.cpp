@@ -2406,12 +2406,12 @@ skipThunk:
     {
 #ifdef ENABLE_WASM
         CompileAssert(type < Wasm::WasmTypes::Limit);
-        const char16_t* fromType = toJs ? Wasm::WasmTypes::GetTypeName(static_cast<Wasm::WasmTypes::WasmType>(type)) : _u("Javascript Variable");
-        const char16_t* toType = toJs ? _u("Javascript Variable") : Wasm::WasmTypes::GetTypeName(static_cast<Wasm::WasmTypes::WasmType>(type));
+        const char16_t* fromType = toJs ? Wasm::WasmTypes::GetTypeName(static_cast<Wasm::WasmTypes::WasmType>(type)) : u"Javascript Variable";
+        const char16_t* toType = toJs ? u"Javascript Variable" : Wasm::WasmTypes::GetTypeName(static_cast<Wasm::WasmTypes::WasmType>(type));
         JavascriptError::ThrowTypeErrorVar(scriptContext, WASMERR_InvalidTypeConversion, fromType, toType);
 #else
         Assert(UNREACHED); //shouldn't get there
-        JavascriptError::ThrowTypeErrorVar(scriptContext, WASMERR_InvalidTypeConversion, _u("unknown"), _u("unknown")); //throw for a release build
+        JavascriptError::ThrowTypeErrorVar(scriptContext, WASMERR_InvalidTypeConversion, u"unknown", u"unknown"); //throw for a release build
 #endif
     }
 
@@ -2569,7 +2569,7 @@ skipThunk:
         that->scriptContext->byteCodeHistogram[(int)op]++;
         if (PHASE_TRACE(Js::InterpreterPhase, that->m_functionBody))
         {
-            Output::Print(_u("%d.%d:Executing %s at offset 0x%X\n"), that->m_functionBody->GetSourceContextId(), that->m_functionBody->GetLocalFunctionId(), Js::OpCodeUtil::GetOpCodeName(op), that->DEBUG_currentByteOffset);
+            Output::Print(u"%d.%d:Executing %s at offset 0x%X\n", that->m_functionBody->GetSourceContextId(), that->m_functionBody->GetLocalFunctionId(), Js::OpCodeUtil::GetOpCodeName(op), that->DEBUG_currentByteOffset);
         }
 #endif
     }
@@ -2579,7 +2579,7 @@ skipThunk:
 #if DBG_DUMP && defined(ASMJS_PLAT)
         if (PHASE_TRACE(Js::AsmjsInterpreterPhase, that->m_functionBody))
         {
-            Output::Print(_u("%d.%d:Executing %s at offset 0x%X\n"), that->m_functionBody->GetSourceContextId(), that->m_functionBody->GetLocalFunctionId(), Js::OpCodeUtilAsmJs::GetOpCodeName(op), that->DEBUG_currentByteOffset);
+            Output::Print(u"%d.%d:Executing %s at offset 0x%X\n", that->m_functionBody->GetSourceContextId(), that->m_functionBody->GetLocalFunctionId(), Js::OpCodeUtilAsmJs::GetOpCodeName(op), that->DEBUG_currentByteOffset);
         }
 #endif
     }
@@ -2632,14 +2632,14 @@ skipThunk:
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (Configuration::Global.flags.ForceAsmJsLinkFail)
         {
-            AsmJSCompiler::OutputError(this->scriptContext, _u("Asm.js Runtime Error : Forcing link failure"));
+            AsmJSCompiler::OutputError(this->scriptContext, u"Asm.js Runtime Error : Forcing link failure");
             return this->ProcessLinkFailedAsmJsModule();
         }
 #endif
         if (m_inSlotsCount != info->GetArgInCount() + 1)
         {
             // Error reparse without asm.js
-            AsmJSCompiler::OutputError(this->scriptContext, _u("Asm.js Runtime Error : Invalid module argument count"));
+            AsmJSCompiler::OutputError(this->scriptContext, u"Asm.js Runtime Error : Invalid module argument count");
             return this->ProcessLinkFailedAsmJsModule();
         }
 
@@ -2674,7 +2674,7 @@ skipThunk:
         }
         else if (this->CheckAndResetImplicitCall(prevDisableImplicitFlags, saveImplicitcallFlags))
         {
-            AsmJSCompiler::OutputError(this->scriptContext, _u("Asm.js Runtime Error : Params have side effects"));
+            AsmJSCompiler::OutputError(this->scriptContext, u"Asm.js Runtime Error : Params have side effects");
             return this->ProcessLinkFailedAsmJsModule();
         }
         // Initialize Variables
@@ -2710,7 +2710,7 @@ skipThunk:
             // check if there is implicit call and if there is implicit call then clear the disableimplicitcall flag
             if (this->CheckAndResetImplicitCall(prevDisableImplicitFlags, saveImplicitcallFlags))
             {
-                AsmJSCompiler::OutputError(this->scriptContext, _u("Asm.js Runtime Error : Accessing var import %s has side effects"), this->scriptContext->GetPropertyName(import.field)->GetBuffer());
+                AsmJSCompiler::OutputError(this->scriptContext, u"Asm.js Runtime Error : Accessing var import %s has side effects", this->scriptContext->GetPropertyName(import.field)->GetBuffer());
                 return this->ProcessLinkFailedAsmJsModule();
             }
             if (CONFIG_FLAG(AsmJsEdge))
@@ -2718,7 +2718,7 @@ skipThunk:
                 // emscripten had a bug which caused this check to fail in some circumstances, so this check fails for some demos
                 if (!TaggedNumber::Is(value) && (!VarIs<RecyclableObject>(value) || DynamicType::Is(VarTo<RecyclableObject>(value)->GetTypeId())))
                 {
-                    AsmJSCompiler::OutputError(this->scriptContext, _u("Asm.js Runtime Error : Var import %s must be primitive"), this->scriptContext->GetPropertyName(import.field)->GetBuffer());
+                    AsmJSCompiler::OutputError(this->scriptContext, u"Asm.js Runtime Error : Var import %s must be primitive", this->scriptContext->GetPropertyName(import.field)->GetBuffer());
                     goto linkFailure;
                 }
             }
@@ -2743,7 +2743,7 @@ skipThunk:
             if (this->CheckAndResetImplicitCall(prevDisableImplicitFlags, saveImplicitcallFlags))
             {
                 // Runtime error
-                AsmJSCompiler::OutputError(this->scriptContext, _u("Asm.js Runtime Error : Accessing var import %s has side effects"), this->scriptContext->GetPropertyName(import.field)->GetBuffer());
+                AsmJSCompiler::OutputError(this->scriptContext, u"Asm.js Runtime Error : Accessing var import %s has side effects", this->scriptContext->GetPropertyName(import.field)->GetBuffer());
                 return this->ProcessLinkFailedAsmJsModule();
             }
         }
@@ -2756,12 +2756,12 @@ skipThunk:
             // check if there is implicit call and if there is implicit call then clear the disableimplicitcall flag
             if (this->CheckAndResetImplicitCall(prevDisableImplicitFlags, saveImplicitcallFlags))
             {
-                AsmJSCompiler::OutputError(this->scriptContext, _u("Asm.js Runtime Error : Accessing foreign function import %s has side effects"), this->scriptContext->GetPropertyName(import.field)->GetBuffer());
+                AsmJSCompiler::OutputError(this->scriptContext, u"Asm.js Runtime Error : Accessing foreign function import %s has side effects", this->scriptContext->GetPropertyName(import.field)->GetBuffer());
                 return this->ProcessLinkFailedAsmJsModule();
             }
             if (!VarIs<JavascriptFunction>(importFunc))
             {
-                AsmJSCompiler::OutputError(this->scriptContext, _u("Asm.js Runtime Error : Foreign function import %s is not a function"), this->scriptContext->GetPropertyName(import.field)->GetBuffer());
+                AsmJSCompiler::OutputError(this->scriptContext, u"Asm.js Runtime Error : Foreign function import %s is not a function", this->scriptContext->GetPropertyName(import.field)->GetBuffer());
                 goto linkFailure;
             }
             localFunctionImports[import.location] = importFunc;
@@ -2833,7 +2833,7 @@ skipThunk:
         {
             if (PHASE_TRACE1(AsmjsEntryPointInfoPhase))
             {
-                Output::Print(_u("%s Scheduling For Full JIT at callcount:%d\n"), asmJsModuleFunctionBody->GetDisplayName(), 0);
+                Output::Print(u"%s Scheduling For Full JIT at callcount:%d\n", asmJsModuleFunctionBody->GetDisplayName(), 0);
                 Output::Flush();
             }
             for (int i = 0; i < info->GetFunctionCount(); i++)
@@ -2882,7 +2882,7 @@ skipThunk:
 
     Var InterpreterStackFrame::ProcessLinkFailedAsmJsModule()
     {
-        AsmJSCompiler::OutputError(this->scriptContext, _u("asm.js linking failed."));
+        AsmJSCompiler::OutputError(this->scriptContext, u"asm.js linking failed.");
 
         Js::FunctionBody* asmJsModuleFunctionBody = GetFunctionBody();
         AsmJsModuleInfo* info = asmJsModuleFunctionBody->GetAsmJsModuleInfo();
@@ -3079,9 +3079,9 @@ skipThunk:
         {
             if (AsmJsCallDepth)
             {
-                Output::Print(_u("%*c"), AsmJsCallDepth, ' ');
+                Output::Print(u"%*c", AsmJsCallDepth, ' ');
             }
-            Output::Print(_u("Executing function %s("), functionBody->GetDisplayName());
+            Output::Print(u"Executing function %s(", functionBody->GetDisplayName());
             ++AsmJsCallDepth;
         }
 #endif
@@ -3094,7 +3094,7 @@ skipThunk:
 #if ENABLE_DEBUG_CONFIG_OPTIONS
                     if (tracingFunc)
                     {
-                        Output::Print(_u("%d, "), *intArg);
+                        Output::Print(u"%d, ", *intArg);
                     }
 #endif
                     ++intArg;
@@ -3106,7 +3106,7 @@ skipThunk:
 #if ENABLE_DEBUG_CONFIG_OPTIONS
                     if (tracingFunc)
                     {
-                        Output::Print(_u("%lld, "), *int64Arg);
+                        Output::Print(u"%lld, ", *int64Arg);
                     }
 #endif
                     ++int64Arg;
@@ -3118,7 +3118,7 @@ skipThunk:
 #if ENABLE_DEBUG_CONFIG_OPTIONS
                     if (tracingFunc)
                     {
-                        Output::Print(_u("%.2f, "), *floatArg);
+                        Output::Print(u"%.2f, ", *floatArg);
                     }
 #endif
                     ++floatArg;
@@ -3131,7 +3131,7 @@ skipThunk:
 #if ENABLE_DEBUG_CONFIG_OPTIONS
                     if (tracingFunc)
                     {
-                        Output::Print(_u("%.2f, "), *doubleArg);
+                        Output::Print(u"%.2f, ", *doubleArg);
                     }
 #endif
                     ++doubleArg;
@@ -3154,7 +3154,7 @@ skipThunk:
 #if ENABLE_DEBUG_CONFIG_OPTIONS
         if (tracingFunc)
         {
-            Output::Print(_u("){\n"));
+            Output::Print(u"){\n");
             Output::Flush();
         }
 #endif
@@ -3294,32 +3294,32 @@ skipThunk:
                     --AsmJsCallDepth;
                     if (AsmJsCallDepth)
                     {
-                        Output::Print(_u("%*c}"), AsmJsCallDepth, ' ');
+                        Output::Print(u"%*c}", AsmJsCallDepth, ' ');
                     }
                     else
                     {
-                        Output::Print(_u("}"));
+                        Output::Print(u"}");
                     }
                     switch (asmInfo->GetReturnType().which())
                     {
                     case AsmJsRetType::Void:
                         break;
                     case AsmJsRetType::Signed:
-                        Output::Print(_u(" = %d"), m_localIntSlots[0]);
+                        Output::Print(u" = %d", m_localIntSlots[0]);
                         break;
                     case AsmJsRetType::Int64:
-                        Output::Print(_u(" = %lld"), m_localInt64Slots[0]);
+                        Output::Print(u" = %lld", m_localInt64Slots[0]);
                         break;
                     case AsmJsRetType::Float:
-                        Output::Print(_u(" = %.4f"), m_localFloatSlots[0]);
+                        Output::Print(u" = %.4f", m_localFloatSlots[0]);
                         break;
                     case AsmJsRetType::Double:
-                        Output::Print(_u(" = %.4f"), m_localDoubleSlots[0]);
+                        Output::Print(u" = %.4f", m_localDoubleSlots[0]);
                         break;
                     default:
                         break;
                     }
-                    Output::Print(_u(";\n"));
+                    Output::Print(u";\n");
                     Output::Flush();
                 }
 #endif
@@ -3391,7 +3391,7 @@ skipThunk:
             if (PHASE_TRACE(InterpreterAutoProfilePhase, functionBody))
             {
                 char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-                Output::Print(_u("InterpreterAutoProfile - Func %s - Started profiling\n"), functionBody->GetDebugNumberSet(debugStringBuffer));
+                Output::Print(u"InterpreterAutoProfile - Func %s - Started profiling\n", functionBody->GetDebugNumberSet(debugStringBuffer));
                 Output::Flush();
             }
 #endif
@@ -3413,7 +3413,7 @@ skipThunk:
             if (PHASE_TRACE(InterpreterAutoProfilePhase, functionBody))
             {
                 char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-                Output::Print(_u("InterpreterAutoProfile - Func %s - Stopped profiling\n"), functionBody->GetDebugNumberSet(debugStringBuffer));
+                Output::Print(u"InterpreterAutoProfile - Func %s - Stopped profiling\n", functionBody->GetDebugNumberSet(debugStringBuffer));
                 Output::Flush();
             }
 #endif
@@ -5931,7 +5931,7 @@ skipThunk:
             if (PHASE_TRACE1(Js::JITLoopBodyPhase) && CONFIG_FLAG(Verbose))
             {
                 fn->DumpFunctionId(true);
-                Output::Print(_u(": %-20s LoopBody Execute  Loop: %2d\n"), fn->GetDisplayName(), loopNumber);
+                Output::Print(u": %-20s LoopBody Execute  Loop: %2d\n", fn->GetDisplayName(), loopNumber);
                 Output::Flush();
             }
             loopHeader->nativeCount++;
@@ -6158,7 +6158,7 @@ skipThunk:
                 char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
                 Output::Print(
-                    _u("Speculate Jit set for this function with loopbody: function: %s (%s)\n"),
+                    u"Speculate Jit set for this function with loopbody: function: %s (%s)\n",
                     fn->GetDisplayName(),
                     fn->GetDebugNumberSet(debugStringBuffer));
                 Output::Flush();
@@ -8073,7 +8073,7 @@ skipThunk:
         Assert(playout->ViewType < Js::ArrayBufferView::TYPE_COUNT);
 
         if (GetRegRawInt(playout->SlotIndex) < 0) {
-            JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgumentOutOfRange, _u("Simd typed array access"));
+            JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgumentOutOfRange, u"Simd typed array access");
         }
 
         const unsigned long index = (unsigned long)GetRegRawInt(playout->SlotIndex) + playout->Offset;
@@ -8090,7 +8090,7 @@ skipThunk:
         RegSlot dstReg = playout->Value;
         if (index + dataWidth > arr->GetByteLength())
         {
-            JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgumentOutOfRange, _u("Simd typed array access"));
+            JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgumentOutOfRange, u"Simd typed array access");
         }
         AsmJsSIMDValue *data = (AsmJsSIMDValue*)(buffer + index);
         AsmJsSIMDValue value;
@@ -8111,7 +8111,7 @@ skipThunk:
 
         if (index + dataWidth > arr->GetByteLength())
         {
-            JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgumentOutOfRange, _u("Simd typed array access"));
+            JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgumentOutOfRange, u"Simd typed array access");
         }
         AsmJsSIMDValue *data = (AsmJsSIMDValue*)(buffer + index);
         AsmJsSIMDValue value;
@@ -8127,7 +8127,7 @@ skipThunk:
 
         if (GetRegRawInt(playout->SlotIndex) < 0)
         {
-            JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgumentOutOfRange, _u("Simd typed array access"));
+            JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgumentOutOfRange, u"Simd typed array access");
         }
         const unsigned long index = (unsigned long)GetRegRawInt(playout->SlotIndex) + playout->Offset;
 
@@ -8144,7 +8144,7 @@ skipThunk:
 
         if (index + dataWidth > arr->GetByteLength())
         {
-            JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgumentOutOfRange, _u("Simd typed array access"));
+            JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgumentOutOfRange, u"Simd typed array access");
         }
         AsmJsSIMDValue *data = (AsmJsSIMDValue*)(buffer + index);
         AsmJsSIMDValue value = GetRegRawSimd(srcReg);
@@ -8163,7 +8163,7 @@ skipThunk:
 
         if (index + dataWidth > arr->GetByteLength())
         {
-            JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgumentOutOfRange, _u("Simd typed array access"));
+            JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgumentOutOfRange, u"Simd typed array access");
         }
         AsmJsSIMDValue *data = (AsmJsSIMDValue*)(buffer + index);
         AsmJsSIMDValue value = GetRegRawSimd(srcReg);
@@ -8202,7 +8202,7 @@ skipThunk:
         // value is out of bound
         if (throws)
         {
-            JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgumentOutOfRange, _u("SIMD.Int32x4.FromFloat32x4"));
+            JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgumentOutOfRange, u"SIMD.Int32x4.FromFloat32x4");
         }
         SetRegRawSimd(playout->I4_0, result);
     }
@@ -8224,7 +8224,7 @@ skipThunk:
 
         if (throws)
         {
-            JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgumentOutOfRange, _u("SIMD.Int32x4.FromFloat32x4"));
+            JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgumentOutOfRange, u"SIMD.Int32x4.FromFloat32x4");
         }
         SetRegRawSimd(playout->U4_0, result);
     }
@@ -9335,7 +9335,7 @@ skipThunk:
                 isCachedScope = true;
                 if (PHASE_VERBOSE_TRACE1(Js::StackArgFormalsOptPhase) && m_functionBody->GetInParamsCount() > 1)
                 {
-                    Output::Print(_u("StackArgFormals : %s (%d) :Using the restored scope object in the bail out path. \n"), m_functionBody->GetDisplayName(), m_functionBody->GetFunctionNumber());
+                    Output::Print(u"StackArgFormals : %s (%d) :Using the restored scope object in the bail out path. \n", m_functionBody->GetDisplayName(), m_functionBody->GetFunctionNumber());
                     Output::Flush();
                 }
             }
@@ -9356,7 +9356,7 @@ skipThunk:
 
                 if (PHASE_VERBOSE_TRACE1(Js::StackArgFormalsOptPhase) && m_functionBody->GetInParamsCount() > 1)
                 {
-                    Output::Print(_u("StackArgFormals : %s (%d) :Creating scope object in the bail out path. \n"), m_functionBody->GetDisplayName(), m_functionBody->GetFunctionNumber());
+                    Output::Print(u"StackArgFormals : %s (%d) :Creating scope object in the bail out path. \n", m_functionBody->GetDisplayName(), m_functionBody->GetFunctionNumber());
                     Output::Flush();
                 }
             }
@@ -9370,7 +9370,7 @@ skipThunk:
 
             if (PHASE_VERBOSE_TRACE1(Js::StackArgOptPhase))
             {
-                Output::Print(_u("StackArgOpt : %s (%d) :Creating NULL scope object in the bail out path. \n"), m_functionBody->GetDisplayName(), m_functionBody->GetFunctionNumber());
+                Output::Print(u"StackArgOpt : %s (%d) :Creating NULL scope object in the bail out path. \n", m_functionBody->GetDisplayName(), m_functionBody->GetFunctionNumber());
                 Output::Flush();
             }
         }
@@ -9384,7 +9384,7 @@ skipThunk:
 
             if (PHASE_TRACE1(Js::StackArgFormalsOptPhase) && formalsCount > 0)
             {
-                Output::Print(_u("StackArgFormals : %s (%d) :Attaching the scope object with the heap arguments object in the bail out path. \n"), m_functionBody->GetDisplayName(), m_functionBody->GetFunctionNumber());
+                Output::Print(u"StackArgFormals : %s (%d) :Attaching the scope object with the heap arguments object in the bail out path. \n", m_functionBody->GetDisplayName(), m_functionBody->GetFunctionNumber());
                 Output::Flush();
             }
         }
@@ -9438,7 +9438,7 @@ skipThunk:
             Output::SkipToColumn(col);
         }
         info->GetBody()->DumpFullFunctionName();
-        Output::Print(_u("("));
+        Output::Print(u"(");
 #endif
     }
 

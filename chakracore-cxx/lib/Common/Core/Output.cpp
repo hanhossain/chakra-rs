@@ -72,7 +72,7 @@ Output::Trace(Js::Phase phase, const char16_t *form, ...)
     {
         va_list argptr;
         va_start(argptr, form);
-        retValue += Output::VTrace(_u("%s: "), Js::PhaseNames[static_cast<int>(phase)], form, argptr);
+        retValue += Output::VTrace(u"%s: ", Js::PhaseNames[static_cast<int>(phase)], form, argptr);
         va_end(argptr);
     }
 
@@ -105,8 +105,8 @@ Output::TraceWithPrefix(Js::Phase phase, const char16_t prefix[], const char16_t
         va_list argptr;
         va_start(argptr, form);
         char16_t prefixValue[512];
-        _snwprintf_s(prefixValue, _countof(prefixValue), _TRUNCATE, _u("%s: %s: "), Js::PhaseNames[static_cast<int>(phase)], prefix);
-        retValue += Output::VTrace(_u("%s"), prefixValue, form, argptr);
+        _snwprintf_s(prefixValue, _countof(prefixValue), _TRUNCATE, u"%s: %s: ", Js::PhaseNames[static_cast<int>(phase)], prefix);
+        retValue += Output::VTrace(u"%s", prefixValue, form, argptr);
         va_end(argptr);
     }
 
@@ -122,7 +122,7 @@ Output::TraceWithFlush(Js::Phase phase, const char16_t *form, ...)
     {
         va_list argptr;
         va_start(argptr, form);
-        retValue += Output::VTrace(_u("%s:"), Js::PhaseNames[static_cast<int>(phase)], form, argptr);
+        retValue += Output::VTrace(u"%s:", Js::PhaseNames[static_cast<int>(phase)], form, argptr);
         Output::Flush();
         va_end(argptr);
     }
@@ -139,7 +139,7 @@ Output::TraceWithFlush(Js::Flag flag, const char16_t *form, ...)
     {
         va_list argptr;
         va_start(argptr, form);
-        retValue += Output::VTrace(_u("[-%s]::"), Js::FlagNames[static_cast<int>(flag)], form, argptr);
+        retValue += Output::VTrace(u"[-%s]::", Js::FlagNames[static_cast<int>(flag)], form, argptr);
         Output::Flush();
         va_end(argptr);
     }
@@ -161,7 +161,7 @@ Output::VTrace(const char16_t* shortPrefixFormat, const char16_t* prefix, const 
     {
         const uint32_t c_framesToSkip = 2; // Skip 2 frames -- Output::VTrace and Output::Trace.
         const uint32_t c_frameCount = 10;  // TODO: make it configurable.
-        const char16_t callStackPrefix[] = _u("call stack:");
+        const char16_t callStackPrefix[] = u"call stack:";
         if (s_inMemoryLogger)
         {
             // Trace just addresses of functions, avoid symbol info as it takes too much memory.
@@ -172,7 +172,7 @@ Output::VTrace(const char16_t* shortPrefixFormat, const char16_t* prefix, const 
             size_t start = 0;
             size_t temp;
 
-            temp = _snwprintf_s(callStackMsg, _countof(callStackMsg), _TRUNCATE, _u("%s"), callStackPrefix);
+            temp = _snwprintf_s(callStackMsg, _countof(callStackMsg), _TRUNCATE, u"%s", callStackPrefix);
             Assert(temp != -1);
             start += temp;
 
@@ -181,17 +181,17 @@ Output::VTrace(const char16_t* shortPrefixFormat, const char16_t* prefix, const 
             for (uint32_t i = 0; i < framesObtained && i < c_frameCount; ++i)
             {
                 Assert(_countof(callStackMsg) >= start);
-                temp = _snwprintf_s(callStackMsg + start, _countof(callStackMsg) - start, _TRUNCATE, _u(" %p"), frames[i]);
+                temp = _snwprintf_s(callStackMsg + start, _countof(callStackMsg) - start, _TRUNCATE, u" %p", frames[i]);
                 Assert(temp != -1);
                 start += temp;
             }
 
-            retValue += Output::Print(_u("%s\n"), callStackMsg);
+            retValue += Output::Print(u"%s\n", callStackMsg);
         }
         else
         {
             // Trace with full symbol info.
-            retValue += Output::Print(_u("%s\n"), callStackPrefix);
+            retValue += Output::Print(u"%s\n", callStackPrefix);
             retValue += s_stackTraceHelper->PrintStackTrace(c_framesToSkip, c_frameCount);
         }
     }
@@ -381,12 +381,12 @@ Output::PrintBuffer(const char16_t * buf, size_t size)
         }
         else
         {
-            fwprintf_s(Output::s_file, _u("%s"), buf);
+            fwprintf_s(Output::s_file, u"%s", buf);
         }
 
         if(s_outputFile != nullptr && !Output::s_capture)
         {
-            fwprintf_s(s_outputFile, _u("%s"), buf);
+            fwprintf_s(s_outputFile, u"%s", buf);
         }
     }
 
@@ -412,7 +412,7 @@ void Output::DirectPrint(char16_t const * string)
 {
     AutoCriticalSection autocs(&s_critsect);
 
-    fwprintf(stdout, _u("%s"), string);
+    fwprintf(stdout, u"%s", string);
 }
 ///----------------------------------------------------------------------------
 ///
@@ -439,7 +439,7 @@ Output::SkipToColumn(size_t column)
     }
     if (column <= reference)
     {
-        Output::Print(_u(" "));
+        Output::Print(u" ");
         return;
     }
 
@@ -450,7 +450,7 @@ Output::SkipToColumn(size_t column)
     // Print at least one space
     while (dist > 0)
     {
-        Output::Print(_u(" "));
+        Output::Print(u" ");
         dist--;
     }
 }

@@ -83,12 +83,12 @@ namespace Js
 
 
 #define CheckNodeLocation(info,type) if(!mFunction->IsValidLocation<type>(&info)){\
-    throw AsmJsCompilationException( _u("Invalid Node location[%d] "), info.location ); }
+    throw AsmJsCompilationException( u"Invalid Node location[%d] ", info.location ); }
 
 
     AsmJSByteCodeGenerator::AsmJSByteCodeGenerator( AsmJsFunc* func, AsmJsModuleCompiler* compiler ) :
         mFunction( func )
-        , mAllocator(_u("AsmjsByteCode"), compiler->GetScriptContext()->GetThreadContext()->GetPageAllocator(), Throw::OutOfMemory)
+        , mAllocator(u"AsmjsByteCode", compiler->GetScriptContext()->GetThreadContext()->GetPageAllocator(), Throw::OutOfMemory)
         , mInfo( mFunction->GetFuncInfo() )
         , mCompiler( compiler )
         , mByteCodeGenerator(mCompiler->GetByteCodeGenerator())
@@ -101,7 +101,7 @@ namespace Js
 
 #ifdef LOG_BYTECODE_AST_RATIO
         // log the max Ast size
-        Output::Print(_u("Max Ast size: %d"), astSize);
+        Output::Print(u"Max Ast size: %d", astSize);
 #endif
     }
 
@@ -266,7 +266,7 @@ namespace Js
             col = 0;
         }
 
-        LPCOLESTR NoneName = _u("None");
+        LPCOLESTR NoneName = u"None";
         LPCOLESTR moduleName = NoneName;
         if (mCompiler->GetModuleFunctionName())
         {
@@ -283,9 +283,9 @@ namespace Js
         }
         AsmJSCompiler::OutputError(
             mCompiler->GetScriptContext(),
-            _u("\n%s%s(%d, %d)\n\tAsm.js Compilation Error function : %s::%s\n\t%s\n"),
-            hasURL ? filename : _u("[Dynamic code]"),
-            hasURL ? ext : _u(""),
+            u"\n%s%s(%d, %d)\n\tAsm.js Compilation Error function : %s::%s\n\t%s\n",
+            hasURL ? filename : u"[Dynamic code]",
+            hasURL ? ext : u"",
             line + 1,
             col + 1,
             moduleName,
@@ -377,7 +377,7 @@ namespace Js
                         }
                         else
                         {
-                            throw AsmJsCompilationException(_u("Unexpected variable type"));
+                            throw AsmJsCompilationException(u"Unexpected variable type");
                         }
                     }
                 }
@@ -403,7 +403,7 @@ namespace Js
         {
             if (!mFunction->CheckAndSetReturnType(AsmJsRetType::Void))
             {
-                throw AsmJsCompilationException(_u("Expected function return type to be void got %s instead"), mFunction->GetReturnType().toType().toChars());
+                throw AsmJsCompilationException(u"Expected function return type to be void got %s instead", mFunction->GetReturnType().toType().toChars());
             }
         }
         EmitTopLevelStatement(varStmts);
@@ -413,7 +413,7 @@ namespace Js
     {
         if( stmt->nop == knopFncDecl && stmt->AsParseNodeFnc()->IsDeclaration() )
         {
-            throw AsmJsCompilationException( _u("Cannot declare functions inside asm.js functions") );
+            throw AsmJsCompilationException( u"Cannot declare functions inside asm.js functions" );
         }
         const EmitExpressionInfo& info = Emit( stmt );
         // free tmp register here
@@ -424,7 +424,7 @@ namespace Js
     {
         if (!ThreadContext::IsCurrentStackAvailable(Js::Constants::MinStackCompile))
         {
-            throw AsmJsCompilationException(_u("Out of stack space"));
+            throw AsmJsCompilationException(u"Out of stack space");
         }
 
         if( !pnode )
@@ -527,7 +527,7 @@ namespace Js
             }
             else if (pnode->AsParseNodeFloat()->maybeInt)
             {
-                throw AsmJsCompilationException(_u("Int literal must be in the range [-2^31, 2^32)"));
+                throw AsmJsCompilationException(u"Int literal must be in the range [-2^31, 2^32)");
             }
             else
             {
@@ -597,10 +597,10 @@ namespace Js
             EndStatement(pnode);
             break;
         case knopVarDecl:
-            throw AsmJsCompilationException( _u("Variable declaration must happen at the top of the function") );
+            throw AsmJsCompilationException( u"Variable declaration must happen at the top of the function" );
             break;
         default:
-            throw AsmJsCompilationException( _u("Unhandled parse opcode for asm.js") );
+            throw AsmJsCompilationException( u"Unhandled parse opcode for asm.js" );
             break;
         }
 
@@ -643,7 +643,7 @@ namespace Js
                 // div and rem must have explicit sign
                 if (!(lType.isSigned() && rType.isSigned()) && !(lType.isUnsigned() && rType.isUnsigned()))
                 {
-                    throw AsmJsCompilationException(_u("arguments to / or %% must both be double?, float?, signed, or unsigned; %s and %s given"), lType.toChars(), rType.toChars());
+                    throw AsmJsCompilationException(u"arguments to / or %% must both be double?, float?, signed, or unsigned; %s and %s given", lType.toChars(), rType.toChars());
                 }
             }
 
@@ -666,7 +666,7 @@ namespace Js
         {
             if (BinaryMathOpCodes[op][BMOT_Float] == OpCodeAsmJs::Nop)
             {
-                throw AsmJsCompilationException(_u("invalid Binary float operation"));
+                throw AsmJsCompilationException(u"invalid Binary float operation");
             }
 
             CheckNodeLocation(lhsEmit, float);
@@ -679,7 +679,7 @@ namespace Js
         }
         else
         {
-            throw AsmJsCompilationException( _u("Unsupported math operation") );
+            throw AsmJsCompilationException( u"Unsupported math operation" );
         }
         EndStatement(pnode);
         return emitInfo;
@@ -696,7 +696,7 @@ namespace Js
             EmitExpressionInfo info = EmitCall(lhs, AsmJsRetType::Signed);
             if (!info.type.isIntish())
             {
-                throw AsmJsCompilationException(_u("Invalid type for [| & ^ >> << >>>] left and right operand must be of type intish"));
+                throw AsmJsCompilationException(u"Invalid type for [| & ^ >> << >>>] left and right operand must be of type intish");
             }
             info.type = AsmJsType::Signed;
             return info;
@@ -707,7 +707,7 @@ namespace Js
         const AsmJsType& rType = rhsEmit.type;
         if( !lType.isIntish() || !rType.isIntish() )
         {
-            throw AsmJsCompilationException( _u("Invalid type for [| & ^ >> << >>>] left and right operand must be of type intish") );
+            throw AsmJsCompilationException( u"Invalid type for [| & ^ >> << >>>] left and right operand must be of type intish" );
         }
         CheckNodeLocation( lhsEmit, int );
         CheckNodeLocation( rhsEmit, int );
@@ -743,7 +743,7 @@ namespace Js
         {
             if( !mFunction->CheckAndSetReturnType( AsmJsRetType::Void ) )
             {
-                throw AsmJsCompilationException( _u("Different return type for the function") );
+                throw AsmJsCompilationException( u"Different return type for the function" );
             }
             retType = AsmJsRetType::Void;
         }
@@ -780,14 +780,14 @@ namespace Js
             }
             else
             {
-                throw AsmJsCompilationException(_u("Expression for return must be subtype of Signed, Double, or Float"));
+                throw AsmJsCompilationException(u"Expression for return must be subtype of Signed, Double, or Float");
             }
             EndStatement(pnode);
         }
         // check if we saw another return already with a different type
         if (!mFunction->CheckAndSetReturnType(retType))
         {
-            throw AsmJsCompilationException(_u("Different return type for the function %s"), mFunction->GetName()->Psz());
+            throw AsmJsCompilationException(u"Different return type for the function %s", mFunction->GetName()->Psz());
         }
         mWriter.AsmBr( mFunction->GetFuncInfo()->singleExit );
         return emitInfo;
@@ -838,52 +838,52 @@ namespace Js
         // check for table size annotation
         if (indexNode->nop != knopAnd)
         {
-            throw AsmJsCompilationException(_u("Function table call must be of format identifier[expr & NumericLiteral](...)"));
+            throw AsmJsCompilationException(u"Function table call must be of format identifier[expr & NumericLiteral](...)");
         }
 
         ParseNode* tableSizeNode = ParserWrapper::GetBinaryRight(indexNode);
         if (tableSizeNode->nop != knopInt)
         {
-            throw AsmJsCompilationException(_u("Function table call must be of format identifier[expr & NumericLiteral](...)"));
+            throw AsmJsCompilationException(u"Function table call must be of format identifier[expr & NumericLiteral](...)");
         }
         if (tableSizeNode->AsParseNodeInt()->lw < 0)
         {
-            throw AsmJsCompilationException(_u("Function table size must be positive"));
+            throw AsmJsCompilationException(u"Function table size must be positive");
         }
         const uint tableSize = tableSizeNode->AsParseNodeInt()->lw + 1;
         if (!::Math::IsPow2(tableSize))
         {
-            throw AsmJsCompilationException(_u("Function table size must be a power of 2"));
+            throw AsmJsCompilationException(u"Function table size must be a power of 2");
         }
 
         // Check for function table identifier
         if (!ParserWrapper::IsNameDeclaration(identifierNode))
         {
-            throw AsmJsCompilationException(_u("Function call must be of format identifier(...) or identifier[expr & size](...)"));
+            throw AsmJsCompilationException(u"Function call must be of format identifier(...) or identifier[expr & size](...)");
         }
         PropertyName funcName = identifierNode->name();
         AsmJsFunctionDeclaration* sym = mCompiler->LookupFunction(funcName);
         if (!sym)
         {
-            throw AsmJsCompilationException(_u("Unable to find function table %s"), funcName->Psz());
+            throw AsmJsCompilationException(u"Unable to find function table %s", funcName->Psz());
         }
         else
         {
             if (!AsmJsFunctionTable::Is(sym))
             {
-                throw AsmJsCompilationException(_u("Identifier %s is not a function table"), funcName->Psz());
+                throw AsmJsCompilationException(u"Identifier %s is not a function table", funcName->Psz());
             }
             AsmJsFunctionTable* funcTable = AsmJsFunctionTable::FromSymbol(sym);
             if (funcTable->GetSize() != tableSize)
             {
-                throw AsmJsCompilationException(_u("Trying to load from Function table %s of size [%d] with size [%d]"), funcName->Psz(), funcTable->GetSize(), tableSize);
+                throw AsmJsCompilationException(u"Trying to load from Function table %s of size [%d] with size [%d]", funcName->Psz(), funcTable->GetSize(), tableSize);
             }
         }
 
         const EmitExpressionInfo& indexInfo = Emit(indexNode);
         if (!indexInfo.type.isInt())
         {
-            throw AsmJsCompilationException(_u("Array Buffer View index must be type int"));
+            throw AsmJsCompilationException(u"Array Buffer View index must be type int");
         }
         CheckNodeLocation(indexInfo, int);
         return indexInfo.location;
@@ -907,13 +907,13 @@ namespace Js
 
         if( !ParserWrapper::IsNameDeclaration( identifierNode ) )
         {
-            throw AsmJsCompilationException( _u("Function call must be of format identifier(...) or identifier[expr & size](...)") );
+            throw AsmJsCompilationException( u"Function call must be of format identifier(...) or identifier[expr & size](...)" );
         }
         PropertyName funcName = identifierNode->name();
         AsmJsFunctionDeclaration* sym = mCompiler->LookupFunction(funcName);
         if( !sym )
         {
-            throw AsmJsCompilationException( _u("Undefined function %s"), funcName->Psz() );
+            throw AsmJsCompilationException( u"Undefined function %s", funcName->Psz() );
         }
 
         const bool isFFI = AsmJsImportFunction::Is(sym);
@@ -926,7 +926,7 @@ namespace Js
         // math builtins have different requirements for call-site coercion
         if (!sym->CheckAndSetReturnType(expectedType))
         {
-            throw AsmJsCompilationException(_u("Different return type found for function %s"), funcName->Psz());
+            throw AsmJsCompilationException(u"Different return type found for function %s", funcName->Psz());
         }
 
         const ArgSlot argCount = pnode->AsParseNodeCall()->argCount;
@@ -980,7 +980,7 @@ namespace Js
                     }
                     else
                     {
-                        throw AsmJsCompilationException(_u("Function %s doesn't support argument of type %s"), funcName->Psz(), argInfo.type.toChars());
+                        throw AsmJsCompilationException(u"Function %s doesn't support argument of type %s", funcName->Psz(), argInfo.type.toChars());
                     }
                 }
             }
@@ -991,7 +991,7 @@ namespace Js
         const bool supported = sym->SupportsArgCall(argCount, types, retType);
         if (!supported)
         {
-            throw AsmJsCompilationException(_u("Function %s doesn't support arguments"), funcName->Psz());
+            throw AsmJsCompilationException(u"Function %s doesn't support arguments", funcName->Psz());
         }
         if (types)
         {
@@ -1004,7 +1004,7 @@ namespace Js
         // don't validate the return type for foreign import functions
         if (!isFFI && retType != expectedType)
         {
-            throw AsmJsCompilationException(_u("Function %s returns different type"), funcName->Psz());
+            throw AsmJsCompilationException(u"Function %s returns different type", funcName->Psz());
         }
 
         const ArgSlot argByteSize = ArgSlotMath::Add(sym->GetArgByteSize(argCount), sizeof(Var));
@@ -1054,7 +1054,7 @@ namespace Js
                     CheckNodeLocation(argInfo, float);
                     if (isFFI)
                     {
-                        throw AsmJsCompilationException(_u("FFI function %s doesn't support float arguments"), funcName->Psz());
+                        throw AsmJsCompilationException(u"FFI function %s doesn't support float arguments", funcName->Psz());
                     }
                     mWriter.AsmReg2(OpCodeAsmJs::I_ArgOut_Flt, regSlotLocation, argInfo.location);
                     regSlotLocation++;
@@ -1067,7 +1067,7 @@ namespace Js
                 }
                 else
                 {
-                    throw AsmJsCompilationException(_u("Function %s doesn't support argument of type %s"), funcName->Psz(), argInfo.type.toChars());
+                    throw AsmJsCompilationException(u"Function %s doesn't support argument of type %s", funcName->Psz(), argInfo.type.toChars());
                 }
             }
 
@@ -1102,14 +1102,14 @@ namespace Js
             // Make sure the user is not trying to call the function table directly
             if (funcTableIndexRegister == Constants::NoRegister)
             {
-                throw AsmJsCompilationException(_u("Direct call to function table '%s' is not allowed"), funcName->Psz());
+                throw AsmJsCompilationException(u"Direct call to function table '%s' is not allowed", funcName->Psz());
             }
             mFunction->ReleaseTmpRegister<int>(funcTableIndexRegister);
             funcReg = mFunction->AcquireTmpRegister<intptr_t>();
             LoadModuleFunctionTable(funcReg, sym->GetFunctionIndex(), funcTableIndexRegister);
             break;
         default:
-            throw AsmJsCompilationException(_u("Invalid function type"));
+            throw AsmJsCompilationException(u"Invalid function type");
         }
 
         // use expected type because return type could be invalid if the function is a FFI
@@ -1232,7 +1232,7 @@ namespace Js
         const bool supported = mathFunction->SupportsMathCall( argCount, types, op, retType );
         if( !supported )
         {
-            throw AsmJsCompilationException( _u("Math builtin function doesn't support arguments") );
+            throw AsmJsCompilationException( u"Math builtin function doesn't support arguments" );
         }
 
         // Release all used location before acquiring a new tmp register
@@ -1309,7 +1309,7 @@ namespace Js
 
         if (argCount < 2)
         {
-            throw AsmJsCompilationException(_u("Math builtin function doesn't support arguments"));
+            throw AsmJsCompilationException(u"Math builtin function doesn't support arguments");
         }
 
         AutoArrayPtr<AsmJsType> types(nullptr, 0);
@@ -1345,7 +1345,7 @@ namespace Js
             const bool supported = mathFunction->SupportsMathCall(mathFunction->GetArgCount(), types, op, retType);
             if (!supported)
             {
-                throw AsmJsCompilationException(_u("Math builtin function doesn't support arguments"));
+                throw AsmJsCompilationException(u"Math builtin function doesn't support arguments");
             }
 
             const int argByteSize = mathFunction->GetArgByteSize(argCount) + sizeof(Var);
@@ -1401,7 +1401,7 @@ namespace Js
         AsmJsSymbol* sym = mCompiler->LookupIdentifier( name, mFunction, &source );
         if( !sym )
         {
-            throw AsmJsCompilationException( _u("Undefined identifier %s"), name->Psz() );
+            throw AsmJsCompilationException( u"Undefined identifier %s", name->Psz() );
         }
 
         switch( sym->GetSymbolType() )
@@ -1485,7 +1485,7 @@ namespace Js
         case AsmJsSymbol::ArrayView:
         case AsmJsSymbol::MathBuiltinFunction:
         default:
-            throw AsmJsCompilationException( _u("Cannot use identifier %s in this context"), name->Psz() );
+            throw AsmJsCompilationException( u"Cannot use identifier %s in this context", name->Psz() );
         }
     }
 
@@ -1534,7 +1534,7 @@ namespace Js
                 else
                 {
                     EmitExpressionInfo indexInfo = Emit(indexNode);
-                    throw AsmJsCompilationException(_u("Array Index must be intish; %s given"), indexInfo.type.toChars());
+                    throw AsmJsCompilationException(u"Array Index must be intish; %s given", indexInfo.type.toChars());
                 }
             }
             // do the right shift now
@@ -1544,7 +1544,7 @@ namespace Js
             case Js::ArrayBufferView::TYPE_UINT16:
                 if (slot & 0x80000000)
                 {
-                    throw AsmJsCompilationException(_u("Numeric literal for heap16 must be within 0 <= n < 2^31; %d given"), slot);
+                    throw AsmJsCompilationException(u"Numeric literal for heap16 must be within 0 <= n < 2^31; %d given", slot);
                 }
                 slot <<= 1;
                 break;
@@ -1553,14 +1553,14 @@ namespace Js
             case Js::ArrayBufferView::TYPE_FLOAT32:
                 if (slot & 0xC0000000)
                 {
-                    throw AsmJsCompilationException(_u("Numeric literal for heap32 must be within 0 <= n < 2^30; %d given"), slot);
+                    throw AsmJsCompilationException(u"Numeric literal for heap32 must be within 0 <= n < 2^30; %d given", slot);
                 }
                 slot <<= 2;
                 break;
             case Js::ArrayBufferView::TYPE_FLOAT64:
                 if (slot & 0xE0000000)
                 {
-                    throw AsmJsCompilationException(_u("Numeric literal for heap64 must be within 0 <= n < 2^29; %d given"), slot);
+                    throw AsmJsCompilationException(u"Numeric literal for heap64 must be within 0 <= n < 2^29; %d given", slot);
                 }
                 slot <<= 3;
                 break;
@@ -1575,7 +1575,7 @@ namespace Js
             EmitExpressionInfo indexInfo;
             if (indexNode->nop != knopRsh && viewType != Js::ArrayBufferView::TYPE_INT8 && viewType != Js::ArrayBufferView::TYPE_UINT8)
             {
-                throw AsmJsCompilationException( _u("index expression isn't shifted; must be an Int8/Uint8 access") );
+                throw AsmJsCompilationException( u"index expression isn't shifted; must be an Int8/Uint8 access" );
             }
             int val = 0;
             uint32 mask = (uint32)~0;
@@ -1585,7 +1585,7 @@ namespace Js
                 ParseNode* rhsNode = ParserWrapper::GetBinaryRight(indexNode);
                 if (!rhsNode || rhsNode->nop != knopInt)
                 {
-                    throw AsmJsCompilationException(_u("shift amount must be constant"));
+                    throw AsmJsCompilationException(u"shift amount must be constant");
                 }
                 switch (viewType)
                 {
@@ -1600,7 +1600,7 @@ namespace Js
                 }
                 if (rhsNode->AsParseNodeInt()->lw != val)
                 {
-                    throw AsmJsCompilationException(_u("shift amount must be %d"), val);
+                    throw AsmJsCompilationException(u"shift amount must be %d", val);
                 }
                 index = ParserWrapper::GetBinaryLeft(indexNode);
             }
@@ -1639,7 +1639,7 @@ namespace Js
                 indexInfo = Emit( index );
                 if( !indexInfo.type.isIntish() )
                 {
-                    throw AsmJsCompilationException( _u("Left operand of >> must be intish; %s given"), indexInfo.type.toChars() );
+                    throw AsmJsCompilationException( u"Left operand of >> must be intish; %s given", indexInfo.type.toChars() );
                 }
                 indexSlot = indexInfo.location;
                 op = typedArrayOp[emitType][1];
@@ -1656,14 +1656,14 @@ namespace Js
         ParseNode* indexNode = ParserWrapper::GetBinaryRight( pnode );
         if( !ParserWrapper::IsNameDeclaration( arrayNameNode ) )
         {
-            throw AsmJsCompilationException( _u("Invalid symbol ") );
+            throw AsmJsCompilationException( u"Invalid symbol " );
         }
 
         PropertyName name = arrayNameNode->name();
         AsmJsSymbol* sym = mCompiler->LookupIdentifier(name, mFunction);
         if(!AsmJsArrayView::Is(sym))
         {
-            throw AsmJsCompilationException( _u("Invalid identifier %s"), name->Psz() );
+            throw AsmJsCompilationException( u"Invalid identifier %s", name->Psz() );
         }
         AsmJsArrayView* arrayView = AsmJsArrayView::FromSymbol(sym);
         ArrayBufferView::ViewType viewType = arrayView->GetViewType();
@@ -1708,18 +1708,18 @@ namespace Js
             AsmJsSymbol* sym = mCompiler->LookupIdentifier( name, mFunction, &source );
             if(!AsmJsVarBase::Is(sym))
             {
-                throw AsmJsCompilationException( _u("Identifier %s is not a variable"), name->Psz() );
+                throw AsmJsCompilationException( u"Identifier %s is not a variable", name->Psz() );
             }
 
             if( !sym->isMutable() )
             {
-                throw AsmJsCompilationException( _u("Cannot assign to identifier %s"), name->Psz() );
+                throw AsmJsCompilationException( u"Cannot assign to identifier %s", name->Psz() );
             }
 
             AsmJsVarBase* var = AsmJsVarBase::FromSymbol(sym);
             if( !var->GetType().isSuperType( rType ) )
             {
-                throw AsmJsCompilationException( _u("Cannot assign type %s to identifier %s"), rType.toChars(), name->Psz() );
+                throw AsmJsCompilationException( u"Cannot assign type %s to identifier %s", rType.toChars(), name->Psz() );
             }
 
             switch( source )
@@ -1777,14 +1777,14 @@ namespace Js
             ParseNode* indexNode = ParserWrapper::GetBinaryRight( lhs );
             if( !ParserWrapper::IsNameDeclaration( arrayNameNode ) )
             {
-                throw AsmJsCompilationException( _u("Invalid symbol ") );
+                throw AsmJsCompilationException( u"Invalid symbol " );
             }
 
             PropertyName name = arrayNameNode->name();
             AsmJsSymbol* sym = mCompiler->LookupIdentifier(name, mFunction);
             if (!AsmJsArrayView::Is(sym))
             {
-                throw AsmJsCompilationException( _u("Invalid identifier %s"), name->Psz() );
+                throw AsmJsCompilationException( u"Invalid identifier %s", name->Psz() );
             }
             // must emit index expr first in case it has side effects
             AsmJsArrayView* arrayView = AsmJsArrayView::FromSymbol(sym);
@@ -1799,7 +1799,7 @@ namespace Js
             {
                 if (!rhsEmit.type.isFloatish() && !rhsEmit.type.isMaybeDouble())
                 {
-                    throw AsmJsCompilationException(_u("Cannot assign value to TYPE_FLOAT32 ArrayBuffer"));
+                    throw AsmJsCompilationException(u"Cannot assign value to TYPE_FLOAT32 ArrayBuffer");
                 }
                 // do the conversion to float only for double
                 if (rhsEmit.type.isMaybeDouble())
@@ -1816,7 +1816,7 @@ namespace Js
             {
                 if (!rhsEmit.type.isMaybeFloat() && !rhsEmit.type.isMaybeDouble())
                 {
-                    throw AsmJsCompilationException(_u("Cannot assign value to TYPE_FLOAT64 ArrayBuffer"));
+                    throw AsmJsCompilationException(u"Cannot assign value to TYPE_FLOAT64 ArrayBuffer");
                 }
                 // do the conversion to double only for float
                 if (rhsEmit.type.isMaybeFloat())
@@ -1831,7 +1831,7 @@ namespace Js
             }
             else if (!rhsEmit.type.isSubType(arrayView->GetType()))
             {
-                throw AsmJsCompilationException( _u("Cannot assign value ArrayBuffer") );
+                throw AsmJsCompilationException( u"Cannot assign value ArrayBuffer" );
             }
 
             // to keep tmp registers in order, I need to release rhsEmit.local before indexInfo.location
@@ -1861,7 +1861,7 @@ namespace Js
         }
         else
         {
-            throw AsmJsCompilationException( _u("Can only assign to an identifier or an ArrayBufferView") );
+            throw AsmJsCompilationException( u"Can only assign to an identifier or an ArrayBufferView" );
         }
         EndStatement(pnode);
         return rhsEmit;
@@ -1913,7 +1913,7 @@ namespace Js
         }
         else
         {
-            throw AsmJsCompilationException( _u("Type not supported for comparison") );
+            throw AsmJsCompilationException( u"Type not supported for comparison" );
         }
         mWriter.AsmReg3( compOp, emitInfo.location, lhsEmit.location, rhsEmit.location );
         EndStatement(pnode);
@@ -1964,7 +1964,7 @@ namespace Js
         }
         else
         {
-            throw AsmJsCompilationException( _u("Type not supported for unary +") );
+            throw AsmJsCompilationException( u"Type not supported for unary +" );
         }
         emitInfo.location = dst;
         EndStatement(pnode);
@@ -2004,7 +2004,7 @@ namespace Js
         }
         else
         {
-            throw AsmJsCompilationException( _u("Type not supported for unary -") );
+            throw AsmJsCompilationException( u"Type not supported for unary -" );
         }
         EndStatement(pnode);
         return emitInfo;
@@ -2060,7 +2060,7 @@ namespace Js
         }
         else
         {
-            throw AsmJsCompilationException( _u("Type not supported for unary ~") );
+            throw AsmJsCompilationException( u"Type not supported for unary ~" );
         }
         EndStatement(pnode);
         return rhsEmit;
@@ -2098,7 +2098,7 @@ namespace Js
         }
         else
         {
-            throw AsmJsCompilationException( _u("Type not supported for unary !") );
+            throw AsmJsCompilationException( u"Type not supported for unary !" );
         }
         EndStatement(pnode);
         return emitInfo;
@@ -2140,7 +2140,7 @@ namespace Js
             const EmitExpressionInfo& info = Emit( expr );
             if( !info.type.isInt() )
             {
-                throw AsmJsCompilationException( _u("Comparison expressions must be type signed") );
+                throw AsmJsCompilationException( u"Comparison expressions must be type signed" );
             }
             mWriter.AsmBrReg1( Js::OpCodeAsmJs::BrTrue_Int, trueLabel, info.location );
             mWriter.AsmBr( falseLabel );
@@ -2301,7 +2301,7 @@ namespace Js
         }
         else
         {
-            throw AsmJsCompilationException(_u("Conditional expressions must be of type int, double, or float"));
+            throw AsmJsCompilationException(u"Conditional expressions must be of type int, double, or float");
         }
         mWriter.AsmBr( skipLabel );
         EndStatement(pnode->AsParseNodeTri()->pnode2);
@@ -2312,7 +2312,7 @@ namespace Js
         {
             if( !trueInfo.type.isInt() )
             {
-                throw AsmJsCompilationException( _u("Conditional expressions results must be the same type") );
+                throw AsmJsCompilationException( u"Conditional expressions results must be the same type" );
             }
             mWriter.AsmReg2( Js::OpCodeAsmJs::Ld_Int, intReg, falseInfo.location );
             mFunction->ReleaseLocation<int>( &falseInfo );
@@ -2321,7 +2321,7 @@ namespace Js
         {
             if( !trueInfo.type.isDouble() )
             {
-                throw AsmJsCompilationException( _u("Conditional expressions results must be the same type") );
+                throw AsmJsCompilationException( u"Conditional expressions results must be the same type" );
             }
             mWriter.AsmReg2( Js::OpCodeAsmJs::Ld_Db, doubleReg, falseInfo.location );
             mFunction->ReleaseLocation<double>( &falseInfo );
@@ -2330,14 +2330,14 @@ namespace Js
         {
             if (!trueInfo.type.isFloat())
             {
-                throw AsmJsCompilationException(_u("Conditional expressions results must be the same type"));
+                throw AsmJsCompilationException(u"Conditional expressions results must be the same type");
             }
             mWriter.AsmReg2(Js::OpCodeAsmJs::Ld_Flt, floatReg, falseInfo.location);
             mFunction->ReleaseLocation<float>(&falseInfo);
         }
         else
         {
-            throw AsmJsCompilationException(_u("Conditional expressions must be of type int, double, or float"));
+            throw AsmJsCompilationException(u"Conditional expressions must be of type int, double, or float");
         }
         mWriter.MarkAsmJsLabel( skipLabel );
         EndStatement(pnode->AsParseNodeTri()->pnode3);
@@ -2352,7 +2352,7 @@ namespace Js
 
         if( !valInfo.type.isSigned() )
         {
-            throw AsmJsCompilationException( _u("Switch value must be type Signed, FixNum") );
+            throw AsmJsCompilationException( u"Switch value must be type Signed, FixNum" );
         }
 
         RegSlot regVal = GetAndReleaseUnaryLocations<int>( &valInfo );
@@ -2377,7 +2377,7 @@ namespace Js
             ParseNode* caseExpr = pnodeCase->pnodeExpr;
             if ((caseExpr->nop != knopInt || (caseExpr->AsParseNodeInt()->lw >> 31) > 1) && !ParserWrapper::IsMinInt(caseExpr))
             {
-                throw AsmJsCompilationException( _u("Switch case value must be int in the range [-2^31, 2^31)") );
+                throw AsmJsCompilationException( u"Switch case value must be int in the range [-2^31, 2^31)" );
             }
 
             const EmitExpressionInfo& caseExprInfo = Emit( pnodeCase->pnodeExpr );
@@ -2464,14 +2464,14 @@ namespace Js
     void AsmJSByteCodeGenerator::StartStatement(ParseNode* pnode)
     {
         mWriter.StartStatement(pnode, 0);
-        //         Output::Print( _u("%*s+%d\n"),tab, " ", pnode->ichMin );
+        //         Output::Print( u"%*s+%d\n",tab, " ", pnode->ichMin );
         //         ++tab;
     }
 
     void AsmJSByteCodeGenerator::EndStatement(ParseNode* pnode)
     {
         mWriter.EndStatement(pnode);
-        //         Output::Print( _u("%*s-%d\n"),tab, " ", pnode->ichMin );
+        //         Output::Print( u"%*s-%d\n",tab, " ", pnode->ichMin );
         //         --tab;
     }
 

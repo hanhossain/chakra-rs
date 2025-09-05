@@ -22,12 +22,12 @@ void TTDHostBuildCurrentExeDirectory(char* path, size_t* pathLength, size_t buff
     }
     if (i == 0)
     {
-        fwprintf(stderr, _u("Can't get current exe directory"));
+        fwprintf(stderr, u"Can't get current exe directory");
         exit(1);
     }
     if (i + 2 > bufferLength)
     {
-        fwprintf(stderr, _u("Don't overflow path buffer during copy"));
+        fwprintf(stderr, u"Don't overflow path buffer during copy");
         exit(1);
     }
     memcpy_s(path, bufferLength, exePath, i + 1);
@@ -202,7 +202,7 @@ HRESULT Helpers::LoadScriptFromFile(LPCSTR filenameToLoad, LPCSTR& contents, uin
 
     if (nullptr == pRawBytes)
     {
-        fwprintf(stderr, _u("out of memory"));
+        fwprintf(stderr, u"out of memory");
         IfFailGo(E_OUTOFMEMORY);
     }
 
@@ -261,7 +261,7 @@ HRESULT Helpers::LoadScriptFromFile(LPCSTR filenameToLoad, LPCSTR& contents, uin
 
             {
                 // unicode unsupported
-                fwprintf(stderr, _u("unsupported file encoding. Only ANSI and UTF8 supported"));
+                fwprintf(stderr, u"unsupported file encoding. Only ANSI and UTF8 supported");
                 IfFailGo(E_UNEXPECTED);
             }
 #pragma prefast(pop)
@@ -304,58 +304,58 @@ LPCWSTR Helpers::JsErrorCodeToString(JsErrorCode jsErrorCode)
 
     switch (jsErrorCode)
     {
-    case JsNoError:                            return _u("JsNoError");
+    case JsNoError:                            return u"JsNoError";
     // JsErrorCategoryUsage
-    case JsErrorCategoryUsage:                 return _u("JsErrorCategoryUsage");
-    case JsErrorInvalidArgument:               return _u("JsErrorInvalidArgument");
-    case JsErrorNullArgument:                  return _u("JsErrorNullArgument");
-    case JsErrorNoCurrentContext:              return _u("JsErrorNoCurrentContext");
-    case JsErrorInExceptionState:              return _u("JsErrorInExceptionState");
-    case JsErrorNotImplemented:                return _u("JsErrorNotImplemented");
-    case JsErrorWrongThread:                   return _u("JsErrorWrongThread");
-    case JsErrorRuntimeInUse:                  return _u("JsErrorRuntimeInUse");
-    case JsErrorBadSerializedScript:           return _u("JsErrorBadSerializedScript");
-    case JsErrorInDisabledState:               return _u("JsErrorInDisabledState");
-    case JsErrorCannotDisableExecution:        return _u("JsErrorCannotDisableExecution");
-    case JsErrorHeapEnumInProgress:            return _u("JsErrorHeapEnumInProgress");
-    case JsErrorArgumentNotObject:             return _u("JsErrorArgumentNotObject");
-    case JsErrorInProfileCallback:             return _u("JsErrorInProfileCallback");
-    case JsErrorInThreadServiceCallback:       return _u("JsErrorInThreadServiceCallback");
-    case JsErrorCannotSerializeDebugScript:    return _u("JsErrorCannotSerializeDebugScript");
-    case JsErrorAlreadyDebuggingContext:       return _u("JsErrorAlreadyDebuggingContext");
-    case JsErrorAlreadyProfilingContext:       return _u("JsErrorAlreadyProfilingContext");
-    case JsErrorIdleNotEnabled:                return _u("JsErrorIdleNotEnabled");
-    case JsErrorInObjectBeforeCollectCallback: return _u("JsErrorInObjectBeforeCollectCallback");
-    case JsErrorObjectNotInspectable:          return _u("JsErrorObjectNotInspectable");
-    case JsErrorPropertyNotSymbol:             return _u("JsErrorPropertyNotSymbol");
-    case JsErrorPropertyNotString:             return _u("JsErrorPropertyNotString");
-    case JsErrorInvalidContext:                return _u("JsErrorInvalidContext");
-    case JsInvalidModuleHostInfoKind:          return _u("JsInvalidModuleHostInfoKind");
-    case JsErrorModuleParsed:                  return _u("JsErrorModuleParsed");
+    case JsErrorCategoryUsage:                 return u"JsErrorCategoryUsage";
+    case JsErrorInvalidArgument:               return u"JsErrorInvalidArgument";
+    case JsErrorNullArgument:                  return u"JsErrorNullArgument";
+    case JsErrorNoCurrentContext:              return u"JsErrorNoCurrentContext";
+    case JsErrorInExceptionState:              return u"JsErrorInExceptionState";
+    case JsErrorNotImplemented:                return u"JsErrorNotImplemented";
+    case JsErrorWrongThread:                   return u"JsErrorWrongThread";
+    case JsErrorRuntimeInUse:                  return u"JsErrorRuntimeInUse";
+    case JsErrorBadSerializedScript:           return u"JsErrorBadSerializedScript";
+    case JsErrorInDisabledState:               return u"JsErrorInDisabledState";
+    case JsErrorCannotDisableExecution:        return u"JsErrorCannotDisableExecution";
+    case JsErrorHeapEnumInProgress:            return u"JsErrorHeapEnumInProgress";
+    case JsErrorArgumentNotObject:             return u"JsErrorArgumentNotObject";
+    case JsErrorInProfileCallback:             return u"JsErrorInProfileCallback";
+    case JsErrorInThreadServiceCallback:       return u"JsErrorInThreadServiceCallback";
+    case JsErrorCannotSerializeDebugScript:    return u"JsErrorCannotSerializeDebugScript";
+    case JsErrorAlreadyDebuggingContext:       return u"JsErrorAlreadyDebuggingContext";
+    case JsErrorAlreadyProfilingContext:       return u"JsErrorAlreadyProfilingContext";
+    case JsErrorIdleNotEnabled:                return u"JsErrorIdleNotEnabled";
+    case JsErrorInObjectBeforeCollectCallback: return u"JsErrorInObjectBeforeCollectCallback";
+    case JsErrorObjectNotInspectable:          return u"JsErrorObjectNotInspectable";
+    case JsErrorPropertyNotSymbol:             return u"JsErrorPropertyNotSymbol";
+    case JsErrorPropertyNotString:             return u"JsErrorPropertyNotString";
+    case JsErrorInvalidContext:                return u"JsErrorInvalidContext";
+    case JsInvalidModuleHostInfoKind:          return u"JsInvalidModuleHostInfoKind";
+    case JsErrorModuleParsed:                  return u"JsErrorModuleParsed";
     // JsErrorCategoryEngine
-    case JsErrorCategoryEngine:                return _u("JsErrorCategoryEngine");
-    case JsErrorOutOfMemory:                   return _u("JsErrorOutOfMemory");
-    case JsErrorBadFPUState:                   return _u("JsErrorBadFPUState");
+    case JsErrorCategoryEngine:                return u"JsErrorCategoryEngine";
+    case JsErrorOutOfMemory:                   return u"JsErrorOutOfMemory";
+    case JsErrorBadFPUState:                   return u"JsErrorBadFPUState";
     // JsErrorCategoryScript
-    case JsErrorCategoryScript:                return _u("JsErrorCategoryScript");
-    case JsErrorScriptException:               return _u("JsErrorScriptException");
-    case JsErrorScriptCompile:                 return _u("JsErrorScriptCompile");
-    case JsErrorScriptTerminated:              return _u("JsErrorScriptTerminated");
-    case JsErrorScriptEvalDisabled:            return _u("JsErrorScriptEvalDisabled");
+    case JsErrorCategoryScript:                return u"JsErrorCategoryScript";
+    case JsErrorScriptException:               return u"JsErrorScriptException";
+    case JsErrorScriptCompile:                 return u"JsErrorScriptCompile";
+    case JsErrorScriptTerminated:              return u"JsErrorScriptTerminated";
+    case JsErrorScriptEvalDisabled:            return u"JsErrorScriptEvalDisabled";
     // JsErrorCategoryFatal
-    case JsErrorCategoryFatal:                 return _u("JsErrorCategoryFatal");
-    case JsErrorFatal:                         return _u("JsErrorFatal");
-    case JsErrorWrongRuntime:                  return _u("JsErrorWrongRuntime");
+    case JsErrorCategoryFatal:                 return u"JsErrorCategoryFatal";
+    case JsErrorFatal:                         return u"JsErrorFatal";
+    case JsErrorWrongRuntime:                  return u"JsErrorWrongRuntime";
     // JsErrorCategoryDiagError
-    case JsErrorCategoryDiagError:             return _u("JsErrorCategoryDiagError");
-    case JsErrorDiagAlreadyInDebugMode:        return _u("JsErrorDiagAlreadyInDebugMode");
-    case JsErrorDiagNotInDebugMode:            return _u("JsErrorDiagNotInDebugMode");
-    case JsErrorDiagNotAtBreak:                return _u("JsErrorDiagNotAtBreak");
-    case JsErrorDiagInvalidHandle:             return _u("JsErrorDiagInvalidHandle");
-    case JsErrorDiagObjectNotFound:            return _u("JsErrorDiagObjectNotFound");
-    case JsErrorDiagUnableToPerformAction:     return _u("JsErrorDiagUnableToPerformAction");
+    case JsErrorCategoryDiagError:             return u"JsErrorCategoryDiagError";
+    case JsErrorDiagAlreadyInDebugMode:        return u"JsErrorDiagAlreadyInDebugMode";
+    case JsErrorDiagNotInDebugMode:            return u"JsErrorDiagNotInDebugMode";
+    case JsErrorDiagNotAtBreak:                return u"JsErrorDiagNotAtBreak";
+    case JsErrorDiagInvalidHandle:             return u"JsErrorDiagInvalidHandle";
+    case JsErrorDiagObjectNotFound:            return u"JsErrorDiagObjectNotFound";
+    case JsErrorDiagUnableToPerformAction:     return u"JsErrorDiagUnableToPerformAction";
     default:
-        return _u("<unknown>");
+        return u"<unknown>";
         break;
     }
 }
@@ -364,9 +364,9 @@ void Helpers::LogError(__nullterminated const char16_t *msg, ...)
 {
     va_list args;
     va_start(args, msg);
-    wprintf(_u("ERROR: "));
+    wprintf(u"ERROR: ");
     vfwprintf(stderr, msg, args);
-    wprintf(_u("\n"));
+    wprintf(u"\n");
     fflush(stdout);
     va_end(args);
 }
@@ -404,7 +404,7 @@ HRESULT Helpers::LoadBinaryFile(LPCSTR filename, LPCSTR& contents, uint32_t& len
     contents = (LPCSTR)HeapAlloc(GetProcessHeap(), 0, lengthBytes);
     if (nullptr == contents)
     {
-        fwprintf(stderr, _u("out of memory"));
+        fwprintf(stderr, u"out of memory");
         IfFailGo(E_OUTOFMEMORY);
     }
     //
@@ -413,7 +413,7 @@ HRESULT Helpers::LoadBinaryFile(LPCSTR filename, LPCSTR& contents, uint32_t& len
     result = fread((void*)contents, sizeof(char), lengthBytes, file);
     if (result != lengthBytes)
     {
-        fwprintf(stderr, _u("Read error"));
+        fwprintf(stderr, u"Read error");
         IfFailGo(E_FAIL);
     }
 
@@ -447,8 +447,8 @@ void Helpers::CreateTTDDirectoryAsNeeded(size_t* uriLength, char* uri, const cha
 {
     if(*uriLength + strlen(asciiDir1) + wcslen(asciiDir2) + 2 > MAX_URI_LENGTH || strlen(asciiDir1) >= MAX_TTD_ASCII_PATH_EXT_LENGTH || wcslen(asciiDir2) >= MAX_TTD_ASCII_PATH_EXT_LENGTH)
     {
-        wprintf(_u("We assume bounded MAX_URI_LENGTH for simplicity.\n"));
-        wprintf(_u("%S, %S, %ls\n"), uri, asciiDir1, asciiDir2);
+        wprintf(u"We assume bounded MAX_URI_LENGTH for simplicity.\n");
+        wprintf(u"%S, %S, %ls\n", uri, asciiDir1, asciiDir2);
         exit(1);
     }
 
@@ -458,8 +458,8 @@ void Helpers::CreateTTDDirectoryAsNeeded(size_t* uriLength, char* uri, const cha
     extLength = sprintf_s(uri + *uriLength, MAX_TTD_ASCII_PATH_EXT_LENGTH, "%s%s", asciiDir1, TTD_HOST_PATH_SEP);
     if(extLength == -1 || MAX_URI_LENGTH < (*uriLength) + extLength)
     {
-        wprintf(_u("Failed directory extension 1.\n"));
-        wprintf(_u("%S, %S, %ls\n"), uri, asciiDir1, asciiDir2);
+        wprintf(u"Failed directory extension 1.\n");
+        wprintf(u"%S, %S, %ls\n", uri, asciiDir1, asciiDir2);
         exit(1);
     }
     *uriLength += extLength;
@@ -477,7 +477,7 @@ void Helpers::CreateTTDDirectoryAsNeeded(size_t* uriLength, char* uri, const cha
     {
         if(asciiDir2[i] > CHAR_MAX)
         {
-            wprintf(_u("Test directory names can only include ascii chars.\n"));
+            wprintf(u"Test directory names can only include ascii chars.\n");
             exit(1);
         }
         realAsciiDir2[i] = (char)asciiDir2[i];
@@ -486,8 +486,8 @@ void Helpers::CreateTTDDirectoryAsNeeded(size_t* uriLength, char* uri, const cha
     extLength = sprintf_s(uri + *uriLength, MAX_TTD_ASCII_PATH_EXT_LENGTH, "%s%s", realAsciiDir2, TTD_HOST_PATH_SEP);
     if(extLength == -1 || MAX_URI_LENGTH < *uriLength + extLength)
     {
-        wprintf(_u("Failed directory create 2.\n"));
-        wprintf(_u("%S, %S, %ls\n"), uri, asciiDir1, asciiDir2);
+        wprintf(u"Failed directory create 2.\n");
+        wprintf(u"%S, %S, %ls\n", uri, asciiDir1, asciiDir2);
         exit(1);
     }
     *uriLength += extLength;
@@ -513,7 +513,7 @@ JsTTDStreamHandle CALLBACK Helpers::TTCreateStreamCallback(size_t uriLength, con
 
     if(uriLength + asciiNameLength + 1 > MAX_URI_LENGTH)
     {
-        wprintf(_u("We assume bounded MAX_URI_LENGTH for simplicity."));
+        wprintf(u"We assume bounded MAX_URI_LENGTH for simplicity.");
         exit(1);
     }
 

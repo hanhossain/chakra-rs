@@ -194,7 +194,7 @@ public:
 
             if (address == nullptr)
             {
-                VerboseHeapTrace(_u("PRE-RESERVE: PreReserved Segment CANNOT be allocated \n"));
+                VerboseHeapTrace(u"PRE-RESERVE: PreReserved Segment CANNOT be allocated \n");
             }
         }
 
@@ -208,7 +208,7 @@ public:
         }
         else
         {
-            VerboseHeapTrace(_u("PRE-RESERVE: Allocing new page in PreReserved Segment \n"));
+            VerboseHeapTrace(u"PRE-RESERVE: Allocing new page in PreReserved Segment \n");
         }
 
         return address;

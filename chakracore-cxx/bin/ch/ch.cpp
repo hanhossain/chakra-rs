@@ -16,7 +16,7 @@
 unsigned int MessageBase::s_messageCount = 0;
 Debugger* Debugger::debugger = nullptr;
 
-LPCWSTR hostName = _u("ch");
+LPCWSTR hostName = u"ch";
 
 JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
 
@@ -52,7 +52,7 @@ int HostExceptionFilter(int exceptionCode, _EXCEPTION_POINTERS *ep)
         return EXCEPTION_CONTINUE_SEARCH;
     }
 
-    fwprintf(stderr, _u("FATAL ERROR: %ls failed due to exception code %x\n"), hostName, exceptionCode);
+    fwprintf(stderr, u"FATAL ERROR: %ls failed due to exception code %x\n", hostName, exceptionCode);
 
     _flushall();
 
@@ -65,19 +65,19 @@ int HostExceptionFilter(int exceptionCode, _EXCEPTION_POINTERS *ep)
 
 void PrintUsageFormat()
 {
-    wprintf(_u("\nUsage: %s [-v|-version] [-h|-help] [-?] [flaglist] <source file>\n"), hostName);
-    wprintf(_u("\t-v|-version\t\tDisplays version info\n"));
-    wprintf(_u("\t-h|-help\t\tDisplays this help message\n"));
-    wprintf(_u("\t-?\t\t\tDisplays this help message with complete [flaglist] info\n"));
+    wprintf(u"\nUsage: %s [-v|-version] [-h|-help] [-?] [flaglist] <source file>\n", hostName);
+    wprintf(u"\t-v|-version\t\tDisplays version info\n");
+    wprintf(u"\t-h|-help\t\tDisplays this help message\n");
+    wprintf(u"\t-?\t\t\tDisplays this help message with complete [flaglist] info\n");
 }
 
 #if !defined(ENABLE_DEBUG_CONFIG_OPTIONS)
 void PrintReleaseUsage()
 {
-    wprintf(_u("\nUsage: %s [-v|-version] [-h|-help|-?] <source file> %s"), hostName,
-        _u("\nNote: [flaglist] is not supported in Release builds; try a Debug or Test build to enable these flags.\n"));
-    wprintf(_u("\t-v|-version\t\tDisplays version info\n"));
-    wprintf(_u("\t-h|-help|-?\t\tDisplays this help message\n"));
+    wprintf(u"\nUsage: %s [-v|-version] [-h|-help|-?] <source file> %s", hostName,
+        u"\nNote: [flaglist] is not supported in Release builds; try a Debug or Test build to enable these flags.\n");
+    wprintf(u"\t-v|-version\t\tDisplays version info\n");
+    wprintf(u"\t-h|-help|-?\t\tDisplays this help message\n");
 }
 #endif
 
@@ -93,9 +93,9 @@ void PrintUsage()
 void PrintChVersion()
 {
 #if CHAKRA_CORE_VERSION_RELEASE
-    wprintf(_u("%s version %d.%d.%d.0\n"),
+    wprintf(u"%s version %d.%d.%d.0\n",
 #else
-    wprintf(_u("%s version %d.%d.%d.0-beta\n"),
+    wprintf(u"%s version %d.%d.%d.0-beta\n",
 #endif
         hostName, CHAKRA_CORE_MAJOR_VERSION, CHAKRA_CORE_MINOR_VERSION, CHAKRA_CORE_PATCH_VERSION);
 }
@@ -211,12 +211,12 @@ HRESULT RunScript(const char* fileName, LPCSTR fileContents, size_t fileLength, 
             fileContentsFinalizeCallback((void*)fileContents);
         }
 #if !ENABLE_TTD
-        wprintf(_u("Sential js file is only ok when in TTDebug mode!!!\n"));
+        wprintf(u"Sential js file is only ok when in TTDebug mode!!!\n");
         return E_FAIL;
 #else
         if(!doTTReplay)
         {
-            wprintf(_u("Sential js file is only ok when in TTReplay mode!!!\n"));
+            wprintf(u"Sential js file is only ok when in TTReplay mode!!!\n");
             return E_FAIL;
         }
 
@@ -236,7 +236,7 @@ HRESULT RunScript(const char* fileName, LPCSTR fileContents, size_t fileLength, 
                 {
                     if(error == JsErrorCategoryUsage)
                     {
-                        wprintf(_u("Start time not in log range.\n"));
+                        wprintf(u"Start time not in log range.\n");
                     }
 
                     return error;
@@ -249,21 +249,21 @@ HRESULT RunScript(const char* fileName, LPCSTR fileContents, size_t fileLength, 
                 //handle any uncaught exception by immediately time-traveling to the throwing line in the debugger -- in replay just report and exit
                 if(res == JsErrorCategoryScript)
                 {
-                    wprintf(_u("An unhandled script exception occurred!!!\n"));
+                    wprintf(u"An unhandled script exception occurred!!!\n");
 
                     ExitProcess(0);
                 }
 
                 if(nextEventTime == -1)
                 {
-                    wprintf(_u("\nReached end of Execution -- Exiting.\n"));
+                    wprintf(u"\nReached end of Execution -- Exiting.\n");
                     break;
                 }
             }
         }
         catch(...)
         {
-            wprintf(_u("Terminal exception in Replay -- exiting.\n"));
+            wprintf(u"Terminal exception in Replay -- exiting.\n");
             ExitProcess(0);
         }
 #endif
@@ -366,7 +366,7 @@ HRESULT RunScript(const char* fileName, LPCSTR fileContents, size_t fileLength, 
                 JsParseScriptAttributeNone, nullptr /*result*/);
             if (runScript == JsErrorCategoryUsage)
             {
-                wprintf(_u("FATAL ERROR: Core was compiled without ENABLE_TTD is defined. CH is trying to use TTD interface\n"));
+                wprintf(u"FATAL ERROR: Core was compiled without ENABLE_TTD is defined. CH is trying to use TTD interface\n");
                 abort();
             }
 #else
@@ -689,12 +689,12 @@ HRESULT ExecuteTest(const char* fileName)
     if(strlen(fileName) >= 14 && strcmp(fileName + strlen(fileName) - 14, "ttdSentinal.js") == 0)
     {
 #if !ENABLE_TTD
-        wprintf(_u("Sentinel js file is only ok when in TTDebug mode!!!\n"));
+        wprintf(u"Sentinel js file is only ok when in TTDebug mode!!!\n");
         return E_FAIL;
 #else
         if(!doTTReplay)
         {
-            wprintf(_u("Sentinel js file is only ok when in TTReplay mode!!!\n"));
+            wprintf(u"Sentinel js file is only ok when in TTReplay mode!!!\n");
             return E_FAIL;
         }
 
@@ -896,10 +896,10 @@ int main(int argc, char** c_argv)
         size_t arglen = wcslen(arg);
 
         // support - or / prefix for flags
-        if (arglen >= 1 && arg[0] == _u('-'))
+        if (arglen >= 1 && arg[0] == u'-')
         {
             // support -- prefix for flags
-            if (arglen >= 2 && arg[0] == _u('-') && arg[1] == _u('-'))
+            if (arglen >= 2 && arg[0] == u'-' && arg[1] == u'-')
             {
                 arg += 2; // advance past -- prefix
             }
@@ -910,8 +910,8 @@ int main(int argc, char** c_argv)
         }
 
         arglen = wcslen(arg); // get length of flag after prefix
-        if ((arglen == 1 && wcsncmp(arg, _u("v"),       arglen) == 0) ||
-            (arglen == 7 && wcsncmp(arg, _u("version"), arglen) == 0))
+        if ((arglen == 1 && wcsncmp(arg, u"v",       arglen) == 0) ||
+            (arglen == 7 && wcsncmp(arg, u"version", arglen) == 0))
         {
             PrintVersion();
             PAL_Shutdown();
@@ -920,10 +920,10 @@ int main(int argc, char** c_argv)
         }
         else if (
 #if !defined(ENABLE_DEBUG_CONFIG_OPTIONS) // release builds can display some kind of help message
-            (arglen == 1 && wcsncmp(arg, _u("?"),    arglen) == 0) ||
+            (arglen == 1 && wcsncmp(arg, u"?",    arglen) == 0) ||
 #endif
-            (arglen == 1 && wcsncmp(arg, _u("h"),    arglen) == 0) ||
-            (arglen == 4 && wcsncmp(arg, _u("help"), arglen) == 0)
+            (arglen == 1 && wcsncmp(arg, u"h",    arglen) == 0) ||
+            (arglen == 4 && wcsncmp(arg, u"help", arglen) == 0)
             )
         {
             PrintUsage();
@@ -931,31 +931,31 @@ int main(int argc, char** c_argv)
             retval = EXIT_SUCCESS;
             goto return_cleanup;
         }
-        else if(wcsstr(argv[i], _u("-TTRecord=")) == argv[i])
+        else if(wcsstr(argv[i], u"-TTRecord=") == argv[i])
         {
             doTTRecord = true;
-            wchar* ruri = argv[i] + wcslen(_u("-TTRecord="));
+            wchar* ruri = argv[i] + wcslen(u"-TTRecord=");
             Helpers::GetTTDDirectory(ruri, &ttUriLength, ttUri, ttUriBufferLength);
         }
-        else if(wcsstr(argv[i], _u("-TTReplay=")) == argv[i])
+        else if(wcsstr(argv[i], u"-TTReplay=") == argv[i])
         {
             doTTReplay = true;
-            wchar* ruri = argv[i] + wcslen(_u("-TTReplay="));
+            wchar* ruri = argv[i] + wcslen(u"-TTReplay=");
             Helpers::GetTTDDirectory(ruri, &ttUriLength, ttUri, ttUriBufferLength);
         }
-        else if(wcsstr(argv[i], _u("-TTSnapInterval=")) == argv[i])
+        else if(wcsstr(argv[i], u"-TTSnapInterval=") == argv[i])
         {
-            LPCWSTR intervalStr = argv[i] + wcslen(_u("-TTSnapInterval="));
+            LPCWSTR intervalStr = argv[i] + wcslen(u"-TTSnapInterval=");
             snapInterval = (uint32_t)_wtoi(intervalStr);
         }
-        else if(wcsstr(argv[i], _u("-TTHistoryLength=")) == argv[i])
+        else if(wcsstr(argv[i], u"-TTHistoryLength=") == argv[i])
         {
-            LPCWSTR historyStr = argv[i] + wcslen(_u("-TTHistoryLength="));
+            LPCWSTR historyStr = argv[i] + wcslen(u"-TTHistoryLength=");
             snapHistoryLength = (uint32_t)_wtoi(historyStr);
         }
-        else if(wcsstr(argv[i], _u("-TTDStartEvent=")) == argv[i])
+        else if(wcsstr(argv[i], u"-TTDStartEvent=") == argv[i])
         {
-            LPCWSTR startEventStr = argv[i] + wcslen(_u("-TTDStartEvent="));
+            LPCWSTR startEventStr = argv[i] + wcslen(u"-TTDStartEvent=");
             startEventCount = (uint32_t)_wtoi(startEventStr);
         }
         else
@@ -970,7 +970,7 @@ int main(int argc, char** c_argv)
 
     if(doTTRecord & doTTReplay)
     {
-        fwprintf(stderr, _u("Cannot run in record and replay at same time!!!"));
+        fwprintf(stderr, u"Cannot run in record and replay at same time!!!");
         ExitProcess(0);
     }
 

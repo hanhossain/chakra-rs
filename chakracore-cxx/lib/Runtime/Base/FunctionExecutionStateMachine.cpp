@@ -875,7 +875,7 @@ namespace Js
     void FunctionExecutionStateMachine::PrintLimits() const
     {
         Output::Print(
-            _u("limits: %hu.%hu.%hu.%hu.%hu = %hu"),
+            u"limits: %hu.%hu.%hu.%hu.%hu = %hu",
             interpreterLimit + autoProfilingInterpreter0Limit,
             profilingInterpreter0Limit,
             autoProfilingInterpreter1Limit,

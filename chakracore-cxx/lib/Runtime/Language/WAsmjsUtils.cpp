@@ -23,51 +23,51 @@ namespace WAsmJs
 
         void PrintArgSeparator()
         {
-            Output::Print(_u(", "));
+            Output::Print(u", ");
         }
 
         void PrintBeginCall()
         {
             ++callDepth;
-            Output::Print(_u(") {\n"));
+            Output::Print(u") {\n");
         }
 
         void PrintNewLine()
         {
-            Output::Print(_u("\n"));
+            Output::Print(u"\n");
         }
 
         void PrintEndCall(int hasReturn)
         {
             callDepth = callDepth > 0 ? callDepth - 1 : 0;
-            Output::Print(_u("%*s}"), GetPrintCol(), _u(""));
+            Output::Print(u"%*s}", GetPrintCol(), u"");
             if (hasReturn)
             {
-                Output::Print(_u(" = "));
+                Output::Print(u" = ");
             }
         }
 
         int PrintI32(int val)
         {
-            Output::Print(_u("%d"), val);
+            Output::Print(u"%d", val);
             return val;
         }
 
         long PrintI64(long val)
         {
-            Output::Print(_u("%lld"), val);
+            Output::Print(u"%lld", val);
             return val;
         }
 
         float PrintF32(float val)
         {
-            Output::Print(_u("%.4f"), val);
+            Output::Print(u"%.4f", val);
             return val;
         }
 
         double PrintF64(double val)
         {
-            Output::Print(_u("%.4f"), val);
+            Output::Print(u"%.4f", val);
             return val;
         }
     }
@@ -80,7 +80,7 @@ namespace WAsmJs
         {
             if (PHASE_TRACE(Js::AsmjsEntryPointInfoPhase, body))
             {
-                Output::Print(_u("Scheduling %s For Full JIT at callcount:%d\n"), body->GetDisplayName(), interpretedCount);
+                Output::Print(u"Scheduling %s For Full JIT at callcount:%d\n", body->GetDisplayName(), interpretedCount);
             }
             GenerateFunction(body->GetScriptContext()->GetNativeCodeGenerator(), body, func);
             body->SetIsAsmJsFullJitScheduled(true);
@@ -193,12 +193,12 @@ namespace WAsmJs
 
         switch (type)
         {
-        case INT32: wcscpy_s(buf, bufsize  , shortName ? _u("I"): _u("INT32")); break;
-        case INT64: wcscpy_s(buf, bufsize  , shortName ? _u("L"): _u("INT64")); break;
-        case FLOAT32: wcscpy_s(buf, bufsize, shortName ? _u("F"): _u("FLOAT32")); break;
-        case FLOAT64: wcscpy_s(buf, bufsize, shortName ? _u("D"): _u("FLOAT64")); break;
-        case SIMD: wcscpy_s(buf, bufsize   , _u("SIMD")); break;
-        default: wcscpy_s(buf, bufsize     , _u("UNKNOWN")); break;
+        case INT32: wcscpy_s(buf, bufsize  , shortName ? u"I": u"INT32"); break;
+        case INT64: wcscpy_s(buf, bufsize  , shortName ? u"L": u"INT64"); break;
+        case FLOAT32: wcscpy_s(buf, bufsize, shortName ? u"F": u"FLOAT32"); break;
+        case FLOAT64: wcscpy_s(buf, bufsize, shortName ? u"D": u"FLOAT64"); break;
+        case SIMD: wcscpy_s(buf, bufsize   , u"SIMD"); break;
+        default: wcscpy_s(buf, bufsize     , u"UNKNOWN"); break;
         }
     }
 
@@ -208,7 +208,7 @@ namespace WAsmJs
         {
             char16_t buf[16];
             GetTypeDebugName(mType, buf, 16, true);
-            Output::Print(_u("%s%s %d\n"), deallocation ? _u("-") : _u("+"), buf, loc);
+            Output::Print(u"%s%s %d\n", deallocation ? u"-" : u"+", buf, loc);
         }
     }
 #endif
@@ -241,9 +241,9 @@ namespace WAsmJs
 #if DBG_DUMP
         if (PHASE_TRACE(Js::AsmjsInterpreterStackPhase, body))
         {
-            Output::Print(_u("ASMFunctionInfo Stack Data for %s\n"), body->GetDisplayName());
-            Output::Print(_u("==========================\n"));
-            Output::Print(_u("RequiredVarConstants:%d\n"), Js::AsmJsFunctionMemory::RequiredVarConstants);
+            Output::Print(u"ASMFunctionInfo Stack Data for %s\n", body->GetDisplayName());
+            Output::Print(u"==========================\n");
+            Output::Print(u"RequiredVarConstants:%d\n", Js::AsmJsFunctionMemory::RequiredVarConstants);
         }
 #endif
 
@@ -276,7 +276,7 @@ namespace WAsmJs
                 {
                     char16_t buf[16];
                     RegisterSpace::GetTypeDebugName(type, buf, 16);
-                    Output::Print(_u("%s Offset:%d  ConstCount:%d  VarCount:%d  TmpCount:%d = %d * %d = 0x%x bytes\n"),
+                    Output::Print(u"%s Offset:%d  ConstCount:%d  VarCount:%d  TmpCount:%d = %d * %d = 0x%x bytes\n",
                                   buf,
                                   slotInfo.byteOffset,
                                   slotInfo.constCount,
@@ -312,7 +312,7 @@ namespace WAsmJs
 #if DBG_DUMP
         if (PHASE_TRACE(Js::AsmjsInterpreterStackPhase, body))
         {
-            Output::Print(_u("Total memory required: (%u consts + %u vars) * sizeof(Js::Var) >= %u * sizeof(Js::Var) = 0x%x bytes\n"),
+            Output::Print(u"Total memory required: (%u consts + %u vars) * sizeof(Js::Var) >= %u * sizeof(Js::Var) = 0x%x bytes\n",
                           jsVarUsedForConstsTable,
                           jsVarNeededForVars,
                           totalVarsNeeded,
@@ -380,7 +380,7 @@ namespace WAsmJs
                 RegisterSpace::GetTypeDebugName(type, shortTypeName, 16, true);
                 RegisterSpace* registerSpace = GetRegisterSpace(type);
                 Output::Print(
-                    _u("     %-10s : %u locals (%u temps from %s%u)\n"),
+                    u"     %-10s : %u locals (%u temps from %s%u)\n",
                     typeName,
                     registerSpace->GetVarCount(),
                     registerSpace->GetTmpCount(),

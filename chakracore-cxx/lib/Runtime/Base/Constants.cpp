@@ -10,17 +10,17 @@ using namespace Js;
 const uint Constants::InvalidSourceIndex;
 const RegSlot Constants::NoRegister;
 
-const char16_t Constants::AnonymousFunction[] = _u("Anonymous function");
-const char16_t Constants::Anonymous[] = _u("anonymous");
-const char16_t Constants::Empty[] = _u("");
-const char16_t Constants::FunctionCode[] = _u("Function code");
-const char16_t Constants::GlobalCode[] = _u("Global code");
-const char16_t Constants::ModuleCode[] = _u("Module code");
-const char16_t Constants::EvalCode[] = _u("eval code");
-const char16_t Constants::GlobalFunction[] = _u("glo");
-const char16_t Constants::UnknownScriptCode[] = _u("Unknown script code");
-const char16_t Constants::StringReplace[] = _u("String.prototype.replace");
-const char16_t Constants::StringMatch[] = _u("String.prototype.match");
+const char16_t Constants::AnonymousFunction[] = u"Anonymous function";
+const char16_t Constants::Anonymous[] = u"anonymous";
+const char16_t Constants::Empty[] = u"";
+const char16_t Constants::FunctionCode[] = u"Function code";
+const char16_t Constants::GlobalCode[] = u"Global code";
+const char16_t Constants::ModuleCode[] = u"Module code";
+const char16_t Constants::EvalCode[] = u"eval code";
+const char16_t Constants::GlobalFunction[] = u"glo";
+const char16_t Constants::UnknownScriptCode[] = u"Unknown script code";
+const char16_t Constants::StringReplace[] = u"String.prototype.replace";
+const char16_t Constants::StringMatch[] = u"String.prototype.match";
 
 const unsigned long Constants::ExponentMask = 0x3FF0000000000000;
 const unsigned long Constants::MantissaMask = 0x000FFFFFFFFFFFFF;

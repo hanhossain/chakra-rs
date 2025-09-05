@@ -148,7 +148,7 @@ public:
                 chunk->dataType = typeid(T).name();
                 if (PHASE_TRACE1(Js::NativeCodeDataPhase))
                 {
-                    Output::Print(_u("NativeCodeData AllocNoFix: chunk: %p, data: %p, index: %d, len: %x, totalOffset: %x, type: %S\n"),
+                    Output::Print(u"NativeCodeData AllocNoFix: chunk: %p, data: %p, index: %d, len: %x, totalOffset: %x, type: %S\n",
                         chunk, (void*)dataBlock, chunk->allocIndex, chunk->len, chunk->offset, chunk->dataType);
                 }
             }
@@ -167,7 +167,7 @@ public:
                 chunk->dataType = typeid(T).name();
                 if (PHASE_TRACE1(Js::NativeCodeDataPhase))
                 {
-                    Output::Print(_u("NativeCodeData AllocNoFix: chunk: %p, data: %p, index: %d, len: %x, totalOffset: %x, type: %S\n"),
+                    Output::Print(u"NativeCodeData AllocNoFix: chunk: %p, data: %p, index: %d, len: %x, totalOffset: %x, type: %S\n",
                         chunk, (void*)dataBlock, chunk->allocIndex, chunk->len, chunk->offset, chunk->dataType);
                 }
             }
@@ -194,7 +194,7 @@ public:
                 chunk->dataType = typeid(T).name();
                 if (PHASE_TRACE1(Js::NativeCodeDataPhase))
                 {
-                    Output::Print(_u("NativeCodeData Alloc: chunk: %p, data: %p, index: %d, len: %x, totalOffset: %x, type: %S\n"),
+                    Output::Print(u"NativeCodeData Alloc: chunk: %p, data: %p, index: %d, len: %x, totalOffset: %x, type: %S\n",
                         chunk, (void*)dataBlock, chunk->allocIndex, chunk->len, chunk->offset, chunk->dataType);
                 }
 #endif

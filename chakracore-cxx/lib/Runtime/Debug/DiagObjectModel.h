@@ -356,7 +356,7 @@ namespace Js
                     {
                         if (!activeScopeObject->HasOwnProperty(resolveObject.propId))
                         {
-                            OUTPUT_TRACE(Js::ConsoleScopePhase, _u("Adding '%s' property to activeScopeObject\n"), resolveObject.scriptContext->GetPropertyName(resolveObject.propId)->GetBuffer());
+                            OUTPUT_TRACE(Js::ConsoleScopePhase, u"Adding '%s' property to activeScopeObject\n", resolveObject.scriptContext->GetPropertyName(resolveObject.propId)->GetBuffer());
                             if (resolveObject.IsInDeadZone())
                             {
                                 PropertyOperationFlags flags = static_cast<PropertyOperationFlags>(PropertyOperation_SpecialValue | PropertyOperation_AllowUndecl);
@@ -816,7 +816,7 @@ namespace Js
         RecyclableCollectionObjectDisplay(ScriptContext* scriptContext, const char16_t* name, RecyclableCollectionObjectWalker<TData>* walker) : scriptContext(scriptContext), name(name), walker(walker) { }
 
         virtual LPCWSTR Name() override { return name; }
-        virtual LPCWSTR Type() override { return _u(""); }
+        virtual LPCWSTR Type() override { return u""; }
         virtual LPCWSTR Value(int radix) override;
         virtual BOOL HasChildren() override { return walker->GetChildrenCount() > 0; }
         virtual BOOL Set(Var updateObject) override { return FALSE; }
@@ -840,7 +840,7 @@ namespace Js
         RecyclableKeyValueDisplay(ScriptContext* scriptContext, Var key, Var value, const char16_t* name) : scriptContext(scriptContext), key(key), value(value), name(name) { }
 
         virtual LPCWSTR Name() override { return name; }
-        virtual LPCWSTR Type() override { return _u(""); }
+        virtual LPCWSTR Type() override { return u""; }
         virtual LPCWSTR Value(int radix) override;
         virtual BOOL HasChildren() override { return TRUE; }
         virtual BOOL Set(Var updateObject) override { return FALSE; }
@@ -979,7 +979,7 @@ namespace Js
         MutationType mutationType;
     public:
         PendingMutationBreakpointDisplay(ResolvedObject* resolvedObject, MutationType mutationType);
-        virtual LPCWSTR Value(int radix) override { return _u(""); }
+        virtual LPCWSTR Value(int radix) override { return u""; }
         virtual BOOL HasChildren() override { return TRUE; }
         virtual WeakArenaReference<IDiagObjectModelWalkerBase>* CreateWalker() override;
     };

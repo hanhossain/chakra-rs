@@ -156,9 +156,9 @@ RecyclerSweepManager::FinishSweep()
 #ifdef RECYCLER_TRACE
             if (recycler->GetRecyclerFlagsTable().Trace.IsEnabled(Js::PartialCollectPhase))
             {
-                Output::Print(_u("AdjustPartialHeuristics returned true\n"));
-                Output::Print(_u("  partialUncollectedAllocBytes = %d\n"), recycler->partialUncollectedAllocBytes);
-                Output::Print(_u("  nextPartialUncollectedAllocBytes = %d\n"), this->nextPartialUncollectedAllocBytes);
+                Output::Print(u"AdjustPartialHeuristics returned true\n");
+                Output::Print(u"  partialUncollectedAllocBytes = %d\n", recycler->partialUncollectedAllocBytes);
+                Output::Print(u"  nextPartialUncollectedAllocBytes = %d\n", this->nextPartialUncollectedAllocBytes);
             }
 #endif
 
@@ -189,7 +189,7 @@ RecyclerSweepManager::FinishSweep()
 #ifdef RECYCLER_TRACE
             if (recycler->GetRecyclerFlagsTable().Trace.IsEnabled(Js::PartialCollectPhase))
             {
-                Output::Print(_u("AdjustPartialHeuristics returned false\n"));
+                Output::Print(u"AdjustPartialHeuristics returned false\n");
             }
 #endif
 
@@ -239,9 +239,9 @@ RecyclerSweepManager::EndSweep()
 #ifdef RECYCLER_TRACE
         if (recycler->GetRecyclerFlagsTable().Trace.IsEnabled(Js::PartialCollectPhase))
         {
-            Output::Print(_u("EndSweep for partial sweep\n"));
-            Output::Print(_u("  uncollectedAllocBytes = %d\n"), recycler->autoHeap.uncollectedAllocBytes);
-            Output::Print(_u("  nextPartialUncollectedAllocBytes = %d\n"), this->nextPartialUncollectedAllocBytes);
+            Output::Print(u"EndSweep for partial sweep\n");
+            Output::Print(u"  uncollectedAllocBytes = %d\n", recycler->autoHeap.uncollectedAllocBytes);
+            Output::Print(u"  nextPartialUncollectedAllocBytes = %d\n", this->nextPartialUncollectedAllocBytes);
         }
 #endif
     }
@@ -365,11 +365,11 @@ RecyclerSweepManager::StartPartialCollectMode()
 #ifdef RECYCLER_TRACE
     if (recycler->GetRecyclerFlagsTable().Trace.IsEnabled(Js::PartialCollectPhase))
     {
-        Output::Print(_u("StartPartialCollectMode\n"));
-        Output::Print(_u("  was inPartialCollectMode = %d\n"), this->inPartialCollect);
-        Output::Print(_u("  lastPartialUncollectedAllocBytes = %d\n"), this->lastPartialUncollectedAllocBytes);
-        Output::Print(_u("  uncollectedAllocBytes = %d\n"), recycler->autoHeap.uncollectedAllocBytes);
-        Output::Print(_u("  nextPartialUncollectedAllocBytes = %d\n"), this->nextPartialUncollectedAllocBytes);
+        Output::Print(u"StartPartialCollectMode\n");
+        Output::Print(u"  was inPartialCollectMode = %d\n", this->inPartialCollect);
+        Output::Print(u"  lastPartialUncollectedAllocBytes = %d\n", this->lastPartialUncollectedAllocBytes);
+        Output::Print(u"  uncollectedAllocBytes = %d\n", recycler->autoHeap.uncollectedAllocBytes);
+        Output::Print(u"  nextPartialUncollectedAllocBytes = %d\n", this->nextPartialUncollectedAllocBytes);
     }
 #endif
 }

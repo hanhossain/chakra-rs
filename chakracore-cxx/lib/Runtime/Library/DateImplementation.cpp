@@ -211,28 +211,28 @@ namespace Js {
         CompoundString *const bs = CompoundString::NewWithCharCapacity(30, requestContext->GetLibrary());
 
         GetDateComponent(bs, DateData::FullYear, 0, requestContext);
-        bs->AppendChars(_u('-'));
+        bs->AppendChars(u'-');
         // month
         GetDateComponent(bs, DateData::Month, 1/*adjustment*/, requestContext);
-        bs->AppendChars(_u('-'));
+        bs->AppendChars(u'-');
         // date
         GetDateComponent(bs, DateData::Date, 0, requestContext);
-        bs->AppendChars(_u('T'));
+        bs->AppendChars(u'T');
         // hours
         GetDateComponent(bs, DateData::Hours, 0, requestContext);
-        bs->AppendChars(_u(':'));
+        bs->AppendChars(u':');
         // minutes
         GetDateComponent(bs, DateData::Minutes, 0, requestContext);
-        bs->AppendChars(_u(':'));
+        bs->AppendChars(u':');
         // seconds
         GetDateComponent(bs, DateData::Seconds, 0, requestContext);
 
         // ES5 fill in milliseconds but v5.8 does not
-        bs->AppendChars(_u('.'));
+        bs->AppendChars(u'.');
         // milliseconds
         GetDateComponent(bs, DateData::Milliseconds, 0, requestContext);
 
-        bs->AppendChars(_u('Z'));
+        bs->AppendChars(u'Z');
 
         return bs;
     }
@@ -256,13 +256,13 @@ namespace Js {
                         // representation should:
                         //     - always include the sign
                         //     - have 2 extra digits (6 digits total)
-                        bs->AppendChars(ival < 0 ? _u('-') : _u('+'));
+                        bs->AppendChars(ival < 0 ? u'-' : u'+');
                         if(ivalAbs < 100000)
                         {
-                            bs->AppendChars(_u('0'));
+                            bs->AppendChars(u'0');
                             if(ivalAbs < 10000)
                             {
-                                bs->AppendChars(_u('0'));
+                                bs->AppendChars(u'0');
                             }
                         }
                     }
@@ -270,7 +270,7 @@ namespace Js {
                     // Years are zero-padded to at least 4 digits in ES5
                     if(ivalAbs < 1000)
                     {
-                        bs->AppendChars(_u('0'));
+                        bs->AppendChars(u'0');
                         // will fall through to next case for additional padding
                     }
                     else
@@ -282,7 +282,7 @@ namespace Js {
                 case DateData::Milliseconds:
                     if (ivalAbs < 100)
                     {
-                        bs->AppendChars(_u('0'));
+                        bs->AppendChars(u'0');
                         // will fall through to next case for additional padding
                     }
                     else
@@ -294,11 +294,11 @@ namespace Js {
                 default:
                     if (ivalAbs < 10)
                     {
-                        bs->AppendChars(_u('0'));
+                        bs->AppendChars(u'0');
                     }
             }
 
-            // _itow_s makes use of max 12 bytes for a base-10 32-bit int (_u("-2147483648\0")), although we don't need the sign
+            // _itow_s makes use of max 12 bytes for a base-10 32-bit int (u"-2147483648\0"), although we don't need the sign
             // and our numbers shouldn't be that big anyway
             bs->AppendChars(
                 ivalAbs,
@@ -376,12 +376,12 @@ namespace Js {
         };
 
         bs->AppendChars(g_rgpszDay[pymd->wday]);
-        bs->AppendChars(_u(", "));
+        bs->AppendChars(u", ");
         // sz - as %02d - output is "01" to "31"
         bs->AppendChars(static_cast<uint16_t>(pymd->mday + 1), 2, ConvertUInt16ToString_ZeroPad_2);
-        bs->AppendChars(_u(' '));
+        bs->AppendChars(u' ');
         bs->AppendChars(g_rgpszMonth[pymd->mon]);
-        bs->AppendChars(_u(' '));
+        bs->AppendChars(u' ');
 
         // Add the year.
         if ((pymd->year) > 0)
@@ -391,23 +391,23 @@ namespace Js {
         else
         {
             int positiveYear = -(pymd->year); // pymd->year is negative
-            bs->AppendChars(_u('-'));
+            bs->AppendChars(u'-');
             bs->AppendChars(positiveYear, 10, ConvertUInt32ToString_ZeroPad_4);
         }
 
         // Add the time.
-        bs->AppendChars(_u(' '));
+        bs->AppendChars(u' ');
         // sz - as %02d - HOUR
         bs->AppendChars(static_cast<uint16_t>(pymd->time / 3600000), 2, ConvertUInt16ToString_ZeroPad_2);
-        bs->AppendChars(_u(':'));
+        bs->AppendChars(u':');
         // sz - as %02d - MINUTE
         bs->AppendChars(static_cast<uint16_t>((pymd->time / 60000) % 60), 2, ConvertUInt16ToString_ZeroPad_2);
-        bs->AppendChars(_u(':'));
+        bs->AppendChars(u':');
         // sz - as %02d - SECOND
         bs->AppendChars(static_cast<uint16_t>((pymd->time / 1000) % 60), 2, ConvertUInt16ToString_ZeroPad_2);
-        bs->AppendChars(_u(' '));
+        bs->AppendChars(u' ');
 
-        bs->AppendChars(_u("GMT"));
+        bs->AppendChars(u"GMT");
 
         return bs;
     }
@@ -518,7 +518,7 @@ namespace Js {
             cch -= (c-1);
             if( !(noDateTime & DateTimeFlag::NoTime))
             {
-                *p++ = _u(' ');
+                *p++ = u' ';
                 cch--;
             }
 
@@ -671,13 +671,13 @@ Error:
         size_t i = 0;
 
         // Skip leading zeroes
-        while(str[startIndex + i] == _u('0') && ++i < numDigits);
+        while(str[startIndex + i] == u'0' && ++i < numDigits);
 
         // Parse remaining digits
         int v = 0;
         for(; i < numDigits; ++i)
         {
-            const unsigned short d = str[startIndex + i] - _u('0');
+            const unsigned short d = str[startIndex + i] - u'0';
             if(d > 9)
                 break;
             v = v * 10 + d;
@@ -688,7 +688,7 @@ Error:
         value = v;
 
         // The next character must not be a digit
-        return !(i < length - startIndex && static_cast<unsigned short>(str[startIndex + i] - _u('0')) <= 9);
+        return !(i < length - startIndex && static_cast<unsigned short>(str[startIndex + i] - u'0') <= 9);
     }
 
     // Either 1 digit or 2 digits or 3 digits
@@ -713,13 +713,13 @@ Error:
         size_t i = 0;
 
         // Skip leading zeroes
-        while(str[startIndex + i] == _u('0') && ++i < allDigits);
+        while(str[startIndex + i] == u'0' && ++i < allDigits);
 
         // Parse remaining digits
         int v = 0;
         for(; i < allDigits ; ++i)
         {
-            const unsigned short d = str[startIndex + i] - _u('0');
+            const unsigned short d = str[startIndex + i] - u'0';
             if(d > 9)
                 break;
             if (i < 3) // not past the 3rd digit in the milliseconds, don't ignore
@@ -737,7 +737,7 @@ Error:
         value = v;
 
         // The next character must not be a digit
-        return !(i < length - startIndex && static_cast<unsigned short>(str[startIndex + i] - _u('0')) <= 9);
+        return !(i < length - startIndex && static_cast<unsigned short>(str[startIndex + i] - u'0') <= 9);
     }
 
     bool DateImplementation::TryParseTwoDecimalDigits(
@@ -754,17 +754,17 @@ Error:
         if(length - startIndex < 2)
             return false;
 
-        unsigned short d = str[startIndex] - _u('0');
+        unsigned short d = str[startIndex] - u'0';
         if(d > 9)
             return false;
         short v = d * 10;
-        d = str[startIndex + 1] - _u('0');
+        d = str[startIndex + 1] - u'0';
         if(d > 9)
             return false;
         value = v + d;
 
         // The next character must not be a digit if canHaveTrailingDigit is false
-        bool hasNoTrailingDigit = !(length - startIndex > 2 && static_cast<unsigned short>(str[startIndex + 2] - _u('0')) <= 9);
+        bool hasNoTrailingDigit = !(length - startIndex > 2 && static_cast<unsigned short>(str[startIndex + 2] - u'0') <= 9);
         return canHaveTrailingDigit || hasNoTrailingDigit;
     }
 
@@ -786,14 +786,14 @@ Error:
         int year;
         switch(str[i])
         {
-            case _u('+'):
+            case u'+':
                 ++i;
                 if(!TryParseDecimalDigits(str, length, i, 6, year))
                     return false;
                 i += 6;
                 break;
 
-            case _u('-'):
+            case u'-':
                 ++i;
                 if(!TryParseDecimalDigits(str, length, i, 6, year) || year == 0)
                     return false;
@@ -801,16 +801,16 @@ Error:
                 i += 6;
                 break;
 
-            case _u('0'):
-            case _u('1'):
-            case _u('2'):
-            case _u('3'):
-            case _u('4'):
-            case _u('5'):
-            case _u('6'):
-            case _u('7'):
-            case _u('8'):
-            case _u('9'):
+            case u'0':
+            case u'1':
+            case u'2':
+            case u'3':
+            case u'4':
+            case u'5':
+            case u'6':
+            case u'7':
+            case u'8':
+            case u'9':
                 if(!TryParseDecimalDigits(str, length, i, 4, year))
                     return false;
                 i += 4;
@@ -834,7 +834,7 @@ Error:
             do // while(false);
             {
                 // -MM
-                if(i >= length || str[i] != _u('-'))
+                if(i >= length || str[i] != u'-')
                     break;
                 ++i;
                 if(!TryParseTwoDecimalDigits(str, length, i, month))
@@ -848,7 +848,7 @@ Error:
                 i += classifier->SkipBiDirectionalChars(str, i, length);
 
                 // -DD
-                if(i >= length || str[i] != _u('-'))
+                if(i >= length || str[i] != u'-')
                     break;
                 ++i;
                 if(!TryParseTwoDecimalDigits(str, length, i, day))
@@ -863,7 +863,7 @@ Error:
             } while(false);
 
             // THH:mm
-            if(i >= length || str[i] != _u('T'))
+            if(i >= length || str[i] != u'T')
                 break;
             ++i;
             int t;
@@ -875,7 +875,7 @@ Error:
             // Skip bidirectional characters, for Round tripping locale formatted date
             i += classifier->SkipBiDirectionalChars(str, i, length);
 
-            if(i >= length || str[i] != _u(':'))
+            if(i >= length || str[i] != u':')
                 return false;
             ++i;
             if(!TryParseTwoDecimalDigits(str, length, i, t) || t > 59)
@@ -889,7 +889,7 @@ Error:
             do // while(false);
             {
                 // :ss
-                if(i >= length || str[i] != _u(':'))
+                if(i >= length || str[i] != u':')
                     break;
                 ++i;
                 if(!TryParseTwoDecimalDigits(str, length, i, t) || t > 59)
@@ -901,7 +901,7 @@ Error:
                 i += classifier->SkipBiDirectionalChars(str, i, length);
 
                 // .sss
-                if(i >= length || str[i] != _u('.'))
+                if(i >= length || str[i] != u'.')
                     break;
                 ++i;
                 // Require one or more decimal digits. Ignore digits beyond the third
@@ -922,12 +922,12 @@ Error:
                 break;
             }
             const char16_t utcOffsetSign = str[i];
-            if(utcOffsetSign == _u('Z'))
+            if(utcOffsetSign == u'Z')
             {
                 ++i;
                 break;
             }
-            if(utcOffsetSign != _u('+') && utcOffsetSign != _u('-'))
+            if(utcOffsetSign != u'+' && utcOffsetSign != u'-')
             {
                 isLocalTime = true;
                 break;
@@ -945,7 +945,7 @@ Error:
             if(i >= length)
                 return false;
             // The ':' is optional in ISO 8601
-            if (str[i] == _u(':'))
+            if (str[i] == u':')
             {
                 ++i;
             }
@@ -957,7 +957,7 @@ Error:
             // Skip bidirectional characters, for Round tripping locale formatted date
             i += classifier->SkipBiDirectionalChars(str, i, length);
 
-            if(utcOffsetSign == _u('-'))
+            if(utcOffsetSign == u'-')
                 utcOffsetMilliseconds = -utcOffsetMilliseconds;
         } while(false);
 
@@ -1052,7 +1052,7 @@ Error:
         double tv = JavascriptNumber::NaN; // Initialized for error handling.
 
         //Create a copy to analyze
-        BEGIN_TEMP_ALLOCATOR(tempAllocator, scriptContext, _u("UtcTimeFromStr"));
+        BEGIN_TEMP_ALLOCATOR(tempAllocator, scriptContext, u"UtcTimeFromStr");
 
         pszSrc = AnewArray(tempAllocator, char16_t, ulength + 1);
 

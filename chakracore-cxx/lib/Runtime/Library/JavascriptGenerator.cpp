@@ -242,15 +242,15 @@ Var JavascriptGenerator::EntryNext(RecyclableObject* function, CallInfo callInfo
     auto* scriptContext = function->GetScriptContext();
     auto* library = scriptContext->GetLibrary();
 
-    AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, _u("Generator.prototype.next"));
+    AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, u"Generator.prototype.next");
 
     if (!VarIs<DynamicObject>(args[0]) || JavascriptOperators::GetTypeId(args[0]) != TypeIds_Generator)
     {
         JavascriptError::ThrowTypeErrorVar(
             scriptContext,
             JSERR_NeedObjectOfType,
-            _u("Generator.prototype.next"),
-            _u("Generator"));
+            u"Generator.prototype.next",
+            u"Generator");
     }
 
     Var undefinedVar = library->GetUndefined();
@@ -261,7 +261,7 @@ Var JavascriptGenerator::EntryNext(RecyclableObject* function, CallInfo callInfo
     if (generator->IsCompleted())
         return library->CreateIteratorResultObject(undefinedVar, library->GetTrue());
 
-    generator->ThrowIfExecuting(_u("Generator.prototype.next"));
+    generator->ThrowIfExecuting(u"Generator.prototype.next");
     return generator->CallGenerator(input, ResumeYieldKind::Normal);
 }
 
@@ -273,15 +273,15 @@ Var JavascriptGenerator::EntryReturn(RecyclableObject* function, CallInfo callIn
     auto* scriptContext = function->GetScriptContext();
     auto* library = scriptContext->GetLibrary();
 
-    AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, _u("Generator.prototype.return"));
+    AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, u"Generator.prototype.return");
 
     if (!VarIs<DynamicObject>(args[0]) || JavascriptOperators::GetTypeId(args[0]) != TypeIds_Generator)
     {
         JavascriptError::ThrowTypeErrorVar(
             scriptContext,
             JSERR_NeedObjectOfType,
-            _u("Generator.prototype.return"),
-            _u("Generator"));
+            u"Generator.prototype.return",
+            u"Generator");
     }
 
     Var input = args.Info.Count > 1 ? args[1] : library->GetUndefined();
@@ -294,7 +294,7 @@ Var JavascriptGenerator::EntryReturn(RecyclableObject* function, CallInfo callIn
     if (generator->IsCompleted())
         return library->CreateIteratorResultObject(input, library->GetTrue());
 
-    generator->ThrowIfExecuting(_u("Generator.prototype.return"));
+    generator->ThrowIfExecuting(u"Generator.prototype.return");
     return generator->CallGenerator(input, ResumeYieldKind::Return);
 }
 
@@ -306,15 +306,15 @@ Var JavascriptGenerator::EntryThrow(RecyclableObject* function, CallInfo callInf
     auto* scriptContext = function->GetScriptContext();
     auto* library = scriptContext->GetLibrary();
 
-    AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, _u("Generator.prototype.throw"));
+    AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, u"Generator.prototype.throw");
 
     if (!VarIs<DynamicObject>(args[0]) || JavascriptOperators::GetTypeId(args[0]) != TypeIds_Generator)
     {
         JavascriptError::ThrowTypeErrorVar(
             scriptContext,
             JSERR_NeedObjectOfType,
-            _u("Generator.prototype.throw"),
-            _u("Generator"));
+            u"Generator.prototype.throw",
+            u"Generator");
     }
 
     Var input = args.Info.Count > 1 ? args[1] : library->GetUndefined();
@@ -327,7 +327,7 @@ Var JavascriptGenerator::EntryThrow(RecyclableObject* function, CallInfo callInf
     if (generator->IsCompleted())
         JavascriptExceptionOperators::OP_Throw(input, scriptContext);
 
-    generator->ThrowIfExecuting(_u("Generator.prototype.throw"));
+    generator->ThrowIfExecuting(u"Generator.prototype.throw");
     return generator->CallGenerator(input, ResumeYieldKind::Throw);
 }
 
@@ -344,7 +344,7 @@ void JavascriptGenerator::OutputBailInTrace(JavascriptGenerator* generator)
     FunctionBody* fnBody = generator->scriptFunction->GetFunctionBody();
 
     Output::Print(
-        _u("BailIn: function: %s (%s) offset: #%04x\n"),
+        u"BailIn: function: %s (%s) offset: #%04x\n",
         fnBody->GetDisplayName(),
         fnBody->GetDebugNumberSet(debugStringBuffer),
         generator->frame->m_reader.GetCurrentOffset());
@@ -352,7 +352,7 @@ void JavascriptGenerator::OutputBailInTrace(JavascriptGenerator* generator)
     if (generator->bailInSymbolsTraceArrayCount == 0)
     {
         Output::Print(
-            _u("BailIn: No symbols reloaded\n"),
+            u"BailIn: No symbols reloaded\n",
             fnBody->GetDisplayName(),
             fnBody->GetDebugNumberSet(debugStringBuffer));
     }
@@ -361,7 +361,7 @@ void JavascriptGenerator::OutputBailInTrace(JavascriptGenerator* generator)
         for (int i = 0; i < generator->bailInSymbolsTraceArrayCount; i++)
         {
             const BailInSymbol& symbol = generator->bailInSymbolsTraceArray[i];
-            Output::Print(_u("BailIn: Register #%4d, value: 0x%p\n"), symbol.id, symbol.value);
+            Output::Print(u"BailIn: Register #%4d, value: 0x%p\n", symbol.id, symbol.value);
         }
     }
 }

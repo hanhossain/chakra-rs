@@ -374,7 +374,7 @@ namespace Js
 #if DBG
     void IntlEngineInterfaceExtensionObject::DumpByteCode()
     {
-        Output::Print(_u("Dumping Intl Byte Code:"));
+        Output::Print(u"Dumping Intl Byte Code:");
         Assert(this->intlByteCode);
         Js::ByteCodeDumper::DumpRecursively(intlByteCode);
     }
@@ -654,7 +654,7 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
 
 #if DEBUG
 #ifdef INTL_ICU_DEBUG
-        Output::Print(_u("EntryIntl_RaiseAssert\n"));
+        Output::Print(u"EntryIntl_RaiseAssert\n");
 #endif
         JavascriptExceptionOperators::Throw(VarTo<JavascriptError>(args.Values[1]), scriptContext);
 #else
@@ -1113,7 +1113,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
 
 #if defined(INTL_ICU)
 #if defined(INTL_ICU_DEBUG)
-        Output::Print(_u("Intl::ResolveLocaleLookup returned false: EntryIntl_ResolveLocaleLookup returning null to fallback to JS\n"));
+        Output::Print(u"Intl::ResolveLocaleLookup returned false: EntryIntl_ResolveLocaleLookup returning null to fallback to JS\n");
 #endif
         return scriptContext->GetLibrary()->GetNull();
 #else
@@ -1154,7 +1154,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
 
         AutoCOMPtr<DateTimeFormatting::IDateTimeFormatter> formatter;
         HRESULT hr;
-        if (FAILED(hr = wga->CreateDateTimeFormatter(scriptContext, _u("longdate"), &passedLocale, 1, nullptr, nullptr, &formatter)))
+        if (FAILED(hr = wga->CreateDateTimeFormatter(scriptContext, u"longdate", &passedLocale, 1, nullptr, nullptr, &formatter)))
         {
             HandleOOMSOEHR(hr);
             return scriptContext->GetLibrary()->GetUndefined();
@@ -1445,7 +1445,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
 
         // TODO (doilij): implement INTL_ICU version
 #ifdef INTL_ICU_DEBUG
-        Output::Print(_u("EntryIntl_CreateDateTimeFormat > returning null, fallback to JS\n"));
+        Output::Print(u"EntryIntl_CreateDateTimeFormat > returning null, fallback to JS\n");
 #endif
         return scriptContext->GetLibrary()->GetNull();
     }
@@ -1497,7 +1497,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
             char localeID[ULOC_FULLNAME_CAPACITY] = { 0 };
             LangtagToLocaleID(langtag, localeID);
 
-            const char16_t searchString[] = _u("search");
+            const char16_t searchString[] = u"search";
             if (usage->BufferEquals(searchString, _countof(searchString) - 1)) // minus the null terminator
             {
                 uloc_setKeywordValue("collation", "search", localeID, _countof(localeID), &status);
@@ -1571,7 +1571,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         }
 
         // As of ES2015, String.prototype.localeCompare must compare canonically equivalent strings as equal
-        BEGIN_TEMP_ALLOCATOR(tempAllocator, scriptContext, _u("EntryIntl_LocaleCompare"));
+        BEGIN_TEMP_ALLOCATOR(tempAllocator, scriptContext, u"EntryIntl_LocaleCompare");
 
         const char16_t *leftNormalized = nullptr;
         charcount_t leftNormalizedLength = 0;
@@ -1685,7 +1685,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         Assert((int)sensitivity >= 0 && sensitivity < CollatorSensitivity::Max);
         Assert((int)caseFirst >= 0 && caseFirst < CollatorCaseFirst::Max);
 
-        BEGIN_TEMP_ALLOCATOR(tempAllocator, scriptContext, _u("EntryIntl_CompareString"));
+        BEGIN_TEMP_ALLOCATOR(tempAllocator, scriptContext, u"EntryIntl_CompareString");
 
         const char16_t *left = nullptr;
         charcount_t leftLen = 0;
@@ -2414,13 +2414,13 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
             JavascriptString *type = AssertStringProperty(stateObject, PropertyIds::type);
 
             UPluralType prType = UPLURAL_TYPE_CARDINAL;
-            if (wcscmp(type->GetSz(), _u("ordinal")) == 0)
+            if (wcscmp(type->GetSz(), u"ordinal") == 0)
             {
                 prType = UPLURAL_TYPE_ORDINAL;
             }
             else
             {
-                AssertOrFailFast(wcscmp(type->GetSz(), _u("cardinal")) == 0);
+                AssertOrFailFast(wcscmp(type->GetSz(), u"cardinal") == 0);
             }
 
             char localeID[ULOC_FULLNAME_CAPACITY] = { 0 };

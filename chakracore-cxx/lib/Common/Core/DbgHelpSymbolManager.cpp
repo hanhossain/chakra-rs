@@ -61,7 +61,7 @@ DbgHelpSymbolManager::Initialize()
         goto end;
     }
 
-    if (wcscmp(wszModule, _u("")) == 0)
+    if (wcscmp(wszModule, u"") == 0)
     {
         if (PlatformAgnostic::SystemInfo::GetBinaryLocation(wszModuleName, static_cast<uint32_t>(ceModuleName)))
         {
@@ -102,9 +102,9 @@ DbgHelpSymbolManager::Initialize()
             goto end;
         }
 
-        if (GetEnvironmentVariable(_u("_NT_SYMBOL_PATH"), wszOldSearchPath, static_cast<uint32_t>(ceOldSearchPath)) != 0)
+        if (GetEnvironmentVariable(u"_NT_SYMBOL_PATH", wszOldSearchPath, static_cast<uint32_t>(ceOldSearchPath)) != 0)
         {
-            swprintf_s(wszNewSearchPath, ceNewSearchPath, _u("%s;%s"), wszOldSearchPath, wszModuleName);
+            swprintf_s(wszNewSearchPath, ceNewSearchPath, u"%s;%s", wszOldSearchPath, wszModuleName);
             wszSearchPath = wszNewSearchPath;
         }
         else
@@ -113,7 +113,7 @@ DbgHelpSymbolManager::Initialize()
         }
     }
 
-    hDbgHelpModule = LoadLibraryEx(_u("dbghelp.dll"), NULL, LOAD_LIBRARY_SEARCH_SYSTEM32);
+    hDbgHelpModule = LoadLibraryEx(u"dbghelp.dll", NULL, LOAD_LIBRARY_SEARCH_SYSTEM32);
     if (hDbgHelpModule == nullptr)
     {
         goto end;
@@ -236,18 +236,18 @@ size_t DbgHelpSymbolManager::PrintSymbol(void * address)
         uint32_t dwDisplacementDWord = static_cast<uint32_t>(dwDisplacement);
         if (DbgHelpSymbolManager::SymGetLineFromAddr64(address, &dwDisplacementDWord, &lineInfo))
         {
-            retValue += Output::Print(_u("0x%p %s+0x%llx (%s:%d)"), address, pSymbol->Name, dwDisplacement, lineInfo.FileName, lineInfo.LineNumber);
+            retValue += Output::Print(u"0x%p %s+0x%llx (%s:%d)", address, pSymbol->Name, dwDisplacement, lineInfo.FileName, lineInfo.LineNumber);
         }
         else
         {
             // SymGetLineFromAddr64 failed
-            retValue += Output::Print(_u("0x%p %s+0x%llx"), address, pSymbol->Name, dwDisplacement);
+            retValue += Output::Print(u"0x%p %s+0x%llx", address, pSymbol->Name, dwDisplacement);
         }
     }
     else
     {
         // SymFromAddr failed
-        retValue += Output::Print(_u("0x%p"), address);
+        retValue += Output::Print(u"0x%p", address);
     }
     return retValue;
 }

@@ -76,7 +76,7 @@ namespace Js
     {
         auto tmp = str + wcslen(str);
         while (!isprint(*--tmp));
-        *(tmp + 1) = _u('\0');
+        *(tmp + 1) = u'\0';
         return str;
     }
 
@@ -302,17 +302,17 @@ namespace Js
         // load dbghelp APIs
         if (hDbgHelp == NULL)
         {
-            hDbgHelp = LoadLibraryEx(_u("dbghelp.dll"), 0, 0);
+            hDbgHelp = LoadLibraryEx(u"dbghelp.dll", 0, 0);
         }
         if (hDbgHelp == NULL)
         {
-            fwprintf(stderr, _u("Failed to load dbghelp.dll for stack walking, gle=0x%08x\n"), GetLastError());
+            fwprintf(stderr, u"Failed to load dbghelp.dll for stack walking, gle=0x%08x\n", GetLastError());
             fflush(stderr);
             return false;
         }
 #define FIDELAYLOAD(fn) pfn##fn = (decltype(fn)*)GetProcAddress(hDbgHelp, #fn); \
         if (pfn##fn == nullptr){\
-            fwprintf(stderr, _u("Failed to load sigs:%s\n"), _u(#fn)); \
+            fwprintf(stderr, u"Failed to load sigs:%s\n", _u(#fn)); \
             fflush(stderr); \
             return false; \
         }
@@ -333,7 +333,7 @@ namespace Js
         // TODO: StackBackTrace.cpp also call SymInitialize, but this can only be called once before cleanup
         if (!pfnSymInitialize(GetCurrentProcess(), NULL, TRUE))
         {
-            fwprintf(stderr, _u("SymInitialize failed, gle=0x%08x\n"), GetLastError());
+            fwprintf(stderr, u"SymInitialize failed, gle=0x%08x\n", GetLastError());
             fflush(stderr);
             return false;
         }
@@ -351,10 +351,10 @@ namespace Js
     static SymbolInfoPackage sip;
     static ModuleInfo mi;
 
-    const char16_t* crashStackStart = _u("=====Callstack for this exception=======\n");
-    const char16_t* crashStackEnd = _u("=====End of callstack for this exception=======\n");
-    const char16_t* injectionStackStart = _u("=====Fault injecting record=====\n");
-    const char16_t* injectionStackEnd = _u("=====End of Fault injecting record=====\n");
+    const char16_t* crashStackStart = u"=====Callstack for this exception=======\n";
+    const char16_t* crashStackEnd = u"=====End of callstack for this exception=======\n";
+    const char16_t* injectionStackStart = u"=====Fault injecting record=====\n";
+    const char16_t* injectionStackEnd = u"=====End of Fault injecting record=====\n";
 
     typedef struct _RANGE{
         UINT_PTR startAddress;
@@ -452,7 +452,7 @@ namespace Js
                 {
                     break;
                 }
-                fwprintf(stderr, _u("FaultInjection stack matching rank %d: %u\n"), i + 1, stackMatchRank[i]);
+                fwprintf(stderr, u"FaultInjection stack matching rank %d: %u\n", i + 1, stackMatchRank[i]);
             }
             fflush(stderr);
 
@@ -477,10 +477,10 @@ namespace Js
 
         if (globalFlags.FaultInjection == FaultMode::DisplayAvailableFaultTypes)
         {
-            Output::Print(_u("Available Fault Types:\n"));
+            Output::Print(u"Available Fault Types:\n");
             for (int i = 0; i < FaultType::FaultTypeCount; i++)
             {
-                Output::Print(_u("%d-%s\n"), i, FaultTypeNames[i]);
+                Output::Print(u"%d-%s\n", i, FaultTypeNames[i]);
             }
             Output::Flush();
         }
@@ -557,7 +557,7 @@ namespace Js
         char16_t* szTypes = (char16_t*)malloc(charCount*sizeof(char16_t));
         AssertMsg(szTypes, "OOM in FaultInjection Infra");
         wcscpy_s(szTypes, charCount, szFaultTypes);
-        const char16_t* delims = _u(",");
+        const char16_t* delims = u",";
         char16_t *nextTok = nullptr;
         char16_t* tok = wcstok_s(szTypes, delims, &nextTok);
         while (tok != NULL)
@@ -575,13 +575,13 @@ namespace Js
                         }
                     }
                 }
-                else if (tok[0] == _u('#'))
+                else if (tok[0] == u'#')
                 {
                     // FaultInjectionType:#1-4,#6 format, not flags
                     auto tok1 = tok + 1;
                     if (wcslen(tok1)>0 && iswdigit(tok1[0]))
                     {
-                        char16_t* pDash = wcschr(tok1, _u('-'));
+                        char16_t* pDash = wcschr(tok1, u'-');
                         if (pDash)
                         {
                             for (int i = _wtoi(tok1); i <= _wtoi(pDash + 1); i++)
@@ -615,7 +615,7 @@ namespace Js
     static void SmashLambda(_Inout_z_ char16_t* str)
     {
         //jscript9test!<lambda_dc7f9e8c591f1832700d6567e43faa6c>::operator()
-        const char16_t lambdaSig[] = _u("<lambda_");
+        const char16_t lambdaSig[] = u"<lambda_";
         const int lambdaSigLen = (int)wcslen(lambdaSig);
         auto temp = str;
         while (temp != nullptr)
@@ -624,14 +624,14 @@ namespace Js
             temp = nullptr;
             if (lambdaStart != nullptr)
             {
-                auto lambdaEnd = wcschr(lambdaStart, _u('>'));
+                auto lambdaEnd = wcschr(lambdaStart, u'>');
                 temp = lambdaEnd;
                 if (lambdaEnd != nullptr && lambdaEnd - lambdaStart == lambdaSigLen + 32)
                 {
                     lambdaStart += lambdaSigLen;
                     while (lambdaStart < lambdaEnd)
                     {
-                        *(lambdaStart++) = _u('?');
+                        *(lambdaStart++) = u'?';
                     }
                 }
             }
@@ -660,11 +660,11 @@ namespace Js
 
             // read baseline stack file
             FILE *fp = nullptr;
-            const char16_t *stackFile = globalFlags.FaultInjectionStackFile;//default: _u("stack.txt");
-            auto err = _wfopen_s(&fp, stackFile, _u("r"));
+            const char16_t *stackFile = globalFlags.FaultInjectionStackFile;//default: u"stack.txt";
+            auto err = _wfopen_s(&fp, stackFile, u"r");
             if (err != 0 || fp == nullptr)
             {
-                fwprintf(stderr, _u("Failed to load %s, gle=0x%08x\n"), stackFile, GetLastError());
+                fwprintf(stderr, u"Failed to load %s, gle=0x%08x\n", stackFile, GetLastError());
                 fflush(stderr);
                 return false;
             }
@@ -689,8 +689,8 @@ namespace Js
                     continue; // don't break because we can hit the start marker and reset
                 }
 
-                const char16_t jscript9test[] = _u("jscript9test!");
-                const char16_t jscript9[] = _u("jscript9!");
+                const char16_t jscript9test[] = u"jscript9test!";
+                const char16_t jscript9[] = u"jscript9!";
                 char16_t* symbolStart = stristr(buffer, jscript9test);
                 if (symbolStart == nullptr)
                 {
@@ -701,15 +701,15 @@ namespace Js
                     continue;// no "jscript9test!", skip this line
                 }
 
-                if (wcsstr(symbolStart, _u("Js::FaultInjection")) != NULL)
+                if (wcsstr(symbolStart, u"Js::FaultInjection") != NULL)
                 { // skip faultinjection infra frames.
                     continue;
                 }
 
-                auto plus = wcschr(symbolStart, _u('+'));
+                auto plus = wcschr(symbolStart, u'+');
                 if (plus)
                 {
-                    *plus = _u('\0');
+                    *plus = u'\0';
                 }
                 else
                 {
@@ -733,11 +733,11 @@ namespace Js
             }
             fclose(fp);
 
-            OutputDebugString(_u("Fault will be injected when hit following stack:\n"));
+            OutputDebugString(u"Fault will be injected when hit following stack:\n");
             for (uint i = 0; i<baselineFrameCount; i++)
             {
                 OutputDebugString(baselineStack[i]);
-                OutputDebugString(_u("\n"));
+                OutputDebugString(u"\n");
                 if (wcschr(baselineStack[i], '*') != nullptr || wcschr(baselineStack[i], '?') != nullptr)
                 {
                     continue; // there's wildcard in this line, don't use address matching
@@ -864,7 +864,7 @@ namespace Js
         }
         triedToInstallExceptionFilter = true;
 
-        if (GetEnvironmentVariable(_u("FAULTINJECTION_DEBUG"), nullptr, 0) != 0)
+        if (GetEnvironmentVariable(u"FAULTINJECTION_DEBUG", nullptr, 0) != 0)
         {
             faultInjectionDebug = true;
         }
@@ -992,7 +992,7 @@ namespace Js
 
         // hash
         record->hash = CalculateStackHash(record->StackFrames, record->FrameCount, 2);
-        fwprintf(stderr, _u("***FI: Fault Injected, StackHash:%p\n"), (void*)record->hash);
+        fwprintf(stderr, u"***FI: Fault Injected, StackHash:%p\n", (void*)record->hash);
         fflush(stderr);
 
         *InjectionLastRecordRef = record;
@@ -1139,11 +1139,11 @@ namespace Js
             {
                 mi.Init();
                 pfnSymGetModuleInfoW64(hProcess, (unsigned long)addr, &mi);
-                fwprintf(stderr, _u("%s!%s+0x%llx\n"), mi.ModuleName, sip.si.Name, (unsigned long)dwSymDisplacement);
+                fwprintf(stderr, u"%s!%s+0x%llx\n", mi.ModuleName, sip.si.Name, (unsigned long)dwSymDisplacement);
             }
             else
             {
-                fwprintf(stderr, _u("0x%p\n"), addr);
+                fwprintf(stderr, u"0x%p\n", addr);
             }
         };
 
@@ -1227,7 +1227,7 @@ namespace Js
         offset = ip - (uintptr_t)mod;
         auto& faultModule = modulePath;
         GetModuleFileName(mod, faultModule, MAX_PATH);
-        fwprintf(stderr, _u("***FI: Exception: %08x, module: %s, offset: 0x%p\n"),
+        fwprintf(stderr, u"***FI: Exception: %08x, module: %s, offset: 0x%p\n",
             ep->ExceptionRecord->ExceptionCode, faultModule, (void*)offset);
 
         //analyze duplication
@@ -1235,9 +1235,9 @@ namespace Js
         auto& mainModule = modulePath;
         PlatformAgnostic::SystemInfo::GetBinaryLocation(mainModule, MAX_PATH);
         // multiple session of Fault Injection run shares the single crash offset recording file
-        _snwprintf_s(filename, _TRUNCATE, _u("%s.FICrashes.txt"), mainModule);
+        _snwprintf_s(filename, _TRUNCATE, u"%s.FICrashes.txt", mainModule);
 
-        auto fp = _wfsopen(filename, _u("a+t"), _SH_DENYNO);
+        auto fp = _wfsopen(filename, u"a+t", _SH_DENYNO);
         if (fp != nullptr)
         {
             HANDLE hFile = (HANDLE)_get_osfhandle(_fileno(fp));
@@ -1246,7 +1246,7 @@ namespace Js
             const int lockSize = 1024 * 64;
             if (!LockFileEx(hFile, LOCKFILE_EXCLUSIVE_LOCK, 0, lockSize, 0, &overlapped))
             {
-                fwprintf(stderr, _u("LockFileEx(%ls) Failed when saving offset to file, gle=%8x\n"), filename, GetLastError());
+                fwprintf(stderr, u"LockFileEx(%ls) Failed when saving offset to file, gle=%8x\n", filename, GetLastError());
                 fclose(fp);
             }
             else
@@ -1264,21 +1264,21 @@ namespace Js
 
                 if (needDump)
                 {
-                    fwprintf(stderr, _u("This is new Exception\n"));
-                    fwprintf(fp, _u("0x%p\n"), (void*)offset);
+                    fwprintf(stderr, u"This is new Exception\n");
+                    fwprintf(fp, u"0x%p\n", (void*)offset);
                 }
                 else
                 {
-                    fwprintf(stderr, _u("This is not a new Exception\n"));
+                    fwprintf(stderr, u"This is not a new Exception\n");
                 }
                 fflush(fp);
 
                 // save the hit count to a file, for bug prioritizing
-                _snwprintf_s(filename, _TRUNCATE, _u("%s.HitCount_%llx.txt"), mainModule, (long long)offset);
-                auto hcfp = _wfsopen(filename, _u("r+"), _SH_DENYNO);
+                _snwprintf_s(filename, _TRUNCATE, u"%s.HitCount_%llx.txt", mainModule, (long long)offset);
+                auto hcfp = _wfsopen(filename, u"r+", _SH_DENYNO);
                 if (!hcfp)
                 {
-                    hcfp = _wfsopen(filename, _u("w+"), _SH_DENYNO);
+                    hcfp = _wfsopen(filename, u"w+", _SH_DENYNO);
                 }
                 if (hcfp)
                 {
@@ -1286,7 +1286,7 @@ namespace Js
                     fscanf_s(hcfp, "%d", &count);
                     count++;
                     fseek(hcfp, -ftell(hcfp), SEEK_CUR);
-                    fwprintf(hcfp, _u("%d"), count);
+                    fwprintf(hcfp, u"%d", count);
                     fclose(hcfp);
                 }
 
@@ -1311,13 +1311,13 @@ namespace Js
             // remove path and keep only alphabet and number to make a valid filename
             while (*pch)
             {
-                if (*pch == _u(':') || *pch == _u('\\'))
+                if (*pch == u':' || *pch == u'\\')
                 {
                     jsFile = pch + 1;
                 }
                 else if (!isalnum(*pch))
                 {
-                    *pch = _u('_');
+                    *pch = u'_';
                 }
                 pch++;
             }
@@ -1325,14 +1325,14 @@ namespace Js
 
             // get dump file name
             int suffix = 1;
-            const char16_t* fiType = _u("undefined");
+            const char16_t* fiType = u"undefined";
             if (globalFlags.FaultInjectionType != nullptr)
             {
                 fiType = (LPCWSTR)globalFlags.FaultInjectionType;
             }
             while (true)
             {
-                _snwprintf_s(dumpName, _TRUNCATE, _u("%s_%s_M%d_T%s_C%d_%llx_%llx_%d.dmp"),
+                _snwprintf_s(dumpName, _TRUNCATE, u"%s_%s_M%d_T%s_C%d_%llx_%llx_%d.dmp",
                     mainModule, jsFile,
                     globalFlags.FaultInjection, fiType, globalFlags.FaultInjectionCount,
                     (unsigned long)offset, (unsigned long)ep->ExceptionRecord->ExceptionCode, suffix);
@@ -1351,7 +1351,7 @@ namespace Js
             HANDLE hFile = CreateFile(dumpName, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
             if ((hFile == NULL) || (hFile == INVALID_HANDLE_VALUE))
             {
-                fwprintf(stderr, _u("CreateFile <%s> failed. gle=0x%08x\n"), dumpName, GetLastError());
+                fwprintf(stderr, u"CreateFile <%s> failed. gle=0x%08x\n", dumpName, GetLastError());
             }
             else
             {
@@ -1371,7 +1371,7 @@ namespace Js
                 wcsncpy_s(jscript9Path, AutoSystemInfo::Data.GetJscriptDllFileName(),
                     wcslen(AutoSystemInfo::Data.GetJscriptDllFileName()) - 4);
                 char16_t* jscript9Name = jscript9Path + wcslen(jscript9Path);
-                while (*(jscript9Name - 1) != _u('\\') && jscript9Name > jscript9Path)
+                while (*(jscript9Name - 1) != u'\\' && jscript9Name > jscript9Path)
                 {
                     jscript9Name--;
                 }
@@ -1384,20 +1384,20 @@ namespace Js
                 if (InjectionFirstRecord == nullptr)
                 {
                     wcsncpy_s(dbgTip,
-                        _u("\n")
-                        _u("************************************************************\n")
-                        _u("* The dump is made by FaultInjection framework, however, the fault is not actually injected yet.\n")
-                        _u("************************************************************\n"), _TRUNCATE);
+                        u"\n"
+                        u"************************************************************\n"
+                        u"* The dump is made by FaultInjection framework, however, the fault is not actually injected yet.\n"
+                        u"************************************************************\n", _TRUNCATE);
                 }
                 else
                 {
-                    _snwprintf_s(dbgTip, _TRUNCATE, _u("\n")
-                        _u("************************************************************\n")
-                        _u("* To find the Fault Injecting points run following command: \n")
+                    _snwprintf_s(dbgTip, _TRUNCATE, u"\n"
+                        u"************************************************************\n"
+                        u"* To find the Fault Injecting points run following command: \n"
                         _u("* !list -t %s!Js::FaultInjection::InjectionRecord.next -e -x \"dps @$extret @$extret+0x128\" poi(@@c++(&%s!Js::FaultInjection::Global.InjectionFirstRecord))\n")
-                        _u("* To rebuild the stack (locals are available):\n")
-                        _u("* .cxr @@C++(&%s!Js::FaultInjection::Global.InjectionFirstRecord->Context)\n")
-                        _u("************************************************************\n"), jscript9Name, jscript9Name, jscript9Name);
+                        u"* To rebuild the stack (locals are available):\n"
+                        u"* .cxr @@C++(&%s!Js::FaultInjection::Global.InjectionFirstRecord->Context)\n"
+                        u"************************************************************\n", jscript9Name, jscript9Name, jscript9Name);
                 }
 
                 MINIDUMP_USER_STREAM UserStreams[1];
@@ -1411,11 +1411,11 @@ namespace Js
                 BOOL rv = pfnMiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), hFile, mdt, (ep != 0) ? &mdei : 0, &musi, 0);
                 if (rv)
                 {
-                    fwprintf(stderr, _u("Minidump created: %s\n"), dumpName);
+                    fwprintf(stderr, u"Minidump created: %s\n", dumpName);
                 }
                 else
                 {
-                    fwprintf(stderr, _u("MiniDumpWriteDump failed. gle=0x%08x\n"), GetLastError());
+                    fwprintf(stderr, u"MiniDumpWriteDump failed. gle=0x%08x\n", GetLastError());
                 }
                 CloseHandle(hFile);
             }

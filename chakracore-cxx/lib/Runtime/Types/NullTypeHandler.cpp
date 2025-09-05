@@ -353,7 +353,7 @@ namespace Js
     template<bool IsPrototypeTemplate>
     void NullTypeHandler<IsPrototypeTemplate>::Dump(unsigned indent) const
     {
-        Output::Print(_u("%*sNullTypeHandler<%d> (0x%p): Dump unimplemented\n"), indent, _u(""), static_cast<int>(IsPrototypeTemplate), this);
+        Output::Print(u"%*sNullTypeHandler<%d> (0x%p): Dump unimplemented\n", indent, u"", static_cast<int>(IsPrototypeTemplate), this);
     }
 #endif
 

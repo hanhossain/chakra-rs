@@ -40,7 +40,7 @@ DynamicProfileMutator::GetMutator()
     HMODULE hModule = ::LoadLibraryW(dllname);
     if (hModule == nullptr)
     {
-        Output::Print(_u("ERROR: Unable to load dynamic profile mutator dll %s\n"), dllname);
+        Output::Print(u"ERROR: Unable to load dynamic profile mutator dll %s\n", dllname);
         Js::Throw::FatalInternalError();
     }
 
@@ -48,14 +48,14 @@ DynamicProfileMutator::GetMutator()
 
     if (procAddress == nullptr)
     {
-        Output::Print(_u("ERROR: Unable to get function %S from dll %s\n"), CreateMutatorProcName, dllname);
+        Output::Print(u"ERROR: Unable to get function %S from dll %s\n", CreateMutatorProcName, dllname);
         Js::Throw::FatalInternalError();
     }
 
     DynamicProfileMutator * mutator = procAddress();
     if (mutator == nullptr)
     {
-        Output::Print(_u("ERROR: Failed to create mutator from dll %s\n"), dllname);
+        Output::Print(u"ERROR: Failed to create mutator from dll %s\n", dllname);
         Js::Throw::FatalInternalError();
     }
     mutator->Initialize(Js::Configuration::Global.flags.DynamicProfileMutator);

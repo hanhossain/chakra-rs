@@ -46,7 +46,7 @@ void HeapBucketStats::Reset()
 
 void HeapBucketStats::Dump() const
 {
-    Output::Print(_u("%5d %7d %7d %11lu %11lu %11lu   %6.2f%%\n"),
+    Output::Print(u"%5d %7d %7d %11lu %11lu %11lu   %6.2f%%\n",
         totalBlockCount, objectCount, finalizeCount,
         static_cast<uint32_t>(objectByteCount),
         static_cast<uint32_t>(FreeBytes()),

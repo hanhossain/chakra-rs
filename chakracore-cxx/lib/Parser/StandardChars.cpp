@@ -188,15 +188,15 @@ END {
 */
 
     const int StandardChars<char16_t>::numDigitPairs = 1;
-    const char16_t* const StandardChars<char16_t>::digitStr = _u("09");
+    const char16_t* const StandardChars<char16_t>::digitStr = u"09";
     const int StandardChars<char16_t>::numWhitespacePairs = 10;
-    const char16_t* const StandardChars<char16_t>::whitespaceStr = _u("\x0009\x000d\x0020\x0020\x00a0\x00a0\x1680\x1680\x2000\x200a\x2028\x2029\x202f\x202f\x205f\x205f\x3000\x3000\xfeff\xfeff");
+    const char16_t* const StandardChars<char16_t>::whitespaceStr = u"\x0009\x000d\x0020\x0020\x00a0\x00a0\x1680\x1680\x2000\x200a\x2028\x2029\x202f\x202f\x205f\x205f\x3000\x3000\xfeff\xfeff";
     const int StandardChars<char16_t>::numWordPairs = 4;
-    const char16_t* const StandardChars<char16_t>::wordStr = _u("09AZ__az");
+    const char16_t* const StandardChars<char16_t>::wordStr = u"09AZ__az";
     const int StandardChars<char16_t>::numWordIUPairs = 6; // Under /iu flags, Sharp S and Kelvin sign map to S and K, respectively.
-    const char16_t* const StandardChars<char16_t>::wordIUStr = _u("09AZ__az\x017F\x017F\x212A\x212A");
+    const char16_t* const StandardChars<char16_t>::wordIUStr = u"09AZ__az\x017F\x017F\x212A\x212A";
     const int StandardChars<char16_t>::numNewlinePairs = 3;
-    const char16_t* const StandardChars<char16_t>::newlineStr = _u("\x000a\x000a\x000d\x000d\x2028\x2029");
+    const char16_t* const StandardChars<char16_t>::newlineStr = u"\x000a\x000a\x000d\x000d\x2028\x2029";
 
     StandardChars<char16_t>::StandardChars(ArenaAllocator* allocator)
         : allocator(allocator)

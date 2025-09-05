@@ -321,7 +321,7 @@ RecyclerWriteBarrierManager::WriteBarrier(void * address)
     // Global to process, use global configuration here
     if (PHASE_VERBOSE_TRACE1(Js::SWBPhase))
     {
-        Output::Print(_u("Writing to 0x%p (CIndex: %u)\n"), address, index);
+        Output::Print(u"Writing to 0x%p (CIndex: %u)\n", address, index);
     }
 #endif
 }
@@ -343,7 +343,7 @@ RecyclerWriteBarrierManager::WriteBarrier(void * address, size_t bytes)
     uintptr_t endIndex = GetCardTableIndex(endAddress);
     Assert(startIndex <= endIndex);
     memset(cardTable + startIndex, WRITE_BARRIER_PAGE_BIT | DIRTYBIT, endIndex - startIndex);
-    GlobalSwbVerboseTrace(_u("Writing to 0x%p (CIndex: %u-%u)\n"), address, startIndex, endIndex);
+    GlobalSwbVerboseTrace(u"Writing to 0x%p (CIndex: %u-%u)\n", address, startIndex, endIndex);
 
 #else
     uint bitShift = (((uint)address) >> s_BitArrayCardTableShift);
@@ -396,7 +396,7 @@ RecyclerWriteBarrierManager::ToggleBarrier(void * address, size_t bytes, bool en
             }
         }
 
-        GlobalSwbVerboseTrace(_u("Enabling 0x%p (CIndex: %u-%u)\n"), address, startIndex, endIndex);
+        GlobalSwbVerboseTrace(u"Enabling 0x%p (CIndex: %u-%u)\n", address, startIndex, endIndex);
     }
 }
 
@@ -517,7 +517,7 @@ RecyclerWriteBarrierManager::ResetWriteBarrier(void * address, size_t pageCount)
     // Global to process, use global configuration here
     if (PHASE_VERBOSE_TRACE1(Js::SWBPhase))
     {
-        Output::Print(_u("Resetting %u pages at CIndex: %u\n"), address, pageCount, cardIndex);
+        Output::Print(u"Resetting %u pages at CIndex: %u\n", address, pageCount, cardIndex);
     }
 #endif
 }

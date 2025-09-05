@@ -133,14 +133,14 @@ void  PerfTrace::WritePerfMap()
             {
               char16_t const * url = body->GetSourceContextInfo()->url;
               if (body->GetSourceContextInfo()->IsDynamic()) {
-                url = _u("dynamic");
+                url = u"dynamic";
               }
 
 #if DYNAMIC_INTERPRETER_THUNK
                 if(body->HasInterpreterThunkGenerated())
                 {
                     const char16_t* functionName = body->GetExternalDisplayName();
-                    fwprintf(perfMapFile, _u("%llX %llX %s!%s[Interpreted]\n"),
+                    fwprintf(perfMapFile, u"%llX %llX %s!%s[Interpreted]\n",
                         body->GetDynamicInterpreterEntryPoint(),
                         body->GetDynamicInterpreterThunkSize(),
                         url,
@@ -156,7 +156,7 @@ void  PerfTrace::WritePerfMap()
                         const ExecutionMode jitMode = entryPoint->GetJitMode();
                         if (jitMode == ExecutionMode::SimpleJit)
                         {
-                            fwprintf(perfMapFile, _u("%llX %llX %s!%s[SimpleJIT]\n"),
+                            fwprintf(perfMapFile, u"%llX %llX %s!%s[SimpleJIT]\n",
                                 entryPoint->GetNativeAddress(),
                                 entryPoint->GetCodeSize(),
                                 url,
@@ -164,7 +164,7 @@ void  PerfTrace::WritePerfMap()
                         }
                         else
                         {
-                            fwprintf(perfMapFile, _u("%llX %llX %s!%s[FullJIT]\n"),
+                            fwprintf(perfMapFile, u"%llX %llX %s!%s[FullJIT]\n",
                                 entryPoint->GetNativeAddress(),
                                 entryPoint->GetCodeSize(),
                                 url,
@@ -180,7 +180,7 @@ void  PerfTrace::WritePerfMap()
                         if(entryPoint->IsCodeGenDone())
                         {
                             const uint16 loopNumber = ((uint16)body->GetLoopNumberWithLock(header));
-                            fwprintf(perfMapFile, _u("%llX %llX %s!%s[Loop%u]\n"),
+                            fwprintf(perfMapFile, u"%llX %llX %s!%s[Loop%u]\n",
                                 entryPoint->GetNativeAddress(),
                                 entryPoint->GetCodeSize(),
                                 url,

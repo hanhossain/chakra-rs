@@ -22,7 +22,7 @@ Js::DynamicObject * IRtoJSObjectBuilder::CreateIntConstOpnd(Js::ScriptContext *s
     Js::Var valueVar = Js::JavascriptNumber::ToVar(value, scriptContext);
 
     Js::DynamicObject *opObject = scriptContext->GetLibrary()->CreateObject();
-    SetProperty(opObject, _u("value"), valueVar);
+    SetProperty(opObject, u"value", valueVar);
 
     return opObject;
 }
@@ -41,7 +41,7 @@ Js::DynamicObject * IRtoJSObjectBuilder::CreateFloatConstOpnd(Js::ScriptContext 
     Js::Var valueVar = Js::JavascriptNumber::New(value, scriptContext);
 
     Js::DynamicObject *opObject = scriptContext->GetLibrary()->CreateObject();
-    SetProperty(opObject, _u("value"), valueVar);
+    SetProperty(opObject, u"value", valueVar);
 
     return opObject;
 }
@@ -60,7 +60,7 @@ Js::DynamicObject * IRtoJSObjectBuilder::CreateHelperCallOpnd(Js::ScriptContext 
     helperString = Js::JavascriptString::NewCopyBuffer(helperText, wcslen(helperText), scriptContext);
 
     Js::DynamicObject *opObject = scriptContext->GetLibrary()->CreateObject();
-    SetProperty(opObject, _u("methodName"), helperString);
+    SetProperty(opObject, u"methodName", helperString);
 
     return opObject;
 }
@@ -78,7 +78,7 @@ Js::DynamicObject * IRtoJSObjectBuilder::CreateSymOpnd(Js::ScriptContext *script
     Js::Var idValue = Js::JavascriptNumber::ToVar(id, scriptContext);
 
     Js::DynamicObject *opObject = scriptContext->GetLibrary()->CreateObject();
-    SetProperty(opObject, _u("symid"), idValue);
+    SetProperty(opObject, u"symid", idValue);
 
     return opObject;
 }
@@ -104,11 +104,11 @@ Js::DynamicObject * IRtoJSObjectBuilder::CreateRegOpnd(Js::ScriptContext *script
     if (regid != RegNOREG)
     {
         Js::Var regidValue = Js::JavascriptNumber::ToVar(regid, scriptContext);
-        SetProperty(opObject, _u("regid"), regidValue);
+        SetProperty(opObject, u"regid", regidValue);
     }
 
     Js::Var symidValue = Js::JavascriptNumber::ToVar(symid, scriptContext);
-    SetProperty(opObject, _u("symid"), symidValue);
+    SetProperty(opObject, u"symid", symidValue);
 
     return opObject;
 }
@@ -125,7 +125,7 @@ Js::DynamicObject * IRtoJSObjectBuilder::CreateAddrOpnd(Js::ScriptContext *scrip
     Js::Var addressVar = Js::JavascriptNumber::ToVar((unsigned long)address, scriptContext);
 
     Js::DynamicObject *opObject = scriptContext->GetLibrary()->CreateObject();
-    SetProperty(opObject, _u("addr"), addressVar);
+    SetProperty(opObject, u"addr", addressVar);
 
     const size_t count = BUFFER_LEN;
     char16_t detail[count];
@@ -133,7 +133,7 @@ Js::DynamicObject * IRtoJSObjectBuilder::CreateAddrOpnd(Js::ScriptContext *scrip
 
     Js::JavascriptString *detailString = NULL;
     detailString = Js::JavascriptString::NewCopyBuffer(detail, wcslen(detail), scriptContext);
-    SetProperty(opObject, _u("detail"), detailString);
+    SetProperty(opObject, u"detail", detailString);
 
     return opObject;
 }
@@ -159,21 +159,21 @@ Js::DynamicObject * IRtoJSObjectBuilder::CreateIndirOpnd(Js::ScriptContext *scri
         baseVar = Js::JavascriptNumber::ToVar(regid, scriptContext);
     }
 
-    SetProperty(opObject, _u("base"), baseVar);
+    SetProperty(opObject, u"base", baseVar);
 
     IR::RegOpnd *indexOpnd = op->GetIndexOpnd();
     if (indexOpnd)
     {
         SymID indexid = indexOpnd->m_sym->m_id;
         Js::Var indexVar = Js::JavascriptNumber::ToVar(indexid, scriptContext);
-        SetProperty(opObject, _u("index"), indexVar);
+        SetProperty(opObject, u"index", indexVar);
     }
 
     int32 offset = op->GetOffset();
     if (offset)
     {
         Js::Var offsetVar = Js::JavascriptNumber::ToVar(offset, scriptContext);
-        SetProperty(opObject, _u("offset"), offsetVar);
+        SetProperty(opObject, u"offset", offsetVar);
     }
 
     return opObject;
@@ -275,7 +275,7 @@ Js::DynamicObject * IRtoJSObjectBuilder::CreateOpnd(Js::ScriptContext *scriptCon
 
     // include the kind of symbol so the UI knows how to display the information
     Js::Var kindVar = Js::JavascriptNumber::ToVar(kind, scriptContext);
-    Js::PropertyId id_kind = CreateProperty(scriptContext, _u("kind"));
+    Js::PropertyId id_kind = CreateProperty(scriptContext, u"kind");
     SetProperty(opObject, id_kind, kindVar);
 
     return opObject;
@@ -460,7 +460,7 @@ void IRtoJSObjectBuilder::CreateLabelInstruction(Js::ScriptContext *scriptContex
                                                  IR::LabelInstr *inst, Js::DynamicObject *currObject)
 {
     Js::Var labelVar = Js::JavascriptNumber::ToVar(inst->m_id, scriptContext);
-    SetProperty(currObject, _u("label"), labelVar);
+    SetProperty(currObject, u"label", labelVar);
 }
 
 void IRtoJSObjectBuilder::CreateBranchInstruction(Js::ScriptContext *scriptContext,
@@ -472,7 +472,7 @@ void IRtoJSObjectBuilder::CreateBranchInstruction(Js::ScriptContext *scriptConte
     }
 
     Js::Var labelVar = Js::JavascriptNumber::ToVar(inst->GetTarget()->m_id, scriptContext);
-    SetProperty(currObject, _u("branch"), labelVar);
+    SetProperty(currObject, u"branch", labelVar);
 }
 
 void IRtoJSObjectBuilder::CreatePragmaInstruction(Js::ScriptContext *scriptContext,
@@ -506,18 +506,18 @@ void IRtoJSObjectBuilder::CreatePragmaInstruction(Js::ScriptContext *scriptConte
     Js::JavascriptString *sourceString = NULL;
     sourceString = Js::JavascriptString::NewCopyBuffer(buffer, wcslen(buffer), scriptContext);
 
-    SetProperty(currObject, _u("source"), sourceString);
+    SetProperty(currObject, u"source", sourceString);
 
     Js::Var lineVar = Js::JavascriptNumber::ToVar((uint32)line, scriptContext);
-    SetProperty(currObject, _u("line"), lineVar);
+    SetProperty(currObject, u"line", lineVar);
 
     Js::Var colVar = Js::JavascriptNumber::ToVar((uint32)col, scriptContext);
-    SetProperty(currObject, _u("col"), colVar);
+    SetProperty(currObject, u"col", colVar);
 
     if (statementIndex != -1)
     {
         Js::Var indexVar = Js::JavascriptNumber::ToVar(statementIndex, scriptContext);
-        SetProperty(currObject, _u("statementIndex"), indexVar);
+        SetProperty(currObject, u"statementIndex", indexVar);
     }
 }
 
@@ -529,9 +529,9 @@ void IRtoJSObjectBuilder::CreateDefaultInstruction(Js::ScriptContext *scriptCont
     Js::DynamicObject *src2 = IRtoJSObjectBuilder::CreateOpnd(scriptContext, currInst->GetSrc2(), func);
     Js::DynamicObject *dst = IRtoJSObjectBuilder::CreateOpnd(scriptContext, currInst->GetDst(), func);
 
-    SetProperty(currObject, _u("src1"), src1);
-    SetProperty(currObject, _u("src2"), src2);
-    SetProperty(currObject, _u("dst"), dst);
+    SetProperty(currObject, u"src1", src1);
+    SetProperty(currObject, u"src2", src2);
+    SetProperty(currObject, u"dst", dst);
 }
 
 /**
@@ -553,7 +553,7 @@ Js::DynamicObject * IRtoJSObjectBuilder::GetMetadata(Js::ScriptContext *scriptCo
     }
 
     Js::DynamicObject *metadata = scriptContext->GetLibrary()->CreateObject();
-    SetProperty(metadata, _u("regNames"), regNameArray);
+    SetProperty(metadata, u"regNames", regNameArray);
 
     return metadata;
 }
@@ -569,7 +569,7 @@ Js::DynamicObject * IRtoJSObjectBuilder::DumpIRtoJSObject(Func *func, Js::Phase 
 #ifdef ENABLE_IR_VIEWER_DBG_DUMP
     if (Js::Configuration::Global.flags.Verbose)
     {
-        Output::Print(_u("\n>>> Begin Dump IR to JS Object (phase: %s) <<<\n"), Js::PhaseNames[phase]);
+        Output::Print(u"\n>>> Begin Dump IR to JS Object (phase: %s) <<<\n", Js::PhaseNames[phase]);
         Output::Flush();
     }
 #endif
@@ -592,8 +592,8 @@ Js::DynamicObject * IRtoJSObjectBuilder::DumpIRtoJSObject(Func *func, Js::Phase 
     IR::Instr *currInst = func->m_headInstr;
 
     // property ids for loop
-    Js::PropertyId id_opcode = CreateProperty(scriptContext, _u("opcode"));
-    Js::PropertyId id_next = CreateProperty(scriptContext, _u("next"));
+    Js::PropertyId id_opcode = CreateProperty(scriptContext, u"opcode");
+    Js::PropertyId id_next = CreateProperty(scriptContext, u"next");
 
     while (currInst)
     {
@@ -659,7 +659,7 @@ Js::DynamicObject * IRtoJSObjectBuilder::DumpIRtoJSObject(Func *func, Js::Phase 
     SetProperty(baseObject, Js::PhaseNames[phase], dumpir);
 
     // attach IR metadata
-    Js::PropertyId id_metadata = CreateProperty(scriptContext, _u("metadata"));
+    Js::PropertyId id_metadata = CreateProperty(scriptContext, u"metadata");
     if (!baseObject->HasProperty(id_metadata))
     {
         Js::DynamicObject *metadata = GetMetadata(scriptContext);

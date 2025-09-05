@@ -27,7 +27,7 @@ using namespace Js;
         {
             uint propertyCount = guard->GetCache()->record.propertyCount;
 
-            Output::Print(_u("EquivObjTypeSpec: checking %u properties on operation %u, (type = 0x%p, ref type = 0x%p):\n"),
+            Output::Print(u"EquivObjTypeSpec: checking %u properties on operation %u, (type = 0x%p, ref type = 0x%p):\n",
                 propertyCount, guard->GetObjTypeSpecFldId(), type, refType);
 
             const Js::TypeEquivalenceRecord& record = guard->GetCache()->record;
@@ -36,14 +36,14 @@ using namespace Js;
             {
                 if (Js::Configuration::Global.flags.Verbose)
                 {
-                    Output::Print(_u("    <start>, "));
+                    Output::Print(u"    <start>, ");
                     for (uint pi = 0; pi < propertyCount; pi++)
                     {
                         const EquivalentPropertyEntry* refInfo = &record.properties[pi];
                         const PropertyRecord* propertyRecord = scriptContext->GetPropertyName(refInfo->propertyId);
-                        Output::Print(_u("%s(#%d)@%ua%dw%d, "), propertyRecord->GetBuffer(), propertyRecord->GetPropertyId(), refInfo->slotIndex, refInfo->isAuxSlot, refInfo->mustBeWritable);
+                        Output::Print(u"%s(#%d)@%ua%dw%d, ", propertyRecord->GetBuffer(), propertyRecord->GetPropertyId(), refInfo->slotIndex, refInfo->isAuxSlot, refInfo->mustBeWritable);
                     }
-                    Output::Print(_u("<end>\n"));
+                    Output::Print(u"<end>\n");
                 }
             }
             else
@@ -57,9 +57,9 @@ using namespace Js;
                     typeHandler->GetPropertyEquivalenceInfo(propertyRecord, info);
                 }
 
-                Output::Print(_u("EquivObjTypeSpec: check failed for %s (#%d) on operation %u:\n"),
+                Output::Print(u"EquivObjTypeSpec: check failed for %s (#%d) on operation %u:\n",
                     propertyRecord->GetBuffer(), propertyRecord->GetPropertyId(), guard->GetObjTypeSpecFldId());
-                Output::Print(_u("    type = 0x%p, ref type = 0x%p, slot = 0x%u (%d), ref slot = 0x%u (%d), is writable = %d, required writable = %d\n"),
+                Output::Print(u"    type = 0x%p, ref type = 0x%p, slot = 0x%u (%d), ref slot = 0x%u (%d), is writable = %d, required writable = %d\n",
                     type, refType, info.slotIndex, refInfo->slotIndex, info.isAuxSlot, refInfo->isAuxSlot, info.isWritable, refInfo->mustBeWritable);
             }
 
@@ -192,7 +192,7 @@ using namespace Js;
                 {
                     if (guard->WasReincarnated())
                     {
-                        Output::Print(_u("EquivObjTypeSpec: Guard 0x%p was reincarnated and working now \n"), guard);
+                        Output::Print(u"EquivObjTypeSpec: Guard 0x%p was reincarnated and working now \n", guard);
                         Output::Flush();
                     }
                 }
@@ -222,7 +222,7 @@ using namespace Js;
         {
             if (PHASE_TRACE1(Js::EquivObjTypeSpecPhase))
             {
-                Output::Print(_u("EquivObjTypeSpec: failed check on operation %u (type = 0x%x, ref type = 0x%x, proto = 0x%x, ref proto = 0x%x) \n"),
+                Output::Print(u"EquivObjTypeSpec: failed check on operation %u (type = 0x%x, ref type = 0x%x, proto = 0x%x, ref proto = 0x%x) \n",
                     guard->GetObjTypeSpecFldId(), type, refType, type->GetPrototype(), refType->GetPrototype());
                 Output::Flush();
             }
@@ -235,7 +235,7 @@ using namespace Js;
         {
             if (PHASE_TRACE1(Js::EquivObjTypeSpecPhase))
             {
-                Output::Print(_u("EquivObjTypeSpec: failed check on operation %u (type = 0x%x, ref type = 0x%x, proto = 0x%x, ref proto = 0x%x) \n"),
+                Output::Print(u"EquivObjTypeSpec: failed check on operation %u (type = 0x%x, ref type = 0x%x, proto = 0x%x, ref proto = 0x%x) \n",
                     guard->GetObjTypeSpecFldId(), type, refType, type->GetPrototype(), refType->GetPrototype());
                 Output::Flush();
             }
@@ -314,7 +314,7 @@ using namespace Js;
         {
             if (PHASE_TRACE1(Js::EquivObjTypeSpecPhase))
             {
-                Output::Print(_u("EquivObjTypeSpec: Saving type in unused slot of equiv types cache. \n"));
+                Output::Print(u"EquivObjTypeSpec: Saving type in unused slot of equiv types cache. \n");
                 Output::Flush();
             }
             equivTypes[emptySlotIndex] = type;
@@ -341,7 +341,7 @@ using namespace Js;
 
             if (PHASE_TRACE1(Js::EquivObjTypeSpecPhase))
             {
-                Output::Print(_u("EquivObjTypeSpec: Saving type in used slot of equiv types cache at index = %d. NextEvictionVictim = %d. \n"), index, cache->nextEvictionVictim);
+                Output::Print(u"EquivObjTypeSpec: Saving type in used slot of equiv types cache at index = %d. NextEvictionVictim = %d. \n", index, cache->nextEvictionVictim);
                 Output::Flush();
             }
             Assert(index < EQUIVALENT_TYPE_CACHE_SIZE);

@@ -448,22 +448,22 @@ LblDone:
 
             if (val100 < 10)
             {
-                buffer[pos--] = _u('0') + static_cast<char>(val100);
-                buffer[pos--] = _u('0');
+                buffer[pos--] = u'0' + static_cast<char>(val100);
+                buffer[pos--] = u'0';
                 continue;
             }
 
-            buffer[pos--] = _u('0') + static_cast<char>(val100 % 10);
-            buffer[pos--] = _u('0') + static_cast<char>(val100 / 10);
+            buffer[pos--] = u'0' + static_cast<char>(val100 % 10);
+            buffer[pos--] = u'0' + static_cast<char>(val100 / 10);
         }
 
         if (value && value < 10)
         {
-            buffer[pos--] = _u('0') + static_cast<char>(value);
+            buffer[pos--] = u'0' + static_cast<char>(value);
         }
         else if (pos == bufferSize - 2) // if it was 0
         {
-            buffer[pos--] = _u('0');
+            buffer[pos--] = u'0';
         }
 
         return pos + 1;
@@ -474,7 +474,7 @@ LblDone:
         bool neg = value < 0;
         unsigned long val = (unsigned long) (neg ? -1 * value : value);
         int pos = UnsignedToString(val, buffer, bufferSize);
-        if (neg) buffer[--pos] = _u('-');
+        if (neg) buffer[--pos] = u'-';
         return pos;
     }
 

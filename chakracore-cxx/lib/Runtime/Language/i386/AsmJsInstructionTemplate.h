@@ -52,16 +52,16 @@ namespace Js
                 if( regEffAddr2 == RegNOREG )
                 {
                     if (offset < 0)
-                        Output::Print(_u("[%s-0x%X]"), RegNamesW[regEffAddr], offset * -1);
+                        Output::Print(u"[%s-0x%X]", RegNamesW[regEffAddr], offset * -1);
                     else
-                        Output::Print( _u("[%s+0x%X]"), RegNamesW[regEffAddr], offset );
+                        Output::Print( u"[%s+0x%X]", RegNamesW[regEffAddr], offset );
                 }
                 else
                 {
                     if (offset < 0)
-                        Output::Print(_u("[%s+%s*%d+0x%X]"), RegNamesW[regEffAddr], RegNamesW[regEffAddr2], multiplier, offset);
+                        Output::Print(u"[%s+%s*%d+0x%X]", RegNamesW[regEffAddr], RegNamesW[regEffAddr2], multiplier, offset);
                     else
-                        Output::Print( _u("[%s+%s*%d+0x%X]"), RegNamesW[regEffAddr], RegNamesW[regEffAddr2], multiplier, offset );
+                        Output::Print( u"[%s+%s*%d+0x%X]", RegNamesW[regEffAddr], RegNamesW[regEffAddr2], multiplier, offset );
                 }
             }
 #endif
@@ -96,7 +96,7 @@ namespace Js
 #if DBG_DUMP
             void dump() const
             {
-                Output::Print( _u("%s"), RegNamesW[reg] );
+                Output::Print( u"%s", RegNamesW[reg] );
             }
 #endif
         };
@@ -111,7 +111,7 @@ namespace Js
 #if DBG_DUMP
             void dump() const
             {
-                Output::Print( _u("0x%X"), imm );
+                Output::Print( u"0x%X", imm );
             }
 #endif
         };
@@ -136,7 +136,7 @@ namespace Js
 #if DBG_DUMP
             void dump() const
             {
-                Output::Print( _u("ptr:0x%X"), (int)addr );
+                Output::Print( u"ptr:0x%X", (int)addr );
             }
 #endif
         };
@@ -151,7 +151,7 @@ namespace Js
 #if DBG_DUMP
             void dump() const
             {
-                Output::Print( _u("%s, ptr:0x%X"), RegNamesW[reg], (int)addr);
+                Output::Print( u"%s, ptr:0x%X", RegNamesW[reg], (int)addr);
             }
 #endif
         };
@@ -180,7 +180,7 @@ namespace Js
 #if DBG_DUMP
             void dump() const
             {
-                Output::Print( _u("%s, %s"), RegNamesW[reg], RegNamesW[reg2] );
+                Output::Print( u"%s, %s", RegNamesW[reg], RegNamesW[reg2] );
             }
 #endif
         };
@@ -204,7 +204,7 @@ namespace Js
 #if DBG_DUMP
             void dump() const
             {
-                Output::Print( _u("%s, "), RegNamesW[reg] );
+                Output::Print( u"%s, ", RegNamesW[reg] );
                 addr.dump();
             }
 #endif
@@ -229,7 +229,7 @@ namespace Js
             void dump() const
             {
                 addr.dump();
-                Output::Print( _u(" , %s"), RegNamesW[reg] );
+                Output::Print( u" , %s", RegNamesW[reg] );
             }
 #endif
         };
@@ -246,9 +246,9 @@ namespace Js
             void dump() const
             {
                 if (imm < 0)
-                    Output::Print(_u("%s, -0x%X"), RegNamesW[reg], imm * -1);
+                    Output::Print(u"%s, -0x%X", RegNamesW[reg], imm * -1);
                 else
-                    Output::Print(_u("%s, 0x%X"), RegNamesW[reg], imm);
+                    Output::Print(u"%s, 0x%X", RegNamesW[reg], imm);
             }
 #endif
         };
@@ -273,9 +273,9 @@ namespace Js
             {
                 addr.dump();
                 if (imm < 0)
-                    Output::Print(_u(", -0x%X"), imm * -1);
+                    Output::Print(u", -0x%X", imm * -1);
                 else
-                    Output::Print( _u(", 0x%X"), imm );
+                    Output::Print( u", 0x%X", imm );
             }
 #endif
         };
@@ -304,12 +304,12 @@ namespace Js
 #if DBG_DUMP
             void dump() const
             {
-                Output::Print(_u("%s, "), RegNamesW[reg]);
+                Output::Print(u"%s, ", RegNamesW[reg]);
                 addr.dump();
                 if (imm < 0)
-                    Output::Print(_u(", -0x%X"), imm * -1);
+                    Output::Print(u", -0x%X", imm * -1);
                 else
-                    Output::Print(_u(", 0x%X"), imm);
+                    Output::Print(u", 0x%X", imm);
             }
 #endif
         };
@@ -327,11 +327,11 @@ namespace Js
 #if DBG_DUMP
             void dump() const
             {
-                Output::Print(_u("%s, %s"), RegNamesW[reg], RegNamesW[reg2]);
+                Output::Print(u"%s, %s", RegNamesW[reg], RegNamesW[reg2]);
                 if (imm < 0)
-                    Output::Print(_u(", -0x%X"), imm * -1);
+                    Output::Print(u", -0x%X", imm * -1);
                 else
-                    Output::Print(_u(", 0x%X"), imm);
+                    Output::Print(u", 0x%X", imm);
             }
 #endif
         };
@@ -1683,16 +1683,16 @@ namespace Js
             {
                 if( j == DUMP_ASM_CODE_NB_BYTES )
                 {
-                    Output::Print( _u("\n") ); j = 0;
+                    Output::Print( u"\n" ); j = 0;
                 }
-                Output::Print( _u("0x%02X "), buffer[-i] );
+                Output::Print( u"0x%02X ", buffer[-i] );
             }
-            Output::Print( _u("%*c  %s "), DUMP_ASM_CODE_PADDING( size ), ' ', instructionName );
+            Output::Print( u"%*c  %s ", DUMP_ASM_CODE_PADDING( size ), ' ', instructionName );
             if( params )
             {
                 params->dump();
             }
-            Output::Print( _u(" (size: %d)\n"), size );
+            Output::Print( u" (size: %d)\n", size );
         }
 #endif
     }
@@ -1710,7 +1710,7 @@ namespace Js
 #define InstructionMembers(name, supInstrSize, flags) \
     static const int SupportedInstrSize = supInstrSize;\
     static const int Flags = flags;\
-    static const char16_t* GetInstructionName() { return _u(""); }
+    static const char16_t* GetInstructionName() { return u""; }
 #define InstructionMemberInit(name)
 #endif
 
@@ -1977,7 +1977,7 @@ namespace Js
         {
             memcpy_s( buffer, size, src, size );
             buffer += size;
-            DumpAsmCode<InstrParamsEmpty>( buffer, size, _u("Custom"),nullptr);
+            DumpAsmCode<InstrParamsEmpty>( buffer, size, u"Custom",nullptr);
             return size;
         }
     };

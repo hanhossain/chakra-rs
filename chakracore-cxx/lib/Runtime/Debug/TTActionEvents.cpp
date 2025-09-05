@@ -385,7 +385,7 @@ namespace TTD
 
         void HostProcessExitAction_Execute(const EventLogEntry* evt, ThreadContextTTD* executeContext)
         {
-            throw TTDebuggerAbortException::CreateAbortEndOfLog(_u("End of log reached with Host Process Exit -- returning to top-level."));
+            throw TTDebuggerAbortException::CreateAbortEndOfLog(u"End of log reached with Host Process Exit -- returning to top-level.");
         }
 
         void GetAndClearExceptionWithMetadataAction_Execute(const EventLogEntry* evt, ThreadContextTTD* executeContext)
@@ -1071,7 +1071,7 @@ namespace TTD
             }
             else
             {
-                alloc.CopyNullTermStringInto(_u("#not a function#"), cfAction->FunctionName);
+                alloc.CopyNullTermStringInto(u"#not a function#", cfAction->FunctionName);
             }
 
             //In case we don't terminate add these nicely
@@ -1182,7 +1182,7 @@ namespace TTD
                             ctx->GetThreadContext()->GetDebugManager()->stepController.Deactivate();
                         }
 
-                        throw TTDebuggerAbortException::CreateUncaughtExceptionAbortRequest(lastLocation.GetRootEventTime(), _u("Uncaught JavaScript exception -- Propagate to top-level."));
+                        throw TTDebuggerAbortException::CreateUncaughtExceptionAbortRequest(lastLocation.GetRootEventTime(), u"Uncaught JavaScript exception -- Propagate to top-level.");
                     }
 
                     throw;
@@ -1198,7 +1198,7 @@ namespace TTD
                         threadContext->TTDExecutionInfo->GetLastExecutedTimeAndPositionForDebugger(lastLocation);
                         JsRTCallFunctionAction_SetLastExecutedStatementAndFrameInfo(const_cast<EventLogEntry*>(evt), lastLocation);
 
-                        throw TTDebuggerAbortException::CreateUncaughtExceptionAbortRequest(lastLocation.GetRootEventTime(), _u("Uncaught Script exception -- Propagate to top-level."));
+                        throw TTDebuggerAbortException::CreateUncaughtExceptionAbortRequest(lastLocation.GetRootEventTime(), u"Uncaught Script exception -- Propagate to top-level.");
                     }
                     else
                     {

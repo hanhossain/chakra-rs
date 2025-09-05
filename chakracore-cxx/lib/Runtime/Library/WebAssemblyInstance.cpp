@@ -29,7 +29,7 @@ Var GetImportVariable(Wasm::WasmImport* wi, ScriptContext* ctx, Var ffi)
 
     if (!JavascriptOperators::IsObject(modProp))
     {
-        JavascriptError::ThrowTypeErrorVar(ctx, WASMERR_InvalidImport, modName, name, _u("Object"));
+        JavascriptError::ThrowTypeErrorVar(ctx, WASMERR_InvalidImport, modName, name, u"Object");
     }
     return JavascriptOperators::OP_GetProperty(modProp, propertyRecord->GetPropertyId(), ctx);
 }
@@ -58,7 +58,7 @@ WebAssemblyInstance::NewInstance(RecyclableObject* function, CallInfo callInfo, 
 
     if (!args.IsNewCall() || (newTarget && JavascriptOperators::IsUndefinedObject(newTarget)))
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_ClassConstructorCannotBeCalledWithoutNew, _u("WebAssembly.Instance"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_ClassConstructorCannotBeCalledWithoutNew, u"WebAssembly.Instance");
     }
 
     if (args.Info.Count < 2 || !VarIs<WebAssemblyModule>(args[1]))
@@ -243,7 +243,7 @@ Var WebAssemblyInstance::CreateExportObject(WebAssemblyModule * wasmModule, Scri
                     obj = JavascriptNumber::ToVar(cnst.i32, scriptContext);
                     break;
                 case Wasm::WasmTypes::I64:
-                    JavascriptError::ThrowTypeErrorVar(wasmModule->GetScriptContext(), WASMERR_InvalidTypeConversion, _u("i64"), _u("Var"));
+                    JavascriptError::ThrowTypeErrorVar(wasmModule->GetScriptContext(), WASMERR_InvalidTypeConversion, u"i64", u"Var");
                 case Wasm::WasmTypes::F32:
                     obj = JavascriptNumber::NewWithCheck(cnst.f32, scriptContext);
                     break;
@@ -252,7 +252,7 @@ Var WebAssemblyInstance::CreateExportObject(WebAssemblyModule * wasmModule, Scri
                     break;
 #ifdef ENABLE_WASM_SIMD
                 case Wasm::WasmTypes::V128:
-                    JavascriptError::ThrowTypeErrorVar(wasmModule->GetScriptContext(), WASMERR_InvalidTypeConversion, _u("v128"), _u("Var"));
+                    JavascriptError::ThrowTypeErrorVar(wasmModule->GetScriptContext(), WASMERR_InvalidTypeConversion, u"v128", u"Var");
 #endif
                 default:
                     Wasm::WasmTypes::CompileAssertCases<Wasm::WasmTypes::I32, Wasm::WasmTypes::I64, Wasm::WasmTypes::F32, Wasm::WasmTypes::F64, WASM_V128_CHECK_TYPE>();
@@ -290,7 +290,7 @@ void WebAssemblyInstance::LoadImports(
         {
             if (!VarIs<JavascriptFunction>(prop))
             {
-                JavascriptError::ThrowWebAssemblyLinkErrorVar(ctx, WASMERR_InvalidImport, import->modName, import->importName, _u("Function"));
+                JavascriptError::ThrowWebAssemblyLinkErrorVar(ctx, WASMERR_InvalidImport, import->modName, import->importName, u"Function");
             }
             Assert(counter < wasmModule->GetImportedFunctionCount());
             Assert(wasmModule->GetFunctionIndexType(counter) == Wasm::FunctionIndexTypes::ImportThunk);
@@ -307,7 +307,7 @@ void WebAssemblyInstance::LoadImports(
                     wasmModule->GetWasmFunctionInfo(counter)->GetSignature()->WriteSignatureToString(importargs, 512);
                     char16_t exportargs[512] = { 0 };
                     func->GetSignature()->WriteSignatureToString(exportargs, 512);
-                    _snwprintf_s(temp, 2048, _TRUNCATE, _u("%ls%ls to %ls%ls"), func->GetDisplayName()->GetString(), exportargs, import->importName, importargs);
+                    _snwprintf_s(temp, 2048, _TRUNCATE, u"%ls%ls to %ls%ls", func->GetDisplayName()->GetString(), exportargs, import->importName, importargs);
                     // this makes a copy of the error message buffer, so it's fine to not worry about clean-up
                     JavascriptError::ThrowWebAssemblyLinkError(ctx, WASMERR_LinkSignatureMismatch, temp);
                 }
@@ -323,24 +323,24 @@ void WebAssemblyInstance::LoadImports(
             {
                 if (!VarIs<WebAssemblyMemory>(prop))
                 {
-                    JavascriptError::ThrowWebAssemblyLinkErrorVar(ctx, WASMERR_InvalidImport, import->modName, import->importName, _u("WebAssembly.Memory"));
+                    JavascriptError::ThrowWebAssemblyLinkErrorVar(ctx, WASMERR_InvalidImport, import->modName, import->importName, u"WebAssembly.Memory");
                 }
                 WebAssemblyMemory * mem = VarTo<WebAssemblyMemory>(prop);
 
                 if (mem->GetInitialLength() < wasmModule->GetMemoryInitSize())
                 {
-                    JavascriptError::ThrowWebAssemblyLinkErrorVar(ctx, WASMERR_InvalidInitialSize, _u("WebAssembly.Memory"), mem->GetInitialLength(), wasmModule->GetMemoryInitSize());
+                    JavascriptError::ThrowWebAssemblyLinkErrorVar(ctx, WASMERR_InvalidInitialSize, u"WebAssembly.Memory", mem->GetInitialLength(), wasmModule->GetMemoryInitSize());
                 }
                 if (mem->GetMaximumLength() > wasmModule->GetMemoryMaxSize())
                 {
-                    JavascriptError::ThrowWebAssemblyLinkErrorVar(ctx, WASMERR_InvalidMaximumSize, _u("WebAssembly.Memory"), mem->GetMaximumLength(), wasmModule->GetMemoryMaxSize());
+                    JavascriptError::ThrowWebAssemblyLinkErrorVar(ctx, WASMERR_InvalidMaximumSize, u"WebAssembly.Memory", mem->GetMaximumLength(), wasmModule->GetMemoryMaxSize());
                 }
 #ifdef ENABLE_WASM_THREADS
                 if (mem->IsSharedMemory() != wasmModule->IsSharedMemory())
                 {
-                    const char16_t* memType = mem->IsSharedMemory() ? _u("shared") : _u("unshared");
-                    const char16_t* modType = wasmModule->IsSharedMemory() ? _u("shared") : _u("unshared");
-                    JavascriptError::ThrowWebAssemblyLinkErrorVar(ctx, WASMERR_InvalidMemoryType, _u("WebAssembly.Memory"), memType, modType);
+                    const char16_t* memType = mem->IsSharedMemory() ? u"shared" : u"unshared";
+                    const char16_t* modType = wasmModule->IsSharedMemory() ? u"shared" : u"unshared";
+                    JavascriptError::ThrowWebAssemblyLinkErrorVar(ctx, WASMERR_InvalidMemoryType, u"WebAssembly.Memory", memType, modType);
                 }
 #endif
                 env->SetMemory(counter, mem);
@@ -354,17 +354,17 @@ void WebAssemblyInstance::LoadImports(
             {
                 if (!VarIs<WebAssemblyTable>(prop))
                 {
-                    JavascriptError::ThrowWebAssemblyLinkErrorVar(ctx, WASMERR_InvalidImport, import->modName, import->importName, _u("WebAssembly.Table"));
+                    JavascriptError::ThrowWebAssemblyLinkErrorVar(ctx, WASMERR_InvalidImport, import->modName, import->importName, u"WebAssembly.Table");
                 }
                 WebAssemblyTable * table = VarTo<WebAssemblyTable>(prop);
 
                 if (table->GetInitialLength() < wasmModule->GetTableInitSize())
                 {
-                    JavascriptError::ThrowWebAssemblyLinkErrorVar(ctx, WASMERR_InvalidInitialSize, _u("WebAssembly.Table"), table->GetInitialLength(), wasmModule->GetTableInitSize());
+                    JavascriptError::ThrowWebAssemblyLinkErrorVar(ctx, WASMERR_InvalidInitialSize, u"WebAssembly.Table", table->GetInitialLength(), wasmModule->GetTableInitSize());
                 }
                 if (table->GetMaximumLength() > wasmModule->GetTableMaxSize())
                 {
-                    JavascriptError::ThrowWebAssemblyLinkErrorVar(ctx, WASMERR_InvalidMaximumSize, _u("WebAssembly.Table"), table->GetMaximumLength(), wasmModule->GetTableMaxSize());
+                    JavascriptError::ThrowWebAssemblyLinkErrorVar(ctx, WASMERR_InvalidMaximumSize, u"WebAssembly.Table", table->GetMaximumLength(), wasmModule->GetTableMaxSize());
                 }
                 env->SetTable(counter, table);
             }
@@ -375,7 +375,7 @@ void WebAssemblyInstance::LoadImports(
             Wasm::WasmGlobal* global = wasmModule->GetGlobal(counter);
             if (global->IsMutable() || (!JavascriptNumber::Is(prop) && !TaggedInt::Is(prop)))
             {
-                JavascriptError::ThrowWebAssemblyLinkErrorVar(ctx, WASMERR_InvalidImport, import->modName, import->importName, _u("Number"));
+                JavascriptError::ThrowWebAssemblyLinkErrorVar(ctx, WASMERR_InvalidImport, import->modName, import->importName, u"Number");
             }
 
             Assert(global->GetReferenceType() == Wasm::GlobalReferenceTypes::ImportedReference);
@@ -385,9 +385,9 @@ void WebAssemblyInstance::LoadImports(
             case Wasm::WasmTypes::I32: cnst.i32 = JavascriptConversion::ToInt32(prop, ctx); break;
             case Wasm::WasmTypes::F32: cnst.f32 = (float)JavascriptConversion::ToNumber(prop, ctx); break;
             case Wasm::WasmTypes::F64: cnst.f64 = JavascriptConversion::ToNumber(prop, ctx); break;
-            case Wasm::WasmTypes::I64: Js::JavascriptError::ThrowTypeErrorVar(ctx, WASMERR_InvalidTypeConversion, _u("Var"), _u("i64"));
+            case Wasm::WasmTypes::I64: Js::JavascriptError::ThrowTypeErrorVar(ctx, WASMERR_InvalidTypeConversion, u"Var", u"i64");
 #ifdef ENABLE_WASM_SIMD
-            case Wasm::WasmTypes::V128: Js::JavascriptError::ThrowTypeErrorVar(ctx, WASMERR_InvalidTypeConversion, _u("Var"), _u("v128"));
+            case Wasm::WasmTypes::V128: Js::JavascriptError::ThrowTypeErrorVar(ctx, WASMERR_InvalidTypeConversion, u"Var", u"v128");
 #endif
             default:
                 Wasm::WasmTypes::CompileAssertCases<Wasm::WasmTypes::I32, Wasm::WasmTypes::I64, Wasm::WasmTypes::F32, Wasm::WasmTypes::F64, WASM_V128_CHECK_TYPE>();

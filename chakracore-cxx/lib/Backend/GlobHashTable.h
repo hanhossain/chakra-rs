@@ -405,23 +405,23 @@ public:
         FOREACH_VALUEHASHTABLE_ENTRY(HashBucket, bucket, this)
         {
 
-            Output::Print(_u("%4d  =>  "), bucket.value);
+            Output::Print(u"%4d  =>  ", bucket.value);
             bucket.element->Dump();
-            Output::Print(_u("\n"));
-            Output::Print(_u("\n"));
+            Output::Print(u"\n");
+            Output::Print(u"\n");
         }
         NEXT_VALUEHASHTABLE_ENTRY;
     }
 
     void Dump(void (*valueDump)(TData))
     {
-        Output::Print(_u("\n-------------------------------------------------------------------------------------------------\n"));
+        Output::Print(u"\n-------------------------------------------------------------------------------------------------\n");
         FOREACH_VALUEHASHTABLE_ENTRY(HashBucket, bucket, this)
         {
             valueDump(bucket.value);
-            Output::Print(_u("  =>  "), bucket.value);
+            Output::Print(u"  =>  ", bucket.value);
             bucket.element->Dump();
-            Output::Print(_u("\n"));
+            Output::Print(u"\n");
         }
         NEXT_VALUEHASHTABLE_ENTRY;
     }

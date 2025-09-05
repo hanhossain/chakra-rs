@@ -2010,7 +2010,7 @@ LowererMD::LoadHeapArguments(IR::Instr * instrArgs)
         instrArgs->ReplaceSrc1(IR::AddrOpnd::NewNull(func));
         if (PHASE_TRACE1(Js::StackArgFormalsOptPhase) && func->GetJITFunctionBody()->GetInParamsCount() > 1)
         {
-            Output::Print(_u("StackArgFormals : %s (%d) :Removing Heap Arguments object creation in Lowerer. \n"), instrArgs->m_func->GetJITFunctionBody()->GetDisplayName(), instrArgs->m_func->GetFunctionNumber());
+            Output::Print(u"StackArgFormals : %s (%d) :Removing Heap Arguments object creation in Lowerer. \n", instrArgs->m_func->GetJITFunctionBody()->GetDisplayName(), instrArgs->m_func->GetFunctionNumber());
             Output::Flush();
         }
     }
@@ -2115,7 +2115,7 @@ LowererMD::LoadHeapArgsCached(IR::Instr * instrArgs)
 
         if (PHASE_TRACE1(Js::StackArgFormalsOptPhase) && func->GetJITFunctionBody()->GetInParamsCount() > 1)
         {
-            Output::Print(_u("StackArgFormals : %s (%d) :Removing Heap Arguments object creation in Lowerer. \n"), instrArgs->m_func->GetJITFunctionBody()->GetDisplayName(), instrArgs->m_func->GetFunctionNumber());
+            Output::Print(u"StackArgFormals : %s (%d) :Removing Heap Arguments object creation in Lowerer. \n", instrArgs->m_func->GetJITFunctionBody()->GetDisplayName(), instrArgs->m_func->GetFunctionNumber());
             Output::Flush();
         }
     }
@@ -6329,7 +6329,7 @@ LowererMD::EmitLoadInt32(IR::Instr *instrLoad, bool conversionFromObjectAllowed,
                     // because it won't help and the same thing will happen again. Just abort jitting this function.
                     if(PHASE_TRACE(Js::BailOutPhase, this->m_func))
                     {
-                        Output::Print(_u("    Aborting JIT because EliminateArrayAccessHelperCall is already off\n"));
+                        Output::Print(u"    Aborting JIT because EliminateArrayAccessHelperCall is already off\n");
                         Output::Flush();
                     }
                     throw Js::OperationAbortedException();
@@ -7577,7 +7577,7 @@ template void LowererMD::Legalize<true>(IR::Instr *const instr);
 void
 LowererMD::FinalLower()
 {
-    NoRecoverMemoryArenaAllocator tempAlloc(_u("BE-ARMFinalLower"), m_func->m_alloc->GetPageAllocator(), Js::Throw::OutOfMemory);
+    NoRecoverMemoryArenaAllocator tempAlloc(u"BE-ARMFinalLower", m_func->m_alloc->GetPageAllocator(), Js::Throw::OutOfMemory);
     EncodeReloc *pRelocList = nullptr;
 
     uint32 instrOffset = 0;

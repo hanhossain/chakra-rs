@@ -30,7 +30,7 @@ Var JavascriptMap::NewInstance(RecyclableObject* function, CallInfo callInfo, ..
     ARGUMENTS(args, callInfo);
     ScriptContext* scriptContext = function->GetScriptContext();
     JavascriptLibrary* library = scriptContext->GetLibrary();
-    AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, _u("Map"));
+    AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, u"Map");
 
     Var newTarget = args.GetNewTarget();
     bool isCtorSuperCall = JavascriptOperators::GetAndAssertIsConstructorSuperCall(args);
@@ -42,7 +42,7 @@ Var JavascriptMap::NewInstance(RecyclableObject* function, CallInfo callInfo, ..
     }
     else
     {
-        JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, _u("Map"), _u("Map"));
+        JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, u"Map", u"Map");
     }
     Assert(mapObject != nullptr);
 
@@ -52,7 +52,7 @@ Var JavascriptMap::NewInstance(RecyclableObject* function, CallInfo callInfo, ..
     if (mapObject->kind != MapKind::EmptyMap)
     {
         Assert(UNREACHED);
-        JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_ObjectIsAlreadyInitialized, _u("Map"), _u("Map"));
+        JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_ObjectIsAlreadyInitialized, u"Map", u"Map");
     }
 
     RecyclableObject* iter = nullptr;
@@ -117,7 +117,7 @@ Var JavascriptMap::EntryClear(RecyclableObject* function, CallInfo callInfo, ...
     JavascriptMap* map = JavascriptOperators::TryFromVar<JavascriptMap>(args[0]);
     if (map == nullptr)
     {
-        JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, _u("Map.prototype.clear"), _u("Map"));
+        JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, u"Map.prototype.clear", u"Map");
     }
 
     map->Clear();
@@ -135,7 +135,7 @@ Var JavascriptMap::EntryDelete(RecyclableObject* function, CallInfo callInfo, ..
     JavascriptMap* map = JavascriptOperators::TryFromVar<JavascriptMap>(args[0]);
     if (map == nullptr)
     {
-        JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, _u("Map.prototype.delete"), _u("Map"));
+        JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, u"Map.prototype.delete", u"Map");
     }
 
     Var key = (args.Info.Count > 1) ? args[1] : scriptContext->GetLibrary()->GetUndefined();
@@ -151,17 +151,17 @@ Var JavascriptMap::EntryForEach(RecyclableObject* function, CallInfo callInfo, .
 
     ARGUMENTS(args, callInfo);
     ScriptContext* scriptContext = function->GetScriptContext();
-    AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, _u("Map.prototype.forEach"));
+    AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, u"Map.prototype.forEach");
 
     JavascriptMap* map = JavascriptOperators::TryFromVar<JavascriptMap>(args[0]);
     if (map == nullptr)
     {
-        JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, _u("Map.prototype.forEach"), _u("Map"));
+        JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, u"Map.prototype.forEach", u"Map");
     }
 
     if (args.Info.Count < 2 || !JavascriptConversion::IsCallable(args[1]))
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedFunction, _u("Map.prototype.forEach"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedFunction, u"Map.prototype.forEach");
     }
     RecyclableObject* callBackFn = VarTo<RecyclableObject>(args[1]);
 
@@ -194,7 +194,7 @@ Var JavascriptMap::EntryGet(RecyclableObject* function, CallInfo callInfo, ...)
     JavascriptMap* map = JavascriptOperators::TryFromVar<JavascriptMap>(args[0]);
     if (map == nullptr)
     {
-        JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, _u("Map.prototype.get"), _u("Map"));
+        JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, u"Map.prototype.get", u"Map");
     }
 
     Var key = (args.Info.Count > 1) ? args[1] : scriptContext->GetLibrary()->GetUndefined();
@@ -218,7 +218,7 @@ Var JavascriptMap::EntryHas(RecyclableObject* function, CallInfo callInfo, ...)
     JavascriptMap* map = JavascriptOperators::TryFromVar<JavascriptMap>(args[0]);
     if (map == nullptr)
     {
-        JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, _u("Map.prototype.has"), _u("Map"));
+        JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, u"Map.prototype.has", u"Map");
     }
 
     Var key = (args.Info.Count > 1) ? args[1] : scriptContext->GetLibrary()->GetUndefined();
@@ -238,7 +238,7 @@ Var JavascriptMap::EntrySet(RecyclableObject* function, CallInfo callInfo, ...)
     JavascriptMap* map = JavascriptOperators::TryFromVar<JavascriptMap>(args[0]);
     if (map == nullptr)
     {
-        JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, _u("Map.prototype.set"), _u("Map"));
+        JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, u"Map.prototype.set", u"Map");
     }
 
     Var key = (args.Info.Count > 1) ? args[1] : scriptContext->GetLibrary()->GetUndefined();
@@ -265,7 +265,7 @@ Var JavascriptMap::EntrySizeGetter(RecyclableObject* function, CallInfo callInfo
     JavascriptMap* map = JavascriptOperators::TryFromVar<JavascriptMap>(args[0]);
     if (map == nullptr)
     {
-        JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, _u("Map.prototype.size"), _u("Map"));
+        JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, u"Map.prototype.size", u"Map");
     }
 
     int size = map->Size();
@@ -283,7 +283,7 @@ Var JavascriptMap::EntryEntries(RecyclableObject* function, CallInfo callInfo, .
     JavascriptMap* map = JavascriptOperators::TryFromVar<JavascriptMap>(args[0]);
     if (map == nullptr)
     {
-        JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, _u("Map.prototype.entries"), _u("Map"));
+        JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, u"Map.prototype.entries", u"Map");
     }
 
     return scriptContext->GetLibrary()->CreateMapIterator(map, JavascriptMapIteratorKind::KeyAndValue);
@@ -299,7 +299,7 @@ Var JavascriptMap::EntryKeys(RecyclableObject* function, CallInfo callInfo, ...)
     JavascriptMap* map = JavascriptOperators::TryFromVar<JavascriptMap>(args[0]);
     if (map == nullptr)
     {
-        JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, _u("Map.prototype.keys"), _u("Map"));
+        JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, u"Map.prototype.keys", u"Map");
     }
 
     return scriptContext->GetLibrary()->CreateMapIterator(map, JavascriptMapIteratorKind::Key);
@@ -315,7 +315,7 @@ Var JavascriptMap::EntryValues(RecyclableObject* function, CallInfo callInfo, ..
     JavascriptMap* map = JavascriptOperators::TryFromVar<JavascriptMap>(args[0]);
     if (map == nullptr)
     {
-        JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, _u("Map.prototype.values"), _u("Map"));
+        JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, u"Map.prototype.values", u"Map");
     }
     return scriptContext->GetLibrary()->CreateMapIterator(map, JavascriptMapIteratorKind::Value);
 }
@@ -622,7 +622,7 @@ int JavascriptMap::Size()
 
 BOOL JavascriptMap::GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
 {
-    stringBuilder->AppendCppLiteral(_u("Map"));
+    stringBuilder->AppendCppLiteral(u"Map");
     return TRUE;
 }
 

@@ -192,7 +192,7 @@ namespace Js
                 if (!JavascriptOperators::GetItem(trapResultArray, i, &element, scriptContext) || // missing
                     !(VarIs<JavascriptString>(element) || VarIs<JavascriptSymbol>(element)))  // neither String nor Symbol
                 {
-                    JavascriptError::ThrowTypeError(scriptContext, JSERR_InconsistentTrapResult, _u("ownKeys"));
+                    JavascriptError::ThrowTypeError(scriptContext, JSERR_InconsistentTrapResult, u"ownKeys");
                 }
 
                 JavascriptConversion::ToPropertyKey(element, scriptContext, &propertyRecord, nullptr);

@@ -378,7 +378,7 @@ namespace JSON
             if (bulkLength > 0)
             {
                 shouldSkipLastCharacter = true;
-                this->GetCurrentRangeCharacterPairList()->Add(RangeCharacterPair((uint)(bulkStart - inputText), bulkLength, _u('\0')));
+                this->GetCurrentRangeCharacterPairList()->Add(RangeCharacterPair((uint)(bulkStart - inputText), bulkLength, u'\0'));
                 uint oldIndex = currentIndex;
                 currentIndex += bulkLength;
                 if (currentIndex < oldIndex)
@@ -397,7 +397,7 @@ namespace JSON
             // make currentIndex the length (w/o the \0)
             currentIndex = bulkLength;
 
-            OUTPUT_TRACE_DEBUGONLY(Js::JSONPhase, _u("ScanString(): direct-mapped string as '%.*s'\n"),
+            OUTPUT_TRACE_DEBUGONLY(Js::JSONPhase, u"ScanString(): direct-mapped string as '%.*s'\n",
                 GetCurrentStringLen(), GetCurrentString());
         }
 
@@ -448,11 +448,11 @@ namespace JSON
 
         if (totalCopied != requiredSize)
         {
-            OUTPUT_TRACE_DEBUGONLY(Js::JSONPhase, _u("BuildUnescapedString(): allocated size = %d != copying size %d\n"), requiredSize, totalCopied);
+            OUTPUT_TRACE_DEBUGONLY(Js::JSONPhase, u"BuildUnescapedString(): allocated size = %d != copying size %d\n", requiredSize, totalCopied);
             AssertMsg(totalCopied == requiredSize, "BuildUnescapedString(): The allocated size and copying size should match.");
         }
 
-        OUTPUT_TRACE_DEBUGONLY(Js::JSONPhase, _u("BuildUnescapedString(): unescaped string as '%.*s'\n"), GetCurrentStringLen(), this->stringBuffer);
+        OUTPUT_TRACE_DEBUGONLY(Js::JSONPhase, u"BuildUnescapedString(): unescaped string as '%.*s'\n", GetCurrentStringLen(), this->stringBuffer);
     }
 
     JSONScanner::RangeCharacterPairList* JSONScanner::GetCurrentRangeCharacterPairList(void)
@@ -461,7 +461,7 @@ namespace JSON
         {
             if (this->allocator == nullptr)
             {
-                this->allocatorObject = this->scriptContext->GetTemporaryGuestAllocator(_u("JSONScanner"));
+                this->allocatorObject = this->scriptContext->GetTemporaryGuestAllocator(u"JSONScanner");
                 this->allocator = this->allocatorObject->GetAllocator();
             }
 

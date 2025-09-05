@@ -26,7 +26,7 @@ namespace Js
 
         if (callInfo.Flags & CallFlags_New)
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_ErrorOnNew, _u("Symbol"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_ErrorOnNew, u"Symbol");
         }
 
         JavascriptString* description;
@@ -64,7 +64,7 @@ namespace Js
         }
         else
         {
-            return TryInvokeRemotelyOrThrow(EntryValueOf, scriptContext, args, JSERR_This_NeedSymbol, _u("Symbol.prototype.valueOf"));
+            return TryInvokeRemotelyOrThrow(EntryValueOf, scriptContext, args, JSERR_This_NeedSymbol, u"Symbol.prototype.valueOf");
         }
     }
 
@@ -91,7 +91,7 @@ namespace Js
         }
         else
         {
-            return TryInvokeRemotelyOrThrow(EntryToString, scriptContext, args, JSERR_This_NeedSymbol, _u("Symbol.prototype.toString"));
+            return TryInvokeRemotelyOrThrow(EntryToString, scriptContext, args, JSERR_This_NeedSymbol, u"Symbol.prototype.toString");
         }
 
         return JavascriptSymbol::ToString(val, scriptContext);
@@ -152,7 +152,7 @@ namespace Js
 
         if (args.Info.Count < 2 || !VarIs<JavascriptSymbol>(args[1]))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedSymbol, _u("Symbol.keyFor"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedSymbol, u"Symbol.keyFor");
         }
 
         JavascriptSymbol* sym = VarTo<JavascriptSymbol>(args[1]);
@@ -197,7 +197,7 @@ namespace Js
         }
         else
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedSymbol, _u("Symbol[Symbol.toPrimitive]"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedSymbol, u"Symbol[Symbol.toPrimitive]");
         }
     }
 
@@ -224,7 +224,7 @@ namespace Js
         }
         else
         {
-            return TryInvokeRemotelyOrThrow(EntryDescription, scriptContext, args, JSERR_This_NeedSymbol, _u("Symbol.prototype.description"));
+            return TryInvokeRemotelyOrThrow(EntryDescription, scriptContext, args, JSERR_This_NeedSymbol, u"Symbol.prototype.description");
         }
 
         return scriptContext->GetPropertyString(val->GetPropertyId());
@@ -294,16 +294,16 @@ namespace Js
     {
         if (this->GetValue())
         {
-            stringBuilder->AppendCppLiteral(_u("Symbol("));
+            stringBuilder->AppendCppLiteral(u"Symbol(");
             stringBuilder->Append(this->GetValue()->GetBuffer(), this->GetValue()->GetLength());
-            stringBuilder->Append(_u(')'));
+            stringBuilder->Append(u')');
         }
         return TRUE;
     }
 
     BOOL JavascriptSymbol::GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
     {
-        stringBuilder->AppendCppLiteral(_u("Symbol"));
+        stringBuilder->AppendCppLiteral(u"Symbol");
         return TRUE;
     }
 
@@ -321,7 +321,7 @@ namespace Js
     {
         if (requestContext->GetThreadContext()->RecordImplicitException())
         {
-            JavascriptError::ThrowTypeError(requestContext, JSERR_ImplicitStrConv, _u("Symbol"));
+            JavascriptError::ThrowTypeError(requestContext, JSERR_ImplicitStrConv, u"Symbol");
         }
 
         return requestContext->GetLibrary()->GetEmptyString();
@@ -331,11 +331,11 @@ namespace Js
     {
         const char16_t* description = propertyRecord->GetBuffer();
         uint len = propertyRecord->GetLength();
-        CompoundString* str = CompoundString::NewWithCharCapacity(len + _countof(_u("Symbol()")), requestContext->GetLibrary());
+        CompoundString* str = CompoundString::NewWithCharCapacity(len + _countof(u"Symbol()"), requestContext->GetLibrary());
 
-        str->AppendChars(_u("Symbol("), _countof(_u("Symbol(")) - 1);
+        str->AppendChars(u"Symbol(", _countof(u"Symbol(") - 1);
         str->AppendChars(description, len);
-        str->AppendChars(_u(')'));
+        str->AppendChars(u')');
 
         return str;
     }

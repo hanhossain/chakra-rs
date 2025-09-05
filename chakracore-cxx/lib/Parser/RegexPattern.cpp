@@ -162,11 +162,11 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void RegexPattern::Print(DebugWriter* w)
     {
-        w->Print(_u("/"));
+        w->Print(u"/");
 
         Js::InternalString str = GetSource();
         if (str.GetLength() == 0)
-            w->Print(_u("(?:)"));
+            w->Print(u"(?:)");
         else
         {
             for (charcount_t i = 0; i < str.GetLength(); ++i)
@@ -174,21 +174,21 @@ namespace UnifiedRegex
                 const char16_t c = str.GetBuffer()[i];
                 switch(c)
                 {
-                case _u('/'):
-                    w->Print(_u("\\%lc"), c);
+                case u'/':
+                    w->Print(u"\\%lc", c);
                     break;
-                case _u('\n'):
-                case _u('\r'):
-                case _u('\x2028'):
-                case _u('\x2029'):
+                case u'\n':
+                case u'\r':
+                case u'\x2028':
+                case u'\x2029':
                     w->PrintEscapedChar(c);
                     break;
-                case _u('-'):
-                    w->Print(_u("-"));
+                case u'-':
+                    w->Print(u"-");
                     break;
-                case _u('\\'):
+                case u'\\':
                     Assert(i + 1 < str.GetLength()); // cannot end in a '\'
-                    w->Print(_u("\\%lc"), str.GetBuffer()[++i]);
+                    w->Print(u"\\%lc", str.GetBuffer()[++i]);
                     break;
                 default:
                     w->PrintEscapedChar(c);
@@ -196,23 +196,23 @@ namespace UnifiedRegex
                 }
             }
         }
-        w->Print(_u("/"));
+        w->Print(u"/");
         if (IsIgnoreCase())
-            w->Print(_u("i"));
+            w->Print(u"i");
         if (IsGlobal())
-            w->Print(_u("g"));
+            w->Print(u"g");
         if (IsMultiline())
-            w->Print(_u("m"));
+            w->Print(u"m");
         if (IsDotAll())
-            w->Print(_u("s"));
+            w->Print(u"s");
         if (IsUnicode())
-            w->Print(_u("u"));
+            w->Print(u"u");
         if (IsSticky())
-            w->Print(_u("y"));
-        w->Print(_u(" /* "));
-        w->Print(_u(", "));
-        w->Print(isLiteral ? _u("literal") : _u("dynamic"));
-        w->Print(_u(" */"));
+            w->Print(u"y");
+        w->Print(u" /* ");
+        w->Print(u", ");
+        w->Print(isLiteral ? u"literal" : u"dynamic");
+        w->Print(u" */");
     }
 
     /* static */
@@ -222,22 +222,22 @@ namespace UnifiedRegex
         {
             if (disabled)
             {
-                Output::Print(_u("Regexp Test Cache Disabled.\n"));
+                Output::Print(u"Regexp Test Cache Disabled.\n");
             }
             else if (cacheHit)
             {
-                Output::Print(_u("Regexp Test Cache Hit.\n"));
+                Output::Print(u"Regexp Test Cache Hit.\n");
             }
             else
             {
-                Output::Print(_u("Regexp Test Cache Miss. "));
+                Output::Print(u"Regexp Test Cache Miss. ");
                 if (cachedValue != nullptr)
                 {
-                    Output::Print(_u("Input: (%p); Cached String: (%p) '%s'\n"), input, cachedValue, cachedValue->GetString());
+                    Output::Print(u"Input: (%p); Cached String: (%p) '%s'\n", input, cachedValue, cachedValue->GetString());
                 }
                 else
                 {
-                    Output::Print(_u("Cache was empty\n"));
+                    Output::Print(u"Cache was empty\n");
                 }
             }
         }

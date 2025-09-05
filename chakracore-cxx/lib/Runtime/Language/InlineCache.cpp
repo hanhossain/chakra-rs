@@ -65,9 +65,9 @@ namespace Js
 #if DBG_DUMP
         if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
         {
-            Output::Print(_u("IC::CacheLocal, %s: "), requestContext->GetPropertyName(propertyId)->GetBuffer());
+            Output::Print(u"IC::CacheLocal, %s: ", requestContext->GetPropertyName(propertyId)->GetBuffer());
             Dump();
-            Output::Print(_u("\n"));
+            Output::Print(u"\n");
             Output::Flush();
         }
 #endif
@@ -131,9 +131,9 @@ namespace Js
 #if DBG_DUMP
         if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
         {
-            Output::Print(_u("IC::CacheProto, %s: "), requestContext->GetPropertyName(propertyId)->GetBuffer());
+            Output::Print(u"IC::CacheProto, %s: ", requestContext->GetPropertyName(propertyId)->GetBuffer());
             Dump();
-            Output::Print(_u("\n"));
+            Output::Print(u"\n");
             Output::Flush();
         }
 #endif
@@ -195,9 +195,9 @@ namespace Js
 #if DBG_DUMP
         if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
         {
-            Output::Print(_u("IC::CacheAccessor, %s: "), requestContext->GetPropertyName(propertyId)->GetBuffer());
+            Output::Print(u"IC::CacheAccessor, %s: ", requestContext->GetPropertyName(propertyId)->GetBuffer());
             Dump();
-            Output::Print(_u("\n"));
+            Output::Print(u"\n");
             Output::Flush();
         }
 #endif
@@ -587,7 +587,7 @@ namespace Js
     {
         if (this->u.local.isLocal)
         {
-            Output::Print(_u("LOCAL { types: 0x%X -> 0x%X, slot = %d, list slot ptr = 0x%X }"),
+            Output::Print(u"LOCAL { types: 0x%X -> 0x%X, slot = %d, list slot ptr = 0x%X }",
                 this->u.local.typeWithoutProperty,
                 this->u.local.type,
                 this->u.local.slotIndex,
@@ -596,7 +596,7 @@ namespace Js
         }
         else if (this->u.proto.isProto)
         {
-            Output::Print(_u("PROTO { type = 0x%X, prototype = 0x%X, slot = %d, list slot ptr = 0x%X }"),
+            Output::Print(u"PROTO { type = 0x%X, prototype = 0x%X, slot = %d, list slot ptr = 0x%X }",
                 this->u.proto.type,
                 this->u.proto.prototypeObject,
                 this->u.proto.slotIndex,
@@ -605,7 +605,7 @@ namespace Js
         }
         else if (this->u.accessor.isAccessor)
         {
-            Output::Print(_u("FLAGS { type = 0x%X, object = 0x%X, flag = 0x%X, slot = %d, list slot ptr = 0x%X }"),
+            Output::Print(u"FLAGS { type = 0x%X, object = 0x%X, flag = 0x%X, slot = %d, list slot ptr = 0x%X }",
                 this->u.accessor.type,
                 this->u.accessor.object,
                 this->u.accessor.slotIndex,
@@ -617,7 +617,7 @@ namespace Js
         {
             Assert(this->u.accessor.type == 0);
             Assert(this->u.accessor.slotIndex == 0);
-            Output::Print(_u("uninitialized"));
+            Output::Print(u"uninitialized");
         }
     }
 
@@ -720,15 +720,15 @@ namespace Js
 #if DBG_DUMP
             if (PHASE_VERBOSE_TRACE1(Js::PolymorphicInlineCachePhase))
             {
-                Output::Print(_u("PIC::CacheLocal, %s, %d: "), requestContext->GetPropertyName(propertyId)->GetBuffer(), inlineCacheIndex);
+                Output::Print(u"PIC::CacheLocal, %s, %d: ", requestContext->GetPropertyName(propertyId)->GetBuffer(), inlineCacheIndex);
                 inlineCaches[inlineCacheIndex].Dump();
-                Output::Print(_u("\n"));
+                Output::Print(u"\n");
                 Output::Flush();
             }
 #endif
             PHASE_PRINT_INTRUSIVE_TESTTRACE1(
                 Js::PolymorphicInlineCachePhase,
-                _u("TestTrace PIC: CacheLocal, 0x%x, entryIndex = %d, collision = %s, entries = %d\n"), this, inlineCacheIndex, collision ? _u("true") : _u("false"), GetEntryCount());
+                u"TestTrace PIC: CacheLocal, 0x%x, entryIndex = %d, collision = %s, entries = %d\n", this, inlineCacheIndex, collision ? u"true" : u"false", GetEntryCount());
         }
         else
         {
@@ -743,15 +743,15 @@ namespace Js
 #if DBG_DUMP
             if (PHASE_VERBOSE_TRACE1(Js::PolymorphicInlineCachePhase))
             {
-                Output::Print(_u("PIC::CacheLocal, %s, %d: "), requestContext->GetPropertyName(propertyId)->GetBuffer(), inlineCacheIndex);
+                Output::Print(u"PIC::CacheLocal, %s, %d: ", requestContext->GetPropertyName(propertyId)->GetBuffer(), inlineCacheIndex);
                 inlineCaches[inlineCacheIndex].Dump();
-                Output::Print(_u("\n"));
+                Output::Print(u"\n");
                 Output::Flush();
             }
 #endif
             PHASE_PRINT_INTRUSIVE_TESTTRACE1(
                 Js::PolymorphicInlineCachePhase,
-                _u("TestTrace PIC: CacheLocal, 0x%x, entryIndex = %d, collision = %s, entries = %d\n"), this, inlineCacheIndex, collision ? _u("true") : _u("false"), GetEntryCount());
+                u"TestTrace PIC: CacheLocal, 0x%x, entryIndex = %d, collision = %s, entries = %d\n", this, inlineCacheIndex, collision ? u"true" : u"false", GetEntryCount());
         }
     }
 
@@ -794,15 +794,15 @@ namespace Js
 #if DBG_DUMP
         if (PHASE_VERBOSE_TRACE1(Js::PolymorphicInlineCachePhase))
         {
-            Output::Print(_u("PIC::CacheProto, %s, %d: "), requestContext->GetPropertyName(propertyId)->GetBuffer(), inlineCacheIndex);
+            Output::Print(u"PIC::CacheProto, %s, %d: ", requestContext->GetPropertyName(propertyId)->GetBuffer(), inlineCacheIndex);
             inlineCaches[inlineCacheIndex].Dump();
-            Output::Print(_u("\n"));
+            Output::Print(u"\n");
             Output::Flush();
         }
 #endif
         PHASE_PRINT_INTRUSIVE_TESTTRACE1(
             Js::PolymorphicInlineCachePhase,
-            _u("TestTrace PIC: CacheProto, 0x%x, entryIndex = %d, collision = %s, entries = %d\n"), this, inlineCacheIndex, collision ? _u("true") : _u("false"), GetEntryCount());
+            u"TestTrace PIC: CacheProto, 0x%x, entryIndex = %d, collision = %s, entries = %d\n", this, inlineCacheIndex, collision ? u"true" : u"false", GetEntryCount());
     }
 
     void PolymorphicInlineCache::CacheAccessor(
@@ -844,15 +844,15 @@ namespace Js
 #if DBG_DUMP
         if (PHASE_VERBOSE_TRACE1(Js::PolymorphicInlineCachePhase))
         {
-            Output::Print(_u("PIC::CacheAccessor, %s, %d: "), requestContext->GetPropertyName(propertyId)->GetBuffer(), inlineCacheIndex);
+            Output::Print(u"PIC::CacheAccessor, %s, %d: ", requestContext->GetPropertyName(propertyId)->GetBuffer(), inlineCacheIndex);
             inlineCaches[inlineCacheIndex].Dump();
-            Output::Print(_u("\n"));
+            Output::Print(u"\n");
             Output::Flush();
         }
 #endif
         PHASE_PRINT_INTRUSIVE_TESTTRACE1(
             Js::PolymorphicInlineCachePhase,
-            _u("TestTrace PIC: CacheAccessor, 0x%x, entryIndex = %d, collision = %s, entries = %d\n"), this, inlineCacheIndex, collision ? _u("true") : _u("false"), GetEntryCount());
+            u"TestTrace PIC: CacheAccessor, 0x%x, entryIndex = %d, collision = %s, entries = %d\n", this, inlineCacheIndex, collision ? u"true" : u"false", GetEntryCount());
     }
 
     bool PolymorphicInlineCache::PretendTryGetProperty(
@@ -920,9 +920,9 @@ namespace Js
         {
             if (!inlineCaches[i].IsEmpty())
             {
-                Output::Print(_u("  %d: "), i);
+                Output::Print(u"  %d: ", i);
                 inlineCaches[i].Dump();
-                Output::Print(_u("\n"));
+                Output::Print(u"\n");
             }
         }
     }
@@ -1112,12 +1112,12 @@ namespace Js
         wchar funcName[1024];
         uint total = data->hits + data->misses;
         char16_t const *propName = this->functionBody->GetScriptContext()->GetThreadContext()->GetPropertyName(data->propertyId)->GetBuffer();
-        swprintf_s(funcName, _u("%s (%s)"), this->functionBody->GetExternalDisplayName(), this->functionBody->GetDebugNumberSet(debugStringBuffer));
+        swprintf_s(funcName, u"%s (%s)", this->functionBody->GetExternalDisplayName(), this->functionBody->GetDebugNumberSet(debugStringBuffer));
 
-        Output::Print(_u("%s,%s,%s,%d,%d,%f,%d,%f,%d\n"),
+        Output::Print(u"%s,%s,%s,%d,%d,%f,%d,%f,%d\n",
             funcName,
             propName,
-            data->isGetCache ? _u("get") : _u("set"),
+            data->isGetCache ? u"get" : u"set",
             total,
             data->misses,
             static_cast<float>(data->misses) / total,
@@ -1131,8 +1131,8 @@ namespace Js
     {
         uint total = data->hits + data->misses;
 
-        Output::Print(_u("ScriptContext,%s,%s,%d,%d,%f,%d,%f,%d\n"),
-            data->isGetCache ? _u("get") : _u("set"),
+        Output::Print(u"ScriptContext,%s,%s,%d,%d,%f,%d,%f,%d\n",
+            data->isGetCache ? u"get" : u"set",
             total,
             data->misses,
             static_cast<float>(data->misses) / total,

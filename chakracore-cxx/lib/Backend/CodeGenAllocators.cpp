@@ -7,8 +7,8 @@
 template<typename TAlloc, typename TPreReservedAlloc>
 CodeGenAllocators<TAlloc, TPreReservedAlloc>::CodeGenAllocators(AllocationPolicyManager * policyManager, Js::ScriptContext * scriptContext, ThreadContextInfo * threadContext, CustomHeap::CodePageAllocators<TAlloc, TPreReservedAlloc> * codePageAllocators, HANDLE processHandle)
 : pageAllocator(policyManager, Js::Configuration::Global.flags, PageAllocatorType_BGJIT, 0)
-, allocator(_u("NativeCode"), &pageAllocator, Js::Throw::OutOfMemory)
-, emitBufferManager(&allocator, codePageAllocators, scriptContext, threadContext, _u("JIT code buffer"), processHandle)
+, allocator(u"NativeCode", &pageAllocator, Js::Throw::OutOfMemory)
+, emitBufferManager(&allocator, codePageAllocators, scriptContext, threadContext, u"JIT code buffer", processHandle)
 {
 }
 

@@ -184,21 +184,21 @@ namespace Js
 
     char16_t const * const OpCodeUtil::OpCodeNames[] =
     {
-#define DEF_OP(x, y, ...) _u("") STRINGIZEW(x) _u(""),
+#define DEF_OP(x, y, ...) u"" STRINGIZEW(x) u"",
 #include "OpCodeList.h"
 #undef DEF_OP
     };
 
     char16_t const * const OpCodeUtil::ExtendedOpCodeNames[] =
     {
-#define DEF_OP(x, y, ...) _u("") STRINGIZEW(x) _u(""),
+#define DEF_OP(x, y, ...) u"" STRINGIZEW(x) u"",
 #include "ExtendedOpCodeList.h"
 #undef DEF_OP
     };
 
     char16_t const * const OpCodeUtil::BackendOpCodeNames[] =
     {
-#define DEF_OP(x, y, ...) _u("") STRINGIZEW(x) _u(""),
+#define DEF_OP(x, y, ...) u"" STRINGIZEW(x) u"",
 #include "BackendOpCodeList.h"
 #undef DEF_OP
     };
@@ -227,7 +227,7 @@ namespace Js
 #else
     wchar const * OpCodeUtil::GetOpCodeName(OpCode op)
     {
-        return _u("<NotAvail>");
+        return u"<NotAvail>";
     }
 #endif
 

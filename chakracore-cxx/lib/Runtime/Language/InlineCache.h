@@ -229,17 +229,17 @@ namespace Js
         {
             if (IsEmpty())
             {
-                return _u("Empty");
+                return u"Empty";
             }
             if (IsLocal())
             {
-                return _u("Local");
+                return u"Local";
             }
             if (IsAccessor())
             {
-                return _u("Accessor");
+                return u"Accessor";
             }
-            return _u("Proto");
+            return u"Proto";
         }
 #endif
 

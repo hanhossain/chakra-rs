@@ -606,7 +606,7 @@ namespace TTD
     void RuntimeContextInfo::BuildPathString(UtilSupport::TTAutoString rootpath, const char16_t* name, const char16_t* optaccessortag, UtilSupport::TTAutoString& into)
     {
         into.Append(rootpath);
-        into.Append(_u("."));
+        into.Append(u".");
         into.Append(name);
 
         if(optaccessortag != nullptr)
@@ -769,21 +769,21 @@ namespace TTD
     {
         JsUtil::List<const Js::PropertyRecord*, HeapAllocator> propertyRecordList(&HeapAllocator::Instance);
 
-        this->EnqueueRootPathObject(_u("global"), ctx->GetGlobalObject());
-        this->EnqueueRootPathObject(_u("null"), ctx->GetLibrary()->GetNull());
-        this->EnqueueRootPathObject(_u("undeclBlockVar"), Js::VarTo<Js::RecyclableObject>(ctx->GetLibrary()->GetUndeclBlockVar()));
+        this->EnqueueRootPathObject(u"global", ctx->GetGlobalObject());
+        this->EnqueueRootPathObject(u"null", ctx->GetLibrary()->GetNull());
+        this->EnqueueRootPathObject(u"undeclBlockVar", Js::VarTo<Js::RecyclableObject>(ctx->GetLibrary()->GetUndeclBlockVar()));
 
-        this->EnqueueRootPathObject(_u("_defaultAccessor"), ctx->GetLibrary()->GetDefaultAccessorFunction());
+        this->EnqueueRootPathObject(u"_defaultAccessor", ctx->GetLibrary()->GetDefaultAccessorFunction());
 
         if(ctx->GetConfig()->IsErrorStackTraceEnabled())
         {
-            this->EnqueueRootPathObject(_u("_stackTraceAccessor"), ctx->GetLibrary()->GetStackTraceAccessorFunction());
+            this->EnqueueRootPathObject(u"_stackTraceAccessor", ctx->GetLibrary()->GetStackTraceAccessorFunction());
         }
 
-        this->EnqueueRootPathObject(_u("_throwTypeErrorRestrictedPropertyAccessor"), ctx->GetLibrary()->GetThrowTypeErrorRestrictedPropertyAccessorFunction());
+        this->EnqueueRootPathObject(u"_throwTypeErrorRestrictedPropertyAccessor", ctx->GetLibrary()->GetThrowTypeErrorRestrictedPropertyAccessorFunction());
 
-        this->EnqueueRootPathObject(_u("_identityFunction"), ctx->GetLibrary()->GetIdentityFunction());
-        this->EnqueueRootPathObject(_u("_throwerFunction"), ctx->GetLibrary()->GetThrowerFunction());
+        this->EnqueueRootPathObject(u"_identityFunction", ctx->GetLibrary()->GetIdentityFunction());
+        this->EnqueueRootPathObject(u"_throwerFunction", ctx->GetLibrary()->GetThrowerFunction());
 
        // ArrayIteratorPrototype is not created when we have JsBuiltins, it it created on-demand only
 #ifdef ENABLE_JS_BUILTINS
@@ -792,16 +792,16 @@ namespace TTD
             ctx->GetLibrary()->EnsureArrayBuiltInsAreReady();
         }
 #endif
-        this->EnqueueRootPathObject(_u("_arrayIteratorPrototype"), ctx->GetLibrary()->GetArrayIteratorPrototype());
-        this->EnqueueRootPathObject(_u("_mapIteratorPrototype"), ctx->GetLibrary()->GetMapIteratorPrototype());
-        this->EnqueueRootPathObject(_u("_setIteratorPrototype"), ctx->GetLibrary()->GetSetIteratorPrototype());
-        this->EnqueueRootPathObject(_u("_stringIteratorPrototype"), ctx->GetLibrary()->GetStringIteratorPrototype());
+        this->EnqueueRootPathObject(u"_arrayIteratorPrototype", ctx->GetLibrary()->GetArrayIteratorPrototype());
+        this->EnqueueRootPathObject(u"_mapIteratorPrototype", ctx->GetLibrary()->GetMapIteratorPrototype());
+        this->EnqueueRootPathObject(u"_setIteratorPrototype", ctx->GetLibrary()->GetSetIteratorPrototype());
+        this->EnqueueRootPathObject(u"_stringIteratorPrototype", ctx->GetLibrary()->GetStringIteratorPrototype());
 
-        this->EnqueueRootPathObject(_u("_generatorNextFunction"), ctx->GetLibrary()->EnsureGeneratorNextFunction());
-        this->EnqueueRootPathObject(_u("_generatorReturnFunction"), ctx->GetLibrary()->EnsureGeneratorReturnFunction());
-        this->EnqueueRootPathObject(_u("_generatorThrowFunction"), ctx->GetLibrary()->EnsureGeneratorThrowFunction());
-        this->EnqueueRootPathObject(_u("_generatorFunctionConstructor"), ctx->GetLibrary()->GetGeneratorFunctionConstructor());
-        this->EnqueueRootPathObject(_u("_asyncFunctionConstructor"), ctx->GetLibrary()->GetAsyncFunctionConstructor());
+        this->EnqueueRootPathObject(u"_generatorNextFunction", ctx->GetLibrary()->EnsureGeneratorNextFunction());
+        this->EnqueueRootPathObject(u"_generatorReturnFunction", ctx->GetLibrary()->EnsureGeneratorReturnFunction());
+        this->EnqueueRootPathObject(u"_generatorThrowFunction", ctx->GetLibrary()->EnsureGeneratorThrowFunction());
+        this->EnqueueRootPathObject(u"_generatorFunctionConstructor", ctx->GetLibrary()->GetGeneratorFunctionConstructor());
+        this->EnqueueRootPathObject(u"_asyncFunctionConstructor", ctx->GetLibrary()->GetAsyncFunctionConstructor());
 
         uint32 counter = 0;
         while(!this->m_worklist.Empty())
@@ -829,13 +829,13 @@ namespace TTD
                     if(getter != nullptr && !Js::JavascriptOperators::IsUndefinedObject(getter))
                     {
                         TTDAssert(Js::VarIs<Js::JavascriptFunction>(getter), "The getter is not a function?");
-                        this->EnqueueNewPathVarAsNeeded(curr, getter, precord, _u(">"));
+                        this->EnqueueNewPathVarAsNeeded(curr, getter, precord, u">");
                     }
 
                     if(setter != nullptr && !Js::JavascriptOperators::IsUndefinedObject(setter))
                     {
                         TTDAssert(Js::VarIs<Js::JavascriptFunction>(setter), "The setter is not a function?");
-                        this->EnqueueNewPathVarAsNeeded(curr, Js::VarTo<Js::RecyclableObject>(setter), precord, _u("<"));
+                        this->EnqueueNewPathVarAsNeeded(curr, Js::VarTo<Js::RecyclableObject>(setter), precord, u"<");
                     }
                 }
                 else
@@ -854,7 +854,7 @@ namespace TTD
                 Js::ArrayObject* parray = Js::VarTo<Js::DynamicObject>(curr)->GetObjectArray();
                 if(parray != nullptr)
                 {
-                    this->EnqueueNewPathVarAsNeeded(curr, parray, _u("_object_array_"));
+                    this->EnqueueNewPathVarAsNeeded(curr, parray, u"_object_array_");
                 }
             }
 
@@ -862,7 +862,7 @@ namespace TTD
             bool skipProto = (proto == nullptr) || Js::JavascriptOperators::IsUndefinedOrNullType(proto->GetTypeId());
             if(!skipProto)
             {
-                this->EnqueueNewPathVarAsNeeded(curr, proto, _u("_proto_"));
+                this->EnqueueNewPathVarAsNeeded(curr, proto, u"_proto_");
             }
 
             curr->ProcessCorePaths();
@@ -910,7 +910,7 @@ namespace TTD
             this->m_worklist.Enqueue(obj);
 
             UtilSupport::TTAutoString* tpath = TT_HEAP_NEW(UtilSupport::TTAutoString, *ppath);
-            tpath->Append(_u("."));
+            tpath->Append(u".");
             tpath->Append(propName);
 
             if(optacessortag != nullptr)
@@ -932,7 +932,7 @@ namespace TTD
 
             UtilSupport::TTAutoString* fpath = TT_HEAP_NEW(UtilSupport::TTAutoString, *ppath);
 
-            fpath->Append(_u("."));
+            fpath->Append(u".");
             fpath->Append(name);
 
             this->m_coreBodyToPathMap.AddNew(fbody, fpath);
@@ -947,9 +947,9 @@ namespace TTD
 
             UtilSupport::TTAutoString* scpath = TT_HEAP_NEW(UtilSupport::TTAutoString, *ppath);
 
-            scpath->Append(_u(".!scope["));
+            scpath->Append(u".!scope[");
             scpath->Append(index);
-            scpath->Append(_u("]"));
+            scpath->Append(u"]");
 
             this->m_coreDbgScopeToPathMap.AddNew(dbgScope, scpath);
         }
@@ -957,25 +957,25 @@ namespace TTD
 
     void RuntimeContextInfo::BuildArrayIndexBuffer(uint32 arrayidx, UtilSupport::TTAutoString& res)
     {
-        res.Append(_u("!arrayContents["));
+        res.Append(u"!arrayContents[");
         res.Append(arrayidx);
-        res.Append(_u("]"));
+        res.Append(u"]");
     }
 
     void RuntimeContextInfo::BuildEnvironmentIndexBuffer(uint32 envidx, UtilSupport::TTAutoString& res)
     {
-        res.Append(_u("!env["));
+        res.Append(u"!env[");
         res.Append(envidx);
-        res.Append(_u("]"));
+        res.Append(u"]");
     }
 
     void RuntimeContextInfo::BuildEnvironmentIndexAndSlotBuffer(uint32 envidx, uint32 slotidx, UtilSupport::TTAutoString& res)
     {
-        res.Append(_u("!env["));
+        res.Append(u"!env[");
         res.Append(envidx);
-        res.Append(_u("].!slot["));
+        res.Append(u"].!slot[");
         res.Append(slotidx);
-        res.Append(_u("]"));
+        res.Append(u"]");
     }
 }
 

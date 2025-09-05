@@ -488,7 +488,7 @@ namespace TTD
 
     void EventLog::AbortReplayReturnToHost()
     {
-        throw TTDebuggerAbortException::CreateAbortEndOfLog(_u("End of log reached -- returning to top-level."));
+        throw TTDebuggerAbortException::CreateAbortEndOfLog(u"End of log reached -- returning to top-level.");
     }
 
     void EventLog::InitializeEventListVTable()
@@ -835,8 +835,8 @@ namespace TTD
 
         if(tEvent->InfoString.Length != infoStrLength)
         {
-            Output::Print(_u("New Telemetry Msg: %ls\n"), infoStr);
-            Output::Print(_u("Original Telemetry Msg: %ls\n"), tEvent->InfoString.Contents);
+            Output::Print(u"New Telemetry Msg: %ls\n", infoStr);
+            Output::Print(u"Original Telemetry Msg: %ls\n", tEvent->InfoString.Contents);
             TTDAssert(false, "Telemetry messages differ??");
         }
         else
@@ -845,8 +845,8 @@ namespace TTD
             {
                 if(tEvent->InfoString.Contents[i] != infoStr[i])
                 {
-                    Output::Print(_u("New Telemetry Msg: %ls\n"), infoStr);
-                    Output::Print(_u("Original Telemetry Msg: %ls\n"), tEvent->InfoString.Contents);
+                    Output::Print(u"New Telemetry Msg: %ls\n", infoStr);
+                    Output::Print(u"Original Telemetry Msg: %ls\n", tEvent->InfoString.Contents);
                     TTDAssert(false, "Telemetry messages differ??");
 
                     break;
@@ -2604,24 +2604,24 @@ namespace TTD
 
         TTString archString;
 #if defined(_M_IX86)
-        this->m_miscSlabAllocator.CopyNullTermStringInto(_u("x86"), archString);
+        this->m_miscSlabAllocator.CopyNullTermStringInto(u"x86", archString);
 #elif defined(_M_X64)
-        this->m_miscSlabAllocator.CopyNullTermStringInto(_u("x64"), archString);
+        this->m_miscSlabAllocator.CopyNullTermStringInto(u"x64", archString);
 #elif defined(_M_ARM)
-        this->m_miscSlabAllocator.CopyNullTermStringInto(_u("arm"), archString);
+        this->m_miscSlabAllocator.CopyNullTermStringInto(u"arm", archString);
 #elif defined(_M_ARM64)
-        this->m_miscSlabAllocator.CopyNullTermStringInto(_u("arm64"), archString);
+        this->m_miscSlabAllocator.CopyNullTermStringInto(u"arm64", archString);
 #else
-        this->m_miscSlabAllocator.CopyNullTermStringInto(_u("unknown"), archString);
+        this->m_miscSlabAllocator.CopyNullTermStringInto(u"unknown", archString);
 #endif
 
         writer.WriteString(NSTokens::Key::arch, archString);
 
         TTString platformString;
 #if defined(__APPLE__)
-        this->m_miscSlabAllocator.CopyNullTermStringInto(_u("macOS"), platformString);
+        this->m_miscSlabAllocator.CopyNullTermStringInto(u"macOS", platformString);
 #else
-        this->m_miscSlabAllocator.CopyNullTermStringInto(_u("Linux"), platformString);
+        this->m_miscSlabAllocator.CopyNullTermStringInto(u"Linux", platformString);
 #endif
 
         writer.WriteString(NSTokens::Key::platform, platformString, NSTokens::Separator::CommaSeparator);
@@ -2812,13 +2812,13 @@ namespace TTD
         reader.ReadString(NSTokens::Key::arch, this->m_miscSlabAllocator, archString);
 
 #if defined(_M_IX86)
-        TTDAssert(wcscmp(_u("x86"), archString.Contents) == 0, "Mismatch in arch between record and replay!!!");
+        TTDAssert(wcscmp(u"x86", archString.Contents) == 0, "Mismatch in arch between record and replay!!!");
 #elif defined(_M_X64)
-        TTDAssert(wcscmp(_u("x64"), archString.Contents) == 0, "Mismatch in arch between record and replay!!!");
+        TTDAssert(wcscmp(u"x64", archString.Contents) == 0, "Mismatch in arch between record and replay!!!");
 #elif defined(_M_ARM) // #TODO investigate why this is checking for "arm64" instead of "arm"
-        TTDAssert(wcscmp(_u("arm64"), archString.Contents) == 0, "Mismatch in arch between record and replay!!!");
+        TTDAssert(wcscmp(u"arm64", archString.Contents) == 0, "Mismatch in arch between record and replay!!!");
 #elif defined(_M_ARM64)
-        TTDAssert(wcscmp(_u("arm64"), archString.Contents) == 0, "Mismatch in arch between record and replay!!!");
+        TTDAssert(wcscmp(u"arm64", archString.Contents) == 0, "Mismatch in arch between record and replay!!!");
 #else
         TTDAssert(false, "Unknown arch!!!");
 #endif

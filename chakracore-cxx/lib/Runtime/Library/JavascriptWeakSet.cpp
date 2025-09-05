@@ -31,7 +31,7 @@ namespace Js
         }
         else
         {
-            JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, _u("WeakSet"), _u("WeakSet"));
+            JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, u"WeakSet", u"WeakSet");
         }
         Assert(weakSetObject != nullptr);
 
@@ -81,7 +81,7 @@ namespace Js
 
         if (!VarIs<JavascriptWeakSet>(args[0]))
         {
-            JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, _u("WeakSet.prototype.add"), _u("WeakSet"));
+            JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, u"WeakSet.prototype.add", u"WeakSet");
         }
 
         JavascriptWeakSet* weakSet = VarTo<JavascriptWeakSet>(args[0]);
@@ -92,7 +92,7 @@ namespace Js
         {
             // HostDispatch is not expanded so can't have internal property added to it.
             // TODO: Support HostDispatch as WeakSet key
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_WeakMapSetKeyNotAnObject, _u("WeakSet.prototype.add"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_WeakMapSetKeyNotAnObject, u"WeakSet.prototype.add");
         }
 
         RecyclableObject* keyObj = VarTo<RecyclableObject>(key);
@@ -119,7 +119,7 @@ namespace Js
 
         if (!VarIs<JavascriptWeakSet>(args[0]))
         {
-            JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, _u("WeakSet.prototype.delete"), _u("WeakSet"));
+            JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, u"WeakSet.prototype.delete", u"WeakSet");
         }
 
         JavascriptWeakSet* weakSet = VarTo<JavascriptWeakSet>(args[0]);
@@ -160,7 +160,7 @@ namespace Js
 
         if (!VarIs<JavascriptWeakSet>(args[0]))
         {
-            JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, _u("WeakSet.prototype.has"), _u("WeakSet"));
+            JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, u"WeakSet.prototype.has", u"WeakSet");
         }
 
         JavascriptWeakSet* weakSet = VarTo<JavascriptWeakSet>(args[0]);
@@ -211,7 +211,7 @@ namespace Js
 
     BOOL JavascriptWeakSet::GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
     {
-        stringBuilder->AppendCppLiteral(_u("WeakSet"));
+        stringBuilder->AppendCppLiteral(u"WeakSet");
         return TRUE;
     }
 

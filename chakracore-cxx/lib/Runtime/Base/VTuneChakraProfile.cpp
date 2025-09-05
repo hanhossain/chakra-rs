@@ -56,11 +56,11 @@ void VTuneChakraProfile::LogMethodNativeLoadEvent(Js::FunctionBody* body, Js::Fu
         wcscpy_s(methodNameBuffer, methodName);
         if (entryPoint->GetJitMode() == ExecutionMode::SimpleJit)
         {
-            wcscat_s(methodNameBuffer, _u(" Simple"));
+            wcscat_s(methodNameBuffer, u" Simple");
         }
-        wcscat_s(methodNameBuffer, _u(" {line:"));
+        wcscat_s(methodNameBuffer, u" {line:");
         wcscat_s(methodNameBuffer, numberBuffer);
-        wcscat_s(methodNameBuffer, _u("}"));
+        wcscat_s(methodNameBuffer, u"}");
 
         size_t methodLength = wcslen(methodNameBuffer);
         Assert(methodLength < _MAX_PATH);
@@ -98,7 +98,7 @@ void VTuneChakraProfile::LogMethodNativeLoadEvent(Js::FunctionBody* body, Js::Fu
             size_t urlLength = 0;
             utf8char_t* utf8Url = GetUrl(body, &urlLength);
             methodInfo.source_file_name = (char*)utf8Url;
-            OUTPUT_TRACE(Js::ProfilerPhase, _u("Method load event: %s\n"), methodNameBuffer);
+            OUTPUT_TRACE(Js::ProfilerPhase, u"Method load event: %s\n", methodNameBuffer);
             iJIT_NotifyEvent(iJVM_EVENT_TYPE_METHOD_LOAD_FINISHED, &methodInfo);
 
             HeapDeleteArray(lineCount, pLineInfo);
@@ -145,7 +145,7 @@ void VTuneChakraProfile::LogLoopBodyLoadEvent(Js::FunctionBody* body, Js::LoopEn
             methodInfo.source_file_name = (char*)utf8Url;
 
             iJIT_NotifyEvent(iJVM_EVENT_TYPE_METHOD_LOAD_FINISHED, &methodInfo);
-            OUTPUT_TRACE(Js::ProfilerPhase, _u("Loop body load event: %s Loop %d\n"), methodName, loopNumber + 1);
+            OUTPUT_TRACE(Js::ProfilerPhase, u"Loop body load event: %s Loop %d\n", methodName, loopNumber + 1);
 
             if(urlLength > 0)
             {

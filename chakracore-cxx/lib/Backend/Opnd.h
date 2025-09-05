@@ -1341,7 +1341,7 @@ public:
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     const char16_t* GetCacheLayoutString() const
     {
-        return HasObjTypeSpecFldInfo() ? this->objTypeSpecFldInfo->GetCacheLayoutString() : _u("empty");
+        return HasObjTypeSpecFldInfo() ? this->objTypeSpecFldInfo->GetCacheLayoutString() : u"empty";
     }
 #endif
 

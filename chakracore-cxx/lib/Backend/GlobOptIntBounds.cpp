@@ -11,7 +11,7 @@
     { \
         for(int i = 0; i < static_cast<int>(indent); ++i) \
         { \
-            Output::Print(_u("    ")); \
+            Output::Print(u"    "); \
         } \
         Output::Print(__VA_ARGS__); \
         Output::Flush(); \
@@ -1976,7 +1976,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
         TRACE_PHASE_VERBOSE(
             Js::Phase::BoundCheckHoistPhase,
             2,
-            _u("Index is constant, looking for a compatible upper bound check\n"));
+            u"Index is constant, looking for a compatible upper bound check\n");
         const int indexConstantValue = indexConstantBounds.LowerBound();
         Assert(indexConstantValue != IntConstMax);
         const IntBoundCheck *compatibleBoundCheck;
@@ -1995,16 +1995,16 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
                 TRACE_PHASE_VERBOSE(
                     Js::Phase::BoundCheckHoistPhase,
                     3,
-                    _u("Found in block %u\n"),
+                    u"Found in block %u\n",
                     compatibleBoundCheck->Block()->GetBlockNum());
                 upperHoistInfo.SetCompatibleBoundCheck(compatibleBoundCheck->Block(), indexConstantValue);
                 return;
             }
             failedToUpdateCompatibleUpperBoundCheck = true;
         }
-        TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 3, _u("Not found\n"));
+        TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 3, u"Not found\n");
 
-        TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 2, _u("Looking for invariant head segment length\n"));
+        TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 2, u"Looking for invariant head segment length\n");
         Loop *invariantLoop;
         Value *landingPadHeadSegmentLengthValue = nullptr;
         if(headSegmentLengthInvariantLoop)
@@ -2031,19 +2031,19 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
             }
             if(!invariantLoop)
             {
-                TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 3, _u("Not found\n"));
+                TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 3, u"Not found\n");
                 return;
             }
         }
         else
         {
-            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 3, _u("Not found, block is not in a loop\n"));
+            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 3, u"Not found, block is not in a loop\n");
             return;
         }
         TRACE_PHASE_VERBOSE(
             Js::Phase::BoundCheckHoistPhase,
             3,
-            _u("Found in loop %u landing pad block %u\n"),
+            u"Found in loop %u landing pad block %u\n",
             invariantLoop->GetLoopNumber(),
             invariantLoop->landingPad->GetBlockNum());
 
@@ -2077,7 +2077,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
         {
             // index >= headSegmentLength in the landing pad, can't use the index sym. This is possible for typed arrays through
             // conditions on array.length in user code.
-            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 2, _u("Index >= head segment length\n"));
+            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 2, u"Index >= head segment length\n");
             return;
         }
 
@@ -2098,7 +2098,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
         TRACE_PHASE_VERBOSE(
             Js::Phase::BoundCheckHoistPhase,
             2,
-            _u("Looking for compatible bound checks for index bounds\n"));
+            u"Looking for compatible bound checks for index bounds\n");
 
         bool searchingLower = needLowerBoundCheck;
         bool searchingUpper = needUpperBoundCheck;
@@ -2237,7 +2237,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
             TRACE_PHASE_VERBOSE(
                 Js::Phase::BoundCheckHoistPhase,
                 3,
-                _u("Found lower bound (s%u + %d) in block %u\n"),
+                u"Found lower bound (s%u + %d) in block %u\n",
                 boundCheckIndexSym->m_id,
                 lowerBoundOffset,
                 lowerBoundCheck->Block()->GetBlockNum());
@@ -2272,7 +2272,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
             TRACE_PHASE_VERBOSE(
                 Js::Phase::BoundCheckHoistPhase,
                 3,
-                _u("Found upper bound (s%u + %d) in block %u\n"),
+                u"Found upper bound (s%u + %d) in block %u\n",
                 boundCheckIndexSym->m_id,
                 upperBoundOffset,
                 upperBoundCheck->Block()->GetBlockNum());
@@ -2302,7 +2302,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
 
     // Check if the index sym is invariant in the loop, or if the index value in the landing pad is a lower/upper bound of the
     // index value in the current block
-    TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 2, _u("Looking for invariant index or index bounded by itself\n"));
+    TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 2, u"Looking for invariant index or index bounded by itself\n");
     bool searchingLower = needLowerBoundCheck, searchingUpper = needUpperBoundCheck;
     for(Loop *loop = currentLoop; loop; loop = loop->parent)
     {
@@ -2310,7 +2310,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
         TRACE_PHASE_VERBOSE(
             Js::Phase::BoundCheckHoistPhase,
             3,
-            _u("Trying loop %u landing pad block %u\n"),
+            u"Trying loop %u landing pad block %u\n",
             loop->GetLoopNumber(),
             loop->landingPad->GetBlockNum());
 
@@ -2327,7 +2327,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
         if(indexValue->GetValueNumber() == landingPadIndexValue->GetValueNumber())
         {
             Assert(landingPadIndexValueIsLikelyInt);
-            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, _u("Index is invariant\n"));
+            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, u"Index is invariant\n");
         }
         else
         {
@@ -2364,13 +2364,13 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
                             TRACE_PHASE_VERBOSE(
                                 Js::Phase::BoundCheckHoistPhase,
                                 4,
-                                _u("Found lower bound (index + %d)\n"),
+                                u"Found lower bound (index + %d)\n",
                                 lowerOffset);
                         }
                     }
                     if(!foundBound)
                     {
-                        TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, _u("Lower bound was not found\n"));
+                        TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, u"Lower bound was not found\n");
                         searchingLower = false;
                         if(!searchingUpper)
                         {
@@ -2408,13 +2408,13 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
                             TRACE_PHASE_VERBOSE(
                                 Js::Phase::BoundCheckHoistPhase,
                                 4,
-                                _u("Found upper bound (index + %d)\n"),
+                                u"Found upper bound (index + %d)\n",
                                 upperOffset);
                         }
                     }
                     if(!foundBound)
                     {
-                        TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, _u("Upper bound was not found\n"));
+                        TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, u"Upper bound was not found\n");
                         searchingUpper = false;
                         if(!searchingLower)
                         {
@@ -2436,7 +2436,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
                     0))
             {
                 // index < 0 in the landing pad; can't use the index sym
-                TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 5, _u("Index < 0\n"));
+                TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 5, u"Index < 0\n");
                 searchingLower = false;
                 if(!searchingUpper)
                 {
@@ -2464,7 +2464,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
         Value *const landingPadHeadSegmentLengthValue = landingPadBlockData.FindValue(headSegmentLengthSym);
         if(!landingPadHeadSegmentLengthValue)
         {
-            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 5, _u("Head segment length is not invariant\n"));
+            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 5, u"Head segment length is not invariant\n");
             searchingUpper = false;
             if(!searchingLower)
             {
@@ -2487,7 +2487,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
                 landingPadHeadSegmentLengthConstantBounds.UpperBound()))
         {
             // index >= headSegmentLength in the landing pad; can't use the index sym
-            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 5, _u("Index >= head segment length\n"));
+            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 5, u"Index >= head segment length\n");
             searchingUpper = false;
             if(!searchingLower)
             {
@@ -2533,7 +2533,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
     }
 
     // Find an invariant lower/upper bound of the index that can be used for hoisting the bound checks
-    TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 2, _u("Looking for invariant index bounds\n"));
+    TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 2, u"Looking for invariant index bounds\n");
     searchingLower = needLowerBoundCheck;
     searchingUpper = needUpperBoundCheck;
     for(Loop *loop = currentLoop; loop; loop = loop->parent)
@@ -2542,7 +2542,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
         TRACE_PHASE_VERBOSE(
             Js::Phase::BoundCheckHoistPhase,
             3,
-            _u("Trying loop %u landing pad block %u\n"),
+            u"Trying loop %u landing pad block %u\n",
             loop->GetLoopNumber(),
             loop->landingPad->GetBlockNum());
 
@@ -2561,7 +2561,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
             }
             else
             {
-                TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, _u("Head segment length is not invariant\n"));
+                TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, u"Head segment length is not invariant\n");
                 searchingUpper = false;
                 if(!searchingLower)
                 {
@@ -2600,7 +2600,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
                     TRACE_PHASE_VERBOSE(
                         Js::Phase::BoundCheckHoistPhase,
                         4,
-                        _u("Found %S bound (s%u + %d)\n"),
+                        u"Found %S bound (s%u + %d)\n",
                         searchingRelativeLowerBounds ? "lower" : "upper",
                         indexBoundBaseSym->m_id,
                         indexBound.Offset());
@@ -2614,7 +2614,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
                         // it in a different array may otherwise cause it to use the first array's head segment length as the
                         // upper bound on which to do the bound check against the second array, and that bound check would
                         // always fail when the arrays are the same size.
-                        TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 5, _u("Bound was established implicitly\n"));
+                        TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 5, u"Bound was established implicitly\n");
                         continue;
                     }
 
@@ -2622,7 +2622,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
                     if(!landingPadIndexBoundBaseValue ||
                         landingPadIndexBoundBaseValue->GetValueNumber() != indexBound.BaseValueNumber())
                     {
-                        TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 5, _u("Bound is not invariant\n"));
+                        TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 5, u"Bound is not invariant\n");
                         continue;
                     }
 
@@ -2645,7 +2645,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
                                 -offset))
                         {
                             // indexBoundBase + indexBoundOffset < 0; can't use this bound
-                            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 5, _u("Bound < 0\n"));
+                            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 5, u"Bound < 0\n");
                             continue;
                         }
 
@@ -2669,7 +2669,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
                             offset))
                     {
                         // indexBoundBase + indexBoundOffset >= headSegmentLength; can't use this bound
-                        TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 5, _u("Bound >= head segment length\n"));
+                        TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 5, u"Bound >= head segment length\n");
                         continue;
                     }
 
@@ -2697,7 +2697,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
 
         if(searchingLower && lowerHoistInfo.Loop() != loop)
         {
-            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, _u("Lower bound was not found\n"));
+            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, u"Lower bound was not found\n");
             searchingLower = false;
             if(!searchingUpper)
             {
@@ -2712,7 +2712,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
             // exit condition, such as math or bitwise operations. Exclude constant bounds established implicitly by <,
             // <=, >, and >=. For example, for a loop condition (i < n - 1), if 'n' is not invariant and hence can't be used,
             // 'i' will still have a constant upper bound of (int32 max - 2) that should be excluded.
-            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, _u("Relative upper bound was not found\n"));
+            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, u"Relative upper bound was not found\n");
             const InductionVariable *indexInductionVariable;
             if(!upperHoistInfo.Loop() &&
                 currentLoop->inductionVariables &&
@@ -2724,7 +2724,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
                     TRACE_PHASE_VERBOSE(
                         Js::Phase::BoundCheckHoistPhase,
                         4,
-                        _u("Constant upper bound was established implicitly\n"));
+                        u"Constant upper bound was established implicitly\n");
                 }
                 else
                 {
@@ -2733,7 +2733,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
                     TRACE_PHASE_VERBOSE(
                         Js::Phase::BoundCheckHoistPhase,
                         4,
-                        _u("Found constant upper bound %d, looking for a compatible bound check\n"),
+                        u"Found constant upper bound %d, looking for a compatible bound check\n",
                         indexConstantBound);
                     const IntBoundCheck *boundCheck;
                     if(currentBlock->globOptData.availableIntBoundChecks->TryGetReference(
@@ -2751,7 +2751,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
                             TRACE_PHASE_VERBOSE(
                                 Js::Phase::BoundCheckHoistPhase,
                                 5,
-                                _u("Found in block %u\n"),
+                                u"Found in block %u\n",
                                 boundCheck->Block()->GetBlockNum());
                             upperHoistInfo.SetCompatibleBoundCheck(boundCheck->Block(), indexConstantBound);
 
@@ -2773,7 +2773,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
 
                     if(searchingUpper)
                     {
-                        TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 5, _u("Not found\n"));
+                        TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 5, u"Not found\n");
                         upperHoistInfo.SetLoop(
                             loop,
                             indexConstantBound,
@@ -2787,12 +2787,12 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
                 TRACE_PHASE_VERBOSE(
                     Js::Phase::BoundCheckHoistPhase,
                     4,
-                    _u("Index is not an induction variable, not using constant upper bound\n"));
+                    u"Index is not an induction variable, not using constant upper bound\n");
             }
 
             if(searchingUpper && upperHoistInfo.Loop() != loop)
             {
-                TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, _u("Upper bound was not found\n"));
+                TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, u"Upper bound was not found\n");
                 searchingUpper = false;
                 if(!searchingLower)
                 {
@@ -2824,14 +2824,14 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
     TRACE_PHASE_VERBOSE(
         Js::Phase::BoundCheckHoistPhase,
         2,
-        _u("Looking for loop count based bound for loop %u landing pad block %u\n"),
+        u"Looking for loop count based bound for loop %u landing pad block %u\n",
         currentLoop->GetLoopNumber(),
         currentLoop->landingPad->GetBlockNum());
 
     LoopCount *const loopCount = currentLoop->loopCount;
     if(!loopCount)
     {
-        TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 3, _u("Loop was not counted\n"));
+        TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 3, u"Loop was not counted\n");
         return;
     }
 
@@ -2840,7 +2840,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
         !currentLoop->inductionVariables->TryGetReference(indexSym->m_id, &indexInductionVariable) ||
         !indexInductionVariable->IsChangeDeterminate())
     {
-        TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 3, _u("Index is not an induction variable\n"));
+        TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 3, u"Index is not an induction variable\n");
         return;
     }
 
@@ -2855,11 +2855,11 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
         TRACE_PHASE_VERBOSE(
             Js::Phase::BoundCheckHoistPhase,
             3,
-            _u("Index's maximum-magnitude change per iteration is %d\n"),
+            u"Index's maximum-magnitude change per iteration is %d\n",
             maxMagnitudeChange);
         if(!needUpperBoundCheck || maxMagnitudeChange > InductionVariable::ChangeMagnitudeLimitForLoopCountBasedHoisting)
         {
-            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, _u("Change magnitude is too large\n"));
+            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, u"Change magnitude is too large\n");
             return;
         }
 
@@ -2868,7 +2868,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
         Assert(!headSegmentLengthInvariantLoop || landingPadHeadSegmentLengthValue);
         if(!landingPadHeadSegmentLengthValue)
         {
-            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 3, _u("Head segment length is not invariant\n"));
+            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 3, u"Head segment length is not invariant\n");
             return;
         }
         AssertVerify(
@@ -2883,11 +2883,11 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
         TRACE_PHASE_VERBOSE(
             Js::Phase::BoundCheckHoistPhase,
             3,
-            _u("Index's maximum-magnitude change per iteration is %d\n"),
+            u"Index's maximum-magnitude change per iteration is %d\n",
             maxMagnitudeChange);
         if(!needLowerBoundCheck || maxMagnitudeChange < -InductionVariable::ChangeMagnitudeLimitForLoopCountBasedHoisting)
         {
-            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, _u("Change magnitude is too large\n"));
+            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, u"Change magnitude is too large\n");
             return;
         }
 
@@ -2917,10 +2917,10 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
     else
     {
         Assert(symBoundType == SymBoundType::UNKNOWN);
-        TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, _u("Unable to determine the sym bound offset or value\n"));
+        TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, u"Unable to determine the sym bound offset or value\n");
         return;
     }
-    TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 3, _u("Index's offset from landing pad is %d\n"), indexOffset);
+    TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 3, u"Index's offset from landing pad is %d\n", indexOffset);
 
     // The secondary induction variable bound is computed as follows:
     //     bound = index + indexOffset + loopCountMinusOne * maxMagnitudeChange
@@ -2939,12 +2939,12 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
             TRACE_PHASE_VERBOSE(
                 Js::Phase::BoundCheckHoistPhase,
                 3,
-                _u("Loop count is assigned to s%u\n"),
+                u"Loop count is assigned to s%u\n",
                 loopCount->LoopCountMinusOneSym()->m_id);
         }
         else
         {
-            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 3, _u("Loop count has not been generated yet\n"));
+            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 3, u"Loop count has not been generated yet\n");
         }
 
         offset = indexOffset;
@@ -2963,7 +2963,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
                 TRACE_PHASE_VERBOSE(
                     Js::Phase::BoundCheckHoistPhase,
                     3,
-                    _u("Loop count based bound is assigned to s%u\n"),
+                    u"Loop count based bound is assigned to s%u\n",
                     indexLoopCountBasedBoundBaseSym->m_id);
                 indexLoopCountBasedBoundBaseValue = landingPadBlockData.FindValue(indexLoopCountBasedBoundBaseSym);
                 Assert(indexLoopCountBasedBoundBaseValue);
@@ -2979,7 +2979,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
             TRACE_PHASE_VERBOSE(
                 Js::Phase::BoundCheckHoistPhase,
                 3,
-                _u("Assigning s%u to the loop count based bound\n"),
+                u"Assigning s%u to the loop count based bound\n",
                 indexLoopCountBasedBoundBaseSym->m_id);
             loopCountBasedBoundBaseSyms->Add(indexSymId, indexLoopCountBasedBoundBaseSym);
             indexLoopCountBasedBoundBaseValue = NewValue(ValueInfo::New(alloc, ValueType::GetInt(true)));
@@ -2991,7 +2991,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
     else
     {
         // The loop count is constant, fold (indexOffset + loopCountMinusOne * maxMagnitudeChange)
-        TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 3, _u("Loop count is constant, folding\n"));
+        TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 3, u"Loop count is constant, folding\n");
 
         int loopCountMinusOnePlusOne = 0;
 
@@ -2999,7 +2999,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
             Int32Math::Mul(loopCountMinusOnePlusOne, maxMagnitudeChange, &offset) ||
             Int32Math::Add(offset, indexOffset, &offset))
         {
-            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, _u("Folding failed\n"));
+            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, u"Folding failed\n");
             return;
         }
 
@@ -3010,7 +3010,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
             TRACE_PHASE_VERBOSE(
                 Js::Phase::BoundCheckHoistPhase,
                 3,
-                _u("Loop count based bound is constant: %d\n"),
+                u"Loop count based bound is constant: %d\n",
                 loopCountBasedConstantBound);
 
             if(maxMagnitudeChange < 0)
@@ -3018,7 +3018,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
                 if(loopCountBasedConstantBound < 0)
                 {
                     // Can't use this bound
-                    TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, _u("Bound < 0\n"));
+                    TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, u"Bound < 0\n");
                     return;
                 }
 
@@ -3039,7 +3039,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
                     landingPadHeadSegmentLengthConstantBounds.UpperBound()));
 
             // See if a compatible bound check is already available
-            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 3, _u("Looking for a compatible bound check\n"));
+            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 3, u"Looking for a compatible bound check\n");
             const IntBoundCheck *boundCheck;
             if(currentBlock->globOptData.availableIntBoundChecks->TryGetReference(
                     IntBoundCheckCompatibilityId(ZeroValueNumber, headSegmentLengthValue->GetValueNumber()),
@@ -3056,14 +3056,14 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
                     TRACE_PHASE_VERBOSE(
                         Js::Phase::BoundCheckHoistPhase,
                         4,
-                        _u("Found in block %u\n"),
+                        u"Found in block %u\n",
                         boundCheck->Block()->GetBlockNum());
                     upperHoistInfo.SetCompatibleBoundCheck(boundCheck->Block(), loopCountBasedConstantBound);
                     return;
                 }
                 failedToUpdateCompatibleUpperBoundCheck = true;
             }
-            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, _u("Not found\n"));
+            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, u"Not found\n");
 
             upperHoistInfo.SetLoop(
                 currentLoop,
@@ -3112,7 +3112,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
                     offset + 1)) // + 1 to simulate > instead of >=
             {
                 // loopCountBasedBound < 0, can't use this bound
-                TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, _u("Bound < 0\n"));
+                TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, u"Bound < 0\n");
                 return;
             }
         }
@@ -3127,12 +3127,12 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
                 offset))
         {
             // loopCountBasedBound >= headSegmentLength, can't use this bound
-            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, _u("Bound >= head segment length\n"));
+            TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, u"Bound >= head segment length\n");
             return;
         }
 
         // See if a compatible bound check is already available
-        TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 3, _u("Looking for a compatible bound check\n"));
+        TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 3, u"Looking for a compatible bound check\n");
         const ValueNumber indexLoopCountBasedBoundBaseValueNumber = indexLoopCountBasedBoundBaseValue->GetValueNumber();
         const IntBoundCheck *boundCheck;
         if(currentBlock->globOptData.availableIntBoundChecks->TryGetReference(
@@ -3150,7 +3150,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
                 TRACE_PHASE_VERBOSE(
                     Js::Phase::BoundCheckHoistPhase,
                     4,
-                    _u("Found in block %u\n"),
+                    u"Found in block %u\n",
                     boundCheck->Block()->GetBlockNum());
                 if(maxMagnitudeChange < 0)
                 {
@@ -3172,7 +3172,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
             }
             (maxMagnitudeChange < 0 ? failedToUpdateCompatibleLowerBoundCheck : failedToUpdateCompatibleUpperBoundCheck) = true;
         }
-        TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, _u("Not found\n"));
+        TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, u"Not found\n");
     }
 
     if(maxMagnitudeChange < 0)

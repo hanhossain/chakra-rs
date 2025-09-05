@@ -142,7 +142,7 @@ template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
 EmitBufferAllocation<TAlloc, TPreReservedAlloc> *
 EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::NewAllocation(size_t bytes, ushort pdataCount, ushort xdataSize, bool canAllocInPreReservedHeapPageSegment, bool isAnyJittedCode)
 {
-    FAULTINJECT_MEMORY_THROW(_u("JIT"), bytes);
+    FAULTINJECT_MEMORY_THROW(u"JIT", bytes);
 
     Assert(this->criticalSection.IsLocked());
 
@@ -170,7 +170,7 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::NewAllocation(size_t b
 #endif
 
     AutoCustomHeapPointer<TAlloc, TPreReservedAlloc> allocatedMemory(&this->allocationHeap, heapAllocation);
-    VerboseHeapTrace(_u("New allocation: 0x%p, size: %p\n"), heapAllocation->address, heapAllocation->size);
+    VerboseHeapTrace(u"New allocation: 0x%p, size: %p\n", heapAllocation->address, heapAllocation->size);
     TEmitBufferAllocation * allocation = AnewStruct(this->allocator, TEmitBufferAllocation);
 
     allocation->bytesCommitted = heapAllocation->size;
@@ -255,7 +255,7 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::FreeAllocation(void* a
             {
                 SetValidCallTarget(allocation, address, false);
             }
-            VerboseHeapTrace(_u("Freeing 0x%p, allocation: 0x%p\n"), address, allocation->allocation->address);
+            VerboseHeapTrace(u"Freeing 0x%p, allocation: 0x%p\n", address, allocation->allocation->address);
 
             this->allocationHeap.Free(allocation->allocation);
             this->allocator->Free(allocation, sizeof(TEmitBufferAllocation));
@@ -356,7 +356,7 @@ bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CheckCommitFaultI
 
     if (Js::Configuration::Global.flags.ForceOOMOnEBCommit == -1)
     {
-        Output::Print(_u("Commit count: %d\n"), commitCount);
+        Output::Print(u"Commit count: %d\n", commitCount);
     }
     else if (commitCount == Js::Configuration::Global.flags.ForceOOMOnEBCommit)
     {
@@ -400,7 +400,7 @@ bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBufferForIn
     this->totalBytesCode += bufferSize;
 #endif
 
-    VerboseHeapTrace(_u("Setting execute permissions on 0x%p, allocation: 0x%p\n"), pBuffer, allocation->allocation->address);
+    VerboseHeapTrace(u"Setting execute permissions on 0x%p, allocation: 0x%p\n", pBuffer, allocation->allocation->address);
 
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     if (CheckCommitFaultInjection())
@@ -573,7 +573,7 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CheckBufferPermissions
         }
         else if(memInfo.Protect == PAGE_EXECUTE_READWRITE)
         {
-            Output::Print(_u("ERROR: Found PAGE_EXECUTE_READWRITE page!\n"));
+            Output::Print(u"ERROR: Found PAGE_EXECUTE_READWRITE page!\n");
 #ifdef DEBUG
             AssertMsg(FALSE, "Page was marked PAGE_EXECUTE_READWRITE");
 #else
@@ -609,17 +609,17 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::DumpAndResetStats(char
     if (this->totalBytesCommitted != 0)
     {
         size_t wasted = this->totalBytesCommitted - this->totalBytesCode - this->totalBytesAlignment;
-        Output::Print(_u("Stats for %s: %s \n"), name, filename);
-        Output::Print(_u("  Total code size      : %10d (%6.2f%% of committed)\n"), this->totalBytesCode,
+        Output::Print(u"Stats for %s: %s \n", name, filename);
+        Output::Print(u"  Total code size      : %10d (%6.2f%% of committed)\n", this->totalBytesCode,
             (float)this->totalBytesCode * 100 / this->totalBytesCommitted);
-        Output::Print(_u("  Total LoopBody code  : %10d\n"), this->totalBytesLoopBody);
-        Output::Print(_u("  Total alignment size : %10d (%6.2f%% of committed)\n"), this->totalBytesAlignment,
+        Output::Print(u"  Total LoopBody code  : %10d\n", this->totalBytesLoopBody);
+        Output::Print(u"  Total alignment size : %10d (%6.2f%% of committed)\n", this->totalBytesAlignment,
             (float)this->totalBytesAlignment * 100 / this->totalBytesCommitted);
-        Output::Print(_u("  Total wasted size    : %10d (%6.2f%% of committed)\n"), wasted,
+        Output::Print(u"  Total wasted size    : %10d (%6.2f%% of committed)\n", wasted,
             (float)wasted * 100 / this->totalBytesCommitted);
-        Output::Print(_u("  Total committed size : %10d (%6.2f%% of reserved)\n"), this->totalBytesCommitted,
+        Output::Print(u"  Total committed size : %10d (%6.2f%% of reserved)\n", this->totalBytesCommitted,
             (float)this->totalBytesCommitted * 100 / this->totalBytesReserved);
-        Output::Print(_u("  Total reserved size  : %10d\n"), this->totalBytesReserved);
+        Output::Print(u"  Total reserved size  : %10d\n", this->totalBytesReserved);
     }
     this->totalBytesCode = 0;
     this->totalBytesLoopBody = 0;

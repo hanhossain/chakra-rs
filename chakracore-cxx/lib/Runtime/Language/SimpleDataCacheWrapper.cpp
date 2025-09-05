@@ -57,10 +57,10 @@ namespace Js
             hr = this->outStream->Stat(&statstg, STATFLAG_DEFAULT);
             if (FAILED(hr))
             {
-                OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Failed to call IStream::Stat on write stream (hr = 0x%08lx)\n"), hr);
+                OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Failed to call IStream::Stat on write stream (hr = 0x%08lx)\n", hr);
             }
 #endif
-            OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Attempting to save write stream with %u bytes...\n"), statstg.cbSize.LowPart);
+            OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Attempting to save write stream with %u bytes...\n", statstg.cbSize.LowPart);
 
             Assert(this->dataCache != nullptr);
             hr = this->dataCache->SaveWriteDataStream(this->outStream);
@@ -70,11 +70,11 @@ namespace Js
 
             if (FAILED(hr))
             {
-                OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Failed to save write stream (hr = 0x%08lx)\n"), hr);
+                OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Failed to save write stream (hr = 0x%08lx)\n", hr);
             }
             else
             {
-                OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Successfully saved write stream\n"), hr);
+                OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Successfully saved write stream\n", hr);
             }
         }
 #endif

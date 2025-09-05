@@ -337,36 +337,36 @@ namespace Js
     template<typename TPropertyIndex>
     void DictionaryPropertyDescriptor<TPropertyIndex>::Dump(unsigned indent) const
     {
-        const auto padding(_u(""));
+        const auto padding(u"");
         const unsigned fieldIndent(indent + 2);
 
-        Output::Print(_u("%*sDictionaryPropertyDescriptor (0x%p)\n"), indent, padding, this);
-        Output::Print(_u("%*sPreventFalseReference: %d\n"), fieldIndent, padding, HasFlag(Flags::PreventFalseReference));
-        Output::Print(_u("%*sIsShadowed: %d\n"), fieldIndent, padding, GetIsShadowed());
-        Output::Print(_u("%*sIsAccessor: %d\n"), fieldIndent, padding, GetIsAccessor());
+        Output::Print(u"%*sDictionaryPropertyDescriptor (0x%p)\n", indent, padding, this);
+        Output::Print(u"%*sPreventFalseReference: %d\n", fieldIndent, padding, HasFlag(Flags::PreventFalseReference));
+        Output::Print(u"%*sIsShadowed: %d\n", fieldIndent, padding, GetIsShadowed());
+        Output::Print(u"%*sIsAccessor: %d\n", fieldIndent, padding, GetIsAccessor());
 #if ENABLE_FIXED_FIELDS
-        Output::Print(_u("%*sIsInitialized: %d\n"), fieldIndent, padding, GetIsInitialized());
-        Output::Print(_u("%*sIsOnlyOneAccessorInitialized: %d\n"), fieldIndent, padding, GetIsOnlyOneAccessorInitialized());
-        Output::Print(_u("%*sIsFixed: %d\n"), fieldIndent, padding, GetIsFixed());
-        Output::Print(_u("%*sUsedAsFixed: %d\n"), fieldIndent, padding, GetUsedAsFixed());
+        Output::Print(u"%*sIsInitialized: %d\n", fieldIndent, padding, GetIsInitialized());
+        Output::Print(u"%*sIsOnlyOneAccessorInitialized: %d\n", fieldIndent, padding, GetIsOnlyOneAccessorInitialized());
+        Output::Print(u"%*sIsFixed: %d\n", fieldIndent, padding, GetIsFixed());
+        Output::Print(u"%*sUsedAsFixed: %d\n", fieldIndent, padding, GetUsedAsFixed());
 #endif
-        Output::Print(_u("%*sAttributes: 0x%02x "), fieldIndent, padding, this->Attributes);
+        Output::Print(u"%*sAttributes: 0x%02x ", fieldIndent, padding, this->Attributes);
         if (this->Attributes != PropertyNone)
         {
-            if (this->Attributes & PropertyEnumerable) Output::Print(_u("PropertyEnumerable "));
-            if (this->Attributes & PropertyConfigurable) Output::Print(_u("PropertyConfigurable "));
-            if (this->Attributes & PropertyWritable) Output::Print(_u("PropertyWritable "));
-            if (this->Attributes & PropertyDeleted) Output::Print(_u("PropertyDeleted "));
-            if (this->Attributes & PropertyLetConstGlobal) Output::Print(_u("PropertyLetConstGlobal "));
-            if (this->Attributes & PropertyDeclaredGlobal) Output::Print(_u("PropertyDeclaredGlobal "));
-            if (this->Attributes & PropertyLet) Output::Print(_u("PropertyLet "));
-            if (this->Attributes & PropertyConst) Output::Print(_u("PropertyConst "));
+            if (this->Attributes & PropertyEnumerable) Output::Print(u"PropertyEnumerable ");
+            if (this->Attributes & PropertyConfigurable) Output::Print(u"PropertyConfigurable ");
+            if (this->Attributes & PropertyWritable) Output::Print(u"PropertyWritable ");
+            if (this->Attributes & PropertyDeleted) Output::Print(u"PropertyDeleted ");
+            if (this->Attributes & PropertyLetConstGlobal) Output::Print(u"PropertyLetConstGlobal ");
+            if (this->Attributes & PropertyDeclaredGlobal) Output::Print(u"PropertyDeclaredGlobal ");
+            if (this->Attributes & PropertyLet) Output::Print(u"PropertyLet ");
+            if (this->Attributes & PropertyConst) Output::Print(u"PropertyConst ");
         }
-        Output::Print(_u("\n"));
+        Output::Print(u"\n");
 
-        Output::Print(_u("%*sData: %d\n"), fieldIndent, padding, static_cast<int32>(this->Data));
-        Output::Print(_u("%*sGetter: %d\n"), fieldIndent, padding, static_cast<int32>(this->Getter));
-        Output::Print(_u("%*sSetter: %d\n"), fieldIndent, padding, static_cast<int32>(this->Setter));
+        Output::Print(u"%*sData: %d\n", fieldIndent, padding, static_cast<int32>(this->Data));
+        Output::Print(u"%*sGetter: %d\n", fieldIndent, padding, static_cast<int32>(this->Getter));
+        Output::Print(u"%*sSetter: %d\n", fieldIndent, padding, static_cast<int32>(this->Setter));
     }
 #endif
 }

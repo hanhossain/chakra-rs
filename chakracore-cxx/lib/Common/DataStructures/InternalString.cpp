@@ -35,7 +35,7 @@ namespace Js
 
         char16_t* buffer = (char16_t*)(allocbuffer+1);
         js_memcpy_s(buffer, bytelength, content, bytelength);
-        buffer[length] = _u('\0');
+        buffer[length] = u'\0';
         InternalString* newInstance = Anew(alloc, InternalString, buffer, length);
         return newInstance;
     }
@@ -55,7 +55,7 @@ namespace Js
         allocbuffer[0] = (uint32_t) bytelength;
         char16_t* buffer = (char16_t*)(allocbuffer + 1);
         js_memcpy_s(buffer, bytelength, content, bytelength);
-        buffer[length] = _u('\0');
+        buffer[length] = u'\0';
         newInstance->m_content = (const char16_t*) allocbuffer;
 
         return newInstance;

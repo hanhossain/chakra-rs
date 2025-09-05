@@ -37,7 +37,7 @@ WebAssemblyModule::WebAssemblyModule(Js::ScriptContext* scriptContext, const byt
     m_binaryBufferLength(binaryBufferLength),
     m_customSections(nullptr)
 {
-    m_alloc = HeapNew(ArenaAllocator, _u("WebAssemblyModule"), scriptContext->GetThreadContext()->GetPageAllocator(), Js::Throw::OutOfMemory);
+    m_alloc = HeapNew(ArenaAllocator, u"WebAssemblyModule", scriptContext->GetThreadContext()->GetPageAllocator(), Js::Throw::OutOfMemory);
     // the first elem is the number of Vars in front of I32; makes for a nicer offset computation
     memset(m_globalCounts, 0, sizeof(uint) * Wasm::WasmTypes::Limit);
     m_functionsInfo = RecyclerNew(scriptContext->GetRecycler(), WasmFunctionInfosList, scriptContext->GetRecycler());
@@ -62,7 +62,7 @@ WebAssemblyModule::NewInstance(RecyclableObject* function, CallInfo callInfo, ..
 
     if (!(callInfo.Flags & CallFlags_New) || (newTarget && JavascriptOperators::IsUndefinedObject(newTarget)))
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_ClassConstructorCannotBeCalledWithoutNew, _u("WebAssembly.Module"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_ClassConstructorCannotBeCalledWithoutNew, u"WebAssembly.Module");
     }
 
     if (args.Info.Count < 2)
@@ -278,7 +278,7 @@ WebAssemblyModule::ValidateModule(
         char16_t* originalMessage = ex.ReleaseErrorMessage();
         if (PHASE_TRACE1(Js::WasmBytecodePhase) || PHASE_TRACE1(Js::WasmReaderPhase))
         {
-            Output::Print(_u("WebAssembly.validate Error: %s\n"), originalMessage);
+            Output::Print(u"WebAssembly.validate Error: %s\n", originalMessage);
         }
         SysFreeString(originalMessage);
 
@@ -314,11 +314,11 @@ WebAssemblyModule::InitializeMemory(_In_ Wasm::MemorySectionLimits* memoryLimits
     if (!memoryLimits)
     {
         Assert(UNREACHED);
-        throw Wasm::WasmCompilationException(_u("Internal Error"));
+        throw Wasm::WasmCompilationException(u"Internal Error");
     }
     if (m_hasMemory)
     {
-        throw Wasm::WasmCompilationException(_u("Memory already allocated"));
+        throw Wasm::WasmCompilationException(u"Memory already allocated");
     }
 
     uint32 minPage = memoryLimits->initial;
@@ -326,10 +326,10 @@ WebAssemblyModule::InitializeMemory(_In_ Wasm::MemorySectionLimits* memoryLimits
 
     if (maxPage < minPage)
     {
-        throw Wasm::WasmCompilationException(_u("Memory: MaxPage (%u) must be greater than MinPage (%u)"), maxPage, minPage);
+        throw Wasm::WasmCompilationException(u"Memory: MaxPage (%u) must be greater than MinPage (%u)", maxPage, minPage);
     }
     auto minPageTooBig = [minPage] {
-        throw Wasm::WasmCompilationException(_u("Memory: Unable to allocate minimum pages (%u)"), minPage);
+        throw Wasm::WasmCompilationException(u"Memory: Unable to allocate minimum pages (%u)", minPage);
     };
     uint32 minBytes = UInt32Math::Mul<WebAssembly::PageSize>(minPage, minPageTooBig);
     if (minBytes > ArrayBuffer::MaxArrayBufferLength)
@@ -371,7 +371,7 @@ WebAssemblyModule::GetSignature(uint32 index) const
 {
     if (!IsSignatureIndexValid(index))
     {
-        throw Wasm::WasmCompilationException(_u("Invalid signature index %u"), index);
+        throw Wasm::WasmCompilationException(u"Invalid signature index %u", index);
     }
 
     return &m_signatures[index];
@@ -400,18 +400,18 @@ WebAssemblyModule::InitializeTable(_In_ Wasm::TableSectionLimits* tableLimits)
     if (!tableLimits)
     {
         Assert(UNREACHED);
-        throw Wasm::WasmCompilationException(_u("Internal Error"));
+        throw Wasm::WasmCompilationException(u"Internal Error");
     }
     if (m_hasTable)
     {
-        throw Wasm::WasmCompilationException(_u("Table already allocated"));
+        throw Wasm::WasmCompilationException(u"Table already allocated");
     }
 
     uint32 minEntries = tableLimits->initial;
     uint32 maxEntries = tableLimits->maximum;
     if (maxEntries < minEntries)
     {
-        throw Wasm::WasmCompilationException(_u("Table: max entries (%d) is less than min entries (%d)"), maxEntries, minEntries);
+        throw Wasm::WasmCompilationException(u"Table: max entries (%d) is less than min entries (%d)", maxEntries, minEntries);
     }
     m_hasTable = true;
     m_tableInitSize = minEntries;
@@ -445,7 +445,7 @@ WebAssemblyModule::GetWasmFunctionInfo(uint index) const
 {
     if (index >= GetWasmFunctionCount())
     {
-        throw Wasm::WasmCompilationException(_u("Invalid function index %u"), index);
+        throw Wasm::WasmCompilationException(u"Invalid function index %u", index);
     }
 
     return m_functionsInfo->Item(index);
@@ -468,7 +468,7 @@ WebAssemblyModule::AttachCustomInOutTracingReader(Wasm::WasmFunctionInfo* func, 
     Wasm::WasmSignature* signature = calledFunc->GetSignature();
     if (!calledFunc->GetSignature()->IsEquivalent(signature))
     {
-        throw Wasm::WasmCompilationException(_u("InOut tracing reader signature mismatch"));
+        throw Wasm::WasmCompilationException(u"InOut tracing reader signature mismatch");
     }
     // Create the custom reader to generate the import thunk
     Wasm::WasmCustomReader* customReader = Anew(m_alloc, Wasm::WasmCustomReader, m_alloc);
@@ -502,7 +502,7 @@ WebAssemblyModule::AttachCustomInOutTracingReader(Wasm::WasmFunctionInfo* func, 
 #endif
         default:
             Wasm::WasmTypes::CompileAssertCasesNoFailFast<Wasm::WasmTypes::I32, Wasm::WasmTypes::I64, Wasm::WasmTypes::F32, Wasm::WasmTypes::F64, WASM_V128_CHECK_TYPE>();
-            throw Wasm::WasmCompilationException(_u("Unknown param type"));
+            throw Wasm::WasmCompilationException(u"Unknown param type");
         }
         customReader->AddNode(node);
 
@@ -547,7 +547,7 @@ WebAssemblyModule::AttachCustomInOutTracingReader(Wasm::WasmFunctionInfo* func, 
 #endif
         default:
             Wasm::WasmTypes::CompileAssertCasesNoFailFast<Wasm::WasmTypes::I32, Wasm::WasmTypes::I64, Wasm::WasmTypes::F32, Wasm::WasmTypes::F64, WASM_V128_CHECK_TYPE>();
-            throw Wasm::WasmCompilationException(_u("Unknown return type"));
+            throw Wasm::WasmCompilationException(u"Unknown return type");
         }
         customReader->AddNode(node);
     }
@@ -598,12 +598,12 @@ WebAssemblyModule::AddFunctionImport(uint32 sigId, const char16_t* modName, uint
 {
     if (sigId >= GetSignatureCount())
     {
-        throw Wasm::WasmCompilationException(_u("Function signature %u is out of bound"), sigId);
+        throw Wasm::WasmCompilationException(u"Function signature %u is out of bound", sigId);
     }
     Wasm::WasmSignature* signature = GetSignature(sigId);
     if (signature->GetResultCount() > 1)
     {
-        throw Wasm::WasmCompilationException(_u("Multiple results for function imports is not supported"));
+        throw Wasm::WasmCompilationException(u"Multiple results for function imports is not supported");
     }
 
     // Store the information about the import
@@ -641,7 +641,7 @@ WebAssemblyModule::AddFunctionImport(uint32 sigId, const char16_t* modName, uint
         !UInt32Math::Add(fnNameLen, bufferLength, &bufferLength))
     {
         char16_t * autoName = RecyclerNewArrayLeafZ(GetScriptContext()->GetRecycler(), char16_t, bufferLength);
-        uint32 nameLength = swprintf_s(autoName, bufferLength, _u("%s.%s.Thunk[%u]"), modName, fnName, funcInfo->GetNumber());
+        uint32 nameLength = swprintf_s(autoName, bufferLength, u"%s.%s.Thunk[%u]", modName, fnName, funcInfo->GetNumber());
         if (nameLength != (uint32)-1)
         {
             funcInfo->SetName(autoName, nameLength);
@@ -658,7 +658,7 @@ WebAssemblyModule::GetImport(uint32 i) const
 {
     if (i >= GetImportCount())
     {
-        throw Wasm::WasmCompilationException(_u("Import index out of range"));
+        throw Wasm::WasmCompilationException(u"Import index out of range");
     }
     return m_imports->Item(i);
 }
@@ -737,12 +737,12 @@ WebAssemblyModule::ValidateInitExportForOffset(const Wasm::WasmNode& initExpr) c
         Wasm::WasmGlobal* global = GetGlobal(initExpr.var.num);
         if (global->GetType() != Wasm::WasmTypes::I32)
         {
-            throw Wasm::WasmCompilationException(_u("global %u must be i32 for init_expr"), initExpr.var.num);
+            throw Wasm::WasmCompilationException(u"global %u must be i32 for init_expr", initExpr.var.num);
         }
     }
     else if (initExpr.op != Wasm::wbI32Const)
     {
-        throw Wasm::WasmCompilationException(_u("Invalid init_expr for offset"));
+        throw Wasm::WasmCompilationException(u"Invalid init_expr for offset");
     }
 }
 
@@ -764,7 +764,7 @@ WebAssemblyModule::GetGlobal(uint32 index) const
 {
     if (index >= GetGlobalCount())
     {
-        throw Wasm::WasmCompilationException(_u("Global index out of bounds %u"), index);
+        throw Wasm::WasmCompilationException(u"Global index out of bounds %u", index);
     }
     return m_globals->Item(index);
 }
@@ -814,7 +814,7 @@ WebAssemblyModule::GetElementSeg(uint32 index) const
 {
     if (index >= m_elementsegCount)
     {
-        throw Wasm::WasmCompilationException(_u("Invalid index for Element segment"));
+        throw Wasm::WasmCompilationException(u"Invalid index for Element segment");
     }
     return m_elementsegs[index];
 }
@@ -824,7 +824,7 @@ WebAssemblyModule::SetStartFunction(uint32 i)
 {
     if (i >= GetWasmFunctionCount())
     {
-        throw Wasm::WasmCompilationException(_u("Invalid start function index %u"), i);
+        throw Wasm::WasmCompilationException(u"Invalid start function index %u", i);
     }
     m_startFuncIndex = i;
 }
@@ -869,7 +869,7 @@ char16_t* WebAssemblyModule::FormatExceptionMessage(Wasm::WasmCompilationExcepti
 
     Wasm::BinaryLocation location = wasmModule->GetReader()->GetCurrentLocation();
 
-    const char16_t* format = _u("function %s at offset %u/%u (0x%x/0x%x): %s");
+    const char16_t* format = u"function %s at offset %u/%u (0x%x/0x%x): %s";
     const char16_t* funcName = body->GetDisplayName();
     char16_t* buf = HeapNewArray(char16_t, 2048);
     autoFree->Set(buf, 2048);
@@ -909,7 +909,7 @@ WebAssemblyModule::GetOffsetForGlobal(Wasm::WasmGlobal* global) const
     Wasm::WasmTypes::WasmType type = global->GetType();
     if (!Wasm::WasmTypes::IsLocalType(type))
     {
-        throw Wasm::WasmCompilationException(_u("Invalid Global type"));
+        throw Wasm::WasmCompilationException(u"Invalid Global type");
     }
 
     uint32 offset = WAsmJs::ConvertOffset<Js::Var, byte>(GetGlobalOffset());
@@ -941,13 +941,13 @@ WebAssemblyModule::GetExternalKindString(ScriptContext * scriptContext, Wasm::Ex
     switch (kind)
     {
     case Wasm::ExternalKinds::Function:
-        return scriptContext->GetLibrary()->CreateStringFromCppLiteral(_u("function"));
+        return scriptContext->GetLibrary()->CreateStringFromCppLiteral(u"function");
     case Wasm::ExternalKinds::Table:
-        return scriptContext->GetLibrary()->CreateStringFromCppLiteral(_u("table"));
+        return scriptContext->GetLibrary()->CreateStringFromCppLiteral(u"table");
     case Wasm::ExternalKinds::Memory:
-        return scriptContext->GetLibrary()->CreateStringFromCppLiteral(_u("memory"));
+        return scriptContext->GetLibrary()->CreateStringFromCppLiteral(u"memory");
     case Wasm::ExternalKinds::Global:
-        return scriptContext->GetLibrary()->CreateStringFromCppLiteral(_u("global"));
+        return scriptContext->GetLibrary()->CreateStringFromCppLiteral(u"global");
     default:
         Assume(UNREACHED);
     }
@@ -990,7 +990,7 @@ WebAssemblyModule::GetCustomSection(uint32 index) const
 {
     if (index >= GetCustomSectionCount())
     {
-        throw Wasm::WasmCompilationException(_u("Custom section index out of bounds %u"), index);
+        throw Wasm::WasmCompilationException(u"Custom section index out of bounds %u", index);
     }
     return m_customSections->Item(index);
 }

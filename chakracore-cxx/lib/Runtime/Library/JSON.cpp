@@ -26,7 +26,7 @@ namespace JSON
         AssertMsg(args.Info.Count > 0, "Should always have implicit 'this'");
 
         Js::ScriptContext* scriptContext = function->GetScriptContext();
-        AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, _u("JSON.parse"));
+        AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, u"JSON.parse");
         Assert(!(callInfo.Flags & Js::CallFlags_New));
 
         if(args.Info.Count < 2)
@@ -105,7 +105,7 @@ namespace JSON
         ARGUMENTS(args, callInfo);
         Js::JavascriptLibrary* library = function->GetType()->GetLibrary();
         Js::ScriptContext* scriptContext = library->GetScriptContext();
-        AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, _u("JSON.stringify"));
+        AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, u"JSON.stringify");
 
         Assert(!(callInfo.Flags & Js::CallFlags_New));
 

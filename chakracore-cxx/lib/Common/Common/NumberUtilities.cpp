@@ -201,13 +201,13 @@ using namespace Js;
             {
                 digit = integer / 10000;
                 integer %= 10000;
-                *outBuffer = digit + _u('0');
+                *outBuffer = digit + u'0';
                 outBuffer++;
                 cchWritten++;
             }
             else if( widthForPaddingZerosInsteadSpaces > 4 )
             {
-                *outBuffer = _u('0');
+                *outBuffer = u'0';
                 outBuffer++;
                 cchWritten++;
             }
@@ -220,13 +220,13 @@ using namespace Js;
             {
                 digit = integer / 1000;
                 integer %= 1000;
-                *outBuffer = digit + _u('0');
+                *outBuffer = digit + u'0';
                 outBuffer++;
                 cchWritten++;
             }
             else if( widthForPaddingZerosInsteadSpaces > 3 )
             {
-                *outBuffer = _u('0');
+                *outBuffer = u'0';
                 outBuffer++;
                 cchWritten++;
             }
@@ -239,13 +239,13 @@ using namespace Js;
             {
                 digit = integer / 100;
                 integer %= 100;
-                *outBuffer = digit + _u('0');
+                *outBuffer = digit + u'0';
                 outBuffer++;
                 cchWritten++;
             }
             else if( widthForPaddingZerosInsteadSpaces > 2 )
             {
-                *outBuffer = _u('0');
+                *outBuffer = u'0';
                 outBuffer++;
                 cchWritten++;
             }
@@ -258,13 +258,13 @@ using namespace Js;
             {
                 digit = integer / 10;
                 integer %= 10;
-                *outBuffer = digit + _u('0');
+                *outBuffer = digit + u'0';
                 outBuffer++;
                 cchWritten++;
             }
             else if( widthForPaddingZerosInsteadSpaces > 1 )
             {
-                *outBuffer = _u('0');
+                *outBuffer = u'0';
                 outBuffer++;
                 cchWritten++;
             }
@@ -273,7 +273,7 @@ using namespace Js;
         Assert(cchWritten < outBufferSize);
         if (cchWritten < outBufferSize)
         {
-            *outBuffer = integer + _u('0');
+            *outBuffer = integer + u'0';
             outBuffer++;
             cchWritten++;
         }
@@ -296,9 +296,9 @@ using namespace Js;
         }
         if (length == 1)
         {
-            if (str[0] >= _u('0') && str[0] <= _u('9'))
+            if (str[0] >= u'0' && str[0] <= u'9')
             {
-                *intVal = (uint32)(str[0] - _u('0'));
+                *intVal = (uint32)(str[0] - u'0');
                 return true;
             }
             else
@@ -306,26 +306,26 @@ using namespace Js;
                 return false;
             }
         }
-        if (str[0] < _u('1') || str[0] > _u('9'))
+        if (str[0] < u'1' || str[0] > u'9')
         {
             return false;
         }
-        uint32 val = (uint32)(str[0] - _u('0'));
+        uint32 val = (uint32)(str[0] - u'0');
         int calcLen = min(length, 9);
         for (int i = 1; i < calcLen; i++)
         {
-            if ((str[i] < _u('0'))|| (str[i] > _u('9')))
+            if ((str[i] < u'0')|| (str[i] > u'9'))
             {
                 return false;
             }
-            val = (val * 10) + (uint32)(str[i] - _u('0'));
+            val = (val * 10) + (uint32)(str[i] - u'0');
         }
         if (length == 10)
         {
             // check for overflow 4294967295
-            if (str[9] < _u('0') || str[9] > _u('9') ||
+            if (str[9] < u'0' || str[9] > u'9' ||
                 UInt32Math::Mul(val, 10, &val) ||
-                UInt32Math::Add(val, (uint32)(str[9] - _u('0')), &val))
+                UInt32Math::Add(val, (uint32)(str[9] - u'0'), &val))
             {
                 return false;
             }

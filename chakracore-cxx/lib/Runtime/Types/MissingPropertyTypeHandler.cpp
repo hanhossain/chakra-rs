@@ -233,7 +233,7 @@ namespace Js
 #if DBG_DUMP
     void MissingPropertyTypeHandler::Dump(unsigned indent) const
     {
-        Output::Print(_u("%*sMissingPropertyTypeHandler (0x%p): Dump unimplemented\n"), indent, _u(""), this);
+        Output::Print(u"%*sMissingPropertyTypeHandler (0x%p): Dump unimplemented\n", indent, u"", this);
     }
 #endif
 }

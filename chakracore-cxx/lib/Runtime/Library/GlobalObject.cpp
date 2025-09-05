@@ -169,7 +169,7 @@ using namespace Js;
         // used arbitrary defaults for these, but it seems to work
         ModuleID moduleID = 0;
         uint32 grfscr = 0;
-        LPCOLESTR pszTitle = _u("");
+        LPCOLESTR pszTitle = u"";
         BOOL registerDocument = false;
 
         BOOL strictMode = true;
@@ -227,13 +227,13 @@ using namespace Js;
         Js::Var utf8SourceInfoVar = Js::JavascriptNumber::ToVar((int32) utf8SrcInfo, scriptContext);
 
         // assign properties to function info object
-        SetProperty(fnInfoObj, _u("filename"), filenameString);
-        SetProperty(fnInfoObj, _u("function"), funcnameString);
-        SetProperty(fnInfoObj, _u("line"), lineNumber);
-        SetProperty(fnInfoObj, _u("col"), colNumber);
-        SetProperty(fnInfoObj, _u("funcId"), functionIdNumberVar);
-        SetProperty(fnInfoObj, _u("utf8SrcInfoPtr"), utf8SourceInfoVar);
-        SetProperty(fnInfoObj, _u("source"), source);
+        SetProperty(fnInfoObj, u"filename", filenameString);
+        SetProperty(fnInfoObj, u"function", funcnameString);
+        SetProperty(fnInfoObj, u"line", lineNumber);
+        SetProperty(fnInfoObj, u"col", colNumber);
+        SetProperty(fnInfoObj, u"funcId", functionIdNumberVar);
+        SetProperty(fnInfoObj, u"utf8SrcInfoPtr", utf8SourceInfoVar);
+        SetProperty(fnInfoObj, u"source", source);
 
         return fnInfoObj;
     }
@@ -279,7 +279,7 @@ using namespace Js;
 #ifdef ENABLE_IR_VIEWER_DBG_DUMP
         if (Js::Configuration::Global.flags.Verbose)
         {
-            Output::Print(_u(">> There are %d total functions\n"), fnCount);
+            Output::Print(u">> There are %d total functions\n", fnCount);
             Output::Flush();
         }
 #endif
@@ -321,7 +321,7 @@ using namespace Js;
                 }
                 else
                 {
-                    StringCchPrintf(filenameBuffer, 128, _u("[dynamic(hash:%u)]"), srcContextInfo->hash);
+                    StringCchPrintf(filenameBuffer, 128, u"[dynamic(hash:%u)]", srcContextInfo->hash);
                     srcFileUrl = filenameBuffer;
                 }
 
@@ -358,7 +358,7 @@ using namespace Js;
 #ifdef ENABLE_IR_VIEWER_DBG_DUMP
         if (Js::Configuration::Global.flags.Verbose)
         {
-            Output::Print(_u(">> Returning from functionList()\n"));
+            Output::Print(u">> Returning from functionList()\n");
             Output::Flush();
         }
 #endif
@@ -374,7 +374,7 @@ using namespace Js;
 #ifdef ENABLE_IR_VIEWER_DBG_DUMP
         if (Js::Configuration::Global.flags.Verbose)
         {
-            Output::Print(_u(">> Entering rejitFunction()\n"));
+            Output::Print(u">> Entering rejitFunction()\n");
             Output::Flush();
         }
 #endif
@@ -390,8 +390,8 @@ using namespace Js;
 #ifdef ENABLE_IR_VIEWER_DBG_DUMP
         if (Js::Configuration::Global.flags.Verbose)
         {
-            Output::Print(_u("jsVarUtf8SourceInfo: %d (0x%08X)\n"), jsVarUtf8SourceInfo, jsVarUtf8SourceInfo);
-            Output::Print(_u("jsVarFunctionId: %d (0x%08X)\n"), jsVarFunctionId, jsVarFunctionId);
+            Output::Print(u"jsVarUtf8SourceInfo: %d (0x%08X)\n", jsVarUtf8SourceInfo, jsVarUtf8SourceInfo);
+            Output::Print(u"jsVarFunctionId: %d (0x%08X)\n", jsVarFunctionId, jsVarFunctionId);
         }
 #endif
 
@@ -435,9 +435,9 @@ using namespace Js;
 #ifdef ENABLE_IR_VIEWER_DBG_DUMP
         if (Js::Configuration::Global.flags.Verbose)
         {
-            Output::Print(_u("utf8SourceInfoNumber (value): %d (0x%08X)\n"), utf8SourceInfoNumber, utf8SourceInfoNumber);
-            Output::Print(_u("jsVarFunctionId (value): %d (0x%08X)\n"), functionIdNumber, functionIdNumber);
-            Output::Print(_u(">> Executing rejitFunction(%d, %d)\n"), utf8SourceInfoNumber, functionIdNumber);
+            Output::Print(u"utf8SourceInfoNumber (value): %d (0x%08X)\n", utf8SourceInfoNumber, utf8SourceInfoNumber);
+            Output::Print(u"jsVarFunctionId (value): %d (0x%08X)\n", functionIdNumber, functionIdNumber);
+            Output::Print(u">> Executing rejitFunction(%d, %d)\n", utf8SourceInfoNumber, functionIdNumber);
             Output::Flush();
         }
 #endif
@@ -475,7 +475,7 @@ using namespace Js;
 #ifdef ENABLE_IR_VIEWER_DBG_DUMP
         if (Js::Configuration::Global.flags.Verbose)
         {
-            Output::Print(_u("rejitFunction - retVal: 0x%08X\n"), retVal);
+            Output::Print(u"rejitFunction - retVal: 0x%08X\n", retVal);
             Output::Flush();
         }
 #endif
@@ -688,7 +688,7 @@ using namespace Js;
             // Indirect evals cannot have a super reference.
             if (!(args.Info.Flags & CallFlags_ExtraArg))
             {
-                JavascriptError::ThrowSyntaxError(scriptContext, ERRSuperInIndirectEval, _u("super"));
+                JavascriptError::ThrowSyntaxError(scriptContext, ERRSuperInIndirectEval, u"super");
             }
         }
 
@@ -734,7 +734,7 @@ using namespace Js;
         Js::FunctionProxy *proxy = pEvalFunction->GetFunctionProxy();
         Assert(proxy);
 
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, _u("GlobalObject::ProfileModeEvalHelper FunctionNumber : %s, Entrypoint : 0x%08X IsFunctionDefer : %d\n"),
+        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"GlobalObject::ProfileModeEvalHelper FunctionNumber : %s, Entrypoint : 0x%08X IsFunctionDefer : %d\n",
                                     proxy->GetDebugNumberSet(debugStringBuffer), pEvalFunction->GetEntryPoint(), proxy->IsDeferred());
 
         if (proxy->IsDeferred())
@@ -761,7 +761,7 @@ using namespace Js;
         BEGIN_LEAVE_SCRIPT_INTERNAL(scriptContext);
         BEGIN_TRANSLATE_EXCEPTION_TO_HRESULT
         {
-            ArenaAllocator tempAlloc(_u("ValidateSyntaxArena"), scriptContext->GetThreadContext()->GetPageAllocator(), Throw::OutOfMemory);
+            ArenaAllocator tempAlloc(u"ValidateSyntaxArena", scriptContext->GetThreadContext()->GetPageAllocator(), Throw::OutOfMemory);
 
             size_t cchSource = sourceLength;
             size_t cbUtf8Buffer = UInt32Math::MulAdd<3, 1>(sourceLength);
@@ -838,7 +838,7 @@ using namespace Js;
             uint cchSource = sourceLength;
             size_t cbUtf8Buffer = UInt32Math::MulAdd<3, 1>(cchSource);
 
-            ArenaAllocator tempArena(_u("EvalHelperArena"), scriptContext->GetThreadContext()->GetPageAllocator(), Js::Throw::OutOfMemory);
+            ArenaAllocator tempArena(u"EvalHelperArena", scriptContext->GetThreadContext()->GetPageAllocator(), Js::Throw::OutOfMemory);
             LPUTF8 utf8Source = AnewArray(&tempArena, utf8char_t, cbUtf8Buffer);
 
             Assert(cchSource < MAXLONG);
@@ -1003,7 +1003,7 @@ using namespace Js;
             size_t cchSource = sourceLength;
             size_t cbUtf8Buffer = UInt32Math::AddMul<1, 3>(sourceLength);
 
-            ArenaAllocator tempArena(_u("EvalHelperArena"), scriptContext->GetThreadContext()->GetPageAllocator(), Js::Throw::OutOfMemory);
+            ArenaAllocator tempArena(u"EvalHelperArena", scriptContext->GetThreadContext()->GetPageAllocator(), Js::Throw::OutOfMemory);
             LPUTF8 utf8Source = AnewArray(&tempArena, utf8char_t, cbUtf8Buffer);
 
             Assert(cchSource < MAXLONG);
@@ -1402,7 +1402,7 @@ using namespace Js;
 
             if (0 != (chw & 0xFF00))
             {
-                bs->AppendChars(_u("%u"));
+                bs->AppendChars(u"%u");
                 bs->AppendChars(static_cast<char16_t>(_rgchHex[(chw >> 12) & 0x0F]));
                 bs->AppendChars(static_cast<char16_t>(_rgchHex[(chw >> 8) & 0x0F]));
                 bs->AppendChars(static_cast<char16_t>(_rgchHex[(chw >> 4) & 0x0F]));
@@ -1411,7 +1411,7 @@ using namespace Js;
             else if (_grfbitEscape[chw >> 3] & (1 << (chw & 7)))
             {
                 // Escape the byte.
-                bs->AppendChars(_u('%'));
+                bs->AppendChars(u'%');
                 bs->AppendChars(static_cast<char16_t>(_rgchHex[chw >> 4]));
                 bs->AppendChars(static_cast<char16_t>(_rgchHex[chw & 0x0F]));
             }
@@ -1524,7 +1524,7 @@ LHexError:
 #if DBG_DUMP
         if (Js::Configuration::Global.flags.TraceWin8Allocations)
         {
-            Output::Print(_u("MemoryTrace: GlobalObject::EntryCollectGarbage Invoke\n"));
+            Output::Print(u"MemoryTrace: GlobalObject::EntryCollectGarbage Invoke\n");
             Output::Flush();
         }
 #endif
@@ -1558,7 +1558,7 @@ LHexError:
 #if DBG_DUMP
         if (Js::Configuration::Global.flags.TraceWin8Allocations)
         {
-            Output::Print(_u("MemoryTrace: GlobalObject::EntryCollectGarbage Exit\n"));
+            Output::Print(u"MemoryTrace: GlobalObject::EntryCollectGarbage Exit\n");
             Output::Flush();
         }
 #endif
@@ -1609,7 +1609,7 @@ LHexError:
             //
             //TODO: the host should give us a print callback which we can use here
             //
-            Output::Print(_u("%ls\n"), jsString->GetSz());
+            Output::Print(u"%ls\n", jsString->GetSz());
             fflush(stdout);
         }
 
@@ -1694,8 +1694,8 @@ LHexError:
             return TRUE; // empty pattern matches all
         }
 
-        bStart = (_u('*') == pattern->GetItem(0));// Is there a start star?
-        bEnd = (_u('*') == pattern->GetItem(patternLength - 1));// Is there an end star?
+        bStart = (u'*' == pattern->GetItem(0));// Is there a start star?
+        bEnd = (u'*' == pattern->GetItem(patternLength - 1));// Is there an end star?
 
         //deal with the stars
         if (bStart || bEnd)
@@ -2236,13 +2236,13 @@ LHexError:
 
     BOOL GlobalObject::GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
     {
-        stringBuilder->AppendCppLiteral(_u("{...}"));
+        stringBuilder->AppendCppLiteral(u"{...}");
         return TRUE;
     }
 
     BOOL GlobalObject::GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
     {
-        stringBuilder->AppendCppLiteral(_u("Object, (Global)"));
+        stringBuilder->AppendCppLiteral(u"Object, (Global)");
         return TRUE;
     }
 

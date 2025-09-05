@@ -64,7 +64,7 @@ namespace PlatformAgnostic
         if (utf8::DecodeUnitsIntoAndNullTerminate(path, (LPCUTF8&)tmp, (LPCUTF8)tmp + strlen(tmp)) <= 0)
         {
             free(tmp);
-            wcscpy_s(path, size, _u("GetBinaryLocation: DecodeUnitsIntoAndNullTerminate has failed."));
+            wcscpy_s(path, size, u"GetBinaryLocation: DecodeUnitsIntoAndNullTerminate has failed.");
             return false;
         }
         free(tmp);

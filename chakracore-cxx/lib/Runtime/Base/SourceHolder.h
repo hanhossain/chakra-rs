@@ -61,7 +61,7 @@ namespace Js
 
         virtual bool Equals(ISourceHolder* other) override
         {
-          const char16_t* reason = _u("Equal Comparison");
+          const char16_t* reason = u"Equal Comparison";
             return this == other ||
                 (this->GetByteLength(reason) == other->GetByteLength(reason)
                     && (this->GetSource(reason) == other->GetSource(reason)

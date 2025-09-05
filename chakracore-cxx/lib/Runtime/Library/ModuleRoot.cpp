@@ -477,13 +477,13 @@ namespace Js
 
     BOOL ModuleRoot::GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
     {
-        stringBuilder->AppendCppLiteral(_u("{Named Item}"));
+        stringBuilder->AppendCppLiteral(u"{Named Item}");
         return TRUE;
     }
 
     BOOL ModuleRoot::GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
     {
-        stringBuilder->AppendCppLiteral(_u("Object, (Named Item)"));
+        stringBuilder->AppendCppLiteral(u"Object, (Named Item)");
         return TRUE;
     }
 }

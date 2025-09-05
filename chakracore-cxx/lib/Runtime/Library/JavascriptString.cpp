@@ -433,8 +433,8 @@ case_2:
         {
             Output::Print(
                 _u("JavascriptString::ConcatDestructive(\"%.8s%s\") - creating ConcatString\n"),
-                pstRight->IsFinalized() ? pstRight->GetString() : _u(""),
-                !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? _u("...") : _u(""));
+                pstRight->IsFinalized() ? pstRight->GetString() : u"",
+                !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? u"..." : u"");
             Output::Flush();
         }
 
@@ -453,8 +453,8 @@ case_2:
         {
             Output::Print(
                 _u("JavascriptString::ConcatDestructive(\"%.8s%s\") - appending to CompoundString\n"),
-                pstRight->IsFinalized() ? pstRight->GetString() : _u(""),
-                !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? _u("...") : _u(""));
+                pstRight->IsFinalized() ? pstRight->GetString() : u"",
+                !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? u"..." : u"");
             Output::Flush();
         }
 
@@ -480,8 +480,8 @@ case_2:
             {
                 Output::Print(
                     _u("JavascriptString::ConcatDestructive(\"%.8s%s\") - converting ConcatString to CompoundString\n"),
-                    pstRight->IsFinalized() ? pstRight->GetString() : _u(""),
-                    !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? _u("...") : _u(""));
+                    pstRight->IsFinalized() ? pstRight->GetString() : u"",
+                    !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? u"..." : u"");
                 Output::Flush();
             }
 
@@ -508,8 +508,8 @@ case_2:
         {
             Output::Print(
                 _u("JavascriptString::ConcatDestructive(\"%.8s%s\") - one side empty, using other side\n"),
-                pstRight->IsFinalized() ? pstRight->GetString() : _u(""),
-                !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? _u("...") : _u(""));
+                pstRight->IsFinalized() ? pstRight->GetString() : u"",
+                !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? u"..." : u"");
             Output::Flush();
         }
 
@@ -536,8 +536,8 @@ case_2:
         {
             Output::Print(
                 _u("JavascriptString::ConcatDestructive(\"%.8s%s\") - creating CompoundString, appending chars\n"),
-                pstRight->IsFinalized() ? pstRight->GetString() : _u(""),
-                !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? _u("...") : _u(""));
+                pstRight->IsFinalized() ? pstRight->GetString() : u"",
+                !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? u"..." : u"");
             Output::Flush();
         }
 
@@ -578,8 +578,8 @@ case_2:
             {
                 Output::Print(
                     _u("JavascriptString::Concat(\"%.8s%s\") - creating ConcatString\n"),
-                    pstRight->IsFinalized() ? pstRight->GetString() : _u(""),
-                    !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? _u("...") : _u(""));
+                    pstRight->IsFinalized() ? pstRight->GetString() : u"",
+                    !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? u"..." : u"");
                 Output::Flush();
             }
 
@@ -602,8 +602,8 @@ case_2:
         {
             Output::Print(
                 _u("JavascriptString::Concat(\"%.8s%s\") - cloning CompoundString, appending to clone\n"),
-                pstRight->IsFinalized() ? pstRight->GetString() : _u(""),
-                !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? _u("...") : _u(""));
+                pstRight->IsFinalized() ? pstRight->GetString() : u"",
+                !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? u"..." : u"");
             Output::Flush();
         }
 
@@ -631,8 +631,8 @@ case_2:
         {
             Output::Print(
                 _u("JavascriptString::Concat(\"%.8s%s\") - converting ConcatString to CompoundString\n"),
-                pstRight->IsFinalized() ? pstRight->GetString() : _u(""),
-                !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? _u("...") : _u(""));
+                pstRight->IsFinalized() ? pstRight->GetString() : u"",
+                !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? u"..." : u"");
             Output::Flush();
         }
 
@@ -657,8 +657,8 @@ case_2:
         {
             Output::Print(
                 _u("JavascriptString::Concat(\"%.8s%s\") - one side empty, using other side\n"),
-                pstRight->IsFinalized() ? pstRight->GetString() : _u(""),
-                !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? _u("...") : _u(""));
+                pstRight->IsFinalized() ? pstRight->GetString() : u"",
+                !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? u"..." : u"");
             Output::Flush();
         }
 
@@ -684,8 +684,8 @@ case_2:
         {
             Output::Print(
                 _u("JavascriptString::Concat(\"%.8s%s\") - both sides length 1, creating BufferStringBuilder::WritableString\n"),
-                pstRight->IsFinalized() ? pstRight->GetString() : _u(""),
-                !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? _u("...") : _u(""));
+                pstRight->IsFinalized() ? pstRight->GetString() : u"",
+                !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? u"..." : u"");
             Output::Flush();
         }
 
@@ -715,7 +715,7 @@ case_2:
 
         // 1. Let O be ? RequireObjectCoercible(this value).
         // 2. Let S be ? ToString(O).
-        JS_REENTRANT(jsReentLock, GetThisStringArgument(args, scriptContext, _u("String.prototype.at"), &pThis));
+        JS_REENTRANT(jsReentLock, GetThisStringArgument(args, scriptContext, u"String.prototype.at", &pThis));
 
         // 3. Let len be the length of S.
         charcount_t len = pThis->GetLength();
@@ -783,7 +783,7 @@ case_2:
         //
 
         JavascriptString * pThis = nullptr;
-        GetThisStringArgument(args, scriptContext, _u("String.prototype.charAt"), &pThis);
+        GetThisStringArgument(args, scriptContext, u"String.prototype.charAt", &pThis);
 
         charcount_t idxPosition = 0;
         if (args.Info.Count > 1)
@@ -831,7 +831,7 @@ case_2:
         // The charCodeAt function is intentionally generic; it does not require that its this value be a String object. Therefore it can be transferred to other kinds of objects for use as a method.
         //
         JavascriptString * pThis = nullptr;
-        GetThisStringArgument(args, scriptContext, _u("String.prototype.charCodeAt"), &pThis);
+        GetThisStringArgument(args, scriptContext, u"String.prototype.charCodeAt", &pThis);
 
         charcount_t idxPosition = 0;
         if (args.Info.Count > 1)
@@ -866,7 +866,7 @@ case_2:
         Assert(!(callInfo.Flags & CallFlags_New));
 
         JavascriptString * pThis = nullptr;
-        GetThisStringArgument(args, scriptContext, _u("String.prototype.codePointAt"), &pThis);
+        GetThisStringArgument(args, scriptContext, u"String.prototype.codePointAt", &pThis);
 
         charcount_t idxPosition = 0;
         if (args.Info.Count > 1)
@@ -920,12 +920,12 @@ case_2:
 
         if(args.Info.Count == 0)
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedString, _u("String.prototype.concat"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedString, u"String.prototype.concat");
         }
         AssertMsg(args.Info.Count > 0, "Negative argument count");
         if (!JavascriptConversion::CheckObjectCoercible(args[0], scriptContext))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NullOrUndefined, _u("String.prototype.concat"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NullOrUndefined, u"String.prototype.concat");
         }
 
         JavascriptString* accum = nullptr;
@@ -966,7 +966,7 @@ case_2:
         //
         if(args.Info.Count == 0)
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedString, _u("String.fromCharCode"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedString, u"String.fromCharCode");
         }
         AssertMsg(args.Info.Count > 0, "Negative argument count");
 
@@ -1033,7 +1033,7 @@ case_2:
             }
         }
 
-        BEGIN_TEMP_ALLOCATOR(tempAllocator, scriptContext, _u("fromCodePoint"));
+        BEGIN_TEMP_ALLOCATOR(tempAllocator, scriptContext, u"fromCodePoint");
         // Create a temporary buffer that is double the arguments count (in case all are surrogate pairs)
         size_t bufferLength = (args.Info.Count - 1) * 2;
         char16_t *tempBuffer = AnewArray(tempAllocator, char16_t, bufferLength);
@@ -1089,7 +1089,7 @@ case_2:
 
         Assert(!(callInfo.Flags & CallFlags_New));
 
-        return JavascriptNumber::ToVar(IndexOf(args, scriptContext, _u("String.prototype.indexOf"), true), scriptContext);
+        return JavascriptNumber::ToVar(IndexOf(args, scriptContext, u"String.prototype.indexOf", true), scriptContext);
     }
 
     int JavascriptString::IndexOf(ArgumentReader& args, ScriptContext* scriptContext, const char16_t* apiNameForErrorMsg, bool isRegExpAnAllowedArg)
@@ -1191,7 +1191,7 @@ case_2:
 
         JavascriptString * pThis = nullptr;
 
-        GetThisStringArgument(args, scriptContext, _u("String.prototype.lastIndexOf"), &pThis);
+        GetThisStringArgument(args, scriptContext, u"String.prototype.lastIndexOf", &pThis);
 
         JavascriptString * searchArg = nullptr;
         if(args.Info.Count > 1)
@@ -1365,14 +1365,14 @@ case_2:
 
         if(args.Info.Count == 0)
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedString, _u("String.prototype.localeCompare"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedString, u"String.prototype.localeCompare");
         }
         AssertMsg(args.Info.Count > 0, "Negative argument count");
 
         JavascriptString * pThis;
         JavascriptString * pThat;
 
-        GetThisAndSearchStringArguments(args, scriptContext, _u("String.prototype.localeCompare"), &pThis, &pThat, true);
+        GetThisAndSearchStringArguments(args, scriptContext, u"String.prototype.localeCompare", &pThis, &pThat, true);
 
 #ifdef ENABLE_INTL_OBJECT
         if (CONFIG_FLAG(IntlBuiltIns) && scriptContext->IsIntlEnabled())
@@ -1423,7 +1423,7 @@ case_2:
             // TODO there is no spec on the error thrown here.
             // When the support for HR errors is implemented replace this with the same error reported by v5.8
             JavascriptError::ThrowRangeError(function->GetScriptContext(),
-                VBSERR_InternalError /* TODO-ERROR: _u("Failed compare operation")*/ );
+                VBSERR_InternalError /* TODO-ERROR: u"Failed compare operation"*/ );
         }
 
         return JavascriptNumber::ToVar(result, scriptContext);
@@ -1439,7 +1439,7 @@ case_2:
 
         Assert(!(callInfo.Flags & CallFlags_New));
 
-        PCWSTR const varName = _u("String.prototype.match");
+        PCWSTR const varName = u"String.prototype.match";
 
         AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, varName);
 
@@ -1478,7 +1478,7 @@ case_2:
         Assert(!(callInfo.Flags & CallFlags_New));
 
         JavascriptString *pThis = nullptr;
-        GetThisStringArgument(args, scriptContext, _u("String.prototype.normalize"), &pThis);
+        GetThisStringArgument(args, scriptContext, u"String.prototype.normalize", &pThis);
 
         UnicodeText::NormalizationForm form = UnicodeText::NormalizationForm::C;
 
@@ -1490,19 +1490,19 @@ case_2:
                 formStr = JavascriptConversion::ToString(args[1], scriptContext);
             }
 
-            if (formStr->BufferEquals(_u("NFD"), 3))
+            if (formStr->BufferEquals(u"NFD", 3))
             {
                 form = UnicodeText::NormalizationForm::D;
             }
-            else if (formStr->BufferEquals(_u("NFKC"), 4))
+            else if (formStr->BufferEquals(u"NFKC", 4))
             {
                 form = UnicodeText::NormalizationForm::KC;
             }
-            else if (formStr->BufferEquals(_u("NFKD"), 4))
+            else if (formStr->BufferEquals(u"NFKD", 4))
             {
                 form = UnicodeText::NormalizationForm::KD;
             }
-            else if (!formStr->BufferEquals(_u("NFC"), 3))
+            else if (!formStr->BufferEquals(u"NFC", 3))
             {
                 JavascriptError::ThrowRangeErrorVar(scriptContext, JSERR_InvalidNormalizationForm, formStr->GetString());
             }
@@ -1513,7 +1513,7 @@ case_2:
             return pThis;
         }
 
-        BEGIN_TEMP_ALLOCATOR(tempAllocator, scriptContext, _u("normalize"));
+        BEGIN_TEMP_ALLOCATOR(tempAllocator, scriptContext, u"normalize");
 
         charcount_t sizeEstimate = 0;
         char16_t* buffer = pThis->GetNormalizedString(form, tempAllocator, sizeEstimate);
@@ -1546,7 +1546,7 @@ case_2:
 
         if (args.Info.Count < 2)
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedObject, _u("String.raw"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedObject, u"String.raw");
         }
 
         RecyclableObject* callSite;
@@ -1557,7 +1557,7 @@ case_2:
         // ToObject returns false if the parameter is null or undefined
         if (!JavascriptConversion::ToObject(args[1], scriptContext, &callSite))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedObject, _u("String.raw"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedObject, u"String.raw");
         }
 
         // Get the raw property from the callSite object
@@ -1568,7 +1568,7 @@ case_2:
 
         if (!JavascriptConversion::ToObject(rawVar, scriptContext, &raw))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedObject, _u("String.raw"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedObject, u"String.raw");
         }
 
         long length = JavascriptConversion::ToLength(JavascriptOperators::OP_GetLength(raw, scriptContext), scriptContext);
@@ -1640,7 +1640,7 @@ case_2:
         ARGUMENTS(args, callInfo);
         ScriptContext* scriptContext = function->GetScriptContext();
 
-        PCWSTR const varName = _u("String.prototype.replace");
+        PCWSTR const varName = u"String.prototype.replace";
 
         AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, varName);
 
@@ -1744,7 +1744,7 @@ case_2:
 
         Assert(!(callInfo.Flags & CallFlags_New));
 
-        PCWSTR const varName = _u("String.prototype.search");
+        PCWSTR const varName = u"String.prototype.search";
 
         AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, varName);
 
@@ -1853,7 +1853,7 @@ case_2:
         Assert(!(callInfo.Flags & CallFlags_New));
 
         JavascriptString * pThis = nullptr;
-        GetThisStringArgument(args, scriptContext, _u("String.prototype.slice"), &pThis);
+        GetThisStringArgument(args, scriptContext, u"String.prototype.slice", &pThis);
 
         int len = pThis->GetLength();
 
@@ -1908,7 +1908,7 @@ case_2:
 
         Assert(!(callInfo.Flags & CallFlags_New));
 
-        PCWSTR const varName = _u("String.prototype.split");
+        PCWSTR const varName = u"String.prototype.split";
 
         AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, varName);
 
@@ -1983,7 +1983,7 @@ case_2:
         Assert(!(callInfo.Flags & CallFlags_New));
 
         JavascriptString * pThis = nullptr;
-        GetThisStringArgument(args, scriptContext, _u("String.prototype.substring"), &pThis);
+        GetThisStringArgument(args, scriptContext, u"String.prototype.substring", &pThis);
 
         int len = pThis->GetLength();
 
@@ -2032,7 +2032,7 @@ case_2:
         Assert(!(callInfo.Flags & CallFlags_New));
 
         JavascriptString * pThis = nullptr;
-        GetThisStringArgument(args, scriptContext, _u("String.prototype.substr"), &pThis);
+        GetThisStringArgument(args, scriptContext, u"String.prototype.substr", &pThis);
 
         int len = pThis->GetLength();
 
@@ -2098,7 +2098,7 @@ case_2:
         Assert(!(callInfo.Flags & CallFlags_New));
 
         JavascriptString * pThis = nullptr;
-        GetThisStringArgument(args, scriptContext, _u("String.prototype.padStart"), &pThis);
+        GetThisStringArgument(args, scriptContext, u"String.prototype.padStart", &pThis);
 
         return PadCore(args, pThis, true /*isPadStart*/, scriptContext);
     }
@@ -2113,7 +2113,7 @@ case_2:
         Assert(!(callInfo.Flags & CallFlags_New));
 
         JavascriptString * pThis = nullptr;
-        GetThisStringArgument(args, scriptContext, _u("String.prototype.padEnd"), &pThis);
+        GetThisStringArgument(args, scriptContext, u"String.prototype.padEnd", &pThis);
 
         return PadCore(args, pThis, false /*isPadStart*/, scriptContext);
     }
@@ -2156,7 +2156,7 @@ case_2:
 
         if (fillerString == nullptr)
         {
-            fillerString = NewWithBuffer(_u(" "), 1, scriptContext);
+            fillerString = NewWithBuffer(u" ", 1, scriptContext);
         }
 
         Assert(fillerString->GetLength() > 0);
@@ -2188,7 +2188,7 @@ case_2:
         Assert(!(callInfo.Flags & CallFlags_New));
 
         JavascriptString * pThis = nullptr;
-        GetThisStringArgument(args, scriptContext, _u("String.prototype.toLocaleLowerCase"), &pThis);
+        GetThisStringArgument(args, scriptContext, u"String.prototype.toLocaleLowerCase", &pThis);
 
         return ToLocaleCaseHelper<false /* toUpper */>(pThis);
     }
@@ -2203,7 +2203,7 @@ case_2:
         Assert(!(callInfo.Flags & CallFlags_New));
 
         JavascriptString * pThis = nullptr;
-        GetThisStringArgument(args, scriptContext, _u("String.prototype.toLocaleUpperCase"), &pThis);
+        GetThisStringArgument(args, scriptContext, u"String.prototype.toLocaleUpperCase", &pThis);
 
         return ToLocaleCaseHelper<true /* toUpper */>(pThis);
     }
@@ -2226,7 +2226,7 @@ case_2:
         Assert(!(callInfo.Flags & CallFlags_New));
 
         JavascriptString * pThis = nullptr;
-        GetThisStringArgument(args, scriptContext, _u("String.prototype.toLowerCase"), &pThis);
+        GetThisStringArgument(args, scriptContext, u"String.prototype.toLowerCase", &pThis);
 
         return ToCaseCore<false, true>(pThis);
     }
@@ -2242,7 +2242,7 @@ case_2:
 
         if(args.Info.Count == 0)
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedString, _u("String.prototype.toString"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedString, u"String.prototype.toString");
         }
         AssertMsg(args.Info.Count > 0, "Negative argument count");
 
@@ -2258,7 +2258,7 @@ case_2:
                 }
             }
 
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedString, _u("String.prototype.toString"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedString, u"String.prototype.toString");
         }
 
         return str;
@@ -2274,7 +2274,7 @@ case_2:
         Assert(!(callInfo.Flags & CallFlags_New));
 
         JavascriptString* pThis = nullptr;
-        GetThisStringArgument(args, scriptContext, _u("String.prototype.toUpperCase"), &pThis);
+        GetThisStringArgument(args, scriptContext, u"String.prototype.toUpperCase", &pThis);
 
         return ToCaseCore<true, true>(pThis);
     }
@@ -2314,7 +2314,7 @@ case_2:
                     char16_t cur = pThisString[i];
                     if (toUpper)
                     {
-                        if (cur >= _u('a') && cur <= _u('z'))
+                        if (cur >= u'a' && cur <= u'z')
                         {
                             ret[i] = cur - diffBetweenCases;
                         }
@@ -2325,7 +2325,7 @@ case_2:
                     }
                     else
                     {
-                        if (cur >= _u('A') && cur <= _u('Z'))
+                        if (cur >= u'A' && cur <= u'Z')
                         {
                             ret[i] = cur + diffBetweenCases;
                         }
@@ -2424,7 +2424,7 @@ case_2:
         //4.    Return T.
 
         JavascriptString* pThis = nullptr;
-        GetThisStringArgument(args, scriptContext, _u("String.prototype.trim"), &pThis);
+        GetThisStringArgument(args, scriptContext, u"String.prototype.trim", &pThis);
         return TrimLeftRightHelper<true /*trimLeft*/, true /*trimRight*/>(pThis, scriptContext);
     }
 
@@ -2445,7 +2445,7 @@ case_2:
         // 5.Return T.
 
         JavascriptString* pThis = nullptr;
-        GetThisStringArgument(args, scriptContext, _u("String.prototype.trimLeft"), &pThis);
+        GetThisStringArgument(args, scriptContext, u"String.prototype.trimLeft", &pThis);
         return TrimLeftRightHelper< true /*trimLeft*/, false /*trimRight*/>(pThis, scriptContext);
     }
 
@@ -2466,7 +2466,7 @@ case_2:
         // 5.Return T.
 
         JavascriptString* pThis = nullptr;
-        GetThisStringArgument(args, scriptContext, _u("String.prototype.trimRight"), &pThis);
+        GetThisStringArgument(args, scriptContext, u"String.prototype.trimRight", &pThis);
         return TrimLeftRightHelper<false /*trimLeft*/, true /*trimRight*/>(pThis, scriptContext);
     }
 
@@ -2548,7 +2548,7 @@ case_2:
         Assert(!(callInfo.Flags & CallFlags_New));
 
         JavascriptString* pThis = nullptr;
-        GetThisStringArgument(args, scriptContext, _u("String.prototype.repeat"), &pThis);
+        GetThisStringArgument(args, scriptContext, u"String.prototype.repeat", &pThis);
 
         charcount_t count = 0;
 
@@ -2559,7 +2559,7 @@ case_2:
                 int32 signedCount = TaggedInt::ToInt32(args[1]);
                 if (signedCount < 0)
                 {
-                    JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgumentOutOfRange, _u("String.prototype.repeat"));
+                    JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgumentOutOfRange, u"String.prototype.repeat");
                 }
                 count = (uint32) signedCount;
             }
@@ -2568,7 +2568,7 @@ case_2:
                 double countDbl = JavascriptConversion::ToInteger_Full(args[1], scriptContext);
                 if (JavascriptNumber::IsPosInf(countDbl) || countDbl < 0.0)
                 {
-                    JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgumentOutOfRange, _u("String.prototype.repeat"));
+                    JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgumentOutOfRange, u"String.prototype.repeat");
                 }
 
                 count = NumberUtilities::LuFromDblNearest(countDbl);
@@ -2648,7 +2648,7 @@ case_2:
         ENTER_PINNED_SCOPE(JavascriptString, pThis);
         ENTER_PINNED_SCOPE(JavascriptString, pSearch);
 
-        GetThisAndSearchStringArguments(args, scriptContext, _u("String.prototype.startsWith"), &pThis, &pSearch, false);
+        GetThisAndSearchStringArguments(args, scriptContext, u"String.prototype.startsWith", &pThis, &pSearch, false);
 
         const char16_t* thisStr = pThis->GetString();
         int thisStrLen = pThis->GetLength();
@@ -2702,7 +2702,7 @@ case_2:
         ENTER_PINNED_SCOPE(JavascriptString, pThis);
         ENTER_PINNED_SCOPE(JavascriptString, pSearch);
 
-        GetThisAndSearchStringArguments(args, scriptContext, _u("String.prototype.endsWith"), &pThis, &pSearch, false);
+        GetThisAndSearchStringArguments(args, scriptContext, u"String.prototype.endsWith", &pThis, &pSearch, false);
 
         const char16_t* thisStr = pThis->GetString();
         int thisStrLen = pThis->GetLength();
@@ -2753,7 +2753,7 @@ case_2:
 
         Assert(!(callInfo.Flags & CallFlags_New));
 
-        return JavascriptBoolean::ToVar(IndexOf(args, scriptContext, _u("String.prototype.includes"), false) != -1, scriptContext);
+        return JavascriptBoolean::ToVar(IndexOf(args, scriptContext, u"String.prototype.includes", false) != -1, scriptContext);
     }
 
     Var JavascriptString::EntryValueOf(RecyclableObject* function, CallInfo callInfo, ...)
@@ -2767,7 +2767,7 @@ case_2:
 
         if(args.Info.Count == 0)
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedString, _u("String.prototype.valueOf"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedString, u"String.prototype.valueOf");
         }
         AssertMsg(args.Info.Count > 0, "Negative argument count");
 
@@ -2783,7 +2783,7 @@ case_2:
                 }
             }
 
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedString, _u("String.prototype.valueOf"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedString, u"String.prototype.valueOf");
         }
 
         return str;
@@ -2800,13 +2800,13 @@ case_2:
 
         if (args.Info.Count == 0)
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedString, _u("String.prototype[Symbol.iterator]"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedString, u"String.prototype[Symbol.iterator]");
         }
         AssertMsg(args.Info.Count > 0, "Negative argument count");
 
         if (!JavascriptConversion::CheckObjectCoercible(args[0], scriptContext))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NullOrUndefined, _u("String.prototype[Symbol.iterator]"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NullOrUndefined, u"String.prototype[Symbol.iterator]");
         }
 
         JavascriptString* str = JavascriptConversion::ToString(args[0], scriptContext);
@@ -2816,7 +2816,7 @@ case_2:
 
     const char16_t * JavascriptString::GetSz()
     {
-        Assert(m_pszValue[m_charLength] == _u('\0'));
+        Assert(m_pszValue[m_charLength] == u'\0');
         return m_pszValue;
     }
 
@@ -2852,7 +2852,7 @@ case_2:
 
     bool JavascriptString::IsNegZero(JavascriptString *string)
     {
-        return string->GetLength() == 2 && wmemcmp(string->GetString(), _u("-0"), 2) == 0;
+        return string->GetLength() == 2 && wmemcmp(string->GetString(), u"-0", 2) == 0;
     }
 
     void JavascriptString::FinishCopy(__inout_xcount(m_charLength) char16_t *const buffer, StringCopyInfoStack &nestedStringTreeCopyInfos)
@@ -3221,15 +3221,15 @@ case_2:
         JavascriptString * pPropertyValue = nullptr;
         const char16_t * propertyValueStr = nullptr;
         uint quotesCount = 0;
-        const char16_t quotStr[] = _u("&quot;");
+        const char16_t quotStr[] = u"&quot;";
         const charcount_t quotStrLen = _countof(quotStr) - 1;
         bool ES6FixesEnabled = scriptContext->GetConfig()->IsES6StringPrototypeFixEnabled();
 
         // Assemble the component pieces of a string tag function (ex: String.prototype.link).
         // In the general case, result is as below:
         //
-        // pszProp = _u("href");
-        // pszTag = _u("a");
+        // pszProp = u"href";
+        // pszTag = u"a";
         // pThis = VarTo<JavascriptString>(args[0]);
         // pPropertyValue = VarTo<JavascriptString>(args[1]);
         //
@@ -3242,7 +3242,7 @@ case_2:
         //                 + cchPropertyValue
         //                 + cchThis;
         //
-        // Note: With ES6FixesEnabled, we need to escape quote characters (_u('"')) in pPropertyValue.
+        // Note: With ES6FixesEnabled, we need to escape quote characters (u'"') in pPropertyValue.
         // Note: Without ES6FixesEnabled, the tag and prop strings should be capitalized.
 
         if(args.Info.Count == 0)
@@ -3294,7 +3294,7 @@ case_2:
                 // Count the number of " characters we need to escape.
                 for (ich = 0; ich < cchPropertyValue; ich++)
                 {
-                    if (propertyValueStr[ich] == _u('"'))
+                    if (propertyValueStr[ich] == u'"')
                     {
                         ++quotesCount;
                     }
@@ -3327,20 +3327,20 @@ case_2:
         BufferStringBuilder builder(cchTotalChars, scriptContext);
         char16_t *pResult = builder.DangerousGetWritableBuffer();
 
-        *pResult++ = _u('<');
+        *pResult++ = u'<';
         for (ich = 0; ich < cchTag; ich++)
         {
             *pResult++ = ES6FixesEnabled ? pszTag[ich] : towupper(pszTag[ich]);
         }
         if (nullptr != pszProp)
         {
-            *pResult++ = _u(' ');
+            *pResult++ = u' ';
             for (ich = 0; ich < cchProp; ich++)
             {
                 *pResult++ = ES6FixesEnabled ? pszProp[ich] : towupper(pszProp[ich]);
             }
-            *pResult++ = _u('=');
-            *pResult++ = _u('"');
+            *pResult++ = u'=';
+            *pResult++ = u'"';
 
             Assert(propertyValueStr != nullptr);
 
@@ -3356,7 +3356,7 @@ case_2:
             else {
                 for (ich = 0; ich < cchPropertyValue; ich++)
                 {
-                    if (propertyValueStr[ich] == _u('"'))
+                    if (propertyValueStr[ich] == u'"')
                     {
                         charcount_t destLengthLeft = (cchTotalChars - (charcount_t)(pResult - builder.DangerousGetWritableBuffer() + 1));
 
@@ -3398,21 +3398,21 @@ case_2:
                 }
             }
 
-            *pResult++ = _u('"');
+            *pResult++ = u'"';
         }
-        *pResult++ = _u('>');
+        *pResult++ = u'>';
 
         const char16_t *pThisString = pThis->GetString();
         js_wmemcpy_s(pResult, cchTotalChars - (pResult - builder.DangerousGetWritableBuffer() + 1), pThisString, cchThis);
         pResult += cchThis;
 
-        *pResult++ = _u('<');
-        *pResult++ = _u('/');
+        *pResult++ = u'<';
+        *pResult++ = u'/';
         for (ich = 0; ich < cchTag; ich++)
         {
             *pResult++ = ES6FixesEnabled ? pszTag[ich] : towupper(pszTag[ich]);
         }
-        *pResult++ = _u('>');
+        *pResult++ = u'>';
 
         // Assert we ended at the right place.
         AssertMsg((charcount_t)(pResult - builder.DangerousGetWritableBuffer()) == cchTotalChars, "Exceeded allocated string limit");
@@ -3682,7 +3682,7 @@ case_2:
         // Allocate recycler memory to store the string plus a terminating NUL
         char16_t* buffer = RecyclerNewArrayLeaf(recycler, char16_t, bufLen);
         js_wmemcpy_s(buffer, bufLen, content, length);
-        buffer[length] = _u('\0');
+        buffer[length] = u'\0';
 
         return buffer;
     }
@@ -3703,7 +3703,7 @@ case_2:
         // Allocate arena memory to store the string plus a terminating NUL
         char16_t* buffer = AnewArray(arena, char16_t, length + 1);
         js_wmemcpy_s(buffer, length + 1, content, length);
-        buffer[length] = _u('\0');
+        buffer[length] = u'\0';
 
         return buffer;
     }
@@ -3951,15 +3951,15 @@ case_2:
 
     BOOL JavascriptString::GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
     {
-        stringBuilder->Append(_u('"'));
+        stringBuilder->Append(u'"');
         stringBuilder->Append(this->GetString(), this->GetLength());
-        stringBuilder->Append(_u('"'));
+        stringBuilder->Append(u'"');
         return TRUE;
     }
 
     BOOL JavascriptString::GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
     {
-        stringBuilder->AppendCppLiteral(_u("String"));
+        stringBuilder->AppendCppLiteral(u"String");
         return TRUE;
     }
 

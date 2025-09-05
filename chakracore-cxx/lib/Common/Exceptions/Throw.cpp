@@ -109,7 +109,7 @@ namespace Js {
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (CONFIG_FLAG(PrintSystemException))
         {
-            Output::Print(_u("SystemException: OutOfMemory\n"));
+            Output::Print(u"SystemException: OutOfMemory\n");
             Output::Flush();
         }
 #endif
@@ -125,7 +125,7 @@ namespace Js {
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (CONFIG_FLAG(PrintSystemException))
         {
-            Output::Print(_u("SystemException: StackOverflow\n"));
+            Output::Print(u"SystemException: StackOverflow\n");
             Output::Flush();
         }
 #endif
@@ -195,8 +195,8 @@ namespace Js {
             filePath = tempFilePath;
         }
 
-        StringCchPrintf(tempFileName, _countof(tempFileName), _u("%s\\CH_%u_%u.dmp"), filePath, GetCurrentProcessId(), GetCurrentThreadId());
-        Output::Print(_u("dump filename %s \n"), tempFileName);
+        StringCchPrintf(tempFileName, _countof(tempFileName), u"%s\\CH_%u_%u.dmp", filePath, GetCurrentProcessId(), GetCurrentThreadId());
+        Output::Print(u"dump filename %s \n", tempFileName);
         Output::Flush();
 
         hTempFile = CreateFile(tempFileName, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
@@ -247,7 +247,7 @@ namespace Js {
             }
             if (!dumpGenerated)
             {
-                Output::Print(_u("Unable to write minidump (0x%08X)\n"), GetLastError());
+                Output::Print(u"Unable to write minidump (0x%08X)\n", GetLastError());
                 Output::Flush();
             }
         }
@@ -271,7 +271,7 @@ namespace Js {
     }
 
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
-#define CHAKRA_ASSERT_CAPTION _u("CHAKRA ASSERT")
+#define CHAKRA_ASSERT_CAPTION u"CHAKRA ASSERT"
 #endif
 
     bool Throw::ReportAssert(LPCSTR fileName, uint lineNumber, LPCSTR error, LPCSTR message)

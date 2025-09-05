@@ -485,7 +485,7 @@ char16_t*
 FunctionJITTimeInfo::GetDebugNumberSet(wchar(&bufferToWriteTo)[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE]) const
 {
     // (#%u.%u), #%u --> (source file Id . function Id) , function Number
-    int len = swprintf_s(bufferToWriteTo, MAX_FUNCTION_BODY_DEBUG_STRING_SIZE, _u(" (#%d.%u), #%u"),
+    int len = swprintf_s(bufferToWriteTo, MAX_FUNCTION_BODY_DEBUG_STRING_SIZE, u" (#%d.%u), #%u",
         (int)GetSourceContextId(), GetLocalFunctionId(), GetBody()->GetFunctionNumber());
     Assert(len > 8);
     return bufferToWriteTo;

@@ -42,7 +42,7 @@ private:
 public:
     static ConfigParser s_moduleConfigParser;
 
-    ConfigParser(Js::ConfigFlagsTable& outputFlags, LPCWSTR configFileName = _u("jscript")) :
+    ConfigParser(Js::ConfigFlagsTable& outputFlags, LPCWSTR configFileName = u"jscript") :
         _flags(outputFlags),
         _hasReadConfig(false),
         _configFileName(configFileName)

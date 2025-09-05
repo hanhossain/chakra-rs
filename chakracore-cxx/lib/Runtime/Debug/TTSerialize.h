@@ -488,7 +488,7 @@ namespace TTD
                 if(this->m_cursor == this->m_buffCount)
                 {
                     // Make sure to set a value before we return.
-                    *c = _u('\0');
+                    *c = u'\0';
 
                     return false;
                 }

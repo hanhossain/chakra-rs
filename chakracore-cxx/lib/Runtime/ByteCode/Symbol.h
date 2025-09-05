@@ -104,7 +104,7 @@ public:
 
         if (PHASE_TESTTRACE1(Js::StackFuncPhase) && hasFuncAssignment)
         {
-            Output::Print(_u("HasFuncDecl: %s\n"), this->GetName().GetBuffer());
+            Output::Print(u"HasFuncDecl: %s\n", this->GetName().GetBuffer());
             Output::Flush();
         }
     }

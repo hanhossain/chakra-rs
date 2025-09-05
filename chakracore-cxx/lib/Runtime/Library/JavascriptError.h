@@ -167,7 +167,7 @@ namespace Js
             {
                 va_list argptr;
                 va_start(argptr, form);
-                Output::Print(_u("Error: "));
+                Output::Print(u"Error: ");
                 Output::VPrint(form, argptr);
                 Output::Flush();
             }

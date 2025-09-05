@@ -366,8 +366,8 @@ size_t EtwTrace::GetSimpleJitFunctionName(
     Assert(name);
     Assert(nameCharCapacity != 0);
 
-    const char16_t *const suffix = _u("Simple");
-    const size_t suffixCharLength = _countof(_u("Simple")) - 1;
+    const char16_t *const suffix = u"Simple";
+    const size_t suffixCharLength = _countof(u"Simple") - 1;
 
     const char16_t *const functionName = GetFunctionName(body);
     const size_t functionNameCharLength = body->GetDisplayNameLength();

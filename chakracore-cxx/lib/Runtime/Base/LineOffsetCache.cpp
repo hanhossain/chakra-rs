@@ -150,7 +150,7 @@ namespace Js
             bool wasLineEncountered = false;
             switch (decodedCharacter)
             {
-            case _u('\r'):
+            case u'\r':
                 // Check if the next character is a '\n'.  If so, consume that character as well
                 // (consider as one line).
                 if (*currentSourcePosition == '\n')
@@ -160,7 +160,7 @@ namespace Js
                 }
 
                 // Intentional fall-through.
-            case _u('\n'):
+            case u'\n':
             case 0x2028:
             case 0x2029:
                 // Found a new line.

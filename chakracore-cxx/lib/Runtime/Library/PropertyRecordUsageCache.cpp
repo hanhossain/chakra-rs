@@ -71,7 +71,7 @@ namespace Js
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (PHASE_VERBOSE_TRACE1(Js::PolymorphicInlineCachePhase) || PHASE_TRACE1(PropertyCachePhase))
         {
-            Output::Print(_u("PropertyRecordUsageCache '%s' : Bigger PIC, oldSize = %d, newSize = %d\n"), GetString(), polymorphicInlineCacheSize, newPolymorphicInlineCacheSize);
+            Output::Print(u"PropertyRecordUsageCache '%s' : Bigger PIC, oldSize = %d, newSize = %d\n", GetString(), polymorphicInlineCacheSize, newPolymorphicInlineCacheSize);
         }
 #endif
         return newPolymorphicInlineCache;

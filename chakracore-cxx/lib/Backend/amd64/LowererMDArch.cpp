@@ -188,7 +188,7 @@ LowererMDArch::LoadHeapArgsCached(IR::Instr *instrArgs)
 
         if (PHASE_TRACE1(Js::StackArgFormalsOptPhase) && func->GetJITFunctionBody()->GetInParamsCount() > 1)
         {
-            Output::Print(_u("StackArgFormals : %s (%d) :Removing Heap Arguments object creation in Lowerer. \n"), instrArgs->m_func->GetJITFunctionBody()->GetDisplayName(), instrArgs->m_func->GetFunctionNumber());
+            Output::Print(u"StackArgFormals : %s (%d) :Removing Heap Arguments object creation in Lowerer. \n", instrArgs->m_func->GetJITFunctionBody()->GetDisplayName(), instrArgs->m_func->GetFunctionNumber());
             Output::Flush();
         }
     }
@@ -301,7 +301,7 @@ LowererMDArch::LoadHeapArguments(IR::Instr *instrArgs)
         instrArgs->ReplaceSrc1(IR::AddrOpnd::NewNull(func));
         if (PHASE_TRACE1(Js::StackArgFormalsOptPhase) && func->GetJITFunctionBody()->GetInParamsCount() > 1)
         {
-            Output::Print(_u("StackArgFormals : %s (%d) :Removing Heap Arguments object creation in Lowerer. \n"), instrArgs->m_func->GetJITFunctionBody()->GetDisplayName(), instrArgs->m_func->GetFunctionNumber());
+            Output::Print(u"StackArgFormals : %s (%d) :Removing Heap Arguments object creation in Lowerer. \n", instrArgs->m_func->GetJITFunctionBody()->GetDisplayName(), instrArgs->m_func->GetFunctionNumber());
             Output::Flush();
         }
     }
@@ -2604,7 +2604,7 @@ LowererMDArch::EmitLoadInt32(IR::Instr *instrLoad, bool conversionFromObjectAllo
                 // because it won't help and the same thing will happen again. Just abort jitting this function.
                 if(PHASE_TRACE(Js::BailOutPhase, this->m_func))
                 {
-                    Output::Print(_u("    Aborting JIT because EliminateArrayAccessHelperCall is already off\n"));
+                    Output::Print(u"    Aborting JIT because EliminateArrayAccessHelperCall is already off\n");
                     Output::Flush();
                 }
                 throw Js::OperationAbortedException();

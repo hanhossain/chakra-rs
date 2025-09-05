@@ -94,7 +94,7 @@ namespace Js {
         Js::JavascriptOperators::OP_SetProperty(metadata, Js::PropertyIds::url,
             Js::JavascriptString::NewCopySz(functionBody->GetSourceName(), scriptContext), scriptContext);
 
-        LPCUTF8 functionSource = sourceInfo->GetSource(_u("Jsrt::JsExperimentalGetAndClearExceptionWithMetadata"));
+        LPCUTF8 functionSource = sourceInfo->GetSource(u"Jsrt::JsExperimentalGetAndClearExceptionWithMetadata");
 
         charcount_t startByteOffset = 0;
         charcount_t endByteOffset = 0;
@@ -116,12 +116,12 @@ namespace Js {
             // The offsets above point to the start of the following line,
             // while we need to find the end of the current line.
             // To do so, just step back over the preceeding newline character(s)
-            if (functionSource[endByteOffset - 1] == _u('\n'))
+            if (functionSource[endByteOffset - 1] == u'\n')
             {
                 endCharOffset--;
                 endByteOffset--;
                 // This may have been \r\n
-                if (endByteOffset > 0 && functionSource[endByteOffset - 1] == _u('\r'))
+                if (endByteOffset > 0 && functionSource[endByteOffset - 1] == u'\r')
                 {
                     endCharOffset--;
                     endByteOffset--;
@@ -137,7 +137,7 @@ namespace Js {
                     endCharOffset--;
                     endByteOffset -= 3;
                 }
-                else if (functionSource[endByteOffset - 1] == _u('\r'))
+                else if (functionSource[endByteOffset - 1] == u'\r')
                 {
                     endCharOffset--;
                     endByteOffset--;

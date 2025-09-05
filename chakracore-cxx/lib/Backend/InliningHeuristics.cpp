@@ -106,7 +106,7 @@ bool InliningHeuristics::BackendInlineIntoInliner(const FunctionJITTimeInfo * in
         && inlinee->GetBody()->GetAddr() == inliner->GetJITFunctionBody()->GetAddr()
         && (!inlinee->GetBody()->CanInlineRecursively(recursiveInlineDepth, doBackEndAggressiveInline)))
     {
-        INLINE_TESTTRACE(_u("INLINING: Skip Inline (backend): Recursive inlining\tInlinee: %s (#%s)\tCaller: %s (#%s) \tRoot: %s (#%s) Depth: %d\n"),
+        INLINE_TESTTRACE(u"INLINING: Skip Inline (backend): Recursive inlining\tInlinee: %s (#%s)\tCaller: %s (#%s) \tRoot: %s (#%s) Depth: %d\n",
             inlinee->GetBody()->GetDisplayName(), inlinee->GetDebugNumberSet(debugStringBuffer),
             inliner->GetJITFunctionBody()->GetDisplayName(), inliner->GetDebugNumberSet(debugStringBuffer2),
             topFunc->GetBody()->GetDisplayName(), topFunc->GetDebugNumberSet(debugStringBuffer3),
@@ -160,7 +160,7 @@ bool InliningHeuristics::BackendInlineIntoInliner(const FunctionJITTimeInfo * in
 
     if (isCallInsideLoop && inlinee->GetBody()->HasLoops() )                            // Don't inline function with loops inside another loop unless it is a leaf
     {
-        INLINE_TESTTRACE(_u("INLINING: Skip Inline (backend): Recursive loop inlining\tInlinee: %s (#%s)\tCaller: %s (#%s) \tRoot: %s (#%s)\n"),
+        INLINE_TESTTRACE(u"INLINING: Skip Inline (backend): Recursive loop inlining\tInlinee: %s (#%s)\tCaller: %s (#%s) \tRoot: %s (#%s)\n",
             inlinee->GetBody()->GetDisplayName(), inlinee->GetDebugNumberSet(debugStringBuffer),
             inliner->GetJITFunctionBody()->GetDisplayName(), inliner->GetDebugNumberSet(debugStringBuffer2),
             topFunc->GetBody()->GetDisplayName(), topFunc->GetDebugNumberSet(debugStringBuffer3));
@@ -178,7 +178,7 @@ bool InliningHeuristics::BackendInlineIntoInliner(const FunctionJITTimeInfo * in
         inlinee->GetBody()->GetNonLoadByteCodeCount() > (uint)threshold.outsideLoopInlineThreshold * scale))
     {
         Assert(!isCallInsideLoop);
-        INLINE_TESTTRACE(_u("INLINING: Skip Inline (backend): Inlining outside loop doesn't meet OutsideLoopInlineThreshold: %d \tBytecode size: %d\tInlinee: %s (#%s)\tCaller: %s (#%s) \tRoot: %s (#%s)\n"),
+        INLINE_TESTTRACE(u"INLINING: Skip Inline (backend): Inlining outside loop doesn't meet OutsideLoopInlineThreshold: %d \tBytecode size: %d\tInlinee: %s (#%s)\tCaller: %s (#%s) \tRoot: %s (#%s)\n",
             threshold.outsideLoopInlineThreshold,
             inlinee->GetBody()->GetByteCodeCount(),
             inlinee->GetBody()->GetDisplayName(), inlinee->GetDebugNumberSet(debugStringBuffer),

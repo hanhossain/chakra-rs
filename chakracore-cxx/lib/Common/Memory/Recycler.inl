@@ -177,7 +177,7 @@ Recycler::AllocWithAttributesInlined(size_t size)
 
 
 #ifdef RECYCLER_WRITE_BARRIER
-    SwbVerboseTrace(this->GetRecyclerFlagsTable(), _u("Allocated SWB memory: 0x%p\n"), memBlock);
+    SwbVerboseTrace(this->GetRecyclerFlagsTable(), u"Allocated SWB memory: 0x%p\n", memBlock);
 
 #pragma prefast(suppress:6313, "attributes is a template parameter and can be 0")
     if ((attributes & NewTrackBit) &&
@@ -364,11 +364,11 @@ Recycler::RealAlloc(HeapInfo* heap, size_t size)
 
     if (nothrow)
     {
-        FAULTINJECT_MEMORY_NOTHROW(_u("Recycler"), size);
+        FAULTINJECT_MEMORY_NOTHROW(u"Recycler", size);
     }
     else
     {
-        FAULTINJECT_MEMORY_THROW(_u("Recycler"), size);
+        FAULTINJECT_MEMORY_THROW(u"Recycler", size);
     }
 
     if (HeapInfo::IsSmallObject(size))
@@ -544,7 +544,7 @@ Recycler::NotifyFree(T * heapBlock)
         heapBlock->isForceSweeping = true;
 #endif
 #ifdef RECYCLER_TRACE
-        this->PrintBlockStatus(nullptr, heapBlock, _u("[**34**] calling SweepObjects during NotifyFree."));
+        this->PrintBlockStatus(nullptr, heapBlock, u"[**34**] calling SweepObjects during NotifyFree.");
 #endif
         heapBlock->template SweepObjects<SweepMode_InThread>(this);
 #if DBG || defined(RECYCLER_STATS)

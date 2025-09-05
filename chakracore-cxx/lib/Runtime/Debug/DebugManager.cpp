@@ -31,7 +31,7 @@ namespace Js
 #if DBG
         // diagnosticPageAllocator may be used in multiple thread, but it's usage is synchronized.
         diagnosticPageAllocator.SetDisableThreadAccessCheck();
-        diagnosticPageAllocator.debugName = _u("Diagnostic");
+        diagnosticPageAllocator.debugName = u"Diagnostic";
 #endif
     }
 
@@ -86,7 +86,7 @@ namespace Js
 
         pCurrentInterpreterLocation = pHaltState;
 
-        AutoAllocatorObjectPtr<ArenaAllocator, HeapAllocator> pDiagArena(HeapNew(ArenaAllocator, _u("DiagHaltState"), this->pThreadContext->GetPageAllocator(), Js::Throw::OutOfMemory), &HeapAllocator::Instance);
+        AutoAllocatorObjectPtr<ArenaAllocator, HeapAllocator> pDiagArena(HeapNew(ArenaAllocator, u"DiagHaltState", this->pThreadContext->GetPageAllocator(), Js::Throw::OutOfMemory), &HeapAllocator::Instance);
         AutoAllocatorObjectPtr<ReferencedArenaAdapter, HeapAllocator> referencedDiagnosticArena(HeapNew(ReferencedArenaAdapter, pDiagArena), &HeapAllocator::Instance);
         pCurrentInterpreterLocation->referencedDiagnosticArena = referencedDiagnosticArena;
 
@@ -181,14 +181,14 @@ namespace Js
                 BOOL gotPropertyValue = JavascriptOperators::GetOwnPropertyDescriptor(copyFromScope, propertyId, scriptContext, &propertyDescriptor);
                 AssertMsg(gotPropertyValue, "DebugManager::UpdateConsoleScope Should have got valid value?");
 
-                OUTPUT_TRACE(Js::ConsoleScopePhase, _u("Adding property '%s'\n"), scriptContext->GetPropertyName(propertyId)->GetBuffer());
+                OUTPUT_TRACE(Js::ConsoleScopePhase, u"Adding property '%s'\n", scriptContext->GetPropertyName(propertyId)->GetBuffer());
 
                 BOOL updateSuccess = JavascriptOperators::SetPropertyDescriptor(consoleScope, propertyId, propertyDescriptor);
                 AssertMsg(updateSuccess, "DebugManager::UpdateConsoleScope Unable to update property value. Am I missing a scenario?");
             }
         }
 
-        OUTPUT_TRACE(Js::ConsoleScopePhase, _u("Number of properties on console scope object after update are %d\n"), consoleScope->GetPropertyCount());
+        OUTPUT_TRACE(Js::ConsoleScopePhase, u"Number of properties on console scope object after update are %d\n", consoleScope->GetPropertyCount());
     }
 
 #if DBG

@@ -386,15 +386,15 @@ namespace Js
 
     BOOL JavascriptStringObject::GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
     {
-        stringBuilder->Append(_u('"'));
+        stringBuilder->Append(u'"');
         stringBuilder->Append(this->InternalUnwrap()->GetString(), this->InternalUnwrap()->GetLength());
-        stringBuilder->Append(_u('"'));
+        stringBuilder->Append(u'"');
         return TRUE;
     }
 
     BOOL JavascriptStringObject::GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
     {
-        stringBuilder->AppendCppLiteral(_u("String"));
+        stringBuilder->AppendCppLiteral(u"String");
         return TRUE;
     }
 

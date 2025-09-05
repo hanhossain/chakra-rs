@@ -356,7 +356,7 @@ namespace TTD
             compareMap.DiagnosticAssert(argsInfo1->NumOfArguments == argsInfo2->NumOfArguments);
 
             compareMap.DiagnosticAssert(argsInfo1->IsFrameNullPtr == argsInfo2->IsFrameNullPtr);
-            compareMap.CheckConsistentAndAddPtrIdMapping_Special(argsInfo1->FrameObject, argsInfo2->FrameObject, _u("frameObject"));
+            compareMap.CheckConsistentAndAddPtrIdMapping_Special(argsInfo1->FrameObject, argsInfo2->FrameObject, u"frameObject");
 
             compareMap.DiagnosticAssert(argsInfo1->FormalCount == argsInfo2->FormalCount);
             for(uint32 i = 0; i < argsInfo1->FormalCount; ++i)

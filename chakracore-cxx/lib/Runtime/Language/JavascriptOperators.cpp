@@ -1329,7 +1329,7 @@ using namespace Js;
 
             if (isConcatSpreadableCache->TryGetIsConcatSpreadable(instanceType, &retVal))
             {
-                OUTPUT_TRACE(Phase::IsConcatSpreadableCachePhase, _u("IsConcatSpreadableCache hit: %p\n"), instanceType);
+                OUTPUT_TRACE(Phase::IsConcatSpreadableCachePhase, u"IsConcatSpreadableCache hit: %p\n", instanceType);
                 return retVal;
             }
 
@@ -1345,7 +1345,7 @@ using namespace Js;
 
             if (!hasUserDefinedSpreadable)
             {
-                OUTPUT_TRACE(Phase::IsConcatSpreadableCachePhase, _u("IsConcatSpreadableCache saved: %p\n"), instanceType);
+                OUTPUT_TRACE(Phase::IsConcatSpreadableCachePhase, u"IsConcatSpreadableCache saved: %p\n", instanceType);
                 isConcatSpreadableCache->CacheIsConcatSpreadable(instanceType, retVal);
             }
 
@@ -1776,7 +1776,7 @@ using namespace Js;
 #endif
             if (PHASE_TRACE1(MissingPropertyCachePhase))
             {
-                Output::Print(_u("MissingPropertyCaching: Missing property %d on slow path.\n"), propertyId);
+                Output::Print(u"MissingPropertyCaching: Missing property %d on slow path.\n", propertyId);
             }
 
             TryCacheMissingProperty(instance, propertyObject, isRoot, propertyId, requestContext, info);
@@ -1833,7 +1833,7 @@ using namespace Js;
 #endif
         if (PHASE_TRACE1(MissingPropertyCachePhase))
         {
-            Output::Print(_u("MissingPropertyCache: Caching missing property for property %d.\n"), propertyId);
+            Output::Print(u"MissingPropertyCache: Caching missing property for property %d.\n", propertyId);
         }
 
         PropertyValueInfo::Set(info, requestContext->GetLibrary()->GetMissingPropertyHolder(), 0);
@@ -3054,7 +3054,7 @@ using namespace Js;
 #if DBG_DUMP
                 if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
                 {
-                    CacheOperators::TraceCache(inlineCache, _u("PatchSetPropertyScoped"), propertyId, scriptContext, object);
+                    CacheOperators::TraceCache(inlineCache, u"PatchSetPropertyScoped", propertyId, scriptContext, object);
                 }
 #endif
                 if (!VarIs<JavascriptProxy>(object) && !allowUndecInConsoleScope)
@@ -3098,7 +3098,7 @@ using namespace Js;
             }
 
             RecyclableObject* obj = VarTo<RecyclableObject>(pDisplay->GetItem(length - 1));
-            OUTPUT_TRACE(Js::ConsoleScopePhase, _u("Adding property '%s' to console scope object\n"), scriptContext->GetPropertyName(propertyId)->GetBuffer());
+            OUTPUT_TRACE(Js::ConsoleScopePhase, u"Adding property '%s' to console scope object\n", scriptContext->GetPropertyName(propertyId)->GetBuffer());
             JavascriptOperators::SetProperty(obj, obj, propertyId, newValue, scriptContext, propertyOperationFlags);
             return;
         }
@@ -3874,7 +3874,7 @@ using namespace Js;
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
             if (PHASE_TRACE1(PropertyCachePhase))
             {
-                Output::Print(_u("PropertyCache: GetElem No property string for '%s'\n"), string->GetString());
+                Output::Print(u"PropertyCache: GetElem No property string for '%s'\n", string->GetString());
             }
 #endif
 #if DBG_DUMP
@@ -6399,13 +6399,13 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 #if DBG_DUMP
                 if ((functionBody != nullptr && PHASE_TRACE(Js::ConstructorCachePhase, functionBody)) || (functionBody == nullptr && PHASE_TRACE1(Js::ConstructorCachePhase)))
                 {
-                    const char16_t* ctorName = functionBody != nullptr ? functionBody->GetDisplayName() : _u("<unknown>");
+                    const char16_t* ctorName = functionBody != nullptr ? functionBody->GetDisplayName() : u"<unknown>";
                     char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
-                    Output::Print(_u("CtorCache: populated cache (0x%p) for ctor %s (%s): "), constructorCache, ctorName,
-                        functionBody ? functionBody->GetDebugNumberSet(debugStringBuffer) : _u("(null)"));
+                    Output::Print(u"CtorCache: populated cache (0x%p) for ctor %s (%s): ", constructorCache, ctorName,
+                        functionBody ? functionBody->GetDebugNumberSet(debugStringBuffer) : u"(null)");
                     constructorCache->Dump();
-                    Output::Print(_u("\n"));
+                    Output::Print(u"\n");
                     Output::Flush();
                 }
 #endif
@@ -6458,13 +6458,13 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 #if DBG_DUMP
             if ((functionBody != nullptr && PHASE_TRACE(Js::ConstructorCachePhase, functionBody)) || (functionBody == nullptr && PHASE_TRACE1(Js::ConstructorCachePhase)))
             {
-                const char16_t* ctorName = functionBody != nullptr ? functionBody->GetDisplayName() : _u("<unknown>");
+                const char16_t* ctorName = functionBody != nullptr ? functionBody->GetDisplayName() : u"<unknown>";
                 char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
-                Output::Print(_u("CtorCache: populated cache (0x%p) for ctor %s (%s): "), constructorCache, ctorName,
-                    functionBody ? functionBody->GetDebugNumberSet(debugStringBuffer) : _u("(null)"));
+                Output::Print(u"CtorCache: populated cache (0x%p) for ctor %s (%s): ", constructorCache, ctorName,
+                    functionBody ? functionBody->GetDebugNumberSet(debugStringBuffer) : u"(null)");
                 constructorCache->Dump();
-                Output::Print(_u("\n"));
+                Output::Print(u"\n");
                 Output::Flush();
             }
 #endif
@@ -6474,16 +6474,16 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 #if DBG_DUMP
             if ((functionBody != nullptr && PHASE_TRACE(Js::ConstructorCachePhase, functionBody)) || (functionBody == nullptr && PHASE_TRACE1(Js::ConstructorCachePhase)))
             {
-                const char16_t* ctorName = functionBody != nullptr ? functionBody->GetDisplayName() : _u("<unknown>");
+                const char16_t* ctorName = functionBody != nullptr ? functionBody->GetDisplayName() : u"<unknown>";
                 char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
-                Output::Print(_u("CtorCache: did not populate cache (0x%p) for ctor %s (%s), because %s: prototype = 0x%p, functionBody = 0x%p, ctor context = 0x%p, request context = 0x%p"),
-                    constructorCache, ctorName, functionBody ? functionBody->GetDebugNumberSet(debugStringBuffer) : _u("(null)"),
-                    !prototypeCanBeCached ? _u("prototype cannot be cached") :
-                    functionBody == nullptr ? _u("function has no body") :
-                    requestContext != constructorScriptContext ? _u("of cross-context call") : _u("constructor cache phase is off"),
+                Output::Print(u"CtorCache: did not populate cache (0x%p) for ctor %s (%s), because %s: prototype = 0x%p, functionBody = 0x%p, ctor context = 0x%p, request context = 0x%p",
+                    constructorCache, ctorName, functionBody ? functionBody->GetDebugNumberSet(debugStringBuffer) : u"(null)",
+                    !prototypeCanBeCached ? u"prototype cannot be cached" :
+                    functionBody == nullptr ? u"function has no body" :
+                    requestContext != constructorScriptContext ? u"of cross-context call" : u"constructor cache phase is off",
                     prototype, functionBody, constructorScriptContext, requestContext);
-                Output::Print(_u("\n"));
+                Output::Print(u"\n");
                 Output::Flush();
             }
 #endif
@@ -6539,7 +6539,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         if (constructorCache->IsInvalidated())
         {
 #if DBG_DUMP
-            TraceUpdateConstructorCache(constructorCache, constructorBody, false, _u("because cache is invalidated"));
+            TraceUpdateConstructorCache(constructorCache, constructorBody, false, u"because cache is invalidated");
 #endif
             return;
         }
@@ -6560,7 +6560,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
                     // So in future don't try to check for "this assignment optimization".
                     constructorBody->SetHasOnlyThisStmts(false);
 #if DBG_DUMP
-                    TraceUpdateConstructorCache(constructorCache, constructorBody, false, _u("because final type is not shareable"));
+                    TraceUpdateConstructorCache(constructorCache, constructorBody, false, u"because final type is not shareable");
 #endif
                 }
                 else if (typeHandler->GetPropertyCount() >= Js::PropertyIndexRanges<PropertyIndex>::MaxValue)
@@ -6569,7 +6569,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
                     // So in future don't try to check for "this assignment optimization".
                     constructorBody->SetHasOnlyThisStmts(false);
 #if DBG_DUMP
-                    TraceUpdateConstructorCache(constructorCache, constructorBody, false, _u("because final type has too many properties"));
+                    TraceUpdateConstructorCache(constructorCache, constructorBody, false, u"because final type has too many properties");
 #endif
                 }
                 else
@@ -6602,13 +6602,13 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
                         if (constructorCache->TryUpdateAfterConstructor(type, constructor->GetScriptContext()))
                         {
 #if DBG_DUMP
-                            TraceUpdateConstructorCache(constructorCache, constructorBody, true, _u(""));
+                            TraceUpdateConstructorCache(constructorCache, constructorBody, true, u"");
 #endif
                         }
                         else
                         {
 #if DBG_DUMP
-                            TraceUpdateConstructorCache(constructorCache, constructorBody, false, _u("because number of slots > MaxCachedSlotCount"));
+                            TraceUpdateConstructorCache(constructorCache, constructorBody, false, u"because number of slots > MaxCachedSlotCount");
 #endif
                         }
                     }
@@ -6622,9 +6622,9 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
                         {
                             const char16_t* ctorName = constructorBody->GetDisplayName();
                             char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-                            Output::Print(_u("CtorCache: %s cache (0x%p) for ctor %s (#%u) did not update because external call"),
-                                constructorCache, constructorBody, ctorName, constructorBody ? constructorBody->GetDebugNumberSet(debugStringBuffer) : _u("(null)"));
-                            Output::Print(_u("\n"));
+                            Output::Print(u"CtorCache: %s cache (0x%p) for ctor %s (#%u) did not update because external call",
+                                constructorCache, constructorBody, ctorName, constructorBody ? constructorBody->GetDebugNumberSet(debugStringBuffer) : u"(null)");
+                            Output::Print(u"\n");
                             Output::Flush();
                         }
                     }
@@ -6635,7 +6635,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             else
             {
 #if DBG_DUMP
-                TraceUpdateConstructorCache(constructorCache, constructorBody, false, _u("because ctor has not only this statements"));
+                TraceUpdateConstructorCache(constructorCache, constructorBody, false, u"because ctor has not only this statements");
 #endif
             }
         }
@@ -6644,7 +6644,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             // Even though this constructor apparently returned something other than the default object we created,
             // it still makes sense to cache the parameters of the default object, since we must create it every time, anyway.
 #if DBG_DUMP
-            TraceUpdateConstructorCache(constructorCache, constructorBody, false, _u("because ctor return a non-object value"));
+            TraceUpdateConstructorCache(constructorCache, constructorBody, false, u"because ctor return a non-object value");
 #endif
             return;
         }
@@ -6684,7 +6684,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
                     {
                         char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
-                        Output::Print(_u("Inline slot capacity shrunk: Function:%04s Before:%d After:%d\n"),
+                        Output::Print(u"Inline slot capacity shrunk: Function:%04s Before:%d After:%d\n",
                             constructorBody->GetDebugNumberSet(debugStringBuffer), inlineSlotCapacityBeforeShrink, cachedTypeHandler->GetInlineSlotCapacity());
                     }
                 }
@@ -6705,13 +6705,13 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         }
         if ((ctorBody != nullptr && PHASE_TRACE(Js::ConstructorCachePhase, ctorBody)) || (ctorBody == nullptr && PHASE_TRACE1(Js::ConstructorCachePhase)))
         {
-            const char16_t* ctorName = ctorBody != nullptr ? ctorBody->GetDisplayName() : _u("<unknown>");
+            const char16_t* ctorName = ctorBody != nullptr ? ctorBody->GetDisplayName() : u"<unknown>";
             char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
-            Output::Print(_u("CtorCache: %s cache (0x%p) for ctor %s (%s): "), isHit ? _u("hit") : _u("missed"), ctorCache, ctorName,
-                ctorBody ? ctorBody->GetDebugNumberSet(debugStringBuffer) : _u("(null)"));
+            Output::Print(u"CtorCache: %s cache (0x%p) for ctor %s (%s): ", isHit ? u"hit" : u"missed", ctorCache, ctorName,
+                ctorBody ? ctorBody->GetDebugNumberSet(debugStringBuffer) : u"(null)");
             ctorCache->Dump();
-            Output::Print(_u("\n"));
+            Output::Print(u"\n");
             Output::Flush();
         }
 #endif
@@ -6725,12 +6725,12 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             const char16_t* ctorName = ctorBody->GetDisplayName();
             char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
-            Output::Print(_u("CtorCache: %s cache (0x%p) for ctor %s (%s)%s %s: "),
-                updated ? _u("updated") : _u("did not update"), ctorBody, ctorName,
-                ctorBody ? const_cast<Js::FunctionBody *>(ctorBody)->GetDebugNumberSet(debugStringBuffer) : _u("(null)"),
-                updated ? _u("") : _u(", because") , reason);
+            Output::Print(u"CtorCache: %s cache (0x%p) for ctor %s (%s)%s %s: ",
+                updated ? u"updated" : u"did not update", ctorBody, ctorName,
+                ctorBody ? const_cast<Js::FunctionBody *>(ctorBody)->GetDebugNumberSet(debugStringBuffer) : u"(null)",
+                updated ? u"" : u", because" , reason);
             ctorCache->Dump();
-            Output::Print(_u("\n"));
+            Output::Print(u"\n");
             Output::Flush();
         }
 #endif
@@ -7407,7 +7407,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         else
         {
             JavascriptOperators::SetProperty(argsObj, argsObj, PropertyIds::callee,
-                StackScriptFunction::EnsureBoxed(BOX_PARAM(funcCallee, nullptr, _u("callee"))), scriptContext);
+                StackScriptFunction::EnsureBoxed(BOX_PARAM(funcCallee, nullptr, u"callee")), scriptContext);
         }
 
         AssertMsg(argsObj->GetTypeHandler() == typeHandler || scriptContext->IsScriptContextInDebugMode(), "type handler should not transition because we initialized it correctly");
@@ -7531,7 +7531,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         JIT_HELPER_REENTRANT_HEADER(ScrObj_OP_IsInst);
         if (!VarIs<RecyclableObject>(aClass))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_Operand_Invalid_NeedFunction, _u("instanceof"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_Operand_Invalid_NeedFunction, u"instanceof");
         }
 
         RecyclableObject* constructor = VarTo<RecyclableObject>(aClass);
@@ -7555,7 +7555,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         {
             if (!JavascriptConversion::IsCallable(instOfHandler))
             {
-                JavascriptError::ThrowTypeError(scriptContext, JSERR_Property_NeedFunction, _u("Symbol[Symbol.hasInstance]"));
+                JavascriptError::ThrowTypeError(scriptContext, JSERR_Property_NeedFunction, u"Symbol[Symbol.hasInstance]");
             }
 
             ThreadContext * threadContext = scriptContext->GetThreadContext();
@@ -7679,7 +7679,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 
         if (!IsObject(instance))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_Operand_Invalid_NeedObject, _u("in"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_Operand_Invalid_NeedObject, u"in");
         }
 
         RecyclableObject* object = VarTo<RecyclableObject>(instance);
@@ -7782,7 +7782,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 #if DBG_DUMP
         if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
         {
-            CacheOperators::TraceCache(inlineCache, _u("PatchGetValue"), propertyId, scriptContext, object);
+            CacheOperators::TraceCache(inlineCache, u"PatchGetValue", propertyId, scriptContext, object);
         }
 #endif
 
@@ -7835,7 +7835,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 #if DBG_DUMP
         if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
         {
-            CacheOperators::TraceCache(inlineCache, _u("PatchGetValueForTypeOf"), propertyId, scriptContext, object);
+            CacheOperators::TraceCache(inlineCache, u"PatchGetValueForTypeOf", propertyId, scriptContext, object);
         }
 #endif
         Var prop = nullptr;
@@ -7867,7 +7867,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 #if DBG_DUMP
         if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
         {
-            CacheOperators::TraceCache(inlineCache, _u("PatchGetValue"), propertyId, scriptContext, object);
+            CacheOperators::TraceCache(inlineCache, u"PatchGetValue", propertyId, scriptContext, object);
         }
 #endif
 
@@ -7922,7 +7922,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 #if DBG_DUMP
         if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
         {
-            CacheOperators::TraceCache(inlineCache, _u("PatchGetRootValue"), propertyId, scriptContext, object);
+            CacheOperators::TraceCache(inlineCache, u"PatchGetRootValue", propertyId, scriptContext, object);
         }
 #endif
 
@@ -7955,7 +7955,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 #if DBG_DUMP
         if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
         {
-            CacheOperators::TraceCache(inlineCache, _u("PatchGetRootValueForTypeOf"), propertyId, scriptContext, object);
+            CacheOperators::TraceCache(inlineCache, u"PatchGetRootValueForTypeOf", propertyId, scriptContext, object);
         }
 #endif
         value = nullptr;
@@ -8030,7 +8030,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 #if DBG_DUMP
             if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
             {
-                CacheOperators::TraceCache(inlineCache, _u("PatchGetPropertyScoped"), propertyId, scriptContext, object);
+                CacheOperators::TraceCache(inlineCache, u"PatchGetPropertyScoped", propertyId, scriptContext, object);
             }
 #endif
             if (JavascriptOperators::GetProperty(object, propertyId, &value, scriptContext, &info))
@@ -8133,7 +8133,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 #if DBG_DUMP
         if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
         {
-            CacheOperators::TraceCache(inlineCache, _u("PatchGetMethod"), propertyId, scriptContext, object);
+            CacheOperators::TraceCache(inlineCache, u"PatchGetMethod", propertyId, scriptContext, object);
         }
 #endif
 
@@ -8176,7 +8176,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 #if DBG_DUMP
         if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
         {
-            CacheOperators::TraceCache(inlineCache, _u("PatchGetRootMethod"), propertyId, scriptContext, object);
+            CacheOperators::TraceCache(inlineCache, u"PatchGetRootMethod", propertyId, scriptContext, object);
         }
 #endif
 
@@ -8233,7 +8233,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 #if DBG_DUMP
         if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
         {
-            CacheOperators::TraceCache(inlineCache, _u("PatchGetMethod"), propertyId, scriptContext, object);
+            CacheOperators::TraceCache(inlineCache, u"PatchGetMethod", propertyId, scriptContext, object);
         }
 #endif
 
@@ -8395,7 +8395,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 #if DBG_DUMP
         if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
         {
-            CacheOperators::TraceCache(inlineCache, _u("PatchPutValue"), propertyId, scriptContext, object);
+            CacheOperators::TraceCache(inlineCache, u"PatchPutValue", propertyId, scriptContext, object);
         }
 #endif
 
@@ -8442,7 +8442,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 #if DBG_DUMP
         if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
         {
-            CacheOperators::TraceCache(inlineCache, _u("PatchPutRootValue"), propertyId, scriptContext, object);
+            CacheOperators::TraceCache(inlineCache, u"PatchPutRootValue", propertyId, scriptContext, object);
         }
 #endif
 
@@ -8517,7 +8517,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 #if DBG_DUMP
         if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
         {
-            CacheOperators::TraceCache(inlineCache, _u("PatchPutValueNoLocalFastPath"), propertyId, scriptContext, object);
+            CacheOperators::TraceCache(inlineCache, u"PatchPutValueNoLocalFastPath", propertyId, scriptContext, object);
         }
 #endif
 
@@ -8565,7 +8565,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 #if DBG_DUMP
         if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
         {
-            CacheOperators::TraceCache(inlineCache, _u("PatchPutRootValueNoLocalFastPath"), propertyId, scriptContext, object);
+            CacheOperators::TraceCache(inlineCache, u"PatchPutRootValueNoLocalFastPath", propertyId, scriptContext, object);
         }
 #endif
 
@@ -8820,7 +8820,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 #if DBG_DUMP
         if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
         {
-            CacheOperators::TraceCache(inlineCache, _u("PatchInitValue"), propertyId, scriptContext, object);
+            CacheOperators::TraceCache(inlineCache, u"PatchInitValue", propertyId, scriptContext, object);
         }
 #endif
 
@@ -9577,7 +9577,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             if (descriptor->WritableSpecified())
             {
                 int32 hCode = descriptor->IsWritable() ? JSERR_InvalidAttributeTrue : JSERR_InvalidAttributeFalse;
-                JavascriptError::ThrowTypeError(scriptContext, hCode, _u("writable"));
+                JavascriptError::ThrowTypeError(scriptContext, hCode, u"writable");
             }
         }
 
@@ -10085,7 +10085,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             if (parentFuncBody->GetUtf8SourceInfo()->GetCallerUtf8SourceInfo() == nullptr)
             {
                 JavascriptError *error = scriptContext->GetLibrary()->CreateError();
-                JavascriptError::SetErrorMessageProperties(error, E_FAIL, _u("Unable to locate active script or module that calls import()"), scriptContext);
+                JavascriptError::SetErrorMessageProperties(error, E_FAIL, u"Unable to locate active script or module that calls import()", scriptContext);
                 return SourceTextModuleRecord::ResolveOrRejectDynamicImportPromise(false, error, scriptContext);
             }
 
@@ -10109,7 +10109,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
                     else
                     {
                         JavascriptError *error = scriptContext->GetLibrary()->CreateError();
-                        JavascriptError::SetErrorMessageProperties(error, E_FAIL, _u("Unable to locate active script or module that calls import()"), scriptContext);
+                        JavascriptError::SetErrorMessageProperties(error, E_FAIL, u"Unable to locate active script or module that calls import()", scriptContext);
                         return SourceTextModuleRecord::ResolveOrRejectDynamicImportPromise(false, error, scriptContext);
                     }
 
@@ -10145,7 +10145,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             size_t length = wcslen(moduleName);
             char16_t* allocatedString = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, length + 1);
             wmemcpy_s(allocatedString, length + 1, moduleName, length);
-            allocatedString[length] = _u('\0');
+            allocatedString[length] = u'\0';
 
             Js::JavascriptError *error = scriptContext->GetLibrary()->CreateURIError();
             JavascriptError::SetErrorMessageProperties(error, hr, allocatedString, scriptContext);
@@ -10473,7 +10473,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         //5.If Type(C) is not Object, throw a TypeError exception.
         if (!JavascriptOperators::IsObject(constructor))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_NeedObject, _u("[constructor]"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_NeedObject, u"[constructor]");
         }
         //6.Let S be Get(C, @@species).
         //7.ReturnIfAbrupt(S).
@@ -10494,7 +10494,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             return constructorObj;
         }
         //10.Throw a TypeError exception.
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_NotAConstructor, _u("constructor[Symbol.species]"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_NotAConstructor, u"constructor[Symbol.species]");
     }
 
     BOOL JavascriptOperators::GreaterEqual(Var aLeft, Var aRight, ScriptContext* scriptContext)

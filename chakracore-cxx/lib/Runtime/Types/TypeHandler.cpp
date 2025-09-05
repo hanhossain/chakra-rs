@@ -3,7 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "RuntimeTypePch.h"
-#define IsTrueOrFalse(value)     ((value) ? _u("True") : _u("False"))
+#define IsTrueOrFalse(value)     ((value) ? u"True" : u"False")
 
 using namespace Js;
 
@@ -339,10 +339,10 @@ using namespace Js;
         if (PHASE_VERBOSE_TRACE1(Js::FixedMethodsPhase) || PHASE_VERBOSE_TESTTRACE1(Js::FixedMethodsPhase) ||
             PHASE_VERBOSE_TRACE1(Js::UseFixedDataPropsPhase) || PHASE_VERBOSE_TESTTRACE1(Js::UseFixedDataPropsPhase))
         {
-            Output::Print(_u("FixedFields: attempt to use fixed property %s from DynamicTypeHandler returned false.\n"), propertyRecord->GetBuffer());
+            Output::Print(u"FixedFields: attempt to use fixed property %s from DynamicTypeHandler returned false.\n", propertyRecord->GetBuffer());
             if (this->HasSingletonInstance() && this->GetSingletonInstance()->Get()->GetScriptContext() != requestContext)
             {
-                Output::Print(_u("FixedFields: Cross Site Script Context is used for property %s. \n"), propertyRecord->GetBuffer());
+                Output::Print(u"FixedFields: Cross Site Script Context is used for property %s. \n", propertyRecord->GetBuffer());
             }
             Output::Flush();
         }
@@ -354,10 +354,10 @@ using namespace Js;
         if (PHASE_VERBOSE_TRACE1(Js::FixedMethodsPhase) || PHASE_VERBOSE_TESTTRACE1(Js::FixedMethodsPhase) ||
             PHASE_VERBOSE_TRACE1(Js::UseFixedDataPropsPhase) || PHASE_VERBOSE_TESTTRACE1(Js::UseFixedDataPropsPhase))
         {
-            Output::Print(_u("FixedFields: attempt to use fixed accessor %s from DynamicTypeHandler returned false.\n"), propertyRecord->GetBuffer());
+            Output::Print(u"FixedFields: attempt to use fixed accessor %s from DynamicTypeHandler returned false.\n", propertyRecord->GetBuffer());
             if (this->HasSingletonInstance() && this->GetSingletonInstance()->Get()->GetScriptContext() != requestContext)
             {
-                Output::Print(_u("FixedFields: Cross Site Script Context is used for property %s. \n"), propertyRecord->GetBuffer());
+                Output::Print(u"FixedFields: Cross Site Script Context is used for property %s. \n", propertyRecord->GetBuffer());
             }
             Output::Flush();
         }
@@ -444,31 +444,31 @@ using namespace Js;
         {
             if(*pProperty == nullptr)
             {
-                fixedPropertyResultType = _u("null");
+                fixedPropertyResultType = u"null";
             }
             else if (Js::VarIs<Js::JavascriptFunction>(*pProperty))
             {
-                fixedPropertyResultType = _u("function");
+                fixedPropertyResultType = u"function";
             }
             else if (TaggedInt::Is(*pProperty))
             {
-                fixedPropertyResultType = _u("int constant");
+                fixedPropertyResultType = u"int constant";
             }
             else
             {
-                fixedPropertyResultType = _u("Var");
+                fixedPropertyResultType = u"Var";
             }
             log = true;
         }
 
         if(log)
         {
-            Output::Print(_u("FixedFields: attempt to use fixed property %s, which is a %s, from %s returned %s.\n"),
+            Output::Print(u"FixedFields: attempt to use fixed property %s, which is a %s, from %s returned %s.\n",
                 propertyRecord->GetBuffer(), fixedPropertyResultType, typeHandlerName, IsTrueOrFalse(result));
 
             if (this->HasSingletonInstance() && this->GetSingletonInstance()->Get()->GetScriptContext() != requestContext)
             {
-                Output::Print(_u("FixedFields: Cross Site Script Context is used for property %s. \n"), propertyRecord->GetBuffer());
+                Output::Print(u"FixedFields: Cross Site Script Context is used for property %s. \n", propertyRecord->GetBuffer());
             }
 
             Output::Flush();
@@ -722,7 +722,7 @@ using namespace Js;
         // Move the last few inline slots into the aux slots
         if(PHASE_TRACE1(Js::ObjectHeaderInliningPhase))
         {
-            Output::Print(_u("ObjectHeaderInlining: Moving inlined properties to aux slots.\n"));
+            Output::Print(u"ObjectHeaderInlining: Moving inlined properties to aux slots.\n");
             Output::Flush();
         }
         Var *const oldInlineSlots =
@@ -738,7 +738,7 @@ using namespace Js;
             // overlap, with the new inline slot array starting beyond the start of the old inline slot array.
             if(PHASE_TRACE1(Js::ObjectHeaderInliningPhase))
             {
-                Output::Print(_u("ObjectHeaderInlining: Moving inlined properties out of the object header.\n"));
+                Output::Print(u"ObjectHeaderInlining: Moving inlined properties out of the object header.\n");
                 Output::Flush();
             }
             Field(Var) *const newInlineSlots = reinterpret_cast<Field(Var) *>(object + 1);
@@ -857,32 +857,32 @@ using namespace Js;
 
 #if DBG_DUMP
     void DynamicTypeHandler::Dump(unsigned indent) const {
-        const auto padding(_u(""));
+        const auto padding(u"");
         const unsigned fieldIndent(indent + 2);
 
-        Output::Print(_u("%*sDynamicTypeHandler: 0x%p\n"), indent, padding, this);
-        Output::Print(_u("%*spropertyTypes: 0x%02x "), fieldIndent, padding, this->propertyTypes);
-        if (this->propertyTypes & PropertyTypesReserved) Output::Print(_u("PropertyTypesReserved "));
-        if (this->propertyTypes & PropertyTypesWritableDataOnly) Output::Print(_u("PropertyTypesWritableDataOnly "));
-        if (this->propertyTypes & PropertyTypesHasSpecialProperties) Output::Print(_u("PropertyTypesHasSpecialProperties "));
-        if (this->propertyTypes & PropertyTypesWritableDataOnlyDetection) Output::Print(_u("PropertyTypesWritableDataOnlyDetection "));
-        if (this->propertyTypes & PropertyTypesInlineSlotCapacityLocked) Output::Print(_u("PropertyTypesInlineSlotCapacityLocked "));
-        Output::Print(_u("\n"));
+        Output::Print(u"%*sDynamicTypeHandler: 0x%p\n", indent, padding, this);
+        Output::Print(u"%*spropertyTypes: 0x%02x ", fieldIndent, padding, this->propertyTypes);
+        if (this->propertyTypes & PropertyTypesReserved) Output::Print(u"PropertyTypesReserved ");
+        if (this->propertyTypes & PropertyTypesWritableDataOnly) Output::Print(u"PropertyTypesWritableDataOnly ");
+        if (this->propertyTypes & PropertyTypesHasSpecialProperties) Output::Print(u"PropertyTypesHasSpecialProperties ");
+        if (this->propertyTypes & PropertyTypesWritableDataOnlyDetection) Output::Print(u"PropertyTypesWritableDataOnlyDetection ");
+        if (this->propertyTypes & PropertyTypesInlineSlotCapacityLocked) Output::Print(u"PropertyTypesInlineSlotCapacityLocked ");
+        Output::Print(u"\n");
 
-        Output::Print(_u("%*sflags: 0x%02x "), fieldIndent, padding, this->flags);
-        if (this->flags & IsExtensibleFlag) Output::Print(_u("IsExtensibleFlag "));
-        if (this->flags & HasKnownSlot0Flag) Output::Print(_u("HasKnownSlot0Flag "));
-        if (this->flags & IsLockedFlag) Output::Print(_u("IsLockedFlag "));
-        if (this->flags & MayBecomeSharedFlag) Output::Print(_u("MayBecomeSharedFlag "));
-        if (this->flags & IsSharedFlag) Output::Print(_u("IsSharedFlag "));
-        if (this->flags & IsPrototypeFlag) Output::Print(_u("IsPrototypeFlag "));
-        if (this->flags & IsSealedOnceFlag) Output::Print(_u("IsSealedOnceFlag "));
-        if (this->flags & IsFrozenOnceFlag) Output::Print(_u("IsFrozenOnceFlag "));
-        Output::Print(_u("\n"));
+        Output::Print(u"%*sflags: 0x%02x ", fieldIndent, padding, this->flags);
+        if (this->flags & IsExtensibleFlag) Output::Print(u"IsExtensibleFlag ");
+        if (this->flags & HasKnownSlot0Flag) Output::Print(u"HasKnownSlot0Flag ");
+        if (this->flags & IsLockedFlag) Output::Print(u"IsLockedFlag ");
+        if (this->flags & MayBecomeSharedFlag) Output::Print(u"MayBecomeSharedFlag ");
+        if (this->flags & IsSharedFlag) Output::Print(u"IsSharedFlag ");
+        if (this->flags & IsPrototypeFlag) Output::Print(u"IsPrototypeFlag ");
+        if (this->flags & IsSealedOnceFlag) Output::Print(u"IsSealedOnceFlag ");
+        if (this->flags & IsFrozenOnceFlag) Output::Print(u"IsFrozenOnceFlag ");
+        Output::Print(u"\n");
 
-        Output::Print(_u("%*soffsetOfInlineSlots: %u\n"), fieldIndent, padding, this->offsetOfInlineSlots);
-        Output::Print(_u("%*sslotCapacity: %d\n"), fieldIndent, padding, this->slotCapacity);
-        Output::Print(_u("%*sunusedBytes: %u\n"), fieldIndent, padding, this->unusedBytes);
-        Output::Print(_u("%*sinlineSlotCapacty: %u\n"), fieldIndent, padding, this->inlineSlotCapacity);
+        Output::Print(u"%*soffsetOfInlineSlots: %u\n", fieldIndent, padding, this->offsetOfInlineSlots);
+        Output::Print(u"%*sslotCapacity: %d\n", fieldIndent, padding, this->slotCapacity);
+        Output::Print(u"%*sunusedBytes: %u\n", fieldIndent, padding, this->unusedBytes);
+        Output::Print(u"%*sinlineSlotCapacty: %u\n", fieldIndent, padding, this->inlineSlotCapacity);
     }
 #endif

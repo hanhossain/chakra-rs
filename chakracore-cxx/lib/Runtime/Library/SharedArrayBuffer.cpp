@@ -85,7 +85,7 @@ namespace Js
 
         if (!(callInfo.Flags & CallFlags_New) || (newTarget && JavascriptOperators::IsUndefinedObject(newTarget)))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_ClassConstructorCannotBeCalledWithoutNew, _u("SharedArrayBuffer"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_ClassConstructorCannotBeCalledWithoutNew, u"SharedArrayBuffer");
         }
 
         uint32 byteLength = 0;
@@ -200,7 +200,7 @@ namespace Js
 
         if (newBuffer->GetByteLength() < newbyteLength)
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_ArgumentOutOfRange, _u("SharedArrayBuffer.prototype.slice"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_ArgumentOutOfRange, u"SharedArrayBuffer.prototype.slice");
         }
 
         Assert(newBuffer);
@@ -394,13 +394,13 @@ namespace Js
 
     BOOL SharedArrayBuffer::GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
     {
-        stringBuilder->AppendCppLiteral(_u("Object, (SharedArrayBuffer)"));
+        stringBuilder->AppendCppLiteral(u"Object, (SharedArrayBuffer)");
         return TRUE;
     }
 
     BOOL SharedArrayBuffer::GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
     {
-        stringBuilder->AppendCppLiteral(_u("[object SharedArrayBuffer]"));
+        stringBuilder->AppendCppLiteral(u"[object SharedArrayBuffer]");
         return TRUE;
     }
 

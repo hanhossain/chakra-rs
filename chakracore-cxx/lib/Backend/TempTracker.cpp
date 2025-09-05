@@ -196,13 +196,13 @@ TempTrackerBase::MergeDependencies(HashTable<BVSparse<JitArenaAllocator> *> * to
 void
 TempTrackerBase::Dump(char16_t const * traceName)
 {
-    Output::Print(_u("%s:        Non temp syms:"), traceName);
+    Output::Print(u"%s:        Non temp syms:", traceName);
     this->nonTempSyms.Dump();
-    Output::Print(_u("%s: Temp transferred syms:"), traceName);
+    Output::Print(u"%s: Temp transferred syms:", traceName);
     this->tempTransferredSyms.Dump();
     if (this->tempTransferDependencies != nullptr)
     {
-        Output::Print(_u("%s: Temp transfer dependencies:\n"), traceName);
+        Output::Print(u"%s: Temp transfer dependencies:\n", traceName);
         this->tempTransferDependencies->Dump();
     }
 }
@@ -228,8 +228,8 @@ TempTracker<T>::ProcessUse(StackSym * sym, BackwardPass * backwardPass)
 #if DBG
     if (T::DoTrace(backwardPass))
     {
-        Output::Print(_u("%s: %8s%4sTemp Use (s%-3d): "), T::GetTraceName(),
-            backwardPass->IsPrePass() ? _u("Prepass ") : _u(""), isTempUse ? _u("") : _u("Non "), usedSymID);
+        Output::Print(u"%s: %8s%4sTemp Use (s%-3d): ", T::GetTraceName(),
+            backwardPass->IsPrePass() ? u"Prepass " : u"", isTempUse ? u"" : u"Non ", usedSymID);
         instr->DumpSimple();
         Output::Flush();
     }
@@ -254,8 +254,8 @@ TempTracker<T>::ProcessUse(StackSym * sym, BackwardPass * backwardPass)
 #if DBG_DUMP
                     if (T::DoTrace(backwardPass))
                     {
-                        Output::Print(_u("%s: %8s s%d -> s%d: "), T::GetTraceName(),
-                            backwardPass->IsPrePass() ? _u("Prepass ") : _u(""), dstSymID, usedSymID);
+                        Output::Print(u"%s: %8s s%d -> s%d: ", T::GetTraceName(),
+                            backwardPass->IsPrePass() ? u"Prepass " : u"", dstSymID, usedSymID);
                         (*this->tempTransferDependencies->Get(usedSymID))->Dump();
                     }
 #endif
@@ -273,8 +273,8 @@ TempTracker<T>::ProcessUse(StackSym * sym, BackwardPass * backwardPass)
 #if DBG_DUMP
         if (T::DoTrace(backwardPass) && this->tempTransferDependencies)
         {
-            Output::Print(_u("%s: %8s (PropId:%d)+[] -> s%d: "), T::GetTraceName(),
-                backwardPass->IsPrePass() ? _u("Prepass ") : _u(""), propertySym->m_propertyId, usedSymID);
+            Output::Print(u"%s: %8s (PropId:%d)+[] -> s%d: ", T::GetTraceName(),
+                backwardPass->IsPrePass() ? u"Prepass " : u"", propertySym->m_propertyId, usedSymID);
             BVSparse<JitArenaAllocator> ** transferDependencies = this->tempTransferDependencies->Get(usedSymID);
             if (transferDependencies)
             {
@@ -282,7 +282,7 @@ TempTracker<T>::ProcessUse(StackSym * sym, BackwardPass * backwardPass)
             }
             else
             {
-                Output::Print(_u("[]\n"));
+                Output::Print(u"[]\n");
             }
         }
 #endif
@@ -374,7 +374,7 @@ TempTracker<T>::MarkTemp(StackSym * sym, BackwardPass * backwardPass)
 #if DBG_DUMP
         if (T::DoTrace(backwardPass)  && !backwardPass->IsPrePass() && T::CanMarkTemp(instr, backwardPass))
         {
-            Output::Print(_u("%s: Not temp (s%-03d):"), T::GetTraceName(), sym->m_id);
+            Output::Print(u"%s: Not temp (s%-03d):", T::GetTraceName(), sym->m_id);
             instr->DumpSimple();
         }
 #endif
@@ -431,13 +431,13 @@ TempTracker<T>::MarkTemp(StackSym * sym, BackwardPass * backwardPass)
 #if DBG_DUMP
                 if (T::DoTrace(backwardPass) && Js::Configuration::Global.flags.Verbose)
                 {
-                     Output::Print(_u("%s: Loop mark temp check instr:\n"), T::GetTraceName());
+                     Output::Print(u"%s: Loop mark temp check instr:\n", T::GetTraceName());
                      instr->DumpSimple();
-                     Output::Print(_u("Transfer dependencies: "));
+                     Output::Print(u"Transfer dependencies: ");
                      bvTempTransferDependencies->Dump();
-                     Output::Print(_u("Upward exposed Uses  : "));
+                     Output::Print(u"Upward exposed Uses  : ");
                      backwardPass->currentBlock->upwardExposedUses->Dump();
-                     Output::Print(_u("\n"));
+                     Output::Print(u"\n");
                 }
 #endif
 
@@ -449,10 +449,10 @@ TempTracker<T>::MarkTemp(StackSym * sym, BackwardPass * backwardPass)
 #if DBG_DUMP
                     if (T::DoTrace(backwardPass))
                     {
-                        Output::Print(_u("%s: Not temp (s%-03d): "), T::GetTraceName(), sym->m_id);
+                        Output::Print(u"%s: Not temp (s%-03d): ", T::GetTraceName(), sym->m_id);
                         instr->DumpSimple();
-                        Output::Print(_u("       Transferred exposed uses: "));
-                        JitArenaAllocator tempAllocator(_u("temp"), this->GetAllocator()->GetPageAllocator(), Js::Throw::OutOfMemory);
+                        Output::Print(u"       Transferred exposed uses: ");
+                        JitArenaAllocator tempAllocator(u"temp", this->GetAllocator()->GetPageAllocator(), Js::Throw::OutOfMemory);
                         bvTempTransferDependencies->AndNew(upwardExposedUses, &tempAllocator)->Dump();
                     }
 #endif
@@ -874,8 +874,8 @@ NumberTemp::ProcessIndirUse(IR::IndirOpnd * indirOpnd, IR::Instr * instr, Backwa
 #if DBG_DUMP
         if (NumberTemp::DoTrace(backwardPass))
         {
-            Output::Print(_u("%s: %8s s%d -> []: "), NumberTemp::GetTraceName(),
-                backwardPass->IsPrePass() ? _u("Prepass ") : _u(""), dstSymID);
+            Output::Print(u"%s: %8s s%d -> []: ", NumberTemp::GetTraceName(),
+                backwardPass->IsPrePass() ? u"Prepass " : u"", dstSymID);
             elemLoadDependencies.Dump();
         }
 #endif
@@ -884,8 +884,8 @@ NumberTemp::ProcessIndirUse(IR::IndirOpnd * indirOpnd, IR::Instr * instr, Backwa
 #if DBG_DUMP
     if (NumberTemp::DoTrace(backwardPass))
     {
-        Output::Print(_u("%s: %8s%4sTemp Use ([] )"), NumberTemp::GetTraceName(),
-            backwardPass->IsPrePass() ? _u("Prepass ") : _u(""), isTempUse ? _u("") : _u("Non "));
+        Output::Print(u"%s: %8s%4sTemp Use ([] )", NumberTemp::GetTraceName(),
+            backwardPass->IsPrePass() ? u"Prepass " : u"", isTempUse ? u"" : u"Non ");
         instr->DumpSimple();
     }
 #endif
@@ -933,8 +933,8 @@ NumberTemp::ProcessPropertySymUse(IR::SymOpnd * symOpnd, IR::Instr * instr, Back
 #if DBG_DUMP
         if (NumberTemp::DoTrace(backwardPass))
         {
-            Output::Print(_u("%s: %8s s%d -> PropId:%d: "), NumberTemp::GetTraceName(),
-                backwardPass->IsPrePass() ? _u("Prepass ") : _u(""), dstSymID, propertySym->m_propertyId);
+            Output::Print(u"%s: %8s s%d -> PropId:%d: ", NumberTemp::GetTraceName(),
+                backwardPass->IsPrePass() ? u"Prepass " : u"", dstSymID, propertySym->m_propertyId);
             (*this->propertyIdsTempTransferDependencies->Get(propertySym->m_propertyId))->Dump();
         }
 #endif
@@ -943,8 +943,8 @@ NumberTemp::ProcessPropertySymUse(IR::SymOpnd * symOpnd, IR::Instr * instr, Back
 #if DBG_DUMP
     if (NumberTemp::DoTrace(backwardPass))
     {
-        Output::Print(_u("%s: %8s%4sTemp Use (PropId:%d)"), NumberTemp::GetTraceName(),
-            backwardPass->IsPrePass() ? _u("Prepass ") : _u(""), isTempUse ? _u("") : _u("Non "), propertySym->m_propertyId);
+        Output::Print(u"%s: %8s%4sTemp Use (PropId:%d)", NumberTemp::GetTraceName(),
+            backwardPass->IsPrePass() ? u"Prepass " : u"", isTempUse ? u"" : u"Non ", propertySym->m_propertyId);
         instr->DumpSimple();
     }
 #endif
@@ -973,15 +973,15 @@ NumberTemp::Dump(char16_t const * traceName)
 {
     if (nonTempElemLoad)
     {
-        Output::Print(_u("%s: Has Non Temp Elem Load\n"), traceName);
+        Output::Print(u"%s: Has Non Temp Elem Load\n", traceName);
     }
     else
     {
-        Output::Print(_u("%s: Non Temp Syms"), traceName);
+        Output::Print(u"%s: Non Temp Syms", traceName);
         this->nonTempSyms.Dump();
         if (this->propertyIdsTempTransferDependencies != nullptr)
         {
-            Output::Print(_u("%s: Temp transfer propertyId dependencies:\n"), traceName);
+            Output::Print(u"%s: Temp transfer propertyId dependencies:\n", traceName);
             this->propertyIdsTempTransferDependencies->Dump();
         }
     }
@@ -1408,7 +1408,7 @@ ObjectTempVerify::SetDstIsTemp(bool dstIsTemp, bool dstIsTempTransferred, IR::In
 #if DBG
                 if (DoTrace(backwardPass) && !instr->dstIsTempObject && !isBailOnNoProfileUpwardExposedUse)
                 {
-                    Output::Print(_u("%s: Missed Mark Temp Object: "), GetTraceName());
+                    Output::Print(u"%s: Missed Mark Temp Object: ", GetTraceName());
                     instr->DumpSimple();
                     Output::Flush();
                 }
@@ -1426,7 +1426,7 @@ ObjectTempVerify::SetDstIsTemp(bool dstIsTemp, bool dstIsTempTransferred, IR::In
 #if DBG
                 if (DoTrace(backwardPass) && instr->dstIsTempObject)
                 {
-                    Output::Print(_u("%s: Invalid Mark Temp Object: "), GetTraceName());
+                    Output::Print(u"%s: Invalid Mark Temp Object: ", GetTraceName());
                     instr->DumpSimple();
                     Output::Flush();
                 }
@@ -1598,7 +1598,7 @@ ObjectTempVerify::DependencyCheck(IR::Instr * instr, BVSparse<JitArenaAllocator>
 
     BasicBlock * currentBlock = backwardPass->currentBlock;
     BVSparse<JitArenaAllocator> * upwardExposedUses = currentBlock->upwardExposedUses;
-    JitArenaAllocator tempAllocator(_u("temp"), instr->m_func->m_alloc->GetPageAllocator(), Js::Throw::OutOfMemory);
+    JitArenaAllocator tempAllocator(u"temp", instr->m_func->m_alloc->GetPageAllocator(), Js::Throw::OutOfMemory);
     BVSparse<JitArenaAllocator> * dependentSyms = bvTempTransferDependencies->AndNew(upwardExposedUses, &tempAllocator);
     BVSparse<JitArenaAllocator> * initialDependentSyms = dependentSyms->CopyNew();
     Assert(!dependentSyms->IsEmpty());
@@ -1724,7 +1724,7 @@ ObjectTempVerify::DependencyCheck(IR::Instr * instr, BVSparse<JitArenaAllocator>
 #if DBG
     if (DoTrace(backwardPass))
     {
-        Output::Print(_u("%s: Unrelated overlap mark temp (s%-3d): "), GetTraceName(), markTempSymId);
+        Output::Print(u"%s: Unrelated overlap mark temp (s%-3d): ", GetTraceName(), markTempSymId);
         instr->DumpSimple();
         Output::Flush();
     }

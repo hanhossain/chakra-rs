@@ -471,7 +471,7 @@ HeapBucket::DoTwoPassConcurrentSweepPreCheck()
     {
         if (this->concurrentSweepAllocationsThresholdExceeded)
         {
-            Output::Print(_u("[HeapBucket 0x%p] exceeded concurrent sweep allocations threshold (%d). Total heap block count: %d \n"), this, RecyclerHeuristic::AllocDuringConcurrentSweepHeapBlockThreshold, this->heapBlockCount + this->newHeapBlockCount);
+            Output::Print(u"[HeapBucket 0x%p] exceeded concurrent sweep allocations threshold (%d). Total heap block count: %d \n", this, RecyclerHeuristic::AllocDuringConcurrentSweepHeapBlockThreshold, this->heapBlockCount + this->newHeapBlockCount);
         }
     }
 #endif
@@ -485,7 +485,7 @@ template <typename TBlockType>
 char *
 HeapBucketT<TBlockType>::PageHeapAlloc(Recycler * recycler, size_t sizeCat, size_t size, ObjectInfoBits attributes, PageHeapMode mode, bool nothrow)
 {
-    AllocationVerboseTrace(recycler->GetRecyclerFlagsTable(), _u("In PageHeapAlloc [Size: 0x%x, Attributes: 0x%x]\n"), size, attributes);
+    AllocationVerboseTrace(recycler->GetRecyclerFlagsTable(), u"In PageHeapAlloc [Size: 0x%x, Attributes: 0x%x]\n", size, attributes);
     char* addr =  heapInfo->largeObjectBucket.PageHeapAlloc(recycler, sizeCat, size, attributes, mode, nothrow);
 
     if (addr)
@@ -501,7 +501,7 @@ template <typename TBlockType>
 char *
 HeapBucketT<TBlockType>::SnailAlloc(Recycler * recycler, TBlockAllocatorType * allocator, size_t sizeCat, size_t size, ObjectInfoBits attributes, bool nothrow)
 {
-    AllocationVerboseTrace(recycler->GetRecyclerFlagsTable(), _u("In SnailAlloc [Size: 0x%x, Attributes: 0x%x]\n"), sizeCat, attributes);
+    AllocationVerboseTrace(recycler->GetRecyclerFlagsTable(), u"In SnailAlloc [Size: 0x%x, Attributes: 0x%x]\n", sizeCat, attributes);
 
     Assert(sizeCat == this->sizeCat);
     Assert((attributes & InternalObjectInfoBitMask) == attributes);
@@ -520,7 +520,7 @@ HeapBucketT<TBlockType>::SnailAlloc(Recycler * recycler, TBlockAllocatorType * a
     BOOL collected = recycler->disableCollectOnAllocationHeuristics ? FALSE : recycler->CollectNow<CollectOnAllocation>();
 #endif
 
-    AllocationVerboseTrace(recycler->GetRecyclerFlagsTable(), _u("TryAlloc failed, forced collection on allocation [Collected: %d]\n"), collected);
+    AllocationVerboseTrace(recycler->GetRecyclerFlagsTable(), u"TryAlloc failed, forced collection on allocation [Collected: %d]\n", collected);
 
     if (!collected)
     {
@@ -550,7 +550,7 @@ HeapBucketT<TBlockType>::SnailAlloc(Recycler * recycler, TBlockAllocatorType * a
 
         // Can't even allocate a new block, we need force a collection and
         //allocate some free memory, add a new heap block again, or throw out of memory
-        AllocationVerboseTrace(recycler->GetRecyclerFlagsTable(), _u("TryAllocFromNewHeapBlock failed, forcing in-thread collection\n"));
+        AllocationVerboseTrace(recycler->GetRecyclerFlagsTable(), u"TryAllocFromNewHeapBlock failed, forcing in-thread collection\n");
         recycler->CollectNow<CollectNowForceInThread>();
     }
 
@@ -562,7 +562,7 @@ HeapBucketT<TBlockType>::SnailAlloc(Recycler * recycler, TBlockAllocatorType * a
         return memBlock;
     }
 
-    AllocationVerboseTrace(recycler->GetRecyclerFlagsTable(), _u("SlowAlloc failed\n"));
+    AllocationVerboseTrace(recycler->GetRecyclerFlagsTable(), u"SlowAlloc failed\n");
 
     // do the allocation
     memBlock = this->TryAlloc(recycler, allocator, sizeCat, attributes);
@@ -571,7 +571,7 @@ HeapBucketT<TBlockType>::SnailAlloc(Recycler * recycler, TBlockAllocatorType * a
         return memBlock;
     }
 
-    AllocationVerboseTrace(recycler->GetRecyclerFlagsTable(), _u("TryAlloc failed\n"));
+    AllocationVerboseTrace(recycler->GetRecyclerFlagsTable(), u"TryAlloc failed\n");
     // add a heap block if there are no preallocated memory left.
     memBlock = TryAllocFromNewHeapBlock(recycler, allocator, sizeCat, size, attributes);
     if (memBlock != nullptr)
@@ -579,7 +579,7 @@ HeapBucketT<TBlockType>::SnailAlloc(Recycler * recycler, TBlockAllocatorType * a
         return memBlock;
     }
 
-    AllocationVerboseTrace(recycler->GetRecyclerFlagsTable(), _u("TryAllocFromNewHeapBlock failed- triggering OOM handler"));
+    AllocationVerboseTrace(recycler->GetRecyclerFlagsTable(), u"TryAllocFromNewHeapBlock failed- triggering OOM handler");
 
     if (nothrow == false)
     {
@@ -619,7 +619,7 @@ template <typename TBlockType>
 TBlockType *
 HeapBucketT<TBlockType>::CreateHeapBlock(Recycler * recycler)
 {
-    FAULTINJECT_MEMORY_NOTHROW(_u("HeapBlock"), sizeof(TBlockType));
+    FAULTINJECT_MEMORY_NOTHROW(u"HeapBlock", sizeof(TBlockType));
 
     // Add a new heap block
     TBlockType * heapBlock = GetUnusedHeapBlock();
@@ -906,7 +906,7 @@ HeapBucketT<TBlockType>::SweepHeapBlockList(RecyclerSweep& recyclerSweep, TBlock
         DebugOnly(VerifyBlockConsistencyInList(heapBlock, recyclerSweep));
 
 #ifdef RECYCLER_TRACE
-        recyclerSweep.GetRecycler()->PrintBlockStatus(this, heapBlock, _u("[**1**] starting Sweep Pass1."));
+        recyclerSweep.GetRecycler()->PrintBlockStatus(this, heapBlock, u"[**1**] starting Sweep Pass1.");
 #endif
         SweepState state = heapBlock->Sweep(recyclerSweep, queuePendingSweep, allocable);
 
@@ -927,7 +927,7 @@ HeapBucketT<TBlockType>::SweepHeapBlockList(RecyclerSweep& recyclerSweep, TBlock
             heapBlock->SetNextBlock(pendingSweepList);
             pendingSweepList = heapBlock;
 #ifdef RECYCLER_TRACE
-            recyclerSweep.GetRecycler()->PrintBlockStatus(this, heapBlock, _u("[**2**] finished Sweep Pass1, heapblock added to pendingSweepList."));
+            recyclerSweep.GetRecycler()->PrintBlockStatus(this, heapBlock, u"[**2**] finished Sweep Pass1, heapblock added to pendingSweepList.");
 #endif
 #if ENABLE_PARTIAL_GC
             recyclerSweep.GetManager()->NotifyAllocableObjects(heapBlock);
@@ -966,7 +966,7 @@ HeapBucketT<TBlockType>::SweepHeapBlockList(RecyclerSweep& recyclerSweep, TBlock
             Assert(!this->heapInfo->hasPendingTransferDisposedObjects);
             recycler->hasDisposableObject = true;
 #ifdef RECYCLER_TRACE
-            recyclerSweep.GetRecycler()->PrintBlockStatus(this, heapBlock, _u("[**3**] finished Sweep Pass1, heapblock added to pendingDisposeList."));
+            recyclerSweep.GetRecycler()->PrintBlockStatus(this, heapBlock, u"[**3**] finished Sweep Pass1, heapblock added to pendingDisposeList.");
 #endif
             break;
         }
@@ -985,7 +985,7 @@ HeapBucketT<TBlockType>::SweepHeapBlockList(RecyclerSweep& recyclerSweep, TBlock
             }
 
 #ifdef RECYCLER_TRACE
-            recyclerSweep.GetRecycler()->PrintBlockStatus(this, heapBlock, _u("[**6**] finished Sweep Pass1, heapblock added to heapBlockList."));
+            recyclerSweep.GetRecycler()->PrintBlockStatus(this, heapBlock, u"[**6**] finished Sweep Pass1, heapblock added to heapBlockList.");
 #endif
 #if ENABLE_PARTIAL_GC
             recyclerSweep.GetManager()->NotifyAllocableObjects(heapBlock);
@@ -999,7 +999,7 @@ HeapBucketT<TBlockType>::SweepHeapBlockList(RecyclerSweep& recyclerSweep, TBlock
             heapBlock->SetNextBlock(this->fullBlockList);
             this->fullBlockList = heapBlock;
 #ifdef RECYCLER_TRACE
-            recyclerSweep.GetRecycler()->PrintBlockStatus(this, heapBlock, _u("[**7**] finished Sweep Pass1, heapblock FULL added to fullBlockList."));
+            recyclerSweep.GetRecycler()->PrintBlockStatus(this, heapBlock, u"[**7**] finished Sweep Pass1, heapblock FULL added to fullBlockList.");
 #endif
             break;
         }
@@ -1039,7 +1039,7 @@ HeapBucketT<TBlockType>::SweepHeapBlockList(RecyclerSweep& recyclerSweep, TBlock
                 recyclerSweep.template QueueEmptyHeapBlock<TBlockType>(this, heapBlock);
                 RECYCLER_STATS_INC(recycler, numZeroedOutSmallBlocks);
 #ifdef RECYCLER_TRACE
-                recyclerSweep.GetRecycler()->PrintBlockStatus(this, heapBlock, _u("[**8**] finished Sweep Pass1, heapblock EMPTY added to pendingEmptyBlockList."));
+                recyclerSweep.GetRecycler()->PrintBlockStatus(this, heapBlock, u"[**8**] finished Sweep Pass1, heapblock EMPTY added to pendingEmptyBlockList.");
 #endif
             }
             else
@@ -1052,7 +1052,7 @@ HeapBucketT<TBlockType>::SweepHeapBlockList(RecyclerSweep& recyclerSweep, TBlock
                 this->heapBlockCount--;
 #endif
 #ifdef RECYCLER_TRACE
-                recyclerSweep.GetRecycler()->PrintBlockStatus(this, heapBlock, _u("[**9**] finished Sweep Pass1, heapblock EMPTY, was FREED in-thread."));
+                recyclerSweep.GetRecycler()->PrintBlockStatus(this, heapBlock, u"[**9**] finished Sweep Pass1, heapblock EMPTY, was FREED in-thread.");
 #endif
             }
 
@@ -1358,7 +1358,7 @@ HeapBucketT<TBlockType>::FinishConcurrentSweepPass1(RecyclerSweep& recyclerSweep
                 heapBlock->GetRecycler()->heapBlockMap.SetPageMarkCount(heapBlock->GetAddress(), currentMarkCount);
 #endif
 #ifdef RECYCLER_TRACE
-                heapBlock->GetRecycler()->PrintBlockStatus(this, heapBlock, _u("[**13**] ending sweep Pass1, rebuilt free bit vector and set page mark count to match."));
+                heapBlock->GetRecycler()->PrintBlockStatus(this, heapBlock, u"[**13**] ending sweep Pass1, rebuilt free bit vector and set page mark count to match.");
 #endif
 
                 heapBlock->SetNextBlock(currentPendingSweepPrepHeapBlockList);
@@ -1386,7 +1386,7 @@ HeapBucketT<TBlockType>::FinishConcurrentSweepPass1(RecyclerSweep& recyclerSweep
             if (heapBlock->isPendingConcurrentSweepPrep)
             {
 #ifdef RECYCLER_TRACE
-                heapBlock->GetRecycler()->PrintBlockStatus(this, heapBlock, _u("[**19**] ending sweep Pass1, removed from SLIST."));
+                heapBlock->GetRecycler()->PrintBlockStatus(this, heapBlock, u"[**19**] ending sweep Pass1, removed from SLIST.");
 #endif
                 heapBlock->SetNextBlock(currentPendingSweepPrepHeapBlockList);
                 currentPendingSweepPrepHeapBlockList = heapBlock;
@@ -1394,7 +1394,7 @@ HeapBucketT<TBlockType>::FinishConcurrentSweepPass1(RecyclerSweep& recyclerSweep
             else
             {
 #ifdef RECYCLER_TRACE
-                heapBlock->GetRecycler()->PrintBlockStatus(this, heapBlock, _u("[**23**] ending sweep Pass1, removed from SLIST and added to sweepableHeapBlockList."));
+                heapBlock->GetRecycler()->PrintBlockStatus(this, heapBlock, u"[**23**] ending sweep Pass1, removed from SLIST and added to sweepableHeapBlockList.");
 #endif
                 // Already swept, put it back to the sweepableHeapBlockList list; so it can be processed later.
                 heapBlock->SetNextBlock(this->sweepableHeapBlockList);
@@ -1470,7 +1470,7 @@ HeapBucketT<TBlockType>::AppendAllocableHeapBlockList(TBlockType * list)
     if (this->GetRecycler()->GetRecyclerFlagsTable().Trace.IsEnabled(Js::ConcurrentSweepPhase) && CONFIG_FLAG_RELEASE(Verbose))
     {
         CollectionState collectionState = this->GetRecycler()->collectionState;
-        Output::Print(_u("[GC #%d] [HeapBucket 0x%p] in AppendAllocableHeapBlockList [CollectionState: %d] \n"), this->GetRecycler()->collectionCount, this, collectionState);
+        Output::Print(u"[GC #%d] [HeapBucket 0x%p] in AppendAllocableHeapBlockList [CollectionState: %d] \n", this->GetRecycler()->collectionCount, this, collectionState);
     }
 #endif
     // Add the list to the end of the current list

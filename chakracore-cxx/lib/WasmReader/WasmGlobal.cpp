@@ -14,7 +14,7 @@ namespace Wasm
     {
         if (GetReferenceType() != GlobalReferenceTypes::Const)
         {
-            throw WasmCompilationException(_u("Global must be initialized from a const to retrieve the const value"));
+            throw WasmCompilationException(u"Global must be initialized from a const to retrieve the const value");
         }
         return m_init.cnst;
     }
@@ -23,7 +23,7 @@ namespace Wasm
     {
         if (GetReferenceType() != GlobalReferenceTypes::LocalReference)
         {
-            throw WasmCompilationException(_u("Global must be initialized from another global to retrieve its index"));
+            throw WasmCompilationException(u"Global must be initialized from another global to retrieve its index");
         }
         return m_init.var.num;
     }

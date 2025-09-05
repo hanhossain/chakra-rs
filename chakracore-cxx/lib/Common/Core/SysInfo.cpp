@@ -83,7 +83,7 @@ AutoSystemInfo::Initialize()
     isWindows8OrGreater = IsWindows8OrGreater();
     isWindows8Point1OrGreater = IsWindows8Point1OrGreater();
 
-    binaryName[0] = _u('\0');
+    binaryName[0] = u'\0';
 
 #if SYSINFO_IMAGE_BASE_AVAILABLE
     dllLoadAddress = (UINT_PTR)&__ImageBase;
@@ -97,7 +97,7 @@ AutoSystemInfo::Initialize()
 #endif
 
     char16_t DisableDebugScopeCaptureFlag[MAX_PATH];
-    if (::GetEnvironmentVariable(_u("JS_DEBUG_SCOPE"), DisableDebugScopeCaptureFlag, _countof(DisableDebugScopeCaptureFlag)) != 0)
+    if (::GetEnvironmentVariable(u"JS_DEBUG_SCOPE", DisableDebugScopeCaptureFlag, _countof(DisableDebugScopeCaptureFlag)) != 0)
     {
         disableDebugScopeCapture = true;
     }

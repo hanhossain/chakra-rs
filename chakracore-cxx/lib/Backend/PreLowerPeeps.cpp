@@ -124,7 +124,7 @@ Lowerer::TryShiftAdd(IR::Instr *instrAdd, IR::Opnd * opndFold, IR::Opnd * opndAd
 #if DBG_DUMP
     if (PHASE_TRACE(Js::PreLowererPeepsPhase, instrAdd->m_func))
     {
-        Output::Print(_u("PeepShiftAdd : %s (%d) : folding:\n"), instrAdd->m_func->GetJITFunctionBody()->GetDisplayName(), instrAdd->m_func->GetFunctionNumber());
+        Output::Print(u"PeepShiftAdd : %s (%d) : folding:\n", instrAdd->m_func->GetJITFunctionBody()->GetDisplayName(), instrAdd->m_func->GetFunctionNumber());
         instrDef->Dump();
         instrAdd->Dump();
     }
@@ -146,7 +146,7 @@ Lowerer::TryShiftAdd(IR::Instr *instrAdd, IR::Opnd * opndFold, IR::Opnd * opndAd
 #if DBG_DUMP
     if (PHASE_TRACE(Js::PreLowererPeepsPhase, instrAdd->m_func))
     {
-        Output::Print(_u("into:\n"), instrAdd->m_func->GetJITFunctionBody()->GetDisplayName(), instrAdd->m_func->GetFunctionNumber());
+        Output::Print(u"into:\n", instrAdd->m_func->GetJITFunctionBody()->GetDisplayName(), instrAdd->m_func->GetFunctionNumber());
         leaInstr->Dump();
     }
 #endif

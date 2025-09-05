@@ -11,7 +11,7 @@ namespace Js
     const uint StringProfiler::k_MaxConcatLength;
 
     StringProfiler::StringProfiler(PageAllocator * pageAllocator)
-      : allocator(_u("StringProfiler"), pageAllocator, Throw::OutOfMemory ),
+      : allocator(u"StringProfiler", pageAllocator, Throw::OutOfMemory ),
         mainThreadId(GetCurrentThreadContextId() ),
         discardedWrongThread(0),
         stringLengthMetrics(&allocator),
@@ -92,7 +92,7 @@ namespace Js
         uint result = 0;
         for( uint i = 0; i != length; ++i )
         {
-            if( sz[i] == _u('\0') ) ++result;
+            if( sz[i] == u'\0' ) ++result;
         }
 
         return result;
@@ -143,7 +143,7 @@ namespace Js
         uint totalCount
         )
     {
-        Output::Print(_u("%10u %10u %10u %10u %10u (%.1f%%)\n"),
+        Output::Print(u"%10u %10u %10u %10u %10u (%.1f%%)\n",
                 len,
                 metrics.count7BitASCII,
                 metrics.count8BitASCII,
@@ -157,33 +157,33 @@ namespace Js
     {
         if( val >= k_MaxConcatLength )
         {
-            Output::Print(_u(" Large"), k_MaxConcatLength);
+            Output::Print(u" Large", k_MaxConcatLength);
         }
         else
         {
-            Output::Print(_u("%6u"), val);
+            Output::Print(u"%6u", val);
         }
     }
 
     /*static*/ void StringProfiler::PrintOneConcat( UintUintPair const& key, const ConcatMetrics& metrics)
     {
         PrintUintOrLarge(key.first);
-        Output::Print(_u(" "));
+        Output::Print(u" ");
         PrintUintOrLarge(key.second);
-        Output::Print(_u(" %6u"), metrics.compoundStringCount);
-        Output::Print(_u(" %6u"), metrics.concatTreeCount);
-        Output::Print(_u(" %6u"), metrics.bufferStringBuilderCount);
-        Output::Print(_u(" %6u"), metrics.unknownCount);
-        Output::Print(_u(" %6u\n"), metrics.Total());
+        Output::Print(u" %6u", metrics.compoundStringCount);
+        Output::Print(u" %6u", metrics.concatTreeCount);
+        Output::Print(u" %6u", metrics.bufferStringBuilderCount);
+        Output::Print(u" %6u", metrics.unknownCount);
+        Output::Print(u" %6u\n", metrics.Total());
     }
 
     void StringProfiler::PrintAll()
     {
-        Output::Print(_u("=============================================================\n"));
-        Output::Print(_u("String Statistics\n"));
-        Output::Print(_u("-------------------------------------------------------------\n"));
-        Output::Print(_u("    Length 7bit ASCII 8bit ASCII    Unicode      Total %%Total\n"));
-        Output::Print(_u(" --------- ---------- ---------- ---------- ---------- ------\n"));
+        Output::Print(u"=============================================================\n");
+        Output::Print(u"String Statistics\n");
+        Output::Print(u"-------------------------------------------------------------\n");
+        Output::Print(u"    Length 7bit ASCII 8bit ASCII    Unicode      Total %%Total\n");
+        Output::Print(u" --------- ---------- ---------- ---------- ---------- ------\n");
 
         // Build an index for printing the histogram in descending order
         HistogramIndex index(&allocator, stringLengthMetrics.Count());
@@ -215,8 +215,8 @@ namespace Js
             }
         }
 
-        Output::Print(_u("-------------------------------------------------------------\n"));
-        Output::Print(_u("    Totals %10u %10u %10u %10u (100%%)\n"),
+        Output::Print(u"-------------------------------------------------------------\n");
+        Output::Print(u"    Totals %10u %10u %10u %10u (100%%)\n",
             cumulative.count7BitASCII,
             cumulative.count8BitASCII,
             cumulative.countUnicode,
@@ -224,31 +224,31 @@ namespace Js
 
         if(discardedWrongThread>0)
         {
-            Output::Print(_u("WARNING: %u strings were not counted because they were allocated on a background thread\n"),discardedWrongThread);
+            Output::Print(u"WARNING: %u strings were not counted because they were allocated on a background thread\n",discardedWrongThread);
         }
-        Output::Print(_u("\n"));
-        Output::Print(_u("Max string length is %u chars\n"), maxLength);
-        Output::Print(_u("%u empty strings (Literals or BufferString) were requested\n"), emptyStrings);
-        Output::Print(_u("%u single char strings (Literals or BufferString) were requested\n"), singleCharStrings);
+        Output::Print(u"\n");
+        Output::Print(u"Max string length is %u chars\n", maxLength);
+        Output::Print(u"%u empty strings (Literals or BufferString) were requested\n", emptyStrings);
+        Output::Print(u"%u single char strings (Literals or BufferString) were requested\n", singleCharStrings);
         if( this->embeddedNULStrings == 0 )
         {
-            Output::Print(_u("No embedded NULs were detected\n"));
+            Output::Print(u"No embedded NULs were detected\n");
         }
         else
         {
-            Output::Print(_u("Embedded NULs: %u NULs in %u strings\n"), this->embeddedNULChars, this->embeddedNULStrings);
+            Output::Print(u"Embedded NULs: %u NULs in %u strings\n", this->embeddedNULChars, this->embeddedNULStrings);
         }
-        Output::Print(_u("\n"));
+        Output::Print(u"\n");
 
         if(stringConcatMetrics.Count() == 0)
         {
-            Output::Print(_u("No string concatenations were performed\n"));
+            Output::Print(u"No string concatenations were performed\n");
         }
         else
         {
             Output::Print(_u("String concatenations (Strings %u chars or longer are treated as \"Large\")\n"), k_MaxConcatLength);
-            Output::Print(_u("   LHS +  RHS  SB    Concat   Buf  Other  Total\n"));
-            Output::Print(_u("------ ------ ------ ------ ------ ------ ------\n"));
+            Output::Print(u"   LHS +  RHS  SB    Concat   Buf  Other  Total\n");
+            Output::Print(u"------ ------ ------ ------ ------ ------ ------\n");
 
             uint totalConcatenations = 0;
             uint totalConcatTree = 0;
@@ -265,8 +265,8 @@ namespace Js
                 totalOther += metrics.unknownCount;
             }
             );
-            Output::Print(_u("-------------------------------------------------------\n"));
-            Output::Print(_u("Total %6u %6u %6u %6u %6u\n"), totalConcatenations, totalCompoundString, totalConcatTree, totalBufString, totalOther);
+            Output::Print(u"-------------------------------------------------------\n");
+            Output::Print(u"Total %6u %6u %6u %6u %6u\n", totalConcatenations, totalCompoundString, totalConcatTree, totalBufString, totalOther);
         }
 
         Output::Flush();

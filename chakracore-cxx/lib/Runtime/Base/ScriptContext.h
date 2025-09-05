@@ -1838,7 +1838,7 @@ private:
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
             if (CONFIG_FLAG(DumpEvalStringOnRemoval))
             {
-                Output::Print(_u("EvalMap: Removing Dynamic Function String from dynamic function cache: %s\n"), key.str.GetBuffer()); Output::Flush();
+                Output::Print(u"EvalMap: Removing Dynamic Function String from dynamic function cache: %s\n", key.str.GetBuffer()); Output::Flush();
             }
 #endif
         });

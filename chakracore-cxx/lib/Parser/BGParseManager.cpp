@@ -197,7 +197,7 @@ HRESULT BGParseManager::QueueBackgroundParse(LPCUTF8 pszSrc, size_t cbLength, ch
         {
             Js::Tick now = Js::Tick::Now();
             Output::Print(
-                _u("[BgParse: Start -- cookie: %04d on thread 0x%X at %.2f ms -- %s]\n"),
+                u"[BgParse: Start -- cookie: %04d on thread 0x%X at %.2f ms -- %s]\n",
                 workitem->GetCookie(),
                 ::GetCurrentThreadId(),
                 now.ToMilliseconds(),
@@ -291,7 +291,7 @@ HRESULT BGParseManager::GetParseResults(
     {
         Js::Tick now = Js::Tick::Now();
         Output::Print(
-            _u("[BgParse: End   -- cookie: %04d on thread 0x%X at %.2f ms -- hr: 0x%X]\n"),
+            u"[BgParse: End   -- cookie: %04d on thread 0x%X at %.2f ms -- hr: 0x%X]\n",
             workitem != nullptr ? workitem->GetCookie() : -1,
             ::GetCurrentThreadId(),
             now.ToMilliseconds(),
@@ -330,7 +330,7 @@ bool BGParseManager::DiscardParseResults(uint32_t cookie, void* buffer)
     {
         Js::Tick now = Js::Tick::Now();
         Output::Print(
-            _u("[BgParse: Discard -- cookie: %04d on thread 0x%X at %.2f ms, workitem: 0x%p, workitem owns buffer: %u]\n"),
+            u"[BgParse: Discard -- cookie: %04d on thread 0x%X at %.2f ms, workitem: 0x%p, workitem owns buffer: %u]\n",
             cookie,
             ::GetCurrentThreadId(),
             now.ToMilliseconds(),
@@ -494,7 +494,7 @@ void BGParseWorkItem::ParseUTF8Core(Js::ScriptContext* scriptContext)
     {
         Js::Tick now = Js::Tick::Now();
         Output::Print(
-            _u("[BgParse: Parse -- cookie: %04d on thread 0x%X at %.2f ms]\n"),
+            u"[BgParse: Parse -- cookie: %04d on thread 0x%X at %.2f ms]\n",
             GetCookie(),
             ::GetCurrentThreadId(),
             now.ToMilliseconds()
@@ -547,7 +547,7 @@ void BGParseWorkItem::ParseUTF8Core(Js::ScriptContext* scriptContext)
 
     if (this->parseHR == S_OK)
     {
-        BEGIN_TEMP_ALLOCATOR(tempAllocator, scriptContext, _u("BGParseWorkItem"));
+        BEGIN_TEMP_ALLOCATOR(tempAllocator, scriptContext, u"BGParseWorkItem");
         Js::FunctionBody *functionBody = func->GetFunctionBody();
         this->parseHR = Js::ByteCodeSerializer::SerializeToBuffer(
             scriptContext,
@@ -642,7 +642,7 @@ void BGParseWorkItem::JobProcessed(const bool succeeded)
     {
         Js::Tick now = Js::Tick::Now();
         Output::Print(
-            _u("[BgParse: Discard Before GetResults -- cookie: %04d on thread 0x%X at %.2f ms]\n"),
+            u"[BgParse: Discard Before GetResults -- cookie: %04d on thread 0x%X at %.2f ms]\n",
             GetCookie(),
             ::GetCurrentThreadId(),
             now.ToMilliseconds()
@@ -668,7 +668,7 @@ void BGParseWorkItem::WaitForCompletion()
         {
             Js::Tick now = Js::Tick::Now();
             Output::Print(
-                _u("[BgParse: Wait -- cookie: %04d on thread 0x%X at %.2f ms]\n"),
+                u"[BgParse: Wait -- cookie: %04d on thread 0x%X at %.2f ms]\n",
                 GetCookie(),
                 ::GetCurrentThreadId(),
                 now.ToMilliseconds()

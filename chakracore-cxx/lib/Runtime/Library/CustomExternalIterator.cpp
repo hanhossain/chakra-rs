@@ -166,13 +166,13 @@ namespace Js
 
         if (!VarIs<CustomExternalIterator>(thisObj))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_InvalidIteratorObject, _u("Iterator.prototype.next"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_InvalidIteratorObject, u"Iterator.prototype.next");
         }
 
         CustomExternalIterator * currentIterator = VarTo<CustomExternalIterator>(thisObj);
         if (iteratorNextFunction->GetExternalTypeId() != currentIterator->m_externalTypeId)
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_InvalidIteratorObject, _u("Iterator.prototype.next"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_InvalidIteratorObject, u"Iterator.prototype.next");
         }
 
         Var key = nullptr;

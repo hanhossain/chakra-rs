@@ -23,27 +23,27 @@ char16_t* DumpCallStackFull(uint frameCount, bool print)
         if (walker.IsJavascriptFrame())
         {
             char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-            StringCchPrintf(buffer, _countof(buffer), _u("0x%p  "), codeAddr);
+            StringCchPrintf(buffer, _countof(buffer), u"0x%p  ", codeAddr);
             sb.AppendSz(buffer);
             // Found a JavascriptFunction.  Dump its name and parameters.
             Js::JavascriptFunction *jsFunc = walker.GetCurrentFunction();
 
             Js::FunctionBody * jsBody = jsFunc->GetFunctionBody();
             const Js::CallInfo callInfo = walker.GetCallInfo();
-            const char16_t* sourceFileName = _u("NULL");
+            const char16_t* sourceFileName = u"NULL";
             uint32_t line = 0; int32_t column = 0;
             walker.GetSourcePosition(&sourceFileName, &line, &column);
 
-            StringCchPrintf(buffer, _countof(buffer), _u("%s [%s] (0x%p, Args=%u"), jsBody->GetDisplayName(), jsBody->GetDebugNumberSet(debugStringBuffer), jsFunc,
+            StringCchPrintf(buffer, _countof(buffer), u"%s [%s] (0x%p, Args=%u", jsBody->GetDisplayName(), jsBody->GetDebugNumberSet(debugStringBuffer), jsFunc,
                 callInfo.Count);
             sb.AppendSz(buffer);
 
             for (uint i = 0; i < callInfo.Count; i++)
             {
-                StringCchPrintf(buffer, _countof(buffer), _u(", 0x%p"), walker.GetJavascriptArgs(false /*boxArgs*/)[i]);
+                StringCchPrintf(buffer, _countof(buffer), u", 0x%p", walker.GetJavascriptArgs(false /*boxArgs*/)[i]);
                 sb.AppendSz(buffer);
             }
-            StringCchPrintf(buffer, _countof(buffer), _u(")[%s (%u, %d)]\n"), sourceFileName, line + 1, column + 1);
+            StringCchPrintf(buffer, _countof(buffer), u")[%s (%u, %d)]\n", sourceFileName, line + 1, column + 1);
             sb.AppendSz(buffer);
             fc++;
             if(fc >= frameCount)
@@ -52,7 +52,7 @@ char16_t* DumpCallStackFull(uint frameCount, bool print)
             }
        }
     }
-    sb.AppendCppLiteral(_u("----------------------------------------------------------------------\n"));
+    sb.AppendCppLiteral(u"----------------------------------------------------------------------\n");
     char16_t* stack = sb.Detach();
     if(print)
     {

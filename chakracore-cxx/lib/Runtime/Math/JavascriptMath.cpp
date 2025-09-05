@@ -495,7 +495,7 @@ StringCommon:
             {
                 if (typeRight != typeLeft)
                 {
-                    JavascriptError::ThrowTypeError(scriptContext, VBSERR_TypeMismatch, _u("Add BigInt"));
+                    JavascriptError::ThrowTypeError(scriptContext, VBSERR_TypeMismatch, u"Add BigInt");
                 }
                 return JavascriptBigInt::Add(primLeft, primRight);
             }
@@ -872,7 +872,7 @@ StringCommon:
             {
                 if (typeRight != typeLeft)
                 {
-                    JavascriptError::ThrowTypeError(scriptContext, VBSERR_TypeMismatch, _u("Subtract BigInt"));
+                    JavascriptError::ThrowTypeError(scriptContext, VBSERR_TypeMismatch, u"Subtract BigInt");
                 }
                 return JavascriptBigInt::Sub(aLeftToPrim, aRightToPrim);
             }
@@ -897,7 +897,7 @@ StringCommon:
             {
                 if (typeRight != typeLeft)
                 {
-                    JavascriptError::ThrowTypeError(scriptContext, VBSERR_TypeMismatch, _u("Subtract BigInt"));
+                    JavascriptError::ThrowTypeError(scriptContext, VBSERR_TypeMismatch, u"Subtract BigInt");
                 }
                 return JavascriptBigInt::Sub(aLeftToPrim, aRightToPrim);
             }
@@ -956,7 +956,7 @@ StringCommon:
             {
                 if (typeRight != typeLeft)
                 {
-                    JavascriptError::ThrowTypeError(scriptContext, VBSERR_TypeMismatch, _u("Multiply BigInt"));
+                    JavascriptError::ThrowTypeError(scriptContext, VBSERR_TypeMismatch, u"Multiply BigInt");
                 }
                 return JavascriptBigInt::Mul(aLeft, aRight);
             }
@@ -1002,7 +1002,7 @@ StringCommon:
             {
                 if (typeRight != typeLeft)
                 {
-                    JavascriptError::ThrowTypeError(scriptContext, VBSERR_TypeMismatch, _u("Multiply BigInt"));
+                    JavascriptError::ThrowTypeError(scriptContext, VBSERR_TypeMismatch, u"Multiply BigInt");
                 }
                 return JavascriptBigInt::Mul(aLeft, aRight);
             }
@@ -1324,7 +1324,7 @@ StringCommon:
             {
                 InitializeRandomSeeds(&seed0, &seed1, scriptContext);
 #if DBG_DUMP
-                OUTPUT_TRACE(Js::PRNGPhase, _u("[PRNG:%x] INIT %I64x %I64x\n"), scriptContext, seed0, seed1);
+                OUTPUT_TRACE(Js::PRNGPhase, u"[PRNG:%x] INIT %I64x %I64x\n", scriptContext, seed0, seed1);
 #endif
                 scriptContext->GetLibrary()->SetIsPRNGSeeded(true);
 
@@ -1350,7 +1350,7 @@ StringCommon:
             }
 
 #if DBG_DUMP
-            OUTPUT_TRACE(Js::PRNGPhase, _u("[PRNG:%x] SEED %I64x %I64x\n"), scriptContext, seed0, seed1);
+            OUTPUT_TRACE(Js::PRNGPhase, u"[PRNG:%x] SEED %I64x %I64x\n", scriptContext, seed0, seed1);
 #endif
 
             Xorshift128plus(&seed0, &seed1);
@@ -1361,7 +1361,7 @@ StringCommon:
 
             double res = ConvertRandomSeedsToDouble(seed0, seed1);
 #if DBG_DUMP
-            OUTPUT_TRACE(Js::PRNGPhase, _u("[PRNG:%x] RAND %I64x\n"), scriptContext, *((unsigned long *)&res));
+            OUTPUT_TRACE(Js::PRNGPhase, u"[PRNG:%x] RAND %I64x\n", scriptContext, *((unsigned long *)&res));
 #endif
             return res;
             JIT_HELPER_END(DirectMath_Random);

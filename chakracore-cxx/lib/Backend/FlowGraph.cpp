@@ -451,19 +451,19 @@ FlowGraph::Build(void)
     {
         if (assignRegionsBeforeGlobopt)
         {
-            Output::Print(_u("Before adding early exit edges\n"));
+            Output::Print(u"Before adding early exit edges\n");
             FOREACH_BLOCK_ALL(block, this)
             {
                 block->DumpHeader(true);
                 Region *region = block->GetFirstInstr()->AsLabelInstr()->GetRegion();
                 if (region)
                 {
-                    const char16_t * regMap[] = { _u("RegionTypeInvalid"),
-                        _u("RegionTypeRoot"),
-                        _u("RegionTypeTry"),
-                        _u("RegionTypeCatch"),
-                        _u("RegionTypeFinally") };
-                    Output::Print(_u("Region %p RegionParent %p RegionType %s\n"), region, region->GetParent(), regMap[region->GetType()]);
+                    const char16_t * regMap[] = { u"RegionTypeInvalid",
+                        u"RegionTypeRoot",
+                        u"RegionTypeTry",
+                        u"RegionTypeCatch",
+                        u"RegionTypeFinally" };
+                    Output::Print(u"Region %p RegionParent %p RegionType %s\n", region, region->GetParent(), regMap[region->GetType()]);
                 }
             } NEXT_BLOCK_ALL;
             this->func->Dump();
@@ -604,19 +604,19 @@ FlowGraph::Build(void)
     {
         if (assignRegionsBeforeGlobopt)
         {
-            Output::Print(_u("After adding early exit edges/Before CanonicalizeLoops\n"));
+            Output::Print(u"After adding early exit edges/Before CanonicalizeLoops\n");
             FOREACH_BLOCK_ALL(block, this)
             {
                 block->DumpHeader(true);
                 Region *region = block->GetFirstInstr()->AsLabelInstr()->GetRegion();
                 if (region)
                 {
-                    const char16_t * regMap[] = { _u("RegionTypeInvalid"),
-                        _u("RegionTypeRoot"),
-                        _u("RegionTypeTry"),
-                        _u("RegionTypeCatch"),
-                        _u("RegionTypeFinally") };
-                    Output::Print(_u("Region %p RegionParent %p RegionType %s\n"), region, region->GetParent(), regMap[region->GetType()]);
+                    const char16_t * regMap[] = { u"RegionTypeInvalid",
+                        u"RegionTypeRoot",
+                        u"RegionTypeTry",
+                        u"RegionTypeCatch",
+                        u"RegionTypeFinally" };
+                    Output::Print(u"Region %p RegionParent %p RegionType %s\n", region, region->GetParent(), regMap[region->GetType()]);
                 }
             } NEXT_BLOCK_ALL;
             this->func->Dump();
@@ -650,19 +650,19 @@ FlowGraph::Build(void)
     {
         if (assignRegionsBeforeGlobopt)
         {
-            Output::Print(_u("After CanonicalizeLoops\n"));
+            Output::Print(u"After CanonicalizeLoops\n");
             FOREACH_BLOCK_ALL(block, this)
             {
                 block->DumpHeader(true);
                 Region *region = block->GetFirstInstr()->AsLabelInstr()->GetRegion();
                 if (region)
                 {
-                    const char16_t * regMap[] = { _u("RegionTypeInvalid"),
-                    _u("RegionTypeRoot"),
-                    _u("RegionTypeTry"),
-                    _u("RegionTypeCatch"),
-                    _u("RegionTypeFinally") };
-                    Output::Print(_u("Region %p RegionParent %p RegionType %s\n"), region, region->GetParent(), regMap[region->GetType()]);
+                    const char16_t * regMap[] = { u"RegionTypeInvalid",
+                    u"RegionTypeRoot",
+                    u"RegionTypeTry",
+                    u"RegionTypeCatch",
+                    u"RegionTypeFinally" };
+                    Output::Print(u"Region %p RegionParent %p RegionType %s\n", region, region->GetParent(), regMap[region->GetType()]);
                 }
             } NEXT_BLOCK_ALL;
             this->func->Dump();
@@ -1074,7 +1074,7 @@ Loop::RemoveBreakBlocks(FlowGraph *fg)
             fg->MoveBlocksBefore(breakBlockStart, breakBlockEnd, exitLoopTail->next);
 
 #if DBG_DUMP
-            fg->Dump(true /*needs verbose flag*/, _u("\n After Each iteration of canonicalization \n"));
+            fg->Dump(true /*needs verbose flag*/, u"\n After Each iteration of canonicalization \n");
 #endif
             // Again be conservative, there are edits to the loop graph. Start fresh for this loop.
             breakBlockEnd = loopTailBlock;
@@ -1197,7 +1197,7 @@ FlowGraph::CanonicalizeLoops()
     }
 
 #if DBG_DUMP
-    this->Dump(true, _u("\n Before canonicalizeLoops \n"));
+    this->Dump(true, u"\n Before canonicalizeLoops \n");
 #endif
 
     bool breakBlockRelocated = false;
@@ -1216,7 +1216,7 @@ FlowGraph::CanonicalizeLoops()
     }
 
 #if DBG_DUMP
-    this->Dump(true, _u("\n After canonicalizeLoops \n"));
+    this->Dump(true, u"\n After canonicalizeLoops \n");
 #endif
 
     return breakBlockRelocated;
@@ -1296,7 +1296,7 @@ FlowGraph::BuildLoop(BasicBlock *headBlock, BasicBlock *tailBlock, Loop *parentL
     loop->memOpInfo = nullptr;
     loop->doMemOp = true;
 
-    NoRecoverMemoryJitArenaAllocator tempAlloc(_u("BE-LoopBuilder"), this->func->m_alloc->GetPageAllocator(), Js::Throw::OutOfMemory);
+    NoRecoverMemoryJitArenaAllocator tempAlloc(u"BE-LoopBuilder", this->func->m_alloc->GetPageAllocator(), Js::Throw::OutOfMemory);
 
     WalkLoopBlocks(tailBlock, loop, &tempAlloc);
 
@@ -2273,7 +2273,7 @@ FlowGraph::InsertAirlockBlock(FlowEdge * edge, bool afterForward /*= false*/)
     }
 
 #if DBG_DUMP
-    this->Dump(true, _u("\n After insertion of airlock block \n"));
+    this->Dump(true, u"\n After insertion of airlock block \n");
 #endif
 
     return airlockBlock;
@@ -3606,9 +3606,9 @@ Loop::CanDoFieldCopyProp()
     if (((this->implicitCallFlags & ~(Js::ImplicitCall_External)) == 0) &&
         Js::Configuration::Global.flags.Trace.IsEnabled(Js::HostOptPhase))
     {
-        Output::Print(_u("fieldcopyprop disabled because external: loop count: %d"), GetLoopNumber());
+        Output::Print(u"fieldcopyprop disabled because external: loop count: %d", GetLoopNumber());
         GetFunc()->DumpFullFunctionName();
-        Output::Print(_u("\n"));
+        Output::Print(u"\n");
         Output::Flush();
     }
 #endif
@@ -3998,28 +3998,28 @@ FlowGraph::Dump(bool onlyOnVerboseMode, const char16_t *form)
 void
 FlowGraph::Dump()
 {
-    Output::Print(_u("\nFlowGraph\n"));
+    Output::Print(u"\nFlowGraph\n");
     FOREACH_BLOCK(block, this)
     {
         Loop * loop = block->loop;
         while (loop)
         {
-            Output::Print(_u("    "));
+            Output::Print(u"    ");
             loop = loop->parent;
         }
         block->DumpHeader(false);
     } NEXT_BLOCK;
 
-    Output::Print(_u("\nLoopGraph\n"));
+    Output::Print(u"\nLoopGraph\n");
 
     for (Loop *loop = this->loopList; loop; loop = loop->next)
     {
-        Output::Print(_u("\nLoop\n"));
+        Output::Print(u"\nLoop\n");
         FOREACH_BLOCK_IN_LOOP(block, loop)
         {
             block->DumpHeader(false);
         }NEXT_BLOCK_IN_LOOP;
-        Output::Print(_u("Loop  Ends\n"));
+        Output::Print(u"Loop  Ends\n");
     }
 }
 
@@ -4028,134 +4028,134 @@ BasicBlock::DumpHeader(bool insertCR)
 {
     if (insertCR)
     {
-        Output::Print(_u("\n"));
+        Output::Print(u"\n");
     }
-    Output::Print(_u("BLOCK %d:"), this->number);
+    Output::Print(u"BLOCK %d:", this->number);
 
     if (this->isDead)
     {
-        Output::Print(_u(" **** DEAD ****"));
+        Output::Print(u" **** DEAD ****");
     }
 
     if (this->isBreakBlock)
     {
-        Output::Print(_u(" **** Break Block ****"));
+        Output::Print(u" **** Break Block ****");
     }
     else if (this->isAirLockBlock)
     {
-        Output::Print(_u(" **** Air lock Block ****"));
+        Output::Print(u" **** Air lock Block ****");
     }
     else if (this->isBreakCompensationBlockAtSource)
     {
-        Output::Print(_u(" **** Break Source Compensation Code ****"));
+        Output::Print(u" **** Break Source Compensation Code ****");
     }
     else if (this->isBreakCompensationBlockAtSink)
     {
-        Output::Print(_u(" **** Break Sink Compensation Code ****"));
+        Output::Print(u" **** Break Sink Compensation Code ****");
     }
     else if (this->isAirLockCompensationBlock)
     {
-        Output::Print(_u(" **** Airlock block Compensation Code ****"));
+        Output::Print(u" **** Airlock block Compensation Code ****");
     }
 
     if (!this->predList.Empty())
     {
         BOOL fFirst = TRUE;
-        Output::Print(_u(" In("));
+        Output::Print(u" In(");
         FOREACH_PREDECESSOR_BLOCK(blockPred, this)
         {
             if (!fFirst)
             {
-                Output::Print(_u(", "));
+                Output::Print(u", ");
             }
-            Output::Print(_u("%d"), blockPred->GetBlockNum());
+            Output::Print(u"%d", blockPred->GetBlockNum());
             fFirst = FALSE;
         }
         NEXT_PREDECESSOR_BLOCK;
-        Output::Print(_u(")"));
+        Output::Print(u")");
     }
 
 
     if (!this->succList.Empty())
     {
         BOOL fFirst = TRUE;
-        Output::Print(_u(" Out("));
+        Output::Print(u" Out(");
         FOREACH_SUCCESSOR_BLOCK(blockSucc, this)
         {
             if (!fFirst)
             {
-                Output::Print(_u(", "));
+                Output::Print(u", ");
             }
-            Output::Print(_u("%d"), blockSucc->GetBlockNum());
+            Output::Print(u"%d", blockSucc->GetBlockNum());
             fFirst = FALSE;
         }
         NEXT_SUCCESSOR_BLOCK;
-        Output::Print(_u(")"));
+        Output::Print(u")");
     }
 
     if (!this->deadPredList.Empty())
     {
         BOOL fFirst = TRUE;
-        Output::Print(_u(" DeadIn("));
+        Output::Print(u" DeadIn(");
         FOREACH_DEAD_PREDECESSOR_BLOCK(blockPred, this)
         {
             if (!fFirst)
             {
-                Output::Print(_u(", "));
+                Output::Print(u", ");
             }
-            Output::Print(_u("%d"), blockPred->GetBlockNum());
+            Output::Print(u"%d", blockPred->GetBlockNum());
             fFirst = FALSE;
         }
         NEXT_DEAD_PREDECESSOR_BLOCK;
-        Output::Print(_u(")"));
+        Output::Print(u")");
     }
 
     if (!this->deadSuccList.Empty())
     {
         BOOL fFirst = TRUE;
-        Output::Print(_u(" DeadOut("));
+        Output::Print(u" DeadOut(");
         FOREACH_DEAD_SUCCESSOR_BLOCK(blockSucc, this)
         {
             if (!fFirst)
             {
-                Output::Print(_u(", "));
+                Output::Print(u", ");
             }
-            Output::Print(_u("%d"), blockSucc->GetBlockNum());
+            Output::Print(u"%d", blockSucc->GetBlockNum());
             fFirst = FALSE;
         }
         NEXT_DEAD_SUCCESSOR_BLOCK;
-        Output::Print(_u(")"));
+        Output::Print(u")");
     }
 
     if (this->loop)
     {
-        Output::Print(_u("   Loop(%d) header: %d"), this->loop->loopNumber - 1, this->loop->GetHeadBlock()->GetBlockNum());
+        Output::Print(u"   Loop(%d) header: %d", this->loop->loopNumber - 1, this->loop->GetHeadBlock()->GetBlockNum());
 
         if (this->loop->parent)
         {
-            Output::Print(_u(" parent(%d): %d"), this->loop->parent->loopNumber, this->loop->parent->GetHeadBlock()->GetBlockNum());
+            Output::Print(u" parent(%d): %d", this->loop->parent->loopNumber, this->loop->parent->GetHeadBlock()->GetBlockNum());
         }
 
         if (this->loop->GetHeadBlock() == this)
         {
             Output::SkipToColumn(50);
-            Output::Print(_u("Call Exp/Imp: "));
+            Output::Print(u"Call Exp/Imp: ");
             if (this->loop->GetHasCall())
             {
-                Output::Print(_u("yes/"));
+                Output::Print(u"yes/");
             }
             else
             {
-                Output::Print(_u(" no/"));
+                Output::Print(u" no/");
             }
             Output::Print(Js::DynamicProfileInfo::GetImplicitCallFlagsString(this->loop->GetImplicitCallFlags()));
         }
     }
 
-    Output::Print(_u("\n"));
+    Output::Print(u"\n");
     if (insertCR)
     {
-        Output::Print(_u("\n"));
+        Output::Print(u"\n");
     }
 }
 
@@ -4175,7 +4175,7 @@ AddPropertyCacheBucket::Dump() const
 {
     Assert(this->initialType != nullptr);
     Assert(this->finalType != nullptr);
-    Output::Print(_u(" initial type: 0x%x, final type: 0x%x "), this->initialType->GetAddr(), this->finalType->GetAddr());
+    Output::Print(u" initial type: 0x%x, final type: 0x%x ", this->initialType->GetAddr(), this->finalType->GetAddr());
 }
 
 void
@@ -4452,7 +4452,7 @@ static bool IsLegalOpcodeForPathDepBrFold(IR::Instr *instr)
 #if DBG
     if (PHASE_TRACE(Js::PathDepBranchFoldingPhase, instr->m_func) && Js::Configuration::Global.flags.Verbose)
     {
-        Output::Print(_u("Skipping PathDependentBranchFolding due to: "));
+        Output::Print(u"Skipping PathDependentBranchFolding due to: ");
         instr->Dump();
     }
 #endif
@@ -4809,15 +4809,15 @@ BasicBlock::CheckLegalityAndFoldPathDepBranches(GlobOpt* globOpt)
             {
                 if (!branch->IsUnconditional())
                 {
-                    Output::Print(_u("TRACE PathDependentBranchFolding: "));
-                    Output::Print(_u("Can prove retarget of branch in Block %d from Block %d to Block %d in func %s\n"),
+                    Output::Print(u"TRACE PathDependentBranchFolding: ");
+                    Output::Print(u"Can prove retarget of branch in Block %d from Block %d to Block %d in func %s\n",
                         this->GetBlockNum(),
                         this->GetLastInstr()->IsBranchInstr() ? this->GetLastInstr()->AsBranchInstr()->GetTarget()->GetBasicBlock()->GetBlockNum() : this->GetNext()->GetBlockNum(),
                         branchTarget->GetBasicBlock()->GetBlockNum(),
                         this->func->GetJITFunctionBody()->GetDisplayName());
                     if (globOpt->IsLoopPrePass())
                     {
-                        Output::Print(_u("In LoopPrePass\n"));
+                        Output::Print(u"In LoopPrePass\n");
                     }
                     Output::Flush();
                 }
@@ -4878,7 +4878,7 @@ BasicBlock::CheckLegalityAndFoldPathDepBranches(GlobOpt* globOpt)
 #if DBG
             if (PHASE_TRACE(Js::PathDepBranchFoldingPhase, instr->m_func) && Js::Configuration::Global.flags.Verbose)
             {
-                Output::Print(_u("After PathDependentBranchFolding: "));
+                Output::Print(u"After PathDependentBranchFolding: ");
                 this->func->Dump();
             }
 #endif
@@ -5198,8 +5198,8 @@ BasicBlock::MergePredBlocksValueMaps(GlobOpt* globOpt)
                 {
                     if (PHASE_TRACE(Js::GlobOptPhase, this->func) && !globOpt->IsLoopPrePass())
                     {
-                        Output::Print(_u("TRACE: "));
-                        Output::Print(_u("Inserting airlock block to convert syms to var between block %d and %d\n"),
+                        Output::Print(u"TRACE: ");
+                        Output::Print(u"Inserting airlock block to convert syms to var between block %d and %d\n",
                             pred->GetBlockNum(), this->GetBlockNum());
                         Output::Flush();
                     }

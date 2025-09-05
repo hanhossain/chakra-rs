@@ -215,7 +215,7 @@ namespace Js
             int32 w = JavascriptConversion::ToInt32(typedArrayBase->DirectGetItem(accessIndex), scriptContext);
             if (value != w)
             {
-                return scriptContext->GetLibrary()->CreateStringFromCppLiteral(_u("not-equal"));
+                return scriptContext->GetLibrary()->CreateStringFromCppLiteral(u"not-equal");
             }
 
             DWORD_PTR agent = (DWORD_PTR)scriptContext;
@@ -228,8 +228,8 @@ namespace Js
             }
         }
 
-        return awoken ? scriptContext->GetLibrary()->CreateStringFromCppLiteral(_u("ok"))
-            : scriptContext->GetLibrary()->CreateStringFromCppLiteral(_u("timed-out"));
+        return awoken ? scriptContext->GetLibrary()->CreateStringFromCppLiteral(u"ok")
+            : scriptContext->GetLibrary()->CreateStringFromCppLiteral(u"timed-out");
     }
 
     Var AtomicsObject::EntryNotify(RecyclableObject* function, CallInfo callInfo, ...)

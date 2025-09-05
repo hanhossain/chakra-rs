@@ -28,7 +28,7 @@ namespace Js
 
         if (!VarIs<JavascriptStringIterator>(thisObj))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedStringIterator, _u("String Iterator.prototype.next"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedStringIterator, u"String Iterator.prototype.next");
         }
 
         JavascriptStringIterator* iterator = VarTo<JavascriptStringIterator>(thisObj);

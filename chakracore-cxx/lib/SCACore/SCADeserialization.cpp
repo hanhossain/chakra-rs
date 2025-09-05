@@ -442,7 +442,7 @@ namespace Js
         else if (byteLen == 0)
         {
             *len = 0;
-            return _u("");
+            return u"";
         }
         else
         {

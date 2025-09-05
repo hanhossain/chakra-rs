@@ -955,7 +955,7 @@ HeapBlockMap32::Rescan(Recycler * recycler, bool resetWriteWatch)
                 // We never have previously, but it still seems like we should.
 
                 uint8_t writeBarrierByte = RecyclerWriteBarrierManager::GetWriteBarrier(pageAddress);
-                SwbVerboseTrace(recycler->GetRecyclerFlagsTable(), _u("Address: 0x%p, Write Barrier value: %u\n"), pageAddress, writeBarrierByte);
+                SwbVerboseTrace(recycler->GetRecyclerFlagsTable(), u"Address: 0x%p, Write Barrier value: %u\n", pageAddress, writeBarrierByte);
                 bool isDirty = (writeBarrierByte & DIRTYBIT);
 
                 if (isDirty)

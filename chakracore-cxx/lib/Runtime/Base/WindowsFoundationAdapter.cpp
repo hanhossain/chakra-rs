@@ -30,8 +30,8 @@ namespace Js
             HRESULT hr;
             HSTRING hString;
             HSTRING_HEADER hStringHdr;
-            LPCWSTR factoryName = _u("Windows.Foundation.Diagnostics.AsyncCausalityTracer");
-            uint32_t factoryNameLen = _countof(_u("Windows.Foundation.Diagnostics.AsyncCausalityTracer")) - 1;
+            LPCWSTR factoryName = u"Windows.Foundation.Diagnostics.AsyncCausalityTracer";
+            uint32_t factoryNameLen = _countof(u"Windows.Foundation.Diagnostics.AsyncCausalityTracer") - 1;
             IID factoryIID = __uuidof(IAsyncCausalityTracerStatics);
 
             IfFailReturnNULL(GetWinRtStringLibrary(scriptContext)->WindowsCreateStringReference(factoryName, factoryNameLen, &hStringHdr, &hString));

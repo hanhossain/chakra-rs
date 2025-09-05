@@ -85,7 +85,7 @@ namespace Js
                     {
                         *length = 0;
                     }
-                    return _u("\0");
+                    return u"\0";
                 }
             }
 
@@ -97,7 +97,7 @@ namespace Js
         {
             *length = 0;
         }
-        return _u("\0");
+        return u"\0";
     }
 
     HRESULT DelayLoadWinRtString::WindowsCompareStringOrdinal(_In_opt_ HSTRING string1, _In_opt_ HSTRING string2, _Out_ int32_t * result)

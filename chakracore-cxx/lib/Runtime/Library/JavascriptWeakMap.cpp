@@ -77,7 +77,7 @@ namespace Js
         }
         else
         {
-            JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, _u("WeakMap"), _u("WeakMap"));
+            JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, u"WeakMap", u"WeakMap");
         }
         Assert(weakMapObject != nullptr);
 
@@ -148,7 +148,7 @@ namespace Js
 
         if (!VarIs<JavascriptWeakMap>(args[0]))
         {
-            JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, _u("WeakMap.prototype.delete"), _u("WeakMap"));
+            JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, u"WeakMap.prototype.delete", u"WeakMap");
         }
 
         JavascriptWeakMap* weakMap = VarTo<JavascriptWeakMap>(args[0]);
@@ -189,7 +189,7 @@ namespace Js
 
         if (!VarIs<JavascriptWeakMap>(args[0]))
         {
-            JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, _u("WeakMap.prototype.get"), _u("WeakMap"));
+            JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, u"WeakMap.prototype.get", u"WeakMap");
         }
 
         JavascriptWeakMap* weakMap = VarTo<JavascriptWeakMap>(args[0]);
@@ -230,7 +230,7 @@ namespace Js
 
         if (!VarIs<JavascriptWeakMap>(args[0]))
         {
-            JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, _u("WeakMap.prototype.has"), _u("WeakMap"));
+            JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, u"WeakMap.prototype.has", u"WeakMap");
         }
 
         JavascriptWeakMap* weakMap = VarTo<JavascriptWeakMap>(args[0]);
@@ -271,7 +271,7 @@ namespace Js
 
         if (!VarIs<JavascriptWeakMap>(args[0]))
         {
-            JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, _u("WeakMap.prototype.set"), _u("WeakMap"));
+            JavascriptError::ThrowTypeErrorVar(scriptContext, JSERR_NeedObjectOfType, u"WeakMap.prototype.set", u"WeakMap");
         }
 
         JavascriptWeakMap* weakMap = VarTo<JavascriptWeakMap>(args[0]);
@@ -281,7 +281,7 @@ namespace Js
 
         if (!JavascriptOperators::IsObject(key))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_WeakMapSetKeyNotAnObject, _u("WeakMap.prototype.set"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_WeakMapSetKeyNotAnObject, u"WeakMap.prototype.set");
         }
 
         RecyclableObject* keyObj = VarTo<RecyclableObject>(key);
@@ -373,7 +373,7 @@ namespace Js
 
     BOOL JavascriptWeakMap::GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
     {
-        stringBuilder->AppendCppLiteral(_u("WeakMap"));
+        stringBuilder->AppendCppLiteral(u"WeakMap");
         return TRUE;
     }
 

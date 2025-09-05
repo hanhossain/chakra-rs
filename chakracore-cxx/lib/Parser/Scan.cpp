@@ -19,13 +19,13 @@ int CountNewlines(LPCOLESTR psz)
     {
         switch (*psz++)
         {
-        case _u('\xD'):
-            if (*psz == _u('\xA'))
+        case u'\xD':
+            if (*psz == u'\xA')
             {
                 ++psz;
             }
             // fall-through
-        case _u('\xA'):
+        case u'\xA':
             cln++;
             break;
         }
@@ -764,7 +764,7 @@ tokens Scanner<EncodingPolicy>::RescanRegExp()
     tokens tk = tkNone;
 
     {
-        ArenaAllocator alloc(_u("RescanRegExp"), m_parser->GetAllocator()->GetPageAllocator(), m_parser->GetAllocator()->outOfMemoryFunc);
+        ArenaAllocator alloc(u"RescanRegExp", m_parser->GetAllocator()->GetPageAllocator(), m_parser->GetAllocator()->outOfMemoryFunc);
         tk = ScanRegExpConstant(&alloc);
     }
 
@@ -797,7 +797,7 @@ tokens Scanner<EncodingPolicy>::RescanRegExpNoAST()
     tokens tk = tkNone;
 
     {
-        ArenaAllocator alloc(_u("RescanRegExp"), m_parser->GetAllocator()->GetPageAllocator(), m_parser->GetAllocator()->outOfMemoryFunc);
+        ArenaAllocator alloc(u"RescanRegExp", m_parser->GetAllocator()->GetPageAllocator(), m_parser->GetAllocator()->outOfMemoryFunc);
         {
             tk = ScanRegExpConstantNoAST(&alloc);
         }
@@ -833,7 +833,7 @@ tokens Scanner<EncodingPolicy>::RescanRegExpTokenizer()
 
     ThreadContext *threadContext = ThreadContext::GetContextForCurrentThread();
     threadContext->EnsureRecycler();
-    Js::TempArenaAllocatorObject *alloc = threadContext->GetTemporaryAllocator(_u("RescanRegExp"));
+    Js::TempArenaAllocatorObject *alloc = threadContext->GetTemporaryAllocator(u"RescanRegExp");
     TryFinally(
         [&]() /* try block */
         {
@@ -1411,7 +1411,7 @@ LBreak:
     {
         createPid = false;
 
-        if ((m_tempChBuf.m_ichCur == 10) && (0 == memcmp(_u("use strict"), m_tempChBuf.m_prgch, m_tempChBuf.m_ichCur * sizeof(OLECHAR))))
+        if ((m_tempChBuf.m_ichCur == 10) && (0 == memcmp(u"use strict", m_tempChBuf.m_prgch, m_tempChBuf.m_ichCur * sizeof(OLECHAR))))
         {
             createPid = true;
         }

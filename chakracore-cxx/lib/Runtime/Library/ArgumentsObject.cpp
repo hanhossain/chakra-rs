@@ -17,13 +17,13 @@ namespace Js
 
     BOOL ArgumentsObject::GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
     {
-        stringBuilder->AppendCppLiteral(_u("{...}"));
+        stringBuilder->AppendCppLiteral(u"{...}");
         return TRUE;
     }
 
     BOOL ArgumentsObject::GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
     {
-        stringBuilder->AppendCppLiteral(_u("Object, (Arguments)"));
+        stringBuilder->AppendCppLiteral(u"Object, (Arguments)");
         return TRUE;
     }
 

@@ -2540,7 +2540,7 @@ void ByteCodeGenerator::EmitFunctionBody(FuncInfo *funcInfo)
                     Assert(decl);
                     if (PHASE_TRACE(Js::DelayCapturePhase, funcInfo->byteCodeFunction))
                     {
-                        Output::Print(_u("--- DelayCapture: Committed symbol '%s' to slot.\n"),
+                        Output::Print(u"--- DelayCapture: Committed symbol '%s' to slot.\n",
                             sym->GetName().GetBuffer());
                         Output::Flush();
                     }
@@ -2575,7 +2575,7 @@ void ByteCodeGenerator::EmitProgram(ParseNodeProg *pnodeProg)
 
 #ifdef LOG_BYTECODE_AST_RATIO
     // log the max Ast size
-    Output::Print(_u("Max Ast size: %d"), initSize);
+    Output::Print(u"Max Ast size: %d", initSize);
 #endif
 
     Assert(pnodeProg && pnodeProg->nop == knopProg);
@@ -2897,7 +2897,7 @@ void ByteCodeGenerator::EmitOneFunction(ParseNodeFnc *pnodeFnc)
         m_callSiteId = 0;
         m_callApplyCallSiteCount = 0;
         m_writer.Begin(byteCodeFunction, alloc, this->DoJitLoopBodies(funcInfo), funcInfo->hasLoop, this->IsInDebugMode());
-        this->PushFuncInfo(_u("EmitOneFunction"), funcInfo);
+        this->PushFuncInfo(u"EmitOneFunction", funcInfo);
 
         this->inPrologue = true;
 
@@ -3157,7 +3157,7 @@ void ByteCodeGenerator::EmitOneFunction(ParseNodeFnc *pnodeFnc)
 #if DBG_DUMP
         if (PHASE_STATS1(Js::ByteCodePhase))
         {
-            Output::Print(_u(" BCode: %-10d, Aux: %-10d, AuxC: %-10d Total: %-10d,  %s\n"),
+            Output::Print(u" BCode: %-10d, Aux: %-10d, AuxC: %-10d Total: %-10d,  %s\n",
                 m_writer.ByteCodeDataSize(),
                 m_writer.AuxiliaryDataSize(),
                 m_writer.AuxiliaryContextDataSize(),
@@ -3174,7 +3174,7 @@ void ByteCodeGenerator::EmitOneFunction(ParseNodeFnc *pnodeFnc)
         this->MapReferencedPropertyIds(funcInfo);
 
         Assert(this->TopFuncInfo() == funcInfo);
-        PopFuncInfo(_u("EmitOneFunction"));
+        PopFuncInfo(u"EmitOneFunction");
         m_writer.SetCallSiteCount(m_callSiteId);
         m_writer.SetCallApplyCallsiteCount(m_callApplyCallSiteCount);
 #if ENABLE_NATIVE_CODEGEN
@@ -3832,7 +3832,7 @@ void ByteCodeGenerator::StartEmitFunction(ParseNodeFnc *pnodeFnc)
         }
     }
 
-    PushFuncInfo(_u("StartEmitFunction"), funcInfo);
+    PushFuncInfo(u"StartEmitFunction", funcInfo);
 
     if (!funcInfo->IsBodyAndParamScopeMerged())
     {
@@ -3994,7 +3994,7 @@ void ByteCodeGenerator::EndEmitFunction(ParseNodeFnc *pnodeFnc)
     }
 
     Assert(funcInfo == this->TopFuncInfo());
-    PopFuncInfo(_u("EndEmitFunction"));
+    PopFuncInfo(u"EndEmitFunction");
 }
 
 void ByteCodeGenerator::StartEmitCatch(ParseNodeCatch *pnodeCatch)
@@ -10332,7 +10332,7 @@ void EmitAdd(ParseNode *pnode, ByteCodeGenerator *byteCodeGenerator, FuncInfo *f
                 concatOpnds.RemoveHead();
                 if (concatCount == 3)
                 {
-                    OUTPUT_TRACE_DEBUGONLY(Js::ByteCodeConcatExprOptPhase, _u("%s(%s) offset:#%d : Concat3\n"),
+                    OUTPUT_TRACE_DEBUGONLY(Js::ByteCodeConcatExprOptPhase, u"%s(%s) offset:#%d : Concat3\n",
                         funcInfo->GetParsedFunctionBody()->GetDisplayName(),
                         funcInfo->GetParsedFunctionBody()->GetDebugNumberSet(debugStringBuffer),
                         byteCodeGenerator->Writer()->ByteCodeDataSize());
@@ -10340,7 +10340,7 @@ void EmitAdd(ParseNode *pnode, ByteCodeGenerator *byteCodeGenerator, FuncInfo *f
                     return;
                 }
 
-                OUTPUT_TRACE_DEBUGONLY(Js::ByteCodeConcatExprOptPhase, _u("%s(%s) offset:#%d: ConcatMulti %d\n"),
+                OUTPUT_TRACE_DEBUGONLY(Js::ByteCodeConcatExprOptPhase, u"%s(%s) offset:#%d: ConcatMulti %d\n",
                     funcInfo->GetParsedFunctionBody()->GetDisplayName(),
                     funcInfo->GetParsedFunctionBody()->GetDebugNumberSet(debugStringBuffer),
                     byteCodeGenerator->Writer()->ByteCodeDataSize(), concatCount);

@@ -1166,7 +1166,7 @@ namespace Js
         {
             return;
         }
-        Output::Print(_u("\nStack trace for thrown exception\n"));
+        Output::Print(u"\nStack trace for thrown exception\n");
 
         JavascriptExceptionContext::StackTrace *stackTrace = exceptionContext.GetStackTrace();
         for (int i=0; i < stackTrace->Count(); i++)
@@ -1178,7 +1178,7 @@ namespace Js
             {
                 currFrame.GetFunctionBody()->GetLineCharOffset(currFrame.GetByteCodeOffset(), &lineNumber, &characterPosition);
             }
-            Output::Print(_u("    %3d: %s (%d, %d)\n"), i, currFrame.GetFunctionName(), lineNumber, characterPosition);
+            Output::Print(u"    %3d: %s (%d, %d)\n", i, currFrame.GetFunctionName(), lineNumber, characterPosition);
         }
         Output::Flush();
 #endif
@@ -1597,7 +1597,7 @@ namespace Js
                     {
                         functionName = functionBody->GetExternalDisplayName();
                     }
-                    AppendExternalFrameToStackTrace(stringBuilder, functionName, pUrl ? pUrl : _u(""), lineNumber + 1, characterPosition + 1);
+                    AppendExternalFrameToStackTrace(stringBuilder, functionName, pUrl ? pUrl : u"", lineNumber + 1, characterPosition + 1);
                 }
             }
 
@@ -1668,16 +1668,16 @@ namespace Js
         };
         if (CONFIG_FLAG(ExtendedErrorStackForTestHost))
         {
-            bs->AppendChars(_u("\n\tat "));
+            bs->AppendChars(u"\n\tat ");
         }
         else
         {
-            bs->AppendChars(_u("\n   at "));
+            bs->AppendChars(u"\n   at ");
         }
         bs->AppendCharsSz(functionName);
-        bs->AppendChars(_u(" ("));
+        bs->AppendChars(u" (");
 
-        if (CONFIG_FLAG(ExtendedErrorStackForTestHost) && *fileName != _u('\0'))
+        if (CONFIG_FLAG(ExtendedErrorStackForTestHost) && *fileName != u'\0')
         {
             char16_t shortfilename[_MAX_FNAME];
             char16_t ext[_MAX_EXT];
@@ -1696,19 +1696,19 @@ namespace Js
         {
             bs->AppendCharsSz(fileName);
         }
-        bs->AppendChars(_u(':'));
+        bs->AppendChars(u':');
         bs->AppendChars(lineNumber, maxULongStringLength, ConvertULongToString);
-        bs->AppendChars(_u(':'));
+        bs->AppendChars(u':');
         bs->AppendChars(characterPosition, maxULongStringLength, ConvertULongToString);
-        bs->AppendChars(_u(')'));
+        bs->AppendChars(u')');
     }
 
     void JavascriptExceptionOperators::AppendLibraryFrameToStackTrace(CompoundString* bs, LPCWSTR functionName)
     {
         // format is equivalent to wprintf("\n   at %s (native code)", functionName);
-        bs->AppendChars(_u("\n   at "));
+        bs->AppendChars(u"\n   at ");
         bs->AppendCharsSz(functionName);
-        bs->AppendChars(_u(" (native code)"));
+        bs->AppendChars(u" (native code)");
     }
 
 } // namespace Js

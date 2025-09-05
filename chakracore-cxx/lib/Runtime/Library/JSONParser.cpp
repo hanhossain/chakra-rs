@@ -27,7 +27,7 @@ namespace JSON
         {
             if (!this->arenaAllocatorObject)
             {
-                this->arenaAllocatorObject = scriptContext->GetTemporaryGuestAllocator(_u("JSONParse"));
+                this->arenaAllocatorObject = scriptContext->GetTemporaryGuestAllocator(u"JSONParse");
                 this->arenaAllocator = arenaAllocatorObject->GetAllocator();
             }
         }

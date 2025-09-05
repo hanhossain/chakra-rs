@@ -99,7 +99,7 @@ DynamicProfileStorage::Load(char16_t const * filename, Fn loadFn)
         char16_t const * messageType = GetMessageType();
         if (messageType)
         {
-            Output::Print(_u("%s: DynamicProfileStorage: Dynamic Profile Data not found for '%s'\n"), messageType, filename);
+            Output::Print(u"%s: DynamicProfileStorage: Dynamic Profile Data not found for '%s'\n", messageType, filename);
             Output::Flush();
         }
 #endif
@@ -117,7 +117,7 @@ DynamicProfileStorage::Load(char16_t const * filename, Fn loadFn)
 #if DBG_DUMP
             if (DynamicProfileStorage::DoTrace())
             {
-                Output::Print(_u("TRACE: DynamicProfileStorage: Failed to load from cache dir for '%s'"), filename);
+                Output::Print(u"TRACE: DynamicProfileStorage: Failed to load from cache dir for '%s'", filename);
                 Output::Flush();
             }
 #endif
@@ -143,7 +143,7 @@ DynamicProfileStorage::Load(char16_t const * filename, Fn loadFn)
 #if DBG_DUMP
     if (DynamicProfileStorage::DoTrace() && sourceDynamicProfileManager)
     {
-        Output::Print(_u("TRACE: DynamicProfileStorage: Dynamic Profile Data Loaded: '%s'\n"), filename);
+        Output::Print(u"TRACE: DynamicProfileStorage: Dynamic Profile Data Loaded: '%s'\n", filename);
     }
 #endif
 
@@ -152,7 +152,7 @@ DynamicProfileStorage::Load(char16_t const * filename, Fn loadFn)
         char16_t const * messageType = GetMessageType();
         if (messageType)
         {
-            Output::Print(_u("%s: DynamicProfileStorage: Dynamic Profile Data corrupted: '%s'\n"), messageType, filename);
+            Output::Print(u"%s: DynamicProfileStorage: Dynamic Profile Data corrupted: '%s'\n", messageType, filename);
             Output::Flush();
             Assert(false);
         }

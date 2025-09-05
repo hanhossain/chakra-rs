@@ -39,7 +39,7 @@ JSONStringifier::SetNumericGap(charcount_t spaceCount)
     if (this->gapLength != 0)
     {
         this->gap = RecyclerNewArrayLeaf(this->scriptContext->GetRecycler(), char16_t, this->gapLength);
-        wmemset(gap, _u(' '), this->gapLength);
+        wmemset(gap, u' ', this->gapLength);
     }
 }
 

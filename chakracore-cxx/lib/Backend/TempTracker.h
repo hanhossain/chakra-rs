@@ -88,7 +88,7 @@ protected:
 
 #if DBG_DUMP
     static bool DoTrace(BackwardPass * backwardPass);
-    static char16_t const * GetTraceName() { return _u("MarkTempNumber"); }
+    static char16_t const * GetTraceName() { return u"MarkTempNumber"; }
     void Dump(char16_t const * traceName);
 #endif
 
@@ -139,7 +139,7 @@ protected:
 
 #if DBG_DUMP
     static bool DoTrace(BackwardPass * backwardPass);
-    static char16_t const * GetTraceName() { return _u("MarkTempObject"); }
+    static char16_t const * GetTraceName() { return u"MarkTempObject"; }
 #endif
 private:
     static bool IsTempProducing(IR::Instr * instr);
@@ -185,7 +185,7 @@ protected:
     bool HasExposedFieldDependencies(BVSparse<JitArenaAllocator> * bvTempTransferDependencies, BackwardPass * backwardPass) { return false; }
 
     static bool DoTrace(BackwardPass * backwardPass);
-    static char16_t const * GetTraceName() { return _u("MarkTempObjectVerify"); }
+    static char16_t const * GetTraceName() { return u"MarkTempObjectVerify"; }
 private:
     BVSparse<JitArenaAllocator> removedUpwardExposedUse;
 };

@@ -97,7 +97,7 @@ namespace Js
             Assert(newLength <= MaxLength);
 
             Data* newChunk = AllocatorNewStructPlus(TAllocator, this->alloc, allocation, Data);
-            newChunk->u.single.buffer[newLength] = _u('\0');
+            newChunk->u.single.buffer[newLength] = u'\0';
 
             *pBufLengthRequested = newLength;
             return newChunk;
@@ -293,13 +293,13 @@ namespace Js
 
             if (this->firstChunk)
             {
-                this->firstChunk->u.single.buffer[this->count] = _u('\0');
+                this->firstChunk->u.single.buffer[this->count] = u'\0';
 
                 return this->firstChunk->u.single.buffer;
             }
             else
             {
-                return _u("");
+                return u"";
             }
         }
 
@@ -324,7 +324,7 @@ namespace Js
             // embedded null characters.
             // WARNING!!
 
-            while (*str != _u('\0'))
+            while (*str != u'\0')
             {
                 Append(*str++);
             }
@@ -397,7 +397,7 @@ namespace Js
         char16_t* Detach()
         {
             // NULL terminate the string
-            Append(_u('\0'));
+            Append(u'\0');
 
             // if there is a chain we need to account for that also, so that the new buffer will have the NULL at the end.
             if (this->IsChained())
@@ -417,11 +417,11 @@ namespace Js
             Assert(this->count);
             if (this->IsChained())
             {
-                Assert(this->lastChunk->u.chained.buffer[this->count - (this->length - this->lastChunk->u.chained.length) - 1] == _u('\0'));
+                Assert(this->lastChunk->u.chained.buffer[this->count - (this->length - this->lastChunk->u.chained.length) - 1] == u'\0');
             }
             else
             {
-                Assert(this->lastChunk->u.single.buffer[this->count - 1] == _u('\0'));
+                Assert(this->lastChunk->u.single.buffer[this->count - 1] == u'\0');
             }
             this->appendPtr--;
             this->count--;

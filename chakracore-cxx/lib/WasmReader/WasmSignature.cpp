@@ -23,7 +23,7 @@ void WasmSignature::AllocateParams(Js::ArgSlot count, Recycler * recycler)
 {
     if (GetParamCount() != 0)
     {
-        throw WasmCompilationException(_u("Invalid call to WasmSignature::AllocateParams: Params are already allocated"));
+        throw WasmCompilationException(u"Invalid call to WasmSignature::AllocateParams: Params are already allocated");
     }
     if (count > 0)
     {
@@ -36,7 +36,7 @@ void WasmSignature::SetParam(WasmTypes::WasmType type, Js::ArgSlot index)
 {
     if (index >= GetParamCount())
     {
-        throw WasmCompilationException(_u("Parameter %u out of range (max %u)"), index, GetParamCount());
+        throw WasmCompilationException(u"Parameter %u out of range (max %u)", index, GetParamCount());
     }
     m_params[index] = Local(type);
 }
@@ -46,7 +46,7 @@ void WasmSignature::AllocateResults(uint32 count, Recycler * recycler)
 {
     if (GetResultCount() != 0)
     {
-        throw WasmCompilationException(_u("Invalid call to WasmSignature::AllocateResults: Results are already allocated"));
+        throw WasmCompilationException(u"Invalid call to WasmSignature::AllocateResults: Results are already allocated");
     }
     if (count > 0)
     {
@@ -59,7 +59,7 @@ void WasmSignature::SetResult(Local type, uint32 index)
 {
     if (index >= GetResultCount())
     {
-        throw WasmCompilationException(_u("Result %u out of range (max %u)"), index, GetResultCount());
+        throw WasmCompilationException(u"Result %u out of range (max %u)", index, GetResultCount());
     }
     m_results[index] = type;
 }
@@ -68,7 +68,7 @@ Wasm::Local WasmSignature::GetResult(uint32 index) const
 {
     if (index >= GetResultCount())
     {
-        throw WasmCompilationException(_u("Result %u out of range (max %u)"), index, GetResultCount());
+        throw WasmCompilationException(u"Result %u out of range (max %u)", index, GetResultCount());
     }
     return m_results[index];
 }
@@ -83,7 +83,7 @@ Local WasmSignature::GetParam(Js::ArgSlot index) const
 {
     if (index >= GetParamCount())
     {
-        throw WasmCompilationException(_u("Parameter %u out of range (max %u)"), index, GetParamCount());
+        throw WasmCompilationException(u"Parameter %u out of range (max %u)", index, GetParamCount());
     }
     return m_params[index];
 }
@@ -156,7 +156,7 @@ Js::ArgSlot WasmSignature::GetParamSize(Js::ArgSlot index) const
 #endif
     default:
         WasmTypes::CompileAssertCasesNoFailFast<WasmTypes::I32, WasmTypes::I64, WasmTypes::F32, WasmTypes::F64, WASM_V128_CHECK_TYPE>();
-        throw WasmCompilationException(_u("Invalid param type"));
+        throw WasmCompilationException(u"Invalid param type");
     }
 }
 
@@ -176,7 +176,7 @@ void WasmSignature::FinalizeSignature()
     {
         if (ArgSlotMath::Add(m_paramSize, GetParamSize(i), &m_paramSize))
         {
-            throw WasmCompilationException(_u("Argument size too big"));
+            throw WasmCompilationException(u"Argument size too big");
         }
     }
 
@@ -245,14 +245,14 @@ uint32 WasmSignature::WriteSignatureToString(_Out_writes_(maxlen) char16_t* out,
     AssertOrFailFast(out != nullptr);
     uint32 numwritten = 0;
 #define WRITE_BUF(msg, ...) numwritten += _snwprintf_s(out+numwritten, maxlen-numwritten, _TRUNCATE, msg, ##__VA_ARGS__);
-    WRITE_BUF(_u("("));
+    WRITE_BUF(u"(");
     for (Js::ArgSlot i = 0; i < GetParamCount(); i++)
     {
         if (i != 0)
         {
-            WRITE_BUF(_u(", "));
+            WRITE_BUF(u", ");
         }
-        WRITE_BUF(_u("%ls"), WasmTypes::GetTypeName(this->GetParam(i)));
+        WRITE_BUF(u"%ls", WasmTypes::GetTypeName(this->GetParam(i)));
     }
     if (numwritten >= maxlen - minEnd) {
         // null out the last 12 characters so we can properly end it 
@@ -269,34 +269,34 @@ uint32 WasmSignature::WriteSignatureToString(_Out_writes_(maxlen) char16_t* out,
             numwritten -= minEnd;
         }
 
-        WRITE_BUF(_u("..."));
+        WRITE_BUF(u"...");
         if (hasMultiResults)
         {
             // If the signature has multiple results, just print the first one then terminate.
-            WRITE_BUF(_u(")->(%s, ...)"), WasmTypes::GetTypeName(this->GetResult(0)));
+            WRITE_BUF(u")->(%s, ...)", WasmTypes::GetTypeName(this->GetResult(0)));
             return numwritten;
         }
     }
     if (GetResultCount() == 0)
     {
-        WRITE_BUF(_u(")->void"));
+        WRITE_BUF(u")->void");
     }
     else if (GetResultCount() == 1)
     {
-        WRITE_BUF(_u(")->%ls"), WasmTypes::GetTypeName(this->GetResult(0)));
+        WRITE_BUF(u")->%ls", WasmTypes::GetTypeName(this->GetResult(0)));
     }
     else
     {
-        WRITE_BUF(_u(")->("));
+        WRITE_BUF(u")->(");
         for (uint32 i = 0; i < GetResultCount(); i++)
         {
             if (i != 0)
             {
-                WRITE_BUF(_u(", "));
+                WRITE_BUF(u", ");
             }
-            WRITE_BUF(_u("%ls"), WasmTypes::GetTypeName(this->GetResult(i)));
+            WRITE_BUF(u"%ls", WasmTypes::GetTypeName(this->GetResult(i)));
         }
-        WRITE_BUF(_u(")"));
+        WRITE_BUF(u")");
     }
 #undef WRITE_BUF
     return numwritten;

@@ -10,7 +10,7 @@
 #include "ByteCode/ByteCodeSerializer.h"
 #include "Language/AsmJs.h"
 
-#define IsTrueOrFalse(value)     ((value) ? _u("True") : _u("False"))
+#define IsTrueOrFalse(value)     ((value) ? u"True" : u"False")
 
 #if DBG_DUMP
 void PrintPnodeWIndent(ParseNode *pnode, int indentAmt);
@@ -21,7 +21,7 @@ const char* const nopNames[knopLim] = {
 #include "ptlist.h"
 };
 void printNop(int nop) {
-    Output::Print(_u("%S\n"), nopNames[nop]);
+    Output::Print(u"%S\n", nopNames[nop]);
 }
 
 const uint ParseNode::mpnopgrfnop[knopLim] =
@@ -44,7 +44,7 @@ Parser::Parser(Js::ScriptContext* scriptContext, BOOL strictMode, PageAllocator 
 #else
 Parser::Parser(Js::ScriptContext* scriptContext, BOOL strictMode, PageAllocator *alloc, bool isBackground)
 #endif
-    : m_nodeAllocator(_u("Parser"), alloc ? alloc : scriptContext->GetThreadContext()->GetPageAllocator(), Parser::OutOfMemory),
+    : m_nodeAllocator(u"Parser", alloc ? alloc : scriptContext->GetThreadContext()->GetPageAllocator(), Parser::OutOfMemory),
     m_cactIdentToNodeLookup(0),
     m_grfscr(fscrNil),
     m_length(0),
@@ -58,7 +58,7 @@ Parser::Parser(Js::ScriptContext* scriptContext, BOOL strictMode, PageAllocator 
 #endif
     m_nextBlockId(0),
     m_tempGuestArenaReleased(false),
-    m_tempGuestArena(scriptContext->GetTemporaryGuestAllocator(_u("ParserRegex")), scriptContext->GetRecycler()),
+    m_tempGuestArena(scriptContext->GetTemporaryGuestAllocator(u"ParserRegex"), scriptContext->GetRecycler()),
     // use the GuestArena directly for keeping the RegexPattern* alive during byte code generation
     m_registeredRegexPatterns(m_tempGuestArena->GetAllocator()),
 
@@ -161,159 +161,159 @@ LPCWSTR Parser::GetTokenString(tokens token)
 {
     switch (token)
     {
-    case tkNone   : return _u("");
-    case tkEOF    : return _u("end of script");
-    case tkIntCon : return _u("integer literal");
-    case tkFltCon : return _u("float literal");
-    case tkStrCon : return _u("string literal");
-    case tkRegExp : return _u("regular expression literal");
+    case tkNone   : return u"";
+    case tkEOF    : return u"end of script";
+    case tkIntCon : return u"integer literal";
+    case tkFltCon : return u"float literal";
+    case tkStrCon : return u"string literal";
+    case tkRegExp : return u"regular expression literal";
 
 // keywords
-    case tkABSTRACT     : return _u("abstract");
-    case tkASSERT       : return _u("assert");
-    case tkAWAIT        : return _u("await");
-    case tkBOOLEAN      : return _u("boolean");
-    case tkBREAK        : return _u("break");
-    case tkBYTE         : return _u("byte");
-    case tkCASE         : return _u("case");
-    case tkCATCH        : return _u("catch");
-    case tkCHAR         : return _u("char");
-    case tkCONTINUE     : return _u("continue");
-    case tkDEBUGGER     : return _u("debugger");
-    case tkDECIMAL      : return _u("decimal");
-    case tkDEFAULT      : return _u("default");
-    case tkDELETE       : return _u("delete");
-    case tkDO           : return _u("do");
-    case tkDOUBLE       : return _u("double");
-    case tkELSE         : return _u("else");
-    case tkENSURE       : return _u("ensure");
-    case tkEVENT        : return _u("event");
-    case tkFALSE        : return _u("false");
-    case tkFINAL        : return _u("final");
-    case tkFINALLY      : return _u("finally");
-    case tkFLOAT        : return _u("float");
-    case tkFOR          : return _u("for");
-    case tkFUNCTION     : return _u("function");
-    case tkGET          : return _u("get");
-    case tkGOTO         : return _u("goto");
-    case tkIF           : return _u("if");
-    case tkIN           : return _u("in");
-    case tkINSTANCEOF   : return _u("instanceof");
-    case tkINT          : return _u("int");
-    case tkINTERNAL     : return _u("internal");
-    case tkINVARIANT    : return _u("invariant");
-    case tkLONG         : return _u("long");
-    case tkNAMESPACE    : return _u("namespace");
-    case tkNATIVE       : return _u("native");
-    case tkNEW          : return _u("new");
-    case tkNULL         : return _u("null");
-    case tkREQUIRE      : return _u("require");
-    case tkRETURN       : return _u("return");
-    case tkSBYTE        : return _u("sbyte");
-    case tkSET          : return _u("set");
-    case tkSHORT        : return _u("short");
-    case tkSWITCH       : return _u("switch");
-    case tkSYNCHRONIZED : return _u("synchronized");
-    case tkTHIS         : return _u("this");
-    case tkTHROW        : return _u("throw");
-    case tkTHROWS       : return _u("throws");
-    case tkTRANSIENT    : return _u("transient");
-    case tkTRUE         : return _u("true");
-    case tkTRY          : return _u("try");
-    case tkTYPEOF       : return _u("typeof");
-    case tkUINT         : return _u("uint");
-    case tkULONG        : return _u("ulong");
-    case tkUSE          : return _u("use");
-    case tkUSHORT       : return _u("ushort");
-    case tkVAR          : return _u("var");
-    case tkVOID         : return _u("void");
-    case tkVOLATILE     : return _u("volatile");
-    case tkWHILE        : return _u("while");
-    case tkWITH         : return _u("with");
+    case tkABSTRACT     : return u"abstract";
+    case tkASSERT       : return u"assert";
+    case tkAWAIT        : return u"await";
+    case tkBOOLEAN      : return u"boolean";
+    case tkBREAK        : return u"break";
+    case tkBYTE         : return u"byte";
+    case tkCASE         : return u"case";
+    case tkCATCH        : return u"catch";
+    case tkCHAR         : return u"char";
+    case tkCONTINUE     : return u"continue";
+    case tkDEBUGGER     : return u"debugger";
+    case tkDECIMAL      : return u"decimal";
+    case tkDEFAULT      : return u"default";
+    case tkDELETE       : return u"delete";
+    case tkDO           : return u"do";
+    case tkDOUBLE       : return u"double";
+    case tkELSE         : return u"else";
+    case tkENSURE       : return u"ensure";
+    case tkEVENT        : return u"event";
+    case tkFALSE        : return u"false";
+    case tkFINAL        : return u"final";
+    case tkFINALLY      : return u"finally";
+    case tkFLOAT        : return u"float";
+    case tkFOR          : return u"for";
+    case tkFUNCTION     : return u"function";
+    case tkGET          : return u"get";
+    case tkGOTO         : return u"goto";
+    case tkIF           : return u"if";
+    case tkIN           : return u"in";
+    case tkINSTANCEOF   : return u"instanceof";
+    case tkINT          : return u"int";
+    case tkINTERNAL     : return u"internal";
+    case tkINVARIANT    : return u"invariant";
+    case tkLONG         : return u"long";
+    case tkNAMESPACE    : return u"namespace";
+    case tkNATIVE       : return u"native";
+    case tkNEW          : return u"new";
+    case tkNULL         : return u"null";
+    case tkREQUIRE      : return u"require";
+    case tkRETURN       : return u"return";
+    case tkSBYTE        : return u"sbyte";
+    case tkSET          : return u"set";
+    case tkSHORT        : return u"short";
+    case tkSWITCH       : return u"switch";
+    case tkSYNCHRONIZED : return u"synchronized";
+    case tkTHIS         : return u"this";
+    case tkTHROW        : return u"throw";
+    case tkTHROWS       : return u"throws";
+    case tkTRANSIENT    : return u"transient";
+    case tkTRUE         : return u"true";
+    case tkTRY          : return u"try";
+    case tkTYPEOF       : return u"typeof";
+    case tkUINT         : return u"uint";
+    case tkULONG        : return u"ulong";
+    case tkUSE          : return u"use";
+    case tkUSHORT       : return u"ushort";
+    case tkVAR          : return u"var";
+    case tkVOID         : return u"void";
+    case tkVOLATILE     : return u"volatile";
+    case tkWHILE        : return u"while";
+    case tkWITH         : return u"with";
 
 // Future reserved words that become keywords in ES6
-    case tkCLASS   : return _u("class");
-    case tkCONST   : return _u("const");
-    case tkEXPORT  : return _u("export");
-    case tkEXTENDS : return _u("extends");
-    case tkIMPORT  : return _u("import");
-    case tkLET     : return _u("let");
-    case tkSUPER   : return _u("super");
-    case tkYIELD   : return _u("yield");
+    case tkCLASS   : return u"class";
+    case tkCONST   : return u"const";
+    case tkEXPORT  : return u"export";
+    case tkEXTENDS : return u"extends";
+    case tkIMPORT  : return u"import";
+    case tkLET     : return u"let";
+    case tkSUPER   : return u"super";
+    case tkYIELD   : return u"yield";
 
 // Future reserved words in strict and non-strict modes
-    case tkENUM : return _u("enum");
+    case tkENUM : return u"enum";
 
 // Additional future reserved words in strict mode
-    case tkIMPLEMENTS : return _u("implements");
-    case tkINTERFACE  : return _u("interface");
-    case tkPACKAGE    : return _u("package");
-    case tkPRIVATE    : return _u("private");
-    case tkPROTECTED  : return _u("protected");
-    case tkPUBLIC     : return _u("public");
-    case tkSTATIC     : return _u("static");
+    case tkIMPLEMENTS : return u"implements";
+    case tkINTERFACE  : return u"interface";
+    case tkPACKAGE    : return u"package";
+    case tkPRIVATE    : return u"private";
+    case tkPROTECTED  : return u"protected";
+    case tkPUBLIC     : return u"public";
+    case tkSTATIC     : return u"static";
 
-    case tkID: return _u("identifier");
+    case tkID: return u"identifier";
 
 // Non-operator non-identifier tokens
-    case tkSColon: return _u(";");
-    case tkRParen: return _u(")");
-    case tkRBrack: return _u("]");
-    case tkLCurly: return _u("{");
-    case tkRCurly: return _u("}");
+    case tkSColon: return u";";
+    case tkRParen: return u")";
+    case tkRBrack: return u"]";
+    case tkLCurly: return u"{";
+    case tkRCurly: return u"}";
 
 // Operator non-identifier tokens
-    case tkComma: return _u(",");
-    case tkDArrow: return _u("=>");
-    case tkAsg: return _u("=");
-    case tkAsgAdd: return _u("+=");
-    case tkAsgSub: return _u("-=");
-    case tkAsgMul: return _u("*=");
-    case tkAsgDiv: return _u("/=");
-    case tkAsgExpo: return _u("**=");
-    case tkAsgMod: return _u("%=");
-    case tkAsgAnd: return _u("&=");
-    case tkAsgXor: return _u("^=");
-    case tkAsgOr: return _u("|=");
-    case tkAsgLsh: return _u("<<=");
-    case tkAsgRsh: return _u(">>=");
-    case tkAsgRs2: return _u(">>>=");
-    case tkQMark: return _u("?");
-    case tkColon: return _u(":");
-    case tkLogOr: return _u("||");
-    case tkLogAnd: return _u("&&");
-    case tkCoalesce: return _u("??");
-    case tkOr: return _u("|");
-    case tkXor: return _u("^");
-    case tkAnd: return _u("&");
-    case tkEQ: return _u("==");
-    case tkNE: return _u("!=");
-    case tkEqv: return _u("===");
-    case tkNEqv: return _u("!==");
-    case tkLT: return _u("<");
-    case tkLE: return _u("<=");
-    case tkGT: return _u(">");
-    case tkGE: return _u(">=");
-    case tkLsh: return _u("<<");
-    case tkRsh: return _u(">>");
-    case tkRs2: return _u(">>>");
-    case tkAdd: return _u("+");
-    case tkSub: return _u("-");
-    case tkExpo: return _u("**");
-    case tkStar: return _u("*");
-    case tkDiv: return _u("/");
-    case tkPct: return _u("%");
-    case tkTilde: return _u("~");
-    case tkBang: return _u("!");
-    case tkInc: return _u("++");
-    case tkDec: return _u("--");
-    case tkEllipsis: return _u("...");
-    case tkLParen: return _u("(");
-    case tkLBrack: return _u("[");
-    case tkDot: return _u(".");
+    case tkComma: return u",";
+    case tkDArrow: return u"=>";
+    case tkAsg: return u"=";
+    case tkAsgAdd: return u"+=";
+    case tkAsgSub: return u"-=";
+    case tkAsgMul: return u"*=";
+    case tkAsgDiv: return u"/=";
+    case tkAsgExpo: return u"**=";
+    case tkAsgMod: return u"%=";
+    case tkAsgAnd: return u"&=";
+    case tkAsgXor: return u"^=";
+    case tkAsgOr: return u"|=";
+    case tkAsgLsh: return u"<<=";
+    case tkAsgRsh: return u">>=";
+    case tkAsgRs2: return u">>>=";
+    case tkQMark: return u"?";
+    case tkColon: return u":";
+    case tkLogOr: return u"||";
+    case tkLogAnd: return u"&&";
+    case tkCoalesce: return u"??";
+    case tkOr: return u"|";
+    case tkXor: return u"^";
+    case tkAnd: return u"&";
+    case tkEQ: return u"==";
+    case tkNE: return u"!=";
+    case tkEqv: return u"===";
+    case tkNEqv: return u"!==";
+    case tkLT: return u"<";
+    case tkLE: return u"<=";
+    case tkGT: return u">";
+    case tkGE: return u">=";
+    case tkLsh: return u"<<";
+    case tkRsh: return u">>";
+    case tkRs2: return u">>>";
+    case tkAdd: return u"+";
+    case tkSub: return u"-";
+    case tkExpo: return u"**";
+    case tkStar: return u"*";
+    case tkDiv: return u"/";
+    case tkPct: return u"%";
+    case tkTilde: return u"~";
+    case tkBang: return u"!";
+    case tkInc: return u"++";
+    case tkDec: return u"--";
+    case tkEllipsis: return u"...";
+    case tkLParen: return u"(";
+    case tkLBrack: return u"[";
+    case tkDot: return u".";
 
     default:
-        return _u("unknown token");
+        return u"unknown token";
     }
 }
 
@@ -2375,11 +2375,11 @@ IdentPtr Parser::ParseMetaProperty(tokens metaParentKeyword, charcount_t ichMin,
 
     if (metaParentKeyword == tkNEW)
     {
-        Error(ERRValidIfFollowedBy, _u("'new.'"), _u("'target'"));
+        Error(ERRValidIfFollowedBy, u"'new.'", u"'target'");
     }
     else
     {
-        Error(ERRValidIfFollowedBy, _u("'import.'"), _u("'meta'"));
+        Error(ERRValidIfFollowedBy, u"'import.'", u"'meta'");
     }
 }
 
@@ -2419,12 +2419,12 @@ void Parser::ParseNamedImportOrExportClause(ModuleImportOrExportEntryList* impor
             // If we are parsing an import statement, the token after 'as' must be a BindingIdentifier.
             if (!isExportClause)
             {
-                ChkCurTokNoScan(tkID, ERRValidIfFollowedBy, _u("'as'"), _u("an identifier."));
+                ChkCurTokNoScan(tkID, ERRValidIfFollowedBy, u"'as'", u"an identifier.");
             }
 
             if (!(m_token.IsIdentifier() || m_token.IsReservedWord()))
             {
-                Error(ERRValidIfFollowedBy, _u("'as'"), _u("an identifier."));
+                Error(ERRValidIfFollowedBy, u"'as'", u"an identifier.");
             }
 
             identifierAs = m_token.GetIdentifier(this->GetHashTbl());
@@ -2667,7 +2667,7 @@ void Parser::ParseImportClause(ModuleImportOrExportEntryList* importEntryList, b
         this->GetScanner()->Scan();
         if (!CheckContextualKeyword(wellKnownPropertyPids.as))
         {
-            Error(ERRValidIfFollowedBy, _u("import *"), _u("as"));
+            Error(ERRValidIfFollowedBy, u"import *", u"as");
         }
 
         // Token following 'as' must be a binding identifier.
@@ -2698,7 +2698,7 @@ void Parser::ParseImportClause(ModuleImportOrExportEntryList* importEntryList, b
         // There cannot be a namespace import or named imports list on the left of the comma in a module import clause.
         if (parsingAfterComma || parsedNamespaceOrNamedImport)
         {
-            Error(ERRTokenAfter, _u(","), GetTokenString(this->GetScanner()->GetPrevious()));
+            Error(ERRTokenAfter, u",", GetTokenString(this->GetScanner()->GetPrevious()));
         }
 
         this->GetScanner()->Scan();
@@ -2845,7 +2845,7 @@ IdentPtr Parser::ParseImportOrExportFromClause(bool throwIfNotFound)
         this->GetScanner()->Scan();
 
         // Token following the 'from' token must be a string constant - the module specifier.
-        ChkCurTokNoScan(tkStrCon, ERRValidIfFollowedBy, _u("'from'"), _u("a module specifier."));
+        ChkCurTokNoScan(tkStrCon, ERRValidIfFollowedBy, u"'from'", u"a module specifier.");
 
         if (buildAST)
         {
@@ -3037,7 +3037,7 @@ ParseNodePtr Parser::ParseExportDeclaration(bool *needTerminator)
                 // token after as must be an identifier
                 if (!(m_token.IsIdentifier() || m_token.IsReservedWord()))
                 {
-                    Error(ERRValidIfFollowedBy, _u("'as'"), _u("an identifier."));
+                    Error(ERRValidIfFollowedBy, u"'as'", u"an identifier.");
                 }
 
                 exportName = m_token.GetIdentifier(this->GetHashTbl());
@@ -3415,7 +3415,7 @@ ParseNodePtr Parser::ParseTerm(BOOL fAllowCall,
             // If the token after the right paren is not => or if there was a newline between () and => this is a syntax error
             if (!IsDoingFastScan() && (m_token.tk != tkDArrow || this->GetScanner()->FHadNewLine()))
             {
-                Error(ERRValidIfFollowedBy, _u("Lambda parameter list"), _u("'=>' on the same line"));
+                Error(ERRValidIfFollowedBy, u"Lambda parameter list", u"'=>' on the same line");
             }
 
             if (buildAST)
@@ -3717,7 +3717,7 @@ ParseNodePtr Parser::ParseTerm(BOOL fAllowCall,
                 }
                 if (!fAllowCall)
                 {
-                    Error(ERRTokenAfter, _u("import"), _u("new"));
+                    Error(ERRTokenAfter, u"import", u"new");
                 }
                 pnode = ParseImportCall<buildAST>();
                 break;
@@ -4724,7 +4724,7 @@ ParseNodePtr Parser::ParseMemberList(LPCOLESTR pNameHint, uint32* pNameHintLengt
         return nullptr;
     }
 
-    ArenaAllocator tempAllocator(_u("MemberNames"), m_nodeAllocator.GetPageAllocator(), Parser::OutOfMemory);
+    ArenaAllocator tempAllocator(u"MemberNames", m_nodeAllocator.GetPageAllocator(), Parser::OutOfMemory);
 
     bool hasDeferredInitError = false;
 
@@ -5921,8 +5921,8 @@ void Parser::ParseFncDeclHelper(ParseNodeFnc * pnodeFnc, LPCOLESTR pNameHint, us
             if (m_InAsmMode && (isTopLevelDeferredFunc && m_deferAsmJs))
             {
                 // asm.js doesn't support lambda functions
-                Js::AsmJSCompiler::OutputError(m_scriptContext, _u("Lambda functions are not supported."));
-                Js::AsmJSCompiler::OutputError(m_scriptContext, _u("Asm.js compilation failed."));
+                Js::AsmJSCompiler::OutputError(m_scriptContext, u"Lambda functions are not supported.");
+                Js::AsmJSCompiler::OutputError(m_scriptContext, u"Asm.js compilation failed.");
                 throw Js::AsmJsParseException();
             }
 #endif
@@ -5947,7 +5947,7 @@ void Parser::ParseFncDeclHelper(ParseNodeFnc * pnodeFnc, LPCOLESTR pNameHint, us
             // this after verifying there was a => token. Otherwise we would throw the wrong error.
             if (hadNewLine)
             {
-                Error(ERRValidIfFollowedBy, _u("Lambda parameter list"), _u("'=>' on the same line"));
+                Error(ERRValidIfFollowedBy, u"Lambda parameter list", u"'=>' on the same line");
             }
         }
 
@@ -5969,7 +5969,7 @@ void Parser::ParseFncDeclHelper(ParseNodeFnc * pnodeFnc, LPCOLESTR pNameHint, us
 
             if (!pnodeFnc->IsBodyAndParamScopeMerged())
             {
-                OUTPUT_TRACE_DEBUGONLY(Js::ParsePhase, _u("The param and body scope of the function %s cannot be merged\n"), pnodeFnc->pnodeName ? pnodeFnc->pnodeName->pid->Psz() : _u("Anonymous function"));
+                OUTPUT_TRACE_DEBUGONLY(Js::ParsePhase, u"The param and body scope of the function %s cannot be merged\n", pnodeFnc->pnodeName ? pnodeFnc->pnodeName->pid->Psz() : u"Anonymous function");
             }
 
             // Keep nested function declarations and expressions in the same list at function scope.
@@ -6242,7 +6242,7 @@ void Parser::ParseTopLevelDeferredFunc(ParseNodeFnc * pnodeFnc, ParseNodeFnc * p
 
         PHASE_PRINT_TRACE1(
             Js::SkipNestedDeferredPhase,
-            _u("Skipping nested deferred function %d. %s: %d...%d\n"),
+            u"Skipping nested deferred function %d. %s: %d...%d\n",
             pnodeFnc->functionId, GetFunctionName(pnodeFnc, pNameHint), pnodeFnc->ichMin, stub->restorePoint.m_ichMinTok);
 
         this->GetScanner()->SeekTo(stub->restorePoint, m_nextFunctionId);
@@ -6258,7 +6258,7 @@ void Parser::ParseTopLevelDeferredFunc(ParseNodeFnc * pnodeFnc, ParseNodeFnc * p
             uint32 stringLength = 0;
             LPCWSTR stringVal = Js::ByteCodeSerializer::DeserializeString(stub, stringId, stringLength);
 
-            OUTPUT_TRACE_DEBUGONLY(Js::SkipNestedDeferredPhase, _u("\tPushing a reference to '%s'\n"), stringVal);
+            OUTPUT_TRACE_DEBUGONLY(Js::SkipNestedDeferredPhase, u"\tPushing a reference to '%s'\n", stringVal);
 
             IdentPtr pid = this->GetHashTbl()->PidHashNameLen(stringVal, stringLength);
             PushPidRef(pid);
@@ -6419,7 +6419,7 @@ bool Parser::FastScanFormalsAndBody()
                 Assert(strTmplDepth == 0);
                 if (PHASE_TRACE1(Js::ParallelParsePhase))
                 {
-                    Output::Print(_u("Finished fast seek: %d. %s -- %d...%d\n"),
+                    Output::Print(u"Finished fast seek: %d. %s -- %d...%d\n",
                         m_currentNodeFunc->functionId,
                         GetFunctionName(m_currentNodeFunc, m_currentNodeFunc->hint),
                         ichStart, this->GetScanner()->IchLimTok());
@@ -6585,7 +6585,7 @@ bool Parser::FastScanFormalsAndBody()
             // Unexpected token.
             if (PHASE_TRACE1(Js::ParallelParsePhase))
             {
-                Output::Print(_u("Failed fast seek: %d. %s -- %d...%d\n"),
+                Output::Print(u"Failed fast seek: %d. %s -- %d...%d\n",
                     m_currentNodeFunc->functionId,
                     GetFunctionName(m_currentNodeFunc, m_currentNodeFunc->hint),
                     ichStart, this->GetScanner()->IchLimTok());
@@ -7221,7 +7221,7 @@ ParseNodeFnc * Parser::GenerateEmptyConstructor(bool extends)
         ParseNodePtr *const ppnodeVarSave = m_ppnodeVar;
         m_ppnodeVar = &pnodeFnc->pnodeVars;
 
-        IdentPtr pidargs = this->GetHashTbl()->PidHashNameLen(_u("args"), sizeof("args") - 1);
+        IdentPtr pidargs = this->GetHashTbl()->PidHashNameLen(u"args", sizeof("args") - 1);
         ParseNodeVar * pnodeT = CreateVarDeclNode(pidargs, STFormal);
         pnodeT->sym->SetIsNonSimpleParameter(true);
         pnodeFnc->pnodeRest = pnodeT;
@@ -7597,7 +7597,7 @@ void Parser::FinishFncDecl(ParseNodeFnc * pnodeFnc, LPCOLESTR pNameHint, bool fL
         name = GetFunctionName(pnodeFnc, pNameHint);
         m_functionBody = NULL;  // for nested functions we do not want to get the name of the top deferred function return name;
         JS_ETW(EventWriteJSCRIPT_PARSE_METHOD_START(m_sourceContextInfo->dwHostSourceContext, GetScriptContext(), pnodeFnc->functionId, 0, m_parseType, name));
-        OUTPUT_TRACE(Js::DeferParsePhase, _u("Parsing function (%s) : %s (%d)\n"), GetParseType(), name, pnodeFnc->functionId);
+        OUTPUT_TRACE(Js::DeferParsePhase, u"Parsing function (%s) : %s (%d)\n", GetParseType(), name, pnodeFnc->functionId);
     }
 
     JS_ETW_INTERNAL(EventWriteJSCRIPT_PARSE_FUNC(GetScriptContext(), pnodeFnc->functionId, /*Undefer*/FALSE));
@@ -7831,7 +7831,7 @@ ParseNodeClass * Parser::ParseClassDecl(BOOL isDeclaration, LPCOLESTR pNameHint,
     uint32 nameHintLength = pHintLength ? *pHintLength : 0;
     uint32 nameHintOffset = pShortNameOffset ? *pShortNameOffset : 0;
 
-    ArenaAllocator tempAllocator(_u("ClassMemberNames"), m_nodeAllocator.GetPageAllocator(), Parser::OutOfMemory);
+    ArenaAllocator tempAllocator(u"ClassMemberNames", m_nodeAllocator.GetPageAllocator(), Parser::OutOfMemory);
 
     size_t cbMinConstructor = 0;
     ParseNodeClass * pnodeClass = nullptr;
@@ -7894,7 +7894,7 @@ ParseNodeClass * Parser::ParseClassDecl(BOOL isDeclaration, LPCOLESTR pNameHint,
         Error(ERRnoLcurly);
     }
 
-    OUTPUT_TRACE_DEBUGONLY(Js::ES6VerboseFlag, _u("Parsing class (%s) : %s\n"), GetParseType(), name ? name->Psz() : _u("anonymous class"));
+    OUTPUT_TRACE_DEBUGONLY(Js::ES6VerboseFlag, u"Parsing class (%s) : %s\n", GetParseType(), name ? name->Psz() : u"anonymous class");
 
     RestorePoint beginClass;
     this->GetScanner()->Capture(&beginClass);
@@ -8165,7 +8165,7 @@ ParseNodeClass * Parser::ParseClassDecl(BOOL isDeclaration, LPCOLESTR pNameHint,
 
     if (!hasConstructor)
     {
-        OUTPUT_TRACE_DEBUGONLY(Js::ES6VerboseFlag, _u("Generating constructor (%s) : %s\n"), GetParseType(), name ? name->Psz() : _u("anonymous class"));
+        OUTPUT_TRACE_DEBUGONLY(Js::ES6VerboseFlag, u"Generating constructor (%s) : %s\n", GetParseType(), name ? name->Psz() : u"anonymous class");
 
         RestorePoint endClass;
         this->GetScanner()->Capture(&endClass);
@@ -8256,9 +8256,9 @@ ParseNodePtr Parser::ParseStringTemplateDecl(ParseNodePtr pnodeTagFnc)
 
     OUTPUT_TRACE_DEBUGONLY(
         Js::StringTemplateParsePhase,
-        _u("Starting to parse a string template (%s)...\n\tis tagged = %s\n"),
+        u"Starting to parse a string template (%s)...\n\tis tagged = %s\n",
         GetParseType(),
-        isTagged ? _u("true") : _u("false (Raw and cooked strings will not differ!)"));
+        isTagged ? u"true" : u"false (Raw and cooked strings will not differ!)");
 
     // String template grammar
     // `...`   Simple string template
@@ -8367,7 +8367,7 @@ ParseNodePtr Parser::ParseStringTemplateDecl(ParseNodePtr pnodeTagFnc)
                 Error(ERRsyntax);
             }
 
-            OUTPUT_TRACE_DEBUGONLY(Js::StringTemplateParsePhase, _u("Parsed expression\n"));
+            OUTPUT_TRACE_DEBUGONLY(Js::StringTemplateParsePhase, u"Parsed expression\n");
         }
         break;
         default:
@@ -8414,12 +8414,12 @@ LPCOLESTR Parser::FormatPropertyString(LPCOLESTR propertyString, ParseNodePtr pN
     LPCOLESTR rightNode = nullptr;
     if (propertyString == nullptr)
     {
-        propertyString = _u("");
+        propertyString = u"";
     }
 
     if (op != knopInt && op != knopFlt && op != knopName && op != knopStr)
     {
-        rightNode = _u("");
+        rightNode = u"";
     }
     else if (op == knopStr)
     {
@@ -8501,7 +8501,7 @@ LPCOLESTR Parser::AppendNameHints(LPCOLESTR leftStr, uint32 leftLen, LPCOLESTR r
     Assert(leftLen != 0 || wrapInBrackets);
     Assert(rightLen != 0 || wrapInBrackets);
 
-    bool ignoreDot = rightStr[0] == _u('[') && !wrapInBrackets;//if we wrap in brackets it can be a string literal which can have brackets at the first char
+    bool ignoreDot = rightStr[0] == u'[' && !wrapInBrackets;//if we wrap in brackets it can be a string literal which can have brackets at the first char
     uint32 totalLength = leftLen + rightLen + ((ignoreDot) ? 1 : 2); // 1 (for dot or [) + 1 (for null termination)
 
     if (wrapInBrackets)
@@ -8517,22 +8517,22 @@ LPCOLESTR Parser::AppendNameHints(LPCOLESTR leftStr, uint32 leftLen, LPCOLESTR r
 
     if (ignoreAddDotWithSpace)
     {
-        finalName[leftLen++] = (OLECHAR)_u(' ');
+        finalName[leftLen++] = (OLECHAR)u' ';
     }
     // mutually exclusive from ignoreAddDotWithSpace which is used for getters/setters
 
     else if (wrapInBrackets)
     {
-        finalName[leftLen++] = (OLECHAR)_u('[');
-        finalName[totalLength - 2] = (OLECHAR)_u(']');
+        finalName[leftLen++] = (OLECHAR)u'[';
+        finalName[totalLength - 2] = (OLECHAR)u']';
     }
     else if (!ignoreDot)
     {
-        finalName[leftLen++] = (OLECHAR)_u('.');
+        finalName[leftLen++] = (OLECHAR)u'.';
     }
     //ignore case falls through
     js_wmemcpy_s(finalName + leftLen, rightLen, rightStr, rightLen);
-    finalName[totalLength - 1] = (OLECHAR)_u('\0');
+    finalName[totalLength - 1] = (OLECHAR)u'\0';
 
     if (pNameLength != nullptr)
     {
@@ -8580,7 +8580,7 @@ LPCOLESTR Parser::AppendNameHints(IdentPtr left, IdentPtr right, uint32 *pNameLe
     }
 
     uint32 leftLen = 0;
-    LPCOLESTR leftStr = _u("");
+    LPCOLESTR leftStr = u"";
 
     if (left != nullptr) // if wrapInBrackets is true
     {
@@ -8615,7 +8615,7 @@ LPCOLESTR Parser::AppendNameHints(IdentPtr left, LPCOLESTR right, uint32 *pNameL
         return right;
     }
 
-    LPCOLESTR leftStr = _u("");
+    LPCOLESTR leftStr = u"";
     uint32 leftLen = 0;
 
     if (left != nullptr) // if wrapInBrackets is true
@@ -10445,7 +10445,7 @@ LRestart:
 
             if (isForAwait && !isForOf)
             {
-                Error(ERRTokenAfter, _u("in"), _u("for await"));
+                Error(ERRTokenAfter, u"in", u"for await");
             }
 
             if ((buildAST && nullptr == pnodeT) || !fForInOrOfOkay)
@@ -10513,7 +10513,7 @@ LRestart:
 
             if (isForAwait)
             {
-                Error(ERRValidIfFollowedBy, _u("'for await'"), _u("'of'"));
+                Error(ERRValidIfFollowedBy, u"'for await'", u"'of'");
             }
 
             ChkCurTok(tkSColon, ERRnoSemic);
@@ -11303,7 +11303,7 @@ LNeedTerminator:
             pCatch->pnodeNext = nullptr;
 
             // create a fake name for the catch var.
-            const char16_t *uniqueNameStr = _u("__ehobj");
+            const char16_t *uniqueNameStr = u"__ehobj";
             IdentPtr uniqueName = this->GetHashTbl()->PidHashNameLen(uniqueNameStr, static_cast<int32>(wcslen(uniqueNameStr)));
 
             pCatch->SetParam(CreateNameNode(uniqueName));
@@ -11766,19 +11766,19 @@ void Parser::InitPids()
     wellKnownPropertyPids.await = this->GetHashTbl()->PidHashNameLen(g_ssym_await.sz, g_ssym_await.cch);
     wellKnownPropertyPids.constructor = this->GetHashTbl()->PidHashNameLen(g_ssym_constructor.sz, g_ssym_constructor.cch);
     wellKnownPropertyPids.prototype = this->GetHashTbl()->PidHashNameLen(g_ssym_prototype.sz, g_ssym_prototype.cch);
-    wellKnownPropertyPids.__proto__ = this->GetHashTbl()->PidHashNameLen(_u("__proto__"), sizeof("__proto__") - 1);
-    wellKnownPropertyPids.of = this->GetHashTbl()->PidHashNameLen(_u("of"), sizeof("of") - 1);
-    wellKnownPropertyPids.target = this->GetHashTbl()->PidHashNameLen(_u("target"), sizeof("target") - 1);
-    wellKnownPropertyPids.meta = this->GetHashTbl()->PidHashNameLen(_u("meta"), sizeof("meta") - 1);
-    wellKnownPropertyPids.as = this->GetHashTbl()->PidHashNameLen(_u("as"), sizeof("as") - 1);
-    wellKnownPropertyPids.from = this->GetHashTbl()->PidHashNameLen(_u("from"), sizeof("from") - 1);
-    wellKnownPropertyPids._default = this->GetHashTbl()->PidHashNameLen(_u("default"), sizeof("default") - 1);
-    wellKnownPropertyPids._star = this->GetHashTbl()->PidHashNameLen(_u("*"), sizeof("*") - 1);
-    wellKnownPropertyPids._this = this->GetHashTbl()->PidHashNameLen(_u("*this*"), sizeof("*this*") - 1);
-    wellKnownPropertyPids._newTarget = this->GetHashTbl()->PidHashNameLen(_u("*new.target*"), sizeof("*new.target*") - 1);
-    wellKnownPropertyPids._super = this->GetHashTbl()->PidHashNameLen(_u("*super*"), sizeof("*super*") - 1);
-    wellKnownPropertyPids._superConstructor = this->GetHashTbl()->PidHashNameLen(_u("*superconstructor*"), sizeof("*superconstructor*") - 1);
-    wellKnownPropertyPids._importMeta = this->GetHashTbl()->PidHashNameLen(_u("*import.meta*"), sizeof("*import.meta*") - 1);
+    wellKnownPropertyPids.__proto__ = this->GetHashTbl()->PidHashNameLen(u"__proto__", sizeof("__proto__") - 1);
+    wellKnownPropertyPids.of = this->GetHashTbl()->PidHashNameLen(u"of", sizeof("of") - 1);
+    wellKnownPropertyPids.target = this->GetHashTbl()->PidHashNameLen(u"target", sizeof("target") - 1);
+    wellKnownPropertyPids.meta = this->GetHashTbl()->PidHashNameLen(u"meta", sizeof("meta") - 1);
+    wellKnownPropertyPids.as = this->GetHashTbl()->PidHashNameLen(u"as", sizeof("as") - 1);
+    wellKnownPropertyPids.from = this->GetHashTbl()->PidHashNameLen(u"from", sizeof("from") - 1);
+    wellKnownPropertyPids._default = this->GetHashTbl()->PidHashNameLen(u"default", sizeof("default") - 1);
+    wellKnownPropertyPids._star = this->GetHashTbl()->PidHashNameLen(u"*", sizeof("*") - 1);
+    wellKnownPropertyPids._this = this->GetHashTbl()->PidHashNameLen(u"*this*", sizeof("*this*") - 1);
+    wellKnownPropertyPids._newTarget = this->GetHashTbl()->PidHashNameLen(u"*new.target*", sizeof("*new.target*") - 1);
+    wellKnownPropertyPids._super = this->GetHashTbl()->PidHashNameLen(u"*super*", sizeof("*super*") - 1);
+    wellKnownPropertyPids._superConstructor = this->GetHashTbl()->PidHashNameLen(u"*superconstructor*", sizeof("*superconstructor*") - 1);
+    wellKnownPropertyPids._importMeta = this->GetHashTbl()->PidHashNameLen(u"*import.meta*", sizeof("*import.meta*") - 1);
 }
 
 void Parser::RestoreScopeInfo(Js::ScopeInfo * scopeInfo)
@@ -11892,7 +11892,7 @@ ParseNodeProg * Parser::Parse(LPCUTF8 pszSrc, size_t offset, size_t length, char
     if (m_parseType != ParseType_Deferred)
     {
         JS_ETW(EventWriteJSCRIPT_PARSE_METHOD_START(m_sourceContextInfo->dwHostSourceContext, GetScriptContext(), *m_nextFunctionId, 0, m_parseType, Js::Constants::GlobalFunction));
-        OUTPUT_TRACE(Js::DeferParsePhase, _u("Parsing function (%s) : %s (%d)\n"), GetParseType(), Js::Constants::GlobalFunction, *m_nextFunctionId);
+        OUTPUT_TRACE(Js::DeferParsePhase, u"Parsing function (%s) : %s (%d)\n", GetParseType(), Js::Constants::GlobalFunction, *m_nextFunctionId);
     }
 
     // Give the scanner the source and get the first token
@@ -12279,7 +12279,7 @@ bool Parser::CheckStrictModeStrPid(IdentPtr pid)
     return pid != nullptr &&
         pid->Cch() == 10 &&
         !this->GetScanner()->IsEscapeOnLastTkStrCon() &&
-        wcsncmp(pid->Psz(), _u("use strict"), 10) == 0;
+        wcsncmp(pid->Psz(), u"use strict", 10) == 0;
 }
 
 bool Parser::CheckAsmjsModeStrPid(IdentPtr pid)
@@ -12294,14 +12294,14 @@ bool Parser::CheckAsmjsModeStrPid(IdentPtr pid)
         AutoSystemInfo::Data.SSE2Available() &&
         pid->Cch() == 7 &&
         !this->GetScanner()->IsEscapeOnLastTkStrCon() &&
-        wcsncmp(pid->Psz(), _u("use asm"), 10) == 0);
+        wcsncmp(pid->Psz(), u"use asm", 10) == 0);
 
 #ifdef ENABLE_SCRIPT_DEBUGGING
     if (isAsmCandidate && m_scriptContext->IsScriptContextInDebugMode())
     {
         // We would like to report this to debugger - they may choose to disable debugging.
         // TODO : localization of the string?
-        m_scriptContext->RaiseMessageToDebugger(DEIT_ASMJS_IN_DEBUGGING, _u("AsmJs initialization error - AsmJs disabled due to script debugger"), m_sourceContextInfo && !m_sourceContextInfo->IsDynamic() ? m_sourceContextInfo->url : nullptr);
+        m_scriptContext->RaiseMessageToDebugger(DEIT_ASMJS_IN_DEBUGGING, u"AsmJs initialization error - AsmJs disabled due to script debugger", m_sourceContextInfo && !m_sourceContextInfo->IsDynamic() ? m_sourceContextInfo->url : nullptr);
         return false;
     }
 #endif
@@ -12901,9 +12901,9 @@ inline bool Parser::IsNaNOrInfinityLiteral(LPCOLESTR str)
 {
     // Note: wcscmp crashes when one of the parameters is NULL.
     return str &&
-        (wcscmp(_u("NaN"), str) == 0 ||
-            wcscmp(_u("Infinity"), str) == 0 ||
-            (CheckForNegativeInfinity && wcscmp(_u("-Infinity"), str) == 0));
+        (wcscmp(u"NaN", str) == 0 ||
+            wcscmp(u"Infinity", str) == 0 ||
+            (CheckForNegativeInfinity && wcscmp(u"-Infinity", str) == 0));
 }
 
 template <bool buildAST>
@@ -13592,7 +13592,7 @@ void PrintFormalsWIndent(ParseNode *pnode, int indentAmt);
 
 void Indent(int indentAmt) {
     for (int i = 0; i < indentAmt; i++) {
-        Output::Print(_u(" "));
+        Output::Print(u" ");
     }
 }
 
@@ -13601,19 +13601,19 @@ void PrintBlockType(PnodeBlockType type)
     switch (type)
     {
     case Global:
-        Output::Print(_u("(Global)"));
+        Output::Print(u"(Global)");
         break;
     case Function:
-        Output::Print(_u("(Function)"));
+        Output::Print(u"(Function)");
         break;
     case Regular:
-        Output::Print(_u("(Regular)"));
+        Output::Print(u"(Regular)");
         break;
     case Parameter:
-        Output::Print(_u("(Parameter)"));
+        Output::Print(u"(Parameter)");
         break;
     default:
-        Output::Print(_u("(unknown blocktype)"));
+        Output::Print(u"(unknown blocktype)");
         break;
     }
 }
@@ -13635,33 +13635,33 @@ void PrintScopesWIndent(ParseNode *pnode, int indentAmt) {
     case knopForAwaitOf: scope = pnode->AsParseNodeForInOrForOf()->pnodeBlock; firstOnly = true; break;
     }
     if (scope) {
-        Output::Print(_u("[%4d, %4d): "), scope->ichMin, scope->ichLim);
+        Output::Print(u"[%4d, %4d): ", scope->ichMin, scope->ichLim);
         Indent(indentAmt);
-        Output::Print(_u("Scopes: "));
+        Output::Print(u"Scopes: ");
         ParseNode *next = nullptr;
         ParseNode *syntheticBlock = nullptr;
         while (scope) {
             switch (scope->nop) {
-            case knopFncDecl: Output::Print(_u("knopFncDecl")); next = scope->AsParseNodeFnc()->pnodeNext; break;
-            case knopBlock: Output::Print(_u("knopBlock")); PrintBlockType(scope->AsParseNodeBlock()->blockType); next = scope->AsParseNodeBlock()->pnodeNext; break;
-            case knopCatch: Output::Print(_u("knopCatch")); next = scope->AsParseNodeCatch()->pnodeNext; break;
-            case knopWith: Output::Print(_u("knopWith")); next = scope->AsParseNodeWith()->pnodeNext; break;
-            default: Output::Print(_u("unknown")); break;
+            case knopFncDecl: Output::Print(u"knopFncDecl"); next = scope->AsParseNodeFnc()->pnodeNext; break;
+            case knopBlock: Output::Print(u"knopBlock"); PrintBlockType(scope->AsParseNodeBlock()->blockType); next = scope->AsParseNodeBlock()->pnodeNext; break;
+            case knopCatch: Output::Print(u"knopCatch"); next = scope->AsParseNodeCatch()->pnodeNext; break;
+            case knopWith: Output::Print(u"knopWith"); next = scope->AsParseNodeWith()->pnodeNext; break;
+            default: Output::Print(u"unknown"); break;
             }
             if (firstOnly) {
                 next = nullptr;
                 syntheticBlock = scope;
             }
             if (scope->grfpn & fpnSyntheticNode) {
-                Output::Print(_u(" synthetic"));
+                Output::Print(u" synthetic");
                 if (scope->nop == knopBlock)
                     syntheticBlock = scope;
             }
-            Output::Print(_u(" (%d-%d)"), scope->ichMin, scope->ichLim);
-            if (next) Output::Print(_u(", "));
+            Output::Print(u" (%d-%d)", scope->ichMin, scope->ichLim);
+            if (next) Output::Print(u", ");
             scope = next;
         }
-        Output::Print(_u("\n"));
+        Output::Print(u"\n");
         if (syntheticBlock || firstOnly) {
             PrintScopesWIndent(syntheticBlock, indentAmt + INDENT_SIZE);
         }
@@ -13672,32 +13672,32 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
     if (pnode == NULL)
         return;
 
-    Output::Print(_u("[%4d, %4d): "), pnode->ichMin, pnode->ichLim);
+    Output::Print(u"[%4d, %4d): ", pnode->ichMin, pnode->ichLim);
     switch (pnode->nop) {
         //PTNODE(knopName       , "name"        ,None    ,Pid  ,fnopLeaf)
     case knopName:
         Indent(indentAmt);
         if (pnode->AsParseNodeName()->pid != NULL) {
-            Output::Print(_u("id: %s\n"), pnode->AsParseNodeName()->pid->Psz());
+            Output::Print(u"id: %s\n", pnode->AsParseNodeName()->pid->Psz());
         }
         else {
-            Output::Print(_u("name node\n"));
+            Output::Print(u"name node\n");
         }
         break;
         //PTNODE(knopInt        , "int const"    ,None    ,Int  ,fnopLeaf|fnopConst)
     case knopInt:
         Indent(indentAmt);
-        Output::Print(_u("%d\n"), pnode->AsParseNodeInt()->lw);
+        Output::Print(u"%d\n", pnode->AsParseNodeInt()->lw);
         break;
         //PTNODE(knopInt        , "int const"    ,None    ,Int  ,fnopLeaf|fnopConst)
     case knopBigInt:
         Indent(indentAmt);
-        Output::Print(_u("%s%s\n"), pnode->AsParseNodeBigInt()->isNegative? "-" : "", pnode->AsParseNodeBigInt()->pid->Psz());
+        Output::Print(u"%s%s\n", pnode->AsParseNodeBigInt()->isNegative? "-" : "", pnode->AsParseNodeBigInt()->pid->Psz());
         break;
         //PTNODE(knopFlt        , "flt const"    ,None    ,Flt  ,fnopLeaf|fnopConst)
     case knopFlt:
         Indent(indentAmt);
-        Output::Print(_u("%lf\n"), pnode->AsParseNodeFloat()->dbl);
+        Output::Print(u"%lf\n", pnode->AsParseNodeFloat()->dbl);
         break;
         //PTNODE(knopStr        , "str const"    ,None    ,Pid  ,fnopLeaf|fnopConst)
     case knopStr:
@@ -13707,152 +13707,152 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         //PTNODE(knopRegExp     , "reg expr"    ,None    ,Pid  ,fnopLeaf|fnopConst)
     case knopRegExp:
         Indent(indentAmt);
-        Output::Print(_u("/%x/\n"), pnode->AsParseNodeRegExp()->regexPattern);
+        Output::Print(u"/%x/\n", pnode->AsParseNodeRegExp()->regexPattern);
         break;
         //PTNODE(knopNull       , "null"        ,Null    ,None ,fnopLeaf)
     case knopNull:
         Indent(indentAmt);
-        Output::Print(_u("null\n"));
+        Output::Print(u"null\n");
         break;
         //PTNODE(knopFalse      , "false"        ,False   ,None ,fnopLeaf)
     case knopFalse:
         Indent(indentAmt);
-        Output::Print(_u("false\n"));
+        Output::Print(u"false\n");
         break;
         //PTNODE(knopTrue       , "true"        ,True    ,None ,fnopLeaf)
     case knopTrue:
         Indent(indentAmt);
-        Output::Print(_u("true\n"));
+        Output::Print(u"true\n");
         break;
         //PTNODE(knopEmpty      , "empty"        ,Empty   ,None ,fnopLeaf)
     case knopEmpty:
         Indent(indentAmt);
-        Output::Print(_u("empty\n"));
+        Output::Print(u"empty\n");
         break;
         // Unary operators.
         //PTNODE(knopNot        , "~"            ,BitNot  ,Uni  ,fnopUni)
     case knopNot:
         Indent(indentAmt);
-        Output::Print(_u("~\n"));
+        Output::Print(u"~\n");
         PrintPnodeWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopNeg        , "unary -"    ,Neg     ,Uni  ,fnopUni)
     case knopNeg:
         Indent(indentAmt);
-        Output::Print(_u("U-\n"));
+        Output::Print(u"U-\n");
         PrintPnodeWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopPos        , "unary +"    ,Pos     ,Uni  ,fnopUni)
     case knopPos:
         Indent(indentAmt);
-        Output::Print(_u("U+\n"));
+        Output::Print(u"U+\n");
         PrintPnodeWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopLogNot     , "!"            ,LogNot  ,Uni  ,fnopUni)
     case knopLogNot:
         Indent(indentAmt);
-        Output::Print(_u("!\n"));
+        Output::Print(u"!\n");
         PrintPnodeWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopEllipsis     , "..."       ,Spread  ,Uni    , fnopUni)
     case knopEllipsis:
         Indent(indentAmt);
-        Output::Print(_u("...<expr>\n"));
+        Output::Print(u"...<expr>\n");
         PrintPnodeWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopIncPost    , "++ post"    ,Inc     ,Uni  ,fnopUni|fnopAsg)
     case knopIncPost:
         Indent(indentAmt);
-        Output::Print(_u("<expr>++\n"));
+        Output::Print(u"<expr>++\n");
         PrintPnodeWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopDecPost    , "-- post"    ,Dec     ,Uni  ,fnopUni|fnopAsg)
     case knopDecPost:
         Indent(indentAmt);
-        Output::Print(_u("<expr>--\n"));
+        Output::Print(u"<expr>--\n");
         PrintPnodeWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopIncPre     , "++ pre"    ,Inc     ,Uni  ,fnopUni|fnopAsg)
     case knopIncPre:
         Indent(indentAmt);
-        Output::Print(_u("++<expr>\n"));
+        Output::Print(u"++<expr>\n");
         PrintPnodeWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopDecPre     , "-- pre"    ,Dec     ,Uni  ,fnopUni|fnopAsg)
     case knopDecPre:
         Indent(indentAmt);
-        Output::Print(_u("--<expr>\n"));
+        Output::Print(u"--<expr>\n");
         PrintPnodeWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopTypeof     , "typeof"    ,None    ,Uni  ,fnopUni)
     case knopTypeof:
         Indent(indentAmt);
-        Output::Print(_u("typeof\n"));
+        Output::Print(u"typeof\n");
         PrintPnodeWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopVoid       , "void"        ,Void    ,Uni  ,fnopUni)
     case knopVoid:
         Indent(indentAmt);
-        Output::Print(_u("void\n"));
+        Output::Print(u"void\n");
         PrintPnodeWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopDelete     , "delete"    ,None    ,Uni  ,fnopUni)
     case knopDelete:
         Indent(indentAmt);
-        Output::Print(_u("delete\n"));
+        Output::Print(u"delete\n");
         PrintPnodeWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopArray      , "arr cnst"    ,None    ,Uni  ,fnopUni)
 
     case knopArrayPattern:
         Indent(indentAmt);
-        Output::Print(_u("Array Pattern\n"));
+        Output::Print(u"Array Pattern\n");
         PrintPnodeListWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
 
     case knopObjectPattern:
         Indent(indentAmt);
-        Output::Print(_u("Object Pattern\n"));
+        Output::Print(u"Object Pattern\n");
         PrintPnodeListWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
 
     case knopArray:
         Indent(indentAmt);
-        Output::Print(_u("Array Literal\n"));
+        Output::Print(u"Array Literal\n");
         PrintPnodeListWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopObject     , "obj cnst"    ,None    ,Uni  ,fnopUni)
     case knopObject:
         Indent(indentAmt);
-        Output::Print(_u("Object Literal\n"));
+        Output::Print(u"Object Literal\n");
         PrintPnodeListWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         // Binary and Ternary Operators
         //PTNODE(knopAdd        , "+"            ,Add     ,Bin  ,fnopBin)
     case knopAdd:
         Indent(indentAmt);
-        Output::Print(_u("+\n"));
+        Output::Print(u"+\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopSub        , "-"            ,Sub     ,Bin  ,fnopBin)
     case knopSub:
         Indent(indentAmt);
-        Output::Print(_u("-\n"));
+        Output::Print(u"-\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopMul        , "*"            ,Mul     ,Bin  ,fnopBin)
     case knopMul:
         Indent(indentAmt);
-        Output::Print(_u("*\n"));
+        Output::Print(u"*\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopDiv        , "/"            ,Div     ,Bin  ,fnopBin)
     case knopExpo:
         Indent(indentAmt);
-        Output::Print(_u("**\n"));
+        Output::Print(u"**\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
@@ -13860,195 +13860,195 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
 
     case knopDiv:
         Indent(indentAmt);
-        Output::Print(_u("/\n"));
+        Output::Print(u"/\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopMod        , "%"            ,Mod     ,Bin  ,fnopBin)
     case knopMod:
         Indent(indentAmt);
-        Output::Print(_u("%%\n"));
+        Output::Print(u"%%\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopOr         , "|"            ,BitOr   ,Bin  ,fnopBin)
     case knopOr:
         Indent(indentAmt);
-        Output::Print(_u("|\n"));
+        Output::Print(u"|\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopXor        , "^"            ,BitXor  ,Bin  ,fnopBin)
     case knopXor:
         Indent(indentAmt);
-        Output::Print(_u("^\n"));
+        Output::Print(u"^\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopAnd        , "&"            ,BitAnd  ,Bin  ,fnopBin)
     case knopAnd:
         Indent(indentAmt);
-        Output::Print(_u("&\n"));
+        Output::Print(u"&\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopEq         , "=="        ,EQ      ,Bin  ,fnopBin|fnopRel)
     case knopEq:
         Indent(indentAmt);
-        Output::Print(_u("==\n"));
+        Output::Print(u"==\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopNe         , "!="        ,NE      ,Bin  ,fnopBin|fnopRel)
     case knopNe:
         Indent(indentAmt);
-        Output::Print(_u("!=\n"));
+        Output::Print(u"!=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopLt         , "<"            ,LT      ,Bin  ,fnopBin|fnopRel)
     case knopLt:
         Indent(indentAmt);
-        Output::Print(_u("<\n"));
+        Output::Print(u"<\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopLe         , "<="        ,LE      ,Bin  ,fnopBin|fnopRel)
     case knopLe:
         Indent(indentAmt);
-        Output::Print(_u("<=\n"));
+        Output::Print(u"<=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopGe         , ">="        ,GE      ,Bin  ,fnopBin|fnopRel)
     case knopGe:
         Indent(indentAmt);
-        Output::Print(_u(">=\n"));
+        Output::Print(u">=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopGt         , ">"            ,GT      ,Bin  ,fnopBin|fnopRel)
     case knopGt:
         Indent(indentAmt);
-        Output::Print(_u(">\n"));
+        Output::Print(u">\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopCall       , "()"        ,None    ,Bin  ,fnopBin)
     case knopCall:
         Indent(indentAmt);
-        Output::Print(_u("Call\n"));
+        Output::Print(u"Call\n");
         PrintPnodeWIndent(pnode->AsParseNodeCall()->pnodeTarget, indentAmt + INDENT_SIZE);
         PrintPnodeListWIndent(pnode->AsParseNodeCall()->pnodeArgs, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopDot        , "."            ,None    ,Bin  ,fnopBin)
     case knopDot:
         Indent(indentAmt);
-        Output::Print(_u(".\n"));
+        Output::Print(u".\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopAsg        , "="            ,None    ,Bin  ,fnopBin|fnopAsg)
     case knopAsg:
         Indent(indentAmt);
-        Output::Print(_u("=\n"));
+        Output::Print(u"=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopInstOf     , "instanceof",InstOf  ,Bin  ,fnopBin|fnopRel)
     case knopInstOf:
         Indent(indentAmt);
-        Output::Print(_u("instanceof\n"));
+        Output::Print(u"instanceof\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopIn         , "in"        ,In      ,Bin  ,fnopBin|fnopRel)
     case knopIn:
         Indent(indentAmt);
-        Output::Print(_u("in\n"));
+        Output::Print(u"in\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopEqv        , "==="        ,Eqv     ,Bin  ,fnopBin|fnopRel)
     case knopEqv:
         Indent(indentAmt);
-        Output::Print(_u("===\n"));
+        Output::Print(u"===\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopNEqv       , "!=="        ,NEqv    ,Bin  ,fnopBin|fnopRel)
     case knopNEqv:
         Indent(indentAmt);
-        Output::Print(_u("!==\n"));
+        Output::Print(u"!==\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopComma      , ","            ,None    ,Bin  ,fnopBin)
     case knopComma:
         Indent(indentAmt);
-        Output::Print(_u(",\n"));
+        Output::Print(u",\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopLogOr      , "||"        ,None    ,Bin  ,fnopBin)
     case knopLogOr:
         Indent(indentAmt);
-        Output::Print(_u("||\n"));
+        Output::Print(u"||\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopLogAnd     , "&&"        ,None    ,Bin  ,fnopBin)
     case knopLogAnd:
         Indent(indentAmt);
-        Output::Print(_u("&&\n"));
+        Output::Print(u"&&\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
     case knopCoalesce:
         Indent(indentAmt);
-        Output::Print(_u("??\n"));
+        Output::Print(u"??\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopLsh        , "<<"        ,Lsh     ,Bin  ,fnopBin)
     case knopLsh:
         Indent(indentAmt);
-        Output::Print(_u("<<\n"));
+        Output::Print(u"<<\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopRsh        , ">>"        ,Rsh     ,Bin  ,fnopBin)
     case knopRsh:
         Indent(indentAmt);
-        Output::Print(_u(">>\n"));
+        Output::Print(u">>\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopRs2        , ">>>"        ,Rs2     ,Bin  ,fnopBin)
     case knopRs2:
         Indent(indentAmt);
-        Output::Print(_u(">>>\n"));
+        Output::Print(u">>>\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopNew        , "new"        ,None    ,Bin  ,fnopBin)
     case knopNew:
         Indent(indentAmt);
-        Output::Print(_u("new\n"));
+        Output::Print(u"new\n");
         PrintPnodeWIndent(pnode->AsParseNodeCall()->pnodeTarget, indentAmt + INDENT_SIZE);
         PrintPnodeListWIndent(pnode->AsParseNodeCall()->pnodeArgs, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopIndex      , "[]"        ,None    ,Bin  ,fnopBin)
     case knopIndex:
         Indent(indentAmt);
-        Output::Print(_u("[]\n"));
+        Output::Print(u"[]\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeListWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopQmark      , "?"            ,None    ,Tri  ,fnopBin)
     case knopQmark:
         Indent(indentAmt);
-        Output::Print(_u("?:\n"));
+        Output::Print(u"?:\n");
         PrintPnodeWIndent(pnode->AsParseNodeTri()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeTri()->pnode2, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeTri()->pnode3, indentAmt + INDENT_SIZE);
@@ -14056,28 +14056,28 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         //PTNODE(knopAsgAdd     , "+="        ,Add     ,Bin  ,fnopBin|fnopAsg)
     case knopAsgAdd:
         Indent(indentAmt);
-        Output::Print(_u("+=\n"));
+        Output::Print(u"+=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopAsgSub     , "-="        ,Sub     ,Bin  ,fnopBin|fnopAsg)
     case knopAsgSub:
         Indent(indentAmt);
-        Output::Print(_u("-=\n"));
+        Output::Print(u"-=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopAsgMul     , "*="        ,Mul     ,Bin  ,fnopBin|fnopAsg)
     case knopAsgMul:
         Indent(indentAmt);
-        Output::Print(_u("*=\n"));
+        Output::Print(u"*=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopAsgDiv     , "/="        ,Div     ,Bin  ,fnopBin|fnopAsg)
     case knopAsgExpo:
         Indent(indentAmt);
-        Output::Print(_u("**=\n"));
+        Output::Print(u"**=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
@@ -14085,63 +14085,63 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
 
     case knopAsgDiv:
         Indent(indentAmt);
-        Output::Print(_u("/=\n"));
+        Output::Print(u"/=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopAsgMod     , "%="        ,Mod     ,Bin  ,fnopBin|fnopAsg)
     case knopAsgMod:
         Indent(indentAmt);
-        Output::Print(_u("%=\n"));
+        Output::Print(u"%=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopAsgAnd     , "&="        ,BitAnd  ,Bin  ,fnopBin|fnopAsg)
     case knopAsgAnd:
         Indent(indentAmt);
-        Output::Print(_u("&=\n"));
+        Output::Print(u"&=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopAsgXor     , "^="        ,BitXor  ,Bin  ,fnopBin|fnopAsg)
     case knopAsgXor:
         Indent(indentAmt);
-        Output::Print(_u("^=\n"));
+        Output::Print(u"^=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopAsgOr      , "|="        ,BitOr   ,Bin  ,fnopBin|fnopAsg)
     case knopAsgOr:
         Indent(indentAmt);
-        Output::Print(_u("|=\n"));
+        Output::Print(u"|=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopAsgLsh     , "<<="        ,Lsh     ,Bin  ,fnopBin|fnopAsg)
     case knopAsgLsh:
         Indent(indentAmt);
-        Output::Print(_u("<<=\n"));
+        Output::Print(u"<<=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopAsgRsh     , ">>="        ,Rsh     ,Bin  ,fnopBin|fnopAsg)
     case knopAsgRsh:
         Indent(indentAmt);
-        Output::Print(_u(">>=\n"));
+        Output::Print(u">>=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopAsgRs2     , ">>>="        ,Rs2     ,Bin  ,fnopBin|fnopAsg)
     case knopAsgRs2:
         Indent(indentAmt);
-        Output::Print(_u(">>>=\n"));
+        Output::Print(u">>>=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
 
     case knopComputedName:
         Indent(indentAmt);
-        Output::Print(_u("ComputedProperty\n"));
+        Output::Print(u"ComputedProperty\n");
         PrintPnodeWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
     case knopParamPattern:
@@ -14152,7 +14152,7 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
     case knopMemberShort:
     case knopObjectPatternMember:
         Indent(indentAmt);
-        Output::Print(_u(":\n"));
+        Output::Print(u":\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
@@ -14160,25 +14160,25 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         //PTNODE(knopList       , "<list>"    ,None    ,Bin  ,fnopNone)
     case knopList:
         Indent(indentAmt);
-        Output::Print(_u("List\n"));
+        Output::Print(u"List\n");
         PrintPnodeListWIndent(pnode, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopVarDecl    , "varDcl"    ,None    ,Var  ,fnopNone)
     case knopVarDecl:
         Indent(indentAmt);
-        Output::Print(_u("var %s\n"), pnode->AsParseNodeVar()->pid->Psz());
+        Output::Print(u"var %s\n", pnode->AsParseNodeVar()->pid->Psz());
         if (pnode->AsParseNodeVar()->pnodeInit != NULL)
             PrintPnodeWIndent(pnode->AsParseNodeVar()->pnodeInit, indentAmt + INDENT_SIZE);
         break;
     case knopConstDecl:
         Indent(indentAmt);
-        Output::Print(_u("const %s\n"), pnode->AsParseNodeVar()->pid->Psz());
+        Output::Print(u"const %s\n", pnode->AsParseNodeVar()->pid->Psz());
         if (pnode->AsParseNodeVar()->pnodeInit != NULL)
             PrintPnodeWIndent(pnode->AsParseNodeVar()->pnodeInit, indentAmt + INDENT_SIZE);
         break;
     case knopLetDecl:
         Indent(indentAmt);
-        Output::Print(_u("let %s\n"), pnode->AsParseNodeVar()->pid->Psz());
+        Output::Print(u"let %s\n", pnode->AsParseNodeVar()->pid->Psz());
         if (pnode->AsParseNodeVar()->pnodeInit != NULL)
             PrintPnodeWIndent(pnode->AsParseNodeVar()->pnodeInit, indentAmt + INDENT_SIZE);
         break;
@@ -14187,12 +14187,12 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         Indent(indentAmt);
         if (pnode->AsParseNodeFnc()->pid != NULL)
         {
-            Output::Print(_u("fn decl %d nested %d name %s (%d-%d)\n"), pnode->AsParseNodeFnc()->IsDeclaration(), pnode->AsParseNodeFnc()->IsNested(),
+            Output::Print(u"fn decl %d nested %d name %s (%d-%d)\n", pnode->AsParseNodeFnc()->IsDeclaration(), pnode->AsParseNodeFnc()->IsNested(),
                 pnode->AsParseNodeFnc()->pid->Psz(), pnode->ichMin, pnode->ichLim);
         }
         else
         {
-            Output::Print(_u("fn decl %d nested %d anonymous (%d-%d)\n"), pnode->AsParseNodeFnc()->IsDeclaration(), pnode->AsParseNodeFnc()->IsNested(), pnode->ichMin, pnode->ichLim);
+            Output::Print(u"fn decl %d nested %d anonymous (%d-%d)\n", pnode->AsParseNodeFnc()->IsDeclaration(), pnode->AsParseNodeFnc()->IsNested(), pnode->ichMin, pnode->ichLim);
         }
         PrintScopesWIndent(pnode, indentAmt + INDENT_SIZE);
         PrintFormalsWIndent(pnode->AsParseNodeFnc()->pnodeParams, indentAmt + INDENT_SIZE);
@@ -14200,32 +14200,32 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         PrintPnodeWIndent(pnode->AsParseNodeFnc()->pnodeBody, indentAmt + INDENT_SIZE);
         if (pnode->AsParseNodeFnc()->pnodeBody == nullptr)
         {
-            Output::Print(_u("[%4d, %4d): "), pnode->ichMin, pnode->ichLim);
+            Output::Print(u"[%4d, %4d): ", pnode->ichMin, pnode->ichLim);
             Indent(indentAmt + INDENT_SIZE);
-            Output::Print(_u("<parse deferred body>\n"));
+            Output::Print(u"<parse deferred body>\n");
         }
         break;
         //PTNODE(knopProg       , "program"    ,None    ,Fnc  ,fnopNone)
     case knopProg:
         Indent(indentAmt);
-        Output::Print(_u("program\n"));
+        Output::Print(u"program\n");
         PrintScopesWIndent(pnode, indentAmt + INDENT_SIZE);
         PrintPnodeListWIndent(pnode->AsParseNodeFnc()->pnodeBody, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopEndCode    , "<endcode>"    ,None    ,None ,fnopNone)
     case knopEndCode:
         Indent(indentAmt);
-        Output::Print(_u("<endcode>\n"));
+        Output::Print(u"<endcode>\n");
         break;
         //PTNODE(knopDebugger   , "debugger"    ,None    ,None ,fnopNone)
     case knopDebugger:
         Indent(indentAmt);
-        Output::Print(_u("<debugger>\n"));
+        Output::Print(u"<debugger>\n");
         break;
         //PTNODE(knopFor        , "for"        ,None    ,For  ,fnopBreak|fnopContinue)
     case knopFor:
         Indent(indentAmt);
-        Output::Print(_u("for\n"));
+        Output::Print(u"for\n");
         PrintScopesWIndent(pnode, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeFor()->pnodeInit, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeFor()->pnodeCond, indentAmt + INDENT_SIZE);
@@ -14235,7 +14235,7 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         //PTNODE(knopIf         , "if"        ,None    ,If   ,fnopNone)
     case knopIf:
         Indent(indentAmt);
-        Output::Print(_u("if\n"));
+        Output::Print(u"if\n");
         PrintPnodeWIndent(pnode->AsParseNodeIf()->pnodeCond, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeIf()->pnodeTrue, indentAmt + INDENT_SIZE);
         if (pnode->AsParseNodeIf()->pnodeFalse != NULL)
@@ -14244,21 +14244,21 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         //PTNODE(knopWhile      , "while"        ,None    ,While,fnopBreak|fnopContinue)
     case knopWhile:
         Indent(indentAmt);
-        Output::Print(_u("while\n"));
+        Output::Print(u"while\n");
         PrintPnodeWIndent(pnode->AsParseNodeWhile()->pnodeCond, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeWhile()->pnodeBody, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopDoWhile    , "do-while"    ,None    ,While,fnopBreak|fnopContinue)
     case knopDoWhile:
         Indent(indentAmt);
-        Output::Print(_u("do\n"));
+        Output::Print(u"do\n");
         PrintPnodeWIndent(pnode->AsParseNodeWhile()->pnodeCond, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeWhile()->pnodeBody, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopForIn      , "for in"    ,None    ,ForIn,fnopBreak|fnopContinue|fnopCleanup)
     case knopForIn:
         Indent(indentAmt);
-        Output::Print(_u("forIn\n"));
+        Output::Print(u"forIn\n");
         PrintScopesWIndent(pnode, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeForInOrForOf()->pnodeLval, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeForInOrForOf()->pnodeObj, indentAmt + INDENT_SIZE);
@@ -14266,7 +14266,7 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         break;
     case knopForOf:
         Indent(indentAmt);
-        Output::Print(_u("forOf\n"));
+        Output::Print(u"forOf\n");
         PrintScopesWIndent(pnode, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeForInOrForOf()->pnodeLval, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeForInOrForOf()->pnodeObj, indentAmt + INDENT_SIZE);
@@ -14274,7 +14274,7 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         break;
     case knopForAwaitOf:
         Indent(indentAmt);
-        Output::Print(_u("forAwaitOf\n"));
+        Output::Print(u"forAwaitOf\n");
         PrintScopesWIndent(pnode, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeForInOrForOf()->pnodeLval, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeForInOrForOf()->pnodeObj, indentAmt + INDENT_SIZE);
@@ -14283,18 +14283,18 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         //PTNODE(knopReturn     , "return"    ,None    ,Uni  ,fnopNone)
     case knopReturn:
         Indent(indentAmt);
-        Output::Print(_u("return\n"));
+        Output::Print(u"return\n");
         if (pnode->AsParseNodeReturn()->pnodeExpr != NULL)
             PrintPnodeWIndent(pnode->AsParseNodeReturn()->pnodeExpr, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopBlock      , "{}"        ,None    ,Block,fnopNone)
     case knopBlock:
         Indent(indentAmt);
-        Output::Print(_u("block "));
+        Output::Print(u"block ");
         if (pnode->grfpn & fpnSyntheticNode)
-            Output::Print(_u("synthetic "));
+            Output::Print(u"synthetic ");
         PrintBlockType(pnode->AsParseNodeBlock()->blockType);
-        Output::Print(_u("(%d-%d)\n"), pnode->ichMin, pnode->ichLim);
+        Output::Print(u"(%d-%d)\n", pnode->ichMin, pnode->ichLim);
         PrintScopesWIndent(pnode, indentAmt + INDENT_SIZE);
         if (pnode->AsParseNodeBlock()->pnodeStmt != NULL)
             PrintPnodeWIndent(pnode->AsParseNodeBlock()->pnodeStmt, indentAmt + INDENT_SIZE);
@@ -14302,7 +14302,7 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         //PTNODE(knopWith       , "with"        ,None    ,With ,fnopCleanup)
     case knopWith:
         Indent(indentAmt);
-        Output::Print(_u("with (%d-%d)\n"), pnode->ichMin, pnode->ichLim);
+        Output::Print(u"with (%d-%d)\n", pnode->ichMin, pnode->ichLim);
         PrintScopesWIndent(pnode, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeWith()->pnodeObj, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeWith()->pnodeBody, indentAmt + INDENT_SIZE);
@@ -14310,19 +14310,19 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         //PTNODE(knopBreak      , "break"        ,None    ,Jump ,fnopNone)
     case knopBreak:
         Indent(indentAmt);
-        Output::Print(_u("break\n"));
+        Output::Print(u"break\n");
         // TODO: some representation of target
         break;
         //PTNODE(knopContinue   , "continue"    ,None    ,Jump ,fnopNone)
     case knopContinue:
         Indent(indentAmt);
-        Output::Print(_u("continue\n"));
+        Output::Print(u"continue\n");
         // TODO: some representation of target
         break;
         //PTNODE(knopSwitch     , "switch"    ,None    ,Switch,fnopBreak)
     case knopSwitch:
         Indent(indentAmt);
-        Output::Print(_u("switch\n"));
+        Output::Print(u"switch\n");
         PrintScopesWIndent(pnode, indentAmt + INDENT_SIZE);
         for (ParseNodeCase *pnodeT = pnode->AsParseNodeSwitch()->pnodeCases; NULL != pnodeT; pnodeT = pnodeT->pnodeNext) {
             PrintPnodeWIndent(pnodeT, indentAmt + 2);
@@ -14331,7 +14331,7 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         //PTNODE(knopCase       , "case"        ,None    ,Case ,fnopNone)
     case knopCase:
         Indent(indentAmt);
-        Output::Print(_u("case\n"));
+        Output::Print(u"case\n");
         PrintPnodeWIndent(pnode->AsParseNodeCase()->pnodeExpr, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeCase()->pnodeBody, indentAmt + INDENT_SIZE);
         break;
@@ -14342,13 +14342,13 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         break;
     case knopFinally:
         Indent(indentAmt);
-        Output::Print(_u("finally\n"));
+        Output::Print(u"finally\n");
         PrintPnodeWIndent(pnode->AsParseNodeFinally()->pnodeBody, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopCatch      , "catch"     ,None    ,Catch,fnopNone)
     case knopCatch:
         Indent(indentAmt);
-        Output::Print(_u("catch (%d-%d)\n"), pnode->ichMin, pnode->ichLim);
+        Output::Print(u"catch (%d-%d)\n", pnode->ichMin, pnode->ichLim);
         PrintScopesWIndent(pnode, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeCatch()->GetParam(), indentAmt + INDENT_SIZE);
         //      if (pnode->AsParseNodeCatch()->pnodeGuard!=NULL)
@@ -14363,26 +14363,26 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         //PTNODE(knopTry        , "try"       ,None    ,Try  ,fnopCleanup)
     case knopTry:
         Indent(indentAmt);
-        Output::Print(_u("try\n"));
+        Output::Print(u"try\n");
         PrintPnodeWIndent(pnode->AsParseNodeTry()->pnodeBody, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopThrow      , "throw"     ,None    ,Uni  ,fnopNone)
     case knopThrow:
         Indent(indentAmt);
-        Output::Print(_u("throw\n"));
+        Output::Print(u"throw\n");
         PrintPnodeWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopClassDecl, "classDecl", None , Class, fnopLeaf)
     case knopClassDecl:
         Indent(indentAmt);
-        Output::Print(_u("class %s"), pnode->AsParseNodeClass()->pnodeName->pid->Psz());
+        Output::Print(u"class %s", pnode->AsParseNodeClass()->pnodeName->pid->Psz());
         if (pnode->AsParseNodeClass()->pnodeExtends != nullptr)
         {
-            Output::Print(_u(" extends "));
+            Output::Print(u" extends ");
             PrintPnodeWIndent(pnode->AsParseNodeClass()->pnodeExtends, 0);
         }
         else {
-            Output::Print(_u("\n"));
+            Output::Print(u"\n");
         }
 
         PrintPnodeWIndent(pnode->AsParseNodeClass()->pnodeConstructor, indentAmt + INDENT_SIZE);
@@ -14390,32 +14390,32 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         break;
     case knopStrTemplate:
         Indent(indentAmt);
-        Output::Print(_u("string template\n"));
+        Output::Print(u"string template\n");
         PrintPnodeListWIndent(pnode->AsParseNodeStrTemplate()->pnodeSubstitutionExpressions, indentAmt + INDENT_SIZE);
         break;
     case knopYieldStar:
         Indent(indentAmt);
-        Output::Print(_u("yield*\n"));
+        Output::Print(u"yield*\n");
         PrintPnodeListWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
     case knopYield:
     case knopYieldLeaf:
         Indent(indentAmt);
-        Output::Print(_u("yield\n"));
+        Output::Print(u"yield\n");
         PrintPnodeListWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
     case knopAwait:
         Indent(indentAmt);
-        Output::Print(_u("await\n"));
+        Output::Print(u"await\n");
         PrintPnodeListWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
     case knopExportDefault:
         Indent(indentAmt);
-        Output::Print(_u("export default\n"));
+        Output::Print(u"export default\n");
         PrintPnodeListWIndent(pnode->AsParseNodeExportDefault()->pnodeExpr, indentAmt + INDENT_SIZE);
         break;
     default:
-        Output::Print(_u("unhandled pnode op %d\n"), pnode->nop);
+        Output::Print(u"unhandled pnode op %d\n", pnode->nop);
         break;
     }
 }
@@ -14455,8 +14455,8 @@ void ParseNode::Dump()
             name = this->AsParseNodeFnc()->pnodeName->pid->Psz();
         }
 
-        Output::Print(_u("%s (%d) [%d, %d]:\n"), name, this->AsParseNodeFnc()->functionId, this->AsParseNodeFnc()->lineNumber, this->AsParseNodeFnc()->columnNumber);
-        Output::Print(_u("hasArguments: %s callsEval:%s childCallsEval:%s HasReferenceableBuiltInArguments:%s ArgumentsObjectEscapes:%s HasWith:%s HasOnlyThis:%s \n"),
+        Output::Print(u"%s (%d) [%d, %d]:\n", name, this->AsParseNodeFnc()->functionId, this->AsParseNodeFnc()->lineNumber, this->AsParseNodeFnc()->columnNumber);
+        Output::Print(u"hasArguments: %s callsEval:%s childCallsEval:%s HasReferenceableBuiltInArguments:%s ArgumentsObjectEscapes:%s HasWith:%s HasOnlyThis:%s \n",
             IsTrueOrFalse(this->AsParseNodeFnc()->HasHeapArguments()),
             IsTrueOrFalse(this->AsParseNodeFnc()->CallsEval()),
             IsTrueOrFalse(this->AsParseNodeFnc()->ChildCallsEval()),

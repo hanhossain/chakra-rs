@@ -56,7 +56,7 @@ Var JavascriptAsyncGenerator::EntryNext(RecyclableObject* function, CallInfo cal
     auto* scriptContext = function->GetScriptContext();
     auto* library = scriptContext->GetLibrary();
 
-    AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, _u("AsyncGenerator.prototype.next"));
+    AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, u"AsyncGenerator.prototype.next");
 
     Var thisValue = args[0];
     Var input = args.Info.Count > 1 ? args[1] : library->GetUndefined();
@@ -66,7 +66,7 @@ Var JavascriptAsyncGenerator::EntryNext(RecyclableObject* function, CallInfo cal
         scriptContext,
         input,
         ResumeYieldKind::Normal,
-        _u("AsyncGenerator.prototype.next"));
+        u"AsyncGenerator.prototype.next");
 }
 
 Var JavascriptAsyncGenerator::EntryReturn(RecyclableObject* function, CallInfo callInfo, ...)
@@ -77,7 +77,7 @@ Var JavascriptAsyncGenerator::EntryReturn(RecyclableObject* function, CallInfo c
     auto* scriptContext = function->GetScriptContext();
     auto* library = scriptContext->GetLibrary();
 
-    AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, _u("AsyncGenerator.prototype.return"));
+    AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, u"AsyncGenerator.prototype.return");
 
     Var thisValue = args[0];
     Var input = args.Info.Count > 1 ? args[1] : library->GetUndefined();
@@ -87,7 +87,7 @@ Var JavascriptAsyncGenerator::EntryReturn(RecyclableObject* function, CallInfo c
         scriptContext,
         input,
         ResumeYieldKind::Return,
-        _u("AsyncGenerator.prototype.return"));
+        u"AsyncGenerator.prototype.return");
 }
 
 Var JavascriptAsyncGenerator::EntryThrow(RecyclableObject* function, CallInfo callInfo, ...)
@@ -98,7 +98,7 @@ Var JavascriptAsyncGenerator::EntryThrow(RecyclableObject* function, CallInfo ca
     auto* scriptContext = function->GetScriptContext();
     auto* library = scriptContext->GetLibrary();
 
-    AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, _u("AsyncGenerator.prototype.throw"));
+    AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, u"AsyncGenerator.prototype.throw");
 
     Var thisValue = args[0];
     Var input = args.Info.Count > 1 ? args[1] : library->GetUndefined();
@@ -108,7 +108,7 @@ Var JavascriptAsyncGenerator::EntryThrow(RecyclableObject* function, CallInfo ca
         scriptContext,
         input,
         ResumeYieldKind::Throw,
-        _u("AsyncGenerator.prototype.throw"));
+        u"AsyncGenerator.prototype.throw");
 }
 
 Var JavascriptAsyncGenerator::EntryAwaitFulfilledCallback(
@@ -202,7 +202,7 @@ Var JavascriptAsyncGenerator::EnqueueRequest(
             JSERR_NeedObjectOfType,
             scriptContext,
             apiNameForErrorMessage,
-            _u("AsyncGenerator"));
+            u"AsyncGenerator");
 
         promise->Reject(error, scriptContext);
     }

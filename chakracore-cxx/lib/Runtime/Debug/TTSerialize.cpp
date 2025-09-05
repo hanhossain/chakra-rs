@@ -181,30 +181,30 @@ namespace TTD
     {
         if((separator & NSTokens::Separator::CommaSeparator) == NSTokens::Separator::CommaSeparator)
         {
-            this->WriteRawChar(_u(','));
+            this->WriteRawChar(u',');
 
             if((separator & NSTokens::Separator::BigSpaceSeparator) == NSTokens::Separator::BigSpaceSeparator)
             {
-                this->WriteRawChar(_u('\n'));
+                this->WriteRawChar(u'\n');
                 for(uint32 i = 0; i < this->m_indentSize; ++i)
                 {
-                    this->WriteRawChar(_u(' '));
-                    this->WriteRawChar(_u(' '));
+                    this->WriteRawChar(u' ');
+                    this->WriteRawChar(u' ');
                 }
             }
             else
             {
-                this->WriteRawChar(_u(' '));
+                this->WriteRawChar(u' ');
             }
         }
 
         if(separator == NSTokens::Separator::BigSpaceSeparator)
         {
-            this->WriteRawChar(_u('\n'));
+            this->WriteRawChar(u'\n');
             for(uint32 i = 0; i < this->m_indentSize; ++i)
             {
-                this->WriteRawChar(_u(' '));
-                this->WriteRawChar(_u(' '));
+                this->WriteRawChar(u' ');
+                this->WriteRawChar(u' ');
             }
         }
     }
@@ -218,13 +218,13 @@ namespace TTD
         size_t ksize = this->m_keyNameLengthArray[(uint32)key];
 
         this->WriteRawCharBuff(kname, ksize);
-        this->WriteRawChar(_u(':'));
+        this->WriteRawChar(u':');
     }
 
     void TextFormatWriter::WriteSequenceStart(NSTokens::Separator separator)
     {
         this->WriteSeparator(separator);
-        this->WriteRawChar(_u('['));
+        this->WriteRawChar(u'[');
     }
 
     void TextFormatWriter::WriteSequenceEnd(NSTokens::Separator separator)
@@ -232,13 +232,13 @@ namespace TTD
         TTDAssert(separator == NSTokens::Separator::NoSeparator || separator == NSTokens::Separator::BigSpaceSeparator, "Shouldn't be anything else!!!");
 
         this->WriteSeparator(separator);
-        this->WriteRawChar(_u(']'));
+        this->WriteRawChar(u']');
     }
 
     void TextFormatWriter::WriteRecordStart(NSTokens::Separator separator)
     {
         this->WriteSeparator(separator);
-        this->WriteRawChar(_u('{'));
+        this->WriteRawChar(u'{');
     }
 
     void TextFormatWriter::WriteRecordEnd(NSTokens::Separator separator)
@@ -246,7 +246,7 @@ namespace TTD
         TTDAssert(separator == NSTokens::Separator::NoSeparator || separator == NSTokens::Separator::BigSpaceSeparator, "Shouldn't be anything else!!!");
 
         this->WriteSeparator(separator);
-        this->WriteRawChar(_u('}'));
+        this->WriteRawChar(u'}');
     }
 
     void TextFormatWriter::AdjustIndent(int32 delta)
@@ -263,13 +263,13 @@ namespace TTD
     {
         this->WriteSeparator(separator);
 
-        this->WriteRawCharBuff(_u("null"), 4);
+        this->WriteRawCharBuff(u"null", 4);
     }
 
     void TextFormatWriter::WriteNakedByte(byte val, NSTokens::Separator separator)
     {
         this->WriteSeparator(separator);
-        this->WriteFormattedCharData(_u("%I32u"), (uint32)val);
+        this->WriteFormattedCharData(u"%I32u", (uint32)val);
     }
 
     void TextFormatWriter::WriteBool(NSTokens::Key key, bool val, NSTokens::Separator separator)
@@ -277,36 +277,36 @@ namespace TTD
         this->WriteKey(key, separator);
         if(val)
         {
-            this->WriteRawCharBuff(_u("true"), 4);
+            this->WriteRawCharBuff(u"true", 4);
         }
         else
         {
-            this->WriteRawCharBuff(_u("false"), 5);
+            this->WriteRawCharBuff(u"false", 5);
         }
     }
 
     void TextFormatWriter::WriteNakedInt32(int32 val, NSTokens::Separator separator)
     {
         this->WriteSeparator(separator);
-        this->WriteFormattedCharData(_u("%I32i"), val);
+        this->WriteFormattedCharData(u"%I32i", val);
     }
 
     void TextFormatWriter::WriteNakedUInt32(uint32 val, NSTokens::Separator separator)
     {
         this->WriteSeparator(separator);
-        this->WriteFormattedCharData(_u("%I32u"), val);
+        this->WriteFormattedCharData(u"%I32u", val);
     }
 
     void TextFormatWriter::WriteNakedInt64(long val, NSTokens::Separator separator)
     {
         this->WriteSeparator(separator);
-        this->WriteFormattedCharData(_u("%I64i"), val);
+        this->WriteFormattedCharData(u"%I64i", val);
     }
 
     void TextFormatWriter::WriteNakedUInt64(unsigned long val, NSTokens::Separator separator)
     {
         this->WriteSeparator(separator);
-        this->WriteFormattedCharData(_u("%I64u"), val);
+        this->WriteFormattedCharData(u"%I64u", val);
     }
 
     void TextFormatWriter::WriteNakedDouble(double val, NSTokens::Separator separator)
@@ -315,33 +315,33 @@ namespace TTD
 
         if(Js::JavascriptNumber::IsNan(val))
         {
-            this->WriteRawCharBuff(_u("#nan"), 4);
+            this->WriteRawCharBuff(u"#nan", 4);
         }
         else if(Js::JavascriptNumber::IsPosInf(val))
         {
-            this->WriteRawCharBuff(_u("#+inf"), 5);
+            this->WriteRawCharBuff(u"#+inf", 5);
         }
         else if(Js::JavascriptNumber::IsNegInf(val))
         {
-            this->WriteRawCharBuff(_u("#-inf"), 5);
+            this->WriteRawCharBuff(u"#-inf", 5);
         }
         else if(Js::JavascriptNumber::MAX_VALUE == val)
         {
-            this->WriteRawCharBuff(_u("#ub"), 3);
+            this->WriteRawCharBuff(u"#ub", 3);
         }
         else if(Js::JavascriptNumber::MIN_VALUE == val)
         {
-            this->WriteRawCharBuff(_u("#lb"), 3);
+            this->WriteRawCharBuff(u"#lb", 3);
         }
         else if(Js::Math::EPSILON == val)
         {
-            this->WriteRawCharBuff(_u("#ep"), 3);
+            this->WriteRawCharBuff(u"#ep", 3);
         }
         else
         {
             if(INT32_MAX <= val && val <= INT32_MAX && floor(val) == val)
             {
-                this->WriteFormattedCharData(_u("%I64i"), (long)val);
+                this->WriteFormattedCharData(u"%I64i", (long)val);
             }
             else
             {
@@ -350,7 +350,7 @@ namespace TTD
                 //      will want to change this to a dump of the bit representation of the number
                 //
 
-                this->WriteFormattedCharData(_u("%.32f"), val);
+                this->WriteFormattedCharData(u"%.32f", val);
             }
         }
     }
@@ -358,19 +358,19 @@ namespace TTD
     void TextFormatWriter::WriteNakedAddr(TTD_PTR_ID val, NSTokens::Separator separator)
     {
         this->WriteSeparator(separator);
-        this->WriteFormattedCharData(_u("*%I64u"), val);
+        this->WriteFormattedCharData(u"*%I64u", val);
     }
 
     void TextFormatWriter::WriteNakedLogTag(TTD_LOG_PTR_ID val, NSTokens::Separator separator)
     {
         this->WriteSeparator(separator);
-        this->WriteFormattedCharData(_u("!%I64i"), val);
+        this->WriteFormattedCharData(u"!%I64i", val);
     }
 
     void TextFormatWriter::WriteNakedTag(uint32 tagvalue, NSTokens::Separator separator)
     {
         this->WriteSeparator(separator);
-        this->WriteFormattedCharData(_u("$%I32i"), tagvalue);
+        this->WriteFormattedCharData(u"$%I32i", tagvalue);
     }
 
     ////
@@ -385,11 +385,11 @@ namespace TTD
         }
         else
         {
-            this->WriteFormattedCharData(_u("@%I32u"), val.Length);
+            this->WriteFormattedCharData(u"@%I32u", val.Length);
 
-            this->WriteRawChar(_u('\"'));
+            this->WriteRawChar(u'\"');
             this->WriteRawCharBuff(val.Contents, val.Length);
-            this->WriteRawChar(_u('\"'));
+            this->WriteRawChar(u'\"');
         }
     }
 
@@ -397,31 +397,31 @@ namespace TTD
     {
         this->WriteSeparator(separator);
 
-        this->WriteRawChar(_u('~'));
+        this->WriteRawChar(u'~');
         this->WriteRawCharBuff(val, wcslen(val));
-        this->WriteRawChar(_u('~'));
+        this->WriteRawChar(u'~');
     }
 
     void TextFormatWriter::WriteInlineCode(_In_reads_(length) const char16_t* code, uint32 length, NSTokens::Separator separator)
     {
         this->WriteSeparator(separator);
 
-        this->WriteFormattedCharData(_u("@%I32u"), length);
+        this->WriteFormattedCharData(u"@%I32u", length);
 
-        this->WriteRawChar(_u('\"'));
+        this->WriteRawChar(u'\"');
         this->WriteRawCharBuff(code, length);
-        this->WriteRawChar(_u('\"'));
+        this->WriteRawChar(u'\"');
     }
 
     void TextFormatWriter::WriteInlinePropertyRecordName(_In_reads_(length) const char16_t* pname, uint32 length, NSTokens::Separator separator)
     {
         this->WriteSeparator(separator);
 
-        this->WriteFormattedCharData(_u("@%I32u"), length);
+        this->WriteFormattedCharData(u"@%I32u", length);
 
-        this->WriteRawChar(_u('\"'));
+        this->WriteRawChar(u'\"');
         this->WriteRawCharBuff(pname, length);
-        this->WriteRawChar(_u('\"'));
+        this->WriteRawChar(u'\"');
     }
 
     BinaryFormatWriter::BinaryFormatWriter(JsTTDStreamHandle handle, TTDWriteBytesToStreamCallback pfWrite, TTDFlushAndCloseStreamCallback pfClose)
@@ -692,7 +692,7 @@ namespace TTD
 
     NSTokens::ParseTokenKind TextFormatReader::Scan(JsUtil::List<char16_t, HeapAllocator>& charList)
     {
-        char16_t c = _u('\0');
+        char16_t c = u'\0';
         charList.Clear();
 
         while(this->ReadRawChar(&c))
@@ -701,55 +701,55 @@ namespace TTD
             {
             case 0:
                 return NSTokens::ParseTokenKind::Error; //we shouldn't hit EOF explicitly here
-            case _u('\t'):
-            case _u('\r'):
-            case _u('\n'):
-            case _u(' '):
+            case u'\t':
+            case u'\r':
+            case u'\n':
+            case u' ':
                 //WS - keep looping
                 break;
-            case _u(','):
+            case u',':
                 return NSTokens::ParseTokenKind::Comma;
-            case _u(':'):
+            case u':':
                 return NSTokens::ParseTokenKind::Colon;
-            case _u('['):
+            case u'[':
                 return NSTokens::ParseTokenKind::LBrack;
-            case _u(']'):
+            case u']':
                 return NSTokens::ParseTokenKind::RBrack;
-            case _u('{'):
+            case u'{':
                 return NSTokens::ParseTokenKind::LCurly;
-            case _u('}'):
+            case u'}':
                 return NSTokens::ParseTokenKind::RCurly;
-            case _u('#'):
+            case u'#':
                 //# starts special double/number value representation
                 return this->ScanSpecialNumber();
-            case _u('-'):
-            case _u('+'):
-            case _u('0'):
-            case _u('1'):
-            case _u('2'):
-            case _u('3'):
-            case _u('4'):
-            case _u('5'):
-            case _u('6'):
-            case _u('7'):
-            case _u('8'):
-            case _u('9'):
+            case u'-':
+            case u'+':
+            case u'0':
+            case u'1':
+            case u'2':
+            case u'3':
+            case u'4':
+            case u'5':
+            case u'6':
+            case u'7':
+            case u'8':
+            case u'9':
                 //decimal digit or (-,+) starts a number
                 charList.Add(c);
                 return this->ScanNumber(charList);
-            case _u('*'):
+            case u'*':
                 //address
                 return this->ScanAddress(charList);
-            case _u('!'):
+            case u'!':
                 //log tag
                 return this->ScanLogTag(charList);
-            case _u('$'):
+            case u'$':
                 //enumeration value tag
                 return this->ScanEnumTag(charList);
-            case _u('~'):
+            case u'~':
                 //wellknown token
                 return this->ScanWellKnownToken(charList);
-            case _u('@'):
+            case u'@':
                 //string
                 return this->ScanString(charList);
             default:
@@ -765,13 +765,13 @@ namespace TTD
     {
         charList.Clear();
 
-        char16_t c = _u('\0');
+        char16_t c = u'\0';
         bool endFound = false;
 
         //Read off any whitespace
         while(this->PeekRawChar(&c))
         {
-            if((c != _u('\t')) & (c != _u('\r')) & (c != _u('\n')) & (c != _u(' ')))
+            if((c != u'\t') & (c != u'\r') & (c != u'\n') & (c != u' '))
             {
                 break;
             }
@@ -787,7 +787,7 @@ namespace TTD
                 return NSTokens::ParseTokenKind::Error;
             }
 
-            if(c == _u(':'))
+            if(c == u':')
             {
                 //end of the string
                 endFound = true;
@@ -811,65 +811,65 @@ namespace TTD
 
     NSTokens::ParseTokenKind TextFormatReader::ScanSpecialNumber()
     {
-        char16_t c = _u('\0');
+        char16_t c = u'\0';
         bool ok = this->ReadRawChar(&c);
 
-        if(ok && c == _u('n'))
+        if(ok && c == u'n')
         {
             ok = this->ReadRawChar(&c);
-            if(!ok || c != _u('a'))
+            if(!ok || c != u'a')
             {
                 return NSTokens::ParseTokenKind::Error;
             }
 
             ok = this->ReadRawChar(&c);
-            if(!ok || c != _u('n'))
+            if(!ok || c != u'n')
             {
                 return NSTokens::ParseTokenKind::Error;
             }
 
             return NSTokens::ParseTokenKind::NaN;
         }
-        else if(ok && (c == _u('+') || c == _u('-')))
+        else if(ok && (c == u'+' || c == u'-'))
         {
             char16_t signc = c;
 
             ok = this->ReadRawChar(&c);
-            if(!ok || c != _u('i'))
+            if(!ok || c != u'i')
             {
                 return NSTokens::ParseTokenKind::Error;
             }
 
             ok = this->ReadRawChar(&c);
-            if(!ok || c != _u('n'))
+            if(!ok || c != u'n')
             {
                 return NSTokens::ParseTokenKind::Error;
             }
 
             ok = this->ReadRawChar(&c);
-            if(!ok || c != _u('f'))
+            if(!ok || c != u'f')
             {
                 return NSTokens::ParseTokenKind::Error;
             }
 
-            return (signc == _u('+')) ? NSTokens::ParseTokenKind::PosInfty : NSTokens::ParseTokenKind::NegInfty;
+            return (signc == u'+') ? NSTokens::ParseTokenKind::PosInfty : NSTokens::ParseTokenKind::NegInfty;
         }
-        else if(ok && (c == _u('u') || c == _u('l')))
+        else if(ok && (c == u'u' || c == u'l'))
         {
             char16_t limitc = c;
 
             ok = this->ReadRawChar(&c);
-            if(!ok || c != _u('b'))
+            if(!ok || c != u'b')
             {
                 return NSTokens::ParseTokenKind::Error;
             }
 
-            return (limitc == _u('u')) ? NSTokens::ParseTokenKind::UpperBound : NSTokens::ParseTokenKind::LowerBound;
+            return (limitc == u'u') ? NSTokens::ParseTokenKind::UpperBound : NSTokens::ParseTokenKind::LowerBound;
         }
-        else if(ok && c == _u('e'))
+        else if(ok && c == u'e')
         {
             ok = this->ReadRawChar(&c);
-            if(!ok || c != _u('p'))
+            if(!ok || c != u'p')
             {
                 return NSTokens::ParseTokenKind::Error;
             }
@@ -884,15 +884,15 @@ namespace TTD
 
     NSTokens::ParseTokenKind TextFormatReader::ScanNumber(JsUtil::List<char16_t, HeapAllocator>& charList)
     {
-        char16_t c = _u('\0');
-        while(this->PeekRawChar(&c) && ((_u('0') <= c && c <= _u('9')) || (c == _u('.'))))
+        char16_t c = u'\0';
+        while(this->PeekRawChar(&c) && ((u'0' <= c && c <= u'9') || (c == u'.')))
         {
             this->ReadRawChar(&c);
             charList.Add(c);
         }
 
         // Null-terminate the list before we try to use the buffer as a string.
-        charList.Add(_u('\0'));
+        charList.Add(u'\0');
 
         LikelyNumberType likelyint; //we don't care about this just want to know that it is convertable to a number
         const char16_t* end;
@@ -942,7 +942,7 @@ namespace TTD
 
     NSTokens::ParseTokenKind TextFormatReader::ScanWellKnownToken(JsUtil::List<char16_t, HeapAllocator>& charList)
     {
-        char16_t c = _u('\0');
+        char16_t c = u'\0';
         bool endFound = false;
 
         while(this->ReadRawChar(&c))
@@ -952,7 +952,7 @@ namespace TTD
                 return NSTokens::ParseTokenKind::Error;
             }
 
-            if(c == _u('~'))
+            if(c == u'~')
             {
                 //end of the string
                 endFound = true;
@@ -976,7 +976,7 @@ namespace TTD
     NSTokens::ParseTokenKind TextFormatReader::ScanString(JsUtil::List<char16_t, HeapAllocator>& charList)
     {
         bool ok = false;
-        char16_t c = _u('\0');
+        char16_t c = u'\0';
 
         //first we should find a number
         NSTokens::ParseTokenKind okNumber = this->ScanNumber(charList);
@@ -991,7 +991,7 @@ namespace TTD
 
         //read the lead "\""
         ok = this->ReadRawChar(&c);
-        if(!ok || c != _u('\"'))
+        if(!ok || c != u'\"')
         {
             return NSTokens::ParseTokenKind::Error;
         }
@@ -1009,7 +1009,7 @@ namespace TTD
         }
 
         ok = this->ReadRawChar(&c);
-        if(!ok || c != _u('\"'))
+        if(!ok || c != u'\"')
         {
             return NSTokens::ParseTokenKind::Error;
         }
@@ -1020,80 +1020,80 @@ namespace TTD
     NSTokens::ParseTokenKind TextFormatReader::ScanNakedString(char16_t leadChar)
     {
         bool ok = false;
-        char16_t c = _u('\0');
+        char16_t c = u'\0';
 
-        if(leadChar == _u('n'))
+        if(leadChar == u'n')
         {
             //check for "null"
 
             ok = this->ReadRawChar(&c);
-            if(!ok || c != _u('u'))
+            if(!ok || c != u'u')
             {
                 return NSTokens::ParseTokenKind::Error;
             }
 
             ok = this->ReadRawChar(&c);
-            if(!ok || c != _u('l'))
+            if(!ok || c != u'l')
             {
                 return NSTokens::ParseTokenKind::Error;
             }
 
             ok = this->ReadRawChar(&c);
-            if(!ok || c != _u('l'))
+            if(!ok || c != u'l')
             {
                 return NSTokens::ParseTokenKind::Error;
             }
 
             return NSTokens::ParseTokenKind::Null;
         }
-        else if(leadChar == _u('t'))
+        else if(leadChar == u't')
         {
             //check for "true"
 
             ok = this->ReadRawChar(&c);
-            if(!ok || c != _u('r'))
+            if(!ok || c != u'r')
             {
                 return NSTokens::ParseTokenKind::Error;
             }
 
             ok = this->ReadRawChar(&c);
-            if(!ok || c != _u('u'))
+            if(!ok || c != u'u')
             {
                 return NSTokens::ParseTokenKind::Error;
             }
 
             ok = this->ReadRawChar(&c);
-            if(!ok || c != _u('e'))
+            if(!ok || c != u'e')
             {
                 return NSTokens::ParseTokenKind::Error;
             }
 
             return NSTokens::ParseTokenKind::True;
         }
-        else if(leadChar == _u('f'))
+        else if(leadChar == u'f')
         {
             //check for "false"
 
             ok = this->ReadRawChar(&c);
-            if(!ok || c != _u('a'))
+            if(!ok || c != u'a')
             {
                 return NSTokens::ParseTokenKind::Error;
             }
 
             ok = this->ReadRawChar(&c);
-            if(!ok || c != _u('l'))
+            if(!ok || c != u'l')
             {
                 return NSTokens::ParseTokenKind::Error;
             }
 
             ok = this->ReadRawChar(&c);
-            if(!ok || c != _u('s'))
+            if(!ok || c != u's')
             {
                 return NSTokens::ParseTokenKind::Error;
             }
 
             ok = this->ReadRawChar(&c);
-            if(!ok || c != _u('e'))
+            if(!ok || c != u'e')
             {
                 return NSTokens::ParseTokenKind::Error;
             }
@@ -1113,7 +1113,7 @@ namespace TTD
 
         long sign = 1;
         int32 lastIdx = 0;
-        if(buff[0] == _u('-'))
+        if(buff[0] == u'-')
         {
             sign = -1;
             lastIdx = 1;
@@ -1123,7 +1123,7 @@ namespace TTD
         for(int32 i = digitCount - 1; i >= lastIdx; --i)
         {
             char16_t digit = buff[i];
-            uint32 digitValue = (digit - _u('0'));
+            uint32 digitValue = (digit - u'0');
 
             value += (multiplier * digitValue);
             multiplier *= 10;
@@ -1141,7 +1141,7 @@ namespace TTD
         for(int32 i = digitCount - 1; i >= 0; --i)
         {
             char16_t digit = buff[i];
-            uint32 digitValue = (digit - _u('0'));
+            uint32 digitValue = (digit - u'0');
 
             value += (multiplier * digitValue);
             multiplier *= 10;
@@ -1192,7 +1192,7 @@ namespace TTD
         NSTokens::ParseTokenKind tok = this->ScanKey(this->m_charListPrimary);
         TTDAssert(tok == NSTokens::ParseTokenKind::String, "Error in parse.");
 
-        this->m_charListPrimary.Add(_u('\0'));
+        this->m_charListPrimary.Add(u'\0');
         const char16_t* keystr = this->m_charListPrimary.GetBuffer();
 
         //check key strings are the same
@@ -1426,7 +1426,7 @@ namespace TTD
         NSTokens::ParseTokenKind tok = this->Scan(this->m_charListOpt);
         TTDAssert(tok == NSTokens::ParseTokenKind::WellKnownToken, "Error in parse.");
 
-        this->m_charListOpt.Add(_u('\0')); //add null terminator
+        this->m_charListOpt.Add(u'\0'); //add null terminator
         return alloc.CopyRawNullTerminatedStringInto(this->m_charListOpt.GetBuffer());
     }
 
@@ -1437,7 +1437,7 @@ namespace TTD
         NSTokens::ParseTokenKind tok = this->Scan(this->m_charListOpt);
         TTDAssert(tok == NSTokens::ParseTokenKind::WellKnownToken, "Error in parse.");
 
-        this->m_charListOpt.Add(_u('\0')); //add null terminator
+        this->m_charListOpt.Add(u'\0'); //add null terminator
         return alloc.CopyRawNullTerminatedStringInto(this->m_charListOpt.GetBuffer() + 1);
     }
 
@@ -1676,7 +1676,7 @@ namespace TTD
 
         char16_t* cbuff = alloc.SlabAllocateArray<char16_t>(charLen + 1);
         this->ReadBytesInto((byte*)cbuff, charLen * sizeof(char16_t));
-        cbuff[charLen] = _u('\0');
+        cbuff[charLen] = u'\0';
 
         return cbuff;
     }
@@ -1690,7 +1690,7 @@ namespace TTD
 
         char16_t* cbuff = alloc.SlabAllocateArray<char16_t>(charLen + 1);
         this->ReadBytesInto((byte*)cbuff, charLen * sizeof(char16_t));
-        cbuff[charLen] = _u('\0');
+        cbuff[charLen] = u'\0';
 
         return cbuff;
     }

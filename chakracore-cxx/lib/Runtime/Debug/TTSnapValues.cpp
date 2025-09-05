@@ -919,9 +919,9 @@ namespace TTD
         {
             compareMap.CheckConsistentAndAddPtrIdMapping_NoEnqueue(capabilityInfo1->CapabilityId, capabilityInfo2->CapabilityId);
 
-            AssertSnapEquivTTDVar_Special(capabilityInfo1->PromiseVar, capabilityInfo2->PromiseVar, compareMap, _u("promiseVar"));
-            AssertSnapEquivTTDVar_Special(capabilityInfo1->ResolveVar, capabilityInfo2->ResolveVar, compareMap, _u("resolveObjId"));
-            AssertSnapEquivTTDVar_Special(capabilityInfo1->RejectVar, capabilityInfo2->RejectVar, compareMap, _u("rejectObjId"));
+            AssertSnapEquivTTDVar_Special(capabilityInfo1->PromiseVar, capabilityInfo2->PromiseVar, compareMap, u"promiseVar");
+            AssertSnapEquivTTDVar_Special(capabilityInfo1->ResolveVar, capabilityInfo2->ResolveVar, compareMap, u"resolveObjId");
+            AssertSnapEquivTTDVar_Special(capabilityInfo1->RejectVar, capabilityInfo2->RejectVar, compareMap, u"rejectObjId");
         }
 #endif
 
@@ -970,7 +970,7 @@ namespace TTD
         {
             compareMap.CheckConsistentAndAddPtrIdMapping_NoEnqueue(reactionInfo1->PromiseReactionId, reactionInfo2->PromiseReactionId);
 
-            compareMap.CheckConsistentAndAddPtrIdMapping_Special(reactionInfo1->HandlerObjId, reactionInfo2->HandlerObjId, _u("handlerObjId"));
+            compareMap.CheckConsistentAndAddPtrIdMapping_Special(reactionInfo1->HandlerObjId, reactionInfo2->HandlerObjId, u"handlerObjId");
             AssertSnapEquiv(&(reactionInfo1->Capabilities), &(reactionInfo2->Capabilities), compareMap);
         }
 #endif
@@ -1470,7 +1470,7 @@ namespace TTD
                     }
 
                     TTDAssert(resfb != nullptr && fbInfo->OptLine == resfb->GetLineNumber() && fbInfo->OptColumn == resfb->GetColumnNumber(), "We are missing something");
-                    TTDAssert(resfb != nullptr && (wcscmp(fbInfo->FunctionName.Contents, resfb->GetDisplayName()) == 0 || wcscmp(_u("get"), resfb->GetDisplayName()) == 0 || wcscmp(_u("set"), resfb->GetDisplayName()) == 0), "We are missing something");
+                    TTDAssert(resfb != nullptr && (wcscmp(fbInfo->FunctionName.Contents, resfb->GetDisplayName()) == 0 || wcscmp(u"get", resfb->GetDisplayName()) == 0 || wcscmp(u"set", resfb->GetDisplayName()) == 0), "We are missing something");
                 }
 
                 //Make sure to register any scopes the found function body has (but *not* for well known functions)
@@ -1496,7 +1496,7 @@ namespace TTD
                 uint32 suffixWDotPos = (fbInfo->FunctionName.Length - 4);
                 uint32 suffixPos = (fbInfo->FunctionName.Length - 3);
 
-                TTDAssert(wcsstr(fbInfo->FunctionName.Contents, _u(".get")) == (fbInfo->FunctionName.Contents + suffixWDotPos) || wcsstr(fbInfo->FunctionName.Contents, _u(".set")) == (fbInfo->FunctionName.Contents + suffixWDotPos), "Does not start with get or set");
+                TTDAssert(wcsstr(fbInfo->FunctionName.Contents, u".get") == (fbInfo->FunctionName.Contents + suffixWDotPos) || wcsstr(fbInfo->FunctionName.Contents, u".set") == (fbInfo->FunctionName.Contents + suffixWDotPos), "Does not start with get or set");
 
                 resfb->SetDisplayName(fbInfo->FunctionName.Contents, fbInfo->FunctionName.Length, suffixPos, Js::FunctionProxy::SetDisplayNameFlagsRecyclerAllocated);
             }

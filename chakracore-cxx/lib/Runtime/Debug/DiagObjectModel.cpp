@@ -119,17 +119,17 @@ namespace Js
 
     LPCWSTR LocalsDisplay::Name()
     {
-        return _u("Locals");
+        return u"Locals";
     }
 
     LPCWSTR LocalsDisplay::Type()
     {
-        return _u("");
+        return u"";
     }
 
     LPCWSTR LocalsDisplay::Value(int radix)
     {
-        return _u("Locals");
+        return u"Locals";
     }
 
     BOOL LocalsDisplay::HasChildren()
@@ -180,7 +180,7 @@ namespace Js
         {
             if (index == 0)
             {
-                pResolvedObject->name          = _u("{exception}");
+                pResolvedObject->name          = u"{exception}";
                 pResolvedObject->typeId        = TypeIds_Error;
                 pResolvedObject->address       = nullptr;
                 pResolvedObject->obj           = pResolvedObject->scriptContext->GetDebugContext()->GetProbeContainer()->GetExceptionObject();
@@ -216,7 +216,7 @@ namespace Js
         char16_t * finalName = AnewArray(GetArenaFromContext(pResolvedObject->scriptContext), char16_t, RETURN_VALUE_MAX_NAME);
         if (returnValue->isValueOfReturnStatement)
         {
-            swprintf_s(finalName, RETURN_VALUE_MAX_NAME, _u("[Return value]"));
+            swprintf_s(finalName, RETURN_VALUE_MAX_NAME, u"[Return value]");
             pResolvedObject->obj = frame->GetRegValue(Js::FunctionBody::ReturnValueRegSlot);
             pResolvedObject->address = Anew(frame->GetArena(), LocalObjectAddressForRegSlot, frame, Js::FunctionBody::ReturnValueRegSlot, pResolvedObject->obj);
         }
@@ -224,7 +224,7 @@ namespace Js
         {
             if (returnValue->calledFunction->IsScriptFunction())
             {
-                swprintf_s(finalName, RETURN_VALUE_MAX_NAME, _u("[%s returned]"), returnValue->calledFunction->GetFunctionBody()->GetDisplayName());
+                swprintf_s(finalName, RETURN_VALUE_MAX_NAME, u"[%s returned]", returnValue->calledFunction->GetFunctionBody()->GetDisplayName());
             }
             else
             {
@@ -232,7 +232,7 @@ namespace Js
                 displayName = returnValue->calledFunction->GetDisplayName();
 
                 const char16_t *builtInName = ParseFunctionName(displayName->GetString(), displayName->GetLength(), pResolvedObject->scriptContext);
-                swprintf_s(finalName, RETURN_VALUE_MAX_NAME, _u("[%s returned]"), builtInName);
+                swprintf_s(finalName, RETURN_VALUE_MAX_NAME, u"[%s returned]", builtInName);
 
                 LEAVE_PINNED_SCOPE();
             }
@@ -277,7 +277,7 @@ namespace Js
             return displayNameBuffer;
         }
         js_memcpy_s(actualFunctionNameBuffer, byteLengthForCopy, displayNameBuffer + funcStringLength, byteLengthForCopy);
-        actualFunctionNameBuffer[actualFunctionNameLength] = _u('\0');
+        actualFunctionNameBuffer[actualFunctionNameLength] = u'\0';
 
         return actualFunctionNameBuffer;
     }
@@ -331,7 +331,7 @@ namespace Js
         {
             if (index == 0)
             {
-                pResolvedObject->name = _u("[Pending Mutation]");
+                pResolvedObject->name = u"[Pending Mutation]";
                 pResolvedObject->typeId = TypeIds_Object;
                 pResolvedObject->address = nullptr;
                 pResolvedObject->obj = mutationBreakpoint->GetMutationObjectVar();
@@ -374,7 +374,7 @@ namespace Js
 
             if (pResolvedObject->propId == Js::PropertyIds::_super || pResolvedObject->propId == Js::PropertyIds::_superConstructor)
             {
-                pResolvedObject->name         = _u("super");
+                pResolvedObject->name         = u"super";
             }
             else
             {
@@ -426,7 +426,7 @@ namespace Js
         Assert(pResolvedObject);
 
         // This is fake [Methods] object.
-        pResolvedObject->name           = groupType == UIGroupType_Scope ? _u("[Scope]") : _u("[Globals]");
+        pResolvedObject->name           = groupType == UIGroupType_Scope ? u"[Scope]" : u"[Globals]";
         pResolvedObject->obj            = Js::VarTo<Js::RecyclableObject>(instance);
         pResolvedObject->typeId         = TypeIds_Function;
         pResolvedObject->address        = nullptr;  // Scope object should not be editable
@@ -1195,7 +1195,7 @@ namespace Js
 
         Assert(hasUserNotDefinedArguments);
 
-        pResolvedObject->name = _u("arguments");
+        pResolvedObject->name = u"arguments";
         pResolvedObject->propId = Js::PropertyIds::arguments;
         pResolvedObject->typeId = TypeIds_Arguments;
 
@@ -1935,7 +1935,7 @@ namespace Js
 
         if(Js::TaggedInt::Is(instance) || Js::JavascriptNumber::Is(instance))
         {
-            typeStr = _u("Number");
+            typeStr = u"Number";
         }
         else
         {
@@ -1951,7 +1951,7 @@ namespace Js
             TypeId typeId = obj->GetTypeId();
             if (typeId == TypeIds_Object && GetPropertyWithScriptEnter(obj, obj, PropertyIds::constructor, &value, scriptContext))
             {
-                builder->AppendCppLiteral(_u("Object"));
+                builder->AppendCppLiteral(u"Object");
                 if (Js::VarIs<Js::JavascriptFunction>(value))
                 {
                     Js::JavascriptFunction *pfunction = Js::VarTo<Js::JavascriptFunction>(value);
@@ -1962,9 +1962,9 @@ namespace Js
                         const char16_t* pDisplayName = pFuncBody->GetDisplayName();
                         if (pDisplayName)
                         {
-                            builder->AppendCppLiteral(_u(", ("));
+                            builder->AppendCppLiteral(u", (");
                             builder->AppendSz(pDisplayName);
-                            builder->Append(_u(')'));
+                            builder->Append(u')');
                         }
                     }
                 }
@@ -1976,7 +1976,7 @@ namespace Js
             }
             else
             {
-                typeStr = _u("Undefined");
+                typeStr = u"Undefined";
             }
         }
 
@@ -1994,7 +1994,7 @@ namespace Js
 
     LPCWSTR RecyclableObjectDisplay::Value(int radix)
     {
-        LPCWSTR valueStr = _u("");
+        LPCWSTR valueStr = u"";
 
         if(Js::TaggedInt::Is(instance)
             || Js::JavascriptNumber::Is(instance)
@@ -2034,7 +2034,7 @@ namespace Js
                 if (Js::JavascriptNumber::IsNegZero(value))
                 {
                     // In debugger, we wanted to show negative zero explicitly
-                    valueStr = _u("-0");
+                    valueStr = u"-0";
                 }
                 else
                 {
@@ -2051,7 +2051,7 @@ namespace Js
                         uint32 ul = static_cast<uint32>(static_cast<int32>(value)); // ARM: casting negative value to uint32 gives 0
                         value = (double)ul;
                     }
-                    valueStr = Js::JavascriptString::Concat(scriptContext->GetLibrary()->CreateStringFromCppLiteral(_u("0x")),
+                    valueStr = Js::JavascriptString::Concat(scriptContext->GetLibrary()->CreateStringFromCppLiteral(u"0x"),
                                                             Js::JavascriptNumber::ToStringRadixHelper(value, radix, scriptContext))->GetSz();
                 }
                 else
@@ -2073,7 +2073,7 @@ namespace Js
             }
             else
             {
-                valueStr = _u("undefined");
+                valueStr = u"undefined";
             }
         }
 
@@ -2457,7 +2457,7 @@ namespace Js
                             Var error = err.GetAndClear()->GetThrownObject(scriptContext);
                             if (error != nullptr && Js::VarIs<Js::JavascriptError>(error))
                             {
-                                Js::PropertyId propertyId = scriptContext->GetOrAddPropertyIdTracked(_u("{error}"));
+                                Js::PropertyId propertyId = scriptContext->GetOrAddPropertyIdTracked(u"{error}");
                                 InsertItem(propertyId, false /*isConst*/, false /*isUnscoped*/, error, &pMethodsGroupWalker);
                             }
                         }
@@ -2912,12 +2912,12 @@ namespace Js
 
     LPCWSTR RecyclableArrayWalker::GetIndexName(uint32 index, StringBuilder<ArenaAllocator>* stringBuilder)
     {
-        stringBuilder->Append(_u('['));
+        stringBuilder->Append(u'[');
         if (stringBuilder->AppendUint64(index) != 0)
         {
-            return _u("[.]");
+            return u"[.]";
         }
-        stringBuilder->Append(_u(']'));
+        stringBuilder->Append(u']');
         return stringBuilder->Detach();
     }
 
@@ -3414,12 +3414,12 @@ namespace Js
         DBGPROP_ATTRIB_FLAGS defaultAttributes = DBGPROP_ATTRIB_NO_ATTRIB;
         if (scriptContext->GetLibrary()->GetObjectPrototypeObject()->is__proto__Enabled())
         {
-            pResolvedObject->name           = _u("__proto__");
+            pResolvedObject->name           = u"__proto__";
             pResolvedObject->propId         = PropertyIds::__proto__;
         }
         else
         {
-            pResolvedObject->name           = _u("[prototype]");
+            pResolvedObject->name           = u"[prototype]";
             pResolvedObject->propId         = Constants::NoProperty; // This property will not be editable.
             defaultAttributes               = DBGPROP_ATTRIB_VALUE_IS_FAKE;
         }
@@ -3487,11 +3487,11 @@ namespace Js
 
     //--------------------------
     // RecyclableCollectionObjectWalker
-    template <typename TData> const char16_t* RecyclableCollectionObjectWalker<TData>::Name() { static_assert(false, _u("Must use specialization")); }
-    template <> const char16_t* RecyclableCollectionObjectWalker<JavascriptMap>::Name() { return _u("[Map]"); }
-    template <> const char16_t* RecyclableCollectionObjectWalker<JavascriptSet>::Name() { return _u("[Set]"); }
-    template <> const char16_t* RecyclableCollectionObjectWalker<JavascriptWeakMap>::Name() { return _u("[WeakMap]"); }
-    template <> const char16_t* RecyclableCollectionObjectWalker<JavascriptWeakSet>::Name() { return _u("[WeakSet]"); }
+    template <typename TData> const char16_t* RecyclableCollectionObjectWalker<TData>::Name() { static_assert(false, u"Must use specialization"); }
+    template <> const char16_t* RecyclableCollectionObjectWalker<JavascriptMap>::Name() { return u"[Map]"; }
+    template <> const char16_t* RecyclableCollectionObjectWalker<JavascriptSet>::Name() { return u"[Set]"; }
+    template <> const char16_t* RecyclableCollectionObjectWalker<JavascriptWeakMap>::Name() { return u"[WeakMap]"; }
+    template <> const char16_t* RecyclableCollectionObjectWalker<JavascriptWeakSet>::Name() { return u"[WeakSet]"; }
 
     template <typename TData>
     BOOL RecyclableCollectionObjectWalker<TData>::GetGroupObject(ResolvedObject* pResolvedObject)
@@ -3619,7 +3619,7 @@ namespace Js
         StringBuilder<ArenaAllocator>* builder = scriptContext->GetThreadContext()->GetDebugManager()->pCurrentInterpreterLocation->stringBuilder;
         builder->Reset();
 
-        builder->AppendCppLiteral(_u("size = "));
+        builder->AppendCppLiteral(u"size = ");
         builder->AppendUint64(walker->GetChildrenCount());
 
         return builder->Detach();
@@ -3673,7 +3673,7 @@ namespace Js
 
         builder->Append('[');
         builder->AppendSz(keyValue);
-        builder->AppendCppLiteral(_u(", "));
+        builder->AppendCppLiteral(u", ");
         builder->AppendSz(valueValue);
         builder->Append(']');
 
@@ -3686,12 +3686,12 @@ namespace Js
     {
         if (i == 0)
         {
-            pResolvedObject->name = _u("key");
+            pResolvedObject->name = u"key";
             pResolvedObject->obj = key;
         }
         else if (i == 1)
         {
-            pResolvedObject->name = _u("value");
+            pResolvedObject->name = u"value";
             pResolvedObject->obj = value;
         }
         else
@@ -3739,7 +3739,7 @@ namespace Js
 
     BOOL RecyclableProxyObjectWalker::GetGroupObject(ResolvedObject* pResolvedObject)
     {
-        pResolvedObject->name = _u("[Proxy]");
+        pResolvedObject->name = u"[Proxy]";
         pResolvedObject->propId = Constants::NoProperty;
         pResolvedObject->obj = instance;
         pResolvedObject->scriptContext = scriptContext;
@@ -3760,12 +3760,12 @@ namespace Js
         }
         if (i == 0)
         {
-            pResolvedObject->name = _u("[target]");
+            pResolvedObject->name = u"[target]";
             pResolvedObject->obj = proxy->GetTarget();
         }
         else if (i == 1)
         {
-            pResolvedObject->name = _u("[handler]");
+            pResolvedObject->name = u"[handler]";
             pResolvedObject->obj = proxy->GetHandler();
         }
         else
@@ -3818,7 +3818,7 @@ namespace Js
 
     BOOL RecyclablePromiseObjectWalker::GetGroupObject(ResolvedObject* pResolvedObject)
     {
-        pResolvedObject->name = _u("[Promise]");
+        pResolvedObject->name = u"[Promise]";
         pResolvedObject->propId = Constants::NoProperty;
         pResolvedObject->obj = instance;
         pResolvedObject->scriptContext = scriptContext;
@@ -3836,7 +3836,7 @@ namespace Js
 
         if (i == 0)
         {
-            pResolvedObject->name = _u("[status]");
+            pResolvedObject->name = u"[status]";
 
             switch (promise->GetStatus())
             {
@@ -3844,13 +3844,13 @@ namespace Js
                 pResolvedObject->obj = scriptContext->GetLibrary()->GetUndefinedDisplayString();
                 break;
             case JavascriptPromise::PromiseStatusCode_Unresolved:
-                pResolvedObject->obj = scriptContext->GetLibrary()->CreateStringFromCppLiteral(_u("pending"));
+                pResolvedObject->obj = scriptContext->GetLibrary()->CreateStringFromCppLiteral(u"pending");
                 break;
             case JavascriptPromise::PromiseStatusCode_HasResolution:
-                pResolvedObject->obj = scriptContext->GetLibrary()->CreateStringFromCppLiteral(_u("resolved"));
+                pResolvedObject->obj = scriptContext->GetLibrary()->CreateStringFromCppLiteral(u"resolved");
                 break;
             case JavascriptPromise::PromiseStatusCode_HasRejection:
-                pResolvedObject->obj = scriptContext->GetLibrary()->CreateStringFromCppLiteral(_u("rejected"));
+                pResolvedObject->obj = scriptContext->GetLibrary()->CreateStringFromCppLiteral(u"rejected");
                 break;
             default:
                 AssertMsg(false, "New PromiseStatusCode not handled in debugger");
@@ -3860,7 +3860,7 @@ namespace Js
         }
         else if (i == 1)
         {
-            pResolvedObject->name = _u("[value]");
+            pResolvedObject->name = u"[value]";
             Var result = promise->GetResult();
             pResolvedObject->obj = result != nullptr ? result : scriptContext->GetLibrary()->GetUndefinedDisplayString();
         }
@@ -3918,7 +3918,7 @@ namespace Js
         Assert(pResolvedObject);
 
         // This is fake [Methods] object.
-        pResolvedObject->name           = _u("[Methods]");
+        pResolvedObject->name           = u"[Methods]";
         pResolvedObject->obj            = Js::VarTo<Js::RecyclableObject>(instance);
         pResolvedObject->scriptContext  = scriptContext;
         pResolvedObject->typeId         = JavascriptOperators::GetTypeId(pResolvedObject->obj);
@@ -3946,12 +3946,12 @@ namespace Js
 
     LPCWSTR RecyclableMethodsGroupDisplay::Type()
     {
-        return _u("");
+        return u"";
     }
 
     LPCWSTR RecyclableMethodsGroupDisplay::Value(int radix)
     {
-        return _u("{...}");
+        return u"{...}";
     }
 
     BOOL RecyclableMethodsGroupDisplay::HasChildren()
@@ -3986,7 +3986,7 @@ namespace Js
 
     LPCWSTR ScopeVariablesGroupDisplay::Type()
     {
-        return _u("");
+        return u"";
     }
 
     LPCWSTR ScopeVariablesGroupDisplay::Value(int radix)
@@ -4030,7 +4030,7 @@ namespace Js
                 err.GetAndClear();  // discard exception object
             }
 
-            return _u("");
+            return u"";
         }
         else
         {
@@ -4040,7 +4040,7 @@ namespace Js
             if(slotArray.IsDebuggerScopeSlotArray())
             {
                 // handling for block/catch scope
-                return _u("");
+                return u"";
             }
             else
             {
@@ -4081,12 +4081,12 @@ namespace Js
 
     LPCWSTR GlobalsScopeVariablesGroupDisplay::Type()
     {
-        return _u("");
+        return u"";
     }
 
     LPCWSTR GlobalsScopeVariablesGroupDisplay::Value(int radix)
     {
-        return _u("");
+        return u"";
     }
 
     BOOL GlobalsScopeVariablesGroupDisplay::HasChildren()
@@ -4162,7 +4162,7 @@ namespace Js
                 // <Property Name> [Changing] : Old Value
                 // <Property Name> [Deleting] : Old Value
                 char16_t * displayName = AnewArray(GetArenaFromContext(scriptContext), char16_t, PENDING_MUTATION_VALUE_MAX_NAME);
-                swprintf_s(displayName, PENDING_MUTATION_VALUE_MAX_NAME, _u("%s [%s]"), mutationBreakpoint->GetBreakPropertyName(), Js::MutationBreakpoint::GetBreakMutationTypeName(mutationType));
+                swprintf_s(displayName, PENDING_MUTATION_VALUE_MAX_NAME, u"%s [%s]", mutationBreakpoint->GetBreakPropertyName(), Js::MutationBreakpoint::GetBreakMutationTypeName(mutationType));
                 pResolvedObject->name = displayName;
                 if (mutationType == MutationTypeUpdate || mutationType == MutationTypeDelete)
                 {
@@ -4180,14 +4180,14 @@ namespace Js
             }
             else if ((i == 1) && (mutationType == MutationTypeUpdate))
             {
-                pResolvedObject->name = _u("[New Value]");
+                pResolvedObject->name = u"[New Value]";
                 pResolvedObject->obj = mutationBreakpoint->GetBreakNewValueVar();
                 pResolvedObject->propId = Constants::NoProperty;
             }
             else if (((i == 1) && (mutationType != MutationTypeUpdate)) || (i == 2))
             {
                 char16_t * displayName = AnewArray(GetArenaFromContext(scriptContext), char16_t, PENDING_MUTATION_VALUE_MAX_NAME);
-                swprintf_s(displayName, PENDING_MUTATION_VALUE_MAX_NAME, _u("[Property container %s]"), mutationBreakpoint->GetParentPropertyName());
+                swprintf_s(displayName, PENDING_MUTATION_VALUE_MAX_NAME, u"[Property container %s]", mutationBreakpoint->GetParentPropertyName());
                 pResolvedObject->name = displayName;
                 pResolvedObject->obj = mutationBreakpoint->GetMutationObjectVar();
                 pResolvedObject->propId = mutationBreakpoint->GetParentPropertyId();

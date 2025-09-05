@@ -418,7 +418,7 @@ SmallHeapBlockT<TBlockAttributes>::ReleasePages(Recycler * recycler)
 #if DBG
     if (this->IsLeafBlock())
     {
-        RecyclerVerboseTrace(recycler->GetRecyclerFlagsTable(), _u("Releasing leaf block pages at address 0x%p\n"), address);
+        RecyclerVerboseTrace(recycler->GetRecyclerFlagsTable(), u"Releasing leaf block pages at address 0x%p\n", address);
     }
 #endif
 
@@ -466,7 +466,7 @@ SmallHeapBlockT<TBlockAttributes>::ReleasePagesShutdown(Recycler * recycler)
 #if DBG
     if (this->IsLeafBlock())
     {
-        RecyclerVerboseTrace(recycler->GetRecyclerFlagsTable(), _u("Releasing leaf block pages at address 0x%p\n"), address);
+        RecyclerVerboseTrace(recycler->GetRecyclerFlagsTable(), u"Releasing leaf block pages at address 0x%p\n", address);
     }
 
     RemoveFromHeapBlockMap(recycler);
@@ -894,7 +894,7 @@ void HeapBlock::PrintVerifyMarkFailure(Recycler* recycler, char* objectAddress, 
             char* name = abi::__cxa_demangle(typeinfo->name(), buffer, &buflen, &status);
             if (status != 0)
             {
-                Output::Print(_u("Demangle failed: result=%d, buflen=%d\n"), status, buflen);
+                Output::Print(u"Demangle failed: result=%d, buflen=%d\n", status, buflen);
             }
             char* demangledName = (char*)malloc(buflen);
             memcpy(demangledName, name, buflen);
@@ -922,11 +922,11 @@ void HeapBlock::PrintVerifyMarkFailure(Recycler* recycler, char* objectAddress, 
             typeName = getDemangledName(trackerData->typeinfo);
             if (trackerData->isArray)
             {
-                Output::Print(_u("Missing Barrier\nOn array of %S\n"), typeName);
+                Output::Print(u"Missing Barrier\nOn array of %S\n", typeName);
 #ifdef STACK_BACK_TRACE
                 if (CONFIG_FLAG(KeepRecyclerTrackData))
                 {
-                    Output::Print(_u("Allocation stack:\n"));
+                    Output::Print(u"Allocation stack:\n");
                     ((StackBackTrace*)(trackerData + 1))->Print();
                 }
 #endif
@@ -937,7 +937,7 @@ void HeapBlock::PrintVerifyMarkFailure(Recycler* recycler, char* objectAddress, 
                 {
                     if (CONFIG_FLAG(Verbose))
                     {
-                        Output::Print(_u("False Positive: %S+0x%x => 0x%p -> 0x%p\n"), typeName, offset, objectAddress, target);
+                        Output::Print(u"False Positive: %S+0x%x => 0x%p -> 0x%p\n", typeName, offset, objectAddress, target);
                     }
                 };
 
@@ -948,7 +948,7 @@ void HeapBlock::PrintVerifyMarkFailure(Recycler* recycler, char* objectAddress, 
                 }
 
                 //TODO: (leish)(swb) analyze pdb to check if the field is a pointer field or not
-                Output::Print(_u("Missing Barrier\nOn type %S+0x%x\n"), typeName, offset);
+                Output::Print(u"Missing Barrier\nOn type %S+0x%x\n", typeName, offset);
             }
         }
 
@@ -962,30 +962,30 @@ void HeapBlock::PrintVerifyMarkFailure(Recycler* recycler, char* objectAddress, 
             targetTypeName = getDemangledName(targetTrackerData->typeinfo);
             if (targetTrackerData->isArray)
             {
-                Output::Print(_u("Target type (missing barrier field type) is array item of %S\n"), targetTypeName);
+                Output::Print(u"Target type (missing barrier field type) is array item of %S\n", targetTypeName);
 #ifdef STACK_BACK_TRACE
                 if (CONFIG_FLAG(KeepRecyclerTrackData))
                 {
-                    Output::Print(_u("Allocation stack:\n"));
+                    Output::Print(u"Allocation stack:\n");
                     ((StackBackTrace*)(targetTrackerData + 1))->Print();
                 }
 #endif
             }
             else if (targetOffset == 0)
             {
-                Output::Print(_u("Target type (missing barrier field type) is %S\n"), targetTypeName);
+                Output::Print(u"Target type (missing barrier field type) is %S\n", targetTypeName);
             }
             else
             {
-                Output::Print(_u("Target type (missing barrier field type) is pointing to %S+0x%x\n"), targetTypeName, targetOffset);
+                Output::Print(u"Target type (missing barrier field type) is pointing to %S+0x%x\n", targetTypeName, targetOffset);
             }
         }
 
-        Output::Print(_u("---------------------------------\n"));
+        Output::Print(u"---------------------------------\n");
     }
 #endif
 
-    Output::Print(_u("Missing barrier on 0x%p, target is 0x%p\n"), objectAddress, target);
+    Output::Print(u"Missing barrier on 0x%p, target is 0x%p\n", objectAddress, target);
     AssertMsg(false, "Missing barrier.");
 }
 #endif  // DBG
@@ -1332,7 +1332,7 @@ SmallHeapBlockT<TBlockAttributes>::Sweep(RecyclerSweep& recyclerSweep, bool queu
             Assert(!this->HasPendingDisposeObjects());
 
 #ifdef RECYCLER_TRACE
-            recycler->PrintBlockStatus(this->heapBucket, this, _u("[**26**] ending sweep Pass1, state returned SweepStateEmpty."));
+            recycler->PrintBlockStatus(this->heapBucket, this, u"[**26**] ending sweep Pass1, state returned SweepStateEmpty.");
 #endif
             return SweepStateEmpty;
     }
@@ -1364,7 +1364,7 @@ SmallHeapBlockT<TBlockAttributes>::Sweep(RecyclerSweep& recyclerSweep, bool queu
         {
             SweepState stateReturned = (this->freeCount == 0) ? SweepStateFull : state;
             CollectionState collectionState = recycler->collectionState;
-            Output::Print(_u("[GC #%d] [HeapBucket 0x%p] HeapBlock 0x%p %s %d [CollectionState: %d] \n"), recycler->collectionCount, this->heapBucket, this, _u("[**37**] heapBlock swept. State returned:"), stateReturned, collectionState);
+            Output::Print(u"[GC #%d] [HeapBucket 0x%p] HeapBlock 0x%p %s %d [CollectionState: %d] \n", recycler->collectionCount, this->heapBucket, this, u"[**37**] heapBlock swept. State returned:", stateReturned, collectionState);
         }
 #endif
         return (this->freeCount == 0) ? SweepStateFull : state;
@@ -1395,7 +1395,7 @@ SmallHeapBlockT<TBlockAttributes>::Sweep(RecyclerSweep& recyclerSweep, bool queu
 #ifdef RECYCLER_TRACE
         if (recycler->GetRecyclerFlagsTable().Trace.IsEnabled(Js::ConcurrentSweepPhase))
         {
-            recycler->PrintBlockStatus(this->heapBucket, this, _u("[**29**] heapBlock swept. State returned: SweepStatePendingSweep"));
+            recycler->PrintBlockStatus(this->heapBucket, this, u"[**29**] heapBlock swept. State returned: SweepStatePendingSweep");
     }
 #endif
         return SweepStatePendingSweep;
@@ -1405,7 +1405,7 @@ SmallHeapBlockT<TBlockAttributes>::Sweep(RecyclerSweep& recyclerSweep, bool queu
 #endif
 
 #ifdef RECYCLER_TRACE
-    recycler->PrintBlockStatus(this->heapBucket, this, _u("[**16**] calling SweepObjects."));
+    recycler->PrintBlockStatus(this->heapBucket, this, u"[**16**] calling SweepObjects.");
 #endif
     SweepObjects<SweepMode_InThread>(recycler);
     if (HasPendingDisposeObjects())
@@ -1430,7 +1430,7 @@ SmallHeapBlockT<TBlockAttributes>::Sweep(RecyclerSweep& recyclerSweep, bool queu
         {
             SweepState stateReturned = (this->freeCount == 0) ? SweepStateFull : state;
             CollectionState collectionState = recycler->collectionState;
-            Output::Print(_u("[GC #%d] [HeapBucket 0x%p] HeapBlock 0x%p %s %d [CollectionState: %d] \n"), recycler->collectionCount, this->heapBucket, this, _u("[**38**] heapBlock swept. State returned:"), stateReturned, collectionState);
+            Output::Print(u"[GC #%d] [HeapBucket 0x%p] HeapBlock 0x%p %s %d [CollectionState: %d] \n", recycler->collectionCount, this->heapBucket, this, u"[**38**] heapBlock swept. State returned:", stateReturned, collectionState);
         }
 #endif
         // We always need to check the free count as we may have allocated from this block during concurrent sweep.
@@ -1614,7 +1614,7 @@ SmallHeapBlockT<TBlockAttributes>::SweepObjects(Recycler * recycler)
 #endif
 
 #ifdef RECYCLER_TRACE
-    recycler->PrintBlockStatus(this->heapBucket, this, _u("[**30**] finished SweepObjects, heapblock SWEPT."));
+    recycler->PrintBlockStatus(this->heapBucket, this, u"[**30**] finished SweepObjects, heapblock SWEPT.");
 #endif
 }
 
@@ -2058,7 +2058,7 @@ void SmallHeapBlockT<TBlockAttributes>::VerifyBumpAllocated(_In_ char * bumpAllo
                 }
                 else
                 {
-                    Recycler::VerifyCheck(false, _u("Non-Finalizable block should not have finalizable objects"),
+                    Recycler::VerifyCheck(false, u"Non-Finalizable block should not have finalizable objects",
                         this->GetAddress(), &this->ObjectInfo(i));
                 }
             }
@@ -2078,7 +2078,7 @@ void SmallHeapBlockT<TBlockAttributes>::Verify(bool pendingDispose)
     char * memBlock = this->GetAddress();
     uint objectBitDelta = this->GetObjectBitDelta();
     Recycler::VerifyCheck(!pendingDispose || this->IsAnyFinalizableBlock(),
-        _u("Non-finalizable block shouldn't be disposing. May have corrupted block type."),
+        u"Non-finalizable block shouldn't be disposing. May have corrupted block type.",
         this->GetAddress(), (void *)&this->heapBlockType);
 
     if (HasPendingDisposeObjects())
@@ -2111,7 +2111,7 @@ void SmallHeapBlockT<TBlockAttributes>::Verify(bool pendingDispose)
                 Recycler::VerifyCheck(nextFree == nullptr
                     || (nextFree >= address && nextFree < this->GetEndAddress()
                     && free->Test(GetAddressBitIndex(nextFree))),
-                    _u("SmallHeapBlock memory written to after freed"), memBlock, memBlock);
+                    u"SmallHeapBlock memory written to after freed", memBlock, memBlock);
                 Recycler::VerifyCheckFill(memBlock + sizeof(FreeObject), this->GetObjectSize() - sizeof(FreeObject));
             }
         }
@@ -2132,7 +2132,7 @@ void SmallHeapBlockT<TBlockAttributes>::Verify(bool pendingDispose)
                     || (nextFree >= address && nextFree < this->GetEndAddress()
                     && explicitFreeBits.Test(GetAddressBitIndex(nextFree)))
                     || nextFreeHeapBlock->GetObjectSize(nextFree) == this->objectSize,
-                    _u("SmallHeapBlock memory written to after freed"), memBlock, memBlock);
+                    u"SmallHeapBlock memory written to after freed", memBlock, memBlock);
                 recycler->VerifyCheckPadExplicitFreeList(memBlock, this->GetObjectSize());
             }
             else
@@ -2148,7 +2148,7 @@ void SmallHeapBlockT<TBlockAttributes>::Verify(bool pendingDispose)
                 }
                 else
                 {
-                    Recycler::VerifyCheck(false, _u("Non-Finalizable block should not have finalizable objects"),
+                    Recycler::VerifyCheck(false, u"Non-Finalizable block should not have finalizable objects",
                         this->GetAddress(), &this->ObjectInfo(i));
                 }
             }
@@ -2160,7 +2160,7 @@ void SmallHeapBlockT<TBlockAttributes>::Verify(bool pendingDispose)
     if (this->IsAnyFinalizableBlock())
     {
         Recycler::VerifyCheck(this->AsFinalizableBlock<TBlockAttributes>()->finalizeCount == verifyFinalizeCount,
-            _u("SmallHeapBlock finalize count mismatch"), this->GetAddress(), &this->AsFinalizableBlock<TBlockAttributes>()->finalizeCount);
+            u"SmallHeapBlock finalize count mismatch", this->GetAddress(), &this->AsFinalizableBlock<TBlockAttributes>()->finalizeCount);
     }
     else
     {

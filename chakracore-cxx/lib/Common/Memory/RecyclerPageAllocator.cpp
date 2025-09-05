@@ -92,7 +92,7 @@ RecyclerPageAllocator::ResetWriteWatch(DListBase<PageSegment> * segmentList)
 
             {
 #if DBG_DUMP
-                Output::Print(_u("ResetWriteWatch failed for %p\n"), address);
+                Output::Print(u"ResetWriteWatch failed for %p\n", address);
                 Output::Flush();
 #endif
                 // shouldn't happen
@@ -115,7 +115,7 @@ RecyclerPageAllocator::ResetAllWriteWatch(DListBase<T> * segmentList)
         if (::ResetWriteWatch(segment.GetAddress(),  segment.GetPageCount() * AutoSystemInfo::PageSize ) != 0)
         {
 #if DBG_DUMP
-            Output::Print(_u("ResetWriteWatch failed for %p\n"), segment.GetAddress());
+            Output::Print(u"ResetWriteWatch failed for %p\n", segment.GetAddress());
             Output::Flush();
 #endif
             // shouldn't happen
@@ -175,7 +175,7 @@ RecyclerPageAllocator::GetWriteWatchPageCount(DListBase<PageSegment> * segmentLi
             if (::GetWriteWatch(0, address, AutoSystemInfo::PageSize, &written, &count, &pageSize) == 0)
             {
 #if DBG_DUMP
-                Output::Print(_u("GetWriteWatch failed for %p\n"), segment.GetAddress());
+                Output::Print(u"GetWriteWatch failed for %p\n", segment.GetAddress());
                 Output::Flush();
 #endif
                 // shouldn't happen
@@ -211,7 +211,7 @@ RecyclerPageAllocator::GetAllWriteWatchPageCount(DListBase<T> * segmentList)
             if (::GetWriteWatch(0, address, AutoSystemInfo::PageSize, &written, &count, &pageSize) == 0)
             {
 #if DBG_DUMP
-                Output::Print(_u("GetWriteWatch failed for %p\n"), segment.GetAddress());
+                Output::Print(u"GetWriteWatch failed for %p\n", segment.GetAddress());
                 Output::Flush();
 #endif
                 // shouldn't happen

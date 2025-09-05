@@ -25,14 +25,14 @@ char16_t* DumpCallStack(uint frameCount = -1);
 
 #if ENABLE_DEBUG_CONFIG_OPTIONS
 #define OUTPUT_PRINT(FunctionBody) \
-    Output::Print(_u("Function %s (#%d.%u, #%u) "), (FunctionBody)->GetDisplayName(), \
+    Output::Print(u"Function %s (#%d.%u, #%u) ", (FunctionBody)->GetDisplayName(), \
             (int)(FunctionBody)->GetSourceContextId(), (FunctionBody)->GetLocalFunctionId(), (FunctionBody)->GetFunctionNumber());
 
 #define OUTPUT_TRACE2(Phase, FunctionBody, ...) \
    if(Js::Configuration::Global.flags.Trace.IsEnabled((Phase))) \
    { \
         char16_t prefixValue[512]; \
-        swprintf_s(prefixValue, _u("Function %s (#%d.%u, #%u)"), (FunctionBody)->GetDisplayName(), \
+        swprintf_s(prefixValue, u"Function %s (#%d.%u, #%u)", (FunctionBody)->GetDisplayName(), \
             (int)(FunctionBody)->GetSourceContextId(), (FunctionBody)->GetLocalFunctionId(), (FunctionBody)->GetFunctionNumber()); \
         Output::TraceWithPrefix((Phase), prefixValue, __VA_ARGS__); \
    }
@@ -40,7 +40,7 @@ char16_t* DumpCallStack(uint frameCount = -1);
    if(PHASE_TRACE((Phase), (Func))) \
       { \
         char16_t prefixValue[512]; \
-        swprintf_s(prefixValue, _u("%s (#%d.%u, #%u)"), (Func)->GetJITFunctionBody()->GetDisplayName(), \
+        swprintf_s(prefixValue, u"%s (#%d.%u, #%u)", (Func)->GetJITFunctionBody()->GetDisplayName(), \
            (int)(Func)->GetJITFunctionBody()->GetSourceContextId(), (Func)->GetWorkItem()->GetJITTimeInfo()->GetLocalFunctionId(), (Func)->GetJITFunctionBody()->GetFunctionNumber()); \
         Output::TraceWithPrefix((Phase), prefixValue, __VA_ARGS__); \
       }

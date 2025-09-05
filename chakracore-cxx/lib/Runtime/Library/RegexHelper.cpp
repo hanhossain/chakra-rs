@@ -131,30 +131,30 @@ namespace Js
         CharCount i = 0;
         if (flags & UnifiedRegex::IgnoreCaseRegexFlag)
         {
-            opts[i++] = _u('i');
+            opts[i++] = u'i';
         }
         if (flags & UnifiedRegex::GlobalRegexFlag)
         {
-            opts[i++] = _u('g');
+            opts[i++] = u'g';
         }
         if (flags & UnifiedRegex::MultilineRegexFlag)
         {
-            opts[i++] = _u('m');
+            opts[i++] = u'm';
         }
         if (flags & UnifiedRegex::DotAllRegexFlag)
         {
             Assert(scriptContext->GetConfig()->IsES2018RegExDotAllEnabled());
-            opts[i++] = _u('s');
+            opts[i++] = u's';
         }
         if (flags & UnifiedRegex::UnicodeRegexFlag)
         {
             Assert(scriptContext->GetConfig()->IsES6UnicodeExtensionsEnabled());
-            opts[i++] = _u('u');
+            opts[i++] = u'u';
         }
         if (flags & UnifiedRegex::StickyRegexFlag)
         {
             Assert(scriptContext->GetConfig()->IsES6RegExStickyEnabled());
-            opts[i++] = _u('y');
+            opts[i++] = u'y';
         }
         Assert(i < OPT_BUF_SIZE);
         opts[i] = NULL;
@@ -205,7 +205,7 @@ namespace Js
         if (REGEX_CONFIG_FLAG(RegexProfile))
             scriptContext->GetRegexStatsDatabase()->BeginProfile();
 #endif
-        BEGIN_TEMP_ALLOCATOR(ctAllocator, scriptContext, _u("UnifiedRegexParseAndCompile"));
+        BEGIN_TEMP_ALLOCATOR(ctAllocator, scriptContext, u"UnifiedRegexParseAndCompile");
         UnifiedRegex::StandardChars<char16_t>* standardChars = scriptContext->GetThreadContext()->GetStandardChars((char16_t*)0);
         UnifiedRegex::Node* root = 0;
         UnifiedRegex::Parser<NullTerminatedUnicodeEncodingPolicy, false> parser
@@ -247,7 +247,7 @@ namespace Js
         if (REGEX_CONFIG_FLAG(RegexTracing))
         {
             UnifiedRegex::DebugWriter* tw = scriptContext->GetRegexDebugWriter();
-            tw->Print(_u("// REGEX COMPILE "));
+            tw->Print(u"// REGEX COMPILE ");
             pattern->Print(tw);
             tw->EOL();
         }
@@ -312,9 +312,9 @@ namespace Js
         if (REGEX_CONFIG_FLAG(RegexTracing))
         {
             UnifiedRegex::DebugWriter* w = scriptContext->GetRegexDebugWriter();
-            w->Print(_u("%s("), UnifiedRegex::RegexStats::UseNames[use]);
+            w->Print(u"%s(", UnifiedRegex::RegexStats::UseNames[use]);
             regExp->GetPattern()->Print(w);
-            w->Print(_u(", "));
+            w->Print(u", ");
             if (!CONFIG_FLAG(Verbose) && inputLength > 1024)
                 w->Print(_u("\"<string too large>\""));
             else
@@ -322,13 +322,13 @@ namespace Js
             if (replace != 0)
             {
                 Assert(use == UnifiedRegex::RegexStats::Replace);
-                w->Print(_u(", "));
+                w->Print(u", ");
                 if (!CONFIG_FLAG(Verbose) && replaceLength > 1024)
                     w->Print(_u("\"<string too large>\""));
                 else
                     w->PrintQuotedString(replace, replaceLength);
             }
-            w->PrintEOL(_u(");"));
+            w->PrintEOL(u");");
             w->Flush();
         }
     }
@@ -379,8 +379,8 @@ namespace Js
         else
         {
             PCWSTR varName = scriptConfig->IsES6RegExSymbolsEnabled()
-                ? _u("RegExp.prototype[Symbol.match]")
-                : _u("String.prototype.match");
+                ? u"RegExp.prototype[Symbol.match]"
+                : u"String.prototype.match";
             JavascriptRegExp* regularExpression = JavascriptRegExp::ToRegExp(thisObj, varName, scriptContext);
             return RegexEs5MatchImpl<updateHistory>(scriptContext, regularExpression, input, noResult, stackAllocationPointer);
         }
@@ -397,7 +397,7 @@ namespace Js
 
     Var RegexHelper::RegexEs6MatchImpl(ScriptContext* scriptContext, RecyclableObject *thisObj, JavascriptString *input, bool noResult, void *const stackAllocationPointer)
     {
-        PCWSTR const varName = _u("RegExp.prototype[Symbol.match]");
+        PCWSTR const varName = u"RegExp.prototype[Symbol.match]";
 
         if (!JavascriptRegExp::GetGlobalProperty(thisObj, scriptContext))
         {
@@ -655,7 +655,7 @@ namespace Js
         else
         {
             JavascriptRegExp* regularExpression =
-                JavascriptRegExp::ToRegExp(thisObj, _u("RegExp.prototype.test"), scriptContext);
+                JavascriptRegExp::ToRegExp(thisObj, u"RegExp.prototype.test", scriptContext);
             return RegexEs5TestImpl(scriptContext, regularExpression, input);
         }
     }
@@ -669,7 +669,7 @@ namespace Js
 
     Var RegexHelper::RegexEs6TestImpl(ScriptContext* scriptContext, RecyclableObject* thisObj, JavascriptString *input)
     {
-        Var match = JavascriptRegExp::CallExec(thisObj, input, _u("RegExp.prototype.test"), scriptContext);
+        Var match = JavascriptRegExp::CallExec(thisObj, input, u"RegExp.prototype.test", scriptContext);
         return JavascriptBoolean::ToVar(!JavascriptOperators::IsNull(match), scriptContext);
     }
 
@@ -784,11 +784,11 @@ namespace Js
             CharCount substitutionOffset = substitutionOffsets[i];
             concatenated.Append(replace, offset, substitutionOffset - offset);
             char16_t currentChar = replaceStr[substitutionOffset + 1];
-            if (currentChar >= _u('0') && currentChar <= _u('9'))
+            if (currentChar >= u'0' && currentChar <= u'9')
             {
                 // We've found a substitution ref, like $32.  In accordance with the standard (sec-getsubstitution),
                 // we recognize at most two decimal digits after the dollar sign.
-                uint16 captureIndex = (uint16)(currentChar - _u('0'));
+                uint16 captureIndex = (uint16)(currentChar - u'0');
                 Assert(captureIndex < 10); // numeric value of single decimal digit
 
                 offset = substitutionOffset + 2;
@@ -796,9 +796,9 @@ namespace Js
                 if (offset < replaceLength)
                 {
                     currentChar = replaceStr[substitutionOffset + 2];
-                    if (currentChar >= _u('0') && currentChar <= _u('9'))
+                    if (currentChar >= u'0' && currentChar <= u'9')
                     {
-                        uint16 tempCaptureIndex = (10 * captureIndex) + (uint16)(currentChar - _u('0'));
+                        uint16 tempCaptureIndex = (10 * captureIndex) + (uint16)(currentChar - u'0');
                         Assert(tempCaptureIndex < 100); // numeric value of 2-digit positive decimal number
                         if (tempCaptureIndex < numGroups)
                         {
@@ -824,15 +824,15 @@ namespace Js
             {
                 switch (currentChar)
                 {
-                case _u('$'): // literal '$' character
-                    concatenated.Append(_u('$'));
+                case u'$': // literal '$' character
+                    concatenated.Append(u'$');
                     offset = substitutionOffset + 2;
                     break;
-                case _u('&'): // matched string
+                case u'&': // matched string
                     concatenated.Append(matchedString, match.length);
                     offset = substitutionOffset + 2;
                     break;
-                case _u('`'): // left context
+                case u'`': // left context
                     concatenated.Append(input, 0, match.offset);
                     offset = substitutionOffset + 2;
                     break;
@@ -844,7 +844,7 @@ namespace Js
                     offset = substitutionOffset + 2;
                     break;
                 default:
-                    concatenated.Append(_u('$'));
+                    concatenated.Append(u'$');
                     offset = substitutionOffset + 1;
                     break;
                 }
@@ -860,7 +860,7 @@ namespace Js
 
         for (CharCount i = 0; i < replaceLength; i++)
         {
-            if (replaceStr[i] == _u('$'))
+            if (replaceStr[i] == u'$')
             {
                 if (++i < replaceLength)
                 {
@@ -875,7 +875,7 @@ namespace Js
             substitutions = 0;
             for (CharCount i = 0; i < replaceLength; i++)
             {
-                if (replaceStr[i] == _u('$'))
+                if (replaceStr[i] == u'$')
                 {
                     if (i < (replaceLength - 1))
                     {
@@ -903,8 +903,8 @@ namespace Js
         else
         {
             PCWSTR varName = scriptConfig->IsES6RegExSymbolsEnabled()
-                ? _u("RegExp.prototype[Symbol.replace]")
-                : _u("String.prototype.replace");
+                ? u"RegExp.prototype[Symbol.replace]"
+                : u"String.prototype.replace";
             JavascriptRegExp* regularExpression = JavascriptRegExp::ToRegExp(thisObj, varName, scriptContext);
             return RegexEs5ReplaceImpl(scriptContext, regularExpression, input, replace, noResult);
         }
@@ -1023,7 +1023,7 @@ namespace Js
 
         while (true)
         {
-            PCWSTR varName = _u("RegExp.prototype[Symbol.replace]");
+            PCWSTR varName = u"RegExp.prototype[Symbol.replace]";
             Var result = JavascriptRegExp::CallExec(thisObj, input, varName, scriptContext);
             if (JavascriptOperators::IsNull(result))
             {
@@ -1050,7 +1050,7 @@ namespace Js
         size_t previousNumberOfCapturesToKeep = 0;
         Field(Var)* captures = nullptr;
 
-        BEGIN_TEMP_ALLOCATOR(tempAlloc, scriptContext, _u("RegexHelper"))
+        BEGIN_TEMP_ALLOCATOR(tempAlloc, scriptContext, u"RegexHelper")
         {
             results->Map([&](int resultIndex, RecyclableObject* resultObj) {
                 long length = JavascriptConversion::ToLength(
@@ -1260,8 +1260,8 @@ namespace Js
         else
         {
             PCWSTR varName = scriptConfig->IsES6RegExSymbolsEnabled()
-                ? _u("RegExp.prototype[Symbol.replace]")
-                : _u("String.prototype.replace");
+                ? u"RegExp.prototype[Symbol.replace]"
+                : u"String.prototype.replace";
             JavascriptRegExp* regularExpression = JavascriptRegExp::ToRegExp(thisObj, varName, scriptContext);
             return RegexEs5ReplaceImpl(scriptContext, regularExpression, input, replacefn);
         }
@@ -1283,7 +1283,7 @@ namespace Js
         AssertOrFailFast(0 < numGroups && numGroups <= INT16_MAX);
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
-        RegexHelperTrace(scriptContext, UnifiedRegex::RegexStats::Replace, regularExpression, input, scriptContext->GetLibrary()->CreateStringFromCppLiteral(_u("<replace function>")));
+        RegexHelperTrace(scriptContext, UnifiedRegex::RegexStats::Replace, regularExpression, input, scriptContext->GetLibrary()->CreateStringFromCppLiteral(u"<replace function>"));
 #endif
 
         RegexMatchState state;
@@ -1408,7 +1408,7 @@ namespace Js
         if(!definitelyNoEscapes && replace->GetLength() <= 8)
         {
             CharCount i = 0;
-            for(; i < replace->GetLength() && replaceStr[i] != _u('$'); ++i);
+            for(; i < replace->GetLength() && replaceStr[i] != u'$'; ++i);
             definitelyNoEscapes = i >= replace->GetLength();
         }
 
@@ -1436,24 +1436,24 @@ namespace Js
         CharCount i = 0, j = 0;
         for(; j < replace->GetLength(); ++j)
         {
-            if(replaceStr[j] == _u('$') && j + 1 < replace->GetLength())
+            if(replaceStr[j] == u'$' && j + 1 < replace->GetLength())
             {
                 switch(replaceStr[j + 1])
                 {
-                    case _u('$'): // literal '$'
+                    case u'$': // literal '$'
                         ++j;
                         concatenated.Append(replace, i, j - i);
                         i = j + 1;
                         break;
 
-                    case _u('&'): // matched substring
+                    case u'&': // matched substring
                         concatenated.Append(replace, i, j - i);
                         concatenated.Append(match);
                         ++j;
                         i = j + 1;
                         break;
 
-                    case _u('`'): // portion of input string that precedes the matched substring
+                    case u'`': // portion of input string that precedes the matched substring
                         concatenated.Append(replace, i, j - i);
                         concatenated.Append(input, 0, matchedIndex);
                         ++j;
@@ -1589,8 +1589,8 @@ namespace Js
         else
         {
             PCWSTR varName = scriptContext->GetConfig()->IsES6RegExSymbolsEnabled()
-                ? _u("RegExp.prototype[Symbol.split]")
-                : _u("String.prototype.split");
+                ? u"RegExp.prototype[Symbol.split]"
+                : u"String.prototype.split";
             JavascriptRegExp* regularExpression = JavascriptRegExp::ToRegExp(thisObj, varName, scriptContext);
             return RegexEs5SplitImpl(scriptContext, regularExpression, input, limit, noResult, stackAllocationPointer);
         }
@@ -1607,7 +1607,7 @@ namespace Js
 
     Var RegexHelper::RegexEs6SplitImpl(ScriptContext* scriptContext, RecyclableObject* thisObj, JavascriptString* input, CharCount limit, bool noResult, void *const stackAllocationPointer)
     {
-        PCWSTR const varName = _u("RegExp.prototype[Symbol.split]");
+        PCWSTR const varName = u"RegExp.prototype[Symbol.split]";
 
         JavascriptFunction* defaultConstructor = scriptContext->GetLibrary()->GetRegExpConstructor();
         RecyclableObject* speciesConstructor = JavascriptOperators::SpeciesConstructor(
@@ -1619,7 +1619,7 @@ namespace Js
         JavascriptString* flags = JavascriptConversion::ToString(
             JavascriptOperators::GetProperty(thisObj, PropertyIds::flags, scriptContext),
             scriptContext);
-        bool unicode = wcsstr(flags->GetString(), _u("u")) != nullptr;
+        bool unicode = wcsstr(flags->GetString(), u"u") != nullptr;
         flags = AppendStickyToFlagsIfNeeded(flags, scriptContext);
 
         bool isDefaultConstructor = speciesConstructor == defaultConstructor;
@@ -1713,13 +1713,13 @@ namespace Js
     JavascriptString* RegexHelper::AppendStickyToFlagsIfNeeded(JavascriptString* flags, ScriptContext* scriptContext)
     {
         const char16_t* flagsString = flags->GetString();
-        if (wcsstr(flagsString, _u("y")) == nullptr)
+        if (wcsstr(flagsString, u"y") == nullptr)
         {
-            BEGIN_TEMP_ALLOCATOR(tempAlloc, scriptContext, _u("RegexHelper"))
+            BEGIN_TEMP_ALLOCATOR(tempAlloc, scriptContext, u"RegexHelper")
             {
                 StringBuilder<ArenaAllocator> bs(tempAlloc, flags->GetLength() + 1);
                 bs.Append(flagsString, flags->GetLength());
-                bs.Append(_u('y'));
+                bs.Append(u'y');
                 flags = Js::JavascriptString::NewCopyBuffer(bs.Detach(), bs.Count(), scriptContext);
             }
             END_TEMP_ALLOCATOR(tempAlloc, scriptContext);
@@ -1914,7 +1914,7 @@ namespace Js
         if (pattern->rep.unified.matcher == 0)
             pattern->rep.unified.matcher = UnifiedRegex::Matcher::New(scriptContext, pattern);
         if (alwaysNeedAlloc)
-            state.tempAllocatorObj = scriptContext->GetTemporaryAllocator(_u("RegexUnifiedExecTemp"));
+            state.tempAllocatorObj = scriptContext->GetTemporaryAllocator(u"RegexUnifiedExecTemp");
         else
             state.tempAllocatorObj = 0;
     }

@@ -17,16 +17,16 @@ ScriptMemoryDumper::ScriptMemoryDumper(Js::ScriptContext* scriptContext)
 
 void ScriptMemoryDumper::Init()
 {
-    pageCountId = scriptContext->GetOrAddPropertyIdTracked(_u("pageCount"));
-    objectSizeId = scriptContext->GetOrAddPropertyIdTracked(_u("objectSize"));
-    freeObjectCountId = scriptContext->GetOrAddPropertyIdTracked(_u("freeObjectCount"));
-    activeObjectCountId = scriptContext->GetOrAddPropertyIdTracked(_u("activeObjectCount"));
-    totalByteCountId = scriptContext->GetOrAddPropertyIdTracked(_u("totalByteCount"));
-    finalizeCountId = scriptContext->GetOrAddPropertyIdTracked(_u("finalizeCount"));
-    weakReferenceCountId = scriptContext->GetOrAddPropertyIdTracked(_u("weakReferenceCount"));
-    largeObjectsId = scriptContext->GetOrAddPropertyIdTracked(_u("largeObjects"));
-    activeObjectByteSizeId = scriptContext->GetOrAddPropertyIdTracked(_u("activeObjectByteSize"));
-    summaryId = scriptContext->GetOrAddPropertyIdTracked(_u("summary"));
+    pageCountId = scriptContext->GetOrAddPropertyIdTracked(u"pageCount");
+    objectSizeId = scriptContext->GetOrAddPropertyIdTracked(u"objectSize");
+    freeObjectCountId = scriptContext->GetOrAddPropertyIdTracked(u"freeObjectCount");
+    activeObjectCountId = scriptContext->GetOrAddPropertyIdTracked(u"activeObjectCount");
+    totalByteCountId = scriptContext->GetOrAddPropertyIdTracked(u"totalByteCount");
+    finalizeCountId = scriptContext->GetOrAddPropertyIdTracked(u"finalizeCount");
+    weakReferenceCountId = scriptContext->GetOrAddPropertyIdTracked(u"weakReferenceCount");
+    largeObjectsId = scriptContext->GetOrAddPropertyIdTracked(u"largeObjects");
+    activeObjectByteSizeId = scriptContext->GetOrAddPropertyIdTracked(u"activeObjectByteSize");
+    summaryId = scriptContext->GetOrAddPropertyIdTracked(u"summary");
     dumpObject = scriptContext->GetLibrary()->CreateObject();
 }
 

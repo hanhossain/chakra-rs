@@ -313,7 +313,7 @@ namespace TTD
             js_memcpy_s(namebuff, namebuffLength * sizeof(char16_t), pRecord->GetBuffer(), pRecord->GetLength() * sizeof(char16_t));
 
             // Don't allow the null to be written past the end of the buffer.
-            namebuff[min(namebuffLength - 1, pRecord->GetLength())] = _u('\0');
+            namebuff[min(namebuffLength - 1, pRecord->GetLength())] = u'\0';
         }
 
         bool isFirst = (this->m_prefix == nullptr);
@@ -322,34 +322,34 @@ namespace TTD
         case StepKind::Empty:
             break;
         case StepKind::Root:
-            Output::Print(_u("root#%I64i"), this->m_step.IndexOrPID);
+            Output::Print(u"root#%I64i", this->m_step.IndexOrPID);
             break;
         case StepKind::PropertyData:
-            Output::Print(_u("%ls%ls"), (isFirst ? _u("") : _u(".")), namebuff);
+            Output::Print(u"%ls%ls", (isFirst ? u"" : u"."), namebuff);
             break;
         case StepKind::PropertyGetter:
-            Output::Print(_u("%ls<%ls"), (isFirst ? _u("") : _u(".")), namebuff);
+            Output::Print(u"%ls<%ls", (isFirst ? u"" : u"."), namebuff);
             break;
         case StepKind::PropertySetter:
-            Output::Print(_u("%ls>%ls"), (isFirst ? _u("") : _u(".")), namebuff);
+            Output::Print(u"%ls>%ls", (isFirst ? u"" : u"."), namebuff);
             break;
         case StepKind::Array:
-            Output::Print(_u("[%I64i]"), this->m_step.IndexOrPID);
+            Output::Print(u"[%I64i]", this->m_step.IndexOrPID);
             break;
         case StepKind::Scope:
-            Output::Print(_u("%ls_scope[%I64i]"), (isFirst ? _u("") : _u(".")), this->m_step.IndexOrPID);
+            Output::Print(u"%ls_scope[%I64i]", (isFirst ? u"" : u"."), this->m_step.IndexOrPID);
             break;
         case StepKind::SlotArray:
-            Output::Print(_u("%ls_slots[%I64i]"), (isFirst ? _u("") : _u(".")), this->m_step.IndexOrPID);
+            Output::Print(u"%ls_slots[%I64i]", (isFirst ? u"" : u"."), this->m_step.IndexOrPID);
             break;
         case StepKind::FunctionBody:
-            Output::Print(_u("%ls%ls"), (isFirst ? _u("") : _u(".")), this->m_step.OptName);
+            Output::Print(u"%ls%ls", (isFirst ? u"" : u"."), this->m_step.OptName);
             break;
         case StepKind::Special:
-            Output::Print(_u("%ls_%ls"), (isFirst ? _u("") : _u(".")), this->m_step.OptName);
+            Output::Print(u"%ls_%ls", (isFirst ? u"" : u"."), this->m_step.OptName);
             break;
         case StepKind::SpecialArray:
-            Output::Print(_u("%ls_%ls[%I64i]"), (isFirst ? _u("") : _u(".")), this->m_step.OptName, this->m_step.IndexOrPID);
+            Output::Print(u"%ls_%ls[%I64i]", (isFirst ? u"" : u"."), this->m_step.OptName, this->m_step.IndexOrPID);
             break;
         default:
             TTDAssert(false, "Unknown tag in switch statement!!!");
@@ -358,7 +358,7 @@ namespace TTD
 
         if(printNewline)
         {
-            Output::Print(_u("\n"));
+            Output::Print(u"\n");
         }
     }
 
@@ -423,8 +423,8 @@ namespace TTD
         {
             if(this->CurrentPath != nullptr)
             {
-                Output::Print(_u("Snap1 ptrid: *0x%I64x\n"), this->CurrentH1Ptr);
-                Output::Print(_u("Snap2 ptrid: *0x%I64x\n"), this->CurrentH2Ptr);
+                Output::Print(u"Snap1 ptrid: *0x%I64x\n", this->CurrentH1Ptr);
+                Output::Print(u"Snap2 ptrid: *0x%I64x\n", this->CurrentH2Ptr);
                 this->CurrentPath->WritePathToConsole(this->Context, true, this->PathBuffer, PATH_BUFFER_COUNT);
             }
         }
@@ -469,7 +469,7 @@ namespace TTD
 
     void TTDCompareMap::CheckConsistentAndAddPtrIdMapping_FunctionBody(TTD_PTR_ID h1PtrId, TTD_PTR_ID h2PtrId)
     {
-        TTDComparePath::PathEntry next{ -1, _u("!body") };
+        TTDComparePath::PathEntry next{ -1, u"!body" };
         this->CheckConsistentAndAddPtrIdMapping_Helper(h1PtrId, h2PtrId, TTDComparePath::StepKind::FunctionBody, next);
     }
 

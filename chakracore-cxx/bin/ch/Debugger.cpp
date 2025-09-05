@@ -330,7 +330,7 @@ bool Debugger::SetBaseline()
 
     if (hr != S_OK)
     {
-        Helpers::LogError(_u("Failed to load & process debug baseline: %s"), HostConfigFlags::flags.dbgbaseline);
+        Helpers::LogError(u"Failed to load & process debug baseline: %s", HostConfigFlags::flags.dbgbaseline);
     }
 
     return hr == S_OK;
@@ -473,10 +473,10 @@ bool Debugger::CompareOrWriteBaselineFile(LPCSTR fileName)
         IfJsrtErrorFailLogAndRetFalse(baselineData.Initialize(result));
 
         char16_t baselineFilename[256];
-        swprintf_s(baselineFilename, HostConfigFlags::flags.dbgbaselineIsEnabled ? _u("%S.dbg.baseline.rebase") : _u("%S.dbg.baseline"), fileName);
+        swprintf_s(baselineFilename, HostConfigFlags::flags.dbgbaselineIsEnabled ? u"%S.dbg.baseline.rebase" : u"%S.dbg.baseline", fileName);
 
         FILE *file = nullptr;
-        if (_wfopen_s(&file, baselineFilename, _u("wt")) != 0)
+        if (_wfopen_s(&file, baselineFilename, u"wt") != 0)
         {
             return false;
         }
@@ -496,11 +496,11 @@ bool Debugger::CompareOrWriteBaselineFile(LPCSTR fileName)
 
         if (!HostConfigFlags::flags.dbgbaselineIsEnabled)
         {
-            wprintf(_u("No baseline file specified, baseline created at '%s'\n"), baselineFilename);
+            wprintf(u"No baseline file specified, baseline created at '%s'\n", baselineFilename);
         }
         else
         {
-            Helpers::LogError(_u("Rebase file created at '%s'\n"), baselineFilename);
+            Helpers::LogError(u"Rebase file created at '%s'\n", baselineFilename);
         }
     }
 

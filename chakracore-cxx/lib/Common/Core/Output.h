@@ -87,9 +87,9 @@ public:
         {
             va_list argptr;
             va_start(argptr, form);
-            retValue = Output::Print(_u("%s:"), Js::PhaseNames[static_cast<int>(phase)]);
+            retValue = Output::Print(u"%s:", Js::PhaseNames[static_cast<int>(phase)]);
             retValue += Output::VPrint(form, argptr);
-            retValue += Output::Print(_u("%s"), callback());
+            retValue += Output::Print(u"%s", callback());
             va_end(argptr);
         }
 

@@ -187,7 +187,7 @@ namespace Js
             bool shouldReparseFunctions;
         } autoRestoreIsReparsingSource(this, shouldReparseFunctions);
 
-        OUTPUT_TRACE(Js::DebuggerPhase, _u("DebugContext::RundownSourcesAndReparse scriptContext 0x%p, shouldPerformSourceRundown %d, shouldReparseFunctions %d\n"),
+        OUTPUT_TRACE(Js::DebuggerPhase, u"DebugContext::RundownSourcesAndReparse scriptContext 0x%p, shouldPerformSourceRundown %d, shouldReparseFunctions %d\n",
             this->scriptContext, shouldPerformSourceRundown, shouldReparseFunctions);
 
         Js::TempArenaAllocatorObject *tempAllocator = nullptr;
@@ -203,7 +203,7 @@ namespace Js
         ThreadContext* threadContext = this->scriptContext->GetThreadContext();
 
         BEGIN_TRANSLATE_OOM_TO_HRESULT_NESTED
-        tempAllocator = threadContext->GetTemporaryAllocator(_u("debuggerAlloc"));
+        tempAllocator = threadContext->GetTemporaryAllocator(u"debuggerAlloc");
 
         utf8SourceInfoList = JsUtil::List<Js::Utf8SourceInfo *, Recycler, false, Js::CopyRemovePolicy, RecyclerPointerComparer>::New(this->scriptContext->GetRecycler());
         yieldFunctions = Anew(tempAllocator->GetAllocator(), FunctionStartToYieldRegister, tempAllocator->GetAllocator());
@@ -229,7 +229,7 @@ namespace Js
                 return true;
             }
 
-            OUTPUT_TRACE(Js::DebuggerPhase, _u("DebugContext::RundownSourcesAndReparse scriptContext 0x%p, sourceInfo 0x%p, HasDebugDocument %d\n"),
+            OUTPUT_TRACE(Js::DebuggerPhase, u"DebugContext::RundownSourcesAndReparse scriptContext 0x%p, sourceInfo 0x%p, HasDebugDocument %d\n",
                 this->scriptContext, sourceInfo, sourceInfo->HasDebugDocument());
 
             if (sourceInfo->GetIsLibraryCode())
@@ -402,7 +402,7 @@ namespace Js
         if (callerUtf8SourceInfo)
         {
             Js::ScriptContext* callerScriptContext = callerUtf8SourceInfo->GetScriptContext();
-            OUTPUT_TRACE(Js::DebuggerPhase, _u("DebugContext::WalkAndAddUtf8SourceInfo scriptContext 0x%p, sourceInfo 0x%p, callerUtf8SourceInfo 0x%p, sourceInfo scriptContext 0x%p, callerUtf8SourceInfo scriptContext 0x%p\n"),
+            OUTPUT_TRACE(Js::DebuggerPhase, u"DebugContext::WalkAndAddUtf8SourceInfo scriptContext 0x%p, sourceInfo 0x%p, callerUtf8SourceInfo 0x%p, sourceInfo scriptContext 0x%p, callerUtf8SourceInfo scriptContext 0x%p\n",
                 this->scriptContext, sourceInfo, callerUtf8SourceInfo, sourceInfo->GetScriptContext(), callerScriptContext);
 
             if (sourceInfo->GetScriptContext() == callerScriptContext)
@@ -417,7 +417,7 @@ namespace Js
         }
         if (!utf8SourceInfoList->Contains(sourceInfo))
         {
-            OUTPUT_TRACE(Js::DebuggerPhase, _u("DebugContext::WalkAndAddUtf8SourceInfo Adding to utf8SourceInfoList scriptContext 0x%p, sourceInfo 0x%p, sourceInfo scriptContext 0x%p\n"),
+            OUTPUT_TRACE(Js::DebuggerPhase, u"DebugContext::WalkAndAddUtf8SourceInfo Adding to utf8SourceInfoList scriptContext 0x%p, sourceInfo 0x%p, sourceInfo scriptContext 0x%p\n",
                 this->scriptContext, sourceInfo, sourceInfo->GetScriptContext());
 #if DBG
             bool found = false;

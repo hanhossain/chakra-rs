@@ -103,15 +103,15 @@ namespace Js
         virtual bool Equals(ISourceHolder* other) override
         {
             return this == other ||
-                (this->GetByteLength(_u("Equal Comparison")) == other->GetByteLength(_u("Equal Comparison"))
-                    && (this->GetSource(_u("Equal Comparison")) == other->GetSource(_u("Equal Comparison"))
-                        || memcmp(this->GetSource(_u("Equal Comparison")), other->GetSource(_u("Equal Comparison")), this->GetByteLength(_u("Equal Comparison"))) == 0));
+                (this->GetByteLength(u"Equal Comparison") == other->GetByteLength(u"Equal Comparison")
+                    && (this->GetSource(u"Equal Comparison") == other->GetSource(u"Equal Comparison")
+                        || memcmp(this->GetSource(u"Equal Comparison"), other->GetSource(u"Equal Comparison"), this->GetByteLength(u"Equal Comparison")) == 0));
         }
 
         virtual hash_t GetHashCode() override
         {
-            LPCUTF8 source = GetSource(_u("Hash Code Calculation"));
-            size_t byteLength = GetByteLength(_u("Hash Code Calculation"));
+            LPCUTF8 source = GetSource(u"Hash Code Calculation");
+            size_t byteLength = GetByteLength(u"Hash Code Calculation");
             Assert(byteLength < MAXUINT32);
             return JsUtil::CharacterBuffer<utf8char_t>::StaticGetHashCode(source, (charcount_t)byteLength);
         }

@@ -484,7 +484,7 @@ namespace Js
 
         if(PHASE_TRACE_StringConcat)
         {
-            Output::Print(_u("CompoundString::SwitchToPointerMode() - directCharLength = %u\n"), directCharLength);
+            Output::Print(u"CompoundString::SwitchToPointerMode() - directCharLength = %u\n", directCharLength);
             Output::Flush();
         }
     }
@@ -982,7 +982,7 @@ namespace Js
 
         if(PHASE_TRACE_StringConcat)
         {
-            Output::Print(_u("CompoundString::AppendGeneric('%c', appendChars = %s)\n"), c, appendChars ? _u("true") : _u("false"));
+            Output::Print(u"CompoundString::AppendGeneric('%c', appendChars = %s)\n", c, appendChars ? u"true" : u"false");
             Output::Flush();
         }
 
@@ -1015,10 +1015,10 @@ namespace Js
         {
             Output::Print(
                 _u("CompoundString::AppendGeneric(JavascriptString *s = \"%.8s%s\", appendCharLength = %u, appendChars = %s)\n"),
-                s->IsFinalized() ? s->GetString() : _u(""),
-                !s->IsFinalized() || appendCharLength > 8 ? _u("...") : _u(""),
+                s->IsFinalized() ? s->GetString() : u"",
+                !s->IsFinalized() || appendCharLength > 8 ? u"..." : u"",
                 appendCharLength,
-                appendChars ? _u("true") : _u("false"));
+                appendChars ? u"true" : u"false");
             Output::Flush();
         }
 
@@ -1078,11 +1078,11 @@ namespace Js
             Output::Print(
                 _u("CompoundString::AppendGeneric(JavascriptString *s = \"%.*s%s\", startIndex = %u, appendCharLength = %u, appendChars = %s)\n"),
                 min(static_cast<CharCount>(8), appendCharLength),
-                s->IsFinalized() ? &s->GetString()[startIndex] : _u(""),
-                !s->IsFinalized() || appendCharLength > 8 ? _u("...") : _u(""),
+                s->IsFinalized() ? &s->GetString()[startIndex] : u"",
+                !s->IsFinalized() || appendCharLength > 8 ? u"..." : u"",
                 startIndex,
                 appendCharLength,
-                appendChars ? _u("true") : _u("false"));
+                appendChars ? u"true" : u"false");
             Output::Flush();
         }
 
@@ -1139,7 +1139,7 @@ namespace Js
     {
         CompileAssert(AppendCharLengthPlusOne != 0);
         Assert(s);
-        Assert(s[AppendCharLengthPlusOne - 1] == _u('\0'));
+        Assert(s[AppendCharLengthPlusOne - 1] == u'\0');
         Assert(toString);
         Assert(!toString->IsFinalized());
         Assert(toString->OwnsLastBlock());
@@ -1165,9 +1165,9 @@ namespace Js
             Output::Print(
                 _u("CompoundString::AppendGeneric(C++ literal \"%.8s%s\", appendCharLength = %u, appendChars = %s)\n"),
                 s,
-                appendCharLength > 8 ? _u("...") : _u(""),
+                appendCharLength > 8 ? u"..." : u"",
                 appendCharLength,
-                appendChars ? _u("true") : _u("false"));
+                appendChars ? u"true" : u"false");
             Output::Flush();
         }
 
@@ -1215,9 +1215,9 @@ namespace Js
             Output::Print(
                 _u("CompoundString::AppendGeneric(char16_t *s = \"%.8s%s\", appendCharLength = %u, appendChars = %s)\n"),
                 s,
-                appendCharLength > 8 ? _u("...") : _u(""),
+                appendCharLength > 8 ? u"..." : u"",
                 appendCharLength,
-                appendChars ? _u("true") : _u("false"));
+                appendChars ? u"true" : u"false");
             Output::Flush();
         }
 
@@ -1276,9 +1276,9 @@ namespace Js
         {
             Output::Print(
                 _u("CompoundString::AppendGeneric(TValue &, appendChars = %s) - converted = \"%.8s%s\", appendCharLength = %u\n"),
-                appendChars ? _u("true") : _u("false"),
+                appendChars ? u"true" : u"false",
                 convertBuffer,
-                appendCharLength > 8 ? _u("...") : _u(""),
+                appendCharLength > 8 ? u"..." : u"",
                 appendCharLength);
             Output::Flush();
         }

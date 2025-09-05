@@ -117,7 +117,7 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
     parallelMarkContext2(this, &this->parallelMarkPagePool2),
     parallelMarkContext3(this, &this->parallelMarkPagePool3),
 #if ENABLE_PARTIAL_GC
-    clientTrackedObjectAllocator(_u("CTO-List"), pageAllocator, Js::Throw::OutOfMemory),
+    clientTrackedObjectAllocator(u"CTO-List", pageAllocator, Js::Throw::OutOfMemory),
 #endif
     outOfMemoryFunc(outOfMemoryFunc),
 #ifdef RECYCLER_TEST_SUPPORT
@@ -236,7 +236,7 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
 #endif
     , objectBeforeCollectCallbackList(nullptr)
     , objectBeforeCollectCallbackState(ObjectBeforeCollectCallback_None)
-    , objectBeforeCollectCallbackArena(_u("BeforeCollect-List"), pageAllocator, Js::Throw::OutOfMemory)
+    , objectBeforeCollectCallbackArena(u"BeforeCollect-List", pageAllocator, Js::Throw::OutOfMemory)
 #if GLOBAL_ENABLE_WRITE_BARRIER
     , pendingWriteBarrierBlockMap(&HeapAllocator::Instance)
 #endif
@@ -448,17 +448,17 @@ Recycler::~Recycler()
     }
 #endif
 
-    AUTO_LEAK_REPORT_SECTION(this->GetRecyclerFlagsTable(), _u("Recycler (%p): %s"), this, this->IsInDllCanUnloadNow()? _u("DllCanUnloadNow") :
-        this->IsInDetachProcess()? _u("DetachProcess") : _u("Destructor"));
+    AUTO_LEAK_REPORT_SECTION(this->GetRecyclerFlagsTable(), u"Recycler (%p): %s", this, this->IsInDllCanUnloadNow()? u"DllCanUnloadNow" :
+        this->IsInDetachProcess()? u"DetachProcess" : u"Destructor");
 #ifdef LEAK_REPORT
     ReportLeaks();
 #endif
 
 #ifdef CHECK_MEMORY_LEAK
-    CheckLeaks(this->IsInDllCanUnloadNow()? _u("DllCanUnloadNow") : this->IsInDetachProcess()? _u("DetachProcess") : _u("Destructor"));
+    CheckLeaks(this->IsInDllCanUnloadNow()? u"DllCanUnloadNow" : this->IsInDetachProcess()? u"DetachProcess" : u"Destructor");
 #endif
 
-    AUTO_LEAK_REPORT_SECTION_0(this->GetRecyclerFlagsTable(), _u("Skipped finalizers"));
+    AUTO_LEAK_REPORT_SECTION_0(this->GetRecyclerFlagsTable(), u"Skipped finalizers");
 
 #if ENABLE_CONCURRENT_GC
     Assert(concurrentThread == nullptr);
@@ -1064,7 +1064,7 @@ Recycler::LeaveIdleDecommit()
 #if DBG
             if (GetRecyclerFlagsTable().Trace.IsEnabled(Js::IdleDecommitPhase))
             {
-                Output::Print(_u("Recycler Thread IdleDecommit Need Signal\n"));
+                Output::Print(u"Recycler Thread IdleDecommit Need Signal\n");
                 Output::Flush();
             }
 #endif
@@ -1537,12 +1537,12 @@ Recycler::ScanArena(ArenaData * alloc, bool background)
         || GetRecyclerFlagsTable().Trace.IsEnabled(Js::FindRootPhase))
     {
         this->forceTraceMark = true;
-        Output::Print(_u("Scanning Guest Arena %p: "), alloc);
+        Output::Print(u"Scanning Guest Arena %p: ", alloc);
     }
 #endif
 
     size_t scanRootBytes = 0;
-    BEGIN_DUMP_OBJECT_ADDRESS(_u("Guest Arena"), alloc);
+    BEGIN_DUMP_OBJECT_ADDRESS(u"Guest Arena", alloc);
 
 #if ENABLE_PARTIAL_GC || ENABLE_CONCURRENT_GC
 // The new write watch batching logic broke the write watch handling here.
@@ -1572,7 +1572,7 @@ Recycler::ScanArena(ArenaData * alloc, bool background)
         || GetRecyclerFlagsTable().Trace.IsEnabled(Js::FindRootPhase))
     {
         this->forceTraceMark = false;
-        Output::Print(_u("\n"));
+        Output::Print(u"\n");
         Output::Flush();
     }
 #endif
@@ -1622,7 +1622,7 @@ Recycler::ScanStack()
     if (this->skipStack)
     {
 #ifdef RECYCLER_TRACE
-        CUSTOM_PHASE_PRINT_VERBOSE_TRACE1(GetRecyclerFlagsTable(), Js::ScanStackPhase, _u("[%04X] Skipping the stack scan\n"), ::GetCurrentThreadId());
+        CUSTOM_PHASE_PRINT_VERBOSE_TRACE1(GetRecyclerFlagsTable(), Js::ScanStackPhase, u"[%04X] Skipping the stack scan\n", ::GetCurrentThreadId());
 #endif
 
 #if ENABLE_CONCURRENT_GC
@@ -1653,7 +1653,7 @@ Recycler::ScanStack()
         || GetRecyclerFlagsTable().Trace.IsEnabled(Js::ScanStackPhase))
     {
         this->forceTraceMark = true;
-        Output::Print(_u("Scanning Stack %p(%8d): "), stackTop, (char *)stackStart - (char *)stackTop);
+        Output::Print(u"Scanning Stack %p(%8d): ", stackTop, (char *)stackStart - (char *)stackTop);
     }
 #endif
 
@@ -1661,7 +1661,7 @@ Recycler::ScanStack()
 
     bool doSpecialMark = collectionWrapper->DoSpecialMarkOnScanStack();
 
-    BEGIN_DUMP_OBJECT(this, _u("Registers"));
+    BEGIN_DUMP_OBJECT(this, u"Registers");
     // We will not scan interior pointers on stack if we are not in script or we are in mem-protect mode.
     if (!this->HasNativeGCHost() && (!this->isInScript || this->IsMemProtectMode()))
     {
@@ -1696,7 +1696,7 @@ Recycler::ScanStack()
     }
     END_DUMP_OBJECT(this);
 
-    BEGIN_DUMP_OBJECT(this, _u("Stack"));
+    BEGIN_DUMP_OBJECT(this, u"Stack");
     // We will not scan interior pointers on stack if we are not in script or we are in mem-protect mode.
     if (!this->HasNativeGCHost() && (!this->isInScript || this->IsMemProtectMode()))
     {
@@ -1734,7 +1734,7 @@ Recycler::ScanStack()
         || GetRecyclerFlagsTable().Trace.IsEnabled(Js::ScanStackPhase))
     {
         this->forceTraceMark = false;
-        Output::Print(_u("\n"));
+        Output::Print(u"\n");
         Output::Flush();
     }
 #endif
@@ -1751,7 +1751,7 @@ template <bool background>
 size_t Recycler::ScanPinnedObjects()
 {
     size_t scanRootBytes = 0;
-    BEGIN_DUMP_OBJECT(this, _u("Pinned"));
+    BEGIN_DUMP_OBJECT(this, u"Pinned");
     {
         this->TryMarkNonInterior(transientPinnedObject, &transientPinnedObject /* parentReference */);
         if (this->scanPinnedObjectMap)
@@ -1826,10 +1826,10 @@ Recycler::FindRoots()
                 || GetRecyclerFlagsTable().Trace.IsEnabled(Js::FindRootPhase))
             {
                 this->forceTraceMark = true;
-                Output::Print(_u("Scanning External Roots: "));
+                Output::Print(u"Scanning External Roots: ");
             }
 #endif
-            BEGIN_DUMP_OBJECT(this, _u("External Roots"));
+            BEGIN_DUMP_OBJECT(this, u"External Roots");
 
             // PARTIALGC-TODO: How do we count external roots?
             externalRootMarker(externalRootMarkerContext);
@@ -1839,7 +1839,7 @@ Recycler::FindRoots()
                 || GetRecyclerFlagsTable().Trace.IsEnabled(Js::FindRootPhase))
             {
                 this->forceTraceMark = false;
-                Output::Print(_u("\n"));
+                Output::Print(u"\n");
                 Output::Flush();
             }
 #endif
@@ -1852,7 +1852,7 @@ Recycler::FindRoots()
         || GetRecyclerFlagsTable().Trace.IsEnabled(Js::FindRootPhase))
     {
         this->forceTraceMark = true;
-        Output::Print(_u("Scanning Pinned Objects: "));
+        Output::Print(u"Scanning Pinned Objects: ");
     }
 #endif
 
@@ -1863,7 +1863,7 @@ Recycler::FindRoots()
         || GetRecyclerFlagsTable().Trace.IsEnabled(Js::FindRootPhase))
     {
         this->forceTraceMark = false;
-        Output::Print(_u("\n"));
+        Output::Print(u"\n");
         Output::Flush();
     }
 #endif
@@ -2019,7 +2019,7 @@ Recycler::ResetMarks(ResetMarkFlags flags)
     Assert(!this->CollectionInProgress());
     this->SetCollectionState(CollectionStateResetMarks);
 
-    RecyclerVerboseTrace(GetRecyclerFlagsTable(), _u("Reset marks\n"));
+    RecyclerVerboseTrace(GetRecyclerFlagsTable(), u"Reset marks\n");
     GCETW(GC_RESETMARKS_START, (this));
     RECYCLER_PROFILE_EXEC_BEGIN(this, Js::ResetMarksPhase);
 
@@ -2049,7 +2049,7 @@ void Recycler::PrintMarkMap()
 {
     this->markMap->Map([](void* key, void* value)
     {
-        Output::Print(_u("0x%P => 0x%P\n"), key, value);
+        Output::Print(u"0x%P => 0x%P\n", key, value);
     });
 }
 #endif
@@ -2403,7 +2403,7 @@ Recycler::RescanMark(uint32_t waitTime)
             GCETW(GC_RESCANMARKWAIT_STOP, (this, !waited));
             if (!waited)
             {
-                CUSTOM_PHASE_PRINT_TRACE1(GetRecyclerFlagsTable(), Js::BackgroundFinishMarkPhase, _u("Finish mark timed out\n"));
+                CUSTOM_PHASE_PRINT_TRACE1(GetRecyclerFlagsTable(), Js::BackgroundFinishMarkPhase, u"Finish mark timed out\n");
 
                 {
                     // We timed out doing the finish mark, notify the runtime
@@ -2440,13 +2440,13 @@ Recycler::FinishMark(uint32_t waitTime)
     if (scannedRootBytes != Recycler::InvalidScanRootBytes)
     {
 #if DBG && ENABLE_PARTIAL_GC
-        RecyclerVerboseTrace(GetRecyclerFlagsTable(), _u("CTO: %d\n"), this->clientTrackedObjectList.Count());
+        RecyclerVerboseTrace(GetRecyclerFlagsTable(), u"CTO: %d\n", this->clientTrackedObjectList.Count());
 #endif
 
 #if ENABLE_PARTIAL_GC
         if (this->inPartialCollectMode)
         {
-            RecyclerVerboseTrace(GetRecyclerFlagsTable(), _u("Processing client tracked objects\n"));
+            RecyclerVerboseTrace(GetRecyclerFlagsTable(), u"Processing client tracked objects\n");
             ProcessClientTrackedObjects();
         }
         else
@@ -2454,7 +2454,7 @@ Recycler::FinishMark(uint32_t waitTime)
 #if ENABLE_CONCURRENT_GC
         if (DoQueueTrackedObject())
         {
-            RecyclerVerboseTrace(GetRecyclerFlagsTable(), _u("Processing regular tracked objects\n"));
+            RecyclerVerboseTrace(GetRecyclerFlagsTable(), u"Processing regular tracked objects\n");
 
             ProcessTrackedObjects();
 #ifdef RECYCLER_WRITE_WATCH
@@ -2658,9 +2658,9 @@ Recycler::RootMark(CollectionState markState)
     size_t scannedRootBytes = 0;
     Assert(!this->NeedOOMRescan() || markState == CollectionStateRescanMark);
 #if ENABLE_PARTIAL_GC
-    RecyclerVerboseTrace(GetRecyclerFlagsTable(), _u("PreMark done, partial collect: %d\n"), this->inPartialCollectMode);
+    RecyclerVerboseTrace(GetRecyclerFlagsTable(), u"PreMark done, partial collect: %d\n", this->inPartialCollectMode);
 #else
-    RecyclerVerboseTrace(GetRecyclerFlagsTable(), _u("PreMark done, partial collect not available\n"));
+    RecyclerVerboseTrace(GetRecyclerFlagsTable(), u"PreMark done, partial collect not available\n");
 #endif
 
     Assert(collectionState == (markState == CollectionStateMark? CollectionStateFindRoots : CollectionStateRescanFindRoots));
@@ -2812,7 +2812,7 @@ Recycler::EndMarkOnLowMemory()
     this->inEndMarkOnLowMemory = true;
 
     // Treat this as a concurrent mark reset so that we don't invalidate the allocators
-    RecyclerVerboseTrace(GetRecyclerFlagsTable(), _u("OOM during mark- rerunning mark\n"));
+    RecyclerVerboseTrace(GetRecyclerFlagsTable(), u"OOM during mark- rerunning mark\n");
 
     // Try to release as much memory as possible
     autoHeap.DecommitNow();
@@ -2894,7 +2894,7 @@ Recycler::EndMarkOnLowMemory()
     Assert(!parallelMarkContext1.GetPageAllocator()->DisableAllocationOutOfMemory());
     Assert(!parallelMarkContext2.GetPageAllocator()->DisableAllocationOutOfMemory());
     Assert(!parallelMarkContext3.GetPageAllocator()->DisableAllocationOutOfMemory());
-    CUSTOM_PHASE_PRINT_TRACE1(GetRecyclerFlagsTable(), Js::RecyclerPhase, _u("EndMarkOnLowMemory iterations: %d\n"), iterations);
+    CUSTOM_PHASE_PRINT_TRACE1(GetRecyclerFlagsTable(), Js::RecyclerPhase, u"EndMarkOnLowMemory iterations: %d\n", iterations);
 
 #if ENABLE_PARTIAL_GC
     Assert(this->clientTrackedObjectList.Empty());
@@ -3118,11 +3118,11 @@ void Recycler::DisplayMemStats()
 {
 #ifdef PERF_COUNTERS
 #if DBG_DUMP
-    Output::Print(_u("Recycler Live Object Count  %u\n"), PerfCounter::RecyclerCounterSet::GetLiveObjectCounter().GetValue());
-    Output::Print(_u("Recycler Live Object Size   %u\n"), PerfCounter::RecyclerCounterSet::GetLiveObjectSizeCounter().GetValue());
+    Output::Print(u"Recycler Live Object Count  %u\n", PerfCounter::RecyclerCounterSet::GetLiveObjectCounter().GetValue());
+    Output::Print(u"Recycler Live Object Size   %u\n", PerfCounter::RecyclerCounterSet::GetLiveObjectSizeCounter().GetValue());
 #endif
 
-    Output::Print(_u("Recycler Used Page Size %u\n"), PerfCounter::PageAllocatorCounterSet::GetUsedSizeCounter(PageAllocatorType::PageAllocatorType_Recycler).GetValue());
+    Output::Print(u"Recycler Used Page Size %u\n", PerfCounter::PageAllocatorCounterSet::GetUsedSizeCounter(PageAllocatorType::PageAllocatorType_Recycler).GetValue());
 #endif
 }
 #endif
@@ -3355,7 +3355,7 @@ Recycler::DisposeObjects()
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     if (GetRecyclerFlagsTable().Trace.IsEnabled(Js::RecyclerPhase))
     {
-        Output::Print(_u("Disposing objects\n"));
+        Output::Print(u"Disposing objects\n");
     }
 #endif
 
@@ -3398,11 +3398,11 @@ Recycler::DisposeObjects()
 bool
 Recycler::FinishDisposeObjects()
 {
-    CUSTOM_PHASE_PRINT_TRACE1(GetRecyclerFlagsTable(), Js::DisposePhase, _u("[Dispose] AllowDispose in FinishDisposeObject: %d\n"), this->allowDispose);
+    CUSTOM_PHASE_PRINT_TRACE1(GetRecyclerFlagsTable(), Js::DisposePhase, u"[Dispose] AllowDispose in FinishDisposeObject: %d\n", this->allowDispose);
 
     if (this->hasDisposableObject && this->allowDispose)
     {
-        CUSTOM_PHASE_PRINT_TRACE1(GetRecyclerFlagsTable(), Js::DisposePhase, _u("[Dispose] FinishDisposeObject, calling Dispose: %d\n"), this->allowDispose);
+        CUSTOM_PHASE_PRINT_TRACE1(GetRecyclerFlagsTable(), Js::DisposePhase, u"[Dispose] FinishDisposeObject, calling Dispose: %d\n", this->allowDispose);
 #ifdef RECYCLER_TRACE
         CollectionParam savedCollectionParam = collectionParam;
 #endif
@@ -3420,7 +3420,7 @@ Recycler::FinishDisposeObjects()
     if (!this->inDispose && this->hasDisposableObject
         && GetRecyclerFlagsTable().Trace.IsEnabled(Js::RecyclerPhase))
     {
-        Output::Print(_u("%04X> RC(%p): %s %d\n"), this->mainThreadId, this, _u("Dispose object delayed"), static_cast<CollectionState>(this->collectionState));
+        Output::Print(u"%04X> RC(%p): %s %d\n", this->mainThreadId, this, u"Dispose object delayed", static_cast<CollectionState>(this->collectionState));
     }
 #endif
     return false;
@@ -3468,7 +3468,7 @@ Recycler::FinishDisposeObjectsWrapped()
 #ifdef RECYCLER_TRACE
             if (GetRecyclerFlagsTable().Trace.IsEnabled(Js::RecyclerPhase))
             {
-                Output::Print(_u("%04X> RC(%p): %s\n"), this->mainThreadId, this, _u("Process delayed dispose object"));
+                Output::Print(u"%04X> RC(%p): %s\n", this->mainThreadId, this, u"Process delayed dispose object");
             }
 #endif
 
@@ -4119,7 +4119,7 @@ Recycler::EndCollection()
 #ifdef RECYCLER_TRACE
         if (GetRecyclerFlagsTable().Trace.IsEnabled(Js::RecyclerPhase))
         {
-            Output::Print(_u("%04X> RC(%p): %s\n"), this->mainThreadId, this, _u("Decommit now"));
+            Output::Print(u"%04X> RC(%p): %s\n", this->mainThreadId, this, u"Decommit now");
         }
 #endif
         autoHeap.DecommitNow();
@@ -4504,7 +4504,7 @@ Recycler::CollectOnConcurrentThread()
         if (GetRecyclerFlagsTable().Trace.IsEnabled(Js::RecyclerPhase)
             || GetRecyclerFlagsTable().Trace.IsEnabled(Js::ThreadCollectPhase))
         {
-            Output::Print(_u("%04X> RC(%p): %s: %s\n"), this->mainThreadId, this, Js::PhaseNames[Js::ThreadCollectPhase], _u("Timeout"));
+            Output::Print(u"%04X> RC(%p): %s: %s\n", this->mainThreadId, this, Js::PhaseNames[Js::ThreadCollectPhase], u"Timeout");
         }
 #endif
 #ifdef ENABLE_JS_ETW
@@ -4626,14 +4626,14 @@ Recycler::TryFinishConcurrentCollect()
     #ifdef RECYCLER_TRACE
                     if (GetRecyclerFlagsTable().Trace.IsEnabled(Js::RecyclerPhase))
                     {
-                        Output::Print(_u("%04X> RC(%p): %s: "), this->mainThreadId, this, _u("Set priority normal"));
+                        Output::Print(u"%04X> RC(%p): %s: ", this->mainThreadId, this, u"Set priority normal");
                         if (autoHeap.uncollectedAllocBytes > RecyclerHeuristic::Instance.UncollectedAllocBytesConcurrentPriorityBoost)
                         {
-                            Output::Print(_u("AllocBytes=%d (Time=%d)\n"), autoHeap.uncollectedAllocBytes, tickCount - this->tickCountStartConcurrent);
+                            Output::Print(u"AllocBytes=%d (Time=%d)\n", autoHeap.uncollectedAllocBytes, tickCount - this->tickCountStartConcurrent);
                         }
                         else
                         {
-                            Output::Print(_u("Time=%d (AllocBytes=%d\n"), tickCount - this->tickCountStartConcurrent, autoHeap.uncollectedAllocBytes);
+                            Output::Print(u"Time=%d (AllocBytes=%d\n", tickCount - this->tickCountStartConcurrent, autoHeap.uncollectedAllocBytes);
                         }
                     }
     #endif
@@ -4764,7 +4764,7 @@ Recycler::InitializeConcurrent(JsUtil::ThreadService *threadService)
         }
 
 #if DBG_DUMP
-        markContext.GetPageAllocator()->debugName = _u("ConcurrentCollect");
+        markContext.GetPageAllocator()->debugName = u"ConcurrentCollect";
 #endif
         if (!threadService->HasCallback())
         {
@@ -5100,7 +5100,7 @@ Recycler::EnableConcurrent(JsUtil::ThreadService *threadService, bool startAllTh
             auto concurrentThread = PlatformAgnostic::Thread::Create(Recycler::ConcurrentThreadStackSize, 
                 &Recycler::StaticThreadProc, this, 
                 PlatformAgnostic::Thread::ThreadInitStackSizeParamIsAReservation,
-                _u("Chakra Background Recycler"));
+                u"Chakra Background Recycler");
 
             if (concurrentThread != PlatformAgnostic::Thread::InvalidHandle)
             {
@@ -5386,7 +5386,7 @@ Recycler::BackgroundScanStack()
     if (this->skipStack)
     {
 #ifdef RECYCLER_TRACE
-        CUSTOM_PHASE_PRINT_VERBOSE_TRACE1(GetRecyclerFlagsTable(), Js::ScanStackPhase, _u("[%04X] Skipping the stack scan\n"), ::GetCurrentThreadId());
+        CUSTOM_PHASE_PRINT_VERBOSE_TRACE1(GetRecyclerFlagsTable(), Js::ScanStackPhase, u"[%04X] Skipping the stack scan\n", ::GetCurrentThreadId());
 #endif
         return 0;
     }
@@ -5882,7 +5882,7 @@ Recycler::FinishConcurrentCollect(CollectionFlags flags)
 #ifdef RECYCLER_TRACE
             if (this->GetRecyclerFlagsTable().Trace.IsEnabled(Js::ConcurrentSweepPhase) && CONFIG_FLAG_RELEASE(Verbose))
             {
-                Output::Print(_u("[GC #%d] Finishing Sweep Pass2 in-thread. \n"), this->collectionCount);
+                Output::Print(u"[GC #%d] Finishing Sweep Pass2 in-thread. \n", this->collectionCount);
             }
 #endif
             this->recyclerSweepManager->FinishSweep();
@@ -6001,7 +6001,7 @@ Recycler::ExceptFilter(LPEXCEPTION_POINTERS pEP)
 #if DBG && _M_IX86
     int callerEBP = *((int*)pEP->ContextRecord->Ebp);
 
-    Output::Print(_u("Recycler Concurrent Thread: Uncaught exception: EIP: 0x%X  ExceptionCode: 0x%X  EBP: 0x%X  ReturnAddress: 0x%X  ReturnAddress2: 0x%X\n"),
+    Output::Print(u"Recycler Concurrent Thread: Uncaught exception: EIP: 0x%X  ExceptionCode: 0x%X  EBP: 0x%X  ReturnAddress: 0x%X  ReturnAddress2: 0x%X\n",
         pEP->ExceptionRecord->ExceptionAddress, pEP->ExceptionRecord->ExceptionCode, pEP->ContextRecord->Eip,
         pEP->ContextRecord->Ebp, *((int*)pEP->ContextRecord->Ebp + 1), *((int*) callerEBP + 1));
 #endif
@@ -6190,7 +6190,7 @@ Recycler::DoBackgroundWork(bool forceForeground)
 #ifdef RECYCLER_TRACE
                 if (this->GetRecyclerFlagsTable().Trace.IsEnabled(Js::ConcurrentSweepPhase) && CONFIG_FLAG_RELEASE(Verbose))
                 {
-                    Output::Print(_u("[GC #%d] Finishing Sweep Pass2 on background thread. \n"), this->collectionCount);
+                    Output::Print(u"[GC #%d] Finishing Sweep Pass2 on background thread. \n", this->collectionCount);
                 }
 #endif
 #if ENABLE_BACKGROUND_PAGE_ZEROING
@@ -6313,7 +6313,7 @@ Recycler::ThreadProc()
 #if DBG
                 if (GetRecyclerFlagsTable().Trace.IsEnabled(Js::IdleDecommitPhase))
                 {
-                    Output::Print(_u("Recycler Thread IdleDecommit Need Timer\n"));
+                    Output::Print(u"Recycler Thread IdleDecommit Need Timer\n");
                     Output::Flush();
                 }
 #endif
@@ -6325,7 +6325,7 @@ Recycler::ThreadProc()
         {
             if (GetRecyclerFlagsTable().Trace.IsEnabled(Js::IdleDecommitPhase))
             {
-                Output::Print(_u("Recycler Thread IdleDecommit Wait %d\n"), waitTime);
+                Output::Print(u"Recycler Thread IdleDecommit Wait %d\n", waitTime);
                 Output::Flush();
             }
         }
@@ -6341,11 +6341,11 @@ Recycler::ThreadProc()
             {
                 if (result == WAIT_TIMEOUT)
                 {
-                    Output::Print(_u("Recycler Thread IdleDecommit Timeout: %d\n"), waitTime);
+                    Output::Print(u"Recycler Thread IdleDecommit Timeout: %d\n", waitTime);
                 }
                 else
                 {
-                    Output::Print(_u("Recycler Thread IdleDecommit Signaled\n"));
+                    Output::Print(u"Recycler Thread IdleDecommit Signaled\n");
                 }
                 Output::Flush();
             }
@@ -6660,7 +6660,7 @@ Recycler::ShouldIdleCollectOnExit()
     if (this->CollectionInProgress())
     {
 #ifdef RECYCLER_TRACE
-        CUSTOM_PHASE_PRINT_VERBOSE_TRACE1(GetRecyclerFlagsTable(), Js::IdleCollectPhase, _u("%04X> Skipping scheduling Idle Collect. Reason: Collection in progress\n"), ::GetCurrentThreadId());
+        CUSTOM_PHASE_PRINT_VERBOSE_TRACE1(GetRecyclerFlagsTable(), Js::IdleCollectPhase, u"%04X> Skipping scheduling Idle Collect. Reason: Collection in progress\n", ::GetCurrentThreadId());
 #endif
 
         // Don't schedule an idle collect if there is a collection going on already
@@ -6687,11 +6687,11 @@ Recycler::ShouldIdleCollectOnExit()
         {
             if (autoHeap.uncollectedAllocBytes >= RecyclerHeuristic::Instance.MaxUncollectedAllocBytesOnExit)
             {
-                Output::Print(_u("%04X> Idle collect on exit: alloc %d\n"), ::GetCurrentThreadId(), autoHeap.uncollectedAllocBytes);
+                Output::Print(u"%04X> Idle collect on exit: alloc %d\n", ::GetCurrentThreadId(), autoHeap.uncollectedAllocBytes);
             }
             else
             {
-                Output::Print(_u("%04X> Idle collect on exit: time %d\n"), ::GetCurrentThreadId(), tickCountNextCollection - GetTickCount());
+                Output::Print(u"%04X> Idle collect on exit: time %d\n", ::GetCurrentThreadId(), tickCountNextCollection - GetTickCount());
             }
             Output::Flush();
         }
@@ -6775,7 +6775,7 @@ RecyclerParallelThread::EnableConcurrent(bool waitForThread)
 
     auto threadHandle = PlatformAgnostic::Thread::Create(Recycler::ConcurrentThreadStackSize, 
       &RecyclerParallelThread::StaticThreadProc, this,
-      PlatformAgnostic::Thread::ThreadInitStackSizeParamIsAReservation, _u("Chakra Recycler Parallel Thread"));
+      PlatformAgnostic::Thread::ThreadInitStackSizeParamIsAReservation, u"Chakra Recycler Parallel Thread");
 
     if (threadHandle != PlatformAgnostic::Thread::InvalidHandle)
     {
@@ -7012,19 +7012,19 @@ Recycler::PrintCollectTrace(Js::Phase phase, bool finish, bool noConcurrentWork)
         BOOL partial = collectionParam.flags & CollectMode_Partial ;
 #endif
 
-        Output::Print(_u("%04X> RC(%p): %s%s%s%s%s%s%s:"), this->mainThreadId, this,
-            collectionParam.domCollect? _u("[DOM] ") : _u(""),
-            collectionParam.repeat? _u("[Repeat] "): _u(""),
-            this->inDispose? _u("[Nested]") : _u(""),
-            forceInThread? _u("Force In thread ") : _u(""),
-            finish? _u("Finish ") : _u(""),
-            exhaustive? _u("Exhaustive ") : _u(""),
+        Output::Print(u"%04X> RC(%p): %s%s%s%s%s%s%s:", this->mainThreadId, this,
+            collectionParam.domCollect? u"[DOM] " : u"",
+            collectionParam.repeat? u"[Repeat] ": u"",
+            this->inDispose? u"[Nested]" : u"",
+            forceInThread? u"Force In thread " : u"",
+            finish? u"Finish " : u"",
+            exhaustive? u"Exhaustive " : u"",
             Js::PhaseNames[phase]);
 
         if (noConcurrentWork)
         {
             Assert(finish);
-            Output::Print(_u(" No concurrent work"));
+            Output::Print(u" No concurrent work");
         }
         else if (collectionParam.finishOnly)
         {
@@ -7035,22 +7035,22 @@ Recycler::PrintCollectTrace(Js::Phase phase, bool finish, bool noConcurrentWork)
             {
                 if (forceFinish)
                 {
-                    Output::Print(_u(" Force finish mark and sweep"));
+                    Output::Print(u" Force finish mark and sweep");
                 }
                 else if (concurrent && this->enableConcurrentSweep)
                 {
                     if (!collectionParam.priorityBoostConcurrentSweepOverride)
                     {
-                        Output::Print(_u(" Finish mark and start concurrent sweep"));
+                        Output::Print(u" Finish mark and start concurrent sweep");
                     }
                     else
                     {
-                        Output::Print(_u(" Finish mark and sweep (priority boost overridden concurrent sweep)"));
+                        Output::Print(u" Finish mark and sweep (priority boost overridden concurrent sweep)");
                     }
                 }
                 else
                 {
-                    Output::Print(_u(" Finish mark and sweep"));
+                    Output::Print(u" Finish mark and sweep");
                 }
             }
             else
@@ -7058,11 +7058,11 @@ Recycler::PrintCollectTrace(Js::Phase phase, bool finish, bool noConcurrentWork)
                 Assert(collectionState == CollectionStateTransferSweptWait);
                 if (forceFinish)
                 {
-                    Output::Print(_u(" Force finish sweep"));
+                    Output::Print(u" Force finish sweep");
                 }
                 else
                 {
-                    Output::Print(_u(" Finish sweep"));
+                    Output::Print(u" Finish sweep");
                 }
             }
 #endif // ENABLE_CONCURRENT_GC
@@ -7071,16 +7071,16 @@ Recycler::PrintCollectTrace(Js::Phase phase, bool finish, bool noConcurrentWork)
         {
             if (finish && !concurrent)
             {
-                Output::Print(_u(" Not concurrent collect"));
+                Output::Print(u" Not concurrent collect");
             }
             if ((finish && finishConcurrent))
             {
-                Output::Print(_u(" No heuristic"));
+                Output::Print(u" No heuristic");
             }
 #if ENABLE_CONCURRENT_GC
             else if (finish && priorityBoost)
             {
-                Output::Print(_u(" Priority boost no heuristic"));
+                Output::Print(u" Priority boost no heuristic");
             }
 #endif
             else
@@ -7107,26 +7107,26 @@ Recycler::PrintCollectTrace(Js::Phase phase, bool finish, bool noConcurrentWork)
                     timeUsed = !!timed;
                 }
 
-                Output::Print(byteCountUsed? _u("*") : (allocSize? _u(" ") : _u("~")));
-                Output::Print(_u("B:%8d "), collectionParam.uncollectedAllocBytes);
-                Output::Print(timeUsed? _u("*") : (timed? _u(" ") : _u("~")));
-                Output::Print(_u("T:%4d "), -collectionParam.timeDiff);
+                Output::Print(byteCountUsed? u"*" : (allocSize? u" " : u"~"));
+                Output::Print(u"B:%8d ", collectionParam.uncollectedAllocBytes);
+                Output::Print(timeUsed? u"*" : (timed? u" " : u"~"));
+                Output::Print(u"T:%4d ", -collectionParam.timeDiff);
 #if ENABLE_PARTIAL_GC
                 if (collectionParam.inPartialCollectMode)
                 {
-                    Output::Print(_u("L:%5d "), collectionParam.uncollectedNewPageCountPartialCollect);
+                    Output::Print(u"L:%5d ", collectionParam.uncollectedNewPageCountPartialCollect);
                 }
                 else
                 {
-                    Output::Print(_u("L:----- "));
+                    Output::Print(u"L:----- ");
                 }
-                Output::Print(newPageUsed? _u("*") : (partial? _u(" ") : _u("~")));
-                Output::Print(_u("P:%5d(%9d) "), collectionParam.uncollectedNewPageCount, collectionParam.uncollectedNewPageCount * AutoSystemInfo::PageSize);
-                Output::Print(_u("U:%8d"), collectionParam.unusedPartialCollectFreeBytes);
+                Output::Print(newPageUsed? u"*" : (partial? u" " : u"~"));
+                Output::Print(u"P:%5d(%9d) ", collectionParam.uncollectedNewPageCount, collectionParam.uncollectedNewPageCount * AutoSystemInfo::PageSize);
+                Output::Print(u"U:%8d", collectionParam.unusedPartialCollectFreeBytes);
 #endif // ENABLE_PARTIAL_GC
             }
         }
-        Output::Print(_u("\n"));
+        Output::Print(u"\n");
         Output::Flush();
     }
 }
@@ -7138,7 +7138,7 @@ Recycler::PrintBlockStatus(HeapBucket * heapBucket, HeapBlock * heapBlock, char1
 {
     if (this->GetRecyclerFlagsTable().Trace.IsEnabled(Js::ConcurrentSweepPhase) && CONFIG_FLAG_RELEASE(Verbose))
     {
-        Output::Print(_u("[GC #%d] [HeapBucket 0x%p] HeapBlock 0x%p %s [CollectionState: %d] \n"), this->collectionCount, heapBucket, heapBlock, statusMessage, static_cast<CollectionState>(this->collectionState));
+        Output::Print(u"[GC #%d] [HeapBucket 0x%p] HeapBlock 0x%p %s [CollectionState: %d] \n", this->collectionCount, heapBucket, heapBlock, statusMessage, static_cast<CollectionState>(this->collectionState));
     }
 }
 #endif
@@ -7149,13 +7149,13 @@ Recycler::PrintHeapBlockStats(char16_t const * name, HeapBlock::HeapBlockType ty
 {
     size_t liveCount = collectionStats.heapBlockCount[type] - collectionStats.heapBlockFreeCount[type];
 
-    Output::Print(_u(" %6s : %5d %5d %5d %5.1f"), name,
+    Output::Print(u" %6s : %5d %5d %5d %5.1f", name,
         liveCount, collectionStats.heapBlockFreeCount[type], collectionStats.heapBlockCount[type],
         (double)collectionStats.heapBlockFreeCount[type] / (double)collectionStats.heapBlockCount[type] * 100);
 
     if (type < HeapBlock::SmallBlockTypeCount)
     {
-        Output::Print(_u(" : %5d %6.1f : %5d %6.1f"),
+        Output::Print(u" : %5d %6.1f : %5d %6.1f",
             collectionStats.heapBlockSweptCount[type],
             (double)collectionStats.heapBlockSweptCount[type] / (double)liveCount * 100,
             collectionStats.heapBlockConcurrentSweptCount[type],
@@ -7180,7 +7180,7 @@ Recycler::PrintHeapBlockMemoryStats(char16_t const * name, HeapBlock::HeapBlockT
         SmallAllocationBlockAttributes::PageCount : MediumAllocationBlockAttributes::PageCount;
     size_t totalByteCount = (collectionStats.heapBlockCount[type] - collectionStats.heapBlockFreeCount[type]) * blockPages * AutoSystemInfo::PageSize;
     size_t liveByteCount = totalByteCount - collectionStats.heapBlockFreeByteCount[type];
-    Output::Print(_u(" %6s: %10d %10d"), name, liveByteCount, allocableFreeByteCount);
+    Output::Print(u" %6s: %10d %10d", name, liveByteCount, allocableFreeByteCount);
 
 #if ENABLE_PARTIAL_GC
     if (this->enablePartialCollect &&
@@ -7198,15 +7198,15 @@ Recycler::PrintHeapBlockMemoryStats(char16_t const * name, HeapBlock::HeapBlockT
 #endif
       ))
     {
-        Output::Print(_u(" %10d"), partialUnusedBytes);
+        Output::Print(u" %10d", partialUnusedBytes);
     }
     else
 #endif
     {
-        Output::Print(_u("           "));
+        Output::Print(u"           ");
     }
 
-    Output::Print(_u(" %10d %6.1f"), totalByteCount,
+    Output::Print(u" %10d %6.1f", totalByteCount,
         (double)allocableFreeByteCount / (double)totalByteCount * 100);
 
 #if ENABLE_PARTIAL_GC
@@ -7225,7 +7225,7 @@ Recycler::PrintHeapBlockMemoryStats(char16_t const * name, HeapBlock::HeapBlockT
 #endif
         ))
     {
-        Output::Print(_u(" %6.1f"), (double)partialUnusedBytes / (double)totalByteCount * 100);
+        Output::Print(u" %6.1f", (double)partialUnusedBytes / (double)totalByteCount * 100);
     }
 #endif
 }
@@ -7233,50 +7233,50 @@ Recycler::PrintHeapBlockMemoryStats(char16_t const * name, HeapBlock::HeapBlockT
 void
 Recycler::PrintHeuristicCollectionStats()
 {
-    Output::Print(_u("---------------------------------------------------------------------------------------------------------------\n"));
-    Output::Print(_u("GC Trigger   : %10s %10s %10s"), _u("Start"), _u("Continue"), _u("Finish"));
+    Output::Print(u"---------------------------------------------------------------------------------------------------------------\n");
+    Output::Print(u"GC Trigger   : %10s %10s %10s", u"Start", u"Continue", u"Finish");
 #if ENABLE_PARTIAL_GC
     if (this->enablePartialCollect)
     {
-        Output::Print(_u(" | Heuristics                   : %10s %10s %5s"), _u(""), _u(""), _u("%"));
+        Output::Print(u" | Heuristics                   : %10s %10s %5s", u"", u"", u"%");
     }
 #endif
-    Output::Print(_u("\n"));
+    Output::Print(u"\n");
 
-    Output::Print(_u("---------------------------------------------------------------------------------------------------------------\n"));
-    Output::Print(_u(" Alloc bytes : %10d %10d %10d"), collectionStats.startCollectAllocBytes, collectionStats.continueCollectAllocBytes, this->autoHeap.uncollectedAllocBytes);
+    Output::Print(u"---------------------------------------------------------------------------------------------------------------\n");
+    Output::Print(u" Alloc bytes : %10d %10d %10d", collectionStats.startCollectAllocBytes, collectionStats.continueCollectAllocBytes, this->autoHeap.uncollectedAllocBytes);
 #if ENABLE_PARTIAL_GC
     if (this->enablePartialCollect)
     {
-        Output::Print(_u(" | Cost                         : %10d %10d %5.1f"), collectionStats.rescanRootBytes, collectionStats.estimatedPartialReuseBytes, collectionStats.collectCost * 100);
+        Output::Print(u" | Cost                         : %10d %10d %5.1f", collectionStats.rescanRootBytes, collectionStats.estimatedPartialReuseBytes, collectionStats.collectCost * 100);
     }
 #endif
-    Output::Print(_u("\n"));
-
-#if ENABLE_PARTIAL_GC
-    if (this->enablePartialCollect)
-    {
-        Output::Print(_u("                                                | Efficacy                     : %10s %10s %5.1f\n"), _u(""), _u(""), collectionStats.collectEfficacy * 100);
-    }
-#endif
+    Output::Print(u"\n");
 
 #if ENABLE_PARTIAL_GC
     if (this->enablePartialCollect)
     {
-        Output::Print(_u(" New page    : %10d %10s %10d"), collectionStats.startCollectNewPageCount, _u(""), autoHeap.uncollectedNewPageCount);
-        Output::Print(_u(" | Partial Uncollect New Page   : %10d %10d"), collectionStats.uncollectedNewPageCountPartialCollect * AutoSystemInfo::PageSize, this->uncollectedNewPageCountPartialCollect * AutoSystemInfo::PageSize);
-        Output::Print(_u("\n"));
+        Output::Print(u"                                                | Efficacy                     : %10s %10s %5.1f\n", u"", u"", collectionStats.collectEfficacy * 100);
     }
 #endif
 
-    Output::Print(_u(" Finish try  : %10d %10s %10s"), collectionStats.finishCollectTryCount, _u(""), _u(""));
 #if ENABLE_PARTIAL_GC
     if (this->enablePartialCollect)
     {
-        Output::Print(_u(" | Partial Reuse Min Free Bytes :            %10d"), collectionStats.partialCollectSmallHeapBlockReuseMinFreeBytes * AutoSystemInfo::PageSize);
+        Output::Print(u" New page    : %10d %10s %10d", collectionStats.startCollectNewPageCount, u"", autoHeap.uncollectedNewPageCount);
+        Output::Print(u" | Partial Uncollect New Page   : %10d %10d", collectionStats.uncollectedNewPageCountPartialCollect * AutoSystemInfo::PageSize, this->uncollectedNewPageCountPartialCollect * AutoSystemInfo::PageSize);
+        Output::Print(u"\n");
     }
 #endif
-    Output::Print(_u("\n"));
+
+    Output::Print(u" Finish try  : %10d %10s %10s", collectionStats.finishCollectTryCount, u"", u"");
+#if ENABLE_PARTIAL_GC
+    if (this->enablePartialCollect)
+    {
+        Output::Print(u" | Partial Reuse Min Free Bytes :            %10d", collectionStats.partialCollectSmallHeapBlockReuseMinFreeBytes * AutoSystemInfo::PageSize);
+    }
+#endif
+    Output::Print(u"\n");
 }
 
 void
@@ -7288,29 +7288,29 @@ Recycler::PrintMarkCollectionStats()
         - collectionStats.tryMarkInteriorNonRecyclerMemoryCount
         - collectionStats.tryMarkInteriorNullCount;
     size_t leafCount = collectionStats.markData.markCount - collectionStats.scanCount;
-    Output::Print(_u("---------------------------------------------------------------------------------------------------------------\n"));
-    Output::Print(_u("Try Mark    :%9s %5s %10s | Non-Mark  : %9s %5s | Mark    :%9s %5s \n"), _u("Count"), _u("%"), _u("Bytes"), _u("Count"), _u("%"), _u("Count"), _u("%"));
-    Output::Print(_u("---------------------------------------------------------------------------------------------------------------\n"));
-    Output::Print(_u(" TryMark    :%9d       %10d | Null      : %9d %5.1f | Scan    :%9d %5.1f\n"),
+    Output::Print(u"---------------------------------------------------------------------------------------------------------------\n");
+    Output::Print(u"Try Mark    :%9s %5s %10s | Non-Mark  : %9s %5s | Mark    :%9s %5s \n", u"Count", u"%", u"Bytes", u"Count", u"%", u"Count", u"%");
+    Output::Print(u"---------------------------------------------------------------------------------------------------------------\n");
+    Output::Print(u" TryMark    :%9d       %10d | Null      : %9d %5.1f | Scan    :%9d %5.1f\n",
         collectionStats.tryMarkCount, collectionStats.tryMarkCount * sizeof(void *),
         collectionStats.tryMarkNullCount, (double)collectionStats.tryMarkNullCount / (double)nonMark * 100,
         collectionStats.scanCount, (double)collectionStats.scanCount / (double)collectionStats.markData.markCount * 100);
-    Output::Print(_u("   Non-Mark :%9d %5.1f            | Unaligned : %9d %5.1f | Leaf    :%9d %5.1f\n"),
+    Output::Print(u"   Non-Mark :%9d %5.1f            | Unaligned : %9d %5.1f | Leaf    :%9d %5.1f\n",
         nonMark, (double)nonMark / (double)collectionStats.tryMarkCount * 100,
         collectionStats.tryMarkUnalignedCount, (double)collectionStats.tryMarkUnalignedCount / (double)nonMark * 100,
         leafCount, (double)leafCount / (double)collectionStats.markData.markCount * 100);
-    Output::Print(_u("   Mark     :%9d %5.1f %10d | Non GC    : %9d %5.1f | Track   :%9d\n"),
+    Output::Print(u"   Mark     :%9d %5.1f %10d | Non GC    : %9d %5.1f | Track   :%9d\n",
         collectionStats.markData.markCount, (double)collectionStats.markData.markCount / (double)collectionStats.tryMarkCount * 100, collectionStats.markData.markBytes,
         collectionStats.tryMarkNonRecyclerMemoryCount, (double)collectionStats.tryMarkNonRecyclerMemoryCount / (double)nonMark * 100,
         collectionStats.trackCount);
-    Output::Print(_u("   Remark   :%9d %5.1f            | Invalid   : %9d %5.1f \n"),
+    Output::Print(u"   Remark   :%9d %5.1f            | Invalid   : %9d %5.1f \n",
         collectionStats.remarkCount, (double)collectionStats.remarkCount / (double)collectionStats.tryMarkCount * 100,
         invalidCount, (double)invalidCount / (double)nonMark * 100);
-    Output::Print(_u(" TryMark Int:%9d       %10d | Null Int  : %9d %5.1f | Root    :%9d | New     :%9d\n"),
+    Output::Print(u" TryMark Int:%9d       %10d | Null Int  : %9d %5.1f | Root    :%9d | New     :%9d\n",
         collectionStats.tryMarkInteriorCount, collectionStats.tryMarkInteriorCount * sizeof(void *),
         collectionStats.tryMarkInteriorNullCount, (double)collectionStats.tryMarkInteriorNullCount / (double)nonMark * 100,
         collectionStats.rootCount, collectionStats.markThruNewObjCount);
-    Output::Print(_u("                                        | Non GC Int: %9d %5.1f | Stack   :%9d | NewFalse:%9d\n"),
+    Output::Print(u"                                        | Non GC Int: %9d %5.1f | Stack   :%9d | NewFalse:%9d\n",
         collectionStats.tryMarkInteriorNonRecyclerMemoryCount, (double)collectionStats.tryMarkInteriorNonRecyclerMemoryCount / (double)nonMark * 100,
         collectionStats.stackCount, collectionStats.markThruFalseNewObjCount);
 }
@@ -7318,7 +7318,7 @@ Recycler::PrintMarkCollectionStats()
 void
 Recycler::PrintBackgroundCollectionStat(RecyclerCollectionStats::MarkData const& markData)
 {
-    Output::Print(_u("BgSmall : %5d %6d %10d | BgLarge : %5d %6d %10d | BgMark :%9d "),
+    Output::Print(u"BgSmall : %5d %6d %10d | BgLarge : %5d %6d %10d | BgMark :%9d ",
         markData.rescanPageCount,
         markData.rescanObjectCount,
         markData.rescanObjectByteCount,
@@ -7329,23 +7329,23 @@ Recycler::PrintBackgroundCollectionStat(RecyclerCollectionStats::MarkData const&
     double markRatio = (double)markData.markCount / (double)collectionStats.markData.markCount * 100;
     if (markRatio == 100.0)
     {
-        Output::Print(_u(" 100"));
+        Output::Print(u" 100");
     }
     else
     {
-        Output::Print(_u("%4.1f"), markRatio);
+        Output::Print(u"%4.1f", markRatio);
     }
-    Output::Print(_u("\n"));
+    Output::Print(u"\n");
 }
 
 void
 Recycler::PrintBackgroundCollectionStats()
 {
 #if ENABLE_CONCURRENT_GC
-    Output::Print(_u("---------------------------------------------------------------------------------------------------------------\n"));
-    Output::Print(_u("BgSmall : %5s %6s %10s | BgLarge : %5s %6s %10s | BgMark :%9s %4s %s\n"),
-        _u("Pages"), _u("Count"), _u("Bytes"), _u("Pages"), _u("Count"), _u("Bytes"), _u("Count"), _u("%"), _u("NonLeafBytes   %"));
-    Output::Print(_u("---------------------------------------------------------------------------------------------------------------\n"));
+    Output::Print(u"---------------------------------------------------------------------------------------------------------------\n");
+    Output::Print(u"BgSmall : %5s %6s %10s | BgLarge : %5s %6s %10s | BgMark :%9s %4s %s\n",
+        u"Pages", u"Count", u"Bytes", u"Pages", u"Count", u"Bytes", u"Count", u"%", u"NonLeafBytes   %");
+    Output::Print(u"---------------------------------------------------------------------------------------------------------------\n");
 
     this->PrintBackgroundCollectionStat(collectionStats.backgroundMarkData[0]);
     for (uint repeatCount = 1; repeatCount < RecyclerHeuristic::MaxBackgroundRepeatMarkCount; repeatCount++)
@@ -7368,38 +7368,38 @@ Recycler::PrintBackgroundCollectionStats()
 void
 Recycler::PrintMemoryStats()
 {
-    Output::Print(_u("----------------------------------------------------------------------------------------------------------------\n"));
-    Output::Print(_u("Memory (Bytes) %4s %10s %10s %10s %6s %6s\n"), _u("Live"), _u("Free"), _u("Unused"), _u("Total"), _u("Free%"), _u("Unused%"));
-    Output::Print(_u("----------------------------------------------------------------------------------------------------------------\n"));
+    Output::Print(u"----------------------------------------------------------------------------------------------------------------\n");
+    Output::Print(u"Memory (Bytes) %4s %10s %10s %10s %6s %6s\n", u"Live", u"Free", u"Unused", u"Total", u"Free%", u"Unused%");
+    Output::Print(u"----------------------------------------------------------------------------------------------------------------\n");
 
-    PrintHeapBlockMemoryStats(_u("Small"), HeapBlock::SmallNormalBlockType);
-    Output::Print(_u("\n"));
-    PrintHeapBlockMemoryStats(_u("SmFin"), HeapBlock::SmallFinalizableBlockType);
-    Output::Print(_u("\n"));
+    PrintHeapBlockMemoryStats(u"Small", HeapBlock::SmallNormalBlockType);
+    Output::Print(u"\n");
+    PrintHeapBlockMemoryStats(u"SmFin", HeapBlock::SmallFinalizableBlockType);
+    Output::Print(u"\n");
 #ifdef RECYCLER_WRITE_BARRIER
-    PrintHeapBlockMemoryStats(_u("SmSWB"), HeapBlock::SmallNormalBlockWithBarrierType);
-    Output::Print(_u("\n"));
-    PrintHeapBlockMemoryStats(_u("SmFinSWB"), HeapBlock::SmallFinalizableBlockWithBarrierType);
-    Output::Print(_u("\n"));
+    PrintHeapBlockMemoryStats(u"SmSWB", HeapBlock::SmallNormalBlockWithBarrierType);
+    Output::Print(u"\n");
+    PrintHeapBlockMemoryStats(u"SmFinSWB", HeapBlock::SmallFinalizableBlockWithBarrierType);
+    Output::Print(u"\n");
 #endif
-    PrintHeapBlockMemoryStats(_u("SmLeaf"), HeapBlock::SmallLeafBlockType);
-    Output::Print(_u("\n"));
-    PrintHeapBlockMemoryStats(_u("Medium"), HeapBlock::MediumNormalBlockType);
-    Output::Print(_u("\n"));
-    PrintHeapBlockMemoryStats(_u("MdFin"), HeapBlock::MediumFinalizableBlockType);
-    Output::Print(_u("\n"));
+    PrintHeapBlockMemoryStats(u"SmLeaf", HeapBlock::SmallLeafBlockType);
+    Output::Print(u"\n");
+    PrintHeapBlockMemoryStats(u"Medium", HeapBlock::MediumNormalBlockType);
+    Output::Print(u"\n");
+    PrintHeapBlockMemoryStats(u"MdFin", HeapBlock::MediumFinalizableBlockType);
+    Output::Print(u"\n");
 #ifdef RECYCLER_WRITE_BARRIER
-    PrintHeapBlockMemoryStats(_u("MdSWB"), HeapBlock::MediumNormalBlockWithBarrierType);
-    Output::Print(_u("\n"));
-    PrintHeapBlockMemoryStats(_u("MdFinSWB"), HeapBlock::MediumFinalizableBlockWithBarrierType);
-    Output::Print(_u("\n"));
+    PrintHeapBlockMemoryStats(u"MdSWB", HeapBlock::MediumNormalBlockWithBarrierType);
+    Output::Print(u"\n");
+    PrintHeapBlockMemoryStats(u"MdFinSWB", HeapBlock::MediumFinalizableBlockWithBarrierType);
+    Output::Print(u"\n");
 #endif
-    PrintHeapBlockMemoryStats(_u("MdLeaf"), HeapBlock::MediumLeafBlockType);
-    Output::Print(_u("\n"));
+    PrintHeapBlockMemoryStats(u"MdLeaf", HeapBlock::MediumLeafBlockType);
+    Output::Print(u"\n");
 
     size_t largeHeapBlockUnusedByteCount = collectionStats.largeHeapBlockTotalByteCount - collectionStats.largeHeapBlockUsedByteCount
         - collectionStats.heapBlockFreeByteCount[HeapBlock::LargeBlockType];
-    Output::Print(_u("  Large: %10d %10d %10d %10d %6.1f %6.1f\n"),
+    Output::Print(u"  Large: %10d %10d %10d %10d %6.1f %6.1f\n",
         collectionStats.largeHeapBlockUsedByteCount,
         collectionStats.heapBlockFreeByteCount[HeapBlock::LargeBlockType],
         largeHeapBlockUnusedByteCount,
@@ -7407,8 +7407,8 @@ Recycler::PrintMemoryStats()
         (double)collectionStats.heapBlockFreeByteCount[HeapBlock::LargeBlockType] / (double)collectionStats.largeHeapBlockTotalByteCount * 100,
         (double)largeHeapBlockUnusedByteCount / (double)collectionStats.largeHeapBlockTotalByteCount * 100);
 
-    Output::Print(_u("\nSmall heap block zeroing stats since last GC\n"));
-    Output::Print(_u("Number of blocks with sweep state empty: normal=%d finalizable=%d leaf=%d\nNumber of blocks zeroed: %d\n"),
+    Output::Print(u"\nSmall heap block zeroing stats since last GC\n");
+    Output::Print(u"Number of blocks with sweep state empty: normal=%d finalizable=%d leaf=%d\nNumber of blocks zeroed: %d\n",
         collectionStats.numEmptySmallBlocks[HeapBlock::SmallNormalBlockType]
 #ifdef RECYCLER_WRITE_BARRIER
         + collectionStats.numEmptySmallBlocks[HeapBlock::SmallNormalBlockWithBarrierType]
@@ -7433,7 +7433,7 @@ Recycler::PrintMemoryStats()
 void
 Recycler::PrintCollectStats()
 {
-    Output::Print(_u("Collection Stats:\n"));
+    Output::Print(u"Collection Stats:\n");
 
     PrintHeuristicCollectionStats();
     PrintMarkCollectionStats();
@@ -7442,195 +7442,195 @@ Recycler::PrintCollectStats()
     size_t freeCount = collectionStats.objectSweptCount - collectionStats.objectSweptFreeListCount;
     size_t freeBytes = collectionStats.objectSweptBytes - collectionStats.objectSweptFreeListBytes;
 
-    Output::Print(_u("---------------------------------------------------------------------------------------------------------------\n"));
+    Output::Print(u"---------------------------------------------------------------------------------------------------------------\n");
 #if ENABLE_PARTIAL_GC || ENABLE_CONCURRENT_GC
-    Output::Print(_u("Rescan  : %5s %6s %10s | Track   : %5s | "), _u("Pages"), _u("Count"), _u("Bytes"), _u("Count"));
+    Output::Print(u"Rescan  : %5s %6s %10s | Track   : %5s | ", u"Pages", u"Count", u"Bytes", u"Count");
 #endif
-    Output::Print(_u("Sweep     : %7s | SweptObj  : %5s %5s %10s\n"), _u("Count"), _u("Count"), _u("%%"), _u("Bytes"));
-    Output::Print(_u("---------------------------------------------------------------------------------------------------------------\n"));
-    Output::Print(_u("  Small : "));
+    Output::Print(u"Sweep     : %7s | SweptObj  : %5s %5s %10s\n", u"Count", u"Count", u"%%", u"Bytes");
+    Output::Print(u"---------------------------------------------------------------------------------------------------------------\n");
+    Output::Print(u"  Small : ");
 #if ENABLE_PARTIAL_GC || ENABLE_CONCURRENT_GC
-    Output::Print(_u("%5d %6d %10d | "), collectionStats.markData.rescanPageCount, collectionStats.markData.rescanObjectCount, collectionStats.markData.rescanObjectByteCount);
+    Output::Print(u"%5d %6d %10d | ", collectionStats.markData.rescanPageCount, collectionStats.markData.rescanObjectCount, collectionStats.markData.rescanObjectByteCount);
 #endif
 #if ENABLE_CONCURRENT_GC
-    Output::Print(_u("Process : %5d | "), collectionStats.trackedObjectCount);
+    Output::Print(u"Process : %5d | ", collectionStats.trackedObjectCount);
 #else
-    Output::Print(_u("              | "));
+    Output::Print(u"              | ");
 #endif
-    Output::Print(_u(" Scan     : %7d |  Free     : %6d %5.1f %10d\n"),
+    Output::Print(u" Scan     : %7d |  Free     : %6d %5.1f %10d\n",
         collectionStats.objectSweepScanCount,
         freeCount, (double)freeCount / (double) collectionStats.objectSweptCount * 100, freeBytes);
 
-    Output::Print(_u("  Large : "));
+    Output::Print(u"  Large : ");
 #if ENABLE_PARTIAL_GC || ENABLE_CONCURRENT_GC
-    Output::Print(_u("%5d %6d %10d | "),
+    Output::Print(u"%5d %6d %10d | ",
         collectionStats.markData.rescanLargePageCount, collectionStats.markData.rescanLargeObjectCount, collectionStats.markData.rescanLargeByteCount);
 #endif
 #if ENABLE_PARTIAL_GC
-    Output::Print(_u("Client  : %5d | "), collectionStats.clientTrackedObjectCount);
+    Output::Print(u"Client  : %5d | ", collectionStats.clientTrackedObjectCount);
 #else
-    Output::Print(_u("                | "));
+    Output::Print(u"                | ");
 #endif
-    Output::Print(_u(" Finalize : %7d |  Free List: %6d %5.1f %10d\n"),
+    Output::Print(u" Finalize : %7d |  Free List: %6d %5.1f %10d\n",
         collectionStats.finalizeSweepCount,
         collectionStats.objectSweptFreeListCount, (double)collectionStats.objectSweptFreeListCount / (double) collectionStats.objectSweptCount * 100, collectionStats.objectSweptFreeListBytes);
 
-    Output::Print(_u("---------------------------------------------------------------------------------------------------------------\n"));
-    Output::Print(_u("SweptBlk:  Live  Free Total Free%% : Swept Swept%% : CSwpt CSwpt%%"));
+    Output::Print(u"---------------------------------------------------------------------------------------------------------------\n");
+    Output::Print(u"SweptBlk:  Live  Free Total Free%% : Swept Swept%% : CSwpt CSwpt%%");
 #if ENABLE_PARTIAL_GC
     if (this->enablePartialCollect)
     {
-        Output::Print(_u(" | Partial    : Count      Bytes     Existing"));
+        Output::Print(u" | Partial    : Count      Bytes     Existing");
    }
 #endif
-    Output::Print(_u("\n"));
-    Output::Print(_u("---------------------------------------------------------------------------------------------------------------\n"));
+    Output::Print(u"\n");
+    Output::Print(u"---------------------------------------------------------------------------------------------------------------\n");
 
-    PrintHeapBlockStats(_u("Small"), HeapBlock::SmallNormalBlockType);
+    PrintHeapBlockStats(u"Small", HeapBlock::SmallNormalBlockType);
 #if ENABLE_PARTIAL_GC
     if (this->enablePartialCollect)
     {
-        Output::Print(_u(" |  Reuse     : %5d %10d %10d"),
+        Output::Print(u" |  Reuse     : %5d %10d %10d",
             collectionStats.smallNonLeafHeapBlockPartialReuseCount[HeapBlock::SmallNormalBlockType],
             collectionStats.smallNonLeafHeapBlockPartialReuseBytes[HeapBlock::MediumNormalBlockType],
             collectionStats.smallNonLeafHeapBlockPartialReuseCount[HeapBlock::SmallNormalBlockType] * AutoSystemInfo::PageSize
             - collectionStats.smallNonLeafHeapBlockPartialReuseBytes[HeapBlock::SmallNormalBlockType]);
     }
 #endif
-    Output::Print(_u("\n"));
-    PrintHeapBlockStats(_u("SmFin"), HeapBlock::SmallFinalizableBlockType);
+    Output::Print(u"\n");
+    PrintHeapBlockStats(u"SmFin", HeapBlock::SmallFinalizableBlockType);
 #if ENABLE_PARTIAL_GC
     if (this->enablePartialCollect)
     {
-        Output::Print(_u(" |  Unused    : %5d %10d %10d"),
+        Output::Print(u" |  Unused    : %5d %10d %10d",
             collectionStats.smallNonLeafHeapBlockPartialUnusedCount[HeapBlock::SmallFinalizableBlockType],
             collectionStats.smallNonLeafHeapBlockPartialUnusedBytes[HeapBlock::SmallFinalizableBlockType],
             collectionStats.smallNonLeafHeapBlockPartialUnusedCount[HeapBlock::SmallFinalizableBlockType] * AutoSystemInfo::PageSize
                 - collectionStats.smallNonLeafHeapBlockPartialUnusedBytes[HeapBlock::SmallFinalizableBlockType]);
     }
 #endif
-    Output::Print(_u("\n"));
+    Output::Print(u"\n");
 
 #ifdef RECYCLER_WRITE_BARRIER
-    PrintHeapBlockStats(_u("SmSWB"), HeapBlock::SmallNormalBlockWithBarrierType);
+    PrintHeapBlockStats(u"SmSWB", HeapBlock::SmallNormalBlockWithBarrierType);
 #if ENABLE_PARTIAL_GC
     if (this->enablePartialCollect)
     {
-        Output::Print(_u(" |  Unused    : %5d %10d %10d"),
+        Output::Print(u" |  Unused    : %5d %10d %10d",
             collectionStats.smallNonLeafHeapBlockPartialUnusedCount[HeapBlock::SmallNormalBlockWithBarrierType],
             collectionStats.smallNonLeafHeapBlockPartialUnusedBytes[HeapBlock::SmallNormalBlockWithBarrierType],
             collectionStats.smallNonLeafHeapBlockPartialUnusedCount[HeapBlock::SmallNormalBlockWithBarrierType] * AutoSystemInfo::PageSize
             - collectionStats.smallNonLeafHeapBlockPartialUnusedBytes[HeapBlock::SmallNormalBlockWithBarrierType]);
     }
 #endif
-    Output::Print(_u("\n"));
-    PrintHeapBlockStats(_u("SmFin"), HeapBlock::SmallFinalizableBlockWithBarrierType);
+    Output::Print(u"\n");
+    PrintHeapBlockStats(u"SmFin", HeapBlock::SmallFinalizableBlockWithBarrierType);
 #if ENABLE_PARTIAL_GC
     if (this->enablePartialCollect)
     {
-        Output::Print(_u(" |  Unused    : %5d %10d %10d"),
+        Output::Print(u" |  Unused    : %5d %10d %10d",
             collectionStats.smallNonLeafHeapBlockPartialUnusedCount[HeapBlock::SmallFinalizableBlockWithBarrierType],
             collectionStats.smallNonLeafHeapBlockPartialUnusedBytes[HeapBlock::SmallFinalizableBlockWithBarrierType],
             collectionStats.smallNonLeafHeapBlockPartialUnusedCount[HeapBlock::SmallFinalizableBlockWithBarrierType] * AutoSystemInfo::PageSize
             - collectionStats.smallNonLeafHeapBlockPartialUnusedBytes[HeapBlock::SmallFinalizableBlockWithBarrierType]);
     }
 #endif
-    Output::Print(_u("\n"));
+    Output::Print(u"\n");
 #endif
 
     // TODO: This seems suspicious- why are we looking at smallNonLeaf while print out leaf...
-    PrintHeapBlockStats(_u("SmLeaf"), HeapBlock::SmallLeafBlockType);
+    PrintHeapBlockStats(u"SmLeaf", HeapBlock::SmallLeafBlockType);
 #if ENABLE_PARTIAL_GC
     if (this->enablePartialCollect)
     {
-        Output::Print(_u(" |  ReuseFin  : %5d %10d %10d"),
+        Output::Print(u" |  ReuseFin  : %5d %10d %10d",
             collectionStats.smallNonLeafHeapBlockPartialReuseCount[HeapBlock::SmallFinalizableBlockType],
             collectionStats.smallNonLeafHeapBlockPartialReuseBytes[HeapBlock::SmallFinalizableBlockType],
             collectionStats.smallNonLeafHeapBlockPartialReuseCount[HeapBlock::SmallFinalizableBlockType] * AutoSystemInfo::PageSize
                 - collectionStats.smallNonLeafHeapBlockPartialReuseBytes[HeapBlock::SmallFinalizableBlockType]);
     }
 #endif
-    Output::Print(_u("\n"));
+    Output::Print(u"\n");
 
-    PrintHeapBlockStats(_u("Medium"), HeapBlock::MediumNormalBlockType);
+    PrintHeapBlockStats(u"Medium", HeapBlock::MediumNormalBlockType);
 #if ENABLE_PARTIAL_GC
     if (this->enablePartialCollect)
     {
-        Output::Print(_u(" |  Reuse     : %5d %10d %10d"),
+        Output::Print(u" |  Reuse     : %5d %10d %10d",
             collectionStats.smallNonLeafHeapBlockPartialReuseCount[HeapBlock::MediumNormalBlockType],
             collectionStats.smallNonLeafHeapBlockPartialReuseBytes[HeapBlock::MediumNormalBlockType],
             collectionStats.smallNonLeafHeapBlockPartialReuseCount[HeapBlock::MediumNormalBlockType] * AutoSystemInfo::PageSize
             - collectionStats.smallNonLeafHeapBlockPartialReuseBytes[HeapBlock::MediumNormalBlockType]);
     }
 #endif
-    Output::Print(_u("\n"));
-    PrintHeapBlockStats(_u("MdFin"), HeapBlock::MediumFinalizableBlockType);
+    Output::Print(u"\n");
+    PrintHeapBlockStats(u"MdFin", HeapBlock::MediumFinalizableBlockType);
 #if ENABLE_PARTIAL_GC
     if (this->enablePartialCollect)
     {
-        Output::Print(_u(" |  Unused    : %5d %10d %10d"),
+        Output::Print(u" |  Unused    : %5d %10d %10d",
             collectionStats.smallNonLeafHeapBlockPartialUnusedCount[HeapBlock::MediumFinalizableBlockType],
             collectionStats.smallNonLeafHeapBlockPartialUnusedBytes[HeapBlock::MediumFinalizableBlockType],
             collectionStats.smallNonLeafHeapBlockPartialUnusedCount[HeapBlock::MediumFinalizableBlockType] * AutoSystemInfo::PageSize
             - collectionStats.smallNonLeafHeapBlockPartialUnusedBytes[HeapBlock::MediumFinalizableBlockType]);
     }
 #endif
-    Output::Print(_u("\n"));
+    Output::Print(u"\n");
 
 #ifdef RECYCLER_WRITE_BARRIER
-    PrintHeapBlockStats(_u("MdSWB"), HeapBlock::MediumNormalBlockWithBarrierType);
+    PrintHeapBlockStats(u"MdSWB", HeapBlock::MediumNormalBlockWithBarrierType);
 #if ENABLE_PARTIAL_GC
     if (this->enablePartialCollect)
     {
-        Output::Print(_u(" |  Unused    : %5d %10d %10d"),
+        Output::Print(u" |  Unused    : %5d %10d %10d",
             collectionStats.smallNonLeafHeapBlockPartialUnusedCount[HeapBlock::MediumNormalBlockWithBarrierType],
             collectionStats.smallNonLeafHeapBlockPartialUnusedBytes[HeapBlock::MediumNormalBlockWithBarrierType],
             collectionStats.smallNonLeafHeapBlockPartialUnusedCount[HeapBlock::MediumNormalBlockWithBarrierType] * AutoSystemInfo::PageSize
             - collectionStats.smallNonLeafHeapBlockPartialUnusedBytes[HeapBlock::MediumNormalBlockWithBarrierType]);
     }
 #endif
-    Output::Print(_u("\n"));
-    PrintHeapBlockStats(_u("MdFin"), HeapBlock::MediumFinalizableBlockWithBarrierType);
+    Output::Print(u"\n");
+    PrintHeapBlockStats(u"MdFin", HeapBlock::MediumFinalizableBlockWithBarrierType);
 #if ENABLE_PARTIAL_GC
     if (this->enablePartialCollect)
     {
-        Output::Print(_u(" |  Unused    : %5d %10d %10d"),
+        Output::Print(u" |  Unused    : %5d %10d %10d",
             collectionStats.smallNonLeafHeapBlockPartialUnusedCount[HeapBlock::MediumFinalizableBlockWithBarrierType],
             collectionStats.smallNonLeafHeapBlockPartialUnusedBytes[HeapBlock::MediumFinalizableBlockWithBarrierType],
             collectionStats.smallNonLeafHeapBlockPartialUnusedCount[HeapBlock::MediumFinalizableBlockWithBarrierType] * AutoSystemInfo::PageSize
             - collectionStats.smallNonLeafHeapBlockPartialUnusedBytes[HeapBlock::MediumFinalizableBlockWithBarrierType]);
     }
 #endif
-    Output::Print(_u("\n"));
+    Output::Print(u"\n");
 #endif
 
     // TODO: This seems suspicious- why are we looking at smallNonLeaf while print out leaf...
-    PrintHeapBlockStats(_u("MdLeaf"), HeapBlock::MediumNormalBlockType);
+    PrintHeapBlockStats(u"MdLeaf", HeapBlock::MediumNormalBlockType);
 #if ENABLE_PARTIAL_GC
     if (this->enablePartialCollect)
     {
-        Output::Print(_u(" |  ReuseFin  : %5d %10d %10d"),
+        Output::Print(u" |  ReuseFin  : %5d %10d %10d",
             collectionStats.smallNonLeafHeapBlockPartialReuseCount[HeapBlock::MediumFinalizableBlockType],
             collectionStats.smallNonLeafHeapBlockPartialReuseBytes[HeapBlock::MediumFinalizableBlockType],
             collectionStats.smallNonLeafHeapBlockPartialReuseCount[HeapBlock::MediumFinalizableBlockType] * AutoSystemInfo::PageSize
             - collectionStats.smallNonLeafHeapBlockPartialReuseBytes[HeapBlock::MediumFinalizableBlockType]);
     }
 #endif
-    Output::Print(_u("\n"));
+    Output::Print(u"\n");
 
     // TODO: This can't possibly be correct...check on this later
-    PrintHeapBlockStats(_u("Large"), HeapBlock::LargeBlockType);
+    PrintHeapBlockStats(u"Large", HeapBlock::LargeBlockType);
 #if ENABLE_PARTIAL_GC
     if (this->enablePartialCollect)
     {
-        Output::Print(_u("                               |  UnusedFin : %5d %10d %10d"),
+        Output::Print(u"                               |  UnusedFin : %5d %10d %10d",
             collectionStats.smallNonLeafHeapBlockPartialUnusedCount[HeapBlock::SmallFinalizableBlockType],
             collectionStats.smallNonLeafHeapBlockPartialUnusedBytes[HeapBlock::SmallFinalizableBlockType],
             collectionStats.smallNonLeafHeapBlockPartialUnusedCount[HeapBlock::SmallFinalizableBlockType] * AutoSystemInfo::PageSize
                 - collectionStats.smallNonLeafHeapBlockPartialUnusedBytes[HeapBlock::SmallFinalizableBlockType]);
     }
 #endif
-    Output::Print(_u("\n"));
+    Output::Print(u"\n");
 
     PrintMemoryStats();
 
@@ -7762,7 +7762,7 @@ void Recycler::VerifyCheck(BOOL cond, char16_t const * msg, void * address, void
 {
     if (!(cond))
     {
-        fwprintf(stderr, _u("RECYCLER CORRUPTION: StartAddress=%p CorruptedAddress=%p: %s"), address, corruptedAddress, msg);
+        fwprintf(stderr, u"RECYCLER CORRUPTION: StartAddress=%p CorruptedAddress=%p: %s", address, corruptedAddress, msg);
         Js::Throw::FatalInternalError();
     }
 }
@@ -7780,10 +7780,10 @@ void Recycler::VerifyCheckPadExplicitFreeList(void * address, size_t size)
 #pragma warning(suppress:4310)
     Assert(padding != (size_t)0xCACACACACACACACA);  // Explicit free objects have to have been initialized at some point before they were freed
 
-    Recycler::VerifyCheck(padding >= verifyPad + sizeof(size_t) &&  padding < size, _u("Invalid padding size"), address, paddingAddress);
+    Recycler::VerifyCheck(padding >= verifyPad + sizeof(size_t) &&  padding < size, u"Invalid padding size", address, paddingAddress);
     for (byte * i = (byte *)address + size - padding; i < (byte *)paddingAddress; i++)
     {
-        Recycler::VerifyCheck(*i == Recycler::VerifyMemFill, _u("buffer overflow"), address, i);
+        Recycler::VerifyCheck(*i == Recycler::VerifyMemFill, u"buffer overflow", address, i);
     }
 }
 void Recycler::VerifyCheckPad(void * address, size_t size)
@@ -7798,10 +7798,10 @@ void Recycler::VerifyCheckPad(void * address, size_t size)
         Recycler::VerifyCheckFill(address, size);
         return;
     }
-    Recycler::VerifyCheck(padding >= verifyPad + sizeof(size_t) &&  padding < size, _u("Invalid padding size"), address, paddingAddress);
+    Recycler::VerifyCheck(padding >= verifyPad + sizeof(size_t) &&  padding < size, u"Invalid padding size", address, paddingAddress);
     for (byte * i = (byte *)address + size - padding; i < (byte *)paddingAddress; i++)
     {
-        Recycler::VerifyCheck(*i == Recycler::VerifyMemFill, _u("buffer overflow"), address, i);
+        Recycler::VerifyCheck(*i == Recycler::VerifyMemFill, u"buffer overflow", address, i);
     }
 }
 #endif
@@ -7873,7 +7873,7 @@ bool Recycler::DumpObjectGraph(RecyclerObjectGraphDumper::Param * param)
     }
     if (this->collectionState != CollectionStateNotCollecting)
     {
-        Output::Print(_u("Can't dump object graph when collecting\n"));
+        Output::Print(u"Can't dump object graph when collecting\n");
         Output::Flush();
         return succeeded;
     }
@@ -7904,7 +7904,7 @@ bool Recycler::DumpObjectGraph(RecyclerObjectGraphDumper::Param * param)
 
     if (!succeeded)
     {
-        Output::Print(_u("Out of memory dumping object graph\n"));
+        Output::Print(u"Out of memory dumping object graph\n");
     }
     Output::Flush();
     return succeeded;
@@ -7932,7 +7932,7 @@ Recycler::DumpObjectDescription(void *objectAddress)
     }
     RecyclerObjectDumper::DumpObject(typeinfo, isArray, objectAddress);
 #else
-    Output::Print(_u("Address %p"), objectAddress);
+    Output::Print(u"Address %p", objectAddress);
 #endif
 }
 #endif
@@ -8116,7 +8116,7 @@ Recycler::TrackAllocCore(void * object, size_t size, const TrackAllocData& track
 
     if (traceLifetime)
     {
-        Output::Print(data.isArray ? _u("Allocated %S[] %p\n") : _u("Allocated %S %p\n"), data.typeinfo->name(), object);
+        Output::Print(data.isArray ? u"Allocated %S[] %p\n" : u"Allocated %S %p\n", data.typeinfo->name(), object);
     }
 #endif
 #ifdef PERF_COUNTERS
@@ -8182,7 +8182,7 @@ BOOL Recycler::TrackFree(const char* address, size_t size)
 #ifdef TRACE_OBJECT_LIFETIME
                 if (data->TraceLifetime)
                 {
-                    Output::Print(data->isArray ? _u("Freed %S[] %p\n") : _u("Freed %S %p\n"), data->typeinfo->name(), address);
+                    Output::Print(data->isArray ? u"Freed %S[] %p\n" : u"Freed %S %p\n", data->typeinfo->name(), address);
                 }
 #endif
             }
@@ -8283,18 +8283,18 @@ Recycler::PrintAllocStats()
     long allocSize = 0;
     int freeCount = 0;
     long freeSize = 0;
-    Output::Print(_u("=================================================================================================================\n"));
-    Output::Print(_u("Recycler Allocations\n"));
-    Output::Print(_u("=================================================================================================================\n"));
-    Output::Print(_u("ItemSize  ItemCount   AllocCount  RequestSize      AllocSize        FreeCount   FreeSize         DiffCount   DiffSize        \n"));
-    Output::Print(_u("--------  ----------  ----------  ---------------  ---------------  ----------  ---------------  ----------  ---------------\n"));
+    Output::Print(u"=================================================================================================================\n");
+    Output::Print(u"Recycler Allocations\n");
+    Output::Print(u"=================================================================================================================\n");
+    Output::Print(u"ItemSize  ItemCount   AllocCount  RequestSize      AllocSize        FreeCount   FreeSize         DiffCount   DiffSize        \n");
+    Output::Print(u"--------  ----------  ----------  ---------------  ---------------  ----------  ---------------  ----------  ---------------\n");
     for (int i = 0; i < trackerDictionary->Count(); i++)
     {
         TrackerItem * item = trackerDictionary->GetValueAt(i);
         type_info const * typeinfo = trackerDictionary->GetKeyAt(i);
         if (item->instanceData.AllocCount != 0)
         {
-            Output::Print(_u("%8d  %10d  %10d  %15I64d  %15I64d  %10d  %15I64d  %10d  %15I64d  %S\n"),
+            Output::Print(u"%8d  %10d  %10d  %15I64d  %15I64d  %10d  %15I64d  %10d  %15I64d  %S\n",
                 item->instanceData.ItemSize, item->instanceData.ItemCount, item->instanceData.AllocCount, item->instanceData.ReqSize,
                 item->instanceData.AllocSize, item->instanceData.FreeCount, item->instanceData.FreeSize,
                 item->instanceData.AllocCount - item->instanceData.FreeCount,  item->instanceData.AllocSize - item->instanceData.FreeSize, typeinfo->name());
@@ -8308,7 +8308,7 @@ Recycler::PrintAllocStats()
 
         if (item->arrayData.AllocCount != 0)
         {
-            Output::Print(_u("%8d  %10d  %10d  %15I64d  %15I64d  %10d  %15I64d  %10d  %15I64d  %S[]\n"),
+            Output::Print(u"%8d  %10d  %10d  %15I64d  %15I64d  %10d  %15I64d  %10d  %15I64d  %S[]\n",
                 item->arrayData.ItemSize, item->arrayData.ItemCount, item->arrayData.AllocCount, item->arrayData.ReqSize,
                 item->arrayData.AllocSize, item->arrayData.FreeCount, item->arrayData.FreeSize,
                 item->instanceData.AllocCount - item->instanceData.FreeCount, item->arrayData.AllocSize - item->arrayData.FreeSize, typeinfo->name());
@@ -8320,26 +8320,26 @@ Recycler::PrintAllocStats()
             freeSize += item->arrayData.FreeSize;
         }
     }
-    Output::Print(_u("--------  ----------  ----------  ---------------  ---------------  ----------  ---------------  ----------  ---------------\n"));
-    Output::Print(_u("            %8d  %10d  %15I64d  %15I64d  %10d  %15I64d  %10d  %15I64d  **Total**\n"),
+    Output::Print(u"--------  ----------  ----------  ---------------  ---------------  ----------  ---------------  ----------  ---------------\n");
+    Output::Print(u"            %8d  %10d  %15I64d  %15I64d  %10d  %15I64d  %10d  %15I64d  **Total**\n",
         itemCount, allocCount, reqSize, allocSize, freeCount, freeSize, allocCount - freeCount, allocSize - freeSize);
 
 #ifdef EXCEL_FRIENDLY_DUMP
-    Output::Print(_u("\nExcel friendly version\nItemSize\tItemCount\tAllocCount\tRequestSize\tAllocSize\tFreeCount\tFreeSize\tDiffCount\tDiffSize\tType\n"));
+    Output::Print(u"\nExcel friendly version\nItemSize\tItemCount\tAllocCount\tRequestSize\tAllocSize\tFreeCount\tFreeSize\tDiffCount\tDiffSize\tType\n");
     for (int i = 0; i < trackerDictionary->Count(); i++)
     {
         TrackerItem * item = trackerDictionary->GetValueAt(i);
         type_info const * typeinfo = trackerDictionary->GetKeyAt(i);
         if (item->instanceData.AllocCount != 0)
         {
-            Output::Print(_u("%d\t%d\t%d\t%I64d\t%I64d\t%d\t%I64d\t%d\t%I64d\t%S\n"),
+            Output::Print(u"%d\t%d\t%d\t%I64d\t%I64d\t%d\t%I64d\t%d\t%I64d\t%S\n",
                 item->instanceData.ItemSize, item->instanceData.ItemCount, item->instanceData.AllocCount, item->instanceData.ReqSize,
                 item->instanceData.AllocSize, item->instanceData.FreeCount, item->instanceData.FreeSize,
                 item->instanceData.AllocCount - item->instanceData.FreeCount,  item->instanceData.AllocSize - item->instanceData.FreeSize, typeinfo->name());
         }
         if (item->arrayData.AllocCount != 0)
         {
-            Output::Print(_u("%d\t%d\t%d\t%I64d\t%I64d\t%d\t%I64d\t%d\t%I64d\t%S[]\n"),
+            Output::Print(u"%d\t%d\t%d\t%I64d\t%I64d\t%d\t%I64d\t%d\t%I64d\t%S[]\n",
                 item->arrayData.ItemSize, item->arrayData.ItemCount, item->arrayData.AllocCount, item->arrayData.ReqSize,
                 item->arrayData.AllocSize, item->arrayData.FreeCount, item->arrayData.FreeSize,
                 item->instanceData.AllocCount - item->instanceData.FreeCount, item->arrayData.AllocSize - item->arrayData.FreeSize, typeinfo->name());
@@ -8552,15 +8552,15 @@ Recycler::ReportLeaks()
             this->RootAddRef(f);
         }
 
-        LeakReport::StartSection(_u("Object Graph"));
+        LeakReport::StartSection(u"Object Graph");
         LeakReport::StartRedirectOutput();
 
         RecyclerObjectGraphDumper::Param param = { 0 };
         param.skipStack = true;
         if (!this->DumpObjectGraph(&param))
         {
-            LeakReport::Print(_u("--------------------------------------------------------------------------------\n"));
-            LeakReport::Print(_u("ERROR: Out of memory generating leak report\n"));
+            LeakReport::Print(u"--------------------------------------------------------------------------------\n");
+            LeakReport::Print(u"ERROR: Out of memory generating leak report\n");
             param.stats.markData.markCount = 0;
         }
 
@@ -8568,14 +8568,14 @@ Recycler::ReportLeaks()
 
         if (param.stats.markData.markCount != 0)
         {
-            LeakReport::Print(_u("--------------------------------------------------------------------------------\n"));
-            LeakReport::Print(_u("Recycler Leaked Object: %d bytes (%d objects)\n"),
+            LeakReport::Print(u"--------------------------------------------------------------------------------\n");
+            LeakReport::Print(u"Recycler Leaked Object: %d bytes (%d objects)\n",
                 param.stats.markData.markBytes, param.stats.markData.markCount);
 
 #ifdef STACK_BACK_TRACE
             if (GetRecyclerFlagsTable().LeakStackTrace)
             {
-                LeakReport::StartSection(_u("Pinned object stack traces"));
+                LeakReport::StartSection(u"Pinned object stack traces");
                 LeakReport::StartRedirectOutput();
                 this->PrintPinnedObjectStackTraces();
                 LeakReport::EndRedirectOutput();
@@ -8592,7 +8592,7 @@ Recycler::ReportLeaksOnProcessDetach()
 {
     if (GetRecyclerFlagsTable().IsEnabled(Js::LeakReportFlag))
     {
-        AUTO_LEAK_REPORT_SECTION(this->GetRecyclerFlagsTable(), _u("Recycler (%p): Process Termination"), this);
+        AUTO_LEAK_REPORT_SECTION(this->GetRecyclerFlagsTable(), u"Recycler (%p): Process Termination", this);
         LeakReport::StartRedirectOutput();
         ReportOnProcessDetach([=]() { this->ReportLeaks(); });
         LeakReport::EndRedirectOutput();
@@ -8615,16 +8615,16 @@ Recycler::CheckLeaks(char16_t const * header)
         }
 
         Output::CaptureStart();
-        Output::Print(_u("-------------------------------------------------------------------------------------\n"));
-        Output::Print(_u("Recycler (%p): %s Leaked Roots\n"), this, header);
-        Output::Print(_u("-------------------------------------------------------------------------------------\n"));
+        Output::Print(u"-------------------------------------------------------------------------------------\n");
+        Output::Print(u"Recycler (%p): %s Leaked Roots\n", this, header);
+        Output::Print(u"-------------------------------------------------------------------------------------\n");
         RecyclerObjectGraphDumper::Param param = { 0 };
         param.dumpRootOnly = true;
         param.skipStack = true;
         if (!this->DumpObjectGraph(&param))
         {
             free(Output::CaptureEnd());
-            Output::Print(_u("ERROR: Out of memory generating leak report\n"));
+            Output::Print(u"ERROR: Out of memory generating leak report\n");
             return;
         }
 
@@ -8633,15 +8633,15 @@ Recycler::CheckLeaks(char16_t const * header)
 #ifdef STACK_BACK_TRACE
             if (GetRecyclerFlagsTable().LeakStackTrace)
             {
-                Output::Print(_u("-------------------------------------------------------------------------------------\n"));
-                Output::Print(_u("Pinned object stack traces"));
-                Output::Print(_u("-------------------------------------------------------------------------------------\n"));
+                Output::Print(u"-------------------------------------------------------------------------------------\n");
+                Output::Print(u"Pinned object stack traces");
+                Output::Print(u"-------------------------------------------------------------------------------------\n");
                 this->PrintPinnedObjectStackTraces();
             }
 #endif
 
-            Output::Print(_u("-------------------------------------------------------------------------------------\n"));
-            Output::Print(_u("Recycler Leaked Object: %d bytes (%d objects)\n"),
+            Output::Print(u"-------------------------------------------------------------------------------------\n");
+            Output::Print(u"Recycler Leaked Object: %d bytes (%d objects)\n",
                 param.stats.markData.markBytes, param.stats.markData.markCount);
 
             char16_t * buffer = Output::CaptureEnd();
@@ -8690,7 +8690,7 @@ Recycler::ReportOnProcessDetach(Fn fn)
 
     if (this->CollectionInProgress())
     {
-        Output::Print(_u("WARNING: Thread terminated during GC.  Can't dump object graph\n"));
+        Output::Print(u"WARNING: Thread terminated during GC.  Can't dump object graph\n");
         return;
     }
 #else
@@ -8711,7 +8711,7 @@ Recycler::PrintPinnedObjectStackTraces()
     pinnedObjectMap.Map([this](void * object, PinRecord const& pinRecord)
         {
             this->DumpObjectDescription(object);
-            Output::Print(_u("\n"));
+            Output::Print(u"\n");
             StackBackTraceNode::PrintAll(pinRecord.stackBackTraces);
         }
     );
@@ -8823,7 +8823,7 @@ ArenaAllocator *
 Recycler::AddBackgroundProfilerArena()
 {
     return this->backgroundProfilerArena.PrependNode(&HeapAllocator::Instance,
-        _u("BgGCProfiler"), &this->backgroundProfilerPageAllocator, Js::Throw::OutOfMemory);
+        u"BgGCProfiler", &this->backgroundProfilerPageAllocator, Js::Throw::OutOfMemory);
 }
 
 void
@@ -9000,7 +9000,7 @@ void Recycler::SetCheckFn(BOOL(*checkFn)(char* addr, size_t size))
 void
 Recycler::NotifyFree(char *address, size_t size)
 {
-    RecyclerVerboseTrace(GetRecyclerFlagsTable(), _u("Sweeping object %p\n"), address);
+    RecyclerVerboseTrace(GetRecyclerFlagsTable(), u"Sweeping object %p\n", address);
 
 #ifdef RECYCLER_TEST_SUPPORT
     if (BinaryFeatureControl::RecyclerTest())
@@ -9170,7 +9170,7 @@ Recycler::VerifyFinalize()
 #else
     if (currentFinalizableObjectCount != >this->collectionStats.finalizeCount)
     {
-        Output::Print(_u("ERROR: Recycler dropped some finalizable objects"));
+        Output::Print(u"ERROR: Recycler dropped some finalizable objects");
         DebugBreak();
     }
 #endif

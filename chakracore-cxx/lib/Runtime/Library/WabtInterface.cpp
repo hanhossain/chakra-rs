@@ -121,7 +121,7 @@ Js::Var WabtInterface::EntryConvertWast2Wasm(RecyclableObject* function, CallInf
         // optional config object
         if (!JavascriptOperators::IsObject(args[2]))
         {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_NeedObject, _u("config"));
+            JavascriptError::ThrowTypeError(scriptContext, JSERR_NeedObject, u"config");
         }
         DynamicObject * configObject = VarTo<DynamicObject>(args[2]);
 
@@ -129,7 +129,7 @@ Js::Var WabtInterface::EntryConvertWast2Wasm(RecyclableObject* function, CallInf
         isSpecText = JavascriptConversion::ToBool(isSpecVar, scriptContext);
     }
 
-    ArenaAllocator arena(_u("Wast2Wasm"), scriptContext->GetThreadContext()->GetPageAllocator(), Throw::OutOfMemory);
+    ArenaAllocator arena(u"Wast2Wasm", scriptContext->GetThreadContext()->GetPageAllocator(), Throw::OutOfMemory);
     Context context;
     size_t wastSize;
     char* wastBuffer = nullptr;

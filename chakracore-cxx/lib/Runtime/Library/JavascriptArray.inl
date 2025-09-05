@@ -328,7 +328,7 @@ namespace Js
 #if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::CopyOnAccessArrayPhase))
         {
-            Output::Print(_u("Create copy-on-access array: func(#%2d) index(%d) length(%d)\n"),
+            Output::Print(u"Create copy-on-access array: func(#%2d) index(%d) length(%d)\n",
                 functionBody->GetFunctionNumber(), lib->cacheForCopyOnAccessArraySegments->GetCount(), ints->count);
             Output::Flush();
         }

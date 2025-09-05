@@ -29,8 +29,8 @@ public:
     ArenaAllocator* GetAllocator() { return &m_allocator; }
 };
 
-static ArenaHost s_arenaHost1(_u("For Output::Trace (1)"));
-static ArenaHost s_arenaHost2(_u("For Output::Trace (2)"));
+static ArenaHost s_arenaHost1(u"For Output::Trace (1)");
+static ArenaHost s_arenaHost2(u"For Output::Trace (2)");
 
 ArenaAllocator* GetOutputAllocator1()
 {
@@ -70,14 +70,14 @@ void ConfigParser::ParseConfig(HANDLE hmod, CmdLineArgsParser &parser, const cha
     _hasReadConfig = true;
 
     const char16_t* configFileName = strCustomConfigFile;
-    const char16_t* configFileExt = _u(""); /* in the custom config case,
+    const char16_t* configFileExt = u""; /* in the custom config case,
                                              ext is expected to be passed
                                              in as part of the filename */
 
     if (configFileName == nullptr)
     {
         configFileName = _configFileName;
-        configFileExt = _u(".config");
+        configFileExt = u".config";
     }
 
     int err = 0;
@@ -97,19 +97,19 @@ void ConfigParser::ParseConfig(HANDLE hmod, CmdLineArgsParser &parser, const cha
     // 2. _wfullpath is not implemented in the PAL.
     // Instead, on xplat, we'll check the HOME directory to see if there is
     // a config file there that we can use
-    if (_wfopen_s(&configFile, filename, _u("r")) != 0 || configFile == nullptr)
+    if (_wfopen_s(&configFile, filename, u"r") != 0 || configFile == nullptr)
     {
         char16_t homeDir[MAX_PATH];
 
-        if (GetEnvironmentVariable(_u("HOME"), homeDir, MAX_PATH) == 0)
+        if (GetEnvironmentVariable(u"HOME", homeDir, MAX_PATH) == 0)
         {
             return;
         }
         
         char16_t configFileFullName[MAX_PATH];
 
-        StringCchPrintf(configFileFullName, MAX_PATH, _u("%s/%s%s"), homeDir, configFileName, configFileExt);
-        if (_wfopen_s(&configFile, configFileFullName, _u("r")) != 0 || configFile == nullptr)
+        StringCchPrintf(configFileFullName, MAX_PATH, u"%s/%s%s", homeDir, configFileName, configFileExt);
+        if (_wfopen_s(&configFile, configFileFullName, u"r") != 0 || configFile == nullptr)
         {
             return;
         }
@@ -229,7 +229,7 @@ void ConfigParser::ProcessConfiguration(HANDLE hmod)
     {
         ConfigParserAPI::DisplayInitialOutput(modulename);
 
-        Output::Print(_u("\n"));
+        Output::Print(u"\n");
 
         Js::Configuration::Global.flags.VerboseDump();
         Output::Flush();
@@ -271,7 +271,7 @@ HRESULT ConfigParser::SetOutputFile(const char16_t* outputFile, const char16_t* 
     // If present, replace the {PID} token with the process ID
     const char16_t* pidStr = nullptr;
     char16_t buffer[_MAX_PATH];
-    if ((pidStr = wcsstr(outputFile, _u("{PID}"))) != nullptr)
+    if ((pidStr = wcsstr(outputFile, u"{PID}")) != nullptr)
     {
         size_t pidStartPosition = pidStr - outputFile;
 
@@ -300,18 +300,18 @@ HRESULT ConfigParser::SetOutputFile(const char16_t* outputFile, const char16_t* 
     char16_t moduleName[_MAX_PATH];
     PlatformAgnostic::SystemInfo::GetBinaryLocation(moduleName, _MAX_PATH);
     _wsplitpath_s(moduleName, nullptr, 0, nullptr, 0, fileName, _MAX_PATH, nullptr, 0);
-    if (_wcsicmp(fileName, _u("WWAHost")) == 0 ||
-        _wcsicmp(fileName, _u("ByteCodeGenerator")) == 0 ||
-        _wcsicmp(fileName, _u("spartan")) == 0 ||
-        _wcsicmp(fileName, _u("spartan_edge")) == 0 ||
-        _wcsnicmp(fileName, _u("MicrosoftEdge"), wcslen(_u("MicrosoftEdge"))) == 0)
+    if (_wcsicmp(fileName, u"WWAHost") == 0 ||
+        _wcsicmp(fileName, u"ByteCodeGenerator") == 0 ||
+        _wcsicmp(fileName, u"spartan") == 0 ||
+        _wcsicmp(fileName, u"spartan_edge") == 0 ||
+        _wcsnicmp(fileName, u"MicrosoftEdge", wcslen(u"MicrosoftEdge")) == 0)
     {
 
         // we need to output to %temp% directory in wwa. we don't have permission otherwise.
-        if (GetEnvironmentVariable(_u("temp"), fileName, _MAX_PATH) != 0)
+        if (GetEnvironmentVariable(u"temp", fileName, _MAX_PATH) != 0)
         {
-            wcscat_s(fileName, _MAX_PATH, _u("\\"));
-            const char16_t * fileNameOnly = wcsrchr(outputFile, _u('\\'));
+            wcscat_s(fileName, _MAX_PATH, u"\\");
+            const char16_t * fileNameOnly = wcsrchr(outputFile, u'\\');
             // if outputFile is full path we just need filename, discard the path
             wcscat_s(fileName, _MAX_PATH, fileNameOnly == nullptr ? outputFile : fileNameOnly);
         }

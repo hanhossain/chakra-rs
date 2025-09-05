@@ -146,7 +146,7 @@ namespace Js
 
     void EngineInterfaceObject::ProcessCorePaths()
     {
-        this->GetScriptContext()->TTDWellKnownInfo->EnqueueNewPathVarAsNeeded(this, this->commonNativeInterfaces, _u("!commonNativeInterfaces"));
+        this->GetScriptContext()->TTDWellKnownInfo->EnqueueNewPathVarAsNeeded(this, this->commonNativeInterfaces, u"!commonNativeInterfaces");
     }
 
     TTD::NSSnapObjects::SnapObjectType EngineInterfaceObject::GetSnapTag_TTD() const
@@ -292,7 +292,7 @@ namespace Js
             // latter do we extract a shortName.
             const char16_t *methodNameBuf = displayName->GetSz();
             charcount_t methodNameLength = displayName->GetLength();
-            const char16_t *shortName = wcsrchr(methodNameBuf, _u('.'));
+            const char16_t *shortName = wcsrchr(methodNameBuf, u'.');
             charcount_t shortNameOffset = 0;
             if (shortName != nullptr)
             {

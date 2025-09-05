@@ -352,17 +352,17 @@ namespace Js
         TraceCacheCommon(methodName, propertyId, requestContext, object);
         if(inlineCache)
         {
-            Output::Print(_u("Inline Cache: \n  "));
+            Output::Print(u"Inline Cache: \n  ");
             inlineCache->Dump();
         }
-        Output::Print(_u("\n"));
+        Output::Print(u"\n");
         Output::Flush();
     }
 
     void CacheOperators::TraceCache(PolymorphicInlineCache * polymorphicInlineCache, const char16_t * methodName, PropertyId propertyId, ScriptContext * requestContext, RecyclableObject * object)
     {
         TraceCacheCommon(methodName, propertyId, requestContext, object);
-        Output::Print(_u("Polymorphic Inline Cache, size = %d :\n"), polymorphicInlineCache->GetSize());
+        Output::Print(u"Polymorphic Inline Cache, size = %d :\n", polymorphicInlineCache->GetSize());
         polymorphicInlineCache->Dump();
         Output::Flush();
     }
@@ -382,7 +382,7 @@ namespace Js
                 lineNumber = functionBody->GetLineNumber();
                 columnNumber = functionBody->GetColumnNumber();
             }
-            Output::Print(_u("%s, %s, %s(%d:%d), InType: 0x%X "),
+            Output::Print(u"%s, %s, %s(%d:%d), InType: 0x%X ",
                 methodName,
                 requestContext->GetPropertyName(propertyId)->GetBuffer(),
                 callerName,

@@ -38,7 +38,7 @@ namespace Js
 
     LiteralString* LiteralString::CreateEmptyString(StaticType* type)
     {
-        return RecyclerNew(type->GetScriptContext()->GetRecycler(), LiteralString, type, _u(""), 0);
+        return RecyclerNew(type->GetScriptContext()->GetRecycler(), LiteralString, type, u"", 0);
     }
 
 } // namespace Js

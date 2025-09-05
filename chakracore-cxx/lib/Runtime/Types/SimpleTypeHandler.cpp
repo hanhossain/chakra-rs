@@ -1271,7 +1271,7 @@ namespace Js
     template<size_t size>
     void SimpleTypeHandler<size>::Dump(unsigned indent) const
     {
-        Output::Print(_u("%*sSimpleTypeHandler<%u> (0x%p): Dump unimplemented\n"), indent, _u(""), size, this);
+        Output::Print(u"%*sSimpleTypeHandler<%u> (0x%p): Dump unimplemented\n", indent, u"", size, this);
     }
 #endif
 

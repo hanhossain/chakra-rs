@@ -81,7 +81,7 @@ namespace Js
         }
         else
         {
-            return TryInvokeRemotelyOrThrow(EntryValueOf, scriptContext, args, JSERR_This_NeedBoolean, _u("Boolean.prototype.valueOf"));
+            return TryInvokeRemotelyOrThrow(EntryValueOf, scriptContext, args, JSERR_This_NeedBoolean, u"Boolean.prototype.valueOf");
         }
     }
 
@@ -109,7 +109,7 @@ namespace Js
         }
         else
         {
-            return TryInvokeRemotelyOrThrow(EntryToString, scriptContext, args, JSERR_This_NeedBoolean, _u("Boolean.prototype.toString"));
+            return TryInvokeRemotelyOrThrow(EntryToString, scriptContext, args, JSERR_This_NeedBoolean, u"Boolean.prototype.toString");
         }
 
         return bval ? scriptContext->GetLibrary()->GetTrueDisplayString() : scriptContext->GetLibrary()->GetFalseDisplayString();
@@ -201,7 +201,7 @@ namespace Js
 
     BOOL JavascriptBoolean::GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
     {
-        stringBuilder->AppendCppLiteral(_u("Boolean"));
+        stringBuilder->AppendCppLiteral(u"Boolean");
         return TRUE;
     }
 

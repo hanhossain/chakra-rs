@@ -70,8 +70,8 @@ namespace Js
 
             if (inDebugMode)
             {
-                this->debugModeSource = this->sourceHolder->GetSource(_u("Entering Debug Mode"));
-                this->debugModeSourceLength = this->sourceHolder->GetByteLength(_u("Entering Debug Mode"));
+                this->debugModeSource = this->sourceHolder->GetSource(u"Entering Debug Mode");
+                this->debugModeSourceLength = this->sourceHolder->GetByteLength(u"Entering Debug Mode");
                 this->debugModeSourceIsEmpty = !this->HasSource() || this->debugModeSource == nullptr;
                 this->EnsureLineOffsetCache();
             }
@@ -87,12 +87,12 @@ namespace Js
 
         size_t CharacterIndexToByteIndex(charcount_t cchIndex) const
         {
-            return cchIndex < m_cchLength ? (GetCbLength(_u("CharacterIndexToByteIndex")) == m_cchLength ?  cchIndex : utf8::CharacterIndexToByteIndex(this->GetSource(_u("CharacterIndexToByteIndex")), GetCbLength(_u("CharacterIndexToByteIndex")), cchIndex, utf8::doAllowThreeByteSurrogates)) : m_cchLength;
+            return cchIndex < m_cchLength ? (GetCbLength(u"CharacterIndexToByteIndex") == m_cchLength ?  cchIndex : utf8::CharacterIndexToByteIndex(this->GetSource(u"CharacterIndexToByteIndex"), GetCbLength(u"CharacterIndexToByteIndex"), cchIndex, utf8::doAllowThreeByteSurrogates)) : m_cchLength;
         }
 
         charcount_t ByteIndexToCharacterIndex(size_t cbIndex) const
         {
-            return cbIndex < GetCbLength(_u("CharacterIndexToByteIndex")) ? static_cast< charcount_t>(GetCbLength(_u("CharacterIndexToByteIndex")) == m_cchLength ? cbIndex : utf8::ByteIndexIntoCharacterIndex(this->GetSource(_u("CharacterIndexToByteIndex")), cbIndex, utf8::doAllowThreeByteSurrogates)) : static_cast< charcount_t >(GetCbLength(_u("CharacterIndexToByteIndex")));
+            return cbIndex < GetCbLength(u"CharacterIndexToByteIndex") ? static_cast< charcount_t>(GetCbLength(u"CharacterIndexToByteIndex") == m_cchLength ? cbIndex : utf8::ByteIndexIntoCharacterIndex(this->GetSource(u"CharacterIndexToByteIndex"), cbIndex, utf8::doAllowThreeByteSurrogates)) : static_cast< charcount_t >(GetCbLength(u"CharacterIndexToByteIndex"));
         }
 
         charcount_t GetCchLength() const

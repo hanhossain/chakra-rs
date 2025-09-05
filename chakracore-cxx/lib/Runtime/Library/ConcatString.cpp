@@ -65,7 +65,7 @@ namespace Js
 
     JavascriptString * LiteralStringWithPropertyStringPtr::CreateEmptyString(JavascriptLibrary *const library)
     {
-        return (JavascriptString*) RecyclerNew(library->GetRecycler(), LiteralStringWithPropertyStringPtr, _u(""), 0, library);
+        return (JavascriptString*) RecyclerNew(library->GetRecycler(), LiteralStringWithPropertyStringPtr, u"", 0, library);
     }
 
     JavascriptString * LiteralStringWithPropertyStringPtr::

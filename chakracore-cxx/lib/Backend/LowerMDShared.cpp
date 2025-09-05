@@ -4155,7 +4155,7 @@ IR::Instr*
 LowererMD::GenerateWriteBarrier(IR::Instr * assignInstr)
 {
 #if defined(RECYCLER_WRITE_BARRIER_BYTE)
-    PHASE_PRINT_TRACE(Js::JitWriteBarrierPhase, assignInstr->m_func, _u("Generating write barrier\n"));
+    PHASE_PRINT_TRACE(Js::JitWriteBarrierPhase, assignInstr->m_func, u"Generating write barrier\n");
     IR::RegOpnd * indexOpnd = IR::RegOpnd::New(TyMachPtr, assignInstr->m_func);
     IR::Instr * loadIndexInstr = IR::Instr::New(Js::OpCode::LEA, indexOpnd, assignInstr->GetDst(), assignInstr->m_func);
     assignInstr->InsertBefore(loadIndexInstr);

@@ -521,7 +521,7 @@ CommonNumber:
         else
         {
             // Don't error if we disabled implicit calls
-            JavascriptError::TryThrowTypeError(scriptContext, requestContext, JSERR_FunctionArgument_Invalid, _u("[Symbol.toPrimitive]"));
+            JavascriptError::TryThrowTypeError(scriptContext, requestContext, JSERR_FunctionArgument_Invalid, u"[Symbol.toPrimitive]");
             return requestContext->GetLibrary()->GetNull();
         }
     }

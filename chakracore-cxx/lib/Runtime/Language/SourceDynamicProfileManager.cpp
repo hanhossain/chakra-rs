@@ -32,7 +32,7 @@ namespace Js
 #if DBG_DUMP
             if (Js::Configuration::Global.flags.Trace.IsEnabled(Js::DynamicProfilePhase))
             {
-                Output::Print(_u("TRACE: DynamicProfile: Profile data rejected for function %d in %s\n"),
+                Output::Print(u"TRACE: DynamicProfile: Profile data rejected for function %d in %s\n",
                     functionId, functionBody->GetSourceContextInfo()->url);
                 Output::Flush();
             }
@@ -114,11 +114,11 @@ namespace Js
                 return false;
             }
             this->cachedStartupFunctions = functions;
-            OUTPUT_TRACE(Js::DynamicProfilePhase, _u("Profile load succeeded. Function count: %d  %s\n"), numberOfFunctions, url);
+            OUTPUT_TRACE(Js::DynamicProfilePhase, u"Profile load succeeded. Function count: %d  %s\n", numberOfFunctions, url);
 #if DBG_DUMP
             if(PHASE_TRACE1(Js::DynamicProfilePhase) && Js::Configuration::Global.flags.Verbose)
             {
-                OUTPUT_VERBOSE_TRACE(Js::DynamicProfilePhase, _u("Profile loaded:\n"));
+                OUTPUT_VERBOSE_TRACE(Js::DynamicProfilePhase, u"Profile loaded:\n");
                 functions->Dump();
             }
 #endif
@@ -127,11 +127,11 @@ namespace Js
         else if (hr == HRESULT_FROM_WIN32(ERROR_WRITE_PROTECT))
         {
             this->isNonCachableScript = true;
-            OUTPUT_VERBOSE_TRACE(Js::DynamicProfilePhase, _u("Profile load failed. Non-cacheable resource. %s\n"), url);
+            OUTPUT_VERBOSE_TRACE(Js::DynamicProfilePhase, u"Profile load failed. Non-cacheable resource. %s\n", url);
         }
         else
         {
-            OUTPUT_TRACE(Js::DynamicProfilePhase, _u("Profile load failed. No read stream. %s\n"), url);
+            OUTPUT_TRACE(Js::DynamicProfilePhase, u"Profile load failed. No read stream. %s\n", url);
         }
 #endif
         return false;
@@ -148,17 +148,17 @@ namespace Js
         {
             if(ShouldSaveToProfileCache(info))
             {
-                OUTPUT_TRACE(Js::DynamicProfilePhase, _u("Saving profile. Number of functions: %d Url: %s...\n"), startupFunctions->Length(), info->url);
+                OUTPUT_TRACE(Js::DynamicProfilePhase, u"Saving profile. Number of functions: %d Url: %s...\n", startupFunctions->Length(), info->url);
 
                 bytesWritten = SaveToProfileCache();
 
                 if (bytesWritten == 0)
                 {
-                    OUTPUT_TRACE(Js::DynamicProfilePhase, _u("Profile saving FAILED\n"));
+                    OUTPUT_TRACE(Js::DynamicProfilePhase, u"Profile saving FAILED\n");
                 }
                 else
                 {
-                    OUTPUT_TRACE(Js::DynamicProfilePhase, _u("Profile saving succeeded. Bytes written: %d\n"), bytesWritten);
+                    OUTPUT_TRACE(Js::DynamicProfilePhase, u"Profile saving succeeded. Bytes written: %d\n", bytesWritten);
                 }
             }
 
@@ -204,7 +204,7 @@ namespace Js
 #if DBG_DUMP
             if (PHASE_TRACE1(Js::DynamicProfilePhase) && Js::Configuration::Global.flags.Verbose)
             {
-                OUTPUT_VERBOSE_TRACE(Js::DynamicProfilePhase, _u("Saved profile:\n"));
+                OUTPUT_VERBOSE_TRACE(Js::DynamicProfilePhase, u"Saved profile:\n");
                 startupFunctions->Dump();
             }
 #endif
@@ -223,19 +223,19 @@ namespace Js
     {
         if(isNonCachableScript)
         {
-            OUTPUT_VERBOSE_TRACE(Js::DynamicProfilePhase, _u("Skipping save of profile. Non-cacheable resource. %s\n"), info->url);
+            OUTPUT_VERBOSE_TRACE(Js::DynamicProfilePhase, u"Skipping save of profile. Non-cacheable resource. %s\n", info->url);
             return false;
         }
 
         if (dataCacheWrapper->BlocksWritten() > 0)
         {
-            OUTPUT_VERBOSE_TRACE(Js::DynamicProfilePhase, _u("Saving profile. There are other blocks in the cache. %s\n"), info->url);
+            OUTPUT_VERBOSE_TRACE(Js::DynamicProfilePhase, u"Saving profile. There are other blocks in the cache. %s\n", info->url);
             return true;
         }
 
         if(!startupFunctions || startupFunctions->Length() <= DEFAULT_CONFIG_MinProfileCacheSize)
         {
-            OUTPUT_VERBOSE_TRACE(Js::DynamicProfilePhase, _u("Skipping save of profile. Small number of functions. %s\n"), info->url);
+            OUTPUT_VERBOSE_TRACE(Js::DynamicProfilePhase, u"Skipping save of profile. Small number of functions. %s\n", info->url);
             return false;
         }
 
@@ -246,12 +246,12 @@ namespace Js
             uint saveThreshold = (cachedStartupFunctions->Length() * DEFAULT_CONFIG_ProfileDifferencePercent) / 100;
             if(numberOfBitsDifferent <= saveThreshold)
             {
-                OUTPUT_VERBOSE_TRACE(Js::DynamicProfilePhase, _u("Skipping save of profile. Number of functions different: %d %s\n"), numberOfBitsDifferent, info->url);
+                OUTPUT_VERBOSE_TRACE(Js::DynamicProfilePhase, u"Skipping save of profile. Number of functions different: %d %s\n", numberOfBitsDifferent, info->url);
                 return false;
             }
             else
             {
-                OUTPUT_VERBOSE_TRACE(Js::DynamicProfilePhase, _u("Number of functions different: %d \n"), numberOfBitsDifferent);
+                OUTPUT_VERBOSE_TRACE(Js::DynamicProfilePhase, u"Number of functions different: %d \n", numberOfBitsDifferent);
             }
         }
         return true;
@@ -304,7 +304,7 @@ namespace Js
         }
         catch (Js::OutOfMemoryException&)
         {
-            Output::Print(_u("Hit OOM while saving dynamic profile info\n"));
+            Output::Print(u"Hit OOM while saving dynamic profile info\n");
         }
     }
 
@@ -351,7 +351,7 @@ namespace Js
 #if DBG_DUMP
         if(Configuration::Global.flags.Dump.IsEnabled(DynamicProfilePhase))
         {
-            Output::Print(_u("Loaded: Startup functions bit vector:"));
+            Output::Print(u"Loaded: Startup functions bit vector:");
             startupFunctions->Dump();
         }
 #endif
@@ -391,7 +391,7 @@ namespace Js
 #if DBG_DUMP
              if(Configuration::Global.flags.Dump.IsEnabled(DynamicProfilePhase))
             {
-                Output::Print(_u("Saving: Startup functions bit vector:"));
+                Output::Print(u"Saving: Startup functions bit vector:");
                 this->startupFunctions->Dump();
             }
 #endif
@@ -440,7 +440,7 @@ namespace Js
 #if DBG_DUMP
         if (PHASE_STATS1(DynamicProfilePhase))
         {
-            Output::Print(_u("%-180s : %d bytes\n"), url, counter.GetByteCount());
+            Output::Print(u"%-180s : %d bytes\n", url, counter.GetByteCount());
         }
 #endif
 

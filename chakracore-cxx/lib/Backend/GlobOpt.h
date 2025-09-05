@@ -13,20 +13,20 @@ class GlobOpt;
 #if ENABLE_DEBUG_CONFIG_OPTIONS && DBG_DUMP
 
 #define PRINT_GOPT_TRACE_HEADER \
-        Output::Print(_u("TRACE ")); \
+        Output::Print(u"TRACE "); \
         if (this->IsLoopPrePass()) \
         { \
-            Output::Print(_u("[%d, %d]"), this->rootLoopPrePass->loopNumber - 1, this->prePassLoop->loopNumber - 1); \
+            Output::Print(u"[%d, %d]", this->rootLoopPrePass->loopNumber - 1, this->prePassLoop->loopNumber - 1); \
         } \
-        Output::Print(_u(": ")); \
+        Output::Print(u": "); \
 
 #define PRINT_VALUENUMBER_TRACE_HEADER \
-        Output::Print(_u("VALUE NUMBERING TRACE ")); \
+        Output::Print(u"VALUE NUMBERING TRACE "); \
         if (this->IsLoopPrePass()) \
         { \
-            Output::Print(_u("[%d, %d]"), this->rootLoopPrePass->loopNumber - 1, this->prePassLoop->loopNumber - 1); \
+            Output::Print(u"[%d, %d]", this->rootLoopPrePass->loopNumber - 1, this->prePassLoop->loopNumber - 1); \
         } \
-        Output::Print(_u(": ")); \
+        Output::Print(u": "); \
 
 #define GOPT_TRACE_VALUENUMBER(opndHeader, opnd, ...) \
     if (PHASE_TRACE(Js::ValueNumberingPhase, this->func)) \
@@ -34,9 +34,9 @@ class GlobOpt;
         PRINT_VALUENUMBER_TRACE_HEADER; \
         Output::Print(opndHeader); \
         opnd->Dump(IRDumpFlags_None, this->func); \
-        Output::Print(_u(" : ")); \
+        Output::Print(u" : "); \
         Output::Print(__VA_ARGS__); \
-        Output::Print(_u("\n")); \
+        Output::Print(u"\n"); \
         Output::Flush(); \
     }
 #define GOPT_TRACE_OPND(opnd, ...) \
@@ -44,7 +44,7 @@ class GlobOpt;
     { \
         PRINT_GOPT_TRACE_HEADER; \
         opnd->Dump(); \
-        Output::Print(_u(" : ")); \
+        Output::Print(u" : "); \
         Output::Print(__VA_ARGS__); \
         Output::Flush(); \
     }
@@ -61,7 +61,7 @@ class GlobOpt;
     { \
         if (this->IsLoopPrePass()) \
         { \
-            Output::Print(_u("[%d, %d]: "), this->rootLoopPrePass->loopNumber - 1, this->prePassLoop->loopNumber - 1); \
+            Output::Print(u"[%d, %d]: ", this->rootLoopPrePass->loopNumber - 1, this->prePassLoop->loopNumber - 1); \
         } \
         instr->Dump(); \
         Output::Flush(); \
@@ -86,23 +86,23 @@ class GlobOpt;
     { \
         char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE]; \
         Output::Print( \
-            _u("Function %s (%s)"), \
+            u"Function %s (%s)", \
             this->func->GetJITFunctionBody()->GetDisplayName(), \
             this->func->GetDebugNumberSet(debugStringBuffer)); \
         if(this->func->IsLoopBody()) \
         { \
-            Output::Print(_u(", loop %u"), this->func->GetWorkItem()->GetLoopNumber()); \
+            Output::Print(u", loop %u", this->func->GetWorkItem()->GetLoopNumber()); \
         } \
         if(instr->m_func != this->func) \
         { \
             Output::Print( \
-                _u(", Inlinee %s (%s)"), \
+                u", Inlinee %s (%s)", \
                 instr->m_func->GetJITFunctionBody()->GetDisplayName(), \
                 instr->m_func->GetDebugNumberSet(debugStringBuffer)); \
         } \
-        Output::Print(_u(" - %s\n    "), Js::PhaseNames[phase]); \
+        Output::Print(u" - %s\n    ", Js::PhaseNames[phase]); \
         instr->Dump(); \
-        Output::Print(_u("    ")); \
+        Output::Print(u"    "); \
         Output::Print(__VA_ARGS__); \
         Output::Flush(); \
     }

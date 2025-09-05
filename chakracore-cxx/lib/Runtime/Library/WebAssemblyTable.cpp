@@ -36,20 +36,20 @@ WebAssemblyTable::NewInstance(RecyclableObject* function, CallInfo callInfo, ...
 
     if (!(callInfo.Flags & CallFlags_New) || (newTarget && JavascriptOperators::IsUndefinedObject(newTarget)))
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_ClassConstructorCannotBeCalledWithoutNew, _u("WebAssembly.Table"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_ClassConstructorCannotBeCalledWithoutNew, u"WebAssembly.Table");
     }
 
     if (args.Info.Count < 2 || !JavascriptOperators::IsObject(args[1]))
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_NeedObject, _u("tableDescriptor"));
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_NeedObject, u"tableDescriptor");
     }
     DynamicObject * tableDescriptor = VarTo<DynamicObject>(args[1]);
 
     Var elementVar = JavascriptOperators::OP_GetProperty(tableDescriptor, PropertyIds::element, scriptContext);
     auto elementStr = JavascriptConversion::ToString(elementVar, scriptContext);
-    if (!JavascriptOperators::StrictEqualString(elementStr, scriptContext->GetLibrary()->CreateStringFromCppLiteral(_u("anyfunc"))))
+    if (!JavascriptOperators::StrictEqualString(elementStr, scriptContext->GetLibrary()->CreateStringFromCppLiteral(u"anyfunc")))
     {
-        JavascriptError::ThrowTypeError(scriptContext, WASMERR_ExpectedAnyFunc, _u("tableDescriptor.element"));
+        JavascriptError::ThrowTypeError(scriptContext, WASMERR_ExpectedAnyFunc, u"tableDescriptor.element");
     }
 
     Var initVar = JavascriptOperators::OP_GetProperty(tableDescriptor, PropertyIds::initial, scriptContext);

@@ -76,7 +76,7 @@ Js::DynamicObject * JsrtDebuggerObjectBase::GetChildren(WeakArenaReference<Js::I
                     resolvedObject.address = nullptr;
                     resolvedObject.scriptContext = exception->GetScriptContext();
                     resolvedObject.typeId = Js::JavascriptOperators::GetTypeId(error);
-                    resolvedObject.name = _u("{error}");
+                    resolvedObject.name = u"{error}";
                     resolvedObject.propId = Js::Constants::NoProperty;
                 }
 
@@ -327,7 +327,7 @@ Js::DynamicObject * JsrtDebuggerStackFrame::GetLocalsObject(Js::ScriptContext* s
             if (thisResolvedObject.obj != nullptr)
             {
                 thisResolvedObject.scriptContext = scriptContext;
-                thisResolvedObject.name = _u("this");
+                thisResolvedObject.name = u"this";
                 thisResolvedObject.typeId = Js::JavascriptOperators::GetTypeId(thisResolvedObject.obj);
                 JsrtDebuggerObjectBase::CreateDebuggerObject<JsrtDebuggerObjectProperty>(this->debuggerObjectsManager, thisResolvedObject, this->stackFrame->GetScriptContext(), false, [&](Js::Var marshaledObj)
                 {
@@ -490,7 +490,7 @@ bool JsrtDebuggerStackFrame::Evaluate(Js::ScriptContext* scriptContext, const ch
 
         if (resolvedObject.obj == nullptr)
         {
-            resolvedObject.name = _u("{exception}");
+            resolvedObject.name = u"{exception}";
             resolvedObject.typeId = Js::TypeIds_Error;
             resolvedObject.address = nullptr;
 
@@ -522,7 +522,7 @@ bool JsrtDebuggerStackFrame::Evaluate(Js::ScriptContext* scriptContext, const ch
             else
             {
                 // len can be big, if we failed just have empty string
-                resolvedObject.name = _u("");
+                resolvedObject.name = u"";
             }
 
             resolvedObject.typeId = Js::JavascriptOperators::GetTypeId(resolvedObject.obj);
@@ -742,7 +742,7 @@ Js::DynamicObject * JsrtDebuggerObjectFunction::GetChildren(Js::ScriptContext * 
         Js::ResolvedObject functionResolvedObject;
         functionResolvedObject.obj = this->javascriptFunction;
         functionResolvedObject.scriptContext = scriptContext;
-        functionResolvedObject.name = _u("Function");
+        functionResolvedObject.name = u"Function";
         functionResolvedObject.typeId = Js::JavascriptOperators::GetTypeId(functionResolvedObject.obj);
         this->objectDisplay = functionResolvedObject.GetObjectDisplay();
     }

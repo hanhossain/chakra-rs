@@ -63,7 +63,7 @@ namespace Js
 #ifdef PROFILE_EVALMAP
             if (Configuration::Global.flags.ProfileEvalMap)
             {
-                Output::Print(_u("EvalMap fastcache collision:\t key = %d count = %d\n"), (hash_t)key, nestedMap->Count());
+                Output::Print(u"EvalMap fastcache collision:\t key = %d count = %d\n", (hash_t)key, nestedMap->Count());
             }
 #endif
         }
@@ -189,7 +189,7 @@ namespace Js
 #ifdef PROFILE_EVALMAP
                 if (Configuration::Global.flags.ProfileEvalMap)
                 {
-                    Output::Print(_u("EvalMap fastcache set:\t key = %d \n"), (hash_t)key);
+                    Output::Print(u"EvalMap fastcache set:\t key = %d \n", (hash_t)key);
                 }
 #endif
             }

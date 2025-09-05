@@ -516,7 +516,7 @@ Security::BuildCookieOpnd(IRType type, Func * func)
     IR::IntConstOpnd * cookieOpnd = IR::IntConstOpnd::New(cookie, type, func);
 
 #if DBG_DUMP
-    cookieOpnd->SetName(_u("cookie"));
+    cookieOpnd->SetName(u"cookie");
 #endif
     return cookieOpnd;
 }

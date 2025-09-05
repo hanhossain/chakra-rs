@@ -24,7 +24,7 @@ namespace Js
                     chunk->dataType = "BranchDictionary::Bucket";
                     if (PHASE_TRACE1(Js::NativeCodeDataPhase))
                     {
-                        Output::Print(_u("NativeCodeData BranchDictionary::Bucket: chunk: %p, data: %p, index: %d, len: %x, totalOffset: %x, type: %S\n"),
+                        Output::Print(u"NativeCodeData BranchDictionary::Bucket: chunk: %p, data: %p, index: %d, len: %x, totalOffset: %x, type: %S\n",
                             chunk, (void*)dataBlock, chunk->allocIndex, chunk->len, chunk->offset, chunk->dataType);
                     }
                 }
@@ -42,7 +42,7 @@ namespace Js
                     chunk->dataType = "BranchDictionary::Entries";
                     if (PHASE_TRACE1(Js::NativeCodeDataPhase))
                     {
-                        Output::Print(_u("NativeCodeData BranchDictionary::Entries: chunk: %p, data: %p, index: %d, len: %x, totalOffset: %x, type: %S\n"),
+                        Output::Print(u"NativeCodeData BranchDictionary::Entries: chunk: %p, data: %p, index: %d, len: %x, totalOffset: %x, type: %S\n",
                             chunk, (void*)dataBlock, chunk->allocIndex, chunk->len, chunk->offset, chunk->dataType);
                     }
                 }
