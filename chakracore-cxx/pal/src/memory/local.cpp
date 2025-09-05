@@ -60,7 +60,7 @@ See MSDN doc.
 HLOCAL
 LocalAlloc(
 	    uint32_t uFlags,
-	    SIZE_T uBytes)
+	    size_t uBytes)
 {
     void * lpRetVal = NULL;
     PERF_ENTRY(LocalAlloc);
@@ -87,7 +87,7 @@ See MSDN doc.
 HLOCAL
 LocalReAlloc(
         HLOCAL hMem,
-        SIZE_T uBytes,
+        size_t uBytes,
         uint32_t   uFlags)
 {
     void * lpRetVal = NULL;
@@ -138,12 +138,12 @@ LocalFree(
     return bRetVal == TRUE ? (HLOCAL)NULL : hMem;
 }
 
-extern "C" void * CoTaskMemAlloc( SIZE_T cb)
+extern "C" void * CoTaskMemAlloc( size_t cb)
 {
     return HeapAlloc(GetProcessHeap(), 0, cb);
 }
 
-extern "C" void * CoTaskMemRealloc( void * pv,  SIZE_T cb)
+extern "C" void * CoTaskMemRealloc( void * pv,  size_t cb)
 {
     return HeapReAlloc(GetProcessHeap(), 0, pv, cb);
 }

@@ -1625,7 +1625,7 @@ See MSDN doc.
 BOOL
 DBG_FlushInstructionCache(
                            const void * lpBaseAddress,
-                           SIZE_T dwSize)
+                           size_t dwSize)
 {
 #if defined(__linux__) && defined(_ARM_)
     // On Linux/arm (at least on 3.10) we found that there is a problem with __do_cache_op (arch/arm/kernel/traps.c)
@@ -1634,7 +1634,7 @@ DBG_FlushInstructionCache(
     //
     // As a workaround, we call __builtin___clear_cache on each page separately.
 
-    const SIZE_T pageSize = VIRTUAL_PAGE_SIZE;
+    const size_t pageSize = VIRTUAL_PAGE_SIZE;
     INT_PTR begin = (INT_PTR)lpBaseAddress;
     const INT_PTR end = begin + dwSize;
 

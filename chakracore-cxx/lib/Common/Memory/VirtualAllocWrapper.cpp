@@ -380,7 +380,7 @@ BOOL
     _In_  HANDLE                    hProcess,
     _In_  PROCESS_MITIGATION_POLICY MitigationPolicy,
     _Out_ void *                     lpBuffer,
-    _In_  SIZE_T                    dwLength
+    _In_  size_t                    dwLength
 );
 
 AutoEnableDynamicCodeGen::PSET_THREAD_INFORMATION_PROC AutoEnableDynamicCodeGen::SetThreadInformationProc = nullptr;

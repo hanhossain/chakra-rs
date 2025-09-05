@@ -167,7 +167,7 @@ namespace Js
         HANDLE hProcess,
         PROCESS_INFORMATION_CLASS ProcessInformationClass,
         __out_bcount(nLength) void * lpBuffer,
-        SIZE_T nLength
+        size_t nLength
     )
     {
 #if defined(DELAYLOAD_SET_CFG_TARGET) || defined(_M_ARM)

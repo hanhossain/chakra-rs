@@ -158,7 +158,7 @@ typedef struct _PAL_CRITICAL_SECTION {
     PCRITICAL_SECTION_DEBUG_INFO DebugInfo;
     Volatile<int32_t> LockCount;
     int32_t RecursionCount;
-    SIZE_T OwningThread;
+    size_t OwningThread;
     HANDLE LockSemaphore;
     size_t SpinCount;
     // Private Unix part
@@ -176,9 +176,9 @@ namespace CorUnix
 #endif // _DEBUG
 
 #define ObtainCurrentThreadId(thread) ObtainCurrentThreadIdImpl(thread, __func__)
-static SIZE_T ObtainCurrentThreadIdImpl(CPalThread *pCurrentThread, const char *callingFuncName)
+static size_t ObtainCurrentThreadIdImpl(CPalThread *pCurrentThread, const char *callingFuncName)
 {
-    SIZE_T threadId;
+    size_t threadId;
     if(pCurrentThread)
     {
         threadId = pCurrentThread->GetThreadId();
@@ -366,7 +366,7 @@ void InternalDeleteCriticalSection(
 
     if (0 != pPalCriticalSection->LockCount)
     {
-        SIZE_T tid;
+        size_t tid;
         tid = ObtainCurrentThreadId(pThread);
         int iWaiterCount = (int)PALCS_GETWCOUNT(pPalCriticalSection->LockCount);
 
@@ -703,7 +703,7 @@ namespace CorUnix
         int32_t lVal, lNewVal;
         int32_t lBitsToChange, lWaitInc;
         PalCsWaiterReturnState cwrs;
-        SIZE_T threadId;
+        size_t threadId;
 
         _ASSERTE(PalCsNotInitialized != pPalCriticalSection->cisInitState);
 
@@ -857,7 +857,7 @@ namespace CorUnix
         int32_t lVal, lNewVal;
 
 #ifdef _DEBUG
-        SIZE_T threadId;
+        size_t threadId;
 
         _ASSERTE(PalCsNotInitialized != pPalCriticalSection->cisInitState);
 
@@ -998,7 +998,7 @@ namespace CorUnix
             reinterpret_cast<PAL_CRITICAL_SECTION*>(pCriticalSection);
 
         int32_t lNewVal;
-        SIZE_T threadId;
+        size_t threadId;
         bool fRet = true;
 
         _ASSERTE(PalCsNotInitialized != pPalCriticalSection->cisInitState);
@@ -1490,7 +1490,7 @@ namespace CorUnix
         PAL_CRITICAL_SECTION * pPalCriticalSection =
             reinterpret_cast<PAL_CRITICAL_SECTION*>(pCriticalSection);
         int iRet;
-        SIZE_T threadId;
+        size_t threadId;
 
         _ASSERTE(PalCsNotInitialized != pPalCriticalSection->cisInitState);
 
@@ -1532,7 +1532,7 @@ namespace CorUnix
             reinterpret_cast<PAL_CRITICAL_SECTION*>(pCriticalSection);
         int iRet;
 #ifdef _DEBUG
-        SIZE_T threadId;
+        size_t threadId;
 
         _ASSERTE(PalCsNotInitialized != pPalCriticalSection->cisInitState);
 
@@ -1574,7 +1574,7 @@ namespace CorUnix
         PAL_CRITICAL_SECTION * pPalCriticalSection =
             reinterpret_cast<PAL_CRITICAL_SECTION*>(pCriticalSection);
         bool fRet;
-        SIZE_T threadId;
+        size_t threadId;
 
         _ASSERTE(PalCsNotInitialized != pPalCriticalSection->cisInitState);
 

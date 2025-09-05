@@ -560,11 +560,11 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CheckBufferPermissions
     MEMORY_BASIC_INFORMATION memInfo;
 
     uint8_t *buffer = (uint8_t*) allocation->allocation->address;
-    SIZE_T size = allocation->bytesCommitted;
+    size_t size = allocation->bytesCommitted;
 
     while(1)
     {
-        SIZE_T result = VirtualQuery(buffer, &memInfo, sizeof(memInfo));
+        size_t result = VirtualQuery(buffer, &memInfo, sizeof(memInfo));
         if(result == 0)
         {
             // VirtualQuery failed.  This is not an expected condition, but it would be benign for the purposes of this check.  Seems

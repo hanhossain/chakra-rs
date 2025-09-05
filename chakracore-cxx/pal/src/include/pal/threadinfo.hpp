@@ -78,7 +78,7 @@ namespace CorUnix
         PAL_ERROR
         InitializePostCreate(
             CPalThread *pThread,
-            SIZE_T threadId,
+            size_t threadId,
             uint32_t dwLwpId
             )
         {

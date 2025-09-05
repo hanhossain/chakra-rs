@@ -596,7 +596,7 @@ IsDBCSLeadByteEx(
       uint8_t TestChar)
 {
     CPINFO cpinfo;
-    SIZE_T i;
+    size_t i;
     BOOL bRet = FALSE;
 
     PERF_ENTRY(IsDBCSLeadByteEx);

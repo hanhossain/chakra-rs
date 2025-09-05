@@ -816,7 +816,7 @@ ULongLongToULongPtr(
 #define SizeTToLongPtr          UIntPtrToLongPtr
 
 //
-// * -> SIZE_T conversion (SIZE_T is always size_t)
+// * -> size_t conversion (size_t is always size_t)
 //
 #define CharToSIZET             CharToULongPtr
 #define SignedCharToSIZET       SignedCharToULongPtr
@@ -829,7 +829,7 @@ ULongLongToULongPtr(
 #define ULongLongToSIZET        ULongLongToULongPtr
 
 //
-// SIZE_T -> * conversion (SIZE_T is always size_t)
+// size_t -> * conversion (size_t is always size_t)
 //
 #define SIZETToUShort           ULongPtrToUShort
 #define SIZETToUInt             ULongPtrToUInt
@@ -982,7 +982,7 @@ SizeTAdd(
 }
 
 //
-// SIZE_T addition
+// size_t addition
 //
 #define SIZETAdd	ULongPtrAdd
 
@@ -1124,7 +1124,7 @@ SizeTSub(
 }
 
 //
-// SIZE_T subtraction
+// size_t subtraction
 //
 #define SIZETSub	ULongPtrSub
 
@@ -1216,7 +1216,7 @@ ULongMult(
 #define SizeTMult		UIntPtrMult
 
 //
-// SIZE_T multiplication
+// size_t multiplication
 //
 #define SIZETMult		ULongPtrMult
 

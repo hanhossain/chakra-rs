@@ -457,7 +457,7 @@ CreateThread(
 
     pThread = InternalGetCurrentThread();
 
-    SIZE_T osThreadId = 0;
+    size_t osThreadId = 0;
     palError = InternalCreateThread(
         pThread,
         lpThreadAttributes,
@@ -493,7 +493,7 @@ CorUnix::InternalCreateThread(
     void * lpParameter,
     uint32_t dwCreationFlags,
     PalThreadType eThreadType,
-    SIZE_T* pThreadId,
+    size_t* pThreadId,
     HANDLE *phThread
     )
 {

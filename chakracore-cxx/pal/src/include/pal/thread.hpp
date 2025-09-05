@@ -58,7 +58,7 @@ namespace CorUnix
         void * lpParameter,
         uint32_t dwCreationFlags,
         PalThreadType eThreadType,
-        SIZE_T* pThreadId,
+        size_t* pThreadId,
         HANDLE *phThread
         );
 
@@ -233,7 +233,7 @@ namespace CorUnix
                 void *,
                 uint32_t,
                 PalThreadType,
-                SIZE_T*,
+                size_t*,
                 HANDLE*
                 );
 
@@ -302,7 +302,7 @@ namespace CorUnix
         // Thread ID info
         //
 
-        SIZE_T m_threadId;
+        size_t m_threadId;
         uint32_t m_dwLwpId;
         pthread_t m_pthreadSelf;
 
@@ -534,7 +534,7 @@ namespace CorUnix
             return m_fExitCodeSet;
         };
 
-        SIZE_T
+        size_t
         GetThreadId(
             void
             )
@@ -794,18 +794,18 @@ Abstract:
 
 --*/
 #if defined(__LINUX__)
-#define THREADSilentGetCurrentThreadId() (SIZE_T)syscall(SYS_gettid)
+#define THREADSilentGetCurrentThreadId() (size_t)syscall(SYS_gettid)
 #elif defined(__APPLE__)
-inline SIZE_T THREADSilentGetCurrentThreadId() {
-    static thread_local SIZE_T threadIdSelf = -1;
+inline size_t THREADSilentGetCurrentThreadId() {
+    static thread_local size_t threadIdSelf = -1;
     if (threadIdSelf != -1) return threadIdSelf;
     uint64_t tid;
     pthread_threadid_np(pthread_self(), &tid);
-    threadIdSelf = (SIZE_T)tid;
-    return (SIZE_T)tid;
+    threadIdSelf = (size_t)tid;
+    return (size_t)tid;
 }
 #else
-#define THREADSilentGetCurrentThreadId() (SIZE_T)pthread_self()
+#define THREADSilentGetCurrentThreadId() (size_t)pthread_self()
 #endif
 
 #endif // _PAL_THREAD_HPP_

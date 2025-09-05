@@ -809,7 +809,7 @@ HijackFaultingThread(
     *--FramePointer = (void *)ts64.__rip;
     *--FramePointer = (void *)ts64.__rbp;
 
-    ts64.__rbp = (SIZE_T)FramePointer;
+    ts64.__rbp = (size_t)FramePointer;
 #elif defined(_ARM64_)
     *--FramePointer = (void *)arm_thread_state64_get_pc_fptr(ts64);
     *--FramePointer = (void *)arm_thread_state64_get_fp(ts64);
@@ -849,8 +849,8 @@ HijackFaultingThread(
     FramePointer[-1] = (void *)((size_t)PAL_DispatchExceptionWrapper + PAL_DispatchExceptionReturnOffset);
 
     // Make the instruction register point to DispatchException
-    ts64.__rip = (SIZE_T)PAL_DispatchException;
-    ts64.__rsp = (SIZE_T)&FramePointer[-1]; // skip return address
+    ts64.__rip = (size_t)PAL_DispatchException;
+    ts64.__rsp = (size_t)&FramePointer[-1]; // skip return address
 
     // Now set the thread state for the faulting thread so that PAL_DispatchException executes next
     machret = thread_set_state(thread, x86_THREAD_STATE64, (thread_state_t)&ts64, x86_THREAD_STATE64_COUNT);
