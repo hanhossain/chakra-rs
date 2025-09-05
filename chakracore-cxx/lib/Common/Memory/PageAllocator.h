@@ -413,7 +413,7 @@ public:
 #endif
     }
 
-    static void RecordError(HRESULT error)
+    static void RecordError(int32_t error)
     {
 #if ENABLE_OOP_NATIVE_CODEGEN
         if (MemOpLastError == S_OK)
@@ -429,7 +429,7 @@ public:
         MemOpLastError = S_OK;
 #endif
     }
-    static HRESULT GetLastError()
+    static int32_t GetLastError()
     {
 #if ENABLE_OOP_NATIVE_CODEGEN
         return MemOpLastError;
@@ -439,7 +439,7 @@ public:
     }
 #if ENABLE_OOP_NATIVE_CODEGEN
 private:
-    thread_local static HRESULT MemOpLastError;
+    thread_local static int32_t MemOpLastError;
 #endif
 };
 

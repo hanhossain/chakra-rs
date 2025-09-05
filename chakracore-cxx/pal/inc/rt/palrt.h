@@ -35,7 +35,7 @@ Revision History:
 #ifdef RC_INVOKED
 #define _HRESULT_TYPEDEF_(_sc) _sc
 #else // RC_INVOKED
-#define _HRESULT_TYPEDEF_(_sc) ((HRESULT)_sc)
+#define _HRESULT_TYPEDEF_(_sc) ((int32_t)_sc)
 #endif // RC_INVOKED
 
 #define S_OK                             _HRESULT_TYPEDEF_(0x00000000L)
@@ -200,22 +200,22 @@ typedef enum tagEFaultRepRetVal
 
 #define STDMETHODCALLTYPE
 
-#define STDMETHODIMP         HRESULT STDMETHODCALLTYPE
+#define STDMETHODIMP         int32_t STDMETHODCALLTYPE
 #define STDMETHODIMP_(type)  type STDMETHODCALLTYPE
 
-#define STDMETHODIMPV        HRESULT
+#define STDMETHODIMPV        int32_t
 #define STDMETHODIMPV_(type) type
 
-#define STDMETHOD(method)       virtual HRESULT STDMETHODCALLTYPE method
+#define STDMETHOD(method)       virtual int32_t STDMETHODCALLTYPE method
 #define STDMETHOD_(type,method) virtual type STDMETHODCALLTYPE method
 
-#define STDMETHODV(method)       virtual HRESULT method
+#define STDMETHODV(method)       virtual int32_t method
 #define STDMETHODV_(type,method) virtual type method
 
-#define STDAPI               EXTERN_C HRESULT
+#define STDAPI               EXTERN_C int32_t
 #define STDAPI_(type)        EXTERN_C type
 
-#define STDAPIV              EXTERN_C HRESULT
+#define STDAPIV              EXTERN_C int32_t
 #define STDAPIV_(type)       EXTERN_C type
 
 #define PURE                    = 0
@@ -313,7 +313,7 @@ typedef union _ULARGE_INTEGER {
     unsigned long QuadPart;
 } ULARGE_INTEGER, *PULARGE_INTEGER;
 
-/******************* HRESULT types ****************************************/
+/******************* int32_t types ****************************************/
 
 #define FACILITY_WINDOWS                 8
 #define FACILITY_STORAGE                 3
@@ -328,8 +328,8 @@ typedef union _ULARGE_INTEGER {
 #define SEVERITY_SUCCESS    0
 #define SEVERITY_ERROR      1
 
-#define SUCCEEDED(Status) ((HRESULT)(Status) >= 0)
-#define FAILED(Status) ((HRESULT)(Status)<0)
+#define SUCCEEDED(Status) ((int32_t)(Status) >= 0)
+#define FAILED(Status) ((int32_t)(Status)<0)
 #define IS_ERROR(Status) ((uint32_t)(Status) >> 31 == SEVERITY_ERROR) // diff from win32
 #define HRESULT_CODE(hr)    ((hr) & 0xFFFF)
 #define SCODE_CODE(sc)      ((sc) & 0xFFFF)
@@ -340,15 +340,15 @@ typedef union _ULARGE_INTEGER {
 
 // both macros diff from Win32
 #define MAKE_HRESULT(sev,fac,code) \
-    ((HRESULT) (((uint32_t)(sev)<<31) | ((uint32_t)(fac)<<16) | ((uint32_t)(code))) )
+    ((int32_t) (((uint32_t)(sev)<<31) | ((uint32_t)(fac)<<16) | ((uint32_t)(code))) )
 #define MAKE_SCODE(sev,fac,code) \
     ((SCODE) (((uint32_t)(sev)<<31) | ((uint32_t)(fac)<<16) | ((int32_t)(code))) )
 
 #define FACILITY_NT_BIT                 0x10000000
-#define HRESULT_FROM_WIN32(x) ((HRESULT)(x) <= 0 ? ((HRESULT)(x)) : ((HRESULT) (((x) & 0x0000FFFF) | (FACILITY_WIN32 << 16) | 0x80000000)))
+#define HRESULT_FROM_WIN32(x) ((int32_t)(x) <= 0 ? ((int32_t)(x)) : ((int32_t) (((x) & 0x0000FFFF) | (FACILITY_WIN32 << 16) | 0x80000000)))
 #define __HRESULT_FROM_WIN32(x) HRESULT_FROM_WIN32(x)
 
-#define HRESULT_FROM_NT(x)      ((HRESULT) ((x) | FACILITY_NT_BIT))
+#define HRESULT_FROM_NT(x)      ((int32_t) ((x) | FACILITY_NT_BIT))
 
 /******************* OLE, BSTR, VARIANT *************************/
 
@@ -563,7 +563,7 @@ struct tagVARIANT
 typedef VARIANT VARIANTARG, *LPVARIANTARG;
 
 STDAPI_(void) VariantInit(VARIANT * pvarg);
-STDAPI_(HRESULT) VariantClear(VARIANT * pvarg);
+STDAPI_(int32_t) VariantClear(VARIANT * pvarg);
 
 #define V_VT(X)         ((X)->n1.n2.vt)
 #define V_UNION(X, Y)   ((X)->n1.n2.n3.Y)
@@ -1594,7 +1594,7 @@ EXTERN_C uint32_t PAL_LoadSatelliteStringA(HSATELLITE SatelliteResource,
              LPSTR lpBuffer,
              uint32_t nBufferMax);
 
-EXTERN_C HRESULT PAL_CoCreateInstance(REFCLSID   rclsid,
+EXTERN_C int32_t PAL_CoCreateInstance(REFCLSID   rclsid,
                              REFIID     riid,
                              void     **ppv);
 

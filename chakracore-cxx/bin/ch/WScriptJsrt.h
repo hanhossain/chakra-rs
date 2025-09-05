@@ -30,8 +30,8 @@ public:
         CallbackMessage(unsigned int time, JsValueRef function);
         ~CallbackMessage();
 
-        HRESULT Call(LPCSTR fileName);
-        HRESULT CallFunction(LPCSTR fileName);
+        int32_t Call(LPCSTR fileName);
+        int32_t CallFunction(LPCSTR fileName);
         template <class Func>
         static CallbackMessage* Create(JsValueRef function, const Func& func, unsigned int time = 0)
         {
@@ -51,7 +51,7 @@ public:
     public:
         ~ModuleMessage();
 
-        virtual HRESULT Call(LPCSTR fileName) override;
+        virtual int32_t Call(LPCSTR fileName) override;
 
         static ModuleMessage* Create(JsModuleRecord module, JsValueRef specifier, std::string* fullPath = nullptr)
         {

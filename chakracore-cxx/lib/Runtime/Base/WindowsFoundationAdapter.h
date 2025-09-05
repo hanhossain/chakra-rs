@@ -23,7 +23,7 @@ namespace Js
         DelayLoadWinRtFoundation* GetWinRtFoundationLibrary(_In_ ScriptContext* scriptContext);
 
     public:
-        HRESULT TraceOperationCreation(
+        int32_t TraceOperationCreation(
             _In_ ScriptContext* scriptContext,
             _In_ int32_t traceLevel,
             _In_ int32_t source,
@@ -32,7 +32,7 @@ namespace Js
             _In_z_ PCWSTR operationName,
             _In_ UINT64 relatedContext);
 
-        HRESULT TraceOperationCompletion(
+        int32_t TraceOperationCompletion(
             _In_ ScriptContext* scriptContext,
             _In_ int32_t traceLevel,
             _In_ int32_t source,
@@ -40,7 +40,7 @@ namespace Js
             _In_ UINT64 operationId,
             _In_ int32_t status);
 
-        HRESULT TraceOperationRelation(
+        int32_t TraceOperationRelation(
             _In_ ScriptContext* scriptContext,
             _In_ int32_t traceLevel,
             _In_ int32_t source,
@@ -48,7 +48,7 @@ namespace Js
             _In_ UINT64 operationId,
             _In_ int32_t relation);
 
-        HRESULT TraceSynchronousWorkStart(
+        int32_t TraceSynchronousWorkStart(
             _In_ ScriptContext* scriptContext,
             _In_ int32_t traceLevel,
             _In_ int32_t source,
@@ -56,7 +56,7 @@ namespace Js
             _In_ UINT64 operationId,
             _In_ int32_t work);
 
-        HRESULT TraceSynchronousWorkCompletion(
+        int32_t TraceSynchronousWorkCompletion(
             _In_ ScriptContext* scriptContext,
             _In_ int32_t traceLevel,
             _In_ int32_t source,

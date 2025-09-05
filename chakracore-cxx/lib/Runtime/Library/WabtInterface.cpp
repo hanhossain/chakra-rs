@@ -23,7 +23,7 @@ char16_t* NarrowStringToWide(Context* ctx, const char* src, const size_t* srcSiz
     auto allocator = [&ctx](size_t size) {return (char16_t*)AnewArray(ctx->allocator, char16_t, size); };
     char16_t* dst = nullptr;
     charcount_t size;
-    HRESULT hr = utf8::NarrowStringToWide(allocator, src, srcSize ? *srcSize : strlen(src), &dst, &size);
+    int32_t hr = utf8::NarrowStringToWide(allocator, src, srcSize ? *srcSize : strlen(src), &dst, &size);
     if (hr != S_OK)
     {
         JavascriptError::ThrowOutOfMemoryError(ctx->scriptContext);

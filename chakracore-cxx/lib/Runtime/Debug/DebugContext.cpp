@@ -107,7 +107,7 @@ namespace Js
         FunctionBody * functionBody = nullptr;
         if (func->IsDeferredParseFunction())
         {
-            HRESULT hr = S_OK;
+            int32_t hr = S_OK;
             Assert(!this->scriptContext->GetThreadContext()->IsScriptActive());
 
             BEGIN_JS_RUNTIME_CALL_EX_AND_TRANSLATE_EXCEPTION_AND_ERROROBJECT_TO_HRESULT_NESTED(this->scriptContext, false)
@@ -161,7 +161,7 @@ namespace Js
         this->debuggerMode = mode;
     }
 
-    HRESULT DebugContext::RundownSourcesAndReparse(bool shouldPerformSourceRundown, bool shouldReparseFunctions)
+    int32_t DebugContext::RundownSourcesAndReparse(bool shouldPerformSourceRundown, bool shouldReparseFunctions)
     {
         struct AutoRestoreIsReparsingSource
         {
@@ -199,7 +199,7 @@ namespace Js
         // Each entry represent a function's start position (each function will have unique start position in a file) and that function yield register
         FunctionStartToYieldRegister *yieldFunctions = nullptr;
 
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         ThreadContext* threadContext = this->scriptContext->GetThreadContext();
 
         BEGIN_TRANSLATE_OOM_TO_HRESULT_NESTED
@@ -279,7 +279,7 @@ namespace Js
             if (this->hostDebugContext != nullptr && sourceInfo->GetSourceContextInfo())
             {
                 // This call goes out of engine
-                this->hostDebugContext->SetThreadDescription(sourceInfo->GetSourceContextInfo()->url); // the HRESULT is omitted.
+                this->hostDebugContext->SetThreadDescription(sourceInfo->GetSourceContextInfo()->url); // the int32_t is omitted.
             }
 
             if (shouldReparseFunctions)

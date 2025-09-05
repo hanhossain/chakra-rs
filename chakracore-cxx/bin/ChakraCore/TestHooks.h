@@ -10,11 +10,11 @@ interface ICustomConfigFlags;
 
 struct TestHooks
 {
-    typedef HRESULT(*SetConfigFlagsPtr)(int argc, LPWSTR argv[], ICustomConfigFlags* customConfigFlags);
-    typedef HRESULT(*SetConfigFilePtr)(LPWSTR strConfigFile);
-    typedef HRESULT(*PrintConfigFlagsUsageStringPtr)(void);
-    typedef HRESULT(*SetAssertToConsoleFlagPtr)(bool flag);
-    typedef HRESULT(*SetEnableCheckMemoryLeakOutputPtr)(bool flag);
+    typedef int32_t(*SetConfigFlagsPtr)(int argc, LPWSTR argv[], ICustomConfigFlags* customConfigFlags);
+    typedef int32_t(*SetConfigFilePtr)(LPWSTR strConfigFile);
+    typedef int32_t(*PrintConfigFlagsUsageStringPtr)(void);
+    typedef int32_t(*SetAssertToConsoleFlagPtr)(bool flag);
+    typedef int32_t(*SetEnableCheckMemoryLeakOutputPtr)(bool flag);
     typedef void(* NotifyUnhandledExceptionPtr)(PEXCEPTION_POINTERS exceptionInfo);
     typedef int(*LogicalStringCompareImpl)(const char16_t* p1, int p1size, const char16_t* p2, int p2size);
 
@@ -36,16 +36,16 @@ struct TestHooks
 #define FLAG(type, name, description, defaultValue, ...) FLAG_##type##(name)
 #define FLAG_String(name) \
     bool (*pfIsEnabled##name##Flag)(); \
-    HRESULT (*pfGet##name##Flag)(BSTR *flag); \
-    HRESULT (*pfSet##name##Flag)(BSTR flag);
+    int32_t (*pfGet##name##Flag)(BSTR *flag); \
+    int32_t (*pfSet##name##Flag)(BSTR flag);
 #define FLAG_Boolean(name) \
     bool (*pfIsEnabled##name##Flag)(); \
-    HRESULT (*pfGet##name##Flag)(bool *flag); \
-    HRESULT (*pfSet##name##Flag)(bool flag);
+    int32_t (*pfGet##name##Flag)(bool *flag); \
+    int32_t (*pfSet##name##Flag)(bool flag);
 #define FLAG_Number(name) \
     bool (*pfIsEnabled##name##Flag)(); \
-    HRESULT (*pfGet##name##Flag)(int *flag); \
-    HRESULT (*pfSet##name##Flag)(int flag);
+    int32_t (*pfGet##name##Flag)(int *flag); \
+    int32_t (*pfSet##name##Flag)(int flag);
     // skipping other types
 #define FLAG_Phases(name)
 #define FLAG_NumberSet(name)
@@ -66,7 +66,7 @@ struct TestHooks
     NotifyUnhandledExceptionPtr pfnNotifyUnhandledException;
 };
 
-typedef HRESULT(*OnChakraCoreLoadedPtr)(TestHooks &testHooks);
-HRESULT OnChakraCoreLoaded(OnChakraCoreLoadedPtr pfChakraCoreLoaded = NULL);
+typedef int32_t(*OnChakraCoreLoadedPtr)(TestHooks &testHooks);
+int32_t OnChakraCoreLoaded(OnChakraCoreLoadedPtr pfChakraCoreLoaded = NULL);
 
 #endif

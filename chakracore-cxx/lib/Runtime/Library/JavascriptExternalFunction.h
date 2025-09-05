@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 
 // Forward declaration to avoid including scriptdirect.h
-typedef HRESULT(*InitializeMethod)(Js::Var instance);
+typedef int32_t(*InitializeMethod)(Js::Var instance);
 
 namespace Js
 {

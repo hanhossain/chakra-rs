@@ -322,33 +322,33 @@ private:
     static JsAPIHooks m_jsApiHooks;
 
 private:
-    static HRESULT ParseConfigFlags();
+    static int32_t ParseConfigFlags();
 
 public:
-    static HRESULT OnChakraCoreLoaded(TestHooks& testHooks);
+    static int32_t OnChakraCoreLoaded(TestHooks& testHooks);
 
     static bool LoadChakraDll(ArgInfo* argInfo, HINSTANCE *library);
     static void UnloadChakraDll(HINSTANCE library);
 
-    static HRESULT SetAssertToConsoleFlag(bool flag) { return CHECKED_CALL(SetAssertToConsoleFlag, flag); }
-    static HRESULT SetConfigFlags(int argc, __in_ecount(argc) LPWSTR argv[], ICustomConfigFlags* customConfigFlags) { return CHECKED_CALL(SetConfigFlags, argc, argv, customConfigFlags); }
-    static HRESULT SetConfigFile(LPWSTR strConfigFileName) { return CHECKED_CALL(SetConfigFile, strConfigFileName); }
-    static HRESULT GetFileNameFlag(BSTR * filename) { return CHECKED_CALL(GetFilenameFlag, filename); }
-    static HRESULT PrintConfigFlagsUsageString() { m_usageStringPrinted = true;  return CHECKED_CALL(PrintConfigFlagsUsageString); }
+    static int32_t SetAssertToConsoleFlag(bool flag) { return CHECKED_CALL(SetAssertToConsoleFlag, flag); }
+    static int32_t SetConfigFlags(int argc, __in_ecount(argc) LPWSTR argv[], ICustomConfigFlags* customConfigFlags) { return CHECKED_CALL(SetConfigFlags, argc, argv, customConfigFlags); }
+    static int32_t SetConfigFile(LPWSTR strConfigFileName) { return CHECKED_CALL(SetConfigFile, strConfigFileName); }
+    static int32_t GetFileNameFlag(BSTR * filename) { return CHECKED_CALL(GetFilenameFlag, filename); }
+    static int32_t PrintConfigFlagsUsageString() { m_usageStringPrinted = true;  return CHECKED_CALL(PrintConfigFlagsUsageString); }
 
 #ifdef CHECK_MEMORY_LEAK
     static bool IsEnabledCheckMemoryFlag() { return CHECKED_CALL_RETURN(IsEnabledCheckMemoryLeakFlag, FALSE); }
-    static HRESULT SetCheckMemoryLeakFlag(bool flag) { return CHECKED_CALL(SetCheckMemoryLeakFlag, flag); }
-    static HRESULT SetEnableCheckMemoryLeakOutput(bool flag) { return CHECKED_CALL(SetEnableCheckMemoryLeakOutput, flag); }
+    static int32_t SetCheckMemoryLeakFlag(bool flag) { return CHECKED_CALL(SetCheckMemoryLeakFlag, flag); }
+    static int32_t SetEnableCheckMemoryLeakOutput(bool flag) { return CHECKED_CALL(SetEnableCheckMemoryLeakOutput, flag); }
 #endif
 #ifdef DEBUG
-    static HRESULT SetCheckOpHelpersFlag(bool flag) { return CHECKED_CALL(SetCheckOpHelpersFlag, flag); }
+    static int32_t SetCheckOpHelpersFlag(bool flag) { return CHECKED_CALL(SetCheckOpHelpersFlag, flag); }
 #endif
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
-    static HRESULT SetOOPCFGRegistrationFlag(bool flag) { return CHECKED_CALL(SetOOPCFGRegistrationFlag, flag); }
+    static int32_t SetOOPCFGRegistrationFlag(bool flag) { return CHECKED_CALL(SetOOPCFGRegistrationFlag, flag); }
 #endif
 
-    static HRESULT GetCrashOnExceptionFlag(bool * flag)
+    static int32_t GetCrashOnExceptionFlag(bool * flag)
     {
 #ifdef SECURITY_TESTING
         return CHECKED_CALL(GetCrashOnExceptionFlag, flag);

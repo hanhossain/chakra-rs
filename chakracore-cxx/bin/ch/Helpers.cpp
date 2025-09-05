@@ -107,13 +107,13 @@ uint ConcatPath(LPCSTR filenameLeft, uint posPathSep, LPCSTR filenameRight, char
     return totalLength;
 }
 
-HRESULT Helpers::LoadScriptFromFile(LPCSTR filenameToLoad, LPCSTR& contents, uint32_t* lengthBytesOut /*= nullptr*/, std::string* fullPath /*= nullptr*/, bool shouldMute /*=false */)
+int32_t Helpers::LoadScriptFromFile(LPCSTR filenameToLoad, LPCSTR& contents, uint32_t* lengthBytesOut /*= nullptr*/, std::string* fullPath /*= nullptr*/, bool shouldMute /*=false */)
 {
     static char sHostApplicationPathBuffer[MAX_URI_LENGTH];
     static uint sHostApplicationPathBufferLength = (uint) -1;
     char combinedPathBuffer[MAX_URI_LENGTH];
 
-    HRESULT hr = S_OK;
+    int32_t hr = S_OK;
     uint8_t * pRawBytes = nullptr;
     uint8_t * pRawBytesFromMap = nullptr;
     uint32_t lengthBytes = 0;
@@ -371,9 +371,9 @@ void Helpers::LogError(__nullterminated const char16_t *msg, ...)
     va_end(args);
 }
 
-HRESULT Helpers::LoadBinaryFile(LPCSTR filename, LPCSTR& contents, uint32_t& lengthBytes, bool printFileOpenError)
+int32_t Helpers::LoadBinaryFile(LPCSTR filename, LPCSTR& contents, uint32_t& lengthBytes, bool printFileOpenError)
 {
-    HRESULT hr = S_OK;
+    int32_t hr = S_OK;
     contents = nullptr;
     lengthBytes = 0;
     size_t result;

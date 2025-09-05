@@ -73,9 +73,9 @@ namespace Js
         return E_NOINTERFACE;
     }
 
-    HRESULT SCAPropBag::Add(LPCWSTR name, Var value)
+    int32_t SCAPropBag::Add(LPCWSTR name, Var value)
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         ScriptContext* scriptContext = GetScriptContext();
 
         BEGIN_TRANSLATE_EXCEPTION_AND_ERROROBJECT_TO_HRESULT
@@ -95,9 +95,9 @@ Error:
         return hr;
     }
 
-    HRESULT SCAPropBag::Get(LPCWSTR name, Var* pValue)
+    int32_t SCAPropBag::Get(LPCWSTR name, Var* pValue)
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         ScriptContext* scriptContext = GetScriptContext();
 
         BEGIN_JS_RUNTIME_CALL_EX(scriptContext, false)
@@ -115,10 +115,10 @@ Error:
         return hr;
     }
 
-    HRESULT SCAPropBag::InternalAdd(LPCWSTR name, charcount_t len, Var value)
+    int32_t SCAPropBag::InternalAdd(LPCWSTR name, charcount_t len, Var value)
     {
         char16_t* buf = nullptr;
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         ScriptContext* scriptContext = GetScriptContext();
         Recycler* recycler = scriptContext->GetRecycler();
         charcount_t fullLen;
@@ -142,9 +142,9 @@ Error:
         return hr;
     }
 
-    HRESULT SCAPropBag::InternalAddNoCopy(LPCWSTR name, charcount_t len, Var value)
+    int32_t SCAPropBag::InternalAddNoCopy(LPCWSTR name, charcount_t len, Var value)
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
 
         int intLen;
         IfFailGo(UIntToInt(len, &intLen));

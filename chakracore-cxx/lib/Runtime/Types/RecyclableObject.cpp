@@ -321,7 +321,7 @@ namespace Js
         // Do nothing
     }
 
-    HRESULT RecyclableObject::QueryObjectInterface(REFIID riid, void **ppvObj)
+    int32_t RecyclableObject::QueryObjectInterface(REFIID riid, void **ppvObj)
     {
         Assert(!this->GetScriptContext()->GetThreadContext()->IsScriptActive());
         return E_NOINTERFACE;

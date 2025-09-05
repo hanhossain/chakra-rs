@@ -11,9 +11,9 @@ namespace UnifiedRegex
         bool isBody;
         CharCount pos;           // Position in unicode characters
         CharCount encodedPos;    // Position in underlying characters (eg utf-8 bytes)
-        HRESULT error;
+        int32_t error;
 
-        ParseError(bool isBody, CharCount pos, CharCount encodedPos, HRESULT error);
+        ParseError(bool isBody, CharCount pos, CharCount encodedPos, int32_t error);
     };
 
     template <typename EncodingPolicy, const bool IsLiteral>
@@ -156,10 +156,10 @@ namespace UnifiedRegex
         // Errors
         //
 
-        void Fail(HRESULT error);
-        void DeferredFailIfUnicode(HRESULT error);
-        void DeferredFailIfNotUnicode(HRESULT error);
-        inline void ECMust(EncodedChar ec, HRESULT error);
+        void Fail(int32_t error);
+        void DeferredFailIfUnicode(int32_t error);
+        void DeferredFailIfNotUnicode(int32_t error);
+        inline void ECMust(EncodedChar ec, int32_t error);
         inline Char NextChar();
 
         //

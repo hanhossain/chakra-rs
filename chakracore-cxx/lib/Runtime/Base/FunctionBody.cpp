@@ -2233,9 +2233,9 @@ namespace Js
     //
     // Map errors like OOM/SOE, return it and clean hrParse. Any other error remaining in hrParse is an internal error.
     //
-    HRESULT ParseableFunctionInfo::MapDeferredReparseError(HRESULT& hrParse, const CompileScriptException& se)
+    int32_t ParseableFunctionInfo::MapDeferredReparseError(int32_t& hrParse, const CompileScriptException& se)
     {
-        HRESULT hrMapped = NO_ERROR;
+        int32_t hrMapped = NO_ERROR;
 
         switch (hrParse)
         {
@@ -2399,9 +2399,9 @@ namespace Js
 #endif
                 // In debug or asm.js mode, the scriptlet will be asked to recompile again.
 
-                HRESULT hr = NO_ERROR;
-                HRESULT hrParser = NO_ERROR;
-                HRESULT hrParseCodeGen = NO_ERROR;
+                int32_t hr = NO_ERROR;
+                int32_t hrParser = NO_ERROR;
+                int32_t hrParseCodeGen = NO_ERROR;
 
                 BEGIN_LEAVE_SCRIPT_INTERNAL(m_scriptContext)
                 {
@@ -2640,8 +2640,8 @@ namespace Js
         Assert(!funcBody->HasExecutionDynamicProfileInfo());
 #endif
 
-        HRESULT hrParser = NO_ERROR;
-        HRESULT hrParseCodeGen = NO_ERROR;
+        int32_t hrParser = NO_ERROR;
+        int32_t hrParseCodeGen = NO_ERROR;
 
         bool isCesu8 = m_scriptContext->GetSource(funcBody->GetSourceIndex())->IsCesu8();
 
@@ -3206,7 +3206,7 @@ namespace Js
             bool doSlowLookup = !canAllocateLineCache;
             if (canAllocateLineCache)
             {
-                HRESULT hr = this->GetUtf8SourceInfo()->EnsureLineOffsetCacheNoThrow();
+                int32_t hr = this->GetUtf8SourceInfo()->EnsureLineOffsetCacheNoThrow();
                 if (FAILED(hr))
                 {
                     if (hr != E_OUTOFMEMORY)
@@ -4919,14 +4919,14 @@ namespace Js
     }
 
 #ifdef ENABLE_SCRIPT_PROFILING
-    HRESULT FunctionBody::RegisterFunction(BOOL fChangeMode, BOOL fOnlyCurrent)
+    int32_t FunctionBody::RegisterFunction(BOOL fChangeMode, BOOL fOnlyCurrent)
     {
         if (!this->IsFunctionParsed())
         {
             return S_OK;
         }
 
-        HRESULT hr = this->ReportFunctionCompiled();
+        int32_t hr = this->ReportFunctionCompiled();
         if (FAILED(hr))
         {
             return hr;
@@ -4957,7 +4957,7 @@ namespace Js
         return hr;
     }
 
-    HRESULT FunctionBody::ReportScriptCompiled()
+    int32_t FunctionBody::ReportScriptCompiled()
     {
         AssertMsg(m_scriptContext != nullptr, "Script Context is null when reporting function information");
 
@@ -4966,14 +4966,14 @@ namespace Js
         IDebugDocumentContext *pDebugDocumentContext = nullptr;
         this->m_scriptContext->GetDocumentContext(this, &pDebugDocumentContext);
 
-        HRESULT hr = m_scriptContext->OnScriptCompiled((PROFILER_TOKEN) this->GetUtf8SourceInfo()->GetSourceInfoId(), type, pDebugDocumentContext);
+        int32_t hr = m_scriptContext->OnScriptCompiled((PROFILER_TOKEN) this->GetUtf8SourceInfo()->GetSourceInfoId(), type, pDebugDocumentContext);
 
         RELEASEPTR(pDebugDocumentContext);
 
         return hr;
     }
 
-    HRESULT FunctionBody::ReportFunctionCompiled()
+    int32_t FunctionBody::ReportFunctionCompiled()
     {
         // Some assumptions by Logger interface.
         // to send NULL as a name in case the name is anonymous and hint is anonymous code.
@@ -4984,7 +4984,7 @@ namespace Js
 
         SetHasFunctionCompiledSent(true);
 
-        HRESULT hr = m_scriptContext->OnFunctionCompiled(m_functionNumber, (PROFILER_TOKEN) this->GetUtf8SourceInfo()->GetSourceInfoId(), pwszName, nullptr, pDebugDocumentContext);
+        int32_t hr = m_scriptContext->OnFunctionCompiled(m_functionNumber, (PROFILER_TOKEN) this->GetUtf8SourceInfo()->GetSourceInfoId(), pwszName, nullptr, pDebugDocumentContext);
         RELEASEPTR(pDebugDocumentContext);
 
 #if DBG

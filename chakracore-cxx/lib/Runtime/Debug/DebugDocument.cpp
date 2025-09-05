@@ -66,7 +66,7 @@ namespace Js
         return BreakpointProbeList::New(arena);
     }
 
-    HRESULT DebugDocument::SetBreakPoint(int32 ibos, BREAKPOINT_STATE breakpointState)
+    int32_t DebugDocument::SetBreakPoint(int32 ibos, BREAKPOINT_STATE breakpointState)
     {
         ScriptContext* scriptContext = this->utf8SourceInfo->GetScriptContext();
 

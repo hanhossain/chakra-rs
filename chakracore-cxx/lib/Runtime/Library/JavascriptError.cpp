@@ -241,7 +241,7 @@ namespace Js
         return outputStr;
     }
 
-    void __declspec(noreturn) JavascriptError::MapAndThrowError(ScriptContext* scriptContext, HRESULT hr)
+    void __declspec(noreturn) JavascriptError::MapAndThrowError(ScriptContext* scriptContext, int32_t hr)
     {
         ErrorTypeEnum errorType;
         hr = MapHr(hr, &errorType);
@@ -249,7 +249,7 @@ namespace Js
         JavascriptError::MapAndThrowError(scriptContext, hr, errorType, nullptr);
     }
 
-    void __declspec(noreturn) JavascriptError::MapAndThrowError(ScriptContext* scriptContext, HRESULT hr, ErrorTypeEnum errorType, EXCEPINFO* pei)
+    void __declspec(noreturn) JavascriptError::MapAndThrowError(ScriptContext* scriptContext, int32_t hr, ErrorTypeEnum errorType, EXCEPINFO* pei)
     {
         JavascriptError* pError = MapError(scriptContext, errorType);
         SetMessageAndThrowError(scriptContext, pError, hr, pei);
@@ -350,14 +350,14 @@ namespace Js
         };
     }
 
-    void __declspec(noreturn) JavascriptError::ThrowDispatchError(ScriptContext* scriptContext, HRESULT hCode, PCWSTR message)
+    void __declspec(noreturn) JavascriptError::ThrowDispatchError(ScriptContext* scriptContext, int32_t hCode, PCWSTR message)
     {
         JavascriptError *pError = scriptContext->GetLibrary()->CreateError();
         JavascriptError::SetErrorMessageProperties(pError, hCode, message, scriptContext);
         JavascriptExceptionOperators::Throw(pError, scriptContext);
     }
 
-    void JavascriptError::SetErrorMessageProperties(JavascriptError *pError, HRESULT hr, PCWSTR message, ScriptContext* scriptContext)
+    void JavascriptError::SetErrorMessageProperties(JavascriptError *pError, int32_t hr, PCWSTR message, ScriptContext* scriptContext)
     {
         JavascriptString * messageString;
         if (message != nullptr)
@@ -381,7 +381,7 @@ namespace Js
         pError->SetNotEnumerable(PropertyIds::number);
     }
 
-    void JavascriptError::SetErrorMessage(JavascriptError *pError, HRESULT hr, ScriptContext* scriptContext, ...)
+    void JavascriptError::SetErrorMessage(JavascriptError *pError, int32_t hr, ScriptContext* scriptContext, ...)
     {
         va_list argList;
         va_start(argList, scriptContext);
@@ -389,7 +389,7 @@ namespace Js
         va_end(argList);
     }
 
-    void JavascriptError::SetErrorMessage(JavascriptError *pError, HRESULT hr, ScriptContext* scriptContext, va_list argList)
+    void JavascriptError::SetErrorMessage(JavascriptError *pError, int32_t hr, ScriptContext* scriptContext, va_list argList)
     {
         Assert(FAILED(hr));
         char16_t * allocatedString = nullptr;
@@ -400,7 +400,7 @@ namespace Js
             if (argList != nullptr)
 #endif
             {
-                HRESULT hrAdjusted = GetAdjustedResourceStringHr(hr, /* isFormatString */ true);
+                int32_t hrAdjusted = GetAdjustedResourceStringHr(hr, /* isFormatString */ true);
 
                 BSTR message = BstrGetResourceString(hrAdjusted);
                 if (message != nullptr)
@@ -422,7 +422,7 @@ namespace Js
             }
             if (allocatedString == nullptr)
             {
-                HRESULT hrAdjusted = GetAdjustedResourceStringHr(hr, /* isFormatString */ false);
+                int32_t hrAdjusted = GetAdjustedResourceStringHr(hr, /* isFormatString */ false);
 
                 BSTR message = BstrGetResourceString(hrAdjusted);
                 if (message == nullptr)
@@ -441,7 +441,7 @@ namespace Js
         JavascriptError::SetErrorMessageProperties(pError, hr, allocatedString, scriptContext);
     }
 
-    void JavascriptError::SetErrorMessage(JavascriptError *pError, HRESULT hr, PCWSTR varName, ScriptContext* scriptContext)
+    void JavascriptError::SetErrorMessage(JavascriptError *pError, int32_t hr, PCWSTR varName, ScriptContext* scriptContext)
     {
         Assert(FAILED(hr));
         char16_t * allocatedString = nullptr;
@@ -450,7 +450,7 @@ namespace Js
         {
             if (varName != nullptr)
             {
-                HRESULT hrAdjusted = GetAdjustedResourceStringHr(hr, /* isFormatString */ true);
+                int32_t hrAdjusted = GetAdjustedResourceStringHr(hr, /* isFormatString */ true);
 
                 BSTR message = BstrGetResourceString(hrAdjusted);
                 if (message != nullptr)
@@ -487,7 +487,7 @@ namespace Js
             }
             if (allocatedString == nullptr)
             {
-                HRESULT hrAdjusted = GetAdjustedResourceStringHr(hr, /* isFormatString */ false);
+                int32_t hrAdjusted = GetAdjustedResourceStringHr(hr, /* isFormatString */ false);
 
                 BSTR message = BstrGetResourceString(hrAdjusted);
                 if (message == nullptr)
@@ -539,10 +539,10 @@ namespace Js
         return TRUE;
     }
 
-    HRESULT JavascriptError::GetRuntimeError(RecyclableObject* errorObject, __out_opt LPCWSTR * pMessage)
+    int32_t JavascriptError::GetRuntimeError(RecyclableObject* errorObject, __out_opt LPCWSTR * pMessage)
     {
         // Only report the error number if it is a runtime error
-        HRESULT hr = JSERR_UncaughtException;
+        int32_t hr = JSERR_UncaughtException;
         ScriptContext* scriptContext = errorObject->GetScriptContext();
 
         // This version needs to be called in script.
@@ -555,7 +555,7 @@ namespace Js
         }
         else if (JavascriptNumber::Is_NoTaggedIntCheck(number))
         {
-            hr = (HRESULT)JavascriptNumber::GetValue(number);
+            hr = (int32_t)JavascriptNumber::GetValue(number);
         }
         if (!FAILED(hr))
         {
@@ -592,7 +592,7 @@ namespace Js
         return hr;
     }
 
-    HRESULT JavascriptError::GetRuntimeErrorWithScriptEnter(RecyclableObject* errorObject, __out_opt LPCWSTR * pMessage)
+    int32_t JavascriptError::GetRuntimeErrorWithScriptEnter(RecyclableObject* errorObject, __out_opt LPCWSTR * pMessage)
     {
         ScriptContext* scriptContext = errorObject->GetScriptContext();
         Assert(!scriptContext->GetThreadContext()->IsScriptActive());
@@ -615,7 +615,7 @@ namespace Js
         JavascriptExceptionOperators::ThrowStackOverflow(scriptContext, returnAddress);
     }
 
-    void __declspec(noreturn) JavascriptError::ThrowParserError(ScriptContext* scriptContext, HRESULT hrParser, CompileScriptException* se)
+    void __declspec(noreturn) JavascriptError::ThrowParserError(ScriptContext* scriptContext, int32_t hrParser, CompileScriptException* se)
     {
         Assert(FAILED(hrParser));
 
@@ -817,7 +817,7 @@ namespace Js
 
     bool JavascriptError::ShouldTypeofErrorBeReThrown(Var errorObject)
     {
-        HRESULT hr = (errorObject != nullptr && Js::VarIs<Js::JavascriptError>(errorObject))
+        int32_t hr = (errorObject != nullptr && Js::VarIs<Js::JavascriptError>(errorObject))
             ? Js::JavascriptError::GetRuntimeError(Js::VarTo<Js::RecyclableObject>(errorObject), nullptr)
             : S_OK;
 
@@ -896,7 +896,7 @@ namespace Js
         if (jsNewError)
         {
             LPCWSTR msg = nullptr;
-            HRESULT hr = JavascriptError::GetRuntimeError(this, &msg);
+            int32_t hr = JavascriptError::GetRuntimeError(this, &msg);
             jsNewError->SetErrorMessageProperties(jsNewError, hr, msg, targetJavascriptLibrary->GetScriptContext());
         }
         return jsNewError;
@@ -913,7 +913,7 @@ namespace Js
 
     JavascriptError* JavascriptError::CreateFromCompileScriptException(ScriptContext* scriptContext, CompileScriptException* cse, const char16_t * sourceUrl)
     {
-        HRESULT hr = cse->ei.scode;
+        int32_t hr = cse->ei.scode;
         Js::JavascriptError * error = Js::JavascriptError::MapParseError(scriptContext, hr);
         Var value;
 

@@ -23,7 +23,7 @@ public:
     unsigned int GetTime() { return m_time; };
     unsigned int GetId() { return m_id; };
 
-    virtual HRESULT Call(LPCSTR fileName) = 0;
+    virtual int32_t Call(LPCSTR fileName) = 0;
 };
 
 template <typename T>
@@ -246,7 +246,7 @@ public:
         });
     }
 
-    HRESULT ProcessAll(LPCSTR fileName)
+    int32_t ProcessAll(LPCSTR fileName)
     {
         while(!IsEmpty())
         {
@@ -276,7 +276,7 @@ public:
         CustomBase(time, customArg), m_func(func)
     {}
 
-    virtual HRESULT Call(LPCSTR fileName) override
+    virtual int32_t Call(LPCSTR fileName) override
     {
         return m_func(*this);
     }

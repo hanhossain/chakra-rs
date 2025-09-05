@@ -88,9 +88,9 @@ namespace Js {
         }
     }
 
-    HRESULT StackTraceArguments::ToString(LPCWSTR functionName, Js::ScriptContext *scriptContext, _In_ LPCWSTR *outResult) const
+    int32_t StackTraceArguments::ToString(LPCWSTR functionName, Js::ScriptContext *scriptContext, _In_ LPCWSTR *outResult) const
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         unsigned long argumentsTypes = types;
         BEGIN_TRANSLATE_EXCEPTION_AND_ERROROBJECT_TO_HRESULT_NESTED
         {

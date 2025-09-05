@@ -15,12 +15,12 @@ struct BackgroundParseItem sealed : public JsUtil::Job
     ParseContext *GetParseContext() { return &parseContext; }
     ParseNodeFnc *GetParseNode() const { return parseNode; }
     CompileScriptException *GetPSE() const { return pse; }
-    HRESULT GetHR() const { return hr; }
+    int32_t GetHR() const { return hr; }
     bool IsStrictMode() const { return strictMode; }
     bool Succeeded() const { return hr == S_OK; }
     bool IsInParseQueue() const { return inParseQueue; }
     bool IsDeferred() const { return isDeferred;}
-    void SetHR(HRESULT hr) { this->hr = hr; }
+    void SetHR(int32_t hr) { this->hr = hr; }
     void SetCompleted(bool has) { completed = has; }
     void SetPSE(CompileScriptException *pse) { this->pse = pse; }
 
@@ -49,7 +49,7 @@ private:
     ParseNodeFnc *parseNode;
     CompileScriptException *pse;
     NodeDList* regExpNodes;
-    HRESULT hr;
+    int32_t hr;
     uint maxBlockId;
     bool isDeferred;
     bool strictMode;

@@ -2782,7 +2782,7 @@ LABEL1:
         }
         else if (foundThis && scriptContext != funcCaller->GetScriptContext())
         {
-            HRESULT hr = scriptContext->GetHostScriptContext()->CheckCrossDomainScriptContext(funcCaller->GetScriptContext());
+            int32_t hr = scriptContext->GetHostScriptContext()->CheckCrossDomainScriptContext(funcCaller->GetScriptContext());
             if (S_OK != hr)
             {
                 *value = nullValue;
@@ -3441,7 +3441,7 @@ LABEL1:
         ArrayBufferBase* arrayBuffer = VarTo<ArrayBufferBase>(args[1]);
         const byte* buffer = arrayBuffer->GetBuffer();
         uint32 size = arrayBuffer->GetByteLength();
-        HRESULT hr = JitFromEncodedWorkItem(scriptContext->GetNativeCodeGenerator(), buffer, size);
+        int32_t hr = JitFromEncodedWorkItem(scriptContext->GetNativeCodeGenerator(), buffer, size);
         if (FAILED(hr))
         {
             return JavascriptNumber::New(hr, scriptContext);

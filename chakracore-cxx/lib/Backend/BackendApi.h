@@ -68,7 +68,7 @@ void GenerateAllFunctions(NativeCodeGenerator * nativeCodeGen, Js::FunctionBody 
 Js::Var RejitIRViewerFunction(NativeCodeGenerator *nativeCodeGen, Js::FunctionBody *fn, Js::ScriptContext *scriptContext);
 #endif
 #ifdef ALLOW_JIT_REPRO
-HRESULT JitFromEncodedWorkItem(NativeCodeGenerator *nativeCodeGen, _In_reads_(bufferSize) const byte* buffer, _In_ uint bufferSize);
+int32_t JitFromEncodedWorkItem(NativeCodeGenerator *nativeCodeGen, _In_reads_(bufferSize) const byte* buffer, _In_ uint bufferSize);
 #endif
 
 BOOL IsIntermediateCodeGenThunk(Js::JavascriptMethod codeAddress);

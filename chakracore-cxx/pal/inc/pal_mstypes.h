@@ -173,8 +173,6 @@ typedef HANDLE HGLOBAL;
 typedef HANDLE HLOCAL;
 typedef HANDLE HRSRC;
 
-typedef int32_t HRESULT;
-
 typedef union _LARGE_INTEGER {
     struct {
 #if BIGENDIAN

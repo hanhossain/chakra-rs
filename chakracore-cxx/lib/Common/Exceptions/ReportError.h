@@ -35,7 +35,7 @@ enum ErrorReason
 
 extern "C" void ReportFatalException(
     size_t context,
-    HRESULT exceptionCode,
+    int32_t exceptionCode,
     ErrorReason reasonCode,
     size_t scenario);
 
@@ -72,8 +72,8 @@ void LargeHeapBlock_Metadata_Corrupted(
 #endif
 
 void FromDOM_NoScriptScope_unrecoverable_error();
-void Debugger_AttachDetach_unrecoverable_error(HRESULT hr);
-void RpcFailure_unrecoverable_error(HRESULT hr);
+void Debugger_AttachDetach_unrecoverable_error(int32_t hr);
+void RpcFailure_unrecoverable_error(int32_t hr);
 void OutOfMemory_unrecoverable_error();
 void RecyclerSingleAllocationLimit_unrecoverable_error();
 void MemGCSingleAllocationLimit_unrecoverable_error();
@@ -90,7 +90,7 @@ void OutOfMemoryTooManyPinnedObjects_unrecoverable_error_notvisible();
 void OutOfMemoryTooManyClosedContexts_unrecoverable_error_notvisible();
 void OutOfMemoryAllocationPolicy_unrecoverable_error_notvisible();
 
-void XDataRegistration_unrecoverable_error(HRESULT hr, size_t scenario);
+void XDataRegistration_unrecoverable_error(int32_t hr, size_t scenario);
 
 inline void OutOfMemoryTooManyPinnedObjects_unrecoverable_error(uint8_t visibility)
 {

@@ -60,7 +60,7 @@ namespace Js {
 #if defined(GENERATE_DUMP) && defined(STACK_BACK_TRACE)
     thread_local StackBackTrace * Throw::stackBackTrace = nullptr;
 #endif
-    void Throw::FatalInternalError(HRESULT hr)
+    void Throw::FatalInternalError(int32_t hr)
     {
         int scenario = 2;
         ReportFatalException(NULL, hr, Fatal_Internal_Error, scenario);

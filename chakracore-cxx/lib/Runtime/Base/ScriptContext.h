@@ -155,35 +155,35 @@ class HostScriptContext
 public:
     HostScriptContext(Js::ScriptContext* inScriptContext) { this->scriptContext = inScriptContext; }
     virtual void Delete() = 0;
-    virtual HRESULT GetPreviousHostScriptContext(__deref_out HostScriptContext** ppUnkCaller) = 0;
-    virtual HRESULT PushHostScriptContext() = 0;
+    virtual int32_t GetPreviousHostScriptContext(__deref_out HostScriptContext** ppUnkCaller) = 0;
+    virtual int32_t PushHostScriptContext() = 0;
     virtual void PopHostScriptContext() = 0;
 
-    virtual HRESULT SetCaller(IUnknown *punkNew, IUnknown **ppunkPrev) = 0;
-    virtual HRESULT GetDispatchExCaller(__deref_out void** dispatchExCaller) = 0;
+    virtual int32_t SetCaller(IUnknown *punkNew, IUnknown **ppunkPrev) = 0;
+    virtual int32_t GetDispatchExCaller(__deref_out void** dispatchExCaller) = 0;
     virtual void ReleaseDispatchExCaller(void* dispatchExCaler) = 0;
     virtual Js::ModuleRoot * GetModuleRoot(int moduleID) = 0;
-    virtual HRESULT CheckCrossDomainScriptContext(Js::ScriptContext* scriptContext) = 0;
+    virtual int32_t CheckCrossDomainScriptContext(Js::ScriptContext* scriptContext) = 0;
 
-    virtual HRESULT GetHostContextUrl(DWORD_PTR hostSourceContext, BSTR& pUrl) = 0;
+    virtual int32_t GetHostContextUrl(DWORD_PTR hostSourceContext, BSTR& pUrl) = 0;
     virtual BOOL HasCaller() = 0;
     virtual void CleanDynamicCodeCache() = 0;
-    virtual HRESULT VerifyDOMSecurity(Js::ScriptContext* targetContext, Js::Var obj) = 0;
+    virtual int32_t VerifyDOMSecurity(Js::ScriptContext* targetContext, Js::Var obj) = 0;
 
-    virtual HRESULT CheckEvalRestriction() = 0;
-    virtual HRESULT HostExceptionFromHRESULT(HRESULT hr, Js::Var* outError) = 0;
+    virtual int32_t CheckEvalRestriction() = 0;
+    virtual int32_t HostExceptionFromHRESULT(int32_t hr, Js::Var* outError) = 0;
 
-    virtual HRESULT GetExternalJitData(ExternalJitData id, void *data) = 0;
-    virtual HRESULT SetDispatchInvoke(Js::JavascriptMethod dispatchInvoke) = 0;
-    virtual HRESULT EnqueuePromiseTask(Js::Var varTask) = 0;
+    virtual int32_t GetExternalJitData(ExternalJitData id, void *data) = 0;
+    virtual int32_t SetDispatchInvoke(Js::JavascriptMethod dispatchInvoke) = 0;
+    virtual int32_t EnqueuePromiseTask(Js::Var varTask) = 0;
 
-    virtual HRESULT FetchImportedModule(Js::ModuleRecordBase* referencingModule, LPCOLESTR specifier, Js::ModuleRecordBase** dependentModuleRecord) = 0;
-    virtual HRESULT FetchImportedModuleFromScript(DWORD_PTR dwReferencingSourceContext, LPCOLESTR specifier, Js::ModuleRecordBase** dependentModuleRecord) = 0;
-    virtual HRESULT NotifyHostAboutModuleReady(Js::ModuleRecordBase* referencingModule, Js::Var exceptionVar) = 0;
-    virtual HRESULT InitializeImportMeta(Js::ModuleRecordBase* referencingModule, Js::Var importMetaObject) = 0;
+    virtual int32_t FetchImportedModule(Js::ModuleRecordBase* referencingModule, LPCOLESTR specifier, Js::ModuleRecordBase** dependentModuleRecord) = 0;
+    virtual int32_t FetchImportedModuleFromScript(DWORD_PTR dwReferencingSourceContext, LPCOLESTR specifier, Js::ModuleRecordBase** dependentModuleRecord) = 0;
+    virtual int32_t NotifyHostAboutModuleReady(Js::ModuleRecordBase* referencingModule, Js::Var exceptionVar) = 0;
+    virtual int32_t InitializeImportMeta(Js::ModuleRecordBase* referencingModule, Js::Var importMetaObject) = 0;
     virtual bool ReportModuleCompletion(Js::ModuleRecordBase* module, Js::Var exception) = 0;
 
-    virtual HRESULT ThrowIfFailed(HRESULT hr) = 0;
+    virtual int32_t ThrowIfFailed(int32_t hr) = 0;
 
     Js::ScriptContext* GetScriptContext() { return scriptContext; }
 
@@ -415,14 +415,14 @@ namespace Js
         Js::JavascriptMethod DispatchProfileInvoke;
 
 #ifdef ENABLE_SCRIPT_DEBUGGING
-        typedef HRESULT (*GetDocumentContextFunction)(
+        typedef int32_t (*GetDocumentContextFunction)(
             Js::FunctionBody *pFunctionBody,
             IDebugDocumentContext **ppDebugDocumentContext);
         GetDocumentContextFunction GetDocumentContext;
 #endif // ENABLE_SCRIPT_DEBUGGING
 
 #ifdef ENABLE_SCRIPT_PROFILING
-        typedef HRESULT (*CleanupDocumentContextFunction)(ScriptContext *pContext);
+        typedef int32_t (*CleanupDocumentContextFunction)(ScriptContext *pContext);
         CleanupDocumentContextFunction CleanupDocumentContext;
 #endif
 
@@ -1233,7 +1233,7 @@ private:
             const char16_t *rootDisplayName, LoadScriptFlag loadScriptFlag,
             Js::Var scriptSource = nullptr);
 
-        HRESULT TryDeserializeParserState(
+        int32_t TryDeserializeParserState(
             _In_ uint32_t grfscr,
             _In_ uint sourceCRC,
             _In_ charcount_t cchLength,
@@ -1247,7 +1247,7 @@ private:
             _Out_ uint32_t* parserStateCacheByteCount,
             _In_ Js::SimpleDataCacheWrapper* pDataCache);
 
-        HRESULT TrySerializeParserState(
+        int32_t TrySerializeParserState(
             _In_ uint sourceCRC,
             _In_reads_bytes_(cbLength) LPCUTF8 pszSrc,
             _In_ size_t cbLength,
@@ -1257,7 +1257,7 @@ private:
             _In_ uint32_t parserStateCacheByteCount,
             _In_ Js::SimpleDataCacheWrapper* pDataCache);
 
-        HRESULT CompileUTF8Core(
+        int32_t CompileUTF8Core(
             Parser& ps,
             Js::Utf8SourceInfo* utf8SourceInfo,
             SRCINFO *srcInfo,
@@ -1272,7 +1272,7 @@ private:
             __deref_out Js::ParseableFunctionInfo ** func,
             __in_opt Js::SimpleDataCacheWrapper* pDataCache);
 
-        HRESULT SerializeParserState(const byte* script, size_t cb,
+        int32_t SerializeParserState(const byte* script, size_t cb,
             SRCINFO const * pSrcInfo,
             CompileScriptException * pse, Utf8SourceInfo** ppSourceInfo,
             const char16_t *rootDisplayName, LoadScriptFlag loadScriptFlag,
@@ -1547,17 +1547,17 @@ private:
 
 #ifdef ENABLE_SCRIPT_PROFILING
         void CoreSetProfileEventMask(uint32_t dwEventMask);
-        typedef HRESULT(*RegisterExternalLibraryType)(Js::ScriptContext *pScriptContext);
-        HRESULT RegisterProfileProbe(IActiveScriptProfilerCallback *pProfileCallback, uint32_t dwEventMask, uint32_t dwContext, RegisterExternalLibraryType RegisterExternalLibrary, JavascriptMethod dispatchInvoke);
-        HRESULT DeRegisterProfileProbe(HRESULT hrReason, JavascriptMethod dispatchInvoke);
-        HRESULT RegisterLibraryFunction(const char16_t *pwszObjectName, const char16_t *pwszFunctionName, Js::PropertyId functionPropertyId, JavascriptMethod entryPoint);
-        HRESULT RegisterBuiltinFunctions(RegisterExternalLibraryType RegisterExternalLibrary);
-        HRESULT SetProfileEventMask(uint32_t dwEventMask);
+        typedef int32_t(*RegisterExternalLibraryType)(Js::ScriptContext *pScriptContext);
+        int32_t RegisterProfileProbe(IActiveScriptProfilerCallback *pProfileCallback, uint32_t dwEventMask, uint32_t dwContext, RegisterExternalLibraryType RegisterExternalLibrary, JavascriptMethod dispatchInvoke);
+        int32_t DeRegisterProfileProbe(int32_t hrReason, JavascriptMethod dispatchInvoke);
+        int32_t RegisterLibraryFunction(const char16_t *pwszObjectName, const char16_t *pwszFunctionName, Js::PropertyId functionPropertyId, JavascriptMethod entryPoint);
+        int32_t RegisterBuiltinFunctions(RegisterExternalLibraryType RegisterExternalLibrary);
+        int32_t SetProfileEventMask(uint32_t dwEventMask);
 
-        HRESULT RegisterScript(Js::FunctionProxy *pFunctionBody, BOOL fRegisterScript = TRUE);
+        int32_t RegisterScript(Js::FunctionProxy *pFunctionBody, BOOL fRegisterScript = TRUE);
 
         // Register static and dynamic scripts
-        HRESULT RegisterAllScripts();
+        int32_t RegisterAllScripts();
 #endif
 
 #ifdef ENABLE_SCRIPT_DEBUGGING
@@ -1583,17 +1583,17 @@ private:
 #endif
 
 #if ENABLE_NATIVE_CODEGEN
-        HRESULT RecreateNativeCodeGenerator(NativeCodeGenerator ** previousCodeGen = nullptr);
+        int32_t RecreateNativeCodeGenerator(NativeCodeGenerator ** previousCodeGen = nullptr);
         void DeletePreviousNativeCodeGenerator(NativeCodeGenerator * codeGen);
-        HRESULT OnDebuggerAttachedDetached(bool attach, NativeCodeGenerator ** previousCodeGenHolder = nullptr);
+        int32_t OnDebuggerAttachedDetached(bool attach, NativeCodeGenerator ** previousCodeGenHolder = nullptr);
 #else
-        HRESULT OnDebuggerAttachedDetached(bool attach);
+        int32_t OnDebuggerAttachedDetached(bool attach);
 #endif
         bool IsForceNoNative();
 
 #ifdef ENABLE_SCRIPT_DEBUGGING
-        HRESULT OnDebuggerAttached();
-        HRESULT OnDebuggerDetached();
+        int32_t OnDebuggerAttached();
+        int32_t OnDebuggerDetached();
         void InitializeDebugging();
         bool IsEnumeratingRecyclerObjects() const { return isEnumeratingRecyclerObjects; }
     private:
@@ -1682,22 +1682,22 @@ private:
             PROFILER_TOKEN &scriptId,
             PROFILER_TOKEN &functionId);
 
-        HRESULT OnScriptCompiled(PROFILER_TOKEN scriptId, PROFILER_SCRIPT_TYPE type, IUnknown *pIDebugDocumentContext);
-        HRESULT OnFunctionCompiled(
+        int32_t OnScriptCompiled(PROFILER_TOKEN scriptId, PROFILER_SCRIPT_TYPE type, IUnknown *pIDebugDocumentContext);
+        int32_t OnFunctionCompiled(
             PROFILER_TOKEN functionId,
             PROFILER_TOKEN scriptId,
             const char16_t *pwszFunctionName,
             const char16_t *pwszFunctionNameHint,
             IUnknown *pIDebugDocumentContext);
-        HRESULT OnFunctionEnter(PROFILER_TOKEN scriptId, PROFILER_TOKEN functionId);
-        HRESULT OnFunctionExit(PROFILER_TOKEN scriptId, PROFILER_TOKEN functionId);
+        int32_t OnFunctionEnter(PROFILER_TOKEN scriptId, PROFILER_TOKEN functionId);
+        int32_t OnFunctionExit(PROFILER_TOKEN scriptId, PROFILER_TOKEN functionId);
 
-        static HRESULT FunctionExitSenderThunk(PROFILER_TOKEN functionId, PROFILER_TOKEN scriptId, ScriptContext *pScriptContext);
-        static HRESULT FunctionExitByNameSenderThunk(const char16_t *pwszFunctionName, ScriptContext *pScriptContext);
+        static int32_t FunctionExitSenderThunk(PROFILER_TOKEN functionId, PROFILER_TOKEN scriptId, ScriptContext *pScriptContext);
+        static int32_t FunctionExitByNameSenderThunk(const char16_t *pwszFunctionName, ScriptContext *pScriptContext);
 
         bool SetDispatchProfile(bool fSet, JavascriptMethod dispatchInvoke);
-        HRESULT OnDispatchFunctionEnter(const char16_t *pwszFunctionName);
-        HRESULT OnDispatchFunctionExit(const char16_t *pwszFunctionName);
+        int32_t OnDispatchFunctionEnter(const char16_t *pwszFunctionName);
+        int32_t OnDispatchFunctionExit(const char16_t *pwszFunctionName);
 
 #endif // ENABLE_SCRIPT_PROFILING
 

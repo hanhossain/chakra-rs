@@ -194,12 +194,12 @@ void HeapInfo::ValidPointersMap<TBlockAttributes>::GenerateValidPointersMap(Vali
 
 #ifdef ENABLE_TEST_HOOKS
 template <>
-HRESULT HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::GenerateValidPointersMapForBlockType(FILE* file)
+int32_t HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::GenerateValidPointersMapForBlockType(FILE* file)
 {
 #define IfErrorGotoCleanup(result) if ((result) < 0) { hr = E_FAIL; goto cleanup; }
 
     Assert(file != nullptr);
-    HRESULT hr = S_OK;
+    int32_t hr = S_OK;
 
     // Use heap to allocate the table so we don't bloat the stack (~64k). We only use this function
     // to generate headers as part of testing.
@@ -297,12 +297,12 @@ cleanup:
 }
 
 template <>
-HRESULT HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::GenerateValidPointersMapForBlockType(FILE* file)
+int32_t HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::GenerateValidPointersMapForBlockType(FILE* file)
 {
 #define IfErrorGotoCleanup(result) if ((result) < 0) { hr = E_FAIL; goto cleanup; }
 
     Assert(file != nullptr);
-    HRESULT hr = S_OK;
+    int32_t hr = S_OK;
 
     // Use heap to allocate the table so we don't bloat the stack (~64k). We only use this function
     // to generate headers as part of testing.
@@ -396,10 +396,10 @@ cleanup:
 }
 
 template <class TBlockAttributes>
-HRESULT HeapInfo::ValidPointersMap<TBlockAttributes>::GenerateValidPointersMapHeader(LPCWSTR vpmFullPath)
+int32_t HeapInfo::ValidPointersMap<TBlockAttributes>::GenerateValidPointersMapHeader(LPCWSTR vpmFullPath)
 {
     Assert(vpmFullPath != nullptr);
-    HRESULT hr = E_FAIL;
+    int32_t hr = E_FAIL;
     FILE * file = nullptr;
 
     if (_wfopen_s(&file, vpmFullPath, u"w") == 0 && file != nullptr)

@@ -167,7 +167,7 @@ namespace Js
             return m_scriptContext;
         }
 
-        void ThrowIfFailed(HRESULT hr) const;
+        void ThrowIfFailed(int32_t hr) const;
 
         void __declspec(noreturn) ThrowSCAUnsupported() const
         {

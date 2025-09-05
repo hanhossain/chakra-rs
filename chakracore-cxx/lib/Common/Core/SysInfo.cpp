@@ -356,9 +356,9 @@ void AutoSystemInfo::SetAvailableCommit(ULONG64 commit)
 // Returns the major and minor version of the loaded binary. If the version info has been fetched once, it will be cached
 // and returned without any system calls to find the version number.
 //
-HRESULT AutoSystemInfo::GetJscriptFileVersion(uint32_t* majorVersion, uint32_t* minorVersion, uint32_t *buildDateHash, uint32_t *buildTimeHash)
+int32_t AutoSystemInfo::GetJscriptFileVersion(uint32_t* majorVersion, uint32_t* minorVersion, uint32_t *buildDateHash, uint32_t *buildTimeHash)
 {
-    HRESULT hr = E_FAIL;
+    int32_t hr = E_FAIL;
     if(AutoSystemInfo::Data.majorVersion == 0 && AutoSystemInfo::Data.minorVersion == 0)
     {
         // uninitialized state  - call the system API to get the version info.
@@ -391,7 +391,7 @@ HRESULT AutoSystemInfo::GetJscriptFileVersion(uint32_t* majorVersion, uint32_t* 
 //
 // Returns the major and minor version of the binary passed as argument.
 //
-HRESULT AutoSystemInfo::GetVersionInfo(LPCWSTR pszPath, uint32_t* majorVersion, uint32_t* minorVersion)
+int32_t AutoSystemInfo::GetVersionInfo(LPCWSTR pszPath, uint32_t* majorVersion, uint32_t* minorVersion)
 {
     // xplat-todo: how to handle version resource?
     *majorVersion = INVALID_VERSION;

@@ -22,7 +22,7 @@ namespace Js {
         static void __declspec(noreturn) StackOverflow(ScriptContext *scriptContext, void * returnAddress);
         static void __declspec(noreturn) NotImplemented();
         static void __declspec(noreturn) InternalError();
-        static void __declspec(noreturn) FatalInternalError(HRESULT hr = E_FAIL);
+        static void __declspec(noreturn) FatalInternalError(int32_t hr = E_FAIL);
         static void __declspec(noreturn) FatalInternalErrorEx(int scenario);
         static void __declspec(noreturn) FatalInternalGlobalizationError();
 
@@ -52,8 +52,8 @@ namespace Js {
     };
 
     // Info:        Verify the result or throw catastrophic
-    // Parameters:  HRESULT
-    inline void VerifyOkCatastrophic(HRESULT hr)
+    // Parameters:  int32_t
+    inline void VerifyOkCatastrophic(int32_t hr)
     {
         if (hr == E_OUTOFMEMORY)
         {

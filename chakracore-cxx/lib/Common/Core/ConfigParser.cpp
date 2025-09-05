@@ -266,7 +266,7 @@ void ConfigParser::ProcessConfiguration(HANDLE hmod)
 #endif
 }
 
-HRESULT ConfigParser::SetOutputFile(const char16_t* outputFile, const char16_t* openMode)
+int32_t ConfigParser::SetOutputFile(const char16_t* outputFile, const char16_t* openMode)
 {
     // If present, replace the {PID} token with the process ID
     const char16_t* pidStr = nullptr;

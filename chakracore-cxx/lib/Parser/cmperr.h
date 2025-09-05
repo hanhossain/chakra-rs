@@ -17,13 +17,13 @@ enum
 class ParseExceptionObject
 {
 public:
-    ParseExceptionObject(HRESULT hr, LPCWSTR stringOneIn = u"", LPCWSTR stringTwoIn = u"");
+    ParseExceptionObject(int32_t hr, LPCWSTR stringOneIn = u"", LPCWSTR stringTwoIn = u"");
     ~ParseExceptionObject();
-    HRESULT GetError() { return m_hr; }
+    int32_t GetError() { return m_hr; }
     LPCWSTR GetStringOne() { return stringOne; }
     LPCWSTR GetStringTwo() { return stringTwo; }
 private:
-    HRESULT m_hr;
+    int32_t m_hr;
     BSTR stringOne;
     BSTR stringTwo;
 };

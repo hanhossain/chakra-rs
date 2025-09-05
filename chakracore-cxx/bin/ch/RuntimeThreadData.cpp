@@ -51,7 +51,7 @@ uint32_t RuntimeThreadData::ThreadProc()
     JsValueRef scriptSource;
     JsValueRef fname;
     const char* fullPath = "agent source";
-    HRESULT hr = S_OK;
+    int32_t hr = S_OK;
 
     threadLocalData.Initialize(this);
 

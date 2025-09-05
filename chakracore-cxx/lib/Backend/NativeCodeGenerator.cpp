@@ -474,10 +474,10 @@ NativeCodeGenerator::RejitIRViewerFunction(Js::FunctionBody *fn, Js::ScriptConte
 #endif /* IR_VIEWER */
 
 #ifdef ALLOW_JIT_REPRO
-HRESULT NativeCodeGenerator::JitFromEncodedWorkItem(_In_reads_(bufferSize) const byte* buffer, _In_ uint bufferSize)
+int32_t NativeCodeGenerator::JitFromEncodedWorkItem(_In_reads_(bufferSize) const byte* buffer, _In_ uint bufferSize)
 {
     CodeGenWorkItemIDL* workItemData = nullptr;
-    HRESULT hr = JITManager::DeserializeRPCData(buffer, bufferSize, &workItemData);
+    int32_t hr = JITManager::DeserializeRPCData(buffer, bufferSize, &workItemData);
     if (FAILED(hr))
     {
         return hr;
@@ -821,7 +821,7 @@ void NativeCodeGenerator::CodeGen(PageAllocator* pageAllocator, CodeGenWorkItemI
         {
             throw Js::OperationAbortedException();
         }
-        HRESULT hr = JITManager::GetJITManager()->RemoteCodeGenCall(
+        int32_t hr = JITManager::GetJITManager()->RemoteCodeGenCall(
             workItemData,
             remoteScriptContext,
             &jitWriteData);
@@ -2143,7 +2143,7 @@ NativeCodeGenerator::UpdateJITState()
             typedef BVSparseNode<JitArenaAllocator> BVSparseNode;
             CompileAssert(sizeof(BVSparseNode) == sizeof(BVSparseNodeIDL));
             BVSparseNodeIDL * bvHead = (BVSparseNodeIDL*)scriptContext->GetThreadContext()->GetJITNumericProperties()->head;
-            HRESULT hr = JITManager::GetJITManager()->UpdatePropertyRecordMap(scriptContext->GetThreadContext()->GetRemoteThreadContextAddr(), bvHead);
+            int32_t hr = JITManager::GetJITManager()->UpdatePropertyRecordMap(scriptContext->GetThreadContext()->GetRemoteThreadContextAddr(), bvHead);
 
             JITManager::HandleServerCallResult(hr, RemoteCallType::StateUpdate);
             scriptContext->GetThreadContext()->ResetJITNeedsPropUpdate();
@@ -3324,7 +3324,7 @@ NativeCodeGenerator::FreeNativeCodeGenAllocation(void* codeAddress)
 {
     if (JITManager::GetJITManager()->IsOOPJITEnabled())
     {
-        HRESULT hr = JITManager::GetJITManager()->FreeAllocation(this->scriptContext->GetRemoteScriptAddr(), (intptr_t)codeAddress);
+        int32_t hr = JITManager::GetJITManager()->FreeAllocation(this->scriptContext->GetRemoteScriptAddr(), (intptr_t)codeAddress);
         JITManager::HandleServerCallResult(hr, RemoteCallType::MemFree);
     }
     else if(this->backgroundAllocators)

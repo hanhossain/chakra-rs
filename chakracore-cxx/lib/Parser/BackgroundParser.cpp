@@ -95,7 +95,7 @@ bool BackgroundParser::Process(JsUtil::Job *const job, Parser *parser, CompileSc
     parser->SetCurrBackgroundParseItem(backgroundItem);
     backgroundItem->SetParser(parser);
 
-    HRESULT hr = parser->ParseFunctionInBackground(backgroundItem->GetParseNode(), backgroundItem->GetParseContext(), backgroundItem->IsDeferred(), pse);
+    int32_t hr = parser->ParseFunctionInBackground(backgroundItem->GetParseNode(), backgroundItem->GetParseContext(), backgroundItem->IsDeferred(), pse);
     backgroundItem->SetMaxBlockId(parser->GetLastBlockId());
     backgroundItem->SetHR(hr);
     if (FAILED(hr))

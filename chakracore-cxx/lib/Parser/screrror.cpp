@@ -25,7 +25,7 @@ void CopyException (EXCEPINFO *peiDest, const EXCEPINFO *peiSource)
 }
 
 /***************************************************************************
-HRESULT mapping
+int32_t mapping
 ***************************************************************************/
 template <rtErrors errnum> class ErrorTypeMap;
 
@@ -42,8 +42,8 @@ template <rtErrors errnum> class ErrorTypeMap;
 
 struct MHR
 {
-    HRESULT hrIn;
-    HRESULT hrOut;
+    int32_t hrIn;
+    int32_t hrOut;
     ErrorTypeEnum errorType;
 };
 
@@ -114,13 +114,13 @@ const MHR g_rgmhr[] =
 const int32 kcmhr = sizeof(g_rgmhr) / sizeof(g_rgmhr[0]);
 
 
-HRESULT MapHr(HRESULT hr, ErrorTypeEnum * errorTypeOut)
+int32_t MapHr(int32_t hr, ErrorTypeEnum * errorTypeOut)
 {
     int imhrMin, imhrLim, imhr;
 
 #if DEBUG
     // In debug, check that all the entries in the error map table are
-    // sorted based on the HRESULT in ascending order. We will then binary
+    // sorted based on the int32_t in ascending order. We will then binary
     // search the sorted array. We need do this only once per invocation.
     static BOOL fCheckSort = TRUE;
 
@@ -185,7 +185,7 @@ void ScriptException::Free(void)
     FreeExcepInfo(&ei);
 }
 
-void ScriptException::GetError(HRESULT *phr, EXCEPINFO *pei)
+void ScriptException::GetError(int32_t *phr, EXCEPINFO *pei)
 {
     Assert(phr);
 
@@ -240,7 +240,7 @@ void CompileScriptException::CopyInto(CompileScriptException* pse)
     }
 }
 
-HRESULT  CompileScriptException::ProcessError(IScanner * pScan, HRESULT hr, ParseNode * pnodeBase, LPCWSTR stringOne, LPCWSTR stringTwo)
+int32_t  CompileScriptException::ProcessError(IScanner * pScan, int32_t hr, ParseNode * pnodeBase, LPCWSTR stringOne, LPCWSTR stringTwo)
 {
     // fill in the ScriptException structure
     Free();
@@ -272,7 +272,7 @@ HRESULT  CompileScriptException::ProcessError(IScanner * pScan, HRESULT hr, Pars
         this->hasLineNumberInfo = true;
         pScan->GetErrorLineInfo(this->ichMin, this->ichLim, this->line, this->ichMinLine);
 
-        HRESULT hrSysAlloc = pScan->SysAllocErrorLine(this->ichMinLine, &this->bstrLine);
+        int32_t hrSysAlloc = pScan->SysAllocErrorLine(this->ichMinLine, &this->bstrLine);
         if( FAILED(hrSysAlloc) )
         {
             return hrSysAlloc;

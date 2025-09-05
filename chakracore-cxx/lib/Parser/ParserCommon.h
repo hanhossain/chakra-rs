@@ -59,4 +59,4 @@ typedef JsUtil::BaseHashSet<IdentPtr, ArenaAllocator, PowerOf2SizePolicy> IdentP
 //
 // Below was moved from scrutil.h to share with chakradiag.
 //
-#define HR(sc) ((HRESULT)(sc))
+#define HR(sc) ((int32_t)(sc))

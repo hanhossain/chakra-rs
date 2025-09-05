@@ -2210,11 +2210,11 @@ void ByteCodeGenerator::Begin(
     this->jumpCleanupList = Anew(alloc, JumpCleanupList, alloc);
 }
 
-HRESULT GenerateByteCode(ParseNodeProg *pnode, uint32 grfscr, Js::ScriptContext* scriptContext, __inout Js::ParseableFunctionInfo ** ppRootFunc,
+int32_t GenerateByteCode(ParseNodeProg *pnode, uint32 grfscr, Js::ScriptContext* scriptContext, __inout Js::ParseableFunctionInfo ** ppRootFunc,
                          uint sourceIndex, bool forceNoNative, Parser* parser, CompileScriptException *pse, Js::ScopeInfo* parentScopeInfo,
                         Js::ScriptFunction ** functionRef)
 {
-    HRESULT hr = S_OK;
+    int32_t hr = S_OK;
     ByteCodeGenerator byteCodeGenerator(scriptContext, parentScopeInfo);
     BEGIN_TRANSLATE_EXCEPTION_TO_HRESULT_NESTED
     {

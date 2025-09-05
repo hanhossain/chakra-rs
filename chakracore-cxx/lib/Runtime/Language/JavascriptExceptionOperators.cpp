@@ -1090,7 +1090,7 @@ namespace Js
 
         JavascriptExceptionContext::StackTrace *stackTrace = nullptr;
         // If we take an OOM (JavascriptException for OOM if script is active), just bail early and return what we've got
-        HRESULT hr;
+        int32_t hr;
         BEGIN_TRANSLATE_EXCEPTION_AND_ERROROBJECT_TO_HRESULT_NESTED
         {
             stackTrace = RecyclerNew(scriptContext.GetRecycler(), JavascriptExceptionContext::StackTrace, scriptContext.GetRecycler());
@@ -1372,7 +1372,7 @@ namespace Js
         JavascriptExceptionContext::StackTrace* stackTraceTrimmed = NULL;
         if (stackTraceLimit > 0)
         {
-            HRESULT hr;
+            int32_t hr;
             BEGIN_TRANSLATE_EXCEPTION_AND_ERROROBJECT_TO_HRESULT_NESTED
             {
                 stackTraceTrimmed = RecyclerNew(scriptContext.GetRecycler(), JavascriptExceptionContext::StackTrace, scriptContext.GetRecycler());
@@ -1456,7 +1456,7 @@ namespace Js
         stackPropertyDescriptor.SetGetter(accessor);
         stackPropertyDescriptor.SetConfigurable(true);
         stackPropertyDescriptor.SetEnumerable(false);
-        HRESULT hr;
+        int32_t hr;
         BEGIN_TRANSLATE_EXCEPTION_AND_ERROROBJECT_TO_HRESULT_NESTED
         {
             if (JavascriptOperators::DefineOwnPropertyDescriptor(obj, PropertyIds::stack, stackPropertyDescriptor, false, &scriptContext))
@@ -1533,7 +1533,7 @@ namespace Js
         }
 
         JavascriptString* stringMessage = scriptContext->GetLibrary()->GetEmptyString();
-        HRESULT hr;
+        int32_t hr;
         BEGIN_TRANSLATE_EXCEPTION_AND_ERROROBJECT_TO_HRESULT_NESTED
         {
             Js::JavascriptExceptionContext::StackTrace *stackTrace = NULL;
@@ -1619,7 +1619,7 @@ namespace Js
         if (scriptContext->GetConfig()->IsErrorStackTraceEnabled()
             && IsErrorInstance(thrownObject))
         {
-            HRESULT hr = JavascriptError::GetRuntimeError(VarTo<RecyclableObject>(thrownObject), NULL);
+            int32_t hr = JavascriptError::GetRuntimeError(VarTo<RecyclableObject>(thrownObject), NULL);
             JavascriptFunction* error = scriptContext->GetLibrary()->GetErrorConstructor();
 
             // If we are throwing StackOverflow and Error.stackTraceLimit is a custom getter, we can't make the getter

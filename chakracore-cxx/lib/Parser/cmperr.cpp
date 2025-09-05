@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "ParserPch.h"
 
-ParseExceptionObject::ParseExceptionObject(HRESULT hr, LPCWSTR stringOneIn, LPCWSTR stringTwoIn)
+ParseExceptionObject::ParseExceptionObject(int32_t hr, LPCWSTR stringOneIn, LPCWSTR stringTwoIn)
 {
     m_hr = hr;
     stringOne = SysAllocString(stringOneIn);

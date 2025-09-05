@@ -20,10 +20,10 @@ Abstract:
 #include "pal/palinternal.h"
 
 // Redefining here to not have to pull in all of palrt.h in order to get intsafe
-#define S_OK ((HRESULT)0x00000000L)
-#define E_INVALIDARG ((HRESULT) 0x80070057L)
-#define SUCCEEDED(Status) ((HRESULT)(Status) >= 0)
-#define FAILED(Status) ((HRESULT)(Status)<0)
+#define S_OK ((int32_t)0x00000000L)
+#define E_INVALIDARG ((int32_t) 0x80070057L)
+#define SUCCEEDED(Status) ((int32_t)(Status) >= 0)
+#define FAILED(Status) ((int32_t)(Status)<0)
 #define NULL    0
 
 #include "pal_assert.h"
@@ -36,7 +36,7 @@ size_t PAL_wcslen(const char16_t *);
 typedef char16_t OLECHAR;
 typedef char16_t *BSTR;
 
-inline HRESULT CbSysStringSize(uint32_t cchSize, BOOL isByteLen, uint32_t *result)
+inline int32_t CbSysStringSize(uint32_t cchSize, BOOL isByteLen, uint32_t *result)
 {
     if (result == nullptr)
         return E_INVALIDARG;

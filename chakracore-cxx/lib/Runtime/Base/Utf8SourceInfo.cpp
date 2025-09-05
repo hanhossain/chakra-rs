@@ -234,9 +234,9 @@ namespace Js
         return NewWithHolder(scriptContext, sourceHolder, length, srcInfo, isLibraryCode, scriptSource);
     }
 
-    HRESULT Utf8SourceInfo::EnsureLineOffsetCacheNoThrow()
+    int32_t Utf8SourceInfo::EnsureLineOffsetCacheNoThrow()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         // This is a double check, otherwise we would have to have a private function, and add an assert.
         // Basically the outer check is for try/catch, inner check (inside EnsureLineOffsetCache) is for that method as its public.
         if (this->m_lineOffsetCache == nullptr)

@@ -29,20 +29,20 @@ typedef enum {
 
 interface IEnumDebugCodeContexts : IUnknown
 {
-    // HRESULT Next( ..
+    // int32_t Next( ..
 
-    // HRESULT Skip( ..
+    // int32_t Skip( ..
 
-    // HRESULT Reset();
+    // int32_t Reset();
 
-    // HRESULT Clone( ..
+    // int32_t Clone( ..
 };
 
 interface IDebugDocumentInfo : IUnknown
 {
-    HRESULT GetName(char* dn, BSTR *name);
+    int32_t GetName(char* dn, BSTR *name);
 
-    HRESULT GetDocumentClassId(CLSID *dclsid);
+    int32_t GetDocumentClassId(CLSID *dclsid);
 };
 
 interface IDebugDocument : IDebugDocumentInfo
@@ -51,73 +51,73 @@ interface IDebugDocument : IDebugDocumentInfo
 
 interface IDebugDocumentContext : IUnknown
 {
-    HRESULT GetDocument(IDebugDocument **doc);
+    int32_t GetDocument(IDebugDocument **doc);
 
-    HRESULT EnumCodeContexts(IEnumDebugCodeContexts **dctx);
+    int32_t EnumCodeContexts(IEnumDebugCodeContexts **dctx);
 };
 
 class IActiveScriptProfilerCallback
 {
 public:
-  HRESULT Initialize(uint32_t ctx)
+  int32_t Initialize(uint32_t ctx)
   {
       return S_OK;
   }
 
-  HRESULT Shutdown(HRESULT _)
+  int32_t Shutdown(int32_t _)
   {
       return S_OK;
   }
 
-  HRESULT Release()
+  int32_t Release()
   {
       return S_OK;
   }
 
-  HRESULT QueryInterface(IActiveScriptProfilerCallback **_)
+  int32_t QueryInterface(IActiveScriptProfilerCallback **_)
   {
       return S_OK;
   }
 
-  HRESULT ScriptCompiled(PROFILER_TOKEN scriptId, PROFILER_SCRIPT_TYPE type, IUnknown *ctx)
+  int32_t ScriptCompiled(PROFILER_TOKEN scriptId, PROFILER_SCRIPT_TYPE type, IUnknown *ctx)
   {
       return S_OK;
   }
 
-  HRESULT FunctionCompiled(PROFILER_TOKEN functionId, PROFILER_TOKEN scriptId,
+  int32_t FunctionCompiled(PROFILER_TOKEN functionId, PROFILER_TOKEN scriptId,
       const char16_t* pwszFunctionName, const char16_t* pwszFunctionNameHint, IUnknown *ctx)
   {
       return S_OK;
   }
 
-  HRESULT OnFunctionEnter(PROFILER_TOKEN scriptId, PROFILER_TOKEN functionId)
+  int32_t OnFunctionEnter(PROFILER_TOKEN scriptId, PROFILER_TOKEN functionId)
   {
       return S_OK;
   }
 
-  HRESULT OnFunctionExit(PROFILER_TOKEN scriptId, PROFILER_TOKEN functionId)
+  int32_t OnFunctionExit(PROFILER_TOKEN scriptId, PROFILER_TOKEN functionId)
   {
       return S_OK;
   }
 
   // IActiveScriptProfilerCallback2
-  HRESULT OnFunctionEnterByName(const char16_t *functionName, PROFILER_SCRIPT_TYPE _)
+  int32_t OnFunctionEnterByName(const char16_t *functionName, PROFILER_SCRIPT_TYPE _)
   {
       return S_OK;
   }
 
-  HRESULT OnFunctionExitByName(const char16_t *functionName, PROFILER_SCRIPT_TYPE _)
+  int32_t OnFunctionExitByName(const char16_t *functionName, PROFILER_SCRIPT_TYPE _)
   {
       return S_OK;
   }
 
   // IActiveScriptProfilerCallback3
-  HRESULT AddRef()
+  int32_t AddRef()
   {
       return S_OK;
   }
 
-  HRESULT SetWebWorkerId(PROFILER_TOKEN _)
+  int32_t SetWebWorkerId(PROFILER_TOKEN _)
   {
       return S_OK;
   }

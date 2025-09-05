@@ -47,7 +47,7 @@ namespace Js
         void Dispose(bool isShutdown) override { return; }
         void Mark(Recycler * recycler) override { return; }
 
-        HRESULT ResolveExternalModuleDependencies();
+        int32_t ResolveExternalModuleDependencies();
         void EnsureChildModuleSet(ScriptContext *scriptContext);
         bool ConfirmChildrenParsed();
 
@@ -88,8 +88,8 @@ namespace Js
         void SetRequestedModuleList(IdentPtrList* requestModules) { requestedModuleList = requestModules; }
 
         ScriptContext* GetScriptContext() const { return scriptContext; }
-        HRESULT ParseSource(__in_bcount(sourceLength) byte* sourceText, uint32 sourceLength, SRCINFO * srcInfo, Var* exceptionVar, bool isUtf8);
-        HRESULT OnHostException(void* errorVar);
+        int32_t ParseSource(__in_bcount(sourceLength) byte* sourceText, uint32 sourceLength, SRCINFO * srcInfo, Var* exceptionVar, bool isUtf8);
+        int32_t OnHostException(void* errorVar);
 
         static SourceTextModuleRecord* FromHost(void* hostModuleRecord)
         {
@@ -186,12 +186,12 @@ namespace Js
 
         Field(Var) importMetaObject;
 
-        HRESULT PostParseProcess();
-        HRESULT PrepareForModuleDeclarationInitialization();
+        int32_t PostParseProcess();
+        int32_t PrepareForModuleDeclarationInitialization();
         void ReleaseParserResources();
         void ReleaseParserResourcesForHierarchy();
         void ImportModuleListsFromParser();
-        HRESULT OnChildModuleReady(SourceTextModuleRecord* childModule, Var errorObj);
+        int32_t OnChildModuleReady(SourceTextModuleRecord* childModule, Var errorObj);
         void NotifyParentsAsNeeded();
         void CleanupBeforeExecution();
         void InitializeLocalImports();

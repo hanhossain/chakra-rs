@@ -216,7 +216,7 @@ void ChakraBinaryAutoSystemInfoInit(AutoSystemInfo * autoSystemInfo)
 }
 
 #if !ENABLE_NATIVE_CODEGEN
-HRESULT JsInitializeJITServer(
+int32_t JsInitializeJITServer(
     GUID* connectionUuid,
     __in_opt void* securityDescriptor,
     __in_opt void* alpcSecurityDescriptor)

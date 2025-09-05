@@ -558,7 +558,7 @@ public:
         scopeInfoToScopeInfoIdMap = Anew(alloc, ScopeInfoToScopeInfoIdMap, alloc);
     }
 
-    HRESULT Create(byte ** buffer, uint32_t * bufferBytes)
+    int32_t Create(byte ** buffer, uint32_t * bufferBytes)
     {
         BufferBuilderList all(u"Final");
 
@@ -877,7 +877,7 @@ public:
     };
 
 #ifdef ASMJS_PLAT
-    HRESULT RewriteAsmJsByteCodesInto(BufferBuilderList & builder, LPCWSTR clue, FunctionBody * function, ByteBlock * byteBlock, SerializedFieldList& definedFields)
+    int32_t RewriteAsmJsByteCodesInto(BufferBuilderList & builder, LPCWSTR clue, FunctionBody * function, ByteBlock * byteBlock, SerializedFieldList& definedFields)
     {
         SListCounted<AuxRecord> auxRecords(alloc);
 
@@ -976,7 +976,7 @@ public:
     }
 #endif
 
-    HRESULT RewriteByteCodesInto(BufferBuilderList & builder, LPCWSTR clue, FunctionBody * function, ByteBlock * byteBlock, SerializedFieldList& definedFields)
+    int32_t RewriteByteCodesInto(BufferBuilderList & builder, LPCWSTR clue, FunctionBody * function, ByteBlock * byteBlock, SerializedFieldList& definedFields)
     {
         SListCounted<AuxRecord> auxRecords(alloc);
 
@@ -2086,7 +2086,7 @@ public:
     }
 #endif
 
-    HRESULT AddFunctionBody(BufferBuilderList &builder, FunctionBody *function, SRCINFO const *srcInfo, SerializedFieldList& definedFields)
+    int32_t AddFunctionBody(BufferBuilderList &builder, FunctionBody *function, SRCINFO const *srcInfo, SerializedFieldList& definedFields)
     {
         Assert(!function->GetIsSerialized());
         DebugOnly(function->SetIsSerialized(true));
@@ -2235,7 +2235,7 @@ public:
         return S_OK;
     }
 
-    HRESULT AddFunction(BufferBuilderList & builder, ParseableFunctionInfo * function, SRCINFO const * srcInfo, ByteCodeCache* cache)
+    int32_t AddFunction(BufferBuilderList & builder, ParseableFunctionInfo * function, SRCINFO const * srcInfo, ByteCodeCache* cache)
     {
         SerializedFieldList definedFields = { 0 };
 
@@ -2439,14 +2439,14 @@ public:
         return S_OK;
     }
 
-    HRESULT AddTopFunctionBody(FunctionBody * function, SRCINFO const * srcInfo, ByteCodeCache* cache)
+    int32_t AddTopFunctionBody(FunctionBody * function, SRCINFO const * srcInfo, ByteCodeCache* cache)
     {
         topFunctionId = function->GetLocalFunctionId();
         functionCount.value = srcInfo->sourceContextInfo->nextLocalFunctionId;
         return AddFunction(functionsTable, function, srcInfo, cache);
     }
 
-    HRESULT AddOneScopeInfo(BufferBuilderList & builder, ScopeInfo* scopeInfo, LocalScopeInfoId parentId = InvalidLocalScopeInfoId)
+    int32_t AddOneScopeInfo(BufferBuilderList & builder, ScopeInfo* scopeInfo, LocalScopeInfoId parentId = InvalidLocalScopeInfoId)
     {
         BufferBuilderInt32* startOfScopeInfo = nullptr;
         PrependInt32(builder, u"ScopeInfo symbol count", scopeInfo->symbolCount, &startOfScopeInfo);
@@ -2555,7 +2555,7 @@ public:
         return localScopeInfoId;
     }
 
-    HRESULT AddScopeInfo(BufferBuilderList & builder, ScopeInfo* scopeInfo)
+    int32_t AddScopeInfo(BufferBuilderList & builder, ScopeInfo* scopeInfo)
     {
         LocalScopeInfoId localScopeInfoId = GetScopeInfoId(scopeInfo);
         PrependInt32(builder, u"ScopeInfo LocalId", localScopeInfoId);
@@ -2563,7 +2563,7 @@ public:
         return S_OK;
     }
 
-    HRESULT AddDeferredStubs(BufferBuilderList & builder, DeferredFunctionStub* deferredStubs, uint stubsCount, ByteCodeCache* cache, bool recursive)
+    int32_t AddDeferredStubs(BufferBuilderList & builder, DeferredFunctionStub* deferredStubs, uint stubsCount, ByteCodeCache* cache, bool recursive)
     {
         AssertOrFailFast(!(deferredStubs == nullptr && stubsCount > 0));
 
@@ -3043,7 +3043,7 @@ public:
         return (uint32)result;
     }
 
-    HRESULT ReadHeader()
+    int32_t ReadHeader()
     {
         auto current = ReadConstantSizedInt32NoSize(raw, &magic);
         if (magic != magicConstant)
@@ -4024,7 +4024,7 @@ public:
 #endif
 
     // Read a function body
-    HRESULT ReadFunctionBody(const byte * functionBytes, FunctionProxy ** functionProxy, Utf8SourceInfo* sourceInfo, ByteCodeCache * cache, NativeModule *nativeModule, bool deserializeThis, bool deserializeNested = true, Js::DeferDeserializeFunctionInfo* deferDeserializeFunctionInfo = NULL)
+    int32_t ReadFunctionBody(const byte * functionBytes, FunctionProxy ** functionProxy, Utf8SourceInfo* sourceInfo, ByteCodeCache * cache, NativeModule *nativeModule, bool deserializeThis, bool deserializeNested = true, Js::DeferDeserializeFunctionInfo* deferDeserializeFunctionInfo = NULL)
     {
         Assert(sourceInfo->GetSrcInfo()->moduleID == kmodGlobal);
 
@@ -4584,7 +4584,7 @@ public:
     }
 
     // Read the top function body.
-    HRESULT ReadTopFunctionBody(Field(FunctionBody*)* function, Utf8SourceInfo* sourceInfo, ByteCodeCache * cache, bool allowDefer, NativeModule *nativeModule)
+    int32_t ReadTopFunctionBody(Field(FunctionBody*)* function, Utf8SourceInfo* sourceInfo, ByteCodeCache * cache, bool allowDefer, NativeModule *nativeModule)
     {
         auto topFunction = ReadInt32(functions, &functionCount);
         firstFunctionId = sourceInfo->GetSrcInfo()->sourceContextInfo->nextLocalFunctionId;
@@ -4595,7 +4595,7 @@ public:
         sourceInfo->GetSrcInfo()->sourceContextInfo->nextLocalFunctionId += functionCount;
         sourceInfo->EnsureInitialized(functionCount);
         sourceInfo->GetSrcInfo()->sourceContextInfo->EnsureInitialized();
-        HRESULT hr = E_FAIL;
+        int32_t hr = E_FAIL;
 
 #if ENABLE_NATIVE_CODEGEN && defined(ENABLE_PREJIT)
         bool prejit = false;
@@ -4942,12 +4942,12 @@ ScopeInfo* ByteCodeCache::LookupScopeInfo(ScriptContext * scriptContext, LocalSc
 }
 
 // Serialize function body
-HRESULT ByteCodeSerializer::SerializeToBuffer(ScriptContext * scriptContext, ArenaAllocator * alloc, uint32_t sourceByteLength, LPCUTF8 utf8Source, FunctionBody * function, SRCINFO const* srcInfo, byte ** buffer, uint32_t * bufferBytes, uint32_t dwFlags)
+int32_t ByteCodeSerializer::SerializeToBuffer(ScriptContext * scriptContext, ArenaAllocator * alloc, uint32_t sourceByteLength, LPCUTF8 utf8Source, FunctionBody * function, SRCINFO const* srcInfo, byte ** buffer, uint32_t * bufferBytes, uint32_t dwFlags)
 {
     int builtInPropertyCount = (dwFlags & GENERATE_BYTE_CODE_BUFFER_LIBRARY) != 0 ?  PropertyIds::_countJSOnlyProperty : TotalNumberOfBuiltInProperties;
 
     Utf8SourceInfo *utf8SourceInfo = function->GetUtf8SourceInfo();
-    HRESULT hr = utf8SourceInfo->EnsureLineOffsetCacheNoThrow();
+    int32_t hr = utf8SourceInfo->EnsureLineOffsetCacheNoThrow();
 
     if (FAILED(hr))
     {
@@ -4994,17 +4994,17 @@ HRESULT ByteCodeSerializer::SerializeToBuffer(ScriptContext * scriptContext, Are
     return hr;
 }
 
-HRESULT ByteCodeSerializer::DeserializeFromBuffer(ScriptContext * scriptContext, uint32 scriptFlags, LPCUTF8 utf8Source, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, Field(FunctionBody*)* function, uint sourceIndex)
+int32_t ByteCodeSerializer::DeserializeFromBuffer(ScriptContext * scriptContext, uint32 scriptFlags, LPCUTF8 utf8Source, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, Field(FunctionBody*)* function, uint sourceIndex)
 {
     return ByteCodeSerializer::DeserializeFromBufferInternal(scriptContext, scriptFlags, utf8Source, /* sourceHolder */ nullptr, srcInfo, buffer, nativeModule, function, sourceIndex);
 }
 // Deserialize function body from supplied buffer
-HRESULT ByteCodeSerializer::DeserializeFromBuffer(ScriptContext * scriptContext, uint32 scriptFlags, ISourceHolder* sourceHolder, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, Field(FunctionBody*)* function, uint sourceIndex)
+int32_t ByteCodeSerializer::DeserializeFromBuffer(ScriptContext * scriptContext, uint32 scriptFlags, ISourceHolder* sourceHolder, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, Field(FunctionBody*)* function, uint sourceIndex)
 {
     AssertMsg(sourceHolder != nullptr || sourceIndex != Js::Constants::InvalidSourceIndex, "SourceHolder can't be null, if you have an empty source then pass ISourceHolder::GetEmptySourceHolder()");
     return ByteCodeSerializer::DeserializeFromBufferInternal(scriptContext, scriptFlags, /* utf8Source */ nullptr, sourceHolder, srcInfo, buffer, nativeModule, function, sourceIndex);
 }
-HRESULT ByteCodeSerializer::DeserializeFromBufferInternal(ScriptContext * scriptContext, uint32 scriptFlags, LPCUTF8 utf8Source, ISourceHolder* sourceHolder, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, Field(FunctionBody*)* function, uint sourceIndex)
+int32_t ByteCodeSerializer::DeserializeFromBufferInternal(ScriptContext * scriptContext, uint32 scriptFlags, LPCUTF8 utf8Source, ISourceHolder* sourceHolder, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, Field(FunctionBody*)* function, uint sourceIndex)
 {
     //ETW Event start
     JS_ETW(EventWriteJSCRIPT_BYTECODEDESERIALIZE_START(scriptContext, 0));
@@ -5081,7 +5081,7 @@ FunctionBody* ByteCodeSerializer::DeserializeFunction(ScriptContext* scriptConte
     FunctionBody* deserializedFunctionBody = nullptr;
     ByteCodeCache* cache = deferredFunction->m_cache;
     ByteCodeBufferReader* reader = cache->GetReader();
-    HRESULT hr = reader->ReadFunctionBody(deferredFunction->m_functionBytes, (FunctionProxy **)&deserializedFunctionBody, deferredFunction->GetUtf8SourceInfo(), cache, deferredFunction->m_nativeModule, true /* deserialize this */, false /* deserialize nested functions */, deferredFunction);
+    int32_t hr = reader->ReadFunctionBody(deferredFunction->m_functionBytes, (FunctionProxy **)&deserializedFunctionBody, deferredFunction->GetUtf8SourceInfo(), cache, deferredFunction->m_nativeModule, true /* deserialize this */, false /* deserialize nested functions */, deferredFunction);
     if (FAILED(hr))
     {
         // This should never happen as the code is currently

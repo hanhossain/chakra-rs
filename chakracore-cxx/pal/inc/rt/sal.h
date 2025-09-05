@@ -140,7 +140,7 @@
    The annotation _Return_type_success_(expr) may be used with a typedef to
    give a default _Success_ criteria to all functions returning that type.
    This is the case for common Windows API status types, including
-   HRESULT and int32_t.  This may be overridden on a per-function basis by
+   int32_t and int32_t.  This may be overridden on a per-function basis by
    specifying a _Success_ annotation locally.
 
 ============================================================================*/
@@ -390,7 +390,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 
 //   _Outptr_ - Annotations for output params returning pointers
 //      These describe parameters where the called function provides the buffer:
-//        HRESULT SHStrDupW(_In_ LPCWSTR psz, _Outptr_ LPWSTR *ppwsz);
+//        int32_t SHStrDupW(_In_ LPCWSTR psz, _Outptr_ LPWSTR *ppwsz);
 //      The caller passes the address of an LPWSTR variable as ppwsz, and SHStrDupW allocates
 //      and initializes memory and returns the pointer to the new LPWSTR in *ppwsz.
 //
@@ -670,7 +670,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 // buffer will be a zero-terminated string after the call
 #define _Post_z_                         _SAL2_Source_(_Post_z_, (), _Post1_impl_(__zterm_impl) _Post_valid_impl_)
 
-// e.g. HRESULT InitStruct( _Post_valid_ Struct* pobj );
+// e.g. int32_t InitStruct( _Post_valid_ Struct* pobj );
 #define _Post_valid_                     _SAL2_Source_(_Post_valid_, (), _Post_valid_impl_)
 #define _Post_invalid_                   _SAL2_Source_(_Post_invalid_, (), _Deref_post1_impl_(__notvalid_impl))
 
@@ -680,7 +680,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 // e.g. void ThrowExceptionIfNull( _Post_notnull_ const void* pv );
 #define _Post_notnull_                   _SAL2_Source_(_Post_notnull_, (), _Post1_impl_(__notnull_impl))
 
-// e.g. HRESULT GetObject(_Outptr_ _On_failure_(_At_(*p, _Post_null_)) T **p);
+// e.g. int32_t GetObject(_Outptr_ _On_failure_(_At_(*p, _Post_null_)) T **p);
 #define _Post_null_                      _SAL2_Source_(_Post_null_, (), _Post1_impl_(__null_impl))
 
 #define _Post_maybenull_                 _SAL2_Source_(_Post_maybenull_, (), _Post1_impl_(__maybenull_impl))
@@ -988,7 +988,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 #define _Deref_inout_bound_  _SAL1_1_Source_(_Deref_inout_bound_, (), _Deref_in_bound_ _Deref_out_bound_)
 #define _Deref_ret_bound_    _SAL1_1_Source_(_Deref_ret_bound_, (), _Deref_ret_bound_impl_)
 
-// e.g.  HRESULT HrCreatePoint( _Deref_out_opt_ POINT** ppPT );
+// e.g.  int32_t HrCreatePoint( _Deref_out_opt_ POINT** ppPT );
 #define _Deref_out_             _SAL1_1_Source_(_Deref_out_, (), _Out_ _Deref_post_valid_)
 #define _Deref_out_opt_         _SAL1_1_Source_(_Deref_out_opt_, (), _Out_ _Deref_post_opt_valid_)
 #define _Deref_opt_out_         _SAL1_1_Source_(_Deref_opt_out_, (), _Out_opt_ _Deref_post_valid_)
@@ -1101,7 +1101,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 #define _Deref_post_z_                           _SAL1_1_Source_(_Deref_post_z_, (), _Deref_post1_impl_(__notnull_impl_notref) _Deref_post1_impl_(__zterm_impl) _Post_valid_impl_)
 #define _Deref_post_opt_z_                       _SAL1_1_Source_(_Deref_post_opt_z_, (), _Deref_post1_impl_(__maybenull_impl_notref) _Deref_post1_impl_(__zterm_impl) _Post_valid_impl_)
 
-// e.g. HRESULT HrAllocateMemory( size_t cb, _Out_ _Deref_post_bytecap_(cb) void** ppv );
+// e.g. int32_t HrAllocateMemory( size_t cb, _Out_ _Deref_post_bytecap_(cb) void** ppv );
 // buffer capacity is described by another parameter
 #define _Deref_post_cap_(size)                   _SAL1_1_Source_(_Deref_post_cap_, (size), _Deref_post1_impl_(__notnull_impl_notref) _Deref_post1_impl_(__cap_impl(size)))
 #define _Deref_post_opt_cap_(size)               _SAL1_1_Source_(_Deref_post_opt_cap_, (size), _Deref_post1_impl_(__maybenull_impl_notref) _Deref_post1_impl_(__cap_impl(size)))
@@ -1152,7 +1152,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 #define _Deref_post_valid_bytecap_x_(size)       _SAL1_1_Source_(_Deref_post_valid_bytecap_x_, (size), _Deref_post1_impl_(__notnull_impl_notref) _Deref_post1_impl_(__bytecap_x_impl(size)) _Post_valid_impl_)
 #define _Deref_post_opt_valid_bytecap_x_(size)   _SAL1_1_Source_(_Deref_post_opt_valid_bytecap_x_, (size), _Deref_post1_impl_(__maybenull_impl_notref) _Deref_post1_impl_(__bytecap_x_impl(size)) _Post_valid_impl_)
 
-// e.g. HRESULT HrAllocateZeroInitializedMemory( size_t cb, _Out_ _Deref_post_bytecount_(cb) void** ppv );
+// e.g. int32_t HrAllocateZeroInitializedMemory( size_t cb, _Out_ _Deref_post_bytecount_(cb) void** ppv );
 // valid buffer extent is described by another parameter
 #define _Deref_post_count_(size)                 _SAL1_1_Source_(_Deref_post_count_, (size), _Deref_post1_impl_(__notnull_impl_notref) _Deref_post1_impl_(__count_impl(size))       _Post_valid_impl_)
 #define _Deref_post_opt_count_(size)             _SAL1_1_Source_(_Deref_post_opt_count_, (size), _Deref_post1_impl_(__maybenull_impl_notref) _Deref_post1_impl_(__count_impl(size))       _Post_valid_impl_)
@@ -2086,7 +2086,7 @@ __PRIMOP(char *, _Strstr_(__In_impl_ char *, __In_impl_ char *));
      uint32_t dwFlags
  );
 
- HRESULT SHLocalAllocBytes(
+ int32_t SHLocalAllocBytes(
      size_t cb,
      __deref_bcount(cb) T **ppv           -- A pointer whose dereference will be set to an
                                           --   uninitialized buffer with cb bytes.
@@ -2113,7 +2113,7 @@ __PRIMOP(char *, _Strstr_(__In_impl_ char *, __In_impl_ char *));
      is false at exit, the caller should not expect any of the function's guarantees
      to hold. If not used, the function must always satisfy its guarantees. Added
      automatically to functions that indicate success in standard ways, such as by
-     returning an HRESULT.
+     returning an int32_t.
 
  __nullterminated p :
      Pointer p is a buffer that may be read or written up to and including the first

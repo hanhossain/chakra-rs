@@ -405,8 +405,8 @@ private:
         }
 
 #ifdef ENABLE_TEST_HOOKS
-        static HRESULT GenerateValidPointersMapHeader(LPCWSTR vpmFullPath);
-        static HRESULT GenerateValidPointersMapForBlockType(FILE* file);
+        static int32_t GenerateValidPointersMapHeader(LPCWSTR vpmFullPath);
+        static int32_t GenerateValidPointersMapForBlockType(FILE* file);
 #endif
     };
 
@@ -415,7 +415,7 @@ private:
 
 public:
 #ifdef ENABLE_TEST_HOOKS
-    static HRESULT GenerateValidPointersMapHeader(LPCWSTR vpmFullPath)
+    static int32_t GenerateValidPointersMapHeader(LPCWSTR vpmFullPath)
     {
         return smallAllocValidPointersMap.GenerateValidPointersMapHeader(vpmFullPath);
     }
@@ -732,9 +732,9 @@ HeapInfo::SmallAllocatorAlloc(Recycler * recycler, SmallHeapBlockAllocatorType *
 #ifdef ENABLE_TEST_HOOKS
 // Forward declaration of explicit specialization before instantiation
 template <>
-HRESULT HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::GenerateValidPointersMapForBlockType(FILE* file);
+int32_t HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::GenerateValidPointersMapForBlockType(FILE* file);
 template <>
-HRESULT HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::GenerateValidPointersMapForBlockType(FILE* file);
+int32_t HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::GenerateValidPointersMapForBlockType(FILE* file);
 #endif
 
 // Template instantiation

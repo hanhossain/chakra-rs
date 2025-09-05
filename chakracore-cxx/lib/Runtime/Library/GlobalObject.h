@@ -25,7 +25,7 @@ namespace Js
 
         void Initialize(ScriptContext * scriptContext);
 
-        HRESULT SetDirectHostObject(RecyclableObject* hostObject, RecyclableObject* secureHostObject);
+        int32_t SetDirectHostObject(RecyclableObject* hostObject, RecyclableObject* secureHostObject);
         RecyclableObject* GetDirectHostObject();
         RecyclableObject* GetSecureDirectHostObject();
         Var ToThis();

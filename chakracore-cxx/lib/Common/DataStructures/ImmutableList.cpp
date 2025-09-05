@@ -10,7 +10,7 @@ template<int chunkSize>
 void regex::ImmutableStringBuilder<chunkSize>::AppendInt32(int32 value)
 {
     char16_t buffer[11]; // -2,147,483,648 w.o ',' + \0
-    HRESULT hr = S_OK;
+    int32_t hr = S_OK;
     hr = StringCchPrintfW(buffer, _countof(buffer), u"%d", value);
     AssertMsg(SUCCEEDED(hr), "StringCchPrintfW");
     if (FAILED(hr) )
@@ -26,7 +26,7 @@ template<int chunkSize>
 void regex::ImmutableStringBuilder<chunkSize>::AppendUInt64(unsigned long value)
 {
     char16_t buffer[21]; // 18,446,744,073,709,551,615 w.o ',' + \0
-    HRESULT hr = S_OK;
+    int32_t hr = S_OK;
     hr = StringCchPrintfW(buffer, _countof(buffer), u"%llu", value);
     AssertMsg(SUCCEEDED(hr), "StringCchPrintfW");
     if (FAILED(hr) )

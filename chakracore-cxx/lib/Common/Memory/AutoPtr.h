@@ -135,7 +135,7 @@ public:
     }
 
     template <class Q>
-    HRESULT QueryInterface(Q** pp) const
+    int32_t QueryInterface(Q** pp) const
     {
         return ptr->QueryInterface(__uuidof(Q), (void**)pp);
     }

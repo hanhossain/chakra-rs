@@ -173,7 +173,7 @@
 *      uint32_t dwFlags
 *  );
 * 
-*  HRESULT SHLocalAllocBytes(
+*  int32_t SHLocalAllocBytes(
 *      size_t cb,
 *      __deref_bcount(cb) T **ppv //  A pointer whose dereference will be set
 *                                 //  to an uninitialized buffer with cb bytes.

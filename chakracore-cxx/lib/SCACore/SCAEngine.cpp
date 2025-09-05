@@ -11,7 +11,7 @@
 
 namespace Js
 {
-    void ScriptContextHolder::ThrowIfFailed(HRESULT hr) const
+    void ScriptContextHolder::ThrowIfFailed(int32_t hr) const
     {
         if (FAILED(hr))
         {

@@ -21,7 +21,7 @@ namespace Js
         uint32_t m_refCount;
 
         SCAPropBag(ScriptContext* scriptContext);
-        HRESULT InternalAdd(LPCWSTR name, charcount_t len, Var value);
+        int32_t InternalAdd(LPCWSTR name, charcount_t len, Var value);
 
     public:
         ~SCAPropBag();
@@ -31,10 +31,10 @@ namespace Js
         STDMETHODIMP_(uint32_t) Release();
         STDMETHODIMP QueryInterface(REFIID riid, void** ppv);
 
-        HRESULT Add(LPCWSTR name, Var value);
-        HRESULT Get(LPCWSTR name, Var* pValue);
+        int32_t Add(LPCWSTR name, Var value);
+        int32_t Get(LPCWSTR name, Var* pValue);
 
-        HRESULT InternalAddNoCopy(LPCWSTR name, charcount_t len, Var value);
+        int32_t InternalAddNoCopy(LPCWSTR name, charcount_t len, Var value);
 
         //
         // PropBag property enumerator for WriteObjectProperties.

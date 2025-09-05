@@ -24,9 +24,9 @@ cpp_quote("#endif //__JITTypes_h__")
 interface IChakraJIT
 {
     typedef CodeGenWorkItemIDL* pCodeGenWorkItemIDL;
-    HRESULT Shutdown([in] handle_t binding);
+    int32_t Shutdown([in] handle_t binding);
 
-    HRESULT ConnectProcessWithProcessHandle(
+    int32_t ConnectProcessWithProcessHandle(
         [in] handle_t binding,
         [in, system_handle(sh_process, PROCESS_VM_OPERATION | PROCESS_VM_READ | PROCESS_VM_WRITE | PROCESS_QUERY_LIMITED_INFORMATION)] HANDLE processHandle,
         [in] CHAKRA_PTR chakraBaseAddress,
@@ -34,14 +34,14 @@ interface IChakraJIT
     );
 
 #if !(WINVER >= _WIN32_WINNT_WINBLUE)
-    HRESULT ConnectProcess(
+    int32_t ConnectProcess(
         [in] handle_t binding,
         [in] CHAKRA_PTR chakraBaseAddress,
         [in] CHAKRA_PTR crtBaseAddress
     );
 #endif
 
-    HRESULT InitializeThreadContext(
+    int32_t InitializeThreadContext(
         [in] handle_t binding,
         [in] ThreadContextDataIDL * threadData,
         [out] PPTHREADCONTEXT_HANDLE threadContextInfoAddress,
@@ -49,75 +49,75 @@ interface IChakraJIT
         [out] CHAKRA_PTR * jitThunkAddr);
 
 
-    HRESULT CleanupThreadContext(
+    int32_t CleanupThreadContext(
         [in] handle_t binding,
         [in, out] PPTHREADCONTEXT_HANDLE threadContextInfoAddress);
 
-    HRESULT UpdatePropertyRecordMap(
+    int32_t UpdatePropertyRecordMap(
         [in] handle_t binding,
         [in] PTHREADCONTEXT_HANDLE threadContextInfoAddress,
         [in, unique] BVSparseNodeIDL * updatedPropsBVHead);
 
-    HRESULT AddModuleRecordInfo(
+    int32_t AddModuleRecordInfo(
         [in] handle_t binding,
         [in] PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
         [in] unsigned int moduleId,
         [in] CHAKRA_PTR localExportSlotsAddr);
 
-    HRESULT SetWellKnownHostTypeId(
+    int32_t SetWellKnownHostTypeId(
         [in] handle_t binding,
         [in] PTHREADCONTEXT_HANDLE threadContextInfoAddress,
         [in] int typeId);
 
-    HRESULT InitializeScriptContext(
+    int32_t InitializeScriptContext(
         [in] handle_t binding,
         [in] ScriptContextDataIDL * scriptContextData,
         [in] PTHREADCONTEXT_HANDLE threadContextInfoAddress,
         [out] PPSCRIPTCONTEXT_HANDLE scriptContextInfoAddress);
 
-    HRESULT CloseScriptContext(
+    int32_t CloseScriptContext(
         [in] handle_t binding,
         [in] PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress);
 
-    HRESULT CleanupScriptContext(
+    int32_t CleanupScriptContext(
         [in] handle_t binding,
         [in, out] PPSCRIPTCONTEXT_HANDLE scriptContextInfoAddress);
 
-    HRESULT FreeAllocation(
+    int32_t FreeAllocation(
         [in] handle_t binding,
         [in] PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
         [in] CHAKRA_PTR codeAddress);
 
-    HRESULT NewInterpreterThunkBlock(
+    int32_t NewInterpreterThunkBlock(
         [in] handle_t binding,
         [in] PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
         [in] InterpreterThunkInputIDL * thunkInput,
         [out] InterpreterThunkOutputIDL * thunkOutput);
 
-    HRESULT DecommitInterpreterBufferManager(
+    int32_t DecommitInterpreterBufferManager(
         [in] handle_t binding,
         [in] PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
         [in] boolean asmJsManager);
 
-    HRESULT IsNativeAddr(
+    int32_t IsNativeAddr(
         [in] handle_t binding,
         [in] PTHREADCONTEXT_HANDLE threadContextInfoAddress,
         [in] CHAKRA_PTR address,
         [out] boolean * result);
 
-    HRESULT SetIsPRNGSeeded(
+    int32_t SetIsPRNGSeeded(
         [in] handle_t binding,
         [in] PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
         [in] boolean value);
 
-    HRESULT RemoteCodeGen(
+    int32_t RemoteCodeGen(
         [in] handle_t binding,
         [in] PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
         [in] CodeGenWorkItemIDL * workItemData,
         [out] JITOutputIDL * jitData);
 
 #if DBG
-    HRESULT IsInterpreterThunkAddr(
+    int32_t IsInterpreterThunkAddr(
         [in] handle_t binding,
         [in] PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
         [in] CHAKRA_PTR address,

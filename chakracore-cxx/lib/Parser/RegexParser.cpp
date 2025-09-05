@@ -107,7 +107,7 @@ namespace UnifiedRegex
     template <typename P, const bool IsLiteral>
     const CharCount Parser<P, IsLiteral>::initLitbufSize;
 
-    ParseError::ParseError(bool isBody, CharCount pos, CharCount encodedPos, HRESULT error)
+    ParseError::ParseError(bool isBody, CharCount pos, CharCount encodedPos, int32_t error)
         : isBody(isBody), pos(pos), encodedPos(encodedPos), error(error)
     {
     }
@@ -562,14 +562,14 @@ namespace UnifiedRegex
     //
 
     template <typename P, const bool IsLiteral>
-    void Parser<P, IsLiteral>::Fail(HRESULT error)
+    void Parser<P, IsLiteral>::Fail(int32_t error)
     {
         throw ParseError(inBody, Pos(), Chars<EncodedChar>::OSB(next, input), error);
     }
 
     // This doesn't throw, but stores first error code for throwing later
     template <typename P, const bool IsLiteral>
-    void Parser<P, IsLiteral>::DeferredFailIfUnicode(HRESULT error)
+    void Parser<P, IsLiteral>::DeferredFailIfUnicode(int32_t error)
     {
         Assert(this->scriptContext->GetConfig()->IsES6UnicodeExtensionsEnabled());
         if (this->deferredIfUnicodeError == nullptr)
@@ -580,7 +580,7 @@ namespace UnifiedRegex
 
     // This doesn't throw, but stores first error code for throwing later
     template <typename P, const bool IsLiteral>
-    void Parser<P, IsLiteral>::DeferredFailIfNotUnicode(HRESULT error)
+    void Parser<P, IsLiteral>::DeferredFailIfNotUnicode(int32_t error)
     {
         Assert(this->scriptContext->GetConfig()->IsES6UnicodeExtensionsEnabled());
         if (this->deferredIfNotUnicodeError == nullptr)
@@ -590,7 +590,7 @@ namespace UnifiedRegex
     }
 
     template <typename P, const bool IsLiteral>
-    inline void Parser<P, IsLiteral>::ECMust(EncodedChar ec, HRESULT error)
+    inline void Parser<P, IsLiteral>::ECMust(EncodedChar ec, int32_t error)
     {
         // We never look for 0
         Assert(ec != 0);
