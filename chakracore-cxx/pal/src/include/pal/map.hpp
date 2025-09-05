@@ -106,8 +106,8 @@ namespace CorUnix
     {
         Volatile<int32_t> ref_count;
         void * address;
-        SIZE_T size;
-        SIZE_T offset; /* for future use */
+        size_t size;
+        size_t offset; /* for future use */
     } NativeMapHolder;
 #endif
 
@@ -134,7 +134,7 @@ namespace CorUnix
                                                physical file, per process */
 #endif
         void * lpAddress;           /* The pointer to the mapped memory. */
-        SIZE_T NumberOfBytesToMap;  /* Number of bytes to map. */
+        size_t NumberOfBytesToMap;  /* Number of bytes to map. */
         uint32_t dwDesiredAccess;      /* Desired access. */
         void * lpPEBaseAddress;     /* If this mapping is part of a PE file mapping, this is the
                                        base address pointer of the PE file (used to find all
@@ -195,7 +195,7 @@ namespace CorUnix
         uint32_t dwDesiredAccess,
         uint32_t dwFileOffsetHigh,
         uint32_t dwFileOffsetLow,
-        SIZE_T dwNumberOfBytesToMap,
+        size_t dwNumberOfBytesToMap,
         void * *ppvBaseAddress
         );
 

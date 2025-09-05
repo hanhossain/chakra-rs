@@ -67,12 +67,12 @@ static uint32_t MAPConvertProtectToAccess( uint32_t );
 static int32_t MAPFileMapToMmapFlags( uint32_t );
 static uint32_t MAPMmapProtToAccessFlags( int prot );
 #if ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
-static NativeMapHolder * NewNativeMapHolder(CPalThread *pThread, void * address, SIZE_T size,
-                                     SIZE_T offset, long init_ref_count);
+static NativeMapHolder * NewNativeMapHolder(CPalThread *pThread, void * address, size_t size,
+                                     size_t offset, long init_ref_count);
 static int32_t NativeMapHolderAddRef(NativeMapHolder * thisPMH);
 static int32_t NativeMapHolderRelease(CPalThread *pThread, NativeMapHolder * thisPMH);
 static PMAPPED_VIEW_LIST FindSharedMappingReplacement(CPalThread *pThread, dev_t deviceNum, ino_t inodeNum,
-                                                      SIZE_T size, SIZE_T offset);
+                                                      size_t size, size_t offset);
 #endif
 
 static PAL_ERROR
@@ -940,7 +940,7 @@ MapViewOfFile(
            uint32_t dwDesiredAccess,
            uint32_t dwFileOffsetHigh,
            uint32_t dwFileOffsetLow,
-           SIZE_T dwNumberOfBytesToMap)
+           size_t dwNumberOfBytesToMap)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread = NULL;
@@ -980,7 +980,7 @@ MapViewOfFileEx(
            uint32_t dwDesiredAccess,
            uint32_t dwFileOffsetHigh,
            uint32_t dwFileOffsetLow,
-           SIZE_T dwNumberOfBytesToMap,
+           size_t dwNumberOfBytesToMap,
            void * lpBaseAddress)
 {
     PAL_ERROR palError = NO_ERROR;
@@ -1032,7 +1032,7 @@ See MSDN doc.
 BOOL
 FlushViewOfFile(
      void * lpBaseAddress,
-     SIZE_T dwNumberOfBytesToFlush)
+     size_t dwNumberOfBytesToFlush)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread = NULL;
@@ -1133,7 +1133,7 @@ CorUnix::InternalMapViewOfFile(
     uint32_t dwDesiredAccess,
     uint32_t dwFileOffsetHigh,
     uint32_t dwFileOffsetLow,
-    SIZE_T dwNumberOfBytesToMap,
+    size_t dwNumberOfBytesToMap,
     void * *ppvBaseAddress
     )
 {
@@ -1968,7 +1968,7 @@ BOOL MAPGetRegionInfo(void * lpAddress,
     {
         uint32_t MappedSize;
         void * real_map_addr;
-        SIZE_T real_map_sz;
+        size_t real_map_sz;
         PMAPPED_VIEW_LIST pView = CONTAINING_RECORD(pLink, MAPPED_VIEW_LIST, Link);
 
 #if ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
@@ -1985,7 +1985,7 @@ BOOL MAPGetRegionInfo(void * lpAddress,
         {
             if (lpBuffer)
             {
-                SIZE_T regionSize = MappedSize + (UINT_PTR) real_map_addr - 
+                size_t regionSize = MappedSize + (UINT_PTR) real_map_addr - 
                        ((UINT_PTR) lpAddress & ~VIRTUAL_PAGE_MASK);
 
                 lpBuffer->BaseAddress = lpAddress;
@@ -2016,8 +2016,8 @@ static PMAPPED_VIEW_LIST FindSharedMappingReplacement(
     CPalThread *pThread,
     dev_t deviceNum,
     ino_t inodeNum,
-    SIZE_T size, 
-    SIZE_T offset)
+    size_t size, 
+    size_t offset)
 {
     PMAPPED_VIEW_LIST pNewView = NULL;
     
@@ -2045,8 +2045,8 @@ static PMAPPED_VIEW_LIST FindSharedMappingReplacement(
         // to see if it overlaps with the range for the new view
         //
 
-        SIZE_T real_map_offs = pView->pNMHolder->offset;
-        SIZE_T real_map_sz = pView->pNMHolder->size;
+        size_t real_map_offs = pView->pNMHolder->offset;
+        size_t real_map_sz = pView->pNMHolder->size;
 
         if (real_map_offs <= offset
             && real_map_offs+real_map_sz >= offset)
@@ -2089,8 +2089,8 @@ static PMAPPED_VIEW_LIST FindSharedMappingReplacement(
     return pNewView;
 }
 
-static NativeMapHolder * NewNativeMapHolder(CPalThread *pThread, void * address, SIZE_T size,
-                                     SIZE_T offset, long init_ref_count)
+static NativeMapHolder * NewNativeMapHolder(CPalThread *pThread, void * address, size_t size,
+                                     size_t offset, long init_ref_count)
 {
     NativeMapHolder * pThisMapHolder;
     
@@ -2348,7 +2348,7 @@ void * MAPMapPEFile(HANDLE hFile)
     //I now know how big the file is.  Reserve enough address space for the whole thing.  Try to get the
     //preferred base.  Create the intial mapping as "no access".  We'll use that for the guard pages in the
     //"holes" between sections.
-    SIZE_T preferredBase, virtualSize;
+    size_t preferredBase, virtualSize;
     preferredBase = ntHeader.OptionalHeader.ImageBase;
     virtualSize = ntHeader.OptionalHeader.SizeOfImage;
 
@@ -2421,10 +2421,10 @@ void * MAPMapPEFile(HANDLE hFile)
 #if _DEBUG
     if (forceRelocs)
     {
-        _ASSERTE(((SIZE_T)loadedBase) != preferredBase);
+        _ASSERTE(((size_t)loadedBase) != preferredBase);
         munmap(pForceRelocBase, VIRTUAL_PAGE_SIZE); // now that we've forced relocation, let the original address mapping go
     }
-    if (((SIZE_T)loadedBase) != preferredBase)
+    if (((size_t)loadedBase) != preferredBase)
     {
         TRACE_(LOADER)("Image rebased from preferredBase of %p to loadedBase of %p\n", preferredBase, loadedBase);
     }

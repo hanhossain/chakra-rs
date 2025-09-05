@@ -6,14 +6,14 @@
 
 #include "pal/malloc.hpp"
 
-template <SIZE_T STACKCOUNT, class T>
+template <size_t STACKCOUNT, class T>
 class StackString
 {
 private:
     T m_innerBuffer[STACKCOUNT + 1];
     T * m_buffer;
-    SIZE_T m_size; // actual allocated size
-    SIZE_T m_count; // actual length of string
+    size_t m_size; // actual allocated size
+    size_t m_count; // actual length of string
 
     void NullTerminate()
     {
@@ -29,7 +29,7 @@ private:
         return;
     }
 
-    void ReallocateBuffer(SIZE_T count)
+    void ReallocateBuffer(size_t count)
     {
         // count is always > STACKCOUNT here.
         T * newBuffer = (T *)PAL_malloc((count + 1) * sizeof(T));
@@ -51,7 +51,7 @@ private:
         return;
     }
 
-    void Resize(SIZE_T count)
+    void Resize(size_t count)
     {
         if (NULL == m_buffer)
         {
@@ -97,7 +97,7 @@ public:
     {
     }
 
-    BOOL Set(const T * buffer, SIZE_T count)
+    BOOL Set(const T * buffer, size_t count)
     {
         Resize(count);
         if (NULL == m_buffer)
@@ -113,12 +113,12 @@ public:
         return Set(s.m_buffer, s.m_count);
     }
 
-    SIZE_T GetCount() const
+    size_t GetCount() const
     {
         return m_count;
     }
     
-    SIZE_T GetSizeOf() const
+    size_t GetSizeOf() const
     {
         return m_size * sizeof(T);
     }
@@ -128,13 +128,13 @@ public:
         return (const T *)m_buffer;
     }
 
-    T * OpenStringBuffer(SIZE_T count)
+    T * OpenStringBuffer(size_t count)
     {
         Resize(count);
         return (T *)m_buffer;
     }
 
-    void CloseBuffer(SIZE_T count)
+    void CloseBuffer(size_t count)
     {
         if (m_count > count)
             m_count = count;

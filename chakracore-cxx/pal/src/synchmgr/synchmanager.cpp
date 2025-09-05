@@ -3932,7 +3932,7 @@ namespace CorUnix
     --*/
     PAL_ERROR CThreadSynchronizationInfo::InitializePostCreate(
         CPalThread *pthrCurrent,
-        SIZE_T threadId,
+        size_t threadId,
         uint32_t dwLwpId)
     {
         PAL_ERROR palErr = NO_ERROR;

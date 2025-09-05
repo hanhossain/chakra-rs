@@ -131,7 +131,7 @@ BOOL
 FlushInstructionCache(
          HANDLE hProcess,
          const void * lpBaseAddress,
-         SIZE_T dwSize)
+         size_t dwSize)
 {
     BOOL Ret;
 
@@ -343,7 +343,7 @@ DebugBreakCommand()
             libNameLength = PAL_wcslen(exe_module.lib_name);
         }
 
-        SIZE_T dwexe_buf = strlen(EXE_TEXT) + libNameLength + 1;
+        size_t dwexe_buf = strlen(EXE_TEXT) + libNameLength + 1;
         char * exe_buf = exe_bufString.OpenStringBuffer(dwexe_buf);
 
         if (NULL == exe_buf)
@@ -553,14 +553,14 @@ ReadProcessMemory(
             HANDLE hProcess,
             const void * lpBaseAddress,
             void * lpBuffer,
-            SIZE_T nSize,
-            SIZE_T * lpNumberOfBytesRead
+            size_t nSize,
+            size_t * lpNumberOfBytesRead
            )
 {
     CPalThread *pThread;
     uint32_t processId;
     Volatile<BOOL> ret = FALSE;
-    Volatile<SIZE_T> numberOfBytesRead = 0;
+    Volatile<size_t> numberOfBytesRead = 0;
 #if HAVE_VM_READ
     kern_return_t result;
     vm_map_t task;
@@ -570,13 +570,13 @@ ReadProcessMemory(
     char memPath[64];
     off_t offset;
 #elif !HAVE_TTRACE
-    SIZE_T nbInts;
+    size_t nbInts;
     int* ptrInt;
     int* lpTmpBuffer;
 #endif
 #if !HAVE_PROCFS_CTL && !HAVE_TTRACE
     int* lpBaseAddressAligned;
-    SIZE_T offset;
+    size_t offset;
 #endif  // !HAVE_PROCFS_CTL && !HAVE_TTRACE
 
     PERF_ENTRY(ReadProcessMemory);
@@ -603,8 +603,8 @@ ReadProcessMemory(
         {
             const void * lpBaseAddress;
             void * lpBuffer;
-            SIZE_T nSize;
-            SIZE_T numberOfBytesRead;
+            size_t nSize;
+            size_t numberOfBytesRead;
             BOOL ret;
         } param;
         param.lpBaseAddress = lpBaseAddress;
@@ -614,7 +614,7 @@ ReadProcessMemory(
         param.ret = ret;
 
         {
-            SIZE_T i;
+            size_t i;
 
             // Seg fault in memcpy can't be caught
             // so we simulate the memcpy here
@@ -645,8 +645,8 @@ ReadProcessMemory(
     // and the size be a multiple of the page size.  We can't differentiate
     // between the cases in which that's required and those in which it
     // isn't, so we do it all the time.
-    lpBaseAddressAligned = (int*)((SIZE_T) lpBaseAddress & ~VIRTUAL_PAGE_MASK);
-    offset = ((SIZE_T) lpBaseAddress & VIRTUAL_PAGE_MASK);
+    lpBaseAddressAligned = (int*)((size_t) lpBaseAddress & ~VIRTUAL_PAGE_MASK);
+    offset = ((size_t) lpBaseAddress & VIRTUAL_PAGE_MASK);
     char *data;
     data = (char*)alloca(VIRTUAL_PAGE_SIZE);
     while (nSize > 0)
@@ -741,7 +741,7 @@ ReadProcessMemory(
 
 #else   // HAVE_TTRACE
 
-        offset = (SIZE_T)lpBaseAddress % sizeof(int);
+        offset = (size_t)lpBaseAddress % sizeof(int);
         lpBaseAddressAligned =  (int*)((char*)lpBaseAddress - offset);
         nbInts = (nSize + offset)/sizeof(int) +
                  ((nSize + offset)%sizeof(int) ? 1:0);
@@ -842,15 +842,15 @@ WriteProcessMemory(
             HANDLE hProcess,
             void * lpBaseAddress,
             const void * lpBuffer,
-            SIZE_T nSize,
-            SIZE_T * lpNumberOfBytesWritten
+            size_t nSize,
+            size_t * lpNumberOfBytesWritten
            )
 
 {
     CPalThread *pThread;
     uint32_t processId;
     Volatile<BOOL> ret = FALSE;
-    Volatile<SIZE_T> numberOfBytesWritten = 0;
+    Volatile<size_t> numberOfBytesWritten = 0;
 #if HAVE_VM_READ
     kern_return_t result;
     vm_map_t task;
@@ -860,11 +860,11 @@ WriteProcessMemory(
     ptrdiff_t bytesWritten;
     off_t offset;
 #elif !HAVE_TTRACE
-    SIZE_T FirstIntOffset;
-    SIZE_T LastIntOffset;
+    size_t FirstIntOffset;
+    size_t LastIntOffset;
     unsigned int FirstIntMask;
     unsigned int LastIntMask;
-    SIZE_T nbInts;
+    size_t nbInts;
     int *lpTmpBuffer = 0, *lpInt;
     int* lpBaseAddressAligned;
 #endif
@@ -894,8 +894,8 @@ WriteProcessMemory(
         {
             void * lpBaseAddress;
             const void * lpBuffer;
-            SIZE_T nSize;
-            SIZE_T numberOfBytesWritten;
+            size_t nSize;
+            size_t numberOfBytesWritten;
             BOOL ret;
         } param;
         param.lpBaseAddress = lpBaseAddress;
@@ -905,7 +905,7 @@ WriteProcessMemory(
         param.ret = ret;
 
         {
-            SIZE_T i;
+            size_t i;
 
             // Seg fault in memcpy can't be caught
             // so we simulate the memcpy here
@@ -1017,7 +1017,7 @@ WriteProcessMemory(
 
 #else   // HAVE_TTRACE
 
-        FirstIntOffset = (SIZE_T)lpBaseAddress % sizeof(int);
+        FirstIntOffset = (size_t)lpBaseAddress % sizeof(int);
         FirstIntMask = -1;
         FirstIntMask <<= (FirstIntOffset * 8);
 

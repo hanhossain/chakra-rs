@@ -35,7 +35,7 @@ typedef struct _CMI {
     struct _CMI * pLast;        /* Link to the previous entry. */
 
     UINT_PTR   startBoundary;   /* Starting location of the region. */
-    SIZE_T   memSize;         /* Size of the entire region.. */
+    size_t   memSize;         /* Size of the entire region.. */
 
     uint32_t  accessProtection;    /* Initial allocation access protection. */
     uint32_t  allocationType;      /* Initial allocation type. */

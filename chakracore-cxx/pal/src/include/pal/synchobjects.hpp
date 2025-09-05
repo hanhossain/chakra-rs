@@ -148,7 +148,7 @@ namespace CorUnix
         
         virtual PAL_ERROR InitializePostCreate(
             CPalThread *pthrCurrent,
-            SIZE_T threadId,
+            size_t threadId,
             uint32_t dwLwpId
             );
 

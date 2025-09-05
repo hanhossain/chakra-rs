@@ -2857,7 +2857,7 @@ PAL_GetLogicalCpuCountFromOS();
 size_t
 PAL_GetLogicalProcessorCacheSizeFromOS();
 
-typedef BOOL (*ReadMemoryWordCallback)(SIZE_T address, SIZE_T *value);
+typedef BOOL (*ReadMemoryWordCallback)(size_t address, size_t *value);
 
 #if defined(_AMD64_) || defined(_ARM_) || defined(_ARM64_)
 BOOL PAL_VirtualUnwind(CONTEXT *context, KNONVOLATILE_CONTEXT_POINTERS *contextPointers);
@@ -3010,7 +3010,7 @@ MapViewOfFile(
            uint32_t dwDesiredAccess,
            uint32_t dwFileOffsetHigh,
            uint32_t dwFileOffsetLow,
-           SIZE_T dwNumberOfBytesToMap);
+           size_t dwNumberOfBytesToMap);
 
 void *
 MapViewOfFileEx(
@@ -3018,13 +3018,13 @@ MapViewOfFileEx(
            uint32_t dwDesiredAccess,
            uint32_t dwFileOffsetHigh,
            uint32_t dwFileOffsetLow,
-           SIZE_T dwNumberOfBytesToMap,
+           size_t dwNumberOfBytesToMap,
            void * lpBaseAddress);
 
 BOOL
 FlushViewOfFile(
          void * lpBaseAddress,
-         SIZE_T dwNumberOfBytesToFlush);
+         size_t dwNumberOfBytesToFlush);
 
 BOOL
 UnmapViewOfFile(
@@ -3177,7 +3177,7 @@ PAL_GetSymbolModuleBase(void *symbol);
 void *
 VirtualAlloc(
           void * lpAddress,
-          SIZE_T dwSize,
+          size_t dwSize,
           uint32_t flAllocationType,
           uint32_t flProtect);
 
@@ -3185,14 +3185,14 @@ void *
 VirtualAllocEx(
           HANDLE hProcess,
           void * lpAddress,
-          SIZE_T dwSize,
+          size_t dwSize,
           uint32_t flAllocationType,
           uint32_t flProtect);
 
 BOOL
 VirtualFree(
          void * lpAddress,
-         SIZE_T dwSize,
+         size_t dwSize,
          uint32_t dwFreeType);
 
 
@@ -3200,13 +3200,13 @@ BOOL
 VirtualFreeEx(
          HANDLE hProcess,
          void * lpAddress,
-         SIZE_T dwSize,
+         size_t dwSize,
          uint32_t dwFreeType);
 
 BOOL
 VirtualProtect(
             void * lpAddress,
-            SIZE_T dwSize,
+            size_t dwSize,
             uint32_t flNewProtect,
             uint32_t * lpflOldProtect);
 
@@ -3214,7 +3214,7 @@ BOOL
 VirtualProtectEx(
             HANDLE hProcess,
             void * lpAddress,
-            SIZE_T dwSize,
+            size_t dwSize,
             uint32_t flNewProtect,
             uint32_t * lpflOldProtect);
 
@@ -3238,43 +3238,43 @@ typedef struct _MEMORY_BASIC_INFORMATION {
     void * BaseAddress;
     void * AllocationBase_PAL_Undefined;
     uint32_t AllocationProtect;
-    SIZE_T RegionSize;
+    size_t RegionSize;
     uint32_t State;
     uint32_t Protect;
     uint32_t Type;
 } MEMORY_BASIC_INFORMATION, *PMEMORY_BASIC_INFORMATION;
 
-SIZE_T
+size_t
 VirtualQuery(
           const void * lpAddress,
           PMEMORY_BASIC_INFORMATION lpBuffer,
-          SIZE_T dwLength);
+          size_t dwLength);
 
-SIZE_T
+size_t
 VirtualQueryEx(
           HANDLE hProcess,
           const void * lpAddress,
           PMEMORY_BASIC_INFORMATION lpBuffer,
-          SIZE_T dwLength);
+          size_t dwLength);
 
 BOOL
 ReadProcessMemory(
            HANDLE hProcess,
            const void * lpBaseAddress,
            void * lpBuffer,
-           SIZE_T nSize,
-           SIZE_T * lpNumberOfBytesRead);
+           size_t nSize,
+           size_t * lpNumberOfBytesRead);
 
 void
 RtlMoveMemory(
            void * Destination,
            const void *Source,
-           SIZE_T Length);
+           size_t Length);
 
 void
 RtlZeroMemory(
      void * Destination,
-     SIZE_T Length);
+     size_t Length);
 
 #define MoveMemory memmove
 #define CopyMemory memcpy
@@ -3291,21 +3291,21 @@ GetProcessHeap(
 HANDLE
 HeapCreate(
 	        uint32_t flOptions,
-	        SIZE_T dwInitialSize,
-	        SIZE_T dwMaximumSize);
+	        size_t dwInitialSize,
+	        size_t dwMaximumSize);
 
 void *
 HeapAlloc(
        HANDLE hHeap,
        uint32_t dwFlags,
-       SIZE_T dwBytes);
+       size_t dwBytes);
 
 void *
 HeapReAlloc(
      HANDLE hHeap,
      uint32_t dwFlags,
      void * lpMem,
-     SIZE_T dwBytes
+     size_t dwBytes
     );
 
 BOOL
@@ -3324,7 +3324,7 @@ HeapSetInformation(
           HANDLE HeapHandle,
          HEAP_INFORMATION_CLASS HeapInformationClass,
          void * HeapInformation,
-         SIZE_T HeapInformationLength);
+         size_t HeapInformationLength);
 
 #define LMEM_FIXED          0x0000
 #define LMEM_MOVEABLE       0x0002
@@ -3334,12 +3334,12 @@ HeapSetInformation(
 HLOCAL
 LocalAlloc(
         uint32_t uFlags,
-        SIZE_T uBytes);
+        size_t uBytes);
 
 HLOCAL
 LocalReAlloc(
         HLOCAL hMem,
-        SIZE_T uBytes,
+        size_t uBytes,
         uint32_t   uFlags);
 
 HLOCAL
@@ -3350,7 +3350,7 @@ BOOL
 FlushInstructionCache(
                HANDLE hProcess,
                const void * lpBaseAddress,
-               SIZE_T dwSize);
+               size_t dwSize);
 
 #if ENABLE_DOWNLEVEL_FOR_NLS
 
@@ -4090,16 +4090,16 @@ void PAL_ReleaseNumber(PALNUMBER);
 
 
 // return string length if Buffer is NULL or the result fits in cchBuffer, otherwise -1
-int PAL_FormatScientific(LPCWSTR sLocale, LPWSTR pBuffer, SIZE_T cchBuffer, PALNUMBER number, int nMinDigits, int nMaxDigits,
+int PAL_FormatScientific(LPCWSTR sLocale, LPWSTR pBuffer, size_t cchBuffer, PALNUMBER number, int nMinDigits, int nMaxDigits,
                                                                       LPCWSTR sExponent, LPCWSTR sNumberDecimal, LPCWSTR sPositive, LPCWSTR sNegative, LPCWSTR sZero);
 
-int PAL_FormatCurrency(LPCWSTR sLocale, LPWSTR pBuffer, SIZE_T cchBuffer, PALNUMBER number, int nMinDigits, int nMaxDigits, int iNegativeFormat, int iPositiveFormat,
+int PAL_FormatCurrency(LPCWSTR sLocale, LPWSTR pBuffer, size_t cchBuffer, PALNUMBER number, int nMinDigits, int nMaxDigits, int iNegativeFormat, int iPositiveFormat,
                       int iPrimaryGroup, int iSecondaryGroup, LPCWSTR sCurrencyDecimal, LPCWSTR sCurrencyGroup, LPCWSTR sNegative, LPCWSTR sCurrency, LPCWSTR sZero);
 
-int PAL_FormatPercent(LPCWSTR sLocale, LPWSTR pBuffer, SIZE_T cchBuffer, PALNUMBER number,  int nMinDigits, int nMaxDigits,int iNegativeFormat, int iPositiveFormat,
+int PAL_FormatPercent(LPCWSTR sLocale, LPWSTR pBuffer, size_t cchBuffer, PALNUMBER number,  int nMinDigits, int nMaxDigits,int iNegativeFormat, int iPositiveFormat,
                       int iPrimaryGroup, int iSecondaryGroup, LPCWSTR sPercentDecimal, LPCWSTR sPercentGroup, LPCWSTR sNegative, LPCWSTR sPercent, LPCWSTR sZero);
 
-int PAL_FormatDecimal(LPCWSTR sLocale, LPWSTR pBuffer, SIZE_T cchBuffer, PALNUMBER number, int nMinDigits, int nMaxDigits, int iNegativeFormat,
+int PAL_FormatDecimal(LPCWSTR sLocale, LPWSTR pBuffer, size_t cchBuffer, PALNUMBER number, int nMinDigits, int nMaxDigits, int iNegativeFormat,
                                     int iPrimaryGroup, int iSecondaryGroup,  LPCWSTR sDecimal, LPCWSTR sGroup, LPCWSTR sNegative, LPCWSTR sZero);
 
 
@@ -4244,8 +4244,8 @@ BOOL
 WriteProcessMemory( HANDLE hProcess,
                     void * lpBaseAddress,
                     const void * lpBuffer,
-                    SIZE_T nSize,
-                    SIZE_T * lpNumberOfBytesWritten);
+                    size_t nSize,
+                    size_t * lpNumberOfBytesWritten);
 
 #define STANDARD_RIGHTS_REQUIRED  (0x000F0000L)
 #define SYNCHRONIZE               (0x00100000L)
@@ -5166,7 +5166,7 @@ RtlCaptureContext(
 );
 
 typedef void (*PAL_ActivationFunction)(CONTEXT *context);
-typedef BOOL (*PAL_SafeActivationCheckFunction)(SIZE_T ip, BOOL checkingCurrentThread);
+typedef BOOL (*PAL_SafeActivationCheckFunction)(size_t ip, BOOL checkingCurrentThread);
 
 void
 PAL_SetActivationFunction(

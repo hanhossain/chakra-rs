@@ -67,7 +67,7 @@ void
 RtlMoveMemory(
            void * Destination,
            const void *Source,
-           SIZE_T Length)
+           size_t Length)
 {
     PERF_ENTRY(RtlMoveMemory);
     ENTRY("RtlMoveMemory(Destination:%p, Source:%p, Length:%d)\n",
@@ -88,7 +88,7 @@ See MSDN doc.
 void
 RtlZeroMemory(
     void * Destination,
-    SIZE_T Length
+    size_t Length
 )
 {
     PERF_ENTRY(RtlZeroMemory);
@@ -109,8 +109,8 @@ See MSDN doc.
 HANDLE
 HeapCreate(
 	        uint32_t flOptions,
-	        SIZE_T dwInitialSize,
-	        SIZE_T dwMaximumSize)
+	        size_t dwInitialSize,
+	        size_t dwMaximumSize)
 {
     HANDLE ret = INVALID_HANDLE_VALUE;
     PERF_ENTRY(HeapCreate);
@@ -209,7 +209,7 @@ void *
 HeapAlloc(
      HANDLE hHeap,
      uint32_t dwFlags,
-     SIZE_T numberOfBytes)
+     size_t numberOfBytes)
 {
     uint8_t *pMem;
 
@@ -345,7 +345,7 @@ HeapReAlloc(
      HANDLE hHeap,
      uint32_t dwFlags,
      void * lpmem,
-     SIZE_T numberOfBytes)
+     size_t numberOfBytes)
 {
     uint8_t *pMem = NULL;
 
@@ -413,7 +413,7 @@ HeapSetInformation(
           HANDLE HeapHandle,
          HEAP_INFORMATION_CLASS HeapInformationClass,
          void * HeapInformation,
-         SIZE_T HeapInformationLength)
+         size_t HeapInformationLength)
 {
     return TRUE;
 }

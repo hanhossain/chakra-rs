@@ -775,7 +775,7 @@ void MachMessage::InitMessageSize()
 // x86_THREAD_STATE and x86_THREAD_STATE32 state flavors are supported for 32-bit.
 thread_act_t MachMessage::GetThreadFromState(thread_state_flavor_t eFlavor, thread_state_t pState)
 {
-    SIZE_T targetSP;
+    size_t targetSP;
 
     // Determine SP from the state provided based on its flavor (this algorithm only works with SP, so
     // flavors that don't report this register can't be used). However, hosts that use RAISE_STATE and a

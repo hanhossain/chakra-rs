@@ -56,7 +56,7 @@ Function :
 
 Parameters :
     const void * lpBaseAddress: start of region to flush
-    SIZE_T dwSize : length of region to flush
+    size_t dwSize : length of region to flush
 
 Return value :
     TRUE on success, FALSE on failure
@@ -65,7 +65,7 @@ Return value :
 BOOL
 DBG_FlushInstructionCache(
                        const void * lpBaseAddress,
-                       SIZE_T dwSize);
+                       size_t dwSize);
 
 #ifdef __cplusplus
 }
