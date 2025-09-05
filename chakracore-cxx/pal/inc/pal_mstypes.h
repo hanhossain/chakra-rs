@@ -93,8 +93,6 @@ typedef unsigned long DWORD_PTR;
 
 typedef size_t SIZE_T;
 
-typedef ptrdiff_t LPARAM;
-
 #define _PTRDIFF_T_DEFINED
 #ifdef _MINGW_
 // We need to define _PTRDIFF_T to make sure ptrdiff_t doesn't get defined

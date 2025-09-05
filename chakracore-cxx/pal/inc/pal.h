@@ -3437,7 +3437,7 @@ CompareStringEx(
      int      cchCount2,
      LPNLSVERSIONINFO lpVersionInformation,
      void * lpReserved,
-     LPARAM lParam);
+     ptrdiff_t lParam);
 
 
 #ifdef UNICODE
@@ -3807,7 +3807,7 @@ FindNLSStringEx(
 	 int32_t * pcchFound,
 	 LPNLSVERSIONINFOEX lpVersionInformation,
 	 void * lpReserved,
-	 LPARAM lParam );
+	 ptrdiff_t lParam );
 
 typedef enum {
     COMPARE_STRING = 0x0001,
@@ -3944,14 +3944,14 @@ EnumDateFormatsExW(
 
 #else // ENABLE_DOWNLEVEL_FOR_NLS
 
-typedef BOOL (CALLBACK* DATEFMT_ENUMPROCEXEXW)(LPWSTR, CALID, LPARAM);
+typedef BOOL (CALLBACK* DATEFMT_ENUMPROCEXEXW)(LPWSTR, CALID, ptrdiff_t);
 
 BOOL
 EnumDateFormatsExEx(
      DATEFMT_ENUMPROCEXEXW lpDateFmtEnumProcEx,
      LPCWSTR          lpLocaleName,
      uint32_t               dwFlags,
-     LPARAM      lParam);
+     ptrdiff_t      lParam);
 
 #endif // ENABLE_DOWNLEVEL_FOR_NLS
 
@@ -3967,14 +3967,14 @@ EnumTimeFormatsW(
 
 #else // ENABLE_DOWNLEVEL_FOR_NLS
 
-typedef BOOL (CALLBACK* TIMEFMT_ENUMPROCEXW)(LPWSTR, LPARAM);
+typedef BOOL (CALLBACK* TIMEFMT_ENUMPROCEXW)(LPWSTR, ptrdiff_t);
 
 BOOL
 EnumTimeFormatsEx(
      TIMEFMT_ENUMPROCEXW lpTimeFmtEnumProc,
      LPCWSTR          lpLocaleName,
      uint32_t             dwFlags,
-     LPARAM    lParam);
+     ptrdiff_t    lParam);
 
 #endif // ENABLE_DOWNLEVEL_FOR_NLS
 
@@ -3996,7 +3996,7 @@ EnumCalendarInfoExW(
 
 #else // ENABLE_DOWNLEVEL_FOR_NLS
 
-typedef BOOL (CALLBACK* CALINFO_ENUMPROCEXEXW)(LPWSTR, CALID, LPWSTR, LPARAM);
+typedef BOOL (CALLBACK* CALINFO_ENUMPROCEXEXW)(LPWSTR, CALID, LPWSTR, ptrdiff_t);
 
 BOOL
 EnumCalendarInfoExEx(
@@ -4005,7 +4005,7 @@ EnumCalendarInfoExEx(
      CALID             Calendar,
      LPCWSTR           lpReserved,
      CALTYPE           CalType,
-     LPARAM        lParam);
+     ptrdiff_t        lParam);
 
 #endif // ENABLE_DOWNLEVEL_FOR_NLS
 
@@ -4041,7 +4041,7 @@ LCMapStringEx(
      int     cchDest,
      LPNLSVERSIONINFO lpVersionInformation,
      void * lpReserved,
-     LPARAM lParam );
+     ptrdiff_t lParam );
 
 int
 PAL_LCMapCharW(
@@ -4051,7 +4051,7 @@ PAL_LCMapCharW(
      char16_t  *destChar,
     LPNLSVERSIONINFO lpVersionInformation,
     void * lpReserved,
-    LPARAM lParam );
+    ptrdiff_t lParam );
 
 int
 PAL_NormalizeStringExW(
