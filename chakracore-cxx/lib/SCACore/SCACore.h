@@ -17,7 +17,7 @@ namespace Js
             {
             }
 
-            HRESULT SetTransferableVars(Var *vars, size_t count);
+            int32_t SetTransferableVars(Var *vars, size_t count);
 
             void WriteRawBytes(const void* source, size_t length);
             bool WriteValue(Var rootObject);
@@ -39,7 +39,7 @@ namespace Js
             {
             }
 
-            HRESULT SetTransferableVars(Var *vars, size_t count);
+            int32_t SetTransferableVars(Var *vars, size_t count);
 
             bool ReadRawBytes(size_t length, void **data);
             bool ReadBytes(size_t length, void **data);

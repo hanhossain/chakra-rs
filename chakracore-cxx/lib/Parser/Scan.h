@@ -339,7 +339,7 @@ typedef UTF8EncodingPolicyBase<false> NotNullTerminatedUTF8EncodingPolicy;
 interface IScanner
 {
     virtual void GetErrorLineInfo(int32& ichMin, int32& ichLim, int32& line, int32& ichMinLine) = 0;
-    virtual HRESULT SysAllocErrorLine(int32 ichMinLine, BSTR* pbstrLine) = 0;
+    virtual int32_t SysAllocErrorLine(int32 ichMinLine, BSTR* pbstrLine) = 0;
 };
 
 // Flags that can be provided to the Scan functions.
@@ -350,7 +350,7 @@ enum ScanFlag
     ScanFlagSuppressStrPid = 1,   // Force strings to always have pid
 };
 
-typedef HRESULT (*CommentCallback)(void *data, OLECHAR firstChar, OLECHAR secondChar, bool containTypeDef, charcount_t min, charcount_t lim, bool adjacent, bool multiline, charcount_t startLine, charcount_t endLine);
+typedef int32_t (*CommentCallback)(void *data, OLECHAR firstChar, OLECHAR secondChar, bool containTypeDef, charcount_t min, charcount_t lim, bool adjacent, bool multiline, charcount_t startLine, charcount_t endLine);
 
 // Restore point defined using a relative offset rather than a pointer.
 struct RestorePoint
@@ -608,7 +608,7 @@ public:
         }
     }
 
-    virtual HRESULT SysAllocErrorLine(int32 ichMinLine, BSTR* pbstrLine);
+    virtual int32_t SysAllocErrorLine(int32 ichMinLine, BSTR* pbstrLine);
 
     class TemporaryBuffer
     {
@@ -776,7 +776,7 @@ private:
         return m_ptoken->tk = tkScanError;
     }
 
-    __declspec(noreturn) void Error(HRESULT hr)
+    __declspec(noreturn) void Error(int32_t hr)
     {
         m_pchMinTok = m_currentCharacter;
         m_cMinTokMultiUnits = this->m_cMultiUnits;

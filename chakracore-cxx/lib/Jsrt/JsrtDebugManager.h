@@ -89,7 +89,7 @@ private:
     // HostDebugContext overrides
     virtual void Delete() {}
     DWORD_PTR GetHostSourceContext(Js::Utf8SourceInfo* sourceInfo) { return Js::Constants::NoHostSourceContext; }
-    HRESULT SetThreadDescription(LPCWSTR url) { return S_OK; }
-    HRESULT DbgRegisterFunction(Js::ScriptContext* scriptContext, Js::FunctionBody* functionBody, DWORD_PTR dwDebugSourceContext, LPCWSTR title);
+    int32_t SetThreadDescription(LPCWSTR url) { return S_OK; }
+    int32_t DbgRegisterFunction(Js::ScriptContext* scriptContext, Js::FunctionBody* functionBody, DWORD_PTR dwDebugSourceContext, LPCWSTR title);
     void ReParentToCaller(Js::Utf8SourceInfo* sourceInfo) {}
 };

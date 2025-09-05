@@ -16,11 +16,11 @@ namespace Js
     {
     private:
         // WinRTString specific functions
-        typedef HRESULT FNCWindowsCreateString(const char16_t *, uint32_t, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING *);
+        typedef int32_t FNCWindowsCreateString(const char16_t *, uint32_t, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING *);
         typedef FNCWindowsCreateString* PFNCWindowsCreateString;
         PFNCWindowsCreateString m_pfnWindowsCreateString;
 
-        typedef HRESULT FNCWindowsCreateStringReference(const char16_t *, uint32_t, HSTRING_HEADER *, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING *);
+        typedef int32_t FNCWindowsCreateStringReference(const char16_t *, uint32_t, HSTRING_HEADER *, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING *);
         typedef FNCWindowsCreateStringReference* PFNCWindowsCreateStringReference;
         PFNCWindowsCreateStringReference m_pfnWindowsCreateStringReference;
 
@@ -28,15 +28,15 @@ namespace Js
         typedef FNCWindowsGetStringRawBuffer* PFNCWindowsGetStringRawBuffer;
         PFNCWindowsGetStringRawBuffer m_pfWindowsGetStringRawBuffer;
 
-        typedef HRESULT FNCWindowsDeleteString(HSTRING);
+        typedef int32_t FNCWindowsDeleteString(HSTRING);
         typedef FNCWindowsDeleteString* PFNCWindowsDeleteString;
         PFNCWindowsDeleteString m_pfnWindowsDeleteString;
 
-        typedef HRESULT FNCWindowsCompareStringOrdinal(HSTRING,HSTRING,int32_t*);
+        typedef int32_t FNCWindowsCompareStringOrdinal(HSTRING,HSTRING,int32_t*);
         typedef FNCWindowsCompareStringOrdinal* PFNCWindowsCompareStringOrdinal;
         PFNCWindowsCompareStringOrdinal m_pfnWindowsCompareStringOrdinal;
 
-        typedef HRESULT FNCWindowsDuplicateString(HSTRING, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING*);
+        typedef int32_t FNCWindowsDuplicateString(HSTRING, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING*);
         typedef FNCWindowsDuplicateString* PFNCWindowsDuplicateString;
         PFNCWindowsDuplicateString m_pfnWindowsDuplicateString;
 
@@ -53,12 +53,12 @@ namespace Js
 
         LPCTSTR GetLibraryName() const { return u"api-ms-win-core-winrt-string-l1-1-0.dll"; }
 
-        virtual HRESULT WindowsCreateString(_In_reads_opt_(length) const char16_t * sourceString, uint32_t length, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * string);
-        virtual HRESULT WindowsCreateStringReference(_In_reads_opt_(length + 1) const char16_t * sourceString, uint32_t length, _Out_ HSTRING_HEADER * header, _Outptr_result_maybenull_ _Result_nullonfailure_  HSTRING * string);
-        virtual HRESULT WindowsDeleteString(_In_opt_ HSTRING string);
+        virtual int32_t WindowsCreateString(_In_reads_opt_(length) const char16_t * sourceString, uint32_t length, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * string);
+        virtual int32_t WindowsCreateStringReference(_In_reads_opt_(length + 1) const char16_t * sourceString, uint32_t length, _Out_ HSTRING_HEADER * header, _Outptr_result_maybenull_ _Result_nullonfailure_  HSTRING * string);
+        virtual int32_t WindowsDeleteString(_In_opt_ HSTRING string);
         virtual PCWSTR WindowsGetStringRawBuffer(_In_opt_ HSTRING string, _Out_opt_ uint32_t * length);
-        virtual HRESULT WindowsCompareStringOrdinal(_In_opt_ HSTRING string1, _In_opt_ HSTRING string2, _Out_ int32_t * result);
-        virtual HRESULT WindowsDuplicateString(_In_opt_ HSTRING original, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * newString);
+        virtual int32_t WindowsCompareStringOrdinal(_In_opt_ HSTRING string1, _In_opt_ HSTRING string2, _Out_ int32_t * result);
+        virtual int32_t WindowsDuplicateString(_In_opt_ HSTRING original, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * newString);
     };
 
     class DelayLoadWinRtFoundation sealed : public DelayLoadLibrary
@@ -66,7 +66,7 @@ namespace Js
     private:
 
         // DelayLoadWindowsFoundation specific functions
-        typedef HRESULT FNCWRoGetActivationFactory(HSTRING clsid, REFIID iid, IActivationFactory** factory);
+        typedef int32_t FNCWRoGetActivationFactory(HSTRING clsid, REFIID iid, IActivationFactory** factory);
 
         typedef FNCWRoGetActivationFactory* PFNCWRoGetActivationFactory;
         PFNCWRoGetActivationFactory m_pfnFNCWRoGetActivationFactory;
@@ -79,7 +79,7 @@ namespace Js
 
         LPCTSTR GetLibraryName() const { return u"api-ms-win-core-winrt-l1-1-0.dll"; }
 
-        HRESULT RoGetActivationFactory(
+        int32_t RoGetActivationFactory(
             HSTRING activatibleClassId,
             REFIID iid,
             IActivationFactory** factory);

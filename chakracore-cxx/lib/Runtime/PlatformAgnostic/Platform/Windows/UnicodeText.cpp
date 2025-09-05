@@ -262,7 +262,7 @@ namespace PlatformAgnostic
         {
             return ExecuteWinGlobApi([&](IUnicodeCharactersStatics* pUnicodeCharStatics) {
                 boolean returnValue = false;
-                HRESULT hr = (pUnicodeCharStatics->*fn)(codepoint, &returnValue);
+                int32_t hr = (pUnicodeCharStatics->*fn)(codepoint, &returnValue);
                 Assert(SUCCEEDED(hr));
                 return (returnValue != 0);
             }, false);
@@ -395,7 +395,7 @@ namespace PlatformAgnostic
             return ExecuteWinGlobApi([&](IUnicodeCharactersStatics* pUnicodeCharStatics) {
                 UnicodeGeneralCategory category = UnicodeGeneralCategory::UnicodeGeneralCategory_NotAssigned;
 
-                HRESULT hr = pUnicodeCharStatics->GetGeneralCategory(codepoint, &category);
+                int32_t hr = pUnicodeCharStatics->GetGeneralCategory(codepoint, &category);
                 Assert(SUCCEEDED(hr));
                 if (SUCCEEDED(hr))
                 {
@@ -451,7 +451,7 @@ namespace PlatformAgnostic
             return ExecuteWithThreadContext([](ThreadContext* threadContext) {
                 Js::WindowsGlobalizationAdapter* globalizationAdapter = threadContext->GetWindowsGlobalizationAdapter();
                 Js::DelayLoadWindowsGlobalization* globLibrary = threadContext->GetWindowsGlobalizationLibrary();
-                HRESULT hr = globalizationAdapter->EnsureDataTextObjectsInitialized(globLibrary);
+                int32_t hr = globalizationAdapter->EnsureDataTextObjectsInitialized(globLibrary);
                 // Failed to load windows.globalization.dll or jsintl.dll. No unicodeStatics support in that case.
                 if (SUCCEEDED(hr))
                 {

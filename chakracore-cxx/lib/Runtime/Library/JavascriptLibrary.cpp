@@ -5222,7 +5222,7 @@ namespace Js
             }
 #endif
 
-            HRESULT hr = scriptContext->GetHostScriptContext()->EnqueuePromiseTask(taskVar);
+            int32_t hr = scriptContext->GetHostScriptContext()->EnqueuePromiseTask(taskVar);
             if (hr != S_OK)
             {
                 Js::JavascriptError::MapAndThrowError(scriptContext, JSERR_HostMaybeMissingPromiseContinuationCallback);
@@ -7175,7 +7175,7 @@ namespace Js
             PSCRIPTCONTEXT_HANDLE remoteScriptContext = this->scriptContext->GetRemoteScriptAddr(false);
             if (remoteScriptContext)
             {
-                HRESULT hr = JITManager::GetJITManager()->SetIsPRNGSeeded(remoteScriptContext, val);
+                int32_t hr = JITManager::GetJITManager()->SetIsPRNGSeeded(remoteScriptContext, val);
                 JITManager::HandleServerCallResult(hr, RemoteCallType::StateUpdate);
             }
         }
@@ -7418,9 +7418,9 @@ namespace Js
     REG_GLOBAL_LIB_FUNC(functionPropertyId, JavascriptError::New##functionPropertyId##Instance)\
     REG_LIB_FUNC(_u(#functionPropertyId), toString, JavascriptError::EntryToString)\
 
-    HRESULT JavascriptLibrary::ProfilerRegisterBuiltIns()
+    int32_t JavascriptLibrary::ProfilerRegisterBuiltIns()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
 
         // Register functions directly in global scope
         REG_GLOBAL_LIB_FUNC(eval, GlobalObject::EntryEval);
@@ -7494,9 +7494,9 @@ namespace Js
         return hr;
     }
 
-    HRESULT JavascriptLibrary::ProfilerRegisterObject()
+    int32_t JavascriptLibrary::ProfilerRegisterObject()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
 
         REG_GLOBAL_CONSTRUCTOR(Object);
 
@@ -7553,9 +7553,9 @@ namespace Js
         return hr;
     }
 
-    HRESULT JavascriptLibrary::ProfilerRegisterArray()
+    int32_t JavascriptLibrary::ProfilerRegisterArray()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         REG_GLOBAL_CONSTRUCTOR(Array);
 
         DEFINE_OBJECT_NAME(Array);
@@ -7610,9 +7610,9 @@ namespace Js
         return hr;
     }
 
-    HRESULT JavascriptLibrary::ProfilerRegisterBoolean()
+    int32_t JavascriptLibrary::ProfilerRegisterBoolean()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         REG_GLOBAL_CONSTRUCTOR(Boolean);
 
         DEFINE_OBJECT_NAME(Boolean);
@@ -7623,13 +7623,13 @@ namespace Js
         return hr;
     }
 
-    HRESULT JavascriptLibrary::ProfilerRegisterBigInt()
+    int32_t JavascriptLibrary::ProfilerRegisterBigInt()
     {
         if (!scriptContext->GetConfig()->IsESBigIntEnabled())
         {
             return E_FAIL;
         }
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         REG_GLOBAL_CONSTRUCTOR(BigInt);
 
         //DEFINE_OBJECT_NAME(BigInt);
@@ -7637,9 +7637,9 @@ namespace Js
         return hr;
     }
 
-    HRESULT JavascriptLibrary::ProfilerRegisterDate()
+    int32_t JavascriptLibrary::ProfilerRegisterDate()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         REG_GLOBAL_CONSTRUCTOR(Date);
 
         DEFINE_OBJECT_NAME(Date);
@@ -7699,9 +7699,9 @@ namespace Js
         return hr;
     }
 
-    HRESULT JavascriptLibrary::ProfilerRegisterFunction()
+    int32_t JavascriptLibrary::ProfilerRegisterFunction()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         REG_GLOBAL_CONSTRUCTOR(Function);
 
         DEFINE_OBJECT_NAME(Function);
@@ -7714,9 +7714,9 @@ namespace Js
         return hr;
     }
 
-    HRESULT JavascriptLibrary::ProfilerRegisterMath()
+    int32_t JavascriptLibrary::ProfilerRegisterMath()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
 
         DEFINE_OBJECT_NAME(Math);
 
@@ -7763,9 +7763,9 @@ namespace Js
         return hr;
     }
 
-    HRESULT JavascriptLibrary::ProfilerRegisterNumber()
+    int32_t JavascriptLibrary::ProfilerRegisterNumber()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         REG_GLOBAL_CONSTRUCTOR(Number);
 
         DEFINE_OBJECT_NAME(Number);
@@ -7788,9 +7788,9 @@ namespace Js
         return hr;
     }
 
-    HRESULT JavascriptLibrary::ProfilerRegisterString()
+    int32_t JavascriptLibrary::ProfilerRegisterString()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         REG_GLOBAL_CONSTRUCTOR(String);
 
         DEFINE_OBJECT_NAME(String);
@@ -7861,9 +7861,9 @@ namespace Js
         return hr;
     }
 
-    HRESULT JavascriptLibrary::ProfilerRegisterRegExp()
+    int32_t JavascriptLibrary::ProfilerRegisterRegExp()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         REG_GLOBAL_CONSTRUCTOR(RegExp);
 
         DEFINE_OBJECT_NAME(RegExp);
@@ -7877,9 +7877,9 @@ namespace Js
         return hr;
     }
 
-    HRESULT JavascriptLibrary::ProfilerRegisterJSON()
+    int32_t JavascriptLibrary::ProfilerRegisterJSON()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
 
         DEFINE_OBJECT_NAME(JSON);
 
@@ -7888,9 +7888,9 @@ namespace Js
         return hr;
     }
 
-    HRESULT JavascriptLibrary::ProfilerRegisterAtomics()
+    int32_t JavascriptLibrary::ProfilerRegisterAtomics()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
 
         DEFINE_OBJECT_NAME(Atomics);
 
@@ -7910,9 +7910,9 @@ namespace Js
         return hr;
     }
 
-    HRESULT JavascriptLibrary::ProfilerRegisterWeakMap()
+    int32_t JavascriptLibrary::ProfilerRegisterWeakMap()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         REG_GLOBAL_CONSTRUCTOR(WeakMap);
 
         DEFINE_OBJECT_NAME(WeakMap);
@@ -7925,9 +7925,9 @@ namespace Js
         return hr;
     }
 
-    HRESULT JavascriptLibrary::ProfilerRegisterWeakSet()
+    int32_t JavascriptLibrary::ProfilerRegisterWeakSet()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         REG_GLOBAL_CONSTRUCTOR(WeakSet);
 
         DEFINE_OBJECT_NAME(WeakSet);
@@ -7939,9 +7939,9 @@ namespace Js
         return hr;
     }
 
-    HRESULT JavascriptLibrary::ProfilerRegisterMap()
+    int32_t JavascriptLibrary::ProfilerRegisterMap()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         REG_GLOBAL_CONSTRUCTOR(Map);
 
         DEFINE_OBJECT_NAME(Map);
@@ -7960,9 +7960,9 @@ namespace Js
         return hr;
     }
 
-    HRESULT JavascriptLibrary::ProfilerRegisterSet()
+    int32_t JavascriptLibrary::ProfilerRegisterSet()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         REG_GLOBAL_CONSTRUCTOR(Set);
 
         DEFINE_OBJECT_NAME(Set);
@@ -7979,9 +7979,9 @@ namespace Js
         return hr;
     }
 
-    HRESULT JavascriptLibrary::ProfilerRegisterSymbol()
+    int32_t JavascriptLibrary::ProfilerRegisterSymbol()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         REG_GLOBAL_CONSTRUCTOR(Symbol);
 
         DEFINE_OBJECT_NAME(Symbol);
@@ -7995,9 +7995,9 @@ namespace Js
         return hr;
     }
 
-    HRESULT JavascriptLibrary::ProfilerRegisterIterator()
+    int32_t JavascriptLibrary::ProfilerRegisterIterator()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         // Array Iterator has no global constructor
 
         DEFINE_OBJECT_NAME(Iterator);
@@ -8007,9 +8007,9 @@ namespace Js
         return hr;
     }
 
-    HRESULT JavascriptLibrary::ProfilerRegisterArrayIterator()
+    int32_t JavascriptLibrary::ProfilerRegisterArrayIterator()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         // Array Iterator has no global constructor
 #if defined(ENABLE_JS_BUILTINS)
         if (!scriptContext->IsJsBuiltInEnabled())
@@ -8022,9 +8022,9 @@ namespace Js
         return hr;
     }
 
-    HRESULT JavascriptLibrary::ProfilerRegisterMapIterator()
+    int32_t JavascriptLibrary::ProfilerRegisterMapIterator()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         // Map Iterator has no global constructor
 
         DEFINE_OBJECT_NAME(Map Iterator);
@@ -8034,9 +8034,9 @@ namespace Js
         return hr;
     }
 
-    HRESULT JavascriptLibrary::ProfilerRegisterSetIterator()
+    int32_t JavascriptLibrary::ProfilerRegisterSetIterator()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         // Set Iterator has no global constructor
 
         DEFINE_OBJECT_NAME(Set Iterator);
@@ -8046,9 +8046,9 @@ namespace Js
         return hr;
     }
 
-    HRESULT JavascriptLibrary::ProfilerRegisterStringIterator()
+    int32_t JavascriptLibrary::ProfilerRegisterStringIterator()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         // String Iterator has no global constructor
 
         DEFINE_OBJECT_NAME(String Iterator);
@@ -8058,9 +8058,9 @@ namespace Js
         return hr;
     }
 
-    HRESULT JavascriptLibrary::ProfilerRegisterTypedArray()
+    int32_t JavascriptLibrary::ProfilerRegisterTypedArray()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         // TypedArray has no named global constructor
 
         DEFINE_OBJECT_NAME(TypedArray);
@@ -8092,9 +8092,9 @@ namespace Js
         return hr;
     }
 
-    HRESULT JavascriptLibrary::ProfilerRegisterPromise()
+    int32_t JavascriptLibrary::ProfilerRegisterPromise()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         REG_GLOBAL_CONSTRUCTOR(Promise);
 
         DEFINE_OBJECT_NAME(Promise);
@@ -8108,9 +8108,9 @@ namespace Js
         return hr;
     }
 
-    HRESULT JavascriptLibrary::ProfilerRegisterProxy()
+    int32_t JavascriptLibrary::ProfilerRegisterProxy()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         REG_GLOBAL_CONSTRUCTOR(Proxy);
 
         DEFINE_OBJECT_NAME(Proxy);
@@ -8119,9 +8119,9 @@ namespace Js
         return hr;
     }
 
-    HRESULT JavascriptLibrary::ProfilerRegisterReflect()
+    int32_t JavascriptLibrary::ProfilerRegisterReflect()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         DEFINE_OBJECT_NAME(Reflect);
 
         REG_OBJECTS_LIB_FUNC(defineProperty, JavascriptReflect::EntryDefineProperty);
@@ -8141,9 +8141,9 @@ namespace Js
     }
 
 
-    HRESULT JavascriptLibrary::ProfilerRegisterGenerator()
+    int32_t JavascriptLibrary::ProfilerRegisterGenerator()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         DEFINE_OBJECT_NAME(Generator);
 
         REG_OBJECTS_LIB_FUNC(next, JavascriptGenerator::EntryNext);
@@ -8175,9 +8175,9 @@ namespace Js
     }
 #endif
 #ifdef IR_VIEWER
-    HRESULT JavascriptLibrary::ProfilerRegisterIRViewer()
+    int32_t JavascriptLibrary::ProfilerRegisterIRViewer()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
 
         DEFINE_OBJECT_NAME(IRViewer);
 

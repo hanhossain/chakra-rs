@@ -73,8 +73,8 @@ namespace Js
 
         static Var EntryToString(RecyclableObject* function, CallInfo callInfo, ...);
 
-        static void __declspec(noreturn) MapAndThrowError(ScriptContext* scriptContext, HRESULT hr);
-        static void __declspec(noreturn) MapAndThrowError(ScriptContext* scriptContext, HRESULT hr, ErrorTypeEnum errorType, EXCEPINFO *ei);
+        static void __declspec(noreturn) MapAndThrowError(ScriptContext* scriptContext, int32_t hr);
+        static void __declspec(noreturn) MapAndThrowError(ScriptContext* scriptContext, int32_t hr, ErrorTypeEnum errorType, EXCEPINFO *ei);
         static void __declspec(noreturn) SetMessageAndThrowError(ScriptContext* scriptContext, JavascriptError *pError, int32 hCode, EXCEPINFO* pei);
         static JavascriptError* MapError(ScriptContext* scriptContext, ErrorTypeEnum errorType);
 
@@ -98,18 +98,18 @@ namespace Js
         THROW_ERROR_DECL(ThrowWebAssemblyLinkError)
 
 #undef THROW_ERROR_DECL
-        static void __declspec(noreturn) ThrowDispatchError(ScriptContext* scriptContext, HRESULT hCode, PCWSTR message);
+        static void __declspec(noreturn) ThrowDispatchError(ScriptContext* scriptContext, int32_t hCode, PCWSTR message);
         static void __declspec(noreturn) ThrowOutOfMemoryError(ScriptContext *scriptContext);
-        static void __declspec(noreturn) ThrowParserError(ScriptContext* scriptContext, HRESULT hrParser, CompileScriptException* se);
+        static void __declspec(noreturn) ThrowParserError(ScriptContext* scriptContext, int32_t hrParser, CompileScriptException* se);
         static ErrorTypeEnum MapParseError(int32 hCode);
         static JavascriptError* MapParseError(ScriptContext* scriptContext, int32 hCode);
-        static HRESULT GetRuntimeError(RecyclableObject* errorObject, __out_opt LPCWSTR * pMessage);
-        static HRESULT GetRuntimeErrorWithScriptEnter(RecyclableObject* errorObject, __out_opt LPCWSTR * pMessage);
+        static int32_t GetRuntimeError(RecyclableObject* errorObject, __out_opt LPCWSTR * pMessage);
+        static int32_t GetRuntimeErrorWithScriptEnter(RecyclableObject* errorObject, __out_opt LPCWSTR * pMessage);
         static void __declspec(noreturn) ThrowStackOverflowError(ScriptContext *scriptContext, void * returnAddress = nullptr);
-        static void SetErrorMessageProperties(JavascriptError *pError, HRESULT errCode, PCWSTR message, ScriptContext* scriptContext);
-        static void SetErrorMessage(JavascriptError *pError, HRESULT errCode, PCWSTR varName, ScriptContext* scriptContext);
-        static void SetErrorMessage(JavascriptError *pError, HRESULT hr, ScriptContext* scriptContext, va_list argList);
-        static void SetErrorMessage(JavascriptError *pError, HRESULT hr, ScriptContext* scriptContext, ...);
+        static void SetErrorMessageProperties(JavascriptError *pError, int32_t errCode, PCWSTR message, ScriptContext* scriptContext);
+        static void SetErrorMessage(JavascriptError *pError, int32_t errCode, PCWSTR varName, ScriptContext* scriptContext);
+        static void SetErrorMessage(JavascriptError *pError, int32_t hr, ScriptContext* scriptContext, va_list argList);
+        static void SetErrorMessage(JavascriptError *pError, int32_t hr, ScriptContext* scriptContext, ...);
         static void SetErrorType(JavascriptError *pError, ErrorTypeEnum errorType);
 
         static bool ThrowCantAssign(PropertyOperationFlags flags, ScriptContext* scriptContext, PropertyId propertyId);

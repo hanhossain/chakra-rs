@@ -9,7 +9,7 @@ namespace Js
 {
     namespace SCACore
     {
-        HRESULT ValidateTransferableVars(Var *vars, size_t count)
+        int32_t ValidateTransferableVars(Var *vars, size_t count)
         {
             for (size_t i = 0; i < count; i++)
             {
@@ -30,7 +30,7 @@ namespace Js
         }
 
 
-        HRESULT Serializer::SetTransferableVars(Var *vars, size_t count)
+        int32_t Serializer::SetTransferableVars(Var *vars, size_t count)
         {
             if (m_transferableVars != nullptr)
             {
@@ -39,7 +39,7 @@ namespace Js
             }
             else if (count > 0)
             {
-                HRESULT hr = ValidateTransferableVars(vars, count);
+                int32_t hr = ValidateTransferableVars(vars, count);
                 if (hr != S_OK)
                 {
                     return hr;
@@ -108,7 +108,7 @@ namespace Js
                 return returnedValue;
         }
 
-        HRESULT Deserializer::SetTransferableVars(Var *vars, size_t count)
+        int32_t Deserializer::SetTransferableVars(Var *vars, size_t count)
         {
             if (m_transferableVars != nullptr)
             {
@@ -117,7 +117,7 @@ namespace Js
             }
             else if (count > 0)
             {
-                HRESULT hr = ValidateTransferableVars(vars, count);
+                int32_t hr = ValidateTransferableVars(vars, count);
                 if (hr != S_OK)
                 {
                     return hr;

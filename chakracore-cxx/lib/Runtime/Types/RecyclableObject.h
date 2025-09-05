@@ -377,7 +377,7 @@ namespace Js {
 
         // don't need cross-site: in HostDispatch it's IDispatchEx based; in CustomExternalObject we have marshalling code explicitly.
         virtual Var GetNamespaceParent(Js::Var aChild) { return nullptr; }
-        virtual HRESULT QueryObjectInterface(REFIID riid, void **ppvObj);
+        virtual int32_t QueryObjectInterface(REFIID riid, void **ppvObj);
 
         virtual BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext);
         virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext);

@@ -526,7 +526,7 @@ namespace Js
         // off this site. GetDispatchExCaller and ReleaseDispatchExCaller is used to get the current caller.
         // currentDispatchExCaller is cached to avoid multiple allocations.
         IUnknown* sourceCaller = nullptr, *previousSourceCaller = nullptr;
-        HRESULT hr = NOERROR;
+        int32_t hr = NOERROR;
         Var result = nullptr;
         BOOL wasDispatchExCallerPushed = FALSE, wasCallerSet = FALSE;
 

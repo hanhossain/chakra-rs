@@ -23,7 +23,7 @@ public:
         return m_err != 0;
     }
 
-    HRESULT GetErr() const
+    int32_t GetErr() const
     {
         Assert(HasErr());
         return HRESULT_FROM_WIN32(m_err);

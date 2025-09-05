@@ -75,7 +75,7 @@ namespace Js
 
 #ifdef ENABLE_TEST_HOOKS
 
-HRESULT SetConfigFlags(int argc, __in_ecount(argc) LPWSTR argv[], ICustomConfigFlags* customConfigFlags)
+int32_t SetConfigFlags(int argc, __in_ecount(argc) LPWSTR argv[], ICustomConfigFlags* customConfigFlags)
 {
     CmdLineArgsParser parser(customConfigFlags);
     if (parser.Parse(argc, argv) != 0)
@@ -86,20 +86,20 @@ HRESULT SetConfigFlags(int argc, __in_ecount(argc) LPWSTR argv[], ICustomConfigF
     return S_OK;
 }
 
-HRESULT SetConfigFile(LPWSTR strConfigFile)
+int32_t SetConfigFile(LPWSTR strConfigFile)
 {
     CmdLineArgsParser parser;
     ConfigParser::ParseCustomConfigFile(parser, strConfigFile);
     return S_OK;
 }
 
-HRESULT PrintConfigFlagsUsageString()
+int32_t PrintConfigFlagsUsageString()
 {
     Js::ConfigFlagsTable::PrintUsageString();
     return S_OK;
 }
 
-HRESULT SetAssertToConsoleFlag(bool flag)
+int32_t SetAssertToConsoleFlag(bool flag)
 {
 #ifdef DBG
     AssertsToConsole = flag;
@@ -107,7 +107,7 @@ HRESULT SetAssertToConsoleFlag(bool flag)
     return S_OK;
 }
 
-HRESULT SetEnableCheckMemoryLeakOutput(bool flag)
+int32_t SetEnableCheckMemoryLeakOutput(bool flag)
 {
 #if defined(CHECK_MEMORY_LEAK)
     MemoryLeakCheck::SetEnableOutput(flag);
@@ -135,12 +135,12 @@ void NotifyUnhandledException(PEXCEPTION_POINTERS exceptionInfo)
     { \
         return Js::Configuration::Global.flags.IsEnabled(Js::##name##Flag); \
     } \
-    HRESULT Get##name##Flag(BSTR *flag) \
+    int32_t Get##name##Flag(BSTR *flag) \
     { \
         *flag = SysAllocString(Js::Configuration::Global.flags.##name##); \
         return (*flag == NULL ? E_OUTOFMEMORY : S_OK); \
     } \
-    HRESULT Set##name##Flag(BSTR flag) \
+    int32_t Set##name##Flag(BSTR flag) \
     { \
         Js::Configuration::Global.flags.##name = flag; \
         return S_OK; \
@@ -150,12 +150,12 @@ void NotifyUnhandledException(PEXCEPTION_POINTERS exceptionInfo)
     { \
         return Js::Configuration::Global.flags.IsEnabled(Js::##name##Flag); \
     } \
-    HRESULT Get##name##Flag(bool *flag) \
+    int32_t Get##name##Flag(bool *flag) \
     { \
         *flag = Js::Configuration::Global.flags.##name##; \
         return S_OK; \
     } \
-    HRESULT Set##name##Flag(bool flag) \
+    int32_t Set##name##Flag(bool flag) \
     { \
         Js::Configuration::Global.flags.##name = flag; \
         return S_OK; \
@@ -165,12 +165,12 @@ void NotifyUnhandledException(PEXCEPTION_POINTERS exceptionInfo)
     { \
         return Js::Configuration::Global.flags.IsEnabled(Js::##name##Flag); \
     } \
-    HRESULT Get##name##Flag(int *flag) \
+    int32_t Get##name##Flag(int *flag) \
     { \
         *flag = Js::Configuration::Global.flags.##name##; \
         return S_OK; \
     } \
-    HRESULT Set##name##Flag(int flag) \
+    int32_t Set##name##Flag(int flag) \
     { \
         Js::Configuration::Global.flags.##name = flag; \
         return S_OK; \
@@ -192,7 +192,7 @@ void NotifyUnhandledException(PEXCEPTION_POINTERS exceptionInfo)
 #undef FLAG_NumberTrioSet
 #undef FLAG_NumberRange
 
-HRESULT OnChakraCoreLoaded(OnChakraCoreLoadedPtr pfChakraCoreLoaded)
+int32_t OnChakraCoreLoaded(OnChakraCoreLoadedPtr pfChakraCoreLoaded)
 {
     if (pfChakraCoreLoaded == nullptr)
     {

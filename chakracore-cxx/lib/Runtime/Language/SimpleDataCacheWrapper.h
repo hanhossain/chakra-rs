@@ -46,7 +46,7 @@ namespace Js
         // Begin to write a block into the cache.
         // Note: Must be called before writing bytes into the block as the block header is
         //       used to lookup the block when reading.
-        HRESULT StartBlock(_In_ BlockType blockType, _In_ uint32_t byteCount);
+        int32_t StartBlock(_In_ BlockType blockType, _In_ uint32_t byteCount);
 
         // A counter of bytes written to the cache as part of the current block.
         // A new block begins (resets this counter to 0) when StartBlock is called.
@@ -58,14 +58,14 @@ namespace Js
 
         // Seek the read stream to a block.
         // After this call, calls to Read or ReadArray will read bytes from the block itself.
-        HRESULT SeekReadStreamToBlock(_In_ BlockType blockType, _Out_opt_ uint32_t* bytesInBlock = nullptr);
+        int32_t SeekReadStreamToBlock(_In_ BlockType blockType, _Out_opt_ uint32_t* bytesInBlock = nullptr);
 
-        HRESULT SaveWriteStream();
+        int32_t SaveWriteStream();
 
         template <typename T>
-        HRESULT Write(_In_ T const& data)
+        int32_t Write(_In_ T const& data)
         {
-            HRESULT hr = E_FAIL;
+            int32_t hr = E_FAIL;
             IFFAILRET(EnsureWriteStream());
 #ifdef ENABLE_WININET_PROFILE_DATA_CACHE
             uint32_t bytesWritten = 0;
@@ -82,9 +82,9 @@ namespace Js
         }
 
         template <typename T>
-        HRESULT WriteArray(_In_reads_(len) T * data, _In_ uint32_t len)
+        int32_t WriteArray(_In_reads_(len) T * data, _In_ uint32_t len)
         {
-            HRESULT hr = E_FAIL;
+            int32_t hr = E_FAIL;
             IFFAILRET(EnsureWriteStream());
 #ifdef ENABLE_WININET_PROFILE_DATA_CACHE
             uint32_t bytesSize = sizeof(T) * len;
@@ -102,9 +102,9 @@ namespace Js
         }
 
         template <typename T>
-        HRESULT Read(T * data)
+        int32_t Read(T * data)
         {
-            HRESULT hr = E_FAIL;
+            int32_t hr = E_FAIL;
             IFFAILRET(EnsureReadStream());
 #ifdef ENABLE_WININET_PROFILE_DATA_CACHE
             uint32_t bytesRead = 0;
@@ -121,9 +121,9 @@ namespace Js
         }
 
         template <typename T>
-        HRESULT ReadArray(_Out_writes_(len) T * data, uint32_t len)
+        int32_t ReadArray(_Out_writes_(len) T * data, uint32_t len)
         {
-            HRESULT hr = E_FAIL;
+            int32_t hr = E_FAIL;
             IFFAILRET(EnsureReadStream());
 #ifdef ENABLE_WININET_PROFILE_DATA_CACHE
             uint32_t bytesSize = sizeof(T) * len;
@@ -150,18 +150,18 @@ namespace Js
         bool IsWriteStreamOpen() { return this->outStream != nullptr; }
         bool IsReadStreamOpen() { return this->inStream != nullptr; }
 
-        HRESULT EnsureWriteStream();
-        HRESULT EnsureReadStream();
+        int32_t EnsureWriteStream();
+        int32_t EnsureReadStream();
 
-        HRESULT OpenWriteStream();
-        HRESULT OpenReadStream();
+        int32_t OpenWriteStream();
+        int32_t OpenReadStream();
 
-        HRESULT WriteHeader();
-        HRESULT ReadHeader();
-        HRESULT ResetReadStream();
+        int32_t WriteHeader();
+        int32_t ReadHeader();
+        int32_t ResetReadStream();
 
-        HRESULT SeekReadStreamToBlockHelper(_In_ BlockType blockType, _Out_opt_ uint32_t* bytesInBlock);
-        HRESULT Close();
+        int32_t SeekReadStreamToBlockHelper(_In_ BlockType blockType, _Out_opt_ uint32_t* bytesInBlock);
+        int32_t Close();
 
         Field(IActiveScriptDataCache*) dataCache;
         Field(IStream*) outStream;

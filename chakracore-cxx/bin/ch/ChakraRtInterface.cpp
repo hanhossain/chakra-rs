@@ -52,9 +52,9 @@ void ChakraRTInterface::UnloadChakraDll(HINSTANCE library)
 }
 
 /*static*/
-HRESULT ChakraRTInterface::ParseConfigFlags()
+int32_t ChakraRTInterface::ParseConfigFlags()
 {
-    HRESULT hr = S_OK;
+    int32_t hr = S_OK;
 
     if (m_testHooks.pfSetAssertToConsoleFlag)
     {
@@ -102,7 +102,7 @@ HRESULT ChakraRTInterface::ParseConfigFlags()
 }
 
 /*static*/
-HRESULT ChakraRTInterface::OnChakraCoreLoaded(TestHooks& testHooks)
+int32_t ChakraRTInterface::OnChakraCoreLoaded(TestHooks& testHooks)
 {
     if (!m_testHooksInitialized)
     {

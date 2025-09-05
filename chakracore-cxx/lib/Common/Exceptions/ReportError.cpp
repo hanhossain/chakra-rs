@@ -8,7 +8,7 @@
 // Disable inline so that _ReturnAddress() will get the address of the calling function.
 void ReportFatalException(
     size_t context,
-    HRESULT exceptionCode,
+    int32_t exceptionCode,
     ErrorReason reasonCode,
     size_t scenario)
 {
@@ -115,7 +115,7 @@ void FromDOM_NoScriptScope_unrecoverable_error()
     ReportFatalException(NULL, E_UNEXPECTED, EnterScript_FromDOM_NoScriptScope, scenario);
 }
 
-void Debugger_AttachDetach_unrecoverable_error(HRESULT hr)
+void Debugger_AttachDetach_unrecoverable_error(int32_t hr)
 {
     int scenario = 5;
     ReportFatalException(NULL, hr, Fatal_Debugger_AttachDetach_Failure, scenario);
@@ -133,7 +133,7 @@ void UnexpectedExceptionHandling_fatal_error()
     ReportFatalException(NULL, E_UNEXPECTED, Fatal_UnexpectedExceptionHandling, scenario);
 }
 
-void RpcFailure_unrecoverable_error(HRESULT hr)
+void RpcFailure_unrecoverable_error(int32_t hr)
 {
     int scenario = 8;
     ReportFatalException(NULL, hr, Fatal_RpcFailure, scenario);
@@ -181,7 +181,7 @@ void OutOfMemoryAllocationPolicy_unrecoverable_error()
     ReportFatalException(NULL, E_OUTOFMEMORY, Fatal_OutOfMemory, scenario);
 }
 
-void XDataRegistration_unrecoverable_error(HRESULT hr, size_t scenario)
+void XDataRegistration_unrecoverable_error(int32_t hr, size_t scenario)
 {
     ReportFatalException(NULL, hr, Fatal_XDataRegistration, scenario);
 }

@@ -1856,7 +1856,7 @@ ThreadContext::SetJITConnectionInfo(HANDLE processHandle, void* serverSecurityDe
     Assert(JITManager::GetJITManager()->IsOOPJITEnabled());
     if (!JITManager::GetJITManager()->IsConnected())
     {
-        // TODO: return HRESULT
+        // TODO: return int32_t
         JITManager::GetJITManager()->ConnectRpcServer(processHandle, serverSecurityDescriptor, connectionId);
     }
 }
@@ -1898,7 +1898,7 @@ ThreadContext::EnsureJITThreadContext(bool allowPrereserveAlloc)
         }
     }
 
-    HRESULT hr = JITManager::GetJITManager()->InitializeThreadContext(
+    int32_t hr = JITManager::GetJITManager()->InitializeThreadContext(
         &contextData,
         &m_remoteThreadContextInfo,
         &m_prereservedRegionAddr,
@@ -2180,7 +2180,7 @@ void ThreadContext::SetWellKnownHostTypeId(WellKnownHostType wellKnownType, Js::
         // The jit server really only needs to know about WellKnownHostType_HTMLAllCollection
         if (this->m_remoteThreadContextInfo && wellKnownType == WellKnownHostType_HTMLAllCollection)
         {
-            HRESULT hr = JITManager::GetJITManager()->SetWellKnownHostTypeId(this->m_remoteThreadContextInfo, (int)typeId);
+            int32_t hr = JITManager::GetJITManager()->SetWellKnownHostTypeId(this->m_remoteThreadContextInfo, (int)typeId);
             JITManager::HandleServerCallResult(hr, RemoteCallType::StateUpdate);
         }
 #endif
@@ -2591,7 +2591,7 @@ ThreadContext::PostSweepRedeferralCallBack()
 {
     if (this->DoTryRedeferral())
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         BEGIN_TRANSLATE_OOM_TO_HRESULT
         {
             this->TryRedeferral();
@@ -4079,7 +4079,7 @@ BOOL ThreadContext::IsNativeAddress(void * pCodeAddr, Js::ScriptContext* current
 
 #if DBG
         boolean result;
-        HRESULT hr = JITManager::GetJITManager()->IsNativeAddr(this->m_remoteThreadContextInfo, (intptr_t)pCodeAddr, &result);
+        int32_t hr = JITManager::GetJITManager()->IsNativeAddr(this->m_remoteThreadContextInfo, (intptr_t)pCodeAddr, &result);
 #endif
         bool isNativeAddr = IsNativeAddressHelper(pCodeAddr, currentScriptContext);
 #if DBG

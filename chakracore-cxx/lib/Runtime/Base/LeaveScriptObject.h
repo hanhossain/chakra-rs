@@ -130,7 +130,7 @@ namespace Js
         bool isCallRoot;
         bool hasForcedEnter; // due to debugging.
         ScriptContext* scriptContext;
-        HRESULT hr; // we need to throw outside of constructor
+        int32_t hr; // we need to throw outside of constructor
         JavascriptLibrary* library;  // stack pin the library.
     public:
         EnterScriptObject(ScriptContext* scriptContext, ScriptEntryExitRecord* entryExitRecord,

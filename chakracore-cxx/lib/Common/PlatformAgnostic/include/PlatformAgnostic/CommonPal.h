@@ -425,12 +425,12 @@ extern "C" void * _AddressOfReturnAddress(void);
 // If you do not want to use these functions inline (and instead want to link w/ strsafe.lib), then
 // #define STRSAFE_LIB before including this header file.
 #if defined(STRSAFE_LIB)
-#define STRSAFEAPI  _STRSAFE_EXTERN_C HRESULT
+#define STRSAFEAPI  _STRSAFE_EXTERN_C int32_t
 #pragma comment(lib, "strsafe.lib")
 #elif defined(STRSAFE_LIB_IMPL)
-#define STRSAFEAPI  _STRSAFE_EXTERN_C HRESULT
+#define STRSAFEAPI  _STRSAFE_EXTERN_C int32_t
 #else
-#define STRSAFEAPI  inline HRESULT
+#define STRSAFEAPI  inline int32_t
 #endif
 
 STRSAFEAPI StringCchPrintfW(char16_t* pszDest, size_t cchDest, const char16_t* pszFormat, ...);
@@ -440,15 +440,15 @@ STRSAFEAPI StringVPrintfWorkerW(char16_t* pszDest, size_t cchDest, const char16_
 
 // STRSAFE error return codes
 //
-#define STRSAFE_E_INSUFFICIENT_BUFFER       ((HRESULT)0x8007007AL)  // 0x7A = 122L = ERROR_INSUFFICIENT_BUFFER
-#define STRSAFE_E_INVALID_PARAMETER         ((HRESULT)0x80070057L)  // 0x57 =  87L = ERROR_INVALID_PARAMETER
-#define STRSAFE_E_END_OF_FILE               ((HRESULT)0x80070026L)  // 0x26 =  38L = ERROR_HANDLE_EOF
+#define STRSAFE_E_INSUFFICIENT_BUFFER       ((int32_t)0x8007007AL)  // 0x7A = 122L = ERROR_INSUFFICIENT_BUFFER
+#define STRSAFE_E_INVALID_PARAMETER         ((int32_t)0x80070057L)  // 0x57 =  87L = ERROR_INVALID_PARAMETER
+#define STRSAFE_E_END_OF_FILE               ((int32_t)0x80070026L)  // 0x26 =  38L = ERROR_HANDLE_EOF
 // ----- END: Define strsafe related types and defines for non-VC++ compilers -----
 
 // Provide the definitions for non-windows platforms
 STRSAFEAPI StringVPrintfWorkerW(char16_t* pszDest, size_t cchDest, const char16_t* pszFormat, va_list argList)
 {
-    HRESULT hr = S_OK;
+    int32_t hr = S_OK;
 
     if (cchDest == 0)
     {
@@ -488,7 +488,7 @@ STRSAFEAPI StringVPrintfWorkerW(char16_t* pszDest, size_t cchDest, const char16_
 
 STRSAFEAPI StringCchPrintfW(char16_t* pszDest, size_t cchDest, const char16_t* pszFormat, ...)
 {
-    HRESULT hr;
+    int32_t hr;
 
     if (cchDest > STRSAFE_MAX_CCH)
     {
@@ -509,7 +509,7 @@ STRSAFEAPI StringCchPrintfW(char16_t* pszDest, size_t cchDest, const char16_t* p
 }
 
 __inline
-HRESULT ULongMult(uint32_t ulMultiplicand, uint32_t ulMultiplier, uint32_t* pulResult);
+int32_t ULongMult(uint32_t ulMultiplicand, uint32_t ulMultiplier, uint32_t* pulResult);
 
 /* **** WARNING : finallyFunc is not allowed to raise exception *****
  * **** DO NOT ADD stack probe or memory allocations within the finallyFunc ****

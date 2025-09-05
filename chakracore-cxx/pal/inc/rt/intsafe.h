@@ -24,7 +24,7 @@ extern "C" {
 #endif
 #endif // _AMD64_
 
-#define INTSAFE_E_ARITHMETIC_OVERFLOW       ((HRESULT)0x80070216L)  // 0x216 = 534 = ERROR_ARITHMETIC_OVERFLOW
+#define INTSAFE_E_ARITHMETIC_OVERFLOW       ((int32_t)0x80070216L)  // 0x216 = 534 = ERROR_ARITHMETIC_OVERFLOW
 
 #ifndef LOWORD
 #define LOWORD(l)       ((uint16_t)(((DWORD_PTR)(l)) & 0xffff))
@@ -88,12 +88,12 @@ C_ASSERT(sizeof(uint32_t) == 4);
 // INT -> signed char conversion
 //
 __inline
-HRESULT
+int32_t
 IntToSignedChar(
      int32_t iOperand,
      signed char* pch)
 {
-    HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
+    int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pch = 0;
 
     if ((iOperand >= -128) && (iOperand <= 127))
@@ -109,12 +109,12 @@ IntToSignedChar(
 // INT -> unsigned char conversion
 //
 __inline
-HRESULT
+int32_t
 IntToUChar(
      int32_t iOperand,
      unsigned char* pch)
 {
-    HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
+    int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pch = 0;
 
     if ((iOperand >= 0) && (iOperand <= 255))
@@ -130,12 +130,12 @@ IntToUChar(
 // int32_t -> unsigned char conversion
 //
 __inline
-HRESULT
+int32_t
 LongToUChar(
      int32_t lOperand,
      unsigned char* pch)
 {
-    HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
+    int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pch = 0;
 
     if ((lOperand >= 0) && (lOperand <= 255))
@@ -155,7 +155,7 @@ LongToUChar(
 // INT -> char conversion
 //
 inline
-HRESULT
+int32_t
 IntToChar(
      int32_t iOperand,
      char* pch)
@@ -171,12 +171,12 @@ IntToChar(
 // INT -> unsigned short conversion
 //
 __inline
-HRESULT
+int32_t
 IntToUShort(
      int32_t iOperand,
      unsigned short* pusResult)
 {
-    HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
+    int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pusResult = USHORT_ERROR;
 
     if ((iOperand >= 0) && (iOperand <= USHRT_MAX))
@@ -192,12 +192,12 @@ IntToUShort(
 // INT -> uint32_t conversion
 //
 __inline
-HRESULT
+int32_t
 IntToUInt(
      int32_t iOperand,
      uint32_t* puResult)
 {
-    HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
+    int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *puResult = UINT_ERROR;
 
     if (iOperand >= 0)
@@ -213,12 +213,12 @@ IntToUInt(
 // INT -> uint32_t conversion
 //
 __inline
-HRESULT
+int32_t
 IntToULong(
      int32_t iOperand,
      uint32_t* pulResult)
 {
-    HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
+    int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pulResult = ULONG_ERROR;
 
     if (iOperand >= 0)
@@ -234,12 +234,12 @@ IntToULong(
 // INT -> unsigned long conversion
 //
 __inline
-HRESULT
+int32_t
 IntToULongLong(
      int32_t iOperand,
      unsigned long* pullResult)
 {
-    HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
+    int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pullResult = ULONG_ERROR;
 
     if (iOperand >= 0)
@@ -255,12 +255,12 @@ IntToULongLong(
 // uint32_t -> signed char conversion
 //
 __inline
-HRESULT
+int32_t
 UIntToSignedChar(
      uint32_t uOperand,
      signed char* pch)
 {
-    HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
+    int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pch = 0;
 
     if (uOperand <= 127)
@@ -276,12 +276,12 @@ UIntToSignedChar(
 // uint32_t -> unsigned char conversion
 //
 __inline
-HRESULT
+int32_t
 UIntToUChar(
      uint32_t uOperand,
      unsigned char* pch)
 {
-    HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
+    int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pch = 0;
 
     if (uOperand <= 255)
@@ -306,7 +306,7 @@ UIntToUChar(
 // uint32_t -> char conversion
 //
 inline
-HRESULT
+int32_t
 UIntToChar(
      uint32_t uOperand,
      char* pch)
@@ -322,12 +322,12 @@ UIntToChar(
 // uint32_t -> INT conversion
 //
 __inline
-HRESULT
+int32_t
 UIntToInt(
      uint32_t uOperand,
      int32_t* piResult)
 {
-    HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
+    int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *piResult = INT_ERROR;
 
     if (uOperand <= INT_MAX)
@@ -343,7 +343,7 @@ UIntToInt(
 // uint32_t -> int32_t conversion
 //
 __inline
-HRESULT
+int32_t
 UIntToLong(
      uint32_t Operand,
      int32_t* Result)
@@ -364,7 +364,7 @@ UIntToLong(
 // uint32_t -> uint32_t conversion
 //
 __inline
-HRESULT
+int32_t
 UIntToULong(
      uint32_t uOperand,
      uint32_t* pulResult)
@@ -378,12 +378,12 @@ UIntToULong(
 // uint32_t -> unsigned char conversion
 //
 __inline
-HRESULT
+int32_t
 ULongToSignedChar(
      uint32_t ulOperand,
      signed char* pch)
 {
-    HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
+    int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pch = 0;
 
     if (ulOperand <= 127)
@@ -399,12 +399,12 @@ ULongToSignedChar(
 // uint32_t -> unsigned char conversion
 //
 __inline
-HRESULT
+int32_t
 ULongToUChar(
      uint32_t ulOperand,
      unsigned char* pch)
 {
-    HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
+    int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pch = 0;
 
     if (ulOperand <= 255)
@@ -424,7 +424,7 @@ ULongToUChar(
 // uint32_t -> char conversion
 //
 inline
-HRESULT
+int32_t
 ULongToChar(
      uint32_t ulOperand,
      char* pch)
@@ -440,12 +440,12 @@ ULongToChar(
 // uint32_t -> unsigned short conversion
 //
 __inline
-HRESULT
+int32_t
 ULongToUShort(
      uint32_t ulOperand,
      unsigned short* pusResult)
 {
-    HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
+    int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pusResult = USHORT_ERROR;
 
     if (ulOperand <= USHRT_MAX)
@@ -461,7 +461,7 @@ ULongToUShort(
 // uint32_t -> INT conversion
 //
 __inline
-HRESULT
+int32_t
 ULongToInt(
      uint32_t ulOperand,
      int32_t* piResult)
@@ -482,7 +482,7 @@ ULongToInt(
 // uint32_t -> uint32_t conversion
 //
 __inline
-HRESULT
+int32_t
 ULongToUInt(
      uint32_t ulOperand,
      uint32_t* puResult)
@@ -496,7 +496,7 @@ ULongToUInt(
 // uint32_t -> int32_t conversion
 //
 __inline
-HRESULT
+int32_t
 ULongToLong(
      uint32_t Operand,
      int32_t* Result)
@@ -517,7 +517,7 @@ ULongToLong(
 // unsigned long -> INT conversion
 //
 __inline
-HRESULT
+int32_t
 ULongLongToInt(
      unsigned long ullOperand,
      int32_t* piResult)
@@ -538,7 +538,7 @@ ULongLongToInt(
 // unsigned long -> int32_t conversion
 //
 __inline
-HRESULT
+int32_t
 ULongLongToLong(
      unsigned long Operand,
      int32_t* Result)
@@ -559,12 +559,12 @@ ULongLongToLong(
 // uint32_t -> unsigned short conversion
 //
 __inline
-HRESULT
+int32_t
 UIntToUShort(
      uint32_t uOperand,
      unsigned short* pusResult)
 {
-    HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
+    int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pusResult = USHORT_ERROR;
 
     if (uOperand <= USHRT_MAX)
@@ -580,12 +580,12 @@ UIntToUShort(
 // unsigned long -> unsigned short conversion
 //
 __inline
-HRESULT
+int32_t
 ULongLongToUShort(
      unsigned long ullOperand,
      unsigned short* pusResult)
 {
-    HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
+    int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     unsigned short usResult = USHORT_ERROR;
 
     if (ullOperand <= USHRT_MAX)
@@ -602,12 +602,12 @@ ULongLongToUShort(
 // unsigned long -> uint32_t conversion
 //
 __inline
-HRESULT
+int32_t
 ULongLongToULong(
      unsigned long ullOperand,
      uint32_t* pulResult)
 {
-    HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
+    int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pulResult = ULONG_ERROR;
 
     if (ullOperand <= ULONG_MAX)
@@ -630,12 +630,12 @@ ULongLongToULong(
 // unsigned long -> uint32_t conversion
 //
 __inline
-HRESULT
+int32_t
 ULongLongToUInt(
      unsigned long ullOperand,
      uint32_t* puResult)
 {
-    HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
+    int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *puResult = UINT_ERROR;
 
     if (ullOperand <= UINT_MAX)
@@ -736,7 +736,7 @@ ULongLongToUInt(
 #define LongPtrToUIntPtr        LongPtrToULongLong
 
 __inline
-HRESULT
+int32_t
 ULongLongToUIntPtr(
      unsigned long ullOperand,
      UINT_PTR* puResult)
@@ -770,7 +770,7 @@ ULongLongToUIntPtr(
 #define LongPtrToULongPtr       LongPtrToULongLong
 
 __inline
-HRESULT
+int32_t
 ULongLongToULongPtr(
      unsigned long ullOperand,
      size_t* pulResult)
@@ -872,13 +872,13 @@ ULongLongToULongPtr(
 // unsigned short addition
 //
 __inline
-HRESULT
+int32_t
 UShortAdd(
      unsigned short usAugend,
      unsigned short usAddend,
      unsigned short* pusResult)
 {
-    HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
+    int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pusResult = USHORT_ERROR;
 
     if (((unsigned short)(usAugend + usAddend)) >= usAugend)
@@ -899,13 +899,13 @@ UShortAdd(
 // uint32_t addition
 //
 __inline
-HRESULT
+int32_t
 UIntAdd(
      uint32_t uAugend,
      uint32_t uAddend,
      uint32_t* puResult)
 {
-    HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
+    int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *puResult = UINT_ERROR;
 
     if ((uAugend + uAddend) >= uAugend)
@@ -926,13 +926,13 @@ UIntAdd(
 // uint32_t addition
 //
 __inline
-HRESULT
+int32_t
 ULongAdd(
      uint32_t ulAugend,
      uint32_t ulAddend,
      uint32_t* pulResult)
 {
-    HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
+    int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pulResult = ULONG_ERROR;
 
     if ((ulAugend + ulAddend) >= ulAugend)
@@ -963,13 +963,13 @@ ULongAdd(
 // size_t addition
 //
 __inline
-HRESULT
+int32_t
 SizeTAdd(
      size_t Augend,
      size_t Addend,
      size_t* pResult)
 {
-    HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
+    int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pResult = SIZET_ERROR;
 
     if ((Augend + Addend) >= Augend)
@@ -990,13 +990,13 @@ SizeTAdd(
 // unsigned long addition
 //
 __inline
-HRESULT
+int32_t
 ULongLongAdd(
      unsigned long ullAugend,
      unsigned long ullAddend,
      unsigned long* pullResult)
 {
-    HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
+    int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pullResult = ULONGLONG_ERROR;
 
     if ((ullAugend + ullAddend) >= ullAugend)
@@ -1012,13 +1012,13 @@ ULongLongAdd(
 // unsigned short subtraction
 //
 __inline
-HRESULT
+int32_t
 UShortSub(
      unsigned short usMinuend,
      unsigned short usSubtrahend,
      unsigned short* pusResult)
 {
-    HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
+    int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pusResult = USHORT_ERROR;
 
     if (usMinuend >= usSubtrahend)
@@ -1040,13 +1040,13 @@ UShortSub(
 // uint32_t subtraction
 //
 __inline
-HRESULT
+int32_t
 UIntSub(
      uint32_t uMinuend,
      uint32_t uSubtrahend,
      uint32_t* puResult)
 {
-    HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
+    int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *puResult = UINT_ERROR;
 
     if (uMinuend >= uSubtrahend)
@@ -1067,13 +1067,13 @@ UIntSub(
 // uint32_t subtraction
 //
 __inline
-HRESULT
+int32_t
 ULongSub(
      uint32_t ulMinuend,
      uint32_t ulSubtrahend,
      uint32_t* pulResult)
 {
-    HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
+    int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pulResult = ULONG_ERROR;
 
     if (ulMinuend >= ulSubtrahend)
@@ -1105,13 +1105,13 @@ ULongSub(
 // size_t subtraction
 //
 __inline
-HRESULT
+int32_t
 SizeTSub(
      size_t Minuend,
      size_t Subtrahend,
      size_t* pResult)
 {
-    HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
+    int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pResult = SIZET_ERROR;
 
     if (Minuend >= Subtrahend)
@@ -1132,13 +1132,13 @@ SizeTSub(
 // unsigned long subtraction
 //
 __inline
-HRESULT
+int32_t
 ULongLongSub(
      unsigned long ullMinuend,
      unsigned long ullSubtrahend,
      unsigned long* pullResult)
 {
-    HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
+    int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pullResult = ULONGLONG_ERROR;
 
     if (ullMinuend >= ullSubtrahend)
@@ -1154,7 +1154,7 @@ ULongLongSub(
 // unsigned short multiplication
 //
 __inline
-HRESULT
+int32_t
 UShortMult(
      unsigned short usMultiplicand,
      unsigned short usMultiplier,
@@ -1174,7 +1174,7 @@ UShortMult(
 // uint32_t multiplication
 //
 __inline
-HRESULT
+int32_t
 UIntMult(
      uint32_t uMultiplicand,
      uint32_t uMultiplier,
@@ -1189,7 +1189,7 @@ UIntMult(
 // uint32_t multiplication
 //
 __inline
-HRESULT
+int32_t
 ULongMult(
      uint32_t ulMultiplicand,
      uint32_t ulMultiplier,

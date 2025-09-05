@@ -11,7 +11,7 @@ private:
     static CriticalSection cs;
 
 public:
-    static HRESULT RegisterNewProcess(uint32_t pid, HANDLE processHandle, intptr_t chakraBaseAddress, intptr_t crtBaseAddress);
+    static int32_t RegisterNewProcess(uint32_t pid, HANDLE processHandle, intptr_t chakraBaseAddress, intptr_t crtBaseAddress);
     static ProcessContext* GetProcessContext(uint32_t pid);
 };
 
@@ -166,6 +166,6 @@ struct AutoReleaseScriptContext
 
 
 template<typename Fn>
-HRESULT ServerCallWrapper(ServerThreadContext* threadContextInfo, Fn fn);
+int32_t ServerCallWrapper(ServerThreadContext* threadContextInfo, Fn fn);
 template<typename Fn>
-HRESULT ServerCallWrapper(ServerScriptContext* scriptContextInfo, Fn fn);
+int32_t ServerCallWrapper(ServerScriptContext* scriptContextInfo, Fn fn);

@@ -40,7 +40,7 @@ namespace Js {
             FunctionBody* GetFunctionBody() const;
             uint32 GetByteCodeOffset() const { return byteCodeOffset; }
             LPCWSTR GetFunctionName() const;
-            HRESULT GetFunctionNameWithArguments(_In_ LPCWSTR *outResult) const;
+            int32_t GetFunctionNameWithArguments(_In_ LPCWSTR *outResult) const;
         };
 
         typedef JsUtil::List<StackFrame> StackTrace;

@@ -820,7 +820,7 @@ namespace Js
         }
 
         template <class DebugSite, class Fn>
-        HRESULT MapEntryPoints(DebugSite site, Fn fn) const // external debugging version
+        int32_t MapEntryPoints(DebugSite site, Fn fn) const // external debugging version
         {
             return Map(site, PointerValue(this->entryPoints), [&](int index, LoopEntryPointInfo * entryPoint)
             {
@@ -1791,7 +1791,7 @@ namespace Js
         RecyclerWeakReference<JavascriptString> * GetCachedSourceStringWeakRef();
         void SetCachedSourceStringWeakRef(RecyclerWeakReference<JavascriptString> * weakRef);
     protected:
-        static HRESULT MapDeferredReparseError(HRESULT& hrParse, const CompileScriptException& se);
+        static int32_t MapDeferredReparseError(int32_t& hrParse, const CompileScriptException& se);
 
         void SetFlags(bool does, FunctionBodyFlags newFlags)
         {
@@ -3303,9 +3303,9 @@ namespace Js
 #endif
 
 #ifdef ENABLE_SCRIPT_PROFILING
-        HRESULT RegisterFunction(BOOL fChangeMode, BOOL fOnlyCurrent = FALSE);
-        HRESULT ReportScriptCompiled();
-        HRESULT ReportFunctionCompiled();
+        int32_t RegisterFunction(BOOL fChangeMode, BOOL fOnlyCurrent = FALSE);
+        int32_t ReportScriptCompiled();
+        int32_t ReportFunctionCompiled();
         void SetEntryToProfileMode();
 #endif
 

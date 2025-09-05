@@ -140,7 +140,7 @@ namespace Js
         static BOOL Is(TypeId typeId);
         // Returns false if this is not a TypedArray or it's not detached
         static BOOL IsDetachedTypedArray(Var aValue);
-        static HRESULT GetBuffer(Var aValue, ArrayBuffer** outBuffer, uint32* outOffset, uint32* outLength);
+        static int32_t GetBuffer(Var aValue, ArrayBuffer** outBuffer, uint32* outOffset, uint32* outLength);
         static TypedArrayBase * ValidateTypedArray(Var aValue, ScriptContext *scriptContext, LPCWSTR apiName);
         static TypedArrayBase * ValidateTypedArray(Arguments &args, ScriptContext *scriptContext, LPCWSTR apiName);
         static Var TypedArrayCreate(Var constructor, Arguments *args, uint32 length, ScriptContext *scriptContext);

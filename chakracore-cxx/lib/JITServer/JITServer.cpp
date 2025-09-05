@@ -6,7 +6,7 @@
 #include "JITServerPch.h"
 
 __declspec(dllexport)
-HRESULT JsInitializeJITServer(
+int32_t JsInitializeJITServer(
     UUID* connectionUuid,
     __in_opt void* securityDescriptor,
     __in_opt void* alpcSecurityDescriptor)
@@ -86,10 +86,10 @@ HRESULT JsInitializeJITServer(
     return status;
 }
 
-HRESULT
+int32_t
 ShutdownCommon()
 {
-    HRESULT status = RpcMgmtStopServerListening(NULL);
+    int32_t status = RpcMgmtStopServerListening(NULL);
     if (status != RPC_S_OK)
     {
         return status;
@@ -102,7 +102,7 @@ ShutdownCommon()
     return status;
 }
 
-HRESULT
+int32_t
 ServerShutdown(
     /* [in] */ handle_t binding)
 {
@@ -122,7 +122,7 @@ __RPC_USER PSCRIPTCONTEXT_HANDLE_rundown(__RPC__in PSCRIPTCONTEXT_HANDLE phConte
     ServerCleanupScriptContext(nullptr, &phContext);
 }
 
-HRESULT
+int32_t
 ServerConnectProcessWithProcessHandle(
     handle_t binding,
     HANDLE processHandle,
@@ -131,7 +131,7 @@ ServerConnectProcessWithProcessHandle(
 )
 {
     uint32_t clientPid;
-    HRESULT hr = HRESULT_FROM_WIN32(I_RpcBindingInqLocalClientPID(binding, &clientPid));
+    int32_t hr = HRESULT_FROM_WIN32(I_RpcBindingInqLocalClientPID(binding, &clientPid));
     if (FAILED(hr))
     {
         return hr;
@@ -148,7 +148,7 @@ ServerConnectProcessWithProcessHandle(
 
 #pragma warning(push)
 #pragma warning(disable:6387 28196) // PREFast does not understand the out context can be null here
-HRESULT
+int32_t
 ServerInitializeThreadContext(
     /* [in] */ handle_t binding,
     /* [in] */ __RPC__in ThreadContextDataIDL * threadContextData,
@@ -169,7 +169,7 @@ ServerInitializeThreadContext(
     ServerThreadContext * contextInfo = nullptr;
 
     uint32_t clientPid;
-    HRESULT hr = HRESULT_FROM_WIN32(I_RpcBindingInqLocalClientPID(binding, &clientPid));
+    int32_t hr = HRESULT_FROM_WIN32(I_RpcBindingInqLocalClientPID(binding, &clientPid));
     if (FAILED(hr))
     {
         return hr;
@@ -201,7 +201,7 @@ ServerInitializeThreadContext(
         return E_OUTOFMEMORY;
     }
 
-    return ServerCallWrapper(contextInfo, [&]()->HRESULT
+    return ServerCallWrapper(contextInfo, [&]()->int32_t
     {
         if (clientPid != contextInfo->GetRuntimePid())
         {
@@ -214,7 +214,7 @@ ServerInitializeThreadContext(
     });
 }
 
-HRESULT
+int32_t
 ServerInitializeScriptContext(
     /* [in] */ handle_t binding,
     /* [in] */ __RPC__in ScriptContextDataIDL * scriptContextData,
@@ -230,7 +230,7 @@ ServerInitializeScriptContext(
     *scriptContextInfoAddress = nullptr;
     ServerThreadContext * threadContextInfo = (ServerThreadContext*)DecodePointer(threadContextInfoAddress);
 
-    return ServerCallWrapper(threadContextInfo, [&]()->HRESULT
+    return ServerCallWrapper(threadContextInfo, [&]()->int32_t
     {
         ServerScriptContext * contextInfo = HeapNew(ServerScriptContext, scriptContextData, threadContextInfo);
         ServerContextManager::RegisterScriptContext(contextInfo);
@@ -245,7 +245,7 @@ ServerInitializeScriptContext(
 }
 #pragma warning(pop)
 
-HRESULT
+int32_t
 ServerCleanupThreadContext(
     /* [in] */ handle_t binding,
     /* [in] */ __RPC__deref_inout_opt PPTHREADCONTEXT_HANDLE threadContextInfoAddress)
@@ -266,7 +266,7 @@ ServerCleanupThreadContext(
     // parameters, that the context handle has been closed normally.
     *threadContextInfoAddress = nullptr;
 
-    return ServerCallWrapper(threadContextInfo, [&]()->HRESULT
+    return ServerCallWrapper(threadContextInfo, [&]()->int32_t
     {
         threadContextInfo->Close();
         ServerContextManager::UnRegisterThreadContext(threadContextInfo);
@@ -274,7 +274,7 @@ ServerCleanupThreadContext(
     });
 }
 
-HRESULT
+int32_t
 ServerUpdatePropertyRecordMap(
     /* [in] */ handle_t binding,
     /* [in] */ __RPC__in PTHREADCONTEXT_HANDLE threadContextInfoAddress,
@@ -288,7 +288,7 @@ ServerUpdatePropertyRecordMap(
         return RPC_S_INVALID_ARG;
     }
 
-    return ServerCallWrapper(threadContextInfo, [&]()->HRESULT
+    return ServerCallWrapper(threadContextInfo, [&]()->int32_t
     {
         typedef ServerThreadContext::BVSparseNode BVSparseNode;
         CompileAssert(sizeof(BVSparseNode) == sizeof(BVSparseNodeIDL));
@@ -298,7 +298,7 @@ ServerUpdatePropertyRecordMap(
     });
 }
 
-HRESULT
+int32_t
 ServerAddModuleRecordInfo(
     /* [in] */ handle_t binding,
     /* [in] */ __RPC__in PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
@@ -312,7 +312,7 @@ ServerAddModuleRecordInfo(
         return RPC_S_INVALID_ARG;
     }
 
-    return ServerCallWrapper(serverScriptContext, [&]()->HRESULT
+    return ServerCallWrapper(serverScriptContext, [&]()->int32_t
     {
         serverScriptContext->AddModuleRecordInfo(moduleId, localExportSlotsAddr);
         return S_OK;
@@ -320,7 +320,7 @@ ServerAddModuleRecordInfo(
 
 }
 
-HRESULT
+int32_t
 ServerSetWellKnownHostTypeId(
     /* [in] */ handle_t binding,
     /* [in] */ __RPC__in PTHREADCONTEXT_HANDLE threadContextInfoAddress,
@@ -334,14 +334,14 @@ ServerSetWellKnownHostTypeId(
         return RPC_S_INVALID_ARG;
     }
 
-    return ServerCallWrapper(threadContextInfo, [&]()->HRESULT
+    return ServerCallWrapper(threadContextInfo, [&]()->int32_t
     {
         threadContextInfo->SetWellKnownHostTypeId((Js::TypeId)typeId);
         return S_OK;
     });
 }
 
-HRESULT
+int32_t
 ServerCleanupScriptContext(
     /* [in] */ handle_t binding,
     /* [in] */ __RPC__deref_inout_opt PPSCRIPTCONTEXT_HANDLE scriptContextInfoAddress)
@@ -375,7 +375,7 @@ ServerCleanupScriptContext(
     return S_OK;
 }
 
-HRESULT
+int32_t
 ServerCloseScriptContext(
     /* [in] */ handle_t binding,
     /* [in] */ __RPC__in PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress)
@@ -388,7 +388,7 @@ ServerCloseScriptContext(
         return RPC_S_INVALID_ARG;
     }
 
-    return ServerCallWrapper(scriptContextInfo, [&]()->HRESULT
+    return ServerCallWrapper(scriptContextInfo, [&]()->int32_t
     {
 #ifdef PROFILE_EXEC
         scriptContextInfo->GetFirstCodeGenProfiler()->ProfilePrint();
@@ -400,7 +400,7 @@ ServerCloseScriptContext(
     });
 }
 
-HRESULT
+int32_t
 ServerDecommitInterpreterBufferManager(
     /* [in] */ handle_t binding,
     /* [in] */ __RPC__in PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
@@ -414,14 +414,14 @@ ServerDecommitInterpreterBufferManager(
         return RPC_S_INVALID_ARG;
     }
 
-    return ServerCallWrapper(scriptContext, [&]()->HRESULT
+    return ServerCallWrapper(scriptContext, [&]()->int32_t
     {
         scriptContext->DecommitEmitBufferManager(asmJsManager != FALSE);
         return S_OK;
     });
 }
 
-HRESULT
+int32_t
 ServerNewInterpreterThunkBlock(
     /* [in] */ handle_t binding,
     /* [in] */ __RPC__in PSCRIPTCONTEXT_HANDLE scriptContextInfo,
@@ -437,7 +437,7 @@ ServerNewInterpreterThunkBlock(
         return RPC_S_INVALID_ARG;
     }
 
-    return ServerCallWrapper(scriptContext, [&]()->HRESULT
+    return ServerCallWrapper(scriptContext, [&]()->int32_t
     {
         ServerThreadContext * threadContext = scriptContext->GetThreadContext();
 
@@ -513,7 +513,7 @@ ServerNewInterpreterThunkBlock(
 }
 
 #if DBG
-HRESULT
+int32_t
 ServerIsInterpreterThunkAddr(
     /* [in] */ handle_t binding,
     /* [in] */ __RPC__in PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
@@ -541,7 +541,7 @@ ServerIsInterpreterThunkAddr(
 }
 #endif
 
-HRESULT
+int32_t
 ServerFreeAllocation(
     /* [in] */ handle_t binding,
     /* [in] */ __RPC__in PSCRIPTCONTEXT_HANDLE scriptContextInfo,
@@ -555,14 +555,14 @@ ServerFreeAllocation(
         return RPC_S_INVALID_ARG;
     }
 
-    return ServerCallWrapper(context, [&]()->HRESULT
+    return ServerCallWrapper(context, [&]()->int32_t
     {
         context->GetCodeGenAllocators()->emitBufferManager.FreeAllocation((void*)codeAddress);
         return S_OK;
     });
 }
 
-HRESULT
+int32_t
 ServerIsNativeAddr(
     /* [in] */ handle_t binding,
     /* [in] */ __RPC__in PTHREADCONTEXT_HANDLE threadContextInfo,
@@ -584,7 +584,7 @@ ServerIsNativeAddr(
         return RPC_S_INVALID_ARG;
     }
 
-    return ServerCallWrapper(context, [&]()->HRESULT
+    return ServerCallWrapper(context, [&]()->int32_t
     {
         PreReservedSectionAllocWrapper *preReservedAllocWrapper = context->GetPreReservedSectionAllocator();
         if (preReservedAllocWrapper->IsInRange((void*)address))
@@ -605,7 +605,7 @@ ServerIsNativeAddr(
     });
 }
 
-HRESULT
+int32_t
 ServerSetIsPRNGSeeded(
     /* [in] */ handle_t binding,
     /* [in] */ __RPC__in PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
@@ -619,14 +619,14 @@ ServerSetIsPRNGSeeded(
         return RPC_S_INVALID_ARG;
     }
 
-    return ServerCallWrapper(scriptContextInfo, [&]()->HRESULT
+    return ServerCallWrapper(scriptContextInfo, [&]()->int32_t
     {
         scriptContextInfo->SetIsPRNGSeeded(value != FALSE);
         return S_OK;
     });
 }
 
-HRESULT
+int32_t
 ServerRemoteCodeGen(
     /* [in] */ handle_t binding,
     /* [in] */ __RPC__in PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
@@ -656,7 +656,7 @@ ServerRemoteCodeGen(
     autoFreeArray.bufferSize = serializedRpcDataSize;
 #endif
 
-    return ServerCallWrapper(scriptContextInfo, [&]() ->HRESULT
+    return ServerCallWrapper(scriptContextInfo, [&]() ->int32_t
     {
         LARGE_INTEGER start_time = { 0 };
         if (PHASE_TRACE1(Js::BackEndPhase))
@@ -767,7 +767,7 @@ CriticalSection ServerContextManager::cs;
 BaseDictionary<uint32_t, ProcessContext*, HeapAllocator> ProcessContextManager::ProcessContexts(&HeapAllocator::Instance);
 CriticalSection ProcessContextManager::cs;
 
-HRESULT
+int32_t
 ProcessContextManager::RegisterNewProcess(uint32_t pid, HANDLE processHandle, intptr_t chakraBaseAddress, intptr_t crtBaseAddress)
 {
     AutoCriticalSection autoCS(&cs);
@@ -896,10 +896,10 @@ bool ServerContextManager::CheckLivenessAndAddref(ServerThreadContext* context)
 }
 
 template<typename Fn>
-HRESULT ServerCallWrapper(ServerThreadContext* threadContextInfo, Fn fn)
+int32_t ServerCallWrapper(ServerThreadContext* threadContextInfo, Fn fn)
 {
     MemoryOperationLastError::ClearLastError();
-    HRESULT hr = S_OK;
+    int32_t hr = S_OK;
     try
     {
         AUTO_NESTED_HANDLED_EXCEPTION_TYPE(static_cast<ExceptionType>(ExceptionType_OutOfMemory | ExceptionType_StackOverflow));
@@ -935,7 +935,7 @@ HRESULT ServerCallWrapper(ServerThreadContext* threadContextInfo, Fn fn)
 }
 
 template<typename Fn>
-HRESULT ServerCallWrapper(ServerScriptContext* scriptContextInfo, Fn fn)
+int32_t ServerCallWrapper(ServerScriptContext* scriptContextInfo, Fn fn)
 {
     try
     {

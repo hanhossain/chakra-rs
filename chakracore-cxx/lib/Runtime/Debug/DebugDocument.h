@@ -22,7 +22,7 @@ namespace Js
         ~DebugDocument();
         virtual void CloseDocument();
 
-        HRESULT SetBreakPoint(int32 ibos, BREAKPOINT_STATE bps);
+        int32_t SetBreakPoint(int32 ibos, BREAKPOINT_STATE bps);
         BreakpointProbe* SetBreakPoint(StatementLocation statement, BREAKPOINT_STATE bps);
         void RemoveBreakpointProbe(BreakpointProbe *probe);
         void ClearAllBreakPoints(void);

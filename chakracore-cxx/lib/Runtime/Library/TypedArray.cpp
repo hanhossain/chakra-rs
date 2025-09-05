@@ -965,9 +965,9 @@ namespace Js
         }
     }
 
-    HRESULT TypedArrayBase::GetBuffer(Var instance, ArrayBuffer** outBuffer, uint32* outOffset, uint32* outLength)
+    int32_t TypedArrayBase::GetBuffer(Var instance, ArrayBuffer** outBuffer, uint32* outOffset, uint32* outLength)
     {
-        HRESULT hr = NOERROR;
+        int32_t hr = NOERROR;
         if (Js::VarIs<Js::TypedArrayBase>(instance))
         {
             Js::TypedArrayBase* typedArrayBase = Js::VarTo<Js::TypedArrayBase>(instance);

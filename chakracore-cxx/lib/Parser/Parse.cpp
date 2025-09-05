@@ -317,12 +317,12 @@ LPCWSTR Parser::GetTokenString(tokens token)
     }
 }
 
-void Parser::Error(HRESULT hr, LPCWSTR stringOne, LPCWSTR stringTwo)
+void Parser::Error(int32_t hr, LPCWSTR stringOne, LPCWSTR stringTwo)
 {
     throw ParseExceptionObject(hr, stringOne, stringTwo);
 }
 
-void Parser::Error(HRESULT hr, ParseNodePtr pnode)
+void Parser::Error(int32_t hr, ParseNodePtr pnode)
 {
     if (pnode && pnode->ichLim)
     {
@@ -334,7 +334,7 @@ void Parser::Error(HRESULT hr, ParseNodePtr pnode)
     }
 }
 
-void Parser::Error(HRESULT hr, charcount_t ichMin, charcount_t ichLim, LPCWSTR stringOne, LPCWSTR stringTwo)
+void Parser::Error(int32_t hr, charcount_t ichMin, charcount_t ichLim, LPCWSTR stringOne, LPCWSTR stringTwo)
 {
     this->GetScanner()->SetErrorPosition(ichMin, ichLim);
     Error(hr, stringOne, stringTwo);
@@ -344,7 +344,7 @@ void Parser::IdentifierExpectedError(const Token& token)
 {
     Assert(token.tk != tkID);
 
-    HRESULT hr;
+    int32_t hr;
     if (token.IsReservedWord())
     {
         if (token.IsKeyword())
@@ -376,13 +376,13 @@ void Parser::IdentifierExpectedError(const Token& token)
     Error(hr);
 }
 
-HRESULT Parser::ValidateSyntax(LPCUTF8 pszSrc, size_t encodedCharCount, bool isGenerator, bool isAsync, CompileScriptException *pse, void (Parser::*validateFunction)())
+int32_t Parser::ValidateSyntax(LPCUTF8 pszSrc, size_t encodedCharCount, bool isGenerator, bool isAsync, CompileScriptException *pse, void (Parser::*validateFunction)())
 {
     Assert(pszSrc);
 
     PROBE_STACK_NO_DISPOSE(m_scriptContext, Js::Constants::MinStackDefault);
 
-    HRESULT hr;
+    int32_t hr;
     SmartFPUControl smartFpuControl;
     bool handled = false;
 
@@ -457,7 +457,7 @@ HRESULT Parser::ValidateSyntax(LPCUTF8 pszSrc, size_t encodedCharCount, bool isG
     return hr;
 }
 
-HRESULT Parser::ParseSourceInternal(
+int32_t Parser::ParseSourceInternal(
     ParseNodeProg ** parseTree, LPCUTF8 pszSrc, size_t offsetInBytes, size_t encodedCharCount, charcount_t offsetInChars,
     bool isUtf8, uint32_t grfscr, CompileScriptException *pse, Js::LocalFunctionId * nextFunctionId, uint32_t lineNumber, SourceContextInfo * sourceContextInfo)
 {
@@ -485,7 +485,7 @@ HRESULT Parser::ParseSourceInternal(
     m_sourceContextInfo = sourceContextInfo;
 
     ParseNodeProg * pnodeBase = NULL;
-    HRESULT hr;
+    int32_t hr;
     SmartFPUControl smartFpuControl;
     bool handled = false;
 
@@ -12312,7 +12312,7 @@ bool Parser::CheckAsmjsModeStrPid(IdentPtr pid)
 #endif
 }
 
-HRESULT Parser::ParseUtf8Source(ParseNodeProg ** parseTree, LPCUTF8 pSrc, size_t length, uint32_t grfsrc, CompileScriptException *pse,
+int32_t Parser::ParseUtf8Source(ParseNodeProg ** parseTree, LPCUTF8 pSrc, size_t length, uint32_t grfsrc, CompileScriptException *pse,
     Js::LocalFunctionId * nextFunctionId, SourceContextInfo * sourceContextInfo)
 {
     m_functionBody = nullptr;
@@ -12320,7 +12320,7 @@ HRESULT Parser::ParseUtf8Source(ParseNodeProg ** parseTree, LPCUTF8 pSrc, size_t
     return ParseSourceInternal(parseTree, pSrc, 0, length, 0, true, grfsrc, pse, nextFunctionId, 0, sourceContextInfo);
 }
 
-HRESULT Parser::ParseCesu8Source(ParseNodeProg ** parseTree, LPCUTF8 pSrc, size_t length, uint32_t grfsrc, CompileScriptException *pse,
+int32_t Parser::ParseCesu8Source(ParseNodeProg ** parseTree, LPCUTF8 pSrc, size_t length, uint32_t grfsrc, CompileScriptException *pse,
     Js::LocalFunctionId * nextFunctionId, SourceContextInfo * sourceContextInfo)
 {
     m_functionBody = nullptr;
@@ -12367,11 +12367,11 @@ void Parser::AddBackgroundRegExpNode(ParseNodePtr const pnode)
     currBackgroundParseItem->AddRegExpNode(pnode, &m_nodeAllocator);
 }
 
-HRESULT Parser::ParseFunctionInBackground(ParseNodeFnc * pnodeFnc, ParseContext *parseContext, bool topLevelDeferred, CompileScriptException *pse)
+int32_t Parser::ParseFunctionInBackground(ParseNodeFnc * pnodeFnc, ParseContext *parseContext, bool topLevelDeferred, CompileScriptException *pse)
 {
     m_functionBody = nullptr;
     m_parseType = ParseType_Upfront;
-    HRESULT hr = S_OK;
+    int32_t hr = S_OK;
     SmartFPUControl smartFpuControl;
     uint nextFunctionId = pnodeFnc->functionId + 1;
 
@@ -12479,7 +12479,7 @@ HRESULT Parser::ParseFunctionInBackground(ParseNodeFnc * pnodeFnc, ParseContext 
 
 #endif
 
-HRESULT Parser::ParseSourceWithOffset(ParseNodeProg ** parseTree, LPCUTF8 pSrc, size_t offset, size_t cbLength, charcount_t cchOffset,
+int32_t Parser::ParseSourceWithOffset(ParseNodeProg ** parseTree, LPCUTF8 pSrc, size_t offset, size_t cbLength, charcount_t cchOffset,
     bool isCesu8, uint32_t grfscr, CompileScriptException *pse, Js::LocalFunctionId * nextFunctionId, uint32_t lineNumber, SourceContextInfo * sourceContextInfo,
     Js::ParseableFunctionInfo* functionInfo)
 {

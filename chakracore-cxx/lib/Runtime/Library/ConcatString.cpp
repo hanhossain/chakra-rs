@@ -112,7 +112,7 @@ namespace Js
         }
 
         charcount_t cchDestString = 0;
-        HRESULT result = utf8::NarrowStringToWideNoAlloc(cString, charCount, destString, charCount + 1, &cchDestString);
+        int32_t result = utf8::NarrowStringToWideNoAlloc(cString, charCount, destString, charCount + 1, &cchDestString);
 
         if (result == S_OK)
         {

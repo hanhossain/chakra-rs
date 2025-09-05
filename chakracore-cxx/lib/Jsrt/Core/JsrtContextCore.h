@@ -118,13 +118,13 @@ public:
         HeapDelete(this);
     }
 
-    HRESULT GetPreviousHostScriptContext(__deref_out HostScriptContext** previousScriptSite)
+    int32_t GetPreviousHostScriptContext(__deref_out HostScriptContext** previousScriptSite)
     {
         *previousScriptSite = GetScriptContext()->GetThreadContext()->GetPreviousHostScriptContext();
         return NOERROR;
     }
 
-    HRESULT SetCaller(IUnknown *punkNew, IUnknown **ppunkPrev)
+    int32_t SetCaller(IUnknown *punkNew, IUnknown **ppunkPrev)
     {
         return NOERROR;
     }
@@ -134,7 +134,7 @@ public:
         return FALSE;
     }
 
-    HRESULT PushHostScriptContext()
+    int32_t PushHostScriptContext()
     {
         GetScriptContext()->GetThreadContext()->PushHostScriptContext(this);
         return NOERROR;
@@ -145,7 +145,7 @@ public:
         GetScriptContext()->GetThreadContext()->PopHostScriptContext();
     }
 
-    HRESULT GetDispatchExCaller(_Outptr_result_maybenull_ void** dispatchExCaller)
+    int32_t GetDispatchExCaller(_Outptr_result_maybenull_ void** dispatchExCaller)
     {
         *dispatchExCaller = nullptr;
         return NOERROR;
@@ -162,13 +162,13 @@ public:
         return nullptr;
     }
 
-    HRESULT CheckCrossDomainScriptContext(Js::ScriptContext* scriptContext) override
+    int32_t CheckCrossDomainScriptContext(Js::ScriptContext* scriptContext) override
     {
         // no cross domain for jsrt. Return S_OK
         return S_OK;
     }
 
-    HRESULT GetHostContextUrl(DWORD_PTR hostSourceContext, BSTR& pUrl) override
+    int32_t GetHostContextUrl(DWORD_PTR hostSourceContext, BSTR& pUrl) override
     {
         Assert(false);
         return E_NOTIMPL;
@@ -180,7 +180,7 @@ public:
         return;
     }
 
-    HRESULT VerifyDOMSecurity(Js::ScriptContext* targetContext, Js::Var obj) override
+    int32_t VerifyDOMSecurity(Js::ScriptContext* targetContext, Js::Var obj) override
     {
         Assert(false);
         return E_NOTIMPL;
@@ -199,48 +199,48 @@ public:
         return false;
     }
 
-    HRESULT CheckEvalRestriction() override
+    int32_t CheckEvalRestriction() override
     {
         Assert(false);
         return E_NOTIMPL;
     }
 
-    HRESULT HostExceptionFromHRESULT(HRESULT hr, Js::Var* outError) override
+    int32_t HostExceptionFromHRESULT(int32_t hr, Js::Var* outError) override
     {
         Assert(false);
         return E_NOTIMPL;
     }
 
-    HRESULT GetExternalJitData(ExternalJitData id, void *data) override
+    int32_t GetExternalJitData(ExternalJitData id, void *data) override
     {
         Assert(false);
         return E_NOTIMPL;
     }
 
-    HRESULT SetDispatchInvoke(Js::JavascriptMethod dispatchInvoke) override
+    int32_t SetDispatchInvoke(Js::JavascriptMethod dispatchInvoke) override
     {
         AssertMsg(false, "no hostdispatch in jsrt");
         return E_NOTIMPL;
     }
 
-    HRESULT ThrowIfFailed(HRESULT hr) override
+    int32_t ThrowIfFailed(int32_t hr) override
     {
         hr;
         // No support yet
         return S_OK;
     }
 
-    HRESULT EnqueuePromiseTask(Js::Var taskVar) override
+    int32_t EnqueuePromiseTask(Js::Var taskVar) override
     {
         return E_NOTIMPL;
     }
 
-    HRESULT FetchImportedModule(Js::ModuleRecordBase* referencingModule, LPCOLESTR specifier, Js::ModuleRecordBase** dependentModuleRecord) override;
-    HRESULT FetchImportedModuleFromScript(JsSourceContext dwReferencingSourceContext, LPCOLESTR specifier, Js::ModuleRecordBase** dependentModuleRecord) override;
+    int32_t FetchImportedModule(Js::ModuleRecordBase* referencingModule, LPCOLESTR specifier, Js::ModuleRecordBase** dependentModuleRecord) override;
+    int32_t FetchImportedModuleFromScript(JsSourceContext dwReferencingSourceContext, LPCOLESTR specifier, Js::ModuleRecordBase** dependentModuleRecord) override;
 
-    HRESULT NotifyHostAboutModuleReady(Js::ModuleRecordBase* referencingModule, Js::Var exceptionVar) override;
+    int32_t NotifyHostAboutModuleReady(Js::ModuleRecordBase* referencingModule, Js::Var exceptionVar) override;
 
-    HRESULT InitializeImportMeta(Js::ModuleRecordBase* referencingModule, Js::Var importMetaObject) override;
+    int32_t InitializeImportMeta(Js::ModuleRecordBase* referencingModule, Js::Var importMetaObject) override;
     bool ReportModuleCompletion(Js::ModuleRecordBase* module, Js::Var exception) override;
 
     void SetNotifyModuleReadyCallback(NotifyModuleReadyCallback notifyCallback) { this->notifyModuleReadyCallback = notifyCallback; }

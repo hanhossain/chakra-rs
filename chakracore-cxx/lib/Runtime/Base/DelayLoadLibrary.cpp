@@ -6,7 +6,7 @@
 
 namespace Js
 {
-    HRESULT DelayLoadWinRtString::WindowsCreateString(_In_reads_opt_(length) const char16_t * sourceString, uint32_t length, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * string)
+    int32_t DelayLoadWinRtString::WindowsCreateString(_In_reads_opt_(length) const char16_t * sourceString, uint32_t length, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * string)
     {
         if (m_hModule)
         {
@@ -28,7 +28,7 @@ namespace Js
         return E_NOTIMPL;
     }
 
-    HRESULT DelayLoadWinRtString::WindowsCreateStringReference(_In_reads_opt_(length + 1) const char16_t *sourceString, uint32_t length, _Out_ HSTRING_HEADER *hstringHeader, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * string)
+    int32_t DelayLoadWinRtString::WindowsCreateStringReference(_In_reads_opt_(length + 1) const char16_t *sourceString, uint32_t length, _Out_ HSTRING_HEADER *hstringHeader, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * string)
     {
         if (m_hModule)
         {
@@ -50,7 +50,7 @@ namespace Js
         return E_NOTIMPL;
     }
 
-    HRESULT DelayLoadWinRtString::WindowsDeleteString(_In_opt_ HSTRING string)
+    int32_t DelayLoadWinRtString::WindowsDeleteString(_In_opt_ HSTRING string)
     {
         if (m_hModule)
         {
@@ -64,7 +64,7 @@ namespace Js
             }
 
             Assert(m_pfnWindowsDeleteString != nullptr);
-            HRESULT hr = m_pfnWindowsDeleteString(string);
+            int32_t hr = m_pfnWindowsDeleteString(string);
             Assert(SUCCEEDED(hr));
             return hr;
         }
@@ -100,7 +100,7 @@ namespace Js
         return u"\0";
     }
 
-    HRESULT DelayLoadWinRtString::WindowsCompareStringOrdinal(_In_opt_ HSTRING string1, _In_opt_ HSTRING string2, _Out_ int32_t * result)
+    int32_t DelayLoadWinRtString::WindowsCompareStringOrdinal(_In_opt_ HSTRING string1, _In_opt_ HSTRING string2, _Out_ int32_t * result)
     {
         if (m_hModule)
         {
@@ -119,7 +119,7 @@ namespace Js
 
         return E_NOTIMPL;
     }
-    HRESULT DelayLoadWinRtString::WindowsDuplicateString(_In_opt_ HSTRING original, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING *newString)
+    int32_t DelayLoadWinRtString::WindowsDuplicateString(_In_opt_ HSTRING original, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING *newString)
     {
         if(m_hModule)
         {
@@ -140,7 +140,7 @@ namespace Js
         return E_NOTIMPL;
     }
 
-    HRESULT DelayLoadWinRtFoundation::RoGetActivationFactory(
+    int32_t DelayLoadWinRtFoundation::RoGetActivationFactory(
         HSTRING activatableClassId,
         REFIID iid,
         IActivationFactory** factory)

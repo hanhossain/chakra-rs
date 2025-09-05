@@ -916,7 +916,7 @@ CHAKRA_API JsSetContextData(_In_ JsContextRef context, _In_ void *data)
 
 void HandleScriptCompileError(Js::ScriptContext * scriptContext, CompileScriptException * se, const char16_t * sourceUrl)
 {
-    HRESULT hr = se->ei.scode;
+    int32_t hr = se->ei.scode;
     if (hr == E_OUTOFMEMORY || hr == VBSERR_OutOfMemory || hr == ERRnoMemory)
     {
         Js::Throw::OutOfMemory();
@@ -3157,7 +3157,7 @@ CHAKRA_API JsGetAndClearException(_Out_ JsValueRef *exception)
         return JsErrorInDisabledState;
     }
 
-    HRESULT hr = S_OK;
+    int32_t hr = S_OK;
     Js::JavascriptExceptionObject *recordedException = nullptr;
 
     BEGIN_TRANSLATE_OOM_TO_HRESULT
@@ -3851,7 +3851,7 @@ JsErrorCode JsSerializeScriptCore(const byte *script, size_t cb,
         // We cast buffer size to uint32_t* because on Windows, uint32_t = unsigned long = unsigned int
         // On 64-bit clang on linux, this is not true, unsigned long is larger than unsigned int
         // However, the PAL defines uint32_t for us on linux as unsigned int so the cast is safe here.
-        HRESULT hr = Js::ByteCodeSerializer::SerializeToBuffer(scriptContext,
+        int32_t hr = Js::ByteCodeSerializer::SerializeToBuffer(scriptContext,
             tempAllocator, static_cast<uint32_t>(cSourceCodeLength), utf8Code,
             functionBody, functionBody->GetHostSrcInfo(), &buffer,
             (uint32_t*) bufferSize, dwFlags);
@@ -3946,7 +3946,7 @@ JsErrorCode RunSerializedScriptCore(
             Assert(sourceIndex != Js::Constants::InvalidSourceIndex);
         }
 
-        HRESULT hr;
+        int32_t hr;
 
         Field(Js::FunctionBody*) functionBody = nullptr;
 
@@ -5169,7 +5169,7 @@ CHAKRA_API JsSerializeParserStateCore(
         // We cast buffer size to uint32_t* because on Windows, uint32_t = unsigned long = unsigned int
         // On 64-bit clang on linux, this is not true, unsigned long is larger than unsigned int
         // However, the PAL defines uint32_t for us on linux as unsigned int so the cast is safe here.
-        HRESULT hr = scriptContext->SerializeParserState(script, cb, &si, &se, &sourceInfo,
+        int32_t hr = scriptContext->SerializeParserState(script, cb, &si, &se, &sourceInfo,
             Js::Constants::GlobalCode, loadScriptFlag, &buffer, (uint32_t*)bufferSize, tempAllocator, &function, nullptr);
         END_TEMP_ALLOCATOR(tempAllocator, scriptContext);
 
@@ -5410,7 +5410,7 @@ JsExecuteBackgroundParse_Experimental(
     _In_ JsValueRef parserState,
     _Out_ JsValueRef *result)
 {
-    HRESULT hr = BGParseManager::GetBGParseManager()->GetInputFromCookie(dwBgParseCookie, nullptr, nullptr, &url);
+    int32_t hr = BGParseManager::GetBGParseManager()->GetInputFromCookie(dwBgParseCookie, nullptr, nullptr, &url);
     if (hr == S_OK)
     {
         return RunScriptWithParserStateCore(

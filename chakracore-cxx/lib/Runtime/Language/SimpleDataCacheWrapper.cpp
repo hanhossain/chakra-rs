@@ -22,9 +22,9 @@ namespace Js
 #endif
     }
 
-    HRESULT SimpleDataCacheWrapper::Close()
+    int32_t SimpleDataCacheWrapper::Close()
     {
-        HRESULT hr = E_FAIL;
+        int32_t hr = E_FAIL;
 
 #ifdef ENABLE_WININET_PROFILE_DATA_CACHE
         hr = this->SaveWriteStream();
@@ -45,9 +45,9 @@ namespace Js
         return hr;
     }
 
-    HRESULT SimpleDataCacheWrapper::SaveWriteStream()
+    int32_t SimpleDataCacheWrapper::SaveWriteStream()
     {
-        HRESULT hr = E_FAIL;
+        int32_t hr = E_FAIL;
 
 #ifdef ENABLE_WININET_PROFILE_DATA_CACHE
         if (IsWriteStreamOpen())
@@ -82,10 +82,10 @@ namespace Js
         return hr;
     }
 
-    HRESULT SimpleDataCacheWrapper::OpenWriteStream()
+    int32_t SimpleDataCacheWrapper::OpenWriteStream()
     {
 #ifdef ENABLE_WININET_PROFILE_DATA_CACHE
-        HRESULT hr = E_FAIL;
+        int32_t hr = E_FAIL;
         Assert(!IsWriteStreamOpen());
         Assert(this->dataCache != nullptr);
         Assert(this->outStream == nullptr);
@@ -105,11 +105,11 @@ namespace Js
         return WriteHeader();
     }
 
-    HRESULT SimpleDataCacheWrapper::WriteHeader()
+    int32_t SimpleDataCacheWrapper::WriteHeader()
     {
         uint32_t jscriptMajorVersion;
         uint32_t jscriptMinorVersion;
-        HRESULT hr = E_FAIL;
+        int32_t hr = E_FAIL;
 
         IFFAILRET(AutoSystemInfo::GetJscriptFileVersion(&jscriptMajorVersion, &jscriptMinorVersion));
 
@@ -123,11 +123,11 @@ namespace Js
         return hr;
     }
 
-    HRESULT SimpleDataCacheWrapper::ReadHeader()
+    int32_t SimpleDataCacheWrapper::ReadHeader()
     {
         uint32_t jscriptMajorVersion;
         uint32_t jscriptMinorVersion;
-        HRESULT hr = E_FAIL;
+        int32_t hr = E_FAIL;
 
         IFFAILRET(AutoSystemInfo::GetJscriptFileVersion(&jscriptMajorVersion, &jscriptMinorVersion));
 
@@ -148,7 +148,7 @@ namespace Js
         return hr;
     }
 
-    HRESULT SimpleDataCacheWrapper::EnsureWriteStream()
+    int32_t SimpleDataCacheWrapper::EnsureWriteStream()
     {
         if (IsWriteStreamOpen())
         {
@@ -158,7 +158,7 @@ namespace Js
         return OpenWriteStream();
     }
 
-    HRESULT SimpleDataCacheWrapper::EnsureReadStream()
+    int32_t SimpleDataCacheWrapper::EnsureReadStream()
     {
         if (IsReadStreamOpen())
         {
@@ -168,9 +168,9 @@ namespace Js
         return OpenReadStream();
     }
 
-    HRESULT SimpleDataCacheWrapper::StartBlock(_In_ BlockType blockType, _In_ uint32_t byteCount)
+    int32_t SimpleDataCacheWrapper::StartBlock(_In_ BlockType blockType, _In_ uint32_t byteCount)
     {
-        HRESULT hr = E_FAIL;
+        int32_t hr = E_FAIL;
 
         if (this->blocksWritten >= MAX_BLOCKS_ALLOWED)
         {
@@ -186,10 +186,10 @@ namespace Js
         return hr;
     }
 
-    HRESULT SimpleDataCacheWrapper::OpenReadStream()
+    int32_t SimpleDataCacheWrapper::OpenReadStream()
     {
 #ifdef ENABLE_WININET_PROFILE_DATA_CACHE
-        HRESULT hr = E_FAIL;
+        int32_t hr = E_FAIL;
         Assert(this->dataCache != nullptr);
         Assert(this->inStream == nullptr);
         IFFAILRET(this->dataCache->GetReadDataStream(&this->inStream));
@@ -198,9 +198,9 @@ namespace Js
         return ReadHeader();
     }
 
-    HRESULT SimpleDataCacheWrapper::ResetReadStream()
+    int32_t SimpleDataCacheWrapper::ResetReadStream()
     {
-        HRESULT hr = E_FAIL;
+        int32_t hr = E_FAIL;
 
         if (IsReadStreamOpen())
         {
@@ -220,9 +220,9 @@ namespace Js
         return hr;
     }
 
-    HRESULT SimpleDataCacheWrapper::SeekReadStreamToBlockHelper(_In_ BlockType blockType, _Out_opt_ uint32_t* bytesInBlock)
+    int32_t SimpleDataCacheWrapper::SeekReadStreamToBlockHelper(_In_ BlockType blockType, _Out_opt_ uint32_t* bytesInBlock)
     {
-        HRESULT hr;
+        int32_t hr;
         BlockType currentBlockType = BlockType_Invalid;
         uint32_t byteCount = 0;
 
@@ -252,9 +252,9 @@ namespace Js
         return SeekReadStreamToBlockHelper(blockType, bytesInBlock);
     }
 
-    HRESULT SimpleDataCacheWrapper::SeekReadStreamToBlock(_In_ BlockType blockType, _Out_opt_ uint32_t* bytesInBlock)
+    int32_t SimpleDataCacheWrapper::SeekReadStreamToBlock(_In_ BlockType blockType, _Out_opt_ uint32_t* bytesInBlock)
     {
-        HRESULT hr;
+        int32_t hr;
 
         if (bytesInBlock != nullptr)
         {

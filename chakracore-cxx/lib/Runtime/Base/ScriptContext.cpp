@@ -1402,7 +1402,7 @@ namespace Js
 
 #if ENABLE_PROFILE_INFO
 #ifdef DYNAMIC_PROFILE_STORAGE
-                HRESULT hr = S_OK;
+                int32_t hr = S_OK;
                 BEGIN_TRANSLATE_OOM_TO_HRESULT_NESTED
                 {
                     DynamicProfileInfo::Save(this);
@@ -1864,7 +1864,7 @@ namespace Js
 
     void ScriptContext::CheckEvalRestriction()
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         Var domError = nullptr;
         HostScriptContext* hostScriptContext = this->GetHostScriptContext();
 
@@ -2037,7 +2037,7 @@ namespace Js
         //
         // Parse and the JavaScript code
         //
-        HRESULT hr;
+        int32_t hr;
         SourceContextInfo * sourceContextInfo = pSrcInfo->sourceContextInfo;
 
         // Invoke the parser, passing in the global function name, which we will then run to execute
@@ -2078,7 +2078,7 @@ namespace Js
         return parseTree;
     }
 
-    HRESULT ScriptContext::TryDeserializeParserState(
+    int32_t ScriptContext::TryDeserializeParserState(
         _In_ uint32_t grfscr,
         _In_ uint sourceCRC,
         _In_ charcount_t cchLength,
@@ -2092,7 +2092,7 @@ namespace Js
         _Out_ uint32_t* parserStateCacheByteCount,
         _In_ Js::SimpleDataCacheWrapper* pDataCache)
     {
-        HRESULT hr = E_FAIL;
+        int32_t hr = E_FAIL;
 
         Assert(pDataCache != nullptr);
         Assert(func != nullptr);
@@ -2240,7 +2240,7 @@ Error:
         return hr;
     }
 
-    HRESULT ScriptContext::TrySerializeParserState(
+    int32_t ScriptContext::TrySerializeParserState(
         _In_ uint sourceCRC,
         _In_reads_bytes_(cbLength) LPCUTF8 pszSrc,
         _In_ size_t cbLength,
@@ -2250,7 +2250,7 @@ Error:
         _In_ uint32_t parserStateCacheByteCount,
         _In_ Js::SimpleDataCacheWrapper* pDataCache)
     {
-        HRESULT hr = E_FAIL;
+        int32_t hr = E_FAIL;
 
         Assert(func != nullptr);
         Assert(pDataCache != nullptr);
@@ -2356,7 +2356,7 @@ ExitTempAllocator:
         return hr;
     }
 
-    HRESULT ScriptContext::CompileUTF8Core(
+    int32_t ScriptContext::CompileUTF8Core(
         Parser& ps,
         Js::Utf8SourceInfo* utf8SourceInfo,
         SRCINFO *srcInfo,
@@ -2372,7 +2372,7 @@ ExitTempAllocator:
         __in_opt Js::SimpleDataCacheWrapper* pDataCache
     )
     {
-        HRESULT hr = E_FAIL;
+        int32_t hr = E_FAIL;
         (*func) = nullptr;
         srcLength = cchLength;
 
@@ -2453,7 +2453,7 @@ ExitTempAllocator:
         return hr;
     }
 
-    HRESULT ScriptContext::SerializeParserState(const byte* script, size_t cb,
+    int32_t ScriptContext::SerializeParserState(const byte* script, size_t cb,
         SRCINFO const * pSrcInfo, CompileScriptException * pse, Utf8SourceInfo** ppSourceInfo,
         const char16_t *rootDisplayName, LoadScriptFlag loadScriptFlag, byte** buffer,
         uint32_t* bufferSize, ArenaAllocator* alloc, JavascriptFunction** function, Js::Var scriptSource)
@@ -2464,7 +2464,7 @@ ExitTempAllocator:
         Assert(function != nullptr);
 
         *function = nullptr;
-        HRESULT hr = NOERROR;
+        int32_t hr = NOERROR;
 
         try
         {
@@ -2552,7 +2552,7 @@ ExitTempAllocator:
     {
         Assert(!this->threadContext->IsScriptActive());
         Assert(pse != nullptr);
-        HRESULT hr = NOERROR;
+        int32_t hr = NOERROR;
         try
         {
             AUTO_NESTED_HANDLED_EXCEPTION_TYPE((ExceptionType)(ExceptionType_OutOfMemory | ExceptionType_StackOverflow));
@@ -2574,7 +2574,7 @@ ExitTempAllocator:
 
     JavascriptFunction* ScriptContext::GenerateRootFunction(ParseNodeProg * parseTree, uint sourceIndex, Parser* parser, uint32 grfscr, CompileScriptException * pse, const char16_t *rootDisplayName)
     {
-        HRESULT hr;
+        int32_t hr;
 
         // Get the source code to keep it alive during the bytecode generation process
         LPCUTF8 source = this->GetSource(sourceIndex)->GetSource(u"ScriptContext::GenerateRootFunction");
@@ -3262,7 +3262,7 @@ ExitTempAllocator:
         m_fTraceDomCall = (dwEventMask & PROFILER_EVENT_MASK_TRACE_DOM_FUNCTION_CALL);
     }
 
-    HRESULT ScriptContext::RegisterProfileProbe(IActiveScriptProfilerCallback *pProfileCallback, uint32_t dwEventMask, uint32_t dwContext, RegisterExternalLibraryType RegisterExternalLibrary, JavascriptMethod dispatchInvoke)
+    int32_t ScriptContext::RegisterProfileProbe(IActiveScriptProfilerCallback *pProfileCallback, uint32_t dwEventMask, uint32_t dwContext, RegisterExternalLibraryType RegisterExternalLibrary, JavascriptMethod dispatchInvoke)
     {
         if (m_pProfileCallback != NULL)
         {
@@ -3276,7 +3276,7 @@ ExitTempAllocator:
         OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptType :\n");
         OUTPUT_TRACE(Js::ScriptProfilerPhase, u"PROFILER_SCRIPT_TYPE_USER : 0, PROFILER_SCRIPT_TYPE_DYNAMIC : 1, PROFILER_SCRIPT_TYPE_NATIVE : 2, PROFILER_SCRIPT_TYPE_DOM : 3\n");
 
-        HRESULT hr = pProfileCallback->Initialize(dwContext);
+        int32_t hr = pProfileCallback->Initialize(dwContext);
         if (SUCCEEDED(hr))
         {
             m_pProfileCallback = pProfileCallback;
@@ -3297,7 +3297,7 @@ ExitTempAllocator:
                 {
                     pProfilerCallback3->SetWebWorkerId(webWorkerId);
                     pProfilerCallback3->Release();
-                    // Omitting the HRESULT since it is up to the callback to make use of the webWorker information.
+                    // Omitting the int32_t since it is up to the callback to make use of the webWorker information.
                 }
             }
 
@@ -3338,7 +3338,7 @@ ExitTempAllocator:
         return hr;
     }
 
-    HRESULT ScriptContext::SetProfileEventMask(uint32_t dwEventMask)
+    int32_t ScriptContext::SetProfileEventMask(uint32_t dwEventMask)
     {
         if (m_pProfileCallback == NULL)
         {
@@ -3348,7 +3348,7 @@ ExitTempAllocator:
         return ACTIVPROF_E_UNABLE_TO_APPLY_ACTION;
     }
 
-    HRESULT ScriptContext::DeRegisterProfileProbe(HRESULT hrReason, JavascriptMethod dispatchInvoke)
+    int32_t ScriptContext::DeRegisterProfileProbe(int32_t hrReason, JavascriptMethod dispatchInvoke)
     {
         if (m_pProfileCallback == NULL)
         {
@@ -3377,7 +3377,7 @@ ExitTempAllocator:
 #endif
 
         m_inProfileCallback = TRUE;
-        HRESULT hr = m_pProfileCallback->Shutdown(hrReason);
+        int32_t hr = m_pProfileCallback->Shutdown(hrReason);
         m_inProfileCallback = FALSE;
         m_pProfileCallback->Release();
         m_pProfileCallback = NULL;
@@ -3427,7 +3427,7 @@ ExitTempAllocator:
         }
     }
 
-    HRESULT ScriptContext::RegisterScript(Js::FunctionProxy * proxy, BOOL fRegisterScript /*default TRUE*/)
+    int32_t ScriptContext::RegisterScript(Js::FunctionProxy * proxy, BOOL fRegisterScript /*default TRUE*/)
     {
         if (m_pProfileCallback == nullptr)
         {
@@ -3443,7 +3443,7 @@ ExitTempAllocator:
         {
             // Register the script to the callback.
             // REVIEW: do we really need to undefer everything?
-            HRESULT hr = proxy->EnsureDeserialized()->Parse()->ReportScriptCompiled();
+            int32_t hr = proxy->EnsureDeserialized()->Parse()->ReportScriptCompiled();
             if (FAILED(hr))
             {
                 return hr;
@@ -3453,7 +3453,7 @@ ExitTempAllocator:
         return !proxy->IsDeferred() ? proxy->GetFunctionBody()->RegisterFunction(false) : S_OK;
     }
 
-    HRESULT ScriptContext::RegisterAllScripts()
+    int32_t ScriptContext::RegisterAllScripts()
     {
         AssertMsg(m_pProfileCallback != nullptr, "Called register scripts when we don't have profile callback");
 
@@ -3494,11 +3494,11 @@ ExitTempAllocator:
     // items that are pending in the JIT job queue.
     // Alloc first and then free so that the native code generator is at a different address
 #if ENABLE_NATIVE_CODEGEN
-    HRESULT ScriptContext::RecreateNativeCodeGenerator(NativeCodeGenerator ** previousCodeGen)
+    int32_t ScriptContext::RecreateNativeCodeGenerator(NativeCodeGenerator ** previousCodeGen)
     {
         NativeCodeGenerator* oldCodeGen = this->nativeCodeGen;
 
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         BEGIN_TRANSLATE_OOM_TO_HRESULT_NESTED
         this->nativeCodeGen = NewNativeCodeGenerator(this);
         SetProfileModeNativeCodeGen(this->GetNativeCodeGenerator(), this->IsProfiling());
@@ -3546,7 +3546,7 @@ ExitTempAllocator:
         }
     };
 #endif // ENABLE_NATIVE_CODEGEN
-    HRESULT ScriptContext::OnDebuggerAttached()
+    int32_t ScriptContext::OnDebuggerAttached()
     {
         OUTPUT_TRACE(Js::DebuggerPhase, u"ScriptContext::OnDebuggerAttached: start 0x%p\n", this);
 
@@ -3573,9 +3573,9 @@ ExitTempAllocator:
 
 #if ENABLE_NATIVE_CODEGEN
         OldCodeGenAutoDelete autoDelete(this);
-        HRESULT hr = OnDebuggerAttachedDetached(/*attach*/ true, &(autoDelete.oldCodegen));
+        int32_t hr = OnDebuggerAttachedDetached(/*attach*/ true, &(autoDelete.oldCodegen));
 #else // ENABLE_NATIVE_CODEGEN
-        HRESULT hr = OnDebuggerAttachedDetached(/*attach*/ true);
+        int32_t hr = OnDebuggerAttachedDetached(/*attach*/ true);
 #endif
 
         // Debugger attach/detach failure is catastrophic, take down the process
@@ -3594,7 +3594,7 @@ ExitTempAllocator:
         // Debugger attach/detach failure is catastrophic, take down the process
         DEBUGGER_ATTACHDETACH_FATAL_ERROR_IF_FAILED(hr);
 
-        HRESULT hrEntryPointUpdate = S_OK;
+        int32_t hrEntryPointUpdate = S_OK;
         BEGIN_TRANSLATE_OOM_TO_HRESULT_NESTED
 #ifdef ASMJS_PLAT
             TempArenaAllocatorObject* tmpAlloc = GetTemporaryAllocator(u"DebuggerTransition");
@@ -3653,7 +3653,7 @@ ExitTempAllocator:
     }
 
     // Reverts the script context state back to the state before debugging began.
-    HRESULT ScriptContext::OnDebuggerDetached()
+    int32_t ScriptContext::OnDebuggerDetached()
     {
         OUTPUT_TRACE(Js::DebuggerPhase, u"ScriptContext::OnDebuggerDetached: start 0x%p\n", this);
 
@@ -3672,9 +3672,9 @@ ExitTempAllocator:
 
 #if ENABLE_NATIVE_CODEGEN
         OldCodeGenAutoDelete autoDelete(this);
-        HRESULT hr = OnDebuggerAttachedDetached(/*attach*/ false, &(autoDelete.oldCodegen));
+        int32_t hr = OnDebuggerAttachedDetached(/*attach*/ false, &(autoDelete.oldCodegen));
 #else // ENABLE_NATIVE_CODEGEN
-        HRESULT hr = OnDebuggerAttachedDetached(/*attach*/ false);
+        int32_t hr = OnDebuggerAttachedDetached(/*attach*/ false);
 #endif
 
         // Debugger attach/detach failure is catastrophic, take down the process
@@ -3697,7 +3697,7 @@ ExitTempAllocator:
         // Debugger attach/detach failure is catastrophic, take down the process
         DEBUGGER_ATTACHDETACH_FATAL_ERROR_IF_FAILED(hr);
 
-        HRESULT hrEntryPointUpdate = S_OK;
+        int32_t hrEntryPointUpdate = S_OK;
         BEGIN_TRANSLATE_OOM_TO_HRESULT_NESTED
         {
             // Still do the pass on the function's entrypoint to reflect its state with the functionbody's entrypoint.
@@ -3718,9 +3718,9 @@ ExitTempAllocator:
     }
 
 #if ENABLE_NATIVE_CODEGEN
-    HRESULT ScriptContext::OnDebuggerAttachedDetached(bool attach, NativeCodeGenerator ** previousCodeGenHolder)
+    int32_t ScriptContext::OnDebuggerAttachedDetached(bool attach, NativeCodeGenerator ** previousCodeGenHolder)
 #else
-    HRESULT ScriptContext::OnDebuggerAttachedDetached(bool attach)
+    int32_t ScriptContext::OnDebuggerAttachedDetached(bool attach)
 #endif
     {
 
@@ -3755,7 +3755,7 @@ ExitTempAllocator:
             this->GetDebugContext()->GetProbeContainer()->RemoveAllProbes();
         }
 
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
 
         if (!CONFIG_FLAG(ForceDiagnosticsMode))
         {
@@ -3881,13 +3881,13 @@ ExitTempAllocator:
 #endif // defined(ENABLE_SCRIPT_DEBUGGING) || defined(ENABLE_SCRIPT_PROFILING)
 
 #ifdef ENABLE_SCRIPT_PROFILING
-    HRESULT ScriptContext::RegisterBuiltinFunctions(RegisterExternalLibraryType RegisterExternalLibrary)
+    int32_t ScriptContext::RegisterBuiltinFunctions(RegisterExternalLibraryType RegisterExternalLibrary)
     {
         Assert(m_pProfileCallback != NULL);
 
         OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::RegisterBuiltinFunctions\n");
 
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         // Consider creating ProfileArena allocator instead of General allocator
         if (m_pBuiltinFunctionIdMap == NULL)
         {
@@ -4409,7 +4409,7 @@ ExitTempAllocator:
         char16_t *pwszExtractedFunctionName = NULL;
         size_t functionNameLen = 0;
         const char16_t *pwszFunctionName = NULL;
-        HRESULT hrOfEnterEvent = S_OK;
+        int32_t hrOfEnterEvent = S_OK;
 
         PROFILER_TOKEN scriptId = -1;
         PROFILER_TOKEN functionId = -1;
@@ -4647,14 +4647,14 @@ ExitTempAllocator:
 #endif
 
 #ifdef ENABLE_SCRIPT_PROFILING
-    HRESULT ScriptContext::OnScriptCompiled(PROFILER_TOKEN scriptId, PROFILER_SCRIPT_TYPE type, IUnknown *pIDebugDocumentContext)
+    int32_t ScriptContext::OnScriptCompiled(PROFILER_TOKEN scriptId, PROFILER_SCRIPT_TYPE type, IUnknown *pIDebugDocumentContext)
     {
         // TODO : can we do a delay send of these events or can we send an event before doing all this stuff that could calculate overhead?
         Assert(m_pProfileCallback != NULL);
 
         OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::OnScriptCompiled scriptId : %d, ScriptType : %d\n", scriptId, type);
 
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
 
         if ((type == PROFILER_SCRIPT_TYPE_NATIVE && m_fTraceNativeFunctionCall) ||
             (type != PROFILER_SCRIPT_TYPE_NATIVE && m_fTraceFunctionCall))
@@ -4666,7 +4666,7 @@ ExitTempAllocator:
         return hr;
     }
 
-    HRESULT ScriptContext::OnFunctionCompiled(
+    int32_t ScriptContext::OnFunctionCompiled(
         PROFILER_TOKEN functionId,
         PROFILER_TOKEN scriptId,
         const char16_t *pwszFunctionName,
@@ -4682,7 +4682,7 @@ ExitTempAllocator:
         }
 #endif
 
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
 
         if ((scriptId == BuiltInFunctionsScriptId && m_fTraceNativeFunctionCall) ||
             (scriptId != BuiltInFunctionsScriptId && m_fTraceFunctionCall))
@@ -4694,7 +4694,7 @@ ExitTempAllocator:
         return hr;
     }
 
-    HRESULT ScriptContext::OnFunctionEnter(PROFILER_TOKEN scriptId, PROFILER_TOKEN functionId)
+    int32_t ScriptContext::OnFunctionEnter(PROFILER_TOKEN scriptId, PROFILER_TOKEN functionId)
     {
         if (m_pProfileCallback == NULL)
         {
@@ -4703,7 +4703,7 @@ ExitTempAllocator:
 
         OUTPUT_VERBOSE_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::OnFunctionEnter scriptId : %d, functionId : %d\n", scriptId, functionId);
 
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
 
         if ((scriptId == BuiltInFunctionsScriptId && m_fTraceNativeFunctionCall) ||
             (scriptId != BuiltInFunctionsScriptId && m_fTraceFunctionCall))
@@ -4715,7 +4715,7 @@ ExitTempAllocator:
         return hr;
     }
 
-    HRESULT ScriptContext::OnFunctionExit(PROFILER_TOKEN scriptId, PROFILER_TOKEN functionId)
+    int32_t ScriptContext::OnFunctionExit(PROFILER_TOKEN scriptId, PROFILER_TOKEN functionId)
     {
         if (m_pProfileCallback == NULL)
         {
@@ -4724,7 +4724,7 @@ ExitTempAllocator:
 
         OUTPUT_VERBOSE_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::OnFunctionExit scriptId : %d, functionId : %d\n", scriptId, functionId);
 
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
 
         if ((scriptId == BuiltInFunctionsScriptId && m_fTraceNativeFunctionCall) ||
             (scriptId != BuiltInFunctionsScriptId && m_fTraceFunctionCall))
@@ -4736,12 +4736,12 @@ ExitTempAllocator:
         return hr;
     }
 
-    HRESULT ScriptContext::FunctionExitSenderThunk(PROFILER_TOKEN functionId, PROFILER_TOKEN scriptId, ScriptContext *pScriptContext)
+    int32_t ScriptContext::FunctionExitSenderThunk(PROFILER_TOKEN functionId, PROFILER_TOKEN scriptId, ScriptContext *pScriptContext)
     {
         return pScriptContext->OnFunctionExit(scriptId, functionId);
     }
 
-    HRESULT ScriptContext::FunctionExitByNameSenderThunk(const char16_t *pwszFunctionName, ScriptContext *pScriptContext)
+    int32_t ScriptContext::FunctionExitByNameSenderThunk(const char16_t *pwszFunctionName, ScriptContext *pScriptContext)
     {
         return pScriptContext->OnDispatchFunctionExit(pwszFunctionName);
     }
@@ -4753,7 +4753,7 @@ ExitTempAllocator:
     }
 
 #if defined(ENABLE_SCRIPT_PROFILING)
-    HRESULT ScriptContext::RegisterLibraryFunction(const char16_t *pwszObjectName, const char16_t *pwszFunctionName, Js::PropertyId functionPropertyId, JavascriptMethod entryPoint)
+    int32_t ScriptContext::RegisterLibraryFunction(const char16_t *pwszObjectName, const char16_t *pwszFunctionName, Js::PropertyId functionPropertyId, JavascriptMethod entryPoint)
     {
 #if DEBUG
         const char16_t *pwszObjectNameFromProperty = const_cast<char16_t *>(GetPropertyName(functionPropertyId)->GetBuffer());
@@ -5146,14 +5146,14 @@ ScriptContext::GetJitFuncRangeCache()
         return false;
     }
 
-    HRESULT ScriptContext::OnDispatchFunctionEnter(const char16_t *pwszFunctionName)
+    int32_t ScriptContext::OnDispatchFunctionEnter(const char16_t *pwszFunctionName)
     {
         if (m_pProfileCallback2 == NULL)
         {
             return ACTIVPROF_E_PROFILER_ABSENT;
         }
 
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
 
         if (m_fTraceDomCall)
         {
@@ -5164,14 +5164,14 @@ ScriptContext::GetJitFuncRangeCache()
         return hr;
     }
 
-    HRESULT ScriptContext::OnDispatchFunctionExit(const char16_t *pwszFunctionName)
+    int32_t ScriptContext::OnDispatchFunctionExit(const char16_t *pwszFunctionName)
     {
         if (m_pProfileCallback2 == NULL)
         {
             return ACTIVPROF_E_PROFILER_ABSENT;
         }
 
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
 
         if (m_fTraceDomCall)
         {
@@ -5278,7 +5278,7 @@ ScriptContext::GetJitFuncRangeCache()
             return;
         }
 
-        HRESULT hr = JITManager::GetJITManager()->InitializeScriptContext(&contextData, this->GetThreadContext()->GetRemoteThreadContextAddr(), &m_remoteScriptContextAddr);
+        int32_t hr = JITManager::GetJITManager()->InitializeScriptContext(&contextData, this->GetThreadContext()->GetRemoteThreadContextAddr(), &m_remoteScriptContextAddr);
         JITManager::HandleServerCallResult(hr, RemoteCallType::StateUpdate);
 
         if (!m_remoteScriptContextAddr)
@@ -5301,7 +5301,7 @@ ScriptContext::GetJitFuncRangeCache()
                 // only add modules which have initialized localExportSlots
                 if (exportSlotsAddr)
                 {
-                    HRESULT hr = JITManager::GetJITManager()->AddModuleRecordInfo(
+                    int32_t hr = JITManager::GetJITManager()->AddModuleRecordInfo(
                         m_remoteScriptContextAddr,
                         moduleRecord->GetModuleId(),
                         exportSlotsAddr);

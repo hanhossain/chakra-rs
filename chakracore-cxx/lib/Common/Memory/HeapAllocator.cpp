@@ -149,7 +149,7 @@ void HeapAllocator::Free(void * buffer, size_t byteSize)
 #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
     if (DoUseMemProtectHeap())
     {
-        HRESULT hr = MemProtectHeapUnrootAndZero(memProtectHeapHandle, buffer);
+        int32_t hr = MemProtectHeapUnrootAndZero(memProtectHeapHandle, buffer);
         Assert(SUCCEEDED(hr));
         return;
     }

@@ -78,12 +78,12 @@ namespace Js
         }
     }
 
-    HRESULT SourceTextModuleRecord::ParseSource(__in_bcount(sourceLength) byte* sourceText, uint32 sourceLength, SRCINFO * srcInfo, Var* exceptionVar, bool isUtf8)
+    int32_t SourceTextModuleRecord::ParseSource(__in_bcount(sourceLength) byte* sourceText, uint32 sourceLength, SRCINFO * srcInfo, Var* exceptionVar, bool isUtf8)
     {
         Assert(!wasParsed || sourceText == nullptr);
         Assert(parser == nullptr);
         Assert(exceptionVar != nullptr);
-        HRESULT hr = NOERROR;
+        int32_t hr = NOERROR;
 
         // Return if loading failure has been reported
         if (sourceText == nullptr && wasParsed)
@@ -277,9 +277,9 @@ namespace Js
         }
     }
 
-    HRESULT SourceTextModuleRecord::PostParseProcess()
+    int32_t SourceTextModuleRecord::PostParseProcess()
     {
-        HRESULT hr = NOERROR;
+        int32_t hr = NOERROR;
         SetWasParsed();
         ImportModuleListsFromParser();
         hr = ResolveExternalModuleDependencies();
@@ -310,7 +310,7 @@ namespace Js
 
         if (this->ParentsNotified())
         {
-            HRESULT hr = NOERROR;
+            int32_t hr = NOERROR;
             if (!WasDeclarationInitialized())
             {
                 if (ModuleDeclarationInstantiation())
@@ -360,10 +360,10 @@ namespace Js
         return JavascriptPromise::CreatePassThroughPromise(this->promise, scriptContext);
     }
 
-    HRESULT SourceTextModuleRecord::PrepareForModuleDeclarationInitialization()
+    int32_t SourceTextModuleRecord::PrepareForModuleDeclarationInitialization()
     {
         OUTPUT_TRACE_DEBUGONLY(Js::ModulePhase, u"PrepareForModuleDeclarationInitialization(%s)\n", this->GetSpecifierSz());
-        HRESULT hr = NO_ERROR;
+        int32_t hr = NO_ERROR;
 
         if (ConfirmChildrenParsed())
         {
@@ -403,10 +403,10 @@ namespace Js
         return hr;
     }
 
-    HRESULT SourceTextModuleRecord::OnChildModuleReady(SourceTextModuleRecord* childModule, Var childException)
+    int32_t SourceTextModuleRecord::OnChildModuleReady(SourceTextModuleRecord* childModule, Var childException)
     {
         OUTPUT_TRACE_DEBUGONLY(Js::ModulePhase, u"OnChildModuleReady(%s)\n", this->GetSpecifierSz(), childModule->GetSpecifierSz());
-        HRESULT hr = NOERROR;
+        int32_t hr = NOERROR;
         if (childException != nullptr)
         {
             // propagate the error up as needed.
@@ -816,13 +816,13 @@ namespace Js
         }
     }
 
-    HRESULT SourceTextModuleRecord::ResolveExternalModuleDependencies()
+    int32_t SourceTextModuleRecord::ResolveExternalModuleDependencies()
     {
         OUTPUT_TRACE_DEBUGONLY(Js::ModulePhase, u"ResolveExternalModuleDependencies(%s)\n", this->GetSpecifierSz());
 
         ScriptContext* scriptContext = GetScriptContext();
 
-        HRESULT hr = NOERROR;
+        int32_t hr = NOERROR;
         if (requestedModuleList != nullptr)
         {
             EnsureChildModuleSet(scriptContext);
@@ -1291,7 +1291,7 @@ namespace Js
         }
     }
 
-    HRESULT SourceTextModuleRecord::OnHostException(void* errorVar)
+    int32_t SourceTextModuleRecord::OnHostException(void* errorVar)
     {
         if (!VarIs<RecyclableObject>(errorVar))
         {
@@ -1430,7 +1430,7 @@ namespace Js
                 PSCRIPTCONTEXT_HANDLE remoteScriptContext = this->scriptContext->GetRemoteScriptAddr(false);
                 if (remoteScriptContext)
                 {
-                    HRESULT hr = JITManager::GetJITManager()->AddModuleRecordInfo(
+                    int32_t hr = JITManager::GetJITManager()->AddModuleRecordInfo(
                         remoteScriptContext,
                         this->GetModuleId(),
                         (intptr_t)this->GetLocalExportSlots());

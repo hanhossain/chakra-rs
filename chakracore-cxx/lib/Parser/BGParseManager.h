@@ -54,9 +54,9 @@ public:
     static uint32_t IncCompleted();
     static uint32_t IncFailed();
 
-    HRESULT QueueBackgroundParse(LPCUTF8 pszSrc, size_t cbLength, char16_t *fullPath, uint32_t* dwBgParseCookie);
-    HRESULT GetInputFromCookie(uint32_t cookie, LPCUTF8* ppszSrc, size_t* pcbLength, char16_t** sourceUrl);
-    HRESULT GetParseResults(
+    int32_t QueueBackgroundParse(LPCUTF8 pszSrc, size_t cbLength, char16_t *fullPath, uint32_t* dwBgParseCookie);
+    int32_t GetInputFromCookie(uint32_t cookie, LPCUTF8* ppszSrc, size_t* pcbLength, char16_t** sourceUrl);
+    int32_t GetParseResults(
         Js::ScriptContext* scriptContextUI,
         uint32_t cookie,
         LPCUTF8 pszSrc,
@@ -109,7 +109,7 @@ public:
     ~BGParseWorkItem();
 
     void ParseUTF8Core(Js::ScriptContext* scriptContext);
-    HRESULT DeserializeParseResults(
+    int32_t DeserializeParseResults(
         Js::ScriptContext* scriptContextUI,
         LPCUTF8 pszSrc,
         SRCINFO const * pSrcInfo,
@@ -143,7 +143,7 @@ private:
 
     // Parse state
     CompileScriptException cse;
-    HRESULT parseHR;
+    int32_t parseHR;
     size_t parseSourceLength;
     Event* complete;
     

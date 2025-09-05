@@ -100,7 +100,7 @@ namespace Js
 
         // Keep a copy of this
         this->dataCacheWrapper = dataCacheWrapper;
-        HRESULT hr = dataCacheWrapper->SeekReadStreamToBlock(SimpleDataCacheWrapper::BlockType_ProfileData);
+        int32_t hr = dataCacheWrapper->SeekReadStreamToBlock(SimpleDataCacheWrapper::BlockType_ProfileData);
         if(SUCCEEDED(hr))
         {
             uint numberOfFunctions = 0;

@@ -51,9 +51,9 @@ using namespace Js;
         library = localLibrary;
     }
 
-    HRESULT GlobalObject::SetDirectHostObject(RecyclableObject* hostObject, RecyclableObject* secureDirectHostObject)
+    int32_t GlobalObject::SetDirectHostObject(RecyclableObject* hostObject, RecyclableObject* secureDirectHostObject)
     {
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
 
         this->directHostObject = hostObject;
         this->secureDirectHostObject = secureDirectHostObject;
@@ -754,8 +754,8 @@ using namespace Js;
     {
         Assert(sourceLength >= 0);
 
-        HRESULT hr = S_OK;
-        HRESULT hrParser = E_FAIL;
+        int32_t hr = S_OK;
+        int32_t hrParser = E_FAIL;
         CompileScriptException se;
 
         BEGIN_LEAVE_SCRIPT_INTERNAL(scriptContext);
@@ -794,7 +794,7 @@ using namespace Js;
             se.GetError(&hrParser, &ei);
 
             ErrorTypeEnum errorType;
-            switch ((HRESULT)ei.scode)
+            switch ((int32_t)ei.scode)
             {
     #define RT_ERROR_MSG(name, errnum, str1, str2, jst, errorNumSource) \
             case name: \
@@ -826,9 +826,9 @@ using namespace Js;
         void * frameAddr = nullptr;
         GET_CURRENT_FRAME_ID(frameAddr);
 
-        HRESULT hr = S_OK;
-        HRESULT hrParser = S_OK;
-        HRESULT hrCodeGen = S_OK;
+        int32_t hr = S_OK;
+        int32_t hrParser = S_OK;
+        int32_t hrCodeGen = S_OK;
         CompileScriptException se;
         Js::ParseableFunctionInfo * funcBody = NULL;
         uint sourceIndex = Constants::InvalidSourceIndex;
@@ -991,9 +991,9 @@ using namespace Js;
         void * frameAddr = nullptr;
         GET_CURRENT_FRAME_ID(frameAddr);
 
-        HRESULT hr = S_OK;
-        HRESULT hrParser = S_OK;
-        HRESULT hrCodeGen = S_OK;
+        int32_t hr = S_OK;
+        int32_t hrParser = S_OK;
+        int32_t hrCodeGen = S_OK;
         CompileScriptException se;
         Js::ParseableFunctionInfo * funcBody = NULL;
 
@@ -1062,7 +1062,7 @@ using namespace Js;
             se.GetError(&hrParser, &ei);
 
             ErrorTypeEnum errorType;
-            switch ((HRESULT)ei.scode)
+            switch ((int32_t)ei.scode)
             {
     #define RT_ERROR_MSG(name, errnum, str1, str2, jst, errorNumSource) \
             case name: \

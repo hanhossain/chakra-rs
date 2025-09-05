@@ -17,7 +17,7 @@ namespace utf8
     ///     As long as that function exists, it _must_ be updated alongside any updates here
     ///
     template <typename AllocatorFunction>
-    HRESULT WideStringToNarrow(
+    int32_t WideStringToNarrow(
         _In_ AllocatorFunction allocator,
         _In_ LPCWSTR sourceString,
         size_t sourceCount,
@@ -65,7 +65,7 @@ namespace utf8
     /// The caller is responsible for providing the buffer
     /// The returned string is null terminated.
     ///
-    inline HRESULT WideStringToNarrowNoAlloc(
+    inline int32_t WideStringToNarrowNoAlloc(
         _In_ LPCWSTR sourceString,
         size_t sourceCount,
         __out_ecount(destCount) LPSTR destString,
@@ -101,12 +101,12 @@ namespace utf8
     }
 
     template <class Allocator>
-    HRESULT WideStringToNarrow(_In_ LPCWSTR sourceString, size_t sourceCount, _Out_ LPSTR* destStringPtr, _Out_ size_t* destCount, size_t* allocateCount = nullptr)
+    int32_t WideStringToNarrow(_In_ LPCWSTR sourceString, size_t sourceCount, _Out_ LPSTR* destStringPtr, _Out_ size_t* destCount, size_t* allocateCount = nullptr)
     {
         return WideStringToNarrow(Allocator::allocate, sourceString, sourceCount, destStringPtr, destCount, allocateCount);
     }
 
-    inline HRESULT NarrowStringToWideNoAlloc(_In_ LPCSTR sourceString, size_t sourceCount,
+    inline int32_t NarrowStringToWideNoAlloc(_In_ LPCSTR sourceString, size_t sourceCount,
         __out_ecount(destBufferCount) LPWSTR destString, size_t destBufferCount, _Out_ charcount_t* destCount)
     {
         size_t sourceStart = 0;
@@ -179,7 +179,7 @@ namespace utf8
     /// The returned string is null terminated.
     ///
     template <typename AllocatorFunction>
-    HRESULT NarrowStringToWide(_In_ AllocatorFunction allocator,_In_ LPCSTR sourceString,
+    int32_t NarrowStringToWide(_In_ AllocatorFunction allocator,_In_ LPCSTR sourceString,
         size_t sourceCount, _Out_ LPWSTR* destStringPtr, _Out_ charcount_t* destCount, size_t* allocateCount = nullptr)
     {
         size_t cbDestString = (sourceCount + 1) * sizeof(char16_t);
@@ -204,7 +204,7 @@ namespace utf8
     }
 
     template <class Allocator>
-    HRESULT NarrowStringToWide(_In_ LPCSTR sourceString, size_t sourceCount, _Out_ LPWSTR* destStringPtr, _Out_ charcount_t* destCount, size_t* allocateCount = nullptr)
+    int32_t NarrowStringToWide(_In_ LPCSTR sourceString, size_t sourceCount, _Out_ LPWSTR* destStringPtr, _Out_ charcount_t* destCount, size_t* allocateCount = nullptr)
     {
         return NarrowStringToWide(Allocator::allocate, sourceString, sourceCount, destStringPtr, destCount, allocateCount);
     }
@@ -216,21 +216,21 @@ namespace utf8
         static void free(void* ptr, size_t count) { ::free(ptr); }
     };
 
-    inline HRESULT WideStringToNarrowDynamic(_In_ LPCWSTR sourceString, _Out_ LPSTR* destStringPtr)
+    inline int32_t WideStringToNarrowDynamic(_In_ LPCWSTR sourceString, _Out_ LPSTR* destStringPtr)
     {
         size_t unused;
         return WideStringToNarrow<malloc_allocator>(
             sourceString, wcslen(sourceString), destStringPtr, &unused);
     }
 
-    inline HRESULT NarrowStringToWideDynamic(_In_ LPCSTR sourceString, _Out_ LPWSTR* destStringPtr)
+    inline int32_t NarrowStringToWideDynamic(_In_ LPCSTR sourceString, _Out_ LPWSTR* destStringPtr)
     {
         charcount_t unused;
         return NarrowStringToWide<malloc_allocator>(
             sourceString, strlen(sourceString), destStringPtr, &unused);
     }
 
-    inline HRESULT NarrowStringToWideDynamicGetLength(_In_ LPCSTR sourceString, _Out_ LPWSTR* destStringPtr, _Out_ charcount_t* destLength)
+    inline int32_t NarrowStringToWideDynamicGetLength(_In_ LPCSTR sourceString, _Out_ LPWSTR* destStringPtr, _Out_ charcount_t* destLength)
     {
         return NarrowStringToWide<malloc_allocator>(
             sourceString, strlen(sourceString), destStringPtr, destLength);
@@ -241,9 +241,9 @@ namespace utf8
     {
     public:
         static size_t Length(const SrcType& src);
-        static HRESULT Convert(
+        static int32_t Convert(
             SrcType src, size_t srcCount, DstType* dst, CountType* dstCount, size_t* allocateCount = nullptr);
-        static HRESULT ConvertNoAlloc(
+        static int32_t ConvertNoAlloc(
             SrcType src, size_t srcCount, DstType dst, CountType dstCount, CountType* written);
     };
 
@@ -258,7 +258,7 @@ namespace utf8
             return strnlen(src, INT_MAX);
         }
 
-        static HRESULT Convert(
+        static int32_t Convert(
             LPCSTR sourceString, size_t sourceCount,
             LPWSTR* destStringPtr, charcount_t * destCount, size_t* allocateCount = nullptr)
         {
@@ -266,7 +266,7 @@ namespace utf8
                 sourceString, sourceCount, destStringPtr, destCount, allocateCount);
         }
 
-        static HRESULT ConvertNoAlloc(
+        static int32_t ConvertNoAlloc(
             LPCSTR sourceString, size_t sourceCount,
             LPWSTR destStringPtr, charcount_t destCount, charcount_t* written)
         {
@@ -286,7 +286,7 @@ namespace utf8
             return wcslen(src);
         }
 
-        static HRESULT Convert(
+        static int32_t Convert(
             LPCWSTR sourceString, size_t sourceCount,
             LPSTR* destStringPtr, size_t* destCount, size_t* allocateCount = nullptr)
         {
@@ -294,7 +294,7 @@ namespace utf8
                 sourceString, sourceCount, destStringPtr, destCount, allocateCount);
         }
 
-        static HRESULT ConvertNoAlloc(
+        static int32_t ConvertNoAlloc(
             LPCWSTR sourceString, size_t sourceCount,
             LPSTR destStringPtr, size_t destCount, size_t* written)
         {

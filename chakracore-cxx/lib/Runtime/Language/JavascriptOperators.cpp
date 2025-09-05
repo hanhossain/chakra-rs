@@ -10118,7 +10118,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         }
 
         LPCOLESTR moduleName = specifierString->GetSz();
-        HRESULT hr = 0;
+        int32_t hr = 0;
 
         if (parentFuncBody->IsES6ModuleCode())
         {

@@ -440,7 +440,7 @@ bool DynamicProfileStorage::Uninitialize()
 #ifdef DYNAMIC_PROFILE_EXPORT_FILE_CHECK
     if (exportFile)
     {
-        HRESULT hr;
+        int32_t hr;
         BEGIN_TRANSLATE_EXCEPTION_AND_ERROROBJECT_TO_HRESULT
         {
             if (!ImportFile(Js::Configuration::Global.flags.DynamicProfileCache, false))

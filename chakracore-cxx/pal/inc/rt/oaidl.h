@@ -25,7 +25,7 @@ typedef struct tagEXCEPINFO {
     BSTR bstrHelpFile;
     uint32_t dwHelpContext;
     void * pvReserved;
-    HRESULT (*pfnDeferredFillIn)(struct tagEXCEPINFO *);
+    int32_t (*pfnDeferredFillIn)(struct tagEXCEPINFO *);
     SCODE scode;
 } EXCEPINFO, * LPEXCEPINFO;
 
@@ -38,19 +38,19 @@ EXTERN_C const IID IID_IErrorInfo;
     IErrorInfo : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetGUID( 
+        virtual int32_t STDMETHODCALLTYPE GetGUID( 
             /* [out] */ GUID *pGUID) = 0;
         
-        virtual HRESULT STDMETHODCALLTYPE GetSource( 
+        virtual int32_t STDMETHODCALLTYPE GetSource( 
             /* [out] */ BSTR *pBstrSource) = 0;
         
-        virtual HRESULT STDMETHODCALLTYPE GetDescription( 
+        virtual int32_t STDMETHODCALLTYPE GetDescription( 
             /* [out] */ BSTR *pBstrDescription) = 0;
         
-        virtual HRESULT STDMETHODCALLTYPE GetHelpFile( 
+        virtual int32_t STDMETHODCALLTYPE GetHelpFile( 
             /* [out] */ BSTR *pBstrHelpFile) = 0;
         
-        virtual HRESULT STDMETHODCALLTYPE GetHelpContext( 
+        virtual int32_t STDMETHODCALLTYPE GetHelpContext( 
             /* [out] */ uint32_t *pdwHelpContext) = 0;
         
     };
@@ -65,19 +65,19 @@ typedef /* [unique] */ ICreateErrorInfo *LPCREATEERRORINFO;
     ICreateErrorInfo : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE SetGUID( 
+        virtual int32_t STDMETHODCALLTYPE SetGUID( 
             /* [in] */ REFGUID rguid) = 0;
         
-        virtual HRESULT STDMETHODCALLTYPE SetSource( 
+        virtual int32_t STDMETHODCALLTYPE SetSource( 
             /* [in] */ LPOLESTR szSource) = 0;
         
-        virtual HRESULT STDMETHODCALLTYPE SetDescription( 
+        virtual int32_t STDMETHODCALLTYPE SetDescription( 
             /* [in] */ LPOLESTR szDescription) = 0;
         
-        virtual HRESULT STDMETHODCALLTYPE SetHelpFile( 
+        virtual int32_t STDMETHODCALLTYPE SetHelpFile( 
             /* [in] */ LPOLESTR szHelpFile) = 0;
         
-        virtual HRESULT STDMETHODCALLTYPE SetHelpContext( 
+        virtual int32_t STDMETHODCALLTYPE SetHelpContext( 
             /* [in] */ uint32_t dwHelpContext) = 0;
         
     };
@@ -103,7 +103,7 @@ EXTERN_C const IID IID_ISupportErrorInfo;
     ISupportErrorInfo : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo( 
+        virtual int32_t STDMETHODCALLTYPE InterfaceSupportsErrorInfo( 
             /* [in] */ REFIID riid) = 0;
         
     };

@@ -286,7 +286,7 @@ bool Debugger::Initialize()
 
 bool Debugger::InstallDebugCallbacks(JsValueRef hostDebugObject)
 {
-    HRESULT hr = S_OK;
+    int32_t hr = S_OK;
     IfFalseGo(WScriptJsrt::InstallObjectsOnObject(hostDebugObject, "JsDiagGetSource", Debugger::GetSource));
     IfFalseGo(WScriptJsrt::InstallObjectsOnObject(hostDebugObject, "JsDiagSetBreakpoint", Debugger::SetBreakpoint));
     IfFalseGo(WScriptJsrt::InstallObjectsOnObject(hostDebugObject, "JsDiagGetStackTrace", Debugger::GetStackTrace));
@@ -309,7 +309,7 @@ bool Debugger::SetBaseline()
     const char* script = nullptr;
     char* fileName = nullptr;
     JsValueRef scriptRef = JS_INVALID_REFERENCE;
-    HRESULT hr = E_FAIL;
+    int32_t hr = E_FAIL;
     uint32_t lengthBytes = 0;
 
     if (SUCCEEDED(WideStringToNarrowDynamic(HostConfigFlags::flags.dbgbaseline, &fileName)))

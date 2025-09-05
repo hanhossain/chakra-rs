@@ -98,7 +98,7 @@ namespace Js
                     if (jsErrorObject->GetScriptContext() != requestingScriptContext )
                     {
                         Assert(requestingScriptContext->GetHostScriptContext());
-                        HRESULT hr = requestingScriptContext->GetHostScriptContext()->CheckCrossDomainScriptContext(jsErrorObject->GetScriptContext());
+                        int32_t hr = requestingScriptContext->GetHostScriptContext()->CheckCrossDomainScriptContext(jsErrorObject->GetScriptContext());
 
                         if ( S_OK != hr )
                         {
@@ -115,11 +115,11 @@ namespace Js
                         if (CrossSite::NeedMarshalVar(rethrownObject, requestingScriptContext))
                         {
                             Assert(requestingScriptContext->GetHostScriptContext());
-                            HRESULT hrSecurityCheck = requestingScriptContext->GetHostScriptContext()->CheckCrossDomainScriptContext(((RecyclableObject*)rethrownObject)->GetScriptContext());
+                            int32_t hrSecurityCheck = requestingScriptContext->GetHostScriptContext()->CheckCrossDomainScriptContext(((RecyclableObject*)rethrownObject)->GetScriptContext());
 
                             if (hrSecurityCheck != S_OK)
                             {
-                                AssertMsg(hrSecurityCheck != E_ACCESSDENIED, "Invalid cross domain throw. HRESULT must either be S_OK or !E_ACCESSDENIED.");
+                                AssertMsg(hrSecurityCheck != E_ACCESSDENIED, "Invalid cross domain throw. int32_t must either be S_OK or !E_ACCESSDENIED.");
 
                                 // DOM should not throw cross domain object at all. This is defend in depth that we'll return something in requestScriptContext if they do throw
                                 // something bad.
@@ -186,10 +186,10 @@ namespace Js
     }
 
     // Get function name with arguments info. Used by script WER.
-    HRESULT JavascriptExceptionContext::StackFrame::GetFunctionNameWithArguments(_In_ LPCWSTR *outResult) const
+    int32_t JavascriptExceptionContext::StackFrame::GetFunctionNameWithArguments(_In_ LPCWSTR *outResult) const
     {
         PCWSTR name = GetFunctionName();
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         if (IsScriptFunction())
         {
             hr = argumentTypes.ToString(name, functionBody->GetScriptContext(), outResult);
@@ -219,7 +219,7 @@ namespace Js
         if (this->stackBackTrace == NULL && this->scriptContext != NULL)
         {
             Recycler* recycler = scriptContext->GetThreadContext()->GetRecycler();
-            HRESULT hr = NOERROR;
+            int32_t hr = NOERROR;
             BEGIN_TRANSLATE_OOM_TO_HRESULT_NESTED
             {
                 this->stackBackTrace = StackBackTrace::Capture(recycler, JavascriptExceptionObject::StackToSkip, JavascriptExceptionObject::StackTraceDepth);

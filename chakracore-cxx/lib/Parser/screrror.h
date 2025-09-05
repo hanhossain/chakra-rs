@@ -24,7 +24,7 @@ inline void FreeExcepInfo(EXCEPINFO *pei)
 
 void CopyException (EXCEPINFO *pexcepinfoDest, const EXCEPINFO *pexcepinfoSource);
 
-HRESULT MapHr(HRESULT hr, ErrorTypeEnum * errorTypeOut = nullptr);
+int32_t MapHr(int32_t hr, ErrorTypeEnum * errorTypeOut = nullptr);
 
 class SRCINFO;
 class ActiveScriptError;
@@ -44,7 +44,7 @@ public:
 public:
     void CopyInto(ScriptException *pse);
     void Free();
-    void GetError(HRESULT *phr, EXCEPINFO *pei); // Clears error.
+    void GetError(int32_t *phr, EXCEPINFO *pei); // Clears error.
 };
 
 class CompileScriptException : public ScriptException
@@ -64,7 +64,7 @@ public:
 
 public:
     void Free();
-    void GetError(HRESULT *phr, EXCEPINFO *pei)
+    void GetError(int32_t *phr, EXCEPINFO *pei)
     {
         ScriptException::GetError(phr, pei);
         Free();
@@ -72,7 +72,7 @@ public:
 
     void CopyInto(CompileScriptException* cse);
 
-    HRESULT ProcessError(IScanner * pScan, HRESULT hr, ParseNode * pnodeBase, LPCWSTR stringOne = u"", LPCWSTR stringTwo = u"");
+    int32_t ProcessError(IScanner * pScan, int32_t hr, ParseNode * pnodeBase, LPCWSTR stringOne = u"", LPCWSTR stringTwo = u"");
 
     friend class ActiveScriptError;
 };

@@ -297,7 +297,7 @@ namespace Js
         }
 
         void EnsureLineOffsetCache();
-        HRESULT EnsureLineOffsetCacheNoThrow();
+        int32_t EnsureLineOffsetCacheNoThrow();
         void DeleteLineOffsetCache()
         {
             this->m_lineOffsetCache = nullptr;

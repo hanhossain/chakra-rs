@@ -119,7 +119,7 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
 #define IfFailAssertAndThrowHr(op) \
     if (FAILED(hr=(op))) \
     { \
-    AssertMsg(false, "HRESULT was a failure."); \
+    AssertMsg(false, "int32_t was a failure."); \
     JavascriptError::MapAndThrowError(scriptContext, hr); \
     } \
 
@@ -514,7 +514,7 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
             SRCINFO *hsi = scriptContext->AddHostSrcInfo(&si);
             uint32 flags = fscrIsLibraryCode | (CONFIG_FLAG(CreateFunctionProxy) && !scriptContext->IsProfiling() ? fscrAllowFunctionProxy : 0);
 
-            HRESULT hr = Js::ByteCodeSerializer::DeserializeFromBuffer(scriptContext, flags, (LPCUTF8)nullptr, hsi, (byte*)js::Library_Bytecode_Intl, nullptr, &this->intlByteCode);
+            int32_t hr = Js::ByteCodeSerializer::DeserializeFromBuffer(scriptContext, flags, (LPCUTF8)nullptr, hsi, (byte*)js::Library_Bytecode_Intl, nullptr, &this->intlByteCode);
 
             IfFailAssertMsgAndThrowHr(hr, "Failed to deserialize Intl.js bytecode - very probably the bytecode needs to be rebuilt.");
 
@@ -726,7 +726,7 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
         // allocate toLangTagResultLength + 1 to leave room for null terminator
         char16_t *canonicalized16 = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, toLangTagResultLength + 1);
         charcount_t canonicalized16Len = 0;
-        HRESULT hr = utf8::NarrowStringToWideNoAlloc(
+        int32_t hr = utf8::NarrowStringToWideNoAlloc(
             canonicalized,
             toLangTagResultLength,
             canonicalized16,
@@ -745,7 +745,7 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
 
         JavascriptString *argString = VarTo<JavascriptString>(args.Values[1]);
         JavascriptString *retVal;
-        HRESULT hr;
+        int32_t hr;
         AutoHSTRING str;
         hr = GetWindowsGlobalizationAdapter(scriptContext)->NormalizeLanguageTag(scriptContext, argString->GetSz(), &str);
         DelayLoadWindowsGlobalization *wsl = scriptContext->GetThreadContext()->GetWindowsGlobalizationLibrary();
@@ -927,7 +927,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
                 // we only need strlen(unicodeCollation) + 1 char16s because unicodeCollation will always be ASCII (funnily enough)
                 char16_t *unicodeCollation16 = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, unicodeCollationLen + 1);
                 charcount_t unicodeCollation16Len = 0;
-                HRESULT hr = utf8::NarrowStringToWideNoAlloc(
+                int32_t hr = utf8::NarrowStringToWideNoAlloc(
                     unicodeCollation,
                     unicodeCollationLen,
                     unicodeCollation16,
@@ -1018,7 +1018,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
                 // we only need strlen(unicodeCalendar) + 1 char16s because unicodeCalendar will always be ASCII (funnily enough)
                 char16_t *unicodeCalendar16 = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, strlen(unicodeCalendar) + 1);
                 charcount_t unicodeCalendar16Len = 0;
-                HRESULT hr = utf8::NarrowStringToWideNoAlloc(
+                int32_t hr = utf8::NarrowStringToWideNoAlloc(
                     unicodeCalendar,
                     unicodeCalendarLen,
                     unicodeCalendar16,
@@ -1153,7 +1153,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         WindowsGlobalizationAdapter* wga = GetWindowsGlobalizationAdapter(scriptContext);
 
         AutoCOMPtr<DateTimeFormatting::IDateTimeFormatter> formatter;
-        HRESULT hr;
+        int32_t hr;
         if (FAILED(hr = wga->CreateDateTimeFormatter(scriptContext, u"longdate", &passedLocale, 1, nullptr, nullptr, &formatter)))
         {
             HandleOOMSOEHR(hr);
@@ -1301,7 +1301,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
 
         return scriptContext->GetLibrary()->GetUndefined();
 #else
-        HRESULT hr = S_OK;
+        int32_t hr = S_OK;
         JavascriptString *localeJSstr = nullptr;
         DynamicObject *options = VarTo<DynamicObject>(args.Values[1]);
         DelayLoadWindowsGlobalization* wgl = scriptContext->GetThreadContext()->GetWindowsGlobalizationLibrary();
@@ -1714,7 +1714,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         // CompareStringEx on Windows returns 0 for error, 1 if less, 2 if equal, 3 if greater
         // Default to the strings being equal, because sorting with == causes no change in the order but converges, whereas < would cause an infinite loop.
         int compareResult = 2;
-        HRESULT error = S_OK;
+        int32_t error = S_OK;
         uint32_t comparisonFlags = GetCompareStringComparisonFlags(sensitivity, ignorePunctuation, numeric);
         compareResult = CompareStringEx(locale, comparisonFlags, left, leftLen, right, rightLen, NULL, NULL, 0);
         error = HRESULT_FROM_WIN32(GetLastError());
@@ -1750,7 +1750,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         int currencyDigits = unum_getAttribute(fmt, UNUM_FRACTION_DIGITS);
         return JavascriptNumber::ToVar(currencyDigits, scriptContext);
 #else
-        HRESULT hr;
+        int32_t hr;
         AutoCOMPtr<NumberFormatting::ICurrencyFormatter> currencyFormatter(nullptr);
         IfFailThrowHr(GetWindowsGlobalizationAdapter(scriptContext)->CreateCurrencyFormatterCode(scriptContext, currencyCode, &currencyFormatter));
         AutoCOMPtr<NumberFormatting::INumberFormatterOptions> numberFormatterOptions;
@@ -2020,7 +2020,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         numberFormatter = static_cast<NumberFormatting::INumberFormatter *>(((AutoCOMJSObject *)hiddenObject)->GetInstance());
 
         AutoHSTRING result;
-        HRESULT hr;
+        int32_t hr;
         if (TaggedInt::Is(args.Values[1]))
         {
             IfFailThrowHr(numberFormatter->FormatInt(TaggedInt::ToInt32(args.Values[1]), &result));

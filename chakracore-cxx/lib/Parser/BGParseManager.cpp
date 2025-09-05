@@ -174,9 +174,9 @@ BGParseWorkItem* BGParseManager::FindJob(uint32_t dwCookie, bool waitForResults,
 
 // Creates a new job to parse the provided script on a background thread
 // Note: runs on any thread
-HRESULT BGParseManager::QueueBackgroundParse(LPCUTF8 pszSrc, size_t cbLength, char16_t *fullPath, uint32_t* dwBgParseCookie)
+int32_t BGParseManager::QueueBackgroundParse(LPCUTF8 pszSrc, size_t cbLength, char16_t *fullPath, uint32_t* dwBgParseCookie)
 {
-    HRESULT hr = S_OK;
+    int32_t hr = S_OK;
     if (cbLength > 0)
     {
         BGParseWorkItem* workitem;
@@ -215,9 +215,9 @@ HRESULT BGParseManager::QueueBackgroundParse(LPCUTF8 pszSrc, size_t cbLength, ch
 
 // Returns the data provided when the parse was queued
 // Note: runs on any thread, but the buffer lifetimes are not guaranteed after parse results are returned
-HRESULT BGParseManager::GetInputFromCookie(uint32_t cookie, LPCUTF8* ppszSrc, size_t* pcbLength, char16_t** sourceUrl)
+int32_t BGParseManager::GetInputFromCookie(uint32_t cookie, LPCUTF8* ppszSrc, size_t* pcbLength, char16_t** sourceUrl)
 {
-    HRESULT hr = E_FAIL;
+    int32_t hr = E_FAIL;
 
     // Find the job associated with this cookie
     BGParseWorkItem* workitem = FindJob(cookie, false /*waitForResults*/, false /*removeJob*/);
@@ -244,7 +244,7 @@ HRESULT BGParseManager::GetInputFromCookie(uint32_t cookie, LPCUTF8* ppszSrc, si
 
 // Deserializes the background parse results into this thread
 // Note: *must* run on a UI/Execution thread with an available ScriptContext
-HRESULT BGParseManager::GetParseResults(
+int32_t BGParseManager::GetParseResults(
     Js::ScriptContext* scriptContextUI,
     uint32_t cookie,
     LPCUTF8 pszSrc,
@@ -260,7 +260,7 @@ HRESULT BGParseManager::GetParseResults(
     // to assert/compare the flags used during background parse with the flags expected
     // from the UI thread?
 
-    HRESULT hr = E_FAIL;
+    int32_t hr = E_FAIL;
 
     // Find the job associated with this cookie
     BGParseWorkItem* workitem = FindJob(cookie, true /*waitForResults*/, false /*removeJob*/);
@@ -574,7 +574,7 @@ void BGParseWorkItem::ParseUTF8Core(Js::ScriptContext* scriptContext)
 
 // Deserializes the background parse results into this thread
 // Note: *must* run on a UI/Execution thread with an available ScriptContext
-HRESULT BGParseWorkItem::DeserializeParseResults(
+int32_t BGParseWorkItem::DeserializeParseResults(
     Js::ScriptContext* scriptContextUI,
     LPCUTF8 pszSrc,
     SRCINFO const * pSrcInfo,
@@ -584,7 +584,7 @@ HRESULT BGParseWorkItem::DeserializeParseResults(
     uint& sourceIndex
 )
 {
-    HRESULT hr = this->parseHR;
+    int32_t hr = this->parseHR;
     if (hr == S_OK)
     {
         if (utf8SourceInfo == nullptr)

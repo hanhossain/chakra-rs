@@ -511,7 +511,7 @@ namespace JsUtil
         }
 
         template<class DebugSite, class TMapFunction>
-        HRESULT Map(DebugSite site, TMapFunction map) const // external debugging version
+        int32_t Map(DebugSite site, TMapFunction map) const // external debugging version
         {
             return Js::Map(site, PointerValue(this->buffer), this->count, map);
         }
@@ -702,7 +702,7 @@ namespace Js
         }
 
         template<class DebugSite, class TMapFunction>
-        HRESULT Map(DebugSite site, TMapFunction map) const // external debugging version
+        int32_t Map(DebugSite site, TMapFunction map) const // external debugging version
         {
             // No lock needed. Threads are suspended during external debugging.
             return __super::Map(site, map);

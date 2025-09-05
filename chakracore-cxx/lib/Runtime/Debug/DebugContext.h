@@ -10,8 +10,8 @@ public:
     HostDebugContext(Js::ScriptContext* inScriptContext) { this->scriptContext = inScriptContext; }
     virtual void Delete() = 0;
     virtual DWORD_PTR GetHostSourceContext(Js::Utf8SourceInfo * sourceInfo) = 0;
-    virtual HRESULT SetThreadDescription(LPCWSTR url) = 0;
-    virtual HRESULT DbgRegisterFunction(Js::ScriptContext * scriptContext, Js::FunctionBody * functionBody, DWORD_PTR dwDebugSourceContext, LPCWSTR title) = 0;
+    virtual int32_t SetThreadDescription(LPCWSTR url) = 0;
+    virtual int32_t DbgRegisterFunction(Js::ScriptContext * scriptContext, Js::FunctionBody * functionBody, DWORD_PTR dwDebugSourceContext, LPCWSTR title) = 0;
     virtual void ReParentToCaller(Js::Utf8SourceInfo* sourceInfo) = 0;
     virtual void SortMembersList(JsUtil::List<Js::DebuggerPropertyDisplayInfo *, ArenaAllocator> * pMembersList, Js::ScriptContext* scriptContext) {/*Do nothing*/}
 
@@ -45,7 +45,7 @@ namespace Js
         DebugContext(Js::ScriptContext * scriptContext);
         ~DebugContext();
         void Initialize();
-        HRESULT RundownSourcesAndReparse(bool shouldPerformSourceRundown, bool shouldReparseFunctions);
+        int32_t RundownSourcesAndReparse(bool shouldPerformSourceRundown, bool shouldReparseFunctions);
         void RegisterFunction(Js::ParseableFunctionInfo * func, LPCWSTR title);
         bool IsClosed() const { return this->isClosed; };
         bool IsSelfOrScriptContextClosed() const;

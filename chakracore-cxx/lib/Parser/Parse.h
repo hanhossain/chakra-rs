@@ -251,7 +251,7 @@ public:
 
     void RestorePidRefForSym(Symbol *sym);
 
-    HRESULT ValidateSyntax(LPCUTF8 pszSrc, size_t encodedCharCount, bool isGenerator, bool isAsync, CompileScriptException *pse, void (Parser::*validateFunction)());
+    int32_t ValidateSyntax(LPCUTF8 pszSrc, size_t encodedCharCount, bool isGenerator, bool isAsync, CompileScriptException *pse, void (Parser::*validateFunction)());
 
     // Should be called when the UTF-8 source was produced from UTF-16. This is really CESU-8 source in that it encodes surrogate pairs
     // as 2 three byte sequences instead of 4 bytes as required by UTF-8. It also is a lossless conversion of invalid UTF-16 sequences.
@@ -259,17 +259,17 @@ public:
     // the UTF-16 characters pre-canonicalization. Converting this UTF-16 with invalid sequences to valid UTF-8 and back would cause
     // all invalid UTF-16 sequences to be replaced by one or more Unicode replacement characters (0xFFFD), losing the original
     // invalid sequences.
-    HRESULT ParseCesu8Source(ParseNodeProg ** parseTree, LPCUTF8 pSrc, size_t length, uint32_t grfsrc, CompileScriptException *pse,
+    int32_t ParseCesu8Source(ParseNodeProg ** parseTree, LPCUTF8 pSrc, size_t length, uint32_t grfsrc, CompileScriptException *pse,
         Js::LocalFunctionId * nextFunctionId, SourceContextInfo * sourceContextInfo);
 
     // Should be called when the source is UTF-8 and invalid UTF-8 sequences should be replaced with the unicode replacement character
     // (0xFFFD). Security concerns require externally produced UTF-8 only allow valid UTF-8 otherwise an attacker could use invalid
     // UTF-8 sequences to fool a filter and cause Javascript to be executed that might otherwise have been rejected.
-    HRESULT ParseUtf8Source(ParseNodeProg ** parseTree, LPCUTF8 pSrc, size_t length, uint32_t grfsrc, CompileScriptException *pse,
+    int32_t ParseUtf8Source(ParseNodeProg ** parseTree, LPCUTF8 pSrc, size_t length, uint32_t grfsrc, CompileScriptException *pse,
         Js::LocalFunctionId * nextFunctionId, SourceContextInfo * sourceContextInfo);
 
     // Used by deferred parsing to parse a deferred function.
-    HRESULT ParseSourceWithOffset(ParseNodeProg ** parseTree, LPCUTF8 pSrc, size_t offset, size_t cbLength, charcount_t cchOffset,
+    int32_t ParseSourceWithOffset(ParseNodeProg ** parseTree, LPCUTF8 pSrc, size_t offset, size_t cbLength, charcount_t cchOffset,
         bool isCesu8, uint32_t grfscr, CompileScriptException *pse, Js::LocalFunctionId * nextFunctionId, uint32_t lineNumber,
         SourceContextInfo * sourceContextInfo, Js::ParseableFunctionInfo* functionInfo);
 
@@ -277,7 +277,7 @@ protected:
     static uint BuildDeferredStubTreeHelper(ParseNodeBlock* pnodeBlock, DeferredFunctionStub* deferredStubs, uint currentStubIndex, uint deferredStubCount, Recycler *recycler);
     void ShiftCurrDeferredStubToChildFunction(ParseNodeFnc* pnodeFnc, ParseNodeFnc* pnodeFncParent);
 
-    HRESULT ParseSourceInternal(
+    int32_t ParseSourceInternal(
         ParseNodeProg ** parseTree, LPCUTF8 pszSrc, size_t offsetInBytes,
         size_t lengthInCodePoints, charcount_t offsetInChars, bool isUtf8,
         uint32_t grfscr, CompileScriptException *pse, Js::LocalFunctionId * nextFunctionId, uint32_t lineNumber, SourceContextInfo * sourceContextInfo);
@@ -316,10 +316,10 @@ protected:
     HashTbl * GetHashTbl() { return this->GetScanner()->GetHashTbl(); }
 
     LPCWSTR GetTokenString(tokens token);
-    __declspec(noreturn) void Error(HRESULT hr, LPCWSTR stringOne = u"", LPCWSTR stringTwo = u"");
+    __declspec(noreturn) void Error(int32_t hr, LPCWSTR stringOne = u"", LPCWSTR stringTwo = u"");
 private:
-    __declspec(noreturn) void Error(HRESULT hr, ParseNodePtr pnode);
-    __declspec(noreturn) void Error(HRESULT hr, charcount_t ichMin, charcount_t ichLim, LPCWSTR stringOne = u"", LPCWSTR stringTwo = u"");
+    __declspec(noreturn) void Error(int32_t hr, ParseNodePtr pnode);
+    __declspec(noreturn) void Error(int32_t hr, charcount_t ichMin, charcount_t ichLim, LPCWSTR stringOne = u"", LPCWSTR stringTwo = u"");
     __declspec(noreturn) static void OutOfMemory();
 
     void EnsureStackAvailable();
@@ -420,7 +420,7 @@ public:
     void FinishBackgroundRegExpNodes();
     void FinishBackgroundPidRefs(BackgroundParseItem *const item, bool isOtherParser);
     void WaitForBackgroundJobs(BackgroundParser *bgp, CompileScriptException *pse);
-    HRESULT ParseFunctionInBackground(ParseNodeFnc * pnodeFnc, ParseContext *parseContext, bool topLevelDeferred, CompileScriptException *pse);
+    int32_t ParseFunctionInBackground(ParseNodeFnc * pnodeFnc, ParseContext *parseContext, bool topLevelDeferred, CompileScriptException *pse);
 #endif
 
     void CheckPidIsValid(IdentPtr pid, bool autoArgumentsObject = false);

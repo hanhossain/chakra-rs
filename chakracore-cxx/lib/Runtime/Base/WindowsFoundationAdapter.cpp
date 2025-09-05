@@ -27,7 +27,7 @@ namespace Js
     {
         if (! asyncCausalityTracerActivationFactory)
         {
-            HRESULT hr;
+            int32_t hr;
             HSTRING hString;
             HSTRING_HEADER hStringHdr;
             LPCWSTR factoryName = u"Windows.Foundation.Diagnostics.AsyncCausalityTracer";
@@ -53,7 +53,7 @@ namespace Js
                 return NULL;
             }
 
-            HRESULT hr;
+            int32_t hr;
             IfFailReturnNULL(factory->QueryInterface(__uuidof(IAsyncCausalityTracerStatics), reinterpret_cast<void**>(&asyncCausalityTracerStatics)));
 
             Assert(asyncCausalityTracerStatics != NULL);
@@ -62,7 +62,7 @@ namespace Js
         return asyncCausalityTracerStatics;
     }
 
-    HRESULT WindowsFoundationAdapter::TraceOperationCreation(
+    int32_t WindowsFoundationAdapter::TraceOperationCreation(
         _In_ ScriptContext* scriptContext,
         _In_ int32_t traceLevel,
         _In_ int32_t source,
@@ -71,7 +71,7 @@ namespace Js
         _In_z_ PCWSTR operationName,
         _In_ UINT64 relatedContext)
     {
-        HRESULT hr;
+        int32_t hr;
         HSTRING hString;
         HSTRING_HEADER hStringHdr;
 
@@ -95,7 +95,7 @@ namespace Js
         return tracerStatics->TraceOperationCreation((CausalityTraceLevel)traceLevel, (CausalitySource)source, platformId, operationId, hString, relatedContext);
     }
 
-    HRESULT WindowsFoundationAdapter::TraceOperationCompletion(
+    int32_t WindowsFoundationAdapter::TraceOperationCompletion(
         _In_ ScriptContext* scriptContext,
         _In_ int32_t traceLevel,
         _In_ int32_t source,
@@ -117,7 +117,7 @@ namespace Js
         return tracerStatics->TraceOperationCompletion((CausalityTraceLevel)traceLevel, (CausalitySource)source, platformId, operationId, (AsyncStatus)status);
     }
 
-    HRESULT WindowsFoundationAdapter::TraceOperationRelation(
+    int32_t WindowsFoundationAdapter::TraceOperationRelation(
         _In_ ScriptContext* scriptContext,
         _In_ int32_t traceLevel,
         _In_ int32_t source,
@@ -139,7 +139,7 @@ namespace Js
         return tracerStatics->TraceOperationRelation((CausalityTraceLevel)traceLevel, (CausalitySource)source, platformId, operationId, (CausalityRelation)relation);
     }
 
-    HRESULT WindowsFoundationAdapter::TraceSynchronousWorkStart(
+    int32_t WindowsFoundationAdapter::TraceSynchronousWorkStart(
         _In_ ScriptContext* scriptContext,
         _In_ int32_t traceLevel,
         _In_ int32_t source,
@@ -161,7 +161,7 @@ namespace Js
         return tracerStatics->TraceSynchronousWorkStart((CausalityTraceLevel)traceLevel, (CausalitySource)source, platformId, operationId, (CausalitySynchronousWork)work);
     }
 
-    HRESULT WindowsFoundationAdapter::TraceSynchronousWorkCompletion(
+    int32_t WindowsFoundationAdapter::TraceSynchronousWorkCompletion(
         _In_ ScriptContext* scriptContext,
         _In_ int32_t traceLevel,
         _In_ int32_t source,

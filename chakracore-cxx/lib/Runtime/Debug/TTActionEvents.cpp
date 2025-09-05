@@ -392,7 +392,7 @@ namespace TTD
         {
             TTD_REPLAY_ACTIVE_CONTEXT(executeContext);
 
-            HRESULT hr = S_OK;
+            int32_t hr = S_OK;
             Js::JavascriptExceptionObject *recordedException = nullptr;
 
             BEGIN_TRANSLATE_OOM_TO_HRESULT
@@ -438,7 +438,7 @@ namespace TTD
         {
             TTD_REPLAY_ACTIVE_CONTEXT(executeContext);
 
-            HRESULT hr = S_OK;
+            int32_t hr = S_OK;
             Js::JavascriptExceptionObject *recordedException = nullptr;
 
             BEGIN_TRANSLATE_OOM_TO_HRESULT

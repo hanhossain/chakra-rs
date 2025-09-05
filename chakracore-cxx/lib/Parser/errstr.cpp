@@ -13,7 +13,7 @@ const char16_t g_wszPrefix[] = u"js";
 
 static BOOL FGetStringFromLibrary(HMODULE hlib, int istring, __out_ecount(cchMax) char16_t * psz, int cchMax)
 {
-    // NOTE - istring is expected to be HRESULT
+    // NOTE - istring is expected to be int32_t
 
     Assert(0 < cchMax);
     Assert(psz);
@@ -118,7 +118,7 @@ BOOL FGetResourceString(int32 isz, __out_ecount(cchMax) OLECHAR *psz, int cchMax
 // Don't inline. This function needs 2KB stack.
 BSTR BstrGetResourceString(int32 isz)
 {
-    // NOTE - isz is expected to be HRESULT
+    // NOTE - isz is expected to be int32_t
 
     const char16_t* LoadResourceStr(uint32_t id);
 

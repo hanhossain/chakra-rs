@@ -9,7 +9,7 @@
 #define UpdateMinimum(dst, src) if (dst > src) { dst = src; }
 
 #if ENABLE_OOP_NATIVE_CODEGEN
-thread_local HRESULT MemoryOperationLastError::MemOpLastError = 0;
+thread_local int32_t MemoryOperationLastError::MemOpLastError = 0;
 #endif
 
 //=============================================================================================================

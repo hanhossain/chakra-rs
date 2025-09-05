@@ -121,7 +121,7 @@ namespace Js
                     this->ThrowSCADataCorrupt();
                 }
 
-                HRESULT hr = m_propbag->InternalAddNoCopy(name, len, value);
+                int32_t hr = m_propbag->InternalAddNoCopy(name, len, value);
                 m_propbag->ThrowIfFailed(hr);
             }
         }

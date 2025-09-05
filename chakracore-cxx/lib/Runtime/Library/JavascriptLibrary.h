@@ -1104,7 +1104,7 @@ namespace Js
 
         void SetProfileMode(bool fSet);
         void SetDispatchProfile(bool fSet, JavascriptMethod dispatchInvoke);
-        HRESULT ProfilerRegisterBuiltIns();
+        int32_t ProfilerRegisterBuiltIns();
 
 #if ENABLE_COPYONACCESS_ARRAY
         static bool IsCopyOnAccessArrayCallSite(JavascriptLibrary *lib, ArrayCallSiteInfo *arrayInfo, uint32 length);
@@ -1338,36 +1338,36 @@ namespace Js
             return this->referencedPropertyRecords;
         }
 
-        HRESULT ProfilerRegisterObject();
-        HRESULT ProfilerRegisterArray();
-        HRESULT ProfilerRegisterBoolean();
-        HRESULT ProfilerRegisterDate();
-        HRESULT ProfilerRegisterFunction();
-        HRESULT ProfilerRegisterMath();
-        HRESULT ProfilerRegisterNumber();
-        HRESULT ProfilerRegisterBigInt();
-        HRESULT ProfilerRegisterString();
-        HRESULT ProfilerRegisterRegExp();
-        HRESULT ProfilerRegisterJSON();
-        HRESULT ProfilerRegisterMap();
-        HRESULT ProfilerRegisterSet();
-        HRESULT ProfilerRegisterWeakMap();
-        HRESULT ProfilerRegisterWeakSet();
-        HRESULT ProfilerRegisterSymbol();
-        HRESULT ProfilerRegisterIterator();
-        HRESULT ProfilerRegisterArrayIterator();
-        HRESULT ProfilerRegisterMapIterator();
-        HRESULT ProfilerRegisterSetIterator();
-        HRESULT ProfilerRegisterStringIterator();
-        HRESULT ProfilerRegisterTypedArray();
-        HRESULT ProfilerRegisterPromise();
-        HRESULT ProfilerRegisterProxy();
-        HRESULT ProfilerRegisterReflect();
-        HRESULT ProfilerRegisterGenerator();
-        HRESULT ProfilerRegisterAtomics();
+        int32_t ProfilerRegisterObject();
+        int32_t ProfilerRegisterArray();
+        int32_t ProfilerRegisterBoolean();
+        int32_t ProfilerRegisterDate();
+        int32_t ProfilerRegisterFunction();
+        int32_t ProfilerRegisterMath();
+        int32_t ProfilerRegisterNumber();
+        int32_t ProfilerRegisterBigInt();
+        int32_t ProfilerRegisterString();
+        int32_t ProfilerRegisterRegExp();
+        int32_t ProfilerRegisterJSON();
+        int32_t ProfilerRegisterMap();
+        int32_t ProfilerRegisterSet();
+        int32_t ProfilerRegisterWeakMap();
+        int32_t ProfilerRegisterWeakSet();
+        int32_t ProfilerRegisterSymbol();
+        int32_t ProfilerRegisterIterator();
+        int32_t ProfilerRegisterArrayIterator();
+        int32_t ProfilerRegisterMapIterator();
+        int32_t ProfilerRegisterSetIterator();
+        int32_t ProfilerRegisterStringIterator();
+        int32_t ProfilerRegisterTypedArray();
+        int32_t ProfilerRegisterPromise();
+        int32_t ProfilerRegisterProxy();
+        int32_t ProfilerRegisterReflect();
+        int32_t ProfilerRegisterGenerator();
+        int32_t ProfilerRegisterAtomics();
 
 #ifdef IR_VIEWER
-        HRESULT ProfilerRegisterIRViewer();
+        int32_t ProfilerRegisterIRViewer();
 #endif /* IR_VIEWER */
     };
 }

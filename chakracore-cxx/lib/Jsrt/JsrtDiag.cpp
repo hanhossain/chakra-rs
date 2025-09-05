@@ -92,7 +92,7 @@ CHAKRA_API JsDiagStartDebugging(
                 debugContext->SetHostDebugContext(jsrtDebugManager);
             }
 
-            HRESULT hr;
+            int32_t hr;
             if (FAILED(hr = scriptContext->OnDebuggerAttached()))
             {
                 Debugger_AttachDetach_unrecoverable_error(hr); // Inconsistent state, we can't continue from here
@@ -144,7 +144,7 @@ CHAKRA_API JsDiagStopDebugging(
         {
             Assert(scriptContext->IsScriptContextInDebugMode());
 
-            HRESULT hr;
+            int32_t hr;
             if (FAILED(hr = scriptContext->OnDebuggerDetached()))
             {
                 Debugger_AttachDetach_unrecoverable_error(hr); // Inconsistent state, we can't continue from here

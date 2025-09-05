@@ -27,7 +27,7 @@ DEFINE_GUID(IID_IUnknown, 0x00000000, 0x0000, 0x0000, 0xC0, 0x00, 0x00, 0x00, 0x
 MIDL_INTERFACE("00000000-0000-0000-C000-000000000046")
 IUnknown
 {
-    virtual HRESULT STDMETHODCALLTYPE QueryInterface( 
+    virtual int32_t STDMETHODCALLTYPE QueryInterface( 
         REFIID riid,
         void **ppvObject) = 0;
         
@@ -36,7 +36,7 @@ IUnknown
     virtual uint32_t STDMETHODCALLTYPE Release( void) = 0;
 
     template<class Q>
-    HRESULT
+    int32_t
     STDMETHODCALLTYPE
     QueryInterface(Q** pp)
     {
@@ -55,12 +55,12 @@ EXTERN_C const IID IID_IClassFactory;
 MIDL_INTERFACE("00000001-0000-0000-C000-000000000046")
 IClassFactory : public IUnknown
 {
-    virtual HRESULT STDMETHODCALLTYPE CreateInstance( 
+    virtual int32_t STDMETHODCALLTYPE CreateInstance( 
         IUnknown *pUnkOuter,
         REFIID riid,
         void **ppvObject) = 0;
     
-    virtual HRESULT STDMETHODCALLTYPE LockServer( 
+    virtual int32_t STDMETHODCALLTYPE LockServer( 
         BOOL fLock) = 0;
 };
 

@@ -151,7 +151,7 @@ void JsrtContextCore::OnScriptLoad(Js::JavascriptFunction * scriptFunction, Js::
 #endif
 }
 
-HRESULT ChakraCoreHostScriptContext::FetchImportedModule(Js::ModuleRecordBase* referencingModule, LPCOLESTR specifier, Js::ModuleRecordBase** dependentModuleRecord)
+int32_t ChakraCoreHostScriptContext::FetchImportedModule(Js::ModuleRecordBase* referencingModule, LPCOLESTR specifier, Js::ModuleRecordBase** dependentModuleRecord)
 {
     if (fetchImportedModuleCallback == nullptr)
     {
@@ -171,7 +171,7 @@ HRESULT ChakraCoreHostScriptContext::FetchImportedModule(Js::ModuleRecordBase* r
     return E_INVALIDARG;
 }
 
-HRESULT ChakraCoreHostScriptContext::FetchImportedModuleFromScript(JsSourceContext dwReferencingSourceContext, LPCOLESTR specifier, Js::ModuleRecordBase** dependentModuleRecord)
+int32_t ChakraCoreHostScriptContext::FetchImportedModuleFromScript(JsSourceContext dwReferencingSourceContext, LPCOLESTR specifier, Js::ModuleRecordBase** dependentModuleRecord)
 {
     if (fetchImportedModuleFromScriptCallback == nullptr)
     {
@@ -191,7 +191,7 @@ HRESULT ChakraCoreHostScriptContext::FetchImportedModuleFromScript(JsSourceConte
     return E_INVALIDARG;
 }
 
-HRESULT ChakraCoreHostScriptContext::NotifyHostAboutModuleReady(Js::ModuleRecordBase* referencingModule, Js::Var exceptionVar)
+int32_t ChakraCoreHostScriptContext::NotifyHostAboutModuleReady(Js::ModuleRecordBase* referencingModule, Js::Var exceptionVar)
 {
     if (notifyModuleReadyCallback == nullptr)
     {
@@ -208,7 +208,7 @@ HRESULT ChakraCoreHostScriptContext::NotifyHostAboutModuleReady(Js::ModuleRecord
     return E_INVALIDARG;
 }
 
-HRESULT ChakraCoreHostScriptContext::InitializeImportMeta(Js::ModuleRecordBase* referencingModule, Js::Var importMetaObject)
+int32_t ChakraCoreHostScriptContext::InitializeImportMeta(Js::ModuleRecordBase* referencingModule, Js::Var importMetaObject)
 {
     if (initializeImportMetaCallback == nullptr)
     {
@@ -301,7 +301,7 @@ bool ChakraCoreStreamWriter::DetachArrayBuffer()
 JsErrorCode ChakraCoreStreamWriter::SetTransferableVars(JsValueRef *transferableVars, size_t transferableVarsCount)
 {
     Assert(m_serializerCore);
-    HRESULT hr = m_serializerCore->SetTransferableVars((Js::Var *)transferableVars, transferableVarsCount);
+    int32_t hr = m_serializerCore->SetTransferableVars((Js::Var *)transferableVars, transferableVarsCount);
     if (hr == S_OK)
     {
         return JsNoError;
@@ -353,7 +353,7 @@ JsValueRef ChakraHostDeserializerHandle::ReadValue()
 JsErrorCode ChakraHostDeserializerHandle::SetTransferableVars(JsValueRef *transferableVars, size_t transferableVarsCount)
 {
     Assert(m_deserializer);
-    HRESULT hr = m_deserializer->SetTransferableVars((Js::Var *)transferableVars, transferableVarsCount);
+    int32_t hr = m_deserializer->SetTransferableVars((Js::Var *)transferableVars, transferableVarsCount);
     if (hr == S_OK)
     {
         return JsNoError;

@@ -71,7 +71,7 @@ namespace Js
     bool JavascriptExternalFunction::DeferredConstructorInitializer(DynamicObject* instance, DeferredTypeHandlerBase* typeHandler, DeferredInitializeMode mode)
     {
         JavascriptExternalFunction* object = static_cast<JavascriptExternalFunction*>(instance);
-        HRESULT hr = E_FAIL;
+        int32_t hr = E_FAIL;
 
         ScriptContext* scriptContext = object->GetScriptContext();
         AnalysisAssert(scriptContext);

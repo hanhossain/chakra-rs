@@ -5367,7 +5367,7 @@ ReportEventW (
 #define ReportEvent  ReportEventA
 #endif // !UNICODE
 
-HRESULT
+int32_t
 CoCreateGuid( GUID * pguid);
 
 /******************* C Runtime Entrypoints *******************************/

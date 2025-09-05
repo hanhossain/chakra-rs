@@ -63,7 +63,7 @@ JsParseModuleSource(
     }
 
     *exceptionValueRef = JS_INVALID_REFERENCE;
-    HRESULT hr;
+    int32_t hr;
     if (!Js::SourceTextModuleRecord::Is(requestModule))
     {
         return JsErrorInvalidArgument;
@@ -171,7 +171,7 @@ JsSetModuleHostInfo(
         {
         case JsModuleHostInfo_Exception:
             {
-            HRESULT hr = moduleRecord->OnHostException(hostInfo);
+            int32_t hr = moduleRecord->OnHostException(hostInfo);
             return (hr == NOERROR) ? JsNoError : JsErrorInvalidArgument;
             }
         case JsModuleHostInfo_HostDefined:
@@ -1133,7 +1133,7 @@ CHAKRA_API JsGetAndClearExceptionWithMetadata(_Out_ JsValueRef *metadata)
         return JsErrorInDisabledState;
     }
 
-    HRESULT hr = S_OK;
+    int32_t hr = S_OK;
     Js::JavascriptExceptionObject *recordedException = nullptr;
 
     BEGIN_TRANSLATE_OOM_TO_HRESULT
@@ -1489,7 +1489,7 @@ JsQueueBackgroundParse_Experimental(
     _In_ JsScriptContents* contents,
     _Out_ uint32_t* dwBgParseCookie)
 {
-    HRESULT hr;
+    int32_t hr;
     if (Js::Configuration::Global.flags.BgParse && !CONFIG_FLAG(ForceDiagnosticsMode)
         // For now, only UTF8 buffers are supported for BGParse
         && contents->encodingType == JsScriptEncodingType::Utf8

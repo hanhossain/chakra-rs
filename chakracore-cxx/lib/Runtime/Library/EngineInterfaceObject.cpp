@@ -19,7 +19,7 @@
 #define IfFailAssertAndThrowHr(op) \
     if (FAILED(hr=(op))) \
     { \
-    AssertMsg(false, "HRESULT was a failure."); \
+    AssertMsg(false, "int32_t was a failure."); \
     JavascriptError::MapAndThrowError(scriptContext, hr); \
     } \
 
@@ -214,7 +214,7 @@ namespace Js
             resourceId = 5202;
             break;
         default:
-            AssertMsg(false, "Invalid HRESULT passed to GetErrorMessage. This shouldn't come from Promise.js - who called us?");
+            AssertMsg(false, "Invalid int32_t passed to GetErrorMessage. This shouldn't come from Promise.js - who called us?");
             return scriptContext->GetLibrary()->GetUndefined();
         }
 
