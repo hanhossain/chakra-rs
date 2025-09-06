@@ -100,7 +100,7 @@ set(SOURCES
   safecrt/vswprint.c
   safecrt/wcscpy_s.c
   safecrt/wcsncpy_s.c
-  safecrt/xtoa_s.c
+  safecrt/xtoa_s.cpp
   safecrt/xtow_s.cpp
   debug/debug.cpp
   exception/seh.cpp
