@@ -91,15 +91,15 @@ set(SOURCES
   safecrt/memmove_s.c
   safecrt/sprintf.cpp
   safecrt/sscanf.c
-  safecrt/strcat_s.c
-  safecrt/strcpy_s.c
-  safecrt/strncat_s.c
-  safecrt/strncpy_s.c
-  safecrt/swprintf.c
+  safecrt/strcat_s.cpp
+  safecrt/strcpy_s.cpp
+  safecrt/strncat_s.cpp
+  safecrt/strncpy_s.cpp
+  safecrt/swprintf.cpp
   safecrt/vsprintf.c
   safecrt/vswprint.c
-  safecrt/wcscpy_s.c
-  safecrt/wcsncpy_s.c
+  safecrt/wcscpy_s.cpp
+  safecrt/wcsncpy_s.cpp
   safecrt/xtoa_s.cpp
   safecrt/xtow_s.cpp
   debug/debug.cpp
