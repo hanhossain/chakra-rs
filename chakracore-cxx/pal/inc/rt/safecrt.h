@@ -3228,33 +3228,6 @@ int vswprintf_s(char16_t (&_Dst)[_SizeInWords], const char16_t *_Format, va_list
  *      return -1 if the formatted string does not entirely fit into _Dst (we will not call _SAFECRT_INVALID_PARAMETER);
  * if _Count == 0, then (_Dst == nullptr && _SizeInBytes == 0) is allowed
  */
-_SAFECRT__EXTERN_C
-int _snprintf_s(char *_Dst, size_t _SizeInBytes, size_t _Count, const char *_Format, ...);
-_SAFECRT__EXTERN_C
-int _vsnprintf_s(char *_Dst, size_t _SizeInBytes, size_t _Count, const char *_Format, va_list _ArgList);
-
-#if defined(__cplusplus) && _SAFECRT_USE_CPP_OVERLOADS
-template <size_t _SizeInBytes>
-inline
-int _snprintf_s(char (&_Dst)[_SizeInBytes], size_t _Count, const char *_Format, ...)
-{
-    int ret;
-    va_list _ArgList;
-    va_start(_ArgList, _Format);
-    ret = _vsnprintf_s(_Dst, _SizeInBytes, _Count, _Format, _ArgList);
-    va_end(_ArgList);
-    return ret;
-}
-
-template <size_t _SizeInBytes>
-inline
-int _vsnprintf_s(char (&_Dst)[_SizeInBytes], size_t _Count, const char *_Format, va_list _ArgList)
-{
-    return _vsnprintf_s(_Dst, _SizeInBytes, _Count, _Format, _ArgList);
-}
-#endif
-
-/* no inline version of _snprintf_s, _vsnprintf_s */
 
 /* _snwprintf_s, _vsnwprintf_s */
 _SAFECRT__EXTERN_C

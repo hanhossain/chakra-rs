@@ -81,27 +81,27 @@ set(SOURCES
   cruntime/wchar.cpp
   cruntime/wchartls.cpp
   cruntime/runtime_proxy.cpp
-  safecrt/makepath_s.c
+  safecrt/makepath_s.cpp
   safecrt/mbusafecrt.c
   safecrt/safecrt_input_s.c
   safecrt/safecrt_output_s.c
   safecrt/safecrt_winput_s.c
   safecrt/safecrt_woutput_s.c
-  safecrt/memcpy_s.c
+  safecrt/memcpy_s.cpp
   safecrt/memmove_s.c
-  safecrt/sprintf.c
+  safecrt/sprintf.cpp
   safecrt/sscanf.c
-  safecrt/strcat_s.c
-  safecrt/strcpy_s.c
-  safecrt/strncat_s.c
-  safecrt/strncpy_s.c
-  safecrt/swprintf.c
+  safecrt/strcat_s.cpp
+  safecrt/strcpy_s.cpp
+  safecrt/strncat_s.cpp
+  safecrt/strncpy_s.cpp
+  safecrt/swprintf.cpp
   safecrt/vsprintf.c
   safecrt/vswprint.c
-  safecrt/wcscpy_s.c
-  safecrt/wcsncpy_s.c
-  safecrt/xtoa_s.c
-  safecrt/xtow_s.c
+  safecrt/wcscpy_s.cpp
+  safecrt/wcsncpy_s.cpp
+  safecrt/xtoa_s.cpp
+  safecrt/xtow_s.cpp
   debug/debug.cpp
   exception/seh.cpp
   exception/signal.cpp
