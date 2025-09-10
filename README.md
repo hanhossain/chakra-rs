@@ -57,3 +57,7 @@ typedefs/defines to remove:
 - __int16
   - int16
   - uint16
+
+Remove unicode (always use unicode):
+- `UNICODE`
+- `_UNICODE`
