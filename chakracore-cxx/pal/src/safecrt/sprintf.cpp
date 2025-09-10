@@ -81,19 +81,3 @@ int sprintf_s (
         va_end(arglist);
         return ret;
 }
-
-int _snprintf_s (
-        char *string,
-        size_t sizeInBytes,
-        size_t count,
-        const char *format,
-        ...
-        )
-{
-        int ret;
-        va_list arglist;
-        va_start(arglist, format);
-        ret = _vsnprintf_s(string, sizeInBytes, count, format, arglist);
-        va_end(arglist);
-        return ret;
-}

@@ -94,11 +94,9 @@ extern errno_t _wsplitpath_s( const char16_t* inPath, char16_t* outDrive, size_t
 extern int sprintf_s( char *string, size_t sizeInBytes, const char *format, ... );
 extern int swprintf_s( char16_t *string, size_t sizeInWords, const char16_t *format, ... );
 
-extern int _snprintf_s( char *string, size_t sizeInBytes, size_t count, const char *format, ... );
 extern int _snwprintf_s( char16_t *string, size_t sizeInWords, size_t count, const char16_t *format, ... );
 
 extern int _vsprintf_s( char* string, size_t sizeInBytes, const char* format, va_list arglist );
-extern int _vsnprintf_s( char* string, size_t sizeInBytes, size_t count, const char* format, va_list arglist );
 
 extern int _vswprintf_s( char16_t* string, size_t sizeInWords, const char16_t* format, va_list arglist );
 extern int _vsnwprintf_s( char16_t* string, size_t sizeInWords, size_t count, const char16_t* format, va_list arglist );
