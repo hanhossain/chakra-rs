@@ -118,7 +118,7 @@ namespace CorUnix
 
             for (j=i;j<n;j++)
             {
-                pvObjRaw = (void *) InternalNew<USynchCacheStackNode>();
+                pvObjRaw = (void *) new USynchCacheStackNode();
                 if (NULL == pvObjRaw)
                     break;
 #ifdef _DEBUG

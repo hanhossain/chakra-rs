@@ -271,7 +271,7 @@ Initialize()
         //
         // Initialize the object manager
         //
-        pshmom = InternalNew<CSharedMemoryObjectManager>();
+        pshmom = new CSharedMemoryObjectManager();
         if (NULL == pshmom)
         {
             ERROR("Unable to allocate new object manager\n");

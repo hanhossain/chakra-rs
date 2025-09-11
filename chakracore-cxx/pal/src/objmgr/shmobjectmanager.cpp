@@ -166,11 +166,11 @@ CSharedMemoryObjectManager::AllocateObject(
 
     if (CObjectType::WaitableObject == pot->GetSynchronizationSupport())
     {
-        pshmobj = InternalNew<CSharedMemoryWaitableObject>(pot, &m_csListLock);
+        pshmobj = new CSharedMemoryWaitableObject(pot, &m_csListLock);
     }
     else
     {
-        pshmobj = InternalNew<CSharedMemoryObject>(pot, &m_csListLock);
+        pshmobj = new CSharedMemoryObject(pot, &m_csListLock);
     }
 
     if (NULL != pshmobj)
@@ -1113,7 +1113,7 @@ CSharedMemoryObjectManager::ImportSharedObjectIntoProcess(
     
     if (CObjectType::WaitableObject == pot->GetSynchronizationSupport())
     {
-        pshmobj = InternalNew<CSharedMemoryWaitableObject>(pot,
+        pshmobj = new CSharedMemoryWaitableObject(pot,
                                                            &m_csListLock,
                                                            shmSharedObjectData,
                                                            psmod,
@@ -1121,7 +1121,7 @@ CSharedMemoryObjectManager::ImportSharedObjectIntoProcess(
     }
     else
     {
-        pshmobj = InternalNew<CSharedMemoryObject>(pot,
+        pshmobj = new CSharedMemoryObject(pot,
                                                    &m_csListLock,
                                                    shmSharedObjectData,
                                                    psmod,

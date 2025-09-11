@@ -1502,7 +1502,7 @@ namespace CorUnix
         InternalInitializeCriticalSection(&s_csSynchProcessLock);
         InternalInitializeCriticalSection(&s_csMonitoredProcessesLock);
 
-        pSynchManager = InternalNew<CPalSynchronizationManager>();
+        pSynchManager = new CPalSynchronizationManager();
         if (NULL == pSynchManager)
         {
             ERROR("Failed to allocate memory for Synchronization Manager");
@@ -2187,7 +2187,7 @@ namespace CorUnix
             // If the array is full, add the target thread object at the end
             // of the overflow list
             DeferredSignalingListNode * pdsln =
-                InternalNew<DeferredSignalingListNode>();
+                new DeferredSignalingListNode();
 
             if (pdsln)
             {
@@ -2940,7 +2940,7 @@ namespace CorUnix
         }
         else
         {
-            pmpln = InternalNew<MonitoredProcessesListNode>();
+            pmpln = new MonitoredProcessesListNode();
             if (NULL == pmpln)
             {
                 ERROR("No memory to allocate MonitoredProcessesListNode structure\n");

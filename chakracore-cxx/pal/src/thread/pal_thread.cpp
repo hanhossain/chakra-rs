@@ -248,7 +248,7 @@ CPalThread* AllocTHREAD()
 
     if (pThread == NULL)
     {
-        pThread = InternalNew<CPalThread>();
+        pThread = new CPalThread();
     }
     else
     {

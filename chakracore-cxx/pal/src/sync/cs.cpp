@@ -635,7 +635,7 @@ namespace CorUnix
         CPalThread * pThread =
             (PALIsThreadDataInitialized() ? GetCurrentPalThread() : NULL);
 
-        pPalCriticalSection->DebugInfo = InternalNew<CRITICAL_SECTION_DEBUG_INFO>();
+        pPalCriticalSection->DebugInfo = new CRITICAL_SECTION_DEBUG_INFO();
         _ASSERT_MSG(NULL != pPalCriticalSection->DebugInfo,
                     "Failed to allocate debug info for new CS\n");
 
