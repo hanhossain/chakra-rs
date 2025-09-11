@@ -60,10 +60,6 @@
 #  endif
 #endif /* ITT_PLATFORM */
 
-#if defined(_UNICODE) && !defined(UNICODE)
-#define UNICODE
-#endif
-
 #include <stddef.h>
 #if ITT_PLATFORM==ITT_PLATFORM_WIN
 // 4/29/2016 disable warning 4995 on deprecated _tccpy, wcsncpy, wcsncat, wcstok funcs in tchar.h
@@ -71,9 +67,7 @@
 #include <tchar.h>
 #else  /* ITT_PLATFORM==ITT_PLATFORM_WIN */
 #include <stdint.h>
-#if defined(UNICODE) || defined(_UNICODE)
 #include <wchar.h>
-#endif /* UNICODE || _UNICODE */
 #endif /* ITT_PLATFORM==ITT_PLATFORM_WIN */
 
 #if ITT_PLATFORM==ITT_PLATFORM_WIN
@@ -168,9 +162,7 @@ typedef CRITICAL_SECTION  mutex_t;
 #define strong_alias(name, aliasname) /* empty for Windows */
 #else  /* ITT_PLATFORM==ITT_PLATFORM_WIN */
 #include <dlfcn.h>
-#if defined(UNICODE) || defined(_UNICODE)
 #include <wchar.h>
-#endif /* UNICODE */
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE 1 /* need for PTHREAD_MUTEX_RECURSIVE */
 #endif /* _GNU_SOURCE */
@@ -297,11 +289,7 @@ typedef enum {
 typedef struct ___itt_thread_info
 {
     const char* nameA; /*!< Copy of original name in ASCII. */
-#if defined(UNICODE) || defined(_UNICODE)
     const char16_t* nameW; /*!< Copy of original name in UNICODE. */
-#else  /* UNICODE || _UNICODE */
-    void* nameW;
-#endif /* UNICODE || _UNICODE */
     TIDT               tid;
     __itt_thread_state state;   /*!< Thread state (paused or normal) */
     int                extra1;  /*!< Reserved to the runtime */
@@ -331,17 +319,9 @@ typedef struct ___itt_api_info
 typedef struct __itt_counter_info
 {
     const char* nameA;  /*!< Copy of original name in ASCII. */
-#if defined(UNICODE) || defined(_UNICODE)
     const char16_t* nameW; /*!< Copy of original name in UNICODE. */
-#else  /* UNICODE || _UNICODE */
-    void* nameW;
-#endif /* UNICODE || _UNICODE */
     const char* domainA;  /*!< Copy of original name in ASCII. */
-#if defined(UNICODE) || defined(_UNICODE)
     const char16_t* domainW; /*!< Copy of original name in UNICODE. */
-#else  /* UNICODE || _UNICODE */
-    void* domainW;
-#endif /* UNICODE || _UNICODE */
     int type;
     long index;
     int   extra1; /*!< Reserved to the runtime */
