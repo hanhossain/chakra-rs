@@ -133,7 +133,7 @@ static LPSTR MapFileOpenModes(LPSTR str , BOOL * bTextMode)
         *bTextMode = FALSE;
     }
 
-    retval = (LPSTR)PAL_malloc( ( strlen( str ) + 1 ) * sizeof( char ) );
+    retval = (LPSTR)malloc( ( strlen( str ) + 1 ) * sizeof( char ) );
     if (NULL == retval)
     {
         ERROR("Unable to allocate memory.\n");
@@ -214,13 +214,13 @@ _fdopen(
 
     _ASSERTE(mode != NULL);
 
-    f = (PAL_FILE*)PAL_malloc( sizeof( PAL_FILE ) );
+    f = (PAL_FILE*)malloc( sizeof( PAL_FILE ) );
     if ( f )
     {
         supported = MapFileOpenModes( (char*)mode , &bTextMode);
         if ( !supported )
         {
-            PAL_free(f);
+            free(f);
             f = NULL;
             goto EXIT;
         }
@@ -230,11 +230,11 @@ _fdopen(
         /* Make sure fdopen did not fail. */
         if ( !f->bsdFilePtr )
         {
-            PAL_free( f );
+            free( f );
             f = NULL;
         }
 
-        PAL_free( supported );
+        free( supported );
         supported = NULL;
     }
     else
@@ -281,10 +281,10 @@ PAL_fopen(const char * fileName, const char * mode)
             goto done;
         }
 
-        UnixFileName = PAL__strdup(fileName);
+        UnixFileName = strdup(fileName);
         if (UnixFileName == NULL )
         {
-            ERROR("PAL__strdup() failed\n");
+            ERROR("strdup() failed\n");
             SetLastError(ERROR_NOT_ENOUGH_MEMORY);
             goto done;
         }
@@ -300,7 +300,7 @@ PAL_fopen(const char * fileName, const char * mode)
             goto done;
         }
 
-        f = (PAL_FILE*)PAL_malloc( sizeof( PAL_FILE ) );
+        f = (PAL_FILE*)malloc( sizeof( PAL_FILE ) );
         if ( f )
         {
             f->bsdFilePtr =  (FILE*)fopen( UnixFileName, supported );
@@ -309,7 +309,7 @@ PAL_fopen(const char * fileName, const char * mode)
             if ( !f->bsdFilePtr )
             {
                 /* Failed */
-                PAL_free( f );
+                free( f );
                 f = NULL;
             }
 #if UNGETC_NOT_RETURN_EOF
@@ -330,9 +330,9 @@ PAL_fopen(const char * fileName, const char * mode)
     }
 
 done:
-    PAL_free( supported );
+    free( supported );
     supported = NULL;
-    PAL_free( UnixFileName );
+    free( UnixFileName );
 
     LOGEXIT( "fopen returns FILE* %p\n", f );
     PERF_EXIT(fopen);
@@ -595,7 +595,7 @@ PAL_fclose(PAL_FILE * f)
     CLEARERR(f);
 
     nRetVal = fclose( f->bsdFilePtr );
-    PAL_free( f );
+    free( f );
 
     LOGEXIT( "fclose returning %d\n", nRetVal );
     PERF_EXIT(fclose);

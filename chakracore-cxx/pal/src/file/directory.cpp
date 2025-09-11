@@ -78,11 +78,11 @@ CreateDirectoryW(
         goto done;
     }
 
-    if (((mb_dir = (char *)PAL_malloc(mb_size)) == NULL) ||
+    if (((mb_dir = (char *)malloc(mb_size)) == NULL) ||
         (WideCharToMultiByte( CP_ACP, 0, lpPathName, -1, mb_dir, mb_size, NULL,
                               NULL) != mb_size))
     {
-        ASSERT("WideCharToMultiByte or PAL_malloc failure! LastError:%d errno:%d\n",
+        ASSERT("WideCharToMultiByte or malloc failure! LastError:%d errno:%d\n",
               GetLastError(), errno);
         dwLastError = ERROR_INTERNAL_ERROR;
         goto done;
@@ -96,7 +96,7 @@ done:
     }
     if (mb_dir != NULL)
     {
-        PAL_free(mb_dir);
+        free(mb_dir);
     }
     LOGEXIT("CreateDirectoryW returns BOOL %d\n", bRet);
     PERF_EXIT(CreateDirectoryW);
@@ -350,7 +350,7 @@ GetCurrentDirectoryA(
     }
 
 done:
-    PAL_free( current_dir );
+    free( current_dir );
 
     if ( dwLastError )
     {
@@ -416,7 +416,7 @@ GetCurrentDirectoryW(
     }
 
 done:
-    PAL_free( current_dir );
+    free( current_dir );
 
     if ( dwLastError )
     {
@@ -546,10 +546,10 @@ CreateDirectoryA(
         goto done;
     }
 
-    UnixPathName = PAL__strdup(lpPathName);
+    UnixPathName = strdup(lpPathName);
     if (UnixPathName == NULL )
     {
-        ERROR("PAL__strdup() failed\n");
+        ERROR("strdup() failed\n");
         dwLastError = ERROR_NOT_ENOUGH_MEMORY;
         goto done;
     }
@@ -593,7 +593,7 @@ CreateDirectoryA(
         realPath = static_cast<char *>(alloca(iLen));
         sprintf_s(realPath, iLen, "%s/%s", cwd, UnixPathName);
 
-        PAL_free((char *)cwd);
+        free((char *)cwd);
     }
     
     // Canonicalize the path so we can determine its length.
@@ -636,7 +636,7 @@ done:
     {
         SetLastError( dwLastError );
     }
-    PAL_free( UnixPathName );
+    free( UnixPathName );
     LOGEXIT("CreateDirectoryA returns BOOL %d\n", bRet);
     PERF_EXIT(CreateDirectoryA);
     return bRet;
@@ -677,10 +677,10 @@ SetCurrentDirectoryA(
         goto done;
     }
 
-    UnixPathName = PAL__strdup(lpPathName);
+    UnixPathName = strdup(lpPathName);
     if (UnixPathName == NULL )
     {
-        ERROR("PAL__strdup() failed\n");
+        ERROR("strdup() failed\n");
         dwLastError = ERROR_NOT_ENOUGH_MEMORY;
         goto done;
     }
@@ -727,7 +727,7 @@ done:
 
     if(UnixPathName != NULL)
     {
-        PAL_free( UnixPathName );
+        free( UnixPathName );
     }
 
     LOGEXIT("SetCurrentDirectoryA returns BOOL %d\n", bRet);

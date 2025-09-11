@@ -21,7 +21,7 @@ Abstract:
 
 #include "pal/thread.hpp"
 #include "pal/threadsusp.hpp"
-#include "pal/malloc.hpp"
+#include <new>
 #include "pal/palinternal.h"
 #include "pal/dbgmsg.h"
 #include "pal/misc.h"
@@ -385,7 +385,7 @@ Function:
   MiscPutenv
 
 Sets an environment variable's value by directly modifying palEnvironment.
-Returns TRUE if the variable was set, or FALSE if PAL_malloc or realloc
+Returns TRUE if the variable was set, or FALSE if malloc or realloc
 failed or if the given string is malformed.
 --*/
 BOOL MiscPutenv(const char *string, BOOL deleteIfEmpty)
@@ -412,7 +412,7 @@ BOOL MiscPutenv(const char *string, BOOL deleteIfEmpty)
         // set the variable's value to "". deleteIfEmpty will be FALSE in
         // that case.
         length = strlen(string);
-        copy = (char *) InternalMalloc(length);
+        copy = (char *) malloc(length);
         if (copy == NULL)
         {
             goto done;
@@ -427,7 +427,7 @@ BOOL MiscPutenv(const char *string, BOOL deleteIfEmpty)
         // See if we are replacing an item or adding one.
 
         // Make our copy up front, since we'll use it either way.
-        copy = InternalStrdup(string);
+        copy = strdup(string);
         if (copy == NULL)
         {
             goto done;
@@ -477,7 +477,7 @@ BOOL MiscPutenv(const char *string, BOOL deleteIfEmpty)
 
             if (sAllocatedEnviron) {
                 if (NULL == (newEnviron =
-                        (char **)InternalRealloc(palEnvironment, (i + 2) * sizeof(char *))))
+                        (char **)realloc(palEnvironment, (i + 2) * sizeof(char *))))
                 {
                     goto done;
                 }
@@ -485,7 +485,7 @@ BOOL MiscPutenv(const char *string, BOOL deleteIfEmpty)
             else
             {
                 // Allocate palEnvironment ourselves so we can realloc it later.
-                newEnviron = (char **)InternalMalloc((i + 2) * sizeof(char *));
+                newEnviron = (char **)malloc((i + 2) * sizeof(char *));
                 if (newEnviron == NULL)
                 {
                     goto done;
@@ -515,7 +515,7 @@ done:
     }
     if (NULL != copy)
     {
-        InternalFree(copy);
+        free(copy);
     }
     return result;
 }

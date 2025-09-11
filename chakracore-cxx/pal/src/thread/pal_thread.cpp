@@ -28,7 +28,6 @@ SET_DEFAULT_DEBUG_CHANNEL(THREAD); // some headers have code with asserts, so do
 #include "pal/corunix.hpp"
 #include "pal/context.h"
 #include "pal/thread.hpp"
-#include "pal/mutex.hpp"
 #include "pal/handlemgr.hpp"
 #include "pal/cs.hpp"
 
@@ -248,7 +247,7 @@ CPalThread* AllocTHREAD()
 
     if (pThread == NULL)
     {
-        pThread = InternalNew<CPalThread>();
+        pThread = new CPalThread();
     }
     else
     {

@@ -4,7 +4,7 @@
 #ifndef __STACKSTRING_H_
 #define __STACKSTRING_H_
 
-#include "pal/malloc.hpp"
+#include <new>
 
 template <size_t STACKCOUNT, class T>
 class StackString
@@ -23,7 +23,7 @@ private:
     void DeleteBuffer()
     {
         if (m_innerBuffer != m_buffer)
-            PAL_free(m_buffer);
+            free(m_buffer);
 
         m_buffer = NULL;
         return;
@@ -32,7 +32,7 @@ private:
     void ReallocateBuffer(size_t count)
     {
         // count is always > STACKCOUNT here.
-        T * newBuffer = (T *)PAL_malloc((count + 1) * sizeof(T));
+        T * newBuffer = (T *)malloc((count + 1) * sizeof(T));
         if (NULL == newBuffer)
         {
             SetLastError(ERROR_NOT_ENOUGH_MEMORY);

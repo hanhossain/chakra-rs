@@ -24,7 +24,6 @@ Revision History:
 
 #include "pal/corunix.hpp"
 #include "pal/thread.hpp"
-#include "pal/mutex.hpp"
 #include "pal/init.h"
 #include "pal/dbgmsg.h"
 

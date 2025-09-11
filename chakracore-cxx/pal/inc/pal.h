@@ -1164,46 +1164,6 @@ OpenEventW(
 #define OpenEvent OpenEventW
 #endif
 
-HANDLE
-CreateMutexW(
-     LPSECURITY_ATTRIBUTES lpMutexAttributes,
-     BOOL bInitialOwner,
-     LPCWSTR lpName);
-
-HANDLE
-CreateMutexA(
-     LPSECURITY_ATTRIBUTES lpMutexAttributes,
-     BOOL bInitialOwner,
-     LPCSTR lpName);
-
-#ifdef UNICODE
-#define CreateMutex  CreateMutexW
-#else
-#define CreateMutex  CreateMutexA
-#endif
-
-HANDLE
-OpenMutexW(
-        uint32_t dwDesiredAccess,
-        BOOL bInheritHandle,
-        LPCWSTR lpName);
-
-HANDLE
-OpenMutexA(
-        uint32_t dwDesiredAccess,
-        BOOL bInheritHandle,
-        LPCSTR lpName);
-
-#ifdef UNICODE
-#define OpenMutex  OpenMutexW
-#else
-#define OpenMutex  OpenMutexA
-#endif // UNICODE
-
-BOOL
-ReleaseMutex(
-     HANDLE hMutex);
-
 uint32_t
 GetCurrentProcessId(
             void);
@@ -5439,7 +5399,6 @@ CoCreateGuid( GUID * pguid);
 #define mkstemp       PAL_mkstemp
 #define rename        PAL_rename
 #define unlink        PAL_unlink
-#define _strdup       PAL__strdup
 #define _open         PAL__open
 #define _close        PAL__close
 #define _wcstoui64    PAL__wcstoui64
@@ -5685,15 +5644,6 @@ inline long abs(long _X) {
 }
 #endif
 #endif
-
-#ifdef INCLUDE_PAL_INTERNAL_
-/* FIXME remove
- * PAL wrappers around memory management functions, only used inside PAL */
-void * PAL_malloc(size_t);
-void   PAL_free(void *);
-void * PAL_realloc(void *, size_t);
-#endif
-char * _strdup(const char *);
 
 #define _alloca alloca
 

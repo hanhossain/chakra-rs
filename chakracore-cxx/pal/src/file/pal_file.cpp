@@ -22,7 +22,7 @@ Abstract:
 #include "pal/thread.hpp"
 #include "pal/file.hpp"
 #include "shmfilelockmgr.hpp"
-#include "pal/malloc.hpp"
+#include <new>
 #include "pal/stackstring.hpp"
 
 #include "pal/palinternal.h"
@@ -169,9 +169,9 @@ void FILEGetProperNotFoundError( LPSTR lpPath, uint32_t * lpErrorCode )
         return;
     }
 
-    if ( NULL == ( lpDupedPath = InternalStrdup( lpPath ) ) )
+    if ( NULL == ( lpDupedPath = strdup( lpPath ) ) )
     {
-        ERROR( "InternalStrdup() failed!\n" );
+        ERROR( "strdup() failed!\n" );
         *lpErrorCode = ERROR_NOT_ENOUGH_MEMORY;
         return;
     }
@@ -204,7 +204,7 @@ void FILEGetProperNotFoundError( LPSTR lpPath, uint32_t * lpErrorCode )
         *lpErrorCode = ERROR_FILE_NOT_FOUND;
     }
     
-    InternalFree(lpDupedPath);
+    free(lpDupedPath);
     lpDupedPath = NULL;
     TRACE( "FILEGetProperNotFoundError returning TRUE\n" );
     return;
@@ -270,10 +270,10 @@ CorUnix::InternalCanonicalizeRealPath(LPCSTR lpUnixPath, LPSTR lpBuffer, uint32_
     lpRealPath = realpath(lpUnixPath, lpBuffer);
 #else   // !REALPATH_SUPPORTS_NONEXISTENT_FILES
 
-    lpExistingPath = InternalStrdup(lpUnixPath);
+    lpExistingPath = strdup(lpUnixPath);
     if (lpExistingPath == NULL)
     {
-        ERROR ("InternalStrdup failed with error %d\n", errno);
+        ERROR ("strdup failed with error %d\n", errno);
         palError = ERROR_NOT_ENOUGH_MEMORY;
         goto LExit;
     }
@@ -435,7 +435,7 @@ CorUnix::InternalCanonicalizeRealPath(LPCSTR lpUnixPath, LPSTR lpBuffer, uint32_
 LExit:
     if (lpExistingPath != NULL)
     {
-        InternalFree(lpExistingPath);
+        free(lpExistingPath);
     }
 #endif // REALPATH_SUPPORTS_NONEXISTENT_FILES
 
@@ -516,18 +516,18 @@ CorUnix::InternalCreateFile(
         goto done;
     }
 
-    lpUnixPath = InternalStrdup(lpFileName);
+    lpUnixPath = strdup(lpFileName);
     if ( lpUnixPath == NULL )
     {
-        ERROR("InternalStrdup() failed\n");
+        ERROR("strdup() failed\n");
         palError = ERROR_NOT_ENOUGH_MEMORY;
         goto done;
     }
 
-    lpFullUnixPath =  reinterpret_cast<LPSTR>(InternalMalloc(cchFullUnixPath));
+    lpFullUnixPath =  reinterpret_cast<LPSTR>(malloc(cchFullUnixPath));
     if ( lpFullUnixPath == NULL )
     {
-        ERROR("InternalMalloc() failed\n");
+        ERROR("malloc() failed\n");
         palError = ERROR_NOT_ENOUGH_MEMORY;
         goto done;
     }
@@ -545,7 +545,7 @@ CorUnix::InternalCreateFile(
         goto done;
     }
 
-    InternalFree(lpUnixPath);
+    free(lpUnixPath);
     lpUnixPath = lpFullUnixPath;
     lpFullUnixPath = NULL;
 
@@ -872,12 +872,12 @@ done:
     
     if (NULL != lpUnixPath)
     {
-        InternalFree(lpUnixPath);
+        free(lpUnixPath);
     }
 
     if (NULL != lpFullUnixPath)
     {
-        InternalFree(lpFullUnixPath);
+        free(lpFullUnixPath);
     }
 
     if (NO_ERROR == palError && fFileExists)
@@ -1192,10 +1192,10 @@ DeleteFileA(
     
     FILEDosToUnixPathA( lpUnixFileName );
 
-    lpFullUnixFileName =  reinterpret_cast<LPSTR>(InternalMalloc(cchFullUnixFileName));
+    lpFullUnixFileName =  reinterpret_cast<LPSTR>(malloc(cchFullUnixFileName));
     if ( lpFullUnixFileName == NULL )
     {
-        ERROR("InternalMalloc() failed\n");
+        ERROR("malloc() failed\n");
         palError = ERROR_NOT_ENOUGH_MEMORY;
         goto done;
     }
@@ -1208,8 +1208,8 @@ DeleteFileA(
     palError = InternalCanonicalizeRealPath(lpUnixFileName, lpFullUnixFileName, cchFullUnixFileName);
     if (palError != NO_ERROR)
     {
-        InternalFree(lpFullUnixFileName);
-        lpFullUnixFileName = InternalStrdup(lpUnixFileName);
+        free(lpFullUnixFileName);
+        lpFullUnixFileName = strdup(lpUnixFileName);
         if (!lpFullUnixFileName)
         {
             palError = ERROR_NOT_ENOUGH_MEMORY;
@@ -1236,7 +1236,7 @@ done:
     }
     if (NULL != lpFullUnixFileName)
     {
-        InternalFree(lpFullUnixFileName);
+        free(lpFullUnixFileName);
     }
     LOGEXIT("DeleteFileA returns BOOL %d\n", bRet);
     PERF_EXIT(DeleteFileA);
@@ -3727,7 +3727,7 @@ GetTempFileNameW(
         }
     }
     
-    tempfile_name = (char*)InternalMalloc(MAX_LONGPATH);
+    tempfile_name = (char*)malloc(MAX_LONGPATH);
     if (tempfile_name == NULL)
     {
         pThread->SetLastError(ERROR_NOT_ENOUGH_MEMORY);
@@ -3743,7 +3743,7 @@ GetTempFileNameW(
         path_size = MultiByteToWideChar( CP_ACP, 0, tempfile_name, -1, 
                                            lpTempFileName, MAX_LONGPATH );
 
-        InternalFree(tempfile_name);
+        free(tempfile_name);
         tempfile_name = NULL;
         if (!path_size)
         {
@@ -3929,10 +3929,10 @@ CopyFileA(
     }
 
     /* Need to preserve the owner/group and chmod() flags */
-    lpUnixPath = InternalStrdup(lpExistingFileName);
+    lpUnixPath = strdup(lpExistingFileName);
     if ( lpUnixPath == NULL )
     {
-        ERROR("InternalStrdup() failed\n");
+        ERROR("strdup() failed\n");
         pThread->SetLastError(FILEGetLastErrorFromErrno());
         goto done;
     }
@@ -3958,11 +3958,11 @@ CopyFileA(
         goto done;
     }
 
-    InternalFree(lpUnixPath);
-    lpUnixPath = InternalStrdup(lpNewFileName);
+    free(lpUnixPath);
+    lpUnixPath = strdup(lpNewFileName);
     if ( lpUnixPath == NULL )
     {
-        ERROR("InternalStrdup() failed\n");
+        ERROR("strdup() failed\n");
         pThread->SetLastError(FILEGetLastErrorFromErrno());
         goto done;
     }
@@ -4021,7 +4021,7 @@ done:
     }
     if (lpUnixPath) 
     {
-        InternalFree(lpUnixPath);
+        free(lpUnixPath);
     }
 
     LOGEXIT("CopyFileA returns BOOL %d\n", bGood);
@@ -4085,9 +4085,9 @@ SetFileAttributesA(
         goto done;
     }
 
-    if ((UnixFileName = InternalStrdup(lpFileName)) == NULL)
+    if ((UnixFileName = strdup(lpFileName)) == NULL)
     {
-        ERROR("InternalStrdup() failed\n");
+        ERROR("strdup() failed\n");
         dwLastError = ERROR_NOT_ENOUGH_MEMORY;
         goto done;
     }
@@ -4147,7 +4147,7 @@ done:
         pThread->SetLastError(dwLastError);
     }
     
-    InternalFree(UnixFileName);
+    free(UnixFileName);
 
     LOGEXIT("SetFileAttributesA returns BOOL %d\n", bRet);
     PERF_EXIT(SetFileAttributesA);

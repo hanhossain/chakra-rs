@@ -22,7 +22,7 @@ Abstract:
 /* PAL headers */
 
 #include "pal/thread.hpp"
-#include "pal/malloc.hpp"
+#include <new>
 #include "pal/file.hpp"
 
 #include "config.h"
@@ -174,7 +174,7 @@ BOOL DBG_init_channels(void)
     }
     else
     {
-        env_pcache = env_workstring = PAL__strdup(env_string);
+        env_pcache = env_workstring = strdup(env_string);
 
         if (env_workstring == NULL)
         {
@@ -313,7 +313,7 @@ BOOL DBG_init_channels(void)
         }
         /* done processing this entry; on to the next. */
     }
-    PAL_free(env_pcache);
+    free(env_pcache);
 
     /* select output file */
     env_string=MiscGetenv(ENV_FILE);

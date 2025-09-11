@@ -67,7 +67,6 @@ set(SOURCES
   cruntime/filecrt.cpp
   cruntime/finite.cpp
   cruntime/lstr.cpp
-  cruntime/malloc.cpp
   cruntime/mbstring.cpp
   cruntime/misc.cpp
   cruntime/misctls.cpp
@@ -138,7 +137,6 @@ set(SOURCES
   objmgr/shmobjectmanager.cpp
   shmemory/shmemory.cpp
   synchobj/event.cpp
-  synchobj/mutex.cpp
   synchobj/semaphore.cpp
   synchmgr/synchcontrollers.cpp
   synchmgr/synchmanager.cpp

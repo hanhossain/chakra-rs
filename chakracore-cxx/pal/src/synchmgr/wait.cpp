@@ -24,7 +24,7 @@ Revision History:
 
 #include "pal/thread.hpp"
 #include "pal/synchobjects.hpp"
-#include "pal/malloc.hpp"
+#include <new>
 #include "pal/dbgmsg.h"
 
 SET_DEFAULT_DEBUG_CHANNEL(SYNC);
@@ -312,8 +312,8 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
         wtWaitType = fWAll ? MultipleObjectsWaitAll : MultipleObjectsWaitOne;
         if (nCount > MAXIMUM_STACK_WAITOBJ_ARRAY_SIZE)
         {
-            ppIPalObjs = InternalNewArray<IPalObject*>(nCount);
-            ppISyncWaitCtrlrs = InternalNewArray<ISynchWaitController*>(nCount);
+            ppIPalObjs = new IPalObject*[nCount];
+            ppISyncWaitCtrlrs = new ISynchWaitController*[nCount];
             if ((NULL == ppIPalObjs) || (NULL == ppISyncWaitCtrlrs))
             {
                 ERROR("Out of memory allocating internal structures\n");
@@ -576,8 +576,8 @@ WFMOExIntCleanup:
 WFMOExIntExit:
     if (nCount > MAXIMUM_STACK_WAITOBJ_ARRAY_SIZE)
     {
-        InternalDeleteArray(ppIPalObjs);
-        InternalDeleteArray(ppISyncWaitCtrlrs);
+        delete[] ppIPalObjs;
+        delete[] ppISyncWaitCtrlrs;
     }
 
     return dwRet;

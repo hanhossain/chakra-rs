@@ -19,7 +19,7 @@ Abstract:
 --*/
 
 #include "shmobject.hpp"
-#include "pal/malloc.hpp"
+#include <new>
 #include "pal/cs.hpp"
 #include "pal/dbgmsg.h"
 
@@ -121,7 +121,7 @@ CSharedMemoryObject::Initialize(
             // Allocate local memory to hold the shared data
             //
 
-            m_pvSharedData = InternalMalloc(m_pot->GetSharedDataSize());
+            m_pvSharedData = malloc(m_pot->GetSharedDataSize());
             if (NULL == m_pvSharedData)
             {
                 ERROR("Failure allocating m_pvSharedData (local copy)\n");
@@ -509,7 +509,7 @@ CSharedMemoryObject::PromoteSharedData(
             m_pot->GetSharedDataSize()
             );
         
-        InternalFree(m_pvSharedData);
+        free(m_pvSharedData);
         m_pvSharedData = pvSharedData;
     }
 
@@ -651,7 +651,7 @@ CSharedMemoryObject::CleanupForProcessShutdown(
     m_pthrCleanup = pthr;
     pthr->AddThreadReference();
     
-    InternalDelete(this);
+    delete this;
 
     pthr->ReleaseThreadReference();
 
@@ -870,7 +870,7 @@ CSharedMemoryObject::~CSharedMemoryObject()
 
     if (NULL != m_pvSharedData && ProcessLocalObject == m_ObjectDomain)
     {
-        InternalFree(m_pvSharedData);
+        free(m_pvSharedData);
     }
     else if (SHMNULL != m_shmod && m_fDeleteSharedData)
     {

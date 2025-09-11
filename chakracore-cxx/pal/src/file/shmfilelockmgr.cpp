@@ -19,7 +19,7 @@ Abstract:
 --*/
 
 #include "pal/thread.hpp"
-#include "pal/malloc.hpp"
+#include <new>
 #include "pal/dbgmsg.h"
 #include "shmfilelockmgr.hpp"
 
@@ -203,7 +203,7 @@ CSharedMemoryFileLockMgr::GetLockControllerForFile(
         dwShareMode = fileLocks->share_mode;
     }
 
-    pController = InternalNew<CSharedMemoryFileLockController>(dwAccessRights, shmFileLocks);
+    pController = new CSharedMemoryFileLockController(dwAccessRights, shmFileLocks);
     if (NULL == pController)
     {
         palError = ERROR_OUTOFMEMORY;
@@ -335,7 +335,7 @@ CSharedMemoryFileLockController::GetTransactionLock(
 
     if (NO_ERROR == palError)
     {
-        *ppTransactionLock = InternalNew<CSharedMemoryFileTransactionLock>(m_shmFileLocks,
+        *ppTransactionLock = new CSharedMemoryFileTransactionLock(m_shmFileLocks,
                                                                            reinterpret_cast<void *>(this),
                                                                            lockRgnStart, 
                                                                            nbBytesToLock);
@@ -435,7 +435,7 @@ CSharedMemoryFileLockController::ReleaseController()
             );
     }
 
-    InternalDelete(this);
+    delete this;
 }
 
 void
@@ -449,7 +449,7 @@ CSharedMemoryFileTransactionLock::ReleaseLock()
         RDWR_LOCK_RGN
         );
 
-    InternalDelete(this);
+    delete this;
 }
 
 PAL_ERROR

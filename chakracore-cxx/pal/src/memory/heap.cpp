@@ -240,12 +240,12 @@ HeapAlloc(
     }
 
 #ifdef __APPLE__
-    // This is patterned off of InternalMalloc in malloc.cpp.
+    // This is patterned off of malloc in malloc.cpp.
     {
         pMem = (uint8_t *)malloc_zone_malloc((malloc_zone_t *)hHeap, numberOfBytes);
     }
 #else // __APPLE__
-    pMem = (uint8_t *) PAL_malloc(numberOfBytes);
+    pMem = (uint8_t *) malloc(numberOfBytes);
 #endif // __APPLE__ else
 
     if (pMem == NULL)
@@ -316,12 +316,12 @@ HeapFree(
 
     bRetVal = TRUE;
 #ifdef __APPLE__
-    // This is patterned off of InternalFree in malloc.cpp.
+    // This is patterned off of free in malloc.cpp.
     {
         malloc_zone_free((malloc_zone_t *)hHeap, lpMem);
     }
 #else // __APPLE__
-    PAL_free (lpMem);
+    free (lpMem);
 #endif // __APPLE__ else
 
 done:
@@ -387,12 +387,12 @@ HeapReAlloc(
     }
 
 #ifdef __APPLE__
-    // This is patterned off of InternalRealloc in malloc.cpp.
+    // This is patterned off of realloc in malloc.cpp.
     {
         pMem = (uint8_t *) malloc_zone_realloc((malloc_zone_t *)hHeap, lpmem, numberOfBytes);
     }
 #else // __APPLE__
-    pMem = (uint8_t *) PAL_realloc(lpmem, numberOfBytes);
+    pMem = (uint8_t *) realloc(lpmem, numberOfBytes);
 #endif // __APPLE__ else
 
     if (pMem == NULL)

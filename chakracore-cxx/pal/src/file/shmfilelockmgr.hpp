@@ -84,8 +84,6 @@ namespace CorUnix
 
     class CSharedMemoryFileLockController : public IFileLockController
     {
-        template <class T> friend void InternalDelete(T *p);
-
     private:
         uint32_t m_dwAccessRights;
         SHMPTR m_shmFileLocks;
@@ -147,8 +145,6 @@ namespace CorUnix
 
     class CSharedMemoryFileTransactionLock : public IFileTransactionLock
     {
-        template <class T> friend void InternalDelete(T *p);
-          
     private:
 
         SHMPTR m_shmFileLocks;

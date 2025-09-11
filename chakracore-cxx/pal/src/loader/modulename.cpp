@@ -20,7 +20,7 @@ Abstract:
 --*/
 
 #include "pal/thread.hpp"
-#include "pal/malloc.hpp"
+#include <new>
 #include "pal/palinternal.h"
 #include "pal/dbgmsg.h"
 #include "pal/modulename.h"
@@ -74,7 +74,7 @@ int GetLibRotorNameViaLoadQuery(LPSTR pszBuf)
     // an error other than ENOMEM
     while (iLQRetVal != 0)
     {
-        pLoadQueryBuf = (char*) InternalMalloc (pThread, cbBuf * sizeof(char));
+        pLoadQueryBuf = (char*) malloc (pThread, cbBuf * sizeof(char));
         if (!pLoadQueryBuf)
         {
             SetLastError(ERROR_NOT_ENOUGH_MEMORY);
@@ -83,7 +83,7 @@ int GetLibRotorNameViaLoadQuery(LPSTR pszBuf)
         iLQRetVal = loadquery(L_GETINFO, pLoadQueryBuf, cbBuf);
         if (iLQRetVal < 0)
         {
-            InternalFree(pThread, pLoadQueryBuf);
+            free(pThread, pLoadQueryBuf);
             pLoadQueryBuf = NULL;
             uint32_t dwLastError = GetLastError();
             if (dwLastError == ERROR_NOT_ENOUGH_MEMORY)
@@ -138,7 +138,7 @@ int GetLibRotorNameViaLoadQuery(LPSTR pszBuf)
     }
 Done:
     if (pLoadQueryBuf)
-        InternalFree(pThread, pLoadQueryBuf);
+        free(pThread, pLoadQueryBuf);
     return iRetVal;
 }
 #endif // defined(_AIX)

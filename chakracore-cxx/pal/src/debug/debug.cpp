@@ -31,7 +31,7 @@ Revision History:
 #include "pal/context.h"
 #include "pal/debug.h"
 #include "pal/misc.h"
-#include "pal/malloc.hpp"
+#include <new>
 #include "pal/module.h"
 #include "pal/stackstring.hpp"
 #include "pal/virtual.h"
@@ -215,7 +215,7 @@ OutputDebugStringW(
     }
 
     /* strLen includes the null terminator */
-    if ((lpOutputStringA = (LPSTR) InternalMalloc((strLen * sizeof(char)))) == NULL)
+    if ((lpOutputStringA = (LPSTR) malloc((strLen * sizeof(char)))) == NULL)
     {
         ERROR("Insufficient memory available !\n");
         SetLastError(ERROR_NOT_ENOUGH_MEMORY);
@@ -227,12 +227,12 @@ OutputDebugStringW(
     {
         ASSERT("failed to convert wide chars to multibytes\n");
         SetLastError(ERROR_INTERNAL_ERROR);
-        InternalFree(lpOutputStringA);
+        free(lpOutputStringA);
         goto EXIT;
     }
 
     OutputDebugStringA(lpOutputStringA);
-    InternalFree(lpOutputStringA);
+    free(lpOutputStringA);
 
 EXIT:
     LOGEXIT("OutputDebugStringW returns\n");
@@ -748,7 +748,7 @@ ReadProcessMemory(
 
         /* before transferring any data to lpBuffer we should make sure that all
            data is accessible for read. so we need to use a temp buffer for that.*/
-        if (!(lpTmpBuffer = (int*)InternalMalloc((nbInts * sizeof(int)))))
+        if (!(lpTmpBuffer = (int*)malloc((nbInts * sizeof(int)))))
         {
             ERROR("Insufficient memory available !\n");
             SetLastError(ERROR_NOT_ENOUGH_MEMORY);
@@ -807,7 +807,7 @@ PROCFSCLEANUP:
 CLEANUP2:
     if (lpTmpBuffer)
     {
-        InternalFree(lpTmpBuffer);
+        free(lpTmpBuffer);
     }
 #endif  // !HAVE_TTRACE
 
@@ -1025,7 +1025,7 @@ WriteProcessMemory(
                  (((nSize + FirstIntOffset)%sizeof(int)) ? 1:0);
         lpBaseAddressAligned = (int*)((char*)lpBaseAddress - FirstIntOffset);
 
-        if ((lpTmpBuffer = (int*)InternalMalloc((nbInts * sizeof(int)))) == NULL)
+        if ((lpTmpBuffer = (int*)malloc((nbInts * sizeof(int)))) == NULL)
         {
             ERROR("Insufficient memory available !\n");
             SetLastError(ERROR_NOT_ENOUGH_MEMORY);
@@ -1097,7 +1097,7 @@ PROCFSCLEANUP:
 CLEANUP2:
     if (lpTmpBuffer)
     {
-        InternalFree(lpTmpBuffer);
+        free(lpTmpBuffer);
     }
 #endif  // !HAVE_TTRACE
 

@@ -20,7 +20,7 @@ Abstract:
 --*/
 
 #include "pal/thread.hpp"
-#include "pal/malloc.hpp"
+#include <new>
 #include "pal/file.hpp"
 #include "pal/palinternal.h"
 #include "pal/dbgmsg.h"
@@ -175,10 +175,10 @@ LoadLibraryExA(
     }
 
     /* do the Dos/Unix conversion on our own copy of the name */
-    lpstr = InternalStrdup(lpLibFileName);
+    lpstr = strdup(lpLibFileName);
     if (!lpstr)
     {
-        ERROR("InternalStrdup failure!\n");
+        ERROR("strdup failure!\n");
         SetLastError(ERROR_NOT_ENOUGH_MEMORY);
         goto Done;
     }
@@ -190,7 +190,7 @@ LoadLibraryExA(
  Done:
     if (lpstr != nullptr)
     {
-        InternalFree(lpstr);
+        free(lpstr);
     }
 
     LOGEXIT("LoadLibraryExA returns HMODULE %p\n", hModule);
@@ -873,7 +873,7 @@ BOOL LOADSetExeName(LPWSTR name)
     LockModuleList();
 
     // Save the exe path in the exe module struct
-    InternalFree(exe_module.lib_name);
+    free(exe_module.lib_name);
     exe_module.lib_name = name;
 
     // For platforms where we can't trust the handle to be constant, we need to
@@ -904,7 +904,7 @@ BOOL LOADSetExeName(LPWSTR name)
 exit:
     if (pszExeName)
     {
-        InternalFree(pszExeName);
+        free(pszExeName);
     }
 #endif
     UnlockModuleList();
@@ -1076,8 +1076,8 @@ static BOOL LOADFreeLibrary(MODSTRUCT *module, BOOL fCallDllMain)
     }
 
     /* release all memory */
-    InternalFree(module->lib_name);
-    InternalFree(module);
+    free(module->lib_name);
+    free(module);
 
     retval = TRUE;
 
@@ -1375,7 +1375,7 @@ static MODSTRUCT *LOADAllocModule(void *dl_handle, LPCSTR name)
     LPWSTR wide_name;
 
     /* no match found : try to create a new module structure */
-    module = (MODSTRUCT *)InternalMalloc(sizeof(MODSTRUCT));
+    module = (MODSTRUCT *)malloc(sizeof(MODSTRUCT));
     if (nullptr == module)
     {
         ERROR("malloc() failed! errno is %d (%s)\n", errno, strerror(errno));
@@ -1386,7 +1386,7 @@ static MODSTRUCT *LOADAllocModule(void *dl_handle, LPCSTR name)
     if (nullptr == wide_name)
     {
         ERROR("couldn't convert name to a wide-character string\n");
-        InternalFree(module);
+        free(module);
         return nullptr;
     }
 
@@ -1633,11 +1633,11 @@ MODSTRUCT *LOADGetPalLibrary()
         // Make sure it's terminated with a slash.
         if (g_szCoreCLRPath == nullptr)
         {
-            g_szCoreCLRPath = (char*) InternalMalloc(g_cbszCoreCLRPath);
+            g_szCoreCLRPath = (char*) malloc(g_cbszCoreCLRPath);
 
             if (g_szCoreCLRPath == nullptr)
             {
-                ERROR("LOADGetPalLibrary: InternalMalloc failed!");
+                ERROR("LOADGetPalLibrary: malloc failed!");
                 goto exit;
             }
         }

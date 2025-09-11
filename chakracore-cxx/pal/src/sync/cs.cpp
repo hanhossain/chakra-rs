@@ -15,7 +15,7 @@
 
 #include "pal/thread.hpp"
 #include "pal/cs.hpp"
-#include "pal/malloc.hpp"
+#include <new>
 #include "pal/list.h"
 #include "pal/dbgmsg.h"
 #include "pal/init.h"
@@ -462,7 +462,7 @@ void InternalDeleteCriticalSection(
 
 #endif // PAL_TRACK_CRITICAL_SECTIONS_DATA
 
-        InternalDelete(pPalCriticalSection->DebugInfo);
+        delete pPalCriticalSection->DebugInfo;
         pPalCriticalSection->DebugInfo = NULL;
     }
 #endif // _DEBUG
@@ -635,7 +635,7 @@ namespace CorUnix
         CPalThread * pThread =
             (PALIsThreadDataInitialized() ? GetCurrentPalThread() : NULL);
 
-        pPalCriticalSection->DebugInfo = InternalNew<CRITICAL_SECTION_DEBUG_INFO>();
+        pPalCriticalSection->DebugInfo = new CRITICAL_SECTION_DEBUG_INFO();
         _ASSERT_MSG(NULL != pPalCriticalSection->DebugInfo,
                     "Failed to allocate debug info for new CS\n");
 

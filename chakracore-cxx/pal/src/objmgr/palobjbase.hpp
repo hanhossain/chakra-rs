@@ -87,8 +87,6 @@ namespace CorUnix
     
     class CPalObjectBase : public IPalObject
     { 
-        template <class T> friend void InternalDelete(T *p);
-        
     protected:
 
         int32_t m_lRefCount;
