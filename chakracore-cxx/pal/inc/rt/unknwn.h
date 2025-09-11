@@ -11,7 +11,6 @@
 // simplified unknwn.h for PAL
 
 #include "rpc.h"
-#include "rpcndr.h"
 #include <initguid.h>
 
 #ifndef __IUnknown_INTERFACE_DEFINED__

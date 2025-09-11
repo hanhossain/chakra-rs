@@ -13,7 +13,6 @@
 #define __OAIDL_H__
 
 #include "rpc.h"
-#include "rpcndr.h"
 
 #include "unknwn.h"
 
