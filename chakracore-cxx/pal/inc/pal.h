@@ -5439,7 +5439,6 @@ CoCreateGuid( GUID * pguid);
 #define mkstemp       PAL_mkstemp
 #define rename        PAL_rename
 #define unlink        PAL_unlink
-#define _strdup       PAL__strdup
 #define _open         PAL__open
 #define _close        PAL__close
 #define _wcstoui64    PAL__wcstoui64
@@ -5693,7 +5692,6 @@ void * PAL_malloc(size_t);
 void   PAL_free(void *);
 void * PAL_realloc(void *, size_t);
 #endif
-char * _strdup(const char *);
 
 #define _alloca alloca
 

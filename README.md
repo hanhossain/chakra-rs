@@ -46,6 +46,7 @@ Preprocessor directives to remove:
   - `TARGET_32`
 - remove more windows
   - `_M_X64`
+  - `ITT_PLATFORM_WIN`
 
 Files to remove:
 - any files with // TODO (hanhossain): remove file

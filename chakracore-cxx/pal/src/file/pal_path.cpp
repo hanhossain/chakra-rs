@@ -82,7 +82,7 @@ GetFullPathNameA(
 
     if(fullPath)
     {
-        lpUnixPath = PAL__strdup( lpFileName );
+        lpUnixPath = strdup( lpFileName );
         if(NULL == lpUnixPath)
         {
             ERROR("strdup() failed; error is %d (%s)\n",

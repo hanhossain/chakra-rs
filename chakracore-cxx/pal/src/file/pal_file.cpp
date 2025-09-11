@@ -169,9 +169,9 @@ void FILEGetProperNotFoundError( LPSTR lpPath, uint32_t * lpErrorCode )
         return;
     }
 
-    if ( NULL == ( lpDupedPath = InternalStrdup( lpPath ) ) )
+    if ( NULL == ( lpDupedPath = strdup( lpPath ) ) )
     {
-        ERROR( "InternalStrdup() failed!\n" );
+        ERROR( "strdup() failed!\n" );
         *lpErrorCode = ERROR_NOT_ENOUGH_MEMORY;
         return;
     }
@@ -270,10 +270,10 @@ CorUnix::InternalCanonicalizeRealPath(LPCSTR lpUnixPath, LPSTR lpBuffer, uint32_
     lpRealPath = realpath(lpUnixPath, lpBuffer);
 #else   // !REALPATH_SUPPORTS_NONEXISTENT_FILES
 
-    lpExistingPath = InternalStrdup(lpUnixPath);
+    lpExistingPath = strdup(lpUnixPath);
     if (lpExistingPath == NULL)
     {
-        ERROR ("InternalStrdup failed with error %d\n", errno);
+        ERROR ("strdup failed with error %d\n", errno);
         palError = ERROR_NOT_ENOUGH_MEMORY;
         goto LExit;
     }
@@ -516,10 +516,10 @@ CorUnix::InternalCreateFile(
         goto done;
     }
 
-    lpUnixPath = InternalStrdup(lpFileName);
+    lpUnixPath = strdup(lpFileName);
     if ( lpUnixPath == NULL )
     {
-        ERROR("InternalStrdup() failed\n");
+        ERROR("strdup() failed\n");
         palError = ERROR_NOT_ENOUGH_MEMORY;
         goto done;
     }
@@ -1209,7 +1209,7 @@ DeleteFileA(
     if (palError != NO_ERROR)
     {
         InternalFree(lpFullUnixFileName);
-        lpFullUnixFileName = InternalStrdup(lpUnixFileName);
+        lpFullUnixFileName = strdup(lpUnixFileName);
         if (!lpFullUnixFileName)
         {
             palError = ERROR_NOT_ENOUGH_MEMORY;
@@ -3929,10 +3929,10 @@ CopyFileA(
     }
 
     /* Need to preserve the owner/group and chmod() flags */
-    lpUnixPath = InternalStrdup(lpExistingFileName);
+    lpUnixPath = strdup(lpExistingFileName);
     if ( lpUnixPath == NULL )
     {
-        ERROR("InternalStrdup() failed\n");
+        ERROR("strdup() failed\n");
         pThread->SetLastError(FILEGetLastErrorFromErrno());
         goto done;
     }
@@ -3959,10 +3959,10 @@ CopyFileA(
     }
 
     InternalFree(lpUnixPath);
-    lpUnixPath = InternalStrdup(lpNewFileName);
+    lpUnixPath = strdup(lpNewFileName);
     if ( lpUnixPath == NULL )
     {
-        ERROR("InternalStrdup() failed\n");
+        ERROR("strdup() failed\n");
         pThread->SetLastError(FILEGetLastErrorFromErrno());
         goto done;
     }
@@ -4085,9 +4085,9 @@ SetFileAttributesA(
         goto done;
     }
 
-    if ((UnixFileName = InternalStrdup(lpFileName)) == NULL)
+    if ((UnixFileName = strdup(lpFileName)) == NULL)
     {
-        ERROR("InternalStrdup() failed\n");
+        ERROR("strdup() failed\n");
         dwLastError = ERROR_NOT_ENOUGH_MEMORY;
         goto done;
     }

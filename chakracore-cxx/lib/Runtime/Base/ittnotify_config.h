@@ -198,7 +198,6 @@ typedef pthread_mutex_t   mutex_t;
 #define __itt_fstrcmp(s1, s2)     lstrcmpA(s1, s2)
 #define __itt_fstrnlen(s, l)      strnlen_s(s, l)
 #define __itt_fstrcpyn(s1, b, s2, l) strncpy_s(s1, b, s2, l)
-#define __itt_fstrdup(s)          _strdup(s)
 #define __itt_thread_id()         GetCurrentThreadId()
 #define __itt_thread_yield()      SwitchToThread()
 #ifndef ITT_SIMPLE_INIT
@@ -250,7 +249,6 @@ ITT_INLINE long __itt_interlocked_increment(volatile long* ptr)
 #define __itt_fstrcpyn(s1, b, s2, l) strncpy(s1, s2, l)
 #endif /* SDL_STRNCPY_S */
 
-#define __itt_fstrdup(s)          strdup(s)
 #define __itt_thread_id()         pthread_self()
 #define __itt_thread_yield()      sched_yield()
 #if ITT_ARCH==ITT_ARCH_IA64
@@ -400,7 +398,7 @@ typedef struct ___itt_global
     h = (__itt_thread_info*)malloc(sizeof(__itt_thread_info)); \
     if (h != NULL) { \
         h->tid    = t; \
-        h->nameA  = n ? __itt_fstrdup(n) : NULL; \
+        h->nameA  = n ? strdup(n) : NULL; \
         h->nameW  = NULL; \
         h->state  = s; \
         h->extra1 = 0;    /* reserved */ \
@@ -433,7 +431,7 @@ typedef struct ___itt_global
     h = (__itt_domain*)malloc(sizeof(__itt_domain)); \
     if (h != NULL) { \
         h->flags  = 1;    /* domain is enabled by default */ \
-        h->nameA  = name ? __itt_fstrdup(name) : NULL; \
+        h->nameA  = name ? strdup(name) : NULL; \
         h->nameW  = NULL; \
         h->extra1 = 0;    /* reserved */ \
         h->extra2 = NULL; /* reserved */ \
@@ -463,7 +461,7 @@ typedef struct ___itt_global
 #define NEW_STRING_HANDLE_A(gptr,h,h_tail,name) { \
     h = (__itt_string_handle*)malloc(sizeof(__itt_string_handle)); \
     if (h != NULL) { \
-        h->strA   = name ? __itt_fstrdup(name) : NULL; \
+        h->strA   = name ? strdup(name) : NULL; \
         h->strW   = NULL; \
         h->extra1 = 0;    /* reserved */ \
         h->extra2 = NULL; /* reserved */ \
@@ -495,9 +493,9 @@ typedef struct ___itt_global
 #define NEW_COUNTER_A(gptr,h,h_tail,name,domain,type) { \
     h = (__itt_counter_info_t*)malloc(sizeof(__itt_counter_info_t)); \
     if (h != NULL) { \
-        h->nameA   = name ? __itt_fstrdup(name) : NULL; \
+        h->nameA   = name ? strdup(name) : NULL; \
         h->nameW   = NULL; \
-        h->domainA   = domain ? __itt_fstrdup(domain) : NULL; \
+        h->domainA   = domain ? strdup(domain) : NULL; \
         h->domainW   = NULL; \
         h->type = type; \
         h->index = 0; \

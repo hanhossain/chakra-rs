@@ -47,11 +47,6 @@ extern "C"
     PAL_free(
         void *pvMem
         );
-
-    char *
-    PAL__strdup(
-        const char *c_szStr
-        );
 }
 
 inline void* operator new(size_t, void* p) throw () { return p; }
@@ -74,11 +69,6 @@ namespace CorUnix{
     InternalFree(
         void *pvMem
         );
-
-    char *
-    InternalStrdup(
-        const char *c_szStr
-        );  
 
     // Define common code for "new" style allocators below.
 #define INTERNAL_NEW_COMMON()                    \

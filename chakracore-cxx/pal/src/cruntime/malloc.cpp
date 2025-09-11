@@ -111,21 +111,3 @@ CorUnix::InternalMalloc(
     pvMem = (void*)malloc(szSize);
     return pvMem;
 }
-
-char *
-PAL__strdup(
-    const char *c_szStr
-    )
-{
-    return InternalStrdup(c_szStr);
-}
-
-char *
-CorUnix::InternalStrdup(
-    const char *c_szStr
-    )
-{
-    char *pszStrCopy;
-    pszStrCopy = strdup(c_szStr);
-    return pszStrCopy;
-}
