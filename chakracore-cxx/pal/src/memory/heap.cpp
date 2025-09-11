@@ -392,7 +392,7 @@ HeapReAlloc(
         pMem = (uint8_t *) malloc_zone_realloc((malloc_zone_t *)hHeap, lpmem, numberOfBytes);
     }
 #else // __APPLE__
-    pMem = (uint8_t *) PAL_realloc(lpmem, numberOfBytes);
+    pMem = (uint8_t *) realloc(lpmem, numberOfBytes);
 #endif // __APPLE__ else
 
     if (pMem == NULL)

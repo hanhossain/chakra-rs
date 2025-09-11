@@ -5685,12 +5685,6 @@ inline long abs(long _X) {
 #endif
 #endif
 
-#ifdef INCLUDE_PAL_INTERNAL_
-/* FIXME remove
- * PAL wrappers around memory management functions, only used inside PAL */
-void * PAL_realloc(void *, size_t);
-#endif
-
 #define _alloca alloca
 
 #if defined(__GNUC__)

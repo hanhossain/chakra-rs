@@ -31,12 +31,3 @@ Revision History:
 SET_DEFAULT_DEBUG_CHANNEL(CRT);
 
 using namespace CorUnix;
-
-void *
-PAL_realloc(
-    void* pvMemblock,
-    size_t szSize
-    )
-{
-    return realloc(pvMemblock, szSize);
-}

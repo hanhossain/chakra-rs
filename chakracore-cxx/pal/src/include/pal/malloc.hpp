@@ -30,15 +30,6 @@ Abstract:
 #include <alloca.h>
 #endif  // HAVE_ALLOCA_H  
 
-extern "C"
-{
-    void *
-    PAL_realloc(
-        void* pvMemblock,
-        size_t szSize
-        );
-}
-
 inline void* operator new(size_t, void* p) throw () { return p; }
 inline void* operator new[](size_t, void* p) throw () { return p; }
 
