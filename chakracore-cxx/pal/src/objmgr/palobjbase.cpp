@@ -19,7 +19,7 @@ Abstract:
 --*/
 
 #include "palobjbase.hpp"
-#include "pal/malloc.hpp"
+#include <new>
 #include "pal/dbgmsg.h"
 
 SET_DEFAULT_DEBUG_CHANNEL(PAL);

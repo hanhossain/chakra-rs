@@ -15,7 +15,7 @@
 
 #include "pal/thread.hpp"
 #include "pal/cs.hpp"
-#include "pal/malloc.hpp"
+#include <new>
 #include "pal/list.h"
 #include "pal/dbgmsg.h"
 #include "pal/init.h"

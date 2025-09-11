@@ -20,7 +20,7 @@ Abstract:
 
 #include "config.h"
 #include "pal/dbgmsg.h"
-#include "pal/malloc.hpp"
+#include <new>
 #include "pal/thread.hpp"
 #include "machmessage.h"
 

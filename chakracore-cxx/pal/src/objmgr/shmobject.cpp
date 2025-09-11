@@ -19,7 +19,7 @@ Abstract:
 --*/
 
 #include "shmobject.hpp"
-#include "pal/malloc.hpp"
+#include <new>
 #include "pal/cs.hpp"
 #include "pal/dbgmsg.h"
 

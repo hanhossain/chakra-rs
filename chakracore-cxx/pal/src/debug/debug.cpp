@@ -31,7 +31,7 @@ Revision History:
 #include "pal/context.h"
 #include "pal/debug.h"
 #include "pal/misc.h"
-#include "pal/malloc.hpp"
+#include <new>
 #include "pal/module.h"
 #include "pal/stackstring.hpp"
 #include "pal/virtual.h"

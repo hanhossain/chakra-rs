@@ -23,7 +23,7 @@ Revision History:
 
 #include "pal/corunix.hpp"
 #include "pal/thread.hpp"
-#include "pal/malloc.hpp"
+#include <new>
 #include "pal/file.hpp"
 #include "pal/printfcpp.hpp"
 #include "pal/palinternal.h"

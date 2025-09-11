@@ -24,7 +24,7 @@ Revision History:
 
 #include "pal/thread.hpp"
 #include "pal/synchobjects.hpp"
-#include "pal/malloc.hpp"
+#include <new>
 #include "pal/dbgmsg.h"
 
 SET_DEFAULT_DEBUG_CHANNEL(SYNC);

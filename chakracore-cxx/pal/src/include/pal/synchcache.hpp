@@ -23,7 +23,7 @@ Abstract:
 #define _SYNCH_CACHE_H_
 
 #include "pal/thread.hpp"
-#include "pal/malloc.hpp"
+#include <new>
 
 namespace CorUnix
 {    

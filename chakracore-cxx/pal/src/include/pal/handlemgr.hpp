@@ -26,7 +26,7 @@ Abstract:
 #include "corunix.hpp"
 #include "cs.hpp"
 #include "pal/thread.hpp"
-#include "pal/malloc.hpp"
+#include <new>
 
 
 /* Pseudo handles constant for current thread and process */

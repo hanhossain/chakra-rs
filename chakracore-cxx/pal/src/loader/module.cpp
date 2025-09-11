@@ -20,7 +20,7 @@ Abstract:
 --*/
 
 #include "pal/thread.hpp"
-#include "pal/malloc.hpp"
+#include <new>
 #include "pal/file.hpp"
 #include "pal/palinternal.h"
 #include "pal/dbgmsg.h"

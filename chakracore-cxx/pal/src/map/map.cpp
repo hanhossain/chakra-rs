@@ -29,7 +29,7 @@ Abstract:
 #include "pal/map.hpp"
 #include "pal/thread.hpp"
 #include "pal/file.hpp"
-#include "pal/malloc.hpp"
+#include <new>
 
 #include <sys/stat.h>
 #include <sys/types.h>

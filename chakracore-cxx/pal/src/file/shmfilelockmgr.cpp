@@ -19,7 +19,7 @@ Abstract:
 --*/
 
 #include "pal/thread.hpp"
-#include "pal/malloc.hpp"
+#include <new>
 #include "pal/dbgmsg.h"
 #include "shmfilelockmgr.hpp"
 

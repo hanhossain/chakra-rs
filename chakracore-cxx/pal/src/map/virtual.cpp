@@ -21,7 +21,7 @@ Abstract:
 
 #include "pal/thread.hpp"
 #include "pal/cs.hpp"
-#include "pal/malloc.hpp"
+#include <new>
 #include "pal/file.hpp"
 #include "pal/dbgmsg.h"
 #include "pal/virtual.h"
