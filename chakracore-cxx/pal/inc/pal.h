@@ -1182,24 +1182,6 @@ CreateMutexA(
 #define CreateMutex  CreateMutexA
 #endif
 
-HANDLE
-OpenMutexW(
-        uint32_t dwDesiredAccess,
-        BOOL bInheritHandle,
-        LPCWSTR lpName);
-
-HANDLE
-OpenMutexA(
-        uint32_t dwDesiredAccess,
-        BOOL bInheritHandle,
-        LPCSTR lpName);
-
-#ifdef UNICODE
-#define OpenMutex  OpenMutexW
-#else
-#define OpenMutex  OpenMutexA
-#endif // UNICODE
-
 BOOL
 ReleaseMutex(
      HANDLE hMutex);
