@@ -11,7 +11,6 @@ bool DynamicProfileStorage::uninitialized = false;
 bool DynamicProfileStorage::enabled = false;
 bool DynamicProfileStorage::useCacheDir = false;
 bool DynamicProfileStorage::collectInfo = false;
-HANDLE DynamicProfileStorage::mutex = nullptr;
 char16_t DynamicProfileStorage::cacheDrive[_MAX_DRIVE];
 char16_t DynamicProfileStorage::cacheDir[_MAX_DIR];
 char16_t DynamicProfileStorage::catalogFilename[_MAX_PATH];
@@ -428,10 +427,6 @@ bool DynamicProfileStorage::Uninitialize()
 #endif
     }
 
-    if (mutex != nullptr)
-    {
-        CloseHandle(mutex);
-    }
 #ifdef DYNAMIC_PROFILE_EXPORT_FILE_CHECK
     uint32 oldCount = infoMap.Count();
 #endif
@@ -698,51 +693,27 @@ void DynamicProfileStorage::DisableCacheDir()
 
 bool DynamicProfileStorage::AcquireLock()
 {
-    AssertOrFailFast(mutex != nullptr);
     AssertOrFailFast(!locked);
-    uint32_t ret = WaitForSingleObject(mutex, INFINITE);
-    if (ret == WAIT_OBJECT_0 || ret == WAIT_ABANDONED)
-    {
+    mutex.lock();
 #if DBG
         locked = true;
 #endif
-        return true;
-    }
-    Output::Print(u"ERROR: DynamicProfileStorage: Unable to acquire mutex %d\n", ret);
-    Output::Flush();
-    DisableCacheDir();
-
-    return false;
+    return true;
 }
 
 bool DynamicProfileStorage::ReleaseLock()
 {
     AssertOrFailFast(locked);
-    AssertOrFailFast(mutex != nullptr);
 #if DBG
     locked = false;
 #endif
-    if (ReleaseMutex(mutex))
-    {
-        return true;
-    }
-    DisableCacheDir();
-    Output::Print(u"ERROR: DynamicProfileStorage: Unable to release mutex");
-    Output::Flush();
-    return false;
+    mutex.unlock();
+    return true;
 }
 
 bool DynamicProfileStorage::SetupCacheDir(__in_z char16_t const * dirname)
 {
     AssertOrFailFast(enabled);
-
-    mutex = CreateMutex(NULL, FALSE, u"JSDPCACHE");
-    if (mutex == nullptr)
-    {
-        Output::Print(u"ERROR: DynamicProfileStorage: Unable to create mutex");
-        Output::Flush();
-        return false;
-    }
 
     useCacheDir = true;
     if (!AcquireLock())

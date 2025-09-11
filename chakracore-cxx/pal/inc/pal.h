@@ -1164,28 +1164,6 @@ OpenEventW(
 #define OpenEvent OpenEventW
 #endif
 
-HANDLE
-CreateMutexW(
-     LPSECURITY_ATTRIBUTES lpMutexAttributes,
-     BOOL bInitialOwner,
-     LPCWSTR lpName);
-
-HANDLE
-CreateMutexA(
-     LPSECURITY_ATTRIBUTES lpMutexAttributes,
-     BOOL bInitialOwner,
-     LPCSTR lpName);
-
-#ifdef UNICODE
-#define CreateMutex  CreateMutexW
-#else
-#define CreateMutex  CreateMutexA
-#endif
-
-BOOL
-ReleaseMutex(
-     HANDLE hMutex);
-
 uint32_t
 GetCurrentProcessId(
             void);

@@ -5,6 +5,7 @@
 #pragma once
 
 #ifdef DYNAMIC_PROFILE_STORAGE
+#include <mutex>
 class DynamicProfileStorage
 {
 public:
@@ -54,7 +55,7 @@ private:
     static inline TimeType GetCreationTime() { return time(NULL); }
     static TimeType creationTime;
     static int32 lastOffset;
-    static HANDLE mutex;
+    static std::mutex mutex;
     static CriticalSection cs;
     static uint32_t nextFileId;
     static bool locked;

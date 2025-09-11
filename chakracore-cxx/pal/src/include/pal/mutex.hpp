@@ -27,20 +27,5 @@ Abstract:
 namespace CorUnix
 {
     extern CObjectType otMutex;
-
-    PAL_ERROR
-    InternalCreateMutex(
-        CPalThread *pThread,
-        LPSECURITY_ATTRIBUTES lpMutexAttributes,
-        BOOL bInitialOwner,
-        LPCWSTR lpName,
-        HANDLE *phMutex
-        );
-
-    PAL_ERROR
-    InternalReleaseMutex(
-        CPalThread *pThread,
-        HANDLE hMutex
-        );
 }
 #endif //_PAL_MUTEX_H_
