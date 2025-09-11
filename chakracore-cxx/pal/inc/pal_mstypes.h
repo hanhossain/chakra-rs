@@ -52,11 +52,7 @@ extern "C" {
 // Type attribute stuff
 ////////////////////////////////////////////////////////////////////////
 
-#ifdef UNICODE
 #define __TEXT(x) L##x
-#else
-#define __TEXT(x) x
-#endif
 #define TEXT(x) __TEXT(x)
 
 ////////////////////////////////////////////////////////////////////////
@@ -121,13 +117,8 @@ typedef char *PCHAR;
 typedef char *LPSTR;
 typedef const char *LPCSTR;
 
-#ifdef UNICODE
 typedef char16_t TCHAR;
 typedef char16_t _TCHAR;
-#else
-typedef char TCHAR;
-typedef char _TCHAR;
-#endif
 typedef TCHAR *LPTSTR;
 typedef const TCHAR *LPCTSTR;
 
