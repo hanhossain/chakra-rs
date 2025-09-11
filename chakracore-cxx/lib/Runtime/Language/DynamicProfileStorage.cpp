@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "RuntimeLanguagePch.h"
+#include <mutex>
 
 #ifdef DYNAMIC_PROFILE_STORAGE
 
@@ -11,6 +12,7 @@ bool DynamicProfileStorage::uninitialized = false;
 bool DynamicProfileStorage::enabled = false;
 bool DynamicProfileStorage::useCacheDir = false;
 bool DynamicProfileStorage::collectInfo = false;
+std::mutex DynamicProfileStorage::mutex;
 char16_t DynamicProfileStorage::cacheDrive[_MAX_DRIVE];
 char16_t DynamicProfileStorage::cacheDir[_MAX_DIR];
 char16_t DynamicProfileStorage::catalogFilename[_MAX_PATH];
