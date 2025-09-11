@@ -21,10 +21,6 @@
 #define _UNICODE 1
 #endif
 
-#ifndef UNICODE    /* NT flag */
-#define UNICODE 1
-#endif
-
 #define _SAFECRT_IMPL
 #define _SECURE_SCANF
 

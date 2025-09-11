@@ -36,10 +36,6 @@
 #define _UNICODE 1
 #endif
 
-#ifndef UNICODE     /* NT flag */
-#define UNICODE 1
-#endif
-
 #define FORMAT_VALIDATIONS
 #if defined(_NTSUBSET_)
 #define _MBTOWC _safecrt_mbtowc
