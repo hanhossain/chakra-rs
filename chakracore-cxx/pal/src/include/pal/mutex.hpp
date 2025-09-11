@@ -42,15 +42,5 @@ namespace CorUnix
         CPalThread *pThread,
         HANDLE hMutex
         );
-
-    PAL_ERROR
-    InternalOpenMutex(
-        CPalThread *pThread,
-        uint32_t dwDesiredAccess,
-        BOOL bInheritHandle,
-        LPCWSTR lpName,
-        HANDLE *phMutex
-        );
-
 }
 #endif //_PAL_MUTEX_H_
