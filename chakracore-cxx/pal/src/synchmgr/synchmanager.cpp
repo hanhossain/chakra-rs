@@ -3486,7 +3486,7 @@ namespace CorUnix
         {
             int i;
 
-            rgshridWTLNodes = InternalNewArray<SharedID>(ulcWaitingThreads);
+            rgshridWTLNodes = new SharedID[ulcWaitingThreads];
             if (NULL == rgshridWTLNodes)
             {
                 palError = ERROR_OUTOFMEMORY;

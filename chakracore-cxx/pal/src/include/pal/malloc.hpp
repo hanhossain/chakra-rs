@@ -33,27 +33,4 @@ Abstract:
 inline void* operator new(size_t, void* p) throw () { return p; }
 inline void* operator new[](size_t, void* p) throw () { return p; }
 
-// TODO (hanhossain): remove these
-namespace CorUnix{
-
-    // Define "new" style allocators (which allocate then call a constructor) for different numbers of
-    // constructor arguments. Added based on usage.
-
-    template<class T> T* InternalNewArray(size_t cElements)
-    {
-        size_t cbSize = (cElements * sizeof(T)) + sizeof(size_t);
-        T *pMem;
-
-        pMem = (T*)malloc(cbSize);
-
-        if (pMem == NULL)
-            return NULL;
-
-        *(size_t*)pMem = cElements;
-        pMem = (T*)((size_t*)pMem + 1);
-
-        return new (pMem) T[cElements]();
-    }
-}
-
 #endif // _MALLOC_HPP

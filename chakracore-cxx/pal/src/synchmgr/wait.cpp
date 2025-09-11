@@ -312,8 +312,8 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
         wtWaitType = fWAll ? MultipleObjectsWaitAll : MultipleObjectsWaitOne;
         if (nCount > MAXIMUM_STACK_WAITOBJ_ARRAY_SIZE)
         {
-            ppIPalObjs = InternalNewArray<IPalObject*>(nCount);
-            ppISyncWaitCtrlrs = InternalNewArray<ISynchWaitController*>(nCount);
+            ppIPalObjs = new IPalObject*[nCount];
+            ppISyncWaitCtrlrs = new ISynchWaitController*[nCount];
             if ((NULL == ppIPalObjs) || (NULL == ppISyncWaitCtrlrs))
             {
                 ERROR("Out of memory allocating internal structures\n");
