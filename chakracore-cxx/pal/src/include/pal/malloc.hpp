@@ -54,18 +54,6 @@ namespace CorUnix{
 
         return new (pMem) T[cElements]();
     }
-
-    template<class T> void InternalDeleteArray(T *p)
-    {
-        if (p)
-        {
-            size_t *pRealMem = (size_t*)p - 1;
-            size_t cElements = *pRealMem;
-            for (size_t i = 0; i < cElements; i++)
-                p[i].~T();
-            free(pRealMem);
-        }
-    }
 }
 
 #endif // _MALLOC_HPP

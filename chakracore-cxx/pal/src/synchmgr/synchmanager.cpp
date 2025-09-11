@@ -3695,7 +3695,7 @@ namespace CorUnix
 
         if (NULL != rgshridWTLNodes)
         {
-            InternalDeleteArray(rgshridWTLNodes);
+            delete[] rgshridWTLNodes;
         }
 
         return palError;

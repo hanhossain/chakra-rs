@@ -576,8 +576,8 @@ WFMOExIntCleanup:
 WFMOExIntExit:
     if (nCount > MAXIMUM_STACK_WAITOBJ_ARRAY_SIZE)
     {
-        InternalDeleteArray(ppIPalObjs);
-        InternalDeleteArray(ppISyncWaitCtrlrs);
+        delete[] ppIPalObjs;
+        delete[] ppISyncWaitCtrlrs;
     }
 
     return dwRet;
