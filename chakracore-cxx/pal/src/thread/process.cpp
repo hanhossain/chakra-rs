@@ -2955,7 +2955,7 @@ getPath(
         /* verify if the path fit in the OUT parameter */
         if (slashLen + nextLen + strlen (lpFileName) >= iLen)
         {
-            InternalFree(lpPath);
+            free(lpPath);
             ERROR("buffer too small for full path\n");
             return FALSE;
         }
@@ -2973,14 +2973,14 @@ getPath(
         if (access (lpPathFileName, F_OK) == 0)
         {
             TRACE("Found %s in $PATH element %s\n", lpFileName, lpNext);
-            InternalFree(lpPath);
+            free(lpPath);
             return TRUE;
         }
 
         lpNext = lpCurrent;  /* search in the next directory */
     }
 
-    InternalFree(lpPath);
+    free(lpPath);
     TRACE("File %s not found in $PATH\n", lpFileName);
     return FALSE;
 }

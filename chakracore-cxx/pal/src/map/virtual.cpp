@@ -160,14 +160,14 @@ void VIRTUALCleanup()
     {
         WARN( "The memory at %d was not freed through a call to VirtualFree.\n",
               pEntry->startBoundary );
-        InternalFree(pEntry->pAllocState);
-        InternalFree(pEntry->pProtectionState );
+        free(pEntry->pAllocState);
+        free(pEntry->pProtectionState );
 #if MMAP_DOESNOT_ALLOW_REMAP
-        InternalFree(pEntry->pDirtyPages );
+        free(pEntry->pDirtyPages );
 #endif
         pTempEntry = pEntry;
         pEntry = pEntry->pNext;
-        InternalFree(pTempEntry );
+        free(pTempEntry );
     }
     pVirtualMemory = NULL;
     pVirtualMemoryLastFound = NULL;
@@ -182,7 +182,7 @@ void VIRTUALCleanup()
         munmap(pFreeBlock->startBoundary, pFreeBlock->memSize);
         pTempFreeBlock = pFreeBlock;
         pFreeBlock = pFreeBlock->next;
-        InternalFree(pTempFreeBlock);
+        free(pTempFreeBlock);
     }
     pFreeMemory = NULL;
     gBackingBaseAddress = MAP_FAILED;
@@ -645,18 +645,18 @@ static BOOL VIRTUALReleaseMemory( PCMI pMemoryToBeReleased )
     bRetVal = VIRTUALAddToFreeList(pMemoryToBeReleased);
 #endif  // MMAP_IGNORES_HINT
 
-    InternalFree( pMemoryToBeReleased->pAllocState );
+    free( pMemoryToBeReleased->pAllocState );
     pMemoryToBeReleased->pAllocState = NULL;
 
-    InternalFree( pMemoryToBeReleased->pProtectionState );
+    free( pMemoryToBeReleased->pProtectionState );
     pMemoryToBeReleased->pProtectionState = NULL;
 
 #if MMAP_DOESNOT_ALLOW_REMAP
-    InternalFree( pMemoryToBeReleased->pDirtyPages );
+    free( pMemoryToBeReleased->pDirtyPages );
     pMemoryToBeReleased->pDirtyPages = NULL;
 #endif // MMAP_DOESNOT_ALLOW_REMAP
 
-    InternalFree( pMemoryToBeReleased );
+    free( pMemoryToBeReleased );
     pMemoryToBeReleased = NULL;
 
     return bRetVal;
@@ -811,17 +811,17 @@ static BOOL VIRTUALStoreAllocationInfo(
         bRetVal =  FALSE;
 
 #if MMAP_DOESNOT_ALLOW_REMAP
-        if (pNewEntry->pDirtyPages) InternalFree( pNewEntry->pDirtyPages );
+        if (pNewEntry->pDirtyPages) free( pNewEntry->pDirtyPages );
         pNewEntry->pDirtyPages = NULL;
 #endif //
 
-        if (pNewEntry->pProtectionState) InternalFree( pNewEntry->pProtectionState );
+        if (pNewEntry->pProtectionState) free( pNewEntry->pProtectionState );
         pNewEntry->pProtectionState = NULL;
 
-        if (pNewEntry->pAllocState) InternalFree( pNewEntry->pAllocState );
+        if (pNewEntry->pAllocState) free( pNewEntry->pAllocState );
         pNewEntry->pAllocState = NULL;
 
-        InternalFree( pNewEntry );
+        free( pNewEntry );
         pNewEntry = NULL;
 
         goto done;
@@ -907,14 +907,14 @@ static BOOL VIRTUALUpdateAllocationInfo(
     // Cleaup previous structures as we will need to reinitialize these using the new size of the region.
     {
 #if MMAP_DOESNOT_ALLOW_REMAP
-        if (pExistingEntry->pDirtyPages) InternalFree(pExistingEntry->pDirtyPages);
+        if (pExistingEntry->pDirtyPages) free(pExistingEntry->pDirtyPages);
         pExistingEntry->pDirtyPages = NULL;
 #endif //  MMAP_DOESNOT_ALLOW_REMAP
 
-        if (pExistingEntry->pProtectionState) InternalFree(pExistingEntry->pProtectionState);
+        if (pExistingEntry->pProtectionState) free(pExistingEntry->pProtectionState);
         pExistingEntry->pProtectionState = NULL;
 
-        if (pExistingEntry->pAllocState) InternalFree(pExistingEntry->pAllocState);
+        if (pExistingEntry->pAllocState) free(pExistingEntry->pAllocState);
         pExistingEntry->pAllocState = NULL;
     }
 
@@ -945,14 +945,14 @@ static BOOL VIRTUALUpdateAllocationInfo(
         bRetVal = FALSE;
 
 #if MMAP_DOESNOT_ALLOW_REMAP
-        if (pExistingEntry->pDirtyPages) InternalFree(pExistingEntry->pDirtyPages);
+        if (pExistingEntry->pDirtyPages) free(pExistingEntry->pDirtyPages);
         pExistingEntry->pDirtyPages = NULL;
 #endif //
 
-        if (pExistingEntry->pProtectionState) InternalFree(pExistingEntry->pProtectionState);
+        if (pExistingEntry->pProtectionState) free(pExistingEntry->pProtectionState);
         pExistingEntry->pProtectionState = NULL;
 
-        if (pExistingEntry->pAllocState) InternalFree(pExistingEntry->pAllocState);
+        if (pExistingEntry->pAllocState) free(pExistingEntry->pAllocState);
         pExistingEntry->pAllocState = NULL;
 
         goto done;
@@ -1442,7 +1442,7 @@ static void *VIRTUALReserveFromBackingFile(UINT_PTR addr, size_t length)
         {
             prev->next = block->next;
         }
-        InternalFree(block);
+        free(block);
     }
     else
     {
@@ -1545,7 +1545,7 @@ static BOOL VIRTUALAddToFreeList(const PCMI pMemoryToBeReleased)
                 lastBlock->memSize += lastBlock->next->memSize;
                 temp = lastBlock->next;
                 lastBlock->next = lastBlock->next->next;
-                InternalFree(temp);
+                free(temp);
             }
             else
             {

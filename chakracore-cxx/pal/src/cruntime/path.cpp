@@ -571,7 +571,7 @@ _fullpath(
                 maxLength, min_length);
         if (fBufAllocated)
         {
-            PAL_free(absPath);
+            free(absPath);
             fBufAllocated = FALSE;
         }
         goto fullpathExit;

@@ -208,8 +208,8 @@ GetEnvironmentVariableW(
     }
 
 done:
-    PAL_free(outBuff);
-    PAL_free(inBuff);
+    free(outBuff);
+    free(inBuff);
 
     LOGEXIT("GetEnvironmentVariableW returns DWORD 0x%x\n", size);
     PERF_EXIT(GetEnvironmentVariableW);
@@ -321,8 +321,8 @@ SetEnvironmentVariableW(
 
     bRet = SetEnvironmentVariableA(name, value);
 done:
-    PAL_free(value);
-    PAL_free(name);
+    free(value);
+    free(name);
     
     LOGEXIT("SetEnvironmentVariableW returning BOOL %d\n", bRet);
     PERF_EXIT(SetEnvironmentVariableW);
@@ -498,7 +498,7 @@ FreeEnvironmentStringsW(
 
     if (lpValue != NULL)
     {
-        PAL_free(lpValue);
+        free(lpValue);
     }
 
     LOGEXIT("FreeEnvironmentStringW returning BOOL TRUE\n");
@@ -523,7 +523,7 @@ FreeEnvironmentStringsA(
 
     if (lpValue != NULL)
     {
-        PAL_free(lpValue);
+        free(lpValue);
     }
 
     LOGEXIT("FreeEnvironmentStringA returning BOOL TRUE\n");
@@ -614,7 +614,7 @@ SetEnvironmentVariableA(
         sprintf_s(string, iLen, "%s=%s", lpName, lpValue);
         nResult = MiscPutenv(string, FALSE) ? 0 : -1;
 
-        PAL_free(string);
+        free(string);
         string = NULL;
         
         // If MiscPutenv returns FALSE, it almost certainly failed to

@@ -714,7 +714,7 @@ static BOOL Internal_ScanfExtractFormatA(LPCSTR *Fmt, LPSTR Out, int iOutSize, L
 
     CHECK_OUT_IN_ITS_RANGE(Out,BaseOut,EndOut)
     *Out = 0;  /* end the string */
-    PAL_free(TempStr);
+    free(TempStr);
     return Result;
 }
 
@@ -1002,7 +1002,7 @@ static BOOL Internal_ScanfExtractFormatW(LPCWSTR *Fmt, LPSTR Out, int iOutSize, 
     *Out++ = 'n';
 
     *Out = 0;  /* end the string */
-    PAL_free(TempStr);
+    free(TempStr);
     return Result;
 }
 
@@ -1306,7 +1306,7 @@ int PAL_wvsscanf(LPCWSTR Buffer, LPCWSTR Format, va_list ap)
                 {
                     ASSERT("WideCharToMultiByte failed.  Error is %d\n",
                         GetLastError());
-                    PAL_free(newBuff);
+                    free(newBuff);
                     return -1;
                 }
 
@@ -1394,7 +1394,7 @@ int PAL_wvsscanf(LPCWSTR Buffer, LPCWSTR Format, va_list ap)
                 }
 #endif // SSCANF_CANNOT_HANDLE_MISSING_EXPONENT
 
-                PAL_free(newBuff);
+                free(newBuff);
                 if (ret > 0)
                 {
                     Length += ret;
@@ -1696,7 +1696,7 @@ static int SscanfFloatCheckExponent(LPCSTR buff, LPCSTR floatFmt,
                 ret = sscanf_s(pLocBuf, floatFmt, voidPtr, pn);
             else
                 ret = sscanf_s(pLocBuf, floatFmt, pn);
-            PAL_free (pLocBuf);
+            free (pLocBuf);
         }
     }
     return ret;

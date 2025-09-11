@@ -816,7 +816,7 @@ static LPWSTR INIT_FormatCommandLine (int argc, const char * const *argv)
     if (i == 0)
     {
         ASSERT("MultiByteToWideChar failure\n");
-        InternalFree(command_line);
+        free(command_line);
         return NULL;
     }
 
@@ -824,20 +824,20 @@ static LPWSTR INIT_FormatCommandLine (int argc, const char * const *argv)
     if(retval == NULL)
     {
         ERROR("can't allocate memory for Unicode command line!\n");
-        InternalFree(command_line);
+        free(command_line);
         return NULL;
     }
 
     if(!MultiByteToWideChar(CP_ACP, 0,command_line, i, retval, i))
     {
         ASSERT("MultiByteToWideChar failure\n");
-        InternalFree(retval);
+        free(retval);
         retval = NULL;
     }
     else
         TRACE("Command line is %s\n", command_line);
 
-    InternalFree(command_line);
+    free(command_line);
     return retval;
 }
 
@@ -912,7 +912,7 @@ static LPWSTR INIT_FindEXEPath(LPCSTR exe_name)
                                         return_value, return_size))
                 {
                     ASSERT("MultiByteToWideChar failure\n");
-                    InternalFree(return_value);
+                    free(return_value);
                     return_value = NULL;
                 }
                 else
@@ -990,8 +990,8 @@ static LPWSTR INIT_FindEXEPath(LPCSTR exe_name)
         if (strcpy_s(full_path, iLength, cur_dir) != SAFECRT_SUCCESS)
         {
             ERROR("strcpy_s failed!\n");
-            InternalFree(full_path);
-            InternalFree(env_path);
+            free(full_path);
+            free(env_path);
             return NULL;
         }
 
@@ -1000,8 +1000,8 @@ static LPWSTR INIT_FindEXEPath(LPCSTR exe_name)
             if (strcat_s(full_path, iLength, "/") != SAFECRT_SUCCESS)
             {
                 ERROR("strcat_s failed!\n");
-                InternalFree(full_path);
-                InternalFree(env_path);
+                free(full_path);
+                free(env_path);
                 return NULL;
             }
         }
@@ -1009,8 +1009,8 @@ static LPWSTR INIT_FindEXEPath(LPCSTR exe_name)
         if (strcat_s(full_path, iLength, exe_name) != SAFECRT_SUCCESS)
         {
             ERROR("strcat_s failed!\n");
-            InternalFree(full_path);
-            InternalFree(env_path);
+            free(full_path);
+            free(env_path);
             return NULL;
         }
 
@@ -1023,17 +1023,17 @@ static LPWSTR INIT_FindEXEPath(LPCSTR exe_name)
                 if(!realpath(full_path, real_path))
                 {
                     ERROR("realpath() failed!\n");
-                    InternalFree(full_path);
-                    InternalFree(env_path);
+                    free(full_path);
+                    free(env_path);
                     return NULL;
                 }
-                InternalFree(full_path);
+                free(full_path);
 
                 return_size = MultiByteToWideChar(CP_ACP,0,real_path,-1,NULL,0);
                 if ( 0 == return_size )
                 {
                     ASSERT("MultiByteToWideChar failure\n");
-                    InternalFree(env_path);
+                    free(env_path);
                     return NULL;
                 }
 
@@ -1041,7 +1041,7 @@ static LPWSTR INIT_FindEXEPath(LPCSTR exe_name)
                 if ( NULL == return_value )
                 {
                     ERROR("Not enough memory to create full path\n");
-                    InternalFree(env_path);
+                    free(env_path);
                     return NULL;
                 }
 
@@ -1049,7 +1049,7 @@ static LPWSTR INIT_FindEXEPath(LPCSTR exe_name)
                                     return_size))
                 {
                     ASSERT("MultiByteToWideChar failure\n");
-                    InternalFree(return_value);
+                    free(return_value);
                     return_value = NULL;
                 }
                 else
@@ -1057,17 +1057,17 @@ static LPWSTR INIT_FindEXEPath(LPCSTR exe_name)
                     TRACE("found %s in %s; real path is %s\n", exe_name,
                           cur_dir,real_path);
                 }
-                InternalFree(env_path);
+                free(env_path);
                 return return_value;
             }
         }
         /* file doesn't exist : keep searching */
-        InternalFree(full_path);
+        free(full_path);
 
         /* path_ptr is NULL if there's no ':' after this directory */
         cur_dir=path_ptr;
     }
-    InternalFree(env_path);
+    free(env_path);
     TRACE("No %s found in $PATH (%s)\n", exe_name, MiscGetenv("PATH"));
 
 last_resort:
@@ -1102,7 +1102,7 @@ last_resort:
                                         return_value, return_size))
                 {
                     ASSERT("MultiByteToWideChar failure\n");
-                    InternalFree(return_value);
+                    free(return_value);
                     return_value = NULL;
                 }
                 else
@@ -1158,7 +1158,7 @@ last_resort:
                                 return_value, return_size))
         {
             ASSERT("MultiByteToWideChar failure\n");
-            InternalFree(return_value);
+            free(return_value);
             return_value = NULL;
         }
         else

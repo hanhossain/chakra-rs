@@ -171,7 +171,7 @@ GetFullPathNameA(
     }
 
 done:
-    PAL_free (lpUnixPath);
+    free (lpUnixPath);
     LOGEXIT("GetFullPathNameA returns DWORD %u\n", nRet);
     PERF_EXIT(GetFullPathNameA);
     return nRet;

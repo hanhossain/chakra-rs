@@ -199,7 +199,7 @@ LPSTR UTIL_WCToMB_Alloc(LPCWSTR lpWideCharStr, int cchWideChar)
     if(0 == length)
     {
         ASSERT("WCToMB error; GetLastError returns %#x\n", GetLastError());
-        PAL_free(lpMultiByteStr);
+        free(lpMultiByteStr);
         return NULL;
     }
     return lpMultiByteStr;
@@ -259,7 +259,7 @@ LPWSTR UTIL_MBToWC_Alloc(LPCSTR lpMultiByteStr, int cbMultiByte)
     if(0 >= length)
     {
         ASSERT("MCToMB error; GetLastError returns %#x\n", GetLastError());
-        PAL_free(lpWideCharStr);
+        free(lpWideCharStr);
         return NULL;
     }
     return lpWideCharStr;

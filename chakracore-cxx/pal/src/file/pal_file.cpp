@@ -204,7 +204,7 @@ void FILEGetProperNotFoundError( LPSTR lpPath, uint32_t * lpErrorCode )
         *lpErrorCode = ERROR_FILE_NOT_FOUND;
     }
     
-    InternalFree(lpDupedPath);
+    free(lpDupedPath);
     lpDupedPath = NULL;
     TRACE( "FILEGetProperNotFoundError returning TRUE\n" );
     return;
@@ -435,7 +435,7 @@ CorUnix::InternalCanonicalizeRealPath(LPCSTR lpUnixPath, LPSTR lpBuffer, uint32_
 LExit:
     if (lpExistingPath != NULL)
     {
-        InternalFree(lpExistingPath);
+        free(lpExistingPath);
     }
 #endif // REALPATH_SUPPORTS_NONEXISTENT_FILES
 
@@ -545,7 +545,7 @@ CorUnix::InternalCreateFile(
         goto done;
     }
 
-    InternalFree(lpUnixPath);
+    free(lpUnixPath);
     lpUnixPath = lpFullUnixPath;
     lpFullUnixPath = NULL;
 
@@ -872,12 +872,12 @@ done:
     
     if (NULL != lpUnixPath)
     {
-        InternalFree(lpUnixPath);
+        free(lpUnixPath);
     }
 
     if (NULL != lpFullUnixPath)
     {
-        InternalFree(lpFullUnixPath);
+        free(lpFullUnixPath);
     }
 
     if (NO_ERROR == palError && fFileExists)
@@ -1208,7 +1208,7 @@ DeleteFileA(
     palError = InternalCanonicalizeRealPath(lpUnixFileName, lpFullUnixFileName, cchFullUnixFileName);
     if (palError != NO_ERROR)
     {
-        InternalFree(lpFullUnixFileName);
+        free(lpFullUnixFileName);
         lpFullUnixFileName = strdup(lpUnixFileName);
         if (!lpFullUnixFileName)
         {
@@ -1236,7 +1236,7 @@ done:
     }
     if (NULL != lpFullUnixFileName)
     {
-        InternalFree(lpFullUnixFileName);
+        free(lpFullUnixFileName);
     }
     LOGEXIT("DeleteFileA returns BOOL %d\n", bRet);
     PERF_EXIT(DeleteFileA);
@@ -3743,7 +3743,7 @@ GetTempFileNameW(
         path_size = MultiByteToWideChar( CP_ACP, 0, tempfile_name, -1, 
                                            lpTempFileName, MAX_LONGPATH );
 
-        InternalFree(tempfile_name);
+        free(tempfile_name);
         tempfile_name = NULL;
         if (!path_size)
         {
@@ -3958,7 +3958,7 @@ CopyFileA(
         goto done;
     }
 
-    InternalFree(lpUnixPath);
+    free(lpUnixPath);
     lpUnixPath = strdup(lpNewFileName);
     if ( lpUnixPath == NULL )
     {
@@ -4021,7 +4021,7 @@ done:
     }
     if (lpUnixPath) 
     {
-        InternalFree(lpUnixPath);
+        free(lpUnixPath);
     }
 
     LOGEXIT("CopyFileA returns BOOL %d\n", bGood);
@@ -4147,7 +4147,7 @@ done:
         pThread->SetLastError(dwLastError);
     }
     
-    InternalFree(UnixFileName);
+    free(UnixFileName);
 
     LOGEXIT("SetFileAttributesA returns BOOL %d\n", bRet);
     PERF_EXIT(SetFileAttributesA);

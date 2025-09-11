@@ -313,7 +313,7 @@ BOOL DBG_init_channels(void)
         }
         /* done processing this entry; on to the next. */
     }
-    PAL_free(env_pcache);
+    free(env_pcache);
 
     /* select output file */
     env_string=MiscGetenv(ENV_FILE);

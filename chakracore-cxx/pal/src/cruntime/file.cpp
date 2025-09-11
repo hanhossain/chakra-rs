@@ -220,7 +220,7 @@ _fdopen(
         supported = MapFileOpenModes( (char*)mode , &bTextMode);
         if ( !supported )
         {
-            PAL_free(f);
+            free(f);
             f = NULL;
             goto EXIT;
         }
@@ -230,11 +230,11 @@ _fdopen(
         /* Make sure fdopen did not fail. */
         if ( !f->bsdFilePtr )
         {
-            PAL_free( f );
+            free( f );
             f = NULL;
         }
 
-        PAL_free( supported );
+        free( supported );
         supported = NULL;
     }
     else
@@ -309,7 +309,7 @@ PAL_fopen(const char * fileName, const char * mode)
             if ( !f->bsdFilePtr )
             {
                 /* Failed */
-                PAL_free( f );
+                free( f );
                 f = NULL;
             }
 #if UNGETC_NOT_RETURN_EOF
@@ -330,9 +330,9 @@ PAL_fopen(const char * fileName, const char * mode)
     }
 
 done:
-    PAL_free( supported );
+    free( supported );
     supported = NULL;
-    PAL_free( UnixFileName );
+    free( UnixFileName );
 
     LOGEXIT( "fopen returns FILE* %p\n", f );
     PERF_EXIT(fopen);
@@ -595,7 +595,7 @@ PAL_fclose(PAL_FILE * f)
     CLEARERR(f);
 
     nRetVal = fclose( f->bsdFilePtr );
-    PAL_free( f );
+    free( f );
 
     LOGEXIT( "fclose returning %d\n", nRetVal );
     PERF_EXIT(fclose);

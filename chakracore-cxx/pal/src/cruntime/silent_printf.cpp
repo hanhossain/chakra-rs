@@ -139,7 +139,7 @@ int32_t Silent_PAL_vsnprintf(LPSTR Buffer, int32_t Count, LPCSTR Format, va_list
                                                               TempStr, Length);
                     if (!wctombResult)
                     {
-                        PAL_free(TempStr);
+                        free(TempStr);
                         va_end(ap);
                         return -1;
                     }
@@ -400,7 +400,7 @@ int Silent_PAL_vfprintf(PAL_FILE *stream, const char *format, va_list aparg)
                                                         TempStr, Length);
                     if (!Length)
                     {
-                        PAL_free(TempStr);
+                        free(TempStr);
                         va_end(ap);
                         return -1;
                     }
@@ -414,7 +414,7 @@ int Silent_PAL_vfprintf(PAL_FILE *stream, const char *format, va_list aparg)
                                                               TempStr, Length);
                     if (!wctombResult)
                     {
-                        PAL_free(TempStr);
+                        free(TempStr);
                         va_end(ap);
                         return -1;
                     }
@@ -426,13 +426,13 @@ int Silent_PAL_vfprintf(PAL_FILE *stream, const char *format, va_list aparg)
                   Silent_AddPaddingVfprintf(stream, TempStr, Width - Length, Flags);
                 if (-1 == paddingReturnValue)
                 {
-                    PAL_free(TempStr);
+                    free(TempStr);
                     va_end(ap);
                     return -1;
                 }
                 written += paddingReturnValue;
 
-                PAL_free(TempStr);
+                free(TempStr);
             }
             else if (Prefix == PFF_PREFIX_LONG && Type == PFF_TYPE_CHAR)
             {
@@ -873,7 +873,7 @@ BOOL Silent_ExtractFormatA(LPCSTR *Fmt, LPSTR Out, int32_t * Flags, int32_t * Wi
     }
 
     *Out = 0;  /* end the string */
-    PAL_free(TempStr);
+    free(TempStr);
     return Result;
 }
 
@@ -958,7 +958,7 @@ int32_t Silent_AddPaddingVfprintf(PAL_FILE *stream, LPSTR In, int32_t Padding, i
     }
 
 Done:
-    PAL_free(OutOriginal);
+    free(OutOriginal);
     return Written;
 }
 

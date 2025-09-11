@@ -1315,7 +1315,7 @@ CorUnix::InternalMapViewOfFile(
                         ERROR( "Failed setting protections on reused mapping\n");
 
                         NativeMapHolderRelease(pThread, pReusedMapping->pNMHolder);
-                        InternalFree(pReusedMapping);
+                        free(pReusedMapping);
                         pReusedMapping = NULL;
                     }
                 }
@@ -1392,7 +1392,7 @@ CorUnix::InternalMapViewOfFile(
             {
                 pNewView->pFileMapping->ReleaseReference(pThread);
                 RemoveEntryList(&pNewView->Link);
-                InternalFree(pNewView);
+                free(pNewView);
                 palError = ERROR_INTERNAL_ERROR;
             }
 #endif // ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
@@ -1474,7 +1474,7 @@ CorUnix::InternalUnmapViewOfFile(
 
     RemoveEntryList(&pView->Link);
     pMappingObject = pView->pFileMapping;
-    InternalFree(pView);
+    free(pView);
     
 InternalUnmapViewOfFileExit:
 
@@ -2135,7 +2135,7 @@ static int32_t NativeMapHolderRelease(CPalThread *pThread, NativeMapHolder * thi
             TRACE( "Successfully unmapped %p (size=%lu)\n", 
                    thisNMH->address, (unsigned long)thisNMH->size);
         }
-        InternalFree (thisNMH);
+        free (thisNMH);
     }
     else if (ret < 0)
     {
@@ -2695,7 +2695,7 @@ BOOL MAPUnmapPEFile(const void * lpAddress)
         {
             pFileObject->ReleaseReference(pThread);
         }
-        InternalFree(pView); // this leaves pLink dangling
+        free(pView); // this leaves pLink dangling
     }
 
     TRACE_(LOADER)("MAPUnmapPEFile returning %d\n", retval);

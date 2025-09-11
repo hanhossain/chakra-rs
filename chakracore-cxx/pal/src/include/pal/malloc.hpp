@@ -37,11 +37,6 @@ extern "C"
         void* pvMemblock,
         size_t szSize
         );
-
-    void
-    PAL_free(
-        void *pvMem
-        );
 }
 
 inline void* operator new(size_t, void* p) throw () { return p; }
@@ -53,11 +48,6 @@ namespace CorUnix{
     InternalRealloc(
         void *pvMemblock,
         size_t szSize
-        );
-
-    void
-    InternalFree(
-        void *pvMem
         );
 
     // Define common code for "new" style allocators below.
@@ -122,7 +112,7 @@ namespace CorUnix{
         if (p)
         {
             p->~T();
-            InternalFree(p);
+            free(p);
         }
     }
 
@@ -134,7 +124,7 @@ namespace CorUnix{
             size_t cElements = *pRealMem;
             for (size_t i = 0; i < cElements; i++)
                 p[i].~T();
-            InternalFree(pRealMem);
+            free(pRealMem);
         }
     }
 }

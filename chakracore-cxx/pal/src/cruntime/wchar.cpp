@@ -268,12 +268,12 @@ _wtoi(
     {
         ASSERT("WideCharToMultiByte failed.  Error is %d\n",
               GetLastError());
-        PAL_free(tempStr);
+        free(tempStr);
         return -1;
     }
     ret = atoi(tempStr);
 
-    PAL_free(tempStr);
+    free(tempStr);
     LOGEXIT("_wtoi returns int %d\n", ret);
     PERF_EXIT(_wtoi);
     return ret;
@@ -557,7 +557,7 @@ PAL_wcstol(
     }
 
 PAL_wcstolExit:
-    PAL_free(s_nptr);
+    free(s_nptr);
     LOGEXIT("wcstol returning long %ld\n", res);
     PERF_EXIT(wcstol);
     /* This explicit cast to int32_t is used to silence any potential warnings
@@ -652,7 +652,7 @@ PAL_wcstoll(
     }
 
 PAL_wcstolExit:
-    PAL_free(s_nptr);
+    free(s_nptr);
     LOGEXIT("wcstoll returning long %lld\n", res);
     PERF_EXIT(wcstoll);
     /* This explicit cast to long is used to silence any potential warnings
@@ -781,7 +781,7 @@ PAL_wcstoul(
     }
 
 PAL_wcstoulExit:
-    PAL_free(s_nptr);
+    free(s_nptr);
     LOGEXIT("wcstoul returning unsigned long %lu\n", res);
     PERF_EXIT(wcstoul);
 
@@ -851,7 +851,7 @@ PAL__wcstoui64(
     }
 
 PAL__wcstoui64Exit:
-    PAL_free(s_nptr);
+    free(s_nptr);
     LOGEXIT("_wcstoui64 returning unsigned long long %llu\n", res);
     PERF_EXIT(_wcstoui64);
 
@@ -1697,7 +1697,7 @@ PAL_wcstod( const char16_t * nptr, char16_t **endptr )
         *endptr = lpEndOfExpression;
     }
 
-    PAL_free( lpStringRep );
+    free( lpStringRep );
     LOGEXIT( "wcstod returning %f.\n", RetVal );
     PERF_EXIT(wcstod);
     return RetVal;

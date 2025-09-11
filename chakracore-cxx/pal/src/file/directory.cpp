@@ -96,7 +96,7 @@ done:
     }
     if (mb_dir != NULL)
     {
-        PAL_free(mb_dir);
+        free(mb_dir);
     }
     LOGEXIT("CreateDirectoryW returns BOOL %d\n", bRet);
     PERF_EXIT(CreateDirectoryW);
@@ -350,7 +350,7 @@ GetCurrentDirectoryA(
     }
 
 done:
-    PAL_free( current_dir );
+    free( current_dir );
 
     if ( dwLastError )
     {
@@ -416,7 +416,7 @@ GetCurrentDirectoryW(
     }
 
 done:
-    PAL_free( current_dir );
+    free( current_dir );
 
     if ( dwLastError )
     {
@@ -593,7 +593,7 @@ CreateDirectoryA(
         realPath = static_cast<char *>(alloca(iLen));
         sprintf_s(realPath, iLen, "%s/%s", cwd, UnixPathName);
 
-        PAL_free((char *)cwd);
+        free((char *)cwd);
     }
     
     // Canonicalize the path so we can determine its length.
@@ -636,7 +636,7 @@ done:
     {
         SetLastError( dwLastError );
     }
-    PAL_free( UnixPathName );
+    free( UnixPathName );
     LOGEXIT("CreateDirectoryA returns BOOL %d\n", bRet);
     PERF_EXIT(CreateDirectoryA);
     return bRet;
@@ -727,7 +727,7 @@ done:
 
     if(UnixPathName != NULL)
     {
-        PAL_free( UnixPathName );
+        free( UnixPathName );
     }
 
     LOGEXIT("SetCurrentDirectoryA returns BOOL %d\n", bRet);

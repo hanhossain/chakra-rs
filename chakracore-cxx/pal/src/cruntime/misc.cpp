@@ -515,7 +515,7 @@ done:
     }
     if (NULL != copy)
     {
-        InternalFree(copy);
+        free(copy);
     }
     return result;
 }

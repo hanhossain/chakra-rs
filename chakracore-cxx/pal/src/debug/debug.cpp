@@ -227,12 +227,12 @@ OutputDebugStringW(
     {
         ASSERT("failed to convert wide chars to multibytes\n");
         SetLastError(ERROR_INTERNAL_ERROR);
-        InternalFree(lpOutputStringA);
+        free(lpOutputStringA);
         goto EXIT;
     }
 
     OutputDebugStringA(lpOutputStringA);
-    InternalFree(lpOutputStringA);
+    free(lpOutputStringA);
 
 EXIT:
     LOGEXIT("OutputDebugStringW returns\n");
@@ -807,7 +807,7 @@ PROCFSCLEANUP:
 CLEANUP2:
     if (lpTmpBuffer)
     {
-        InternalFree(lpTmpBuffer);
+        free(lpTmpBuffer);
     }
 #endif  // !HAVE_TTRACE
 
@@ -1097,7 +1097,7 @@ PROCFSCLEANUP:
 CLEANUP2:
     if (lpTmpBuffer)
     {
-        InternalFree(lpTmpBuffer);
+        free(lpTmpBuffer);
     }
 #endif  // !HAVE_TTRACE
 

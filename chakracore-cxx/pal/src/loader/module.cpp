@@ -190,7 +190,7 @@ LoadLibraryExA(
  Done:
     if (lpstr != nullptr)
     {
-        InternalFree(lpstr);
+        free(lpstr);
     }
 
     LOGEXIT("LoadLibraryExA returns HMODULE %p\n", hModule);
@@ -873,7 +873,7 @@ BOOL LOADSetExeName(LPWSTR name)
     LockModuleList();
 
     // Save the exe path in the exe module struct
-    InternalFree(exe_module.lib_name);
+    free(exe_module.lib_name);
     exe_module.lib_name = name;
 
     // For platforms where we can't trust the handle to be constant, we need to
@@ -904,7 +904,7 @@ BOOL LOADSetExeName(LPWSTR name)
 exit:
     if (pszExeName)
     {
-        InternalFree(pszExeName);
+        free(pszExeName);
     }
 #endif
     UnlockModuleList();
@@ -1076,8 +1076,8 @@ static BOOL LOADFreeLibrary(MODSTRUCT *module, BOOL fCallDllMain)
     }
 
     /* release all memory */
-    InternalFree(module->lib_name);
-    InternalFree(module);
+    free(module->lib_name);
+    free(module);
 
     retval = TRUE;
 
@@ -1386,7 +1386,7 @@ static MODSTRUCT *LOADAllocModule(void *dl_handle, LPCSTR name)
     if (nullptr == wide_name)
     {
         ERROR("couldn't convert name to a wide-character string\n");
-        InternalFree(module);
+        free(module);
         return nullptr;
     }
 
