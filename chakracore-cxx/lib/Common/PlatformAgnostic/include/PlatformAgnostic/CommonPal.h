@@ -385,11 +385,7 @@ uint32_t CharUpperBuffW(const char16_t* lpsz, uint32_t  cchLength);
 #define BYTE_MAX    0xff
 #define USHORT_MAX  0xffff
 
-#ifdef UNICODE
 #define StringCchPrintf  StringCchPrintfW
-#endif
-
-
 
 // Use intsafe.h for internal builds (currently missing some files with stdint.h)
 #include <stdint.h>
