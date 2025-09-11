@@ -137,7 +137,6 @@ set(SOURCES
   objmgr/shmobjectmanager.cpp
   shmemory/shmemory.cpp
   synchobj/event.cpp
-  synchobj/mutex.cpp
   synchobj/semaphore.cpp
   synchmgr/synchcontrollers.cpp
   synchmgr/synchmanager.cpp
