@@ -33,6 +33,7 @@ Abstract:
 inline void* operator new(size_t, void* p) throw () { return p; }
 inline void* operator new[](size_t, void* p) throw () { return p; }
 
+// TODO (hanhossain): remove these
 namespace CorUnix{
 
     // Define common code for "new" style allocators below.
