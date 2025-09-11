@@ -185,7 +185,7 @@ LPSTR UTIL_WCToMB_Alloc(LPCWSTR lpWideCharStr, int cchWideChar)
     }
 
     /* allocate required buffer */
-    lpMultiByteStr = (LPSTR)PAL_malloc(length);
+    lpMultiByteStr = (LPSTR)malloc(length);
     if(NULL == lpMultiByteStr)
     {
         ERROR("malloc() failed! errno is %d (%s)\n", errno,strerror(errno));
@@ -245,7 +245,7 @@ LPWSTR UTIL_MBToWC_Alloc(LPCSTR lpMultiByteStr, int cbMultiByte)
 
     /* allocate required buffer */
     size_t fullsize = length * sizeof(char16_t);
-    lpWideCharStr = (LPWSTR)PAL_malloc(fullsize);
+    lpWideCharStr = (LPWSTR)malloc(fullsize);
     if(NULL == lpWideCharStr)
     {
         ERROR("malloc() failed! errno is %d (%s)\n", errno,strerror(errno));

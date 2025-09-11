@@ -555,10 +555,10 @@ _fullpath(
     if(NULL == absPath)
     {
         absPath = static_cast<char *>(
-            PAL_malloc(_MAX_PATH * sizeof(char)));
+            malloc(_MAX_PATH * sizeof(char)));
         if (!absPath)
         {
-            ERROR("PAL_malloc failed with error %d\n", errno);
+            ERROR("malloc failed with error %d\n", errno);
             goto fullpathExit;
         }
         maxLength = _MAX_PATH;

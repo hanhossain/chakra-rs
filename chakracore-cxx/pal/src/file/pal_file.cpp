@@ -524,10 +524,10 @@ CorUnix::InternalCreateFile(
         goto done;
     }
 
-    lpFullUnixPath =  reinterpret_cast<LPSTR>(InternalMalloc(cchFullUnixPath));
+    lpFullUnixPath =  reinterpret_cast<LPSTR>(malloc(cchFullUnixPath));
     if ( lpFullUnixPath == NULL )
     {
-        ERROR("InternalMalloc() failed\n");
+        ERROR("malloc() failed\n");
         palError = ERROR_NOT_ENOUGH_MEMORY;
         goto done;
     }
@@ -1192,10 +1192,10 @@ DeleteFileA(
     
     FILEDosToUnixPathA( lpUnixFileName );
 
-    lpFullUnixFileName =  reinterpret_cast<LPSTR>(InternalMalloc(cchFullUnixFileName));
+    lpFullUnixFileName =  reinterpret_cast<LPSTR>(malloc(cchFullUnixFileName));
     if ( lpFullUnixFileName == NULL )
     {
-        ERROR("InternalMalloc() failed\n");
+        ERROR("malloc() failed\n");
         palError = ERROR_NOT_ENOUGH_MEMORY;
         goto done;
     }
@@ -3727,7 +3727,7 @@ GetTempFileNameW(
         }
     }
     
-    tempfile_name = (char*)InternalMalloc(MAX_LONGPATH);
+    tempfile_name = (char*)malloc(MAX_LONGPATH);
     if (tempfile_name == NULL)
     {
         pThread->SetLastError(ERROR_NOT_ENOUGH_MEMORY);

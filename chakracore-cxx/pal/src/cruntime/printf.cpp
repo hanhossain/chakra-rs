@@ -432,10 +432,10 @@ static BOOL Internal_ScanfExtractFormatA(LPCSTR *Fmt, LPSTR Out, int iOutSize, L
     }
 
     /* we'll never need a temp string longer than the original */
-    TempStrPtr = TempStr = (LPSTR) PAL_malloc(strlen(*Fmt)+1);
+    TempStrPtr = TempStr = (LPSTR) malloc(strlen(*Fmt)+1);
     if (!TempStr)
     {
-        ERROR("PAL_malloc failed\n");
+        ERROR("malloc failed\n");
         SetLastError(ERROR_NOT_ENOUGH_MEMORY);
         return Result;
     }
@@ -747,10 +747,10 @@ static BOOL Internal_ScanfExtractFormatW(LPCWSTR *Fmt, LPSTR Out, int iOutSize, 
     }
 
     /* we'll never need a temp string longer than the original */
-    TempStrPtr = TempStr = (LPSTR) PAL_malloc(PAL_wcslen(*Fmt)+1);
+    TempStrPtr = TempStr = (LPSTR) malloc(PAL_wcslen(*Fmt)+1);
     if (!TempStr)
     {
-        ERROR("PAL_malloc failed\n");
+        ERROR("malloc failed\n");
         SetLastError(ERROR_NOT_ENOUGH_MEMORY);
         return Result;
     }
@@ -1293,10 +1293,10 @@ int PAL_wvsscanf(LPCWSTR Buffer, LPCWSTR Format, va_list ap)
                         GetLastError());
                     return -1;
                 }
-                newBuff = (LPSTR) PAL_malloc(size);
+                newBuff = (LPSTR) malloc(size);
                 if (!newBuff)
                 {
-                    ERROR("PAL_malloc failed\n");
+                    ERROR("malloc failed\n");
                     SetLastError(ERROR_NOT_ENOUGH_MEMORY);
                     return -1;
                 }
@@ -1687,7 +1687,7 @@ static int SscanfFloatCheckExponent(LPCSTR buff, LPCSTR floatFmt,
              )
         )
     {
-        char * pLocBuf = (char *)PAL_malloc((pos-buff+1)*sizeof(char));
+        char * pLocBuf = (char *)malloc((pos-buff+1)*sizeof(char));
         if (pLocBuf)
         {
             memcpy(pLocBuf, buff, (pos-buff)*sizeof(char));

@@ -1365,7 +1365,7 @@ CorUnix::InternalMapViewOfFile(
         // the global list.
         //
         
-        PMAPPED_VIEW_LIST pNewView = (PMAPPED_VIEW_LIST)InternalMalloc(sizeof(*pNewView));
+        PMAPPED_VIEW_LIST pNewView = (PMAPPED_VIEW_LIST)malloc(sizeof(*pNewView));
         if (NULL != pNewView)
         {
             pNewView->lpAddress = pvBaseAddress;
@@ -2066,7 +2066,7 @@ static PMAPPED_VIEW_LIST FindSharedMappingReplacement(
                 /* The new desired mapping is fully contained in the 
                    one just found: we can reuse this one */
 
-                pNewView = (PMAPPED_VIEW_LIST)InternalMalloc(sizeof(MAPPED_VIEW_LIST));
+                pNewView = (PMAPPED_VIEW_LIST)malloc(sizeof(MAPPED_VIEW_LIST));
                 if (pNewView)
                 {
                     memcpy(pNewView, pView, sizeof(*pNewView));
@@ -2101,7 +2101,7 @@ static NativeMapHolder * NewNativeMapHolder(CPalThread *pThread, void * address,
     }
 	
     pThisMapHolder = 
-        (NativeMapHolder *)InternalMalloc(sizeof(NativeMapHolder));
+        (NativeMapHolder *)malloc(sizeof(NativeMapHolder));
         
     if (pThisMapHolder)
     {
@@ -2167,7 +2167,7 @@ MAPRecordMapping(
 
     PAL_ERROR palError = NO_ERROR;
     PMAPPED_VIEW_LIST pNewView;
-    pNewView = (PMAPPED_VIEW_LIST)InternalMalloc(sizeof(*pNewView));
+    pNewView = (PMAPPED_VIEW_LIST)malloc(sizeof(*pNewView));
     if (NULL != pNewView)
     {
         pNewView->lpAddress = addr;

@@ -38,11 +38,6 @@ extern "C"
         size_t szSize
         );
 
-    void *
-    PAL_malloc(
-        size_t szSize
-        );
-
     void
     PAL_free(
         void *pvMem
@@ -60,11 +55,6 @@ namespace CorUnix{
         size_t szSize
         );
 
-    void *
-    InternalMalloc(
-        size_t szSize
-        );
-
     void
     InternalFree(
         void *pvMem
@@ -72,7 +62,7 @@ namespace CorUnix{
 
     // Define common code for "new" style allocators below.
 #define INTERNAL_NEW_COMMON()                    \
-        T *pMem = (T*)InternalMalloc(sizeof(T)); \
+        T *pMem = (T*)malloc(sizeof(T)); \
         if (pMem == NULL)                        \
             return NULL;
 
@@ -116,7 +106,7 @@ namespace CorUnix{
         size_t cbSize = (cElements * sizeof(T)) + sizeof(size_t);
         T *pMem;
 
-        pMem = (T*)InternalMalloc(cbSize);
+        pMem = (T*)malloc(cbSize);
 
         if (pMem == NULL)
             return NULL;

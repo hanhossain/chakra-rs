@@ -32,7 +32,7 @@ private:
     void ReallocateBuffer(size_t count)
     {
         // count is always > STACKCOUNT here.
-        T * newBuffer = (T *)PAL_malloc((count + 1) * sizeof(T));
+        T * newBuffer = (T *)malloc((count + 1) * sizeof(T));
         if (NULL == newBuffer)
         {
             SetLastError(ERROR_NOT_ENOUGH_MEMORY);

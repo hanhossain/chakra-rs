@@ -86,28 +86,3 @@ CorUnix::InternalFree(
 {
     free(pvMem);
 }
-
-void * 
-PAL_malloc(
-    size_t szSize
-    )
-{
-    return InternalMalloc(szSize);
-}
-
-void *
-CorUnix::InternalMalloc(
-    size_t szSize
-    )
-{
-    void *pvMem;
-
-    if (szSize == 0)
-    {
-        // malloc may return null for a requested size of zero bytes. Force a nonzero size to get a valid pointer.
-        szSize = 1;
-    }
-
-    pvMem = (void*)malloc(szSize);
-    return pvMem;
-}

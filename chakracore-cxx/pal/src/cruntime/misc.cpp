@@ -385,7 +385,7 @@ Function:
   MiscPutenv
 
 Sets an environment variable's value by directly modifying palEnvironment.
-Returns TRUE if the variable was set, or FALSE if PAL_malloc or realloc
+Returns TRUE if the variable was set, or FALSE if malloc or realloc
 failed or if the given string is malformed.
 --*/
 BOOL MiscPutenv(const char *string, BOOL deleteIfEmpty)
@@ -412,7 +412,7 @@ BOOL MiscPutenv(const char *string, BOOL deleteIfEmpty)
         // set the variable's value to "". deleteIfEmpty will be FALSE in
         // that case.
         length = strlen(string);
-        copy = (char *) InternalMalloc(length);
+        copy = (char *) malloc(length);
         if (copy == NULL)
         {
             goto done;
@@ -485,7 +485,7 @@ BOOL MiscPutenv(const char *string, BOOL deleteIfEmpty)
             else
             {
                 // Allocate palEnvironment ourselves so we can realloc it later.
-                newEnviron = (char **)InternalMalloc((i + 2) * sizeof(char *));
+                newEnviron = (char **)malloc((i + 2) * sizeof(char *));
                 if (newEnviron == NULL)
                 {
                     goto done;

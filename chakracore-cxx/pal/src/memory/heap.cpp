@@ -240,12 +240,12 @@ HeapAlloc(
     }
 
 #ifdef __APPLE__
-    // This is patterned off of InternalMalloc in malloc.cpp.
+    // This is patterned off of malloc in malloc.cpp.
     {
         pMem = (uint8_t *)malloc_zone_malloc((malloc_zone_t *)hHeap, numberOfBytes);
     }
 #else // __APPLE__
-    pMem = (uint8_t *) PAL_malloc(numberOfBytes);
+    pMem = (uint8_t *) malloc(numberOfBytes);
 #endif // __APPLE__ else
 
     if (pMem == NULL)

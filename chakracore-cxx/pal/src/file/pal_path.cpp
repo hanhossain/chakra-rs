@@ -98,10 +98,10 @@ GetFullPathNameA(
         /* allocate memory for full non-canonical path */
         max_len = strlen(lpFileName)+1; /* 1 for the slash to append */
         max_len += MAX_LONGPATH + 1;
-        lpUnixPath = (LPSTR)PAL_malloc(max_len);
+        lpUnixPath = (LPSTR)malloc(max_len);
         if(NULL == lpUnixPath)
         {
-            ERROR("PAL_malloc() failed; error is %d (%s)\n",
+            ERROR("malloc() failed; error is %d (%s)\n",
                   errno, strerror(errno));
             SetLastError(ERROR_NOT_ENOUGH_MEMORY);
             goto done;

@@ -694,7 +694,7 @@ CorUnix::InternalCreateProcess(
             }
         }
         EnvironmentEntries++;
-        EnvironmentArray = (char **)InternalMalloc(EnvironmentEntries * sizeof(char *));
+        EnvironmentArray = (char **)malloc(EnvironmentEntries * sizeof(char *));
 
         EnvironmentEntries = 0;
         // Convert the environment block to array of strings
@@ -1676,7 +1676,7 @@ CorUnix::InitializeProcessCommandLine(
         size_t n = PAL_wcslen(lpwstrFullPath) + 1;
 
         size_t iLen = n;
-        initial_dir = reinterpret_cast<LPWSTR>(InternalMalloc(iLen*sizeof(char16_t)));
+        initial_dir = reinterpret_cast<LPWSTR>(malloc(iLen*sizeof(char16_t)));
         if (NULL == initial_dir)
         {
             ERROR("malloc() failed! (initial_dir) \n");
@@ -2580,7 +2580,7 @@ buildArgv(
     pThread = InternalGetCurrentThread();
     /* make sure to allocate enough space, up for the worst case scenario */
     int iLength = (iWlen + strlen(lpAppPath) + 2);
-    lpAsciiCmdLine = (char *) InternalMalloc(iLength);
+    lpAsciiCmdLine = (char *) malloc(iLength);
 
     if (lpAsciiCmdLine == NULL)
     {
@@ -2759,7 +2759,7 @@ buildArgv(
 
     /* allocate lppargv according to the number of arguments
        in the command line */
-    lppArgv = (char **) InternalMalloc((((*pnArg)+1) * sizeof(char *)));
+    lppArgv = (char **) malloc((((*pnArg)+1) * sizeof(char *)));
 
     if (lppArgv == NULL)
     {
@@ -2916,7 +2916,7 @@ getPath(
     pThread = InternalGetCurrentThread();
     /* Then try to look in the path */
     int iLen2 = strlen(MiscGetenv("PATH"))+1;
-    lpPath = (LPSTR) InternalMalloc(iLen2);
+    lpPath = (LPSTR) malloc(iLen2);
 
     if (!lpPath)
     {

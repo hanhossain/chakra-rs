@@ -256,10 +256,10 @@ _wtoi(
               GetLastError());
         return -1;
     }
-    tempStr = (char *) PAL_malloc(len);
+    tempStr = (char *) malloc(len);
     if (!tempStr)
     {
-        ERROR("PAL_malloc failed\n");
+        ERROR("malloc failed\n");
         SetLastError(ERROR_NOT_ENOUGH_MEMORY);
         return -1;
     }
@@ -516,10 +516,10 @@ PAL_wcstol(
         res = 0;
         goto PAL_wcstolExit;
     }
-    s_nptr = (char *)PAL_malloc(size);
+    s_nptr = (char *)malloc(size);
     if (!s_nptr)
     {
-        ERROR("PAL_malloc failed\n");
+        ERROR("malloc failed\n");
         SetLastError(ERROR_NOT_ENOUGH_MEMORY);
         res = 0;
         goto PAL_wcstolExit;
@@ -622,10 +622,10 @@ PAL_wcstoll(
         res = 0;
         goto PAL_wcstolExit;
     }
-    s_nptr = (char *)PAL_malloc(size);
+    s_nptr = (char *)malloc(size);
     if (!s_nptr)
     {
-        ERROR("PAL_malloc failed\n");
+        ERROR("malloc failed\n");
         SetLastError(ERROR_NOT_ENOUGH_MEMORY);
         res = 0;
         goto PAL_wcstolExit;
@@ -734,10 +734,10 @@ PAL_wcstoul(
         res = 0;
         goto PAL_wcstoulExit;
     }
-    s_nptr = (char *)PAL_malloc(size);
+    s_nptr = (char *)malloc(size);
     if (!s_nptr)
     {
-        ERROR("PAL_malloc failed\n");
+        ERROR("malloc failed\n");
         SetLastError(ERROR_NOT_ENOUGH_MEMORY);
         res = 0;
         goto PAL_wcstoulExit;
@@ -821,10 +821,10 @@ PAL__wcstoui64(
         res = 0;
         goto PAL__wcstoui64Exit;
     }
-    s_nptr = (char *)PAL_malloc(size);
+    s_nptr = (char *)malloc(size);
     if (!s_nptr)
     {
-        ERROR("PAL_malloc failed\n");
+        ERROR("malloc failed\n");
         SetLastError(ERROR_NOT_ENOUGH_MEMORY);
         res = 0;
         goto PAL__wcstoui64Exit;
@@ -1654,7 +1654,7 @@ PAL_wcstod( const char16_t * nptr, char16_t **endptr )
     if ( lpEndOfExpression != lpStartOfExpression )
     {
         Length = lpEndOfExpression - lpStartOfExpression;
-        lpStringRep = (LPSTR)PAL_malloc( Length + 1);
+        lpStringRep = (LPSTR)malloc( Length + 1);
 
         if ( lpStringRep )
         {

@@ -215,7 +215,7 @@ OutputDebugStringW(
     }
 
     /* strLen includes the null terminator */
-    if ((lpOutputStringA = (LPSTR) InternalMalloc((strLen * sizeof(char)))) == NULL)
+    if ((lpOutputStringA = (LPSTR) malloc((strLen * sizeof(char)))) == NULL)
     {
         ERROR("Insufficient memory available !\n");
         SetLastError(ERROR_NOT_ENOUGH_MEMORY);
@@ -748,7 +748,7 @@ ReadProcessMemory(
 
         /* before transferring any data to lpBuffer we should make sure that all
            data is accessible for read. so we need to use a temp buffer for that.*/
-        if (!(lpTmpBuffer = (int*)InternalMalloc((nbInts * sizeof(int)))))
+        if (!(lpTmpBuffer = (int*)malloc((nbInts * sizeof(int)))))
         {
             ERROR("Insufficient memory available !\n");
             SetLastError(ERROR_NOT_ENOUGH_MEMORY);
@@ -1025,7 +1025,7 @@ WriteProcessMemory(
                  (((nSize + FirstIntOffset)%sizeof(int)) ? 1:0);
         lpBaseAddressAligned = (int*)((char*)lpBaseAddress - FirstIntOffset);
 
-        if ((lpTmpBuffer = (int*)InternalMalloc((nbInts * sizeof(int)))) == NULL)
+        if ((lpTmpBuffer = (int*)malloc((nbInts * sizeof(int)))) == NULL)
         {
             ERROR("Insufficient memory available !\n");
             SetLastError(ERROR_NOT_ENOUGH_MEMORY);

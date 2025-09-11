@@ -766,7 +766,7 @@ static BOOL VIRTUALStoreAllocationInfo(
         goto done;
     }
 
-    if ( !(pNewEntry = ( PCMI )InternalMalloc( sizeof( *pNewEntry )) ) )
+    if ( !(pNewEntry = ( PCMI )malloc( sizeof( *pNewEntry )) ) )
     {
         ERROR( "Unable to allocate memory for the structure.\n");
         bRetVal =  FALSE;
@@ -784,10 +784,10 @@ static BOOL VIRTUALStoreAllocationInfo(
         nBufferSize++;
     }
 
-    pNewEntry->pAllocState      = (uint8_t*)InternalMalloc( nBufferSize  );
-    pNewEntry->pProtectionState = (uint8_t*)InternalMalloc( (memSize / VIRTUAL_PAGE_SIZE)  );
+    pNewEntry->pAllocState      = (uint8_t*)malloc( nBufferSize  );
+    pNewEntry->pProtectionState = (uint8_t*)malloc( (memSize / VIRTUAL_PAGE_SIZE)  );
 #if MMAP_DOESNOT_ALLOW_REMAP
-    pNewEntry->pDirtyPages  = (uint8_t*)InternalMalloc( nBufferSize );
+    pNewEntry->pDirtyPages  = (uint8_t*)malloc( nBufferSize );
 #endif //
 
     if ( pNewEntry->pAllocState && pNewEntry->pProtectionState
@@ -918,10 +918,10 @@ static BOOL VIRTUALUpdateAllocationInfo(
         pExistingEntry->pAllocState = NULL;
     }
 
-    pExistingEntry->pAllocState = (uint8_t*)InternalMalloc(nBufferSize);
-    pExistingEntry->pProtectionState = (uint8_t*)InternalMalloc((memSize / VIRTUAL_PAGE_SIZE));
+    pExistingEntry->pAllocState = (uint8_t*)malloc(nBufferSize);
+    pExistingEntry->pProtectionState = (uint8_t*)malloc((memSize / VIRTUAL_PAGE_SIZE));
 #if MMAP_DOESNOT_ALLOW_REMAP
-    pExistingEntry->pDirtyPages = (uint8_t*)InternalMalloc(nBufferSize);
+    pExistingEntry->pDirtyPages = (uint8_t*)malloc(nBufferSize);
 #endif //  MMAP_DOESNOT_ALLOW_REMAP
 
     if (pExistingEntry->pAllocState && pExistingEntry->pProtectionState
@@ -1464,7 +1464,7 @@ static void *VIRTUALReserveFromBackingFile(UINT_PTR addr, size_t length)
         else
         {
             // Splitting the block. We'll need a new block for the free list.
-            temp = (FREE_BLOCK *) InternalMalloc(sizeof(FREE_BLOCK));
+            temp = (FREE_BLOCK *) malloc(sizeof(FREE_BLOCK));
             if (temp == NULL)
             {
                 ERROR("Failed to allocate memory for a new free block!");
@@ -1563,7 +1563,7 @@ static BOOL VIRTUALAddToFreeList(const PCMI pMemoryToBeReleased)
 
     // At this point we know we're not coalescing anything and we need
     // a new block.
-    newBlock = (FREE_BLOCK *) InternalMalloc(sizeof(FREE_BLOCK));
+    newBlock = (FREE_BLOCK *) malloc(sizeof(FREE_BLOCK));
     if (newBlock == NULL)
     {
         ERROR("Failed to allocate memory for a new free block!");
@@ -1650,7 +1650,7 @@ static BOOL VIRTUALGetBackingFile(CPalThread *pthrCurrent)
     }
 
     // Create our free list.
-    pFreeMemory = (FREE_BLOCK *) InternalMalloc(sizeof(FREE_BLOCK));
+    pFreeMemory = (FREE_BLOCK *) malloc(sizeof(FREE_BLOCK));
     if (pFreeMemory == NULL)
     {
         // Not good.

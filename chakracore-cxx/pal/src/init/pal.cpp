@@ -768,7 +768,7 @@ static LPWSTR INIT_FormatCommandLine (int argc, const char * const *argv)
         length+=3;
         length+=strlen(argv[i])*2;
     }
-    command_line = reinterpret_cast<LPSTR>(InternalMalloc(length));
+    command_line = reinterpret_cast<LPSTR>(malloc(length));
 
     if(!command_line)
     {
@@ -820,7 +820,7 @@ static LPWSTR INIT_FormatCommandLine (int argc, const char * const *argv)
         return NULL;
     }
 
-    retval = reinterpret_cast<LPWSTR>(InternalMalloc((sizeof(char16_t)*i)));
+    retval = reinterpret_cast<LPWSTR>(malloc((sizeof(char16_t)*i)));
     if(retval == NULL)
     {
         ERROR("can't allocate memory for Unicode command line!\n");
@@ -900,7 +900,7 @@ static LPWSTR INIT_FindEXEPath(LPCSTR exe_name)
                 return NULL;
             }
 
-            return_value = reinterpret_cast<LPWSTR>(InternalMalloc((return_size*sizeof(char16_t))));
+            return_value = reinterpret_cast<LPWSTR>(malloc((return_size*sizeof(char16_t))));
             if ( NULL == return_value )
             {
                 ERROR("Not enough memory to create full path\n");
@@ -980,7 +980,7 @@ static LPWSTR INIT_FindEXEPath(LPCSTR exe_name)
 
         /* build tentative full file name */
         int iLength = (strlen(cur_dir)+exe_name_length+2);
-        full_path = reinterpret_cast<LPSTR>(InternalMalloc(iLength));
+        full_path = reinterpret_cast<LPSTR>(malloc(iLength));
         if(!full_path)
         {
             ERROR("Not enough memory!\n");
@@ -1037,7 +1037,7 @@ static LPWSTR INIT_FindEXEPath(LPCSTR exe_name)
                     return NULL;
                 }
 
-                return_value = reinterpret_cast<LPWSTR>(InternalMalloc((return_size*sizeof(char16_t))));
+                return_value = reinterpret_cast<LPWSTR>(malloc((return_size*sizeof(char16_t))));
                 if ( NULL == return_value )
                 {
                     ERROR("Not enough memory to create full path\n");
@@ -1090,7 +1090,7 @@ last_resort:
                 return NULL;
             }
 
-            return_value = reinterpret_cast<LPWSTR>(InternalMalloc((return_size*sizeof(char16_t))));
+            return_value = reinterpret_cast<LPWSTR>(malloc((return_size*sizeof(char16_t))));
             if (NULL == return_value)
             {
                 ERROR("Not enough memory to create full path\n");
@@ -1146,7 +1146,7 @@ last_resort:
         return NULL;
     }
 
-    return_value = reinterpret_cast<LPWSTR>(InternalMalloc((return_size*sizeof(char16_t))));
+    return_value = reinterpret_cast<LPWSTR>(malloc((return_size*sizeof(char16_t))));
     if (NULL == return_value)
     {
         ERROR("Not enough memory to create full path\n");

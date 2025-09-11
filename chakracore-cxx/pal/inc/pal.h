@@ -5688,7 +5688,6 @@ inline long abs(long _X) {
 #ifdef INCLUDE_PAL_INTERNAL_
 /* FIXME remove
  * PAL wrappers around memory management functions, only used inside PAL */
-void * PAL_malloc(size_t);
 void   PAL_free(void *);
 void * PAL_realloc(void *, size_t);
 #endif

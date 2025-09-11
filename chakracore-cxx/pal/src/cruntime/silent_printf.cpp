@@ -382,7 +382,7 @@ int Silent_PAL_vfprintf(PAL_FILE *stream, const char *format, va_list aparg)
                     va_end(ap);
                     return -1;
                 }
-                TempStr = (LPSTR) PAL_malloc(Length);
+                TempStr = (LPSTR) malloc(Length);
                 if (!TempStr)
                 {
                     va_end(ap);
@@ -639,7 +639,7 @@ BOOL Silent_ExtractFormatA(LPCSTR *Fmt, LPSTR Out, int32_t * Flags, int32_t * Wi
     }
 
     /* we'll never need a temp string longer than the original */
-    TempStrPtr = TempStr = (LPSTR) PAL_malloc(strlen(*Fmt)+1);
+    TempStrPtr = TempStr = (LPSTR) malloc(strlen(*Fmt)+1);
     if (!TempStr)
     {
         return Result;
@@ -898,7 +898,7 @@ int32_t Silent_AddPaddingVfprintf(PAL_FILE *stream, LPSTR In, int32_t Padding, i
     {
         Length += Padding;
     }
-    Out = (LPSTR) PAL_malloc(Length+1);
+    Out = (LPSTR) malloc(Length+1);
     int iLen = Length+1;
     if (!Out)
     {

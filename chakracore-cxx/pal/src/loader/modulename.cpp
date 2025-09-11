@@ -74,7 +74,7 @@ int GetLibRotorNameViaLoadQuery(LPSTR pszBuf)
     // an error other than ENOMEM
     while (iLQRetVal != 0)
     {
-        pLoadQueryBuf = (char*) InternalMalloc (pThread, cbBuf * sizeof(char));
+        pLoadQueryBuf = (char*) malloc (pThread, cbBuf * sizeof(char));
         if (!pLoadQueryBuf)
         {
             SetLastError(ERROR_NOT_ENOUGH_MEMORY);

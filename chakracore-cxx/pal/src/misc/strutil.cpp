@@ -55,7 +55,7 @@ CPalString::CopyString(
         _ASSERTE(psSource->GetMaxLength() > psSource->GetStringLength());
         
         char16_t *pwsz = reinterpret_cast<char16_t*>(
-            InternalMalloc(psSource->GetMaxLength() * sizeof(char16_t))
+            malloc(psSource->GetMaxLength() * sizeof(char16_t))
             );
 
         if (NULL != pwsz)

@@ -133,7 +133,7 @@ static LPSTR MapFileOpenModes(LPSTR str , BOOL * bTextMode)
         *bTextMode = FALSE;
     }
 
-    retval = (LPSTR)PAL_malloc( ( strlen( str ) + 1 ) * sizeof( char ) );
+    retval = (LPSTR)malloc( ( strlen( str ) + 1 ) * sizeof( char ) );
     if (NULL == retval)
     {
         ERROR("Unable to allocate memory.\n");
@@ -214,7 +214,7 @@ _fdopen(
 
     _ASSERTE(mode != NULL);
 
-    f = (PAL_FILE*)PAL_malloc( sizeof( PAL_FILE ) );
+    f = (PAL_FILE*)malloc( sizeof( PAL_FILE ) );
     if ( f )
     {
         supported = MapFileOpenModes( (char*)mode , &bTextMode);
@@ -300,7 +300,7 @@ PAL_fopen(const char * fileName, const char * mode)
             goto done;
         }
 
-        f = (PAL_FILE*)PAL_malloc( sizeof( PAL_FILE ) );
+        f = (PAL_FILE*)malloc( sizeof( PAL_FILE ) );
         if ( f )
         {
             f->bsdFilePtr =  (FILE*)fopen( UnixFileName, supported );

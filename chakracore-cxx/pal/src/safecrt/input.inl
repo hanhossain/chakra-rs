@@ -80,7 +80,7 @@
 #define _istspace(x)    isspace(x)
 #endif
 
-#define _malloc_crt PAL_malloc
+#define _malloc_crt malloc
 #define _realloc_crt PAL_realloc
 #define _free_crt PAL_free
 
