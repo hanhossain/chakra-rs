@@ -387,7 +387,7 @@ HeapReAlloc(
     }
 
 #ifdef __APPLE__
-    // This is patterned off of InternalRealloc in malloc.cpp.
+    // This is patterned off of realloc in malloc.cpp.
     {
         pMem = (uint8_t *) malloc_zone_realloc((malloc_zone_t *)hHeap, lpmem, numberOfBytes);
     }

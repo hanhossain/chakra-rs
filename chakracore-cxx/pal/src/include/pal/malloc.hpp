@@ -44,12 +44,6 @@ inline void* operator new[](size_t, void* p) throw () { return p; }
 
 namespace CorUnix{
 
-    void *
-    InternalRealloc(
-        void *pvMemblock,
-        size_t szSize
-        );
-
     // Define common code for "new" style allocators below.
 #define INTERNAL_NEW_COMMON()                    \
         T *pMem = (T*)malloc(sizeof(T)); \

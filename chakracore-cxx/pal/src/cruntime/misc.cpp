@@ -477,7 +477,7 @@ BOOL MiscPutenv(const char *string, BOOL deleteIfEmpty)
 
             if (sAllocatedEnviron) {
                 if (NULL == (newEnviron =
-                        (char **)InternalRealloc(palEnvironment, (i + 2) * sizeof(char *))))
+                        (char **)realloc(palEnvironment, (i + 2) * sizeof(char *))))
                 {
                     goto done;
                 }
