@@ -18,9 +18,6 @@ Abstract:
     the Microsoft Common Language Runtime.
 
     Defines which control the behavior of this include file:
-      UNICODE - define it to set the Ansi/Unicode neutral names to
-                be the ...W names.  Otherwise the neutral names default
-                to be the ...A names.
       PAL_IMPLEMENTATION - define it when implementing the PAL.  Otherwise
                 leave it undefined when consuming the PAL.
 
@@ -389,11 +386,7 @@ PAL_GetPALDirectoryA(
      LPSTR lpDirectoryName,
      uint32_t cchDirectoryName);
 
-#ifdef UNICODE
 #define PAL_GetPALDirectory PAL_GetPALDirectoryW
-#else
-#define PAL_GetPALDirectory PAL_GetPALDirectoryA
-#endif
 
 BOOL
 PAL_Random(
@@ -425,11 +418,6 @@ CharNextExA(
          LPCSTR lpCurrentChar,
          uint32_t dwFlags);
 
-#ifndef UNICODE
-#define CharNext CharNextA
-#define CharNextEx CharNextExA
-#endif
-
 extern int sprintf_s(char *_Dst, size_t _SizeInBytes, const char *_Format, ...);
 
 typedef int errno_t;
@@ -448,11 +436,7 @@ wsprintfW(
        LPCWSTR,
       ...);
 
-#ifdef UNICODE
 #define wsprintf wsprintfW
-#else
-#define wsprintf wsprintfA
-#endif
 
 // From win32.h
 #ifndef _CRTIMP
@@ -534,11 +518,7 @@ CreateFileW(
          uint32_t dwFlagsAndAttributes,
          HANDLE hTemplateFile);
 
-#ifdef UNICODE
 #define CreateFile CreateFileW
-#else
-#define CreateFile CreateFileA
-#endif
 
 BOOL
 LockFile(
@@ -577,11 +557,7 @@ SearchPathW(
      LPWSTR lpBuffer,
      LPWSTR *lpFilePart
     );
-#ifdef UNICODE
 #define SearchPath  SearchPathW
-#else
-#define SearchPath  SearchPathA
-#endif // !UNICODE
 
 
 BOOL
@@ -596,11 +572,7 @@ CopyFileW(
        LPCWSTR lpNewFileName,
        BOOL bFailIfExists);
 
-#ifdef UNICODE
 #define CopyFile CopyFileW
-#else
-#define CopyFile CopyFileA
-#endif
 
 BOOL
 DeleteFileA(
@@ -610,11 +582,7 @@ BOOL
 DeleteFileW(
          LPCWSTR lpFileName);
 
-#ifdef UNICODE
 #define DeleteFile DeleteFileW
-#else
-#define DeleteFile DeleteFileA
-#endif
 
 
 BOOL
@@ -627,11 +595,7 @@ MoveFileW(
       LPCWSTR lpExistingFileName,
       LPCWSTR lpNewFileName);
 
-#ifdef UNICODE
 #define MoveFile MoveFileW
-#else
-#define MoveFile MoveFileA
-#endif
 
 #define MOVEFILE_REPLACE_EXISTING      0x00000001
 #define MOVEFILE_COPY_ALLOWED          0x00000002
@@ -648,11 +612,7 @@ MoveFileExW(
          LPCWSTR lpNewFileName,
          uint32_t dwFlags);
 
-#ifdef UNICODE
 #define MoveFileEx MoveFileExW
-#else
-#define MoveFileEx MoveFileExA
-#endif
 
 BOOL
 CreateDirectoryA(
@@ -664,11 +624,7 @@ CreateDirectoryW(
           LPCWSTR lpPathName,
           LPSECURITY_ATTRIBUTES lpSecurityAttributes);
 
-#ifdef UNICODE
 #define CreateDirectory CreateDirectoryW
-#else
-#define CreateDirectory CreateDirectoryA
-#endif
 
 BOOL
 RemoveDirectoryW(
@@ -678,11 +634,7 @@ BOOL
 RemoveDirectoryA(
           LPCSTR lpPathName);
 
-#ifdef UNICODE
 #define RemoveDirectory RemoveDirectoryW
-#else
-#define RemoveDirectory RemoveDirectoryA
-#endif
 
 typedef struct _BY_HANDLE_FILE_INFORMATION {
     uint32_t dwFileAttributes;
@@ -723,15 +675,9 @@ typedef struct _WIN32_FIND_DATAW {
     char16_t cAlternateFileName[ 14 ];
 } WIN32_FIND_DATAW, *PWIN32_FIND_DATAW, *LPWIN32_FIND_DATAW;
 
-#ifdef UNICODE
 typedef WIN32_FIND_DATAW WIN32_FIND_DATA;
 typedef PWIN32_FIND_DATAW PWIN32_FIND_DATA;
 typedef LPWIN32_FIND_DATAW LPWIN32_FIND_DATA;
-#else
-typedef WIN32_FIND_DATAA WIN32_FIND_DATA;
-typedef PWIN32_FIND_DATAA PWIN32_FIND_DATA;
-typedef LPWIN32_FIND_DATAA LPWIN32_FIND_DATA;
-#endif
 
 HANDLE
 FindFirstFileA(
@@ -743,11 +689,7 @@ FindFirstFileW(
             LPCWSTR lpFileName,
             LPWIN32_FIND_DATAW lpFindFileData);
 
-#ifdef UNICODE
 #define FindFirstFile FindFirstFileW
-#else
-#define FindFirstFile FindFirstFileA
-#endif
 
 BOOL
 FindNextFileA(
@@ -759,11 +701,7 @@ FindNextFileW(
            HANDLE hFindFile,
            LPWIN32_FIND_DATAW lpFindFileData);
 
-#ifdef UNICODE
 #define FindNextFile FindNextFileW
-#else
-#define FindNextFile FindNextFileA
-#endif
 
 BOOL
 FindClose(
@@ -777,11 +715,7 @@ uint32_t
 GetFileAttributesW(
             LPCWSTR lpFileName);
 
-#ifdef UNICODE
 #define GetFileAttributes GetFileAttributesW
-#else
-#define GetFileAttributes GetFileAttributesA
-#endif
 
 typedef enum _GET_FILEEX_INFO_LEVELS {
   GetFileExInfoStandard
@@ -802,9 +736,7 @@ GetFileAttributesExW(
               GET_FILEEX_INFO_LEVELS fInfoLevelId,
               void * lpFileInformation);
 
-#ifdef UNICODE
 #define GetFileAttributesEx GetFileAttributesExW
-#endif
 
 BOOL
 SetFileAttributesA(
@@ -816,11 +748,7 @@ SetFileAttributesW(
             LPCWSTR lpFileName,
             uint32_t dwFileAttributes);
 
-#ifdef UNICODE
 #define SetFileAttributes SetFileAttributesW
-#else
-#define SetFileAttributes SetFileAttributesA
-#endif
 
 typedef void * LPOVERLAPPED;  // diff from winbase.h
 
@@ -965,11 +893,7 @@ GetFullPathNameW(
           LPWSTR lpBuffer,
           LPWSTR *lpFilePart);
 
-#ifdef UNICODE
 #define GetFullPathName GetFullPathNameW
-#else
-#define GetFullPathName GetFullPathNameA
-#endif
 
 uint32_t
 GetLongPathNameW(
@@ -977,9 +901,7 @@ GetLongPathNameW(
                   LPWSTR lpszLongPath,
           uint32_t cchBuffer);
 
-#ifdef UNICODE
 #define GetLongPathName GetLongPathNameW
-#endif
 
 uint32_t
 GetShortPathNameW(
@@ -987,9 +909,7 @@ GetShortPathNameW(
                   LPWSTR lpszShortPath,
           uint32_t cchBuffer);
 
-#ifdef UNICODE
 #define GetShortPathName GetShortPathNameW
-#endif
 
 
 uint32_t
@@ -1006,11 +926,7 @@ GetTempFileNameW(
           uint32_t uUnique,
           LPWSTR lpTempFileName);
 
-#ifdef UNICODE
 #define GetTempFileName GetTempFileNameW
-#else
-#define GetTempFileName GetTempFileNameA
-#endif
 
 uint32_t
 GetTempPathA(
@@ -1022,11 +938,7 @@ GetTempPathW(
           uint32_t nBufferLength,
           LPWSTR lpBuffer);
 
-#ifdef UNICODE
 #define GetTempPath GetTempPathW
-#else
-#define GetTempPath GetTempPathA
-#endif
 
 uint32_t
 GetCurrentDirectoryA(
@@ -1038,11 +950,7 @@ GetCurrentDirectoryW(
               uint32_t nBufferLength,
               LPWSTR lpBuffer);
 
-#ifdef UNICODE
 #define GetCurrentDirectory GetCurrentDirectoryW
-#else
-#define GetCurrentDirectory GetCurrentDirectoryA
-#endif
 
 BOOL
 SetCurrentDirectoryA(
@@ -1053,11 +961,7 @@ SetCurrentDirectoryW(
              LPCWSTR lpPathName);
 
 
-#ifdef UNICODE
 #define SetCurrentDirectory SetCurrentDirectoryW
-#else
-#define SetCurrentDirectory SetCurrentDirectoryA
-#endif
 
 BOOL
 GetUserNameW(
@@ -1069,10 +973,8 @@ GetComputerNameW(
      LPWSTR lpBuffer,     // address of name buffer
       uint32_t * nSize);   // address of size of name buffer
 
-#ifdef UNICODE
 #define GetUserName GetUserNameW
 #define GetComputerName GetComputerNameW
-#endif // UNICODE
 
 HANDLE
 CreateSemaphoreA(
@@ -1112,13 +1014,8 @@ OpenSemaphoreW(
      BOOL bInheritHandle,
      LPCWSTR lpName);
 
-#ifdef UNICODE
 #define CreateSemaphore CreateSemaphoreW
 #define CreateSemaphoreEx CreateSemaphoreExW
-#else
-#define CreateSemaphore CreateSemaphoreA
-#define CreateSemaphoreEx CreateSemaphoreExA
-#endif
 
 BOOL
 ReleaseSemaphore(
@@ -1140,11 +1037,7 @@ CreateEventW(
           BOOL bInitialState,
           LPCWSTR lpName);
 
-#ifdef UNICODE
 #define CreateEvent CreateEventW
-#else
-#define CreateEvent CreateEventA
-#endif
 
 BOOL
 SetEvent(
@@ -1160,9 +1053,7 @@ OpenEventW(
         BOOL bInheritHandle,
         LPCWSTR lpName);
 
-#ifdef UNICODE
 #define OpenEvent OpenEventW
-#endif
 
 uint32_t
 GetCurrentProcessId(
@@ -1231,13 +1122,8 @@ typedef struct _STARTUPINFOA {
     HANDLE hStdError;
 } STARTUPINFOA, *LPSTARTUPINFOA;
 
-#ifdef UNICODE
 typedef STARTUPINFOW STARTUPINFO;
 typedef LPSTARTUPINFOW LPSTARTUPINFO;
-#else
-typedef STARTUPINFOA STARTUPINFO;
-typedef LPSTARTUPINFOW LPSTARTUPINFO;
-#endif
 
 #define CREATE_NEW_CONSOLE          0x00000010
 
@@ -1276,11 +1162,7 @@ CreateProcessW(
             LPSTARTUPINFOW lpStartupInfo,
             LPPROCESS_INFORMATION lpProcessInformation);
 
-#ifdef UNICODE
 #define CreateProcess CreateProcessW
-#else
-#define CreateProcess CreateProcessA
-#endif
 
 __attribute__((noreturn))
 void
@@ -2930,11 +2812,7 @@ CreateFileMappingW(
             uint32_t dwMaximumSizeLow,
             LPCWSTR lpName);
 
-#ifdef UNICODE
 #define CreateFileMapping CreateFileMappingW
-#else
-#define CreateFileMapping CreateFileMappingA
-#endif
 
 #define SECTION_QUERY       0x0001
 #define SECTION_MAP_WRITE   0x0002
@@ -2958,11 +2836,7 @@ OpenFileMappingW(
           BOOL bInheritHandle,
           LPCWSTR lpName);
 
-#ifdef UNICODE
 #define OpenFileMapping OpenFileMappingW
-#else
-#define OpenFileMapping OpenFileMappingA
-#endif
 
 void *
 MapViewOfFile(
@@ -3052,13 +2926,8 @@ Return value:
 BOOL
 PAL_LOADUnloadPEFile(void * ptr);
 
-#ifdef UNICODE
 #define LoadLibrary LoadLibraryW
 #define LoadLibraryEx LoadLibraryExW
-#else
-#define LoadLibrary LoadLibraryA
-#define LoadLibraryEx LoadLibraryExA
-#endif
 
 typedef INT_PTR (*FARPROC)();
 
@@ -3093,11 +2962,7 @@ GetModuleFileNameW(
      LPWSTR lpFileName,
      uint32_t nSize);
 
-#ifdef UNICODE
 #define GetModuleFileName GetModuleFileNameW
-#else
-#define GetModuleFileName GetModuleFileNameA
-#endif
 
 uint32_t
 GetModuleFileNameExW(
@@ -3107,18 +2972,14 @@ GetModuleFileNameExW(
      uint32_t nSize
     );
 
-#ifdef UNICODE
 #define GetModuleFileNameEx GetModuleFileNameExW
-#endif
 
 HMODULE
 GetModuleHandleW(
       LPCWSTR lpModuleName
 );
 
-#ifdef UNICODE
 #define GetModuleHandle GetModuleHandleW
-#endif
 
 BOOL
 GetModuleHandleExW(
@@ -3126,9 +2987,7 @@ GetModuleHandleExW(
       LPCWSTR lpModuleName,
      HMODULE *phModule);
 
-#ifdef UNICODE
 #define GetModuleHandleEx GetModuleHandleExW
-#endif
 
 // Get base address of the module containing a given symbol
 const void *
@@ -3322,9 +3181,7 @@ GetStringTypeExW(
           int cchSrc,
           uint16_t * lpCharType);
 
-#ifdef UNICODE
 #define GetStringTypeEx GetStringTypeExW
-#endif
 
 #endif // ENABLE_DOWNLEVEL_FOR_NLS
 
@@ -3400,9 +3257,7 @@ CompareStringEx(
      ptrdiff_t lParam);
 
 
-#ifdef UNICODE
 #define CompareString  CompareStringW
-#endif
 
 #define MAX_LEADBYTES         12
 #define MAX_DEFAULTCHAR       2
@@ -3801,9 +3656,7 @@ GetSystemDefaultLocaleName(
      LPWSTR lpLocaleName,
 	 int cchLocaleName);
 
-#ifdef UNICODE
 #define GetLocaleInfo GetLocaleInfoW
-#endif
 
 #if ENABLE_DOWNLEVEL_FOR_NLS
 LCID
@@ -3862,9 +3715,7 @@ GetCalendarInfoW(
           int cchData,
           uint32_t * lpValue);
 
-#ifdef UNICODE
 #define GetCalendarInfo GetCalendarInfoW
-#endif
 
 #endif // ENABLE_DOWNLEVEL_FOR_NLS
 
@@ -3983,9 +3834,7 @@ LCMapStringW(
      LPWSTR lpDestStr,
      int     cchDest);
 
-#ifdef UNICODE
 #define LCMapString LCMapStringW
-#endif
 
 
 #endif // ENABLE_DOWNLEVEL_FOR_NLS
@@ -4102,9 +3951,7 @@ GetDateFormatEx(
            LPCWSTR lpCalendar);
 
 
-#ifdef UNICODE
 #define GetDateFormat GetDateFormatW
-#endif
 
 
 int
@@ -4262,11 +4109,7 @@ void
 OutputDebugStringW(
      LPCWSTR lpOutputStrig);
 
-#ifdef UNICODE
 #define OutputDebugString OutputDebugStringW
-#else
-#define OutputDebugString OutputDebugStringA
-#endif
 
 void
 DebugBreak(
@@ -4277,18 +4120,14 @@ lstrcatW(
        LPWSTR lpString1,
       LPCWSTR lpString2);
 
-#ifdef UNICODE
 #define lstrcat lstrcatW
-#endif
 
 LPWSTR
 lstrcpyW(
       LPWSTR lpString1,
       LPCWSTR lpString2);
 
-#ifdef UNICODE
 #define lstrcpy lstrcpyW
-#endif
 
 int
 lstrlenA(
@@ -4298,11 +4137,7 @@ int
 lstrlenW(
       LPCWSTR lpString);
 
-#ifdef UNICODE
 #define lstrlen lstrlenW
-#else
-#define lstrlen lstrlenA
-#endif
 
 LPWSTR
 lstrcpynW(
@@ -4310,9 +4145,7 @@ lstrcpynW(
        LPCWSTR lpString2,
        int iMaxLength);
 
-#ifdef UNICODE
 #define lstrcpyn lstrcpynW
-#endif
 
 
 uint32_t
@@ -4327,11 +4160,7 @@ GetEnvironmentVariableW(
              LPWSTR lpBuffer,
              uint32_t nSize);
 
-#ifdef UNICODE
 #define GetEnvironmentVariable GetEnvironmentVariableW
-#else
-#define GetEnvironmentVariable GetEnvironmentVariableA
-#endif
 
 BOOL
 SetEnvironmentVariableA(
@@ -4343,11 +4172,7 @@ SetEnvironmentVariableW(
              LPCWSTR lpName,
              LPCWSTR lpValue);
 
-#ifdef UNICODE
 #define SetEnvironmentVariable SetEnvironmentVariableW
-#else
-#define SetEnvironmentVariable SetEnvironmentVariableA
-#endif
 
 LPSTR
 GetEnvironmentStringsA(
@@ -4357,11 +4182,7 @@ LPWSTR
 GetEnvironmentStringsW(
                void);
 
-#ifdef UNICODE
 #define GetEnvironmentStrings GetEnvironmentStringsW
-#else
-#define GetEnvironmentStrings GetEnvironmentStringsA
-#endif
 
 BOOL
 FreeEnvironmentStringsA(
@@ -4371,11 +4192,7 @@ BOOL
 FreeEnvironmentStringsW(
              LPWSTR);
 
-#ifdef UNICODE
 #define FreeEnvironmentStrings FreeEnvironmentStringsW
-#else
-#define FreeEnvironmentStrings FreeEnvironmentStringsA
-#endif
 
 BOOL
 CloseHandle(
@@ -5093,9 +4910,7 @@ FormatMessageW(
             uint32_t nSize,
             va_list *Arguments);
 
-#ifdef UNICODE
 #define FormatMessage FormatMessageW
-#endif
 
 
 uint32_t
@@ -5110,9 +4925,7 @@ LPWSTR
 GetCommandLineW(
         void);
 
-#ifdef UNICODE
 #define GetCommandLine GetCommandLineW
-#endif
 
 void
 RtlRestoreContext(
@@ -5156,15 +4969,9 @@ typedef struct _OSVERSIONINFOW {
     char16_t szCSDVersion[ 128 ];
 } OSVERSIONINFOW, *POSVERSIONINFOW, *LPOSVERSIONINFOW;
 
-#ifdef UNICODE
 typedef OSVERSIONINFOW OSVERSIONINFO;
 typedef POSVERSIONINFOW POSVERSIONINFO;
 typedef LPOSVERSIONINFOW LPOSVERSIONINFO;
-#else
-typedef OSVERSIONINFOA OSVERSIONINFO;
-typedef POSVERSIONINFOA POSVERSIONINFO;
-typedef LPOSVERSIONINFOA LPOSVERSIONINFO;
-#endif
 
 typedef struct _OSVERSIONINFOEXA {
     uint32_t dwOSVersionInfoSize;
@@ -5194,15 +5001,9 @@ typedef struct _OSVERSIONINFOEXW {
     uint8_t  wReserved;
 } OSVERSIONINFOEXW, *POSVERSIONINFOEXW, *LPOSVERSIONINFOEXW;
 
-#ifdef UNICODE
 typedef OSVERSIONINFOEXW OSVERSIONINFOEX;
 typedef POSVERSIONINFOEXW POSVERSIONINFOEX;
 typedef LPOSVERSIONINFOEXW LPOSVERSIONINFOEX;
-#else
-typedef OSVERSIONINFOEXA OSVERSIONINFOEX;
-typedef POSVERSIONINFOEXA POSVERSIONINFOEX;
-typedef LPOSVERSIONINFOEXA LPOSVERSIONINFOEX;
-#endif
 
 BOOL
 GetVersionExA(
@@ -5212,11 +5013,7 @@ BOOL
 GetVersionExW(
             LPOSVERSIONINFOW lpVersionInformation);
 
-#ifdef UNICODE
 #define GetVersionEx GetVersionExW
-#else
-#define GetVersionEx GetVersionExA
-#endif
 
 #define IMAGE_FILE_MACHINE_I386              0x014c
 #define IMAGE_FILE_MACHINE_ARM64             0xAA64  // ARM64 Little-Endian
@@ -5247,9 +5044,7 @@ GetDiskFreeSpaceW(
           uint32_t * lpNumberOfFreeClusters,
           uint32_t * lpTotalNumberOfClusters);
 
-#ifdef UNICODE
 #define GetDiskFreeSpace GetDiskFreeSpaceW
-#endif
 
 BOOL
 CreatePipe(
@@ -5274,11 +5069,7 @@ RegisterEventSourceW (
       LPCWSTR lpUNCServerName,
          LPCWSTR lpSourceName
     );
-#ifdef UNICODE
 #define RegisterEventSource  RegisterEventSourceW
-#else
-#define RegisterEventSource  RegisterEventSourceA
-#endif // !UNICODE
 
 //
 // The types of events that can be logged.
@@ -5314,11 +5105,7 @@ ReportEventW (
       LPCWSTR *lpStrings,
       void * lpRawData
     );
-#ifdef UNICODE
 #define ReportEvent  ReportEventW
-#else
-#define ReportEvent  ReportEventA
-#endif // !UNICODE
 
 int32_t
 CoCreateGuid( GUID * pguid);
@@ -5987,11 +5774,7 @@ public:
 #define MAKEDLLNAME_A(name)  "lib" name  ".so"
 #endif
 
-#ifdef UNICODE
 #define MAKEDLLNAME(x) MAKEDLLNAME_W(x)
-#else
-#define MAKEDLLNAME(x) MAKEDLLNAME_A(x)
-#endif
 
 #define PAL_SHLIB_PREFIX "lib"
 

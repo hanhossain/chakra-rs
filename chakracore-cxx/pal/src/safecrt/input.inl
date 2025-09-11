@@ -74,11 +74,7 @@
 
 #define _MBTOWC(x,y,z) _minimal_chartowchar( x, y )
 
-#ifdef UNICODE
 #define _istspace(x)    isspace( ( char )( x & 0x00FF ) )
-#else
-#define _istspace(x)    isspace(x)
-#endif
 
 #define _malloc_crt malloc
 #define _realloc_crt realloc
@@ -87,11 +83,7 @@
 #define _FASSIGN(flag, argument, number, dec_point, locale) _safecrt_fassign((flag), (argument), (number))
 #define _WFASSIGN(flag, argument, number, dec_point, locale) _safecrt_wfassign((flag), (argument), (number))
 
-#if defined (UNICODE)
 #define ALLOC_TABLE 1
-#else  /* defined (UNICODE) */
-#define ALLOC_TABLE 0
-#endif  /* defined (UNICODE) */
 
 #define HEXTODEC(chr)   _hextodec(chr)
 

@@ -732,7 +732,6 @@ STDAPI_(LPWSTR) StrCatBuffW(LPWSTR pszDest, LPCWSTR pszSrc, int cchDestBuffSize)
 #define wnsprintfW              _snwprintf // note: not 100% compatible (wsprintf should be subset of sprintf...)
 #define wvnsprintfW             _vsnwprintf // note: not 100% compatible (wsprintf should be subset of sprintf...)
 
-#ifdef UNICODE
 #define StrCpy                  StrCpyW
 #define StrCpyN                 StrCpyNW
 #define StrCat                  StrCatW
@@ -751,8 +750,6 @@ STDAPI_(LPWSTR) StrCatBuffW(LPWSTR pszDest, LPCWSTR pszSrc, int cchDestBuffSize)
 #define lstrcmp                 lstrcmpW
 #define lstrcmpi                lstrcmpiW
 #define wnsprintf               wnsprintfW
-#endif
-
 
 #ifdef __cplusplus
 /*
@@ -1121,7 +1118,6 @@ STDAPI UrlUnescapeW(LPWSTR pszURL, LPWSTR pszUnescaped, uint32_t * pcchUnescaped
 STDAPI_(BOOL) UrlIsW(LPCWSTR pszUrl, URLIS dwUrlIs);
 STDAPI UrlGetPartW(LPCWSTR pszIn, LPWSTR pszOut, uint32_t * pcchOut, uint32_t dwPart, uint32_t dwFlags);
 
-#ifdef UNICODE
 #define PathAppend          PathAppendW
 #define PathCommonPrefix    PathCommonPrefixW
 #define PathFindFileName    PathFindFileNameW
@@ -1149,8 +1145,6 @@ STDAPI UrlGetPartW(LPCWSTR pszIn, LPWSTR pszOut, uint32_t * pcchOut, uint32_t dw
 #define UrlUnescape         UrlUnescapeW
 #define UrlIs               UrlIsW
 #define UrlGetPart          UrlGetPartW
-
-#endif // UNICODE
 
 /******************* misc ***************************************/
 

@@ -354,26 +354,6 @@ void _invalid_parameter(const char16_t *_Message, const char16_t *_FunctionName,
 #if _SAFECRT_DEFINE_TCS_MACROS
 
 /* _tcs macros */
-#if !defined(_UNICODE) && !defined(UNICODE) && !defined(_MBCS)
-
-#define _tcscpy_s       strcpy_s
-#define _tcsncpy_s      strncpy_s
-#define _tcscat_s       strcat_s
-#define _tcsncat_s      strncat_s
-#define _tcsset_s       _strset_s
-#define _tcsnset_s      _strnset_s
-#define _tcstok_s       strtok_s
-#define _tmakepath_s    _makepath_s
-#define _tsplitpath_s   _splitpath_s
-#define _stprintf_s     sprintf_s
-#define _vstprintf_s    vsprintf_s
-#define _sntprintf_s    _snprintf_s
-#define _vsntprintf_s   _vsnprintf_s
-#define _tscanf_s       scanf_s
-#define _tsscanf_s      sscanf_s
-#define _tsnscanf_s     _snscanf_s
-
-#elif defined(_UNICODE) || defined(UNICODE)
 
 #define _tcscpy_s       wcscpy_s
 #define _tcsncpy_s      wcsncpy_s
@@ -391,31 +371,6 @@ void _invalid_parameter(const char16_t *_Message, const char16_t *_FunctionName,
 #define _tscanf_s       wscanf_s
 #define _tsscanf_s      swscanf_s
 #define _tsnscanf_s     _swnscanf_s
-
-#elif defined(_MBCS)
-
-#define _tcscpy_s       _mbscpy_s
-#define _tcsncpy_s      _mbsnbcpy_s
-#define _tcscat_s       _mbscat_s
-#define _tcsncat_s      _mbsnbcat_s
-#define _tcsset_s       _mbsset_s
-#define _tcsnset_s      _mbsnbset_s
-#define _tcstok_s       _mbstok_s
-#define _tmakepath_s    _makepath_s
-#define _tsplitpath_s   _splitpath_s
-#define _stprintf_s     sprintf_s
-#define _vstprintf_s    vsprintf_s
-#define _sntprintf_s    _snprintf_s
-#define _vsntprintf_s   _vsnprintf_s
-#define _tscanf_s       scanf_s
-#define _tsscanf_s      sscanf_s
-#define _tsnscanf_s     _snscanf_s
-
-#else
-
-#error We should not get here...
-
-#endif
 
 #endif /* _SAFECRT_DEFINE_TCS_MACROS */
 
