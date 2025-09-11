@@ -283,7 +283,7 @@ Initialize()
         if (NO_ERROR != palError)
         {
             ERROR("object manager initialization failed!\n");
-            InternalDelete(pshmom);
+            delete pshmom;
             goto CLEANUP1b;
         }
 

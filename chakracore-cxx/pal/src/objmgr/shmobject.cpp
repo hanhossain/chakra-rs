@@ -651,7 +651,7 @@ CSharedMemoryObject::CleanupForProcessShutdown(
     m_pthrCleanup = pthr;
     pthr->AddThreadReference();
     
-    InternalDelete(this);
+    delete this;
 
     pthr->ReleaseThreadReference();
 

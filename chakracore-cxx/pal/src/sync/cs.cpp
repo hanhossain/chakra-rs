@@ -462,7 +462,7 @@ void InternalDeleteCriticalSection(
 
 #endif // PAL_TRACK_CRITICAL_SECTIONS_DATA
 
-        InternalDelete(pPalCriticalSection->DebugInfo);
+        delete pPalCriticalSection->DebugInfo;
         pPalCriticalSection->DebugInfo = NULL;
     }
 #endif // _DEBUG

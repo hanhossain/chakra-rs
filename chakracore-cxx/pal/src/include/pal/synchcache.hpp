@@ -161,7 +161,7 @@ namespace CorUnix
             }
             else
             {
-                InternalDelete((char *)pNode);
+                delete (char *)pNode;
             }
             Unlock(pthrCurrent);
         }
@@ -186,7 +186,7 @@ namespace CorUnix
             {
                 pTemp = pNode;
                 pNode = pNode->next;
-                InternalDelete((char *)pTemp);
+                delete pTemp;
             }
         }
     };

@@ -55,15 +55,6 @@ namespace CorUnix{
         return new (pMem) T[cElements]();
     }
 
-    template<class T> void InternalDelete(T *p)
-    {
-        if (p)
-        {
-            p->~T();
-            free(p);
-        }
-    }
-
     template<class T> void InternalDeleteArray(T *p)
     {
         if (p)

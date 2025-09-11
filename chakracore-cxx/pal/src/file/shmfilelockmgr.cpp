@@ -435,7 +435,7 @@ CSharedMemoryFileLockController::ReleaseController()
             );
     }
 
-    InternalDelete(this);
+    delete this;
 }
 
 void
@@ -449,7 +449,7 @@ CSharedMemoryFileTransactionLock::ReleaseLock()
         RDWR_LOCK_RGN
         );
 
-    InternalDelete(this);
+    delete this;
 }
 
 PAL_ERROR

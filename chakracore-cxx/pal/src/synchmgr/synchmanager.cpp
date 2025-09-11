@@ -1534,7 +1534,7 @@ namespace CorUnix
             }
             s_pObjSynchMgr = NULL;
             g_pSynchronizationManager = NULL;
-            InternalDelete(pSynchManager);
+            delete pSynchManager;
         }
 
         return palErr;
@@ -3042,7 +3042,7 @@ namespace CorUnix
 
                 m_lMonitoredProcessesCount--;
                 pmpln->psdSynchData->Release(pthrCurrent);
-                InternalDelete(pmpln);
+                delete pmpln;
             }
         }
         else
@@ -3250,7 +3250,7 @@ namespace CorUnix
                 pNode->psdSynchData->Release(pthrCurrent);
 
                 // Delete the node
-                InternalDelete(pNode);
+                delete pNode;
 
                 // Go to the next
                 pNode = pNext;
@@ -3300,7 +3300,7 @@ namespace CorUnix
             pNode = m_pmplnMonitoredProcesses;
             m_pmplnMonitoredProcesses = pNode->pNext;
             pNode->psdSynchData->Release(pthrCurrent);
-            InternalDelete(pNode);
+            delete pNode;
         }
 
         // Release the monitored processes lock
@@ -4059,7 +4059,7 @@ namespace CorUnix
                     pdsln->pthrTarget->ReleaseThreadReference();
 
                     // Delete the node
-                    InternalDelete(pdsln);
+                    delete pdsln;
 
                     lIdx += 1;
                 }

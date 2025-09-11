@@ -315,7 +315,7 @@ CPalObjectBase::ReleaseReference(
                 );
         }
 
-        InternalDelete(this);
+        delete this;
 
         pthr->ReleaseThreadReference();
     }
