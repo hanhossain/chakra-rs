@@ -110,13 +110,13 @@ ServerShutdown(
 }
 
 void
-__RPC_USER PTHREADCONTEXT_HANDLE_rundown(__RPC__in PTHREADCONTEXT_HANDLE phContext)
+PTHREADCONTEXT_HANDLE_rundown(__RPC__in PTHREADCONTEXT_HANDLE phContext)
 {
     ServerCleanupThreadContext(nullptr, &phContext);
 }
 
 void
-__RPC_USER PSCRIPTCONTEXT_HANDLE_rundown(__RPC__in PSCRIPTCONTEXT_HANDLE phContext)
+ PSCRIPTCONTEXT_HANDLE_rundown(__RPC__in PSCRIPTCONTEXT_HANDLE phContext)
 {
     ServerCloseScriptContext(nullptr, phContext);
     ServerCleanupScriptContext(nullptr, &phContext);

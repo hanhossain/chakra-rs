@@ -156,7 +156,9 @@ add_library(Chakra.Pal
   ${ARCH_SOURCES}
 )
 
-target_include_directories(Chakra.Pal PUBLIC
+target_include_directories(Chakra.Pal
+  PUBLIC
   ${CHAKRACORE_SOURCE_DIR}/pal/inc
+  PRIVATE
   ${CHAKRACORE_SOURCE_DIR}/pal/src/include
-  )
+)

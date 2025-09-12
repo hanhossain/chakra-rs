@@ -117,20 +117,10 @@ using namespace Js;
 #pragma warning(disable:4035)   // Turn off warning that there is no return value
     uint32 NumberUtilities::MulLu(uint32 lu1, uint32 lu2, uint32 *pluHi)
     {
-#if I386_ASM
-        __asm
-        {
-            mov eax, lu1
-            mul lu2
-            mov ebx, pluHi
-            mov uint32_t PTR[ebx], edx
-        }
-#else //!I386_ASM
-        unsigned long llu = UInt32x32To64(lu1, lu2);
+        uint64_t llu = (uint64_t)lu1 * (uint64_t)lu2;
 
         *pluHi = (uint32)(llu >> 32);
         return (uint32)llu;
-#endif //!I386_ASM
     }
 #pragma warning(pop)
 

@@ -10,10 +10,6 @@
 // ===========================================================================
 // simplified unknwn.h for PAL
 
-#include "rpc.h"
-#include "rpcndr.h"
-#include <initguid.h>
-
 #ifndef __IUnknown_INTERFACE_DEFINED__
 #define __IUnknown_INTERFACE_DEFINED__
 
@@ -21,11 +17,7 @@ typedef interface IUnknown IUnknown;
 
 typedef /* [unique] */ IUnknown *LPUNKNOWN;
 
-// 00000000-0000-0000-C000-000000000046
-DEFINE_GUID(IID_IUnknown, 0x00000000, 0x0000, 0x0000, 0xC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x46);
-
-MIDL_INTERFACE("00000000-0000-0000-C000-000000000046")
-IUnknown
+struct IUnknown
 {
     virtual int32_t STDMETHODCALLTYPE QueryInterface( 
         REFIID riid,
@@ -49,11 +41,7 @@ IUnknown
 #ifndef __IClassFactory_INTERFACE_DEFINED__
 #define __IClassFactory_INTERFACE_DEFINED__
 
-// 00000001-0000-0000-C000-000000000046
-EXTERN_C const IID IID_IClassFactory;
-    
-MIDL_INTERFACE("00000001-0000-0000-C000-000000000046")
-IClassFactory : public IUnknown
+struct IClassFactory : public IUnknown
 {
     virtual int32_t STDMETHODCALLTYPE CreateInstance( 
         IUnknown *pUnkOuter,

@@ -4,8 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 #include "CommonCorePch.h"
 #include "SysInfo.h"
-#include <wincrypt.h>
-#include <VersionHelpers.h>
 #ifdef __APPLE__
 #include <sys/sysctl.h> // sysctl*
 #elif defined(__linux__)
@@ -80,8 +78,8 @@ AutoSystemInfo::Initialize()
 #endif
     allocationGranularityPageCount = dwAllocationGranularity / dwPageSize;
 
-    isWindows8OrGreater = IsWindows8OrGreater();
-    isWindows8Point1OrGreater = IsWindows8Point1OrGreater();
+    isWindows8OrGreater = false;
+    isWindows8Point1OrGreater = false;
 
     binaryName[0] = u'\0';
 

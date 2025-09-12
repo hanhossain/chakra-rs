@@ -16,10 +16,6 @@
 *       [Public]
 ****/
 
-/*************************************************************************
-* See specstrings_strict.h for documentation of all user visible macros.
-*************************************************************************/
-
 #if !defined(_SAL_VERSION_SAL2)
 
  #if defined(__BUILDMACHINE__) || defined(_USE_SAL2_ONLY)
@@ -420,13 +416,6 @@ void __pfx_assume(int, const char *);
 #define __analysis_assert(e) (__pfx_assert(e,"pfx_assert"),__assume(e));
 #endif /* ifdef _PREFIX_ */
 
-/**************************************************************************
-* This include should always be the last thing in this file.
-* Must avoid redfinitions of macros to workaround rc.exe issues.
-***************************************************************************/
-#if !(defined(RC_INVOKED) || defined(SORTPP_PASS))
-#include "specstrings_strict.h"
-#endif /* if !(defined(RC_INVOKED) || defined(SORTPP_PASS)) */
 
 /*
  If no SAL 2 appears to have been defined (_Outptr_ is a representative choice)

@@ -8,8 +8,12 @@
 #define SCA_FORMAT_MAJOR  1
 #define SCA_FORMAT_MINOR  0
 #define SCA_FORMAT_VERSION (MAKELONG(0, MAKEWORD(SCA_FORMAT_MINOR, SCA_FORMAT_MAJOR)))
-#define GetSCAMajor(header) HIBYTE(HIWORD(header))
-#define GetSCAMinor(header) LOBYTE(HIWORD(header))
+
+inline uint8_t GetSCAMajor(uint32_t x)
+{
+    return x >> 24;
+}
+
 typedef
 enum SCATypeId
 {

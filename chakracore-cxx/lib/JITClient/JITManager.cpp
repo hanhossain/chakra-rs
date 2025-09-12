@@ -9,13 +9,13 @@
 
 _Must_inspect_result_
 _Ret_maybenull_ _Post_writable_byte_size_(size)
-void * __RPC_USER midl_user_allocate(
+void * midl_user_allocate(
     size_t size)
 {
     return (HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, size));
 }
 
-void __RPC_USER midl_user_free(_Pre_maybenull_ _Post_invalid_ void * ptr)
+void midl_user_free(_Pre_maybenull_ _Post_invalid_ void * ptr)
 {
     if (ptr != NULL)
     {
