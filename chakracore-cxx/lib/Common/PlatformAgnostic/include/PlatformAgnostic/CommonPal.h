@@ -17,10 +17,10 @@
 #endif // defined(_AMD64_)
 #endif
 
-#include "inc/pal.h"
-#include "inc/rt/palrt.h"
-#include "inc/rt/no_sal2.h"
-#include "inc/rt/oaidl.h"
+#include "pal.h"
+#include "rt/palrt.h"
+#include "rt/no_sal2.h"
+#include "rt/oaidl.h"
 
 #define _u(s) u##s
 

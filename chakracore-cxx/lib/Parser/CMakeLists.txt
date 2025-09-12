@@ -30,7 +30,6 @@ add_library (Chakra.Parser OBJECT
 
 # TODO (hanhossain): cleanup includes
 target_include_directories (Chakra.Parser PUBLIC
-    ${CHAKRACORE_SOURCE_DIR}/pal
     ${CHAKRACORE_SOURCE_DIR}/pal/inc
     ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlaceHolder

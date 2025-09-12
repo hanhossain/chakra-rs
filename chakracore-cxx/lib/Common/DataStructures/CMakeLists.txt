@@ -15,7 +15,6 @@ add_library (Chakra.Common.DataStructures OBJECT
 
 # TODO (hanhossain): cleanup includes
 target_include_directories (Chakra.Common.DataStructures PUBLIC
-    ${CHAKRACORE_SOURCE_DIR}/pal
     ${CHAKRACORE_SOURCE_DIR}/pal/inc
     ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
     ${CHAKRACORE_SOURCE_DIR}/lib/Common

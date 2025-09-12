@@ -20,7 +20,6 @@ add_subdirectory(Core)
 # TODO (hanhossain): cleanup includes
 target_include_directories (Chakra.Jsrt PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CHAKRACORE_SOURCE_DIR}/pal
     ${CHAKRACORE_SOURCE_DIR}/pal/inc
     ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlaceHolder
