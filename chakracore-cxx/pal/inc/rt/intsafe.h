@@ -14,48 +14,7 @@
 
 #include "specstrings.h"    // for IN, etc.
 
-
-#if defined(_AMD64_)
-#ifdef __cplusplus
-extern "C" {
-#endif
-#ifdef __cplusplus
-}
-#endif
-#endif // _AMD64_
-
 #define INTSAFE_E_ARITHMETIC_OVERFLOW       ((int32_t)0x80070216L)  // 0x216 = 534 = ERROR_ARITHMETIC_OVERFLOW
-
-#ifndef LOWORD
-#define LOWORD(l)       ((uint16_t)(((DWORD_PTR)(l)) & 0xffff))
-#endif
-
-#ifndef HIWORD
-#define HIWORD(l)       ((uint16_t)(((DWORD_PTR)(l)) >> 16))
-#endif
-
-#define HIDWORD(_qw)    ((uint32_t)((_qw) >> 32))
-#define LODWORD(_qw)    ((uint32_t)(_qw))
-
-#if defined(MIDL_PASS) || defined(RC_INVOKED) || defined(_M_CEE_PURE) \
-    || defined(_68K_) || defined(_MPPC_) || defined(_PPC_)            \
-    || defined(_M_IA64) || defined(_M_AMD64) || defined(__ARM_ARCH)
-
-#ifndef UInt32x32To64
-#define UInt32x32To64(a, b) ((unsigned long)((uint32_t)(a)) * (unsigned long)((uint32_t)(b)))
-#endif
-
-#elif defined(_M_IX86)
-
-#ifndef UInt32x32To64
-#define UInt32x32To64(a, b) (unsigned long)((unsigned long)(uint32_t)(a) * (uint32_t)(b))
-#endif
-
-#else
-
-#error Must define a target architecture.
-
-#endif
 
 #define INT_MAX         2147483647
 #define LONG_MAX        2147483647L
@@ -889,8 +848,7 @@ UIntMult(
      uint32_t uMultiplier,
      uint32_t* puResult)
 {
-    unsigned long ull64Result = UInt32x32To64(uMultiplicand, uMultiplier);
-
+    unsigned long ull64Result = ((unsigned long)uMultiplicand * (unsigned long)uMultiplier);
     return ULongLongToUInt(ull64Result, puResult);
 }
 
@@ -904,8 +862,7 @@ ULongMult(
      uint32_t ulMultiplier,
      uint32_t* pulResult)
 {
-    unsigned long ull64Result = UInt32x32To64(ulMultiplicand, ulMultiplier);
-
+    unsigned long ull64Result = ((unsigned long)ulMultiplicand * (unsigned long)ulMultiplier);
     return ULongLongToULong(ull64Result, pulResult);
 }
 

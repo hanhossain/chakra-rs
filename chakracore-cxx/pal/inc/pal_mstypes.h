@@ -124,8 +124,6 @@ typedef const TCHAR *LPCTSTR;
 
 #define MAKEWORD(a, b)      ((uint16_t)(((uint8_t)((DWORD_PTR)(a) & 0xff)) | ((uint16_t)((uint8_t)((DWORD_PTR)(b) & 0xff))) << 8))
 #define MAKELONG(a, b)      ((int32_t)(((uint16_t)((DWORD_PTR)(a) & 0xffff)) | ((uint32_t)((uint16_t)((DWORD_PTR)(b) & 0xffff))) << 16))
-#define LOWORD(l)           ((uint16_t)((DWORD_PTR)(l) & 0xffff))
-#define HIWORD(l)           ((uint16_t)((DWORD_PTR)(l) >> 16))
 #define LOBYTE(w)           ((uint8_t)((DWORD_PTR)(w) & 0xff))
 #define HIBYTE(w)           ((uint8_t)((DWORD_PTR)(w) >> 8))
 
