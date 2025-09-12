@@ -116,7 +116,6 @@ add_library (Chakra.Backend OBJECT
 # TODO (hanhossain): cleanup includes
 target_include_directories (Chakra.Backend PUBLIC
     ${CC_BACKEND_ARCH_FOLDER}
-    ${CHAKRACORE_SOURCE_DIR}/pal
     ${CHAKRACORE_SOURCE_DIR}/pal/inc
     ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
     ${CHAKRACORE_SOURCE_DIR}/lib/Common

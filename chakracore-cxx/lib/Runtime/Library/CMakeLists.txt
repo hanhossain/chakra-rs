@@ -135,7 +135,6 @@ add_library (Chakra.Runtime.Library OBJECT ${CRLIB_SOURCE_CODES})
 
 # TODO (hanhossain): cleanup includes
 target_include_directories (Chakra.Runtime.Library PUBLIC
-    ${CHAKRACORE_SOURCE_DIR}/pal
     ${CHAKRACORE_SOURCE_DIR}/pal/inc
     ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlaceHolder

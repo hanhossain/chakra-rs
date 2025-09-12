@@ -33,7 +33,6 @@ endif()
 target_include_directories (ch PUBLIC
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlaceHolder
-  ${CHAKRACORE_SOURCE_DIR}/pal
   ${CHAKRACORE_SOURCE_DIR}/pal/inc
   ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
   ${CHAKRACORE_SOURCE_DIR}/lib/Runtime
