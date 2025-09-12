@@ -6,8 +6,6 @@
 #ifndef _CHAKRACOREWINDOWS_H_
 #define _CHAKRACOREWINDOWS_H_
 
-#include <rpc.h>
-
 /// <summary>
 ///     Globally enables out-of-process JIT.
 /// </summary>

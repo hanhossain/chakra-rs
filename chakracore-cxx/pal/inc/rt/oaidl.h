@@ -12,8 +12,6 @@
 #ifndef __OAIDL_H__
 #define __OAIDL_H__
 
-#include "rpc.h"
-
 #include "unknwn.h"
 
 typedef struct tagEXCEPINFO {

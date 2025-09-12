@@ -10,8 +10,6 @@
 // ===========================================================================
 // simplified unknwn.h for PAL
 
-#include "rpc.h"
-
 #ifndef __IUnknown_INTERFACE_DEFINED__
 #define __IUnknown_INTERFACE_DEFINED__
 
