@@ -4,7 +4,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "stdafx.h"
-#include "Core/AtomLockGuids.h"
 #include <pthread.h>
 
 #ifdef __linux__

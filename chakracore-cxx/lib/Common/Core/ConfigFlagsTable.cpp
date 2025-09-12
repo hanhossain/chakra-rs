@@ -6,8 +6,6 @@
 #include "Memory/PageHeapBlockTypeFilter.h"
 #include "Core/ConfigFlagsTable.h"
 
-#include <initguid.h>
-
 #undef DebugBreak
 
 // Initialization order

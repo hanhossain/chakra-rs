@@ -62,13 +62,6 @@ namespace Js
             return E_POINTER;
         }
 
-        if (IsEqualGUID(riid, IID_IUnknown))
-        {
-            *ppv = static_cast<IUnknown*>(this);
-            AddRef();
-            return S_OK;
-        }
-
         *ppv = nullptr;
         return E_NOINTERFACE;
     }
