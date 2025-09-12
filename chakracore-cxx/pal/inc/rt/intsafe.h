@@ -65,18 +65,6 @@ extern "C" {
 #define DWORD_MAX       0xffffffffUL
 
 //
-// It is common for -1 to be used as an error value for various types
-//
-#define USHORT_ERROR    (0xffff)
-#define INT_ERROR       (-1)
-#define LONG_ERROR      (-1L)
-#define UINT_ERROR      (0xffffffff)
-#define ULONG_ERROR     (0xffffffffUL)
-#define ULONGLONG_ERROR (0xffffffffffffffffULL)
-#define HIDWORD_MASK (0xffffffff00000000ULL)
-#define SIZET_ERROR     ULONGLONG_ERROR
-
-//
 // We make some assumptions about the sizes of various types. Let's be
 // explicit about those assumptions and check them.
 //
@@ -177,7 +165,7 @@ IntToUShort(
      unsigned short* pusResult)
 {
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
-    *pusResult = USHORT_ERROR;
+    *pusResult = 0xffff;
 
     if ((iOperand >= 0) && (iOperand <= USHRT_MAX))
     {
@@ -198,7 +186,7 @@ IntToUInt(
      uint32_t* puResult)
 {
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
-    *puResult = UINT_ERROR;
+    *puResult = 0xffffffff;
 
     if (iOperand >= 0)
     {
@@ -219,7 +207,7 @@ IntToULong(
      uint32_t* pulResult)
 {
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
-    *pulResult = ULONG_ERROR;
+    *pulResult = 0xffffffffUL;
 
     if (iOperand >= 0)
     {
@@ -240,7 +228,7 @@ IntToULongLong(
      unsigned long* pullResult)
 {
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
-    *pullResult = ULONG_ERROR;
+    *pullResult = 0xffffffffUL;
 
     if (iOperand >= 0)
     {
@@ -328,7 +316,7 @@ UIntToInt(
      int32_t* piResult)
 {
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
-    *piResult = INT_ERROR;
+    *piResult = -1;
 
     if (uOperand <= INT_MAX)
     {
@@ -355,7 +343,7 @@ UIntToLong(
     }
     else
     {
-        *Result = LONG_ERROR;
+        *Result = -1L;
         return INTSAFE_E_ARITHMETIC_OVERFLOW;
     }
 }
@@ -446,7 +434,7 @@ ULongToUShort(
      unsigned short* pusResult)
 {
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
-    *pusResult = USHORT_ERROR;
+    *pusResult = 0xffff;
 
     if (ulOperand <= USHRT_MAX)
     {
@@ -473,7 +461,7 @@ ULongToInt(
     }
     else
     {
-        *piResult = INT_ERROR;
+        *piResult = -1;
         return INTSAFE_E_ARITHMETIC_OVERFLOW;
     }
 }
@@ -508,7 +496,7 @@ ULongToLong(
     }
     else
     {
-        *Result = LONG_ERROR;
+        *Result = -1L;
         return INTSAFE_E_ARITHMETIC_OVERFLOW;
     }
 }
@@ -529,7 +517,7 @@ ULongLongToInt(
     }
     else
     {
-        *piResult = INT_ERROR;
+        *piResult = -1;
         return INTSAFE_E_ARITHMETIC_OVERFLOW;
     }
 }
@@ -550,7 +538,7 @@ ULongLongToLong(
     }
     else
     {
-        *Result = LONG_ERROR;
+        *Result = -1L;
         return INTSAFE_E_ARITHMETIC_OVERFLOW;
     }
 }
@@ -565,7 +553,7 @@ UIntToUShort(
      unsigned short* pusResult)
 {
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
-    *pusResult = USHORT_ERROR;
+    *pusResult = 0xffff;
 
     if (uOperand <= USHRT_MAX)
     {
@@ -586,7 +574,7 @@ ULongLongToUShort(
      unsigned short* pusResult)
 {
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
-    unsigned short usResult = USHORT_ERROR;
+    unsigned short usResult = 0xffff;
 
     if (ullOperand <= USHRT_MAX)
     {
@@ -608,7 +596,7 @@ ULongLongToULong(
      uint32_t* pulResult)
 {
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
-    *pulResult = ULONG_ERROR;
+    *pulResult = 0xffffffffUL;
 
     if (ullOperand <= ULONG_MAX)
     {
@@ -636,7 +624,7 @@ ULongLongToUInt(
      uint32_t* puResult)
 {
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
-    *puResult = UINT_ERROR;
+    *puResult = 0xffffffff;
 
     if (ullOperand <= UINT_MAX)
     {
@@ -879,7 +867,7 @@ UShortAdd(
      unsigned short* pusResult)
 {
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
-    *pusResult = USHORT_ERROR;
+    *pusResult = 0xffff;
 
     if (((unsigned short)(usAugend + usAddend)) >= usAugend)
     {
@@ -906,7 +894,7 @@ UIntAdd(
      uint32_t* puResult)
 {
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
-    *puResult = UINT_ERROR;
+    *puResult = 0xffffffff;
 
     if ((uAugend + uAddend) >= uAugend)
     {
@@ -933,7 +921,7 @@ ULongAdd(
      uint32_t* pulResult)
 {
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
-    *pulResult = ULONG_ERROR;
+    *pulResult = 0xffffffffUL;
 
     if ((ulAugend + ulAddend) >= ulAugend)
     {
@@ -970,7 +958,7 @@ SizeTAdd(
      size_t* pResult)
 {
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
-    *pResult = SIZET_ERROR;
+    *pResult = 0xffffffffffffffffULL;
 
     if ((Augend + Addend) >= Augend)
     {
@@ -997,7 +985,7 @@ ULongLongAdd(
      unsigned long* pullResult)
 {
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
-    *pullResult = ULONGLONG_ERROR;
+    *pullResult = 0xffffffffffffffffULL;
 
     if ((ullAugend + ullAddend) >= ullAugend)
     {
@@ -1019,7 +1007,7 @@ UShortSub(
      unsigned short* pusResult)
 {
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
-    *pusResult = USHORT_ERROR;
+    *pusResult = 0xffff;
 
     if (usMinuend >= usSubtrahend)
     {
@@ -1047,7 +1035,7 @@ UIntSub(
      uint32_t* puResult)
 {
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
-    *puResult = UINT_ERROR;
+    *puResult = 0xffffffff;
 
     if (uMinuend >= uSubtrahend)
     {
@@ -1074,7 +1062,7 @@ ULongSub(
      uint32_t* pulResult)
 {
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
-    *pulResult = ULONG_ERROR;
+    *pulResult = 0xffffffffUL;
 
     if (ulMinuend >= ulSubtrahend)
     {
@@ -1112,7 +1100,7 @@ SizeTSub(
      size_t* pResult)
 {
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
-    *pResult = SIZET_ERROR;
+    *pResult = 0xffffffffffffffffULL;
 
     if (Minuend >= Subtrahend)
     {
@@ -1139,7 +1127,7 @@ ULongLongSub(
      unsigned long* pullResult)
 {
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
-    *pullResult = ULONGLONG_ERROR;
+    *pullResult = 0xffffffffffffffffULL;
 
     if (ullMinuend >= ullSubtrahend)
     {
