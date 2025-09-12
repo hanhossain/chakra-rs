@@ -76,7 +76,7 @@ namespace Js
             BEGIN_JS_RUNTIME_CALL_EX(scriptContext, false)
             {
                 charcount_t len;
-                IfFailGo(SizeTToUInt(wcslen(name), &len));
+                IfFailGo(ULongLongToUInt(wcslen(name), &len));
                 IfFailGo(InternalAdd(name, len, value));
 Error:
                 ; // Fall through
@@ -96,7 +96,7 @@ Error:
         BEGIN_JS_RUNTIME_CALL_EX(scriptContext, false)
         {
             int len;
-            IfFailGo(SizeTToInt(wcslen(name), &len));
+            IfFailGo(ULongLongToInt(wcslen(name), &len));
 
             if (!m_properties->TryGetValue(InternalString(name, len), pValue))
             {

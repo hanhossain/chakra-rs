@@ -282,11 +282,6 @@ UIntToUChar(
 }
 
 //
-// uint32_t -> uint8_t conversion
-//
-#define UIntToByte   UIntToUChar
-
-//
 // __inline is not sufficient. __forceinline is necessary.
 // If the function is not inlined and you link .objs compiled with different compiler switches,
 // you get one or the other function arbitrarily chosen.
@@ -608,13 +603,6 @@ ULongLongToULong(
 }
 
 //
-// UINT_PTR -> uint32_t conversion
-// size_t -> uint32_t conversion
-//
-#define UIntPtrToULong  ULongLongToULong
-#define ULongPtrToULong ULongLongToULong
-
-//
 // unsigned long -> uint32_t conversion
 //
 __inline
@@ -635,94 +623,6 @@ ULongLongToUInt(
     return hr;
 }
 
-//
-// UINT_PTR -> uint32_t conversion
-// size_t -> uint32_t conversion
-//
-#define UIntPtrToUInt  ULongLongToUInt
-#define ULongPtrToUInt ULongLongToUInt
-
-//
-// * -> uint8_t conversion (uint8_t is always unsigned char)
-//
-#define  IntToByte   IntToUChar
-#define UIntToByte  UIntToUChar
-#define  LongToByte  LongToUChar
-#define ULongToByte ULongToUChar
-
-//
-// * -> uint16_t conversion (uint16_t is always unsigned short)
-//
-#define IntToWord               IntToUShort
-#define LongToWord              LongToUShort
-#define LongLongToWord          LongLongToUShort
-#define UIntToWord              UIntToUShort
-#define ULongToWord             ULongToUShort
-#define ULongLongToWord         ULongLongToUShort
-#define UIntPtrToWord           UIntPtrToUShort
-#define ULongPtrToWord          ULongPtrToUShort
-#define SizeTToWord             SizeTToUShort
-#define SIZETToWord             SIZETToUShort
-
-//
-// uint16_t -> * conversion (uint16_t is always unsigned short)
-//
-#define WordToUChar             UShortToUChar
-#define WordToByte              UShortToByte
-#define WordToChar              UShortToChar
-#define WordToSignedChar        UShortToSignedChar
-#define WordToInt               UShortToInt
-#define WordToLong              UShortToLong
-#define WordToLongLong          UShortToLongLong
-#define WordToIntPtr            UShortToIntPtr
-#define WordToLongPtr           UShortToLongPtr
-
-//
-// * -> uint32_t conversion (uint32_t is always uint32_t)
-//
-#define CharToDWord             CharToULong
-#define SignedCharToDWord       SignedCharToULong
-#define ShortToDWord            ShortToULong
-#define IntToDWord              IntToULong
-#define LongToDWord             LongToULong
-#define LongLongToDWord         LongLongToULong
-#define UIntToDWord             UIntToULong
-#define ULongLongToDWord        ULongLongToULong
-#define IntPtrToDWord           IntPtrToULong
-#define LongPtrToDWord          LongPtrToULong
-#define UIntPtrToDWord          UIntPtrToULong
-#define ULongPtrToDWord         ULongPtrToULong
-#define SizeTToDWord            SizeTToULong
-#define SIZETToDWord            SIZETToULong
-
-//
-// uint32_t -> * conversion (uint32_t is always uint32_t)
-//
-#define DWordToChar             ULongToChar
-#define DWordToUChar            ULongToUChar
-#define DWordToByte             ULongToByte
-#define DWordToSignedChar       ULongToSignedChar
-#define DWordToUShort           ULongToUShort
-#define DWordToUInt             ULongToUInt
-#define DWordToInt              ULongToInt
-#define DWordToLong             ULongToLong
-#define DWordToLongLong         ULongToLongLong
-#define DWordToIntPtr           ULongToIntPtr
-#define DWordToLongPtr          ULongToLongPtr
-
-
-//
-// * -> UINT_PTR conversion (UINT_PTR is uint32_t on Win32, unsigned long on Win64)
-//
-#define CharToUIntPtr           CharToULongLong
-#define SignedCharToUIntPtr     SignedCharToULongLong
-#define ShortToUIntPtr          ShortToULongLong
-#define IntToUIntPtr            IntToULongLong
-#define LongToUIntPtr           LongToULongLong
-#define LongLongToUIntPtr       LongLongToULongLong
-#define IntPtrToUIntPtr         IntPtrToULongLong
-#define LongPtrToUIntPtr        LongPtrToULongLong
-
 __inline
 int32_t
 ULongLongToUIntPtr(
@@ -733,30 +633,6 @@ ULongLongToUIntPtr(
 	return S_OK;
 }
 
-
-//
-// UINT_PTR -> * conversion (UINT_PTR is uint32_t on Win32, unsigned long on Win64)
-//
-#define UIntPtrToUShort         ULongLongToUShort
-#define UIntPtrToInt            ULongLongToInt
-#define UIntPtrToLong           ULongLongToLong
-#define UIntPtrToLongLong       ULongLongToLongLong
-#define UIntPtrToIntPtr         ULongLongToIntPtr
-#define UIntPtrToLongPtr        ULongLongToLongPtr
-
-
-//
-// * -> size_t conversion (size_t is uint32_t on Win32, unsigned long on Win64)
-//
-#define CharToULongPtr          CharToULongLong
-#define SignedCharToULongPtr    SignedCharToULongLong
-#define ShortToULongPtr         ShortToULongLong
-#define IntToULongPtr           IntToULongLong
-#define LongToULongPtr          LongToULongLong
-#define LongLongToULongPtr      LongLongToULongLong
-#define IntPtrToULongPtr        IntPtrToULongLong
-#define LongPtrToULongPtr       LongPtrToULongLong
-
 __inline
 int32_t
 ULongLongToULongPtr(
@@ -766,95 +642,6 @@ ULongLongToULongPtr(
 	*pulResult = ullOperand;
 	return S_OK;
 }
-
-
-//
-// size_t -> * conversion (size_t is uint32_t on Win32, unsigned long on Win64)
-//
-#define ULongPtrToUShort        ULongLongToUShort
-#define ULongPtrToInt           ULongLongToInt
-#define ULongPtrToLong          ULongLongToLong
-#define ULongPtrToLongLong      ULongLongToLongLong
-#define ULongPtrToIntPtr        ULongLongToIntPtr
-#define ULongPtrToLongPtr       ULongLongToLongPtr
-
-//
-// * -> size_t conversion (size_t is always UINT_PTR)
-//
-#define CharToSizeT             CharToUIntPtr
-#define SignedCharToSizeT       SignedCharToUIntPtr
-#define ShortToSizeT            ShortToUIntPtr
-#define IntToSizeT              IntToUIntPtr
-#define LongToSizeT             LongToUIntPtr
-#define LongLongToSizeT         LongLongToUIntPtr
-#define ULongLongToSizeT        ULongLongToUIntPtr
-#define IntPtrToSizeT           IntPtrToUIntPtr
-#define LongPtrToSizeT          LongPtrToUIntPtr
-
-//
-// size_t -> * conversion (size_t is always UINT_PTR)
-//
-#define SizeTToUShort           UIntPtrToUShort
-#define SizeTToUInt             UIntPtrToUInt
-#define SizeTToULong            UIntPtrToULong
-#define SizeTToInt              UIntPtrToInt
-#define SizeTToLong             UIntPtrToLong
-#define SizeTToLongLong         UIntPtrToLongLong
-#define SizeTToIntPtr           UIntPtrToIntPtr
-#define SizeTToLongPtr          UIntPtrToLongPtr
-
-//
-// * -> size_t conversion (size_t is always size_t)
-//
-#define CharToSIZET             CharToULongPtr
-#define SignedCharToSIZET       SignedCharToULongPtr
-#define ShortToSIZET            ShortToULongPtr
-#define IntToSIZET              IntToULongPtr
-#define LongToSIZET             LongToULongPtr
-#define LongLongToSIZET         LongLongToULongPtr
-#define IntPtrToSIZET           IntPtrToULongPtr
-#define LongPtrToSIZET          LongPtrToULongPtr
-#define ULongLongToSIZET        ULongLongToULongPtr
-
-//
-// size_t -> * conversion (size_t is always size_t)
-//
-#define SIZETToUShort           ULongPtrToUShort
-#define SIZETToUInt             ULongPtrToUInt
-#define SIZETToULong            ULongPtrToULong
-#define SIZETToUIntPtr          ULongPtrToUIntPtr
-#define SIZETToULongPtr         ULongPtrToULongPtr
-#define SIZETToInt              ULongPtrToInt
-#define SIZETToLong             ULongPtrToLong
-#define SIZETToLongLong         ULongPtrToLongLong
-#define SIZETToIntPtr           ULongPtrToIntPtr
-#define SIZETToLongPtr          ULongPtrToLongPtr
-
-//
-// * -> DWORD_PTR conversion (DWORD_PTR is always size_t)
-//
-#define CharToDWordPtr             CharToULongPtr
-#define SignedCharToDWordPtr       SignedCharToULongPtr
-#define ShortToDWordPtr            ShortToULongPtr
-#define IntToDWordPtr              IntToULongPtr
-#define LongToDWordPtr             LongToULongPtr
-#define LongLongToDWordPtr         LongLongToULongPtr
-#define ULongLongToDWordPtr        ULongLongToULongPtr
-#define IntPtrToDWordPtr           IntPtrToULongPtr
-#define LongPtrToDWordPtr          LongPtrToULongPtr
-
-//
-// DWORD_PTR -> * conversion (DWORD_PTR is always size_t)
-//
-#define DWordPtrToUShort           ULongPtrToUShort
-#define DWordPtrToUInt             ULongPtrToUInt
-#define DWordPtrToULong            ULongPtrToULong
-#define DWordPtrToDWord            ULongPtrToDWord
-#define DWordPtrToInt              ULongPtrToInt
-#define DWordPtrToLong             ULongPtrToLong
-#define DWordPtrToLongLong         ULongPtrToLongLong
-#define DWordPtrToIntPtr           ULongPtrToIntPtr
-#define DWordPtrToLongPtr          ULongPtrToLongPtr
 
 //
 // unsigned short addition
@@ -879,11 +666,6 @@ UShortAdd(
 }
 
 //
-// uint16_t addtition
-//
-#define WordAdd     UShortAdd
-
-//
 // uint32_t addition
 //
 __inline
@@ -904,11 +686,6 @@ UIntAdd(
 
     return hr;
 }
-
-//
-// UINT_PTR addition
-//
-#define UIntPtrAdd		SizeTAdd
 
 //
 // uint32_t addition
@@ -935,21 +712,6 @@ ULongAdd(
 //
 // size_t addition
 //
-#define ULongPtrAdd     ULongLongAdd
-
-//
-// uint32_t addition
-//
-#define DWordAdd        ULongAdd
-
-//
-// DWORD_PTR addition
-//
-#define DWordPtrAdd		ULongPtrAdd
-
-//
-// size_t addition
-//
 __inline
 int32_t
 SizeTAdd(
@@ -968,11 +730,6 @@ SizeTAdd(
 
     return hr;
 }
-
-//
-// size_t addition
-//
-#define SIZETAdd	ULongPtrAdd
 
 //
 // unsigned long addition
@@ -1018,11 +775,6 @@ UShortSub(
     return hr;
 }
 
-//
-// uint16_t subtraction
-//
-#define WordSub     UShortSub
-
 
 //
 // uint32_t subtraction
@@ -1045,11 +797,6 @@ UIntSub(
 
     return hr;
 }
-
-//
-// UINT_PTR subtraction
-//
-#define UIntPtrSub	SizeTSub
 
 //
 // uint32_t subtraction
@@ -1076,22 +823,6 @@ ULongSub(
 //
 // size_t subtraction
 //
-#define ULongPtrSub ULongLongSub
-
-
-//
-// uint32_t subtraction
-//
-#define DWordSub        ULongSub
-
-//
-// DWORD_PTR subtraction
-//
-#define DWordPtrSub		ULongPtrSub
-
-//
-// size_t subtraction
-//
 __inline
 int32_t
 SizeTSub(
@@ -1110,11 +841,6 @@ SizeTSub(
 
     return hr;
 }
-
-//
-// size_t subtraction
-//
-#define SIZETSub	ULongPtrSub
 
 //
 // unsigned long subtraction
@@ -1154,11 +880,6 @@ UShortMult(
 }
 
 //
-// uint16_t multiplication
-//
-#define WordMult      UShortMult
-
-//
 // uint32_t multiplication
 //
 __inline
@@ -1187,25 +908,5 @@ ULongMult(
 
     return ULongLongToULong(ull64Result, pulResult);
 }
-
-//
-// uint32_t multiplication
-//
-#define DWordMult       ULongMult
-
-//
-// DWORD_PTR multiplication
-//
-#define DWordPtrMult	ULongPtrMult
-
-//
-// size_t multiplication
-//
-#define SizeTMult		UIntPtrMult
-
-//
-// size_t multiplication
-//
-#define SIZETMult		ULongPtrMult
 
 #endif // _INTSAFE_H_INCLUDED_
