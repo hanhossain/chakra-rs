@@ -169,24 +169,13 @@ function_name() to call the system's implementation
 #define strlen DUMMY_strlen
 #define strnlen DUMMY_strnlen
 #define stricmp DUMMY_stricmp
-#define strcspn DUMMY_strcspn
-#define strtod DUMMY_strtod
-#define strspn DUMMY_strspn
 #if HAVE__SNPRINTF
 #define _snprintf DUMMY__snprintf
 #endif /* HAVE__SNPRINTF */
 #if HAVE__SNWPRINTF
 #define _snwprintf DUMMY__snwprintf
 #endif  /* HAVE__SNWPRINTF */
-#define tolower DUMMY_tolower
-#define toupper DUMMY_toupper
-#define islower DUMMY_islower
-#define isupper DUMMY_isupper
-#define isprint DUMMY_isprint
-#define isdigit DUMMY_isdigit
 #define srand DUMMY_srand
-#define atoi DUMMY_atoi
-#define atof DUMMY_atof
 #define time DUMMY_time
 #define tm PAL_tm
 #define time_t PAL_time_t
@@ -213,25 +202,6 @@ function_name() to call the system's implementation
    stdlib.h header files. PAL_RAND_MAX should have the same value as RAND_MAX
    defined in pal.h  */
 #define PAL_RAND_MAX 0x7fff
-
-/* The standard headers define isspace and isxdigit as macros and functions,
-   To avoid redefinition problems, undefine those macros. */
-#ifdef isspace
-#undef isspace
-#endif
-#ifdef isxdigit
-#undef isxdigit
-#endif
-#ifdef isalpha
-#undef isalpha
-#endif
-#ifdef isalnum
-#undef isalnum
-#endif
-#define isspace DUMMY_isspace
-#define isxdigit DUMMY_isxdigit
-#define isalpha DUMMY_isalpha
-#define isalnum DUMMY_isalnum
 
 #ifdef stdin
 #undef stdin
@@ -322,28 +292,13 @@ function_name() to call the system's implementation
 #undef strlen
 #undef strnlen
 #undef stricmp
-#undef strcspn
 #undef strtoul
-#undef strtod
-#undef strspn
 #undef strdup
-#undef tolower
-#undef toupper
-#undef islower
-#undef isupper
-#undef isprint
-#undef isdigit
-#undef isspace
 #undef iswdigit
 #undef iswxdigit
 #undef iswalpha
 #undef iswprint
-#undef isxdigit
-#undef isalpha
-#undef isalnum
-#undef atoi
 #undef atol
-#undef atof
 #undef malloc
 #undef realloc
 #undef free
