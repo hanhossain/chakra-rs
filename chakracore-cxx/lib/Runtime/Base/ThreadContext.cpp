@@ -727,8 +727,6 @@ Recycler* ThreadContext::EnsureRecycler()
 
             throw;
         }
-
-        JS_ETW(EventWriteJSCRIPT_GC_INIT(this->recycler, this->GetHiResTimer()->Now()));
     }
 
 #if DBG
@@ -3002,7 +3000,6 @@ ThreadContext::ClearInlineCachesWithDeadWeakRefs()
     uint scriptContextCount = 0;
 
     // Note: this event is not meaningful for MemGC, only Chakra
-    JS_ETW(EventWriteJSCRIPT_GC_CLEAR_INLINECACHE_START());
 #endif
 
     for (Js::ScriptContext *scriptContext = scriptContextList; scriptContext != nullptr; scriptContext = scriptContext->next)
@@ -3020,8 +3017,6 @@ ThreadContext::ClearInlineCachesWithDeadWeakRefs()
         polyInlineCacheSize += scriptContext->GetInlineCacheAllocator()->GetPolyInlineCacheSize();
 #endif
     }
-
-    JS_ETW(EventWriteJSCRIPT_GC_CLEAR_INLINECACHE_STOP(this, scriptContextCount, (uint) allocatedSize, (uint) preClearFreeListSize, (uint) freeListSize, (uint) polyInlineCacheSize));
 
 #if ENABLE_DEBUG_CONFIG_OPTIONS
     if (PHASE_TRACE1(Js::InlineCachePhase))

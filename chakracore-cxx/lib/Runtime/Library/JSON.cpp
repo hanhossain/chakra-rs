@@ -83,7 +83,6 @@ namespace JSON
             if (reviver)
             {
                 Js::DynamicObject* root = scriptContext->GetLibrary()->CreateObject();
-                JS_ETW(EventWriteJSCRIPT_RECYCLER_ALLOCATE_OBJECT(root));
                 Js::PropertyId propertyId = scriptContext->GetEmptyStringPropertyId();
                 Js::JavascriptOperators::InitProperty(root, propertyId, result);
                 result = parser.Walk(scriptContext->GetLibrary()->GetEmptyString(), propertyId, root);

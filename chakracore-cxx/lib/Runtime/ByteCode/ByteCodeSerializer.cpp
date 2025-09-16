@@ -5006,9 +5006,6 @@ int32_t ByteCodeSerializer::DeserializeFromBuffer(ScriptContext * scriptContext,
 }
 int32_t ByteCodeSerializer::DeserializeFromBufferInternal(ScriptContext * scriptContext, uint32 scriptFlags, LPCUTF8 utf8Source, ISourceHolder* sourceHolder, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, Field(FunctionBody*)* function, uint sourceIndex)
 {
-    //ETW Event start
-    JS_ETW(EventWriteJSCRIPT_BYTECODEDESERIALIZE_START(scriptContext, 0));
-
     auto alloc = scriptContext->SourceCodeAllocator();
     bool isLibraryCode = ((scriptFlags & fscrIsLibraryCode) == fscrIsLibraryCode);
     bool isJsBuiltInCode = ((scriptFlags & fscrJsBuiltIn) == fscrJsBuiltIn);
@@ -5050,9 +5047,6 @@ int32_t ByteCodeSerializer::DeserializeFromBufferInternal(ScriptContext * script
     auto cache = Anew(alloc, ByteCodeCache, scriptContext, reader, builtInPropertyCount);
 
     hr = reader->ReadTopFunctionBody(function, sourceInfo, cache, ((scriptFlags & fscrAllowFunctionProxy) == fscrAllowFunctionProxy), nativeModule);
-
-    //ETW Event stop
-    JS_ETW(EventWriteJSCRIPT_BYTECODEDESERIALIZE_STOP(scriptContext,0));
 
     LEAVE_PINNED_SCOPE();
     LEAVE_PINNED_SCOPE();

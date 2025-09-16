@@ -103,8 +103,6 @@ using namespace Js;
             pfuncScript->GetTypeHandler()->EnsureObjectReady(pfuncScript);
         }
 
-        JS_ETW(EventWriteJSCRIPT_RECYCLER_ALLOCATE_FUNCTION(pfuncScript, EtwTrace::GetFunctionId(functionProxy)));
-
         return pfuncScript;
         JIT_HELPER_END(ScrFunc_OP_NewScFunc);
     }
@@ -595,8 +593,6 @@ using namespace Js;
         Assert(!functionProxy->HasSuperReference());
         AsmJsScriptFunction* asmJsFunc = scriptContext->GetLibrary()->CreateAsmJsScriptFunction(functionProxy);
         asmJsFunc->SetEnvironment(environment);
-
-        JS_ETW(EventWriteJSCRIPT_RECYCLER_ALLOCATE_FUNCTION(asmJsFunc, EtwTrace::GetFunctionId(functionProxy)));
 
         return asmJsFunc;
     }

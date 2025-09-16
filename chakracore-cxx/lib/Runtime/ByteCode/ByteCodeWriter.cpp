@@ -224,8 +224,6 @@ namespace Js
         m_functionWrite->LoadDynamicProfileInfo();
 #endif
 
-        JS_ETW(EventWriteJSCRIPT_BYTECODEGEN_METHOD(m_functionWrite->GetHostSourceContext(), m_functionWrite->GetScriptContext(), m_functionWrite->GetLocalFunctionId(), m_functionWrite->GetByteCodeCount(), this->GetTotalSize(), m_functionWrite->GetExternalDisplayName()));
-
 #ifdef LOG_BYTECODE_AST_RATIO
         // log the bytecode AST ratio
         if (currentAstSize == maxAstSize)

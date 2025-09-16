@@ -63,8 +63,6 @@ using namespace Js;
         GeneratorVirtualScriptFunction* scriptFunction = scriptContext->GetLibrary()->CreateGeneratorVirtualScriptFunction(functionProxy);
         scriptFunction->SetEnvironment(environment);
 
-        JS_ETW(EventWriteJSCRIPT_RECYCLER_ALLOCATE_FUNCTION(scriptFunction, EtwTrace::GetFunctionId(functionProxy)));
-
         JavascriptGeneratorFunction* genFunc = nullptr;
         if (functionProxy->IsAsync() && !functionProxy->IsModule())
         {

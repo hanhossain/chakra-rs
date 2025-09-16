@@ -69,7 +69,6 @@ namespace Js
     ArrayBuffer* JsrtExternalArrayBuffer::JsrtExternalArrayBufferDetachedState::Create(JavascriptLibrary* library)
     {
         ArrayBuffer* arr = JsrtExternalArrayBuffer::New(buffer, bufferLength, finalizeCallback, callbackState, library->GetArrayBufferType());
-        JS_ETW(EventWriteJSCRIPT_RECYCLER_ALLOCATE_OBJECT(arr));
         return arr;
     }
 }

@@ -3794,10 +3794,6 @@ namespace Js
             {
                 this->SetOriginalEntryPoint(this->m_scriptContext->GetNextDynamicInterpreterThunk(&this->m_dynamicInterpreterThunk));
             }
-            if (this->m_dynamicInterpreterThunk != nullptr)
-            {
-                JS_ETW(EtwTrace::LogMethodInterpreterThunkLoadEvent(this));
-            }
         }
         else
         {
@@ -3924,7 +3920,6 @@ namespace Js
         }
         TraceExecutionMode();
 
-        JS_ETW(EtwTrace::LogMethodNativeLoadEvent(this, entryPointInfo));
 #ifdef VTUNE_PROFILING
         VTuneChakraProfile::LogMethodNativeLoadEvent(this, entryPointInfo);
 #endif
@@ -3992,7 +3987,6 @@ namespace Js
         {
             loopHeader->interpretCount = entryPointInfo->GetFunctionBody()->GetLoopInterpretCount(loopHeader) - 1;
         }
-        JS_ETW(EtwTrace::LogLoopBodyLoadEvent(this, ((LoopEntryPointInfo*)entryPointInfo), ((uint16)loopNum)));
 #ifdef VTUNE_PROFILING
         VTuneChakraProfile::LogLoopBodyLoadEvent(this, ((LoopEntryPointInfo*)entryPointInfo), ((uint16)loopNum));
 #endif
@@ -7674,8 +7668,6 @@ namespace Js
 #if DYNAMIC_INTERPRETER_THUNK
         if (this->HasInterpreterThunkGenerated())
         {
-            JS_ETW(EtwTrace::LogMethodInterpreterThunkUnloadEvent(this));
-
             if (!isScriptContextClosing)
             {
                 if (m_isAsmJsFunction)
@@ -9163,13 +9155,6 @@ namespace Js
         {
             Assert(this->functionProxy->GetFunctionInfo()->HasBody());
 
-#if ENABLE_NATIVE_CODEGEN
-            if (this->IsNativeEntryPointProcessed())
-            {
-                JS_ETW(EtwTrace::LogMethodNativeUnloadEvent(this->functionProxy->GetFunctionBody(), this));
-            }
-#endif
-
             FunctionBody* functionBody = this->functionProxy->GetFunctionBody();
 #ifdef ASMJS_PLAT
             if (this->GetIsTJMode())
@@ -9445,9 +9430,6 @@ namespace Js
         if (this->IsCodeGenDone())
 #endif
         {
-            JS_ETW(EtwTrace::LogLoopBodyUnloadEvent(this->loopHeader->functionBody, this,
-                this->loopHeader->functionBody->GetLoopNumber(this->loopHeader)));
-
 #if ENABLE_NATIVE_CODEGEN
             this->CleanupNativeCode(this->loopHeader->functionBody->GetScriptContext());
 #endif

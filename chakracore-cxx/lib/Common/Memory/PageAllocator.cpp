@@ -2248,7 +2248,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::AddUsedBytes(size_t by
     // ETW events from different threads may be reported out of order, producing an
     // incorrect representation of current used bytes in the process. We've determined that this is an
     // acceptable issue, which will be mitigated at the level of the application consuming the event.
-    JS_ETW(EventWriteJSCRIPT_PAGE_ALLOCATOR_USED_SIZE(lastTotalUsedBytes + bytes));
     Unused(lastTotalUsedBytes);
 
 #ifdef PERF_COUNTERS
@@ -2275,7 +2274,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::SubUsedBytes(size_t by
     // ETW events from different threads may be reported out of order, producing an
     // incorrect representation of current used bytes in the process. We've determined that this is an
     // acceptable issue, which will be mitigated at the level of the application consuming the event.
-    JS_ETW(EventWriteJSCRIPT_PAGE_ALLOCATOR_USED_SIZE(lastTotalUsedBytes - bytes));
     Unused(lastTotalUsedBytes);
 
 #ifdef PERF_COUNTERS

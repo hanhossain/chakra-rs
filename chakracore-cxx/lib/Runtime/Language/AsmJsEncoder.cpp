@@ -243,16 +243,6 @@ namespace Js
             wcscpy_s(functionNameArray, 256, functionName);
             wcscpy_s(&functionNameArray[functionNameCharLength], 256 - functionNameCharLength, suffix);
 #endif
-            JS_ETW(EventWriteMethodLoad(functionBody->GetScriptContext(),
-                (void *)buffer,
-                codeSize,
-                EtwTrace::GetFunctionId(functionBody),
-                0 /* methodFlags - for future use*/,
-                MethodType_Jit,
-                EtwTrace::GetSourceId(functionBody),
-                functionBody->GetLineNumber(),
-                functionBody->GetColumnNumber(),
-                functionBody->GetDisplayName()));
             entryPointInfo->SetTJCodeGenDone(); // set the codegen to done state for TJ
             entryPointInfo->SetTJCodeSize(codeSize);
             return buffer;
