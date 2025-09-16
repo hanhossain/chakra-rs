@@ -75,8 +75,6 @@
 #include "Debug/TTEventLog.h"
 #endif
 
-#include "Base/EtwTrace.h"
-
 #include "Library/JavascriptNumberObject.h"
 #include "Library/JavascriptStringObject.h"
 #include "Library/JavascriptBooleanObject.h"

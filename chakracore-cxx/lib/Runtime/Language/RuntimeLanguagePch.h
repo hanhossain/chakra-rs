@@ -100,8 +100,6 @@
 #include "Language/SourceDynamicProfileManager.h"
 #include "Language/SimpleDataCacheWrapper.h"
 
-#include "Base/EtwTrace.h"
-
 #include "Library/ArgumentsObject.h"
 
 #include "Types/TypePropertyCache.h"

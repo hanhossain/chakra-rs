@@ -64,5 +64,4 @@ Remove unicode (always use unicode):
 
 Remove ETW:
 - TEST_ETW_EVENTS
-- EtwTrace.h
-- EtwTrace.cpp
+- EtwTraceCore.h

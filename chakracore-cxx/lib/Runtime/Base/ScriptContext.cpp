@@ -22,7 +22,6 @@
 #endif
 
 #include "Base/ScriptContextProfiler.h"
-#include "Base/EtwTrace.h"
 
 #include "Language/InterpreterStackFrame.h"
 #include "Language/SourceDynamicProfileManager.h"
