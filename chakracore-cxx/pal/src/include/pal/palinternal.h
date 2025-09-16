@@ -156,10 +156,6 @@ function_name() to call the system's implementation
 #define _ENABLE_DEBUG_MESSAGES_ 0
 #endif
 
-#ifdef PAL_PERF
-#include "pal_perf.h"
-#endif
-
 #if defined(__APPLE__)
 #include "TargetConditionals.h"
 #endif // __APPLE__ ?

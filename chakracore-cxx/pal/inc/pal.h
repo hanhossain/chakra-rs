@@ -5590,21 +5590,6 @@ int32_t
 PAL_GetCPUBusyTime(
       PAL_IOCP_CPU_INFORMATION *lpPrevCPUInfo);
 
-/****************PAL Perf functions for PInvoke*********************/
-#if PAL_PERF
-void
-PAL_EnableProcessProfile(void);
-
-void
-PAL_DisableProcessProfile(void);
-
-BOOL
-PAL_IsProcessProfileEnabled(void);
-
-int64_t
-PAL_GetCpuTickCount(void);
-#endif // PAL_PERF
-
 /******************* PAL side-by-side support  ************************/
 
 #ifdef FEATURE_PAL_SXS
