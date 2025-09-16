@@ -4,7 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#define GCETW(e, ...)
 #define IS_GCETW_Enabled(e)  false
 #define JS_ETW(s)
 #define IS_JS_ETW(s) (false)
