@@ -5,8 +5,6 @@
 #include "CommonCommonPch.h"
 #include "Common/Jobs.h"
 
-#include "Core/EtwTraceCore.h"
-
 #include "Exceptions/ExceptionBase.h"
 #include "Exceptions/JavascriptException.h"
 #include "Exceptions/OperationAbortedException.h"

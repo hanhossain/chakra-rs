@@ -93,4 +93,3 @@
 #include "Debug/ProbeContainer.h"
 #include "Debug/DebugContext.h"
 #endif
-#include "Core/EtwTraceCore.h"

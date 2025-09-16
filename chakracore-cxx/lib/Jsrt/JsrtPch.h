@@ -73,4 +73,3 @@
 #endif
 
 #include "JsrtContext.h"
-#include "Core/EtwTraceCore.h"

@@ -5,7 +5,6 @@
 
 #include "Backend.h"
 #include "PlatformAgnostic/CommonPal.h"
-#include "Core/EtwTraceCore.h"
 #ifdef ENABLE_SCRIPT_DEBUGGING
 #include "Debug/DebuggingFlags.h"
 #include "Debug/DiagProbe.h"
