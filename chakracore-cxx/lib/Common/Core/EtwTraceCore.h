@@ -8,4 +8,3 @@
 #define IS_JS_ETW(s) (false)
 #define GCETW_INTERNAL(e, args)
 #define JS_ETW_INTERNAL(s)
-#define EDGE_ETW_INTERNAL(s)
