@@ -2998,7 +2998,7 @@ ThreadContext::ClearScriptContextCaches()
 void
 ThreadContext::ClearInlineCachesWithDeadWeakRefs()
 {
-#if ENABLE_DEBUG_CONFIG_OPTIONS || defined(ENABLE_JS_ETW)
+#if ENABLE_DEBUG_CONFIG_OPTIONS
     size_t allocatedSize = 0;
     size_t preClearFreeListSize = 0;
     size_t freeListSize = 0;
@@ -3011,7 +3011,7 @@ ThreadContext::ClearInlineCachesWithDeadWeakRefs()
 
     for (Js::ScriptContext *scriptContext = scriptContextList; scriptContext != nullptr; scriptContext = scriptContext->next)
     {
-#if ENABLE_DEBUG_CONFIG_OPTIONS || defined(ENABLE_JS_ETW)
+#if ENABLE_DEBUG_CONFIG_OPTIONS
         scriptContextCount++;
         allocatedSize += scriptContext->GetInlineCacheAllocator()->AllocatedSize();
         preClearFreeListSize += scriptContext->GetInlineCacheAllocator()->FreeListSize();
@@ -3019,7 +3019,7 @@ ThreadContext::ClearInlineCachesWithDeadWeakRefs()
 
         scriptContext->ClearInlineCachesWithDeadWeakRefs();
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS || defined(ENABLE_JS_ETW)
+#if ENABLE_DEBUG_CONFIG_OPTIONS
         freeListSize += scriptContext->GetInlineCacheAllocator()->FreeListSize();;
         polyInlineCacheSize += scriptContext->GetInlineCacheAllocator()->GetPolyInlineCacheSize();
 #endif

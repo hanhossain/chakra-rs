@@ -61,3 +61,8 @@ typedefs/defines to remove:
 
 Remove unicode (always use unicode):
 - `_UNICODE`
+
+Remove ETW:
+- TEST_ETW_EVENTS
+- EtwTrace.h
+- EtwTrace.cpp

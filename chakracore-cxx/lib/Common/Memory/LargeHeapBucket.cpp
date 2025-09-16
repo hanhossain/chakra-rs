@@ -327,14 +327,6 @@ LargeHeapBucket::AddLargeHeapBlock(size_t size, bool nothrow)
     LargeAllocationVerboseTrace(recycler->GetRecyclerFlagsTable(), u"Allocated new large heap block 0x%p for sizeCat 0x%x\n", heapBlock, sizeCat);
 #endif
 
-#ifdef ENABLE_JS_ETW
-#if ENABLE_DEBUG_CONFIG_OPTIONS
-    if (segment->GetPageCount() > heapInfo->GetRecyclerLargeBlockPageAllocator()->GetMaxAllocPageCount())
-    {
-        JS_ETW_INTERNAL(EventWriteJSCRIPT_INTERNAL_RECYCLER_EXTRALARGE_OBJECT_ALLOC(size));
-    }
-#endif
-#endif
     if (!heapBlock)
     {       
         heapInfo->GetRecyclerLargeBlockPageAllocator()->SuspendIdleDecommit();

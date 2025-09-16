@@ -282,10 +282,6 @@
 #endif
 #endif
 
-#ifdef ENABLE_JS_ETW
-#define TEST_ETW_EVENTS
-#endif
-
 // VTUNE profiling requires ETW trace
 #if defined(_M_IX86) || defined(_M_X64)
 #define VTUNE_PROFILING
@@ -460,9 +456,6 @@
 // Special build features
 //  - features that can be enabled on private builds for debugging
 //----------------------------------------------------------------------------------------------------
-#ifdef ENABLE_JS_ETW
-// #define ETW_MEMORY_TRACKING          // ETW events for internal allocations
-#endif
 // #define OLD_ITRACKER                 // Switch to the old IE8 ITracker GUID
 // #define LOG_BYTECODE_AST_RATIO       // log the ratio between AST size and bytecode generated.
 // #define DUMP_FRAGMENTATION_STATS        // Display HeapBucket fragmentation stats after sweep
@@ -507,7 +500,7 @@
 // #define RECYCLER_MARK_TRACK
 // #define INTERNAL_MEM_PROTECT_HEAP_ALLOC
 
-#if defined(ENABLE_JS_ETW) || defined(DUMP_FRAGMENTATION_STATS)
+#if defined(DUMP_FRAGMENTATION_STATS)
 #define ENABLE_MEM_STATS 1
 #define POLY_INLINE_CACHE_SIZE_STATS
 #endif
