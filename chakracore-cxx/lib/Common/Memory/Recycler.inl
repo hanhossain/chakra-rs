@@ -553,7 +553,6 @@ Recycler::NotifyFree(T * heapBlock)
 #endif
         RECYCLER_STATS_INC(this, heapBlockFreeCount[heapBlock->GetHeapBlockType()]);
     }
-    JS_ETW(EventWriteFreeMemoryBlock(heapBlock));
 #ifdef RECYCLER_PERF_COUNTERS
     if (forceSweepObject)
     {

@@ -7588,12 +7588,10 @@ void Parser::FinishFncNode(ParseNodeFnc * pnodeFnc, bool fAllowIn)
 void Parser::FinishFncDecl(ParseNodeFnc * pnodeFnc, LPCOLESTR pNameHint, bool fLambda, bool skipCurlyBraces, bool fAllowIn)
 {
     LPCOLESTR name = NULL;
-    JS_ETW(int32 startAstSize = *m_pCurrentAstSize);
     if (PHASE_TRACE1(Js::DeferParsePhase))
     {
         name = GetFunctionName(pnodeFnc, pNameHint);
         m_functionBody = NULL;  // for nested functions we do not want to get the name of the top deferred function return name;
-        JS_ETW(EventWriteJSCRIPT_PARSE_METHOD_START(m_sourceContextInfo->dwHostSourceContext, GetScriptContext(), pnodeFnc->functionId, 0, m_parseType, name));
         OUTPUT_TRACE(Js::DeferParsePhase, u"Parsing function (%s) : %s (%d)\n", GetParseType(), name, pnodeFnc->functionId);
     }
 
@@ -11877,7 +11875,6 @@ ParseNodeProg * Parser::Parse(LPCUTF8 pszSrc, size_t offset, size_t length, char
 
     if (m_parseType != ParseType_Deferred)
     {
-        JS_ETW(EventWriteJSCRIPT_PARSE_METHOD_START(m_sourceContextInfo->dwHostSourceContext, GetScriptContext(), *m_nextFunctionId, 0, m_parseType, Js::Constants::GlobalFunction));
         OUTPUT_TRACE(Js::DeferParsePhase, u"Parsing function (%s) : %s (%d)\n", GetParseType(), Js::Constants::GlobalFunction, *m_nextFunctionId);
     }
 
@@ -12187,11 +12184,6 @@ ParseNodeProg * Parser::Parse(LPCUTF8 pszSrc, size_t offset, size_t length, char
     FinishParseBlock(pnodeGlobalBlock);
 
     m_scriptContext->AddSourceSize(m_length);
-
-    if (m_parseType != ParseType_Deferred)
-    {
-        JS_ETW(EventWriteJSCRIPT_PARSE_METHOD_STOP(m_sourceContextInfo->dwHostSourceContext, GetScriptContext(), pnodeProg->functionId, *m_pCurrentAstSize, false, Js::Constants::GlobalFunction));
-    }
 
     if (isModuleSource)
     {

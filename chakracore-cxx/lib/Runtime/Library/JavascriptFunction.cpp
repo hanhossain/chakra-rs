@@ -277,8 +277,6 @@ using namespace Js;
         }
 #endif
 
-        JS_ETW(EventWriteJSCRIPT_RECYCLER_ALLOCATE_FUNCTION(pfuncScript, EtwTrace::GetFunctionId(pfuncScript->GetFunctionProxy())));
-
         if (isGenerator || isAsync)
         {
             Assert(pfuncScript->GetFunctionInfo()->IsCoroutine());

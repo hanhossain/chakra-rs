@@ -5553,7 +5553,6 @@ skipThunk:
     Var InterpreterStackFrame::OP_NewScObjectSimple()
     {
         Var object = scriptContext->GetLibrary()->CreateObject(true);
-        JS_ETW(EventWriteJSCRIPT_RECYCLER_ALLOCATE_OBJECT(object));
 #if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
         {
@@ -6419,7 +6418,6 @@ skipThunk:
         END_SAFE_REENTRANT_CALL
 
             PopOut(ArgCount);
-        JS_ETW(EventWriteJSCRIPT_RECYCLER_ALLOCATE_OBJECT(newVarInstance));
 #if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
         {
@@ -6450,7 +6448,6 @@ skipThunk:
         END_SAFE_REENTRANT_CALL
 
         PopOut(ArgCount);
-        JS_ETW(EventWriteJSCRIPT_RECYCLER_ALLOCATE_OBJECT(newVarInstance));
 #if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
         {

@@ -2056,8 +2056,6 @@ CHAKRA_API JsCreateArrayBuffer(_In_ unsigned int byteLength, _Out_ JsValueRef *r
         *result = library->CreateArrayBuffer(byteLength);
 
         PERFORM_JSRT_TTD_RECORD_ACTION_RESULT(scriptContext, result);
-
-        JS_ETW(EventWriteJSCRIPT_RECYCLER_ALLOCATE_OBJECT(*result));
         return JsNoError;
     });
 }
@@ -2084,8 +2082,6 @@ CHAKRA_API JsCreateExternalArrayBuffer(_Pre_maybenull_ _Pre_writable_byte_size_(
             library->GetArrayBufferType());
 
         PERFORM_JSRT_TTD_RECORD_ACTION_RESULT(scriptContext, result);
-
-        JS_ETW(EventWriteJSCRIPT_RECYCLER_ALLOCATE_OBJECT(*result));
         return JsNoError;
     });
 }
@@ -2169,8 +2165,6 @@ CHAKRA_API JsCreateTypedArray(_In_ JsTypedArrayType arrayType, _In_ JsValueRef b
             *result = Js::JavascriptFunction::CallAsConstructor(constructorFunc, /* overridingNewTarget = */nullptr, args, scriptContext);
         }
         END_SAFE_REENTRANT_CALL
-
-        JS_ETW(EventWriteJSCRIPT_RECYCLER_ALLOCATE_OBJECT(*result));
         return JsNoError;
     });
 }
@@ -2190,8 +2184,6 @@ CHAKRA_API JsCreateDataView(_In_ JsValueRef arrayBuffer, _In_ unsigned int byteO
 
         Js::JavascriptLibrary* library = scriptContext->GetLibrary();
         *result = library->CreateDataView(Js::VarTo<Js::ArrayBuffer>(arrayBuffer), byteOffset, byteLength);
-
-        JS_ETW(EventWriteJSCRIPT_RECYCLER_ALLOCATE_OBJECT(*result));
         return JsNoError;
     });
 }

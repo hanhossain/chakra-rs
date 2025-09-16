@@ -3984,10 +3984,6 @@ Inline::InlineGetterSetterFunction(IR::Instr *accessorInstr, const FunctionJITTi
 
     Assert(!accessorInstr->GetSrc2());
 
-    JS_ETW(EventWriteJSCRIPT_BACKEND_INLINE(
-        funcCaller->GetFunctionNumber(), funcBody->GetFunctionNumber(),
-        funcCaller->GetDisplayName(), funcBody->GetDisplayName()));
-
     IR::Instr *inlineBailoutChecksBeforeInstr = accessorInstr;
 
 
@@ -4252,10 +4248,6 @@ Inline::InlineScriptFunction(IR::Instr *callInstr, const FunctionJITTimeInfo *co
 
     // We are committed to inlining, optimize the call instruction for fixed fields now and don't attempt it later.
     bool isFixed = false;
-
-    JS_ETW(EventWriteJSCRIPT_BACKEND_INLINE(
-        funcCaller->GetFunctionNumber(), funcBody->GetFunctionNumber(),
-        funcCaller->GetJITFunctionBody()->GetDisplayName(), funcBody->GetDisplayName()));// REVIEW: OOP JIT, was GetExternalDisplayName, does this matter?
 
     bool isCtor = false;
     bool safeThis = false;

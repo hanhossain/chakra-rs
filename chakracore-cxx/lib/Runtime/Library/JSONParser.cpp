@@ -290,7 +290,6 @@ namespace JSON
 
                 // first, create the object
                 Js::DynamicObject* object = scriptContext->GetLibrary()->CreateObject();
-                JS_ETW(EventWriteJSCRIPT_RECYCLER_ALLOCATE_OBJECT(object));
 #if ENABLE_DEBUG_CONFIG_OPTIONS
                 if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
                 {

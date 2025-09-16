@@ -280,10 +280,6 @@ namespace Js
         if(dataCacheWrapper != nullptr)
         {
             bool profileLoaded = manager->LoadFromProfileCache(dataCacheWrapper, info->url);
-            if(profileLoaded)
-            {
-                JS_ETW(EventWriteJSCRIPT_PROFILE_LOAD(info->dwHostSourceContext, scriptContext));
-            }
         }
         return manager;
     }

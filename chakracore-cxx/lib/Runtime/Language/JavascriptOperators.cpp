@@ -5738,7 +5738,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             scriptContext->objectLiteralCacheCount++;
         }
 #endif
-        JS_ETW(EventWriteJSCRIPT_RECYCLER_ALLOCATE_OBJECT(instance));
         // can't auto-proxy here as object literal is not exactly "new" object and cannot be intercepted as proxy.
         return instance;
     }
@@ -5935,8 +5934,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             ScriptFunction *func = scriptContext->GetLibrary()->CreateScriptFunction(proxy);
 
             func->SetEnvironment(pDisplay);
-            JS_ETW(EventWriteJSCRIPT_RECYCLER_ALLOCATE_FUNCTION(func, EtwTrace::GetFunctionId(proxy)));
-
             scopeObj->SetCachedFunc(i, func);
             if (scopeSlot != Constants::NoProperty)
             {
@@ -6075,7 +6072,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     {
         JIT_HELPER_NOT_REENTRANT_HEADER(NewJavascriptObjectNoArg, reentrancylock, requestContext->GetThreadContext());
         DynamicObject * newObject = requestContext->GetLibrary()->CreateObject(true);
-        JS_ETW(EventWriteJSCRIPT_RECYCLER_ALLOCATE_OBJECT(newObject));
 #if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
         {
@@ -6090,7 +6086,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     {
         JIT_HELPER_NOT_REENTRANT_HEADER(NewJavascriptArrayNoArg, reentrancylock, requestContext->GetThreadContext());
         JavascriptArray * newArray = requestContext->GetLibrary()->CreateArray();
-        JS_ETW(EventWriteJSCRIPT_RECYCLER_ALLOCATE_OBJECT(newArray));
 #if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
         {
@@ -6157,7 +6152,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             JavascriptLibrary* library = object->GetLibrary();
 
             DynamicObject * newObject = library->CreateObject(true);
-            JS_ETW(EventWriteJSCRIPT_RECYCLER_ALLOCATE_OBJECT(newObject));
 #if ENABLE_DEBUG_CONFIG_OPTIONS
             if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
             {
@@ -6187,7 +6181,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             JavascriptLibrary* library = object->GetLibrary();
 
             JavascriptArray * newArray = library->CreateArray();
-            JS_ETW(EventWriteJSCRIPT_RECYCLER_ALLOCATE_OBJECT(newArray));
 #if ENABLE_DEBUG_CONFIG_OPTIONS
             if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
             {
@@ -6295,7 +6288,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         prototype = VarTo<RecyclableObject>(CrossSite::MarshalVar(requestContext, prototype, functionScriptContext));
 
         Var object = requestContext->GetLibrary()->CreateObject(prototype);
-        JS_ETW(EventWriteJSCRIPT_RECYCLER_ALLOCATE_OBJECT(object));
 #if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
         {
@@ -6343,7 +6335,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             TraceUseConstructorCache(constructorCache, constructor, true);
 #endif
             Var object = DynamicObject::New(requestContext->GetRecycler(), type);
-            JS_ETW(EventWriteJSCRIPT_RECYCLER_ALLOCATE_OBJECT(object));
 #if ENABLE_DEBUG_CONFIG_OPTIONS
             if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
             {
@@ -6428,7 +6419,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 
         DynamicObject* newObject = requestContext->GetLibrary()->CreateObject(prototype, 8);
 
-        JS_ETW(EventWriteJSCRIPT_RECYCLER_ALLOCATE_OBJECT(newObject));
 #if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
         {

@@ -62,7 +62,6 @@ bool ThreadServiceWrapperBase::ScheduleIdleCollect(uint ticks, bool scheduleAsTa
 
     if (OnScheduleIdleCollect(ticks, scheduleAsTask))
     {
-        JS_ETW(EventWriteJSCRIPT_GC_IDLE_START(this));
         IDLE_COLLECT_VERBOSE_TRACE(u"ScheduledIdleCollect- Set hasScheduledIdleCollect\n");
 
         hasScheduledIdleCollect = true;
@@ -109,7 +108,6 @@ bool ThreadServiceWrapperBase::IdleCollect()
     if (this->ShouldFinishConcurrentCollectOnIdleCallback() && recycler->FinishConcurrent<FinishConcurrentOnIdle>())
     {
         IDLE_COLLECT_TRACE(u"Idle callback: finish concurrent\n");
-        JS_ETW(EventWriteJSCRIPT_GC_IDLE_CALLBACK_FINISH(this));
     }
 #endif
 
@@ -143,7 +141,6 @@ bool ThreadServiceWrapperBase::IdleCollect()
 
         // activate an idle collection
         IDLE_COLLECT_TRACE(u"Idle callback: collection: %d\n", timeDiff);
-        JS_ETW(EventWriteJSCRIPT_GC_IDLE_CALLBACK_NEWCOLLECT(this));
 
         needIdleCollect = false;
         recycler->CollectNow<CollectOnScriptIdle>();
@@ -181,10 +178,6 @@ void ThreadServiceWrapperBase::FinishIdleCollect(ThreadServiceWrapperBase::Finis
         // TODO: measure and adjust the timeout bellow
         ScheduleIdleCollect(RecyclerHeuristic::TickCountIdleCollectRepeatTimer, false);
     }
-    else
-    {
-        JS_ETW(EventWriteJSCRIPT_GC_IDLE_FINISHED(this));
-    }
 }
 
 bool ThreadServiceWrapperBase::ScheduleNextCollectOnExit()
@@ -215,8 +208,6 @@ bool ThreadServiceWrapperBase::ScheduleNextCollectOnExit()
 
         IDLE_COLLECT_VERBOSE_TRACE(u"Idle on exit collect %s: %d\n", (oldNeedIdleCollect ? u"rescheduled" : u"scheduled"),
             tickCountNextIdleCollection - GetTickCount());
-
-        JS_ETW(EventWriteJSCRIPT_GC_IDLE_SCHEDULED(this));
     }
     else
     {

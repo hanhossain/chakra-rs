@@ -630,8 +630,6 @@ CHAKRA_API JsCreateSharedArrayBufferWithSharedContent(_In_ JsSharedArrayBufferCo
         *result = library->CreateSharedArrayBuffer((Js::SharedContents*)sharedContents);
 
         PERFORM_JSRT_TTD_RECORD_ACTION_RESULT(scriptContext, result);
-
-        JS_ETW(EventWriteJSCRIPT_RECYCLER_ALLOCATE_OBJECT(*result));
         return JsNoError;
     });
 }

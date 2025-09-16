@@ -1324,8 +1324,6 @@ namespace Js
             true);
 #endif
 
-        JS_ETW(EtwTrace::LogScriptContextLoadEvent(this));
-
 #ifdef PROFILE_EXEC
         if (profiler != nullptr)
         {
@@ -1386,8 +1384,6 @@ namespace Js
 
             if (this->javascriptLibrary)
             {
-                JS_ETW(EtwTrace::LogSourceUnloadEvents(this));
-
 #if ENABLE_PROFILE_INFO
 #if DBG_DUMP
                 DynamicProfileInfo::DumpScriptContext(this);
@@ -3010,7 +3006,6 @@ ExitTempAllocator:
         if (url != nullptr)
         {
             sourceContextInfo->url = CopyString(url, len, this->SourceCodeAllocator());
-            JS_ETW(EtwTrace::LogSourceModuleLoadEvent(this, sourceContext, url));
         }
         if (sourceMapUrl != nullptr && sourceMapUrlLen != 0)
         {
@@ -3058,10 +3053,6 @@ ExitTempAllocator:
                 !this->startupComplete)
             {
                 bool profileLoaded = sourceContextInfo->sourceDynamicProfileManager->LoadFromProfileCache(dataCacheWrapper, sourceContextInfo->url);
-                if (profileLoaded)
-                {
-                    JS_ETW(EventWriteJSCRIPT_PROFILE_LOAD(sourceContextInfo->dwHostSourceContext, this));
-                }
             }
 #endif
             return sourceContextInfo;
@@ -5603,8 +5594,6 @@ ScriptContext::GetJitFuncRangeCache()
 
     void ScriptContext::OnStartupComplete()
     {
-        JS_ETW(EventWriteJSCRIPT_ON_STARTUP_COMPLETE(this));
-
         SaveStartupProfileAndRelease();
     }
 
@@ -5624,7 +5613,6 @@ ScriptContext::GetJitFuncRangeCache()
                 uint bytesWritten = info->sourceDynamicProfileManager->SaveToProfileCacheAndRelease(info);
                 if (bytesWritten > 0)
                 {
-                    JS_ETW(EventWriteJSCRIPT_PROFILE_SAVE(info->dwHostSourceContext, this, bytesWritten, isSaveOnClose));
                     OUTPUT_TRACE(Js::DynamicProfilePhase, u"Profile saving succeeded\n");
                 }
             });
