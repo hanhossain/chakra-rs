@@ -476,8 +476,6 @@ int32_t Parser::ParseSourceInternal(
 #ifdef PROFILE_EXEC
     m_scriptContext->ProfileBegin(Js::ParsePhase);
 #endif
-    JS_ETW_INTERNAL(EventWriteJSCRIPT_PARSE_START(m_scriptContext, 0));
-
     *parseTree = NULL;
     m_sourceLim = 0;
 
@@ -584,7 +582,6 @@ int32_t Parser::ParseSourceInternal(
 #ifdef PROFILE_EXEC
     m_scriptContext->ProfileEnd(Js::ParsePhase);
 #endif
-    JS_ETW_INTERNAL(EventWriteJSCRIPT_PARSE_STOP(m_scriptContext, 0));
 
     return hr;
 }
@@ -7600,9 +7597,6 @@ void Parser::FinishFncDecl(ParseNodeFnc * pnodeFnc, LPCOLESTR pNameHint, bool fL
         OUTPUT_TRACE(Js::DeferParsePhase, u"Parsing function (%s) : %s (%d)\n", GetParseType(), name, pnodeFnc->functionId);
     }
 
-    JS_ETW_INTERNAL(EventWriteJSCRIPT_PARSE_FUNC(GetScriptContext(), pnodeFnc->functionId, /*Undefer*/FALSE));
-
-
     // Do the work of creating an AST for a function body.
     // This is common to the un-deferred case and the case in which we un-defer late in the game.
 
@@ -11601,9 +11595,6 @@ void Parser::FinishDeferredFunction(ParseNodeBlock * pnodeScopeList)
         // will remain deferred until they are called.
         if (pnodeFnc->pnodeBody == nullptr && !pnodeFnc->HasNonSimpleParameterList())
         {
-            // Go back and generate an AST for this function.
-            JS_ETW_INTERNAL(EventWriteJSCRIPT_PARSE_FUNC(this->GetScriptContext(), pnodeFnc->functionId, /*Undefer*/TRUE));
-
             ParseNodeFnc * pnodeFncSave = this->m_currentNodeFunc;
             this->m_currentNodeFunc = pnodeFnc;
 

@@ -608,7 +608,6 @@ namespace Js
             Output::Flush();
         }
 #endif
-        JS_ETW_INTERNAL(EventWriteJSCRIPT_HOST_SCRIPT_CONTEXT_CLOSE(this));
 
 #if ENABLE_TTD
         if(this->TTDWellKnownInfo != nullptr)
@@ -1326,7 +1325,6 @@ namespace Js
 #endif
 
         JS_ETW(EtwTrace::LogScriptContextLoadEvent(this));
-        JS_ETW_INTERNAL(EventWriteJSCRIPT_HOST_SCRIPT_CONTEXT_START(this));
 
 #ifdef PROFILE_EXEC
         if (profiler != nullptr)
