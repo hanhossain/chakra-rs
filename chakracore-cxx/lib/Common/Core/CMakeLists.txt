@@ -9,7 +9,6 @@ add_library (Chakra.Common.Core OBJECT
     CRC.cpp
     DbgHelpSymbolManager.cpp
     DelayLoadLibrary.cpp
-    EtwTraceCore.cpp
     FaultInjection.cpp
     GlobalSecurityPolicy.cpp
     Output.cpp

@@ -103,10 +103,6 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
     collectionState(CollectionStateNotCollecting, &collectionStateChangedObserver),
     recyclerFlagsTable(configFlagsTable),
     autoHeap(policyManager, configFlagsTable, pageAllocator),
-#ifdef ENABLE_JS_ETW
-    collectionStartReason(ETWEventGCActivationTrigger::ETWEvent_GC_Trigger_Unknown),
-    collectionFinishReason(ETWEventGCActivationTrigger::ETWEvent_GC_Trigger_Unknown),
-#endif
     threadService(nullptr),
     markPagePool(configFlagsTable),
     parallelMarkPagePool1(configFlagsTable),
@@ -225,9 +221,6 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
 #endif
 #ifdef HEAP_ENUMERATION_VALIDATION
     ,pfPostHeapEnumScanCallback(nullptr)
-#endif
-#ifdef ENABLE_JS_ETW
-    ,bulkFreeMemoryWrittenCount(0)
 #endif
 #ifdef RECYCLER_PAGE_HEAP
     , isPageHeapEnabled(false)
@@ -350,18 +343,6 @@ void
 Recycler::LogMemProtectHeapSize(bool fromGC)
 {
     Assert(IsMemProtectMode());
-#ifdef ENABLE_JS_ETW
-    if (IS_JS_ETW(EventEnabledMEMPROTECT_GC_HEAP_SIZE()))
-    {
-
-        size_t usedBytes = autoHeap.GetUsedBytes();
-        size_t reservedBytes = autoHeap.GetReservedBytes();
-        size_t committedBytes = autoHeap.GetCommittedBytes();
-        size_t numberOfSegments = autoHeap.GetNumberOfSegments();
-
-        JS_ETW(EventWriteMEMPROTECT_GC_HEAP_SIZE(this, usedBytes, reservedBytes, committedBytes, numberOfSegments, fromGC));
-    }
-#endif
 }
 
 #if DBG
@@ -430,10 +411,6 @@ Recycler::~Recycler()
 
 #if DBG
     this->ResetThreadId();
-#endif
-
-#ifdef ENABLE_JS_ETW
-    FlushFreeRecord();
 #endif
 
     ClearObjectBeforeCollectCallbacks();
@@ -3099,17 +3076,10 @@ Recycler::Sweep(bool concurrent)
             // Next time we check for completion, we will finish the sweep just as if it had happened out of thread.
         }
 
-#ifdef ENABLE_JS_ETW
-        collectionFinishReason = ETWEventGCActivationTrigger::ETWEvent_GC_Trigger_Status_StartedConcurrent;
-#endif
         return true;
     }
 #endif
 
-#ifdef ENABLE_JS_ETW
-    // The false below just means we don't need a concurrent sweep as we have completed a sweep above.
-    collectionFinishReason = ETWEventGCActivationTrigger::ETWEvent_GC_Trigger_Status_Completed;
-#endif
     return false;
 }
 
@@ -3137,10 +3107,6 @@ Recycler::SweepWeakReference()
 
     // REVIEW: Clean up the weak reference map concurrently?
     bool hasCleanup = false;
-#if defined(GCETW) && defined(ENABLE_JS_ETW)
-    uint scannedCount = weakReferenceMap.Count();
-#endif
-
     weakReferenceMap.Map([&hasCleanup](RecyclerWeakReferenceBase * weakRef) -> bool
     {
         if (!weakRef->weakRefHeapBlock->TestObjectMarkedBit(weakRef))
@@ -3166,11 +3132,6 @@ Recycler::SweepWeakReference()
         return true;
     });
 
-#if defined(GCETW) && defined(ENABLE_JS_ETW)
-    uint regionScannedCount = 0;
-    uint regionClearedCount = 0;
-#endif
-
 #if ENABLE_WEAK_REFERENCE_REGIONS
 
     auto edIt = this->weakReferenceRegionList.GetEditingIterator();
@@ -3182,17 +3143,11 @@ Recycler::SweepWeakReference()
         {
             edIt.RemoveCurrent();
             hasCleanup = true;
-#if defined(GCETW) && defined(ENABLE_JS_ETW)
-            regionClearedCount += (uint)region.GetCount();
-#endif
             continue;
         }
 
         // The region is referenced, clean up any stale weak references
         RecyclerWeakReferenceRegionItem<void*>* refs = region.GetPtr();
-#if defined(GCETW) && defined(ENABLE_JS_ETW)
-        regionScannedCount += (uint)region.GetCount();
-#endif
         for (size_t i = 0; i < region.GetCount(); ++i)
         {
             RecyclerWeakReferenceRegionItem<void*> &ref = refs[i];
@@ -3228,20 +3183,12 @@ Recycler::SweepWeakReference()
                 ref.ptr = nullptr;
                 ref.heapBlock = nullptr;
                 hasCleanup = true;
-#if defined(GCETW) && defined(ENABLE_JS_ETW)
-                regionClearedCount++;
-#endif
             }
         }
     }
 #endif
 
     this->weakReferenceCleanupId += hasCleanup;
-
-#if defined(GCETW) && defined(ENABLE_JS_ETW)
-    const uint keptCount = weakReferenceMap.Count();
-    GCETW(GC_SWEEP_WEAKREF_STOP_EX, (this, scannedCount, (scannedCount - keptCount), regionScannedCount, regionClearedCount));
-#endif
 
     RECYCLER_PROFILE_EXEC_END(this, Js::SweepWeakPhase);
 }
@@ -3698,12 +3645,6 @@ Recycler::CollectWithHeuristic()
             // Maybe improve this heuristic by looking at how many free pages are in the page allocator.
             if (autoHeap.uncollectedNewPageCount > this->uncollectedNewPageCountPartialCollect)
             {
-#ifdef ENABLE_JS_ETW
-                if (IS_UNKNOWN_GC_TRIGGER(collectionStartReason))
-                {
-                    collectionStartReason = ETWEventGCActivationTrigger::ETWEvent_GC_Trigger_Partial_GC_AllocSize_Heuristic;
-                }
-#endif
                 return Collect<flags>();
             }
         }
@@ -3920,37 +3861,6 @@ Recycler::DoCollect(CollectionFlags flags)
         Assert(this->backgroundFinishMarkCount == 0);
 #endif
 
-#ifdef ENABLE_JS_ETW
-        this->collectionStartFlags = flags;
-
-        if (flags == CollectOnScriptIdle)
-        {
-            collectionStartReason = ETWEventGCActivationTrigger::ETWEvent_GC_Trigger_IdleCollect;
-        }
-
-        const BOOL timedIfScriptActive = flags & CollectHeuristic_TimeIfScriptActive;
-        const BOOL timedIfInScript = flags & CollectHeuristic_TimeIfInScript;
-        if (IS_UNKNOWN_GC_TRIGGER(collectionStartReason) && (flags & CollectHeuristic_Mask))
-        {
-            if (timedIfScriptActive)
-            {
-                collectionStartReason = ETWEventGCActivationTrigger::ETWEvent_GC_Trigger_TimeAndAllocSizeIfScriptActive_Heuristic;
-            }
-            else if (timedIfInScript)
-            {
-                collectionStartReason = ETWEventGCActivationTrigger::ETWEvent_GC_Trigger_TimeAndAllocSizeIfInScript_Heuristic;
-            }
-            else
-            {
-                collectionStartReason = ETWEventGCActivationTrigger::ETWEvent_GC_Trigger_TimeAndAllocSize_Heuristic;
-            }
-        }
-
-        if (IS_UNKNOWN_GC_TRIGGER(collectionStartReason))
-        {
-            this->collectionStartReason = ETWEventGCActivationTrigger::ETWEvent_GC_Trigger_NoHeuristic;
-        }
-#endif
 
 #if DBG || defined RECYCLER_TRACE
         collectionCount++;
@@ -4506,9 +4416,6 @@ Recycler::CollectOnConcurrentThread()
         {
             Output::Print(u"%04X> RC(%p): %s: %s\n", this->mainThreadId, this, Js::PhaseNames[Js::ThreadCollectPhase], u"Timeout");
         }
-#endif
-#ifdef ENABLE_JS_ETW
-        collectionFinishReason = ETWEventGCActivationTrigger::ETWEvent_GC_Trigger_Status_FailedTimeout;
 #endif
         this->CollectionEnd<Js::ThreadCollectPhase>();
 
@@ -5247,9 +5154,6 @@ Recycler::StartBackgroundMark(bool foregroundResetMark, bool foregroundFindRoots
             {
                 // Disable concurrent mark
                 this->enableConcurrentMark = false;
-#ifdef ENABLE_JS_ETW
-                collectionFinishReason = ETWEventGCActivationTrigger::ETWEvent_GC_Trigger_Status_Failed;
-#endif
                 return false;
             }
         }
@@ -5286,15 +5190,9 @@ Recycler::StartBackgroundMark(bool foregroundResetMark, bool foregroundFindRoots
             this->RevertPrepareBackgroundFindRoots();
         }
         this->collectionState = CollectionStateNotCollecting;
-#ifdef ENABLE_JS_ETW
-        collectionFinishReason = ETWEventGCActivationTrigger::ETWEvent_GC_Trigger_Status_Failed;
-#endif
         return false;
     }
 
-#ifdef ENABLE_JS_ETW
-    collectionFinishReason = ETWEventGCActivationTrigger::ETWEvent_GC_Trigger_Status_StartedConcurrent;
-#endif
     return true;
 }
 
@@ -6279,14 +6177,6 @@ Recycler::ThreadProc()
         dllHandle = NULL;
     }
 
-#if defined(ENABLE_JS_ETW)
-    // LTTng has no concept of EventActivityIdControl
-    // Create an ETW ActivityId for this thread, to help tools correlate ETW events we generate
-    GUID activityId = { 0 };
-    auto eventActivityIdControlResult = EventActivityIdControl(EVENT_ACTIVITY_CTRL_CREATE_SET_ID, &activityId);
-    Assert(eventActivityIdControlResult == ERROR_SUCCESS);
-#endif
-
     // Signal that the thread has started
     SetEvent(this->concurrentWorkDoneEvent);
 
@@ -6503,10 +6393,6 @@ Recycler::FinishCollection()
     this->VerifyFinalize();
 #endif
 
-#ifdef ENABLE_JS_ETW
-    FlushFreeRecord();
-#endif
-
     FinishDisposeObjects();
 
 #ifdef RECYCLER_FINALIZE_CHECK
@@ -6536,11 +6422,6 @@ Recycler::FinishCollection()
 
 #if ENABLE_MEM_STATS
     autoHeap.ReportMemStats(this);
-#endif
-
-#ifdef ENABLE_JS_ETW
-    this->collectionStartReason = ETWEventGCActivationTrigger::ETWEvent_GC_Trigger_Unknown;
-    this->collectionFinishReason = ETWEventGCActivationTrigger::ETWEvent_GC_Trigger_Unknown;
 #endif
 
     RECORD_TIMESTAMP(currentCollectionEndTime);
@@ -6904,14 +6785,6 @@ RecyclerParallelThread::StaticThreadProc(void * lpParameter)
         {
             dllHandle = NULL;
         }
-#if defined(ENABLE_JS_ETW)
-        // LTTng has no concept of EventActivityIdControl
-        // Create an ETW ActivityId for this thread, to help tools correlate ETW events we generate
-        GUID activityId = { 0 };
-        auto eventActivityIdControlResult = EventActivityIdControl(EVENT_ACTIVITY_CTRL_CREATE_SET_ID, &activityId);
-        Assert(eventActivityIdControlResult == ERROR_SUCCESS);
-#endif
-
         // If this thread is created on demand we already have work to process and do not need to wait
         bool mustWait = parallelThread->synchronizeOnStartup;
 
@@ -8738,86 +8611,6 @@ Recycler::SetInDetachProcess()
 }
 #endif
 
-#ifdef ENABLE_JS_ETW
-
-uint32_t Recycler::EventWriteFreeMemoryBlock(HeapBlock* heapBlock)
-{
-    if (EventEnabledJSCRIPT_RECYCLER_FREE_MEMORY_BLOCK())
-    {
-        char* memoryAddress = NULL;
-        uint32_t objectSize = 0;
-        uint32_t blockSize = 0;
-        switch (heapBlock->GetHeapBlockType())
-        {
-        case HeapBlock::HeapBlockType::SmallFinalizableBlockType:
-        case HeapBlock::HeapBlockType::SmallNormalBlockType:
-#ifdef RECYCLER_WRITE_BARRIER
-        case HeapBlock::HeapBlockType::SmallFinalizableBlockWithBarrierType:
-        case HeapBlock::HeapBlockType::SmallNormalBlockWithBarrierType:
-#endif
-        case HeapBlock::HeapBlockType::SmallLeafBlockType:
-            {
-                SmallHeapBlock* smallHeapBlock = static_cast<SmallHeapBlock*>(heapBlock);
-                memoryAddress = smallHeapBlock->GetAddress();
-                blockSize = (uint32_t)(smallHeapBlock->GetEndAddress() - memoryAddress);
-                objectSize = smallHeapBlock->GetObjectSize();
-            }
-            break;
-        case HeapBlock::HeapBlockType::MediumFinalizableBlockType:
-        case HeapBlock::HeapBlockType::MediumNormalBlockType:
-#ifdef RECYCLER_WRITE_BARRIER
-        case HeapBlock::HeapBlockType::MediumFinalizableBlockWithBarrierType:
-        case HeapBlock::HeapBlockType::MediumNormalBlockWithBarrierType:
-#endif
-        case HeapBlock::HeapBlockType::MediumLeafBlockType:
-            {
-                MediumHeapBlock* mediumHeapBlock = static_cast<MediumHeapBlock*>(heapBlock);
-                memoryAddress = mediumHeapBlock->GetAddress();
-                blockSize = (uint32_t)(mediumHeapBlock->GetEndAddress() - memoryAddress);
-                objectSize = mediumHeapBlock->GetObjectSize();
-            }
-        case HeapBlock::HeapBlockType::LargeBlockType:
-                {
-                LargeHeapBlock* largeHeapBlock = static_cast<LargeHeapBlock*>(heapBlock);
-                memoryAddress = largeHeapBlock->GetBeginAddress();
-                blockSize = (uint32_t)(largeHeapBlock->GetEndAddress() - memoryAddress);
-                objectSize = blockSize;
-            }
-            break;
-         default:
-             AssertMsg(FALSE, "invalid heapblock type");
-       }
-
-        EventWriteJSCRIPT_RECYCLER_FREE_MEMORY_BLOCK(memoryAddress, blockSize, objectSize);
-
-    }
-    return S_OK;
-}
-
-void Recycler::FlushFreeRecord()
-{
-    Assert(bulkFreeMemoryWrittenCount <= Recycler::BulkFreeMemoryCount);
-    JS_ETW(EventWriteJSCRIPT_RECYCLER_FREE_MEMORY(bulkFreeMemoryWrittenCount, sizeof(Recycler::ETWFreeRecord), etwFreeRecords));
-    bulkFreeMemoryWrittenCount = 0;
-}
-
-void Recycler::AppendFreeMemoryETWRecord(char *address, size_t size)
-{
-    Assert(bulkFreeMemoryWrittenCount < Recycler::BulkFreeMemoryCount);
-    __analysis_assume(bulkFreeMemoryWrittenCount < Recycler::BulkFreeMemoryCount);
-    etwFreeRecords[bulkFreeMemoryWrittenCount].memoryAddress = address;
-    // TODO: change to size_t or unsigned long?
-    etwFreeRecords[bulkFreeMemoryWrittenCount].objectSize = (uint)size;
-    bulkFreeMemoryWrittenCount++;
-    if (bulkFreeMemoryWrittenCount == Recycler::BulkFreeMemoryCount)
-    {
-        FlushFreeRecord();
-        Assert(bulkFreeMemoryWrittenCount == 0);
-    }
-}
-
-#endif
-
 #ifdef PROFILE_EXEC
 ArenaAllocator *
 Recycler::AddBackgroundProfilerArena()
@@ -9007,13 +8800,6 @@ Recycler::NotifyFree(char *address, size_t size)
     {
         if (checkFn != NULL)
             checkFn(address, size);
-    }
-#endif
-
-#ifdef ENABLE_JS_ETW
-    if (EventEnabledJSCRIPT_RECYCLER_FREE_MEMORY())
-    {
-        AppendFreeMemoryETWRecord(address, (uint32_t)size);
     }
 #endif
 

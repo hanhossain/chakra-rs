@@ -129,9 +129,6 @@ void JsrtCallbackState::ObjectBeforeCallectCallbackWrapper(JsObjectBeforeCollect
             ConfigParser::ParseOnModuleLoad(parser, mod);
         }
 
-    #if defined(ENABLE_JS_ETW)
-        EtwTrace::Register();
-    #endif
     #ifdef VTUNE_PROFILING
         VTuneChakraProfile::Register();
     #endif
