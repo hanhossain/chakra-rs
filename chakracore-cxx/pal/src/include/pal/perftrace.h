@@ -31,35 +31,9 @@ extern "C"
 {
 #endif // __cplusplus
 
-#if PAL_PERF
-#define PERF_ENTRY(x)  \
-	unsigned long pal_perf_start_tick = 0;\
-    PERFLogFunctionEntry( PAL_PERF_##x, &pal_perf_start_tick )
-#define PERF_EXIT(x) \
-	PERFLogFunctionExit( PAL_PERF_##x, &pal_perf_start_tick ) 
-#define PERF_ENTRY_ONLY(x)  \
-	PERFNoLatencyProfileEntry( PAL_PERF_##x )
-
-BOOL PERFInitialize(LPWSTR command_line, LPWSTR exe_path) ;
-void PERFTerminate( );
-BOOL PERFAllocThreadInfo( ); 
-void PERFLogFunctionExit(unsigned int pal_api_id, unsigned long *pal_perf_start_tick);
-void PERFLogFunctionEntry(unsigned int pal_api_id, unsigned long *pal_perf_start_tick);
-void PERFEnableThreadProfile(BOOL isInternal);
-void PERFDisableThreadProfile(BOOL isInternal);
-void PERFEnableProcessProfile( );  
-void PERFDisableProcessProfile( ); 
-BOOL PERFIsProcessProfileEnabled( );
-void PERFNoLatencyProfileEntry(unsigned int pal_api_id );
-void PERFCalibrate(const char* msg);
-
-#else  /* PAL_PERF */
-
 #define PERF_ENTRY(x) 
 #define PERF_ENTRY_ONLY(x) 
 #define PERF_EXIT(x)  
-
-#endif /* PAL_PERF */
 
 #ifdef __cplusplus
 }

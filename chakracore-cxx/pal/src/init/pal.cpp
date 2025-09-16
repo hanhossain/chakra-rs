@@ -405,15 +405,6 @@ CLEANUP0:
     SetLastError(palError);
 
 done:
-#ifdef PAL_PERF
-    if( retval == 0)
-    {
-         PERFEnableProcessProfile();
-         PERFEnableThreadProfile(FALSE);
-         PERFCalibrate("Overhead of PERF entry/exit");
-    }
-#endif
-
     InternalLeaveCriticalSection(pThread, init_critsec);
 
     if (fFirstTimeInit && 0 == retval)
