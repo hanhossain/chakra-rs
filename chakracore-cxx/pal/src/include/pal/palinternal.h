@@ -167,7 +167,6 @@ function_name() to call the system's implementation
 #define div DUMMY_div
 #define div_t DUMMY_div_t
 #define memcpy DUMMY_memcpy
-#define memcmp DUMMY_memcmp
 #define memset DUMMY_memset
 #define memchr DUMMY_memchr
 #define strlen DUMMY_strlen
@@ -333,7 +332,6 @@ function_name() to call the system's implementation
 #undef div
 #undef div_t
 #undef memcpy
-#undef memcmp
 #undef memset
 #undef memmove
 #undef memchr

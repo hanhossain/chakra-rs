@@ -5219,7 +5219,6 @@ typedef struct {
 div_t div(int numer, int denom);
 
 void * memcpy(void *, const void *, size_t);
-int    memcmp(const void *, const void *, size_t);
 void * memset(void *, int, size_t);
 void * memchr(const void *, int, size_t);
 
