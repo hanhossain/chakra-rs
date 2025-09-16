@@ -50,9 +50,9 @@ jobs:
       - name: Build
         run: cargo build --features ${{ matrix.features }} --all-targets
       - name: Run tests
-        run: cargo nextest run --no-fail-fast --features ${{ matrix.features }}
+        run: cargo nextest run --features ${{ matrix.features }}
       - name: Run slow tests
-        run: cargo nextest run --no-fail-fast --features ${{ matrix.features }} -- --ignored
+        run: cargo nextest run --features ${{ matrix.features }} -- --ignored
         env:
           CHAKRA_TEST_SLOW: true
 
