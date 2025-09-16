@@ -1275,33 +1275,6 @@ NativeCodeGenerator::CodeGen(PageAllocator * pageAllocator, CodeGenWorkItem* wor
 void NativeCodeGenerator::LogCodeGenStart(CodeGenWorkItem * workItem, LARGE_INTEGER * start_time)
 {
     Js::FunctionBody * body = workItem->GetFunctionBody();
-    {
-        if (IS_JS_ETW(EventEnabledJSCRIPT_FUNCTION_JIT_START()))
-        {
-            char16_t displayNameBuffer[256];
-            char16_t* displayName = displayNameBuffer;
-            size_t sizeInChars = workItem->GetDisplayName(displayName, 256);
-            if (sizeInChars > 256)
-            {
-                displayName = HeapNewArray(char16_t, sizeInChars);
-                workItem->GetDisplayName(displayName, 256);
-            }
-            JS_ETW(EventWriteJSCRIPT_FUNCTION_JIT_START(
-                body->GetFunctionNumber(),
-                displayName,
-                body->GetScriptContext(),
-                workItem->GetInterpretedCount(),
-                (const unsigned int)body->LengthInBytes(),
-                body->GetByteCodeCount(),
-                body->GetByteCodeInLoopCount(),
-                (int)workItem->GetJitMode()));
-
-            if (displayName != displayNameBuffer)
-            {
-                HeapDeleteArray(sizeInChars, displayName);
-            }
-        }
-    }
 
 #if DBG_DUMP
     if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::BackEndPhase))
@@ -1391,35 +1364,6 @@ void NativeCodeGenerator::LogCodeGenDone(CodeGenWorkItem * workItem, LARGE_INTEG
 {
     Js::FunctionBody * body = workItem->GetFunctionBody();
     char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-
-    {
-        if (IS_JS_ETW(EventEnabledJSCRIPT_FUNCTION_JIT_STOP()))
-        {
-            char16_t displayNameBuffer[256];
-            char16_t* displayName = displayNameBuffer;
-            size_t sizeInChars = workItem->GetDisplayName(displayName, 256);
-            if (sizeInChars > 256)
-            {
-                displayName = HeapNewArray(char16_t, sizeInChars);
-                workItem->GetDisplayName(displayName, 256);
-            }
-            void* entryPoint;
-            ptrdiff_t codeSize;
-            workItem->GetEntryPointAddress(&entryPoint, &codeSize);
-            JS_ETW(EventWriteJSCRIPT_FUNCTION_JIT_STOP(
-                body->GetFunctionNumber(),
-                displayName,
-                body->GetScriptContext(),
-                workItem->GetInterpretedCount(),
-                entryPoint,
-                codeSize));
-
-            if (displayName != displayNameBuffer)
-            {
-                HeapDeleteArray(sizeInChars, displayName);
-            }
-        }
-    }
 
 #if DBG_DUMP
     if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::BackEndPhase))

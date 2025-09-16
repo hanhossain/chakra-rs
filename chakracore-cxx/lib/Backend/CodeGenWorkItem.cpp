@@ -127,27 +127,6 @@ void CodeGenWorkItem::OnAddToJitQueue()
     VerifyJitMode();
 
     this->entryPointInfo->SetCodeGenQueued();
-    if(IS_JS_ETW(EventEnabledJSCRIPT_FUNCTION_JIT_QUEUED()))
-    {
-        char16_t displayNameBuffer[256];
-        char16_t* displayName = displayNameBuffer;
-        size_t sizeInChars = this->GetDisplayName(displayName, 256);
-        if(sizeInChars > 256)
-        {
-            displayName = HeapNewArray(char16_t, sizeInChars);
-            this->GetDisplayName(displayName, 256);
-        }
-        JS_ETW(EventWriteJSCRIPT_FUNCTION_JIT_QUEUED(
-            this->GetFunctionNumber(),
-            displayName,
-            this->GetScriptContext(),
-            this->GetInterpretedCount()));
-
-        if(displayName != displayNameBuffer)
-        {
-            HeapDeleteArray(sizeInChars, displayName);
-        }
-    }
 }
 
 void CodeGenWorkItem::OnRemoveFromJitQueue(NativeCodeGenerator* generator)
@@ -158,28 +137,6 @@ void CodeGenWorkItem::OnRemoveFromJitQueue(NativeCodeGenerator* generator)
     this->entryPointInfo->SetCodeGenPending();
     functionBody->GetScriptContext()->GetThreadContext()->UnregisterCodeGenRecyclableData(this->recyclableData);
     this->recyclableData = nullptr;
-
-    if(IS_JS_ETW(EventEnabledJSCRIPT_FUNCTION_JIT_DEQUEUED()))
-    {
-        char16_t displayNameBuffer[256];
-        char16_t* displayName = displayNameBuffer;
-        size_t sizeInChars = this->GetDisplayName(displayName, 256);
-        if(sizeInChars > 256)
-        {
-            displayName = HeapNewArray(char16_t, sizeInChars);
-            this->GetDisplayName(displayName, 256);
-        }
-        JS_ETW(EventWriteJSCRIPT_FUNCTION_JIT_DEQUEUED(
-            this->GetFunctionNumber(),
-            displayName,
-            this->GetScriptContext(),
-            this->GetInterpretedCount()));
-
-        if(displayName != displayNameBuffer)
-        {
-            HeapDeleteArray(sizeInChars, displayName);
-        }
-    }
 
     if(this->Type() == JsLoopBodyWorkItemType)
     {
