@@ -24,6 +24,6 @@ target_include_directories (Chakra.Common.DataStructures PUBLIC
 
 target_compile_definitions(Chakra.Common.DataStructures PUBLIC
     PAL_STDCPP_COMPAT
-    NO_PAL_MINMAX)
+)
 
 target_precompile_headers(Chakra.Common.DataStructures PUBLIC CommonDataStructuresPch.h)

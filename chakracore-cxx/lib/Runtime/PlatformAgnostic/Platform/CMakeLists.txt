@@ -59,4 +59,4 @@ target_include_directories (Chakra.Runtime.PlatformAgnostic PUBLIC
 
 target_compile_definitions(Chakra.Runtime.PlatformAgnostic PUBLIC
     PAL_STDCPP_COMPAT
-    NO_PAL_MINMAX)
+)

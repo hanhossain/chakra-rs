@@ -55,6 +55,6 @@ target_include_directories (Chakra.Runtime.Base PUBLIC
 
 target_compile_definitions(Chakra.Runtime.Base PUBLIC
     PAL_STDCPP_COMPAT
-    NO_PAL_MINMAX)
+)
 
 target_precompile_headers(Chakra.Runtime.Base PUBLIC RuntimeBasePch.h)

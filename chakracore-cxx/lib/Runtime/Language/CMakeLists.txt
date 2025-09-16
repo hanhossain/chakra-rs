@@ -104,6 +104,6 @@ target_include_directories (Chakra.Runtime.Language PUBLIC
 
 target_compile_definitions(Chakra.Runtime.Language PUBLIC
     PAL_STDCPP_COMPAT
-    NO_PAL_MINMAX)
+)
 
 target_precompile_headers(Chakra.Runtime.Language PUBLIC RuntimeLanguagePch.h)

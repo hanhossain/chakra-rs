@@ -158,6 +158,6 @@ endif()
 
 target_compile_definitions(Chakra.Runtime.Library PUBLIC
     PAL_STDCPP_COMPAT
-    NO_PAL_MINMAX)
+)
 
 target_precompile_headers(Chakra.Runtime.Library PUBLIC RuntimeLibraryPch.h)

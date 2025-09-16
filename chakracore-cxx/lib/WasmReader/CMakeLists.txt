@@ -31,6 +31,6 @@ target_include_directories (Chakra.WasmReader PUBLIC
 
 target_compile_definitions(Chakra.WasmReader PUBLIC
     PAL_STDCPP_COMPAT
-    NO_PAL_MINMAX)
+)
 
 target_precompile_headers(Chakra.WasmReader PUBLIC WasmReaderPch.h)
