@@ -35,38 +35,6 @@ SET_DEFAULT_DEBUG_CHANNEL(CRT);
 
 /*++
 Function:
-  _strnicmp
-
-compare at most count characters from two strings, ignoring case
-
-The strnicmp() function compares, with case insensitivity, at most count
-characters from s1 to s2. All uppercase characters from s1 and s2 are
-mapped to lowercase for the purposes of doing the comparison.
-
-Returns:
-
-Value Meaning
-
-< 0   s1 is less than s2
-0     s1 is equal to s2
-> 0   s1 is greater than s2
-
---*/
-int
-_strnicmp( const char *s1, const char *s2, size_t count )
-{
-    int ret;
-
-    ENTRY("_strnicmp (s1=%p (%s), s2=%p (%s), count=%d)\n", s1?s1:"NULL", s1?s1:"NULL", s2?s2:"NULL", s2?s2:"NULL", count);
-
-    ret = strncasecmp(s1, s2, count );
-
-    LOGEXIT("_strnicmp returning int %d\n", ret);
-    return ret;
-}
-
-/*++
-Function:
   _stricmp
 
 compare two strings, ignoring case

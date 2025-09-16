@@ -170,16 +170,7 @@ function_name() to call the system's implementation
 #define strnlen DUMMY_strnlen
 #define stricmp DUMMY_stricmp
 #define strstr DUMMY_strstr
-#define strcmp DUMMY_strcmp
-#define strcat DUMMY_strcat
-#define strncat DUMMY_strncat
-#define strcpy DUMMY_strcpy
 #define strcspn DUMMY_strcspn
-#define strncmp DUMMY_strncmp
-#define strncpy DUMMY_strncpy
-#define strchr DUMMY_strchr
-#define strrchr DUMMY_strrchr
-#define strpbrk DUMMY_strpbrk
 #define strtod DUMMY_strtod
 #define strspn DUMMY_strspn
 #if HAVE__SNPRINTF
@@ -333,16 +324,7 @@ function_name() to call the system's implementation
 #undef strnlen
 #undef stricmp
 #undef strstr
-#undef strcmp
-#undef strcat
 #undef strcspn
-#undef strncat
-#undef strcpy
-#undef strncmp
-#undef strncpy
-#undef strchr
-#undef strrchr
-#undef strpbrk
 #undef strtoul
 #undef strtod
 #undef strspn
