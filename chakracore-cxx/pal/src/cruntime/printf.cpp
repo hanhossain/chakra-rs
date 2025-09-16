@@ -1414,32 +1414,6 @@ int PAL_wvsscanf(LPCWSTR Buffer, LPCWSTR Format, va_list ap)
 
 /*++
 Function:
-  PAL_sscanf
-
-See MSDN doc.
---*/
-__attribute__((no_instrument_function))
-int
-PAL_sscanf(
-           const char *buffer,
-           const char *format,
-           ...)
-{
-    int Length;
-    va_list ap;
-
-    ENTRY("PAL_sscanf (buffer=%p (%s), format=%p (%s))\n", buffer, buffer, format, format);
-
-    va_start(ap, format);
-    Length = PAL_vsscanf(buffer, format, ap);
-    va_end(ap);
-
-    LOGEXIT("PAL_sscanf returns int %d\n", Length);
-    return Length;
-}
-
-/*++
-Function:
   PAL_swprintf
 
 See MSDN doc.
@@ -1489,32 +1463,6 @@ PAL_swscanf(
     LOGEXIT("PAL_swscanf returns int %d\n", Length);
     return Length;
 }
-
-
-/*++
-Function:
-  PAL_vsprintf
-
-See MSDN doc.
---*/
-__attribute__((no_instrument_function))
-int
-PAL_vsprintf(char *buffer,
-         const char *format,
-         va_list argptr)
-{
-    int32_t Length;
-
-    ENTRY("PAL_vsprintf (buffer=%p, format=%p (%s), argptr=%p)\n",
-          buffer, format, format, argptr);
-
-    Length = PAL__vsnprintf(buffer, 0x7fffffff, format, argptr);
-
-    LOGEXIT("PAL_vsprintf returns int %d\n", Length);
-
-    return Length;
-}
-
 
 /*++
 Function:

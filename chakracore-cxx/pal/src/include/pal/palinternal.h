@@ -298,7 +298,6 @@ function_name() to call the system's implementation
 #undef iswxdigit
 #undef iswalpha
 #undef iswprint
-#undef atol
 #undef malloc
 #undef realloc
 #undef free
@@ -387,7 +386,6 @@ function_name() to call the system's implementation
 #if HAVE__SNWPRINTF
 #undef _snwprintf
 #endif  /* HAVE__SNWPRINTF */
-#undef sscanf
 #undef wcstod
 #undef wcstol
 #undef wcstoul
@@ -411,7 +409,6 @@ function_name() to call the system's implementation
 #undef iswspace
 #undef towlower
 #undef towupper
-#undef vsprintf
 #undef vswprintf
 #undef _vsnprintf
 #undef _vsnwprintf
