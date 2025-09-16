@@ -109,7 +109,7 @@ public:
         allocator.SetFreeObjectList(freeObject);
     }
 
-#if defined(PROFILE_RECYCLER_ALLOC) || defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING) || defined(ETW_MEMORY_TRACKING)
+#if defined(PROFILE_RECYCLER_ALLOC) || defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING)
     RecyclerFastAllocator()
     {
         allocator.SetTrackNativeAllocatedObjectCallBack(&TrackNativeAllocatedObject);

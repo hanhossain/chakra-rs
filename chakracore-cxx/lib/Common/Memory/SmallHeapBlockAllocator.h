@@ -43,7 +43,7 @@ public:
     FreeObject *GetFreeObjectList() { return freeObjectList; }
     void SetFreeObjectList(FreeObject *freeObject) { freeObjectList = freeObject; }
 
-#if defined(PROFILE_RECYCLER_ALLOC) || defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING) || defined(ETW_MEMORY_TRACKING)
+#if defined(PROFILE_RECYCLER_ALLOC) || defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING)
     void SetTrackNativeAllocatedObjectCallBack(void (*pfnCallBack)(Recycler *, void *, size_t))
     {
         pfnTrackNativeAllocatedObjectCallBack = pfnCallBack;
@@ -106,7 +106,7 @@ private:
     char * lastNonNativeBumpAllocatedBlock;
     void TrackNativeAllocatedObjects();
 #endif
-#if defined(PROFILE_RECYCLER_ALLOC) || defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING) || defined(ETW_MEMORY_TRACKING)
+#if defined(PROFILE_RECYCLER_ALLOC) || defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING)
     void (*pfnTrackNativeAllocatedObjectCallBack)(Recycler * recycler, void *, size_t sizeCat);
 #endif
 };

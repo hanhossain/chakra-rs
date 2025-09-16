@@ -212,7 +212,7 @@ SmallHeapBlockAllocator<TBlockType>::TrackNativeAllocatedObjects()
     Assert(this->freeObjectList != nullptr && endAddress != nullptr);
     Assert(this->heapBlock != nullptr);
 
-#if defined(PROFILE_RECYCLER_ALLOC) || defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING) || defined(ETW_MEMORY_TRACKING)
+#if defined(PROFILE_RECYCLER_ALLOC) || defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING)
     if (pfnTrackNativeAllocatedObjectCallBack == nullptr)
     {
         return;
