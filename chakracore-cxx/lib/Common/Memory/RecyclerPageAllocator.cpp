@@ -49,8 +49,6 @@ RecyclerPageAllocator::ResetWriteWatch()
         return false;
     }
 
-    GCETW(GC_RESETWRITEWATCH_START, (this));
-
     SuspendIdleDecommit();
 
     bool success = true;
@@ -65,8 +63,6 @@ RecyclerPageAllocator::ResetWriteWatch()
     }
 
     ResumeIdleDecommit();
-
-    GCETW(GC_RESETWRITEWATCH_STOP, (this));
 
     return success;
 }

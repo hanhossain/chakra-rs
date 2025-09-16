@@ -58,9 +58,7 @@ RecyclerSweepManager::BeginSweep(Recycler * recycler)
         // RecyclerSweep may not be initialized till later in this function but
         // GCETW relies on the recycler pointer being correctly set up
         this->recycler = recycler;
-        GCETW(GC_PRESWEEPCALLBACK_START, (this));
         recycler->collectionWrapper->PreSweepCallback();
-        GCETW(GC_PRESWEEPCALLBACK_STOP, (this));
     }
 
     Assert(!recycler->IsSweeping());
@@ -146,8 +144,6 @@ RecyclerSweepManager::FinishSweep()
     {
         if (this->AdjustPartialHeuristics())
         {
-            GCETW(GC_SWEEP_PARTIAL_REUSE_PAGE_START, (recycler));
-
             // If we are doing a full concurrent GC, all allocated bytes are consider "collected".
             // We only start accumulating uncollected allocate bytes during partial GC.
             // FinishPartialCollect will reset it to 0 if we are not doing a partial GC
@@ -163,8 +159,6 @@ RecyclerSweepManager::FinishSweep()
 #endif
 
             recycler->autoHeap.SweepPartialReusePages(*this);
-
-            GCETW(GC_SWEEP_PARTIAL_REUSE_PAGE_STOP, (recycler));
 
 #ifdef RECYCLER_WRITE_WATCH
             if (!CONFIG_FLAG(ForceSoftwareWriteBarrier))

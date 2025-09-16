@@ -116,7 +116,6 @@ public:
         {
             const uint16 bucketNameCode = BucketNameCode<TBlockAttributes, TBucketType>();
             const uint16 sizeCat = static_cast<uint16>(bucket.GetSizeCat());
-            GCETW(GC_BUCKET_STATS, (recycler, bucketNameCode, sizeCat, stats.objectByteCount, stats.totalByteCount));
 #ifdef DUMP_FRAGMENTATION_STATS
             DumpStats<TBlockAttributes, TBucketType>(sizeCat, stats);
 #endif
@@ -133,14 +132,12 @@ public:
         if (stats.totalByteCount > 0)
         {
             const uint16 sizeCat = static_cast<uint16>(bucket.GetSizeCat());
-            GCETW(GC_BUCKET_STATS, (recycler, LargeBucketNameCode, sizeCat, stats.objectByteCount, stats.totalByteCount));
             DUMP_FRAGMENTATION_STATS_ONLY(DumpLarge(stats));
         }
     }
 
     void Report()
     {
-        GCETW(GC_BUCKET_STATS, (recycler, TotalBucketNameCode, 0, total.objectByteCount, total.totalByteCount));
         DUMP_FRAGMENTATION_STATS_ONLY(DumpFooter());
     }
 

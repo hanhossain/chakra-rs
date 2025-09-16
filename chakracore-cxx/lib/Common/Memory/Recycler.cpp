@@ -1614,8 +1614,6 @@ Recycler::ScanStack()
     size_t lastMarkCount = this->collectionStats.markData.markCount;
 #endif
 
-    GCETW(GC_SCANSTACK_START, (this));
-
     RECYCLER_PROFILE_EXEC_BEGIN(this, Js::ScanStackPhase);
 
     SAVE_THREAD_CONTEXT();
@@ -1718,8 +1716,6 @@ Recycler::ScanStack()
 
     RECYCLER_PROFILE_EXEC_END(this, Js::ScanStackPhase);
     RECYCLER_STATS_ADD(this, stackCount, this->collectionStats.markData.markCount - lastMarkCount);
-    GCETW(GC_SCANSTACK_STOP, (this));
-
     return stackScanned;
 }
 #pragma warning(pop)
@@ -1783,8 +1779,6 @@ Recycler::FindRoots()
 #ifdef RECYCLER_STATS
     size_t lastMarkCount = this->collectionStats.markData.markCount;
 #endif
-
-    GCETW(GC_SCANROOTS_START, (this));
 
     RECYCLER_PROFILE_EXEC_BEGIN(this, Js::FindRootPhase);
 
@@ -1881,7 +1875,6 @@ Recycler::FindRoots()
     this->ScanImplicitRoots();
 
     RECYCLER_PROFILE_EXEC_END(this, Js::FindRootPhase);
-    GCETW(GC_SCANROOTS_STOP, (this));
     RECYCLER_STATS_ADD(this, rootCount, this->collectionStats.markData.markCount - lastMarkCount);
     return scanRootBytes;
 }
@@ -1997,7 +1990,6 @@ Recycler::ResetMarks(ResetMarkFlags flags)
     this->SetCollectionState(CollectionStateResetMarks);
 
     RecyclerVerboseTrace(GetRecyclerFlagsTable(), u"Reset marks\n");
-    GCETW(GC_RESETMARKS_START, (this));
     RECYCLER_PROFILE_EXEC_BEGIN(this, Js::ResetMarksPhase);
 
     Assert(IsMarkStackEmpty());
@@ -2009,7 +2001,6 @@ Recycler::ResetMarks(ResetMarkFlags flags)
     autoHeap.ResetMarks(flags);
 
     RECYCLER_PROFILE_EXEC_END(this, Js::ResetMarksPhase);
-    GCETW(GC_RESETMARKS_STOP, (this));
 
 #ifdef RECYCLER_MARK_TRACK
     this->ClearMarkMap();
@@ -2130,16 +2121,6 @@ Recycler::ProcessMarkContext(MarkContext * markContext)
 void
 Recycler::ProcessMark(bool background)
 {
-#if ENABLE_CONCURRENT_GC
-    if (background)
-    {
-        GCETW(GC_BACKGROUNDMARK_START, (this, backgroundRescanCount));
-    }
-    else
-#endif
-    {
-        GCETW(GC_MARK_START, (this));
-    }
 
     RECYCLER_PROFILE_EXEC_THREAD_BEGIN(background, this, Js::MarkPhase);
 
@@ -2154,17 +2135,6 @@ Recycler::ProcessMark(bool background)
 
     RECYCLER_PROFILE_EXEC_THREAD_END(background, this, Js::MarkPhase);
 
-#if ENABLE_CONCURRENT_GC
-    if (background)
-    {
-        GCETW(GC_BACKGROUNDMARK_STOP, (this, backgroundRescanCount));
-    }
-    else
-#endif
-    {
-        GCETW(GC_MARK_STOP, (this));
-    }
-
     DebugOnly(this->markContext.VerifyPostMarkState());
 }
 
@@ -2172,17 +2142,6 @@ Recycler::ProcessMark(bool background)
 void
 Recycler::ProcessParallelMark(bool background, MarkContext * markContext)
 {
-#if ENABLE_CONCURRENT_GC
-    if (background)
-    {
-        GCETW(GC_BACKGROUNDPARALLELMARK_START, (this, backgroundRescanCount));
-    }
-    else
-#endif
-    {
-        GCETW(GC_PARALLELMARK_START, (this));
-    }
-
     RECYCLER_PROFILE_EXEC_THREAD_BEGIN(background, this, Js::MarkPhase);
 
     if (this->enableScanInteriorPointers)
@@ -2195,17 +2154,6 @@ Recycler::ProcessParallelMark(bool background, MarkContext * markContext)
     }
 
     RECYCLER_PROFILE_EXEC_THREAD_END(background, this, Js::MarkPhase);
-
-#if ENABLE_CONCURRENT_GC
-    if (background)
-    {
-        GCETW(GC_BACKGROUNDPARALLELMARK_STOP, (this, backgroundRescanCount));
-    }
-    else
-#endif
-    {
-        GCETW(GC_PARALLELMARK_STOP, (this));
-    }
 }
 
 void
@@ -2375,9 +2323,7 @@ Recycler::RescanMark(uint32_t waitTime)
         {
             this->backgroundFinishMarkCount++;
             this->PrepareSweep();
-            GCETW(GC_RESCANMARKWAIT_START, (this, waitTime));
             const BOOL waited = WaitForConcurrentThread(waitTime, RecyclerWaitReason::RescanMark);
-            GCETW(GC_RESCANMARKWAIT_STOP, (this, !waited));
             if (!waited)
             {
                 CUSTOM_PHASE_PRINT_TRACE1(GetRecyclerFlagsTable(), Js::BackgroundFinishMarkPhase, u"Finish mark timed out\n");
@@ -2760,9 +2706,6 @@ Recycler::EndMark()
         oomRescan |= EndMarkCheckOOMRescan();
     }
 
-    // GC-CONSIDER: Consider keeping some page around
-    GCETW(GC_DECOMMIT_CONCURRENT_COLLECT_PAGE_ALLOCATOR_START, (this));
-
     // Clean up mark contexts, which will release held free pages
     // Do this for all contexts before we decommit, to make sure all pages are freed
     markContext.Cleanup();
@@ -2776,15 +2719,12 @@ Recycler::EndMark()
     parallelMarkContext2.DecommitPages();
     parallelMarkContext3.DecommitPages();
 
-    GCETW(GC_DECOMMIT_CONCURRENT_COLLECT_PAGE_ALLOCATOR_STOP, (this));
-
     return oomRescan;
 }
 
 void
 Recycler::EndMarkOnLowMemory()
 {
-    GCETW(GC_ENDMARKONLOWMEMORY_START, (this));
     Assert(this->NeedOOMRescan());
     this->inEndMarkOnLowMemory = true;
 
@@ -2886,8 +2826,6 @@ Recycler::EndMarkOnLowMemory()
         this->FinishPartialCollect();
     }
 #endif
-
-    GCETW(GC_ENDMARKONLOWMEMORY_STOP, (this));
 }
 
 
@@ -3103,7 +3041,6 @@ void
 Recycler::SweepWeakReference()
 {
     RECYCLER_PROFILE_EXEC_BEGIN(this, Js::SweepWeakPhase);
-    GCETW(GC_SWEEP_WEAKREF_START, (this));
 
     // REVIEW: Clean up the weak reference map concurrently?
     bool hasCleanup = false;
@@ -3221,17 +3158,6 @@ Recycler::SweepHeap(bool concurrent, RecyclerSweepManager& recyclerSweepManager)
 
     this->SweepWeakReference();
 
-#if ENABLE_CONCURRENT_GC
-    if (concurrent)
-    {
-        GCETW(GC_SETUPBACKGROUNDSWEEP_START, (this));
-    }
-    else
-#endif
-    {
-        GCETW(GC_SWEEP_START, (this));
-    }
-
     autoHeap.FinalizeAndSweep(recyclerSweepManager, concurrent);
 
 #if ENABLE_CONCURRENT_GC
@@ -3243,8 +3169,6 @@ Recycler::SweepHeap(bool concurrent, RecyclerSweepManager& recyclerSweepManager)
             autoHeap.StopQueueZeroPage();
         }
 #endif
-
-        GCETW(GC_SETUPBACKGROUNDSWEEP_STOP, (this));
     }
     else
     {
@@ -3259,8 +3183,6 @@ Recycler::SweepHeap(bool concurrent, RecyclerSweepManager& recyclerSweepManager)
 #ifdef RECYCLER_STATS
         sweptBytes = (uint)collectionStats.objectSweptBytes;
 #endif
-
-        GCETW(GC_SWEEP_STOP, (this, sweptBytes));
     }
 #endif
 }
@@ -3282,8 +3204,6 @@ Recycler::DisposeObjects()
 {
     Assert(this->allowDispose && this->hasDisposableObject && !this->inDispose);
     Assert(!isHeapEnumInProgress);
-
-    GCETW(GC_DISPOSE_START, (this));
     ASYNC_HOST_OPERATION_START(collectionWrapper);
 
     this->inDispose = true;
@@ -3338,8 +3258,6 @@ Recycler::DisposeObjects()
 #ifdef RECYCLER_STATS
     sweptBytes = (uint)collectionStats.objectSweptBytes;
 #endif
-
-    GCETW(GC_DISPOSE_STOP, (this, sweptBytes));
 }
 
 bool
@@ -4098,8 +4016,6 @@ Recycler::PartialCollect(bool concurrent)
 void
 Recycler::ProcessClientTrackedObjects()
 {
-    GCETW(GC_PROCESS_CLIENT_TRACKED_OBJECT_START, (this));
-
     Assert(this->inPartialCollectMode);
 #if ENABLE_CONCURRENT_GC
     Assert(!this->DoQueueTrackedObject());
@@ -4117,8 +4033,6 @@ Recycler::ProcessClientTrackedObjects()
 
         this->clientTrackedObjectList.Clear(&this->clientTrackedObjectAllocator);
     }
-
-    GCETW(GC_PROCESS_CLIENT_TRACKED_OBJECT_STOP, (this));
 }
 
 void
@@ -4227,7 +4141,6 @@ Recycler::BackgroundRescan(RescanFlags rescanFlags)
 
     DebugOnly(this->isProcessingRescan = true);
 
-    GCETW(GC_BACKGROUNDRESCAN_START, (this, backgroundRescanCount));
     RECYCLER_PROFILE_EXEC_BACKGROUND_BEGIN(this, Js::BackgroundRescanPhase);
 
 #if GLOBAL_ENABLE_WRITE_BARRIER
@@ -4247,7 +4160,6 @@ Recycler::BackgroundRescan(RescanFlags rescanFlags)
     rescannedPageCount += autoHeap.Rescan(rescanFlags);
 
     RECYCLER_PROFILE_EXEC_BACKGROUND_END(this, Js::BackgroundRescanPhase);
-    GCETW(GC_BACKGROUNDRESCAN_STOP, (this, backgroundRescanCount));
     this->backgroundRescanCount++;
 
     if (!this->NeedOOMRescan())
@@ -4268,9 +4180,7 @@ Recycler::BackgroundRescan(RescanFlags rescanFlags)
 void
 Recycler::BackgroundResetWriteWatchAll()
 {
-    GCETW(GC_BACKGROUNDRESETWRITEWATCH_START, (this, -1));
     heapBlockMap.ResetDirtyPages(this);
-    GCETW(GC_BACKGROUNDRESETWRITEWATCH_STOP, (this, -1));
 }
 #endif
 
@@ -4280,15 +4190,6 @@ Recycler::FinishMarkRescan(bool background)
 #if !ENABLE_CONCURRENT_GC
     Assert(!background);
 #endif
-
-    if (background)
-    {
-        GCETW(GC_BACKGROUNDRESCAN_START, (this, 0));
-    }
-    else
-    {
-        GCETW(GC_RESCAN_START, (this));
-    }
 
     RECYCLER_PROFILE_EXEC_THREAD_BEGIN(background, this, Js::RescanPhase);
 
@@ -4316,15 +4217,6 @@ Recycler::FinishMarkRescan(bool background)
 
     RECYCLER_PROFILE_EXEC_THREAD_END(background, this, Js::RescanPhase);
 
-    if (background)
-    {
-        GCETW(GC_BACKGROUNDRESCAN_STOP, (this, 0));
-    }
-    else
-    {
-        GCETW(GC_RESCAN_STOP, (this));
-    }
-
     return scannedPageCount;
 }
 
@@ -4333,8 +4225,6 @@ Recycler::FinishMarkRescan(bool background)
 void
 Recycler::ProcessTrackedObjects()
 {
-    GCETW(GC_PROCESS_TRACKED_OBJECT_START, (this));
-
 #if ENABLE_PARTIAL_GC
     Assert(this->clientTrackedObjectList.Empty());
     Assert(!this->inPartialCollectMode);
@@ -4353,8 +4243,6 @@ Recycler::ProcessTrackedObjects()
     parallelMarkContext3.ProcessTracked();
 
     DebugOnly(this->isProcessingTrackedObjects = false);
-
-    GCETW(GC_PROCESS_TRACKED_OBJECT_STOP, (this));
 }
 #endif
 
@@ -4405,9 +4293,7 @@ Recycler::CollectOnConcurrentThread()
     }
 
     const uint32_t waitTime = RecyclerHeuristic::FinishConcurrentCollectWaitTime(this->GetRecyclerFlagsTable());
-    GCETW(GC_SYNCHRONOUSMARKWAIT_START, (this, waitTime));
     const BOOL waited = WaitForConcurrentThread(waitTime, RecyclerWaitReason::CollectOnConcurrentThread);
-    GCETW(GC_SYNCHRONOUSMARKWAIT_STOP, (this, !waited));
     if (!waited)
     {
 #ifdef RECYCLER_TRACE
@@ -4764,8 +4650,6 @@ bool Recycler::AbortConcurrent(bool restoreState)
 #ifdef RECYCLER_STATS
                 sweptBytes = (uint)collectionStats.objectSweptBytes;
 #endif
-
-                GCETW(GC_BACKGROUNDSWEEP_STOP, (this, sweptBytes));
 
                 this->SetCollectionState(CollectionStateTransferSweptWait);
                 RECYCLER_PROFILE_EXEC_BACKGROUND_END(this, Js::ConcurrentSweepPhase);
@@ -5403,7 +5287,6 @@ void
 Recycler::BackgroundResetMarks()
 {
     RECYCLER_PROFILE_EXEC_BACKGROUND_BEGIN(this, Js::BackgroundResetMarksPhase);
-    GCETW(GC_BACKGROUNDRESETMARKS_START, (this));
     Assert(IsMarkStackEmpty());
     this->scanPinnedObjectMap = true;
     this->hasScannedInitialImplicitRoots = false;
@@ -5411,8 +5294,6 @@ Recycler::BackgroundResetMarks()
     heapBlockMap.ResetMarks();
 
     autoHeap.ResetMarks(this->enableScanImplicitRoots ? ResetMarkFlags_InBackgroundThreadImplicitRoots : ResetMarkFlags_InBackgroundThread);
-
-    GCETW(GC_BACKGROUNDRESETMARKS_STOP, (this));
     RECYCLER_PROFILE_EXEC_BACKGROUND_END(this, Js::BackgroundResetMarksPhase);
 }
 
@@ -5487,7 +5368,6 @@ Recycler::BackgroundFindRoots()
     // the main thread won't delete any entries from the map, so concurrent read
     // to the map safe.
 
-    GCETW(GC_BACKGROUNDSCANROOTS_START, (this));
     RECYCLER_PROFILE_EXEC_BACKGROUND_BEGIN(this, Js::BackgroundFindRootsPhase);
 
     scanRootBytes += this->ScanPinnedObjects</*background = */true>();
@@ -5515,7 +5395,6 @@ Recycler::BackgroundFindRoots()
     this->hasPendingConcurrentFindRoot = false;
     this->SetCollectionState(CollectionStateConcurrentMark);
 
-    GCETW(GC_BACKGROUNDSCANROOTS_STOP, (this));
     RECYCLER_STATS_ADD(this, rootCount, this->collectionStats.markData.markCount - lastMarkCount);
 
     return scanRootBytes;
@@ -5695,9 +5574,7 @@ Recycler::FinishConcurrentCollect(CollectionFlags flags)
 #endif
 
     const uint32_t waitTime = forceInThread? INFINITE : RecyclerHeuristic::FinishConcurrentCollectWaitTime(this->GetRecyclerFlagsTable());
-    GCETW(GC_FINISHCONCURRENTWAIT_START, (this, waitTime));
     const BOOL waited = WaitForConcurrentThread(waitTime, RecyclerWaitReason::FinishConcurrentCollect);
-    GCETW(GC_FINISHCONCURRENTWAIT_STOP, (this, !waited));
     if (!waited)
     {
         RECYCLER_PROFILE_EXEC_END2(this, concurrentPhase, Js::RecyclerPhase);
@@ -5792,8 +5669,6 @@ Recycler::FinishConcurrentCollect(CollectionFlags flags)
             sweptBytes = (uint)collectionStats.objectSweptBytes;
 #endif
 
-            GCETW(GC_BACKGROUNDSWEEP_STOP, (this, sweptBytes));
-
             this->SetCollectionState(CollectionStateTransferSweptWait);
             RECYCLER_PROFILE_EXEC_BACKGROUND_END(this, Js::ConcurrentSweepPhase);
 
@@ -5837,8 +5712,6 @@ Recycler::FinishTransferSwept(CollectionFlags flags)
 {
     GCETW_INTERNAL(GC_START, (this, ETWEvent_ConcurrentTransferSwept));
     GCETW_INTERNAL(GC_START2, (this, ETWEvent_ConcurrentTransferSwept, this->collectionStartReason, this->collectionStartFlags));
-    GCETW(GC_FLUSHZEROPAGE_START, (this));
-
     Assert(collectionState == CollectionStateTransferSweptWait);
 #ifdef RECYCLER_TRACE
     PrintCollectTrace(Js::ConcurrentSweepPhase, true);
@@ -5854,9 +5727,6 @@ Recycler::FinishTransferSwept(CollectionFlags flags)
     }
 #endif
 
-    GCETW(GC_FLUSHZEROPAGE_STOP, (this));
-    GCETW(GC_TRANSFERSWEPTOBJECTS_START, (this));
-
     Assert(this->recyclerSweepManager != nullptr);
     Assert(!this->recyclerSweepManager->IsBackground());
 #if ENABLE_PARTIAL_GC
@@ -5870,8 +5740,6 @@ Recycler::FinishTransferSwept(CollectionFlags flags)
         ConcurrentTransferSweptObjects(*this->recyclerSweepManager);
     }
     recyclerSweepManager->EndSweep();
-
-    GCETW(GC_TRANSFERSWEPTOBJECTS_STOP, (this));
 
     GCETW_INTERNAL(GC_STOP, (this, ETWEvent_ConcurrentTransferSwept));
     GCETW_INTERNAL(GC_STOP2, (this, ETWEvent_ConcurrentTransferSwept, this->collectionStartReason, this->collectionStartFlags));
@@ -6047,8 +5915,6 @@ Recycler::DoBackgroundWork(bool forceForeground)
                 GCETW_INTERNAL(GC_START2, (this, ETWEvent_ConcurrentSweep, this->collectionStartReason, this->collectionStartFlags));
             }
 
-            GCETW(GC_BACKGROUNDZEROPAGE_START, (this));
-
 #if ENABLE_BACKGROUND_PAGE_ZEROING
         if (CONFIG_FLAG(EnableBGFreeZero))
         {
@@ -6056,10 +5922,6 @@ Recycler::DoBackgroundWork(bool forceForeground)
             autoHeap.BackgroundZeroQueuedPages();
         }
 #endif
-
-            GCETW(GC_BACKGROUNDZEROPAGE_STOP, (this));
-            GCETW(GC_BACKGROUNDSWEEP_START, (this));
-
         Assert(this->recyclerSweepManager != nullptr);
         this->recyclerSweepManager->BackgroundSweep();
 
@@ -6096,9 +5958,7 @@ Recycler::DoBackgroundWork(bool forceForeground)
                 {
                     // Drain the zero queue again as we might have free more during sweep
                     // in the background
-                    GCETW(GC_BACKGROUNDZEROPAGE_START, (this));
                     autoHeap.BackgroundZeroQueuedPages();
-                    GCETW(GC_BACKGROUNDZEROPAGE_STOP, (this));
                 }
 #endif
                 this->FinishConcurrentSweepPass1();
@@ -6120,16 +5980,12 @@ Recycler::DoBackgroundWork(bool forceForeground)
             sweptBytes = (uint)collectionStats.objectSweptBytes;
 #endif
 
-            GCETW(GC_BACKGROUNDSWEEP_STOP, (this, sweptBytes));
-
 #if ENABLE_BACKGROUND_PAGE_ZEROING
             if (CONFIG_FLAG(EnableBGFreeZero))
             {
                 // Drain the zero queue again as we might have free more during sweep
                 // in the background
-                GCETW(GC_BACKGROUNDZEROPAGE_START, (this));
                 autoHeap.BackgroundZeroQueuedPages();
-                GCETW(GC_BACKGROUNDZEROPAGE_STOP, (this));
             }
 #endif
 
