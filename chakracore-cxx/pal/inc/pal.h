@@ -5204,19 +5204,6 @@ CoCreateGuid( GUID * pguid);
 
 typedef int errno_t;
 
-#ifndef PAL_STDCPP_COMPAT
-
-typedef struct {
-    int quot;
-    int rem;
-} div_t;
-
-div_t div(int numer, int denom);
-
-//long long int atoll(const char *) __THROW;
-
-#endif // PAL_STDCPP_COMPAT
-
 errno_t memcpy_s(void *, size_t, const void *, size_t);
 errno_t memmove_s(void *, size_t, const void *, size_t);
 void * memmove_xplat(void *, const void *, size_t);
