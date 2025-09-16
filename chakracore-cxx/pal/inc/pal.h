@@ -5149,7 +5149,6 @@ CoCreateGuid( GUID * pguid);
 #define towupper      PAL_towupper
 #define vswprintf     PAL_vswprintf
 #define fopen         PAL_fopen
-#define strtoul       PAL_strtoul
 #define fprintf       PAL_fprintf
 #define fwprintf      PAL_fwprintf
 #define vfprintf      PAL_vfprintf
@@ -5215,7 +5214,6 @@ typedef struct {
 div_t div(int numer, int denom);
 
 //long long int atoll(const char *) __THROW;
-uint32_t strtoul(const char *, char **, int);
 
 #endif // PAL_STDCPP_COMPAT
 
