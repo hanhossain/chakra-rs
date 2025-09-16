@@ -164,7 +164,6 @@ LoadLibraryExA(
     LPSTR lpstr = nullptr;
     HMODULE hModule = nullptr;
 
-    PERF_ENTRY(LoadLibraryA);
     ENTRY("LoadLibraryExA (lpLibFileName=%p (%s)) \n",
           (lpLibFileName) ? lpLibFileName : "NULL",
           (lpLibFileName) ? lpLibFileName : "NULL");
@@ -194,7 +193,6 @@ LoadLibraryExA(
     }
 
     LOGEXIT("LoadLibraryExA returns HMODULE %p\n", hModule);
-    PERF_EXIT(LoadLibraryExA);
     return hModule;
 
 }
@@ -223,7 +221,6 @@ LoadLibraryExW(
     PathCharString pathstr;
     HMODULE hModule = nullptr;
 
-    PERF_ENTRY(LoadLibraryExW);
     ENTRY("LoadLibraryExW (lpLibFileName=%p (%S)) \n",
           lpLibFileName ? lpLibFileName : W16_NULLSTRING,
           lpLibFileName ? lpLibFileName : W16_NULLSTRING);
@@ -252,7 +249,6 @@ LoadLibraryExW(
 
 done:
     LOGEXIT("LoadLibraryExW returns HMODULE %p\n", hModule);
-    PERF_EXIT(LoadLibraryExW);
     return hModule;
 }
 
@@ -271,7 +267,6 @@ GetProcAddress(
     FARPROC ProcAddress = nullptr;
     LPCSTR symbolName = lpProcName;
 
-    PERF_ENTRY(GetProcAddress);
     ENTRY("GetProcAddress (hModule=%p, lpProcName=%p (%s))\n",
           hModule, lpProcName ? lpProcName : "NULL", lpProcName ? lpProcName : "NULL");
 
@@ -373,7 +368,6 @@ GetProcAddress(
 done:
     UnlockModuleList();
     LOGEXIT("GetProcAddress returns FARPROC %p\n", ProcAddress);
-    PERF_EXIT(GetProcAddress);
     return ProcAddress;
 }
 
@@ -389,12 +383,10 @@ FreeLibrary(
 {
     BOOL retval = FALSE;
 
-    PERF_ENTRY(FreeLibrary);
     ENTRY("FreeLibrary (hLibModule=%p)\n", hLibModule);
     retval = LOADFreeLibrary((MODSTRUCT *)hLibModule, TRUE /* fCallDllMain */);
 
     LOGEXIT("FreeLibrary returns BOOL %d\n", retval);
-    PERF_EXIT(FreeLibrary);
     return retval;
 }
 
@@ -410,12 +402,10 @@ FreeLibraryAndExitThread(
      HMODULE hLibModule,
      uint32_t dwExitCode)
 {
-    PERF_ENTRY(FreeLibraryAndExitThread);
     ENTRY("FreeLibraryAndExitThread()\n");
     FreeLibrary(hLibModule);
     ExitThread(dwExitCode);
     LOGEXIT("FreeLibraryAndExitThread\n");
-    PERF_EXIT(FreeLibraryAndExitThread);
 }
 
 /*++
@@ -441,7 +431,6 @@ GetModuleFileNameA(
     uint32_t retval = 0;
     LPWSTR wide_name = nullptr;
 
-    PERF_ENTRY(GetModuleFileNameA);
     ENTRY("GetModuleFileNameA (hModule=%p, lpFileName=%p, nSize=%u)\n",
           hModule, lpFileName, nSize);
 
@@ -477,7 +466,6 @@ GetModuleFileNameA(
 done:
     UnlockModuleList();
     LOGEXIT("GetModuleFileNameA returns DWORD %d\n", retval);
-    PERF_EXIT(GetModuleFileNameA);
     return retval;
 }
 
@@ -504,7 +492,6 @@ GetModuleFileNameW(
     uint32_t retval = 0;
     LPWSTR wide_name = nullptr;
 
-    PERF_ENTRY(GetModuleFileNameW);
     ENTRY("GetModuleFileNameW (hModule=%p, lpFileName=%p, nSize=%u)\n",
           hModule, lpFileName, nSize);
 
@@ -544,7 +531,6 @@ GetModuleFileNameW(
 done:
     UnlockModuleList();
     LOGEXIT("GetModuleFileNameW returns DWORD %u\n", retval);
-    PERF_EXIT(GetModuleFileNameW);
     return retval;
 }
 
@@ -589,7 +575,6 @@ PAL_LoadLibraryDirect(
     int32_t name_length;
     void *dl_handle = nullptr;
 
-    PERF_ENTRY(LoadLibraryDirect);
     ENTRY("LoadLibraryDirect (lpLibFileName=%p (%S)) \n",
           lpLibFileName ? lpLibFileName : W16_NULLSTRING,
           lpLibFileName ? lpLibFileName : W16_NULLSTRING);
@@ -617,7 +602,6 @@ PAL_LoadLibraryDirect(
 
 done:
     LOGEXIT("LoadLibraryDirect returns HMODULE %p\n", dl_handle);
-    PERF_EXIT(LoadLibraryDirect);
     return dl_handle;
 }
 
@@ -639,7 +623,6 @@ PAL_RegisterLibraryDirect(
     int32_t name_length;
     HMODULE hModule = nullptr;
 
-    PERF_ENTRY(RegisterLibraryDirect);
     ENTRY("RegisterLibraryDirect (lpLibFileName=%p (%S)) \n",
         lpLibFileName ? lpLibFileName : W16_NULLSTRING,
         lpLibFileName ? lpLibFileName : W16_NULLSTRING);
@@ -670,7 +653,6 @@ PAL_RegisterLibraryDirect(
 
 done:
     LOGEXIT("RegisterLibraryDirect returns HMODULE %p\n", hModule);
-    PERF_EXIT(RegisterLibraryDirect);
     return hModule;
 }
 
@@ -684,13 +666,11 @@ void
 PAL_UnregisterModule(
      HINSTANCE hInstance)
 {
-    PERF_ENTRY(PAL_UnregisterModule);
     ENTRY("PAL_UnregisterModule(hInstance=%p)\n", hInstance);
 
     LOADFreeLibrary((MODSTRUCT *)hInstance, FALSE /* fCallDllMain */);
 
     LOGEXIT("PAL_UnregisterModule returns\n");
-    PERF_EXIT(PAL_UnregisterModule);
 }
 
 /*++
@@ -778,7 +758,6 @@ PAL_GetSymbolModuleBase(void *symbol)
 {
     const void * retval = nullptr;
 
-    PERF_ENTRY(PAL_GetPalModuleBase);
     ENTRY("PAL_GetPalModuleBase\n");
 
     if (symbol == nullptr)
@@ -801,7 +780,6 @@ PAL_GetSymbolModuleBase(void *symbol)
     }
 
     LOGEXIT("PAL_GetPalModuleBase returns %p\n", retval);
-    PERF_EXIT(PAL_GetPalModuleBase);
     return retval;
 }
 
@@ -1158,7 +1136,6 @@ DisableThreadLibraryCalls(
 {
     BOOL ret = FALSE;
     MODSTRUCT *module;
-    PERF_ENTRY(DisableThreadLibraryCalls);
     ENTRY("DisableThreadLibraryCalls(hLibModule=%p)\n", hLibModule);
 
     LockModuleList();
@@ -1188,7 +1165,6 @@ DisableThreadLibraryCalls(
 done:
     UnlockModuleList();
     LOGEXIT("DisableThreadLibraryCalls returns BOOL %d\n", ret);
-    PERF_EXIT(DisableThreadLibraryCalls);
     return ret;
 }
 

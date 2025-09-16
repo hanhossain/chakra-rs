@@ -93,7 +93,6 @@ CreateEventA(
     CPalThread *pthr = NULL;
     PAL_ERROR palError;
 
-    PERF_ENTRY(CreateEventA);
     ENTRY("CreateEventA(lpEventAttr=%p, bManualReset=%d, bInitialState=%d, lpName=%p (%s)\n",
           lpEventAttributes, bManualReset, bInitialState, lpName, lpName?lpName:"NULL");
 
@@ -126,7 +125,6 @@ CreateEventA(
     pthr->SetLastError(palError);
     
     LOGEXIT("CreateEventA returns HANDLE %p\n", hEvent);
-    PERF_EXIT(CreateEventA);
     return hEvent;
 }
 
@@ -155,7 +153,6 @@ CreateEventW(
     PAL_ERROR palError;
     CPalThread *pthr = NULL;
 
-    PERF_ENTRY(CreateEventW);
     ENTRY("CreateEventW(lpEventAttr=%p, bManualReset=%d, "
           "bInitialState=%d, lpName=%p (%S)\n", lpEventAttributes, bManualReset, 
            bInitialState, lpName, lpName?lpName:W16_NULLSTRING);
@@ -181,7 +178,6 @@ CreateEventW(
     pthr->SetLastError(palError);
 
     LOGEXIT("CreateEventW returns HANDLE %p\n", hEvent);
-    PERF_EXIT(CreateEventW);
     return hEvent;
 }
 
@@ -319,7 +315,6 @@ SetEvent(
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pthr = NULL;
 
-    PERF_ENTRY(SetEvent);
     ENTRY("SetEvent(hEvent=%p)\n", hEvent);
 
     pthr = InternalGetCurrentThread();
@@ -332,7 +327,6 @@ SetEvent(
     }
     
     LOGEXIT("SetEvent returns BOOL %d\n", (NO_ERROR == palError));
-    PERF_EXIT(SetEvent);
     return (NO_ERROR == palError);
 }
 
@@ -351,7 +345,6 @@ ResetEvent(
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pthr = NULL;
 
-    PERF_ENTRY(ResetEvent);
     ENTRY("ResetEvent(hEvent=%p)\n", hEvent);
 
     pthr = InternalGetCurrentThread();
@@ -364,7 +357,6 @@ ResetEvent(
     }
     
     LOGEXIT("ResetEvent returns BOOL %d\n", (NO_ERROR == palError));
-    PERF_EXIT(ResetEvent);
     return (NO_ERROR == palError);
 }
 
@@ -471,7 +463,6 @@ OpenEventW(
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pthr = NULL;
 
-    PERF_ENTRY(OpenEventW);
     ENTRY("OpenEventW(dwDesiredAccess=%#x, bInheritHandle=%d, lpName=%p (%S))\n", 
           dwDesiredAccess, bInheritHandle, lpName, lpName?lpName:W16_NULLSTRING);
 
@@ -498,7 +489,6 @@ OpenEventWExit:
     }
 
     LOGEXIT("OpenEventW returns HANDLE %p\n", hEvent);
-    PERF_EXIT(OpenEventW);
 
     return hEvent;
 }

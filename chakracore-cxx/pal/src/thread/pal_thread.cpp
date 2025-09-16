@@ -328,7 +328,6 @@ GetThreadId(
     IPalObject *pobjThread = 0;
 
     // TODO: not sure if this could be done in a more efficient way.
-    PERF_ENTRY(GetThreadId);
     ENTRY("GetThreadId()\n");
 
     pThread = InternalGetCurrentThread();
@@ -352,7 +351,6 @@ GetThreadId(
     }
 
     LOGEXIT("GetThreadId returns DWORD %#x\n", dwThreadId);
-    PERF_EXIT(GetThreadId);
 
     return dwThreadId;
 }
@@ -369,13 +367,11 @@ GetCurrentThreadId(
 {
     uint32_t dwThreadId;
 
-    PERF_ENTRY(GetCurrentThreadId);
     ENTRY("GetCurrentThreadId()\n");
 
     dwThreadId = (uint32_t)THREADSilentGetCurrentThreadId();
 
     LOGEXIT("GetCurrentThreadId returns DWORD %#x\n", dwThreadId);
-    PERF_EXIT(GetCurrentThreadId);
 
     return dwThreadId;
 }
@@ -390,11 +386,9 @@ HANDLE
 PAL_GetCurrentThread(
           void)
 {
-    PERF_ENTRY(GetCurrentThread);
     ENTRY("GetCurrentThread()\n");
 
     LOGEXIT("GetCurrentThread returns HANDLE %p\n", hPseudoCurrentThread);
-    PERF_EXIT(GetCurrentThread);
 
     /* return a pseudo handle */
     return (HANDLE) hPseudoCurrentThread;
@@ -412,7 +406,6 @@ SwitchToThread(
 {
     BOOL ret;
 
-    PERF_ENTRY(SwitchToThread);
     ENTRY("SwitchToThread(VOID)\n");
 
     /* sched_yield yields to another thread in the current process. This implementation
@@ -420,7 +413,6 @@ SwitchToThread(
     ret = (sched_yield() == 0);
 
     LOGEXIT("SwitchToThread returns BOOL %d\n", ret);
-    PERF_EXIT(SwitchToThread);
 
     return ret;
 }
@@ -448,7 +440,6 @@ CreateThread(
     CPalThread *pThread;
     HANDLE hNewThread = NULL;
 
-    PERF_ENTRY(CreateThread);
     ENTRY("CreateThread(lpThreadAttr=%p, dwStackSize=%u, lpStartAddress=%p, "
           "lpParameter=%p, dwFlags=%#x, lpThreadId=%#x)\n",
           lpThreadAttributes, dwStackSize, lpStartAddress, lpParameter,
@@ -478,7 +469,6 @@ CreateThread(
         *lpThreadId = osThreadId;
     }
     LOGEXIT("CreateThread returns HANDLE %p\n", hNewThread);
-    PERF_EXIT(CreateThread);
 
     return hNewThread;
 }
@@ -774,8 +764,6 @@ ExitThread(
     CPalThread *pThread;
 
     ENTRY("ExitThread(dwExitCode=%u)\n", dwExitCode);
-    PERF_ENTRY_ONLY(ExitThread);
-
     pThread = InternalGetCurrentThread();
 
     /* store the exit code */
@@ -899,7 +887,6 @@ GetThreadPriority(
     PAL_ERROR palError;
     int iPriority = THREAD_PRIORITY_ERROR_RETURN;
 
-    PERF_ENTRY(GetThreadPriority);
     ENTRY("GetThreadPriority(hThread=%p)\n", hThread);
 
     pThread = InternalGetCurrentThread();
@@ -916,7 +903,6 @@ GetThreadPriority(
     }
 
     LOGEXIT("GetThreadPriorityExit returns int %d\n", iPriority);
-    PERF_EXIT(GetThreadPriority);
 
     return iPriority;
 }
@@ -976,7 +962,6 @@ SetThreadPriority(
     CPalThread *pThread;
     PAL_ERROR palError = NO_ERROR;
 
-    PERF_ENTRY(SetThreadPriority);
     ENTRY("SetThreadPriority(hThread=%p, nPriority=%#x)\n", hThread, nPriority);
 
     pThread = InternalGetCurrentThread();
@@ -993,7 +978,6 @@ SetThreadPriority(
     }
 
     LOGEXIT("SetThreadPriority returns BOOL %d\n", NO_ERROR == palError);
-    PERF_EXIT(SetThreadPriority);
 
     return NO_ERROR == palError;
 }

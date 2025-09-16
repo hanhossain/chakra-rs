@@ -1717,7 +1717,6 @@ VirtualAlloc_(
     void *  pRetVal       = NULL;
     CPalThread *pthrCurrent;
 
-    PERF_ENTRY(VirtualAlloc);
     ENTRY("VirtualAlloc(lpAddress=%p, dwSize=%u, flAllocationType=%#x, \
           flProtect=%#x)\n", lpAddress, dwSize, flAllocationType, flProtect);
 
@@ -1788,7 +1787,6 @@ VirtualAlloc_(
 
 done:
     LOGEXIT("VirtualAlloc returning %p\n ", pRetVal  );
-    PERF_EXIT(VirtualAlloc);
     return pRetVal;
 }
 
@@ -2020,7 +2018,6 @@ VirtualFree(
     BOOL bRetVal = TRUE;
     CPalThread *pthrCurrent;
 
-    PERF_ENTRY(VirtualFree);
     ENTRY("VirtualFree(lpAddress=%p, dwSize=%u, dwFreeType=%#x)\n",
           lpAddress, dwSize, dwFreeType);
 
@@ -2204,7 +2201,6 @@ VirtualFree(
 VirtualFreeExit:
     InternalLeaveCriticalSection(pthrCurrent, &virtual_critsec);
     LOGEXIT( "VirtualFree returning %s.\n", bRetVal == TRUE ? "TRUE" : "FALSE" );
-    PERF_EXIT(VirtualFree);
     return bRetVal;
 }
 
@@ -2241,7 +2237,6 @@ VirtualProtect(
     size_t   OffSet = 0;
     CPalThread * pthrCurrent;
 
-    PERF_ENTRY(VirtualProtect);
     ENTRY("VirtualProtect(lpAddress=%p, dwSize=%u, flNewProtect=%#x, "
           "flOldProtect=%p)\n",
           lpAddress, dwSize, flNewProtect, lpflOldProtect);
@@ -2336,7 +2331,6 @@ ExitVirtualProtect:
     InternalLeaveCriticalSection(pthrCurrent, &virtual_critsec);
 
     LOGEXIT( "VirtualProtect returning %s.\n", bRetVal == TRUE ? "TRUE" : "FALSE" );
-    PERF_EXIT(VirtualProtect);
     return bRetVal;
 }
 
@@ -2497,7 +2491,6 @@ VirtualQuery(
     UINT_PTR StartBoundary = 0;
     CPalThread * pthrCurrent;
 
-    PERF_ENTRY(VirtualQuery);
     ENTRY("VirtualQuery(lpAddress=%p, lpBuffer=%p, dwLength=%u)\n",
           lpAddress, lpBuffer, dwLength);
 
@@ -2608,6 +2601,5 @@ ExitVirtualQuery:
     InternalLeaveCriticalSection(pthrCurrent, &virtual_critsec);
 
     LOGEXIT( "VirtualQuery returning %d.\n", sizeof( *lpBuffer ) );
-    PERF_EXIT(VirtualQuery);
     return sizeof( *lpBuffer );
 }

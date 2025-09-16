@@ -82,7 +82,6 @@ _wsplitpath(
     LPCWSTR period_ptr = NULL;
     int32_t size = 0;
 
-    PERF_ENTRY(_wsplitpath);
     ENTRY("_wsplitpath (path=%p (%S), drive=%p, dir=%p, fname=%p, ext=%p)\n",
           dospath?dospath:W16_NULLSTRING,
           dospath?dospath:W16_NULLSTRING, drive, dir, fname, ext);
@@ -205,7 +204,6 @@ _wsplitpath(
 done:
 
     LOGEXIT("_wsplitpath returns.\n");
-    PERF_EXIT(_wsplitpath);
 }
 
 
@@ -229,7 +227,6 @@ _splitpath(
     char16_t w_fname[_MAX_FNAME];
     char16_t w_ext[_MAX_EXT];
 
-    PERF_ENTRY(_splitpath);
     ENTRY("_splitpath (path=%p (%s), drive=%p, dir=%p, fname=%p, ext=%p)\n",
           path?path:"NULL",
           path?path:"NULL", drive, dir, fname, ext);
@@ -303,7 +300,6 @@ _splitpath(
 
 done:
     LOGEXIT("_splitpath returns.\n");
-    PERF_EXIT(_splitpath);
 }
 
 
@@ -325,7 +321,6 @@ _makepath(
 {
     uint32_t Length = 0;
 
-    PERF_ENTRY(_makepath);
     ENTRY( "_makepath (path=%p, drive=%p (%s), dir=%p (%s), fname=%p (%s), ext=%p (%s))\n",
            path, drive ? drive:"NULL", drive ? drive:"NULL", dir ? dir:"NULL", dir ? dir:"NULL", fname ? fname:"NULL", fname ? fname:"NULL",
            ext ? ext:"NULL",
@@ -420,7 +415,6 @@ _makepath(
 
     FILEDosToUnixPathA( path );
     LOGEXIT( "_makepath returning void.\n" );
-    PERF_EXIT(_makepath);
     return;
 
 Max_Path_Error:
@@ -428,7 +422,6 @@ Max_Path_Error:
     ERROR( "path cannot be greater then _MAX_PATH\n" );
     path[ 0 ] = '\0';
     LOGEXIT( "_makepath returning void \n" );
-    PERF_EXIT(_makepath);
     return;
 }
 
@@ -452,7 +445,6 @@ _wmakepath(
     char Ext[ _MAX_EXT ]={0};
     char Path[ _MAX_PATH ]={0};
 
-    PERF_ENTRY(_wmakepath);
     ENTRY("_wmakepath (path=%p, drive=%p (%S), dir=%p (%S), fname=%p (%S), ext=%p (%S))\n",
           path, drive ? drive:W16_NULLSTRING, drive ? drive:W16_NULLSTRING, dir ? dir:W16_NULLSTRING, dir ? dir:W16_NULLSTRING,
           fname ? fname:W16_NULLSTRING,
@@ -502,13 +494,11 @@ _wmakepath(
     }
 
     LOGEXIT("_wmakepath returns void\n");
-    PERF_EXIT(_wmakepath);
     return;
 
 error:
     *path = '\0';
     LOGEXIT("_wmakepath returns void\n");
-    PERF_EXIT(_wmakepath);
 }
 
 
@@ -532,7 +522,6 @@ _fullpath(
     size_t min_length;
     BOOL fBufAllocated = FALSE;
 
-    PERF_ENTRY(_fullpath);
     ENTRY("_fullpath (absPath=%p, relPath=%p (%s), maxLength = %lu)\n",
           absPath, relPath ? relPath:"NULL", relPath ? relPath:"NULL", maxLength);
 
@@ -582,6 +571,5 @@ _fullpath(
 
 fullpathExit:
     LOGEXIT("_fullpath returns char * %p\n", retval);
-    PERF_EXIT(_fullpath);
     return retval;
 }

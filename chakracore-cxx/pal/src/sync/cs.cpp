@@ -202,7 +202,6 @@ See MSDN doc.
 --*/
 void InitializeCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
 {
-    PERF_ENTRY(InitializeCriticalSection);
     ENTRY("InitializeCriticalSection(lpCriticalSection=%p)\n",
           lpCriticalSection);
 
@@ -210,7 +209,6 @@ void InitializeCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
                                                   0, false);
 
     LOGEXIT("InitializeCriticalSection returns void\n");
-    PERF_EXIT(InitializeCriticalSection);
 }
 
 /*++
@@ -221,14 +219,12 @@ See MSDN doc.
 --*/
 BOOL InitializeCriticalSectionEx(LPCRITICAL_SECTION lpCriticalSection, uint32_t dwSpinCount, uint32_t Flags)
 {
-    PERF_ENTRY(InitializeCriticalSection);
     ENTRY("InitializeCriticalSectionEx(lpCriticalSection=%p, dwSpinCount=%d, Flags=%d)\n",
           lpCriticalSection, dwSpinCount, Flags);
 
     InternalInitializeCriticalSectionAndSpinCount(lpCriticalSection, dwSpinCount, false);
 
     LOGEXIT("InitializeCriticalSectionEx returns TRUE\n");
-    PERF_EXIT(InitializeCriticalSection);
     return true;
 }
 
@@ -242,7 +238,6 @@ BOOL InitializeCriticalSectionAndSpinCount(LPCRITICAL_SECTION lpCriticalSection,
                                            uint32_t dwSpinCount)
 {
     BOOL bRet = TRUE;
-    PERF_ENTRY(InitializeCriticalSectionAndSpinCount);
     ENTRY("InitializeCriticalSectionAndSpinCount(lpCriticalSection=%p, "
           "dwSpinCount=%u)\n", lpCriticalSection, dwSpinCount);
 
@@ -251,7 +246,6 @@ BOOL InitializeCriticalSectionAndSpinCount(LPCRITICAL_SECTION lpCriticalSection,
 
     LOGEXIT("InitializeCriticalSectionAndSpinCount returns BOOL %d\n",
             bRet);
-    PERF_EXIT(InitializeCriticalSectionAndSpinCount);
     return bRet;
 }
 
@@ -263,13 +257,11 @@ See MSDN doc.
 --*/
 void DeleteCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
 {
-    PERF_ENTRY(DeleteCriticalSection);
     ENTRY("DeleteCriticalSection(lpCriticalSection=%p)\n", lpCriticalSection);
 
     InternalDeleteCriticalSection(lpCriticalSection);
 
     LOGEXIT("DeleteCriticalSection returns void\n");
-    PERF_EXIT(DeleteCriticalSection);
 }
 
 /*++
@@ -280,7 +272,6 @@ See MSDN doc.
 --*/
 void EnterCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
 {
-    PERF_ENTRY(EnterCriticalSection);
     ENTRY("EnterCriticalSection(lpCriticalSection=%p)\n", lpCriticalSection);
 
     CPalThread * pThread = InternalGetCurrentThread();
@@ -288,7 +279,6 @@ void EnterCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
     InternalEnterCriticalSection(pThread, lpCriticalSection);
 
     LOGEXIT("EnterCriticalSection returns void\n");
-    PERF_EXIT(EnterCriticalSection);
 }
 
 /*++
@@ -299,7 +289,6 @@ See MSDN doc.
 --*/
 BOOL TryEnterCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
 {
-    PERF_ENTRY(TryEnterCriticalSection);
     ENTRY("TryEnterCriticalSection(lpCriticalSection=%p)\n", lpCriticalSection);
 
     CPalThread * pThread = InternalGetCurrentThread();
@@ -308,7 +297,6 @@ BOOL TryEnterCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
         lpCriticalSection);
 
     LOGEXIT("TryEnterCriticalSection returns bool %d\n", (int)fRet);
-    PERF_EXIT(TryEnterCriticalSection);
 
     return (BOOL)fRet;
 }
@@ -321,7 +309,6 @@ See MSDN doc.
 --*/
 void LeaveCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
 {
-    PERF_ENTRY(LeaveCriticalSection);
     ENTRY("LeaveCriticalSection(lpCriticalSection=%p)\n", lpCriticalSection);
 
     CPalThread * pThread = InternalGetCurrentThread();
@@ -329,7 +316,6 @@ void LeaveCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
     InternalLeaveCriticalSection(pThread, lpCriticalSection);
 
     LOGEXIT("LeaveCriticalSection returns void\n");
-    PERF_EXIT(LeaveCriticalSection);
 }
 
 /*++

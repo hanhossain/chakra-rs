@@ -286,7 +286,6 @@ CreateFileMappingA(
     CPalThread *pThread = NULL;
     PAL_ERROR palError = NO_ERROR;
 
-    PERF_ENTRY(CreateFileMappingA);
     ENTRY("CreateFileMappingA(hFile=%p, lpAttributes=%p, flProtect=%#x, "
           "dwMaxSizeH=%d, dwMaxSizeL=%d, lpName=%p (%s))\n",
           hFile, lpFileMappingAttributes, flProtect, 
@@ -326,7 +325,6 @@ CreateFileMappingA(
     pThread->SetLastError(palError);
 
     LOGEXIT( "CreateFileMappingA returns HANDLE %p. \n", hFileMapping );
-    PERF_EXIT(CreateFileMappingA);
     return hFileMapping;
 }
 
@@ -352,7 +350,6 @@ CreateFileMappingW(
     CPalThread *pThread = NULL;
     PAL_ERROR palError = NO_ERROR;
     
-    PERF_ENTRY(CreateFileMappingW);
     ENTRY("CreateFileMappingW(hFile=%p, lpAttributes=%p, flProtect=%#x, "
           "dwMaxSizeH=%u, dwMaxSizeL=%u, lpName=%p (%S))\n",
           hFile, lpFileMappingAttributes, flProtect, dwMaximumSizeHigh, 
@@ -381,7 +378,6 @@ CreateFileMappingW(
     pThread->SetLastError(palError);
 
     LOGEXIT( "CreateFileMappingW returning %p .\n", hFileMapping );
-    PERF_EXIT(CreateFileMappingW);
     return hFileMapping;
 }
 
@@ -778,7 +774,6 @@ OpenFileMappingA(
     CPalThread *pThread = NULL;
     PAL_ERROR palError = NO_ERROR;
 
-    PERF_ENTRY(OpenFileMappingA);
     ENTRY("OpenFileMappingA(dwDesiredAccess=%u, bInheritHandle=%d, lpName=%p (%s)\n",
           dwDesiredAccess, bInheritHandle, lpName?lpName:"NULL", lpName?lpName:"NULL");
 
@@ -800,7 +795,6 @@ OpenFileMappingA(
         pThread->SetLastError(palError);
     }
     LOGEXIT( "OpenFileMappingA returning %p\n", hFileMapping );
-    PERF_EXIT(OpenFileMappingA);
     return hFileMapping;
 }
 
@@ -821,7 +815,6 @@ OpenFileMappingW(
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread = NULL;
     
-    PERF_ENTRY(OpenFileMappingW);
     ENTRY("OpenFileMappingW(dwDesiredAccess=%#x, bInheritHandle=%d, lpName=%p (%S)\n",
           dwDesiredAccess, bInheritHandle, lpName?lpName:W16_NULLSTRING, lpName?lpName:W16_NULLSTRING);
 
@@ -844,7 +837,6 @@ OpenFileMappingW(
         pThread->SetLastError(palError);
     }
     LOGEXIT("OpenFileMappingW returning %p.\n", hFileMapping);
-    PERF_EXIT(OpenFileMappingW);
     return hFileMapping;
 }
 
@@ -946,7 +938,6 @@ MapViewOfFile(
     CPalThread *pThread = NULL;
     void * pvMappedBaseAddress = NULL;
 
-    PERF_ENTRY(MapViewOfFile);
     ENTRY("MapViewOfFile(hFileMapping=%p, dwDesiredAccess=%u, "
           "dwFileOffsetH=%u, dwFileOffsetL=%u, dwNumberOfBytes=%u)\n",
           hFileMappingObject, dwDesiredAccess, dwFileOffsetHigh,
@@ -970,7 +961,6 @@ MapViewOfFile(
     }
 
     LOGEXIT( "MapViewOfFile returning %p.\n", pvMappedBaseAddress );
-    PERF_EXIT(MapViewOfFile);
     return pvMappedBaseAddress;
 }
 
@@ -987,7 +977,6 @@ MapViewOfFileEx(
     CPalThread *pThread = NULL;
     void * pvMappedBaseAddress = NULL;
 
-    PERF_ENTRY(MapViewOfFileEx);
     ENTRY("MapViewOfFileEx(hFileMapping=%p, dwDesiredAccess=%u, "
           "dwFileOffsetH=%u, dwFileOffsetL=%u, dwNumberOfBytes=%u, lpBaseAddress=%p)\n",
           hFileMappingObject, dwDesiredAccess, dwFileOffsetHigh,
@@ -1019,7 +1008,6 @@ MapViewOfFileEx(
     }
 
     LOGEXIT( "MapViewOfFileEx returning %p.\n", pvMappedBaseAddress );
-    PERF_EXIT(MapViewOfFileEx);
     return pvMappedBaseAddress;
 }
 
@@ -1039,7 +1027,6 @@ FlushViewOfFile(
     PMAPPED_VIEW_LIST pView = NULL;
     BOOL fResult = TRUE;
 
-    PERF_ENTRY(FlushViewOfFile);
     ENTRY("FlushViewOfFile(lpBaseAddress=%p, dwNumberOfBytesToFlush=%u)\n",
           lpBaseAddress, dwNumberOfBytesToFlush);
 
@@ -1091,7 +1078,6 @@ Exit:
     }
 
     LOGEXIT("FlushViewOfFile returning %d.\n", fResult);
-    PERF_EXIT(FlushViewOfFile);
     return fResult;
 }
 
@@ -1109,7 +1095,6 @@ UnmapViewOfFile(
     PAL_ERROR palError;
     CPalThread *pThread;
     
-    PERF_ENTRY(UnmapViewOfFile);
     ENTRY("UnmapViewOfFile(lpBaseAddress=%p)\n", lpBaseAddress);
 
     pThread = InternalGetCurrentThread();
@@ -1122,7 +1107,6 @@ UnmapViewOfFile(
     }
     
     LOGEXIT( "UnmapViewOfFile returning %s.\n", (NO_ERROR == palError) ? "TRUE" : "FALSE" );
-    PERF_EXIT(UnmapViewOfFile);
     return (NO_ERROR == palError);
 }
 

@@ -63,7 +63,6 @@ LocalAlloc(
 	    size_t uBytes)
 {
     void * lpRetVal = NULL;
-    PERF_ENTRY(LocalAlloc);
     ENTRY("LocalAlloc (uFlags=%#x, uBytes=%u)\n", uFlags, uBytes);
 
     if (!AllocFlagsToHeapAllocFlags (uFlags, &uFlags)) {
@@ -74,7 +73,6 @@ LocalAlloc(
 
 done:
     LOGEXIT( "LocalAlloc returning %p.\n", lpRetVal );
-    PERF_EXIT(LocalAlloc);
     return (HLOCAL) lpRetVal;
 }
 
@@ -91,7 +89,6 @@ LocalReAlloc(
         uint32_t   uFlags)
 {
     void * lpRetVal = NULL;
-    PERF_ENTRY(LocalReAlloc);
     ENTRY("LocalReAlloc (hMem=%p, uBytes=%u, uFlags=%#x)\n", hMem, uBytes, uFlags);
 
     if (uFlags != LMEM_MOVEABLE) {
@@ -106,7 +103,6 @@ LocalReAlloc(
 
 done:
     LOGEXIT("LocalReAlloc returning %p.\n", lpRetVal);
-    PERF_EXIT(LocalReAlloc);
     return (HLOCAL)lpRetVal;
 }
 
@@ -121,7 +117,6 @@ LocalFree(
 	   HLOCAL hMem)
 {
     BOOL bRetVal = FALSE;
-    PERF_ENTRY(LocalFree);
     ENTRY("LocalFree (hmem=%p)\n", hMem);
 
     if ( hMem )
@@ -134,7 +129,6 @@ LocalFree(
     }
     
     LOGEXIT( "LocalFree returning %p.\n", bRetVal == TRUE ? (HLOCAL)NULL : hMem );
-    PERF_EXIT(LocalFree);
     return bRetVal == TRUE ? (HLOCAL)NULL : hMem;
 }
 

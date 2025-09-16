@@ -57,7 +57,6 @@ CreateDirectoryW(
     int   mb_size;
     char  *mb_dir = NULL;
 
-    PERF_ENTRY(CreateDirectoryW);
     ENTRY("CreateDirectoryW(lpPathName=%p (%S), lpSecurityAttr=%p)\n",
           lpPathName?lpPathName:W16_NULLSTRING,
           lpPathName?lpPathName:W16_NULLSTRING, lpSecurityAttributes);
@@ -99,7 +98,6 @@ done:
         free(mb_dir);
     }
     LOGEXIT("CreateDirectoryW returns BOOL %d\n", bRet);
-    PERF_EXIT(CreateDirectoryW);
     return bRet;
 }
 
@@ -192,7 +190,6 @@ RemoveDirectoryA(
     size_t length;
     char * mb_dir;
     
-    PERF_ENTRY(RemoveDirectoryA);
     ENTRY("RemoveDirectoryA(lpPathName=%p (%s))\n",
           lpPathName,
           lpPathName);
@@ -229,7 +226,6 @@ done:
     }
 
     LOGEXIT("RemoveDirectoryA returns BOOL %d\n", bRet);
-    PERF_EXIT(RemoveDirectoryA);
     return bRet;
 }
 
@@ -250,7 +246,6 @@ RemoveDirectoryW(
     size_t length;
     char * mb_dir;
 
-    PERF_ENTRY(RemoveDirectoryW);
     ENTRY("RemoveDirectoryW(lpPathName=%p (%S))\n",
           lpPathName?lpPathName:W16_NULLSTRING,
           lpPathName?lpPathName:W16_NULLSTRING);
@@ -301,7 +296,6 @@ done:
     }
 
     LOGEXIT("RemoveDirectoryW returns BOOL %d\n", bRet);
-    PERF_EXIT(RemoveDirectoryW);
     return bRet;
 }
 
@@ -322,7 +316,6 @@ GetCurrentDirectoryA(
 
     char  *current_dir;
 
-    PERF_ENTRY(GetCurrentDirectoryA);
     ENTRY("GetCurrentDirectoryA(nBufferLength=%u, lpBuffer=%p)\n", nBufferLength, lpBuffer);
 
     /* NULL first arg means getcwd will allocate the string */
@@ -358,7 +351,6 @@ done:
     }
 
     LOGEXIT("GetCurrentDirectoryA returns DWORD %u\n", dwDirLen);
-    PERF_EXIT(GetCurrentDirectoryA);
     return dwDirLen;
 }
 
@@ -380,7 +372,6 @@ GetCurrentDirectoryW(
     char  *current_dir;
     int   dir_len;
 
-    PERF_ENTRY(GetCurrentDirectoryW);
     ENTRY("GetCurrentDirectoryW(nBufferLength=%u, lpBuffer=%p)\n",
           nBufferLength, lpBuffer);
 
@@ -424,7 +415,6 @@ done:
     }
 
     LOGEXIT("GetCurrentDirectoryW returns DWORD %u\n", dwWideLen);
-    PERF_EXIT(GetCurrentDirectoryW);
     return dwWideLen;
 }
 
@@ -446,7 +436,6 @@ SetCurrentDirectoryW(
     size_t length;
     char * dir;
     
-    PERF_ENTRY(SetCurrentDirectoryW);
     ENTRY("SetCurrentDirectoryW(lpPathName=%p (%S))\n",
           lpPathName?lpPathName:W16_NULLSTRING,
           lpPathName?lpPathName:W16_NULLSTRING);
@@ -499,7 +488,6 @@ done:
     }
 
     LOGEXIT("SetCurrentDirectoryW returns BOOL %d\n", bRet);
-    PERF_EXIT(SetCurrentDirectoryW);
     return bRet;
 }
 
@@ -525,7 +513,6 @@ CreateDirectoryA(
     int i;
     const int mode = S_IRWXU | S_IRWXG | S_IRWXO;
 
-    PERF_ENTRY(CreateDirectoryA);
     ENTRY("CreateDirectoryA(lpPathName=%p (%s), lpSecurityAttr=%p)\n",
           lpPathName?lpPathName:"NULL",
           lpPathName?lpPathName:"NULL", lpSecurityAttributes);
@@ -638,7 +625,6 @@ done:
     }
     free( UnixPathName );
     LOGEXIT("CreateDirectoryA returns BOOL %d\n", bRet);
-    PERF_EXIT(CreateDirectoryA);
     return bRet;
 }
 
@@ -657,7 +643,6 @@ SetCurrentDirectoryA(
     int result;
     LPSTR UnixPathName = NULL;
 
-    PERF_ENTRY(SetCurrentDirectoryA);
     ENTRY("SetCurrentDirectoryA(lpPathName=%p (%s))\n",
           lpPathName?lpPathName:"NULL",
           lpPathName?lpPathName:"NULL");
@@ -731,6 +716,5 @@ done:
     }
 
     LOGEXIT("SetCurrentDirectoryA returns BOOL %d\n", bRet);
-    PERF_EXIT(SetCurrentDirectoryA);
     return bRet;
 }

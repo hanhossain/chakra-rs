@@ -71,7 +71,6 @@ GetEnvironmentVariableA(
     char  *value;
     uint32_t dwRet = 0;
 
-    PERF_ENTRY(GetEnvironmentVariableA);
     ENTRY("GetEnvironmentVariableA(lpName=%p (%s), lpBuffer=%p, nSize=%u)\n",
         lpName?lpName:"NULL",
         lpName?lpName:"NULL", lpBuffer, nSize);
@@ -120,7 +119,6 @@ GetEnvironmentVariableA(
 
 done:
     LOGEXIT("GetEnvironmentVariableA returns DWORD 0x%x\n", dwRet);
-    PERF_EXIT(GetEnvironmentVariableA);
     return dwRet;
 }
 
@@ -142,7 +140,6 @@ GetEnvironmentVariableW(
     int32_t inBuffSize;
     uint32_t size = 0;
 
-    PERF_ENTRY(GetEnvironmentVariableW);
     ENTRY("GetEnvironmentVariableW(lpName=%p (%S), lpBuffer=%p, nSize=%u)\n",
           lpName?lpName:W16_NULLSTRING,
           lpName?lpName:W16_NULLSTRING, lpBuffer, nSize);
@@ -212,7 +209,6 @@ done:
     free(inBuff);
 
     LOGEXIT("GetEnvironmentVariableW returns DWORD 0x%x\n", size);
-    PERF_EXIT(GetEnvironmentVariableW);
     return size;
 }
 
@@ -261,7 +257,6 @@ SetEnvironmentVariableW(
     int32_t valueSize = 0;
     BOOL bRet = FALSE;
 
-    PERF_ENTRY(SetEnvironmentVariableW);
     ENTRY("SetEnvironmentVariableW(lpName=%p (%S), lpValue=%p (%S))\n",
         lpName?lpName:W16_NULLSTRING,
         lpName?lpName:W16_NULLSTRING, lpValue?lpValue:W16_NULLSTRING, lpValue?lpValue:W16_NULLSTRING);
@@ -325,7 +320,6 @@ done:
     free(name);
     
     LOGEXIT("SetEnvironmentVariableW returning BOOL %d\n", bRet);
-    PERF_EXIT(SetEnvironmentVariableW);
     return bRet;
 }
 
@@ -363,7 +357,6 @@ GetEnvironmentStringsW(
     char16_t *wenviron = NULL, *tempEnviron;
     int i, len, envNum;
 
-    PERF_ENTRY(GetEnvironmentStringsW);
     ENTRY("GetEnvironmentStringsW()\n");
 
     PALCEnterCriticalSection(&gcsEnvironment);    
@@ -401,7 +394,6 @@ GetEnvironmentStringsW(
     PALCLeaveCriticalSection(&gcsEnvironment);
 
     LOGEXIT("GetEnvironmentStringsW returning %p\n", wenviron);
-    PERF_EXIT(GetEnvironmentStringsW);
     return wenviron;
 }
 
@@ -420,7 +412,6 @@ GetEnvironmentStringsA(
     char *environ = NULL, *tempEnviron;
     int i, len, envNum;
 
-    PERF_ENTRY(GetEnvironmentStringsA);
     ENTRY("GetEnvironmentStringsA()\n");
 
     PALCEnterCriticalSection(&gcsEnvironment);    
@@ -459,7 +450,6 @@ GetEnvironmentStringsA(
     PALCLeaveCriticalSection(&gcsEnvironment);
 
     LOGEXIT("GetEnvironmentStringsA returning %p\n", environ);
-    PERF_EXIT(GetEnvironmentStringsA);
     return environ;
 }
 
@@ -493,7 +483,6 @@ BOOL
 FreeEnvironmentStringsW(
              LPWSTR lpValue)
 {
-    PERF_ENTRY(FreeEnvironmentStringsW);
     ENTRY("FreeEnvironmentStringsW(lpValue=%p (%S))\n", lpValue?lpValue:W16_NULLSTRING, lpValue?lpValue:W16_NULLSTRING);
 
     if (lpValue != NULL)
@@ -502,7 +491,6 @@ FreeEnvironmentStringsW(
     }
 
     LOGEXIT("FreeEnvironmentStringW returning BOOL TRUE\n");
-    PERF_EXIT(FreeEnvironmentStringsW);
     return TRUE ;
 }
 
@@ -518,7 +506,6 @@ BOOL
 FreeEnvironmentStringsA(
              LPSTR lpValue)
 {
-    PERF_ENTRY(FreeEnvironmentStringsA);
     ENTRY("FreeEnvironmentStringsA(lpValue=%p (%s))\n", lpValue?lpValue:"NULL", lpValue?lpValue:"NULL");
 
     if (lpValue != NULL)
@@ -527,7 +514,6 @@ FreeEnvironmentStringsA(
     }
 
     LOGEXIT("FreeEnvironmentStringA returning BOOL TRUE\n");
-    PERF_EXIT(FreeEnvironmentStringsA);
     return TRUE ;
 }
 
@@ -573,7 +559,6 @@ SetEnvironmentVariableA(
 
     BOOL bRet = FALSE;
     int nResult =0;
-    PERF_ENTRY(SetEnvironmentVariableA);
     ENTRY("SetEnvironmentVariableA(lpName=%p (%s), lpValue=%p (%s))\n",
         lpName?lpName:"NULL",
         lpName?lpName:"NULL", lpValue?lpValue:"NULL", lpValue?lpValue:"NULL");
@@ -630,7 +615,6 @@ SetEnvironmentVariableA(
     bRet = TRUE;
 done:
     LOGEXIT("SetEnvironmentVariableA returning BOOL %d\n", bRet);    
-    PERF_EXIT(SetEnvironmentVariableA);
     return bRet;
 }
 

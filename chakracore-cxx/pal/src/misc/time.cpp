@@ -98,7 +98,6 @@ GetSystemTime(
     struct timeval timeval;
     int timeofday_retval;
 
-    PERF_ENTRY(GetSystemTime);
     ENTRY("GetSystemTime (lpSystemTime=%p)\n", lpSystemTime);
 
     tt = time(NULL);
@@ -152,7 +151,6 @@ GetSystemTime(
     }
 EXIT:
     LOGEXIT("GetSystemTime returns void\n");
-    PERF_EXIT(GetSystemTime);
 }
 
 /*++
@@ -182,14 +180,12 @@ GetTickCount(
          void)
 {
     uint32_t retval = 0;
-    PERF_ENTRY(GetTickCount);
     ENTRY("GetTickCount ()\n");
 
     // Get the 64-bit count from GetTickCount64 and truncate the results.
     retval = (uint32_t) GetTickCount64();
 
     LOGEXIT("GetTickCount returns DWORD %u\n", retval);
-    PERF_EXIT(GetTickCount);
     return retval;
 }
 
@@ -200,7 +196,6 @@ QueryPerformanceCounter(
 {
     BOOL retval = TRUE;
 
-    PERF_ENTRY(QueryPerformanceCounter);
     ENTRY("QueryPerformanceCounter()\n");
     do
 #if HAVE_CLOCK_MONOTONIC
@@ -252,7 +247,6 @@ QueryPerformanceCounter(
     while (false);
 
     LOGEXIT("QueryPerformanceCounter\n");
-    PERF_EXIT(QueryPerformanceCounter);
     return retval;
 }
 
@@ -262,13 +256,11 @@ QueryPerformanceFrequency(
     )
 {
     BOOL retval = TRUE;
-    PERF_ENTRY(QueryPerformanceFrequency);
     ENTRY("QueryPerformanceFrequency()\n");
 
     lpFrequency->QuadPart = (long)(tccSecondsToNanoSeconds);
 
     LOGEXIT("QueryPerformanceFrequency\n");
-    PERF_EXIT(QueryPerformanceFrequency);
     return retval;
 }
 

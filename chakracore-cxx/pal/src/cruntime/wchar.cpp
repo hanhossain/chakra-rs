@@ -166,14 +166,12 @@ _itow(
 {
     char16_t *ret;
 
-    PERF_ENTRY(_itow);
     ENTRY("_itow (value=%d, string=%p, radix=%d)\n",
           value, string, radix);
 
     ret = Internal_i64tow(value, string, radix, FALSE);
 
     LOGEXIT("_itow returns char16_t* %p\n", ret);
-    PERF_EXIT(_itow);
 
     return ret;
 }
@@ -193,14 +191,12 @@ _ltow(
 {
     char16_t *ret;
 
-    PERF_ENTRY(_ltow);
     ENTRY("_ltow (value=%d, string=%p, radix=%d)\n",
           value, string, radix);
 
     ret = Internal_i64tow(value, string, radix, FALSE);
 
     LOGEXIT("_ltow returns char16_t* %p\n", ret);
-    PERF_EXIT(_ltow);
 
     return ret;
 }
@@ -219,14 +215,12 @@ char16_t *
 {
     char16_t *ret;
 
-    PERF_ENTRY(_i64tow);
     ENTRY("_i64tow (value=%ld, string=%p, radix=%d)\n",
           value, string, radix);
 
     ret = Internal_i64tow(value, string, radix, TRUE);
 
     LOGEXIT("_i64tow returns char16_t* %p\n", ret);
-    PERF_EXIT(_i64tow);
 
     return ret;
 }
@@ -246,7 +240,6 @@ _wtoi(
     int ret;
     char *tempStr;
 
-    PERF_ENTRY(_wtoi);
     ENTRY("_wtoi (string=%p)\n", string);
 
     len = WideCharToMultiByte(CP_ACP, 0, string, -1, 0, 0, 0, 0);
@@ -275,7 +268,6 @@ _wtoi(
 
     free(tempStr);
     LOGEXIT("_wtoi returns int %d\n", ret);
-    PERF_EXIT(_wtoi);
     return ret;
 }
 
@@ -291,13 +283,11 @@ PAL_iswspace(char16_t c)
 {
     int ret;
 
-    PERF_ENTRY(iswspace);
     ENTRY("PAL_iswspace (c=%C)\n", c);
 
     ret = proxy_iswspace(c);
 
     LOGEXIT("PAL_iswspace returns int %d\n", ret);
-    PERF_EXIT(iswspace);
     return ret;
 }
 
@@ -345,7 +335,6 @@ _wcsnicmp(
     size_t i;
     int diff = 0;
 
-    PERF_ENTRY(_wcsnicmp);
     ENTRY("_wcsnicmp (string1=%p (%S), string2=%p (%S), count=%lu)\n",
           string1?string1:W16_NULLSTRING,
           string1?string1:W16_NULLSTRING, string2?string2:W16_NULLSTRING, string2?string2:W16_NULLSTRING,
@@ -360,7 +349,6 @@ _wcsnicmp(
         }
     }
     LOGEXIT("_wcsnicmp returning int %d\n", diff);
-    PERF_EXIT(_wcsnicmp);
     return diff;
 }
 
@@ -394,7 +382,6 @@ _wcsicmp(
 {
     int ret;
 
-    PERF_ENTRY(_wcsicmp);
     ENTRY("_wcsicmp (string1=%p (%S), string2=%p (%S))\n",
           string1?string1:W16_NULLSTRING,
           string1?string1:W16_NULLSTRING, string2?string2:W16_NULLSTRING, string2?string2:W16_NULLSTRING);
@@ -402,7 +389,6 @@ _wcsicmp(
     ret = _wcsnicmp(string1, string2, 0x7fffffff);
 
     LOGEXIT("_wcsnicmp returns int %d\n", ret);
-    PERF_EXIT(_wcsicmp);
     return ret;
 }
 
@@ -433,7 +419,6 @@ _wcslwr(
 {
     int i;
 
-    PERF_ENTRY(_wcslwr);
     ENTRY("_wcslwr (string=%p (%S))\n", string?string:W16_NULLSTRING, string?string:W16_NULLSTRING);
 
     for (i=0 ; string[i] != 0; i++)
@@ -442,7 +427,6 @@ _wcslwr(
     }
 
     LOGEXIT("_wcslwr returning char16_t %p (%S)\n", string?string:W16_NULLSTRING, string?string:W16_NULLSTRING);
-    PERF_EXIT(_wcslwr);
     return string;
 }
 
@@ -503,7 +487,6 @@ PAL_wcstol(
     int size;
     uint32_t dwLastError = 0;
 
-    PERF_ENTRY(wcstol);
     ENTRY("wcstol (nptr=%p (%S), endptr=%p, base=%d)\n", nptr?nptr:W16_NULLSTRING, nptr?nptr:W16_NULLSTRING,
           endptr, base);
 
@@ -559,7 +542,6 @@ PAL_wcstol(
 PAL_wcstolExit:
     free(s_nptr);
     LOGEXIT("wcstol returning long %ld\n", res);
-    PERF_EXIT(wcstol);
     /* This explicit cast to int32_t is used to silence any potential warnings
     due to implicitly casting the native long res to int32_t when returning. */
     return (int32_t)res;
@@ -609,7 +591,6 @@ PAL_wcstoll(
     int size;
     uint32_t dwLastError = 0;
 
-    PERF_ENTRY(wcstoll);
     ENTRY("wcstoll (nptr=%p (%S), endptr=%p, base=%d)\n", nptr?nptr:W16_NULLSTRING, nptr?nptr:W16_NULLSTRING,
           endptr, base);
 
@@ -654,7 +635,6 @@ PAL_wcstoll(
 PAL_wcstolExit:
     free(s_nptr);
     LOGEXIT("wcstoll returning long %lld\n", res);
-    PERF_EXIT(wcstoll);
     /* This explicit cast to long is used to silence any potential warnings
     due to implicitly casting the native long res to long when returning. */
     return (long)res;
@@ -721,7 +701,6 @@ PAL_wcstoul(
     int size;
     uint32_t dwLastError = 0;
 
-    PERF_ENTRY(wcstoul);
     ENTRY("wcstoul (nptr=%p (%S), endptr=%p, base=%d)\n", nptr?nptr:W16_NULLSTRING, nptr?nptr:W16_NULLSTRING,
           endptr, base);
 
@@ -783,7 +762,6 @@ PAL_wcstoul(
 PAL_wcstoulExit:
     free(s_nptr);
     LOGEXIT("wcstoul returning unsigned long %lu\n", res);
-    PERF_EXIT(wcstoul);
 
     /* When returning unsigned long res from this function, it will be
     implicitly cast to uint32_t. This handles situations where a string that
@@ -808,7 +786,6 @@ PAL__wcstoui64(
     int size;
     uint32_t dwLastError = 0;
 
-    PERF_ENTRY(wcstoul);
     ENTRY("_wcstoui64 (nptr=%p (%S), endptr=%p, base=%d)\n", nptr?nptr:W16_NULLSTRING, nptr?nptr:W16_NULLSTRING,
           endptr, base);
 
@@ -853,7 +830,6 @@ PAL__wcstoui64(
 PAL__wcstoui64Exit:
     free(s_nptr);
     LOGEXIT("_wcstoui64 returning unsigned long long %llu\n", res);
-    PERF_EXIT(_wcstoui64);
 
     return res;
 }
@@ -868,20 +844,17 @@ See MSDN
 char16_t
 PAL_towlower( char16_t c )
 {
-    PERF_ENTRY(towlower);
     ENTRY("towlower (c=%d)\n", c);
     if(c < 128)
     {//fast path for ascii characters
         if(c >= 'A' && c <= 'Z')
         {
             c += ('a' - 'A');
-            PERF_EXIT(towlower);
             LOGEXIT("towlower returns int %d\n", c );
             return c;
         }
         else
         {
-            PERF_EXIT(towlower);
             LOGEXIT("towlower returns int %d\n", c );
             return c;
         }
@@ -902,7 +875,6 @@ PAL_towlower( char16_t c )
             }
         }
         LOGEXIT("towlower returns int %d\n", c );
-        PERF_EXIT(towlower);
         return c;
     #else   /* HAVE_COREFOUNDATION */
         UnicodeDataRec dataRec;
@@ -911,20 +883,17 @@ PAL_towlower( char16_t c )
         {
             TRACE( "Unable to retrieve unicode data for the character %c.\n", c );
             LOGEXIT("towlower returns int %d\n", c );
-            PERF_EXIT(towlower);
             return c;
         }
 
         if ( (dataRec.C1_TYPE_FLAGS & C1_LOWER) || (dataRec.nOpposingCase ==  0 ))
         {
             LOGEXIT("towlower returns int %d\n", c );
-            PERF_EXIT(towlower);
             return c;
         }
         else
         {
             LOGEXIT("towlower returns int %d\n", dataRec.nOpposingCase );
-            PERF_EXIT(towlower);
             return dataRec.nOpposingCase;
         }
     #endif  /* HAVE_COREFOUNDATION */
@@ -943,7 +912,6 @@ char16_t
 PAL_towupper( char16_t c )
 {
 #if HAVE_COREFOUNDATION
-    PERF_ENTRY(towupper);
     ENTRY("towupper (c=%d)\n", c);
     if (!PAL_iswupper(c))
     {
@@ -958,32 +926,27 @@ PAL_towupper( char16_t c )
         }
     }
     LOGEXIT("towupper returns int %d\n", c );
-    PERF_EXIT(towupper);
     return c;
 #else   /* HAVE_COREFOUNDATION */
     UnicodeDataRec dataRec;
 
-    PERF_ENTRY(towupper);
     ENTRY("towupper (c=%d)\n", c);
 
     if (!GetUnicodeData(c, &dataRec))
     {
         TRACE( "Unable to retrieve unicode data for the character %c.\n", c );
         LOGEXIT("towupper returns int %d\n", c );
-        PERF_EXIT(towupper);
         return c;
     }
 
     if ( (dataRec.C1_TYPE_FLAGS & C1_UPPER) || (dataRec.nOpposingCase ==  0 ))
     {
         LOGEXIT("towupper returns int %d\n", c );
-        PERF_EXIT(towupper);
         return c;
     }
     else
     {
         LOGEXIT("towupper returns int %d\n", dataRec.nOpposingCase );
-        PERF_EXIT(towupper);
         return dataRec.nOpposingCase;
     }
 #endif  /* HAVE_COREFOUNDATION */
@@ -1008,13 +971,11 @@ PAL_iswupper( char16_t c )
         sUppercaseSet = CFCharacterSetGetPredefined(
                                         kCFCharacterSetUppercaseLetter);
     }
-    PERF_ENTRY(iswupper);
     ENTRY( "iswupper (c=%d)\n", c );
     bRetVal = CFCharacterSetIsCharacterMember(sUppercaseSet, c);
 #else   /* HAVE_COREFOUNDATION */
     UnicodeDataRec dataRec;
 
-    PERF_ENTRY(iswupper);
     ENTRY( "iswupper (c=%d)\n", c );
 
     if (!GetUnicodeData(c, &dataRec))
@@ -1030,7 +991,6 @@ PAL_iswupper( char16_t c )
 exit:
 #endif  /* HAVE_COREFOUNDATION */
     LOGEXIT( "iswupper returns %s.\n", bRetVal == TRUE ? "TRUE" : "FALSE" );
-    PERF_EXIT(iswupper);
     return bRetVal;
 }
 
@@ -1053,13 +1013,11 @@ PAL_iswlower( char16_t c )
         sLowercaseSet = CFCharacterSetGetPredefined(
                                         kCFCharacterSetLowercaseLetter);
     }
-    PERF_ENTRY(iswlower);
     ENTRY("PAL_iswlower (c=%d)\n", c);
     bRetVal = CFCharacterSetIsCharacterMember(sLowercaseSet, c);
 #else   /* HAVE_COREFOUNDATION */
     UnicodeDataRec dataRec;
 
-    PERF_ENTRY(iswlower);
     ENTRY("PAL_iswlower (c=%d)\n", c);
 
     if (!GetUnicodeData(c, &dataRec))
@@ -1075,7 +1033,6 @@ PAL_iswlower( char16_t c )
 exit:
 #endif  /* HAVE_COREFOUNDATION */
     LOGEXIT("PAL_iswlower returns %s.\n", bRetVal == TRUE ? "TRUE" : "FALSE");
-    PERF_EXIT(iswlower);
     return bRetVal;
 }
 
@@ -1089,18 +1046,15 @@ See MSDN
 int
 PAL_iswalpha( char16_t c )
 {
-    PERF_ENTRY(iswalpha);
     ENTRY( "PAL_iswalpha (c=%d)\n", c);
 
     if ( PAL_iswupper( c ) || PAL_iswlower( c ) )
     {
         LOGEXIT( "PAL_iswalpha returns 1.\n" );
-        PERF_EXIT(iswalpha);
         return 1;
     }
 
     LOGEXIT( "PAL_iswalpha returns 0.\n" );
-    PERF_EXIT(iswalpha);
     return 0;
 }
 
@@ -1118,7 +1072,6 @@ PAL_wcscat(
         const char16_t *strSource)
 {
     char16_t *ret;
-    PERF_ENTRY(wcscat);
     ENTRY("wcscat (strDestination=%p (%S), strSource=%p (%S))\n",
           strDestination?strDestination:W16_NULLSTRING,
           strDestination?strDestination:W16_NULLSTRING, strSource?strSource:W16_NULLSTRING, strSource?strSource:W16_NULLSTRING);
@@ -1126,7 +1079,6 @@ PAL_wcscat(
     ret = PAL_wcsncat( strDestination, strSource, PAL_wcslen( strSource ) );
 
     LOGEXIT("wcscat returning char16_t %p (%S)\n", ret, ret);
-    PERF_EXIT(wcscat);
     return ret;
 }
 
@@ -1145,7 +1097,6 @@ PAL_wcscpy(
 {
     char16_t *start = strDestination;
 
-    PERF_ENTRY(wcscpy);
     ENTRY("wcscpy (strDestination=%p, strSource=%p (%S))\n",
           strDestination, strSource ? strSource:W16_NULLSTRING, strSource ? strSource:W16_NULLSTRING);
 
@@ -1153,7 +1104,6 @@ PAL_wcscpy(
     {
         ERROR("invalid strDestination argument\n");
         LOGEXIT("wcscpy returning char16_t NULL\n");
-        PERF_EXIT(wcscpy);
         return NULL;
     }
 
@@ -1161,7 +1111,6 @@ PAL_wcscpy(
     {
         ERROR("invalid strSource argument\n");
         LOGEXIT("wcscpy returning char16_t NULL\n");
-        PERF_EXIT(wcscpy);
         return NULL;
     }
 
@@ -1175,7 +1124,6 @@ PAL_wcscpy(
     *strDestination = char16_t(0);
 
     LOGEXIT("wcscpy returning char16_t %p (%S)\n", start, start);
-    PERF_EXIT(wcscpy);
     return start;
 }
 
@@ -1224,7 +1172,6 @@ PAL_wmemcmp(
     size_t i, wi = 0;
     int diff = 0;
 
-    PERF_ENTRY(wmemcmp);
     ENTRY("wmemcmp (string1=%p (%S), string2=%p (%S) count=%lu)\n",
           string1?string1:W16_NULLSTRING,
           string1?string1:W16_NULLSTRING, string2?string2:W16_NULLSTRING, string2?string2:W16_NULLSTRING,
@@ -1248,7 +1195,6 @@ PAL_wmemcmp(
     }
 
     LOGEXIT("wmemcmp returning int %d\n", diff);
-    PERF_EXIT(wmemcmp);
     return diff;
 }
 
@@ -1267,7 +1213,6 @@ PAL_wcsncmp(
     size_t i;
     int diff = 0;
 
-    PERF_ENTRY(wcsncmp);
     ENTRY("wcsncmp (string1=%p (%S), string2=%p (%S) count=%lu)\n",
           string1?string1:W16_NULLSTRING,
           string1?string1:W16_NULLSTRING, string2?string2:W16_NULLSTRING, string2?string2:W16_NULLSTRING,
@@ -1290,7 +1235,6 @@ PAL_wcsncmp(
         }
     }
     LOGEXIT("wcsncmp returning int %d\n", diff);
-    PERF_EXIT(wcsncmp);
     return diff;
 }
 
@@ -1307,7 +1251,6 @@ PAL_wcscmp(
 {
     int ret;
 
-    PERF_ENTRY(wcscmp);
     ENTRY("wcscmp (string1=%p (%S), string2=%p (%S))\n",
           string1?string1:W16_NULLSTRING,
           string1?string1:W16_NULLSTRING, string2?string2:W16_NULLSTRING, string2?string2:W16_NULLSTRING);
@@ -1315,7 +1258,6 @@ PAL_wcscmp(
     ret = PAL_wcsncmp(string1, string2, 0x7fffffff);
 
     LOGEXIT("wcscmp returns int %d\n", ret);
-    PERF_EXIT(wcscmp);
     return ret;
 }
 
@@ -1331,7 +1273,6 @@ PAL_wcschr(
         const char16_t * string,
         char16_t c)
 {
-    PERF_ENTRY(wcschr);
     ENTRY("wcschr (string=%p (%S), c=%C)\n", string?string:W16_NULLSTRING, string?string:W16_NULLSTRING, c);
 
     while (*string)
@@ -1339,7 +1280,6 @@ PAL_wcschr(
         if (*string == c)
         {
             LOGEXIT("wcschr returning char16_t %p (%S)\n", string?string:W16_NULLSTRING, string?string:W16_NULLSTRING);
-            PERF_EXIT(wcschr);
             return (char16_t *) string;
         }
         string++;
@@ -1350,7 +1290,6 @@ PAL_wcschr(
         return (char16_t *) string;
 
     LOGEXIT("wcschr returning char16_t NULL\n");
-    PERF_EXIT(wcschr);
     return NULL;
 }
 
@@ -1369,7 +1308,6 @@ PAL_wcsrchr(
 {
     char16_t *last = NULL;
 
-    PERF_ENTRY(wcsrchr);
     ENTRY("wcsrchr (string=%p (%S), c=%C)\n", string?string:W16_NULLSTRING, string?string:W16_NULLSTRING, c);
 
     while (*string)
@@ -1382,7 +1320,6 @@ PAL_wcsrchr(
     }
 
     LOGEXIT("wcsrchr returning char16_t %p (%S)\n", last?last:W16_NULLSTRING, last?last:W16_NULLSTRING);
-    PERF_EXIT(wcsrchr);
     return (char16_t *)last;
 }
 
@@ -1412,7 +1349,6 @@ PAL_wcspbrk(
         const char16_t *string,
         const char16_t *strCharSet)
 {
-    PERF_ENTRY(wcspbrk);
     ENTRY("wcspbrk (string=%p (%S), strCharSet=%p (%S))\n",
           string?string:W16_NULLSTRING,
           string?string:W16_NULLSTRING, strCharSet?strCharSet:W16_NULLSTRING, strCharSet?strCharSet:W16_NULLSTRING);
@@ -1422,7 +1358,6 @@ PAL_wcspbrk(
         if (PAL_wcschr(strCharSet, *string) != NULL)
         {
             LOGEXIT("wcspbrk returning char16_t %p (%S)\n", string?string:W16_NULLSTRING, string?string:W16_NULLSTRING);
-            PERF_EXIT(wcspbrk);
             return (char16_t *) string;
         }
 
@@ -1430,7 +1365,6 @@ PAL_wcspbrk(
     }
 
     LOGEXIT("wcspbrk returning char16_t NULL\n");
-    PERF_EXIT(wcspbrk);
     return NULL;
 }
 
@@ -1449,7 +1383,6 @@ PAL_wcsstr(
     char16_t *ret = NULL;
     int i;
 
-    PERF_ENTRY(wcsstr);
     ENTRY("wcsstr (string=%p (%S), strCharSet=%p (%S))\n",
       string?string:W16_NULLSTRING,
       string?string:W16_NULLSTRING, strCharSet?strCharSet:W16_NULLSTRING, strCharSet?strCharSet:W16_NULLSTRING);
@@ -1499,7 +1432,6 @@ PAL_wcsstr(
 
  leave:
     LOGEXIT("wcsstr returning char16_t %p (%S)\n", ret?ret:W16_NULLSTRING, ret?ret:W16_NULLSTRING);
-    PERF_EXIT(wcsstr);
     return ret;
 }
 
@@ -1514,7 +1446,6 @@ char16_t *
 PAL_wcsncpy( char16_t * strDest, const char16_t *strSource, size_t count )
 {
     uint32_t length = sizeof( char16_t ) * count;
-    PERF_ENTRY(wcsncpy);
     ENTRY("wcsncpy( strDest:%p, strSource:%p (%S), count:%lu)\n",
           strDest, strSource, strSource, (unsigned long) count);
 
@@ -1523,7 +1454,6 @@ PAL_wcsncpy( char16_t * strDest, const char16_t *strSource, size_t count )
     memcpy( strDest, strSource, length );
 
     LOGEXIT("wcsncpy returning (char16_t*): %p\n", strDest);
-    PERF_EXIT(wcsncpy);
     return strDest;
 }
 
@@ -1541,7 +1471,6 @@ PAL_wcsncat( char16_t * strDest, const char16_t *strSource, size_t count )
     uint32_t LoopCount = 0;
     uint32_t StrSourceLength = 0;
 
-    PERF_ENTRY(wcsncat);
     ENTRY( "wcsncat (strDestination=%p (%S), strSource=%p (%S), count=%lu )\n",
             strDest ? strDest : W16_NULLSTRING,
             strDest ? strDest : W16_NULLSTRING,
@@ -1552,7 +1481,6 @@ PAL_wcsncat( char16_t * strDest, const char16_t *strSource, size_t count )
     {
         ERROR("invalid strDest argument\n");
         LOGEXIT("wcsncat returning char16_t NULL\n");
-        PERF_EXIT(wcsncat);
         return NULL;
     }
 
@@ -1560,7 +1488,6 @@ PAL_wcsncat( char16_t * strDest, const char16_t *strSource, size_t count )
     {
         ERROR("invalid strSource argument\n");
         LOGEXIT("wcsncat returning char16_t NULL\n");
-        PERF_EXIT(wcsncat);
         return NULL;
     }
 
@@ -1587,7 +1514,6 @@ PAL_wcsncat( char16_t * strDest, const char16_t *strSource, size_t count )
     *strDest = '\0';
 
     LOGEXIT("wcsncat returning char16_t %p (%S)\n", start, start);
-    PERF_EXIT(wcsncat);
     return start;
 }
 
@@ -1623,14 +1549,12 @@ PAL_wcstod( const char16_t * nptr, char16_t **endptr )
     LPWSTR lpEndOfExpression = NULL;
     uint32_t Length = 0;
 
-    PERF_ENTRY(wcstod);
     ENTRY( "wcstod( %p (%S), %p (%S) )\n", nptr, nptr, endptr , endptr );
 
     if ( !nptr )
     {
         ERROR( "nptr is invalid.\n" );
         LOGEXIT( "wcstod returning 0.0\n" );
-        PERF_EXIT(wcstod);
         return 0.0;
     }
 
@@ -1699,7 +1623,6 @@ PAL_wcstod( const char16_t * nptr, char16_t **endptr )
 
     free( lpStringRep );
     LOGEXIT( "wcstod returning %f.\n", RetVal );
-    PERF_EXIT(wcstod);
     return RetVal;
 }
 
@@ -1718,7 +1641,6 @@ _ui64tow( unsigned long value , char16_t * string , int radix )
     LPWSTR lpString = string;
     uint32_t Index = 0;
 
-    PERF_ENTRY(_ui64tow);
     ENTRY( "_ui64tow( value=%I64d, string=%p (%S), radix=%d )\n",
            value, string, string, radix );
 
@@ -1726,14 +1648,12 @@ _ui64tow( unsigned long value , char16_t * string , int radix )
     {
         ERROR( "string has to be a valid pointer.\n" );
         LOGEXIT( "_ui64tow returning NULL.\n" );
-        PERF_EXIT(_ui64tow);
         return NULL;
     }
     if ( radix < 2 || radix > 36 )
     {
         ERROR( "radix has to be between 2 and 36.\n" );
         LOGEXIT( "_ui64tow returning NULL.\n" );
-        PERF_EXIT(_ui64tow);
         return NULL;
     }
 
@@ -1768,7 +1688,6 @@ _ui64tow( unsigned long value , char16_t * string , int radix )
 
     string[ Index ] = '\0';
     LOGEXIT( "_ui64tow returning %p (%S).\n", lpString , lpString );
-    PERF_EXIT(_ui64tow);
     return lpString;
 }
 
@@ -1792,13 +1711,11 @@ PAL_iswdigit( char16_t c )
         sDigitSet = CFCharacterSetGetPredefined(
                                         kCFCharacterSetDecimalDigit);
     }
-    PERF_ENTRY(iswdigit);
     ENTRY("PAL_iswdigit (c=%d)\n", c);
     nRetVal = CFCharacterSetIsCharacterMember(sDigitSet, c);
 #else   /* HAVE_COREFOUNDATION */
     UnicodeDataRec dataRec;
 
-    PERF_ENTRY(iswdigit);
     ENTRY("PAL_iswdigit (c=%d)\n", c);
 
     if (GetUnicodeData(c, &dataRec))
@@ -1818,7 +1735,6 @@ PAL_iswdigit( char16_t c )
     }
 #endif  /* HAVE_COREFOUNDATION */
     LOGEXIT("PAL_iswdigit returning %d\n", nRetVal);
-    PERF_EXIT(iswdigit);
     return nRetVal;
 }
 
@@ -1840,7 +1756,6 @@ PAL_iswxdigit( char16_t c )
 {
     uint32_t nRetVal = 0;
 
-    PERF_ENTRY(iswxdigit);
     ENTRY("PAL_iswxdigit( c=%d )\n", c);
 
     /* ASCII characters */
@@ -1863,7 +1778,6 @@ PAL_iswxdigit( char16_t c )
         nRetVal = 0;
     }
     LOGEXIT("PAL_iswxdigit returning %d\n", nRetVal);
-    PERF_EXIT(iswxdigit);
     return nRetVal;
 }
 
@@ -1881,13 +1795,11 @@ PAL_iswprint( char16_t c )
     int ret;
 
 
-    PERF_ENTRY(iswprint);
     ENTRY("PAL_iswprint (%#X)\n", c);
 
     ret = proxy_iswprint(c);
 
     LOGEXIT("PAL_iswprint returns %d\n", ret);
-    PERF_EXIT(iswprint);
     return (ret);
 }
 
@@ -1915,7 +1827,6 @@ PAL_wcscspn(const char16_t *string, const char16_t *strCharSet)
     const char16_t *temp;
     size_t count = 0;
 
-    PERF_ENTRY(wcscspn);
 
     while(*string != 0)
     {
@@ -1923,14 +1834,12 @@ PAL_wcscspn(const char16_t *string, const char16_t *strCharSet)
         {
             if (*string == *temp)
             {
-                PERF_EXIT(wcscspn);
                 return count;
             }
         }
         count++;
         string++;
     }
-    PERF_EXIT(wcscspn);
     return count;
 }
 

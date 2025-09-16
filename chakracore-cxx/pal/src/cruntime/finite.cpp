@@ -76,7 +76,6 @@ _finite(
         double x)
 {
     int ret;
-    PERF_ENTRY(_finite);
     ENTRY("_finite (x=%f)\n", x);
 #if defined(_IA64_) && defined (_HPUX_)
     ret = !isnan(x) && x != PAL_POSINF && x != PAL_NEGINF;
@@ -84,7 +83,6 @@ _finite(
     ret = isfinite(x);
 #endif
     LOGEXIT("_finite returns int %d\n", ret);
-    PERF_EXIT(_finite);
     return ret;
 }
 
@@ -101,11 +99,9 @@ _isnan(
 {
     int ret;
 
-    PERF_ENTRY(_isnan);
     ENTRY("_isnan (x=%f)\n", x);
     ret = isnan(x);
     LOGEXIT("_isnan returns int %d\n", ret);
-    PERF_EXIT(_isnan);
     return ret;
 }
 
@@ -122,11 +118,9 @@ _copysign(
 {
     double ret;
 
-    PERF_ENTRY(_copysign);
     ENTRY("_copysign (x=%f,y=%f)\n", x, y);
     ret = copysign(x, y);
     LOGEXIT("_copysign returns double %f\n", ret);
-    PERF_EXIT(_copysign);
     return ret;
 }
 
@@ -143,11 +137,9 @@ _copysignf(
 {
     double ret;
 
-    PERF_ENTRY(_copysignf);
     ENTRY("_copysignf (x=%f,y=%f)\n", x, y);
     ret = copysignf(x, y);
     LOGEXIT("_copysignf returns float %f\n", ret);
-    PERF_EXIT(_copysignf);
     return ret;
 }
 

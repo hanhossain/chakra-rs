@@ -241,13 +241,11 @@ CharNextA(
    LPCSTR lpsz)
 {
     LPSTR pRet;
-    PERF_ENTRY(CharNextA);
     ENTRY("CharNextA (lpsz=%p (%s))\n", lpsz?lpsz:NULL, lpsz?lpsz:NULL);
 
     pRet = CharNextExA(GetACP(), lpsz, 0);
 
     LOGEXIT ("CharNextA returns LPSTR %p\n", pRet);
-    PERF_EXIT(CharNextA);
     return pRet;
 }
 
@@ -266,7 +264,6 @@ CharNextExA(
 {
     LPSTR pRet = (LPSTR) lpCurrentChar;
 
-    PERF_ENTRY(CharNextExA);
     ENTRY("CharNextExA (CodePage=%hu, lpCurrentChar=%p (%s), dwFlags=%#x)\n",
     CodePage, lpCurrentChar?lpCurrentChar:"NULL", lpCurrentChar?lpCurrentChar:"NULL", dwFlags);
 
@@ -277,7 +274,6 @@ CharNextExA(
     }
 
     LOGEXIT("CharNextExA returns LPSTR:%p (%s)\n", pRet, pRet);
-    PERF_EXIT(CharNextExA);
     return pRet;
 }
 
@@ -305,11 +301,9 @@ BOOL
 AreFileApisANSI(
     void)
 {
-    PERF_ENTRY(AreFileApisANSI);
     ENTRY("AreFileApisANSI ()\n");
 
     LOGEXIT("AreFileApisANSI returns BOOL TRUE\n");
-    PERF_EXIT(AreFileApisANSI);
     return TRUE;
 }
 
@@ -325,13 +319,11 @@ GetConsoleCP(
      void)
 {
     uint32_t nRet = 0;
-    PERF_ENTRY(GetConsoleCP);
     ENTRY("GetConsoleCP()\n");
 
     nRet = GetACP();
 
     LOGEXIT("GetConsoleCP returns UINT %d\n", nRet );
-    PERF_EXIT(GetConsoleCP);
     return nRet;
 }
 
@@ -346,11 +338,9 @@ GetConsoleOutputCP(
        void)
 {
     uint32_t nRet = 0;
-    PERF_ENTRY(GetConsoleOutputCP);
     ENTRY("GetConsoleOutputCP()\n");
     nRet = GetACP();
     LOGEXIT("GetConsoleOutputCP returns UINT %d \n", nRet );
-    PERF_EXIT(GetConsoleOutputCP);
     return nRet;
 }
 
@@ -373,7 +363,6 @@ IsValidCodePage(
 {
     BOOL retval = FALSE;
 
-    PERF_ENTRY(IsValidCodePage);
     ENTRY("IsValidCodePage(%d)\n", CodePage );
 
     switch(CodePage)
@@ -399,7 +388,6 @@ IsValidCodePage(
     }
 
     LOGEXIT("IsValidCodePage returns BOOL %d\n",retval);
-    PERF_EXIT(IsValidCodePage);
     return retval;
 }
 
@@ -426,7 +414,6 @@ GetStringTypeExW(
 #endif /* !HAVE_COREFOUNDATION */
     BOOL bRet = TRUE;
     char16_t  wcstr ;
-    PERF_ENTRY(GetStringTypeExW);
     ENTRY("GetStringTypeExW(Locale=%#x, dwInfoType=%#x, lpSrcStr=%p (%S), "
     "cchSrc=%d, lpCharType=%p)\n",
     Locale, dwInfoType, lpSrcStr?lpSrcStr:W16_NULLSTRING, lpSrcStr?lpSrcStr:W16_NULLSTRING, cchSrc, lpCharType);
@@ -507,7 +494,6 @@ GetStringTypeExW(
 
     GetStringTypeExExit:
     LOGEXIT("GetStringTypeEx returns BOOL %d\n", bRet);
-    PERF_EXIT(GetStringTypeExW);
     return bRet;
 }
 #endif // ENABLE_DOWNLEVEL_FOR_NLS
@@ -526,7 +512,6 @@ GetCPInfo(
     const CP_MAPPING * lpStruct = NULL;
     BOOL bRet = FALSE;
 
-    PERF_ENTRY(GetCPInfo);
     ENTRY("GetCPInfo(CodePage=%hu, lpCPInfo=%p)\n", CodePage, lpCPInfo);
 
     /*check if the input code page is valid*/
@@ -560,7 +545,6 @@ GetCPInfo(
 
 done:
     LOGEXIT("GetCPInfo returns BOOL %d \n",bRet);
-    PERF_EXIT(GetCPInfo);
     return bRet;
 }
 
@@ -574,11 +558,9 @@ See MSDN doc.
 uint32_t
 GetACP(void)
 {
-    PERF_ENTRY(GetACP);
     ENTRY("GetACP(VOID)\n");
 
     LOGEXIT("GetACP returning UINT %d\n", PAL_ACP );
-    PERF_EXIT(GetACP);
 
     return PAL_ACP;
 }
@@ -599,7 +581,6 @@ IsDBCSLeadByteEx(
     size_t i;
     BOOL bRet = FALSE;
 
-    PERF_ENTRY(IsDBCSLeadByteEx);
     ENTRY("IsDBCSLeadByteEx(CodePage=%#x, TestChar=%d)\n", CodePage, TestChar);
 
     /* Get the lead byte info with respect to the given codepage*/
@@ -626,7 +607,6 @@ IsDBCSLeadByteEx(
     }
 done:
     LOGEXIT("IsDBCSLeadByteEx returns BOOL %d\n",bRet);
-    PERF_EXIT(IsDBCSLeadByteEx);
     return bRet;
 }
 
@@ -668,7 +648,6 @@ MultiByteToWideChar(
     int bytesToConvert;
 #endif /* HAVE_COREFOUNDATION */
 
-    PERF_ENTRY(MultiByteToWideChar);
     ENTRY("MultiByteToWideChar(CodePage=%u, dwFlags=%#x, lpMultiByteStr=%p (%s),"
     " cbMultiByte=%d, lpWideCharStr=%p, cchWideChar=%d)\n",
     CodePage, dwFlags, lpMultiByteStr?lpMultiByteStr:"NULL", lpMultiByteStr?lpMultiByteStr:"NULL",
@@ -766,7 +745,6 @@ ReleaseString:
 EXIT:
 
     LOGEXIT("MultiByteToWideChar returns %d.\n",retval);
-    PERF_EXIT(MultiByteToWideChar);
     return retval;
 }
 
@@ -800,7 +778,6 @@ WideCharToMultiByte(
     CFIndex bytesConverted;
 #endif /* !HAVE_COREFOUNDATION */
 
-    PERF_ENTRY(WideCharToMultiByte);
     ENTRY("WideCharToMultiByte(CodePage=%u, dwFlags=%#x, lpWideCharStr=%p (%S), "
           "cchWideChar=%d, lpMultiByteStr=%p, cbMultiByte=%d, "
           "lpDefaultChar=%p, lpUsedDefaultChar=%p)\n",
@@ -937,7 +914,6 @@ EXIT:
           lpWideCharStr, lpWideCharStr);
 
     LOGEXIT("WideCharToMultiByte returns INT %d\n", retval);
-    PERF_EXIT(WideCharToMultiByte);
     return retval;
 }
 

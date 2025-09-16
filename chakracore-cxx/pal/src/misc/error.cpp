@@ -57,11 +57,9 @@ uint32_t
 SetErrorMode(
           uint32_t uMode)
 {
-  PERF_ENTRY(SetErrorMode);
   ENTRY("SetErrorMode (uMode=%#x)\n", uMode);
 
   LOGEXIT("SetErrorMode returns UINT 0\n");
-  PERF_EXIT(SetErrorMode);
   return 0;
 }
 

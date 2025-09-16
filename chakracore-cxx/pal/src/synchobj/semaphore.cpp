@@ -116,7 +116,6 @@ CreateSemaphoreA(
     CPalThread *pthr = NULL;
     PAL_ERROR palError;
 
-    PERF_ENTRY(CreateSemaphoreA);
     ENTRY("CreateSemaphoreA(lpSemaphoreAttributes=%p, lInitialCount=%d, "
           "lMaximumCount=%d, lpName=%p (%s))\n",
           lpSemaphoreAttributes, lInitialCount, lMaximumCount, lpName, lpName?lpName:"NULL");
@@ -150,7 +149,6 @@ CreateSemaphoreA(
     pthr->SetLastError(palError);
 
     LOGEXIT("CreateSemaphoreA returns HANDLE %p\n", hSemaphore);
-    PERF_EXIT(CreateSemaphoreA);
     return hSemaphore;
 }
 
@@ -209,7 +207,6 @@ CreateSemaphoreW(
     PAL_ERROR palError;
     CPalThread *pthr = NULL;
 
-    PERF_ENTRY(CreateSemaphoreW);
     ENTRY("CreateSemaphoreW(lpSemaphoreAttributes=%p, lInitialCount=%d, "
           "lMaximumCount=%d, lpName=%p (%S))\n",
           lpSemaphoreAttributes, lInitialCount, lMaximumCount,
@@ -236,7 +233,6 @@ CreateSemaphoreW(
     pthr->SetLastError(palError);
 
     LOGEXIT("CreateSemaphoreW returns HANDLE %p\n", hSemaphore);
-    PERF_EXIT(CreateSemaphoreW);
     return hSemaphore;
 }
 
@@ -402,7 +398,6 @@ ReleaseSemaphore(
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pthr = NULL;
 
-    PERF_ENTRY(ReleaseSemaphore);
     ENTRY("ReleaseSemaphore(hSemaphore=%p, lReleaseCount=%d, "
           "lpPreviousCount=%p)\n",
           hSemaphore, lReleaseCount, lpPreviousCount);
@@ -422,7 +417,6 @@ ReleaseSemaphore(
     }
 
     LOGEXIT ("ReleaseSemaphore returns BOOL %d\n", (NO_ERROR == palError));
-    PERF_EXIT(ReleaseSemaphore);
     return (NO_ERROR == palError);
 }
 
@@ -568,7 +562,6 @@ OpenSemaphoreW(
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pthr = NULL;
 
-    PERF_ENTRY(OpenSemaphoreW);
     ENTRY("OpenSemaphoreW(dwDesiredAccess=%#x, bInheritHandle=%d, lpName=%p (%S))\n",
           dwDesiredAccess, bInheritHandle, lpName, lpName?lpName:W16_NULLSTRING);
 
@@ -592,7 +585,6 @@ OpenSemaphoreW(
     }
 
     LOGEXIT("OpenSemaphoreW returns HANDLE %p\n", hSemaphore);
-    PERF_EXIT(OpenSemaphoreW);
 
     return hSemaphore;
 }

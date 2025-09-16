@@ -57,13 +57,11 @@ _strnicmp( const char *s1, const char *s2, size_t count )
 {
     int ret;
 
-    PERF_ENTRY(_strnicmp);
     ENTRY("_strnicmp (s1=%p (%s), s2=%p (%s), count=%d)\n", s1?s1:"NULL", s1?s1:"NULL", s2?s2:"NULL", s2?s2:"NULL", count);
 
     ret = strncasecmp(s1, s2, count );
 
     LOGEXIT("_strnicmp returning int %d\n", ret);
-    PERF_EXIT(_strnicmp);
     return ret;
 }
 
@@ -94,13 +92,11 @@ _stricmp(
 {
     int ret;
 
-    PERF_ENTRY(_stricmp);
     ENTRY("_stricmp (s1=%p (%s), s2=%p (%s))\n", s1?s1:"NULL", s1?s1:"NULL", s2?s2:"NULL", s2?s2:"NULL");
 
     ret = strcasecmp(s1, s2);
 
     LOGEXIT("_stricmp returning int %d\n", ret);
-    PERF_EXIT(_stricmp);
     return ret;
 }
 
@@ -135,7 +131,6 @@ _strlwr(
 {
     char *orig = str;
 
-    PERF_ENTRY(_strlwr);
     ENTRY("_strlwr (str=%p (%s))\n", str?str:"NULL", str?str:"NULL");
 
     while (*str)
@@ -145,7 +140,6 @@ _strlwr(
     }
 
     LOGEXIT("_strlwr returning char* %p (%s)\n", orig?orig:"NULL", orig?orig:"NULL");
-    PERF_EXIT(_strlwr);
     return orig;
 }
 
@@ -204,7 +198,6 @@ PAL_strtoul(const char *szNumber, char **pszEnd, int nBase)
 {
     unsigned long ulResult;
 
-    PERF_ENTRY(strtoul);
     ENTRY("strtoul (szNumber=%p (%s), pszEnd=%p, nBase=%d)\n",
         szNumber?szNumber:"NULL",
         szNumber?szNumber:"NULL",
@@ -231,7 +224,6 @@ PAL_strtoul(const char *szNumber, char **pszEnd, int nBase)
     }
 
     LOGEXIT("strtoul returning unsigned long %lu\n", ulResult);
-    PERF_EXIT(wcstoul);
 
     /* When returning unsigned long res from this function, it will be
         implicitly cast to uint32_t. This handles situations where a string that
@@ -271,7 +263,6 @@ PAL_atol(const char *szNumber)
 {
     long lResult;
 
-    PERF_ENTRY(atol);
     ENTRY("atol (szNumber=%p (%s))\n",
         szNumber?szNumber:"NULL"
         );
@@ -279,7 +270,6 @@ PAL_atol(const char *szNumber)
     lResult = atol(szNumber);
 
     LOGEXIT("atol returning long %ld\n", (int32_t)lResult);
-    PERF_EXIT(atol);
     /* This explicit cast to int32_t is used to silence any potential warnings
         due to implicitly casting the native long lResult to int32_t when returning. */
     return (int32_t)lResult;

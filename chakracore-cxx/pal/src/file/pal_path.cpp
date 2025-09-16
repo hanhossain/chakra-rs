@@ -61,7 +61,6 @@ GetFullPathNameA(
     LPSTR lpUnixPath = NULL;
     BOOL fullPath = FALSE;
 
-    PERF_ENTRY(GetFullPathNameA);
     ENTRY("GetFullPathNameA(lpFileName=%p (%s), nBufferLength=%u, lpBuffer=%p, "
           "lpFilePart=%p)\n",
           lpFileName?lpFileName:"NULL",
@@ -173,7 +172,6 @@ GetFullPathNameA(
 done:
     free (lpUnixPath);
     LOGEXIT("GetFullPathNameA returns DWORD %u\n", nRet);
-    PERF_EXIT(GetFullPathNameA);
     return nRet;
 }
 
@@ -203,7 +201,6 @@ GetFullPathNameW(
     uint32_t length;
     uint32_t nRet = 0;
 
-    PERF_ENTRY(GetFullPathNameW);
     ENTRY("GetFullPathNameW(lpFileName=%p (%S), nBufferLength=%u, lpBuffer=%p"
           ", lpFilePart=%p)\n",
           lpFileName?lpFileName:W16_NULLSTRING,
@@ -295,7 +292,6 @@ GetFullPathNameW(
 
 done:
     LOGEXIT("GetFullPathNameW returns DWORD %u\n", nRet);
-    PERF_EXIT(GetFullPathNameW);
     return nRet;
 }
 
@@ -319,7 +315,6 @@ GetLongPathNameW(
 {
     uint32_t dwPathLen = 0;
 
-    PERF_ENTRY(GetLongPathNameW);
     ENTRY("GetLongPathNameW(lpszShortPath=%p (%S), lpszLongPath=%p (%S), "
           "cchBuffer=%d\n", lpszShortPath, lpszShortPath, lpszLongPath, lpszLongPath, cchBuffer);
 
@@ -328,7 +323,6 @@ GetLongPathNameW(
         ERROR( "lpszShortPath was not a valid pointer.\n" );
         SetLastError( ERROR_INVALID_PARAMETER );
         LOGEXIT("GetLongPathNameW returns DWORD 0\n");
-        PERF_EXIT(GetLongPathNameW);
         return 0;
     }
     else if (INVALID_FILE_ATTRIBUTES == GetFileAttributesW( lpszShortPath ))
@@ -336,7 +330,6 @@ GetLongPathNameW(
         // last error has been set by GetFileAttributes
         ERROR( "lpszShortPath does not exist.\n" );
         LOGEXIT("GetLongPathNameW returns DWORD 0\n");
-        PERF_EXIT(GetLongPathNameW);
         return 0;
     }
 
@@ -366,7 +359,6 @@ GetLongPathNameW(
     }
 
     LOGEXIT("GetLongPathNameW returns DWORD %u\n", dwPathLen);
-    PERF_EXIT(GetLongPathNameW);
     return dwPathLen;
 }
 
@@ -390,7 +382,6 @@ GetShortPathNameW(
 {
     uint32_t dwPathLen = 0;
 
-    PERF_ENTRY(GetShortPathNameW);
     ENTRY("GetShortPathNameW(lpszLongPath=%p (%S), lpszShortPath=%p (%S), "
           "cchBuffer=%d\n", lpszLongPath, lpszLongPath, lpszShortPath, lpszShortPath, cchBuffer);
 
@@ -399,7 +390,6 @@ GetShortPathNameW(
         ERROR( "lpszLongPath was not a valid pointer.\n" );
         SetLastError( ERROR_INVALID_PARAMETER );
         LOGEXIT("GetShortPathNameW returns DWORD 0\n");
-        PERF_EXIT(GetShortPathNameW);
         return 0;
     }
     else if (INVALID_FILE_ATTRIBUTES == GetFileAttributesW( lpszLongPath ))
@@ -407,7 +397,6 @@ GetShortPathNameW(
         // last error has been set by GetFileAttributes
         ERROR( "lpszLongPath does not exist.\n" );
         LOGEXIT("GetShortPathNameW returns DWORD 0\n");
-        PERF_EXIT(GetShortPathNameW);
         return 0;
     }
 
@@ -437,7 +426,6 @@ GetShortPathNameW(
     }
 
     LOGEXIT("GetShortPathNameW returns DWORD %u\n", dwPathLen);
-    PERF_EXIT(GetShortPathNameW);
     return dwPathLen;
 }
 
@@ -467,7 +455,6 @@ GetTempPathA(
 {
     uint32_t dwPathLen = 0;
 
-    PERF_ENTRY(GetTempPathA);
     ENTRY("GetTempPathA(nBufferLength=%u, lpBuffer=%p)\n",
           nBufferLength, lpBuffer);
 
@@ -476,7 +463,6 @@ GetTempPathA(
         ERROR( "lpBuffer was not a valid pointer.\n" );
         SetLastError( ERROR_INVALID_PARAMETER );
         LOGEXIT("GetTempPathA returns DWORD %u\n", dwPathLen);
-        PERF_EXIT(GetTempPathA);
         return 0;
     }
 
@@ -543,7 +529,6 @@ GetTempPathA(
     }
 
     LOGEXIT("GetTempPathA returns DWORD %u\n", dwPathLen);
-    PERF_EXIT(GetTempPathA);
     return dwPathLen;
 }
 
@@ -559,7 +544,6 @@ GetTempPathW(
 	      uint32_t nBufferLength,
 	      LPWSTR lpBuffer)
 {
-    PERF_ENTRY(GetTempPathW);
     ENTRY("GetTempPathW(nBufferLength=%u, lpBuffer=%p)\n",
           nBufferLength, lpBuffer);
 
@@ -568,7 +552,6 @@ GetTempPathW(
         ERROR("lpBuffer was not a valid pointer.\n");
         SetLastError(ERROR_INVALID_PARAMETER);
         LOGEXIT("GetTempPathW returns DWORD 0\n");
-        PERF_EXIT(GetTempPathW);
         return 0;
     }
 
@@ -599,7 +582,6 @@ GetTempPathW(
     }
 
     LOGEXIT("GetTempPathW returns DWORD %u\n", dwRetVal );
-    PERF_EXIT(GetTempPathW);
     return dwRetVal;
 }
 
@@ -1105,7 +1087,6 @@ SearchPathA(
     uint32_t length;
     uint32_t dw;
 
-    PERF_ENTRY(SearchPathA);
     ENTRY("SearchPathA(lpPath=%p (%s), lpFileName=%p (%s), lpExtension=%p, "
           "nBufferLength=%u, lpBuffer=%p, lpFilePart=%p)\n",
       lpPath,
@@ -1333,7 +1314,6 @@ SearchPathA(
     }
 done:
     LOGEXIT("SearchPathA returns DWORD %u\n", nRet);
-    PERF_EXIT(SearchPathA);
     return nRet;
 }
 
@@ -1377,7 +1357,6 @@ SearchPathW(
     char16_t * CanonicalPath;
     PathWCharString CanonicalPathPS;
 
-    PERF_ENTRY(SearchPathW);
     ENTRY("SearchPathW(lpPath=%p (%S), lpFileName=%p (%S), lpExtension=%p, "
           "nBufferLength=%u, lpBuffer=%p, lpFilePart=%p)\n",
 	  lpPath,
@@ -1612,7 +1591,6 @@ SearchPathW(
     }
 done:
     LOGEXIT("SearchPathW returns DWORD %u\n", nRet);
-    PERF_EXIT(SearchPathW);
     return nRet;
 }
 
@@ -1627,7 +1605,6 @@ PathFindFileNameW(
      LPCWSTR pPath
     )
 {
-    PERF_ENTRY(PathFindFileNameW);
     ENTRY("PathFindFileNameW(pPath=%p (%S))\n",
           pPath?pPath:W16_NULLSTRING,
           pPath?pPath:W16_NULLSTRING);
@@ -1651,6 +1628,5 @@ PathFindFileNameW(
     }
 
     LOGEXIT("PathFindFileNameW returns %S\n", ret);
-    PERF_EXIT(PathFindFileNameW);
     return ret;
 }
