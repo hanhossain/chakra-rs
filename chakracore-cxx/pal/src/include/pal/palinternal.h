@@ -169,7 +169,6 @@ function_name() to call the system's implementation
 #define strlen DUMMY_strlen
 #define strnlen DUMMY_strnlen
 #define stricmp DUMMY_stricmp
-#define strstr DUMMY_strstr
 #define strcspn DUMMY_strcspn
 #define strtod DUMMY_strtod
 #define strspn DUMMY_strspn
@@ -323,12 +322,10 @@ function_name() to call the system's implementation
 #undef strlen
 #undef strnlen
 #undef stricmp
-#undef strstr
 #undef strcspn
 #undef strtoul
 #undef strtod
 #undef strspn
-#undef strtok
 #undef strdup
 #undef tolower
 #undef toupper
