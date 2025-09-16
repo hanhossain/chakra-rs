@@ -5119,7 +5119,6 @@ CoCreateGuid( GUID * pguid);
 #define exit          PAL_exit
 #define wprintf       PAL_wprintf
 #define swprintf      PAL_swprintf
-#define sscanf        PAL_sscanf
 #define wcsspn        PAL_wcsspn
 #define wcstod        PAL_wcstod
 #define wcstol        PAL_wcstol
@@ -5148,7 +5147,6 @@ CoCreateGuid( GUID * pguid);
 #define iswxdigit     PAL_iswxdigit
 #define towlower      PAL_towlower
 #define towupper      PAL_towupper
-#define vsprintf      PAL_vsprintf
 #define vswprintf     PAL_vswprintf
 #define fopen         PAL_fopen
 #define strtoul       PAL_strtoul
@@ -5180,7 +5178,6 @@ CoCreateGuid( GUID * pguid);
 #define fgetc         PAL_getc // not a typo
 #define ungetc        PAL_ungetc
 #define setvbuf       PAL_setvbuf
-#define atol          PAL_atol
 #define memmove       memmove_xplat
 #define mkstemp       PAL_mkstemp
 #define rename        PAL_rename
@@ -5217,9 +5214,6 @@ typedef struct {
 
 div_t div(int numer, int denom);
 
-int vsprintf(char *, const char *, va_list);
-int sscanf(const char *, const char *, ...);
-int32_t atol(const char *);
 //long long int atoll(const char *) __THROW;
 uint32_t strtoul(const char *, char **, int);
 
