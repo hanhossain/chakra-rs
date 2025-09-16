@@ -25,7 +25,6 @@
 
 // Other core headers
 #include "Core/FinalizableObject.h"
-#include "Core/EtwTraceCore.h"
 #include "Core/ProfileInstrument.h"
 #include "Core/ProfileMemory.h"
 #include "Core/StackBackTrace.h"

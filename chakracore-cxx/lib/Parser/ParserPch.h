@@ -92,4 +92,3 @@
 #include "Library/JavascriptFunction.h"
 #include "Language/JavascriptStackWalker.h"
 #include "Exceptions/AsmJsParseException.h"
-#include "Core/EtwTraceCore.h"
