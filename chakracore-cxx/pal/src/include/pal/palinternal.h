@@ -166,9 +166,6 @@ function_name() to call the system's implementation
    of those functions when including standard C header files */
 #define div DUMMY_div
 #define div_t DUMMY_div_t
-#define memcpy DUMMY_memcpy
-#define memset DUMMY_memset
-#define memchr DUMMY_memchr
 #define strlen DUMMY_strlen
 #define strnlen DUMMY_strnlen
 #define stricmp DUMMY_stricmp
@@ -331,10 +328,7 @@ function_name() to call the system's implementation
 #undef alloca
 #undef div
 #undef div_t
-#undef memcpy
-#undef memset
 #undef memmove
-#undef memchr
 #undef strlen
 #undef strnlen
 #undef stricmp
