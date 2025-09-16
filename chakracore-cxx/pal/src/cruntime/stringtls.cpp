@@ -62,7 +62,6 @@ PAL_strtok(char *strToken, const char *strDelimit)
     CPalThread *pThread = NULL;
     char *retval=NULL;
 
-    PERF_ENTRY(strtok);
     ENTRY("strtok (strToken=%p (%s), strDelimit=%p (%s))\n", 
           strToken?strToken:"NULL", 
           strToken?strToken:"NULL", strDelimit?strDelimit:"NULL", strDelimit?strDelimit:"NULL");
@@ -72,7 +71,6 @@ PAL_strtok(char *strToken, const char *strDelimit)
     retval = strtok_r(strToken, strDelimit, &pThread->crtInfo.strtokContext);
  
     LOGEXIT("strtok returns %p (%s)\n", retval?retval:"NULL", retval?retval:"NULL");
-    PERF_EXIT(strtok);
     
     return retval;
 }

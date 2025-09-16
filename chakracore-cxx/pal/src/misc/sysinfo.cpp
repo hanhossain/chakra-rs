@@ -140,7 +140,6 @@ GetSystemInfo(
     int nrcpus = 0;
     long pagesize;
 
-    PERF_ENTRY(GetSystemInfo);
     ENTRY("GetSystemInfo (lpSystemInfo=%p)\n", lpSystemInfo);
 
     pagesize = getpagesize();
@@ -207,7 +206,6 @@ GetCurrentThreadStackLimits(&lowl, &highl);
     lpSystemInfo->wProcessorRevision_PAL_Undefined = 0;
 
     LOGEXIT("GetSystemInfo returns VOID\n");
-    PERF_EXIT(GetSystemInfo);
 }
 
 /*++
@@ -228,7 +226,6 @@ GlobalMemoryStatusEx(
               LPMEMORYSTATUSEX lpBuffer)
 {
 
-    PERF_ENTRY(GlobalMemoryStatusEx);
     ENTRY("GlobalMemoryStatusEx (lpBuffer=%p)\n", lpBuffer);
 
     lpBuffer->dwMemoryLoad = 0;
@@ -313,7 +310,6 @@ GlobalMemoryStatusEx(
     lpBuffer->ullAvailVirtual = lpBuffer->ullAvailPhys;
 
     LOGEXIT("GlobalMemoryStatusEx returns %d\n", fRetVal);
-    PERF_EXIT(GlobalMemoryStatusEx);
 
     return fRetVal;
 }

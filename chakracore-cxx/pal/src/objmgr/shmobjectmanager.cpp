@@ -1193,7 +1193,6 @@ PAL_LocalHandleToRemote( HANDLE hLocal)
     SHMObjData *psmod = NULL;
     RHANDLE hRemote = reinterpret_cast<RHANDLE>(INVALID_HANDLE_VALUE);
 
-    PERF_ENTRY(PAL_LocalHandleToRemote);
     ENTRY("PAL_LocalHandleToRemote( hLocal=0x%lx )\n", hLocal);
 
     pthr = InternalGetCurrentThread();
@@ -1281,7 +1280,6 @@ PAL_LocalHandleToRemoteExitNoLockRelease:
     }
     
     LOGEXIT("PAL_LocalHandleToRemote returns RHANDLE 0x%lx\n", hRemote);
-    PERF_EXIT(PAL_LocalHandleToRemote);
     return hRemote;
 }
 
@@ -1477,7 +1475,6 @@ PAL_RemoteHandleToLocal( RHANDLE rhRemote)
     CPalThread *pthr;
     HANDLE hLocal = INVALID_HANDLE_VALUE;
 
-    PERF_ENTRY(PAL_RemoteHandleToLocal);
     ENTRY("PAL_RemoteHandleToLocal( hRemote=0x%lx )\n", rhRemote);
 
     pthr = InternalGetCurrentThread();
@@ -1494,7 +1491,6 @@ PAL_RemoteHandleToLocal( RHANDLE rhRemote)
     }
     
     LOGEXIT("PAL_RemoteHandleToLocal returns HANDLE 0x%lx\n", hLocal);
-    PERF_EXIT(PAL_RemoteHandleToLocal);
     return hLocal;
 }
 

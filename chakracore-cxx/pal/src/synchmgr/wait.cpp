@@ -57,7 +57,6 @@ WaitForSingleObject( HANDLE hHandle,
 {
     uint32_t dwRet;
 
-    PERF_ENTRY(WaitForSingleObject);
     ENTRY("WaitForSingleObject(hHandle=%p, dwMilliseconds=%u)\n",
           hHandle, dwMilliseconds);
 
@@ -67,7 +66,6 @@ WaitForSingleObject( HANDLE hHandle,
                                              dwMilliseconds, FALSE);
 
     LOGEXIT("WaitForSingleObject returns DWORD %u\n", dwRet);
-    PERF_EXIT(WaitForSingleObject);
     return dwRet;
 }
 
@@ -85,7 +83,6 @@ WaitForSingleObjectEx( HANDLE hHandle,
 {
     uint32_t dwRet;
 
-    PERF_ENTRY(WaitForSingleObjectEx);
     ENTRY("WaitForSingleObjectEx(hHandle=%p, dwMilliseconds=%u, bAlertable=%s)\n",
           hHandle, dwMilliseconds, bAlertable ? "TRUE" : "FALSE");
 
@@ -95,7 +92,6 @@ WaitForSingleObjectEx( HANDLE hHandle,
                                              dwMilliseconds, bAlertable);
 
     LOGEXIT("WaitForSingleObjectEx returns DWORD %u\n", dwRet);
-    PERF_EXIT(WaitForSingleObjectEx);
     return dwRet;
 }
 
@@ -115,7 +111,6 @@ WaitForMultipleObjects( uint32_t nCount,
 {
     uint32_t dwRet;
 
-    PERF_ENTRY(WaitForMultipleObjects);
     ENTRY("WaitForMultipleObjects(nCount=%d, lpHandles=%p,"
           " bWaitAll=%d, dwMilliseconds=%u)\n",
           nCount, lpHandles, bWaitAll, dwMilliseconds);
@@ -126,7 +121,6 @@ WaitForMultipleObjects( uint32_t nCount,
                                              bWaitAll, dwMilliseconds, FALSE);
 
     LOGEXIT("WaitForMultipleObjects returns DWORD %u\n", dwRet);
-    PERF_EXIT(WaitForMultipleObjects);
     return dwRet;
 }
 
@@ -145,7 +139,6 @@ WaitForMultipleObjectsEx( uint32_t nCount,
 {
     uint32_t dwRet;
 
-    PERF_ENTRY(WaitForMultipleObjectsEx);
     ENTRY("WaitForMultipleObjectsEx(nCount=%d, lpHandles=%p,"
           " bWaitAll=%d, dwMilliseconds=%u, bAlertable=d)\n",
           nCount, lpHandles, bWaitAll, dwMilliseconds, bAlertable);
@@ -156,7 +149,6 @@ WaitForMultipleObjectsEx( uint32_t nCount,
                                              dwMilliseconds, bAlertable);
 
     LOGEXIT("WaitForMultipleObjectsEx returns DWORD %u\n", dwRet);
-    PERF_EXIT(WaitForMultipleObjectsEx);
     return dwRet;
 }
 
@@ -169,7 +161,6 @@ See MSDN doc.
 void
 Sleep( uint32_t dwMilliseconds)
 {
-    PERF_ENTRY(Sleep);
     ENTRY("Sleep(dwMilliseconds=%u)\n", dwMilliseconds);
 
     CPalThread * pThread = InternalGetCurrentThread();
@@ -184,7 +175,6 @@ Sleep( uint32_t dwMilliseconds)
     }
 
     LOGEXIT("Sleep returns VOID\n");
-    PERF_EXIT(Sleep);
 }
 
 
@@ -200,7 +190,6 @@ SleepEx( uint32_t dwMilliseconds,
 {
     uint32_t dwRet;
 
-    PERF_ENTRY(SleepEx);
     ENTRY("SleepEx(dwMilliseconds=%u, bAlertable=%d)\n", dwMilliseconds, bAlertable);
 
     CPalThread * pThread = InternalGetCurrentThread();
@@ -208,7 +197,6 @@ SleepEx( uint32_t dwMilliseconds,
     dwRet = InternalSleepEx(pThread, dwMilliseconds, bAlertable);
 
     LOGEXIT("SleepEx returns DWORD %u\n", dwRet);
-    PERF_EXIT(SleepEx);
 
     return dwRet;
 }
@@ -231,7 +219,6 @@ QueueUserAPC(
     PAL_ERROR palErr;
     uint32_t dwRet;
 
-    PERF_ENTRY(QueueUserAPC);
     ENTRY("QueueUserAPC(pfnAPC=%p, hThread=%p, dwData=%#x)\n",
           pfnAPC, hThread, dwData);
 
@@ -269,7 +256,6 @@ QueueUserAPC_exit:
     dwRet = (NO_ERROR == palErr) ? 1 : 0;
 
     LOGEXIT("QueueUserAPC returns DWORD %d\n", dwRet);
-    PERF_EXIT(QueueUserAPC);
     return dwRet;
 }
 

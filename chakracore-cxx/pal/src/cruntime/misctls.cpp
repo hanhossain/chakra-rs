@@ -57,7 +57,6 @@ PAL_localtime(const PAL_time_t *clock)
     struct tm tmpResult;
     struct PAL_tm *result = NULL;
 
-    PERF_ENTRY(localtime);
     ENTRY( "localtime( clock=%p )\n",clock );
 
     /* Get the per-thread buffer from the thread structure. */
@@ -79,7 +78,6 @@ PAL_localtime(const PAL_time_t *clock)
     result->tm_isdst = tmpResult.tm_isdst;
 
     LOGEXIT( "localtime returned %p\n", result );
-    PERF_EXIT(localtime);
 
     return result;
 }
@@ -101,7 +99,6 @@ PAL_ctime( const PAL_time_t *clock )
     CPalThread *pThread = NULL;
     char * retval = NULL;
 
-    PERF_ENTRY(ctime);
     ENTRY( "ctime( clock=%p )\n",clock );
     if(*clock < 0)
     {
@@ -122,7 +119,6 @@ PAL_ctime( const PAL_time_t *clock )
 done:
 
     LOGEXIT( "ctime() returning %p (%s)\n",retval,retval);
-    PERF_EXIT(ctime);
 
     return retval;
 }
@@ -160,7 +156,6 @@ char * _ecvt( double value, int count, int * dec, int * sign )
     int32_t nExponentValue = 0;
     int32_t LoopIndex = 0;
 
-    PERF_ENTRY(_ecvt);
     ENTRY( "_ecvt( value=%.30g, count=%d, dec=%p, sign=%p )\n",
            value, count, dec, sign );
 
@@ -390,7 +385,6 @@ char * _ecvt( double value, int count, int * dec, int * sign )
 done:
 
     LOGEXIT( "_ecvt returning %p (%s)\n", lpStartOfReturnBuffer , lpStartOfReturnBuffer );
-    PERF_EXIT(_ecvt);
 
     return lpStartOfReturnBuffer;
 }

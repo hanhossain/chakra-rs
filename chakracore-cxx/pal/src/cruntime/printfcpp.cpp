@@ -1154,7 +1154,6 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
        in text mode. In those case the output should be ANSI not Unicode */
     BOOL textMode = TRUE;
 
-    PERF_ENTRY(vfwprintf);
     ENTRY("vfwprintf (stream=%p, format=%p (%S))\n",
           stream, format, format);
 
@@ -1217,7 +1216,6 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
                         {
                             ERROR( "malloc failed.\n" );
                             LOGEXIT("vfwprintf returns int -1\n");
-                            PERF_EXIT(vfwprintf);
                             va_end(ap);
                             return -1;
                         }
@@ -1227,7 +1225,6 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
                         ASSERT( "Unable to convert from multibyte "
                                " to wide char.\n" );
                         LOGEXIT("vfwprintf returns int -1\n");
-                        PERF_EXIT(vfwprintf);
                         va_end(ap);
                         return -1;
                     }
@@ -1239,7 +1236,6 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
                 {
                     ERROR("malloc failed\n");
                     LOGEXIT("vfwprintf returns int -1\n");
-                    PERF_EXIT(vfwprintf);
                     pthrCurrent->SetLastError(ERROR_NOT_ENOUGH_MEMORY);
                     if (WStrWasMalloced)
                     {
@@ -1265,7 +1261,6 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
                         }
                         free(WorkingWStr);
                         LOGEXIT("wcsncpy_s failed!\n");
-                        PERF_EXIT(vfwprintf);
                         va_end(ap);
                         return (-1);
                     }
@@ -1294,7 +1289,6 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
                     }
                     free(WorkingWStr);
                     LOGEXIT("vfwprintf returns int -1\n");
-                    PERF_EXIT(vfwprintf);
                     va_end(ap);
                     return (-1);
                 }
@@ -1334,7 +1328,6 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
                 {
                     ERROR("Internal_AddPaddingVfwprintf failed\n");
                     LOGEXIT("vfwprintf returns int -1\n");
-                    PERF_EXIT(vfwprintf);
                     va_end(ap);
                     return(-1);
                 }
@@ -1401,7 +1394,6 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
                         {
                             ERROR("malloc failed\n");
                             LOGEXIT("vfwprintf returns int -1\n");
-                            PERF_EXIT(vfwprintf);
                             pthrCurrent->SetLastError(ERROR_NOT_ENOUGH_MEMORY);
                             va_end(ap);
                             return -1;
@@ -1429,7 +1421,6 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
                         {
                             ERROR("malloc failed\n");
                             LOGEXIT("vfwprintf returns int -1\n");
-                            PERF_EXIT(vfwprintf);
                             pthrCurrent->SetLastError(ERROR_NOT_ENOUGH_MEMORY);
                             va_end(ap);
                             return -1;
@@ -1454,7 +1445,6 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
                         {
                             ERROR("malloc failed\n");
                             LOGEXIT("vfwprintf returns int -1\n");
-                            PERF_EXIT(vfwprintf);
                             pthrCurrent->SetLastError(ERROR_NOT_ENOUGH_MEMORY);
                             va_end(ap);
                             return -1;
@@ -1480,7 +1470,6 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
                         free(TempSprintfStrPtr);
                     }
                     LOGEXIT("vfwprintf returns int -1\n");
-                    PERF_EXIT(vfwprintf);
                     va_end(ap);
                     return -1;
                 }
@@ -1490,7 +1479,6 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
                 {
                     ERROR("malloc failed\n");
                     LOGEXIT("vfwprintf returns int -1\n");
-                    PERF_EXIT(vfwprintf);
                     pthrCurrent->SetLastError(ERROR_NOT_ENOUGH_MEMORY);
                     if(TempSprintfStrPtr)
                     {
@@ -1515,7 +1503,6 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
                 {
                     ERROR("fwrite() failed with errno == %d (%s)\n", errno, strerror(errno));
                     LOGEXIT("vfwprintf returns int -1\n");
-                    PERF_EXIT(vfwprintf);
                     free(TempWideBuffer);
                     if(TempSprintfStrPtr)
                     {
@@ -1545,7 +1532,6 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
             {
                 ERROR("fwrite() failed with errno == %d\n", errno);
                 LOGEXIT("vfwprintf returns int -1\n");
-                PERF_EXIT(vfwprintf);
                 va_end(ap);
                 return -1;
             }
@@ -1554,7 +1540,6 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
     }
 
     LOGEXIT("vfwprintf returns int %d\n", written);
-    PERF_EXIT(vfwprintf);
     va_end(ap);
     return (written);
 }
@@ -1873,7 +1858,6 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, LPWSTR Buffer, size_t Count, LPCWSTR
     int mbtowcResult;
     va_list(ap);
 
-    PERF_ENTRY(wvsnprintf);
     ENTRY("wvsnprintf (buffer=%p, count=%u, format=%p (%S))\n",
           Buffer, Count, Format, Format);
 
@@ -1996,7 +1980,6 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, LPWSTR Buffer, size_t Count, LPCWSTR
                         }
                         free(WorkingWStr);
                         LOGEXIT("wcsncpy_s failed!\n");
-                        PERF_EXIT(wvsnprintf);
                         va_end(ap);
                         return (-1);
                     }
@@ -2245,7 +2228,6 @@ int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, 
     int paddingReturnValue;
     va_list ap;
 
-    PERF_ENTRY(vfprintf);
 
     va_copy(ap, aparg);
 
@@ -2285,7 +2267,6 @@ int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, 
                 {
                     ASSERT("WideCharToMultiByte failed.  Error is %d\n",
                         GetLastError());
-                    PERF_EXIT(vfprintf);
                     va_end(ap);
                     return -1;
                 }
@@ -2294,7 +2275,6 @@ int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, 
                 {
                     ERROR("malloc failed\n");
                     pthrCurrent->SetLastError(ERROR_NOT_ENOUGH_MEMORY);
-                    PERF_EXIT(vfprintf);
                     va_end(ap);
                     return -1;
                 }
@@ -2314,7 +2294,6 @@ int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, 
                         ASSERT("WideCharToMultiByte failed.  Error is %d\n",
                               GetLastError());
                         free(TempStr);
-                        PERF_EXIT(vfprintf);
                         va_end(ap);
                         return -1;
                     }
@@ -2331,7 +2310,6 @@ int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, 
                         ASSERT("WideCharToMultiByte failed.  Error is %d\n",
                               GetLastError());
                         free(TempStr);
-                        PERF_EXIT(vfprintf);
                         va_end(ap);
                         return -1;
                     }
@@ -2346,7 +2324,6 @@ int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, 
                 {
                     ERROR("Internal_AddPaddingVfprintf failed\n");
                     free(TempStr);
-                    PERF_EXIT(vfprintf);
                     va_end(ap);
                     return -1;
                 }
@@ -2378,7 +2355,6 @@ int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, 
                 {
                     ASSERT("WideCharToMultiByte failed.  Error is %d\n",
                           GetLastError());
-                    PERF_EXIT(vfprintf);
                     va_end(ap);
                     return -1;
                 }
@@ -2391,7 +2367,6 @@ int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, 
                 if (-1 == paddingReturnValue)
                 {
                     ERROR("Internal_AddPaddingVfprintf failed\n");
-                    PERF_EXIT(vfprintf);
                     va_end(ap);
                     return -1;
                 }
@@ -2438,7 +2413,6 @@ int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, 
                 if (-1 == paddingReturnValue)
                 {
                     ERROR("Internal_AddPaddingVfprintf failed\n");
-                    PERF_EXIT(vfprintf);
                     va_end(ap);
                     return -1;
                 }
@@ -2461,7 +2435,6 @@ int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, 
                 if (-1 == paddingReturnValue)
                 {
                     ERROR("Internal_AddPaddingVfprintf failed\n");
-                    PERF_EXIT(vfprintf);
                     va_end(ap);
                     return -1;
                 }
@@ -2528,7 +2501,6 @@ int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, 
             if (stream->PALferrorCode == PAL_FILE_ERROR)
             {
                 ERROR("fwrite() failed with errno == %d\n", errno);
-                PERF_EXIT(vfprintf);
                 va_end(ap);
                 return -1;
             }
@@ -2538,6 +2510,5 @@ int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, 
 
     va_end(ap);
 
-    PERF_EXIT(vfprintf);
     return written;
 }

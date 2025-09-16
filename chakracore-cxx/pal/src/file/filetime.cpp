@@ -120,7 +120,6 @@ CompareFileTime(
 
     long Ret;
 
-    PERF_ENTRY(CompareFileTime);
     ENTRY("CompareFileTime(lpFileTime1=%p lpFileTime2=%p)\n", 
           lpFileTime1, lpFileTime2);
 
@@ -143,7 +142,6 @@ CompareFileTime(
     }
     
     LOGEXIT("CompareFileTime returns int32_t %ld\n", Ret);
-    PERF_EXIT(CompareFileTime);
     return Ret;
 }
 
@@ -172,7 +170,6 @@ SetFileTime(
     PAL_ERROR palError = NO_ERROR;
     const UINT64 MAX_FILETIMEVALUE = 0x8000000000000000LL;
 
-    PERF_ENTRY(SetFileTime);
     ENTRY("SetFileTime(hFile=%p, lpCreationTime=%p, lpLastAccessTime=%p, "
           "lpLastWriteTime=%p)\n", hFile, lpCreationTime, lpLastAccessTime, 
           lpLastWriteTime);
@@ -205,7 +202,6 @@ SetFileTime(
     }
 
     LOGEXIT("SetFileTime returns BOOL %s\n", NO_ERROR == palError ? "TRUE":"FALSE");
-    PERF_EXIT(SetFileTime);
     return NO_ERROR == palError;
 }
 
@@ -360,7 +356,6 @@ GetFileTime(
     CPalThread *pThread;
     PAL_ERROR palError = NO_ERROR;
 
-    PERF_ENTRY(GetFileTime);
     ENTRY("GetFileTime(hFile=%p, lpCreationTime=%p, lpLastAccessTime=%p, "
           "lpLastWriteTime=%p)\n",
           hFile, lpCreationTime, lpLastAccessTime, lpLastWriteTime);
@@ -381,7 +376,6 @@ GetFileTime(
     }
 
     LOGEXIT("GetFileTime returns BOOL %s\n", NO_ERROR == palError ? "TRUE":"FALSE");
-    PERF_EXIT(GetFileTime);
     return NO_ERROR == palError;
 }
 
@@ -503,7 +497,6 @@ GetSystemTimeAsFileTime(
 {
     struct timeval Time;
 
-    PERF_ENTRY(GetSystemTimeAsFileTime);
     ENTRY("GetSystemTimeAsFileTime(lpSystemTimeAsFileTime=%p)\n", 
           lpSystemTimeAsFileTime);
 
@@ -521,7 +514,6 @@ GetSystemTimeAsFileTime(
     }
 
     LOGEXIT("GetSystemTimeAsFileTime returns.\n");
-    PERF_EXIT(GetSystemTimeAsFileTime);
 }
 
 
@@ -721,7 +713,6 @@ FileTimeToDosDateTime(
 {
     BOOL bRetVal = FALSE;
 
-    PERF_ENTRY(FileTimeToDosDateTime);
     ENTRY( "FileTimeToDosDateTime( lpFileTime=%p, lpFatDate=%p, lpFatTime=%p )\n",
            lpFileTime, lpFatDate, lpFatTime );
 
@@ -776,6 +767,5 @@ FileTimeToDosDateTime(
     }
 
     LOGEXIT( "returning BOOL %d\n", bRetVal );
-    PERF_EXIT(FileTimeToDosDateTime);
     return bRetVal;
 }

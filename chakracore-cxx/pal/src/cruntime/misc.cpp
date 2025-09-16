@@ -56,7 +56,6 @@ See MSDN doc.
 char *
 _gcvt_s( char * buffer, int iSize, double value, int digits )
 {
-    PERF_ENTRY(_gcvt);
     ENTRY( "_gcvt( value:%f digits=%d, buffer=%p )\n", value, digits, buffer );
 
     if ( !buffer )
@@ -83,7 +82,6 @@ _gcvt_s( char * buffer, int iSize, double value, int digits )
     }
 
     LOGEXIT( "_gcvt returns %p (%s)\n", buffer , buffer );
-    PERF_EXIT(_gcvt);
     return buffer;
 }
 
@@ -98,18 +96,15 @@ See MSDN for more details.
 int
 __iscsym( int c )
 {
-    PERF_ENTRY(__iscsym);
     ENTRY( "__iscsym( c=%d )\n", c );
 
     if ( isalnum( c ) || c == '_'  )
     {
         LOGEXIT( "__iscsym returning 1\n" );
-        PERF_EXIT(__iscsym);
         return 1;
     }
 
     LOGEXIT( "__iscsym returning 0\n" );
-    PERF_EXIT(__iscsym);
     return 0;
 }
 
@@ -126,11 +121,9 @@ Function :
 int * PAL_errno( int caller )
 {
     int *retval;
-    PERF_ENTRY(errno);
     ENTRY( "PAL_errno( void )\n" );
     retval = (int32_t*)(&errno);
     LOGEXIT("PAL_errno returns %p\n",retval);
-    PERF_EXIT(errno);
     return retval;
 }
 
@@ -148,7 +141,6 @@ _putenv( const char * envstring )
 {
     int ret = -1;
 
-    PERF_ENTRY(_putenv);
     ENTRY( "_putenv( %p (%s) )\n", envstring ? envstring : "NULL", envstring ? envstring : "NULL") ;
 
     if (!envstring)
@@ -161,7 +153,6 @@ _putenv( const char * envstring )
 
 EXIT:
     LOGEXIT( "_putenv returning %d\n", ret);
-    PERF_EXIT(_putenv);
     return ret;
 }
 
@@ -175,20 +166,17 @@ char * PAL_getenv(const char *varname)
 {
     char *retval;
 
-    PERF_ENTRY(getenv);
     ENTRY("getenv (%p (%s))\n", varname ? varname : "NULL", varname ? varname : "NULL");
 
     if (strcmp(varname, "") == 0)
     {
         ERROR("getenv called with a empty variable name\n");
         LOGEXIT("getenv returning NULL\n");
-        PERF_EXIT(getenv);
         return(NULL);
     }
     retval = MiscGetenv(varname);
 
     LOGEXIT("getenv returning %p\n", retval);
-    PERF_EXIT(getenv);
     return(retval);
 }
 
@@ -207,13 +195,11 @@ int
 PAL_rand(void)
 {
     int ret;
-    PERF_ENTRY(rand);
     ENTRY("rand(void)\n");
 
     ret = (rand() % (PAL_RAND_MAX + 1));
 
     LOGEXIT("rand() returning %d\n", ret);
-    PERF_EXIT(rand);
     return ret;
 }
 
@@ -222,7 +208,6 @@ void * PAL_bsearch(const void *key, const void *base, size_t nmemb, size_t size,
 {
     void *retval;
 
-    PERF_ENTRY(bsearch);
     ENTRY("bsearch(key=%p, base=%p, nmemb=%lu, size=%lu, compar=%p\n",
           key, base, (unsigned long) nmemb, (unsigned long) size, compar);
 
@@ -243,7 +228,6 @@ void * PAL_bsearch(const void *key, const void *base, size_t nmemb, size_t size,
 #endif /* _ENABLE_DEBUG_MESSAGES_ */
 
     LOGEXIT("bsearch returns %p\n",retval);
-    PERF_EXIT(bsearch);
     return retval;
 }
 

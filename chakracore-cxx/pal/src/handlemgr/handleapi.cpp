@@ -65,7 +65,6 @@ DuplicateHandle(
     PAL_ERROR palError;
     CPalThread *pThread;
     
-    PERF_ENTRY(DuplicateHandle);
     ENTRY("DuplicateHandle( hSrcProcHandle=%p, hSrcHandle=%p, "
           "hTargetProcHandle=%p, lpTargetHandle=%p, dwAccess=%#x, "
           "bInheritHandle=%d, dwOptions=%#x) \n", hSourceProcessHandle,
@@ -91,7 +90,6 @@ DuplicateHandle(
     }
 
     LOGEXIT("DuplicateHandle returns BOOL %d\n", (NO_ERROR == palError));
-    PERF_EXIT(DuplicateHandle);
     return (NO_ERROR == palError);
 }
 
@@ -278,7 +276,6 @@ CloseHandle(
     CPalThread *pThread;
     PAL_ERROR palError;
 
-    PERF_ENTRY(CloseHandle);
     ENTRY("CloseHandle (hObject=%p) \n", hObject);
 
     pThread = InternalGetCurrentThread();
@@ -294,7 +291,6 @@ CloseHandle(
     }
 
     LOGEXIT("CloseHandle returns BOOL %d\n", (NO_ERROR == palError));
-    PERF_EXIT(CloseHandle);
     return (NO_ERROR == palError);
 }
 

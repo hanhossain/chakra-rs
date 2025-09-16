@@ -914,7 +914,6 @@ CreateFileA(
     PAL_ERROR palError = NO_ERROR;
     HANDLE  hRet = INVALID_HANDLE_VALUE;
 
-    PERF_ENTRY(CreateFileA);
     ENTRY("CreateFileA(lpFileName=%p (%s), dwAccess=%#x, dwShareMode=%#x, "
           "lpSecurityAttr=%p, dwDisposition=%#x, dwFlags=%#x, " 
           "hTemplateFile=%p )\n",lpFileName?lpFileName:"NULL",lpFileName?lpFileName:"NULL", dwDesiredAccess, 
@@ -945,7 +944,6 @@ CreateFileA(
     pThread->SetLastError(palError);
 
     LOGEXIT("CreateFileA returns HANDLE %p\n", hRet);
-    PERF_EXIT(CreateFileA);
     return hRet;
 }
 
@@ -979,7 +977,6 @@ CreateFileW(
     int length = 0;
     HANDLE  hRet = INVALID_HANDLE_VALUE;
 
-    PERF_ENTRY(CreateFileW);
     ENTRY("CreateFileW(lpFileName=%p (%S), dwAccess=%#x, dwShareMode=%#x, "
           "lpSecurityAttr=%p, dwDisposition=%#x, dwFlags=%#x, hTemplateFile=%p )\n",
           lpFileName?lpFileName:W16_NULLSTRING,
@@ -1043,7 +1040,6 @@ CreateFileW(
 done:
 	pThread->SetLastError(palError);
     LOGEXIT( "CreateFileW returns HANDLE %p\n", hRet );
-    PERF_EXIT(CreateFileW);
     return hRet;
 }
 
@@ -1073,7 +1069,6 @@ CopyFileW(
     int src_size, dest_size, length = 0;
     BOOL bRet = FALSE;
 
-    PERF_ENTRY(CopyFileW);
     ENTRY("CopyFileW(lpExistingFileName=%p (%S), lpNewFileName=%p (%S), bFailIfExists=%d)\n",
           lpExistingFileName?lpExistingFileName:W16_NULLSTRING,
           lpExistingFileName?lpExistingFileName:W16_NULLSTRING,
@@ -1149,7 +1144,6 @@ CopyFileW(
 
 done:
     LOGEXIT("CopyFileW returns BOOL %d\n", bRet);
-    PERF_EXIT(CopyFileW);
     return bRet;
 }
 
@@ -1175,7 +1169,6 @@ DeleteFileA(
     LPSTR lpFullUnixFileName = NULL;
     uint32_t cchFullUnixFileName = MAX_LONGPATH+1;// InternalCanonicalizeRealPath requires this to be at least PATH_MAX
 
-    PERF_ENTRY(DeleteFileA);
     ENTRY("DeleteFileA(lpFileName=%p (%s))\n", lpFileName?lpFileName:"NULL", lpFileName?lpFileName:"NULL");
 
     pThread = InternalGetCurrentThread();
@@ -1239,7 +1232,6 @@ done:
         free(lpFullUnixFileName);
     }
     LOGEXIT("DeleteFileA returns BOOL %d\n", bRet);
-    PERF_EXIT(DeleteFileA);
     return bRet;
 }
 
@@ -1261,7 +1253,6 @@ DeleteFileW(
     int length = 0;
     BOOL bRet = FALSE;
 
-    PERF_ENTRY(DeleteFileW);
     ENTRY("DeleteFileW(lpFileName=%p (%S))\n",
       lpFileName?lpFileName:W16_NULLSTRING,
       lpFileName?lpFileName:W16_NULLSTRING);
@@ -1305,7 +1296,6 @@ DeleteFileW(
 
 done:
     LOGEXIT("DeleteFileW returns BOOL %d\n", bRet);
-    PERF_EXIT(DeleteFileW);
     return bRet;
 }
 
@@ -1323,7 +1313,6 @@ MoveFileA(
 {
     BOOL bRet;
 
-    PERF_ENTRY(MoveFileA);
     ENTRY("MoveFileA(lpExistingFileName=%p (%s), lpNewFileName=%p (%s))\n",
           lpExistingFileName?lpExistingFileName:"NULL",
           lpExistingFileName?lpExistingFileName:"NULL",
@@ -1335,7 +1324,6 @@ MoveFileA(
             MOVEFILE_COPY_ALLOWED );
 
     LOGEXIT("MoveFileA returns BOOL %d\n", bRet);
-    PERF_EXIT(MoveFileA);
     return bRet;
 }
 
@@ -1353,7 +1341,6 @@ MoveFileW(
 {
     BOOL bRet;
 
-    PERF_ENTRY(MoveFileW);
     ENTRY("MoveFileW(lpExistingFileName=%p (%S), lpNewFileName=%p (%S))\n",
           lpExistingFileName?lpExistingFileName:W16_NULLSTRING,
           lpExistingFileName?lpExistingFileName:W16_NULLSTRING,
@@ -1365,7 +1352,6 @@ MoveFileW(
             MOVEFILE_COPY_ALLOWED );
 
     LOGEXIT("MoveFileW returns BOOL %d\n", bRet);
-    PERF_EXIT(MoveFileW);
     return bRet;
 }
 
@@ -1391,7 +1377,6 @@ MoveFileExA(
     BOOL  bRet = TRUE;
     uint32_t dwLastError = 0;
 
-    PERF_ENTRY(MoveFileExA);
     ENTRY("MoveFileExA(lpExistingFileName=%p (%S), lpNewFileName=%p (%S), "
           "dwFlags=%#x)\n",
           lpExistingFileName?lpExistingFileName:"NULL",
@@ -1538,7 +1523,6 @@ done:
     }
 
     LOGEXIT( "MoveFileExA returns BOOL %d\n", bRet );
-    PERF_EXIT(MoveFileExA);
     return bRet;
 }
 
@@ -1563,7 +1547,6 @@ MoveFileExW(
     int     src_size,dest_size;
     BOOL        bRet = FALSE;
 
-    PERF_ENTRY(MoveFileExW);
     ENTRY("MoveFileExW(lpExistingFileName=%p (%S), lpNewFileName=%p (%S), dwFlags=%#x)\n",
           lpExistingFileName?lpExistingFileName:W16_NULLSTRING,
           lpExistingFileName?lpExistingFileName:W16_NULLSTRING,
@@ -1638,7 +1621,6 @@ MoveFileExW(
 
 done:
     LOGEXIT("MoveFileExW returns BOOL %d\n", bRet);
-    PERF_EXIT(MoveFileExW);
     return bRet;
 }
 
@@ -1679,7 +1661,6 @@ GetFileAttributesA(
     int length = 0;
     PathCharString UnixFileNamePS;
 
-    PERF_ENTRY(GetFileAttributesA);
     ENTRY("GetFileAttributesA(lpFileName=%p (%s))\n", lpFileName?lpFileName:"NULL", lpFileName?lpFileName:"NULL");
 
     pThread = InternalGetCurrentThread();
@@ -1739,7 +1720,6 @@ done:
     }
 
     LOGEXIT("GetFileAttributesA returns DWORD %#x\n", dwAttr);
-    PERF_EXIT(GetFileAttributesA);
     return dwAttr;
 }
 
@@ -1766,7 +1746,6 @@ GetFileAttributesW(
     char * filename;
     uint32_t dwRet = (uint32_t) -1;
 
-    PERF_ENTRY(GetFileAttributesW);
     ENTRY("GetFileAttributesW(lpFileName=%p (%S))\n",
           lpFileName?lpFileName:W16_NULLSTRING,
           lpFileName?lpFileName:W16_NULLSTRING);
@@ -1807,7 +1786,6 @@ GetFileAttributesW(
         dwRet = GetFileAttributesA( filename );
 done:
     LOGEXIT("GetFileAttributesW returns DWORD %#x\n", dwRet);
-    PERF_EXIT(GetFileAttributesW);
     return dwRet;
 }
 
@@ -1836,7 +1814,6 @@ GetFileAttributesExW(
     int length = 0;
     int  size;
 
-    PERF_ENTRY(GetFileAttributesExW);
     ENTRY("GetFileAttributesExW(lpFileName=%p (%S), fInfoLevelId=%d, "
           "lpFileInformation=%p)\n", lpFileName?lpFileName:W16_NULLSTRING, lpFileName?lpFileName:W16_NULLSTRING,
           fInfoLevelId, lpFileInformation);
@@ -1933,7 +1910,6 @@ done:
     if (dwLastError) pThread->SetLastError(dwLastError);
 
     LOGEXIT("GetFileAttributesExW returns BOOL %d\n", bRet);
-    PERF_EXIT(GetFileAttributesExW);
     return bRet;
 }
 
@@ -1959,7 +1935,6 @@ SetFileAttributesW(
     uint32_t dwLastError = 0;
     BOOL  bRet = FALSE;
 
-    PERF_ENTRY(SetFileAttributesW);
     ENTRY("SetFileAttributesW(lpFileName=%p (%S), dwFileAttributes=%#x)\n",
         lpFileName?lpFileName:W16_NULLSTRING,
         lpFileName?lpFileName:W16_NULLSTRING, dwFileAttributes);
@@ -2003,7 +1978,6 @@ done:
     if (dwLastError) pThread->SetLastError(dwLastError);
 
     LOGEXIT("SetFileAttributes returns BOOL %d\n", bRet);
-    PERF_EXIT(SetFileAttributesW);
     return bRet;
 }
 
@@ -2201,7 +2175,6 @@ WriteFile(
     PAL_ERROR palError;
     CPalThread *pThread;
     
-    PERF_ENTRY(WriteFile);
     ENTRY("WriteFile(hFile=%p, lpBuffer=%p, nToWrite=%u, lpWritten=%p, "
           "lpOverlapped=%p)\n", hFile, lpBuffer, nNumberOfBytesToWrite, 
           lpNumberOfBytesWritten, lpOverlapped);
@@ -2223,7 +2196,6 @@ WriteFile(
     }
 
     LOGEXIT("WriteFile returns BOOL %d\n", NO_ERROR == palError);
-    PERF_EXIT(WriteFile);
     return NO_ERROR == palError;
 }
 
@@ -2424,7 +2396,6 @@ ReadFile(
     PAL_ERROR palError;
     CPalThread *pThread;
     
-    PERF_ENTRY(ReadFile);
     ENTRY("ReadFile(hFile=%p, lpBuffer=%p, nToRead=%u, "
           "lpRead=%p, lpOverlapped=%p)\n",
           hFile, lpBuffer, nNumberOfBytesToRead, 
@@ -2447,7 +2418,6 @@ ReadFile(
     }
 
     LOGEXIT("ReadFile returns BOOL %d\n", NO_ERROR == palError);
-    PERF_EXIT(ReadFile);
     return NO_ERROR == palError;
 }
 
@@ -2465,7 +2435,6 @@ GetStdHandle(
     CPalThread *pThread;
     HANDLE hRet = INVALID_HANDLE_VALUE;
 
-    PERF_ENTRY(GetStdHandle);
     ENTRY("GetStdHandle(nStdHandle=%#x)\n", nStdHandle);
 
     pThread = InternalGetCurrentThread();
@@ -2487,7 +2456,6 @@ GetStdHandle(
     }
 
     LOGEXIT("GetStdHandle returns HANDLE %p\n", hRet);
-    PERF_EXIT(GetStdHandle);
     return hRet;
 }
 
@@ -2644,7 +2612,6 @@ SetEndOfFile(
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread;;
 
-    PERF_ENTRY(SetEndOfFile);
     ENTRY("SetEndOfFile(hFile=%p)\n", hFile);
 
     pThread = InternalGetCurrentThread();
@@ -2660,7 +2627,6 @@ SetEndOfFile(
     }
 
     LOGEXIT("SetEndOfFile returns BOOL %d\n", NO_ERROR == palError);
-    PERF_EXIT(SetEndOfFile);
     return NO_ERROR == palError;
 }
 
@@ -2887,7 +2853,6 @@ SetFilePointer(
     CPalThread *pThread;
     int32_t lNewFilePointerLow = 0;
 
-    PERF_ENTRY(SetFilePointer);
     ENTRY("SetFilePointer(hFile=%p, lDistance=%d, lpDistanceHigh=%p, "
           "dwMoveMethod=%#x)\n", hFile, lDistanceToMove,
           lpDistanceToMoveHigh, dwMoveMethod);
@@ -2923,7 +2888,6 @@ SetFilePointer(
     pThread->SetLastError(palError);
     
     LOGEXIT("SetFilePointer returns DWORD %#x\n", lNewFilePointerLow);
-    PERF_EXIT(SetFilePointer);
     return lNewFilePointerLow;
 }
 
@@ -2944,7 +2908,6 @@ SetFilePointerEx(
     CPalThread *pThread;
     BOOL Ret = FALSE;
 
-    PERF_ENTRY(SetFilePointerEx);
     ENTRY("SetFilePointerEx(hFile=%p, liDistanceToMove=0x%llx, "
            "lpNewFilePointer=%p (0x%llx), dwMoveMethod=0x%x)\n", hFile, 
            liDistanceToMove.QuadPart, lpNewFilePointer, 
@@ -2983,7 +2946,6 @@ SetFilePointerEx(
     }
     
     LOGEXIT("SetFilePointerEx returns BOOL %d\n", Ret);
-    PERF_EXIT(SetFilePointerEx);
     return Ret;
 }
 
@@ -3082,7 +3044,6 @@ GetFileSize(
     CPalThread *pThread;
     uint32_t dwFileSizeLow;
 
-    PERF_ENTRY(GetFileSize);
     ENTRY("GetFileSize(hFile=%p, lpFileSizeHigh=%p)\n", hFile, lpFileSizeHigh);
 
     pThread = InternalGetCurrentThread();
@@ -3101,7 +3062,6 @@ GetFileSize(
     }
 
     LOGEXIT("GetFileSize returns DWORD %u\n", dwFileSizeLow);
-    PERF_EXIT(GetFileSize);
     return dwFileSizeLow;
 }
 
@@ -3121,7 +3081,6 @@ GetFileSizeEx(
     uint32_t dwFileSizeHigh;
     uint32_t dwFileSizeLow;
 
-    PERF_ENTRY(GetFileSizeEx);
     ENTRY("GetFileSizeEx(hFile=%p, lpFileSize=%p)\n", hFile, lpFileSize);
 
     pThread = InternalGetCurrentThread();
@@ -3149,7 +3108,6 @@ GetFileSizeEx(
     }
 
     LOGEXIT("GetFileSizeEx returns BOOL %d\n", NO_ERROR == palError);
-    PERF_EXIT(GetFileSizeEx);
     return NO_ERROR == palError;
 }
 
@@ -3264,7 +3222,6 @@ FlushFileBuffers(
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread;
 
-    PERF_ENTRY(FlushFileBuffers);
     ENTRY("FlushFileBuffers(hFile=%p)\n", hFile);
 
     pThread = InternalGetCurrentThread();
@@ -3280,7 +3237,6 @@ FlushFileBuffers(
     }
 
     LOGEXIT("FlushFileBuffers returns BOOL %d\n", NO_ERROR == palError);
-    PERF_EXIT(FlushFileBuffers);
     return NO_ERROR == palError;
 }
 
@@ -3395,7 +3351,6 @@ GetFileType(
     CPalThread *pThread;
     uint32_t dwFileType;
 
-    PERF_ENTRY(GetFileType);
     ENTRY("GetFileType(hFile=%p)\n", hFile);
 
     pThread = InternalGetCurrentThread();
@@ -3418,7 +3373,6 @@ GetFileType(
 
 
     LOGEXIT("GetFileType returns DWORD %#x\n", dwFileType);
-    PERF_EXIT(GetFileType);
     return dwFileType;
 }
 
@@ -3460,7 +3414,6 @@ GetTempFileNameA(
     uint32_t   dwError;
     unsigned short  uLoopCounter = 0;
 
-    PERF_ENTRY(GetTempFileNameA);
     ENTRY("GetTempFileNameA(lpPathName=%p (%s), lpPrefixString=%p (%s), uUnique=%u, " 
           "lpTempFileName=%p)\n",  lpPathName?lpPathName:"NULL",  lpPathName?lpPathName:"NULL", 
         lpPrefixString?lpPrefixString:"NULL", 
@@ -3621,7 +3574,6 @@ GetTempFileNameA(
 
 done:
     LOGEXIT("GetTempFileNameA returns UINT %u\n", uRet);
-    PERF_EXIT(GetTempFileNameA);
     return uRet;
        
 }
@@ -3649,7 +3601,6 @@ GetTempFileNameW(
     int32_t length = 0;
     uint32_t   uRet;
 
-    PERF_ENTRY(GetTempFileNameW);
     ENTRY("GetTempFileNameW(lpPathName=%p (%S), lpPrefixString=%p (%S), uUnique=%u, "
           "lpTempFileName=%p)\n", lpPathName?lpPathName:W16_NULLSTRING, lpPathName?lpPathName:W16_NULLSTRING,
           lpPrefixString?lpPrefixString:W16_NULLSTRING,
@@ -3765,7 +3716,6 @@ GetTempFileNameW(
 
 done:
     LOGEXIT("GetTempFileNameW returns UINT %u\n", uRet);
-    PERF_EXIT(GetTempFileNameW);
     return uRet;
 }
 
@@ -3889,7 +3839,6 @@ CopyFileA(
     int          permissions;
 
 
-    PERF_ENTRY(CopyFileA);
     ENTRY("CopyFileA(lpExistingFileName=%p (%s), lpNewFileName=%p (%s), bFailIfExists=%d)\n",
           lpExistingFileName?lpExistingFileName:"NULL",
           lpExistingFileName?lpExistingFileName:"NULL",
@@ -4025,7 +3974,6 @@ done:
     }
 
     LOGEXIT("CopyFileA returns BOOL %d\n", bGood);
-    PERF_EXIT(CopyFileA);
     return bGood;
 }
 
@@ -4051,7 +3999,6 @@ SetFileAttributesA(
     BOOL  bRet = FALSE;
     LPSTR UnixFileName = NULL;
 
-    PERF_ENTRY(SetFileAttributesA);
     ENTRY("SetFileAttributesA(lpFileName=%p (%s), dwFileAttributes=%#x)\n",
         lpFileName?lpFileName:"NULL",
         lpFileName?lpFileName:"NULL", dwFileAttributes);
@@ -4150,7 +4097,6 @@ done:
     free(UnixFileName);
 
     LOGEXIT("SetFileAttributesA returns BOOL %d\n", bRet);
-    PERF_EXIT(SetFileAttributesA);
     return bRet;
 }
 
@@ -4397,7 +4343,6 @@ CreatePipe(
     PAL_ERROR palError;
     CPalThread *pThread;
 
-    PERF_ENTRY(CreatePipe);
     ENTRY("CreatePipe(hReadPipe:%p, hWritePipe:%p, lpPipeAttributes:%p, nSize:%d\n",
           hReadPipe, hWritePipe, lpPipeAttributes, nSize);
 
@@ -4417,7 +4362,6 @@ CreatePipe(
     }
 
     LOGEXIT("CreatePipe return %s\n", NO_ERROR == palError ? "TRUE":"FALSE");
-    PERF_EXIT(CreatePipe);
     return NO_ERROR == palError;
 }
 
@@ -4522,7 +4466,6 @@ LockFile(HANDLE hFile,
     CPalThread *pThread;
     PAL_ERROR palError = NO_ERROR;
 
-    PERF_ENTRY(LockFile);
     ENTRY("LockFile(hFile:%p, offsetLow:%u, offsetHigh:%u, nbBytesLow:%u,"
            " nbBytesHigh:%u\n", hFile, dwFileOffsetLow, dwFileOffsetHigh, 
           nNumberOfBytesToLockLow, nNumberOfBytesToLockHigh);
@@ -4544,7 +4487,6 @@ LockFile(HANDLE hFile,
     }
 
     LOGEXIT("LockFile returns %s\n", NO_ERROR == palError ? "TRUE":"FALSE");
-    PERF_EXIT(LockFile);
     return NO_ERROR == palError;
 }
 
@@ -4646,7 +4588,6 @@ UnlockFile(HANDLE hFile,
     CPalThread *pThread;
     PAL_ERROR palError = NO_ERROR;
 
-    PERF_ENTRY(UnlockFile);
     ENTRY("UnlockFile(hFile:%p, offsetLow:%u, offsetHigh:%u, nbBytesLow:%u,"
           "nbBytesHigh:%u\n", hFile, dwFileOffsetLow, dwFileOffsetHigh, 
           nNumberOfBytesToUnlockLow, nNumberOfBytesToUnlockHigh);
@@ -4668,7 +4609,6 @@ UnlockFile(HANDLE hFile,
     }
 
     LOGEXIT("UnlockFile returns %s\n", NO_ERROR == palError ? "TRUE" : "FALSE");
-    PERF_EXIT(UnlockFile);
     return NO_ERROR == palError;
 }
 
@@ -4905,7 +4845,6 @@ GetFileInformationByHandle(
     uint32_t dwAttr = 0;
     struct stat stat_data;
 
-    PERF_ENTRY(GetFileInformationByHandle);
     ENTRY("GetFileInformationByHandle(hFile=%p, lpFileInformation=%p)\n",
           hFile, lpFileInformation);
 
@@ -5020,6 +4959,5 @@ done:
     if (dwLastError) pThread->SetLastError(dwLastError);
 
     LOGEXIT("GetFileInformationByHandle returns BOOL %d\n", bRet);
-    PERF_EXIT(GetFileInformationByHandle);
     return bRet;
 }

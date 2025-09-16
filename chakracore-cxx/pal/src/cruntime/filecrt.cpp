@@ -58,7 +58,6 @@ _open_osfhandle( INT_PTR osfhandle, int flags )
     int32_t nRetVal = -1;
     int32_t openFlags = 0;
 
-    PERF_ENTRY(_open_osfhandle);
     ENTRY( "_open_osfhandle (osfhandle=%#x, flags=%#x)\n", osfhandle, flags );
 
     pthrCurrent = InternalGetCurrentThread();
@@ -133,7 +132,6 @@ EXIT:
     }
 
     LOGEXIT( "_open_osfhandle return nRetVal:%d\n", nRetVal);
-    PERF_EXIT(_open_osfhandle);
     return nRetVal;
 }
 
@@ -149,13 +147,11 @@ PAL_fflush( PAL_FILE *stream )
 {
     int nRetVal = 0;
 
-    PERF_ENTRY(fflush);
     ENTRY( "fflush( %p )\n", stream );
 
     nRetVal = fflush(stream ? stream->bsdFilePtr : NULL);
 
     LOGEXIT( "fflush returning %d\n", nRetVal );
-    PERF_EXIT(fflush);
     return nRetVal;
 }
 
@@ -349,7 +345,6 @@ PAL_fgets(
 {
     char * szBuf;
 
-    PERF_ENTRY(fgets);
     ENTRY( "fgets(sz=%p (%s) nSize=%d pf=%p)\n", sz, sz, nSize, pf);
 
     if (pf != NULL)
@@ -362,7 +357,6 @@ PAL_fgets(
     }
 
     LOGEXIT("fgets() returns %p\n", szBuf);
-    PERF_EXIT(fgets);
 
     return szBuf;
 }
@@ -467,7 +461,6 @@ PAL_fwrite(
 {
     size_t nWrittenBytes = 0;
 
-    PERF_ENTRY(fwrite);
     ENTRY( "fwrite( pvBuffer=%p, nSize=%d, nCount=%d, pf=%p )\n",
            pvBuffer, nSize, nCount, pf);
     _ASSERTE(pf != NULL);
@@ -475,7 +468,6 @@ PAL_fwrite(
     nWrittenBytes = InternalFwrite(pvBuffer, nSize, nCount, pf->bsdFilePtr, &pf->PALferrorCode);
 
     LOGEXIT( "fwrite returning size_t %d\n", nWrittenBytes );
-    PERF_EXIT(fwrite);
     return nWrittenBytes;
 }
 
@@ -547,12 +539,10 @@ PAL_fseek(
 {
     int nRet = 0;
 
-    PERF_ENTRY(fseek);
     ENTRY( "fseek( %p, %ld, %d )\n", pf, lOffset, nWhence );
 
     nRet = fseek(pf ? pf->bsdFilePtr : NULL, lOffset, nWhence);
 
     LOGEXIT("fseek returning %d\n", nRet);
-    PERF_EXIT(fseek);
     return nRet;
 }

@@ -143,7 +143,6 @@ ResumeThread(
     CPalThread *pthrResumer;
     uint32_t dwSuspendCount = (uint32_t)-1;
 
-    PERF_ENTRY(ResumeThread);
     ENTRY("ResumeThread(hThread=%p)\n", hThread);
 
     pthrResumer = InternalGetCurrentThread();
@@ -164,7 +163,6 @@ ResumeThread(
     }
 
     LOGEXIT("ResumeThread returns DWORD %u\n", dwSuspendCount);
-    PERF_EXIT(ResumeThread);
     return dwSuspendCount;
 }
 

@@ -185,7 +185,6 @@ PAL_fprintf(PAL_FILE *stream,const char *format,...)
     int32_t Length = 0;
     va_list ap;
 
-    PERF_ENTRY(fprintf);
     ENTRY("PAL_fprintf(stream=%p,format=%p (%s))\n",stream, format, format);
 
     va_start(ap, format);
@@ -193,7 +192,6 @@ PAL_fprintf(PAL_FILE *stream,const char *format,...)
     va_end(ap);
 
     LOGEXIT("PAL_fprintf returns int %d\n", Length);
-    PERF_EXIT(fprintf);
     return Length;
 }
 
@@ -212,7 +210,6 @@ PAL_wprintf(
     int32_t Length;
     va_list ap;
 
-    PERF_ENTRY(wprintf);
     ENTRY("PAL_wprintf (format=%p (%S))\n", format, format);
 
     va_start(ap, format);
@@ -220,7 +217,6 @@ PAL_wprintf(
     va_end(ap);
 
     LOGEXIT("PAL_wprintf returns int %d\n", Length);
-    PERF_EXIT(wprintf);
     return Length;
 }
 
@@ -240,7 +236,6 @@ wsprintfA(
     int32_t Length;
     va_list ap;
 
-    PERF_ENTRY(wsprintfA);
     ENTRY("wsprintfA (buffer=%p, format=%p (%s))\n", buffer, format, format);
 
     va_start(ap, format);
@@ -248,7 +243,6 @@ wsprintfA(
     va_end(ap);
 
     LOGEXIT("wsprintfA returns int %d\n", Length);
-    PERF_EXIT(wsprintfA);
     return Length;
 }
 
@@ -268,7 +262,6 @@ wsprintfW(
     int32_t Length;
     va_list ap;
 
-    PERF_ENTRY(wsprintfW);
     ENTRY("wsprintfW (buffer=%p, format=%p (%S))\n", buffer, format, format);
 
     va_start(ap, format);
@@ -276,7 +269,6 @@ wsprintfW(
     va_end(ap);
 
     LOGEXIT("wsprintfW returns int %d\n", Length);
-    PERF_EXIT(wsprintfW);
     return Length;
 }
 
@@ -298,7 +290,6 @@ _snprintf(
     int32_t Length;
     va_list ap;
 
-    PERF_ENTRY(_snprintf);
     ENTRY("_snprintf (buffer=%p, count=%lu, format=%p (%s))\n",
           buffer, (unsigned long) count, format, format);
 
@@ -307,7 +298,6 @@ _snprintf(
     va_end(ap);
 
     LOGEXIT("_snprintf returns int %d\n", Length);
-    PERF_EXIT(_snprintf);
     return Length;
 }
 
@@ -329,7 +319,6 @@ _snwprintf(
     int32_t Length;
     va_list ap;
 
-    PERF_ENTRY(_snwprintf);
     ENTRY("_snwprintf (buffer=%p, count=%lu, format=%p (%S))\n",
           buffer, (unsigned long) count, format, format);
 
@@ -338,7 +327,6 @@ _snwprintf(
     va_end(ap);
 
     LOGEXIT("_snwprintf returns int %d\n", Length);
-    PERF_EXIT(_snwprintf);
     return Length;
 }
 
@@ -358,7 +346,6 @@ PAL_fwprintf(
     int32_t Length;
     va_list ap;
 
-    PERF_ENTRY(fwprintf);
     ENTRY("PAL_fwprintf (stream=%p, format=%p (%S))\n", stream, format, format);
 
     va_start(ap, format);
@@ -366,7 +353,6 @@ PAL_fwprintf(
     va_end(ap);
 
     LOGEXIT("PAL_fwprintf returns int %d\n", Length);
-    PERF_EXIT(fwprintf);
     return Length;
 }
 
@@ -1442,7 +1428,6 @@ PAL_sscanf(
     int Length;
     va_list ap;
 
-    PERF_ENTRY(sscanf);
     ENTRY("PAL_sscanf (buffer=%p (%s), format=%p (%s))\n", buffer, buffer, format, format);
 
     va_start(ap, format);
@@ -1450,7 +1435,6 @@ PAL_sscanf(
     va_end(ap);
 
     LOGEXIT("PAL_sscanf returns int %d\n", Length);
-    PERF_EXIT(sscanf);
     return Length;
 }
 
@@ -1470,7 +1454,6 @@ PAL_swprintf(
     int32_t Length;
     va_list ap;
 
-    PERF_ENTRY(swprintf);
     ENTRY("PAL_swprintf (buffer=%p, format=%p (%S))\n", buffer, format, format);
 
     va_start(ap, format);
@@ -1478,7 +1461,6 @@ PAL_swprintf(
     va_end(ap);
 
     LOGEXIT("PAL_swprintf returns int %d\n", Length);
-    PERF_EXIT(swprintf);
     return Length;
 }
 
@@ -1498,7 +1480,6 @@ PAL_swscanf(
     int Length;
     va_list ap;
 
-    PERF_ENTRY(swscanf);
     ENTRY("PAL_swscanf (buffer=%p (%S), format=%p (%S))\n", buffer, buffer, format, format);
 
     va_start(ap, format);
@@ -1506,7 +1487,6 @@ PAL_swscanf(
     va_end(ap);
 
     LOGEXIT("PAL_swscanf returns int %d\n", Length);
-    PERF_EXIT(swscanf);
     return Length;
 }
 
@@ -1525,14 +1505,12 @@ PAL_vsprintf(char *buffer,
 {
     int32_t Length;
 
-    PERF_ENTRY(vsprintf);
     ENTRY("PAL_vsprintf (buffer=%p, format=%p (%s), argptr=%p)\n",
           buffer, format, format, argptr);
 
     Length = PAL__vsnprintf(buffer, 0x7fffffff, format, argptr);
 
     LOGEXIT("PAL_vsprintf returns int %d\n", Length);
-    PERF_EXIT(vsprintf);
 
     return Length;
 }
@@ -1553,14 +1531,12 @@ _vsnprintf(char *buffer,
 {
     int32_t Length;
 
-    PERF_ENTRY(_vsnprintf);
     ENTRY("_vsnprintf (buffer=%p, count=%d, format=%p (%s), argptr=%p)\n",
           buffer, count, format, format, argptr);
 
     Length = PAL__vsnprintf(buffer, count, format, argptr);
 
     LOGEXIT("_vsnprintf returns int %d\n", Length);
-    PERF_EXIT(_vsnprintf);
 
     return Length;
 }
@@ -1581,14 +1557,12 @@ PAL_vswprintf(char16_t *buffer,
 {
     int32_t Length;
 
-    PERF_ENTRY(vswprintf);
     ENTRY("PAL_vswprintf (buffer=%p, format=%p (%S), argptr=%p)\n",
           buffer, format, format, argptr);
 
     Length = PAL__wvsnprintf(buffer, 0x7fffffff, format, argptr);
 
     LOGEXIT("PAL_vswprintf returns int %d\n", Length);
-    PERF_EXIT(vswprintf);
 
     return Length;
 }
@@ -1609,14 +1583,12 @@ _vsnwprintf(char16_t *buffer,
 {
     int32_t Length;
 
-    PERF_ENTRY(_vsnwprintf);
     ENTRY("_vsnwprintf (buffer=%p, count=%lu, format=%p (%S), argptr=%p)\n",
           buffer, (unsigned long) count, format, format, argptr);
 
     Length = PAL__wvsnprintf(buffer, count, format, argptr);
 
     LOGEXIT("_vsnwprintf returns int %d\n", Length);
-    PERF_EXIT(_vsnwprintf);
 
     return Length;
 }

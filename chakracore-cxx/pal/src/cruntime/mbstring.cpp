@@ -61,7 +61,6 @@ _mbslen(
 {
     size_t ret = 0;
     CPINFO cpinfo;
-    PERF_ENTRY(_mbslen);
     ENTRY("_mbslen (string=%p (%s))\n", string, string);
 
     if (string)
@@ -85,7 +84,6 @@ _mbslen(
     }
 
     LOGEXIT("_mbslen returning size_t %u\n", ret);
-    PERF_EXIT(_mbslen);
     return ret;
 }
 
@@ -113,7 +111,6 @@ _mbsinc(
 {
     unsigned char *ret;
 
-    PERF_ENTRY(_mbsinc);
     ENTRY("_mbsinc (string=%p)\n", string);
 
     if (string == NULL)
@@ -131,7 +128,6 @@ _mbsinc(
     }
 
     LOGEXIT("_mbsinc returning unsigned char* %p (%s)\n", ret, ret);
-    PERF_EXIT(_mbsinc);
     return ret;
 }
 
@@ -166,7 +162,6 @@ _mbsninc(
     unsigned char *ret;
     CPINFO cpinfo;
 
-    PERF_ENTRY(_mbsninc);
     ENTRY("_mbsninc (string=%p, count=%lu)\n", string, count);
     if (string == NULL)
     {
@@ -192,7 +187,6 @@ _mbsninc(
         }
     }
     LOGEXIT("_mbsninc returning unsigned char* %p (%s)\n", ret, ret);
-    PERF_EXIT(_mbsninc);
     return ret;
 }
 
@@ -224,7 +218,6 @@ _mbsdec(
     unsigned char *strPtr;
     CPINFO cpinfo;
 
-    PERF_ENTRY(_mbsdec);
     ENTRY("_mbsdec (start=%p, current=%p)\n", start, current);
 
     if (current <= start)
@@ -249,6 +242,5 @@ _mbsdec(
         }
     }
     LOGEXIT("_mbsdec returning unsigned int %p (%s)\n", ret, ret);
-    PERF_EXIT(_mbsdec);
     return ret;
 }

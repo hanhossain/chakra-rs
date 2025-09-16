@@ -155,7 +155,6 @@ Using Debug channels at Run Time
 
 #include "pal/palinternal.h"
 #include "config.h"
-#include "pal/perftrace.h"
 #include "pal/debug.h"
 #include "pal/thread.hpp"
 

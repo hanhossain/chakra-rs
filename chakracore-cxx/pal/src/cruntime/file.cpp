@@ -209,7 +209,6 @@ _fdopen(
     LPSTR supported = NULL;
     BOOL bTextMode = TRUE;
 
-    PERF_ENTRY(_fdopen);
     ENTRY("_fdopen (handle=%d mode=%p (%s))\n", handle, mode, mode);
 
     _ASSERTE(mode != NULL);
@@ -244,7 +243,6 @@ _fdopen(
 
 EXIT:
     LOGEXIT( "_fdopen returns FILE* %p\n", f );
-    PERF_EXIT(_fdopen);
     return f;
 }
 
@@ -266,7 +264,6 @@ PAL_fopen(const char * fileName, const char * mode)
     struct stat stat_data;
     BOOL bTextMode = TRUE;
 
-    PERF_ENTRY(fopen);
     ENTRY("fopen ( fileName=%p (%s) mode=%p (%s))\n", fileName, fileName, mode , mode );
 
     _ASSERTE(fileName != NULL);
@@ -335,7 +332,6 @@ done:
     free( UnixFileName );
 
     LOGEXIT( "fopen returns FILE* %p\n", f );
-    PERF_EXIT(fopen);
     return f;
 }
 
@@ -355,7 +351,6 @@ _wfopen(
     char mbMode[ 10 ];
     PAL_FILE * filePtr = NULL;
 
-    PERF_ENTRY(_wfopen);
     ENTRY("_wfopen(fileName:%p (%S), mode:%p (%S))\n", fileName, fileName, mode, mode);
 
     _ASSERTE(fileName != NULL);
@@ -381,7 +376,6 @@ _wfopen(
                " fileName to ANSI string.\n" );
     }
     LOGEXIT("_wfopen returning FILE* %p\n", filePtr);
-    PERF_EXIT(_wfopen);
     return filePtr;
 }
 
@@ -411,10 +405,8 @@ Function
 --*/
 PAL_FILE * PAL_get_stdout(int caller)
 {
-    PERF_ENTRY(get_stdout);
     ENTRY("PAL_get_stdout\n");
     LOGEXIT("PAL_get_stdout returns PAL_FILE * %p\n", &PAL_Stdout );
-    PERF_EXIT(get_stdout);
     return &PAL_Stdout;
 }
 
@@ -426,10 +418,8 @@ Function
 --*/
 PAL_FILE * PAL_get_stdin(int caller)
 {
-    PERF_ENTRY(get_stdin);
     ENTRY("PAL_get_stdin\n");
     LOGEXIT("PAL_get_stdin returns PAL_FILE * %p\n", &PAL_Stdin );
-    PERF_EXIT(get_stdin);
     return &PAL_Stdin;
 }
 
@@ -441,10 +431,8 @@ Function
 --*/
 PAL_FILE * PAL_get_stderr(int caller)
 {
-    PERF_ENTRY(get_stderr);
     ENTRY("PAL_get_stderr\n");
     LOGEXIT("PAL_get_stderr returns PAL_FILE * %p\n", &PAL_Stderr );
-    PERF_EXIT(get_stderr);
     return &PAL_Stderr;
 }
 
@@ -461,13 +449,11 @@ int PAL__close(int handle)
 {
     int32_t nRetVal = 0;
 
-    PERF_ENTRY(_close);
     ENTRY( "_close( handle=%d )\n", handle );
 
     nRetVal = close( handle );
 
     LOGEXIT( "_close returning %d.\n", nRetVal );
-    PERF_EXIT(_close);
     return nRetVal;
 }
 
@@ -497,7 +483,6 @@ PAL_fread(void * buffer, size_t size, size_t count, PAL_FILE * f)
 {
     size_t nReadBytes = 0;
 
-    PERF_ENTRY(fread);
     ENTRY( "fread( buffer=%p, size=%d, count=%d, f=%p )\n",
            buffer, size, count, f );
 
@@ -540,7 +525,6 @@ PAL_fread(void * buffer, size_t size, size_t count, PAL_FILE * f)
 
 done:
     LOGEXIT( "fread returning size_t %d\n", nReadBytes );
-    PERF_EXIT(fread);
     return nReadBytes;
 }
 
@@ -557,7 +541,6 @@ PAL_ferror(PAL_FILE * f)
 {
     int32_t nErrorCode = PAL_FILE_NOERROR;
 
-    PERF_ENTRY(ferror);
     ENTRY( "ferror( f=%p )\n", f );
 
     _ASSERTE(f != NULL);
@@ -570,7 +553,6 @@ PAL_ferror(PAL_FILE * f)
     }
 
     LOGEXIT( "ferror returns %d\n", nErrorCode );
-    PERF_EXIT(ferror);
     return nErrorCode;
 }
 
@@ -587,7 +569,6 @@ PAL_fclose(PAL_FILE * f)
 {
     int32_t nRetVal = 0;
 
-    PERF_ENTRY(fclose);
     ENTRY( "fclose( f=%p )\n", f );
 
     _ASSERTE(f != NULL);
@@ -598,7 +579,6 @@ PAL_fclose(PAL_FILE * f)
     free( f );
 
     LOGEXIT( "fclose returning %d\n", nRetVal );
-    PERF_EXIT(fclose);
     return nRetVal;
 }
 
@@ -612,7 +592,6 @@ Function :
 void
 PAL_setbuf(PAL_FILE * f, char * buffer)
 {
-    PERF_ENTRY(setbuf);
     ENTRY( "setbuf( %p, %p )\n", f, buffer );
 
     _ASSERTE(f != NULL);
@@ -620,7 +599,6 @@ PAL_setbuf(PAL_FILE * f, char * buffer)
     setbuf( f->bsdFilePtr, buffer );
 
     LOGEXIT( "setbuf\n" );
-    PERF_EXIT(setbuf);
 }
 
 /*++
@@ -635,7 +613,6 @@ PAL_fputs(const char * str,  PAL_FILE * f)
 {
     int32_t nRetVal = 0;
 
-    PERF_ENTRY(fputs);
     ENTRY( "fputs( %p (%s), %p )\n", str, str, f);
 
     _ASSERTE(str != NULL);
@@ -646,7 +623,6 @@ PAL_fputs(const char * str,  PAL_FILE * f)
     nRetVal = fputs( str, f->bsdFilePtr );
 
     LOGEXIT( "fputs returning %d\n", nRetVal );
-    PERF_EXIT(fputs);
     return nRetVal;
 }
 
@@ -662,7 +638,6 @@ PAL_fputc(int c,  PAL_FILE * f)
 {
     int32_t nRetVal = 0;
 
-    PERF_ENTRY(fputc);
     ENTRY( "fputc( 0x%x (%c), %p )\n", c, c, f);
 
     _ASSERTE(f != NULL);
@@ -672,7 +647,6 @@ PAL_fputc(int c,  PAL_FILE * f)
     nRetVal = fputc( c, f->bsdFilePtr );
 
     LOGEXIT( "fputc returning %d\n", nRetVal );
-    PERF_EXIT(fputc);
     return nRetVal;
 }
 
@@ -688,13 +662,11 @@ PAL_putchar( int c )
 {
     int32_t nRetVal = 0;
 
-    PERF_ENTRY(putchar);
     ENTRY( "putchar( 0x%x (%c) )\n", c, c);
 
     nRetVal = putchar( c );
 
     LOGEXIT( "putchar returning %d\n", nRetVal );
-    PERF_EXIT(putchar);
     return nRetVal;
 }
 
@@ -710,7 +682,6 @@ PAL_ftell(PAL_FILE * f)
 {
     long lRetVal = 0;
 
-    PERF_ENTRY(ftell);
     ENTRY( "ftell( %p )\n", f );
 
     _ASSERTE(f != NULL);
@@ -724,7 +695,6 @@ PAL_ftell(PAL_FILE * f)
     }
 
     LOGEXIT( "ftell returning %ld\n", lRetVal );
-    PERF_EXIT(ftell);
     /* This explicit cast to int32_t is used to silence any potential warnings
     due to implicitly casting the native long lRetVal to int32_t when returning. */
     return (int32_t)lRetVal;
@@ -753,7 +723,6 @@ PAL_fgetpos (
     int    nRetVal = -1;
     fpos_t native_pos;
 
-    PERF_ENTRY(fgetpos);
     ENTRY("fgetpos( f=%p, pos=%p )\n", f, pos);
 
     _ASSERTE(f != NULL);
@@ -770,7 +739,6 @@ PAL_fgetpos (
     }
 
     LOGEXIT( "fgetpos returning error code %d, pos %d\n", nRetVal, pos ? *pos : 0);
-    PERF_EXIT(fgetpos);
     return nRetVal;
 #endif // __LINUX__
 }
@@ -798,7 +766,6 @@ PAL_fsetpos (
     int    nRetVal = -1;
     fpos_t native_pos;
 
-    PERF_ENTRY(fsetpos);
     ENTRY("fsetpos( f=%p, pos=%p )\n", f, pos);
 
     _ASSERTE(f != NULL);
@@ -814,7 +781,6 @@ PAL_fsetpos (
     }
 
     LOGEXIT( "fsetpos returning error code %d\n", nRetVal);
-    PERF_EXIT(fsetpos);
     return nRetVal;
 #endif // __LINUX__
 }
@@ -832,14 +798,12 @@ PAL_feof(PAL_FILE * f)
 {
     int32_t nRetVal = 0;
 
-    PERF_ENTRY(feof);
     ENTRY( "feof( %p )\n", f );
 
     _ASSERTE(f != NULL);
     nRetVal = feof( f->bsdFilePtr );
 
     LOGEXIT( "feof returning %d\n", nRetVal );
-    PERF_EXIT(feof);
     return nRetVal;
 }
 
@@ -856,7 +820,6 @@ PAL_getc(PAL_FILE * f)
     int32_t nRetVal = 0;
     int32_t temp =0;
 
-    PERF_ENTRY(getc);
     ENTRY( "getc( %p )\n", f );
 
     _ASSERTE(f != NULL);
@@ -878,7 +841,6 @@ PAL_getc(PAL_FILE * f)
     }
 
     LOGEXIT( "getc returning %d\n", nRetVal );
-    PERF_EXIT(getc);
     return nRetVal;
 }
 
@@ -894,7 +856,6 @@ PAL_ungetc(int c, PAL_FILE * f)
 {
     int32_t nRetVal = 0;
 
-    PERF_ENTRY(ungetc);
     ENTRY( "ungetc( %c, %p )\n", c, f );
 
     _ASSERTE(f != NULL);
@@ -915,7 +876,6 @@ PAL_ungetc(int c, PAL_FILE * f)
     }
 
     LOGEXIT( "ungetc returning %d\n", nRetVal );
-    PERF_EXIT(ungetc);
     return nRetVal;
 }
 
@@ -933,7 +893,6 @@ PAL_setvbuf(PAL_FILE *f, char *buf, int type, size_t size)
 {
     int32_t nRetVal = 0;
 
-    PERF_ENTRY(setvbuf);
     ENTRY( "setvbuf( %p, %p, %d, %ul )\n", f, buf, type, size);
 
     _ASSERTE(f != NULL);
@@ -941,6 +900,5 @@ PAL_setvbuf(PAL_FILE *f, char *buf, int type, size_t size)
     nRetVal = setvbuf(f->bsdFilePtr, buf, type, size);
 
     LOGEXIT( "setvbuf returning %d\n", nRetVal );
-    PERF_EXIT(setvbuf);
     return nRetVal;
 }

@@ -69,14 +69,12 @@ RtlMoveMemory(
            const void *Source,
            size_t Length)
 {
-    PERF_ENTRY(RtlMoveMemory);
     ENTRY("RtlMoveMemory(Destination:%p, Source:%p, Length:%d)\n",
           Destination, Source, Length);
 
     memmove(Destination, Source, Length);
 
     LOGEXIT("RtlMoveMemory returning\n");
-    PERF_EXIT(RtlMoveMemory);
 }
 
 /*++
@@ -91,13 +89,11 @@ RtlZeroMemory(
     size_t Length
 )
 {
-    PERF_ENTRY(RtlZeroMemory);
     ENTRY("RtlZeroMemory(Destination:%p, Length:%x)\n", Destination, Length);
 
     memset(Destination, 0, Length);
 
     LOGEXIT("RtlZeroMemory returning.\n");
-    PERF_EXIT(RtlZeroMemory);
 }
 
 /*++
@@ -113,7 +109,6 @@ HeapCreate(
 	        size_t dwMaximumSize)
 {
     HANDLE ret = INVALID_HANDLE_VALUE;
-    PERF_ENTRY(HeapCreate);
     ENTRY("HeapCreate(flOptions=%#x, dwInitialSize=%u, dwMaximumSize=%u)\n",
         flOptions, dwInitialSize, dwMaximumSize);
 #ifdef __APPLE__
@@ -142,7 +137,6 @@ HeapCreate(
 #endif // __APPLE__
 
     LOGEXIT("HeapCreate returning HANDLE %p\n", ret);
-    PERF_EXIT(HeapCreate);
     return ret;
 }
 
@@ -170,7 +164,6 @@ GetProcessHeap(
     _ASSERTE(was_pal_initialized);
 #endif
 
-    PERF_ENTRY(GetProcessHeap);
     ENTRY("GetProcessHeap()\n");
 
 #ifdef __APPLE__
@@ -192,7 +185,6 @@ GetProcessHeap(
 #endif
 
     LOGEXIT("GetProcessHeap returning HANDLE %p\n", ret);
-    PERF_EXIT(GetProcessHeap);
     return ret;
 }
 
@@ -213,7 +205,6 @@ HeapAlloc(
 {
     uint8_t *pMem;
 
-    PERF_ENTRY(HeapAlloc);
     ENTRY("HeapAlloc (hHeap=%p, dwFlags=%#x, numberOfBytes=%u)\n",
           hHeap, dwFlags, numberOfBytes);
 
@@ -226,7 +217,6 @@ HeapAlloc(
         ERROR("Invalid heap handle\n");
         SetLastError(ERROR_INVALID_PARAMETER);
         LOGEXIT("HeapAlloc returning NULL\n");
-        PERF_EXIT(HeapAlloc);
         return NULL;
     }
 
@@ -235,7 +225,6 @@ HeapAlloc(
         ASSERT("Invalid parameter dwFlags=%#x\n", dwFlags);
         SetLastError(ERROR_INVALID_PARAMETER);
         LOGEXIT("HeapAlloc returning NULL\n");
-        PERF_EXIT(HeapAlloc);
         return NULL;
     }
 
@@ -253,7 +242,6 @@ HeapAlloc(
         ERROR("Not enough memory\n");
         SetLastError(ERROR_NOT_ENOUGH_MEMORY);
         LOGEXIT("HeapAlloc returning NULL\n");
-        PERF_EXIT(HeapAlloc);
         return NULL;
     }
 
@@ -264,7 +252,6 @@ HeapAlloc(
     }
 
     LOGEXIT("HeapAlloc returning LPVOID %p\n", pMem);
-    PERF_EXIT(HeapAlloc);
     return (pMem);
 }
 
@@ -286,7 +273,6 @@ HeapFree(
 {
     BOOL bRetVal = FALSE;
 
-    PERF_ENTRY(HeapFree);
     ENTRY("HeapFree (hHeap=%p, dwFlags = %#x, lpMem=%p)\n",
           hHeap, dwFlags, lpMem);
 
@@ -326,7 +312,6 @@ HeapFree(
 
 done:
     LOGEXIT( "HeapFree returning BOOL %d\n", bRetVal );
-    PERF_EXIT(HeapFree);
     return bRetVal;
 }
 
@@ -349,7 +334,6 @@ HeapReAlloc(
 {
     uint8_t *pMem = NULL;
 
-    PERF_ENTRY(HeapReAlloc);
     ENTRY("HeapReAlloc (hHeap=%p, dwFlags=%#x, lpmem=%p, numberOfBytes=%u)\n",
           hHeap, dwFlags, lpmem, numberOfBytes);
 
@@ -404,7 +388,6 @@ HeapReAlloc(
 
 done:
     LOGEXIT("HeapReAlloc returns LPVOID %p\n", pMem);
-    PERF_EXIT(HeapReAlloc);
     return pMem;
 }
 

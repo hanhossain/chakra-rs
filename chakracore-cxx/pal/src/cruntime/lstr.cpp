@@ -52,7 +52,6 @@ lstrcatW(
 {
     LPWSTR lpStart = lpString1;
 
-    PERF_ENTRY(lstrcatW);
     ENTRY("lstrcatW (lpString1=%p (%S), lpString2=%p (%S))\n",
           lpString1?lpString1:W16_NULLSTRING,
           lpString1?lpString1:W16_NULLSTRING, lpString2?lpString2:W16_NULLSTRING, lpString2?lpString2:W16_NULLSTRING);
@@ -61,7 +60,6 @@ lstrcatW(
     {
         ERROR("invalid lpString1 argument\n");
         LOGEXIT("lstrcatW returning LPWSTR NULL\n");
-        PERF_EXIT(lstrcatW);
         return NULL;
     }
 
@@ -69,7 +67,6 @@ lstrcatW(
     {
         ERROR("invalid lpString2 argument\n");
         LOGEXIT("lstrcatW returning LPWSTR NULL\n");
-        PERF_EXIT(lstrcatW);
         return NULL;
     }
 
@@ -89,7 +86,6 @@ lstrcatW(
     *lpString1 = '\0';
 
     LOGEXIT("lstrcatW returning LPWSTR %p (%S)\n", lpStart, lpStart);
-    PERF_EXIT(lstrcatW);
     return lpStart;
 }
 
@@ -123,7 +119,6 @@ lstrcpyW(
 {
     LPWSTR lpStart = lpString1;
 
-    PERF_ENTRY(lstrcpyW);
     ENTRY("lstrcpyW (lpString1=%p, lpString2=%p (%S))\n",
           lpString1?lpString1:W16_NULLSTRING, lpString2?lpString2:W16_NULLSTRING, lpString2?lpString2:W16_NULLSTRING);
 
@@ -131,7 +126,6 @@ lstrcpyW(
     {
         ERROR("invalid lpString1 argument\n");
         LOGEXIT("lstrcpyW returning LPWSTR NULL\n");
-        PERF_EXIT(lstrcpyW);
         return NULL;
     }
 
@@ -139,7 +133,6 @@ lstrcpyW(
     {
         ERROR("invalid lpString2 argument\n");
         LOGEXIT("lstrcpyW returning LPWSTR NULL\n");
-        PERF_EXIT(lstrcpyW);
         return NULL;
     }
 
@@ -153,7 +146,6 @@ lstrcpyW(
     *lpString1 = '\0';
 
     LOGEXIT("lstrcpyW returning LPWSTR %p (%S)\n", lpStart, lpStart);
-    PERF_EXIT(lstrcpyW);
     return lpStart;
 }
 
@@ -183,7 +175,6 @@ lstrlenA(  LPCSTR lpString)
 {
     int nChar = 0;
 
-    PERF_ENTRY(lstrlenA);
     ENTRY("lstrlenA (lpString=%p (%s))\n", lpString?lpString:"NULL", lpString?lpString:"NULL");
     if (lpString)
     {
@@ -193,7 +184,6 @@ lstrlenA(  LPCSTR lpString)
         }
     }
     LOGEXIT("lstrlenA returning int %d\n", nChar);
-    PERF_EXIT(lstrlenA);
     return nChar;
 }
 
@@ -223,7 +213,6 @@ lstrlenW(
 {
     int nChar = 0;
 
-    PERF_ENTRY(lstrlenW);
     ENTRY("lstrlenW (lpString=%p (%S))\n", lpString?lpString:W16_NULLSTRING, lpString?lpString:W16_NULLSTRING);
     if (lpString != NULL)
     {
@@ -233,7 +222,6 @@ lstrlenW(
         }
     }
     LOGEXIT("lstrlenW returning int %d\n", nChar);
-    PERF_EXIT(lstrlenW);
     return nChar;
 }
 
@@ -270,7 +258,6 @@ lstrcpynW(
 {
     LPWSTR lpStart = lpString1;
 
-    PERF_ENTRY(lstrcpynW);
     ENTRY("lstrcpynW (lpString1=%p, lpString2=%p (%S), iMaxLength=%d)\n",
               lpString1?lpString1:W16_NULLSTRING, lpString2?lpString2:W16_NULLSTRING, lpString2?lpString2:W16_NULLSTRING, iMaxLength);
 
@@ -278,7 +265,6 @@ lstrcpynW(
     {
         ERROR("invalid lpString1 argument\n");
         LOGEXIT("lstrcpynW returning LPWSTR NULL\n");
-        PERF_EXIT(lstrcpynW);
         return NULL;
     }
 
@@ -286,7 +272,6 @@ lstrcpynW(
     {
         ERROR("invalid lpString2 argument\n");
         LOGEXIT("lstrcpynW returning LPWSTR NULL\n");
-        PERF_EXIT(lstrcpynW);
         return NULL;
     }
 
@@ -304,7 +289,6 @@ lstrcpynW(
     }
 
     LOGEXIT("lstrcpynW returning LPWSTR %p (%S)\n", lpStart, lpStart);
-    PERF_EXIT(lstrcpynW);
     return lpStart;
 
 }

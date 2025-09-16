@@ -284,11 +284,9 @@ uint32_t
 GetCurrentProcessId(
             void)
 {
-    PERF_ENTRY(GetCurrentProcessId);
     ENTRY("GetCurrentProcessId()\n" );
 
     LOGEXIT("GetCurrentProcessId returns DWORD %#x\n", gPID);
-    PERF_EXIT(GetCurrentProcessId);
     return gPID;
 }
 
@@ -303,11 +301,9 @@ uint32_t
 GetCurrentSessionId(
             void)
 {
-    PERF_ENTRY(GetCurrentSessionId);
     ENTRY("GetCurrentSessionId()\n" );
 
     LOGEXIT("GetCurrentSessionId returns DWORD %#x\n", gSID);
-    PERF_EXIT(GetCurrentSessionId);
     return gSID;
 }
 
@@ -322,11 +318,9 @@ HANDLE
 GetCurrentProcess(
           void)
 {
-    PERF_ENTRY(GetCurrentProcess);
     ENTRY("GetCurrentProcess()\n" );
 
     LOGEXIT("GetCurrentProcess returns HANDLE %p\n", hPseudoCurrentProcess);
-    PERF_EXIT(GetCurrentProcess);
 
     /* return a pseudo handle */
     return hPseudoCurrentProcess;
@@ -358,7 +352,6 @@ CreateProcessW(
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread;
 
-    PERF_ENTRY(CreateProcessW);
     ENTRY("CreateProcessW(lpAppName=%p (%S), lpCmdLine=%p (%S), lpProcessAttr=%p,"
            "lpThreadAttr=%p, bInherit=%d, dwFlags=%#x, lpEnv=%p,"
            "lpCurrentDir=%p (%S), lpStartupInfo=%p, lpProcessInfo=%p)\n",
@@ -393,7 +386,6 @@ CreateProcessW(
     }
 
     LOGEXIT("CreateProcessW returns BOOL %d\n", NO_ERROR == palError);
-    PERF_EXIT(CreateProcessW);
 
     return NO_ERROR == palError;
 }
@@ -1063,7 +1055,6 @@ GetExitCodeProcess(
     uint32_t dwExitCode;
     PROCESS_STATE ps;
 
-    PERF_ENTRY(GetExitCodeProcess);
     ENTRY("GetExitCodeProcess(hProcess = %p, lpExitCode = %p)\n",
           hProcess, lpExitCode);
 
@@ -1106,7 +1097,6 @@ done:
     }
 
     LOGEXIT("GetExitCodeProcess returns BOOL %d\n", NO_ERROR == palError);
-    PERF_EXIT(GetExitCodeProcess);
 
     return NO_ERROR == palError;
 }
@@ -1124,7 +1114,6 @@ ExitProcess(
 {
     uint32_t old_terminator;
 
-    PERF_ENTRY_ONLY(ExitProcess);
     ENTRY("ExitProcess(uExitCode=0x%x)\n", uExitCode );
 
     old_terminator = InterlockedCompareExchange(&terminator, GetCurrentThreadId(), 0);
@@ -1200,13 +1189,11 @@ TerminateProcess(
 {
     BOOL ret;
 
-    PERF_ENTRY(TerminateProcess);
     ENTRY("TerminateProcess(hProcess=%p, uExitCode=%u)\n",hProcess, uExitCode );
 
     ret = PROCEndProcess(hProcess, uExitCode, TRUE);
 
     LOGEXIT("TerminateProcess returns BOOL %d\n", ret);
-    PERF_EXIT(TerminateProcess);
     return ret;
 }
 
@@ -1347,7 +1334,6 @@ GetProcessTimes(
     const long USECS_TO_NS = 1000;      /* 10^3 */
 
 
-    PERF_ENTRY(GetProcessTimes);
     ENTRY("GetProcessTimes(hProcess=%p, lpExitTime=%p, lpKernelTime=%p,"
           "lpUserTime=%p)\n",
           hProcess, lpCreationTime, lpExitTime, lpKernelTime, lpUserTime );
@@ -1404,7 +1390,6 @@ GetProcessTimes(
 
 GetProcessTimesExit:
     LOGEXIT("GetProcessTimes returns BOOL %d\n", retval);
-    PERF_EXIT(GetProcessTimes);
     return (retval);
 }
 
@@ -1418,7 +1403,6 @@ LPWSTR
 GetCommandLineW(
     void)
 {
-    PERF_ENTRY(GetCommandLineW);
     ENTRY("GetCommandLineW()\n");
 
     LPWSTR lpwstr = g_lpwstrCmdLine ? g_lpwstrCmdLine : (LPWSTR)W("");
@@ -1426,7 +1410,6 @@ GetCommandLineW(
     LOGEXIT("GetCommandLineW returns LPWSTR %p (%S)\n",
           g_lpwstrCmdLine,
           lpwstr);
-    PERF_EXIT(GetCommandLineW);
 
     return lpwstr;
 }
@@ -1456,7 +1439,6 @@ OpenProcess(
     CObjectAttributes oa;
     HANDLE hProcess = NULL;
 
-    PERF_ENTRY(OpenProcess);
     ENTRY("OpenProcess(dwDesiredAccess=0x%08x, bInheritHandle=%d, "
           "dwProcessId = 0x%08x)\n",
           dwDesiredAccess, bInheritHandle, dwProcessId );
@@ -1534,7 +1516,6 @@ OpenProcessExit:
     }
 
     LOGEXIT("OpenProcess returns HANDLE %p\n", hProcess);
-    PERF_EXIT(OpenProcess);
     return hProcess;
 }
 

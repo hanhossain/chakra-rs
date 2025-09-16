@@ -135,7 +135,6 @@ FlushInstructionCache(
 {
     BOOL Ret;
 
-    PERF_ENTRY(FlushInstructionCache);
     ENTRY("FlushInstructionCache (hProcess=%p, lpBaseAddress=%p dwSize=%d)\
           \n", hProcess, lpBaseAddress, dwSize);
 
@@ -149,7 +148,6 @@ FlushInstructionCache(
     }
 
     LOGEXIT("FlushInstructionCache returns BOOL %d\n", Ret);
-    PERF_EXIT(FlushInstructionCache);
     return Ret;
 }
 
@@ -164,7 +162,6 @@ void
 OutputDebugStringA(
          LPCSTR lpOutputString)
 {
-    PERF_ENTRY(OutputDebugStringA);
     ENTRY("OutputDebugStringA (lpOutputString=%p (%s))\n",
           lpOutputString?lpOutputString:"NULL",
           lpOutputString?lpOutputString:"NULL");
@@ -178,7 +175,6 @@ OutputDebugStringA(
     }
 
     LOGEXIT("OutputDebugStringA returns\n");
-    PERF_EXIT(OutputDebugStringA);
 }
 
 /*++
@@ -194,7 +190,6 @@ OutputDebugStringW(
     char *lpOutputStringA;
     int strLen;
 
-    PERF_ENTRY(OutputDebugStringW);
     ENTRY("OutputDebugStringW (lpOutputString=%p (%S))\n",
           lpOutputString ? lpOutputString: W16_NULLSTRING,
           lpOutputString ? lpOutputString: W16_NULLSTRING);
@@ -236,7 +231,6 @@ OutputDebugStringW(
 
 EXIT:
     LOGEXIT("OutputDebugStringW returns\n");
-    PERF_EXIT(OutputDebugStringW);
 }
 
 #ifdef ENABLE_RUN_ON_DEBUG_BREAK
@@ -390,7 +384,6 @@ void
 DebugBreak(
        void)
 {
-    PERF_ENTRY(DebugBreak);
     ENTRY("DebugBreak()\n");
 
     if (DebugBreakCommand() <= 0) {
@@ -400,7 +393,6 @@ DebugBreak(
     }
 
     LOGEXIT("DebugBreak returns\n");
-    PERF_EXIT(DebugBreak);
 }
 
 /*++
@@ -439,7 +431,6 @@ GetThreadContext(
     IPalObject *pobjThread = NULL;
     BOOL ret = FALSE;
 
-    PERF_ENTRY(GetThreadContext);
     ENTRY("GetThreadContext (hThread=%p, lpContext=%p)\n",hThread,lpContext);
 
     pThread = InternalGetCurrentThread();
@@ -479,7 +470,6 @@ GetThreadContext(
     }
 
     LOGEXIT("GetThreadContext returns ret:%d\n", ret);
-    PERF_EXIT(GetThreadContext);
     return ret;
 }
 
@@ -500,7 +490,6 @@ SetThreadContext(
     IPalObject *pobjThread = NULL;
     BOOL ret = FALSE;
 
-    PERF_ENTRY(SetThreadContext);
     ENTRY("SetThreadContext (hThread=%p, lpContext=%p)\n",hThread,lpContext);
 
     pThread = InternalGetCurrentThread();
@@ -579,7 +568,6 @@ ReadProcessMemory(
     size_t offset;
 #endif  // !HAVE_PROCFS_CTL && !HAVE_TTRACE
 
-    PERF_ENTRY(ReadProcessMemory);
     ENTRY("ReadProcessMemory (hProcess=%p,lpBaseAddress=%p, lpBuffer=%p, "
           "nSize=%u, lpNumberOfBytesRead=%p)\n",hProcess,lpBaseAddress,
           lpBuffer, (unsigned int)nSize, lpNumberOfBytesRead);
@@ -827,7 +815,6 @@ EXIT:
         *lpNumberOfBytesRead = numberOfBytesRead;
     }
     LOGEXIT("ReadProcessMemory returns BOOL %d\n", ret.Load());
-    PERF_EXIT(ReadProcessMemory);
     return ret;
 }
 
@@ -869,7 +856,6 @@ WriteProcessMemory(
     int* lpBaseAddressAligned;
 #endif
 
-    PERF_ENTRY(WriteProcessMemory);
     ENTRY("WriteProcessMemory (hProcess=%p,lpBaseAddress=%p, lpBuffer=%p, "
            "nSize=%u, lpNumberOfBytesWritten=%p)\n",
            hProcess,lpBaseAddress, lpBuffer, (unsigned int)nSize, lpNumberOfBytesWritten);
@@ -1118,7 +1104,6 @@ EXIT:
     }
 
     LOGEXIT("WriteProcessMemory returns BOOL %d\n", ret.Load());
-    PERF_EXIT(WriteProcessMemory);
     return ret;
 }
 
@@ -1596,7 +1581,6 @@ PAL_CreateExecWatchpoint(
     void * pvInstruction
     )
 {
-    PERF_ENTRY(PAL_CreateExecWatchpoint);
     ENTRY("PAL_CreateExecWatchpoint (hThread=%p, pvInstruction=%p)\n", hThread, pvInstruction);
 
     uint32_t dwError = ERROR_NOT_SUPPORTED;
@@ -1689,7 +1673,6 @@ PAL_CreateExecWatchpointExit:
 #endif // HAVE_PRWATCH_T
 
     LOGEXIT("PAL_CreateExecWatchpoint returns ret:%d\n", dwError);
-    PERF_EXIT(PAL_CreateExecWatchpoint);
     return dwError;
 }
 
@@ -1718,7 +1701,6 @@ PAL_DeleteExecWatchpoint(
     void * pvInstruction
     )
 {
-    PERF_ENTRY(PAL_DeleteExecWatchpoint);
     ENTRY("PAL_DeleteExecWatchpoint (hThread=%p, pvInstruction=%p)\n", hThread, pvInstruction);
 
     uint32_t dwError = ERROR_NOT_SUPPORTED;
@@ -1792,7 +1774,6 @@ PAL_DeleteExecWatchpointExit:
 #endif // HAVE_PRWATCH_T
 
     LOGEXIT("PAL_DeleteExecWatchpoint returns ret:%d\n", dwError);
-    PERF_EXIT(PAL_DeleteExecWatchpoint);
     return dwError;
 }
 
