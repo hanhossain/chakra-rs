@@ -4,7 +4,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "Backend.h"
-#include "Base/EtwTrace.h"
 #include "Base/ScriptContextProfiler.h"
 #ifdef VTUNE_PROFILING
 #include "Base/VTuneChakraProfile.h"

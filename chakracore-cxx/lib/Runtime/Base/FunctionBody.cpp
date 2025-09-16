@@ -12,7 +12,6 @@
 #include "Language/FunctionCodeGenRuntimeData.h"
 
 #include "ByteCode/ScopeInfo.h"
-#include "Base/EtwTrace.h"
 #include "Core/StackBackTrace.h"
 
 #ifdef VTUNE_PROFILING

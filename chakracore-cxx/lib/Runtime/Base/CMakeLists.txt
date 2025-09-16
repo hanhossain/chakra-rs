@@ -6,7 +6,6 @@ add_library (Chakra.Runtime.Base OBJECT
     Debug.cpp
     # DelayLoadLibrary.cpp
     # Entropy.cpp
-    EtwTrace.cpp
     Exception.cpp
     ExpirableObject.cpp
     FunctionBody.cpp
