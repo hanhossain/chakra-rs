@@ -164,8 +164,6 @@ function_name() to call the system's implementation
 
 /* C runtime functions needed to be renamed to avoid duplicate definition
    of those functions when including standard C header files */
-#define div DUMMY_div
-#define div_t DUMMY_div_t
 #define strlen DUMMY_strlen
 #define strnlen DUMMY_strnlen
 #define stricmp DUMMY_stricmp
@@ -286,8 +284,6 @@ function_name() to call the system's implementation
    native OS */
 #undef exit
 #undef alloca
-#undef div
-#undef div_t
 #undef memmove
 #undef strlen
 #undef strnlen
