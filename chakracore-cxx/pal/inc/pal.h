@@ -5218,10 +5218,6 @@ typedef struct {
 
 div_t div(int numer, int denom);
 
-void * memcpy(void *, const void *, size_t);
-void * memset(void *, int, size_t);
-void * memchr(const void *, int, size_t);
-
 size_t strlen(const char *);
 int strcmp(const char*, const char *);
 int strncmp(const char*, const char *, size_t);
