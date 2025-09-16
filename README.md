@@ -63,5 +63,4 @@ Remove unicode (always use unicode):
 - `_UNICODE`
 
 Remove ETW:
-- TEST_ETW_EVENTS
 - EtwTraceCore.h
