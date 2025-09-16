@@ -25,4 +25,4 @@ target_include_directories (Chakra.Jsrt.Core PUBLIC
 
 target_compile_definitions(Chakra.Jsrt.Core PUBLIC
     PAL_STDCPP_COMPAT
-    NO_PAL_MINMAX)
+)

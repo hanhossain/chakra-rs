@@ -100,4 +100,4 @@ target_include_directories(libwabt PUBLIC
 
 target_compile_definitions(libwabt PUBLIC
     PAL_STDCPP_COMPAT
-    NO_PAL_MINMAX)
+)

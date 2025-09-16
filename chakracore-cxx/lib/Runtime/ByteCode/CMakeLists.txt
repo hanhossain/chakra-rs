@@ -40,6 +40,6 @@ target_include_directories (Chakra.Runtime.ByteCode PUBLIC
 
 target_compile_definitions(Chakra.Runtime.ByteCode PUBLIC
     PAL_STDCPP_COMPAT
-    NO_PAL_MINMAX)
+)
 
 target_precompile_headers(Chakra.Runtime.ByteCode PUBLIC RuntimeByteCodePch.h)

@@ -134,4 +134,4 @@ target_include_directories (Chakra.Backend PUBLIC
 
 target_compile_definitions(Chakra.Backend PUBLIC
     PAL_STDCPP_COMPAT
-    NO_PAL_MINMAX)
+)

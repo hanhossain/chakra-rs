@@ -7,4 +7,4 @@ target_include_directories (Chakra.Common.Codex PUBLIC
 
 target_compile_definitions(Chakra.Common.Codex PUBLIC
     PAL_STDCPP_COMPAT
-    NO_PAL_MINMAX)
+)

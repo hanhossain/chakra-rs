@@ -22,6 +22,6 @@ target_include_directories (Chakra.Runtime.Math PUBLIC
 
 target_compile_definitions(Chakra.Runtime.Math PUBLIC
     PAL_STDCPP_COMPAT
-    NO_PAL_MINMAX)
+)
 
 target_precompile_headers(Chakra.Runtime.Math PUBLIC RuntimeMathPch.h)
