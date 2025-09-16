@@ -6,4 +6,3 @@
 
 #define JS_ETW(s)
 #define IS_JS_ETW(s) (false)
-#define GCETW_INTERNAL(e, args)
