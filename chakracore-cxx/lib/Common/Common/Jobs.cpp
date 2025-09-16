@@ -1050,8 +1050,6 @@ namespace JsUtil
 
     void BackgroundJobProcessor::Run(ParallelThreadData* threadData)
     {
-        EDGE_ETW_INTERNAL(EventWriteJSCRIPT_NATIVECODEGEN_START(this, 0));
-
         ArenaAllocator threadArena(u"ThreadArena", threadData->GetPageAllocator(), Js::Throw::OutOfMemory);
         threadData->threadArena = &threadArena;
 
@@ -1084,7 +1082,6 @@ namespace JsUtil
                     Assert(!threadData->isWaitingForJobs);
                     threadData->isWaitingForJobs = true;
                     criticalSection.Leave();
-                    EDGE_ETW_INTERNAL(EventWriteJSCRIPT_NATIVECODEGEN_STOP(this, 0));
 
                     if (threadService->HasCallback())
                     {
@@ -1095,7 +1092,6 @@ namespace JsUtil
 
                     WaitForJobReadyOrShutdown(threadData);
 
-                    EDGE_ETW_INTERNAL(EventWriteJSCRIPT_NATIVECODEGEN_START(this, 0));
                     criticalSection.Enter();
                     threadData->isWaitingForJobs = false;
                     continue;
@@ -1142,8 +1138,6 @@ namespace JsUtil
                 }
             }
             criticalSection.Leave();
-
-            EDGE_ETW_INTERNAL(EventWriteJSCRIPT_NATIVECODEGEN_STOP(this, 0));
         }
     }
 
