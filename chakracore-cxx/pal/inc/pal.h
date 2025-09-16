@@ -5217,26 +5217,11 @@ typedef struct {
 
 div_t div(int numer, int denom);
 
-size_t strspn(const char *, const char *);
-size_t  strcspn(const char *, const char *);
 int vsprintf(char *, const char *, va_list);
 int sscanf(const char *, const char *, ...);
-int atoi(const char *);
 int32_t atol(const char *);
 //long long int atoll(const char *) __THROW;
 uint32_t strtoul(const char *, char **, int);
-double atof(const char *);
-double strtod(const char *, char **);
-int isprint(int);
-int isspace(int);
-int isalpha(int);
-int isalnum(int);
-int isdigit(int);
-int isxdigit(int);
-int isupper(int);
-int islower(int);
-int tolower(int);
-int toupper(int);
 
 #endif // PAL_STDCPP_COMPAT
 
