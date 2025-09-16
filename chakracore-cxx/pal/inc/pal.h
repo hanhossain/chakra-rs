@@ -5151,7 +5151,6 @@ CoCreateGuid( GUID * pguid);
 #define vsprintf      PAL_vsprintf
 #define vswprintf     PAL_vswprintf
 #define fopen         PAL_fopen
-#define strtok        PAL_strtok
 #define strtoul       PAL_strtoul
 #define fprintf       PAL_fprintf
 #define fwprintf      PAL_fwprintf
@@ -5218,8 +5217,6 @@ typedef struct {
 
 div_t div(int numer, int denom);
 
-char * strstr(const char *, const char *);
-char * strtok(char *, const char *);
 size_t strspn(const char *, const char *);
 size_t  strcspn(const char *, const char *);
 int vsprintf(char *, const char *, va_list);
@@ -5509,7 +5506,6 @@ int32_t PAL_ftell(PAL_FILE *);
 int PAL_feof(PAL_FILE *);
 int PAL_ferror(PAL_FILE *);
 PAL_FILE * PAL_fopen(const char *, const char *);
-char * PAL_strtok(char *, const char *);
 int PAL_getc(PAL_FILE *stream);
 int PAL_fgetc(PAL_FILE *stream);
 int PAL_ungetc(int c, PAL_FILE *stream);
