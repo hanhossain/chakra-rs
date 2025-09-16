@@ -7589,7 +7589,7 @@ void Parser::FinishFncDecl(ParseNodeFnc * pnodeFnc, LPCOLESTR pNameHint, bool fL
 {
     LPCOLESTR name = NULL;
     JS_ETW(int32 startAstSize = *m_pCurrentAstSize);
-    if (IS_JS_ETW(EventEnabledJSCRIPT_PARSE_METHOD_START()) || PHASE_TRACE1(Js::DeferParsePhase))
+    if (PHASE_TRACE1(Js::DeferParsePhase))
     {
         name = GetFunctionName(pnodeFnc, pNameHint);
         m_functionBody = NULL;  // for nested functions we do not want to get the name of the top deferred function return name;
