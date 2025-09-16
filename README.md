@@ -61,5 +61,3 @@ typedefs/defines to remove:
 
 Remove unicode (always use unicode):
 - `_UNICODE`
-
-Remove ETW:

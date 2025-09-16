@@ -7,8 +7,6 @@
 
 // These are empty stubs here but DLL can supply an .OBJ with an implementation
 
-#ifndef ETW_MEMORY_TRACKING
-
 void ArenaMemoryTracking::Activate()
 {
     // Called to activate arena memory tracking
@@ -102,8 +100,6 @@ void RecyclerMemoryTracking::ReportUnallocated(Recycler * recycler, void* addres
     //
     // if address where a (char *)
 }
-
-#endif
 
 // PageTracking stubs
 void PageTracking::Activate()

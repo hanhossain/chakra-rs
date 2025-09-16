@@ -694,7 +694,7 @@ Recycler::Initialize(const bool forceInThread, JsUtil::ThreadService *threadServ
     collectionParam.domCollect = false;
 #endif
 
-#if defined(PROFILE_RECYCLER_ALLOC) || defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING) || defined(ETW_MEMORY_TRACKING)
+#if defined(PROFILE_RECYCLER_ALLOC) || defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING)
     bool dontNeedDetailedTracking = false;
 
 #if defined(PROFILE_RECYCLER_ALLOC)
