@@ -1059,7 +1059,6 @@ ThreadContext::AddPropertyRecordInternal(const Js::PropertyRecord * propertyReco
     // We will still be able to lookup the symbol property by the property id, so go ahead and check that.
     Assert(GetPropertyName(propertyRecord->GetPropertyId()) == propertyRecord);
 #endif
-    JS_ETW_INTERNAL(EventWriteJSCRIPT_HOSTING_PROPERTYID_LIST(propertyRecord, propertyRecord->GetBuffer()));
 }
 
 void
@@ -1347,7 +1346,6 @@ ThreadContext::EnterScriptStart(Js::ScriptEntryExitRecord * record, bool doClean
 {
     Recycler * recycler = this->GetRecycler();
     Assert(recycler->IsReentrantState());
-    JS_ETW_INTERNAL(EventWriteJSCRIPT_RUN_START(this,0));
 
     // Increment the callRootLevel early so that Dispose ran during FinishConcurrent will not close the current scriptContext
     uint oldCallRootLevel = this->callRootLevel++;
@@ -1479,8 +1477,6 @@ ThreadContext::EnterScriptEnd(Js::ScriptEntryExitRecord * record, bool doCleanup
         PHASE_PRINT_TRACE1(Js::DisposePhase, u"[Dispose] NeedDispose in EnterScriptEnd: %d\n", this->recycler->NeedDispose());
         this->recycler->FinishDisposeObjectsNow<FinishDispose>();
     }
-
-    JS_ETW_INTERNAL(EventWriteJSCRIPT_RUN_STOP(this,0));
 }
 
 void
