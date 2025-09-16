@@ -75,11 +75,6 @@ public:
 
     HeapBucketStats* GetTotalStats() { return &total; }
 
-    bool IsEtwEnabled() const
-    {
-        return IS_GCETW_Enabled(GC_BUCKET_STATS);
-    }
-
     bool IsDumpEnabled() const
     {
         return DUMP_FRAGMENTATION_STATS_IS(!!recycler->GetRecyclerFlagsTable().DumpFragmentationStats);
@@ -87,7 +82,7 @@ public:
 
     bool IsEnabled() const
     {
-        return IsEtwEnabled() || IsDumpEnabled();
+        return IsDumpEnabled();
     }
 
     template <class TBlockType>
