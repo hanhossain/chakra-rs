@@ -211,12 +211,6 @@ function_name() to call the system's implementation
 #undef stderr
 #endif
 
-#ifdef SCHAR_MIN
-#undef SCHAR_MIN
-#endif
-#ifdef SCHAR_MAX
-#undef SCHAR_MAX
-#endif
 #ifdef SHRT_MIN
 #undef SHRT_MIN
 #endif
@@ -411,8 +405,6 @@ function_name() to call the system's implementation
 
 #undef ctime
 
-#undef SCHAR_MIN
-#undef SCHAR_MAX
 #undef UCHAR_MAX
 #undef SHRT_MIN
 #undef SHRT_MAX
