@@ -3175,7 +3175,7 @@ FlushInstructionCache(
 
 BOOL
 GetStringTypeExW(
-          LCID Locale,
+          uint32_t Locale,
           uint32_t dwInfoType,
           LPCWSTR lpSrcStr,
           int cchSrc,
@@ -3225,7 +3225,7 @@ typedef struct nlsversioninfo {
 
 int
 CompareStringA(
-     LCID     Locale,
+     uint32_t     Locale,
      uint32_t    dwCmpFlags,
      LPCSTR   lpString1,
      int      cchCount1,
@@ -3234,7 +3234,7 @@ CompareStringA(
 
 int
 CompareStringW(
-     LCID     Locale,
+     uint32_t     Locale,
      uint32_t    dwCmpFlags,
      LPCWSTR  lpString1,
      int      cchCount1,
@@ -3327,9 +3327,9 @@ GetUserDefaultLangID(
 
 BOOL
 SetThreadLocale(
-         LCID Locale);
+         uint32_t Locale);
 
-LCID
+uint32_t
 GetThreadLocale(
         void);
 
@@ -3580,7 +3580,7 @@ GetThreadLocale(
 
 int
 GetLocaleInfoW(
-     LCID     Locale,
+     uint32_t     Locale,
      LCTYPE   LCType,
      LPWSTR  lpLCData,
      int      cchData);
@@ -3659,7 +3659,7 @@ GetSystemDefaultLocaleName(
 #define GetLocaleInfo GetLocaleInfoW
 
 #if ENABLE_DOWNLEVEL_FOR_NLS
-LCID
+uint32_t
 GetUserDefaultLCID(
            void);
 #endif
@@ -3680,7 +3680,7 @@ GetUserDefaultLocaleName(
 #if ENABLE_DOWNLEVEL_FOR_NLS
 BOOL
 IsValidLocale(
-           LCID Locale,
+           uint32_t Locale,
            uint32_t dwFlags);
 #endif // ENABLE_DOWNLEVEL_FOR_NLS
 
@@ -3708,7 +3708,7 @@ typedef uint32_t CALTYPE;
 #if ENABLE_DOWNLEVEL_FOR_NLS
 int
 GetCalendarInfoW(
-          LCID Locale,
+          uint32_t Locale,
           CALID Calendar,
           CALTYPE CalType,
           LPWSTR lpCalData,
@@ -3750,7 +3750,7 @@ typedef BOOL (CALLBACK* DATEFMT_ENUMPROCEXW)(LPWSTR, CALID);
 BOOL
 EnumDateFormatsExW(
      DATEFMT_ENUMPROCEXW lpDateFmtEnumProcEx,
-     LCID                Locale,
+     uint32_t                Locale,
      uint32_t               dwFlags);
 
 #else // ENABLE_DOWNLEVEL_FOR_NLS
@@ -3773,7 +3773,7 @@ typedef BOOL (CALLBACK* TIMEFMT_ENUMPROCW)(LPWSTR);
 BOOL
 EnumTimeFormatsW(
      TIMEFMT_ENUMPROCW lpTimeFmtEnumProc,
-     LCID              Locale,
+     uint32_t              Locale,
      uint32_t             dwFlags);
 
 #else // ENABLE_DOWNLEVEL_FOR_NLS
@@ -3801,7 +3801,7 @@ typedef BOOL (CALLBACK* CALINFO_ENUMPROCEXW)(LPWSTR,CALID);
 BOOL
 EnumCalendarInfoExW(
      CALINFO_ENUMPROCEXW lpCalInfoEnumProc,
-     LCID              Locale,
+     uint32_t              Locale,
      CALID             Calendar,
      CALTYPE           CalType);
 
@@ -3827,7 +3827,7 @@ EnumCalendarInfoExEx(
 
 int
 LCMapStringW(
-     LCID    Locale,
+     uint32_t    Locale,
      uint32_t   dwMapFlags,
      LPCWSTR lpSrcStr,
      int     cchSrc,
@@ -3918,7 +3918,7 @@ int PAL_FormatDecimal(LPCWSTR sLocale, LPWSTR pBuffer, size_t cchBuffer, PALNUMB
 
 int
 GetDateFormatW(
-            LCID Locale,
+            uint32_t Locale,
             uint32_t dwFlags,
             const SYSTEMTIME *lpDate,
             LPCWSTR lpFormat,

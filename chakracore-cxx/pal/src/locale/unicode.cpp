@@ -400,7 +400,7 @@ See MSDN doc.
 --*/
 BOOL
 GetStringTypeExW(
-      LCID Locale,
+      uint32_t Locale,
       uint32_t dwInfoType,
       LPCWSTR lpSrcStr,
       int cchSrc,

@@ -103,7 +103,6 @@ typedef unsigned short char16_t;
 // TODO (hanhossain): can probably remove this
 #define _UINTPTR_T_DEFINED
 
-typedef uint32_t LCID;
 typedef uint16_t LANGID;
 
 typedef uint32_t LCTYPE;

@@ -436,7 +436,7 @@ namespace Js {
 
         cch = 0;
 
-        LCID lcid = GetUserDefaultLCID();
+        uint32_t lcid = GetUserDefaultLCID();
         if( !(noDateTime & DateTimeFlag::NoDate))
         {
             uint32_t dwFormat = DATE_LONGDATE;
