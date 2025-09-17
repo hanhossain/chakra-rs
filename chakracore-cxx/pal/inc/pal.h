@@ -166,17 +166,10 @@ extern "C" {
 #define INT_MAX       2147483647
 #define UINT_MAX      0xffffffff
 
-#define LONG_MIN    (-2147483647L - 1)
 #define LONG_MAX      2147483647L
 #define ULONG_MAX     0xffffffffUL
 
 #define LONGLONG_MIN    (-9223372036854775807i64 - 1)
-#define LONG64_MIN      (-9223372036854775807i64 - 1)
-#define LONG64_MAX      9223372036854775807i64
-#define ULONGLONG_MAX   0xffffffffffffffffui64
-#define DWORDLONG_MAX   0xffffffffffffffffui64
-#define ULONG64_MAX     0xffffffffffffffffui64
-#define DWORD64_MAX     0xffffffffffffffffui64
 
 #define _I8_MAX   SCHAR_MAX
 #define _I8_MIN   SCHAR_MIN
