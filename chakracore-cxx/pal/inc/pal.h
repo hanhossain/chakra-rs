@@ -158,8 +158,6 @@ extern "C" {
 /******************* Compiler-specific glue *******************************/
 
 #define FEATURE_PAL_SXS 1
-#define __annotation(x)
-#define UNALIGNED
 
 #ifndef FORCEINLINE
 #define FORCEINLINE inline

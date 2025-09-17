@@ -40,8 +40,6 @@
 #define TRUE 1
 #endif
 
-#define UNALIGNED
-
 #define _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
 #define _END_SECURE_CRT_DEPRECATION_DISABLE
 
@@ -511,7 +509,7 @@ DEFAULT_LABEL:
 
                     if(array_width < 1) {
                         if (widechar > 0)
-                            *(char16_t UNALIGNED *)pointer = L'\0';
+                            *(char16_t *)pointer = L'\0';
                         else
                             *(char *)pointer = '\0';
 
@@ -674,7 +672,7 @@ scanit:
                                         }
 #endif  /* 0 */
                                         _MBTOWC(&wctemp, temp, MB_CUR_MAX);
-                                        *(char16_t UNALIGNED *)pointer = wctemp;
+                                        *(char16_t *)pointer = wctemp;
                                         /* just copy L'?' if mbtowc fails, errno is set by mbtowc */
                                         pointer = (char16_t *)pointer + 1;
 #ifdef _SECURE_SCANF
@@ -683,7 +681,7 @@ scanit:
                                     } else
 #else  /* _UNICODE */
                                     if (fl_wchar_arg) {
-                                        *(char16_t UNALIGNED *)pointer = ch;
+                                        *(char16_t *)pointer = ch;
                                         pointer = (char16_t *)pointer + 1;
 #ifdef _SECURE_SCANF
                                         --array_width;
@@ -759,7 +757,7 @@ _END_SECURE_CRT_DEPRECATION_DISABLE
                             /* In case of error, blank out the input buffer */
                             if (fl_wchar_arg)
                             {
-                                _RESET_STRING(((char16_t UNALIGNED *)start), original_array_width);
+                                _RESET_STRING(((char16_t *)start), original_array_width);
                             }
                             else
                             {
@@ -777,10 +775,10 @@ _END_SECURE_CRT_DEPRECATION_DISABLE
                                 {
                                     if (fl_wchar_arg)
                                     {
-                                        *(char16_t UNALIGNED *)pointer = L'\0';
+                                        *(char16_t *)pointer = L'\0';
 #ifdef _SECURE_SCANF
-                                        _FILL_STRING(((char16_t UNALIGNED *)start), original_array_width,
-                                            ((char16_t UNALIGNED *)pointer - (char16_t UNALIGNED *)start + 1))
+                                        _FILL_STRING(((char16_t *)start), original_array_width,
+                                            ((char16_t *)pointer - (char16_t *)start + 1))
 #endif  /* _SECURE_SCANF */
                                     }
                                     else
@@ -975,13 +973,13 @@ getnum:
 assign_num:
 #if _INTEGRAL_MAX_BITS >= 64   
                                 if ( integer64 )
-                                    *(long UNALIGNED *)pointer = ( __uint64_t )num64;
+                                    *(long *)pointer = ( __uint64_t )num64;
                                 else
 #endif  /* _INTEGRAL_MAX_BITS >= 64    */
                                 if (longone)
-                                    *(int UNALIGNED *)pointer = (unsigned int)number;
+                                    *(int *)pointer = (unsigned int)number;
                                 else
-                                    *(short UNALIGNED *)pointer = (unsigned short)number;
+                                    *(short *)pointer = (unsigned short)number;
 
                             } else /*NULL*/;
                         else

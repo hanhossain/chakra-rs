@@ -559,7 +559,7 @@ typedef struct _IMAGE_SYMBOL {
     unsigned char   StorageClass;
     unsigned char   NumberOfAuxSymbols;
 } IMAGE_SYMBOL;
-typedef IMAGE_SYMBOL UNALIGNED *PIMAGE_SYMBOL;
+typedef IMAGE_SYMBOL *PIMAGE_SYMBOL;
 
 
 #define IMAGE_SIZEOF_SYMBOL                  18
@@ -720,7 +720,7 @@ typedef union _IMAGE_AUX_SYMBOL {
         unsigned char   Selection;                      // communal selection type
     } Section;
 } IMAGE_AUX_SYMBOL;
-typedef IMAGE_AUX_SYMBOL UNALIGNED *PIMAGE_AUX_SYMBOL;
+typedef IMAGE_AUX_SYMBOL *PIMAGE_AUX_SYMBOL;
 
 #define IMAGE_SIZEOF_AUX_SYMBOL             18
 
@@ -737,7 +737,7 @@ typedef struct IMAGE_AUX_SYMBOL_TOKEN_DEF {
     unsigned char rgbReserved[12];           // Must be 0
 } IMAGE_AUX_SYMBOL_TOKEN_DEF;
 
-typedef IMAGE_AUX_SYMBOL_TOKEN_DEF UNALIGNED *PIMAGE_AUX_SYMBOL_TOKEN_DEF;
+typedef IMAGE_AUX_SYMBOL_TOKEN_DEF *PIMAGE_AUX_SYMBOL_TOKEN_DEF;
 
 #include "poppack.h"
 
@@ -769,7 +769,7 @@ typedef struct _IMAGE_RELOCATION {
     uint32_t   SymbolTableIndex;
     unsigned short  Type;
 } IMAGE_RELOCATION;
-typedef IMAGE_RELOCATION UNALIGNED *PIMAGE_RELOCATION;
+typedef IMAGE_RELOCATION *PIMAGE_RELOCATION;
 
 #define IMAGE_SIZEOF_RELOCATION         10
 
@@ -1090,7 +1090,7 @@ typedef struct _IMAGE_LINENUMBER {
     } Type;
     unsigned short  Linenumber;                         // Line number.
 } IMAGE_LINENUMBER;
-typedef IMAGE_LINENUMBER UNALIGNED *PIMAGE_LINENUMBER;
+typedef IMAGE_LINENUMBER *PIMAGE_LINENUMBER;
 
 #define IMAGE_SIZEOF_LINENUMBER              6
 
@@ -1107,7 +1107,7 @@ typedef struct _IMAGE_BASE_RELOCATION {
     uint32_t   SizeOfBlock;
 //  unsigned short  TypeOffset[1];
 } IMAGE_BASE_RELOCATION;
-typedef IMAGE_BASE_RELOCATION UNALIGNED * PIMAGE_BASE_RELOCATION;
+typedef IMAGE_BASE_RELOCATION * PIMAGE_BASE_RELOCATION;
 
 #define IMAGE_SIZEOF_BASE_RELOCATION         8
 
@@ -1270,7 +1270,7 @@ typedef struct _IMAGE_IMPORT_DESCRIPTOR {
     uint32_t   Name;
     uint32_t   FirstThunk;                     // RVA to IAT (if bound this IAT has actual addresses)
 } IMAGE_IMPORT_DESCRIPTOR;
-typedef IMAGE_IMPORT_DESCRIPTOR UNALIGNED *PIMAGE_IMPORT_DESCRIPTOR;
+typedef IMAGE_IMPORT_DESCRIPTOR *PIMAGE_IMPORT_DESCRIPTOR;
 
 //
 // New format import descriptors pointed to by DataDirectory[ IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT ]
