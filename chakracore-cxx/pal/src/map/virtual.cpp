@@ -45,7 +45,7 @@ using namespace CorUnix;
 
 SET_DEFAULT_DEBUG_CHANNEL(VIRTUAL);
 
-CRITICAL_SECTION virtual_critsec PAL_GLOBAL;
+CRITICAL_SECTION virtual_critsec __attribute__((init_priority(200)));
 
 #ifdef DEBUG
 Volatile<int> attempt1 = 0;
@@ -66,7 +66,7 @@ static PCMI pVirtualMemory;
 
 #if MMAP_IGNORES_HINT
 // The first node in our list of freed blocks.
-static FREE_BLOCK *pFreeMemory PAL_GLOBAL;
+static FREE_BLOCK *pFreeMemory __attribute__((init_priority(200)));
 
 // The amount of memory that we'll try to reserve on our file.
 // Currently 1GB.
@@ -89,7 +89,7 @@ static void *gBackingBaseAddress = MAP_FAILED;
 static BOOL VIRTUALGetBackingFile(CPalThread * pthrCurrent);
 
 // The file that we're using to back our pages.
-static int gBackingFile PAL_GLOBAL = -1;
+static int gBackingFile __attribute__((init_priority(200))) = -1;
 #endif // RESERVE_FROM_BACKING_FILE
 
 /* We need MAP_ANON. However on some platforms like HP-UX, it is defined as MAP_ANONYMOUS */

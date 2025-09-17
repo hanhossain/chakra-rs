@@ -120,9 +120,9 @@ namespace CorUnix
     IPalSynchronizationManager * g_pSynchronizationManager = NULL;
 
     CPalSynchronizationManager * CPalSynchronizationManager::s_pObjSynchMgr = NULL;
-    Volatile<int32_t> CPalSynchronizationManager::s_lInitStatus PAL_GLOBAL = SynchMgrStatusIdle;
-    CRITICAL_SECTION CPalSynchronizationManager::s_csSynchProcessLock PAL_GLOBAL;
-    CRITICAL_SECTION CPalSynchronizationManager::s_csMonitoredProcessesLock PAL_GLOBAL;
+    Volatile<int32_t> CPalSynchronizationManager::s_lInitStatus __attribute__((init_priority(200))) = SynchMgrStatusIdle;
+    CRITICAL_SECTION CPalSynchronizationManager::s_csSynchProcessLock __attribute__((init_priority(200)));
+    CRITICAL_SECTION CPalSynchronizationManager::s_csMonitoredProcessesLock __attribute__((init_priority(200)));
 
     CPalSynchronizationManager::CPalSynchronizationManager()
         : m_dwWorkerThreadTid(0),

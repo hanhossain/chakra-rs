@@ -109,7 +109,7 @@ SET_DEFAULT_DEBUG_CHANNEL(THREAD);
 uint32_t CPalThread::s_dwDefaultThreadStackSize = 256*1024;
 
 /* list of free CPalThread objects */
-static Volatile<CPalThread*> free_threads_list PAL_GLOBAL = NULL;
+static Volatile<CPalThread*> free_threads_list __attribute__((init_priority(200))) = NULL;
 
 /* lock to access list of free THREAD structures */
 /* NOTE: can't use a CRITICAL_SECTION here (see comment in FreeTHREAD) */
@@ -118,8 +118,8 @@ static CCLock free_threads_spinlock;
 /* lock to access iEndingThreads counter, condition variable to signal shutdown
 thread when any remaining threads have died, and count of exiting threads that
 can't be suspended. */
-pthread_mutex_t ptmEndThread PAL_GLOBAL;
-pthread_cond_t ptcEndThread PAL_GLOBAL;
+pthread_mutex_t ptmEndThread __attribute__((init_priority(200)));
+pthread_cond_t ptcEndThread __attribute__((init_priority(200)));
 static int iEndingThreads = 0;
 
 // Activation function that gets called when an activation is injected into a thread.
@@ -144,7 +144,7 @@ ThreadInitializationRoutine(
     void *pProcessLocalData
     );
 
-CObjectType CorUnix::otThread PAL_GLOBAL (
+CObjectType CorUnix::otThread __attribute__((init_priority(200))) (
                 otiThread,
                 ThreadCleanupRoutine,
                 ThreadInitializationRoutine,
@@ -162,7 +162,7 @@ CObjectType CorUnix::otThread PAL_GLOBAL (
                 CObjectType::NoOwner
                 );
 
-CAllowedObjectTypes aotThread PAL_GLOBAL (otiThread);
+CAllowedObjectTypes aotThread __attribute__((init_priority(200))) (otiThread);
 
 /*++
 Function:

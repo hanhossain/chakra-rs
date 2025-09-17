@@ -75,7 +75,7 @@ BOOL g_Dbg_asserts_enabled;
 FILE *output_file = NULL;
 
 /* master switch for debug channel enablement, to be modified by debugger */
-Volatile<BOOL> dbg_master_switch PAL_GLOBAL = TRUE;
+Volatile<BOOL> dbg_master_switch __attribute__((init_priority(200))) = TRUE;
 
 
 static const char *dbg_channel_names[]=
@@ -134,7 +134,7 @@ static const char INDENT_CHAR = '.';
 static BOOL DBG_get_indent(DBG_LEVEL_ID level, const char *format,
                            char *indent_string);
 
-static CRITICAL_SECTION fprintf_crit_section PAL_GLOBAL;
+static CRITICAL_SECTION fprintf_crit_section __attribute__((init_priority(200)));
 
 /* Function definitions */
 

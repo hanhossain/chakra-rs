@@ -64,7 +64,7 @@ FileCleanupRoutine(
     bool fCleanupSharedState
     );
 
-CObjectType CorUnix::otFile PAL_GLOBAL (
+CObjectType CorUnix::otFile __attribute__((init_priority(200))) (
                 otiFile,
                 FileCleanupRoutine,
                 NULL,   // No initialization routine
@@ -82,8 +82,8 @@ CObjectType CorUnix::otFile PAL_GLOBAL (
                 CObjectType::OwnershipNotApplicable
                 );
 
-CAllowedObjectTypes CorUnix::aotFile PAL_GLOBAL (otiFile);
-static CSharedMemoryFileLockMgr _FileLockManager PAL_GLOBAL;
+CAllowedObjectTypes CorUnix::aotFile __attribute__((init_priority(200))) (otiFile);
+static CSharedMemoryFileLockMgr _FileLockManager __attribute__((init_priority(200)));
 IFileLockManager *CorUnix::g_pFileLockManager = &_FileLockManager;
 
 void

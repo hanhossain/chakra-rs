@@ -159,7 +159,6 @@ extern "C" {
 
 #define FEATURE_PAL_SXS 1
 
-#define PAL_GLOBAL __attribute__((init_priority(200)))
 /******************* PAL-Specific Entrypoints *****************************/
 
 // TODO (hanhossain): remove all the defines

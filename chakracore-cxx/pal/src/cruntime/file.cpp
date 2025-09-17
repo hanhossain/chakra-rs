@@ -39,9 +39,9 @@ Abstract:
 SET_DEFAULT_DEBUG_CHANNEL(CRT);
 
 /* Global variables storing the std streams.*/
-PAL_FILE PAL_Stdout PAL_GLOBAL;
-PAL_FILE PAL_Stdin PAL_GLOBAL;
-PAL_FILE PAL_Stderr PAL_GLOBAL;
+PAL_FILE PAL_Stdout __attribute__((init_priority(200)));
+PAL_FILE PAL_Stdin __attribute__((init_priority(200)));
+PAL_FILE PAL_Stderr __attribute__((init_priority(200)));
 
 /*++
 

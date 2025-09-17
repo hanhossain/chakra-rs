@@ -121,7 +121,7 @@ extern bool g_running_in_exe;
 
 using namespace CorUnix;
 
-CObjectType CorUnix::otProcess PAL_GLOBAL (
+CObjectType CorUnix::otProcess __attribute__((init_priority(200))) (
                 otiProcess,
                 NULL,   // No cleanup routine
                 NULL,   // No initialization routine
@@ -160,7 +160,7 @@ enum membarrier_cmd
     MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_SYNC_CORE  = (1 << 6)
 };
 
-CAllowedObjectTypes aotProcess PAL_GLOBAL (otiProcess);
+CAllowedObjectTypes aotProcess __attribute__((init_priority(200))) (otiProcess);
 
 //
 // The representative IPalObject for this process
@@ -171,7 +171,7 @@ IPalObject* CorUnix::g_pobjProcess;
 // Critical section that protects process data (e.g., the
 // list of active threads)/
 //
-CRITICAL_SECTION g_csProcess PAL_GLOBAL;
+CRITICAL_SECTION g_csProcess __attribute__((init_priority(200)));
 
 //
 // List and count of active threads
@@ -186,7 +186,7 @@ LPWSTR g_lpwstrCmdLine = NULL;
 LPWSTR g_lpwstrAppDir = NULL;
 
 // Thread ID of thread that has started the ExitProcess process
-Volatile<int32_t> terminator PAL_GLOBAL = 0;
+Volatile<int32_t> terminator __attribute__((init_priority(200))) = 0;
 
 // Process and session ID of this process.
 uint32_t gPID = (uint32_t) -1;

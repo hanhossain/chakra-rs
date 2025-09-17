@@ -1168,7 +1168,7 @@ ImportSharedObjectIntoProcessExit:
 static PalObjectTypeId RemotableObjectTypes[] =
     {otiManualResetEvent, otiAutoResetEvent, otiMutex, otiProcess};
     
-static CAllowedObjectTypes aotRemotable PAL_GLOBAL (
+static CAllowedObjectTypes aotRemotable __attribute__((init_priority(200))) (
     RemotableObjectTypes,
     sizeof(RemotableObjectTypes) / sizeof(RemotableObjectTypes[0])
     );

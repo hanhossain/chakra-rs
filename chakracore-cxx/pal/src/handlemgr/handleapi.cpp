@@ -30,7 +30,7 @@ using namespace CorUnix;
 
 SET_DEFAULT_DEBUG_CHANNEL(HANDLE);
 
-CAllowedObjectTypes aotDuplicateHandle PAL_GLOBAL(TRUE);
+CAllowedObjectTypes aotDuplicateHandle __attribute__((init_priority(200)))(TRUE);
 
 PAL_ERROR
 CloseSpecialHandle(

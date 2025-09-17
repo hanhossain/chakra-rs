@@ -312,8 +312,8 @@ typedef struct _pid_and_tid
     Volatile<pthread_t> tid;
 } pid_and_tid;
 
-const uint32_t HeadSignature  PAL_GLOBAL = 0x48454144;
-const uint32_t TailSignature  PAL_GLOBAL = 0x5441494C;
+const uint32_t HeadSignature  __attribute__((init_priority(200))) = 0x48454144;
+const uint32_t TailSignature  __attribute__((init_priority(200))) = 0x5441494C;
 
 #endif // TRACK_SHMLOCK_OWNERSHIP
 
@@ -352,17 +352,17 @@ static CCLock shm_critsec(false);
 int shm_numsegments;
 
 /* array containing the base address of each segment */
-Volatile<void *> shm_segment_bases[MAX_SEGMENTS] PAL_GLOBAL;
+Volatile<void *> shm_segment_bases[MAX_SEGMENTS] __attribute__((init_priority(200)));
 
 /* number of locks the process currently holds (SHMLock calls without matching
 SHMRelease). Because we take the critical section while inside a
 SHMLock/SHMRelease pair, this is actually the number of locks held by a single
 thread. */
-static Volatile<int32_t> lock_count PAL_GLOBAL;
+static Volatile<int32_t> lock_count __attribute__((init_priority(200)));
 
 /* thread ID of thread holding the SHM lock. used for debugging purposes :
    SHMGet/SetInfo will verify that the calling thread holds the lock */
-static Volatile<HANDLE> locking_thread PAL_GLOBAL;
+static Volatile<HANDLE> locking_thread __attribute__((init_priority(200)));
 
 /* Constants ******************************************************************/
 

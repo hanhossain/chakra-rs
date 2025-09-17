@@ -86,9 +86,9 @@ extern "C" BOOL CRTInitStdStreams( void );
 
 SET_DEFAULT_DEBUG_CHANNEL(PAL);
 
-Volatile<int32_t> init_count PAL_GLOBAL = 0;
-Volatile<BOOL> shutdown_intent PAL_GLOBAL = 0;
-Volatile<int32_t> g_chakraCoreInitialized PAL_GLOBAL = 0;
+Volatile<int32_t> init_count __attribute__((init_priority(200))) = 0;
+Volatile<BOOL> shutdown_intent __attribute__((init_priority(200))) = 0;
+Volatile<int32_t> g_chakraCoreInitialized __attribute__((init_priority(200))) = 0;
 static BOOL g_fThreadDataAvailable = FALSE;
 static pthread_mutex_t init_critsec_mutex = PTHREAD_MUTEX_INITIALIZER;
 

@@ -53,8 +53,8 @@ SET_DEFAULT_DEBUG_CHANNEL(VIRTUAL);
 // this critical section.
 //
 
-CRITICAL_SECTION mapping_critsec PAL_GLOBAL;
-LIST_ENTRY MappedViewList PAL_GLOBAL;
+CRITICAL_SECTION mapping_critsec __attribute__((init_priority(200)));
+LIST_ENTRY MappedViewList __attribute__((init_priority(200)));
 
 static PAL_ERROR MAPGrowLocalFile(int32_t, uint32_t);
 static PMAPPED_VIEW_LIST MAPGetViewForAddress( const void * );
@@ -121,7 +121,7 @@ FileMappingInitializationRoutine(
     void *pProcessLocalData
     );
 
-CObjectType CorUnix::otFileMapping PAL_GLOBAL(
+CObjectType CorUnix::otFileMapping __attribute__((init_priority(200)))(
                 otiFileMapping,
                 FileMappingCleanupRoutine,
                 FileMappingInitializationRoutine,
@@ -139,7 +139,7 @@ CObjectType CorUnix::otFileMapping PAL_GLOBAL(
                 CObjectType::OwnershipNotApplicable
                 );
 
-CAllowedObjectTypes aotFileMapping PAL_GLOBAL (otiFileMapping);
+CAllowedObjectTypes aotFileMapping __attribute__((init_priority(200))) (otiFileMapping);
 
 void
 FileMappingCleanupRoutine(
