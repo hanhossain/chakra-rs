@@ -3828,7 +3828,7 @@ JsErrorCode JsSerializeScriptCore(const byte *script, size_t cb,
         size_t cSourceCodeLength = sourceInfo->GetCbLength(u"JsSerializeScript");
 
         // truncation of code length can lead to accessing random memory. Reject the call.
-        if (cSourceCodeLength > DWORD_MAX)
+        if (cSourceCodeLength > UINT_MAX)
         {
             return JsErrorOutOfMemory;
         }
@@ -5176,7 +5176,7 @@ CHAKRA_API JsSerializeParserStateCore(
         size_t cSourceCodeLength = sourceInfo->GetCbLength(u"JsSerializeParserState");
 
         // truncation of code length can lead to accessing random memory. Reject the call.
-        if (cSourceCodeLength > DWORD_MAX)
+        if (cSourceCodeLength > UINT_MAX)
         {
             return JsErrorOutOfMemory;
         }

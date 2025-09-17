@@ -1270,7 +1270,7 @@ LEnd:
     }
 
     // Convert to a big number.
-    Assert(pchLimDig - pchMinDig >= 0 && pchLimDig - pchMinDig <= LONG_MAX);
+    Assert(pchLimDig - pchMinDig >= 0 && pchLimDig - pchMinDig <= INT_MAX);
     num.SetFromRgchExp(pchMinDig, (int32)(pchLimDig - pchMinDig), lwExp);
 
     // If there is no error in the big number, just convert it to a double.
@@ -1278,7 +1278,7 @@ LEnd:
     {
         dbl = num.GetDbl();
 #if DBG
-        Assert(pchLimDig - pchMinDig >= 0 && pchLimDig - pchMinDig <= LONG_MAX);
+        Assert(pchLimDig - pchMinDig >= 0 && pchLimDig - pchMinDig <= INT_MAX);
         dblLo = AdjustDbl(dbl, pchMinDig, (int32)(pchLimDig - pchMinDig), lwExp);
         Assert(dbl == dblLo);
 #endif //DBG
@@ -1299,7 +1299,7 @@ LEnd:
     {
 #if DBG
         Assert(dbl == num.GetDbl());
-        Assert(pchLimDig - pchMinDig >= 0 && pchLimDig - pchMinDig <= LONG_MAX);
+        Assert(pchLimDig - pchMinDig >= 0 && pchLimDig - pchMinDig <= INT_MAX);
         dblLo = AdjustDbl(dbl, pchMinDig, (int32)(pchLimDig - pchMinDig), lwExp);
         Assert(dbl == dblLo || Js::NumberUtilities::IsNan(dblLo));
 #endif //DBG
@@ -1311,7 +1311,7 @@ LEnd:
     // but does happen, e.g.:
     // x = 1.2345678901234568347913049445e+200;
     //
-    Assert(pchLimDig - pchMinDig >= 0 && pchLimDig - pchMinDig <= LONG_MAX);
+    Assert(pchLimDig - pchMinDig >= 0 && pchLimDig - pchMinDig <= INT_MAX);
     dbl = AdjustDbl(num.GetDbl(), pchMinDig, (int32)(pchLimDig - pchMinDig), lwExp);
 
 LDone:

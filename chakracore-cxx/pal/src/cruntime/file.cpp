@@ -29,6 +29,7 @@ Abstract:
 #include <errno.h>
 #include <sys/stat.h>
 #include <pthread.h>
+#include <limits.h>
 
 #if FILE_OPS_CHECK_FERROR_OF_PREVIOUS_CALL
     #define CLEARERR(f) clearerr((f)->bsdFilePtr)
@@ -689,7 +690,7 @@ PAL_ftell(PAL_FILE * f)
 
     /* Windows does not set an error if the file pointer's position
     is greater than _I32_MAX. It just returns -1. */
-    if (lRetVal > _I32_MAX)
+    if (lRetVal > INT_MAX)
     {
         lRetVal = -1;
     }

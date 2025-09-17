@@ -14,14 +14,9 @@
 
 #include "specstrings.h"    // for IN, etc.
 
-#define INTSAFE_E_ARITHMETIC_OVERFLOW       ((int32_t)0x80070216L)  // 0x216 = 534 = ERROR_ARITHMETIC_OVERFLOW
+#include <limits.h>
 
-#define INT_MAX         2147483647
-#define LONG_MAX        2147483647L
-#define USHRT_MAX       0xffff
-#define UINT_MAX        0xffffffff
-#define ULONG_MAX       0xffffffffUL
-#define DWORD_MAX       0xffffffffUL
+#define INTSAFE_E_ARITHMETIC_OVERFLOW       ((int32_t)0x80070216L)  // 0x216 = 534 = ERROR_ARITHMETIC_OVERFLOW
 
 //
 // We make some assumptions about the sizes of various types. Let's be
@@ -290,7 +285,7 @@ UIntToLong(
      uint32_t Operand,
      int32_t* Result)
 {
-    if (Operand <= LONG_MAX)
+    if (Operand <= INT_MAX)
     {
         *Result = (int32_t)Operand;
         return S_OK;
@@ -443,7 +438,7 @@ ULongToLong(
      uint32_t Operand,
      int32_t* Result)
 {
-    if (Operand <= LONG_MAX)
+    if (Operand <= INT_MAX)
     {
         *Result = (int32_t)Operand;
         return S_OK;
@@ -485,7 +480,7 @@ ULongLongToLong(
      unsigned long Operand,
      int32_t* Result)
 {
-    if (Operand <= LONG_MAX)
+    if (Operand <= INT_MAX)
     {
         *Result = (int32_t)Operand;
         return S_OK;
@@ -552,7 +547,7 @@ ULongLongToULong(
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pulResult = 0xffffffffUL;
 
-    if (ullOperand <= ULONG_MAX)
+    if (ullOperand <= UINT_MAX)
     {
         *pulResult = (uint32_t)ullOperand;
         hr = S_OK;
@@ -573,7 +568,7 @@ ULongLongToUInt(
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *puResult = 0xffffffff;
 
-    if (ullOperand <= UINT_MAX)
+    if (ullOperand <= 0xffffffff)
     {
         *puResult = (uint32_t)ullOperand;
         hr = S_OK;

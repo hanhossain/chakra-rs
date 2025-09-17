@@ -35,6 +35,7 @@ Abstract:
 
 #include "runtime_proxy.h"
 #include <errno.h>
+#include <limits.h>
 
 SET_DEFAULT_DEBUG_CHANNEL(CRT);
 
@@ -519,14 +520,14 @@ PAL_wcstol(
 
     res = strtol(s_nptr, &s_endptr, base);
 
-    if (res > _I32_MAX)
+    if (res > INT_MAX)
     {
-        res = _I32_MAX;
+        res = INT_MAX;
         errno = ERANGE;
     }
-    else if (res < _I32_MIN)
+    else if (res < INT_MIN)
     {
-        res = _I32_MIN;
+        res = INT_MIN;
         errno = ERANGE;
     }
 
@@ -733,7 +734,7 @@ PAL_wcstoul(
 
     res = strtoul(s_nptr, &s_endptr, base);
 
-    if (res > _UI32_MAX)
+    if (res > UINT_MAX)
     {
         char16_t wc = *nptr;
         while (PAL_iswspace(wc))
@@ -745,7 +746,7 @@ PAL_wcstoul(
            to match Windows behavior. */
         if (wc != '-')
         {
-            res = _UI32_MAX;
+            res = UINT_MAX;
             errno = ERANGE;
         }
     }

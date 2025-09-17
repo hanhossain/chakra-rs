@@ -8270,7 +8270,7 @@ Case0:
             if (lu > 0x19999999)
                 return FALSE;
             lu *= 10;
-            if(lu > (ULONG_MAX - luDig))
+            if(lu > (UINT_MAX - luDig))
                 return FALSE;
             lu += luDig;
         }

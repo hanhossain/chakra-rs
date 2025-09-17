@@ -8594,7 +8594,7 @@ LPCOLESTR Parser::AppendNameHints(IdentPtr left, LPCOLESTR right, uint32 *pNameL
         *pShortNameOffset = 0;
     }
 
-    Assert(rightLen <= ULONG_MAX); // name hints should not exceed ULONG_MAX characters
+    Assert(rightLen <= UINT_MAX); // name hints should not exceed ULONG_MAX characters
 
     if (left == nullptr && !wrapInBrackets)
     {
@@ -8629,7 +8629,7 @@ LPCOLESTR Parser::AppendNameHints(LPCOLESTR left, IdentPtr right, uint32 *pNameL
         *pShortNameOffset = 0;
     }
 
-    Assert(leftLen <= ULONG_MAX); // name hints should not exceed ULONG_MAX characters
+    Assert(leftLen <= UINT_MAX); // name hints should not exceed ULONG_MAX characters
 
     if (left == nullptr || (leftLen == 0 && !wrapInBrackets))
     {
@@ -8660,7 +8660,7 @@ LPCOLESTR Parser::AppendNameHints(LPCOLESTR left, LPCOLESTR right, uint32 *pName
     {
         *pShortNameOffset = 0;
     }
-    Assert(rightLen <= ULONG_MAX && leftLen <= ULONG_MAX); // name hints should not exceed ULONG_MAX characters
+    Assert(rightLen <= UINT_MAX && leftLen <= UINT_MAX); // name hints should not exceed ULONG_MAX characters
 
     if (leftLen == 0 && !wrapInBrackets)
     {

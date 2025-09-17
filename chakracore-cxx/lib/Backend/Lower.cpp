@@ -27118,7 +27118,7 @@ Lowerer::LowerDivI4Common(IR::Instr * instr)
     {
         IR::LabelInstr * minIntLabel = nullptr;
         // we need to check for INT_MIN/-1 if divisor is either -1 or variable, and dividend is either INT_MIN or variable
-        long intMin = IRType_IsInt64(src1->GetType()) ? LONGLONG_MIN : INT_MIN;
+        long intMin = IRType_IsInt64(src1->GetType()) ? INT64_MIN : INT_MIN;
         bool needsMinOverNeg1Check = !(src2->IsImmediateOpnd() && src2->GetImmediateValue(m_func) != -1);
         if (src1->IsImmediateOpnd())
         {
@@ -27249,7 +27249,7 @@ Lowerer::LowerTrapIfMinIntOverNegOne(IR::Instr * const instr)
     IR::Opnd * src1 = instr->GetSrc1();
     IR::Opnd * src2 = instr->UnlinkSrc2();
 
-    long intMin = src1->IsInt64() ? LONGLONG_MIN : INT_MIN;
+    long intMin = src1->IsInt64() ? INT64_MIN : INT_MIN;
     if (src1->IsImmediateOpnd())
     {
         if (src1->GetImmediateValue(m_func) != intMin)
