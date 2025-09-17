@@ -211,9 +211,6 @@ function_name() to call the system's implementation
 #undef stderr
 #endif
 
-#ifdef ULONG_MAX
-#undef ULONG_MAX
-#endif
 #ifdef RAND_MAX
 #undef RAND_MAX
 #endif
@@ -381,7 +378,6 @@ function_name() to call the system's implementation
 
 #undef ctime
 
-#undef ULONG_MAX
 #undef RAND_MAX
 #undef __record_type_class
 #undef __real_type_class

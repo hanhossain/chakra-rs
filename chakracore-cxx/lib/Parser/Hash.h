@@ -350,7 +350,7 @@ public:
     IdentPtr PidHashName(LPCOLESTR psz)
     {
         size_t csz = wcslen(psz);
-        Assert(csz <= ULONG_MAX);
+        Assert(csz <= UINT_MAX);
         return PidHashNameLen(psz, static_cast<uint32>(csz));
     }
 

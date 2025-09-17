@@ -19,7 +19,6 @@
 // TODO (hanhossain): remove the limit defines
 #define INT_MAX         2147483647
 #define USHRT_MAX       0xffff
-#define ULONG_MAX       0xffffffffUL
 
 //
 // We make some assumptions about the sizes of various types. Let's be
@@ -550,7 +549,7 @@ ULongLongToULong(
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pulResult = 0xffffffffUL;
 
-    if (ullOperand <= ULONG_MAX)
+    if (ullOperand <= UINT_MAX)
     {
         *pulResult = (uint32_t)ullOperand;
         hr = S_OK;
