@@ -217,9 +217,6 @@ function_name() to call the system's implementation
 #ifdef SHRT_MAX
 #undef SHRT_MAX
 #endif
-#ifdef UCHAR_MAX
-#undef UCHAR_MAX
-#endif
 #ifdef USHRT_MAX
 #undef USHRT_MAX
 #endif
@@ -405,7 +402,6 @@ function_name() to call the system's implementation
 
 #undef ctime
 
-#undef UCHAR_MAX
 #undef SHRT_MIN
 #undef SHRT_MAX
 #undef USHRT_MAX
