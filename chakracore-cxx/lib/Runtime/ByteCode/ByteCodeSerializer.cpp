@@ -1045,7 +1045,6 @@ public:
             break; \
         default: \
             Assert(false); \
-            __assume(false); \
         } \
        saveBlock(); \
        break;     }
@@ -1258,7 +1257,6 @@ public:
                         } \
                         default: \
                             Assert(false); \
-                            __assume(false); \
                         } \
                        saveBlock(); \
                        break; \

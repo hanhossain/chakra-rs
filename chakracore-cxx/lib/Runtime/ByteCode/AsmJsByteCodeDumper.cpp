@@ -1036,7 +1036,6 @@ namespace Js
             heapTag = u"HEAPI64"; break;
         default:
             Assert(false);
-            __assume(false);
             break;
         }
 
@@ -1072,7 +1071,6 @@ namespace Js
             //SIMD_DUMP_ARR_VALUE(D2)
         default:
             Assert(false);
-            __assume(false);
             break;
         }
 

@@ -57,7 +57,6 @@ const byte* Js::InterpreterStackFrame::PROCESS_OPCODE_FN_NAME(ExtendedOpcodePref
         // Help the C++ optimizer by declaring that the cases we
         // have above are sufficient
         AssertMsg(false, "dispatch to bad opcode");
-        __assume(false);
     };
     return ip;
 }
@@ -82,7 +81,6 @@ const byte* Js::InterpreterStackFrame::PROCESS_OPCODE_FN_NAME(MediumLayoutPrefix
         // Help the C++ optimizer by declaring that the cases we
         // have above are sufficient
         AssertMsg(false, "dispatch to bad opcode");
-        __assume(false);
     }
     return ip;
 }
@@ -100,7 +98,6 @@ const byte* Js::InterpreterStackFrame::PROCESS_OPCODE_FN_NAME(ExtendedMediumLayo
         // Help the C++ optimizer by declaring that the cases we
         // have above are sufficient
         AssertMsg(false, "dispatch to bad opcode");
-        __assume(false);
     };
     return ip;
 }
@@ -125,7 +122,6 @@ const byte* Js::InterpreterStackFrame::PROCESS_OPCODE_FN_NAME(LargeLayoutPrefix)
         // Help the C++ optimizer by declaring that the cases we
         // have above are sufficient
         AssertMsg(false, "dispatch to bad opcode");
-        __assume(false);
     }
     return ip;
 }
@@ -143,7 +139,6 @@ const byte* Js::InterpreterStackFrame::PROCESS_OPCODE_FN_NAME(ExtendedLargeLayou
         // Help the C++ optimizer by declaring that the cases we
         // have above are sufficient
         AssertMsg(false, "dispatch to bad opcode");
-        __assume(false);
     };
     return ip;
 }
@@ -496,7 +491,6 @@ SWAP_BP_FOR_OPCODE:
                 // Help the C++ optimizer by declaring that the cases we
                 // have above are sufficient
                 AssertMsg(false, "dispatch to bad opcode");
-                __assume(false);
         }
     }
 }

@@ -51,7 +51,7 @@ extern __declspec(thread) int IsInAssert;
 #define AssertMsg(f, comment) ((void) 0)
 #define Assert(exp)           ((void) 0)
 #define AssertVerify(exp)     (exp)
-#define Assume(x)             __assume(x)
+#define Assume(x)
 #define DebugOnly(x)
 #endif // DBG
 

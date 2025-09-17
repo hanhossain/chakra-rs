@@ -917,7 +917,6 @@ namespace Js
                 break;
             default:
                 Assert(false);
-                __assume(false);
             }
             Output::Print(u"%ls\n", FlagDescriptions[i]);
         }

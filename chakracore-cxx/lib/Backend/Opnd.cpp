@@ -286,7 +286,6 @@ void Opnd::Free(Func *func)
 
     default:
         Assert(UNREACHED);
-        __assume(UNREACHED);
 
     };
 #if DBG
@@ -350,7 +349,6 @@ bool Opnd::IsEqual(Opnd *opnd)
         return static_cast<RegBVOpnd*>(this)->IsEqualInternal(opnd);
     default:
         Assert(UNREACHED);
-        __assume(UNREACHED);
     };
 }
 /*
@@ -413,7 +411,6 @@ Opnd * Opnd::Copy(Func *func)
         return static_cast<RegBVOpnd*>(this)->CopyInternal(func);
     default:
         Assert(UNREACHED);
-        __assume(UNREACHED);
 
     };
 }

@@ -140,7 +140,6 @@ namespace Js
         else
         {
             Assert(false);
-            __assume(false);
         }
         Assert(DebugConvertProfiledCallToNonProfiled(op) == newOpcode);
         return newOpcode;
@@ -156,7 +155,6 @@ namespace Js
         else
         {
             Assert(false);
-            __assume(false);
         }
 
         Assert(DebugConvertProfiledReturnTypeCallToNonProfiled(op) == newOpcode);

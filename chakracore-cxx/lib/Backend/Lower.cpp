@@ -14133,7 +14133,6 @@ Lowerer::LowerInstrWithBailOnResultCondition(
             break;
         default:
             Assert(false); // not implemented
-            __assume(false);
     }
 }
 
@@ -18736,7 +18735,6 @@ Lowerer::GetMissingItemOpnd(IRType type, Func *func)
         return IR::IntConstOpnd::New(Js::JavascriptNativeIntArray::MissingItem, TyInt32, func, true);
     }
     AssertMsg(false, "Only expecting TyVar and TyInt32 in Lowerer::GetMissingItemOpnd");
-    __assume(false);
 }
 
 IR::Opnd*
@@ -18753,7 +18751,6 @@ Lowerer::GetMissingItemOpndForAssignment(IRType type, Func *func)
 
     default:
         AnalysisAssertMsg(false, "Unexpected type in Lowerer::GetMissingItemOpndForAssignment");
-        __assume(false);
     }
 }
 
@@ -18775,7 +18772,6 @@ Lowerer::GetMissingItemOpndForCompare(IRType type, Func *func)
 
     default:
         AnalysisAssertMsg(false, "Unexpected type in Lowerer::GetMissingItemOpndForCompare");
-        __assume(false);
     }
 }
 
@@ -20596,7 +20592,6 @@ Lowerer::GenerateFastInlineStringSplitMatch(IR::Instr * instr)
 
             default:
                 Assert(false);
-                __assume(false);
         }
 
         // Allocate some space on the stack for the result array
@@ -20626,7 +20621,6 @@ Lowerer::GenerateFastInlineStringSplitMatch(IR::Instr * instr)
 
             default:
                 Assert(false);
-                __assume(false);
         }
     }
 
@@ -25224,7 +25218,6 @@ Lowerer::GenerateFastBrTypeOf(IR::Instr *branch, IR::RegOpnd *object, IR::IntCon
         break;
     default:
         Assert(UNREACHED);
-        __assume(UNREACHED);
     }
     // JNE/BNE (typeId == Js::TypeIds_Number) ? $target : $done
     IR::LabelInstr *label = (typeId == Js::TypeIds_Number) ? target : done;

@@ -2679,19 +2679,11 @@ of each annotation, see the advanced annotations section.
 #endif // ]
 
 #ifndef __analysis_assume // [
-#ifdef _PREFAST_ // [
-#define __analysis_assume(expr) __assume(expr)
-#else // ][
-#define __analysis_assume(expr) 
-#endif // ]
+#define __analysis_assume(expr)
 #endif // ]
 
 #ifndef _Analysis_assume_ // [
-#ifdef _PREFAST_ // [
-#define _Analysis_assume_(expr) __assume(expr)
-#else // ][
 #define _Analysis_assume_(expr) 
-#endif // ]
 #endif // ]
 
 #define _Analysis_noreturn_    _SAL2_Source_(_Analysis_noreturn_, (), _SA_annotes0(SAL_terminates))

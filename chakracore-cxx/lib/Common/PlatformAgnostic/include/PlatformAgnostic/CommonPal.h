@@ -235,7 +235,7 @@ typedef struct _SINGLE_LIST_ENTRY {
 #pragma warning(push)
 #pragma warning(disable:4324)   // structure padded due to align()
 
-typedef struct DECLSPEC_ALIGN(16) _SLIST_ENTRY {
+typedef struct __declspec(align(16)) _SLIST_ENTRY {
   struct _SLIST_ENTRY *Next;
 } SLIST_ENTRY, *PSLIST_ENTRY;
 
@@ -249,7 +249,7 @@ typedef struct _SINGLE_LIST_ENTRY SLIST_ENTRY, *PSLIST_ENTRY;
 
 #if defined(_AMD64_)
 
-typedef union DECLSPEC_ALIGN(16) _SLIST_HEADER {
+typedef union __declspec(align(16)) _SLIST_HEADER {
   struct {  // original struct
     unsigned long Alignment;
     unsigned long Region;

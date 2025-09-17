@@ -821,7 +821,6 @@ namespace Js
                 break;
             default:
                 Assert(false);
-                __assume(false);
             }
             return true;
         }

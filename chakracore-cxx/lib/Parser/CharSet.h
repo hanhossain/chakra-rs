@@ -79,7 +79,6 @@ namespace UnifiedRegex
         inline void Set(uint k)
         {
             Assert(k < Size);
-            __assume(k < Size);
             if (k < Size)
             {
                 vec[k / wordSize] |= 1U << (k % wordSize);
@@ -90,8 +89,6 @@ namespace UnifiedRegex
         {
             Assert(l < Size);
             Assert(h < Size);
-            __assume(l < Size);
-            __assume(h < Size);
             if (l < Size && h < Size)
             {
                 if (l == h)
@@ -125,8 +122,6 @@ namespace UnifiedRegex
         {
             Assert(l < Size);
             Assert(h < Size);
-            __assume(l < Size);
-            __assume(h < Size);
             if (l < Size && h < Size)
             {
                 if (l == h)
@@ -193,7 +188,6 @@ namespace UnifiedRegex
         inline bool Get(uint k) const
         {
             Assert(k < Size);
-            __assume(k < Size);
             return ((vec[k / wordSize] >> (k % wordSize)) & 1) != 0;
         }
 

@@ -56,7 +56,6 @@ namespace Js
             Output::Flush();
 #endif
             Assert( false );
-            __assume( false );
         };
     }
 
@@ -80,7 +79,6 @@ namespace Js
             Output::Flush();
 #endif
             Assert( false );
-            __assume( false );
         };
     }
 
@@ -104,7 +102,6 @@ namespace Js
             Output::Flush();
 #endif
             Assert( false );
-            __assume( false );
         };
     }
 

@@ -1243,7 +1243,6 @@ Peeps::PeepCondMove(IR::LabelInstr *labelInstr, IR::Instr *nextInstr, const bool
                 break;
         default:
                 Assert(UNREACHED);
-                __assume(UNREACHED);
         }
 
         // convert the entire block to CMOVs

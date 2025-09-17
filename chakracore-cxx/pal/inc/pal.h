@@ -155,22 +155,9 @@ extern "C" {
 // use _MAX_PATH_FNAME to indicate these cases
 #define MAX_PATH_FNAME MAX_PATH
 
-//  Sorting IDs.
-//
-//  Note that the named locale APIs (eg CompareStringExEx) are recommended.
-//
-
-#define LANG_CHINESE                     0x04
-#define LANG_ENGLISH                     0x09
-#define LANG_JAPANESE                    0x11
-#define LANG_KOREAN                      0x12
-#define LANG_THAI                        0x1e
-
 /******************* Compiler-specific glue *******************************/
 
 #define FEATURE_PAL_SXS 1
-#define DECLSPEC_ALIGN(x)   __declspec(align(x))
-#define __assume(x) (void)0
 #define __annotation(x)
 #define UNALIGNED
 
@@ -2000,7 +1987,7 @@ typedef struct _M128U {
 } M128U, *PM128U;
 
 // Same as _M128U but aligned to a 16-byte boundary
-typedef DECLSPEC_ALIGN(16) M128U M128A;
+typedef __declspec(align(16)) M128U M128A;
 typedef M128A *PM128A;
 
 typedef struct _XMM_SAVE_AREA32 {
@@ -2057,7 +2044,7 @@ typedef struct _XMM_SAVE_AREA32 {
 //     Mm0/St0-Mm7/St7 and Xmm0-Xmm15).
 //
 
-typedef struct DECLSPEC_ALIGN(16) _CONTEXT {
+typedef struct __declspec(align(16)) _CONTEXT {
 
     //
     // Register parameter home addresses.
@@ -2301,7 +2288,7 @@ typedef struct _NEON128 {
 //      DBGWCR.
 //
 
-typedef struct DECLSPEC_ALIGN(8) _CONTEXT {
+typedef struct __declspec(align(8)) _CONTEXT {
 
     //
     // Control flags.
@@ -2488,7 +2475,7 @@ typedef struct _NEON128 {
     long High;
 } NEON128, *PNEON128;
 
-typedef struct DECLSPEC_ALIGN(16) _CONTEXT {
+typedef struct __declspec(align(16)) _CONTEXT {
 
     //
     // Control flags.

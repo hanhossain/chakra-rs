@@ -296,7 +296,6 @@ namespace Js
 
         default:
             Assert(false);
-            __assume(false);
         }
     }
 
@@ -789,7 +788,6 @@ namespace Js
 
         default:
             Assert(false);
-            __assume(false);
         }
     }
 
@@ -865,7 +863,6 @@ namespace Js
 
         default:
             Assert(false);
-            __assume(false);
         }
 #else
         UNREFERENCED_PARAMETER(executionMode);

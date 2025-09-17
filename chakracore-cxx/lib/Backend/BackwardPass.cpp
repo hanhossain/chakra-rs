@@ -4440,7 +4440,6 @@ BackwardPass::ProcessNoImplicitCallUses(IR::Instr *const instr)
 
             default:
                 Assert(false);
-                __assume(false);
         }
 
         currentBlock->noImplicitCallUses->Set(sym->m_id);
@@ -4559,7 +4558,6 @@ BackwardPass::ProcessNoImplicitCallDef(IR::Instr *const instr)
 
         default:
             Assert(false);
-            __assume(false);
     }
 
     currentBlock->noImplicitCallUses->Set(srcSym->m_id);

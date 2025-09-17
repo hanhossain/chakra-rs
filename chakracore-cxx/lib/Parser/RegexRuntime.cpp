@@ -5135,7 +5135,6 @@ namespace UnifiedRegex
 #undef MTemplate
             default:
                 Assert(false);
-                __assume(false);
             }
         }
     }
@@ -5549,7 +5548,6 @@ namespace UnifiedRegex
 
         default:
             Assert(false);
-            __assume(false);
         }
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
@@ -5615,7 +5613,6 @@ namespace UnifiedRegex
 #undef MTemplate
             default:
                 Assert(false);
-                __assume(false);
             }
 
             w->PrintEOL(u"groups:");
@@ -5735,7 +5732,6 @@ namespace UnifiedRegex
 #undef MTemplate
                 default:
                     Assert(false);
-                    __assume(false);
             }
         } while(inst < instEnd);
         Assert(inst == instEnd);
@@ -5817,7 +5813,6 @@ namespace UnifiedRegex
 #undef MTemplate
                     default:
                         Assert(false);
-                        __assume(false);
                     }
                 }
                 w->Unindent();

@@ -2846,7 +2846,6 @@ FlowGraph::PeepCm(IR::Instr *instr)
         break;
     default:
         Assert(UNREACHED);
-        __assume(UNREACHED);
     }
 
     instrBr->m_opcode = newOpcode;

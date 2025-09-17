@@ -754,7 +754,6 @@ EncoderMD::Encode(IR::Instr *instr, uint8_t *pc, uint8_t* beginCodeAddress)
         break;
     default:
         Assert(UNREACHED);
-        __assume(UNREACHED);
     }
     // Actual opcode byte.
     popcodeByte = instrRestart++;

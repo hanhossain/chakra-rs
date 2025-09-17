@@ -135,7 +135,6 @@ namespace UnifiedRegex
                 bool isNonTrivial = CaseInsensitive::RangeToEquivClassOnlyInSource(mappingSource, tblidx, l, h, acth, equivl);
                 if (isNonTrivial)
                 {
-                    __assume(acth <= maxUChar); // property of algorithm: acth never greater than h
                     do
                     {
                         unsigned long r = 0;
@@ -143,7 +142,6 @@ namespace UnifiedRegex
 
                         for (int i = CaseInsensitive::EquivClassSize - 1; i >= 0; i--)
                         {
-                            __assume(equivl[i] <= maxUChar); // property of algorithm: never map outside of range
                             r <<= 16;
                             r |= Chars<char16_t>::CTU(equivl[i]++);
                         }

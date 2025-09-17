@@ -3184,7 +3184,6 @@ Inline::InlineCallApplyTarget_Shared(
 
     default:
         Assert(UNREACHED);
-        __assume(UNREACHED);
         break;
     }
 

@@ -2330,7 +2330,6 @@ void LowererMD::ChangeToShift(IR::Instr *const instr, const bool needFlags)
 
         default:
             Assert(false);
-            __assume(false);
     }
 
     // Javascript requires the ShiftCount is masked to the bottom 5 bits.
@@ -3898,7 +3897,6 @@ LowererMD::GenerateFastBrS(IR::BranchInstr *brInstr)
 
     default:
         Assert(UNREACHED);
-        __assume(false);
     }
 
     brInstr->m_opcode = opcode;

@@ -1325,7 +1325,6 @@ void LowererMD::ChangeToShift(IR::Instr *const instr, const bool needFlags)
 
         default:
             Assert(false);
-            __assume(false);
     }
 
     if(instr->GetSrc2()->IsIntConstOpnd() && !instr->GetSrc1()->IsInt64())
@@ -1638,14 +1637,12 @@ LowererMD::Legalize(IR::Instr *const instr, bool fPostRegAlloc)
 
                             default:
                                 Assert(false);
-                                __assume(false);
                         }
                         break;
                 #endif
 
                     default:
                         Assert(false);
-                        __assume(false);
                 }
             }
             else if (TySize[dstType] < TySize[srcType])
@@ -1989,7 +1986,6 @@ void LowererMD::LegalizeDst(IR::Instr *const instr, const LegalForms forms)
 
         default:
             Assert(false);
-            __assume(false);
     }
 
     if (verify)
@@ -2199,7 +2195,6 @@ void LowererMD::LegalizeSrc(IR::Instr *const instr, IR::Opnd *src, const LegalFo
 
         default:
             Assert(false);
-            __assume(false);
     }
 
     if (verify)
@@ -3731,7 +3726,6 @@ LowererMD::GenerateFastBrS(IR::BranchInstr *brInstr)
 
     default:
         Assert(UNREACHED);
-        __assume(false);
     }
 
     brInstr->m_opcode = opcode;

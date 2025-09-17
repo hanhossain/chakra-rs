@@ -2938,7 +2938,6 @@ IRBuilder::BuildUnsigned1(Js::OpCode newOpcode, uint32 offset, uint32 num)
 
         default:
             Assert(false);
-            __assume(false);
     }
 }
 

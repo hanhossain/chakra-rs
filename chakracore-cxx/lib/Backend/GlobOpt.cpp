@@ -10464,7 +10464,6 @@ GlobOpt::UpdatePathDependentInfo(PathDependentInfo *const info)
 
         default:
             Assert(false);
-            __assume(false);
     }
 
     ValueInfo *leftValueInfo = info->LeftValue()->GetValueInfo();

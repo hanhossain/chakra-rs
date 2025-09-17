@@ -562,7 +562,6 @@ private:
             }
 
             Assert(false);
-            __assume(false);
         }
         }
     }

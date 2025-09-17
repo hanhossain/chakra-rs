@@ -346,7 +346,6 @@ namespace Js
             return CreateWebAssemblyLinkError(scriptContext);
         default:
             AssertMsg(FALSE, "Invalid error type");
-            __assume(false);
         };
     }
 

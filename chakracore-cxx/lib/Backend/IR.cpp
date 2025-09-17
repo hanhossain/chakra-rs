@@ -1128,7 +1128,6 @@ Instr::GetBailOutInfo() const
         return ((BranchBailOutInstr const *)this)->bailOutInfo;
     default:
         Assert(false);
-        __assume(false);
     }
 }
 
@@ -1198,7 +1197,6 @@ void Instr::SetBailOutKind_NoAssert(const IR::BailOutKind bailOutKind)
         break;
     default:
         Assert(false);
-        __assume(false);
     }
 }
 
@@ -1217,7 +1215,6 @@ void Instr::SetAuxBailOutKind(const IR::BailOutKind bailOutKind)
         break;
     default:
         Assert(false);
-        __assume(false);
     }
 }
 
@@ -1285,7 +1282,6 @@ Instr::ReplaceBailOutInfo(BailOutInfo *newBailOutInfo)
         break;
     default:
         Assert(false);
-        __assume(UNREACHED);
     }
     
     if (oldBailOutInfo->bailOutInstr == this && !oldBailOutInfo->sharedBailOutKind)
@@ -3918,7 +3914,6 @@ Instr::ChangeCmCCToBranchInstr(LabelInstr *targetInstr)
         break;
     default:
         Assert(UNREACHED);
-        __assume(UNREACHED);
     }
 
     BranchInstr *instrBr = BranchInstr::New(newOpcode, targetInstr, this->m_func);

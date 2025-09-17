@@ -412,8 +412,8 @@ void __pfx_assume(int, const char *);
 **************************************************************************/
 #undef  __analysis_assume
 #undef  __analysis_assert
-#define __analysis_assume(e) (__pfx_assume(e,"pfx_assume"),__assume(e));
-#define __analysis_assert(e) (__pfx_assert(e,"pfx_assert"),__assume(e));
+#define __analysis_assume(e) (__pfx_assume(e,"pfx_assume"));
+#define __analysis_assert(e) (__pfx_assert(e,"pfx_assert"));
 #endif /* ifdef _PREFIX_ */
 
 

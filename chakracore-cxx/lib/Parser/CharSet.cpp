@@ -862,7 +862,6 @@ namespace UnifiedRegex
     {
         Assert(IsCompact());
         uint existCount = this->GetCompactLength();
-        __assume(existCount <= MaxCompact);
         if (existCount <= MaxCompact)
         {
             Char existCs[MaxCompact];
@@ -880,7 +879,6 @@ namespace UnifiedRegex
     void CharSet<char16_t>::Sort()
     {
         Assert(IsCompact());
-        __assume(this->GetCompactLength() <= MaxCompact);
         for (uint i = 1; i < this->GetCompactLength(); i++)
         {
             uint curr = GetCompactCharU(i);
@@ -1065,7 +1063,6 @@ namespace UnifiedRegex
                     uint i;
                     for (i = 0; i < this->GetCompactLength(); i++)
                     {
-                        __assume(l <= MaxUChar);
                         if (l <= MaxUChar && i < MaxCompact)
                         {
                             if (this->GetCompactCharU(i) == l)
