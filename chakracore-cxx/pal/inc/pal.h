@@ -163,10 +163,6 @@ extern "C" {
 
 // TODO (hanhossain): remove all the defines
 
-
-#define INT_MIN     (-2147483647 - 1)
-#define INT_MAX       2147483647
-
 #ifdef PAL_STDCPP_COMPAT
 #undef NULL
 #endif

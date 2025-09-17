@@ -764,6 +764,7 @@ STDAPI_(LPWSTR) StrCatBuffW(LPWSTR pszDest, LPCWSTR pszSrc, int cchDestBuffSize)
 */
 #include "safecrt.h"
 #include "specstrings.h"
+#include <limits.h>
 
 /*
 The wrappers below are simple implementations that may not be as robust as complete functions in the Secure CRT library.

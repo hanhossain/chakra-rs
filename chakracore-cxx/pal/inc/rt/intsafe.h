@@ -14,11 +14,9 @@
 
 #include "specstrings.h"    // for IN, etc.
 
-#define INTSAFE_E_ARITHMETIC_OVERFLOW       ((int32_t)0x80070216L)  // 0x216 = 534 = ERROR_ARITHMETIC_OVERFLOW
+#include <limits.h>
 
-// TODO (hanhossain): remove the limit defines
-#define INT_MAX         2147483647
-#define USHRT_MAX       0xffff
+#define INTSAFE_E_ARITHMETIC_OVERFLOW       ((int32_t)0x80070216L)  // 0x216 = 534 = ERROR_ARITHMETIC_OVERFLOW
 
 //
 // We make some assumptions about the sizes of various types. Let's be
