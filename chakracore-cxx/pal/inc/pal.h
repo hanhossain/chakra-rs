@@ -179,8 +179,6 @@ extern "C" {
 #define ULONG64_MAX     0xffffffffffffffffui64
 #define DWORD64_MAX     0xffffffffffffffffui64
 
-#define FLT_MAX 3.402823466e+38F
-
 #define _I8_MAX   SCHAR_MAX
 #define _I8_MIN   SCHAR_MIN
 #define _I16_MAX  SHRT_MAX
