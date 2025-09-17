@@ -689,7 +689,7 @@ PAL_ftell(PAL_FILE * f)
 
     /* Windows does not set an error if the file pointer's position
     is greater than _I32_MAX. It just returns -1. */
-    if (lRetVal > _I32_MAX)
+    if (lRetVal > INT_MAX)
     {
         lRetVal = -1;
     }

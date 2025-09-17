@@ -20,7 +20,6 @@
 #define INT_MAX         2147483647
 #define LONG_MAX        2147483647L
 #define USHRT_MAX       0xffff
-#define UINT_MAX        0xffffffff
 #define ULONG_MAX       0xffffffffUL
 #define DWORD_MAX       0xffffffffUL
 
@@ -574,7 +573,7 @@ ULongLongToUInt(
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *puResult = 0xffffffff;
 
-    if (ullOperand <= UINT_MAX)
+    if (ullOperand <= 0xffffffff)
     {
         *puResult = (uint32_t)ullOperand;
         hr = S_OK;
