@@ -16,7 +16,8 @@ jobs:
     name: rust / ${{ matrix.os }} / ${{ matrix.build-type }}
     runs-on: ${{ matrix.os-image }}
     strategy:
-      fail-fast: false
+      # TODO: don't fail fast
+      fail-fast: true
       matrix:
         os:
           - macos
@@ -49,8 +50,10 @@ jobs:
           tool: cargo-nextest
       - name: Build
         run: cargo build --features ${{ matrix.features }} --all-targets
+      # TODO: don't fail fast
       - name: Run tests
         run: cargo nextest run --features ${{ matrix.features }}
+      # TODO: don't fail fast
       - name: Run slow tests
         run: cargo nextest run --features ${{ matrix.features }} -- --ignored
         env:
@@ -61,7 +64,8 @@ jobs:
     runs-on: ${{ matrix.os-image }}
     timeout-minutes: 120
     strategy:
-      fail-fast: false
+      # TODO: don't fail fast
+      fail-fast: true
       matrix:
         os:
           - macos
