@@ -495,7 +495,7 @@ tokens Scanner<EncodingPolicy>::ScanIdentifierContinue(bool identifyKwds, bool f
 
     m_lastIdentifierHasEscape = fHasEscape;
 
-    Assert(p - pchMin > 0 && p - pchMin <= LONG_MAX);
+    Assert(p - pchMin > 0 && p - pchMin <= INT_MAX);
 
     *pp = p;
 
@@ -2356,7 +2356,7 @@ int32_t Scanner<EncodingPolicy>::SysAllocErrorLine(int32 ichMinLine, BSTR* pbstr
     // Determine the length by scanning for the next newline
     size_t cb = 0;
     charcount_t cch = LineLength(pStart, m_pchLast, &cb);
-    Assert(cch <= LONG_MAX);
+    Assert(cch <= INT_MAX);
 
     typename EncodingPolicy::EncodedCharPtr pEnd = static_cast<size_t>(ichMinLine) == IchMinLine() ? m_pchMinLine + cb : m_pchBase + this->CharacterOffsetToUnitOffset(m_pchBase, m_currentCharacter, m_pchLast, cch);
 

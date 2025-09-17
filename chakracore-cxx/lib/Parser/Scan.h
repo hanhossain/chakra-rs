@@ -277,7 +277,7 @@ protected:
         Assert(current >= start);
         size_t currentUnitOffset = current - start;
         Assert(currentUnitOffset > m_cMultiUnits);
-        Assert(currentUnitOffset - m_cMultiUnits < LONG_MAX);
+        Assert(currentUnitOffset - m_cMultiUnits < INT_MAX);
         charcount_t currentCharacterOffset = charcount_t(currentUnitOffset - m_cMultiUnits);
 
         // If the offset is the current character offset then just return the current unit offset.
@@ -509,7 +509,7 @@ public:
     charcount_t IchMinTok(void) const
     {
         Assert(m_pchMinTok - m_pchBase >= 0);
-        Assert(m_pchMinTok - m_pchBase <= LONG_MAX);
+        Assert(m_pchMinTok - m_pchBase <= INT_MAX);
         Assert(static_cast<charcount_t>(m_pchMinTok - m_pchBase) >= m_cMinTokMultiUnits);
         return static_cast<charcount_t>(m_pchMinTok - m_pchBase - m_cMinTokMultiUnits);
     }
@@ -519,7 +519,7 @@ public:
     charcount_t IchLimTok(void) const
     {
         Assert(m_currentCharacter - m_pchBase >= 0);
-        Assert(m_currentCharacter - m_pchBase <= LONG_MAX);
+        Assert(m_currentCharacter - m_pchBase <= INT_MAX);
         Assert(static_cast<charcount_t>(m_currentCharacter - m_pchBase) >= this->m_cMultiUnits);
         return static_cast<charcount_t>(m_currentCharacter - m_pchBase - this->m_cMultiUnits);
     }
@@ -573,7 +573,7 @@ public:
     charcount_t IchMinLine(void) const
     {
         Assert(m_pchMinLine - m_pchBase >= 0);
-        Assert(m_pchMinLine - m_pchBase <= LONG_MAX);
+        Assert(m_pchMinLine - m_pchBase <= INT_MAX);
         Assert(static_cast<charcount_t>(m_pchMinLine - m_pchBase) >= m_cMinLineMultiUnits);
         return static_cast<charcount_t>(m_pchMinLine - m_pchBase - m_cMinLineMultiUnits);
     }

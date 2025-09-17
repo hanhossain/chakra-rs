@@ -167,7 +167,6 @@ extern "C" {
 #define INT_MIN     (-2147483647 - 1)
 #define INT_MAX       2147483647
 
-#define LONG_MAX      2147483647L
 #define ULONG_MAX     0xffffffffUL
 
 #ifdef PAL_STDCPP_COMPAT

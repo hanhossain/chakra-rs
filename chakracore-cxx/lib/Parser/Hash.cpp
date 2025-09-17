@@ -42,7 +42,7 @@ BOOL HashTbl::Init(uint cidHash)
     // NoReleaseAllocator( ) takes int32 - so check for LONG_MAX
     // Win8 730594 - Use intsafe function to check for overflow.
     uint cbTemp;
-    if (FAILED(UIntMult(cidHash, sizeof(Ident *), &cbTemp)) || cbTemp > LONG_MAX)
+    if (FAILED(UIntMult(cidHash, sizeof(Ident *), &cbTemp)) || cbTemp > INT_MAX)
         return FALSE;
 
     cb = cbTemp;
@@ -67,7 +67,7 @@ void HashTbl::Grow()
 
     // Win8 730594 - Use intsafe function to check for overflow.
     uint cbTemp;
-    if (FAILED(UIntMult(n_cidHash, sizeof(Ident *), &cbTemp)) || cbTemp > LONG_MAX)
+    if (FAILED(UIntMult(n_cidHash, sizeof(Ident *), &cbTemp)) || cbTemp > INT_MAX)
         // It is fine to exit early here, we will just have a potentially densely populated hash table
         return;
     int32 cb = cbTemp;

@@ -18,7 +18,6 @@
 
 // TODO (hanhossain): remove the limit defines
 #define INT_MAX         2147483647
-#define LONG_MAX        2147483647L
 #define USHRT_MAX       0xffff
 #define ULONG_MAX       0xffffffffUL
 
@@ -289,7 +288,7 @@ UIntToLong(
      uint32_t Operand,
      int32_t* Result)
 {
-    if (Operand <= LONG_MAX)
+    if (Operand <= INT_MAX)
     {
         *Result = (int32_t)Operand;
         return S_OK;
@@ -442,7 +441,7 @@ ULongToLong(
      uint32_t Operand,
      int32_t* Result)
 {
-    if (Operand <= LONG_MAX)
+    if (Operand <= INT_MAX)
     {
         *Result = (int32_t)Operand;
         return S_OK;
@@ -484,7 +483,7 @@ ULongLongToLong(
      unsigned long Operand,
      int32_t* Result)
 {
-    if (Operand <= LONG_MAX)
+    if (Operand <= INT_MAX)
     {
         *Result = (int32_t)Operand;
         return S_OK;
