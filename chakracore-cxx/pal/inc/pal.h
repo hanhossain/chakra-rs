@@ -172,7 +172,6 @@ extern "C" {
 
 #define LONGLONG_MIN    (-9223372036854775807i64 - 1)
 #define LONG64_MIN      (-9223372036854775807i64 - 1)
-#define LONGLONG_MAX    9223372036854775807i64
 #define LONG64_MAX      9223372036854775807i64
 #define ULONGLONG_MAX   0xffffffffffffffffui64
 #define DWORDLONG_MAX   0xffffffffffffffffui64
