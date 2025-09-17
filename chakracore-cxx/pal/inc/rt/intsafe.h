@@ -21,7 +21,6 @@
 #define LONG_MAX        2147483647L
 #define USHRT_MAX       0xffff
 #define ULONG_MAX       0xffffffffUL
-#define DWORD_MAX       0xffffffffUL
 
 //
 // We make some assumptions about the sizes of various types. Let's be
