@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "Util/Abstractions.h"
+
 namespace Js
 {
 
@@ -104,7 +106,7 @@ namespace Js
             bool shouldInjectionFault = Js::Configuration::Global.flags.FaultInjectionCount == 0
                 || ShouldInjectFaultHelper(fType);
             if (shouldInjectionFault && p()) {
-                if(IsDebuggerPresent()) {
+                if(Abstractions::IsDebuggerPresent()) {
                     DebugBreak();
                 }
                 dumpCurrentStackData();

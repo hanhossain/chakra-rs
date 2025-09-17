@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "Util/Abstractions.h"
+
 enum ErrorReason
 {
     JavascriptDispatch_OUTOFMEMORY = 1,
@@ -165,7 +167,7 @@ inline int32_t FatalExceptionFilter(
     else
     {
         // However, if debugger was not attached for some reason, terminate the process.
-        if (!IsDebuggerPresent())
+        if (!Abstractions::IsDebuggerPresent())
         {
             TerminateProcess(GetCurrentProcess(), (uint32_t)DBG_TERMINATE_PROCESS);
         }

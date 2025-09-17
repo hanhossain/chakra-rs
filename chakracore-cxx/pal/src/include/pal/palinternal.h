@@ -571,6 +571,8 @@ inline T* InterlockedCompareExchangePointerT(
 
 #define MAX_LONGPATH   1024  /* max. length of full pathname */
 
+BOOL PAL_IsDebuggerPresent();
+
 // do not change the location of the definitions below.
 // these defs should be always at the end
 #ifndef max

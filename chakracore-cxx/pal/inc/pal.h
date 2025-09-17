@@ -181,11 +181,6 @@ extern "C" {
 #define PAL_GLOBAL __attribute__((init_priority(200)))
 /******************* PAL-Specific Entrypoints *****************************/
 
-#define IsDebuggerPresent PAL_IsDebuggerPresent
-
-BOOL
-PAL_IsDebuggerPresent();
-
 // TODO (hanhossain): remove all the defines
 
 #define CHAR_BIT      8

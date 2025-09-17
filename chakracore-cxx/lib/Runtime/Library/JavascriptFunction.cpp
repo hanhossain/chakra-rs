@@ -7,6 +7,7 @@
 #include "Types/SpreadArgument.h"
 
 #include "Language/AsmJsTypes.h"
+#include "Util/Abstractions.h"
 #ifdef _M_X64
 #include "ByteCode/PropertyIdArray.h"
 #include "Language/AsmJsModule.h"
@@ -731,7 +732,7 @@ using namespace Js;
         __finally
         {
             // 0xE06D7363 is C++ exception code
-            if (exceptionCode != 0 && exceptionCode != 0xE06D7363 && AbnormalTermination() && !IsDebuggerPresent())
+            if (exceptionCode != 0 && exceptionCode != 0xE06D7363 && AbnormalTermination() && !Abstractions::IsDebuggerPresent())
             {
                 scriptContext->GetThreadContext()->SetAbnormalExceptionCode(exceptionCode);
                 scriptContext->GetThreadContext()->SetAbnormalExceptionRecord(&exceptionInfo);

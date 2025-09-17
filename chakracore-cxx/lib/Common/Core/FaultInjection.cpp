@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "CommonCorePch.h"
+#include "Util/Abstractions.h"
 
 #ifdef FAULT_INJECTION
 #include "io.h"
@@ -952,7 +953,7 @@ namespace Js
 #if !defined(_M_ARM32_OR_ARM64)
 
         static bool keepBreak = true; // for disabling following breakpoint by editing the value
-        if (keepBreak && IsDebuggerPresent())
+        if (keepBreak && Abstractions::IsDebuggerPresent())
         {
             DebugBreak();
         }

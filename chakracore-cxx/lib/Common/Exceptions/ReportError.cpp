@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "CommonExceptionsPch.h"
+#include "Util/Abstractions.h"
 #include "Exceptions/ReportError.h"
 
 // Disable inline so that _ReturnAddress() will get the address of the calling function.
@@ -15,7 +16,7 @@ void ReportFatalException(
     // avoid the error text methods to be optimized out.
     UNREFERENCED_PARAMETER(scenario);
 
-    if (IsDebuggerPresent())
+    if (Abstractions::IsDebuggerPresent())
     {
         DebugBreak();
     }
