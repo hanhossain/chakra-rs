@@ -211,12 +211,6 @@ function_name() to call the system's implementation
 #undef stderr
 #endif
 
-#ifdef SHRT_MIN
-#undef SHRT_MIN
-#endif
-#ifdef SHRT_MAX
-#undef SHRT_MAX
-#endif
 #ifdef USHRT_MAX
 #undef USHRT_MAX
 #endif
@@ -402,8 +396,6 @@ function_name() to call the system's implementation
 
 #undef ctime
 
-#undef SHRT_MIN
-#undef SHRT_MAX
 #undef USHRT_MAX
 #undef LONG_MIN
 #undef LONG_MAX

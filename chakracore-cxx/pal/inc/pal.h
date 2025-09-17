@@ -164,8 +164,6 @@ extern "C" {
 // TODO (hanhossain): remove all the defines
 
 
-#define SHRT_MIN    (-32768)
-#define SHRT_MAX      32767
 #define USHRT_MAX     0xffff
 
 #define INT_MIN     (-2147483647 - 1)
