@@ -44,10 +44,8 @@ extern "C"
 #endif  // HAVE_COREFOUNDATION
 
 #if HAVE_COREFOUNDATION
-#if !ENABLE_DOWNLEVEL_FOR_NLS
 BOOL LocaleInitialize( void );
 void LocaleCleanup( void );
-#endif // !ENABLE_DOWNLEVEL_FOR_NLS
 
 typedef
 struct _CP_MAPPING

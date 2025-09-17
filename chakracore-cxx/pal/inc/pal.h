@@ -268,37 +268,6 @@ typedef long time_t;
 #define _TIME_T_DEFINED
 #endif // !PAL_STDCPP_COMPAT
 
-#if ENABLE_DOWNLEVEL_FOR_NLS
-#define MAKELCID(lgid, srtid)  ((uint32_t)((((uint32_t)((uint16_t  )(srtid))) << 16) |  \
-                                         ((uint32_t)((uint16_t  )(lgid)))))
-#define LANGIDFROMLCID(lcid)   ((uint16_t)(lcid))
-#define SORTIDFROMLCID(lcid)   ((uint16_t)((((uint32_t)(lcid)) >> 16) & 0xf))
-
-#define LANG_NEUTRAL                     0x00
-#define LANG_INVARIANT                   0x7f
-#define SUBLANG_NEUTRAL                  0x00    // language neutral
-#define SUBLANG_DEFAULT                  0x01    // user default
-#define SORT_DEFAULT                     0x0     // sorting default
-#define SUBLANG_SYS_DEFAULT              0x02    // system default
-
-#define MAKELANGID(p, s)       ((((uint16_t  )(s)) << 10) | (uint16_t  )(p))
-#define PRIMARYLANGID(lgid)    ((uint16_t  )(lgid) & 0x3ff)
-#define SUBLANGID(lgid)        ((uint16_t  )(lgid) >> 10)
-
-#define LANG_SYSTEM_DEFAULT    (MAKELANGID(LANG_NEUTRAL, SUBLANG_SYS_DEFAULT))
-#define LANG_USER_DEFAULT      (MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT))
-#define LOCALE_SYSTEM_DEFAULT  (MAKELCID(LANG_SYSTEM_DEFAULT, SORT_DEFAULT))
-#define LOCALE_USER_DEFAULT    (MAKELCID(LANG_USER_DEFAULT, SORT_DEFAULT))
-#define LOCALE_NEUTRAL         (MAKELCID(MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL), SORT_DEFAULT))
-#define LOCALE_US_ENGLISH      (MAKELCID(MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US), SORT_DEFAULT))
-#define LOCALE_INVARIANT       (MAKELCID(MAKELANGID(LANG_INVARIANT, SUBLANG_NEUTRAL), SORT_DEFAULT))
-
-#define SUBLANG_ENGLISH_US               0x01
-#define SUBLANG_CHINESE_TRADITIONAL      0x01    /* Chinese (Traditional) */
-
-#endif // ENABLE_DOWNLEVEL_FOR_NLS
-
-
 #define CT_CTYPE1                 0x00000001  /* ctype 1 information */
 #define CT_CTYPE2                 0x00000002  /* ctype 2 information */
 #define CT_CTYPE3                 0x00000004  /* ctype 3 information */
@@ -3171,21 +3140,6 @@ FlushInstructionCache(
                const void * lpBaseAddress,
                size_t dwSize);
 
-#if ENABLE_DOWNLEVEL_FOR_NLS
-
-BOOL
-GetStringTypeExW(
-          uint32_t Locale,
-          uint32_t dwInfoType,
-          LPCWSTR lpSrcStr,
-          int cchSrc,
-          uint16_t * lpCharType);
-
-#define GetStringTypeEx GetStringTypeExW
-
-#endif // ENABLE_DOWNLEVEL_FOR_NLS
-
-
 #define NORM_IGNORECASE           0x00000001  // ignore case
 #define NORM_IGNOREWIDTH          0x00020000  // ignore width
 
@@ -3219,30 +3173,6 @@ typedef struct nlsversioninfo {
 #define CSTR_LESS_THAN     1
 #define CSTR_EQUAL         2
 #define CSTR_GREATER_THAN  3
-
-#if ENABLE_DOWNLEVEL_FOR_NLS
-
-
-int
-CompareStringA(
-     uint32_t     Locale,
-     uint32_t    dwCmpFlags,
-     LPCSTR   lpString1,
-     int      cchCount1,
-     LPCSTR   lpString2,
-     int      cchCount2);
-
-int
-CompareStringW(
-     uint32_t     Locale,
-     uint32_t    dwCmpFlags,
-     LPCWSTR  lpString1,
-     int      cchCount1,
-     LPCWSTR  lpString2,
-     int      cchCount2);
-
-#endif // ENABLE_DOWNLEVEL_FOR_NLS
-
 
 int
 CompareStringEx(
@@ -3314,18 +3244,6 @@ WideCharToMultiByte(
              int cbMultyByte,
              LPCSTR lpDefaultChar,
              LPBOOL lpUsedDefaultChar);
-
-#if ENABLE_DOWNLEVEL_FOR_NLS
-
-BOOL
-SetThreadLocale(
-         uint32_t Locale);
-
-uint32_t
-GetThreadLocale(
-        void);
-
-#endif //ENABLE_DOWNLEVEL_FOR_NLS
 
 //
 //  Locale Types.
@@ -3568,17 +3486,6 @@ GetThreadLocale(
 #endif // __APPLE__
 
 
-#if ENABLE_DOWNLEVEL_FOR_NLS
-
-int
-GetLocaleInfoW(
-     uint32_t     Locale,
-     LCTYPE   LCType,
-     LPWSTR  lpLCData,
-     int      cchData);
-
-#endif // ENABLE_DOWNLEVEL_FOR_NLS
-
 int
 GetLocaleInfoEx(
      LPCWSTR  lpLocaleName,
@@ -3650,13 +3557,6 @@ GetSystemDefaultLocaleName(
 
 #define GetLocaleInfo GetLocaleInfoW
 
-#if ENABLE_DOWNLEVEL_FOR_NLS
-uint32_t
-GetUserDefaultLCID(
-           void);
-#endif
-
-
 int
 GetUserDefaultLocaleName(
             LPWSTR lpLocaleName,
@@ -3668,14 +3568,6 @@ GetUserDefaultLocaleName(
 #ifdef __APPLE__
 #define LCID_ALTERNATE_SORTS      0x00000004  // alternate sort locale ids
 #endif // __APPLE__
-
-#if ENABLE_DOWNLEVEL_FOR_NLS
-BOOL
-IsValidLocale(
-           uint32_t Locale,
-           uint32_t dwFlags);
-#endif // ENABLE_DOWNLEVEL_FOR_NLS
-
 
 typedef uint32_t CALID;
 typedef uint32_t CALTYPE;
@@ -3697,21 +3589,6 @@ typedef uint32_t CALTYPE;
 #define CAL_GREGORIAN_XLIT_FRENCH    12 // Gregorian Transliterated French calendar
 #define CAL_JULIAN                   13
 
-#if ENABLE_DOWNLEVEL_FOR_NLS
-int
-GetCalendarInfoW(
-          uint32_t Locale,
-          CALID Calendar,
-          CALTYPE CalType,
-          LPWSTR lpCalData,
-          int cchData,
-          uint32_t * lpValue);
-
-#define GetCalendarInfo GetCalendarInfoW
-
-#endif // ENABLE_DOWNLEVEL_FOR_NLS
-
-
 int
 GetCalendarInfoEx(
           LPCWSTR lpLocaleName,
@@ -3722,31 +3599,11 @@ GetCalendarInfoEx(
           int cchData,
           uint32_t * lpValue);
 
-#if ENABLE_DOWNLEVEL_FOR_NLS
-typedef BOOL (CALLBACK* LOCALE_ENUMPROCW)(LPWSTR);
-
-BOOL
-EnumSystemLocalesW(
-     LOCALE_ENUMPROCW lpLocaleEnumProc,
-     uint32_t            dwFlags);
-#endif //  ENABLE_DOWNLEVEL_FOR_NLS
-
 #define DATE_SHORTDATE            0x00000001  // use short date picture
 #define DATE_LONGDATE             0x00000002  // use long date picture
 #define DATE_YEARMONTH            0x00000008  // use year month picture
 
 typedef BOOL (CALLBACK* DATEFMT_ENUMPROCEXW)(LPWSTR, CALID);
-
-#if ENABLE_DOWNLEVEL_FOR_NLS
-
-BOOL
-EnumDateFormatsExW(
-     DATEFMT_ENUMPROCEXW lpDateFmtEnumProcEx,
-     uint32_t                Locale,
-     uint32_t               dwFlags);
-
-#else // ENABLE_DOWNLEVEL_FOR_NLS
-
 typedef BOOL (CALLBACK* DATEFMT_ENUMPROCEXEXW)(LPWSTR, CALID, ptrdiff_t);
 
 BOOL
@@ -3756,20 +3613,7 @@ EnumDateFormatsExEx(
      uint32_t               dwFlags,
      ptrdiff_t      lParam);
 
-#endif // ENABLE_DOWNLEVEL_FOR_NLS
-
 typedef BOOL (CALLBACK* TIMEFMT_ENUMPROCW)(LPWSTR);
-
-#if ENABLE_DOWNLEVEL_FOR_NLS
-
-BOOL
-EnumTimeFormatsW(
-     TIMEFMT_ENUMPROCW lpTimeFmtEnumProc,
-     uint32_t              Locale,
-     uint32_t             dwFlags);
-
-#else // ENABLE_DOWNLEVEL_FOR_NLS
-
 typedef BOOL (CALLBACK* TIMEFMT_ENUMPROCEXW)(LPWSTR, ptrdiff_t);
 
 BOOL
@@ -3779,26 +3623,12 @@ EnumTimeFormatsEx(
      uint32_t             dwFlags,
      ptrdiff_t    lParam);
 
-#endif // ENABLE_DOWNLEVEL_FOR_NLS
-
 #define ENUM_ALL_CALENDARS        0xffffffff  // enumerate all calendars
 #define CAL_ICALINTVALUE          0x00000001  // calendar type
 #define CAL_NOUSEROVERRIDE        LOCALE_NOUSEROVERRIDE  // do not use user overrides
 #define CAL_SCALNAME              0x00000002  // native name of calendar
 
 typedef BOOL (CALLBACK* CALINFO_ENUMPROCEXW)(LPWSTR,CALID);
-
-#if ENABLE_DOWNLEVEL_FOR_NLS
-
-BOOL
-EnumCalendarInfoExW(
-     CALINFO_ENUMPROCEXW lpCalInfoEnumProc,
-     uint32_t              Locale,
-     CALID             Calendar,
-     CALTYPE           CalType);
-
-#else // ENABLE_DOWNLEVEL_FOR_NLS
-
 typedef BOOL (CALLBACK* CALINFO_ENUMPROCEXEXW)(LPWSTR, CALID, LPWSTR, ptrdiff_t);
 
 BOOL
@@ -3810,27 +3640,8 @@ EnumCalendarInfoExEx(
      CALTYPE           CalType,
      ptrdiff_t        lParam);
 
-#endif // ENABLE_DOWNLEVEL_FOR_NLS
-
 #define LCMAP_LOWERCASE  0x00000100
 #define LCMAP_UPPERCASE  0x00000200
-
-#if ENABLE_DOWNLEVEL_FOR_NLS
-
-int
-LCMapStringW(
-     uint32_t    Locale,
-     uint32_t   dwMapFlags,
-     LPCWSTR lpSrcStr,
-     int     cchSrc,
-     LPWSTR lpDestStr,
-     int     cchDest);
-
-#define LCMapString LCMapStringW
-
-
-#endif // ENABLE_DOWNLEVEL_FOR_NLS
-
 
 int
 LCMapStringEx(
@@ -3906,19 +3717,6 @@ int PAL_FormatDecimal(LPCWSTR sLocale, LPWSTR pBuffer, size_t cchBuffer, PALNUMB
 
 #define DATE_USE_ALT_CALENDAR 0x00000004
 
-#if ENABLE_DOWNLEVEL_FOR_NLS
-
-int
-GetDateFormatW(
-            uint32_t Locale,
-            uint32_t dwFlags,
-            const SYSTEMTIME *lpDate,
-            LPCWSTR lpFormat,
-            LPWSTR lpDateStr,
-            int cchDate);
-
-#else
-
 int
 GetDateFormatEx(
             LPCWSTR Locale,
@@ -3928,9 +3726,6 @@ GetDateFormatEx(
             LPWSTR lpDateStr,
             int cchDate,
             LPCWSTR lpCalendar);
-
-
-#endif // ENABLE_DOWNLEVEL_FOR_NLS
 
 int
 GetDateFormatEx(
@@ -3944,7 +3739,6 @@ GetDateFormatEx(
 
 
 #define GetDateFormat GetDateFormatW
-
 
 int
 PAL_GetResourceString(
