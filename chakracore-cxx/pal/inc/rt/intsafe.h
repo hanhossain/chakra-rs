@@ -16,6 +16,7 @@
 
 #define INTSAFE_E_ARITHMETIC_OVERFLOW       ((int32_t)0x80070216L)  // 0x216 = 534 = ERROR_ARITHMETIC_OVERFLOW
 
+// TODO (hanhossain): remove the limit defines
 #define INT_MAX         2147483647
 #define LONG_MAX        2147483647L
 #define USHRT_MAX       0xffff
