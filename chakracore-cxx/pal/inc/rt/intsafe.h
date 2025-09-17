@@ -12,6 +12,7 @@
 #ifndef _INTSAFE_H_INCLUDED_
 #define _INTSAFE_H_INCLUDED_
 
+#include <limits.h>
 #include "specstrings.h"    // for IN, etc.
 
 #define INTSAFE_E_ARITHMETIC_OVERFLOW       ((int32_t)0x80070216L)  // 0x216 = 534 = ERROR_ARITHMETIC_OVERFLOW
