@@ -19,7 +19,6 @@
 
 #define INT_MAX         2147483647
 #define LONG_MAX        2147483647L
-#define USHRT_MAX       0xffff
 #define UINT_MAX        0xffffffff
 #define DWORD_MAX       0xffffffffUL
 
