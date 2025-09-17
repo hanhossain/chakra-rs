@@ -569,6 +569,8 @@ inline T* InterlockedCompareExchangePointerT(
 
 #define StackOverflowMessage "Process is terminated due to StackOverflowException.\n"
 
+#define MAX_LONGPATH   1024  /* max. length of full pathname */
+
 // do not change the location of the definitions below.
 // these defs should be always at the end
 #ifndef max

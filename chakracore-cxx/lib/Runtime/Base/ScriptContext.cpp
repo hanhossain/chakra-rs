@@ -14,6 +14,7 @@
 #include "Interface/ConfigFlagsList.h"
 #include "ByteCode/ByteCodeApi.h"
 #include "Library/ProfileString.h"
+#include <limits>
 #ifdef ENABLE_SCRIPT_DEBUGGING
 #include "Debug/DiagHelperMethodWrapper.h"
 #endif
@@ -1907,7 +1908,7 @@ namespace Js
             {
                 Js::Throw::OutOfMemory();
             }
-            Assert(length < MAXLONG);
+            Assert(length < std::numeric_limits<int32_t>::max());
             charcount_t ccLength = static_cast<charcount_t>(length);
 
             // Allocate memory for the UTF8 output buffer.

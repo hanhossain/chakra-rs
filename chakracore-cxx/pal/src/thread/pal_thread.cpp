@@ -885,7 +885,7 @@ GetThreadPriority(
 {
     CPalThread *pThread;
     PAL_ERROR palError;
-    int iPriority = THREAD_PRIORITY_ERROR_RETURN;
+    int iPriority = INT_MAX;
 
     ENTRY("GetThreadPriority(hThread=%p)\n", hThread);
 

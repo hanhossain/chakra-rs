@@ -160,12 +160,6 @@ extern "C" {
 // In some Win32 APIs MAX_PATH is used for file names (even though 256 is the normal file system limit)
 // use _MAX_PATH_FNAME to indicate these cases
 #define MAX_PATH_FNAME MAX_PATH
-#define MAX_LONGPATH   1024  /* max. length of full pathname */
-
-#define MAXSHORT      0x7fff
-#define MAXLONG       0x7fffffff
-#define MAXCHAR       0x7f
-#define MAXDWORD      0xffffffff
 
 //  Sorting IDs.
 //
@@ -199,8 +193,6 @@ BOOL
 PAL_IsDebuggerPresent();
 
 // TODO (hanhossain): remove all the defines
-
-#define MAXIMUM_SUSPEND_COUNT  MAXCHAR
 
 #define CHAR_BIT      8
 
@@ -2634,7 +2626,6 @@ SetThreadContext(
 #define THREAD_PRIORITY_NORMAL        0
 #define THREAD_PRIORITY_HIGHEST       THREAD_BASE_PRIORITY_MAX
 #define THREAD_PRIORITY_ABOVE_NORMAL  (THREAD_PRIORITY_HIGHEST-1)
-#define THREAD_PRIORITY_ERROR_RETURN  (MAXLONG)
 
 #define THREAD_PRIORITY_TIME_CRITICAL THREAD_BASE_PRIORITY_LOWRT
 #define THREAD_PRIORITY_IDLE          THREAD_BASE_PRIORITY_IDLE

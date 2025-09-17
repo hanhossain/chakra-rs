@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "stdafx.h"
+#include <limits>
 #include <sys/stat.h>
 
 #define MAX_URI_LENGTH 512
@@ -537,7 +538,7 @@ bool CALLBACK Helpers::TTReadBytesFromStreamCallback(JsTTDStreamHandle handle, b
 {
     AssertMsg(handle != nullptr, "Bad file handle.");
 
-    if(size > MAXDWORD)
+    if(size > std::numeric_limits<uint32_t>::max())
     {
         *readCount = 0;
         return false;
@@ -556,7 +557,7 @@ bool CALLBACK Helpers::TTWriteBytesToStreamCallback(JsTTDStreamHandle handle, co
 {
     AssertMsg(handle != nullptr, "Bad file handle.");
 
-    if(size > MAXDWORD)
+    if(size > std::numeric_limits<uint32_t>::max())
     {
         *writtenCount = 0;
         return false;
