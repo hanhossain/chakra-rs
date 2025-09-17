@@ -180,7 +180,6 @@ extern "C" {
 #define DWORD64_MAX     0xffffffffffffffffui64
 
 #define FLT_MAX 3.402823466e+38F
-#define DBL_MAX 1.7976931348623157e+308
 
 #define _I8_MAX   SCHAR_MAX
 #define _I8_MIN   SCHAR_MIN

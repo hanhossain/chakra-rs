@@ -223,9 +223,6 @@ function_name() to call the system's implementation
 #ifdef RAND_MAX
 #undef RAND_MAX
 #endif
-#ifdef DBL_MAX
-#undef DBL_MAX
-#endif
 #ifdef FLT_MAX
 #undef FLT_MAX
 #endif
@@ -397,7 +394,6 @@ function_name() to call the system's implementation
 #undef LONG_MAX
 #undef ULONG_MAX
 #undef RAND_MAX
-#undef DBL_MAX
 #undef FLT_MAX
 #undef __record_type_class
 #undef __real_type_class
