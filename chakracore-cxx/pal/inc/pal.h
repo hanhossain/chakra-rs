@@ -171,8 +171,6 @@ extern "C" {
 #define LONG_MAX      2147483647L
 #define ULONG_MAX     0xffffffffUL
 
-#define LONGLONG_MIN    (-9223372036854775807i64 - 1)
-
 #define _I32_MAX  INT_MAX
 #define _I32_MIN  INT_MIN
 #define _UI32_MAX UINT_MAX
