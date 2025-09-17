@@ -163,8 +163,6 @@ extern "C" {
 
 // TODO (hanhossain): remove all the defines
 
-#define CHAR_BIT      8
-
 #define SCHAR_MIN   (-128)
 #define SCHAR_MAX     127
 #define UCHAR_MAX     0xff

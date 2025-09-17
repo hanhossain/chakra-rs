@@ -269,7 +269,6 @@ function_name() to call the system's implementation
 #include "mbusafecrt.h"
 
 #ifdef _VAC_
-#undef CHAR_BIT
 #undef va_arg
 #endif
 
@@ -426,10 +425,6 @@ function_name() to call the system's implementation
 #undef FLT_MAX
 #undef __record_type_class
 #undef __real_type_class
-
-#if HAVE_CHAR_BIT
-#undef CHAR_BIT
-#endif
 
 // We need a sigsetjmp prototype in pal.h for the SEH macros, but we
 // can't use the "real" prototype (because we don't want to define sigjmp_buf).
