@@ -159,10 +159,6 @@ extern "C" {
 
 #define FEATURE_PAL_SXS 1
 
-#ifndef FORCEINLINE
-#define FORCEINLINE inline
-#endif
-
 #define PAL_GLOBAL __attribute__((init_priority(200)))
 /******************* PAL-Specific Entrypoints *****************************/
 
