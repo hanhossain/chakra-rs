@@ -35,6 +35,7 @@ Abstract:
 
 #include "runtime_proxy.h"
 #include <errno.h>
+#include <limits.h>
 
 SET_DEFAULT_DEBUG_CHANNEL(CRT);
 
