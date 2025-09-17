@@ -172,17 +172,9 @@ extern "C" {
 #define LONGLONG_MIN    (-9223372036854775807i64 - 1)
 
 #define _I8_MAX   SCHAR_MAX
-#define _I8_MIN   SCHAR_MIN
-#define _I16_MAX  SHRT_MAX
-#define _I16_MIN  SHRT_MIN
 #define _I32_MAX  INT_MAX
 #define _I32_MIN  INT_MIN
-#define _UI8_MAX  UCHAR_MAX
-#define _UI8_MIN  UCHAR_MIN
-#define _UI16_MAX USHRT_MAX
-#define _UI16_MIN USHRT_MIN
 #define _UI32_MAX UINT_MAX
-#define _UI32_MIN UINT_MIN
 
 #ifdef PAL_STDCPP_COMPAT
 #undef NULL

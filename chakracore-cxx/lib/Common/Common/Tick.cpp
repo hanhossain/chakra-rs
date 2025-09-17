@@ -402,7 +402,7 @@ namespace Js {
     TickDelta::FromMicroseconds(
         int nTimeDelta)                     // Tick delta, in 1/1000^2 sec
     {
-        AssertMsg(nTimeDelta != _I32_MAX, "Use Infinite() to create an infinite TickDelta");
+        AssertMsg(nTimeDelta != INT_MAX, "Use Infinite() to create an infinite TickDelta");
 
         return FromMicroseconds((long) nTimeDelta);
     }
@@ -421,7 +421,7 @@ namespace Js {
     TickDelta::FromMilliseconds(
         int nTimeDelta)                     // Tick delta, in 1/1000^1 sec
     {
-        AssertMsg(nTimeDelta != _I32_MAX, "Use Infinite() to create an infinite TickDelta");
+        AssertMsg(nTimeDelta != INT_MAX, "Use Infinite() to create an infinite TickDelta");
 
         return FromMicroseconds(((long) nTimeDelta) * ((long) 1000));
     }
@@ -867,7 +867,7 @@ namespace Js {
     {
         if (*this == Infinite())
         {
-            return _I32_MAX;
+            return INT_MAX;
         }
 
         long nTickUs = ToMicroseconds();
