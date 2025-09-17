@@ -399,7 +399,7 @@ GlobOpt::OptimizeChecks(IR::Instr * const instr)
         if (src1 && src1->IsImmediateOpnd())
         {
             long val = src1->GetImmediateValue(func);
-            bool isMintInt = src1->GetSize() == 8 ? val == LONGLONG_MIN : (int32)val == INT_MIN;
+            bool isMintInt = src1->GetSize() == 8 ? val == LONG_MIN : (int32)val == INT_MIN;
             if (!isMintInt)
             {
                 instr->m_opcode = Js::OpCode::Ld_I4;

@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include <climits>
 #include <wchar.h>
 
 // =================
@@ -115,15 +116,15 @@ class Loop;
 
 const int32     IntConstMax = INT_MAX;
 const int32     IntConstMin = INT_MIN;
-const int32     Int8ConstMax = _I8_MAX;
-const int32     Int8ConstMin = _I8_MIN;
-const int32     Int16ConstMax = _I16_MAX;
-const int32     Int16ConstMin = _I16_MIN;
-const int32     Int32ConstMax = _I32_MAX;
-const int32     Int32ConstMin = _I32_MIN;
-const int32     Uint8ConstMax = _UI8_MAX;
+const int32     Int8ConstMax = SCHAR_MAX;
+const int32     Int8ConstMin = SCHAR_MIN;
+const int32     Int16ConstMax = SHRT_MAX;
+const int32     Int16ConstMin = SHRT_MIN;
+const int32     Int32ConstMax = INT_MAX;
+const int32     Int32ConstMin = INT_MIN;
+const int32     Uint8ConstMax = UCHAR_MAX;
 const int32     Uint8ConstMin = 0;
-const int32     Uint16ConstMax = _UI16_MAX;
+const int32     Uint16ConstMax = USHRT_MAX;
 const int32     Uint16ConstMin = 0;
 
 #if defined(_M_X64) || defined(_M_ARM32_OR_ARM64)

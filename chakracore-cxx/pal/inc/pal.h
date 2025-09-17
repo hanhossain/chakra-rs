@@ -163,10 +163,6 @@ extern "C" {
 
 // TODO (hanhossain): remove all the defines
 
-#define CHAR_BIT      8
-
-#define SCHAR_MIN   (-128)
-#define SCHAR_MAX     127
 #define UCHAR_MAX     0xff
 
 #define SHRT_MIN    (-32768)
@@ -179,32 +175,10 @@ extern "C" {
 
 #define LONG_MIN    (-2147483647L - 1)
 #define LONG_MAX      2147483647L
-#define ULONG_MAX     0xffffffffUL
 
-#define LONGLONG_MIN    (-9223372036854775807i64 - 1)
-#define LONG64_MIN      (-9223372036854775807i64 - 1)
-#define LONGLONG_MAX    9223372036854775807i64
-#define LONG64_MAX      9223372036854775807i64
-#define ULONGLONG_MAX   0xffffffffffffffffui64
-#define DWORDLONG_MAX   0xffffffffffffffffui64
-#define ULONG64_MAX     0xffffffffffffffffui64
-#define DWORD64_MAX     0xffffffffffffffffui64
-
-#define FLT_MAX 3.402823466e+38F
-#define DBL_MAX 1.7976931348623157e+308
-
-#define _I8_MAX   SCHAR_MAX
-#define _I8_MIN   SCHAR_MIN
-#define _I16_MAX  SHRT_MAX
-#define _I16_MIN  SHRT_MIN
 #define _I32_MAX  INT_MAX
 #define _I32_MIN  INT_MIN
-#define _UI8_MAX  UCHAR_MAX
-#define _UI8_MIN  UCHAR_MIN
-#define _UI16_MAX USHRT_MAX
-#define _UI16_MIN USHRT_MIN
 #define _UI32_MAX UINT_MAX
-#define _UI32_MIN UINT_MIN
 
 #ifdef PAL_STDCPP_COMPAT
 #undef NULL

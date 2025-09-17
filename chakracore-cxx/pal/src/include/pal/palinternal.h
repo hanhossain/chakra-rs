@@ -211,12 +211,6 @@ function_name() to call the system's implementation
 #undef stderr
 #endif
 
-#ifdef SCHAR_MIN
-#undef SCHAR_MIN
-#endif
-#ifdef SCHAR_MAX
-#undef SCHAR_MAX
-#endif
 #ifdef SHRT_MIN
 #undef SHRT_MIN
 #endif
@@ -229,9 +223,6 @@ function_name() to call the system's implementation
 #ifdef USHRT_MAX
 #undef USHRT_MAX
 #endif
-#ifdef ULONG_MAX
-#undef ULONG_MAX
-#endif
 #ifdef LONG_MIN
 #undef LONG_MIN
 #endif
@@ -240,12 +231,6 @@ function_name() to call the system's implementation
 #endif
 #ifdef RAND_MAX
 #undef RAND_MAX
-#endif
-#ifdef DBL_MAX
-#undef DBL_MAX
-#endif
-#ifdef FLT_MAX
-#undef FLT_MAX
 #endif
 #ifdef __record_type_class
 #undef __record_type_class
@@ -269,7 +254,6 @@ function_name() to call the system's implementation
 #include "mbusafecrt.h"
 
 #ifdef _VAC_
-#undef CHAR_BIT
 #undef va_arg
 #endif
 
@@ -412,24 +396,15 @@ function_name() to call the system's implementation
 
 #undef ctime
 
-#undef SCHAR_MIN
-#undef SCHAR_MAX
 #undef UCHAR_MAX
 #undef SHRT_MIN
 #undef SHRT_MAX
 #undef USHRT_MAX
 #undef LONG_MIN
 #undef LONG_MAX
-#undef ULONG_MAX
 #undef RAND_MAX
-#undef DBL_MAX
-#undef FLT_MAX
 #undef __record_type_class
 #undef __real_type_class
-
-#if HAVE_CHAR_BIT
-#undef CHAR_BIT
-#endif
 
 // We need a sigsetjmp prototype in pal.h for the SEH macros, but we
 // can't use the "real" prototype (because we don't want to define sigjmp_buf).

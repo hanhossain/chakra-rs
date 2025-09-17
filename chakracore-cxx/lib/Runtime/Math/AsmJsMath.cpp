@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "RuntimeMathPch.h"
+#include <climits>
 
 namespace Js
 {
@@ -62,16 +63,16 @@ namespace Js
     template<>
     long AsmJsMath::DivChecked<long>(long aLeft, long aRight)
     {
-        return aRight == 0 ? 0 : (aLeft == LONGLONG_MIN && aRight == -1) ? LONGLONG_MIN : aLeft / aRight;
+        return aRight == 0 ? 0 : (aLeft == LONG_MIN && aRight == -1) ? LONG_MIN : aLeft / aRight;
     }
-    template<> bool AsmJsMath::DivWouldTrap(long aLeft, long aRight) { return aRight == 0 || (aLeft == LONGLONG_MIN && aRight == -1); }
+    template<> bool AsmJsMath::DivWouldTrap(long aLeft, long aRight) { return aRight == 0 || (aLeft == LONG_MIN && aRight == -1); }
     template<> long AsmJsMath::RemUnsafe<long>(long aLeft, long aRight) { return aLeft % aRight; }
     template<>
     long AsmJsMath::RemChecked<long>(long aLeft, long aRight)
     {
-        return ((aRight == 0) || (aLeft == LONGLONG_MIN && aRight == -1)) ? 0 : aLeft % aRight;
+        return ((aRight == 0) || (aLeft == LONG_MIN && aRight == -1)) ? 0 : aLeft % aRight;
     }
-    template<> bool AsmJsMath::RemWouldTrap(long aLeft, long aRight) { return aRight == 0 || (aLeft == LONGLONG_MIN && aRight == -1); }
+    template<> bool AsmJsMath::RemWouldTrap(long aLeft, long aRight) { return aRight == 0 || (aLeft == LONG_MIN && aRight == -1); }
 
     // Unsigned Int64
     template<> unsigned long AsmJsMath::Mul<unsigned long>(unsigned long aLeft, unsigned long aRight) { return aLeft * aRight; }
@@ -86,8 +87,8 @@ namespace Js
     template<>
     unsigned long AsmJsMath::RemChecked<unsigned long>(unsigned long aLeft, unsigned long aRight)
     {
-        return aRight == 0 ? 0 : (aLeft == LONGLONG_MIN && aRight == -1) ? LONGLONG_MIN : aLeft % aRight;
+        return aRight == 0 ? 0 : (aLeft == LONG_MIN && aRight == -1) ? LONG_MIN : aLeft % aRight;
     }
-    template<> bool AsmJsMath::RemWouldTrap(unsigned long aLeft, unsigned long aRight) { return aRight == 0 || (aLeft == LONGLONG_MIN && aRight == -1); }
+    template<> bool AsmJsMath::RemWouldTrap(unsigned long aLeft, unsigned long aRight) { return aRight == 0 || (aLeft == LONG_MIN && aRight == -1); }
 }
 #pragma prefast(pop
