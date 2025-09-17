@@ -163,6 +163,8 @@ extern "C" {
 
 // TODO (hanhossain): remove all the defines
 
+
+#define INT_MIN     (-2147483647 - 1)
 #define INT_MAX       2147483647
 #define UINT_MAX      0xffffffff
 
