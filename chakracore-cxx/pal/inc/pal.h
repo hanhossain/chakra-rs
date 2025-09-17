@@ -3317,14 +3317,6 @@ WideCharToMultiByte(
 
 #if ENABLE_DOWNLEVEL_FOR_NLS
 
-LANGID
-GetSystemDefaultLangID(
-               void);
-
-LANGID
-GetUserDefaultLangID(
-             void);
-
 BOOL
 SetThreadLocale(
          uint32_t Locale);
