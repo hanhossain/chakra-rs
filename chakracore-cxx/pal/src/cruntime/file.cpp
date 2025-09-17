@@ -29,6 +29,7 @@ Abstract:
 #include <errno.h>
 #include <sys/stat.h>
 #include <pthread.h>
+#include <limits.h>
 
 #if FILE_OPS_CHECK_FERROR_OF_PREVIOUS_CALL
     #define CLEARERR(f) clearerr((f)->bsdFilePtr)
