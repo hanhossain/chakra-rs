@@ -387,8 +387,6 @@ CLEANUP13:
 CLEANUP6:
 CLEANUP5:
     PROCCleanupInitialProcess();
-CLEANUP1d:
-    // Cleanup synchronization manager
 CLEANUP1c:
     // Cleanup object manager
 CLEANUP1b:
