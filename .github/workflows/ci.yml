@@ -89,6 +89,6 @@ jobs:
       - name: Install dependencies
         run: ${{ matrix.deps }}
       - name: Configure CMake
-        run: cmake --preset ${{ matrix.cmake-preset-prefix || matrix.os }}-${{ matrix.build-type }}
+        run: cmake --preset ${{ matrix.cmake-preset-prefix || matrix.os }}-${{ matrix.build-type }} -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
       - name: Build
         run: cmake --build build
