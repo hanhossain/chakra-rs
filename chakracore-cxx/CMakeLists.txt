@@ -110,13 +110,10 @@ endif()
 
 if(CC_TARGET_OS_LINUX)
     set(CLR_CMAKE_PLATFORM_LINUX 1)
-    # OSX 10.12 Clang deprecates libstdc++ [See GH #1599]
-    # So, -Werror is linux only for now
-    # + Android ARM ABI shows ld warnings
-    # xplat-todo: Do we need this ?
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-        -Werror"
-        )
+    # TODO (hanhossain): treat warnings as errors
+    # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
+    #     -Werror"
+    #     )
 elseif(CC_TARGET_OS_OSX)
     add_definitions(
         -DPLATFORM_UNIX
