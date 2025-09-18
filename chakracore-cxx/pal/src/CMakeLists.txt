@@ -155,7 +155,17 @@ add_library(Chakra.Pal
   ${ARCH_SOURCES}
 )
 
-target_compile_options(Chakra.Pal PRIVATE -Wall)
+target_compile_options(Chakra.Pal PRIVATE -Wall
+    -Werror
+    -Wno-format
+    -Wno-unused-but-set-variable
+    -Wno-vla-cxx-extension
+    -Wno-unused-label
+    -Wno-unused-function
+    -Wno-bitwise-instead-of-logical
+    -Wno-delete-non-abstract-non-virtual-dtor
+    -Wno-unused-variable
+)
 
 target_include_directories(Chakra.Pal
   PUBLIC
