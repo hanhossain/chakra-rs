@@ -661,7 +661,6 @@ WideCharToMultiByte(
          LPBOOL lpUsedDefaultChar)
 {
     int32_t retval =0;
-    char defaultChar = '?';
     BOOL usedDefaultChar = FALSE;
 #if HAVE_COREFOUNDATION
     CFStringRef cfString = NULL;
@@ -700,11 +699,6 @@ WideCharToMultiByte(
         ERROR("Error lpWideCharStr parameters are invalid\n");
         SetLastError(ERROR_INVALID_PARAMETER);
         goto EXIT;
-    }
-
-    if (lpDefaultChar != NULL)
-    {
-        defaultChar = *lpDefaultChar;
     }
 
     // Use UnicodeToUTF8 on all systems because we use

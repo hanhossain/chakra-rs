@@ -709,10 +709,9 @@ void MachMessage::InitFixedFields()
 
     if (m_hTask)
     {
-        kern_return_t machret;
         // Addref the task, because the receiver will expect it to own it. (or, if we
         // free it unsent, we'll expect to deallocate it).
-        machret = mach_port_mod_refs(mach_task_self(), m_hTask, MACH_PORT_RIGHT_SEND, 1);
+        mach_port_mod_refs(mach_task_self(), m_hTask, MACH_PORT_RIGHT_SEND, 1);
     }
 }
 
@@ -942,8 +941,7 @@ void MachMessage::SetThread(thread_act_t thread)
     if (fSet)
     {
         // Addref the thread port.
-        kern_return_t machret;
-        machret = mach_port_mod_refs(mach_task_self(), thread, MACH_PORT_RIGHT_SEND, 1);
+        mach_port_mod_refs(mach_task_self(), thread, MACH_PORT_RIGHT_SEND, 1);
     }
 }
 

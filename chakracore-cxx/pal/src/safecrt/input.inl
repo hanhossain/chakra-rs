@@ -273,7 +273,6 @@ static int __check_float_string(size_t nFloatStrUsed,
     int widthset;                       /* user has specified width          */
 #ifdef _SECURE_SCANF
     size_t array_width = 0;
-    size_t original_array_width = 0;
     int enomem = 0;
     int format_error = FALSE;
 #endif  /* _SECURE_SCANF */
@@ -342,7 +341,7 @@ static int __check_float_string(size_t nFloatStrUsed,
             prevchar = 0;
             width = widthset = started = 0;
 #ifdef _SECURE_SCANF
-            original_array_width = array_width = 0;
+            array_width = 0;
             enomem = 0;
 #endif  /* _SECURE_SCANF */
             fl_wchar_arg = done_flag = suppress = negative = reject = 0;
@@ -505,7 +504,7 @@ DEFAULT_LABEL:
                     va_copy(arglistsave, arglist);
 
                     /* Get the next argument - size of the array in characters */
-                    original_array_width = array_width = va_arg(arglist, size_t);
+                    array_width = va_arg(arglist, size_t);
 
                     if(array_width < 1) {
                         if (widechar > 0)
@@ -757,11 +756,11 @@ _END_SECURE_CRT_DEPRECATION_DISABLE
                             /* In case of error, blank out the input buffer */
                             if (fl_wchar_arg)
                             {
-                                _RESET_STRING(((char16_t *)start), original_array_width);
+                                { *(((char16_t *)start)) = 0; ; };
                             }
                             else
                             {
-                                _RESET_STRING(((char *)start), original_array_width);
+                                { *(((char *)start)) = 0; ; };
                             }
 
                             goto error_return;
@@ -776,18 +775,10 @@ _END_SECURE_CRT_DEPRECATION_DISABLE
                                     if (fl_wchar_arg)
                                     {
                                         *(char16_t *)pointer = L'\0';
-#ifdef _SECURE_SCANF
-                                        _FILL_STRING(((char16_t *)start), original_array_width,
-                                            ((char16_t *)pointer - (char16_t *)start + 1))
-#endif  /* _SECURE_SCANF */
                                     }
                                     else
                                     {
                                         *(char *)pointer = '\0';
-#ifdef _SECURE_SCANF
-                                        _FILL_STRING(((char *)start), original_array_width,
-                                            ((char *)pointer - (char *)start + 1))
-#endif  /* _SECURE_SCANF */
                                     }
                                 }
                             }

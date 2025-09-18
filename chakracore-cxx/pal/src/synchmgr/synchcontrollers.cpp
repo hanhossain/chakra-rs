@@ -452,11 +452,9 @@ namespace CorUnix
                 // Early death detected, i.e. the process is about to exit. 
                 // We need to completely release the synch lock(s) before
                 // going to sleep
-                int32_t lLocalSynchLockCount;
-                int32_t lSharedSynchLockCount;
-                                          
-                lSharedSynchLockCount = CPalSynchronizationManager::ResetSharedSynchLock(m_pthrOwner);
-                lLocalSynchLockCount = CPalSynchronizationManager::ResetLocalSynchLock(m_pthrOwner);
+
+                [[maybe_unused]] int32_t lSharedSynchLockCount = CPalSynchronizationManager::ResetSharedSynchLock(m_pthrOwner);
+                [[maybe_unused]] int32_t lLocalSynchLockCount = CPalSynchronizationManager::ResetLocalSynchLock(m_pthrOwner);
 
                 _ASSERTE(0 < lLocalSynchLockCount);
 

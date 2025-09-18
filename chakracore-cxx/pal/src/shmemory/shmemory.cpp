@@ -499,8 +499,8 @@ in PALCommonCleanup.
 --*/
 void SHMCleanup(void)
 {
-    SHM_FIRST_HEADER *header;
-    pid_t my_pid;
+    [[maybe_unused]] SHM_FIRST_HEADER *header;
+    [[maybe_unused]] pid_t my_pid;
 
     TRACE("Starting shared memory cleanup\n");
 

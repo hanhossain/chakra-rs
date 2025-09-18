@@ -265,7 +265,6 @@ GetProcAddress(
 {
     MODSTRUCT *module;
     FARPROC ProcAddress = nullptr;
-    LPCSTR symbolName = lpProcName;
 
     ENTRY("GetProcAddress (hModule=%p, lpProcName=%p (%s))\n",
           hModule, lpProcName ? lpProcName : "NULL", lpProcName ? lpProcName : "NULL");
@@ -325,7 +324,6 @@ GetProcAddress(
         }
 
         ProcAddress = (FARPROC) dlsym(module->dl_handle, lpPALProcName);
-        symbolName = lpPALProcName;
     }
 
     // If we aren't looking inside the PAL or we didn't find a PAL_ variant
