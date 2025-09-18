@@ -74,8 +74,6 @@ extern "C" {
 typedef int BOOL, *LPBOOL;
 typedef uint8_t BOOLEAN;
 
-typedef unsigned long UINT64;
-
 typedef unsigned long ULONG64;
 typedef signed long LONG64;
 
@@ -167,7 +165,6 @@ typedef struct _GUID {
     unsigned short  Data3;
     unsigned char   Data4[ 8 ];
 } GUID;
-typedef const GUID *LPCGUID;
 #define GUID_DEFINED
 #endif // !GUID_DEFINED
 

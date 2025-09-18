@@ -241,17 +241,17 @@ struct UnambiguousProcessDescriptor
     {
     }
 
-    UnambiguousProcessDescriptor(uint32_t processId, UINT64 disambiguationKey)
+    UnambiguousProcessDescriptor(uint32_t processId, unsigned long disambiguationKey)
     {
         Init(processId, disambiguationKey);
     }
 
-    void Init(uint32_t processId, UINT64 disambiguationKey)
+    void Init(uint32_t processId, unsigned long disambiguationKey)
     {
         m_processId = processId;
         m_disambiguationKey = disambiguationKey;
     }
-    UINT64 m_disambiguationKey;
+    unsigned long m_disambiguationKey;
     uint32_t m_processId;
 };
 #pragma pack(pop)

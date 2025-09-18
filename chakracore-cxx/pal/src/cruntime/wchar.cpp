@@ -91,7 +91,7 @@ LPWSTR Internal_i64tow(int64_t value, LPWSTR string, int radix, BOOL isI64)
     int length = 0;
     int n;
     int r;
-    UINT64 uval = value;
+    unsigned long uval = value;
     LPWSTR stringPtr = string;
     int start = 0;
     int end;

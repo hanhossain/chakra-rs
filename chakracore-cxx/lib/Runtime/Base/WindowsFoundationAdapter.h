@@ -28,16 +28,16 @@ namespace Js
             _In_ int32_t traceLevel,
             _In_ int32_t source,
             _In_ GUID platformId,
-            _In_ UINT64 operationId,
+            _In_ unsigned long operationId,
             _In_z_ PCWSTR operationName,
-            _In_ UINT64 relatedContext);
+            _In_ unsigned long relatedContext);
 
         int32_t TraceOperationCompletion(
             _In_ ScriptContext* scriptContext,
             _In_ int32_t traceLevel,
             _In_ int32_t source,
             _In_ GUID platformId,
-            _In_ UINT64 operationId,
+            _In_ unsigned long operationId,
             _In_ int32_t status);
 
         int32_t TraceOperationRelation(
@@ -45,7 +45,7 @@ namespace Js
             _In_ int32_t traceLevel,
             _In_ int32_t source,
             _In_ GUID platformId,
-            _In_ UINT64 operationId,
+            _In_ unsigned long operationId,
             _In_ int32_t relation);
 
         int32_t TraceSynchronousWorkStart(
@@ -53,7 +53,7 @@ namespace Js
             _In_ int32_t traceLevel,
             _In_ int32_t source,
             _In_ GUID platformId,
-            _In_ UINT64 operationId,
+            _In_ unsigned long operationId,
             _In_ int32_t work);
 
         int32_t TraceSynchronousWorkCompletion(

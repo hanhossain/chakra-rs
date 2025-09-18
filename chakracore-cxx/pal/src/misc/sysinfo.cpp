@@ -304,7 +304,7 @@ GlobalMemoryStatusEx(
     lpBuffer->ullTotalVirtual = MAX_PROCESS_VA_SPACE_LINUX;
 #else
     // xplat-todo: for all the other unices just use 128TB for now.
-    static const UINT64 _128TB = (1ull << 47);
+    static const unsigned long _128TB = (1ull << 47);
     lpBuffer->ullTotalVirtual = _128TB;
 #endif
     lpBuffer->ullAvailVirtual = lpBuffer->ullAvailPhys;
