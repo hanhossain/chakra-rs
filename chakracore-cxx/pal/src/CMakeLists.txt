@@ -161,7 +161,6 @@ target_compile_options(Chakra.Pal PRIVATE -Wall
     -Wno-unused-but-set-variable
     -Wno-vla-cxx-extension
     -Wno-unused-label
-    -Wno-unused-function
     -Wno-delete-non-abstract-non-virtual-dtor
 )
 
