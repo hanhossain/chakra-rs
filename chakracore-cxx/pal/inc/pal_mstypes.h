@@ -86,11 +86,6 @@ typedef unsigned long UINT_PTR;
 typedef unsigned long DWORD_PTR;
 
 #define _PTRDIFF_T_DEFINED
-#ifdef _MINGW_
-// We need to define _PTRDIFF_T to make sure ptrdiff_t doesn't get defined
-// again by system headers - but only for MinGW.
-#define _PTRDIFF_T
-#endif
 
 #if !defined(__cplusplus)
 typedef unsigned short char16_t;
