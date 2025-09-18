@@ -486,7 +486,6 @@ PAL_wcstol(
     char *s_endptr = 0;
     long res;
     int size;
-    uint32_t dwLastError = 0;
 
     ENTRY("wcstol (nptr=%p (%S), endptr=%p, base=%d)\n", nptr?nptr:W16_NULLSTRING, nptr?nptr:W16_NULLSTRING,
           endptr, base);
@@ -494,8 +493,7 @@ PAL_wcstol(
     size = WideCharToMultiByte(CP_ACP, 0, nptr, -1, NULL, 0, NULL, NULL);
     if (!size)
     {
-        dwLastError = GetLastError();
-        ASSERT("WideCharToMultiByte failed.  Error is %d\n", dwLastError);
+        ASSERT("WideCharToMultiByte failed.  Error is %d\n", GetLastError());
         SetLastError(ERROR_INVALID_PARAMETER);
         res = 0;
         goto PAL_wcstolExit;
@@ -511,8 +509,7 @@ PAL_wcstol(
     size = WideCharToMultiByte(CP_ACP, 0, nptr, -1, s_nptr, size, NULL, NULL);
     if( size==0 )
     {
-        dwLastError = GetLastError();
-        ASSERT("WideCharToMultiByte failed.  Error is %d\n", dwLastError);
+        ASSERT("WideCharToMultiByte failed.  Error is %d\n", GetLastError());
         SetLastError(ERROR_INVALID_PARAMETER);
         res = 0;
         goto PAL_wcstolExit;
@@ -590,7 +587,6 @@ PAL_wcstoll(
     char *s_endptr = 0;
     long long res;
     int size;
-    uint32_t dwLastError = 0;
 
     ENTRY("wcstoll (nptr=%p (%S), endptr=%p, base=%d)\n", nptr?nptr:W16_NULLSTRING, nptr?nptr:W16_NULLSTRING,
           endptr, base);
@@ -598,8 +594,7 @@ PAL_wcstoll(
     size = WideCharToMultiByte(CP_ACP, 0, nptr, -1, NULL, 0, NULL, NULL);
     if (!size)
     {
-        dwLastError = GetLastError();
-        ASSERT("WideCharToMultiByte failed.  Error is %d\n", dwLastError);
+        ASSERT("WideCharToMultiByte failed.  Error is %d\n", GetLastError());
         SetLastError(ERROR_INVALID_PARAMETER);
         res = 0;
         goto PAL_wcstolExit;
@@ -615,8 +610,7 @@ PAL_wcstoll(
     size = WideCharToMultiByte(CP_ACP, 0, nptr, -1, s_nptr, size, NULL, NULL);
     if( size==0 )
     {
-        dwLastError = GetLastError();
-        ASSERT("WideCharToMultiByte failed.  Error is %d\n", dwLastError);
+        ASSERT("WideCharToMultiByte failed.  Error is %d\n", GetLastError());
         SetLastError(ERROR_INVALID_PARAMETER);
         res = 0;
         goto PAL_wcstolExit;
@@ -700,7 +694,6 @@ PAL_wcstoul(
     char *s_endptr = 0;
     unsigned long res;
     int size;
-    uint32_t dwLastError = 0;
 
     ENTRY("wcstoul (nptr=%p (%S), endptr=%p, base=%d)\n", nptr?nptr:W16_NULLSTRING, nptr?nptr:W16_NULLSTRING,
           endptr, base);
@@ -708,8 +701,7 @@ PAL_wcstoul(
     size = WideCharToMultiByte(CP_ACP, 0, nptr, -1, NULL, 0, NULL, NULL);
     if (!size)
     {
-        dwLastError = GetLastError();
-        ASSERT("WideCharToMultiByte failed.  Error is %d\n", dwLastError);
+        ASSERT("WideCharToMultiByte failed.  Error is %d\n", GetLastError());
         SetLastError(ERROR_INVALID_PARAMETER);
         res = 0;
         goto PAL_wcstoulExit;
@@ -725,8 +717,7 @@ PAL_wcstoul(
     size = WideCharToMultiByte(CP_ACP, 0, nptr, -1, s_nptr, size, NULL, NULL);
     if (!size)
     {
-        dwLastError = GetLastError();
-        ASSERT("WideCharToMultiByte failed.  Error is %d\n", dwLastError);
+        ASSERT("WideCharToMultiByte failed.  Error is %d\n", GetLastError());
         SetLastError(ERROR_INVALID_PARAMETER);
         res = 0;
         goto PAL_wcstoulExit;
@@ -785,7 +776,6 @@ PAL__wcstoui64(
     char *s_endptr = 0;
     unsigned long long res;
     int size;
-    uint32_t dwLastError = 0;
 
     ENTRY("_wcstoui64 (nptr=%p (%S), endptr=%p, base=%d)\n", nptr?nptr:W16_NULLSTRING, nptr?nptr:W16_NULLSTRING,
           endptr, base);
@@ -793,8 +783,7 @@ PAL__wcstoui64(
     size = WideCharToMultiByte(CP_ACP, 0, nptr, -1, NULL, 0, NULL, NULL);
     if (!size)
     {
-        dwLastError = GetLastError();
-        ASSERT("WideCharToMultiByte failed.  Error is %d\n", dwLastError);
+        ASSERT("WideCharToMultiByte failed.  Error is %d\n", GetLastError());
         SetLastError(ERROR_INVALID_PARAMETER);
         res = 0;
         goto PAL__wcstoui64Exit;
@@ -810,8 +799,7 @@ PAL__wcstoui64(
     size = WideCharToMultiByte(CP_ACP, 0, nptr, -1, s_nptr, size, NULL, NULL);
     if (!size)
     {
-        dwLastError = GetLastError();
-        ASSERT("WideCharToMultiByte failed.  Error is %d\n", dwLastError);
+        ASSERT("WideCharToMultiByte failed.  Error is %d\n", GetLastError());
         SetLastError(ERROR_INVALID_PARAMETER);
         res = 0;
         goto PAL__wcstoui64Exit;
