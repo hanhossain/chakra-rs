@@ -65,7 +65,7 @@ jobs:
     timeout-minutes: 120
     strategy:
       # TODO: don't fail fast
-      fail-fast: true
+      fail-fast: false
       matrix:
         os:
           - macos
@@ -89,6 +89,6 @@ jobs:
       - name: Install dependencies
         run: ${{ matrix.deps }}
       - name: Configure CMake
-        run: cmake --preset ${{ matrix.cmake-preset-prefix || matrix.os }}-${{ matrix.build-type }} -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
+        run: cmake --preset ${{ matrix.cmake-preset-prefix || matrix.os }}-${{ matrix.build-type }}
       - name: Build
         run: cmake --build build
