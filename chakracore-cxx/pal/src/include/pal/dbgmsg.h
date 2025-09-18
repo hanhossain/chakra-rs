@@ -225,13 +225,13 @@ extern Volatile<BOOL> dbg_master_switch ;
 #if !defined(DEBUG)
 #define TRACE     NOTRACE
 #else
-#define TRACE     {if (!PAL_InitializeChakraCoreCalled) abort();}
+#define TRACE     NOTRACE
 #endif
 #define TRACE_(x) TRACE
 #define WARN      TRACE
 #define WARN_(x)  TRACE
 #define ENTRY_EXTERNAL TRACE
-#define ENTRY     TRACE
+#define ENTRY     NOTRACE
 #define ENTRY_(x) TRACE
 #define LOGEXIT   TRACE
 #define LOGEXIT_(x) TRACE
