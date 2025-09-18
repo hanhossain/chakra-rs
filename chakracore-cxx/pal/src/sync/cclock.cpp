@@ -21,7 +21,7 @@ void CCLock::Reset(bool shouldTrackThreadId)
         return; // already initialized
     }
 
-    int err;
+    [[maybe_unused]] int err;
     pthread_mutexattr_t mtconf;
     if (shouldTrackThreadId)
     {

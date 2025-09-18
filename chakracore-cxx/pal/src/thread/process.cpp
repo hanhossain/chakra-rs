@@ -2535,7 +2535,6 @@ buildArgv(
       LPSTR lpAppPath,
       uint32_t *pnArg)
 {
-    CPalThread *pThread = NULL;
     uint32_t iWlen;
     char *lpAsciiCmdLine;
     char *pChar;
@@ -2553,7 +2552,6 @@ buildArgv(
         return NULL;
     }
 
-    pThread = InternalGetCurrentThread();
     /* make sure to allocate enough space, up for the worst case scenario */
     int iLength = (iWlen + strlen(lpAppPath) + 2);
     lpAsciiCmdLine = (char *) malloc(iLength);
@@ -2817,7 +2815,6 @@ getPath(
     int32_t n;
     int32_t nextLen;
     int32_t slashLen;
-    CPalThread *pThread = NULL;
 
     /* if a path is specified, only look there */
     if(strchr(lpFileName, '/'))
@@ -2889,7 +2886,6 @@ getPath(
         return TRUE;
     }
 
-    pThread = InternalGetCurrentThread();
     /* Then try to look in the path */
     int iLen2 = strlen(MiscGetenv("PATH"))+1;
     lpPath = (LPSTR) malloc(iLen2);

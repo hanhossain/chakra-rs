@@ -965,7 +965,7 @@ CThreadSuspensionInfo::~CThreadSuspensionInfo()
 #if USE_POSIX_SEMAPHORES
     if (m_fSemaphoresInitialized)
     {
-        int iError;
+        [[maybe_unused]] int iError;
 
         iError = sem_destroy(&m_semSusp);
         _ASSERT_MSG(0 == iError, "sem_destroy failed and set errno to %d (%s)\n", errno, strerror(errno));
@@ -978,7 +978,7 @@ CThreadSuspensionInfo::~CThreadSuspensionInfo()
 #elif USE_PTHREAD_CONDVARS
     if (m_fSemaphoresInitialized)
     {
-        int iError;
+        [[maybe_unused]] int iError;
 
         iError = pthread_cond_destroy(&m_condSusp);
         _ASSERT_MSG(0 == iError, "pthread_cond_destroy failed with %d (%s)\n", iError, strerror(iError));

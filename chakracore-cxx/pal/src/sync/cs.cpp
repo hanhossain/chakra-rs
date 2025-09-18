@@ -455,7 +455,7 @@ void InternalDeleteCriticalSection(
 
     if (PalCsFullyInitialized == pPalCriticalSection->cisInitState)
     {
-        int iRet;
+        [[maybe_unused]] int iRet;
 
         // destroy condition
         iRet = pthread_cond_destroy(&pPalCriticalSection->csndNativeData.condition);
@@ -1137,7 +1137,7 @@ namespace CorUnix
                                           int32_t lInc)
     {
         uint32_t lVal, lNewVal;
-        PAL_ERROR palErr = NO_ERROR;
+        [[maybe_unused]] PAL_ERROR palErr = NO_ERROR;
 
         if (PalCsFullyInitialized != pPalCriticalSection->cisInitState)
         {

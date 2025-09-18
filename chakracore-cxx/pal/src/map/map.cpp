@@ -2619,7 +2619,9 @@ BOOL MAPUnmapPEFile(const void * lpAddress)
     CPalThread * pThread = InternalGetCurrentThread();
     InternalEnterCriticalSection(pThread, &mapping_critsec);
     PLIST_ENTRY pLink, pLinkNext, pLinkLocal = NULL;
+#if _DEBUG
     unsigned nPESections = 0;
+#endif
 
     // Look through the entire MappedViewList for all mappings associated with the
     // PE file with base address 'lpAddress'. We want to unmap all the memory
@@ -2640,7 +2642,9 @@ BOOL MAPUnmapPEFile(const void * lpAddress)
 
         if (pView->lpPEBaseAddress == lpAddress) // this entry is associated with the PE file
         {
+#if _DEBUG
             ++nPESections; // for debugging, check that we see at least one
+#endif
 
             RemoveEntryList(&pView->Link);
             pView->Link.Flink = pLinkLocal; // the local list is singly-linked, NULL terminated

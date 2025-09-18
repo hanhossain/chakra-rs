@@ -546,7 +546,9 @@ ReadProcessMemory(
             size_t * lpNumberOfBytesRead
            )
 {
+#if !HAVE_VM_READ && !HAVE_PROCFS_CTL
     CPalThread *pThread;
+#endif
     uint32_t processId;
     Volatile<BOOL> ret = FALSE;
     Volatile<size_t> numberOfBytesRead = 0;
@@ -572,7 +574,9 @@ ReadProcessMemory(
           "nSize=%u, lpNumberOfBytesRead=%p)\n",hProcess,lpBaseAddress,
           lpBuffer, (unsigned int)nSize, lpNumberOfBytesRead);
 
+#if !HAVE_VM_READ && !HAVE_PROCFS_CTL
     pThread = InternalGetCurrentThread();
+#endif
 
     if (!(processId = PROCGetProcessIDFromHandle(hProcess)))
     {
@@ -834,7 +838,9 @@ WriteProcessMemory(
            )
 
 {
+#if !HAVE_VM_READ && !HAVE_PROCFS_CTL
     CPalThread *pThread;
+#endif
     uint32_t processId;
     Volatile<BOOL> ret = FALSE;
     Volatile<size_t> numberOfBytesWritten = 0;
@@ -860,7 +866,9 @@ WriteProcessMemory(
            "nSize=%u, lpNumberOfBytesWritten=%p)\n",
            hProcess,lpBaseAddress, lpBuffer, (unsigned int)nSize, lpNumberOfBytesWritten);
 
+#if !HAVE_VM_READ && !HAVE_PROCFS_CTL
     pThread = InternalGetCurrentThread();
+#endif
 
     if (!(nSize && (processId = PROCGetProcessIDFromHandle(hProcess))))
     {

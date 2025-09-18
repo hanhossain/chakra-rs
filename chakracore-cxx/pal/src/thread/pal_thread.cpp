@@ -2015,7 +2015,7 @@ CPalThread::~CPalThread()
 
     if (m_fStartItemsInitialized)
     {
-        int iError;
+        [[maybe_unused]] int iError;
 
         iError = pthread_cond_destroy(&m_startCond);
         _ASSERTE(0 == iError);
@@ -2249,7 +2249,7 @@ CPalThread::GetStackBase()
     pthread_attr_t attr;
     void* stackAddr;
     size_t stackSize;
-    int status;
+    [[maybe_unused]] int status;
 
     pthread_t thread = pthread_self();
 
@@ -2289,7 +2289,7 @@ CPalThread::GetStackLimit()
 #else
     pthread_attr_t attr;
     size_t stackSize;
-    int status;
+    [[maybe_unused]] int status;
 
     pthread_t thread = pthread_self();
 
@@ -2444,7 +2444,7 @@ void GetCurrentThreadStackLimits(size_t* lowLimit, size_t* highLimit)
     pthread_attr_t attr;
     size_t stacksize;
     void* stackend;
-    int status;
+    [[maybe_unused]] int status;
 
 #if HAVE_PTHREAD_ATTR_GET_NP
     status = pthread_attr_get_np(currentThreadHandle, &attr);
