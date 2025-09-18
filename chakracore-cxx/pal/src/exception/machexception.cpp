@@ -50,8 +50,6 @@ using namespace CorUnix;
 // The port we use to handle exceptions and to set the thread context
 mach_port_t s_ExceptionPort;
 
-static uint32_t s_PalInitializeFlags = 0;
-
 static const char * PAL_MACH_EXCEPTION_MODE = "PAL_MachExceptionMode";
 
 // This struct is used to track the threads that need to have an exception forwarded
