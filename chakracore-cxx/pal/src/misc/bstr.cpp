@@ -56,7 +56,7 @@ inline int32_t CbSysStringSize(uint32_t cchSize, BOOL isByteLen, uint32_t *resul
     else
     {
         uint32_t temp = 0; // should not use in-place addition in ULongAdd
-        if (SUCCEEDED(ULongMult(cchSize, sizeof(char16_t), &temp)) &
+        if (SUCCEEDED(ULongMult(cchSize, sizeof(char16_t), &temp)) &&
             SUCCEEDED(ULongAdd(temp, constant, result)))
         {
             *result = *result & ~WIN32_ALLOC_ALIGN;
