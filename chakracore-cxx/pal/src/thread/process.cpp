@@ -256,11 +256,6 @@ struct UnambiguousProcessDescriptor
 };
 #pragma pack(pop)
 
-static
-uint32_t
-StartupHelperThread(
-    void * p);
-
 PAL_ERROR
 PROCGetProcessStatus(
     CPalThread *pThread,

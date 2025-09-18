@@ -140,13 +140,14 @@ HeapCreate(
     return ret;
 }
 
-
+#ifdef DEBUG
 __attribute__((no_instrument_function, noinline))
 static bool PAL_Initialize_Check_Once()
 {
     int error = PAL_InitializeChakraCore();
     return error == ERROR_SUCCESS;
 }
+#endif
 
 /*++
 Function:
