@@ -249,7 +249,6 @@ typedef enum tagEFaultRepRetVal
 EXTERN_C const GUID GUID_NULL;
 
 typedef GUID *LPGUID;
-typedef const GUID  *LPCGUID;
 
 #ifdef __cplusplus
 extern "C++" {

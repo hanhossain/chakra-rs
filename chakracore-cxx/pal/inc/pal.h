@@ -2703,7 +2703,7 @@ typedef struct PALNUMBER__* PALNUMBER;
 // return NULL on OOM
 PALNUMBER PAL_DoubleToNumber(double);
 PALNUMBER PAL_Int64ToNumber(int64_t);
-PALNUMBER PAL_UInt64ToNumber(UINT64);
+PALNUMBER PAL_UInt64ToNumber(unsigned long);
 PALNUMBER PAL_IntToNumber(int);
 PALNUMBER PAL_UIntToNumber(unsigned int);
 
@@ -3088,7 +3088,7 @@ inline
 unsigned char
 BitScanForward64(
       uint32_t * Index,
-     UINT64 qwMask)
+     unsigned long qwMask)
 {
     unsigned char bRet = FALSE;
     static_assert(sizeof(qwMask) <= sizeof(long long),
@@ -3131,7 +3131,7 @@ inline
 unsigned char
 BitScanReverse64(
       uint32_t * Index,
-     UINT64 qwMask)
+     unsigned long qwMask)
 {
     unsigned char bRet = FALSE;
     if (qwMask != 0)
