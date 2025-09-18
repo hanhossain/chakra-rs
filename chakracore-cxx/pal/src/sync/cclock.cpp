@@ -48,14 +48,14 @@ CCLock::~CCLock()
 void CCLock::Enter()
 {
     pthread_mutex_t *mutex = (pthread_mutex_t*)this->mutexPtr;
-    int err = pthread_mutex_lock(mutex);
+    [[maybe_unused]] int err = pthread_mutex_lock(mutex);
     AssertMsg(err == 0 || *((size_t*)mutexPtr) == 0, "Mutex Enter has failed");
 }
 
 void CCLock::Leave()
 {
     pthread_mutex_t *mutex = (pthread_mutex_t*)this->mutexPtr;
-    int err = pthread_mutex_unlock(mutex);
+    [[maybe_unused]] int err = pthread_mutex_unlock(mutex);
     AssertMsg(err == 0 || *((size_t*)mutexPtr) == 0, "Mutex Leave has failed");
 }
 
