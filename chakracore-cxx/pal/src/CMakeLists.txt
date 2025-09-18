@@ -164,7 +164,6 @@ target_compile_options(Chakra.Pal PRIVATE -Wall
     -Wno-unused-function
     -Wno-bitwise-instead-of-logical
     -Wno-delete-non-abstract-non-virtual-dtor
-    -Wno-unused-variable
 )
 
 target_include_directories(Chakra.Pal

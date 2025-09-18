@@ -120,7 +120,6 @@ thread when any remaining threads have died, and count of exiting threads that
 can't be suspended. */
 pthread_mutex_t ptmEndThread __attribute__((init_priority(200)));
 pthread_cond_t ptcEndThread __attribute__((init_priority(200)));
-static int iEndingThreads = 0;
 
 // Activation function that gets called when an activation is injected into a thread.
 PAL_ActivationFunction g_activationFunction = NULL;
