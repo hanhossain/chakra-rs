@@ -743,7 +743,7 @@ NativeCodeGenerator::IsValidVar(const Js::Var var, Recycler *const recycler)
         return false;
     }
 
-    INT_PTR vtable = VirtualTableInfoBase::GetVirtualTable(var);
+    long vtable = VirtualTableInfoBase::GetVirtualTable(var);
     if (vtable <= USHRT_MAX || (vtable & 1))
     {
         // Don't have a vtable, is it not a var, may be a frame display?

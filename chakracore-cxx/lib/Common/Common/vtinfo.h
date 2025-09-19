@@ -86,17 +86,17 @@ enum VirtualTableInfoCtorEnum
 class VirtualTableInfoBase
 {
 public:
-    static INT_PTR GetVirtualTable(void * ptr) { return (*(INT_PTR*)ptr); }
+    static long GetVirtualTable(void * ptr) { return (*(long*)ptr); }
 protected:
-    static void SetVirtualTable(void * ptr, INT_PTR vt) { *(INT_PTR*)ptr = vt; }
+    static void SetVirtualTable(void * ptr, long vt) { *(long*)ptr = vt; }
 };
 
 template <typename T>
 class VirtualTableInfo : public VirtualTableInfoBase
 {
 public:
-    static INT_PTR const Address;
-    static INT_PTR RegisterVirtualTable();
+    static long const Address;
+    static long RegisterVirtualTable();
     static void SetVirtualTable(void * ptr);
     static bool HasVirtualTable(void * ptr) { return GetVirtualTable(ptr) == Address; }
 };
@@ -105,7 +105,7 @@ template <typename T>
 class VirtualTableRecorder
 {
 public:
-    static void RecordVirtualTableAddress(INT_PTR * vtableAddresses, int32 value)
+    static void RecordVirtualTableAddress(long * vtableAddresses, int32 value)
     {
         vtableAddresses[value] = VirtualTableInfo<T>::Address;
 
@@ -118,7 +118,7 @@ public:
 #if !defined(USED_IN_STATIC_LIB)
 #pragma warning(disable:4238) // class rvalue used as lvalue
 template <typename T>
-INT_PTR const VirtualTableInfo<T>::Address = VirtualTableInfo<T>::RegisterVirtualTable();
+long const VirtualTableInfo<T>::Address = VirtualTableInfo<T>::RegisterVirtualTable();
 #endif
 
 #define DEFINE_VTABLE_CTOR_NOBASE_ABSTRACT(T) \

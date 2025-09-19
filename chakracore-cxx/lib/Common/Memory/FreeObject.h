@@ -19,16 +19,16 @@ public:
 
     void SetNext(FreeObject * next)
     {
-        Assert(((INT_PTR)next & TaggedBit) == 0);
-        taggedNext = ((INT_PTR)next) | TaggedBit;
+        Assert(((long)next & TaggedBit) == 0);
+        taggedNext = ((long)next) | TaggedBit;
     }
     void ZeroNext() { taggedNext = 0; }
 #ifdef RECYCLER_MEMORY_VERIFY
 #pragma warning(suppress:4310)
-    void DebugFillNext() { taggedNext = (INT_PTR)0xCACACACACACACACA; }
+    void DebugFillNext() { taggedNext = (long)0xCACACACACACACACA; }
 #endif
 private:
-    INT_PTR taggedNext;
-    static INT_PTR const TaggedBit = 0x1;
+    long taggedNext;
+    static long const TaggedBit = 0x1;
 };
 }

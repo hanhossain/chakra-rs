@@ -697,13 +697,13 @@ static BOOL DBG_get_indent(DBG_LEVEL_ID level, const char *format,
     {
         if(0 != max_entry_level)
         {
-            INT_PTR nesting;
+            long nesting;
 
             /* Determine if this is an entry or an
                exit */
             if(DLI_EXIT == level)
             {
-                nesting = (INT_PTR) pthread_getspecific(entry_level_key);
+                nesting = (long) pthread_getspecific(entry_level_key);
                 /* avoid going negative */
                 if(nesting != 0)
                 {
@@ -718,7 +718,7 @@ static BOOL DBG_get_indent(DBG_LEVEL_ID level, const char *format,
             }
             else
             {
-                nesting = (INT_PTR) pthread_getspecific(entry_level_key);
+                nesting = (long) pthread_getspecific(entry_level_key);
 
                 if ((ret = pthread_setspecific(entry_level_key,
                                                  (void *)(nesting+1))) != 0)

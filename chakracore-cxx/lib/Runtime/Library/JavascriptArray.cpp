@@ -609,7 +609,7 @@ using namespace Js;
         }
 
         JavascriptArray *array = nullptr;
-        INT_PTR vtable = VirtualTableInfoBase::GetVirtualTable(var);
+        long vtable = VirtualTableInfoBase::GetVirtualTable(var);
         if (!Jit_TryGetArrayForObjectWithArray(var, isObjectWithArrayRef, &vtable, &array))
         {
             return nullptr;
@@ -632,7 +632,7 @@ using namespace Js;
         return array;
     }
 
-    bool JavascriptArray::Jit_TryGetArrayForObjectWithArray(const Var var, bool *const isObjectWithArrayRef, INT_PTR* pVTable, JavascriptArray** pArray)
+    bool JavascriptArray::Jit_TryGetArrayForObjectWithArray(const Var var, bool *const isObjectWithArrayRef, long* pVTable, JavascriptArray** pArray)
     {
         Assert(isObjectWithArrayRef);
         Assert(pVTable);
@@ -674,7 +674,7 @@ using namespace Js;
         }
 
         JavascriptArray *array = nullptr;
-        INT_PTR vtable = VirtualTableInfoBase::GetVirtualTable(var);
+        long vtable = VirtualTableInfoBase::GetVirtualTable(var);
         if(vtable == VirtualTableInfo<DynamicObject>::Address)
         {
             ArrayObject* objectArray = VarTo<DynamicObject>(var)->GetObjectArray();

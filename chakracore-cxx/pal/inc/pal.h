@@ -1907,7 +1907,7 @@ PAL_LOADUnloadPEFile(void * ptr);
 #define LoadLibrary LoadLibraryW
 #define LoadLibraryEx LoadLibraryExW
 
-typedef INT_PTR (*FARPROC)();
+typedef long (*FARPROC)();
 
 FARPROC
 GetProcAddress(
@@ -4214,7 +4214,7 @@ struct tm {
 char * ctime(const time_t *);
 #endif // !PAL_STDCPP_COMPAT
 
-int _open_osfhandle(INT_PTR, int);
+int _open_osfhandle(long, int);
 int _close(int);
 int _flushall();
 

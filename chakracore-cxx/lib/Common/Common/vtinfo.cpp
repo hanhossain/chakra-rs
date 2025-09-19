@@ -10,7 +10,7 @@
 VirtualTableRegistry::TableEntry VirtualTableRegistry::m_knownVtables[MAX_KNOWN_VTABLES];
 uint32_t VirtualTableRegistry::m_knownVtableCount = 0;
 
-void VirtualTableRegistry::Add(INT_PTR vtable, LPCSTR className)
+void VirtualTableRegistry::Add(long vtable, LPCSTR className)
 {
     Assert(m_knownVtableCount < MAX_KNOWN_VTABLES);
     if (m_knownVtableCount < MAX_KNOWN_VTABLES)
@@ -33,7 +33,7 @@ VirtualTableRegistry::CreateVtableHashMap(ArenaAllocator * alloc)
     // then validate that we have got all the vtables by comparing in chk build against VirtualTableRegistry.
     for (uint32_t i=0; i < VirtualTableRegistry::m_knownVtableCount; i++)
     {
-        INT_PTR vtable = VirtualTableRegistry::m_knownVtables[i].vtable;
+        long vtable = VirtualTableRegistry::m_knownVtables[i].vtable;
         LPCSTR className = VirtualTableRegistry::m_knownVtables[i].className;
         vtableHashMap->Add(vtable, className);
     }

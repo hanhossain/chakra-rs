@@ -339,7 +339,7 @@ RecyclerWriteBarrierManager::WriteBarrier(void * address, size_t bytes)
 #endif
 #ifdef RECYCLER_WRITE_BARRIER_BYTE
     uintptr_t startIndex = GetCardTableIndex(address);
-    char * endAddress = (char *)Math::Align<INT_PTR>((INT_PTR)((char *)address + bytes), s_WriteBarrierPageSize);
+    char * endAddress = (char *)Math::Align<long>((long)((char *)address + bytes), s_WriteBarrierPageSize);
     uintptr_t endIndex = GetCardTableIndex(endAddress);
     Assert(startIndex <= endIndex);
     memset(cardTable + startIndex, WRITE_BARRIER_PAGE_BIT | DIRTYBIT, endIndex - startIndex);
@@ -350,8 +350,8 @@ RecyclerWriteBarrierManager::WriteBarrier(void * address, size_t bytes)
     uint bitMask = 0xFFFFFFFF << bitShift;
     uint cardIndex = ((uint)address) / s_BytesPerCard);
 
-    char * endAddress = (char *)Math::Align((INT_PTR)((char *)address + bytes), s_BytesPerCardBit);
-    char * alignedAddress = (char *)Math::Align((INT_PTR)address, s_WriteBarrierPageSize);
+    char * endAddress = (char *)Math::Align((long)((char *)address + bytes), s_BytesPerCardBit);
+    char * alignedAddress = (char *)Math::Align((long)address, s_WriteBarrierPageSize);
     if (alignedAddress > endAddress)
     {
         uint endAddressShift = (((uint)endAddress) >> s_BitArrayCardTableShift);
@@ -379,7 +379,7 @@ RecyclerWriteBarrierManager::ToggleBarrier(void * address, size_t bytes, bool en
     if (CONFIG_FLAG(StrictWriteBarrierCheck))
     {
         uintptr_t startIndex = GetCardTableIndex(address);
-        char * endAddress = (char *)Math::Align<INT_PTR>((INT_PTR)((char *)address + bytes), s_WriteBarrierPageSize);
+        char * endAddress = (char *)Math::Align<long>((long)((char *)address + bytes), s_WriteBarrierPageSize);
         uintptr_t endIndex = GetCardTableIndex(endAddress);
         if (enable)
         {
@@ -436,7 +436,7 @@ RecyclerWriteBarrierManager::VerifyIsBarrierAddress(void * address, size_t bytes
     if (CONFIG_FLAG(StrictWriteBarrierCheck))
     {
         uintptr_t startIndex = GetCardTableIndex(address);
-        char * endAddress = (char *)Math::Align<INT_PTR>((INT_PTR)((char *)address + bytes), s_WriteBarrierPageSize);
+        char * endAddress = (char *)Math::Align<long>((long)((char *)address + bytes), s_WriteBarrierPageSize);
         uintptr_t endIndex = GetCardTableIndex(endAddress);
         do
         {
@@ -455,7 +455,7 @@ RecyclerWriteBarrierManager::VerifyIsNotBarrierAddress(void * address, size_t by
     if (CONFIG_FLAG(StrictWriteBarrierCheck))
     {
         uintptr_t startIndex = GetCardTableIndex(address);
-        char * endAddress = (char *)Math::Align<INT_PTR>((INT_PTR)((char *)address + bytes), s_WriteBarrierPageSize);
+        char * endAddress = (char *)Math::Align<long>((long)((char *)address + bytes), s_WriteBarrierPageSize);
         uintptr_t endIndex = GetCardTableIndex(endAddress);
         do
         {

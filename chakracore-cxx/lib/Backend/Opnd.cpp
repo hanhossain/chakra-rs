@@ -3447,7 +3447,7 @@ Opnd::Dump(IRDumpFlags flags, Func *func)
         }
         if (indirOpnd->HasAddrKind())
         {
-            INT_PTR address = (INT_PTR)indirOpnd->GetOriginalAddress();
+            long address = (long)indirOpnd->GetOriginalAddress();
             Output::Print(u" <");
             const size_t BUFFER_LEN = 128;
             char16_t buffer[BUFFER_LEN];
@@ -3805,14 +3805,14 @@ Opnd::GetAddrDescription(__out_ecount(count) char16_t *const description, const 
                 printToConsole, u"ScriptFunctionEnvironmentRef");
             break;
         case IR::AddrOpndKindDynamicVtable:
-            if ((INT_PTR)address == Js::ScriptContextOptimizationOverrideInfo::InvalidVtable)
+            if ((long)address == Js::ScriptContextOptimizationOverrideInfo::InvalidVtable)
             {
                 WriteToBuffer(&buffer, &n, u"%d (Invalid Vtable)", Js::ScriptContextOptimizationOverrideInfo::InvalidVtable);
             }
             else
             {
                 DumpAddress(address, printToConsole, skipMaskedAddress);
-                WriteToBuffer(&buffer, &n, u" (%S Vtable)", func->GetVtableName((INT_PTR)address));
+                WriteToBuffer(&buffer, &n, u" (%S Vtable)", func->GetVtableName((long)address));
             }
             break;
 

@@ -7167,7 +7167,7 @@ namespace Js
         }
 #endif
     }
-    INT_PTR* JavascriptLibrary::GetVTableAddresses()
+    long* JavascriptLibrary::GetVTableAddresses()
     {
         AssertMsg(this->vtableAddresses, "vtableAddresses table must've been initialized as part of library initialization!");
         return this->vtableAddresses;

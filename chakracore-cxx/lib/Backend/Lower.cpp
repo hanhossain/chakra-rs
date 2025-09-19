@@ -19170,9 +19170,9 @@ Lowerer::GenerateFastStElemI(IR::Instr *& stElem, bool *instrIsInHelperBlockRef)
                 Assert(srcType == TyVar);
 
 #if INT32VAR
-                bitMaskOpnd = IR::AddrOpnd::New((Js::Var)~(INT_PTR)(Js::TaggedInt::ToVarUnchecked(255)), IR::AddrOpndKindConstantVar, this->m_func, true);
+                bitMaskOpnd = IR::AddrOpnd::New((Js::Var)~(long)(Js::TaggedInt::ToVarUnchecked(255)), IR::AddrOpndKindConstantVar, this->m_func, true);
 #else
-                bitMaskOpnd = IR::IntConstOpnd::New(~(INT_PTR)(Js::TaggedInt::ToVarUnchecked(255)), TyMachReg, this->m_func, true);
+                bitMaskOpnd = IR::IntConstOpnd::New(~(long)(Js::TaggedInt::ToVarUnchecked(255)), TyMachReg, this->m_func, true);
 #endif
                 // Note: We are assuming that if no bits other than ~(TaggedInt(255)) are 1, that we have a tagged
                 //  int value between 0 - 255.
