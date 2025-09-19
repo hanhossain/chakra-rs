@@ -1046,110 +1046,6 @@ done:
 
 /*++
 Function:
-  CopyFileW
-
-See MSDN doc.
-
-Notes:
-  There are several (most) error paths here that do not call SetLastError().
-This is because we know that CreateFile, ReadFile, and WriteFile will do so,
-and will have a much better idea of the specific error.
---*/
-BOOL
-CopyFileW(
-       const char16_t* lpExistingFileName,
-       const char16_t* lpNewFileName,
-       BOOL bFailIfExists)
-{
-    CPalThread *pThread;
-    PathCharString sourcePathString;
-    PathCharString destPathString;
-    char * source;
-    char * dest;
-    int src_size, dest_size, length = 0;
-    BOOL bRet = FALSE;
-
-    ENTRY("CopyFileW(lpExistingFileName=%p (%S), lpNewFileName=%p (%S), bFailIfExists=%d)\n",
-          lpExistingFileName?lpExistingFileName:W16_NULLSTRING,
-          lpExistingFileName?lpExistingFileName:W16_NULLSTRING,
-          lpNewFileName?lpNewFileName:W16_NULLSTRING,
-          lpNewFileName?lpNewFileName:W16_NULLSTRING, bFailIfExists);
-
-    pThread = InternalGetCurrentThread();
-    if (lpExistingFileName != NULL)
-    {
-        length = (PAL_wcslen(lpExistingFileName)+1) * MaxWCharToAcpLengthFactor;
-    }
-    
-    source = sourcePathString.OpenStringBuffer(length);
-    if (NULL == source)
-    {
-        pThread->SetLastError(ERROR_NOT_ENOUGH_MEMORY);
-        goto done;
-    }
-
-    src_size = WideCharToMultiByte( CP_ACP, 0, lpExistingFileName, -1, source, length,
-                                NULL, NULL );
-    sourcePathString.CloseBuffer(src_size);
-    
-    if( src_size == 0 )
-    {
-        uint32_t dwLastError = GetLastError();
-        if( dwLastError == ERROR_INSUFFICIENT_BUFFER )
-        {
-            WARN("lpExistingFileName is larger than MAX_LONGPATH (%d)!\n", MAX_LONGPATH);
-            pThread->SetLastError(ERROR_FILENAME_EXCED_RANGE);
-        }
-        else
-        {
-            ASSERT("WideCharToMultiByte failure! error is %d\n", dwLastError);
-            pThread->SetLastError(ERROR_INTERNAL_ERROR);
-        }
-        goto done;
-    }
-
-    length = 0;
-    if (lpNewFileName != NULL)
-    {
-        length = (PAL_wcslen(lpNewFileName)+1) * MaxWCharToAcpLengthFactor;
-    }
-    
-    dest = destPathString.OpenStringBuffer(length);
-    if (NULL == dest)
-    {
-        pThread->SetLastError(ERROR_NOT_ENOUGH_MEMORY);
-        goto done;
-    }
-    dest_size = WideCharToMultiByte( CP_ACP, 0, lpNewFileName, -1, dest, length,
-                                NULL, NULL );
-    destPathString.CloseBuffer(dest_size);
-    
-    if( dest_size == 0 )
-    {
-        uint32_t dwLastError = GetLastError();
-        if( dwLastError == ERROR_INSUFFICIENT_BUFFER )
-        {
-            WARN("lpNewFileName is larger than MAX_LONGPATH (%d)!\n", MAX_LONGPATH);
-            pThread->SetLastError(ERROR_FILENAME_EXCED_RANGE);
-        }
-        else
-        {
-            ASSERT("WideCharToMultiByte failure! error is %d\n", dwLastError);
-            pThread->SetLastError(ERROR_INTERNAL_ERROR);
-        }
-        goto done;
-    }
-
-    bRet = CopyFileA(source,dest,bFailIfExists);
-
-done:
-    LOGEXIT("CopyFileW returns BOOL %d\n", bRet);
-    return bRet;
-}
-
-
-/*++
-Function:
   DeleteFileA
 
 See MSDN doc.
@@ -4449,47 +4345,6 @@ InternalLockFileExit:
     return palError;
 }
 
-
-/*++
-Function:
-  LockFile
-
-See MSDN doc.
---*/
-BOOL
-LockFile(HANDLE hFile,
-         uint32_t dwFileOffsetLow,
-         uint32_t dwFileOffsetHigh,
-         uint32_t nNumberOfBytesToLockLow,
-         uint32_t nNumberOfBytesToLockHigh)
-{
-    CPalThread *pThread;
-    PAL_ERROR palError = NO_ERROR;
-
-    ENTRY("LockFile(hFile:%p, offsetLow:%u, offsetHigh:%u, nbBytesLow:%u,"
-           " nbBytesHigh:%u\n", hFile, dwFileOffsetLow, dwFileOffsetHigh, 
-          nNumberOfBytesToLockLow, nNumberOfBytesToLockHigh);
-
-    pThread = InternalGetCurrentThread();
-
-    palError = InternalLockFile(
-        pThread,
-        hFile,
-        dwFileOffsetLow,
-        dwFileOffsetHigh,
-        nNumberOfBytesToLockLow,
-        nNumberOfBytesToLockHigh
-        );
-
-    if (NO_ERROR != palError)
-    {
-        pThread->SetLastError(palError);
-    }
-
-    LOGEXIT("LockFile returns %s\n", NO_ERROR == palError ? "TRUE":"FALSE");
-    return NO_ERROR == palError;
-}
-
 PAL_ERROR
 CorUnix::InternalUnlockFile(
     CPalThread *pThread,
@@ -4570,46 +4425,6 @@ InternalUnlockFileExit:
     }
 
     return palError;
-}
-
-/*++
-Function:
-  UnlockFile
-
-See MSDN doc.
---*/
-BOOL
-UnlockFile(HANDLE hFile,
-           uint32_t dwFileOffsetLow,
-           uint32_t dwFileOffsetHigh,
-           uint32_t nNumberOfBytesToUnlockLow,
-           uint32_t nNumberOfBytesToUnlockHigh)
-{
-    CPalThread *pThread;
-    PAL_ERROR palError = NO_ERROR;
-
-    ENTRY("UnlockFile(hFile:%p, offsetLow:%u, offsetHigh:%u, nbBytesLow:%u,"
-          "nbBytesHigh:%u\n", hFile, dwFileOffsetLow, dwFileOffsetHigh, 
-          nNumberOfBytesToUnlockLow, nNumberOfBytesToUnlockHigh);
-
-    pThread = InternalGetCurrentThread();
-
-    palError = InternalUnlockFile(
-        pThread,
-        hFile,
-        dwFileOffsetLow,
-        dwFileOffsetHigh,
-        nNumberOfBytesToUnlockLow,
-        nNumberOfBytesToUnlockHigh
-        );
-
-    if (NO_ERROR != palError)
-    {
-        pThread->SetLastError(palError);
-    }
-
-    LOGEXIT("UnlockFile returns %s\n", NO_ERROR == palError ? "TRUE" : "FALSE");
-    return NO_ERROR == palError;
 }
 
 /*++
