@@ -536,42 +536,13 @@ FlushFileBuffers(
 #define FILE_TYPE_PIPE            0x0003
 #define FILE_TYPE_REMOTE          0x8000
 
-// TODO (hanhossain): check usage
-uint32_t
-GetConsoleCP(
-         void);
-
-// TODO (hanhossain): check usage
-uint32_t
-GetConsoleOutputCP(
-           void);
-
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 uint32_t
 GetFullPathNameA(
           const char * lpFileName,
           uint32_t nBufferLength,
           char* lpBuffer,
           char* *lpFilePart);
-
-// TODO (hanhossain): check usage
-uint32_t
-GetFullPathNameW(
-          const char16_t* lpFileName,
-          uint32_t nBufferLength,
-          char16_t* lpBuffer,
-          char16_t* *lpFilePart);
-
-#define GetFullPathName GetFullPathNameW
-
-// TODO (hanhossain): check usage
-uint32_t
-GetLongPathNameW(
-          const char16_t* lpszShortPath,
-                  char16_t* lpszLongPath,
-          uint32_t cchBuffer);
-
-#define GetLongPathName GetLongPathNameW
 
 // TODO (hanhossain): check usage
 uint32_t

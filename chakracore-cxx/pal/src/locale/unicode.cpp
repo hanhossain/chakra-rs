@@ -221,43 +221,6 @@ CFStringEncoding CODEPAGECPToCFStringEncoding(uint32_t codepage)
 
 /*++
 Function:
-GetConsoleCP
-
-See MSDN doc.
---*/
-uint32_t
-GetConsoleCP(
-     void)
-{
-    uint32_t nRet = 0;
-    ENTRY("GetConsoleCP()\n");
-
-    nRet = GetACP();
-
-    LOGEXIT("GetConsoleCP returns UINT %d\n", nRet );
-    return nRet;
-}
-
-/*++
-Function:
-GetConsoleOutputCP
-
-See MSDN doc.
---*/
-uint32_t
-GetConsoleOutputCP(
-       void)
-{
-    uint32_t nRet = 0;
-    ENTRY("GetConsoleOutputCP()\n");
-    nRet = GetACP();
-    LOGEXIT("GetConsoleOutputCP returns UINT %d \n", nRet );
-    return nRet;
-}
-
-
-/*++
-Function:
 IsValidCodePage
 
 See MSDN doc.
