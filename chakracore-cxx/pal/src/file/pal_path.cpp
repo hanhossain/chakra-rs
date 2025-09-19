@@ -54,11 +54,11 @@ uint32_t
 GetFullPathNameA(
       LPCSTR lpFileName,
       uint32_t nBufferLength,
-      LPSTR lpBuffer,
-      LPSTR *lpFilePart)
+      char* lpBuffer,
+      char* *lpFilePart)
 {
     uint32_t  nReqPathLen, nRet = 0;
-    LPSTR lpUnixPath = NULL;
+    char* lpUnixPath = NULL;
     BOOL fullPath = FALSE;
 
     ENTRY("GetFullPathNameA(lpFileName=%p (%s), nBufferLength=%u, lpBuffer=%p, "
@@ -97,7 +97,7 @@ GetFullPathNameA(
         /* allocate memory for full non-canonical path */
         max_len = strlen(lpFileName)+1; /* 1 for the slash to append */
         max_len += MAX_LONGPATH + 1;
-        lpUnixPath = (LPSTR)malloc(max_len);
+        lpUnixPath = (char*)malloc(max_len);
         if(NULL == lpUnixPath)
         {
             ERROR("malloc() failed; error is %d (%s)\n",
@@ -189,13 +189,13 @@ GetFullPathNameW(
       char16_t* lpBuffer,
       char16_t* *lpFilePart)
 {
-    LPSTR fileNameA;
+    char* fileNameA;
     /* bufferA needs to be able to hold a path that's potentially as
        large as MAX_LONGPATH WCHARs. */
     char * bufferA;
     size_t bufferASize = 0;
     PathCharString bufferAPS;
-    LPSTR lpFilePartA;
+    char* lpFilePartA;
     int   fileNameLength;
     int   srcSize;
     uint32_t length;
@@ -222,7 +222,7 @@ GetFullPathNameW(
     }
     else
     {
-        fileNameA = static_cast<LPSTR>(alloca(fileNameLength));
+        fileNameA = static_cast<char*>(alloca(fileNameLength));
     }
 
     /* Now convert lpFileName to ANSI. */
@@ -451,7 +451,7 @@ Notes:
 uint32_t
 GetTempPathA(
 	      uint32_t nBufferLength,
-	      LPSTR lpBuffer)
+	      char* lpBuffer)
 {
     uint32_t dwPathLen = 0;
 
@@ -602,10 +602,10 @@ Parameter:
 --*/
 void
 FILEDosToUnixPathA(
-       LPSTR lpPath)
+       char* lpPath)
 {
-    LPSTR p;
-    LPSTR pPointAtDot=NULL;
+    char* p;
+    char* pPointAtDot=NULL;
     char charBeforeFirstDot='\0';
 
     TRACE("Original DOS path = [%s]\n", lpPath);
@@ -833,9 +833,9 @@ Parameter:
 --*/
 void
 FILEUnixToDosPathA(
-       LPSTR lpPath)
+       char* lpPath)
 {
-    LPSTR p;
+    char* p;
 
     TRACE("Original Unix path = [%s]\n", lpPath);
 
@@ -864,7 +864,7 @@ there is no directory part in the path, return 0.
 --*/
 uint32_t FILEGetDirectoryFromFullPathA( LPCSTR lpFullPath,
                      uint32_t  nBufferLength,
-                     LPSTR  lpBuffer )
+                     char*  lpBuffer )
 {
     int    full_len, dir_len, i;
     LPCSTR lpDirEnd;
@@ -927,7 +927,7 @@ FILECanonicalizePath
     Removes all instances of '/./', '/../' and '//' from an absolute path.
 
 Parameters:
-    LPSTR lpUnixPath : absolute path to modify, in Unix format
+    char* lpUnixPath : absolute path to modify, in Unix format
 
 (no return value)
 
@@ -938,12 +938,12 @@ Notes :
 -reason for this function is that GetFullPathName can't use realpath(), since
  realpath() requires the given path to be valid and GetFullPathName does not.
 --*/
-void FILECanonicalizePath(LPSTR lpUnixPath)
+void FILECanonicalizePath(char* lpUnixPath)
 {
-    LPSTR slashslashptr;
-    LPSTR dotdotptr;
-    LPSTR slashdotptr;
-    LPSTR slashptr;
+    char* slashslashptr;
+    char* dotdotptr;
+    char* slashdotptr;
+    char* slashptr;
 
     /* step 1 : replace '//' sequences by a single '/' */
 
@@ -1070,8 +1070,8 @@ SearchPathA(
      LPCSTR lpFileName,
      LPCSTR lpExtension,
      uint32_t nBufferLength,
-     LPSTR lpBuffer,
-     LPSTR *lpFilePart
+     char* lpBuffer,
+     char* *lpFilePart
     )
 {
     uint32_t nRet = 0;

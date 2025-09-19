@@ -236,16 +236,16 @@ If lpsz points to the terminating null character, the return value is equal to l
 
 See MSDN doc.
 --*/
-LPSTR
+char*
 CharNextA(
    LPCSTR lpsz)
 {
-    LPSTR pRet;
+    char* pRet;
     ENTRY("CharNextA (lpsz=%p (%s))\n", lpsz?lpsz:NULL, lpsz?lpsz:NULL);
 
     pRet = CharNextExA(GetACP(), lpsz, 0);
 
-    LOGEXIT ("CharNextA returns LPSTR %p\n", pRet);
+    LOGEXIT ("CharNextA returns char* %p\n", pRet);
     return pRet;
 }
 
@@ -256,13 +256,13 @@ CharNextExA
 
 See MSDN doc.
 --*/
-LPSTR
+char*
 CharNextExA(
      uint16_t CodePage,
      LPCSTR lpCurrentChar,
      uint32_t dwFlags)
 {
-    LPSTR pRet = (LPSTR) lpCurrentChar;
+    char* pRet = (char*) lpCurrentChar;
 
     ENTRY("CharNextExA (CodePage=%hu, lpCurrentChar=%p (%s), dwFlags=%#x)\n",
     CodePage, lpCurrentChar?lpCurrentChar:"NULL", lpCurrentChar?lpCurrentChar:"NULL", dwFlags);
@@ -273,7 +273,7 @@ CharNextExA(
             IsDBCSLeadByteEx(CodePage, *lpCurrentChar) ?  2 : 1;
     }
 
-    LOGEXIT("CharNextExA returns LPSTR:%p (%s)\n", pRet, pRet);
+    LOGEXIT("CharNextExA returns char*:%p (%s)\n", pRet, pRet);
     return pRet;
 }
 
@@ -557,7 +557,7 @@ MultiByteToWideChar(
         (lpMultiByteStr == NULL) ||
         ((cchWideChar != 0) &&
         ((lpWideCharStr == NULL) ||
-        (lpMultiByteStr == (LPSTR)lpWideCharStr))) )
+        (lpMultiByteStr == (char*)lpWideCharStr))) )
     {
         ERROR("Error lpMultiByteStr parameters are invalid\n");
         SetLastError(ERROR_INVALID_PARAMETER);
@@ -655,7 +655,7 @@ WideCharToMultiByte(
          uint32_t dwFlags,
          const char16_t* lpWideCharStr,
          int cchWideChar,
-         LPSTR lpMultiByteStr,
+         char* lpMultiByteStr,
          int cbMultiByte,
          LPCSTR lpDefaultChar,
          LPBOOL lpUsedDefaultChar)

@@ -337,7 +337,7 @@ int UTF8ToUnicode(
 int UnicodeToUTF8(
     const char16_t* lpSrcStr,
     int cchSrc,
-    LPSTR lpDestStr,
+    char* lpDestStr,
     int cchDest)
 {
     const char16_t* lpWC = lpSrcStr;

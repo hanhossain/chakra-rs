@@ -104,7 +104,7 @@ Return Value :
     with free().
     In case if failure, LastError will be set.
 --*/
-LPSTR UTIL_WCToMB_Alloc(const char16_t* lpWideCharStr, int cchWideChar);
+char* UTIL_WCToMB_Alloc(const char16_t* lpWideCharStr, int cchWideChar);
 
 /*++
 Function : 

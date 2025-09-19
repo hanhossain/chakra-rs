@@ -373,7 +373,7 @@ Parameters :
     DBG_CHANNEL_ID channel : debug channel to use
     DBG_LEVEL_ID level : debug message level
     BOOL bHeader : whether or not to output message header (thread id, etc)
-    LPSTR file : current file
+    char* file : current file
     INT line : line number
 
 Return Value :
@@ -386,7 +386,7 @@ Notes :
     DBG_printf_plain.
 --*/
 BOOL DBG_preprintf(DBG_CHANNEL_ID channel, DBG_LEVEL_ID level, BOOL bHeader,
-                   LPSTR file, int32_t line);
+                   char* file, int32_t line);
 
 /*++
 Function :
@@ -399,10 +399,10 @@ Parameters :
     DBG_CHANNEL_ID channel : debug channel to use
     DBG_LEVEL_ID level : debug message level
     BOOL bHeader : whether or not to output message header (thread id, etc)
-    LPSTR function : current function
-    LPSTR file : current file
+    char* function : current function
+    char* file : current file
     INT line : line number
-    LPSTR format, ... : standard printf parameter list.
+    char* format, ... : standard printf parameter list.
 
 Return Value :
     always 1.
@@ -434,9 +434,9 @@ Parameters :
     DBG_CHANNEL_ID channel : debug channel to use
     DBG_LEVEL_ID level : debug message level
     BOOL bHeader : whether or not to output message header (thread id, etc)
-    LPSTR file : current file
+    char* file : current file
     INT line : line number
-    LPSTR format, ... : standard printf parameter list.
+    char* format, ... : standard printf parameter list.
 
 Return Value :
     always 1.
@@ -448,7 +448,7 @@ Notes :
 
 --*/
 int DBG_printf_c99(DBG_CHANNEL_ID channel, DBG_LEVEL_ID level, BOOL bHeader,
-                   LPSTR file, int32_t line, LPSTR format, ...);
+                   char* file, int32_t line, char* format, ...);
 
 /*++
 Function :
@@ -458,7 +458,7 @@ Function :
     This function output the user-specified part of a debug-message.
 
 Parameters :
-    LPSTR format, ... : standard printf parameter list.
+    char* format, ... : standard printf parameter list.
 
 Return value :
     always 1.
@@ -469,7 +469,7 @@ Notes :
     DBG_preprintf.
 
 --*/
-int DBG_printf_plain(LPSTR format, ...);
+int DBG_printf_plain(char* format, ...);
 
 /*++
 Function :

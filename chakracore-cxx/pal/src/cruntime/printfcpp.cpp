@@ -37,7 +37,7 @@ SET_DEFAULT_DEBUG_CHANNEL(CRT);
 using namespace CorUnix;
 
 int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, const char16_t* Format, va_list ap);
-int CoreVsnprintf(CPalThread *pthrCurrent, LPSTR Buffer, size_t Count, LPCSTR Format, va_list ap);
+int CoreVsnprintf(CPalThread *pthrCurrent, char* Buffer, size_t Count, LPCSTR Format, va_list ap);
 int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, va_list ap);
 int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *format, va_list ap);
 
@@ -63,14 +63,14 @@ static int Internal_Convertfwrite(CPalThread *pthrCurrent, const void *buffer, s
     if(convert)
     {
         int nsize;
-        LPSTR newBuff = 0;
+        char* newBuff = 0;
         nsize = WideCharToMultiByte(CP_ACP, 0,(const char16_t*)buffer, count, 0, 0, 0, 0);
         if (!nsize)
         {
             ASSERT("WideCharToMultiByte failed.  Error is %d\n", GetLastError());
             return -1;
         }
-        newBuff = (LPSTR) malloc(nsize);
+        newBuff = (char*) malloc(nsize);
         if (!newBuff)
         {
             ERROR("malloc failed\n");
@@ -147,12 +147,12 @@ Notes:
         MS  -->  2.560000E+002
         gcc -->  2.560000E+02
 *******************************************************************************/
-BOOL Internal_ExtractFormatA(CPalThread *pthrCurrent, LPCSTR *Fmt, LPSTR Out, int32_t * Flags,
+BOOL Internal_ExtractFormatA(CPalThread *pthrCurrent, LPCSTR *Fmt, char* Out, int32_t * Flags,
     int32_t * Width, int32_t * Precision, int32_t * Prefix, int32_t * Type)
 {
     BOOL Result = FALSE;
-    LPSTR TempStr;
-    LPSTR TempStrPtr;
+    char* TempStr;
+    char* TempStrPtr;
 
     *Width = WIDTH_DEFAULT;
     *Precision = PRECISION_DEFAULT;
@@ -170,7 +170,7 @@ BOOL Internal_ExtractFormatA(CPalThread *pthrCurrent, LPCSTR *Fmt, LPSTR Out, in
     }
 
     /* we'll never need a temp string longer than the original */
-    TempStrPtr = TempStr = (LPSTR) malloc(strlen(*Fmt)+1);
+    TempStrPtr = TempStr = (char*) malloc(strlen(*Fmt)+1);
     if (!TempStr)
     {
         ERROR("malloc failed\n");
@@ -446,12 +446,12 @@ Function:
 
   -- see Internal_ExtractFormatA above
 *******************************************************************************/
-BOOL Internal_ExtractFormatW(CPalThread *pthrCurrent, const char16_t* *Fmt, LPSTR Out, int32_t * Flags,
+BOOL Internal_ExtractFormatW(CPalThread *pthrCurrent, const char16_t* *Fmt, char* Out, int32_t * Flags,
     int32_t * Width, int32_t * Precision, int32_t * Prefix, int32_t * Type)
 {
     BOOL Result = FALSE;
-    LPSTR TempStr;
-    LPSTR TempStrPtr;
+    char* TempStr;
+    char* TempStrPtr;
 
     *Width = WIDTH_DEFAULT;
     *Precision = PRECISION_DEFAULT;
@@ -469,7 +469,7 @@ BOOL Internal_ExtractFormatW(CPalThread *pthrCurrent, const char16_t* *Fmt, LPST
     }
 
     /* we'll never need a temp string longer than the original */
-    TempStrPtr = TempStr = (LPSTR) malloc(PAL_wcslen(*Fmt)+1);
+    TempStrPtr = TempStr = (char*) malloc(PAL_wcslen(*Fmt)+1);
     if (!TempStr)
     {
         ERROR("malloc failed\n");
@@ -854,13 +854,13 @@ Parameters:
     - padding style flags (PRINTF_FORMAT_FLAGS)
 *******************************************************************************/
 
-int32_t Internal_AddPaddingVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, LPSTR In,
+int32_t Internal_AddPaddingVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, char* In,
                                        int32_t Padding, int32_t Flags)
 {
-    LPSTR Out;
+    char* Out;
     int32_t LengthInStr;
     int32_t Length;
-    LPSTR OutOriginal;
+    char* OutOriginal;
     int32_t Written;
 
     LengthInStr = strlen(In);
@@ -870,7 +870,7 @@ int32_t Internal_AddPaddingVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, L
     {
         Length += Padding;
     }
-    Out = (LPSTR) malloc(Length+1);
+    Out = (char*) malloc(Length+1);
     int iLength = Length+1;
     if (!Out)
     {
@@ -1055,7 +1055,7 @@ Parameters:
     - stdarg parameter list
 *******************************************************************************/
 
-int PAL__vsnprintf(LPSTR Buffer, size_t Count, LPCSTR Format, va_list ap)
+int PAL__vsnprintf(char* Buffer, size_t Count, LPCSTR Format, va_list ap)
 {
     return CoreVsnprintf(InternalGetCurrentThread(), Buffer, Count, Format, ap);
 }
@@ -1115,7 +1115,7 @@ int CorUnix::InternalWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_
     return CoreWvsnprintf(pthrCurrent, Buffer, Count, Format, ap);
 }
 
-int CorUnix::InternalVsnprintf(CPalThread *pthrCurrent, LPSTR Buffer, size_t Count, LPCSTR Format, va_list ap)
+int CorUnix::InternalVsnprintf(CPalThread *pthrCurrent, char* Buffer, size_t Count, LPCSTR Format, va_list ap)
 {
     return CoreVsnprintf(pthrCurrent, Buffer, Count, Format, ap);
 }
@@ -1198,8 +1198,8 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
                 }
                 else
                 {
-                    /* %lS assumes a LPSTR argument. */
-                    LPSTR s = va_arg(ap, LPSTR );
+                    /* %lS assumes a char* argument. */
+                    char* s = va_arg(ap, char* );
                     uint32_t Length = 0;
                     Length = MultiByteToWideChar( CP_ACP, 0, s, -1, NULL, 0 );
                     if ( Length != 0 )
@@ -1544,14 +1544,14 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
     return (written);
 }
 
-int CoreVsnprintf(CPalThread *pthrCurrent, LPSTR Buffer, size_t Count, LPCSTR Format, va_list aparg)
+int CoreVsnprintf(CPalThread *pthrCurrent, char* Buffer, size_t Count, LPCSTR Format, va_list aparg)
 {
     BOOL BufferRanOut = FALSE;
     char TempBuff[1024]; /* used to hold a single %<foo> format string */
-    LPSTR BufferPtr = Buffer;
+    char* BufferPtr = Buffer;
     LPCSTR Fmt = Format;
     char16_t* TempWStr;
-    LPSTR TempStr;
+    char* TempStr;
     char16_t TempWChar;
     int32_t Flags;
     int32_t Width;
@@ -1609,7 +1609,7 @@ int CoreVsnprintf(CPalThread *pthrCurrent, LPSTR Buffer, size_t Count, LPCSTR Fo
                     va_end(ap);
                     return -1;
                 }
-                TempStr = (LPSTR) malloc(Length);
+                TempStr = (char*) malloc(Length);
                 if (!TempStr)
                 {
                     ERROR("malloc failed\n");
@@ -1854,7 +1854,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
     int32_t Prefix;
     int32_t Type;
     int32_t TempInt;
-    LPSTR TempNumberBuffer;
+    char* TempNumberBuffer;
     int mbtowcResult;
     va_list(ap);
 
@@ -1911,8 +1911,8 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
                 }
                 else
                 {
-                    // %lS and %hs assume an LPSTR argument.
-                    LPSTR s = va_arg(ap, LPSTR );
+                    // %lS and %hs assume an char* argument.
+                    char* s = va_arg(ap, char* );
                     uint32_t Length = 0;
                     Length = MultiByteToWideChar( CP_ACP, 0, s, -1, NULL, 0 );
                     if ( Length != 0 )
@@ -2086,7 +2086,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
                     trunc2 = (short)trunc1;
                     trunc1 = trunc2;
 
-                    TempInt = snprintf((LPSTR)BufferPtr, TempCount, TempBuff, trunc1);
+                    TempInt = snprintf((char*)BufferPtr, TempCount, TempBuff, trunc1);
                 }
                 else if (Type == PFF_TYPE_INT && Prefix == PFF_PREFIX_SHORT)
                 {
@@ -2098,13 +2098,13 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
                     n = va_arg(ap, int);
                     s = (short) n;
 
-                    TempInt = snprintf((LPSTR)BufferPtr, TempCount, TempBuff, s);
+                    TempInt = snprintf((char*)BufferPtr, TempCount, TempBuff, s);
                 }
                 else
                 {
                     va_list apcopy;
                     va_copy(apcopy, ap);
-                    TempInt = vsnprintf((LPSTR) BufferPtr, TempCount, TempBuff, apcopy);
+                    TempInt = vsnprintf((char*) BufferPtr, TempCount, TempBuff, apcopy);
                     va_end(apcopy);
                     PAL_printf_arg_remover(&ap, Width, Precision, Type, Prefix);
                 }
@@ -2116,7 +2116,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
                 }
                 if (TempInt < 0 || static_cast<size_t>(TempInt) >= TempCount) /* buffer not long enough */
                 {
-                    TempNumberBuffer = (LPSTR) malloc(TempCount+1);
+                    TempNumberBuffer = (char*) malloc(TempCount+1);
                     if (!TempNumberBuffer)
                     {
                         ERROR("malloc failed\n");
@@ -2126,7 +2126,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
                         return -1;
                     }
 
-                    if (strncpy_s(TempNumberBuffer, TempCount+1, (LPSTR) BufferPtr, TempCount) != SAFECRT_SUCCESS)
+                    if (strncpy_s(TempNumberBuffer, TempCount+1, (char*) BufferPtr, TempCount) != SAFECRT_SUCCESS)
                     {
                         ASSERT("strncpy_s failed!\n");
                         free(TempNumberBuffer);
@@ -2151,7 +2151,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
                 }
                 else
                 {
-                    TempNumberBuffer = (LPSTR) malloc(TempInt+1);
+                    TempNumberBuffer = (char*) malloc(TempInt+1);
                     if (!TempNumberBuffer)
                     {
                         ERROR("malloc failed\n");
@@ -2160,7 +2160,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
                         return -1;
                     }
 
-                    if (strncpy_s(TempNumberBuffer, TempInt+1, (LPSTR) BufferPtr, TempInt) != SAFECRT_SUCCESS)
+                    if (strncpy_s(TempNumberBuffer, TempInt+1, (char*) BufferPtr, TempInt) != SAFECRT_SUCCESS)
                     {
                         ASSERT("strncpy_s failed!\n");
                         free(TempNumberBuffer);
@@ -2214,7 +2214,7 @@ int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, 
     char TempBuff[1024]; /* used to hold a single %<foo> format string */
     LPCSTR Fmt = format;
     char16_t* TempWStr;
-    LPSTR TempStr;
+    char* TempStr;
     char16_t TempWChar;
     int32_t Flags;
     int32_t Width;
@@ -2270,7 +2270,7 @@ int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, 
                     va_end(ap);
                     return -1;
                 }
-                TempStr = (LPSTR) malloc(Length);
+                TempStr = (char*) malloc(Length);
                 if (!TempStr)
                 {
                     ERROR("malloc failed\n");

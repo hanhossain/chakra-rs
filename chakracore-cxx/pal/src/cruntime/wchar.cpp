@@ -1533,7 +1533,7 @@ double
 PAL_wcstod( const char16_t * nptr, char16_t **endptr )
 {
     double RetVal = 0.0;
-    LPSTR  lpStringRep = NULL;
+    char*  lpStringRep = NULL;
     char16_t* lpStartOfExpression = (char16_t*)nptr;
     char16_t* lpEndOfExpression = NULL;
     uint32_t Length = 0;
@@ -1567,7 +1567,7 @@ PAL_wcstod( const char16_t * nptr, char16_t **endptr )
     if ( lpEndOfExpression != lpStartOfExpression )
     {
         Length = lpEndOfExpression - lpStartOfExpression;
-        lpStringRep = (LPSTR)malloc( Length + 1);
+        lpStringRep = (char*)malloc( Length + 1);
 
         if ( lpStringRep )
         {
@@ -1575,7 +1575,7 @@ PAL_wcstod( const char16_t * nptr, char16_t **endptr )
                                       lpStringRep, Length + 1 ,
                                       NULL, 0 ) != 0 )
             {
-                LPSTR ScanStop = NULL;
+                char* ScanStop = NULL;
                 lpStringRep[Length]= 0;
                 RetVal = strtod( lpStringRep, &ScanStop );
 

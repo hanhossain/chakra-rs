@@ -65,7 +65,7 @@ and its terminating null character.
 uint32_t
 GetEnvironmentVariableA(
              LPCSTR lpName,
-             LPSTR lpBuffer,
+             char* lpBuffer,
              uint32_t nSize)
 {
     char  *value;
@@ -405,7 +405,7 @@ Function:
 See GetEnvironmentStringsW.
 
 --*/
-LPSTR
+char*
 GetEnvironmentStringsA(
                void)
 {
@@ -504,7 +504,7 @@ See FreeEnvironmentStringsW.
 --*/
 BOOL
 FreeEnvironmentStringsA(
-             LPSTR lpValue)
+             char* lpValue)
 {
     ENTRY("FreeEnvironmentStringsA(lpValue=%p (%s))\n", lpValue?lpValue:"NULL", lpValue?lpValue:"NULL");
 
@@ -587,7 +587,7 @@ SetEnvironmentVariableA(
     else
     {
         int iLen = strlen(lpName) + strlen(lpValue) + 2;
-        LPSTR string = (LPSTR) malloc(iLen);
+        char* string = (char*) malloc(iLen);
         if (string == NULL)
         {
             bRet = FALSE;

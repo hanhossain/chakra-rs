@@ -1370,7 +1370,7 @@ typedef struct _UNLOAD_DLL_DEBUG_INFO {
 } UNLOAD_DLL_DEBUG_INFO, *LPUNLOAD_DLL_DEBUG_INFO;
 
 typedef struct _OUTPUT_DEBUG_STRING_INFO {
-    LPSTR lpDebugStringData;
+    char* lpDebugStringData;
     uint16_t fUnicode;
     uint16_t nDebugStringLength;
 } OUTPUT_DEBUG_STRING_INFO, *LPOUTPUT_DEBUG_STRING_INFO;
@@ -1582,7 +1582,7 @@ EXTERN_C uint32_t PAL_LoadSatelliteStringW(HSATELLITE SatelliteResource,
              uint32_t nBufferMax);
 EXTERN_C uint32_t PAL_LoadSatelliteStringA(HSATELLITE SatelliteResource,
              uint32_t uID,
-             LPSTR lpBuffer,
+             char* lpBuffer,
              uint32_t nBufferMax);
 
 EXTERN_C int32_t PAL_CoCreateInstance(REFCLSID   rclsid,

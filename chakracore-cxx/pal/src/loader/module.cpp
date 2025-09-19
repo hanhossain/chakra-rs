@@ -103,7 +103,7 @@ int MaxWCharToAcpLength = 3;
 template<class TChar> static bool LOADVerifyLibraryPath(const TChar *libraryPath);
 static bool LOADConvertLibraryPathWideStringToMultibyteString(
     const char16_t* wideLibraryPath,
-    LPSTR multibyteLibraryPath,
+    char* multibyteLibraryPath,
     int32_t *multibyteLibraryPathLengthRef);
 static BOOL LOADValidateModule(MODSTRUCT *module);
 static char16_t* LOADGetModuleFileName(MODSTRUCT *module);
@@ -161,7 +161,7 @@ LoadLibraryExA(
         return nullptr;
     }
 
-    LPSTR lpstr = nullptr;
+    char* lpstr = nullptr;
     HMODULE hModule = nullptr;
 
     ENTRY("LoadLibraryExA (lpLibFileName=%p (%s)) \n",
@@ -307,7 +307,7 @@ GetProcAddress(
     if (pal_module && module->dl_handle == pal_module->dl_handle)
     {
         int iLen = 4 + strlen(lpProcName) + 1;
-        LPSTR lpPALProcName = (LPSTR) alloca(iLen);
+        char* lpPALProcName = (char*) alloca(iLen);
 
         if (strcpy_s(lpPALProcName, iLen, "PAL_") != SAFECRT_SUCCESS)
         {
@@ -422,7 +422,7 @@ Notes :
 uint32_t
 GetModuleFileNameA(
      HMODULE hModule,
-     LPSTR lpFileName,
+     char* lpFileName,
      uint32_t nSize)
 {
     int32_t name_length;
@@ -842,7 +842,7 @@ extern "C"
 BOOL LOADSetExeName(char16_t* name)
 {
 #if RETURNS_NEW_HANDLES_ON_REPEAT_DLOPEN
-    LPSTR pszExeName = nullptr;
+    char* pszExeName = nullptr;
 #endif
     BOOL result = FALSE;
 
@@ -1188,7 +1188,7 @@ static bool LOADVerifyLibraryPath(const TChar *libraryPath)
 // Converts the wide char library path string into a multibyte-char string. On error, calls SetLastError() and returns false.
 static bool LOADConvertLibraryPathWideStringToMultibyteString(
     const char16_t* wideLibraryPath,
-    LPSTR multibyteLibraryPath,
+    char* multibyteLibraryPath,
     int32_t *multibyteLibraryPathLengthRef)
 {
     _ASSERTE(multibyteLibraryPathLengthRef != nullptr);
@@ -1531,7 +1531,7 @@ Function :
     implementation of LoadLibrary (for use by the A/W variants)
 
 Parameters :
-    LPSTR shortAsciiName : name of module as specified to LoadLibrary
+    char* shortAsciiName : name of module as specified to LoadLibrary
 
     BOOL fDynamic : TRUE if dynamic load through LoadLibrary, FALSE if static load through RegisterLibrary
 
