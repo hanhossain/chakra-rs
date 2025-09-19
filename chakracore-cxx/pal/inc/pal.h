@@ -310,6 +310,7 @@ typedef struct _SECURITY_ATTRIBUTES {
 
 #define INVALID_SET_FILE_POINTER   ((uint32_t)-1)
 
+// TODO (hanhossain): check usage
 HANDLE
 CreateFileA(
          const char * lpFileName,
@@ -320,6 +321,7 @@ CreateFileA(
          uint32_t dwFlagsAndAttributes,
          HANDLE hTemplateFile);
 
+// TODO (hanhossain): check usage
 HANDLE
 CreateFileW(
          const char16_t* lpFileName,
@@ -332,6 +334,7 @@ CreateFileW(
 
 #define CreateFile CreateFileW
 
+// TODO (hanhossain): check usage
 BOOL
 LockFile(
      HANDLE hFile,
@@ -341,6 +344,7 @@ LockFile(
      uint32_t nNumberOfBytesToLockHigh
     );
 
+// TODO (hanhossain): check usage
 BOOL
 UnlockFile(
      HANDLE hFile,
@@ -350,6 +354,7 @@ UnlockFile(
      uint32_t nNumberOfBytesToUnlockHigh
     );
 
+// TODO (hanhossain): check usage
 uint32_t
 SearchPathA(
      const char * lpPath,
@@ -360,6 +365,7 @@ SearchPathA(
      char* *lpFilePart
     );
 
+// TODO (hanhossain): check usage
 uint32_t
 SearchPathW(
      const char16_t* lpPath,
@@ -371,13 +377,14 @@ SearchPathW(
     );
 #define SearchPath  SearchPathW
 
-
+// TODO (hanhossain): check usage
 BOOL
 CopyFileA(
        const char * lpExistingFileName,
        const char * lpNewFileName,
        BOOL bFailIfExists);
 
+// TODO (hanhossain): check usage
 BOOL
 CopyFileW(
        const char16_t* lpExistingFileName,
@@ -386,22 +393,25 @@ CopyFileW(
 
 #define CopyFile CopyFileW
 
+// TODO (hanhossain): check usage
 BOOL
 DeleteFileA(
          const char * lpFileName);
 
+// TODO (hanhossain): check usage
 BOOL
 DeleteFileW(
          const char16_t* lpFileName);
 
 #define DeleteFile DeleteFileW
 
-
+// TODO (hanhossain): check usage
 BOOL
 MoveFileA(
       const char * lpExistingFileName,
       const char * lpNewFileName);
 
+// TODO (hanhossain): check usage
 BOOL
 MoveFileW(
       const char16_t* lpExistingFileName,
@@ -412,12 +422,14 @@ MoveFileW(
 #define MOVEFILE_REPLACE_EXISTING      0x00000001
 #define MOVEFILE_COPY_ALLOWED          0x00000002
 
+// TODO (hanhossain): check usage
 BOOL
 MoveFileExA(
          const char * lpExistingFileName,
          const char * lpNewFileName,
          uint32_t dwFlags);
 
+// TODO (hanhossain): check usage
 BOOL
 MoveFileExW(
          const char16_t* lpExistingFileName,
@@ -426,11 +438,13 @@ MoveFileExW(
 
 #define MoveFileEx MoveFileExW
 
+// TODO (hanhossain): check usage
 BOOL
 CreateDirectoryA(
           const char * lpPathName,
           LPSECURITY_ATTRIBUTES lpSecurityAttributes);
 
+// TODO (hanhossain): check usage
 BOOL
 CreateDirectoryW(
           const char16_t* lpPathName,
@@ -438,10 +452,12 @@ CreateDirectoryW(
 
 #define CreateDirectory CreateDirectoryW
 
+// TODO (hanhossain): check usage
 BOOL
 RemoveDirectoryW(
           const char16_t* lpPathName);
 
+// TODO (hanhossain): check usage
 BOOL
 RemoveDirectoryA(
           const char * lpPathName);
@@ -491,11 +507,13 @@ typedef WIN32_FIND_DATAW WIN32_FIND_DATA;
 typedef PWIN32_FIND_DATAW PWIN32_FIND_DATA;
 typedef LPWIN32_FIND_DATAW LPWIN32_FIND_DATA;
 
+// TODO (hanhossain): check usage
 HANDLE
 FindFirstFileA(
             const char * lpFileName,
             LPWIN32_FIND_DATAA lpFindFileData);
 
+// TODO (hanhossain): check usage
 HANDLE
 FindFirstFileW(
             const char16_t* lpFileName,
@@ -503,11 +521,13 @@ FindFirstFileW(
 
 #define FindFirstFile FindFirstFileW
 
+// TODO (hanhossain): check usage
 BOOL
 FindNextFileA(
            HANDLE hFindFile,
            LPWIN32_FIND_DATAA lpFindFileData);
 
+// TODO (hanhossain): check usage
 BOOL
 FindNextFileW(
            HANDLE hFindFile,
@@ -515,14 +535,17 @@ FindNextFileW(
 
 #define FindNextFile FindNextFileW
 
+// TODO (hanhossain): check usage
 BOOL
 FindClose(
         HANDLE hFindFile);
 
+// TODO (hanhossain): check usage
 uint32_t
 GetFileAttributesA(
             const char * lpFileName);
 
+// TODO (hanhossain): check usage
 uint32_t
 GetFileAttributesW(
             const char16_t* lpFileName);
@@ -542,6 +565,7 @@ typedef struct _WIN32_FILE_ATTRIBUTE_DATA {
     uint32_t      nFileSizeLow;
 } WIN32_FILE_ATTRIBUTE_DATA, *LPWIN32_FILE_ATTRIBUTE_DATA;
 
+// TODO (hanhossain): check usage
 BOOL
 GetFileAttributesExW(
               const char16_t* lpFileName,
@@ -550,11 +574,13 @@ GetFileAttributesExW(
 
 #define GetFileAttributesEx GetFileAttributesExW
 
+// TODO (hanhossain): check usage
 BOOL
 SetFileAttributesA(
             const char * lpFileName,
             uint32_t dwFileAttributes);
 
+// TODO (hanhossain): check usage
 BOOL
 SetFileAttributesW(
             const char16_t* lpFileName,
@@ -564,6 +590,7 @@ SetFileAttributesW(
 
 typedef void * LPOVERLAPPED;  // diff from winbase.h
 
+// TODO (hanhossain): check usage
 BOOL
 WriteFile(
        HANDLE hFile,
@@ -572,6 +599,7 @@ WriteFile(
        uint32_t * lpNumberOfBytesWritten,
        LPOVERLAPPED lpOverlapped);
 
+// TODO (hanhossain): check usage
 BOOL
 ReadFile(
       HANDLE hFile,
@@ -584,14 +612,17 @@ ReadFile(
 #define STD_OUTPUT_HANDLE        ((uint32_t)-11)
 #define STD_ERROR_HANDLE         ((uint32_t)-12)
 
+// TODO (hanhossain): check usage
 HANDLE
 GetStdHandle(
           uint32_t nStdHandle);
 
+// TODO (hanhossain): check usage
 BOOL
 SetEndOfFile(
           HANDLE hFile);
 
+// TODO (hanhossain): check usage
 uint32_t
 SetFilePointer(
             HANDLE hFile,
@@ -599,6 +630,7 @@ SetFilePointer(
             int32_t * lpDistanceToMoveHigh,
             uint32_t dwMoveMethod);
 
+// TODO (hanhossain): check usage
 BOOL
 SetFilePointerEx(
             HANDLE hFile,
@@ -606,26 +638,31 @@ SetFilePointerEx(
             PLARGE_INTEGER lpNewFilePointer,
             uint32_t dwMoveMethod);
 
+// TODO (hanhossain): check usage
 uint32_t
 GetFileSize(
          HANDLE hFile,
          uint32_t * lpFileSizeHigh);
 
+// TODO (hanhossain): check usage
 BOOL
 GetFileSizeEx(
            HANDLE hFile,
           PLARGE_INTEGER lpFileSize);
 
+// TODO (hanhossain): check usage
 BOOL
 GetFileInformationByHandle(
          HANDLE hFile,
          BY_HANDLE_FILE_INFORMATION* lpFileInformation);
 
+// TODO (hanhossain): check usage
 int32_t
 CompareFileTime(
          const FILETIME *lpFileTime1,
          const FILETIME *lpFileTime2);
 
+// TODO (hanhossain): check usage
 BOOL
 SetFileTime(
          HANDLE hFile,
@@ -633,6 +670,7 @@ SetFileTime(
          const FILETIME *lpLastAccessTime,
          const FILETIME *lpLastWriteTime);
 
+// TODO (hanhossain): check usage
 BOOL
 GetFileTime(
          HANDLE hFile,
@@ -640,6 +678,7 @@ GetFileTime(
          LPFILETIME lpLastAccessTime,
          LPFILETIME lpLastWriteTime);
 
+// TODO (hanhossain): check usage
 void
 GetSystemTimeAsFileTime(
              LPFILETIME lpSystemTimeAsFileTime);
@@ -655,11 +694,13 @@ typedef struct _SYSTEMTIME {
     uint16_t wMilliseconds;
 } SYSTEMTIME, *PSYSTEMTIME, *LPSYSTEMTIME;
 
+// TODO (hanhossain): check usage
 BOOL
 FileTimeToSystemTime(
              const FILETIME *lpFileTime,
              LPSYSTEMTIME lpSystemTime);
 
+// TODO (hanhossain): check usage
 BOOL
 FileTimeToDosDateTime(
      const FILETIME *lpFileTime,
@@ -669,6 +710,7 @@ FileTimeToDosDateTime(
 
 
 
+// TODO (hanhossain): check usage
 BOOL
 FlushFileBuffers(
           HANDLE hFile);
@@ -679,18 +721,22 @@ FlushFileBuffers(
 #define FILE_TYPE_PIPE            0x0003
 #define FILE_TYPE_REMOTE          0x8000
 
+// TODO (hanhossain): check usage
 uint32_t
 GetFileType(
          HANDLE hFile);
 
+// TODO (hanhossain): check usage
 uint32_t
 GetConsoleCP(
          void);
 
+// TODO (hanhossain): check usage
 uint32_t
 GetConsoleOutputCP(
            void);
 
+// TODO (hanhossain): check usage
 uint32_t
 GetFullPathNameA(
           const char * lpFileName,
@@ -698,6 +744,7 @@ GetFullPathNameA(
           char* lpBuffer,
           char* *lpFilePart);
 
+// TODO (hanhossain): check usage
 uint32_t
 GetFullPathNameW(
           const char16_t* lpFileName,
@@ -707,6 +754,7 @@ GetFullPathNameW(
 
 #define GetFullPathName GetFullPathNameW
 
+// TODO (hanhossain): check usage
 uint32_t
 GetLongPathNameW(
           const char16_t* lpszShortPath,
@@ -715,6 +763,7 @@ GetLongPathNameW(
 
 #define GetLongPathName GetLongPathNameW
 
+// TODO (hanhossain): check usage
 uint32_t
 GetShortPathNameW(
           const char16_t* lpszLongPath,
@@ -723,7 +772,7 @@ GetShortPathNameW(
 
 #define GetShortPathName GetShortPathNameW
 
-
+// TODO (hanhossain): check usage
 uint32_t
 GetTempFileNameA(
           const char * lpPathName,
@@ -731,6 +780,7 @@ GetTempFileNameA(
           uint32_t uUnique,
           char* lpTempFileName);
 
+// TODO (hanhossain): check usage
 uint32_t
 GetTempFileNameW(
           const char16_t* lpPathName,
@@ -740,11 +790,13 @@ GetTempFileNameW(
 
 #define GetTempFileName GetTempFileNameW
 
+// TODO (hanhossain): check usage
 uint32_t
 GetTempPathA(
           uint32_t nBufferLength,
           char* lpBuffer);
 
+// TODO (hanhossain): check usage
 uint32_t
 GetTempPathW(
           uint32_t nBufferLength,
@@ -752,11 +804,13 @@ GetTempPathW(
 
 #define GetTempPath GetTempPathW
 
+// TODO (hanhossain): check usage
 uint32_t
 GetCurrentDirectoryA(
               uint32_t nBufferLength,
               char* lpBuffer);
 
+// TODO (hanhossain): check usage
 uint32_t
 GetCurrentDirectoryW(
               uint32_t nBufferLength,
@@ -764,10 +818,12 @@ GetCurrentDirectoryW(
 
 #define GetCurrentDirectory GetCurrentDirectoryW
 
+// TODO (hanhossain): check usage
 BOOL
 SetCurrentDirectoryA(
              const char * lpPathName);
 
+// TODO (hanhossain): check usage
 BOOL
 SetCurrentDirectoryW(
              const char16_t* lpPathName);
@@ -775,11 +831,13 @@ SetCurrentDirectoryW(
 
 #define SetCurrentDirectory SetCurrentDirectoryW
 
+// TODO (hanhossain): check usage
 BOOL
 GetUserNameW(
      char16_t* lpBuffer,      // address of name buffer
       uint32_t * nSize );   // address of size of name buffer
 
+// TODO (hanhossain): check usage
 BOOL
 GetComputerNameW(
      char16_t* lpBuffer,     // address of name buffer
@@ -788,6 +846,7 @@ GetComputerNameW(
 #define GetUserName GetUserNameW
 #define GetComputerName GetComputerNameW
 
+// TODO (hanhossain): check usage
 HANDLE
 CreateSemaphoreA(
           LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
@@ -795,6 +854,7 @@ CreateSemaphoreA(
           int32_t lMaximumCount,
           const char * lpName);
 
+// TODO (hanhossain): check usage
 HANDLE
 CreateSemaphoreExA(
           LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
@@ -804,6 +864,7 @@ CreateSemaphoreExA(
           /*_Reserved_*/  uint32_t dwFlags,
           uint32_t dwDesiredAccess);
 
+// TODO (hanhossain): check usage
 HANDLE
 CreateSemaphoreW(
           LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
@@ -811,6 +872,7 @@ CreateSemaphoreW(
           int32_t lMaximumCount,
           const char16_t* lpName);
 
+// TODO (hanhossain): check usage
 HANDLE
 CreateSemaphoreExW(
          LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
@@ -820,6 +882,7 @@ CreateSemaphoreExW(
          /*_Reserved_*/  uint32_t dwFlags,
          uint32_t dwDesiredAccess);
 
+// TODO (hanhossain): check usage
 HANDLE
 OpenSemaphoreW(
      uint32_t dwDesiredAccess,
@@ -829,12 +892,14 @@ OpenSemaphoreW(
 #define CreateSemaphore CreateSemaphoreW
 #define CreateSemaphoreEx CreateSemaphoreExW
 
+// TODO (hanhossain): check usage
 BOOL
 ReleaseSemaphore(
           HANDLE hSemaphore,
           int32_t lReleaseCount,
           int32_t * lpPreviousCount);
 
+// TODO (hanhossain): check usage
 HANDLE
 CreateEventA(
           LPSECURITY_ATTRIBUTES lpEventAttributes,
@@ -842,6 +907,7 @@ CreateEventA(
           BOOL bInitialState,
           const char * lpName);
 
+// TODO (hanhossain): check usage
 HANDLE
 CreateEventW(
           LPSECURITY_ATTRIBUTES lpEventAttributes,
@@ -851,14 +917,17 @@ CreateEventW(
 
 #define CreateEvent CreateEventW
 
+// TODO (hanhossain): check usage
 BOOL
 SetEvent(
       HANDLE hEvent);
 
+// TODO (hanhossain): check usage
 BOOL
 ResetEvent(
         HANDLE hEvent);
 
+// TODO (hanhossain): check usage
 HANDLE
 OpenEventW(
         uint32_t dwDesiredAccess,
@@ -867,18 +936,22 @@ OpenEventW(
 
 #define OpenEvent OpenEventW
 
+// TODO (hanhossain): check usage
 uint32_t
 GetCurrentProcessId(
             void);
 
+// TODO (hanhossain): check usage
 HANDLE
 GetCurrentProcess(
           void);
 
+// TODO (hanhossain): check usage
 uint32_t
 GetCurrentThreadId(
            void);
 
+// TODO (hanhossain): check usage
 uint32_t
 GetThreadId(
     HANDLE hThread);
@@ -948,6 +1021,7 @@ typedef struct _PROCESS_INFORMATION {
     uint32_t dwThreadId_PAL_Undefined;
 } PROCESS_INFORMATION, *PPROCESS_INFORMATION, *LPPROCESS_INFORMATION;
 
+// TODO (hanhossain): check usage
 BOOL
 CreateProcessA(
             const char * lpApplicationName,
@@ -961,6 +1035,7 @@ CreateProcessA(
             LPSTARTUPINFOA lpStartupInfo,
             LPPROCESS_INFORMATION lpProcessInformation);
 
+// TODO (hanhossain): check usage
 BOOL
 CreateProcessW(
             const char16_t* lpApplicationName,
@@ -976,21 +1051,25 @@ CreateProcessW(
 
 #define CreateProcess CreateProcessW
 
+// TODO (hanhossain): check usage
 __attribute__((noreturn))
 void
 ExitProcess(
          uint32_t uExitCode);
 
+// TODO (hanhossain): check usage
 BOOL
 TerminateProcess(
           HANDLE hProcess,
           uint32_t uExitCode);
 
+// TODO (hanhossain): check usage
 BOOL
 GetExitCodeProcess(
             HANDLE hProcess,
             uint32_t * lpExitCode);
 
+// TODO (hanhossain): check usage
 BOOL
 GetProcessTimes(
          HANDLE hProcess,
@@ -1008,17 +1087,20 @@ GetProcessTimes(
 
 #define INFINITE 0xFFFFFFFF // Infinite timeout
 
+// TODO (hanhossain): check usage
 uint32_t
 WaitForSingleObject(
              HANDLE hHandle,
              uint32_t dwMilliseconds);
 
+// TODO (hanhossain): check usage
 uint32_t
 WaitForSingleObjectEx(
              HANDLE hHandle,
              uint32_t dwMilliseconds,
              BOOL bAlertable);
 
+// TODO (hanhossain): check usage
 uint32_t
 WaitForMultipleObjects(
                 uint32_t nCount,
@@ -1026,6 +1108,7 @@ WaitForMultipleObjects(
                 BOOL bWaitAll,
                 uint32_t dwMilliseconds);
 
+// TODO (hanhossain): check usage
 uint32_t
 WaitForMultipleObjectsEx(
               uint32_t nCount,
@@ -1034,10 +1117,12 @@ WaitForMultipleObjectsEx(
               uint32_t dwMilliseconds,
               BOOL bAlertable);
 
+// TODO (hanhossain): check usage
 RHANDLE
 PAL_LocalHandleToRemote(
              HANDLE hLocal);
 
+// TODO (hanhossain): check usage
 HANDLE
 PAL_RemoteHandleToLocal(
              RHANDLE hRemote);
@@ -1046,6 +1131,7 @@ PAL_RemoteHandleToLocal(
 #define DUPLICATE_CLOSE_SOURCE      0x00000001
 #define DUPLICATE_SAME_ACCESS       0x00000002
 
+// TODO (hanhossain): check usage
 BOOL
 DuplicateHandle(
          HANDLE hSourceProcessHandle,
@@ -1056,15 +1142,18 @@ DuplicateHandle(
          BOOL bInheritHandle,
          uint32_t dwOptions);
 
+// TODO (hanhossain): check usage
 void
 Sleep(
        uint32_t dwMilliseconds);
 
+// TODO (hanhossain): check usage
 uint32_t
 SleepEx(
      uint32_t dwMilliseconds,
      BOOL bAlertable);
 
+// TODO (hanhossain): check usage
 BOOL
 SwitchToThread(
     void);
@@ -1074,6 +1163,7 @@ SwitchToThread(
 #define CREATE_SUSPENDED                  0x00000004
 #define STACK_SIZE_PARAM_IS_A_RESERVATION 0x00010000
 
+// TODO (hanhossain): check usage
 HANDLE
 CreateThread(
           LPSECURITY_ATTRIBUTES lpThreadAttributes,
@@ -1083,22 +1173,26 @@ CreateThread(
           uint32_t dwCreationFlags,
           uint32_t * lpThreadId);
 
+// TODO (hanhossain): check usage
 __attribute__((noreturn))
 void
 ExitThread(
         uint32_t dwExitCode);
 
+// TODO (hanhossain): check usage
 BOOL
 GetExitCodeThread(
             HANDLE hThread,
             uint32_t * lpExitCode);
 
+// TODO (hanhossain): check usage
 uint32_t
 ResumeThread(
           HANDLE hThread);
 
 typedef void (*PAPCFUNC)(size_t dwParam);
 
+// TODO (hanhossain): check usage
 uint32_t
 QueueUserAPC(
           PAPCFUNC pfnAPC,
@@ -1572,15 +1666,18 @@ SetThreadContext(
 #define THREAD_PRIORITY_TIME_CRITICAL THREAD_BASE_PRIORITY_LOWRT
 #define THREAD_PRIORITY_IDLE          THREAD_BASE_PRIORITY_IDLE
 
+// TODO (hanhossain): check usage
 int
 GetThreadPriority(
            HANDLE hThread);
 
+// TODO (hanhossain): check usage
 BOOL
 SetThreadPriority(
            HANDLE hThread,
            int nPriority);
 
+// TODO (hanhossain): check usage
 BOOL
 GetThreadTimes(
          HANDLE hThread,
@@ -1589,23 +1686,29 @@ GetThreadTimes(
          LPFILETIME lpKernelTime,
          LPFILETIME lpUserTime);
 
+// TODO (hanhossain): check usage
 void *
 PAL_GetStackBase();
 
+// TODO (hanhossain): check usage
 void *
 PAL_GetStackLimit();
 
+// TODO (hanhossain): check usage
 uint32_t
 PAL_GetLogicalCpuCountFromOS();
 
+// TODO (hanhossain): check usage
 size_t
 PAL_GetLogicalProcessorCacheSizeFromOS();
 
 typedef BOOL (*ReadMemoryWordCallback)(size_t address, size_t *value);
 
 #if defined(_AMD64_) || defined(_ARM_) || defined(_ARM64_)
+// TODO (hanhossain): check usage
 BOOL PAL_VirtualUnwind(CONTEXT *context, KNONVOLATILE_CONTEXT_POINTERS *contextPointers);
 
+// TODO (hanhossain): check usage
 BOOL PAL_VirtualUnwindOutOfProc(CONTEXT *context,
                                                  KNONVOLATILE_CONTEXT_POINTERS *contextPointers,
                                                  uint32_t pid,
@@ -1661,17 +1764,25 @@ typedef struct _CRITICAL_SECTION {
     } csnds;
 } CRITICAL_SECTION, *PCRITICAL_SECTION, *LPCRITICAL_SECTION;
 
+// TODO (hanhossain): check usage
 void EnterCriticalSection(  LPCRITICAL_SECTION lpCriticalSection);
+// TODO (hanhossain): check usage
 void LeaveCriticalSection(  LPCRITICAL_SECTION lpCriticalSection);
+// TODO (hanhossain): check usage
 void InitializeCriticalSection( LPCRITICAL_SECTION lpCriticalSection);
+// TODO (hanhossain): check usage
 BOOL InitializeCriticalSectionEx(LPCRITICAL_SECTION lpCriticalSection, uint32_t dwSpinCount, uint32_t Flags);
+// TODO (hanhossain): check usage
 BOOL InitializeCriticalSectionAndSpinCount(LPCRITICAL_SECTION lpCriticalSection, uint32_t dwSpinCount);
+// TODO (hanhossain): check usage
 void DeleteCriticalSection(  LPCRITICAL_SECTION lpCriticalSection);
+// TODO (hanhossain): check usage
 BOOL TryEnterCriticalSection(  LPCRITICAL_SECTION lpCriticalSection);
 
 #define SEM_FAILCRITICALERRORS          0x0001
 #define SEM_NOOPENFILEERRORBOX          0x8000
 
+// TODO (hanhossain): check usage
 uint32_t
 SetErrorMode(
           uint32_t uMode);
@@ -1696,6 +1807,7 @@ SetErrorMode(
 #define MEM_WRITE_WATCH                 0x200000
 #define MEM_RESERVE_EXECUTABLE          0x40000000 // reserve memory using executable memory allocator
 
+// TODO (hanhossain): check usage
 HANDLE
 CreateFileMappingA(
             HANDLE hFile,
@@ -1705,6 +1817,7 @@ CreateFileMappingA(
             uint32_t dwMaximumSizeLow,
             const char * lpName);
 
+// TODO (hanhossain): check usage
 HANDLE
 CreateFileMappingW(
             HANDLE hFile,
@@ -1726,12 +1839,14 @@ CreateFileMappingW(
 #define FILE_MAP_ALL_ACCESS SECTION_ALL_ACCESS
 #define FILE_MAP_COPY       SECTION_QUERY
 
+// TODO (hanhossain): check usage
 HANDLE
 OpenFileMappingA(
           uint32_t dwDesiredAccess,
           BOOL bInheritHandle,
           const char * lpName);
 
+// TODO (hanhossain): check usage
 HANDLE
 OpenFileMappingW(
           uint32_t dwDesiredAccess,
@@ -1740,6 +1855,7 @@ OpenFileMappingW(
 
 #define OpenFileMapping OpenFileMappingW
 
+// TODO (hanhossain): check usage
 void *
 MapViewOfFile(
            HANDLE hFileMappingObject,
@@ -1748,6 +1864,7 @@ MapViewOfFile(
            uint32_t dwFileOffsetLow,
            size_t dwNumberOfBytesToMap);
 
+// TODO (hanhossain): check usage
 void *
 MapViewOfFileEx(
            HANDLE hFileMappingObject,
@@ -1757,39 +1874,47 @@ MapViewOfFileEx(
            size_t dwNumberOfBytesToMap,
            void * lpBaseAddress);
 
+// TODO (hanhossain): check usage
 BOOL
 FlushViewOfFile(
          void * lpBaseAddress,
          size_t dwNumberOfBytesToFlush);
 
+// TODO (hanhossain): check usage
 BOOL
 UnmapViewOfFile(
          const void * lpBaseAddress);
 
+// TODO (hanhossain): check usage
 HMODULE
 LoadLibraryA(
          const char * lpLibFileName);
 
+// TODO (hanhossain): check usage
 HMODULE
 LoadLibraryW(
          const char16_t* lpLibFileName);
 
+// TODO (hanhossain): check usage
 HMODULE
 LoadLibraryExA(
          const char * lpLibFileName,
          /*Reserved*/ HANDLE hFile,
          uint32_t dwFlags);
 
+// TODO (hanhossain): check usage
 HMODULE
 LoadLibraryExW(
          const char16_t* lpLibFileName,
          /*Reserved*/ HANDLE hFile,
          uint32_t dwFlags);
 
+// TODO (hanhossain): check usage
 void *
 PAL_LoadLibraryDirect(
          const char16_t* lpLibFileName);
 
+// TODO (hanhossain): check usage
 HMODULE
 PAL_RegisterLibraryDirect(
          void *dl_handle,
@@ -1810,6 +1935,7 @@ Return value:
     A valid base address if successful.
     0 if failure
 --*/
+// TODO (hanhossain): check usage
 void *
 PAL_LOADLoadPEFile(HANDLE hFile);
 
@@ -1825,6 +1951,7 @@ Return value:
     TRUE - success
     FALSE - failure (incorrect ptr, etc.)
 --*/
+// TODO (hanhossain): check usage
 BOOL
 PAL_LOADUnloadPEFile(void * ptr);
 
@@ -1833,31 +1960,37 @@ PAL_LOADUnloadPEFile(void * ptr);
 
 typedef long (*FARPROC)();
 
+// TODO (hanhossain): check usage
 FARPROC
 GetProcAddress(
      HMODULE hModule,
      const char * lpProcName);
 
+// TODO (hanhossain): check usage
 BOOL
 FreeLibrary(
       HMODULE hLibModule);
 
+// TODO (hanhossain): check usage
 __attribute__((noreturn))
 void
 FreeLibraryAndExitThread(
      HMODULE hLibModule,
      uint32_t dwExitCode);
 
+// TODO (hanhossain): check usage
 BOOL
 DisableThreadLibraryCalls(
      HMODULE hLibModule);
 
+// TODO (hanhossain): check usage
 uint32_t
 GetModuleFileNameA(
      HMODULE hModule,
      char* lpFileName,
      uint32_t nSize);
 
+// TODO (hanhossain): check usage
 uint32_t
 GetModuleFileNameW(
      HMODULE hModule,
@@ -1866,6 +1999,7 @@ GetModuleFileNameW(
 
 #define GetModuleFileName GetModuleFileNameW
 
+// TODO (hanhossain): check usage
 uint32_t
 GetModuleFileNameExW(
      HANDLE hProcess,
@@ -1876,6 +2010,7 @@ GetModuleFileNameExW(
 
 #define GetModuleFileNameEx GetModuleFileNameExW
 
+// TODO (hanhossain): check usage
 HMODULE
 GetModuleHandleW(
       const char16_t* lpModuleName
@@ -1883,6 +2018,7 @@ GetModuleHandleW(
 
 #define GetModuleHandle GetModuleHandleW
 
+// TODO (hanhossain): check usage
 BOOL
 GetModuleHandleExW(
      uint32_t dwFlags,
@@ -1892,9 +2028,11 @@ GetModuleHandleExW(
 #define GetModuleHandleEx GetModuleHandleExW
 
 // Get base address of the module containing a given symbol
+// TODO (hanhossain): check usage
 const void *
 PAL_GetSymbolModuleBase(void *symbol);
 
+// TODO (hanhossain): check usage
 void *
 VirtualAlloc(
           void * lpAddress,
@@ -1902,6 +2040,7 @@ VirtualAlloc(
           uint32_t flAllocationType,
           uint32_t flProtect);
 
+// TODO (hanhossain): check usage
 void *
 VirtualAllocEx(
           HANDLE hProcess,
@@ -1910,13 +2049,14 @@ VirtualAllocEx(
           uint32_t flAllocationType,
           uint32_t flProtect);
 
+// TODO (hanhossain): check usage
 BOOL
 VirtualFree(
          void * lpAddress,
          size_t dwSize,
          uint32_t dwFreeType);
 
-
+// TODO (hanhossain): check usage
 BOOL
 VirtualFreeEx(
          HANDLE hProcess,
@@ -1924,6 +2064,7 @@ VirtualFreeEx(
          size_t dwSize,
          uint32_t dwFreeType);
 
+// TODO (hanhossain): check usage
 BOOL
 VirtualProtect(
             void * lpAddress,
@@ -1931,6 +2072,7 @@ VirtualProtect(
             uint32_t flNewProtect,
             uint32_t * lpflOldProtect);
 
+// TODO (hanhossain): check usage
 BOOL
 VirtualProtectEx(
             HANDLE hProcess,
@@ -1951,6 +2093,7 @@ typedef struct _MEMORYSTATUSEX {
   unsigned long ullAvailExtendedVirtual;
 } MEMORYSTATUSEX, *LPMEMORYSTATUSEX;
 
+// TODO (hanhossain): check usage
 BOOL
 GlobalMemoryStatusEx(
               LPMEMORYSTATUSEX lpBuffer);
@@ -1965,12 +2108,14 @@ typedef struct _MEMORY_BASIC_INFORMATION {
     uint32_t Type;
 } MEMORY_BASIC_INFORMATION, *PMEMORY_BASIC_INFORMATION;
 
+// TODO (hanhossain): check usage
 size_t
 VirtualQuery(
           const void * lpAddress,
           PMEMORY_BASIC_INFORMATION lpBuffer,
           size_t dwLength);
 
+// TODO (hanhossain): check usage
 size_t
 VirtualQueryEx(
           HANDLE hProcess,
@@ -1978,6 +2123,7 @@ VirtualQueryEx(
           PMEMORY_BASIC_INFORMATION lpBuffer,
           size_t dwLength);
 
+// TODO (hanhossain): check usage
 BOOL
 ReadProcessMemory(
            HANDLE hProcess,
@@ -1986,12 +2132,14 @@ ReadProcessMemory(
            size_t nSize,
            size_t * lpNumberOfBytesRead);
 
+// TODO (hanhossain): check usage
 void
 RtlMoveMemory(
            void * Destination,
            const void *Source,
            size_t Length);
 
+// TODO (hanhossain): check usage
 void
 RtlZeroMemory(
      void * Destination,
@@ -2002,25 +2150,28 @@ RtlZeroMemory(
 #define FillMemory(Destination,Length,Fill) memset((Destination),(Fill),(Length))
 #define ZeroMemory(Destination,Length) memset((Destination),0,(Length))
 
-
+// TODO (hanhossain): check usage
 HANDLE
 GetProcessHeap(
            void);
 
 #define HEAP_ZERO_MEMORY 0x00000008
 
+// TODO (hanhossain): check usage
 HANDLE
 HeapCreate(
 	        uint32_t flOptions,
 	        size_t dwInitialSize,
 	        size_t dwMaximumSize);
 
+// TODO (hanhossain): check usage
 void *
 HeapAlloc(
        HANDLE hHeap,
        uint32_t dwFlags,
        size_t dwBytes);
 
+// TODO (hanhossain): check usage
 void *
 HeapReAlloc(
      HANDLE hHeap,
@@ -2029,6 +2180,7 @@ HeapReAlloc(
      size_t dwBytes
     );
 
+// TODO (hanhossain): check usage
 BOOL
 HeapFree(
       HANDLE hHeap,
@@ -2040,6 +2192,7 @@ typedef enum _HEAP_INFORMATION_CLASS {
     HeapEnableTerminationOnCorruption
 } HEAP_INFORMATION_CLASS;
 
+// TODO (hanhossain): check usage
 BOOL
 HeapSetInformation(
           HANDLE HeapHandle,
@@ -2052,21 +2205,25 @@ HeapSetInformation(
 #define LMEM_ZEROINIT       0x0040
 #define LPTR                (LMEM_FIXED | LMEM_ZEROINIT)
 
+// TODO (hanhossain): check usage
 HLOCAL
 LocalAlloc(
         uint32_t uFlags,
         size_t uBytes);
 
+// TODO (hanhossain): check usage
 HLOCAL
 LocalReAlloc(
         HLOCAL hMem,
         size_t uBytes,
         uint32_t   uFlags);
 
+// TODO (hanhossain): check usage
 HLOCAL
 LocalFree(
        HLOCAL hMem);
 
+// TODO (hanhossain): check usage
 BOOL
 FlushInstructionCache(
                HANDLE hProcess,
@@ -2107,6 +2264,7 @@ typedef struct nlsversioninfo {
 #define CSTR_EQUAL         2
 #define CSTR_GREATER_THAN  3
 
+// TODO (hanhossain): check usage
 int
 CompareStringEx(
      const char16_t* lpLocaleName,
@@ -2125,6 +2283,7 @@ CompareStringEx(
 #define MAX_LEADBYTES         12
 #define MAX_DEFAULTCHAR       2
 
+// TODO (hanhossain): check usage
 uint32_t
 GetACP(void);
 
@@ -2134,20 +2293,24 @@ typedef struct _cpinfo {
     uint8_t LeadByte[MAX_LEADBYTES];
 } CPINFO, *LPCPINFO;
 
+// TODO (hanhossain): check usage
 BOOL
 GetCPInfo(
        uint32_t CodePage,
        LPCPINFO lpCPInfo);
 
+// TODO (hanhossain): check usage
 BOOL
 IsDBCSLeadByteEx(
           uint32_t CodePage,
           uint8_t TestChar);
 
+// TODO (hanhossain): check usage
 BOOL
 IsDBCSLeadByte(
          uint8_t TestChar);
 
+// TODO (hanhossain): check usage
 BOOL
 IsValidCodePage(
          uint32_t CodePage);
@@ -2156,6 +2319,7 @@ IsValidCodePage(
 #define MB_PRECOMPOSED            0x00000001
 #define MB_ERR_INVALID_CHARS      0x00000008
 
+// TODO (hanhossain): check usage
 int
 MultiByteToWideChar(
              uint32_t CodePage,
@@ -2167,6 +2331,7 @@ MultiByteToWideChar(
 
 #define WC_NO_BEST_FIT_CHARS      0x00000400
 
+// TODO (hanhossain): check usage
 int
 WideCharToMultiByte(
              uint32_t CodePage,
@@ -2419,6 +2584,7 @@ WideCharToMultiByte(
 #endif // __APPLE__
 
 
+// TODO (hanhossain): check usage
 int
 GetLocaleInfoEx(
      const char16_t*  lpLocaleName,
@@ -2426,7 +2592,7 @@ GetLocaleInfoEx(
      char16_t*  lpLCData,
      int      cchData);
 
-
+// TODO (hanhossain): check usage
 int
 CompareStringOrdinal(
      const char16_t* lpString1,
@@ -2443,6 +2609,7 @@ typedef struct _nlsversioninfoex {
   GUID  guidCustomVersion;
   } NLSVERSIONINFOEX, *LPNLSVERSIONINFOEX;
 
+// TODO (hanhossain): check usage
 int
 FindNLSStringEx(
      const char16_t* lpLocaleName,
@@ -2460,6 +2627,7 @@ typedef enum {
     COMPARE_STRING = 0x0001,
 } NLS_FUNCTION;
 
+// TODO (hanhossain): check usage
 BOOL
 IsNLSDefinedString(
      NLS_FUNCTION Function,
@@ -2468,13 +2636,14 @@ IsNLSDefinedString(
 	 const char16_t* lpString,
 	 int cchStr );
 
-
+// TODO (hanhossain): check usage
 int
 ResolveLocaleName(
      const char16_t* lpNameToResolve,
          char16_t* lpLocaleName,
          int cchLocaleName );
 
+// TODO (hanhossain): check usage
 BOOL
 GetThreadPreferredUILanguages(
      uint32_t  dwFlags,
@@ -2482,7 +2651,7 @@ GetThreadPreferredUILanguages(
      char16_t *  pwszLanguagesBuffer,
       uint32_t *  pcchLanguagesBuffer);
 
-
+// TODO (hanhossain): check usage
 int
 GetSystemDefaultLocaleName(
      char16_t* lpLocaleName,
@@ -2490,6 +2659,7 @@ GetSystemDefaultLocaleName(
 
 #define GetLocaleInfo GetLocaleInfoW
 
+// TODO (hanhossain): check usage
 int
 GetUserDefaultLocaleName(
             char16_t* lpLocaleName,
@@ -2522,6 +2692,7 @@ typedef uint32_t CALTYPE;
 #define CAL_GREGORIAN_XLIT_FRENCH    12 // Gregorian Transliterated French calendar
 #define CAL_JULIAN                   13
 
+// TODO (hanhossain): check usage
 int
 GetCalendarInfoEx(
           const char16_t* lpLocaleName,
@@ -2539,6 +2710,7 @@ GetCalendarInfoEx(
 typedef BOOL (CALLBACK* DATEFMT_ENUMPROCEXW)(char16_t*, CALID);
 typedef BOOL (CALLBACK* DATEFMT_ENUMPROCEXEXW)(char16_t*, CALID, ptrdiff_t);
 
+// TODO (hanhossain): check usage
 BOOL
 EnumDateFormatsExEx(
      DATEFMT_ENUMPROCEXEXW lpDateFmtEnumProcEx,
@@ -2549,6 +2721,7 @@ EnumDateFormatsExEx(
 typedef BOOL (CALLBACK* TIMEFMT_ENUMPROCW)(char16_t*);
 typedef BOOL (CALLBACK* TIMEFMT_ENUMPROCEXW)(char16_t*, ptrdiff_t);
 
+// TODO (hanhossain): check usage
 BOOL
 EnumTimeFormatsEx(
      TIMEFMT_ENUMPROCEXW lpTimeFmtEnumProc,
@@ -2564,6 +2737,7 @@ EnumTimeFormatsEx(
 typedef BOOL (CALLBACK* CALINFO_ENUMPROCEXW)(char16_t*,CALID);
 typedef BOOL (CALLBACK* CALINFO_ENUMPROCEXEXW)(char16_t*, CALID, char16_t*, ptrdiff_t);
 
+// TODO (hanhossain): check usage
 BOOL
 EnumCalendarInfoExEx(
      CALINFO_ENUMPROCEXEXW lpCalInfoEnumProc,
@@ -2576,6 +2750,7 @@ EnumCalendarInfoExEx(
 #define LCMAP_LOWERCASE  0x00000100
 #define LCMAP_UPPERCASE  0x00000200
 
+// TODO (hanhossain): check usage
 int
 LCMapStringEx(
      const char16_t*    lpLocaleName,
@@ -2588,6 +2763,7 @@ LCMapStringEx(
      void * lpReserved,
      ptrdiff_t lParam );
 
+// TODO (hanhossain): check usage
 int
 PAL_LCMapCharW(
      const char16_t*    lpLocaleName,
@@ -2598,6 +2774,7 @@ PAL_LCMapCharW(
     void * lpReserved,
     ptrdiff_t lParam );
 
+// TODO (hanhossain): check usage
 int
 PAL_NormalizeStringExW(
      const char16_t*    lpLocaleName,
@@ -2607,6 +2784,7 @@ PAL_NormalizeStringExW(
      char16_t* lpDestStr,
      int     cchDest);
 
+// TODO (hanhossain): check usage
 int
 PAL_ParseDateW(
      const char16_t*   lpLocaleName,
@@ -2614,6 +2792,7 @@ PAL_ParseDateW(
      const char16_t*   lpString,
      LPSYSTEMTIME lpTime);
 
+// TODO (hanhossain): check usage
 int
 PAL_GetCalendar(
      const char16_t*   lpLocaleName,
@@ -2625,31 +2804,41 @@ PAL_GetCalendar(
 typedef struct PALNUMBER__* PALNUMBER;
 
 // return NULL on OOM
+// TODO (hanhossain): check usage
 PALNUMBER PAL_DoubleToNumber(double);
+// TODO (hanhossain): check usage
 PALNUMBER PAL_Int64ToNumber(int64_t);
+// TODO (hanhossain): check usage
 PALNUMBER PAL_UInt64ToNumber(unsigned long);
+// TODO (hanhossain): check usage
 PALNUMBER PAL_IntToNumber(int);
+// TODO (hanhossain): check usage
 PALNUMBER PAL_UIntToNumber(unsigned int);
 
+// TODO (hanhossain): check usage
 void PAL_ReleaseNumber(PALNUMBER);
 
-
+// TODO (hanhossain): check usage
 // return string length if Buffer is NULL or the result fits in cchBuffer, otherwise -1
 int PAL_FormatScientific(const char16_t* sLocale, char16_t* pBuffer, size_t cchBuffer, PALNUMBER number, int nMinDigits, int nMaxDigits,
                                                                       const char16_t* sExponent, const char16_t* sNumberDecimal, const char16_t* sPositive, const char16_t* sNegative, const char16_t* sZero);
 
+// TODO (hanhossain): check usage
 int PAL_FormatCurrency(const char16_t* sLocale, char16_t* pBuffer, size_t cchBuffer, PALNUMBER number, int nMinDigits, int nMaxDigits, int iNegativeFormat, int iPositiveFormat,
                       int iPrimaryGroup, int iSecondaryGroup, const char16_t* sCurrencyDecimal, const char16_t* sCurrencyGroup, const char16_t* sNegative, const char16_t* sCurrency, const char16_t* sZero);
 
+// TODO (hanhossain): check usage
 int PAL_FormatPercent(const char16_t* sLocale, char16_t* pBuffer, size_t cchBuffer, PALNUMBER number,  int nMinDigits, int nMaxDigits,int iNegativeFormat, int iPositiveFormat,
                       int iPrimaryGroup, int iSecondaryGroup, const char16_t* sPercentDecimal, const char16_t* sPercentGroup, const char16_t* sNegative, const char16_t* sPercent, const char16_t* sZero);
 
+// TODO (hanhossain): check usage
 int PAL_FormatDecimal(const char16_t* sLocale, char16_t* pBuffer, size_t cchBuffer, PALNUMBER number, int nMinDigits, int nMaxDigits, int iNegativeFormat,
                                     int iPrimaryGroup, int iSecondaryGroup,  const char16_t* sDecimal, const char16_t* sGroup, const char16_t* sNegative, const char16_t* sZero);
 
 
 #define DATE_USE_ALT_CALENDAR 0x00000004
 
+// TODO (hanhossain): check usage
 int
 GetDateFormatEx(
             const char16_t* Locale,
@@ -2660,6 +2849,7 @@ GetDateFormatEx(
             int cchDate,
             const char16_t* lpCalendar);
 
+// TODO (hanhossain): check usage
 int
 GetDateFormatEx(
             const char16_t* lpLocaleName,
@@ -2673,6 +2863,7 @@ GetDateFormatEx(
 
 #define GetDateFormat GetDateFormatW
 
+// TODO (hanhossain): check usage
 int
 PAL_GetResourceString(
          const char * lpDomain,
@@ -2680,6 +2871,7 @@ PAL_GetResourceString(
          char16_t* lpWideCharStr,
          int cchWideChar);
 
+// TODO (hanhossain): check usage
 BOOL
 PAL_BindResources( const char * lpDomain);
 
@@ -2766,6 +2958,7 @@ typedef struct _RUNTIME_FUNCTION {
 } RUNTIME_FUNCTION, *PRUNTIME_FUNCTION;
 #endif
 
+// TODO (hanhossain): check usage
 BOOL
 WriteProcessMemory( HANDLE hProcess,
                     void * lpBaseAddress,
@@ -2805,6 +2998,7 @@ WriteProcessMemory( HANDLE hProcess,
 #define PROCESS_ALL_ACCESS        (STANDARD_RIGHTS_REQUIRED | SYNCHRONIZE | \
                                    0xFFF)
 
+// TODO (hanhossain): check usage
 HANDLE
 OpenProcess(
      uint32_t dwDesiredAccess, /* PROCESS_DUP_HANDLE or PROCESS_ALL_ACCESS */
@@ -2812,6 +3006,7 @@ OpenProcess(
      uint32_t dwProcessId
     );
 
+// TODO (hanhossain): check usage
 BOOL
 EnumProcessModules(
      HANDLE hProcess,
@@ -2820,20 +3015,24 @@ EnumProcessModules(
      uint32_t * lpcbNeeded
     );
 
+// TODO (hanhossain): check usage
 void
 OutputDebugStringA(
      const char * lpOutputString);
 
+// TODO (hanhossain): check usage
 void
 OutputDebugStringW(
      const char16_t* lpOutputStrig);
 
 #define OutputDebugString OutputDebugStringW
 
+// TODO (hanhossain): check usage
 void
 DebugBreak(
        void);
 
+// TODO (hanhossain): check usage
 char16_t*
 lstrcatW(
        char16_t* lpString1,
@@ -2841,6 +3040,7 @@ lstrcatW(
 
 #define lstrcat lstrcatW
 
+// TODO (hanhossain): check usage
 char16_t*
 lstrcpyW(
       char16_t* lpString1,
@@ -2848,16 +3048,19 @@ lstrcpyW(
 
 #define lstrcpy lstrcpyW
 
+// TODO (hanhossain): check usage
 int
 lstrlenA(
       const char * lpString);
 
+// TODO (hanhossain): check usage
 int
 lstrlenW(
       const char16_t* lpString);
 
 #define lstrlen lstrlenW
 
+// TODO (hanhossain): check usage
 char16_t*
 lstrcpynW(
        char16_t* lpString1,
@@ -2867,12 +3070,14 @@ lstrcpynW(
 #define lstrcpyn lstrcpynW
 
 
+// TODO (hanhossain): check usage
 uint32_t
 GetEnvironmentVariableA(
              const char * lpName,
              char* lpBuffer,
              uint32_t nSize);
 
+// TODO (hanhossain): check usage
 uint32_t
 GetEnvironmentVariableW(
              const char16_t* lpName,
@@ -2881,11 +3086,13 @@ GetEnvironmentVariableW(
 
 #define GetEnvironmentVariable GetEnvironmentVariableW
 
+// TODO (hanhossain): check usage
 BOOL
 SetEnvironmentVariableA(
              const char * lpName,
              const char * lpValue);
 
+// TODO (hanhossain): check usage
 BOOL
 SetEnvironmentVariableW(
              const char16_t* lpName,
@@ -2893,30 +3100,36 @@ SetEnvironmentVariableW(
 
 #define SetEnvironmentVariable SetEnvironmentVariableW
 
+// TODO (hanhossain): check usage
 char*
 GetEnvironmentStringsA(
                void);
 
+// TODO (hanhossain): check usage
 char16_t*
 GetEnvironmentStringsW(
                void);
 
 #define GetEnvironmentStrings GetEnvironmentStringsW
 
+// TODO (hanhossain): check usage
 BOOL
 FreeEnvironmentStringsA(
              char*);
 
+// TODO (hanhossain): check usage
 BOOL
 FreeEnvironmentStringsW(
              char16_t*);
 
 #define FreeEnvironmentStrings FreeEnvironmentStringsW
 
+// TODO (hanhossain): check usage
 BOOL
 CloseHandle(
           HANDLE hObject);
 
+// TODO (hanhossain): check usage
 void
 RaiseException(
             uint32_t dwExceptionCode,
@@ -2925,29 +3138,35 @@ RaiseException(
             const size_t *lpArguments);
 
 #ifdef FEATURE_PAL_SXS
+// TODO (hanhossain): check usage
 __attribute__((noreturn))
 void
 PAL_RaiseException(
             PEXCEPTION_POINTERS ExceptionPointers);
 #endif // FEATURE_PAL_SXS
 
+// TODO (hanhossain): check usage
 uint32_t
 GetTickCount(
          void);
 
+// TODO (hanhossain): check usage
 unsigned long
 GetTickCount64();
 
+// TODO (hanhossain): check usage
 BOOL
 QueryPerformanceCounter(
      LARGE_INTEGER *lpPerformanceCount
     );
 
+// TODO (hanhossain): check usage
 BOOL
 QueryPerformanceFrequency(
      LARGE_INTEGER *lpFrequency
     );
 
+// TODO (hanhossain): check usage
 BOOL
 QueryThreadCycleTime(
      HANDLE ThreadHandle,
@@ -2959,14 +3178,17 @@ typedef int32_t (*PTOP_LEVEL_EXCEPTION_FILTER)(
                            struct _EXCEPTION_POINTERS *ExceptionInfo);
 typedef PTOP_LEVEL_EXCEPTION_FILTER LPTOP_LEVEL_EXCEPTION_FILTER;
 
+// TODO (hanhossain): check usage
 LPTOP_LEVEL_EXCEPTION_FILTER
 SetUnhandledExceptionFilter(
                  LPTOP_LEVEL_EXCEPTION_FILTER lpTopLevelExceptionFilter);
 
+// TODO (hanhossain): check usage
 int32_t
 UnhandledExceptionFilter(
                  struct _EXCEPTION_POINTERS *ExceptionInfo);
 
+// TODO (hanhossain): check usage
 LPEXCEPTION_POINTERS
 GetExceptionInformation();
 
@@ -2986,6 +3208,7 @@ typedef EXCEPTION_DISPOSITION (*PVECTORED_EXCEPTION_HANDLER)(
 // significant set bit, or 0 if if mask is zero.
 //
 // The same is true for BitScanForward, except that the GCC function is __builtin_ffs.
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 unsigned char
@@ -3007,6 +3230,7 @@ BitScanForward(
     return bRet;
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 unsigned char
@@ -3028,6 +3252,7 @@ BitScanForward64(
     return bRet;
 }
 
+// TODO (hanhossain): check usage
 // xplat-todo: review this implementation
 EXTERN_C
 inline
@@ -3049,6 +3274,7 @@ BitScanReverse(
     return bRet;
 }
 
+// TODO (hanhossain): check usage
 // xplat-todo: review this implementation
 EXTERN_C
 inline
@@ -3089,6 +3315,7 @@ Return Values
 The return value is the resulting incremented value.
 
 --*/
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 int32_t
@@ -3098,6 +3325,7 @@ InterlockedIncrement(
     return __sync_add_and_fetch(lpAddend, (int32_t)1);
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 long
@@ -3107,6 +3335,7 @@ InterlockedIncrement16(
     return __sync_add_and_fetch(lpAddend, (short)1);
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 long
@@ -3135,6 +3364,7 @@ Return Values
 The return value is the resulting decremented value.
 
 --*/
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 int32_t
@@ -3144,6 +3374,7 @@ InterlockedDecrement(
     return __sync_sub_and_fetch(lpAddend, (int32_t)1);
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 long
@@ -3174,6 +3405,7 @@ Return Values
 The function returns the initial value pointed to by Target.
 
 --*/
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 char
@@ -3184,6 +3416,7 @@ InterlockedExchange8(
     return __sync_swap(Target, Value);
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 short
@@ -3194,6 +3427,7 @@ InterlockedExchange16(
     return __sync_swap(Target, Value);
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 int32_t
@@ -3204,6 +3438,7 @@ InterlockedExchange(
     return __sync_swap(Target, Value);
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 long
@@ -3237,6 +3472,7 @@ Return Values
 The return value is the initial value of the destination.
 
 --*/
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 char
@@ -3251,6 +3487,7 @@ InterlockedCompareExchange8(
         Exchange /* The value to be stored */);
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 short
@@ -3265,6 +3502,7 @@ InterlockedCompareExchange16(
         Exchange /* The value to be stored */);
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 int32_t
@@ -3279,6 +3517,7 @@ InterlockedCompareExchange(
         Exchange /* The value to be stored */);
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 int32_t
@@ -3294,6 +3533,7 @@ InterlockedCompareExchangeAcquire(
         Exchange /* The value to be stored */);
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 int32_t
@@ -3309,6 +3549,7 @@ InterlockedCompareExchangeRelease(
         Exchange /* The value to be stored */);
 }
 
+// TODO (hanhossain): check usage
 // See the 32-bit variant in interlock2.s
 EXTERN_C
 inline
@@ -3341,6 +3582,7 @@ Return Values
 The return value is the original value that 'Addend' pointed to.
 
 --*/
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 char
@@ -3351,6 +3593,7 @@ InterlockedExchangeAdd8(
     return __sync_fetch_and_add(Addend, Value);
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 short
@@ -3361,6 +3604,7 @@ InterlockedExchangeAdd16(
     return __sync_fetch_and_add(Addend, Value);
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 int32_t
@@ -3371,6 +3615,7 @@ InterlockedExchangeAdd(
     return __sync_fetch_and_add(Addend, Value);
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 int32_t
@@ -3381,6 +3626,7 @@ InterlockedAdd(
     return InterlockedExchangeAdd(Addend, Value) + Value;
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 long
@@ -3391,6 +3637,7 @@ InterlockedExchangeAdd64(
     return __sync_fetch_and_add(Addend, Value);
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 char
@@ -3401,6 +3648,7 @@ InterlockedAnd8(
     return __sync_fetch_and_and(Destination, Value);
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 short
@@ -3411,6 +3659,7 @@ InterlockedAnd16(
     return __sync_fetch_and_and(Destination, Value);
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 int32_t
@@ -3421,6 +3670,7 @@ InterlockedAnd(
     return __sync_fetch_and_and(Destination, Value);
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 long
@@ -3431,6 +3681,7 @@ InterlockedAnd64(
     return __sync_fetch_and_and(Destination, Value);
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 char
@@ -3441,6 +3692,7 @@ InterlockedOr8(
     return __sync_fetch_and_or(Destination, Value);
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 short
@@ -3451,6 +3703,7 @@ InterlockedOr16(
     return __sync_fetch_and_or(Destination, Value);
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 int32_t
@@ -3461,6 +3714,7 @@ InterlockedOr(
     return __sync_fetch_and_or(Destination, Value);
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 long
@@ -3471,6 +3725,7 @@ InterlockedOr64(
     return __sync_fetch_and_or(Destination, Value);
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 char
@@ -3481,6 +3736,7 @@ InterlockedXor8(
     return __sync_fetch_and_xor(Destination, Value);
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 short
@@ -3491,6 +3747,7 @@ InterlockedXor16(
     return __sync_fetch_and_xor(Destination, Value);
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 int32_t
@@ -3501,6 +3758,7 @@ InterlockedXor(
     return __sync_fetch_and_xor(Destination, Value);
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 long
@@ -3514,6 +3772,7 @@ InterlockedXor64(
 #define BITS_IN_BYTE 8
 #define BITS_IN_LONG (sizeof(int32_t) * BITS_IN_BYTE)
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 unsigned char
@@ -3530,6 +3789,7 @@ InterlockedBitTestAndReset(
     return (InterlockedAnd(longToTest, ~(1 << bitToTest)) & (1 << bitToTest)) != 0;
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 unsigned char
@@ -3542,6 +3802,7 @@ InterlockedBitTestAndSet(
     return (InterlockedOr(longToTest, (1 << bitToTest)) & (1 << bitToTest)) != 0;
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 unsigned char
@@ -3554,6 +3815,7 @@ BitTest(
     return ((*longToTest) & (1 << bitToTest)) != 0;
 }
 
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 unsigned char
@@ -3586,6 +3848,7 @@ MemoryBarrier
 The MemoryBarrier function creates a full memory barrier.
 
 --*/
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 void
@@ -3595,10 +3858,12 @@ MemoryBarrier(
     __sync_synchronize();
 }
 
+// TODO (hanhossain): check usage
 void
 YieldProcessor(
     void);
 
+// TODO (hanhossain): check usage
 uint32_t
 GetCurrentProcessorNumber();
 
@@ -3609,6 +3874,7 @@ PAL_HasGetCurrentProcessorNumber
 Checks if GetCurrentProcessorNumber is available in the current environment
 
 --*/
+// TODO (hanhossain): check usage
 BOOL
 PAL_HasGetCurrentProcessorNumber();
 
@@ -3619,6 +3885,7 @@ PAL_HasGetCurrentProcessorNumber();
 #define FORMAT_MESSAGE_ARGUMENT_ARRAY  0x00002000
 #define FORMAT_MESSAGE_MAX_WIDTH_MASK  0x000000FF
 
+// TODO (hanhossain): check usage
 uint32_t
 FormatMessageW(
             uint32_t dwFlags,
@@ -3631,27 +3898,31 @@ FormatMessageW(
 
 #define FormatMessage FormatMessageW
 
-
+// TODO (hanhossain): check usage
 uint32_t
 GetLastError(
          void);
 
+// TODO (hanhossain): check usage
 void
 SetLastError(
           uint32_t dwErrCode);
 
+// TODO (hanhossain): check usage
 char16_t*
 GetCommandLineW(
         void);
 
 #define GetCommandLine GetCommandLineW
 
+// TODO (hanhossain): check usage
 void
 RtlRestoreContext(
    PCONTEXT ContextRecord,
    PEXCEPTION_RECORD ExceptionRecord
 );
 
+// TODO (hanhossain): check usage
 void
 RtlCaptureContext(
    PCONTEXT ContextRecord
@@ -3660,6 +3931,7 @@ RtlCaptureContext(
 typedef void (*PAL_ActivationFunction)(CONTEXT *context);
 typedef BOOL (*PAL_SafeActivationCheckFunction)(size_t ip, BOOL checkingCurrentThread);
 
+// TODO (hanhossain): check usage
 void
 PAL_SetActivationFunction(
      PAL_ActivationFunction pActivationFunction,
@@ -3724,10 +3996,12 @@ typedef OSVERSIONINFOEXW OSVERSIONINFOEX;
 typedef POSVERSIONINFOEXW POSVERSIONINFOEX;
 typedef LPOSVERSIONINFOEXW LPOSVERSIONINFOEX;
 
+// TODO (hanhossain): check usage
 BOOL
 GetVersionExA(
             LPOSVERSIONINFOA lpVersionInformation);
 
+// TODO (hanhossain): check usage
 BOOL
 GetVersionExW(
             LPOSVERSIONINFOW lpVersionInformation);
@@ -3751,10 +4025,12 @@ typedef struct _SYSTEM_INFO {
     uint16_t wProcessorRevision_PAL_Undefined;
 } SYSTEM_INFO, *LPSYSTEM_INFO;
 
+// TODO (hanhossain): check usage
 void
 GetSystemInfo(
            LPSYSTEM_INFO lpSystemInfo);
 
+// TODO (hanhossain): check usage
 BOOL
 GetDiskFreeSpaceW(
           const char16_t* lpDirectoryName,
@@ -3765,6 +4041,7 @@ GetDiskFreeSpaceW(
 
 #define GetDiskFreeSpace GetDiskFreeSpaceW
 
+// TODO (hanhossain): check usage
 BOOL
 CreatePipe(
      PHANDLE hReadPipe,
@@ -3773,16 +4050,20 @@ CreatePipe(
      uint32_t nSize
     );
 
+// TODO (hanhossain): check usage
 BOOL
 DeregisterEventSource (
      HANDLE hEventLog
     );
 
+// TODO (hanhossain): check usage
 HANDLE
 RegisterEventSourceA (
       const char * lpUNCServerName,
          const char * lpSourceName
     );
+
+// TODO (hanhossain): check usage
 HANDLE
 RegisterEventSourceW (
       const char16_t* lpUNCServerName,
@@ -3800,6 +4081,7 @@ RegisterEventSourceW (
 #define EVENTLOG_AUDIT_SUCCESS          0x0008
 #define EVENTLOG_AUDIT_FAILURE          0x0010
 
+// TODO (hanhossain): check usage
 BOOL
 ReportEventA (
          HANDLE     hEventLog,
@@ -3812,6 +4094,8 @@ ReportEventA (
       const char * *lpStrings,
       void * lpRawData
     );
+    
+// TODO (hanhossain): check usage
 BOOL
 ReportEventW (
          HANDLE     hEventLog,
@@ -3826,6 +4110,7 @@ ReportEventW (
     );
 #define ReportEvent  ReportEventW
 
+// TODO (hanhossain): check usage
 int32_t
 CoCreateGuid( GUID * pguid);
 
@@ -3923,72 +4208,131 @@ CoCreateGuid( GUID * pguid);
 
 typedef int errno_t;
 
+// TODO (hanhossain): check usage 
 errno_t memcpy_s(void *, size_t, const void *, size_t);
+// TODO (hanhossain): check usage 
 errno_t memmove_s(void *, size_t, const void *, size_t);
+// TODO (hanhossain): check usage 
 void * memmove_xplat(void *, const void *, size_t);
+// TODO (hanhossain): check usage 
 char * _strlwr(char *);
+// TODO (hanhossain): check usage 
 int _stricmp(const char *, const char *);
+// TODO (hanhossain): check usage 
 int _snprintf(char *, size_t, const char *, ...);
+// TODO (hanhossain): check usage 
 char * _gcvt_s(char *, int, double, int);
+// TODO (hanhossain): check usage 
 char * _ecvt(double, int, int *, int *);
+// TODO (hanhossain): check usage 
 int __iscsym(int);
+// TODO (hanhossain): check usage 
 size_t _mbslen(const unsigned char *);
+// TODO (hanhossain): check usage 
 unsigned char * _mbsinc(const unsigned char *);
+// TODO (hanhossain): check usage 
 unsigned char * _mbsninc(const unsigned char *, size_t);
+// TODO (hanhossain): check usage 
 unsigned char * _mbsdec(const unsigned char *, const unsigned char *);
+// TODO (hanhossain): check usage 
 int _wcsicmp(const char16_t *, const char16_t*);
+// TODO (hanhossain): check usage 
 int _wcsnicmp(const char16_t *, const char16_t *, size_t);
+// TODO (hanhossain): check usage 
 int _vsnprintf(char *, size_t, const char *, va_list);
+// TODO (hanhossain): check usage 
 int _vsnwprintf(char16_t *, size_t, const char16_t *, va_list);
+// TODO (hanhossain): check usage 
 char16_t * _itow(int, char16_t *, int);
+// TODO (hanhossain): check usage 
 char16_t * _ltow(long, char16_t *, int);
 
+// TODO (hanhossain): check usage
 size_t PAL_wcslen(const char16_t *);
+// TODO (hanhossain): check usage
 int PAL_wcscmp(const char16_t*, const char16_t*);
+// TODO (hanhossain): check usage
 int PAL_wmemcmp(const char16_t *, const char16_t *, size_t);
+// TODO (hanhossain): check usage
 int PAL_wcsncmp(const char16_t *, const char16_t *, size_t);
+// TODO (hanhossain): check usage
 char16_t * PAL_wcscat(char16_t *, const char16_t *);
+// TODO (hanhossain): check usage
 char16_t * PAL_wcsncat(char16_t *, const char16_t *, size_t);
+// TODO (hanhossain): check usage
 char16_t * PAL_wcscpy(char16_t *, const char16_t *);
+// TODO (hanhossain): check usage
 char16_t * PAL_wcsncpy(char16_t *, const char16_t *, size_t);
+// TODO (hanhossain): check usage
 const char16_t * PAL_wcschr(const char16_t *, char16_t);
+// TODO (hanhossain): check usage
 const char16_t * PAL_wcsrchr(const char16_t *, char16_t);
+// TODO (hanhossain): check usage
 char16_t _WConst_return * PAL_wcspbrk(const char16_t *, const char16_t *);
+// TODO (hanhossain): check usage
 char16_t _WConst_return * PAL_wcsstr(const char16_t *, const char16_t *);
+// TODO (hanhossain): check usage
 char16_t * PAL_wcstok(char16_t *, const char16_t *);
+// TODO (hanhossain): check usage
 size_t PAL_wcscspn(const char16_t *, const char16_t *);
+// TODO (hanhossain): check usage
 int PAL_swprintf(char16_t *, const char16_t *, ...);
+// TODO (hanhossain): check usage
 int PAL_vswprintf(char16_t *, const char16_t *, va_list);
+// TODO (hanhossain): check usage
 int _snwprintf(char16_t *, size_t, const char16_t *, ...);
+// TODO (hanhossain): check usage
 int PAL_swscanf(const char16_t *, const char16_t *, ...);
+// TODO (hanhossain): check usage
 int32_t PAL_wcstol(const char16_t *, char16_t **, int);
+// TODO (hanhossain): check usage
 uint32_t PAL_wcstoul(const char16_t *, char16_t **, int);
+// TODO (hanhossain): check usage
 long PAL_wcstoll(const char16_t *, char16_t **, int);
+// TODO (hanhossain): check usage
 size_t PAL_wcsspn (const char16_t *, const char16_t *);
+// TODO (hanhossain): check usage
 double PAL_wcstod(const char16_t *, char16_t **);
+// TODO (hanhossain): check usage
 int PAL_iswalpha(char16_t);
+// TODO (hanhossain): check usage
 int PAL_iswprint(char16_t);
+// TODO (hanhossain): check usage
 int PAL_iswupper(char16_t);
+// TODO (hanhossain): check usage
 int PAL_iswspace(char16_t);
+// TODO (hanhossain): check usage
 int PAL_iswdigit(char16_t);
+// TODO (hanhossain): check usage
 int PAL_iswxdigit(char16_t);
+// TODO (hanhossain): check usage
 char16_t PAL_towlower(char16_t);
+// TODO (hanhossain): check usage
 char16_t PAL_towupper(char16_t);
 
+// TODO (hanhossain): check usage
 char16_t * _wcslwr(char16_t *);
+// TODO (hanhossain): check usage
 unsigned long _wcstoui64(const char16_t *, char16_t **, int);
+// TODO (hanhossain): check usage
 char16_t * _i64tow(long, char16_t *, int);
+// TODO (hanhossain): check usage
 char16_t * _ui64tow(unsigned long, char16_t *, int);
+// TODO (hanhossain): check usage
 int _wtoi(const char16_t *);
 
 #ifdef __cplusplus
 extern "C++" {
+// TODO (hanhossain): check usage
 inline char16_t *PAL_wcschr(char16_t *_S, char16_t _C)
         {return ((char16_t *)PAL_wcschr((const char16_t *)_S, _C)); }
+// TODO (hanhossain): check usage
 inline char16_t *PAL_wcsrchr(char16_t *_S, char16_t _C)
         {return ((char16_t *)PAL_wcsrchr((const char16_t *)_S, _C)); }
+// TODO (hanhossain): check usage
 inline char16_t *PAL_wcspbrk(char16_t *_S, const char16_t *_P)
         {return ((char16_t *)PAL_wcspbrk((const char16_t *)_S, _P)); }
+// TODO (hanhossain): check usage
 inline char16_t *PAL_wcsstr(char16_t *_S, const char16_t *_P)
         {return ((char16_t *)PAL_wcsstr((const char16_t *)_S, _P)); }
 }
@@ -4005,6 +4349,7 @@ _rotl
 
 See MSDN doc.
 --*/
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 unsigned int _rotl(unsigned int value, int shift)
@@ -4027,6 +4372,7 @@ _rotl64
 
 See MSDN doc.
 --*/
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 unsigned long long _rotl64(unsigned long long value, int shift)
@@ -4046,6 +4392,7 @@ _rotr
 
 See MSDN doc.
 --*/
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 unsigned int _rotr(unsigned int value, int shift)
@@ -4065,6 +4412,7 @@ _rotr64
 
 See MSDN doc.
 --*/
+// TODO (hanhossain): check usage
 EXTERN_C
 inline
 unsigned long long _rotr64(unsigned long long value, int shift)
@@ -4077,9 +4425,13 @@ unsigned long long _rotr64(unsigned long long value, int shift)
 }
 #endif
 
+// TODO (hanhossain): check usage
 int _finite(double);
+// TODO (hanhossain): check usage
 int _isnan(double);
+// TODO (hanhossain): check usage
 double _copysign(double, double);
+// TODO (hanhossain): check usage
 float _copysignf(float, float);
 
 #if !defined(PAL_STDCPP_COMPAT) || defined(USING_PAL_STDLIB)
@@ -4109,15 +4461,21 @@ inline long abs(long _X) {
 
 #endif // !PAL_STDCPP_COMPAT
 
+// TODO (hanhossain): check usage
 __attribute__((noreturn)) void exit(int);
 
 void * bsearch(const void *, const void *, size_t, size_t,
 int (*)(const void *, const void *));
 
+// TODO (hanhossain): check usage
 void _splitpath(const char *, char *, char *, char *, char *);
+// TODO (hanhossain): check usage
 void _wsplitpath(const char16_t *, char16_t *, char16_t *, char16_t *, char16_t *);
+// TODO (hanhossain): check usage
 void _makepath(char *, const char *, const char *, const char *, const char *);
+// TODO (hanhossain): check usage
 void _wmakepath(char16_t *, const char16_t *, const char16_t *, const char16_t *, const char16_t *);
+// TODO (hanhossain): check usage
 char * _fullpath(char *, const char *, size_t);
 
 #ifndef PAL_STDCPP_COMPAT
@@ -4138,8 +4496,11 @@ struct tm {
 char * ctime(const time_t *);
 #endif // !PAL_STDCPP_COMPAT
 
+// TODO (hanhossain): check usage
 int _open_osfhandle(long, int);
+// TODO (hanhossain): check usage
 int _close(int);
+// TODO (hanhossain): check usage
 int _flushall();
 
 #ifdef PAL_STDCPP_COMPAT
@@ -4171,37 +4532,68 @@ typedef struct _FILE PAL_FILE;
 
 #endif // PAL_STDCPP_COMPAT
 
+// TODO (hanhossain): check usage
 int PAL_fclose(PAL_FILE *);
+// TODO (hanhossain): check usage
 void PAL_setbuf(PAL_FILE *, char*);
+// TODO (hanhossain): check usage
 int PAL_fflush(PAL_FILE *);
+// TODO (hanhossain): check usage
 size_t PAL_fwrite(const void *, size_t, size_t, PAL_FILE *);
+// TODO (hanhossain): check usage
 size_t PAL_fread(void *, size_t, size_t, PAL_FILE *);
+// TODO (hanhossain): check usage
 char * PAL_fgets(char *, int, PAL_FILE *);
+// TODO (hanhossain): check usage
 int PAL_fputs(const char *, PAL_FILE *);
+// TODO (hanhossain): check usage
 int PAL_fputc(int c, PAL_FILE *stream);
+// TODO (hanhossain): check usage
 int PAL_putchar(int c);
+// TODO (hanhossain): check usage
 int PAL_fprintf(PAL_FILE *, const char *, ...);
+// TODO (hanhossain): check usage
 int PAL_vfprintf(PAL_FILE *, const char *, va_list);
+// TODO (hanhossain): check usage
 int PAL_fseek(PAL_FILE *, int32_t, int);
+// TODO (hanhossain): check usage
 int PAL_fgetpos(PAL_FILE *, fpos_t *);
+// TODO (hanhossain): check usage
 int PAL_fsetpos(PAL_FILE *, const fpos_t *);
+// TODO (hanhossain): check usage
 int32_t PAL_ftell(PAL_FILE *);
+// TODO (hanhossain): check usage
 int PAL_feof(PAL_FILE *);
+// TODO (hanhossain): check usage
 int PAL_ferror(PAL_FILE *);
+// TODO (hanhossain): check usage
 PAL_FILE * PAL_fopen(const char *, const char *);
+// TODO (hanhossain): check usage
 int PAL_getc(PAL_FILE *stream);
+// TODO (hanhossain): check usage
 int PAL_fgetc(PAL_FILE *stream);
+// TODO (hanhossain): check usage
 int PAL_ungetc(int c, PAL_FILE *stream);
+// TODO (hanhossain): check usage
 int PAL_setvbuf(PAL_FILE *stream, char *, int, size_t);
+// TODO (hanhossain): check usage
 char16_t * PAL_fgetws(char16_t *, int, PAL_FILE *);
+// TODO (hanhossain): check usage
 int PAL_fwprintf(PAL_FILE *, const char16_t *, ...);
+// TODO (hanhossain): check usage
 int PAL_vfwprintf(PAL_FILE *, const char16_t *, va_list);
+// TODO (hanhossain): check usage
 int PAL_wprintf(const char16_t*, ...);
 
+// TODO (hanhossain): check usage
 int _getw(PAL_FILE *);
+// TODO (hanhossain): check usage
 int _putw(int, PAL_FILE *);
+// TODO (hanhossain): check usage
 PAL_FILE * _fdopen(int, const char *);
+// TODO (hanhossain): check usage
 PAL_FILE * _wfopen(const char16_t *, const char16_t *);
+// TODO (hanhossain): check usage
 PAL_FILE * _wfsopen(const char16_t *, const char16_t *, int);
 
 /* Maximum value that can be returned by the rand function. */
@@ -4210,15 +4602,22 @@ PAL_FILE * _wfsopen(const char16_t *, const char16_t *, int);
 #define RAND_MAX 0x7fff
 #endif // !PAL_STDCPP_COMPAT
 
+// TODO (hanhossain): check usage
 int rand(void);
+// TODO (hanhossain): check usage
 void srand(unsigned int);
+// TODO (hanhossain): check usage
 errno_t rand_s(unsigned int*);
 
 #define PAL_get_caller 0
 
+// TODO (hanhossain): check usage
 PAL_FILE * PAL_get_stdout(int caller);
+// TODO (hanhossain): check usage
 PAL_FILE * PAL_get_stdin(int caller);
+// TODO (hanhossain): check usage
 PAL_FILE * PAL_get_stderr(int caller);
+// TODO (hanhossain): check usage
 int * PAL_errno(int caller);
 
 #if defined(PAL_STDCPP_COMPAT) && !defined(USING_PAL_STDLIB)
@@ -4233,7 +4632,9 @@ int * PAL_errno(int caller);
 #define errno  (*PAL_errno(PAL_get_caller))
 #endif // PAL_STDCPP_COMPAT
 
+// TODO (hanhossain): check usage
 char * getenv(const char *);
+// TODO (hanhossain): check usage
 int _putenv(const char *);
 
 #define ERANGE          34
@@ -4249,6 +4650,7 @@ typedef struct _PAL_IOCP_CPU_INFORMATION {
     FILETIME ftLastRecordedUserTime;
 } PAL_IOCP_CPU_INFORMATION;
 
+// TODO (hanhossain): check usage
 int32_t
 PAL_GetCPUBusyTime(
       PAL_IOCP_CPU_INFORMATION *lpPrevCPUInfo);
@@ -4284,16 +4686,19 @@ typedef enum _PAL_Boundary {
 // than an internal error) if this is the first time that the
 // current thread entered this PAL.  Note that PAL_Initialize
 // implies a call to this function.  Does not modify LastError.
+// TODO (hanhossain): check usage
 uint32_t
 PAL_Enter(PAL_Boundary boundary);
 
 // Returns TRUE if we this thread has already entered the PAL,
 // returns FALSE if we have not entered the PAL.
+// TODO (hanhossain): check usage
 BOOL
 PAL_HasEntered();
 
 // Equivalent to PAL_Enter(PAL_BoundaryTop) and is for stub
 // code generation use.
+// TODO (hanhossain): check usage
 uint32_t
 PAL_EnterTop();
 
@@ -4301,22 +4706,26 @@ PAL_EnterTop();
 // a region of code that depends on this instance of the PAL
 // in the process, and the current thread is already known to
 // the PAL.  Does not modify LastError.
+// TODO (hanhossain): check usage
 void
 PAL_Reenter(PAL_Boundary boundary);
 
 // This function needs to be called on a thread when it leaves
 // a region of code that depends on this instance of the PAL
 // in the process.  Does not modify LastError.
+// TODO (hanhossain): check usage
 void
 PAL_Leave(PAL_Boundary boundary);
 
 // This function is equivalent to PAL_Leave(PAL_BoundaryBottom)
 // and is available to limit the creation of stub code.
+// TODO (hanhossain): check usage
 void
 PAL_LeaveBottom();
 
 // This function is equivalent to PAL_Leave(PAL_BoundaryTop)
 // and is available to limit the creation of stub code.
+// TODO (hanhossain): check usage
 void
 PAL_LeaveTop();
 
