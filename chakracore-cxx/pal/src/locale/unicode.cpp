@@ -221,35 +221,6 @@ CFStringEncoding CODEPAGECPToCFStringEncoding(uint32_t codepage)
 
 /*++
 Function:
-AreFileApisANSI
-
-The AreFileApisANSI function determines whether the file I/O functions
-are using the ANSI or OEM character set code page. This function is
-useful for 8-bit console input and output operations.
-
-Return Values
-
-If the set of file I/O functions is using the ANSI code page, the return value is nonzero.
-
-If the set of file I/O functions is using the OEM code page, the return value is zero.
-
-In the ROTOR version we always return true since there is no concept
-of OEM code pages.
-
---*/
-BOOL
-AreFileApisANSI(
-    void)
-{
-    ENTRY("AreFileApisANSI ()\n");
-
-    LOGEXIT("AreFileApisANSI returns BOOL TRUE\n");
-    return TRUE;
-}
-
-
-/*++
-Function:
 GetConsoleCP
 
 See MSDN doc.

@@ -253,14 +253,6 @@ typedef int errno_t;
 extern errno_t _ultow_s(unsigned long inValue, char16_t* outBuffer, size_t inDestBufferSize, int inRadix );
 extern errno_t _ui64tow_s(unsigned long long inValue, char16_t* outBuffer, size_t inDestBufferSize, int inRadix );
 
-int
-wsprintfW(
-       char16_t*,
-       const char16_t*,
-      ...);
-
-#define wsprintf wsprintfW
-
 // From win32.h
 #ifndef _CRTIMP
 #ifdef __llvm__
@@ -271,9 +263,6 @@ wsprintfW(
 #endif // _CRTIMP
 
 /******************* winbase.h Entrypoints and defines ************************/
-BOOL
-AreFileApisANSI(
-        void);
 
 typedef struct _SECURITY_ATTRIBUTES {
             uint32_t nLength;
