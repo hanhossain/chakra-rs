@@ -39,7 +39,7 @@ public:
     uint32_t GetNumberOfPhysicalProcessors() const { return this->dwNumberOfPhysicalProcessors; }
 
 #if SYSINFO_IMAGE_BASE_AVAILABLE
-    UINT_PTR GetChakraBaseAddr() const;
+    unsigned long GetChakraBaseAddr() const;
 #endif
 
 #if defined(_M_ARM32_OR_ARM64)
@@ -77,8 +77,8 @@ public:
 #endif
 
 #if SYSINFO_IMAGE_BASE_AVAILABLE
-    UINT_PTR dllLoadAddress;
-    UINT_PTR dllHighAddress;
+    unsigned long dllLoadAddress;
+    unsigned long dllHighAddress;
 #endif
 
 private:

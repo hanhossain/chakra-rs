@@ -18,16 +18,16 @@ Math::NextPowerOf2(uint32 n)
     return n;
 }
 
-UINT_PTR
+unsigned long
 Math::Rand()
 {
     unsigned int rand;
     rand_s(&rand);
-    UINT_PTR newRand = static_cast<UINT_PTR>(rand);
+    unsigned long newRand = static_cast<unsigned long>(rand);
 
 #if TARGET_64
     rand_s(&rand);
-    newRand |= static_cast<UINT_PTR>(rand) << 32;
+    newRand |= static_cast<unsigned long>(rand) << 32;
 #endif
 
     return newRand;

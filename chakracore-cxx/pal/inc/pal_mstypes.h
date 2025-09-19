@@ -79,7 +79,6 @@ typedef signed long LONG64;
 
 #define _W64
 
-typedef unsigned long UINT_PTR;
 typedef unsigned long DWORD_PTR;
 
 #define _PTRDIFF_T_DEFINED

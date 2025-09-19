@@ -84,8 +84,8 @@ AutoSystemInfo::Initialize()
     binaryName[0] = u'\0';
 
 #if SYSINFO_IMAGE_BASE_AVAILABLE
-    dllLoadAddress = (UINT_PTR)&__ImageBase;
-    dllHighAddress = (UINT_PTR)&__ImageBase +
+    dllLoadAddress = (unsigned long)&__ImageBase;
+    dllHighAddress = (unsigned long)&__ImageBase +
         ((PIMAGE_NT_HEADERS)(((char *)&__ImageBase) + __ImageBase.e_lfanew))->OptionalHeader.SizeOfImage;
 #endif
 
@@ -156,10 +156,10 @@ AutoSystemInfo::InitPhysicalProcessorCount()
 bool
 AutoSystemInfo::IsJscriptModulePointer(void * ptr)
 {
-    return ((UINT_PTR)ptr >= Data.dllLoadAddress && (UINT_PTR)ptr < Data.dllHighAddress);
+    return ((unsigned long)ptr >= Data.dllLoadAddress && (unsigned long)ptr < Data.dllHighAddress);
 }
 
-UINT_PTR
+unsigned long
 AutoSystemInfo::GetChakraBaseAddr() const
 {
     return dllLoadAddress;

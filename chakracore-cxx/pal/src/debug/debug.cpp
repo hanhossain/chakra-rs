@@ -690,7 +690,7 @@ ReadProcessMemory(
     // an unsigned type to ensure that no sign extension takes place
     //
 
-    offset = (off_t) (UINT_PTR) lpBaseAddress;
+    offset = (off_t) (unsigned long) lpBaseAddress;
 
     if (lseek(fd, offset, SEEK_SET) == -1)
     {
@@ -960,7 +960,7 @@ WriteProcessMemory(
     // an unsigned type to ensure that no sign extension takes place
     //
 
-    offset = (off_t) (UINT_PTR) lpBaseAddress;
+    offset = (off_t) (unsigned long) lpBaseAddress;
 
     if (lseek(fd, offset, SEEK_SET) == -1)
     {

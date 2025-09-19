@@ -793,7 +793,7 @@ void LegalizeMD::ObfuscateLDIMM(IR::Instr * instrMov, IR::Instr * instrMovt)
         return;
     }
 
-    UINT_PTR rand = Math::Rand();
+    unsigned long rand = Math::Rand();
 
     // Use this random value as follows:
     // bits 0-3: reg to use in pre-LDIMM instr
@@ -808,7 +808,7 @@ void LegalizeMD::ObfuscateLDIMM(IR::Instr * instrMov, IR::Instr * instrMovt)
     LegalizeMD::EmitRandomNopBefore(instrMovt->m_next, rand >> 14, targetReg);
 }
 
-void LegalizeMD::EmitRandomNopBefore(IR::Instr *insertInstr, UINT_PTR rand, RegNum targetReg)
+void LegalizeMD::EmitRandomNopBefore(IR::Instr *insertInstr, unsigned long rand, RegNum targetReg)
 {
     // bits 0-3: reg to use in pre-LDIMM instr
     // bits 4: do/don't emit pre-LDIMM instr

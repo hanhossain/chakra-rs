@@ -286,7 +286,7 @@ typedef GUID CLSID;
 #define IsEqualCLSID(rclsid1, rclsid2) IsEqualGUID(rclsid1, rclsid2)
 typedef CLSID *LPCLSID;
 
-typedef UINT_PTR WPARAM;
+typedef unsigned long WPARAM;
 typedef ptrdiff_t LRESULT;
 
 typedef int32_t SCODE;
