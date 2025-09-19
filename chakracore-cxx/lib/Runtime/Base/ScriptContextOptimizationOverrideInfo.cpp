@@ -205,28 +205,28 @@ ScriptContextOptimizationOverrideInfo::DisableArraySetElementFastPath()
     }
 }
 
-INT_PTR
+long
 ScriptContextOptimizationOverrideInfo::GetArraySetElementFastPathVtable() const
 {
     return arraySetElementFastPathVtable;
 }
 
-INT_PTR
+long
 ScriptContextOptimizationOverrideInfo::GetArraySetElementFastPathVtableAddr() const
 {
-    return (INT_PTR)&arraySetElementFastPathVtable;
+    return (long)&arraySetElementFastPathVtable;
 }
 
-INT_PTR
+long
 ScriptContextOptimizationOverrideInfo::GetIntArraySetElementFastPathVtableAddr() const
 {
-    return (INT_PTR)&intArraySetElementFastPathVtable;
+    return (long)&intArraySetElementFastPathVtable;
 }
 
-INT_PTR
+long
 ScriptContextOptimizationOverrideInfo::GetFloatArraySetElementFastPathVtableAddr() const
 {
-    return (INT_PTR)&floatArraySetElementFastPathVtable;
+    return (long)&floatArraySetElementFastPathVtable;
 }
 
 void *

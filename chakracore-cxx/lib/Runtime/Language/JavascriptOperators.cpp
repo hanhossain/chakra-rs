@@ -4360,7 +4360,7 @@ using namespace Js;
             return OP_SetElementI(instance, index, value, scriptContext, flags);
         }
 
-        INT_PTR vt = VirtualTableInfoBase::GetVirtualTable(instance);
+        long vt = VirtualTableInfoBase::GetVirtualTable(instance);
         OP_SetElementI(instance, index, value, scriptContext, flags);
         return vt != VirtualTableInfoBase::GetVirtualTable(instance);
         JIT_HELPER_END(Op_SetElementI);
@@ -4764,7 +4764,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     {
         JIT_HELPER_REENTRANT_HEADER(Op_SetNativeIntElementI);
 
-        INT_PTR vt = (INT_PTR)nullptr;
+        long vt = (long)nullptr;
         vt = VirtualTableInfoBase::GetVirtualTable(instance);
 
         if (TaggedInt::Is(aElementIndex))
@@ -4833,7 +4833,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     {
         JIT_HELPER_REENTRANT_HEADER(Op_SetNativeFloatElementI);
 
-        INT_PTR vt = (INT_PTR)nullptr;
+        long vt = (long)nullptr;
         vt = VirtualTableInfoBase::GetVirtualTable(instance);
 
         if (TaggedInt::Is(aElementIndex))
@@ -4975,7 +4975,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             JavascriptArray* dstArray = VarTo<JavascriptArray>(dstInstance);
             if (scriptContext->optimizationOverrides.IsEnabledArraySetElementFastPath())
             {
-                INT_PTR vt = VirtualTableInfoBase::GetVirtualTable(dstInstance);
+                long vt = VirtualTableInfoBase::GetVirtualTable(dstInstance);
                 if (instanceType == TypeIds_Array)
                 {
                     returnValue = dstArray->DirectSetItemAtRangeFromArray<Var>(dstStart, length, srcArray, srcStart);
@@ -5057,7 +5057,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             }
             if (scriptContext->optimizationOverrides.IsEnabledArraySetElementFastPath())
             {
-                INT_PTR vt = VirtualTableInfoBase::GetVirtualTable(instance);
+                long vt = VirtualTableInfoBase::GetVirtualTable(instance);
                 if (instanceType == TypeIds_Array)
                 {
                     returnValue = UnsafeVarTo<JavascriptArray>(instance)->DirectSetItemAtRange<Var>(start, length, value);

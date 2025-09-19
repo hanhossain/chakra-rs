@@ -81,7 +81,6 @@ typedef signed long LONG64;
 
 #define _atoi64 (long)atoll
 
-typedef long INT_PTR;
 typedef unsigned long UINT_PTR;
 typedef unsigned long DWORD_PTR;
 

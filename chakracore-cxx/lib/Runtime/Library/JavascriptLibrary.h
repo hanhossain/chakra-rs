@@ -274,7 +274,7 @@ namespace Js
 
         Field(JavascriptFunction*) builtinFunctions[BuiltinFunction::Count];
 
-        Field(INT_PTR) vtableAddresses[VTableValue::Count];
+        Field(long) vtableAddresses[VTableValue::Count];
         Field(JavascriptString*) typeDisplayStrings[TypeIds_Limit];
         Field(ConstructorCache *) constructorCacheDefaultInstance;
         __declspec(align(16)) Field(const uint8_t *) absDoubleCst;
@@ -1120,7 +1120,7 @@ namespace Js
 #endif
 
         Field(JavascriptFunction*)* GetBuiltinFunctions();
-        INT_PTR* GetVTableAddresses();
+        long* GetVTableAddresses();
         static BuiltinFunction GetBuiltinFunctionForPropId(PropertyId id);
         static BuiltinFunction GetBuiltInForFuncInfo(LocalFunctionId localFuncId);
 #if DBG

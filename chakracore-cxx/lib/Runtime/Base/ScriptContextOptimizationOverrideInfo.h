@@ -24,10 +24,10 @@ public:
 
     bool IsEnabledArraySetElementFastPath() const;
     void DisableArraySetElementFastPath();
-    INT_PTR GetArraySetElementFastPathVtable() const;
-    INT_PTR GetArraySetElementFastPathVtableAddr() const;
-    INT_PTR GetIntArraySetElementFastPathVtableAddr() const;
-    INT_PTR GetFloatArraySetElementFastPathVtableAddr() const;
+    long GetArraySetElementFastPathVtable() const;
+    long GetArraySetElementFastPathVtableAddr() const;
+    long GetIntArraySetElementFastPathVtableAddr() const;
+    long GetFloatArraySetElementFastPathVtableAddr() const;
     void * GetAddressOfArraySetElementFastPathVtable();
     void * GetAddressOfIntArraySetElementFastPathVtable();
     void * GetAddressOfFloatArraySetElementFastPathVtable();
@@ -35,13 +35,13 @@ public:
     void Merge(ScriptContextOptimizationOverrideInfo * info);
 
     // Use a small integer so JIT'ed code can encode in a smaller instruction
-    static const INT_PTR InvalidVtable = (INT_PTR)1;
+    static const long InvalidVtable = (long)1;
 private:
     // Optimization overrides
     SideEffects sideEffects;
-    INT_PTR arraySetElementFastPathVtable;
-    INT_PTR intArraySetElementFastPathVtable;
-    INT_PTR floatArraySetElementFastPathVtable;
+    long arraySetElementFastPathVtable;
+    long intArraySetElementFastPathVtable;
+    long floatArraySetElementFastPathVtable;
 
     // Cross site tracking
     ScriptContextOptimizationOverrideInfo * crossSiteRoot;

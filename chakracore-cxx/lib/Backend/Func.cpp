@@ -2174,7 +2174,7 @@ Func::Dump()
 
 #if DBG_DUMP || defined(ENABLE_IR_VIEWER)
 LPCSTR
-Func::GetVtableName(INT_PTR address)
+Func::GetVtableName(long address)
 {
 #if DBG
     if (vtableMap == nullptr)
