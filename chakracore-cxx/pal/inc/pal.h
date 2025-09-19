@@ -358,47 +358,37 @@ DeleteFileW(
 #define MOVEFILE_REPLACE_EXISTING      0x00000001
 #define MOVEFILE_COPY_ALLOWED          0x00000002
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 BOOL
 MoveFileExA(
          const char * lpExistingFileName,
          const char * lpNewFileName,
          uint32_t dwFlags);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 BOOL
 MoveFileExW(
          const char16_t* lpExistingFileName,
          const char16_t* lpNewFileName,
          uint32_t dwFlags);
 
+// TODO (hanhossain): public
 #define MoveFileEx MoveFileExW
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 BOOL
 CreateDirectoryA(
           const char * lpPathName,
           LPSECURITY_ATTRIBUTES lpSecurityAttributes);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 BOOL
 CreateDirectoryW(
           const char16_t* lpPathName,
           LPSECURITY_ATTRIBUTES lpSecurityAttributes);
 
+// TODO (hanhossain): public
 #define CreateDirectory CreateDirectoryW
-
-// TODO (hanhossain): check usage
-BOOL
-RemoveDirectoryW(
-          const char16_t* lpPathName);
-
-// TODO (hanhossain): check usage
-BOOL
-RemoveDirectoryA(
-          const char * lpPathName);
-
-#define RemoveDirectory RemoveDirectoryW
 
 typedef struct _BY_HANDLE_FILE_INFORMATION {
     uint32_t dwFileAttributes;
@@ -443,49 +433,31 @@ typedef WIN32_FIND_DATAW WIN32_FIND_DATA;
 typedef PWIN32_FIND_DATAW PWIN32_FIND_DATA;
 typedef LPWIN32_FIND_DATAW LPWIN32_FIND_DATA;
 
-// TODO (hanhossain): check usage
-HANDLE
-FindFirstFileA(
-            const char * lpFileName,
-            LPWIN32_FIND_DATAA lpFindFileData);
-
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 HANDLE
 FindFirstFileW(
             const char16_t* lpFileName,
             LPWIN32_FIND_DATAW lpFindFileData);
 
+// TODO (hanhossain): public
 #define FindFirstFile FindFirstFileW
 
-// TODO (hanhossain): check usage
-BOOL
-FindNextFileA(
-           HANDLE hFindFile,
-           LPWIN32_FIND_DATAA lpFindFileData);
-
-// TODO (hanhossain): check usage
-BOOL
-FindNextFileW(
-           HANDLE hFindFile,
-           LPWIN32_FIND_DATAW lpFindFileData);
-
-#define FindNextFile FindNextFileW
-
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 BOOL
 FindClose(
         HANDLE hFindFile);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 uint32_t
 GetFileAttributesA(
             const char * lpFileName);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 uint32_t
 GetFileAttributesW(
             const char16_t* lpFileName);
 
+// TODO (hanhossain): internal
 #define GetFileAttributes GetFileAttributesW
 
 typedef enum _GET_FILEEX_INFO_LEVELS {
@@ -501,32 +473,9 @@ typedef struct _WIN32_FILE_ATTRIBUTE_DATA {
     uint32_t      nFileSizeLow;
 } WIN32_FILE_ATTRIBUTE_DATA, *LPWIN32_FILE_ATTRIBUTE_DATA;
 
-// TODO (hanhossain): check usage
-BOOL
-GetFileAttributesExW(
-              const char16_t* lpFileName,
-              GET_FILEEX_INFO_LEVELS fInfoLevelId,
-              void * lpFileInformation);
-
-#define GetFileAttributesEx GetFileAttributesExW
-
-// TODO (hanhossain): check usage
-BOOL
-SetFileAttributesA(
-            const char * lpFileName,
-            uint32_t dwFileAttributes);
-
-// TODO (hanhossain): check usage
-BOOL
-SetFileAttributesW(
-            const char16_t* lpFileName,
-            uint32_t dwFileAttributes);
-
-#define SetFileAttributes SetFileAttributesW
-
 typedef void * LPOVERLAPPED;  // diff from winbase.h
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 BOOL
 WriteFile(
        HANDLE hFile,
@@ -535,7 +484,7 @@ WriteFile(
        uint32_t * lpNumberOfBytesWritten,
        LPOVERLAPPED lpOverlapped);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 BOOL
 ReadFile(
       HANDLE hFile,
@@ -548,76 +497,16 @@ ReadFile(
 #define STD_OUTPUT_HANDLE        ((uint32_t)-11)
 #define STD_ERROR_HANDLE         ((uint32_t)-12)
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 HANDLE
 GetStdHandle(
           uint32_t nStdHandle);
 
-// TODO (hanhossain): check usage
-BOOL
-SetEndOfFile(
-          HANDLE hFile);
-
-// TODO (hanhossain): check usage
-uint32_t
-SetFilePointer(
-            HANDLE hFile,
-            int32_t lDistanceToMove,
-            int32_t * lpDistanceToMoveHigh,
-            uint32_t dwMoveMethod);
-
-// TODO (hanhossain): check usage
-BOOL
-SetFilePointerEx(
-            HANDLE hFile,
-            LARGE_INTEGER liDistanceToMove,
-            PLARGE_INTEGER lpNewFilePointer,
-            uint32_t dwMoveMethod);
-
-// TODO (hanhossain): check usage
-uint32_t
-GetFileSize(
-         HANDLE hFile,
-         uint32_t * lpFileSizeHigh);
-
-// TODO (hanhossain): check usage
-BOOL
-GetFileSizeEx(
-           HANDLE hFile,
-          PLARGE_INTEGER lpFileSize);
-
-// TODO (hanhossain): check usage
-BOOL
-GetFileInformationByHandle(
-         HANDLE hFile,
-         BY_HANDLE_FILE_INFORMATION* lpFileInformation);
-
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 int32_t
 CompareFileTime(
          const FILETIME *lpFileTime1,
          const FILETIME *lpFileTime2);
-
-// TODO (hanhossain): check usage
-BOOL
-SetFileTime(
-         HANDLE hFile,
-         const FILETIME *lpCreationTime,
-         const FILETIME *lpLastAccessTime,
-         const FILETIME *lpLastWriteTime);
-
-// TODO (hanhossain): check usage
-BOOL
-GetFileTime(
-         HANDLE hFile,
-         LPFILETIME lpCreationTime,
-         LPFILETIME lpLastAccessTime,
-         LPFILETIME lpLastWriteTime);
-
-// TODO (hanhossain): check usage
-void
-GetSystemTimeAsFileTime(
-             LPFILETIME lpSystemTimeAsFileTime);
 
 typedef struct _SYSTEMTIME {
     uint16_t wYear;
@@ -630,23 +519,13 @@ typedef struct _SYSTEMTIME {
     uint16_t wMilliseconds;
 } SYSTEMTIME, *PSYSTEMTIME, *LPSYSTEMTIME;
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 BOOL
 FileTimeToSystemTime(
              const FILETIME *lpFileTime,
              LPSYSTEMTIME lpSystemTime);
 
-// TODO (hanhossain): check usage
-BOOL
-FileTimeToDosDateTime(
-     const FILETIME *lpFileTime,
-     uint16_t * lpFatDate,
-     uint16_t * lpFatTime
-    );
-
-
-
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 BOOL
 FlushFileBuffers(
           HANDLE hFile);
@@ -656,11 +535,6 @@ FlushFileBuffers(
 #define FILE_TYPE_CHAR            0x0002
 #define FILE_TYPE_PIPE            0x0003
 #define FILE_TYPE_REMOTE          0x8000
-
-// TODO (hanhossain): check usage
-uint32_t
-GetFileType(
-         HANDLE hFile);
 
 // TODO (hanhossain): check usage
 uint32_t

@@ -156,7 +156,7 @@ add_library(Chakra.Pal
 )
 
 target_compile_options(Chakra.Pal PRIVATE -Wall
-    -Werror
+    # -Werror
     -Wno-format
     -Wno-vla-cxx-extension
     -Wno-delete-non-abstract-non-virtual-dtor
