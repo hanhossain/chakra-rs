@@ -60,13 +60,13 @@ Function:
 
 Parameters :
     char16_t* lpwstr :   string to search
-    LPCWSTR charset : list of characters to search for
+    const char16_t* charset : list of characters to search for
                                       
 Return value :
     pointer to first character of lpwstr that isn't in the set
     NULL if all characters are in the set                                                                 
 --*/
-char16_t* UTIL_inverse_wcspbrk(char16_t* lpwstr, LPCWSTR charset);
+char16_t* UTIL_inverse_wcspbrk(char16_t* lpwstr, const char16_t* charset);
 
 /*++
 Function : 
@@ -94,7 +94,7 @@ Function :
     Converts a wide string to a multibyte string, allocating the required buffer
     
 Parameters :
-    LPCWSTR lpWideCharStr : string to convert
+    const char16_t* lpWideCharStr : string to convert
     int cchWideChar : number of wide characters to convert
                       (-1 to convert a complete null-termnated string)
     
@@ -104,7 +104,7 @@ Return Value :
     with free().
     In case if failure, LastError will be set.
 --*/
-LPSTR UTIL_WCToMB_Alloc(LPCWSTR lpWideCharStr, int cchWideChar);
+LPSTR UTIL_WCToMB_Alloc(const char16_t* lpWideCharStr, int cchWideChar);
 
 /*++
 Function : 

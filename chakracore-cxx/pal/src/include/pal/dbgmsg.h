@@ -212,7 +212,7 @@ typedef enum
 /* extern variables */
 
 // Change W16_NULLSTRING to external variable to avoid multiple warnings showing up in prefast
-extern LPCWSTR W16_NULLSTRING;
+extern const char16_t* W16_NULLSTRING;
 
 extern uint32_t dbg_channel_flags[DCI_LAST];
 extern BOOL g_Dbg_asserts_enabled;

@@ -21,7 +21,7 @@ namespace JSON
         }
     }
 
-    Js::Var JSONParser::Parse(LPCWSTR str, uint length)
+    Js::Var JSONParser::Parse(const char16_t* str, uint length)
     {
         if (length > MIN_CACHE_LENGTH)
         {

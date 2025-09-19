@@ -66,7 +66,7 @@ namespace Js
         return E_NOINTERFACE;
     }
 
-    int32_t SCAPropBag::Add(LPCWSTR name, Var value)
+    int32_t SCAPropBag::Add(const char16_t* name, Var value)
     {
         int32_t hr = S_OK;
         ScriptContext* scriptContext = GetScriptContext();
@@ -88,7 +88,7 @@ Error:
         return hr;
     }
 
-    int32_t SCAPropBag::Get(LPCWSTR name, Var* pValue)
+    int32_t SCAPropBag::Get(const char16_t* name, Var* pValue)
     {
         int32_t hr = S_OK;
         ScriptContext* scriptContext = GetScriptContext();
@@ -108,7 +108,7 @@ Error:
         return hr;
     }
 
-    int32_t SCAPropBag::InternalAdd(LPCWSTR name, charcount_t len, Var value)
+    int32_t SCAPropBag::InternalAdd(const char16_t* name, charcount_t len, Var value)
     {
         char16_t* buf = nullptr;
         int32_t hr = S_OK;
@@ -135,7 +135,7 @@ Error:
         return hr;
     }
 
-    int32_t SCAPropBag::InternalAddNoCopy(LPCWSTR name, charcount_t len, Var value)
+    int32_t SCAPropBag::InternalAddNoCopy(const char16_t* name, charcount_t len, Var value)
     {
         int32_t hr = S_OK;
 

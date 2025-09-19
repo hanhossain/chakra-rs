@@ -396,7 +396,7 @@ cleanup:
 }
 
 template <class TBlockAttributes>
-int32_t HeapInfo::ValidPointersMap<TBlockAttributes>::GenerateValidPointersMapHeader(LPCWSTR vpmFullPath)
+int32_t HeapInfo::ValidPointersMap<TBlockAttributes>::GenerateValidPointersMapHeader(const char16_t* vpmFullPath)
 {
     Assert(vpmFullPath != nullptr);
     int32_t hr = E_FAIL;

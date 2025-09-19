@@ -288,7 +288,7 @@ void CustomExternalWrapperObject::PropertyIdFromInt(uint32 index, Js::PropertyRe
     char16_t buffer[22];
     int pos = Js::TaggedInt::ToBuffer(index, buffer, _countof(buffer));
 
-    GetScriptContext()->GetOrAddPropertyRecord((LPCWSTR)buffer + pos, (_countof(buffer) - 1) - pos, propertyRecord);
+    GetScriptContext()->GetOrAddPropertyRecord((const char16_t*)buffer + pos, (_countof(buffer) - 1) - pos, propertyRecord);
 }
 
 Js::Var CustomExternalWrapperObject::GetName(Js::ScriptContext* requestContext, Js::PropertyId propertyId, Var * isPropertyNameNumeric, Var * propertyNameNumericValue)

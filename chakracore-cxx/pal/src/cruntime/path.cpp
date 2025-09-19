@@ -78,8 +78,8 @@ _wsplitpath(
             char16_t *ext)
 {
     char16_t path[_MAX_PATH+1];
-    LPCWSTR slash_ptr = NULL;
-    LPCWSTR period_ptr = NULL;
+    const char16_t* slash_ptr = NULL;
+    const char16_t* period_ptr = NULL;
     int32_t size = 0;
 
     ENTRY("_wsplitpath (path=%p (%S), drive=%p, dir=%p, fname=%p, ext=%p)\n",

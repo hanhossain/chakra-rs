@@ -10,7 +10,7 @@
 //----------------------------------------------------------------------------
 template <typename TAlloc, typename TPreReservedAlloc, typename SyncObject>
 EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::EmitBufferManager(ArenaAllocator * allocator, CustomHeap::CodePageAllocators<TAlloc, TPreReservedAlloc> * codePageAllocators,
-    Js::ScriptContext * scriptContext, ThreadContextInfo * threadContext, LPCWSTR name, HANDLE processHandle) :
+    Js::ScriptContext * scriptContext, ThreadContextInfo * threadContext, const char16_t* name, HANDLE processHandle) :
     allocationHeap(allocator, codePageAllocators, processHandle),
     allocator(allocator),
     allocations(nullptr),

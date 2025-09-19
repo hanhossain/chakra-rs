@@ -29,7 +29,7 @@ void JsrtDebugUtils::AddFileNameOrScriptTypeToObject(Js::DynamicObject* object, 
 
         Js::FunctionBody* anyFunctionBody = utf8SourceInfo->GetAnyParsedFunction();
 
-        LPCWSTR sourceName = (anyFunctionBody != nullptr) ? anyFunctionBody->GetSourceName() : Js::Constants::UnknownScriptCode;
+        const char16_t* sourceName = (anyFunctionBody != nullptr) ? anyFunctionBody->GetSourceName() : Js::Constants::UnknownScriptCode;
 
         JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::scriptType, sourceName, wcslen(sourceName), utf8SourceInfo->GetScriptContext());
     }
@@ -319,7 +319,7 @@ void JsrtDebugUtils::AddPropertyType(Js::DynamicObject * object, Js::IDiagObject
 
     if (addDisplay || addValue)
     {
-        LPCWSTR value = nullptr;
+        const char16_t* value = nullptr;
 
         // Getting value might call getter which can throw so wrap in try catch
         try

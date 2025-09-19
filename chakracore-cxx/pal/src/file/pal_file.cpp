@@ -961,7 +961,7 @@ See MSDN doc.
 --*/
 HANDLE
 CreateFileW(
-         LPCWSTR lpFileName,
+         const char16_t* lpFileName,
          uint32_t dwDesiredAccess,
          uint32_t dwShareMode,
          LPSECURITY_ATTRIBUTES lpSecurityAttributes,
@@ -1057,8 +1057,8 @@ and will have a much better idea of the specific error.
 --*/
 BOOL
 CopyFileW(
-       LPCWSTR lpExistingFileName,
-       LPCWSTR lpNewFileName,
+       const char16_t* lpExistingFileName,
+       const char16_t* lpNewFileName,
        BOOL bFailIfExists)
 {
     CPalThread *pThread;
@@ -1244,7 +1244,7 @@ See MSDN doc.
 --*/
 BOOL
 DeleteFileW(
-         LPCWSTR lpFileName)
+         const char16_t* lpFileName)
 {
     CPalThread *pThread;
     int  size;
@@ -1336,8 +1336,8 @@ See MSDN doc.
 --*/
 BOOL
 MoveFileW(
-      LPCWSTR lpExistingFileName,
-      LPCWSTR lpNewFileName)
+      const char16_t* lpExistingFileName,
+      const char16_t* lpNewFileName)
 {
     BOOL bRet;
 
@@ -1534,8 +1534,8 @@ See MSDN doc.
 --*/
 BOOL
 MoveFileExW(
-         LPCWSTR lpExistingFileName,
-         LPCWSTR lpNewFileName,
+         const char16_t* lpExistingFileName,
+         const char16_t* lpNewFileName,
          uint32_t dwFlags)
 {
     CPalThread *pThread;
@@ -1737,7 +1737,7 @@ See MSDN doc.
 --*/
 uint32_t
 GetFileAttributesW(
-            LPCWSTR lpFileName)
+            const char16_t* lpFileName)
 {
     CPalThread *pThread;
     int   size;
@@ -1798,7 +1798,7 @@ See MSDN doc, and notes for GetFileAttributesW.
 --*/
 BOOL
 GetFileAttributesExW(
-              LPCWSTR lpFileName,
+              const char16_t* lpFileName,
               GET_FILEEX_INFO_LEVELS fInfoLevelId,
               void * lpFileInformation)
 {
@@ -1923,7 +1923,7 @@ Notes:
 --*/
 BOOL
 SetFileAttributesW(
-            LPCWSTR lpFileName,
+            const char16_t* lpFileName,
             uint32_t dwFileAttributes)
 {
     CPalThread *pThread;
@@ -3586,8 +3586,8 @@ uUnique is always 0.
 --*/
 uint32_t
 GetTempFileNameW(
-          LPCWSTR lpPathName,
-          LPCWSTR lpPrefixString,
+          const char16_t* lpPathName,
+          const char16_t* lpPrefixString,
           uint32_t uUnique,
           char16_t* lpTempFileName)
 {

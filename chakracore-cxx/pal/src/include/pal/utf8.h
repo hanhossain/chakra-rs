@@ -45,7 +45,7 @@ Function :
 
     Convert a string from UTF-16 (UCS-2) to UTF-8
 --*/
-int UnicodeToUTF8(LPCWSTR lpSrcStr, int cchSrc, LPSTR lpDestStr, int cchDest);
+int UnicodeToUTF8(const char16_t* lpSrcStr, int cchSrc, LPSTR lpDestStr, int cchDest);
 
 #ifdef __cplusplus
 }

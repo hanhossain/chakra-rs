@@ -288,7 +288,7 @@ Duplicates the wide string in shared memory.
 Returns the new address as SHMPTR on success.
 Returns (SHMPTR)NULL on failure.
 --*/
-SHMPTR SHMWStrDup( LPCWSTR string );
+SHMPTR SHMWStrDup( const char16_t* string );
 
 
 /*++
@@ -302,7 +302,7 @@ If an object matches the name but is of a different type, the function
 returns NULL and sets pbNameExists to TRUE.
 
 --*/
-SHMPTR SHMFindNamedObjectByName( LPCWSTR lpName, SHM_NAMED_OBJECTS_ID oid,
+SHMPTR SHMFindNamedObjectByName( const char16_t* lpName, SHM_NAMED_OBJECTS_ID oid,
                                  BOOL *pbNameExists );
 
 /*++ 

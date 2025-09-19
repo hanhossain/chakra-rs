@@ -947,7 +947,7 @@ namespace Js
     // !list -t jscript9test!Js::FaultInjection::InjectionRecord.next -e -x "dps @$extret @$extret+0x128" poi(@@c++(&jscript9test!Js::FaultInjection::Global.InjectionFirstRecord))
     // to rebuild the stack (locals are available)
     // .cxr @@C++(&jscript9test!Js::FaultInjection::Global.InjectionFirstRecord->Context)
-    void FaultInjection::dumpCurrentStackData(LPCWSTR name /*= nullptr*/, size_t size /*= 0*/)
+    void FaultInjection::dumpCurrentStackData(const char16_t* name /*= nullptr*/, size_t size /*= 0*/)
     {
 
 #if !defined(_M_ARM32_OR_ARM64)
@@ -1003,7 +1003,7 @@ namespace Js
 #endif // _M_ARM || _M_ARM64
     }
 
-    bool FaultInjection::ShouldInjectFault(FaultType fType, LPCWSTR name, size_t size)
+    bool FaultInjection::ShouldInjectFault(FaultType fType, const char16_t* name, size_t size)
     {
         bool shouldInjectionFault = ShouldInjectFaultHelper(fType, name, size);
         if (shouldInjectionFault && fType != FaultType::ScriptTerminationOnDispose)
@@ -1013,7 +1013,7 @@ namespace Js
         return shouldInjectionFault;
     }
 
-    bool FaultInjection::ShouldInjectFaultHelper(FaultType fType, LPCWSTR name, size_t size)
+    bool FaultInjection::ShouldInjectFaultHelper(FaultType fType, const char16_t* name, size_t size)
     {
         if (globalFlags.FaultInjection < 0)
         {
@@ -1106,7 +1106,7 @@ namespace Js
         // try to lookup stack hash, to see if it matches
         if (!shouldInjectionFault)
         {
-            const unsigned long expectedHash = HexStrToAddress((LPCWSTR)globalFlags.FaultInjectionStackHash);
+            const unsigned long expectedHash = HexStrToAddress((const char16_t*)globalFlags.FaultInjectionStackHash);
             if (expectedHash != 0)
             {
                 void* StackFrames[MAX_FRAME_COUNT];
@@ -1329,7 +1329,7 @@ namespace Js
             const char16_t* fiType = u"undefined";
             if (globalFlags.FaultInjectionType != nullptr)
             {
-                fiType = (LPCWSTR)globalFlags.FaultInjectionType;
+                fiType = (const char16_t*)globalFlags.FaultInjectionType;
             }
             while (true)
             {

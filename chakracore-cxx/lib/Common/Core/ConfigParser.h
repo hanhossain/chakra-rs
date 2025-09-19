@@ -35,14 +35,14 @@ private:
     bool _hasReadConfig;
 
     Js::ConfigFlagsTable& _flags;
-    const LPCWSTR _configFileName;
+    const char16_t* _configFileName;
 
     void ParseRegistryKey(HKEY hk, CmdLineArgsParser &parser);
 
 public:
     static ConfigParser s_moduleConfigParser;
 
-    ConfigParser(Js::ConfigFlagsTable& outputFlags, LPCWSTR configFileName = u"jscript") :
+    ConfigParser(Js::ConfigFlagsTable& outputFlags, const char16_t* configFileName = u"jscript") :
         _flags(outputFlags),
         _hasReadConfig(false),
         _configFileName(configFileName)

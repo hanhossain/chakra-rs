@@ -36,7 +36,7 @@ SET_DEFAULT_DEBUG_CHANNEL(CRT);
 
 using namespace CorUnix;
 
-int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, LPCWSTR Format, va_list ap);
+int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, const char16_t* Format, va_list ap);
 int CoreVsnprintf(CPalThread *pthrCurrent, LPSTR Buffer, size_t Count, LPCSTR Format, va_list ap);
 int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, va_list ap);
 int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *format, va_list ap);
@@ -64,7 +64,7 @@ static int Internal_Convertfwrite(CPalThread *pthrCurrent, const void *buffer, s
     {
         int nsize;
         LPSTR newBuff = 0;
-        nsize = WideCharToMultiByte(CP_ACP, 0,(LPCWSTR)buffer, count, 0, 0, 0, 0);
+        nsize = WideCharToMultiByte(CP_ACP, 0,(const char16_t*)buffer, count, 0, 0, 0, 0);
         if (!nsize)
         {
             ASSERT("WideCharToMultiByte failed.  Error is %d\n", GetLastError());
@@ -77,7 +77,7 @@ static int Internal_Convertfwrite(CPalThread *pthrCurrent, const void *buffer, s
             pthrCurrent->SetLastError(ERROR_NOT_ENOUGH_MEMORY);
             return -1;
         }
-        nsize = WideCharToMultiByte(CP_ACP, 0, (LPCWSTR)buffer, count, newBuff, nsize, 0, 0);
+        nsize = WideCharToMultiByte(CP_ACP, 0, (const char16_t*)buffer, count, newBuff, nsize, 0, 0);
         if (!nsize)
         {
             ASSERT("WideCharToMultiByte failed.  Error is %d\n", GetLastError());
@@ -446,7 +446,7 @@ Function:
 
   -- see Internal_ExtractFormatA above
 *******************************************************************************/
-BOOL Internal_ExtractFormatW(CPalThread *pthrCurrent, LPCWSTR *Fmt, LPSTR Out, int32_t * Flags,
+BOOL Internal_ExtractFormatW(CPalThread *pthrCurrent, const char16_t* *Fmt, LPSTR Out, int32_t * Flags,
     int32_t * Width, int32_t * Precision, int32_t * Prefix, int32_t * Type)
 {
     BOOL Result = FALSE;
@@ -1067,7 +1067,7 @@ Function:
   -- see PAL_vsnprintf above
 *******************************************************************************/
 
-int PAL__wvsnprintf(char16_t* Buffer, size_t Count, LPCWSTR Format, va_list ap)
+int PAL__wvsnprintf(char16_t* Buffer, size_t Count, const char16_t* Format, va_list ap)
 {
     return CoreWvsnprintf(InternalGetCurrentThread(), Buffer, Count, Format, ap);
 }
@@ -1110,7 +1110,7 @@ int PAL_vfwprintf(PAL_FILE *stream, const char16_t *format, va_list ap)
 
 } // end extern "C"
 
-int CorUnix::InternalWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, LPCWSTR Format, va_list ap)
+int CorUnix::InternalWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, const char16_t* Format, va_list ap)
 {
     return CoreWvsnprintf(pthrCurrent, Buffer, Count, Format, ap);
 }
@@ -1133,7 +1133,7 @@ int CorUnix::InternalVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const 
 int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *format, va_list aparg)
 {
     char TempBuff[1024]; /* used to hold a single %<foo> format string */
-    LPCWSTR Fmt = format;
+    const char16_t* Fmt = format;
     char16_t* TempWStr = NULL;
     char16_t* WorkingWStr = NULL;
     char16_t TempWChar[2];
@@ -1839,12 +1839,12 @@ int CoreVsnprintf(CPalThread *pthrCurrent, LPSTR Buffer, size_t Count, LPCSTR Fo
     }
 }
 
-int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, LPCWSTR Format, va_list aparg)
+int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, const char16_t* Format, va_list aparg)
 {
     BOOL BufferRanOut = FALSE;
     char TempBuff[1024]; /* used to hold a single %<foo> format string */
     char16_t* BufferPtr = Buffer;
-    LPCWSTR Fmt = Format;
+    const char16_t* Fmt = Format;
     char16_t* TempWStr = NULL;
     char16_t* WorkingWStr = NULL;
     char16_t TempWChar[2];

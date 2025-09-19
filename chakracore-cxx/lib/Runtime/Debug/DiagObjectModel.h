@@ -24,7 +24,7 @@ namespace Js
         IDiagObjectModelDisplay *objectDisplay;
         Var                     obj;
         Var                     originalObj;
-        LPCWSTR                 name;
+        const char16_t*                 name;
         TypeId                  typeId;
         bool                    isConst;
 
@@ -73,9 +73,9 @@ namespace Js
     class IDiagObjectModelDisplay
     {
     public:
-        virtual LPCWSTR Name() = 0;
-        virtual LPCWSTR Type() = 0;
-        virtual LPCWSTR Value(int radix) = 0;
+        virtual const char16_t* Name() = 0;
+        virtual const char16_t* Type() = 0;
+        virtual const char16_t* Value(int radix) = 0;
         virtual BOOL HasChildren() = 0;
         virtual BOOL Set(Var updateObject) = 0;
         virtual DBGPROP_ATTRIB_FLAGS GetTypeAttribute() = 0;
@@ -398,9 +398,9 @@ namespace Js
     public:
         LocalsDisplay(DiagStackFrame* _frame);
 
-        virtual LPCWSTR Name() override;
-        virtual LPCWSTR Type() override;
-        virtual LPCWSTR Value(int radix) override;
+        virtual const char16_t* Name() override;
+        virtual const char16_t* Type() override;
+        virtual const char16_t* Value(int radix) override;
         virtual BOOL HasChildren() override;
         virtual BOOL Set(Var updateObject) override;
         virtual DBGPROP_ATTRIB_FLAGS GetTypeAttribute() override;
@@ -519,7 +519,7 @@ namespace Js
         ScriptContext* scriptContext;
         Var instance;
         Var originalInstance;
-        LPCWSTR name;
+        const char16_t* name;
         IDiagObjectAddress* pObjAddress;
         DBGPROP_ATTRIB_FLAGS defaultAttributes;
         PropertyId propertyId;
@@ -527,9 +527,9 @@ namespace Js
     public:
         RecyclableObjectDisplay(ResolvedObject* resolvedObject, DBGPROP_ATTRIB_FLAGS defaultAttributes = DBGPROP_ATTRIB_NO_ATTRIB);
 
-        virtual LPCWSTR Name() override;
-        virtual LPCWSTR Type() override;
-        virtual LPCWSTR Value(int radix) override;
+        virtual const char16_t* Name() override;
+        virtual const char16_t* Type() override;
+        virtual const char16_t* Value(int radix) override;
         virtual BOOL HasChildren() override;
         virtual BOOL Set(Var updateObject) override;
         virtual BOOL SetDefaultTypeAttribute(DBGPROP_ATTRIB_FLAGS attributes) override { defaultAttributes = attributes; return TRUE; };
@@ -587,7 +587,7 @@ namespace Js
         // ES5Array will extend this.
         virtual uint32 GetNextDescriptor(uint32 currentDescriptor) { return Js::JavascriptArray::InvalidIndex; }
 
-        LPCWSTR GetIndexName(uint32 index, StringBuilder<ArenaAllocator>* stringBuilder);
+        const char16_t* GetIndexName(uint32 index, StringBuilder<ArenaAllocator>* stringBuilder);
 
         Js::JavascriptArray* GetArrayObject();
 
@@ -815,9 +815,9 @@ namespace Js
     public:
         RecyclableCollectionObjectDisplay(ScriptContext* scriptContext, const char16_t* name, RecyclableCollectionObjectWalker<TData>* walker) : scriptContext(scriptContext), name(name), walker(walker) { }
 
-        virtual LPCWSTR Name() override { return name; }
-        virtual LPCWSTR Type() override { return u""; }
-        virtual LPCWSTR Value(int radix) override;
+        virtual const char16_t* Name() override { return name; }
+        virtual const char16_t* Type() override { return u""; }
+        virtual const char16_t* Value(int radix) override;
         virtual BOOL HasChildren() override { return walker->GetChildrenCount() > 0; }
         virtual BOOL Set(Var updateObject) override { return FALSE; }
         virtual BOOL SetDefaultTypeAttribute(DBGPROP_ATTRIB_FLAGS attributes) override { return FALSE; }
@@ -839,9 +839,9 @@ namespace Js
     public:
         RecyclableKeyValueDisplay(ScriptContext* scriptContext, Var key, Var value, const char16_t* name) : scriptContext(scriptContext), key(key), value(value), name(name) { }
 
-        virtual LPCWSTR Name() override { return name; }
-        virtual LPCWSTR Type() override { return u""; }
-        virtual LPCWSTR Value(int radix) override;
+        virtual const char16_t* Name() override { return name; }
+        virtual const char16_t* Type() override { return u""; }
+        virtual const char16_t* Value(int radix) override;
         virtual BOOL HasChildren() override { return TRUE; }
         virtual BOOL Set(Var updateObject) override { return FALSE; }
         virtual DBGPROP_ATTRIB_FLAGS GetTypeAttribute() override { return DBGPROP_ATTRIB_VALUE_IS_EXPANDABLE | DBGPROP_ATTRIB_VALUE_IS_FAKE | DBGPROP_ATTRIB_VALUE_READONLY; }
@@ -929,8 +929,8 @@ namespace Js
 
         RecyclableMethodsGroupDisplay(RecyclableMethodsGroupWalker *_methodGroupWalker, ResolvedObject* resolvedObject);
 
-        virtual LPCWSTR Type() override;
-        virtual LPCWSTR Value(int radix) override;
+        virtual const char16_t* Type() override;
+        virtual const char16_t* Value(int radix) override;
         virtual BOOL HasChildren() override;
         virtual DBGPROP_ATTRIB_FLAGS GetTypeAttribute() override;
         virtual WeakArenaReference<IDiagObjectModelWalkerBase>* CreateWalker() override;
@@ -947,8 +947,8 @@ namespace Js
 
         ScopeVariablesGroupDisplay(VariableWalkerBase *walker, ResolvedObject* resolvedObject);
 
-        virtual LPCWSTR Type() override;
-        virtual LPCWSTR Value(int radix) override;
+        virtual const char16_t* Type() override;
+        virtual const char16_t* Value(int radix) override;
         virtual BOOL HasChildren() override;
         virtual DBGPROP_ATTRIB_FLAGS GetTypeAttribute() override;
         virtual WeakArenaReference<IDiagObjectModelWalkerBase>* CreateWalker() override;
@@ -964,8 +964,8 @@ namespace Js
 
         GlobalsScopeVariablesGroupDisplay(VariableWalkerBase *walker, ResolvedObject* resolvedObject);
 
-        virtual LPCWSTR Type() override;
-        virtual LPCWSTR Value(int radix) override;
+        virtual const char16_t* Type() override;
+        virtual const char16_t* Value(int radix) override;
         virtual BOOL HasChildren() override;
         virtual DBGPROP_ATTRIB_FLAGS GetTypeAttribute() override;
         virtual WeakArenaReference<IDiagObjectModelWalkerBase>* CreateWalker() override;
@@ -979,7 +979,7 @@ namespace Js
         MutationType mutationType;
     public:
         PendingMutationBreakpointDisplay(ResolvedObject* resolvedObject, MutationType mutationType);
-        virtual LPCWSTR Value(int radix) override { return u""; }
+        virtual const char16_t* Value(int radix) override { return u""; }
         virtual BOOL HasChildren() override { return TRUE; }
         virtual WeakArenaReference<IDiagObjectModelWalkerBase>* CreateWalker() override;
     };

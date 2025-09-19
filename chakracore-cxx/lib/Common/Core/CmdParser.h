@@ -49,13 +49,13 @@ private:
     ///----------------------------------------------------------------------------
 
     class Exception {
-        LPCWSTR        pszMsg;
+        const char16_t*        pszMsg;
     public:
-        Exception(LPCWSTR message):
+        Exception(const char16_t* message):
             pszMsg(message)
         {}
 
-        operator LPCWSTR () const
+        operator const char16_t* () const
         {
             return this->pszMsg;
         }

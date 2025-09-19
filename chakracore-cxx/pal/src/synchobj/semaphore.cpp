@@ -170,7 +170,7 @@ CreateSemaphoreExW(
          LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
          int32_t lInitialCount,
          int32_t lMaximumCount,
-         LPCWSTR lpName,
+         const char16_t* lpName,
          /*_Reserved_*/  uint32_t dwFlags,
          uint32_t dwDesiredAccess)
 {
@@ -201,7 +201,7 @@ CreateSemaphoreW(
           LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
           int32_t lInitialCount,
           int32_t lMaximumCount,
-          LPCWSTR lpName)
+          const char16_t* lpName)
 {
     HANDLE hSemaphore = NULL;
     PAL_ERROR palError;
@@ -258,7 +258,7 @@ CorUnix::InternalCreateSemaphore(
     LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
     int32_t lInitialCount,
     int32_t lMaximumCount,
-    LPCWSTR lpName,
+    const char16_t* lpName,
     HANDLE *phSemaphore
     )
 {
@@ -556,7 +556,7 @@ HANDLE
 OpenSemaphoreW(
         uint32_t dwDesiredAccess,
         BOOL bInheritHandle,
-        LPCWSTR lpName)
+        const char16_t* lpName)
 {
     HANDLE hSemaphore = NULL;
     PAL_ERROR palError = NO_ERROR;

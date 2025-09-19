@@ -2002,7 +2002,7 @@ namespace Js
         char16_t buffer[22];
         int pos = TaggedInt::ToBuffer(index, buffer, _countof(buffer));
 
-        GetScriptContext()->GetOrAddPropertyRecord((LPCWSTR)buffer + pos, (_countof(buffer) - 1) - pos, propertyRecord);
+        GetScriptContext()->GetOrAddPropertyRecord((const char16_t*)buffer + pos, (_countof(buffer) - 1) - pos, propertyRecord);
     }
 
     Var JavascriptProxy::GetName(ScriptContext* requestContext, PropertyId propertyId)
@@ -2026,7 +2026,7 @@ namespace Js
         ThreadContext* threadContext = scriptContext->GetThreadContext();
         if (threadContext->handlerPropertyId == Js::Constants::NoProperty)
         {
-            LPCWSTR autoProxyName;
+            const char16_t* autoProxyName;
 
             if (threadContext->GetAutoProxyName() != nullptr)
             {

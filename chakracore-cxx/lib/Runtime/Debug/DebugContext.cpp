@@ -87,7 +87,7 @@ namespace Js
         return true;
     }
 
-    void DebugContext::RegisterFunction(Js::ParseableFunctionInfo * func, LPCWSTR title)
+    void DebugContext::RegisterFunction(Js::ParseableFunctionInfo * func, const char16_t* title)
     {
         if (!this->CanRegisterFunction())
         {
@@ -97,7 +97,7 @@ namespace Js
         this->RegisterFunction(func, func->GetHostSourceContext(), title);
     }
 
-    void DebugContext::RegisterFunction(Js::ParseableFunctionInfo * func, unsigned long dwDebugSourceContext, LPCWSTR title)
+    void DebugContext::RegisterFunction(Js::ParseableFunctionInfo * func, unsigned long dwDebugSourceContext, const char16_t* title)
     {
         if (!this->CanRegisterFunction())
         {
@@ -128,7 +128,7 @@ namespace Js
         this->RegisterFunction(functionBody, dwDebugSourceContext, title);
     }
 
-    void DebugContext::RegisterFunction(Js::FunctionBody * functionBody, unsigned long dwDebugSourceContext, LPCWSTR title)
+    void DebugContext::RegisterFunction(Js::FunctionBody * functionBody, unsigned long dwDebugSourceContext, const char16_t* title)
     {
         if (!this->CanRegisterFunction())
         {

@@ -131,7 +131,7 @@ See MSDN doc.
 --*/
 uint32_t
 GetEnvironmentVariableW(
-             LPCWSTR lpName,
+             const char16_t* lpName,
              char16_t* lpBuffer,
              uint32_t nSize)
 {
@@ -248,8 +248,8 @@ environment variables of other processes.
 --*/
 BOOL
 SetEnvironmentVariableW(
-             LPCWSTR lpName,
-             LPCWSTR lpValue)
+             const char16_t* lpName,
+             const char16_t* lpValue)
 {
     PCHAR name = NULL;
     PCHAR value = NULL;

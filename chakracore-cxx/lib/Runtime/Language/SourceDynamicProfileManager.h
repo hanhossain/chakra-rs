@@ -41,7 +41,7 @@ namespace Js
         uint SaveToProfileCacheAndRelease(SourceContextInfo* info);
         bool IsProfileLoaded() { return cachedStartupFunctions != nullptr; }
         bool IsProfileLoadedFromWinInet() { return dataCacheWrapper != nullptr; }
-        bool LoadFromProfileCache(SimpleDataCacheWrapper* dataCacheWrapper, LPCWSTR url);
+        bool LoadFromProfileCache(SimpleDataCacheWrapper* dataCacheWrapper, const char16_t* url);
         SimpleDataCacheWrapper* GetProfileCache() { return dataCacheWrapper; }
         uint GetStartupFunctionsLength() { return (this->startupFunctions ? this->startupFunctions->Length() : 0); }
 #ifdef DYNAMIC_PROFILE_STORAGE

@@ -157,7 +157,7 @@ private:
     uint blockState;        // 0 = no block, 1 = one big block, other more then one big block or have malloc blocks
 
 #ifdef PROFILE_MEM
-    LPCWSTR name;
+    const char16_t* name;
 #endif
 
 #ifdef PROFILE_MEM
@@ -404,7 +404,7 @@ public:
 class ArenaAllocator : public ArenaAllocatorBase<InPlaceFreeListPolicy>
 {
 public:
-    ArenaAllocator(LPCWSTR name, PageAllocator * pageAllocator, void (*outOfMemoryFunc)(), void (*recoverMemoryFunc)() = JsUtil::ExternalApi::RecoverUnusedMemory) :
+    ArenaAllocator(const char16_t* name, PageAllocator * pageAllocator, void (*outOfMemoryFunc)(), void (*recoverMemoryFunc)() = JsUtil::ExternalApi::RecoverUnusedMemory) :
         ArenaAllocatorBase<InPlaceFreeListPolicy>(name, pageAllocator, outOfMemoryFunc, recoverMemoryFunc)
     {
     }
@@ -481,7 +481,7 @@ private:
 
 public:
 
-    JitArenaAllocator(LPCWSTR name, PageAllocator * pageAllocator, void(*outOfMemoryFunc)(), void(*recoverMemoryFunc)() = JsUtil::ExternalApi::RecoverUnusedMemory) :
+    JitArenaAllocator(const char16_t* name, PageAllocator * pageAllocator, void(*outOfMemoryFunc)(), void(*recoverMemoryFunc)() = JsUtil::ExternalApi::RecoverUnusedMemory) :
         bvFreeList(nullptr), ArenaAllocator(name, pageAllocator, outOfMemoryFunc, recoverMemoryFunc)
     {
     }
@@ -561,7 +561,7 @@ public:
 class NoRecoverMemoryJitArenaAllocator : public JitArenaAllocator
 {
 public:
-    NoRecoverMemoryJitArenaAllocator(LPCWSTR name, PageAllocator * pageAllocator, void(*outOfMemoryFunc)()) :
+    NoRecoverMemoryJitArenaAllocator(const char16_t* name, PageAllocator * pageAllocator, void(*outOfMemoryFunc)()) :
         JitArenaAllocator(name, pageAllocator, outOfMemoryFunc, NULL)
     {
     }
@@ -572,7 +572,7 @@ public:
 class NoRecoverMemoryArenaAllocator : public ArenaAllocator
 {
 public:
-    NoRecoverMemoryArenaAllocator(LPCWSTR name, PageAllocator * pageAllocator, void (*outOfMemoryFunc)()) :
+    NoRecoverMemoryArenaAllocator(const char16_t* name, PageAllocator * pageAllocator, void (*outOfMemoryFunc)()) :
         ArenaAllocator(name, pageAllocator, outOfMemoryFunc, NULL)
     {
     }
@@ -683,7 +683,7 @@ public:
     // Zeroing and freeing w/o leaking is not implemented for large objects
     CompileAssert(MaxObjectSize <= MaxSmallObjectSize);
 
-    InlineCacheAllocator(LPCWSTR name, PageAllocator * pageAllocator, void(*outOfMemoryFunc)(), void(*recoverMemoryFunc)() = JsUtil::ExternalApi::RecoverUnusedMemory) :
+    InlineCacheAllocator(const char16_t* name, PageAllocator * pageAllocator, void(*outOfMemoryFunc)(), void(*recoverMemoryFunc)() = JsUtil::ExternalApi::RecoverUnusedMemory) :
         ArenaAllocatorBase<InlineCacheAllocatorTraits>(name, pageAllocator, outOfMemoryFunc, recoverMemoryFunc), hasUsedInlineCache(false), hasProtoOrStoreFieldInlineCache(false)
 #ifdef POLY_INLINE_CACHE_SIZE_STATS
         , polyCacheAllocSize(0)
@@ -769,7 +769,7 @@ private:
 #endif
 
 public:
-    InlineCacheAllocator(LPCWSTR name, PageAllocator * pageAllocator, void(*outOfMemoryFunc)()) :
+    InlineCacheAllocator(const char16_t* name, PageAllocator * pageAllocator, void(*outOfMemoryFunc)()) :
         ArenaAllocatorBase<InlineCacheAllocatorTraits>(name, pageAllocator, outOfMemoryFunc) {}
 
     char * Alloc(size_t requestedBytes)
@@ -808,7 +808,7 @@ public:
 class CacheAllocator : public ArenaAllocatorBase<CacheAllocatorTraits>
 {
 public:
-    CacheAllocator(LPCWSTR name, PageAllocator * pageAllocator, void(*outOfMemoryFunc)()) :
+    CacheAllocator(const char16_t* name, PageAllocator * pageAllocator, void(*outOfMemoryFunc)()) :
         ArenaAllocatorBase<CacheAllocatorTraits>(name, pageAllocator, outOfMemoryFunc)
 #if DBG
         , verifiedAllZeroAndLockedDown(false)

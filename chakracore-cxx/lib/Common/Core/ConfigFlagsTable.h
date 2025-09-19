@@ -436,8 +436,8 @@ namespace Js
     // Methods
     public:
 
-        static  Flag            GetFlag(LPCWSTR str);
-        static  Phase           GetPhase(LPCWSTR str);
+        static  Flag            GetFlag(const char16_t* str);
+        static  Phase           GetPhase(const char16_t* str);
         static  void            PrintUsageString();
 
         static  FlagTypes       GetFlagType(Flag flag);

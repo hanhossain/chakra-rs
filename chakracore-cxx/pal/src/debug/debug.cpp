@@ -185,7 +185,7 @@ See MSDN doc.
 --*/
 void
 OutputDebugStringW(
-         LPCWSTR lpOutputString)
+         const char16_t* lpOutputString)
 {
     char *lpOutputStringA;
     int strLen;

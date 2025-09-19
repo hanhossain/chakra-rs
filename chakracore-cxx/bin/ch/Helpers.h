@@ -8,7 +8,7 @@ class Helpers
 {
 public :
     static int32_t LoadScriptFromFile(LPCSTR filename, LPCSTR& contents, uint32_t* lengthBytesOut = nullptr, std::string* fullPath = nullptr, bool shouldMute = false);
-    static LPCWSTR JsErrorCodeToString(JsErrorCode jsErrorCode);
+    static const char16_t* JsErrorCodeToString(JsErrorCode jsErrorCode);
     static void LogError(__nullterminated const char16_t *msg, ...);
     static int32_t LoadBinaryFile(LPCSTR filename, LPCSTR& contents, uint32_t& lengthBytes, bool printFileOpenError = true);
 

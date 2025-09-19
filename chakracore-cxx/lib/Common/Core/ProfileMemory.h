@@ -66,11 +66,11 @@ class MemoryProfiler
 public:
     MemoryProfiler();
     ~MemoryProfiler();
-    static ArenaMemoryData * Begin(LPCWSTR name);
+    static ArenaMemoryData * Begin(const char16_t* name);
     static RecyclerMemoryData * GetRecyclerMemoryData();
     static PageMemoryData * GetPageMemoryData(PageAllocatorType type);
-    static void Reset(LPCWSTR name, ArenaMemoryData * arena);
-    static void End(LPCWSTR name, ArenaMemoryData * arena);
+    static void Reset(const char16_t* name, ArenaMemoryData * arena);
+    static void End(const char16_t* name, ArenaMemoryData * arena);
     static void PrintAll();
 
     static void PrintCurrentThread();

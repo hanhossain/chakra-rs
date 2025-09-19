@@ -256,7 +256,7 @@ __attribute__((no_instrument_function))
 int
 wsprintfW(
        char16_t* buffer,
-       LPCWSTR format,
+       const char16_t* format,
       ...)
 {
     int32_t Length;
@@ -711,7 +711,7 @@ Function:
   -- see Internal_ScanfExtractFormatA above
 *******************************************************************************/
 __attribute__((no_instrument_function))
-static BOOL Internal_ScanfExtractFormatW(LPCWSTR *Fmt, LPSTR Out, int iOutSize, LPBOOL Store,
+static BOOL Internal_ScanfExtractFormatW(const char16_t* *Fmt, LPSTR Out, int iOutSize, LPBOOL Store,
                                          int32_t * Width, int32_t * Prefix, int32_t * Type)
 {
     BOOL Result = FALSE;
@@ -1180,11 +1180,11 @@ Function:
   -- see PAL_vsscanf above
 *******************************************************************************/
 __attribute__((no_instrument_function))
-int PAL_wvsscanf(LPCWSTR Buffer, LPCWSTR Format, va_list ap)
+int PAL_wvsscanf(const char16_t* Buffer, const char16_t* Format, va_list ap)
 {
     int32_t Length = 0;
-    LPCWSTR Buff = Buffer;
-    LPCWSTR Fmt = Format;
+    const char16_t* Buff = Buffer;
+    const char16_t* Fmt = Format;
     char TempBuff[1024]; /* used to hold a single %<foo> format string */
     BOOL Store;
     int32_t Width;

@@ -95,14 +95,14 @@ namespace CorUnix
     PAL_ERROR
     InternalCreateProcess(
         CPalThread *pThread,
-        LPCWSTR lpApplicationName,
+        const char16_t* lpApplicationName,
         char16_t* lpCommandLine,
         LPSECURITY_ATTRIBUTES lpProcessAttributes,
         LPSECURITY_ATTRIBUTES lpThreadAttributes,
         BOOL bInheritHandles,
         uint32_t dwCreationFlags,
         void * lpEnvironment,
-        LPCWSTR lpCurrentDirectory,
+        const char16_t* lpCurrentDirectory,
         LPSTARTUPINFOW lpStartupInfo,
         LPPROCESS_INFORMATION lpProcessInformation
         );

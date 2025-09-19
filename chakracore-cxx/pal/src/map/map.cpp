@@ -344,7 +344,7 @@ CreateFileMappingW(
                 uint32_t flProtect,
                 uint32_t dwMaximumSizeHigh,
                 uint32_t dwMaximumSizeLow,
-                LPCWSTR lpName)
+                const char16_t* lpName)
 {
     HANDLE hFileMapping = NULL;
     CPalThread *pThread = NULL;
@@ -389,7 +389,7 @@ CorUnix::InternalCreateFileMapping(
     uint32_t flProtect,
     uint32_t dwMaximumSizeHigh,
     uint32_t dwMaximumSizeLow,
-    LPCWSTR lpName,
+    const char16_t* lpName,
     HANDLE *phMapping
     )
 {
@@ -809,7 +809,7 @@ HANDLE
 OpenFileMappingW(
           uint32_t dwDesiredAccess,
           BOOL bInheritHandle,
-          LPCWSTR lpName)
+          const char16_t* lpName)
 {
     HANDLE hFileMapping = NULL;
     PAL_ERROR palError = NO_ERROR;
@@ -845,7 +845,7 @@ CorUnix::InternalOpenFileMapping(
     CPalThread *pThread,
     uint32_t dwDesiredAccess,
     BOOL bInheritHandle,
-    LPCWSTR lpName,
+    const char16_t* lpName,
     HANDLE *phMapping
     )
 {

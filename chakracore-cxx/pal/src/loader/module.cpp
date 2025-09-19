@@ -102,7 +102,7 @@ int MaxWCharToAcpLength = 3;
 
 template<class TChar> static bool LOADVerifyLibraryPath(const TChar *libraryPath);
 static bool LOADConvertLibraryPathWideStringToMultibyteString(
-    LPCWSTR wideLibraryPath,
+    const char16_t* wideLibraryPath,
     LPSTR multibyteLibraryPath,
     int32_t *multibyteLibraryPathLengthRef);
 static BOOL LOADValidateModule(MODSTRUCT *module);
@@ -137,7 +137,7 @@ See MSDN doc.
 --*/
 HMODULE
 LoadLibraryW(
-     LPCWSTR lpLibFileName)
+     const char16_t* lpLibFileName)
 {
     return LoadLibraryExW(lpLibFileName, nullptr, 0);
 }
@@ -205,7 +205,7 @@ See MSDN doc.
 --*/
 HMODULE
 LoadLibraryExW(
-     LPCWSTR lpLibFileName,
+     const char16_t* lpLibFileName,
      /*Reserved*/ HANDLE hFile,
      uint32_t dwFlags)
 {
@@ -534,7 +534,7 @@ done:
 
 HMODULE
 GetModuleHandleW(
-      LPCWSTR lpModuleName)
+      const char16_t* lpModuleName)
 {
     if (lpModuleName)
     {
@@ -549,7 +549,7 @@ GetModuleHandleW(
 BOOL
 GetModuleHandleExW(
      uint32_t dwFlags,
-      LPCWSTR lpModuleName,
+      const char16_t* lpModuleName,
      HMODULE *phModule)
 {
     *phModule = NULL;
@@ -566,7 +566,7 @@ Function:
 */
 void *
 PAL_LoadLibraryDirect(
-     LPCWSTR lpLibFileName)
+     const char16_t* lpLibFileName)
 {
     PathCharString pathstr;
     char * lpstr = nullptr;
@@ -614,7 +614,7 @@ Function:
 HMODULE
 PAL_RegisterLibraryDirect(
      void *dl_handle,
-     LPCWSTR lpLibFileName)
+     const char16_t* lpLibFileName)
 {
     PathCharString pathstr;
     char * lpstr = nullptr;
@@ -1187,7 +1187,7 @@ static bool LOADVerifyLibraryPath(const TChar *libraryPath)
 
 // Converts the wide char library path string into a multibyte-char string. On error, calls SetLastError() and returns false.
 static bool LOADConvertLibraryPathWideStringToMultibyteString(
-    LPCWSTR wideLibraryPath,
+    const char16_t* wideLibraryPath,
     LPSTR multibyteLibraryPath,
     int32_t *multibyteLibraryPathLengthRef)
 {

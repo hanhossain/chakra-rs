@@ -263,8 +263,8 @@ PROCGetProcessStatus(
     PROCESS_STATE *pps,
     uint32_t *pdwExitCode);
 
-static BOOL getFileName(LPCWSTR lpApplicationName, char16_t* lpCommandLine, char *lpPathFileName);
-static char ** buildArgv(LPCWSTR lpCommandLine, LPSTR lpAppPath, uint32_t *pnArg);
+static BOOL getFileName(const char16_t* lpApplicationName, char16_t* lpCommandLine, char *lpPathFileName);
+static char ** buildArgv(const char16_t* lpCommandLine, LPSTR lpAppPath, uint32_t *pnArg);
 static BOOL getPath(LPCSTR lpFileName, uint32_t iLen, LPSTR  lpPathFileName);
 static int checkFileType(LPCSTR lpFileName);
 static BOOL PROCEndProcess(HANDLE hProcess, uint32_t uExitCode, BOOL bTerminateUnconditionally);
@@ -333,14 +333,14 @@ See MSDN doc.
 --*/
 BOOL
 CreateProcessW(
-            LPCWSTR lpApplicationName,
+            const char16_t* lpApplicationName,
             char16_t* lpCommandLine,
             LPSECURITY_ATTRIBUTES lpProcessAttributes,
             LPSECURITY_ATTRIBUTES lpThreadAttributes,
             BOOL bInheritHandles,
             uint32_t dwCreationFlags,
             void * lpEnvironment,
-            LPCWSTR lpCurrentDirectory,
+            const char16_t* lpCurrentDirectory,
             LPSTARTUPINFOW lpStartupInfo,
             LPPROCESS_INFORMATION lpProcessInformation)
 {
@@ -474,14 +474,14 @@ PrepareStandardHandleExit:
 PAL_ERROR
 CorUnix::InternalCreateProcess(
     CPalThread *pThread,
-    LPCWSTR lpApplicationName,
+    const char16_t* lpApplicationName,
     char16_t* lpCommandLine,
     LPSECURITY_ATTRIBUTES lpProcessAttributes,
     LPSECURITY_ATTRIBUTES lpThreadAttributes,
     BOOL bInheritHandles,
     uint32_t dwCreationFlags,
     void * lpEnvironment,
-    LPCWSTR lpCurrentDirectory,
+    const char16_t* lpCurrentDirectory,
     LPSTARTUPINFOW lpStartupInfo,
     LPPROCESS_INFORMATION lpProcessInformation
     )
@@ -2328,7 +2328,7 @@ Return:
 static
 BOOL
 getFileName(
-       LPCWSTR lpApplicationName,
+       const char16_t* lpApplicationName,
        char16_t* lpCommandLine,
        char *lpPathFileName)
 {
@@ -2531,7 +2531,7 @@ note that there may be other special cases
 static
 char **
 buildArgv(
-      LPCWSTR lpCommandLine,
+      const char16_t* lpCommandLine,
       LPSTR lpAppPath,
       uint32_t *pnArg)
 {
@@ -2584,7 +2584,7 @@ buildArgv(
 
     if (lpCommandLine)
     {
-        LPCWSTR stringstart = lpCommandLine;
+        const char16_t* stringstart = lpCommandLine;
 
         do
         {

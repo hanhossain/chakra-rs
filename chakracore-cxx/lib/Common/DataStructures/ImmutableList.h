@@ -910,7 +910,7 @@ namespace regex
     private:
         struct StringChunk
         {
-            LPCWSTR dataPtr[chunkSize];
+            const char16_t* dataPtr[chunkSize];
             StringChunk *next;
 
             StringChunk() : next(nullptr)
@@ -926,7 +926,7 @@ namespace regex
         // tracking allocated strings based on non-Append(String) calls
         struct AllocatedStringChunk
         {
-            LPCWSTR dataPtr;
+            const char16_t* dataPtr;
             AllocatedStringChunk *next;
 
             AllocatedStringChunk() : next(nullptr)
@@ -970,14 +970,14 @@ namespace regex
 
         void AppendUInt64(unsigned long value);
 
-        void AppendWithCopy(_In_z_ LPCWSTR str);
+        void AppendWithCopy(_In_z_ const char16_t* str);
 
         void AppendBool(bool value)
         {
             this->Append(value ? u"true" : u"false");
         }
 
-        void Append(LPCWSTR str)
+        void Append(const char16_t* str)
         {
             // silently ignore nullptr usage pattern, to avoid cluttering codebase
             if (str == nullptr)
@@ -1017,7 +1017,7 @@ namespace regex
         }
 
         template<class TAllocator>
-        LPCWSTR Get(TAllocator *allocator)
+        const char16_t* Get(TAllocator *allocator)
         {
             char16_t *str = AllocatorNewArray(TAllocator, allocator, char16_t, stringSize);
             str[0] = u'\0';
@@ -1039,13 +1039,13 @@ namespace regex
 
         // Free a string returned by Get()
         template<class TAllocator>
-        void FreeString(LPCWSTR str)
+        void FreeString(const char16_t* str)
         {
             ImmutableList<chunkSize>::FreeString(allocator, str, stringSize);
         }
 
         template<class TAllocator>
-        static void FreeString(TAllocator *allocator, LPCWSTR str, size_t strLength)
+        static void FreeString(TAllocator *allocator, const char16_t* str, size_t strLength)
         {
             AssertMsg(allocator != nullptr, "allocator != nullptr");
             AssertMsg(str != nullptr, "str != nullptr");

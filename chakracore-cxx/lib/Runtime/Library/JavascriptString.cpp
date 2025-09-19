@@ -311,7 +311,7 @@ namespace Js
         return StringBracketHelper(args, scriptContext, tag, static_cast<charcount_t>(N1 - 1), prop, static_cast<charcount_t>(N2 - 1));
     }
 
-    BOOL JavascriptString::BufferEquals(__in_ecount(otherLength) LPCWSTR otherBuffer, charcount_t otherLength)
+    BOOL JavascriptString::BufferEquals(__in_ecount(otherLength) const char16_t* otherBuffer, charcount_t otherLength)
     {
         return otherLength == this->GetLength() &&
             JsUtil::CharacterBuffer<char16_t>::StaticEquals(this->GetString(), otherBuffer, otherLength);
@@ -2882,7 +2882,7 @@ case_2:
         return AllocateLeafAndCopySz(this->GetScriptContext()->GetRecycler(), GetString(), GetLength());
     }
 
-    LPCWSTR JavascriptString::GetSzCopy(ArenaAllocator* alloc)
+    const char16_t* JavascriptString::GetSzCopy(ArenaAllocator* alloc)
     {
         return AllocateAndCopySz(alloc, GetString(), GetLength());
     }

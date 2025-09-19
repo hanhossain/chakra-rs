@@ -677,7 +677,7 @@ int CmdLineArgsParser::Parse(char16_t* oneArg) throw()
     }
     catch(Exception &exp)
     {
-        Output::Print(u"%s : %s\n", (LPCWSTR)exp, oneArg);
+        Output::Print(u"%s : %s\n", (const char16_t*)exp, oneArg);
         err = -1;
     }
     return err;

@@ -653,7 +653,7 @@ int
 WideCharToMultiByte(
          uint32_t CodePage,
          uint32_t dwFlags,
-         LPCWSTR lpWideCharStr,
+         const char16_t* lpWideCharStr,
          int cchWideChar,
          LPSTR lpMultiByteStr,
          int cbMultiByte,
@@ -717,7 +717,7 @@ WideCharToMultiByte(
     charsToConvert = cchWideChar;
     if (charsToConvert == -1)
     {
-        LPCWSTR ptr = lpWideCharStr;
+        const char16_t* ptr = lpWideCharStr;
 
         charsToConvert = 0;
         while(*ptr++ != 0)

@@ -15,7 +15,7 @@
 unsigned int MessageBase::s_messageCount = 0;
 Debugger* Debugger::debugger = nullptr;
 
-LPCWSTR hostName = u"ch";
+const char16_t* hostName = u"ch";
 
 JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
 
@@ -26,7 +26,7 @@ char ttUri[ttUriBufferLength];
 size_t ttUriLength = 0;
 uint32_t snapInterval = MAXUINT32;
 uint32_t snapHistoryLength = MAXUINT32;
-LPCWSTR connectionUuidString = NULL;
+const char16_t* connectionUuidString = NULL;
 uint32_t startEventCount = 1;
 
 int32_t RunBgParseSync(LPCSTR fileContents, uint32_t lengthBytes, const char* fileName);
@@ -119,7 +119,7 @@ Error:
     return hr;
 }
 
-HANDLE GetFileHandle(LPCWSTR filename)
+HANDLE GetFileHandle(const char16_t* filename)
 {
     if (filename != nullptr)
     {
@@ -499,7 +499,7 @@ Error:
     return hr;
 }
 
-int32_t CreateParserState(LPCSTR fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback, LPCWSTR fullPath)
+int32_t CreateParserState(LPCSTR fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback, const char16_t* fullPath)
 {
     int32_t hr = S_OK;
     HANDLE fileHandle = nullptr;
@@ -944,17 +944,17 @@ int main(int argc, char** c_argv)
         }
         else if(wcsstr(argv[i], u"-TTSnapInterval=") == argv[i])
         {
-            LPCWSTR intervalStr = argv[i] + wcslen(u"-TTSnapInterval=");
+            const char16_t* intervalStr = argv[i] + wcslen(u"-TTSnapInterval=");
             snapInterval = (uint32_t)_wtoi(intervalStr);
         }
         else if(wcsstr(argv[i], u"-TTHistoryLength=") == argv[i])
         {
-            LPCWSTR historyStr = argv[i] + wcslen(u"-TTHistoryLength=");
+            const char16_t* historyStr = argv[i] + wcslen(u"-TTHistoryLength=");
             snapHistoryLength = (uint32_t)_wtoi(historyStr);
         }
         else if(wcsstr(argv[i], u"-TTDStartEvent=") == argv[i])
         {
-            LPCWSTR startEventStr = argv[i] + wcslen(u"-TTDStartEvent=");
+            const char16_t* startEventStr = argv[i] + wcslen(u"-TTDStartEvent=");
             startEventCount = (uint32_t)_wtoi(startEventStr);
         }
         else

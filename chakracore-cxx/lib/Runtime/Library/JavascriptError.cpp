@@ -538,7 +538,7 @@ namespace Js
         return TRUE;
     }
 
-    int32_t JavascriptError::GetRuntimeError(RecyclableObject* errorObject, __out_opt LPCWSTR * pMessage)
+    int32_t JavascriptError::GetRuntimeError(RecyclableObject* errorObject, __out_opt const char16_t* * pMessage)
     {
         // Only report the error number if it is a runtime error
         int32_t hr = JSERR_UncaughtException;
@@ -591,7 +591,7 @@ namespace Js
         return hr;
     }
 
-    int32_t JavascriptError::GetRuntimeErrorWithScriptEnter(RecyclableObject* errorObject, __out_opt LPCWSTR * pMessage)
+    int32_t JavascriptError::GetRuntimeErrorWithScriptEnter(RecyclableObject* errorObject, __out_opt const char16_t* * pMessage)
     {
         ScriptContext* scriptContext = errorObject->GetScriptContext();
         Assert(!scriptContext->GetThreadContext()->IsScriptActive());
@@ -894,7 +894,7 @@ namespace Js
         JavascriptError* jsNewError = this->CreateNewErrorOfSameType(targetJavascriptLibrary);
         if (jsNewError)
         {
-            LPCWSTR msg = nullptr;
+            const char16_t* msg = nullptr;
             int32_t hr = JavascriptError::GetRuntimeError(this, &msg);
             jsNewError->SetErrorMessageProperties(jsNewError, hr, msg, targetJavascriptLibrary->GetScriptContext());
         }

@@ -434,9 +434,9 @@ using namespace Js;
         }
     }
 
-    void DynamicTypeHandler::TraceUseFixedProperty(PropertyRecord const * propertyRecord, Var * pProperty, bool result, LPCWSTR typeHandlerName, ScriptContext * requestContext)
+    void DynamicTypeHandler::TraceUseFixedProperty(PropertyRecord const * propertyRecord, Var * pProperty, bool result, const char16_t* typeHandlerName, ScriptContext * requestContext)
     {
-        LPCWSTR fixedPropertyResultType = nullptr;
+        const char16_t* fixedPropertyResultType = nullptr;
         bool log = false;
 
         if (pProperty && *pProperty && ((Js::VarIs<Js::JavascriptFunction>(*pProperty) && (PHASE_VERBOSE_TRACE1(Js::FixedMethodsPhase) || PHASE_VERBOSE_TESTTRACE1(Js::FixedMethodsPhase))) ||

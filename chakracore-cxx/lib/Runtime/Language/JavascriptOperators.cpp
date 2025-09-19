@@ -41,7 +41,7 @@ typedef enum JsNativeValueType: int
 typedef struct JsNativeString
 {
     unsigned int length;
-    LPCWSTR str;
+    const char16_t* str;
 } JsNativeString;
 
 #endif

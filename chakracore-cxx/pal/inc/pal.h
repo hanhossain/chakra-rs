@@ -321,7 +321,7 @@ wsprintfA(
 int
 wsprintfW(
        char16_t*,
-       LPCWSTR,
+       const char16_t*,
       ...);
 
 #define wsprintf wsprintfW
@@ -398,7 +398,7 @@ CreateFileA(
 
 HANDLE
 CreateFileW(
-         LPCWSTR lpFileName,
+         const char16_t* lpFileName,
          uint32_t dwDesiredAccess,
          uint32_t dwShareMode,
          LPSECURITY_ATTRIBUTES lpSecurityAttributes,
@@ -438,9 +438,9 @@ SearchPathA(
 
 uint32_t
 SearchPathW(
-     LPCWSTR lpPath,
-     LPCWSTR lpFileName,
-     LPCWSTR lpExtension,
+     const char16_t* lpPath,
+     const char16_t* lpFileName,
+     const char16_t* lpExtension,
      uint32_t nBufferLength,
      char16_t* lpBuffer,
      char16_t* *lpFilePart
@@ -456,8 +456,8 @@ CopyFileA(
 
 BOOL
 CopyFileW(
-       LPCWSTR lpExistingFileName,
-       LPCWSTR lpNewFileName,
+       const char16_t* lpExistingFileName,
+       const char16_t* lpNewFileName,
        BOOL bFailIfExists);
 
 #define CopyFile CopyFileW
@@ -468,7 +468,7 @@ DeleteFileA(
 
 BOOL
 DeleteFileW(
-         LPCWSTR lpFileName);
+         const char16_t* lpFileName);
 
 #define DeleteFile DeleteFileW
 
@@ -480,8 +480,8 @@ MoveFileA(
 
 BOOL
 MoveFileW(
-      LPCWSTR lpExistingFileName,
-      LPCWSTR lpNewFileName);
+      const char16_t* lpExistingFileName,
+      const char16_t* lpNewFileName);
 
 #define MoveFile MoveFileW
 
@@ -496,8 +496,8 @@ MoveFileExA(
 
 BOOL
 MoveFileExW(
-         LPCWSTR lpExistingFileName,
-         LPCWSTR lpNewFileName,
+         const char16_t* lpExistingFileName,
+         const char16_t* lpNewFileName,
          uint32_t dwFlags);
 
 #define MoveFileEx MoveFileExW
@@ -509,14 +509,14 @@ CreateDirectoryA(
 
 BOOL
 CreateDirectoryW(
-          LPCWSTR lpPathName,
+          const char16_t* lpPathName,
           LPSECURITY_ATTRIBUTES lpSecurityAttributes);
 
 #define CreateDirectory CreateDirectoryW
 
 BOOL
 RemoveDirectoryW(
-          LPCWSTR lpPathName);
+          const char16_t* lpPathName);
 
 BOOL
 RemoveDirectoryA(
@@ -574,7 +574,7 @@ FindFirstFileA(
 
 HANDLE
 FindFirstFileW(
-            LPCWSTR lpFileName,
+            const char16_t* lpFileName,
             LPWIN32_FIND_DATAW lpFindFileData);
 
 #define FindFirstFile FindFirstFileW
@@ -601,7 +601,7 @@ GetFileAttributesA(
 
 uint32_t
 GetFileAttributesW(
-            LPCWSTR lpFileName);
+            const char16_t* lpFileName);
 
 #define GetFileAttributes GetFileAttributesW
 
@@ -620,7 +620,7 @@ typedef struct _WIN32_FILE_ATTRIBUTE_DATA {
 
 BOOL
 GetFileAttributesExW(
-              LPCWSTR lpFileName,
+              const char16_t* lpFileName,
               GET_FILEEX_INFO_LEVELS fInfoLevelId,
               void * lpFileInformation);
 
@@ -633,7 +633,7 @@ SetFileAttributesA(
 
 BOOL
 SetFileAttributesW(
-            LPCWSTR lpFileName,
+            const char16_t* lpFileName,
             uint32_t dwFileAttributes);
 
 #define SetFileAttributes SetFileAttributesW
@@ -776,7 +776,7 @@ GetFullPathNameA(
 
 uint32_t
 GetFullPathNameW(
-          LPCWSTR lpFileName,
+          const char16_t* lpFileName,
           uint32_t nBufferLength,
           char16_t* lpBuffer,
           char16_t* *lpFilePart);
@@ -785,7 +785,7 @@ GetFullPathNameW(
 
 uint32_t
 GetLongPathNameW(
-          LPCWSTR lpszShortPath,
+          const char16_t* lpszShortPath,
                   char16_t* lpszLongPath,
           uint32_t cchBuffer);
 
@@ -793,7 +793,7 @@ GetLongPathNameW(
 
 uint32_t
 GetShortPathNameW(
-          LPCWSTR lpszLongPath,
+          const char16_t* lpszLongPath,
                   char16_t* lpszShortPath,
           uint32_t cchBuffer);
 
@@ -809,8 +809,8 @@ GetTempFileNameA(
 
 uint32_t
 GetTempFileNameW(
-          LPCWSTR lpPathName,
-          LPCWSTR lpPrefixString,
+          const char16_t* lpPathName,
+          const char16_t* lpPrefixString,
           uint32_t uUnique,
           char16_t* lpTempFileName);
 
@@ -846,7 +846,7 @@ SetCurrentDirectoryA(
 
 BOOL
 SetCurrentDirectoryW(
-             LPCWSTR lpPathName);
+             const char16_t* lpPathName);
 
 
 #define SetCurrentDirectory SetCurrentDirectoryW
@@ -885,14 +885,14 @@ CreateSemaphoreW(
           LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
           int32_t lInitialCount,
           int32_t lMaximumCount,
-          LPCWSTR lpName);
+          const char16_t* lpName);
 
 HANDLE
 CreateSemaphoreExW(
          LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
          int32_t lInitialCount,
          int32_t lMaximumCount,
-         LPCWSTR lpName,
+         const char16_t* lpName,
          /*_Reserved_*/  uint32_t dwFlags,
          uint32_t dwDesiredAccess);
 
@@ -900,7 +900,7 @@ HANDLE
 OpenSemaphoreW(
      uint32_t dwDesiredAccess,
      BOOL bInheritHandle,
-     LPCWSTR lpName);
+     const char16_t* lpName);
 
 #define CreateSemaphore CreateSemaphoreW
 #define CreateSemaphoreEx CreateSemaphoreExW
@@ -923,7 +923,7 @@ CreateEventW(
           LPSECURITY_ATTRIBUTES lpEventAttributes,
           BOOL bManualReset,
           BOOL bInitialState,
-          LPCWSTR lpName);
+          const char16_t* lpName);
 
 #define CreateEvent CreateEventW
 
@@ -939,7 +939,7 @@ HANDLE
 OpenEventW(
         uint32_t dwDesiredAccess,
         BOOL bInheritHandle,
-        LPCWSTR lpName);
+        const char16_t* lpName);
 
 #define OpenEvent OpenEventW
 
@@ -1039,14 +1039,14 @@ CreateProcessA(
 
 BOOL
 CreateProcessW(
-            LPCWSTR lpApplicationName,
+            const char16_t* lpApplicationName,
             char16_t* lpCommandLine,
             LPSECURITY_ATTRIBUTES lpProcessAttributes,
             LPSECURITY_ATTRIBUTES lpThreadAttributes,
             BOOL bInheritHandles,
             uint32_t dwCreationFlags,
             void * lpEnvironment,
-            LPCWSTR lpCurrentDirectory,
+            const char16_t* lpCurrentDirectory,
             LPSTARTUPINFOW lpStartupInfo,
             LPPROCESS_INFORMATION lpProcessInformation);
 
@@ -1788,7 +1788,7 @@ CreateFileMappingW(
             uint32_t flProtect,
             uint32_t dwMaxmimumSizeHigh,
             uint32_t dwMaximumSizeLow,
-            LPCWSTR lpName);
+            const char16_t* lpName);
 
 #define CreateFileMapping CreateFileMappingW
 
@@ -1812,7 +1812,7 @@ HANDLE
 OpenFileMappingW(
           uint32_t dwDesiredAccess,
           BOOL bInheritHandle,
-          LPCWSTR lpName);
+          const char16_t* lpName);
 
 #define OpenFileMapping OpenFileMappingW
 
@@ -1848,7 +1848,7 @@ LoadLibraryA(
 
 HMODULE
 LoadLibraryW(
-         LPCWSTR lpLibFileName);
+         const char16_t* lpLibFileName);
 
 HMODULE
 LoadLibraryExA(
@@ -1858,18 +1858,18 @@ LoadLibraryExA(
 
 HMODULE
 LoadLibraryExW(
-         LPCWSTR lpLibFileName,
+         const char16_t* lpLibFileName,
          /*Reserved*/ HANDLE hFile,
          uint32_t dwFlags);
 
 void *
 PAL_LoadLibraryDirect(
-         LPCWSTR lpLibFileName);
+         const char16_t* lpLibFileName);
 
 HMODULE
 PAL_RegisterLibraryDirect(
          void *dl_handle,
-         LPCWSTR lpLibFileName);
+         const char16_t* lpLibFileName);
 
 /*++
 Function:
@@ -1954,7 +1954,7 @@ GetModuleFileNameExW(
 
 HMODULE
 GetModuleHandleW(
-      LPCWSTR lpModuleName
+      const char16_t* lpModuleName
 );
 
 #define GetModuleHandle GetModuleHandleW
@@ -1962,7 +1962,7 @@ GetModuleHandleW(
 BOOL
 GetModuleHandleExW(
      uint32_t dwFlags,
-      LPCWSTR lpModuleName,
+      const char16_t* lpModuleName,
      HMODULE *phModule);
 
 #define GetModuleHandleEx GetModuleHandleExW
@@ -2185,11 +2185,11 @@ typedef struct nlsversioninfo {
 
 int
 CompareStringEx(
-     LPCWSTR lpLocaleName,
+     const char16_t* lpLocaleName,
      uint32_t    dwCmpFlags,
-     LPCWSTR  lpString1,
+     const char16_t*  lpString1,
      int      cchCount1,
-     LPCWSTR  lpString2,
+     const char16_t*  lpString2,
      int      cchCount2,
      LPNLSVERSIONINFO lpVersionInformation,
      void * lpReserved,
@@ -2247,7 +2247,7 @@ int
 WideCharToMultiByte(
              uint32_t CodePage,
              uint32_t dwFlags,
-             LPCWSTR lpWideCharStr,
+             const char16_t* lpWideCharStr,
              int cchWideChar,
              LPSTR lpMultiByteStr,
              int cbMultyByte,
@@ -2497,7 +2497,7 @@ WideCharToMultiByte(
 
 int
 GetLocaleInfoEx(
-     LPCWSTR  lpLocaleName,
+     const char16_t*  lpLocaleName,
      uint32_t   LCType,
      char16_t*  lpLCData,
      int      cchData);
@@ -2505,9 +2505,9 @@ GetLocaleInfoEx(
 
 int
 CompareStringOrdinal(
-     LPCWSTR lpString1,
+     const char16_t* lpString1,
 	 int cchCount1,
-	 LPCWSTR lpString2,
+	 const char16_t* lpString2,
 	 int cchCount2,
 	 BOOL bIgnoreCase);
 
@@ -2521,11 +2521,11 @@ typedef struct _nlsversioninfoex {
 
 int
 FindNLSStringEx(
-     LPCWSTR lpLocaleName,
+     const char16_t* lpLocaleName,
 	 uint32_t dwFindNLSStringFlags,
-	 LPCWSTR lpStringSource,
+	 const char16_t* lpStringSource,
 	 int cchSource,
-     LPCWSTR lpStringValue,
+     const char16_t* lpStringValue,
 	 int cchValue,
 	 int32_t * pcchFound,
 	 LPNLSVERSIONINFOEX lpVersionInformation,
@@ -2541,13 +2541,13 @@ IsNLSDefinedString(
      NLS_FUNCTION Function,
 	 uint32_t dwFlags,
 	 LPNLSVERSIONINFOEX lpVersionInfo,
-	 LPCWSTR lpString,
+	 const char16_t* lpString,
 	 int cchStr );
 
 
 int
 ResolveLocaleName(
-     LPCWSTR lpNameToResolve,
+     const char16_t* lpNameToResolve,
          char16_t* lpLocaleName,
          int cchLocaleName );
 
@@ -2600,9 +2600,9 @@ typedef uint32_t CALTYPE;
 
 int
 GetCalendarInfoEx(
-          LPCWSTR lpLocaleName,
+          const char16_t* lpLocaleName,
           CALID Calendar,
-          LPCWSTR lpReserved,
+          const char16_t* lpReserved,
           CALTYPE CalType,
           char16_t* lpCalData,
           int cchData,
@@ -2618,7 +2618,7 @@ typedef BOOL (CALLBACK* DATEFMT_ENUMPROCEXEXW)(char16_t*, CALID, ptrdiff_t);
 BOOL
 EnumDateFormatsExEx(
      DATEFMT_ENUMPROCEXEXW lpDateFmtEnumProcEx,
-     LPCWSTR          lpLocaleName,
+     const char16_t*          lpLocaleName,
      uint32_t               dwFlags,
      ptrdiff_t      lParam);
 
@@ -2628,7 +2628,7 @@ typedef BOOL (CALLBACK* TIMEFMT_ENUMPROCEXW)(char16_t*, ptrdiff_t);
 BOOL
 EnumTimeFormatsEx(
      TIMEFMT_ENUMPROCEXW lpTimeFmtEnumProc,
-     LPCWSTR          lpLocaleName,
+     const char16_t*          lpLocaleName,
      uint32_t             dwFlags,
      ptrdiff_t    lParam);
 
@@ -2643,9 +2643,9 @@ typedef BOOL (CALLBACK* CALINFO_ENUMPROCEXEXW)(char16_t*, CALID, char16_t*, ptrd
 BOOL
 EnumCalendarInfoExEx(
      CALINFO_ENUMPROCEXEXW lpCalInfoEnumProc,
-     LPCWSTR          lpLocaleName,
+     const char16_t*          lpLocaleName,
      CALID             Calendar,
-     LPCWSTR           lpReserved,
+     const char16_t*           lpReserved,
      CALTYPE           CalType,
      ptrdiff_t        lParam);
 
@@ -2654,9 +2654,9 @@ EnumCalendarInfoExEx(
 
 int
 LCMapStringEx(
-     LPCWSTR    lpLocaleName,
+     const char16_t*    lpLocaleName,
      uint32_t   dwMapFlags,
-     LPCWSTR lpSrcStr,
+     const char16_t* lpSrcStr,
      int     cchSrc,
      char16_t* lpDestStr,
      int     cchDest,
@@ -2666,7 +2666,7 @@ LCMapStringEx(
 
 int
 PAL_LCMapCharW(
-     LPCWSTR    lpLocaleName,
+     const char16_t*    lpLocaleName,
      uint32_t   dwMapFlags,
      char16_t   srcChar,
      char16_t  *destChar,
@@ -2676,23 +2676,23 @@ PAL_LCMapCharW(
 
 int
 PAL_NormalizeStringExW(
-     LPCWSTR    lpLocaleName,
+     const char16_t*    lpLocaleName,
      uint32_t   dwMapFlags,
-     LPCWSTR lpSrcStr,
+     const char16_t* lpSrcStr,
      int     cchSrc,
      char16_t* lpDestStr,
      int     cchDest);
 
 int
 PAL_ParseDateW(
-     LPCWSTR   lpLocaleName,
-     LPCWSTR   lpFormat,
-     LPCWSTR   lpString,
+     const char16_t*   lpLocaleName,
+     const char16_t*   lpFormat,
+     const char16_t*   lpString,
      LPSYSTEMTIME lpTime);
 
 int
 PAL_GetCalendar(
-     LPCWSTR   lpLocaleName,
+     const char16_t*   lpLocaleName,
      CALID*   pCalendar);
 
 #define GEOID_NOT_AVAILABLE -1
@@ -2711,40 +2711,40 @@ void PAL_ReleaseNumber(PALNUMBER);
 
 
 // return string length if Buffer is NULL or the result fits in cchBuffer, otherwise -1
-int PAL_FormatScientific(LPCWSTR sLocale, char16_t* pBuffer, size_t cchBuffer, PALNUMBER number, int nMinDigits, int nMaxDigits,
-                                                                      LPCWSTR sExponent, LPCWSTR sNumberDecimal, LPCWSTR sPositive, LPCWSTR sNegative, LPCWSTR sZero);
+int PAL_FormatScientific(const char16_t* sLocale, char16_t* pBuffer, size_t cchBuffer, PALNUMBER number, int nMinDigits, int nMaxDigits,
+                                                                      const char16_t* sExponent, const char16_t* sNumberDecimal, const char16_t* sPositive, const char16_t* sNegative, const char16_t* sZero);
 
-int PAL_FormatCurrency(LPCWSTR sLocale, char16_t* pBuffer, size_t cchBuffer, PALNUMBER number, int nMinDigits, int nMaxDigits, int iNegativeFormat, int iPositiveFormat,
-                      int iPrimaryGroup, int iSecondaryGroup, LPCWSTR sCurrencyDecimal, LPCWSTR sCurrencyGroup, LPCWSTR sNegative, LPCWSTR sCurrency, LPCWSTR sZero);
+int PAL_FormatCurrency(const char16_t* sLocale, char16_t* pBuffer, size_t cchBuffer, PALNUMBER number, int nMinDigits, int nMaxDigits, int iNegativeFormat, int iPositiveFormat,
+                      int iPrimaryGroup, int iSecondaryGroup, const char16_t* sCurrencyDecimal, const char16_t* sCurrencyGroup, const char16_t* sNegative, const char16_t* sCurrency, const char16_t* sZero);
 
-int PAL_FormatPercent(LPCWSTR sLocale, char16_t* pBuffer, size_t cchBuffer, PALNUMBER number,  int nMinDigits, int nMaxDigits,int iNegativeFormat, int iPositiveFormat,
-                      int iPrimaryGroup, int iSecondaryGroup, LPCWSTR sPercentDecimal, LPCWSTR sPercentGroup, LPCWSTR sNegative, LPCWSTR sPercent, LPCWSTR sZero);
+int PAL_FormatPercent(const char16_t* sLocale, char16_t* pBuffer, size_t cchBuffer, PALNUMBER number,  int nMinDigits, int nMaxDigits,int iNegativeFormat, int iPositiveFormat,
+                      int iPrimaryGroup, int iSecondaryGroup, const char16_t* sPercentDecimal, const char16_t* sPercentGroup, const char16_t* sNegative, const char16_t* sPercent, const char16_t* sZero);
 
-int PAL_FormatDecimal(LPCWSTR sLocale, char16_t* pBuffer, size_t cchBuffer, PALNUMBER number, int nMinDigits, int nMaxDigits, int iNegativeFormat,
-                                    int iPrimaryGroup, int iSecondaryGroup,  LPCWSTR sDecimal, LPCWSTR sGroup, LPCWSTR sNegative, LPCWSTR sZero);
+int PAL_FormatDecimal(const char16_t* sLocale, char16_t* pBuffer, size_t cchBuffer, PALNUMBER number, int nMinDigits, int nMaxDigits, int iNegativeFormat,
+                                    int iPrimaryGroup, int iSecondaryGroup,  const char16_t* sDecimal, const char16_t* sGroup, const char16_t* sNegative, const char16_t* sZero);
 
 
 #define DATE_USE_ALT_CALENDAR 0x00000004
 
 int
 GetDateFormatEx(
-            LPCWSTR Locale,
+            const char16_t* Locale,
             uint32_t dwFlags,
             const SYSTEMTIME *lpDate,
-            LPCWSTR lpFormat,
+            const char16_t* lpFormat,
             char16_t* lpDateStr,
             int cchDate,
-            LPCWSTR lpCalendar);
+            const char16_t* lpCalendar);
 
 int
 GetDateFormatEx(
-            LPCWSTR lpLocaleName,
+            const char16_t* lpLocaleName,
             uint32_t dwFlags,
             const SYSTEMTIME *lpDate,
-            LPCWSTR lpFormat,
+            const char16_t* lpFormat,
             char16_t* lpDateStr,
             int cchDate,
-           LPCWSTR lpCalendar);
+           const char16_t* lpCalendar);
 
 
 #define GetDateFormat GetDateFormatW
@@ -2902,7 +2902,7 @@ OutputDebugStringA(
 
 void
 OutputDebugStringW(
-     LPCWSTR lpOutputStrig);
+     const char16_t* lpOutputStrig);
 
 #define OutputDebugString OutputDebugStringW
 
@@ -2913,14 +2913,14 @@ DebugBreak(
 char16_t*
 lstrcatW(
        char16_t* lpString1,
-      LPCWSTR lpString2);
+      const char16_t* lpString2);
 
 #define lstrcat lstrcatW
 
 char16_t*
 lstrcpyW(
       char16_t* lpString1,
-      LPCWSTR lpString2);
+      const char16_t* lpString2);
 
 #define lstrcpy lstrcpyW
 
@@ -2930,14 +2930,14 @@ lstrlenA(
 
 int
 lstrlenW(
-      LPCWSTR lpString);
+      const char16_t* lpString);
 
 #define lstrlen lstrlenW
 
 char16_t*
 lstrcpynW(
        char16_t* lpString1,
-       LPCWSTR lpString2,
+       const char16_t* lpString2,
        int iMaxLength);
 
 #define lstrcpyn lstrcpynW
@@ -2951,7 +2951,7 @@ GetEnvironmentVariableA(
 
 uint32_t
 GetEnvironmentVariableW(
-             LPCWSTR lpName,
+             const char16_t* lpName,
              char16_t* lpBuffer,
              uint32_t nSize);
 
@@ -2964,8 +2964,8 @@ SetEnvironmentVariableA(
 
 BOOL
 SetEnvironmentVariableW(
-             LPCWSTR lpName,
-             LPCWSTR lpValue);
+             const char16_t* lpName,
+             const char16_t* lpValue);
 
 #define SetEnvironmentVariable SetEnvironmentVariableW
 
@@ -3833,7 +3833,7 @@ GetSystemInfo(
 
 BOOL
 GetDiskFreeSpaceW(
-          LPCWSTR lpDirectoryName,
+          const char16_t* lpDirectoryName,
           uint32_t * lpSectorsPerCluster,
           uint32_t * lpBytesPerSector,
           uint32_t * lpNumberOfFreeClusters,
@@ -3861,8 +3861,8 @@ RegisterEventSourceA (
     );
 HANDLE
 RegisterEventSourceW (
-      LPCWSTR lpUNCServerName,
-         LPCWSTR lpSourceName
+      const char16_t* lpUNCServerName,
+         const char16_t* lpSourceName
     );
 #define RegisterEventSource  RegisterEventSourceW
 
@@ -3897,7 +3897,7 @@ ReportEventW (
       void *       lpUserSid,
          uint16_t       wNumStrings,
          uint32_t      dwDataSize,
-      LPCWSTR *lpStrings,
+      const char16_t* *lpStrings,
       void * lpRawData
     );
 #define ReportEvent  ReportEventW
