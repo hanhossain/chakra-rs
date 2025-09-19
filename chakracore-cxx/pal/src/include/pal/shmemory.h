@@ -43,7 +43,7 @@ SHMLIST *item_ptr = (SHMLIST *)SHMPTR_TO_PTR(new_item);
 
 // Allocate memory for the "string" member, initialize it
 item_ptr->string = SHMalloc(strlen("string"));
-LPSTR str_ptr = (LPSTR)SHMPTR_TO_PTR(item_ptr->string);
+char* str_ptr = (char*)SHMPTR_TO_PTR(item_ptr->string);
 strcpy(str_ptr, "string");
 
 //Take the shared memory lock to prevent anyone from modifying the linked list

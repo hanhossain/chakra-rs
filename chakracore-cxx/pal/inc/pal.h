@@ -271,7 +271,7 @@ PAL_GetPALDirectoryW(
 
 BOOL
 PAL_GetPALDirectoryA(
-     LPSTR lpDirectoryName,
+     char* lpDirectoryName,
      uint32_t cchDirectoryName);
 
 #define PAL_GetPALDirectory PAL_GetPALDirectoryW
@@ -296,11 +296,11 @@ PAL_DeleteExecWatchpoint(
 
 /******************* winuser.h Entrypoints *******************************/
 
-LPSTR
+char*
 CharNextA(
              LPCSTR lpsz);
 
-LPSTR
+char*
 CharNextExA(
          uint16_t CodePage,
          LPCSTR lpCurrentChar,
@@ -314,7 +314,7 @@ extern errno_t _ui64tow_s(unsigned long long inValue, char16_t* outBuffer, size_
 
 int
 wsprintfA(
-       LPSTR,
+       char*,
        LPCSTR,
       ...);
 
@@ -432,8 +432,8 @@ SearchPathA(
      LPCSTR lpFileName,
      LPCSTR lpExtension,
      uint32_t nBufferLength,
-     LPSTR lpBuffer,
-     LPSTR *lpFilePart
+     char* lpBuffer,
+     char* *lpFilePart
     );
 
 uint32_t
@@ -771,8 +771,8 @@ uint32_t
 GetFullPathNameA(
           LPCSTR lpFileName,
           uint32_t nBufferLength,
-          LPSTR lpBuffer,
-          LPSTR *lpFilePart);
+          char* lpBuffer,
+          char* *lpFilePart);
 
 uint32_t
 GetFullPathNameW(
@@ -805,7 +805,7 @@ GetTempFileNameA(
           LPCSTR lpPathName,
           LPCSTR lpPrefixString,
           uint32_t uUnique,
-          LPSTR lpTempFileName);
+          char* lpTempFileName);
 
 uint32_t
 GetTempFileNameW(
@@ -819,7 +819,7 @@ GetTempFileNameW(
 uint32_t
 GetTempPathA(
           uint32_t nBufferLength,
-          LPSTR lpBuffer);
+          char* lpBuffer);
 
 uint32_t
 GetTempPathW(
@@ -831,7 +831,7 @@ GetTempPathW(
 uint32_t
 GetCurrentDirectoryA(
               uint32_t nBufferLength,
-              LPSTR lpBuffer);
+              char* lpBuffer);
 
 uint32_t
 GetCurrentDirectoryW(
@@ -991,9 +991,9 @@ typedef struct _STARTUPINFOW {
 
 typedef struct _STARTUPINFOA {
     uint32_t cb;
-    LPSTR lpReserved_PAL_Undefined;
-    LPSTR lpDesktop_PAL_Undefined;
-    LPSTR lpTitle_PAL_Undefined;
+    char* lpReserved_PAL_Undefined;
+    char* lpDesktop_PAL_Undefined;
+    char* lpTitle_PAL_Undefined;
     uint32_t dwX_PAL_Undefined;
     uint32_t dwY_PAL_Undefined;
     uint32_t dwXSize_PAL_Undefined;
@@ -1027,7 +1027,7 @@ typedef struct _PROCESS_INFORMATION {
 BOOL
 CreateProcessA(
             LPCSTR lpApplicationName,
-            LPSTR lpCommandLine,
+            char* lpCommandLine,
             LPSECURITY_ATTRIBUTES lpProcessAttributes,
             LPSECURITY_ATTRIBUTES lpThreadAttributes,
             BOOL bInheritHandles,
@@ -1931,7 +1931,7 @@ DisableThreadLibraryCalls(
 uint32_t
 GetModuleFileNameA(
      HMODULE hModule,
-     LPSTR lpFileName,
+     char* lpFileName,
      uint32_t nSize);
 
 uint32_t
@@ -2249,7 +2249,7 @@ WideCharToMultiByte(
              uint32_t dwFlags,
              const char16_t* lpWideCharStr,
              int cchWideChar,
-             LPSTR lpMultiByteStr,
+             char* lpMultiByteStr,
              int cbMultyByte,
              LPCSTR lpDefaultChar,
              LPBOOL lpUsedDefaultChar);
@@ -2946,7 +2946,7 @@ lstrcpynW(
 uint32_t
 GetEnvironmentVariableA(
              LPCSTR lpName,
-             LPSTR lpBuffer,
+             char* lpBuffer,
              uint32_t nSize);
 
 uint32_t
@@ -2969,7 +2969,7 @@ SetEnvironmentVariableW(
 
 #define SetEnvironmentVariable SetEnvironmentVariableW
 
-LPSTR
+char*
 GetEnvironmentStringsA(
                void);
 
@@ -2981,7 +2981,7 @@ GetEnvironmentStringsW(
 
 BOOL
 FreeEnvironmentStringsA(
-             LPSTR);
+             char*);
 
 BOOL
 FreeEnvironmentStringsW(

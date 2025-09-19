@@ -63,10 +63,10 @@ Parameters:
     - padding style flags (PRINTF_FORMAT_FLAGS)
 *******************************************************************************/
 __attribute__((no_instrument_function))
-BOOL Internal_AddPaddingA(LPSTR *Out, int32_t Count, LPSTR In,
+BOOL Internal_AddPaddingA(char* *Out, int32_t Count, char* In,
                                  int32_t Padding, int32_t Flags)
 {
-    LPSTR OutOriginal = *Out;
+    char* OutOriginal = *Out;
     int32_t PaddingOriginal = Padding;
     int32_t LengthInStr;
     LengthInStr = strlen(In);
@@ -229,7 +229,7 @@ See MSDN doc.
 __attribute__((no_instrument_function))
 int
 wsprintfA(
-       LPSTR buffer,
+       char* buffer,
        LPCSTR format,
       ...)
 {
@@ -393,14 +393,14 @@ Notes:
     }
 
 __attribute__((no_instrument_function))
-static BOOL Internal_ScanfExtractFormatA(LPCSTR *Fmt, LPSTR Out, int iOutSize, LPBOOL Store,
+static BOOL Internal_ScanfExtractFormatA(LPCSTR *Fmt, char* Out, int iOutSize, LPBOOL Store,
                                          int32_t * Width, int32_t * Prefix, int32_t * Type)
 {
     BOOL Result = FALSE;
-    LPSTR TempStr;
-    LPSTR TempStrPtr;
-    LPSTR BaseOut = Out;
-    LPSTR EndOut = Out + iOutSize;
+    char* TempStr;
+    char* TempStrPtr;
+    char* BaseOut = Out;
+    char* EndOut = Out + iOutSize;
 
     *Width = -1;
     *Store = TRUE;
@@ -418,7 +418,7 @@ static BOOL Internal_ScanfExtractFormatA(LPCSTR *Fmt, LPSTR Out, int iOutSize, L
     }
 
     /* we'll never need a temp string longer than the original */
-    TempStrPtr = TempStr = (LPSTR) malloc(strlen(*Fmt)+1);
+    TempStrPtr = TempStr = (char*) malloc(strlen(*Fmt)+1);
     if (!TempStr)
     {
         ERROR("malloc failed\n");
@@ -711,12 +711,12 @@ Function:
   -- see Internal_ScanfExtractFormatA above
 *******************************************************************************/
 __attribute__((no_instrument_function))
-static BOOL Internal_ScanfExtractFormatW(const char16_t* *Fmt, LPSTR Out, int iOutSize, LPBOOL Store,
+static BOOL Internal_ScanfExtractFormatW(const char16_t* *Fmt, char* Out, int iOutSize, LPBOOL Store,
                                          int32_t * Width, int32_t * Prefix, int32_t * Type)
 {
     BOOL Result = FALSE;
-    LPSTR TempStr;
-    LPSTR TempStrPtr;
+    char* TempStr;
+    char* TempStrPtr;
 
     *Width = -1;
     *Store = TRUE;
@@ -733,7 +733,7 @@ static BOOL Internal_ScanfExtractFormatW(const char16_t* *Fmt, LPSTR Out, int iO
     }
 
     /* we'll never need a temp string longer than the original */
-    TempStrPtr = TempStr = (LPSTR) malloc(PAL_wcslen(*Fmt)+1);
+    TempStrPtr = TempStr = (char*) malloc(PAL_wcslen(*Fmt)+1);
     if (!TempStr)
     {
         ERROR("malloc failed\n");
@@ -1269,7 +1269,7 @@ int PAL_wvsscanf(const char16_t* Buffer, const char16_t* Format, va_list ap)
                 int ret;
                 int n;
                 int size;
-                LPSTR newBuff = 0;
+                char* newBuff = 0;
                 void * voidPtr = NULL;
 
                 size = WideCharToMultiByte(CP_ACP, 0, Buff, -1, 0, 0, 0, 0);
@@ -1279,7 +1279,7 @@ int PAL_wvsscanf(const char16_t* Buffer, const char16_t* Format, va_list ap)
                         GetLastError());
                     return -1;
                 }
-                newBuff = (LPSTR) malloc(size);
+                newBuff = (char*) malloc(size);
                 if (!newBuff)
                 {
                     ERROR("malloc failed\n");

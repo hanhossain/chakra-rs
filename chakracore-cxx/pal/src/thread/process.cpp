@@ -264,8 +264,8 @@ PROCGetProcessStatus(
     uint32_t *pdwExitCode);
 
 static BOOL getFileName(const char16_t* lpApplicationName, char16_t* lpCommandLine, char *lpPathFileName);
-static char ** buildArgv(const char16_t* lpCommandLine, LPSTR lpAppPath, uint32_t *pnArg);
-static BOOL getPath(LPCSTR lpFileName, uint32_t iLen, LPSTR  lpPathFileName);
+static char ** buildArgv(const char16_t* lpCommandLine, char* lpAppPath, uint32_t *pnArg);
+static BOOL getPath(LPCSTR lpFileName, uint32_t iLen, char*  lpPathFileName);
 static int checkFileType(LPCSTR lpFileName);
 static BOOL PROCEndProcess(HANDLE hProcess, uint32_t uExitCode, BOOL bTerminateUnconditionally);
 
@@ -2532,7 +2532,7 @@ static
 char **
 buildArgv(
       const char16_t* lpCommandLine,
-      LPSTR lpAppPath,
+      char* lpAppPath,
       uint32_t *pnArg)
 {
     uint32_t iWlen;
@@ -2806,11 +2806,11 @@ BOOL
 getPath(
       LPCSTR lpFileName,
       uint32_t iLen,
-      LPSTR  lpPathFileName)
+      char*  lpPathFileName)
 {
-    LPSTR lpPath;
-    LPSTR lpNext;
-    LPSTR lpCurrent;
+    char* lpPath;
+    char* lpNext;
+    char* lpCurrent;
     char16_t* lpwstr;
     int32_t n;
     int32_t nextLen;
@@ -2888,7 +2888,7 @@ getPath(
 
     /* Then try to look in the path */
     int iLen2 = strlen(MiscGetenv("PATH"))+1;
-    lpPath = (LPSTR) malloc(iLen2);
+    lpPath = (char*) malloc(iLen2);
 
     if (!lpPath)
     {

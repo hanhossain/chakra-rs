@@ -170,10 +170,10 @@ Return Value :
     with free().
     In case if failure, LastError will be set.
 --*/
-LPSTR UTIL_WCToMB_Alloc(const char16_t* lpWideCharStr, int cchWideChar)
+char* UTIL_WCToMB_Alloc(const char16_t* lpWideCharStr, int cchWideChar)
 {
     int length;
-    LPSTR lpMultiByteStr;
+    char* lpMultiByteStr;
 
     /* get required buffer length */
     length = WideCharToMultiByte(CP_ACP, 0, lpWideCharStr, cchWideChar, 
@@ -185,7 +185,7 @@ LPSTR UTIL_WCToMB_Alloc(const char16_t* lpWideCharStr, int cchWideChar)
     }
 
     /* allocate required buffer */
-    lpMultiByteStr = (LPSTR)malloc(length);
+    lpMultiByteStr = (char*)malloc(length);
     if(NULL == lpMultiByteStr)
     {
         ERROR("malloc() failed! errno is %d (%s)\n", errno,strerror(errno));

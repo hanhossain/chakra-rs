@@ -112,7 +112,7 @@ Routine Description:
 
 Parameters:
 
-    LPSTR lpPathName - [in/out]
+    char* lpPathName - [in/out]
         The directory name to remove. It is converted in place to a unix path.
 
 Return Value:
@@ -125,7 +125,7 @@ Return Value:
 static
 BOOL
 RemoveDirectoryHelper (
-    LPSTR lpPathName,
+    char* lpPathName,
     uint32_t * dwLastError
 )
 {
@@ -309,7 +309,7 @@ See MSDN doc.
 uint32_t
 GetCurrentDirectoryA(
               uint32_t nBufferLength,
-              LPSTR lpBuffer)
+              char* lpBuffer)
 {
     uint32_t dwDirLen = 0;
     uint32_t dwLastError = 0;
@@ -508,7 +508,7 @@ CreateDirectoryA(
     BOOL  bRet = FALSE;
     uint32_t dwLastError = 0;
     char *realPath;
-    LPSTR UnixPathName = NULL;
+    char* UnixPathName = NULL;
     int pathLength;
     int i;
     const int mode = S_IRWXU | S_IRWXG | S_IRWXO;
@@ -641,7 +641,7 @@ SetCurrentDirectoryA(
     BOOL bRet = FALSE;
     uint32_t dwLastError = 0;
     int result;
-    LPSTR UnixPathName = NULL;
+    char* UnixPathName = NULL;
 
     ENTRY("SetCurrentDirectoryA(lpPathName=%p (%s))\n",
           lpPathName?lpPathName:"NULL",

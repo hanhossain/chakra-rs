@@ -938,7 +938,7 @@ namespace CorUnix
 
 #ifndef CORECLR
         static bool GetProcessPipeName(
-            LPSTR pDest, 
+            char* pDest, 
             int iDestSize,
             uint32_t dwPid);
 #endif // !CORECLR

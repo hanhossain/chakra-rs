@@ -210,7 +210,7 @@ OutputDebugStringW(
     }
 
     /* strLen includes the null terminator */
-    if ((lpOutputStringA = (LPSTR) malloc((strLen * sizeof(char)))) == NULL)
+    if ((lpOutputStringA = (char*) malloc((strLen * sizeof(char)))) == NULL)
     {
         ERROR("Insufficient memory available !\n");
         SetLastError(ERROR_NOT_ENOUGH_MEMORY);
@@ -667,7 +667,7 @@ ReadProcessMemory(
             }
             goto EXIT;
         }
-        memcpy((LPSTR)lpBuffer + numberOfBytesRead, data + offset, bytesToRead);
+        memcpy((char*)lpBuffer + numberOfBytesRead, data + offset, bytesToRead);
         numberOfBytesRead.Store(numberOfBytesRead.Load() + bytesToRead);
         lpBaseAddressAligned = (int*)((char*)lpBaseAddressAligned + VIRTUAL_PAGE_SIZE);
         nSize -= bytesToRead;

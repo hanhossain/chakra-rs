@@ -152,14 +152,14 @@ Function :
 Returns the proper error code, based on the
 Windows behavior.
 
-    IN LPSTR lpPath - The path to check.
+    IN char* lpPath - The path to check.
     uint32_t * lpErrorCode - The error to set.
 */
-void FILEGetProperNotFoundError( LPSTR lpPath, uint32_t * lpErrorCode )
+void FILEGetProperNotFoundError( char* lpPath, uint32_t * lpErrorCode )
 {
     struct stat stat_data;
-    LPSTR lpDupedPath = NULL;
-    LPSTR lpLastPathSeparator = NULL;
+    char* lpDupedPath = NULL;
+    char* lpLastPathSeparator = NULL;
 
     TRACE( "FILEGetProperNotFoundError( %s )\n", lpPath?lpPath:"(null)" );
 
@@ -217,9 +217,9 @@ Function :
 Returns the proper error code for errno, or, if errno is ENOENT,
 based on the Windows behavior for nonexistent filenames.
 
-    IN LPSTR lpPath - The path to check.
+    IN char* lpPath - The path to check.
 */
-PAL_ERROR FILEGetLastErrorFromErrnoAndFilename(LPSTR lpPath)
+PAL_ERROR FILEGetLastErrorFromErrnoAndFilename(char* lpPath)
 {
     PAL_ERROR palError;
     if (ENOENT == errno)
@@ -246,15 +246,15 @@ InternalCanonicalizeRealPath
     realpath() requires the buffer to be at least PATH_MAX).
 --*/
 PAL_ERROR
-CorUnix::InternalCanonicalizeRealPath(LPCSTR lpUnixPath, LPSTR lpBuffer, uint32_t cch)
+CorUnix::InternalCanonicalizeRealPath(LPCSTR lpUnixPath, char* lpBuffer, uint32_t cch)
 {
     PAL_ERROR palError = NO_ERROR;
-    LPSTR lpRealPath = NULL;
+    char* lpRealPath = NULL;
 
 #if !REALPATH_SUPPORTS_NONEXISTENT_FILES
-    LPSTR lpExistingPath = NULL;
-    LPSTR pchSeparator = NULL;
-    LPSTR lpFilename = NULL;
+    char* lpExistingPath = NULL;
+    char* pchSeparator = NULL;
+    char* lpFilename = NULL;
     uint32_t cchBuffer = 0;
     uint32_t cchFilename = 0;
 #endif // !REALPATH_SUPPORTS_NONEXISTENT_FILES
@@ -472,7 +472,7 @@ CorUnix::InternalCreateFile(
     BOOL fFileExists = FALSE;
 
     BOOL inheritable = FALSE;
-    LPSTR lpUnixPath = NULL;
+    char* lpUnixPath = NULL;
     int   filed = -1;
     int   create_flags = (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
     int   open_flags = 0;
@@ -483,7 +483,7 @@ CorUnix::InternalCreateFile(
     BOOL bFileCreated = FALSE;
 
     const char* szNonfilePrefix = "\\\\.\\";
-    LPSTR lpFullUnixPath = NULL;
+    char* lpFullUnixPath = NULL;
     uint32_t cchFullUnixPath = PATH_MAX+1; // InternalCanonicalizeRealPath requires this to be at least PATH_MAX
 
     /* for dwShareMode only three flags are accepted */
@@ -524,7 +524,7 @@ CorUnix::InternalCreateFile(
         goto done;
     }
 
-    lpFullUnixPath =  reinterpret_cast<LPSTR>(malloc(cchFullUnixPath));
+    lpFullUnixPath =  reinterpret_cast<char*>(malloc(cchFullUnixPath));
     if ( lpFullUnixPath == NULL )
     {
         ERROR("malloc() failed\n");
@@ -1166,7 +1166,7 @@ DeleteFileA(
     char * lpUnixFileName;
     int length;
     PathCharString lpUnixFileNamePS;
-    LPSTR lpFullUnixFileName = NULL;
+    char* lpFullUnixFileName = NULL;
     uint32_t cchFullUnixFileName = MAX_LONGPATH+1;// InternalCanonicalizeRealPath requires this to be at least PATH_MAX
 
     ENTRY("DeleteFileA(lpFileName=%p (%s))\n", lpFileName?lpFileName:"NULL", lpFileName?lpFileName:"NULL");
@@ -1185,7 +1185,7 @@ DeleteFileA(
     
     FILEDosToUnixPathA( lpUnixFileName );
 
-    lpFullUnixFileName =  reinterpret_cast<LPSTR>(malloc(cchFullUnixFileName));
+    lpFullUnixFileName =  reinterpret_cast<char*>(malloc(cchFullUnixFileName));
     if ( lpFullUnixFileName == NULL )
     {
         ERROR("malloc() failed\n");
@@ -3399,7 +3399,7 @@ GetTempFileNameA(
                   LPCSTR lpPathName,
                   LPCSTR lpPrefixString,
                   uint32_t   uUnique,
-                  LPSTR lpTempFileName)
+                  char* lpTempFileName)
 {
     CPalThread *pThread;
     char * full_name;
@@ -3831,7 +3831,7 @@ CopyFileA(
     uint32_t        dwSrcFileAttributes;
     struct stat  SrcFileStats;
     
-    LPSTR lpUnixPath = NULL;
+    char* lpUnixPath = NULL;
     const int    buffer_size = 16*1024;
     char        *buffer = (char*)alloca(buffer_size);
     uint32_t        bytes_read;
@@ -3997,7 +3997,7 @@ SetFileAttributesA(
 
     uint32_t dwLastError = 0;
     BOOL  bRet = FALSE;
-    LPSTR UnixFileName = NULL;
+    char* UnixFileName = NULL;
 
     ENTRY("SetFileAttributesA(lpFileName=%p (%s), dwFileAttributes=%#x)\n",
         lpFileName?lpFileName:"NULL",

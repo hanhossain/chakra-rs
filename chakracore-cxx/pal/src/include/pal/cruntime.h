@@ -112,7 +112,7 @@ Parameters:
   Flags
     - padding style flags (PRINTF_FORMAT_FLAGS)
 *******************************************************************************/
-BOOL Internal_AddPaddingA(LPSTR *Out, int32_t Count, LPSTR In, int32_t Padding, int32_t Flags);
+BOOL Internal_AddPaddingA(char* *Out, int32_t Count, char* In, int32_t Padding, int32_t Flags);
 
 /*******************************************************************************
 Function:
@@ -138,7 +138,7 @@ Function:
 
 See MSDN doc.
 --*/
-int32_t Silent_PAL_vsnprintf(LPSTR Buffer, int32_t Count, LPCSTR Format, va_list ap);
+int32_t Silent_PAL_vsnprintf(char* Buffer, int32_t Count, LPCSTR Format, va_list ap);
 
 /*++
 Function:

@@ -32,10 +32,10 @@ Revision History:
 #define MAX_STR_LEN 300
 
 static int Silent_WideCharToMultiByte(const char16_t* lpWideCharStr, int cchWideChar, 
-                                      LPSTR lpMultiByteStr, int cbMultiByte);
-static BOOL Silent_ExtractFormatA(LPCSTR *Fmt, LPSTR Out, int32_t * Flags, int32_t * Width,
+                                      char* lpMultiByteStr, int cbMultiByte);
+static BOOL Silent_ExtractFormatA(LPCSTR *Fmt, char* Out, int32_t * Flags, int32_t * Width,
                                   int32_t * Precision, int32_t * Prefix, int32_t * Type);
-static int32_t Silent_AddPaddingVfprintf(PAL_FILE *stream, LPSTR In, int32_t Padding,
+static int32_t Silent_AddPaddingVfprintf(PAL_FILE *stream, char* In, int32_t Padding,
                                      int32_t Flags);
 
 static size_t Silent_PAL_wcslen(const char16_t *string);
@@ -45,11 +45,11 @@ Function:
   PAL_vsnprintf (silent version)
   for more details, see PAL_vsnprintf in printf.c
 *******************************************************************************/
-int32_t Silent_PAL_vsnprintf(LPSTR Buffer, int32_t Count, LPCSTR Format, va_list aparg)
+int32_t Silent_PAL_vsnprintf(char* Buffer, int32_t Count, LPCSTR Format, va_list aparg)
 {
     BOOL BufferRanOut = FALSE;
     char TempBuff[1024]; /* used to hold a single %<foo> format string */
-    LPSTR BufferPtr = Buffer;
+    char* BufferPtr = Buffer;
     LPCSTR Fmt = Format;
     char16_t* TempWStr;
     char TempStr[MAX_STR_LEN+1];
@@ -331,7 +331,7 @@ int Silent_PAL_vfprintf(PAL_FILE *stream, const char *format, va_list aparg)
     char TempBuff[1024]; /* used to hold a single %<foo> format string */
     LPCSTR Fmt = format;
     char16_t* TempWStr;
-    LPSTR TempStr;
+    char* TempStr;
     char16_t TempWChar;
     int32_t Flags;
     int32_t Width;
@@ -382,7 +382,7 @@ int Silent_PAL_vfprintf(PAL_FILE *stream, const char *format, va_list aparg)
                     va_end(ap);
                     return -1;
                 }
-                TempStr = (LPSTR) malloc(Length);
+                TempStr = (char*) malloc(Length);
                 if (!TempStr)
                 {
                     va_end(ap);
@@ -565,7 +565,7 @@ Function:
 See MSDN doc.
 --*/
 int Silent_WideCharToMultiByte(const char16_t* lpWideCharStr, int cchWideChar,
-                               LPSTR lpMultiByteStr, int cbMultiByte)
+                               char* lpMultiByteStr, int cbMultiByte)
 {
     int32_t retval =0;
 
@@ -617,11 +617,11 @@ Function:
   
   see Internal_ExtractFormatA function in printf.c
 *******************************************************************************/
-BOOL Silent_ExtractFormatA(LPCSTR *Fmt, LPSTR Out, int32_t * Flags, int32_t * Width, int32_t * Precision, int32_t * Prefix, int32_t * Type)
+BOOL Silent_ExtractFormatA(LPCSTR *Fmt, char* Out, int32_t * Flags, int32_t * Width, int32_t * Precision, int32_t * Prefix, int32_t * Type)
 {
     BOOL Result = FALSE;
-    LPSTR TempStr;
-    LPSTR TempStrPtr;
+    char* TempStr;
+    char* TempStrPtr;
 
     *Width = WIDTH_DEFAULT;
     *Precision = PRECISION_DEFAULT;
@@ -639,7 +639,7 @@ BOOL Silent_ExtractFormatA(LPCSTR *Fmt, LPSTR Out, int32_t * Flags, int32_t * Wi
     }
 
     /* we'll never need a temp string longer than the original */
-    TempStrPtr = TempStr = (LPSTR) malloc(strlen(*Fmt)+1);
+    TempStrPtr = TempStr = (char*) malloc(strlen(*Fmt)+1);
     if (!TempStr)
     {
         return Result;
@@ -882,12 +882,12 @@ Function:
   AddPaddingVfprintf (silent version)
     see Internal_AddPaddingVfprintf in printf.c
 *******************************************************************************/
-int32_t Silent_AddPaddingVfprintf(PAL_FILE *stream, LPSTR In, int32_t Padding, int32_t Flags)
+int32_t Silent_AddPaddingVfprintf(PAL_FILE *stream, char* In, int32_t Padding, int32_t Flags)
 {
-    LPSTR Out;
+    char* Out;
     int32_t LengthInStr;
     int32_t Length;
-    LPSTR OutOriginal;
+    char* OutOriginal;
     int32_t Written;
 
     LengthInStr = strlen(In);
@@ -898,7 +898,7 @@ int32_t Silent_AddPaddingVfprintf(PAL_FILE *stream, LPSTR In, int32_t Padding, i
     {
         Length += Padding;
     }
-    Out = (LPSTR) malloc(Length+1);
+    Out = (char*) malloc(Length+1);
     int iLen = Length+1;
     if (!Out)
     {

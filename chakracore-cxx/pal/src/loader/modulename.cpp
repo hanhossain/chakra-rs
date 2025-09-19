@@ -52,7 +52,7 @@ Return value:
     0 on success
     -1 on failure, with last error set
 --*/
-int GetLibRotorNameViaLoadQuery(LPSTR pszBuf)
+int GetLibRotorNameViaLoadQuery(char* pszBuf)
 {
     char*               pLoadQueryBuf = NULL;
     uint32_t                cbBuf = 1024;

@@ -127,7 +127,7 @@
 
    The success criteria can be specified with the _Success_(expr) annotation:
      _Success_(return != FALSE) BOOL
-     PathCanonicalizeA(_Out_writes_(MAX_PATH) LPSTR pszBuf, LPCSTR pszPath) :
+     PathCanonicalizeA(_Out_writes_(MAX_PATH) char* pszBuf, LPCSTR pszPath) :
         pszBuf is only guaranteed to be NULL-terminated when TRUE is returned,
         and FALSE indiates failure. In common practice, callers check for zero
         vs. non-zero returns, so it is preferable to express the success
@@ -647,7 +647,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 // buffer is a zero terminated string
 #define _Pre_z_                           _SAL2_Source_(_Pre_z_, (), _Pre1_impl_(__zterm_impl) _Pre_valid_impl_)
 
-// valid size unknown or indicated by type (e.g.:LPSTR)
+// valid size unknown or indicated by type (e.g.:char*)
 #define _Pre_valid_                       _SAL2_Source_(_Pre_valid_, (), _Pre1_impl_(__notnull_impl_notref)   _Pre_valid_impl_)
 #define _Pre_opt_valid_                   _SAL2_Source_(_Pre_opt_valid_, (), _Pre1_impl_(__maybenull_impl_notref) _Pre_valid_impl_)
 
@@ -941,7 +941,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 #define _Inout_bytecount_x_(size)         _SAL1_1_Source_(_Inout_bytecount_x_, (size), _Prepost_bytecount_x_(size))
 #define _Inout_opt_bytecount_x_(size)     _SAL1_1_Source_(_Inout_opt_bytecount_x_, (size), _Prepost_opt_bytecount_x_(size))
 
-// e.g. void AppendToLPSTR( _In_ LPCSTR szFrom, _Inout_cap_(cchTo) LPSTR* szTo, size_t cchTo );
+// e.g. void AppendToLPSTR( _In_ LPCSTR szFrom, _Inout_cap_(cchTo) char** szTo, size_t cchTo );
 #define _Inout_cap_(size)                 _SAL1_1_Source_(_Inout_cap_, (size), _Pre_valid_cap_(size)           _Post_valid_)
 #define _Inout_opt_cap_(size)             _SAL1_1_Source_(_Inout_opt_cap_, (size), _Pre_opt_valid_cap_(size)       _Post_valid_)
 #define _Inout_bytecap_(size)             _SAL1_1_Source_(_Inout_bytecap_, (size), _Pre_valid_bytecap_(size)       _Post_valid_)
@@ -1171,7 +1171,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 #define _Deref_post_bytecount_x_(size)           _SAL1_1_Source_(_Deref_post_bytecount_x_, (size), _Deref_post1_impl_(__notnull_impl_notref) _Deref_post1_impl_(__bytecount_x_impl(size)) _Post_valid_impl_)
 #define _Deref_post_opt_bytecount_x_(size)       _SAL1_1_Source_(_Deref_post_opt_bytecount_x_, (size), _Deref_post1_impl_(__maybenull_impl_notref) _Deref_post1_impl_(__bytecount_x_impl(size)) _Post_valid_impl_)
 
-// e.g. void GetStrings( _Out_count_(cElems) _Deref_post_valid_ LPSTR const rgStr[], size_t cElems );
+// e.g. void GetStrings( _Out_count_(cElems) _Deref_post_valid_ char* const rgStr[], size_t cElems );
 #define _Deref_post_valid_                       _SAL1_1_Source_(_Deref_post_valid_, (), _Deref_post1_impl_(__notnull_impl_notref)   _Post_valid_impl_)
 #define _Deref_post_opt_valid_                   _SAL1_1_Source_(_Deref_post_opt_valid_, (), _Deref_post1_impl_(__maybenull_impl_notref) _Post_valid_impl_)
 
@@ -1195,7 +1195,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 // _Ret_ ---
 //
 
-// e.g. _Ret_opt_valid_ LPSTR void* CloneSTR( _Pre_valid_ LPSTR src );
+// e.g. _Ret_opt_valid_ char* void* CloneSTR( _Pre_valid_ char* src );
 #define _Ret_opt_valid_                   _SAL1_1_Source_(_Ret_opt_valid_, (), _Ret1_impl_(__maybenull_impl_notref) _Ret_valid_impl_)
 #define _Ret_opt_z_                       _SAL1_1_Source_(_Ret_opt_z_, (), _Ret2_impl_(__maybenull_impl,__zterm_impl) _Ret_valid_impl_)
 
@@ -2032,7 +2032,7 @@ __PRIMOP(char *, _Strstr_(__In_impl_ char *, __In_impl_ char *));
          allocated for the buffer, in which case it describes the accessible amount.
 
  <>      : No buffer size is given. If the type specifies the buffer size (such as
-             with LPSTR and char16_t*), that amount is used. Otherwise, the buffer is one
+             with char* and char16_t*), that amount is used. Otherwise, the buffer is one
              element long. Must be used with _in, _out, or _inout.
  _ecount : The buffer size is an explicit element count.
  _bcount : The buffer size is an explicit byte count.
@@ -2079,7 +2079,7 @@ __PRIMOP(char *, _Strstr_(__In_impl_ char *, __In_impl_ char *));
  );
 
  LWSTDAPI_(BOOL) PathCompactPathExA(
-     __out_ecount(cchMax) LPSTR pszOut,   -- A string buffer with cch elements that will
+     __out_ecount(cchMax) char* pszOut,   -- A string buffer with cch elements that will
                                           --   be NULL terminated on exit.
      LPCSTR pszSrc,
      uint32_t cchMax,
@@ -2154,7 +2154,7 @@ __PRIMOP(char *, _Strstr_(__In_impl_ char *, __In_impl_ char *));
  Advanced Annotation Examples
 
  __success(return != FALSE) LWSTDAPI_(BOOL) 
- PathCanonicalizeA(__out_ecount(MAX_PATH) LPSTR pszBuf, LPCSTR pszPath) :
+ PathCanonicalizeA(__out_ecount(MAX_PATH) char* pszBuf, LPCSTR pszPath) :
     pszBuf is only guaranteed to be NULL-terminated when TRUE is returned.
 
  typedef __nullterminated char16_t* char16_t* : Initialized LPWSTRs are NULL-terminated strings.

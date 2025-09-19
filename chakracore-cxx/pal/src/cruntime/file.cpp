@@ -80,10 +80,10 @@ Function :
     Maps Windows file open modes to Unix fopen modes and validates.
 
 --*/
-static LPSTR MapFileOpenModes(LPSTR str , BOOL * bTextMode)
+static char* MapFileOpenModes(char* str , BOOL * bTextMode)
 {
-    LPSTR retval = NULL;
-    LPSTR temp = NULL;
+    char* retval = NULL;
+    char* temp = NULL;
 
     if (NULL == bTextMode)
     {
@@ -134,7 +134,7 @@ static LPSTR MapFileOpenModes(LPSTR str , BOOL * bTextMode)
         *bTextMode = FALSE;
     }
 
-    retval = (LPSTR)malloc( ( strlen( str ) + 1 ) * sizeof( char ) );
+    retval = (char*)malloc( ( strlen( str ) + 1 ) * sizeof( char ) );
     if (NULL == retval)
     {
         ERROR("Unable to allocate memory.\n");
@@ -207,7 +207,7 @@ _fdopen(
     const char *mode)
 {
     PAL_FILE *f = NULL;
-    LPSTR supported = NULL;
+    char* supported = NULL;
     BOOL bTextMode = TRUE;
 
     ENTRY("_fdopen (handle=%d mode=%p (%s))\n", handle, mode, mode);
@@ -260,8 +260,8 @@ PAL_FILE *
 PAL_fopen(const char * fileName, const char * mode)
 {
     PAL_FILE *f = NULL;
-    LPSTR supported = NULL;
-    LPSTR UnixFileName = NULL;
+    char* supported = NULL;
+    char* UnixFileName = NULL;
     struct stat stat_data;
     BOOL bTextMode = TRUE;
 
@@ -501,7 +501,7 @@ PAL_fread(void * buffer, size_t size, size_t count, PAL_FILE * f)
         if(size > 0)
         {
             size_t j=0;
-            LPSTR temp = (LPSTR)buffer;
+            char* temp = (char*)buffer;
             int nChar = 0;
             int nCount =0;
 
