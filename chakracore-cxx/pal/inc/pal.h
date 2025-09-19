@@ -310,7 +310,7 @@ typedef struct _SECURITY_ATTRIBUTES {
 
 #define INVALID_SET_FILE_POINTER   ((uint32_t)-1)
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 HANDLE
 CreateFileA(
          const char * lpFileName,
@@ -321,7 +321,7 @@ CreateFileA(
          uint32_t dwFlagsAndAttributes,
          HANDLE hTemplateFile);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 HANDLE
 CreateFileW(
          const char16_t* lpFileName,
@@ -332,92 +332,28 @@ CreateFileW(
          uint32_t dwFlagsAndAttributes,
          HANDLE hTemplateFile);
 
+// TODO (hanhossain): public
 #define CreateFile CreateFileW
 
-// TODO (hanhossain): check usage
-BOOL
-LockFile(
-     HANDLE hFile,
-     uint32_t dwFileOffsetLow,
-     uint32_t dwFileOffsetHigh,
-     uint32_t nNumberOfBytesToLockLow,
-     uint32_t nNumberOfBytesToLockHigh
-    );
-
-// TODO (hanhossain): check usage
-BOOL
-UnlockFile(
-     HANDLE hFile,
-     uint32_t dwFileOffsetLow,
-     uint32_t dwFileOffsetHigh,
-     uint32_t nNumberOfBytesToUnlockLow,
-     uint32_t nNumberOfBytesToUnlockHigh
-    );
-
-// TODO (hanhossain): check usage
-uint32_t
-SearchPathA(
-     const char * lpPath,
-     const char * lpFileName,
-     const char * lpExtension,
-     uint32_t nBufferLength,
-     char* lpBuffer,
-     char* *lpFilePart
-    );
-
-// TODO (hanhossain): check usage
-uint32_t
-SearchPathW(
-     const char16_t* lpPath,
-     const char16_t* lpFileName,
-     const char16_t* lpExtension,
-     uint32_t nBufferLength,
-     char16_t* lpBuffer,
-     char16_t* *lpFilePart
-    );
-#define SearchPath  SearchPathW
-
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 BOOL
 CopyFileA(
        const char * lpExistingFileName,
        const char * lpNewFileName,
        BOOL bFailIfExists);
 
-// TODO (hanhossain): check usage
-BOOL
-CopyFileW(
-       const char16_t* lpExistingFileName,
-       const char16_t* lpNewFileName,
-       BOOL bFailIfExists);
-
-#define CopyFile CopyFileW
-
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 BOOL
 DeleteFileA(
          const char * lpFileName);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 BOOL
 DeleteFileW(
          const char16_t* lpFileName);
 
+// TODO (hanhossain): public
 #define DeleteFile DeleteFileW
-
-// TODO (hanhossain): check usage
-BOOL
-MoveFileA(
-      const char * lpExistingFileName,
-      const char * lpNewFileName);
-
-// TODO (hanhossain): check usage
-BOOL
-MoveFileW(
-      const char16_t* lpExistingFileName,
-      const char16_t* lpNewFileName);
-
-#define MoveFile MoveFileW
 
 #define MOVEFILE_REPLACE_EXISTING      0x00000001
 #define MOVEFILE_COPY_ALLOWED          0x00000002
