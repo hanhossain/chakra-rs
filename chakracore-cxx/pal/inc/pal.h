@@ -544,90 +544,38 @@ GetFullPathNameA(
           char* lpBuffer,
           char* *lpFilePart);
 
-// TODO (hanhossain): check usage
-uint32_t
-GetShortPathNameW(
-          const char16_t* lpszLongPath,
-                  char16_t* lpszShortPath,
-          uint32_t cchBuffer);
-
-#define GetShortPathName GetShortPathNameW
-
-// TODO (hanhossain): check usage
-uint32_t
-GetTempFileNameA(
-          const char * lpPathName,
-          const char * lpPrefixString,
-          uint32_t uUnique,
-          char* lpTempFileName);
-
-// TODO (hanhossain): check usage
-uint32_t
-GetTempFileNameW(
-          const char16_t* lpPathName,
-          const char16_t* lpPrefixString,
-          uint32_t uUnique,
-          char16_t* lpTempFileName);
-
-#define GetTempFileName GetTempFileNameW
-
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 uint32_t
 GetTempPathA(
           uint32_t nBufferLength,
           char* lpBuffer);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 uint32_t
 GetTempPathW(
           uint32_t nBufferLength,
           char16_t* lpBuffer);
 
+// TODO (hanhossain): public
 #define GetTempPath GetTempPathW
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 uint32_t
 GetCurrentDirectoryA(
               uint32_t nBufferLength,
               char* lpBuffer);
 
-// TODO (hanhossain): check usage
-uint32_t
-GetCurrentDirectoryW(
-              uint32_t nBufferLength,
-              char16_t* lpBuffer);
-
-#define GetCurrentDirectory GetCurrentDirectoryW
-
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 BOOL
 SetCurrentDirectoryA(
              const char * lpPathName);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 BOOL
 SetCurrentDirectoryW(
              const char16_t* lpPathName);
 
-
-#define SetCurrentDirectory SetCurrentDirectoryW
-
-// TODO (hanhossain): check usage
-BOOL
-GetUserNameW(
-     char16_t* lpBuffer,      // address of name buffer
-      uint32_t * nSize );   // address of size of name buffer
-
-// TODO (hanhossain): check usage
-BOOL
-GetComputerNameW(
-     char16_t* lpBuffer,     // address of name buffer
-      uint32_t * nSize);   // address of size of name buffer
-
-#define GetUserName GetUserNameW
-#define GetComputerName GetComputerNameW
-
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 HANDLE
 CreateSemaphoreA(
           LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
@@ -635,7 +583,7 @@ CreateSemaphoreA(
           int32_t lMaximumCount,
           const char * lpName);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 HANDLE
 CreateSemaphoreExA(
           LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
@@ -645,7 +593,7 @@ CreateSemaphoreExA(
           /*_Reserved_*/  uint32_t dwFlags,
           uint32_t dwDesiredAccess);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 HANDLE
 CreateSemaphoreW(
           LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
@@ -653,42 +601,17 @@ CreateSemaphoreW(
           int32_t lMaximumCount,
           const char16_t* lpName);
 
-// TODO (hanhossain): check usage
-HANDLE
-CreateSemaphoreExW(
-         LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
-         int32_t lInitialCount,
-         int32_t lMaximumCount,
-         const char16_t* lpName,
-         /*_Reserved_*/  uint32_t dwFlags,
-         uint32_t dwDesiredAccess);
-
-// TODO (hanhossain): check usage
-HANDLE
-OpenSemaphoreW(
-     uint32_t dwDesiredAccess,
-     BOOL bInheritHandle,
-     const char16_t* lpName);
-
+// TODO (hanhossain): public
 #define CreateSemaphore CreateSemaphoreW
-#define CreateSemaphoreEx CreateSemaphoreExW
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 BOOL
 ReleaseSemaphore(
           HANDLE hSemaphore,
           int32_t lReleaseCount,
           int32_t * lpPreviousCount);
 
-// TODO (hanhossain): check usage
-HANDLE
-CreateEventA(
-          LPSECURITY_ATTRIBUTES lpEventAttributes,
-          BOOL bManualReset,
-          BOOL bInitialState,
-          const char * lpName);
-
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 HANDLE
 CreateEventW(
           LPSECURITY_ATTRIBUTES lpEventAttributes,
@@ -696,43 +619,35 @@ CreateEventW(
           BOOL bInitialState,
           const char16_t* lpName);
 
+// TODO (hanhossain): public
 #define CreateEvent CreateEventW
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 BOOL
 SetEvent(
       HANDLE hEvent);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 BOOL
 ResetEvent(
         HANDLE hEvent);
 
-// TODO (hanhossain): check usage
-HANDLE
-OpenEventW(
-        uint32_t dwDesiredAccess,
-        BOOL bInheritHandle,
-        const char16_t* lpName);
-
-#define OpenEvent OpenEventW
-
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 uint32_t
 GetCurrentProcessId(
             void);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 HANDLE
 GetCurrentProcess(
           void);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 uint32_t
 GetCurrentThreadId(
            void);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 uint32_t
 GetThreadId(
     HANDLE hThread);
@@ -802,62 +717,17 @@ typedef struct _PROCESS_INFORMATION {
     uint32_t dwThreadId_PAL_Undefined;
 } PROCESS_INFORMATION, *PPROCESS_INFORMATION, *LPPROCESS_INFORMATION;
 
-// TODO (hanhossain): check usage
-BOOL
-CreateProcessA(
-            const char * lpApplicationName,
-            char* lpCommandLine,
-            LPSECURITY_ATTRIBUTES lpProcessAttributes,
-            LPSECURITY_ATTRIBUTES lpThreadAttributes,
-            BOOL bInheritHandles,
-            uint32_t dwCreationFlags,
-            void * lpEnvironment,
-            const char * lpCurrentDirectory,
-            LPSTARTUPINFOA lpStartupInfo,
-            LPPROCESS_INFORMATION lpProcessInformation);
-
-// TODO (hanhossain): check usage
-BOOL
-CreateProcessW(
-            const char16_t* lpApplicationName,
-            char16_t* lpCommandLine,
-            LPSECURITY_ATTRIBUTES lpProcessAttributes,
-            LPSECURITY_ATTRIBUTES lpThreadAttributes,
-            BOOL bInheritHandles,
-            uint32_t dwCreationFlags,
-            void * lpEnvironment,
-            const char16_t* lpCurrentDirectory,
-            LPSTARTUPINFOW lpStartupInfo,
-            LPPROCESS_INFORMATION lpProcessInformation);
-
-#define CreateProcess CreateProcessW
-
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 __attribute__((noreturn))
 void
 ExitProcess(
          uint32_t uExitCode);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 BOOL
 TerminateProcess(
           HANDLE hProcess,
           uint32_t uExitCode);
-
-// TODO (hanhossain): check usage
-BOOL
-GetExitCodeProcess(
-            HANDLE hProcess,
-            uint32_t * lpExitCode);
-
-// TODO (hanhossain): check usage
-BOOL
-GetProcessTimes(
-         HANDLE hProcess,
-         LPFILETIME lpCreationTime,
-         LPFILETIME lpExitTime,
-         LPFILETIME lpKernelTime,
-         LPFILETIME lpUserTime);
 
 #define MAXIMUM_WAIT_OBJECTS  64
 #define WAIT_OBJECT_0 0
@@ -868,20 +738,13 @@ GetProcessTimes(
 
 #define INFINITE 0xFFFFFFFF // Infinite timeout
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 uint32_t
 WaitForSingleObject(
              HANDLE hHandle,
              uint32_t dwMilliseconds);
 
-// TODO (hanhossain): check usage
-uint32_t
-WaitForSingleObjectEx(
-             HANDLE hHandle,
-             uint32_t dwMilliseconds,
-             BOOL bAlertable);
-
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 uint32_t
 WaitForMultipleObjects(
                 uint32_t nCount,
@@ -889,7 +752,7 @@ WaitForMultipleObjects(
                 BOOL bWaitAll,
                 uint32_t dwMilliseconds);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 uint32_t
 WaitForMultipleObjectsEx(
               uint32_t nCount,
@@ -898,21 +761,10 @@ WaitForMultipleObjectsEx(
               uint32_t dwMilliseconds,
               BOOL bAlertable);
 
-// TODO (hanhossain): check usage
-RHANDLE
-PAL_LocalHandleToRemote(
-             HANDLE hLocal);
-
-// TODO (hanhossain): check usage
-HANDLE
-PAL_RemoteHandleToLocal(
-             RHANDLE hRemote);
-
-
 #define DUPLICATE_CLOSE_SOURCE      0x00000001
 #define DUPLICATE_SAME_ACCESS       0x00000002
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 BOOL
 DuplicateHandle(
          HANDLE hSourceProcessHandle,
@@ -923,18 +775,12 @@ DuplicateHandle(
          BOOL bInheritHandle,
          uint32_t dwOptions);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 void
 Sleep(
        uint32_t dwMilliseconds);
 
-// TODO (hanhossain): check usage
-uint32_t
-SleepEx(
-     uint32_t dwMilliseconds,
-     BOOL bAlertable);
-
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 BOOL
 SwitchToThread(
     void);
@@ -944,7 +790,7 @@ SwitchToThread(
 #define CREATE_SUSPENDED                  0x00000004
 #define STACK_SIZE_PARAM_IS_A_RESERVATION 0x00010000
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 HANDLE
 CreateThread(
           LPSECURITY_ATTRIBUTES lpThreadAttributes,
@@ -954,26 +800,20 @@ CreateThread(
           uint32_t dwCreationFlags,
           uint32_t * lpThreadId);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 __attribute__((noreturn))
 void
 ExitThread(
         uint32_t dwExitCode);
 
-// TODO (hanhossain): check usage
-BOOL
-GetExitCodeThread(
-            HANDLE hThread,
-            uint32_t * lpExitCode);
-
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 uint32_t
 ResumeThread(
           HANDLE hThread);
 
 typedef void (*PAPCFUNC)(size_t dwParam);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 uint32_t
 QueueUserAPC(
           PAPCFUNC pfnAPC,
