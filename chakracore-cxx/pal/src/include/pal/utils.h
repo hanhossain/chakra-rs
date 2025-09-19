@@ -59,14 +59,14 @@ Function:
   given set
 
 Parameters :
-    LPWSTR lpwstr :   string to search
+    char16_t* lpwstr :   string to search
     LPCWSTR charset : list of characters to search for
                                       
 Return value :
     pointer to first character of lpwstr that isn't in the set
     NULL if all characters are in the set                                                                 
 --*/
-LPWSTR UTIL_inverse_wcspbrk(LPWSTR lpwstr, LPCWSTR charset);
+char16_t* UTIL_inverse_wcspbrk(char16_t* lpwstr, LPCWSTR charset);
 
 /*++
 Function : 
@@ -123,7 +123,7 @@ Return Value :
     with free().
     In case if failure, LastError will be set.
 --*/
-LPWSTR UTIL_MBToWC_Alloc(LPCSTR lpMultiByteStr, int cbMultiByte);
+char16_t* UTIL_MBToWC_Alloc(LPCSTR lpMultiByteStr, int cbMultiByte);
 
 #if HAVE_VM_ALLOCATE
 #include <mach/kern_return.h>

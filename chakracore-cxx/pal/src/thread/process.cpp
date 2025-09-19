@@ -182,8 +182,8 @@ uint32_t g_dwThreadCount;
 //
 // The command line and app name for the process
 //
-LPWSTR g_lpwstrCmdLine = NULL;
-LPWSTR g_lpwstrAppDir = NULL;
+char16_t* g_lpwstrCmdLine = NULL;
+char16_t* g_lpwstrAppDir = NULL;
 
 // Thread ID of thread that has started the ExitProcess process
 Volatile<int32_t> terminator __attribute__((init_priority(200))) = 0;
@@ -263,7 +263,7 @@ PROCGetProcessStatus(
     PROCESS_STATE *pps,
     uint32_t *pdwExitCode);
 
-static BOOL getFileName(LPCWSTR lpApplicationName, LPWSTR lpCommandLine, char *lpPathFileName);
+static BOOL getFileName(LPCWSTR lpApplicationName, char16_t* lpCommandLine, char *lpPathFileName);
 static char ** buildArgv(LPCWSTR lpCommandLine, LPSTR lpAppPath, uint32_t *pnArg);
 static BOOL getPath(LPCSTR lpFileName, uint32_t iLen, LPSTR  lpPathFileName);
 static int checkFileType(LPCSTR lpFileName);
@@ -334,7 +334,7 @@ See MSDN doc.
 BOOL
 CreateProcessW(
             LPCWSTR lpApplicationName,
-            LPWSTR lpCommandLine,
+            char16_t* lpCommandLine,
             LPSECURITY_ATTRIBUTES lpProcessAttributes,
             LPSECURITY_ATTRIBUTES lpThreadAttributes,
             BOOL bInheritHandles,
@@ -475,7 +475,7 @@ PAL_ERROR
 CorUnix::InternalCreateProcess(
     CPalThread *pThread,
     LPCWSTR lpApplicationName,
-    LPWSTR lpCommandLine,
+    char16_t* lpCommandLine,
     LPSECURITY_ATTRIBUTES lpProcessAttributes,
     LPSECURITY_ATTRIBUTES lpThreadAttributes,
     BOOL bInheritHandles,
@@ -1394,15 +1394,15 @@ Function:
 
 See MSDN doc.
 --*/
-LPWSTR
+char16_t*
 GetCommandLineW(
     void)
 {
     ENTRY("GetCommandLineW()\n");
 
-    LPWSTR lpwstr = g_lpwstrCmdLine ? g_lpwstrCmdLine : (LPWSTR)W("");
+    char16_t* lpwstr = g_lpwstrCmdLine ? g_lpwstrCmdLine : (char16_t*)W("");
 
-    LOGEXIT("GetCommandLineW returns LPWSTR %p (%S)\n",
+    LOGEXIT("GetCommandLineW returns char16_t* %p (%S)\n",
           g_lpwstrCmdLine,
           lpwstr);
 
@@ -1634,12 +1634,12 @@ Notes
 
 PAL_ERROR
 CorUnix::InitializeProcessCommandLine(
-    LPWSTR lpwstrCmdLine,
-    LPWSTR lpwstrFullPath
+    char16_t* lpwstrCmdLine,
+    char16_t* lpwstrFullPath
 )
 {
     PAL_ERROR palError = NO_ERROR;
-    LPWSTR initial_dir = NULL;
+    char16_t* initial_dir = NULL;
 
     //
     // Save the command line and initial directory
@@ -1647,12 +1647,12 @@ CorUnix::InitializeProcessCommandLine(
 
     if (lpwstrFullPath)
     {
-        LPWSTR lpwstr = PAL_wcsrchr(lpwstrFullPath, '/');
+        char16_t* lpwstr = PAL_wcsrchr(lpwstrFullPath, '/');
         lpwstr[0] = '\0';
         size_t n = PAL_wcslen(lpwstrFullPath) + 1;
 
         size_t iLen = n;
-        initial_dir = reinterpret_cast<LPWSTR>(malloc(iLen*sizeof(char16_t)));
+        initial_dir = reinterpret_cast<char16_t*>(malloc(iLen*sizeof(char16_t)));
         if (NULL == initial_dir)
         {
             ERROR("malloc() failed! (initial_dir) \n");
@@ -2329,10 +2329,10 @@ static
 BOOL
 getFileName(
        LPCWSTR lpApplicationName,
-       LPWSTR lpCommandLine,
+       char16_t* lpCommandLine,
        char *lpPathFileName)
 {
-    LPWSTR lpEnd;
+    char16_t* lpEnd;
     char16_t wcEnd;
     char * lpFileName;
     PathCharString lpFileNamePS;
@@ -2580,7 +2580,7 @@ buildArgv(
 
     /* strip leading whitespace; function returns NULL if there's only
         whitespace, so the if statement below will work correctly */
-    lpCommandLine = UTIL_inverse_wcspbrk((LPWSTR)lpCommandLine, W16_WHITESPACE);
+    lpCommandLine = UTIL_inverse_wcspbrk((char16_t*)lpCommandLine, W16_WHITESPACE);
 
     if (lpCommandLine)
     {
@@ -2811,7 +2811,7 @@ getPath(
     LPSTR lpPath;
     LPSTR lpNext;
     LPSTR lpCurrent;
-    LPWSTR lpwstr;
+    char16_t* lpwstr;
     int32_t n;
     int32_t nextLen;
     int32_t slashLen;

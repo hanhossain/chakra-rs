@@ -390,9 +390,9 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 
 //   _Outptr_ - Annotations for output params returning pointers
 //      These describe parameters where the called function provides the buffer:
-//        int32_t SHStrDupW(_In_ LPCWSTR psz, _Outptr_ LPWSTR *ppwsz);
-//      The caller passes the address of an LPWSTR variable as ppwsz, and SHStrDupW allocates
-//      and initializes memory and returns the pointer to the new LPWSTR in *ppwsz.
+//        int32_t SHStrDupW(_In_ LPCWSTR psz, _Outptr_ char16_t* *ppwsz);
+//      The caller passes the address of an char16_t* variable as ppwsz, and SHStrDupW allocates
+//      and initializes memory and returns the pointer to the new char16_t* in *ppwsz.
 //
 //    _Outptr_opt_ - describes parameters that are allowed to be NULL.
 //    _Outptr_*_result_maybenull_ - describes parameters where the called function might return NULL to the caller.
@@ -2032,7 +2032,7 @@ __PRIMOP(char *, _Strstr_(__In_impl_ char *, __In_impl_ char *));
          allocated for the buffer, in which case it describes the accessible amount.
 
  <>      : No buffer size is given. If the type specifies the buffer size (such as
-             with LPSTR and LPWSTR), that amount is used. Otherwise, the buffer is one
+             with LPSTR and char16_t*), that amount is used. Otherwise, the buffer is one
              element long. Must be used with _in, _out, or _inout.
  _ecount : The buffer size is an explicit element count.
  _bcount : The buffer size is an explicit byte count.
@@ -2042,7 +2042,7 @@ __PRIMOP(char *, _Strstr_(__In_impl_ char *, __In_impl_ char *));
            category for _in buffers; they must be fully initialized by the caller.
 
  <>    : The type specifies how much is initialized. For instance, a function initializing
-           an LPWSTR must NULL-terminate the string.
+           an char16_t* must NULL-terminate the string.
  _full : The function initializes the entire buffer.
  _part : The function initializes part of the buffer, and explicitly indicates how much.
 
@@ -2157,9 +2157,9 @@ __PRIMOP(char *, _Strstr_(__In_impl_ char *, __In_impl_ char *));
  PathCanonicalizeA(__out_ecount(MAX_PATH) LPSTR pszBuf, LPCSTR pszPath) :
     pszBuf is only guaranteed to be NULL-terminated when TRUE is returned.
 
- typedef __nullterminated char16_t* LPWSTR : Initialized LPWSTRs are NULL-terminated strings.
+ typedef __nullterminated char16_t* char16_t* : Initialized LPWSTRs are NULL-terminated strings.
 
- __out_ecount(cch) __typefix(LPWSTR) void *psz : psz is a buffer parameter which will be
+ __out_ecount(cch) __typefix(char16_t*) void *psz : psz is a buffer parameter which will be
      a NULL-terminated char16_t string at exit, and which initially contains cch WCHARs.
 
  -------------------------------------------------------------------------------

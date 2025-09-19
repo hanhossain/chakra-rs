@@ -3589,7 +3589,7 @@ GetTempFileNameW(
           LPCWSTR lpPathName,
           LPCWSTR lpPrefixString,
           uint32_t uUnique,
-          LPWSTR lpTempFileName)
+          char16_t* lpTempFileName)
 {
     CPalThread *pThread;
     int32_t path_size = 0;

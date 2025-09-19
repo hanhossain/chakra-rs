@@ -509,7 +509,7 @@ CSharedMemoryObjectManager::LocateObject(
     SHMPTR shmSharedObjectData = SHMNULL;
     SHMPTR shmObjectListEntry = SHMNULL;
     SHMObjData *psmod = NULL;
-    LPWSTR pwsz = NULL;
+    char16_t* pwsz = NULL;
 
     _ASSERTE(NULL != pthr);
     _ASSERTE(NULL != psObjectToLocate);

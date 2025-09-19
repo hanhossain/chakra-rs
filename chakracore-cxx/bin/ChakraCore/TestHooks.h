@@ -10,8 +10,8 @@ interface ICustomConfigFlags;
 
 struct TestHooks
 {
-    typedef int32_t(*SetConfigFlagsPtr)(int argc, LPWSTR argv[], ICustomConfigFlags* customConfigFlags);
-    typedef int32_t(*SetConfigFilePtr)(LPWSTR strConfigFile);
+    typedef int32_t(*SetConfigFlagsPtr)(int argc, char16_t* argv[], ICustomConfigFlags* customConfigFlags);
+    typedef int32_t(*SetConfigFilePtr)(char16_t* strConfigFile);
     typedef int32_t(*PrintConfigFlagsUsageStringPtr)(void);
     typedef int32_t(*SetAssertToConsoleFlagPtr)(bool flag);
     typedef int32_t(*SetEnableCheckMemoryLeakOutputPtr)(bool flag);

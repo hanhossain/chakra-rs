@@ -5,7 +5,7 @@
 #include "stdafx.h"
 
 HostConfigFlags HostConfigFlags::flags;
-LPWSTR* HostConfigFlags::argsVal;
+char16_t** HostConfigFlags::argsVal;
 int HostConfigFlags::argsCount;
 void(*HostConfigFlags::pfnPrintUsage)();
 
@@ -83,7 +83,7 @@ void HostConfigFlags::PrintUsage()
     ChakraRTInterface::PrintConfigFlagsUsageString();
 }
 
-int HostConfigFlags::FindArg(int argc, _In_reads_(argc) PWSTR argv[], PCWSTR targetArg, size_t targetArgLen)
+int HostConfigFlags::FindArg(int argc, _In_reads_(argc) char16_t* argv[], PCWSTR targetArg, size_t targetArgLen)
 {
     return FindArg(argc, argv, [=](PCWSTR arg) -> bool
     {
@@ -91,7 +91,7 @@ int HostConfigFlags::FindArg(int argc, _In_reads_(argc) PWSTR argv[], PCWSTR tar
     });
 }
 
-void HostConfigFlags::RemoveArg(int& argc, _Inout_updates_to_(argc, argc) LPWSTR argv[], int index)
+void HostConfigFlags::RemoveArg(int& argc, _Inout_updates_to_(argc, argc) char16_t* argv[], int index)
 {
     Assert(index >= 0 && index < argc);
     for (int i = index + 1; i < argc; ++i)
@@ -102,7 +102,7 @@ void HostConfigFlags::RemoveArg(int& argc, _Inout_updates_to_(argc, argc) LPWSTR
     --argc;
 }
 
-void HostConfigFlags::HandleArgsFlag(int& argc, _Inout_updates_to_(argc, argc) LPWSTR argv[])
+void HostConfigFlags::HandleArgsFlag(int& argc, _Inout_updates_to_(argc, argc) char16_t* argv[])
 {
     const LPCWSTR argsFlag = u"-args";
     const LPCWSTR endArgsFlag = u"-endargs";
@@ -130,7 +130,7 @@ void HostConfigFlags::HandleArgsFlag(int& argc, _Inout_updates_to_(argc, argc) L
     {
         return;
     }
-    HostConfigFlags::argsVal = new LPWSTR[argsCount];
+    HostConfigFlags::argsVal = new char16_t*[argsCount];
     HostConfigFlags::argsCount = argsCount;
     int argIndex = argsStart;
     for (i = 0; i < argsCount; i++)
@@ -141,7 +141,7 @@ void HostConfigFlags::HandleArgsFlag(int& argc, _Inout_updates_to_(argc, argc) L
     argIndex = argsStart - 1;
     for (i = argsEnd + 1; i < argc; i++)
     {
-        LPWSTR temp = argv[argIndex];
+        char16_t* temp = argv[argIndex];
         argv[argIndex] = argv[i];
         argv[i] = temp;
         argIndex++;

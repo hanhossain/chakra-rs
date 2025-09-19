@@ -166,7 +166,7 @@ class AutoString
 {
     size_t length;
     char* data;
-    LPWSTR data_wide;
+    char16_t* data_wide;
     JsErrorCode errorCode;
     bool dontFree;
 public:
@@ -234,7 +234,7 @@ public:
         return data;
     }
 
-    LPWSTR GetWideString(charcount_t* destCount = nullptr)
+    char16_t* GetWideString(charcount_t* destCount = nullptr)
     {
         if(data_wide || !data)
         {

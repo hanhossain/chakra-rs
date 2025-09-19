@@ -35,7 +35,7 @@ typedef struct _MODSTRUCT
     HMODULE self;           /* circular reference to this module */
     void *dl_handle;        /* handle returned by dlopen() */
     HINSTANCE hinstance;    /* handle returned by PAL_RegisterLibrary */
-    LPWSTR lib_name;        /* full path of module */
+    char16_t* lib_name;        /* full path of module */
     int32_t refcount;           /* reference count */
                             /* -1 means infinite reference count - module is never released */
     BOOL threadLibCalls;    /* TRUE for DLL_THREAD_ATTACH/DETACH notifications enabled, FALSE if they are disabled */
@@ -75,14 +75,14 @@ Function :
     Set the exe name path
 
 Parameters :
-    LPWSTR man exe path and name
+    char16_t* man exe path and name
 
 Return value :
     TRUE  if initialization succeedded
     FALSE otherwise
 
 --*/
-BOOL LOADSetExeName(LPWSTR name);
+BOOL LOADSetExeName(char16_t* name);
 
 /*++
 Function :

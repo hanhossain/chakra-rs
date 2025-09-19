@@ -266,7 +266,7 @@ PAL_UnregisterModule(
 
 BOOL
 PAL_GetPALDirectoryW(
-     LPWSTR lpDirectoryName,
+     char16_t* lpDirectoryName,
      uint32_t cchDirectoryName);
 
 BOOL
@@ -320,7 +320,7 @@ wsprintfA(
 
 int
 wsprintfW(
-       LPWSTR,
+       char16_t*,
        LPCWSTR,
       ...);
 
@@ -442,8 +442,8 @@ SearchPathW(
      LPCWSTR lpFileName,
      LPCWSTR lpExtension,
      uint32_t nBufferLength,
-     LPWSTR lpBuffer,
-     LPWSTR *lpFilePart
+     char16_t* lpBuffer,
+     char16_t* *lpFilePart
     );
 #define SearchPath  SearchPathW
 
@@ -778,15 +778,15 @@ uint32_t
 GetFullPathNameW(
           LPCWSTR lpFileName,
           uint32_t nBufferLength,
-          LPWSTR lpBuffer,
-          LPWSTR *lpFilePart);
+          char16_t* lpBuffer,
+          char16_t* *lpFilePart);
 
 #define GetFullPathName GetFullPathNameW
 
 uint32_t
 GetLongPathNameW(
           LPCWSTR lpszShortPath,
-                  LPWSTR lpszLongPath,
+                  char16_t* lpszLongPath,
           uint32_t cchBuffer);
 
 #define GetLongPathName GetLongPathNameW
@@ -794,7 +794,7 @@ GetLongPathNameW(
 uint32_t
 GetShortPathNameW(
           LPCWSTR lpszLongPath,
-                  LPWSTR lpszShortPath,
+                  char16_t* lpszShortPath,
           uint32_t cchBuffer);
 
 #define GetShortPathName GetShortPathNameW
@@ -812,7 +812,7 @@ GetTempFileNameW(
           LPCWSTR lpPathName,
           LPCWSTR lpPrefixString,
           uint32_t uUnique,
-          LPWSTR lpTempFileName);
+          char16_t* lpTempFileName);
 
 #define GetTempFileName GetTempFileNameW
 
@@ -824,7 +824,7 @@ GetTempPathA(
 uint32_t
 GetTempPathW(
           uint32_t nBufferLength,
-          LPWSTR lpBuffer);
+          char16_t* lpBuffer);
 
 #define GetTempPath GetTempPathW
 
@@ -836,7 +836,7 @@ GetCurrentDirectoryA(
 uint32_t
 GetCurrentDirectoryW(
               uint32_t nBufferLength,
-              LPWSTR lpBuffer);
+              char16_t* lpBuffer);
 
 #define GetCurrentDirectory GetCurrentDirectoryW
 
@@ -853,12 +853,12 @@ SetCurrentDirectoryW(
 
 BOOL
 GetUserNameW(
-     LPWSTR lpBuffer,      // address of name buffer
+     char16_t* lpBuffer,      // address of name buffer
       uint32_t * nSize );   // address of size of name buffer
 
 BOOL
 GetComputerNameW(
-     LPWSTR lpBuffer,     // address of name buffer
+     char16_t* lpBuffer,     // address of name buffer
       uint32_t * nSize);   // address of size of name buffer
 
 #define GetUserName GetUserNameW
@@ -970,9 +970,9 @@ GetCurrentThread(
 
 typedef struct _STARTUPINFOW {
     uint32_t cb;
-    LPWSTR lpReserved_PAL_Undefined;
-    LPWSTR lpDesktop_PAL_Undefined;
-    LPWSTR lpTitle_PAL_Undefined;
+    char16_t* lpReserved_PAL_Undefined;
+    char16_t* lpDesktop_PAL_Undefined;
+    char16_t* lpTitle_PAL_Undefined;
     uint32_t dwX_PAL_Undefined;
     uint32_t dwY_PAL_Undefined;
     uint32_t dwXSize_PAL_Undefined;
@@ -1040,7 +1040,7 @@ CreateProcessA(
 BOOL
 CreateProcessW(
             LPCWSTR lpApplicationName,
-            LPWSTR lpCommandLine,
+            char16_t* lpCommandLine,
             LPSECURITY_ATTRIBUTES lpProcessAttributes,
             LPSECURITY_ATTRIBUTES lpThreadAttributes,
             BOOL bInheritHandles,
@@ -1937,7 +1937,7 @@ GetModuleFileNameA(
 uint32_t
 GetModuleFileNameW(
      HMODULE hModule,
-     LPWSTR lpFileName,
+     char16_t* lpFileName,
      uint32_t nSize);
 
 #define GetModuleFileName GetModuleFileNameW
@@ -1946,7 +1946,7 @@ uint32_t
 GetModuleFileNameExW(
      HANDLE hProcess,
      HMODULE hModule,
-     LPWSTR lpFilename,
+     char16_t* lpFilename,
      uint32_t nSize
     );
 
@@ -2238,7 +2238,7 @@ MultiByteToWideChar(
              uint32_t dwFlags,
              LPCSTR lpMultiByteStr,
              int cbMultiByte,
-             LPWSTR lpWideCharStr,
+             char16_t* lpWideCharStr,
              int cchWideChar);
 
 #define WC_NO_BEST_FIT_CHARS      0x00000400
@@ -2498,8 +2498,8 @@ WideCharToMultiByte(
 int
 GetLocaleInfoEx(
      LPCWSTR  lpLocaleName,
-     LCTYPE   LCType,
-     LPWSTR  lpLCData,
+     uint32_t   LCType,
+     char16_t*  lpLCData,
      int      cchData);
 
 
@@ -2548,27 +2548,27 @@ IsNLSDefinedString(
 int
 ResolveLocaleName(
      LPCWSTR lpNameToResolve,
-         LPWSTR lpLocaleName,
+         char16_t* lpLocaleName,
          int cchLocaleName );
 
 BOOL
 GetThreadPreferredUILanguages(
      uint32_t  dwFlags,
      uint32_t *  pulNumLanguages,
-     PWSTR  pwszLanguagesBuffer,
+     char16_t *  pwszLanguagesBuffer,
       uint32_t *  pcchLanguagesBuffer);
 
 
 int
 GetSystemDefaultLocaleName(
-     LPWSTR lpLocaleName,
+     char16_t* lpLocaleName,
 	 int cchLocaleName);
 
 #define GetLocaleInfo GetLocaleInfoW
 
 int
 GetUserDefaultLocaleName(
-            LPWSTR lpLocaleName,
+            char16_t* lpLocaleName,
             int cchLocaleName);
 
 
@@ -2604,7 +2604,7 @@ GetCalendarInfoEx(
           CALID Calendar,
           LPCWSTR lpReserved,
           CALTYPE CalType,
-          LPWSTR lpCalData,
+          char16_t* lpCalData,
           int cchData,
           uint32_t * lpValue);
 
@@ -2612,8 +2612,8 @@ GetCalendarInfoEx(
 #define DATE_LONGDATE             0x00000002  // use long date picture
 #define DATE_YEARMONTH            0x00000008  // use year month picture
 
-typedef BOOL (CALLBACK* DATEFMT_ENUMPROCEXW)(LPWSTR, CALID);
-typedef BOOL (CALLBACK* DATEFMT_ENUMPROCEXEXW)(LPWSTR, CALID, ptrdiff_t);
+typedef BOOL (CALLBACK* DATEFMT_ENUMPROCEXW)(char16_t*, CALID);
+typedef BOOL (CALLBACK* DATEFMT_ENUMPROCEXEXW)(char16_t*, CALID, ptrdiff_t);
 
 BOOL
 EnumDateFormatsExEx(
@@ -2622,8 +2622,8 @@ EnumDateFormatsExEx(
      uint32_t               dwFlags,
      ptrdiff_t      lParam);
 
-typedef BOOL (CALLBACK* TIMEFMT_ENUMPROCW)(LPWSTR);
-typedef BOOL (CALLBACK* TIMEFMT_ENUMPROCEXW)(LPWSTR, ptrdiff_t);
+typedef BOOL (CALLBACK* TIMEFMT_ENUMPROCW)(char16_t*);
+typedef BOOL (CALLBACK* TIMEFMT_ENUMPROCEXW)(char16_t*, ptrdiff_t);
 
 BOOL
 EnumTimeFormatsEx(
@@ -2637,8 +2637,8 @@ EnumTimeFormatsEx(
 #define CAL_NOUSEROVERRIDE        LOCALE_NOUSEROVERRIDE  // do not use user overrides
 #define CAL_SCALNAME              0x00000002  // native name of calendar
 
-typedef BOOL (CALLBACK* CALINFO_ENUMPROCEXW)(LPWSTR,CALID);
-typedef BOOL (CALLBACK* CALINFO_ENUMPROCEXEXW)(LPWSTR, CALID, LPWSTR, ptrdiff_t);
+typedef BOOL (CALLBACK* CALINFO_ENUMPROCEXW)(char16_t*,CALID);
+typedef BOOL (CALLBACK* CALINFO_ENUMPROCEXEXW)(char16_t*, CALID, char16_t*, ptrdiff_t);
 
 BOOL
 EnumCalendarInfoExEx(
@@ -2658,7 +2658,7 @@ LCMapStringEx(
      uint32_t   dwMapFlags,
      LPCWSTR lpSrcStr,
      int     cchSrc,
-     LPWSTR lpDestStr,
+     char16_t* lpDestStr,
      int     cchDest,
      LPNLSVERSIONINFO lpVersionInformation,
      void * lpReserved,
@@ -2680,7 +2680,7 @@ PAL_NormalizeStringExW(
      uint32_t   dwMapFlags,
      LPCWSTR lpSrcStr,
      int     cchSrc,
-     LPWSTR lpDestStr,
+     char16_t* lpDestStr,
      int     cchDest);
 
 int
@@ -2711,16 +2711,16 @@ void PAL_ReleaseNumber(PALNUMBER);
 
 
 // return string length if Buffer is NULL or the result fits in cchBuffer, otherwise -1
-int PAL_FormatScientific(LPCWSTR sLocale, LPWSTR pBuffer, size_t cchBuffer, PALNUMBER number, int nMinDigits, int nMaxDigits,
+int PAL_FormatScientific(LPCWSTR sLocale, char16_t* pBuffer, size_t cchBuffer, PALNUMBER number, int nMinDigits, int nMaxDigits,
                                                                       LPCWSTR sExponent, LPCWSTR sNumberDecimal, LPCWSTR sPositive, LPCWSTR sNegative, LPCWSTR sZero);
 
-int PAL_FormatCurrency(LPCWSTR sLocale, LPWSTR pBuffer, size_t cchBuffer, PALNUMBER number, int nMinDigits, int nMaxDigits, int iNegativeFormat, int iPositiveFormat,
+int PAL_FormatCurrency(LPCWSTR sLocale, char16_t* pBuffer, size_t cchBuffer, PALNUMBER number, int nMinDigits, int nMaxDigits, int iNegativeFormat, int iPositiveFormat,
                       int iPrimaryGroup, int iSecondaryGroup, LPCWSTR sCurrencyDecimal, LPCWSTR sCurrencyGroup, LPCWSTR sNegative, LPCWSTR sCurrency, LPCWSTR sZero);
 
-int PAL_FormatPercent(LPCWSTR sLocale, LPWSTR pBuffer, size_t cchBuffer, PALNUMBER number,  int nMinDigits, int nMaxDigits,int iNegativeFormat, int iPositiveFormat,
+int PAL_FormatPercent(LPCWSTR sLocale, char16_t* pBuffer, size_t cchBuffer, PALNUMBER number,  int nMinDigits, int nMaxDigits,int iNegativeFormat, int iPositiveFormat,
                       int iPrimaryGroup, int iSecondaryGroup, LPCWSTR sPercentDecimal, LPCWSTR sPercentGroup, LPCWSTR sNegative, LPCWSTR sPercent, LPCWSTR sZero);
 
-int PAL_FormatDecimal(LPCWSTR sLocale, LPWSTR pBuffer, size_t cchBuffer, PALNUMBER number, int nMinDigits, int nMaxDigits, int iNegativeFormat,
+int PAL_FormatDecimal(LPCWSTR sLocale, char16_t* pBuffer, size_t cchBuffer, PALNUMBER number, int nMinDigits, int nMaxDigits, int iNegativeFormat,
                                     int iPrimaryGroup, int iSecondaryGroup,  LPCWSTR sDecimal, LPCWSTR sGroup, LPCWSTR sNegative, LPCWSTR sZero);
 
 
@@ -2732,7 +2732,7 @@ GetDateFormatEx(
             uint32_t dwFlags,
             const SYSTEMTIME *lpDate,
             LPCWSTR lpFormat,
-            LPWSTR lpDateStr,
+            char16_t* lpDateStr,
             int cchDate,
             LPCWSTR lpCalendar);
 
@@ -2742,7 +2742,7 @@ GetDateFormatEx(
             uint32_t dwFlags,
             const SYSTEMTIME *lpDate,
             LPCWSTR lpFormat,
-            LPWSTR lpDateStr,
+            char16_t* lpDateStr,
             int cchDate,
            LPCWSTR lpCalendar);
 
@@ -2753,7 +2753,7 @@ int
 PAL_GetResourceString(
          LPCSTR lpDomain,
          LPCSTR lpResourceStr,
-         LPWSTR lpWideCharStr,
+         char16_t* lpWideCharStr,
          int cchWideChar);
 
 BOOL
@@ -2910,16 +2910,16 @@ void
 DebugBreak(
        void);
 
-LPWSTR
+char16_t*
 lstrcatW(
-       LPWSTR lpString1,
+       char16_t* lpString1,
       LPCWSTR lpString2);
 
 #define lstrcat lstrcatW
 
-LPWSTR
+char16_t*
 lstrcpyW(
-      LPWSTR lpString1,
+      char16_t* lpString1,
       LPCWSTR lpString2);
 
 #define lstrcpy lstrcpyW
@@ -2934,9 +2934,9 @@ lstrlenW(
 
 #define lstrlen lstrlenW
 
-LPWSTR
+char16_t*
 lstrcpynW(
-       LPWSTR lpString1,
+       char16_t* lpString1,
        LPCWSTR lpString2,
        int iMaxLength);
 
@@ -2952,7 +2952,7 @@ GetEnvironmentVariableA(
 uint32_t
 GetEnvironmentVariableW(
              LPCWSTR lpName,
-             LPWSTR lpBuffer,
+             char16_t* lpBuffer,
              uint32_t nSize);
 
 #define GetEnvironmentVariable GetEnvironmentVariableW
@@ -2973,7 +2973,7 @@ LPSTR
 GetEnvironmentStringsA(
                void);
 
-LPWSTR
+char16_t*
 GetEnvironmentStringsW(
                void);
 
@@ -2985,7 +2985,7 @@ FreeEnvironmentStringsA(
 
 BOOL
 FreeEnvironmentStringsW(
-             LPWSTR);
+             char16_t*);
 
 #define FreeEnvironmentStrings FreeEnvironmentStringsW
 
@@ -3701,7 +3701,7 @@ FormatMessageW(
             const void * lpSource,
             uint32_t dwMessageId,
             uint32_t dwLanguageId,
-            LPWSTR lpBffer,
+            char16_t* lpBffer,
             uint32_t nSize,
             va_list *Arguments);
 
@@ -3716,7 +3716,7 @@ void
 SetLastError(
           uint32_t dwErrCode);
 
-LPWSTR
+char16_t*
 GetCommandLineW(
         void);
 

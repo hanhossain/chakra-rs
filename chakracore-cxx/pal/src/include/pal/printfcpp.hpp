@@ -42,7 +42,7 @@ extern "C"
 
     int
     PAL__wvsnprintf(
-        LPWSTR Buffer,
+        char16_t* Buffer,
         size_t Count,
         LPCWSTR Format,
         va_list ap);
@@ -72,7 +72,7 @@ namespace CorUnix
     int
     InternalWvsnprintf(
         CPalThread *pthrCurrent,
-        LPWSTR Buffer,
+        char16_t* Buffer,
         size_t Count,
         LPCWSTR Format,
         va_list ap);
@@ -104,7 +104,7 @@ namespace CorUnix
 
     int
     PAL__wvsnprintf(
-        LPWSTR Buffer,
+        char16_t* Buffer,
         size_t Count,
         LPCWSTR Format,
         va_list ap);

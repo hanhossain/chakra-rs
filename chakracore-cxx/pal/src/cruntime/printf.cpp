@@ -255,7 +255,7 @@ See MSDN doc.
 __attribute__((no_instrument_function))
 int
 wsprintfW(
-       LPWSTR buffer,
+       char16_t* buffer,
        LPCWSTR format,
       ...)
 {

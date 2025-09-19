@@ -96,7 +96,7 @@ namespace CorUnix
     InternalCreateProcess(
         CPalThread *pThread,
         LPCWSTR lpApplicationName,
-        LPWSTR lpCommandLine,
+        char16_t* lpCommandLine,
         LPSECURITY_ATTRIBUTES lpProcessAttributes,
         LPSECURITY_ATTRIBUTES lpThreadAttributes,
         BOOL bInheritHandles,
@@ -114,8 +114,8 @@ namespace CorUnix
 
     PAL_ERROR
     InitializeProcessCommandLine(
-        LPWSTR lpwstrCmdLine,
-        LPWSTR lpwstrFullPath
+        char16_t* lpwstrCmdLine,
+        char16_t* lpwstrFullPath
         );
 
     PAL_ERROR

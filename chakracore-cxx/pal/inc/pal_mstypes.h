@@ -79,8 +79,6 @@ typedef signed long LONG64;
 
 #define _W64
 
-#define _atoi64 (long)atoll
-
 typedef unsigned long UINT_PTR;
 typedef unsigned long DWORD_PTR;
 
@@ -94,11 +92,6 @@ typedef unsigned short char16_t;
 #define _INTPTR_T_DEFINED
 // TODO (hanhossain): can probably remove this
 #define _UINTPTR_T_DEFINED
-
-typedef uint32_t LCTYPE;
-
-typedef const char16_t *LPCWCH;
-typedef char16_t *LPWSTR, *PWSTR;
 
 typedef const char16_t *LPCWSTR, *PCWSTR;
 

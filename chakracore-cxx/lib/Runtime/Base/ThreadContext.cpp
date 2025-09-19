@@ -792,7 +792,7 @@ ThreadContext::FindPropertyRecord(Js::JavascriptString *pstName, Js::PropertyRec
     }
 
     // GetString is not guaranteed to be null-terminated, but we explicitly pass length to the next step
-    LPCWCH propertyName = pstName->GetString();
+    const char16_t * propertyName = pstName->GetString();
     FindPropertyRecord(propertyName, pstName->GetLength(), propertyRecord);
 
     if (*propertyRecord)
@@ -802,7 +802,7 @@ ThreadContext::FindPropertyRecord(Js::JavascriptString *pstName, Js::PropertyRec
 }
 
 void
-ThreadContext::FindPropertyRecord(LPCWCH propertyName, int propertyNameLength, Js::PropertyRecord const ** propertyRecord)
+ThreadContext::FindPropertyRecord(const char16_t * propertyName, int propertyNameLength, Js::PropertyRecord const ** propertyRecord)
 {
     EnterPinnedScope((volatile void **)propertyRecord);
     *propertyRecord = FindPropertyRecord(propertyName, propertyNameLength);

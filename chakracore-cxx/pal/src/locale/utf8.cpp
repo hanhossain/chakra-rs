@@ -60,7 +60,7 @@ Revision History:
 int UTF8ToUnicode(
     LPCSTR lpSrcStr,
     int cchSrc,
-    LPWSTR lpDestStr,
+    char16_t* lpDestStr,
     int cchDest,
     uint32_t dwFlags
     )

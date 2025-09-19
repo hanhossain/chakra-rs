@@ -29,13 +29,13 @@ private:
     static const int  MaxTokenSize  = 512;
 
     Js::ConfigFlagsTable& flagTable;
-    LPWSTR           pszCurrentArg;
+    char16_t*           pszCurrentArg;
     ICustomConfigFlags * pCustomConfigFlags;
 
 // Methods
 public:
-    int                Parse(int argc, __in_ecount(argc) LPWSTR argv[]);
-    int Parse(LPWSTR token) throw();
+    int                Parse(int argc, __in_ecount(argc) char16_t* argv[]);
+    int Parse(char16_t* token) throw();
     CmdLineArgsParser(ICustomConfigFlags * pCustomConfigFlags = nullptr, Js::ConfigFlagsTable& flagTable = Js::Configuration::Global.flags);
     ~CmdLineArgsParser();
 
@@ -64,7 +64,7 @@ private:
 // Implementation
 private:
             bool                       ParseBoolean();
-            LPWSTR                     ParseString(__inout_ecount(ceBuffer) LPWSTR buffer, size_t ceBuffer = MaxTokenSize, bool fTreatColonAsSeparator = true);
+            char16_t*                     ParseString(__inout_ecount(ceBuffer) char16_t* buffer, size_t ceBuffer = MaxTokenSize, bool fTreatColonAsSeparator = true);
             int                        ParseInteger();
             Js::SourceFunctionNode     ParseSourceFunctionIds();
             void                       ParsePhase(Js::Phases *pPhase, Js::Phases *oppositePhase);
