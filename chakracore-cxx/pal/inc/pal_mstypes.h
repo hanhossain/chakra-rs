@@ -89,7 +89,6 @@ typedef unsigned short char16_t;
 // TODO (hanhossain): can probably remove this
 #define _UINTPTR_T_DEFINED
 
-typedef char *PCHAR;
 typedef char *LPSTR;
 typedef const char *LPCSTR;
 
