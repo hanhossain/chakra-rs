@@ -194,7 +194,7 @@ uint32_t gSID = (uint32_t) -1;
 
 // Application group ID for this process
 #ifdef __APPLE__
-LPCSTR gApplicationGroupId = nullptr;
+const char * gApplicationGroupId = nullptr;
 int gApplicationGroupIdLength = 0;
 #endif // __APPLE__
 PathCharString* gSharedFilesPath = nullptr;
@@ -265,8 +265,8 @@ PROCGetProcessStatus(
 
 static BOOL getFileName(const char16_t* lpApplicationName, char16_t* lpCommandLine, char *lpPathFileName);
 static char ** buildArgv(const char16_t* lpCommandLine, char* lpAppPath, uint32_t *pnArg);
-static BOOL getPath(LPCSTR lpFileName, uint32_t iLen, char*  lpPathFileName);
-static int checkFileType(LPCSTR lpFileName);
+static BOOL getPath(const char * lpFileName, uint32_t iLen, char*  lpPathFileName);
+static int checkFileType(const char * lpFileName);
 static BOOL PROCEndProcess(HANDLE hProcess, uint32_t uExitCode, BOOL bTerminateUnconditionally);
 
 /*++
@@ -2465,7 +2465,7 @@ Return:
 --*/
 static
 int
-checkFileType( LPCSTR lpFileName)
+checkFileType( const char * lpFileName)
 {
     struct stat stat_data;
 
@@ -2804,7 +2804,7 @@ Return:
 static
 BOOL
 getPath(
-      LPCSTR lpFileName,
+      const char * lpFileName,
       uint32_t iLen,
       char*  lpPathFileName)
 {

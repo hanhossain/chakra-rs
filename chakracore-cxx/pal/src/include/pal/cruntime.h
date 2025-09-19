@@ -138,7 +138,7 @@ Function:
 
 See MSDN doc.
 --*/
-int32_t Silent_PAL_vsnprintf(char* Buffer, int32_t Count, LPCSTR Format, va_list ap);
+int32_t Silent_PAL_vsnprintf(char* Buffer, int32_t Count, const char * Format, va_list ap);
 
 /*++
 Function:

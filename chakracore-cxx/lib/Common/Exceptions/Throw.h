@@ -34,7 +34,7 @@ namespace Js {
         static void __declspec(noreturn) FatalJsBuiltInError();
 #endif
 
-        static bool ReportAssert(LPCSTR fileName, uint lineNumber, LPCSTR error, LPCSTR message);
+        static bool ReportAssert(const char * fileName, uint lineNumber, const char * error, const char * message);
         static void LogAssert();
 #ifdef GENERATE_DUMP
         static int GenerateDump(PEXCEPTION_POINTERS exceptInfo, const char16_t* filePath, int ret = EXCEPTION_CONTINUE_SEARCH, bool needLock = false);

@@ -58,7 +58,7 @@ Revision History:
 ////////////////////////////////////////////////////////////////////////////
 
 int UTF8ToUnicode(
-    LPCSTR lpSrcStr,
+    const char * lpSrcStr,
     int cchSrc,
     char16_t* lpDestStr,
     int cchDest,

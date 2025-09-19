@@ -182,7 +182,7 @@ See MSDN doc.
 --*/
 BOOL
 RemoveDirectoryA(
-          LPCSTR lpPathName)
+          const char * lpPathName)
 {
     uint32_t dwLastError = 0;
     BOOL  bRet = FALSE;
@@ -502,7 +502,7 @@ See MSDN doc.
 --*/
 BOOL
 CreateDirectoryA(
-          LPCSTR lpPathName,
+          const char * lpPathName,
           LPSECURITY_ATTRIBUTES lpSecurityAttributes)
 {
     BOOL  bRet = FALSE;
@@ -636,7 +636,7 @@ See MSDN doc.
 --*/
 BOOL
 SetCurrentDirectoryA(
-             LPCSTR lpPathName)
+             const char * lpPathName)
 {
     BOOL bRet = FALSE;
     uint32_t dwLastError = 0;

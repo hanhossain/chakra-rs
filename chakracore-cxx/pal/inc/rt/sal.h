@@ -127,7 +127,7 @@
 
    The success criteria can be specified with the _Success_(expr) annotation:
      _Success_(return != FALSE) BOOL
-     PathCanonicalizeA(_Out_writes_(MAX_PATH) char* pszBuf, LPCSTR pszPath) :
+     PathCanonicalizeA(_Out_writes_(MAX_PATH) char* pszBuf, const char * pszPath) :
         pszBuf is only guaranteed to be NULL-terminated when TRUE is returned,
         and FALSE indiates failure. In common practice, callers check for zero
         vs. non-zero returns, so it is preferable to express the success
@@ -941,7 +941,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 #define _Inout_bytecount_x_(size)         _SAL1_1_Source_(_Inout_bytecount_x_, (size), _Prepost_bytecount_x_(size))
 #define _Inout_opt_bytecount_x_(size)     _SAL1_1_Source_(_Inout_opt_bytecount_x_, (size), _Prepost_opt_bytecount_x_(size))
 
-// e.g. void AppendToLPSTR( _In_ LPCSTR szFrom, _Inout_cap_(cchTo) char** szTo, size_t cchTo );
+// e.g. void AppendToLPSTR( _In_ const char * szFrom, _Inout_cap_(cchTo) char** szTo, size_t cchTo );
 #define _Inout_cap_(size)                 _SAL1_1_Source_(_Inout_cap_, (size), _Pre_valid_cap_(size)           _Post_valid_)
 #define _Inout_opt_cap_(size)             _SAL1_1_Source_(_Inout_opt_cap_, (size), _Pre_opt_valid_cap_(size)       _Post_valid_)
 #define _Inout_bytecap_(size)             _SAL1_1_Source_(_Inout_bytecap_, (size), _Pre_valid_bytecap_(size)       _Post_valid_)
@@ -1079,7 +1079,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 #define _Deref_pre_bytecount_x_(size)           _SAL1_1_Source_(_Deref_pre_bytecount_x_, (size), _Deref_pre1_impl_(__notnull_impl_notref)   _Deref_pre1_impl_(__bytecount_x_impl(size)) _Pre_valid_impl_)
 #define _Deref_pre_opt_bytecount_x_(size)       _SAL1_1_Source_(_Deref_pre_opt_bytecount_x_, (size), _Deref_pre1_impl_(__maybenull_impl_notref) _Deref_pre1_impl_(__bytecount_x_impl(size)) _Pre_valid_impl_)
 
-// e.g. void PrintStringArray( _In_count_(cElems) _Deref_pre_valid_ LPCSTR rgStr[], size_t cElems );
+// e.g. void PrintStringArray( _In_count_(cElems) _Deref_pre_valid_ const char * rgStr[], size_t cElems );
 #define _Deref_pre_valid_                       _SAL1_1_Source_(_Deref_pre_valid_, (), _Deref_pre1_impl_(__notnull_impl_notref)   _Pre_valid_impl_)
 #define _Deref_pre_opt_valid_                   _SAL1_1_Source_(_Deref_pre_opt_valid_, (), _Deref_pre1_impl_(__maybenull_impl_notref) _Pre_valid_impl_)
 #define _Deref_pre_invalid_                     _SAL1_1_Source_(_Deref_pre_invalid_, (), _Deref_pre1_impl_(__notvalid_impl))
@@ -2066,7 +2066,7 @@ __PRIMOP(char *, _Strstr_(__In_impl_ char *, __In_impl_ char *));
  Buffer Annotation Examples
 
  LWSTDAPI_(BOOL) StrToIntExA(
-     LPCSTR pszString,
+     const char * pszString,
      uint32_t dwFlags,
      int *piRet                     -- A pointer whose dereference will be filled in.
  );
@@ -2081,7 +2081,7 @@ __PRIMOP(char *, _Strstr_(__In_impl_ char *, __In_impl_ char *));
  LWSTDAPI_(BOOL) PathCompactPathExA(
      __out_ecount(cchMax) char* pszOut,   -- A string buffer with cch elements that will
                                           --   be NULL terminated on exit.
-     LPCSTR pszSrc,
+     const char * pszSrc,
      uint32_t cchMax,
      uint32_t dwFlags
  );
@@ -2154,7 +2154,7 @@ __PRIMOP(char *, _Strstr_(__In_impl_ char *, __In_impl_ char *));
  Advanced Annotation Examples
 
  __success(return != FALSE) LWSTDAPI_(BOOL) 
- PathCanonicalizeA(__out_ecount(MAX_PATH) char* pszBuf, LPCSTR pszPath) :
+ PathCanonicalizeA(__out_ecount(MAX_PATH) char* pszBuf, const char * pszPath) :
     pszBuf is only guaranteed to be NULL-terminated when TRUE is returned.
 
  typedef __nullterminated char16_t* char16_t* : Initialized LPWSTRs are NULL-terminated strings.

@@ -3682,7 +3682,7 @@ JsErrorCode RunScriptCore(const char *script, JsSourceContext sourceContext,
     const char *sourceUrl, bool parseOnly, JsParseScriptAttributes parseAttributes,
     bool isSourceModule, JsValueRef *result)
 {
-    utf8::NarrowToWide url((LPCSTR)sourceUrl);
+    utf8::NarrowToWide url((const char *)sourceUrl);
     if (!url)
     {
         return JsErrorOutOfMemory;

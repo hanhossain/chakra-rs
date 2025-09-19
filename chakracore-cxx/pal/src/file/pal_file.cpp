@@ -246,7 +246,7 @@ InternalCanonicalizeRealPath
     realpath() requires the buffer to be at least PATH_MAX).
 --*/
 PAL_ERROR
-CorUnix::InternalCanonicalizeRealPath(LPCSTR lpUnixPath, char* lpBuffer, uint32_t cch)
+CorUnix::InternalCanonicalizeRealPath(const char * lpUnixPath, char* lpBuffer, uint32_t cch)
 {
     PAL_ERROR palError = NO_ERROR;
     char* lpRealPath = NULL;
@@ -452,7 +452,7 @@ LExitDontFree:
 PAL_ERROR
 CorUnix::InternalCreateFile(
     CPalThread *pThread,
-    LPCSTR lpFileName,
+    const char * lpFileName,
     uint32_t dwDesiredAccess,
     uint32_t dwShareMode,
     LPSECURITY_ATTRIBUTES lpSecurityAttributes,
@@ -901,7 +901,7 @@ See MSDN doc.
 --*/
 HANDLE
 CreateFileA(
-         LPCSTR lpFileName,
+         const char * lpFileName,
          uint32_t dwDesiredAccess,
          uint32_t dwShareMode,
          LPSECURITY_ATTRIBUTES lpSecurityAttributes,
@@ -1156,7 +1156,7 @@ See MSDN doc.
 --*/
 BOOL
 DeleteFileA(
-         LPCSTR lpFileName)
+         const char * lpFileName)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread;
@@ -1308,8 +1308,8 @@ See MSDN doc.
 --*/
 BOOL
 MoveFileA(
-      LPCSTR lpExistingFileName,
-      LPCSTR lpNewFileName)
+      const char * lpExistingFileName,
+      const char * lpNewFileName)
 {
     BOOL bRet;
 
@@ -1363,8 +1363,8 @@ See MSDN doc.
 --*/
 BOOL
 MoveFileExA(
-         LPCSTR lpExistingFileName,
-         LPCSTR lpNewFileName,
+         const char * lpExistingFileName,
+         const char * lpNewFileName,
          uint32_t dwFlags)
 {
     CPalThread *pThread;
@@ -1651,7 +1651,7 @@ FILE_ATTRIBUTE_HIDDEN
 --*/
 uint32_t
 GetFileAttributesA(
-            LPCSTR lpFileName)
+            const char * lpFileName)
 {
     CPalThread *pThread;
     struct stat stat_data;
@@ -3396,8 +3396,8 @@ static BOOL IsInitialized   = FALSE;
 
 uint32_t
 GetTempFileNameA(
-                  LPCSTR lpPathName,
-                  LPCSTR lpPrefixString,
+                  const char * lpPathName,
+                  const char * lpPrefixString,
                   uint32_t   uUnique,
                   char* lpTempFileName)
 {
@@ -3819,8 +3819,8 @@ and will have a much better idea of the specific error.
 --*/
 BOOL
 CopyFileA(
-       LPCSTR lpExistingFileName,
-       LPCSTR lpNewFileName,
+       const char * lpExistingFileName,
+       const char * lpNewFileName,
        BOOL bFailIfExists)
 {
     CPalThread *pThread;
@@ -3988,7 +3988,7 @@ Notes:
 --*/
 BOOL
 SetFileAttributesA(
-            LPCSTR lpFileName,
+            const char * lpFileName,
             uint32_t dwFileAttributes)
 {
     CPalThread *pThread;

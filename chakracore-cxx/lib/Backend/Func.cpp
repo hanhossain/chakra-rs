@@ -2173,7 +2173,7 @@ Func::Dump()
 #endif
 
 #if DBG_DUMP || defined(ENABLE_IR_VIEWER)
-LPCSTR
+const char *
 Func::GetVtableName(long address)
 {
 #if DBG
@@ -2181,7 +2181,7 @@ Func::GetVtableName(long address)
     {
         vtableMap = VirtualTableRegistry::CreateVtableHashMap(this->m_alloc);
     };
-    LPCSTR name = vtableMap->Lookup(address, nullptr);
+    const char * name = vtableMap->Lookup(address, nullptr);
     if (name)
     {
          if (strncmp(name, "class ", _countof("class ") - 1) == 0)

@@ -150,7 +150,7 @@ Function :
 BOOL DBG_init_channels(void)
 {
     int32_t i;
-    LPCSTR env_string;
+    const char * env_string;
     char* env_workstring;
     char* env_pcache;
     char* entry_ptr;
@@ -473,7 +473,7 @@ Notes :
 
 --*/
 int DBG_printf_gcc(DBG_CHANNEL_ID channel, DBG_LEVEL_ID level, BOOL bHeader,
-                   LPCSTR function, LPCSTR file, int32_t line, LPCSTR format, ...)
+                   const char * function, const char * file, int32_t line, const char * format, ...)
 {
     char *buffer = (char*)alloca(DBG_BUFFER_SIZE);
     char indent[MAX_NESTING+1];

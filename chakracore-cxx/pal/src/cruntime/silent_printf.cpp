@@ -33,7 +33,7 @@ Revision History:
 
 static int Silent_WideCharToMultiByte(const char16_t* lpWideCharStr, int cchWideChar, 
                                       char* lpMultiByteStr, int cbMultiByte);
-static BOOL Silent_ExtractFormatA(LPCSTR *Fmt, char* Out, int32_t * Flags, int32_t * Width,
+static BOOL Silent_ExtractFormatA(const char * *Fmt, char* Out, int32_t * Flags, int32_t * Width,
                                   int32_t * Precision, int32_t * Prefix, int32_t * Type);
 static int32_t Silent_AddPaddingVfprintf(PAL_FILE *stream, char* In, int32_t Padding,
                                      int32_t Flags);
@@ -45,12 +45,12 @@ Function:
   PAL_vsnprintf (silent version)
   for more details, see PAL_vsnprintf in printf.c
 *******************************************************************************/
-int32_t Silent_PAL_vsnprintf(char* Buffer, int32_t Count, LPCSTR Format, va_list aparg)
+int32_t Silent_PAL_vsnprintf(char* Buffer, int32_t Count, const char * Format, va_list aparg)
 {
     BOOL BufferRanOut = FALSE;
     char TempBuff[1024]; /* used to hold a single %<foo> format string */
     char* BufferPtr = Buffer;
-    LPCSTR Fmt = Format;
+    const char * Fmt = Format;
     char16_t* TempWStr;
     char TempStr[MAX_STR_LEN+1];
     char16_t TempWChar;
@@ -329,7 +329,7 @@ Function:
 int Silent_PAL_vfprintf(PAL_FILE *stream, const char *format, va_list aparg)
 {
     char TempBuff[1024]; /* used to hold a single %<foo> format string */
-    LPCSTR Fmt = format;
+    const char * Fmt = format;
     char16_t* TempWStr;
     char* TempStr;
     char16_t TempWChar;
@@ -617,7 +617,7 @@ Function:
   
   see Internal_ExtractFormatA function in printf.c
 *******************************************************************************/
-BOOL Silent_ExtractFormatA(LPCSTR *Fmt, char* Out, int32_t * Flags, int32_t * Width, int32_t * Precision, int32_t * Prefix, int32_t * Type)
+BOOL Silent_ExtractFormatA(const char * *Fmt, char* Out, int32_t * Flags, int32_t * Width, int32_t * Precision, int32_t * Prefix, int32_t * Type)
 {
     BOOL Result = FALSE;
     char* TempStr;

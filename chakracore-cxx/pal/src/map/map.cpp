@@ -280,7 +280,7 @@ CreateFileMappingA(
                     uint32_t flProtect,
                     uint32_t dwMaximumSizeHigh,
                     uint32_t dwMaximumSizeLow,
-                    LPCSTR lpName)
+                    const char * lpName)
 {
     HANDLE hFileMapping = NULL;
     CPalThread *pThread = NULL;
@@ -768,7 +768,7 @@ HANDLE
 OpenFileMappingA(
           uint32_t dwDesiredAccess,
           BOOL bInheritHandle,
-          LPCSTR lpName)
+          const char * lpName)
 {
     HANDLE hFileMapping = NULL;
     CPalThread *pThread = NULL;

@@ -52,7 +52,7 @@ See MSDN doc.
 --*/
 uint32_t
 GetFullPathNameA(
-      LPCSTR lpFileName,
+      const char * lpFileName,
       uint32_t nBufferLength,
       char* lpBuffer,
       char* *lpFilePart)
@@ -862,12 +862,12 @@ characters written to the buffer. If the buffer is not large enough,
 return the required size of the buffer including the NULL character. If
 there is no directory part in the path, return 0.
 --*/
-uint32_t FILEGetDirectoryFromFullPathA( LPCSTR lpFullPath,
+uint32_t FILEGetDirectoryFromFullPathA( const char * lpFullPath,
                      uint32_t  nBufferLength,
                      char*  lpBuffer )
 {
     int    full_len, dir_len, i;
-    LPCSTR lpDirEnd;
+    const char * lpDirEnd;
     uint32_t  dwRetLength;
 
     full_len = lstrlenA( lpFullPath );
@@ -908,7 +908,7 @@ Function:
 
 Given a full path, return a pointer to the first char of the filename part.
 --*/
-LPCSTR FILEGetFileNameFromFullPathA( LPCSTR lpFullPath )
+const char * FILEGetFileNameFromFullPathA( const char * lpFullPath )
 {
     int DirLen = FILEGetDirectoryFromFullPathA( lpFullPath, 0, NULL );
 
@@ -1066,9 +1066,9 @@ PAL-specific notes :
 --*/
 uint32_t
 SearchPathA(
-     LPCSTR lpPath,
-     LPCSTR lpFileName,
-     LPCSTR lpExtension,
+     const char * lpPath,
+     const char * lpFileName,
+     const char * lpExtension,
      uint32_t nBufferLength,
      char* lpBuffer,
      char* *lpFilePart
@@ -1080,8 +1080,8 @@ SearchPathA(
     PathCharString FullPathPS;
     PathCharString CanonicalFullPathPS;
     char * CanonicalFullPath;
-    LPCSTR pPathStart;
-    LPCSTR pPathEnd;
+    const char * pPathStart;
+    const char * pPathEnd;
     size_t PathLength;
     size_t FileNameLength;
     uint32_t length;
@@ -1167,7 +1167,7 @@ SearchPathA(
     }
     else
     {
-        LPCSTR pNextPath;
+        const char * pNextPath;
 
         pNextPath = lpPath;
 

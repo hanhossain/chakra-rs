@@ -42,7 +42,7 @@ const static char *scanf_longlongfmt = "q";
 #endif
 
 #if SSCANF_CANNOT_HANDLE_MISSING_EXPONENT
-static int SscanfFloatCheckExponent(LPCSTR buff, LPCSTR floatFmt,
+static int SscanfFloatCheckExponent(const char * buff, const char * floatFmt,
                                       void * voidPtr, int * pn);
 #endif // SSCANF_CANNOT_HANDLE_MISSING_EXPONENT
 
@@ -230,7 +230,7 @@ __attribute__((no_instrument_function))
 int
 wsprintfA(
        char* buffer,
-       LPCSTR format,
+       const char * format,
       ...)
 {
     int32_t Length;
@@ -393,7 +393,7 @@ Notes:
     }
 
 __attribute__((no_instrument_function))
-static BOOL Internal_ScanfExtractFormatA(LPCSTR *Fmt, char* Out, int iOutSize, LPBOOL Store,
+static BOOL Internal_ScanfExtractFormatA(const char * *Fmt, char* Out, int iOutSize, LPBOOL Store,
                                          int32_t * Width, int32_t * Prefix, int32_t * Type)
 {
     BOOL Result = FALSE;
@@ -1005,11 +1005,11 @@ Parameters:
     - stdarg parameter list
 *******************************************************************************/
 __attribute__((no_instrument_function))
-int PAL_vsscanf(LPCSTR Buffer, LPCSTR Format, va_list ap)
+int PAL_vsscanf(const char * Buffer, const char * Format, va_list ap)
 {
     int32_t Length = 0;
-    LPCSTR Buff = Buffer;
-    LPCSTR Fmt = Format;
+    const char * Buff = Buffer;
+    const char * Fmt = Format;
     char TempBuff[1024]; /* used to hold a single %<foo> format string */
     BOOL Store;
     int32_t Width;
@@ -1569,13 +1569,13 @@ Function:
 --*/
 
 __attribute__((no_instrument_function))
-static int SscanfFloatCheckExponent(LPCSTR buff, LPCSTR floatFmt,
+static int SscanfFloatCheckExponent(const char * buff, const char * floatFmt,
                                       void * voidPtr, int * pn)
 {
     int ret = 0;
     int digits = 0;
     int points = 0;
-    LPCSTR pos = buff;
+    const char * pos = buff;
 
     /* skip initial spaces */
     while (*pos && isspace(*pos))

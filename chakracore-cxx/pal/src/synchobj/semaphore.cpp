@@ -76,7 +76,7 @@ CreateSemaphoreExA(
          LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
          int32_t lInitialCount,
          int32_t lMaximumCount,
-         LPCSTR lpName,
+         const char * lpName,
          /*_Reserved_*/  uint32_t dwFlags,
          uint32_t dwDesiredAccess)
 {
@@ -110,7 +110,7 @@ CreateSemaphoreA(
           LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
           int32_t lInitialCount,
           int32_t lMaximumCount,
-          LPCSTR lpName)
+          const char * lpName)
 {
     HANDLE hSemaphore = NULL;
     CPalThread *pthr = NULL;

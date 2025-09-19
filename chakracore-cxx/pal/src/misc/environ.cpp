@@ -64,7 +64,7 @@ and its terminating null character.
 --*/
 uint32_t
 GetEnvironmentVariableA(
-             LPCSTR lpName,
+             const char * lpName,
              char* lpBuffer,
              uint32_t nSize)
 {
@@ -553,8 +553,8 @@ environment variables of other processes.
 --*/
 BOOL
 SetEnvironmentVariableA(
-			 LPCSTR lpName,
-			 LPCSTR lpValue)
+			 const char * lpName,
+			 const char * lpValue)
 {
 
     BOOL bRet = FALSE;

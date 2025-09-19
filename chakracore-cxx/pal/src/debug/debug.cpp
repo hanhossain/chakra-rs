@@ -160,7 +160,7 @@ See MSDN doc.
 --*/
 void
 OutputDebugStringA(
-         LPCSTR lpOutputString)
+         const char * lpOutputString)
 {
     ENTRY("OutputDebugStringA (lpOutputString=%p (%s))\n",
           lpOutputString?lpOutputString:"NULL",

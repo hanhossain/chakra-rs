@@ -443,7 +443,7 @@ bool Debugger::HandleDebugEvent(JsDiagDebugEvent debugEvent, JsValueRef eventDat
     return this->CallFunctionNoResult("HandleDebugEvent", debugEventRef, eventData);
 }
 
-bool Debugger::CompareOrWriteBaselineFile(LPCSTR fileName)
+bool Debugger::CompareOrWriteBaselineFile(const char * fileName)
 {
     AutoRestoreContext autoRestoreContext(this->m_context);
 

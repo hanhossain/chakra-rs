@@ -1574,7 +1574,7 @@ typedef LIST_ENTRY64 *PLIST_ENTRY64;
 typedef struct _HSATELLITE *HSATELLITE;
 
 EXTERN_C HSATELLITE PAL_LoadSatelliteResourceW(const char16_t* SatelliteResourceFileName);
-EXTERN_C HSATELLITE PAL_LoadSatelliteResourceA(LPCSTR SatelliteResourceFileName);
+EXTERN_C HSATELLITE PAL_LoadSatelliteResourceA(const char * SatelliteResourceFileName);
 EXTERN_C BOOL PAL_FreeSatelliteResource(HSATELLITE SatelliteResource);
 EXTERN_C uint32_t PAL_LoadSatelliteStringW(HSATELLITE SatelliteResource,
              uint32_t uID,

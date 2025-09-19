@@ -37,7 +37,7 @@ extern "C"
     PAL__vsnprintf(
         char* Buffer,
         size_t Count,
-        LPCSTR Format,
+        const char * Format,
         va_list ap);
 
     int
@@ -82,7 +82,7 @@ namespace CorUnix
         CPalThread *pthrCurrent,
         char* Buffer,
         size_t Count,
-        LPCSTR Format,
+        const char * Format,
         va_list ap);
 
     int
@@ -99,7 +99,7 @@ namespace CorUnix
     PAL__vsnprintf(
         char* Buffer,
         size_t Count,
-        LPCSTR Format,
+        const char * Format,
         va_list ap);
 
     int

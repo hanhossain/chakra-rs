@@ -113,7 +113,7 @@ Function :
     Converts a multibyte string to a wide string, allocating the required buffer
     
 Parameters :
-    LPCSTR lpMultiByteStr : string to convert
+    const char * lpMultiByteStr : string to convert
     int cbMultiByte : number of bytes to convert 
                       (-1 to convert a complete null-termnated string)
     
@@ -123,7 +123,7 @@ Return Value :
     with free().
     In case if failure, LastError will be set.
 --*/
-char16_t* UTIL_MBToWC_Alloc(LPCSTR lpMultiByteStr, int cbMultiByte);
+char16_t* UTIL_MBToWC_Alloc(const char * lpMultiByteStr, int cbMultiByte);
 
 #if HAVE_VM_ALLOCATE
 #include <mach/kern_return.h>
