@@ -655,23 +655,6 @@ done:
 }
 
 /*++
-Function:
-  PAL_UnregisterModule
-
-  Used to cleanup the module HINSTANCE from PAL_RegisterModule.
---*/
-void
-PAL_UnregisterModule(
-     HINSTANCE hInstance)
-{
-    ENTRY("PAL_UnregisterModule(hInstance=%p)\n", hInstance);
-
-    LOADFreeLibrary((MODSTRUCT *)hInstance, FALSE /* fCallDllMain */);
-
-    LOGEXIT("PAL_UnregisterModule returns\n");
-}
-
-/*++
     PAL_LOADLoadPEFile
 
     Map a PE format file into memory like Windows LoadLibrary() would do.

@@ -245,78 +245,13 @@ void
 PAL_Shutdown(
     void);
 
-/// <summary>
-/// This function shuts down PAL and exits the current process.
-/// </summary>
-void
-PAL_Terminate(
-    void);
-
-/// <summary>
-/// This function shuts down PAL and exits the current process with
-/// the specified exit code.
-/// </summary>
-void
-PAL_TerminateEx(
-    int exitCode);
-
-void
-PAL_UnregisterModule(
-     HINSTANCE hInstance);
-
-BOOL
-PAL_GetPALDirectoryW(
-     char16_t* lpDirectoryName,
-     uint32_t cchDirectoryName);
-
-BOOL
-PAL_GetPALDirectoryA(
-     char* lpDirectoryName,
-     uint32_t cchDirectoryName);
-
-#define PAL_GetPALDirectory PAL_GetPALDirectoryW
-
-BOOL
-PAL_Random(
-     BOOL bStrong,
-      void * lpBuffer,
-     uint32_t dwLength);
-
-uint32_t
-PAL_CreateExecWatchpoint(
-    HANDLE hThread,
-    void * pvInstruction
-    );
-
-uint32_t
-PAL_DeleteExecWatchpoint(
-    HANDLE hThread,
-    void * pvInstruction
-    );
-
 /******************* winuser.h Entrypoints *******************************/
-
-char*
-CharNextA(
-             const char * lpsz);
-
-char*
-CharNextExA(
-         uint16_t CodePage,
-         const char * lpCurrentChar,
-         uint32_t dwFlags);
 
 extern int sprintf_s(char *_Dst, size_t _SizeInBytes, const char *_Format, ...);
 
 typedef int errno_t;
 extern errno_t _ultow_s(unsigned long inValue, char16_t* outBuffer, size_t inDestBufferSize, int inRadix );
 extern errno_t _ui64tow_s(unsigned long long inValue, char16_t* outBuffer, size_t inDestBufferSize, int inRadix );
-
-int
-wsprintfA(
-       char*,
-       const char *,
-      ...);
 
 int
 wsprintfW(
