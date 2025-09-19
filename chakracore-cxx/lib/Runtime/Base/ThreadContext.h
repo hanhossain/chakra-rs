@@ -601,7 +601,7 @@ private:
 
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         // use for autoProxy called from Debug.setAutoProxyName. we need to keep the buffer from GetSz() alive.
-        Field(LPCWSTR) autoProxyName;
+        Field(const char16_t*) autoProxyName;
 #endif
     };
 
@@ -936,8 +936,8 @@ public:
 
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     Js::Var GetMemoryStat(Js::ScriptContext* scriptContext);
-    void SetAutoProxyName(LPCWSTR objectName);
-    LPCWSTR GetAutoProxyName() const { return recyclableData->autoProxyName; }
+    void SetAutoProxyName(const char16_t* objectName);
+    const char16_t* GetAutoProxyName() const { return recyclableData->autoProxyName; }
     Js::PropertyId handlerPropertyId = Js::Constants::NoProperty;
 #endif
 
@@ -1094,7 +1094,7 @@ public:
     void FindPropertyRecord(const char16_t * propertyName, int propertyNameLength, Js::PropertyRecord const ** propertyRecord);
     const Js::PropertyRecord * FindPropertyRecord(const char16_t * propertyName, int propertyNameLength);
 
-    JsUtil::List<const RecyclerWeakReference<Js::PropertyRecord const>*>* FindPropertyIdNoCase(Js::ScriptContext * scriptContext, LPCWSTR propertyName, int propertyNameLength);
+    JsUtil::List<const RecyclerWeakReference<Js::PropertyRecord const>*>* FindPropertyIdNoCase(Js::ScriptContext * scriptContext, const char16_t* propertyName, int propertyNameLength);
     JsUtil::List<const RecyclerWeakReference<Js::PropertyRecord const>*>* FindPropertyIdNoCase(Js::ScriptContext * scriptContext, JsUtil::CharacterBuffer<char16_t> const& propertyName);
     bool FindExistingPropertyRecord(_In_ JsUtil::CharacterBuffer<char16_t> const& propertyName, Js::CaseInvariantPropertyListWithHashCode** propertyRecord);
     void CleanNoCasePropertyMap();
@@ -1110,10 +1110,10 @@ public:
     }
     void AddBuiltInPropertyRecord(const Js::PropertyRecord *propertyRecord);
 
-    void GetOrAddPropertyId(_In_ LPCWSTR propertyName, _In_ int propertyNameLength, _Out_ Js::PropertyRecord const** propertyRecord);
+    void GetOrAddPropertyId(_In_ const char16_t* propertyName, _In_ int propertyNameLength, _Out_ Js::PropertyRecord const** propertyRecord);
     void GetOrAddPropertyId(_In_ JsUtil::CharacterBuffer<char16_t> const& propertyName, _Out_ Js::PropertyRecord const** propertyRecord);
     Js::PropertyRecord const * UncheckedAddPropertyId(JsUtil::CharacterBuffer<char16_t> const& propertyName, bool bind, bool isSymbol = false);
-    Js::PropertyRecord const * UncheckedAddPropertyId(LPCWSTR propertyName, int propertyNameLength, bool bind = false, bool isSymbol = false);
+    Js::PropertyRecord const * UncheckedAddPropertyId(const char16_t* propertyName, int propertyNameLength, bool bind = false, bool isSymbol = false);
 
 private:
     const Js::PropertyRecord * GetOrAddPropertyRecordImpl(JsUtil::CharacterBuffer<char16_t> propertyName, bool bind);
@@ -1215,10 +1215,10 @@ public:
     Js::InterpreterStackFrame *PopInterpreterFrame();
     Js::InterpreterStackFrame *GetLeafInterpreterFrame() const { return leafInterpreterFrame; }
 
-    Js::TempArenaAllocatorObject * GetTemporaryAllocator(LPCWSTR name);
+    Js::TempArenaAllocatorObject * GetTemporaryAllocator(const char16_t* name);
     void ReleaseTemporaryAllocator(Js::TempArenaAllocatorObject * tempAllocator);
 
-    Js::TempGuestArenaAllocatorObject * GetTemporaryGuestAllocator(LPCWSTR name);
+    Js::TempGuestArenaAllocatorObject * GetTemporaryGuestAllocator(const char16_t* name);
     void ReleaseTemporaryGuestAllocator(Js::TempGuestArenaAllocatorObject * tempAllocator);
 
 #ifdef ENABLE_SCRIPT_DEBUGGING

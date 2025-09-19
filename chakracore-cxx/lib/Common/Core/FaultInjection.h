@@ -98,7 +98,7 @@ namespace Js
         ~FaultInjection();
         bool IsFaultEnabled(FaultType faultType);
         bool IsFaultInjectionOn(FaultType faultType);
-        bool ShouldInjectFault(FaultType fType, LPCWSTR name = nullptr, size_t size = 0);// name and size are used for OOM only
+        bool ShouldInjectFault(FaultType fType, const char16_t* name = nullptr, size_t size = 0);// name and size are used for OOM only
 
         // sample for customized fault type
         template<class Pred>
@@ -115,7 +115,7 @@ namespace Js
         }
 
     private:
-        bool ShouldInjectFaultHelper(FaultType fType, LPCWSTR name = nullptr, size_t size = 0);
+        bool ShouldInjectFaultHelper(FaultType fType, const char16_t* name = nullptr, size_t size = 0);
 
     private:
         // for reconstruction stack of the fault injection points in postmortem debugging
@@ -134,7 +134,7 @@ namespace Js
         InjectionRecord* InjectionFirstRecord;
         InjectionRecord** InjectionLastRecordRef;
         int InjectionRecordsCount;
-        void dumpCurrentStackData(LPCWSTR name = nullptr, size_t size = 0);
+        void dumpCurrentStackData(const char16_t* name = nullptr, size_t size = 0);
 
         static thread_local int(*pfnHandleAV)(int, PEXCEPTION_POINTERS);
 

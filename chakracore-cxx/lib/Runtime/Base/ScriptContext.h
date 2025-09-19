@@ -829,7 +829,7 @@ private:
         RecyclerRootPtr<SourceList> sourceList;
 
 #ifdef ENABLE_SCRIPT_DEBUGGING
-        typedef void(*RaiseMessageToDebuggerFunctionType)(ScriptContext *, DEBUG_EVENT_INFO_TYPE, LPCWSTR, LPCWSTR);
+        typedef void(*RaiseMessageToDebuggerFunctionType)(ScriptContext *, DEBUG_EVENT_INFO_TYPE, const char16_t*, const char16_t*);
         RaiseMessageToDebuggerFunctionType raiseMessageToDebuggerFunctionType;
 
         typedef void(*TransitionToDebugModeIfFirstSourceFn)(ScriptContext *, Utf8SourceInfo *);
@@ -1177,8 +1177,8 @@ private:
         PropertyString* AddPropertyString2(const Js::PropertyRecord* propertyRecord);
         PropertyString* CachePropertyString2(const Js::PropertyRecord* propertyRecord);
         PropertyString* GetPropertyString2(char16_t ch1, char16_t ch2);
-        void FindPropertyRecord(LPCWSTR pszPropertyName, int propertyNameLength, PropertyRecord const** propertyRecord);
-        JsUtil::List<const RecyclerWeakReference<Js::PropertyRecord const>*>* FindPropertyIdNoCase(LPCWSTR pszPropertyName, int propertyNameLength);
+        void FindPropertyRecord(const char16_t* pszPropertyName, int propertyNameLength, PropertyRecord const** propertyRecord);
+        JsUtil::List<const RecyclerWeakReference<Js::PropertyRecord const>*>* FindPropertyIdNoCase(const char16_t* pszPropertyName, int propertyNameLength);
 
         void FindPropertyRecord(JavascriptString* pstName, PropertyRecord const** propertyRecord);
         PropertyRecord const * GetPropertyName(PropertyId propertyId);
@@ -1194,8 +1194,8 @@ private:
         {
             return GetOrAddPropertyIdTracked(propertyName, N - 1);
         }
-        PropertyId GetOrAddPropertyIdTracked(__in_ecount(propertyNameLength) LPCWSTR pszPropertyName, int propertyNameLength);
-        void GetOrAddPropertyRecord(__in_ecount(propertyNameLength) LPCWSTR pszPropertyName, _In_ int propertyNameLength, _Out_ PropertyRecord const** propertyRecord);
+        PropertyId GetOrAddPropertyIdTracked(__in_ecount(propertyNameLength) const char16_t* pszPropertyName, int propertyNameLength);
+        void GetOrAddPropertyRecord(__in_ecount(propertyNameLength) const char16_t* pszPropertyName, _In_ int propertyNameLength, _Out_ PropertyRecord const** propertyRecord);
         BOOL IsNumericPropertyId(PropertyId propertyId, uint32* value);
 
         void RegisterWeakReferenceDictionary(JsUtil::IWeakReferenceDictionary* weakReferenceDictionary);
@@ -1305,9 +1305,9 @@ private:
         ArenaAllocator* AllocatorForDiagnostics();
 #endif
 
-        Js::TempArenaAllocatorObject* GetTemporaryAllocator(LPCWSTR name);
+        Js::TempArenaAllocatorObject* GetTemporaryAllocator(const char16_t* name);
         void ReleaseTemporaryAllocator(Js::TempArenaAllocatorObject* tempAllocator);
-        Js::TempGuestArenaAllocatorObject* GetTemporaryGuestAllocator(LPCWSTR name);
+        Js::TempGuestArenaAllocatorObject* GetTemporaryGuestAllocator(const char16_t* name);
         void ReleaseTemporaryGuestAllocator(Js::TempGuestArenaAllocatorObject* tempAllocator);
 
         bool EnsureInterpreterArena(ArenaAllocator **);
@@ -1408,7 +1408,7 @@ private:
             raiseMessageToDebuggerFunctionType = function;
         }
 
-        void RaiseMessageToDebugger(DEBUG_EVENT_INFO_TYPE messageType, LPCWSTR message, LPCWSTR url)
+        void RaiseMessageToDebugger(DEBUG_EVENT_INFO_TYPE messageType, const char16_t* message, const char16_t* url)
         {
             if (raiseMessageToDebuggerFunctionType != nullptr)
             {

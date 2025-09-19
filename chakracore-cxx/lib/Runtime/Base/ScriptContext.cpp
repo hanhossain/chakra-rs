@@ -830,12 +830,12 @@ namespace Js
         threadContext->FindPropertyRecord(pstName, propertyRecord);
     }
 
-    void ScriptContext::FindPropertyRecord(LPCWSTR propertyName, int propertyNameLength, PropertyRecord const ** propertyRecord)
+    void ScriptContext::FindPropertyRecord(const char16_t* propertyName, int propertyNameLength, PropertyRecord const ** propertyRecord)
     {
         threadContext->FindPropertyRecord(propertyName, propertyNameLength, propertyRecord);
     }
 
-    JsUtil::List<const RecyclerWeakReference<Js::PropertyRecord const>*>* ScriptContext::FindPropertyIdNoCase(LPCWSTR propertyName, int propertyNameLength)
+    JsUtil::List<const RecyclerWeakReference<Js::PropertyRecord const>*>* ScriptContext::FindPropertyIdNoCase(const char16_t* propertyName, int propertyNameLength)
     {
         return threadContext->FindPropertyIdNoCase(this, propertyName, propertyNameLength);
     }
@@ -860,7 +860,7 @@ namespace Js
         threadContext->GetOrAddPropertyId(propertyName, propertyRecord);
     }
 
-    PropertyId ScriptContext::GetOrAddPropertyIdTracked(__in_ecount(propertyNameLength) LPCWSTR propertyName, int propertyNameLength)
+    PropertyId ScriptContext::GetOrAddPropertyIdTracked(__in_ecount(propertyNameLength) const char16_t* propertyName, int propertyNameLength)
     {
         Js::PropertyRecord const * propertyRecord = nullptr;
         threadContext->GetOrAddPropertyId(propertyName, propertyNameLength, &propertyRecord);
@@ -873,7 +873,7 @@ namespace Js
         return propertyRecord->GetPropertyId();
     }
 
-    void ScriptContext::GetOrAddPropertyRecord(__in_ecount(propertyNameLength) LPCWSTR propertyName, _In_ int propertyNameLength, _Out_ PropertyRecord const ** propertyRecord)
+    void ScriptContext::GetOrAddPropertyRecord(__in_ecount(propertyNameLength) const char16_t* propertyName, _In_ int propertyNameLength, _Out_ PropertyRecord const ** propertyRecord)
     {
         threadContext->GetOrAddPropertyId(propertyName, propertyNameLength, propertyRecord);
         if (propertyNameLength == 2)
@@ -1199,7 +1199,7 @@ namespace Js
         regexStacks = stacks;
     }
 
-    Js::TempArenaAllocatorObject* ScriptContext::GetTemporaryAllocator(LPCWSTR name)
+    Js::TempArenaAllocatorObject* ScriptContext::GetTemporaryAllocator(const char16_t* name)
     {
         return this->threadContext->GetTemporaryAllocator(name);
     }
@@ -1211,7 +1211,7 @@ namespace Js
         this->threadContext->ReleaseTemporaryAllocator(tempAllocator);
     }
 
-    Js::TempGuestArenaAllocatorObject* ScriptContext::GetTemporaryGuestAllocator(LPCWSTR name)
+    Js::TempGuestArenaAllocatorObject* ScriptContext::GetTemporaryGuestAllocator(const char16_t* name)
     {
         return this->threadContext->GetTemporaryGuestAllocator(name);
     }

@@ -175,7 +175,7 @@ namespace CorUnix
         uint32_t flProtect,
         uint32_t dwMaximumSizeHigh,
         uint32_t dwMaximumSizeLow,
-        LPCWSTR lpName,
+        const char16_t* lpName,
         HANDLE *phMapping
         );
 
@@ -184,7 +184,7 @@ namespace CorUnix
         CPalThread *pThread,
         uint32_t dwDesiredAccess,
         BOOL bInheritHandle,
-        LPCWSTR lpName,
+        const char16_t* lpName,
         HANDLE *phMapping
         );
 

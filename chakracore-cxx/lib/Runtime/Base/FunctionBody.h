@@ -1462,7 +1462,7 @@ namespace Js
         virtual void SetDisplayName(const char16_t* displayName, uint displayNameLength, uint displayShortNameOffset, SetDisplayNameFlags flags = SetDisplayNameFlagsNone) override;
         virtual uint GetDisplayNameLength() const { return m_displayNameLength; }
         virtual uint GetShortDisplayNameOffset() const { return m_displayShortNameOffset; }
-        LPCWSTR GetSourceInfo(int& lineNumber, int& columnNumber) const;
+        const char16_t* GetSourceInfo(int& lineNumber, int& columnNumber) const;
     private:
         Field(const byte*) m_functionBytes;
         Field(ByteCodeCache*) m_cache;
@@ -1673,10 +1673,10 @@ namespace Js
         uint32_t GetLineNumber() const;
         uint32_t GetColumnNumber() const;
         template <class T>
-        LPCWSTR GetSourceName(const T& sourceContextInfo) const;
+        const char16_t* GetSourceName(const T& sourceContextInfo) const;
         template <class T>
-        static LPCWSTR GetSourceName(const T& sourceContextInfo, bool m_isEval, bool m_isDynamicFunction);
-        LPCWSTR GetSourceName() const;
+        static const char16_t* GetSourceName(const T& sourceContextInfo, bool m_isEval, bool m_isDynamicFunction);
+        const char16_t* GetSourceName() const;
         uint32_t GetRelativeLineNumber() const { return m_lineNumber; }
         uint32_t GetRelativeColumnNumber() const { return m_columnNumber; }
         uint GetSourceIndex() const;
@@ -1876,13 +1876,13 @@ namespace Js
     // local FunctionBody and ScriptDAC (debugging) scenarios.
     //
     template <class T>
-    LPCWSTR ParseableFunctionInfo::GetSourceName(const T& sourceContextInfo) const
+    const char16_t* ParseableFunctionInfo::GetSourceName(const T& sourceContextInfo) const
     {
         return GetSourceName<T>(sourceContextInfo, this->m_isEval, this->m_isDynamicFunction);
     }
 
     template <class T>
-    LPCWSTR ParseableFunctionInfo::GetSourceName(const T& sourceContextInfo, bool m_isEval, bool m_isDynamicFunction)
+    const char16_t* ParseableFunctionInfo::GetSourceName(const T& sourceContextInfo, bool m_isEval, bool m_isDynamicFunction)
     {
         if (sourceContextInfo->IsDynamic())
         {
@@ -3330,7 +3330,7 @@ namespace Js
             return sourceSpan->begin == 0 && sourceSpan->end == 0;
         }
 
-        static void GetShortNameFromUrl(LPCWSTR pchUrl, _Out_writes_z_(cchBuffer) char16_t* pchShortName, size_t cchBuffer);
+        static void GetShortNameFromUrl(const char16_t* pchUrl, _Out_writes_z_(cchBuffer) char16_t* pchShortName, size_t cchBuffer);
 
         template<class Fn>
         void MapLoopHeaders(Fn fn) const

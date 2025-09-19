@@ -294,7 +294,7 @@ Error:
     return hr;
 }
 
-LPCWSTR Helpers::JsErrorCodeToString(JsErrorCode jsErrorCode)
+const char16_t* Helpers::JsErrorCodeToString(JsErrorCode jsErrorCode)
 {
     bool hasException = false;
     ChakraRTInterface::JsHasException(&hasException);

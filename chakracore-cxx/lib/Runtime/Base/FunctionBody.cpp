@@ -1884,7 +1884,7 @@ namespace Js
         return ComputeAbsoluteColumnNumber(this->m_lineNumber, m_columnNumber);
     }
 
-    LPCWSTR
+    const char16_t*
     ParseableFunctionInfo::GetSourceName() const
     {
         return GetSourceName(this->GetSourceContextInfo());
@@ -2189,7 +2189,7 @@ namespace Js
         this->m_displayNameIsRecyclerAllocated = FunctionProxy::SetDisplayName(pszDisplayName, &this->m_displayName, displayNameLength, m_scriptContext, flags);
     }
 
-    LPCWSTR DeferDeserializeFunctionInfo::GetSourceInfo(int& lineNumber, int& columnNumber) const
+    const char16_t* DeferDeserializeFunctionInfo::GetSourceInfo(int& lineNumber, int& columnNumber) const
     {
         // Read all the necessary information from the serialized byte code
         int lineNumberField, columnNumberField;
@@ -7949,15 +7949,15 @@ namespace Js
     }
 
     /*static*/
-    void FunctionBody::GetShortNameFromUrl(LPCWSTR pchUrl, _Out_writes_z_(cchBuffer) char16_t* pchShortName, size_t cchBuffer)
+    void FunctionBody::GetShortNameFromUrl(const char16_t* pchUrl, _Out_writes_z_(cchBuffer) char16_t* pchShortName, size_t cchBuffer)
     {
-        LPCWSTR pchFile = wcsrchr(pchUrl, u'/');
+        const char16_t* pchFile = wcsrchr(pchUrl, u'/');
         if (pchFile == nullptr)
         {
             pchFile = wcsrchr(pchUrl, u'\\');
         }
 
-        LPCWSTR pchToCopy = pchUrl;
+        const char16_t* pchToCopy = pchUrl;
 
         if (pchFile != nullptr)
         {

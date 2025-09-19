@@ -35,7 +35,7 @@ class EmitBufferManager
 {
     typedef EmitBufferAllocation<TAlloc, TPreReservedAlloc> TEmitBufferAllocation;
 public:
-    EmitBufferManager(ArenaAllocator * allocator, CustomHeap::CodePageAllocators<TAlloc, TPreReservedAlloc> * codePageAllocators, Js::ScriptContext * scriptContext, ThreadContextInfo * threadContext, LPCWSTR name, HANDLE processHandle);
+    EmitBufferManager(ArenaAllocator * allocator, CustomHeap::CodePageAllocators<TAlloc, TPreReservedAlloc> * codePageAllocators, Js::ScriptContext * scriptContext, ThreadContextInfo * threadContext, const char16_t* name, HANDLE processHandle);
     ~EmitBufferManager();
 
     // All the following methods are guarded with the SyncObject
@@ -90,7 +90,7 @@ private:
 #if DBG_DUMP
 
 public:
-    LPCWSTR name;
+    const char16_t* name;
     size_t totalBytesCode;
     size_t totalBytesLoopBody;
     size_t totalBytesAlignment;

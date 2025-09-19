@@ -91,7 +91,7 @@ namespace Js
     //
     // Loads the profile from the WININET cache
     //
-    bool SourceDynamicProfileManager::LoadFromProfileCache(SimpleDataCacheWrapper* dataCacheWrapper, LPCWSTR url)
+    bool SourceDynamicProfileManager::LoadFromProfileCache(SimpleDataCacheWrapper* dataCacheWrapper, const char16_t* url)
     {
 #ifdef ENABLE_WININET_PROFILE_DATA_CACHE
         AssertMsg(CONFIG_FLAG(WininetProfileCache), "Profile caching should be enabled for us to get here");

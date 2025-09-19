@@ -577,7 +577,7 @@ Js::DynamicObject * JsrtDebuggerObjectProperty::GetJSONObject(Js::ScriptContext*
     {
         propertyObject = scriptContext->GetLibrary()->CreateObject();
 
-        LPCWSTR name = objectDisplayRef->Name();
+        const char16_t* name = objectDisplayRef->Name();
 
         JsrtDebugUtils::AddPropertyToObject(propertyObject, JsrtDebugPropertyId::name, name, wcslen(name), scriptContext);
 

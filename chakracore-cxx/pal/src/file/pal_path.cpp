@@ -184,7 +184,7 @@ See MSDN doc.
 --*/
 uint32_t
 GetFullPathNameW(
-      LPCWSTR lpFileName,
+      const char16_t* lpFileName,
       uint32_t nBufferLength,
       char16_t* lpBuffer,
       char16_t* *lpFilePart)
@@ -309,7 +309,7 @@ Note:
 --*/
 uint32_t
 GetLongPathNameW(
-		  LPCWSTR lpszShortPath,
+		  const char16_t* lpszShortPath,
           char16_t* lpszLongPath,
   		  uint32_t cchBuffer)
 {
@@ -376,7 +376,7 @@ Note:
 --*/
 uint32_t
 GetShortPathNameW(
-		  LPCWSTR lpszLongPath,
+		  const char16_t* lpszLongPath,
           char16_t* lpszShortPath,
   		  uint32_t cchBuffer)
 {
@@ -1332,9 +1332,9 @@ PAL-specific notes :
 --*/
 uint32_t
 SearchPathW(
-     LPCWSTR lpPath,
-     LPCWSTR lpFileName,
-     LPCWSTR lpExtension,
+     const char16_t* lpPath,
+     const char16_t* lpFileName,
+     const char16_t* lpExtension,
      uint32_t nBufferLength,
      char16_t* lpBuffer,
      char16_t* *lpFilePart
@@ -1344,8 +1344,8 @@ SearchPathW(
     char16_t * FullPath;
     size_t FullPathLength = 0;
     PathWCharString FullPathPS;
-    LPCWSTR pPathStart;
-    LPCWSTR pPathEnd;
+    const char16_t* pPathStart;
+    const char16_t* pPathEnd;
     size_t PathLength;
     size_t FileNameLength;
     uint32_t dw;
@@ -1438,7 +1438,7 @@ SearchPathW(
     }
     else
     {
-        LPCWSTR pNextPath;
+        const char16_t* pNextPath;
 
         pNextPath = lpPath;
 
@@ -1602,7 +1602,7 @@ See MSDN doc.
 --*/
 char16_t*
 PathFindFileNameW(
-     LPCWSTR pPath
+     const char16_t* pPath
     )
 {
     ENTRY("PathFindFileNameW(pPath=%p (%S))\n",

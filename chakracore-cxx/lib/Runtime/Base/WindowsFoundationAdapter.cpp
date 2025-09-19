@@ -30,7 +30,7 @@ namespace Js
             int32_t hr;
             HSTRING hString;
             HSTRING_HEADER hStringHdr;
-            LPCWSTR factoryName = u"Windows.Foundation.Diagnostics.AsyncCausalityTracer";
+            const char16_t* factoryName = u"Windows.Foundation.Diagnostics.AsyncCausalityTracer";
             uint32_t factoryNameLen = _countof(u"Windows.Foundation.Diagnostics.AsyncCausalityTracer") - 1;
             IID factoryIID = __uuidof(IAsyncCausalityTracerStatics);
 

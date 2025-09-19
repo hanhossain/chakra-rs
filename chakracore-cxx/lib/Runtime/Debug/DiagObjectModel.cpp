@@ -117,17 +117,17 @@ namespace Js
     {
     }
 
-    LPCWSTR LocalsDisplay::Name()
+    const char16_t* LocalsDisplay::Name()
     {
         return u"Locals";
     }
 
-    LPCWSTR LocalsDisplay::Type()
+    const char16_t* LocalsDisplay::Type()
     {
         return u"";
     }
 
-    LPCWSTR LocalsDisplay::Value(int radix)
+    const char16_t* LocalsDisplay::Value(int radix)
     {
         return u"Locals";
     }
@@ -1924,14 +1924,14 @@ namespace Js
         return false;
     }
 
-    LPCWSTR RecyclableObjectDisplay::Name()
+    const char16_t* RecyclableObjectDisplay::Name()
     {
         return name;
     }
 
-    LPCWSTR RecyclableObjectDisplay::Type()
+    const char16_t* RecyclableObjectDisplay::Type()
     {
-        LPCWSTR typeStr;
+        const char16_t* typeStr;
 
         if(Js::TaggedInt::Is(instance) || Js::JavascriptNumber::Is(instance))
         {
@@ -1992,9 +1992,9 @@ namespace Js
         return instance;
     }
 
-    LPCWSTR RecyclableObjectDisplay::Value(int radix)
+    const char16_t* RecyclableObjectDisplay::Value(int radix)
     {
-        LPCWSTR valueStr = u"";
+        const char16_t* valueStr = u"";
 
         if(Js::TaggedInt::Is(instance)
             || Js::JavascriptNumber::Is(instance)
@@ -2910,7 +2910,7 @@ namespace Js
         return arrayObj->DirectGetItem(index);
     }
 
-    LPCWSTR RecyclableArrayWalker::GetIndexName(uint32 index, StringBuilder<ArenaAllocator>* stringBuilder)
+    const char16_t* RecyclableArrayWalker::GetIndexName(uint32 index, StringBuilder<ArenaAllocator>* stringBuilder)
     {
         stringBuilder->Append(u'[');
         if (stringBuilder->AppendUint64(index) != 0)
@@ -3614,7 +3614,7 @@ namespace Js
     //--------------------------
     // RecyclableCollectionObjectDisplay
     template <typename TData>
-    LPCWSTR RecyclableCollectionObjectDisplay<TData>::Value(int radix)
+    const char16_t* RecyclableCollectionObjectDisplay<TData>::Value(int radix)
     {
         StringBuilder<ArenaAllocator>* builder = scriptContext->GetThreadContext()->GetDebugManager()->pCurrentInterpreterLocation->stringBuilder;
         builder->Reset();
@@ -3652,7 +3652,7 @@ namespace Js
         return nullptr;
     }
 
-    LPCWSTR RecyclableKeyValueDisplay::Value(int radix)
+    const char16_t* RecyclableKeyValueDisplay::Value(int radix)
     {
         ResolvedObject ro;
         ro.scriptContext = scriptContext;
@@ -3944,12 +3944,12 @@ namespace Js
     {
     }
 
-    LPCWSTR RecyclableMethodsGroupDisplay::Type()
+    const char16_t* RecyclableMethodsGroupDisplay::Type()
     {
         return u"";
     }
 
-    LPCWSTR RecyclableMethodsGroupDisplay::Value(int radix)
+    const char16_t* RecyclableMethodsGroupDisplay::Value(int radix)
     {
         return u"{...}";
     }
@@ -3984,12 +3984,12 @@ namespace Js
     {
     }
 
-    LPCWSTR ScopeVariablesGroupDisplay::Type()
+    const char16_t* ScopeVariablesGroupDisplay::Type()
     {
         return u"";
     }
 
-    LPCWSTR ScopeVariablesGroupDisplay::Value(int radix)
+    const char16_t* ScopeVariablesGroupDisplay::Value(int radix)
     {
         if (VarIs<ActivationObject>(instance))
         {
@@ -4079,12 +4079,12 @@ namespace Js
     {
     }
 
-    LPCWSTR GlobalsScopeVariablesGroupDisplay::Type()
+    const char16_t* GlobalsScopeVariablesGroupDisplay::Type()
     {
         return u"";
     }
 
-    LPCWSTR GlobalsScopeVariablesGroupDisplay::Value(int radix)
+    const char16_t* GlobalsScopeVariablesGroupDisplay::Value(int radix)
     {
         return u"";
     }

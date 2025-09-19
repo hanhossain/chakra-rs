@@ -31,7 +31,7 @@ Revision History:
 /* clip strings (%s, %S) at this number of characters */
 #define MAX_STR_LEN 300
 
-static int Silent_WideCharToMultiByte(LPCWSTR lpWideCharStr, int cchWideChar, 
+static int Silent_WideCharToMultiByte(const char16_t* lpWideCharStr, int cchWideChar, 
                                       LPSTR lpMultiByteStr, int cbMultiByte);
 static BOOL Silent_ExtractFormatA(LPCSTR *Fmt, LPSTR Out, int32_t * Flags, int32_t * Width,
                                   int32_t * Precision, int32_t * Prefix, int32_t * Type);
@@ -564,13 +564,13 @@ Function:
 
 See MSDN doc.
 --*/
-int Silent_WideCharToMultiByte(LPCWSTR lpWideCharStr, int cchWideChar,
+int Silent_WideCharToMultiByte(const char16_t* lpWideCharStr, int cchWideChar,
                                LPSTR lpMultiByteStr, int cbMultiByte)
 {
     int32_t retval =0;
 
     if ((lpWideCharStr == NULL)||
-        (lpWideCharStr == (LPCWSTR) lpMultiByteStr))
+        (lpWideCharStr == (const char16_t*) lpMultiByteStr))
     {
         goto EXIT;
     }

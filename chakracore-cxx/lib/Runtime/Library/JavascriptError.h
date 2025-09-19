@@ -103,8 +103,8 @@ namespace Js
         static void __declspec(noreturn) ThrowParserError(ScriptContext* scriptContext, int32_t hrParser, CompileScriptException* se);
         static ErrorTypeEnum MapParseError(int32 hCode);
         static JavascriptError* MapParseError(ScriptContext* scriptContext, int32 hCode);
-        static int32_t GetRuntimeError(RecyclableObject* errorObject, __out_opt LPCWSTR * pMessage);
-        static int32_t GetRuntimeErrorWithScriptEnter(RecyclableObject* errorObject, __out_opt LPCWSTR * pMessage);
+        static int32_t GetRuntimeError(RecyclableObject* errorObject, __out_opt const char16_t* * pMessage);
+        static int32_t GetRuntimeErrorWithScriptEnter(RecyclableObject* errorObject, __out_opt const char16_t* * pMessage);
         static void __declspec(noreturn) ThrowStackOverflowError(ScriptContext *scriptContext, void * returnAddress = nullptr);
         static void SetErrorMessageProperties(JavascriptError *pError, int32_t errCode, PCWSTR message, ScriptContext* scriptContext);
         static void SetErrorMessage(JavascriptError *pError, int32_t errCode, PCWSTR varName, ScriptContext* scriptContext);

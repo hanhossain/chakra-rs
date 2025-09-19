@@ -71,7 +71,7 @@ public:
     static void CALLBACK PromiseContinuationCallback(JsValueRef task, void *callbackState);
     static void CALLBACK PromiseRejectionTrackerCallback(JsValueRef promise, JsValueRef reason, bool handled, void *callbackState);
 
-    static LPCWSTR ConvertErrorCodeToMessage(JsErrorCode errorCode)
+    static const char16_t* ConvertErrorCodeToMessage(JsErrorCode errorCode)
     {
         switch (errorCode)
         {
@@ -112,7 +112,7 @@ public:
     static void FinalizeFree(void * addr);
     static void RegisterScriptDir(unsigned long sourceContext, LPCSTR fullDirNarrow);
 private:
-    static void SetExceptionIf(JsErrorCode errorCode, LPCWSTR errorMessage);
+    static void SetExceptionIf(JsErrorCode errorCode, const char16_t* errorMessage);
     static bool CreateArgumentsObject(JsValueRef *argsObject);
     static bool CreateNamedFunction(const char*, JsNativeFunction callback, JsValueRef* functionVar);
     static void GetDir(LPCSTR fullPathNarrow, std::string *fullDirNarrow);

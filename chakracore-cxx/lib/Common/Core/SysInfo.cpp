@@ -319,9 +319,9 @@ uint32_t AutoSystemInfo::SaveModuleFileName(HANDLE hMod)
     return ::GetModuleFileNameW((HMODULE)hMod, Data.binaryName, MAX_PATH);
 }
 
-LPCWSTR AutoSystemInfo::GetJscriptDllFileName()
+const char16_t* AutoSystemInfo::GetJscriptDllFileName()
 {
-    return (LPCWSTR)Data.binaryName;
+    return (const char16_t*)Data.binaryName;
 }
 
 bool AutoSystemInfo::IsLowMemoryProcess()
@@ -360,7 +360,7 @@ int32_t AutoSystemInfo::GetJscriptFileVersion(uint32_t* majorVersion, uint32_t* 
     if(AutoSystemInfo::Data.majorVersion == 0 && AutoSystemInfo::Data.minorVersion == 0)
     {
         // uninitialized state  - call the system API to get the version info.
-        LPCWSTR jscriptDllName = GetJscriptDllFileName();
+        const char16_t* jscriptDllName = GetJscriptDllFileName();
         hr = GetVersionInfo(jscriptDllName, majorVersion, minorVersion);
 
         AutoSystemInfo::Data.majorVersion = *majorVersion;
@@ -389,7 +389,7 @@ int32_t AutoSystemInfo::GetJscriptFileVersion(uint32_t* majorVersion, uint32_t* 
 //
 // Returns the major and minor version of the binary passed as argument.
 //
-int32_t AutoSystemInfo::GetVersionInfo(LPCWSTR pszPath, uint32_t* majorVersion, uint32_t* minorVersion)
+int32_t AutoSystemInfo::GetVersionInfo(const char16_t* pszPath, uint32_t* majorVersion, uint32_t* minorVersion)
 {
     // xplat-todo: how to handle version resource?
     *majorVersion = INVALID_VERSION;

@@ -335,12 +335,12 @@ int UTF8ToUnicode(
 ////////////////////////////////////////////////////////////////////////////
 
 int UnicodeToUTF8(
-    LPCWSTR lpSrcStr,
+    const char16_t* lpSrcStr,
     int cchSrc,
     LPSTR lpDestStr,
     int cchDest)
 {
-    LPCWSTR lpWC = lpSrcStr;
+    const char16_t* lpWC = lpSrcStr;
     int     cchU8 = 0;                // # of UTF8 chars generated
     uint32_t   dwSurrogateChar;
     char16_t   wchHighSurrogate = 0;

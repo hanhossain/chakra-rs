@@ -26,7 +26,7 @@ public:
     template <class Func> static int FindArg(int argc, _In_reads_(argc) char16_t* argv[], Func func);
     template <int LEN> static int FindArg(int argc, _In_reads_(argc) char16_t* argv[], const char16_t(&targetArg)[LEN]);
 
-    virtual bool ParseFlag(LPCWSTR flagsString, ICmdLineArgsParser * parser) override;
+    virtual bool ParseFlag(const char16_t* flagsString, ICmdLineArgsParser * parser) override;
     virtual void PrintUsage() override;
     static void PrintUsageString();
 

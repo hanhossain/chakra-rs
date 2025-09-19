@@ -39,7 +39,7 @@ void regex::ImmutableStringBuilder<chunkSize>::AppendUInt64(unsigned long value)
 }
 
 template<int chunkSize>
-void regex::ImmutableStringBuilder<chunkSize>::AppendWithCopy(_In_z_ LPCWSTR str)
+void regex::ImmutableStringBuilder<chunkSize>::AppendWithCopy(_In_z_ const char16_t* str)
 {
     AssertMsg(str != nullptr, "str != nullptr");
     size_t strLength = wcslen(str) + 1; // include null-terminated

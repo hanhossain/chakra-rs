@@ -51,7 +51,7 @@ HostConfigFlags::HostConfigFlags() :
 {
 }
 
-bool HostConfigFlags::ParseFlag(LPCWSTR flagsString, ICmdLineArgsParser * parser)
+bool HostConfigFlags::ParseFlag(const char16_t* flagsString, ICmdLineArgsParser * parser)
 {
 #define FLAG(Type, Name, Desc, Default) \
     if (_wcsicmp(_u(#Name), flagsString) == 0) \
@@ -104,8 +104,8 @@ void HostConfigFlags::RemoveArg(int& argc, _Inout_updates_to_(argc, argc) char16
 
 void HostConfigFlags::HandleArgsFlag(int& argc, _Inout_updates_to_(argc, argc) char16_t* argv[])
 {
-    const LPCWSTR argsFlag = u"-args";
-    const LPCWSTR endArgsFlag = u"-endargs";
+    const char16_t* argsFlag = u"-args";
+    const char16_t* endArgsFlag = u"-endargs";
     int argsFlagLen = static_cast<int>(wcslen(argsFlag));
     int i;
     for (i = 1; i < argc; i++)

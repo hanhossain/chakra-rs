@@ -86,7 +86,7 @@ MemoryProfiler::GetRecyclerMemoryData()
 }
 
 ArenaMemoryData *
-MemoryProfiler::Begin(LPCWSTR name)
+MemoryProfiler::Begin(const char16_t* name)
 {
     if (!Js::Configuration::Global.flags.IsEnabled(Js::TraceMemoryFlag))
     {
@@ -126,7 +126,7 @@ MemoryProfiler::Begin(LPCWSTR name)
 }
 
 void
-MemoryProfiler::Reset(LPCWSTR name, ArenaMemoryData * memoryData)
+MemoryProfiler::Reset(const char16_t* name, ArenaMemoryData * memoryData)
 {
     MemoryProfiler * memoryProfiler = memoryData->profiler;
     ArenaMemoryDataSummary * arenaMemoryDataSummary;
@@ -147,7 +147,7 @@ MemoryProfiler::Reset(LPCWSTR name, ArenaMemoryData * memoryData)
 }
 
 void
-MemoryProfiler::End(LPCWSTR name, ArenaMemoryData * memoryData)
+MemoryProfiler::End(const char16_t* name, ArenaMemoryData * memoryData)
 {
     MemoryProfiler * memoryProfiler = memoryData->profiler;
     ArenaMemoryDataSummary * arenaMemoryDataSummary;

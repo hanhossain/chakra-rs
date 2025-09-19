@@ -29,7 +29,7 @@ void ConfigParserAPI::DisplayInitialOutput(char16_t* moduleName)
 {
 }
 
-LPCWSTR JsUtil::ExternalApi::GetFeatureKeyName()
+const char16_t* JsUtil::ExternalApi::GetFeatureKeyName()
 {
     return u"";
 }

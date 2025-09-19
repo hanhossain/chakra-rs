@@ -48,7 +48,7 @@ If the function fails, the return value is NULL.
 char16_t*
 lstrcatW(
 	   char16_t* lpString1,
-	  LPCWSTR lpString2)
+	  const char16_t* lpString2)
 {
     char16_t* lpStart = lpString1;
 
@@ -115,7 +115,7 @@ If the function fails, the return value is NULL.
 char16_t*
 lstrcpyW(
 	  char16_t* lpString1,
-	  LPCWSTR lpString2)
+	  const char16_t* lpString2)
 {
     char16_t* lpStart = lpString1;
 
@@ -209,7 +209,7 @@ Unicode versions.
 --*/
 int
 lstrlenW(
-	  LPCWSTR lpString)
+	  const char16_t* lpString)
 {
     int nChar = 0;
 
@@ -253,7 +253,7 @@ If the function fails, the return value is NULL.
 char16_t*
 lstrcpynW(
 	   char16_t* lpString1,
-	   LPCWSTR lpString2,
+	   const char16_t* lpString2,
 	   int iMaxLength)
 {
     char16_t* lpStart = lpString1;

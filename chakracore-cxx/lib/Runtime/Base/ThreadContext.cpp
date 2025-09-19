@@ -844,7 +844,7 @@ ThreadContext::FindPropertyRecord(const char16_t * propertyName, int propertyNam
 }
 
 Js::PropertyRecord const *
-ThreadContext::UncheckedAddPropertyId(LPCWSTR propertyName, int propertyNameLength, bool bind, bool isSymbol)
+ThreadContext::UncheckedAddPropertyId(const char16_t* propertyName, int propertyNameLength, bool bind, bool isSymbol)
 {
     return UncheckedAddPropertyId(JsUtil::CharacterBuffer<char16_t>(propertyName, propertyNameLength), bind, isSymbol);
 }
@@ -1100,7 +1100,7 @@ ThreadContext::BindPropertyRecord(const Js::PropertyRecord * propertyRecord)
     }
 }
 
-void ThreadContext::GetOrAddPropertyId(_In_ LPCWSTR propertyName, _In_ int propertyNameLength, _Out_ Js::PropertyRecord const ** propertyRecord)
+void ThreadContext::GetOrAddPropertyId(_In_ const char16_t* propertyName, _In_ int propertyNameLength, _Out_ Js::PropertyRecord const ** propertyRecord)
 {
     GetOrAddPropertyId(JsUtil::CharacterBuffer<char16_t>(propertyName, propertyNameLength), propertyRecord);
 }
@@ -1233,7 +1233,7 @@ void ThreadContext::CreateNoCasePropertyMap()
 }
 
 JsUtil::List<const RecyclerWeakReference<Js::PropertyRecord const>*>*
-ThreadContext::FindPropertyIdNoCase(Js::ScriptContext * scriptContext, LPCWSTR propertyName, int propertyNameLength)
+ThreadContext::FindPropertyIdNoCase(Js::ScriptContext * scriptContext, const char16_t* propertyName, int propertyNameLength)
 {
     return ThreadContext::FindPropertyIdNoCase(scriptContext, JsUtil::CharacterBuffer<char16_t>(propertyName,  propertyNameLength));
 }
@@ -2218,7 +2218,7 @@ void ThreadContext::ReleaseDebugManager()
 #endif
 
 Js::TempArenaAllocatorObject *
-ThreadContext::GetTemporaryAllocator(LPCWSTR name)
+ThreadContext::GetTemporaryAllocator(const char16_t* name)
 {
     AssertCanHandleOutOfMemory();
 
@@ -2249,7 +2249,7 @@ ThreadContext::ReleaseTemporaryAllocator(Js::TempArenaAllocatorObject * tempAllo
 
 
 Js::TempGuestArenaAllocatorObject *
-ThreadContext::GetTemporaryGuestAllocator(LPCWSTR name)
+ThreadContext::GetTemporaryGuestAllocator(const char16_t* name)
 {
     AssertCanHandleOutOfMemory();
 
@@ -4331,7 +4331,7 @@ Js::Var ThreadContext::GetMemoryStat(Js::ScriptContext* scriptContext)
     return dumper.Dump();
 }
 
-void ThreadContext::SetAutoProxyName(LPCWSTR objectName)
+void ThreadContext::SetAutoProxyName(const char16_t* objectName)
 {
     recyclableData->autoProxyName = objectName;
 }

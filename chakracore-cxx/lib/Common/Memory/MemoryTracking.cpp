@@ -13,7 +13,7 @@ void ArenaMemoryTracking::Activate()
 }
 
 // ArenaMemoryTracking stubs
-void ArenaMemoryTracking::ArenaCreated(Allocator *arena,  LPCWSTR name)
+void ArenaMemoryTracking::ArenaCreated(Allocator *arena,  const char16_t* name)
 {
     // Called when arena is created.
 }

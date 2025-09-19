@@ -147,7 +147,7 @@ CreateEventW(
           LPSECURITY_ATTRIBUTES lpEventAttributes,
           BOOL bManualReset,
           BOOL bInitialState,
-          LPCWSTR lpName)
+          const char16_t* lpName)
 {
     HANDLE hEvent = NULL;
     PAL_ERROR palError;
@@ -203,7 +203,7 @@ CorUnix::InternalCreateEvent(
     LPSECURITY_ATTRIBUTES lpEventAttributes,
     BOOL bManualReset,
     BOOL bInitialState,
-    LPCWSTR lpName,
+    const char16_t* lpName,
     HANDLE *phEvent
     )
 {
@@ -457,7 +457,7 @@ HANDLE
 OpenEventW(
         uint32_t dwDesiredAccess,
         BOOL bInheritHandle,
-        LPCWSTR lpName)
+        const char16_t* lpName)
 {
     HANDLE hEvent = NULL;
     PAL_ERROR palError = NO_ERROR;
@@ -513,7 +513,7 @@ CorUnix::InternalOpenEvent(
     CPalThread *pthr,
     uint32_t dwDesiredAccess,
     BOOL bInheritHandle,
-    LPCWSTR lpName,
+    const char16_t* lpName,
     HANDLE *phEvent
     )
 {

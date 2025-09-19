@@ -390,7 +390,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 
 //   _Outptr_ - Annotations for output params returning pointers
 //      These describe parameters where the called function provides the buffer:
-//        int32_t SHStrDupW(_In_ LPCWSTR psz, _Outptr_ char16_t* *ppwsz);
+//        int32_t SHStrDupW(_In_ const char16_t* psz, _Outptr_ char16_t* *ppwsz);
 //      The caller passes the address of an char16_t* variable as ppwsz, and SHStrDupW allocates
 //      and initializes memory and returns the pointer to the new char16_t* in *ppwsz.
 //

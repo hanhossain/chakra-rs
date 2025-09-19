@@ -49,7 +49,7 @@ See MSDN doc.
 --*/
 BOOL
 CreateDirectoryW(
-          LPCWSTR lpPathName,
+          const char16_t* lpPathName,
           LPSECURITY_ATTRIBUTES lpSecurityAttributes)
 {
     BOOL  bRet = FALSE;
@@ -237,7 +237,7 @@ See MSDN doc.
 --*/
 BOOL
 RemoveDirectoryW(
-          LPCWSTR lpPathName)
+          const char16_t* lpPathName)
 {
     PathCharString mb_dirPathString;
     int   mb_size;
@@ -427,7 +427,7 @@ See MSDN doc.
 --*/
 BOOL
 SetCurrentDirectoryW(
-             LPCWSTR lpPathName)
+             const char16_t* lpPathName)
 {
     BOOL bRet;
     uint32_t dwLastError = 0;

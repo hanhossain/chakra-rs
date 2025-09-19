@@ -67,7 +67,7 @@ namespace Js
         virtual bool IsSubstring() const;
         int GetLengthAsSignedInt() const;
         const char16_t* UnsafeGetBuffer() const;
-        LPCWSTR GetSzCopy(ArenaAllocator* alloc);   // Copy to an Arena
+        const char16_t* GetSzCopy(ArenaAllocator* alloc);   // Copy to an Arena
         const char16_t* GetString(); // Get string, may not be NULL terminated
 
         // NumberUtil::FIntRadStrToDbl and parts of GlobalObject::EntryParseInt were refactored into ToInteger
@@ -131,7 +131,7 @@ namespace Js
         virtual BOOL ToPrimitive(JavascriptHint hint, Var* value, ScriptContext * requestContext) override { AssertMsg(false, "String ToPrimitive should not be called"); *value = this; return true;}
         virtual RecyclableObject * CloneToScriptContext(ScriptContext* requestContext) override;
 
-        virtual BOOL BufferEquals(__in_ecount(otherLength) LPCWSTR otherBuffer, charcount_t otherLength);
+        virtual BOOL BufferEquals(__in_ecount(otherLength) const char16_t* otherBuffer, charcount_t otherLength);
         char16_t* GetNormalizedString(PlatformAgnostic::UnicodeText::NormalizationForm, ArenaAllocator*, charcount_t&);
 
         static bool Equals(JavascriptString* aLeft, JavascriptString* aRight);
