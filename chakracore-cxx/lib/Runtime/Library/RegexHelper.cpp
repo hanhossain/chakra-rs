@@ -378,7 +378,7 @@ namespace Js
         }
         else
         {
-            PCWSTR varName = scriptConfig->IsES6RegExSymbolsEnabled()
+            const char16_t * varName = scriptConfig->IsES6RegExSymbolsEnabled()
                 ? u"RegExp.prototype[Symbol.match]"
                 : u"String.prototype.match";
             JavascriptRegExp* regularExpression = JavascriptRegExp::ToRegExp(thisObj, varName, scriptContext);
@@ -397,7 +397,7 @@ namespace Js
 
     Var RegexHelper::RegexEs6MatchImpl(ScriptContext* scriptContext, RecyclableObject *thisObj, JavascriptString *input, bool noResult, void *const stackAllocationPointer)
     {
-        PCWSTR const varName = u"RegExp.prototype[Symbol.match]";
+        const char16_t * const varName = u"RegExp.prototype[Symbol.match]";
 
         if (!JavascriptRegExp::GetGlobalProperty(thisObj, scriptContext))
         {
@@ -902,7 +902,7 @@ namespace Js
         }
         else
         {
-            PCWSTR varName = scriptConfig->IsES6RegExSymbolsEnabled()
+            const char16_t * varName = scriptConfig->IsES6RegExSymbolsEnabled()
                 ? u"RegExp.prototype[Symbol.replace]"
                 : u"String.prototype.replace";
             JavascriptRegExp* regularExpression = JavascriptRegExp::ToRegExp(thisObj, varName, scriptContext);
@@ -1023,7 +1023,7 @@ namespace Js
 
         while (true)
         {
-            PCWSTR varName = u"RegExp.prototype[Symbol.replace]";
+            const char16_t * varName = u"RegExp.prototype[Symbol.replace]";
             Var result = JavascriptRegExp::CallExec(thisObj, input, varName, scriptContext);
             if (JavascriptOperators::IsNull(result))
             {
@@ -1259,7 +1259,7 @@ namespace Js
         }
         else
         {
-            PCWSTR varName = scriptConfig->IsES6RegExSymbolsEnabled()
+            const char16_t * varName = scriptConfig->IsES6RegExSymbolsEnabled()
                 ? u"RegExp.prototype[Symbol.replace]"
                 : u"String.prototype.replace";
             JavascriptRegExp* regularExpression = JavascriptRegExp::ToRegExp(thisObj, varName, scriptContext);
@@ -1588,7 +1588,7 @@ namespace Js
         }
         else
         {
-            PCWSTR varName = scriptContext->GetConfig()->IsES6RegExSymbolsEnabled()
+            const char16_t * varName = scriptContext->GetConfig()->IsES6RegExSymbolsEnabled()
                 ? u"RegExp.prototype[Symbol.split]"
                 : u"String.prototype.split";
             JavascriptRegExp* regularExpression = JavascriptRegExp::ToRegExp(thisObj, varName, scriptContext);
@@ -1607,7 +1607,7 @@ namespace Js
 
     Var RegexHelper::RegexEs6SplitImpl(ScriptContext* scriptContext, RecyclableObject* thisObj, JavascriptString* input, CharCount limit, bool noResult, void *const stackAllocationPointer)
     {
-        PCWSTR const varName = u"RegExp.prototype[Symbol.split]";
+        const char16_t * const varName = u"RegExp.prototype[Symbol.split]";
 
         JavascriptFunction* defaultConstructor = scriptContext->GetLibrary()->GetRegExpConstructor();
         RecyclableObject* speciesConstructor = JavascriptOperators::SpeciesConstructor(

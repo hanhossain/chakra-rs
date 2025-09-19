@@ -83,9 +83,9 @@ void HostConfigFlags::PrintUsage()
     ChakraRTInterface::PrintConfigFlagsUsageString();
 }
 
-int HostConfigFlags::FindArg(int argc, _In_reads_(argc) char16_t* argv[], PCWSTR targetArg, size_t targetArgLen)
+int HostConfigFlags::FindArg(int argc, _In_reads_(argc) char16_t* argv[], const char16_t * targetArg, size_t targetArgLen)
 {
-    return FindArg(argc, argv, [=](PCWSTR arg) -> bool
+    return FindArg(argc, argv, [=](const char16_t * arg) -> bool
     {
         return _wcsnicmp(arg, targetArg, targetArgLen) == 0;
     });

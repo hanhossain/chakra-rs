@@ -40,9 +40,9 @@ namespace Js
         //  3. ToNumber(lastIndexVar) yields NaN, +0, -0 or an integer in range [0, MaxCharCount]
         Field(CharCount) lastIndexOrFlag;
 
-        static JavascriptRegExp * GetJavascriptRegExp(Arguments& args, PCWSTR varName, ScriptContext* scriptContext);
-        static JavascriptRegExp * ToRegExp(Var var, PCWSTR varName, ScriptContext* scriptContext);
-        static RecyclableObject * GetThisObject(Arguments& args, PCWSTR varName, ScriptContext* scriptContext);
+        static JavascriptRegExp * GetJavascriptRegExp(Arguments& args, const char16_t * varName, ScriptContext* scriptContext);
+        static JavascriptRegExp * ToRegExp(Var var, const char16_t * varName, ScriptContext* scriptContext);
+        static RecyclableObject * GetThisObject(Arguments& args, const char16_t * varName, ScriptContext* scriptContext);
         static JavascriptString * GetFirstStringArg(Arguments& args, ScriptContext* scriptContext);
 
         static bool ShouldApplyPrototypeWebWorkaround(Arguments& args, ScriptContext* scriptContext);
@@ -80,7 +80,7 @@ namespace Js
         static bool HasObservableGlobalFlag(DynamicObject* regexPrototype);
         static bool HasObservableUnicodeFlag(DynamicObject* regexPrototype);
 
-        static Var CallExec(RecyclableObject* thisObj, JavascriptString* string, PCWSTR varName, ScriptContext* scriptContext);
+        static Var CallExec(RecyclableObject* thisObj, JavascriptString* string, const char16_t * varName, ScriptContext* scriptContext);
         UnifiedRegex::RegexFlags SetRegexFlag(PropertyId propertyId, UnifiedRegex::RegexFlags flags, UnifiedRegex::RegexFlags flag, ScriptContext* scriptContext);
 
         // For boxing stack instance

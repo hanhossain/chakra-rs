@@ -3890,7 +3890,7 @@ namespace Js
         void SetEnd(int end);
 #if DBG
         void Dump();
-        PCWSTR GetDebuggerScopeTypeString(DiagExtraScopesType scopeType);
+        const char16_t * GetDebuggerScopeTypeString(DiagExtraScopesType scopeType);
 #endif
 
 #if ENABLE_TTD

@@ -350,10 +350,10 @@ namespace Js
         static Var DoStringReplace(Arguments& args, CallInfo& callInfo, JavascriptString* input, ScriptContext* scriptContext);
         static Var DoStringSplit(Arguments& args, CallInfo& callInfo, JavascriptString* input, ScriptContext* scriptContext);
         template<int argCount, typename FallbackFn>
-        static Var DelegateToRegExSymbolFunction(ArgumentReader &args, PropertyId symbolPropertyId, FallbackFn fallback, PCWSTR varName, ScriptContext* scriptContext);
+        static Var DelegateToRegExSymbolFunction(ArgumentReader &args, PropertyId symbolPropertyId, FallbackFn fallback, const char16_t * varName, ScriptContext* scriptContext);
         static Var GetRegExSymbolFunction(Var regExp, PropertyId propertyId, ScriptContext* scriptContext);
         template<int argCount> // The count is excluding 'this'
-        static Var CallRegExSymbolFunction(Var fn, Var regExp, Arguments& args, PCWSTR const varName, ScriptContext* scriptContext);
+        static Var CallRegExSymbolFunction(Var fn, Var regExp, Arguments& args, const char16_t * const varName, ScriptContext* scriptContext);
         template<int argCount> // The count is excluding 'this'
         static Var CallRegExFunction(RecyclableObject* fnObj, Var regExp, Arguments& args, ScriptContext *scriptContext);
     };

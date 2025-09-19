@@ -200,7 +200,7 @@ public:
     {
         Js::RecyclableObject* function;
         Js::CallInfo callInfo;
-        PCWSTR name;
+        const char16_t * name;
         void * addr;
         Entry* next;
     };
@@ -236,7 +236,7 @@ private:
     NativeLibraryEntryRecord::Entry entry;
 
 public:
-    AutoTagNativeLibraryEntry(Js::RecyclableObject* function, Js::CallInfo callInfo, PCWSTR name, void* addr);
+    AutoTagNativeLibraryEntry(Js::RecyclableObject* function, Js::CallInfo callInfo, const char16_t * name, void* addr);
     ~AutoTagNativeLibraryEntry();
 };
 

@@ -1439,7 +1439,7 @@ case_2:
 
         Assert(!(callInfo.Flags & CallFlags_New));
 
-        PCWSTR const varName = u"String.prototype.match";
+        const char16_t * const varName = u"String.prototype.match";
 
         AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, varName);
 
@@ -1640,7 +1640,7 @@ case_2:
         ARGUMENTS(args, callInfo);
         ScriptContext* scriptContext = function->GetScriptContext();
 
-        PCWSTR const varName = u"String.prototype.replace";
+        const char16_t * const varName = u"String.prototype.replace";
 
         AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, varName);
 
@@ -1744,7 +1744,7 @@ case_2:
 
         Assert(!(callInfo.Flags & CallFlags_New));
 
-        PCWSTR const varName = u"String.prototype.search";
+        const char16_t * const varName = u"String.prototype.search";
 
         AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, varName);
 
@@ -1768,7 +1768,7 @@ case_2:
     }
 
     template<int argCount, typename FallbackFn>
-    Var JavascriptString::DelegateToRegExSymbolFunction(ArgumentReader &args, PropertyId symbolPropertyId, FallbackFn fallback, PCWSTR varName, ScriptContext* scriptContext)
+    Var JavascriptString::DelegateToRegExSymbolFunction(ArgumentReader &args, PropertyId symbolPropertyId, FallbackFn fallback, const char16_t * varName, ScriptContext* scriptContext)
     {
         if (scriptContext->GetConfig()->IsES6RegExSymbolsEnabled())
         {
@@ -1802,7 +1802,7 @@ case_2:
     }
 
     template<int argCount>
-    Var JavascriptString::CallRegExSymbolFunction(Var fn, Var regExp, Arguments& args, PCWSTR const varName, ScriptContext* scriptContext)
+    Var JavascriptString::CallRegExSymbolFunction(Var fn, Var regExp, Arguments& args, const char16_t * const varName, ScriptContext* scriptContext)
     {
         if (!JavascriptConversion::IsCallable(fn))
         {
@@ -1908,7 +1908,7 @@ case_2:
 
         Assert(!(callInfo.Flags & CallFlags_New));
 
-        PCWSTR const varName = u"String.prototype.split";
+        const char16_t * const varName = u"String.prototype.split";
 
         AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, varName);
 

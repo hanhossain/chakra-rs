@@ -3172,7 +3172,7 @@ using namespace Js;
     template<typename T>
     void JavascriptArray::TryGetArrayAndLength(Var arg,
         ScriptContext *scriptContext,
-        PCWSTR methodName,
+        const char16_t * methodName,
         JavascriptArray** array,
         RecyclableObject** obj,
         T * length)

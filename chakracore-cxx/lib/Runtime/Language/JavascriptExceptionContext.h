@@ -18,7 +18,7 @@ namespace Js {
             union
             {
                 Field(uint32) byteCodeOffset;  // used for script functions        (functionBody != nullptr)
-                Field(PCWSTR) name;            // used for native/virtual frames   (functionBody == nullptr)
+                Field(const char16_t *) name;            // used for native/virtual frames   (functionBody == nullptr)
             };
             Field(StackTraceArguments) argumentTypes;
 

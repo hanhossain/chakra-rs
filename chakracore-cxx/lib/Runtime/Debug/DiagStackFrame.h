@@ -26,7 +26,7 @@ namespace Js
         virtual Var CreateHeapArguments() = 0;
 
         virtual ScriptContext* GetScriptContext();
-        virtual PCWSTR GetDisplayName();
+        virtual const char16_t * GetDisplayName();
         virtual bool IsInterpreterFrame();
         virtual InterpreterStackFrame* AsInterpreterFrame();
         virtual ArenaAllocator * GetArena();
@@ -109,11 +109,11 @@ namespace Js
     class DiagRuntimeStackFrame : public DiagStackFrame
     {
         JavascriptFunction* m_function;
-        PCWSTR m_displayName;
+        const char16_t * m_displayName;
         void* m_stackAddr;
 
     public:
-        DiagRuntimeStackFrame(JavascriptFunction* function, PCWSTR displayName, void* stackAddr);
+        DiagRuntimeStackFrame(JavascriptFunction* function, const char16_t * displayName, void* stackAddr);
         virtual JavascriptFunction* GetJavascriptFunction() override;
         virtual int GetByteCodeOffset() override;
         virtual unsigned long GetStackAddress() override;
@@ -123,6 +123,6 @@ namespace Js
         virtual Var GetArgumentsObject() override;
         virtual Var CreateHeapArguments() override;
 
-        virtual PCWSTR GetDisplayName() override;
+        virtual const char16_t * GetDisplayName() override;
     };
 }
