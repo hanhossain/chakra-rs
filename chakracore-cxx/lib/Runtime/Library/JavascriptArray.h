@@ -896,7 +896,7 @@ namespace Js
         static void ThrowErrorOnFailure(BOOL succeeded, ScriptContext* scriptContext, BigIndex index);
 
         template<typename T>
-        static void TryGetArrayAndLength(Var arg, ScriptContext *scriptContext, PCWSTR methodName, JavascriptArray** array, RecyclableObject** obj, T * length);
+        static void TryGetArrayAndLength(Var arg, ScriptContext *scriptContext, const char16_t * methodName, JavascriptArray** array, RecyclableObject** obj, T * length);
         static unsigned long OP_GetLength(Var obj, ScriptContext *scriptContext);
 
     public:
@@ -974,10 +974,10 @@ namespace Js
     class ThrowTypeErrorOnFailureHelper
     {
         ScriptContext *m_scriptContext;
-        PCWSTR m_functionName;
+        const char16_t * m_functionName;
 
     public:
-        ThrowTypeErrorOnFailureHelper(ScriptContext *scriptContext, PCWSTR functionName) : m_scriptContext(scriptContext), m_functionName(functionName) {}
+        ThrowTypeErrorOnFailureHelper(ScriptContext *scriptContext, const char16_t * functionName) : m_scriptContext(scriptContext), m_functionName(functionName) {}
         inline void ThrowTypeErrorOnFailure(BOOL operationSucceeded);
         inline void ThrowTypeErrorOnFailure();
         inline BOOL IsThrowTypeError(BOOL operationSucceeded);

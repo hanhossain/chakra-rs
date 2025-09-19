@@ -42,7 +42,7 @@ namespace Js
         return GetJavascriptFunction()->GetScriptContext();
     }
 
-    PCWSTR DiagStackFrame::GetDisplayName()
+    const char16_t * DiagStackFrame::GetDisplayName()
     {
         return GetFunction()->GetExternalDisplayName();
     }
@@ -608,7 +608,7 @@ namespace Js
 #endif
 
 
-    DiagRuntimeStackFrame::DiagRuntimeStackFrame(JavascriptFunction* function, PCWSTR displayName, void* stackAddr):
+    DiagRuntimeStackFrame::DiagRuntimeStackFrame(JavascriptFunction* function, const char16_t * displayName, void* stackAddr):
         m_function(function),
         m_displayName(displayName),
         m_stackAddr(stackAddr)
@@ -620,7 +620,7 @@ namespace Js
         return m_function;
     }
 
-    PCWSTR DiagRuntimeStackFrame::GetDisplayName()
+    const char16_t * DiagRuntimeStackFrame::GetDisplayName()
     {
         return m_displayName;
     }

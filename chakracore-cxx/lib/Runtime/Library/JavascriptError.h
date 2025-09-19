@@ -83,7 +83,7 @@ namespace Js
 
 #define THROW_ERROR_DECL(err_method) \
         static void __declspec(noreturn) err_method(ScriptContext* scriptContext, int32 hCode, EXCEPINFO* ei); \
-        static void __declspec(noreturn) err_method(ScriptContext* scriptContext, int32 hCode, PCWSTR varName = nullptr); \
+        static void __declspec(noreturn) err_method(ScriptContext* scriptContext, int32 hCode, const char16_t * varName = nullptr); \
         static void __declspec(noreturn) err_method(ScriptContext* scriptContext, int32 hCode, JavascriptString* varName); \
         static void __declspec(noreturn) err_method##Var(ScriptContext* scriptContext, int32 hCode, ...);
 
@@ -98,7 +98,7 @@ namespace Js
         THROW_ERROR_DECL(ThrowWebAssemblyLinkError)
 
 #undef THROW_ERROR_DECL
-        static void __declspec(noreturn) ThrowDispatchError(ScriptContext* scriptContext, int32_t hCode, PCWSTR message);
+        static void __declspec(noreturn) ThrowDispatchError(ScriptContext* scriptContext, int32_t hCode, const char16_t * message);
         static void __declspec(noreturn) ThrowOutOfMemoryError(ScriptContext *scriptContext);
         static void __declspec(noreturn) ThrowParserError(ScriptContext* scriptContext, int32_t hrParser, CompileScriptException* se);
         static ErrorTypeEnum MapParseError(int32 hCode);
@@ -106,8 +106,8 @@ namespace Js
         static int32_t GetRuntimeError(RecyclableObject* errorObject, __out_opt const char16_t* * pMessage);
         static int32_t GetRuntimeErrorWithScriptEnter(RecyclableObject* errorObject, __out_opt const char16_t* * pMessage);
         static void __declspec(noreturn) ThrowStackOverflowError(ScriptContext *scriptContext, void * returnAddress = nullptr);
-        static void SetErrorMessageProperties(JavascriptError *pError, int32_t errCode, PCWSTR message, ScriptContext* scriptContext);
-        static void SetErrorMessage(JavascriptError *pError, int32_t errCode, PCWSTR varName, ScriptContext* scriptContext);
+        static void SetErrorMessageProperties(JavascriptError *pError, int32_t errCode, const char16_t * message, ScriptContext* scriptContext);
+        static void SetErrorMessage(JavascriptError *pError, int32_t errCode, const char16_t * varName, ScriptContext* scriptContext);
         static void SetErrorMessage(JavascriptError *pError, int32_t hr, ScriptContext* scriptContext, va_list argList);
         static void SetErrorMessage(JavascriptError *pError, int32_t hr, ScriptContext* scriptContext, ...);
         static void SetErrorType(JavascriptError *pError, ErrorTypeEnum errorType);
@@ -116,8 +116,8 @@ namespace Js
         static bool ThrowCantAssign(PropertyOperationFlags flags, ScriptContext* scriptContext, uint32 index);
         static bool ThrowCantAssignIfStrictMode(PropertyOperationFlags flags, ScriptContext* scriptContext);
         static bool ThrowCantExtendIfStrictMode(PropertyOperationFlags flags, ScriptContext* scriptContext);
-        static bool ThrowCantDeleteIfStrictMode(PropertyOperationFlags flags, ScriptContext* scriptContext, PCWSTR varName);
-        static bool ThrowCantDeleteIfStrictModeOrNonconfigurable(PropertyOperationFlags flags, ScriptContext* scriptContext, PCWSTR varName);
+        static bool ThrowCantDeleteIfStrictMode(PropertyOperationFlags flags, ScriptContext* scriptContext, const char16_t * varName);
+        static bool ThrowCantDeleteIfStrictModeOrNonconfigurable(PropertyOperationFlags flags, ScriptContext* scriptContext, const char16_t * varName);
         static bool ThrowIfUndefinedSetter(PropertyOperationFlags flags, Var setterValue, ScriptContext* scriptContext, PropertyId propertyId);
         static bool ThrowIfStrictModeUndefinedSetter(PropertyOperationFlags flags, Var setterValue, ScriptContext* scriptContext);
         static bool ThrowIfNotExtensibleUndefinedSetter(PropertyOperationFlags flags, Var setterValue, ScriptContext* scriptContext);
@@ -144,7 +144,7 @@ namespace Js
 
         virtual JavascriptError* CreateNewErrorOfSameType(JavascriptLibrary* targetJavascriptLibrary);
         JavascriptError* CloneErrorMsgAndNumber(JavascriptLibrary* targetJavascriptLibrary);
-        static void TryThrowTypeError(ScriptContext * checkScriptContext, ScriptContext * scriptContext, int32 hCode, PCWSTR varName = nullptr);
+        static void TryThrowTypeError(ScriptContext * checkScriptContext, ScriptContext * scriptContext, int32 hCode, const char16_t * varName = nullptr);
         static JavascriptError* CreateFromCompileScriptException(ScriptContext* scriptContext, CompileScriptException* cse, const char16_t * sourceUrl = nullptr);
 
         static Var NewAggregateErrorInstance(RecyclableObject* function, CallInfo callinfo, ...);

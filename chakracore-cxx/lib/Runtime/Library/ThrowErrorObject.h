@@ -23,12 +23,12 @@ namespace Js
 
         static ThrowErrorObject* New(StaticType* type, JavascriptError* error, Recycler* recycler);
 
-        static RecyclableObject* CreateThrowTypeErrorObject(ScriptContext* scriptContext, int32 hCode, PCWSTR varName);
+        static RecyclableObject* CreateThrowTypeErrorObject(ScriptContext* scriptContext, int32 hCode, const char16_t * varName);
         static RecyclableObject* CreateThrowTypeErrorObject(ScriptContext* scriptContext, int32 hCode, JavascriptString* varName);
 
     private:
         typedef JavascriptError* (JavascriptLibrary::*CreateErrorFunc)();
-        static RecyclableObject* CreateThrowErrorObject(CreateErrorFunc createError, ScriptContext* scriptContext, int32 hCode, PCWSTR varName);
+        static RecyclableObject* CreateThrowErrorObject(CreateErrorFunc createError, ScriptContext* scriptContext, int32 hCode, const char16_t * varName);
     };
 
     template <> inline bool VarIsImpl<ThrowErrorObject>(RecyclableObject* obj)

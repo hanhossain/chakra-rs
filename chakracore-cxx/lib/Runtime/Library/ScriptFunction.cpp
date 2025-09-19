@@ -361,7 +361,7 @@ using namespace Js;
         {
             //Don't display if it is anonymous function
             charcount_t displayNameLength = 0;
-            PCWSTR displayName = pFuncBody->GetShortDisplayName(&displayNameLength);
+            const char16_t * displayName = pFuncBody->GetShortDisplayName(&displayNameLength);
             cachedSourceString = JavascriptFunction::GetLibraryCodeDisplayString(scriptContext, displayName);
         }
         else if (!pFuncBody->GetUtf8SourceInfo()->GetIsXDomain()

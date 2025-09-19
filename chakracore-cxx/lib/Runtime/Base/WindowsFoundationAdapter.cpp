@@ -68,7 +68,7 @@ namespace Js
         _In_ int32_t source,
         _In_ GUID platformId,
         _In_ unsigned long operationId,
-        _In_z_ PCWSTR operationName,
+        _In_z_ const char16_t * operationName,
         _In_ unsigned long relatedContext)
     {
         int32_t hr;

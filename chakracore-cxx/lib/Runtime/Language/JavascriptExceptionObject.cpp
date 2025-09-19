@@ -188,7 +188,7 @@ namespace Js
     // Get function name with arguments info. Used by script WER.
     int32_t JavascriptExceptionContext::StackFrame::GetFunctionNameWithArguments(_In_ const char16_t* *outResult) const
     {
-        PCWSTR name = GetFunctionName();
+        const char16_t * name = GetFunctionName();
         int32_t hr = S_OK;
         if (IsScriptFunction())
         {

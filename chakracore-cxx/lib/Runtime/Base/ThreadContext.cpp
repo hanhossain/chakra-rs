@@ -4581,7 +4581,7 @@ ThreadContext::ClearRootTrackerScriptContext(Js::ScriptContext * scriptContext)
 }
 #endif
 
-AutoTagNativeLibraryEntry::AutoTagNativeLibraryEntry(Js::RecyclableObject* function, Js::CallInfo callInfo, PCWSTR name, void* addr)
+AutoTagNativeLibraryEntry::AutoTagNativeLibraryEntry(Js::RecyclableObject* function, Js::CallInfo callInfo, const char16_t * name, void* addr)
 {
     // Save function/callInfo values (for StackWalker). Compiler may stackpack/optimize them for built-in native functions.
     entry.function = function;

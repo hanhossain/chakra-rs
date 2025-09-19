@@ -159,7 +159,7 @@ using namespace Js;
         return GetPattern()->GetFlags();
     }
 
-    JavascriptRegExp* JavascriptRegExp::GetJavascriptRegExp(Arguments& args, PCWSTR propertyName, ScriptContext* scriptContext)
+    JavascriptRegExp* JavascriptRegExp::GetJavascriptRegExp(Arguments& args, const char16_t * propertyName, ScriptContext* scriptContext)
     {
         if (args.Info.Count == 0)
         {
@@ -169,7 +169,7 @@ using namespace Js;
         return ToRegExp(args[0], propertyName, scriptContext);
     }
 
-    JavascriptRegExp* JavascriptRegExp::ToRegExp(Var var, PCWSTR varName, ScriptContext* scriptContext)
+    JavascriptRegExp* JavascriptRegExp::ToRegExp(Var var, const char16_t * varName, ScriptContext* scriptContext)
     {
         JavascriptRegExp * regExp = JavascriptOperators::TryFromVar<JavascriptRegExp>(var);
         if (regExp)
@@ -191,7 +191,7 @@ using namespace Js;
     }
 
 
-    RecyclableObject* JavascriptRegExp::GetThisObject(Arguments& args, PCWSTR varName, ScriptContext* scriptContext)
+    RecyclableObject* JavascriptRegExp::GetThisObject(Arguments& args, const char16_t * varName, ScriptContext* scriptContext)
     {
         if (args.Info.Count == 0 || !JavascriptOperators::IsObject(args[0]))
         {
@@ -659,7 +659,7 @@ using namespace Js;
         Assert(!(callInfo.Flags & CallFlags_New));
         Assert(args.Info.Count > 0);
 
-        PCWSTR const varName = u"RegExp.prototype.toString";
+        const char16_t * const varName = u"RegExp.prototype.toString";
 
         const ScriptConfiguration* scriptConfig = scriptContext->GetConfig();
 
@@ -698,7 +698,7 @@ using namespace Js;
 
         ScriptContext* scriptContext = function->GetScriptContext();
 
-        PCWSTR const varName = u"RegExp.prototype[Symbol.match]";
+        const char16_t * const varName = u"RegExp.prototype[Symbol.match]";
 
         RecyclableObject *thisObj = GetThisObject(args, varName, scriptContext);
         JavascriptString* string = GetFirstStringArg(args, scriptContext);
@@ -766,7 +766,7 @@ using namespace Js;
 
         ScriptContext* scriptContext = function->GetScriptContext();
 
-        PCWSTR varName = u"RegExp.prototype[Symbol.replace]";
+        const char16_t * varName = u"RegExp.prototype[Symbol.replace]";
 
         RecyclableObject* thisObj = GetThisObject(args, varName, scriptContext);
         JavascriptString* string = GetFirstStringArg(args, scriptContext);
@@ -798,7 +798,7 @@ using namespace Js;
 
         ScriptContext* scriptContext = function->GetScriptContext();
 
-        PCWSTR const varName = u"RegExp.prototype[Symbol.search]";
+        const char16_t * const varName = u"RegExp.prototype[Symbol.search]";
 
         RecyclableObject *thisObj = GetThisObject(args, varName, scriptContext);
         Var regEx = args[0];
@@ -850,7 +850,7 @@ using namespace Js;
             RegexHelper::IsResultNotUsed(callInfo.Flags));
     }
 
-    Var JavascriptRegExp::CallExec(RecyclableObject* thisObj, JavascriptString* string, PCWSTR varName, ScriptContext* scriptContext)
+    Var JavascriptRegExp::CallExec(RecyclableObject* thisObj, JavascriptString* string, const char16_t * varName, ScriptContext* scriptContext)
     {
         Var exec = JavascriptOperators::GetProperty(thisObj, PropertyIds::exec, scriptContext);
         if (JavascriptConversion::IsCallable(exec))

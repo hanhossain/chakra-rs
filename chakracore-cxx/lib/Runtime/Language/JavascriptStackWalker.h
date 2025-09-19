@@ -247,7 +247,7 @@ namespace Js
 
         static bool IsDisplayCaller(JavascriptFunction* func);
         bool GetDisplayCaller(_Out_opt_ JavascriptFunction ** ppFunc);
-        PCWSTR GetCurrentNativeLibraryEntryName() const;
+        const char16_t * GetCurrentNativeLibraryEntryName() const;
         static bool IsLibraryStackFrameEnabled(Js::ScriptContext * scriptContext);
         static bool IsWalkable(ScriptContext *scriptContext);
 

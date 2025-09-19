@@ -257,7 +257,7 @@ namespace Js
 
     void __declspec(noreturn) JavascriptError::SetMessageAndThrowError(ScriptContext* scriptContext, JavascriptError *pError, int32 hCode, EXCEPINFO* pei)
     {
-        PCWSTR varName = (pei ? pei->bstrDescription : nullptr);
+        const char16_t * varName = (pei ? pei->bstrDescription : nullptr);
 
         JavascriptError::SetErrorMessage(pError, hCode, varName, scriptContext);
 
@@ -283,7 +283,7 @@ namespace Js
         SetMessageAndThrowError(scriptContext, pError, hCode, pei); \
     } \
     \
-    void __declspec(noreturn) JavascriptError::err_method(ScriptContext* scriptContext, int32 hCode, PCWSTR varName) \
+    void __declspec(noreturn) JavascriptError::err_method(ScriptContext* scriptContext, int32 hCode, const char16_t * varName) \
     { \
         JavascriptLibrary *library = scriptContext->GetLibrary(); \
         JavascriptError *pError = library->create_method(); \
@@ -349,14 +349,14 @@ namespace Js
         };
     }
 
-    void __declspec(noreturn) JavascriptError::ThrowDispatchError(ScriptContext* scriptContext, int32_t hCode, PCWSTR message)
+    void __declspec(noreturn) JavascriptError::ThrowDispatchError(ScriptContext* scriptContext, int32_t hCode, const char16_t * message)
     {
         JavascriptError *pError = scriptContext->GetLibrary()->CreateError();
         JavascriptError::SetErrorMessageProperties(pError, hCode, message, scriptContext);
         JavascriptExceptionOperators::Throw(pError, scriptContext);
     }
 
-    void JavascriptError::SetErrorMessageProperties(JavascriptError *pError, int32_t hr, PCWSTR message, ScriptContext* scriptContext)
+    void JavascriptError::SetErrorMessageProperties(JavascriptError *pError, int32_t hr, const char16_t * message, ScriptContext* scriptContext)
     {
         JavascriptString * messageString;
         if (message != nullptr)
@@ -440,7 +440,7 @@ namespace Js
         JavascriptError::SetErrorMessageProperties(pError, hr, allocatedString, scriptContext);
     }
 
-    void JavascriptError::SetErrorMessage(JavascriptError *pError, int32_t hr, PCWSTR varName, ScriptContext* scriptContext)
+    void JavascriptError::SetErrorMessage(JavascriptError *pError, int32_t hr, const char16_t * varName, ScriptContext* scriptContext)
     {
         Assert(FAILED(hr));
         char16_t * allocatedString = nullptr;
@@ -729,7 +729,7 @@ namespace Js
         return false;
     }
 
-    bool JavascriptError::ThrowCantDeleteIfStrictMode(PropertyOperationFlags flags, ScriptContext* scriptContext, PCWSTR varName)
+    bool JavascriptError::ThrowCantDeleteIfStrictMode(PropertyOperationFlags flags, ScriptContext* scriptContext, const char16_t * varName)
     {
         if (flags & PropertyOperation_StrictMode)
         {
@@ -742,7 +742,7 @@ namespace Js
         return false;
     }
 
-    bool JavascriptError::ThrowCantDeleteIfStrictModeOrNonconfigurable(PropertyOperationFlags flags, ScriptContext* scriptContext, PCWSTR varName)
+    bool JavascriptError::ThrowCantDeleteIfStrictModeOrNonconfigurable(PropertyOperationFlags flags, ScriptContext* scriptContext, const char16_t * varName)
     {
         bool isNonConfigThrow = (flags & PropertyOperation_ThrowOnDeleteIfNotConfig) == PropertyOperation_ThrowOnDeleteIfNotConfig;
 
@@ -901,7 +901,7 @@ namespace Js
         return jsNewError;
     }
 
-    void JavascriptError::TryThrowTypeError(ScriptContext * checkScriptContext, ScriptContext * scriptContext, int32 hCode, PCWSTR varName)
+    void JavascriptError::TryThrowTypeError(ScriptContext * checkScriptContext, ScriptContext * scriptContext, int32 hCode, const char16_t * varName)
     {
         // Don't throw if implicit exceptions are disabled
         if (checkScriptContext->GetThreadContext()->RecordImplicitException())

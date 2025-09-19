@@ -860,7 +860,7 @@ namespace Js
         return false;
     }
 
-    PCWSTR JavascriptStackWalker::GetCurrentNativeLibraryEntryName() const
+    const char16_t * JavascriptStackWalker::GetCurrentNativeLibraryEntryName() const
     {
         Assert(IsLibraryStackFrameEnabled(this->scriptContext)
             && this->prevNativeLibraryEntry

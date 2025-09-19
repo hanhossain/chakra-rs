@@ -5757,7 +5757,7 @@ namespace Js
     }
 
     // Returns the debugger scope type in string format.
-    PCWSTR DebuggerScope::GetDebuggerScopeTypeString(DiagExtraScopesType scopeType)
+    const char16_t * DebuggerScope::GetDebuggerScopeTypeString(DiagExtraScopesType scopeType)
     {
         switch (scopeType)
         {
