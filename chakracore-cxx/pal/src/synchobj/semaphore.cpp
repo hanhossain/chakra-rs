@@ -154,37 +154,6 @@ CreateSemaphoreA(
 
 /*++
 Function:
-CreateSemaphoreExW
-
-Note:
-lpSemaphoreAttributes currentely ignored:
--- Win32 object security not supported
--- handles to semaphore objects are not inheritable
-
-Parameters:
-See MSDN doc.
---*/
-
-HANDLE
-CreateSemaphoreExW(
-         LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
-         int32_t lInitialCount,
-         int32_t lMaximumCount,
-         const char16_t* lpName,
-         /*_Reserved_*/  uint32_t dwFlags,
-         uint32_t dwDesiredAccess)
-{
-    // dwFlags is reserved and unused
-
-    return CreateSemaphoreW(
-        lpSemaphoreAttributes,
-        lInitialCount,
-        lMaximumCount,
-        lpName);
-}
-
-/*++
-Function:
   CreateSemaphoreW
 
 Note:
@@ -539,52 +508,3 @@ InternalReleaseSemaphoreExit:
 }
 
 // TODO: Implementation of OpenSemaphoreA() doesn't exist, do we need it? More generally, do we need the A versions at all?
-
-/*++
-Function:
-  OpenSemaphoreW
-
-Note:
-  dwDesiredAccess is currently ignored (no Win32 object security support)
-  bInheritHandle is currently ignored (handles to semaphore are not inheritable)
-
-Parameters:
-  See MSDN doc.
---*/
-
-HANDLE
-OpenSemaphoreW(
-        uint32_t dwDesiredAccess,
-        BOOL bInheritHandle,
-        const char16_t* lpName)
-{
-    HANDLE hSemaphore = NULL;
-    PAL_ERROR palError = NO_ERROR;
-    CPalThread *pthr = NULL;
-
-    ENTRY("OpenSemaphoreW(dwDesiredAccess=%#x, bInheritHandle=%d, lpName=%p (%S))\n",
-          dwDesiredAccess, bInheritHandle, lpName, lpName?lpName:W16_NULLSTRING);
-
-    pthr = InternalGetCurrentThread();
-
-    /* validate parameters */
-    if (lpName == nullptr)
-    {
-        ERROR("lpName is NULL\n");
-        palError = ERROR_INVALID_PARAMETER;
-    }
-    else
-    {
-        ASSERT("lpName: Cross-process named objects are not supported in PAL");
-        palError = ERROR_NOT_SUPPORTED;
-    }
-
-    if (NO_ERROR != palError)
-    {
-        pthr->SetLastError(palError);
-    }
-
-    LOGEXIT("OpenSemaphoreW returns HANDLE %p\n", hSemaphore);
-
-    return hSemaphore;
-}
