@@ -28,7 +28,7 @@ namespace Js {
         unsigned long types;
 
     public:
-        int32_t ToString(LPCWSTR functionName, Js::ScriptContext *scriptContext, _In_ LPCWSTR* outResult) const;
+        int32_t ToString(const char16_t* functionName, Js::ScriptContext *scriptContext, _In_ const char16_t** outResult) const;
         void Init(const JavascriptStackWalker &walker);
         StackTraceArguments() : types(fCallerIsGlobal) {}
     };

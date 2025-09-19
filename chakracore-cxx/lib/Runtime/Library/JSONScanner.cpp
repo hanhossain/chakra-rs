@@ -228,7 +228,7 @@ namespace JSON
         this->currentString = const_cast<char16_t*>(currentChar);
         bool endFound = false;
         bool isStringDirectInputTextMapped = true;
-        LPCWSTR bulkStart = currentChar;
+        const char16_t* bulkStart = currentChar;
         uint bulkLength = 0;
 
         while (currentChar < inputText + inputLen)

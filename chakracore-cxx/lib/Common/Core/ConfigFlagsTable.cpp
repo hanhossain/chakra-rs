@@ -615,7 +615,7 @@ namespace Js
                 uint profilingInterpreter1Limit;
                 const int scannedCount =
                     swscanf_s(
-                        static_cast<LPCWSTR>(ExecutionModeLimits),
+                        static_cast<const char16_t*>(ExecutionModeLimits),
                         u"%u.%u.%u.%u.%u",
                         &autoProfilingInterpreter0Limit,
                         &profilingInterpreter0Limit,
@@ -836,7 +836,7 @@ namespace Js
     ///----------------------------------------------------------------------------
 
     Flag
-    ConfigFlagsTable::GetFlag(LPCWSTR str)
+    ConfigFlagsTable::GetFlag(const char16_t* str)
     {
         for(int i=0; i < FlagCount; i++)
         {
@@ -858,7 +858,7 @@ namespace Js
     ///----------------------------------------------------------------------------
 
     Phase
-    ConfigFlagsTable::GetPhase(LPCWSTR str)
+    ConfigFlagsTable::GetPhase(const char16_t* str)
     {
         for(int i=0; i < PhaseCount; i++)
         {
@@ -996,7 +996,7 @@ namespace Js
             case FlagString: \
                 if (GetAsString(name##Flag) != nullptr) \
                 { \
-                    Output::Print(u":%s", (LPCWSTR)*GetAsString(name##Flag)); \
+                    Output::Print(u":%s", (const char16_t*)*GetAsString(name##Flag)); \
                 } \
                 break; \
             case FlagNumber: \

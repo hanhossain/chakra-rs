@@ -240,7 +240,7 @@ void CompileScriptException::CopyInto(CompileScriptException* pse)
     }
 }
 
-int32_t  CompileScriptException::ProcessError(IScanner * pScan, int32_t hr, ParseNode * pnodeBase, LPCWSTR stringOne, LPCWSTR stringTwo)
+int32_t  CompileScriptException::ProcessError(IScanner * pScan, int32_t hr, ParseNode * pnodeBase, const char16_t* stringOne, const char16_t* stringTwo)
 {
     // fill in the ScriptException structure
     Free();

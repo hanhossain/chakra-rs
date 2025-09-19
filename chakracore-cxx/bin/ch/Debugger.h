@@ -15,7 +15,7 @@ public:
     bool StartDebugging(JsRuntimeHandle runtime);
     bool StopDebugging(JsRuntimeHandle runtime);
     bool HandleDebugEvent(JsDiagDebugEvent debugEvent, JsValueRef eventData);
-    bool CompareOrWriteBaselineFile(LPCSTR fileName);
+    bool CompareOrWriteBaselineFile(const char * fileName);
     bool SourceRunDown();
     bool DumpFunctionPosition(JsValueRef functionPosition);
     bool IsDetached() const { return m_isDetached; }

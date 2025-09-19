@@ -60,7 +60,7 @@ typedef
 struct _CP_MAPPING
 {
     uint32_t    nCodePage;                  // Code page identifier.
-    LPCSTR  lpBSDEquivalent;            // The equivalent BSD locale identifier.
+    const char *  lpBSDEquivalent;            // The equivalent BSD locale identifier.
     uint32_t    nMaxByteSize;               // The max byte size of any character.
     uint8_t    LeadByte[ MAX_LEADBYTES ];  // The lead byte array.
 } CP_MAPPING;

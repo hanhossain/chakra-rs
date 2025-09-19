@@ -1154,7 +1154,7 @@ namespace Js
 
     InterpreterStackFrame *
     InterpreterStackFrame::Setup::InitializeAllocation(__in_ecount(varAllocCount) Var * allocation, __in_ecount(stackVarAllocCount) Var * stackAllocation
-        , bool initParams, bool profileParams, LoopHeader* loopHeaderArray, DWORD_PTR stackAddr
+        , bool initParams, bool profileParams, LoopHeader* loopHeaderArray, unsigned long stackAddr
 #if DBG
         , Var invalidStackVar
 #endif
@@ -1854,7 +1854,7 @@ skipThunk:
         Assert(setup.GetStackAllocationVarCount() == 0);
         size_t varAllocCount = setup.GetAllocationVarCount();
         size_t varSizeInBytes = varAllocCount * sizeof(Var);
-        DWORD_PTR stackAddr = reinterpret_cast<DWORD_PTR>(&generator); // use any stack address from this frame to ensure correct debugging functionality
+        unsigned long stackAddr = reinterpret_cast<unsigned long>(&generator); // use any stack address from this frame to ensure correct debugging functionality
         LoopHeader* loopHeaderArray = executeFunction->GetHasAllocatedLoopHeaders() ? executeFunction->GetLoopHeaderArrayPtr() : nullptr;
 
         Var* allocation = RecyclerNewPlus(functionScriptContext->GetRecycler(), varSizeInBytes, Var);
@@ -2016,7 +2016,7 @@ skipThunk:
 
                 // The debugger relies on comparing stack addresses of frames to decide when a step_out is complete so
                 // give the InterpreterStackFrame a legit enough stack address to make this comparison work.
-                newInstance->m_stackAddress = reinterpret_cast<DWORD_PTR>(&generator);
+                newInstance->m_stackAddress = reinterpret_cast<unsigned long>(&generator);
 
                 newInstance->retOffset = 0;
             }
@@ -2035,7 +2035,7 @@ skipThunk:
             //
             // Allocate a new InterpreterStackFrame instance on the interpreter's virtual stack.
             //
-            DWORD_PTR stackAddr;
+            unsigned long stackAddr;
 
             Var* allocation;
             Var* stackAllocation = nullptr;
@@ -2048,7 +2048,7 @@ skipThunk:
                 fReleaseAlloc = functionScriptContext->EnsureInterpreterArena(&tmpAlloc);
                 varSizeInBytes = varAllocCount * sizeof(Var);
                 allocation = (Var*)tmpAlloc->Alloc(varSizeInBytes);
-                stackAddr = reinterpret_cast<DWORD_PTR>(&allocation); // use a stack address so the debugger stepping logic works (step-out, for example, compares stack depths to determine when to complete the step)
+                stackAddr = reinterpret_cast<unsigned long>(&allocation); // use a stack address so the debugger stepping logic works (step-out, for example, compares stack depths to determine when to complete the step)
                 if (stackVarAllocCount != 0)
                 {
                     size_t stackVarSizeInBytes = stackVarAllocCount * sizeof(Var);
@@ -2064,7 +2064,7 @@ skipThunk:
 #if DBG
                 memset(allocation, 0xFE, varSizeInBytes);
 #endif
-                stackAddr = reinterpret_cast<DWORD_PTR>(allocation);
+                stackAddr = reinterpret_cast<unsigned long>(allocation);
             }
 
             /*
@@ -2914,7 +2914,7 @@ skipThunk:
 
         Var* allocation = nullptr;
         Var* stackAllocation = nullptr;
-        DWORD_PTR stackAddr;
+        unsigned long stackAddr;
         bool fReleaseAlloc = false;
         if ((varAllocCount + stackVarAllocCount) > InterpreterStackFrame::LocalsThreshold)
         {
@@ -2930,14 +2930,14 @@ skipThunk:
             }
             // use a stack address so the debugger stepping logic works (step-out, for example, compares stack depths to determine when to complete the step)
             // debugger stepping does not matter here, but it's worth being consistent with normal stack frame
-            stackAddr = reinterpret_cast<DWORD_PTR>(&allocation);
+            stackAddr = reinterpret_cast<unsigned long>(&allocation);
         }
         else
         {
             varSizeInBytes = (varAllocCount + stackVarAllocCount) * sizeof(Var);
             PROBE_STACK_PARTIAL_INITIALIZED_INTERPRETER_FRAME(GetScriptContext(), Js::Constants::MinStackInterpreter + varSizeInBytes);
             allocation = (Var*)_alloca(varSizeInBytes);
-            stackAddr = reinterpret_cast<DWORD_PTR>(allocation);
+            stackAddr = reinterpret_cast<unsigned long>(allocation);
         }
 
 #if DBG
@@ -7681,7 +7681,7 @@ skipThunk:
         this->function = scriptFunction;
     }
 
-    DWORD_PTR InterpreterStackFrame::GetStackAddress() const
+    unsigned long InterpreterStackFrame::GetStackAddress() const
     {
         return m_stackAddress;
     }

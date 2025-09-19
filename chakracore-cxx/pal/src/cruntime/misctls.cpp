@@ -147,10 +147,10 @@ char * _ecvt( double value, int count, int * dec, int * sign )
     const char * FORMAT_STRING = "%.348e";
     char TempBuffer[ ECVT_MAX_BUFFER_SIZE ];
     CPalThread *pThread = NULL;
-    LPSTR lpReturnBuffer = NULL;
-    LPSTR lpStartOfReturnBuffer = NULL;
-    LPSTR lpTempBuffer = NULL;
-    LPSTR lpEndOfTempBuffer = NULL;
+    char* lpReturnBuffer = NULL;
+    char* lpStartOfReturnBuffer = NULL;
+    char* lpTempBuffer = NULL;
+    char* lpEndOfTempBuffer = NULL;
     int32_t nTempBufferLength = 0;
     char ExponentBuffer[ 6 ];
     int32_t nExponentValue = 0;
@@ -324,7 +324,7 @@ char * _ecvt( double value, int count, int * dec, int * sign )
             }
             else
             {
-                LPSTR lpRounding = NULL;
+                char* lpRounding = NULL;
 
                 if ( count > 0 )
                 {

@@ -46,7 +46,7 @@ FILECanonicalizePath
     Removes all instances of '/./', '/../' and '//' from an absolute path.
 
 Parameters:
-    LPSTR lpUnixPath : absolute path to modify, in Unix format
+    char* lpUnixPath : absolute path to modify, in Unix format
 
 (no return value)
 
@@ -57,7 +57,7 @@ Notes :
 -reason for this function is that GetFullPathName can't use realpath(), since
  realpath() requires the given path to be valid and GetFullPathName does not.
 --*/
-void FILECanonicalizePath(LPSTR lpUnixPath);
+void FILECanonicalizePath(char* lpUnixPath);
 
 /*++
 Function:
@@ -70,7 +70,7 @@ Parameter:
   IN/OUT lpPath: path to be modified
 --*/
 void
-FILEDosToUnixPathA(LPSTR lpPath);
+FILEDosToUnixPathA(char* lpPath);
 
 /*++
 Function:
@@ -83,7 +83,7 @@ Parameter:
   IN/OUT lpPath: path to be modified
   --*/
 void
-FILEDosToUnixPathW(LPWSTR lpPath);
+FILEDosToUnixPathW(char16_t* lpPath);
 
 /*++
 Function:
@@ -96,7 +96,7 @@ Parameter:
   IN/OUT lpPath: path to be modified
 --*/
 void
-FILEUnixToDosPathA(LPSTR lpPath);
+FILEUnixToDosPathA(char* lpPath);
 
 /*++
 Function:
@@ -108,9 +108,9 @@ characters written to the buffer. If the buffer is not large enough,
 return the required size of the buffer including the NULL character. If
 there is no directory part in the path, return 0.
 --*/
-uint32_t FILEGetDirectoryFromFullPathA( LPCSTR lpFullPath,
+uint32_t FILEGetDirectoryFromFullPathA( const char * lpFullPath,
                      uint32_t  nBufferLength,
-                     LPSTR  lpBuffer );
+                     char*  lpBuffer );
 
 /*++
 Function:
@@ -118,7 +118,7 @@ Function:
 
 Given a full path, return a pointer to the first char of the filename part.
 --*/
-LPCSTR FILEGetFileNameFromFullPathA( LPCSTR lpFullPath );
+const char * FILEGetFileNameFromFullPathA( const char * lpFullPath );
 
 /*++
 Function:
@@ -165,10 +165,10 @@ Function :
 Returns the proper error code, based on the
 Windows behavoir.
 
-    IN LPSTR lpPath - The path to check.
+    IN char* lpPath - The path to check.
     uint32_t * lpErrorCode - The error to set.
 */
-void FILEGetProperNotFoundError( LPSTR lpPath, uint32_t * lpErrorCode );
+void FILEGetProperNotFoundError( char* lpPath, uint32_t * lpErrorCode );
 
 /*++
 PAL_fflush

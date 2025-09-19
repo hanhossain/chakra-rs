@@ -185,7 +185,7 @@ namespace Js
 
         // Deserialize a string from the string table based on the stringId.
         // Note: Returns the count of characters (not bytes) of the string via the stringLength argument.
-        static LPCWSTR DeserializeString(const DeferredFunctionStub* deferredStub, uint stringId, uint32& stringLength);
+        static const char16_t* DeserializeString(const DeferredFunctionStub* deferredStub, uint stringId, uint32& stringLength);
 
         // This lib doesn't directly depend on the generated interfaces. Ensure the same codes with a C_ASSERT
         static const int32_t CantGenerate = 0x80020201L;

@@ -5771,14 +5771,14 @@ namespace Js
     }
 
     JavascriptExternalFunction*
-    JavascriptLibrary::CreateExternalFunction(ExternalMethod entryPoint, PropertyId nameId, Var signature, UINT64 flags, bool isLengthAvailable)
+    JavascriptLibrary::CreateExternalFunction(ExternalMethod entryPoint, PropertyId nameId, Var signature, unsigned long flags, bool isLengthAvailable)
     {
         Assert(nameId == 0 || scriptContext->IsTrackedPropertyId(nameId));
         return CreateExternalFunction(entryPoint, TaggedInt::ToVarUnchecked(nameId), signature, flags, isLengthAvailable);
     }
 
     JavascriptExternalFunction*
-    JavascriptLibrary::CreateExternalFunction(ExternalMethod entryPoint, Var nameId, Var signature, UINT64 flags, bool isLengthAvailable)
+    JavascriptLibrary::CreateExternalFunction(ExternalMethod entryPoint, Var nameId, Var signature, unsigned long flags, bool isLengthAvailable)
     {
         JavascriptExternalFunction* function = this->CreateIdMappedExternalFunction(entryPoint, isLengthAvailable ? externalFunctionWithLengthAndDeferredPrototypeType : externalFunctionWithDeferredPrototypeType);
         function->SetExternalFlags(flags);
@@ -7167,7 +7167,7 @@ namespace Js
         }
 #endif
     }
-    INT_PTR* JavascriptLibrary::GetVTableAddresses()
+    long* JavascriptLibrary::GetVTableAddresses()
     {
         AssertMsg(this->vtableAddresses, "vtableAddresses table must've been initialized as part of library initialization!");
         return this->vtableAddresses;

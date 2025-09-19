@@ -166,7 +166,7 @@ class AutoString
 {
     size_t length;
     char* data;
-    LPWSTR data_wide;
+    char16_t* data_wide;
     JsErrorCode errorCode;
     bool dontFree;
 public:
@@ -229,12 +229,12 @@ public:
         dontFree = true;
     }
 
-    LPCSTR GetString()
+    const char * GetString()
     {
         return data;
     }
 
-    LPWSTR GetWideString(charcount_t* destCount = nullptr)
+    char16_t* GetWideString(charcount_t* destCount = nullptr)
     {
         if(data_wide || !data)
         {
@@ -320,7 +320,7 @@ public:
         return Find(path.GetString(), path.GetLength(), out);
     }
 
-    static bool Find(LPCSTR path, size_t pathLength, AutoString ** out)
+    static bool Find(const char * path, size_t pathLength, AutoString ** out)
     {
         FileNode * node = root;
         while(node != nullptr)

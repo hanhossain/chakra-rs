@@ -137,8 +137,8 @@ namespace Js
         static BOOL GetCaller(JavascriptStackWalker& walker, _Out_opt_ JavascriptFunction*& jsFunc);
         static void DumpStackTrace(JavascriptExceptionContext& exceptionContext, bool isThrownException = true);
         static JavascriptExceptionContext::StackTrace* TrimStackTraceForThrownObject(JavascriptExceptionContext::StackTrace* stackTraceOriginal, Var thrownObject, ScriptContext& scriptContext);
-        static void AppendExternalFrameToStackTrace(CompoundString* bs, LPCWSTR functionName, LPCWSTR fileName, uint32_t lineNumber, int32_t characterPosition);
-        static void AppendLibraryFrameToStackTrace(CompoundString* bs, LPCWSTR functionName);
+        static void AppendExternalFrameToStackTrace(CompoundString* bs, const char16_t* functionName, const char16_t* fileName, uint32_t lineNumber, int32_t characterPosition);
+        static void AppendLibraryFrameToStackTrace(CompoundString* bs, const char16_t* functionName);
         static bool IsErrorInstance(Var thrownObject);
 
         static bool CrawlStackForWER(Js::ScriptContext& scriptContext);

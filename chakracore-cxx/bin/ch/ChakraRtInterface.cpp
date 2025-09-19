@@ -7,9 +7,9 @@
 
 #include <dlfcn.h>
 #ifdef __APPLE__
-LPCSTR chakraDllName = "libChakraCore.dylib";
+const char * chakraDllName = "libChakraCore.dylib";
 #else
-LPCSTR chakraDllName = "libChakraCore.so";
+const char * chakraDllName = "libChakraCore.so";
 #endif
 
 bool ChakraRTInterface::m_testHooksSetup = false;
@@ -24,7 +24,7 @@ JsAPIHooks ChakraRTInterface::m_jsApiHooks = { 0 };
 // and resolving its symbols
 // Currently, these functions resolve to the PAL on Linux
 // but in the future, we can easily switch to a different mechanism
-HINSTANCE LoadChakraCore(LPCSTR libPath)
+HINSTANCE LoadChakraCore(const char * libPath)
 {
     return LoadLibraryExA(libPath, nullptr, 0);
 }

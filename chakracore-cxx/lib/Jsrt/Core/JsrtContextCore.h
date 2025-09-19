@@ -168,7 +168,7 @@ public:
         return S_OK;
     }
 
-    int32_t GetHostContextUrl(DWORD_PTR hostSourceContext, BSTR& pUrl) override
+    int32_t GetHostContextUrl(unsigned long hostSourceContext, BSTR& pUrl) override
     {
         Assert(false);
         return E_NOTIMPL;

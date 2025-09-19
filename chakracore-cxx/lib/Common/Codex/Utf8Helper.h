@@ -19,9 +19,9 @@ namespace utf8
     template <typename AllocatorFunction>
     int32_t WideStringToNarrow(
         _In_ AllocatorFunction allocator,
-        _In_ LPCWSTR sourceString,
+        _In_ const char16_t* sourceString,
         size_t sourceCount,
-        _Out_ LPSTR* destStringPtr,
+        _Out_ char** destStringPtr,
         _Out_ size_t* destCount,
         size_t* allocateCount = nullptr)
     {
@@ -66,9 +66,9 @@ namespace utf8
     /// The returned string is null terminated.
     ///
     inline int32_t WideStringToNarrowNoAlloc(
-        _In_ LPCWSTR sourceString,
+        _In_ const char16_t* sourceString,
         size_t sourceCount,
-        __out_ecount(destCount) LPSTR destString,
+        __out_ecount(destCount) char* destString,
         size_t destCount,
         size_t* writtenCount = nullptr)
     {
@@ -101,13 +101,13 @@ namespace utf8
     }
 
     template <class Allocator>
-    int32_t WideStringToNarrow(_In_ LPCWSTR sourceString, size_t sourceCount, _Out_ LPSTR* destStringPtr, _Out_ size_t* destCount, size_t* allocateCount = nullptr)
+    int32_t WideStringToNarrow(_In_ const char16_t* sourceString, size_t sourceCount, _Out_ char** destStringPtr, _Out_ size_t* destCount, size_t* allocateCount = nullptr)
     {
         return WideStringToNarrow(Allocator::allocate, sourceString, sourceCount, destStringPtr, destCount, allocateCount);
     }
 
-    inline int32_t NarrowStringToWideNoAlloc(_In_ LPCSTR sourceString, size_t sourceCount,
-        __out_ecount(destBufferCount) LPWSTR destString, size_t destBufferCount, _Out_ charcount_t* destCount)
+    inline int32_t NarrowStringToWideNoAlloc(_In_ const char * sourceString, size_t sourceCount,
+        __out_ecount(destBufferCount) char16_t* destString, size_t destBufferCount, _Out_ charcount_t* destCount)
     {
         size_t sourceStart = 0;
         size_t cbSourceString = sourceCount;
@@ -179,8 +179,8 @@ namespace utf8
     /// The returned string is null terminated.
     ///
     template <typename AllocatorFunction>
-    int32_t NarrowStringToWide(_In_ AllocatorFunction allocator,_In_ LPCSTR sourceString,
-        size_t sourceCount, _Out_ LPWSTR* destStringPtr, _Out_ charcount_t* destCount, size_t* allocateCount = nullptr)
+    int32_t NarrowStringToWide(_In_ AllocatorFunction allocator,_In_ const char * sourceString,
+        size_t sourceCount, _Out_ char16_t** destStringPtr, _Out_ charcount_t* destCount, size_t* allocateCount = nullptr)
     {
         size_t cbDestString = (sourceCount + 1) * sizeof(char16_t);
         if (cbDestString < sourceCount) // overflow ?
@@ -204,7 +204,7 @@ namespace utf8
     }
 
     template <class Allocator>
-    int32_t NarrowStringToWide(_In_ LPCSTR sourceString, size_t sourceCount, _Out_ LPWSTR* destStringPtr, _Out_ charcount_t* destCount, size_t* allocateCount = nullptr)
+    int32_t NarrowStringToWide(_In_ const char * sourceString, size_t sourceCount, _Out_ char16_t** destStringPtr, _Out_ charcount_t* destCount, size_t* allocateCount = nullptr)
     {
         return NarrowStringToWide(Allocator::allocate, sourceString, sourceCount, destStringPtr, destCount, allocateCount);
     }
@@ -216,21 +216,21 @@ namespace utf8
         static void free(void* ptr, size_t count) { ::free(ptr); }
     };
 
-    inline int32_t WideStringToNarrowDynamic(_In_ LPCWSTR sourceString, _Out_ LPSTR* destStringPtr)
+    inline int32_t WideStringToNarrowDynamic(_In_ const char16_t* sourceString, _Out_ char** destStringPtr)
     {
         size_t unused;
         return WideStringToNarrow<malloc_allocator>(
             sourceString, wcslen(sourceString), destStringPtr, &unused);
     }
 
-    inline int32_t NarrowStringToWideDynamic(_In_ LPCSTR sourceString, _Out_ LPWSTR* destStringPtr)
+    inline int32_t NarrowStringToWideDynamic(_In_ const char * sourceString, _Out_ char16_t** destStringPtr)
     {
         charcount_t unused;
         return NarrowStringToWide<malloc_allocator>(
             sourceString, strlen(sourceString), destStringPtr, &unused);
     }
 
-    inline int32_t NarrowStringToWideDynamicGetLength(_In_ LPCSTR sourceString, _Out_ LPWSTR* destStringPtr, _Out_ charcount_t* destLength)
+    inline int32_t NarrowStringToWideDynamicGetLength(_In_ const char * sourceString, _Out_ char16_t** destStringPtr, _Out_ charcount_t* destLength)
     {
         return NarrowStringToWide<malloc_allocator>(
             sourceString, strlen(sourceString), destStringPtr, destLength);
@@ -248,27 +248,27 @@ namespace utf8
     };
 
     template <class Allocator>
-    class NarrowWideStringConverter<Allocator, LPCSTR, LPWSTR, charcount_t>
+    class NarrowWideStringConverter<Allocator, const char *, char16_t*, charcount_t>
     {
     public:
         // Note: Typically caller should pass in Utf8 string length. Following
         // is used as fallback.
-        static size_t Length(LPCSTR src)
+        static size_t Length(const char * src)
         {
             return strnlen(src, INT_MAX);
         }
 
         static int32_t Convert(
-            LPCSTR sourceString, size_t sourceCount,
-            LPWSTR* destStringPtr, charcount_t * destCount, size_t* allocateCount = nullptr)
+            const char * sourceString, size_t sourceCount,
+            char16_t** destStringPtr, charcount_t * destCount, size_t* allocateCount = nullptr)
         {
             return NarrowStringToWide<Allocator>(
                 sourceString, sourceCount, destStringPtr, destCount, allocateCount);
         }
 
         static int32_t ConvertNoAlloc(
-            LPCSTR sourceString, size_t sourceCount,
-            LPWSTR destStringPtr, charcount_t destCount, charcount_t* written)
+            const char * sourceString, size_t sourceCount,
+            char16_t* destStringPtr, charcount_t destCount, charcount_t* written)
         {
             return NarrowStringToWideNoAlloc(
                 sourceString, sourceCount, destStringPtr, destCount, written);
@@ -276,27 +276,27 @@ namespace utf8
     };
 
     template <class Allocator>
-    class NarrowWideStringConverter<Allocator, LPCWSTR, LPSTR, size_t>
+    class NarrowWideStringConverter<Allocator, const char16_t*, char*, size_t>
     {
     public:
         // Note: Typically caller should pass in char16_t string length. Following
         // is used as fallback.
-        static size_t Length(LPCWSTR src)
+        static size_t Length(const char16_t* src)
         {
             return wcslen(src);
         }
 
         static int32_t Convert(
-            LPCWSTR sourceString, size_t sourceCount,
-            LPSTR* destStringPtr, size_t* destCount, size_t* allocateCount = nullptr)
+            const char16_t* sourceString, size_t sourceCount,
+            char** destStringPtr, size_t* destCount, size_t* allocateCount = nullptr)
         {
             return WideStringToNarrow<Allocator>(
                 sourceString, sourceCount, destStringPtr, destCount, allocateCount);
         }
 
         static int32_t ConvertNoAlloc(
-            LPCWSTR sourceString, size_t sourceCount,
-            LPSTR destStringPtr, size_t destCount, size_t* written)
+            const char16_t* sourceString, size_t sourceCount,
+            char* destStringPtr, size_t destCount, size_t* written)
         {
             return WideStringToNarrowNoAlloc(
                 sourceString, sourceCount, destStringPtr, destCount, written);
@@ -367,6 +367,6 @@ namespace utf8
         }
     };
 
-    typedef NarrowWideConverter<malloc_allocator, LPCSTR, LPWSTR, charcount_t> NarrowToWide;
-    typedef NarrowWideConverter<malloc_allocator, LPCWSTR, LPSTR, size_t> WideToNarrow;
+    typedef NarrowWideConverter<malloc_allocator, const char *, char16_t*, charcount_t> NarrowToWide;
+    typedef NarrowWideConverter<malloc_allocator, const char16_t*, char*, size_t> WideToNarrow;
 }

@@ -88,7 +88,7 @@ namespace Js {
         }
     }
 
-    int32_t StackTraceArguments::ToString(LPCWSTR functionName, Js::ScriptContext *scriptContext, _In_ LPCWSTR *outResult) const
+    int32_t StackTraceArguments::ToString(const char16_t* functionName, Js::ScriptContext *scriptContext, _In_ const char16_t* *outResult) const
     {
         int32_t hr = S_OK;
         unsigned long argumentsTypes = types;

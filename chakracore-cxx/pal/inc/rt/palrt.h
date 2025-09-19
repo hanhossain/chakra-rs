@@ -249,7 +249,6 @@ typedef enum tagEFaultRepRetVal
 EXTERN_C const GUID GUID_NULL;
 
 typedef GUID *LPGUID;
-typedef const GUID  *LPCGUID;
 
 #ifdef __cplusplus
 extern "C++" {
@@ -287,7 +286,7 @@ typedef GUID CLSID;
 #define IsEqualCLSID(rclsid1, rclsid2) IsEqualGUID(rclsid1, rclsid2)
 typedef CLSID *LPCLSID;
 
-typedef UINT_PTR WPARAM;
+typedef unsigned long WPARAM;
 typedef ptrdiff_t LRESULT;
 
 typedef int32_t SCODE;
@@ -718,11 +717,11 @@ enum tagMIMECONTF {
 #define StrCmpNW                PAL_wcsncmp
 #define StrCmpNIW               _wcsnicmp
 
-STDAPI_(LPWSTR) StrNCatW(LPWSTR lpFront, LPCWSTR lpBack, int cchMax);
-STDAPI_(int) StrToIntW(LPCWSTR lpSrc);
-STDAPI_(LPWSTR) StrStrIW(LPCWSTR lpFirst, LPCWSTR lpSrch);
-STDAPI_(LPWSTR) StrRChrW(LPCWSTR lpStart, LPCWSTR lpEnd, char16_t wMatch);
-STDAPI_(LPWSTR) StrCatBuffW(LPWSTR pszDest, LPCWSTR pszSrc, int cchDestBuffSize);
+STDAPI_(char16_t*) StrNCatW(char16_t* lpFront, const char16_t* lpBack, int cchMax);
+STDAPI_(int) StrToIntW(const char16_t* lpSrc);
+STDAPI_(char16_t*) StrStrIW(const char16_t* lpFirst, const char16_t* lpSrch);
+STDAPI_(char16_t*) StrRChrW(const char16_t* lpStart, const char16_t* lpEnd, char16_t wMatch);
+STDAPI_(char16_t*) StrCatBuffW(char16_t* pszDest, const char16_t* pszSrc, int cchDestBuffSize);
 
 #define lstrcmpW                PAL_wcscmp
 #define lstrcmpiW               _wcsicmp
@@ -1077,24 +1076,24 @@ errno_t getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, const ch
 #endif /* __cplusplus */
 
 
-STDAPI_(BOOL) PathAppendW(LPWSTR pszPath, LPCWSTR pszMore);
-STDAPI_(int) PathCommonPrefixW(LPCWSTR pszFile1, LPCWSTR pszFile2, LPWSTR  pszPath);
-LPWSTR PathFindFileNameW(LPCWSTR pPath);
-STDAPI_(int) PathGetDriveNumberW(LPCWSTR lpsz);
-STDAPI_(BOOL) PathIsRelativeW(LPCWSTR lpszPath);
-STDAPI_(BOOL) PathIsUNCW(LPCWSTR pszPath);
-STDAPI_(LPWSTR) PathAddBackslashW(LPWSTR lpszPath);
-STDAPI_(LPWSTR) PathRemoveBackslashW(LPWSTR lpszPath);
-STDAPI_(void) PathRemoveExtensionW(LPWSTR pszPath);
-STDAPI_(LPWSTR) PathCombineW(LPWSTR lpszDest, LPCWSTR lpszDir, LPCWSTR lpszFile);
-STDAPI_(BOOL) PathCanonicalizeW(LPWSTR lpszDst, LPCWSTR lpszSrc);
-STDAPI_(BOOL) PathRelativePathToW(LPWSTR pszPath, LPCWSTR pszFrom, uint32_t dwAttrFrom, LPCWSTR pszTo, uint32_t dwAttrTo);
-STDAPI_(BOOL) PathRenameExtensionW(LPWSTR pszPath, LPCWSTR pszExt);
-STDAPI_(BOOL) PathRemoveFileSpecW(LPWSTR pFile);
-STDAPI_(void) PathStripPathW (LPWSTR pszPath);
+STDAPI_(BOOL) PathAppendW(char16_t* pszPath, const char16_t* pszMore);
+STDAPI_(int) PathCommonPrefixW(const char16_t* pszFile1, const char16_t* pszFile2, char16_t*  pszPath);
+char16_t* PathFindFileNameW(const char16_t* pPath);
+STDAPI_(int) PathGetDriveNumberW(const char16_t* lpsz);
+STDAPI_(BOOL) PathIsRelativeW(const char16_t* lpszPath);
+STDAPI_(BOOL) PathIsUNCW(const char16_t* pszPath);
+STDAPI_(char16_t*) PathAddBackslashW(char16_t* lpszPath);
+STDAPI_(char16_t*) PathRemoveBackslashW(char16_t* lpszPath);
+STDAPI_(void) PathRemoveExtensionW(char16_t* pszPath);
+STDAPI_(char16_t*) PathCombineW(char16_t* lpszDest, const char16_t* lpszDir, const char16_t* lpszFile);
+STDAPI_(BOOL) PathCanonicalizeW(char16_t* lpszDst, const char16_t* lpszSrc);
+STDAPI_(BOOL) PathRelativePathToW(char16_t* pszPath, const char16_t* pszFrom, uint32_t dwAttrFrom, const char16_t* pszTo, uint32_t dwAttrTo);
+STDAPI_(BOOL) PathRenameExtensionW(char16_t* pszPath, const char16_t* pszExt);
+STDAPI_(BOOL) PathRemoveFileSpecW(char16_t* pFile);
+STDAPI_(void) PathStripPathW (char16_t* pszPath);
 
-STDAPI PathCreateFromUrlW(LPCWSTR pszUrl, LPWSTR pszPath, uint32_t * pcchPath, uint32_t dwFlags);
-STDAPI_(BOOL) PathIsURLW(LPCWSTR pszPath);
+STDAPI PathCreateFromUrlW(const char16_t* pszUrl, char16_t* pszPath, uint32_t * pcchPath, uint32_t dwFlags);
+STDAPI_(BOOL) PathIsURLW(const char16_t* pszPath);
 
 
 #define URL_UNESCAPE                    0x10000000
@@ -1109,12 +1108,12 @@ typedef enum {
     URL_PART_HOSTNAME   = 2,
 } URL_PART;
 
-STDAPI UrlCanonicalizeW(LPCWSTR pszUrl, LPWSTR pszCanonicalized, uint32_t * pcchCanonicalized, uint32_t dwFlags);
-STDAPI UrlCombineW(LPCWSTR pszBase, LPCWSTR pszRelative, LPWSTR pszCombined, uint32_t * pcchCombined, uint32_t dwFlags);
-STDAPI UrlEscapeW(LPCWSTR pszUrl, LPWSTR pszEscaped, uint32_t * pcchEscaped, uint32_t dwFlags);
-STDAPI UrlUnescapeW(LPWSTR pszURL, LPWSTR pszUnescaped, uint32_t * pcchUnescaped, uint32_t dwFlags);
-STDAPI_(BOOL) UrlIsW(LPCWSTR pszUrl, URLIS dwUrlIs);
-STDAPI UrlGetPartW(LPCWSTR pszIn, LPWSTR pszOut, uint32_t * pcchOut, uint32_t dwPart, uint32_t dwFlags);
+STDAPI UrlCanonicalizeW(const char16_t* pszUrl, char16_t* pszCanonicalized, uint32_t * pcchCanonicalized, uint32_t dwFlags);
+STDAPI UrlCombineW(const char16_t* pszBase, const char16_t* pszRelative, char16_t* pszCombined, uint32_t * pcchCombined, uint32_t dwFlags);
+STDAPI UrlEscapeW(const char16_t* pszUrl, char16_t* pszEscaped, uint32_t * pcchEscaped, uint32_t dwFlags);
+STDAPI UrlUnescapeW(char16_t* pszURL, char16_t* pszUnescaped, uint32_t * pcchUnescaped, uint32_t dwFlags);
+STDAPI_(BOOL) UrlIsW(const char16_t* pszUrl, URLIS dwUrlIs);
+STDAPI UrlGetPartW(const char16_t* pszIn, char16_t* pszOut, uint32_t * pcchOut, uint32_t dwPart, uint32_t dwFlags);
 
 #define PathAppend          PathAppendW
 #define PathCommonPrefix    PathCommonPrefixW
@@ -1270,7 +1269,7 @@ typedef JIT_DEBUG_INFO JIT_DEBUG_INFO64, *LPJIT_DEBUG_INFO64;
 
 /******************* resources ***************************************/
 
-#define MAKEINTRESOURCEW(i) ((LPWSTR)((size_t)((uint16_t)(i))))
+#define MAKEINTRESOURCEW(i) ((char16_t*)((size_t)((uint16_t)(i))))
 #define RT_RCDATA           MAKEINTRESOURCE(10)
 #define RT_VERSION          MAKEINTRESOURCE(16)
 
@@ -1371,7 +1370,7 @@ typedef struct _UNLOAD_DLL_DEBUG_INFO {
 } UNLOAD_DLL_DEBUG_INFO, *LPUNLOAD_DLL_DEBUG_INFO;
 
 typedef struct _OUTPUT_DEBUG_STRING_INFO {
-    LPSTR lpDebugStringData;
+    char* lpDebugStringData;
     uint16_t fUnicode;
     uint16_t nDebugStringLength;
 } OUTPUT_DEBUG_STRING_INFO, *LPOUTPUT_DEBUG_STRING_INFO;
@@ -1574,16 +1573,16 @@ typedef LIST_ENTRY64 *PLIST_ENTRY64;
 
 typedef struct _HSATELLITE *HSATELLITE;
 
-EXTERN_C HSATELLITE PAL_LoadSatelliteResourceW(LPCWSTR SatelliteResourceFileName);
-EXTERN_C HSATELLITE PAL_LoadSatelliteResourceA(LPCSTR SatelliteResourceFileName);
+EXTERN_C HSATELLITE PAL_LoadSatelliteResourceW(const char16_t* SatelliteResourceFileName);
+EXTERN_C HSATELLITE PAL_LoadSatelliteResourceA(const char * SatelliteResourceFileName);
 EXTERN_C BOOL PAL_FreeSatelliteResource(HSATELLITE SatelliteResource);
 EXTERN_C uint32_t PAL_LoadSatelliteStringW(HSATELLITE SatelliteResource,
              uint32_t uID,
-             LPWSTR lpBuffer,
+             char16_t* lpBuffer,
              uint32_t nBufferMax);
 EXTERN_C uint32_t PAL_LoadSatelliteStringA(HSATELLITE SatelliteResource,
              uint32_t uID,
-             LPSTR lpBuffer,
+             char* lpBuffer,
              uint32_t nBufferMax);
 
 EXTERN_C int32_t PAL_CoCreateInstance(REFCLSID   rclsid,

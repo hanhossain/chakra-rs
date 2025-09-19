@@ -237,7 +237,7 @@ namespace Js
         return requestContext->GetSymbol(this->GetValue());
     }
 
-    Var JavascriptSymbol::TryInvokeRemotelyOrThrow(JavascriptMethod entryPoint, ScriptContext * scriptContext, Arguments & args, int32 errorCode, PCWSTR varName)
+    Var JavascriptSymbol::TryInvokeRemotelyOrThrow(JavascriptMethod entryPoint, ScriptContext * scriptContext, Arguments & args, int32 errorCode, const char16_t * varName)
     {
         if (JavascriptOperators::GetTypeId(args[0]) == TypeIds_HostDispatch)
         {

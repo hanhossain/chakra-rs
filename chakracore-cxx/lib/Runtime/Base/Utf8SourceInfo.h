@@ -241,7 +241,7 @@ namespace Js
             return m_isCesu8;
         }
 
-        DWORD_PTR GetSecondaryHostSourceContext() const
+        unsigned long GetSecondaryHostSourceContext() const
         {
             return m_secondaryHostSourceContext;
         }
@@ -257,10 +257,10 @@ namespace Js
         bool GetIsXDomainString() const { return m_isXDomainString; }
         void SetIsXDomainString() { m_isXDomainString = true; }
 
-        DWORD_PTR GetHostSourceContext() const;
+        unsigned long GetHostSourceContext() const;
         bool IsDynamic() const;
         SourceContextInfo* GetSourceContextInfo() const;
-        void SetSecondaryHostContext(DWORD_PTR hostSourceContext);
+        void SetSecondaryHostContext(unsigned long hostSourceContext);
 
         bool IsHostManagedSource() const;
 
@@ -374,7 +374,7 @@ namespace Js
 #endif
 
         Field(const SRCINFO*) m_srcInfo;
-        Field(DWORD_PTR) m_secondaryHostSourceContext;
+        Field(unsigned long) m_secondaryHostSourceContext;
 
 #ifdef ENABLE_SCRIPT_DEBUGGING
         Field(LPCUTF8) debugModeSource;
@@ -405,7 +405,7 @@ namespace Js
         Field(uint32_t) byteCodeGenerationFlags;
 
         Utf8SourceInfo(ISourceHolder *sourceHolder, int32 cchLength, SRCINFO const* srcInfo,
-            DWORD_PTR secondaryHostSourceContext, ScriptContext* scriptContext,
+            unsigned long secondaryHostSourceContext, ScriptContext* scriptContext,
             bool isLibraryCode, Js::Var scriptSource = nullptr);
 
         Field(Js::Var) sourceRef; // keep source string reference to prevent GC

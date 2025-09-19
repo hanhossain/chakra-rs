@@ -69,33 +69,6 @@ WaitForSingleObject( HANDLE hHandle,
     return dwRet;
 }
 
-
-/*++
-Function:
-  WaitForSingleObjectEx
-
-See MSDN doc.
---*/
-uint32_t
-WaitForSingleObjectEx( HANDLE hHandle,
-                       uint32_t dwMilliseconds,
-                       BOOL bAlertable)
-{
-    uint32_t dwRet;
-
-    ENTRY("WaitForSingleObjectEx(hHandle=%p, dwMilliseconds=%u, bAlertable=%s)\n",
-          hHandle, dwMilliseconds, bAlertable ? "TRUE" : "FALSE");
-
-    CPalThread * pThread = InternalGetCurrentThread();
-
-    dwRet = InternalWaitForMultipleObjectsEx(pThread, 1, &hHandle, FALSE,
-                                             dwMilliseconds, bAlertable);
-
-    LOGEXIT("WaitForSingleObjectEx returns DWORD %u\n", dwRet);
-    return dwRet;
-}
-
-
 /*++
 Function:
   WaitForMultipleObjects
@@ -177,29 +150,6 @@ Sleep( uint32_t dwMilliseconds)
     LOGEXIT("Sleep returns VOID\n");
 }
 
-
-/*++
-Function:
-  SleepEx
-
-See MSDN doc.
---*/
-uint32_t
-SleepEx( uint32_t dwMilliseconds,
-         BOOL bAlertable)
-{
-    uint32_t dwRet;
-
-    ENTRY("SleepEx(dwMilliseconds=%u, bAlertable=%d)\n", dwMilliseconds, bAlertable);
-
-    CPalThread * pThread = InternalGetCurrentThread();
-
-    dwRet = InternalSleepEx(pThread, dwMilliseconds, bAlertable);
-
-    LOGEXIT("SleepEx returns DWORD %u\n", dwRet);
-
-    return dwRet;
-}
 
 /*++
 Function:

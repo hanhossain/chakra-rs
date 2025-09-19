@@ -749,7 +749,7 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
         AutoHSTRING str;
         hr = GetWindowsGlobalizationAdapter(scriptContext)->NormalizeLanguageTag(scriptContext, argString->GetSz(), &str);
         DelayLoadWindowsGlobalization *wsl = scriptContext->GetThreadContext()->GetWindowsGlobalizationLibrary();
-        PCWSTR strBuf = wsl->WindowsGetStringRawBuffer(*str, NULL);
+        const char16_t * strBuf = wsl->WindowsGetStringRawBuffer(*str, NULL);
         retVal = Js::JavascriptString::NewCopySz(strBuf, scriptContext);
         if (FAILED(hr))
         {
@@ -1118,7 +1118,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         return scriptContext->GetLibrary()->GetNull();
 #else
         JavascriptString *argString = VarTo<JavascriptString>(args.Values[1]);
-        PCWSTR passedLocale = argString->GetSz();
+        const char16_t * passedLocale = argString->GetSz();
         // REVIEW should we zero the whole array for safety?
         char16_t resolvedLocaleName[LOCALE_NAME_MAX_LENGTH];
         resolvedLocaleName[0] = '\0';
@@ -1148,7 +1148,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         return nullptr;
 #else // !INTL_ICU
         JavascriptString *localeStrings = VarTo<JavascriptString>(args.Values[1]);
-        PCWSTR passedLocale = localeStrings->GetSz();
+        const char16_t * passedLocale = localeStrings->GetSz();
         DelayLoadWindowsGlobalization* wgl = scriptContext->GetThreadContext()->GetWindowsGlobalizationLibrary();
         WindowsGlobalizationAdapter* wga = GetWindowsGlobalizationAdapter(scriptContext);
 
@@ -1319,7 +1319,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         //First we have to determine which formatter(number, percent, or currency) we will be using.
         //Note some options might not be present.
         AutoCOMPtr<NumberFormatting::INumberFormatter> numberFormatter(nullptr);
-        PCWSTR locale = localeJSstr->GetSz();
+        const char16_t * locale = localeJSstr->GetSz();
 
         uint16 formatterToUseVal = 0; // 0 (default) is number, 1 is percent, 2 is currency
         if (GetTypedPropertyBuiltInFrom(options, __formatterToUse, TaggedInt) && (formatterToUseVal = TaggedInt::ToUInt16(propertyValue)) == 1)
@@ -2030,7 +2030,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
             IfFailThrowHr(numberFormatter->FormatDouble(JavascriptNumber::GetValue(args.Values[1]), &result));
         }
 
-        PCWSTR strBuf = wsl->WindowsGetStringRawBuffer(*result, NULL);
+        const char16_t * strBuf = wsl->WindowsGetStringRawBuffer(*result, NULL);
 
         if (strBuf == nullptr)
         {

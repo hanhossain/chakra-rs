@@ -1589,7 +1589,7 @@ Var JavascriptObject::EntryAssign(RecyclableObject* function, CallInfo callInfo,
 }
 
 template <bool assign>
-PCWSTR GetCopyDataPropertiesEntryName() {
+const char16_t * GetCopyDataPropertiesEntryName() {
     return assign ? u"Object.assign" : u"Object.Spread";
 }
 

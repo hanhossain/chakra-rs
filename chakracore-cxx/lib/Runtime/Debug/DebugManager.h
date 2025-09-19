@@ -19,7 +19,7 @@ namespace Js
 
     private:
         InterpreterHaltState* pCurrentInterpreterLocation; // NULL if not Halted at a Probe
-        DWORD_PTR secondaryCurrentSourceContext;           // For resolving ambiguity among generated files, e.g. eval, anonymous, etc.
+        unsigned long secondaryCurrentSourceContext;           // For resolving ambiguity among generated files, e.g. eval, anonymous, etc.
         uint32 debugSessionNumber;                          // A unique number, which will be used to sync all probecontainer when on break
         RecyclerRootPtr<Js::DynamicObject> pConsoleScope;
         ThreadContext* pThreadContext;
@@ -52,7 +52,7 @@ namespace Js
         void SetDispatchHalt(bool set) { this->isAtDispatchHalt = set; }
 
         ReferencedArenaAdapter* GetDiagnosticArena();
-        DWORD_PTR AllocateSecondaryHostSourceContext();
+        unsigned long AllocateSecondaryHostSourceContext();
         void SetCurrentInterpreterLocation(InterpreterHaltState* pHaltState);
         void UnsetCurrentInterpreterLocation();
         bool IsMatchTopFrameStackAddress(DiagStackFrame* frame) const;
@@ -65,7 +65,7 @@ namespace Js
         void UpdateConsoleScope(DynamicObject* copyFromScope, ScriptContext* scriptContext);
         PageAllocator * GetDiagnosticPageAllocator() { return &this->diagnosticPageAllocator; }
         void SetDispatchHaltFrameAddress(void * returnAddress) { this->dispatchHaltFrameAddress = returnAddress; }
-        DWORD_PTR GetDispatchHaltFrameAddress() const { return (DWORD_PTR)this->dispatchHaltFrameAddress; }
+        unsigned long GetDispatchHaltFrameAddress() const { return (unsigned long)this->dispatchHaltFrameAddress; }
 #if DBG
         void ValidateDebugAPICall();
 #endif

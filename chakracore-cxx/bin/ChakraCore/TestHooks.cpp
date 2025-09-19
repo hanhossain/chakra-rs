@@ -75,7 +75,7 @@ namespace Js
 
 #ifdef ENABLE_TEST_HOOKS
 
-int32_t SetConfigFlags(int argc, __in_ecount(argc) LPWSTR argv[], ICustomConfigFlags* customConfigFlags)
+int32_t SetConfigFlags(int argc, __in_ecount(argc) char16_t* argv[], ICustomConfigFlags* customConfigFlags)
 {
     CmdLineArgsParser parser(customConfigFlags);
     if (parser.Parse(argc, argv) != 0)
@@ -86,7 +86,7 @@ int32_t SetConfigFlags(int argc, __in_ecount(argc) LPWSTR argv[], ICustomConfigF
     return S_OK;
 }
 
-int32_t SetConfigFile(LPWSTR strConfigFile)
+int32_t SetConfigFile(char16_t* strConfigFile)
 {
     CmdLineArgsParser parser;
     ConfigParser::ParseCustomConfigFile(parser, strConfigFile);

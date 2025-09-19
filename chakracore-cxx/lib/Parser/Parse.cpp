@@ -157,7 +157,7 @@ void Parser::OutOfMemory()
     throw ParseExceptionObject(ERRnoMemory);
 }
 
-LPCWSTR Parser::GetTokenString(tokens token)
+const char16_t* Parser::GetTokenString(tokens token)
 {
     switch (token)
     {
@@ -317,7 +317,7 @@ LPCWSTR Parser::GetTokenString(tokens token)
     }
 }
 
-void Parser::Error(int32_t hr, LPCWSTR stringOne, LPCWSTR stringTwo)
+void Parser::Error(int32_t hr, const char16_t* stringOne, const char16_t* stringTwo)
 {
     throw ParseExceptionObject(hr, stringOne, stringTwo);
 }
@@ -334,7 +334,7 @@ void Parser::Error(int32_t hr, ParseNodePtr pnode)
     }
 }
 
-void Parser::Error(int32_t hr, charcount_t ichMin, charcount_t ichLim, LPCWSTR stringOne, LPCWSTR stringTwo)
+void Parser::Error(int32_t hr, charcount_t ichMin, charcount_t ichLim, const char16_t* stringOne, const char16_t* stringTwo)
 {
     this->GetScanner()->SetErrorPosition(ichMin, ichLim);
     Error(hr, stringOne, stringTwo);
@@ -6253,7 +6253,7 @@ void Parser::ParseTopLevelDeferredFunc(ParseNodeFnc * pnodeFnc, ParseNodeFnc * p
         {
             int stringId = stub->capturedNameSerializedIds[i];
             uint32 stringLength = 0;
-            LPCWSTR stringVal = Js::ByteCodeSerializer::DeserializeString(stub, stringId, stringLength);
+            const char16_t* stringVal = Js::ByteCodeSerializer::DeserializeString(stub, stringId, stringLength);
 
             OUTPUT_TRACE_DEBUGONLY(Js::SkipNestedDeferredPhase, u"\tPushing a reference to '%s'\n", stringVal);
 

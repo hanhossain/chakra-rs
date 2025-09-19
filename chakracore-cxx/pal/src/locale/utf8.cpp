@@ -58,9 +58,9 @@ Revision History:
 ////////////////////////////////////////////////////////////////////////////
 
 int UTF8ToUnicode(
-    LPCSTR lpSrcStr,
+    const char * lpSrcStr,
     int cchSrc,
-    LPWSTR lpDestStr,
+    char16_t* lpDestStr,
     int cchDest,
     uint32_t dwFlags
     )
@@ -335,12 +335,12 @@ int UTF8ToUnicode(
 ////////////////////////////////////////////////////////////////////////////
 
 int UnicodeToUTF8(
-    LPCWSTR lpSrcStr,
+    const char16_t* lpSrcStr,
     int cchSrc,
-    LPSTR lpDestStr,
+    char* lpDestStr,
     int cchDest)
 {
-    LPCWSTR lpWC = lpSrcStr;
+    const char16_t* lpWC = lpSrcStr;
     int     cchU8 = 0;                // # of UTF8 chars generated
     uint32_t   dwSurrogateChar;
     char16_t   wchHighSurrogate = 0;

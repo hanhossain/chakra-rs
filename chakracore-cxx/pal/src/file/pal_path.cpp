@@ -52,13 +52,13 @@ See MSDN doc.
 --*/
 uint32_t
 GetFullPathNameA(
-      LPCSTR lpFileName,
+      const char * lpFileName,
       uint32_t nBufferLength,
-      LPSTR lpBuffer,
-      LPSTR *lpFilePart)
+      char* lpBuffer,
+      char* *lpFilePart)
 {
     uint32_t  nReqPathLen, nRet = 0;
-    LPSTR lpUnixPath = NULL;
+    char* lpUnixPath = NULL;
     BOOL fullPath = FALSE;
 
     ENTRY("GetFullPathNameA(lpFileName=%p (%s), nBufferLength=%u, lpBuffer=%p, "
@@ -97,7 +97,7 @@ GetFullPathNameA(
         /* allocate memory for full non-canonical path */
         max_len = strlen(lpFileName)+1; /* 1 for the slash to append */
         max_len += MAX_LONGPATH + 1;
-        lpUnixPath = (LPSTR)malloc(max_len);
+        lpUnixPath = (char*)malloc(max_len);
         if(NULL == lpUnixPath)
         {
             ERROR("malloc() failed; error is %d (%s)\n",
@@ -175,261 +175,6 @@ done:
     return nRet;
 }
 
-
-/*++
-Function:
-  GetFullPathNameW
-
-See MSDN doc.
---*/
-uint32_t
-GetFullPathNameW(
-      LPCWSTR lpFileName,
-      uint32_t nBufferLength,
-      LPWSTR lpBuffer,
-      LPWSTR *lpFilePart)
-{
-    LPSTR fileNameA;
-    /* bufferA needs to be able to hold a path that's potentially as
-       large as MAX_LONGPATH WCHARs. */
-    char * bufferA;
-    size_t bufferASize = 0;
-    PathCharString bufferAPS;
-    LPSTR lpFilePartA;
-    int   fileNameLength;
-    int   srcSize;
-    uint32_t length;
-    uint32_t nRet = 0;
-
-    ENTRY("GetFullPathNameW(lpFileName=%p (%S), nBufferLength=%u, lpBuffer=%p"
-          ", lpFilePart=%p)\n",
-          lpFileName?lpFileName:W16_NULLSTRING,
-          lpFileName?lpFileName:W16_NULLSTRING, nBufferLength,
-          lpBuffer, lpFilePart);
-
-    /* Find the number of bytes required to convert lpFileName
-       to ANSI. This may be more than MAX_LONGPATH. We try to
-       handle that case, since it may be less than MAX_LONGPATH
-       WCHARs. */
-
-    fileNameLength = WideCharToMultiByte(CP_ACP, 0, lpFileName,
-                                         -1, NULL, 0, NULL, NULL);
-    if (fileNameLength == 0)
-    {
-        /* Couldn't convert to ANSI. That's odd. */
-        SetLastError(ERROR_INVALID_PARAMETER);
-        goto done;
-    }
-    else
-    {
-        fileNameA = static_cast<LPSTR>(alloca(fileNameLength));
-    }
-
-    /* Now convert lpFileName to ANSI. */
-    srcSize = WideCharToMultiByte (CP_ACP, 0, lpFileName,
-                                   -1, fileNameA, fileNameLength,
-                                   NULL, NULL );
-    if( srcSize == 0 )
-    {
-        uint32_t dwLastError = GetLastError();
-        if( dwLastError == ERROR_INSUFFICIENT_BUFFER )
-        {
-            ERROR("lpFileName is larger than MAX_LONGPATH (%d)!\n", MAX_LONGPATH);
-        }
-        else
-        {
-            ASSERT("WideCharToMultiByte failure! error is %d\n", dwLastError);
-        }
-        SetLastError(ERROR_INVALID_PARAMETER);
-        goto done;
-    }
-
-    bufferASize = MAX_LONGPATH * MaxWCharToAcpLengthRatio;
-    bufferA = bufferAPS.OpenStringBuffer(bufferASize);
-    if (NULL == bufferA)
-    {
-        SetLastError(ERROR_NOT_ENOUGH_MEMORY);
-        goto done;
-    }
-    length = GetFullPathNameA(fileNameA, bufferASize, bufferA, &lpFilePartA);
-    bufferAPS.CloseBuffer(length);
-
-    if (length == 0 || length > bufferASize)
-    {
-        /* Last error is set by GetFullPathNameA */
-        nRet = length;
-        goto done;
-    }
-
-    /* Convert back to Unicode the result */
-    nRet = MultiByteToWideChar( CP_ACP, 0, bufferA, -1,
-                                lpBuffer, nBufferLength );
-
-    if (nRet == 0)
-    {
-        if ( GetLastError() == ERROR_INSUFFICIENT_BUFFER )
-        {
-            /* get the required length */
-            nRet = MultiByteToWideChar( CP_ACP, 0, bufferA, -1,
-                                        NULL, 0 );
-            SetLastError(ERROR_BUFFER_OVERFLOW);
-        }
-
-        goto done;
-    }
-
-    /* MultiByteToWideChar counts the trailing NULL, but
-       GetFullPathName does not. */
-    nRet--;
-
-    /* now set lpFilePart */
-    if (lpFilePart != NULL)
-    {
-        *lpFilePart = lpBuffer;
-        *lpFilePart += MultiByteToWideChar( CP_ACP, 0, bufferA,
-                                            lpFilePartA - bufferA, NULL, 0);
-    }
-
-done:
-    LOGEXIT("GetFullPathNameW returns DWORD %u\n", nRet);
-    return nRet;
-}
-
-
-/*++
-Function:
-  GetLongPathNameW
-
-See MSDN doc.
-
-Note:
-  Since short path names are not implemented (nor supported) in the PAL,
-  this function simply copies the given path into the new buffer.
-
---*/
-uint32_t
-GetLongPathNameW(
-		  LPCWSTR lpszShortPath,
-          LPWSTR lpszLongPath,
-  		  uint32_t cchBuffer)
-{
-    uint32_t dwPathLen = 0;
-
-    ENTRY("GetLongPathNameW(lpszShortPath=%p (%S), lpszLongPath=%p (%S), "
-          "cchBuffer=%d\n", lpszShortPath, lpszShortPath, lpszLongPath, lpszLongPath, cchBuffer);
-
-    if ( !lpszShortPath )
-    {
-        ERROR( "lpszShortPath was not a valid pointer.\n" );
-        SetLastError( ERROR_INVALID_PARAMETER );
-        LOGEXIT("GetLongPathNameW returns DWORD 0\n");
-        return 0;
-    }
-    else if (INVALID_FILE_ATTRIBUTES == GetFileAttributesW( lpszShortPath ))
-    {
-        // last error has been set by GetFileAttributes
-        ERROR( "lpszShortPath does not exist.\n" );
-        LOGEXIT("GetLongPathNameW returns DWORD 0\n");
-        return 0;
-    }
-
-    /* all lengths are # of TCHAR characters */
-    /* "required size" includes space for the terminating null character */
-    dwPathLen = PAL_wcslen(lpszShortPath)+1;
-
-    /* lpszLongPath == 0 means caller is asking only for size */
-    if ( lpszLongPath )
-    {
-        if ( dwPathLen > cchBuffer )
-        {
-            ERROR("Buffer is too small, need %d characters\n", dwPathLen);
-            SetLastError( ERROR_INSUFFICIENT_BUFFER );
-        } else
-        {
-            if ( lpszShortPath != lpszLongPath )
-            {
-                // Note: MSDN doesn't specify the behavior of GetLongPathName API
-                //       if the buffers are overlap.
-                PAL_wcsncpy( lpszLongPath, lpszShortPath, cchBuffer );
-            }
-
-            /* actual size not including terminating null is returned */
-            dwPathLen--;
-        }
-    }
-
-    LOGEXIT("GetLongPathNameW returns DWORD %u\n", dwPathLen);
-    return dwPathLen;
-}
-
-
-/*++
-Function:
-  GetShortPathNameW
-
-See MSDN doc.
-
-Note:
-  Since short path names are not implemented (nor supported) in the PAL,
-  this function simply copies the given path into the new buffer.
-
---*/
-uint32_t
-GetShortPathNameW(
-		  LPCWSTR lpszLongPath,
-          LPWSTR lpszShortPath,
-  		  uint32_t cchBuffer)
-{
-    uint32_t dwPathLen = 0;
-
-    ENTRY("GetShortPathNameW(lpszLongPath=%p (%S), lpszShortPath=%p (%S), "
-          "cchBuffer=%d\n", lpszLongPath, lpszLongPath, lpszShortPath, lpszShortPath, cchBuffer);
-
-    if ( !lpszLongPath )
-    {
-        ERROR( "lpszLongPath was not a valid pointer.\n" );
-        SetLastError( ERROR_INVALID_PARAMETER );
-        LOGEXIT("GetShortPathNameW returns DWORD 0\n");
-        return 0;
-    }
-    else if (INVALID_FILE_ATTRIBUTES == GetFileAttributesW( lpszLongPath ))
-    {
-        // last error has been set by GetFileAttributes
-        ERROR( "lpszLongPath does not exist.\n" );
-        LOGEXIT("GetShortPathNameW returns DWORD 0\n");
-        return 0;
-    }
-
-    /* all lengths are # of TCHAR characters */
-    /* "required size" includes space for the terminating null character */
-    dwPathLen = PAL_wcslen(lpszLongPath)+1;
-
-    /* lpszShortPath == 0 means caller is asking only for size */
-    if ( lpszShortPath )
-    {
-        if ( dwPathLen > cchBuffer )
-        {
-            ERROR("Buffer is too small, need %d characters\n", dwPathLen);
-            SetLastError( ERROR_INSUFFICIENT_BUFFER );
-        } else
-        {
-            if ( lpszLongPath != lpszShortPath )
-            {
-                // Note: MSDN doesn't specify the behavior of GetShortPathName API
-                //       if the buffers are overlap.
-                PAL_wcsncpy( lpszShortPath, lpszLongPath, cchBuffer );
-            }
-
-            /* actual size not including terminating null is returned */
-            dwPathLen--;
-        }
-    }
-
-    LOGEXIT("GetShortPathNameW returns DWORD %u\n", dwPathLen);
-    return dwPathLen;
-}
-
-
 /*++
 Function:
   GetTempPathA
@@ -451,7 +196,7 @@ Notes:
 uint32_t
 GetTempPathA(
 	      uint32_t nBufferLength,
-	      LPSTR lpBuffer)
+	      char* lpBuffer)
 {
     uint32_t dwPathLen = 0;
 
@@ -542,7 +287,7 @@ See also the comment for GetTempPathA.
 uint32_t
 GetTempPathW(
 	      uint32_t nBufferLength,
-	      LPWSTR lpBuffer)
+	      char16_t* lpBuffer)
 {
     ENTRY("GetTempPathW(nBufferLength=%u, lpBuffer=%p)\n",
           nBufferLength, lpBuffer);
@@ -602,10 +347,10 @@ Parameter:
 --*/
 void
 FILEDosToUnixPathA(
-       LPSTR lpPath)
+       char* lpPath)
 {
-    LPSTR p;
-    LPSTR pPointAtDot=NULL;
+    char* p;
+    char* pPointAtDot=NULL;
     char charBeforeFirstDot='\0';
 
     TRACE("Original DOS path = [%s]\n", lpPath);
@@ -719,10 +464,10 @@ Parameter:
 --*/
 void
 FILEDosToUnixPathW(
-       LPWSTR lpPath)
+       char16_t* lpPath)
 {
-    LPWSTR p;
-    LPWSTR pPointAtDot=NULL;
+    char16_t* p;
+    char16_t* pPointAtDot=NULL;
     char16_t charBeforeFirstDot='\0';
 
     TRACE("Original DOS path = [%S]\n", lpPath);
@@ -833,9 +578,9 @@ Parameter:
 --*/
 void
 FILEUnixToDosPathA(
-       LPSTR lpPath)
+       char* lpPath)
 {
-    LPSTR p;
+    char* p;
 
     TRACE("Original Unix path = [%s]\n", lpPath);
 
@@ -862,12 +607,12 @@ characters written to the buffer. If the buffer is not large enough,
 return the required size of the buffer including the NULL character. If
 there is no directory part in the path, return 0.
 --*/
-uint32_t FILEGetDirectoryFromFullPathA( LPCSTR lpFullPath,
+uint32_t FILEGetDirectoryFromFullPathA( const char * lpFullPath,
                      uint32_t  nBufferLength,
-                     LPSTR  lpBuffer )
+                     char*  lpBuffer )
 {
     int    full_len, dir_len, i;
-    LPCSTR lpDirEnd;
+    const char * lpDirEnd;
     uint32_t  dwRetLength;
 
     full_len = lstrlenA( lpFullPath );
@@ -908,7 +653,7 @@ Function:
 
 Given a full path, return a pointer to the first char of the filename part.
 --*/
-LPCSTR FILEGetFileNameFromFullPathA( LPCSTR lpFullPath )
+const char * FILEGetFileNameFromFullPathA( const char * lpFullPath )
 {
     int DirLen = FILEGetDirectoryFromFullPathA( lpFullPath, 0, NULL );
 
@@ -927,7 +672,7 @@ FILECanonicalizePath
     Removes all instances of '/./', '/../' and '//' from an absolute path.
 
 Parameters:
-    LPSTR lpUnixPath : absolute path to modify, in Unix format
+    char* lpUnixPath : absolute path to modify, in Unix format
 
 (no return value)
 
@@ -938,12 +683,12 @@ Notes :
 -reason for this function is that GetFullPathName can't use realpath(), since
  realpath() requires the given path to be valid and GetFullPathName does not.
 --*/
-void FILECanonicalizePath(LPSTR lpUnixPath)
+void FILECanonicalizePath(char* lpUnixPath)
 {
-    LPSTR slashslashptr;
-    LPSTR dotdotptr;
-    LPSTR slashdotptr;
-    LPSTR slashptr;
+    char* slashslashptr;
+    char* dotdotptr;
+    char* slashdotptr;
+    char* slashptr;
 
     /* step 1 : replace '//' sequences by a single '/' */
 
@@ -1066,12 +811,12 @@ PAL-specific notes :
 --*/
 uint32_t
 SearchPathA(
-     LPCSTR lpPath,
-     LPCSTR lpFileName,
-     LPCSTR lpExtension,
+     const char * lpPath,
+     const char * lpFileName,
+     const char * lpExtension,
      uint32_t nBufferLength,
-     LPSTR lpBuffer,
-     LPSTR *lpFilePart
+     char* lpBuffer,
+     char* *lpFilePart
     )
 {
     uint32_t nRet = 0;
@@ -1080,8 +825,8 @@ SearchPathA(
     PathCharString FullPathPS;
     PathCharString CanonicalFullPathPS;
     char * CanonicalFullPath;
-    LPCSTR pPathStart;
-    LPCSTR pPathEnd;
+    const char * pPathStart;
+    const char * pPathEnd;
     size_t PathLength;
     size_t FileNameLength;
     uint32_t length;
@@ -1167,7 +912,7 @@ SearchPathA(
     }
     else
     {
-        LPCSTR pNextPath;
+        const char * pNextPath;
 
         pNextPath = lpPath;
 
@@ -1317,299 +1062,22 @@ done:
     return nRet;
 }
 
-
-/*++
-Function:
-  SearchPathW
-
-See MSDN doc.
-
-PAL-specific notes :
--lpPath must be non-NULL; path delimiters are platform-dependent (':' for Unix)
--lpFileName must be non-NULL, may be an absolute path
--lpExtension must be NULL
--lpFilePart (if non-NULL) doesn't need to be used (but we do)
---*/
-uint32_t
-SearchPathW(
-     LPCWSTR lpPath,
-     LPCWSTR lpFileName,
-     LPCWSTR lpExtension,
-     uint32_t nBufferLength,
-     LPWSTR lpBuffer,
-     LPWSTR *lpFilePart
-    )
-{
-    uint32_t nRet = 0;
-    char16_t * FullPath;
-    size_t FullPathLength = 0;
-    PathWCharString FullPathPS;
-    LPCWSTR pPathStart;
-    LPCWSTR pPathEnd;
-    size_t PathLength;
-    size_t FileNameLength;
-    uint32_t dw;
-    uint32_t length;
-    char * AnsiPath;
-    PathCharString AnsiPathPS;
-    size_t CanonicalPathLength;
-    int canonical_size;
-    char16_t * CanonicalPath;
-    PathWCharString CanonicalPathPS;
-
-    ENTRY("SearchPathW(lpPath=%p (%S), lpFileName=%p (%S), lpExtension=%p, "
-          "nBufferLength=%u, lpBuffer=%p, lpFilePart=%p)\n",
-	  lpPath,
-	  lpPath, lpFileName, lpFileName, lpExtension, nBufferLength, lpBuffer,
-          lpFilePart);
-
-    /* validate parameters */
-
-    if(NULL == lpPath)
-    {
-        ASSERT("lpPath may not be NULL\n");
-        SetLastError(ERROR_INVALID_PARAMETER);
-        goto done;
-    }
-    if(NULL == lpFileName)
-    {
-        ASSERT("lpFileName may not be NULL\n");
-        SetLastError(ERROR_INVALID_PARAMETER);
-        goto done;
-    }
-    if(NULL != lpExtension)
-    {
-        ASSERT("lpExtension must be NULL, is %p instead\n", lpExtension);
-        SetLastError(ERROR_INVALID_PARAMETER);
-        goto done;
-    }
-
-    /* special case : if file name contains absolute path, don't search the
-       provided path */
-    if('\\' == lpFileName[0] || '/' == lpFileName[0])
-    {
-        /* Canonicalize the path to deal with back-to-back '/', etc. */
-        length = MAX_LONGPATH;
-        CanonicalPath = CanonicalPathPS.OpenStringBuffer(length);
-        if (NULL == CanonicalPath)
-        {
-            SetLastError(ERROR_NOT_ENOUGH_MEMORY);
-            goto done;
-        }
-        dw = GetFullPathNameW(lpFileName, length+1, CanonicalPath, NULL);
-        CanonicalPathPS.CloseBuffer(dw);
-        if (length+1 < dw)
-        {
-            CanonicalPath = CanonicalPathPS.OpenStringBuffer(dw-1);
-            if (NULL == CanonicalPath)
-            {
-                SetLastError(ERROR_NOT_ENOUGH_MEMORY);
-                goto done;
-            }
-            dw = GetFullPathNameW(lpFileName, dw, CanonicalPath, NULL);
-            CanonicalPathPS.CloseBuffer(dw);
-        }
-
-        if (dw == 0)
-        {
-            WARN("couldn't canonicalize path <%S>, error is %#x. failing.\n",
-                 lpPath, GetLastError());
-            SetLastError(ERROR_INVALID_PARAMETER);
-            goto done;
-        }
-
-        /* see if the file exists */
-        CanonicalPathLength = (PAL_wcslen(CanonicalPath)+1) * MaxWCharToAcpLengthRatio;
-        AnsiPath = AnsiPathPS.OpenStringBuffer(CanonicalPathLength);
-        if (NULL == AnsiPath)
-        {
-            SetLastError(ERROR_NOT_ENOUGH_MEMORY);
-            goto done;
-        }
-	    canonical_size = WideCharToMultiByte(CP_ACP, 0, CanonicalPath, -1,
-			    AnsiPath, CanonicalPathLength, NULL, NULL);
-	    AnsiPathPS.CloseBuffer(canonical_size);
-
-        if(0 == access(AnsiPath, F_OK))
-        {
-            /* found it */
-            nRet = dw;
-        }
-    }
-    else
-    {
-        LPCWSTR pNextPath;
-
-        pNextPath = lpPath;
-
-        FileNameLength = PAL_wcslen(lpFileName);
-
-        while (*pNextPath)
-        {
-            pPathStart = pNextPath;
-
-            /* get a pointer to the end of the first path in pPathStart */
-            pPathEnd = PAL_wcschr(pPathStart, ':');
-            if (!pPathEnd)
-            {
-                pPathEnd = pPathStart + PAL_wcslen(pPathStart);
-                /* we want to break out of the loop after this pass, so let
-                   *pNextPath be '\0' */
-                pNextPath = pPathEnd;
-            }
-            else
-            {
-                /* point to the next component in the path string */
-                pNextPath = pPathEnd+1;
-            }
-
-            PathLength = pPathEnd-pPathStart;
-
-            if (PathLength+FileNameLength+1 >= MAX_LONGPATH)
-            {
-                /* The path+'/'+file length is too long.  Skip it. */
-                WARN("path component %.*S is too long, skipping it\n",
-                     (int)PathLength, pPathStart);
-                continue;
-            }
-            else if(0 == PathLength)
-            {
-                /* empty component : there were 2 consecutive ':' */
-                continue;
-            }
-
-            /* Construct a pathname by concatenating one path from lpPath, '/'
-               and lpFileName */
-            FullPathLength = PathLength + FileNameLength;
-            FullPath = FullPathPS.OpenStringBuffer(FullPathLength+1);
-            if (NULL == FullPath)
-            {
-                SetLastError(ERROR_NOT_ENOUGH_MEMORY);
-                goto done;
-            }
-            memcpy(FullPath, pPathStart, PathLength*sizeof(char16_t));
-            FullPath[PathLength] = '/';
-            PAL_wcscpy(&FullPath[PathLength+1], lpFileName);
-
-            FullPathPS.CloseBuffer(FullPathLength+1);
-
-            /* Canonicalize the path to deal with back-to-back '/', etc. */
-            length = MAX_LONGPATH;
-            CanonicalPath = CanonicalPathPS.OpenStringBuffer(length);
-            if (NULL == CanonicalPath)
-            {
-                SetLastError(ERROR_NOT_ENOUGH_MEMORY);
-                goto done;
-            }
-            dw = GetFullPathNameW(FullPath, length+1,
-                                  CanonicalPath, NULL);
-            CanonicalPathPS.CloseBuffer(dw);
-
-            if (length+1 < dw)
-            {
-                CanonicalPath = CanonicalPathPS.OpenStringBuffer(dw-1);
-                if (NULL == CanonicalPath)
-                {
-                    SetLastError(ERROR_NOT_ENOUGH_MEMORY);
-                    goto done;
-                }
-                dw = GetFullPathNameW(FullPath, dw, CanonicalPath, NULL);
-                CanonicalPathPS.CloseBuffer(dw);
-            }
-
-            if (dw == 0)
-            {
-                /* Call failed - possibly low memory.  Skip the path */
-                WARN("couldn't canonicalize path <%S>, error is %#x. "
-                     "skipping it\n", FullPath, GetLastError());
-                continue;
-            }
-
-            /* see if the file exists */
-            CanonicalPathLength = (PAL_wcslen(CanonicalPath)+1) * MaxWCharToAcpLengthRatio;
-            AnsiPath = AnsiPathPS.OpenStringBuffer(CanonicalPathLength);
-            if (NULL == AnsiPath)
-            {
-                SetLastError(ERROR_NOT_ENOUGH_MEMORY);
-                goto done;
-            }
-            canonical_size = WideCharToMultiByte(CP_ACP, 0, CanonicalPath, -1,
-                                AnsiPath, CanonicalPathLength, NULL, NULL);
-            AnsiPathPS.CloseBuffer(canonical_size);
-
-            if(0 == access(AnsiPath, F_OK))
-            {
-                /* found it */
-                nRet = dw;
-                break;
-            }
-        }
-    }
-
-    if (nRet == 0)
-    {
-       /* file not found anywhere; say so. in Windows, this always seems to say
-          FILE_NOT_FOUND, even if path doesn't exist */
-       SetLastError(ERROR_FILE_NOT_FOUND);
-    }
-    else
-    {
-        /* find out the required buffer size, copy path to buffer if it's
-           large enough */
-        nRet = PAL_wcslen(CanonicalPath)+1;
-        if(nRet <= nBufferLength)
-        {
-            if(NULL == lpBuffer)
-            {
-                /* Windows merily crashes here, but let's not */
-                ERROR("caller told us buffer size was %d, but buffer is NULL\n",
-                      nBufferLength);
-                SetLastError(ERROR_INVALID_PARAMETER);
-                nRet = 0;
-                goto done;
-            }
-            PAL_wcscpy(lpBuffer, CanonicalPath);
-
-            /* don't include the null-terminator in the count if buffer was
-               large enough */
-            nRet--;
-
-            if(NULL != lpFilePart)
-            {
-                *lpFilePart = PAL_wcsrchr(lpBuffer, '/');
-                if(NULL == *lpFilePart)
-                {
-                    ASSERT("no '/' in full path!\n");
-                }
-                else
-                {
-                    /* point to character after last '/' */
-                    (*lpFilePart)++;
-                }
-            }
-        }
-    }
-done:
-    LOGEXIT("SearchPathW returns DWORD %u\n", nRet);
-    return nRet;
-}
-
 /*++
 Function:
   PathFindFileNameW
 
 See MSDN doc.
 --*/
-LPWSTR
+char16_t*
 PathFindFileNameW(
-     LPCWSTR pPath
+     const char16_t* pPath
     )
 {
     ENTRY("PathFindFileNameW(pPath=%p (%S))\n",
           pPath?pPath:W16_NULLSTRING,
           pPath?pPath:W16_NULLSTRING);
 
-    LPWSTR ret = (LPWSTR)pPath;
+    char16_t* ret = (char16_t*)pPath;
     if (ret != NULL && *ret != W('\0'))
     {
         ret = PAL_wcschr(ret, W('\0')) - 1;

@@ -127,7 +127,7 @@
 
    The success criteria can be specified with the _Success_(expr) annotation:
      _Success_(return != FALSE) BOOL
-     PathCanonicalizeA(_Out_writes_(MAX_PATH) LPSTR pszBuf, LPCSTR pszPath) :
+     PathCanonicalizeA(_Out_writes_(MAX_PATH) char* pszBuf, const char * pszPath) :
         pszBuf is only guaranteed to be NULL-terminated when TRUE is returned,
         and FALSE indiates failure. In common practice, callers check for zero
         vs. non-zero returns, so it is preferable to express the success
@@ -390,9 +390,9 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 
 //   _Outptr_ - Annotations for output params returning pointers
 //      These describe parameters where the called function provides the buffer:
-//        int32_t SHStrDupW(_In_ LPCWSTR psz, _Outptr_ LPWSTR *ppwsz);
-//      The caller passes the address of an LPWSTR variable as ppwsz, and SHStrDupW allocates
-//      and initializes memory and returns the pointer to the new LPWSTR in *ppwsz.
+//        int32_t SHStrDupW(_In_ const char16_t* psz, _Outptr_ char16_t* *ppwsz);
+//      The caller passes the address of an char16_t* variable as ppwsz, and SHStrDupW allocates
+//      and initializes memory and returns the pointer to the new char16_t* in *ppwsz.
 //
 //    _Outptr_opt_ - describes parameters that are allowed to be NULL.
 //    _Outptr_*_result_maybenull_ - describes parameters where the called function might return NULL to the caller.
@@ -647,7 +647,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 // buffer is a zero terminated string
 #define _Pre_z_                           _SAL2_Source_(_Pre_z_, (), _Pre1_impl_(__zterm_impl) _Pre_valid_impl_)
 
-// valid size unknown or indicated by type (e.g.:LPSTR)
+// valid size unknown or indicated by type (e.g.:char*)
 #define _Pre_valid_                       _SAL2_Source_(_Pre_valid_, (), _Pre1_impl_(__notnull_impl_notref)   _Pre_valid_impl_)
 #define _Pre_opt_valid_                   _SAL2_Source_(_Pre_opt_valid_, (), _Pre1_impl_(__maybenull_impl_notref) _Pre_valid_impl_)
 
@@ -941,7 +941,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 #define _Inout_bytecount_x_(size)         _SAL1_1_Source_(_Inout_bytecount_x_, (size), _Prepost_bytecount_x_(size))
 #define _Inout_opt_bytecount_x_(size)     _SAL1_1_Source_(_Inout_opt_bytecount_x_, (size), _Prepost_opt_bytecount_x_(size))
 
-// e.g. void AppendToLPSTR( _In_ LPCSTR szFrom, _Inout_cap_(cchTo) LPSTR* szTo, size_t cchTo );
+// e.g. void AppendToLPSTR( _In_ const char * szFrom, _Inout_cap_(cchTo) char** szTo, size_t cchTo );
 #define _Inout_cap_(size)                 _SAL1_1_Source_(_Inout_cap_, (size), _Pre_valid_cap_(size)           _Post_valid_)
 #define _Inout_opt_cap_(size)             _SAL1_1_Source_(_Inout_opt_cap_, (size), _Pre_opt_valid_cap_(size)       _Post_valid_)
 #define _Inout_bytecap_(size)             _SAL1_1_Source_(_Inout_bytecap_, (size), _Pre_valid_bytecap_(size)       _Post_valid_)
@@ -1079,7 +1079,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 #define _Deref_pre_bytecount_x_(size)           _SAL1_1_Source_(_Deref_pre_bytecount_x_, (size), _Deref_pre1_impl_(__notnull_impl_notref)   _Deref_pre1_impl_(__bytecount_x_impl(size)) _Pre_valid_impl_)
 #define _Deref_pre_opt_bytecount_x_(size)       _SAL1_1_Source_(_Deref_pre_opt_bytecount_x_, (size), _Deref_pre1_impl_(__maybenull_impl_notref) _Deref_pre1_impl_(__bytecount_x_impl(size)) _Pre_valid_impl_)
 
-// e.g. void PrintStringArray( _In_count_(cElems) _Deref_pre_valid_ LPCSTR rgStr[], size_t cElems );
+// e.g. void PrintStringArray( _In_count_(cElems) _Deref_pre_valid_ const char * rgStr[], size_t cElems );
 #define _Deref_pre_valid_                       _SAL1_1_Source_(_Deref_pre_valid_, (), _Deref_pre1_impl_(__notnull_impl_notref)   _Pre_valid_impl_)
 #define _Deref_pre_opt_valid_                   _SAL1_1_Source_(_Deref_pre_opt_valid_, (), _Deref_pre1_impl_(__maybenull_impl_notref) _Pre_valid_impl_)
 #define _Deref_pre_invalid_                     _SAL1_1_Source_(_Deref_pre_invalid_, (), _Deref_pre1_impl_(__notvalid_impl))
@@ -1171,7 +1171,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 #define _Deref_post_bytecount_x_(size)           _SAL1_1_Source_(_Deref_post_bytecount_x_, (size), _Deref_post1_impl_(__notnull_impl_notref) _Deref_post1_impl_(__bytecount_x_impl(size)) _Post_valid_impl_)
 #define _Deref_post_opt_bytecount_x_(size)       _SAL1_1_Source_(_Deref_post_opt_bytecount_x_, (size), _Deref_post1_impl_(__maybenull_impl_notref) _Deref_post1_impl_(__bytecount_x_impl(size)) _Post_valid_impl_)
 
-// e.g. void GetStrings( _Out_count_(cElems) _Deref_post_valid_ LPSTR const rgStr[], size_t cElems );
+// e.g. void GetStrings( _Out_count_(cElems) _Deref_post_valid_ char* const rgStr[], size_t cElems );
 #define _Deref_post_valid_                       _SAL1_1_Source_(_Deref_post_valid_, (), _Deref_post1_impl_(__notnull_impl_notref)   _Post_valid_impl_)
 #define _Deref_post_opt_valid_                   _SAL1_1_Source_(_Deref_post_opt_valid_, (), _Deref_post1_impl_(__maybenull_impl_notref) _Post_valid_impl_)
 
@@ -1195,7 +1195,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 // _Ret_ ---
 //
 
-// e.g. _Ret_opt_valid_ LPSTR void* CloneSTR( _Pre_valid_ LPSTR src );
+// e.g. _Ret_opt_valid_ char* void* CloneSTR( _Pre_valid_ char* src );
 #define _Ret_opt_valid_                   _SAL1_1_Source_(_Ret_opt_valid_, (), _Ret1_impl_(__maybenull_impl_notref) _Ret_valid_impl_)
 #define _Ret_opt_z_                       _SAL1_1_Source_(_Ret_opt_z_, (), _Ret2_impl_(__maybenull_impl,__zterm_impl) _Ret_valid_impl_)
 
@@ -2032,7 +2032,7 @@ __PRIMOP(char *, _Strstr_(__In_impl_ char *, __In_impl_ char *));
          allocated for the buffer, in which case it describes the accessible amount.
 
  <>      : No buffer size is given. If the type specifies the buffer size (such as
-             with LPSTR and LPWSTR), that amount is used. Otherwise, the buffer is one
+             with char* and char16_t*), that amount is used. Otherwise, the buffer is one
              element long. Must be used with _in, _out, or _inout.
  _ecount : The buffer size is an explicit element count.
  _bcount : The buffer size is an explicit byte count.
@@ -2042,7 +2042,7 @@ __PRIMOP(char *, _Strstr_(__In_impl_ char *, __In_impl_ char *));
            category for _in buffers; they must be fully initialized by the caller.
 
  <>    : The type specifies how much is initialized. For instance, a function initializing
-           an LPWSTR must NULL-terminate the string.
+           an char16_t* must NULL-terminate the string.
  _full : The function initializes the entire buffer.
  _part : The function initializes part of the buffer, and explicitly indicates how much.
 
@@ -2066,7 +2066,7 @@ __PRIMOP(char *, _Strstr_(__In_impl_ char *, __In_impl_ char *));
  Buffer Annotation Examples
 
  LWSTDAPI_(BOOL) StrToIntExA(
-     LPCSTR pszString,
+     const char * pszString,
      uint32_t dwFlags,
      int *piRet                     -- A pointer whose dereference will be filled in.
  );
@@ -2079,9 +2079,9 @@ __PRIMOP(char *, _Strstr_(__In_impl_ char *, __In_impl_ char *));
  );
 
  LWSTDAPI_(BOOL) PathCompactPathExA(
-     __out_ecount(cchMax) LPSTR pszOut,   -- A string buffer with cch elements that will
+     __out_ecount(cchMax) char* pszOut,   -- A string buffer with cch elements that will
                                           --   be NULL terminated on exit.
-     LPCSTR pszSrc,
+     const char * pszSrc,
      uint32_t cchMax,
      uint32_t dwFlags
  );
@@ -2154,12 +2154,12 @@ __PRIMOP(char *, _Strstr_(__In_impl_ char *, __In_impl_ char *));
  Advanced Annotation Examples
 
  __success(return != FALSE) LWSTDAPI_(BOOL) 
- PathCanonicalizeA(__out_ecount(MAX_PATH) LPSTR pszBuf, LPCSTR pszPath) :
+ PathCanonicalizeA(__out_ecount(MAX_PATH) char* pszBuf, const char * pszPath) :
     pszBuf is only guaranteed to be NULL-terminated when TRUE is returned.
 
- typedef __nullterminated char16_t* LPWSTR : Initialized LPWSTRs are NULL-terminated strings.
+ typedef __nullterminated char16_t* char16_t* : Initialized LPWSTRs are NULL-terminated strings.
 
- __out_ecount(cch) __typefix(LPWSTR) void *psz : psz is a buffer parameter which will be
+ __out_ecount(cch) __typefix(char16_t*) void *psz : psz is a buffer parameter which will be
      a NULL-terminated char16_t string at exit, and which initially contains cch WCHARs.
 
  -------------------------------------------------------------------------------

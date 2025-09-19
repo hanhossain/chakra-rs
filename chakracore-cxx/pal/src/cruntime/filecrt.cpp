@@ -48,7 +48,7 @@ Function:
 See MSDN doc.
 --*/
 int
-_open_osfhandle( INT_PTR osfhandle, int flags )
+_open_osfhandle( long osfhandle, int flags )
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pthrCurrent = NULL;

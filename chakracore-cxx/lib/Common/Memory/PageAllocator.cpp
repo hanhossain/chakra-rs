@@ -2235,7 +2235,7 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::AddUsedBytes(size_t by
 {
     usedBytes += bytes;
 #if defined(TARGET_64)
-    size_t lastTotalUsedBytes = ::InterlockedExchangeAdd64((volatile LONG64 *)&totalUsedBytes, bytes);
+    size_t lastTotalUsedBytes = ::InterlockedExchangeAdd64((volatile long *)&totalUsedBytes, bytes);
 #else
     uint32_t lastTotalUsedBytes = ::InterlockedExchangeAdd(&totalUsedBytes, bytes);
 #endif
@@ -2266,7 +2266,7 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::SubUsedBytes(size_t by
     usedBytes -= bytes;
 
 #if defined(TARGET_64)
-    size_t lastTotalUsedBytes = ::InterlockedExchangeAdd64((volatile LONG64 *)&totalUsedBytes, -(LONG64)bytes);
+    size_t lastTotalUsedBytes = ::InterlockedExchangeAdd64((volatile long *)&totalUsedBytes, -(long)bytes);
 #else
     uint32_t lastTotalUsedBytes = ::InterlockedExchangeSubtract(&totalUsedBytes, bytes);
 #endif

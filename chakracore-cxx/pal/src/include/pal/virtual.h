@@ -34,7 +34,7 @@ typedef struct _CMI {
     struct _CMI * pNext;        /* Link to the next entry. */
     struct _CMI * pLast;        /* Link to the previous entry. */
 
-    UINT_PTR   startBoundary;   /* Starting location of the region. */
+    unsigned long   startBoundary;   /* Starting location of the region. */
     size_t   memSize;         /* Size of the entire region.. */
 
     uint32_t  accessProtection;    /* Initial allocation access protection. */
@@ -105,7 +105,7 @@ Function :
     Returns whether the space in question is owned the VIRTUAL system.
 
 --*/
-BOOL VIRTUALOwnedRegion(  UINT_PTR address );
+BOOL VIRTUALOwnedRegion(  unsigned long address );
 
 
 #ifdef __cplusplus

@@ -743,7 +743,7 @@ NativeCodeGenerator::IsValidVar(const Js::Var var, Recycler *const recycler)
         return false;
     }
 
-    INT_PTR vtable = VirtualTableInfoBase::GetVirtualTable(var);
+    long vtable = VirtualTableInfoBase::GetVirtualTable(var);
     if (vtable <= USHRT_MAX || (vtable & 1))
     {
         // Don't have a vtable, is it not a var, may be a frame display?
@@ -809,7 +809,7 @@ NativeCodeGenerator::IsValidVar(const Js::Var var, Recycler *const recycler)
 }
 
 #if ENABLE_DEBUG_CONFIG_OPTIONS
-volatile UINT_PTR NativeCodeGenerator::CodegenFailureSeed = 0;
+volatile unsigned long NativeCodeGenerator::CodegenFailureSeed = 0;
 #endif
 
 void NativeCodeGenerator::CodeGen(PageAllocator* pageAllocator, CodeGenWorkItemIDL* workItemData, _Out_ JITOutputIDL& jitWriteData, const bool foreground, Js::EntryPointInfo* epInfo /*= nullptr*/)

@@ -74,25 +74,11 @@ extern "C" {
 typedef int BOOL, *LPBOOL;
 typedef uint8_t BOOLEAN;
 
-typedef unsigned long UINT64;
-
 typedef unsigned long ULONG64;
-typedef signed long LONG64;
 
 #define _W64
 
-#define _atoi64 (long)atoll
-
-typedef long INT_PTR;
-typedef unsigned long UINT_PTR;
-typedef unsigned long DWORD_PTR;
-
 #define _PTRDIFF_T_DEFINED
-#ifdef _MINGW_
-// We need to define _PTRDIFF_T to make sure ptrdiff_t doesn't get defined
-// again by system headers - but only for MinGW.
-#define _PTRDIFF_T
-#endif
 
 #if !defined(__cplusplus)
 typedef unsigned short char16_t;
@@ -103,26 +89,15 @@ typedef unsigned short char16_t;
 // TODO (hanhossain): can probably remove this
 #define _UINTPTR_T_DEFINED
 
-typedef uint32_t LCTYPE;
-
-typedef const char16_t *LPCWCH;
-typedef char16_t *LPWSTR, *PWSTR;
-
-typedef const char16_t *LPCWSTR, *PCWSTR;
-
-typedef char *PCHAR;
-typedef char *LPSTR;
-typedef const char *LPCSTR;
-
 typedef char16_t TCHAR;
 typedef char16_t _TCHAR;
 typedef TCHAR *LPTSTR;
 typedef const TCHAR *LPCTSTR;
 
-#define MAKEWORD(a, b)      ((uint16_t)(((uint8_t)((DWORD_PTR)(a) & 0xff)) | ((uint16_t)((uint8_t)((DWORD_PTR)(b) & 0xff))) << 8))
-#define MAKELONG(a, b)      ((int32_t)(((uint16_t)((DWORD_PTR)(a) & 0xffff)) | ((uint32_t)((uint16_t)((DWORD_PTR)(b) & 0xffff))) << 16))
-#define LOBYTE(w)           ((uint8_t)((DWORD_PTR)(w) & 0xff))
-#define HIBYTE(w)           ((uint8_t)((DWORD_PTR)(w) >> 8))
+#define MAKEWORD(a, b)      ((uint16_t)(((uint8_t)((unsigned long)(a) & 0xff)) | ((uint16_t)((uint8_t)((unsigned long)(b) & 0xff))) << 8))
+#define MAKELONG(a, b)      ((int32_t)(((uint16_t)((unsigned long)(a) & 0xffff)) | ((uint32_t)((uint16_t)((unsigned long)(b) & 0xffff))) << 16))
+#define LOBYTE(w)           ((uint8_t)((unsigned long)(w) & 0xff))
+#define HIBYTE(w)           ((uint8_t)((unsigned long)(w) >> 8))
 
 typedef void *HANDLE;
 typedef HANDLE HWND;
@@ -167,7 +142,6 @@ typedef struct _GUID {
     unsigned short  Data3;
     unsigned char   Data4[ 8 ];
 } GUID;
-typedef const GUID *LPCGUID;
 #define GUID_DEFINED
 #endif // !GUID_DEFINED
 

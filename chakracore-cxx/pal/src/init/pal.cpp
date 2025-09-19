@@ -536,50 +536,6 @@ PAL_Shutdown(
 
 /*++
 Function:
-  PAL_Terminate
-
-Abstract:
-  This function is the called when a thread has finished using the PAL
-  library. It shuts down PAL and exits the current process.
---*/
-void
-PAL_Terminate(
-    void)
-{
-    PAL_TerminateEx(0);
-}
-
-/*++
-Function:
-PAL_TerminateEx
-
-Abstract:
-This function is the called when a thread has finished using the PAL
-library. It shuts down PAL and exits the current process with
-the specified exit code.
---*/
-void
-PAL_TerminateEx(
-    int exitCode)
-{
-    ENTRY_EXTERNAL("PAL_TerminateEx()\n");
-
-    if (NULL == init_critsec)
-    {
-        /* note that these macros probably won't output anything, since the
-        debug channels haven't been initialized yet */
-        ASSERT("PAL_Initialize has never been called!\n");
-        LOGEXIT("PAL_Terminate returns.\n");
-    }
-
-    PALSetShutdownIntent();
-
-    LOGEXIT("PAL_TerminateEx is exiting the current process.\n");
-    exit(exitCode);
-}
-
-/*++
-Function:
   PALIsThreadDataInitialized
 
 Returns TRUE if startup has reached a point where thread data is available

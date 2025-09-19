@@ -60,10 +60,10 @@ namespace Js
 
         bool isPrimaryBrokenToDebuggerContext;
 
-        JsUtil::List<DWORD_PTR, ArenaAllocator> *registeredFuncContextList;
+        JsUtil::List<unsigned long, ArenaAllocator> *registeredFuncContextList;
         JsUtil::List<const Js::PropertyRecord*> *pinnedPropertyRecords;
 
-        void UpdateFramePointers(bool fMatchWithCurrentScriptContext, DWORD_PTR dispatchHaltFrameAddress = 0);
+        void UpdateFramePointers(bool fMatchWithCurrentScriptContext, unsigned long dispatchHaltFrameAddress = 0);
         bool InitializeLocation(InterpreterHaltState* pHaltState, bool fMatchWithCurrentScriptContext = true);
         void DestroyLocation();
 
@@ -91,7 +91,7 @@ namespace Js
         void Initialize(ScriptContext* pScriptContext);
         void Close();
 
-        WeakDiagStack* GetFramePointers(DWORD_PTR dispatchHaltFrameAddress = 0);
+        WeakDiagStack* GetFramePointers(unsigned long dispatchHaltFrameAddress = 0);
 
         // A break engine responsible for breaking at iniline statement and error statement.
         void InitializeInlineBreakEngine(HaltCallback* pProbe);
@@ -157,9 +157,9 @@ namespace Js
 
         void PrepDiagForEnterScript();
 
-        void RegisterContextToDiag(DWORD_PTR context, ArenaAllocator *alloc);
-        bool IsContextRegistered(DWORD_PTR context);
-        FunctionBody * GetGlobalFunc(ScriptContext* scriptContext, DWORD_PTR secondaryHostSourceContext);
+        void RegisterContextToDiag(unsigned long context, ArenaAllocator *alloc);
+        bool IsContextRegistered(unsigned long context);
+        FunctionBody * GetGlobalFunc(ScriptContext* scriptContext, unsigned long secondaryHostSourceContext);
 
         Var GetExceptionObject() { return jsExceptionObject; }
 

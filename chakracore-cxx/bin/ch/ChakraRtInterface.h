@@ -281,7 +281,7 @@ public:
     struct ArgInfo
     {
         int argc;
-        LPWSTR* argv;
+        char16_t ** argv;
         HostPrintUsageFuncPtr hostPrintUsage;
         char* filename;
 
@@ -293,7 +293,7 @@ public:
         {
         }
 
-        ArgInfo(int argc, LPWSTR* argv, HostPrintUsageFuncPtr hostPrintUsage, char* filename) :
+        ArgInfo(int argc, char16_t ** argv, HostPrintUsageFuncPtr hostPrintUsage, char* filename) :
             argc(argc),
             argv(argv),
             hostPrintUsage(hostPrintUsage),
@@ -331,8 +331,8 @@ public:
     static void UnloadChakraDll(HINSTANCE library);
 
     static int32_t SetAssertToConsoleFlag(bool flag) { return CHECKED_CALL(SetAssertToConsoleFlag, flag); }
-    static int32_t SetConfigFlags(int argc, __in_ecount(argc) LPWSTR argv[], ICustomConfigFlags* customConfigFlags) { return CHECKED_CALL(SetConfigFlags, argc, argv, customConfigFlags); }
-    static int32_t SetConfigFile(LPWSTR strConfigFileName) { return CHECKED_CALL(SetConfigFile, strConfigFileName); }
+    static int32_t SetConfigFlags(int argc, __in_ecount(argc) char16_t * argv[], ICustomConfigFlags* customConfigFlags) { return CHECKED_CALL(SetConfigFlags, argc, argv, customConfigFlags); }
+    static int32_t SetConfigFile(char16_t * strConfigFileName) { return CHECKED_CALL(SetConfigFile, strConfigFileName); }
     static int32_t GetFileNameFlag(BSTR * filename) { return CHECKED_CALL(GetFilenameFlag, filename); }
     static int32_t PrintConfigFlagsUsageString() { m_usageStringPrinted = true;  return CHECKED_CALL(PrintConfigFlagsUsageString); }
 

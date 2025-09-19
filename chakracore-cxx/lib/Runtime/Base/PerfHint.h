@@ -20,9 +20,9 @@ enum PerfHints : uint
 
 struct PerfHintItem
 {
-    LPCWSTR description;
-    LPCWSTR consequences;
-    LPCWSTR suggestion;
+    const char16_t* description;
+    const char16_t* consequences;
+    const char16_t* suggestion;
     PerfHintLevels level;
     bool isNotOptimized;
 };

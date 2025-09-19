@@ -1331,7 +1331,7 @@ namespace CorUnix
         PAL_ERROR
         GetLockControllerForFile(
             CPalThread *pThread,                // IN, OPTIONAL
-            LPCSTR szFileName,
+            const char * szFileName,
             uint32_t dwAccessRights,
             uint32_t dwShareMode,
             IFileLockController **ppLockController  // OUT
@@ -1345,7 +1345,7 @@ namespace CorUnix
         virtual
         PAL_ERROR
         GetFileShareModeForFile(
-            LPCSTR szFileName,
+            const char * szFileName,
             uint32_t* pdwShareMode) = 0;
     };
 

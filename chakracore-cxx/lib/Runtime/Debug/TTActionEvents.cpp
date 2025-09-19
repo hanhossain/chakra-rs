@@ -945,14 +945,14 @@ namespace TTD
 
             TTDAssert(cpAction->IsUtf8 == ((cpAction->LoadFlag & LoadScriptFlag_Utf8Source) == LoadScriptFlag_Utf8Source), "Utf8 status is inconsistent!!!");
 
-            SourceContextInfo * sourceContextInfo = ctx->GetSourceContextInfo((DWORD_PTR)cpAction->SourceContextId, nullptr);
+            SourceContextInfo * sourceContextInfo = ctx->GetSourceContextInfo((unsigned long)cpAction->SourceContextId, nullptr);
 
             if(sourceContextInfo == nullptr)
             {
                 const char16_t* srcUri = cpAction->SourceUri.Contents;
                 uint32 srcUriLength = cpAction->SourceUri.Length;
 
-                sourceContextInfo = ctx->CreateSourceContextInfo((DWORD_PTR)cpAction->SourceContextId, srcUri, srcUriLength, nullptr);
+                sourceContextInfo = ctx->CreateSourceContextInfo((unsigned long)cpAction->SourceContextId, srcUri, srcUriLength, nullptr);
             }
 
             TTDAssert(cpAction->IsUtf8 || sizeof(wchar) == sizeof(char16_t), "Non-utf8 code only allowed on windows!!!");

@@ -3157,7 +3157,7 @@ EmitSubImmediate64(
     ULONG64 Immediate
     )
 {
-    if (-int32_t(Immediate) == -LONG64(Immediate)) {
+    if (-int32_t(Immediate) == -long(Immediate)) {
         return EmitAddSubImmediateCommon(Emitter, Dest, Src, -int32_t(Immediate), false, false, 0x80000000);
     }
 
@@ -3186,7 +3186,7 @@ EmitSubsImmediate64(
     ULONG64 Immediate
     )
 {
-    if (-int32_t(Immediate) == -LONG64(Immediate)) {
+    if (-int32_t(Immediate) == -long(Immediate)) {
         return EmitAddSubImmediateCommon(Emitter, Dest, Src, -int32_t(Immediate), true, false, 0x80000000);
     }
 

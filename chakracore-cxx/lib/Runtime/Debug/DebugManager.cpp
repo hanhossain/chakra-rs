@@ -73,7 +73,7 @@ namespace Js
         return nullptr;
     }
 
-    DWORD_PTR DebugManager::AllocateSecondaryHostSourceContext()
+    unsigned long DebugManager::AllocateSecondaryHostSourceContext()
     {
         Assert(secondaryCurrentSourceContext < UINT_MAX);
         return secondaryCurrentSourceContext++; // The context is not valid, use the secondary context for identify the function body for further use.

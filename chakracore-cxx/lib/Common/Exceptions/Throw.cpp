@@ -145,7 +145,7 @@ namespace Js {
 
 #ifdef GENERATE_DUMP
     CriticalSection Throw::csGenerateDump;
-    void Throw::GenerateDump(LPCWSTR filePath, bool terminate, bool needLock)
+    void Throw::GenerateDump(const char16_t* filePath, bool terminate, bool needLock)
     {
         __try
         {
@@ -165,7 +165,7 @@ namespace Js {
         }
     }
 
-    void Throw::GenerateDumpForAssert(LPCWSTR filePath)
+    void Throw::GenerateDumpForAssert(const char16_t* filePath)
     {
         __try
         {
@@ -177,7 +177,7 @@ namespace Js {
         }
     }
 
-    int Throw::GenerateDump(PEXCEPTION_POINTERS exceptInfo, LPCWSTR filePath, int ret, bool needLock)
+    int Throw::GenerateDump(PEXCEPTION_POINTERS exceptInfo, const char16_t* filePath, int ret, bool needLock)
     {
         char16_t tempFilePath[MAX_PATH];
         char16_t tempFileName[MAX_PATH];
@@ -274,7 +274,7 @@ namespace Js {
 #define CHAKRA_ASSERT_CAPTION u"CHAKRA ASSERT"
 #endif
 
-    bool Throw::ReportAssert(LPCSTR fileName, uint lineNumber, LPCSTR error, LPCSTR message)
+    bool Throw::ReportAssert(const char * fileName, uint lineNumber, const char * error, const char * message)
     {
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.IsEnabled(Js::AssertBreakFlag))

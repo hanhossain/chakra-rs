@@ -67,7 +67,7 @@ namespace Js
         virtual bool IsSubstring() const;
         int GetLengthAsSignedInt() const;
         const char16_t* UnsafeGetBuffer() const;
-        LPCWSTR GetSzCopy(ArenaAllocator* alloc);   // Copy to an Arena
+        const char16_t* GetSzCopy(ArenaAllocator* alloc);   // Copy to an Arena
         const char16_t* GetString(); // Get string, may not be NULL terminated
 
         // NumberUtil::FIntRadStrToDbl and parts of GlobalObject::EntryParseInt were refactored into ToInteger
@@ -131,7 +131,7 @@ namespace Js
         virtual BOOL ToPrimitive(JavascriptHint hint, Var* value, ScriptContext * requestContext) override { AssertMsg(false, "String ToPrimitive should not be called"); *value = this; return true;}
         virtual RecyclableObject * CloneToScriptContext(ScriptContext* requestContext) override;
 
-        virtual BOOL BufferEquals(__in_ecount(otherLength) LPCWSTR otherBuffer, charcount_t otherLength);
+        virtual BOOL BufferEquals(__in_ecount(otherLength) const char16_t* otherBuffer, charcount_t otherLength);
         char16_t* GetNormalizedString(PlatformAgnostic::UnicodeText::NormalizationForm, ArenaAllocator*, charcount_t&);
 
         static bool Equals(JavascriptString* aLeft, JavascriptString* aRight);
@@ -350,10 +350,10 @@ namespace Js
         static Var DoStringReplace(Arguments& args, CallInfo& callInfo, JavascriptString* input, ScriptContext* scriptContext);
         static Var DoStringSplit(Arguments& args, CallInfo& callInfo, JavascriptString* input, ScriptContext* scriptContext);
         template<int argCount, typename FallbackFn>
-        static Var DelegateToRegExSymbolFunction(ArgumentReader &args, PropertyId symbolPropertyId, FallbackFn fallback, PCWSTR varName, ScriptContext* scriptContext);
+        static Var DelegateToRegExSymbolFunction(ArgumentReader &args, PropertyId symbolPropertyId, FallbackFn fallback, const char16_t * varName, ScriptContext* scriptContext);
         static Var GetRegExSymbolFunction(Var regExp, PropertyId propertyId, ScriptContext* scriptContext);
         template<int argCount> // The count is excluding 'this'
-        static Var CallRegExSymbolFunction(Var fn, Var regExp, Arguments& args, PCWSTR const varName, ScriptContext* scriptContext);
+        static Var CallRegExSymbolFunction(Var fn, Var regExp, Arguments& args, const char16_t * const varName, ScriptContext* scriptContext);
         template<int argCount> // The count is excluding 'this'
         static Var CallRegExFunction(RecyclableObject* fnObj, Var regExp, Arguments& args, ScriptContext *scriptContext);
     };

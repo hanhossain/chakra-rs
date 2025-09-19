@@ -51,7 +51,7 @@ namespace Js
             InterpreterStackFrame * AllocateAndInitialize(bool doProfile, bool * releaseAlloc);
 
             InterpreterStackFrame * InitializeAllocation(__in_ecount(varAllocCount) Var * allocation, __in_ecount(stackVarAllocCount) Var * stackAllocation
-                                                         , bool initParams, bool profileParams, LoopHeader* loopHeaderArray, DWORD_PTR stackAddr
+                                                         , bool initParams, bool profileParams, LoopHeader* loopHeaderArray, unsigned long stackAddr
 #if DBG
                                                          , Var invalidStackVar
 #endif
@@ -131,7 +131,7 @@ namespace Js
         // 'stack address' of the frame, used for recursion detection during stepping.
         // For frames created via interpreter path, we use 'this', for frames created by bailout we use stack addr of actual jitted frame
         // the interpreter frame is created for.
-        DWORD_PTR m_stackAddress;
+        unsigned long m_stackAddress;
 
 #if ENABLE_PROFILE_INFO
         ImplicitCallFlags * savedLoopImplicitCallFlags;
@@ -338,7 +338,7 @@ namespace Js
 #endif
         }
 
-        DWORD_PTR GetStackAddress() const;
+        unsigned long GetStackAddress() const;
         void* GetAddressOfReturnAddress() const;
 
 #if _M_IX86

@@ -429,7 +429,7 @@ BOOL SHMInitialize(void)
         // Check spinlock size
         _ASSERTE(sizeof(uint32_t) == sizeof(header->spinlock));
         // Check spinlock alignment
-        _ASSERTE(0 == ((DWORD_PTR)&header->spinlock % (DWORD_PTR)sizeof(void *)));
+        _ASSERTE(0 == ((unsigned long)&header->spinlock % (unsigned long)sizeof(void *)));
 #endif // TRACK_SHMLOCK_OWNERSHIP
 
 #ifdef TRACK_SHMLOCK_OWNERSHIP
@@ -1268,7 +1268,7 @@ Duplicates the string in shared memory.
 Returns the new address as SHMPTR on success.
 Returns (SHMPTR)NULL on failure.
 --*/
-SHMPTR SHMStrDup( LPCSTR string )
+SHMPTR SHMStrDup( const char * string )
 {
     uint32_t length = 0;
     SHMPTR retVal = 0;
@@ -1311,7 +1311,7 @@ Duplicates the wide string in shared memory.
 Returns the new address as SHMPTR on success.
 Returns (SHMPTR)NULL on failure.
 --*/
-SHMPTR SHMWStrDup( LPCWSTR string )
+SHMPTR SHMWStrDup( const char16_t* string )
 {
     uint32_t length = 0;
     SHMPTR retVal = 0;
@@ -1359,12 +1359,12 @@ If an object matches the name but is of a different type, the function
 returns NULL and sets pbNameExists to TRUE.
 
 --*/
-SHMPTR SHMFindNamedObjectByName( LPCWSTR lpName, SHM_NAMED_OBJECTS_ID oid,
+SHMPTR SHMFindNamedObjectByName( const char16_t* lpName, SHM_NAMED_OBJECTS_ID oid,
                                  BOOL *pbNameExists )
 {
     PSHM_NAMED_OBJECTS pNamedObject = NULL;
     SHMPTR shmNamedObject = 0;
-    LPWSTR object_name = NULL;
+    char16_t* object_name = NULL;
 
     if(oid==SHM_NAMED_LAST)
     {
@@ -1397,7 +1397,7 @@ SHMPTR SHMFindNamedObjectByName( LPCWSTR lpName, SHM_NAMED_OBJECTS_ID oid,
 
         if ( pNamedObject->ShmObjectName )
         {
-            object_name = (LPWSTR)SHMPTR_TO_PTR( pNamedObject->ShmObjectName );
+            object_name = (char16_t*)SHMPTR_TO_PTR( pNamedObject->ShmObjectName );
         }
 
         if ( object_name &&

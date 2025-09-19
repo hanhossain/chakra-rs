@@ -64,8 +64,8 @@ and its terminating null character.
 --*/
 uint32_t
 GetEnvironmentVariableA(
-             LPCSTR lpName,
-             LPSTR lpBuffer,
+             const char * lpName,
+             char* lpBuffer,
              uint32_t nSize)
 {
     char  *value;
@@ -131,8 +131,8 @@ See MSDN doc.
 --*/
 uint32_t
 GetEnvironmentVariableW(
-             LPCWSTR lpName,
-             LPWSTR lpBuffer,
+             const char16_t* lpName,
+             char16_t* lpBuffer,
              uint32_t nSize)
 {
     char *inBuff = NULL;
@@ -248,11 +248,11 @@ environment variables of other processes.
 --*/
 BOOL
 SetEnvironmentVariableW(
-             LPCWSTR lpName,
-             LPCWSTR lpValue)
+             const char16_t* lpName,
+             const char16_t* lpValue)
 {
-    PCHAR name = NULL;
-    PCHAR value = NULL;
+    char * name = NULL;
+    char * value = NULL;
     int32_t nameSize = 0;
     int32_t valueSize = 0;
     BOOL bRet = FALSE;
@@ -269,7 +269,7 @@ SetEnvironmentVariableW(
         goto done;
     }
 
-    name = (PCHAR)malloc(sizeof(char)* nameSize);
+    name = (char *)malloc(sizeof(char)* nameSize);
     if (name == NULL)
     {
         ERROR("malloc failed\n");
@@ -295,7 +295,7 @@ SetEnvironmentVariableW(
             goto done;
         }
 
-        value = (PCHAR)malloc(sizeof(char)*valueSize);
+        value = (char *)malloc(sizeof(char)*valueSize);
         
         if ( NULL == value )
         {
@@ -350,7 +350,7 @@ the block is no longer needed, it should be freed by calling
 FreeEnvironmentStrings.
 
 --*/
-LPWSTR
+char16_t*
 GetEnvironmentStringsW(
                void)
 {
@@ -405,7 +405,7 @@ Function:
 See GetEnvironmentStringsW.
 
 --*/
-LPSTR
+char*
 GetEnvironmentStringsA(
                void)
 {
@@ -481,7 +481,7 @@ be freed by calling FreeEnvironmentStrings.
 --*/
 BOOL
 FreeEnvironmentStringsW(
-             LPWSTR lpValue)
+             char16_t* lpValue)
 {
     ENTRY("FreeEnvironmentStringsW(lpValue=%p (%S))\n", lpValue?lpValue:W16_NULLSTRING, lpValue?lpValue:W16_NULLSTRING);
 
@@ -504,7 +504,7 @@ See FreeEnvironmentStringsW.
 --*/
 BOOL
 FreeEnvironmentStringsA(
-             LPSTR lpValue)
+             char* lpValue)
 {
     ENTRY("FreeEnvironmentStringsA(lpValue=%p (%s))\n", lpValue?lpValue:"NULL", lpValue?lpValue:"NULL");
 
@@ -553,8 +553,8 @@ environment variables of other processes.
 --*/
 BOOL
 SetEnvironmentVariableA(
-			 LPCSTR lpName,
-			 LPCSTR lpValue)
+			 const char * lpName,
+			 const char * lpValue)
 {
 
     BOOL bRet = FALSE;
@@ -587,7 +587,7 @@ SetEnvironmentVariableA(
     else
     {
         int iLen = strlen(lpName) + strlen(lpValue) + 2;
-        LPSTR string = (LPSTR) malloc(iLen);
+        char* string = (char*) malloc(iLen);
         if (string == NULL)
         {
             bRet = FALSE;

@@ -280,7 +280,7 @@ public:
 private:
     static Bits TypeIdToBits[Js::TypeIds_Limit];
     static Bits VirtualTypeIdToBits[Js::TypeIds_Limit];
-    static INT_PTR TypeIdToVtable[Js::TypeIds_Limit];
+    static long TypeIdToVtable[Js::TypeIds_Limit];
     static ObjectType VirtualTypedArrayPair[(size_t)ObjectType::Count];
     static ObjectType MixedTypedArrayPair[(size_t)ObjectType::Count];
     static ObjectType MixedTypedToVirtualTypedArray[(size_t)ObjectType::Count];
@@ -288,7 +288,7 @@ private:
     static void InitializeTypeIdToBitsMap();
 public:
     static ValueType FromTypeId(const Js::TypeId typeId, bool useVirtual);
-    static INT_PTR GetVirtualTypedArrayVtable(const Js::TypeId typeId);
+    static long GetVirtualTypedArrayVtable(const Js::TypeId typeId);
     static ValueType FromObject(Js::RecyclableObject *const recyclableObject);
     static ValueType FromObjectWithArray(Js::DynamicObject *const object);
     static ValueType FromObjectArray(Js::JavascriptArray *const objectArray);

@@ -43,7 +43,7 @@ namespace CorUnix
         LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
         int32_t lInitialCount,
         int32_t lMaximumCount,
-        LPCWSTR lpName,
+        const char16_t* lpName,
         HANDLE *phSemaphore
         );
 

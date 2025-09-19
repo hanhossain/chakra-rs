@@ -581,7 +581,7 @@ __inline
 int32_t
 ULongLongToUIntPtr(
      unsigned long ullOperand,
-     UINT_PTR* puResult)
+     unsigned long* puResult)
 {
 	*puResult = ullOperand;
 	return S_OK;

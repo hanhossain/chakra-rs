@@ -88,7 +88,7 @@ namespace Js
         bool EnsureStackMatchInfraInitialized();
         uint baselineFrameCount;
         char16_t *baselineStack[MAX_FRAME_COUNT];
-        UINT_PTR baselineAddresses[MAX_FRAME_COUNT];
+        unsigned long baselineAddresses[MAX_FRAME_COUNT];
         size_t* stackHashOfAllInjectionPoints;
         uint32_t stackHashOfAllInjectionPointsSize;
 
@@ -98,7 +98,7 @@ namespace Js
         ~FaultInjection();
         bool IsFaultEnabled(FaultType faultType);
         bool IsFaultInjectionOn(FaultType faultType);
-        bool ShouldInjectFault(FaultType fType, LPCWSTR name = nullptr, size_t size = 0);// name and size are used for OOM only
+        bool ShouldInjectFault(FaultType fType, const char16_t* name = nullptr, size_t size = 0);// name and size are used for OOM only
 
         // sample for customized fault type
         template<class Pred>
@@ -115,13 +115,13 @@ namespace Js
         }
 
     private:
-        bool ShouldInjectFaultHelper(FaultType fType, LPCWSTR name = nullptr, size_t size = 0);
+        bool ShouldInjectFaultHelper(FaultType fType, const char16_t* name = nullptr, size_t size = 0);
 
     private:
         // for reconstruction stack of the fault injection points in postmortem debugging
         struct InjectionRecord{
             void* StackFrames[MAX_FRAME_COUNT];
-            UINT_PTR hash;
+            unsigned long hash;
             uint16_t FrameCount;
             void* StackData;
             size_t StackDataLength;
@@ -134,7 +134,7 @@ namespace Js
         InjectionRecord* InjectionFirstRecord;
         InjectionRecord** InjectionLastRecordRef;
         int InjectionRecordsCount;
-        void dumpCurrentStackData(LPCWSTR name = nullptr, size_t size = 0);
+        void dumpCurrentStackData(const char16_t* name = nullptr, size_t size = 0);
 
         static thread_local int(*pfnHandleAV)(int, PEXCEPTION_POINTERS);
 
@@ -144,7 +144,7 @@ namespace Js
         static uint32_t exceptionFilterRemovalLastError;
         static void InstallExceptionFilters();
         static void RemoveExceptionFilters();
-        static UINT_PTR CalculateStackHash(void* frames[], uint16_t frameCount, uint16_t framesToSkip);
+        static unsigned long CalculateStackHash(void* frames[], uint16_t frameCount, uint16_t framesToSkip);
         static int32_t WINAPI FaultInjectionExceptionFilter(_In_  struct _EXCEPTION_POINTERS *ExceptionInfo);
         void FaultInjectionAnalyzeException(_EXCEPTION_POINTERS *ep);
     };

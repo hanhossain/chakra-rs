@@ -1575,13 +1575,13 @@ namespace Js
                 }
                 else
                 {
-                    LPCWSTR pUrl = NULL;
+                    const char16_t* pUrl = NULL;
                     uint32_t lineNumber = 0;
                     int32_t characterPosition = 0;
 
                     functionBody->GetLineCharOffset(currentFrame.GetByteCodeOffset(), &lineNumber, &characterPosition);
                     pUrl = functionBody->GetSourceName();
-                    LPCWSTR functionName = nullptr;
+                    const char16_t* functionName = nullptr;
                     if (CONFIG_FLAG(ExtendedErrorStackForTestHost))
                     {
                         BEGIN_LEAVE_SCRIPT_INTERNAL(scriptContext)
@@ -1656,7 +1656,7 @@ namespace Js
         return limit;
     }
 
-    void JavascriptExceptionOperators::AppendExternalFrameToStackTrace(CompoundString* bs, LPCWSTR functionName, LPCWSTR fileName, uint32_t lineNumber, int32_t characterPosition)
+    void JavascriptExceptionOperators::AppendExternalFrameToStackTrace(CompoundString* bs, const char16_t* functionName, const char16_t* fileName, uint32_t lineNumber, int32_t characterPosition)
     {
         // format is equivalent to wprintf("\n   at %s (%s:%d:%d)", functionName, filename, lineNumber, characterPosition);
 
@@ -1703,7 +1703,7 @@ namespace Js
         bs->AppendChars(u')');
     }
 
-    void JavascriptExceptionOperators::AppendLibraryFrameToStackTrace(CompoundString* bs, LPCWSTR functionName)
+    void JavascriptExceptionOperators::AppendLibraryFrameToStackTrace(CompoundString* bs, const char16_t* functionName)
     {
         // format is equivalent to wprintf("\n   at %s (native code)", functionName);
         bs->AppendChars(u"\n   at ");

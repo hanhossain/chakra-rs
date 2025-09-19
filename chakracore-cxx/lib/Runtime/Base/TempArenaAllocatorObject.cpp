@@ -21,7 +21,7 @@ namespace Js
     }
 
     template <bool isGuestArena>
-    TempArenaAllocatorWrapper<isGuestArena>::TempArenaAllocatorWrapper(LPCWSTR name, PageAllocator * pageAllocator, void (*outOfMemoryFunc)()) :
+    TempArenaAllocatorWrapper<isGuestArena>::TempArenaAllocatorWrapper(const char16_t* name, PageAllocator * pageAllocator, void (*outOfMemoryFunc)()) :
         allocator(name, pageAllocator, outOfMemoryFunc), recycler(nullptr), externalGuestArenaRef(nullptr)
     {
     }

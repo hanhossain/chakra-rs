@@ -120,7 +120,7 @@ DbgHelpSymbolManager::Initialize()
     }
 
     {
-        typedef BOOL(*PfnSymInitialize)(HANDLE, PCWSTR, BOOL);
+        typedef BOOL(*PfnSymInitialize)(HANDLE, const char16_t *, BOOL);
         PfnSymInitialize pfnSymInitialize = (PfnSymInitialize)GetProcAddress(hDbgHelpModule, "SymInitializeW");
         if (pfnSymInitialize)
         {

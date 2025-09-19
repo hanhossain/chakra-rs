@@ -11,9 +11,9 @@
 using namespace Js;
 
     // Redeclare static constants
-    const UINT64 NumberConstantsBase::k_Nan;
+    const unsigned long NumberConstantsBase::k_Nan;
     const uint32_t NumberConstantsBase::k_Nan32;
-    const UINT64 NumberConstantsBase::k_NegativeNan;
+    const unsigned long NumberConstantsBase::k_NegativeNan;
     const int64_t NumberUtilitiesBase::Pos_InvalidInt64;
     const int64_t NumberUtilitiesBase::Neg_InvalidInt64;
     const unsigned long NumberConstants::k_PosInf;

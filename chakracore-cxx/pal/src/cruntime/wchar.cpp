@@ -86,13 +86,13 @@ Note:
   - only a radix of ten (and value < 0) will result in a negative
     sign in the output buffer
 *******************************************************************************/
-LPWSTR Internal_i64tow(int64_t value, LPWSTR string, int radix, BOOL isI64)
+char16_t* Internal_i64tow(int64_t value, char16_t* string, int radix, BOOL isI64)
 {
     int length = 0;
     int n;
     int r;
-    UINT64 uval = value;
-    LPWSTR stringPtr = string;
+    unsigned long uval = value;
+    char16_t* stringPtr = string;
     int start = 0;
     int end;
     char16_t tempCh;
@@ -1533,9 +1533,9 @@ double
 PAL_wcstod( const char16_t * nptr, char16_t **endptr )
 {
     double RetVal = 0.0;
-    LPSTR  lpStringRep = NULL;
-    LPWSTR lpStartOfExpression = (LPWSTR)nptr;
-    LPWSTR lpEndOfExpression = NULL;
+    char*  lpStringRep = NULL;
+    char16_t* lpStartOfExpression = (char16_t*)nptr;
+    char16_t* lpEndOfExpression = NULL;
     uint32_t Length = 0;
 
     ENTRY( "wcstod( %p (%S), %p (%S) )\n", nptr, nptr, endptr , endptr );
@@ -1567,7 +1567,7 @@ PAL_wcstod( const char16_t * nptr, char16_t **endptr )
     if ( lpEndOfExpression != lpStartOfExpression )
     {
         Length = lpEndOfExpression - lpStartOfExpression;
-        lpStringRep = (LPSTR)malloc( Length + 1);
+        lpStringRep = (char*)malloc( Length + 1);
 
         if ( lpStringRep )
         {
@@ -1575,7 +1575,7 @@ PAL_wcstod( const char16_t * nptr, char16_t **endptr )
                                       lpStringRep, Length + 1 ,
                                       NULL, 0 ) != 0 )
             {
-                LPSTR ScanStop = NULL;
+                char* ScanStop = NULL;
                 lpStringRep[Length]= 0;
                 RetVal = strtod( lpStringRep, &ScanStop );
 
@@ -1583,25 +1583,25 @@ PAL_wcstod( const char16_t * nptr, char16_t **endptr )
                 if ( RetVal == 0.0 && ScanStop == lpStringRep )
                 {
                     ASSERT( "An error occurred in the conversion.\n" );
-                    lpEndOfExpression = (LPWSTR)nptr;
+                    lpEndOfExpression = (char16_t*)nptr;
                 }
             }
             else
             {
                 ASSERT( "Wide char to multibyte conversion failed.\n" );
-                lpEndOfExpression = (LPWSTR)nptr;
+                lpEndOfExpression = (char16_t*)nptr;
             }
         }
         else
         {
             ERROR( "Not enough memory.\n" );
-            lpEndOfExpression = (LPWSTR)nptr;
+            lpEndOfExpression = (char16_t*)nptr;
         }
     }
     else
     {
         ERROR( "Malformed expression.\n" );
-        lpEndOfExpression = (LPWSTR)nptr;
+        lpEndOfExpression = (char16_t*)nptr;
     }
 
     /* Set the stop scan character. */
@@ -1627,7 +1627,7 @@ _ui64tow( unsigned long value , char16_t * string , int radix )
 {
     uint32_t ReversedIndex = 0;
     char16_t ReversedString[ 65 ];
-    LPWSTR lpString = string;
+    char16_t* lpString = string;
     uint32_t Index = 0;
 
     ENTRY( "_ui64tow( value=%I64d, string=%p (%S), radix=%d )\n",

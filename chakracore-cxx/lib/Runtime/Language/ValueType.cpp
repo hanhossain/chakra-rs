@@ -1115,7 +1115,7 @@ ValueType ValueType::Merge(const Js::Var var) const
 
 ValueType::Bits ValueType::TypeIdToBits[Js::TypeIds_Limit];
 ValueType::Bits ValueType::VirtualTypeIdToBits[Js::TypeIds_Limit];
-INT_PTR ValueType::TypeIdToVtable[Js::TypeIds_Limit];
+long ValueType::TypeIdToVtable[Js::TypeIds_Limit];
 ObjectType ValueType::VirtualTypedArrayPair[(uint16)ObjectType::Count];
 ObjectType ValueType::MixedTypedArrayPair[(uint16)ObjectType::Count];
 ObjectType ValueType::TypedArrayMergeMap[(uint16)ObjectType::Count][(uint16)ObjectType::Count];
@@ -1131,7 +1131,7 @@ void ValueType::InitializeTypeIdToBitsMap()
     {
         TypeIdToBits[typeId] = ValueType::Uninitialized.bits;
         VirtualTypeIdToBits[typeId] = ValueType::Uninitialized.bits;
-        TypeIdToVtable[typeId] = (INT_PTR)nullptr;
+        TypeIdToVtable[typeId] = (long)nullptr;
     }
 
     for (ObjectType objType = static_cast<ObjectType>(0); objType <ObjectType::Count; objType = static_cast<ObjectType>((uint16)(objType) + 1))
@@ -1312,7 +1312,7 @@ void ValueType::InitializeTypeIdToBitsMap()
 
 }
 
-INT_PTR ValueType::GetVirtualTypedArrayVtable(const Js::TypeId typeId)
+long ValueType::GetVirtualTypedArrayVtable(const Js::TypeId typeId)
 {
     if (typeId < _countof(TypeIdToVtable))
     {

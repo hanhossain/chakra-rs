@@ -43,7 +43,7 @@ SHMLIST *item_ptr = (SHMLIST *)SHMPTR_TO_PTR(new_item);
 
 // Allocate memory for the "string" member, initialize it
 item_ptr->string = SHMalloc(strlen("string"));
-LPSTR str_ptr = (LPSTR)SHMPTR_TO_PTR(item_ptr->string);
+char* str_ptr = (char*)SHMPTR_TO_PTR(item_ptr->string);
 strcpy(str_ptr, "string");
 
 //Take the shared memory lock to prevent anyone from modifying the linked list
@@ -82,7 +82,7 @@ extern "C"
 /*
 Type for shared memory blocks. use SHMPTR_TO_PTR to get a useable address.
  */
-typedef DWORD_PTR SHMPTR;
+typedef unsigned long SHMPTR;
 
 #define MAX_SEGMENTS 256
 
@@ -278,7 +278,7 @@ Duplicates the string in shared memory.
 Returns the new address as SHMPTR on success.
 Returns (SHMPTR)NULL on failure.
 --*/
-SHMPTR SHMStrDup( LPCSTR string );
+SHMPTR SHMStrDup( const char * string );
 
 /*++
 SHMWStrDup
@@ -288,7 +288,7 @@ Duplicates the wide string in shared memory.
 Returns the new address as SHMPTR on success.
 Returns (SHMPTR)NULL on failure.
 --*/
-SHMPTR SHMWStrDup( LPCWSTR string );
+SHMPTR SHMWStrDup( const char16_t* string );
 
 
 /*++
@@ -302,7 +302,7 @@ If an object matches the name but is of a different type, the function
 returns NULL and sets pbNameExists to TRUE.
 
 --*/
-SHMPTR SHMFindNamedObjectByName( LPCWSTR lpName, SHM_NAMED_OBJECTS_ID oid,
+SHMPTR SHMFindNamedObjectByName( const char16_t* lpName, SHM_NAMED_OBJECTS_ID oid,
                                  BOOL *pbNameExists );
 
 /*++ 

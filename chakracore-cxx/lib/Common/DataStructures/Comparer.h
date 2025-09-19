@@ -68,7 +68,7 @@ struct DefaultComparer<size_t>
     {
 #ifdef TARGET_64
         // For 64 bits we want all 64 bits of the pointer to be represented in the hash code.
-        uint32 hi = ((UINT_PTR) i >> 32);
+        uint32 hi = ((unsigned long) i >> 32);
         uint32 lo = (uint32)i;
         hash_t hash = hi ^ lo;
 #else

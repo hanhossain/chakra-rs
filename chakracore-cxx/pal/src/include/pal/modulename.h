@@ -30,7 +30,7 @@ extern "C"
 
 const char *PAL_dladdr(void * ProcAddress);
 #if defined(_AIX)
-int GetLibRotorNameViaLoadQuery(LPSTR pszBuf);
+int GetLibRotorNameViaLoadQuery(char* pszBuf);
 #endif
 
 #ifdef __cplusplus

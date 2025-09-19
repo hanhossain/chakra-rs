@@ -72,7 +72,7 @@ namespace Js
         return E_NOTIMPL;
     }
 
-    PCWSTR DelayLoadWinRtString::WindowsGetStringRawBuffer(_In_opt_ HSTRING string, _Out_opt_ uint32_t * length)
+    const char16_t * DelayLoadWinRtString::WindowsGetStringRawBuffer(_In_opt_ HSTRING string, _Out_opt_ uint32_t * length)
     {
         if (m_hModule)
         {

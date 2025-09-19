@@ -42,7 +42,7 @@ namespace CorUnix
         enum { c_BasicGrowthRate = 1024 };
         enum { c_MaxIndex = 0x3FFFFFFE };
 
-        typedef UINT_PTR HANDLE_INDEX;
+        typedef unsigned long HANDLE_INDEX;
         static const HANDLE_INDEX c_hiInvalid = (HANDLE_INDEX) -1;
 
         HANDLE
@@ -54,7 +54,7 @@ namespace CorUnix
         HANDLE_INDEX
         HandleToHandleIndex(HANDLE h)
         {
-            return (HANDLE_INDEX) (((UINT_PTR) h) >> 2) - 1;
+            return (HANDLE_INDEX) (((unsigned long) h) >> 2) - 1;
         };
 
         typedef struct _HANDLE_TABLE_ENTRY

@@ -42,8 +42,8 @@ inline int32_t CbSysStringSize(uint32_t cchSize, BOOL isByteLen, uint32_t *resul
         return E_INVALIDARG;
 
     // +2 for the null terminator
-    // + DWORD_PTR to store the byte length of the string
-    int constant = sizeof(char16_t) + sizeof(DWORD_PTR) + WIN32_ALLOC_ALIGN;
+    // + unsigned long to store the byte length of the string
+    int constant = sizeof(char16_t) + sizeof(unsigned long) + WIN32_ALLOC_ALIGN;
 
     if (isByteLen)
     {
@@ -98,7 +98,7 @@ extern "C" BSTR SysAllocStringLen(const OLECHAR *psz, uint32_t len)
         // the size of the BSTR. So, in case of 64-bit code,
         // we need to ensure that the BSTR length can be found by
         // looking one uint32_t before the BSTR pointer.
-        *(DWORD_PTR *)bstr = (DWORD_PTR) 0;
+        *(unsigned long *)bstr = (unsigned long) 0;
         bstr = (BSTR) ((char *) bstr + sizeof (uint32_t));
         *(uint32_t *)bstr = (uint32_t)len * sizeof(OLECHAR);
 

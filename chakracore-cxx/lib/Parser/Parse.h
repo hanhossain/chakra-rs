@@ -315,11 +315,11 @@ protected:
     Js::ScriptContext* m_scriptContext;
     HashTbl * GetHashTbl() { return this->GetScanner()->GetHashTbl(); }
 
-    LPCWSTR GetTokenString(tokens token);
-    __declspec(noreturn) void Error(int32_t hr, LPCWSTR stringOne = u"", LPCWSTR stringTwo = u"");
+    const char16_t* GetTokenString(tokens token);
+    __declspec(noreturn) void Error(int32_t hr, const char16_t* stringOne = u"", const char16_t* stringTwo = u"");
 private:
     __declspec(noreturn) void Error(int32_t hr, ParseNodePtr pnode);
-    __declspec(noreturn) void Error(int32_t hr, charcount_t ichMin, charcount_t ichLim, LPCWSTR stringOne = u"", LPCWSTR stringTwo = u"");
+    __declspec(noreturn) void Error(int32_t hr, charcount_t ichMin, charcount_t ichLim, const char16_t* stringOne = u"", const char16_t* stringTwo = u"");
     __declspec(noreturn) static void OutOfMemory();
 
     void EnsureStackAvailable();
@@ -435,7 +435,7 @@ public:
     void RegisterRegexPattern(UnifiedRegex::RegexPattern *const regexPattern);
 
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
-    LPCWSTR GetParseType() const
+    const char16_t* GetParseType() const
     {
         switch(m_parseType)
         {
@@ -1104,7 +1104,7 @@ private:
     void AddToNodeList(ParseNode ** ppnodeList, ParseNode *** pppnodeLast, ParseNode * pnodeAdd);
     void AddToNodeListEscapedUse(ParseNode ** ppnodeList, ParseNode *** pppnodeLast, ParseNode * pnodeAdd);
 
-    void ChkCurTokNoScan(int tk, int wErr, LPCWSTR stringOne = u"", LPCWSTR stringTwo = u"")
+    void ChkCurTokNoScan(int tk, int wErr, const char16_t* stringOne = u"", const char16_t* stringTwo = u"")
     {
         if (m_token.tk != tk)
         {

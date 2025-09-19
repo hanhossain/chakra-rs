@@ -39,14 +39,14 @@ public:
     uint32_t GetNumberOfPhysicalProcessors() const { return this->dwNumberOfPhysicalProcessors; }
 
 #if SYSINFO_IMAGE_BASE_AVAILABLE
-    UINT_PTR GetChakraBaseAddr() const;
+    unsigned long GetChakraBaseAddr() const;
 #endif
 
 #if defined(_M_ARM32_OR_ARM64)
     bool ArmDivAvailable() const { return this->armDivAvailable; }
 #endif
     static uint32_t SaveModuleFileName(HANDLE hMod);
-    static LPCWSTR GetJscriptDllFileName();
+    static const char16_t* GetJscriptDllFileName();
     static int32_t GetJscriptFileVersion(uint32_t* majorVersion, uint32_t* minorVersion, uint32_t *buildDateHash = nullptr, uint32_t *buildTimeHash = nullptr);
 #if DBG
     static bool IsInitialized();
@@ -77,8 +77,8 @@ public:
 #endif
 
 #if SYSINFO_IMAGE_BASE_AVAILABLE
-    UINT_PTR dllLoadAddress;
-    UINT_PTR dllHighAddress;
+    unsigned long dllLoadAddress;
+    unsigned long dllHighAddress;
 #endif
 
 private:
@@ -115,7 +115,7 @@ private:
     uint32_t minorVersion;
     uint32_t buildDateHash;
     uint32_t buildTimeHash;
-    static int32_t GetVersionInfo(LPCWSTR pszPath, uint32_t* majorVersion, uint32_t* minorVersion);
+    static int32_t GetVersionInfo(const char16_t* pszPath, uint32_t* majorVersion, uint32_t* minorVersion);
 
     static const uint32_t INVALID_VERSION = (uint32_t)-1;
 

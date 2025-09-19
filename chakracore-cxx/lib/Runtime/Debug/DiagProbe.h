@@ -114,7 +114,7 @@ namespace Js
         int frameCountWhenSet;
         int returnedValueRecordingDepth;
 
-        DWORD_PTR frameAddrWhenSet;
+        unsigned long frameAddrWhenSet;
         uint scriptIdWhenSet;
 
         bool stepCompleteOnInlineBreakpoint;
@@ -157,7 +157,7 @@ namespace Js
             return (void*)&frameAddrWhenSet;
         }
 
-        void SetFrameAddr(DWORD_PTR value)
+        void SetFrameAddr(unsigned long value)
         {
             this->frameAddrWhenSet = value;
         }

@@ -160,7 +160,7 @@ See MSDN doc.
 --*/
 void
 OutputDebugStringA(
-         LPCSTR lpOutputString)
+         const char * lpOutputString)
 {
     ENTRY("OutputDebugStringA (lpOutputString=%p (%s))\n",
           lpOutputString?lpOutputString:"NULL",
@@ -185,7 +185,7 @@ See MSDN doc.
 --*/
 void
 OutputDebugStringW(
-         LPCWSTR lpOutputString)
+         const char16_t* lpOutputString)
 {
     char *lpOutputStringA;
     int strLen;
@@ -210,7 +210,7 @@ OutputDebugStringW(
     }
 
     /* strLen includes the null terminator */
-    if ((lpOutputStringA = (LPSTR) malloc((strLen * sizeof(char)))) == NULL)
+    if ((lpOutputStringA = (char*) malloc((strLen * sizeof(char)))) == NULL)
     {
         ERROR("Insufficient memory available !\n");
         SetLastError(ERROR_NOT_ENOUGH_MEMORY);
@@ -667,7 +667,7 @@ ReadProcessMemory(
             }
             goto EXIT;
         }
-        memcpy((LPSTR)lpBuffer + numberOfBytesRead, data + offset, bytesToRead);
+        memcpy((char*)lpBuffer + numberOfBytesRead, data + offset, bytesToRead);
         numberOfBytesRead.Store(numberOfBytesRead.Load() + bytesToRead);
         lpBaseAddressAligned = (int*)((char*)lpBaseAddressAligned + VIRTUAL_PAGE_SIZE);
         nSize -= bytesToRead;
@@ -690,7 +690,7 @@ ReadProcessMemory(
     // an unsigned type to ensure that no sign extension takes place
     //
 
-    offset = (off_t) (UINT_PTR) lpBaseAddress;
+    offset = (off_t) (unsigned long) lpBaseAddress;
 
     if (lseek(fd, offset, SEEK_SET) == -1)
     {
@@ -960,7 +960,7 @@ WriteProcessMemory(
     // an unsigned type to ensure that no sign extension takes place
     //
 
-    offset = (off_t) (UINT_PTR) lpBaseAddress;
+    offset = (off_t) (unsigned long) lpBaseAddress;
 
     if (lseek(fd, offset, SEEK_SET) == -1)
     {
@@ -1565,224 +1565,5 @@ DBGSetProcessAttachedExit:
 }
 
 #endif // !HAVE_VM_READ && !HAVE_PROCFS_CTL
-
-/*++
-Function:
-  PAL_CreateExecWatchpoint
-
-Abstract
-  Creates an OS exec watchpoint for the specified instruction
-  and thread. This function should only be called on architectures
-  that do not support a hardware single-step mode (e.g., SPARC).
-
-Parameter
-  hThread : the thread for which the watchpoint is to apply
-  pvInstruction : the instruction on which the watchpoint is to be set
-
-Return
-  A Win32 error code
---*/
-
-uint32_t
-PAL_CreateExecWatchpoint(
-    HANDLE hThread,
-    void * pvInstruction
-    )
-{
-    ENTRY("PAL_CreateExecWatchpoint (hThread=%p, pvInstruction=%p)\n", hThread, pvInstruction);
-
-    uint32_t dwError = ERROR_NOT_SUPPORTED;
-
-#if HAVE_PRWATCH_T
-
-    CPalThread *pThread = NULL;
-    CPalThread *pTargetThread = NULL;
-    IPalObject *pobjThread = NULL;
-    int fd = -1;
-    char ctlPath[50];
-
-    struct
-    {
-        long ctlCode;
-        prwatch_t prwatch;
-    } ctlStruct;
-
-    //
-    // We must never set a watchpoint on an instruction that enters a syscall;
-    // if such a request comes in we succeed it w/o actually creating the
-    // watchpoint. This mirrors the behavior of setting the single-step flag
-    // in a thread context when the thread is w/in a system service -- the
-    // flag is ignored and will not be present when the thread returns
-    // to user mode.
-    //
-
-#if defined(_SPARC_)
-    if (*(uint32_t*)pvInstruction == 0x91d02008) // ta 8
-    {
-        TRACE("Watchpoint requested on sysenter instruction -- ignoring");
-        dwError = ERROR_SUCCESS;
-        goto PAL_CreateExecWatchpointExit;
-    }
-#else
-#error Need syscall instruction for this platform
-#endif // _SPARC_
-
-    pThread = InternalGetCurrentThread();
-
-    dwError = InternalGetThreadDataFromHandle(
-        pThread,
-        hThread,
-        0, // THREAD_SET_CONTEXT
-        &pTargetThread,
-        &pobjThread
-        );
-
-    if (NO_ERROR != dwError)
-    {
-        goto PAL_CreateExecWatchpointExit;
-    }
-
-    snprintf(ctlPath, sizeof(ctlPath), "/proc/%u/lwp/%u/lwpctl", getpid(), pTargetThread->GetLwpId());
-
-    fd = InternalOpen(pThread, ctlPath, O_WRONLY);
-    if (-1 == fd)
-    {
-        ERROR("Failed to open %s\n", ctlPath);
-        dwError = ERROR_INVALID_ACCESS;
-        goto PAL_CreateExecWatchpointExit;
-    }
-
-    ctlStruct.ctlCode = PCWATCH;
-    ctlStruct.prwatch.pr_vaddr = (uintptr_t) pvInstruction;
-    ctlStruct.prwatch.pr_size = sizeof(uint32_t);
-    ctlStruct.prwatch.pr_wflags = WA_EXEC | WA_TRAPAFTER;
-
-    if (write(fd, (void*) &ctlStruct, sizeof(ctlStruct)) != sizeof(ctlStruct))
-    {
-        ERROR("Failure writing control structure (errno = %u)\n", errno);
-        dwError = ERROR_INTERNAL_ERROR;
-        goto PAL_CreateExecWatchpointExit;
-    }
-
-    dwError = ERROR_SUCCESS;
-
-PAL_CreateExecWatchpointExit:
-
-    if (NULL != pobjThread)
-    {
-        pobjThread->ReleaseReference(pThread);
-    }
-
-    if (-1 != fd)
-    {
-        close(fd);
-    }
-
-#endif // HAVE_PRWATCH_T
-
-    LOGEXIT("PAL_CreateExecWatchpoint returns ret:%d\n", dwError);
-    return dwError;
-}
-
-/*++
-Function:
-  PAL_DeleteExecWatchpoint
-
-Abstract
-  Deletes an OS exec watchpoint for the specified instruction
-  and thread. This function should only be called on architectures
-  that do not support a hardware single-step mode (e.g., SPARC).
-
-Parameter
-  hThread : the thread to remove the watchpoint from
-  pvInstruction : the instruction for which the watchpoint is to be removed
-
-Return
-  A Win32 error code. Attempting to delete a watchpoint that does not exist
-  may or may not result in an error, depending on the behavior of the
-  underlying operating system.
---*/
-
-uint32_t
-PAL_DeleteExecWatchpoint(
-    HANDLE hThread,
-    void * pvInstruction
-    )
-{
-    ENTRY("PAL_DeleteExecWatchpoint (hThread=%p, pvInstruction=%p)\n", hThread, pvInstruction);
-
-    uint32_t dwError = ERROR_NOT_SUPPORTED;
-
-#if HAVE_PRWATCH_T
-
-    CPalThread *pThread = NULL;
-    CPalThread *pTargetThread = NULL;
-    IPalObject *pobjThread = NULL;
-    int fd = -1;
-    char ctlPath[50];
-
-    struct
-    {
-        long ctlCode;
-        prwatch_t prwatch;
-    } ctlStruct;
-
-
-    pThread = InternalGetCurrentThread();
-
-    dwError = InternalGetThreadDataFromHandle(
-        pThread,
-        hThread,
-        0, // THREAD_SET_CONTEXT
-        &pTargetThread,
-        &pobjThread
-        );
-
-    if (NO_ERROR != dwError)
-    {
-        goto PAL_DeleteExecWatchpointExit;
-    }
-
-    snprintf(ctlPath, sizeof(ctlPath), "/proc/%u/lwp/%u/lwpctl", getpid(), pTargetThread->GetLwpId());
-
-    fd = InternalOpen(pThread, ctlPath, O_WRONLY);
-    if (-1 == fd)
-    {
-        ERROR("Failed to open %s\n", ctlPath);
-        dwError = ERROR_INVALID_ACCESS;
-        goto PAL_DeleteExecWatchpointExit;
-    }
-
-    ctlStruct.ctlCode = PCWATCH;
-    ctlStruct.prwatch.pr_vaddr = (uintptr_t) pvInstruction;
-    ctlStruct.prwatch.pr_size = sizeof(uint32_t);
-    ctlStruct.prwatch.pr_wflags = 0;
-
-    if (write(fd, (void*) &ctlStruct, sizeof(ctlStruct)) != sizeof(ctlStruct))
-    {
-        ERROR("Failure writing control structure (errno = %u)\n", errno);
-        dwError = ERROR_INTERNAL_ERROR;
-        goto PAL_DeleteExecWatchpointExit;
-    }
-
-    dwError = ERROR_SUCCESS;
-
-PAL_DeleteExecWatchpointExit:
-
-    if (NULL != pobjThread)
-    {
-        pobjThread->ReleaseReference(pThread);
-    }
-
-    if (-1 != fd)
-    {
-        close(fd);
-    }
-
-#endif // HAVE_PRWATCH_T
-
-    LOGEXIT("PAL_DeleteExecWatchpoint returns ret:%d\n", dwError);
-    return dwError;
-}
 
 } // extern "C"

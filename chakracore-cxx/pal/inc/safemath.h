@@ -123,7 +123,7 @@ inline bool FitsIn(Src val)
 // minimum and maximum values of that type, respectively.  Returns "true" iff
 // "val" can be represented in the range [DstMin..DstMax] (allowing loss of precision, but
 // not truncation).
-template <int64_t DstMin, UINT64 DstMax>
+template <int64_t DstMin, unsigned long DstMax>
 inline bool FloatFitsInIntType(float val)
 {
     float DstMinF = static_cast<float>(DstMin);
@@ -131,7 +131,7 @@ inline bool FloatFitsInIntType(float val)
     return DstMinF <= val && val <= DstMaxF;
 }
 
-template <int64_t DstMin, UINT64 DstMax>
+template <int64_t DstMin, unsigned long DstMax>
 inline bool DoubleFitsInIntType(double val)
 {
     double DstMinD = static_cast<double>(DstMin);

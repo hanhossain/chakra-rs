@@ -247,7 +247,7 @@ namespace Js
 
         static bool IsDisplayCaller(JavascriptFunction* func);
         bool GetDisplayCaller(_Out_opt_ JavascriptFunction ** ppFunc);
-        PCWSTR GetCurrentNativeLibraryEntryName() const;
+        const char16_t * GetCurrentNativeLibraryEntryName() const;
         static bool IsLibraryStackFrameEnabled(Js::ScriptContext * scriptContext);
         static bool IsWalkable(ScriptContext *scriptContext);
 
@@ -346,7 +346,7 @@ namespace Js
         bool TryGetByteCodeOffsetFromInterpreterFrame(uint32& offset) const;
 #if ENABLE_NATIVE_CODEGEN
         bool TryGetByteCodeOffsetFromNativeFrame(uint32& offset) const;
-        bool TryGetByteCodeOffsetOfInlinee(Js::JavascriptFunction* function, uint loopNum, DWORD_PTR pCodeAddr, Js::FunctionBody** inlinee, uint32& offset, bool useInternalFrameInfo) const;
+        bool TryGetByteCodeOffsetOfInlinee(Js::JavascriptFunction* function, uint loopNum, unsigned long pCodeAddr, Js::FunctionBody** inlinee, uint32& offset, bool useInternalFrameInfo) const;
         uint GetLoopNumber(bool& usedInternalFrameInfo) const;
         bool InlinedFramesBeingWalked() const;
         bool HasInlinedFramesOnStack() const;

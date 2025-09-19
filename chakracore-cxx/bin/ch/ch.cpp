@@ -15,7 +15,7 @@
 unsigned int MessageBase::s_messageCount = 0;
 Debugger* Debugger::debugger = nullptr;
 
-LPCWSTR hostName = u"ch";
+const char16_t* hostName = u"ch";
 
 JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
 
@@ -26,10 +26,10 @@ char ttUri[ttUriBufferLength];
 size_t ttUriLength = 0;
 uint32_t snapInterval = MAXUINT32;
 uint32_t snapHistoryLength = MAXUINT32;
-LPCWSTR connectionUuidString = NULL;
+const char16_t* connectionUuidString = NULL;
 uint32_t startEventCount = 1;
 
-int32_t RunBgParseSync(LPCSTR fileContents, uint32_t lengthBytes, const char* fileName);
+int32_t RunBgParseSync(const char * fileContents, uint32_t lengthBytes, const char* fileName);
 
 extern "C"
 int32_t OnChakraCoreLoadedEntry(TestHooks& testHooks)
@@ -105,7 +105,7 @@ void PrintVersion()
 }
 
 // On success the param byteCodeBuffer will be allocated in the function.
-int32_t GetSerializedBuffer(LPCSTR fileContents, JsFinalizeCallback fileContentFinalizeCallback, JsValueRef *byteCodeBuffer)
+int32_t GetSerializedBuffer(const char * fileContents, JsFinalizeCallback fileContentFinalizeCallback, JsValueRef *byteCodeBuffer)
 {
     int32_t hr = S_OK;
 
@@ -119,7 +119,7 @@ Error:
     return hr;
 }
 
-HANDLE GetFileHandle(LPCWSTR filename)
+HANDLE GetFileHandle(const char16_t* filename)
 {
     if (filename != nullptr)
     {
@@ -195,7 +195,7 @@ static bool DummyJsSerializedScriptLoadUtf8Source(
     return true;
 }
 
-int32_t RunScript(const char* fileName, LPCSTR fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback, JsValueRef bufferValue, char *fullPath, JsValueRef parserStateCache)
+int32_t RunScript(const char* fileName, const char * fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback, JsValueRef bufferValue, char *fullPath, JsValueRef parserStateCache)
 {
     int32_t hr = S_OK;
     MessageQueue * messageQueue = new MessageQueue();
@@ -485,7 +485,7 @@ Error:
     return hr;
 }
 
-int32_t GetParserStateBuffer(LPCSTR fileContents, JsFinalizeCallback fileContentsFinalizeCallback, JsValueRef *parserStateBuffer)
+int32_t GetParserStateBuffer(const char * fileContents, JsFinalizeCallback fileContentsFinalizeCallback, JsValueRef *parserStateBuffer)
 {
     int32_t hr = S_OK;
     JsValueRef scriptSource = nullptr;
@@ -499,7 +499,7 @@ Error:
     return hr;
 }
 
-int32_t CreateParserState(LPCSTR fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback, LPCWSTR fullPath)
+int32_t CreateParserState(const char * fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback, const char16_t* fullPath)
 {
     int32_t hr = S_OK;
     HANDLE fileHandle = nullptr;
@@ -538,7 +538,7 @@ Error:
     return hr;
 }
 
-int32_t CreateParserStateAndRunScript(const char* fileName, LPCSTR fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback, char *fullPath)
+int32_t CreateParserStateAndRunScript(const char* fileName, const char * fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback, char *fullPath)
 {
     int32_t hr = S_OK;
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
@@ -587,7 +587,7 @@ Error:
     return hr;
 }
 
-int32_t CreateAndRunSerializedScript(const char* fileName, LPCSTR fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback, char *fullPath)
+int32_t CreateAndRunSerializedScript(const char* fileName, const char * fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback, char *fullPath)
 {
     int32_t hr = S_OK;
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
@@ -638,7 +638,7 @@ Error:
 }
 
 // Use the asynchronous BGParse JSRT APIs in a synchronous call
-int32_t RunBgParseSync(LPCSTR fileContents, uint32_t lengthBytes, const char* fileName)
+int32_t RunBgParseSync(const char * fileContents, uint32_t lengthBytes, const char* fileName)
 {
     JsValueRef scriptSource;
     JsErrorCode e = (ChakraRTInterface::JsCreateExternalArrayBuffer((void*)fileContents,
@@ -681,7 +681,7 @@ int32_t RunBgParseSync(LPCSTR fileContents, uint32_t lengthBytes, const char* fi
 int32_t ExecuteTest(const char* fileName)
 {
     int32_t hr = S_OK;
-    LPCSTR fileContents = nullptr;
+    const char * fileContents = nullptr;
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
     uint32_t lengthBytes = 0;
 
@@ -944,17 +944,17 @@ int main(int argc, char** c_argv)
         }
         else if(wcsstr(argv[i], u"-TTSnapInterval=") == argv[i])
         {
-            LPCWSTR intervalStr = argv[i] + wcslen(u"-TTSnapInterval=");
+            const char16_t* intervalStr = argv[i] + wcslen(u"-TTSnapInterval=");
             snapInterval = (uint32_t)_wtoi(intervalStr);
         }
         else if(wcsstr(argv[i], u"-TTHistoryLength=") == argv[i])
         {
-            LPCWSTR historyStr = argv[i] + wcslen(u"-TTHistoryLength=");
+            const char16_t* historyStr = argv[i] + wcslen(u"-TTHistoryLength=");
             snapHistoryLength = (uint32_t)_wtoi(historyStr);
         }
         else if(wcsstr(argv[i], u"-TTDStartEvent=") == argv[i])
         {
-            LPCWSTR startEventStr = argv[i] + wcslen(u"-TTDStartEvent=");
+            const char16_t* startEventStr = argv[i] + wcslen(u"-TTDStartEvent=");
             startEventCount = (uint32_t)_wtoi(startEventStr);
         }
         else

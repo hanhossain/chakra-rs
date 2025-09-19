@@ -5,7 +5,7 @@
 #include "stdafx.h"
 
 HostConfigFlags HostConfigFlags::flags;
-LPWSTR* HostConfigFlags::argsVal;
+char16_t** HostConfigFlags::argsVal;
 int HostConfigFlags::argsCount;
 void(*HostConfigFlags::pfnPrintUsage)();
 
@@ -51,7 +51,7 @@ HostConfigFlags::HostConfigFlags() :
 {
 }
 
-bool HostConfigFlags::ParseFlag(LPCWSTR flagsString, ICmdLineArgsParser * parser)
+bool HostConfigFlags::ParseFlag(const char16_t* flagsString, ICmdLineArgsParser * parser)
 {
 #define FLAG(Type, Name, Desc, Default) \
     if (_wcsicmp(_u(#Name), flagsString) == 0) \
@@ -83,15 +83,15 @@ void HostConfigFlags::PrintUsage()
     ChakraRTInterface::PrintConfigFlagsUsageString();
 }
 
-int HostConfigFlags::FindArg(int argc, _In_reads_(argc) PWSTR argv[], PCWSTR targetArg, size_t targetArgLen)
+int HostConfigFlags::FindArg(int argc, _In_reads_(argc) char16_t* argv[], const char16_t * targetArg, size_t targetArgLen)
 {
-    return FindArg(argc, argv, [=](PCWSTR arg) -> bool
+    return FindArg(argc, argv, [=](const char16_t * arg) -> bool
     {
         return _wcsnicmp(arg, targetArg, targetArgLen) == 0;
     });
 }
 
-void HostConfigFlags::RemoveArg(int& argc, _Inout_updates_to_(argc, argc) LPWSTR argv[], int index)
+void HostConfigFlags::RemoveArg(int& argc, _Inout_updates_to_(argc, argc) char16_t* argv[], int index)
 {
     Assert(index >= 0 && index < argc);
     for (int i = index + 1; i < argc; ++i)
@@ -102,10 +102,10 @@ void HostConfigFlags::RemoveArg(int& argc, _Inout_updates_to_(argc, argc) LPWSTR
     --argc;
 }
 
-void HostConfigFlags::HandleArgsFlag(int& argc, _Inout_updates_to_(argc, argc) LPWSTR argv[])
+void HostConfigFlags::HandleArgsFlag(int& argc, _Inout_updates_to_(argc, argc) char16_t* argv[])
 {
-    const LPCWSTR argsFlag = u"-args";
-    const LPCWSTR endArgsFlag = u"-endargs";
+    const char16_t* argsFlag = u"-args";
+    const char16_t* endArgsFlag = u"-endargs";
     int argsFlagLen = static_cast<int>(wcslen(argsFlag));
     int i;
     for (i = 1; i < argc; i++)
@@ -130,7 +130,7 @@ void HostConfigFlags::HandleArgsFlag(int& argc, _Inout_updates_to_(argc, argc) L
     {
         return;
     }
-    HostConfigFlags::argsVal = new LPWSTR[argsCount];
+    HostConfigFlags::argsVal = new char16_t*[argsCount];
     HostConfigFlags::argsCount = argsCount;
     int argIndex = argsStart;
     for (i = 0; i < argsCount; i++)
@@ -141,7 +141,7 @@ void HostConfigFlags::HandleArgsFlag(int& argc, _Inout_updates_to_(argc, argc) L
     argIndex = argsStart - 1;
     for (i = argsEnd + 1; i < argc; i++)
     {
-        LPWSTR temp = argv[argIndex];
+        char16_t* temp = argv[argIndex];
         argv[argIndex] = argv[i];
         argv[i] = temp;
         argIndex++;

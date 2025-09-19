@@ -18,7 +18,7 @@ namespace Js
         virtual ~DiagStackFrame() {}
         virtual JavascriptFunction* GetJavascriptFunction() = 0;
         virtual int GetByteCodeOffset() = 0;
-        virtual DWORD_PTR GetStackAddress() = 0;
+        virtual unsigned long GetStackAddress() = 0;
         virtual Var GetRegValue(RegSlot slotId, bool allowTemp = false) = 0;
         virtual Var GetNonVarRegValue(RegSlot slotId) = 0;
         virtual void SetRegValue(RegSlot slotId, Var value) = 0;
@@ -26,7 +26,7 @@ namespace Js
         virtual Var CreateHeapArguments() = 0;
 
         virtual ScriptContext* GetScriptContext();
-        virtual PCWSTR GetDisplayName();
+        virtual const char16_t * GetDisplayName();
         virtual bool IsInterpreterFrame();
         virtual InterpreterStackFrame* AsInterpreterFrame();
         virtual ArenaAllocator * GetArena();
@@ -65,7 +65,7 @@ namespace Js
         virtual JavascriptFunction* GetJavascriptFunction() override;
         virtual ScriptContext* GetScriptContext() override;
         virtual int GetByteCodeOffset() override;
-        virtual DWORD_PTR GetStackAddress() override;
+        virtual unsigned long GetStackAddress() override;
         virtual bool IsInterpreterFrame() override;
         virtual InterpreterStackFrame* AsInterpreterFrame() override;
         virtual Var GetRegValue(RegSlot slotId, bool allowTemp = false) override;
@@ -93,7 +93,7 @@ namespace Js
         virtual JavascriptFunction* GetJavascriptFunction() override;
         virtual ScriptContext* GetScriptContext() override;
         virtual int GetByteCodeOffset() override;
-        virtual DWORD_PTR GetStackAddress() override;
+        virtual unsigned long GetStackAddress() override;
 
         virtual Var GetRegValue(RegSlot slotId, bool allowTemp = false) override;
         virtual Var GetNonVarRegValue(RegSlot slotId) override;
@@ -109,20 +109,20 @@ namespace Js
     class DiagRuntimeStackFrame : public DiagStackFrame
     {
         JavascriptFunction* m_function;
-        PCWSTR m_displayName;
+        const char16_t * m_displayName;
         void* m_stackAddr;
 
     public:
-        DiagRuntimeStackFrame(JavascriptFunction* function, PCWSTR displayName, void* stackAddr);
+        DiagRuntimeStackFrame(JavascriptFunction* function, const char16_t * displayName, void* stackAddr);
         virtual JavascriptFunction* GetJavascriptFunction() override;
         virtual int GetByteCodeOffset() override;
-        virtual DWORD_PTR GetStackAddress() override;
+        virtual unsigned long GetStackAddress() override;
         virtual Var GetRegValue(RegSlot slotId, bool allowTemp = false) override;
         virtual Var GetNonVarRegValue(RegSlot slotId) override;
         virtual void SetRegValue(RegSlot slotId, Var value) override;
         virtual Var GetArgumentsObject() override;
         virtual Var CreateHeapArguments() override;
 
-        virtual PCWSTR GetDisplayName() override;
+        virtual const char16_t * GetDisplayName() override;
     };
 }

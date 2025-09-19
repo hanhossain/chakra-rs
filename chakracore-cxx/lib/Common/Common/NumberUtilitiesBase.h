@@ -12,9 +12,9 @@ namespace Js
     class NumberConstantsBase
     {
     public:
-        static const UINT64 k_Nan = 0x7FF8000000000000ull;
+        static const unsigned long k_Nan = 0x7FF8000000000000ull;
         static const uint32_t k_Nan32 = 0x7FC00000ul;
-        static const UINT64 k_NegativeNan = 0xFFF8000000000000ull;
+        static const unsigned long k_NegativeNan = 0xFFF8000000000000ull;
     };
 
     class NumberUtilitiesBase

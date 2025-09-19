@@ -1284,11 +1284,11 @@ BailOutRecord::BailOutInlinedHelper(Js::JavascriptCallStackLayout * layout, Bail
         Js::InterpreterStackFrame * interpreterFrame = functionBody->GetScriptContext()->GetThreadContext()->GetLeafInterpreterFrame();
         uint loopNum = interpreterFrame->GetCurrentLoopNum();
 
-        entryPointInfo = (Js::EntryPointInfo*)functionBody->GetLoopEntryPointInfoFromNativeAddress((DWORD_PTR)returnAddress, loopNum);
+        entryPointInfo = (Js::EntryPointInfo*)functionBody->GetLoopEntryPointInfoFromNativeAddress((unsigned long)returnAddress, loopNum);
     }
     else
     {
-        entryPointInfo = (Js::EntryPointInfo*)functionBody->GetEntryPointFromNativeAddress((DWORD_PTR)returnAddress);
+        entryPointInfo = (Js::EntryPointInfo*)functionBody->GetEntryPointFromNativeAddress((unsigned long)returnAddress);
     }
 
     // Let's restore the inline stack - so that in case of a stack walk we have it available
@@ -1552,7 +1552,7 @@ BailOutRecord::BailOutHelper(Js::JavascriptCallStackLayout * layout, Js::ScriptF
 
         // The debugger relies on comparing stack addresses of frames to decide when a step_out is complete so
         // give the InterpreterStackFrame a legit enough stack address to make this comparison work.
-        newInstance->m_stackAddress = reinterpret_cast<DWORD_PTR>(&generator);
+        newInstance->m_stackAddress = reinterpret_cast<unsigned long>(&generator);
     }
     else
     {
@@ -1598,7 +1598,7 @@ BailOutRecord::BailOutHelper(Js::JavascriptCallStackLayout * layout, Js::ScriptF
         // Set stack address for STEP_OUT/recursion detection for new frame.
         // This frame is originally jitted frame for which we create a new interpreter frame on top of it on stack,
         // set the stack address to some stack location that belong to the original jitted frame.
-        DWORD_PTR frameStackAddr = reinterpret_cast<DWORD_PTR>(layout->GetArgv());
+        unsigned long frameStackAddr = reinterpret_cast<unsigned long>(layout->GetArgv());
 
         // Initialize the interpreter stack frame (constants) but not the param, the bailout record will restore the value
 #if DBG
@@ -2827,7 +2827,7 @@ Js::Var BailOutRecord::BailOutForElidedYield(void * framePointer)
 
     // The debugger relies on comparing stack addresses of frames to decide when a step_out is complete so
     // give the InterpreterStackFrame a legit enough stack address to make this comparison work.
-    frame->m_stackAddress = reinterpret_cast<DWORD_PTR>(&generator);
+    frame->m_stackAddress = reinterpret_cast<unsigned long>(&generator);
 
     executeFunction->BeginExecution();
 

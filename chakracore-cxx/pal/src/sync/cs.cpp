@@ -213,23 +213,6 @@ void InitializeCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
 
 /*++
 Function:
-  InitializeCriticalSectionEx - Flags is ignored.
-
-See MSDN doc.
---*/
-BOOL InitializeCriticalSectionEx(LPCRITICAL_SECTION lpCriticalSection, uint32_t dwSpinCount, uint32_t Flags)
-{
-    ENTRY("InitializeCriticalSectionEx(lpCriticalSection=%p, dwSpinCount=%d, Flags=%d)\n",
-          lpCriticalSection, dwSpinCount, Flags);
-
-    InternalInitializeCriticalSectionAndSpinCount(lpCriticalSection, dwSpinCount, false);
-
-    LOGEXIT("InitializeCriticalSectionEx returns TRUE\n");
-    return true;
-}
-
-/*++
-Function:
   InitializeCriticalSectionAndSpinCount
 
 See MSDN doc.
@@ -279,26 +262,6 @@ void EnterCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
     InternalEnterCriticalSection(pThread, lpCriticalSection);
 
     LOGEXIT("EnterCriticalSection returns void\n");
-}
-
-/*++
-Function:
-  TryEnterCriticalSection
-
-See MSDN doc.
---*/
-BOOL TryEnterCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
-{
-    ENTRY("TryEnterCriticalSection(lpCriticalSection=%p)\n", lpCriticalSection);
-
-    CPalThread * pThread = InternalGetCurrentThread();
-
-    bool fRet = InternalTryEnterCriticalSection(pThread,
-        lpCriticalSection);
-
-    LOGEXIT("TryEnterCriticalSection returns bool %d\n", (int)fRet);
-
-    return (BOOL)fRet;
 }
 
 /*++

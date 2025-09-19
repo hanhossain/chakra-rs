@@ -139,7 +139,7 @@ namespace Js
         Var GetAuxSlot(DynamicObject * instance, int index);
 
 #if ENABLE_FIXED_FIELDS
-        void TraceUseFixedProperty(PropertyRecord const * propertyRecord, Var * pProperty, bool result, LPCWSTR typeHandlerName, ScriptContext * requestContext);
+        void TraceUseFixedProperty(PropertyRecord const * propertyRecord, Var * pProperty, bool result, const char16_t* typeHandlerName, ScriptContext * requestContext);
 
         bool IsFixedMethodProperty(FixedPropertyKind fixedPropKind);
         bool IsFixedDataProperty(FixedPropertyKind fixedPropKind);

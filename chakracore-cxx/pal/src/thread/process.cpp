@@ -182,8 +182,8 @@ uint32_t g_dwThreadCount;
 //
 // The command line and app name for the process
 //
-LPWSTR g_lpwstrCmdLine = NULL;
-LPWSTR g_lpwstrAppDir = NULL;
+char16_t* g_lpwstrCmdLine = NULL;
+char16_t* g_lpwstrAppDir = NULL;
 
 // Thread ID of thread that has started the ExitProcess process
 Volatile<int32_t> terminator __attribute__((init_priority(200))) = 0;
@@ -194,7 +194,7 @@ uint32_t gSID = (uint32_t) -1;
 
 // Application group ID for this process
 #ifdef __APPLE__
-LPCSTR gApplicationGroupId = nullptr;
+const char * gApplicationGroupId = nullptr;
 int gApplicationGroupIdLength = 0;
 #endif // __APPLE__
 PathCharString* gSharedFilesPath = nullptr;
@@ -241,17 +241,17 @@ struct UnambiguousProcessDescriptor
     {
     }
 
-    UnambiguousProcessDescriptor(uint32_t processId, UINT64 disambiguationKey)
+    UnambiguousProcessDescriptor(uint32_t processId, unsigned long disambiguationKey)
     {
         Init(processId, disambiguationKey);
     }
 
-    void Init(uint32_t processId, UINT64 disambiguationKey)
+    void Init(uint32_t processId, unsigned long disambiguationKey)
     {
         m_processId = processId;
         m_disambiguationKey = disambiguationKey;
     }
-    UINT64 m_disambiguationKey;
+    unsigned long m_disambiguationKey;
     uint32_t m_processId;
 };
 #pragma pack(pop)
@@ -263,10 +263,10 @@ PROCGetProcessStatus(
     PROCESS_STATE *pps,
     uint32_t *pdwExitCode);
 
-static BOOL getFileName(LPCWSTR lpApplicationName, LPWSTR lpCommandLine, char *lpPathFileName);
-static char ** buildArgv(LPCWSTR lpCommandLine, LPSTR lpAppPath, uint32_t *pnArg);
-static BOOL getPath(LPCSTR lpFileName, uint32_t iLen, LPSTR  lpPathFileName);
-static int checkFileType(LPCSTR lpFileName);
+static BOOL getFileName(const char16_t* lpApplicationName, char16_t* lpCommandLine, char *lpPathFileName);
+static char ** buildArgv(const char16_t* lpCommandLine, char* lpAppPath, uint32_t *pnArg);
+static BOOL getPath(const char * lpFileName, uint32_t iLen, char*  lpPathFileName);
+static int checkFileType(const char * lpFileName);
 static BOOL PROCEndProcess(HANDLE hProcess, uint32_t uExitCode, BOOL bTerminateUnconditionally);
 
 /*++
@@ -333,14 +333,14 @@ See MSDN doc.
 --*/
 BOOL
 CreateProcessW(
-            LPCWSTR lpApplicationName,
-            LPWSTR lpCommandLine,
+            const char16_t* lpApplicationName,
+            char16_t* lpCommandLine,
             LPSECURITY_ATTRIBUTES lpProcessAttributes,
             LPSECURITY_ATTRIBUTES lpThreadAttributes,
             BOOL bInheritHandles,
             uint32_t dwCreationFlags,
             void * lpEnvironment,
-            LPCWSTR lpCurrentDirectory,
+            const char16_t* lpCurrentDirectory,
             LPSTARTUPINFOW lpStartupInfo,
             LPPROCESS_INFORMATION lpProcessInformation)
 {
@@ -474,14 +474,14 @@ PrepareStandardHandleExit:
 PAL_ERROR
 CorUnix::InternalCreateProcess(
     CPalThread *pThread,
-    LPCWSTR lpApplicationName,
-    LPWSTR lpCommandLine,
+    const char16_t* lpApplicationName,
+    char16_t* lpCommandLine,
     LPSECURITY_ATTRIBUTES lpProcessAttributes,
     LPSECURITY_ATTRIBUTES lpThreadAttributes,
     BOOL bInheritHandles,
     uint32_t dwCreationFlags,
     void * lpEnvironment,
-    LPCWSTR lpCurrentDirectory,
+    const char16_t* lpCurrentDirectory,
     LPSTARTUPINFOW lpStartupInfo,
     LPPROCESS_INFORMATION lpProcessInformation
     )
@@ -1033,69 +1033,6 @@ InternalCreateProcessExit:
     return palError;
 }
 
-
-/*++
-Function:
-  GetExitCodeProcess
-
-See MSDN doc.
---*/
-BOOL
-GetExitCodeProcess(
-     HANDLE hProcess,
-     uint32_t * lpExitCode)
-{
-    CPalThread *pThread;
-    PAL_ERROR palError = NO_ERROR;
-    uint32_t dwExitCode;
-    PROCESS_STATE ps;
-
-    ENTRY("GetExitCodeProcess(hProcess = %p, lpExitCode = %p)\n",
-          hProcess, lpExitCode);
-
-    pThread = InternalGetCurrentThread();
-
-    if(NULL == lpExitCode)
-    {
-        WARN("Got NULL lpExitCode\n");
-        palError = ERROR_INVALID_PARAMETER;
-        goto done;
-    }
-
-    palError = PROCGetProcessStatus(
-        pThread,
-        hProcess,
-        &ps,
-        &dwExitCode
-        );
-
-    if (NO_ERROR != palError)
-    {
-        ASSERT("Couldn't get process status information!\n");
-        goto done;
-    }
-
-    if( PS_DONE == ps )
-    {
-        *lpExitCode = dwExitCode;
-    }
-    else
-    {
-        *lpExitCode = STILL_ACTIVE;
-    }
-
-done:
-
-    if (NO_ERROR != palError)
-    {
-        pThread->SetLastError(palError);
-    }
-
-    LOGEXIT("GetExitCodeProcess returns BOOL %d\n", NO_ERROR == palError);
-
-    return NO_ERROR == palError;
-}
-
 /*++
 Function:
   ExitProcess
@@ -1310,99 +1247,19 @@ void PROCCleanupProcess(BOOL bTerminateUnconditionally)
 
 /*++
 Function:
-  GetProcessTimes
-
-See MSDN doc.
---*/
-BOOL
-GetProcessTimes(
-         HANDLE hProcess,
-         LPFILETIME lpCreationTime,
-         LPFILETIME lpExitTime,
-         LPFILETIME lpKernelTime,
-         LPFILETIME lpUserTime)
-{
-    BOOL retval = FALSE;
-    struct rusage resUsage;
-    long calcTime;
-    const long SECS_TO_NS = 1000000000; /* 10^9 */
-    const long USECS_TO_NS = 1000;      /* 10^3 */
-
-
-    ENTRY("GetProcessTimes(hProcess=%p, lpExitTime=%p, lpKernelTime=%p,"
-          "lpUserTime=%p)\n",
-          hProcess, lpCreationTime, lpExitTime, lpKernelTime, lpUserTime );
-
-    /* Make sure hProcess is the current process, this is the only supported
-       case */
-    if(PROCGetProcessIDFromHandle(hProcess)!=GetCurrentProcessId())
-    {
-        ASSERT("GetProcessTimes() does not work on a process other than the "
-              "current process.\n");
-        SetLastError(ERROR_INVALID_HANDLE);
-        goto GetProcessTimesExit;
-    }
-
-    /* First, we need to actually retrieve the relevant statistics from the
-       OS */
-    if (getrusage (RUSAGE_SELF, &resUsage) == -1)
-    {
-        ASSERT("Unable to get resource usage information for the current "
-              "process\n");
-        SetLastError(ERROR_INTERNAL_ERROR);
-        goto GetProcessTimesExit;
-    }
-
-    TRACE ("getrusage User: %ld sec,%ld microsec. Kernel: %ld sec,%ld"
-           " microsec\n",
-           resUsage.ru_utime.tv_sec, resUsage.ru_utime.tv_usec,
-           resUsage.ru_stime.tv_sec, resUsage.ru_stime.tv_usec);
-
-    if (lpUserTime)
-    {
-        /* Get the time of user mode execution, in 100s of nanoseconds */
-        calcTime = (long)resUsage.ru_utime.tv_sec * SECS_TO_NS;
-        calcTime += (long)resUsage.ru_utime.tv_usec * USECS_TO_NS;
-        calcTime /= 100; /* Produce the time in 100s of ns */
-        /* Assign the time into lpUserTime */
-        lpUserTime->dwLowDateTime = (uint32_t)calcTime;
-        lpUserTime->dwHighDateTime = (uint32_t)(calcTime >> 32);
-    }
-
-    if (lpKernelTime)
-    {
-        /* Get the time of kernel mode execution, in 100s of nanoseconds */
-        calcTime = (long)resUsage.ru_stime.tv_sec * SECS_TO_NS;
-        calcTime += (long)resUsage.ru_stime.tv_usec * USECS_TO_NS;
-        calcTime /= 100; /* Produce the time in 100s of ns */
-        /* Assign the time into lpUserTime */
-        lpKernelTime->dwLowDateTime = (uint32_t)calcTime;
-        lpKernelTime->dwHighDateTime = (uint32_t)(calcTime >> 32);
-    }
-
-    retval = TRUE;
-
-
-GetProcessTimesExit:
-    LOGEXIT("GetProcessTimes returns BOOL %d\n", retval);
-    return (retval);
-}
-
-/*++
-Function:
   GetCommandLineW
 
 See MSDN doc.
 --*/
-LPWSTR
+char16_t*
 GetCommandLineW(
     void)
 {
     ENTRY("GetCommandLineW()\n");
 
-    LPWSTR lpwstr = g_lpwstrCmdLine ? g_lpwstrCmdLine : (LPWSTR)W("");
+    char16_t* lpwstr = g_lpwstrCmdLine ? g_lpwstrCmdLine : (char16_t*)W("");
 
-    LOGEXIT("GetCommandLineW returns LPWSTR %p (%S)\n",
+    LOGEXIT("GetCommandLineW returns char16_t* %p (%S)\n",
           g_lpwstrCmdLine,
           lpwstr);
 
@@ -1634,12 +1491,12 @@ Notes
 
 PAL_ERROR
 CorUnix::InitializeProcessCommandLine(
-    LPWSTR lpwstrCmdLine,
-    LPWSTR lpwstrFullPath
+    char16_t* lpwstrCmdLine,
+    char16_t* lpwstrFullPath
 )
 {
     PAL_ERROR palError = NO_ERROR;
-    LPWSTR initial_dir = NULL;
+    char16_t* initial_dir = NULL;
 
     //
     // Save the command line and initial directory
@@ -1647,12 +1504,12 @@ CorUnix::InitializeProcessCommandLine(
 
     if (lpwstrFullPath)
     {
-        LPWSTR lpwstr = PAL_wcsrchr(lpwstrFullPath, '/');
+        char16_t* lpwstr = PAL_wcsrchr(lpwstrFullPath, '/');
         lpwstr[0] = '\0';
         size_t n = PAL_wcslen(lpwstrFullPath) + 1;
 
         size_t iLen = n;
-        initial_dir = reinterpret_cast<LPWSTR>(malloc(iLen*sizeof(char16_t)));
+        initial_dir = reinterpret_cast<char16_t*>(malloc(iLen*sizeof(char16_t)));
         if (NULL == initial_dir)
         {
             ERROR("malloc() failed! (initial_dir) \n");
@@ -2328,11 +2185,11 @@ Return:
 static
 BOOL
 getFileName(
-       LPCWSTR lpApplicationName,
-       LPWSTR lpCommandLine,
+       const char16_t* lpApplicationName,
+       char16_t* lpCommandLine,
        char *lpPathFileName)
 {
-    LPWSTR lpEnd;
+    char16_t* lpEnd;
     char16_t wcEnd;
     char * lpFileName;
     PathCharString lpFileNamePS;
@@ -2465,7 +2322,7 @@ Return:
 --*/
 static
 int
-checkFileType( LPCSTR lpFileName)
+checkFileType( const char * lpFileName)
 {
     struct stat stat_data;
 
@@ -2531,8 +2388,8 @@ note that there may be other special cases
 static
 char **
 buildArgv(
-      LPCWSTR lpCommandLine,
-      LPSTR lpAppPath,
+      const char16_t* lpCommandLine,
+      char* lpAppPath,
       uint32_t *pnArg)
 {
     uint32_t iWlen;
@@ -2580,11 +2437,11 @@ buildArgv(
 
     /* strip leading whitespace; function returns NULL if there's only
         whitespace, so the if statement below will work correctly */
-    lpCommandLine = UTIL_inverse_wcspbrk((LPWSTR)lpCommandLine, W16_WHITESPACE);
+    lpCommandLine = UTIL_inverse_wcspbrk((char16_t*)lpCommandLine, W16_WHITESPACE);
 
     if (lpCommandLine)
     {
-        LPCWSTR stringstart = lpCommandLine;
+        const char16_t* stringstart = lpCommandLine;
 
         do
         {
@@ -2804,14 +2661,14 @@ Return:
 static
 BOOL
 getPath(
-      LPCSTR lpFileName,
+      const char * lpFileName,
       uint32_t iLen,
-      LPSTR  lpPathFileName)
+      char*  lpPathFileName)
 {
-    LPSTR lpPath;
-    LPSTR lpNext;
-    LPSTR lpCurrent;
-    LPWSTR lpwstr;
+    char* lpPath;
+    char* lpNext;
+    char* lpCurrent;
+    char16_t* lpwstr;
     int32_t n;
     int32_t nextLen;
     int32_t slashLen;
@@ -2888,7 +2745,7 @@ getPath(
 
     /* Then try to look in the path */
     int iLen2 = strlen(MiscGetenv("PATH"))+1;
-    lpPath = (LPSTR) malloc(iLen2);
+    lpPath = (char*) malloc(iLen2);
 
     if (!lpPath)
     {

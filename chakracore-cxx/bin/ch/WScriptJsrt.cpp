@@ -68,8 +68,8 @@ MessageQueue* WScriptJsrt::messageQueue = nullptr;
 std::map<std::string, JsModuleRecord>  WScriptJsrt::moduleRecordMap;
 std::map<JsModuleRecord, std::string>  WScriptJsrt::moduleDirMap;
 std::map<JsModuleRecord, ModuleState>  WScriptJsrt::moduleErrMap;
-std::map<DWORD_PTR, std::string> WScriptJsrt::scriptDirMap;
-DWORD_PTR WScriptJsrt::sourceContext = 0;
+std::map<unsigned long, std::string> WScriptJsrt::scriptDirMap;
+unsigned long WScriptJsrt::sourceContext = 0;
 
 #define ERROR_MESSAGE_TO_STRING(errorCode, errorMessage, errorMessageString)        \
     JsErrorCode errorCode = JsNoError;                                              \
@@ -93,19 +93,19 @@ DWORD_PTR WScriptJsrt::sourceContext = 0;
     }                                                                               \
     while(0)
 
-DWORD_PTR WScriptJsrt::GetNextSourceContext()
+unsigned long WScriptJsrt::GetNextSourceContext()
 {
     return sourceContext++;
 }
 
-void WScriptJsrt::RegisterScriptDir(DWORD_PTR sourceContext, LPCSTR fullDirNarrow)
+void WScriptJsrt::RegisterScriptDir(unsigned long sourceContext, const char * fullDirNarrow)
 {
     GetDir(fullDirNarrow, &scriptDirMap[sourceContext]);
 }
 
 bool WScriptJsrt::CreateArgumentsObject(JsValueRef *argsObject)
 {
-    LPWSTR *argv = HostConfigFlags::argsVal;
+    char16_t* *argv = HostConfigFlags::argsVal;
     JsValueRef retArr;
 
     Assert(argsObject);
@@ -154,8 +154,8 @@ JsValueRef WScriptJsrt::EchoCallback(JsValueRef callee, bool isConstructCall, Js
                     wprintf(u" ");
                 }
                 charcount_t len;
-                LPWSTR ws = str.GetWideString(&len);
-                LPWSTR wsNoNull = new char16_t[((size_t)len) + 1];
+                char16_t* ws = str.GetWideString(&len);
+                char16_t* wsNoNull = new char16_t[((size_t)len) + 1];
                 charcount_t newIndex = 0;
                 for (charcount_t j = 0; j < len; j++)
                 {
@@ -219,7 +219,7 @@ JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *argu
     int32_t hr = E_FAIL;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     JsErrorCode errorCode = JsNoError;
-    LPCWSTR errorMessage = u"";
+    const char16_t* errorMessage = u"";
 
     if (argumentCount < 2 || argumentCount > 4)
     {
@@ -228,7 +228,7 @@ JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *argu
     }
     else
     {
-        LPCSTR fileContent;
+        const char * fileContent;
         AutoString fileName(arguments[1]);
         IfJsrtErrorSetGo(fileName.GetError());
 
@@ -258,7 +258,7 @@ Error:
     return returnValue;
 }
 
-void WScriptJsrt::SetExceptionIf(JsErrorCode errorCode, LPCWSTR errorMessage)
+void WScriptJsrt::SetExceptionIf(JsErrorCode errorCode, const char16_t* errorMessage)
 {
     if (errorCode != JsNoError)
     {
@@ -301,7 +301,7 @@ bool WriteHostObject(void * state, JsValueRef data)
 JsValueRef WScriptJsrt::SerializeObject(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
     JsErrorCode errorCode = JsNoError;
-    LPCWSTR errorMessage = u"";
+    const char16_t* errorMessage = u"";
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     int32_t hr = S_OK;
     JsValueRef *transferVarsArray = nullptr;
@@ -436,7 +436,7 @@ void BufferFreeFunction(void * state)
 JsValueRef WScriptJsrt::Deserialize(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
     JsErrorCode errorCode = JsNoError;
-    LPCWSTR errorMessage = u"";
+    const char16_t* errorMessage = u"";
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     JsValueRef * transferables = nullptr;
     int32_t hr = S_OK;
@@ -493,7 +493,7 @@ JsValueRef WScriptJsrt::GetModuleNamespace(JsValueRef callee, bool isConstructCa
 {
     JsErrorCode errorCode = JsNoError;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
-    LPCWSTR errorMessage = u"";
+    const char16_t* errorMessage = u"";
     char fullPath[_MAX_PATH];
 
     if (argumentCount < 2)
@@ -550,7 +550,7 @@ JsValueRef WScriptJsrt::LoadScriptHelper(JsValueRef callee, bool isConstructCall
 {
     int32_t hr = E_FAIL;
     JsErrorCode errorCode = JsNoError;
-    LPCWSTR errorMessage = u"";
+    const char16_t* errorMessage = u"";
     JsValueRef returnValue = JS_INVALID_REFERENCE;
 
     if (argumentCount < 2 || argumentCount > 4)
@@ -606,7 +606,7 @@ Error:
     return returnValue;
 }
 
-void WScriptJsrt::GetDir(LPCSTR fullPathNarrow, std::string *fullDirNarrow)
+void WScriptJsrt::GetDir(const char * fullPathNarrow, std::string *fullDirNarrow)
 {
     char fileDrive[_MAX_DRIVE];
     char fileDir[_MAX_DIR];
@@ -621,16 +621,16 @@ void WScriptJsrt::GetDir(LPCSTR fullPathNarrow, std::string *fullDirNarrow)
     *fullDirNarrow = result;
 }
 
-JsErrorCode WScriptJsrt::ModuleEntryPoint(LPCSTR fileName, LPCSTR fileContent, LPCSTR fullName)
+JsErrorCode WScriptJsrt::ModuleEntryPoint(const char * fileName, const char * fileContent, const char * fullName)
 {
     return LoadModuleFromString(fileName, fileContent, fullName, true);
 }
 
-JsErrorCode WScriptJsrt::LoadModuleFromString(LPCSTR fileName, LPCSTR fileContent, LPCSTR fullName, bool isFile)
+JsErrorCode WScriptJsrt::LoadModuleFromString(const char * fileName, const char * fileContent, const char * fullName, bool isFile)
 {
-    DWORD_PTR dwSourceCookie = WScriptJsrt::GetNextSourceContext();
+    unsigned long dwSourceCookie = WScriptJsrt::GetNextSourceContext();
     JsModuleRecord requestModule = JS_INVALID_REFERENCE;
-    LPCSTR moduleRecordKey = fullName ? fullName : fileName;
+    const char * moduleRecordKey = fullName ? fullName : fileName;
     auto moduleRecordEntry = moduleRecordMap.find(std::string(moduleRecordKey));
     JsErrorCode errorCode = JsNoError;
 
@@ -682,12 +682,12 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(LPCSTR fileName, LPCSTR fileConten
 }
 
 
-JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, LPCSTR fileName,
-    LPCSTR fileContent, LPCSTR scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile)
+JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, const char * fileName,
+    const char * fileContent, const char * scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile)
 {
     int32_t hr = E_FAIL;
     JsErrorCode errorCode = JsNoError;
-    LPCWSTR errorMessage = u"Internal error.";
+    const char16_t* errorMessage = u"Internal error.";
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     JsContextRef currentContext = JS_INVALID_REFERENCE;
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
@@ -840,7 +840,7 @@ Error:
 
 JsValueRef WScriptJsrt::MonotonicNowCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    LPCWSTR errorMessage = u"invalid call to WScript.monotonicNow";
+    const char16_t* errorMessage = u"invalid call to WScript.monotonicNow";
     JsErrorCode errorCode = JsNoError;
     int32_t hr = S_OK;
     JsValueRef result;
@@ -860,7 +860,7 @@ Error:
 
 JsValueRef WScriptJsrt::SetTimeoutCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    LPCWSTR errorMessage = u"invalid call to WScript.SetTimeout";
+    const char16_t* errorMessage = u"invalid call to WScript.SetTimeout";
     JsErrorCode errorCode = JsNoError;
     int32_t hr = S_OK;
 
@@ -894,7 +894,7 @@ Error:
 
 JsValueRef WScriptJsrt::ClearTimeoutCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    LPCWSTR errorMessage = u"invalid call to WScript.ClearTimeout";
+    const char16_t* errorMessage = u"invalid call to WScript.ClearTimeout";
     JsErrorCode errorCode = JsNoError;
     int32_t hr = S_OK;
 
@@ -930,7 +930,7 @@ void QueueDebugOperation(JsValueRef function, const DebugOperationFunc& operatio
 
 JsValueRef WScriptJsrt::AttachCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    LPCWSTR errorMessage = u"WScript.Attach requires a function, like WScript.Attach(foo);";
+    const char16_t* errorMessage = u"WScript.Attach requires a function, like WScript.Attach(foo);";
     JsErrorCode errorCode = JsNoError;
     int32_t hr = S_OK;
     JsValueType argumentType = JsUndefined;
@@ -965,7 +965,7 @@ Error:
 
 JsValueRef WScriptJsrt::DetachCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    LPCWSTR errorMessage = u"WScript.Detach requires a function, like WScript.Detach(foo);";
+    const char16_t* errorMessage = u"WScript.Detach requires a function, like WScript.Detach(foo);";
     JsErrorCode errorCode = JsNoError;
     int32_t hr = S_OK;
     JsValueType argumentType = JsUndefined;
@@ -1777,9 +1777,9 @@ Error:
     return returnValue;
 }
 
-bool WScriptJsrt::PrintException(LPCSTR fileName, JsErrorCode jsErrorCode, JsValueRef exception)
+bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode, JsValueRef exception)
 {
-    LPCWSTR errorTypeString = ConvertErrorCodeToMessage(jsErrorCode);
+    const char16_t* errorTypeString = ConvertErrorCodeToMessage(jsErrorCode);
     JsValueRef metaData = JS_INVALID_REFERENCE;
 
     if (exception == nullptr)
@@ -1967,12 +1967,12 @@ WScriptJsrt::CallbackMessage::~CallbackMessage()
     m_function = JS_INVALID_REFERENCE;
 }
 
-int32_t WScriptJsrt::CallbackMessage::Call(LPCSTR fileName)
+int32_t WScriptJsrt::CallbackMessage::Call(const char * fileName)
 {
     return CallFunction(fileName);
 }
 
-int32_t WScriptJsrt::CallbackMessage::CallFunction(LPCSTR fileName)
+int32_t WScriptJsrt::CallbackMessage::CallFunction(const char * fileName)
 {
     int32_t hr = S_OK;
 
@@ -2034,7 +2034,7 @@ WScriptJsrt::ModuleMessage::~ModuleMessage()
     }
 }
 
-int32_t WScriptJsrt::ModuleMessage::Call(LPCSTR fileName)
+int32_t WScriptJsrt::ModuleMessage::Call(const char * fileName)
 {
     JsErrorCode errorCode = JsNoError;
     JsValueRef result = JS_INVALID_REFERENCE;
@@ -2052,7 +2052,7 @@ int32_t WScriptJsrt::ModuleMessage::Call(LPCSTR fileName)
     }
     else
     {
-        LPCSTR fileContent = nullptr;
+        const char * fileContent = nullptr;
         AutoString specifierStr(specifier);
         errorCode = specifierStr.GetError();
         if (errorCode == JsNoError)
@@ -2091,7 +2091,7 @@ JsErrorCode WScriptJsrt::ReportModuleCompletionCallback(JsModuleRecord module, J
 }
 
 JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingModule,
-    JsValueRef specifier, JsModuleRecord* dependentModuleRecord, LPCSTR refdir)
+    JsValueRef specifier, JsModuleRecord* dependentModuleRecord, const char * refdir)
 {
     JsModuleRecord moduleRecord = JS_INVALID_REFERENCE;
     AutoString specifierStr;

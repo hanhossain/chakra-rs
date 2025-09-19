@@ -31,7 +31,7 @@ namespace Js
     class RefCountedBuffer;
 
     static const unsigned int EvalMRUSize = 15;
-    typedef JsUtil::BaseDictionary<DWORD_PTR, SourceContextInfo *, Recycler, PowerOf2SizePolicy> SourceContextInfoMap;
+    typedef JsUtil::BaseDictionary<unsigned long, SourceContextInfo *, Recycler, PowerOf2SizePolicy> SourceContextInfoMap;
     typedef JsUtil::BaseDictionary<uint, SourceContextInfo *, Recycler, PowerOf2SizePolicy> DynamicSourceContextInfoMap;
 
     typedef JsUtil::BaseDictionary<EvalMapString, ScriptFunction*, RecyclerNonLeafAllocator, PrimeSizePolicy> SecondLevelEvalCache;
@@ -274,7 +274,7 @@ namespace Js
 
         Field(JavascriptFunction*) builtinFunctions[BuiltinFunction::Count];
 
-        Field(INT_PTR) vtableAddresses[VTableValue::Count];
+        Field(long) vtableAddresses[VTableValue::Count];
         Field(JavascriptString*) typeDisplayStrings[TypeIds_Limit];
         Field(ConstructorCache *) constructorCacheDefaultInstance;
         __declspec(align(16)) Field(const uint8_t *) absDoubleCst;
@@ -1010,8 +1010,8 @@ namespace Js
         JavascriptAsyncFunction* CreateAsyncFunction(JavascriptMethod entryPoint, GeneratorVirtualScriptFunction* scriptFunction);
         JavascriptAsyncFunction* CreateAsyncFunction(JavascriptMethod entryPoint, bool isAnonymousFunction);
         JavascriptAsyncSpawnStepFunction* CreateAsyncSpawnStepFunction(JavascriptMethod entryPoint, JavascriptGenerator* generator, Var argument, Var resolve = nullptr, Var reject = nullptr, bool isReject = false);
-        JavascriptExternalFunction* CreateExternalFunction(ExternalMethod entryPointer, PropertyId nameId, Var signature, UINT64 flags, bool isLengthAvailable = false);
-        JavascriptExternalFunction* CreateExternalFunction(ExternalMethod entryPointer, Var nameId, Var signature, UINT64 flags, bool isLengthAvailable = false);
+        JavascriptExternalFunction* CreateExternalFunction(ExternalMethod entryPointer, PropertyId nameId, Var signature, unsigned long flags, bool isLengthAvailable = false);
+        JavascriptExternalFunction* CreateExternalFunction(ExternalMethod entryPointer, Var nameId, Var signature, unsigned long flags, bool isLengthAvailable = false);
         JavascriptExternalFunction* CreateStdCallExternalFunction(StdCallJavascriptMethod entryPointer, Var name, void *callbackState);
         JavascriptPromiseCapabilitiesExecutorFunction* CreatePromiseCapabilitiesExecutorFunction(JavascriptMethod entryPoint, JavascriptPromiseCapability* capability);
         JavascriptPromiseResolveOrRejectFunction* CreatePromiseResolveOrRejectFunction(JavascriptMethod entryPoint, JavascriptPromise* promise, bool isReject, JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* alreadyResolvedRecord);
@@ -1120,7 +1120,7 @@ namespace Js
 #endif
 
         Field(JavascriptFunction*)* GetBuiltinFunctions();
-        INT_PTR* GetVTableAddresses();
+        long* GetVTableAddresses();
         static BuiltinFunction GetBuiltinFunctionForPropId(PropertyId id);
         static BuiltinFunction GetBuiltInForFuncInfo(LocalFunctionId localFuncId);
 #if DBG

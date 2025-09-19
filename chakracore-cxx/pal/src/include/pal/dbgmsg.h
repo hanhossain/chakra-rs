@@ -212,7 +212,7 @@ typedef enum
 /* extern variables */
 
 // Change W16_NULLSTRING to external variable to avoid multiple warnings showing up in prefast
-extern LPCWSTR W16_NULLSTRING;
+extern const char16_t* W16_NULLSTRING;
 
 extern uint32_t dbg_channel_flags[DCI_LAST];
 extern BOOL g_Dbg_asserts_enabled;
@@ -373,7 +373,7 @@ Parameters :
     DBG_CHANNEL_ID channel : debug channel to use
     DBG_LEVEL_ID level : debug message level
     BOOL bHeader : whether or not to output message header (thread id, etc)
-    LPSTR file : current file
+    char* file : current file
     INT line : line number
 
 Return Value :
@@ -386,7 +386,7 @@ Notes :
     DBG_printf_plain.
 --*/
 BOOL DBG_preprintf(DBG_CHANNEL_ID channel, DBG_LEVEL_ID level, BOOL bHeader,
-                   LPSTR file, int32_t line);
+                   char* file, int32_t line);
 
 /*++
 Function :
@@ -399,10 +399,10 @@ Parameters :
     DBG_CHANNEL_ID channel : debug channel to use
     DBG_LEVEL_ID level : debug message level
     BOOL bHeader : whether or not to output message header (thread id, etc)
-    LPSTR function : current function
-    LPSTR file : current file
+    char* function : current function
+    char* file : current file
     INT line : line number
-    LPSTR format, ... : standard printf parameter list.
+    char* format, ... : standard printf parameter list.
 
 Return Value :
     always 1.
@@ -416,11 +416,11 @@ Notes :
 /* if requested, use an __attribute__ feature to ask gcc to check that format
    specifiers match their parameters */
 int DBG_printf_gcc(DBG_CHANNEL_ID channel, DBG_LEVEL_ID level, BOOL bHeader,
-                   LPCSTR function, LPCSTR file, int32_t line, LPCSTR format, ...)
+                   const char * function, const char * file, int32_t line, const char * format, ...)
                    __attribute__ ((format (printf,7, 8)));
 #else
 int DBG_printf_gcc(DBG_CHANNEL_ID channel, DBG_LEVEL_ID level, BOOL bHeader,
-                   LPCSTR function, LPCSTR file, int32_t line, LPCSTR format, ...);
+                   const char * function, const char * file, int32_t line, const char * format, ...);
 #endif
 
 /*++
@@ -434,9 +434,9 @@ Parameters :
     DBG_CHANNEL_ID channel : debug channel to use
     DBG_LEVEL_ID level : debug message level
     BOOL bHeader : whether or not to output message header (thread id, etc)
-    LPSTR file : current file
+    char* file : current file
     INT line : line number
-    LPSTR format, ... : standard printf parameter list.
+    char* format, ... : standard printf parameter list.
 
 Return Value :
     always 1.
@@ -448,7 +448,7 @@ Notes :
 
 --*/
 int DBG_printf_c99(DBG_CHANNEL_ID channel, DBG_LEVEL_ID level, BOOL bHeader,
-                   LPSTR file, int32_t line, LPSTR format, ...);
+                   char* file, int32_t line, char* format, ...);
 
 /*++
 Function :
@@ -458,7 +458,7 @@ Function :
     This function output the user-specified part of a debug-message.
 
 Parameters :
-    LPSTR format, ... : standard printf parameter list.
+    char* format, ... : standard printf parameter list.
 
 Return value :
     always 1.
@@ -469,7 +469,7 @@ Notes :
     DBG_preprintf.
 
 --*/
-int DBG_printf_plain(LPSTR format, ...);
+int DBG_printf_plain(char* format, ...);
 
 /*++
 Function :

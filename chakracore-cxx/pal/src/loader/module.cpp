@@ -102,16 +102,16 @@ int MaxWCharToAcpLength = 3;
 
 template<class TChar> static bool LOADVerifyLibraryPath(const TChar *libraryPath);
 static bool LOADConvertLibraryPathWideStringToMultibyteString(
-    LPCWSTR wideLibraryPath,
-    LPSTR multibyteLibraryPath,
+    const char16_t* wideLibraryPath,
+    char* multibyteLibraryPath,
     int32_t *multibyteLibraryPathLengthRef);
 static BOOL LOADValidateModule(MODSTRUCT *module);
-static LPWSTR LOADGetModuleFileName(MODSTRUCT *module);
-static MODSTRUCT *LOADAddModule(void *dl_handle, LPCSTR libraryNameOrPath);
-static void *LOADLoadLibraryDirect(LPCSTR libraryNameOrPath);
+static char16_t* LOADGetModuleFileName(MODSTRUCT *module);
+static MODSTRUCT *LOADAddModule(void *dl_handle, const char * libraryNameOrPath);
+static void *LOADLoadLibraryDirect(const char * libraryNameOrPath);
 static BOOL LOADFreeLibrary(MODSTRUCT *module, BOOL fCallDllMain);
-static HMODULE LOADRegisterLibraryDirect(void *dl_handle, LPCSTR libraryNameOrPath, BOOL fDynamic);
-static HMODULE LOADLoadLibrary(LPCSTR shortAsciiName, BOOL fDynamic);
+static HMODULE LOADRegisterLibraryDirect(void *dl_handle, const char * libraryNameOrPath, BOOL fDynamic);
+static HMODULE LOADLoadLibrary(const char * shortAsciiName, BOOL fDynamic);
 static BOOL LOADCallDllMainSafe(MODSTRUCT *module, uint32_t dwReason, void * lpReserved);
 
 /* API function definitions ***************************************************/
@@ -124,7 +124,7 @@ See MSDN doc.
 --*/
 HMODULE
 LoadLibraryA(
-     LPCSTR lpLibFileName)
+     const char * lpLibFileName)
 {
     return LoadLibraryExA(lpLibFileName, nullptr, 0);
 }
@@ -137,7 +137,7 @@ See MSDN doc.
 --*/
 HMODULE
 LoadLibraryW(
-     LPCWSTR lpLibFileName)
+     const char16_t* lpLibFileName)
 {
     return LoadLibraryExW(lpLibFileName, nullptr, 0);
 }
@@ -150,7 +150,7 @@ See MSDN doc.
 --*/
 HMODULE
 LoadLibraryExA(
-     LPCSTR lpLibFileName,
+     const char * lpLibFileName,
      /*Reserved*/ HANDLE hFile,
      uint32_t dwFlags)
 {
@@ -161,7 +161,7 @@ LoadLibraryExA(
         return nullptr;
     }
 
-    LPSTR lpstr = nullptr;
+    char* lpstr = nullptr;
     HMODULE hModule = nullptr;
 
     ENTRY("LoadLibraryExA (lpLibFileName=%p (%s)) \n",
@@ -205,7 +205,7 @@ See MSDN doc.
 --*/
 HMODULE
 LoadLibraryExW(
-     LPCWSTR lpLibFileName,
+     const char16_t* lpLibFileName,
      /*Reserved*/ HANDLE hFile,
      uint32_t dwFlags)
 {
@@ -261,7 +261,7 @@ See MSDN doc.
 FARPROC
 GetProcAddress(
      HMODULE hModule,
-     LPCSTR lpProcName)
+     const char * lpProcName)
 {
     MODSTRUCT *module;
     FARPROC ProcAddress = nullptr;
@@ -294,7 +294,7 @@ GetProcAddress(
        because of the address range reserved for ordinals contain can
        be a valid string address on non-Windows systems
     */
-    if ((DWORD_PTR)lpProcName < VIRTUAL_PAGE_SIZE)
+    if ((unsigned long)lpProcName < VIRTUAL_PAGE_SIZE)
     {
         ASSERT("Attempt to locate symbol by ordinal?!\n");
     }
@@ -307,7 +307,7 @@ GetProcAddress(
     if (pal_module && module->dl_handle == pal_module->dl_handle)
     {
         int iLen = 4 + strlen(lpProcName) + 1;
-        LPSTR lpPALProcName = (LPSTR) alloca(iLen);
+        char* lpPALProcName = (char*) alloca(iLen);
 
         if (strcpy_s(lpPALProcName, iLen, "PAL_") != SAFECRT_SUCCESS)
         {
@@ -422,12 +422,12 @@ Notes :
 uint32_t
 GetModuleFileNameA(
      HMODULE hModule,
-     LPSTR lpFileName,
+     char* lpFileName,
      uint32_t nSize)
 {
     int32_t name_length;
     uint32_t retval = 0;
-    LPWSTR wide_name = nullptr;
+    char16_t* wide_name = nullptr;
 
     ENTRY("GetModuleFileNameA (hModule=%p, lpFileName=%p, nSize=%u)\n",
           hModule, lpFileName, nSize);
@@ -483,12 +483,12 @@ Notes :
 uint32_t
 GetModuleFileNameW(
      HMODULE hModule,
-     LPWSTR lpFileName,
+     char16_t* lpFileName,
      uint32_t nSize)
 {
     int32_t name_length;
     uint32_t retval = 0;
-    LPWSTR wide_name = nullptr;
+    char16_t* wide_name = nullptr;
 
     ENTRY("GetModuleFileNameW (hModule=%p, lpFileName=%p, nSize=%u)\n",
           hModule, lpFileName, nSize);
@@ -534,7 +534,7 @@ done:
 
 HMODULE
 GetModuleHandleW(
-      LPCWSTR lpModuleName)
+      const char16_t* lpModuleName)
 {
     if (lpModuleName)
     {
@@ -549,7 +549,7 @@ GetModuleHandleW(
 BOOL
 GetModuleHandleExW(
      uint32_t dwFlags,
-      LPCWSTR lpModuleName,
+      const char16_t* lpModuleName,
      HMODULE *phModule)
 {
     *phModule = NULL;
@@ -566,7 +566,7 @@ Function:
 */
 void *
 PAL_LoadLibraryDirect(
-     LPCWSTR lpLibFileName)
+     const char16_t* lpLibFileName)
 {
     PathCharString pathstr;
     char * lpstr = nullptr;
@@ -614,7 +614,7 @@ Function:
 HMODULE
 PAL_RegisterLibraryDirect(
      void *dl_handle,
-     LPCWSTR lpLibFileName)
+     const char16_t* lpLibFileName)
 {
     PathCharString pathstr;
     char * lpstr = nullptr;
@@ -652,23 +652,6 @@ PAL_RegisterLibraryDirect(
 done:
     LOGEXIT("RegisterLibraryDirect returns HMODULE %p\n", hModule);
     return hModule;
-}
-
-/*++
-Function:
-  PAL_UnregisterModule
-
-  Used to cleanup the module HINSTANCE from PAL_RegisterModule.
---*/
-void
-PAL_UnregisterModule(
-     HINSTANCE hInstance)
-{
-    ENTRY("PAL_UnregisterModule(hInstance=%p)\n", hInstance);
-
-    LOADFreeLibrary((MODSTRUCT *)hInstance, FALSE /* fCallDllMain */);
-
-    LOGEXIT("PAL_UnregisterModule returns\n");
 }
 
 /*++
@@ -831,7 +814,7 @@ Function :
     Set the exe name path
 
 Parameters :
-    LPWSTR man exe path and name
+    char16_t* man exe path and name
 
 Return value :
     TRUE  if initialization succeedded
@@ -839,10 +822,10 @@ Return value :
 
 --*/
 extern "C"
-BOOL LOADSetExeName(LPWSTR name)
+BOOL LOADSetExeName(char16_t* name)
 {
 #if RETURNS_NEW_HANDLES_ON_REPEAT_DLOPEN
-    LPSTR pszExeName = nullptr;
+    char* pszExeName = nullptr;
 #endif
     BOOL result = FALSE;
 
@@ -1187,8 +1170,8 @@ static bool LOADVerifyLibraryPath(const TChar *libraryPath)
 
 // Converts the wide char library path string into a multibyte-char string. On error, calls SetLastError() and returns false.
 static bool LOADConvertLibraryPathWideStringToMultibyteString(
-    LPCWSTR wideLibraryPath,
-    LPSTR multibyteLibraryPath,
+    const char16_t* wideLibraryPath,
+    char* multibyteLibraryPath,
     int32_t *multibyteLibraryPathLengthRef)
 {
     _ASSERTE(multibyteLibraryPathLengthRef != nullptr);
@@ -1275,9 +1258,9 @@ Notes :
     this function assumes that the module critical section is held, and that
     the module has already been validated.
 --*/
-static LPWSTR LOADGetModuleFileName(MODSTRUCT *module)
+static char16_t* LOADGetModuleFileName(MODSTRUCT *module)
 {
-    LPWSTR module_name;
+    char16_t* module_name;
     /* special case : if module is NULL, we want the name of the executable */
     if (!module)
     {
@@ -1300,12 +1283,12 @@ Function:
     Loads a library using a system call, without registering the library with the module list.
 
 Parameters:
-    LPCSTR libraryNameOrPath:           The library to load.
+    const char * libraryNameOrPath:           The library to load.
 
 Return value:
     System handle to the loaded library, or nullptr upon failure (error is set via SetLastError()).
 */
-static void *LOADLoadLibraryDirect(LPCSTR libraryNameOrPath)
+static void *LOADLoadLibraryDirect(const char * libraryNameOrPath)
 {
     _ASSERTE(libraryNameOrPath != nullptr);
     _ASSERTE(libraryNameOrPath[0] != '\0');
@@ -1343,10 +1326,10 @@ Notes :
     'name' is used to initialize MODSTRUCT::lib_name. The other member is set to NULL
     In case of failure (in malloc or MBToWC), this function sets LastError.
 --*/
-static MODSTRUCT *LOADAllocModule(void *dl_handle, LPCSTR name)
+static MODSTRUCT *LOADAllocModule(void *dl_handle, const char * name)
 {
     MODSTRUCT *module;
-    LPWSTR wide_name;
+    char16_t* wide_name;
 
     /* no match found : try to create a new module structure */
     module = (MODSTRUCT *)malloc(sizeof(MODSTRUCT));
@@ -1397,12 +1380,12 @@ Function:
 
 Parameters:
     void *dl_handle:                    System handle to the loaded library.
-    LPCSTR libraryNameOrPath:           The library that was loaded.
+    const char * libraryNameOrPath:           The library that was loaded.
 
 Return value:
     PAL handle to the loaded library, or nullptr upon failure (error is set via SetLastError()).
 */
-static MODSTRUCT *LOADAddModule(void *dl_handle, LPCSTR libraryNameOrPath)
+static MODSTRUCT *LOADAddModule(void *dl_handle, const char * libraryNameOrPath)
 {
     _ASSERTE(dl_handle != nullptr);
     _ASSERTE(libraryNameOrPath != nullptr);
@@ -1467,13 +1450,13 @@ Function:
 
 Parameters:
     void *dl_handle:                    System handle to the loaded library.
-    LPCSTR libraryNameOrPath:           The library that was loaded.
+    const char * libraryNameOrPath:           The library that was loaded.
     BOOL fDynamic:                      TRUE if dynamic load through LoadLibrary, FALSE if static load through RegisterLibrary.
 
 Return value:
     PAL handle to the loaded library, or nullptr upon failure (error is set via SetLastError()).
 */
-static HMODULE LOADRegisterLibraryDirect(void *dl_handle, LPCSTR libraryNameOrPath, BOOL fDynamic)
+static HMODULE LOADRegisterLibraryDirect(void *dl_handle, const char * libraryNameOrPath, BOOL fDynamic)
 {
     MODSTRUCT *module = LOADAddModule(dl_handle, libraryNameOrPath);
     if (module == nullptr)
@@ -1531,7 +1514,7 @@ Function :
     implementation of LoadLibrary (for use by the A/W variants)
 
 Parameters :
-    LPSTR shortAsciiName : name of module as specified to LoadLibrary
+    char* shortAsciiName : name of module as specified to LoadLibrary
 
     BOOL fDynamic : TRUE if dynamic load through LoadLibrary, FALSE if static load through RegisterLibrary
 
@@ -1539,7 +1522,7 @@ Return value :
     handle to loaded module
 
 --*/
-static HMODULE LOADLoadLibrary(LPCSTR shortAsciiName, BOOL fDynamic)
+static HMODULE LOADLoadLibrary(const char * shortAsciiName, BOOL fDynamic)
 {
     HMODULE module = nullptr;
     void *dl_handle = nullptr;

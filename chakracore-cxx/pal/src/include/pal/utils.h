@@ -59,14 +59,14 @@ Function:
   given set
 
 Parameters :
-    LPWSTR lpwstr :   string to search
-    LPCWSTR charset : list of characters to search for
+    char16_t* lpwstr :   string to search
+    const char16_t* charset : list of characters to search for
                                       
 Return value :
     pointer to first character of lpwstr that isn't in the set
     NULL if all characters are in the set                                                                 
 --*/
-LPWSTR UTIL_inverse_wcspbrk(LPWSTR lpwstr, LPCWSTR charset);
+char16_t* UTIL_inverse_wcspbrk(char16_t* lpwstr, const char16_t* charset);
 
 /*++
 Function : 
@@ -94,7 +94,7 @@ Function :
     Converts a wide string to a multibyte string, allocating the required buffer
     
 Parameters :
-    LPCWSTR lpWideCharStr : string to convert
+    const char16_t* lpWideCharStr : string to convert
     int cchWideChar : number of wide characters to convert
                       (-1 to convert a complete null-termnated string)
     
@@ -104,7 +104,7 @@ Return Value :
     with free().
     In case if failure, LastError will be set.
 --*/
-LPSTR UTIL_WCToMB_Alloc(LPCWSTR lpWideCharStr, int cchWideChar);
+char* UTIL_WCToMB_Alloc(const char16_t* lpWideCharStr, int cchWideChar);
 
 /*++
 Function : 
@@ -113,7 +113,7 @@ Function :
     Converts a multibyte string to a wide string, allocating the required buffer
     
 Parameters :
-    LPCSTR lpMultiByteStr : string to convert
+    const char * lpMultiByteStr : string to convert
     int cbMultiByte : number of bytes to convert 
                       (-1 to convert a complete null-termnated string)
     
@@ -123,7 +123,7 @@ Return Value :
     with free().
     In case if failure, LastError will be set.
 --*/
-LPWSTR UTIL_MBToWC_Alloc(LPCSTR lpMultiByteStr, int cbMultiByte);
+char16_t* UTIL_MBToWC_Alloc(const char * lpMultiByteStr, int cbMultiByte);
 
 #if HAVE_VM_ALLOCATE
 #include <mach/kern_return.h>

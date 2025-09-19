@@ -84,8 +84,8 @@ AutoSystemInfo::Initialize()
     binaryName[0] = u'\0';
 
 #if SYSINFO_IMAGE_BASE_AVAILABLE
-    dllLoadAddress = (UINT_PTR)&__ImageBase;
-    dllHighAddress = (UINT_PTR)&__ImageBase +
+    dllLoadAddress = (unsigned long)&__ImageBase;
+    dllHighAddress = (unsigned long)&__ImageBase +
         ((PIMAGE_NT_HEADERS)(((char *)&__ImageBase) + __ImageBase.e_lfanew))->OptionalHeader.SizeOfImage;
 #endif
 
@@ -156,10 +156,10 @@ AutoSystemInfo::InitPhysicalProcessorCount()
 bool
 AutoSystemInfo::IsJscriptModulePointer(void * ptr)
 {
-    return ((UINT_PTR)ptr >= Data.dllLoadAddress && (UINT_PTR)ptr < Data.dllHighAddress);
+    return ((unsigned long)ptr >= Data.dllLoadAddress && (unsigned long)ptr < Data.dllHighAddress);
 }
 
-UINT_PTR
+unsigned long
 AutoSystemInfo::GetChakraBaseAddr() const
 {
     return dllLoadAddress;
@@ -319,9 +319,9 @@ uint32_t AutoSystemInfo::SaveModuleFileName(HANDLE hMod)
     return ::GetModuleFileNameW((HMODULE)hMod, Data.binaryName, MAX_PATH);
 }
 
-LPCWSTR AutoSystemInfo::GetJscriptDllFileName()
+const char16_t* AutoSystemInfo::GetJscriptDllFileName()
 {
-    return (LPCWSTR)Data.binaryName;
+    return (const char16_t*)Data.binaryName;
 }
 
 bool AutoSystemInfo::IsLowMemoryProcess()
@@ -347,7 +347,7 @@ BOOL AutoSystemInfo::GetAvailableCommit(ULONG64 *pCommit)
 
 void AutoSystemInfo::SetAvailableCommit(ULONG64 commit)
 {
-    ::InterlockedCompareExchange64((volatile LONG64 *)&this->availableCommit, commit, 0);
+    ::InterlockedCompareExchange64((volatile long *)&this->availableCommit, commit, 0);
 }
 
 //
@@ -360,7 +360,7 @@ int32_t AutoSystemInfo::GetJscriptFileVersion(uint32_t* majorVersion, uint32_t* 
     if(AutoSystemInfo::Data.majorVersion == 0 && AutoSystemInfo::Data.minorVersion == 0)
     {
         // uninitialized state  - call the system API to get the version info.
-        LPCWSTR jscriptDllName = GetJscriptDllFileName();
+        const char16_t* jscriptDllName = GetJscriptDllFileName();
         hr = GetVersionInfo(jscriptDllName, majorVersion, minorVersion);
 
         AutoSystemInfo::Data.majorVersion = *majorVersion;
@@ -389,7 +389,7 @@ int32_t AutoSystemInfo::GetJscriptFileVersion(uint32_t* majorVersion, uint32_t* 
 //
 // Returns the major and minor version of the binary passed as argument.
 //
-int32_t AutoSystemInfo::GetVersionInfo(LPCWSTR pszPath, uint32_t* majorVersion, uint32_t* minorVersion)
+int32_t AutoSystemInfo::GetVersionInfo(const char16_t* pszPath, uint32_t* majorVersion, uint32_t* minorVersion)
 {
     // xplat-todo: how to handle version resource?
     *majorVersion = INVALID_VERSION;

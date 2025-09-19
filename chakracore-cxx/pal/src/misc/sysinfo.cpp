@@ -304,7 +304,7 @@ GlobalMemoryStatusEx(
     lpBuffer->ullTotalVirtual = MAX_PROCESS_VA_SPACE_LINUX;
 #else
     // xplat-todo: for all the other unices just use 128TB for now.
-    static const UINT64 _128TB = (1ull << 47);
+    static const unsigned long _128TB = (1ull << 47);
     lpBuffer->ullTotalVirtual = _128TB;
 #endif
     lpBuffer->ullAvailVirtual = lpBuffer->ullAvailPhys;
@@ -328,32 +328,4 @@ BOOL
 PAL_HasGetCurrentProcessorNumber()
 {
     return HAVE_SCHED_GETCPU;
-}
-
-uint32_t
-PAL_GetLogicalCpuCountFromOS()
-{
-    uint32_t numLogicalCores = 0;
-
-#if HAVE_SYSCONF
-    numLogicalCores = sysconf(_SC_NPROCESSORS_ONLN);
-#endif
-
-    return numLogicalCores;
-}
-
-size_t
-PAL_GetLogicalProcessorCacheSizeFromOS()
-{
-    size_t cacheSize = 0;
-
-#if HAVE_SYSCONF && defined(__LINUX__)
-    cacheSize = max(cacheSize, sysconf(_SC_LEVEL1_DCACHE_SIZE));
-    cacheSize = max(cacheSize, sysconf(_SC_LEVEL1_ICACHE_SIZE));
-    cacheSize = max(cacheSize, sysconf(_SC_LEVEL2_CACHE_SIZE));
-    cacheSize = max(cacheSize, sysconf(_SC_LEVEL3_CACHE_SIZE));
-    cacheSize = max(cacheSize, sysconf(_SC_LEVEL4_CACHE_SIZE));
-#endif
-
-    return cacheSize;
 }

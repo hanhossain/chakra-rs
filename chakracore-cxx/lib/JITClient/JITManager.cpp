@@ -151,10 +151,10 @@ JITManager::CreateBinding(
         {
             Assert(waitStatus == WAIT_FAILED);
 #ifdef DBG
-            LPWSTR messageBuffer = nullptr;
+            char16_t* messageBuffer = nullptr;
             uint32_t errorNumber = GetLastError();
             FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-                           NULL, errorNumber, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPWSTR)&messageBuffer, 0, NULL);
+                           NULL, errorNumber, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (char16_t*)&messageBuffer, 0, NULL);
             Output::Print(u"Last error was 0x%x (%s)", errorNumber, messageBuffer);
             LocalFree(messageBuffer);
 #endif

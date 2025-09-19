@@ -30,7 +30,7 @@ namespace Js
             int32_t hr;
             HSTRING hString;
             HSTRING_HEADER hStringHdr;
-            LPCWSTR factoryName = u"Windows.Foundation.Diagnostics.AsyncCausalityTracer";
+            const char16_t* factoryName = u"Windows.Foundation.Diagnostics.AsyncCausalityTracer";
             uint32_t factoryNameLen = _countof(u"Windows.Foundation.Diagnostics.AsyncCausalityTracer") - 1;
             IID factoryIID = __uuidof(IAsyncCausalityTracerStatics);
 
@@ -67,9 +67,9 @@ namespace Js
         _In_ int32_t traceLevel,
         _In_ int32_t source,
         _In_ GUID platformId,
-        _In_ UINT64 operationId,
-        _In_z_ PCWSTR operationName,
-        _In_ UINT64 relatedContext)
+        _In_ unsigned long operationId,
+        _In_z_ const char16_t * operationName,
+        _In_ unsigned long relatedContext)
     {
         int32_t hr;
         HSTRING hString;
@@ -100,7 +100,7 @@ namespace Js
         _In_ int32_t traceLevel,
         _In_ int32_t source,
         _In_ GUID platformId,
-        _In_ UINT64 operationId,
+        _In_ unsigned long operationId,
         _In_ int32_t status)
     {
         Assert(traceLevel <= CausalityTraceLevel::CausalityTraceLevel_Verbose && traceLevel >= CausalityTraceLevel_Required);
@@ -122,7 +122,7 @@ namespace Js
         _In_ int32_t traceLevel,
         _In_ int32_t source,
         _In_ GUID platformId,
-        _In_ UINT64 operationId,
+        _In_ unsigned long operationId,
         _In_ int32_t relation)
     {
         Assert(traceLevel <= CausalityTraceLevel::CausalityTraceLevel_Verbose && traceLevel >= CausalityTraceLevel_Required);
@@ -144,7 +144,7 @@ namespace Js
         _In_ int32_t traceLevel,
         _In_ int32_t source,
         _In_ GUID platformId,
-        _In_ UINT64 operationId,
+        _In_ unsigned long operationId,
         _In_ int32_t work)
     {
         Assert(traceLevel <= CausalityTraceLevel::CausalityTraceLevel_Verbose && traceLevel >= CausalityTraceLevel_Required);

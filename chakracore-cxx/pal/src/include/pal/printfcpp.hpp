@@ -35,16 +35,16 @@ extern "C"
 {
     int
     PAL__vsnprintf(
-        LPSTR Buffer,
+        char* Buffer,
         size_t Count,
-        LPCSTR Format,
+        const char * Format,
         va_list ap);
 
     int
     PAL__wvsnprintf(
-        LPWSTR Buffer,
+        char16_t* Buffer,
         size_t Count,
-        LPCWSTR Format,
+        const char16_t* Format,
         va_list ap);
 
     int
@@ -72,17 +72,17 @@ namespace CorUnix
     int
     InternalWvsnprintf(
         CPalThread *pthrCurrent,
-        LPWSTR Buffer,
+        char16_t* Buffer,
         size_t Count,
-        LPCWSTR Format,
+        const char16_t* Format,
         va_list ap);
 
     int
     InternalVsnprintf(
         CPalThread *pthrCurrent,
-        LPSTR Buffer,
+        char* Buffer,
         size_t Count,
-        LPCSTR Format,
+        const char * Format,
         va_list ap);
 
     int
@@ -97,16 +97,16 @@ namespace CorUnix
 
     int
     PAL__vsnprintf(
-        LPSTR Buffer,
+        char* Buffer,
         size_t Count,
-        LPCSTR Format,
+        const char * Format,
         va_list ap);
 
     int
     PAL__wvsnprintf(
-        LPWSTR Buffer,
+        char16_t* Buffer,
         size_t Count,
-        LPCWSTR Format,
+        const char16_t* Format,
         va_list ap);
 
     int

@@ -65,7 +65,7 @@ static const char FOPEN_FLAGS[] = "wt";
 
 /* global and static variables */
 
-LPCWSTR W16_NULLSTRING = (LPCWSTR) "N\0U\0L\0L\0\0";
+const char16_t* W16_NULLSTRING = (const char16_t*) "N\0U\0L\0L\0\0";
 
 uint32_t dbg_channel_flags[DCI_LAST];
 BOOL g_Dbg_asserts_enabled;
@@ -150,11 +150,11 @@ Function :
 BOOL DBG_init_channels(void)
 {
     int32_t i;
-    LPCSTR env_string;
-    LPSTR env_workstring;
-    LPSTR env_pcache;
-    LPSTR entry_ptr;
-    LPSTR level_ptr;
+    const char * env_string;
+    char* env_workstring;
+    char* env_pcache;
+    char* entry_ptr;
+    char* level_ptr;
     char plus_or_minus;
     uint32_t flag_mask = 0;
     int ret;
@@ -459,10 +459,10 @@ Parameters :
     DBG_CHANNEL_ID channel : debug channel to use
     DBG_LEVEL_ID level : debug message level
     BOOL bHeader : whether or not to output message header (thread id, etc)
-    LPSTR function : current function
-    LPSTR file : current file
+    char* function : current function
+    char* file : current file
     INT line : line number
-    LPSTR format, ... : standard printf parameter list.
+    char* format, ... : standard printf parameter list.
 
 Return Value :
     always 1.
@@ -473,11 +473,11 @@ Notes :
 
 --*/
 int DBG_printf_gcc(DBG_CHANNEL_ID channel, DBG_LEVEL_ID level, BOOL bHeader,
-                   LPCSTR function, LPCSTR file, int32_t line, LPCSTR format, ...)
+                   const char * function, const char * file, int32_t line, const char * format, ...)
 {
     char *buffer = (char*)alloca(DBG_BUFFER_SIZE);
     char indent[MAX_NESTING+1];
-    LPSTR buffer_ptr;
+    char* buffer_ptr;
     int32_t output_size;
     va_list args;
     void *thread_id;
@@ -573,9 +573,9 @@ Parameters :
     DBG_CHANNEL_ID channel : debug channel to use
     DBG_LEVEL_ID level : debug message level
     BOOL bHeader : whether or not to output message header (thread id, etc)
-    LPSTR file : current file
+    char* file : current file
     INT line : line number
-    LPSTR format, ... : standard printf parameter list.
+    char* format, ... : standard printf parameter list.
 
 Return Value :
     always 1.
@@ -587,11 +587,11 @@ Notes :
 
 --*/
 int DBG_printf_c99(DBG_CHANNEL_ID channel, DBG_LEVEL_ID level, BOOL bHeader,
-                   LPSTR file, int32_t line, LPSTR format, ...)
+                   char* file, int32_t line, char* format, ...)
 {
     char *buffer = (char*)alloca(DBG_BUFFER_SIZE);
     char indent[MAX_NESTING+1];
-    LPSTR buffer_ptr;
+    char* buffer_ptr;
     int32_t output_size;
     va_list args;
     static int32_t call_count=0;
@@ -697,13 +697,13 @@ static BOOL DBG_get_indent(DBG_LEVEL_ID level, const char *format,
     {
         if(0 != max_entry_level)
         {
-            INT_PTR nesting;
+            long nesting;
 
             /* Determine if this is an entry or an
                exit */
             if(DLI_EXIT == level)
             {
-                nesting = (INT_PTR) pthread_getspecific(entry_level_key);
+                nesting = (long) pthread_getspecific(entry_level_key);
                 /* avoid going negative */
                 if(nesting != 0)
                 {
@@ -718,7 +718,7 @@ static BOOL DBG_get_indent(DBG_LEVEL_ID level, const char *format,
             }
             else
             {
-                nesting = (INT_PTR) pthread_getspecific(entry_level_key);
+                nesting = (long) pthread_getspecific(entry_level_key);
 
                 if ((ret = pthread_setspecific(entry_level_key,
                                                  (void *)(nesting+1))) != 0)

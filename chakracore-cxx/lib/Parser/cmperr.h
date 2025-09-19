@@ -17,11 +17,11 @@ enum
 class ParseExceptionObject
 {
 public:
-    ParseExceptionObject(int32_t hr, LPCWSTR stringOneIn = u"", LPCWSTR stringTwoIn = u"");
+    ParseExceptionObject(int32_t hr, const char16_t* stringOneIn = u"", const char16_t* stringTwoIn = u"");
     ~ParseExceptionObject();
     int32_t GetError() { return m_hr; }
-    LPCWSTR GetStringOne() { return stringOne; }
-    LPCWSTR GetStringTwo() { return stringTwo; }
+    const char16_t* GetStringOne() { return stringOne; }
+    const char16_t* GetStringTwo() { return stringTwo; }
 private:
     int32_t m_hr;
     BSTR stringOne;

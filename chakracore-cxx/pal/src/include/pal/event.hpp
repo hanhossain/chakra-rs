@@ -34,7 +34,7 @@ namespace CorUnix
         LPSECURITY_ATTRIBUTES lpEventAttributes,
         BOOL bManualReset,
         BOOL bInitialState,
-        LPCWSTR lpName,
+        const char16_t* lpName,
         HANDLE *phEvent
         );
 
@@ -50,7 +50,7 @@ namespace CorUnix
         CPalThread *pThread,
         uint32_t dwDesiredAccess,
         BOOL bInheritHandle,
-        LPCWSTR lpName,
+        const char16_t* lpName,
         HANDLE *phEvent
         );
         

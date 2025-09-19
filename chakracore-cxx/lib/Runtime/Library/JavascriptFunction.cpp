@@ -1583,7 +1583,7 @@ dbl_align:
         return GetNativeFunctionDisplayStringCommon<JavascriptString>(scriptContext, name);
     }
 
-    JavascriptString* JavascriptFunction::GetLibraryCodeDisplayString(ScriptContext *scriptContext, PCWSTR displayName)
+    JavascriptString* JavascriptFunction::GetLibraryCodeDisplayString(ScriptContext *scriptContext, const char16_t * displayName)
     {
         return GetLibraryCodeDisplayStringCommon<JavascriptString, JavascriptString*>(scriptContext, displayName);
     }

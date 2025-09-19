@@ -266,70 +266,6 @@ ExitFileMappingInitializationRoutine:
 
 /*++
 Function:
-  CreateFileMappingA
-
-Note:
-  File mapping are used to do inter-process communication.
-
-See MSDN doc.
---*/
-HANDLE
-CreateFileMappingA(
-                    HANDLE hFile,
-                    LPSECURITY_ATTRIBUTES lpFileMappingAttributes,
-                    uint32_t flProtect,
-                    uint32_t dwMaximumSizeHigh,
-                    uint32_t dwMaximumSizeLow,
-                    LPCSTR lpName)
-{
-    HANDLE hFileMapping = NULL;
-    CPalThread *pThread = NULL;
-    PAL_ERROR palError = NO_ERROR;
-
-    ENTRY("CreateFileMappingA(hFile=%p, lpAttributes=%p, flProtect=%#x, "
-          "dwMaxSizeH=%d, dwMaxSizeL=%d, lpName=%p (%s))\n",
-          hFile, lpFileMappingAttributes, flProtect, 
-          dwMaximumSizeHigh, dwMaximumSizeLow,
-          lpName?lpName:"NULL",
-          lpName?lpName:"NULL");
-
-    pThread = InternalGetCurrentThread();
-
-    if (lpName != nullptr)
-    {
-        ASSERT("lpName: Cross-process named objects are not supported in PAL");
-        palError = ERROR_NOT_SUPPORTED;
-    }
-    else
-    {
-        palError = InternalCreateFileMapping(
-            pThread,
-            hFile,
-            lpFileMappingAttributes,
-            flProtect,
-            dwMaximumSizeHigh,
-            dwMaximumSizeLow,
-            NULL,
-            &hFileMapping
-            );
-    }
-
-
-    //
-    // We always need to set last error, even on success:
-    // we need to protect ourselves from the situation
-    // where last error is set to ERROR_ALREADY_EXISTS on
-    // entry to the function
-    //
-
-    pThread->SetLastError(palError);
-
-    LOGEXIT( "CreateFileMappingA returns HANDLE %p. \n", hFileMapping );
-    return hFileMapping;
-}
-
-/*++
-Function:
   CreateFileMappingW
 
 Note:
@@ -344,7 +280,7 @@ CreateFileMappingW(
                 uint32_t flProtect,
                 uint32_t dwMaximumSizeHigh,
                 uint32_t dwMaximumSizeLow,
-                LPCWSTR lpName)
+                const char16_t* lpName)
 {
     HANDLE hFileMapping = NULL;
     CPalThread *pThread = NULL;
@@ -389,7 +325,7 @@ CorUnix::InternalCreateFileMapping(
     uint32_t flProtect,
     uint32_t dwMaximumSizeHigh,
     uint32_t dwMaximumSizeLow,
-    LPCWSTR lpName,
+    const char16_t* lpName,
     HANDLE *phMapping
     )
 {
@@ -758,46 +694,6 @@ ExitInternalCreateFileMapping:
     return palError;
 }
 
-/*++
-Function:
-  OpenFileMappingA
-
-See MSDN doc.
---*/
-HANDLE
-OpenFileMappingA(
-          uint32_t dwDesiredAccess,
-          BOOL bInheritHandle,
-          LPCSTR lpName)
-{
-    HANDLE hFileMapping = NULL;
-    CPalThread *pThread = NULL;
-    PAL_ERROR palError = NO_ERROR;
-
-    ENTRY("OpenFileMappingA(dwDesiredAccess=%u, bInheritHandle=%d, lpName=%p (%s)\n",
-          dwDesiredAccess, bInheritHandle, lpName?lpName:"NULL", lpName?lpName:"NULL");
-
-    pThread = InternalGetCurrentThread();
-
-    if (lpName == nullptr)
-    {
-        ERROR("name is NULL\n");
-        palError = ERROR_INVALID_PARAMETER;
-    }
-    else
-    {
-        ASSERT("lpName: Cross-process named objects are not supported in PAL");
-        palError = ERROR_NOT_SUPPORTED;
-    }
-
-    if (NO_ERROR != palError)
-    {
-        pThread->SetLastError(palError);
-    }
-    LOGEXIT( "OpenFileMappingA returning %p\n", hFileMapping );
-    return hFileMapping;
-}
-
 
 /*++
 Function:
@@ -809,7 +705,7 @@ HANDLE
 OpenFileMappingW(
           uint32_t dwDesiredAccess,
           BOOL bInheritHandle,
-          LPCWSTR lpName)
+          const char16_t* lpName)
 {
     HANDLE hFileMapping = NULL;
     PAL_ERROR palError = NO_ERROR;
@@ -845,7 +741,7 @@ CorUnix::InternalOpenFileMapping(
     CPalThread *pThread,
     uint32_t dwDesiredAccess,
     BOOL bInheritHandle,
-    LPCWSTR lpName,
+    const char16_t* lpName,
     HANDLE *phMapping
     )
 {
@@ -1965,12 +1861,12 @@ BOOL MAPGetRegionInfo(void * lpAddress,
 
         MappedSize = ((real_map_sz-1) & ~VIRTUAL_PAGE_MASK) + VIRTUAL_PAGE_SIZE; 
         if ( real_map_addr <= lpAddress && 
-             (void *)((UINT_PTR)real_map_addr+MappedSize) > lpAddress )
+             (void *)((unsigned long)real_map_addr+MappedSize) > lpAddress )
         {
             if (lpBuffer)
             {
-                size_t regionSize = MappedSize + (UINT_PTR) real_map_addr - 
-                       ((UINT_PTR) lpAddress & ~VIRTUAL_PAGE_MASK);
+                size_t regionSize = MappedSize + (unsigned long) real_map_addr - 
+                       ((unsigned long) lpAddress & ~VIRTUAL_PAGE_MASK);
 
                 lpBuffer->BaseAddress = lpAddress;
                 lpBuffer->AllocationProtect = 0;

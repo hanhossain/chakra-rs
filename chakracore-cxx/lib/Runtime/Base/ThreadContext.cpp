@@ -792,7 +792,7 @@ ThreadContext::FindPropertyRecord(Js::JavascriptString *pstName, Js::PropertyRec
     }
 
     // GetString is not guaranteed to be null-terminated, but we explicitly pass length to the next step
-    LPCWCH propertyName = pstName->GetString();
+    const char16_t * propertyName = pstName->GetString();
     FindPropertyRecord(propertyName, pstName->GetLength(), propertyRecord);
 
     if (*propertyRecord)
@@ -802,7 +802,7 @@ ThreadContext::FindPropertyRecord(Js::JavascriptString *pstName, Js::PropertyRec
 }
 
 void
-ThreadContext::FindPropertyRecord(LPCWCH propertyName, int propertyNameLength, Js::PropertyRecord const ** propertyRecord)
+ThreadContext::FindPropertyRecord(const char16_t * propertyName, int propertyNameLength, Js::PropertyRecord const ** propertyRecord)
 {
     EnterPinnedScope((volatile void **)propertyRecord);
     *propertyRecord = FindPropertyRecord(propertyName, propertyNameLength);
@@ -844,7 +844,7 @@ ThreadContext::FindPropertyRecord(const char16_t * propertyName, int propertyNam
 }
 
 Js::PropertyRecord const *
-ThreadContext::UncheckedAddPropertyId(LPCWSTR propertyName, int propertyNameLength, bool bind, bool isSymbol)
+ThreadContext::UncheckedAddPropertyId(const char16_t* propertyName, int propertyNameLength, bool bind, bool isSymbol)
 {
     return UncheckedAddPropertyId(JsUtil::CharacterBuffer<char16_t>(propertyName, propertyNameLength), bind, isSymbol);
 }
@@ -1100,7 +1100,7 @@ ThreadContext::BindPropertyRecord(const Js::PropertyRecord * propertyRecord)
     }
 }
 
-void ThreadContext::GetOrAddPropertyId(_In_ LPCWSTR propertyName, _In_ int propertyNameLength, _Out_ Js::PropertyRecord const ** propertyRecord)
+void ThreadContext::GetOrAddPropertyId(_In_ const char16_t* propertyName, _In_ int propertyNameLength, _Out_ Js::PropertyRecord const ** propertyRecord)
 {
     GetOrAddPropertyId(JsUtil::CharacterBuffer<char16_t>(propertyName, propertyNameLength), propertyRecord);
 }
@@ -1233,7 +1233,7 @@ void ThreadContext::CreateNoCasePropertyMap()
 }
 
 JsUtil::List<const RecyclerWeakReference<Js::PropertyRecord const>*>*
-ThreadContext::FindPropertyIdNoCase(Js::ScriptContext * scriptContext, LPCWSTR propertyName, int propertyNameLength)
+ThreadContext::FindPropertyIdNoCase(Js::ScriptContext * scriptContext, const char16_t* propertyName, int propertyNameLength)
 {
     return ThreadContext::FindPropertyIdNoCase(scriptContext, JsUtil::CharacterBuffer<char16_t>(propertyName,  propertyNameLength));
 }
@@ -2218,7 +2218,7 @@ void ThreadContext::ReleaseDebugManager()
 #endif
 
 Js::TempArenaAllocatorObject *
-ThreadContext::GetTemporaryAllocator(LPCWSTR name)
+ThreadContext::GetTemporaryAllocator(const char16_t* name)
 {
     AssertCanHandleOutOfMemory();
 
@@ -2249,7 +2249,7 @@ ThreadContext::ReleaseTemporaryAllocator(Js::TempArenaAllocatorObject * tempAllo
 
 
 Js::TempGuestArenaAllocatorObject *
-ThreadContext::GetTemporaryGuestAllocator(LPCWSTR name)
+ThreadContext::GetTemporaryGuestAllocator(const char16_t* name)
 {
     AssertCanHandleOutOfMemory();
 
@@ -3584,7 +3584,7 @@ ThreadContext::InvalidatePropertyGuardEntry(const Js::PropertyRecord* propertyRe
             {
                 uint8_t dummy;
                 Js::FunctionEntryPointInfo* functionEntryPoint = caller->GetFunctionBody()->GetDefaultFunctionEntryPointInfo();
-                if (functionEntryPoint->IsInNativeAddressRange((DWORD_PTR)stackWalker.GetInstructionPointer()))
+                if (functionEntryPoint->IsInNativeAddressRange((unsigned long)stackWalker.GetInstructionPointer()))
                 {
                     if (entry->entryPoints->TryGetValue(functionEntryPoint, &dummy))
                     {
@@ -4331,7 +4331,7 @@ Js::Var ThreadContext::GetMemoryStat(Js::ScriptContext* scriptContext)
     return dumper.Dump();
 }
 
-void ThreadContext::SetAutoProxyName(LPCWSTR objectName)
+void ThreadContext::SetAutoProxyName(const char16_t* objectName)
 {
     recyclableData->autoProxyName = objectName;
 }
@@ -4581,7 +4581,7 @@ ThreadContext::ClearRootTrackerScriptContext(Js::ScriptContext * scriptContext)
 }
 #endif
 
-AutoTagNativeLibraryEntry::AutoTagNativeLibraryEntry(Js::RecyclableObject* function, Js::CallInfo callInfo, PCWSTR name, void* addr)
+AutoTagNativeLibraryEntry::AutoTagNativeLibraryEntry(Js::RecyclableObject* function, Js::CallInfo callInfo, const char16_t * name, void* addr)
 {
     // Save function/callInfo values (for StackWalker). Compiler may stackpack/optimize them for built-in native functions.
     entry.function = function;

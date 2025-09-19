@@ -221,132 +221,6 @@ CFStringEncoding CODEPAGECPToCFStringEncoding(uint32_t codepage)
 
 /*++
 Function:
-CharNextA
-
-Parameters
-
-lpsz
-[in] Pointer to a character in a null-terminated string.
-
-Return Values
-
-A pointer to the next character in the string, or to the terminating null character if at the end of the string, indicates success.
-
-If lpsz points to the terminating null character, the return value is equal to lpsz.
-
-See MSDN doc.
---*/
-LPSTR
-CharNextA(
-   LPCSTR lpsz)
-{
-    LPSTR pRet;
-    ENTRY("CharNextA (lpsz=%p (%s))\n", lpsz?lpsz:NULL, lpsz?lpsz:NULL);
-
-    pRet = CharNextExA(GetACP(), lpsz, 0);
-
-    LOGEXIT ("CharNextA returns LPSTR %p\n", pRet);
-    return pRet;
-}
-
-
-/*++
-Function:
-CharNextExA
-
-See MSDN doc.
---*/
-LPSTR
-CharNextExA(
-     uint16_t CodePage,
-     LPCSTR lpCurrentChar,
-     uint32_t dwFlags)
-{
-    LPSTR pRet = (LPSTR) lpCurrentChar;
-
-    ENTRY("CharNextExA (CodePage=%hu, lpCurrentChar=%p (%s), dwFlags=%#x)\n",
-    CodePage, lpCurrentChar?lpCurrentChar:"NULL", lpCurrentChar?lpCurrentChar:"NULL", dwFlags);
-
-    if ((lpCurrentChar != NULL) && (*lpCurrentChar != 0))
-    {
-        pRet += (*(lpCurrentChar+1) != 0) &&
-            IsDBCSLeadByteEx(CodePage, *lpCurrentChar) ?  2 : 1;
-    }
-
-    LOGEXIT("CharNextExA returns LPSTR:%p (%s)\n", pRet, pRet);
-    return pRet;
-}
-
-
-
-/*++
-Function:
-AreFileApisANSI
-
-The AreFileApisANSI function determines whether the file I/O functions
-are using the ANSI or OEM character set code page. This function is
-useful for 8-bit console input and output operations.
-
-Return Values
-
-If the set of file I/O functions is using the ANSI code page, the return value is nonzero.
-
-If the set of file I/O functions is using the OEM code page, the return value is zero.
-
-In the ROTOR version we always return true since there is no concept
-of OEM code pages.
-
---*/
-BOOL
-AreFileApisANSI(
-    void)
-{
-    ENTRY("AreFileApisANSI ()\n");
-
-    LOGEXIT("AreFileApisANSI returns BOOL TRUE\n");
-    return TRUE;
-}
-
-
-/*++
-Function:
-GetConsoleCP
-
-See MSDN doc.
---*/
-uint32_t
-GetConsoleCP(
-     void)
-{
-    uint32_t nRet = 0;
-    ENTRY("GetConsoleCP()\n");
-
-    nRet = GetACP();
-
-    LOGEXIT("GetConsoleCP returns UINT %d\n", nRet );
-    return nRet;
-}
-
-/*++
-Function:
-GetConsoleOutputCP
-
-See MSDN doc.
---*/
-uint32_t
-GetConsoleOutputCP(
-       void)
-{
-    uint32_t nRet = 0;
-    ENTRY("GetConsoleOutputCP()\n");
-    nRet = GetACP();
-    LOGEXIT("GetConsoleOutputCP returns UINT %d \n", nRet );
-    return nRet;
-}
-
-
-/*++
-Function:
 IsValidCodePage
 
 See MSDN doc.
@@ -529,9 +403,9 @@ int
 MultiByteToWideChar(
          uint32_t CodePage,
          uint32_t dwFlags,
-         LPCSTR lpMultiByteStr,
+         const char * lpMultiByteStr,
          int cbMultiByte,
-         LPWSTR lpWideCharStr,
+         char16_t* lpWideCharStr,
          int cchWideChar)
 {
     int32_t retval =0;
@@ -557,7 +431,7 @@ MultiByteToWideChar(
         (lpMultiByteStr == NULL) ||
         ((cchWideChar != 0) &&
         ((lpWideCharStr == NULL) ||
-        (lpMultiByteStr == (LPSTR)lpWideCharStr))) )
+        (lpMultiByteStr == (char*)lpWideCharStr))) )
     {
         ERROR("Error lpMultiByteStr parameters are invalid\n");
         SetLastError(ERROR_INVALID_PARAMETER);
@@ -653,11 +527,11 @@ int
 WideCharToMultiByte(
          uint32_t CodePage,
          uint32_t dwFlags,
-         LPCWSTR lpWideCharStr,
+         const char16_t* lpWideCharStr,
          int cchWideChar,
-         LPSTR lpMultiByteStr,
+         char* lpMultiByteStr,
          int cbMultiByte,
-         LPCSTR lpDefaultChar,
+         const char * lpDefaultChar,
          LPBOOL lpUsedDefaultChar)
 {
     int32_t retval =0;
@@ -694,7 +568,7 @@ WideCharToMultiByte(
         (lpWideCharStr == NULL) ||
         ((cbMultiByte != 0) &&
         ((lpMultiByteStr == NULL) ||
-        (lpWideCharStr == (LPWSTR)lpMultiByteStr))) )
+        (lpWideCharStr == (char16_t*)lpMultiByteStr))) )
     {
         ERROR("Error lpWideCharStr parameters are invalid\n");
         SetLastError(ERROR_INVALID_PARAMETER);
@@ -717,7 +591,7 @@ WideCharToMultiByte(
     charsToConvert = cchWideChar;
     if (charsToConvert == -1)
     {
-        LPCWSTR ptr = lpWideCharStr;
+        const char16_t* ptr = lpWideCharStr;
 
         charsToConvert = 0;
         while(*ptr++ != 0)
@@ -815,21 +689,21 @@ Returns number of characters retrieved, 0 if it failed.
 --*/
 int
 PAL_GetResourceString(
-         LPCSTR lpDomain,
-         LPCSTR lpResourceStr,
-         LPWSTR lpWideCharStr,
+         const char * lpDomain,
+         const char * lpResourceStr,
+         char16_t* lpWideCharStr,
          int cchWideChar
       )
 {
 #if !defined(__APPLE__)
     // NOTE: dgettext returns the key if it fails to locate the appropriate
     // resource. In our case, that will be the English string.
-    LPCSTR resourceString = dgettext(lpDomain, lpResourceStr);
+    const char * resourceString = dgettext(lpDomain, lpResourceStr);
 #else // __APPLE__
     // UNIXTODO: Implement for OSX using the native localization API
 
     // This is a temporary solution until we add the real native resource support.
-    LPCSTR resourceString = lpResourceStr;
+    const char * resourceString = lpResourceStr;
 #endif // __APPLE__
 
     int length = strlen(resourceString);

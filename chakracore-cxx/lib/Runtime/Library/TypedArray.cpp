@@ -1605,7 +1605,7 @@ namespace Js
         return JavascriptArray::CopyWithinHelper(nullptr, typedArrayBase, typedArrayBase, length, args, scriptContext);
     }
 
-    Var TypedArrayBase::GetKeysEntriesValuesHelper(Arguments& args, ScriptContext *scriptContext, LPCWSTR apiName, JavascriptArrayIteratorKind kind)
+    Var TypedArrayBase::GetKeysEntriesValuesHelper(Arguments& args, ScriptContext *scriptContext, const char16_t* apiName, JavascriptArrayIteratorKind kind)
     {
         TypedArrayBase* typedArrayBase = ValidateTypedArray(args, scriptContext, apiName);
 #ifdef ENABLE_JS_BUILTINS
@@ -2527,7 +2527,7 @@ namespace Js
     }
 
     // static
-    TypedArrayBase * TypedArrayBase::ValidateTypedArray(Arguments &args, ScriptContext *scriptContext, LPCWSTR apiName)
+    TypedArrayBase * TypedArrayBase::ValidateTypedArray(Arguments &args, ScriptContext *scriptContext, const char16_t* apiName)
     {
         if (args.Info.Count == 0)
         {
@@ -2538,7 +2538,7 @@ namespace Js
     }
 
     // static
-    TypedArrayBase* TypedArrayBase::ValidateTypedArray(Var aValue, ScriptContext *scriptContext, LPCWSTR apiName)
+    TypedArrayBase* TypedArrayBase::ValidateTypedArray(Var aValue, ScriptContext *scriptContext, const char16_t* apiName)
     {
         TypedArrayBase *typedArrayBase = JavascriptOperators::TryFromVar<Js::TypedArrayBase>(aValue);
         if (!typedArrayBase)
@@ -3313,7 +3313,7 @@ namespace Js
     {
         ScriptContext* scriptContext = GetScriptContext();
         // A typed array is Integer Indexed Exotic object, so doing a get translates to 9.4.5.9 IntegerIndexedElementSet
-        LPCWSTR asString = (Js::JavascriptConversion::ToString(value, scriptContext))->GetSz();
+        const char16_t* asString = (Js::JavascriptConversion::ToString(value, scriptContext))->GetSz();
 
         if (this->IsDetachedBuffer())
         {

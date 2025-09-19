@@ -18,7 +18,7 @@ class WScriptJsrt
 public:
     static bool Initialize();
     static bool Uninitialize();
-    static JsErrorCode ModuleEntryPoint(LPCSTR fileName, LPCSTR fileContent, LPCSTR fullName);
+    static JsErrorCode ModuleEntryPoint(const char * fileName, const char * fileContent, const char * fullName);
 
     class CallbackMessage : public MessageBase
     {
@@ -30,8 +30,8 @@ public:
         CallbackMessage(unsigned int time, JsValueRef function);
         ~CallbackMessage();
 
-        int32_t Call(LPCSTR fileName);
-        int32_t CallFunction(LPCSTR fileName);
+        int32_t Call(const char * fileName);
+        int32_t CallFunction(const char * fileName);
         template <class Func>
         static CallbackMessage* Create(JsValueRef function, const Func& func, unsigned int time = 0)
         {
@@ -51,7 +51,7 @@ public:
     public:
         ~ModuleMessage();
 
-        virtual int32_t Call(LPCSTR fileName) override;
+        virtual int32_t Call(const char * fileName) override;
 
         static ModuleMessage* Create(JsModuleRecord module, JsValueRef specifier, std::string* fullPath = nullptr)
         {
@@ -64,14 +64,14 @@ public:
     static void PushMessage(MessageBase *message) { messageQueue->InsertSorted(message); }
 
     static JsErrorCode FetchImportedModule(_In_ JsModuleRecord referencingModule, _In_ JsValueRef specifier, _Outptr_result_maybenull_ JsModuleRecord* dependentModuleRecord);
-    static JsErrorCode FetchImportedModuleFromScript(_In_ DWORD_PTR dwReferencingSourceContext, _In_ JsValueRef specifier, _Outptr_result_maybenull_ JsModuleRecord* dependentModuleRecord);
+    static JsErrorCode FetchImportedModuleFromScript(_In_ unsigned long dwReferencingSourceContext, _In_ JsValueRef specifier, _Outptr_result_maybenull_ JsModuleRecord* dependentModuleRecord);
     static JsErrorCode NotifyModuleReadyCallback(_In_opt_ JsModuleRecord referencingModule, _In_opt_ JsValueRef exceptionVar);
     static JsErrorCode ReportModuleCompletionCallback(JsModuleRecord module, JsValueRef exception);
     static JsErrorCode CALLBACK InitializeImportMetaCallback(_In_opt_ JsModuleRecord referencingModule, _In_opt_ JsValueRef importMetaVar);
     static void CALLBACK PromiseContinuationCallback(JsValueRef task, void *callbackState);
     static void CALLBACK PromiseRejectionTrackerCallback(JsValueRef promise, JsValueRef reason, bool handled, void *callbackState);
 
-    static LPCWSTR ConvertErrorCodeToMessage(JsErrorCode errorCode)
+    static const char16_t* ConvertErrorCodeToMessage(JsErrorCode errorCode)
     {
         switch (errorCode)
         {
@@ -103,19 +103,19 @@ public:
     static void CALLBACK JsContextBeforeCollectCallback(JsRef contextRef, void *data);
 #endif
 
-    static bool PrintException(LPCSTR fileName, JsErrorCode jsErrorCode, JsValueRef exception = nullptr);
-    static JsValueRef LoadScript(JsValueRef callee, LPCSTR fileName, LPCSTR fileContent, LPCSTR scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile);
-    static DWORD_PTR GetNextSourceContext();
+    static bool PrintException(const char * fileName, JsErrorCode jsErrorCode, JsValueRef exception = nullptr);
+    static JsValueRef LoadScript(JsValueRef callee, const char * fileName, const char * fileContent, const char * scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile);
+    static unsigned long GetNextSourceContext();
     static JsValueRef LoadScriptFileHelper(JsValueRef callee, JsValueRef *arguments, unsigned short argumentCount, bool isSourceModule);
     static JsValueRef LoadScriptHelper(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState, bool isSourceModule);
     static bool InstallObjectsOnObject(JsValueRef object, const char* name, JsNativeFunction nativeFunction);
     static void FinalizeFree(void * addr);
-    static void RegisterScriptDir(DWORD_PTR sourceContext, LPCSTR fullDirNarrow);
+    static void RegisterScriptDir(unsigned long sourceContext, const char * fullDirNarrow);
 private:
-    static void SetExceptionIf(JsErrorCode errorCode, LPCWSTR errorMessage);
+    static void SetExceptionIf(JsErrorCode errorCode, const char16_t* errorMessage);
     static bool CreateArgumentsObject(JsValueRef *argsObject);
     static bool CreateNamedFunction(const char*, JsNativeFunction callback, JsValueRef* functionVar);
-    static void GetDir(LPCSTR fullPathNarrow, std::string *fullDirNarrow);
+    static void GetDir(const char * fullPathNarrow, std::string *fullDirNarrow);
     static JsValueRef CALLBACK EchoCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
     static JsValueRef CALLBACK QuitCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
     static JsValueRef CALLBACK LoadScriptFileCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
@@ -130,7 +130,7 @@ private:
     static JsValueRef CALLBACK DumpFunctionPositionCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
     static JsValueRef CALLBACK RequestAsyncBreakCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
 
-    static JsErrorCode CALLBACK LoadModuleFromString(LPCSTR fileName, LPCSTR fileContent, LPCSTR fullName = nullptr, bool isFile = false);
+    static JsErrorCode CALLBACK LoadModuleFromString(const char * fileName, const char * fileContent, const char * fullName = nullptr, bool isFile = false);
 
     static JsValueRef CALLBACK LoadBinaryFileCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
     static JsValueRef CALLBACK LoadTextFileCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
@@ -149,12 +149,12 @@ private:
     static JsValueRef CALLBACK SerializeObject(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
     static JsValueRef CALLBACK Deserialize(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
 
-    static JsErrorCode FetchImportedModuleHelper(JsModuleRecord referencingModule, JsValueRef specifier, JsModuleRecord* dependentModuleRecord, LPCSTR refdir = nullptr);
+    static JsErrorCode FetchImportedModuleHelper(JsModuleRecord referencingModule, JsValueRef specifier, JsModuleRecord* dependentModuleRecord, const char * refdir = nullptr);
 
     static MessageQueue *messageQueue;
-    static DWORD_PTR sourceContext;
+    static unsigned long sourceContext;
     static std::map<std::string, JsModuleRecord> moduleRecordMap;
     static std::map<JsModuleRecord, std::string> moduleDirMap;
     static std::map<JsModuleRecord, ModuleState> moduleErrMap;
-    static std::map<DWORD_PTR, std::string> scriptDirMap;
+    static std::map<unsigned long, std::string> scriptDirMap;
 };

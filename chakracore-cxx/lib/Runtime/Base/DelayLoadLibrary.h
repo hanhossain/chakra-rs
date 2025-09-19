@@ -24,7 +24,7 @@ namespace Js
         typedef FNCWindowsCreateStringReference* PFNCWindowsCreateStringReference;
         PFNCWindowsCreateStringReference m_pfnWindowsCreateStringReference;
 
-        typedef PCWSTR FNCWindowsGetStringRawBuffer(HSTRING, uint32_t*);
+        typedef const char16_t * FNCWindowsGetStringRawBuffer(HSTRING, uint32_t*);
         typedef FNCWindowsGetStringRawBuffer* PFNCWindowsGetStringRawBuffer;
         PFNCWindowsGetStringRawBuffer m_pfWindowsGetStringRawBuffer;
 
@@ -56,7 +56,7 @@ namespace Js
         virtual int32_t WindowsCreateString(_In_reads_opt_(length) const char16_t * sourceString, uint32_t length, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * string);
         virtual int32_t WindowsCreateStringReference(_In_reads_opt_(length + 1) const char16_t * sourceString, uint32_t length, _Out_ HSTRING_HEADER * header, _Outptr_result_maybenull_ _Result_nullonfailure_  HSTRING * string);
         virtual int32_t WindowsDeleteString(_In_opt_ HSTRING string);
-        virtual PCWSTR WindowsGetStringRawBuffer(_In_opt_ HSTRING string, _Out_opt_ uint32_t * length);
+        virtual const char16_t * WindowsGetStringRawBuffer(_In_opt_ HSTRING string, _Out_opt_ uint32_t * length);
         virtual int32_t WindowsCompareStringOrdinal(_In_opt_ HSTRING string1, _In_opt_ HSTRING string2, _Out_ int32_t * result);
         virtual int32_t WindowsDuplicateString(_In_opt_ HSTRING original, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * newString);
     };

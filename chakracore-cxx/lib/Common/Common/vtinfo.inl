@@ -8,9 +8,9 @@
 
 // static
 template <typename T>
-inline INT_PTR VirtualTableInfo<T>::RegisterVirtualTable()
+inline long VirtualTableInfo<T>::RegisterVirtualTable()
 {
-    INT_PTR vtable = *(INT_PTR const*)&T(VirtualTableInfoCtorValue);
+    long vtable = *(long const*)&T(VirtualTableInfoCtorValue);
 
 #if DBG
 #if ENABLE_VALIDATE_VTABLE_CTOR

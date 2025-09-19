@@ -405,7 +405,7 @@ private:
         }
 
 #ifdef ENABLE_TEST_HOOKS
-        static int32_t GenerateValidPointersMapHeader(LPCWSTR vpmFullPath);
+        static int32_t GenerateValidPointersMapHeader(const char16_t* vpmFullPath);
         static int32_t GenerateValidPointersMapForBlockType(FILE* file);
 #endif
     };
@@ -415,7 +415,7 @@ private:
 
 public:
 #ifdef ENABLE_TEST_HOOKS
-    static int32_t GenerateValidPointersMapHeader(LPCWSTR vpmFullPath)
+    static int32_t GenerateValidPointersMapHeader(const char16_t* vpmFullPath)
     {
         return smallAllocValidPointersMap.GenerateValidPointersMapHeader(vpmFullPath);
     }

@@ -158,12 +158,12 @@ namespace Js
         static uint32 GetOffsetOfConstructorCache() { return offsetof(JavascriptFunction, constructorCache); };
 
         static JavascriptString* GetNativeFunctionDisplayString(ScriptContext *scriptContext, JavascriptString *name);
-        static JavascriptString* GetLibraryCodeDisplayString(ScriptContext* scriptContext, PCWSTR displayName);
+        static JavascriptString* GetLibraryCodeDisplayString(ScriptContext* scriptContext, const char16_t * displayName);
 
         template <class StringHelper, class String, class ScriptContext>
         static String GetNativeFunctionDisplayStringCommon(ScriptContext* scriptContext, String name);
         template <class StringHelper, class String, class ScriptContext>
-        static String GetLibraryCodeDisplayStringCommon(ScriptContext* scriptContext, PCWSTR displayName);
+        static String GetLibraryCodeDisplayStringCommon(ScriptContext* scriptContext, const char16_t * displayName);
 
         FunctionInfo * GetFunctionInfo() const { return functionInfo; }
         void SetFunctionInfo(FunctionInfo *info) { functionInfo = info; }
@@ -282,7 +282,7 @@ namespace Js
     }
 
     template <class StringHelper, class String, class ScriptContext>
-    String JavascriptFunction::GetLibraryCodeDisplayStringCommon(ScriptContext* scriptContext, PCWSTR displayName)
+    String JavascriptFunction::GetLibraryCodeDisplayStringCommon(ScriptContext* scriptContext, const char16_t * displayName)
     {
         String sourceString;
         if(wcscmp(displayName, Js::Constants::AnonymousFunction) == 0)

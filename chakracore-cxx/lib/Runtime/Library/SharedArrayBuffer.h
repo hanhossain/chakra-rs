@@ -10,7 +10,7 @@ namespace Js
 {
 
     class WaiterList;
-    typedef JsUtil::List<DWORD_PTR, HeapAllocator> SharableAgents;
+    typedef JsUtil::List<unsigned long, HeapAllocator> SharableAgents;
     typedef JsUtil::BaseDictionary<uint, WaiterList *, HeapAllocator> IndexToWaitersMap;
 
     class SharedContents
@@ -37,8 +37,8 @@ namespace Js
         // This is mainly used for validation purpose as the wait/wake APIs should be used on the agents (Workers) among which this buffer is shared.
         SharableAgents *allowedAgents;
         CriticalSection csAgent;
-        void AddAgent(DWORD_PTR agent);
-        bool IsValidAgent(DWORD_PTR agent);
+        void AddAgent(unsigned long agent);
+        bool IsValidAgent(unsigned long agent);
 #endif
 
         void Cleanup();
@@ -170,10 +170,10 @@ namespace Js
     {
     public:
         AgentOfBuffer() :identity(NULL), event(NULL) {}
-        AgentOfBuffer(DWORD_PTR agent, HANDLE e) :identity(agent), event(e) {}
+        AgentOfBuffer(unsigned long agent, HANDLE e) :identity(agent), event(e) {}
         static bool AgentCanSuspend(ScriptContext *scriptContext);
 
-        DWORD_PTR identity;
+        unsigned long identity;
         HANDLE event;
     };
 
@@ -185,15 +185,15 @@ namespace Js
         WaiterList();
         void Cleanup();
 
-        bool _Requires_lock_held_(csForAccess.cs) AddAndSuspendWaiter(DWORD_PTR waiter, uint32 timeout);
-        void RemoveWaiter(DWORD_PTR waiter);
+        bool _Requires_lock_held_(csForAccess.cs) AddAndSuspendWaiter(unsigned long waiter, uint32 timeout);
+        void RemoveWaiter(unsigned long waiter);
         uint32 RemoveAndWakeWaiters(int32 count);
 
         CriticalSection * GetCriticalSectionForAccess() { return &csForAccess; }
 
     private:
         void InitWaiterList();
-        bool Contains(DWORD_PTR agent);
+        bool Contains(unsigned long agent);
 
         Waiters * m_waiters;
 

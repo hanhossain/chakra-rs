@@ -141,8 +141,8 @@ namespace Js
         // Returns false if this is not a TypedArray or it's not detached
         static BOOL IsDetachedTypedArray(Var aValue);
         static int32_t GetBuffer(Var aValue, ArrayBuffer** outBuffer, uint32* outOffset, uint32* outLength);
-        static TypedArrayBase * ValidateTypedArray(Var aValue, ScriptContext *scriptContext, LPCWSTR apiName);
-        static TypedArrayBase * ValidateTypedArray(Arguments &args, ScriptContext *scriptContext, LPCWSTR apiName);
+        static TypedArrayBase * ValidateTypedArray(Var aValue, ScriptContext *scriptContext, const char16_t* apiName);
+        static TypedArrayBase * ValidateTypedArray(Arguments &args, ScriptContext *scriptContext, const char16_t* apiName);
         static Var TypedArrayCreate(Var constructor, Arguments *args, uint32 length, ScriptContext *scriptContext);
 
         virtual BOOL DirectSetItem(uint32 index, Js::Var value) = 0;
@@ -188,7 +188,7 @@ namespace Js
         Var FindMinOrMax(Js::ScriptContext * scriptContext, TypeId typeId, bool findMax);
         template<typename T, bool checkNaNAndNegZero> Var FindMinOrMax(Js::ScriptContext * scriptContext, bool findMax);
 
-        static Var GetKeysEntriesValuesHelper(Arguments& args, ScriptContext *scriptContext, LPCWSTR apiName, JavascriptArrayIteratorKind kind);
+        static Var GetKeysEntriesValuesHelper(Arguments& args, ScriptContext *scriptContext, const char16_t* apiName, JavascriptArrayIteratorKind kind);
 
         static uint32 GetFromIndex(Var arg, uint32 length, ScriptContext *scriptContext);
 
