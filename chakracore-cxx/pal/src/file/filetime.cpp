@@ -146,65 +146,6 @@ CompareFileTime(
 }
 
 
-
-/*++
-Function:
-  SetFileTime
-
-Notes: This function will drop one digit (radix 10) of precision from
-the supplied times, since Unix can set to the microsecond (at most, i.e.
-if the futimes() function is available).
-
-As noted in the file header, there is no analog to "creation time" on Unix
-systems, so the lpCreationTime argument to this function will always be
-ignored, and the inode change time will be set to the current time.
---*/
-BOOL
-SetFileTime(
-         HANDLE hFile,
-         const FILETIME *lpCreationTime,
-         const FILETIME *lpLastAccessTime,
-         const FILETIME *lpLastWriteTime)
-{
-    CPalThread *pThread;
-    PAL_ERROR palError = NO_ERROR;
-    const unsigned long MAX_FILETIMEVALUE = 0x8000000000000000LL;
-
-    ENTRY("SetFileTime(hFile=%p, lpCreationTime=%p, lpLastAccessTime=%p, "
-          "lpLastWriteTime=%p)\n", hFile, lpCreationTime, lpLastAccessTime, 
-          lpLastWriteTime);
-
-    pThread = InternalGetCurrentThread();
-
-    /* validate filetime values */
-    if ( (lpCreationTime && (((unsigned long)lpCreationTime->dwHighDateTime   << 32) + 
-          lpCreationTime->dwLowDateTime   >= MAX_FILETIMEVALUE)) ||        
-         (lpLastAccessTime && (((unsigned long)lpLastAccessTime->dwHighDateTime << 32) + 
-          lpLastAccessTime->dwLowDateTime >= MAX_FILETIMEVALUE)) ||
-         (lpLastWriteTime && (((unsigned long)lpLastWriteTime->dwHighDateTime  << 32) + 
-          lpLastWriteTime->dwLowDateTime  >= MAX_FILETIMEVALUE)))
-    {
-        pThread->SetLastError(ERROR_INVALID_HANDLE);
-        return FALSE;
-    }
-
-    palError = InternalSetFileTime(
-        pThread,
-        hFile,
-        lpCreationTime,
-        lpLastAccessTime,
-        lpLastWriteTime
-        );
-
-    if (NO_ERROR != palError)
-    {
-        pThread->SetLastError(palError);
-    }
-
-    LOGEXIT("SetFileTime returns BOOL %s\n", NO_ERROR == palError ? "TRUE":"FALSE");
-    return NO_ERROR == palError;
-}
-
 PAL_ERROR
 CorUnix::InternalSetFileTime(
         CPalThread *pThread,
@@ -336,49 +277,6 @@ InternalSetFileTimeExit:
 }
 
 
-/*++
-Function:
-  GetFileTime
-
-Notes: As noted at the top of this file, there is no analog to "creation
-time" on Unix systems, so the inode change time is used instead. Also, Win32
-LastAccessTime is updated after a write operation, but it is not on Unix.
-To be consistent with Win32, this function returns the greater of mtime and
-atime for LastAccessTime.
---*/
-BOOL
-GetFileTime(
-         HANDLE hFile,
-         LPFILETIME lpCreationTime,
-         LPFILETIME lpLastAccessTime,
-         LPFILETIME lpLastWriteTime)
-{
-    CPalThread *pThread;
-    PAL_ERROR palError = NO_ERROR;
-
-    ENTRY("GetFileTime(hFile=%p, lpCreationTime=%p, lpLastAccessTime=%p, "
-          "lpLastWriteTime=%p)\n",
-          hFile, lpCreationTime, lpLastAccessTime, lpLastWriteTime);
-
-    pThread = InternalGetCurrentThread();
-
-    palError = InternalGetFileTime(
-        pThread,
-        hFile,
-        lpCreationTime,
-        lpLastAccessTime,
-        lpLastWriteTime
-        );
-
-    if (NO_ERROR != palError)
-    {
-        pThread->SetLastError(palError);
-    }
-
-    LOGEXIT("GetFileTime returns BOOL %s\n", NO_ERROR == palError ? "TRUE":"FALSE");
-    return NO_ERROR == palError;
-}
-
 PAL_ERROR
 CorUnix::InternalGetFileTime(
         CPalThread *pThread,
@@ -479,43 +377,6 @@ InternalGetFileTimeExit:
 
     return palError;
 }
-
-
-
-
-
-
-/*++
-Function:
-  GetSystemTimeAsFileTime
-
-See MSDN doc.
---*/
-void
-GetSystemTimeAsFileTime(
-             LPFILETIME lpSystemTimeAsFileTime)
-{
-    struct timeval Time;
-
-    ENTRY("GetSystemTimeAsFileTime(lpSystemTimeAsFileTime=%p)\n", 
-          lpSystemTimeAsFileTime);
-
-    if ( gettimeofday( &Time, NULL ) != 0 )
-    {
-        ASSERT("gettimeofday() failed");
-        /* no way to indicate failure, so set time to zero */
-        *lpSystemTimeAsFileTime = FILEUnixTimeToFileTime( 0, 0 );
-    }
-    else
-    {
-        /* use (tv_usec * 1000) because 2nd arg is in nanoseconds */
-        *lpSystemTimeAsFileTime = FILEUnixTimeToFileTime( Time.tv_sec,
-                                                          Time.tv_usec * 1000 );
-    }
-
-    LOGEXIT("GetSystemTimeAsFileTime returns.\n");
-}
-
 
 #ifdef __APPLE__
 /*++
@@ -690,82 +551,4 @@ BOOL FileTimeToSystemTime( const FILETIME * lpFileTime,
         SetLastError(ERROR_INVALID_PARAMETER);
         return FALSE;
     }
-}
-
-
-    
-/**
-Function:
-    FileTimeToDosDateTime
-    
-    Notes due to the difference between how BSD and Windows
-    calculates time, this function can only repersent dates between
-    1980 and 2037. 2037 is the upperlimit for the BSD time functions( 1900 - 
-    2037 range ).
-    
-See msdn for more details.
---*/
-BOOL
-FileTimeToDosDateTime(
-             const FILETIME *lpFileTime,
-             uint16_t * lpFatDate,
-             uint16_t * lpFatTime )
-{
-    BOOL bRetVal = FALSE;
-
-    ENTRY( "FileTimeToDosDateTime( lpFileTime=%p, lpFatDate=%p, lpFatTime=%p )\n",
-           lpFileTime, lpFatDate, lpFatTime );
-
-    /* Sanity checks. */
-    if ( !lpFileTime || !lpFatDate || !lpFatTime )
-    {
-        ERROR( "Incorrect parameters.\n" );
-        SetLastError( ERROR_INVALID_PARAMETER );
-    }
-    else
-    {
-        /* Do conversion. */
-        SYSTEMTIME SysTime;
-        if ( FileTimeToSystemTime( lpFileTime, &SysTime ) )
-        {
-            if ( SysTime.wYear >= 1980 && SysTime.wYear <= 2037 )
-            {
-                *lpFatDate = 0;
-                *lpFatTime = 0;
-
-                *lpFatDate |= ( SysTime.wDay & 0x1F );
-                *lpFatDate |= ( ( SysTime.wMonth & 0xF ) << 5 );
-                *lpFatDate |= ( ( ( SysTime.wYear - 1980 ) & 0x7F ) << 9 );
-
-                if ( SysTime.wSecond % 2 == 0 )
-                {
-                    *lpFatTime |= ( ( SysTime.wSecond / 2 )  & 0x1F );
-                }
-                else
-                {
-                    *lpFatTime |= ( ( SysTime.wSecond / 2 + 1 )  & 0x1F );
-                }
-
-                *lpFatTime |= ( ( SysTime.wMinute & 0x3F ) << 5 );
-                *lpFatTime |= ( ( SysTime.wHour & 0x1F ) << 11 );
-                
-                bRetVal = TRUE;
-            }
-            else
-            {
-                ERROR( "The function can only repersent dates between 1/1/1980"
-                       " and 12/31/2037\n" );
-                SetLastError( ERROR_INVALID_PARAMETER );
-            }
-        }
-        else
-        {
-            ERROR( "Unable to convert file time to system time.\n" );
-            SetLastError( ERROR_INVALID_PARAMETER );
-            bRetVal = FALSE;
-        }
-    }
-
-    LOGEXIT( "returning BOOL %d\n", bRetVal );
-    return bRetVal;
 }
