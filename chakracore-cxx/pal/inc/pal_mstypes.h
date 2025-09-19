@@ -75,7 +75,6 @@ typedef int BOOL, *LPBOOL;
 typedef uint8_t BOOLEAN;
 
 typedef unsigned long ULONG64;
-typedef signed long LONG64;
 
 #define _W64
 

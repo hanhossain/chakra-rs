@@ -347,7 +347,7 @@ BOOL AutoSystemInfo::GetAvailableCommit(ULONG64 *pCommit)
 
 void AutoSystemInfo::SetAvailableCommit(ULONG64 commit)
 {
-    ::InterlockedCompareExchange64((volatile LONG64 *)&this->availableCommit, commit, 0);
+    ::InterlockedCompareExchange64((volatile long *)&this->availableCommit, commit, 0);
 }
 
 //
