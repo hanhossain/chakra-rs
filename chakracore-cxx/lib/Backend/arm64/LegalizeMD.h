@@ -112,7 +112,7 @@ private:
     static IR::Instr * GenerateHoistSrc(IR::Instr * instr, uint opndNum, Js::OpCode op, RegNum scratchReg);
 
     static void ObfuscateLDIMM(IR::Instr * instrMov, IR::Instr * instrMovt);
-    static void EmitRandomNopBefore(IR::Instr * instrMov, UINT_PTR rand, RegNum targetReg);
+    static void EmitRandomNopBefore(IR::Instr * instrMov, unsigned long rand, RegNum targetReg);
 
 #ifdef DBG
     static void IllegalInstr(IR::Instr * instr, const char16_t * msg, ...);

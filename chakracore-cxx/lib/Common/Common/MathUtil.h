@@ -49,7 +49,7 @@ public:
 
     static bool     FitsInWord(int32 value) { return ((int32)(int16)(value & 0xFFFF) == value); }
 
-    static UINT_PTR Rand();
+    static unsigned long Rand();
     static bool     IsPow2(int32 val) { return (val > 0 && ((val-1) & val) == 0); }
     static uint32   NextPowerOf2(uint32 n);
 

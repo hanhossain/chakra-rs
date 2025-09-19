@@ -91,9 +91,9 @@ namespace Js
     }();
 
     template<typename CharT>
-    static UINT_PTR HexStrToAddress(const CharT* str)
+    static unsigned long HexStrToAddress(const CharT* str)
     {
-        UINT_PTR address = 0;
+        unsigned long address = 0;
         while (*str == '0' || *str == '`' || *str == 'x' || *str == 'X')
             str++; // leading zero
         do
@@ -358,8 +358,8 @@ namespace Js
     const char16_t* injectionStackEnd = u"=====End of Fault injecting record=====\n";
 
     typedef struct _RANGE{
-        UINT_PTR startAddress;
-        UINT_PTR endAddress;
+        unsigned long startAddress;
+        unsigned long endAddress;
     }RANGE, *PRANGE;
 
     typedef struct _FUNCTION_SIGNATURES
@@ -757,8 +757,8 @@ namespace Js
                         AssertMsg(tmp, "OOM when allocating for FaultInjection Stack matching objects");
                         *sigs = tmp;
                         (*sigs)->count = count;
-                        (*sigs)->signatures[count].startAddress = (UINT_PTR)pSymInfo->Address;
-                        (*sigs)->signatures[count].endAddress = (UINT_PTR)(pSymInfo->Address + pSymInfo->Size);
+                        (*sigs)->signatures[count].startAddress = (unsigned long)pSymInfo->Address;
+                        (*sigs)->signatures[count].endAddress = (unsigned long)(pSymInfo->Address + pSymInfo->Size);
                         (*sigs)->count++;
                     }
                     return TRUE;
@@ -803,8 +803,8 @@ namespace Js
             {
                 for (int j = 0; j<baselineFuncSigs[n]->count; j++)
                 {
-                    match = baselineFuncSigs[n]->signatures[j].startAddress <= (UINT_PTR)framesBuffer[i]
-                        && (UINT_PTR)framesBuffer[i] < baselineFuncSigs[n]->signatures[j].endAddress;
+                    match = baselineFuncSigs[n]->signatures[j].startAddress <= (unsigned long)framesBuffer[i]
+                        && (unsigned long)framesBuffer[i] < baselineFuncSigs[n]->signatures[j].endAddress;
                     if (match)
                     {
                         break;
@@ -929,14 +929,14 @@ namespace Js
     }
 
     // Calculate stack hash by adding the addresses (only jscript9 frames)
-    UINT_PTR FaultInjection::CalculateStackHash(void* frames[], uint16_t frameCount, uint16_t framesToSkip)
+    unsigned long FaultInjection::CalculateStackHash(void* frames[], uint16_t frameCount, uint16_t framesToSkip)
     {
-        UINT_PTR hash = 0;
+        unsigned long hash = 0;
         for (int i = framesToSkip; i < frameCount; i++)
         {
             if (AutoSystemInfo::Data.IsJscriptModulePointer(frames[i]))
             {
-                hash += (UINT_PTR)frames[i] - AutoSystemInfo::Data.dllLoadAddress;
+                hash += (unsigned long)frames[i] - AutoSystemInfo::Data.dllLoadAddress;
             }
         }
         return hash;
@@ -1084,7 +1084,7 @@ namespace Js
             }
             void* StackFrames[MAX_FRAME_COUNT];
             auto FrameCount = CaptureStack(0, MAX_FRAME_COUNT, StackFrames, 0);
-            UINT_PTR hash = CalculateStackHash(StackFrames, FrameCount, 2);
+            unsigned long hash = CalculateStackHash(StackFrames, FrameCount, 2);
             stackHashOfAllInjectionPoints[countOfInjectionPoints] = hash;
             break;
         }
@@ -1106,12 +1106,12 @@ namespace Js
         // try to lookup stack hash, to see if it matches
         if (!shouldInjectionFault)
         {
-            const UINT_PTR expectedHash = HexStrToAddress((LPCWSTR)globalFlags.FaultInjectionStackHash);
+            const unsigned long expectedHash = HexStrToAddress((LPCWSTR)globalFlags.FaultInjectionStackHash);
             if (expectedHash != 0)
             {
                 void* StackFrames[MAX_FRAME_COUNT];
                 auto FrameCount = CaptureStack(0, MAX_FRAME_COUNT, StackFrames, 0);
-                UINT_PTR hash = CalculateStackHash(StackFrames, FrameCount, 2);
+                unsigned long hash = CalculateStackHash(StackFrames, FrameCount, 2);
                 if (hash == expectedHash)
                 {
                     shouldInjectionFault = true;

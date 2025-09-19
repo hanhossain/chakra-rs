@@ -801,19 +801,19 @@ private:
 
         static bool IsMatched(PNode node)
         {
-            return !!(reinterpret_cast<UINT_PTR>(node) & 1);
+            return !!(reinterpret_cast<unsigned long>(node) & 1);
         }
 
         template <class P>
         static void SetNext(P& node, int next)
         {
-            UINT_PTR value = (static_cast<UINT_PTR>(next) << 1) | 1;
+            unsigned long value = (static_cast<unsigned long>(next) << 1) | 1;
             node = reinterpret_cast<PNode>(value);
         }
 
         static bool IsNext(PNode node, _Out_ int* next)
         {
-            UINT_PTR value = reinterpret_cast<UINT_PTR>(node);
+            unsigned long value = reinterpret_cast<unsigned long>(node);
             if (value & 1)
             {
                 *next = static_cast<int>(value >> 1);

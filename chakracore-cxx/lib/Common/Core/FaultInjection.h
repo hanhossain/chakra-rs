@@ -88,7 +88,7 @@ namespace Js
         bool EnsureStackMatchInfraInitialized();
         uint baselineFrameCount;
         char16_t *baselineStack[MAX_FRAME_COUNT];
-        UINT_PTR baselineAddresses[MAX_FRAME_COUNT];
+        unsigned long baselineAddresses[MAX_FRAME_COUNT];
         size_t* stackHashOfAllInjectionPoints;
         uint32_t stackHashOfAllInjectionPointsSize;
 
@@ -121,7 +121,7 @@ namespace Js
         // for reconstruction stack of the fault injection points in postmortem debugging
         struct InjectionRecord{
             void* StackFrames[MAX_FRAME_COUNT];
-            UINT_PTR hash;
+            unsigned long hash;
             uint16_t FrameCount;
             void* StackData;
             size_t StackDataLength;
@@ -144,7 +144,7 @@ namespace Js
         static uint32_t exceptionFilterRemovalLastError;
         static void InstallExceptionFilters();
         static void RemoveExceptionFilters();
-        static UINT_PTR CalculateStackHash(void* frames[], uint16_t frameCount, uint16_t framesToSkip);
+        static unsigned long CalculateStackHash(void* frames[], uint16_t frameCount, uint16_t framesToSkip);
         static int32_t WINAPI FaultInjectionExceptionFilter(_In_  struct _EXCEPTION_POINTERS *ExceptionInfo);
         void FaultInjectionAnalyzeException(_EXCEPTION_POINTERS *ep);
     };

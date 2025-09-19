@@ -8686,7 +8686,7 @@ Recycler::WBVerifyBitIsSet(char* addr, char* target)
     Recycler* recycler = Recycler::recyclerList;
     while (recycler)
     {
-        auto heapBlock = recycler->FindHeapBlock((void*)((UINT_PTR)addr&~HeapInfo::ObjectAlignmentMask));
+        auto heapBlock = recycler->FindHeapBlock((void*)((unsigned long)addr&~HeapInfo::ObjectAlignmentMask));
         if (heapBlock)
         {
             heapBlock->WBVerifyBitIsSet(addr);
@@ -8704,7 +8704,7 @@ Recycler::WBSetBit(char* addr)
         Recycler* recycler = Recycler::recyclerList;
         while (recycler)
         {
-            auto heapBlock = recycler->FindHeapBlock((void*)((UINT_PTR)addr&~HeapInfo::ObjectAlignmentMask));
+            auto heapBlock = recycler->FindHeapBlock((void*)((unsigned long)addr&~HeapInfo::ObjectAlignmentMask));
             if (heapBlock)
             {
                 heapBlock->WBSetBit(addr);
@@ -8723,7 +8723,7 @@ Recycler::WBSetBitRange(char* addr, uint count)
         Recycler* recycler = Recycler::recyclerList;
         while (recycler)
         {
-            auto heapBlock = recycler->FindHeapBlock((void*)((UINT_PTR)addr&~HeapInfo::ObjectAlignmentMask));
+            auto heapBlock = recycler->FindHeapBlock((void*)((unsigned long)addr&~HeapInfo::ObjectAlignmentMask));
             if (heapBlock)
             {
                 heapBlock->WBSetBitRange(addr, count);
@@ -8740,7 +8740,7 @@ Recycler::WBCheckIsRecyclerAddress(char* addr)
     Recycler* recycler = Recycler::recyclerList;
     while (recycler)
     {
-        auto heapBlock = recycler->FindHeapBlock((void*)((UINT_PTR)addr&~HeapInfo::ObjectAlignmentMask));
+        auto heapBlock = recycler->FindHeapBlock((void*)((unsigned long)addr&~HeapInfo::ObjectAlignmentMask));
         if (heapBlock)
         {
             return true;

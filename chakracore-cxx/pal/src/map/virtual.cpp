@@ -72,7 +72,7 @@ static FREE_BLOCK *pFreeMemory __attribute__((init_priority(200)));
 // Currently 1GB.
 static const int BACKING_FILE_SIZE = 1024 * 1024 * 1024;
 
-static void *VIRTUALReserveFromBackingFile(UINT_PTR addr, size_t length);
+static void *VIRTUALReserveFromBackingFile(unsigned long addr, size_t length);
 static BOOL VIRTUALAddToFreeList(const PCMI pMemoryToBeReleased);
 
 // The base address of the pages mapped onto our backing file.
@@ -528,11 +528,11 @@ static BOOL VIRTUALSetDirtyPages( uint32_t nStatus, size_t nStartingBit,
  *
  * VIRTUALFindRegionInformation( )
  *
- *          IN UINT_PTR address - The address to look for.
+ *          IN unsigned long address - The address to look for.
  *
  *          Returns the PCMI if found, NULL otherwise.
  */
-static PCMI VIRTUALFindRegionInformation(  UINT_PTR address )
+static PCMI VIRTUALFindRegionInformation(  unsigned long address )
 {
     PCMI pEntry = NULL;
 
@@ -580,7 +580,7 @@ Function :
     Returns whether the space in question is owned the VIRTUAL system.
 
 --*/
-BOOL VIRTUALOwnedRegion(  UINT_PTR address )
+BOOL VIRTUALOwnedRegion(  unsigned long address )
 {
     PCMI pEntry = NULL;
     CPalThread * pthrCurrent = InternalGetCurrentThread();
@@ -749,7 +749,7 @@ static uint32_t VIRTUALConvertVirtualFlags(  uint8_t VirtualProtect )
  *      NOTE: The caller must own the critical section.
  */
 static BOOL VIRTUALStoreAllocationInfo(
-             UINT_PTR startBoundary,      /* Start of the region. */
+             unsigned long startBoundary,      /* Start of the region. */
              size_t memSize,            /* Size of the region. */
              uint32_t flAllocationType,  /* Allocation Types. */
              uint32_t flProtection )     /* Protections flags on the memory. */
@@ -875,7 +875,7 @@ done:
  */
 static BOOL VIRTUALUpdateAllocationInfo(
      PCMI pExistingEntry,         /* Existing entry in the virtual memory regions list that we are currently managing. */
-     UINT_PTR startBoundary,      /* The new starting address of the region. */
+     unsigned long startBoundary,      /* The new starting address of the region. */
      size_t memSize)              /* The new size of the region. */
 {
     BOOL bRetVal = TRUE;
@@ -978,7 +978,7 @@ static void * VIRTUALReserveMemory(
                  uint32_t flProtect)         /* Type of access protection */
 {
     void * pRetVal      = NULL;
-    UINT_PTR StartBoundary;
+    unsigned long StartBoundary;
     size_t MemSize;
 
     TRACE( "Reserving the memory now..\n");
@@ -986,9 +986,9 @@ static void * VIRTUALReserveMemory(
     // First, figure out where we're trying to reserve the memory and
     // how much we need. On most systems, requests to mmap must be
     // page-aligned and at multiples of the page size.
-    StartBoundary = (UINT_PTR)lpAddress & ~BOUNDARY_64K;
+    StartBoundary = (unsigned long)lpAddress & ~BOUNDARY_64K;
     /* Add the sizes, and round down to the nearest page boundary. */
-    MemSize = ( ((UINT_PTR)lpAddress + dwSize + VIRTUAL_PAGE_MASK) & ~VIRTUAL_PAGE_MASK ) -
+    MemSize = ( ((unsigned long)lpAddress + dwSize + VIRTUAL_PAGE_MASK) & ~VIRTUAL_PAGE_MASK ) -
                StartBoundary;
 
     if ((flAllocationType & MEM_RESERVE_EXECUTABLE) != 0)
@@ -1012,9 +1012,9 @@ static void * VIRTUALReserveMemory(
         {
 #endif  // MMAP_IGNORES_HINT
             /* Compute the real values instead of the null values. */
-            StartBoundary = (UINT_PTR)pRetVal & ~VIRTUAL_PAGE_MASK;
+            StartBoundary = (unsigned long)pRetVal & ~VIRTUAL_PAGE_MASK;
 
-            MemSize = ( ((UINT_PTR)pRetVal + dwSize + VIRTUAL_PAGE_MASK) & ~VIRTUAL_PAGE_MASK ) -
+            MemSize = ( ((unsigned long)pRetVal + dwSize + VIRTUAL_PAGE_MASK) & ~VIRTUAL_PAGE_MASK ) -
                       StartBoundary;
 #if !MMAP_IGNORES_HINT
         }
@@ -1046,7 +1046,7 @@ static void * ReserveVirtualMemory(
 {
     void * pRetVal = NULL;
 #if !defined(__APPLE__) && !defined(vm_address_t)
-#define vm_address_t UINT_PTR
+#define vm_address_t unsigned long
 #endif
     vm_address_t StartBoundary = (vm_address_t)lpAddress;
     size_t MemSize = dwSize;
@@ -1091,7 +1091,7 @@ static void * ReserveVirtualMemory(
 
     /* Check to see if the region is what we asked for. */
     if (pRetVal != MAP_FAILED && lpAddress != NULL &&
-        StartBoundary != (UINT_PTR) pRetVal)
+        StartBoundary != (unsigned long) pRetVal)
     {
         ERROR("We did not get the region we asked for!\n");
         pthrCurrent->SetLastError(ERROR_INVALID_ADDRESS);
@@ -1144,7 +1144,7 @@ static void * VIRTUALCommitMemory(
                  uint32_t flAllocationType,  /* Type of allocation */
                  uint32_t flProtect)         /* Type of access protection */
 {
-    UINT_PTR StartBoundary      = 0;
+    unsigned long StartBoundary      = 0;
     size_t MemSize              = 0;
     PCMI pInformation           = 0;
     void * pRetVal              = NULL;
@@ -1161,9 +1161,9 @@ static void * VIRTUALCommitMemory(
 
     if ( lpAddress )
     {
-        StartBoundary = (UINT_PTR)lpAddress & ~VIRTUAL_PAGE_MASK;
+        StartBoundary = (unsigned long)lpAddress & ~VIRTUAL_PAGE_MASK;
         /* Add the sizes, and round down to the nearest page boundary. */
-        MemSize = ( ((UINT_PTR)lpAddress + dwSize + VIRTUAL_PAGE_MASK) & ~VIRTUAL_PAGE_MASK ) -
+        MemSize = ( ((unsigned long)lpAddress + dwSize + VIRTUAL_PAGE_MASK) & ~VIRTUAL_PAGE_MASK ) -
                   StartBoundary;
     }
     else
@@ -1188,8 +1188,8 @@ static void * VIRTUALCommitMemory(
         if ( pReservedMemory )
         {
             /* Re-align the addresses and try again to find the memory. */
-            StartBoundary = (UINT_PTR)pReservedMemory & ~VIRTUAL_PAGE_MASK;
-            MemSize = ( ((UINT_PTR)pReservedMemory + dwSize + VIRTUAL_PAGE_MASK)
+            StartBoundary = (unsigned long)pReservedMemory & ~VIRTUAL_PAGE_MASK;
+            MemSize = ( ((unsigned long)pReservedMemory + dwSize + VIRTUAL_PAGE_MASK)
                         & ~VIRTUAL_PAGE_MASK ) - StartBoundary;
 
             pInformation = VIRTUALFindRegionInformation( StartBoundary );
@@ -1384,7 +1384,7 @@ Function:
     Returns the base address of the mapped block, or MAP_FAILED if no
     suitable block exists or mapping fails.
 --*/
-static void *VIRTUALReserveFromBackingFile(UINT_PTR addr, size_t length)
+static void *VIRTUALReserveFromBackingFile(unsigned long addr, size_t length)
 {
     FREE_BLOCK *block;
     FREE_BLOCK *prev;
@@ -1397,7 +1397,7 @@ static void *VIRTUALReserveFromBackingFile(UINT_PTR addr, size_t length)
     {
         if (addr != 0)
         {
-            if (addr < (UINT_PTR) temp->startBoundary)
+            if (addr < (unsigned long) temp->startBoundary)
             {
                 // Not up to a block containing addr yet.
                 prev = temp;
@@ -1405,8 +1405,8 @@ static void *VIRTUALReserveFromBackingFile(UINT_PTR addr, size_t length)
             }
         }
         if ((addr == 0 && temp->memSize >= length) ||
-            (addr >= (UINT_PTR) temp->startBoundary &&
-             addr + length <= (UINT_PTR) temp->startBoundary + temp->memSize))
+            (addr >= (unsigned long) temp->startBoundary &&
+             addr + length <= (unsigned long) temp->startBoundary + temp->memSize))
         {
             block = temp;
             break;
@@ -1500,12 +1500,12 @@ static BOOL VIRTUALAddToFreeList(const PCMI pMemoryToBeReleased)
     lastBlock = NULL;
     for(temp = pFreeMemory; temp != NULL; temp = temp->next)
     {
-        if ((UINT_PTR) temp->startBoundary > pMemoryToBeReleased->startBoundary)
+        if ((unsigned long) temp->startBoundary > pMemoryToBeReleased->startBoundary)
         {
             // This check isn't necessary unless the PAL is fundamentally
             // broken elsewhere.
             if (pMemoryToBeReleased->startBoundary +
-                pMemoryToBeReleased->memSize > (UINT_PTR) temp->startBoundary)
+                pMemoryToBeReleased->memSize > (unsigned long) temp->startBoundary)
             {
                 ASSERT("Free and allocated memory blocks overlap!");
                 return FALSE;
@@ -1522,7 +1522,7 @@ static BOOL VIRTUALAddToFreeList(const PCMI pMemoryToBeReleased)
     // First, are we coalescing with the next block?
     if (temp != NULL)
     {
-        if ((UINT_PTR) temp->startBoundary == pMemoryToBeReleased->startBoundary +
+        if ((unsigned long) temp->startBoundary == pMemoryToBeReleased->startBoundary +
             pMemoryToBeReleased->memSize)
         {
             temp->startBoundary = (char *) pMemoryToBeReleased->startBoundary;
@@ -1535,7 +1535,7 @@ static BOOL VIRTUALAddToFreeList(const PCMI pMemoryToBeReleased)
     // if we can free one of the blocks.
     if (lastBlock != NULL)
     {
-        if ((UINT_PTR) lastBlock->startBoundary + lastBlock->memSize ==
+        if ((unsigned long) lastBlock->startBoundary + lastBlock->memSize ==
             pMemoryToBeReleased->startBoundary)
         {
             if (lastBlock->next != NULL &&
@@ -1842,7 +1842,7 @@ VirtualFreeEnclosing_(
     InternalEnterCriticalSection(pthrCurrent, &virtual_critsec);
 
     PCMI pMemoryToBeReleased =
-        VIRTUALFindRegionInformation((UINT_PTR)lpRegionStartAddress);
+        VIRTUALFindRegionInformation((unsigned long)lpRegionStartAddress);
 
     if (!pMemoryToBeReleased)
     {
@@ -1906,7 +1906,7 @@ VirtualFreeEnclosing_(
 
     if (beforeRegionFreed && afterRegionFreed)
     {
-        bRetVal = VIRTUALUpdateAllocationInfo(pMemoryToBeReleased, (UINT_PTR)lpActualAlignedStartAddress, dwSize);
+        bRetVal = VIRTUALUpdateAllocationInfo(pMemoryToBeReleased, (unsigned long)lpActualAlignedStartAddress, dwSize);
         goto VirtualFreeEnclosingExit;
     }
 
@@ -2055,7 +2055,7 @@ VirtualFree(
 
     if ( dwFreeType & MEM_DECOMMIT )
     {
-        UINT_PTR StartBoundary  = 0;
+        unsigned long StartBoundary  = 0;
         size_t MemSize        = 0;
 
         if ( dwSize == 0 )
@@ -2070,10 +2070,10 @@ VirtualFree(
          * released or decommitted. So round the dwSize up to the next page
          * boundary and round the lpAddress down to the next page boundary.
          */
-        MemSize = (((UINT_PTR)(dwSize) + ((UINT_PTR)(lpAddress) & VIRTUAL_PAGE_MASK)
+        MemSize = (((unsigned long)(dwSize) + ((unsigned long)(lpAddress) & VIRTUAL_PAGE_MASK)
                     + VIRTUAL_PAGE_MASK) & ~VIRTUAL_PAGE_MASK);
 
-        StartBoundary = (UINT_PTR)lpAddress & ~VIRTUAL_PAGE_MASK;
+        StartBoundary = (unsigned long)lpAddress & ~VIRTUAL_PAGE_MASK;
 
         PCMI pUnCommittedMem;
         pUnCommittedMem = VIRTUALFindRegionInformation( StartBoundary );
@@ -2146,7 +2146,7 @@ VirtualFree(
     if ( dwFreeType & MEM_RELEASE )
     {
         PCMI pMemoryToBeReleased =
-            VIRTUALFindRegionInformation( (UINT_PTR)lpAddress );
+            VIRTUALFindRegionInformation( (unsigned long)lpAddress );
 
         if ( !pMemoryToBeReleased )
         {
@@ -2234,7 +2234,7 @@ VirtualProtect(
     BOOL     bRetVal = FALSE;
     PCMI     pEntry = NULL;
     size_t   MemSize = 0;
-    UINT_PTR StartBoundary = 0;
+    unsigned long StartBoundary = 0;
     size_t   Index = 0;
     size_t   NumberOfPagesToChange = 0;
     size_t   OffSet = 0;
@@ -2247,8 +2247,8 @@ VirtualProtect(
     pthrCurrent = InternalGetCurrentThread();
     InternalEnterCriticalSection(pthrCurrent, &virtual_critsec);
 
-    StartBoundary = (UINT_PTR)lpAddress & ~VIRTUAL_PAGE_MASK;
-    MemSize = (((UINT_PTR)(dwSize) + ((UINT_PTR)(lpAddress) & VIRTUAL_PAGE_MASK)
+    StartBoundary = (unsigned long)lpAddress & ~VIRTUAL_PAGE_MASK;
+    MemSize = (((unsigned long)(dwSize) + ((unsigned long)(lpAddress) & VIRTUAL_PAGE_MASK)
                 + VIRTUAL_PAGE_MASK) & ~VIRTUAL_PAGE_MASK);
 
 #if DEBUG
@@ -2491,7 +2491,7 @@ VirtualQuery(
           size_t dwLength)
 {
     PCMI     pEntry = NULL;
-    UINT_PTR StartBoundary = 0;
+    unsigned long StartBoundary = 0;
     CPalThread * pthrCurrent;
 
     ENTRY("VirtualQuery(lpAddress=%p, lpBuffer=%p, dwLength=%u)\n",
@@ -2513,7 +2513,7 @@ VirtualQuery(
         goto ExitVirtualQuery;
     }
 
-    StartBoundary = (UINT_PTR)lpAddress & ~VIRTUAL_PAGE_MASK;
+    StartBoundary = (unsigned long)lpAddress & ~VIRTUAL_PAGE_MASK;
 
 #if MMAP_IGNORES_HINT
     // Make sure we have memory to map before we try to query it.
@@ -2522,12 +2522,12 @@ VirtualQuery(
     // If we're suballocating, claim that any memory that isn't in our
     // suballocated block is already allocated. This keeps callers from
     // using these results to try to allocate those blocks and failing.
-    if (StartBoundary < (UINT_PTR) gBackingBaseAddress ||
-        StartBoundary >= (UINT_PTR) gBackingBaseAddress + BACKING_FILE_SIZE)
+    if (StartBoundary < (unsigned long) gBackingBaseAddress ||
+        StartBoundary >= (unsigned long) gBackingBaseAddress + BACKING_FILE_SIZE)
     {
-        if (StartBoundary < (UINT_PTR) gBackingBaseAddress)
+        if (StartBoundary < (unsigned long) gBackingBaseAddress)
         {
-            lpBuffer->RegionSize = (UINT_PTR) gBackingBaseAddress - StartBoundary;
+            lpBuffer->RegionSize = (unsigned long) gBackingBaseAddress - StartBoundary;
         }
         else
         {

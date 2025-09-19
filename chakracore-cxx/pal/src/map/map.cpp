@@ -1965,12 +1965,12 @@ BOOL MAPGetRegionInfo(void * lpAddress,
 
         MappedSize = ((real_map_sz-1) & ~VIRTUAL_PAGE_MASK) + VIRTUAL_PAGE_SIZE; 
         if ( real_map_addr <= lpAddress && 
-             (void *)((UINT_PTR)real_map_addr+MappedSize) > lpAddress )
+             (void *)((unsigned long)real_map_addr+MappedSize) > lpAddress )
         {
             if (lpBuffer)
             {
-                size_t regionSize = MappedSize + (UINT_PTR) real_map_addr - 
-                       ((UINT_PTR) lpAddress & ~VIRTUAL_PAGE_MASK);
+                size_t regionSize = MappedSize + (unsigned long) real_map_addr - 
+                       ((unsigned long) lpAddress & ~VIRTUAL_PAGE_MASK);
 
                 lpBuffer->BaseAddress = lpAddress;
                 lpBuffer->AllocationProtect = 0;
