@@ -31,7 +31,7 @@ namespace Js
     class RefCountedBuffer;
 
     static const unsigned int EvalMRUSize = 15;
-    typedef JsUtil::BaseDictionary<DWORD_PTR, SourceContextInfo *, Recycler, PowerOf2SizePolicy> SourceContextInfoMap;
+    typedef JsUtil::BaseDictionary<unsigned long, SourceContextInfo *, Recycler, PowerOf2SizePolicy> SourceContextInfoMap;
     typedef JsUtil::BaseDictionary<uint, SourceContextInfo *, Recycler, PowerOf2SizePolicy> DynamicSourceContextInfoMap;
 
     typedef JsUtil::BaseDictionary<EvalMapString, ScriptFunction*, RecyclerNonLeafAllocator, PrimeSizePolicy> SecondLevelEvalCache;

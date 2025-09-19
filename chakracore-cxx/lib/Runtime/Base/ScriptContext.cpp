@@ -1405,7 +1405,7 @@ namespace Js
 
                 if (this->Cache()->sourceContextInfoMap)
                 {
-                    this->Cache()->sourceContextInfoMap->Map([&](DWORD_PTR dwHostSourceContext, SourceContextInfo * sourceContextInfo)
+                    this->Cache()->sourceContextInfoMap->Map([&](unsigned long dwHostSourceContext, SourceContextInfo * sourceContextInfo)
                     {
                         if (sourceContextInfo->sourceDynamicProfileManager)
                         {
@@ -2953,7 +2953,7 @@ ExitTempAllocator:
         return nullptr;
     }
 
-    SourceContextInfo* ScriptContext::CreateSourceContextInfo(uint hash, DWORD_PTR hostSourceContext)
+    SourceContextInfo* ScriptContext::CreateSourceContextInfo(uint hash, unsigned long hostSourceContext)
     {
         EnsureDynamicSourceContextInfoMap();
         if (this->GetSourceContextInfo(hash) != nullptr)
@@ -2988,7 +2988,7 @@ ExitTempAllocator:
     //
     // Makes a copy of the URL to be stored in the map.
     //
-    SourceContextInfo * ScriptContext::CreateSourceContextInfo(DWORD_PTR sourceContext, char16_t const * url, size_t len,
+    SourceContextInfo * ScriptContext::CreateSourceContextInfo(unsigned long sourceContext, char16_t const * url, size_t len,
         SimpleDataCacheWrapper* dataCacheWrapper, char16_t const * sourceMapUrl /*= NULL*/, size_t sourceMapUrlLen /*= 0*/)
     {
         // Take etw rundown lock on this thread context. We are going to init/add to sourceContextInfoMap.
@@ -3035,7 +3035,7 @@ ExitTempAllocator:
         return copy;
     }
 
-    SourceContextInfo *  ScriptContext::GetSourceContextInfo(DWORD_PTR sourceContext, SimpleDataCacheWrapper* dataCacheWrapper)
+    SourceContextInfo *  ScriptContext::GetSourceContextInfo(unsigned long sourceContext, SimpleDataCacheWrapper* dataCacheWrapper)
     {
         if (sourceContext == Js::Constants::NoHostSourceContext)
         {
@@ -4118,7 +4118,7 @@ ExitTempAllocator:
 #endif
             OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::RecyclerEnumClassEnumeratorCallback\n");
             OUTPUT_TRACE(Js::ScriptProfilerPhase, u"\tFunctionProxy : 0x%08X, FunctionNumber : %s, DeferredParseAttributes : %d, EntryPoint : 0x%08X",
-                (DWORD_PTR)proxy, proxy->GetDebugNumberSet(debugStringBuffer), proxy->GetAttributes(), (DWORD_PTR)entryPoint);
+                (unsigned long)proxy, proxy->GetDebugNumberSet(debugStringBuffer), proxy->GetAttributes(), (unsigned long)entryPoint);
 #if ENABLE_NATIVE_CODEGEN
             OUTPUT_TRACE(Js::ScriptProfilerPhase, u" (IsIntermediateCodeGenThunk : %s, isNative : %s)\n",
                 IsTrueOrFalse(IsIntermediateCodeGenThunk(entryPoint)), IsTrueOrFalse(scriptContext->IsNativeAddress(entryPoint)));
@@ -4130,13 +4130,13 @@ ExitTempAllocator:
             if (!IsIntermediateCodeGenThunk(entryPoint) && entryPoint != DynamicProfileInfo::EnsureDynamicProfileInfoThunk)
 #endif
             {
-                OUTPUT_TRACE(Js::ScriptProfilerPhase, u"\t\tJs::ScriptContext::GetProfileModeThunk : 0x%08X\n", (DWORD_PTR)Js::ScriptContext::GetProfileModeThunk(entryPoint));
+                OUTPUT_TRACE(Js::ScriptProfilerPhase, u"\t\tJs::ScriptContext::GetProfileModeThunk : 0x%08X\n", (unsigned long)Js::ScriptContext::GetProfileModeThunk(entryPoint));
 
                 ScriptFunction * scriptFunction = VarTo<ScriptFunction>(pFunction);
                 scriptFunction->ChangeEntryPoint(proxy->GetDefaultEntryPointInfo(), Js::ScriptContext::GetProfileModeThunk(entryPoint));
 
 #if ENABLE_NATIVE_CODEGEN && defined(ENABLE_SCRIPT_PROFILING)
-                OUTPUT_TRACE(Js::ScriptProfilerPhase, u"\tUpdated entrypoint : 0x%08X (isNative : %s)\n", (DWORD_PTR)pFunction->GetEntryPoint(), IsTrueOrFalse(scriptContext->IsNativeAddress(entryPoint)));
+                OUTPUT_TRACE(Js::ScriptProfilerPhase, u"\tUpdated entrypoint : 0x%08X (isNative : %s)\n", (unsigned long)pFunction->GetEntryPoint(), IsTrueOrFalse(scriptContext->IsNativeAddress(entryPoint)));
 #endif
             }
         }
@@ -5608,7 +5608,7 @@ ScriptContext::GetJitFuncRangeCache()
         if (!startupComplete && this->Cache()->sourceContextInfoMap)
         {
 #if ENABLE_PROFILE_INFO
-            this->Cache()->sourceContextInfoMap->Map([&](DWORD_PTR dwHostSourceContext, SourceContextInfo* info)
+            this->Cache()->sourceContextInfoMap->Map([&](unsigned long dwHostSourceContext, SourceContextInfo* info)
             {
                 Assert(info->sourceDynamicProfileManager);
                 uint bytesWritten = info->sourceDynamicProfileManager->SaveToProfileCacheAndRelease(info);

@@ -68,8 +68,8 @@ MessageQueue* WScriptJsrt::messageQueue = nullptr;
 std::map<std::string, JsModuleRecord>  WScriptJsrt::moduleRecordMap;
 std::map<JsModuleRecord, std::string>  WScriptJsrt::moduleDirMap;
 std::map<JsModuleRecord, ModuleState>  WScriptJsrt::moduleErrMap;
-std::map<DWORD_PTR, std::string> WScriptJsrt::scriptDirMap;
-DWORD_PTR WScriptJsrt::sourceContext = 0;
+std::map<unsigned long, std::string> WScriptJsrt::scriptDirMap;
+unsigned long WScriptJsrt::sourceContext = 0;
 
 #define ERROR_MESSAGE_TO_STRING(errorCode, errorMessage, errorMessageString)        \
     JsErrorCode errorCode = JsNoError;                                              \
@@ -93,12 +93,12 @@ DWORD_PTR WScriptJsrt::sourceContext = 0;
     }                                                                               \
     while(0)
 
-DWORD_PTR WScriptJsrt::GetNextSourceContext()
+unsigned long WScriptJsrt::GetNextSourceContext()
 {
     return sourceContext++;
 }
 
-void WScriptJsrt::RegisterScriptDir(DWORD_PTR sourceContext, LPCSTR fullDirNarrow)
+void WScriptJsrt::RegisterScriptDir(unsigned long sourceContext, LPCSTR fullDirNarrow)
 {
     GetDir(fullDirNarrow, &scriptDirMap[sourceContext]);
 }
@@ -628,7 +628,7 @@ JsErrorCode WScriptJsrt::ModuleEntryPoint(LPCSTR fileName, LPCSTR fileContent, L
 
 JsErrorCode WScriptJsrt::LoadModuleFromString(LPCSTR fileName, LPCSTR fileContent, LPCSTR fullName, bool isFile)
 {
-    DWORD_PTR dwSourceCookie = WScriptJsrt::GetNextSourceContext();
+    unsigned long dwSourceCookie = WScriptJsrt::GetNextSourceContext();
     JsModuleRecord requestModule = JS_INVALID_REFERENCE;
     LPCSTR moduleRecordKey = fullName ? fullName : fileName;
     auto moduleRecordEntry = moduleRecordMap.find(std::string(moduleRecordKey));

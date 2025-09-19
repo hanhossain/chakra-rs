@@ -25,7 +25,7 @@ Abstract:
 
 //
 // Some compilers (e.g., HPUX/IA64) warn about using NULL to initialize
-// something of type SHMPTR, since SHMPTR is defined as DWORD_PTR, which
+// something of type SHMPTR, since SHMPTR is defined as unsigned long, which
 // isn't considered a pointer type...
 //
 
@@ -46,7 +46,7 @@ ShmPtrToPtrFast(SHMPTR shmptr)
         if (segment < shm_numsegments)
         {
             pv = reinterpret_cast<void*>(
-                reinterpret_cast<DWORD_PTR>(shm_segment_bases[(uint)segment].Load())
+                reinterpret_cast<unsigned long>(shm_segment_bases[(uint)segment].Load())
                 + (shmptr & 0x00FFFFFF)
                 );
         }

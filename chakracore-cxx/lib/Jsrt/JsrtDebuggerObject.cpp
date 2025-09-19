@@ -852,14 +852,14 @@ JsrtDebugStackFrames::~JsrtDebugStackFrames()
 
 static int DiagStackFrameSorter(void * dispatchHaltFrameAddress, const void * diagStackFrame1, const void * diagStackFrame2)
 {
-    const DWORD_PTR *p1 = reinterpret_cast<const DWORD_PTR*>(diagStackFrame1);
-    const DWORD_PTR *p2 = reinterpret_cast<const DWORD_PTR*>(diagStackFrame2);
+    const unsigned long *p1 = reinterpret_cast<const unsigned long*>(diagStackFrame1);
+    const unsigned long *p2 = reinterpret_cast<const unsigned long*>(diagStackFrame2);
 
     Js::DiagStackFrame * pStackFrame1 = (Js::DiagStackFrame *)(*p1);
     Js::DiagStackFrame * pStackFrame2 = (Js::DiagStackFrame *)(*p2);
 
-    DWORD_PTR stackAddress1 = pStackFrame1->GetStackAddress();
-    DWORD_PTR stackAddress2 = pStackFrame2->GetStackAddress();
+    unsigned long stackAddress1 = pStackFrame1->GetStackAddress();
+    unsigned long stackAddress2 = pStackFrame2->GetStackAddress();
 
     return stackAddress1 > stackAddress2 ? 1 : -1;
 }
@@ -870,7 +870,7 @@ Js::JavascriptArray * JsrtDebugStackFrames::StackFrames(Js::ScriptContext * scri
 
     ThreadContext* threadContext = scriptContext->GetThreadContext();
 
-    DWORD_PTR dispatchHaltFrameAddress = threadContext->GetDebugManager()->GetDispatchHaltFrameAddress();
+    unsigned long dispatchHaltFrameAddress = threadContext->GetDebugManager()->GetDispatchHaltFrameAddress();
     AssertMsg(dispatchHaltFrameAddress > 0, "Didn't set the dispatchHaltFrameAddress at time of break?");
 
     if (dispatchHaltFrameAddress != 0)

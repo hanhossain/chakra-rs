@@ -1491,7 +1491,7 @@ namespace Js
         }
         DynamicProfileInfo::UpdateSourceDynamicProfileManagers(scriptContext);
 
-        scriptContext->GetSourceContextInfoMap()->Map([&](DWORD_PTR dwHostSourceContext, SourceContextInfo * sourceContextInfo)
+        scriptContext->GetSourceContextInfoMap()->Map([&](unsigned long dwHostSourceContext, SourceContextInfo * sourceContextInfo)
         {
             if (sourceContextInfo->sourceDynamicProfileManager != nullptr && sourceContextInfo->url != nullptr
                 && !sourceContextInfo->IsDynamic())
@@ -2117,7 +2117,7 @@ namespace Js
             Output::Print(u"Sources:\n");
             if (scriptContext->GetSourceContextInfoMap() != nullptr)
             {
-                scriptContext->GetSourceContextInfoMap()->Map([&](DWORD_PTR dwHostSourceContext, SourceContextInfo * sourceContextInfo)
+                scriptContext->GetSourceContextInfoMap()->Map([&](unsigned long dwHostSourceContext, SourceContextInfo * sourceContextInfo)
                 {
                     if (sourceContextInfo->sourceContextId != Js::Constants::NoSourceContext)
                     {
@@ -2128,7 +2128,7 @@ namespace Js
 
             if (scriptContext->GetDynamicSourceContextInfoMap() != nullptr)
             {
-                scriptContext->GetDynamicSourceContextInfoMap()->Map([&](DWORD_PTR dwHostSourceContext, SourceContextInfo * sourceContextInfo)
+                scriptContext->GetDynamicSourceContextInfoMap()->Map([&](unsigned long dwHostSourceContext, SourceContextInfo * sourceContextInfo)
                 {
                     Output::Print(u"%2d: %d (Dynamic) (Function count: %d)\n", sourceContextInfo->sourceContextId, sourceContextInfo->hash, sourceContextInfo->nextLocalFunctionId);
                 });
@@ -2595,7 +2595,7 @@ namespace Js
 
         if (scriptContext->GetSourceContextInfoMap())
         {
-            scriptContext->GetSourceContextInfoMap()->Map([&](DWORD_PTR dwHostSourceContext, SourceContextInfo * sourceContextInfo)
+            scriptContext->GetSourceContextInfoMap()->Map([&](unsigned long dwHostSourceContext, SourceContextInfo * sourceContextInfo)
             {
                 WriteData(sourceContextInfo->sourceContextId, file);
                 WriteData(sourceContextInfo->nextLocalFunctionId, file);

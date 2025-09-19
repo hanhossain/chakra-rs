@@ -7,7 +7,7 @@
 namespace Js
 {
 #if DBG
-    void SharedContents::AddAgent(DWORD_PTR agent)
+    void SharedContents::AddAgent(unsigned long agent)
     {
         AutoCriticalSection autoCS(&csAgent);
         if (allowedAgents == nullptr)
@@ -18,7 +18,7 @@ namespace Js
         allowedAgents->Add(agent);
     }
 
-    bool SharedContents::IsValidAgent(DWORD_PTR agent)
+    bool SharedContents::IsValidAgent(unsigned long agent)
     {
         AutoCriticalSection autoCS(&csAgent);
         return allowedAgents != nullptr && allowedAgents->Contains(agent);
@@ -316,7 +316,7 @@ namespace Js
         }
         localSharedContents->buffer = buffer;
 #if DBG
-        localSharedContents->AddAgent((DWORD_PTR)GetScriptContext());
+        localSharedContents->AddAgent((unsigned long)GetScriptContext());
 #endif
         sharedContents = localSharedContents;
         autoCleanupSharedContents.allocationCompleted = true;
@@ -344,7 +344,7 @@ namespace Js
             Js::Throw::FatalInternalError();
         }
 #if DBG
-        sharedContents->AddAgent((DWORD_PTR)GetScriptContext());
+        sharedContents->AddAgent((unsigned long)GetScriptContext());
 #endif
     }
 
@@ -631,7 +631,7 @@ namespace Js
         }
     }
 
-    bool WaiterList::Contains(DWORD_PTR agent)
+    bool WaiterList::Contains(unsigned long agent)
     {
         Assert(m_waiters != nullptr);
         for (int i = 0; i < m_waiters->Count(); i++)
@@ -645,13 +645,13 @@ namespace Js
         return false;
     }
 
-    bool _Requires_lock_held_(csForAccess.cs) WaiterList::AddAndSuspendWaiter(DWORD_PTR waiter, uint32 timeout)
+    bool _Requires_lock_held_(csForAccess.cs) WaiterList::AddAndSuspendWaiter(unsigned long waiter, uint32 timeout)
     {
         // TODO for xplat
         return false;
     }
 
-    void WaiterList::RemoveWaiter(DWORD_PTR waiter)
+    void WaiterList::RemoveWaiter(unsigned long waiter)
     {
         // TODO for xplat
     }

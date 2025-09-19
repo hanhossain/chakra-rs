@@ -10068,7 +10068,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             Throw::InternalError();
         }
 
-        DWORD_PTR dwReferencingSourceContext = parentFuncBody->GetHostSourceContext();
+        unsigned long dwReferencingSourceContext = parentFuncBody->GetHostSourceContext();
         if (!parentFuncBody->IsES6ModuleCode() && dwReferencingSourceContext == Js::Constants::NoHostSourceContext)
         {
             // import() called from eval

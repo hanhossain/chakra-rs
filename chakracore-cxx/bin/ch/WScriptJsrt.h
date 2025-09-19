@@ -64,7 +64,7 @@ public:
     static void PushMessage(MessageBase *message) { messageQueue->InsertSorted(message); }
 
     static JsErrorCode FetchImportedModule(_In_ JsModuleRecord referencingModule, _In_ JsValueRef specifier, _Outptr_result_maybenull_ JsModuleRecord* dependentModuleRecord);
-    static JsErrorCode FetchImportedModuleFromScript(_In_ DWORD_PTR dwReferencingSourceContext, _In_ JsValueRef specifier, _Outptr_result_maybenull_ JsModuleRecord* dependentModuleRecord);
+    static JsErrorCode FetchImportedModuleFromScript(_In_ unsigned long dwReferencingSourceContext, _In_ JsValueRef specifier, _Outptr_result_maybenull_ JsModuleRecord* dependentModuleRecord);
     static JsErrorCode NotifyModuleReadyCallback(_In_opt_ JsModuleRecord referencingModule, _In_opt_ JsValueRef exceptionVar);
     static JsErrorCode ReportModuleCompletionCallback(JsModuleRecord module, JsValueRef exception);
     static JsErrorCode CALLBACK InitializeImportMetaCallback(_In_opt_ JsModuleRecord referencingModule, _In_opt_ JsValueRef importMetaVar);
@@ -105,12 +105,12 @@ public:
 
     static bool PrintException(LPCSTR fileName, JsErrorCode jsErrorCode, JsValueRef exception = nullptr);
     static JsValueRef LoadScript(JsValueRef callee, LPCSTR fileName, LPCSTR fileContent, LPCSTR scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile);
-    static DWORD_PTR GetNextSourceContext();
+    static unsigned long GetNextSourceContext();
     static JsValueRef LoadScriptFileHelper(JsValueRef callee, JsValueRef *arguments, unsigned short argumentCount, bool isSourceModule);
     static JsValueRef LoadScriptHelper(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState, bool isSourceModule);
     static bool InstallObjectsOnObject(JsValueRef object, const char* name, JsNativeFunction nativeFunction);
     static void FinalizeFree(void * addr);
-    static void RegisterScriptDir(DWORD_PTR sourceContext, LPCSTR fullDirNarrow);
+    static void RegisterScriptDir(unsigned long sourceContext, LPCSTR fullDirNarrow);
 private:
     static void SetExceptionIf(JsErrorCode errorCode, LPCWSTR errorMessage);
     static bool CreateArgumentsObject(JsValueRef *argsObject);
@@ -152,9 +152,9 @@ private:
     static JsErrorCode FetchImportedModuleHelper(JsModuleRecord referencingModule, JsValueRef specifier, JsModuleRecord* dependentModuleRecord, LPCSTR refdir = nullptr);
 
     static MessageQueue *messageQueue;
-    static DWORD_PTR sourceContext;
+    static unsigned long sourceContext;
     static std::map<std::string, JsModuleRecord> moduleRecordMap;
     static std::map<JsModuleRecord, std::string> moduleDirMap;
     static std::map<JsModuleRecord, ModuleState> moduleErrMap;
-    static std::map<DWORD_PTR, std::string> scriptDirMap;
+    static std::map<unsigned long, std::string> scriptDirMap;
 };

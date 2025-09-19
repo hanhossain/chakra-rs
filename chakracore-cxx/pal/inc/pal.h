@@ -3819,7 +3819,7 @@ typedef struct _SYSTEM_INFO {
     uint32_t dwPageSize;
     void * lpMinimumApplicationAddress;
     void * lpMaximumApplicationAddress;
-    DWORD_PTR dwActiveProcessorMask_PAL_Undefined;
+    unsigned long dwActiveProcessorMask_PAL_Undefined;
     uint32_t dwNumberOfProcessors;
     uint32_t dwProcessorType_PAL_Undefined;
     uint32_t dwAllocationGranularity;

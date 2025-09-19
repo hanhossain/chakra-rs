@@ -514,13 +514,13 @@ namespace Js
         SmallSpanSequence* GetNativeThrowSpanSequence() const;
         void SetNativeThrowSpanSequence(SmallSpanSequence* seq);
 
-        bool IsInNativeAddressRange(DWORD_PTR codeAddress) {
+        bool IsInNativeAddressRange(unsigned long codeAddress) {
             return (IsNativeCode() &&
                 codeAddress >= GetNativeAddress() &&
                 codeAddress < GetNativeAddress() + GetCodeSize());
         }
 
-        DWORD_PTR GetNativeAddress() const;
+        unsigned long GetNativeAddress() const;
         Js::JavascriptMethod GetThunkAddress() const;
         Js::JavascriptMethod GetNativeEntrypoint() const;
         ptrdiff_t GetCodeSize() const;
@@ -1066,8 +1066,8 @@ namespace Js
         void SetUtf8SourceInfo(Utf8SourceInfo* utf8SourceInfo) { m_utf8SourceInfo = utf8SourceInfo; }
         bool IsInDebugMode() const { return this->m_utf8SourceInfo->IsInDebugMode(); }
 
-        DWORD_PTR GetSecondaryHostSourceContext() const;
-        DWORD_PTR GetHostSourceContext() const;
+        unsigned long GetSecondaryHostSourceContext() const;
+        unsigned long GetHostSourceContext() const;
         SourceContextInfo * GetSourceContextInfo() const;
         SRCINFO const * GetHostSrcInfo() const;
 
@@ -3231,11 +3231,11 @@ namespace Js
         void RecordNativeThrowMap(SmallSpanSequenceIter& iter, uint32 offset, uint32 statementIndex, EntryPointInfo* entryPoint, uint loopNum);
         void SetNativeThrowSpanSequence(SmallSpanSequence *seq, uint loopNum, LoopEntryPointInfo* entryPoint);
 
-        BOOL GetMatchingStatementMapFromNativeAddress(DWORD_PTR codeAddress, StatementData &data, uint loopNum, FunctionBody *inlinee = nullptr);
-        BOOL GetMatchingStatementMapFromNativeOffset(DWORD_PTR codeAddress, uint32 offset, StatementData &data, uint loopNum, FunctionBody *inlinee = nullptr);
+        BOOL GetMatchingStatementMapFromNativeAddress(unsigned long codeAddress, StatementData &data, uint loopNum, FunctionBody *inlinee = nullptr);
+        BOOL GetMatchingStatementMapFromNativeOffset(unsigned long codeAddress, uint32 offset, StatementData &data, uint loopNum, FunctionBody *inlinee = nullptr);
 
-        FunctionEntryPointInfo * GetEntryPointFromNativeAddress(DWORD_PTR codeAddress);
-        LoopEntryPointInfo * GetLoopEntryPointInfoFromNativeAddress(DWORD_PTR codeAddress, uint loopNum) const;
+        FunctionEntryPointInfo * GetEntryPointFromNativeAddress(unsigned long codeAddress);
+        LoopEntryPointInfo * GetLoopEntryPointInfoFromNativeAddress(unsigned long codeAddress, uint loopNum) const;
 #endif
 
         void InsertSymbolToRegSlotList(JsUtil::CharacterBuffer<char16_t> const& propName, RegSlot reg, RegSlot totalRegsCount);
@@ -3438,7 +3438,7 @@ namespace Js
 
 #if ENABLE_NATIVE_CODEGEN
         int                GetStatementIndexFromNativeOffset(SmallSpanSequence *pThrowSpanSequence, uint32 nativeOffset);
-        int                GetStatementIndexFromNativeAddress(SmallSpanSequence *pThrowSpanSequence, DWORD_PTR codeAddress, DWORD_PTR nativeBaseAddress);
+        int                GetStatementIndexFromNativeAddress(SmallSpanSequence *pThrowSpanSequence, unsigned long codeAddress, unsigned long nativeBaseAddress);
 #endif
 
         void EnsureAuxStatementData();
