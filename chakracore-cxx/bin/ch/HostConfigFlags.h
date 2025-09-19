@@ -15,16 +15,16 @@ public:
 #include "HostConfigFlagsList.h"
 
     static HostConfigFlags flags;
-    static LPWSTR* argsVal;
+    static char16_t** argsVal;
     static int argsCount;
     static void(*pfnPrintUsage)();
 
-    static void HandleArgsFlag(int& argc, _Inout_updates_to_(argc, argc) LPWSTR argv[]);
-    static void RemoveArg(int& argc, _Inout_updates_to_(argc, argc) PWSTR argv[], int index);
-    static int FindArg(int argc, _In_reads_(argc) PWSTR argv[], PCWSTR targetArg, size_t targetArgLen);
+    static void HandleArgsFlag(int& argc, _Inout_updates_to_(argc, argc) char16_t* argv[]);
+    static void RemoveArg(int& argc, _Inout_updates_to_(argc, argc) char16_t* argv[], int index);
+    static int FindArg(int argc, _In_reads_(argc) char16_t* argv[], PCWSTR targetArg, size_t targetArgLen);
 
-    template <class Func> static int FindArg(int argc, _In_reads_(argc) PWSTR argv[], Func func);
-    template <int LEN> static int FindArg(int argc, _In_reads_(argc) PWSTR argv[], const char16_t(&targetArg)[LEN]);
+    template <class Func> static int FindArg(int argc, _In_reads_(argc) char16_t* argv[], Func func);
+    template <int LEN> static int FindArg(int argc, _In_reads_(argc) char16_t* argv[], const char16_t(&targetArg)[LEN]);
 
     virtual bool ParseFlag(LPCWSTR flagsString, ICmdLineArgsParser * parser) override;
     virtual void PrintUsage() override;
@@ -40,7 +40,7 @@ private:
 
 // Find an arg in the arg list that satisfies func. Return the arg index if found.
 template <class Func>
-int HostConfigFlags::FindArg(int argc, _In_reads_(argc) PWSTR argv[], Func func)
+int HostConfigFlags::FindArg(int argc, _In_reads_(argc) char16_t * argv[], Func func)
 {
     for (int i = 1; i < argc; ++i)
     {
@@ -54,7 +54,7 @@ int HostConfigFlags::FindArg(int argc, _In_reads_(argc) PWSTR argv[], Func func)
 }
 
 template <int LEN>
-int HostConfigFlags::FindArg(int argc, _In_reads_(argc) PWSTR argv[], const char16_t(&targetArg)[LEN])
+int HostConfigFlags::FindArg(int argc, _In_reads_(argc) char16_t * argv[], const char16_t(&targetArg)[LEN])
 {
     return FindArg(argc, argv, targetArg, LEN - 1); // -1 to exclude null terminator
 }

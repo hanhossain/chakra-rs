@@ -105,7 +105,7 @@ void WScriptJsrt::RegisterScriptDir(DWORD_PTR sourceContext, LPCSTR fullDirNarro
 
 bool WScriptJsrt::CreateArgumentsObject(JsValueRef *argsObject)
 {
-    LPWSTR *argv = HostConfigFlags::argsVal;
+    char16_t* *argv = HostConfigFlags::argsVal;
     JsValueRef retArr;
 
     Assert(argsObject);
@@ -154,8 +154,8 @@ JsValueRef WScriptJsrt::EchoCallback(JsValueRef callee, bool isConstructCall, Js
                     wprintf(u" ");
                 }
                 charcount_t len;
-                LPWSTR ws = str.GetWideString(&len);
-                LPWSTR wsNoNull = new char16_t[((size_t)len) + 1];
+                char16_t* ws = str.GetWideString(&len);
+                char16_t* wsNoNull = new char16_t[((size_t)len) + 1];
                 charcount_t newIndex = 0;
                 for (charcount_t j = 0; j < len; j++)
                 {

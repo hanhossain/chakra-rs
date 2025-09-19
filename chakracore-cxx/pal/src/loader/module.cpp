@@ -106,7 +106,7 @@ static bool LOADConvertLibraryPathWideStringToMultibyteString(
     LPSTR multibyteLibraryPath,
     int32_t *multibyteLibraryPathLengthRef);
 static BOOL LOADValidateModule(MODSTRUCT *module);
-static LPWSTR LOADGetModuleFileName(MODSTRUCT *module);
+static char16_t* LOADGetModuleFileName(MODSTRUCT *module);
 static MODSTRUCT *LOADAddModule(void *dl_handle, LPCSTR libraryNameOrPath);
 static void *LOADLoadLibraryDirect(LPCSTR libraryNameOrPath);
 static BOOL LOADFreeLibrary(MODSTRUCT *module, BOOL fCallDllMain);
@@ -427,7 +427,7 @@ GetModuleFileNameA(
 {
     int32_t name_length;
     uint32_t retval = 0;
-    LPWSTR wide_name = nullptr;
+    char16_t* wide_name = nullptr;
 
     ENTRY("GetModuleFileNameA (hModule=%p, lpFileName=%p, nSize=%u)\n",
           hModule, lpFileName, nSize);
@@ -483,12 +483,12 @@ Notes :
 uint32_t
 GetModuleFileNameW(
      HMODULE hModule,
-     LPWSTR lpFileName,
+     char16_t* lpFileName,
      uint32_t nSize)
 {
     int32_t name_length;
     uint32_t retval = 0;
-    LPWSTR wide_name = nullptr;
+    char16_t* wide_name = nullptr;
 
     ENTRY("GetModuleFileNameW (hModule=%p, lpFileName=%p, nSize=%u)\n",
           hModule, lpFileName, nSize);
@@ -831,7 +831,7 @@ Function :
     Set the exe name path
 
 Parameters :
-    LPWSTR man exe path and name
+    char16_t* man exe path and name
 
 Return value :
     TRUE  if initialization succeedded
@@ -839,7 +839,7 @@ Return value :
 
 --*/
 extern "C"
-BOOL LOADSetExeName(LPWSTR name)
+BOOL LOADSetExeName(char16_t* name)
 {
 #if RETURNS_NEW_HANDLES_ON_REPEAT_DLOPEN
     LPSTR pszExeName = nullptr;
@@ -1275,9 +1275,9 @@ Notes :
     this function assumes that the module critical section is held, and that
     the module has already been validated.
 --*/
-static LPWSTR LOADGetModuleFileName(MODSTRUCT *module)
+static char16_t* LOADGetModuleFileName(MODSTRUCT *module)
 {
-    LPWSTR module_name;
+    char16_t* module_name;
     /* special case : if module is NULL, we want the name of the executable */
     if (!module)
     {
@@ -1346,7 +1346,7 @@ Notes :
 static MODSTRUCT *LOADAllocModule(void *dl_handle, LPCSTR name)
 {
     MODSTRUCT *module;
-    LPWSTR wide_name;
+    char16_t* wide_name;
 
     /* no match found : try to create a new module structure */
     module = (MODSTRUCT *)malloc(sizeof(MODSTRUCT));

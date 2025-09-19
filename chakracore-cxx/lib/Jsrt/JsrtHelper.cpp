@@ -20,12 +20,12 @@
 #include "Core/ConfigParser.h"
 #include "Base/ThreadBoundThreadContextManager.h"
 
-bool ConfigParserAPI::FillConsoleTitle(__ecount(cchBufferSize) LPWSTR buffer, size_t cchBufferSize, LPWSTR moduleName)
+bool ConfigParserAPI::FillConsoleTitle(__ecount(cchBufferSize) char16_t* buffer, size_t cchBufferSize, char16_t* moduleName)
 {
     return false;
 }
 
-void ConfigParserAPI::DisplayInitialOutput(LPWSTR moduleName)
+void ConfigParserAPI::DisplayInitialOutput(char16_t* moduleName)
 {
 }
 

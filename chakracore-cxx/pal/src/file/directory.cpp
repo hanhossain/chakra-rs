@@ -364,7 +364,7 @@ See MSDN doc.
 uint32_t
 GetCurrentDirectoryW(
               uint32_t nBufferLength,
-              LPWSTR lpBuffer)
+              char16_t* lpBuffer)
 {
     uint32_t dwWideLen = 0;
     uint32_t dwLastError = 0;

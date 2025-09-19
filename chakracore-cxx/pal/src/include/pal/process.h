@@ -43,7 +43,7 @@ extern Volatile<int32_t> terminator;
 
 // The process ID of this process, so we can avoid excessive calls to getpid().
 extern uint32_t gPID;
-extern LPWSTR pAppDir;
+extern char16_t* pAppDir;
 
 /*++
 Function:
@@ -72,7 +72,7 @@ Return
 Notes :
     This function takes ownership of lpwstrCmdLine, but not of lpwstrFullPath
 --*/
-BOOL  PROCCreateInitialProcess(LPWSTR lpwstrCmdLine, LPWSTR lpwstrFullPath);
+BOOL  PROCCreateInitialProcess(char16_t* lpwstrCmdLine, char16_t* lpwstrFullPath);
 
 /*++
 Function:

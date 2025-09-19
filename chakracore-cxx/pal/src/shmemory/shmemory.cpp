@@ -1364,7 +1364,7 @@ SHMPTR SHMFindNamedObjectByName( LPCWSTR lpName, SHM_NAMED_OBJECTS_ID oid,
 {
     PSHM_NAMED_OBJECTS pNamedObject = NULL;
     SHMPTR shmNamedObject = 0;
-    LPWSTR object_name = NULL;
+    char16_t* object_name = NULL;
 
     if(oid==SHM_NAMED_LAST)
     {
@@ -1397,7 +1397,7 @@ SHMPTR SHMFindNamedObjectByName( LPCWSTR lpName, SHM_NAMED_OBJECTS_ID oid,
 
         if ( pNamedObject->ShmObjectName )
         {
-            object_name = (LPWSTR)SHMPTR_TO_PTR( pNamedObject->ShmObjectName );
+            object_name = (char16_t*)SHMPTR_TO_PTR( pNamedObject->ShmObjectName );
         }
 
         if ( object_name &&

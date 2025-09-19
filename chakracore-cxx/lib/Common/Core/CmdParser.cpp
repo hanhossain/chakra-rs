@@ -25,8 +25,8 @@ using namespace Js;
 ///
 ///----------------------------------------------------------------------------
 
-LPWSTR
-CmdLineArgsParser::ParseString(__inout_ecount(ceBuffer) LPWSTR buffer, size_t ceBuffer, bool fTreatColonAsSeparator)
+char16_t*
+CmdLineArgsParser::ParseString(__inout_ecount(ceBuffer) char16_t* buffer, size_t ceBuffer, bool fTreatColonAsSeparator)
 {
 
     char16_t *out = buffer;
@@ -525,7 +525,7 @@ CmdLineArgsParser::ParseFlag()
     char16_t buffer[MaxTokenSize];
     ZeroMemory(buffer, sizeof(buffer));
 
-    LPWSTR flagString = ParseString(buffer);
+    char16_t* flagString = ParseString(buffer);
     Flag flag = ConfigFlagsTable::GetFlag(flagString);
     if(InvalidFlag == flag)
     {
@@ -618,7 +618,7 @@ CmdLineArgsParser::ParseFlag()
 ///----------------------------------------------------------------------------
 
 int
-CmdLineArgsParser::Parse(int argc, __in_ecount(argc) LPWSTR argv[])
+CmdLineArgsParser::Parse(int argc, __in_ecount(argc) char16_t* argv[])
 {
     int err = 0;
 
@@ -638,7 +638,7 @@ CmdLineArgsParser::Parse(int argc, __in_ecount(argc) LPWSTR argv[])
     return err;
 }
 
-int CmdLineArgsParser::Parse(LPWSTR oneArg) throw()
+int CmdLineArgsParser::Parse(char16_t* oneArg) throw()
 {
     int err = 0;
     char16_t buffer[MaxTokenSize];

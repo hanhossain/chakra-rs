@@ -45,12 +45,12 @@ If the function succeeds, the return value is a pointer to the buffer.
 If the function fails, the return value is NULL. 
 
 --*/
-LPWSTR
+char16_t*
 lstrcatW(
-	   LPWSTR lpString1,
+	   char16_t* lpString1,
 	  LPCWSTR lpString2)
 {
-    LPWSTR lpStart = lpString1;
+    char16_t* lpStart = lpString1;
 
     ENTRY("lstrcatW (lpString1=%p (%S), lpString2=%p (%S))\n",
           lpString1?lpString1:W16_NULLSTRING,
@@ -59,14 +59,14 @@ lstrcatW(
     if (lpString1 == NULL)
     {
         ERROR("invalid lpString1 argument\n");
-        LOGEXIT("lstrcatW returning LPWSTR NULL\n");
+        LOGEXIT("lstrcatW returning char16_t* NULL\n");
         return NULL;
     }
 
     if (lpString2 == NULL)
     {
         ERROR("invalid lpString2 argument\n");
-        LOGEXIT("lstrcatW returning LPWSTR NULL\n");
+        LOGEXIT("lstrcatW returning char16_t* NULL\n");
         return NULL;
     }
 
@@ -85,7 +85,7 @@ lstrcatW(
     /* add terminating null */
     *lpString1 = '\0';
 
-    LOGEXIT("lstrcatW returning LPWSTR %p (%S)\n", lpStart, lpStart);
+    LOGEXIT("lstrcatW returning char16_t* %p (%S)\n", lpStart, lpStart);
     return lpStart;
 }
 
@@ -112,12 +112,12 @@ If the function succeeds, the return value is a pointer to the buffer.
 If the function fails, the return value is NULL. 
 
 --*/
-LPWSTR
+char16_t*
 lstrcpyW(
-	  LPWSTR lpString1,
+	  char16_t* lpString1,
 	  LPCWSTR lpString2)
 {
-    LPWSTR lpStart = lpString1;
+    char16_t* lpStart = lpString1;
 
     ENTRY("lstrcpyW (lpString1=%p, lpString2=%p (%S))\n",
           lpString1?lpString1:W16_NULLSTRING, lpString2?lpString2:W16_NULLSTRING, lpString2?lpString2:W16_NULLSTRING);
@@ -125,14 +125,14 @@ lstrcpyW(
     if (lpString1 == NULL)
     {
         ERROR("invalid lpString1 argument\n");
-        LOGEXIT("lstrcpyW returning LPWSTR NULL\n");
+        LOGEXIT("lstrcpyW returning char16_t* NULL\n");
         return NULL;
     }
 
     if (lpString2 == NULL)
     {
         ERROR("invalid lpString2 argument\n");
-        LOGEXIT("lstrcpyW returning LPWSTR NULL\n");
+        LOGEXIT("lstrcpyW returning char16_t* NULL\n");
         return NULL;
     }
 
@@ -145,7 +145,7 @@ lstrcpyW(
     /* add terminating null */
     *lpString1 = '\0';
 
-    LOGEXIT("lstrcpyW returning LPWSTR %p (%S)\n", lpStart, lpStart);
+    LOGEXIT("lstrcpyW returning char16_t* %p (%S)\n", lpStart, lpStart);
     return lpStart;
 }
 
@@ -250,13 +250,13 @@ If the function succeeds, the return value is a pointer to the buffer.
 If the function fails, the return value is NULL. 
 
 --*/
-LPWSTR
+char16_t*
 lstrcpynW(
-	   LPWSTR lpString1,
+	   char16_t* lpString1,
 	   LPCWSTR lpString2,
 	   int iMaxLength)
 {
-    LPWSTR lpStart = lpString1;
+    char16_t* lpStart = lpString1;
 
     ENTRY("lstrcpynW (lpString1=%p, lpString2=%p (%S), iMaxLength=%d)\n",
               lpString1?lpString1:W16_NULLSTRING, lpString2?lpString2:W16_NULLSTRING, lpString2?lpString2:W16_NULLSTRING, iMaxLength);
@@ -264,14 +264,14 @@ lstrcpynW(
     if (lpString1 == NULL)
     {
         ERROR("invalid lpString1 argument\n");
-        LOGEXIT("lstrcpynW returning LPWSTR NULL\n");
+        LOGEXIT("lstrcpynW returning char16_t* NULL\n");
         return NULL;
     }
 
     if (lpString2 == NULL)
     {
         ERROR("invalid lpString2 argument\n");
-        LOGEXIT("lstrcpynW returning LPWSTR NULL\n");
+        LOGEXIT("lstrcpynW returning char16_t* NULL\n");
         return NULL;
     }
 
@@ -288,7 +288,7 @@ lstrcpynW(
         *lpString1 = '\0';
     }
 
-    LOGEXIT("lstrcpynW returning LPWSTR %p (%S)\n", lpStart, lpStart);
+    LOGEXIT("lstrcpynW returning char16_t* %p (%S)\n", lpStart, lpStart);
     return lpStart;
 
 }

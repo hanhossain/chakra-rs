@@ -47,14 +47,14 @@ Function:
   given set
 
 Parameters :
-    LPWSTR lpwstr :   string to search
+    char16_t* lpwstr :   string to search
     LPCWSTR charset : list of characters to search for
                                       
 Return value :
     pointer to first character of lpwstr that isn't in the set
     NULL if all characters are in the set                                                                 
 --*/
-LPWSTR UTIL_inverse_wcspbrk(LPWSTR lpwstr, LPCWSTR charset)
+char16_t* UTIL_inverse_wcspbrk(char16_t* lpwstr, LPCWSTR charset)
 {
     while(*lpwstr)
     {
@@ -222,10 +222,10 @@ Return Value :
     with free().
     In case if failure, LastError will be set.
 --*/
-LPWSTR UTIL_MBToWC_Alloc(LPCSTR lpMultiByteStr, int cbMultiByte)
+char16_t* UTIL_MBToWC_Alloc(LPCSTR lpMultiByteStr, int cbMultiByte)
 {
     int length;
-    LPWSTR lpWideCharStr;
+    char16_t* lpWideCharStr;
 
     /* get required buffer length */
     length = MultiByteToWideChar(CP_ACP, 0, lpMultiByteStr, cbMultiByte,
@@ -245,7 +245,7 @@ LPWSTR UTIL_MBToWC_Alloc(LPCSTR lpMultiByteStr, int cbMultiByte)
 
     /* allocate required buffer */
     size_t fullsize = length * sizeof(char16_t);
-    lpWideCharStr = (LPWSTR)malloc(fullsize);
+    lpWideCharStr = (char16_t*)malloc(fullsize);
     if(NULL == lpWideCharStr)
     {
         ERROR("malloc() failed! errno is %d (%s)\n", errno,strerror(errno));

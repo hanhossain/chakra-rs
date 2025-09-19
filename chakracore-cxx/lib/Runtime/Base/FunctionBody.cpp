@@ -7949,7 +7949,7 @@ namespace Js
     }
 
     /*static*/
-    void FunctionBody::GetShortNameFromUrl(LPCWSTR pchUrl, _Out_writes_z_(cchBuffer) LPWSTR pchShortName, size_t cchBuffer)
+    void FunctionBody::GetShortNameFromUrl(LPCWSTR pchUrl, _Out_writes_z_(cchBuffer) char16_t* pchShortName, size_t cchBuffer)
     {
         LPCWSTR pchFile = wcsrchr(pchUrl, u'/');
         if (pchFile == nullptr)

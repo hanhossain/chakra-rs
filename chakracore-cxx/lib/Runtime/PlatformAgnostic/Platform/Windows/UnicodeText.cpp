@@ -324,7 +324,7 @@ namespace PlatformAgnostic
             // Initialize the error field on the TLS since we check it later
             ::SetLastError(ERROR_SUCCESS);
 
-            int normalizedStringLength = ::NormalizeString(TranslateToWin32NormForm(normalizationForm), (LPCWSTR)sourceString, sourceLength, (LPWSTR)destString, destLength);
+            int normalizedStringLength = ::NormalizeString(TranslateToWin32NormForm(normalizationForm), (LPCWSTR)sourceString, sourceLength, (char16_t*)destString, destLength);
 
             if (destLength == 0 && normalizedStringLength >= 0)
             {

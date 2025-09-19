@@ -51,7 +51,7 @@ int32_t Silent_PAL_vsnprintf(LPSTR Buffer, int32_t Count, LPCSTR Format, va_list
     char TempBuff[1024]; /* used to hold a single %<foo> format string */
     LPSTR BufferPtr = Buffer;
     LPCSTR Fmt = Format;
-    LPWSTR TempWStr;
+    char16_t* TempWStr;
     char TempStr[MAX_STR_LEN+1];
     char16_t TempWChar;
     int32_t Flags;
@@ -100,7 +100,7 @@ int32_t Silent_PAL_vsnprintf(LPSTR Buffer, int32_t Count, LPCSTR Format, va_list
                     TempInt = va_arg(ap, int32_t); /* value not used */
                 }
 
-                TempWStr = va_arg(ap, LPWSTR);
+                TempWStr = va_arg(ap, char16_t*);
                 Length = Silent_WideCharToMultiByte(TempWStr, -1, 0, 0);
                 if (!Length)
                 {
@@ -330,7 +330,7 @@ int Silent_PAL_vfprintf(PAL_FILE *stream, const char *format, va_list aparg)
 {
     char TempBuff[1024]; /* used to hold a single %<foo> format string */
     LPCSTR Fmt = format;
-    LPWSTR TempWStr;
+    char16_t* TempWStr;
     LPSTR TempStr;
     char16_t TempWChar;
     int32_t Flags;
@@ -375,7 +375,7 @@ int Silent_PAL_vfprintf(PAL_FILE *stream, const char *format, va_list aparg)
                     TempInt = va_arg(ap, int32_t); /* value not used */
                 }
 
-                TempWStr = va_arg(ap, LPWSTR);
+                TempWStr = va_arg(ap, char16_t*);
                 Length = Silent_WideCharToMultiByte(TempWStr, -1, 0, 0);
                 if (!Length)
                 {

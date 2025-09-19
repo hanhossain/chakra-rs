@@ -186,8 +186,8 @@ uint32_t
 GetFullPathNameW(
       LPCWSTR lpFileName,
       uint32_t nBufferLength,
-      LPWSTR lpBuffer,
-      LPWSTR *lpFilePart)
+      char16_t* lpBuffer,
+      char16_t* *lpFilePart)
 {
     LPSTR fileNameA;
     /* bufferA needs to be able to hold a path that's potentially as
@@ -310,7 +310,7 @@ Note:
 uint32_t
 GetLongPathNameW(
 		  LPCWSTR lpszShortPath,
-          LPWSTR lpszLongPath,
+          char16_t* lpszLongPath,
   		  uint32_t cchBuffer)
 {
     uint32_t dwPathLen = 0;
@@ -377,7 +377,7 @@ Note:
 uint32_t
 GetShortPathNameW(
 		  LPCWSTR lpszLongPath,
-          LPWSTR lpszShortPath,
+          char16_t* lpszShortPath,
   		  uint32_t cchBuffer)
 {
     uint32_t dwPathLen = 0;
@@ -542,7 +542,7 @@ See also the comment for GetTempPathA.
 uint32_t
 GetTempPathW(
 	      uint32_t nBufferLength,
-	      LPWSTR lpBuffer)
+	      char16_t* lpBuffer)
 {
     ENTRY("GetTempPathW(nBufferLength=%u, lpBuffer=%p)\n",
           nBufferLength, lpBuffer);
@@ -719,10 +719,10 @@ Parameter:
 --*/
 void
 FILEDosToUnixPathW(
-       LPWSTR lpPath)
+       char16_t* lpPath)
 {
-    LPWSTR p;
-    LPWSTR pPointAtDot=NULL;
+    char16_t* p;
+    char16_t* pPointAtDot=NULL;
     char16_t charBeforeFirstDot='\0';
 
     TRACE("Original DOS path = [%S]\n", lpPath);
@@ -1336,8 +1336,8 @@ SearchPathW(
      LPCWSTR lpFileName,
      LPCWSTR lpExtension,
      uint32_t nBufferLength,
-     LPWSTR lpBuffer,
-     LPWSTR *lpFilePart
+     char16_t* lpBuffer,
+     char16_t* *lpFilePart
     )
 {
     uint32_t nRet = 0;
@@ -1600,7 +1600,7 @@ Function:
 
 See MSDN doc.
 --*/
-LPWSTR
+char16_t*
 PathFindFileNameW(
      LPCWSTR pPath
     )
@@ -1609,7 +1609,7 @@ PathFindFileNameW(
           pPath?pPath:W16_NULLSTRING,
           pPath?pPath:W16_NULLSTRING);
 
-    LPWSTR ret = (LPWSTR)pPath;
+    char16_t* ret = (char16_t*)pPath;
     if (ret != NULL && *ret != W('\0'))
     {
         ret = PAL_wcschr(ret, W('\0')) - 1;

@@ -83,7 +83,7 @@ Parameter:
   IN/OUT lpPath: path to be modified
   --*/
 void
-FILEDosToUnixPathW(LPWSTR lpPath);
+FILEDosToUnixPathW(char16_t* lpPath);
 
 /*++
 Function:

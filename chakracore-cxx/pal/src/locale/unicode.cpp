@@ -531,7 +531,7 @@ MultiByteToWideChar(
          uint32_t dwFlags,
          LPCSTR lpMultiByteStr,
          int cbMultiByte,
-         LPWSTR lpWideCharStr,
+         char16_t* lpWideCharStr,
          int cchWideChar)
 {
     int32_t retval =0;
@@ -694,7 +694,7 @@ WideCharToMultiByte(
         (lpWideCharStr == NULL) ||
         ((cbMultiByte != 0) &&
         ((lpMultiByteStr == NULL) ||
-        (lpWideCharStr == (LPWSTR)lpMultiByteStr))) )
+        (lpWideCharStr == (char16_t*)lpMultiByteStr))) )
     {
         ERROR("Error lpWideCharStr parameters are invalid\n");
         SetLastError(ERROR_INVALID_PARAMETER);
@@ -817,7 +817,7 @@ int
 PAL_GetResourceString(
          LPCSTR lpDomain,
          LPCSTR lpResourceStr,
-         LPWSTR lpWideCharStr,
+         char16_t* lpWideCharStr,
          int cchWideChar
       )
 {

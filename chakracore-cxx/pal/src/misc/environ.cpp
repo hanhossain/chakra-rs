@@ -132,7 +132,7 @@ See MSDN doc.
 uint32_t
 GetEnvironmentVariableW(
              LPCWSTR lpName,
-             LPWSTR lpBuffer,
+             char16_t* lpBuffer,
              uint32_t nSize)
 {
     char *inBuff = NULL;
@@ -350,7 +350,7 @@ the block is no longer needed, it should be freed by calling
 FreeEnvironmentStrings.
 
 --*/
-LPWSTR
+char16_t*
 GetEnvironmentStringsW(
                void)
 {
@@ -481,7 +481,7 @@ be freed by calling FreeEnvironmentStrings.
 --*/
 BOOL
 FreeEnvironmentStringsW(
-             LPWSTR lpValue)
+             char16_t* lpValue)
 {
     ENTRY("FreeEnvironmentStringsW(lpValue=%p (%S))\n", lpValue?lpValue:W16_NULLSTRING, lpValue?lpValue:W16_NULLSTRING);
 
