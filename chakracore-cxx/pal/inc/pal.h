@@ -1287,56 +1287,18 @@ SetThreadContext(
 #define THREAD_PRIORITY_TIME_CRITICAL THREAD_BASE_PRIORITY_LOWRT
 #define THREAD_PRIORITY_IDLE          THREAD_BASE_PRIORITY_IDLE
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 int
 GetThreadPriority(
            HANDLE hThread);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 BOOL
 SetThreadPriority(
            HANDLE hThread,
            int nPriority);
 
-// TODO (hanhossain): check usage
-BOOL
-GetThreadTimes(
-         HANDLE hThread,
-         LPFILETIME lpCreationTime,
-         LPFILETIME lpExitTime,
-         LPFILETIME lpKernelTime,
-         LPFILETIME lpUserTime);
-
-// TODO (hanhossain): check usage
-void *
-PAL_GetStackBase();
-
-// TODO (hanhossain): check usage
-void *
-PAL_GetStackLimit();
-
-// TODO (hanhossain): check usage
-uint32_t
-PAL_GetLogicalCpuCountFromOS();
-
-// TODO (hanhossain): check usage
-size_t
-PAL_GetLogicalProcessorCacheSizeFromOS();
-
 typedef BOOL (*ReadMemoryWordCallback)(size_t address, size_t *value);
-
-#if defined(_AMD64_) || defined(_ARM_) || defined(_ARM64_)
-// TODO (hanhossain): check usage
-BOOL PAL_VirtualUnwind(CONTEXT *context, KNONVOLATILE_CONTEXT_POINTERS *contextPointers);
-
-// TODO (hanhossain): check usage
-BOOL PAL_VirtualUnwindOutOfProc(CONTEXT *context,
-                                                 KNONVOLATILE_CONTEXT_POINTERS *contextPointers,
-                                                 uint32_t pid,
-                                                 ReadMemoryWordCallback readMemCallback);
-#endif
-
-#define GetLogicalProcessorCacheSizeFromOS PAL_GetLogicalProcessorCacheSizeFromOS
 
 #if defined(__FreeBSD__) && defined(_X86_)
 #define PAL_CS_NATIVE_DATA_SIZE 12
@@ -1385,28 +1347,19 @@ typedef struct _CRITICAL_SECTION {
     } csnds;
 } CRITICAL_SECTION, *PCRITICAL_SECTION, *LPCRITICAL_SECTION;
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 void EnterCriticalSection(  LPCRITICAL_SECTION lpCriticalSection);
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 void LeaveCriticalSection(  LPCRITICAL_SECTION lpCriticalSection);
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 void InitializeCriticalSection( LPCRITICAL_SECTION lpCriticalSection);
-// TODO (hanhossain): check usage
-BOOL InitializeCriticalSectionEx(LPCRITICAL_SECTION lpCriticalSection, uint32_t dwSpinCount, uint32_t Flags);
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 BOOL InitializeCriticalSectionAndSpinCount(LPCRITICAL_SECTION lpCriticalSection, uint32_t dwSpinCount);
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 void DeleteCriticalSection(  LPCRITICAL_SECTION lpCriticalSection);
-// TODO (hanhossain): check usage
-BOOL TryEnterCriticalSection(  LPCRITICAL_SECTION lpCriticalSection);
 
 #define SEM_FAILCRITICALERRORS          0x0001
 #define SEM_NOOPENFILEERRORBOX          0x8000
-
-// TODO (hanhossain): check usage
-uint32_t
-SetErrorMode(
-          uint32_t uMode);
 
 #define PAGE_NOACCESS                   0x01
 #define PAGE_READONLY                   0x02
@@ -1428,17 +1381,7 @@ SetErrorMode(
 #define MEM_WRITE_WATCH                 0x200000
 #define MEM_RESERVE_EXECUTABLE          0x40000000 // reserve memory using executable memory allocator
 
-// TODO (hanhossain): check usage
-HANDLE
-CreateFileMappingA(
-            HANDLE hFile,
-            LPSECURITY_ATTRIBUTES lpFileMappingAttributes,
-            uint32_t flProtect,
-            uint32_t dwMaximumSizeHigh,
-            uint32_t dwMaximumSizeLow,
-            const char * lpName);
-
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 HANDLE
 CreateFileMappingW(
             HANDLE hFile,
@@ -1448,6 +1391,7 @@ CreateFileMappingW(
             uint32_t dwMaximumSizeLow,
             const char16_t* lpName);
 
+// TODO (hanhossain): public
 #define CreateFileMapping CreateFileMappingW
 
 #define SECTION_QUERY       0x0001
@@ -1460,20 +1404,14 @@ CreateFileMappingW(
 #define FILE_MAP_ALL_ACCESS SECTION_ALL_ACCESS
 #define FILE_MAP_COPY       SECTION_QUERY
 
-// TODO (hanhossain): check usage
-HANDLE
-OpenFileMappingA(
-          uint32_t dwDesiredAccess,
-          BOOL bInheritHandle,
-          const char * lpName);
-
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 HANDLE
 OpenFileMappingW(
           uint32_t dwDesiredAccess,
           BOOL bInheritHandle,
           const char16_t* lpName);
 
+// TODO (hanhossain): public
 #define OpenFileMapping OpenFileMappingW
 
 // TODO (hanhossain): check usage

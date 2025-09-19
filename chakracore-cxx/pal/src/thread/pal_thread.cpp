@@ -2315,20 +2315,6 @@ CPalThread::GetStackLimit()
     return stackLimit;
 }
 
-void *
-PAL_GetStackBase()
-{
-    CPalThread* thread = InternalGetCurrentThread();
-    return thread->GetStackBase();
-}
-
-void *
-PAL_GetStackLimit()
-{
-    CPalThread* thread = InternalGetCurrentThread();
-    return thread->GetStackLimit();
-}
-
 /*++
 Function:
     PAL_SetActivationFunction

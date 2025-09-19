@@ -329,31 +329,3 @@ PAL_HasGetCurrentProcessorNumber()
 {
     return HAVE_SCHED_GETCPU;
 }
-
-uint32_t
-PAL_GetLogicalCpuCountFromOS()
-{
-    uint32_t numLogicalCores = 0;
-
-#if HAVE_SYSCONF
-    numLogicalCores = sysconf(_SC_NPROCESSORS_ONLN);
-#endif
-
-    return numLogicalCores;
-}
-
-size_t
-PAL_GetLogicalProcessorCacheSizeFromOS()
-{
-    size_t cacheSize = 0;
-
-#if HAVE_SYSCONF && defined(__LINUX__)
-    cacheSize = max(cacheSize, sysconf(_SC_LEVEL1_DCACHE_SIZE));
-    cacheSize = max(cacheSize, sysconf(_SC_LEVEL1_ICACHE_SIZE));
-    cacheSize = max(cacheSize, sysconf(_SC_LEVEL2_CACHE_SIZE));
-    cacheSize = max(cacheSize, sysconf(_SC_LEVEL3_CACHE_SIZE));
-    cacheSize = max(cacheSize, sysconf(_SC_LEVEL4_CACHE_SIZE));
-#endif
-
-    return cacheSize;
-}
