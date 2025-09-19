@@ -221,66 +221,6 @@ CFStringEncoding CODEPAGECPToCFStringEncoding(uint32_t codepage)
 
 /*++
 Function:
-CharNextA
-
-Parameters
-
-lpsz
-[in] Pointer to a character in a null-terminated string.
-
-Return Values
-
-A pointer to the next character in the string, or to the terminating null character if at the end of the string, indicates success.
-
-If lpsz points to the terminating null character, the return value is equal to lpsz.
-
-See MSDN doc.
---*/
-char*
-CharNextA(
-   const char * lpsz)
-{
-    char* pRet;
-    ENTRY("CharNextA (lpsz=%p (%s))\n", lpsz?lpsz:NULL, lpsz?lpsz:NULL);
-
-    pRet = CharNextExA(GetACP(), lpsz, 0);
-
-    LOGEXIT ("CharNextA returns char* %p\n", pRet);
-    return pRet;
-}
-
-
-/*++
-Function:
-CharNextExA
-
-See MSDN doc.
---*/
-char*
-CharNextExA(
-     uint16_t CodePage,
-     const char * lpCurrentChar,
-     uint32_t dwFlags)
-{
-    char* pRet = (char*) lpCurrentChar;
-
-    ENTRY("CharNextExA (CodePage=%hu, lpCurrentChar=%p (%s), dwFlags=%#x)\n",
-    CodePage, lpCurrentChar?lpCurrentChar:"NULL", lpCurrentChar?lpCurrentChar:"NULL", dwFlags);
-
-    if ((lpCurrentChar != NULL) && (*lpCurrentChar != 0))
-    {
-        pRet += (*(lpCurrentChar+1) != 0) &&
-            IsDBCSLeadByteEx(CodePage, *lpCurrentChar) ?  2 : 1;
-    }
-
-    LOGEXIT("CharNextExA returns char*:%p (%s)\n", pRet, pRet);
-    return pRet;
-}
-
-
-
-/*++
-Function:
 AreFileApisANSI
 
 The AreFileApisANSI function determines whether the file I/O functions

@@ -222,32 +222,6 @@ PAL_wprintf(
 
 /*++
 Function:
-  wsprintfA
-
-See MSDN doc.
---*/
-__attribute__((no_instrument_function))
-int
-wsprintfA(
-       char* buffer,
-       const char * format,
-      ...)
-{
-    int32_t Length;
-    va_list ap;
-
-    ENTRY("wsprintfA (buffer=%p, format=%p (%s))\n", buffer, format, format);
-
-    va_start(ap, format);
-    Length = PAL__vsnprintf(buffer, 1024, format, ap);
-    va_end(ap);
-
-    LOGEXIT("wsprintfA returns int %d\n", Length);
-    return Length;
-}
-
-/*++
-Function:
   wsprintfW
 
 See MSDN doc.

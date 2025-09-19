@@ -58,7 +58,6 @@ typedef unsigned char* ChakraBytePtr;
 typedef void* HANDLE;
 typedef unsigned char uint8_t;
 typedef uint8_t byte;
-typedef uint32_t uint32_t;
 typedef unsigned short char16_t;
 #endif
 
