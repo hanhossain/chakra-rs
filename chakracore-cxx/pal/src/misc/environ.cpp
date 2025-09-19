@@ -251,8 +251,8 @@ SetEnvironmentVariableW(
              const char16_t* lpName,
              const char16_t* lpValue)
 {
-    PCHAR name = NULL;
-    PCHAR value = NULL;
+    char * name = NULL;
+    char * value = NULL;
     int32_t nameSize = 0;
     int32_t valueSize = 0;
     BOOL bRet = FALSE;
@@ -269,7 +269,7 @@ SetEnvironmentVariableW(
         goto done;
     }
 
-    name = (PCHAR)malloc(sizeof(char)* nameSize);
+    name = (char *)malloc(sizeof(char)* nameSize);
     if (name == NULL)
     {
         ERROR("malloc failed\n");
@@ -295,7 +295,7 @@ SetEnvironmentVariableW(
             goto done;
         }
 
-        value = (PCHAR)malloc(sizeof(char)*valueSize);
+        value = (char *)malloc(sizeof(char)*valueSize);
         
         if ( NULL == value )
         {
