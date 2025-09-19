@@ -1173,13 +1173,13 @@ namespace TTD
             uint32 scriptLength = fbInfo->TopLevelBase.ByteLength;
             unsigned long sourceContext = fbInfo->TopLevelBase.SourceContextId;
 
-            TTDAssert(ctx->GetSourceContextInfo((DWORD_PTR)sourceContext, nullptr) == nullptr, "On inflate we should either have clean ctxts or we want to optimize the inflate process by skipping redoing this work!!!");
+            TTDAssert(ctx->GetSourceContextInfo((unsigned long)sourceContext, nullptr) == nullptr, "On inflate we should either have clean ctxts or we want to optimize the inflate process by skipping redoing this work!!!");
             TTDAssert(fbInfo->TopLevelBase.IsUtf8 == ((fbInfo->LoadFlag & LoadScriptFlag_Utf8Source) == LoadScriptFlag_Utf8Source), "Utf8 status is inconsistent!!!");
 
             const char16_t* srcUri = fbInfo->TopLevelBase.SourceUri.Contents;
             uint32 srcUriLength = fbInfo->TopLevelBase.SourceUri.Length;
 
-            SourceContextInfo * sourceContextInfo = ctx->CreateSourceContextInfo((DWORD_PTR)sourceContext, srcUri, srcUriLength, nullptr);
+            SourceContextInfo * sourceContextInfo = ctx->CreateSourceContextInfo((unsigned long)sourceContext, srcUri, srcUriLength, nullptr);
 
             TTDAssert(fbInfo->TopLevelBase.IsUtf8 || sizeof(wchar) == sizeof(char16_t), "Non-utf8 code only allowed on windows!!!");
             const int chsize = (fbInfo->LoadFlag & LoadScriptFlag_Utf8Source) ? sizeof(char) : sizeof(char16_t);

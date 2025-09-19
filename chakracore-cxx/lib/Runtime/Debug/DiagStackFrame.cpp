@@ -430,7 +430,7 @@ namespace Js
 
     // Address on stack that belongs to current frame.
     // Currently we only use this to determine which of given frames is above/below another one.
-    DWORD_PTR DiagInterpreterStackFrame::GetStackAddress()
+    unsigned long DiagInterpreterStackFrame::GetStackAddress()
     {
         return m_interpreterFrame->GetStackAddress();
     }
@@ -496,7 +496,7 @@ namespace Js
         AssertMsg(m_function && m_function->GetScriptContext() && m_function->GetScriptContext()->IsScriptContextInDebugMode(),
             "This only supports functions in debug mode.");
 
-        FunctionEntryPointInfo * entryPointInfo = GetFunction()->GetEntryPointFromNativeAddress((DWORD_PTR)codeAddr);
+        FunctionEntryPointInfo * entryPointInfo = GetFunction()->GetEntryPointFromNativeAddress((unsigned long)codeAddr);
         if (entryPointInfo)
         {
             m_localVarSlotsOffset = entryPointInfo->localVarSlotsOffset;
@@ -526,9 +526,9 @@ namespace Js
 
     // Address on stack that belongs to current frame.
     // Currently we only use this to determine which of given frames is above/below another one.
-    DWORD_PTR DiagNativeStackFrame::GetStackAddress()
+    unsigned long DiagNativeStackFrame::GetStackAddress()
     {
-        return reinterpret_cast<DWORD_PTR>(m_stackAddr);
+        return reinterpret_cast<unsigned long>(m_stackAddr);
     }
 
     Var DiagNativeStackFrame::GetRegValue(RegSlot slotId, bool allowTemp)
@@ -625,9 +625,9 @@ namespace Js
         return m_displayName;
     }
 
-    DWORD_PTR DiagRuntimeStackFrame::GetStackAddress()
+    unsigned long DiagRuntimeStackFrame::GetStackAddress()
     {
-        return reinterpret_cast<DWORD_PTR>(m_stackAddr);
+        return reinterpret_cast<unsigned long>(m_stackAddr);
     }
 
     int DiagRuntimeStackFrame::GetByteCodeOffset()

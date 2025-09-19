@@ -79,8 +79,6 @@ typedef signed long LONG64;
 
 #define _W64
 
-typedef unsigned long DWORD_PTR;
-
 #define _PTRDIFF_T_DEFINED
 
 #if !defined(__cplusplus)
@@ -103,10 +101,10 @@ typedef char16_t _TCHAR;
 typedef TCHAR *LPTSTR;
 typedef const TCHAR *LPCTSTR;
 
-#define MAKEWORD(a, b)      ((uint16_t)(((uint8_t)((DWORD_PTR)(a) & 0xff)) | ((uint16_t)((uint8_t)((DWORD_PTR)(b) & 0xff))) << 8))
-#define MAKELONG(a, b)      ((int32_t)(((uint16_t)((DWORD_PTR)(a) & 0xffff)) | ((uint32_t)((uint16_t)((DWORD_PTR)(b) & 0xffff))) << 16))
-#define LOBYTE(w)           ((uint8_t)((DWORD_PTR)(w) & 0xff))
-#define HIBYTE(w)           ((uint8_t)((DWORD_PTR)(w) >> 8))
+#define MAKEWORD(a, b)      ((uint16_t)(((uint8_t)((unsigned long)(a) & 0xff)) | ((uint16_t)((uint8_t)((unsigned long)(b) & 0xff))) << 8))
+#define MAKELONG(a, b)      ((int32_t)(((uint16_t)((unsigned long)(a) & 0xffff)) | ((uint32_t)((uint16_t)((unsigned long)(b) & 0xffff))) << 16))
+#define LOBYTE(w)           ((uint8_t)((unsigned long)(w) & 0xff))
+#define HIBYTE(w)           ((uint8_t)((unsigned long)(w) >> 8))
 
 typedef void *HANDLE;
 typedef HANDLE HWND;

@@ -19,9 +19,9 @@ namespace Js
         static const uint               NoSourceContext             = (uint)-1;
         // Variable indicating no source context cookie was passed in by the host- indicates Dynamic Script
         static const uint               JsBuiltInSourceContextId    = (uint)-2;
-        static const DWORD_PTR          JsBuiltInSourceContext      = (DWORD_PTR)-2;
-        static const DWORD_PTR          NoHostSourceContext         = (DWORD_PTR)-1;
-        static const DWORD_PTR          FunctionBodyUnavailable     = (DWORD_PTR)NULL; // Not a valid Var
+        static const unsigned long          JsBuiltInSourceContext      = (unsigned long)-2;
+        static const unsigned long          NoHostSourceContext         = (unsigned long)-1;
+        static const unsigned long          FunctionBodyUnavailable     = (unsigned long)NULL; // Not a valid Var
         static const LocalFunctionId    NoFunctionId                = (LocalFunctionId)-1;
         static const uint               NoStatementIndex            = (uint)-1;
         static const uint               NoByteCodeOffset            = (uint)-1;

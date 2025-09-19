@@ -3584,7 +3584,7 @@ ThreadContext::InvalidatePropertyGuardEntry(const Js::PropertyRecord* propertyRe
             {
                 uint8_t dummy;
                 Js::FunctionEntryPointInfo* functionEntryPoint = caller->GetFunctionBody()->GetDefaultFunctionEntryPointInfo();
-                if (functionEntryPoint->IsInNativeAddressRange((DWORD_PTR)stackWalker.GetInstructionPointer()))
+                if (functionEntryPoint->IsInNativeAddressRange((unsigned long)stackWalker.GetInstructionPointer()))
                 {
                     if (entry->entryPoints->TryGetValue(functionEntryPoint, &dummy))
                     {

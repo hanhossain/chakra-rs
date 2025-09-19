@@ -97,7 +97,7 @@ namespace Js
         this->debugManager->stepController.ResetReturnedValueList();
     }
 
-    void ProbeContainer::UpdateFramePointers(bool fMatchWithCurrentScriptContext, DWORD_PTR dispatchHaltFrameAddress)
+    void ProbeContainer::UpdateFramePointers(bool fMatchWithCurrentScriptContext, unsigned long dispatchHaltFrameAddress)
     {
         ArenaAllocator* pDiagArena = debugManager->GetDiagnosticArena()->Arena();
         framePointers = Anew(pDiagArena, DiagStack, pDiagArena);
@@ -137,7 +137,7 @@ namespace Js
                     else
                     {
                         void* stackAddress = walker.GetCurrentArgv();
-                        if (dispatchHaltFrameAddress == 0 || reinterpret_cast<DWORD_PTR>(stackAddress) > dispatchHaltFrameAddress)
+                        if (dispatchHaltFrameAddress == 0 || reinterpret_cast<unsigned long>(stackAddress) > dispatchHaltFrameAddress)
                         {
 #if ENABLE_NATIVE_CODEGEN
                             if (func->IsScriptFunction())
@@ -174,7 +174,7 @@ namespace Js
         }
     }
 
-    WeakDiagStack * ProbeContainer::GetFramePointers(DWORD_PTR dispatchHaltFrameAddress)
+    WeakDiagStack * ProbeContainer::GetFramePointers(unsigned long dispatchHaltFrameAddress)
     {
         if (framePointers == nullptr || this->debugSessionNumber < debugManager->GetDebugSessionNumber())
         {
@@ -970,25 +970,25 @@ namespace Js
         }
     }
 
-    void ProbeContainer::RegisterContextToDiag(DWORD_PTR context, ArenaAllocator *alloc)
+    void ProbeContainer::RegisterContextToDiag(unsigned long context, ArenaAllocator *alloc)
     {
         Assert(this->pScriptContext->IsScriptContextInSourceRundownOrDebugMode());
         Assert(alloc);
 
         if (registeredFuncContextList == nullptr)
         {
-            registeredFuncContextList = JsUtil::List<DWORD_PTR, ArenaAllocator>::New(alloc);
+            registeredFuncContextList = JsUtil::List<unsigned long, ArenaAllocator>::New(alloc);
         }
 
         registeredFuncContextList->Add(context);
     }
 
-    bool ProbeContainer::IsContextRegistered(DWORD_PTR context)
+    bool ProbeContainer::IsContextRegistered(unsigned long context)
     {
         return registeredFuncContextList != nullptr && registeredFuncContextList->Contains(context);
     }
 
-    FunctionBody * ProbeContainer::GetGlobalFunc(ScriptContext* scriptContext, DWORD_PTR secondaryHostSourceContext)
+    FunctionBody * ProbeContainer::GetGlobalFunc(ScriptContext* scriptContext, unsigned long secondaryHostSourceContext)
     {
         return scriptContext->FindFunction([&secondaryHostSourceContext] (FunctionBody* pFunc) {
             return ((pFunc->GetSecondaryHostSourceContext() == secondaryHostSourceContext) &&

@@ -340,14 +340,14 @@ namespace Js
 #if ENABLE_NATIVE_CODEGEN
     bool JavascriptStackWalker::TryGetByteCodeOffsetFromNativeFrame(uint32& offset) const
     {
-        DWORD_PTR pCodeAddr;
+        unsigned long pCodeAddr;
         if (this->lastInternalFrameInfo.codeAddress != nullptr)
         {
-            pCodeAddr = (DWORD_PTR)this->lastInternalFrameInfo.codeAddress;
+            pCodeAddr = (unsigned long)this->lastInternalFrameInfo.codeAddress;
         }
         else
         {
-            pCodeAddr = (DWORD_PTR)this->GetCurrentCodeAddr();
+            pCodeAddr = (unsigned long)this->GetCurrentCodeAddr();
         }
 
         // If the current instruction's return address is the beginning of the next statement then we will show error for the next line, which would be completely wrong.
@@ -359,7 +359,7 @@ namespace Js
         if (pCodeAddr)
         {
 #if defined(_M_ARM)
-            // Note that DWORD_PTR is not actually a pointer type (!) but is simple unsigned long/long (see BaseTsd.h).
+            // Note that unsigned long is not actually a pointer type (!) but is simple unsigned long/long (see BaseTsd.h).
             // Thus, decrement would be by 1 byte and not 4 bytes as in pointer arithmetic. That's exactly what we need.
             // For ARM the 'return address' is always odd and is 'next instr addr' + 1 byte, so to get to the BLX instr, we need to subtract 2 bytes from it.
             AssertMsg(pCodeAddr % 2 == 1, "Got even number for pCodeAddr! It's expected to be return address, which should be odd.");
@@ -423,7 +423,7 @@ namespace Js
         return loopNum;
     }
 
-    bool JavascriptStackWalker::TryGetByteCodeOffsetOfInlinee(Js::JavascriptFunction* parentFunction, uint loopNum, DWORD_PTR pCodeAddr, Js::FunctionBody** inlinee, uint32& offset, bool useInternalFrameInfo) const
+    bool JavascriptStackWalker::TryGetByteCodeOffsetOfInlinee(Js::JavascriptFunction* parentFunction, uint loopNum, unsigned long pCodeAddr, Js::FunctionBody** inlinee, uint32& offset, bool useInternalFrameInfo) const
     {
         // For inlined frames, translation from native offset -> source code happens in two steps.
         // The native offset is first translated into a statement index using the physical frame's
@@ -1279,11 +1279,11 @@ namespace Js
 
         if (loopNum != -1)
         {
-            entryPointInfo = (Js::EntryPointInfo*)parentFunctionBody->GetLoopEntryPointInfoFromNativeAddress((DWORD_PTR)nativeCodeAddress, loopNum);
+            entryPointInfo = (Js::EntryPointInfo*)parentFunctionBody->GetLoopEntryPointInfoFromNativeAddress((unsigned long)nativeCodeAddress, loopNum);
         }
         else
         {
-            entryPointInfo = (Js::EntryPointInfo*)parentFunctionBody->GetEntryPointFromNativeAddress((DWORD_PTR)nativeCodeAddress);
+            entryPointInfo = (Js::EntryPointInfo*)parentFunctionBody->GetEntryPointFromNativeAddress((unsigned long)nativeCodeAddress);
         }
 
         AssertMsg(entryPointInfo != nullptr, "Inlined frame should resolve to the right parent address");

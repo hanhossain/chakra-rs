@@ -97,7 +97,7 @@ namespace Js
         this->RegisterFunction(func, func->GetHostSourceContext(), title);
     }
 
-    void DebugContext::RegisterFunction(Js::ParseableFunctionInfo * func, DWORD_PTR dwDebugSourceContext, LPCWSTR title)
+    void DebugContext::RegisterFunction(Js::ParseableFunctionInfo * func, unsigned long dwDebugSourceContext, LPCWSTR title)
     {
         if (!this->CanRegisterFunction())
         {
@@ -128,7 +128,7 @@ namespace Js
         this->RegisterFunction(functionBody, dwDebugSourceContext, title);
     }
 
-    void DebugContext::RegisterFunction(Js::FunctionBody * functionBody, DWORD_PTR dwDebugSourceContext, LPCWSTR title)
+    void DebugContext::RegisterFunction(Js::FunctionBody * functionBody, unsigned long dwDebugSourceContext, LPCWSTR title)
     {
         if (!this->CanRegisterFunction())
         {
@@ -261,7 +261,7 @@ namespace Js
             }
 #endif // DBG
 
-            DWORD_PTR dwDebugHostSourceContext = Js::Constants::NoHostSourceContext;
+            unsigned long dwDebugHostSourceContext = Js::Constants::NoHostSourceContext;
 
             if (shouldPerformSourceRundown && this->hostDebugContext != nullptr)
             {

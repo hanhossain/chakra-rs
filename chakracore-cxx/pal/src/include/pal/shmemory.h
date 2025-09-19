@@ -82,7 +82,7 @@ extern "C"
 /*
 Type for shared memory blocks. use SHMPTR_TO_PTR to get a useable address.
  */
-typedef DWORD_PTR SHMPTR;
+typedef unsigned long SHMPTR;
 
 #define MAX_SEGMENTS 256
 

@@ -1793,12 +1793,12 @@ namespace Js
         return info;
     }
 
-    DWORD_PTR FunctionProxy::GetSecondaryHostSourceContext() const
+    unsigned long FunctionProxy::GetSecondaryHostSourceContext() const
     {
         return this->GetUtf8SourceInfo()->GetSecondaryHostSourceContext();
     }
 
-    DWORD_PTR FunctionProxy::GetHostSourceContext() const
+    unsigned long FunctionProxy::GetHostSourceContext() const
     {
         return this->GetSourceContextInfo()->dwHostSourceContext;
     }
@@ -3316,7 +3316,7 @@ namespace Js
     }
 
 #if ENABLE_NATIVE_CODEGEN
-    FunctionEntryPointInfo * FunctionBody::GetEntryPointFromNativeAddress(DWORD_PTR codeAddress)
+    FunctionEntryPointInfo * FunctionBody::GetEntryPointFromNativeAddress(unsigned long codeAddress)
     {
         FunctionEntryPointInfo * entryPoint = nullptr;
         this->MapEntryPoints([&entryPoint, &codeAddress](int index, FunctionEntryPointInfo * currentEntryPoint)
@@ -3332,7 +3332,7 @@ namespace Js
         return entryPoint;
     }
 
-    LoopEntryPointInfo * FunctionBody::GetLoopEntryPointInfoFromNativeAddress(DWORD_PTR codeAddress, uint loopNum) const
+    LoopEntryPointInfo * FunctionBody::GetLoopEntryPointInfoFromNativeAddress(unsigned long codeAddress, uint loopNum) const
     {
         LoopEntryPointInfo * entryPoint = nullptr;
 
@@ -3375,7 +3375,7 @@ namespace Js
         return statementIndex;
     }
 
-    int FunctionBody::GetStatementIndexFromNativeAddress(SmallSpanSequence *pThrowSpanSequence, DWORD_PTR codeAddress, DWORD_PTR nativeBaseAddress)
+    int FunctionBody::GetStatementIndexFromNativeAddress(SmallSpanSequence *pThrowSpanSequence, unsigned long codeAddress, unsigned long nativeBaseAddress)
     {
         uint32 nativeOffset = (uint32)(codeAddress - nativeBaseAddress);
 
@@ -3456,10 +3456,10 @@ namespace Js
     }
 
 #if ENABLE_NATIVE_CODEGEN
-    BOOL FunctionBody::GetMatchingStatementMapFromNativeAddress(DWORD_PTR codeAddress, StatementData &data, uint loopNum, FunctionBody *inlinee /* = nullptr */)
+    BOOL FunctionBody::GetMatchingStatementMapFromNativeAddress(unsigned long codeAddress, StatementData &data, uint loopNum, FunctionBody *inlinee /* = nullptr */)
     {
         SmallSpanSequence * spanSequence = nullptr;
-        DWORD_PTR nativeBaseAddress = NULL;
+        unsigned long nativeBaseAddress = NULL;
 
         EntryPointInfo * entryPoint;
         if (loopNum == -1)
@@ -3482,7 +3482,7 @@ namespace Js
         return GetMatchingStatementMap(data, statementIndex, inlinee);
     }
 
-    BOOL FunctionBody::GetMatchingStatementMapFromNativeOffset(DWORD_PTR codeAddress, uint32 offset, StatementData &data, uint loopNum, FunctionBody *inlinee /* = nullptr */)
+    BOOL FunctionBody::GetMatchingStatementMapFromNativeOffset(unsigned long codeAddress, uint32 offset, StatementData &data, uint loopNum, FunctionBody *inlinee /* = nullptr */)
     {
         EntryPointInfo * entryPoint;
 
@@ -8140,13 +8140,13 @@ namespace Js
     }
 
 #if ENABLE_NATIVE_CODEGEN
-    DWORD_PTR EntryPointInfo::GetNativeAddress() const
+    unsigned long EntryPointInfo::GetNativeAddress() const
     {
         // need the assert to skip for asmjsFunction as nativeAddress can be interpreter too for asmjs
         Assert(this->GetState() == CodeGenRecorded || this->GetState() == CodeGenDone || this->isAsmJsFunction);
 
         // !! this is illegal, however (by design) `IsInNativeAddressRange` needs it
-        return reinterpret_cast<DWORD_PTR>(this->GetNativeEntryPointData()->GetNativeAddress());
+        return reinterpret_cast<unsigned long>(this->GetNativeEntryPointData()->GetNativeAddress());
     }
 
     Js::JavascriptMethod EntryPointInfo::GetThunkAddress() const

@@ -9,9 +9,9 @@ class HostDebugContext
 public:
     HostDebugContext(Js::ScriptContext* inScriptContext) { this->scriptContext = inScriptContext; }
     virtual void Delete() = 0;
-    virtual DWORD_PTR GetHostSourceContext(Js::Utf8SourceInfo * sourceInfo) = 0;
+    virtual unsigned long GetHostSourceContext(Js::Utf8SourceInfo * sourceInfo) = 0;
     virtual int32_t SetThreadDescription(LPCWSTR url) = 0;
-    virtual int32_t DbgRegisterFunction(Js::ScriptContext * scriptContext, Js::FunctionBody * functionBody, DWORD_PTR dwDebugSourceContext, LPCWSTR title) = 0;
+    virtual int32_t DbgRegisterFunction(Js::ScriptContext * scriptContext, Js::FunctionBody * functionBody, unsigned long dwDebugSourceContext, LPCWSTR title) = 0;
     virtual void ReParentToCaller(Js::Utf8SourceInfo* sourceInfo) = 0;
     virtual void SortMembersList(JsUtil::List<Js::DebuggerPropertyDisplayInfo *, ArenaAllocator> * pMembersList, Js::ScriptContext* scriptContext) {/*Do nothing*/}
 
@@ -82,8 +82,8 @@ namespace Js
         // Private Functions
         void WalkAndAddUtf8SourceInfo(Js::Utf8SourceInfo* sourceInfo, JsUtil::List<Js::Utf8SourceInfo *, Recycler, false, Js::CopyRemovePolicy, RecyclerPointerComparer> *utf8SourceInfoList);
         bool CanRegisterFunction() const;
-        void RegisterFunction(Js::ParseableFunctionInfo * func, DWORD_PTR dwDebugSourceContext, LPCWSTR title);
-        void RegisterFunction(Js::FunctionBody * functionBody, DWORD_PTR dwDebugSourceContext, LPCWSTR title);
+        void RegisterFunction(Js::ParseableFunctionInfo * func, unsigned long dwDebugSourceContext, LPCWSTR title);
+        void RegisterFunction(Js::FunctionBody * functionBody, unsigned long dwDebugSourceContext, LPCWSTR title);
 
         template<class TMapFunction>
         void MapUTF8SourceInfoUntil(TMapFunction map);

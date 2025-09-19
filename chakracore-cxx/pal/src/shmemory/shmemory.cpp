@@ -429,7 +429,7 @@ BOOL SHMInitialize(void)
         // Check spinlock size
         _ASSERTE(sizeof(uint32_t) == sizeof(header->spinlock));
         // Check spinlock alignment
-        _ASSERTE(0 == ((DWORD_PTR)&header->spinlock % (DWORD_PTR)sizeof(void *)));
+        _ASSERTE(0 == ((unsigned long)&header->spinlock % (unsigned long)sizeof(void *)));
 #endif // TRACK_SHMLOCK_OWNERSHIP
 
 #ifdef TRACK_SHMLOCK_OWNERSHIP

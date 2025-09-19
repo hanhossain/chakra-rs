@@ -142,7 +142,7 @@ bool JsrtDebugManager::IsFirstChanceExceptionEnabled()
     return (this->GetBreakOnException() & JsDiagBreakOnExceptionAttributeFirstChance) == JsDiagBreakOnExceptionAttributeFirstChance;
 }
 
-int32_t JsrtDebugManager::DbgRegisterFunction(Js::ScriptContext* scriptContext, Js::FunctionBody* functionBody, DWORD_PTR dwDebugSourceContext, LPCWSTR title)
+int32_t JsrtDebugManager::DbgRegisterFunction(Js::ScriptContext* scriptContext, Js::FunctionBody* functionBody, unsigned long dwDebugSourceContext, LPCWSTR title)
 {
     Js::Utf8SourceInfo* utf8SourceInfo = functionBody->GetUtf8SourceInfo();
 

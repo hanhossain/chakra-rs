@@ -23,7 +23,7 @@ public:
     Field(bool) closed;
 #endif
 
-    Field(DWORD_PTR) dwHostSourceContext;      // Context passed in to ParseScriptText
+    Field(unsigned long) dwHostSourceContext;      // Context passed in to ParseScriptText
     Field(bool) isHostDynamicDocument;         // will be set to true when current doc is treated dynamic from the host side. (IActiveScriptContext::IsDynamicDocument)
 
     union

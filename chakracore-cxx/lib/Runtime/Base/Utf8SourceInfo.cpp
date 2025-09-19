@@ -16,7 +16,7 @@ namespace Js
     // If m_cbLength > abs(m_cchLength) then m_utf8Source contains non-ASCII (multi-byte encoded) characters.
 
     Utf8SourceInfo::Utf8SourceInfo(ISourceHolder* mappableSource, int32 cchLength,
-        SRCINFO const* srcInfo, DWORD_PTR secondaryHostSourceContext,
+        SRCINFO const* srcInfo, unsigned long secondaryHostSourceContext,
         ScriptContext* scriptContext, bool isLibraryCode, Js::Var scriptSource):
         sourceHolder(mappableSource),
         m_cchLength(cchLength),
@@ -189,7 +189,7 @@ namespace Js
         int32 length, SRCINFO const* srcInfo, bool isLibraryCode, Js::Var scriptSource)
     {
         // TODO: make this finalizable? Or have a finalizable version which would HeapDelete the string? Is this needed?
-        DWORD_PTR secondaryHostSourceContext = Js::Constants::NoHostSourceContext;
+        unsigned long secondaryHostSourceContext = Js::Constants::NoHostSourceContext;
 #ifdef ENABLE_SCRIPT_DEBUGGING
         if (srcInfo->sourceContextInfo->IsDynamic())
         {
@@ -323,7 +323,7 @@ namespace Js
         this->m_lineOffsetCache = RecyclerNew(recycler, LineOffsetCache, recycler, lineCharacterOffsets, lineByteOffsets, numberOfItems);
     }
 
-    DWORD_PTR Utf8SourceInfo::GetHostSourceContext() const
+    unsigned long Utf8SourceInfo::GetHostSourceContext() const
     {
         return m_srcInfo->sourceContextInfo->dwHostSourceContext;
     }
