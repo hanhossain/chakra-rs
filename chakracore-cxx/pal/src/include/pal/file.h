@@ -108,7 +108,7 @@ characters written to the buffer. If the buffer is not large enough,
 return the required size of the buffer including the NULL character. If
 there is no directory part in the path, return 0.
 --*/
-uint32_t FILEGetDirectoryFromFullPathA( LPCSTR lpFullPath,
+uint32_t FILEGetDirectoryFromFullPathA( const char * lpFullPath,
                      uint32_t  nBufferLength,
                      char*  lpBuffer );
 
@@ -118,7 +118,7 @@ Function:
 
 Given a full path, return a pointer to the first char of the filename part.
 --*/
-LPCSTR FILEGetFileNameFromFullPathA( LPCSTR lpFullPath );
+const char * FILEGetFileNameFromFullPathA( const char * lpFullPath );
 
 /*++
 Function:

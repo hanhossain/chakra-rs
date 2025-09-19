@@ -3,17 +3,17 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #if DBG
-typedef JsUtil::BaseDictionary<long, LPCSTR, ArenaAllocator> VtableHashMap;
+typedef JsUtil::BaseDictionary<long, const char *, ArenaAllocator> VtableHashMap;
 class VirtualTableRegistry
 {
 public:
-    static void Add(long vtable, LPCSTR className);
+    static void Add(long vtable, const char * className);
     static VtableHashMap * CreateVtableHashMap(ArenaAllocator * allocator);
 private:
     struct TableEntry
     {
         long vtable;
-        LPCSTR className;
+        const char * className;
     };
     static TableEntry m_knownVtables[];
     static uint32_t m_knownVtableCount;

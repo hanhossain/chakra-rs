@@ -587,7 +587,7 @@ static const unsigned long c_debugFillPattern8 = 0xcececececececece;
 #endif
 
 #if DBG_DUMP || defined(ENABLE_IR_VIEWER)
-    LPCSTR GetVtableName(long address);
+    const char * GetVtableName(long address);
 #endif
 #if DBG_DUMP | defined(VTUNE_PROFILING)
     bool DoRecordNativeMap() const;

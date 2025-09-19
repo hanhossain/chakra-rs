@@ -87,7 +87,7 @@ CreateEventA(
           LPSECURITY_ATTRIBUTES lpEventAttributes,
           BOOL bManualReset,
           BOOL bInitialState,
-          LPCSTR lpName)
+          const char * lpName)
 {
     HANDLE hEvent = NULL;
     CPalThread *pthr = NULL;

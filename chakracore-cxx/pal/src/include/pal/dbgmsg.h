@@ -416,11 +416,11 @@ Notes :
 /* if requested, use an __attribute__ feature to ask gcc to check that format
    specifiers match their parameters */
 int DBG_printf_gcc(DBG_CHANNEL_ID channel, DBG_LEVEL_ID level, BOOL bHeader,
-                   LPCSTR function, LPCSTR file, int32_t line, LPCSTR format, ...)
+                   const char * function, const char * file, int32_t line, const char * format, ...)
                    __attribute__ ((format (printf,7, 8)));
 #else
 int DBG_printf_gcc(DBG_CHANNEL_ID channel, DBG_LEVEL_ID level, BOOL bHeader,
-                   LPCSTR function, LPCSTR file, int32_t line, LPCSTR format, ...);
+                   const char * function, const char * file, int32_t line, const char * format, ...);
 #endif
 
 /*++

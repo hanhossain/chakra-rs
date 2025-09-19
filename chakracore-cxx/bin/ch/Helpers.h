@@ -7,10 +7,10 @@
 class Helpers
 {
 public :
-    static int32_t LoadScriptFromFile(LPCSTR filename, LPCSTR& contents, uint32_t* lengthBytesOut = nullptr, std::string* fullPath = nullptr, bool shouldMute = false);
+    static int32_t LoadScriptFromFile(const char * filename, const char *& contents, uint32_t* lengthBytesOut = nullptr, std::string* fullPath = nullptr, bool shouldMute = false);
     static const char16_t* JsErrorCodeToString(JsErrorCode jsErrorCode);
     static void LogError(__nullterminated const char16_t *msg, ...);
-    static int32_t LoadBinaryFile(LPCSTR filename, LPCSTR& contents, uint32_t& lengthBytes, bool printFileOpenError = true);
+    static int32_t LoadBinaryFile(const char * filename, const char *& contents, uint32_t& lengthBytes, bool printFileOpenError = true);
 
     static void TTReportLastIOErrorAsNeeded(BOOL ok, const char* msg);
     static void CreateTTDDirectoryAsNeeded(size_t* uriLength, char* uri, const char* asciiDir1, const wchar* asciiDir2);

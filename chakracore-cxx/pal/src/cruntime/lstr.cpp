@@ -171,7 +171,7 @@ Unicode versions.
 
 --*/
 int
-lstrlenA(  LPCSTR lpString)
+lstrlenA(  const char * lpString)
 {
     int nChar = 0;
 

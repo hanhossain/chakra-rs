@@ -298,12 +298,12 @@ PAL_DeleteExecWatchpoint(
 
 char*
 CharNextA(
-             LPCSTR lpsz);
+             const char * lpsz);
 
 char*
 CharNextExA(
          uint16_t CodePage,
-         LPCSTR lpCurrentChar,
+         const char * lpCurrentChar,
          uint32_t dwFlags);
 
 extern int sprintf_s(char *_Dst, size_t _SizeInBytes, const char *_Format, ...);
@@ -315,7 +315,7 @@ extern errno_t _ui64tow_s(unsigned long long inValue, char16_t* outBuffer, size_
 int
 wsprintfA(
        char*,
-       LPCSTR,
+       const char *,
       ...);
 
 int
@@ -388,7 +388,7 @@ typedef struct _SECURITY_ATTRIBUTES {
 
 HANDLE
 CreateFileA(
-         LPCSTR lpFileName,
+         const char * lpFileName,
          uint32_t dwDesiredAccess,
          uint32_t dwShareMode,
          LPSECURITY_ATTRIBUTES lpSecurityAttributes,
@@ -428,9 +428,9 @@ UnlockFile(
 
 uint32_t
 SearchPathA(
-     LPCSTR lpPath,
-     LPCSTR lpFileName,
-     LPCSTR lpExtension,
+     const char * lpPath,
+     const char * lpFileName,
+     const char * lpExtension,
      uint32_t nBufferLength,
      char* lpBuffer,
      char* *lpFilePart
@@ -450,8 +450,8 @@ SearchPathW(
 
 BOOL
 CopyFileA(
-       LPCSTR lpExistingFileName,
-       LPCSTR lpNewFileName,
+       const char * lpExistingFileName,
+       const char * lpNewFileName,
        BOOL bFailIfExists);
 
 BOOL
@@ -464,7 +464,7 @@ CopyFileW(
 
 BOOL
 DeleteFileA(
-         LPCSTR lpFileName);
+         const char * lpFileName);
 
 BOOL
 DeleteFileW(
@@ -475,8 +475,8 @@ DeleteFileW(
 
 BOOL
 MoveFileA(
-      LPCSTR lpExistingFileName,
-      LPCSTR lpNewFileName);
+      const char * lpExistingFileName,
+      const char * lpNewFileName);
 
 BOOL
 MoveFileW(
@@ -490,8 +490,8 @@ MoveFileW(
 
 BOOL
 MoveFileExA(
-         LPCSTR lpExistingFileName,
-         LPCSTR lpNewFileName,
+         const char * lpExistingFileName,
+         const char * lpNewFileName,
          uint32_t dwFlags);
 
 BOOL
@@ -504,7 +504,7 @@ MoveFileExW(
 
 BOOL
 CreateDirectoryA(
-          LPCSTR lpPathName,
+          const char * lpPathName,
           LPSECURITY_ATTRIBUTES lpSecurityAttributes);
 
 BOOL
@@ -520,7 +520,7 @@ RemoveDirectoryW(
 
 BOOL
 RemoveDirectoryA(
-          LPCSTR lpPathName);
+          const char * lpPathName);
 
 #define RemoveDirectory RemoveDirectoryW
 
@@ -569,7 +569,7 @@ typedef LPWIN32_FIND_DATAW LPWIN32_FIND_DATA;
 
 HANDLE
 FindFirstFileA(
-            LPCSTR lpFileName,
+            const char * lpFileName,
             LPWIN32_FIND_DATAA lpFindFileData);
 
 HANDLE
@@ -597,7 +597,7 @@ FindClose(
 
 uint32_t
 GetFileAttributesA(
-            LPCSTR lpFileName);
+            const char * lpFileName);
 
 uint32_t
 GetFileAttributesW(
@@ -628,7 +628,7 @@ GetFileAttributesExW(
 
 BOOL
 SetFileAttributesA(
-            LPCSTR lpFileName,
+            const char * lpFileName,
             uint32_t dwFileAttributes);
 
 BOOL
@@ -769,7 +769,7 @@ GetConsoleOutputCP(
 
 uint32_t
 GetFullPathNameA(
-          LPCSTR lpFileName,
+          const char * lpFileName,
           uint32_t nBufferLength,
           char* lpBuffer,
           char* *lpFilePart);
@@ -802,8 +802,8 @@ GetShortPathNameW(
 
 uint32_t
 GetTempFileNameA(
-          LPCSTR lpPathName,
-          LPCSTR lpPrefixString,
+          const char * lpPathName,
+          const char * lpPrefixString,
           uint32_t uUnique,
           char* lpTempFileName);
 
@@ -842,7 +842,7 @@ GetCurrentDirectoryW(
 
 BOOL
 SetCurrentDirectoryA(
-             LPCSTR lpPathName);
+             const char * lpPathName);
 
 BOOL
 SetCurrentDirectoryW(
@@ -869,14 +869,14 @@ CreateSemaphoreA(
           LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
           int32_t lInitialCount,
           int32_t lMaximumCount,
-          LPCSTR lpName);
+          const char * lpName);
 
 HANDLE
 CreateSemaphoreExA(
           LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
           int32_t lInitialCount,
           int32_t lMaximumCount,
-          LPCSTR lpName,
+          const char * lpName,
           /*_Reserved_*/  uint32_t dwFlags,
           uint32_t dwDesiredAccess);
 
@@ -916,7 +916,7 @@ CreateEventA(
           LPSECURITY_ATTRIBUTES lpEventAttributes,
           BOOL bManualReset,
           BOOL bInitialState,
-          LPCSTR lpName);
+          const char * lpName);
 
 HANDLE
 CreateEventW(
@@ -1026,14 +1026,14 @@ typedef struct _PROCESS_INFORMATION {
 
 BOOL
 CreateProcessA(
-            LPCSTR lpApplicationName,
+            const char * lpApplicationName,
             char* lpCommandLine,
             LPSECURITY_ATTRIBUTES lpProcessAttributes,
             LPSECURITY_ATTRIBUTES lpThreadAttributes,
             BOOL bInheritHandles,
             uint32_t dwCreationFlags,
             void * lpEnvironment,
-            LPCSTR lpCurrentDirectory,
+            const char * lpCurrentDirectory,
             LPSTARTUPINFOA lpStartupInfo,
             LPPROCESS_INFORMATION lpProcessInformation);
 
@@ -1779,7 +1779,7 @@ CreateFileMappingA(
             uint32_t flProtect,
             uint32_t dwMaximumSizeHigh,
             uint32_t dwMaximumSizeLow,
-            LPCSTR lpName);
+            const char * lpName);
 
 HANDLE
 CreateFileMappingW(
@@ -1806,7 +1806,7 @@ HANDLE
 OpenFileMappingA(
           uint32_t dwDesiredAccess,
           BOOL bInheritHandle,
-          LPCSTR lpName);
+          const char * lpName);
 
 HANDLE
 OpenFileMappingW(
@@ -1844,7 +1844,7 @@ UnmapViewOfFile(
 
 HMODULE
 LoadLibraryA(
-         LPCSTR lpLibFileName);
+         const char * lpLibFileName);
 
 HMODULE
 LoadLibraryW(
@@ -1852,7 +1852,7 @@ LoadLibraryW(
 
 HMODULE
 LoadLibraryExA(
-         LPCSTR lpLibFileName,
+         const char * lpLibFileName,
          /*Reserved*/ HANDLE hFile,
          uint32_t dwFlags);
 
@@ -1912,7 +1912,7 @@ typedef long (*FARPROC)();
 FARPROC
 GetProcAddress(
      HMODULE hModule,
-     LPCSTR lpProcName);
+     const char * lpProcName);
 
 BOOL
 FreeLibrary(
@@ -2236,7 +2236,7 @@ int
 MultiByteToWideChar(
              uint32_t CodePage,
              uint32_t dwFlags,
-             LPCSTR lpMultiByteStr,
+             const char * lpMultiByteStr,
              int cbMultiByte,
              char16_t* lpWideCharStr,
              int cchWideChar);
@@ -2251,7 +2251,7 @@ WideCharToMultiByte(
              int cchWideChar,
              char* lpMultiByteStr,
              int cbMultyByte,
-             LPCSTR lpDefaultChar,
+             const char * lpDefaultChar,
              LPBOOL lpUsedDefaultChar);
 
 //
@@ -2751,13 +2751,13 @@ GetDateFormatEx(
 
 int
 PAL_GetResourceString(
-         LPCSTR lpDomain,
-         LPCSTR lpResourceStr,
+         const char * lpDomain,
+         const char * lpResourceStr,
          char16_t* lpWideCharStr,
          int cchWideChar);
 
 BOOL
-PAL_BindResources( LPCSTR lpDomain);
+PAL_BindResources( const char * lpDomain);
 
 #define EXCEPTION_NONCONTINUABLE 0x1
 #define EXCEPTION_UNWINDING 0x2
@@ -2898,7 +2898,7 @@ EnumProcessModules(
 
 void
 OutputDebugStringA(
-     LPCSTR lpOutputString);
+     const char * lpOutputString);
 
 void
 OutputDebugStringW(
@@ -2926,7 +2926,7 @@ lstrcpyW(
 
 int
 lstrlenA(
-      LPCSTR lpString);
+      const char * lpString);
 
 int
 lstrlenW(
@@ -2945,7 +2945,7 @@ lstrcpynW(
 
 uint32_t
 GetEnvironmentVariableA(
-             LPCSTR lpName,
+             const char * lpName,
              char* lpBuffer,
              uint32_t nSize);
 
@@ -2959,8 +2959,8 @@ GetEnvironmentVariableW(
 
 BOOL
 SetEnvironmentVariableA(
-             LPCSTR lpName,
-             LPCSTR lpValue);
+             const char * lpName,
+             const char * lpValue);
 
 BOOL
 SetEnvironmentVariableW(
@@ -3856,8 +3856,8 @@ DeregisterEventSource (
 
 HANDLE
 RegisterEventSourceA (
-      LPCSTR lpUNCServerName,
-         LPCSTR lpSourceName
+      const char * lpUNCServerName,
+         const char * lpSourceName
     );
 HANDLE
 RegisterEventSourceW (
@@ -3885,7 +3885,7 @@ ReportEventA (
       void *       lpUserSid,
          uint16_t       wNumStrings,
          uint32_t      dwDataSize,
-      LPCSTR *lpStrings,
+      const char * *lpStrings,
       void * lpRawData
     );
 BOOL

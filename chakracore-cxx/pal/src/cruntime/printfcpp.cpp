@@ -37,7 +37,7 @@ SET_DEFAULT_DEBUG_CHANNEL(CRT);
 using namespace CorUnix;
 
 int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, const char16_t* Format, va_list ap);
-int CoreVsnprintf(CPalThread *pthrCurrent, char* Buffer, size_t Count, LPCSTR Format, va_list ap);
+int CoreVsnprintf(CPalThread *pthrCurrent, char* Buffer, size_t Count, const char * Format, va_list ap);
 int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, va_list ap);
 int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *format, va_list ap);
 
@@ -147,7 +147,7 @@ Notes:
         MS  -->  2.560000E+002
         gcc -->  2.560000E+02
 *******************************************************************************/
-BOOL Internal_ExtractFormatA(CPalThread *pthrCurrent, LPCSTR *Fmt, char* Out, int32_t * Flags,
+BOOL Internal_ExtractFormatA(CPalThread *pthrCurrent, const char * *Fmt, char* Out, int32_t * Flags,
     int32_t * Width, int32_t * Precision, int32_t * Prefix, int32_t * Type)
 {
     BOOL Result = FALSE;
@@ -1055,7 +1055,7 @@ Parameters:
     - stdarg parameter list
 *******************************************************************************/
 
-int PAL__vsnprintf(char* Buffer, size_t Count, LPCSTR Format, va_list ap)
+int PAL__vsnprintf(char* Buffer, size_t Count, const char * Format, va_list ap)
 {
     return CoreVsnprintf(InternalGetCurrentThread(), Buffer, Count, Format, ap);
 }
@@ -1115,7 +1115,7 @@ int CorUnix::InternalWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_
     return CoreWvsnprintf(pthrCurrent, Buffer, Count, Format, ap);
 }
 
-int CorUnix::InternalVsnprintf(CPalThread *pthrCurrent, char* Buffer, size_t Count, LPCSTR Format, va_list ap)
+int CorUnix::InternalVsnprintf(CPalThread *pthrCurrent, char* Buffer, size_t Count, const char * Format, va_list ap)
 {
     return CoreVsnprintf(pthrCurrent, Buffer, Count, Format, ap);
 }
@@ -1544,12 +1544,12 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
     return (written);
 }
 
-int CoreVsnprintf(CPalThread *pthrCurrent, char* Buffer, size_t Count, LPCSTR Format, va_list aparg)
+int CoreVsnprintf(CPalThread *pthrCurrent, char* Buffer, size_t Count, const char * Format, va_list aparg)
 {
     BOOL BufferRanOut = FALSE;
     char TempBuff[1024]; /* used to hold a single %<foo> format string */
     char* BufferPtr = Buffer;
-    LPCSTR Fmt = Format;
+    const char * Fmt = Format;
     char16_t* TempWStr;
     char* TempStr;
     char16_t TempWChar;
@@ -2212,7 +2212,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
 int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, va_list aparg)
 {
     char TempBuff[1024]; /* used to hold a single %<foo> format string */
-    LPCSTR Fmt = format;
+    const char * Fmt = format;
     char16_t* TempWStr;
     char* TempStr;
     char16_t TempWChar;

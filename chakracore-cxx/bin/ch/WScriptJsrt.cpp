@@ -98,7 +98,7 @@ unsigned long WScriptJsrt::GetNextSourceContext()
     return sourceContext++;
 }
 
-void WScriptJsrt::RegisterScriptDir(unsigned long sourceContext, LPCSTR fullDirNarrow)
+void WScriptJsrt::RegisterScriptDir(unsigned long sourceContext, const char * fullDirNarrow)
 {
     GetDir(fullDirNarrow, &scriptDirMap[sourceContext]);
 }
@@ -228,7 +228,7 @@ JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *argu
     }
     else
     {
-        LPCSTR fileContent;
+        const char * fileContent;
         AutoString fileName(arguments[1]);
         IfJsrtErrorSetGo(fileName.GetError());
 
@@ -606,7 +606,7 @@ Error:
     return returnValue;
 }
 
-void WScriptJsrt::GetDir(LPCSTR fullPathNarrow, std::string *fullDirNarrow)
+void WScriptJsrt::GetDir(const char * fullPathNarrow, std::string *fullDirNarrow)
 {
     char fileDrive[_MAX_DRIVE];
     char fileDir[_MAX_DIR];
@@ -621,16 +621,16 @@ void WScriptJsrt::GetDir(LPCSTR fullPathNarrow, std::string *fullDirNarrow)
     *fullDirNarrow = result;
 }
 
-JsErrorCode WScriptJsrt::ModuleEntryPoint(LPCSTR fileName, LPCSTR fileContent, LPCSTR fullName)
+JsErrorCode WScriptJsrt::ModuleEntryPoint(const char * fileName, const char * fileContent, const char * fullName)
 {
     return LoadModuleFromString(fileName, fileContent, fullName, true);
 }
 
-JsErrorCode WScriptJsrt::LoadModuleFromString(LPCSTR fileName, LPCSTR fileContent, LPCSTR fullName, bool isFile)
+JsErrorCode WScriptJsrt::LoadModuleFromString(const char * fileName, const char * fileContent, const char * fullName, bool isFile)
 {
     unsigned long dwSourceCookie = WScriptJsrt::GetNextSourceContext();
     JsModuleRecord requestModule = JS_INVALID_REFERENCE;
-    LPCSTR moduleRecordKey = fullName ? fullName : fileName;
+    const char * moduleRecordKey = fullName ? fullName : fileName;
     auto moduleRecordEntry = moduleRecordMap.find(std::string(moduleRecordKey));
     JsErrorCode errorCode = JsNoError;
 
@@ -682,8 +682,8 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(LPCSTR fileName, LPCSTR fileConten
 }
 
 
-JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, LPCSTR fileName,
-    LPCSTR fileContent, LPCSTR scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile)
+JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, const char * fileName,
+    const char * fileContent, const char * scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile)
 {
     int32_t hr = E_FAIL;
     JsErrorCode errorCode = JsNoError;
@@ -1777,7 +1777,7 @@ Error:
     return returnValue;
 }
 
-bool WScriptJsrt::PrintException(LPCSTR fileName, JsErrorCode jsErrorCode, JsValueRef exception)
+bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode, JsValueRef exception)
 {
     const char16_t* errorTypeString = ConvertErrorCodeToMessage(jsErrorCode);
     JsValueRef metaData = JS_INVALID_REFERENCE;
@@ -1967,12 +1967,12 @@ WScriptJsrt::CallbackMessage::~CallbackMessage()
     m_function = JS_INVALID_REFERENCE;
 }
 
-int32_t WScriptJsrt::CallbackMessage::Call(LPCSTR fileName)
+int32_t WScriptJsrt::CallbackMessage::Call(const char * fileName)
 {
     return CallFunction(fileName);
 }
 
-int32_t WScriptJsrt::CallbackMessage::CallFunction(LPCSTR fileName)
+int32_t WScriptJsrt::CallbackMessage::CallFunction(const char * fileName)
 {
     int32_t hr = S_OK;
 
@@ -2034,7 +2034,7 @@ WScriptJsrt::ModuleMessage::~ModuleMessage()
     }
 }
 
-int32_t WScriptJsrt::ModuleMessage::Call(LPCSTR fileName)
+int32_t WScriptJsrt::ModuleMessage::Call(const char * fileName)
 {
     JsErrorCode errorCode = JsNoError;
     JsValueRef result = JS_INVALID_REFERENCE;
@@ -2052,7 +2052,7 @@ int32_t WScriptJsrt::ModuleMessage::Call(LPCSTR fileName)
     }
     else
     {
-        LPCSTR fileContent = nullptr;
+        const char * fileContent = nullptr;
         AutoString specifierStr(specifier);
         errorCode = specifierStr.GetError();
         if (errorCode == JsNoError)
@@ -2091,7 +2091,7 @@ JsErrorCode WScriptJsrt::ReportModuleCompletionCallback(JsModuleRecord module, J
 }
 
 JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingModule,
-    JsValueRef specifier, JsModuleRecord* dependentModuleRecord, LPCSTR refdir)
+    JsValueRef specifier, JsModuleRecord* dependentModuleRecord, const char * refdir)
 {
     JsModuleRecord moduleRecord = JS_INVALID_REFERENCE;
     AutoString specifierStr;

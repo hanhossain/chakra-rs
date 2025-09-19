@@ -229,7 +229,7 @@ public:
         dontFree = true;
     }
 
-    LPCSTR GetString()
+    const char * GetString()
     {
         return data;
     }
@@ -320,7 +320,7 @@ public:
         return Find(path.GetString(), path.GetLength(), out);
     }
 
-    static bool Find(LPCSTR path, size_t pathLength, AutoString ** out)
+    static bool Find(const char * path, size_t pathLength, AutoString ** out)
     {
         FileNode * node = root;
         while(node != nullptr)

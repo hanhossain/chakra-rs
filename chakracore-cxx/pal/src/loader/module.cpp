@@ -107,11 +107,11 @@ static bool LOADConvertLibraryPathWideStringToMultibyteString(
     int32_t *multibyteLibraryPathLengthRef);
 static BOOL LOADValidateModule(MODSTRUCT *module);
 static char16_t* LOADGetModuleFileName(MODSTRUCT *module);
-static MODSTRUCT *LOADAddModule(void *dl_handle, LPCSTR libraryNameOrPath);
-static void *LOADLoadLibraryDirect(LPCSTR libraryNameOrPath);
+static MODSTRUCT *LOADAddModule(void *dl_handle, const char * libraryNameOrPath);
+static void *LOADLoadLibraryDirect(const char * libraryNameOrPath);
 static BOOL LOADFreeLibrary(MODSTRUCT *module, BOOL fCallDllMain);
-static HMODULE LOADRegisterLibraryDirect(void *dl_handle, LPCSTR libraryNameOrPath, BOOL fDynamic);
-static HMODULE LOADLoadLibrary(LPCSTR shortAsciiName, BOOL fDynamic);
+static HMODULE LOADRegisterLibraryDirect(void *dl_handle, const char * libraryNameOrPath, BOOL fDynamic);
+static HMODULE LOADLoadLibrary(const char * shortAsciiName, BOOL fDynamic);
 static BOOL LOADCallDllMainSafe(MODSTRUCT *module, uint32_t dwReason, void * lpReserved);
 
 /* API function definitions ***************************************************/
@@ -124,7 +124,7 @@ See MSDN doc.
 --*/
 HMODULE
 LoadLibraryA(
-     LPCSTR lpLibFileName)
+     const char * lpLibFileName)
 {
     return LoadLibraryExA(lpLibFileName, nullptr, 0);
 }
@@ -150,7 +150,7 @@ See MSDN doc.
 --*/
 HMODULE
 LoadLibraryExA(
-     LPCSTR lpLibFileName,
+     const char * lpLibFileName,
      /*Reserved*/ HANDLE hFile,
      uint32_t dwFlags)
 {
@@ -261,7 +261,7 @@ See MSDN doc.
 FARPROC
 GetProcAddress(
      HMODULE hModule,
-     LPCSTR lpProcName)
+     const char * lpProcName)
 {
     MODSTRUCT *module;
     FARPROC ProcAddress = nullptr;
@@ -1300,12 +1300,12 @@ Function:
     Loads a library using a system call, without registering the library with the module list.
 
 Parameters:
-    LPCSTR libraryNameOrPath:           The library to load.
+    const char * libraryNameOrPath:           The library to load.
 
 Return value:
     System handle to the loaded library, or nullptr upon failure (error is set via SetLastError()).
 */
-static void *LOADLoadLibraryDirect(LPCSTR libraryNameOrPath)
+static void *LOADLoadLibraryDirect(const char * libraryNameOrPath)
 {
     _ASSERTE(libraryNameOrPath != nullptr);
     _ASSERTE(libraryNameOrPath[0] != '\0');
@@ -1343,7 +1343,7 @@ Notes :
     'name' is used to initialize MODSTRUCT::lib_name. The other member is set to NULL
     In case of failure (in malloc or MBToWC), this function sets LastError.
 --*/
-static MODSTRUCT *LOADAllocModule(void *dl_handle, LPCSTR name)
+static MODSTRUCT *LOADAllocModule(void *dl_handle, const char * name)
 {
     MODSTRUCT *module;
     char16_t* wide_name;
@@ -1397,12 +1397,12 @@ Function:
 
 Parameters:
     void *dl_handle:                    System handle to the loaded library.
-    LPCSTR libraryNameOrPath:           The library that was loaded.
+    const char * libraryNameOrPath:           The library that was loaded.
 
 Return value:
     PAL handle to the loaded library, or nullptr upon failure (error is set via SetLastError()).
 */
-static MODSTRUCT *LOADAddModule(void *dl_handle, LPCSTR libraryNameOrPath)
+static MODSTRUCT *LOADAddModule(void *dl_handle, const char * libraryNameOrPath)
 {
     _ASSERTE(dl_handle != nullptr);
     _ASSERTE(libraryNameOrPath != nullptr);
@@ -1467,13 +1467,13 @@ Function:
 
 Parameters:
     void *dl_handle:                    System handle to the loaded library.
-    LPCSTR libraryNameOrPath:           The library that was loaded.
+    const char * libraryNameOrPath:           The library that was loaded.
     BOOL fDynamic:                      TRUE if dynamic load through LoadLibrary, FALSE if static load through RegisterLibrary.
 
 Return value:
     PAL handle to the loaded library, or nullptr upon failure (error is set via SetLastError()).
 */
-static HMODULE LOADRegisterLibraryDirect(void *dl_handle, LPCSTR libraryNameOrPath, BOOL fDynamic)
+static HMODULE LOADRegisterLibraryDirect(void *dl_handle, const char * libraryNameOrPath, BOOL fDynamic)
 {
     MODSTRUCT *module = LOADAddModule(dl_handle, libraryNameOrPath);
     if (module == nullptr)
@@ -1539,7 +1539,7 @@ Return value :
     handle to loaded module
 
 --*/
-static HMODULE LOADLoadLibrary(LPCSTR shortAsciiName, BOOL fDynamic)
+static HMODULE LOADLoadLibrary(const char * shortAsciiName, BOOL fDynamic)
 {
     HMODULE module = nullptr;
     void *dl_handle = nullptr;

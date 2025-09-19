@@ -49,7 +49,7 @@ JsTTDStreamHandle TTDHostOpen(size_t pathLength, const char* path, bool isWrite)
 #define TTDHostRead(buff, size, handle) fread(buff, 1, size, (FILE*)handle)
 #define TTDHostWrite(buff, size, handle) fwrite(buff, 1, size, (FILE*)handle)
 
-int GetPathNameLocation(LPCSTR filename)
+int GetPathNameLocation(const char * filename)
 {
     int filenameLength = (int) strlen(filename);
     int pos;
@@ -68,7 +68,7 @@ int GetPathNameLocation(LPCSTR filename)
     return pos;
 }
 
-inline void pathcpy(char * target, LPCSTR src, uint length)
+inline void pathcpy(char * target, const char * src, uint length)
 {
     for (int i = 0; i < length; i++)
     {
@@ -83,7 +83,7 @@ inline void pathcpy(char * target, LPCSTR src, uint length)
     }
 }
 
-uint ConcatPath(LPCSTR filenameLeft, uint posPathSep, LPCSTR filenameRight, char* buffer, uint bufferLength)
+uint ConcatPath(const char * filenameLeft, uint posPathSep, const char * filenameRight, char* buffer, uint bufferLength)
 {
     int filenameRightLength = (int) strlen(filenameRight);
 
@@ -108,7 +108,7 @@ uint ConcatPath(LPCSTR filenameLeft, uint posPathSep, LPCSTR filenameRight, char
     return totalLength;
 }
 
-int32_t Helpers::LoadScriptFromFile(LPCSTR filenameToLoad, LPCSTR& contents, uint32_t* lengthBytesOut /*= nullptr*/, std::string* fullPath /*= nullptr*/, bool shouldMute /*=false */)
+int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& contents, uint32_t* lengthBytesOut /*= nullptr*/, std::string* fullPath /*= nullptr*/, bool shouldMute /*=false */)
 {
     static char sHostApplicationPathBuffer[MAX_URI_LENGTH];
     static uint sHostApplicationPathBufferLength = (uint) -1;
@@ -122,7 +122,7 @@ int32_t Helpers::LoadScriptFromFile(LPCSTR filenameToLoad, LPCSTR& contents, uin
     FILE * file = NULL;
     size_t bufferLength = 0;
 
-    LPCSTR filename = fullPath == nullptr ? filenameToLoad : LPCSTR(fullPath->c_str());
+    const char * filename = fullPath == nullptr ? filenameToLoad : (const char *)(fullPath->c_str());
     if (sHostApplicationPathBufferLength == (uint)-1)
     {
         // consider incoming filename as the host app and base its' path for others
@@ -270,7 +270,7 @@ int32_t Helpers::LoadScriptFromFile(LPCSTR filenameToLoad, LPCSTR& contents, uin
 #pragma warning(pop)
     }
 
-    contents = reinterpret_cast<LPCSTR>(pRawBytes);
+    contents = reinterpret_cast<const char *>(pRawBytes);
 
 Error:
     if (SUCCEEDED(hr))
@@ -286,7 +286,7 @@ Error:
         fclose(file);
     }
 
-    if (pRawBytes && reinterpret_cast<LPCSTR>(pRawBytes) != contents)
+    if (pRawBytes && reinterpret_cast<const char *>(pRawBytes) != contents)
     {
         free(pRawBytes);
     }
@@ -372,7 +372,7 @@ void Helpers::LogError(__nullterminated const char16_t *msg, ...)
     va_end(args);
 }
 
-int32_t Helpers::LoadBinaryFile(LPCSTR filename, LPCSTR& contents, uint32_t& lengthBytes, bool printFileOpenError)
+int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, uint32_t& lengthBytes, bool printFileOpenError)
 {
     int32_t hr = S_OK;
     contents = nullptr;
@@ -402,7 +402,7 @@ int32_t Helpers::LoadBinaryFile(LPCSTR filename, LPCSTR& contents, uint32_t& len
     fseek(file, 0, SEEK_END);
     lengthBytes = ftell(file);
     fseek(file, 0, SEEK_SET);
-    contents = (LPCSTR)HeapAlloc(GetProcessHeap(), 0, lengthBytes);
+    contents = (const char *)HeapAlloc(GetProcessHeap(), 0, lengthBytes);
     if (nullptr == contents)
     {
         fwprintf(stderr, u"out of memory");

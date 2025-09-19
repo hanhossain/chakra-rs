@@ -238,7 +238,7 @@ See MSDN doc.
 --*/
 char*
 CharNextA(
-   LPCSTR lpsz)
+   const char * lpsz)
 {
     char* pRet;
     ENTRY("CharNextA (lpsz=%p (%s))\n", lpsz?lpsz:NULL, lpsz?lpsz:NULL);
@@ -259,7 +259,7 @@ See MSDN doc.
 char*
 CharNextExA(
      uint16_t CodePage,
-     LPCSTR lpCurrentChar,
+     const char * lpCurrentChar,
      uint32_t dwFlags)
 {
     char* pRet = (char*) lpCurrentChar;
@@ -529,7 +529,7 @@ int
 MultiByteToWideChar(
          uint32_t CodePage,
          uint32_t dwFlags,
-         LPCSTR lpMultiByteStr,
+         const char * lpMultiByteStr,
          int cbMultiByte,
          char16_t* lpWideCharStr,
          int cchWideChar)
@@ -657,7 +657,7 @@ WideCharToMultiByte(
          int cchWideChar,
          char* lpMultiByteStr,
          int cbMultiByte,
-         LPCSTR lpDefaultChar,
+         const char * lpDefaultChar,
          LPBOOL lpUsedDefaultChar)
 {
     int32_t retval =0;
@@ -815,8 +815,8 @@ Returns number of characters retrieved, 0 if it failed.
 --*/
 int
 PAL_GetResourceString(
-         LPCSTR lpDomain,
-         LPCSTR lpResourceStr,
+         const char * lpDomain,
+         const char * lpResourceStr,
          char16_t* lpWideCharStr,
          int cchWideChar
       )
@@ -824,12 +824,12 @@ PAL_GetResourceString(
 #if !defined(__APPLE__)
     // NOTE: dgettext returns the key if it fails to locate the appropriate
     // resource. In our case, that will be the English string.
-    LPCSTR resourceString = dgettext(lpDomain, lpResourceStr);
+    const char * resourceString = dgettext(lpDomain, lpResourceStr);
 #else // __APPLE__
     // UNIXTODO: Implement for OSX using the native localization API
 
     // This is a temporary solution until we add the real native resource support.
-    LPCSTR resourceString = lpResourceStr;
+    const char * resourceString = lpResourceStr;
 #endif // __APPLE__
 
     int length = strlen(resourceString);

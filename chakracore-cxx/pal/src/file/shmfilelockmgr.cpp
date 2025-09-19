@@ -64,7 +64,7 @@ FILECleanUpLockedRgn(
 
 PAL_ERROR
 FILEGetSHMFileLocks(
-    LPCSTR filename,
+    const char * filename,
     SHMPTR *pshmFileLocks,
     BOOL noCreate
     );
@@ -96,7 +96,7 @@ FILEGetSHMFileLocks(
 PAL_ERROR
 CSharedMemoryFileLockMgr::GetLockControllerForFile(
     CPalThread *pThread,                // IN, OPTIONAL
-    LPCSTR szFileName,
+    const char * szFileName,
     uint32_t dwAccessRights,
     uint32_t dwShareMode,
     IFileLockController **ppLockController  // OUT
@@ -265,7 +265,7 @@ GetLockControllerForFileExit:
 
 PAL_ERROR
 CSharedMemoryFileLockMgr::GetFileShareModeForFile(
-   LPCSTR szFileName,
+   const char * szFileName,
    uint32_t* pdwShareMode)
 {
     PAL_ERROR palError = NO_ERROR;
@@ -686,7 +686,7 @@ EXIT:
 
 PAL_ERROR
 FILEGetSHMFileLocks(
-    LPCSTR filename,
+    const char * filename,
     SHMPTR *pshmFileLocks,
     BOOL noCreate
     )
