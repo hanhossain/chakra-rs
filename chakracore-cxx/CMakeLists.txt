@@ -187,6 +187,7 @@ if(CLR_CMAKE_PLATFORM_XPLAT)
         -Wno-int-to-pointer-cast\
         -Wno-tautological-constant-compare\
         -Wno-enum-compare-switch\
+        -Wno-delayed-template-parsing-in-cxx20\
         -Wno-unknown-warning-option"
     )
         # notes..
