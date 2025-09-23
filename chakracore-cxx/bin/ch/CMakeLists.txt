@@ -78,6 +78,7 @@ if(CC_TARGET_OS_OSX)
 else()
   set(lib_target "${lib_target}"
     "pthread"
+    "-fuse-ld=lld"
     )
 endif()
 
