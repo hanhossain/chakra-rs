@@ -196,6 +196,7 @@ if(CLR_CMAKE_PLATFORM_XPLAT)
         -Wno-deprecated-this-capture\
         -Wno-deprecated-enum-compare-conditional\
         -Wno-deprecated-enum-enum-conversion\
+        -Wno-deprecated-declarations\
         -Wno-ambiguous-reversed-operator")
 
         # notes..
