@@ -190,6 +190,13 @@ if(CLR_CMAKE_PLATFORM_XPLAT)
         -Wno-delayed-template-parsing-in-cxx20\
         -Wno-unknown-warning-option"
     )
+
+    # c++20
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
+        -Wno-deprecated-this-capture\
+        -Wno-deprecated-enum-compare-conditional\
+        -Wno-ambiguous-reversed-operator")
+
         # notes..
         # -Wno-address-of-temporary  # vtinfo.h, VirtualTableInfo<T>::RegisterVirtualTable
         # -Wno-null-conversion # Check shmemory.cpp and cs.cpp here...
