@@ -171,7 +171,7 @@ pub fn run_test_variant<const N: usize>(
     let out_dir = PathBuf::from(env!("OUT_DIR"));
 
     if cfg!(feature = "compile-cpp") {
-        let mut ch = Command::new(out_dir.join("build/ch"));
+        let mut ch = Command::new(out_dir.join("build/bin/ch/ch"));
         ch.current_dir(test_dir)
             .arg(source)
             .arg("-ExtendedErrorStackForTestHost")

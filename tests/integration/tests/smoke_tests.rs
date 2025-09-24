@@ -5,7 +5,7 @@ use std::path::PathBuf;
 fn hello() {
     let out_dir = env!("OUT_DIR");
 
-    let ch = PathBuf::from(out_dir).join("build/ch");
+    let ch = PathBuf::from(out_dir).join("build/bin/ch/ch");
 
     let source =
         PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("chakracore-cxx/test/Basics/hello.js");
