@@ -135,12 +135,6 @@ exit:
     return palError;
 }
 
-uint32_t
-PAL_EnterTop()
-{
-    return PAL_Enter(PAL_BoundaryTop);
-}
-
 
 /*++
 Function:
@@ -170,30 +164,6 @@ PAL_Reenter(PAL_Boundary boundary)
     pThread->Enter(boundary);
 
     LOGEXIT("PAL_Reenter returns\n");
-}
-
-/*++
-Function:
-  PAL_HasEntered
-
-Abstract:
-  This function can be called to determine if the thread has entered the
-  PAL through PAL_Enter or related calls.
---*/
-BOOL
-PAL_HasEntered()
-{
-    ENTRY_EXTERNAL("PAL_HasEntered()\n");
-
-    CPalThread *pThread = InternalGetCurrentThread();
-    if (pThread == NULL)
-    {
-        ASSERT("PAL_Reenter called on a thread unknown to this PAL\n");
-    }
-
-    LOGEXIT("PAL_HasEntered returned\n");
-
-    return pThread->IsInPal();
 }
 
 PAL_ERROR CPalThread::Enter(PAL_Boundary /* boundary */)
@@ -232,18 +202,6 @@ PAL_Leave(PAL_Boundary boundary)
     pThread->Leave(boundary);
 
     LOGEXIT("PAL_Leave returns\n");
-}
-
-void
-PAL_LeaveBottom()
-{
-    PAL_Leave(PAL_BoundaryBottom);
-}
-
-void
-PAL_LeaveTop()
-{
-    PAL_Leave(PAL_BoundaryTop);
 }
 
 

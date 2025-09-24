@@ -195,60 +195,6 @@ static BOOL WriteOnlyMode(FILE* pFile)
 
 
 /*++
-Function:
-  _fdopen
-
-see MSDN
-
---*/
-PAL_FILE *
-_fdopen(
-    int handle,
-    const char *mode)
-{
-    PAL_FILE *f = NULL;
-    char* supported = NULL;
-    BOOL bTextMode = TRUE;
-
-    ENTRY("_fdopen (handle=%d mode=%p (%s))\n", handle, mode, mode);
-
-    _ASSERTE(mode != NULL);
-
-    f = (PAL_FILE*)malloc( sizeof( PAL_FILE ) );
-    if ( f )
-    {
-        supported = MapFileOpenModes( (char*)mode , &bTextMode);
-        if ( !supported )
-        {
-            free(f);
-            f = NULL;
-            goto EXIT;
-        }
-
-        f->bsdFilePtr = (FILE *)fdopen( handle, supported );
-        f->PALferrorCode = PAL_FILE_NOERROR;
-        /* Make sure fdopen did not fail. */
-        if ( !f->bsdFilePtr )
-        {
-            free( f );
-            f = NULL;
-        }
-
-        free( supported );
-        supported = NULL;
-    }
-    else
-    {
-        ERROR( "Unable to allocate memory for the PAL_FILE wrapper!\n" );
-    }
-
-EXIT:
-    LOGEXIT( "_fdopen returns FILE* %p\n", f );
-    return f;
-}
-
-
-/*++
 
 Function :
     fopen
@@ -435,27 +381,6 @@ PAL_FILE * PAL_get_stderr(int caller)
     ENTRY("PAL_get_stderr\n");
     LOGEXIT("PAL_get_stderr returns PAL_FILE * %p\n", &PAL_Stderr );
     return &PAL_Stderr;
-}
-
-
-/*++
-
-Function:
-
-    _close
-
-See msdn for more details.
---*/
-int PAL__close(int handle)
-{
-    int32_t nRetVal = 0;
-
-    ENTRY( "_close( handle=%d )\n", handle );
-
-    nRetVal = close( handle );
-
-    LOGEXIT( "_close returning %d.\n", nRetVal );
-    return nRetVal;
 }
 
  int PAL__flushall()

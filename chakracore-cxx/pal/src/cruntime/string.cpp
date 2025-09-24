@@ -33,41 +33,6 @@ Abstract:
 
 SET_DEFAULT_DEBUG_CHANNEL(CRT);
 
-/*++
-Function:
-  _stricmp
-
-compare two strings, ignoring case
-
-The stricmp() function compares, with case insensitivity, the string
-pointed to by s1 to the string pointed to by s2. All uppercase
-characters from s1 and s2 are mapped to lowercase for the purposes of
-doing the comparison.
-
-Returns:
-
-Value Meaning
-
-< 0   s1 is less than s2
-0     s1 is equal to s2
-> 0   s1 is greater than s2
-
---*/
-int
-_stricmp(
-         const char *s1,
-         const char *s2)
-{
-    int ret;
-
-    ENTRY("_stricmp (s1=%p (%s), s2=%p (%s))\n", s1?s1:"NULL", s1?s1:"NULL", s2?s2:"NULL", s2?s2:"NULL");
-
-    ret = strcasecmp(s1, s2);
-
-    LOGEXIT("_stricmp returning int %d\n", ret);
-    return ret;
-}
-
 
 /*++
 Function:

@@ -2315,29 +2315,6 @@ CPalThread::GetStackLimit()
     return stackLimit;
 }
 
-/*++
-Function:
-    PAL_SetActivationFunction
-
-    Register an activation function that gets called when an activation is injected
-    into a thread.
-
-Parameters:
-    pActivationFunction - activation function
-    pSafeActivationCheckFunction - function to check if an activation can be safely
-                                   injected at a specified context
-Return value:
-    None
---*/
-void
-PAL_SetActivationFunction(
-     PAL_ActivationFunction pActivationFunction,
-     PAL_SafeActivationCheckFunction pSafeActivationCheckFunction)
-{
-    g_activationFunction = pActivationFunction;
-    g_safeActivationCheckFunction = pSafeActivationCheckFunction;
-}
-
 #if HAVE_MACH_EXCEPTIONS
 
 extern mach_port_t s_ExceptionPort;

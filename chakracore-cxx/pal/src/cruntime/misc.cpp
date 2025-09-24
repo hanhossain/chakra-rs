@@ -47,67 +47,6 @@ CRITICAL_SECTION gcsEnvironment;
 
 using namespace CorUnix;
 
-/*++
-Function:
-  _gcvt_s
-
-See MSDN doc.
---*/
-char *
-_gcvt_s( char * buffer, int iSize, double value, int digits )
-{
-    ENTRY( "_gcvt( value:%f digits=%d, buffer=%p )\n", value, digits, buffer );
-
-    if ( !buffer )
-    {
-        ERROR( "buffer was an invalid pointer.\n" );
-    }
-
-    switch ( digits )
-    {
-    case 7 :
-        /* Fall through */
-    case 8 :
-        /* Fall through */
-    case 15 :
-        /* Fall through */
-    case 17 :
-
-        sprintf_s( buffer, iSize, "%.*g", digits, value );
-        break;
-
-    default :
-        ASSERT( "Only the digits 7, 8, 15, and 17 are valid.\n" );
-        *buffer = '\0';
-    }
-
-    LOGEXIT( "_gcvt returns %p (%s)\n", buffer , buffer );
-    return buffer;
-}
-
-
-/*++
-Function :
-
-    __iscsym
-
-See MSDN for more details.
---*/
-int
-__iscsym( int c )
-{
-    ENTRY( "__iscsym( c=%d )\n", c );
-
-    if ( isalnum( c ) || c == '_'  )
-    {
-        LOGEXIT( "__iscsym returning 1\n" );
-        return 1;
-    }
-
-    LOGEXIT( "__iscsym returning 0\n" );
-    return 0;
-}
-
 
 /*++
 
@@ -125,35 +64,6 @@ int * PAL_errno( int caller )
     retval = (int32_t*)(&errno);
     LOGEXIT("PAL_errno returns %p\n",retval);
     return retval;
-}
-
-/*++
-
-Function : _putenv.
-
-See MSDN for more details.
-
-Note:   The BSD implementation can cause
-        memory leaks. See man pages for more details.
---*/
-int
-_putenv( const char * envstring )
-{
-    int ret = -1;
-
-    ENTRY( "_putenv( %p (%s) )\n", envstring ? envstring : "NULL", envstring ? envstring : "NULL") ;
-
-    if (!envstring)
-    {
-        ERROR( "_putenv() called with NULL envstring!\n");
-        goto EXIT;
-    }
-
-    ret = MiscPutenv(envstring, TRUE) ? 0 : -1;
-
-EXIT:
-    LOGEXIT( "_putenv returning %d\n", ret);
-    return ret;
 }
 
 /*++
