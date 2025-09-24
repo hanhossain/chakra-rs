@@ -1,10 +1,3 @@
-find_package (Python COMPONENTS Interpreter)
-add_custom_target(dbg_controller_h
-  COMMAND ${Python_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/jstoc.py ${CMAKE_CURRENT_SOURCE_DIR}/DbgController.js controllerScript
-  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-  SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/jstoc.py ${CMAKE_CURRENT_SOURCE_DIR}/DbgController.js
-  )
-
 set(ch_source_files
   ch.cpp
   ChakraRtInterface.cpp
@@ -17,8 +10,6 @@ set(ch_source_files
 
 add_executable (ch ${ch_source_files})
 
-add_dependencies(ch dbg_controller_h)
-
 set_target_properties(ch
   PROPERTIES
   POSITION_INDEPENDENT_CODE True
@@ -30,7 +21,6 @@ endif()
 
 # TODO (hanhossain): cleanup includes
 target_include_directories (ch PUBLIC
-  ${CMAKE_CURRENT_BINARY_DIR}
   ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlaceHolder
   ${CHAKRACORE_SOURCE_DIR}/pal/inc
   ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
