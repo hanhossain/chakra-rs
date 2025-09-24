@@ -2003,22 +2003,13 @@ WideCharToMultiByte(
 #endif // __APPLE__
 
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 int
 GetLocaleInfoEx(
      const char16_t*  lpLocaleName,
      uint32_t   LCType,
      char16_t*  lpLCData,
      int      cchData);
-
-// TODO (hanhossain): check usage
-int
-CompareStringOrdinal(
-     const char16_t* lpString1,
-	 int cchCount1,
-	 const char16_t* lpString2,
-	 int cchCount2,
-	 BOOL bIgnoreCase);
 
 typedef struct _nlsversioninfoex {
   uint32_t  dwNLSVersionInfoSize;
@@ -2028,57 +2019,18 @@ typedef struct _nlsversioninfoex {
   GUID  guidCustomVersion;
   } NLSVERSIONINFOEX, *LPNLSVERSIONINFOEX;
 
-// TODO (hanhossain): check usage
-int
-FindNLSStringEx(
-     const char16_t* lpLocaleName,
-	 uint32_t dwFindNLSStringFlags,
-	 const char16_t* lpStringSource,
-	 int cchSource,
-     const char16_t* lpStringValue,
-	 int cchValue,
-	 int32_t * pcchFound,
-	 LPNLSVERSIONINFOEX lpVersionInformation,
-	 void * lpReserved,
-	 ptrdiff_t lParam );
-
 typedef enum {
     COMPARE_STRING = 0x0001,
 } NLS_FUNCTION;
 
-// TODO (hanhossain): check usage
-BOOL
-IsNLSDefinedString(
-     NLS_FUNCTION Function,
-	 uint32_t dwFlags,
-	 LPNLSVERSIONINFOEX lpVersionInfo,
-	 const char16_t* lpString,
-	 int cchStr );
-
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 int
 ResolveLocaleName(
      const char16_t* lpNameToResolve,
          char16_t* lpLocaleName,
          int cchLocaleName );
 
-// TODO (hanhossain): check usage
-BOOL
-GetThreadPreferredUILanguages(
-     uint32_t  dwFlags,
-     uint32_t *  pulNumLanguages,
-     char16_t *  pwszLanguagesBuffer,
-      uint32_t *  pcchLanguagesBuffer);
-
-// TODO (hanhossain): check usage
-int
-GetSystemDefaultLocaleName(
-     char16_t* lpLocaleName,
-	 int cchLocaleName);
-
-#define GetLocaleInfo GetLocaleInfoW
-
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 int
 GetUserDefaultLocaleName(
             char16_t* lpLocaleName,
@@ -2111,17 +2063,6 @@ typedef uint32_t CALTYPE;
 #define CAL_GREGORIAN_XLIT_FRENCH    12 // Gregorian Transliterated French calendar
 #define CAL_JULIAN                   13
 
-// TODO (hanhossain): check usage
-int
-GetCalendarInfoEx(
-          const char16_t* lpLocaleName,
-          CALID Calendar,
-          const char16_t* lpReserved,
-          CALTYPE CalType,
-          char16_t* lpCalData,
-          int cchData,
-          uint32_t * lpValue);
-
 #define DATE_SHORTDATE            0x00000001  // use short date picture
 #define DATE_LONGDATE             0x00000002  // use long date picture
 #define DATE_YEARMONTH            0x00000008  // use year month picture
@@ -2129,24 +2070,8 @@ GetCalendarInfoEx(
 typedef BOOL (CALLBACK* DATEFMT_ENUMPROCEXW)(char16_t*, CALID);
 typedef BOOL (CALLBACK* DATEFMT_ENUMPROCEXEXW)(char16_t*, CALID, ptrdiff_t);
 
-// TODO (hanhossain): check usage
-BOOL
-EnumDateFormatsExEx(
-     DATEFMT_ENUMPROCEXEXW lpDateFmtEnumProcEx,
-     const char16_t*          lpLocaleName,
-     uint32_t               dwFlags,
-     ptrdiff_t      lParam);
-
 typedef BOOL (CALLBACK* TIMEFMT_ENUMPROCW)(char16_t*);
 typedef BOOL (CALLBACK* TIMEFMT_ENUMPROCEXW)(char16_t*, ptrdiff_t);
-
-// TODO (hanhossain): check usage
-BOOL
-EnumTimeFormatsEx(
-     TIMEFMT_ENUMPROCEXW lpTimeFmtEnumProc,
-     const char16_t*          lpLocaleName,
-     uint32_t             dwFlags,
-     ptrdiff_t    lParam);
 
 #define ENUM_ALL_CALENDARS        0xffffffff  // enumerate all calendars
 #define CAL_ICALINTVALUE          0x00000001  // calendar type
@@ -2156,20 +2081,10 @@ EnumTimeFormatsEx(
 typedef BOOL (CALLBACK* CALINFO_ENUMPROCEXW)(char16_t*,CALID);
 typedef BOOL (CALLBACK* CALINFO_ENUMPROCEXEXW)(char16_t*, CALID, char16_t*, ptrdiff_t);
 
-// TODO (hanhossain): check usage
-BOOL
-EnumCalendarInfoExEx(
-     CALINFO_ENUMPROCEXEXW lpCalInfoEnumProc,
-     const char16_t*          lpLocaleName,
-     CALID             Calendar,
-     const char16_t*           lpReserved,
-     CALTYPE           CalType,
-     ptrdiff_t        lParam);
-
 #define LCMAP_LOWERCASE  0x00000100
 #define LCMAP_UPPERCASE  0x00000200
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 int
 LCMapStringEx(
      const char16_t*    lpLocaleName,
@@ -2182,117 +2097,14 @@ LCMapStringEx(
      void * lpReserved,
      ptrdiff_t lParam );
 
-// TODO (hanhossain): check usage
-int
-PAL_LCMapCharW(
-     const char16_t*    lpLocaleName,
-     uint32_t   dwMapFlags,
-     char16_t   srcChar,
-     char16_t  *destChar,
-    LPNLSVERSIONINFO lpVersionInformation,
-    void * lpReserved,
-    ptrdiff_t lParam );
-
-// TODO (hanhossain): check usage
-int
-PAL_NormalizeStringExW(
-     const char16_t*    lpLocaleName,
-     uint32_t   dwMapFlags,
-     const char16_t* lpSrcStr,
-     int     cchSrc,
-     char16_t* lpDestStr,
-     int     cchDest);
-
-// TODO (hanhossain): check usage
-int
-PAL_ParseDateW(
-     const char16_t*   lpLocaleName,
-     const char16_t*   lpFormat,
-     const char16_t*   lpString,
-     LPSYSTEMTIME lpTime);
-
-// TODO (hanhossain): check usage
-int
-PAL_GetCalendar(
-     const char16_t*   lpLocaleName,
-     CALID*   pCalendar);
-
 #define GEOID_NOT_AVAILABLE -1
 
 // "a number", might represent different types
 typedef struct PALNUMBER__* PALNUMBER;
 
-// return NULL on OOM
-// TODO (hanhossain): check usage
-PALNUMBER PAL_DoubleToNumber(double);
-// TODO (hanhossain): check usage
-PALNUMBER PAL_Int64ToNumber(int64_t);
-// TODO (hanhossain): check usage
-PALNUMBER PAL_UInt64ToNumber(unsigned long);
-// TODO (hanhossain): check usage
-PALNUMBER PAL_IntToNumber(int);
-// TODO (hanhossain): check usage
-PALNUMBER PAL_UIntToNumber(unsigned int);
-
-// TODO (hanhossain): check usage
-void PAL_ReleaseNumber(PALNUMBER);
-
-// TODO (hanhossain): check usage
-// return string length if Buffer is NULL or the result fits in cchBuffer, otherwise -1
-int PAL_FormatScientific(const char16_t* sLocale, char16_t* pBuffer, size_t cchBuffer, PALNUMBER number, int nMinDigits, int nMaxDigits,
-                                                                      const char16_t* sExponent, const char16_t* sNumberDecimal, const char16_t* sPositive, const char16_t* sNegative, const char16_t* sZero);
-
-// TODO (hanhossain): check usage
-int PAL_FormatCurrency(const char16_t* sLocale, char16_t* pBuffer, size_t cchBuffer, PALNUMBER number, int nMinDigits, int nMaxDigits, int iNegativeFormat, int iPositiveFormat,
-                      int iPrimaryGroup, int iSecondaryGroup, const char16_t* sCurrencyDecimal, const char16_t* sCurrencyGroup, const char16_t* sNegative, const char16_t* sCurrency, const char16_t* sZero);
-
-// TODO (hanhossain): check usage
-int PAL_FormatPercent(const char16_t* sLocale, char16_t* pBuffer, size_t cchBuffer, PALNUMBER number,  int nMinDigits, int nMaxDigits,int iNegativeFormat, int iPositiveFormat,
-                      int iPrimaryGroup, int iSecondaryGroup, const char16_t* sPercentDecimal, const char16_t* sPercentGroup, const char16_t* sNegative, const char16_t* sPercent, const char16_t* sZero);
-
-// TODO (hanhossain): check usage
-int PAL_FormatDecimal(const char16_t* sLocale, char16_t* pBuffer, size_t cchBuffer, PALNUMBER number, int nMinDigits, int nMaxDigits, int iNegativeFormat,
-                                    int iPrimaryGroup, int iSecondaryGroup,  const char16_t* sDecimal, const char16_t* sGroup, const char16_t* sNegative, const char16_t* sZero);
-
-
 #define DATE_USE_ALT_CALENDAR 0x00000004
 
-// TODO (hanhossain): check usage
-int
-GetDateFormatEx(
-            const char16_t* Locale,
-            uint32_t dwFlags,
-            const SYSTEMTIME *lpDate,
-            const char16_t* lpFormat,
-            char16_t* lpDateStr,
-            int cchDate,
-            const char16_t* lpCalendar);
-
-// TODO (hanhossain): check usage
-int
-GetDateFormatEx(
-            const char16_t* lpLocaleName,
-            uint32_t dwFlags,
-            const SYSTEMTIME *lpDate,
-            const char16_t* lpFormat,
-            char16_t* lpDateStr,
-            int cchDate,
-           const char16_t* lpCalendar);
-
-
 #define GetDateFormat GetDateFormatW
-
-// TODO (hanhossain): check usage
-int
-PAL_GetResourceString(
-         const char * lpDomain,
-         const char * lpResourceStr,
-         char16_t* lpWideCharStr,
-         int cchWideChar);
-
-// TODO (hanhossain): check usage
-BOOL
-PAL_BindResources( const char * lpDomain);
 
 #define EXCEPTION_NONCONTINUABLE 0x1
 #define EXCEPTION_UNWINDING 0x2
@@ -2377,7 +2189,7 @@ typedef struct _RUNTIME_FUNCTION {
 } RUNTIME_FUNCTION, *PRUNTIME_FUNCTION;
 #endif
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 BOOL
 WriteProcessMemory( HANDLE hProcess,
                     void * lpBaseAddress,
@@ -2417,41 +2229,24 @@ WriteProcessMemory( HANDLE hProcess,
 #define PROCESS_ALL_ACCESS        (STANDARD_RIGHTS_REQUIRED | SYNCHRONIZE | \
                                    0xFFF)
 
-// TODO (hanhossain): check usage
-HANDLE
-OpenProcess(
-     uint32_t dwDesiredAccess, /* PROCESS_DUP_HANDLE or PROCESS_ALL_ACCESS */
-     BOOL bInheritHandle,
-     uint32_t dwProcessId
-    );
-
-// TODO (hanhossain): check usage
-BOOL
-EnumProcessModules(
-     HANDLE hProcess,
-     HMODULE *lphModule,
-     uint32_t cb,
-     uint32_t * lpcbNeeded
-    );
-
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 void
 OutputDebugStringA(
      const char * lpOutputString);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 void
 OutputDebugStringW(
      const char16_t* lpOutputStrig);
 
 #define OutputDebugString OutputDebugStringW
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 void
 DebugBreak(
        void);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 char16_t*
 lstrcatW(
        char16_t* lpString1,
@@ -2459,7 +2254,7 @@ lstrcatW(
 
 #define lstrcat lstrcatW
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 char16_t*
 lstrcpyW(
       char16_t* lpString1,
@@ -2467,19 +2262,19 @@ lstrcpyW(
 
 #define lstrcpy lstrcpyW
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 int
 lstrlenA(
       const char * lpString);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 int
 lstrlenW(
       const char16_t* lpString);
 
 #define lstrlen lstrlenW
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 char16_t*
 lstrcpynW(
        char16_t* lpString1,

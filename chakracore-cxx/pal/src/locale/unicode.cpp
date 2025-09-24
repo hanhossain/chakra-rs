@@ -662,35 +662,3 @@ EXIT:
     LOGEXIT("WideCharToMultiByte returns INT %d\n", retval);
     return retval;
 }
-
-/*++
-Function :
-
-PAL_GetResourceString - get localized string for a specified resource.
-The string that is passed in should be the English string, since it
-will be returned if an appropriately localized version is not found.
-
-Returns number of characters retrieved, 0 if it failed.
---*/
-int
-PAL_GetResourceString(
-         const char * lpDomain,
-         const char * lpResourceStr,
-         char16_t* lpWideCharStr,
-         int cchWideChar
-      )
-{
-#if !defined(__APPLE__)
-    // NOTE: dgettext returns the key if it fails to locate the appropriate
-    // resource. In our case, that will be the English string.
-    const char * resourceString = dgettext(lpDomain, lpResourceStr);
-#else // __APPLE__
-    // UNIXTODO: Implement for OSX using the native localization API
-
-    // This is a temporary solution until we add the real native resource support.
-    const char * resourceString = lpResourceStr;
-#endif // __APPLE__
-
-    int length = strlen(resourceString);
-    return UTF8ToUnicode(lpResourceStr, length + 1, lpWideCharStr, cchWideChar, 0);
-}
