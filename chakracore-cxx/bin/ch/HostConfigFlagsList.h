@@ -5,7 +5,6 @@
 
 #ifdef FLAG
 FLAG(BSTR, dbgbaseline,                     "Baseline file to compare debugger output", NULL)
-FLAG(bool, DebugLaunch,                     "Create the test debugger and execute test in the debug mode", false)
 FLAG(BSTR, GenerateLibraryByteCodeHeader,   "Generate bytecode header file from library code", NULL)
 FLAG(bool, GenerateParserStateCache,        "Parse source file to create parser state cache and write it to file or console", false)
 FLAG(bool, UseParserStateCache,             "Create parser state cache while parsing and use it during script execution", false)
