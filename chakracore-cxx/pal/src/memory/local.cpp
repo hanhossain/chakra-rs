@@ -48,63 +48,6 @@ AllocFlagsToHeapAllocFlags (  uint32_t  AllocFlags,
     }
     return success;
 }
-        
-    
-
-/*++
-Function:
-  LocalAlloc
-
-See MSDN doc.
---*/
-HLOCAL
-LocalAlloc(
-	    uint32_t uFlags,
-	    size_t uBytes)
-{
-    void * lpRetVal = NULL;
-    ENTRY("LocalAlloc (uFlags=%#x, uBytes=%u)\n", uFlags, uBytes);
-
-    if (!AllocFlagsToHeapAllocFlags (uFlags, &uFlags)) {
-        goto done;
-    }
-
-    lpRetVal = HeapAlloc( GetProcessHeap(), uFlags, uBytes );
-
-done:
-    LOGEXIT( "LocalAlloc returning %p.\n", lpRetVal );
-    return (HLOCAL) lpRetVal;
-}
-
-/*++
-Function:
-LocalReAlloc
-
-See MSDN doc.
---*/
-HLOCAL
-LocalReAlloc(
-        HLOCAL hMem,
-        size_t uBytes,
-        uint32_t   uFlags)
-{
-    void * lpRetVal = NULL;
-    ENTRY("LocalReAlloc (hMem=%p, uBytes=%u, uFlags=%#x)\n", hMem, uBytes, uFlags);
-
-    if (uFlags != LMEM_MOVEABLE) {
-        // Currently valid iff uFlags is LMEM_MOVEABLE
-        ASSERT("Invalid parameter uFlags=0x%x\n", uFlags);
-        SetLastError(ERROR_INVALID_PARAMETER);
-        goto done;
-    }
-    uFlags = 0;
-
-    lpRetVal = HeapReAlloc(GetProcessHeap(), uFlags, hMem, uBytes);
-
-done:
-    LOGEXIT("LocalReAlloc returning %p.\n", lpRetVal);
-    return (HLOCAL)lpRetVal;
-}
 
 /*++
 Function:

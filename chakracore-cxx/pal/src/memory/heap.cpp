@@ -59,26 +59,6 @@ malloc_zone_t *s_pExecutableHeap = NULL;
 
 /*++
 Function:
-  RtlMoveMemory
-
-See MSDN doc.
---*/
-void
-RtlMoveMemory(
-           void * Destination,
-           const void *Source,
-           size_t Length)
-{
-    ENTRY("RtlMoveMemory(Destination:%p, Source:%p, Length:%d)\n",
-          Destination, Source, Length);
-
-    memmove(Destination, Source, Length);
-
-    LOGEXIT("RtlMoveMemory returning\n");
-}
-
-/*++
-Function:
   RtlZeroMemory
 
 See MSDN doc.
@@ -390,14 +370,4 @@ HeapReAlloc(
 done:
     LOGEXIT("HeapReAlloc returns LPVOID %p\n", pMem);
     return pMem;
-}
-
-BOOL
-HeapSetInformation(
-          HANDLE HeapHandle,
-         HEAP_INFORMATION_CLASS HeapInformationClass,
-         void * HeapInformation,
-         size_t HeapInformationLength)
-{
-    return TRUE;
 }

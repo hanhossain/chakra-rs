@@ -2207,17 +2207,6 @@ VirtualFreeExit:
     return bRetVal;
 }
 
-BOOL
-VirtualProtectEx(
-            HANDLE hProcess,
-            void * lpAddress,
-            size_t dwSize,
-            uint32_t flNewProtect,
-            uint32_t * lpflOldProtect)
-{
-    return VirtualProtect(lpAddress, dwSize, flNewProtect, lpflOldProtect);
-}
-
 /*++
 Function:
   VirtualProtect
