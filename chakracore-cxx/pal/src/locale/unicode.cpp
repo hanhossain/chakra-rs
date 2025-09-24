@@ -379,21 +379,6 @@ done:
 
 /*++
 Function:
-IsDBCSLeadByte
-
-See MSDN doc.
---*/
-BOOL
-IsDBCSLeadByte(
-         uint8_t TestChar)
-{
-    // UNIXTODO: Implement this!
-    ERROR("Needs Implementation!!!");
-    return FALSE;
-}
-
-/*++
-Function:
 MultiByteToWideChar
 
 See MSDN doc.

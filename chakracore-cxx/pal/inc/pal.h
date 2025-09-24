@@ -1414,7 +1414,7 @@ OpenFileMappingW(
 // TODO (hanhossain): public
 #define OpenFileMapping OpenFileMappingW
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 void *
 MapViewOfFile(
            HANDLE hFileMappingObject,
@@ -1423,133 +1423,60 @@ MapViewOfFile(
            uint32_t dwFileOffsetLow,
            size_t dwNumberOfBytesToMap);
 
-// TODO (hanhossain): check usage
-void *
-MapViewOfFileEx(
-           HANDLE hFileMappingObject,
-           uint32_t dwDesiredAccess,
-           uint32_t dwFileOffsetHigh,
-           uint32_t dwFileOffsetLow,
-           size_t dwNumberOfBytesToMap,
-           void * lpBaseAddress);
-
-// TODO (hanhossain): check usage
-BOOL
-FlushViewOfFile(
-         void * lpBaseAddress,
-         size_t dwNumberOfBytesToFlush);
-
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 BOOL
 UnmapViewOfFile(
          const void * lpBaseAddress);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 HMODULE
 LoadLibraryA(
          const char * lpLibFileName);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 HMODULE
 LoadLibraryW(
          const char16_t* lpLibFileName);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 HMODULE
 LoadLibraryExA(
          const char * lpLibFileName,
          /*Reserved*/ HANDLE hFile,
          uint32_t dwFlags);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 HMODULE
 LoadLibraryExW(
          const char16_t* lpLibFileName,
          /*Reserved*/ HANDLE hFile,
          uint32_t dwFlags);
 
-// TODO (hanhossain): check usage
-void *
-PAL_LoadLibraryDirect(
-         const char16_t* lpLibFileName);
-
-// TODO (hanhossain): check usage
-HMODULE
-PAL_RegisterLibraryDirect(
-         void *dl_handle,
-         const char16_t* lpLibFileName);
-
-/*++
-Function:
-  PAL_LOADLoadPEFile
-
-Abstract
-  Loads a PE file into memory.  Properly maps all of the sections in the PE file.  Returns a pointer to the
-  loaded base.
-
-Parameters:
-    IN hFile    - The file to load
-
-Return value:
-    A valid base address if successful.
-    0 if failure
---*/
-// TODO (hanhossain): check usage
-void *
-PAL_LOADLoadPEFile(HANDLE hFile);
-
-/*++
-    PAL_LOADUnloadPEFile
-
-    Unload a PE file that was loaded by PAL_LOADLoadPEFile().
-
-Parameters:
-    IN ptr - the file pointer returned by PAL_LOADLoadPEFile()
-
-Return value:
-    TRUE - success
-    FALSE - failure (incorrect ptr, etc.)
---*/
-// TODO (hanhossain): check usage
-BOOL
-PAL_LOADUnloadPEFile(void * ptr);
-
 #define LoadLibrary LoadLibraryW
 #define LoadLibraryEx LoadLibraryExW
 
 typedef long (*FARPROC)();
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 FARPROC
 GetProcAddress(
      HMODULE hModule,
      const char * lpProcName);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 BOOL
 FreeLibrary(
       HMODULE hLibModule);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 __attribute__((noreturn))
 void
 FreeLibraryAndExitThread(
      HMODULE hLibModule,
      uint32_t dwExitCode);
 
-// TODO (hanhossain): check usage
-BOOL
-DisableThreadLibraryCalls(
-     HMODULE hLibModule);
 
-// TODO (hanhossain): check usage
-uint32_t
-GetModuleFileNameA(
-     HMODULE hModule,
-     char* lpFileName,
-     uint32_t nSize);
-
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 uint32_t
 GetModuleFileNameW(
      HMODULE hModule,
@@ -1558,18 +1485,7 @@ GetModuleFileNameW(
 
 #define GetModuleFileName GetModuleFileNameW
 
-// TODO (hanhossain): check usage
-uint32_t
-GetModuleFileNameExW(
-     HANDLE hProcess,
-     HMODULE hModule,
-     char16_t* lpFilename,
-     uint32_t nSize
-    );
-
-#define GetModuleFileNameEx GetModuleFileNameExW
-
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 HMODULE
 GetModuleHandleW(
       const char16_t* lpModuleName
@@ -1577,7 +1493,7 @@ GetModuleHandleW(
 
 #define GetModuleHandle GetModuleHandleW
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 BOOL
 GetModuleHandleExW(
      uint32_t dwFlags,
@@ -1586,12 +1502,7 @@ GetModuleHandleExW(
 
 #define GetModuleHandleEx GetModuleHandleExW
 
-// Get base address of the module containing a given symbol
-// TODO (hanhossain): check usage
-const void *
-PAL_GetSymbolModuleBase(void *symbol);
-
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 void *
 VirtualAlloc(
           void * lpAddress,
@@ -1599,7 +1510,7 @@ VirtualAlloc(
           uint32_t flAllocationType,
           uint32_t flProtect);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 void *
 VirtualAllocEx(
           HANDLE hProcess,
@@ -1608,14 +1519,14 @@ VirtualAllocEx(
           uint32_t flAllocationType,
           uint32_t flProtect);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 BOOL
 VirtualFree(
          void * lpAddress,
          size_t dwSize,
          uint32_t dwFreeType);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 BOOL
 VirtualFreeEx(
          HANDLE hProcess,
@@ -1623,18 +1534,9 @@ VirtualFreeEx(
          size_t dwSize,
          uint32_t dwFreeType);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 BOOL
 VirtualProtect(
-            void * lpAddress,
-            size_t dwSize,
-            uint32_t flNewProtect,
-            uint32_t * lpflOldProtect);
-
-// TODO (hanhossain): check usage
-BOOL
-VirtualProtectEx(
-            HANDLE hProcess,
             void * lpAddress,
             size_t dwSize,
             uint32_t flNewProtect,
@@ -1652,7 +1554,7 @@ typedef struct _MEMORYSTATUSEX {
   unsigned long ullAvailExtendedVirtual;
 } MEMORYSTATUSEX, *LPMEMORYSTATUSEX;
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 BOOL
 GlobalMemoryStatusEx(
               LPMEMORYSTATUSEX lpBuffer);
@@ -1667,14 +1569,14 @@ typedef struct _MEMORY_BASIC_INFORMATION {
     uint32_t Type;
 } MEMORY_BASIC_INFORMATION, *PMEMORY_BASIC_INFORMATION;
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 size_t
 VirtualQuery(
           const void * lpAddress,
           PMEMORY_BASIC_INFORMATION lpBuffer,
           size_t dwLength);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 size_t
 VirtualQueryEx(
           HANDLE hProcess,
@@ -1682,23 +1584,7 @@ VirtualQueryEx(
           PMEMORY_BASIC_INFORMATION lpBuffer,
           size_t dwLength);
 
-// TODO (hanhossain): check usage
-BOOL
-ReadProcessMemory(
-           HANDLE hProcess,
-           const void * lpBaseAddress,
-           void * lpBuffer,
-           size_t nSize,
-           size_t * lpNumberOfBytesRead);
-
-// TODO (hanhossain): check usage
-void
-RtlMoveMemory(
-           void * Destination,
-           const void *Source,
-           size_t Length);
-
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 void
 RtlZeroMemory(
      void * Destination,
@@ -1709,28 +1595,28 @@ RtlZeroMemory(
 #define FillMemory(Destination,Length,Fill) memset((Destination),(Fill),(Length))
 #define ZeroMemory(Destination,Length) memset((Destination),0,(Length))
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 HANDLE
 GetProcessHeap(
            void);
 
 #define HEAP_ZERO_MEMORY 0x00000008
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 HANDLE
 HeapCreate(
 	        uint32_t flOptions,
 	        size_t dwInitialSize,
 	        size_t dwMaximumSize);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 void *
 HeapAlloc(
        HANDLE hHeap,
        uint32_t dwFlags,
        size_t dwBytes);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 void *
 HeapReAlloc(
      HANDLE hHeap,
@@ -1739,7 +1625,7 @@ HeapReAlloc(
      size_t dwBytes
     );
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 BOOL
 HeapFree(
       HANDLE hHeap,
@@ -1751,38 +1637,17 @@ typedef enum _HEAP_INFORMATION_CLASS {
     HeapEnableTerminationOnCorruption
 } HEAP_INFORMATION_CLASS;
 
-// TODO (hanhossain): check usage
-BOOL
-HeapSetInformation(
-          HANDLE HeapHandle,
-         HEAP_INFORMATION_CLASS HeapInformationClass,
-         void * HeapInformation,
-         size_t HeapInformationLength);
-
 #define LMEM_FIXED          0x0000
 #define LMEM_MOVEABLE       0x0002
 #define LMEM_ZEROINIT       0x0040
 #define LPTR                (LMEM_FIXED | LMEM_ZEROINIT)
 
-// TODO (hanhossain): check usage
-HLOCAL
-LocalAlloc(
-        uint32_t uFlags,
-        size_t uBytes);
-
-// TODO (hanhossain): check usage
-HLOCAL
-LocalReAlloc(
-        HLOCAL hMem,
-        size_t uBytes,
-        uint32_t   uFlags);
-
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 HLOCAL
 LocalFree(
        HLOCAL hMem);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 BOOL
 FlushInstructionCache(
                HANDLE hProcess,
@@ -1823,7 +1688,7 @@ typedef struct nlsversioninfo {
 #define CSTR_EQUAL         2
 #define CSTR_GREATER_THAN  3
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 int
 CompareStringEx(
      const char16_t* lpLocaleName,
@@ -1842,7 +1707,7 @@ CompareStringEx(
 #define MAX_LEADBYTES         12
 #define MAX_DEFAULTCHAR       2
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 uint32_t
 GetACP(void);
 
@@ -1852,24 +1717,19 @@ typedef struct _cpinfo {
     uint8_t LeadByte[MAX_LEADBYTES];
 } CPINFO, *LPCPINFO;
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 BOOL
 GetCPInfo(
        uint32_t CodePage,
        LPCPINFO lpCPInfo);
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 BOOL
 IsDBCSLeadByteEx(
           uint32_t CodePage,
           uint8_t TestChar);
 
-// TODO (hanhossain): check usage
-BOOL
-IsDBCSLeadByte(
-         uint8_t TestChar);
-
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 BOOL
 IsValidCodePage(
          uint32_t CodePage);
@@ -1878,7 +1738,7 @@ IsValidCodePage(
 #define MB_PRECOMPOSED            0x00000001
 #define MB_ERR_INVALID_CHARS      0x00000008
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): public
 int
 MultiByteToWideChar(
              uint32_t CodePage,
@@ -1890,7 +1750,7 @@ MultiByteToWideChar(
 
 #define WC_NO_BEST_FIT_CHARS      0x00000400
 
-// TODO (hanhossain): check usage
+// TODO (hanhossain): internal
 int
 WideCharToMultiByte(
              uint32_t CodePage,
