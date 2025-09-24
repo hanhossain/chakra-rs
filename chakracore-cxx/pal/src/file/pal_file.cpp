@@ -3459,45 +3459,7 @@ InternalCreatePipeExit:
     return palError;
 }
 
-/*++
-Function:
-  CreatePipe
-
-See MSDN doc.
---*/
-BOOL
-CreatePipe(
-         PHANDLE hReadPipe,
-         PHANDLE hWritePipe,
-         LPSECURITY_ATTRIBUTES lpPipeAttributes,
-         uint32_t nSize)
-{
-    PAL_ERROR palError;
-    CPalThread *pThread;
-
-    ENTRY("CreatePipe(hReadPipe:%p, hWritePipe:%p, lpPipeAttributes:%p, nSize:%d\n",
-          hReadPipe, hWritePipe, lpPipeAttributes, nSize);
-
-    pThread = InternalGetCurrentThread();
-
-    palError = InternalCreatePipe(
-        pThread,
-        hReadPipe,
-        hWritePipe,
-        lpPipeAttributes,
-        nSize
-        );
-
-    if (NO_ERROR != palError)
-    {
-        pThread->SetLastError(palError);
-    }
-
-    LOGEXIT("CreatePipe return %s\n", NO_ERROR == palError ? "TRUE":"FALSE");
-    return NO_ERROR == palError;
-}
-
-PAL_ERROR
+        PAL_ERROR
 CorUnix::InternalLockFile(
     CPalThread *pThread,
     HANDLE hFile,

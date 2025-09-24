@@ -1245,27 +1245,6 @@ void PROCCleanupProcess(BOOL bTerminateUnconditionally)
     PALShutdown();
 }
 
-/*++
-Function:
-  GetCommandLineW
-
-See MSDN doc.
---*/
-char16_t*
-GetCommandLineW(
-    void)
-{
-    ENTRY("GetCommandLineW()\n");
-
-    char16_t* lpwstr = g_lpwstrCmdLine ? g_lpwstrCmdLine : (char16_t*)W("");
-
-    LOGEXIT("GetCommandLineW returns char16_t* %p (%S)\n",
-          g_lpwstrCmdLine,
-          lpwstr);
-
-    return lpwstr;
-}
-
 #define FATAL_ASSERT(e, msg) \
     do \
     { \

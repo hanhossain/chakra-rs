@@ -314,18 +314,3 @@ GlobalMemoryStatusEx(
     return fRetVal;
 }
 
-uint32_t
-GetCurrentProcessorNumber()
-{
-#if HAVE_SCHED_GETCPU
-    return sched_getcpu();
-#else //HAVE_SCHED_GETCPU
-    return -1;
-#endif //HAVE_SCHED_GETCPU
-}
-
-BOOL
-PAL_HasGetCurrentProcessorNumber()
-{
-    return HAVE_SCHED_GETCPU;
-}
