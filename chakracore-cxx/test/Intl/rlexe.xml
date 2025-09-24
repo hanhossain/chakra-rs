@@ -82,13 +82,6 @@
   </test>
   <test>
     <default>
-      <compile-flags> -Intl -debugLaunch -dbgbaseline:IntlReturnedValueTests.js.dbg.baseline</compile-flags>
-      <files>IntlReturnedValueTests.js</files>
-      <tags>Intl,require_winglob</tags> <!-- require_winglob because the baseline contains embedded bi-di markers -->
-    </default>
-  </test>
-  <test>
-    <default>
       <!-- TODO investigate why -ExtendedErrorStackForTestHost inserts tabs at the beginning of some frames (Microsoft/ChakraCore#3130) -->
       <files>IntlInternalsHiddenFromExceptionStackTest.js</files>
       <baseline>IntlInternalsHiddenFromExceptionStackTest.baseline</baseline>

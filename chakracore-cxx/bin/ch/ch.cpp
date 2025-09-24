@@ -13,7 +13,6 @@
 #endif
 
 unsigned int MessageBase::s_messageCount = 0;
-Debugger* Debugger::debugger = nullptr;
 
 const char16_t* hostName = u"ch";
 
@@ -330,7 +329,7 @@ int32_t RunScript(const char* fileName, const char * fileContents, size_t fileLe
         {
             runScript = WScriptJsrt::ModuleEntryPoint(fileName, fileContents, fullPath);
         }
-        else if (HostConfigFlags::flags.ExecuteWithBgParse && !HostConfigFlags::flags.DebugLaunch)
+        else if (HostConfigFlags::flags.ExecuteWithBgParse)
         {
             unsigned int lengthBytes = (unsigned int) fileLength;
             runScript = (JsErrorCode)RunBgParseSync(fileContents, lengthBytes, fileName);
@@ -756,12 +755,6 @@ int32_t ExecuteTest(const char* fileName)
             IfJsErrorFailLog(ChakraRTInterface::JsCreateRuntime(jsrtAttributes, nullptr, &runtime));
             chRuntime = runtime;
 
-            if (HostConfigFlags::flags.DebugLaunch)
-            {
-                Debugger* debugger = Debugger::GetDebugger(runtime);
-                debugger->StartDebugging(runtime);
-            }
-
             JsContextRef context = JS_INVALID_REFERENCE;
             IfJsErrorFailLog(ChakraRTInterface::JsCreateContext(runtime, &context));
 
@@ -772,12 +765,6 @@ int32_t ExecuteTest(const char* fileName)
 #else
         IfJsErrorFailLog(ChakraRTInterface::JsCreateRuntime(jsrtAttributes, nullptr, &runtime));
         chRuntime = runtime;
-
-        if (HostConfigFlags::flags.DebugLaunch)
-        {
-            Debugger* debugger = Debugger::GetDebugger(runtime);
-            debugger->StartDebugging(runtime);
-        }
 
         JsContextRef context = JS_INVALID_REFERENCE;
         IfJsErrorFailLog(ChakraRTInterface::JsCreateContext(runtime, &context));
@@ -826,12 +813,6 @@ int32_t ExecuteTest(const char* fileName)
         }
     }
 Error:
-    if (Debugger::debugger != nullptr)
-    {
-        Debugger::debugger->CompareOrWriteBaselineFile(fileName);
-        Debugger::CloseDebugger();
-    }
-
     ChakraRTInterface::JsSetCurrentContext(nullptr);
 
     if (runtime != JS_INVALID_RUNTIME_HANDLE)
