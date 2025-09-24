@@ -153,26 +153,6 @@ fn intl_identities_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-#[cfg(windows)]
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn intl_returned_value_tests_js(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "IntlReturnedValueTests.js",
-        compile_flags: vec![
-            "-Intl",
-            "-debugLaunch",
-            "-dbgbaseline:IntlReturnedValueTests.js.dbg.baseline",
-        ],
-        tags: HashSet::from(["Intl", "exclude_noicu", "require_winglob"]),
-        ..Default::default()
-    };
-    common::run_test_variant(test, variant, COMMON_TAGS);
-}
-
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]

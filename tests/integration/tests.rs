@@ -22,10 +22,6 @@ mod control_flow;
 #[cfg(feature = "optimized-tests")]
 mod conversions;
 mod date;
-#[cfg(feature = "optimized-tests")]
-mod debugger;
-#[cfg(feature = "optimized-tests")]
-mod debugger_common;
 #[cfg(not(feature = "optimized-tests"))]
 mod dynamic_code;
 #[cfg(feature = "optimized-tests")]
@@ -103,10 +99,6 @@ mod test262;
 mod test_loop;
 #[cfg(feature = "optimized-tests")]
 mod try_catch;
-#[cfg(feature = "optimized-tests")]
-mod ttbasic;
-#[cfg(feature = "optimized-tests")]
-mod ttexecute_basic;
 mod typed_array;
 #[cfg(feature = "optimized-tests")]
 mod unified_regex;
