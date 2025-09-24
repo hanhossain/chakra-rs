@@ -70,12 +70,6 @@ else()
     )
 endif()
 
-if(CC_TARGET_OS_LINUX)
-  set(lib_target "${lib_target}"
-    -Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/ch.version
-    )
-endif()
-
 target_link_libraries (ch
   ${lib_target}
   )
