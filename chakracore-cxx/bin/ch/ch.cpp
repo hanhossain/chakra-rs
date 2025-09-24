@@ -13,7 +13,6 @@
 #endif
 
 unsigned int MessageBase::s_messageCount = 0;
-Debugger* Debugger::debugger = nullptr;
 
 const char16_t* hostName = u"ch";
 
@@ -756,10 +755,9 @@ int32_t ExecuteTest(const char* fileName)
             IfJsErrorFailLog(ChakraRTInterface::JsCreateRuntime(jsrtAttributes, nullptr, &runtime));
             chRuntime = runtime;
 
+            // TODO (hanhossain): remove DebugLaunch flag
             if (HostConfigFlags::flags.DebugLaunch)
             {
-                Debugger* debugger = Debugger::GetDebugger(runtime);
-                debugger->StartDebugging(runtime);
             }
 
             JsContextRef context = JS_INVALID_REFERENCE;
@@ -826,12 +824,6 @@ int32_t ExecuteTest(const char* fileName)
         }
     }
 Error:
-    if (Debugger::debugger != nullptr)
-    {
-        Debugger::debugger->CompareOrWriteBaselineFile(fileName);
-        Debugger::CloseDebugger();
-    }
-
     ChakraRTInterface::JsSetCurrentContext(nullptr);
 
     if (runtime != JS_INVALID_RUNTIME_HANDLE)

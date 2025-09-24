@@ -952,10 +952,6 @@ JsValueRef WScriptJsrt::AttachCallback(JsValueRef callee, bool isConstructCall, 
         JsRuntimeHandle currentRuntime = JS_INVALID_RUNTIME_HANDLE;
         ChakraRTInterface::JsGetRuntime(currentContext, &currentRuntime);
 
-        Debugger* debugger = Debugger::GetDebugger(currentRuntime);
-        debugger->StartDebugging(currentRuntime);
-        debugger->SourceRunDown();
-
         return msg.CallFunction("");
     });
 Error:
@@ -986,11 +982,6 @@ JsValueRef WScriptJsrt::DetachCallback(JsValueRef callee, bool isConstructCall, 
         ChakraRTInterface::JsGetCurrentContext(&currentContext);
         JsRuntimeHandle currentRuntime = JS_INVALID_RUNTIME_HANDLE;
         ChakraRTInterface::JsGetRuntime(currentContext, &currentRuntime);
-        if (Debugger::debugger != nullptr)
-        {
-            Debugger* debugger = Debugger::GetDebugger(currentRuntime);
-            debugger->StopDebugging(currentRuntime);
-        }
         return msg.CallFunction("");
     });
 Error:
@@ -1009,27 +1000,16 @@ JsValueRef WScriptJsrt::DumpFunctionPositionCallback(JsValueRef callee, bool isC
             // If we can't get the functionPosition pass undefined
             IfJsErrorFailLogAndRet(ChakraRTInterface::JsGetUndefinedValue(&functionPosition));
         }
-
-        if (Debugger::debugger != nullptr)
-        {
-            Debugger::debugger->DumpFunctionPosition(functionPosition);
-        }
     }
 
     return JS_INVALID_REFERENCE;
 }
 
+// TODO (hanhossain): remove this method entirely
 JsValueRef WScriptJsrt::RequestAsyncBreakCallback(JsValueRef callee, bool isConstructCall,
     JsValueRef * arguments, unsigned short argumentCount, void * callbackState)
 {
-    if (Debugger::debugger != nullptr && !Debugger::debugger->IsDetached())
-    {
-        IfJsErrorFailLogAndRet(ChakraRTInterface::JsDiagRequestAsyncBreak(Debugger::GetRuntime()));
-    }
-    else
-    {
-        Helpers::LogError(u"RequestAsyncBreak can only be called when debugger is attached");
-    }
+    Helpers::LogError(u"RequestAsyncBreak can only be called when debugger is attached");
 
     return JS_INVALID_REFERENCE;
 }
