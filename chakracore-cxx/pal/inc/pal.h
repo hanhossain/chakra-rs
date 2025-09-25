@@ -2921,8 +2921,6 @@ PAL_FILE * _wfsopen(const char16_t *, const char16_t *, int);
 // TODO (hanhossain): public
 int rand(void);
 // TODO (hanhossain): public
-void srand(unsigned int);
-// TODO (hanhossain): public
 errno_t rand_s(unsigned int*);
 
 #define PAL_get_caller 0

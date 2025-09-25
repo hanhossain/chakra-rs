@@ -173,7 +173,6 @@ function_name() to call the system's implementation
 #if HAVE__SNWPRINTF
 #define _snwprintf DUMMY__snwprintf
 #endif  /* HAVE__SNWPRINTF */
-#define srand DUMMY_srand
 #define time DUMMY_time
 #define tm PAL_tm
 #define time_t PAL_time_t
@@ -308,7 +307,6 @@ function_name() to call the system's implementation
 #undef log
 #undef log10
 #undef rand
-#undef srand
 #undef errno
 #undef getenv
 #undef wcsspn
