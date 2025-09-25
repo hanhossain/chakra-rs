@@ -1737,11 +1737,6 @@ typedef struct PALNUMBER__* PALNUMBER;
 
 #define EXCEPTION_MAXIMUM_PARAMETERS 15
 
-// Index in the ExceptionInformation array where we will keep the reference
-// to the native exception that needs to be deleted when dispatching
-// exception in managed code.
-#define NATIVE_EXCEPTION_ASYNC_SLOT (EXCEPTION_MAXIMUM_PARAMETERS-1)
-
 typedef struct _EXCEPTION_RECORD {
     uint32_t ExceptionCode;
     uint32_t ExceptionFlags;
@@ -1806,33 +1801,13 @@ WriteProcessMemory( HANDLE hProcess,
 
 #define STANDARD_RIGHTS_REQUIRED  (0x000F0000L)
 #define SYNCHRONIZE               (0x00100000L)
-#define READ_CONTROL              (0x00020000L)
 
-#define EVENT_MODIFY_STATE        (0x0002)
 #define EVENT_ALL_ACCESS          (STANDARD_RIGHTS_REQUIRED | SYNCHRONIZE | \
                                    0x3)
 
-#define MUTANT_QUERY_STATE        (0x0001)
-#define MUTANT_ALL_ACCESS         (STANDARD_RIGHTS_REQUIRED | SYNCHRONIZE | \
-                                   MUTANT_QUERY_STATE)
-#define MUTEX_ALL_ACCESS          MUTANT_ALL_ACCESS
-
-#define SEMAPHORE_MODIFY_STATE    (0x0002)
 #define SEMAPHORE_ALL_ACCESS      (STANDARD_RIGHTS_REQUIRED | SYNCHRONIZE | \
                                    0x3)
 
-#define PROCESS_TERMINATE         (0x0001)
-#define PROCESS_CREATE_THREAD     (0x0002)
-#define PROCESS_SET_SESSIONID     (0x0004)
-#define PROCESS_VM_OPERATION      (0x0008)
-#define PROCESS_VM_READ           (0x0010)
-#define PROCESS_VM_WRITE          (0x0020)
-#define PROCESS_DUP_HANDLE        (0x0040)
-#define PROCESS_CREATE_PROCESS    (0x0080)
-#define PROCESS_SET_QUOTA         (0x0100)
-#define PROCESS_SET_INFORMATION   (0x0200)
-#define PROCESS_QUERY_INFORMATION (0x0400)
-#define PROCESS_SUSPEND_RESUME    (0x0800)
 #define PROCESS_ALL_ACCESS        (STANDARD_RIGHTS_REQUIRED | SYNCHRONIZE | \
                                    0xFFF)
 
@@ -1859,15 +1834,11 @@ lstrcatW(
        char16_t* lpString1,
       const char16_t* lpString2);
 
-#define lstrcat lstrcatW
-
 // TODO (hanhossain): internal
 char16_t*
 lstrcpyW(
       char16_t* lpString1,
       const char16_t* lpString2);
-
-#define lstrcpy lstrcpyW
 
 // TODO (hanhossain): internal
 int
@@ -1878,8 +1849,6 @@ lstrlenA(
 int
 lstrlenW(
       const char16_t* lpString);
-
-#define lstrlen lstrlenW
 
 // TODO (hanhossain): internal
 char16_t*
