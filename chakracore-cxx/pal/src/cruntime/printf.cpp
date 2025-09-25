@@ -1361,32 +1361,6 @@ int PAL_wvsscanf(const char16_t* Buffer, const char16_t* Format, va_list ap)
 
 /*++
 Function:
-  PAL_swprintf
-
-See MSDN doc.
---*/
-__attribute__((no_instrument_function))
-int
-PAL_swprintf(
-          char16_t *buffer,
-          const char16_t *format,
-          ...)
-{
-    int32_t Length;
-    va_list ap;
-
-    ENTRY("PAL_swprintf (buffer=%p, format=%p (%S))\n", buffer, format, format);
-
-    va_start(ap, format);
-    Length = PAL__wvsnprintf(buffer, 0x7fffffff, format, ap);
-    va_end(ap);
-
-    LOGEXIT("PAL_swprintf returns int %d\n", Length);
-    return Length;
-}
-
-/*++
-Function:
   PAL_swscanf
 
 See MSDN doc.
