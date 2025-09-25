@@ -55,11 +55,6 @@ Abstract:
 
 #if defined(__APPLE__)
 #include "TargetConditionals.h"
-#ifndef INCLUDE_PAL_INTERNAL_
-namespace std {
-    typedef decltype(nullptr) nullptr_t;
-}
-#endif
 #endif // __APPLE__ ?
 
 typedef __builtin_va_list va_list;
@@ -338,32 +333,6 @@ CreateDirectoryW(
 // TODO (hanhossain): public
 #define CreateDirectory CreateDirectoryW
 
-typedef struct _BY_HANDLE_FILE_INFORMATION {
-    uint32_t dwFileAttributes;
-    FILETIME ftCreationTime;
-    FILETIME ftLastAccessTime;
-    FILETIME ftLastWriteTime;
-    uint32_t dwVolumeSerialNumber;
-    uint32_t nFileSizeHigh;
-    uint32_t nFileSizeLow;
-    uint32_t nNumberOfLinks;
-    uint32_t nFileIndexHigh;
-    uint32_t nFileIndexLow;
-} BY_HANDLE_FILE_INFORMATION, *PBY_HANDLE_FILE_INFORMATION, *LPBY_HANDLE_FILE_INFORMATION;
-
-typedef struct _WIN32_FIND_DATAA {
-    uint32_t dwFileAttributes;
-    FILETIME ftCreationTime;
-    FILETIME ftLastAccessTime;
-    FILETIME ftLastWriteTime;
-    uint32_t nFileSizeHigh;
-    uint32_t nFileSizeLow;
-    uint32_t dwReserved0;
-    uint32_t dwReserved1;
-    char cFileName[ MAX_PATH_FNAME ];
-    char cAlternateFileName[ 14 ];
-} WIN32_FIND_DATAA, *PWIN32_FIND_DATAA, *LPWIN32_FIND_DATAA;
-
 typedef struct _WIN32_FIND_DATAW {
     uint32_t dwFileAttributes;
     FILETIME ftCreationTime;
@@ -375,11 +344,7 @@ typedef struct _WIN32_FIND_DATAW {
     uint32_t dwReserved1;
     char16_t cFileName[ MAX_PATH_FNAME ];
     char16_t cAlternateFileName[ 14 ];
-} WIN32_FIND_DATAW, *PWIN32_FIND_DATAW, *LPWIN32_FIND_DATAW;
-
-typedef WIN32_FIND_DATAW WIN32_FIND_DATA;
-typedef PWIN32_FIND_DATAW PWIN32_FIND_DATA;
-typedef LPWIN32_FIND_DATAW LPWIN32_FIND_DATA;
+} WIN32_FIND_DATAW, *LPWIN32_FIND_DATAW;
 
 // TODO (hanhossain): internal
 HANDLE
@@ -416,7 +381,7 @@ typedef struct _WIN32_FILE_ATTRIBUTE_DATA {
     FILETIME   ftLastWriteTime;
     uint32_t      nFileSizeHigh;
     uint32_t      nFileSizeLow;
-} WIN32_FILE_ATTRIBUTE_DATA, *LPWIN32_FILE_ATTRIBUTE_DATA;
+} *LPWIN32_FILE_ATTRIBUTE_DATA;
 
 typedef void * LPOVERLAPPED;  // diff from winbase.h
 
@@ -462,13 +427,7 @@ typedef struct _SYSTEMTIME {
     uint16_t wMinute;
     uint16_t wSecond;
     uint16_t wMilliseconds;
-} SYSTEMTIME, *PSYSTEMTIME, *LPSYSTEMTIME;
-
-// TODO (hanhossain): internal
-BOOL
-FileTimeToSystemTime(
-             const FILETIME *lpFileTime,
-             LPSYSTEMTIME lpSystemTime);
+} SYSTEMTIME, *LPSYSTEMTIME;
 
 // TODO (hanhossain): public
 BOOL
@@ -518,24 +477,6 @@ SetCurrentDirectoryA(
 BOOL
 SetCurrentDirectoryW(
              const char16_t* lpPathName);
-
-// TODO (hanhossain): internal
-HANDLE
-CreateSemaphoreA(
-          LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
-          int32_t lInitialCount,
-          int32_t lMaximumCount,
-          const char * lpName);
-
-// TODO (hanhossain): internal
-HANDLE
-CreateSemaphoreExA(
-          LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
-          int32_t lInitialCount,
-          int32_t lMaximumCount,
-          const char * lpName,
-          /*_Reserved_*/  uint32_t dwFlags,
-          uint32_t dwDesiredAccess);
 
 // TODO (hanhossain): internal
 HANDLE
@@ -626,30 +567,6 @@ typedef struct _STARTUPINFOW {
     HANDLE hStdError;
 } STARTUPINFOW, *LPSTARTUPINFOW;
 
-typedef struct _STARTUPINFOA {
-    uint32_t cb;
-    char* lpReserved_PAL_Undefined;
-    char* lpDesktop_PAL_Undefined;
-    char* lpTitle_PAL_Undefined;
-    uint32_t dwX_PAL_Undefined;
-    uint32_t dwY_PAL_Undefined;
-    uint32_t dwXSize_PAL_Undefined;
-    uint32_t dwYSize_PAL_Undefined;
-    uint32_t dwXCountChars_PAL_Undefined;
-    uint32_t dwYCountChars_PAL_Undefined;
-    uint32_t dwFillAttribute_PAL_Undefined;
-    uint32_t dwFlags;
-    uint16_t wShowWindow_PAL_Undefined;
-    uint16_t cbReserved2_PAL_Undefined;
-    uint8_t * lpReserved2_PAL_Undefined;
-    HANDLE hStdInput;
-    HANDLE hStdOutput;
-    HANDLE hStdError;
-} STARTUPINFOA, *LPSTARTUPINFOA;
-
-typedef STARTUPINFOW STARTUPINFO;
-typedef LPSTARTUPINFOW LPSTARTUPINFO;
-
 #define CREATE_NEW_CONSOLE          0x00000010
 
 typedef struct _PROCESS_INFORMATION {
@@ -657,7 +574,7 @@ typedef struct _PROCESS_INFORMATION {
     HANDLE hThread;
     uint32_t dwProcessId;
     uint32_t dwThreadId_PAL_Undefined;
-} PROCESS_INFORMATION, *PPROCESS_INFORMATION, *LPPROCESS_INFORMATION;
+} *LPPROCESS_INFORMATION;
 
 // TODO (hanhossain): public
 __attribute__((noreturn))
@@ -720,11 +637,6 @@ DuplicateHandle(
 void
 Sleep(
        uint32_t dwMilliseconds);
-
-// TODO (hanhossain): public
-BOOL
-SwitchToThread(
-    void);
 
 #define CREATE_SUSPENDED                  0x00000004
 #define STACK_SIZE_PARAM_IS_A_RESERVATION 0x00010000
@@ -1805,9 +1717,6 @@ WriteProcessMemory( HANDLE hProcess,
 #define EVENT_ALL_ACCESS          (STANDARD_RIGHTS_REQUIRED | SYNCHRONIZE | \
                                    0x3)
 
-#define SEMAPHORE_ALL_ACCESS      (STANDARD_RIGHTS_REQUIRED | SYNCHRONIZE | \
-                                   0x3)
-
 #define PROCESS_ALL_ACCESS        (STANDARD_RIGHTS_REQUIRED | SYNCHRONIZE | \
                                    0xFFF)
 
@@ -1933,11 +1842,6 @@ UnhandledExceptionFilter(
 // TODO (hanhossain): public
 LPEXCEPTION_POINTERS
 GetExceptionInformation();
-
-#else // FEATURE_PAL_SXS
-
-typedef EXCEPTION_DISPOSITION (*PVECTORED_EXCEPTION_HANDLER)(
-                           struct _EXCEPTION_POINTERS *ExceptionPointers);
 
 #endif // FEATURE_PAL_SXS
 
@@ -2466,23 +2370,6 @@ InterlockedXor64(
 EXTERN_C
 inline
 unsigned char
-InterlockedBitTestAndReset(
-      int32_t volatile *Base,
-     int32_t Bit)
-{
-    // The BitTestAndReset family of functions allow for arbitrary bit
-    // indices- so a bit index can be greater than the number of bits in
-    // int32_t. We need to account for this in all BitTest/BitTestAndSet
-    // related functions.
-    volatile int32_t* longToTest = Base + (Bit / BITS_IN_LONG);
-    int32_t bitToTest  = Bit % BITS_IN_LONG;
-    return (InterlockedAnd(longToTest, ~(1 << bitToTest)) & (1 << bitToTest)) != 0;
-}
-
-// TODO (hanhossain): public
-EXTERN_C
-inline
-unsigned char
 InterlockedBitTestAndSet(
       int32_t volatile *Base,
      int32_t Bit)
@@ -2550,17 +2437,6 @@ MemoryBarrier(
 
 // TODO (hanhossain): public
 uint32_t
-FormatMessageW(
-            uint32_t dwFlags,
-            const void * lpSource,
-            uint32_t dwMessageId,
-            uint32_t dwLanguageId,
-            char16_t* lpBffer,
-            uint32_t nSize,
-            va_list *Arguments);
-
-// TODO (hanhossain): public
-uint32_t
 GetLastError(
          void);
 
@@ -2584,60 +2460,6 @@ RtlCaptureContext(
 
 typedef void (*PAL_ActivationFunction)(CONTEXT *context);
 typedef BOOL (*PAL_SafeActivationCheckFunction)(size_t ip, BOOL checkingCurrentThread);
-
-typedef struct _OSVERSIONINFOA {
-    uint32_t dwOSVersionInfoSize;
-    uint32_t dwMajorVersion;
-    uint32_t dwMinorVersion;
-    uint32_t dwBuildNumber;
-    uint32_t dwPlatformId;
-    char szCSDVersion[ 128 ];
-} OSVERSIONINFOA, *POSVERSIONINFOA, *LPOSVERSIONINFOA;
-
-typedef struct _OSVERSIONINFOW {
-    uint32_t dwOSVersionInfoSize;
-    uint32_t dwMajorVersion;
-    uint32_t dwMinorVersion;
-    uint32_t dwBuildNumber;
-    uint32_t dwPlatformId;
-    char16_t szCSDVersion[ 128 ];
-} OSVERSIONINFOW, *POSVERSIONINFOW, *LPOSVERSIONINFOW;
-
-typedef OSVERSIONINFOW OSVERSIONINFO;
-typedef POSVERSIONINFOW POSVERSIONINFO;
-typedef LPOSVERSIONINFOW LPOSVERSIONINFO;
-
-typedef struct _OSVERSIONINFOEXA {
-    uint32_t dwOSVersionInfoSize;
-    uint32_t dwMajorVersion;
-    uint32_t dwMinorVersion;
-    uint32_t dwBuildNumber;
-    uint32_t dwPlatformId;
-    char szCSDVersion[ 128 ];
-    uint16_t  wServicePackMajor;
-    uint16_t  wServicePackMinor;
-    uint16_t  wSuiteMask;
-    uint8_t  wProductType;
-    uint8_t  wReserved;
-} OSVERSIONINFOEXA, *POSVERSIONINFOEXA, *LPOSVERSIONINFOEXA;
-
-typedef struct _OSVERSIONINFOEXW {
-    uint32_t dwOSVersionInfoSize;
-    uint32_t dwMajorVersion;
-    uint32_t dwMinorVersion;
-    uint32_t dwBuildNumber;
-    uint32_t dwPlatformId;
-    char16_t szCSDVersion[ 128 ];
-    uint16_t  wServicePackMajor;
-    uint16_t  wServicePackMinor;
-    uint16_t  wSuiteMask;
-    uint8_t  wProductType;
-    uint8_t  wReserved;
-} OSVERSIONINFOEXW, *POSVERSIONINFOEXW, *LPOSVERSIONINFOEXW;
-
-typedef OSVERSIONINFOEXW OSVERSIONINFOEX;
-typedef POSVERSIONINFOEXW POSVERSIONINFOEX;
-typedef LPOSVERSIONINFOEXW LPOSVERSIONINFOEX;
 
 #define IMAGE_FILE_MACHINE_I386              0x014c
 
@@ -3130,17 +2952,6 @@ int * PAL_errno(int caller);
 char * getenv(const char *);
 
 #define ERANGE          34
-
-/******************* PAL-specific I/O completion port *****************/
-
-typedef struct _PAL_IOCP_CPU_INFORMATION {
-    union {
-        FILETIME ftLastRecordedIdleTime;
-        FILETIME ftLastRecordedCurrentTime;
-    } LastRecordedTime;
-    FILETIME ftLastRecordedKernelTime;
-    FILETIME ftLastRecordedUserTime;
-} PAL_IOCP_CPU_INFORMATION;
 
 /******************* PAL side-by-side support  ************************/
 

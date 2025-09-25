@@ -395,29 +395,6 @@ PAL_GetCurrentThread(
 
 /*++
 Function:
-  SwitchToThread
-
-See MSDN doc.
---*/
-BOOL
-SwitchToThread(
-    void)
-{
-    BOOL ret;
-
-    ENTRY("SwitchToThread(VOID)\n");
-
-    /* sched_yield yields to another thread in the current process. This implementation
-       won't work well for cross-process synchronization. */
-    ret = (sched_yield() == 0);
-
-    LOGEXIT("SwitchToThread returns BOOL %d\n", ret);
-
-    return ret;
-}
-
-/*++
-Function:
   CreateThread
 
 Note:
