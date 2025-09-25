@@ -63,8 +63,6 @@ namespace std {
 #endif // __APPLE__ ?
 
 typedef __builtin_va_list va_list;
-#define PRINT_LOG(...) \
-    fprintf(stdout, __VA_ARGS__)
 #define PRINT_ERROR(...) \
     fprintf(stderr, __VA_ARGS__)
 
@@ -81,10 +79,6 @@ extern "C" {
 // Undefine the QUOTE_MACRO_L helper and redefine it in terms of u.
 // The reason that we do this is that quote macro is defined in ndp\common\inc,
 // not inside of coreclr sources.
-
-#define QUOTE_MACRO_L(x) QUOTE_MACRO_u(x)
-#define QUOTE_MACRO_u_HELPER(x)     u###x
-#define QUOTE_MACRO_u(x)            QUOTE_MACRO_u_HELPER(x)
 
 #include <pal_error.h>
 #include <pal_mstypes.h>
@@ -187,43 +181,9 @@ typedef long time_t;
 #define _TIME_T_DEFINED
 #endif // !PAL_STDCPP_COMPAT
 
-#define CT_CTYPE1                 0x00000001  /* ctype 1 information */
-#define CT_CTYPE2                 0x00000002  /* ctype 2 information */
-#define CT_CTYPE3                 0x00000004  /* ctype 3 information */
 #define C1_UPPER                  0x0001      /* upper case */
 #define C1_LOWER                  0x0002      /* lower case */
 #define C1_DIGIT                  0x0004      /* decimal digits */
-#define C1_SPACE                  0x0008      /* spacing characters */
-#define C1_PUNCT                  0x0010      /* punctuation characters */
-#define C1_CNTRL                  0x0020      /* control characters */
-#define C1_BLANK                  0x0040      /* blank characters */
-#define C1_XDIGIT                 0x0080      /* other digits */
-#define C1_ALPHA                  0x0100      /* any linguistic character */
-#define C2_LEFTTORIGHT            0x0001      /* left to right */
-#define C2_RIGHTTOLEFT            0x0002      /* right to left */
-#define C2_EUROPENUMBER           0x0003      /* European number, digit */
-#define C2_EUROPESEPARATOR        0x0004      /* European numeric separator */
-#define C2_EUROPETERMINATOR       0x0005      /* European numeric terminator */
-#define C2_ARABICNUMBER           0x0006      /* Arabic number */
-#define C2_COMMONSEPARATOR        0x0007      /* common numeric separator */
-#define C2_BLOCKSEPARATOR         0x0008      /* block separator */
-#define C2_SEGMENTSEPARATOR       0x0009      /* segment separator */
-#define C2_WHITESPACE             0x000A      /* white space */
-#define C2_OTHERNEUTRAL           0x000B      /* other neutrals */
-#define C2_NOTAPPLICABLE          0x0000      /* no implicit directionality */
-#define C3_NONSPACING             0x0001      /* nonspacing character */
-#define C3_DIACRITIC              0x0002      /* diacritic mark */
-#define C3_VOWELMARK              0x0004      /* vowel mark */
-#define C3_SYMBOL                 0x0008      /* symbols */
-#define C3_KATAKANA               0x0010      /* katakana character */
-#define C3_HIRAGANA               0x0020      /* hiragana character */
-#define C3_HALFWIDTH              0x0040      /* half width character */
-#define C3_FULLWIDTH              0x0080      /* full width character */
-#define C3_IDEOGRAPH              0x0100      /* ideographic character */
-#define C3_KASHIDA                0x0200      /* Arabic kashida character */
-#define C3_LEXICAL                0x0400      /* lexical character */
-#define C3_ALPHA                  0x8000      /* any ling. char (C1_ALPHA) */
-#define C3_NOTAPPLICABLE          0x0000      /* ctype 3 is not applicable */
 
 #define DLL_PROCESS_ATTACH 1
 #define DLL_THREAD_ATTACH  2
@@ -268,12 +228,9 @@ typedef struct _SECURITY_ATTRIBUTES {
             uint32_t nLength;
             void * lpSecurityDescriptor;
             BOOL bInheritHandle;
-} SECURITY_ATTRIBUTES, *PSECURITY_ATTRIBUTES, *LPSECURITY_ATTRIBUTES;
+} SECURITY_ATTRIBUTES, *LPSECURITY_ATTRIBUTES;
 
 #define _SH_DENYWR      0x20    /* deny write mode */
-
-#define FILE_READ_DATA            ( 0x0001 )    // file & pipe
-#define FILE_APPEND_DATA          ( 0x0004 )    // file
 
 #define GENERIC_READ               (0x80000000L)
 #define GENERIC_WRITE              (0x40000000L)
@@ -289,11 +246,7 @@ typedef struct _SECURITY_ATTRIBUTES {
 #define TRUNCATE_EXISTING          5
 
 #define FILE_ATTRIBUTE_READONLY                 0x00000001
-#define FILE_ATTRIBUTE_HIDDEN                   0x00000002
-#define FILE_ATTRIBUTE_SYSTEM                   0x00000004
 #define FILE_ATTRIBUTE_DIRECTORY                0x00000010
-#define FILE_ATTRIBUTE_ARCHIVE                  0x00000020
-#define FILE_ATTRIBUTE_DEVICE                   0x00000040
 #define FILE_ATTRIBUTE_NORMAL                   0x00000080
 
 #define FILE_FLAG_WRITE_THROUGH    0x80000000
@@ -307,8 +260,6 @@ typedef struct _SECURITY_ATTRIBUTES {
 #define FILE_END                   2
 
 #define STILL_ACTIVE (0x00000103L)
-
-#define INVALID_SET_FILE_POINTER   ((uint32_t)-1)
 
 // TODO (hanhossain): internal
 HANDLE
@@ -371,9 +322,6 @@ MoveFileExW(
          const char16_t* lpExistingFileName,
          const char16_t* lpNewFileName,
          uint32_t dwFlags);
-
-// TODO (hanhossain): public
-#define MoveFileEx MoveFileExW
 
 // TODO (hanhossain): internal
 BOOL
@@ -457,9 +405,6 @@ uint32_t
 GetFileAttributesW(
             const char16_t* lpFileName);
 
-// TODO (hanhossain): internal
-#define GetFileAttributes GetFileAttributesW
-
 typedef enum _GET_FILEEX_INFO_LEVELS {
   GetFileExInfoStandard
 } GET_FILEEX_INFO_LEVELS;
@@ -534,7 +479,6 @@ FlushFileBuffers(
 #define FILE_TYPE_DISK            0x0001
 #define FILE_TYPE_CHAR            0x0002
 #define FILE_TYPE_PIPE            0x0003
-#define FILE_TYPE_REMOTE          0x8000
 
 // TODO (hanhossain): internal
 uint32_t
@@ -708,8 +652,6 @@ typedef LPSTARTUPINFOW LPSTARTUPINFO;
 
 #define CREATE_NEW_CONSOLE          0x00000010
 
-#define NORMAL_PRIORITY_CLASS             0x00000020
-
 typedef struct _PROCESS_INFORMATION {
     HANDLE hProcess;
     HANDLE hThread;
@@ -731,7 +673,6 @@ TerminateProcess(
 
 #define MAXIMUM_WAIT_OBJECTS  64
 #define WAIT_OBJECT_0 0
-#define WAIT_ABANDONED   0x00000080
 #define WAIT_ABANDONED_0 0x00000080
 #define WAIT_TIMEOUT 258
 #define WAIT_FAILED ((uint32_t)0xFFFFFFFF)
@@ -785,8 +726,6 @@ BOOL
 SwitchToThread(
     void);
 
-#define DEBUG_PROCESS                     0x00000001
-#define DEBUG_ONLY_THIS_PROCESS           0x00000002
 #define CREATE_SUSPENDED                  0x00000004
 #define STACK_SIZE_PARAM_IS_A_RESERVATION 0x00010000
 
@@ -1093,22 +1032,6 @@ typedef struct _KNONVOLATILE_CONTEXT_POINTERS {
 #define CONTEXT_EXCEPTION_REQUEST 0x40000000L
 #define CONTEXT_EXCEPTION_REPORTING 0x80000000L
 
-//
-// This flag is set by the unwinder if it has unwound to a call
-// site, and cleared whenever it unwinds through a trap frame.
-// It is used by language-specific exception handlers to help
-// differentiate exception scopes during dispatching.
-//
-
-#define CONTEXT_UNWOUND_TO_CALL 0x20000000
-
-//
-// Define initial Cpsr/Fpscr value
-//
-
-#define INITIAL_CPSR 0x10
-#define INITIAL_FPSCR 0
-
 // begin_ntoshvp
 
 //
@@ -1358,9 +1281,6 @@ BOOL InitializeCriticalSectionAndSpinCount(LPCRITICAL_SECTION lpCriticalSection,
 // TODO (hanhossain): public
 void DeleteCriticalSection(  LPCRITICAL_SECTION lpCriticalSection);
 
-#define SEM_FAILCRITICALERRORS          0x0001
-#define SEM_NOOPENFILEERRORBOX          0x8000
-
 #define PAGE_NOACCESS                   0x01
 #define PAGE_READONLY                   0x02
 #define PAGE_READWRITE                  0x04
@@ -1373,7 +1293,6 @@ void DeleteCriticalSection(  LPCRITICAL_SECTION lpCriticalSection);
 #define MEM_RESERVE                     0x2000
 #define MEM_DECOMMIT                    0x4000
 #define MEM_RELEASE                     0x8000
-#define MEM_RESET                       0x80000
 #define MEM_FREE                        0x10000
 #define MEM_PRIVATE                     0x20000
 #define MEM_MAPPED                      0x40000
@@ -1452,7 +1371,6 @@ LoadLibraryExW(
          /*Reserved*/ HANDLE hFile,
          uint32_t dwFlags);
 
-#define LoadLibrary LoadLibraryW
 #define LoadLibraryEx LoadLibraryExW
 
 typedef long (*FARPROC)();
@@ -1590,9 +1508,7 @@ RtlZeroMemory(
      void * Destination,
      size_t Length);
 
-#define MoveMemory memmove
 #define CopyMemory memcpy
-#define FillMemory(Destination,Length,Fill) memset((Destination),(Fill),(Length))
 #define ZeroMemory(Destination,Length) memset((Destination),0,(Length))
 
 // TODO (hanhossain): public
@@ -1637,11 +1553,6 @@ typedef enum _HEAP_INFORMATION_CLASS {
     HeapEnableTerminationOnCorruption
 } HEAP_INFORMATION_CLASS;
 
-#define LMEM_FIXED          0x0000
-#define LMEM_MOVEABLE       0x0002
-#define LMEM_ZEROINIT       0x0040
-#define LPTR                (LMEM_FIXED | LMEM_ZEROINIT)
-
 // TODO (hanhossain): public
 HLOCAL
 LocalFree(
@@ -1655,9 +1566,6 @@ FlushInstructionCache(
                size_t dwSize);
 
 #define NORM_IGNORECASE           0x00000001  // ignore case
-#define NORM_IGNOREWIDTH          0x00020000  // ignore width
-
-#define NORM_LINGUISTIC_CASING    0x08000000  // use linguistic rules for casing
 
 #ifdef __APPLE__
 #define NORM_IGNORENONSPACE       0x00000002  // ignore nonspacing chars
@@ -1673,8 +1581,6 @@ FlushInstructionCache(
 #endif // __APPLE__
 // __APPLE__ and LINUX
 // Flags with no value on a given platform are given 0 so that program logic can be unaltered (a|0==a)
-#define LINGUISTIC_IGNOREDIACRITIC 0x00000000  // linguistically appropriate 'ignore case'
-#define LINGUISTIC_IGNORECASE     0x00000000  // linguistically appropriate 'ignore nonspace'
 #define SORT_DIGITSASNUMBERS      0x00000000  // Sort digits as numbers (ie: 2 comes before 10)
 
 
@@ -1684,9 +1590,7 @@ typedef struct nlsversioninfo {
   uint32_t     dwDefinedVersion;
 } NLSVERSIONINFO, *LPNLSVERSIONINFO;
 
-#define CSTR_LESS_THAN     1
 #define CSTR_EQUAL         2
-#define CSTR_GREATER_THAN  3
 
 // TODO (hanhossain): public
 int
@@ -1768,240 +1672,6 @@ WideCharToMultiByte(
 //  These types are used for the GetLocaleInfo NLS API routine.
 //
 
-#ifdef __APPLE__
-
-//
-//  The following LCTypes may be used in combination with any other LCTypes.
-//
-//    LOCALE_NOUSEROVERRIDE is also used in GetTimeFormat and
-//    GetDateFormat.
-//
-//    LOCALE_RETURN_NUMBER will return the result from GetLocaleInfo as a
-//    number instead of a string.  This flag is only valid for the LCTypes
-//    beginning with LOCALE_I.
-//
-#define LOCALE_NOUSEROVERRIDE         0x80000000    /* do not use user overrides */
-#define LOCALE_RETURN_NUMBER          0x20000000    /* return number instead of string */
-#define LOCALE_RETURN_GENITIVE_NAMES  0x10000000   //Flag to return the Genitive forms of month names
-
-#define LOCALE_SLOCALIZEDDISPLAYNAME  0x00000002   // localized name of locale, eg "German (Germany)" in UI language
-#define LOCALE_SENGLISHDISPLAYNAME    0x00000072   // Display name (language + country usually) in English, eg "German (Germany)"
-#define LOCALE_SNATIVEDISPLAYNAME     0x00000073   // Display name in native locale language, eg "Deutsch (Deutschland)
-
-#define LOCALE_SLOCALIZEDLANGUAGENAME 0x0000006f   // Language Display Name for a language, eg "German" in UI language
-#define LOCALE_SENGLISHLANGUAGENAME   0x00001001   // English name of language, eg "German"
-#define LOCALE_SNATIVELANGUAGENAME    0x00000004   // native name of language, eg "Deutsch"
-
-#define LOCALE_SLOCALIZEDCOUNTRYNAME  0x00000006   // localized name of country, eg "Germany" in UI language
-#define LOCALE_SENGLISHCOUNTRYNAME    0x00001002   // English name of country, eg "Germany"
-#define LOCALE_SNATIVECOUNTRYNAME     0x00000008   // native name of country, eg "Deutschland"
-
-//
-//  The following LCTypes are mutually exclusive in that they may NOT
-//  be used in combination with each other.
-//
-#define LOCALE_ILANGUAGE              0x00000001    /* language id */
-#define LOCALE_SLANGUAGE              0x00000002    /* localized name of language */
-#define LOCALE_SENGLANGUAGE           0x00001001    /* English name of language */
-#define LOCALE_SABBREVLANGNAME        0x00000003    /* abbreviated language name */
-#define LOCALE_SNATIVELANGNAME        0x00000004    /* native name of language */
-#define LOCALE_ICOUNTRY               0x00000005    /* country code */
-#define LOCALE_SCOUNTRY               0x00000006    /* localized name of country */
-
-#define LOCALE_SENGCOUNTRY            0x00001002    /* English name of country */
-#define LOCALE_SABBREVCTRYNAME        0x00000007    /* abbreviated country name */
-#define LOCALE_SNATIVECTRYNAME        0x00000008    /* native name of country */
-
-#define LOCALE_SLIST                  0x0000000C    /* list item separator */
-#define LOCALE_IMEASURE               0x0000000D    /* 0 = metric, 1 = US */
-
-#define LOCALE_SDECIMAL               0x0000000E    /* decimal separator */
-#define LOCALE_STHOUSAND              0x0000000F    /* thousand separator */
-#define LOCALE_SGROUPING              0x00000010    /* digit grouping */
-#define LOCALE_IDIGITS                0x00000011    /* number of fractional digits */
-#define LOCALE_ILZERO                 0x00000012    /* leading zeros for decimal */
-#define LOCALE_INEGNUMBER             0x00001010    /* negative number mode */
-#define LOCALE_SNATIVEDIGITS          0x00000013    /* native ascii 0-9 */
-
-#define LOCALE_SCURRENCY              0x00000014    /* local monetary symbol */
-#define LOCALE_SINTLSYMBOL            0x00000015    /* intl monetary symbol */
-#define LOCALE_SMONDECIMALSEP         0x00000016    /* monetary decimal separator */
-#define LOCALE_SMONTHOUSANDSEP        0x00000017    /* monetary thousand separator */
-#define LOCALE_SMONGROUPING           0x00000018    /* monetary grouping */
-#define LOCALE_ICURRDIGITS            0x00000019    /* # local monetary digits */
-#define LOCALE_IINTLCURRDIGITS        0x0000001A    /* # intl monetary digits */
-#define LOCALE_ICURRENCY              0x0000001B    /* positive currency mode */
-#define LOCALE_INEGCURR               0x0000001C    /* negative currency mode */
-
-#define LOCALE_SSHORTDATE             0x0000001F    /* short date format string */
-#define LOCALE_SLONGDATE              0x00000020    /* long date format string */
-#define LOCALE_STIMEFORMAT            0x00001003    /* time format string */
-#define LOCALE_S1159                  0x00000028    /* AM designator */
-#define LOCALE_S2359                  0x00000029    /* PM designator */
-
-#define LOCALE_ICALENDARTYPE          0x00001009    /* type of calendar specifier */
-#define LOCALE_IFIRSTDAYOFWEEK        0x0000100C    /* first day of week specifier */
-#define LOCALE_IFIRSTWEEKOFYEAR       0x0000100D    /* first week of year specifier */
-
-#define LOCALE_SDAYNAME1              0x0000002A    /* long name for Monday */
-#define LOCALE_SDAYNAME2              0x0000002B    /* long name for Tuesday */
-#define LOCALE_SDAYNAME3              0x0000002C    /* long name for Wednesday */
-#define LOCALE_SDAYNAME4              0x0000002D    /* long name for Thursday */
-#define LOCALE_SDAYNAME5              0x0000002E    /* long name for Friday */
-#define LOCALE_SDAYNAME6              0x0000002F    /* long name for Saturday */
-#define LOCALE_SDAYNAME7              0x00000030    /* long name for Sunday */
-#define LOCALE_SABBREVDAYNAME1        0x00000031    /* abbreviated name for Monday */
-#define LOCALE_SABBREVDAYNAME2        0x00000032    /* abbreviated name for Tuesday */
-#define LOCALE_SABBREVDAYNAME3        0x00000033    /* abbreviated name for Wednesday */
-#define LOCALE_SABBREVDAYNAME4        0x00000034    /* abbreviated name for Thursday */
-#define LOCALE_SABBREVDAYNAME5        0x00000035    /* abbreviated name for Friday */
-#define LOCALE_SABBREVDAYNAME6        0x00000036    /* abbreviated name for Saturday */
-#define LOCALE_SABBREVDAYNAME7        0x00000037    /* abbreviated name for Sunday */
-#define LOCALE_SMONTHNAME1            0x00000038    /* long name for January */
-#define LOCALE_SMONTHNAME2            0x00000039    /* long name for February */
-#define LOCALE_SMONTHNAME3            0x0000003A    /* long name for March */
-#define LOCALE_SMONTHNAME4            0x0000003B    /* long name for April */
-#define LOCALE_SMONTHNAME5            0x0000003C    /* long name for May */
-#define LOCALE_SMONTHNAME6            0x0000003D    /* long name for June */
-#define LOCALE_SMONTHNAME7            0x0000003E    /* long name for July */
-#define LOCALE_SMONTHNAME8            0x0000003F    /* long name for August */
-#define LOCALE_SMONTHNAME9            0x00000040    /* long name for September */
-#define LOCALE_SMONTHNAME10           0x00000041    /* long name for October */
-#define LOCALE_SMONTHNAME11           0x00000042    /* long name for November */
-#define LOCALE_SMONTHNAME12           0x00000043    /* long name for December */
-#define LOCALE_SMONTHNAME13           0x0000100E    /* long name for 13th month (if exists) */
-#define LOCALE_SABBREVMONTHNAME1      0x00000044    /* abbreviated name for January */
-#define LOCALE_SABBREVMONTHNAME2      0x00000045    /* abbreviated name for February */
-#define LOCALE_SABBREVMONTHNAME3      0x00000046    /* abbreviated name for March */
-#define LOCALE_SABBREVMONTHNAME4      0x00000047    /* abbreviated name for April */
-#define LOCALE_SABBREVMONTHNAME5      0x00000048    /* abbreviated name for May */
-#define LOCALE_SABBREVMONTHNAME6      0x00000049    /* abbreviated name for June */
-#define LOCALE_SABBREVMONTHNAME7      0x0000004A    /* abbreviated name for July */
-#define LOCALE_SABBREVMONTHNAME8      0x0000004B    /* abbreviated name for August */
-#define LOCALE_SABBREVMONTHNAME9      0x0000004C    /* abbreviated name for September */
-#define LOCALE_SABBREVMONTHNAME10     0x0000004D    /* abbreviated name for October */
-#define LOCALE_SABBREVMONTHNAME11     0x0000004E    /* abbreviated name for November */
-#define LOCALE_SABBREVMONTHNAME12     0x0000004F    /* abbreviated name for December */
-#define LOCALE_SABBREVMONTHNAME13     0x0000100F    /* abbreviated name for 13th month (if exists) */
-
-#define LOCALE_SPOSITIVESIGN          0x00000050    /* positive sign */
-#define LOCALE_SNEGATIVESIGN          0x00000051    /* negative sign */
-
-#define LOCALE_FONTSIGNATURE          0x00000058    /* font signature */
-#define LOCALE_SISO639LANGNAME        0x00000059    /* ISO abbreviated language name */
-#define LOCALE_SISO3166CTRYNAME       0x0000005A    /* ISO abbreviated country name */
-
-#define LOCALE_SENGCURRNAME           0x00001007    /* english name of currency */
-#define LOCALE_SNATIVECURRNAME        0x00001008    /* native name of currency */
-#define LOCALE_SYEARMONTH             0x00001006    /* year month format string */
-#define LOCALE_IDIGITSUBSTITUTION     0x00001014    /* 0 = context, 1 = none, 2 = national */
-
-#define LOCALE_SNAME                  0x0000005C    /* locale name <language>[-<Script>][-<REGION>[_<sort order>]] */
-#define LOCALE_SDURATION              0x0000005d    /* time duration format */
-#define LOCALE_SKEYBOARDSTOINSTALL    0x0000005e    /* (windows only) keyboards to install */
-#define LOCALE_SSHORTESTDAYNAME1      0x00000060    /* Shortest day name for Monday */
-#define LOCALE_SSHORTESTDAYNAME2      0x00000061    /* Shortest day name for Tuesday */
-#define LOCALE_SSHORTESTDAYNAME3      0x00000062    /* Shortest day name for Wednesday */
-#define LOCALE_SSHORTESTDAYNAME4      0x00000063    /* Shortest day name for Thursday */
-#define LOCALE_SSHORTESTDAYNAME5      0x00000064    /* Shortest day name for Friday */
-#define LOCALE_SSHORTESTDAYNAME6      0x00000065    /* Shortest day name for Saturday */
-#define LOCALE_SSHORTESTDAYNAME7      0x00000066    /* Shortest day name for Sunday */
-#define LOCALE_SISO639LANGNAME2       0x00000067    /* 3 character ISO abbreviated language name */
-#define LOCALE_SISO3166CTRYNAME2      0x00000068    /* 3 character ISO country name */
-#define LOCALE_SNAN                   0x00000069    /* Not a Number */
-#define LOCALE_SPOSINFINITY           0x0000006a    /* + Infinity */
-#define LOCALE_SNEGINFINITY           0x0000006b    /* - Infinity */
-#define LOCALE_SSCRIPTS               0x0000006c    /* Typical scripts in the locale */
-#define LOCALE_SPARENT                0x0000006d    /* Fallback name for resources */
-#define LOCALE_SCONSOLEFALLBACKNAME   0x0000006e    /* Fallback name for within the console */
-#define LOCALE_SLANGDISPLAYNAME       0x0000006f    /* Language Display Name for a language */
-#define LOCALE_IREADINGLAYOUT         0x00000070   // Returns one of the following 4 reading layout values:
-                                                   // 0 - Left to right (eg en-US)
-                                                   // 1 - Right to left (eg arabic locales)
-                                                   // 2 - Vertical top to bottom with columns to the left and also left to right (ja-JP locales)
-                                                   // 3 - Vertical top to bottom with columns proceeding to the right
-#define LOCALE_INEUTRAL               0x00000071   // Returns 0 for specific cultures, 1 for neutral cultures.
-#define LOCALE_INEGATIVEPERCENT       0x00000074   // Returns 0-11 for the negative percent format
-#define LOCALE_IPOSITIVEPERCENT       0x00000075   // Returns 0-3 for the positive percent formatIPOSITIVEPERCENT
-#define LOCALE_SPERCENT               0x00000076   // Returns the percent symbol
-#define LOCALE_SPERMILLE              0x00000077   // Returns the permille (U+2030) symbol
-#define LOCALE_SMONTHDAY              0x00000078   // Returns the preferred month/day format
-#define LOCALE_SSHORTTIME             0x00000079   // Returns the preferred short time format (ie: no seconds, just h:mm)
-#define LOCALE_SOPENTYPELANGUAGETAG   0x0000007a   // Open type language tag, eg: "latn" or "dflt"
-#define LOCALE_SSORTLOCALE            0x0000007b   // Name of locale to use for sorting/collation/casing behavior.
-
-#define LCMAP_LINGUISTIC_CASING       0x01000000    /* Use linguistic casing */
-
-#define CAL_RETURN_GENITIVE_NAMES       LOCALE_RETURN_GENITIVE_NAMES  // return genitive forms of month names
-
-#define CAL_SSHORTESTDAYNAME1         0x00000031
-#define CAL_SSHORTESTDAYNAME2         0x00000032
-#define CAL_SSHORTESTDAYNAME3         0x00000033
-#define CAL_SSHORTESTDAYNAME4         0x00000034
-#define CAL_SSHORTESTDAYNAME5         0x00000035
-#define CAL_SSHORTESTDAYNAME6         0x00000036
-#define CAL_SSHORTESTDAYNAME7         0x00000037
-
-#define CAL_SMONTHDAY                   0x00000038  // Month/day pattern (reserve for potential inclusion in a future version)
-#define CAL_SERASTRING                  0x00000004  // era name for IYearOffsetRanges, eg A.D.
-#define CAL_SABBREVERASTRING            0x00000039  // Abbreviated era string (eg: AD)
-
-#define CAL_SSHORTDATE            0x00000005  /* short date format string */
-#define CAL_SLONGDATE             0x00000006  /* long date format string */
-#define CAL_SDAYNAME1             0x00000007  /* native name for Monday */
-#define CAL_SDAYNAME2             0x00000008  /* native name for Tuesday */
-#define CAL_SDAYNAME3             0x00000009  /* native name for Wednesday */
-#define CAL_SDAYNAME4             0x0000000a  /* native name for Thursday */
-#define CAL_SDAYNAME5             0x0000000b  /* native name for Friday */
-#define CAL_SDAYNAME6             0x0000000c  /* native name for Saturday */
-#define CAL_SDAYNAME7             0x0000000d  /* native name for Sunday */
-#define CAL_SABBREVDAYNAME1       0x0000000e  /* abbreviated name for Monday */
-#define CAL_SABBREVDAYNAME2       0x0000000f  /* abbreviated name for Tuesday */
-#define CAL_SABBREVDAYNAME3       0x00000010  /* abbreviated name for Wednesday */
-#define CAL_SABBREVDAYNAME4       0x00000011  /* abbreviated name for Thursday */
-#define CAL_SABBREVDAYNAME5       0x00000012  /* abbreviated name for Friday */
-#define CAL_SABBREVDAYNAME6       0x00000013  /* abbreviated name for Saturday */
-#define CAL_SABBREVDAYNAME7       0x00000014  /* abbreviated name for Sunday */
-#define CAL_SMONTHNAME1           0x00000015  /* native name for January */
-#define CAL_SMONTHNAME2           0x00000016  /* native name for February */
-#define CAL_SMONTHNAME3           0x00000017  /* native name for March */
-#define CAL_SMONTHNAME4           0x00000018  /* native name for April */
-#define CAL_SMONTHNAME5           0x00000019  /* native name for May */
-#define CAL_SMONTHNAME6           0x0000001a  /* native name for June */
-#define CAL_SMONTHNAME7           0x0000001b  /* native name for July */
-#define CAL_SMONTHNAME8           0x0000001c  /* native name for August */
-#define CAL_SMONTHNAME9           0x0000001d  /* native name for September */
-#define CAL_SMONTHNAME10          0x0000001e  /* native name for October */
-#define CAL_SMONTHNAME11          0x0000001f  /* native name for November */
-#define CAL_SMONTHNAME12          0x00000020  /* native name for December */
-#define CAL_SMONTHNAME13          0x00000021  /* native name for 13th month (if any) */
-#define CAL_SABBREVMONTHNAME1     0x00000022  /* abbreviated name for January */
-#define CAL_SABBREVMONTHNAME2     0x00000023  /* abbreviated name for February */
-#define CAL_SABBREVMONTHNAME3     0x00000024  /* abbreviated name for March */
-#define CAL_SABBREVMONTHNAME4     0x00000025  /* abbreviated name for April */
-#define CAL_SABBREVMONTHNAME5     0x00000026  /* abbreviated name for May */
-#define CAL_SABBREVMONTHNAME6     0x00000027  /* abbreviated name for June */
-#define CAL_SABBREVMONTHNAME7     0x00000028  /* abbreviated name for July */
-#define CAL_SABBREVMONTHNAME8     0x00000029  /* abbreviated name for August */
-#define CAL_SABBREVMONTHNAME9     0x0000002a  /* abbreviated name for September */
-#define CAL_SABBREVMONTHNAME10    0x0000002b  /* abbreviated name for October */
-#define CAL_SABBREVMONTHNAME11    0x0000002c  /* abbreviated name for November */
-#define CAL_SABBREVMONTHNAME12    0x0000002d  /* abbreviated name for December */
-#define CAL_SABBREVMONTHNAME13    0x0000002e  /* abbreviated name for 13th month (if any) */
-#define CAL_SYEARMONTH            0x0000002f  /* year month format string */
-
-
-#else // __APPLE__
-
-#define LOCALE_SDECIMAL               0x0000000E    /* decimal separator */
-#define LOCALE_STHOUSAND              0x0000000F    /* thousand separator */
-#define LOCALE_ILZERO                 0x00000012    /* leading zeros for decimal */
-#define LOCALE_SCURRENCY              0x00000014    /* local monetary symbol */
-#define LOCALE_SMONDECIMALSEP         0x00000016    /* monetary decimal separator */
-#define LOCALE_SMONTHOUSANDSEP        0x00000017    /* monetary thousand separator */
-
-#endif // __APPLE__
-
 
 // TODO (hanhossain): public
 int
@@ -2036,53 +1706,12 @@ GetUserDefaultLocaleName(
             char16_t* lpLocaleName,
             int cchLocaleName);
 
-
-#define LCID_INSTALLED            0x00000001  // installed locale ids
-#define LCID_SUPPORTED            0x00000002  // supported locale ids
-#ifdef __APPLE__
-#define LCID_ALTERNATE_SORTS      0x00000004  // alternate sort locale ids
-#endif // __APPLE__
-
 typedef uint32_t CALID;
-typedef uint32_t CALTYPE;
 
-#define CAL_ITWODIGITYEARMAX 0x00000030 // two digit year max
-#define CAL_RETURN_NUMBER    0x20000000 // return number instead of string
-
-#define CAL_GREGORIAN                 1 // Gregorian (localized) calendar
-#define CAL_GREGORIAN_US              2 // Gregorian (U.S.) calendar
-#define CAL_JAPAN                     3 // Japanese Emperor Era calendar
-#define CAL_TAIWAN                    4 // Taiwan Era calendar
-#define CAL_KOREA                     5 // Korean Tangun Era calendar
-#define CAL_HIJRI                     6 // Hijri (Arabic Lunar) calendar
-#define CAL_THAI                      7 // Thai calendar
-#define CAL_HEBREW                    8 // Hebrew (Lunar) calendar
-#define CAL_GREGORIAN_ME_FRENCH       9 // Gregorian Middle East French calendar
-#define CAL_GREGORIAN_ARABIC         10 // Gregorian Arabic calendar
-#define CAL_GREGORIAN_XLIT_ENGLISH   11 // Gregorian Transliterated English calendar
-#define CAL_GREGORIAN_XLIT_FRENCH    12 // Gregorian Transliterated French calendar
-#define CAL_JULIAN                   13
-
-#define DATE_SHORTDATE            0x00000001  // use short date picture
 #define DATE_LONGDATE             0x00000002  // use long date picture
-#define DATE_YEARMONTH            0x00000008  // use year month picture
-
-typedef BOOL (CALLBACK* DATEFMT_ENUMPROCEXW)(char16_t*, CALID);
-typedef BOOL (CALLBACK* DATEFMT_ENUMPROCEXEXW)(char16_t*, CALID, ptrdiff_t);
-
-typedef BOOL (CALLBACK* TIMEFMT_ENUMPROCW)(char16_t*);
-typedef BOOL (CALLBACK* TIMEFMT_ENUMPROCEXW)(char16_t*, ptrdiff_t);
-
-#define ENUM_ALL_CALENDARS        0xffffffff  // enumerate all calendars
-#define CAL_ICALINTVALUE          0x00000001  // calendar type
-#define CAL_NOUSEROVERRIDE        LOCALE_NOUSEROVERRIDE  // do not use user overrides
-#define CAL_SCALNAME              0x00000002  // native name of calendar
 
 typedef BOOL (CALLBACK* CALINFO_ENUMPROCEXW)(char16_t*,CALID);
 typedef BOOL (CALLBACK* CALINFO_ENUMPROCEXEXW)(char16_t*, CALID, char16_t*, ptrdiff_t);
-
-#define LCMAP_LOWERCASE  0x00000100
-#define LCMAP_UPPERCASE  0x00000200
 
 // TODO (hanhossain): public
 int
@@ -2097,34 +1726,12 @@ LCMapStringEx(
      void * lpReserved,
      ptrdiff_t lParam );
 
-#define GEOID_NOT_AVAILABLE -1
-
 // "a number", might represent different types
 typedef struct PALNUMBER__* PALNUMBER;
-
-#define DATE_USE_ALT_CALENDAR 0x00000004
 
 #define GetDateFormat GetDateFormatW
 
 #define EXCEPTION_NONCONTINUABLE 0x1
-#define EXCEPTION_UNWINDING 0x2
-
-#ifdef FEATURE_PAL_SXS
-
-#define EXCEPTION_EXIT_UNWIND 0x4       // Exit unwind is in progress (not used by PAL SEH)
-#define EXCEPTION_NESTED_CALL 0x10      // Nested exception handler call
-#define EXCEPTION_TARGET_UNWIND 0x20    // Target unwind in progress
-#define EXCEPTION_COLLIDED_UNWIND 0x40  // Collided exception handler call
-#define EXCEPTION_SKIP_VEH 0x200
-
-#define EXCEPTION_UNWIND (EXCEPTION_UNWINDING | EXCEPTION_EXIT_UNWIND | \
-                          EXCEPTION_TARGET_UNWIND | EXCEPTION_COLLIDED_UNWIND)
-
-#define IS_DISPATCHING(Flag) ((Flag & EXCEPTION_UNWIND) == 0)
-#define IS_UNWINDING(Flag) ((Flag & EXCEPTION_UNWIND) != 0)
-#define IS_TARGET_UNWIND(Flag) (Flag & EXCEPTION_TARGET_UNWIND)
-
-#endif // FEATURE_PAL_SXS
 
 #define EXCEPTION_IS_SIGNAL 0x100
 
@@ -3616,9 +3223,6 @@ typedef struct _PAL_IOCP_CPU_INFORMATION {
 typedef enum _PAL_Boundary {
     PAL_BoundaryTop,            // closer to main()
     PAL_BoundaryBottom,         // closer to execution
-    PAL_BoundaryEH,             // out-of-band during EH
-
-    PAL_BoundaryMax = PAL_BoundaryEH
 } PAL_Boundary;
 
 // This function needs to be called on a thread when it enters
@@ -3684,13 +3288,6 @@ public:
     {
         return m_palError;
     }
-
-    void SuppressRelease()
-    {
-        // Used to avoid calling PAL_Leave() when
-        // another code path will explicitly do so.
-        m_fEntered = FALSE;
-    }
 };
 
 class PAL_LeaveHolder
@@ -3733,74 +3330,25 @@ public:
 #define EXCEPTION_EXECUTE_HANDLER   1
 #define EXCEPTION_CONTINUE_EXECUTION -1
 
-// Platform-specific library naming
-//
-#ifdef __APPLE__
-#define MAKEDLLNAME_W(name) u"lib" name u".dylib"
-#define MAKEDLLNAME_A(name)  "lib" name  ".dylib"
-#elif defined(_AIX)
-#define MAKEDLLNAME_W(name) L"lib" name L".a"
-#define MAKEDLLNAME_A(name)  "lib" name  ".a"
-#elif defined(__hppa__) || defined(_IA64_)
-#define MAKEDLLNAME_W(name) L"lib" name L".sl"
-#define MAKEDLLNAME_A(name)  "lib" name  ".sl"
-#else
-#define MAKEDLLNAME_W(name) u"lib" name u".so"
-#define MAKEDLLNAME_A(name)  "lib" name  ".so"
-#endif
-
-#define MAKEDLLNAME(x) MAKEDLLNAME_W(x)
-
-#define PAL_SHLIB_PREFIX "lib"
-
-#if __APPLE__
-#define PAL_SHLIB_SUFFIX ".dylib"
-#elif _AIX
-#define PAL_SHLIB_SUFFIX ".a"
-#elif _HPUX_
-#define PAL_SHLIB_SUFFIX ".sl"
-#else
-#define PAL_SHLIB_SUFFIX ".so"
-#endif
-
-#define DBG_EXCEPTION_HANDLED            ((uint32_t   )0x00010001L)
-#define DBG_CONTINUE                     ((uint32_t   )0x00010002L)
-#define DBG_EXCEPTION_NOT_HANDLED        ((uint32_t   )0x80010001L)
-
-#define DBG_TERMINATE_THREAD             ((uint32_t   )0x40010003L)
 #define DBG_TERMINATE_PROCESS            ((uint32_t   )0x40010004L)
-#define DBG_CONTROL_C                    ((uint32_t   )0x40010005L)
-#define DBG_RIPEXCEPTION                 ((uint32_t   )0x40010007L)
-#define DBG_CONTROL_BREAK                ((uint32_t   )0x40010008L)
-#define DBG_COMMAND_EXCEPTION            ((uint32_t   )0x40010009L)
 
 #define STATUS_USER_APC                  ((uint32_t   )0x000000C0L)
-#define STATUS_GUARD_PAGE_VIOLATION      ((uint32_t   )0x80000001L)
 #define STATUS_DATATYPE_MISALIGNMENT     ((uint32_t   )0x80000002L)
 #define STATUS_BREAKPOINT                ((uint32_t   )0x80000003L)
 #define STATUS_SINGLE_STEP               ((uint32_t   )0x80000004L)
-#define STATUS_LONGJUMP                  ((uint32_t   )0x80000026L)
-#define STATUS_UNWIND_CONSOLIDATE        ((uint32_t   )0x80000029L)
 #define STATUS_ACCESS_VIOLATION          ((uint32_t   )0xC0000005L)
-#define STATUS_IN_PAGE_ERROR             ((uint32_t   )0xC0000006L)
-#define STATUS_INVALID_HANDLE            ((uint32_t   )0xC0000008L)
-#define STATUS_NO_MEMORY                 ((uint32_t   )0xC0000017L)
 #define STATUS_ILLEGAL_INSTRUCTION       ((uint32_t   )0xC000001DL)
-#define STATUS_NONCONTINUABLE_EXCEPTION  ((uint32_t   )0xC0000025L)
-#define STATUS_INVALID_DISPOSITION       ((uint32_t   )0xC0000026L)
 #define STATUS_ARRAY_BOUNDS_EXCEEDED     ((uint32_t   )0xC000008CL)
 #define STATUS_FLOAT_DENORMAL_OPERAND    ((uint32_t   )0xC000008DL)
 #define STATUS_FLOAT_DIVIDE_BY_ZERO      ((uint32_t   )0xC000008EL)
 #define STATUS_FLOAT_INEXACT_RESULT      ((uint32_t   )0xC000008FL)
 #define STATUS_FLOAT_INVALID_OPERATION   ((uint32_t   )0xC0000090L)
 #define STATUS_FLOAT_OVERFLOW            ((uint32_t   )0xC0000091L)
-#define STATUS_FLOAT_STACK_CHECK         ((uint32_t   )0xC0000092L)
 #define STATUS_FLOAT_UNDERFLOW           ((uint32_t   )0xC0000093L)
 #define STATUS_INTEGER_DIVIDE_BY_ZERO    ((uint32_t   )0xC0000094L)
 #define STATUS_INTEGER_OVERFLOW          ((uint32_t   )0xC0000095L)
 #define STATUS_PRIVILEGED_INSTRUCTION    ((uint32_t   )0xC0000096L)
 #define STATUS_STACK_OVERFLOW            ((uint32_t   )0xC00000FDL)
-#define STATUS_CONTROL_C_EXIT            ((uint32_t   )0xC000013AL)
 
 #define WAIT_IO_COMPLETION                  STATUS_USER_APC
 
@@ -3814,32 +3362,14 @@ public:
 #define EXCEPTION_FLT_INEXACT_RESULT        STATUS_FLOAT_INEXACT_RESULT
 #define EXCEPTION_FLT_INVALID_OPERATION     STATUS_FLOAT_INVALID_OPERATION
 #define EXCEPTION_FLT_OVERFLOW              STATUS_FLOAT_OVERFLOW
-#define EXCEPTION_FLT_STACK_CHECK           STATUS_FLOAT_STACK_CHECK
 #define EXCEPTION_FLT_UNDERFLOW             STATUS_FLOAT_UNDERFLOW
 #define EXCEPTION_INT_DIVIDE_BY_ZERO        STATUS_INTEGER_DIVIDE_BY_ZERO
 #define EXCEPTION_INT_OVERFLOW              STATUS_INTEGER_OVERFLOW
 #define EXCEPTION_PRIV_INSTRUCTION          STATUS_PRIVILEGED_INSTRUCTION
-#define EXCEPTION_IN_PAGE_ERROR             STATUS_IN_PAGE_ERROR
 #define EXCEPTION_ILLEGAL_INSTRUCTION       STATUS_ILLEGAL_INSTRUCTION
-#define EXCEPTION_NONCONTINUABLE_EXCEPTION  STATUS_NONCONTINUABLE_EXCEPTION
 #define EXCEPTION_STACK_OVERFLOW            STATUS_STACK_OVERFLOW
-#define EXCEPTION_INVALID_DISPOSITION       STATUS_INVALID_DISPOSITION
-#define EXCEPTION_GUARD_PAGE                STATUS_GUARD_PAGE_VIOLATION
-#define EXCEPTION_INVALID_HANDLE            STATUS_INVALID_HANDLE
-
-#define CONTROL_C_EXIT                      STATUS_CONTROL_C_EXIT
-
-/*  These are from the <FCNTL.H> file in windows.
-    They are needed for _open_osfhandle.*/
-#define _O_RDONLY   0x0000
-#define _O_APPEND   0x0008
-#define _O_TEXT     0x4000
-#define _O_BINARY   0x8000
 
 size_t GetCurrentSP();
-
-// xplat-todo: implement me
-#define IsProcessorFeaturePresent(x) false
 
 #if defined(_ARM_)
 #define _ARM_BARRIER_SY 0xF
