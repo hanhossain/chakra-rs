@@ -5,13 +5,6 @@
 #include "RuntimeLibraryPch.h"
 #include "AtomicsOperations.h"
 
-#define InterlockedExchangeAdd32 InterlockedExchangeAdd
-#define InterlockedAnd32 InterlockedAnd
-#define InterlockedOr32 InterlockedOr
-#define InterlockedXor32 InterlockedXor
-#define InterlockedCompareExchange32 InterlockedCompareExchange
-#define InterlockedExchange32 InterlockedExchange
-
 template<typename T> struct ConvertType {};
 template<> struct ConvertType<int8_t> { typedef char _t; };
 template<> struct ConvertType<uint8_t> { typedef char _t; };
@@ -21,23 +14,103 @@ template<> struct ConvertType<int32> { typedef int32_t _t; };
 template<> struct ConvertType<uint32> { typedef int32_t _t; };
 template<> struct ConvertType<long> { typedef long _t; };
 
-#define MakeInterLockArgDef1(type) type value
-#define MakeInterLockArgDef2(type) type v1, type v2
-#define MakeInterLockArgUse1 value
-#define MakeInterLockArgUse2 v1, v2
-#define _MakeInterlockTemplate(op, argDef, argUse) \
-template<typename T> T Interlocked##op##_t(T* target, argDef(T));\
-template<> char Interlocked##op##_t(char* target, argDef(char))   { return Interlocked##op##8 (target, argUse); }\
-template<> short Interlocked##op##_t(short* target, argDef(short)){ return Interlocked##op##16(target, argUse); }\
-template<> int32_t Interlocked##op##_t(int32_t* target, argDef(int32_t))   { return Interlocked##op##32(target, argUse); }\
-template<> long Interlocked##op##_t(long* target, argDef(long)) { return Interlocked##op##64(target, argUse); }
-#define MakeInterlockTemplate(op, nArgs) _MakeInterlockTemplate(op, MakeInterLockArgDef##nArgs, MakeInterLockArgUse##nArgs)
-MakeInterlockTemplate(ExchangeAdd, 1)
-MakeInterlockTemplate(And, 1)
-MakeInterlockTemplate(Or, 1)
-MakeInterlockTemplate(Xor, 1)
-MakeInterlockTemplate(Exchange, 1)
-MakeInterlockTemplate(CompareExchange, 2)
+template<typename T>
+T InterlockedExchangeAdd_t(T *target, T value);
+
+template<>
+char InterlockedExchangeAdd_t(char *target, char value) { return InterlockedExchangeAdd8(target, value); }
+
+template<>
+short InterlockedExchangeAdd_t(short *target, short value) { return InterlockedExchangeAdd16(target, value); }
+
+template<>
+int32_t InterlockedExchangeAdd_t(int32_t *target, int32_t value) { return InterlockedExchangeAdd(target, value); }
+
+template<>
+long InterlockedExchangeAdd_t(long *target, long value) { return InterlockedExchangeAdd64(target, value); }
+
+template<typename T>
+T InterlockedAnd_t(T *target, T value);
+
+template<>
+char InterlockedAnd_t(char *target, char value) { return InterlockedAnd8(target, value); }
+
+template<>
+short InterlockedAnd_t(short *target, short value) { return InterlockedAnd16(target, value); }
+
+template<>
+int32_t InterlockedAnd_t(int32_t *target, int32_t value) { return InterlockedAnd(target, value); }
+
+template<>
+long InterlockedAnd_t(long *target, long value) { return InterlockedAnd64(target, value); }
+
+template<typename T>
+T InterlockedOr_t(T *target, T value);
+
+template<>
+char InterlockedOr_t(char *target, char value) { return InterlockedOr8(target, value); }
+
+template<>
+short InterlockedOr_t(short *target, short value) { return InterlockedOr16(target, value); }
+
+template<>
+int32_t InterlockedOr_t(int32_t *target, int32_t value) { return InterlockedOr(target, value); }
+
+template<>
+long InterlockedOr_t(long *target, long value) { return InterlockedOr64(target, value); }
+
+template<typename T>
+T InterlockedXor_t(T *target, T value);
+
+template<>
+char InterlockedXor_t(char *target, char value) { return InterlockedXor8(target, value); }
+
+template<>
+short InterlockedXor_t(short *target, short value) { return InterlockedXor16(target, value); }
+
+template<>
+int32_t InterlockedXor_t(int32_t *target, int32_t value) { return InterlockedXor(target, value); }
+
+template<>
+long InterlockedXor_t(long *target, long value) { return InterlockedXor64(target, value); }
+
+template<typename T>
+T InterlockedExchange_t(T *target, T value);
+
+template<>
+char InterlockedExchange_t(char *target, char value) { return InterlockedExchange8(target, value); }
+
+template<>
+short InterlockedExchange_t(short *target, short value) { return InterlockedExchange16(target, value); }
+
+template<>
+int32_t InterlockedExchange_t(int32_t *target, int32_t value) { return InterlockedExchange(target, value); }
+
+template<>
+long InterlockedExchange_t(long *target, long value) { return InterlockedExchange64(target, value); }
+
+template<typename T>
+T InterlockedCompareExchange_t(T *target, T v1, T v2);
+
+template<>
+char InterlockedCompareExchange_t(char *target, char v1, char v2) {
+    return InterlockedCompareExchange8(target, v1, v2);
+}
+
+template<>
+short InterlockedCompareExchange_t(short *target, short v1, short v2) {
+    return InterlockedCompareExchange16(target, v1, v2);
+}
+
+template<>
+int32_t InterlockedCompareExchange_t(int32_t *target, int32_t v1, int32_t v2) {
+    return InterlockedCompareExchange(target, v1, v2);
+}
+
+template<>
+long InterlockedCompareExchange_t(long *target, long v1, long v2) {
+    return InterlockedCompareExchange64(target, v1, v2);
+}
 
 namespace Js
 {
