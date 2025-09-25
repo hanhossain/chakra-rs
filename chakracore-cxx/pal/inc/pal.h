@@ -2592,11 +2592,6 @@ RtlCaptureContext(
 typedef void (*PAL_ActivationFunction)(CONTEXT *context);
 typedef BOOL (*PAL_SafeActivationCheckFunction)(size_t ip, BOOL checkingCurrentThread);
 
-#define VER_PLATFORM_WIN32_WINDOWS        1
-#define VER_PLATFORM_WIN32_NT        2
-#define VER_PLATFORM_UNIX            10
-#define VER_PLATFORM_MACOSX          11
-
 typedef struct _OSVERSIONINFOA {
     uint32_t dwOSVersionInfoSize;
     uint32_t dwMajorVersion;
@@ -2652,7 +2647,6 @@ typedef POSVERSIONINFOEXW POSVERSIONINFOEX;
 typedef LPOSVERSIONINFOEXW LPOSVERSIONINFOEX;
 
 #define IMAGE_FILE_MACHINE_I386              0x014c
-#define IMAGE_FILE_MACHINE_ARM64             0xAA64  // ARM64 Little-Endian
 
 typedef struct _SYSTEM_INFO {
     uint16_t wProcessorArchitecture_PAL_Undefined;
@@ -2673,16 +2667,6 @@ void
 GetSystemInfo(
            LPSYSTEM_INFO lpSystemInfo);
 
-//
-// The types of events that can be logged.
-//
-#define EVENTLOG_SUCCESS                0x0000
-#define EVENTLOG_ERROR_TYPE             0x0001
-#define EVENTLOG_WARNING_TYPE           0x0002
-#define EVENTLOG_INFORMATION_TYPE       0x0004
-#define EVENTLOG_AUDIT_SUCCESS          0x0008
-#define EVENTLOG_AUDIT_FAILURE          0x0010
-
 /******************* C Runtime Entrypoints *******************************/
 
 /* Some C runtime functions needs to be reimplemented by the PAL.
@@ -2695,7 +2679,6 @@ GetSystemInfo(
 #define wcsspn        PAL_wcsspn
 #define wcstod        PAL_wcstod
 #define wcstol        PAL_wcstol
-#define wcstoll       PAL_wcstoll
 #define wcstoul       PAL_wcstoul
 #define wcscat        PAL_wcscat
 #define wcscpy        PAL_wcscpy
@@ -2754,7 +2737,6 @@ GetSystemInfo(
 #define mkstemp       PAL_mkstemp
 #define rename        PAL_rename
 #define unlink        PAL_unlink
-#define _open         PAL__open
 #define _wcstoui64    PAL__wcstoui64
 #define _flushall     PAL__flushall
 
@@ -2763,7 +2745,6 @@ GetSystemInfo(
 #ifndef _CONST_RETURN
 #ifdef  __cplusplus
 #define _CONST_RETURN  const
-#define _CRT_CONST_CORRECT_OVERLOADS
 #else
 #define _CONST_RETURN
 #endif
@@ -2842,8 +2823,6 @@ int32_t PAL_wcstol(const char16_t *, char16_t **, int);
 // TODO (hanhossain): internal
 uint32_t PAL_wcstoul(const char16_t *, char16_t **, int);
 // TODO (hanhossain): internal
-long PAL_wcstoll(const char16_t *, char16_t **, int);
-// TODO (hanhossain): internal
 size_t PAL_wcsspn (const char16_t *, const char16_t *);
 // TODO (hanhossain): internal
 double PAL_wcstod(const char16_t *, char16_t **);
@@ -2915,9 +2894,6 @@ unsigned int _rotl(unsigned int value, int shift)
     return retval;
 }
 #endif
-
-// On 64 bit unix, make the long an int.
-#define _lrotl _rotl
 
 #if !__has_builtin(_rotl64)
 /*++

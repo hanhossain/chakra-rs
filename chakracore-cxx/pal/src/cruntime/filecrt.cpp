@@ -105,44 +105,6 @@ CorUnix::InternalMkstemp(
     return nRet;
 }
 
-
-/*++
-PAL__open
-
-Wrapper function for InternalOpen.
-
-Input parameters:
-
-szPath = pointer to a pathname of a file to be opened
-nFlags = arguments that control how the file should be accessed
-mode = file permission settings that are used only when a file is created
-
-Return value:
-    File descriptor on success, -1 on failure
---*/
-int
-PAL__open(
-    const char *szPath,
-    int nFlags,
-    ...
-    )
-{
-    int nRet = -1;
-    int mode = 0;
-    va_list ap;
-
-    // If nFlags does not contain O_CREAT, the mode parameter will be ignored.
-    if (nFlags & O_CREAT)
-    {
-        va_start(ap, nFlags);
-        mode = va_arg(ap, int);
-        va_end(ap);
-    }
-
-    nRet = InternalOpen(szPath, nFlags, mode);
-    return nRet;
-}
-
 /*++
 InternalOpen
 
