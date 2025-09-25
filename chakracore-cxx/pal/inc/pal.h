@@ -2490,7 +2490,6 @@ GetSystemInfo(
 #if !defined(PAL_STDCPP_COMPAT) || defined(USING_PAL_STDLIB)
 #define exit          PAL_exit
 #define wprintf       PAL_wprintf
-#define swprintf      PAL_swprintf
 #define wcsspn        PAL_wcsspn
 #define wcstod        PAL_wcstod
 #define wcstol        PAL_wcstol
@@ -2625,8 +2624,6 @@ char16_t _WConst_return * PAL_wcsstr(const char16_t *, const char16_t *);
 char16_t * PAL_wcstok(char16_t *, const char16_t *);
 // TODO (hanhossain): internal
 size_t PAL_wcscspn(const char16_t *, const char16_t *);
-// TODO (hanhossain): internal
-int PAL_swprintf(char16_t *, const char16_t *, ...);
 // TODO (hanhossain): internal
 int PAL_vswprintf(char16_t *, const char16_t *, va_list);
 // TODO (hanhossain): public
