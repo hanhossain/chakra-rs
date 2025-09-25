@@ -74,7 +74,7 @@ AutoSystemInfo::Initialize()
     isAtom = CheckForAtom();
 #endif
 #if defined(_M_ARM32_OR_ARM64)
-    armDivAvailable = IsProcessorFeaturePresent(PF_ARM_DIVIDE_INSTRUCTION_AVAILABLE) ? true : false;
+    armDivAvailable = false;
 #endif
     allocationGranularityPageCount = dwAllocationGranularity / dwPageSize;
 
