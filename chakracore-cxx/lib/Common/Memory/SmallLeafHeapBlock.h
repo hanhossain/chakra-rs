@@ -31,7 +31,7 @@ public:
     virtual bool GetFreeObjectListOnAllocator(FreeObject ** freeObjectList) override;
 #endif
 
-    virtual bool FindHeapObject(void* objectAddress, Recycler * recycler, FindHeapObjectFlags flags, RecyclerHeapObjectInfo& heapObject) override sealed
+    virtual bool FindHeapObject(void* objectAddress, Recycler * recycler, FindHeapObjectFlags flags, RecyclerHeapObjectInfo& heapObject) override
     {
         return this->template FindHeapObjectImpl<SmallLeafHeapBlockT<TBlockAttributes>>(objectAddress, recycler, flags, heapObject);
     }

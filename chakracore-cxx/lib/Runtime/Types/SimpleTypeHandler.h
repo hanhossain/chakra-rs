@@ -7,7 +7,7 @@
 namespace Js
 {
     template<size_t size>
-    class SimpleTypeHandler sealed: public DynamicTypeHandler
+    class SimpleTypeHandler : public DynamicTypeHandler
     {
         friend class NullTypeHandlerBase;
     private:

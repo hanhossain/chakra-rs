@@ -11,7 +11,7 @@ typedef JsUtil::BaseHashSet<ValueRelativeOffset, JitArenaAllocator, PowerOf2Size
 
 #pragma region IntBounds
 
-class IntBounds sealed
+class IntBounds
 {
 private:
     int constantLowerBound, constantUpperBound;

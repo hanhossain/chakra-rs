@@ -8,7 +8,7 @@ class ISourceHolder;
 namespace Js
 {
     template <typename TLoadCallback, typename TUnloadCallback>
-    class JsrtSourceHolder sealed : public ISourceHolder
+    class JsrtSourceHolder : public ISourceHolder
     {
     private:
         enum MapRequestFor { Source = 1, Length = 2 };

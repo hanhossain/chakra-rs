@@ -661,7 +661,7 @@ namespace Js
     };
 
 
-    class FunctionBodyPolymorphicInlineCache sealed : public PolymorphicInlineCache
+    class FunctionBodyPolymorphicInlineCache : public PolymorphicInlineCache
     {
     private:
         FunctionBody * functionBody;
@@ -693,7 +693,7 @@ namespace Js
         virtual void Finalize(bool isShutdown) override;
     };
 
-    class ScriptContextPolymorphicInlineCache sealed : public PolymorphicInlineCache
+    class ScriptContextPolymorphicInlineCache : public PolymorphicInlineCache
     {
     private:
         Field(JavascriptLibrary*) javascriptLibrary;

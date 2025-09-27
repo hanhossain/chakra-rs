@@ -8,7 +8,7 @@ namespace Js
 {
     // Keeps track of inline caches for loads and stores on the contained PropertyRecord.
     // Used in PropertyString and JavascriptSymbol.
-    class PropertyRecordUsageCache sealed
+    class PropertyRecordUsageCache
     {
     private:
         Field(const PropertyRecord*) propertyRecord;

@@ -17,7 +17,7 @@ namespace Js
     }
 }
 
-class JsrtContextCore sealed : public JsrtContext
+class JsrtContextCore : public JsrtContext
 {
 public:
     static JsrtContextCore *New(JsrtRuntime * runtime);
@@ -97,7 +97,7 @@ public:
 
 };
 
-class ChakraCoreHostScriptContext sealed : public HostScriptContext
+class ChakraCoreHostScriptContext : public HostScriptContext
 {
 public:
     ChakraCoreHostScriptContext(Js::ScriptContext* scriptContext)

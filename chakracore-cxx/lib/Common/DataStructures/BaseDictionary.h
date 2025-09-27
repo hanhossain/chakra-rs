@@ -1282,7 +1282,7 @@ namespace JsUtil
 
     public:
         template<class TDictionary>
-        class EntryIterator sealed : public IteratorBase<TDictionary, EntryIterator<TDictionary>>
+        class EntryIterator : public IteratorBase<TDictionary, EntryIterator<TDictionary>>
         {
         private:
             typedef IteratorBase<TDictionary, EntryIterator<TDictionary>> Base;
@@ -1323,7 +1323,7 @@ namespace JsUtil
 
     public:
         template<class TDictionary>
-        class BucketEntryIterator sealed : public IteratorBase<TDictionary, BucketEntryIterator<TDictionary>>
+        class BucketEntryIterator : public IteratorBase<TDictionary, BucketEntryIterator<TDictionary>>
         {
         private:
             typedef IteratorBase<TDictionary, BucketEntryIterator<TDictionary>> Base;

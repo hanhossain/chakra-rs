@@ -8,7 +8,7 @@
 #if ENABLE_NATIVE_CODEGEN
 typedef DList<ParseNode*, ArenaAllocator> NodeDList;
 
-struct BackgroundParseItem sealed : public JsUtil::Job
+struct BackgroundParseItem : public JsUtil::Job
 {
     BackgroundParseItem(JsUtil::JobManager *const manager, Parser *const parser, ParseNodeFnc *parseNode, bool defer);
 
@@ -57,7 +57,7 @@ private:
     bool completed;
 };
 
-class BackgroundParser sealed : public JsUtil::WaitableJobManager
+class BackgroundParser : public JsUtil::WaitableJobManager
 {
 public:
     BackgroundParser(Js::ScriptContext *scriptContext);

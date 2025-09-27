@@ -9,7 +9,7 @@ namespace Js
     // - Data generated for jitting and runtime purposes. Data grows as different versions of the function body are jitted.
     // - Recycler-allocated, lifetime is from when a code gen work item is added to the jit queue, to when the function body
     //   becomes collectible
-    class FunctionCodeGenRuntimeData sealed
+    class FunctionCodeGenRuntimeData
     {
     private:
         Field(FunctionBody *const) functionBody;

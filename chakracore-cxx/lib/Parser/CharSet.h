@@ -335,7 +335,7 @@ namespace UnifiedRegex
 #endif
     };
 
-    struct CharSetInner sealed : CharSetNode
+    struct CharSetInner : CharSetNode
     {
     private:
         template <typename C>
@@ -362,7 +362,7 @@ namespace UnifiedRegex
 #endif
     };
 
-    struct CharSetLeaf sealed : CharSetNode
+    struct CharSetLeaf : CharSetNode
     {
     private:
         template <typename C>

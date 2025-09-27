@@ -187,7 +187,7 @@ namespace Js
 
         virtual BOOL Get(int i, ResolvedObject* pResolvedObject) override;
         virtual uint32 GetChildrenCount() override;
-        virtual BOOL GetGroupObject(ResolvedObject* pResolvedObject) override sealed;
+        virtual BOOL GetGroupObject(ResolvedObject* pResolvedObject) override;
 
         virtual IDiagObjectAddress *FindPropertyAddress(PropertyId propId, bool& isConst) override;
 
@@ -279,7 +279,7 @@ namespace Js
         virtual void PopulateMembers() override;
     };
 
-    class DiagScopeVariablesWalker sealed : public VariableWalkerBase
+    class DiagScopeVariablesWalker : public VariableWalkerBase
     {
     public:
         // Represent catch/with scope objects, (ie. the representation for the diagnostics purposes.)
@@ -305,7 +305,7 @@ namespace Js
 
     // Display of variable on the locals window
     // Also responsible for walking on the current frame and build up chain of scopes.
-    class LocalsWalker sealed : public IDiagObjectModelWalkerBase
+    class LocalsWalker : public IDiagObjectModelWalkerBase
     {
         friend class RecyclableArgumentsArrayWalker;
 
@@ -444,7 +444,7 @@ namespace Js
         BOOL IsInDeadZone() const;
     };
 
-    class CatchScopeWalker sealed : public IDiagObjectModelWalkerBase
+    class CatchScopeWalker : public IDiagObjectModelWalkerBase
     {
         DiagStackFrame* pFrame;
         DebuggerScope * debuggerScope;
@@ -599,7 +599,7 @@ namespace Js
         virtual uint32 GetChildrenCount() override;
         virtual BOOL FetchItemAtIndex(Js::JavascriptArray* arrayObj, uint32 index, Var *value);
         virtual Var FetchItemAt(Js::JavascriptArray* arrayObj, uint32 index);
-        virtual BOOL GetResolvedObject(Js::JavascriptArray* arrayObj, int index, ResolvedObject* pResolvedObject, uint32 * pabsIndex) sealed;
+        virtual BOOL GetResolvedObject(Js::JavascriptArray* arrayObj, int index, ResolvedObject* pResolvedObject, uint32 * pabsIndex);
 
         StringBuilder<ArenaAllocator>* GetBuilder();
     };
@@ -724,7 +724,7 @@ namespace Js
         virtual WeakArenaReference<IDiagObjectModelWalkerBase>* CreateWalker() override;
     };
 
-    class RecyclableES5ArrayWalker sealed : public RecyclableArrayWalker
+    class RecyclableES5ArrayWalker : public RecyclableArrayWalker
     {
     public:
         RecyclableES5ArrayWalker(ScriptContext* pContext, Var slot, Var originalInstance);
@@ -957,7 +957,7 @@ namespace Js
     // Concrete classes for Globals group object
     //
 
-    class GlobalsScopeVariablesGroupDisplay sealed : public RecyclableObjectDisplay
+    class GlobalsScopeVariablesGroupDisplay : public RecyclableObjectDisplay
     {
     public:
         VariableWalkerBase *globalsGroupWalker;

@@ -253,7 +253,7 @@ namespace Js
         int GetPropertyCountForEnum();
         virtual PropertyId GetPropertyId(PropertyIndex index) override;
         virtual PropertyId GetPropertyId(BigPropertyIndex index) override;
-        PropertyIndex GetPropertyIndex(PropertyId propertyId) sealed;
+        PropertyIndex GetPropertyIndex(PropertyId propertyId);
         virtual PropertyQueryFlags HasPropertyQuery(PropertyId propertyId, _Inout_opt_ PropertyValueInfo* info) override;
         virtual BOOL HasOwnProperty(PropertyId propertyId) override;
         virtual PropertyQueryFlags GetPropertyQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
@@ -323,7 +323,7 @@ namespace Js
         BOOL FindNextProperty(BigPropertyIndex& index, JavascriptString** propertyString, PropertyId* propertyId, PropertyAttributes* attributes,
             DynamicType *typeToEnumerate, EnumeratorFlags flags, ScriptContext * requestContext, PropertyValueInfo * info);
 
-        virtual BOOL HasDeferredTypeHandler() const sealed;
+        virtual BOOL HasDeferredTypeHandler() const;
         static uint32_t GetOffsetOfAuxSlots();
         static uint32_t GetOffsetOfObjectArray();
         static uint32_t GetOffsetOfType();

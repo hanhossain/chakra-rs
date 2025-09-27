@@ -64,7 +64,7 @@ private:
 
 #ifdef IDLE_DECOMMIT_ENABLED
 #if DBG_DUMP
-    virtual void DumpStats() const override sealed;
+    virtual void DumpStats() const override;
     size_t idleDecommitCount;
 #endif
 #endif
@@ -86,7 +86,7 @@ private:
 
 #if IDLE_DECOMMIT_ENABLED && DBG
 public:
-    virtual void UpdateThreadContextHandle(ThreadContextId threadContextHandle) override sealed
+    virtual void UpdateThreadContextHandle(ThreadContextId threadContextHandle) override
     {
         PageAllocator::UpdateThreadContextHandle(threadContextHandle);
     }

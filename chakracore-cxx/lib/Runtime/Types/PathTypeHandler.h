@@ -223,7 +223,7 @@ namespace Js
 #if ENABLE_FIXED_FIELDS
         virtual void DoShareTypeHandler(ScriptContext* scriptContext) override;
         virtual BOOL IsFixedProperty(const DynamicObject* instance, PropertyId propertyId) override;
-        virtual bool HasSingletonInstance() const override sealed;
+        virtual bool HasSingletonInstance() const override;
         virtual bool TryUseFixedProperty(PropertyRecord const * propertyRecord, Var * pProperty, FixedPropertyKind propertyType, ScriptContext * requestContext) override;
         virtual bool TryUseFixedAccessor(PropertyRecord const * propertyRecord, Var * pAccessor, FixedPropertyKind propertyType, bool getter, ScriptContext * requestContext) override;
 
@@ -261,7 +261,7 @@ namespace Js
         bool TryGetFixedProperty(PropertyRecord const * propertyRecord, Var * pProperty, Js::FixedPropertyKind propertyType, ScriptContext * requestContext);
 
     public:
-        virtual RecyclerWeakReference<DynamicObject>* GetSingletonInstance() const override sealed { return HasSingletonInstance() ? this->typePath->GetSingletonInstance() : nullptr; }
+        virtual RecyclerWeakReference<DynamicObject>* GetSingletonInstance() const override { return HasSingletonInstance() ? this->typePath->GetSingletonInstance() : nullptr; }
 
         virtual void SetSingletonInstanceUnchecked(RecyclerWeakReference<DynamicObject>* instance) override
         {
@@ -540,7 +540,7 @@ namespace Js
         {
             return FindNextPropertyHelper(scriptContext, this->attributes, index, propertyString, propertyId, attributes, type, typeToEnumerate, flags, instance, info);
         }
-        virtual BOOL AllPropertiesAreEnumerable() sealed override { return false; }
+        virtual BOOL AllPropertiesAreEnumerable() override { return false; }
         virtual bool IsObjectCopyable() const override { return false; }
 #if ENABLE_NATIVE_CODEGEN
         virtual bool IsObjTypeSpecEquivalent(const Type* type, const TypeEquivalenceRecord& record, uint& failedPropertyIndex) override;

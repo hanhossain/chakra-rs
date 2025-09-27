@@ -42,7 +42,7 @@ namespace Js
 
 // BGParseManager is the primary interface for background parsing. It uses a cookie to publicly track the data
 // involved per parse request.
-class BGParseManager sealed : public JsUtil::WaitableJobManager
+class BGParseManager : public JsUtil::WaitableJobManager
 {
 public:
     BGParseManager();
@@ -97,7 +97,7 @@ private:
 // BGParseWorkItem is a helper class to BGParseManager that caches the input data from the calling thread
 // to parse on the background thread and caches serialized bytecode so that bytecode can be deserialized
 // on the appropriate thread.
-class BGParseWorkItem sealed : public JsUtil::Job
+class BGParseWorkItem : public JsUtil::Job
 {
 public:
     BGParseWorkItem(

@@ -30,8 +30,8 @@ namespace Js
         uint ReleaseInlineCache(PropertyId propertyId, bool isLoadMethod, bool isStore, bool isShutdown);
 
         virtual BOOL EnsureProperty(PropertyId propertyId) override;
-        virtual BOOL EnsureNoRedeclProperty(PropertyId propertyId) override sealed;
-        virtual BOOL HasOwnPropertyCheckNoRedecl(PropertyId propertyId) override sealed;
+        virtual BOOL EnsureNoRedeclProperty(PropertyId propertyId) override;
+        virtual BOOL HasOwnPropertyCheckNoRedecl(PropertyId propertyId) override;
         void EnsureCanDeclGloFunc(PropertyId propertyId);
 
         // These are special "Root" versions of the property APIs that allow access

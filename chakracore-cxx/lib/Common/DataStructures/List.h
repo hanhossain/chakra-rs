@@ -609,7 +609,7 @@ namespace Js
         class LockPolicy = DefaultContainerLockPolicy,   // Controls lock policy for read/map/write/add/remove items
         class SyncObject = CriticalSection
     >
-    class SynchronizableList sealed: private ListType // Make base class private to lock down exposed methods
+    class SynchronizableList : private ListType // Make base class private to lock down exposed methods
     {
     private:
         FieldNoBarrier(SyncObject*) syncObj;
