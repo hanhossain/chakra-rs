@@ -162,7 +162,6 @@ if(CLR_CMAKE_PLATFORM_XPLAT)
 
     # CXX WARNING FLAGS
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-        -Wno-ignored-attributes\
         -Wno-parentheses-equality\
         -Wno-reorder\
         -Wno-unused-value\
