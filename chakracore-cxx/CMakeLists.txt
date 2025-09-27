@@ -167,7 +167,6 @@ if(CLR_CMAKE_PLATFORM_XPLAT)
         -Wno-invalid-offsetof\
         -Wno-undefined-inline\
         -Wno-inconsistent-missing-override\
-        -Wno-c++14-extensions\
         -Wno-macro-redefined\
         -Wno-pragmas\
         -Wno-invalid-token-paste\
