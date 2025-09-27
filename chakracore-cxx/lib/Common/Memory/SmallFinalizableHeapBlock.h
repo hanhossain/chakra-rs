@@ -182,7 +182,7 @@ public:
         return block ? block->template AsRecyclerVisitedHostBlock<TBlockAttributes>() : nullptr;
     }
 
-    virtual bool FindHeapObject(void* objectAddress, Recycler * recycler, FindHeapObjectFlags flags, RecyclerHeapObjectInfo& heapObject) sealed
+    virtual bool FindHeapObject(void* objectAddress, Recycler * recycler, FindHeapObjectFlags flags, RecyclerHeapObjectInfo& heapObject)
     {
         return this->template FindHeapObjectImpl<SmallRecyclerVisitedHostHeapBlockT<TBlockAttributes>>(objectAddress, recycler, flags, heapObject);
     }
@@ -214,7 +214,7 @@ public:
         return block ? block->template AsFinalizableWriteBarrierBlock<TBlockAttributes>() : nullptr;
     }
 
-    virtual bool FindHeapObject(void* objectAddress, Recycler * recycler, FindHeapObjectFlags flags, RecyclerHeapObjectInfo& heapObject) override sealed
+    virtual bool FindHeapObject(void* objectAddress, Recycler * recycler, FindHeapObjectFlags flags, RecyclerHeapObjectInfo& heapObject) override
     {
         return this->template FindHeapObjectImpl<SmallFinalizableWithBarrierHeapBlockT<TBlockAttributes>>(objectAddress, recycler, flags, heapObject);
     }

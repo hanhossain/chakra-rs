@@ -125,7 +125,7 @@ namespace Js
         virtual BOOL SetItemAttributes(DynamicObject* instance, uint32 index, PropertyAttributes attributes) override;
         virtual BOOL SetItemAccessors(DynamicObject* instance, uint32 index, Var getter, Var setter) override;
         virtual DescriptorFlags GetItemSetter(DynamicObject* instance, uint32 index, Var* setterValue, ScriptContext* requestContext) override;
-        virtual BOOL SetAccessors(DynamicObject* instance, PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags = PropertyOperation_None) override sealed;
+        virtual BOOL SetAccessors(DynamicObject* instance, PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags = PropertyOperation_None) override;
         _Check_return_ _Success_(return) virtual BOOL GetAccessors(DynamicObject* instance, PropertyId propertyId, _Outptr_result_maybenull_ Var* getter, _Outptr_result_maybenull_ Var* setter) override;
         virtual BOOL PreventExtensions(DynamicObject *instance) override;
         virtual BOOL Seal(DynamicObject* instance) override;
@@ -150,7 +150,7 @@ namespace Js
         virtual void DoShareTypeHandler(ScriptContext* scriptContext) override { AssertMsg(false, "DictionaryTypeHandlers cannot be shared."); };
         virtual BOOL IsFixedProperty(const DynamicObject* instance, PropertyId propertyId) override;
 
-        virtual bool HasSingletonInstance() const override sealed;
+        virtual bool HasSingletonInstance() const override;
         virtual bool TryUseFixedProperty(PropertyRecord const * propertyRecord, Var * pProperty, FixedPropertyKind propertyType, ScriptContext * requestContext) override;
         virtual bool TryUseFixedAccessor(PropertyRecord const * propertyRecord, Var * pAccessor, FixedPropertyKind propertyType, bool getter, ScriptContext * requestContext) override;
 
@@ -182,7 +182,7 @@ namespace Js
         bool TryGetFixedAccessor(PropertyRecord const * propertyRecord, Var * pAccessor, FixedPropertyKind propertyType, bool getter, ScriptContext * requestContext);
 
     public:
-        virtual RecyclerWeakReference<DynamicObject>* GetSingletonInstance() const sealed { Assert(HasSingletonInstanceOnlyIfNeeded()); return this->singletonInstance; }
+        virtual RecyclerWeakReference<DynamicObject>* GetSingletonInstance() const { Assert(HasSingletonInstanceOnlyIfNeeded()); return this->singletonInstance; }
 
         virtual void SetSingletonInstanceUnchecked(RecyclerWeakReference<DynamicObject>* instance) override
         {
@@ -191,7 +191,7 @@ namespace Js
             this->singletonInstance = instance;
         }
 
-        virtual void ClearSingletonInstance() override sealed
+        virtual void ClearSingletonInstance() override
         {
             Assert(HasSingletonInstanceOnlyIfNeeded());
             this->singletonInstance = nullptr;

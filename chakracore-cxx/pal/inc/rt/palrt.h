@@ -1307,7 +1307,7 @@ STDAPI SafeArrayGetVartype(SAFEARRAY * psa, VARTYPE * pvt);
 STDAPI SafeArrayPutElement(SAFEARRAY * psa, int32_t * rgIndices, void * pv);
 STDAPI SafeArrayDestroy(SAFEARRAY * psa);
 
-EXTERN_C void * _stdcall _lfind(const void *, const void *, unsigned int *, unsigned int,
+EXTERN_C void * _lfind(const void *, const void *, unsigned int *, unsigned int,
         int (*)(const void *, const void *));
 
 interface IDispatch;

@@ -11,7 +11,7 @@ extern const ValueNumber InvalidValueNumber;
 extern const ValueNumber ZeroValueNumber;
 extern const ValueNumber FirstNewValueNumber;
 
-class ValueRelativeOffset sealed
+class ValueRelativeOffset
 {
 private:
     const Value *baseValue;

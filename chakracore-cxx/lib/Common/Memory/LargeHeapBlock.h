@@ -117,7 +117,7 @@ struct PageHeapData
 #endif
 
 // CONSIDER: Templatizing this so that we don't have free list support if we don't need it
-class LargeHeapBlock sealed : public HeapBlock
+class LargeHeapBlock : public HeapBlock
 {
     friend class HeapInfo;
 public:

@@ -9,7 +9,7 @@ namespace Js
     //
     // Implements ISCAPropBag.
     //
-    class SCAPropBag sealed :
+    class SCAPropBag :
         public ScriptContextHolder,
         public IUnknown
     {

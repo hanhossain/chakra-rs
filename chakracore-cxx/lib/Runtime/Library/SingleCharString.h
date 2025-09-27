@@ -10,7 +10,7 @@ namespace Js
     // Caution: GetString and GetSz return interior pointers.
     // So, if allocated in Recycler memory, these objects must
     // remain pinned to prevent orphaning via interior pointers (GetString, GetSz)
-    class SingleCharString sealed : public JavascriptString
+    class SingleCharString : public JavascriptString
     {
     public:
         static SingleCharString* New(char16_t ch, ScriptContext* scriptContext);

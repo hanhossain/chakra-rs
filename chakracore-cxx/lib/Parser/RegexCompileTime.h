@@ -427,7 +427,7 @@ namespace UnifiedRegex
         NODE_DECL
     };
 
-    struct AltNode sealed : Node
+    struct AltNode : Node
     {
         Node* head;    // never an alt node
         AltNode* tail; // null for end, overall always length > 1, never consecutive chars/sets

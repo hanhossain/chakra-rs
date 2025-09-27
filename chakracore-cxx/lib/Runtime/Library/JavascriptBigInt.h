@@ -7,7 +7,7 @@
 
 namespace Js
 {
-    class JavascriptBigInt sealed : public RecyclableObject
+    class JavascriptBigInt : public RecyclableObject
     {
     private:
         Field(digit_t*) m_digits;         // digits

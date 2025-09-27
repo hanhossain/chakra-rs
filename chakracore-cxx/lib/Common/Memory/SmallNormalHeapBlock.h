@@ -77,7 +77,7 @@ public:
         return block ? block->template AsNormalWriteBarrierBlock<TBlockAttributes>() : nullptr;
     }
 
-    virtual bool FindHeapObject(void* objectAddress, Recycler * recycler, FindHeapObjectFlags flags, RecyclerHeapObjectInfo& heapObject) override sealed
+    virtual bool FindHeapObject(void* objectAddress, Recycler * recycler, FindHeapObjectFlags flags, RecyclerHeapObjectInfo& heapObject) override
     {
         return this->template FindHeapObjectImpl<SmallNormalWithBarrierHeapBlockT<TBlockAttributes>>(objectAddress, recycler, flags, heapObject);
     }

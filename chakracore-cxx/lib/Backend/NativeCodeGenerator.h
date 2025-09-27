@@ -15,7 +15,7 @@ namespace Js
     class RemoteScriptContext;
 };
 
-class NativeCodeGenerator sealed : public JsUtil::WaitableJobManager
+class NativeCodeGenerator : public JsUtil::WaitableJobManager
 {
 #if ENABLE_DEBUG_CONFIG_OPTIONS
     static volatile unsigned long CodegenFailureSeed;
@@ -209,7 +209,7 @@ private:
         void* thunkAddress;
     };
 
-    class FreeLoopBodyJobManager sealed: public WaitableJobManager
+    class FreeLoopBodyJobManager: public WaitableJobManager
     {
     public:
         FreeLoopBodyJobManager(JsUtil::JobProcessor* processor)

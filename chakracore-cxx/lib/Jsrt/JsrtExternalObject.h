@@ -26,7 +26,7 @@
     }
 
 
-class JsrtExternalType sealed : public Js::DynamicType
+class JsrtExternalType : public Js::DynamicType
 {
 public:
     JsrtExternalType(JsrtExternalType *type) :

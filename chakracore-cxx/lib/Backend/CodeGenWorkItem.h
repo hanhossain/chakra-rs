@@ -191,7 +191,7 @@ public:
     QueuedFullJitWorkItem *EnsureQueuedFullJitWorkItem();
 };
 
-struct JsFunctionCodeGen sealed : public CodeGenWorkItem
+struct JsFunctionCodeGen : public CodeGenWorkItem
 {
     JsFunctionCodeGen(
         JsUtil::JobManager *const manager,
@@ -260,7 +260,7 @@ public:
 #endif
 };
 
-struct JsLoopBodyCodeGen sealed : public CodeGenWorkItem
+struct JsLoopBodyCodeGen : public CodeGenWorkItem
 {
     JsLoopBodyCodeGen(
         JsUtil::JobManager *const manager, Js::FunctionBody *const functionBody,

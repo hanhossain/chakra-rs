@@ -162,16 +162,11 @@ if(CLR_CMAKE_PLATFORM_XPLAT)
 
     # CXX WARNING FLAGS
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-        -Wno-ignored-attributes\
-        -Wno-parentheses-equality\
-        -Wno-reorder\
-        -Wno-microsoft\
         -Wno-unused-value\
         -Wno-int-to-void-pointer-cast\
         -Wno-invalid-offsetof\
         -Wno-undefined-inline\
         -Wno-inconsistent-missing-override\
-        -Wno-c++14-extensions\
         -Wno-macro-redefined\
         -Wno-pragmas\
         -Wno-invalid-token-paste\

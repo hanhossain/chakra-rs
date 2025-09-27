@@ -728,8 +728,8 @@ public:
     virtual BOOL IsFreeObject(void* objectAddress) override;
 #endif
     virtual BOOL IsValidObject(void* objectAddress) override;
-    byte* GetRealAddressFromInterior(void* interiorAddress) override sealed;
-    bool TestObjectMarkedBit(void* objectAddress) override sealed;
+    byte* GetRealAddressFromInterior(void* interiorAddress) override;
+    bool TestObjectMarkedBit(void* objectAddress) override;
     void SetObjectMarkedBit(void* objectAddress) override;
     virtual size_t GetObjectSize(void* object) const override { return objectSize; }
 
@@ -786,7 +786,7 @@ public:
     virtual bool VerifyMark(void * objectAddress, void * target) override;
 #endif
 #ifdef RECYCLER_PERF_COUNTERS
-    virtual void UpdatePerfCountersOnFree() override sealed;
+    virtual void UpdatePerfCountersOnFree() override;
 #endif
 #ifdef PROFILE_RECYCLER_ALLOC
     virtual void * GetTrackerData(void * address) override;

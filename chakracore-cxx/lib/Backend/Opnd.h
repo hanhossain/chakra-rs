@@ -369,7 +369,7 @@ private:
 ///
 ///---------------------------------------------------------------------------
 
-class IntConstOpnd sealed : public Opnd, public EncodableOpnd<IntConstType>
+class IntConstOpnd : public Opnd, public EncodableOpnd<IntConstType>
 {
 public:
     static IntConstOpnd *   New(IntConstType value, IRType type, Func *func, bool dontEncode = false);
@@ -404,7 +404,7 @@ public:
 /// class Int64ConstOpnd
 ///
 ///---------------------------------------------------------------------------
-class Int64ConstOpnd sealed : public Opnd, public EncodableOpnd<long>
+class Int64ConstOpnd : public Opnd, public EncodableOpnd<long>
 {
 public:
     static Int64ConstOpnd* New(long value, IRType type, Func *func);
@@ -462,7 +462,7 @@ public:
     float                   m_value;
 };
 
-class Simd128ConstOpnd sealed : public Opnd
+class Simd128ConstOpnd : public Opnd
 {
 
 public:
@@ -586,7 +586,7 @@ public:
     RegOpnd *CreatePropertyOwnerOpnd(Func *const func) const;
 };
 
-class PropertySymOpnd sealed : public SymOpnd
+class PropertySymOpnd : public SymOpnd
 {
 protected:
     PropertySymOpnd() : SymOpnd() {}
@@ -1425,7 +1425,7 @@ private:
 ///
 ///---------------------------------------------------------------------------
 
-class ArrayRegOpnd sealed : public RegOpnd
+class ArrayRegOpnd : public RegOpnd
 {
 private:
     StackSym *headSegmentSym;
@@ -1513,7 +1513,7 @@ public:
 ///
 ///---------------------------------------------------------------------------
 
-class AddrOpnd sealed : public Opnd
+class AddrOpnd : public Opnd
 {
 public:
     static AddrOpnd *       New(intptr_t address, AddrOpndKind addrOpndKind, Func *func, bool dontEncode = false, Js::Var varLocal = nullptr);

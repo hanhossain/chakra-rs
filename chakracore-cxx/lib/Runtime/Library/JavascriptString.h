@@ -112,7 +112,7 @@ namespace Js
 
         virtual BOOL SetItem(uint32 index, Var value, PropertyOperationFlags propertyOperationFlags) override;
         virtual BOOL DeleteItem(uint32 index, PropertyOperationFlags propertyOperationFlags) override;
-        virtual PropertyQueryFlags HasItemQuery(uint32 index) override sealed;
+        virtual PropertyQueryFlags HasItemQuery(uint32 index) override;
         virtual PropertyQueryFlags GetItemQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext) override;
         virtual PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext) override;
         virtual BOOL GetEnumerator(JavascriptStaticEnumerator * enumerator, EnumeratorFlags flags, ScriptContext* requestContext, EnumeratorCache * enumeratorCache = nullptr) override;

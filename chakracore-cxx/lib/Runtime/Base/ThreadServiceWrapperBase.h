@@ -16,8 +16,8 @@ class ThreadServiceWrapperBase : public ThreadServiceWrapper
     friend class JsStaticAPI::JavascriptLibrary;
 
 public:
-    bool ScheduleNextCollectOnExit() override sealed;
-    void ScheduleFinishConcurrent() override sealed;
+    bool ScheduleNextCollectOnExit() override;
+    void ScheduleFinishConcurrent() override;
     void SetForceOneIdleCollection() override;
 
 protected:

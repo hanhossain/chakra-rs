@@ -89,7 +89,7 @@ namespace Js
     // Private type handler used by ES5Array
     //
     template <class T>
-    class ES5ArrayTypeHandlerBase sealed: public DictionaryTypeHandlerBase<T>
+    class ES5ArrayTypeHandlerBase : public DictionaryTypeHandlerBase<T>
     {
         friend class NullTypeHandlerBase;
         friend class DeferredTypeHandlerBase;

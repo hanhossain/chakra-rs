@@ -41,7 +41,7 @@ namespace Js
         virtual BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
         virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
 
-        virtual BOOL EnsureProperty(PropertyId propertyId) override sealed;
+        virtual BOOL EnsureProperty(PropertyId propertyId) override;
 
         virtual BOOL HasRootProperty(PropertyId propertyId) override;
         virtual BOOL GetRootProperty(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;

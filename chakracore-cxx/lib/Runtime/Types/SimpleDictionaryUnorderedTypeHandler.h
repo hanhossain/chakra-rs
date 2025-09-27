@@ -21,7 +21,7 @@ namespace Js
     // property indexes from deleted properties for new properties, even if the property ID is different. That is when it
     // transitions into this unordered type handler.
     template<class TPropertyIndex, class TMapKey, bool IsNotExtensibleSupported>
-    class SimpleDictionaryUnorderedTypeHandler sealed : public SimpleDictionaryTypeHandlerBase<TPropertyIndex, TMapKey, IsNotExtensibleSupported>
+    class SimpleDictionaryUnorderedTypeHandler : public SimpleDictionaryTypeHandlerBase<TPropertyIndex, TMapKey, IsNotExtensibleSupported>
     {
         template <typename _TPropertyIndex, typename _TMapKey, bool _IsNotExtensibleSupported> friend class SimpleDictionaryUnorderedTypeHandler;
         template <typename _TPropertyIndex, typename _TMapKey, bool _IsNotExtensibleSupported> friend class SimpleDictionaryTypeHandlerBase;

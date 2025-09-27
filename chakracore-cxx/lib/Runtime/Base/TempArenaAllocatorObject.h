@@ -7,7 +7,7 @@
 namespace Js
 {
     template <bool isGuestArena>
-    class TempArenaAllocatorWrapper sealed : public FinalizableObject
+    class TempArenaAllocatorWrapper : public FinalizableObject
     {
     private:
         FieldNoBarrier(ArenaAllocator) allocator;

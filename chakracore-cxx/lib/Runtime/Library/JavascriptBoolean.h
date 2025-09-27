@@ -6,7 +6,7 @@
 
 namespace Js
 {
-    class JavascriptBoolean sealed : public RecyclableObject
+    class JavascriptBoolean : public RecyclableObject
     {
     private:
         Field(BOOL) value;

@@ -95,7 +95,7 @@ namespace Js
     //     - For many concatenations, the use of stack space reduces the number of allocations that would otherwise be necessary
     //       to grow the buffer
 
-    class CompoundString sealed : public LiteralString // vtable will be switched to LiteralString's vtable after flattening
+    class CompoundString : public LiteralString // vtable will be switched to LiteralString's vtable after flattening
     {
         #pragma region CompoundString::Block
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -417,10 +417,10 @@ namespace Js
     private:
         void Unreference();
     public:
-        virtual const char16_t *GetSz() override sealed;
+        virtual const char16_t *GetSz() override;
         using JavascriptString::Copy;
-        virtual void CopyVirtual(_Out_writes_(m_charLength) char16_t *const buffer, StringCopyInfoStack &nestedStringTreeCopyInfos, const byte recursionDepth) override sealed;
-        virtual bool IsTree() const override sealed;
+        virtual void CopyVirtual(_Out_writes_(m_charLength) char16_t *const buffer, StringCopyInfoStack &nestedStringTreeCopyInfos, const byte recursionDepth) override;
+        virtual bool IsTree() const override;
 
     protected:
         DEFINE_VTABLE_CTOR(CompoundString, LiteralString);

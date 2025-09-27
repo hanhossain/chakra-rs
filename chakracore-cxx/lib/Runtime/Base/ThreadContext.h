@@ -300,7 +300,7 @@ private:
 
 class AutoReentrancyHandler;
 
-class ThreadContext sealed :
+class ThreadContext :
     public DefaultRecyclerCollectionWrapper,
     public JsUtil::DoublyLinkedListElement<ThreadContext>,
     public ThreadContextInfo
@@ -1846,8 +1846,8 @@ private:
         virtual bool TransmitGCTelemetryStats(RecyclerTelemetryInfo& rti);
         virtual bool TransmitTelemetryError(const RecyclerTelemetryInfo& rti, const char * msg);
         virtual bool TransmitHeapUsage(size_t totalHeapBytes, size_t usedHeapBytes, double heapUsedRatio);
-        virtual bool ThreadContextRecyclerTelemetryHostInterface::IsThreadBound() const;
-        virtual uint32_t ThreadContextRecyclerTelemetryHostInterface::GetCurrentScriptThreadID() const;
+        virtual bool IsThreadBound() const;
+        virtual uint32_t GetCurrentScriptThreadID() const;
         virtual bool IsTelemetryProviderEnabled() const;
         virtual uint GetClosedContextCount() const;
 

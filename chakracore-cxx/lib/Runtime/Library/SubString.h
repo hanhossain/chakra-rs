@@ -6,7 +6,7 @@
 
 namespace Js
 {
-    class SubString sealed : public JavascriptString
+    class SubString : public JavascriptString
     {
         Field(void const *) originalFullStringReference;          // Only here to prevent recycler to free this buffer.
         Field(void const *) unused; // Recycler would allocate this space anyway due to bucket sizing, so make it explicit

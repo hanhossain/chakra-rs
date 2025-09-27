@@ -383,7 +383,7 @@ namespace JsUtil
     // ForegroundJobProcessor
     // -------------------------------------------------------------------------------------------------------------------------
 
-    class ForegroundJobProcessor sealed : public JobProcessor
+    class ForegroundJobProcessor : public JobProcessor
     {
 #if ENABLE_BACKGROUND_JOB_PROCESSOR
         friend BackgroundJobProcessor;
@@ -446,7 +446,7 @@ namespace JsUtil
         bool CanDecommit() const { return canDecommit; }
     };
 
-    class BackgroundJobProcessor sealed : public JobProcessor
+    class BackgroundJobProcessor : public JobProcessor
     {
     private:
         CriticalSection criticalSection;
