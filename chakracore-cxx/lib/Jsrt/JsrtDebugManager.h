@@ -78,7 +78,7 @@ private:
     // Js::HaltCallback overrides
     virtual bool CanHalt(Js::InterpreterHaltState* pHaltState);
     virtual void DispatchHalt(Js::InterpreterHaltState* pHaltState);
-    virtual void CleanupHalt() sealed;
+    virtual void CleanupHalt();
     virtual bool CanAllowBreakpoints();
     virtual bool IsInClosedState();
 

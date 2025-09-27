@@ -165,7 +165,6 @@ if(CLR_CMAKE_PLATFORM_XPLAT)
         -Wno-ignored-attributes\
         -Wno-parentheses-equality\
         -Wno-reorder\
-        -Wno-microsoft\
         -Wno-unused-value\
         -Wno-int-to-void-pointer-cast\
         -Wno-invalid-offsetof\

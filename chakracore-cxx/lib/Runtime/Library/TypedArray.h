@@ -494,11 +494,11 @@ namespace Js
             return TRUE;
         }
 
-        virtual BOOL DirectSetItem(uint32 index, Js::Var value) override sealed;
-        virtual BOOL DirectSetItemNoSet(uint32 index, Js::Var value) override sealed;
-        virtual Var  DirectGetItem(uint32 index) override sealed;
-        virtual BOOL DirectSetItemNoDetachCheck(uint32 index, Js::Var value) override sealed;
-        virtual Var  DirectGetItemNoDetachCheck(uint32 index) override sealed;
+        virtual BOOL DirectSetItem(uint32 index, Js::Var value) override;
+        virtual BOOL DirectSetItemNoSet(uint32 index, Js::Var value) override;
+        virtual Var  DirectGetItem(uint32 index) override;
+        virtual BOOL DirectSetItemNoDetachCheck(uint32 index, Js::Var value) override;
+        virtual Var  DirectGetItemNoDetachCheck(uint32 index) override;
         virtual Var TypedAdd(uint32 index, Var second) override;
         virtual Var TypedAnd(uint32 index, Var second) override;
         virtual Var TypedLoad(uint32 index) override;

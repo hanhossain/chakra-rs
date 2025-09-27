@@ -61,7 +61,7 @@ namespace Js
         virtual int32_t WindowsDuplicateString(_In_opt_ HSTRING original, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * newString);
     };
 
-    class DelayLoadWinRtFoundation sealed : public DelayLoadLibrary
+    class DelayLoadWinRtFoundation : public DelayLoadLibrary
     {
     private:
 
@@ -85,7 +85,7 @@ namespace Js
             IActivationFactory** factory);
     };
 
-    class DelayLoadWinCoreProcessThreads sealed : public DelayLoadLibrary
+    class DelayLoadWinCoreProcessThreads : public DelayLoadLibrary
     {
     private:
         // LoadWinCoreMemory specific functions

@@ -6,7 +6,7 @@
 
 namespace Js
 {
-    class JavascriptSymbol sealed : public RecyclableObject
+    class JavascriptSymbol : public RecyclableObject
     {
     private:
         Field(PropertyRecordUsageCache) propertyRecordUsageCache;

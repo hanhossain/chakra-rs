@@ -110,7 +110,7 @@ namespace Js
         byte GetUtil(Js::FunctionBody* functionBody, uint index);
     };
 
-    class PolymorphicInlineCacheInfo sealed
+    class PolymorphicInlineCacheInfo
     {
     private:
         Field(InlineCachePointerArray<PolymorphicInlineCache>) polymorphicInlineCaches;
@@ -129,7 +129,7 @@ namespace Js
         FunctionBody * GetFunctionBody() const { return functionBody; }
     };
 
-    class EntryPointPolymorphicInlineCacheInfo sealed
+    class EntryPointPolymorphicInlineCacheInfo
     {
     private:
         Field(PolymorphicInlineCacheInfo) selfInfo;

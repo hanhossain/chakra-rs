@@ -22,7 +22,7 @@ namespace Js
         Field(void *) initializeTrap;
     } JsGetterSetterInterceptor;
 
-    class CustomExternalWrapperType sealed : public DynamicType
+    class CustomExternalWrapperType : public DynamicType
     {
     public:
         CustomExternalWrapperType(CustomExternalWrapperType * type) : DynamicType(type), jsTraceCallback(type->jsTraceCallback), jsFinalizeCallback(type->jsFinalizeCallback), jsGetterSetterInterceptor(type->jsGetterSetterInterceptor) {}

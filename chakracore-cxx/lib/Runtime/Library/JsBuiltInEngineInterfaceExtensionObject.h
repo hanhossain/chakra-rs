@@ -54,7 +54,7 @@ namespace Js
         Field(SRCINFO*) sourceInfo = nullptr;
 
         void EnsureSourceInfo();
-        void JsBuiltInEngineInterfaceExtensionObject::DumpByteCode(JsBuiltInFile file);
+        void DumpByteCode(JsBuiltInFile file);
 
         static Var EntryJsBuiltIn_RegisterChakraLibraryFunction(RecyclableObject* function, CallInfo callInfo, ...);
         static Var EntryJsBuiltIn_RegisterFunction(RecyclableObject* function, CallInfo callInfo, ...);

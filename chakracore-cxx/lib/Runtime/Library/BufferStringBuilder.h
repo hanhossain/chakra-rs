@@ -38,7 +38,7 @@ namespace Js
             return this->m_string->GetWritableBuffer();
         }
 
-        class WritableString sealed : public JavascriptString
+        class WritableString : public JavascriptString
         {
         public:
             static WritableString* New(charcount_t length, ScriptContext* scriptContext);

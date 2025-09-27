@@ -88,7 +88,7 @@ namespace Js
     public:
         virtual const char16_t* GetSz() = 0;     // Force subclass to call GetSzImpl with the real type to avoid virtual calls
         using JavascriptString::Copy;
-        virtual bool IsTree() const override sealed;
+        virtual bool IsTree() const override;
     };
 
     // Concat string with N (or less) child nodes.
@@ -122,7 +122,7 @@ namespace Js
 
     public:
         static ConcatStringN<N>* New(ScriptContext* scriptContext);
-        const char16_t * GetSz() override sealed;
+        const char16_t * GetSz() override;
         void SetItem(_In_range_(0, N - 1) int index, JavascriptString* value);
 
     protected:
@@ -134,7 +134,7 @@ namespace Js
     //   ConcatString* str = ConcatString::New(javascriptString1, javascriptString2);
     // Note: it's preferred you would use the following for concats, that would figure out whether concat string is optimal or create a new string is better.
     //   JavascriptString::Concat(javascriptString1, javascriptString2);
-    class ConcatString sealed : public ConcatStringN<2>
+    class ConcatString : public ConcatStringN<2>
     {
         ConcatString(JavascriptString* a, JavascriptString* b);
     protected:
@@ -158,7 +158,7 @@ namespace Js
     // - We use chunks in order to avoid big allocations, we don't expect lots of reallocs, that why chunk size is relatively big.
     // - the chunks are linked using m_prevChunk field. flattening happens from left to right, i.e. first we need to get
     //   head chunk -- the one that has m_prevChunk == NULL.
-    class ConcatStringBuilder sealed : public ConcatStringBase
+    class ConcatStringBuilder : public ConcatStringBase
     {
         friend JavascriptString;
         ConcatStringBuilder(ScriptContext* scriptContext, int initialSlotCount);
@@ -168,11 +168,11 @@ namespace Js
 
     protected:
         DEFINE_VTABLE_CTOR(ConcatStringBuilder, ConcatStringBase);
-        virtual void CopyVirtual(_Out_writes_(m_charLength) char16_t *const buffer, StringCopyInfoStack &nestedStringTreeCopyInfos, const byte recursionDepth) override sealed;
+        virtual void CopyVirtual(_Out_writes_(m_charLength) char16_t *const buffer, StringCopyInfoStack &nestedStringTreeCopyInfos, const byte recursionDepth) override;
 
     public:
         static ConcatStringBuilder* New(ScriptContext* scriptContext, int initialSlotCount);
-        const char16_t * GetSz() override sealed;
+        const char16_t * GetSz() override;
         void Append(JavascriptString* str);
 
     private:
@@ -191,7 +191,7 @@ namespace Js
     // Usage pattern:
     //   result = ConcatStringWrapping<u'{', u'}'>::New(result);
     template <char16_t L, char16_t R>
-    class ConcatStringWrapping sealed : public ConcatStringBase
+    class ConcatStringWrapping : public ConcatStringBase
     {
         friend JavascriptString;
         ConcatStringWrapping(JavascriptString* inner);
@@ -200,13 +200,13 @@ namespace Js
 
     protected:
         DEFINE_VTABLE_CTOR(ConcatStringWrapping, ConcatStringBase);
-        virtual void CopyVirtual(_Out_writes_(m_charLength) char16_t *const buffer, StringCopyInfoStack &nestedStringTreeCopyInfos, const byte recursionDepth) override sealed
+        virtual void CopyVirtual(_Out_writes_(m_charLength) char16_t *const buffer, StringCopyInfoStack &nestedStringTreeCopyInfos, const byte recursionDepth) override
         {
             const_cast<ConcatStringWrapping *>(this)->EnsureAllSlots();
 #pragma prefast(suppress: __WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY, "WDGVSO:14980704 The CopyImpl method uses GetLength() to ensure we only access m_charLength elements of buffer.")
             __super::CopyImpl(buffer, _countof(m_slots), AddressOf(m_slots[0]), nestedStringTreeCopyInfos, recursionDepth);
         }
-        virtual int GetRandomAccessItemsFromConcatString(Js::JavascriptString * const *& items) const override sealed
+        virtual int GetRandomAccessItemsFromConcatString(Js::JavascriptString * const *& items) const override
         {
             const_cast<ConcatStringWrapping *>(this)->EnsureAllSlots();
             items = AddressOf(m_slots[0]);
@@ -214,7 +214,7 @@ namespace Js
         }
     public:
         static ConcatStringWrapping<L, R>* New(JavascriptString* inner);
-        const char16_t * GetSz() override sealed;
+        const char16_t * GetSz() override;
     private:
         void EnsureAllSlots()
         {
@@ -242,7 +242,7 @@ namespace Js
     //   tree->SetItem(0, javascriptString1);
     //   tree->SetItem(1, javascriptString2);
     //   tree->SetItem(2, javascriptString3);
-    class ConcatStringMulti sealed : public ConcatStringBase
+    class ConcatStringMulti : public ConcatStringBase
     {
         friend JavascriptString;
 
@@ -265,7 +265,7 @@ namespace Js
 
     public:
         static ConcatStringMulti * New(uint slotCount, JavascriptString * a1, JavascriptString * a2, ScriptContext* scriptContext);
-        const char16_t * GetSz() override sealed;
+        const char16_t * GetSz() override;
         static size_t GetAllocSize(uint slotCount);
         void SetItem(_In_range_(0, slotCount - 1) uint index, JavascriptString* value);
 

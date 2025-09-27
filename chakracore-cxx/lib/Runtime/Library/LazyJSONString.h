@@ -103,7 +103,7 @@ public:
     // Tells if the string has a gap with characters that might impact JSON.parse
     bool HasComplexGap() const;
 
-    const char16_t* GetSz() override sealed;
+    const char16_t* GetSz() override;
 
     virtual VTableValue DummyVirtualFunctionToHinderLinkerICF()
     {
