@@ -2509,7 +2509,6 @@ GetSystemInfo(
 #define wcsncpy       PAL_wcsncpy
 #define wcstok        PAL_wcstok
 #define wcscspn       PAL_wcscspn
-#define iswupper      PAL_iswupper
 #define iswxdigit     PAL_iswxdigit
 #define towlower      PAL_towlower
 #define towupper      PAL_towupper
