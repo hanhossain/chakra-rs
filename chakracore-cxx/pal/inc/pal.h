@@ -2509,7 +2509,6 @@ GetSystemInfo(
 #define wcsncpy       PAL_wcsncpy
 #define wcstok        PAL_wcstok
 #define wcscspn       PAL_wcscspn
-#define towupper      PAL_towupper
 #define vswprintf     PAL_vswprintf
 #define fopen         PAL_fopen
 #define fprintf       PAL_fprintf
