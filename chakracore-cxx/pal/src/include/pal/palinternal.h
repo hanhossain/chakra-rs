@@ -360,7 +360,6 @@ function_name() to call the system's implementation
 #undef wcstok
 #undef wcscspn
 #undef iswupper
-#undef iswspace
 #undef towlower
 #undef towupper
 #undef vswprintf
