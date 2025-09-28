@@ -565,7 +565,7 @@ namespace Js
         {
             if (wcslen(tok) > 0)
             {
-                if (iswdigit(tok[0]))
+                if (PAL_iswdigit(tok[0]))
                 {
                     auto numType = _wtoi(tok);
                     for (int i = 0; i< FaultType::FaultTypeCount; i++)
@@ -580,7 +580,7 @@ namespace Js
                 {
                     // FaultInjectionType:#1-4,#6 format, not flags
                     auto tok1 = tok + 1;
-                    if (wcslen(tok1)>0 && iswdigit(tok1[0]))
+                    if (wcslen(tok1)>0 && PAL_iswdigit(tok1[0]))
                     {
                         char16_t* pDash = wcschr(tok1, u'-');
                         if (pDash)

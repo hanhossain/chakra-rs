@@ -254,7 +254,6 @@ function_name() to call the system's implementation
 #undef strnlen
 #undef stricmp
 #undef strdup
-#undef iswdigit
 #undef iswxdigit
 #undef iswprint
 #undef malloc

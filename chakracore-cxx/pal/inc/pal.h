@@ -2510,7 +2510,6 @@ GetSystemInfo(
 #define wcstok        PAL_wcstok
 #define wcscspn       PAL_wcscspn
 #define iswprint      PAL_iswprint
-#define iswdigit      PAL_iswdigit
 #define iswspace      PAL_iswspace
 #define iswupper      PAL_iswupper
 #define iswxdigit     PAL_iswxdigit
@@ -2637,8 +2636,6 @@ uint32_t PAL_wcstoul(const char16_t *, char16_t **, int);
 size_t PAL_wcsspn (const char16_t *, const char16_t *);
 // TODO (hanhossain): internal
 double PAL_wcstod(const char16_t *, char16_t **);
-// TODO (hanhossain): internal
-int PAL_iswalpha(char16_t);
 // TODO (hanhossain): internal
 int PAL_iswprint(char16_t);
 // TODO (hanhossain): internal
