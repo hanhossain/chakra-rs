@@ -1616,49 +1616,6 @@ PAL_iswdigit( char16_t c )
 
 /*++
 Function:
-
-    iswxdigit
-
-See MSDN for more details.
-
-Notes :
-the information in UnicodeData doesn't help us, it doesn't have enough
-granularity. Results in windows show that only ASCII and "Fullwidth" (>0xFF10)
-numbers and letters are considered as "hex"; other "numbers"
-(nGeneralCategory==8) aren't.
---*/
-int
-PAL_iswxdigit( char16_t c )
-{
-    uint32_t nRetVal = 0;
-
-    ENTRY("PAL_iswxdigit( c=%d )\n", c);
-
-    /* ASCII characters */
-    if((c>= 'A' && c<='F') ||        /* uppercase hex letters */
-       (c>= 'a' && c<='f') ||        /* lowercase hex letters */
-       (c>= '0' && c<='9'))          /* digits */
-    {
-        nRetVal = 1;
-    }
-    else
-    /* "fullwidth" characters, whatever that is */
-    if((c>= 0xFF10 && c<=0xFF19) ||  /* digits */
-       (c>= 0xFF21 && c<=0xFF26) ||  /* uppercase hex letters */
-       (c>= 0xFF41 && c<=0xFF46))    /* lowercase hex letters */
-    {
-        nRetVal = 1;
-    }
-    else
-    {
-        nRetVal = 0;
-    }
-    LOGEXIT("PAL_iswxdigit returning %d\n", nRetVal);
-    return nRetVal;
-}
-
-/*++
-Function:
    PAL_wcscspn
 
 Finds the number of consecutive characters from the start of the string

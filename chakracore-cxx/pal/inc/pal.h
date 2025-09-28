@@ -2509,7 +2509,6 @@ GetSystemInfo(
 #define wcsncpy       PAL_wcsncpy
 #define wcstok        PAL_wcstok
 #define wcscspn       PAL_wcscspn
-#define iswxdigit     PAL_iswxdigit
 #define towlower      PAL_towlower
 #define towupper      PAL_towupper
 #define vswprintf     PAL_vswprintf
@@ -2639,8 +2638,6 @@ int PAL_iswupper(char16_t);
 int PAL_iswspace(char16_t);
 // TODO (hanhossain): internal
 int PAL_iswdigit(char16_t);
-// TODO (hanhossain): internal
-int PAL_iswxdigit(char16_t);
 // TODO (hanhossain): public
 char16_t PAL_towlower(char16_t);
 // TODO (hanhossain): public
