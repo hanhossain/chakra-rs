@@ -937,29 +937,6 @@ exit:
 
 /*++
 Function:
-  PAL_iswalpha
-
-See MSDN
-
---*/
-int
-PAL_iswalpha( char16_t c )
-{
-    ENTRY( "PAL_iswalpha (c=%d)\n", c);
-
-    if ( PAL_iswupper( c ) || PAL_iswlower( c ) )
-    {
-        LOGEXIT( "PAL_iswalpha returns 1.\n" );
-        return 1;
-    }
-
-    LOGEXIT( "PAL_iswalpha returns 0.\n" );
-    return 0;
-}
-
-
-/*++
-Function:
   PAL_wcscat
 
 See MSDN or the man page for mcscat.

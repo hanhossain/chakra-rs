@@ -2510,7 +2510,6 @@ GetSystemInfo(
 #define wcstok        PAL_wcstok
 #define wcscspn       PAL_wcscspn
 #define iswprint      PAL_iswprint
-#define iswalpha      PAL_iswalpha
 #define iswdigit      PAL_iswdigit
 #define iswspace      PAL_iswspace
 #define iswupper      PAL_iswupper
