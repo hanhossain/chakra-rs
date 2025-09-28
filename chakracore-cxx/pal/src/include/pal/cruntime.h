@@ -159,16 +159,6 @@ See MSDN
 --*/
 int PAL_iswlower( char16_t c );
 
-
-/*++
-Function:
-  PAL_iswalpha
-
-See MSDN
-
---*/
-int PAL_iswalpha( char16_t c );
-
 #if HAVE_COREFOUNDATION
 /*--
 Function:

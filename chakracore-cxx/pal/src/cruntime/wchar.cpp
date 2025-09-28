@@ -937,29 +937,6 @@ exit:
 
 /*++
 Function:
-  PAL_iswalpha
-
-See MSDN
-
---*/
-int
-PAL_iswalpha( char16_t c )
-{
-    ENTRY( "PAL_iswalpha (c=%d)\n", c);
-
-    if ( PAL_iswupper( c ) || PAL_iswlower( c ) )
-    {
-        LOGEXIT( "PAL_iswalpha returns 1.\n" );
-        return 1;
-    }
-
-    LOGEXIT( "PAL_iswalpha returns 0.\n" );
-    return 0;
-}
-
-
-/*++
-Function:
   PAL_wcscat
 
 See MSDN or the man page for mcscat.
@@ -1636,72 +1613,6 @@ PAL_iswdigit( char16_t c )
     LOGEXIT("PAL_iswdigit returning %d\n", nRetVal);
     return nRetVal;
 }
-
-/*++
-Function:
-
-    iswxdigit
-
-See MSDN for more details.
-
-Notes :
-the information in UnicodeData doesn't help us, it doesn't have enough
-granularity. Results in windows show that only ASCII and "Fullwidth" (>0xFF10)
-numbers and letters are considered as "hex"; other "numbers"
-(nGeneralCategory==8) aren't.
---*/
-int
-PAL_iswxdigit( char16_t c )
-{
-    uint32_t nRetVal = 0;
-
-    ENTRY("PAL_iswxdigit( c=%d )\n", c);
-
-    /* ASCII characters */
-    if((c>= 'A' && c<='F') ||        /* uppercase hex letters */
-       (c>= 'a' && c<='f') ||        /* lowercase hex letters */
-       (c>= '0' && c<='9'))          /* digits */
-    {
-        nRetVal = 1;
-    }
-    else
-    /* "fullwidth" characters, whatever that is */
-    if((c>= 0xFF10 && c<=0xFF19) ||  /* digits */
-       (c>= 0xFF21 && c<=0xFF26) ||  /* uppercase hex letters */
-       (c>= 0xFF41 && c<=0xFF46))    /* lowercase hex letters */
-    {
-        nRetVal = 1;
-    }
-    else
-    {
-        nRetVal = 0;
-    }
-    LOGEXIT("PAL_iswxdigit returning %d\n", nRetVal);
-    return nRetVal;
-}
-
-
-/*++
-Function:
-
-    iswprint
-
-See MSDN for more details.
---*/
-int
-PAL_iswprint( char16_t c )
-{
-    int ret;
-
-
-    ENTRY("PAL_iswprint (%#X)\n", c);
-
-    ret = proxy_iswprint(c);
-
-    LOGEXIT("PAL_iswprint returns %d\n", ret);
-    return (ret);
-}
-
 
 /*++
 Function:

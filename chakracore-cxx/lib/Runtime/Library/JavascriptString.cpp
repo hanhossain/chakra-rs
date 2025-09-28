@@ -8,6 +8,7 @@
 #include "DataStructures/BigUInt.h"
 #include "Library/EngineInterfaceObject.h"
 #include "Library/IntlEngineInterfaceExtensionObject.h"
+#include <cwctype>
 
 #if ENABLE_NATIVE_CODEGEN
 #include "JITRecyclableObject.h"

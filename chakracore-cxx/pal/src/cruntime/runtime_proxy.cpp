@@ -14,11 +14,6 @@
 #include <wctype.h>
 #endif
 
-int proxy_iswprint(char16_t c)
-{
-    return iswprint(c);
-}
-
 int proxy_iswspace(char16_t c)
 {
     return iswspace(c);

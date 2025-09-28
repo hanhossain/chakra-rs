@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.28)
 project (CHAKRACORE)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g")
 set(CMAKE_COLOR_DIAGNOSTICS ON)
 
@@ -187,8 +187,18 @@ if(CLR_CMAKE_PLATFORM_XPLAT)
         -Wno-int-to-pointer-cast\
         -Wno-tautological-constant-compare\
         -Wno-enum-compare-switch\
+        -Wno-delayed-template-parsing-in-cxx20\
         -Wno-unknown-warning-option"
     )
+
+    # c++20
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
+        -Wno-deprecated-this-capture\
+        -Wno-deprecated-enum-compare-conditional\
+        -Wno-deprecated-enum-enum-conversion\
+        -Wno-deprecated-declarations\
+        -Wno-ambiguous-reversed-operator")
+
         # notes..
         # -Wno-address-of-temporary  # vtinfo.h, VirtualTableInfo<T>::RegisterVirtualTable
         # -Wno-null-conversion # Check shmemory.cpp and cs.cpp here...
