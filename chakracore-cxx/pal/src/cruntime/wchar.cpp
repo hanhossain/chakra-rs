@@ -1657,29 +1657,6 @@ PAL_iswxdigit( char16_t c )
     return nRetVal;
 }
 
-
-/*++
-Function:
-
-    iswprint
-
-See MSDN for more details.
---*/
-int
-PAL_iswprint( char16_t c )
-{
-    int ret;
-
-
-    ENTRY("PAL_iswprint (%#X)\n", c);
-
-    ret = proxy_iswprint(c);
-
-    LOGEXIT("PAL_iswprint returns %d\n", ret);
-    return (ret);
-}
-
-
 /*++
 Function:
    PAL_wcscspn
