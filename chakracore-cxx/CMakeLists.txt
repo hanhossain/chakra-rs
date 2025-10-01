@@ -162,6 +162,7 @@ if(CLR_CMAKE_PLATFORM_XPLAT)
 
     # CXX WARNING FLAGS
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
+        -Wall\
         -Wno-unused-value\
         -Wno-int-to-void-pointer-cast\
         -Wno-invalid-offsetof\
