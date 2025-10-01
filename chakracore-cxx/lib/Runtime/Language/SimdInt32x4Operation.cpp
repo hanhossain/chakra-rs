@@ -62,7 +62,7 @@ namespace Js
 
     SIMDValue SIMDInt32x4Operation::OpFromFloat32x4(const SIMDValue& v, bool &throws)
     {
-        SIMDValue result = { 0 };
+        SIMDValue result = { {{0}} };
         const int MIN_INT = 0x80000000, MAX_INT = 0x7FFFFFFF;
 
         for (uint i = 0; i < 4; i++)
