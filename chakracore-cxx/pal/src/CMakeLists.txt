@@ -159,7 +159,6 @@ target_compile_options(Chakra.Pal PRIVATE -Wall
     # -Werror
     -Wno-format
     -Wno-vla-cxx-extension
-    -Wno-delete-non-abstract-non-virtual-dtor
 )
 
 target_include_directories(Chakra.Pal

@@ -192,7 +192,6 @@ if(CLR_CMAKE_PLATFORM_XPLAT)
         -Wno-missing-braces\
         -Wno-unused-variable\
         -Wno-overloaded-virtual\
-        -Wno-delete-non-abstract-non-virtual-dtor\
         -Wno-unused-private-field\
         -Wno-unused-but-set-variable\
         -Wno-unused-lambda-capture\
