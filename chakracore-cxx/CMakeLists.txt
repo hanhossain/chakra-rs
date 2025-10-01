@@ -187,6 +187,25 @@ if(CLR_CMAKE_PLATFORM_XPLAT)
         -Wno-unknown-warning-option"
     )
 
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
+        -Wno-reorder-ctor\
+        -Wno-missing-braces\
+        -Wno-mismatched-tags\
+        -Wno-unused-variable\
+        -Wno-overloaded-virtual\
+        -Wno-delete-non-abstract-non-virtual-dtor\
+        -Wno-unused-private-field\
+        -Wno-unused-but-set-variable\
+        -Wno-unused-lambda-capture\
+        -Wno-sometimes-uninitialized\
+        -Wno-tautological-overlap-compare\
+        -Wno-unused-const-variable\
+        -Wno-char-subscripts\
+        -Wno-unused-local-typedef\
+        -Wno-bitwise-instead-of-logical\
+        -Wno-int-in-bool-context\
+        -Wno-unused-function")
+
     # c++20
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
         -Wno-deprecated-this-capture\
