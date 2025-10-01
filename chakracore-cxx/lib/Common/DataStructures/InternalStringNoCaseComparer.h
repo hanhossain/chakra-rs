@@ -7,10 +7,10 @@
 namespace JsUtil
 {
     template <typename T>
-    class NoCaseComparer;
+    struct NoCaseComparer;
 
     template <>
-    class NoCaseComparer<JsUtil::CharacterBuffer<char16_t>>
+    struct NoCaseComparer<JsUtil::CharacterBuffer<char16_t>>
     {
     public:
         static bool Equals(JsUtil::CharacterBuffer<char16_t> const& x, JsUtil::CharacterBuffer<char16_t> const& y);
