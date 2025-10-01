@@ -189,7 +189,7 @@ if(CLR_CMAKE_PLATFORM_XPLAT)
 
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
         -Wno-reorder-ctor\
-        -Wno-missing-braces\
+        -Wno-error=missing-braces\
         -Wno-unused-variable\
         -Wno-overloaded-virtual\
         -Wno-unused-private-field\

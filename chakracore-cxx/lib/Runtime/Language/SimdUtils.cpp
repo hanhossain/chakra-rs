@@ -31,7 +31,7 @@ namespace Js
 
     SIMDValue SIMDUtils::SIMD128InnerShuffle(const SIMDValue src1, const SIMDValue src2, uint32 laneCount, const uint32* lanes)
     {
-        SIMDValue result = { 0 };
+        SIMDValue result = { {{0}} };
         Assert(laneCount == 16 || laneCount == 8 || laneCount == 4);
         Assert(lanes != nullptr);
         switch (laneCount)
@@ -62,7 +62,7 @@ namespace Js
 
     SIMDValue SIMDUtils::SIMDLdData(const SIMDValue *data, uint8_t dataWidth)
     {
-        SIMDValue result = { 0, 0, 0, 0 };
+        SIMDValue result = { {{0, 0, 0, 0}} };
         // bitwise copy. Always use integer fields to avoid wrong copy of NaNs.
         switch (dataWidth)
         {

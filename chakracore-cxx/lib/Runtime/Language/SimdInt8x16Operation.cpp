@@ -11,7 +11,7 @@ namespace Js
 {
     SIMDValue SIMDInt8x16Operation::OpInt8x16(int8_t values[])
     {
-        SIMDValue result = {0, 0, 0, 0};
+        SIMDValue result = {{{0, 0, 0, 0}}};
 
         for (uint8_t i = 0; i < 16; i++)
         {
