@@ -166,7 +166,7 @@ int _vswprintf_s (
     return retvalue;
 }
 
-int vswprintf_s (
+extern "C" int vswprintf_s (
         char16_t *string,
         size_t sizeInWords,
         const char16_t *format,

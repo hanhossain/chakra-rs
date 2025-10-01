@@ -42,9 +42,7 @@ typedef int errno_t;
 //#define _MAX_FNAME  256 /* max. length of file name component */
 //#define _MAX_EXT    256 /* max. length of extension component */
 
-#ifdef __cplusplus
     extern "C" {
-#endif
 
 typedef void ( *tSafeCRT_AssertFuncPtr )( const char* inExpression, const char* inComment, const char* inFile, const unsigned long inLineNum );
 void MBUSafeCRTSetAssertFunc( tSafeCRT_AssertFuncPtr inAssertFuncPtr );
@@ -109,9 +107,6 @@ extern int _snwscanf_s( const char16_t *string, size_t count, const char16_t *fo
 
 extern errno_t memcpy_s( void * dst, size_t sizeInBytes, const void * src, size_t count );
 extern errno_t memmove_s( void * dst, size_t sizeInBytes, const void * src, size_t count );
-
-#ifdef __cplusplus
     }
-#endif
 
 #endif	/* MBUSAFECRT_H */
