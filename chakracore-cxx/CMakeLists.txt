@@ -190,7 +190,6 @@ if(CLR_CMAKE_PLATFORM_XPLAT)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
         -Wno-reorder-ctor\
         -Wno-missing-braces\
-        -Wno-mismatched-tags\
         -Wno-unused-variable\
         -Wno-overloaded-virtual\
         -Wno-delete-non-abstract-non-virtual-dtor\
