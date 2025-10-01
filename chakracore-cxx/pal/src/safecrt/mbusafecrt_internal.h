@@ -45,7 +45,7 @@ typedef struct miniFILE_struct
 #define _IOWRT 2
 #define _IOREAD 4
 #define _IOMYBUF 8
-
+extern "C" {
 int _putc_nolock( char inChar, miniFILE* inStream );
 int _putwc_nolock( char16_t inChar, miniFILE* inStream );
 int _getc_nolock( miniFILE* inStream );
@@ -69,5 +69,6 @@ int _swoutput_s( char16_t *_Dst, size_t _Size, const char16_t *_Format, va_list 
 
 int __tinput_s( miniFILE* inFile, const unsigned char * inFormat, va_list inArgList );
 int __twinput_s( miniFILE* inFile, const char16_t * inFormat, va_list inArgList );
+}
 
 #endif  /* MBUSAFECRT_INTERNAL_H */

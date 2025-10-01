@@ -151,7 +151,7 @@ int _vsprintf_s (
     return retvalue;
 }
 
-int vsprintf_s(char *_Dst, size_t _SizeInBytes, const char *_Format, va_list _ArgList)
+extern "C" int vsprintf_s(char *_Dst, size_t _SizeInBytes, const char *_Format, va_list _ArgList)
 {
     return _vsprintf_s(_Dst, _SizeInBytes, _Format, _ArgList);
 }

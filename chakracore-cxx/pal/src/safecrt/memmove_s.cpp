@@ -19,8 +19,8 @@
 *******************************************************************************/
 
 // use stdlib instead of PAL defined malloc to avoid forced Wint-to-pointer warning
-#include <stdlib.h>
-#include <string.h>
+#include <cstring>
+#include <cstdlib>
 
 #ifndef _VALIDATE_RETURN_ERRCODE
 #define _VALIDATE_RETURN_ERRCODE(c, e) \
@@ -53,16 +53,17 @@ src
 count
     Number of bytes (memmove) to copy.
 */
-void* memmove_xplat(
+extern "C" void* memmove_xplat(
     void * dst,
     const void * src,
     size_t count
 )
 {
 #if defined(__APPLE__) || defined(__FreeBSD__)
-    if (src <= dst && src + count > dst)
+    if (static_cast<const char*>(src) <= static_cast<char*>(dst) && 
+        static_cast<const char*>(src) + count > static_cast<char*>(dst))
     {
-        char *temp = (char*) malloc(count);
+        char *temp = static_cast<char*>(malloc(count));
         _VALIDATE_RETURN_ERRCODE(temp != NULL, NULL);
 
         memcpy(temp, src, count);
@@ -92,7 +93,7 @@ src
 count
     Number of bytes (memmove_s) or characters (wmemmove_s) to copy.
 */
-int memmove_s(
+extern "C" int memmove_s(
     void * dst,
     size_t sizeInBytes,
     const void * src,
