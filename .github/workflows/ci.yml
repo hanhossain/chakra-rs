@@ -90,6 +90,6 @@ jobs:
         run: ${{ matrix.deps }}
       - name: Configure CMake
         # TODO: re-enable warning as error
-        run: cmake --preset ${{ matrix.cmake-preset-prefix || matrix.os }}-${{ matrix.build-type }} -DCMAKE_COMPILE_WARNING_AS_ERROR=OFF
+        run: cmake --preset ${{ matrix.cmake-preset-prefix || matrix.os }}-${{ matrix.build-type }} -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
       - name: Build
         run: cmake --build build
