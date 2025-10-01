@@ -203,8 +203,7 @@ if(CLR_CMAKE_PLATFORM_XPLAT)
         -Wno-char-subscripts\
         -Wno-unused-local-typedef\
         -Wno-bitwise-instead-of-logical\
-        -Wno-int-in-bool-context\
-        -Wno-unused-function")
+        -Wno-int-in-bool-context")
 
     # c++20
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
