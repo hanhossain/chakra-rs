@@ -144,7 +144,7 @@ namespace CorUnix
                 return;
             }
 
-            pobj->~T();
+            pobj->T::~T();
             
             Lock(pthrCurrent);
             if (m_iDepth < m_iMaxDepth)
@@ -342,7 +342,7 @@ namespace CorUnix
             USHRSynchCacheStackNode * pNode = SharedIDToTypePointer(USHRSynchCacheStackNode, shridObj);
             T * pObj = reinterpret_cast<T *>(pNode);
 
-            pObj->~T();
+            pObj->T::~T();
             
             pNode->pointers.shrid = shridObj;
             

@@ -273,7 +273,7 @@ template <typename TAllocator,
           typename T>
 void DeleteObject(typename AllocatorInfo<TAllocator, T>::AllocatorType * allocator, T * obj)
 {
-    obj->~T();
+    obj->T::~T();
 
     auto freeFunc = AllocatorInfo<TAllocator, T>::InstAllocatorFunc::GetFreeFunc(); // Use InstAllocatorFunc
     (allocator->*freeFunc)(
@@ -291,7 +291,7 @@ void DeleteObject(typename AllocatorInfo<TAllocator, T>::AllocatorType * allocat
 template <typename TAllocator, typename T>
 void DeleteObjectInline(TAllocator * allocator, T * obj)
 {
-    obj->~T();
+    obj->T::~T();
     allocator->FreeInline(obj, sizeof(T));
 }
 
@@ -300,7 +300,7 @@ template <typename TAllocator,
           typename T>
 void DeleteObject(typename AllocatorInfo<TAllocator, T>::AllocatorType * allocator, T * obj, size_t plusSize)
 {
-    obj->~T();
+    obj->T::~T();
 
     // DeleteObject can only be called when an object is allocated successfully.
     // So the add should never overflow
@@ -317,7 +317,7 @@ template <typename TAllocator,
 void DeleteObject(typename AllocatorInfo<TAllocator, T>::AllocatorType * allocator, T * obj, size_t plusSize, bool prefix)
 {
     Assert(prefix);
-    obj->~T();
+    obj->T::~T();
 
     // DeleteObject can only be called when an object is allocated successfully.
     // So the add should never overflow
