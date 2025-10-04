@@ -76,7 +76,7 @@ namespace Js
     // Unary Ops
     SIMDValue SIMDFloat32x4Operation::OpAbs(const SIMDValue& value)
     {
-        X86SIMDValue x86Result = { 0 };
+        X86SIMDValue x86Result = { {{0}} };
         X86SIMDValue v = X86SIMDValue::ToX86SIMDValue(value);
 
         x86Result.m128_value = _mm_and_ps(v.m128_value, X86_ABS_MASK_F4.m128_value);

@@ -37,7 +37,7 @@ namespace Js
 
     SIMDValue SIMDUint32x4Operation::OpFromFloat32x4(const SIMDValue& value, bool& throws)
     {
-        X86SIMDValue x86Result = { 0 };
+        X86SIMDValue x86Result = { {{0}} };
         X86SIMDValue v = X86SIMDValue::ToX86SIMDValue(value);
         X86SIMDValue temp, temp2;
         X86SIMDValue two_31_f4, two_31_i4;

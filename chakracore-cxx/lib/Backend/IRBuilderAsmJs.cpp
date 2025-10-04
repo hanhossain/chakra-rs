@@ -2275,7 +2275,7 @@ IRBuilderAsmJs::BuildFloat32x4_IntConst4(Js::OpCodeAsmJs newOpcode, uint32 offse
     Assert(newOpcode == Js::OpCodeAsmJs::Simd128_LdC);
     IR::RegOpnd * dstOpnd = BuildDstOpnd(dstRegSlot, TySimd128F4);
     dstOpnd->SetValueType(ValueType::Simd);
-    SIMDValue simdConst{ C1, C2, C3, C4 };
+    SIMDValue simdConst{ {{C1, C2, C3, C4}} };
     IR::Instr * instr = IR::Instr::New(Js::OpCode::Simd128_LdC, dstOpnd, IR::Simd128ConstOpnd::New(simdConst, TySimd128F4, m_func), m_func);
     AddInstr(instr, offset);
 }
@@ -6535,7 +6535,7 @@ void IRBuilderAsmJs::BuildSimd_2(Js::OpCodeAsmJs newOpcode, uint32 offset, Js::R
 
     if (newOpcode == Js::OpCodeAsmJs::Simd128_Neg_I2)
     {
-        SIMDValue zeroVec{ 0 };
+        SIMDValue zeroVec{ {{0}} };
         IR::Opnd* zeroConst = IR::Simd128ConstOpnd::New(zeroVec, TySimd128F4, m_func);
         IR::RegOpnd* tmpReg = IR::RegOpnd::New(TyMachSimd128F4, m_func);
         tmpReg->SetValueType(ValueType::Simd);

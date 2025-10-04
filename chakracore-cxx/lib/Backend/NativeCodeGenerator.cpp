@@ -1002,7 +1002,7 @@ NativeCodeGenerator::CodeGen(PageAllocator * pageAllocator, CodeGenWorkItem* wor
 #endif
     workItem->GetJITData()->globalThisAddr = (intptr_t)workItem->RecyclableData()->JitTimeData()->GetGlobalThisObject();
 
-    LARGE_INTEGER start_time = { 0 };
+    LARGE_INTEGER start_time = { {0} };
     NativeCodeGenerator::LogCodeGenStart(workItem, &start_time);
     workItem->GetJITData()->startTime = (long)start_time.QuadPart;
     CodeGen(pageAllocator, workItem->GetJITData(), jitWriteData, foreground, epInfo);

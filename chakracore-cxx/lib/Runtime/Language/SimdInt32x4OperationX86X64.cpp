@@ -31,7 +31,7 @@ namespace Js
     // Conversions
     SIMDValue SIMDInt32x4Operation::OpFromFloat32x4(const SIMDValue& value, bool &throws)
     {
-        X86SIMDValue x86Result = { 0 };
+        X86SIMDValue x86Result = { {{0}} };
         X86SIMDValue v = X86SIMDValue::ToX86SIMDValue(value);
         X86SIMDValue temp;
         int mask = 0;
@@ -106,7 +106,7 @@ namespace Js
         X86SIMDValue x86Result;
 
         X86SIMDValue SIGNMASK, temp;
-        X86SIMDValue negativeOnes = { { -1, -1, -1, -1 } };
+        X86SIMDValue negativeOnes = { { {-1, -1, -1, -1} } };
         X86SIMDValue v = X86SIMDValue::ToX86SIMDValue(value);
 
         temp.m128i_value = _mm_andnot_si128(v.m128i_value, negativeOnes.m128i_value); // (~value) & (negative ones)
@@ -120,7 +120,7 @@ namespace Js
     {
         X86SIMDValue x86Result;
 
-        X86SIMDValue negativeOnes = { { -1, -1, -1, -1 } };
+        X86SIMDValue negativeOnes = { { {-1, -1, -1, -1} } };
         X86SIMDValue temp = X86SIMDValue::ToX86SIMDValue(value);
         x86Result.m128i_value = _mm_andnot_si128(temp.m128i_value, negativeOnes.m128i_value);
 

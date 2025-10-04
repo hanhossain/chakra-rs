@@ -876,7 +876,7 @@ if (switchProfileMode) \
     case OpCodeAsmJs::name: \
     { \
     PROCESS_READ_LAYOUT_ASMJS(name, Int64x2_2, suffix); \
-    SIMDValue result {0}; \
+    SIMDValue result {{{0}}}; \
     SIMDValue src = GetRegRawSimd(playout->I2_1); \
     func(&result, &src); \
     SetRegRawSimd(playout->I2_0, result); \
@@ -888,7 +888,7 @@ if (switchProfileMode) \
     case OpCodeAsmJs::name: \
     { \
     PROCESS_READ_LAYOUT_ASMJS(name, Int64x2_2Int1, suffix); \
-    SIMDValue result {0}; \
+    SIMDValue result {{{0}}}; \
     SIMDValue src = GetRegRawSimd(playout->I2_1); \
     func(&result, &src, GetRegRawInt(playout->I2)); \
     SetRegRawSimd(playout->I2_0, result); \

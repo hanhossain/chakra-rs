@@ -107,7 +107,7 @@ namespace Js
 
     SIMDValue SIMDUint16x8Operation::OpShiftRightByScalar(const SIMDValue& value, int count)
     {
-        X86SIMDValue x86Result = { { 0, 0, 0, 0 } };
+        X86SIMDValue x86Result = { { {0, 0, 0, 0} } };
         X86SIMDValue tmpaValue = X86SIMDValue::ToX86SIMDValue(value);
 
         x86Result.m128i_value = _mm_srli_epi16(tmpaValue.m128i_value, count &  SIMDUtils::SIMDGetShiftAmountMask(2));
