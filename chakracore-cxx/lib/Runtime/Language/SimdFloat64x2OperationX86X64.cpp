@@ -83,7 +83,7 @@ namespace Js
     {
         X86SIMDValue x86Result;
 
-        X86SIMDValue negativeOnes = { { -1, -1, -1, -1 } };
+        X86SIMDValue negativeOnes = { { {-1, -1, -1, -1} } };
         X86SIMDValue v = X86SIMDValue::ToX86SIMDValue(value);
 
         x86Result.m128d_value = _mm_xor_pd(v.m128d_value, negativeOnes.m128d_value); // v ^ -1

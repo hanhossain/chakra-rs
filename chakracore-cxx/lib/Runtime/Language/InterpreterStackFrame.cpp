@@ -8186,7 +8186,7 @@ skipThunk:
     {
         bool throws = false;
         AsmJsSIMDValue input = GetRegRawSimd(playout->F4_1);
-        AsmJsSIMDValue result{ 0 };
+        AsmJsSIMDValue result{ {{0}} };
 
 #ifdef ENABLE_WASM_SIMD
         throws = SIMDAnyNaN(input);
@@ -8209,7 +8209,7 @@ skipThunk:
     {
         bool throws = false;
         AsmJsSIMDValue input = GetRegRawSimd(playout->F4_1);
-        AsmJsSIMDValue result{ 0 };
+        AsmJsSIMDValue result{ {{0}} };
 
 #ifdef ENABLE_WASM_SIMD
         throws = SIMDAnyNaN(input);
@@ -8229,7 +8229,7 @@ skipThunk:
     template <class T>
     void InterpreterStackFrame::OP_WasmSimdConst(const unaligned T* playout)
     {
-        AsmJsSIMDValue result{ playout->C1, playout->C2, playout->C3, playout->C4 };
+        AsmJsSIMDValue result{ {{playout->C1, playout->C2, playout->C3, playout->C4}} };
         SetRegRawSimd(playout->F4_0, result);
     }
 

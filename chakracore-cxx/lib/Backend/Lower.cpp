@@ -1846,7 +1846,7 @@ Lowerer::LowerRange(IR::Instr *instrStart, IR::Instr *instrEnd, bool defaultDoFa
             {
                 Assert(m_func->GetJITFunctionBody()->IsWasmFunction());
                 GenerateRuntimeError(instr, WASMERR_InvalidTypeConversion);
-                instr->ReplaceSrc1(IR::Simd128ConstOpnd::New({ 0,0,0,0 }, instr->GetDst()->GetType(), m_func));
+                instr->ReplaceSrc1(IR::Simd128ConstOpnd::New({ {{0,0,0,0}} }, instr->GetDst()->GetType(), m_func));
                 LowererMD::ChangeToAssign(instr);
             }
 #endif
@@ -21014,12 +21014,12 @@ void Lowerer::GenerateTruncWithCheck(_In_ IR::Instr* instr)
         IR::JnHelperMethod helper;
         if (Saturate)
         {
-            IR::JnHelperMethod helperList[2][2] = { IR::HelperF32ToI64Sat, IR::HelperF32ToU64Sat, IR::HelperF64ToI64Sat ,IR::HelperF64ToU64Sat };
+            IR::JnHelperMethod helperList[2][2] = { {IR::HelperF32ToI64Sat, IR::HelperF32ToU64Sat}, {IR::HelperF64ToI64Sat ,IR::HelperF64ToU64Sat} };
             helper = helperList[instr->GetSrc1()->GetType() != TyFloat32][instr->GetDst()->GetType() == TyUint64];
         }
         else
         {
-            IR::JnHelperMethod helperList[2][2] = { IR::HelperF32ToI64, IR::HelperF32ToU64, IR::HelperF64ToI64 ,IR::HelperF64ToU64 };
+            IR::JnHelperMethod helperList[2][2] = { {IR::HelperF32ToI64, IR::HelperF32ToU64}, {IR::HelperF64ToI64 ,IR::HelperF64ToU64} };
             helper = helperList[instr->GetSrc1()->GetType() != TyFloat32][instr->GetDst()->GetType() == TyUint64];
         }
         instr->UnlinkSrc1();

@@ -35,7 +35,7 @@ namespace Js
         X86SIMDValue x86Result;
 
         X86SIMDValue SIGNMASK, temp;
-        X86SIMDValue negativeOnes = { { -1, -1, -1, -1} };
+        X86SIMDValue negativeOnes = { { {-1, -1, -1, -1}} };
         X86SIMDValue v = X86SIMDValue::ToX86SIMDValue(value);
 
         temp.m128i_value = _mm_andnot_si128(v.m128i_value, negativeOnes.m128i_value); // (~value) & (negative ones)
@@ -49,7 +49,7 @@ namespace Js
     {
         X86SIMDValue x86Result;
 
-        X86SIMDValue negativeOnes = { { -1, -1, -1, -1} };
+        X86SIMDValue negativeOnes = { { {-1, -1, -1, -1}} };
         X86SIMDValue temp = X86SIMDValue::ToX86SIMDValue(value);
         x86Result.m128i_value = _mm_andnot_si128(temp.m128i_value, negativeOnes.m128i_value);
 
@@ -206,7 +206,7 @@ namespace Js
         X86SIMDValue tmpaValue = X86SIMDValue::ToX86SIMDValue(aValue);
         X86SIMDValue tmpbValue = X86SIMDValue::ToX86SIMDValue(bValue);
         tmpResult.m128i_value = _mm_cmpeq_epi16(tmpaValue.m128i_value, tmpbValue.m128i_value); // compare a == b?
-        X86SIMDValue negativeOnes = { { -1, -1, -1, -1} };
+        X86SIMDValue negativeOnes = { { {-1, -1, -1, -1}} };
         x86Result.m128i_value = _mm_andnot_si128(tmpResult.m128i_value, negativeOnes.m128i_value);
         return X86SIMDValue::ToSIMDValue(x86Result);
     }

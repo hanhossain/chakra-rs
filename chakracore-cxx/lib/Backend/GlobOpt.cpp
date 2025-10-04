@@ -2025,7 +2025,7 @@ GlobOpt::CollectMemsetStElementI(IR::Instr *instr, Loop *loop)
         }
     }
 
-    BailoutConstantValue constant = {TyIllegal, {0}};
+    BailoutConstantValue constant = {TyIllegal, {{0}}};
     if (srcDef->IsFloatConstOpnd())
     {
         constant.InitFloatConstValue(srcDef->AsFloatConstOpnd()->m_value);

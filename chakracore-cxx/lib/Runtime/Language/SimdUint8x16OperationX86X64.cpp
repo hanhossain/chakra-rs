@@ -52,7 +52,7 @@ namespace Js
 
 #pragma warning(push)
 #pragma warning(disable:4838) // conversion from 'unsigned int' to 'int32' requires a narrowing conversion
-        X86SIMDValue signBits = { {0x80808080,0x80808080, 0x80808080, 0x80808080} };
+        X86SIMDValue signBits = { {{0x80808080,0x80808080, 0x80808080, 0x80808080}} };
 #pragma warning(pop)
 
         // Signed comparison of unsigned ints can be done if the ints have the "sign" bit xored with 1
@@ -71,7 +71,7 @@ namespace Js
 
 #pragma warning(push)
 #pragma warning(disable:4838) // conversion from 'unsigned int' to 'int32' requires a narrowing conversion
-        X86SIMDValue signBits = { { 0x80808080,0x80808080, 0x80808080, 0x80808080 } };
+        X86SIMDValue signBits = { { {0x80808080,0x80808080, 0x80808080, 0x80808080} } };
 #pragma warning(pop)
 
         // Signed comparison of unsigned ints can be done if the ints have the "sign" bit xored with 1
@@ -102,7 +102,7 @@ namespace Js
 
     SIMDValue SIMDUint8x16Operation::OpShiftRightByScalar(const SIMDValue& value, int count)
     {
-        X86SIMDValue x86Result = { { 0, 0, 0, 0} };
+        X86SIMDValue x86Result = { { {0, 0, 0, 0}} };
         X86SIMDValue tmpaValue = X86SIMDValue::ToX86SIMDValue(value);
         __m128i x86tmp1;
 
