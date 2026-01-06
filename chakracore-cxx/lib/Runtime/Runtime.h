@@ -342,7 +342,7 @@ const Js::ModuleID kmodGlobal = 0;
 
 class SourceContextInfo;
 
-#define SCRIPT_E_RECORDED                _HRESULT_TYPEDEF_(0x86664004L)
+#define SCRIPT_E_RECORDED                ((int32_t)0x86664004L)
 #define NEED_DEBUG_EVENT_INFO_TYPE
 
 #ifndef NTDDI_WIN10
