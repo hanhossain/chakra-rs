@@ -1558,7 +1558,6 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 // Declare a function to be an annotation or primop (respectively).
 // Done this way so that they don't appear in the regular compiler's
 // namespace.
-#define __ANNOTATION(fun)              _SA_annotes0(SAL_annotation)  void __SA_##fun;
 #define __PRIMOP(type, fun)            _SA_annotes0(SAL_primop)  type __SA_##fun;
 #define __QUALIFIER(fun)               _SA_annotes0(SAL_qualifier)  void __SA_##fun;
 
@@ -1582,7 +1581,6 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 // Declare a function to be an annotation or primop (respectively).
 // Done this way so that they don't appear in the regular compiler's
 // namespace.
-#define __ANNOTATION(fun)              _SA_annotes0(SAL_annotation) void __SA_##fun
  
 #define __PRIMOP(type, fun)            _SA_annotes0(SAL_primop) type __SA_##fun
 
@@ -1599,45 +1597,12 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 #define _SA_annotes2(n,pp1,pp2)
 #define _SA_annotes3(n,pp1,pp2,pp3)
 
-#define __ANNOTATION(fun)              
 #define __PRIMOP(type, fun)            
 #define __QUALIFIER(type, fun)            
 
 #endif // ]
 
 #if _USE_ATTRIBUTES_FOR_SAL || _USE_DECLSPECS_FOR_SAL // [
-
-// Declare annotations that need to be declared.
-__ANNOTATION(SAL_useHeader(void));
-__ANNOTATION(SAL_bound(void));
-__ANNOTATION(SAL_allocator(void));   //??? resolve with PFD
-__ANNOTATION(SAL_file_parser(__AuToQuOtE __In_impl_ char *, __In_impl_ char *));
-__ANNOTATION(SAL_source_code_content(__In_impl_ char *));
-__ANNOTATION(SAL_analysisHint(__AuToQuOtE __In_impl_ char *));
-__ANNOTATION(SAL_untrusted_data_source(__AuToQuOtE __In_impl_ char *));
-__ANNOTATION(SAL_untrusted_data_source_this(__AuToQuOtE __In_impl_ char *));
-__ANNOTATION(SAL_validated(__AuToQuOtE __In_impl_ char *));
-__ANNOTATION(SAL_validated_this(__AuToQuOtE __In_impl_ char *));
-__ANNOTATION(SAL_encoded(void));
-__ANNOTATION(SAL_adt(__AuToQuOtE __In_impl_ char *, __AuToQuOtE __In_impl_ char *));
-__ANNOTATION(SAL_add_adt_property(__AuToQuOtE __In_impl_ char *, __AuToQuOtE __In_impl_ char *));
-__ANNOTATION(SAL_remove_adt_property(__AuToQuOtE __In_impl_ char *, __AuToQuOtE __In_impl_ char *));
-__ANNOTATION(SAL_transfer_adt_property_from(__AuToQuOtE __In_impl_ char *));
-__ANNOTATION(SAL_post_type(__AuToQuOtE __In_impl_ char *));
-__ANNOTATION(SAL_volatile(void));
-__ANNOTATION(SAL_nonvolatile(void));
-__ANNOTATION(SAL_entrypoint(__AuToQuOtE __In_impl_ char *, __AuToQuOtE __In_impl_ char *));
-__ANNOTATION(SAL_blocksOn(__In_impl_ void*));
-__ANNOTATION(SAL_mustInspect(void));
-
-// Only appears in model files, but needs to be declared.
-__ANNOTATION(SAL_TypeName(__AuToQuOtE __In_impl_ char *));
-
-// To be declared well-known soon.
-__ANNOTATION(SAL_interlocked(void);)
-
-#pragma warning (suppress: 28227 28241)
-__ANNOTATION(SAL_name(__In_impl_ char *, __In_impl_ char *, __In_impl_ char *);)
 
 __PRIMOP(char *, _Macro_value_(__In_impl_ char *));
 __PRIMOP(int, _Macro_defined_(__In_impl_ char *));
@@ -2119,11 +2084,6 @@ __PRIMOP(char *, _Strstr_(__In_impl_ char *, __In_impl_ char *));
      Pointer p is a buffer that may be read or written up to and including the first
      NULL character or pointer. May be used on typedefs, which marks valid (properly
      initialized) instances of that type as being NULL-terminated.
-
- __nullnullterminated p :
-     Pointer p is a buffer that may be read or written up to and including the first
-     sequence of two NULL characters or pointers. May be used on typedefs, which marks
-     valid instances of that type as being double-NULL terminated.
 
  __reserved v :
      Value v must be 0/NULL, reserved for future use.
@@ -2660,7 +2620,6 @@ of each annotation, see the advanced annotations section.
 
 #define __success(expr)                      _Success_(expr)
 #define __nullterminated                     _Null_terminated_
-#define __nullnullterminated
 #define __reserved                           _SAL1_Source_(__reserved, (), _Reserved_)
 #define __checkReturn                        _SAL1_Source_(__checkReturn, (), _Check_return_)
 #define __typefix(ctype)                     _SAL1_Source_(__typefix, (ctype), __inner_typefix(ctype))
@@ -2700,8 +2659,6 @@ void __AnalysisAssumeNullterminated(_Post_ __nullterminated void *p);
 #define __MKID(x, y) ___MKID(x, y)
 #define __GENSYM(x) __MKID(x, __COUNTER__)
 
-__ANNOTATION(SAL_analysisMode(__AuToQuOtE __In_impl_ char *mode);)
-
 #define _Analysis_mode_impl_(mode) _SA_annotes1(SAL_analysisMode, #mode)
 
 #define _Analysis_mode_(mode)                                                 \
@@ -2715,7 +2672,6 @@ __ANNOTATION(SAL_analysisMode(__AuToQuOtE __In_impl_ char *mode);)
 //
 
 // Function class annotations.
-__ANNOTATION(SAL_functionClassNew(__In_impl_ char*);)
 __PRIMOP(int, _In_function_class_(__In_impl_ char*);)
 #define _In_function_class_(x)  _In_function_class_(#x)
 

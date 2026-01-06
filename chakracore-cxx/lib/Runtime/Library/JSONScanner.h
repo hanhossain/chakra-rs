@@ -76,7 +76,7 @@ namespace JSON
 
         uint     currentIndex;
         char16_t* currentString;
-        __field_ecount(stringBufferLength) char16_t* stringBuffer;
+        __notnull __elem_writableTo(stringBufferLength) char16_t* stringBuffer;
         int      stringBufferLength;
 
         friend class JSONParser;

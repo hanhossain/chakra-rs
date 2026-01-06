@@ -91,7 +91,7 @@ struct Allocation
     };
 
     uintptr_t thunkAddress;
-    __field_bcount(size) char* address;
+    __notnull __byte_writableTo(size) char* address;
     size_t size;
 
     bool IsLargeAllocation() const { return size > Page::MaxAllocationSize; }

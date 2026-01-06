@@ -620,7 +620,7 @@ public:
         Scanner<EncodingPolicy>* m_pscanner;
         uint32 m_cchMax;
         uint32 m_ichCur;
-        __field_ecount(m_cchMax) OLECHAR *m_prgch;
+        __notnull __elem_writableTo(m_cchMax) OLECHAR *m_prgch;
         byte m_rgbInit[256];
 
     public:
