@@ -27,14 +27,12 @@ namespace Js
         if (op <= Js::OpCodeAsmJs::MaxByteSizedOpcodes)
         {
             Assert(op < _countof(OpCodeAsmJsNames));
-            __analysis_assume(op < _countof(OpCodeAsmJsNames));
             return OpCodeAsmJsNames[(int)op];
         }
         else if (op < Js::OpCodeAsmJs::ByteCodeLast)
         {
             uint opIndex = op - (Js::OpCodeAsmJs::MaxByteSizedOpcodes + 1);
             Assert(opIndex < _countof(ExtendedOpCodeAsmJsNames));
-            __analysis_assume(opIndex < _countof(ExtendedOpCodeAsmJsNames));
             return ExtendedOpCodeAsmJsNames[opIndex];
         }
         return u"<NotAvail>";
@@ -64,13 +62,11 @@ namespace Js
         if ((uint)op <= (uint)Js::OpCodeAsmJs::MaxByteSizedOpcodes)
         {
             Assert(op < _countof(OpCodeAsmJsLayouts));
-            __analysis_assume(op < _countof(OpCodeAsmJsLayouts));
             return OpCodeAsmJsLayouts[(uint)op];
         }
 
         uint opIndex = op - (Js::OpCodeAsmJs::MaxByteSizedOpcodes + 1);
         Assert(opIndex < _countof(ExtendedOpCodeAsmJsLayouts));
-        __analysis_assume(opIndex < _countof(ExtendedOpCodeAsmJsLayouts));
         return ExtendedOpCodeAsmJsLayouts[opIndex];
     }
 

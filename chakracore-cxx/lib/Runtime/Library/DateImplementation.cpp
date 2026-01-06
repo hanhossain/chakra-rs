@@ -1675,8 +1675,6 @@ LError:
         // Get the parameters.
         cvarMax = mpddcvar[dd];
 
-        __analysis_assume(cvarMax <= 4);
-
         //
         // arg[0] would be the date object itself
         //

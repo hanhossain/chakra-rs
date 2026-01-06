@@ -1482,7 +1482,6 @@ LinearScan::FillBailOutRecord(IR::Instr * instr)
         Assert(i < stackSymFunc->GetJITFunctionBody()->GetLocalsCount());
 
         Assert(index < funcCount);
-        __analysis_assume(index < funcCount);
         Assert(funcBailOutData[index].func == stackSymFunc);
 
         Assert(!byteCodeUpwardExposedUsed->Test(stackSym->m_id));
@@ -1523,7 +1522,6 @@ LinearScan::FillBailOutRecord(IR::Instr * instr)
         Assert(i < stackSymFunc->GetJITFunctionBody()->GetLocalsCount());
 
         Assert(index < funcCount);
-        __analysis_assume(index < funcCount);
         Assert(funcBailOutData[index].func == stackSymFunc);
 
         AssertMsg(funcBailOutData[index].localOffsets[i] == 0, "Can't have two active lifetime for the same byte code register");
@@ -1550,7 +1548,6 @@ LinearScan::FillBailOutRecord(IR::Instr * instr)
         Assert(i < stackSymFunc->GetJITFunctionBody()->GetLocalsCount());
 
         Assert(index < funcCount);
-         __analysis_assume(index < funcCount);
         Assert(funcBailOutData[index].func == stackSymFunc);
 
         AssertMsg(funcBailOutData[index].localOffsets[i] == 0, "Can't have two active lifetime for the same byte code register");
@@ -1574,7 +1571,6 @@ LinearScan::FillBailOutRecord(IR::Instr * instr)
             Assert(i < stackSymFunc->GetJITFunctionBody()->GetLocalsCount());
 
             Assert(index < funcCount);
-            __analysis_assume(index < funcCount);
 
             Assert(funcBailOutData[index].func == stackSymFunc);
             AssertMsg(funcBailOutData[index].localOffsets[i] == 0, "Can't have two active lifetime for the same byte code register");
@@ -1613,7 +1609,6 @@ LinearScan::FillBailOutRecord(IR::Instr * instr)
                         Assert(dataIndex == 0);     // There is no inlining while in debug mode
 
                         // Filling in which are not filled already.
-                        __analysis_assume(dataIndex == 0);
                         if (funcBailOutData[dataIndex].localOffsets[regSlotId] == 0)
                         {
                             int32 offset = GetStackOffset(regSlotId);
@@ -3679,7 +3674,6 @@ LinearScan::AssignTempReg(Lifetime * lifetime, RegNum reg)
     this->func->m_regsUsed.Set(reg);
     lifetime->reg = reg;
     this->tempRegs.Set(reg);
-    __analysis_assume(reg > 0 && reg < RegNumCount);
     this->tempRegLifetimes[reg] = lifetime;
 
     this->RecordLoopUse(nullptr, reg);

@@ -673,7 +673,6 @@ using namespace Js;
             uint i = 0;
             uint unregisteredInlineCacheCount = 0;
             uint plainInlineCacheEnd = rootObjectLoadInlineCacheStart;
-            __analysis_assume(plainInlineCacheEnd < totalCacheCount);
             for (; i < plainInlineCacheEnd; i++)
             {
                 if (this->m_inlineCaches[i])
@@ -739,7 +738,6 @@ using namespace Js;
 #endif
             uint i = 0;
             uint plainInlineCacheEnd = rootObjectLoadInlineCacheStart;
-            __analysis_assume(plainInlineCacheEnd <= totalCacheCount);
             for (; i < plainInlineCacheEnd; i++)
             {
                 inlineCaches[i] = AllocatorNewZ(InlineCacheAllocator,
@@ -748,21 +746,18 @@ using namespace Js;
             Js::RootObjectBase * rootObject = functionBody->GetRootObject();
             ThreadContext * threadContext = scriptContext->GetThreadContext();
             uint rootObjectLoadInlineCacheEnd = rootObjectLoadMethodInlineCacheStart;
-            __analysis_assume(rootObjectLoadInlineCacheEnd <= totalCacheCount);
             for (; i < rootObjectLoadInlineCacheEnd; i++)
             {
                 inlineCaches[i] = rootObject->GetInlineCache(
                     threadContext->GetPropertyName(functionBody->GetPropertyIdFromCacheId(i)), false, false);
             }
             uint rootObjectLoadMethodInlineCacheEnd = rootObjectStoreInlineCacheStart;
-            __analysis_assume(rootObjectLoadMethodInlineCacheEnd <= totalCacheCount);
             for (; i < rootObjectLoadMethodInlineCacheEnd; i++)
             {
                 inlineCaches[i] = rootObject->GetInlineCache(
                     threadContext->GetPropertyName(functionBody->GetPropertyIdFromCacheId(i)), true, false);
             }
             uint rootObjectStoreInlineCacheEnd = isInstInlineCacheStart;
-            __analysis_assume(rootObjectStoreInlineCacheEnd <= totalCacheCount);
             for (; i < rootObjectStoreInlineCacheEnd; i++)
             {
 #pragma prefast(suppress:6386, "The analysis assume didn't help prefast figure out this is in range")

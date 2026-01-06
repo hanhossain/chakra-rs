@@ -1042,8 +1042,6 @@ namespace JsUtil
             int newSize = SizePolicy::GetNextSize(count);
             int modIndex = UNKNOWN_MOD_INDEX;
             uint newBucketCount = SizePolicy::GetBucketSize(newSize, &modIndex);
-
-            __analysis_assume(newSize > count);
             int* newBuckets = nullptr;
             EntryType* newEntries = nullptr;
             if (newBucketCount == bucketCount)
@@ -1071,7 +1069,6 @@ namespace JsUtil
             this->modFunctionIndex = modIndex;
             for (int i = 0; i < count; i++)
             {
-                __analysis_assume(i < newSize);
 
                 if (!IsFreeEntry(newEntries[i]))
                 {

@@ -8,7 +8,6 @@
 
 // Minimal definitions to use AssertMsg in the PAL
 #define DbgRaiseAssertionFailure() __builtin_trap()
-#define __analysis_assume(x)
 #define __inout
 
 #ifndef USE_ICU

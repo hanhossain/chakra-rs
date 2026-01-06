@@ -252,7 +252,6 @@ uint PageStack<T>::Split(uint targetCount, __in_ecount(targetCount) PageStack<T>
 
     Assert(targetCount > 0 && targetCount <= MaxSplitTargets);
     Assert(targetStacks);
-    __analysis_assume(targetCount <= MaxSplitTargets);
 
     Chunk * mainCurrent;
     Chunk * targetCurrents[MaxSplitTargets];

@@ -326,14 +326,12 @@ using namespace Js;
 
             if (cache->nextEvictionVictim == EQUIVALENT_TYPE_CACHE_SIZE)
             {
-                __analysis_assume(index < EQUIVALENT_TYPE_CACHE_SIZE);
                 // If nextEvictionVictim was never set, set it to next element after index
                 cache->nextEvictionVictim = (index + 1) & (EQUIVALENT_TYPE_CACHE_SIZE - 1);
             }
             else
             {
                 Assert(cache->nextEvictionVictim < EQUIVALENT_TYPE_CACHE_SIZE);
-                __analysis_assume(cache->nextEvictionVictim < EQUIVALENT_TYPE_CACHE_SIZE);
                 equivTypes[cache->nextEvictionVictim] = equivTypes[index];
                 // Else, set it to next element after current nextEvictionVictim index
                 cache->nextEvictionVictim = (cache->nextEvictionVictim + 1) & (EQUIVALENT_TYPE_CACHE_SIZE - 1);
@@ -345,7 +343,6 @@ using namespace Js;
                 Output::Flush();
             }
             Assert(index < EQUIVALENT_TYPE_CACHE_SIZE);
-            __analysis_assume(index < EQUIVALENT_TYPE_CACHE_SIZE);
             equivTypes[index] = type;
         }
 

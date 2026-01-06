@@ -109,7 +109,6 @@ Encoder::Encode()
 
 #if DBG_DUMP
             AssertMsg(m_instrNumber < instrCount, "Bad instr count?");
-            __analysis_assume(m_instrNumber < instrCount);
             m_offsetBuffer[m_instrNumber++] = GetCurrentOffset();
 #endif
             if (instr->IsPragmaInstr())
@@ -648,7 +647,6 @@ Encoder::Encode()
             {
                 Js::Throw::OutOfMemory();
             }
-            __analysis_assume(pinnedTypeRefs);
 
             pinnedTypeRefs->count = pinnedTypeRefCount;
             pinnedTypeRefs->isOOPJIT = true;
@@ -802,7 +800,6 @@ Encoder::Encode()
                 {
                     Js::Throw::OutOfMemory();
                 }
-                __analysis_assume(*entry);
                 (*entry)->propId = propertyId;
                 (*entry)->guardsCount = count;
                 (*entry)->next = nullptr;
@@ -848,7 +845,6 @@ Encoder::Encode()
             {
                 Js::Throw::OutOfMemory();
             }
-            __analysis_assume(entries);
 
             uint propIndex = 0;
             m_func->ctorCachesByPropertyId->Map([func, entries, &propIndex](Js::PropertyId propertyId, Func::CtorCacheSet* srcCacheSet) -> void
@@ -858,7 +854,6 @@ Encoder::Encode()
                 {
                     Js::Throw::OutOfMemory();
                 }
-                __analysis_assume(entries[propIndex]);
                 entries[propIndex]->propId = propertyId;
 
                 int cacheIndex = 0;
@@ -927,7 +922,6 @@ Encoder::Encode()
         m_instrNumber = 0;
         FOREACH_INSTR_IN_FUNC(instr, m_func)
         {
-            __analysis_assume(m_instrNumber < instrCount);
             instr->DumpGlobOptInstrString();
 #ifdef TARGET_64
             Output::Print(u"%12IX  ", m_offsetBuffer[m_instrNumber++] + (uint8_t *)m_func->GetJITOutput()->GetCodeAddress());

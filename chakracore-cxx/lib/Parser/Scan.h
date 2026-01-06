@@ -671,7 +671,6 @@ public:
                 }
 
                 Assert(m_ichCur < m_cchMax);
-                __analysis_assume(m_ichCur < m_cchMax);
 
                 m_prgch[m_ichCur++] = static_cast<OLECHAR>(ch);
             }

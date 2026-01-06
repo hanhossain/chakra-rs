@@ -979,7 +979,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::TryAllocFromZeroPages(
 
         if (this->hasZeroQueuedPages)
         {
-            __analysis_assume(backgroundPageQueue != nullptr);
             return TryAllocFromZeroPagesList(pageCount, pageSegment, backgroundPageQueue, true);
         }
     }

@@ -5899,7 +5899,6 @@ ScriptContext::GetJitFuncRangeCache()
 
                     // Explicitly assume that the bucket count is less than the following counts (which are all equal)
                     // This is because min will return MAX_BUCKETS - 1 if the count exceeds MAX_BUCKETS - 1.
-                    __analysis_assume(bucket < MAX_BUCKETS);
 
                     totalBuckets[bucket]++;
                     if (isNativeCode)

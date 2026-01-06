@@ -915,7 +915,6 @@ namespace UnifiedRegex
                 break;
             }
         }
-        __analysis_assume(numCases < MaxCases);
         for (uint8_t j = numCases; j > i; j--)
         {
             cases[j] = cases[j - 1];

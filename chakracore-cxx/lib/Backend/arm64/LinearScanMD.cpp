@@ -33,7 +33,6 @@ LinearScanMD::EnsureSpillSymForVFPReg(RegNum reg, Func *func)
 {
     Assert(REGNUM_ISVFPREG(reg));
 
-    __analysis_assume(reg - RegD0 < VFP_REGCOUNT);
     StackSym *sym = this->vfpSymTable[reg - RegD0];
 
     if (sym == nullptr)
@@ -41,7 +40,6 @@ LinearScanMD::EnsureSpillSymForVFPReg(RegNum reg, Func *func)
         sym = StackSym::New(TyFloat64, func);
         func->StackAllocate(sym, MachRegDouble);
 
-        __analysis_assume(reg - RegD0 < VFP_REGCOUNT);
         this->vfpSymTable[reg - RegD0] = sym;
     }
 

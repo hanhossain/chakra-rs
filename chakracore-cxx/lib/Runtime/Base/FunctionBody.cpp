@@ -6244,7 +6244,6 @@ namespace Js
 #endif
             uint i = 0;
             uint plainInlineCacheEnd = GetRootObjectLoadInlineCacheStart();
-            __analysis_assume(plainInlineCacheEnd <= totalCacheCount);
             for (; i < plainInlineCacheEnd; i++)
             {
                 inlineCaches[i] = AllocatorNewZ(InlineCacheAllocator,
@@ -6253,21 +6252,18 @@ namespace Js
             Js::RootObjectBase * rootObject = this->GetRootObject();
             ThreadContext * threadContext = this->GetScriptContext()->GetThreadContext();
             uint rootObjectLoadInlineCacheEnd = GetRootObjectLoadMethodInlineCacheStart();
-            __analysis_assume(rootObjectLoadInlineCacheEnd <= totalCacheCount);
             for (; i < rootObjectLoadInlineCacheEnd; i++)
             {
                 inlineCaches[i] = rootObject->GetInlineCache(
                     threadContext->GetPropertyName(this->GetPropertyIdFromCacheId(i)), false, false);
             }
             uint rootObjectLoadMethodInlineCacheEnd = GetRootObjectStoreInlineCacheStart();
-            __analysis_assume(rootObjectLoadMethodInlineCacheEnd <= totalCacheCount);
             for (; i < rootObjectLoadMethodInlineCacheEnd; i++)
             {
                 inlineCaches[i] = rootObject->GetInlineCache(
                     threadContext->GetPropertyName(this->GetPropertyIdFromCacheId(i)), true, false);
             }
             uint rootObjectStoreInlineCacheEnd = isInstInlineCacheStart;
-            __analysis_assume(rootObjectStoreInlineCacheEnd <= totalCacheCount);
             for (; i < rootObjectStoreInlineCacheEnd; i++)
             {
 #pragma prefast(suppress:6386, "The analysis assume didn't help prefast figure out this is in range")

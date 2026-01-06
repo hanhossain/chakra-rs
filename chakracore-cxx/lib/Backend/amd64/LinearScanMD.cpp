@@ -58,7 +58,6 @@ LinearScanMD::EnsureSpillSymForXmmReg(RegNum reg, Func *func, IRType type)
 {
     Assert(REGNUM_ISXMMXREG(reg));
 
-    __analysis_assume(reg - FIRST_XMM_REG < XMM_REGCOUNT);
     StackSym *sym;
     if (type == TyFloat32)
     {
@@ -78,8 +77,6 @@ LinearScanMD::EnsureSpillSymForXmmReg(RegNum reg, Func *func, IRType type)
     {
         sym = StackSym::New(type, func);
         func->StackAllocate(sym, TySize[type]);
-
-        __analysis_assume(reg - FIRST_XMM_REG < XMM_REGCOUNT);
 
         if (type == TyFloat32)
         {
@@ -234,7 +231,6 @@ LinearScanMD::GenerateBailOut(IR::Instr * instr, __in_ecount(registerSaveSymsCou
 
     // Code analysis doesn't do inter-procesure analysis and cannot infer the value of registerSaveSymsCount,
     // but the passed in registerSaveSymsCount is static value RegNumCount-1, so reg-1 in below loop is always a valid index.
-    __analysis_assume(static_cast<int>(registerSaveSymsCount) == static_cast<int>(RegNumCount-1));
     Assert(static_cast<int>(registerSaveSymsCount) == static_cast<int>(RegNumCount-1));
 
     // Save registers used for parameters, and rax, if necessary, into the shadow space allocated for register parameters:

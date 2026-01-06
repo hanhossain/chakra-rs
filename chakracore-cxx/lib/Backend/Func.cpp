@@ -633,7 +633,6 @@ Func::TryCodegen()
             {
                 Js::Throw::OutOfMemory();
             }
-            __analysis_assume(jitOutputData->nativeDataFixupTable);
             jitOutputData->nativeDataFixupTable->count = dataAllocator->allocCount;
 
             jitOutputData->buffer = (NativeDataBuffer*)midl_user_allocate(offsetof(NativeDataBuffer, data) + dataAllocator->totalSize);
@@ -641,7 +640,6 @@ Func::TryCodegen()
             {
                 Js::Throw::OutOfMemory();
             }
-            __analysis_assume(jitOutputData->buffer);
 
             jitOutputData->buffer->len = dataAllocator->totalSize;
 

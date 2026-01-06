@@ -393,7 +393,6 @@ HeapBlockMap32::L2MapChunk::Get(void * address)
 {
     uint id2 = GetLevel2Id(address);
     Assert(id2 < L2Count);
-    __analysis_assume(id2 < L2Count);
     return map[id2];
 }
 
@@ -407,7 +406,6 @@ HeapBlockMap32::L2MapChunk::Set(uint id2, uint pageCount, HeapBlock * heapBlock,
 
     for (uint i = id2; i < id2End; i++)
     {
-        __analysis_assume(i < L2Count);
         Assert(map[i] == nullptr);
         Assert(blockInfo[i].blockType == HeapBlock::HeapBlockType::FreeBlockType);
 
@@ -434,7 +432,6 @@ HeapBlockMap32::L2MapChunk::Clear(uint id2, uint pageCount)
 
     for (uint i = id2; i < id2End; i++)
     {
-        __analysis_assume(i < L2Count);
         Assert(map[i] != nullptr);
         Assert(blockInfo[i].blockType != HeapBlock::HeapBlockType::FreeBlockType);
 
@@ -465,7 +462,6 @@ HeapBlockMap32::L2MapChunk::GetPageMarkBitVector(void * address)
 {
     uint id2 = GetLevel2Id(address);
     Assert(id2 < L2Count);
-    __analysis_assume(id2 < L2Count);
     return GetPageMarkBitVector(id2);
 }
 
@@ -481,7 +477,6 @@ HeapBlockMap32::L2MapChunk::GetMarkBitVectorForPages(void * address)
 {
     uint id2 = GetLevel2Id(address);
     Assert(id2 < L2Count);
-    __analysis_assume(id2 < L2Count);
     return GetMarkBitVectorForPages<BitCount>(id2);
 }
 

@@ -333,7 +333,6 @@ Js::JavascriptNumber* XProcNumberPageSegmentImpl::AllocateNumber(Func* func, dou
             }
 #else
             Assert(sizeCat == sizeof(Js::JavascriptNumber));
-            __analysis_assume(sizeCat == sizeof(Js::JavascriptNumber));
 #endif
             // change vtable to the remote one
             *(void**)pLocalNumber = (void*)func->GetScriptContextInfo()->GetVTableAddress(VTableValue::VtableJavascriptNumber);

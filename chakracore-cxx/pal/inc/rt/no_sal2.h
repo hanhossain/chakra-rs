@@ -375,8 +375,6 @@
 #define _Post_equal_to_(e)
 #undef _Struct_size_bytes_
 #define _Struct_size_bytes_(s)
-#undef _Analysis_assume_
-#define _Analysis_assume_
 #undef _Analysis_mode_
 #define _Analysis_mode_(m)
 #undef _Analysis_noreturn_

@@ -8083,7 +8083,6 @@ Lowerer::CreateEquivalentTypeGuardAndLinkToGuardedProperties(IR::PropertySymOpnd
                     Output::Flush();
                 }
                 Assert(propIdCount < propOpCount);
-                __analysis_assume(propIdCount < propOpCount);
                 entry = &properties[propIdCount++];
                 entry->propertyId = propertyId;
                 entry->slotIndex = propOpIndex;
@@ -8094,7 +8093,6 @@ Lowerer::CreateEquivalentTypeGuardAndLinkToGuardedProperties(IR::PropertySymOpnd
         else
         {
             Assert(propIdCount < propOpCount);
-            __analysis_assume(propIdCount < propOpCount);
             entry = &properties[propIdCount++];
             entry->propertyId = propertyId;
             entry->slotIndex = propOpIndex;

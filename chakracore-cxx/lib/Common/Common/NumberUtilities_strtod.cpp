@@ -1735,7 +1735,6 @@ static BOOL FDblToRgbFast(double dbl, _Out_writes_to_(kcbMaxRgb, (*ppbLim - prgb
     {
         iT = (numHH.m_wExp - 25) * 15 / -g_rgnumNeg[45].m_wExp;
         Assert(iT >= 0 && iT < 16);
-        __analysis_assume(iT >= 0 && iT < 16);
         if (iT > 0)
         {
             pnum = &g_rgnumNeg[30 + iT];
@@ -1760,7 +1759,6 @@ static BOOL FDblToRgbFast(double dbl, _Out_writes_to_(kcbMaxRgb, (*ppbLim - prgb
     {
         iT = (25 - numHH.m_wExp) * 15 / g_rgnumPos[45].m_wExp;
         Assert(iT >= 0 && iT < 16);
-        __analysis_assume(iT >= 0 && iT < 16);
         if (iT > 0)
         {
             pnum = &g_rgnumPos[30 + iT];
@@ -2612,7 +2610,6 @@ BOOL Js::NumberUtilities::FNonZeroFiniteDblToStr(double dbl, _In_range_(2, 36) i
     // powers of 2, but not for other radixes.
     // REVIEW : round?
     const int maxOutDigits = g_rgcchSig[radix];
-    __analysis_assume(maxOutDigits > 0);
 
     // Output the integer portion.
     if (1 <= dbl)
@@ -2640,8 +2637,6 @@ BOOL Js::NumberUtilities::FNonZeroFiniteDblToStr(double dbl, _In_range_(2, 36) i
             }
         }
         AssertMsg(valueDen <= dbl && dbl < valueDen * radix, "Bad floating point format");
-
-        __analysis_assume(cchSig >= 0);
 
         if (len < cchSig + 1)
         {
@@ -2743,7 +2738,6 @@ double Js::NumberUtilities::DblFromDecimal(DECIMAL * pdecIn)
     double dblRet;
 
     Assert(pdecIn->scale >= 0 && pdecIn->scale < 29);
-    __analysis_assume(pdecIn->scale >= 0 && pdecIn->scale < 29);
     if ((int32_t)pdecIn->Mid32 < 0)
     {
 

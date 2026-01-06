@@ -7145,8 +7145,6 @@ Case0:
         // Force check the prototype as we may insert values more than current elements
         if (pArr != nullptr && !HasAnyES5ArrayInPrototypeChain(pArr, true /*forceCheckProtoChain*/))
         {
-            // Since we get the length from an array and that cannot be more than uint32.
-            _Analysis_assume_(length <= UINT_MAX);
             JS_REENTRANT_UNLOCK(jsReentLock,
                 return TryArraySplice(pArr, (uint32)start, (uint32)length, (uint32)deleteLen, insertArgs, insertLen, scriptContext));
         }

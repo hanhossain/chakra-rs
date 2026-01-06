@@ -1677,7 +1677,6 @@ BackwardPass::ProcessLoop(BasicBlock * lastBlock)
 
     this->currentPrePassLoop = nullptr;
     Assert(lastBlock);
-    __analysis_assume(lastBlock);
     lastBlock->loop->hasDeadStorePrepass = true;
 
     this->isLoopPrepass = prevIsLoopPrepass;

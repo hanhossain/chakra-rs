@@ -1416,7 +1416,6 @@ namespace UnifiedRegex
             return -1;
 
         uint count = min(max, (uint)(this->GetCompactLength()));
-        __analysis_assume(count <= max);
         for (uint i = 0; i < count; i++)
         {
             // Bug in oacr. it can't figure out count is less than or equal to max

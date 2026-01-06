@@ -4,9 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 #include "Utf8Codex.h"
 
-#undef _Analysis_assume_
-#define _Analysis_assume_(expr)
-
 namespace utf8
 {
     const unsigned int mAlignmentMask = 0x3;
@@ -91,7 +88,6 @@ namespace utf8
                 c1 = ptr[-1]; // the original first byte
 
                 // ptr is now on c2. We must also have c3 and c4, otherwise doSecondSurrogatePair won't set.
-                _Analysis_assume_(ptr + 2 < end);
                 goto LFourByte;
             }
 

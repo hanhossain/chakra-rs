@@ -503,7 +503,6 @@ FlowGraph::Build(void)
             else if (instr->m_opcode == Js::OpCode::Leave)
             {
                 Assert(currentLabel != nullptr);
-                __analysis_assume(currentLabel != nullptr);
                 if (createNonExceptionFinally)
                 {
                     IR::LabelInstr *branchTarget = instr->AsBranchInstr()->GetTarget();

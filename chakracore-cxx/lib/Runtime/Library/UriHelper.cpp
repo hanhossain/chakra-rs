@@ -164,7 +164,6 @@ namespace Js
                     {
                         JavascriptError::ThrowURIError(scriptContext, JSERR_URIEncodeError /* TODO-ERROR: u"NEED MESSAGE" */);
                     }
-                    __analysis_assume(k < len); // because we throw exception if k==len
                     char16_t c1 = input[k];
                     if( c1 < 0xDC00 || c1 > 0xDFFF )
                     {
@@ -198,7 +197,6 @@ namespace Js
             uint32 uVal;
             if( InURISet(c, unescapedFlags) )
             {
-                __analysis_assume(outCurrent < outURI + allocSize);
                 *outCurrent++ = c;
             }
             else
@@ -222,7 +220,6 @@ namespace Js
                         JavascriptError::ThrowURIError(scriptContext, VBSERR_InternalError /* TODO-ERROR: u"NEED MESSAGE" */);
                     }
 #endif
-                    __analysis_assume(k < len);// because we throw exception if k==len
                     char16_t c1 = input[k];
 
 #if DBG
@@ -247,7 +244,6 @@ namespace Js
             }
         }
         AssertMsg(outURI + outputLen == outCurrent, " URI out buffer out of sync");
-        __analysis_assume(outputLen + 1 == allocSize);
         outURI[outputLen] = u'\0';
 
         return JavascriptString::NewWithBuffer(outURI, outputLen, scriptContext);
@@ -429,7 +425,6 @@ namespace Js
                 // Let OACR know some things about 'k' that we checked just above, to let it know that we are not going to
                 // overflow later. The same checks are done in the first pass in non-debug builds, and the conditions
                 // checked upon in the first and second pass are the same.
-                __analysis_assume(!(k + 2 >= len));
 
                 uint8_t b;
                 if(!DecodeByteFromHex(input[k + 1], input[k + 2], b))
@@ -470,7 +465,6 @@ namespace Js
                     // Let OACR know some things about 'k' that we checked just above, to let it know that we are not going to
                     // overflow later. The same checks are done in the first pass in non-debug builds, and the conditions
                     // checked upon in the first and second pass are the same.
-                    __analysis_assume(!(k + 3 * (n-1) >= len));
 
                     for( int j = 1; j < n; j++ )
                     {
@@ -532,8 +526,6 @@ namespace Js
                     {
                         uint32 l = (( uVal - 0x10000) & 0x3ff) + 0xdc00;
                         uint32 h = ((( uVal - 0x10000) >> 10) & 0x3ff) + 0xd800;
-
-                        __analysis_assume(outCurrent + 2 <= outURI + allocSize);
                         *outCurrent++ = (char16_t)h;
                         *outCurrent++ = (char16_t)l;
                         continue;
@@ -542,7 +534,6 @@ namespace Js
 
                 if( !UriHelper::InURISet( c1, reservedFlags ))
                 {
-                    __analysis_assume(outCurrent < outURI + allocSize);
                     *outCurrent++ = c1;
                 }
                 else
@@ -553,13 +544,11 @@ namespace Js
             }
             else // c is not '%'
             {
-                __analysis_assume(outCurrent < outURI + allocSize);
                 *outCurrent++ = c;
             }
         }
 
         AssertMsg(outURI + outputLen == outCurrent, " URI out buffer out of sync");
-        __analysis_assume(outputLen + 1 == allocSize);
         outURI[outputLen] = u'\0';
 
         return JavascriptString::NewWithBuffer(outURI, outputLen, scriptContext);

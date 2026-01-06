@@ -81,14 +81,12 @@ namespace UnifiedRegex
         uint GetChar(uint index) const
         {
             Assert(index < MaxCharMapLinearChars);
-            __analysis_assume(index < MaxCharMapLinearChars);
             return map[index];
         }
 
         V GetLastOcc(uint index) const
         {
             Assert(index < MaxCharMapLinearChars);
-            __analysis_assume(index < MaxCharMapLinearChars);
             return lastOcc[index];
         }
 
@@ -301,7 +299,6 @@ namespace UnifiedRegex
         V GetDirectMap(uint c) const
         {
             Assert(c < directSize);
-            __analysis_assume(c < directSize);
             return directMap[c];
         }
         inline V Get(Char kc) const

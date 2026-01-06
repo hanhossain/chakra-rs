@@ -217,7 +217,6 @@ void Ident::TrySetIsUsedInLdElem(ParseNode * pnode)
 IdentPtr HashTbl::PidFromTk(tokens token)
 {
     Assert(token > tkNone && token < tkID);
-    __analysis_assume(token > tkNone && token < tkID);
     // Create a pid so we can create a name node
     IdentPtr rpid = m_rpid[token];
     if (nullptr == rpid)
