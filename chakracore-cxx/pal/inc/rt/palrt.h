@@ -32,11 +32,7 @@ Revision History:
 
 /******************* HRESULTs *********************************************/
 
-#ifdef RC_INVOKED
-#define _HRESULT_TYPEDEF_(_sc) _sc
-#else // RC_INVOKED
 #define _HRESULT_TYPEDEF_(_sc) ((int32_t)_sc)
-#endif // RC_INVOKED
 
 #define S_OK                             _HRESULT_TYPEDEF_(0x00000000L)
 #define S_FALSE                          _HRESULT_TYPEDEF_(0x00000001L)
@@ -89,8 +85,6 @@ typedef enum tagEFaultRepRetVal
 } EFaultRepRetVal;
 
 /**************************************************************************/
-
-#ifndef RC_INVOKED
 
 #include "pal.h"
 
@@ -1633,7 +1627,5 @@ typedef struct tagVS_FIXEDFILEINFO
 // #include "cpp/cstring.h"
 #endif // !PAL_STDCPP_COMPAT
   // #include "sscli_version.h"
-
-#endif // RC_INVOKED
 
 #endif // __PALRT_H__

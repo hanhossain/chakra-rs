@@ -156,16 +156,12 @@ extern "C" {
 /* Provide default definition to be overridden when needed */
 #define __post_nullnullterminated
 
-/* Must protect redfinitions of macros to workaround rc.exe issues. */
-#ifndef RC_INVOKED
-
 #undef __nullnullterminated
 #define __nullnullterminated __inexpressible_readableTo("string terminated by two nulls") __nullterminated
 
 #undef __post_nullnullterminated
 #define __post_nullnullterminated _Post_ __inexpressible_readableTo("string terminated by two nulls") _Post_ __nullterminated
 
-#endif
 #endif  //__SAL_H_FULL_VER <= 140050727
 
 /************************************************************************

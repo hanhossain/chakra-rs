@@ -25,7 +25,7 @@ Abstract:
 
 --*/
 
-#if ! (defined(lint) || defined(RC_INVOKED))
+#if ! (defined(lint))
 #if defined(_PUSHPOP_SUPPORTED)
 #pragma warning(disable:4103)
 #if !(defined( MIDL_PASS )) || defined( __midl )
@@ -36,4 +36,4 @@ Abstract:
 #else
 #pragma pack(4)
 #endif
-#endif // ! (defined(lint) || defined(RC_INVOKED))
+#endif // ! (defined(lint))
