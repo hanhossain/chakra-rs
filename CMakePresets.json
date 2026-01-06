@@ -33,7 +33,7 @@
                 "default"
             ],
             "cacheVariables": {
-                "ICU_INCLUDE_PATH": "/opt/homebrew/opt/icu4c/include",
+                "ICU_INCLUDE_PATH": "/opt/homebrew/opt/icu4c@77/include",
                 "DISABLE_JIT": "ON"
             }
         },
