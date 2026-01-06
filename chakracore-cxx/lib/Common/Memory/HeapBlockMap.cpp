@@ -985,7 +985,7 @@ HeapBlockMap32::OOMRescan(Recycler * recycler)
 
     // Loop through segments and find pages that need OOM Rescan.
 
-    this->ForEachSegment(recycler, [=, &noHeapBlockNeedsRescan] (char * segmentStart, size_t segmentLength, Segment * currentSegment, PageAllocator * segmentPageAllocator) {
+    this->ForEachSegment(recycler, [=, this, &noHeapBlockNeedsRescan] (char * segmentStart, size_t segmentLength, Segment * currentSegment, PageAllocator * segmentPageAllocator) {
         Assert(segmentLength % AutoSystemInfo::PageSize == 0);
 
         // Process Small non-leaf segments (including write barrier blocks).

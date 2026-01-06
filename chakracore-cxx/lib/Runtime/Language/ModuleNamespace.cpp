@@ -60,7 +60,7 @@ namespace Js
         propertyMap = RecyclerNew(recycler, SimplePropertyDescriptorMap, recycler, sourceTextModuleRecord->GetLocalExportCount());
         if (localExportList != nullptr)
         {
-            localExportList->Map([=](ModuleImportOrExportEntry exportEntry) {
+            localExportList->Map([=, this](ModuleImportOrExportEntry exportEntry) {
                 PropertyId exportNameId = exportEntry.exportName->GetPropertyId();
                 PropertyId localNameId = exportEntry.localName->GetPropertyId();
                 const Js::PropertyRecord* exportNameRecord = scriptContext->GetThreadContext()->GetPropertyName(exportNameId);

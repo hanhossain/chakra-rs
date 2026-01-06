@@ -8275,7 +8275,7 @@ Recycler::ReportLeaksOnProcessDetach()
     {
         AUTO_LEAK_REPORT_SECTION(this->GetRecyclerFlagsTable(), u"Recycler (%p): Process Termination", this);
         LeakReport::StartRedirectOutput();
-        ReportOnProcessDetach([=]() { this->ReportLeaks(); });
+        ReportOnProcessDetach([=, this]() { this->ReportLeaks(); });
         LeakReport::EndRedirectOutput();
     }
 }
@@ -8348,7 +8348,7 @@ Recycler::CheckLeaksOnProcessDetach(char16_t const * header)
 {
     if (GetRecyclerFlagsTable().CheckMemoryLeak)
     {
-        ReportOnProcessDetach([=]() { this->CheckLeaks(header); });
+        ReportOnProcessDetach([=, this]() { this->CheckLeaks(header); });
     }
 }
 #endif

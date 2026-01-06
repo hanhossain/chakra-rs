@@ -204,7 +204,6 @@ if(CLR_CMAKE_PLATFORM_XPLAT)
 
     # c++20
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-        -Wno-deprecated-this-capture\
         -Wno-deprecated-enum-compare-conditional\
         -Wno-deprecated-enum-enum-conversion\
         -Wno-deprecated-declarations\

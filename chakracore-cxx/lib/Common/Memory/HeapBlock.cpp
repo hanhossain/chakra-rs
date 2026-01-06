@@ -1975,7 +1975,7 @@ template <class TBlockAttributes>
 void
 SmallHeapBlockT<TBlockAttributes>::EnumerateObjects(ObjectInfoBits infoBits, void (*CallBackFunction)(void * address, size_t size))
 {
-    ForEachAllocatedObject(infoBits, [=](uint index, void * objectAddress)
+    ForEachAllocatedObject(infoBits, [=, this](uint index, void * objectAddress)
     {
         CallBackFunction(objectAddress, this->objectSize);
     });

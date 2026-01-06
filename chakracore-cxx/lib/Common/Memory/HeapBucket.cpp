@@ -900,7 +900,7 @@ HeapBucketT<TBlockType>::SweepHeapBlockList(RecyclerSweep& recyclerSweep, TBlock
     Assert(this->IsAllocationStopped());
 #endif
 
-    HeapBlockList::ForEachEditing(heapBlockList, [=, &recyclerSweep](TBlockType * heapBlock)
+    HeapBlockList::ForEachEditing(heapBlockList, [=, this, &recyclerSweep](TBlockType * heapBlock)
     {
         // The whole list need to be consistent
         DebugOnly(VerifyBlockConsistencyInList(heapBlock, recyclerSweep));
