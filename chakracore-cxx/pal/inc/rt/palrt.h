@@ -32,41 +32,39 @@ Revision History:
 
 /******************* HRESULTs *********************************************/
 
-#define _HRESULT_TYPEDEF_(_sc) ((int32_t)_sc)
+#define S_OK                             ((int32_t)0x00000000L)
+#define S_FALSE                          ((int32_t)0x00000001L)
 
-#define S_OK                             _HRESULT_TYPEDEF_(0x00000000L)
-#define S_FALSE                          _HRESULT_TYPEDEF_(0x00000001L)
+#define E_NOTIMPL                        ((int32_t)0x80004001L)
+#define E_NOINTERFACE                    ((int32_t)0x80004002L)
+#define E_UNEXPECTED                     ((int32_t)0x8000FFFFL)
+#define E_OUTOFMEMORY                    ((int32_t)0x8007000EL)
+#define E_INVALIDARG                     ((int32_t)0x80070057L)
+#define E_POINTER                        ((int32_t)0x80004003L)
+#define E_HANDLE                         ((int32_t)0x80070006L)
+#define E_ABORT                          ((int32_t)0x80004004L)
+#define E_FAIL                           ((int32_t)0x80004005L)
+#define E_ACCESSDENIED                   ((int32_t)0x80070005L)
+#define E_PENDING                        ((int32_t)0x8000000AL)
 
-#define E_NOTIMPL                        _HRESULT_TYPEDEF_(0x80004001L)
-#define E_NOINTERFACE                    _HRESULT_TYPEDEF_(0x80004002L)
-#define E_UNEXPECTED                     _HRESULT_TYPEDEF_(0x8000FFFFL)
-#define E_OUTOFMEMORY                    _HRESULT_TYPEDEF_(0x8007000EL)
-#define E_INVALIDARG                     _HRESULT_TYPEDEF_(0x80070057L)
-#define E_POINTER                        _HRESULT_TYPEDEF_(0x80004003L)
-#define E_HANDLE                         _HRESULT_TYPEDEF_(0x80070006L)
-#define E_ABORT                          _HRESULT_TYPEDEF_(0x80004004L)
-#define E_FAIL                           _HRESULT_TYPEDEF_(0x80004005L)
-#define E_ACCESSDENIED                   _HRESULT_TYPEDEF_(0x80070005L)
-#define E_PENDING                        _HRESULT_TYPEDEF_(0x8000000AL)
+#define DISP_E_PARAMNOTFOUND             ((int32_t)0x80020004L)
+#define DISP_E_TYPEMISMATCH              ((int32_t)0x80020005L)
+#define DISP_E_BADVARTYPE                ((int32_t)0x80020008L)
+#define DISP_E_OVERFLOW                  ((int32_t)0x8002000AL)
+#define DISP_E_DIVBYZERO                 ((int32_t)0x80020012L)
 
-#define DISP_E_PARAMNOTFOUND             _HRESULT_TYPEDEF_(0x80020004L)
-#define DISP_E_TYPEMISMATCH              _HRESULT_TYPEDEF_(0x80020005L)
-#define DISP_E_BADVARTYPE                _HRESULT_TYPEDEF_(0x80020008L)
-#define DISP_E_OVERFLOW                  _HRESULT_TYPEDEF_(0x8002000AL)
-#define DISP_E_DIVBYZERO                 _HRESULT_TYPEDEF_(0x80020012L)
+#define CO_E_CLASSSTRING                 ((int32_t)0x800401F3L)
 
-#define CO_E_CLASSSTRING                 _HRESULT_TYPEDEF_(0x800401F3L)
+#define URL_E_INVALID_SYNTAX             ((int32_t)0x80041001L)
+#define MK_E_SYNTAX                      ((int32_t)0x800401E4L)
 
-#define URL_E_INVALID_SYNTAX             _HRESULT_TYPEDEF_(0x80041001L)
-#define MK_E_SYNTAX                      _HRESULT_TYPEDEF_(0x800401E4L)
+#define STG_E_FILENOTFOUND               ((int32_t)0x80030002L)
+#define STG_E_PATHNOTFOUND               ((int32_t)0x80030003L)
+#define STG_E_WRITEFAULT                 ((int32_t)0x8003001DL)
+#define STG_E_FILEALREADYEXISTS          ((int32_t)0x80030050L)
 
-#define STG_E_FILENOTFOUND               _HRESULT_TYPEDEF_(0x80030002L)
-#define STG_E_PATHNOTFOUND               _HRESULT_TYPEDEF_(0x80030003L)
-#define STG_E_WRITEFAULT                 _HRESULT_TYPEDEF_(0x8003001DL)
-#define STG_E_FILEALREADYEXISTS          _HRESULT_TYPEDEF_(0x80030050L)
-
-#define NTE_BAD_HASH                     _HRESULT_TYPEDEF_(0x80090002L)
-#define NTE_BAD_KEY                      _HRESULT_TYPEDEF_(0x80090003L)
+#define NTE_BAD_HASH                     ((int32_t)0x80090002L)
+#define NTE_BAD_KEY                      ((int32_t)0x80090003L)
 
 #define STD_CTL_SCODE(n) MAKE_SCODE(SEVERITY_ERROR, FACILITY_CONTROL, n)
 /********************** errorrep.h ****************************************/
