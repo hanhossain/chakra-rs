@@ -1215,7 +1215,6 @@ namespace Js
         if (newTypeHandler == this)
         {
             Assert(setters != nullptr);
-            _Analysis_assume_(setters != nullptr);
             setterSlot = setters[propertyIndex];
         }
         else
@@ -1245,7 +1244,6 @@ namespace Js
             newTypeHandler = PathTypeHandlerBase::FromTypeHandler(newType->GetTypeHandler());
             setters = PathTypeHandlerWithAttr::FromPathTypeHandler(newTypeHandler)->PathTypeHandlerWithAttr::GetSetterSlots();
             Assert(setters != nullptr);
-            _Analysis_assume_(setters != nullptr);
             setters[propertyIndex] = setterSlot;
 #if ENABLE_FIXED_FIELDS
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES

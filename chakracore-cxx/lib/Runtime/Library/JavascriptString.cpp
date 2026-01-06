@@ -1056,7 +1056,6 @@ case_2:
 
             if (num < 0x10000)
             {
-                __analysis_assume(count < bufferLength);
                 Assert(count < bufferLength);
 #pragma prefast(suppress: 22102, "I have an assert in place to guard against overflow. Even though this should never happen.")
                 tempBuffer[count] = (char16_t)num;
@@ -1064,14 +1063,12 @@ case_2:
             }
             else
             {
-                __analysis_assume(count + 1 < bufferLength);
                 Assert(count  + 1 < bufferLength);
                 NumberUtilities::CodePointAsSurrogatePair((codepoint_t)num, (tempBuffer + count), (tempBuffer + count + 1));
                 count += 2;
             }
         }
         // Create a string of appropriate length
-        __analysis_assume(count <= bufferLength);
         Assert(count <= bufferLength);
         JavascriptString *toReturn = JavascriptString::NewCopyBuffer(tempBuffer, count, scriptContext);
 
@@ -2989,7 +2986,6 @@ case_2:
         Assert(pchEnd >= pch);
         size_t length = pchEnd - pch;
         const char16_t *const pchMin = pch;
-        __analysis_assume(radix < _countof(maxUintStringLengthTable));
         if(length <= maxUintStringLengthTable[radix])
         {
             // Use uint32 as integer being parsed - much faster than BigInt

@@ -7292,7 +7292,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             if (useCachedScope)
             {
                 frameObject = VarTo<DynamicObject>(frameObj);
-                __analysis_assume((uint32)frameObject->GetDynamicType()->GetTypeHandler()->GetSlotCapacity() >= formalsCount);
             }
             else
             {
@@ -7324,7 +7323,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
                 }
                 int oldSlotCapacity = frameObject->GetDynamicType()->GetTypeHandler()->GetSlotCapacity();
                 int newSlotCapacity = newType->GetTypeHandler()->GetSlotCapacity();
-                __analysis_assume((uint32)newSlotCapacity >= formalsCount);
 
                 frameObject->EnsureSlots(oldSlotCapacity, newSlotCapacity, scriptContext, newType->GetTypeHandler());
                 frameObject->ReplaceType(newType);

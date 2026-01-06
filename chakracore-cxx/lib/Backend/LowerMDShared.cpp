@@ -5707,8 +5707,6 @@ LowererMD::EmitLoadFloat(IR::Opnd *dst, IR::Opnd *src, IR::Instr *insertInstr, I
 
     if (BailOutInfo::IsBailOutOnImplicitCalls(bailOutKind))
     {
-        _Analysis_assume_(instrBailOut != nullptr);
-
         instr = instr->ConvertToBailOutInstr(instrBailOut->GetBailOutInfo(), bailOutKind);
         if (instrBailOut->GetBailOutInfo()->bailOutInstr == instrBailOut)
         {
@@ -7325,8 +7323,6 @@ LowererMD::EmitFloatToInt(IR::Opnd *dst, IR::Opnd *src, IR::Instr *instrInsert, 
 
     if (BailOutInfo::IsBailOutOnImplicitCalls(bailOutKind))
     {
-        _Analysis_assume_(instrBailOut != nullptr);
-
         instr = instr->ConvertToBailOutInstr(instrBailOut->GetBailOutInfo(), bailOutKind);
         if (instrBailOut->GetBailOutInfo()->bailOutInstr == instrBailOut)
         {

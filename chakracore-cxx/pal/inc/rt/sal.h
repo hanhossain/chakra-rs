@@ -2678,14 +2678,6 @@ of each annotation, see the advanced annotations section.
     #define __fallthrough __inner_fallthrough
 #endif // ]
 
-#ifndef __analysis_assume // [
-#define __analysis_assume(expr)
-#endif // ]
-
-#ifndef _Analysis_assume_ // [
-#define _Analysis_assume_(expr) 
-#endif // ]
-
 #define _Analysis_noreturn_    _SAL2_Source_(_Analysis_noreturn_, (), _SA_annotes0(SAL_terminates))
 
 #ifdef _PREFAST_ // [

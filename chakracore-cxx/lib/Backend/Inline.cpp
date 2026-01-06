@@ -1206,7 +1206,6 @@ Inline::InlinePolymorphicFunction(IR::Instr *callInstr, const FunctionJITTimeInf
     POLYMORPHIC_INLINE_TESTTRACE(u"------------------------------------------------\n");
     for (uint i = 0; i < inlineeCount; i++)
     {
-        __analysis_assert(inlineesDataArray[i] != nullptr);
         JITTimeFunctionBody *inlineeFunctionBody = inlineesDataArray[i]->GetBody();
         POLYMORPHIC_INLINE_TESTTRACE(u"INLINING (Polymorphic): Start inlining: \tInlinee: %s (%s):\tCaller: %s (%s)\n",
                     inlineeFunctionBody->GetDisplayName(), inlineesDataArray[i]->GetDebugNumberSet(debugStringBuffer),
@@ -4115,7 +4114,6 @@ Inline::InlineFunctionCommon(IR::Instr *callInstr, bool originalCallTargetOpndIs
     }
 
     Assert(formalCount <= Js::InlineeCallInfo::MaxInlineeArgoutCount);
-    __analysis_assume(formalCount <= Js::InlineeCallInfo::MaxInlineeArgoutCount);
 
     IR::Instr *argOutsExtra[Js::InlineeCallInfo::MaxInlineeArgoutCount];
 #if DBG
@@ -4969,7 +4967,6 @@ Inline::MapActuals(IR::Instr *callInstr, __out_ecount(maxParamCount) IR::Instr *
                     argOutsExtra[currentActual] = argInstr;
                     if (currentActual < maxParamCount)
                     {
-                        __analysis_assume(currentActual < Js::InlineeCallInfo::MaxInlineeArgoutCount);
                         argOuts[currentActual] = nullptr;
                     }
                 }

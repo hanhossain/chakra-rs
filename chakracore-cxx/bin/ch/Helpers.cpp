@@ -251,7 +251,6 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
         C_ASSERT(sizeof(char16_t) == 2);
         if (bufferLength > 2)
         {
-            __analysis_assume(bufferLength > 2);
 #pragma prefast(push)
 #pragma prefast(disable:6385, "PREfast incorrectly reports this as an out-of-bound access.");
             if ((pRawBytes[0] == 0xFE && pRawBytes[1] == 0xFF) ||
@@ -394,7 +393,6 @@ int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, u
         return E_FAIL;
     }
     // file will not be nullptr if _wfopen_s succeeds
-    __analysis_assume(file != nullptr);
 
     //
     // Determine the file length, in bytes.

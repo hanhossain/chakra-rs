@@ -53,7 +53,6 @@ extern "C" {
 
 #define __inner_bound
 #define __inner_range(lb,ub)
-#define __inner_assume_bound_dec
 #define __inner_assume_bound(i)
 #define __inner_allocator
 
@@ -168,20 +167,7 @@ extern "C" {
  New extensions to sal.h follow here.
 *************************************************************************/
 
-#define __file_parser(typ)
-#define __file_parser_class(typ)
-#define __file_parser_library(typ)
-#define __source_code_content(typ)
-#define __class_code_content(typ)
-#define __analysis_assert(e)
-#define __analysis_hint(hint)
-#define __analysis_noreturn
 /* Internal defintions */
-#define __inner_data_source(src_raw)
-#define __inner_this_data_source(src_raw)
-#define __inner_out_validated(typ_raw)
-#define __inner_this_out_validated(typ_raw)
-#define __inner_assume_validated_dec
 #define __inner_assume_validated(p)
 #define __inner_transfer(formal)
 #define __inner_encoded
@@ -193,191 +179,20 @@ extern "C" {
 #define __inner_volatile
 #define __inner_nonvolatile
 #define __inner_possibly_notnullterminated
-#define __inner_analysis_assume_nullterminated_dec
 #define __inner_analysis_assume_nullterminated(x)
 
 #define __field_ecount(size)                __notnull __elem_writableTo(size)
 #define __field_bcount(size)                __notnull __byte_writableTo(size)
-#define __field_xcount(size)                __notnull __inexpressible_writableTo(size)
 
-#define __field_ecount_opt(size)            __maybenull __elem_writableTo(size)
-#define __field_bcount_opt(size)            __maybenull __byte_writableTo(size)
-#define __field_xcount_opt(size)            __maybenull __inexpressible_writableTo(size)
-
-#define __field_ecount_part(size,init)      __notnull __elem_writableTo(size) __elem_readableTo(init)
-#define __field_bcount_part(size,init)      __notnull __byte_writableTo(size) __byte_readableTo(init)
-#define __field_xcount_part(size,init)      __notnull __inexpressible_writableTo(size) __inexpressible_readableTo(init)
-
-#define __field_ecount_part_opt(size,init)  __maybenull __elem_writableTo(size) __elem_readableTo(init)
-#define __field_bcount_part_opt(size,init)  __maybenull __byte_writableTo(size) __byte_readableTo(init)
-#define __field_xcount_part_opt(size,init)  __maybenull __inexpressible_writableTo(size) __inexpressible_readableTo(init)
-
-#define __field_ecount_full(size)           __field_ecount_part(size,size)
-#define __field_bcount_full(size)           __field_bcount_part(size,size)
-#define __field_xcount_full(size)           __field_xcount_part(size,size)
-
-#define __field_ecount_full_opt(size)       __field_ecount_part_opt(size,size)
-#define __field_bcount_full_opt(size)       __field_bcount_part_opt(size,size)
-#define __field_xcount_full_opt(size)       __field_xcount_part_opt(size,size)
-
-#define __field_nullterminated              __nullterminated
-
-#define __struct_bcount(size)               __byte_writableTo(size)
-#define __struct_xcount(size)               __inexpressible_writableTo(size)
-
-#define __out_awcount(expr,size)            _Pre_ __notnull \
-					    __byte_writableTo((expr) ? (size) : (size) * 2) \
-                                            _Post_ __valid __refparam
-#define __in_awcount(expr,size)             _Pre_ __valid \
-                                            _Pre_ _Notref_ __deref __readonly \
-				            __byte_readableTo((expr) ? (size) : (size) * 2)
-#define __post_invalid                      _Post_ __notvalid
 /* integer related macros */
-#define __allocator                         __inner_allocator
-#ifndef PAL_STDCPP_COMPAT
-#define __deallocate(kind)                  _Pre_ __notnull __post_invalid
-#define __deallocate_opt(kind)              _Pre_ __maybenull __post_invalid
-#endif
-#define __bound                             __inner_bound
 #define __range(lb,ub)                      __inner_range(lb,ub)
-#define __in_bound                          _Pre_ __inner_bound
-#define __out_bound                         _Post_ __inner_bound
-#define __deref_out_bound                   _Post_ __deref __inner_bound
 #define __in_range(lb,ub)                   _Pre_ __inner_range(lb,ub)
-#define __out_range(lb,ub)                  _Post_ __inner_range(lb,ub)
 #define __deref_in_range(lb,ub)             _Pre_ __deref __inner_range(lb,ub)
 #define __deref_out_range(lb,ub)            _Post_ __deref __inner_range(lb,ub)
-#define __deref_inout_range(lb,ub)          __deref_in_range(lb,ub) __deref_out_range(lb,ub)
-#define __field_range(lb,ub)                __range(lb,ub)
-#define __field_data_source(src_sym)        __inner_data_source(#src_sym)
-
-#define __range_max(a,b)                    __range(==, a > b ? a : b)
-#define __range_min(a,b)                    __range(==, a < b ? a : b)
-
-
-/* Penetration review macros */
-#define __in_data_source(src_sym)           _Pre_ __inner_data_source(#src_sym)
-#define __out_data_source(src_sym)          _Post_ __inner_data_source(#src_sym)
-#define __out_validated(typ_sym)            __inner_out_validated(#typ_sym)
-#define __this_out_data_source(src_sym)     __inner_this_data_source(#src_sym)
-#define __this_out_validated(typ_sym)       __inner_this_out_validated(#typ_sym)
-#define __transfer(formal)                  _Post_ __inner_transfer(formal)
-#define __rpc_entry                         __inner_control_entrypoint(RPC)
-#define __kernel_entry                      __inner_control_entrypoint(UserToKernel)
-#define __gdi_entry                         __inner_control_entrypoint(GDI)
-#define __encoded_pointer                   __inner_encoded
-#define __encoded_array                     __inner_encoded
-#define __field_encoded_pointer             __inner_encoded
-#define __field_encoded_array               __inner_encoded
-#if defined(_MSC_EXTENSIONS) || defined(_PREFAST_) || defined(OACR)
-#define __type_has_adt_prop(adt,prop)       __inner_adt_prop(adt,prop)
-#define __out_has_adt_prop(adt,prop)        _Post_ __inner_adt_add_prop(adt,prop)
-#define __out_not_has_adt_prop(adt,prop)    _Post_ __inner_adt_remove_prop(adt,prop)
-#define __out_transfer_adt_prop(arg)        _Post_ __inner_adt_transfer_prop(arg)
-#define __out_has_type_adt_props(typ)       _Post_ __inner_adt_type_props(typ)
-
-/* useful PFD related macros */
-#define __possibly_notnullterminated        __inner_possibly_notnullterminated
-
-/* Windows Internal */
-#define __volatile                          __inner_volatile
-#define __nonvolatile                       __inner_nonvolatile
-#else
-#define __out_has_type_adt_props(typ)       /* nothing */
-#endif
-#define __deref_volatile                    __deref __volatile
-#define __deref_nonvolatile                 __deref __nonvolatile
-
-/* declare stub functions for macros */
-__inner_assume_validated_dec
-__inner_assume_bound_dec
-__inner_analysis_assume_nullterminated_dec
-#define __analysis_assume_nullterminated(x) __inner_analysis_assume_nullterminated(x)
-#define __assume_validated(p) __inner_assume_validated(p)
-#define __assume_bound(i) __inner_assume_bound(i)
-
 
 /**************************************************************************
 * SAL 2 extensions for Windows-specific APIs.
 ***************************************************************************/
-
-// Annotation for parameters that are not used in any way by the function.
-// Unlike _Reserved_, an _Unreferenced_parameter_ pointer need not be NULL.
-#ifndef _Unreferenced_parameter_
-#define _Unreferenced_parameter_  _Const_
-#endif
-
-// Pointer parameters that are freed by the function, and thus the pointed-to
-// memory should not be used after return.
-#ifndef _Frees_ptr_
-#define _Frees_ptr_               _Pre_notnull_ _Post_ptr_invalid_
-#endif
-#ifndef _Frees_ptr_opt_
-#define _Frees_ptr_opt_           _Pre_maybenull_ _Post_ptr_invalid_
-#endif
-
-// NLS APIs allow strings to be specified either by an element count or
-// null termination. Unlike _In_reads_or_z_, this is not whichever comes
-// first, but based on whether the size is negative or not.
-#define _In_NLS_string_(size)     _When_((size) < 0,  _In_z_)           \
-                                  _When_((size) >= 0, _In_reads_(size))
-
-
-// Minifilter CompletionContext parameters on the pre-operation callback
-// default to NULL.  For return type FLT_PREOP_SUCCESS_WITH_CALLBACK or
-// FLT_PREOP_SYNCHRONIZE, it may be set to NULL or a valid pointer.  For all
-// other returns, it must be NULL.
-#define _Flt_CompletionContext_Outptr_   \
-           _Outptr_result_maybenull_ _Pre_valid_ \
-           _At_(*_Curr_, _Pre_null_ \
-               _When_(return != FLT_PREOP_SUCCESS_WITH_CALLBACK && return != FLT_PREOP_SYNCHRONIZE, _Post_null_))
-
-// Minifilter ConnectionCookie parameters on the port connect notify callback
-// default to NULL.  On successful return, it may be set to NULL or non-NULL,
-// but it must be NULL on failure.
-#define _Flt_ConnectionCookie_Outptr_      \
-     _Outptr_result_maybenull_ _Pre_valid_ \
-     _At_(*_Curr_, _Pre_null_ _On_failure_(_Post_null_))
-
-
-//
-// A common pattern is to pass an "_Inout_ char ** ppBuf" of size "_Inout_ uint32_t* pSize"
-// to a function that writes to **pBuf, incrementing *ppBuf to point to one
-// past the last written byte. Thus the length of the write is
-// (*ppBuf - Old(*ppBuf)). The size of the remaining unwritten capacity 
-// is written to *pSize.
-//
-// This pattern is frequently used when progressively filling a
-// large buffer in chunks
-// (e.g. when reading from a network interface in a driver).
-//
-// It is expected that these supplementary annotations would be used inside an
-// _At_, like so:
-//
-// _At_(*ppBuf, _Writes_and_advances_ptr_(*pBufSize))
-// int32_t WriteChunkOfData(_Inout_ char ** ppBuf, _Inout_ uint32_t* pBufSize);
-//
-#ifndef _Writes_and_advances_ptr_
-#define _Writes_and_advances_ptr_(size) \
-                                _At_((void*)_Curr_, _Inout_) \
-                                _At_(_Curr_, \
-                                    _Pre_writable_size_(size) \
-                                    _Post_writable_size_(size) \
-                                    _Post_satisfies_(_Curr_ - _Old_(_Curr_) == size)) \
-                                _At_(_Old_(_Curr_), \
-                                    _Post_readable_size_(_Old_(size) - size))
-#endif
-
-#ifndef _Writes_bytes_and_advances_ptr_
-#define _Writes_bytes_and_advances_ptr_(size) \
-                                _At_((void*)_Curr_, _Inout_) \
-                                _At_(_Curr_, \
-                                    _Pre_writable_byte_size_(size) \
-                                    _Post_writable_byte_size_(size) \
-                                    _Post_satisfies_(((char*)_Curr_) - ((void*)_Old_(_Curr_)) == size)) \
-                                _At_(_Old_(_Curr_), \
-                                    _Post_readable_byte_size_(_Old_(size) - size))
-#endif
 
 //
 // Gets the current error code (as returned by GetLastError()), and stores
@@ -403,13 +218,6 @@ extern "C" void __pfx_assume(bool, const char *);
 void __pfx_assert(int, const char *);
 void __pfx_assume(int, const char *);
 #endif
-/**************************************************************************
-* Redefintion of __analysis_assume and __analysis_assert for PREFIX build
-**************************************************************************/
-#undef  __analysis_assume
-#undef  __analysis_assert
-#define __analysis_assume(e) (__pfx_assume(e,"pfx_assume"));
-#define __analysis_assert(e) (__pfx_assert(e,"pfx_assert"));
 #endif /* ifdef _PREFIX_ */
 
 

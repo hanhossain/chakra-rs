@@ -1512,7 +1512,6 @@ void ValueType::ToVerboseString(char (&str)[VALUE_TYPE_MAX_STRING_SIZE]) const
             default:
                 size_t nameIndex = nameIndexOffset + GetLowestBitIndex(b);
                 Assert(nameIndex < sizeof(BitNames) / sizeof(BitNames[0]));
-                __analysis_assume(nameIndex < sizeof(BitNames) / sizeof(BitNames[0])); // function is not used in shipping builds, satisfy oacr
                 name = BitNames[nameIndex];
                 break;
         }

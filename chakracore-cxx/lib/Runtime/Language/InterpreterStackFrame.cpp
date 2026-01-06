@@ -1169,8 +1169,6 @@ namespace Js
         //placement_new(allocation, InterpreterStackFrame) instead, though that will cause problems
         //if the placement_new is surrounded by a try/finally since this would mix C++/SEH exception
         //handling.
-
-        __analysis_assume(varAllocCount >= k_stackFrameVarCount + localCount);
         InterpreterStackFrame* newInstance = (InterpreterStackFrame*)allocation;
 
         newInstance->scriptContext  = this->executeFunction->GetScriptContext();
@@ -1322,10 +1320,6 @@ namespace Js
 #if ENABLE_PROFILE_INFO
         if (Js::DynamicProfileInfo::EnableImplicitCallFlags(this->executeFunction))
         {
-            /*
-            __analysis_assume(varAllocCount == (k_stackFrameVarCount + localCount + executeFunction->GetOutParamMaxDepth()
-                                                + ((sizeof(ImplicitCallFlags) * executeFunction->GetLoopCount() + sizeof(Var) - 1) / sizeof(Var))));
-           */
             newInstance->savedLoopImplicitCallFlags = (ImplicitCallFlags *)nextAllocBytes;
             for (uint i = 0; i < this->executeFunction->GetLoopCount(); i++)
             {

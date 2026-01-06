@@ -194,8 +194,6 @@ namespace Js
         __in_opt const PCONTEXT InitialContext = NULL
         )
     {
-        _Analysis_assume_(FramesToSkip >= 0);
-        _Analysis_assume_(FramesToCapture >= 0);
         uint32_t MachineType;
         CONTEXT Context;
         STACKFRAME64 StackFrame;

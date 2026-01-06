@@ -63,9 +63,6 @@ RecyclerTrackerCounterSet::Map::Map(type_info const * type, bool isArray,uint co
 {
     Assert(counterIndex >= NumUnknownCounters && counterIndex < RecyclerTrackerCounterSetDefinition::MaxCounter);
     Assert(sizeCounterIndex >= NumUnknownCounters && sizeCounterIndex < RecyclerTrackerCounterSetDefinition::MaxCounter);
-
-    __analysis_assume(counterIndex >= NumUnknownCounters && counterIndex < RecyclerTrackerCounterSetDefinition::MaxCounter);
-    __analysis_assume(sizeCounterIndex >= NumUnknownCounters && sizeCounterIndex < RecyclerTrackerCounterSetDefinition::MaxCounter);
     if (isArray)
     {
         Assert(ArrayCountIndexTypeInfoMap[counterIndex - NumUnknownCounters] == nullptr);
@@ -84,7 +81,6 @@ RecyclerTrackerCounterSet::Map::Map(type_info const * type, bool isArray,uint co
 
 RecyclerTrackerCounterSet::Map::Map(type_info const * type, uint weakRefCounterIndex)
 {
-    __analysis_assume(weakRefCounterIndex >= NumUnknownCounters && weakRefCounterIndex < RecyclerTrackerCounterSetDefinition::MaxCounter);
     Assert(weakRefCounterIndex >= NumUnknownCounters && weakRefCounterIndex < RecyclerTrackerCounterSetDefinition::MaxCounter);
     Assert(WeakRefIndexTypeInfoMap[weakRefCounterIndex - NumUnknownCounters] == nullptr);
     WeakRefIndexTypeInfoMap[weakRefCounterIndex - NumUnknownCounters] = type;

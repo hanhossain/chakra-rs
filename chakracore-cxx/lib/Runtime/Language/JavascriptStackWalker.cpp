@@ -816,7 +816,6 @@ namespace Js
         while (this->GetCaller(ppFunc))
         {
             Assert(ppFunc != nullptr);
-            __analysis_assume(ppFunc != nullptr);
             if (!(*ppFunc)->IsLibraryCode())
             {
                 return true;
@@ -851,7 +850,6 @@ namespace Js
         while (this->GetCaller(ppFunc))
         {
             Assert(ppFunc != nullptr);
-            __analysis_assume(ppFunc != nullptr);
             if (IsDisplayCaller(*ppFunc))
             {
                 return true;

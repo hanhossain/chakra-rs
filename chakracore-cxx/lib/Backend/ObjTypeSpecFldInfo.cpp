@@ -1093,7 +1093,6 @@ ObjTypeSpecFldInfo* ObjTypeSpecFldInfo::CreateFrom(uint id, Js::PolymorphicInlin
             }
             // TODO: OOP JIT, consider putting these inline
             types[i].t = RecyclerNew(recycler, JITType);
-            __analysis_assume(localTypes[i] != nullptr);
             JITType::BuildFromJsType(localTypes[i], types[i].t);
 
             if (depolymorphize)

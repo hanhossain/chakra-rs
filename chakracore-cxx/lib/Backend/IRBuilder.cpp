@@ -809,7 +809,6 @@ IRBuilder::Build()
 
                     AssertOrFailFast(lastInstrOffset < m_offsetToInstructionCount);
 #if DBG
-                    __analysis_assume(lastInstrOffset < this->m_offsetToInstructionCount);
 #endif
                     bool isLastInstrUpdateNeeded = m_offsetToInstruction[lastInstrOffset] == m_lastInstr;
 

@@ -86,8 +86,6 @@ uint MarkContext::Split(uint targetCount, __in_ecount(targetCount) MarkContext *
 {
 #pragma prefast(suppress:__WARNING_REDUNDANTTEST, "Due to implementation of the PageStack template this test may end up being redundant")
     Assert(targetCount > 0 && targetCount <= PageStack<MarkCandidate>::MaxSplitTargets && targetCount <= PageStack<IRecyclerVisitedObject*>::MaxSplitTargets);
-    __analysis_assume(targetCount <= PageStack<MarkCandidate>::MaxSplitTargets);
-    __analysis_assume(targetCount <= PageStack<IRecyclerVisitedObject*>::MaxSplitTargets);
 
     PageStack<MarkCandidate> * targetMarkStacks[PageStack<MarkCandidate>::MaxSplitTargets];
 #ifdef RECYCLER_VISITED_HOST

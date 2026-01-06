@@ -278,7 +278,6 @@ FunctionJITTimeInfo::GetInlineeForTargetInlineeRuntimeData(const Js::ProfileId p
     {
         inlineeData = inlineeData->GetNext();
     }
-    __analysis_assume(inlineeData != nullptr);
     return inlineeData->GetRuntimeInfo();
 }
 
@@ -308,7 +307,6 @@ FunctionJITTimeInfo::GetInlineeForCallbackInlineeRuntimeData(const Js::ProfileId
     {
         inlineeData = inlineeData->GetNext();
     }
-    __analysis_assume(inlineeData != nullptr);
     return inlineeData->GetRuntimeInfo();
 }
 

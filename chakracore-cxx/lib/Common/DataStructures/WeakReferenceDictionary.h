@@ -538,13 +538,10 @@ namespace JsUtil
         void Resize()
         {
             AutoDoResize autoDoResize(*this);
-            __analysis_assert(count > 1);
 
             int newSize = SizePolicy::GetNextSize(count);
             int modIndex = UNKNOWN_MOD_INDEX;
             uint newBucketCount = SizePolicy::GetBucketSize(newSize, &modIndex);
-
-            __analysis_assume(newSize > count);
             int* newBuckets = nullptr;
             EntryType* newEntries = nullptr;
             WeakType* newWeakRefs = nullptr;

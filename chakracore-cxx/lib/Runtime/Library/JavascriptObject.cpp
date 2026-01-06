@@ -1915,7 +1915,6 @@ Var JavascriptObject::DefinePropertiesHelperForGenericObjects(RecyclableObject *
         {
             //reallocate - consider linked list of DescriptorMap if the descSize is too high
             descSize = AllocSizeMath::Mul(descCount, 2);
-            __analysis_assume(descSize == descCount * 2);
             DescriptorMap *temp = RecyclerNewArray(scriptContext->GetRecycler(), DescriptorMap, descSize);
 
             for (size_t i = 0; i < descCount; i++)

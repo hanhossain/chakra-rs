@@ -38,7 +38,6 @@ extern __declspec(thread) int IsInAssert;
                 RAISE_ASSERTION(comment);        \
             } \
             IsInAssert = FALSE; \
-            __analysis_assume(false); \
         } \
     } while (false)
 
@@ -55,8 +54,8 @@ extern __declspec(thread) int IsInAssert;
 #define DebugOnly(x)
 #endif // DBG
 
-#define AnalysisAssert(x)               Assert(x); __analysis_assume(x)
-#define AnalysisAssertMsg(x, comment)   AssertMsg(x, comment); __analysis_assume(x)
+#define AnalysisAssert(x)               Assert(x);
+#define AnalysisAssertMsg(x, comment)   AssertMsg(x, comment);
 
 #ifdef DBG
 #define AssertOrFailFast(x)                 Assert(x)

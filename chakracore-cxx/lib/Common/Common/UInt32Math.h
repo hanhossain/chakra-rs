@@ -118,7 +118,6 @@ public:
     static uint32 Add(uint32 lhs, uint32 rhs)
     {
         uint32 result = Add( lhs, rhs, ::Math::DefaultOverflowPolicy );
-        _Analysis_assume_(result == lhs + rhs);
         return result;
     }
 
