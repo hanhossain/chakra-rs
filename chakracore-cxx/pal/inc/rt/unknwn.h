@@ -19,17 +19,17 @@ typedef /* [unique] */ IUnknown *LPUNKNOWN;
 
 struct IUnknown
 {
-    virtual int32_t STDMETHODCALLTYPE QueryInterface( 
+    virtual int32_t QueryInterface( 
         REFIID riid,
         void **ppvObject) = 0;
         
-    virtual uint32_t STDMETHODCALLTYPE AddRef( void) = 0;
+    virtual uint32_t AddRef( void) = 0;
         
-    virtual uint32_t STDMETHODCALLTYPE Release( void) = 0;
+    virtual uint32_t Release( void) = 0;
 
     template<class Q>
     int32_t
-    STDMETHODCALLTYPE
+   
     QueryInterface(Q** pp)
     {
         return QueryInterface(__uuidof(Q), (void **)pp);
@@ -43,12 +43,12 @@ struct IUnknown
 
 struct IClassFactory : public IUnknown
 {
-    virtual int32_t STDMETHODCALLTYPE CreateInstance( 
+    virtual int32_t CreateInstance( 
         IUnknown *pUnkOuter,
         REFIID riid,
         void **ppvObject) = 0;
     
-    virtual int32_t STDMETHODCALLTYPE LockServer( 
+    virtual int32_t LockServer( 
         BOOL fLock) = 0;
 };
 

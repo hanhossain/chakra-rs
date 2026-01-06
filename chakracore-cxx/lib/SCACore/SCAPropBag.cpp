@@ -38,13 +38,13 @@ namespace Js
         *ppInstance = HeapNew(SCAPropBag, scriptContext);
     }
 
-    STDMETHODIMP_(uint32_t) SCAPropBag::AddRef()
+    uint32_t SCAPropBag::AddRef()
     {
         Assert(m_refCount > 0);
         return InterlockedIncrement(&m_refCount);
     }
 
-    STDMETHODIMP_(uint32_t) SCAPropBag::Release()
+    uint32_t SCAPropBag::Release()
     {
         Assert(m_refCount > 0);
         uint32_t ref = InterlockedDecrement(&m_refCount);
@@ -55,7 +55,7 @@ namespace Js
         return ref;
     }
 
-    STDMETHODIMP SCAPropBag::QueryInterface(REFIID riid, void** ppv)
+    int32_t SCAPropBag::QueryInterface(REFIID riid, void** ppv)
     {
         if (ppv == nullptr)
         {
