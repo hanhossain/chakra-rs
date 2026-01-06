@@ -187,11 +187,11 @@
 #endif // ]
 
 // safeguard for MIDL and RC builds
-#if _USE_DECLSPECS_FOR_SAL && ( defined( MIDL_PASS ) || defined(__midl) || defined(RC_INVOKED) || !defined(_PREFAST_) ) /*IFSTRIP=IGN*/ // [
+#if _USE_DECLSPECS_FOR_SAL && ( defined( MIDL_PASS ) || defined(__midl) || !defined(_PREFAST_) ) /*IFSTRIP=IGN*/ // [
 #undef _USE_DECLSPECS_FOR_SAL
 #define _USE_DECLSPECS_FOR_SAL 0
 #endif // ]
-#if _USE_ATTRIBUTES_FOR_SAL && ( !defined(_MSC_EXTENSIONS) || defined( MIDL_PASS ) || defined(__midl) || defined(RC_INVOKED) ) /*IFSTRIP=IGN*/ // [
+#if _USE_ATTRIBUTES_FOR_SAL && ( !defined(_MSC_EXTENSIONS) || defined( MIDL_PASS ) || defined(__midl) ) /*IFSTRIP=IGN*/ // [
 #undef _USE_ATTRIBUTES_FOR_SAL
 #define _USE_ATTRIBUTES_FOR_SAL 0
 #endif // ]
