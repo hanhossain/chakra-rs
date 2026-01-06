@@ -27,9 +27,9 @@ namespace Js
         ~SCAPropBag();
         static void CreateInstance(ScriptContext* scriptContext, SCAPropBag** ppInstance);
 
-        STDMETHODIMP_(uint32_t) AddRef();
-        STDMETHODIMP_(uint32_t) Release();
-        STDMETHODIMP QueryInterface(REFIID riid, void** ppv);
+        uint32_t AddRef();
+        uint32_t Release();
+        int32_t QueryInterface(REFIID riid, void** ppv);
 
         int32_t Add(const char16_t* name, Var value);
         int32_t Get(const char16_t* name, Var* pValue);

@@ -480,12 +480,12 @@ Js::MutationBreakpointDelegate * Js::MutationBreakpointDelegate::New(Js::Mutatio
     IMutationBreakpoint interface definition
 */
 
-STDMETHODIMP_(uint32_t) Js::MutationBreakpointDelegate::AddRef()
+uint32_t Js::MutationBreakpointDelegate::AddRef()
 {
     return (uint32_t)InterlockedIncrement(&m_refCount);
 }
 
-STDMETHODIMP_(uint32_t) Js::MutationBreakpointDelegate::Release()
+uint32_t Js::MutationBreakpointDelegate::Release()
 {
     uint32_t refCount = (uint32_t)InterlockedDecrement(&m_refCount);
 
@@ -497,7 +497,7 @@ STDMETHODIMP_(uint32_t) Js::MutationBreakpointDelegate::Release()
     return refCount;
 }
 
-STDMETHODIMP Js::MutationBreakpointDelegate::QueryInterface(REFIID iid, void ** ppv)
+int32_t Js::MutationBreakpointDelegate::QueryInterface(REFIID iid, void ** ppv)
 {
     if (!ppv)
     {
@@ -518,13 +518,13 @@ STDMETHODIMP Js::MutationBreakpointDelegate::QueryInterface(REFIID iid, void ** 
     return S_OK;
 }
 
-STDMETHODIMP Js::MutationBreakpointDelegate::Delete(void)
+int32_t Js::MutationBreakpointDelegate::Delete(void)
 {
     this->m_breakpoint->Invalidate();
     return S_OK;
 }
 
-STDMETHODIMP Js::MutationBreakpointDelegate::DidCauseBreak(
+int32_t Js::MutationBreakpointDelegate::DidCauseBreak(
     /* [out] */ __RPC__out BOOL *didCauseBreak)
 {
     if (!didCauseBreak)

@@ -180,7 +180,7 @@ inline int32_t FatalExceptionFilter(
 
 
 template<class Fn>
-static STDMETHODIMP DebugApiWrapper(Fn fn)
+static int32_t DebugApiWrapper(Fn fn)
 {
     // If an assertion or AV is hit, it triggers a SEH exception. SEH exceptions escaped here will be eaten by PDM. To prevent assertions
     // from getting unnoticed, we install a SEH exception filter and crash the process.

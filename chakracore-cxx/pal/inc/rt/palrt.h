@@ -192,29 +192,8 @@ typedef enum tagEFaultRepRetVal
 
 #define interface struct
 
-#define STDMETHODCALLTYPE
-
-#define STDMETHODIMP         int32_t STDMETHODCALLTYPE
-#define STDMETHODIMP_(type)  type STDMETHODCALLTYPE
-
-#define STDMETHODIMPV        int32_t
-#define STDMETHODIMPV_(type) type
-
-#define STDMETHOD(method)       virtual int32_t STDMETHODCALLTYPE method
-#define STDMETHOD_(type,method) virtual type STDMETHODCALLTYPE method
-
-#define STDMETHODV(method)       virtual int32_t method
-#define STDMETHODV_(type,method) virtual type method
-
 #define STDAPI               EXTERN_C int32_t
 #define STDAPI_(type)        EXTERN_C type
-
-#define STDAPIV              EXTERN_C int32_t
-#define STDAPIV_(type)       EXTERN_C type
-
-#define PURE                    = 0
-#define THIS_
-#define THIS                void
 
 #ifndef _DECLSPEC_DEFINED_
 #define _DECLSPEC_DEFINED_

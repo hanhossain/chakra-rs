@@ -35,19 +35,19 @@ EXTERN_C const IID IID_IErrorInfo;
     IErrorInfo : public IUnknown
     {
     public:
-        virtual int32_t STDMETHODCALLTYPE GetGUID( 
+        virtual int32_t GetGUID( 
             /* [out] */ GUID *pGUID) = 0;
         
-        virtual int32_t STDMETHODCALLTYPE GetSource( 
+        virtual int32_t GetSource( 
             /* [out] */ BSTR *pBstrSource) = 0;
         
-        virtual int32_t STDMETHODCALLTYPE GetDescription( 
+        virtual int32_t GetDescription( 
             /* [out] */ BSTR *pBstrDescription) = 0;
         
-        virtual int32_t STDMETHODCALLTYPE GetHelpFile( 
+        virtual int32_t GetHelpFile( 
             /* [out] */ BSTR *pBstrHelpFile) = 0;
         
-        virtual int32_t STDMETHODCALLTYPE GetHelpContext( 
+        virtual int32_t GetHelpContext( 
             /* [out] */ uint32_t *pdwHelpContext) = 0;
         
     };
@@ -62,19 +62,19 @@ typedef /* [unique] */ ICreateErrorInfo *LPCREATEERRORINFO;
     ICreateErrorInfo : public IUnknown
     {
     public:
-        virtual int32_t STDMETHODCALLTYPE SetGUID( 
+        virtual int32_t SetGUID( 
             /* [in] */ REFGUID rguid) = 0;
         
-        virtual int32_t STDMETHODCALLTYPE SetSource( 
+        virtual int32_t SetSource( 
             /* [in] */ LPOLESTR szSource) = 0;
         
-        virtual int32_t STDMETHODCALLTYPE SetDescription( 
+        virtual int32_t SetDescription( 
             /* [in] */ LPOLESTR szDescription) = 0;
         
-        virtual int32_t STDMETHODCALLTYPE SetHelpFile( 
+        virtual int32_t SetHelpFile( 
             /* [in] */ LPOLESTR szHelpFile) = 0;
         
-        virtual int32_t STDMETHODCALLTYPE SetHelpContext( 
+        virtual int32_t SetHelpContext( 
             /* [in] */ uint32_t dwHelpContext) = 0;
         
     };
@@ -100,7 +100,7 @@ EXTERN_C const IID IID_ISupportErrorInfo;
     ISupportErrorInfo : public IUnknown
     {
     public:
-        virtual int32_t STDMETHODCALLTYPE InterfaceSupportsErrorInfo( 
+        virtual int32_t InterfaceSupportsErrorInfo( 
             /* [in] */ REFIID riid) = 0;
         
     };

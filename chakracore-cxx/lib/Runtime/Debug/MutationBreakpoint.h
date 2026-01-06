@@ -26,12 +26,12 @@ namespace Js
 
         /* IMutationBreakpoint methods */
 
-        STDMETHODIMP_(uint32_t) AddRef();
-        STDMETHODIMP_(uint32_t) Release();
-        STDMETHODIMP QueryInterface(REFIID iid, void ** ppv);
+        uint32_t AddRef();
+        uint32_t Release();
+        int32_t QueryInterface(REFIID iid, void ** ppv);
 
-        STDMETHODIMP Delete(void);
-        STDMETHODIMP DidCauseBreak(
+        int32_t Delete(void);
+        int32_t DidCauseBreak(
             /* [out] */ __RPC__out BOOL *didCauseBreak);
     };
 
