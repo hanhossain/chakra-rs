@@ -174,7 +174,7 @@ namespace Js
         // as part of the Invoke operation performed inside the loop below.
         RecyclableObject* constructorObject = VarTo<RecyclableObject>(constructor);
 
-        uint32 index = 0;
+        uint32_t index = 0;
         JavascriptArray* values = nullptr;
 
         // We can't use a simple counter for the remaining element count since each Promise.all Resolve Element Function needs to know how many
@@ -321,7 +321,7 @@ namespace Js
             remainingElementsWrapper->remainingElements = 1;
 
             // 6. Let index be 0.
-            uint32 index = 0;
+            uint32_t index = 0;
 
             // 7. Repeat,
             JavascriptOperators::DoIteratorStepAndValue(iteratorRecord, scriptContext, [&](Var nextValue) {
@@ -434,7 +434,7 @@ namespace Js
         anyRejectElementFunction->SetAlreadyCalled(true);
 
         // 5. Let index be F.[[Index]].
-        uint32 index = anyRejectElementFunction->GetIndex();
+        uint32_t index = anyRejectElementFunction->GetIndex();
 
         // 6. Let errors be F.[[Errors]].
         JavascriptArray* errors = anyRejectElementFunction->GetValues();
@@ -503,7 +503,7 @@ namespace Js
         // as part of the Invoke operation performed inside the loop below.
         RecyclableObject* constructorObject = VarTo<RecyclableObject>(constructor);
 
-        uint32 index = 0;
+        uint32_t index = 0;
         JavascriptArray* values = nullptr;
 
         // We can't use a simple counter for the remaining element count since each Promise.all Resolve Element Function needs to know how many
@@ -1629,7 +1629,7 @@ namespace Js
 
         allResolveElementFunction->SetAlreadyCalled(true);
 
-        uint32 index = allResolveElementFunction->GetIndex();
+        uint32_t index = allResolveElementFunction->GetIndex();
         JavascriptArray* values = allResolveElementFunction->GetValues();
         JavascriptPromiseCapability* promiseCapability = allResolveElementFunction->GetCapabilities();
         JavascriptExceptionObject* exception = nullptr;
@@ -1685,7 +1685,7 @@ namespace Js
         allSettledResolveElementFunction->SetAlreadyCalled(true);
 
         bool isRejecting = allSettledResolveElementFunction->IsRejectFunction();
-        uint32 index = allSettledResolveElementFunction->GetIndex();
+        uint32_t index = allSettledResolveElementFunction->GetIndex();
         JavascriptArray* values = allSettledResolveElementFunction->GetValues();
         JavascriptPromiseCapability* promiseCapability = allSettledResolveElementFunction->GetCapabilities();
         JavascriptExceptionObject* exception = nullptr;
@@ -1778,7 +1778,7 @@ namespace Js
             spi->RejectReactions = alloc.SlabAllocateArray<TTD::NSSnapValues::SnapPromiseReactionInfo>(spi->RejectReactionCount);
 
             JavascriptPromiseReactionList::Iterator it = this->reactions->GetIterator();
-            uint32 i = 0;
+            uint32_t i = 0;
             while (it.Next())
             {
                 it.Data().resolveReaction->ExtractSnapPromiseReactionInto(spi->ResolveReactions + i, depOnList, alloc);
@@ -1794,10 +1794,10 @@ namespace Js
         }
         else
         {
-            uint32 depOnCount = depOnList.Count();
+            uint32_t depOnCount = depOnList.Count();
             TTD_PTR_ID* depOnArray = alloc.SlabAllocateArray<TTD_PTR_ID>(depOnCount);
 
-            for(uint32 i = 0; i < depOnCount; ++i)
+            for(uint32_t i = 0; i < depOnCount; ++i)
             {
                 depOnArray[i] = depOnList.Item(i);
             }
@@ -1806,7 +1806,7 @@ namespace Js
         }
     }
 
-    JavascriptPromise* JavascriptPromise::InitializePromise_TTD(ScriptContext* scriptContext, uint32 status, bool isHandled, Var result, SList<Js::JavascriptPromiseReaction*, HeapAllocator>& resolveReactions,SList<Js::JavascriptPromiseReaction*, HeapAllocator>& rejectReactions)
+    JavascriptPromise* JavascriptPromise::InitializePromise_TTD(ScriptContext* scriptContext, uint32_t status, bool isHandled, Var result, SList<Js::JavascriptPromiseReaction*, HeapAllocator>& resolveReactions,SList<Js::JavascriptPromiseReaction*, HeapAllocator>& rejectReactions)
     {
         Recycler* recycler = scriptContext->GetRecycler();
         JavascriptLibrary* library = scriptContext->GetLibrary();
@@ -1989,7 +1989,7 @@ namespace Js
     {
         TTD::NSSnapObjects::SnapPromiseResolveOrRejectFunctionInfo* sprri = alloc.SlabAllocateStruct<TTD::NSSnapObjects::SnapPromiseResolveOrRejectFunctionInfo>();
 
-        uint32 depOnCount = 1;
+        uint32_t depOnCount = 1;
         TTD_PTR_ID* depOnArray = alloc.SlabAllocateArray<TTD_PTR_ID>(depOnCount);
 
         sprri->PromiseId = TTD_CONVERT_VAR_TO_PTR_ID(this->promise);
@@ -2208,10 +2208,10 @@ namespace Js
         }
         else
         {
-            uint32 depOnCount = depOnList.Count();
+            uint32_t depOnCount = depOnList.Count();
             TTD_PTR_ID* depOnArray = alloc.SlabAllocateArray<TTD_PTR_ID>(depOnCount);
 
-            for(uint32 i = 0; i < depOnCount; ++i)
+            for(uint32_t i = 0; i < depOnCount; ++i)
             {
                 depOnArray[i] = depOnList.Item(i);
             }
@@ -2290,7 +2290,7 @@ namespace Js
         : JavascriptPromiseAllResolveElementFunction(type), alreadyCalledWrapper(nullptr), isRejecting(false)
     { }
 
-    JavascriptPromiseAllSettledResolveOrRejectElementFunction::JavascriptPromiseAllSettledResolveOrRejectElementFunction(DynamicType* type, FunctionInfo* functionInfo, uint32 index, JavascriptArray* values, JavascriptPromiseCapability* capabilities, JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* remainingElementsWrapper, JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* alreadyCalledWrapper, bool isRejecting)
+    JavascriptPromiseAllSettledResolveOrRejectElementFunction::JavascriptPromiseAllSettledResolveOrRejectElementFunction(DynamicType* type, FunctionInfo* functionInfo, uint32_t index, JavascriptArray* values, JavascriptPromiseCapability* capabilities, JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* remainingElementsWrapper, JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* alreadyCalledWrapper, bool isRejecting)
         : JavascriptPromiseAllResolveElementFunction(type, functionInfo, index, values, capabilities, remainingElementsWrapper), alreadyCalledWrapper(alreadyCalledWrapper), isRejecting(isRejecting)
     { }
 
@@ -2354,10 +2354,10 @@ namespace Js
 
         sprai->AlreadyCalled = this->alreadyCalled;
 
-        uint32 depOnCount = depOnList.Count();
+        uint32_t depOnCount = depOnList.Count();
         TTD_PTR_ID* depOnArray = alloc.SlabAllocateArray<TTD_PTR_ID>(depOnCount);
 
-        for (uint32 i = 0; i < depOnCount; ++i)
+        for (uint32_t i = 0; i < depOnCount; ++i)
         {
             depOnArray[i] = depOnList.Item(i);
         }
@@ -2370,7 +2370,7 @@ namespace Js
         : JavascriptPromiseAllResolveElementFunction(type), alreadyCalledWrapper(nullptr)
     { }
 
-    JavascriptPromiseAnyRejectElementFunction::JavascriptPromiseAnyRejectElementFunction(DynamicType* type, FunctionInfo* functionInfo, uint32 index, JavascriptArray* values, JavascriptPromiseCapability* capabilities, JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* remainingElementsWrapper, JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* alreadyCalledWrapper)
+    JavascriptPromiseAnyRejectElementFunction::JavascriptPromiseAnyRejectElementFunction(DynamicType* type, FunctionInfo* functionInfo, uint32_t index, JavascriptArray* values, JavascriptPromiseCapability* capabilities, JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* remainingElementsWrapper, JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* alreadyCalledWrapper)
         : JavascriptPromiseAllResolveElementFunction(type, functionInfo, index, values, capabilities, remainingElementsWrapper), alreadyCalledWrapper(alreadyCalledWrapper)
     { }
 
@@ -2404,10 +2404,10 @@ namespace Js
 
         sprai->AlreadyCalled = this->alreadyCalled;
 
-        uint32 depOnCount = depOnList.Count();
+        uint32_t depOnCount = depOnList.Count();
         TTD_PTR_ID* depOnArray = alloc.SlabAllocateArray<TTD_PTR_ID>(depOnCount);
 
-        for (uint32 i = 0; i < depOnCount; ++i)
+        for (uint32_t i = 0; i < depOnCount; ++i)
         {
             depOnArray[i] = depOnList.Item(i);
         }
@@ -2432,7 +2432,7 @@ namespace Js
         : RuntimeFunction(type, &Js::JavascriptPromise::EntryInfo::AllResolveElementFunction), index(0), values(nullptr), capabilities(nullptr), remainingElementsWrapper(nullptr), alreadyCalled(false)
     { }
 
-    JavascriptPromiseAllResolveElementFunction::JavascriptPromiseAllResolveElementFunction(DynamicType* type, FunctionInfo* functionInfo, uint32 index, JavascriptArray* values, JavascriptPromiseCapability* capabilities, JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* remainingElementsWrapper)
+    JavascriptPromiseAllResolveElementFunction::JavascriptPromiseAllResolveElementFunction(DynamicType* type, FunctionInfo* functionInfo, uint32_t index, JavascriptArray* values, JavascriptPromiseCapability* capabilities, JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* remainingElementsWrapper)
         : RuntimeFunction(type, functionInfo), index(index), values(values), capabilities(capabilities), remainingElementsWrapper(remainingElementsWrapper), alreadyCalled(false)
     { }
 
@@ -2452,12 +2452,12 @@ namespace Js
         return this->capabilities;
     }
 
-    uint32 JavascriptPromiseAllResolveElementFunction::GetIndex()
+    uint32_t JavascriptPromiseAllResolveElementFunction::GetIndex()
     {
         return this->index;
     }
 
-    uint32 JavascriptPromiseAllResolveElementFunction::GetRemainingElements()
+    uint32_t JavascriptPromiseAllResolveElementFunction::GetRemainingElements()
     {
         return this->remainingElementsWrapper->remainingElements;
     }
@@ -2467,7 +2467,7 @@ namespace Js
         return this->values;
     }
 
-    uint32 JavascriptPromiseAllResolveElementFunction::DecrementRemainingElements()
+    uint32_t JavascriptPromiseAllResolveElementFunction::DecrementRemainingElements()
     {
         return --(this->remainingElementsWrapper->remainingElements);
     }
@@ -2512,10 +2512,10 @@ namespace Js
 
         sprai->AlreadyCalled = this->alreadyCalled;
 
-        uint32 depOnCount = depOnList.Count();
+        uint32_t depOnCount = depOnList.Count();
         TTD_PTR_ID* depOnArray = alloc.SlabAllocateArray<TTD_PTR_ID>(depOnCount);
 
-        for(uint32 i = 0; i < depOnCount; ++i)
+        for(uint32_t i = 0; i < depOnCount; ++i)
         {
             depOnArray[i] = depOnList.Item(i);
         }

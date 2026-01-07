@@ -1491,7 +1491,7 @@ namespace Js
 
         Assert(!(callInfo.Flags & CallFlags_New));
 
-        uint32 uint32value = JavascriptConversion::ToUInt32(value, scriptContext);
+        uint32_t uint32value = JavascriptConversion::ToUInt32(value, scriptContext);
         uint32_t index;
 
         if (!_BitScanReverse(&index, uint32value))

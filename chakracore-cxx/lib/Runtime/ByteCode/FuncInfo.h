@@ -99,7 +99,7 @@ public:
     uint        innerScopeCount;
     uint        currentInnerScopeIndex;
 #if DBG
-    uint32 outArgsDepth; // number of calls nested in an expression
+    uint32_t outArgsDepth; // number of calls nested in an expression
 #endif
     const char16_t *name; // name of the function
     Js::RegSlot nullConstantRegister; // location, if any, of enregistered null constant
@@ -257,7 +257,7 @@ public:
     //    1) new Function code's global code
     //    2) global code generated from the reparsing deferred parse function
 
-    bool IsFakeGlobalFunction(uint32 flags) const 
+    bool IsFakeGlobalFunction(uint32_t flags) const 
     {
         return IsGlobalFunction() && !(flags & fscrGlobalCode);
     }

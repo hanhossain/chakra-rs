@@ -36,14 +36,14 @@ Big floating point number.
 struct BIGNUM
 {
     // WARNING: some asm code below assumes the ordering of these fields.
-    uint32 m_lu0;
-    uint32 m_lu1;
-    uint32 m_lu2;
+    uint32_t m_lu0;
+    uint32_t m_lu1;
+    uint32_t m_lu2;
     int m_wExp;
 
     // This is a bound on the absolute value of the error. It is based at
     // one bit before the least significant bit of m_lu0.
-    uint32 m_luError;
+    uint32_t m_luError;
 
     // Test to see if the num is zero. This works even if we're not normalized.
     BOOL FZero(void)
@@ -54,7 +54,7 @@ struct BIGNUM
     void Normalize(void);
 
     // Round based on the given extra data using IEEE round to nearest rule.
-    void Round(uint32 luExtra)
+    void Round(uint32_t luExtra)
     {
         if (0 == (luExtra & 0x80000000) ||
             (0 == (luExtra & 0x7FFFFFFF) && 0 == (m_lu0 & 1)))
@@ -79,7 +79,7 @@ struct BIGNUM
     }
 
     // Multiply by ten and add a base 10 digit.
-    void MulTenAdd(byte bAdd, uint32 *pluExtra);
+    void MulTenAdd(byte bAdd, uint32_t *pluExtra);
 
     // Set the value from decimal digits and decimal exponent
     template <typename EncodedChar>
@@ -92,12 +92,12 @@ struct BIGNUM
     double GetDbl(void);
 
     // Lop off the integer part and return it.
-    uint32 LuMod1(void)
+    uint32_t LuMod1(void)
     {
         if (m_wExp <= 0)
             return 0;
         Assert(m_wExp <= 32);
-        uint32 luT = m_lu2 >> (32 - m_wExp);
+        uint32_t luT = m_lu2 >> (32 - m_wExp);
         m_lu2 &= 0x7FFFFFFF >> (m_wExp - 1);
         Normalize();
         return luT;
@@ -107,7 +107,7 @@ struct BIGNUM
     void MakeUpperBound(void)
     {
         Assert(m_luError < 0xFFFFFFFF);
-        uint32 luT = (m_luError + 1) >> 1;
+        uint32_t luT = (m_luError + 1) >> 1;
 
         if (luT &&
             Js::NumberUtilities::AddLu(&m_lu0, luT) &&
@@ -127,10 +127,10 @@ struct BIGNUM
     void MakeLowerBound(void)
     {
         Assert(m_luError < 0xFFFFFFFF);
-        uint32 luT = (m_luError + 1) >> 1;
+        uint32_t luT = (m_luError + 1) >> 1;
 
         if (luT &&
-            !Js::NumberUtilities::AddLu(&m_lu0, (uint32)-(int32)luT) &&
+            !Js::NumberUtilities::AddLu(&m_lu0, (uint32_t)-(int32)luT) &&
             !Js::NumberUtilities::AddLu(&m_lu1, 0xFFFFFFFF))
         {
             Js::NumberUtilities::AddLu(&m_lu2, 0xFFFFFFFF);
@@ -283,12 +283,12 @@ void BIGNUM::Normalize(void)
 }
 
 
-void BIGNUM::MulTenAdd(byte bAdd, uint32 *pluExtra)
+void BIGNUM::MulTenAdd(byte bAdd, uint32_t *pluExtra)
 {
     Assert(bAdd <= 9);
     Assert(m_lu2 & 0x80000000);
 
-    uint32 rglu[5];
+    uint32_t rglu[5];
 
     // First "multiply" by eight
     m_wExp += 3;
@@ -309,12 +309,12 @@ void BIGNUM::MulTenAdd(byte bAdd, uint32 *pluExtra)
                 Assert(ilu < 4);
                 rglu[ilu + 1] = bAdd >> ibit;
                 if (ibit > 0)
-                    rglu[ilu] = (uint32)bAdd << (32 - ibit);
+                    rglu[ilu] = (uint32_t)bAdd << (32 - ibit);
             }
             else
             {
                 Assert(ilu < 5);
-                rglu[ilu] = (uint32)bAdd << (32 - ibit);
+                rglu[ilu] = (uint32_t)bAdd << (32 - ibit);
             }
         }
     }
@@ -351,12 +351,12 @@ void BIGNUM::SetFromRgchExp(const EncodedChar *prgch, int32 cch, int32 lwExp)
 
     const BIGNUM *prgnum;
     int wT;
-    uint32 luExtra;
+    uint32_t luExtra;
     const EncodedChar *pchLim = prgch + cch;
 
     // Record the first digit
     Assert(FNzDigit(prgch[0]));
-    m_lu2 = (uint32)(prgch[0] - '0') << 28;
+    m_lu2 = (uint32_t)(prgch[0] - '0') << 28;
     m_lu1 = 0;
     m_lu0 = 0;
     m_wExp = 4;
@@ -410,7 +410,7 @@ void BIGNUM::SetFromRgchExp(const EncodedChar *prgch, int32 cch, int32 lwExp)
 
 void BIGNUM::Mul(const BIGNUM *pnumOp)
 {
-    uint32 rglu[6];
+    uint32_t rglu[6];
 
     Assert(m_lu2 & 0x80000000);
     Assert(pnumOp->m_lu2 & 0x80000000);
@@ -491,7 +491,7 @@ LDigit3:
         adc uint32_t PTR [ebx+20],edx
     }
 #else //!I386_ASM
-    uint32 luLo, luHi, luT;
+    uint32_t luLo, luHi, luT;
     int wCarry;
 
     if (0 != (luT = m_lu0))
@@ -626,7 +626,7 @@ LNormalized:
 double BIGNUM::GetDbl(void)
 {
     double dbl;
-    uint32 luEx;
+    uint32_t luEx;
     int wExp;
 
     Assert(m_lu2 & 0x80000000);
@@ -639,13 +639,13 @@ double BIGNUM::GetDbl(void)
         return dbl;
     }
 
-    // Round after filling in the bits. In the extra uint32, we set the low bit
+    // Round after filling in the bits. In the extra uint32_t, we set the low bit
     // if there are any extra non-zero bits. This is for breaking the tie when
     // deciding whether to round up or down.
     if (wExp > 0)
     {
         // Normalized.
-        Js::NumberUtilities::LuHiDbl(dbl) = ((uint32)wExp << 20) | ((m_lu2 & 0x7FFFFFFF) >> 11);
+        Js::NumberUtilities::LuHiDbl(dbl) = ((uint32_t)wExp << 20) | ((m_lu2 & 0x7FFFFFFF) >> 11);
         Js::NumberUtilities::LuLoDbl(dbl) = m_lu2 << 21 | m_lu1 >> 11;
         luEx = m_lu1 << 21 | (m_lu0 != 0);
     }
@@ -725,8 +725,8 @@ static double AdjustDbl(double dbl, const EncodedChar *prgch, int32 cch, int32 l
     int wAddHi, wT;
     int32 iT;
     int32 wExp2;
-    uint32 rglu[2];
-    uint32 luT;
+    uint32_t rglu[2];
+    uint32_t luT;
     BOOL f;
     int32 clu;
 
@@ -895,7 +895,7 @@ String to Double.
 template <typename EncodedChar>
 double Js::NumberUtilities::StrToDbl(const EncodedChar *psz, const EncodedChar **ppchLim, LikelyNumberType& likelyNumberType, bool isBigIntEnabled, bool isNumericSeparatorEnabled)
 {
-    uint32 lu;
+    uint32_t lu;
     BIGNUM num;
     BIGNUM numHi;
     BIGNUM numLo;
@@ -1355,7 +1355,7 @@ static BOOL FDblToRgbPrecise(double dbl, __out_ecount(kcbMaxRgb) byte *prgb, int
     Js::BigUInt biNum, biDen, biHi, biLo;
     Js::BigUInt *pbiLo;
     Js::BigUInt biT;
-    uint32 rglu[2];
+    uint32_t rglu[2];
 
     // Caller should take care of 0, negative and non-finite values.
     Assert(Js::NumberUtilities::IsFinite(dbl));
@@ -1651,11 +1651,11 @@ static BOOL FDblToRgbFast(double dbl, _Out_writes_to_(kcbMaxRgb, (*ppbLim - prgb
 {
     int ib;
     int iT;
-    uint32 luT;
-    uint32 luScale;
+    uint32_t luT;
+    uint32_t luScale;
     const BIGNUM *pnum;
     byte bHH = 0, bHL = 0, bLH = 0, bLL = 0;
-    uint32 luHH, luHL, luLH, luLL;
+    uint32_t luHH, luHL, luLH, luLL;
     BIGNUM numHH, numHL, numLH, numLL, numBase;
     int wExp2;
     int wExp10 = 0;
@@ -2623,7 +2623,7 @@ BOOL Js::NumberUtilities::FNonZeroFiniteDblToStr(double dbl, _In_range_(2, 36) i
             int wExp = wExp2 / cbitDigit;
             wExp2 = wExp * cbitDigit;
 
-            Js::NumberUtilities::LuHiDbl(valueDen) = (uint32)(0x03FF + wExp2) << 20;
+            Js::NumberUtilities::LuHiDbl(valueDen) = (uint32_t)(0x03FF + wExp2) << 20;
             Js::NumberUtilities::LuLoDbl(valueDen) = 0;
             cchSig = abs(wExp) + 1;
         }

@@ -45,7 +45,7 @@ namespace Js
         return m_clu;
     }
 
-    uint32 BigUInt::Lu(int32 ilu)
+    uint32_t BigUInt::Lu(int32 ilu)
     {
         AssertBi(this);
         Assert(ilu < m_clu);
@@ -56,7 +56,7 @@ namespace Js
     {
         AssertBiNoVal(this);
 
-        uint32 *prglu;
+        uint32_t *prglu;
 
         if (clu <= m_cluMax)
             return true;
@@ -64,12 +64,12 @@ namespace Js
         clu += clu;
         if (m_prglu == m_rgluInit)
         {
-            if ((INT_MAX / sizeof(uint32) < clu) || (NULL == (prglu = (uint32 *)malloc(clu * sizeof(uint32)))))
+            if ((INT_MAX / sizeof(uint32_t) < clu) || (NULL == (prglu = (uint32_t *)malloc(clu * sizeof(uint32_t)))))
                 return false;
             if (0 < m_clu)
-                js_memcpy_s(prglu, clu * sizeof(uint32), m_prglu, m_clu * sizeof(uint32));
+                js_memcpy_s(prglu, clu * sizeof(uint32_t), m_prglu, m_clu * sizeof(uint32_t));
         }
-        else if (NULL == (prglu = (uint32 *)realloc(m_prglu, clu * sizeof(uint32))))
+        else if (NULL == (prglu = (uint32_t *)realloc(m_prglu, clu * sizeof(uint32_t))))
             return false;
 
         m_prglu = prglu;
@@ -79,7 +79,7 @@ namespace Js
         return true;
     }
 
-    bool BigUInt::FInitFromRglu(uint32 *prglu, int32 clu)
+    bool BigUInt::FInitFromRglu(uint32_t *prglu, int32 clu)
     {
         AssertBi(this);
         Assert(clu >= 0);
@@ -89,7 +89,7 @@ namespace Js
             return false;
         m_clu = clu;
         if (clu > 0)
-            js_memcpy_s(m_prglu, m_clu * sizeof(uint32), prglu, clu * sizeof(uint32));
+            js_memcpy_s(m_prglu, m_clu * sizeof(uint32_t), prglu, clu * sizeof(uint32_t));
 
         AssertBi(this);
         return true;
@@ -112,8 +112,8 @@ namespace Js
         Assert(prgch != 0);
         Assert(pcchDig != 0);
 
-        uint32 luAdd;
-        uint32 luMul;
+        uint32_t luAdd;
+        uint32_t luMul;
         int32 clu = (cch + 8) / 9;
         const EncodedChar *pchLim = prgch + cch;
 
@@ -147,14 +147,14 @@ namespace Js
         return true;
     }
 
-    bool BigUInt::FMulAdd(uint32 luMul, uint32 luAdd)
+    bool BigUInt::FMulAdd(uint32_t luMul, uint32_t luAdd)
     {
         AssertBi(this);
         Assert(luMul != 0);
 
-        uint32 luT;
-        uint32 *plu = m_prglu;
-        uint32 *pluLim = plu + m_clu;
+        uint32_t luT;
+        uint32_t *plu = m_prglu;
+        uint32_t *pluLim = plu + m_clu;
 
         for (; plu < pluLim; plu++)
         {
@@ -179,9 +179,9 @@ LDone:
         AssertBi(this);
         Assert(c5 >= 0);
 
-        const uint32 k5to13 = 1220703125;
+        const uint32_t k5to13 = 1220703125;
         int32 clu = (c5 + 12) / 13;
-        uint32 luT;
+        uint32_t luT;
 
         if (0 == m_clu || 0 == c5)
             return true;
@@ -210,7 +210,7 @@ LDone:
 
         int32 ilu;
         int32 clu;
-        uint32 luExtra;
+        uint32_t luExtra;
 
         if (0 == cbit || 0 == m_clu)
             return true;
@@ -244,8 +244,8 @@ LDone:
             if (clu > 0)
             {
                 // Shift the uint32s.
-                memmove(m_prglu + clu, m_prglu, m_clu * sizeof(uint32));
-                memset(m_prglu, 0, clu * sizeof(uint32));
+                memmove(m_prglu + clu, m_prglu, m_clu * sizeof(uint32_t));
+                memset(m_prglu, 0, clu * sizeof(uint32_t));
                 m_clu += clu;
             }
 
@@ -271,7 +271,7 @@ LDone:
         }
         if (clu > 0)
         {
-            memmove(m_prglu, m_prglu + clu, (m_clu - clu) * sizeof(uint32));
+            memmove(m_prglu, m_prglu + clu, (m_clu - clu) * sizeof(uint32_t));
             m_clu -= clu;
         }
 
@@ -399,7 +399,7 @@ LDone:
 
         int32 ilu;
         int wCarry;
-        uint32 luT;
+        uint32_t luT;
 
         if (m_clu < pbi->m_clu)
             goto LNegative;
@@ -453,7 +453,7 @@ LNegative:
         int wCarry;
         int wQuo;
         int wT;
-        uint32 luT, luHi, luLo;
+        uint32_t luT, luHi, luLo;
 
         clu = pbi->m_clu;
         Assert(m_clu <= clu);
@@ -513,8 +513,8 @@ LNegative:
     double BigUInt::GetDbl(void)
     {
         double dbl;
-        uint32 luHi, luLo;
-        uint32 lu1, lu2, lu3;
+        uint32_t luHi, luLo;
+        uint32_t lu1, lu2, lu3;
         int32 ilu;
         int cbit;
 

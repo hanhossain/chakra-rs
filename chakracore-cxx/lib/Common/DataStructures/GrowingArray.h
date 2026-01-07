@@ -2,7 +2,7 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-// Contains a class which will provide a uint32 array which can grow dynamically
+// Contains a class which will provide a uint32_t array which can grow dynamically
 // It behaves almost same as regex::List<> except it has less members, is customized for being used in SmallSpanSequence of FunctionBody
 
 
@@ -21,9 +21,9 @@ namespace JsUtil
     public:
         typedef Field(ValueType, TAllocator) TValue;
         typedef typename AllocatorInfo<TAllocator, TValue>::AllocatorType AllocatorType;
-        static GrowingArray* Create(uint32 _length);
+        static GrowingArray* Create(uint32_t _length);
 
-        GrowingArray(AllocatorType* allocator, uint32 _length)
+        GrowingArray(AllocatorType* allocator, uint32_t _length)
             : buffer(nullptr),
             alloc(allocator),
             count(0),
@@ -40,7 +40,7 @@ namespace JsUtil
             }
         }
 
-        TValue ItemInBuffer(uint32 index) const
+        TValue ItemInBuffer(uint32_t index) const
         {
             if (index >= count)
             {
@@ -50,7 +50,7 @@ namespace JsUtil
             return buffer[index];
         }
 
-        void ItemInBuffer(uint32 index, TValue item)
+        void ItemInBuffer(uint32_t index, TValue item)
         {
             EnsureArray();
             Assert(index < count);
@@ -64,9 +64,9 @@ namespace JsUtil
             count++;
         }
 
-        uint32 Count() const { return count; }
-        void SetCount(uint32 _count) { count = _count; }
-        uint32 GetLength() const { return length; }
+        uint32_t Count() const { return count; }
+        void SetCount(uint32_t _count) { count = _count; }
+        uint32_t GetLength() const { return length; }
         TValue* GetBuffer() const { return buffer; }
 
         GrowingArray * Clone()
@@ -87,8 +87,8 @@ namespace JsUtil
 
     private:
         Field(TValue*, TAllocator) buffer;
-        Field(uint32) count;
-        Field(uint32) length;
+        Field(uint32_t) count;
+        Field(uint32_t) length;
         FieldNoBarrier(AllocatorType*) alloc;
 
         void EnsureArray()
@@ -103,7 +103,7 @@ namespace JsUtil
             }
             else if (count == length)
             {
-                uint32 newLength = UInt32Math::AddMul<1, 2>(length);
+                uint32_t newLength = UInt32Math::AddMul<1, 2>(length);
                 TValue * newbuffer = AllocateArray<AllocatorType, TValue, false>(
                     TRACK_ALLOC_INFO(alloc, TValue, AllocatorType, 0, newLength),
                     TypeAllocatorFunc<TAllocator, TValue>::GetAllocFunc(),
@@ -122,5 +122,5 @@ namespace JsUtil
             }
         }
     };
-    typedef GrowingArray<uint32, HeapAllocator> GrowingUint32HeapArray;
+    typedef GrowingArray<uint32_t, HeapAllocator> GrowingUint32HeapArray;
 }

@@ -167,7 +167,7 @@ namespace Js
             // OACR thinks that this can change between here and the check in the for loop below
             const unsigned int argCount = args.Info.Count;
 
-            uint32 newArgCount = UInt32Math::Add(boundFunction->count, args.GetLargeArgCountWithExtraArgs());
+            uint32_t newArgCount = UInt32Math::Add(boundFunction->count, args.GetLargeArgCountWithExtraArgs());
             if (newArgCount > CallInfo::kMaxCountArgs)
             {
                 JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgListTooLarge);
@@ -332,7 +332,7 @@ namespace Js
             extractor->MarkVisitVar(this->boundThis);
         }
 
-        for(uint32 i = 0; i < this->count; ++i)
+        for(uint32_t i = 0; i < this->count; ++i)
         {
             extractor->MarkVisitVar(this->boundArgs[i]);
         }
@@ -370,7 +370,7 @@ namespace Js
         TTD_PTR_ID* depArray = alloc.SlabReserveArraySpace<TTD_PTR_ID>(bfi->ArgCount + 2 /*this and bound function*/);
 
         depArray[0] = bfi->TargetFunction;
-        uint32 depCount = 1;
+        uint32_t depCount = 1;
 
         if(this->boundThis != nullptr && TTD::JsSupport::IsVarComplexKind(this->boundThis))
         {
@@ -380,7 +380,7 @@ namespace Js
 
         if(bfi->ArgCount > 0)
         {
-            for(uint32 i = 0; i < bfi->ArgCount; ++i)
+            for(uint32_t i = 0; i < bfi->ArgCount; ++i)
             {
                 bfi->ArgArray[i] = this->boundArgs[i];
 
@@ -398,7 +398,7 @@ namespace Js
     }
 
     BoundFunction* BoundFunction::InflateBoundFunction(
-        ScriptContext* ctx, RecyclableObject* function, Var bThis, uint32 ct, Field(Var)* args)
+        ScriptContext* ctx, RecyclableObject* function, Var bThis, uint32_t ct, Field(Var)* args)
     {
         BoundFunction* res = RecyclerNew(ctx->GetRecycler(), BoundFunction, ctx->GetLibrary()->GetBoundFunctionType());
 

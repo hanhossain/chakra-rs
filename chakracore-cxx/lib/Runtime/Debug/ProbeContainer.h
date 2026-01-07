@@ -44,9 +44,9 @@ namespace Js
         Var jsExceptionObject;
 
         // Used for synchronizing with ProbeManager
-        uint32 debugSessionNumber;
+        uint32_t debugSessionNumber;
 
-        uint32  tmpRegCount; // Mentions the temp register count for the current statement (this will be used to determine if SetNextStatement can be applied)
+        uint32_t  tmpRegCount; // Mentions the temp register count for the current statement (this will be used to determine if SetNextStatement can be applied)
 
         // Used when SetNextStatement is applied.
         int bytecodeOffset;
@@ -75,7 +75,7 @@ namespace Js
         void ClearMutationBreakpoints();
         void RemoveMutationBreakpointListIfNeeded();
 #endif
-        static bool FetchTmpRegCount(Js::FunctionBody * functionBody, Js::ByteCodeReader * reader, int atOffset, uint32 *pTmpRegCount, Js::OpCode *pOp);
+        static bool FetchTmpRegCount(Js::FunctionBody * functionBody, Js::ByteCodeReader * reader, int atOffset, uint32_t *pTmpRegCount, Js::OpCode *pOp);
     public:
 
         bool isForcedToEnterScriptStart;
@@ -172,8 +172,8 @@ namespace Js
         bool IsNonUserCodeSupportEnabled();
         bool IsLibraryStackFrameSupportEnabled();
 
-        void SetCurrentTmpRegCount(uint32 set) { tmpRegCount = set; }
-        uint32 GetCurrentTmpRegCount() const { return tmpRegCount; }
+        void SetCurrentTmpRegCount(uint32_t set) { tmpRegCount = set; }
+        uint32_t GetCurrentTmpRegCount() const { return tmpRegCount; }
         void PinPropertyRecord(const Js::PropertyRecord *propertyRecord);
 
         bool IsPrimaryBrokenToDebuggerContext() const { return isPrimaryBrokenToDebuggerContext; }

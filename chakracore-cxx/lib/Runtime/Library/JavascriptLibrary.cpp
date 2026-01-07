@@ -2435,7 +2435,7 @@ namespace Js
     INIT_TYPEDARRAY_CONSTRUCTOR(Int16Array, Int16ArrayPrototype, int16);
     INIT_TYPEDARRAY_CONSTRUCTOR(Uint16Array, Uint16ArrayPrototype, uint16);
     INIT_TYPEDARRAY_CONSTRUCTOR(Int32Array, Int32ArrayPrototype, int32);
-    INIT_TYPEDARRAY_CONSTRUCTOR(Uint32Array, Uint32ArrayPrototype, uint32);
+    INIT_TYPEDARRAY_CONSTRUCTOR(Uint32Array, Uint32ArrayPrototype, uint32_t);
     INIT_TYPEDARRAY_CONSTRUCTOR(Float32Array, Float32ArrayPrototype, float);
     INIT_TYPEDARRAY_CONSTRUCTOR(Float64Array, Float64ArrayPrototype, double);
 
@@ -2456,7 +2456,7 @@ namespace Js
     INIT_TYPEDARRAY_PROTOTYPE(Int16Array, Int16ArrayPrototype, int16);
     INIT_TYPEDARRAY_PROTOTYPE(Uint16Array, Uint16ArrayPrototype, uint16);
     INIT_TYPEDARRAY_PROTOTYPE(Int32Array, Int32ArrayPrototype, int32);
-    INIT_TYPEDARRAY_PROTOTYPE(Uint32Array, Uint32ArrayPrototype, uint32);
+    INIT_TYPEDARRAY_PROTOTYPE(Uint32Array, Uint32ArrayPrototype, uint32_t);
     INIT_TYPEDARRAY_PROTOTYPE(Float32Array, Float32ArrayPrototype, float);
     INIT_TYPEDARRAY_PROTOTYPE(Float64Array, Float64ArrayPrototype, double);
 
@@ -5449,7 +5449,7 @@ namespace Js
         return this->CreateDate(value);
     }
 
-    Js::RecyclableObject* JavascriptLibrary::CreateRegex_TTD(const char16_t* patternSource, uint32 patternLength, UnifiedRegex::RegexFlags flags, CharCount lastIndex, Js::Var lastVar)
+    Js::RecyclableObject* JavascriptLibrary::CreateRegex_TTD(const char16_t* patternSource, uint32_t patternLength, UnifiedRegex::RegexFlags flags, CharCount lastIndex, Js::Var lastVar)
     {
         Js::JavascriptRegExp* re = Js::JavascriptRegExp::CreateRegEx(patternSource, patternLength, flags, this->scriptContext);
         re->SetLastIndexInfo_TTD(lastIndex, lastVar);
@@ -5541,7 +5541,7 @@ namespace Js
     }
 
     Js::RecyclableObject* JavascriptLibrary::CreateBoundFunction_TTD(
-        RecyclableObject* function, Var bThis, uint32 ct, Field(Var)* args)
+        RecyclableObject* function, Var bThis, uint32_t ct, Field(Var)* args)
     {
         return BoundFunction::InflateBoundFunction(this->scriptContext, function, bThis, ct, args);
     }
@@ -5569,12 +5569,12 @@ namespace Js
         return revoker;
     }
 
-    Js::RecyclableObject* JavascriptLibrary::CreateHeapArguments_TTD(uint32 numOfArguments, uint32 formalCount, ActivationObject* frameObject, byte* deletedArray)
+    Js::RecyclableObject* JavascriptLibrary::CreateHeapArguments_TTD(uint32_t numOfArguments, uint32_t formalCount, ActivationObject* frameObject, byte* deletedArray)
     {
         Js::HeapArgumentsObject* argsObj = this->CreateHeapArguments(frameObject, formalCount);
 
         argsObj->SetNumberOfArguments(numOfArguments);
-        for(uint32 i = 0; i < formalCount; ++i)
+        for(uint32_t i = 0; i < formalCount; ++i)
         {
             if(deletedArray[i])
             {
@@ -5585,12 +5585,12 @@ namespace Js
         return argsObj;
     }
 
-    Js::RecyclableObject* JavascriptLibrary::CreateES5HeapArguments_TTD(uint32 numOfArguments, uint32 formalCount, ActivationObject* frameObject, byte* deletedArray)
+    Js::RecyclableObject* JavascriptLibrary::CreateES5HeapArguments_TTD(uint32_t numOfArguments, uint32_t formalCount, ActivationObject* frameObject, byte* deletedArray)
     {
         Js::HeapArgumentsObject* argsObj = this->CreateHeapArguments(frameObject, formalCount);
 
         argsObj->SetNumberOfArguments(numOfArguments);
-        for(uint32 i = 0; i < formalCount; ++i)
+        for(uint32_t i = 0; i < formalCount; ++i)
         {
             if(deletedArray[i])
             {
@@ -5611,7 +5611,7 @@ namespace Js
         return JavascriptPromiseReaction::New(capabilities, handler, this->scriptContext);
     }
 
-    Js::RecyclableObject* JavascriptLibrary::CreatePromise_TTD(uint32 status, bool isHandled, Var result, SList<Js::JavascriptPromiseReaction*, HeapAllocator>& resolveReactions, SList<Js::JavascriptPromiseReaction*, HeapAllocator>& rejectReactions)
+    Js::RecyclableObject* JavascriptLibrary::CreatePromise_TTD(uint32_t status, bool isHandled, Var result, SList<Js::JavascriptPromiseReaction*, HeapAllocator>& resolveReactions, SList<Js::JavascriptPromiseReaction*, HeapAllocator>& rejectReactions)
     {
         return JavascriptPromise::InitializePromise_TTD(this->scriptContext, status, isHandled, result, resolveReactions, rejectReactions);
     }
@@ -5636,7 +5636,7 @@ namespace Js
         return this->CreatePromiseReactionTaskFunction(JavascriptPromise::EntryReactionTaskFunction, reaction, argument);
     }
 
-    JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* JavascriptLibrary::CreateRemainingElementsWrapper_TTD(Js::ScriptContext* ctx, uint32 value)
+    JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* JavascriptLibrary::CreateRemainingElementsWrapper_TTD(Js::ScriptContext* ctx, uint32_t value)
     {
         JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* remainingElementsWrapper = RecyclerNewStructZ(ctx->GetRecycler(), JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper);
         remainingElementsWrapper->remainingElements = value;
@@ -5644,7 +5644,7 @@ namespace Js
         return remainingElementsWrapper;
     }
 
-    Js::RecyclableObject* JavascriptLibrary::CreatePromiseAllResolveElementFunction_TTD(Js::JavascriptPromiseCapability* capabilities, uint32 index, Js::JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* wrapper, Js::RecyclableObject* values, bool alreadyCalled)
+    Js::RecyclableObject* JavascriptLibrary::CreatePromiseAllResolveElementFunction_TTD(Js::JavascriptPromiseCapability* capabilities, uint32_t index, Js::JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* wrapper, Js::RecyclableObject* values, bool alreadyCalled)
     {
         Js::JavascriptPromiseAllResolveElementFunction* res = this->CreatePromiseAllResolveElementFunction(JavascriptPromise::EntryAllResolveElementFunction, index, Js::VarTo<Js::JavascriptArray>(values), capabilities, wrapper);
         res->SetAlreadyCalled(alreadyCalled);
@@ -5660,7 +5660,7 @@ namespace Js
         return alreadyCalledWrapper;
     }
 
-    Js::RecyclableObject* JavascriptLibrary::CreatePromiseAllSettledResolveOrRejectElementFunction_TTD(Js::JavascriptPromiseCapability* capabilities, uint32 index, Js::JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* wrapper, Js::RecyclableObject* values, JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* alreadyCalledWrapper, bool isRejecting)
+    Js::RecyclableObject* JavascriptLibrary::CreatePromiseAllSettledResolveOrRejectElementFunction_TTD(Js::JavascriptPromiseCapability* capabilities, uint32_t index, Js::JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* wrapper, Js::RecyclableObject* values, JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* alreadyCalledWrapper, bool isRejecting)
     {
         Js::JavascriptPromiseAllSettledResolveOrRejectElementFunction* res = this->CreatePromiseAllSettledResolveOrRejectElementFunction(JavascriptPromise::EntryAllSettledResolveOrRejectElementFunction, index, Js::VarTo<Js::JavascriptArray>(values), capabilities, wrapper, alreadyCalledWrapper, isRejecting);
 
@@ -5810,21 +5810,21 @@ namespace Js
 
         Var var = JavascriptOperators::OP_GetProperty(callsiteObj, Js::PropertyIds::raw, scriptContext);
         ES5Array* rawArray = VarTo<ES5Array>(var);
-        uint32 arrayLength = rawArray->GetLength();
-        uint32 totalStringLength = 0;
+        uint32_t arrayLength = rawArray->GetLength();
+        uint32_t totalStringLength = 0;
         JavascriptString* str;
 
         Assert(arrayLength != 0);
 
         // Count the size in characters of the raw strings
-        for (uint32 i = 0; i < arrayLength; i++)
+        for (uint32_t i = 0; i < arrayLength; i++)
         {
             rawArray->DirectGetItemAt(i, &var);
             str = VarTo<JavascriptString>(var);
             totalStringLength += str->GetLength();
         }
 
-        uint32 keyLength = totalStringLength + (arrayLength - 1) * 3 + 1;
+        uint32_t keyLength = totalStringLength + (arrayLength - 1) * 3 + 1;
         char16_t* key = RecyclerNewArray(scriptContext->GetRecycler(), char16_t, keyLength);
         char16_t* ptr = key;
         charcount_t remainingSpace = keyLength;
@@ -5839,7 +5839,7 @@ namespace Js
         remainingSpace -= len;
 
         // Append a delimiter and the rest of the items
-        for (uint32 i = 1; i < arrayLength; i++)
+        for (uint32_t i = 1; i < arrayLength; i++)
         {
             len = 3; // strlen(u"${}");
             js_wmemcpy_s(ptr, remainingSpace, u"${}", len);
@@ -5888,7 +5888,7 @@ namespace Js
                     ) / InlineSlotCountIncrement];
     }
 
-    HeapArgumentsObject* JavascriptLibrary::CreateHeapArguments(Var frameObj, uint32 formalCount, bool isStrictMode)
+    HeapArgumentsObject* JavascriptLibrary::CreateHeapArguments(Var frameObj, uint32_t formalCount, bool isStrictMode)
     {
         AssertMsg(heapArgumentsType, "Where's heapArgumentsType?");
         Assert(strictHeapArgumentsType);
@@ -5910,7 +5910,7 @@ namespace Js
         return JavascriptArray::New<Var, JavascriptArray>(this->GetRecycler(), arrayType);
     }
 
-    JavascriptArray* JavascriptLibrary::CreateArray(uint32 length)
+    JavascriptArray* JavascriptLibrary::CreateArray(uint32_t length)
     {
         AssertMsg(arrayType, "Where's arrayType?");
         JavascriptArray* arr = JavascriptArray::New<Var, JavascriptArray, 0>(length, arrayType, this->GetRecycler());
@@ -5932,7 +5932,7 @@ namespace Js
         return JavascriptArray::New<int32, JavascriptNativeIntArray>(this->GetRecycler(), nativeIntArrayType);
     }
 
-    JavascriptNativeIntArray* JavascriptLibrary::CreateNativeIntArray(uint32 length)
+    JavascriptNativeIntArray* JavascriptLibrary::CreateNativeIntArray(uint32_t length)
     {
         AssertMsg(nativeIntArrayType, "Where's nativeIntArrayType?");
         JavascriptNativeIntArray* arr = JavascriptArray::New<int32, JavascriptNativeIntArray, 0>(length, nativeIntArrayType, this->GetRecycler());
@@ -5949,7 +5949,7 @@ namespace Js
         return JavascriptArray::New<double, JavascriptNativeFloatArray>(this->GetRecycler(), nativeFloatArrayType);
     }
 
-    JavascriptNativeFloatArray* JavascriptLibrary::CreateNativeFloatArray(uint32 length)
+    JavascriptNativeFloatArray* JavascriptLibrary::CreateNativeFloatArray(uint32_t length)
     {
         AssertMsg(nativeFloatArrayType, "Where's nativeIntArrayType?");
         JavascriptNativeFloatArray* arr = JavascriptArray::New<double, JavascriptNativeFloatArray, 0>(length, nativeFloatArrayType, this->GetRecycler());
@@ -5960,7 +5960,7 @@ namespace Js
         return arr;
     }
 
-    JavascriptArray* JavascriptLibrary::CreateArrayLiteral(uint32 length)
+    JavascriptArray* JavascriptLibrary::CreateArrayLiteral(uint32_t length)
     {
         AssertMsg(arrayType, "Where's arrayType?");
         JavascriptArray* arr = JavascriptArray::NewLiteral<Var, JavascriptArray, 0>(length, arrayType, this->GetRecycler());
@@ -5971,7 +5971,7 @@ namespace Js
         return arr;
     }
 
-    JavascriptNativeIntArray* JavascriptLibrary::CreateNativeIntArrayLiteral(uint32 length)
+    JavascriptNativeIntArray* JavascriptLibrary::CreateNativeIntArrayLiteral(uint32_t length)
     {
         AssertMsg(nativeIntArrayType, "Where's arrayType?");
         JavascriptNativeIntArray* arr = JavascriptArray::NewLiteral<int32, JavascriptNativeIntArray, 0>(length, nativeIntArrayType, this->GetRecycler());
@@ -5989,7 +5989,7 @@ namespace Js
     }
 #endif
 
-    JavascriptNativeFloatArray* JavascriptLibrary::CreateNativeFloatArrayLiteral(uint32 length)
+    JavascriptNativeFloatArray* JavascriptLibrary::CreateNativeFloatArrayLiteral(uint32_t length)
     {
         AssertMsg(nativeFloatArrayType, "Where's arrayType?");
         JavascriptNativeFloatArray* arr = JavascriptArray::NewLiteral<double, JavascriptNativeFloatArray, 0>(length, nativeFloatArrayType, this->GetRecycler());
@@ -6000,7 +6000,7 @@ namespace Js
         return arr;
     }
 
-    JavascriptArray* JavascriptLibrary::CreateArray(uint32 length, uint32 size)
+    JavascriptArray* JavascriptLibrary::CreateArray(uint32_t length, uint32_t size)
     {
         AssertMsg(arrayType, "Where's arrayType?");
         JavascriptArray* arr = RecyclerNew(this->GetRecycler(), JavascriptArray, length, size, arrayType);
@@ -6011,37 +6011,37 @@ namespace Js
         return arr;
     }
 
-    ArrayBuffer* JavascriptLibrary::CreateArrayBuffer(uint32 length)
+    ArrayBuffer* JavascriptLibrary::CreateArrayBuffer(uint32_t length)
     {
         ArrayBuffer* arr = JavascriptArrayBuffer::Create(length, arrayBufferType);
         return arr;
     }
 
-    ArrayBuffer* JavascriptLibrary::CreateArrayBuffer(byte* buffer, uint32 length)
+    ArrayBuffer* JavascriptLibrary::CreateArrayBuffer(byte* buffer, uint32_t length)
     {
         ArrayBuffer* arr = JavascriptArrayBuffer::Create(buffer, length, arrayBufferType);
         return arr;
     }
 
-    ArrayBuffer* JavascriptLibrary::CreateArrayBuffer(RefCountedBuffer* buffer, uint32 length)
+    ArrayBuffer* JavascriptLibrary::CreateArrayBuffer(RefCountedBuffer* buffer, uint32_t length)
     {
         ArrayBuffer* arr = JavascriptArrayBuffer::Create(buffer, length, arrayBufferType);
         return arr;
     }
 
 #ifdef ENABLE_WASM
-    Js::WebAssemblyArrayBuffer* JavascriptLibrary::CreateWebAssemblyArrayBuffer(uint32 length)
+    Js::WebAssemblyArrayBuffer* JavascriptLibrary::CreateWebAssemblyArrayBuffer(uint32_t length)
     {
         return WebAssemblyArrayBuffer::Create(nullptr, length, arrayBufferType);
     }
 
-    Js::WebAssemblyArrayBuffer* JavascriptLibrary::CreateWebAssemblyArrayBuffer(byte* buffer, uint32 length)
+    Js::WebAssemblyArrayBuffer* JavascriptLibrary::CreateWebAssemblyArrayBuffer(byte* buffer, uint32_t length)
     {
         return WebAssemblyArrayBuffer::Create(buffer, length, arrayBufferType);
     }
 
 #ifdef ENABLE_WASM_THREADS
-    WebAssemblySharedArrayBuffer* JavascriptLibrary::CreateWebAssemblySharedArrayBuffer(uint32 length, uint32 maxLength)
+    WebAssemblySharedArrayBuffer* JavascriptLibrary::CreateWebAssemblySharedArrayBuffer(uint32_t length, uint32_t maxLength)
     {
         return WebAssemblySharedArrayBuffer::Create(length, maxLength, sharedArrayBufferType);
     }
@@ -6053,7 +6053,7 @@ namespace Js
 #endif
 #endif
 
-    SharedArrayBuffer* JavascriptLibrary::CreateSharedArrayBuffer(uint32 length)
+    SharedArrayBuffer* JavascriptLibrary::CreateSharedArrayBuffer(uint32_t length)
     {
         return JavascriptSharedArrayBuffer::Create(length, sharedArrayBufferType);
     }
@@ -6069,31 +6069,31 @@ namespace Js
         return JavascriptSharedArrayBuffer::Create(contents, sharedArrayBufferType);
     }
 
-    ArrayBuffer* JavascriptLibrary::CreateProjectionArraybuffer(uint32 length)
+    ArrayBuffer* JavascriptLibrary::CreateProjectionArraybuffer(uint32_t length)
     {
         ArrayBuffer* arr = ProjectionArrayBuffer::Create(length, arrayBufferType);
         return arr;
     }
 
-    ArrayBuffer* JavascriptLibrary::CreateProjectionArraybuffer(byte* buffer, uint32 length)
+    ArrayBuffer* JavascriptLibrary::CreateProjectionArraybuffer(byte* buffer, uint32_t length)
     {
         ArrayBuffer* arr = ProjectionArrayBuffer::Create(buffer, length, arrayBufferType);
         return arr;
     }
 
-    ArrayBuffer* JavascriptLibrary::CreateProjectionArraybuffer(RefCountedBuffer* buffer, uint32 length)
+    ArrayBuffer* JavascriptLibrary::CreateProjectionArraybuffer(RefCountedBuffer* buffer, uint32_t length)
     {
         ArrayBuffer* arr = ProjectionArrayBuffer::Create(buffer, length, arrayBufferType);
         return arr;
     }
 
-    ArrayBuffer* JavascriptLibrary::CreateExternalArrayBuffer(RefCountedBuffer* buffer, uint32 length)
+    ArrayBuffer* JavascriptLibrary::CreateExternalArrayBuffer(RefCountedBuffer* buffer, uint32_t length)
     {
         ArrayBuffer* arr = ExternalArrayBuffer::Create(buffer, length, arrayBufferType);
         return arr;
     }
 
-    DataView* JavascriptLibrary::CreateDataView(ArrayBufferBase* arrayBuffer, uint32 offset, uint32 length)
+    DataView* JavascriptLibrary::CreateDataView(ArrayBufferBase* arrayBuffer, uint32_t offset, uint32_t length)
     {
         DataView* dataView = RecyclerNew(this->GetRecycler(), DataView, arrayBuffer, offset, length, dataViewType);
 
@@ -6620,7 +6620,7 @@ namespace Js
         return RecyclerNewEnumClass(this->GetRecycler(), EnumFunctionClass, JavascriptPromiseResolveThenableTaskFunction, type, functionInfo, promise, thenable, thenFunction);
     }
 
-    JavascriptPromiseAllResolveElementFunction* JavascriptLibrary::CreatePromiseAllResolveElementFunction(JavascriptMethod entryPoint, uint32 index, JavascriptArray* values, JavascriptPromiseCapability* capabilities, JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* remainingElements)
+    JavascriptPromiseAllResolveElementFunction* JavascriptLibrary::CreatePromiseAllResolveElementFunction(JavascriptMethod entryPoint, uint32_t index, JavascriptArray* values, JavascriptPromiseCapability* capabilities, JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* remainingElements)
     {
         FunctionInfo* functionInfo = &Js::JavascriptPromise::EntryInfo::AllResolveElementFunction;
         DynamicType* type = DynamicType::New(scriptContext, TypeIds_Function, functionPrototype, entryPoint, GetDeferredAnonymousFunctionTypeHandler());
@@ -6631,7 +6631,7 @@ namespace Js
         return function;
     }
 
-    JavascriptPromiseAnyRejectElementFunction* JavascriptLibrary::CreatePromiseAnyRejectElementFunction(JavascriptMethod entryPoint, uint32 index, JavascriptArray* errors, JavascriptPromiseCapability* capabilities, JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* remainingElements, JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* alreadyCalledWrapper)
+    JavascriptPromiseAnyRejectElementFunction* JavascriptLibrary::CreatePromiseAnyRejectElementFunction(JavascriptMethod entryPoint, uint32_t index, JavascriptArray* errors, JavascriptPromiseCapability* capabilities, JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* remainingElements, JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* alreadyCalledWrapper)
     {
         FunctionInfo* functionInfo = &Js::JavascriptPromise::EntryInfo::AnyRejectElementFunction;
         DynamicType* type = DynamicType::New(scriptContext, TypeIds_Function, functionPrototype, entryPoint, GetDeferredAnonymousFunctionTypeHandler());
@@ -6640,7 +6640,7 @@ namespace Js
         return function;
     }
 
-    JavascriptPromiseAllSettledResolveOrRejectElementFunction* JavascriptLibrary::CreatePromiseAllSettledResolveOrRejectElementFunction(JavascriptMethod entryPoint, uint32 index, JavascriptArray* values, JavascriptPromiseCapability* capabilities, JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* remainingElements, JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* alreadyCalledWrapper, bool isRejecting)
+    JavascriptPromiseAllSettledResolveOrRejectElementFunction* JavascriptLibrary::CreatePromiseAllSettledResolveOrRejectElementFunction(JavascriptMethod entryPoint, uint32_t index, JavascriptArray* values, JavascriptPromiseCapability* capabilities, JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* remainingElements, JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* alreadyCalledWrapper, bool isRejecting)
     {
         FunctionInfo* functionInfo = &Js::JavascriptPromise::EntryInfo::AllSettledResolveOrRejectElementFunction;
         DynamicType* type = DynamicType::New(scriptContext, TypeIds_Function, functionPrototype, entryPoint, GetDeferredAnonymousFunctionTypeHandler());
@@ -7103,7 +7103,7 @@ namespace Js
     }
 
 #if ENABLE_COPYONACCESS_ARRAY
-    bool JavascriptLibrary::IsCopyOnAccessArrayCallSite(JavascriptLibrary *lib, ArrayCallSiteInfo *arrayInfo, uint32 length)
+    bool JavascriptLibrary::IsCopyOnAccessArrayCallSite(JavascriptLibrary *lib, ArrayCallSiteInfo *arrayInfo, uint32_t length)
     {
         return
             lib->cacheForCopyOnAccessArraySegments
@@ -7114,8 +7114,8 @@ namespace Js
                     !arrayInfo->isNotCopyOnAccessArray        // from profile
                     && !PHASE_OFF1(CopyOnAccessArrayPhase)
                     && lib->cacheForCopyOnAccessArraySegments->IsNotFull()  // cache size soft limit through -copyonaccessarraysegmentcachesize:<number>
-                    && length <= (uint32)CONFIG_FLAG(MaxCopyOnAccessArrayLength)  // -maxcopyonaccessarraylength:<number>
-                    && length >= (uint32)CONFIG_FLAG(MinCopyOnAccessArrayLength)  // -mincopyonaccessarraylength:<number>
+                    && length <= (uint32_t)CONFIG_FLAG(MaxCopyOnAccessArrayLength)  // -maxcopyonaccessarraylength:<number>
+                    && length >= (uint32_t)CONFIG_FLAG(MinCopyOnAccessArrayLength)  // -mincopyonaccessarraylength:<number>
                     )
                 )
 #if ENABLE_TTD

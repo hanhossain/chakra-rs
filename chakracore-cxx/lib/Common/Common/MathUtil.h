@@ -14,7 +14,7 @@ class Math
 {
 public:
 
-    static uint32 PopCnt32(uint32 x)
+    static uint32_t PopCnt32(uint32_t x)
     {
         // sum set bits in every bit pair
         x -= (x >> 1) & 0x55555555u;
@@ -51,17 +51,17 @@ public:
 
     static unsigned long Rand();
     static bool     IsPow2(int32 val) { return (val > 0 && ((val-1) & val) == 0); }
-    static uint32   NextPowerOf2(uint32 n);
+    static uint32_t   NextPowerOf2(uint32_t n);
 
     // Use for compile-time evaluation of powers of 2
-    template<uint32 val> struct Is
+    template<uint32_t val> struct Is
     {
         static const bool Pow2 = ((val-1) & val) == 0;
     };
 
     // Defined in the header so that the Recycler static lib doesn't
     // need to pull in jscript.common.common.lib
-    static uint32 Log2(uint32 value)
+    static uint32_t Log2(uint32_t value)
     {
         int i;
 

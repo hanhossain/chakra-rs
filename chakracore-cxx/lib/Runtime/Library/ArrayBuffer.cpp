@@ -68,7 +68,7 @@ namespace Js
         return toReturn;
     }
 
-    uint32 ArrayBuffer::GetByteLength() const
+    uint32_t ArrayBuffer::GetByteLength() const
     {
         return this->bufferLength;
     }
@@ -339,7 +339,7 @@ namespace Js
         return this;
     }
 
-    uint32 ArrayBuffer::ToIndex(Var value, int32 errorCode, ScriptContext *scriptContext, uint32 MaxAllowedLength, bool checkSameValueZero)
+    uint32_t ArrayBuffer::ToIndex(Var value, int32 errorCode, ScriptContext *scriptContext, uint32_t MaxAllowedLength, bool checkSameValueZero)
     {
         if (JavascriptOperators::IsUndefined(value))
         {
@@ -354,7 +354,7 @@ namespace Js
                 JavascriptError::ThrowRangeError(scriptContext, errorCode);
             }
 
-            return  (uint32)index;
+            return  (uint32_t)index;
         }
 
         // Slower path
@@ -375,7 +375,7 @@ namespace Js
             }
         }
 
-        return (uint32)d;
+        return (uint32_t)d;
     }
 
     Var ArrayBuffer::NewInstance(RecyclableObject* function, CallInfo callInfo, ...)
@@ -395,7 +395,7 @@ namespace Js
             JavascriptError::ThrowTypeError(scriptContext, JSERR_ClassConstructorCannotBeCalledWithoutNew, u"ArrayBuffer");
         }
 
-        uint32 byteLength = 0;
+        uint32_t byteLength = 0;
         if (args.Info.Count > 1)
         {
             byteLength = ToIndex(args[1], JSERR_ArrayLengthConstructIncorrect, scriptContext, MaxArrayBufferLength);
@@ -558,10 +558,10 @@ namespace Js
 
         // We can't have allocated an ArrayBuffer with byteLength > MaxArrayBufferLength.
         // start and end are clamped to valid indices, so the new length also cannot exceed MaxArrayBufferLength.
-        // Therefore, should be safe to cast down newLen to uint32.
+        // Therefore, should be safe to cast down newLen to uint32_t.
         // TODO: If we ever support allocating ArrayBuffer with byteLength > MaxArrayBufferLength we may need to review this math.
         Assert(newLen <= MaxArrayBufferLength);
-        uint32 byteLength = static_cast<uint32>(newLen);
+        uint32_t byteLength = static_cast<uint32_t>(newLen);
 
         ArrayBuffer* newBuffer = nullptr;
 
@@ -627,7 +627,7 @@ namespace Js
         return args[0];
     }
 
-    ArrayBufferContentForDelayedFreeBase* ArrayBuffer::CopyBufferContentForDelayedFree(RefCountedBuffer * content, uint32 bufferLength)
+    ArrayBufferContentForDelayedFreeBase* ArrayBuffer::CopyBufferContentForDelayedFree(RefCountedBuffer * content, uint32_t bufferLength)
     {
         Assert(content != nullptr);
         FreeFn freeFn = nullptr;
@@ -647,7 +647,7 @@ namespace Js
     }
 
     template <class Allocator>
-    ArrayBuffer::ArrayBuffer(uint32 length, DynamicType * type, Allocator allocator) :
+    ArrayBuffer::ArrayBuffer(uint32_t length, DynamicType * type, Allocator allocator) :
         ArrayBufferBase(type), bufferContent(nullptr), bufferLength(0)
     {
         if (length > MaxArrayBufferLength)
@@ -695,7 +695,7 @@ namespace Js
         }
     }
 
-    ArrayBuffer::ArrayBuffer(RefCountedBuffer* buffContent, uint32 length, DynamicType * type)
+    ArrayBuffer::ArrayBuffer(RefCountedBuffer* buffContent, uint32_t length, DynamicType * type)
        : bufferContent(nullptr), bufferLength(length), ArrayBufferBase(type)
     {
         if (length > MaxArrayBufferLength)
@@ -718,7 +718,7 @@ namespace Js
         }
     }
 
-    ArrayBuffer::ArrayBuffer(byte* buffer, uint32 length, DynamicType * type, bool isExternal) :
+    ArrayBuffer::ArrayBuffer(byte* buffer, uint32_t length, DynamicType * type, bool isExternal) :
         bufferContent(nullptr), bufferLength(length), ArrayBufferBase(type)
     {
         if (length > MaxArrayBufferLength)
@@ -778,16 +778,16 @@ namespace Js
     }
 #endif
 
-    JavascriptArrayBuffer::JavascriptArrayBuffer(uint32 length, DynamicType * type) :
+    JavascriptArrayBuffer::JavascriptArrayBuffer(uint32_t length, DynamicType * type) :
         ArrayBuffer(length, type, IsValidVirtualBufferLength(length) ? AsmJsVirtualAllocator : malloc)
     {
     }
-    JavascriptArrayBuffer::JavascriptArrayBuffer(byte* buffer, uint32 length, DynamicType * type) :
+    JavascriptArrayBuffer::JavascriptArrayBuffer(byte* buffer, uint32_t length, DynamicType * type) :
         ArrayBuffer(buffer, length, type)
     {
     }
 
-    JavascriptArrayBuffer::JavascriptArrayBuffer(RefCountedBuffer* buffer, uint32 length, DynamicType * type) :
+    JavascriptArrayBuffer::JavascriptArrayBuffer(RefCountedBuffer* buffer, uint32_t length, DynamicType * type) :
         ArrayBuffer(buffer, length, type)
     {
     }
@@ -797,7 +797,7 @@ namespace Js
     {
     }
 
-    JavascriptArrayBuffer* JavascriptArrayBuffer::Create(uint32 length, DynamicType * type)
+    JavascriptArrayBuffer* JavascriptArrayBuffer::Create(uint32_t length, DynamicType * type)
     {
         Recycler* recycler = type->GetScriptContext()->GetRecycler();
         JavascriptArrayBuffer* result = RecyclerNewFinalized(recycler, JavascriptArrayBuffer, length, type);
@@ -806,7 +806,7 @@ namespace Js
         return result;
     }
 
-    JavascriptArrayBuffer* JavascriptArrayBuffer::Create(byte* buffer, uint32 length, DynamicType * type)
+    JavascriptArrayBuffer* JavascriptArrayBuffer::Create(byte* buffer, uint32_t length, DynamicType * type)
     {
         Recycler* recycler = type->GetScriptContext()->GetRecycler();
         JavascriptArrayBuffer* result = RecyclerNewFinalized(recycler, JavascriptArrayBuffer, buffer, length, type);
@@ -815,7 +815,7 @@ namespace Js
         return result;
     }
 
-    JavascriptArrayBuffer* JavascriptArrayBuffer::Create(RefCountedBuffer* content, uint32 length, DynamicType * type)
+    JavascriptArrayBuffer* JavascriptArrayBuffer::Create(RefCountedBuffer* content, uint32_t length, DynamicType * type)
     {
         Recycler* recycler = type->GetScriptContext()->GetRecycler();
         JavascriptArrayBuffer* result = RecyclerNewFinalized(recycler, JavascriptArrayBuffer, content, length, type);
@@ -838,7 +838,7 @@ namespace Js
         }
     }
 
-    ArrayBufferDetachedStateBase* JavascriptArrayBuffer::CreateDetachedState(RefCountedBuffer * content, uint32 bufferLength)
+    ArrayBufferDetachedStateBase* JavascriptArrayBuffer::CreateDetachedState(RefCountedBuffer * content, uint32_t bufferLength)
     {
         FreeFn freeFn = nullptr;
         ArrayBufferAllocationType allocationType;
@@ -977,7 +977,7 @@ namespace Js
     }
 
     template<typename Allocator>
-    Js::WebAssemblyArrayBuffer::WebAssemblyArrayBuffer(uint32 length, DynamicType * type, Allocator allocator):
+    Js::WebAssemblyArrayBuffer::WebAssemblyArrayBuffer(uint32_t length, DynamicType * type, Allocator allocator):
         JavascriptArrayBuffer(length, type, allocator)
     {
 #ifndef ENABLE_FAST_ARRAYBUFFER
@@ -1004,7 +1004,7 @@ namespace Js
     }
 
     // Treat as a normal JavascriptArrayBuffer
-    WebAssemblyArrayBuffer::WebAssemblyArrayBuffer(uint32 length, DynamicType * type) :
+    WebAssemblyArrayBuffer::WebAssemblyArrayBuffer(uint32_t length, DynamicType * type) :
         JavascriptArrayBuffer(length, type, malloc)
     {
         // Make sure we always have a bufferContent even if the length is 0
@@ -1018,7 +1018,7 @@ namespace Js
         }
     }
 
-    WebAssemblyArrayBuffer::WebAssemblyArrayBuffer(byte* buffer, uint32 length, DynamicType * type):
+    WebAssemblyArrayBuffer::WebAssemblyArrayBuffer(byte* buffer, uint32_t length, DynamicType * type):
         JavascriptArrayBuffer(buffer, length, type)
     {
 #if ENABLE_FAST_ARRAYBUFFER
@@ -1029,7 +1029,7 @@ namespace Js
 #endif
     }
 
-    WebAssemblyArrayBuffer* WebAssemblyArrayBuffer::Create(byte* buffer, uint32 length, DynamicType * type)
+    WebAssemblyArrayBuffer* WebAssemblyArrayBuffer::Create(byte* buffer, uint32_t length, DynamicType * type)
     {
         Recycler* recycler = type->GetScriptContext()->GetRecycler();
         WebAssemblyArrayBuffer* result = nullptr;
@@ -1065,12 +1065,12 @@ namespace Js
 #endif
     }
 
-    ArrayBufferDetachedStateBase* WebAssemblyArrayBuffer::CreateDetachedState(RefCountedBuffer* buffer, uint32 bufferLength)
+    ArrayBufferDetachedStateBase* WebAssemblyArrayBuffer::CreateDetachedState(RefCountedBuffer* buffer, uint32_t bufferLength)
     {
         JavascriptError::ThrowTypeError(GetScriptContext(), WASMERR_CantDetach);
     }
 
-    WebAssemblyArrayBuffer* WebAssemblyArrayBuffer::GrowMemory(uint32 newBufferLength)
+    WebAssemblyArrayBuffer* WebAssemblyArrayBuffer::GrowMemory(uint32_t newBufferLength)
     {
         if (newBufferLength < this->bufferLength)
         {
@@ -1078,7 +1078,7 @@ namespace Js
             JavascriptError::ThrowTypeError(GetScriptContext(), WASMERR_BufferGrowOnly);
         }
 
-        uint32 growSize = newBufferLength - this->bufferLength;
+        uint32_t growSize = newBufferLength - this->bufferLength;
         const auto finalizeGrowMemory = [&](WebAssemblyArrayBuffer* newArrayBuffer)
         {
             AssertOrFailFast(newArrayBuffer && newArrayBuffer->GetByteLength() == newBufferLength);
@@ -1163,29 +1163,29 @@ namespace Js
     }
 #endif
 
-    ProjectionArrayBuffer::ProjectionArrayBuffer(uint32 length, DynamicType * type) :
+    ProjectionArrayBuffer::ProjectionArrayBuffer(uint32_t length, DynamicType * type) :
         ArrayBuffer(length, type, CoTaskMemAlloc)
     {
     }
 
-    ProjectionArrayBuffer::ProjectionArrayBuffer(byte* buffer, uint32 length, DynamicType * type) :
+    ProjectionArrayBuffer::ProjectionArrayBuffer(byte* buffer, uint32_t length, DynamicType * type) :
         ArrayBuffer(buffer, length, type)
     {
     }
 
-    ProjectionArrayBuffer::ProjectionArrayBuffer(RefCountedBuffer* buffer, uint32 length, DynamicType * type) :
+    ProjectionArrayBuffer::ProjectionArrayBuffer(RefCountedBuffer* buffer, uint32_t length, DynamicType * type) :
         ArrayBuffer(buffer, length, type)
     {
     }
 
-    ProjectionArrayBuffer* ProjectionArrayBuffer::Create(uint32 length, DynamicType * type)
+    ProjectionArrayBuffer* ProjectionArrayBuffer::Create(uint32_t length, DynamicType * type)
     {
         Recycler* recycler = type->GetScriptContext()->GetRecycler();
         recycler->AddExternalMemoryUsage(length);
         return RecyclerNewFinalized(recycler, ProjectionArrayBuffer, length, type);
     }
 
-    ProjectionArrayBuffer* ProjectionArrayBuffer::Create(byte* buffer, uint32 length, DynamicType * type)
+    ProjectionArrayBuffer* ProjectionArrayBuffer::Create(byte* buffer, uint32_t length, DynamicType * type)
     {
         Recycler* recycler = type->GetScriptContext()->GetRecycler();
         ProjectionArrayBuffer* result = RecyclerNewFinalized(recycler, ProjectionArrayBuffer, buffer, length, type);
@@ -1196,7 +1196,7 @@ namespace Js
 
     }
 
-    ProjectionArrayBuffer* ProjectionArrayBuffer::Create(RefCountedBuffer* buffer, uint32 length, DynamicType * type)
+    ProjectionArrayBuffer* ProjectionArrayBuffer::Create(RefCountedBuffer* buffer, uint32_t length, DynamicType * type)
     {
         Recycler* recycler = type->GetScriptContext()->GetRecycler();
 
@@ -1234,7 +1234,7 @@ namespace Js
         /* See ProjectionArrayBuffer::Finalize */
     }
 
-    ArrayBufferContentForDelayedFreeBase* ProjectionArrayBuffer::CopyBufferContentForDelayedFree(RefCountedBuffer * content, uint32 bufferLength)
+    ArrayBufferContentForDelayedFreeBase* ProjectionArrayBuffer::CopyBufferContentForDelayedFree(RefCountedBuffer * content, uint32_t bufferLength)
     {
         // This heap object will be deleted when the Recycler::DelayedFreeArrayBuffer determines to remove this item
         return HeapNew(ArrayBufferContentForDelayedFree<FreeFn>, content, bufferLength, GetRecycler(), CoTaskMemFree);
@@ -1245,23 +1245,23 @@ namespace Js
         return library->CreateExternalArrayBuffer(buffer, bufferLength);
     }
 
-    ExternalArrayBuffer::ExternalArrayBuffer(byte *buffer, uint32 length, DynamicType *type)
+    ExternalArrayBuffer::ExternalArrayBuffer(byte *buffer, uint32_t length, DynamicType *type)
         : ArrayBuffer(buffer, length, type, true)
     {
     }
 
-    ExternalArrayBuffer::ExternalArrayBuffer(RefCountedBuffer *buffer, uint32 length, DynamicType *type)
+    ExternalArrayBuffer::ExternalArrayBuffer(RefCountedBuffer *buffer, uint32_t length, DynamicType *type)
         : ArrayBuffer(buffer, length, type)
     {
     }
 
-    ExternalArrayBuffer* ExternalArrayBuffer::Create(RefCountedBuffer* buffer, uint32 length, DynamicType * type)
+    ExternalArrayBuffer* ExternalArrayBuffer::Create(RefCountedBuffer* buffer, uint32_t length, DynamicType * type)
     {
         // This type does not own the external memory, so don't AddExternalMemoryUsage like other ArrayBuffer types do
         return RecyclerNewFinalized(type->GetScriptContext()->GetRecycler(), ExternalArrayBuffer, buffer, length, type);
     }
 
-    ArrayBufferDetachedStateBase* ExternalArrayBuffer::CreateDetachedState(RefCountedBuffer* buffer, uint32 bufferLength)
+    ArrayBufferDetachedStateBase* ExternalArrayBuffer::CreateDetachedState(RefCountedBuffer* buffer, uint32_t bufferLength)
     {
         return HeapNew(ExternalArrayBufferDetachedState, buffer, bufferLength);
     };
@@ -1297,7 +1297,7 @@ namespace Js
     }
 #endif
 
-    ExternalArrayBufferDetachedState::ExternalArrayBufferDetachedState(RefCountedBuffer* buffer, uint32 bufferLength)
+    ExternalArrayBufferDetachedState::ExternalArrayBufferDetachedState(RefCountedBuffer* buffer, uint32_t bufferLength)
         : ArrayBufferDetachedStateBase(TypeIds_ArrayBuffer, buffer, bufferLength, ArrayBufferAllocationType::External)
     {}
 

@@ -79,11 +79,11 @@ namespace TTD
             TTD_PTR_ID HandlerId;
 
             //Slot capacity information
-            uint32 InlineSlotCapacity;
-            uint32 TotalSlotCapacity;
+            uint32_t InlineSlotCapacity;
+            uint32_t TotalSlotCapacity;
 
             //the property record information array (with the info on the property stored in the location)
-            uint32 MaxPropertyIndex;
+            uint32_t MaxPropertyIndex;
             SnapHandlerPropertyEntry* PropertyInfoArray;
 
             //The sealed/frozen/extensible information

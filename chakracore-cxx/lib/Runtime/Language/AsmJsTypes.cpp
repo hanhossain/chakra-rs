@@ -844,7 +844,7 @@ namespace Js
 
     WAsmJs::TypedSlotInfo* AsmJsFunctionInfo::GetTypedSlotInfo(WAsmJs::Types type)
     {
-        if ((uint32)type > WAsmJs::LIMIT)
+        if ((uint32_t)type > WAsmJs::LIMIT)
         {
             Assert(false);
             Js::Throw::InternalError();
@@ -852,7 +852,7 @@ namespace Js
         return &mTypedSlotInfos[type];
     }
 
-    void AsmJsFunctionInfo::SetTotalSizeinBytes(uint32 totalSize)
+    void AsmJsFunctionInfo::SetTotalSizeinBytes(uint32_t totalSize)
     {
         AssertOrFailFast(mTotalSizeBytes == 0 && totalSize <= INT_MAX);
         mTotalSizeBytes = totalSize;

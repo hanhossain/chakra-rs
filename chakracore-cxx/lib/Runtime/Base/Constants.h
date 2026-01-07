@@ -48,7 +48,7 @@ namespace Js
         static const InlineCacheIndex   NoInlineCacheIndex          = (InlineCacheIndex)-1;
         static const uint               UninitializedValue          = (uint)-1;
         static const ArgSlot            InvalidArgSlot              = (ArgSlot)-1;
-        static const uint32             InvalidSymID                = (uint32)-1;
+        static const uint32_t             InvalidSymID                = (uint32_t)-1;
         static const size_t             InvalidSignature            = (size_t)-1;
 
         // We add extra args during bytecode phase, so account for those and few extra slots for padding.

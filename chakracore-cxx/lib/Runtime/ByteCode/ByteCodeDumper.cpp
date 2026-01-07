@@ -64,7 +64,7 @@ namespace Js
             dumpFunction->GetTempCount(),
             dumpFunction->GetFirstTmpReg(),
             dumpFunction->GetInlineCacheCount());
-        uint32 statementIndex = 0;
+        uint32_t statementIndex = 0;
         ByteCodeDumper::DumpConstantTable(dumpFunction);
         ByteCodeDumper::DumpImplicitArgIns(dumpFunction);
         while (true)
@@ -267,7 +267,7 @@ namespace Js
         Output::Print(u"\n");
     }
 
-    void ByteCodeDumper::DumpU4(uint32 value)
+    void ByteCodeDumper::DumpU4(uint32_t value)
     {
         Output::Print(u" uint:%u ", value);
     }
@@ -368,7 +368,7 @@ namespace Js
         DumpCallI(op, data, dumpFunction, reader);
         if (data->Options & Js::CallIExtended_SpreadArgs)
         {
-            const Js::AuxArray<uint32> *arr = reader.ReadAuxArray<uint32>(data->SpreadAuxOffset, dumpFunction);
+            const Js::AuxArray<uint32_t> *arr = reader.ReadAuxArray<uint32_t>(data->SpreadAuxOffset, dumpFunction);
             Output::Print(u" spreadArgs [", arr->count);
             for (uint i = 0; i < arr->count; i++)
             {
@@ -400,7 +400,7 @@ namespace Js
         DumpCallIFlags(op, data, dumpFunction, reader);
         if (data->Options & Js::CallIExtended_SpreadArgs)
         {
-            const Js::AuxArray<uint32> *arr = reader.ReadAuxArray<uint32>(data->SpreadAuxOffset, dumpFunction);
+            const Js::AuxArray<uint32_t> *arr = reader.ReadAuxArray<uint32_t>(data->SpreadAuxOffset, dumpFunction);
             Output::Print(u" spreadArgs [", arr->count);
             for (uint i = 0; i < arr->count; i++)
             {
@@ -426,7 +426,7 @@ namespace Js
         DumpCallIWithICIndex(op, data, dumpFunction, reader);
         if (data->Options & Js::CallIExtended_SpreadArgs)
         {
-            const Js::AuxArray<uint32> *arr = reader.ReadAuxArray<uint32>(data->SpreadAuxOffset, dumpFunction);
+            const Js::AuxArray<uint32_t> *arr = reader.ReadAuxArray<uint32_t>(data->SpreadAuxOffset, dumpFunction);
             Output::Print(u" spreadArgs [", arr->count);
             for (uint i = 0; i < arr->count; i++)
             {
@@ -466,7 +466,7 @@ namespace Js
         DumpCallIWithICIndex(op, data, dumpFunction, reader);
         if (data->Options & Js::CallIExtended_SpreadArgs)
         {
-            const Js::AuxArray<uint32> *arr = reader.ReadAuxArray<uint32>(data->SpreadAuxOffset, dumpFunction);
+            const Js::AuxArray<uint32_t> *arr = reader.ReadAuxArray<uint32_t>(data->SpreadAuxOffset, dumpFunction);
             Output::Print(u" spreadArgs [", arr->count);
             for (uint i=0; i < arr->count; i++)
             {
@@ -1556,7 +1556,7 @@ namespace Js
         {
         case Js::OpCode::SpreadArrayLiteral:
         {
-            const Js::AuxArray<uint32> *arr = reader.ReadAuxArray<uint32>(playout->Offset, dumpFunction);
+            const Js::AuxArray<uint32_t> *arr = reader.ReadAuxArray<uint32_t>(playout->Offset, dumpFunction);
             Output::Print(u" R%u <- R%u, %u spreadArgs [", playout->R0, playout->R1, arr->count);
             for (uint i = 0; i < arr->count; i++)
             {

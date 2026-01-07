@@ -34,7 +34,7 @@ private:
     } u;
     size_t currentIndex;
 
-    static const uint32 kInitIterationCount;
+    static const uint32_t kInitIterationCount;
 
     void BeginAdd();
     void Add(const char byteValue);

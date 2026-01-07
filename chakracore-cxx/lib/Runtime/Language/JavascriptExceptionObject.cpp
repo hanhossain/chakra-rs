@@ -202,7 +202,7 @@ namespace Js
         return hr;
     }
 
-    void JavascriptExceptionContext::SetThrowingFunction(JavascriptFunction * function, uint32 byteCodeOffset, void * returnAddress)
+    void JavascriptExceptionContext::SetThrowingFunction(JavascriptFunction * function, uint32_t byteCodeOffset, void * returnAddress)
     {
         // Unfortunately, window.onerror can ask for argument.callee.caller
         // and we will return the thrown function, but the stack already unwound.

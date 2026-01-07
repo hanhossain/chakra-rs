@@ -346,12 +346,12 @@ bool DynamicProfileStorage::Initialize()
             // Try to open the DynamicProfileInput.
             // If failure to open, retry at 100 ms intervals until a timeout.
 
-            const uint32 MAX_DELAY = 2000;  // delay at most 2 seconds
-            const uint32 DELAY_INTERVAL = 100;
-            const uint32 MAX_TRIES = MAX_DELAY / DELAY_INTERVAL;
+            const uint32_t MAX_DELAY = 2000;  // delay at most 2 seconds
+            const uint32_t DELAY_INTERVAL = 100;
+            const uint32_t MAX_TRIES = MAX_DELAY / DELAY_INTERVAL;
             bool readSuccessful = false;
 
-            for (uint32 i = 0; i < MAX_TRIES; i++)
+            for (uint32_t i = 0; i < MAX_TRIES; i++)
             {
                 readSuccessful = ImportFile(Js::Configuration::Global.flags.DynamicProfileInput, false);
                 if (readSuccessful)
@@ -430,7 +430,7 @@ bool DynamicProfileStorage::Uninitialize()
     }
 
 #ifdef DYNAMIC_PROFILE_EXPORT_FILE_CHECK
-    uint32 oldCount = infoMap.Count();
+    uint32_t oldCount = infoMap.Count();
 #endif
 
     ClearInfoMap(false);
@@ -726,7 +726,7 @@ bool DynamicProfileStorage::SetupCacheDir(__in_z char16_t const * dirname)
     char16_t tempPath[_MAX_PATH];
     if (dirname == nullptr)
     {
-        uint32 len = GetTempPath(_MAX_PATH, tempPath);
+        uint32_t len = GetTempPath(_MAX_PATH, tempPath);
         if (len >= _MAX_PATH || wcscat_s(tempPath, u"jsdpcache") != 0)
         {
             DisableCacheDir();

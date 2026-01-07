@@ -70,7 +70,7 @@ namespace Js
 
     private:
         template <typename EncodedChar>
-        void InitFromCharDigits(const EncodedChar *prgch, uint32 cch, bool isNegative); // init from char of digits
+        void InitFromCharDigits(const EncodedChar *prgch, uint32_t cch, bool isNegative); // init from char of digits
 
         void MulThenAdd(digit_t luMul, digit_t luAdd);
         static bool IsZero(JavascriptBigInt * pbi);

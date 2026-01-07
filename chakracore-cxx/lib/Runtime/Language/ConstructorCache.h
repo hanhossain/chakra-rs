@@ -219,7 +219,7 @@ namespace Js
             return reinterpret_cast<const void*>(__super::GetAddressOfValue());
         }
 
-        static uint32 GetOffsetOfUpdateAfterCtor()
+        static uint32_t GetOffsetOfUpdateAfterCtor()
         {
             return offsetof(ConstructorCache, content.updateAfterCtor);
         }

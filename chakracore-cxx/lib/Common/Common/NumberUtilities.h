@@ -45,22 +45,22 @@ namespace Js
         static const unsigned long     k_UintMaxPlusOne = 0x41f0000000000000ull;
         static const unsigned long     k_IntMaxPlusOne = 0x41e0000000000000ull;
 
-        static const uint32     k_Float32Zero      = 0x00000000ul;
-        static const uint32     k_Float32PointFive = 0x3F000000ul;
-        static const uint32     k_Float32NegPointFive = 0xBF000000ul;
-        static const uint32     k_Float32NegZero   = 0x80000000ul;
+        static const uint32_t     k_Float32Zero      = 0x00000000ul;
+        static const uint32_t     k_Float32PointFive = 0x3F000000ul;
+        static const uint32_t     k_Float32NegPointFive = 0xBF000000ul;
+        static const uint32_t     k_Float32NegZero   = 0x80000000ul;
         // 2^23
-        static const uint32     k_Float32TwoToFraction = 0x4B000000ul;
+        static const uint32_t     k_Float32TwoToFraction = 0x4B000000ul;
         // -2^23
-        static const uint32     k_Float32NegTwoToFraction = 0xCB000000ul;
+        static const uint32_t     k_Float32NegTwoToFraction = 0xCB000000ul;
 
-        static const uint32     k_Float32TwoTo63 = 0x5f000000u;
-        static const uint32     k_Float32NegTwoTo63 = 0xdf000000u;
-        static const uint32     k_Float32TwoTo64 = 0x5f800000u;
-        static const uint32     k_Float32NegOne = 0xbf800000u;
-        static const uint32     k_Float32TwoTo31 = 0x4f000000u;
-        static const uint32     k_Float32NegTwoTo31 = 0xcf000000u;
-        static const uint32     k_Float32TwoTo32 = 0x4f800000u;
+        static const uint32_t     k_Float32TwoTo63 = 0x5f000000u;
+        static const uint32_t     k_Float32NegTwoTo63 = 0xdf000000u;
+        static const uint32_t     k_Float32TwoTo64 = 0x5f800000u;
+        static const uint32_t     k_Float32NegOne = 0xbf800000u;
+        static const uint32_t     k_Float32TwoTo31 = 0x4f000000u;
+        static const uint32_t     k_Float32NegTwoTo31 = 0xcf000000u;
+        static const uint32_t     k_Float32TwoTo32 = 0x4f800000u;
 
         static const double     MAX_VALUE;
         static const double     MIN_VALUE;
@@ -89,15 +89,15 @@ namespace Js
     public:
         static bool IsDigit(int ch);
         static BOOL FHexDigit(char16_t ch, int *pw);
-        static uint32 MulLu(uint32 lu1, uint32 lu2, uint32 *pluHi);
-        static int AddLu(uint32 *plu1, uint32 lu2);
+        static uint32_t MulLu(uint32_t lu1, uint32_t lu2, uint32_t *pluHi);
+        static int AddLu(uint32_t *plu1, uint32_t lu2);
 
-        static uint32 &LuHiDbl(double &dbl);
-        static uint32 &LuLoDbl(double &dbl);
+        static uint32_t &LuHiDbl(double &dbl);
+        static uint32_t &LuLoDbl(double &dbl);
         static int64_t TryToInt64(double d);
         static bool IsValidTryToInt64(long value);   // Whether TryToInt64 resulted in a valid value.
 
-        static int CbitZeroLeft(uint32 lu);
+        static int CbitZeroLeft(uint32_t lu);
 
         static bool IsFinite(double value);
         static bool IsNan(double value);
@@ -105,7 +105,7 @@ namespace Js
         static bool IsFloat32NegZero(float value);
         static bool IsSpecial(double value, unsigned long nSpecial);
         static unsigned long ToSpecial(double value);
-        static uint32 ToSpecial(float value);
+        static uint32_t ToSpecial(float value);
         static float VECTORCALL ReinterpretBits(int value);
         static double VECTORCALL ReinterpretBits(long value);
 
@@ -115,7 +115,7 @@ namespace Js
         static charcount_t UInt16ToString(uint16 integer, __ecount(outBufferSize) char16_t* outBuffer, charcount_t outBufferSize, char widthForPaddingZerosInsteadSpaces);
 
         // Try to parse an integer string to find out if the string contains an index property name.
-        static BOOL TryConvertToUInt32(const char16_t* str, int length, uint32* intVal);
+        static BOOL TryConvertToUInt32(const char16_t* str, int length, uint32_t* intVal);
 
         static double Modulus(double dblLeft, double dblRight);
 
@@ -247,7 +247,7 @@ namespace Js
         static bool IsInSupplementaryPlane(codepoint_t codePointValue);
 
         static int32 LwFromDblNearest(double dbl);
-        static uint32 LuFromDblNearest(double dbl);
+        static uint32_t LuFromDblNearest(double dbl);
         static BOOL FDblIsInt32(double dbl, int32 *plw);
 
         template<typename EncodedChar>

@@ -27,7 +27,7 @@ namespace UnifiedRegex
             return -1;
         uint w = k / wordSize;
         uint o = k % wordSize;
-        uint32 v = vec[w] >> o;
+        uint32_t v = vec[w] >> o;
         do
         {
             if (v == 0)
@@ -80,7 +80,7 @@ namespace UnifiedRegex
             return -1;
         uint w = k / wordSize;
         uint o = k % wordSize;
-        uint32 v = vec[w] >> o;
+        uint32_t v = vec[w] >> o;
         do
         {
             if (v == ones)

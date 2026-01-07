@@ -536,7 +536,7 @@ namespace Js
         }
     }
 
-    BOOL JavascriptRegExpConstructor::GetSpecialNonEnumerablePropertyName(uint32 index, Var *propertyName, ScriptContext * requestContext)
+    BOOL JavascriptRegExpConstructor::GetSpecialNonEnumerablePropertyName(uint32_t index, Var *propertyName, ScriptContext * requestContext)
     {
         uint length = GetSpecialNonEnumerablePropertyCount();
         if (index < length)
@@ -560,7 +560,7 @@ namespace Js
     }
 
 
-    BOOL JavascriptRegExpConstructor::GetSpecialEnumerablePropertyName(uint32 index, JavascriptString ** propertyName, ScriptContext * requestContext)
+    BOOL JavascriptRegExpConstructor::GetSpecialEnumerablePropertyName(uint32_t index, JavascriptString ** propertyName, ScriptContext * requestContext)
     {
         uint length = GetSpecialEnumerablePropertyCount();
         if (index < length)
@@ -593,7 +593,7 @@ namespace Js
         return _countof(specialPropertyIds);
     }
 
-    BOOL JavascriptRegExpConstructor::GetSpecialPropertyName(uint32 index, JavascriptString ** propertyName, ScriptContext * requestContext)
+    BOOL JavascriptRegExpConstructor::GetSpecialPropertyName(uint32_t index, JavascriptString ** propertyName, ScriptContext * requestContext)
     {
         uint length = GetSpecialPropertyCount();
         if (index < length)

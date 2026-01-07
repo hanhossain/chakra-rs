@@ -18,7 +18,7 @@
 #define NEXT_BITSET_IN_UNITBV           }}
 
 // Typedef
-typedef uint32   UnitWord32;
+typedef uint32_t   UnitWord32;
 typedef unsigned long   UnitWord64;
 
 inline BOOLEAN

@@ -512,7 +512,7 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
             memset(&si, 0, sizeof(si));
             si.sourceContextInfo = sourceContextInfo;
             SRCINFO *hsi = scriptContext->AddHostSrcInfo(&si);
-            uint32 flags = fscrIsLibraryCode | (CONFIG_FLAG(CreateFunctionProxy) && !scriptContext->IsProfiling() ? fscrAllowFunctionProxy : 0);
+            uint32_t flags = fscrIsLibraryCode | (CONFIG_FLAG(CreateFunctionProxy) && !scriptContext->IsProfiling() ? fscrAllowFunctionProxy : 0);
 
             int32_t hr = Js::ByteCodeSerializer::DeserializeFromBuffer(scriptContext, flags, (LPCUTF8)nullptr, hsi, (byte*)js::Library_Bytecode_Intl, nullptr, &this->intlByteCode);
 
@@ -1380,7 +1380,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         //Get the numeral system and add it to the object since it will be located in the locale
         AutoHSTRING hNumeralSystem;
         AutoHSTRING hResolvedLanguage;
-        uint32 length;
+        uint32_t length;
         IfFailThrowHr(wga->GetNumeralSystem(numberFormatterOptions, &hNumeralSystem));
         SetHSTRINGPropertyBuiltInOn(options, __numberingSystem, *hNumeralSystem);
 

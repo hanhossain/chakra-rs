@@ -9,9 +9,9 @@ namespace Js
     class ES5ArrayIndexEnumerator : public JavascriptArrayIndexEnumeratorBase
     {
     private:
-        Field(uint32) initialLength;                   // The initial array length when this enumerator is created
-        Field(uint32) dataIndex;                       // Current data index
-        Field(uint32) descriptorIndex;                 // Current descriptor index
+        Field(uint32_t) initialLength;                   // The initial array length when this enumerator is created
+        Field(uint32_t) dataIndex;                       // Current data index
+        Field(uint32_t) descriptorIndex;                 // Current descriptor index
         Field(IndexPropertyDescriptor*) descriptor;    // Current descriptor
         Field(void *) descriptorValidationToken;
     protected:

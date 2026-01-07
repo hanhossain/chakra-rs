@@ -464,9 +464,9 @@ using namespace Js;
         rctxInfo->EnqueueNewFunctionBodyObject(this, fb, u"!fbody");
 
         Js::FrameDisplay* environment = this->GetEnvironment();
-        uint32 scopeCount = environment->GetLength();
+        uint32_t scopeCount = environment->GetLength();
 
-        for(uint32 i = 0; i < scopeCount; ++i)
+        for(uint32_t i = 0; i < scopeCount; ++i)
         {
             TTD::UtilSupport::TTAutoString scopePathString;
             rctxInfo->BuildEnvironmentIndexBuffer(i, scopePathString);

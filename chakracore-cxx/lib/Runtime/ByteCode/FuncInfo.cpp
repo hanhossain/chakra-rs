@@ -388,7 +388,7 @@ Js::RegSlot FuncInfo::InnerScopeToRegSlot(Scope *scope) const
     Js::RegSlot reg = FirstInnerScopeReg();
     Assert(reg != Js::Constants::NoRegister);
 
-    uint32 index = scope->GetInnerScopeIndex();
+    uint32_t index = scope->GetInnerScopeIndex();
 
     return reg + index;
 }

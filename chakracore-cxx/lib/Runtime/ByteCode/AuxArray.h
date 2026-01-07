@@ -9,10 +9,10 @@ namespace Js
     template<typename T>
     struct AuxArray
     {
-        uint32 count;
+        uint32_t count;
         T elements[];
 
-        AuxArray(uint32 count) : count(count)
+        AuxArray(uint32_t count) : count(count)
         {
         }
 

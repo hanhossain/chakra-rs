@@ -36,7 +36,7 @@ Js::Var ScriptMemoryDumper::Dump()
     Recycler* recycler = scriptContext->GetRecycler();
     HeapInfo* heapInfo = recycler->GetDefaultHeapInfo();
 
-    for (uint32 i = 0 ; i < HeapConstants::BucketCount; i++)
+    for (uint32_t i = 0 ; i < HeapConstants::BucketCount; i++)
     {
         ResetCurrentStats();
         size_t sizeCat = (i + 1) * HeapConstants::ObjectGranularity;
@@ -48,7 +48,7 @@ Js::Var ScriptMemoryDumper::Dump()
     }
 
 #ifdef BUCKETIZE_MEDIUM_ALLOCATIONS
-    for (uint32 i = 0 ; i < HeapConstants::MediumBucketCount; i++)
+    for (uint32_t i = 0 ; i < HeapConstants::MediumBucketCount; i++)
     {
         ResetCurrentStats();
         size_t sizeCat = HeapConstants::MaxSmallObjectSize + ((i + 1) * HeapConstants::ObjectGranularity);
@@ -168,7 +168,7 @@ void ScriptMemoryDumper::DumpLargeHeapBlock(LargeHeapBlock* heapBlock)
     current.pageCount += heapBlock->GetPageCount();
     current.totalByteCount += heapBlock->GetPageCount() * AutoSystemInfo::PageSize;
 
-    for (uint32 i = 0; i < heapBlock->allocCount; i++)
+    for (uint32_t i = 0; i < heapBlock->allocCount; i++)
     {
         Memory::LargeObjectHeader* heapHeader = heapBlock->GetHeaderByIndex(i);
         if (heapHeader != nullptr)
@@ -194,7 +194,7 @@ inline void ScriptMemoryDumper::MergeCurrentStats()
     total.freeObjectCount += current.freeObjectCount;
 }
 
-void ScriptMemoryDumper::SaveCurrentAtIndex(uint32 index)
+void ScriptMemoryDumper::SaveCurrentAtIndex(uint32_t index)
 {
     Js::DynamicObject* currentBucket = scriptContext->GetLibrary()->CreateObject();
     FillObjectWithStats(currentBucket, current);

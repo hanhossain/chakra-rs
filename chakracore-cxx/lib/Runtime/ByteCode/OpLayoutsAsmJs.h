@@ -86,7 +86,7 @@ namespace Js
     struct OpLayoutT_AsmTypedArr
     {
         // force encode 4 bytes because it can be a value
-        uint32                               SlotIndex;
+        uint32_t                               SlotIndex;
         typename SizePolicy::RegSlotType     Value;
         Js::ArrayBufferView::ViewType        ViewType;
     };
@@ -94,7 +94,7 @@ namespace Js
     template <typename SizePolicy>
     struct OpLayoutT_WasmMemAccess
     {
-        uint32                               Offset;
+        uint32_t                               Offset;
         typename SizePolicy::RegSlotType     SlotIndex;
         typename SizePolicy::RegSlotType     Value;
         Js::ArrayBufferView::ViewType        ViewType;
@@ -536,11 +536,11 @@ namespace Js
     struct OpLayoutT_AsmSimdTypedArr
     {
         // force encode 4 bytes because it can be a value
-        uint32                               SlotIndex;
+        uint32_t                               SlotIndex;
         typename SizePolicy::RegSlotType     Value;
         ArrayBufferView::ViewType            ViewType;
         int8_t                                 DataWidth; // # of bytes to load/store
-        uint32                               Offset; //WASM.SIMD
+        uint32_t                               Offset; //WASM.SIMD
     };
 
     // Generate the multi size layout type defs

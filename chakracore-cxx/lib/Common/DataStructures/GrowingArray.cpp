@@ -9,7 +9,7 @@
 namespace JsUtil
 {
     template <>
-    GrowingUint32HeapArray* GrowingArray<uint32, HeapAllocator>::Create(uint32 _length)
+    GrowingUint32HeapArray* GrowingArray<uint32_t, HeapAllocator>::Create(uint32_t _length)
     {
         return HeapNew(GrowingUint32HeapArray, &HeapAllocator::Instance, _length);
     }

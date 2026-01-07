@@ -82,7 +82,7 @@ public:
 #endif
         return memBlock;
     };
-    static uint32 GetEndAddressOffset()
+    static uint32_t GetEndAddressOffset()
     {
         return offsetof(RecyclerFastAllocator, allocator) + SmallHeapBlockAllocator<BlockType>::GetEndAddressOffset();
     }
@@ -96,7 +96,7 @@ public:
     {
         return allocator.GetEndAddress();
     }
-    static uint32 GetFreeObjectListOffset()
+    static uint32_t GetFreeObjectListOffset()
     {
         return offsetof(RecyclerFastAllocator, allocator) + SmallHeapBlockAllocator<BlockType>::GetFreeObjectListOffset();
     }

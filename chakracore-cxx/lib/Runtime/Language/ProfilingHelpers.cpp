@@ -62,7 +62,7 @@ using namespace Js;
             // The fast path is only for JavascriptArray and doesn't cover native arrays, objects with internal arrays, or typed
             // arrays, but we still need to profile the array
 
-            uint32 headSegmentLength;
+            uint32_t headSegmentLength;
             if(array)
             {
                 ldElemInfo.arrayType =
@@ -98,7 +98,7 @@ using namespace Js;
             }
 
             const int32 index = TaggedInt::ToInt32(varIndex);
-            const uint32 offset = index;
+            const uint32_t offset = index;
             if(index < 0 || offset >= headSegmentLength || (array && array->IsMissingHeadSegmentItem(offset)))
             {
                 ldElemInfo.neededHelperCall = true;
@@ -174,7 +174,7 @@ using namespace Js;
             {
                 SparseArraySegment<Var> *const head = static_cast<SparseArraySegment<Var> *>(array->GetHead());
                 Assert(head->left == 0);
-                const uint32 offset = index;
+                const uint32_t offset = index;
                 if(offset < head->length)
                 {
                     const Var element = head->elements[offset];
@@ -189,12 +189,12 @@ using namespace Js;
             }
 
             SparseArraySegment<Var> *seg = (SparseArraySegment<Var>*)array->GetLastUsedSegment();
-            if ((uint32) index < seg->left)
+            if ((uint32_t) index < seg->left)
             {
                 break;
             }
 
-            uint32 index2 = index - seg->left;
+            uint32_t index2 = index - seg->left;
 
             if (index2 < seg->length)
             {
@@ -291,8 +291,8 @@ using namespace Js;
             // The fast path is only for JavascriptArray and doesn't cover native arrays, objects with internal arrays, or typed
             // arrays, but we still need to profile the array
 
-            uint32 length;
-            uint32 headSegmentLength;
+            uint32_t length;
+            uint32_t headSegmentLength;
             if(array)
             {
                 stElemInfo.arrayType =
@@ -342,7 +342,7 @@ using namespace Js;
                 break;
             }
 
-            const uint32 offset = index;
+            const uint32_t offset = index;
             if(offset >= headSegmentLength)
             {
                 stElemInfo.storedOutsideHeadSegmentBounds = true;
@@ -427,7 +427,7 @@ using namespace Js;
             {
                 SparseArraySegmentBase *const head = array->GetHead();
                 Assert(head->left == 0);
-                const uint32 offset = index;
+                const uint32_t offset = index;
                 if(offset >= head->length)
                 {
                     stElemInfo->storedOutsideHeadSegmentBounds = true;
@@ -446,12 +446,12 @@ using namespace Js;
 
             SparseArraySegment<Var>* lastUsedSeg = (SparseArraySegment<Var>*)array->GetLastUsedSegment();
             if (lastUsedSeg == NULL ||
-                (uint32) index < lastUsedSeg->left)
+                (uint32_t) index < lastUsedSeg->left)
             {
                 break;
             }
 
-            uint32 index2 = index - lastUsedSeg->left;
+            uint32_t index2 = index - lastUsedSeg->left;
 
             if (index2 < lastUsedSeg->size)
             {
@@ -539,7 +539,7 @@ using namespace Js;
     }
 
     Var ProfilingHelpers::ProfiledNewScObjArraySpread_Jit(
-        const Js::AuxArray<uint32> *spreadIndices,
+        const Js::AuxArray<uint32_t> *spreadIndices,
         const Var callee,
         void *const framePointer,
         const ProfileId profileId,
@@ -554,7 +554,7 @@ using namespace Js;
 
         JIT_HELPER_REENTRANT_HEADER(ProfiledNewScObjArraySpread);
         // GetSpreadSize ensures that spreadSize < 2^24
-        uint32 spreadSize = 0;
+        uint32_t spreadSize = 0;
         if (spreadIndices != nullptr)
         {
             Arguments outArgs(CallInfo(args.Info.Flags, 0), nullptr);
@@ -688,7 +688,7 @@ using namespace Js;
         FunctionBody *const callerFunctionBody,
         const ProfileId profileId,
         const InlineCacheIndex inlineCacheIndex,
-        const Js::AuxArray<uint32> *spreadIndices)
+        const Js::AuxArray<uint32_t> *spreadIndices)
     {
         Assert(callee);
         Assert(args.Info.Count != 0);

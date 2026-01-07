@@ -17,9 +17,9 @@ private:
     JSONProperty* jsonContent;
     const char16_t* gap;
     charcount_t gapLength;
-    uint32 indentLevel;
+    uint32_t indentLevel;
 
-    void AppendGap(uint32 count);
+    void AppendGap(uint32_t count);
     void AppendCharacter(char16_t character);
     void AppendBuffer(_In_ const char16_t* buffer, charcount_t length);
     void AppendString(_In_ JavascriptString* str);

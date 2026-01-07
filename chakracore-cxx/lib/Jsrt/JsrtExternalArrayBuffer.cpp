@@ -7,23 +7,23 @@
 
 namespace Js
 {
-    JsrtExternalArrayBuffer::JsrtExternalArrayBuffer(byte *buffer, uint32 length, JsFinalizeCallback finalizeCallback, void *callbackState, DynamicType *type)
+    JsrtExternalArrayBuffer::JsrtExternalArrayBuffer(byte *buffer, uint32_t length, JsFinalizeCallback finalizeCallback, void *callbackState, DynamicType *type)
         : ExternalArrayBuffer(buffer, length, type), finalizeCallback(finalizeCallback), callbackState(callbackState)
     {
     }
 
-    JsrtExternalArrayBuffer::JsrtExternalArrayBuffer(RefCountedBuffer *buffer, uint32 length, JsFinalizeCallback finalizeCallback, void *callbackState, DynamicType *type)
+    JsrtExternalArrayBuffer::JsrtExternalArrayBuffer(RefCountedBuffer *buffer, uint32_t length, JsFinalizeCallback finalizeCallback, void *callbackState, DynamicType *type)
         : ExternalArrayBuffer(buffer, length, type), finalizeCallback(finalizeCallback), callbackState(callbackState)
     {
     }
 
-    JsrtExternalArrayBuffer* JsrtExternalArrayBuffer::New(byte *buffer, uint32 length, JsFinalizeCallback finalizeCallback, void *callbackState, DynamicType *type)
+    JsrtExternalArrayBuffer* JsrtExternalArrayBuffer::New(byte *buffer, uint32_t length, JsFinalizeCallback finalizeCallback, void *callbackState, DynamicType *type)
     {
         Recycler* recycler = type->GetScriptContext()->GetRecycler();
         return RecyclerNewFinalized(recycler, JsrtExternalArrayBuffer, buffer, length, finalizeCallback, callbackState, type);
     }
 
-    JsrtExternalArrayBuffer* JsrtExternalArrayBuffer::New(RefCountedBuffer *buffer, uint32 length, JsFinalizeCallback finalizeCallback, void *callbackState, DynamicType *type)
+    JsrtExternalArrayBuffer* JsrtExternalArrayBuffer::New(RefCountedBuffer *buffer, uint32_t length, JsFinalizeCallback finalizeCallback, void *callbackState, DynamicType *type)
     {
         Recycler* recycler = type->GetScriptContext()->GetRecycler();
         return RecyclerNewFinalized(recycler, JsrtExternalArrayBuffer, buffer, length, finalizeCallback, callbackState, type);
@@ -39,13 +39,13 @@ namespace Js
         }
     }
 
-    ArrayBufferDetachedStateBase* JsrtExternalArrayBuffer::CreateDetachedState(RefCountedBuffer* buffer, uint32 bufferLength)
+    ArrayBufferDetachedStateBase* JsrtExternalArrayBuffer::CreateDetachedState(RefCountedBuffer* buffer, uint32_t bufferLength)
     {
         return HeapNew(JsrtExternalArrayBufferDetachedState, buffer, bufferLength, finalizeCallback, callbackState);
     };
 
     JsrtExternalArrayBuffer::JsrtExternalArrayBufferDetachedState::JsrtExternalArrayBufferDetachedState(
-        RefCountedBuffer* buffer, uint32 bufferLength, JsFinalizeCallback finalizeCallback, void *callbackState)
+        RefCountedBuffer* buffer, uint32_t bufferLength, JsFinalizeCallback finalizeCallback, void *callbackState)
         : ExternalArrayBufferDetachedState(buffer, bufferLength), finalizeCallback(finalizeCallback), callbackState(callbackState)
     {}
 

@@ -1046,7 +1046,7 @@ namespace Js
         return InnerScopeFromIndex(reg - m_functionBody->GetFirstInnerScopeRegister());
     }
 
-    Var InterpreterStackFrame::InnerScopeFromIndex(uint32 index) const
+    Var InterpreterStackFrame::InnerScopeFromIndex(uint32_t index) const
     {
         if (index >= m_functionBody->GetInnerScopeCount())
         {
@@ -1057,7 +1057,7 @@ namespace Js
         return this->innerScopeArray[index];
     }
 
-    void InterpreterStackFrame::SetInnerScopeFromIndex(uint32 index, Var scope)
+    void InterpreterStackFrame::SetInnerScopeFromIndex(uint32_t index, Var scope)
     {
         if (index >= m_functionBody->GetInnerScopeCount())
         {
@@ -1144,7 +1144,7 @@ namespace Js
                 // ...and scope slots (if any)
                 if (this->executeFunction->DoStackScopeSlots())
                 {
-                    uint32 scopeSlots = this->executeFunction->scopeSlotArraySize;
+                    uint32_t scopeSlots = this->executeFunction->scopeSlotArraySize;
                     Assert(scopeSlots != 0);
                     this->stackVarAllocCount += scopeSlots + Js::ScopeSlots::FirstSlotIndex;
                 }
@@ -1305,7 +1305,7 @@ namespace Js
 
                 if (this->executeFunction->DoStackScopeSlots())
                 {
-                    uint32 scopeSlots = this->executeFunction->scopeSlotArraySize;
+                    uint32_t scopeSlots = this->executeFunction->scopeSlotArraySize;
                     Assert(scopeSlots != 0);
                     ScopeSlots((Field(Var)*)stackAllocBytes).SetCount(0); // Start with count as 0. It will get set in NewScopeSlots
                     newInstance->localClosure = stackAllocBytes;
@@ -2998,7 +2998,7 @@ skipThunk:
     {
         FunctionBody *const functionBody = GetFunctionBody();
         ScriptFunction* func = GetJavascriptFunction();
-        uint32& callCount = ((FunctionEntryPointInfo*)func->GetEntryPointInfo())->callsCount;
+        uint32_t& callCount = ((FunctionEntryPointInfo*)func->GetEntryPointInfo())->callsCount;
         WAsmJs::JitFunctionIfReady(func, ++callCount);
         AsmJsFunctionInfo* info = functionBody->GetAsmJsFunctionInfo();
 
@@ -3234,7 +3234,7 @@ skipThunk:
         {
         private:
             InterpreterStackFrame * const interpreterStackFrame;
-            const uint32 savedSwitchProfileModeOnLoopEndNumber;
+            const uint32_t savedSwitchProfileModeOnLoopEndNumber;
             const bool savedIsAutoProfiling;
             const bool savedSwitchProfileMode;
 
@@ -3691,7 +3691,7 @@ skipThunk:
     {
         AsmJsScriptFunction* scriptFunc = VarTo<AsmJsScriptFunction>(function);
         AsmJsFunctionInfo* asmInfo = scriptFunc->GetFunctionBody()->GetAsmJsFunctionInfo();
-        uint alignedArgsSize = ::Math::Align<uint32>(asmInfo->GetArgByteSize(), 16);
+        uint alignedArgsSize = ::Math::Align<uint32_t>(asmInfo->GetArgByteSize(), 16);
         byte* reg = nullptr;
 
         ScriptContext * scriptContext = function->GetScriptContext();
@@ -3785,7 +3785,7 @@ skipThunk:
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_CallCommon(const unaligned T * playout, RecyclableObject * function, unsigned flags, const Js::AuxArray<uint32> *spreadIndices)
+    void InterpreterStackFrame::OP_CallCommon(const unaligned T * playout, RecyclableObject * function, unsigned flags, const Js::AuxArray<uint32_t> *spreadIndices)
     {
         // Always save and restore implicit call flags when calling out
         // REVIEW: Can we avoid it if we don't collect dynamic profile info?
@@ -3848,7 +3848,7 @@ skipThunk:
 
 #if ENABLE_PROFILE_INFO
     template <class T>
-    void InterpreterStackFrame::OP_ProfileCallCommon(const unaligned T * playout, RecyclableObject * function, unsigned flags, ProfileId profileId, InlineCacheIndex inlineCacheIndex, const Js::AuxArray<uint32> *spreadIndices)
+    void InterpreterStackFrame::OP_ProfileCallCommon(const unaligned T * playout, RecyclableObject * function, unsigned flags, ProfileId profileId, InlineCacheIndex inlineCacheIndex, const Js::AuxArray<uint32_t> *spreadIndices)
     {
         JavascriptFunction * targetFunction = VarIs<JavascriptFunction>(m_outParams[0]) ? UnsafeVarTo<JavascriptFunction>(m_outParams[0]) : nullptr;
         FunctionBody* functionBody = this->m_functionBody;
@@ -3892,7 +3892,7 @@ skipThunk:
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_ProfileReturnTypeCallCommon(const unaligned T * playout, RecyclableObject * function, unsigned flags, ProfileId profileId, const Js::AuxArray<uint32> *spreadIndices)
+    void InterpreterStackFrame::OP_ProfileReturnTypeCallCommon(const unaligned T * playout, RecyclableObject * function, unsigned flags, ProfileId profileId, const Js::AuxArray<uint32_t> *spreadIndices)
     {
         OP_CallCommon<T>(playout, function, flags, spreadIndices);
         FunctionBody* functionBody = this->m_functionBody;
@@ -5176,7 +5176,7 @@ skipThunk:
     {
         SparseArraySegment<Var> * segment = (SparseArraySegment<Var> *)GetNonVarReg(playout->Instance);
 
-        uint32 index = playout->Element;
+        uint32_t index = playout->Element;
         Var value = GetReg(playout->Value);
 
         Assert(segment->left == 0);
@@ -5401,7 +5401,7 @@ skipThunk:
     void InterpreterStackFrame::OP_SetArrayItemC_CI4(const unaligned T* playout)
     {
         JavascriptArray* array = JavascriptArray::FromAnyArray(GetReg(playout->Instance));
-        uint32 index = playout->Element;
+        uint32_t index = playout->Element;
         Var value = GetReg(playout->Value);
 
 #if ENABLE_COPYONACCESS_ARRAY
@@ -5429,7 +5429,7 @@ skipThunk:
     void InterpreterStackFrame::OP_SetArrayItemI_CI4(const unaligned T* playout)
     {
         // Note that this code assumes that we only get here when we see an array literal,
-        // so we know that the instance is truly an array, and the index is a uint32.
+        // so we know that the instance is truly an array, and the index is a uint32_t.
         // If/when we use this for cases like "a[0] = x", we'll at least have to check
         // whether "a" is really an array.
 
@@ -5438,14 +5438,14 @@ skipThunk:
         // The array is create by the built-in on the same script context
         Assert(array->GetScriptContext() == GetScriptContext());
 
-        uint32 index = playout->Element;
+        uint32_t index = playout->Element;
         Var value = GetReg(playout->Value);
 
         Assert(VirtualTableInfo<JavascriptArray>::HasVirtualTable(array));
         SparseArraySegment<Var>* lastUsedSeg = (SparseArraySegment<Var>*)array->GetLastUsedSegment();
         if (index >= lastUsedSeg->left)
         {
-            uint32 index2 = index - lastUsedSeg->left;
+            uint32_t index2 = index - lastUsedSeg->left;
             if (index2 < lastUsedSeg->size)
             {
                 // Successful fastpath
@@ -5586,7 +5586,7 @@ skipThunk:
         SetNonVarReg(playout->R0, (Var)propIds);
     }
 
-    void InterpreterStackFrame::OP_StPropIdArrFromVar(Var instance, uint32 index, Var value, ScriptContext* scriptContext)
+    void InterpreterStackFrame::OP_StPropIdArrFromVar(Var instance, uint32_t index, Var value, ScriptContext* scriptContext)
     {
         Js::PropertyIdArray * propIds = reinterpret_cast<Js::PropertyIdArray *>(instance);
         AssertOrFailFast(index < propIds->count);
@@ -5594,7 +5594,7 @@ skipThunk:
         propIds->elements[index] = id;
     }
 
-    Js::PropertyIdArray * InterpreterStackFrame::OP_NewPropIdArrForCompProps(uint32 size, ScriptContext* scriptContext)
+    Js::PropertyIdArray * InterpreterStackFrame::OP_NewPropIdArrForCompProps(uint32_t size, ScriptContext* scriptContext)
     {
         uint extraAlloc = UInt32Math::Mul(size, sizeof(Js::PropertyId));
         Js::PropertyIdArray * propIdArr = RecyclerNewPlusLeaf(scriptContext->GetRecycler(), extraAlloc, Js::PropertyIdArray, size, 0);
@@ -5614,7 +5614,7 @@ skipThunk:
     template <LayoutSize layoutSize, bool profiled>
     const byte * InterpreterStackFrame::OP_ProfiledLoopBodyStart(const byte * ip)
     {
-        uint32 loopId = m_reader.GetLayout<OpLayoutT_Unsigned1<LayoutSizePolicy<layoutSize>>>(ip)->C1;
+        uint32_t loopId = m_reader.GetLayout<OpLayoutT_Unsigned1<LayoutSizePolicy<layoutSize>>>(ip)->C1;
         return OP_ProfiledLoopBodyStart<layoutSize, profiled>(loopId);
     }
 
@@ -5622,7 +5622,7 @@ skipThunk:
     template <LayoutSize layoutSize, bool profiled>
     const byte * InterpreterStackFrame::OP_ProfiledWasmLoopBodyStart(const byte * ip)
     {
-        uint32 loopId = m_reader.GetLayout<OpLayoutT_WasmLoopStart<LayoutSizePolicy<layoutSize>>>(ip)->loopId;
+        uint32_t loopId = m_reader.GetLayout<OpLayoutT_WasmLoopStart<LayoutSizePolicy<layoutSize>>>(ip)->loopId;
         return OP_ProfiledLoopBodyStart<layoutSize, profiled>(loopId);
     }
 #endif
@@ -5642,7 +5642,7 @@ skipThunk:
     template <LayoutSize layoutSize, bool profiled>
     const byte * InterpreterStackFrame::OP_ProfiledLoopStart(const byte * ip)
     {
-        const uint32 C1 = m_reader.GetLayout<OpLayoutT_Unsigned1<LayoutSizePolicy<layoutSize>>>(ip)->C1;
+        const uint32_t C1 = m_reader.GetLayout<OpLayoutT_Unsigned1<LayoutSizePolicy<layoutSize>>>(ip)->C1;
         if (!profiled && !isAutoProfiling)
         {
             return ip;
@@ -5672,7 +5672,7 @@ skipThunk:
             ip += Js::OpCodeUtil::EncodedSize(peekOp, layoutSize);
             // We are doing JIT loop body. Process the first ProfiledLoopBodyStart to avoid recording
             // the implicit call before the first iteration
-            uint32 C2 = m_reader.GetLayout<OpLayoutT_Unsigned1<LayoutSizePolicy<layoutSize>>>(ip)->C1;
+            uint32_t C2 = m_reader.GetLayout<OpLayoutT_Unsigned1<LayoutSizePolicy<layoutSize>>>(ip)->C1;
             Assert(C1 == C2);
             (this->*opProfiledLoopBodyStart)(C1, layoutSize, true /* isFirstIteration */);
             return m_reader.GetIP();
@@ -5684,7 +5684,7 @@ skipThunk:
     template <LayoutSize layoutSize, bool profiled>
     const byte * InterpreterStackFrame::OP_ProfiledLoopEnd(const byte * ip)
     {
-        uint32 loopNumber = m_reader.GetLayout<OpLayoutT_Unsigned1<LayoutSizePolicy<layoutSize>>>(ip)->C1;
+        uint32_t loopNumber = m_reader.GetLayout<OpLayoutT_Unsigned1<LayoutSizePolicy<layoutSize>>>(ip)->C1;
         if (!profiled && !isAutoProfiling)
         {
             return ip;
@@ -5748,7 +5748,7 @@ skipThunk:
     }
 
     template<bool InterruptProbe, bool JITLoopBody>
-    void InterpreterStackFrame::ProfiledLoopBodyStart(uint32 loopNumber, LayoutSize layoutSize, bool isFirstIteration)
+    void InterpreterStackFrame::ProfiledLoopBodyStart(uint32_t loopNumber, LayoutSize layoutSize, bool isFirstIteration)
     {
         Assert(Js::DynamicProfileInfo::EnableImplicitCallFlags(GetFunctionBody()));
 
@@ -5814,7 +5814,7 @@ skipThunk:
 #endif
 
     template<bool InterruptProbe, bool JITLoopBody>
-    void InterpreterStackFrame::LoopBodyStart(uint32 loopNumber, LayoutSize layoutSize, bool isFirstIteration)
+    void InterpreterStackFrame::LoopBodyStart(uint32_t loopNumber, LayoutSize layoutSize, bool isFirstIteration)
     {
         if (InterruptProbe)
         {
@@ -5838,18 +5838,18 @@ skipThunk:
         DoLoopBodyStart(loopNumber, layoutSize, true, isFirstIteration);
     }
 
-    LoopHeader const * InterpreterStackFrame::DoLoopBodyStart(uint32 loopNumber, LayoutSize layoutSize, const bool doProfileLoopCheck, const bool isFirstIteration)
+    LoopHeader const * InterpreterStackFrame::DoLoopBodyStart(uint32_t loopNumber, LayoutSize layoutSize, const bool doProfileLoopCheck, const bool isFirstIteration)
     {
 #if ENABLE_PROFILE_INFO
         class AutoRestoreLoopNumbers
         {
         private:
             InterpreterStackFrame * const interpreterStackFrame;
-            uint32 loopNumber;
+            uint32_t loopNumber;
             bool doProfileLoopCheck;
 
         public:
-            AutoRestoreLoopNumbers(InterpreterStackFrame *const interpreterStackFrame, uint32 loopNumber, bool doProfileLoopCheck)
+            AutoRestoreLoopNumbers(InterpreterStackFrame *const interpreterStackFrame, uint32_t loopNumber, bool doProfileLoopCheck)
                 : interpreterStackFrame(interpreterStackFrame), loopNumber(loopNumber), doProfileLoopCheck(doProfileLoopCheck)
             {
                 Assert(interpreterStackFrame->currentLoopNum == LoopHeader::NoLoop);
@@ -5986,8 +5986,8 @@ skipThunk:
                 }
             }
 
-            uint32 innerScopeCount = this->m_functionBody->GetInnerScopeCount();
-            for (uint32 i = 0; i < innerScopeCount; i++)
+            uint32_t innerScopeCount = this->m_functionBody->GetInnerScopeCount();
+            for (uint32_t i = 0; i < innerScopeCount; i++)
             {
                 // As with the function-level scope, transfer the inner scopes from the interpreter's side storage
                 // to their dedicated register slots.
@@ -6026,7 +6026,7 @@ skipThunk:
                 SetNonVarReg(paramClosureReg, nullptr);
             }
 
-            for (uint32 i = 0; i < innerScopeCount; i++)
+            for (uint32_t i = 0; i < innerScopeCount; i++)
             {
                 // Get the (possibly updated) scopes from their registers and put them back in side storage.
                 // (Getting the updated values may not be necessary, actually, but it can't hurt.)
@@ -6296,7 +6296,7 @@ skipThunk:
     ///
     ///----------------------------------------------------------------------------
     template <class T, bool Profiled, bool ICIndex>
-    void InterpreterStackFrame::OP_NewScObject_Impl(const unaligned T* playout, InlineCacheIndex inlineCacheIndex, const Js::AuxArray<uint32> *spreadIndices)
+    void InterpreterStackFrame::OP_NewScObject_Impl(const unaligned T* playout, InlineCacheIndex inlineCacheIndex, const Js::AuxArray<uint32_t> *spreadIndices)
     {
         if (ICIndex)
         {
@@ -6317,7 +6317,7 @@ skipThunk:
     }
 
     template <class T, bool Profiled>
-    void InterpreterStackFrame::OP_ProfiledNewScObjArray_Impl(const unaligned T* playout, const Js::AuxArray<uint32> *spreadIndices)
+    void InterpreterStackFrame::OP_ProfiledNewScObjArray_Impl(const unaligned T* playout, const Js::AuxArray<uint32_t> *spreadIndices)
     {
         // Always profile this operation when auto-profiling so that array type changes are tracked
 #if ENABLE_PROFILE_INFO
@@ -6333,7 +6333,7 @@ skipThunk:
 #if ENABLE_PROFILE_INFO
         Arguments args(CallInfo(CallFlags_New, playout->ArgCount), m_outParams);
 
-        uint32 spreadSize = 0;
+        uint32_t spreadSize = 0;
         if (spreadIndices != nullptr)
         {
             spreadSize = JavascriptFunction::GetSpreadSize(args, spreadIndices, scriptContext);
@@ -6400,7 +6400,7 @@ skipThunk:
 
     }
 
-    Var InterpreterStackFrame::NewScObject_Helper(Var target, ArgSlot ArgCount, const Js::AuxArray<uint32> *spreadIndices)
+    Var InterpreterStackFrame::NewScObject_Helper(Var target, ArgSlot ArgCount, const Js::AuxArray<uint32_t> *spreadIndices)
     {
         Arguments args(CallInfo(CallFlags_New, ArgCount), m_outParams);
 
@@ -6424,7 +6424,7 @@ skipThunk:
     }
 
 #if ENABLE_PROFILE_INFO
-    Var InterpreterStackFrame::ProfiledNewScObject_Helper(Var target, ArgSlot ArgCount, ProfileId profileId, InlineCacheIndex inlineCacheIndex, const Js::AuxArray<uint32> *spreadIndices)
+    Var InterpreterStackFrame::ProfiledNewScObject_Helper(Var target, ArgSlot ArgCount, ProfileId profileId, InlineCacheIndex inlineCacheIndex, const Js::AuxArray<uint32_t> *spreadIndices)
     {
         Arguments args(CallInfo(CallFlags_New, ArgCount), m_outParams);
 
@@ -6680,7 +6680,7 @@ skipThunk:
         return newOffset;
     }
 
-    void InterpreterStackFrame::ProcessTryHandlerBailout(EHBailoutData * ehBailoutData, uint32 tryNestingDepth)
+    void InterpreterStackFrame::ProcessTryHandlerBailout(EHBailoutData * ehBailoutData, uint32_t tryNestingDepth)
     {
         int catchOffset = ehBailoutData->catchOffset;
         int finallyOffset = ehBailoutData->finallyOffset;
@@ -7223,7 +7223,7 @@ skipThunk:
 #if ENABLE_COPYONACCESS_ARRAY
         JavascriptLibrary::CheckAndConvertCopyOnAccessNativeIntArray<Var>(instance);
 #endif
-        const Js::AuxArray<uint32> *spreadIndices = m_reader.ReadAuxArray<uint32>(playout->Offset, this->GetFunctionBody());
+        const Js::AuxArray<uint32_t> *spreadIndices = m_reader.ReadAuxArray<uint32_t>(playout->Offset, this->GetFunctionBody());
         ScriptContext* scriptContext = GetScriptContext();
         Var result = JavascriptArray::SpreadArrayArgs(instance, spreadIndices, scriptContext);
 
@@ -8006,7 +8006,7 @@ skipThunk:
     int InterpreterStackFrame::OP_GrowMemory(int32 delta)
     {
 #ifdef ENABLE_WASM
-        return GetWebAssemblyMemory()->GrowInternal((uint32)delta);
+        return GetWebAssemblyMemory()->GrowInternal((uint32_t)delta);
 #else
         Assert(UNREACHED);
         return 0;
@@ -8094,7 +8094,7 @@ skipThunk:
     void InterpreterStackFrame::OP_SimdLdArrConstIndex(const unaligned T* playout)
     {
         Assert(playout->ViewType < Js::ArrayBufferView::TYPE_COUNT);
-        const unsigned long index = (uint32)playout->SlotIndex;
+        const unsigned long index = (uint32_t)playout->SlotIndex;
         JavascriptArrayBuffer* arr = GetAsmJsBuffer();
         uint8_t* buffer = arr->GetBuffer();
         uint8_t dataWidth = playout->DataWidth;
@@ -8146,7 +8146,7 @@ skipThunk:
     void InterpreterStackFrame::OP_SimdStArrConstIndex(const unaligned T* playout)
     {
         Assert(playout->ViewType < Js::ArrayBufferView::TYPE_COUNT);
-        const unsigned long index = (uint32)playout->SlotIndex;
+        const unsigned long index = (uint32_t)playout->SlotIndex;
         JavascriptArrayBuffer* arr = GetAsmJsBuffer();
         uint8_t* buffer = arr->GetBuffer();
         uint8_t dataWidth = playout->DataWidth;
@@ -8230,8 +8230,8 @@ skipThunk:
     template <class T>
     void InterpreterStackFrame::OP_SimdShuffleV8X16(const unaligned T* playout)
     {
-        uint32 lanes[Wasm::Simd::MAX_LANES];
-        for (uint32 i = 0; i < Wasm::Simd::MAX_LANES; i++)
+        uint32_t lanes[Wasm::Simd::MAX_LANES];
+        for (uint32_t i = 0; i < Wasm::Simd::MAX_LANES; i++)
         {
             Assert(playout->INDICES[i] < Wasm::Simd::MAX_LANES * 2);
             lanes[i] = playout->INDICES[i];
@@ -8697,7 +8697,7 @@ skipThunk:
 
 #ifdef ASMJS_PLAT
     template <typename ArrayType, typename RegType>
-    void InterpreterStackFrame::OP_StArr(uint32 index, RegSlot regSlot)
+    void InterpreterStackFrame::OP_StArr(uint32_t index, RegSlot regSlot)
     {
         JavascriptArrayBuffer* arr = GetAsmJsBuffer();
         if (index < arr->GetByteLength())
@@ -8727,7 +8727,7 @@ skipThunk:
     void InterpreterStackFrame::OP_LdArrFunc(const unaligned T* playout)
     {
         Var* arr = (Var*)GetRegRawPtr(playout->Instance);
-        const uint32 index = (uint32)GetRegRawInt(playout->SlotIndex);
+        const uint32_t index = (uint32_t)GetRegRawInt(playout->SlotIndex);
         SetRegRawPtr(playout->Value, arr[index]);
     }
 
@@ -8736,7 +8736,7 @@ skipThunk:
     {
 #ifdef ENABLE_WASM
         WebAssemblyTable * table = VarTo<WebAssemblyTable>(GetRegRawPtr(playout->Instance));
-        const uint32 index = (uint32)GetRegRawInt(playout->SlotIndex);
+        const uint32_t index = (uint32_t)GetRegRawInt(playout->SlotIndex);
         if (index >= table->GetCurrentLength())
         {
             JavascriptError::ThrowWebAssemblyRuntimeError(GetScriptContext(), WASMERR_TableIndexOutOfRange);
@@ -8777,7 +8777,7 @@ skipThunk:
 
 #ifdef ASMJS_PLAT
     template <typename ArrayType, typename RegType>
-    void InterpreterStackFrame::OP_LdArr(uint32 index, RegSlot regSlot)
+    void InterpreterStackFrame::OP_LdArr(uint32_t index, RegSlot regSlot)
     {
         JavascriptArrayBuffer* arr = GetAsmJsBuffer();
         uint8_t* buffer = arr->GetBuffer();
@@ -8811,7 +8811,7 @@ skipThunk:
     template <class T>
     void InterpreterStackFrame::OP_LdArrGeneric(const unaligned T* playout)
     {
-        const uint32 index = (uint32)GetRegRawInt(playout->SlotIndex);
+        const uint32_t index = (uint32_t)GetRegRawInt(playout->SlotIndex);
         switch (playout->ViewType)
         {
 #define ARRAYBUFFER_VIEW(name, align, RegType, MemType, ...) \
@@ -8824,7 +8824,7 @@ skipThunk:
     }
 
     template<typename MemType>
-    void InterpreterStackFrame::WasmArrayBoundsCheck(unsigned long index, uint32 byteLength)
+    void InterpreterStackFrame::WasmArrayBoundsCheck(unsigned long index, uint32_t byteLength)
     {
         if (index + sizeof(MemType) > byteLength)
         {
@@ -8833,7 +8833,7 @@ skipThunk:
     }
 
     template<typename MemType>
-    MemType* InterpreterStackFrame::WasmAtomicsArrayBoundsCheck(byte* buffer, unsigned long index, uint32 byteLength)
+    MemType* InterpreterStackFrame::WasmAtomicsArrayBoundsCheck(byte* buffer, unsigned long index, uint32_t byteLength)
     {
         MemType* readBuffer = (MemType*)(buffer + index);
         // Do alignment check to be coherent with the order the jit does the checks
@@ -8850,10 +8850,10 @@ skipThunk:
     {
 #ifdef ENABLE_WASM
         Assert(playout->ViewType < Js::ArrayBufferView::TYPE_COUNT);
-        const unsigned long index = playout->Offset + (unsigned long)(uint32)GetRegRawInt(playout->SlotIndex);
+        const unsigned long index = playout->Offset + (unsigned long)(uint32_t)GetRegRawInt(playout->SlotIndex);
         ArrayBufferBase* arr = GetWebAssemblyMemory()->GetBuffer();
 
-        uint32 byteLength = arr->GetByteLength();
+        uint32_t byteLength = arr->GetByteLength();
         uint8_t* buffer = arr->GetBuffer();
         switch (playout->ViewType)
         {
@@ -8876,10 +8876,10 @@ skipThunk:
 #ifdef ENABLE_WASM
         Assert(Wasm::Threads::IsEnabled());
         Assert(playout->ViewType < Js::ArrayBufferView::TYPE_COUNT);
-        const unsigned long index = playout->Offset + (unsigned long)(uint32)GetRegRawInt(playout->SlotIndex);
+        const unsigned long index = playout->Offset + (unsigned long)(uint32_t)GetRegRawInt(playout->SlotIndex);
         ArrayBufferBase* arr = GetWebAssemblyMemory()->GetBuffer();
 
-        uint32 byteLength = arr->GetByteLength();
+        uint32_t byteLength = arr->GetByteLength();
         uint8_t* buffer = arr->GetBuffer();
         switch (playout->ViewType)
         {
@@ -8904,10 +8904,10 @@ skipThunk:
 #ifdef ENABLE_WASM
         Assert(Wasm::Threads::IsEnabled());
         Assert(playout->ViewType < Js::ArrayBufferView::TYPE_COUNT);
-        const unsigned long index = playout->Offset + (unsigned long)(uint32)GetRegRawInt(playout->SlotIndex);
+        const unsigned long index = playout->Offset + (unsigned long)(uint32_t)GetRegRawInt(playout->SlotIndex);
         ArrayBufferBase* arr = GetWebAssemblyMemory()->GetBuffer();
 
-        uint32 byteLength = arr->GetByteLength();
+        uint32_t byteLength = arr->GetByteLength();
         uint8_t* buffer = arr->GetBuffer();
         switch (playout->ViewType)
         {
@@ -8943,7 +8943,7 @@ skipThunk:
     template <class T>
     void InterpreterStackFrame::OP_StArrGeneric(const unaligned T* playout)
     {
-        const uint32 index = (uint32)GetRegRawInt(playout->SlotIndex);
+        const uint32_t index = (uint32_t)GetRegRawInt(playout->SlotIndex);
         switch (playout->ViewType)
         {
 #define ARRAYBUFFER_VIEW(name, align, RegType, MemType, ...) \
@@ -8959,10 +8959,10 @@ skipThunk:
     {
 #ifdef ENABLE_WASM
         Assert(playout->ViewType < Js::ArrayBufferView::TYPE_COUNT);
-        const unsigned long index = playout->Offset + (unsigned long)(uint32)GetRegRawInt(playout->SlotIndex);
+        const unsigned long index = playout->Offset + (unsigned long)(uint32_t)GetRegRawInt(playout->SlotIndex);
         ArrayBufferBase* arr = GetWebAssemblyMemory()->GetBuffer();
 
-        uint32 byteLength = arr->GetByteLength();
+        uint32_t byteLength = arr->GetByteLength();
         uint8_t* buffer = arr->GetBuffer();
         switch (playout->ViewType)
         {
@@ -8978,7 +8978,7 @@ skipThunk:
 #if DBG
         if (PHASE_TRACE(WasmMemWritesPhase, m_functionBody))
         {
-            GetWebAssemblyMemory()->TraceMemWrite(GetWebAssemblyMemory(), (uint32)GetRegRawInt(playout->SlotIndex), playout->Offset, playout->ViewType, (uint32)(size_t)this->DEBUG_currentByteOffset, scriptContext);
+            GetWebAssemblyMemory()->TraceMemWrite(GetWebAssemblyMemory(), (uint32_t)GetRegRawInt(playout->SlotIndex), playout->Offset, playout->ViewType, (uint32_t)(size_t)this->DEBUG_currentByteOffset, scriptContext);
         }
 #endif
         return;
@@ -9131,7 +9131,7 @@ skipThunk:
         return JavascriptOperators::OP_LdModuleSlot(playout->SlotIndex1, playout->SlotIndex2, scriptContext);
     }
 
-    inline void InterpreterStackFrame::OP_StModuleSlot(Var instance, uint32 slotIndex1, uint32 slotIndex2, Var value)
+    inline void InterpreterStackFrame::OP_StModuleSlot(Var instance, uint32_t slotIndex1, uint32_t slotIndex2, Var value)
     {
         JavascriptOperators::OP_StModuleSlot(slotIndex1, slotIndex2, value, scriptContext);
     }
@@ -9275,7 +9275,7 @@ skipThunk:
 
     Var InterpreterStackFrame::OP_LdHeapArgsCached(ScriptContext* scriptContext)
     {
-        uint32 formalsCount = this->m_functionBody->GetInParamsCount() - 1;
+        uint32_t formalsCount = this->m_functionBody->GetInParamsCount() - 1;
         Var args = JavascriptOperators::LoadHeapArgsCached(this->function->GetRealFunctionObject(), this->m_inSlotsCount - 1, formalsCount, &this->m_inParams[1], this->localClosure, scriptContext, false);
         this->m_arguments = args;
         return args;
@@ -9283,7 +9283,7 @@ skipThunk:
 
     Var InterpreterStackFrame::OP_LdLetHeapArgsCached(ScriptContext* scriptContext)
     {
-        uint32 formalsCount = this->m_functionBody->GetInParamsCount() - 1;
+        uint32_t formalsCount = this->m_functionBody->GetInParamsCount() - 1;
         Var args = JavascriptOperators::LoadHeapArgsCached(this->function->GetRealFunctionObject(), this->m_inSlotsCount - 1, formalsCount, &this->m_inParams[1], this->localClosure, scriptContext, true);
         this->m_arguments = args;
         return args;
@@ -9300,7 +9300,7 @@ skipThunk:
     {
         Var frameObject = nullptr;
 
-        uint32 formalsCount = this->m_functionBody->GetInParamsCount() - 1;
+        uint32_t formalsCount = this->m_functionBody->GetInParamsCount() - 1;
         Js::PropertyIdArray * propIds = nullptr;
         Js::HeapArgumentsObject* heapArgObj = nullptr;
 

@@ -137,8 +137,8 @@ JSONStringifier::ReadReplacer(_In_opt_ Var replacer)
                 JavascriptArray* propertyArray = JavascriptArray::TryVarToNonES5Array(replacer);
                 if (propertyArray != nullptr)
                 {
-                    uint32 length = propertyArray->GetLength();
-                    for (uint32 i = 0; i < length; i++)
+                    uint32_t length = propertyArray->GetLength();
+                    for (uint32_t i = 0; i < length; i++)
                     {
                         Var item = propertyArray->DirectGetItem(i);
                         this->AddToPropertyList(item, &propertyListBV);
@@ -348,7 +348,7 @@ JSONStringifier::ToJSON(_In_ JavascriptString* key, _In_ RecyclableObject* value
     return nullptr;
 }
 
-uint32
+uint32_t
 JSONStringifier::ReadArrayLength(_In_ RecyclableObject* value)
 {
     JavascriptArray* arr = JavascriptArray::TryVarToNonES5Array(value);
@@ -363,11 +363,11 @@ JSONStringifier::ReadArrayLength(_In_ RecyclableObject* value)
         // If the length goes more than MaxCharCount we will eventually fail (as OOM) in ConcatStringBuilder - so failing early.
         JavascriptError::ThrowRangeError(this->scriptContext, JSERR_OutOfBoundString);
     }
-    return static_cast<uint32>(len);
+    return static_cast<uint32_t>(len);
 }
 
 void
-JSONStringifier::ReadArrayElement(uint32 index, _In_ RecyclableObject* arr, _Out_ JSONProperty* prop, _In_ JSONObjectStack* objectStack)
+JSONStringifier::ReadArrayElement(uint32_t index, _In_ RecyclableObject* arr, _Out_ JSONProperty* prop, _In_ JSONObjectStack* objectStack)
 {
     Var value = nullptr;
     JavascriptArray* jsArray = JavascriptArray::TryVarToNonES5Array(arr);
@@ -401,13 +401,13 @@ JSONStringifier::ReadArray(_In_ RecyclableObject* arr, _In_ JSONObjectStack* obj
         this->indentLength = UInt32Math::Add(this->indentLength, this->gapLength);
     }
 
-    const uint32 arrayLength = this->ReadArrayLength(arr);
+    const uint32_t arrayLength = this->ReadArrayLength(arr);
 
     const size_t arraySize = AllocSizeMath::Mul(arrayLength, sizeof(JSONProperty));
     JSONArray * jsonArray = RecyclerNewPlusZ(this->scriptContext->GetRecycler(), arraySize, JSONArray);
 
     jsonArray->length = arrayLength;
-    for (uint32 i = 0; i < arrayLength; ++i)
+    for (uint32_t i = 0; i < arrayLength; ++i)
     {
         this->ReadArrayElement(i, arr, &jsonArray->arr[i], &stack);
         if (jsonArray->arr[i].type == JSONContentType::Undefined)
@@ -451,7 +451,7 @@ JSONStringifier::AppendObjectElement(
 void
 JSONStringifier::ReadObjectElement(
     _In_ JavascriptString* propertyName,
-    _In_ uint32 numericIndex,
+    _In_ uint32_t numericIndex,
     _In_ RecyclableObject* obj,
     _In_ JSONObject* jsonObject,
     _In_ JSONObjectStack* objectStack)
@@ -487,7 +487,7 @@ JSONStringifier::ReadObjectElement(
 // Calculates how many additional characters are needed for printing the Object/Array structure
 // This includes commas, brackets, and gap (if any)
 void
-JSONStringifier::CalculateStringifiedLength(uint32 propertyCount, charcount_t stepbackLength)
+JSONStringifier::CalculateStringifiedLength(uint32_t propertyCount, charcount_t stepbackLength)
 {
     if (propertyCount == 0)
     {
@@ -524,8 +524,8 @@ JSONStringifier::ReadProxy(_In_ JavascriptProxy* proxyObject, _In_ JSONObject* j
     JavascriptArray* ownPropertyNames = proxyObject->PropertyKeysTrap(JavascriptProxy::KeysTrapKind::GetOwnPropertyNamesKind, this->scriptContext);
 
     // filter enumerable keys
-    uint32 resultLength = ownPropertyNames->GetLength();
-    for (uint32 i = 0; i < resultLength; i++)
+    uint32_t resultLength = ownPropertyNames->GetLength();
+    for (uint32_t i = 0; i < resultLength; i++)
     {
         Var element = ownPropertyNames->DirectGetItem(i);
 
@@ -596,7 +596,7 @@ JSONStringifier::ReadObject(_In_ RecyclableObject* obj, _In_ JSONObjectStack* ob
                 PropertyId nextKey = Constants::NoProperty;
                 while ((propertyName = enumerator.MoveAndGetNext(nextKey)) != nullptr)
                 {
-                    const uint32 numericIndex = enumerator.GetCurrentItemIndex();
+                    const uint32_t numericIndex = enumerator.GetCurrentItemIndex();
                     if (numericIndex != Constants::InvalidSourceIndex)
                     {
                         this->ReadObjectElement(propertyName, numericIndex, obj, jsonObject, &stack);

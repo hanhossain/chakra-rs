@@ -316,7 +316,7 @@ namespace Js
         }
 
         // Simple JIT counts down and transitions on overflow
-        const uint32 callCount = simpleJitEntryPointInfo->callsCount;
+        const uint32_t callCount = simpleJitEntryPointInfo->callsCount;
         Assert(simpleJitLimit == 0 ? callCount == 0 : simpleJitLimit > callCount);
         return callCount == 0 ?
             static_cast<uint16>(simpleJitLimit) :
@@ -732,7 +732,7 @@ namespace Js
         {
         case ExecutionMode::ProfilingInterpreter:
         {
-            uint32 interpretedCount = GetInterpretedCount();
+            uint32_t interpretedCount = GetInterpretedCount();
             const uint16 clampedInterpretedCount =
                 interpretedCount <= UINT16_MAX
                 ? static_cast<uint16>(interpretedCount)

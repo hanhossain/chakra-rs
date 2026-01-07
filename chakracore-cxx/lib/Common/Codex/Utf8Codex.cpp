@@ -35,7 +35,7 @@ namespace utf8
         // 1111 -> 4
 
         // If this value is XOR with 0xF0 and shift 3 bits to the right it can be used as an
-        // index into a 16 element 2 bit array encoded as a uint32 of n - 1 where n is the number
+        // index into a 16 element 2 bit array encoded as a uint32_t of n - 1 where n is the number
         // of bits in the encoding.
 
         // The XOR prefix bits mapped to n - 1.
@@ -337,8 +337,8 @@ LFastPath:
         {
             unsigned bytes = *(unsigned *)p;
             if ((bytes & 0x80808080) != 0) goto LSlowPath;
-            ((uint32 *)dest)[0] = (char16_t(bytes) & 0x00FF) | ((char16_t(bytes) & 0xFF00) << 8);
-            ((uint32 *)dest)[1] = (char16_t(bytes >> 16) & 0x00FF) | ((char16_t(bytes >> 16) & 0xFF00) << 8);
+            ((uint32_t *)dest)[0] = (char16_t(bytes) & 0x00FF) | ((char16_t(bytes) & 0xFF00) << 8);
+            ((uint32_t *)dest)[1] = (char16_t(bytes >> 16) & 0x00FF) | ((char16_t(bytes >> 16) & 0xFF00) << 8);
             p += 4;
             dest += 4;
         }
@@ -414,15 +414,15 @@ LSlowPath:
 LFastPath:
         while (cch >= 4)
         {
-            uint32 first = ((const uint32 *)source)[0];
+            uint32_t first = ((const uint32_t *)source)[0];
             if ( (first & 0xFF80FF80) != 0) goto LSlowPath;
-            uint32 second = ((const uint32 *)source)[1];
+            uint32_t second = ((const uint32_t *)source)[1];
             if ( (second & 0xFF80FF80) != 0) goto LSlowPath;
 
             if (!countBytesOnly)
             {
                 CodexAssertOrFailFast(dest + 4 <= bufferEnd);
-                *(uint32 *)dest = (first & 0x0000007F) | ((first & 0x007F0000) >> 8) | ((second & 0x0000007f) << 16) | ((second & 0x007F0000) << 8);
+                *(uint32_t *)dest = (first & 0x0000007F) | ((first & 0x007F0000) >> 8) | ((second & 0x0000007f) << 16) | ((second & 0x007F0000) << 8);
             }
             dest += 4;
             source += 4;
@@ -538,7 +538,7 @@ LFastPath:
         // Skip 4 bytes at a time.
         while (pchCurrent < pchEndMinus4 && i > 4)
         {
-            uint32 ch4 = *reinterpret_cast<const uint32 *>(pchCurrent);
+            uint32_t ch4 = *reinterpret_cast<const uint32_t *>(pchCurrent);
             if ((ch4 & 0x80808080) == 0)
             {
                 pchCurrent += 4;
@@ -575,7 +575,7 @@ LFastPath:
         // Skip 4 bytes at a time.
         while (pchCurrent < pchEndMinus4)
         {
-            uint32 ch4 = *reinterpret_cast<const uint32 *>(pchCurrent);
+            uint32_t ch4 = *reinterpret_cast<const uint32_t *>(pchCurrent);
             if ((ch4 & 0x80808080) == 0)
             {
                 pchCurrent += 4;

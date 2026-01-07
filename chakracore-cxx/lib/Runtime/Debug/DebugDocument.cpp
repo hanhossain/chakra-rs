@@ -164,7 +164,7 @@ namespace Js
     BreakpointProbe* DebugDocument::SetBreakPoint_TTDWbpId(long bpId, StatementLocation statement)
     {
         ScriptContext* scriptContext = this->utf8SourceInfo->GetScriptContext();
-        BreakpointProbe* pProbe = Anew(scriptContext->AllocatorForDiagnostics(), BreakpointProbe, this, statement, (uint32)bpId);
+        BreakpointProbe* pProbe = Anew(scriptContext->AllocatorForDiagnostics(), BreakpointProbe, this, statement, (uint32_t)bpId);
 
         scriptContext->GetDebugContext()->GetProbeContainer()->AddProbe(pProbe);
         BreakpointProbeList* pBreakpointList = this->GetBreakpointList();
@@ -252,7 +252,7 @@ namespace Js
             return FALSE;
         }
 
-        uint32 ubos = static_cast<uint32>(ibos);
+        uint32_t ubos = static_cast<uint32_t>(ibos);
 
         // Getting the appropriate statement on the asked position works on the heuristic which requires two
         // probable candidates. These candidates will be closest to the ibos where first.range.start < ibos and
@@ -263,8 +263,8 @@ namespace Js
 
         this->utf8SourceInfo->MapFunction([&](FunctionBody* pFuncBody)
         {
-            uint32 functionStart = pFuncBody->StartInDocument();
-            uint32 functionEnd = functionStart + pFuncBody->LengthInBytes();
+            uint32_t functionStart = pFuncBody->StartInDocument();
+            uint32_t functionEnd = functionStart + pFuncBody->LengthInBytes();
 
             // For the first candidate, we should allow the current function to participate if its range
             // (instead of just start offset) is closer to the ubos compared to already found candidate1.

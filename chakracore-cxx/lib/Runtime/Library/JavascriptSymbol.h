@@ -24,9 +24,9 @@ namespace Js
         const PropertyRecord* GetValue() { return propertyRecordUsageCache.GetPropertyRecord(); }
         PropertyRecordUsageCache * GetPropertyRecordUsageCache();
 
-        static uint32 GetOffsetOfLdElemInlineCache() { return offsetof(JavascriptSymbol, propertyRecordUsageCache) + PropertyRecordUsageCache::GetOffsetOfLdElemInlineCache(); }
-        static uint32 GetOffsetOfStElemInlineCache() { return offsetof(JavascriptSymbol, propertyRecordUsageCache) + PropertyRecordUsageCache::GetOffsetOfStElemInlineCache(); }
-        static uint32 GetOffsetOfHitRate() { return offsetof(JavascriptSymbol, propertyRecordUsageCache) + PropertyRecordUsageCache::GetOffsetOfHitRate(); }
+        static uint32_t GetOffsetOfLdElemInlineCache() { return offsetof(JavascriptSymbol, propertyRecordUsageCache) + PropertyRecordUsageCache::GetOffsetOfLdElemInlineCache(); }
+        static uint32_t GetOffsetOfStElemInlineCache() { return offsetof(JavascriptSymbol, propertyRecordUsageCache) + PropertyRecordUsageCache::GetOffsetOfStElemInlineCache(); }
+        static uint32_t GetOffsetOfHitRate() { return offsetof(JavascriptSymbol, propertyRecordUsageCache) + PropertyRecordUsageCache::GetOffsetOfHitRate(); }
 
         class EntryInfo
         {

@@ -32,7 +32,7 @@ namespace Wasm
 
 namespace Js
 {
-    typedef uint32 uint32_t;
+    typedef uint32_t uint32_t;
     typedef IdentPtr PropertyName;
     typedef ParseNode* AsmJSParser;
 
@@ -64,14 +64,14 @@ namespace Js
             TYPE_COUNT
         };
 
-        const uint32 NaturalAlignment[ArrayBufferView::TYPE_COUNT] =
+        const uint32_t NaturalAlignment[ArrayBufferView::TYPE_COUNT] =
         {
 #define ARRAYBUFFER_VIEW(name, align, ...) align,
 #include "AsmJsArrayBufferViews.h"
         };
 
-#define ARRAYBUFFER_VIEW_MASK(align) ((uint32)~((1 << align) - 1))
-        const uint32 ViewMask[] =
+#define ARRAYBUFFER_VIEW_MASK(align) ((uint32_t)~((1 << align) - 1))
+        const uint32_t ViewMask[] =
         {
 #define ARRAYBUFFER_VIEW(name, align, ...) ARRAYBUFFER_VIEW_MASK(align),
 #include "AsmJsArrayBufferViews.h"
@@ -893,7 +893,7 @@ namespace Js
 
         Field(FunctionBody*) asmJsModuleFunctionBody;
         Field(Js::JavascriptError *) mLazyError;
-        Field(uint32) mTotalSizeBytes = 0;
+        Field(uint32_t) mTotalSizeBytes = 0;
 
     public:
         AsmJsFunctionInfo() : mArgCount(0),
@@ -944,7 +944,7 @@ namespace Js
         Js::JavascriptError * GetLazyError() const { return mLazyError; }
         void SetLazyError(Js::JavascriptError * val) { mLazyError = val; }
 
-        void SetTotalSizeinBytes(uint32 totalSize);
+        void SetTotalSizeinBytes(uint32_t totalSize);
         int GetTotalSizeinBytes() const;
         void SetArgType(AsmJsVarType type, ArgSlot index);
         inline AsmJsVarType GetArgType(ArgSlot index ) const

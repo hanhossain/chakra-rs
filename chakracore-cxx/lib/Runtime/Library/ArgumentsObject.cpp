@@ -32,18 +32,18 @@ namespace Js
     {
     }
 
-    HeapArgumentsObject::HeapArgumentsObject(Recycler *recycler, ActivationObject* obj, uint32 formalCount, DynamicType * type)
+    HeapArgumentsObject::HeapArgumentsObject(Recycler *recycler, ActivationObject* obj, uint32_t formalCount, DynamicType * type)
         : ArgumentsObject(type), frameObject(obj), formalCount(formalCount), numOfArguments(0), callerDeleted(false), deletedArgs(nullptr)
     {
         Assert(!frameObject || VarIsCorrectType(frameObject));
     }
 
-    void HeapArgumentsObject::SetNumberOfArguments(uint32 len)
+    void HeapArgumentsObject::SetNumberOfArguments(uint32_t len)
     {
         numOfArguments = len;
     }
 
-    uint32 HeapArgumentsObject::GetNumberOfArguments() const
+    uint32_t HeapArgumentsObject::GetNumberOfArguments() const
     {
         return numOfArguments;
     }
@@ -80,7 +80,7 @@ namespace Js
     //
     // Get the next valid formal arg index held in this object.
     //
-    uint32 HeapArgumentsObject::GetNextFormalArgIndex(uint32 index, BOOL enumNonEnumerable, PropertyAttributes* attributes) const
+    uint32_t HeapArgumentsObject::GetNextFormalArgIndex(uint32_t index, BOOL enumNonEnumerable, PropertyAttributes* attributes) const
     {
         if (attributes != nullptr)
         {
@@ -109,7 +109,7 @@ namespace Js
         return JavascriptArray::InvalidIndex;
     }
 
-    BOOL HeapArgumentsObject::HasItemAt(uint32 index)
+    BOOL HeapArgumentsObject::HasItemAt(uint32_t index)
     {
         // If this arg index is bound to a named formal argument, get it from the local frame.
         // If not, report this fact to the caller, which will defer to the normal get-value-by-index means.
@@ -121,7 +121,7 @@ namespace Js
         return false;
     }
 
-    BOOL HeapArgumentsObject::GetItemAt(uint32 index, Var* value, ScriptContext* requestContext)
+    BOOL HeapArgumentsObject::GetItemAt(uint32_t index, Var* value, ScriptContext* requestContext)
     {
         // If this arg index is bound to a named formal argument, get it from the local frame.
         // If not, report this fact to the caller, which will defer to the normal get-value-by-index means.
@@ -134,7 +134,7 @@ namespace Js
         return false;
     }
 
-    BOOL HeapArgumentsObject::SetItemAt(uint32 index, Var value)
+    BOOL HeapArgumentsObject::SetItemAt(uint32_t index, Var value)
     {
         // If this arg index is bound to a named formal argument, set it in the local frame.
         // If not, report this fact to the caller, which will defer to the normal set-value-by-index means.
@@ -147,7 +147,7 @@ namespace Js
         return false;
     }
 
-    BOOL HeapArgumentsObject::DeleteItemAt(uint32 index)
+    BOOL HeapArgumentsObject::DeleteItemAt(uint32_t index)
     {
         if (index < formalCount)
         {
@@ -167,25 +167,25 @@ namespace Js
         return false;
     }
 
-    BOOL HeapArgumentsObject::IsFormalArgument(uint32 index)
+    BOOL HeapArgumentsObject::IsFormalArgument(uint32_t index)
     {
         return index < this->numOfArguments && index < formalCount;
     }
 
     BOOL HeapArgumentsObject::IsFormalArgument(PropertyId propertyId)
     {
-        uint32 index;
+        uint32_t index;
         return IsFormalArgument(propertyId, &index);
     }
 
-    BOOL HeapArgumentsObject::IsFormalArgument(PropertyId propertyId, uint32* pIndex)
+    BOOL HeapArgumentsObject::IsFormalArgument(PropertyId propertyId, uint32_t* pIndex)
     {
         return
             this->GetScriptContext()->IsNumericPropertyId(propertyId, pIndex) &&
             IsFormalArgument(*pIndex);
     }
 
-    BOOL HeapArgumentsObject::IsArgumentDeleted(uint32 index) const
+    BOOL HeapArgumentsObject::IsArgumentDeleted(uint32_t index) const
     {
         return this->deletedArgs != NULL && this->deletedArgs->Test(index);
     }
@@ -218,7 +218,7 @@ namespace Js
         argsInfo->NumOfArguments = this->numOfArguments;
         argsInfo->FormalCount = this->formalCount;
 
-        uint32 depOnCount = 0;
+        uint32_t depOnCount = 0;
         TTD_PTR_ID* depOnArray = nullptr;
 
         argsInfo->IsFrameNullPtr = false;
@@ -243,7 +243,7 @@ namespace Js
         argsInfo->DeletedArgFlags = (this->formalCount != 0) ? alloc.SlabAllocateArrayZ<byte>(argsInfo->FormalCount) : nullptr;
         if(this->deletedArgs != nullptr)
         {
-            for(uint32 i = 0; i < this->formalCount; ++i)
+            for(uint32_t i = 0; i < this->formalCount; ++i)
             {
                 if(this->deletedArgs->Test(i))
                 {
@@ -302,7 +302,7 @@ namespace Js
         {
             // Copy existing items to the array so that they are there before the user can call Object.preventExtensions,
             // after which we can no longer add new items to the objectArray.
-            for (uint32 i = 0; i < this->formalCount && i < this->numOfArguments; ++i)
+            for (uint32_t i = 0; i < this->formalCount && i < this->numOfArguments; ++i)
             {
                 AssertMsg(this->IsFormalArgument(i), "this->IsFormalArgument(i)");
                 if (!this->IsArgumentDeleted(i))
@@ -321,7 +321,7 @@ namespace Js
         ScriptContext *scriptContext = GetScriptContext();
 
         // Try to get a numbered property that maps to an actual argument.
-        uint32 index;
+        uint32_t index;
         if (scriptContext->IsNumericPropertyId(id, &index) && index < this->HeapArgumentsObject::GetNumberOfArguments())
         {
             return HeapArgumentsObject::HasItemQuery(index);
@@ -335,7 +335,7 @@ namespace Js
         ScriptContext *scriptContext = GetScriptContext();
 
         // Try to get a numbered property that maps to an actual argument.
-        uint32 index;
+        uint32_t index;
         if (scriptContext->IsNumericPropertyId(propertyId, &index) && index < this->HeapArgumentsObject::GetNumberOfArguments())
         {
             if (this->GetItemAt(index, value, requestContext))
@@ -380,7 +380,7 @@ namespace Js
         // Try to set a numbered property that maps to an actual argument.
         ScriptContext *scriptContext = GetScriptContext();
 
-        uint32 index;
+        uint32_t index;
         if (scriptContext->IsNumericPropertyId(propertyId, &index) && index < this->HeapArgumentsObject::GetNumberOfArguments())
         {
             if (this->SetItemAt(index, value))
@@ -406,7 +406,7 @@ namespace Js
         return DynamicObject::SetProperty(propertyNameString, value, flags, info);
     }
 
-    PropertyQueryFlags HeapArgumentsObject::HasItemQuery(uint32 index)
+    PropertyQueryFlags HeapArgumentsObject::HasItemQuery(uint32_t index)
     {
         if (this->HasItemAt(index))
         {
@@ -415,7 +415,7 @@ namespace Js
         return DynamicObject::HasItemQuery(index);
     }
 
-    PropertyQueryFlags HeapArgumentsObject::GetItemQuery(Var originalInstance, uint32 index, Var* value, ScriptContext* requestContext)
+    PropertyQueryFlags HeapArgumentsObject::GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext* requestContext)
     {
         if (this->GetItemAt(index, value, requestContext))
         {
@@ -424,12 +424,12 @@ namespace Js
         return DynamicObject::GetItemQuery(originalInstance, index, value, requestContext);
     }
 
-    PropertyQueryFlags HeapArgumentsObject::GetItemReferenceQuery(Var originalInstance, uint32 index, Var* value, ScriptContext* requestContext)
+    PropertyQueryFlags HeapArgumentsObject::GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext* requestContext)
     {
         return HeapArgumentsObject::GetItemQuery(originalInstance, index, value, requestContext);
     }
 
-    BOOL HeapArgumentsObject::SetItem(uint32 index, Var value, PropertyOperationFlags flags)
+    BOOL HeapArgumentsObject::SetItem(uint32_t index, Var value, PropertyOperationFlags flags)
     {
         if (this->SetItemAt(index, value))
         {
@@ -438,7 +438,7 @@ namespace Js
         return DynamicObject::SetItem(index, value, flags);
     }
 
-    BOOL HeapArgumentsObject::DeleteItem(uint32 index, PropertyOperationFlags flags)
+    BOOL HeapArgumentsObject::DeleteItem(uint32_t index, PropertyOperationFlags flags)
     {
         if (this->DeleteItemAt(index))
         {
@@ -450,7 +450,7 @@ namespace Js
     BOOL HeapArgumentsObject::SetConfigurable(PropertyId propertyId, BOOL value)
     {
         // Try to set a numbered property that maps to an actual argument.
-        uint32 index;
+        uint32_t index;
         if (this->IsFormalArgument(propertyId, &index))
         {
             // From now on, make sure that frame object is ES5HeapArgumentsObject.
@@ -464,7 +464,7 @@ namespace Js
 
     BOOL HeapArgumentsObject::SetEnumerable(PropertyId propertyId, BOOL value)
     {
-        uint32 index;
+        uint32_t index;
         if (this->IsFormalArgument(propertyId, &index))
         {
             return this->ConvertToES5HeapArgumentsObject()->SetEnumerableForFormal(index, propertyId, value);
@@ -474,7 +474,7 @@ namespace Js
 
     BOOL HeapArgumentsObject::SetWritable(PropertyId propertyId, BOOL value)
     {
-        uint32 index;
+        uint32_t index;
         if (this->IsFormalArgument(propertyId, &index))
         {
             return this->ConvertToES5HeapArgumentsObject()->SetWritableForFormal(index, propertyId, value);
@@ -484,7 +484,7 @@ namespace Js
 
     BOOL HeapArgumentsObject::SetAccessors(PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags)
     {
-        uint32 index;
+        uint32_t index;
         if (this->IsFormalArgument(propertyId, &index))
         {
             return this->ConvertToES5HeapArgumentsObject()->SetAccessorsForFormal(index, propertyId, getter, setter, flags);
@@ -497,7 +497,7 @@ namespace Js
         // This is called by defineProperty in order to change the value in objectArray.
         // We have to intercept this call because
         // in case when we are connected (objectArray item is not used) we need to update the slot value (which is actually used).
-        uint32 index;
+        uint32_t index;
         if (this->IsFormalArgument(propertyId, &index))
         {
             return this->ConvertToES5HeapArgumentsObject()->SetPropertyWithAttributesForFormal(
@@ -536,7 +536,7 @@ namespace Js
 
     BOOL ES5HeapArgumentsObject::SetConfigurable(PropertyId propertyId, BOOL value)
     {
-        uint32 index;
+        uint32_t index;
         if (this->IsFormalArgument(propertyId, &index))
         {
             return this->SetConfigurableForFormal(index, propertyId, value);
@@ -546,7 +546,7 @@ namespace Js
 
     BOOL ES5HeapArgumentsObject::SetEnumerable(PropertyId propertyId, BOOL value)
     {
-        uint32 index;
+        uint32_t index;
         if (this->IsFormalArgument(propertyId, &index))
         {
             return this->SetEnumerableForFormal(index, propertyId, value);
@@ -556,7 +556,7 @@ namespace Js
 
     BOOL ES5HeapArgumentsObject::SetWritable(PropertyId propertyId, BOOL value)
     {
-        uint32 index;
+        uint32_t index;
         if (this->IsFormalArgument(propertyId, &index))
         {
             return this->SetWritableForFormal(index, propertyId, value);
@@ -566,7 +566,7 @@ namespace Js
 
     BOOL ES5HeapArgumentsObject::SetAccessors(PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags)
     {
-        uint32 index;
+        uint32_t index;
         if (this->IsFormalArgument(propertyId, &index))
         {
             return SetAccessorsForFormal(index, propertyId, getter, setter);
@@ -579,7 +579,7 @@ namespace Js
         // This is called by defineProperty in order to change the value in objectArray.
         // We have to intercept this call because
         // in case when we are connected (objectArray item is not used) we need to update the slot value (which is actually used).
-        uint32 index;
+        uint32_t index;
         if (this->IsFormalArgument(propertyId, &index))
         {
             return this->SetPropertyWithAttributesForFormal(index, propertyId, value, attributes, info, flags, possibleSideEffects);
@@ -614,21 +614,21 @@ namespace Js
         return this->DynamicObject::Freeze();
     }
 
-    BOOL ES5HeapArgumentsObject::GetItemAt(uint32 index, Var* value, ScriptContext* requestContext)
+    BOOL ES5HeapArgumentsObject::GetItemAt(uint32_t index, Var* value, ScriptContext* requestContext)
     {
         return this->IsFormalDisconnectedFromNamedArgument(index) ?
             JavascriptConversion::PropertyQueryFlagsToBoolean(this->DynamicObject::GetItemQuery(this, index, value, requestContext)) :
             __super::GetItemAt(index, value, requestContext);
     }
 
-    BOOL ES5HeapArgumentsObject::SetItemAt(uint32 index, Var value)
+    BOOL ES5HeapArgumentsObject::SetItemAt(uint32_t index, Var value)
     {
         return this->IsFormalDisconnectedFromNamedArgument(index) ?
             this->DynamicObject::SetItem(index, value, PropertyOperation_None) :
             __super::SetItemAt(index, value);
     }
 
-    BOOL ES5HeapArgumentsObject::DeleteItemAt(uint32 index)
+    BOOL ES5HeapArgumentsObject::DeleteItemAt(uint32_t index)
     {
         BOOL result = __super::DeleteItemAt(index);
         if (result && IsFormalArgument(index))
@@ -647,12 +647,12 @@ namespace Js
     //
     // Get the next valid formal arg index held in this object.
     //
-    uint32 ES5HeapArgumentsObject::GetNextFormalArgIndex(uint32 index, BOOL enumNonEnumerable, PropertyAttributes* attributes) const
+    uint32_t ES5HeapArgumentsObject::GetNextFormalArgIndex(uint32_t index, BOOL enumNonEnumerable, PropertyAttributes* attributes) const
     {
         return GetNextFormalArgIndexHelper(index, enumNonEnumerable, attributes);
     }
 
-    uint32 ES5HeapArgumentsObject::GetNextFormalArgIndexHelper(uint32 index, BOOL enumNonEnumerable, PropertyAttributes* attributes) const
+    uint32_t ES5HeapArgumentsObject::GetNextFormalArgIndexHelper(uint32_t index, BOOL enumNonEnumerable, PropertyAttributes* attributes) const
     {
         // Formals:
         // - deleted => not in objectArray && not connected -- do not enum, do not advance.
@@ -662,7 +662,7 @@ namespace Js
         // We use GetFormalCount and IsEnumerableByIndex which don't change the object
         // but are not declared as const, so do a const cast.
         ES5HeapArgumentsObject* mutableThis = const_cast<ES5HeapArgumentsObject*>(this);
-        uint32 formalCount = this->GetFormalCount();
+        uint32_t formalCount = this->GetFormalCount();
         while (++index < formalCount)
         {
             bool isDeleted = mutableThis->IsFormalDisconnectedFromNamedArgument(index) &&
@@ -690,7 +690,7 @@ namespace Js
     // Disconnects indexed argument from named argument for frame object property.
     // Remove association from them map. From now on (or still) for this argument,
     // named argument's value is no longer associated with arguments[] item.
-    void ES5HeapArgumentsObject::DisconnectFormalFromNamedArgument(uint32 index)
+    void ES5HeapArgumentsObject::DisconnectFormalFromNamedArgument(uint32_t index)
     {
         AssertMsg(this->IsFormalArgument(index), "SetAccessorsForFormal: called for non-formal");
 
@@ -700,13 +700,13 @@ namespace Js
         }
     }
 
-    BOOL ES5HeapArgumentsObject::IsFormalDisconnectedFromNamedArgument(uint32 index)
+    BOOL ES5HeapArgumentsObject::IsFormalDisconnectedFromNamedArgument(uint32_t index)
     {
         return this->IsArgumentDeleted(index);
     }
 
-    // Wrapper over IsEnumerable by uint32 index.
-    BOOL ES5HeapArgumentsObject::IsEnumerableByIndex(uint32 index)
+    // Wrapper over IsEnumerable by uint32_t index.
+    BOOL ES5HeapArgumentsObject::IsEnumerableByIndex(uint32_t index)
     {
         ScriptContext* scriptContext = this->GetScriptContext();
         Var indexNumber = JavascriptNumber::New(index, scriptContext);
@@ -717,7 +717,7 @@ namespace Js
     }
 
     // Helper method, just to avoid code duplication.
-    BOOL ES5HeapArgumentsObject::SetConfigurableForFormal(uint32 index, PropertyId propertyId, BOOL value)
+    BOOL ES5HeapArgumentsObject::SetConfigurableForFormal(uint32_t index, PropertyId propertyId, BOOL value)
     {
         AssertMsg(this->IsFormalArgument(index), "SetAccessorsForFormal: called for non-formal");
 
@@ -732,7 +732,7 @@ namespace Js
     }
 
     // Helper method, just to avoid code duplication.
-    BOOL ES5HeapArgumentsObject::SetEnumerableForFormal(uint32 index, PropertyId propertyId, BOOL value)
+    BOOL ES5HeapArgumentsObject::SetEnumerableForFormal(uint32_t index, PropertyId propertyId, BOOL value)
     {
         AssertMsg(this->IsFormalArgument(index), "SetAccessorsForFormal: called for non-formal");
 
@@ -745,7 +745,7 @@ namespace Js
     }
 
     // Helper method, just to avoid code duplication.
-    BOOL ES5HeapArgumentsObject::SetWritableForFormal(uint32 index, PropertyId propertyId, BOOL value)
+    BOOL ES5HeapArgumentsObject::SetWritableForFormal(uint32_t index, PropertyId propertyId, BOOL value)
     {
         AssertMsg(this->IsFormalArgument(index), "SetAccessorsForFormal: called for non-formal");
 
@@ -771,7 +771,7 @@ namespace Js
     }
 
     // Helper method for SetPropertyWithAttributes, just to avoid code duplication.
-    BOOL ES5HeapArgumentsObject::SetAccessorsForFormal(uint32 index, PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags)
+    BOOL ES5HeapArgumentsObject::SetAccessorsForFormal(uint32_t index, PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags)
     {
         AssertMsg(this->IsFormalArgument(index), "SetAccessorsForFormal: called for non-formal");
 
@@ -788,7 +788,7 @@ namespace Js
     }
 
     // Helper method for SetPropertyWithAttributes, just to avoid code duplication.
-    BOOL ES5HeapArgumentsObject::SetPropertyWithAttributesForFormal(uint32 index, PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags, SideEffects possibleSideEffects)
+    BOOL ES5HeapArgumentsObject::SetPropertyWithAttributesForFormal(uint32_t index, PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags, SideEffects possibleSideEffects)
     {
         AssertMsg(this->IsFormalArgument(propertyId), "SetPropertyWithAttributesForFormal: called for non-formal");
 
@@ -813,7 +813,7 @@ namespace Js
     }
 
     //---------------------- ES5HeapArgumentsObject::AutoObjectArrayItemExistsValidator -------------------------------
-    ES5HeapArgumentsObject::AutoObjectArrayItemExistsValidator::AutoObjectArrayItemExistsValidator(ES5HeapArgumentsObject* args, uint32 index)
+    ES5HeapArgumentsObject::AutoObjectArrayItemExistsValidator::AutoObjectArrayItemExistsValidator(ES5HeapArgumentsObject* args, uint32_t index)
         : m_args(args), m_index(index), m_isReleaseItemNeeded(false)
     {
         AssertMsg(args, "args");

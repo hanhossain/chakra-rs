@@ -50,7 +50,7 @@ void Symbol::SaveToPropIdArray(Symbol *sym, Js::PropertyIdArray *propIds, ByteCo
         Js::PropertyId slot = sym->scopeSlot;
         if (slot != Js::Constants::NoProperty)
         {
-            Assert((uint32)slot < propIds->count);
+            Assert((uint32_t)slot < propIds->count);
             propIds->elements[slot] = sym->EnsurePosition(byteCodeGenerator);
             if (pFirstSlot && !sym->IsArguments())
             {

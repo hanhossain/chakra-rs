@@ -71,7 +71,7 @@ inline ENUMTYPE &operator ^= (ENUMTYPE &a, ENUMTYPE b) { return (ENUMTYPE &)(((_
 typedef uint32_t uint32;
 // charcount_t represents a count of characters in a String
 // It is unsigned and the maximum value is (INT_MAX-1)
-typedef uint32 charcount_t;
+typedef uint32_t charcount_t;
 
 typedef uint8_t utf8char_t;
 typedef const utf8char_t CUTF8;
@@ -233,9 +233,9 @@ namespace utf8
         //  Add 0xD800 to the high ten bits, and 0xDC00 to the low ten bits
         // Below, we want to decode the surrogate pair to its original codepoint
         // So we do the above process in reverse
-        uint32 highTen = (surrogateHigh - 0xD800);
-        uint32 lowTen = (surrogateLow - 0xDC00);
-        uint32 codepoint = 0x10000 + ((highTen << 10) | lowTen);
+        uint32_t highTen = (surrogateHigh - 0xD800);
+        uint32_t lowTen = (surrogateLow - 0xDC00);
+        uint32_t codepoint = 0x10000 + ((highTen << 10) | lowTen);
 
         // This is the maximum valid unicode codepoint
         // This should be ensured anyway since you can't encode a value higher

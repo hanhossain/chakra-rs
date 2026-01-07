@@ -144,7 +144,7 @@ namespace TTD
             {
                 writer->WriteSequenceStart_DefaultKey(NSTokens::Separator::CommaSeparator);
                 writer->AdjustIndent(1);
-                for(uint32 i = 0; i < snapHandler->MaxPropertyIndex; ++i)
+                for(uint32_t i = 0; i < snapHandler->MaxPropertyIndex; ++i)
                 {
                     writer->WriteRecordStart(i != 0 ? NSTokens::Separator::CommaAndBigSpaceSeparator : NSTokens::Separator::BigSpaceSeparator);
                     writer->WriteUInt32(NSTokens::Key::propertyId, snapHandler->PropertyInfoArray[i].PropertyRecordId);
@@ -181,7 +181,7 @@ namespace TTD
                 snapHandler->PropertyInfoArray = alloc.SlabAllocateArray<SnapHandlerPropertyEntry>(snapHandler->MaxPropertyIndex);
 
                 reader->ReadSequenceStart_WDefaultKey(true);
-                for(uint32 i = 0; i < snapHandler->MaxPropertyIndex; ++i)
+                for(uint32_t i = 0; i < snapHandler->MaxPropertyIndex; ++i)
                 {
                     reader->ReadRecordStart(i != 0);
 
@@ -207,8 +207,8 @@ namespace TTD
         {
             compareMap.DiagnosticAssert(h1->IsExtensibleFlag == h2->IsExtensibleFlag);
 
-            JsUtil::BaseDictionary<long, uint32, HeapAllocator> h1Dict(&HeapAllocator::Instance);
-            for(uint32 i = 0; i < h1->MaxPropertyIndex; ++i)
+            JsUtil::BaseDictionary<long, uint32_t, HeapAllocator> h1Dict(&HeapAllocator::Instance);
+            for(uint32_t i = 0; i < h1->MaxPropertyIndex; ++i)
             {
                 if(h1->PropertyInfoArray[i].DataKind != SnapEntryDataKindTag::Clear)
                 {
@@ -217,8 +217,8 @@ namespace TTD
                 }
             }
 
-            JsUtil::BaseDictionary<long, uint32, HeapAllocator> h2Dict(&HeapAllocator::Instance);
-            for(uint32 i = 0; i < h2->MaxPropertyIndex; ++i)
+            JsUtil::BaseDictionary<long, uint32_t, HeapAllocator> h2Dict(&HeapAllocator::Instance);
+            for(uint32_t i = 0; i < h2->MaxPropertyIndex; ++i)
             {
                 if(h2->PropertyInfoArray[i].DataKind != SnapEntryDataKindTag::Clear)
                 {
@@ -234,8 +234,8 @@ namespace TTD
                 long locationTag = iter.CurrentKey();
                 compareMap.DiagnosticAssert(h2Dict.ContainsKey(locationTag));
 
-                uint32 h1Idx = h1Dict.Item(locationTag);
-                uint32 h2Idx = h2Dict.Item(locationTag);
+                uint32_t h1Idx = h1Dict.Item(locationTag);
+                uint32_t h2Idx = h2Dict.Item(locationTag);
                 compareMap.DiagnosticAssert(h1->PropertyInfoArray[h1Idx].AttributeInfo == h2->PropertyInfoArray[h2Idx].AttributeInfo);
                 compareMap.DiagnosticAssert(h1->PropertyInfoArray[h1Idx].DataKind == h2->PropertyInfoArray[h2Idx].DataKind);
             }

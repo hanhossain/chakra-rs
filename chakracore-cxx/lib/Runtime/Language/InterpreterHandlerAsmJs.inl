@@ -133,10 +133,10 @@ EXDEF3_WMS( CUSTOM_ASMJS     , StArrAtomic  , OP_StArrAtomic               , Was
   DEF2_WMS( I1toI1Mem        , Ctz_Int      , Wasm::WasmMath::Ctz                                )
 
 // Unsigned Int32 Math
-  DEF2_WMS( I2toI1Mem        , Div_UInt     , AsmJsMath::DivChecked<uint32>                            )
-  DEF2_WMS( I2toI1Mem        , Rem_UInt     , AsmJsMath::RemChecked<uint32>                            )
-  DEF2_WMS( I2toI1Ctx        , Div_Trap_UInt, (OP_UnsignedDivRemCheck<uint32, &AsmJsMath::DivUnsafe<uint32>>) )
-  DEF2_WMS( I2toI1Ctx        , Rem_Trap_UInt, (OP_UnsignedDivRemCheck<uint32, &AsmJsMath::RemUnsafe<uint32>>) )
+  DEF2_WMS( I2toI1Mem        , Div_UInt     , AsmJsMath::DivChecked<uint32_t>                            )
+  DEF2_WMS( I2toI1Mem        , Rem_UInt     , AsmJsMath::RemChecked<uint32_t>                            )
+  DEF2_WMS( I2toI1Ctx        , Div_Trap_UInt, (OP_UnsignedDivRemCheck<uint32_t, &AsmJsMath::DivUnsafe<uint32_t>>) )
+  DEF2_WMS( I2toI1Ctx        , Rem_Trap_UInt, (OP_UnsignedDivRemCheck<uint32_t, &AsmJsMath::RemUnsafe<uint32_t>>) )
 
 // Int64 Math
   DEF2_WMS( L2toL1Mem        , Add_Long     , AsmJsMath::Add<long>)

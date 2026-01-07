@@ -537,8 +537,8 @@ namespace Js
         void SetIgnoreForEquivalentObjTypeSpec(bool value) { this->ignoreForEquivalentObjTypeSpec = value; }
         bool GetCloneForJitTimeUse() const { return this->cloneForJitTimeUse; }
         void SetCloneForJitTimeUse(bool value) { this->cloneForJitTimeUse = value; }
-        uint32 GetInlineCachesFillInfo() { return this->inlineCachesFillInfo; }
-        void UpdateInlineCachesFillInfo(uint32 index, bool set);
+        uint32_t GetInlineCachesFillInfo() { return this->inlineCachesFillInfo; }
+        void UpdateInlineCachesFillInfo(uint32_t index, bool set);
         bool IsFull();
         void Clear(Type * type);
 
@@ -624,8 +624,8 @@ namespace Js
 #endif
         virtual ScriptContext* GetScriptContext() const = 0;
 
-        static uint32 GetOffsetOfSize() { return offsetof(Js::PolymorphicInlineCache, size); }
-        static uint32 GetOffsetOfInlineCaches() { return offsetof(Js::PolymorphicInlineCache, inlineCaches); }
+        static uint32_t GetOffsetOfSize() { return offsetof(Js::PolymorphicInlineCache, size); }
+        static uint32_t GetOffsetOfInlineCaches() { return offsetof(Js::PolymorphicInlineCache, inlineCaches); }
 
     private:
         uint GetNextInlineCacheIndex(uint index) const
@@ -731,9 +731,9 @@ namespace Js
         void Unregister(ScriptContext * scriptContext);
         void Clear();
 
-        static uint32 OffsetOfFunction();
-        static uint32 OffsetOfResult();
-        static uint32 OffsetOfType();
+        static uint32_t OffsetOfFunction();
+        static uint32_t OffsetOfResult();
+        static uint32_t OffsetOfType();
 
     private:
         void Set(Type * instanceType, JavascriptFunction * function, JavascriptBoolean * result);

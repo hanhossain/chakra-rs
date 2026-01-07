@@ -299,7 +299,7 @@ namespace UnifiedRegex
             for (int j = 0; j < TrigramInfo::PatternLength; j++)
             {
                 patterns[i] <<= 4;
-                patterns[i] |= (uint32)identifier->patternBits[i][j];
+                patterns[i] |= (uint32_t)identifier->patternBits[i][j];
             }
         }
     }
@@ -314,7 +314,7 @@ namespace UnifiedRegex
     }
 
     // It exploits the fact that each quad of bits has at most only one bit set.
-    inline bool oneBitSetInEveryQuad(uint32 x)
+    inline bool oneBitSetInEveryQuad(uint32_t x)
     {
         x -= 0x11111111;
         return (x & 0x88888888u) == 0;
@@ -337,7 +337,7 @@ namespace UnifiedRegex
         if (offset > inputLength - TrigramInfo::PatternLength)
             return false;
 
-        uint32 v = 0;
+        uint32_t v = 0;
         for (int i = 0; i < TrigramInfo::PatternLength; i++)
         {
 #if ENABLE_REGEX_CONFIG_OPTIONS
@@ -349,8 +349,8 @@ namespace UnifiedRegex
                 v |= charToBits[CTU(input[offset + i])];
         }
 
-        const uint32 lp = patterns[0];
-        const uint32 rp = patterns[1];
+        const uint32_t lp = patterns[0];
+        const uint32_t rp = patterns[1];
         CharCount next = offset + TrigramInfo::PatternLength;
 
         while (true)

@@ -64,10 +64,10 @@ namespace Js
     bool JavascriptStringObject::IsValidIndex(PropertyId propertyId, bool conditionMetBehavior)
     {
         ScriptContext*scriptContext = GetScriptContext();
-        uint32 index;
+        uint32_t index;
         if (scriptContext->IsNumericPropertyId(propertyId, &index))
         {
-            if (index < (uint32)this->InternalUnwrap()->GetLength())
+            if (index < (uint32_t)this->InternalUnwrap()->GetLength())
             {
                 return conditionMetBehavior;
             }
@@ -98,7 +98,7 @@ namespace Js
             return flags;
         }
 
-        uint32 index;
+        uint32_t index;
         if (requestContext->IsNumericPropertyId(propertyId, &index))
         {
             return JavascriptStringObject::GetItemSetter(index, setterValue, requestContext);
@@ -121,7 +121,7 @@ namespace Js
                 return flags;
             }
 
-            uint32 index;
+            uint32_t index;
             if (requestContext->IsNumericPropertyId(propertyId, &index))
             {
                 return JavascriptStringObject::GetItemSetter(index, setterValue, requestContext);
@@ -188,7 +188,7 @@ namespace Js
         return JavascriptStringObject::IsValidIndex(propertyId, false);
     }
 
-    BOOL JavascriptStringObject::GetSpecialPropertyName(uint32 index, JavascriptString ** propertyName, ScriptContext * requestContext)
+    BOOL JavascriptStringObject::GetSpecialPropertyName(uint32_t index, JavascriptString ** propertyName, ScriptContext * requestContext)
     {
         if (index == 0)
         {
@@ -231,7 +231,7 @@ namespace Js
 
         // For NumericPropertyIds check that index is less than JavascriptString length
         ScriptContext*scriptContext = GetScriptContext();
-        uint32 index;
+        uint32_t index;
         if (scriptContext->IsNumericPropertyId(propertyId, &index))
         {
             JavascriptString* str = this->InternalUnwrap();
@@ -332,7 +332,7 @@ namespace Js
         return DynamicObject::DeleteProperty(propertyNameString, propertyOperationFlags);
     }
 
-    PropertyQueryFlags JavascriptStringObject::HasItemQuery(uint32 index)
+    PropertyQueryFlags JavascriptStringObject::HasItemQuery(uint32_t index)
     {
         if (this->InternalUnwrap()->HasItem(index))
         {
@@ -341,7 +341,7 @@ namespace Js
         return DynamicObject::HasItemQuery(index);
     }
 
-    PropertyQueryFlags JavascriptStringObject::GetItemQuery(Var originalInstance, uint32 index, Var* value, ScriptContext* requestContext)
+    PropertyQueryFlags JavascriptStringObject::GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext* requestContext)
     {
         Var strObject = CrossSite::MarshalVar(requestContext,
           this->InternalUnwrap(), this->GetScriptContext());
@@ -354,23 +354,23 @@ namespace Js
         return DynamicObject::GetItemQuery(originalInstance, index, value, requestContext);
     }
 
-    PropertyQueryFlags JavascriptStringObject::GetItemReferenceQuery(Var originalInstance, uint32 index, Var* value, ScriptContext* requestContext)
+    PropertyQueryFlags JavascriptStringObject::GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext* requestContext)
     {
         return this->GetItemQuery(originalInstance, index, value, requestContext);
     }
 
-    DescriptorFlags JavascriptStringObject::GetItemSetter(uint32 index, Var* setterValue, ScriptContext* requestContext)
+    DescriptorFlags JavascriptStringObject::GetItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext)
     {
-        if (index < (uint32)this->InternalUnwrap()->GetLength())
+        if (index < (uint32_t)this->InternalUnwrap()->GetLength())
         {
             return DescriptorFlags::Data;
         }
         return DynamicObject::GetItemSetter(index, setterValue, requestContext);
     }
 
-    BOOL JavascriptStringObject::SetItem(uint32 index, Var value, PropertyOperationFlags flags)
+    BOOL JavascriptStringObject::SetItem(uint32_t index, Var value, PropertyOperationFlags flags)
     {
-        if (index < (uint32)this->InternalUnwrap()->GetLength())
+        if (index < (uint32_t)this->InternalUnwrap()->GetLength())
         {
             return false;
         }

@@ -44,7 +44,7 @@ namespace TTD
         }
     }
 
-    void InflateMap::PrepForInitialInflate(ThreadContext* threadContext, uint32 ctxCount, uint32 handlerCount, uint32 typeCount, uint32 objectCount, uint32 bodyCount, uint32 dbgScopeCount, uint32 envCount, uint32 slotCount)
+    void InflateMap::PrepForInitialInflate(ThreadContext* threadContext, uint32_t ctxCount, uint32_t handlerCount, uint32_t typeCount, uint32_t objectCount, uint32_t bodyCount, uint32_t dbgScopeCount, uint32_t envCount, uint32_t slotCount)
     {
         this->m_typeMap.Initialize(typeCount);
         this->m_handlerMap.Initialize(handlerCount);
@@ -63,7 +63,7 @@ namespace TTD
         this->m_slotArrayPinSet.Root(RecyclerNew(recycler, SlotArrayPinSet, recycler, objectCount), recycler);
     }
 
-    void InflateMap::PrepForReInflate(uint32 ctxCount, uint32 handlerCount, uint32 typeCount, uint32 objectCount, uint32 bodyCount, uint32 dbgScopeCount, uint32 envCount, uint32 slotCount)
+    void InflateMap::PrepForReInflate(uint32_t ctxCount, uint32_t handlerCount, uint32_t typeCount, uint32_t objectCount, uint32_t bodyCount, uint32_t dbgScopeCount, uint32_t envCount, uint32_t slotCount)
     {
         this->m_typeMap.Initialize(typeCount);
         this->m_handlerMap.Initialize(handlerCount);
@@ -461,7 +461,7 @@ namespace TTD
         }
     }
 
-    void TTDCompareMap::CheckConsistentAndAddPtrIdMapping_Scope(TTD_PTR_ID h1PtrId, TTD_PTR_ID h2PtrId, uint32 index)
+    void TTDCompareMap::CheckConsistentAndAddPtrIdMapping_Scope(TTD_PTR_ID h1PtrId, TTD_PTR_ID h2PtrId, uint32_t index)
     {
         TTDComparePath::PathEntry next{ index, nullptr };
         this->CheckConsistentAndAddPtrIdMapping_Helper(h1PtrId, h2PtrId, TTDComparePath::StepKind::Scope, next);
@@ -481,7 +481,7 @@ namespace TTD
 
     void TTDCompareMap::CheckConsistentAndAddPtrIdMapping_Root(TTD_PTR_ID h1PtrId, TTD_PTR_ID h2PtrId, TTD_LOG_PTR_ID tag)
     {
-        TTDComparePath::PathEntry next{ (uint32)tag, nullptr };
+        TTDComparePath::PathEntry next{ (uint32_t)tag, nullptr };
         this->CheckConsistentAndAddPtrIdMapping_Helper(h1PtrId, h2PtrId, TTDComparePath::StepKind::Root, next);
     }
 

@@ -46,11 +46,11 @@ namespace Js
 
         if (isNumeric)
         {
-            uint32 numericValue;
+            uint32_t numericValue;
             isNumeric = Js::PropertyRecord::IsPropertyNameNumeric(this->GetBuffer(), this->GetLength(), &numericValue);
             if (isNumeric)
             {
-                *(uint32 *)(this->GetBuffer() + this->GetLength() + 1) = numericValue;
+                *(uint32_t *)(this->GetBuffer() + this->GetLength() + 1) = numericValue;
                 Assert(GetNumericValue() == numericValue);
             }
         }
@@ -82,21 +82,21 @@ namespace Js
     // through a fast path before reaching those APIs.
     bool PropertyRecord::IsPropertyNameNumeric(const char16_t* str, int length)
     {
-        uint32 unused;
+        uint32_t unused;
         return IsPropertyNameNumeric(str, length, &unused);
     }
 #endif
 
-    bool PropertyRecord::IsPropertyNameNumeric(const char16_t* str, int length, uint32* intVal)
+    bool PropertyRecord::IsPropertyNameNumeric(const char16_t* str, int length, uint32_t* intVal)
     {
         return (Js::JavascriptOperators::TryConvertToUInt32(str, length, intVal) &&
             (*intVal != Js::JavascriptArray::InvalidIndex));
     }
 
-    uint32 PropertyRecord::GetNumericValue() const
+    uint32_t PropertyRecord::GetNumericValue() const
     {
         Assert(IsNumeric());
-        return *(uint32 *)(this->GetBuffer() + this->GetLength() + 1);
+        return *(uint32_t *)(this->GetBuffer() + this->GetLength() + 1);
     }
 
     // Initialize all Internal property records

@@ -798,7 +798,7 @@ namespace Js
         Assert(!GetScriptContext()->IsHeapEnumInProgress());
         if (nullptr == deleteMethod)
         {
-            uint32 indexVal;
+            uint32_t indexVal;
             if (requestContext->IsNumericPropertyId(propertyId, &indexVal))
             {
                 return targetObj->DeleteItem(indexVal, flags);
@@ -872,7 +872,7 @@ namespace Js
     }
 #endif
 
-    PropertyQueryFlags JavascriptProxy::HasItemQuery(uint32 index)
+    PropertyQueryFlags JavascriptProxy::HasItemQuery(uint32_t index)
     {
         const PropertyRecord* propertyRecord;
         auto fn = [&](RecyclableObject* object)-> BOOL {
@@ -885,7 +885,7 @@ namespace Js
         return JavascriptConversion::BooleanToPropertyQueryFlags(HasPropertyTrap(fn, getPropertyId));
     }
 
-    BOOL JavascriptProxy::HasOwnItem(uint32 index)
+    BOOL JavascriptProxy::HasOwnItem(uint32_t index)
     {
         const PropertyRecord* propertyRecord;
         auto fn = [&](RecyclableObject* object)-> BOOL {
@@ -898,7 +898,7 @@ namespace Js
         return HasPropertyTrap(fn, getPropertyId);
     }
 
-    PropertyQueryFlags JavascriptProxy::GetItemQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext)
+    PropertyQueryFlags JavascriptProxy::GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext)
     {
         const PropertyRecord* propertyRecord;
         auto fn = [&](RecyclableObject* object)-> BOOL {
@@ -921,7 +921,7 @@ namespace Js
         return JavascriptConversion::BooleanToPropertyQueryFlags(foundProperty);
     }
 
-    PropertyQueryFlags JavascriptProxy::GetItemReferenceQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext)
+    PropertyQueryFlags JavascriptProxy::GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext)
     {
         const PropertyRecord* propertyRecord;
         auto fn = [&](RecyclableObject* object)-> BOOL {
@@ -944,20 +944,20 @@ namespace Js
         return JavascriptConversion::BooleanToPropertyQueryFlags(foundProperty);
     }
 
-    DescriptorFlags JavascriptProxy::GetItemSetter(uint32 index, Var* setterValueOrProxy, ScriptContext* requestContext)
+    DescriptorFlags JavascriptProxy::GetItemSetter(uint32_t index, Var* setterValueOrProxy, ScriptContext* requestContext)
     {
         *setterValueOrProxy = this;
         return DescriptorFlags::Proxy;
     }
 
-    BOOL JavascriptProxy::SetItem(uint32 index, Var value, PropertyOperationFlags flags)
+    BOOL JavascriptProxy::SetItem(uint32_t index, Var value, PropertyOperationFlags flags)
     {
         const PropertyRecord* propertyRecord;
         PropertyIdFromInt(index, &propertyRecord);
         return SetProperty(propertyRecord->GetPropertyId(), value, flags, nullptr);
     }
 
-    BOOL JavascriptProxy::DeleteItem(uint32 index, PropertyOperationFlags flags)
+    BOOL JavascriptProxy::DeleteItem(uint32_t index, PropertyOperationFlags flags)
     {
         const PropertyRecord* propertyRecord;
         PropertyIdFromInt(index, &propertyRecord);
@@ -993,7 +993,7 @@ namespace Js
             Field(JavascriptArray*) trapResult;
             Field(JavascriptProxy*) proxy;
             FieldNoBarrier(ScriptContext*) scriptContext;
-            Field(uint32) index;
+            Field(uint32_t) index;
 
             DEFINE_VTABLE_CTOR_ABSTRACT(ProxyOwnkeysEnumerator, JavascriptEnumerator)
 
@@ -1017,7 +1017,7 @@ namespace Js
                 }
                 // 13.7.5.15 EnumerateObjectProperties(O) (https://tc39.github.io/ecma262/#sec-enumerate-object-properties)
                 // for (let key of Reflect.ownKeys(obj)) {
-                uint32 len = trapResult->GetLength();
+                uint32_t len = trapResult->GetLength();
                 while (index < len)
                 {
                     Var var = trapResult->DirectGetItem(index++) ;
@@ -1856,7 +1856,7 @@ namespace Js
             {
             case SetPropertyTrapKind::SetItemOnTaggedNumberKind:
             {
-                uint32 indexVal;
+                uint32_t indexVal;
                 BOOL isNumericPropertyId = requestContext->IsNumericPropertyId(propertyId, &indexVal);
                 Assert(isNumericPropertyId);
                 return JavascriptOperators::SetItemOnTaggedNumber(receiver, targetObj, indexVal, newValue, requestContext, propertyOperationFlags);
@@ -1867,7 +1867,7 @@ namespace Js
                 return JavascriptOperators::SetProperty(receiver, targetObj, propertyId, newValue, requestContext, propertyOperationFlags);
             case SetPropertyTrapKind::SetItemKind:
             {
-                uint32 indexVal;
+                uint32_t indexVal;
                 BOOL isNumericPropertyId = requestContext->IsNumericPropertyId(propertyId, &indexVal);
                 Assert(isNumericPropertyId);
                 return  JavascriptOperators::SetItem(receiver, targetObj, indexVal, newValue, requestContext, propertyOperationFlags, skipPrototypeCheck);
@@ -1997,7 +1997,7 @@ namespace Js
         return requestContext->GetLibrary()->GetUndefined();
     }
 
-    void JavascriptProxy::PropertyIdFromInt(uint32 index, PropertyRecord const** propertyRecord)
+    void JavascriptProxy::PropertyIdFromInt(uint32_t index, PropertyRecord const** propertyRecord)
     {
         char16_t buffer[22];
         int pos = TaggedInt::ToBuffer(index, buffer, _countof(buffer));
@@ -2078,7 +2078,7 @@ namespace Js
     }
 #endif
 
-    Var JavascriptProxy::ConstructorTrap(Arguments args, ScriptContext* scriptContext, const Js::AuxArray<uint32> *spreadIndices)
+    Var JavascriptProxy::ConstructorTrap(Arguments args, ScriptContext* scriptContext, const Js::AuxArray<uint32_t> *spreadIndices)
     {
         PROBE_STACK(GetScriptContext(), Js::Constants::MinStackDefault);
 
@@ -2466,7 +2466,7 @@ namespace Js
         {
             // Dictionary containing intersection of keys present in targetKeys and trapResult
             Var lenValue = JavascriptOperators::OP_GetLength(trapResultArray, requestContext);
-            uint32 len = (uint32)JavascriptConversion::ToLength(lenValue, requestContext);
+            uint32_t len = (uint32_t)JavascriptConversion::ToLength(lenValue, requestContext);
 
             JsUtil::BaseDictionary<Js::PropertyId, bool, ArenaAllocator> targetToTrapResultMap(tempAllocator, len);
 
@@ -2502,7 +2502,7 @@ namespace Js
             isTargetExtensible = targetObj->IsExtensible();
             targetKeys = JavascriptOperators::GetOwnPropertyKeys(targetObj, requestContext);
 
-            for (uint32 i = 0; i < targetKeys->GetLength(); i++)
+            for (uint32_t i = 0; i < targetKeys->GetLength(); i++)
             {
                 element = targetKeys->DirectGetItem(i);
                 AssertMsg(VarIs<JavascriptSymbol>(element) || VarIs<JavascriptString>(element), "Invariant check during ownKeys proxy trap should make sure we only get property key here. (symbol or string primitives)");
@@ -2603,8 +2603,8 @@ namespace Js
     {
         TTD::NSSnapObjects::SnapProxyInfo* spi = alloc.SlabAllocateStruct<TTD::NSSnapObjects::SnapProxyInfo>();
 
-        const uint32 reserveSize = 2;
-        uint32 depOnCount = 0;
+        const uint32_t reserveSize = 2;
+        uint32_t depOnCount = 0;
         TTD_PTR_ID* depOnArray = alloc.SlabReserveArraySpace<TTD_PTR_ID>(reserveSize);
 
         spi->HandlerId = TTD_INVALID_PTR_ID;

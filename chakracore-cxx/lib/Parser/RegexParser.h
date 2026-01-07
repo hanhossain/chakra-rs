@@ -29,11 +29,11 @@ namespace UnifiedRegex
             // If this surrogate pair is inside a range, then rangeLocation isn't null.
             const EncodedChar* rangeLocation;
             codepoint_t value;
-            uint32 length;
+            uint32_t length;
             size_t multiUnits;
             SurrogatePairTracker* next;
 
-            SurrogatePairTracker(const EncodedChar* location, codepoint_t value, uint32 length, size_t multiUnits)
+            SurrogatePairTracker(const EncodedChar* location, codepoint_t value, uint32_t length, size_t multiUnits)
                 : location(location)
                 , next(nullptr)
                 , value(value)
@@ -43,7 +43,7 @@ namespace UnifiedRegex
             {
             }
 
-            SurrogatePairTracker(const EncodedChar* location, const EncodedChar* rangeLocation, codepoint_t value, uint32 length, size_t multiUnits)
+            SurrogatePairTracker(const EncodedChar* location, const EncodedChar* rangeLocation, codepoint_t value, uint32_t length, size_t multiUnits)
                 : location(location)
                 , next(nullptr)
                 , value(value)
@@ -147,7 +147,7 @@ namespace UnifiedRegex
         // Helpers
         //
         int TryParseExtendedUnicodeEscape(Char& c, bool& previousSurrogatePart, bool trackSurrogatePair = false);
-        void TrackIfSurrogatePair(codepoint_t codePoint, const EncodedChar* location, uint32 consumptionLength);
+        void TrackIfSurrogatePair(codepoint_t codePoint, const EncodedChar* location, uint32_t consumptionLength);
         Node* CreateSurrogatePairAtom(char16_t lower, char16_t upper);
         AltNode* AppendSurrogateRangeToDisjunction(codepoint_t lowerCodePoint, codepoint_t upperCodePoint, AltNode *lastAlttNode);
         AltNode* AppendSurrogatePairToDisjunction(codepoint_t codePoint, AltNode *lastAlttNode);

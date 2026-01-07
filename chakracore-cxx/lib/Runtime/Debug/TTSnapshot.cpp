@@ -45,7 +45,7 @@ namespace TTD
         bool firstTCSymbol = true;
         for(auto iter = this->m_tcSymbolRegistrationMapContents.GetIterator(); iter.IsValid(); iter.MoveNext())
         {
-            writer->WriteNakedUInt32((uint32)*iter.Current(), firstTCSymbol ? NSTokens::Separator::NoSeparator : NSTokens::Separator::CommaSeparator);
+            writer->WriteNakedUInt32((uint32_t)*iter.Current(), firstTCSymbol ? NSTokens::Separator::NoSeparator : NSTokens::Separator::CommaSeparator);
 
             firstTCSymbol = false;
         }
@@ -112,18 +112,18 @@ namespace TTD
 
         SnapShot* snap = TT_HEAP_NEW(SnapShot, 0.0);
 
-        uint32 ctxCount = reader->ReadLengthValue(true);
+        uint32_t ctxCount = reader->ReadLengthValue(true);
         reader->ReadSequenceStart_WDefaultKey(true);
-        for(uint32 i = 0; i < ctxCount; ++i)
+        for(uint32_t i = 0; i < ctxCount; ++i)
         {
             NSSnapValues::SnapContext* snpCtx = snap->m_ctxList.NextOpenEntry();
             NSSnapValues::ParseSnapContext(snpCtx, i != 0, reader, snap->GetSnapshotSlabAllocator());
         }
         reader->ReadSequenceEnd();
 
-        uint32 tcSymbolCount = reader->ReadLengthValue(true);
+        uint32_t tcSymbolCount = reader->ReadLengthValue(true);
         reader->ReadSequenceStart_WDefaultKey(true);
-        for(uint32 i = 0; i < tcSymbolCount; ++i)
+        for(uint32_t i = 0; i < tcSymbolCount; ++i)
         {
             Js::PropertyId* symid = snap->m_tcSymbolRegistrationMapContents.NextOpenEntry();
             *symid = reader->ReadNakedUInt32(i != 0);
@@ -154,9 +154,9 @@ namespace TTD
         }
 
         ////
-        uint32 bodyCount = reader->ReadLengthValue(true);
+        uint32_t bodyCount = reader->ReadLengthValue(true);
         reader->ReadSequenceStart_WDefaultKey(true);
-        for(uint32 i = 0; i < bodyCount; ++i)
+        for(uint32_t i = 0; i < bodyCount; ++i)
         {
             NSSnapValues::FunctionBodyResolveInfo* into = snap->m_functionBodyList.NextOpenEntry();
             NSSnapValues::ParseFunctionBodyInfo(into, i != 0, reader, snap->GetSnapshotSlabAllocator());
@@ -165,9 +165,9 @@ namespace TTD
 
         SnapShot::ParseListHelper_WMap(&NSSnapValues::ParseSnapPrimitiveValue, snap->m_primitiveObjectList, reader, snap->GetSnapshotSlabAllocator(), typeMap);
 
-        uint32 objCount = reader->ReadLengthValue(true);
+        uint32_t objCount = reader->ReadLengthValue(true);
         reader->ReadSequenceStart_WDefaultKey(true);
-        for(uint32 i = 0; i < objCount; ++i)
+        for(uint32_t i = 0; i < objCount; ++i)
         {
             NSSnapObjects::SnapObject* into = snap->m_compoundObjectList.NextOpenEntry();
             NSSnapObjects::ParseObject(into, i != 0, reader, snap->GetSnapshotSlabAllocator(), snap->m_snapObjectVTableArray, typeMap);
@@ -194,7 +194,7 @@ namespace TTD
 
         if(snpObject->OptDependsOnInfo != nullptr)
         {
-            for(uint32 i = 0; i < snpObject->OptDependsOnInfo->DepOnCount; ++i)
+            for(uint32_t i = 0; i < snpObject->OptDependsOnInfo->DepOnCount; ++i)
             {
                 const NSSnapObjects::SnapObject* depOnObj = idToSnpObjectMap.LookupKnownItem(snpObject->OptDependsOnInfo->DepOnPtrArray[i]);
 
@@ -216,11 +216,11 @@ namespace TTD
         else
         {
             //lookup the inflator function for this object and call it
-            NSSnapObjects::fPtr_DoObjectInflation inflateFPtr = this->m_snapObjectVTableArray[(uint32)snpObject->SnapObjectTag].InflationFunc;
+            NSSnapObjects::fPtr_DoObjectInflation inflateFPtr = this->m_snapObjectVTableArray[(uint32_t)snpObject->SnapObjectTag].InflationFunc;
             if(inflateFPtr == nullptr)
             {
                 char buff[1024];
-                sprintf_s(buff, "We probably forgot to update the vtable with a tag we added.  Tag is [%i].  SnapRuntimeFunctionObject is [%i]", (uint32)snpObject->SnapObjectTag, TTD::NSSnapObjects::SnapObjectType::SnapRuntimeFunctionObject);
+                sprintf_s(buff, "We probably forgot to update the vtable with a tag we added.  Tag is [%i].  SnapRuntimeFunctionObject is [%i]", (uint32_t)snpObject->SnapObjectTag, TTD::NSSnapObjects::SnapObjectType::SnapRuntimeFunctionObject);
                 TTDAssert(inflateFPtr != nullptr, buff);
             }
             res = inflateFPtr(snpObject, inflator);
@@ -293,78 +293,78 @@ namespace TTD
         m_snapObjectVTableArray(nullptr),
         GCTime(gcTime), MarkTime(0.0), ExtractTime(0.0)
     {
-        this->m_snapObjectVTableArray = this->m_slabAllocator.SlabAllocateArray<NSSnapObjects::SnapObjectVTable>((uint32)NSSnapObjects::SnapObjectType::Limit);
-        memset(this->m_snapObjectVTableArray, 0, sizeof(NSSnapObjects::SnapObjectVTable) * (uint32)NSSnapObjects::SnapObjectType::Limit);
+        this->m_snapObjectVTableArray = this->m_slabAllocator.SlabAllocateArray<NSSnapObjects::SnapObjectVTable>((uint32_t)NSSnapObjects::SnapObjectType::Limit);
+        memset(this->m_snapObjectVTableArray, 0, sizeof(NSSnapObjects::SnapObjectVTable) * (uint32_t)NSSnapObjects::SnapObjectType::Limit);
 
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::Invalid] = { nullptr, nullptr, nullptr, nullptr };
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapUnhandledObject] = { nullptr, nullptr, nullptr, nullptr };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::Invalid] = { nullptr, nullptr, nullptr, nullptr };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapUnhandledObject] = { nullptr, nullptr, nullptr, nullptr };
 
         ////
         //For the objects that have inflators
 
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapDynamicObject] = { &NSSnapObjects::DoObjectInflation_SnapDynamicObject, nullptr, nullptr, nullptr };
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapAwaitObject] = { &NSSnapObjects::DoObjectInflation_SnapAwaitObject, nullptr, nullptr, nullptr };
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapExternalObject] = { &NSSnapObjects::DoObjectInflation_SnapExternalObject, nullptr, nullptr, nullptr };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapDynamicObject] = { &NSSnapObjects::DoObjectInflation_SnapDynamicObject, nullptr, nullptr, nullptr };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapAwaitObject] = { &NSSnapObjects::DoObjectInflation_SnapAwaitObject, nullptr, nullptr, nullptr };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapExternalObject] = { &NSSnapObjects::DoObjectInflation_SnapExternalObject, nullptr, nullptr, nullptr };
 
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapScriptFunctionObject] = { &NSSnapObjects::DoObjectInflation_SnapScriptFunctionInfo, &NSSnapObjects::DoAddtlValueInstantiation_SnapScriptFunctionInfo, &NSSnapObjects::EmitAddtlInfo_SnapScriptFunctionInfo, &NSSnapObjects::ParseAddtlInfo_SnapScriptFunctionInfo };
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapRuntimeFunctionObject] = { nullptr, nullptr, nullptr, nullptr }; //should always be wellknown objects and the extra state is in the functionbody defs
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapExternalFunctionObject] = { &NSSnapObjects::DoObjectInflation_SnapExternalFunctionInfo, nullptr, &NSSnapObjects::EmitAddtlInfo_SnapExternalFunctionInfo, &NSSnapObjects::ParseAddtlInfo_SnapExternalFunctionInfo };
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapRuntimeRevokerFunctionObject] = { &NSSnapObjects::DoObjectInflation_SnapRevokerFunctionInfo, nullptr, &NSSnapObjects::EmitAddtlInfo_SnapRevokerFunctionInfo, &NSSnapObjects::ParseAddtlInfo_SnapRevokerFunctionInfo };
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapBoundFunctionObject] = { &NSSnapObjects::DoObjectInflation_SnapBoundFunctionInfo, nullptr, &NSSnapObjects::EmitAddtlInfo_SnapBoundFunctionInfo, &NSSnapObjects::ParseAddtlInfo_SnapBoundFunctionInfo };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapScriptFunctionObject] = { &NSSnapObjects::DoObjectInflation_SnapScriptFunctionInfo, &NSSnapObjects::DoAddtlValueInstantiation_SnapScriptFunctionInfo, &NSSnapObjects::EmitAddtlInfo_SnapScriptFunctionInfo, &NSSnapObjects::ParseAddtlInfo_SnapScriptFunctionInfo };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapRuntimeFunctionObject] = { nullptr, nullptr, nullptr, nullptr }; //should always be wellknown objects and the extra state is in the functionbody defs
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapExternalFunctionObject] = { &NSSnapObjects::DoObjectInflation_SnapExternalFunctionInfo, nullptr, &NSSnapObjects::EmitAddtlInfo_SnapExternalFunctionInfo, &NSSnapObjects::ParseAddtlInfo_SnapExternalFunctionInfo };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapRuntimeRevokerFunctionObject] = { &NSSnapObjects::DoObjectInflation_SnapRevokerFunctionInfo, nullptr, &NSSnapObjects::EmitAddtlInfo_SnapRevokerFunctionInfo, &NSSnapObjects::ParseAddtlInfo_SnapRevokerFunctionInfo };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapBoundFunctionObject] = { &NSSnapObjects::DoObjectInflation_SnapBoundFunctionInfo, nullptr, &NSSnapObjects::EmitAddtlInfo_SnapBoundFunctionInfo, &NSSnapObjects::ParseAddtlInfo_SnapBoundFunctionInfo };
 
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapActivationObject] = { &NSSnapObjects::DoObjectInflation_SnapActivationInfo, nullptr, nullptr, nullptr };
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapBlockActivationObject] = { &NSSnapObjects::DoObjectInflation_SnapBlockActivationObject, nullptr, nullptr, nullptr };
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapPseudoActivationObject] = { &NSSnapObjects::DoObjectInflation_SnapPseudoActivationObject, nullptr, nullptr, nullptr };
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapConsoleScopeActivationObject] = { &NSSnapObjects::DoObjectInflation_SnapConsoleScopeActivationObject, nullptr, nullptr, nullptr };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapActivationObject] = { &NSSnapObjects::DoObjectInflation_SnapActivationInfo, nullptr, nullptr, nullptr };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapBlockActivationObject] = { &NSSnapObjects::DoObjectInflation_SnapBlockActivationObject, nullptr, nullptr, nullptr };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapPseudoActivationObject] = { &NSSnapObjects::DoObjectInflation_SnapPseudoActivationObject, nullptr, nullptr, nullptr };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapConsoleScopeActivationObject] = { &NSSnapObjects::DoObjectInflation_SnapConsoleScopeActivationObject, nullptr, nullptr, nullptr };
 
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapHeapArgumentsObject] = { &NSSnapObjects::DoObjectInflation_SnapHeapArgumentsInfo, nullptr, &NSSnapObjects::EmitAddtlInfo_SnapHeapArgumentsInfo<NSSnapObjects::SnapObjectType::SnapHeapArgumentsObject>, &NSSnapObjects::ParseAddtlInfo_SnapHeapArgumentsInfo<NSSnapObjects::SnapObjectType::SnapHeapArgumentsObject> };
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapES5HeapArgumentsObject] = { &NSSnapObjects::DoObjectInflation_SnapES5HeapArgumentsInfo, nullptr, &NSSnapObjects::EmitAddtlInfo_SnapHeapArgumentsInfo<NSSnapObjects::SnapObjectType::SnapES5HeapArgumentsObject>, &NSSnapObjects::ParseAddtlInfo_SnapHeapArgumentsInfo<NSSnapObjects::SnapObjectType::SnapES5HeapArgumentsObject> };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapHeapArgumentsObject] = { &NSSnapObjects::DoObjectInflation_SnapHeapArgumentsInfo, nullptr, &NSSnapObjects::EmitAddtlInfo_SnapHeapArgumentsInfo<NSSnapObjects::SnapObjectType::SnapHeapArgumentsObject>, &NSSnapObjects::ParseAddtlInfo_SnapHeapArgumentsInfo<NSSnapObjects::SnapObjectType::SnapHeapArgumentsObject> };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapES5HeapArgumentsObject] = { &NSSnapObjects::DoObjectInflation_SnapES5HeapArgumentsInfo, nullptr, &NSSnapObjects::EmitAddtlInfo_SnapHeapArgumentsInfo<NSSnapObjects::SnapObjectType::SnapES5HeapArgumentsObject>, &NSSnapObjects::ParseAddtlInfo_SnapHeapArgumentsInfo<NSSnapObjects::SnapObjectType::SnapES5HeapArgumentsObject> };
 
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapBoxedValueObject] = { &NSSnapObjects::DoObjectInflation_SnapBoxedValue, &NSSnapObjects::DoAddtlValueInstantiation_SnapBoxedValue, &NSSnapObjects::EmitAddtlInfo_SnapBoxedValue, &NSSnapObjects::ParseAddtlInfo_SnapBoxedValue };
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapDateObject] = { &NSSnapObjects::DoObjectInflation_SnapDate, nullptr, &NSSnapObjects::EmitAddtlInfo_SnapDate, &NSSnapObjects::ParseAddtlInfo_SnapDate };
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapRegexObject] = { &NSSnapObjects::DoObjectInflation_SnapRegexInfo, nullptr, &NSSnapObjects::EmitAddtlInfo_SnapRegexInfo, &NSSnapObjects::ParseAddtlInfo_SnapRegexInfo };
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapErrorObject] = { &NSSnapObjects::DoObjectInflation_SnapError, nullptr, nullptr, nullptr };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapBoxedValueObject] = { &NSSnapObjects::DoObjectInflation_SnapBoxedValue, &NSSnapObjects::DoAddtlValueInstantiation_SnapBoxedValue, &NSSnapObjects::EmitAddtlInfo_SnapBoxedValue, &NSSnapObjects::ParseAddtlInfo_SnapBoxedValue };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapDateObject] = { &NSSnapObjects::DoObjectInflation_SnapDate, nullptr, &NSSnapObjects::EmitAddtlInfo_SnapDate, &NSSnapObjects::ParseAddtlInfo_SnapDate };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapRegexObject] = { &NSSnapObjects::DoObjectInflation_SnapRegexInfo, nullptr, &NSSnapObjects::EmitAddtlInfo_SnapRegexInfo, &NSSnapObjects::ParseAddtlInfo_SnapRegexInfo };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapErrorObject] = { &NSSnapObjects::DoObjectInflation_SnapError, nullptr, nullptr, nullptr };
 
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapArrayObject] = { &NSSnapObjects::DoObjectInflation_SnapArrayInfo<Js::Var, NSSnapObjects::SnapObjectType::SnapArrayObject>, &NSSnapObjects::DoAddtlValueInstantiation_SnapArrayInfo<TTDVar, Js::Var, NSSnapObjects::SnapObjectType::SnapArrayObject>, &NSSnapObjects::EmitAddtlInfo_SnapArrayInfo<TTDVar, NSSnapObjects::SnapObjectType::SnapArrayObject>, &NSSnapObjects::ParseAddtlInfo_SnapArrayInfo<TTDVar, NSSnapObjects::SnapObjectType::SnapArrayObject> };
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapNativeIntArrayObject] = { &NSSnapObjects::DoObjectInflation_SnapArrayInfo<int32, NSSnapObjects::SnapObjectType::SnapNativeIntArrayObject>, &NSSnapObjects::DoAddtlValueInstantiation_SnapArrayInfo<int32, int32, NSSnapObjects::SnapObjectType::SnapNativeIntArrayObject>, &NSSnapObjects::EmitAddtlInfo_SnapArrayInfo<int32, NSSnapObjects::SnapObjectType::SnapNativeIntArrayObject>, &NSSnapObjects::ParseAddtlInfo_SnapArrayInfo<int32, NSSnapObjects::SnapObjectType::SnapNativeIntArrayObject> };
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapNativeFloatArrayObject] = { &NSSnapObjects::DoObjectInflation_SnapArrayInfo<double, NSSnapObjects::SnapObjectType::SnapNativeFloatArrayObject>, &NSSnapObjects::DoAddtlValueInstantiation_SnapArrayInfo<double, double, NSSnapObjects::SnapObjectType::SnapNativeFloatArrayObject>, &NSSnapObjects::EmitAddtlInfo_SnapArrayInfo<double, NSSnapObjects::SnapObjectType::SnapNativeFloatArrayObject>, &NSSnapObjects::ParseAddtlInfo_SnapArrayInfo<double, NSSnapObjects::SnapObjectType::SnapNativeFloatArrayObject> };
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapES5ArrayObject] = { &NSSnapObjects::DoObjectInflation_SnapES5ArrayInfo, &NSSnapObjects::DoAddtlValueInstantiation_SnapES5ArrayInfo, &NSSnapObjects::EmitAddtlInfo_SnapES5ArrayInfo, &NSSnapObjects::ParseAddtlInfo_SnapES5ArrayInfo };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapArrayObject] = { &NSSnapObjects::DoObjectInflation_SnapArrayInfo<Js::Var, NSSnapObjects::SnapObjectType::SnapArrayObject>, &NSSnapObjects::DoAddtlValueInstantiation_SnapArrayInfo<TTDVar, Js::Var, NSSnapObjects::SnapObjectType::SnapArrayObject>, &NSSnapObjects::EmitAddtlInfo_SnapArrayInfo<TTDVar, NSSnapObjects::SnapObjectType::SnapArrayObject>, &NSSnapObjects::ParseAddtlInfo_SnapArrayInfo<TTDVar, NSSnapObjects::SnapObjectType::SnapArrayObject> };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapNativeIntArrayObject] = { &NSSnapObjects::DoObjectInflation_SnapArrayInfo<int32, NSSnapObjects::SnapObjectType::SnapNativeIntArrayObject>, &NSSnapObjects::DoAddtlValueInstantiation_SnapArrayInfo<int32, int32, NSSnapObjects::SnapObjectType::SnapNativeIntArrayObject>, &NSSnapObjects::EmitAddtlInfo_SnapArrayInfo<int32, NSSnapObjects::SnapObjectType::SnapNativeIntArrayObject>, &NSSnapObjects::ParseAddtlInfo_SnapArrayInfo<int32, NSSnapObjects::SnapObjectType::SnapNativeIntArrayObject> };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapNativeFloatArrayObject] = { &NSSnapObjects::DoObjectInflation_SnapArrayInfo<double, NSSnapObjects::SnapObjectType::SnapNativeFloatArrayObject>, &NSSnapObjects::DoAddtlValueInstantiation_SnapArrayInfo<double, double, NSSnapObjects::SnapObjectType::SnapNativeFloatArrayObject>, &NSSnapObjects::EmitAddtlInfo_SnapArrayInfo<double, NSSnapObjects::SnapObjectType::SnapNativeFloatArrayObject>, &NSSnapObjects::ParseAddtlInfo_SnapArrayInfo<double, NSSnapObjects::SnapObjectType::SnapNativeFloatArrayObject> };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapES5ArrayObject] = { &NSSnapObjects::DoObjectInflation_SnapES5ArrayInfo, &NSSnapObjects::DoAddtlValueInstantiation_SnapES5ArrayInfo, &NSSnapObjects::EmitAddtlInfo_SnapES5ArrayInfo, &NSSnapObjects::ParseAddtlInfo_SnapES5ArrayInfo };
 
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapArrayBufferObject] = { &NSSnapObjects::DoObjectInflation_SnapArrayBufferInfo, nullptr, &NSSnapObjects::EmitAddtlInfo_SnapArrayBufferInfo, &NSSnapObjects::ParseAddtlInfo_SnapArrayBufferInfo };
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapTypedArrayObject] = { &NSSnapObjects::DoObjectInflation_SnapTypedArrayInfo, nullptr, &NSSnapObjects::EmitAddtlInfo_SnapTypedArrayInfo, &NSSnapObjects::ParseAddtlInfo_SnapTypedArrayInfo };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapArrayBufferObject] = { &NSSnapObjects::DoObjectInflation_SnapArrayBufferInfo, nullptr, &NSSnapObjects::EmitAddtlInfo_SnapArrayBufferInfo, &NSSnapObjects::ParseAddtlInfo_SnapArrayBufferInfo };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapTypedArrayObject] = { &NSSnapObjects::DoObjectInflation_SnapTypedArrayInfo, nullptr, &NSSnapObjects::EmitAddtlInfo_SnapTypedArrayInfo, &NSSnapObjects::ParseAddtlInfo_SnapTypedArrayInfo };
 
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapSetObject] = { &NSSnapObjects::DoObjectInflation_SnapSetInfo, &NSSnapObjects::DoAddtlValueInstantiation_SnapSetInfo, &NSSnapObjects::EmitAddtlInfo_SnapSetInfo, &NSSnapObjects::ParseAddtlInfo_SnapSetInfo };
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapMapObject] = { &NSSnapObjects::DoObjectInflation_SnapMapInfo, &NSSnapObjects::DoAddtlValueInstantiation_SnapMapInfo, &NSSnapObjects::EmitAddtlInfo_SnapMapInfo, &NSSnapObjects::ParseAddtlInfo_SnapMapInfo };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapSetObject] = { &NSSnapObjects::DoObjectInflation_SnapSetInfo, &NSSnapObjects::DoAddtlValueInstantiation_SnapSetInfo, &NSSnapObjects::EmitAddtlInfo_SnapSetInfo, &NSSnapObjects::ParseAddtlInfo_SnapSetInfo };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapMapObject] = { &NSSnapObjects::DoObjectInflation_SnapMapInfo, &NSSnapObjects::DoAddtlValueInstantiation_SnapMapInfo, &NSSnapObjects::EmitAddtlInfo_SnapMapInfo, &NSSnapObjects::ParseAddtlInfo_SnapMapInfo };
 
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapProxyObject] = { &NSSnapObjects::DoObjectInflation_SnapProxyInfo, nullptr, &NSSnapObjects::EmitAddtlInfo_SnapProxyInfo, &NSSnapObjects::ParseAddtlInfo_SnapProxyInfo };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapProxyObject] = { &NSSnapObjects::DoObjectInflation_SnapProxyInfo, nullptr, &NSSnapObjects::EmitAddtlInfo_SnapProxyInfo, &NSSnapObjects::ParseAddtlInfo_SnapProxyInfo };
 
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapPromiseObject] = { &NSSnapObjects::DoObjectInflation_SnapPromiseInfo, nullptr, &NSSnapObjects::EmitAddtlInfo_SnapPromiseInfo, &NSSnapObjects::ParseAddtlInfo_SnapPromiseInfo };
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapPromiseResolveOrRejectFunctionObject] = { &NSSnapObjects::DoObjectInflation_SnapPromiseResolveOrRejectFunctionInfo, nullptr, &NSSnapObjects::EmitAddtlInfo_SnapPromiseResolveOrRejectFunctionInfo, &NSSnapObjects::ParseAddtlInfo_SnapPromiseResolveOrRejectFunctionInfo };
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapPromiseReactionTaskFunctionObject] = { &NSSnapObjects::DoObjectInflation_SnapPromiseReactionTaskFunctionInfo, nullptr, &NSSnapObjects::EmitAddtlInfo_SnapPromiseReactionTaskFunctionInfo, &NSSnapObjects::ParseAddtlInfo_SnapPromiseReactionTaskFunctionInfo };
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapPromiseAllResolveElementFunctionObject] = { &NSSnapObjects::DoObjectInflation_SnapPromiseAllResolveElementFunctionInfo, nullptr, &NSSnapObjects::EmitAddtlInfo_SnapPromiseAllResolveElementFunctionInfo, &NSSnapObjects::ParseAddtlInfo_SnapPromiseAllResolveElementFunctionInfo };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapPromiseObject] = { &NSSnapObjects::DoObjectInflation_SnapPromiseInfo, nullptr, &NSSnapObjects::EmitAddtlInfo_SnapPromiseInfo, &NSSnapObjects::ParseAddtlInfo_SnapPromiseInfo };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapPromiseResolveOrRejectFunctionObject] = { &NSSnapObjects::DoObjectInflation_SnapPromiseResolveOrRejectFunctionInfo, nullptr, &NSSnapObjects::EmitAddtlInfo_SnapPromiseResolveOrRejectFunctionInfo, &NSSnapObjects::ParseAddtlInfo_SnapPromiseResolveOrRejectFunctionInfo };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapPromiseReactionTaskFunctionObject] = { &NSSnapObjects::DoObjectInflation_SnapPromiseReactionTaskFunctionInfo, nullptr, &NSSnapObjects::EmitAddtlInfo_SnapPromiseReactionTaskFunctionInfo, &NSSnapObjects::ParseAddtlInfo_SnapPromiseReactionTaskFunctionInfo };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapPromiseAllResolveElementFunctionObject] = { &NSSnapObjects::DoObjectInflation_SnapPromiseAllResolveElementFunctionInfo, nullptr, &NSSnapObjects::EmitAddtlInfo_SnapPromiseAllResolveElementFunctionInfo, &NSSnapObjects::ParseAddtlInfo_SnapPromiseAllResolveElementFunctionInfo };
 
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapGeneratorFunction] = {
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapGeneratorFunction] = {
             &NSSnapObjects::DoObjectInflation_SnapGeneratorFunctionInfo,
             &NSSnapObjects::DoAddtlValueInstantiation_SnapGeneratorFunctionInfo,
             &NSSnapObjects::EmitAddtlInfo_SnapGeneratorFunctionInfo,
             &NSSnapObjects::ParseAddtlInfo_SnapGeneratorFunctionInfo };
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapGeneratorVirtualScriptFunction] = {
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapGeneratorVirtualScriptFunction] = {
             &NSSnapObjects::DoObjectInflation_SnapGeneratorVirtualScriptFunctionInfo,
             &NSSnapObjects::DoAddtlValueInstantiation_SnapGeneratorVirtualScriptFunctionInfo,
             &NSSnapObjects::EmitAddtlInfo_SnapGeneratorVirtualScriptFunctionInfo,
             &NSSnapObjects::ParseAddtlInfo_SnapGeneratorVirtualScriptFunctionInfo };
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapAsyncFunction] = {
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapAsyncFunction] = {
             &NSSnapObjects::DoObjectInflation_SnapAsyncFunction,
             &NSSnapObjects::DoAddtlValueInstantiation_SnapAsyncFunction,
             &NSSnapObjects::EmitAddtlInfo_SnapAsyncFunction,
             &NSSnapObjects::ParseAddtlInfo_SnapAsyncFunction
         };
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapGenerator] = {
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapGenerator] = {
             &NSSnapObjects::DoObjectInflation_SnapGeneratorInfo,
             &NSSnapObjects::DoAddtlValueInstantiation_SnapGeneratorInfo,
             &NSSnapObjects::EmitAddtlInfo_SnapGeneratorInfo,
             &NSSnapObjects::ParseAddtlInfo_SnapGeneratorInfo };
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::JavascriptAsyncSpawnStepFunction] = {
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::JavascriptAsyncSpawnStepFunction] = {
             &NSSnapObjects::DoObjectInflation_SnapJavascriptAsyncSpawnStepFunctionInfo,
             &NSSnapObjects::DoAddtlValueInstantiation_SnapJavascriptAsyncSpawnStepFunctionInfo,
             &NSSnapObjects::EmitAddtlInfo_SnapJavascriptAsyncSpawnStepFunctionInfo,
@@ -376,7 +376,7 @@ namespace TTD
         ////
         //For the objects that are always well known
 
-        this->m_snapObjectVTableArray[(uint32)NSSnapObjects::SnapObjectType::SnapWellKnownObject] = { nullptr, nullptr, nullptr, nullptr };
+        this->m_snapObjectVTableArray[(uint32_t)NSSnapObjects::SnapObjectType::SnapWellKnownObject] = { nullptr, nullptr, nullptr, nullptr };
     }
 
     SnapShot::~SnapShot()
@@ -384,49 +384,49 @@ namespace TTD
         ;
     }
 
-    uint32 SnapShot::ContextCount() const
+    uint32_t SnapShot::ContextCount() const
     {
         return this->m_ctxList.Count();
     }
 
-    uint32 SnapShot::HandlerCount() const
+    uint32_t SnapShot::HandlerCount() const
     {
         return this->m_handlerList.Count();
     }
 
-    uint32 SnapShot::TypeCount() const
+    uint32_t SnapShot::TypeCount() const
     {
         return this->m_typeList.Count();
     }
 
-    uint32 SnapShot::BodyCount() const
+    uint32_t SnapShot::BodyCount() const
     {
         return this->m_functionBodyList.Count();
     }
 
-    uint32 SnapShot::PrimitiveCount() const
+    uint32_t SnapShot::PrimitiveCount() const
     {
         return this->m_primitiveObjectList.Count();
     }
 
-    uint32 SnapShot::ObjectCount() const
+    uint32_t SnapShot::ObjectCount() const
     {
         return this->m_compoundObjectList.Count();
     }
 
-    uint32 SnapShot::EnvCount() const
+    uint32_t SnapShot::EnvCount() const
     {
         return this->m_scopeEntries.Count();
     }
 
-    uint32 SnapShot::SlotArrayCount() const
+    uint32_t SnapShot::SlotArrayCount() const
     {
         return this->m_slotArrayEntries.Count();
     }
 
-    uint32 SnapShot::GetDbgScopeCountNonTopLevel() const
+    uint32_t SnapShot::GetDbgScopeCountNonTopLevel() const
     {
-        uint32 dbgScopeCount = 0;
+        uint32_t dbgScopeCount = 0;
         for(auto iter = this->m_functionBodyList.GetIterator(); iter.IsValid(); iter.MoveNext())
         {
             dbgScopeCount += iter.Current()->ScopeChainInfo.ScopeCount;
@@ -596,7 +596,7 @@ namespace TTD
             const NSSnapObjects::SnapObject* sobj = iter.Current();
             Js::RecyclableObject* iobj = inflator->LookupObject(sobj->ObjectPtrId);
 
-            NSSnapObjects::fPtr_DoAddtlValueInstantiation addtlInstFPtr = this->m_snapObjectVTableArray[(uint32)sobj->SnapObjectTag].AddtlInstationationFunc;
+            NSSnapObjects::fPtr_DoAddtlValueInstantiation addtlInstFPtr = this->m_snapObjectVTableArray[(uint32_t)sobj->SnapObjectTag].AddtlInstationationFunc;
             if(addtlInstFPtr != nullptr)
             {
                 addtlInstFPtr(sobj, iobj, inflator);
@@ -673,17 +673,17 @@ namespace TTD
         {
             const NSSnapValues::SnapContext* ctx = iter.Current();
 
-            for(uint32 i = 0; i < ctx->LoadedTopLevelScriptCount; ++i)
+            for(uint32_t i = 0; i < ctx->LoadedTopLevelScriptCount; ++i)
             {
                 compareMap.H1FunctionTopLevelLoadMap.AddNew(ctx->LoadedTopLevelScriptArray[i].ContextSpecificBodyPtrId, ctx->LoadedTopLevelScriptArray[i].TopLevelBodyCtr);
             }
 
-            for(uint32 i = 0; i < ctx->NewFunctionTopLevelScriptCount; ++i)
+            for(uint32_t i = 0; i < ctx->NewFunctionTopLevelScriptCount; ++i)
             {
                 compareMap.H1FunctionTopLevelNewMap.AddNew(ctx->NewFunctionTopLevelScriptArray[i].ContextSpecificBodyPtrId, ctx->NewFunctionTopLevelScriptArray[i].TopLevelBodyCtr);
             }
 
-            for(uint32 i = 0; i < ctx->EvalTopLevelScriptCount; ++i)
+            for(uint32_t i = 0; i < ctx->EvalTopLevelScriptCount; ++i)
             {
                 compareMap.H1FunctionTopLevelEvalMap.AddNew(ctx->EvalTopLevelScriptArray[i].ContextSpecificBodyPtrId, ctx->EvalTopLevelScriptArray[i].TopLevelBodyCtr);
             }
@@ -693,17 +693,17 @@ namespace TTD
         {
             const NSSnapValues::SnapContext* ctx = iter.Current();
 
-            for(uint32 i = 0; i < ctx->LoadedTopLevelScriptCount; ++i)
+            for(uint32_t i = 0; i < ctx->LoadedTopLevelScriptCount; ++i)
             {
                 compareMap.H2FunctionTopLevelLoadMap.AddNew(ctx->LoadedTopLevelScriptArray[i].ContextSpecificBodyPtrId, ctx->LoadedTopLevelScriptArray[i].TopLevelBodyCtr);
             }
 
-            for(uint32 i = 0; i < ctx->NewFunctionTopLevelScriptCount; ++i)
+            for(uint32_t i = 0; i < ctx->NewFunctionTopLevelScriptCount; ++i)
             {
                 compareMap.H2FunctionTopLevelNewMap.AddNew(ctx->NewFunctionTopLevelScriptArray[i].ContextSpecificBodyPtrId, ctx->NewFunctionTopLevelScriptArray[i].TopLevelBodyCtr);
             }
 
-            for(uint32 i = 0; i < ctx->EvalTopLevelScriptCount; ++i)
+            for(uint32_t i = 0; i < ctx->EvalTopLevelScriptCount; ++i)
             {
                 compareMap.H2FunctionTopLevelEvalMap.AddNew(ctx->EvalTopLevelScriptArray[i].ContextSpecificBodyPtrId, ctx->EvalTopLevelScriptArray[i].TopLevelBodyCtr);
             }
@@ -830,9 +830,9 @@ namespace TTD
         TTD_PTR_ID ptrId1 = TTD_INVALID_PTR_ID;
         TTD_PTR_ID ptrId2 = TTD_INVALID_PTR_ID;
 
-        uint32 comparedSlotArrays = 0;
-        uint32 comparedScopes = 0;
-        uint32 comparedObjects = 0;
+        uint32_t comparedSlotArrays = 0;
+        uint32_t comparedScopes = 0;
+        uint32_t comparedObjects = 0;
 
         compareMap.GetNextCompareInfo(&ctag, &ptrId1, &ptrId2);
         while(ctag != TTDCompareTag::Done)

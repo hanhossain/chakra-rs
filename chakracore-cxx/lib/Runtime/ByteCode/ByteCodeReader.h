@@ -9,8 +9,8 @@ namespace Js
 {
     struct ByteCodeReader
     {
-        static uint32 GetStartLocationOffset() { return offsetof(ByteCodeReader, m_startLocation); }
-        static uint32 GetCurrentLocationOffset() { return offsetof(ByteCodeReader, m_currentLocation); }
+        static uint32_t GetStartLocationOffset() { return offsetof(ByteCodeReader, m_startLocation); }
+        static uint32_t GetCurrentLocationOffset() { return offsetof(ByteCodeReader, m_currentLocation); }
 
     private:
         // TODO: (leish)(swb) this is not always stack allocated now

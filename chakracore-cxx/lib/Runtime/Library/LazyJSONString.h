@@ -73,7 +73,7 @@ struct JSONObjectProperty
 
 struct JSONArray
 {
-    Field(uint32) length;
+    Field(uint32_t) length;
     Field(JSONProperty) arr[];
 };
 

@@ -213,8 +213,8 @@ public:
 
 #if ENABLE_TTD
 typedef void (CALLBACK *JsTTDOnScriptLoadCallback)(FinalizableObject* hostContext, Js::FunctionBody* body, Js::Utf8SourceInfo* utf8SourceInfo, CompileScriptException* compileException, bool notify);
-typedef uint32 (CALLBACK *JsTTDOnBPRegisterCallback)(void* hostRuntime, long bpID, Js::ScriptContext* scriptContext, Js::Utf8SourceInfo* utf8SourceInfo, uint32 line, uint32 column, BOOL* isNewBP);
-typedef void (CALLBACK *JsTTDOnBPDeleteCallback)(void* hostRuntime, uint32 bpID);
+typedef uint32_t (CALLBACK *JsTTDOnBPRegisterCallback)(void* hostRuntime, long bpID, Js::ScriptContext* scriptContext, Js::Utf8SourceInfo* utf8SourceInfo, uint32_t line, uint32_t column, BOOL* isNewBP);
+typedef void (CALLBACK *JsTTDOnBPDeleteCallback)(void* hostRuntime, uint32_t bpID);
 typedef void (CALLBACK *JsTTDOnBPClearDocumentCallback)(void* hostRuntime);
 
 //A class that we use to pass in a functor from the host when we need to inform it about something we are doing
@@ -513,7 +513,7 @@ namespace Js
         OnlyWritablePropertyScriptRegistry* GetOnlyWritablePropertyRegistry() { return &this->onlyWritablePropertyRegistry; }
     private:
 
-        JavascriptFunction* GenerateRootFunction(ParseNodeProg * parseTree, uint sourceIndex, Parser* parser, uint32 grfscr, CompileScriptException * pse, const char16_t *rootDisplayName);
+        JavascriptFunction* GenerateRootFunction(ParseNodeProg * parseTree, uint sourceIndex, Parser* parser, uint32_t grfscr, CompileScriptException * pse, const char16_t *rootDisplayName);
 
         typedef void (*EventHandler)(ScriptContext *);
         NoSpecialPropertyScriptRegistry noSpecialPropertyRegistry;
@@ -628,7 +628,7 @@ public:
         int objectLiteralPathCount;
         int objectLiteralCount[TypePath::MaxPathTypeHandlerLength];
         int objectLiteralSimpleDictionaryCount;
-        uint32 objectLiteralMaxLength;
+        uint32_t objectLiteralMaxLength;
         int objectLiteralPromoteCount;
         int objectLiteralCacheCount;
         int objectLiteralBranchCount;
@@ -638,8 +638,8 @@ public:
         uint byteCodeAuxiliaryDataSize;
         uint byteCodeAuxiliaryContextDataSize;
         uint byteCodeHistogram[static_cast<uint>(OpCode::ByteCodeLast)];
-        uint32 forinCache;
-        uint32 forinNoCache;
+        uint32_t forinCache;
+        uint32_t forinNoCache;
 #endif
 #ifdef BGJIT_STATS
         uint interpretedCount;
@@ -1196,7 +1196,7 @@ private:
         }
         PropertyId GetOrAddPropertyIdTracked(__in_ecount(propertyNameLength) const char16_t* pszPropertyName, int propertyNameLength);
         void GetOrAddPropertyRecord(__in_ecount(propertyNameLength) const char16_t* pszPropertyName, _In_ int propertyNameLength, _Out_ PropertyRecord const** propertyRecord);
-        BOOL IsNumericPropertyId(PropertyId propertyId, uint32* value);
+        BOOL IsNumericPropertyId(PropertyId propertyId, uint32_t* value);
 
         void RegisterWeakReferenceDictionary(JsUtil::IWeakReferenceDictionary* weakReferenceDictionary);
         void ResetWeakReferenceDictionaryList() { weakReferenceDictionaryList.Reset(); }

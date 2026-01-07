@@ -23,11 +23,11 @@ namespace Js
 
     public:
         static Var ProfiledNewScObjArray_Jit(const Var callee, void *const framePointer, const ProfileId profileId, const ProfileId arrayProfileId, CallInfo callInfo, ...);
-        static Var ProfiledNewScObjArraySpread_Jit(const Js::AuxArray<uint32> *spreadIndices, const Var callee, void *const framePointer, const ProfileId profileId, const ProfileId arrayProfileId, CallInfo callInfo, ...);
+        static Var ProfiledNewScObjArraySpread_Jit(const Js::AuxArray<uint32_t> *spreadIndices, const Var callee, void *const framePointer, const ProfileId profileId, const ProfileId arrayProfileId, CallInfo callInfo, ...);
         static Var ProfiledNewScObjArray(const Var callee, const Arguments args, ScriptFunction *const caller, const ProfileId profileId, const ProfileId arrayProfileId);
 
     public:
-        static Var ProfiledNewScObject(const Var callee, const Arguments args, FunctionBody *const callerFunctionBody, const ProfileId profileId, const InlineCacheIndex inlineCacheIndex = Constants::NoInlineCacheIndex, const Js::AuxArray<uint32> *spreadIndices = nullptr);
+        static Var ProfiledNewScObject(const Var callee, const Arguments args, FunctionBody *const callerFunctionBody, const ProfileId profileId, const InlineCacheIndex inlineCacheIndex = Constants::NoInlineCacheIndex, const Js::AuxArray<uint32_t> *spreadIndices = nullptr);
 
     public:
         static void ProfileLdSlot(const Var value, FunctionBody *const functionBody, const ProfileId profileId);

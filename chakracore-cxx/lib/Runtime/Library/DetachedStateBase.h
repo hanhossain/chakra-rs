@@ -59,10 +59,10 @@ namespace Js
     {
     public:
         RefCountedBuffer* buffer;
-        uint32 bufferLength;
+        uint32_t bufferLength;
         ArrayBufferAllocationType allocationType;
 
-        ArrayBufferDetachedStateBase(TypeId typeId, RefCountedBuffer* buffer, uint32 bufferLength, ArrayBufferAllocationType allocationType)
+        ArrayBufferDetachedStateBase(TypeId typeId, RefCountedBuffer* buffer, uint32_t bufferLength, ArrayBufferAllocationType allocationType)
             : DetachedStateBase(typeId),
             buffer(buffer),
             bufferLength(bufferLength),

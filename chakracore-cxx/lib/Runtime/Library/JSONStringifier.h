@@ -60,7 +60,7 @@ private:
     Var ToJSON(_In_ JavascriptString* key, _In_ RecyclableObject* valueObject);
     Var CallReplacerFunction(_In_opt_ RecyclableObject* holder, _In_ JavascriptString* key, _In_ Var value);
     _Ret_notnull_ Var ReadValue(_In_ JavascriptString* key, _In_opt_ const PropertyRecord* propertyRecord, _In_ RecyclableObject* holder);
-    uint32 ReadArrayLength(_In_ RecyclableObject* value);
+    uint32_t ReadArrayLength(_In_ RecyclableObject* value);
     JSONArray* ReadArray(_In_ RecyclableObject* arr, _In_ JSONObjectStack* objectStack);
 
     void AppendObjectElement(
@@ -70,7 +70,7 @@ private:
 
     void ReadObjectElement(
         _In_ JavascriptString* propertyName,
-        _In_ uint32 numericIndex,
+        _In_ uint32_t numericIndex,
         _In_ RecyclableObject* obj,
         _In_ JSONObject* jsonObject,
         _In_ JSONObjectStack* objectStack);
@@ -83,12 +83,12 @@ private:
         _In_ JSONObjectStack* objectStack);
 
     void ReadArrayElement(
-        uint32 index,
+        uint32_t index,
         _In_ RecyclableObject* arr,
         _Out_ JSONProperty* prop,
         _In_ JSONObjectStack* objectStack);
 
-    void CalculateStringifiedLength(uint32 propertyCount, charcount_t stepbackLength);
+    void CalculateStringifiedLength(uint32_t propertyCount, charcount_t stepbackLength);
     void ReadProxy(_In_ JavascriptProxy* proxyObject, _In_ JSONObject* jsonObject, _In_ JSONObjectStack* stack);
     JSONObject* ReadObject(_In_ RecyclableObject* obj, _In_ JSONObjectStack* objectStack);
     void SetNullProperty(_Out_ JSONProperty* prop);

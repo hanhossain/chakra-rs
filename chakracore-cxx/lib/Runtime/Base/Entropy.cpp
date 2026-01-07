@@ -5,7 +5,7 @@
 #include "RuntimeBasePch.h"
 #include "Entropy.h"
 
-const uint32 Entropy::kInitIterationCount = 3;
+const uint32_t Entropy::kInitIterationCount = 3;
 
 void Entropy::BeginAdd()
 {
@@ -34,7 +34,7 @@ void Entropy::Add(const char byteValue)
 
 void Entropy::Initialize()
 {
-    for (uint32 times = 0; times < Entropy::kInitIterationCount; times++)
+    for (uint32_t times = 0; times < Entropy::kInitIterationCount; times++)
     {
         AddIoCounters();
         AddThreadCycleTime();

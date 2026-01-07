@@ -376,7 +376,7 @@ using namespace Js;
     void JavascriptGeneratorFunction::ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc)
     {
         TTD::NSSnapObjects::SnapGeneratorFunctionInfo* fi = nullptr;
-        uint32 depCount = 0;
+        uint32_t depCount = 0;
         TTD_PTR_ID* depArray = nullptr;
 
         this->CreateSnapObjectInfo(alloc, &fi, &depArray, &depCount);
@@ -392,7 +392,7 @@ using namespace Js;
         }
     }
 
-    void JavascriptGeneratorFunction::CreateSnapObjectInfo(TTD::SlabAllocator& alloc, _Out_ TTD::NSSnapObjects::SnapGeneratorFunctionInfo** info, _Out_ TTD_PTR_ID** depArray, _Out_ uint32* depCount)
+    void JavascriptGeneratorFunction::CreateSnapObjectInfo(TTD::SlabAllocator& alloc, _Out_ TTD::NSSnapObjects::SnapGeneratorFunctionInfo** info, _Out_ TTD_PTR_ID** depArray, _Out_ uint32_t* depCount)
     {
         *info = alloc.SlabAllocateStruct<TTD::NSSnapObjects::SnapGeneratorFunctionInfo>();
         (*info)->scriptFunction = TTD_CONVERT_VAR_TO_PTR_ID(this->scriptFunction);

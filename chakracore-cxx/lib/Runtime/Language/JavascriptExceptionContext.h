@@ -17,7 +17,7 @@ namespace Js {
             Field(FunctionBody*) functionBody;
             union
             {
-                Field(uint32) byteCodeOffset;  // used for script functions        (functionBody != nullptr)
+                Field(uint32_t) byteCodeOffset;  // used for script functions        (functionBody != nullptr)
                 Field(const char16_t *) name;            // used for native/virtual frames   (functionBody == nullptr)
             };
             Field(StackTraceArguments) argumentTypes;
@@ -38,7 +38,7 @@ namespace Js {
 
             bool IsScriptFunction() const;
             FunctionBody* GetFunctionBody() const;
-            uint32 GetByteCodeOffset() const { return byteCodeOffset; }
+            uint32_t GetByteCodeOffset() const { return byteCodeOffset; }
             const char16_t* GetFunctionName() const;
             int32_t GetFunctionNameWithArguments(_In_ const char16_t* *outResult) const;
         };
@@ -55,8 +55,8 @@ namespace Js {
         }
 
         JavascriptFunction* ThrowingFunction() const { return m_throwingFunction; }
-        uint32 ThrowingFunctionByteCodeOffset() const { return m_throwingFunctionByteCodeOffset; }
-        void SetThrowingFunction(JavascriptFunction* function, uint32 byteCodeOffset, void * returnAddress);
+        uint32_t ThrowingFunctionByteCodeOffset() const { return m_throwingFunctionByteCodeOffset; }
+        void SetThrowingFunction(JavascriptFunction* function, uint32_t byteCodeOffset, void * returnAddress);
 
         bool HasStackTrace() const { return m_stackTrace && m_stackTrace->Count() > 0; }
         StackTrace* GetStackTrace() const { return m_stackTrace; }
@@ -66,7 +66,7 @@ namespace Js {
 
     private:
         Field(JavascriptFunction*) m_throwingFunction;
-        Field(uint32) m_throwingFunctionByteCodeOffset;
+        Field(uint32_t) m_throwingFunctionByteCodeOffset;
         Field(StackTrace *) m_stackTrace;
         Field(StackTrace *) m_originalStackTrace;
     };

@@ -25,7 +25,7 @@ struct DynamicLoadRecord
     Js::ByteCodeLabel label;
     union
     {
-        uint32 index;
+        uint32_t index;
         Js::RegSlot instance;
     };
 };
@@ -48,7 +48,7 @@ class ByteCodeGenerator
 private:
     Js::ScriptContext* scriptContext;
     ArenaAllocator *alloc;
-    uint32 flags;
+    uint32_t flags;
     SList<FuncInfo*> *funcInfoStack;
     ParseNodeBlock *currentBlock;
     ParseNode *currentTopStatement;
@@ -140,12 +140,12 @@ public:
         return m_utf8SourceInfo->GetSrcInfo()->moduleID;
     }
 
-    void SetFlags(uint32 grfscr)
+    void SetFlags(uint32_t grfscr)
     {
         flags = grfscr;
     }
 
-    uint32 GetFlags(void)
+    uint32_t GetFlags(void)
     {
         return flags;
     }
@@ -405,10 +405,10 @@ public:
 
     bool DoJitLoopBodies(FuncInfo *funcInfo) const;
 
-    static void Generate(ParseNodeProg *pnode, uint32 grfscr, ByteCodeGenerator* byteCodeGenerator, __inout Js::ParseableFunctionInfo ** ppRootFunc, uint sourceIndex, bool forceNoNative, Parser* parser, Js::ScriptFunction ** functionRef);
+    static void Generate(ParseNodeProg *pnode, uint32_t grfscr, ByteCodeGenerator* byteCodeGenerator, __inout Js::ParseableFunctionInfo ** ppRootFunc, uint sourceIndex, bool forceNoNative, Parser* parser, Js::ScriptFunction ** functionRef);
     void Begin(
         ArenaAllocator *alloc,
-        uint32 grfscr,
+        uint32_t grfscr,
         Js::ParseableFunctionInfo* pRootFunc);
 
     void SetCurrentSourceIndex(uint sourceIndex) { this->sourceIndex = sourceIndex; }

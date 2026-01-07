@@ -1199,7 +1199,7 @@ CommonNumber:
     //----------------------------------------------------------------------------
     // (ES3.0: S9.6).
     //----------------------------------------------------------------------------
-    uint32 JavascriptConversion::ToUInt32_Full(Var aValue, ScriptContext* scriptContext)
+    uint32_t JavascriptConversion::ToUInt32_Full(Var aValue, ScriptContext* scriptContext)
     {
         JIT_HELPER_REENTRANT_HEADER(Conv_ToUInt32_Full);
         AssertMsg(!TaggedInt::Is(aValue), "Should be detected");
@@ -1265,12 +1265,12 @@ CommonNumber:
     JIT_HELPER_TEMPLATE(Conv_ToUInt32, Conv_ToUInt32)
     JIT_HELPER_TEMPLATE(Conv_ToBoolean, Conv_ToBoolean)
 
-    uint32 JavascriptConversion::ToUInt32(double T1)
+    uint32_t JavascriptConversion::ToUInt32(double T1)
     {
         JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Conv_ToUInt32Core);
         JIT_HELPER_SAME_ATTRIBUTES(Conv_ToInt32Core, Conv_ToUInt32Core);
-        // Same as doing ToInt32 and reinterpret the bits as uint32
-        return (uint32)JavascriptMath::ToInt32Core(T1);
+        // Same as doing ToInt32 and reinterpret the bits as uint32_t
+        return (uint32_t)JavascriptMath::ToInt32Core(T1);
         JIT_HELPER_END(Conv_ToUInt32Core);
     }
 
@@ -1342,11 +1342,11 @@ CommonNumber:
     uint16 JavascriptConversion::ToUInt16(double T1)
     {
         //
-        // VC does the right thing here, if we first convert to uint32 and then to uint16
+        // VC does the right thing here, if we first convert to uint32_t and then to uint16
         // Spec says mod should be done.
         //
 
-        uint32 result = JavascriptConversion::ToUInt32(T1);
+        uint32_t result = JavascriptConversion::ToUInt32(T1);
         return (uint16) result;
     }
 

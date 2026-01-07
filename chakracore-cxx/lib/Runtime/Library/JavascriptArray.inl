@@ -47,7 +47,7 @@ namespace Js
     SparseArraySegmentBase *
     JavascriptArray::ForEachSegment(SparseArraySegmentBase * segment, Fn fn)
     {
-        DebugOnly(uint32 lastindex = segment? segment->left : 0);
+        DebugOnly(uint32_t lastindex = segment? segment->left : 0);
         SparseArraySegmentBase * current = segment;
         while (current)
         {
@@ -148,8 +148,8 @@ namespace Js
     template<typename T, uint InlinePropertySlots>
     inline SparseArraySegment<typename T::TElement> *JavascriptArray::InitArrayAndHeadSegment(
         T *const array,
-        const uint32 length,
-        const uint32 size,
+        const uint32_t length,
+        const uint32_t size,
         const bool wasZeroAllocated)
     {
         Assert(!array->HasSegmentMap());
@@ -188,7 +188,7 @@ namespace Js
 
     /*static*/
     template<typename unitType, typename className, uint inlineSlots>
-    className* JavascriptArray::New(uint32 length, DynamicType* arrayType, Recycler* recycler)
+    className* JavascriptArray::New(uint32_t length, DynamicType* arrayType, Recycler* recycler)
     {
         CompileAssert(static_cast<PropertyIndex>(inlineSlots) == inlineSlots);
         Assert(DynamicTypeHandler::RoundUpInlineSlotCapacity(static_cast<PropertyIndex>(inlineSlots)) == inlineSlots);
@@ -219,7 +219,7 @@ namespace Js
     //
     /*static*/
     template<typename unitType, typename className, uint inlineSlots>
-    className* JavascriptArray::NewLiteral(uint32 length, DynamicType* arrayType, Recycler* recycler)
+    className* JavascriptArray::NewLiteral(uint32_t length, DynamicType* arrayType, Recycler* recycler)
     {
         CompileAssert(static_cast<PropertyIndex>(inlineSlots) == inlineSlots);
         Assert(DynamicTypeHandler::RoundUpInlineSlotCapacity(static_cast<PropertyIndex>(inlineSlots)) == inlineSlots);
@@ -341,7 +341,7 @@ namespace Js
     template<class T, uint InlinePropertySlots>
     inline T *JavascriptArray::New(
         void *const stackAllocationPointer,
-        const uint32 length,
+        const uint32_t length,
         DynamicType *const arrayType)
     {
         Assert(arrayType);
@@ -378,7 +378,7 @@ namespace Js
     template<class T, uint InlinePropertySlots>
     inline T *JavascriptArray::NewLiteral(
         void *const stackAllocationPointer,
-        const uint32 length,
+        const uint32_t length,
         DynamicType *const arrayType)
     {
         Assert(arrayType);
@@ -415,14 +415,14 @@ namespace Js
     }
 
     template <>
-    inline void JavascriptArray::DirectSetItemAt<int32>(uint32 itemIndex, int32 newValue)
+    inline void JavascriptArray::DirectSetItemAt<int32>(uint32_t itemIndex, int32 newValue)
     {
         Assert_FailFast(this->GetTypeId() == TypeIds_NativeIntArray);
 
         Assert(itemIndex < InvalidIndex); // Otherwise the code below could overflow and set length = 0
 
         SparseArraySegment<int32> *seg = (SparseArraySegment<int32>*)this->GetLastUsedSegment();
-        uint32 offset = itemIndex - seg->left;
+        uint32_t offset = itemIndex - seg->left;
         if(itemIndex >= seg->left && offset < seg->size)
         {
             DirectSetItemInLastUsedSegmentAt(offset, newValue);
@@ -432,14 +432,14 @@ namespace Js
     }
 
     template <>
-    inline void JavascriptArray::DirectSetItemAt<double>(uint32 itemIndex, double newValue)
+    inline void JavascriptArray::DirectSetItemAt<double>(uint32_t itemIndex, double newValue)
     {
         Assert_FailFast(this->GetTypeId() == TypeIds_NativeFloatArray);
 
         Assert(itemIndex < InvalidIndex); // Otherwise the code below could overflow and set length = 0
 
         SparseArraySegment<double> *seg = (SparseArraySegment<double>*)this->GetLastUsedSegment();
-        uint32 offset = itemIndex - seg->left;
+        uint32_t offset = itemIndex - seg->left;
         if (itemIndex >= seg->left && offset < seg->size)
         {
             DirectSetItemInLastUsedSegmentAt(offset, newValue);
@@ -449,14 +449,14 @@ namespace Js
     }
 
     template <>
-    inline void JavascriptArray::DirectSetItemAt<Var>(uint32 itemIndex, Var newValue)
+    inline void JavascriptArray::DirectSetItemAt<Var>(uint32_t itemIndex, Var newValue)
     {
         Assert_FailFast(this->GetTypeId() == TypeIds_Array || this->GetTypeId() == TypeIds_ES5Array);
 
         Assert(itemIndex < InvalidIndex); // Otherwise the code below could overflow and set length = 0
 
         SparseArraySegment<Var> *seg = (SparseArraySegment<Var>*)this->GetLastUsedSegment();
-        uint32 offset = itemIndex - seg->left;
+        uint32_t offset = itemIndex - seg->left;
         if (itemIndex >= seg->left && offset < seg->size)
         {
             DirectSetItemInLastUsedSegmentAt(offset, newValue);
@@ -466,12 +466,12 @@ namespace Js
     }
 
     template <typename T>
-    inline void JavascriptArray::DirectSetItemAt(uint32 itemIndex, T newValue)
+    inline void JavascriptArray::DirectSetItemAt(uint32_t itemIndex, T newValue)
     {
         Assert(itemIndex < InvalidIndex); // Otherwise the code below could overflow and set length = 0
 
         SparseArraySegment<T> *seg = (SparseArraySegment<T>*)this->GetLastUsedSegment();
-        uint32 offset = itemIndex - seg->left;
+        uint32_t offset = itemIndex - seg->left;
         if (itemIndex >= seg->left && offset < seg->size)
         {
             DirectSetItemInLastUsedSegmentAt(offset, newValue);
@@ -480,14 +480,14 @@ namespace Js
         DirectSetItem_Full(itemIndex, newValue);
     }
 
-    inline void JavascriptArray::GenericDirectSetItemAt(const uint32 index, Var newValue)
+    inline void JavascriptArray::GenericDirectSetItemAt(const uint32_t index, Var newValue)
     {
         newValue = CrossSite::MarshalVar(this->GetScriptContext(), newValue);
         this->DirectSetItemAt(index, newValue);
     }
 
     template<typename T>
-    inline void JavascriptArray::DirectSetItemInLastUsedSegmentAt(const uint32 offset, const T newValue)
+    inline void JavascriptArray::DirectSetItemInLastUsedSegmentAt(const uint32_t offset, const T newValue)
     {
         Assert(!SparseArraySegment<T>::IsMissingItem(&newValue));
 
@@ -512,7 +512,7 @@ namespace Js
 
             seg->length = offset + 1;
             seg->CheckLengthvsSize();
-            const uint32 itemIndex = seg->left + offset;
+            const uint32_t itemIndex = seg->left + offset;
             if (this->length <= itemIndex)
             {
                 this->length = itemIndex  + 1;
@@ -527,7 +527,7 @@ namespace Js
 #if ENABLE_PROFILE_INFO
     template<typename T>
     inline void JavascriptArray::DirectProfiledSetItemInHeadSegmentAt(
-        const uint32 offset,
+        const uint32_t offset,
         const T newValue,
         StElemInfo *const stElemInfo)
     {
@@ -555,7 +555,7 @@ namespace Js
 
             seg->length = offset + 1;
             seg->CheckLengthvsSize();
-            const uint32 itemIndex = seg->left + offset;
+            const uint32_t itemIndex = seg->left + offset;
             if (this->length <= itemIndex)
             {
                 this->length = itemIndex  + 1;
@@ -569,7 +569,7 @@ namespace Js
 #endif
 
     template<typename T>
-    inline BOOL JavascriptArray::DirectGetItemAt(uint32 index, T* outVal)
+    inline BOOL JavascriptArray::DirectGetItemAt(uint32_t index, T* outVal)
     {
 #ifdef VALIDATE_ARRAY
         ValidateArray();
@@ -608,7 +608,7 @@ SECOND_PASS:
         uint probeCost = 0;
         while (nextSeg != nullptr && nextSeg->left <= index)
         {
-            uint32 limit =  nextSeg->left + nextSeg->length;
+            uint32_t limit =  nextSeg->left + nextSeg->length;
             if (index < limit)
             {
                 const T * v = AddressOf(((SparseArraySegment<T>*)nextSeg)->elements[index - nextSeg->left]);
@@ -689,7 +689,7 @@ SECOND_PASS:
     void JavascriptArray::AllocateHead()
     {
         Recycler* recycler = GetRecycler();
-        uint32 allocLength;
+        uint32_t allocLength;
 
         Assert(this->head == EmptySegment);
 
@@ -708,9 +708,9 @@ SECOND_PASS:
     }
 
     template<typename T>
-    SparseArraySegment<T>* JavascriptArray::PrepareSegmentForMemOp(uint32 startIndex, uint32 length)
+    SparseArraySegment<T>* JavascriptArray::PrepareSegmentForMemOp(uint32_t startIndex, uint32_t length)
     {
-        uint32 endIndex;
+        uint32_t endIndex;
         if (UInt32Math::Add(startIndex, length - 1, &endIndex))
         {
             return nullptr;
@@ -743,7 +743,7 @@ SECOND_PASS:
         SparseArraySegmentBase* startSeg = nullptr;
         SparseArraySegmentBase* endSeg = nullptr;
         SparseArraySegmentBase* startPrev = nullptr;
-        uint32 growby, startOffset, endOffset;
+        uint32_t growby, startOffset, endOffset;
         bool isAllocationSolelyInLastUsedSegment = false;
 
         // FindStartAndEndSegment
@@ -1048,7 +1048,7 @@ SECOND_PASS:
     }
 
     template<typename T>
-    bool JavascriptArray::DirectSetItemAtRangeFromArray(uint32 toStartIndex, uint32 length, JavascriptArray *fromArray, uint32 fromStartIndex)
+    bool JavascriptArray::DirectSetItemAtRangeFromArray(uint32_t toStartIndex, uint32_t length, JavascriptArray *fromArray, uint32_t fromStartIndex)
     {
         if (length == 0)
         {
@@ -1080,8 +1080,8 @@ SECOND_PASS:
             return true;
         }
 
-        const auto isSegmentValid = [length](Js::SparseArraySegment<T>* segment, uint32 startIndex) {
-            uint32 end, segmentEnd;
+        const auto isSegmentValid = [length](Js::SparseArraySegment<T>* segment, uint32_t startIndex) {
+            uint32_t end, segmentEnd;
             // Check the segment is big enough
             return (
                 segment &&
@@ -1134,7 +1134,7 @@ SECOND_PASS:
     }
 
     template<typename T>
-    bool JavascriptArray::DirectSetItemAtRange(uint32 startIndex, uint32 length, T newValue)
+    bool JavascriptArray::DirectSetItemAtRange(uint32_t startIndex, uint32_t length, T newValue)
     {
         bool isBtree = false;
 
@@ -1194,7 +1194,7 @@ SECOND_PASS:
     }
 
     template<typename T>
-    bool JavascriptArray::DirectSetItemAtRangeFull(uint32 startIndex, uint32 length, T newValue)
+    bool JavascriptArray::DirectSetItemAtRangeFull(uint32_t startIndex, uint32_t length, T newValue)
     {
         if (length == 0)
         {
@@ -1224,7 +1224,7 @@ SECOND_PASS:
     }
 
     template<typename T>
-    void JavascriptArray::DirectSetItem_Full(uint32 itemIndex, T newValue)
+    void JavascriptArray::DirectSetItem_Full(uint32_t itemIndex, T newValue)
     {
         Assert(!SparseArraySegment<T>::IsMissingItem(&newValue));
 
@@ -1323,7 +1323,7 @@ SECOND_PASS:
         uint probeCost = 0;
         while(current != nullptr)
         {
-            uint32 offset = itemIndex - current->left;
+            uint32_t offset = itemIndex - current->left;
             if (itemIndex < current->left)
             {
                 break;
@@ -1402,7 +1402,7 @@ SECOND_PASS:
 
         if (current != nullptr)
         {
-            uint32 offset = itemIndex - current->left;
+            uint32_t offset = itemIndex - current->left;
             if ((itemIndex >= current->left) && (offset < current->size))
             {
                 //itemIndex lies in the segment
@@ -1566,7 +1566,7 @@ SECOND_PASS:
     }
 
     template<typename T>
-    bool JavascriptArray::NeedScanForMissingValuesUponSetItem(SparseArraySegment<T> *const segment, const uint32 offset) const
+    bool JavascriptArray::NeedScanForMissingValuesUponSetItem(SparseArraySegment<T> *const segment, const uint32_t offset) const
     {
         Assert(segment);
 
@@ -1618,7 +1618,7 @@ SECOND_PASS:
         return false;
     }
 
-    inline void JavascriptArray::DirectSetItemIfNotExist(uint32 index, Var newValue)
+    inline void JavascriptArray::DirectSetItemIfNotExist(uint32_t index, Var newValue)
     {
         Assert(VirtualTableInfo<JavascriptArray>::HasVirtualTable(this));
         Var oldValue;
@@ -1630,7 +1630,7 @@ SECOND_PASS:
 
     //Grow the array head and try to set at the boundary
     template<typename unitType, typename classname>
-    inline BOOL JavascriptArray::TryGrowHeadSegmentAndSetItem(uint32 indexInt, unitType iValue)
+    inline BOOL JavascriptArray::TryGrowHeadSegmentAndSetItem(uint32_t indexInt, unitType iValue)
     {
         SparseArraySegment<unitType> *current = SparseArraySegment<unitType>::From(head);
 
@@ -1674,34 +1674,34 @@ SECOND_PASS:
     }
 
     //
-    // JavascriptArray::IndexTrace specialized on uint32 (small index)
+    // JavascriptArray::IndexTrace specialized on uint32_t (small index)
     //
     template<>
-    inline Var JavascriptArray::IndexTrace<uint32>::ToNumber(const uint32& index, ScriptContext* scriptContext)
+    inline Var JavascriptArray::IndexTrace<uint32_t>::ToNumber(const uint32_t& index, ScriptContext* scriptContext)
     {
         return JavascriptNumber::ToVar(index, scriptContext);
     }
 
     template<>
-    inline BOOL JavascriptArray::IndexTrace<uint32>::GetItem(JavascriptArray* arr, const uint32& index, Var* outVal)
+    inline BOOL JavascriptArray::IndexTrace<uint32_t>::GetItem(JavascriptArray* arr, const uint32_t& index, Var* outVal)
     {
         return arr->DirectGetItemAt(index, outVal);
     }
 
     template<>
-    inline BOOL JavascriptArray::IndexTrace<uint32>::SetItem(JavascriptArray* arr, const uint32& index, Var newValue)
+    inline BOOL JavascriptArray::IndexTrace<uint32_t>::SetItem(JavascriptArray* arr, const uint32_t& index, Var newValue)
     {
         return arr->SetItem(index, newValue, PropertyOperation_None);
     }
 
     template<>
-    inline void JavascriptArray::IndexTrace<uint32>::SetItemIfNotExist(JavascriptArray* arr, const uint32& index, Var newValue)
+    inline void JavascriptArray::IndexTrace<uint32_t>::SetItemIfNotExist(JavascriptArray* arr, const uint32_t& index, Var newValue)
     {
         arr->DirectSetItemIfNotExist(index, newValue);
     }
 
     template<>
-    inline BOOL JavascriptArray::IndexTrace<uint32>::DeleteItem(JavascriptArray* arr, const uint32& index)
+    inline BOOL JavascriptArray::IndexTrace<uint32_t>::DeleteItem(JavascriptArray* arr, const uint32_t& index)
     {
         switch (arr->GetTypeId())
         {
@@ -1721,14 +1721,14 @@ SECOND_PASS:
     }
 
     template<>
-    inline BOOL JavascriptArray::IndexTrace<uint32>::SetItem(RecyclableObject* obj, const uint32& index, Var newValue, PropertyOperationFlags flags)
+    inline BOOL JavascriptArray::IndexTrace<uint32_t>::SetItem(RecyclableObject* obj, const uint32_t& index, Var newValue, PropertyOperationFlags flags)
     {
         ScriptContext* requestContext = obj->GetScriptContext();
         return JavascriptOperators::SetItem(obj, obj, index, newValue, requestContext, flags);
     }
 
     template<>
-    inline BOOL JavascriptArray::IndexTrace<uint32>::DeleteItem(RecyclableObject* obj, const uint32& index, PropertyOperationFlags flags)
+    inline BOOL JavascriptArray::IndexTrace<uint32_t>::DeleteItem(RecyclableObject* obj, const uint32_t& index, PropertyOperationFlags flags)
     {
         return JavascriptOperators::DeleteItem(obj, index, flags);
     }
@@ -1918,24 +1918,24 @@ SECOND_PASS:
     // ItemTrace<T> specializations
     //
     template<>
-    inline uint32 JavascriptArray::ItemTrace<JavascriptArray>::GetLength(JavascriptArray* obj, ScriptContext* scriptContext)
+    inline uint32_t JavascriptArray::ItemTrace<JavascriptArray>::GetLength(JavascriptArray* obj, ScriptContext* scriptContext)
     {
         return obj->GetLength();
     }
     template<>
-    inline BOOL JavascriptArray::ItemTrace<JavascriptArray>::GetItem(JavascriptArray* obj, uint32 index, Var* outVal, ScriptContext* scriptContext)
+    inline BOOL JavascriptArray::ItemTrace<JavascriptArray>::GetItem(JavascriptArray* obj, uint32_t index, Var* outVal, ScriptContext* scriptContext)
     {
         Assert(JavascriptArray::IsDirectAccessArray(obj));
         return obj->DirectGetItemAtFull(index, outVal); // Note this does prototype lookup
     }
 
     template<>
-    inline uint32 JavascriptArray::ItemTrace<RecyclableObject>::GetLength(RecyclableObject* obj, ScriptContext* scriptContext)
+    inline uint32_t JavascriptArray::ItemTrace<RecyclableObject>::GetLength(RecyclableObject* obj, ScriptContext* scriptContext)
     {
         return JavascriptConversion::ToUInt32(JavascriptOperators::OP_GetLength(obj, scriptContext), scriptContext);
     }
     template<>
-    inline BOOL JavascriptArray::ItemTrace<RecyclableObject>::GetItem(RecyclableObject* obj, uint32 index, Var* outVal, ScriptContext* scriptContext)
+    inline BOOL JavascriptArray::ItemTrace<RecyclableObject>::GetItem(RecyclableObject* obj, uint32_t index, Var* outVal, ScriptContext* scriptContext)
     {
         return JavascriptOperators::GetItem(obj, index, outVal, scriptContext);
     }

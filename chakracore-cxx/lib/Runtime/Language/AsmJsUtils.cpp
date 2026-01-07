@@ -475,7 +475,7 @@ namespace Js
             if (CONFIG_FLAG(WasmI64))
             {
                 unsigned long lHigh = ((unsigned long)iHigh) << 32;
-                unsigned long lLow = (unsigned long)(uint32)iLow;
+                unsigned long lLow = (unsigned long)(uint32_t)iLow;
                 returnValue = CreateI64ReturnObject((long)(lHigh | lLow), func->GetScriptContext());
                 break;
             }

@@ -91,7 +91,7 @@ namespace TTD
                     Field(Js::Var) const* inlineSlots = dynObj->GetInlineSlots_TTD();
 
                     //copy all the properties (if they all fit into the inline slots) otherwise just copy all the inline slot values
-                    uint32 inlineSlotCount = min(sHandler->MaxPropertyIndex, sHandler->InlineSlotCapacity);
+                    uint32_t inlineSlotCount = min(sHandler->MaxPropertyIndex, sHandler->InlineSlotCapacity);
                     js_memcpy_s(cpyBase, inlineSlotCount * sizeof(TTDVar), inlineSlots, inlineSlotCount * sizeof(Js::Var));
                 }
 
@@ -101,7 +101,7 @@ namespace TTD
                     Js::Var const* auxSlots = dynObj->GetAuxSlots_TTD();
 
                     //there are some values in aux slots (in addition to the inline slots) so copy them as well
-                    uint32 auxSlotCount = (sHandler->MaxPropertyIndex - sHandler->InlineSlotCapacity);
+                    uint32_t auxSlotCount = (sHandler->MaxPropertyIndex - sHandler->InlineSlotCapacity);
                     js_memcpy_s(cpyBase, auxSlotCount * sizeof(TTDVar), auxSlots, auxSlotCount * sizeof(Js::Var));
                 }
             }
@@ -144,7 +144,7 @@ namespace TTD
             }
 
             const NSSnapType::SnapHandler* handler = snpObject->SnapType->TypeHandlerInfo;
-            for(uint32 i = 0; i < handler->MaxPropertyIndex; ++i)
+            for(uint32_t i = 0; i < handler->MaxPropertyIndex; ++i)
             {
                 BOOL willOverwriteLater = (handler->PropertyInfoArray[i].DataKind != NSSnapType::SnapEntryDataKindTag::Clear);
                 BOOL isInternal = Js::IsInternalPropertyId(handler->PropertyInfoArray[i].PropertyRecordId);
@@ -203,7 +203,7 @@ namespace TTD
             }
 
             const NSSnapType::SnapHandler* handler = snpObject->SnapType->TypeHandlerInfo;
-            for(uint32 i = 0; i < handler->MaxPropertyIndex; ++i)
+            for(uint32_t i = 0; i < handler->MaxPropertyIndex; ++i)
             {
                 BOOL willOverwriteLater = (handler->PropertyInfoArray[i].DataKind != NSSnapType::SnapEntryDataKindTag::Clear);
                 BOOL isInternal = Js::IsInternalPropertyId(handler->PropertyInfoArray[i].PropertyRecordId);
@@ -302,7 +302,7 @@ namespace TTD
             //There may also be sensitivity in other cases -- e.g. activation objects with arguments objects that use slot index values directly.
             //    Things look good in this case but future changes may require care and/or adding special case handling.
             //
-            for(uint32 i = 0; i < handler->MaxPropertyIndex; ++i)
+            for(uint32_t i = 0; i < handler->MaxPropertyIndex; ++i)
             {
                 //We have an empty (or uninteresting) slot for so there is nothing to restore
                 if(handler->PropertyInfoArray[i].DataKind == NSSnapType::SnapEntryDataKindTag::Clear)
@@ -446,7 +446,7 @@ namespace TTD
             {
                 writer->WriteLengthValue(snpObject->OptDependsOnInfo->DepOnCount, NSTokens::Separator::CommaSeparator);
                 writer->WriteSequenceStart_DefaultKey(NSTokens::Separator::CommaSeparator);
-                for(uint32 i = 0; i < snpObject->OptDependsOnInfo->DepOnCount; ++i)
+                for(uint32_t i = 0; i < snpObject->OptDependsOnInfo->DepOnCount; ++i)
                 {
                     writer->WriteNakedAddr(snpObject->OptDependsOnInfo->DepOnPtrArray[i], i != 0 ? NSTokens::Separator::CommaSeparator : NSTokens::Separator::NoSeparator);
                 }
@@ -468,7 +468,7 @@ namespace TTD
                     writer->WriteLengthValue(handler->MaxPropertyIndex, NSTokens::Separator::CommaAndBigSpaceSeparator);
                     writer->WriteSequenceStart_DefaultKey(NSTokens::Separator::CommaSeparator);
                     writer->AdjustIndent(1);
-                    for(uint32 i = 0; i < handler->MaxPropertyIndex; ++i)
+                    for(uint32_t i = 0; i < handler->MaxPropertyIndex; ++i)
                     {
                         NSTokens::Separator varSep = i != 0 ? NSTokens::Separator::CommaAndBigSpaceSeparator : NSTokens::Separator::BigSpaceSeparator;
 
@@ -480,7 +480,7 @@ namespace TTD
                         {
 #if ENABLE_TTD_INTERNAL_DIAGNOSTICS
                             writer->WriteRecordStart(varSep);
-                            writer->WriteUInt32(NSTokens::Key::pid, (uint32)handler->PropertyInfoArray[i].PropertyRecordId, NSTokens::Separator::NoSeparator);
+                            writer->WriteUInt32(NSTokens::Key::pid, (uint32_t)handler->PropertyInfoArray[i].PropertyRecordId, NSTokens::Separator::NoSeparator);
                             writer->WriteKey(NSTokens::Key::entry, NSTokens::Separator::CommaSeparator);
 
                             varSep = NSTokens::Separator::NoSeparator;
@@ -498,7 +498,7 @@ namespace TTD
                 }
             }
 
-            fPtr_EmitAddtlInfo addtlInfoEmit = vtable[(uint32)snpObject->SnapObjectTag].EmitAddtlInfoFunc;
+            fPtr_EmitAddtlInfo addtlInfoEmit = vtable[(uint32_t)snpObject->SnapObjectTag].EmitAddtlInfoFunc;
             if(addtlInfoEmit != nullptr)
             {
                 addtlInfoEmit(snpObject, writer);
@@ -541,7 +541,7 @@ namespace TTD
                 snpObject->OptDependsOnInfo->DepOnPtrArray = alloc.SlabAllocateArray<TTD_PTR_ID>(snpObject->OptDependsOnInfo->DepOnCount);
 
                 reader->ReadSequenceStart_WDefaultKey(true);
-                for(uint32 i = 0; i < snpObject->OptDependsOnInfo->DepOnCount; ++i)
+                for(uint32_t i = 0; i < snpObject->OptDependsOnInfo->DepOnCount; ++i)
                 {
                     snpObject->OptDependsOnInfo->DepOnPtrArray[i] = reader->ReadNakedAddr(i != 0);
                 }
@@ -564,7 +564,7 @@ namespace TTD
                     snpObject->VarArray = alloc.SlabAllocateArray<TTDVar>(snpObject->VarArrayCount);
 
                     reader->ReadSequenceStart_WDefaultKey(true);
-                    for(uint32 i = 0; i < handler->MaxPropertyIndex; ++i)
+                    for(uint32_t i = 0; i < handler->MaxPropertyIndex; ++i)
                     {
                         bool readVarSeparator = i != 0;
 
@@ -593,7 +593,7 @@ namespace TTD
                 }
             }
 
-            fPtr_ParseAddtlInfo addtlInfoParse = vtable[(uint32)snpObject->SnapObjectTag].ParseAddtlInfoFunc;
+            fPtr_ParseAddtlInfo addtlInfoParse = vtable[(uint32_t)snpObject->SnapObjectTag].ParseAddtlInfoFunc;
             if(addtlInfoParse != nullptr)
             {
                 addtlInfoParse(snpObject, reader, alloc);
@@ -637,7 +637,7 @@ namespace TTD
 
                 const NSSnapType::SnapHandler* handler1 = sobj1->SnapType->TypeHandlerInfo;
                 JsUtil::BaseDictionary<long, int32, HeapAllocator> sobj1PidMap(&HeapAllocator::Instance);
-                for(uint32 i = 0; i < handler1->MaxPropertyIndex; ++i)
+                for(uint32_t i = 0; i < handler1->MaxPropertyIndex; ++i)
                 {
                     const NSSnapType::SnapHandlerPropertyEntry spe = handler1->PropertyInfoArray[i];
                     if(spe.DataKind != NSSnapType::SnapEntryDataKindTag::Clear)
@@ -648,7 +648,7 @@ namespace TTD
                 }
 
                 const NSSnapType::SnapHandler* handler2 = sobj2->SnapType->TypeHandlerInfo;
-                for(uint32 i = 0; i < handler2->MaxPropertyIndex; ++i)
+                for(uint32_t i = 0; i < handler2->MaxPropertyIndex; ++i)
                 {
                     const NSSnapType::SnapHandlerPropertyEntry spe = handler2->PropertyInfoArray[i];
                     if(spe.DataKind != NSSnapType::SnapEntryDataKindTag::Clear && spe.DataKind != NSSnapType::SnapEntryDataKindTag::Uninitialized)
@@ -960,7 +960,7 @@ namespace TTD
 
             writer->WriteKey(NSTokens::Key::boundArgs, NSTokens::Separator::CommaAndBigSpaceSeparator);
             writer->WriteSequenceStart();
-            for(uint32 i = 0; i < snapBoundInfo->ArgCount; ++i)
+            for(uint32_t i = 0; i < snapBoundInfo->ArgCount; ++i)
             {
                 NSSnapValues::EmitTTDVar(snapBoundInfo->ArgArray[i], writer, i != 0 ? NSTokens::Separator::CommaSeparator : NSTokens::Separator::NoSeparator);
             }
@@ -986,7 +986,7 @@ namespace TTD
 
             reader->ReadKey(NSTokens::Key::boundArgs, true);
             reader->ReadSequenceStart();
-            for(uint32 i = 0; i < snapBoundInfo->ArgCount; ++i)
+            for(uint32_t i = 0; i < snapBoundInfo->ArgCount; ++i)
             {
                 snapBoundInfo->ArgArray[i] = NSSnapValues::ParseTTDVar(i != 0, reader);
             }
@@ -1005,7 +1005,7 @@ namespace TTD
             compareMap.CheckConsistentAndAddPtrIdMapping_Special(snapBoundInfo1->BoundThis, snapBoundInfo2->BoundThis, u"boundThis");
 
             compareMap.DiagnosticAssert(snapBoundInfo1->ArgCount == snapBoundInfo2->ArgCount);
-            for(uint32 i = 0; i < snapBoundInfo1->ArgCount; ++i)
+            for(uint32_t i = 0; i < snapBoundInfo1->ArgCount; ++i)
             {
                 NSSnapValues::AssertSnapEquivTTDVar_SpecialArray(snapBoundInfo1->ArgArray[i], snapBoundInfo2->ArgArray[i], compareMap, u"boundArgs", i);
             }
@@ -1099,7 +1099,7 @@ namespace TTD
             Js::Var result = (promiseInfo->Result != nullptr) ? inflator->InflateTTDVar(promiseInfo->Result) : nullptr;
 
             SList<Js::JavascriptPromiseReaction*, HeapAllocator> resolveReactions(&HeapAllocator::Instance);
-            for(uint32 i = 0; i < promiseInfo->ResolveReactionCount; ++i)
+            for(uint32_t i = 0; i < promiseInfo->ResolveReactionCount; ++i)
             {
                 Js::JavascriptPromiseReaction* reaction = NSSnapValues::InflatePromiseReactionInfo(promiseInfo->ResolveReactions + i, ctx, inflator);
                 resolveReactions.Prepend(reaction);
@@ -1107,7 +1107,7 @@ namespace TTD
             resolveReactions.Reverse();
 
             SList<Js::JavascriptPromiseReaction*, HeapAllocator> rejectReactions(&HeapAllocator::Instance);
-            for(uint32 i = 0; i < promiseInfo->RejectReactionCount; ++i)
+            for(uint32_t i = 0; i < promiseInfo->RejectReactionCount; ++i)
             {
                 Js::JavascriptPromiseReaction* reaction = NSSnapValues::InflatePromiseReactionInfo(promiseInfo->RejectReactions + i, ctx, inflator);
                 rejectReactions.Prepend(reaction);
@@ -1131,7 +1131,7 @@ namespace TTD
 
             writer->WriteLengthValue(promiseInfo->ResolveReactionCount, NSTokens::Separator::CommaSeparator);
             writer->WriteSequenceStart_DefaultKey(NSTokens::Separator::CommaSeparator);
-            for(uint32 i = 0; i < promiseInfo->ResolveReactionCount; ++i)
+            for(uint32_t i = 0; i < promiseInfo->ResolveReactionCount; ++i)
             {
                 NSTokens::Separator sep = (i != 0) ? NSTokens::Separator::CommaSeparator : NSTokens::Separator::NoSeparator;
                 NSSnapValues::EmitPromiseReactionInfo(promiseInfo->ResolveReactions + i, writer, sep);
@@ -1140,7 +1140,7 @@ namespace TTD
 
             writer->WriteLengthValue(promiseInfo->RejectReactionCount, NSTokens::Separator::CommaSeparator);
             writer->WriteSequenceStart_DefaultKey(NSTokens::Separator::CommaSeparator);
-            for(uint32 i = 0; i < promiseInfo->RejectReactionCount; ++i)
+            for(uint32_t i = 0; i < promiseInfo->RejectReactionCount; ++i)
             {
                 NSTokens::Separator sep = (i != 0) ? NSTokens::Separator::CommaSeparator : NSTokens::Separator::NoSeparator;
                 NSSnapValues::EmitPromiseReactionInfo(promiseInfo->RejectReactions + i, writer, sep);
@@ -1165,7 +1165,7 @@ namespace TTD
             {
                 promiseInfo->ResolveReactions = alloc.SlabAllocateArray<NSSnapValues::SnapPromiseReactionInfo>(promiseInfo->ResolveReactionCount);
 
-                for(uint32 i = 0; i < promiseInfo->ResolveReactionCount; ++i)
+                for(uint32_t i = 0; i < promiseInfo->ResolveReactionCount; ++i)
                 {
                     NSSnapValues::ParsePromiseReactionInfo(promiseInfo->ResolveReactions + i, i != 0, reader, alloc);
                 }
@@ -1179,7 +1179,7 @@ namespace TTD
             {
                 promiseInfo->RejectReactions = alloc.SlabAllocateArray<NSSnapValues::SnapPromiseReactionInfo>(promiseInfo->RejectReactionCount);
 
-                for(uint32 i = 0; i < promiseInfo->RejectReactionCount; ++i)
+                for(uint32_t i = 0; i < promiseInfo->RejectReactionCount; ++i)
                 {
                     NSSnapValues::ParsePromiseReactionInfo(promiseInfo->RejectReactions + i, i != 0, reader, alloc);
                 }
@@ -1199,13 +1199,13 @@ namespace TTD
             NSSnapValues::AssertSnapEquivTTDVar_Special(promiseInfo1->Result, promiseInfo2->Result, compareMap, u"result");
 
             compareMap.DiagnosticAssert(promiseInfo1->ResolveReactionCount == promiseInfo2->ResolveReactionCount);
-            for(uint32 i = 0; i < promiseInfo1->ResolveReactionCount; ++i)
+            for(uint32_t i = 0; i < promiseInfo1->ResolveReactionCount; ++i)
             {
                 NSSnapValues::AssertSnapEquiv(promiseInfo1->ResolveReactions + i, promiseInfo2->ResolveReactions + i, compareMap);
             }
 
             compareMap.DiagnosticAssert(promiseInfo1->RejectReactionCount == promiseInfo2->RejectReactionCount);
-            for(uint32 i = 0; i < promiseInfo1->RejectReactionCount; ++i)
+            for(uint32_t i = 0; i < promiseInfo1->RejectReactionCount; ++i)
             {
                 NSSnapValues::AssertSnapEquiv(promiseInfo1->RejectReactions + i, promiseInfo2->RejectReactions + i, compareMap);
             }
@@ -1689,7 +1689,7 @@ namespace TTD
             Js::JavascriptArray* arrayObj = static_cast<Js::JavascriptArray*>(obj);
             DoAddtlValueInstantiation_SnapArrayInfoCore<TTDVar, Js::Var>(es5Info->BasicArrayData, arrayObj, inflator);
 
-            for(uint32 i = 0; i < es5Info->GetterSetterCount; ++i)
+            for(uint32_t i = 0; i < es5Info->GetterSetterCount; ++i)
             {
                 const SnapES5ArrayGetterSetterEntry* entry = es5Info->GetterSetterEntries + i;
 
@@ -1725,7 +1725,7 @@ namespace TTD
             writer->WriteBool(NSTokens::Key::boolVal, es5Info->IsLengthWritable, NSTokens::Separator::CommaSeparator);
 
             writer->WriteSequenceStart_DefaultKey(NSTokens::Separator::CommaSeparator);
-            for(uint32 i = 0; i < es5Info->GetterSetterCount; ++i)
+            for(uint32_t i = 0; i < es5Info->GetterSetterCount; ++i)
             {
                 NSTokens::Separator sep = (i != 0) ? NSTokens::Separator::CommaSeparator : NSTokens::Separator::NoSeparator;
                 const SnapES5ArrayGetterSetterEntry* entry = es5Info->GetterSetterEntries + i;
@@ -1765,7 +1765,7 @@ namespace TTD
             }
 
             reader->ReadSequenceStart_WDefaultKey(true);
-            for(uint32 i = 0; i < es5Info->GetterSetterCount; ++i)
+            for(uint32_t i = 0; i < es5Info->GetterSetterCount; ++i)
             {
                 SnapES5ArrayGetterSetterEntry* entry = es5Info->GetterSetterEntries + i;
 
@@ -1798,7 +1798,7 @@ namespace TTD
             compareMap.DiagnosticAssert(es5Info1->GetterSetterCount == es5Info2->GetterSetterCount);
             compareMap.DiagnosticAssert(es5Info1->IsLengthWritable == es5Info2->IsLengthWritable);
 
-            for(uint32 i = 0; i < es5Info1->GetterSetterCount; ++i)
+            for(uint32_t i = 0; i < es5Info1->GetterSetterCount; ++i)
             {
                 const SnapES5ArrayGetterSetterEntry* entry1 = es5Info1->GetterSetterEntries + i;
                 const SnapES5ArrayGetterSetterEntry* entry2 = es5Info2->GetterSetterEntries + i;
@@ -1843,7 +1843,7 @@ namespace TTD
             if(buffInfo->Length > 0)
             {
                 writer->WriteSequenceStart_DefaultKey(NSTokens::Separator::CommaSeparator);
-                for(uint32 i = 0; i < buffInfo->Length; ++i)
+                for(uint32_t i = 0; i < buffInfo->Length; ++i)
                 {
                     writer->WriteNakedByte(buffInfo->Buff[i], i != 0 ? NSTokens::Separator::CommaSeparator : NSTokens::Separator::NoSeparator);
                 }
@@ -1866,7 +1866,7 @@ namespace TTD
                 buffInfo->Buff = alloc.SlabAllocateArray<byte>(buffInfo->Length);
 
                 reader->ReadSequenceStart_WDefaultKey(true);
-                for(uint32 i = 0; i < buffInfo->Length; ++i)
+                for(uint32_t i = 0; i < buffInfo->Length; ++i)
                 {
                     buffInfo->Buff[i] = reader->ReadNakedByte(i != 0);
                 }
@@ -1894,7 +1894,7 @@ namespace TTD
             }
             else
             {
-                for(uint32 i = 0; i < buffInfo1->Length; ++i)
+                for(uint32_t i = 0; i < buffInfo1->Length; ++i)
                 {
                     compareMap.DiagnosticAssert(buffInfo1->Buff[i] == buffInfo2->Buff[i]);
                 }
@@ -2020,7 +2020,7 @@ namespace TTD
             if(snpObject->SnapType->JsTypeId == Js::TypeIds_Set)
             {
                 Js::JavascriptSet* sobj = (Js::JavascriptSet*)obj;
-                for(uint32 i = 0; i < setInfo->SetSize; ++i)
+                for(uint32_t i = 0; i < setInfo->SetSize; ++i)
                 {
                     Js::Var val = inflator->InflateTTDVar(setInfo->SetValueArray[i]);
                     Js::JavascriptLibrary::AddSetElementInflate_TTD(sobj, val);
@@ -2029,7 +2029,7 @@ namespace TTD
             else
             {
                 Js::JavascriptWeakSet* sobj = (Js::JavascriptWeakSet*)obj;
-                for(uint32 i = 0; i < setInfo->SetSize; ++i)
+                for(uint32_t i = 0; i < setInfo->SetSize; ++i)
                 {
                     Js::Var val = inflator->InflateTTDVar(setInfo->SetValueArray[i]);
                     Js::JavascriptLibrary::AddWeakSetElementInflate_TTD(sobj, val);
@@ -2046,7 +2046,7 @@ namespace TTD
             if(setInfo->SetSize > 0)
             {
                 writer->WriteSequenceStart_DefaultKey(NSTokens::Separator::CommaSeparator);
-                for(uint32 i = 0; i < setInfo->SetSize; ++i)
+                for(uint32_t i = 0; i < setInfo->SetSize; ++i)
                 {
                     NSSnapValues::EmitTTDVar(setInfo->SetValueArray[i], writer, i != 0 ? NSTokens::Separator::CommaSeparator : NSTokens::Separator::BigSpaceSeparator);
                 }
@@ -2068,7 +2068,7 @@ namespace TTD
                 setInfo->SetValueArray = alloc.SlabAllocateArray<TTDVar>(setInfo->SetSize);
 
                 reader->ReadSequenceStart_WDefaultKey(true);
-                for(uint32 i = 0; i < setInfo->SetSize; ++i)
+                for(uint32_t i = 0; i < setInfo->SetSize; ++i)
                 {
                     setInfo->SetValueArray[i] = NSSnapValues::ParseTTDVar(i != 0, reader);
                 }
@@ -2090,7 +2090,7 @@ namespace TTD
             //Treat weak set contents as ignorable
             if(sobj1->SnapType->JsTypeId == Js::TypeIds_Set)
             {
-                for(uint32 i = 0; i < setInfo1->SetSize; ++i)
+                for(uint32_t i = 0; i < setInfo1->SetSize; ++i)
                 {
                     NSSnapValues::AssertSnapEquivTTDVar_SpecialArray(setInfo1->SetValueArray[i], setInfo2->SetValueArray[i], compareMap, u"setValues", i);
                 }
@@ -2119,7 +2119,7 @@ namespace TTD
             if(snpObject->SnapType->JsTypeId == Js::TypeIds_Map)
             {
                 Js::JavascriptMap* mobj = (Js::JavascriptMap*)obj;
-                for(uint32 i = 0; i < mapInfo->MapSize; i += 2)
+                for(uint32_t i = 0; i < mapInfo->MapSize; i += 2)
                 {
                     Js::Var key = inflator->InflateTTDVar(mapInfo->MapKeyValueArray[i]);
                     Js::Var data = inflator->InflateTTDVar(mapInfo->MapKeyValueArray[i + 1]);
@@ -2129,7 +2129,7 @@ namespace TTD
             else
             {
                 Js::JavascriptWeakMap* mobj = (Js::JavascriptWeakMap*)obj;
-                for(uint32 i = 0; i < mapInfo->MapSize; i += 2)
+                for(uint32_t i = 0; i < mapInfo->MapSize; i += 2)
                 {
                     Js::Var key = inflator->InflateTTDVar(mapInfo->MapKeyValueArray[i]);
                     Js::Var data = inflator->InflateTTDVar(mapInfo->MapKeyValueArray[i + 1]);
@@ -2147,7 +2147,7 @@ namespace TTD
             if(mapInfo->MapSize > 0)
             {
                 writer->WriteSequenceStart_DefaultKey(NSTokens::Separator::CommaSeparator);
-                for(uint32 i = 0; i < mapInfo->MapSize; i += 2)
+                for(uint32_t i = 0; i < mapInfo->MapSize; i += 2)
                 {
                     writer->WriteSequenceStart(i != 0 ? NSTokens::Separator::CommaAndBigSpaceSeparator : NSTokens::Separator::BigSpaceSeparator);
                     NSSnapValues::EmitTTDVar(mapInfo->MapKeyValueArray[i], writer, NSTokens::Separator::NoSeparator);
@@ -2172,7 +2172,7 @@ namespace TTD
                 mapInfo->MapKeyValueArray = alloc.SlabAllocateArray<TTDVar>(mapInfo->MapSize);
 
                 reader->ReadSequenceStart_WDefaultKey(true);
-                for(uint32 i = 0; i < mapInfo->MapSize; i += 2)
+                for(uint32_t i = 0; i < mapInfo->MapSize; i += 2)
                 {
                     reader->ReadSequenceStart(i != 0);
                     mapInfo->MapKeyValueArray[i] = NSSnapValues::ParseTTDVar(false, reader);
@@ -2197,7 +2197,7 @@ namespace TTD
             //Treat weak map contents as ignorable
             if(sobj1->SnapType->JsTypeId == Js::TypeIds_Map)
             {
-                for(uint32 i = 0; i < mapInfo1->MapSize; i += 2)
+                for(uint32_t i = 0; i < mapInfo1->MapSize; i += 2)
                 {
                     NSSnapValues::AssertSnapEquivTTDVar_SpecialArray(mapInfo1->MapKeyValueArray[i], mapInfo2->MapKeyValueArray[i], compareMap, u"mapKeys", i);
                     NSSnapValues::AssertSnapEquivTTDVar_SpecialArray(mapInfo1->MapKeyValueArray[i + 1], mapInfo2->MapKeyValueArray[i + 1], compareMap, u"mapValues", i);
@@ -2367,7 +2367,7 @@ namespace TTD
             // arguments_values array
             writer->WriteKey(NSTokens::Key::arguments_values, NSTokens::Separator::CommaAndBigSpaceSeparator);
             writer->WriteSequenceStart();
-            for(uint32 i = 0; i < sgi->arguments_count; ++i)
+            for(uint32_t i = 0; i < sgi->arguments_count; ++i)
             {
                 NSSnapValues::EmitTTDVar(sgi->arguments_values[i], writer, i != 0 ? NSTokens::Separator::CommaSeparator : NSTokens::Separator::NoSeparator);
             }
@@ -2417,7 +2417,7 @@ namespace TTD
             }
             reader->ReadKey(NSTokens::Key::arguments_values, true);
             reader->ReadSequenceStart();
-            for(uint32 i = 0; i < sgi->arguments_count; ++i)
+            for(uint32_t i = 0; i < sgi->arguments_count; ++i)
             {
                 sgi->arguments_values[i] = NSSnapValues::ParseTTDVar(i != 0, reader);
             }

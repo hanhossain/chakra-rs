@@ -268,7 +268,7 @@ namespace Js {
         FieldNoBarrier(DateTime::YMD)   m_ymdUtc;
         FieldNoBarrier(DateTime::YMD)   m_ymdLcl;
         Field(TZD)                      m_tzd;
-        Field(uint32)                   m_grfval; // Which fields are valid. m_tvUtc is always valid.
+        Field(uint32_t)                   m_grfval; // Which fields are valid. m_tvUtc is always valid.
         Field(bool)                     m_modified : 1; // Whether SetDateData was called on this class
 
         friend JavascriptDate;
@@ -353,7 +353,7 @@ namespace Js {
         return GetDateDefaultString<StringBuilder>(&m_ymdLcl, &m_tzd, DateTimeFlag::None, scriptContext, newStringBuilder);
     }
 
-    const auto ConvertUInt32ToString_ZeroPad_4 = [](const uint32 value, char16_t *const buffer, const CharCount charCapacity)
+    const auto ConvertUInt32ToString_ZeroPad_4 = [](const uint32_t value, char16_t *const buffer, const CharCount charCapacity)
     {
         Assert(charCapacity >= 4);
         if (value < 10)

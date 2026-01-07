@@ -26,9 +26,9 @@ namespace Js
         ExecutionMode GetInterpreterExecutionMode(const bool isPostBailout);
         bool IsInterpreterExecutionMode() const;
         uint16 GetProfiledIterations() const;
-        uint32 GetInterpretedCount() const { return interpretedCount; }
-        uint32 SetInterpretedCount(uint32 val) { return interpretedCount = val; }
-        uint32 IncreaseInterpretedCount() { return interpretedCount++; }
+        uint32_t GetInterpretedCount() const { return interpretedCount; }
+        uint32_t SetInterpretedCount(uint32_t val) { return interpretedCount = val; }
+        uint32_t IncreaseInterpretedCount() { return interpretedCount++; }
         bool InterpretedSinceCallCountCollection() const;
         void CollectInterpretedCounts();
         void CommitExecutedIterations();
@@ -111,9 +111,9 @@ namespace Js
         // Total number of times this function has run under the interpreter with full profiling
         FieldWithBarrier(uint16) committedProfiledIterations;
         // Number of times this function has run under the interpreter in the current execution mode
-        FieldWithBarrier(uint32) interpretedCount;
+        FieldWithBarrier(uint32_t) interpretedCount;
         // Used to detect when interpretedCount changed from a particular call
-        FieldWithBarrier(uint32) lastInterpretedCount;
+        FieldWithBarrier(uint32_t) lastInterpretedCount;
 
         inline uint16 GetDefaultAutoProfilingInterpreter0Limit(bool isCoroutine) const;
         inline uint16 GetDefaultProfilingInterpreter0Limit(bool isCoroutine) const;

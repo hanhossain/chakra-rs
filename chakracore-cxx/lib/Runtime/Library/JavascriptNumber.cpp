@@ -64,7 +64,7 @@ namespace Js
         return InPlaceNew(static_cast<double>(nValue), scriptContext, result);
     }
 
-    Var JavascriptNumber::ToVarInPlace(uint32 nValue, ScriptContext* scriptContext, Js::JavascriptNumber *result)
+    Var JavascriptNumber::ToVarInPlace(uint32_t nValue, ScriptContext* scriptContext, Js::JavascriptNumber *result)
     {
         if (!TaggedInt::IsOverflow(nValue))
         {
@@ -119,7 +119,7 @@ namespace Js
             return *isInt32 = TryGetInt32Value(value, int32Value);
         }
 
-        const uint32 i = static_cast<uint32>(value);
+        const uint32_t i = static_cast<uint32_t>(value);
         if(static_cast<double>(i) != value)
         {
             return false;
@@ -176,7 +176,7 @@ namespace Js
             return 0;
         }
 
-        uint32 uexp = static_cast<uint32>(y);
+        uint32_t uexp = static_cast<uint32_t>(y);
         int32 result = 1;
 
         while (true)
@@ -210,7 +210,7 @@ namespace Js
         // of exponent. This acceleration may lead to significant deviation for larger exponent
         if (y >= -8 && y <= 8)
         {
-            uint32 uexp = static_cast<uint32>(y >= 0 ? y : -y);
+            uint32_t uexp = static_cast<uint32_t>(y >= 0 ? y : -y);
             for (double result = 1.0; ; x *= x)
             {
                 if ((uexp & 1) != 0)

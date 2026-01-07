@@ -9,7 +9,7 @@ namespace Js
 {
     typedef struct
     {
-        uint32 shift;
+        uint32_t shift;
     } Boyer_Moore_Jump;
 
     // Boyer Moore table for only the first character in the search string.
@@ -110,11 +110,11 @@ namespace Js
         virtual int GetRandomAccessItemsFromConcatString(Js::JavascriptString * const *& items) const { return -1; }
         virtual bool IsTree() const { return false; }
 
-        virtual BOOL SetItem(uint32 index, Var value, PropertyOperationFlags propertyOperationFlags) override;
-        virtual BOOL DeleteItem(uint32 index, PropertyOperationFlags propertyOperationFlags) override;
-        virtual PropertyQueryFlags HasItemQuery(uint32 index) override;
-        virtual PropertyQueryFlags GetItemQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext) override;
-        virtual PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext) override;
+        virtual BOOL SetItem(uint32_t index, Var value, PropertyOperationFlags propertyOperationFlags) override;
+        virtual BOOL DeleteItem(uint32_t index, PropertyOperationFlags propertyOperationFlags) override;
+        virtual PropertyQueryFlags HasItemQuery(uint32_t index) override;
+        virtual PropertyQueryFlags GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
+        virtual PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
         virtual BOOL GetEnumerator(JavascriptStaticEnumerator * enumerator, EnumeratorFlags flags, ScriptContext* requestContext, EnumeratorCache * enumeratorCache = nullptr) override;
         virtual PropertyQueryFlags HasPropertyQuery(PropertyId propertyId, _Inout_opt_ PropertyValueInfo* info) override;
         virtual BOOL IsEnumerable(PropertyId propertyId) override;
@@ -202,12 +202,12 @@ namespace Js
         static JavascriptString* Concat_BothOneChar(JavascriptString * pstLeft, JavascriptString * pstRight);
 
     public:
-        static uint32 GetOffsetOfpszValue()
+        static uint32_t GetOffsetOfpszValue()
         {
             return offsetof(JavascriptString, m_pszValue);
         }
 
-        static uint32 GetOffsetOfcharLength()
+        static uint32_t GetOffsetOfcharLength()
         {
             return offsetof(JavascriptString, m_charLength);
         }

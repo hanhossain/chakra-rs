@@ -773,7 +773,7 @@ using namespace Js;
         // On 64-bit architectures, two nonnegative 32-bit ints fit completely in a tagged pointer
         Assert(!pointer2);
         *startIndexRef = static_cast<CharCount>(packedSubstringInfo >> 32);
-        *lengthRef = static_cast<CharCount>(static_cast<uint32>(packedSubstringInfo) >> 1);
+        *lengthRef = static_cast<CharCount>(static_cast<uint32_t>(packedSubstringInfo) >> 1);
     #else
         CompileAssert(sizeof(void *) == sizeof(int32));
 

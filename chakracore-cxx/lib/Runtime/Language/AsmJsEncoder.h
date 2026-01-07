@@ -30,7 +30,7 @@ namespace Js
         typedef JsUtil::BaseDictionary<int, EncoderRelocLabel, ArenaAllocator> RelocLabelMap;
         const byte* ip;
         ByteCodeReader mReader;
-        uint32 mEncodeBufferSize;
+        uint32_t mEncodeBufferSize;
         uint8_t* mEncodeBuffer;
         uint8_t* mPc;
         PageAllocator* mPageAllocator;
@@ -57,7 +57,7 @@ namespace Js
     private:
         void ApplyRelocs();
         void AddReloc( const int labelOffset, uint8_t* patchAddr );
-        uint32 GetEncodeBufferSize(FunctionBody* functionBody);
+        uint32_t GetEncodeBufferSize(FunctionBody* functionBody);
         AsmJsFunctionInfo* GetAsmJsFunctionInfo(){ return mFunctionBody->GetAsmJsFunctionInfo(); }
         AsmJsFunctionInfo* GetAsmJsFunctionInfoWithLock() { return mFunctionBody->GetAsmJsFunctionInfoWithLock(); }
         bool ReadOp();

@@ -49,7 +49,7 @@ namespace Js
 
         Data *NewChainedChunk(charcount_t bufLengthRequested)
         {
-            CompileAssert(sizeof(charcount_t) == sizeof(uint32));
+            CompileAssert(sizeof(charcount_t) == sizeof(uint32_t));
 
             // allocation = (bufLengthRequested * sizeof(char16_t) + sizeof(Data)
             charcount_t alloc32 = UInt32Math::MulAdd<sizeof(char16_t), sizeof(Data)>(bufLengthRequested);
@@ -78,7 +78,7 @@ namespace Js
 
             // Let's just grow the current chunk in place
 
-            CompileAssert(sizeof(charcount_t) == sizeof(uint32));
+            CompileAssert(sizeof(charcount_t) == sizeof(uint32_t));
 
             //// allocation = (bufLengthRequested+1) * sizeof(char16_t)
             charcount_t alloc32 = UInt32Math::AddMul< 1, sizeof(char16_t) >(*pBufLengthRequested);
@@ -115,7 +115,7 @@ namespace Js
 
             Assert(this->length <= MaxLength);
 
-            charcount_t newLengthTryGrowPolicy = newLength + (this->length*2/3); // Note: this would never result in uint32 overflow.
+            charcount_t newLengthTryGrowPolicy = newLength + (this->length*2/3); // Note: this would never result in uint32_t overflow.
             if (newLengthTryGrowPolicy <= MaxLength)
             {
                 newLength = newLengthTryGrowPolicy;
@@ -184,7 +184,7 @@ namespace Js
             {
                 if (countNeeded > MaxLength)
                 {
-                    // Check upfront to prevent potential uint32 overflow caused by (this->count + countNeeded + 1).
+                    // Check upfront to prevent potential uint32_t overflow caused by (this->count + countNeeded + 1).
                     Throw::OutOfMemory();
                 }
                 ExtendBuffer(this->count + countNeeded + 1);

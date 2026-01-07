@@ -46,7 +46,7 @@ namespace JSON
         return Parse(input->GetSz(), input->GetLength());
     }
 
-    Js::Var JSONParser::Walk(Js::JavascriptString* name, Js::PropertyId id, Js::Var holder, uint32 index)
+    Js::Var JSONParser::Walk(Js::JavascriptString* name, Js::PropertyId id, Js::Var holder, uint32_t index)
     {
         AssertMsg(reviver, "JSON post parse walk with null reviver");
         PROBE_STACK(scriptContext, Js::Constants::MinStackDefault);
@@ -159,7 +159,7 @@ namespace JSON
                         // Numerals do not have property Ids so we need to set and delete items
                         else
                         {
-                            uint32 propertyIndex = enumerator.GetCurrentItemIndex();
+                            uint32_t propertyIndex = enumerator.GetCurrentItemIndex();
                             AssertMsg(Js::JavascriptArray::InvalidIndex != propertyIndex, "Not a numeric type");
                             Js::Var newElement = Walk(propertyName, idMember, value, propertyIndex);
                             if (Js::JavascriptOperators::IsUndefinedObject(newElement, undefined))

@@ -143,7 +143,7 @@ namespace Js
         }
 
 #if ENABLE_TTD
-        void SetSourceInfoForDebugReplay_TTD(uint32 newSourceInfoId)
+        void SetSourceInfoForDebugReplay_TTD(uint32_t newSourceInfoId)
         {
             this->m_sourceInfoId = newSourceInfoId;
         }

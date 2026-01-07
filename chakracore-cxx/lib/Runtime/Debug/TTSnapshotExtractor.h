@@ -45,7 +45,7 @@ namespace TTD
 
         ////
         //Performance info
-        uint32 m_snapshotsTakenCount;
+        uint32_t m_snapshotsTakenCount;
         double m_totalMarkMillis;
         double m_totalExtractMillis;
 

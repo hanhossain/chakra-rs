@@ -269,8 +269,8 @@ namespace Js
         static size_t GetAllocSize(uint slotCount);
         void SetItem(_In_range_(0, slotCount - 1) uint index, JavascriptString* value);
 
-        static uint32 GetOffsetOfSlotCount() { return offsetof(ConcatStringMulti, slotCount); }
-        static uint32 GetOffsetOfSlots() { return offsetof(ConcatStringMulti, m_slots); }
+        static uint32_t GetOffsetOfSlotCount() { return offsetof(ConcatStringMulti, slotCount); }
+        static uint32_t GetOffsetOfSlots() { return offsetof(ConcatStringMulti, m_slots); }
     protected:
         Field(uint) slotCount;
         Field(uint)   __alignment;

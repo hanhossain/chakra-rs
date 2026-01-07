@@ -12,13 +12,13 @@ namespace Js {
         DEFINE_VTABLE_CTOR(JsrtExternalArrayBuffer, ExternalArrayBuffer);
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JsrtExternalArrayBuffer);
 
-        JsrtExternalArrayBuffer(byte *buffer, uint32 length, JsFinalizeCallback finalizeCallback, void *callbackState, DynamicType *type);
-        JsrtExternalArrayBuffer(RefCountedBuffer *buffer, uint32 length, JsFinalizeCallback finalizeCallback, void *callbackState, DynamicType *type);
-        virtual ArrayBufferDetachedStateBase* CreateDetachedState(RefCountedBuffer* buffer, uint32 bufferLength) override;
+        JsrtExternalArrayBuffer(byte *buffer, uint32_t length, JsFinalizeCallback finalizeCallback, void *callbackState, DynamicType *type);
+        JsrtExternalArrayBuffer(RefCountedBuffer *buffer, uint32_t length, JsFinalizeCallback finalizeCallback, void *callbackState, DynamicType *type);
+        virtual ArrayBufferDetachedStateBase* CreateDetachedState(RefCountedBuffer* buffer, uint32_t bufferLength) override;
 
     public:
-        static JsrtExternalArrayBuffer* New(byte *buffer, uint32 length, JsFinalizeCallback finalizeCallback, void *callbackState, DynamicType *type);
-        static JsrtExternalArrayBuffer* New(RefCountedBuffer *buffer, uint32 length, JsFinalizeCallback finalizeCallback, void *callbackState, DynamicType *type);
+        static JsrtExternalArrayBuffer* New(byte *buffer, uint32_t length, JsFinalizeCallback finalizeCallback, void *callbackState, DynamicType *type);
+        static JsrtExternalArrayBuffer* New(RefCountedBuffer *buffer, uint32_t length, JsFinalizeCallback finalizeCallback, void *callbackState, DynamicType *type);
         void Finalize(bool isShutdown) override;
 
     private:
@@ -30,7 +30,7 @@ namespace Js {
             FieldNoBarrier(JsFinalizeCallback) finalizeCallback;
             FieldNoBarrier(void *) callbackState;
         public:
-            JsrtExternalArrayBufferDetachedState(RefCountedBuffer* buffer, uint32 bufferLength, JsFinalizeCallback finalizeCallback, void *callbackState);
+            JsrtExternalArrayBufferDetachedState(RefCountedBuffer* buffer, uint32_t bufferLength, JsFinalizeCallback finalizeCallback, void *callbackState);
             virtual void ClearSelfOnly() override;
             virtual void DiscardState() override;
             virtual ArrayBuffer* Create(JavascriptLibrary* library) override;

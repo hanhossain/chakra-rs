@@ -2230,7 +2230,7 @@ namespace Js
         ImplicitCallFlags implicitCallFlags;
         ThisInfo thisInfo;
         Bits bits;
-        uint32 recursiveInlineInfo = 0;
+        uint32_t recursiveInlineInfo = 0;
 
         try
         {

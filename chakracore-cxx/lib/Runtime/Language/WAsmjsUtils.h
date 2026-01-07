@@ -34,12 +34,12 @@ namespace WAsmJs
 
     typedef Js::RegSlot RegSlot;
 
-    uint32 ConvertOffset(uint32 offset, uint32 fromSize, uint32 toSize);
-    template<typename ToType> uint32 ConvertOffset(uint32 offset, uint32 fromSize)
+    uint32_t ConvertOffset(uint32_t offset, uint32_t fromSize, uint32_t toSize);
+    template<typename ToType> uint32_t ConvertOffset(uint32_t offset, uint32_t fromSize)
     {
         return ConvertOffset(offset, fromSize, sizeof(ToType));
     }
-    template<typename FromType, typename ToType> uint32 ConvertOffset(uint32 offset)
+    template<typename FromType, typename ToType> uint32_t ConvertOffset(uint32_t offset)
     {
         return ConvertOffset<ToType>(offset, sizeof(FromType));
     }
@@ -63,7 +63,7 @@ namespace WAsmJs
     };
     const Types FirstType = (Types)0;
     const Types LastType = (Types)(LIMIT - 1);
-    uint32 GetTypeByteSize(Types type);
+    uint32_t GetTypeByteSize(Types type);
     Types FromIRType(IRType irType);
     template<typename T>
     Types FromPrimitiveType();
@@ -186,7 +186,7 @@ namespace WAsmJs
             // a register is a var if it is between the last const and the end
             // equivalent to  reg>=mNbConst && reg<mRegisterCount
             // forcing unsigned, if reg < mNbConst then reg-mNbConst = 0xFFFFF..
-            return (uint32)(reg - mNbConst) < (uint32)(mRegisterCount - mNbConst);
+            return (uint32_t)(reg - mNbConst) < (uint32_t)(mRegisterCount - mNbConst);
         }
 
         // Releases a location if its a temporary, safe to call with any expression
@@ -249,29 +249,29 @@ namespace WAsmJs
 
     struct TypedConstSourcesInfo
     {
-        uint32 srcByteOffsets[WAsmJs::LIMIT];
-        uint32 bytesUsed;
+        uint32_t srcByteOffsets[WAsmJs::LIMIT];
+        uint32_t bytesUsed;
     };
 
     struct TypedSlotInfo
     {
         TypedSlotInfo(): constCount(0), varCount(0), tmpCount(0), byteOffset(0), constSrcByteOffset(0) { }
-        Field(uint32) constCount;
-        Field(uint32) varCount;
-        Field(uint32) tmpCount;
+        Field(uint32_t) constCount;
+        Field(uint32_t) varCount;
+        Field(uint32_t) tmpCount;
         // Offset in bytes from the start of InterpreterStack::m_localSlot
-        Field(uint32) byteOffset;
+        Field(uint32_t) byteOffset;
         // Offset in bytes from the start of the const table before shuffling (InterpreterStackFrame::AlignMemoryForAsmJs())
-        Field(uint32) constSrcByteOffset;
+        Field(uint32_t) constSrcByteOffset;
     };
 
     typedef RegisterSpace*(*AllocateRegisterSpaceFunc)(ArenaAllocator*, WAsmJs::Types);
     class TypedRegisterAllocator
     {
-        uint32 mExcludedMask;
+        uint32_t mExcludedMask;
         RegisterSpace* mTypeSpaces[WAsmJs::LIMIT];
     public:
-        TypedRegisterAllocator(ArenaAllocator* allocator, AllocateRegisterSpaceFunc allocateFunc, uint32 excludedMask = 0);
+        TypedRegisterAllocator(ArenaAllocator* allocator, AllocateRegisterSpaceFunc allocateFunc, uint32_t excludedMask = 0);
 
         void CommitToFunctionInfo(Js::AsmJsFunctionInfo* funcInfo, Js::FunctionBody* body) const;
         void CommitToFunctionBody(Js::FunctionBody* body);
@@ -281,7 +281,7 @@ namespace WAsmJs
 #if DBG_DUMP
         void DumpLocalsInfo() const;
         // indexes' array size must be WAsmJs::RegisterSpace::LIMIT
-        void GetArgumentStartIndex(uint32* indexes) const;
+        void GetArgumentStartIndex(uint32_t* indexes) const;
 #endif
 
         RegisterSpace* GetRegisterSpace(Types type) const;

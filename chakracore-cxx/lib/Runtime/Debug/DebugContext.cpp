@@ -193,7 +193,7 @@ namespace Js
         Js::TempArenaAllocatorObject *tempAllocator = nullptr;
         JsUtil::List<Js::FunctionInfo *, Recycler>* pFunctionsToRegister = nullptr;
         JsUtil::List<Js::Utf8SourceInfo *, Recycler, false, Js::CopyRemovePolicy, RecyclerPointerComparer>* utf8SourceInfoList = nullptr;
-        typedef JsUtil::BaseDictionary<uint32, RegSlot, ArenaAllocator, PowerOf2SizePolicy> FunctionStartToYieldRegister;
+        typedef JsUtil::BaseDictionary<uint32_t, RegSlot, ArenaAllocator, PowerOf2SizePolicy> FunctionStartToYieldRegister;
 
         // This container ensures that for Generator/Async functions the yield register is same between non-debug to debug parse.
         // Each entry represent a function's start position (each function will have unique start position in a file) and that function yield register

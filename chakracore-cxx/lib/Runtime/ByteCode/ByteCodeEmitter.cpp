@@ -1073,7 +1073,7 @@ void ByteCodeGenerator::DefineCachedFunctions(FuncInfo *funcInfoParent)
     Js::FuncInfoArray *info = AnewPlus(alloc, extraBytes, Js::FuncInfoArray, slotCount);
 
     // slotCount is guaranteed to be non-zero here.
-    Js::AuxArray<uint32> * slotIdInCachedScopeToNestedIndexArray = funcInfoParent->GetParsedFunctionBody()->AllocateSlotIdInCachedScopeToNestedIndexArray(slotCount);
+    Js::AuxArray<uint32_t> * slotIdInCachedScopeToNestedIndexArray = funcInfoParent->GetParsedFunctionBody()->AllocateSlotIdInCachedScopeToNestedIndexArray(slotCount);
 
     slotCount = 0;
 
@@ -2137,7 +2137,7 @@ void ByteCodeGenerator::InvalidateCachedOuterScopes(FuncInfo *funcInfo)
     // Walk the scope stack, from funcInfo outward, looking for scopes that have been cached.
 
     Scope *scope = funcInfo->GetBodyScope()->GetEnclosingScope();
-    uint32 envIndex = 0;
+    uint32_t envIndex = 0;
 
     while (scope && scope->GetFunc() == funcInfo)
     {
@@ -3151,7 +3151,7 @@ void ByteCodeGenerator::EmitOneFunction(ParseNodeFnc *pnodeFnc)
         byteCodeFunction->CheckAndSetOutParamMaxDepth(funcInfo->outArgsMaxDepth);
         byteCodeFunction->SetForInLoopDepth(funcInfo->GetMaxForInLoopLevel());
 
-        // Do a uint32 add just to verify that we haven't overflowed the reg slot type.
+        // Do a uint32_t add just to verify that we haven't overflowed the reg slot type.
         UInt32Math::Add(funcInfo->varRegsCount, funcInfo->constRegsCount);
 
 #if DBG_DUMP
@@ -3221,7 +3221,7 @@ void ByteCodeGenerator::EmitOneFunction(ParseNodeFnc *pnodeFnc)
     {
         // Add the top level of nested functions to the tracking dictionary. Wait until this point so that all nested functions have gone
         // through the Emit API so source info, etc., is initialized, and these are not orphaned functions left behind by an unfinished pass.
-        byteCodeFunction->ForEachNestedFunc([&](Js::FunctionProxy * nestedFunc, uint32 i)
+        byteCodeFunction->ForEachNestedFunc([&](Js::FunctionProxy * nestedFunc, uint32_t i)
         {
             if (nestedFunc && nestedFunc->IsDeferredParseFunction() && nestedFunc->GetParseableFunctionInfo()->GetIsDeclaration())
             {
@@ -4284,7 +4284,7 @@ void ByteCodeGenerator::EmitLoadInstance(Symbol *sym, IdentPtr pid, Js::RegSlot 
                 // Function body scope in an enclosing function that calls eval.
                 // Emit a branch opcode that does not require bail on implicit calls.
 
-                uint32 frameDisplayIndex = envIndex + Js::FrameDisplay::GetOffsetOfScopes() / sizeof(Js::Var);
+                uint32_t frameDisplayIndex = envIndex + Js::FrameDisplay::GetOffsetOfScopes() / sizeof(Js::Var);
                 this->m_writer.BrEnvProperty(Js::OpCode::BrOnHasLocalEnvProperty, rec.label, propertyIndex, frameDisplayIndex);
                 rec.kind = DynamicLoadKind::Env;
                 rec.index = frameDisplayIndex;
@@ -4307,7 +4307,7 @@ void ByteCodeGenerator::EmitLoadInstance(Symbol *sym, IdentPtr pid, Js::RegSlot 
             else
             {
                 // With object declared in an enclosing function. HasProperty may have implicit calls.
-                uint32 frameDisplayIndex = envIndex + Js::FrameDisplay::GetOffsetOfScopes() / sizeof(Js::Var);
+                uint32_t frameDisplayIndex = envIndex + Js::FrameDisplay::GetOffsetOfScopes() / sizeof(Js::Var);
                 this->m_writer.BrEnvProperty(Js::OpCode::BrOnHasEnvProperty, rec.label, propertyIndex, frameDisplayIndex);
                 rec.kind = DynamicLoadKind::EnvWith;
                 rec.index = frameDisplayIndex;
@@ -4713,7 +4713,7 @@ void ByteCodeGenerator::EmitPropStore(Js::RegSlot rhsLocation, Symbol *sym, Iden
             }
             else
             {
-                uint32 frameDisplayIndex = envIndex + Js::FrameDisplay::GetOffsetOfScopes() / sizeof(Js::Var);
+                uint32_t frameDisplayIndex = envIndex + Js::FrameDisplay::GetOffsetOfScopes() / sizeof(Js::Var);
                 this->m_writer.BrEnvProperty(Js::OpCode::BrOnHasLocalEnvProperty, rec.label, propertyIndex, frameDisplayIndex);
                 rec.kind = DynamicLoadKind::Env;
                 rec.index = frameDisplayIndex;
@@ -4729,7 +4729,7 @@ void ByteCodeGenerator::EmitPropStore(Js::RegSlot rhsLocation, Symbol *sym, Iden
             }
             else
             {
-                uint32 frameDisplayIndex = envIndex + Js::FrameDisplay::GetOffsetOfScopes() / sizeof(Js::Var);
+                uint32_t frameDisplayIndex = envIndex + Js::FrameDisplay::GetOffsetOfScopes() / sizeof(Js::Var);
                 this->m_writer.BrEnvProperty(Js::OpCode::BrOnHasEnvProperty, rec.label, propertyIndex, frameDisplayIndex);
                 rec.kind = DynamicLoadKind::EnvWith;
                 rec.index = frameDisplayIndex;
@@ -5086,7 +5086,7 @@ void ByteCodeGenerator::EmitPropLoad(Js::RegSlot lhsLocation, Symbol *sym, Ident
             }
             else
             {
-                uint32 frameDisplayIndex = envIndex + Js::FrameDisplay::GetOffsetOfScopes() / sizeof(Js::Var);
+                uint32_t frameDisplayIndex = envIndex + Js::FrameDisplay::GetOffsetOfScopes() / sizeof(Js::Var);
                 this->m_writer.BrEnvProperty(Js::OpCode::BrOnHasLocalEnvProperty, rec.label, propertyIndex, frameDisplayIndex);
                 rec.kind = DynamicLoadKind::Env;
                 rec.index = frameDisplayIndex;
@@ -5102,7 +5102,7 @@ void ByteCodeGenerator::EmitPropLoad(Js::RegSlot lhsLocation, Symbol *sym, Ident
             }
             else
             {
-                uint32 frameDisplayIndex = envIndex + Js::FrameDisplay::GetOffsetOfScopes() / sizeof(Js::Var);
+                uint32_t frameDisplayIndex = envIndex + Js::FrameDisplay::GetOffsetOfScopes() / sizeof(Js::Var);
                 this->m_writer.BrEnvProperty(Js::OpCode::BrOnHasEnvProperty, rec.label, propertyIndex, frameDisplayIndex);
                 rec.kind = DynamicLoadKind::EnvWith;
                 rec.index = frameDisplayIndex;
@@ -5368,7 +5368,7 @@ void ByteCodeGenerator::EmitPropDelete(Js::RegSlot lhsLocation, Symbol *sym, Ide
             }
             else
             {
-                uint32 frameDisplayIndex = envIndex + Js::FrameDisplay::GetOffsetOfScopes() / sizeof(Js::Var);
+                uint32_t frameDisplayIndex = envIndex + Js::FrameDisplay::GetOffsetOfScopes() / sizeof(Js::Var);
                 this->m_writer.BrEnvProperty(Js::OpCode::BrOnHasLocalEnvProperty, rec.label, propertyIndex, frameDisplayIndex);
                 rec.kind = DynamicLoadKind::Env;
                 rec.index = frameDisplayIndex;
@@ -5384,7 +5384,7 @@ void ByteCodeGenerator::EmitPropDelete(Js::RegSlot lhsLocation, Symbol *sym, Ide
             }
             else
             {
-                uint32 frameDisplayIndex = envIndex + Js::FrameDisplay::GetOffsetOfScopes() / sizeof(Js::Var);
+                uint32_t frameDisplayIndex = envIndex + Js::FrameDisplay::GetOffsetOfScopes() / sizeof(Js::Var);
                 this->m_writer.BrEnvProperty(Js::OpCode::BrOnHasEnvProperty, rec.label, propertyIndex, frameDisplayIndex);
                 rec.kind = DynamicLoadKind::EnvWith;
                 rec.index = frameDisplayIndex;
@@ -5561,7 +5561,7 @@ void ByteCodeGenerator::EmitPropTypeof(Js::RegSlot lhsLocation, Symbol *sym, Ide
             }
             else
             {
-                uint32 frameDisplayIndex = envIndex + Js::FrameDisplay::GetOffsetOfScopes() / sizeof(Js::Var);
+                uint32_t frameDisplayIndex = envIndex + Js::FrameDisplay::GetOffsetOfScopes() / sizeof(Js::Var);
                 this->m_writer.BrEnvProperty(Js::OpCode::BrOnHasLocalEnvProperty, rec.label, propertyIndex, frameDisplayIndex);
                 rec.kind = DynamicLoadKind::Env;
                 rec.index = frameDisplayIndex;
@@ -5577,7 +5577,7 @@ void ByteCodeGenerator::EmitPropTypeof(Js::RegSlot lhsLocation, Symbol *sym, Ide
             }
             else
             {
-                uint32 frameDisplayIndex = envIndex + Js::FrameDisplay::GetOffsetOfScopes() / sizeof(Js::Var);
+                uint32_t frameDisplayIndex = envIndex + Js::FrameDisplay::GetOffsetOfScopes() / sizeof(Js::Var);
                 this->m_writer.BrEnvProperty(Js::OpCode::BrOnHasEnvProperty, rec.label, propertyIndex, frameDisplayIndex);
                 rec.kind = DynamicLoadKind::EnvWith;
                 rec.index = frameDisplayIndex;
@@ -6961,7 +6961,7 @@ void EmitDestructuredArray(
 void EmitNameInvoke(Js::RegSlot lhsLocation,
     Js::RegSlot objectLocation,
     Js::RegSlot computedPropIdArrLocation,
-    uint32 *computedIndex,
+    uint32_t *computedIndex,
     bool hasRest,
     ParseNodePtr nameNode,
     ByteCodeGenerator* byteCodeGenerator,
@@ -7051,7 +7051,7 @@ void EmitDestructuredObjectMember(ParseNodePtr memberNode,
     Js::RegSlot rhsLocation,
     Js::RegSlot propIdArrLocation,
     Js::RegSlot computedPropIdArrLocation,
-    uint32 *computedIndex,
+    uint32_t *computedIndex,
     bool hasRest,
     ByteCodeGenerator *byteCodeGenerator,
     FuncInfo *funcInfo)
@@ -7098,10 +7098,10 @@ void EmitDestructuredObjectMember(ParseNodePtr memberNode,
 void EmitObjectPropertyIdsToArray(ByteCodeGenerator *byteCodeGenerator, 
     Js::PropertyId *ids, 
     ParseNodePtr memberNodes, 
-    uint32 staticCount, 
+    uint32_t staticCount, 
     bool *hasComputedProps)
 {
-    uint32 index = 0;
+    uint32_t index = 0;
     Parser::ForEachItemInList(memberNodes, [&](ParseNodePtr current) {
         if (current->nop != knopEllipsis)
         {
@@ -7135,8 +7135,8 @@ void EmitDestructuredObject(ParseNode *lhs,
     Assert(lhs->nop == knopObjectPattern);
     ParseNodeObjLit *pnodeObjLit = lhs->AsParseNodeObjLit();
     ParseNodePtr pnode1 = pnodeObjLit->pnode1;
-    uint32 staticCount = pnodeObjLit->staticCount;
-    uint32 computedCount = pnodeObjLit->computedCount;
+    uint32_t staticCount = pnodeObjLit->staticCount;
+    uint32_t computedCount = pnodeObjLit->computedCount;
     bool hasRest = pnodeObjLit->hasRest;
     bool hasComputedProps = false;
 
@@ -7178,7 +7178,7 @@ void EmitDestructuredObject(ParseNode *lhs,
             }
         }
 
-        uint32 index = 0;
+        uint32_t index = 0;
         Parser::ForEachItemInList(pnode1, [&](ParseNodePtr memberNode) {
             EmitDestructuredObjectMember(memberNode, rhsLocation, propIdArrLocation, computedPropIdArrLocation, 
                 &index, hasRest, byteCodeGenerator, funcInfo);
@@ -7420,7 +7420,7 @@ void EmitOneArg(
     Js::ArgSlot &spreadIndex,
     Js::RegSlot argTempLocation,
     bool emitProfiledArgout,
-    Js::AuxArray<uint32> *spreadIndices = nullptr
+    Js::AuxArray<uint32_t> *spreadIndices = nullptr
 )
 {
     bool noArgOuts = argTempLocation != Js::Constants::NoRegister;
@@ -7476,7 +7476,7 @@ size_t EmitArgsWithArgOutsAtEnd(
     Js::RegSlot thisLocation,
     Js::ArgSlot argsCountForStartCall,
     bool emitProfiledArgouts,
-    Js::AuxArray<uint32> *spreadIndices = nullptr
+    Js::AuxArray<uint32_t> *spreadIndices = nullptr
 )
 {
     AssertOrFailFast(pnode != nullptr);
@@ -7527,7 +7527,7 @@ size_t EmitArgs(
     FuncInfo *funcInfo,
     Js::ProfileId callSiteId,
     bool emitProfiledArgouts,
-    Js::AuxArray<uint32> *spreadIndices = nullptr
+    Js::AuxArray<uint32_t> *spreadIndices = nullptr
     )
 {
     Js::ArgSlot argIndex = 0;
@@ -7651,7 +7651,7 @@ Js::ArgSlot EmitArgList(
     bool emitArgOutsAtEnd,
     bool emitProfiledArgouts,
     uint16 spreadArgCount = 0,
-    Js::AuxArray<uint32> **spreadIndices = nullptr)
+    Js::AuxArray<uint32_t> **spreadIndices = nullptr)
 {
     // This function emits the arguments for a call.
     // ArgOut's with uses immediately following defs.
@@ -7674,9 +7674,9 @@ Js::ArgSlot EmitArgList(
 
     if (spreadArgCount > 0)
     {
-        const size_t extraAlloc = UInt32Math::Mul(spreadArgCount, sizeof(uint32));
+        const size_t extraAlloc = UInt32Math::Mul(spreadArgCount, sizeof(uint32_t));
         Assert(spreadIndices != nullptr);
-        *spreadIndices = AnewPlus(byteCodeGenerator->GetAllocator(), extraAlloc, Js::AuxArray<uint32>, spreadArgCount);
+        *spreadIndices = AnewPlus(byteCodeGenerator->GetAllocator(), extraAlloc, Js::AuxArray<uint32_t>, spreadArgCount);
     }
 
     size_t argIndex = 0;
@@ -8192,11 +8192,11 @@ void EmitCallI(
     BOOL fEvaluateComponents,
     BOOL fIsEval,
     BOOL fHasNewTarget,
-    uint32 actualArgCount,
+    uint32_t actualArgCount,
     ByteCodeGenerator *byteCodeGenerator,
     FuncInfo *funcInfo,
     Js::ProfileId callSiteId,
-    Js::AuxArray<uint32> *spreadIndices = nullptr)
+    Js::AuxArray<uint32_t> *spreadIndices = nullptr)
 {
     // Emit a call where the target is in a register, because it's either a local name or an expression we've
     // already evaluated.
@@ -8274,7 +8274,7 @@ void EmitCallI(
         if (pnodeCall->spreadArgCount > 0)
         {
             Assert(spreadIndices != nullptr);
-            spreadExtraAlloc = UInt32Math::Mul(spreadIndices->count, sizeof(uint32));
+            spreadExtraAlloc = UInt32Math::Mul(spreadIndices->count, sizeof(uint32_t));
             spreadIndicesSize = UInt32Math::Add(sizeof(*spreadIndices), spreadExtraAlloc);
             options = Js::CallIExtended_SpreadArgs;
         }
@@ -8303,11 +8303,11 @@ void EmitCallInstrNoEvalComponents(
     BOOL fHasNewTarget,
     Js::RegSlot thisLocation,
     Js::RegSlot callObjLocation,
-    uint32 actualArgCount,
+    uint32_t actualArgCount,
     ByteCodeGenerator *byteCodeGenerator,
     FuncInfo *funcInfo,
     Js::ProfileId callSiteId,
-    Js::AuxArray<uint32> *spreadIndices = nullptr)
+    Js::AuxArray<uint32_t> *spreadIndices = nullptr)
 {
     // Emit the call instruction. The call target is a reference at this point, and we evaluate
     // it as part of doing the actual call.
@@ -8366,11 +8366,11 @@ void EmitCallInstr(
     BOOL fHasNewTarget,
     Js::RegSlot thisLocation,
     Js::RegSlot callObjLocation,
-    uint32 actualArgCount,
+    uint32_t actualArgCount,
     ByteCodeGenerator *byteCodeGenerator,
     FuncInfo *funcInfo,
     Js::ProfileId callSiteId,
-    Js::AuxArray<uint32> *spreadIndices = nullptr)
+    Js::AuxArray<uint32_t> *spreadIndices = nullptr)
 {
     // Emit a call instruction. The call target has been fully evaluated already, so we always
     // emit a CallI through the register that holds the target value.
@@ -8429,7 +8429,7 @@ void EmitNew(ParseNode* pnode, ByteCodeGenerator* byteCodeGenerator, FuncInfo* f
     }
     else
     {
-        uint32 actualArgCount = 0;
+        uint32_t actualArgCount = 0;
 
         if (IsCallOfConstants(pnode))
         {
@@ -8454,7 +8454,7 @@ void EmitNew(ParseNode* pnode, ByteCodeGenerator* byteCodeGenerator, FuncInfo* f
             // Only emit profiled argouts if we're going to profile this call.
             bool emitProfiledArgouts = callSiteId != byteCodeGenerator->GetCurrentCallSiteId();
 
-            Js::AuxArray<uint32> *spreadIndices = nullptr;
+            Js::AuxArray<uint32_t> *spreadIndices = nullptr;
 
             // Emit argouts at end for generators so that we don't need to restore them when bailing in
             bool emitArgOutsAtEnd = pnode->AsParseNodeCall()->hasDestructuring || (funcInfo->byteCodeFunction->IsCoroutine() && pnode->AsParseNodeCall()->pnodeArgs != nullptr);
@@ -8466,7 +8466,7 @@ void EmitNew(ParseNode* pnode, ByteCodeGenerator* byteCodeGenerator, FuncInfo* f
             if (pnode->AsParseNodeCall()->spreadArgCount > 0)
             {
                 Assert(spreadIndices != nullptr);
-                uint spreadExtraAlloc = UInt32Math::Mul(spreadIndices->count, sizeof(uint32));
+                uint spreadExtraAlloc = UInt32Math::Mul(spreadIndices->count, sizeof(uint32_t));
                 uint spreadIndicesSize = UInt32Math::Add(sizeof(*spreadIndices), spreadExtraAlloc);
                 byteCodeGenerator->Writer()->CallIExtended(op, funcInfo->AcquireLoc(pnode), pnode->AsParseNodeCall()->pnodeTarget->location,
                     (uint16)actualArgCount, Js::CallIExtended_SpreadArgs,
@@ -8599,7 +8599,7 @@ void EmitCall(
 
     // Emit argouts at end for generators so that we don't need to restore them when bailing in
     bool emitArgOutsAtEnd = pnodeCall->hasDestructuring || (funcInfo->byteCodeFunction->IsCoroutine() && pnodeCall->pnodeArgs != nullptr);
-    Js::AuxArray<uint32> *spreadIndices;
+    Js::AuxArray<uint32_t> *spreadIndices;
     EmitArgList(pnodeArgs, thisLocation, newTargetLocation, fIsEval, fEvaluateComponents, byteCodeGenerator, funcInfo, callSiteId, (Js::ArgSlot)argCount, emitArgOutsAtEnd, emitProfiledArgouts, spreadArgCount, &spreadIndices);
 
     if (!fEvaluateComponents)
@@ -8838,7 +8838,7 @@ void EmitObjectInitializers(ParseNode *memberList, Js::RegSlot objectLocation, B
 {
     ParseNode *pmemberList = memberList;
     unsigned int argCount = 0;
-    uint32  value;
+    uint32_t  value;
     Js::PropertyId propertyId;
 
     //
@@ -8894,7 +8894,7 @@ void EmitObjectInitializers(ParseNode *memberList, Js::RegSlot objectLocation, B
     }
     else
     {
-        uint32 allocSize = UInt32Math::Mul(argCount, sizeof(Js::PropertyId));
+        uint32_t allocSize = UInt32Math::Mul(argCount, sizeof(Js::PropertyId));
         Js::PropertyIdArray *propIds = AnewPlus(byteCodeGenerator->GetAllocator(), allocSize, Js::PropertyIdArray, argCount, 0);
 
         if (propertyIds->ContainsKey(Js::PropertyIds::__proto__))
@@ -8930,7 +8930,7 @@ void EmitObjectInitializers(ParseNode *memberList, Js::RegSlot objectLocation, B
             }
         }
 
-        uint32 literalObjectId = funcInfo->GetParsedFunctionBody()->NewObjectLiteral();
+        uint32_t literalObjectId = funcInfo->GetParsedFunctionBody()->NewObjectLiteral();
 
         // Generate the opcode with propIds and cacheId
         byteCodeGenerator->Writer()->Auxiliary(Js::OpCode::NewScObjectLiteral, objectLocation, propIds, UInt32Math::Add(sizeof(Js::PropertyIdArray), allocSize), literalObjectId);
@@ -9160,12 +9160,12 @@ void SetNewArrayElements(ParseNode *pnode, Js::RegSlot arrayLocation, ByteCodeGe
     Assert(!arrayLitOpt || !nativeArrays);
 
     Js::RegSlot spreadArrLoc = arrayLocation;
-    Js::AuxArray<uint32> *spreadIndices = nullptr;
-    const uint extraAlloc = UInt32Math::Mul(spreadCount, sizeof(uint32));
+    Js::AuxArray<uint32_t> *spreadIndices = nullptr;
+    const uint extraAlloc = UInt32Math::Mul(spreadCount, sizeof(uint32_t));
     if (pnode->AsParseNodeArrLit()->spreadCount > 0)
     {
         arrayLocation = funcInfo->AcquireTmpRegister();
-        spreadIndices = AnewPlus(byteCodeGenerator->GetAllocator(), extraAlloc, Js::AuxArray<uint32>, spreadCount);
+        spreadIndices = AnewPlus(byteCodeGenerator->GetAllocator(), extraAlloc, Js::AuxArray<uint32_t>, spreadCount);
     }
 
     byteCodeGenerator->Writer()->Reg1Unsigned1(
@@ -9209,7 +9209,7 @@ void SetNewArrayElements(ParseNode *pnode, Js::RegSlot arrayLocation, ByteCodeGe
 
         if (arrayLitOpt)
         {
-            uint32 allocSize = UInt32Math::Mul(argCount, sizeof(Js::Var));
+            uint32_t allocSize = UInt32Math::Mul(argCount, sizeof(Js::Var));
             Js::VarArray *vars = AnewPlus(byteCodeGenerator->GetAllocator(), allocSize, Js::VarArray, argCount);
 
             EmitConstantArgsToVarArray(byteCodeGenerator, vars->elements, args, argCount);
@@ -9287,7 +9287,7 @@ void SetNewArrayElements(ParseNode *pnode, Js::RegSlot arrayLocation, ByteCodeGe
 
     if (pnode->AsParseNodeArrLit()->spreadCount > 0)
     {
-        byteCodeGenerator->Writer()->Reg2Aux(Js::OpCode::SpreadArrayLiteral, spreadArrLoc, arrayLocation, spreadIndices, UInt32Math::Add(sizeof(Js::AuxArray<uint32>), extraAlloc), extraAlloc);
+        byteCodeGenerator->Writer()->Reg2Aux(Js::OpCode::SpreadArrayLiteral, spreadArrLoc, arrayLocation, spreadIndices, UInt32Math::Add(sizeof(Js::AuxArray<uint32_t>), extraAlloc), extraAlloc);
         AdeletePlus(byteCodeGenerator->GetAllocator(), extraAlloc, spreadIndices);
         funcInfo->ReleaseTmpRegister(arrayLocation);
     }

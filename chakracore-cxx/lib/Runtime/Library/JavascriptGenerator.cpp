@@ -176,8 +176,8 @@ Var JavascriptGenerator::CallGenerator(Var data, ResumeYieldKind resumeKind)
     {
         // if the function already has a state it may be going to resume in the jit
         // if so copy any innerScopes into registers jit can access
-        uint32 innerScopeCount = this->scriptFunction->GetFunctionBody()->GetInnerScopeCount();
-        for (uint32 i = 0; i < innerScopeCount; ++i)
+        uint32_t innerScopeCount = this->scriptFunction->GetFunctionBody()->GetInnerScopeCount();
+        for (uint32_t i = 0; i < innerScopeCount; ++i)
         {
             Js::RegSlot reg = this->scriptFunction->GetFunctionBody()->GetFirstInnerScopeRegister() + i;
             this->frame->SetNonVarReg(reg, this->frame->InnerScopeFromIndex(i));
@@ -406,8 +406,8 @@ void JavascriptGenerator::MarkVisitKindSpecificPtrs(TTD::SnapshotExtractor* extr
     if (this->args.Values != nullptr)
     {
         // mark argument variables for traversal
-        uint32 argCount = this->args.GetArgCountWithExtraArgs();
-        for (uint32 i = 0; i < argCount; i++)
+        uint32_t argCount = this->args.GetArgCountWithExtraArgs();
+        for (uint32_t i = 0; i < argCount; i++)
         {
             Js::Var curr = this->args[i];
             if (curr != nullptr)
@@ -444,7 +444,7 @@ void JavascriptGenerator::ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObje
     //}
 
     gi->scriptFunction = TTD_CONVERT_VAR_TO_PTR_ID(this->scriptFunction);
-    gi->state = static_cast<uint32>(this->state);
+    gi->state = static_cast<uint32_t>(this->state);
 
 
     // grab slot info from InterpreterStackFrame
@@ -465,7 +465,7 @@ void JavascriptGenerator::ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObje
 
     // grab arguments
     TTD_PTR_ID* depArray = nullptr;
-    uint32 depCount = 0;
+    uint32_t depCount = 0;
 
     if (this->args.Values == nullptr)
     {
@@ -483,7 +483,7 @@ void JavascriptGenerator::ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObje
         depArray = alloc.SlabReserveArraySpace<TTD_PTR_ID>(gi->arguments_count);
     }
 
-    for (uint32 i = 0; i < gi->arguments_count; i++)
+    for (uint32_t i = 0; i < gi->arguments_count; i++)
     {
         gi->arguments_values[i] = this->args[i];
         if (gi->arguments_values[i] != nullptr && TTD::JsSupport::IsVarComplexKind(gi->arguments_values[i]))

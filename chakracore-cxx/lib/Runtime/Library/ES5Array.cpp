@@ -113,7 +113,7 @@ namespace Js
     }
 
     // Convert a Var to array length, throw RangeError if value is not valid for array length.
-    uint32 ES5Array::ToLengthValue(Var value, ScriptContext* scriptContext)
+    uint32_t ES5Array::ToLengthValue(Var value, ScriptContext* scriptContext)
     {
         if (TaggedInt::Is(value))
         {
@@ -122,11 +122,11 @@ namespace Js
             {
                 JavascriptError::ThrowRangeError(scriptContext, JSERR_ArrayLengthAssignIncorrect);
             }
-            return static_cast<uint32>(newLen);
+            return static_cast<uint32_t>(newLen);
         }
         else
         {
-            uint32 newLen = JavascriptConversion::ToUInt32(value, scriptContext);
+            uint32_t newLen = JavascriptConversion::ToUInt32(value, scriptContext);
             if (newLen != JavascriptConversion::ToNumber(value, scriptContext))
             {
                 JavascriptError::ThrowRangeError(scriptContext, JSERR_ArrayLengthAssignIncorrect);
@@ -213,8 +213,8 @@ namespace Js
                 return true;
             }
 
-            uint32 newLen = ToLengthValue(value, scriptContext);
-            uint32 assignedLen = GetTypeHandler()->SetLength(this, newLen, propertyOperationFlags);
+            uint32_t newLen = ToLengthValue(value, scriptContext);
+            uint32_t assignedLen = GetTypeHandler()->SetLength(this, newLen, propertyOperationFlags);
             if (newLen != assignedLen)
             {
                 scriptContext->GetThreadContext()->AddImplicitCallFlags(ImplicitCall_NoOpSet);
@@ -233,7 +233,7 @@ namespace Js
             Assert(attributes == PropertyWritable);
             Assert(IsWritable(propertyId) && !IsConfigurable(propertyId) && !IsEnumerable(propertyId));
 
-            uint32 newLen = ToLengthValue(value, GetScriptContext());
+            uint32_t newLen = ToLengthValue(value, GetScriptContext());
             GetTypeHandler()->SetLength(this, newLen, PropertyOperation_None);
             return true;
         }
@@ -241,37 +241,37 @@ namespace Js
         return __super::SetPropertyWithAttributes(propertyId, value, attributes, info, flags, possibleSideEffects);
     }
 
-    BOOL ES5Array::DeleteItem(uint32 index, PropertyOperationFlags flags)
+    BOOL ES5Array::DeleteItem(uint32_t index, PropertyOperationFlags flags)
     {
         // Skip JavascriptArray override
         return DynamicObject::DeleteItem(index, flags);
     }
 
-    PropertyQueryFlags ES5Array::HasItemQuery(uint32 index)
+    PropertyQueryFlags ES5Array::HasItemQuery(uint32_t index)
     {
         // Skip JavascriptArray override
         return DynamicObject::HasItemQuery(index);
     }
 
-    PropertyQueryFlags ES5Array::GetItemQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext)
+    PropertyQueryFlags ES5Array::GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext)
     {
         // Skip JavascriptArray override
         return DynamicObject::GetItemQuery(originalInstance, index, value, requestContext);
     }
 
-    PropertyQueryFlags ES5Array::GetItemReferenceQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext)
+    PropertyQueryFlags ES5Array::GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext)
     {
         // Skip JavascriptArray override
         return DynamicObject::GetItemReferenceQuery(originalInstance, index, value, requestContext);
     }
 
-    DescriptorFlags ES5Array::GetItemSetter(uint32 index, Var* setterValue, ScriptContext* requestContext)
+    DescriptorFlags ES5Array::GetItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext)
     {
         // Skip JavascriptArray override
         return DynamicObject::GetItemSetter(index, setterValue, requestContext);
     }
 
-    BOOL ES5Array::SetItem(uint32 index, Var value, PropertyOperationFlags flags)
+    BOOL ES5Array::SetItem(uint32_t index, Var value, PropertyOperationFlags flags)
     {
         // Skip JavascriptArray override
         return DynamicObject::SetItem(index, value, flags);
@@ -312,22 +312,22 @@ namespace Js
         return RecyclerNew(GetScriptContext()->GetRecycler(), ES5ArrayIndexEnumerator, this, flags, requestContext);
     }
 
-    BOOL ES5Array::IsItemEnumerable(uint32 index)
+    BOOL ES5Array::IsItemEnumerable(uint32_t index)
     {
         return GetTypeHandler()->IsItemEnumerable(this, index);
     }
 
-    BOOL ES5Array::SetItemWithAttributes(uint32 index, Var value, PropertyAttributes attributes)
+    BOOL ES5Array::SetItemWithAttributes(uint32_t index, Var value, PropertyAttributes attributes)
     {
         return GetTypeHandler()->SetItemWithAttributes(this, index, value, attributes);
     }
 
-    BOOL ES5Array::SetItemAttributes(uint32 index, PropertyAttributes attributes)
+    BOOL ES5Array::SetItemAttributes(uint32_t index, PropertyAttributes attributes)
     {
         return GetTypeHandler()->SetItemAttributes(this, index, attributes);
     }
 
-    BOOL ES5Array::SetItemAccessors(uint32 index, Var getter, Var setter)
+    BOOL ES5Array::SetItemAccessors(uint32_t index, Var getter, Var setter)
     {
         return GetTypeHandler()->SetItemAccessors(this, index, getter, setter);
     }
@@ -341,12 +341,12 @@ namespace Js
     {
         return GetTypeHandler()->IsValidDescriptorToken(descriptorValidationToken);
     }
-    uint32 ES5Array::GetNextDescriptor(uint32 key, IndexPropertyDescriptor** descriptor, void ** descriptorValidationToken)
+    uint32_t ES5Array::GetNextDescriptor(uint32_t key, IndexPropertyDescriptor** descriptor, void ** descriptorValidationToken)
     {
         return GetTypeHandler()->GetNextDescriptor(key, descriptor, descriptorValidationToken);
     }
 
-    BOOL ES5Array::GetDescriptor(uint32 index, Js::IndexPropertyDescriptor **ppDescriptor)
+    BOOL ES5Array::GetDescriptor(uint32_t index, Js::IndexPropertyDescriptor **ppDescriptor)
     {
         return GetTypeHandler()->GetDescriptor(index, ppDescriptor);
     }
@@ -356,8 +356,8 @@ namespace Js
     {
         this->JavascriptArray::MarkVisitKindSpecificPtrs(extractor);
 
-        uint32 length = this->GetLength();
-        uint32 descriptorIndex = Js::JavascriptArray::InvalidIndex;
+        uint32_t length = this->GetLength();
+        uint32_t descriptorIndex = Js::JavascriptArray::InvalidIndex;
         IndexPropertyDescriptor* descriptor = nullptr;
         void* descriptorValidationToken = nullptr;
 
@@ -400,13 +400,13 @@ namespace Js
         //TODO: reserving memory for entire length might be a problem if we have very large sparse arrays.
         //
 
-        uint32 length = this->GetLength();
+        uint32_t length = this->GetLength();
 
         es5ArrayInfo->IsLengthWritable = this->IsLengthWritable();
         es5ArrayInfo->GetterSetterCount = 0;
         es5ArrayInfo->GetterSetterEntries = alloc.SlabReserveArraySpace<TTD::NSSnapObjects::SnapES5ArrayGetterSetterEntry>(length + 1); //ensure we don't do a 0 reserve
 
-        uint32 descriptorIndex = Js::JavascriptArray::InvalidIndex;
+        uint32_t descriptorIndex = Js::JavascriptArray::InvalidIndex;
         IndexPropertyDescriptor* descriptor = nullptr;
         void* descriptorValidationToken = nullptr;
 
@@ -423,7 +423,7 @@ namespace Js
                 TTD::NSSnapObjects::SnapES5ArrayGetterSetterEntry* entry = es5ArrayInfo->GetterSetterEntries + es5ArrayInfo->GetterSetterCount;
                 es5ArrayInfo->GetterSetterCount++;
 
-                entry->Index = (uint32)descriptorIndex;
+                entry->Index = (uint32_t)descriptorIndex;
                 entry->Attributes = descriptor->Attributes;
 
                 entry->Getter = nullptr;

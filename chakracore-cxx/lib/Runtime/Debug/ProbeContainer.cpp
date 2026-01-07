@@ -776,7 +776,7 @@ namespace Js
         return false;
     }
 
-    bool ProbeContainer::FetchTmpRegCount(Js::FunctionBody * functionBody, Js::ByteCodeReader * reader, int atOffset, uint32 *pTmpRegCount, Js::OpCode *pOp)
+    bool ProbeContainer::FetchTmpRegCount(Js::FunctionBody * functionBody, Js::ByteCodeReader * reader, int atOffset, uint32_t *pTmpRegCount, Js::OpCode *pOp)
     {
         Assert(pTmpRegCount);
         Assert(pOp);
@@ -804,19 +804,19 @@ namespace Js
             case Js::SmallLayout:
             {
                 const unaligned Js::OpLayoutReg1_Small * playout = reader->Reg1_Small();
-                *pTmpRegCount = (uint32)playout->R0;
+                *pTmpRegCount = (uint32_t)playout->R0;
             }
                 break;
             case Js::MediumLayout:
             {
                 const unaligned Js::OpLayoutReg1_Medium * playout = reader->Reg1_Medium();
-                *pTmpRegCount = (uint32)playout->R0;
+                *pTmpRegCount = (uint32_t)playout->R0;
             }
                 break;
             case Js::LargeLayout:
             {
                 const unaligned Js::OpLayoutReg1_Large * playout = reader->Reg1_Large();
-                *pTmpRegCount = (uint32)playout->R0;
+                *pTmpRegCount = (uint32_t)playout->R0;
             }
                 break;
             default:
@@ -841,7 +841,7 @@ namespace Js
 
         int direction = currentOffset < nextStmOffset ? 1 : -1;
         int startIndex = functionBody->GetEnclosingStatementIndexFromByteCode(currentOffset, true);
-        uint32 tmpRegCountLowest = 0;
+        uint32_t tmpRegCountLowest = 0;
 
         // In the native code-gen (or interpreter which created from bailout points) the EmitTmpRegCount is not handled,
         // so lets calculate it by going through all statements backward from the current offset
@@ -859,7 +859,7 @@ namespace Js
         // Reset to the current offset.
         reader->SetCurrentOffset(currentOffset);
 
-        uint32 tmpRegCountOnNext = tmpRegCountLowest; // Will fetch the tmp reg count till the B and skipped statements.
+        uint32_t tmpRegCountOnNext = tmpRegCountLowest; // Will fetch the tmp reg count till the B and skipped statements.
         Assert(startIndex != -1);
         index = startIndex + direction;
         while (index > 0 && index < pStatementMaps->Count())

@@ -241,7 +241,7 @@ TTD::NSSnapObjects::SnapObjectType JavascriptAsyncFunction::GetSnapTag_TTD() con
 void JavascriptAsyncFunction::ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc)
 {
     TTD::NSSnapObjects::SnapGeneratorFunctionInfo* fi = nullptr;
-    uint32 depCount = 0;
+    uint32_t depCount = 0;
     TTD_PTR_ID* depArray = nullptr;
 
     this->CreateSnapObjectInfo(alloc, &fi, &depArray, &depCount);
@@ -313,8 +313,8 @@ void JavascriptAsyncSpawnStepFunction::ExtractSnapObjectDataInto(TTD::NSSnapObje
         TTDAssert(false, "Unexpected entrypoint found JavascriptAsyncSpawnStepArgumentExecutorFunction");
     }
 
-    const uint32 maxDeps = 4;
-    uint32 depCount = 0;
+    const uint32_t maxDeps = 4;
+    uint32_t depCount = 0;
     TTD_PTR_ID* depArray = alloc.SlabReserveArraySpace<TTD_PTR_ID>(maxDeps);
     if (this->reject != nullptr &&  TTD::JsSupport::IsVarComplexKind(this->reject))
     {

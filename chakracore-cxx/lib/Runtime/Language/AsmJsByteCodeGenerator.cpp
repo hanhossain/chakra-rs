@@ -140,7 +140,7 @@ namespace Js
         for (int i = 0; i < WAsmJs::LIMIT; ++i)
         {
             WAsmJs::Types type = (WAsmJs::Types)i;
-            uint32 srcByteOffset = constSourcesInfo.srcByteOffsets[i];
+            uint32_t srcByteOffset = constSourcesInfo.srcByteOffsets[i];
             byte* byteTable = ((byte*)table) + srcByteOffset;
             if (srcByteOffset != Js::Constants::InvalidOffset)
             {
@@ -232,7 +232,7 @@ namespace Js
             functionBody->SetIsAsmJsFunction(true);
             functionBody->SetIsAsmjsMode(true);
 
-            // Do a uint32 add just to verify that we haven't overflowed the reg slot type.
+            // Do a uint32_t add just to verify that we haven't overflowed the reg slot type.
             UInt32Math::Add( mFunction->GetRegisterSpace<int>().GetTotalVarCount(), mFunction->GetRegisterSpace<int>().GetConstCount());
             UInt32Math::Add( mFunction->GetRegisterSpace<double>().GetTotalVarCount(), mFunction->GetRegisterSpace<double>().GetConstCount());
             UInt32Math::Add( mFunction->GetRegisterSpace<float>().GetTotalVarCount(), mFunction->GetRegisterSpace<float>().GetConstCount());
@@ -523,7 +523,7 @@ namespace Js
             }
             else if (ParserWrapper::IsUnsigned(pnode))
             {
-                return EmitExpressionInfo(mFunction->GetConstRegister<int>((uint32)pnode->AsParseNodeFloat()->dbl), AsmJsType::Unsigned);
+                return EmitExpressionInfo(mFunction->GetConstRegister<int>((uint32_t)pnode->AsParseNodeFloat()->dbl), AsmJsType::Unsigned);
             }
             else if (pnode->AsParseNodeFloat()->maybeInt)
             {
@@ -1495,11 +1495,11 @@ namespace Js
         { OpCodeAsmJs::StArrConst, OpCodeAsmJs::StArr },//StoreTypedArray
     };
 
-    EmitExpressionInfo AsmJSByteCodeGenerator::EmitTypedArrayIndex(ParseNode* indexNode, OpCodeAsmJs &op, uint32 &indexSlot, ArrayBufferView::ViewType viewType, TypedArrayEmitType emitType)
+    EmitExpressionInfo AsmJSByteCodeGenerator::EmitTypedArrayIndex(ParseNode* indexNode, OpCodeAsmJs &op, uint32_t &indexSlot, ArrayBufferView::ViewType viewType, TypedArrayEmitType emitType)
     {
         mCompiler->SetUsesHeapBuffer(true);
         bool isConst = false;
-        uint32 slot = 0;
+        uint32_t slot = 0;
         if(indexNode->nop == knopName)
         {
             AsmJsSymbol * declSym = mCompiler->LookupIdentifier(indexNode->name(), mFunction);
@@ -1508,7 +1508,7 @@ namespace Js
                 AsmJsVar * definition = AsmJsVar::FromSymbol(declSym);
                 if(definition->GetVarType().isInt())
                 {
-                    slot = (uint32)definition->GetIntInitialiser();
+                    slot = (uint32_t)definition->GetIntInitialiser();
                     isConst = true;
                 }
             }
@@ -1520,16 +1520,16 @@ namespace Js
             {
                 if (indexNode->nop == knopInt)
                 {
-                    slot = (uint32)indexNode->AsParseNodeInt()->lw;
+                    slot = (uint32_t)indexNode->AsParseNodeInt()->lw;
                 }
                 else if (ParserWrapper::IsMinInt(indexNode))
                 {
                     // this is going to be an error, but we can do this to allow it to get same error message as invalid int
-                    slot = (uint32)INT32_MIN;
+                    slot = (uint32_t)INT32_MIN;
                 }
                 else if (ParserWrapper::IsUnsigned(indexNode))
                 {
-                    slot = (uint32)indexNode->AsParseNodeFloat()->dbl;
+                    slot = (uint32_t)indexNode->AsParseNodeFloat()->dbl;
                 }
                 else
                 {
@@ -1578,7 +1578,7 @@ namespace Js
                 throw AsmJsCompilationException( u"index expression isn't shifted; must be an Int8/Uint8 access" );
             }
             int val = 0;
-            uint32 mask = (uint32)~0;
+            uint32_t mask = (uint32_t)~0;
             ParseNode* index;
             if (indexNode->nop == knopRsh)
             {
@@ -1618,7 +1618,7 @@ namespace Js
                     AsmJsVar * definition = AsmJsVar::FromSymbol(declSym);
                     if (definition->GetVarType().isInt())
                     {
-                        slot = (uint32)definition->GetIntInitialiser();
+                        slot = (uint32_t)definition->GetIntInitialiser();
                         slot &= mask;
                         op = typedArrayOp[emitType][0];
                         isConst = true;
@@ -1669,7 +1669,7 @@ namespace Js
         ArrayBufferView::ViewType viewType = arrayView->GetViewType();
 
         OpCodeAsmJs op;
-        uint32 indexSlot = 0;
+        uint32_t indexSlot = 0;
         EmitExpressionInfo indexInfo = EmitTypedArrayIndex(indexNode, op, indexSlot, viewType, LoadTypedArray);
         mFunction->ReleaseLocationGeneric(&indexInfo);
 
@@ -1791,7 +1791,7 @@ namespace Js
             ArrayBufferView::ViewType viewType = arrayView->GetViewType();
 
             OpCodeAsmJs op;
-            uint32 indexSlot = 0;
+            uint32_t indexSlot = 0;
             EmitExpressionInfo indexInfo = EmitTypedArrayIndex(indexNode, op, indexSlot, viewType, StoreTypedArray);
             rhsEmit = Emit(rhs);
 

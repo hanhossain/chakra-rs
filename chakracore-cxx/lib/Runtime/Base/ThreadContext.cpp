@@ -953,7 +953,7 @@ ThreadContext::UncheckedAddPropertyId(JsUtil::CharacterBuffer<char16_t> const& p
 
     int length = propertyName.GetLength();
     uint bytelength = sizeof(char16_t) * length;
-    size_t allocLength = bytelength + sizeof(char16_t) + ( (!isSymbol && length <= 10 && length > 0) ? sizeof(uint32) : 0);
+    size_t allocLength = bytelength + sizeof(char16_t) + ( (!isSymbol && length <= 10 && length > 0) ? sizeof(uint32_t) : 0);
 
     // If it's bound, create it in the thread arena, along with a fake weak ref
     Js::PropertyRecord * propertyRecord;
@@ -1145,7 +1145,7 @@ void ThreadContext::AddBuiltInPropertyRecord(const Js::PropertyRecord *propertyR
     this->AddPropertyRecordInternal(propertyRecord);
 }
 
-BOOL ThreadContext::IsNumericPropertyId(Js::PropertyId propertyId, uint32* value)
+BOOL ThreadContext::IsNumericPropertyId(Js::PropertyId propertyId, uint32_t* value)
 {
     if (Js::IsInternalPropertyId(propertyId))
     {
@@ -1912,7 +1912,7 @@ ThreadContext::EnsureJITThreadContext(bool allowPrereserveAlloc)
 #endif
 
 #if ENABLE_TTD
-void ThreadContext::InitTimeTravel(ThreadContext* threadContext, void* runtimeHandle, uint32 snapInterval, uint32 snapHistoryLength)
+void ThreadContext::InitTimeTravel(ThreadContext* threadContext, void* runtimeHandle, uint32_t snapInterval, uint32_t snapHistoryLength)
 {
     TTDAssert(!this->IsRuntimeInTTDMode(), "We should only init once.");
 
@@ -4632,7 +4632,7 @@ void JsReentLock::MutateArrayObject(Js::Var arrayObject)
     if (arrayObject)
     {
         Js::JavascriptArray *arr = Js::JavascriptArray::FromAnyArray(arrayObject);
-        uint32 random = static_cast<unsigned int>(rand());
+        uint32_t random = static_cast<unsigned int>(rand());
 
         if (random % 20 == 0)
         {

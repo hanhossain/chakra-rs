@@ -68,8 +68,8 @@ struct DefaultComparer<size_t>
     {
 #ifdef TARGET_64
         // For 64 bits we want all 64 bits of the pointer to be represented in the hash code.
-        uint32 hi = ((unsigned long) i >> 32);
-        uint32 lo = (uint32)i;
+        uint32_t hi = ((unsigned long) i >> 32);
+        uint32_t lo = (uint32_t)i;
         hash_t hash = hi ^ lo;
 #else
         hash_t hash = i;
@@ -137,7 +137,7 @@ struct DefaultComparer<GUID>
         hash_t hash = CC_HASH_OFFSET_VALUE;
         for (int i = 0; i < sizeof(GUID); i++)
         {
-            CC_HASH_LOGIC(hash, (uint32)(p[i]));
+            CC_HASH_LOGIC(hash, (uint32_t)(p[i]));
         }
         return hash;
      }

@@ -545,7 +545,7 @@ IdentPtr Scanner<EncodingPolicy>::PidAt(size_t iecpMin, size_t iecpLim)
 }
 
 template <typename EncodingPolicy>
-uint32 Scanner<EncodingPolicy>::UnescapeToTempBuf(EncodedCharPtr p, EncodedCharPtr last)
+uint32_t Scanner<EncodingPolicy>::UnescapeToTempBuf(EncodedCharPtr p, EncodedCharPtr last)
 {
     m_tempChBuf.Reset();
     while( p < last )
@@ -1744,7 +1744,7 @@ LEof:
                     Assert(m_scriptContext->GetConfig()->IsESBigIntEnabled());
                     AssertOrFailFast(pchT - p < UINT_MAX);
                     token = tkBigIntCon;
-                    m_ptoken->SetBigInt(this->GetHashTbl()->PidHashNameLen(p, pchT, (uint32) (pchT - p)));
+                    m_ptoken->SetBigInt(this->GetHashTbl()->PidHashNameLen(p, pchT, (uint32_t) (pchT - p)));
                     p = pchT;
                     break;
                 }

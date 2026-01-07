@@ -85,9 +85,9 @@ namespace TTD
         template<typename Fn, typename T, size_t allocSize>
         static void ParseListHelper(Fn parseFunc, UnorderedArrayList<T, allocSize>& list, FileReader* snapreader, SlabAllocator& alloc)
         {
-            uint32 count = snapreader->ReadLengthValue(true);
+            uint32_t count = snapreader->ReadLengthValue(true);
             snapreader->ReadSequenceStart_WDefaultKey(true);
-            for(uint32 i = 0; i < count; ++i)
+            for(uint32_t i = 0; i < count; ++i)
             {
                 T* into = list.NextOpenEntry();
                 (*parseFunc)(into, i != 0, snapreader, alloc);
@@ -98,9 +98,9 @@ namespace TTD
         template<typename Fn, typename T, typename U, size_t allocSize>
         static void ParseListHelper_WMap(Fn parseFunc, UnorderedArrayList<T, allocSize>& list, FileReader* snapreader, SlabAllocator& alloc, const TTDIdentifierDictionary<TTD_PTR_ID, U>& infoMap)
         {
-            uint32 count = snapreader->ReadLengthValue(true);
+            uint32_t count = snapreader->ReadLengthValue(true);
             snapreader->ReadSequenceStart_WDefaultKey(true);
-            for(uint32 i = 0; i < count; ++i)
+            for(uint32_t i = 0; i < count; ++i)
             {
                 T* into = list.NextOpenEntry();
                 (*parseFunc)(into, i != 0, snapreader, alloc, infoMap);
@@ -129,15 +129,15 @@ namespace TTD
         ~SnapShot();
 
         //Get the counts for the various list sizes (not constant time -- so use carefully!!!!)
-        uint32 ContextCount() const;
-        uint32 HandlerCount() const;
-        uint32 TypeCount() const;
-        uint32 BodyCount() const;
-        uint32 PrimitiveCount() const;
-        uint32 ObjectCount() const;
-        uint32 EnvCount() const;
-        uint32 SlotArrayCount() const;
-        uint32 GetDbgScopeCountNonTopLevel() const;
+        uint32_t ContextCount() const;
+        uint32_t HandlerCount() const;
+        uint32_t TypeCount() const;
+        uint32_t BodyCount() const;
+        uint32_t PrimitiveCount() const;
+        uint32_t ObjectCount() const;
+        uint32_t EnvCount() const;
+        uint32_t SlotArrayCount() const;
+        uint32_t GetDbgScopeCountNonTopLevel() const;
 
         //Get the context list for this snapshot
         UnorderedArrayList<NSSnapValues::SnapContext, TTD_ARRAY_LIST_SIZE_XSMALL>& GetContextList();

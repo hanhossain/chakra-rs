@@ -151,7 +151,7 @@ namespace Js
         }
         return true;
     }
-    uint32 AsmJsEncoder::GetEncodeBufferSize(FunctionBody* functionBody)
+    uint32_t AsmJsEncoder::GetEncodeBufferSize(FunctionBody* functionBody)
     {
         // TODO: Make a good heuristic; this is completely arbitrary. As we emit each bytecode we can calculate the max instruction size.
         return UInt32Math::Add(

@@ -160,32 +160,32 @@ namespace Js
     {
     public:
         NumberSet();
-        void Add(uint32 x);
-        bool Contains(uint32 x);
+        void Add(uint32_t x);
+        bool Contains(uint32_t x);
         bool Empty() const { return set.Count() == 0; }
     private:
-        JsUtil::BaseHashSet<uint32, NoCheckHeapAllocator, PrimeSizePolicy> set;
+        JsUtil::BaseHashSet<uint32_t, NoCheckHeapAllocator, PrimeSizePolicy> set;
     };
 
     class NumberPair
     {
     public:
-        NumberPair(uint32 x, uint32 y) : x(x), y(y) {}
-        NumberPair() : x((uint32)-1), y((uint32)-1) {}
+        NumberPair(uint32_t x, uint32_t y) : x(x), y(y) {}
+        NumberPair() : x((uint32_t)-1), y((uint32_t)-1) {}
 
         operator hash_t() const { return (x << 16) + y; }
         bool operator ==(const NumberPair &other) const { return x == other.x && y == other.y; }
     private:
-        uint32 x;
-        uint32 y;
+        uint32_t x;
+        uint32_t y;
     };
 
     class NumberPairSet
     {
     public:
         NumberPairSet();
-        void Add(uint32 x, uint32 y);
-        bool Contains(uint32 x, uint32 y);
+        void Add(uint32_t x, uint32_t y);
+        bool Contains(uint32_t x, uint32_t y);
         bool Empty() const { return set.Count() == 0; }
     private:
         JsUtil::BaseHashSet<NumberPair, NoCheckHeapAllocator, PrimeSizePolicy> set;
@@ -194,23 +194,23 @@ namespace Js
     class NumberTrio
     {
     public:
-        NumberTrio(uint32 x, uint32 y, uint32 z) : x(x), y(y), z(z) {}
-        NumberTrio() : x((uint32)-1), y((uint32)-1) {}
+        NumberTrio(uint32_t x, uint32_t y, uint32_t z) : x(x), y(y), z(z) {}
+        NumberTrio() : x((uint32_t)-1), y((uint32_t)-1) {}
 
         operator hash_t() const { return (x << 20) + (y << 10) + z; }
         bool operator ==(const NumberTrio &other) const { return x == other.x && y == other.y && z == other.z; }
     private:
-        uint32 x;
-        uint32 y;
-        uint32 z;
+        uint32_t x;
+        uint32_t y;
+        uint32_t z;
     };
 
     class NumberTrioSet
     {
     public:
         NumberTrioSet();
-        void Add(uint32 x, uint32 y, uint32 z);
-        bool Contains(uint32 x, uint32 y, uint32 z);
+        void Add(uint32_t x, uint32_t y, uint32_t z);
+        bool Contains(uint32_t x, uint32_t y, uint32_t z);
         bool Empty() const { return set.Count() == 0; }
     private:
         JsUtil::BaseHashSet<NumberTrio, NoCheckHeapAllocator, PrimeSizePolicy> set;

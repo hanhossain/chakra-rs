@@ -368,23 +368,23 @@ namespace Js
             goto case_8;
 
         case 10:
-            *(uint32 *)(dst+8) = *(uint32*)(str+8);
+            *(uint32_t *)(dst+8) = *(uint32_t*)(str+8);
             // FALLTHROUGH
         case 8:
 case_8:
-            *(uint32 *)(dst+6) = *(uint32*)(str+6);
+            *(uint32_t *)(dst+6) = *(uint32_t*)(str+6);
             // FALLTHROUGH
         case 6:
 case_6:
-            *(uint32 *)(dst+4) = *(uint32*)(str+4);
+            *(uint32_t *)(dst+4) = *(uint32_t*)(str+4);
             // FALLTHROUGH
         case 4:
 case_4:
-            *(uint32 *)(dst+2) = *(uint32*)(str+2);
+            *(uint32_t *)(dst+2) = *(uint32_t*)(str+2);
             // FALLTHROUGH
         case 2:
 case_2:
-            *(uint32 *)(dst) = *(uint32*)str;
+            *(uint32_t *)(dst) = *(uint32_t*)str;
             break;
 
         default:
@@ -1038,7 +1038,7 @@ case_2:
         // Create a temporary buffer that is double the arguments count (in case all are surrogate pairs)
         size_t bufferLength = (args.Info.Count - 1) * 2;
         char16_t *tempBuffer = AnewArray(tempAllocator, char16_t, bufferLength);
-        uint32 count = 0;
+        uint32_t count = 0;
 
         for (uint i = 1; i < args.Info.Count; i++)
         {
@@ -1605,9 +1605,9 @@ case_2:
             JavascriptString* string = JavascriptConversion::ToString(var, scriptContext);
                 stringBuilder.Append(string);
         };
-        uint32 loopMax = length >= UINT_MAX ? UINT_MAX-1 : (uint32)length;
-        uint32 i = 1;
-        uint32 argsCount = args.Info.Count;
+        uint32_t loopMax = length >= UINT_MAX ? UINT_MAX-1 : (uint32_t)length;
+        uint32_t i = 1;
+        uint32_t argsCount = args.Info.Count;
         for (; i < loopMax; ++i)
         {
             // First append the next substitution expression if available
@@ -1620,7 +1620,7 @@ case_2:
             append(JavascriptOperators::OP_GetElementI_UInt32(raw, i, scriptContext));
         }
 
-        // Length can be greater than uint32 max (unlikely in practice)
+        // Length can be greater than uint32_t max (unlikely in practice)
         for (long j = (long)i; j < length; ++j)
         {
             // Append whatever is left in the array/object
@@ -1927,7 +1927,7 @@ case_2:
         }
         else
         {
-            uint32 limit;
+            uint32_t limit;
             if (args.Info.Count < 3 || JavascriptOperators::IsUndefinedObject(args[2]))
             {
                 limit = UINT_MAX;
@@ -2559,7 +2559,7 @@ case_2:
                 {
                     JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgumentOutOfRange, u"String.prototype.repeat");
                 }
-                count = (uint32) signedCount;
+                count = (uint32_t) signedCount;
             }
             else if (!JavascriptOperators::IsUndefinedObject(args[1]))
             {
@@ -2988,8 +2988,8 @@ case_2:
         const char16_t *const pchMin = pch;
         if(length <= maxUintStringLengthTable[radix])
         {
-            // Use uint32 as integer being parsed - much faster than BigInt
-            uint32 value = 0;
+            // Use uint32_t as integer being parsed - much faster than BigInt
+            uint32_t value = 0;
             for ( ; pch < pchEnd ; pch++)
             {
                 char16_t ch = *pch;
@@ -2998,7 +2998,7 @@ case_2:
                 {
                     break;
                 }
-                uint32 beforeValue = value;
+                uint32_t beforeValue = value;
                 value = value * radix + ch;
                 AssertMsg(value >= beforeValue, "uint overflow");
             }
@@ -3424,7 +3424,7 @@ case_2:
 
         const char16_t searchLast = searchStr[searchLen-1];
 
-        uint32 lMatchedJump = searchLen;
+        uint32_t lMatchedJump = searchLen;
         if (jmpTable[searchLast].shift > 0)
         {
             lMatchedJump = jmpTable[searchLast].shift;
@@ -3469,7 +3469,7 @@ case_2:
     {
         Assert(searchLen > 0);
         const char16_t searchFirst = searchStr[0];
-        uint32 lMatchedJump = searchLen;
+        uint32_t lMatchedJump = searchLen;
         if (jmpTable[searchFirst].shift > 0)
         {
             lMatchedJump = jmpTable[searchFirst].shift;
@@ -3479,8 +3479,8 @@ case_2:
 
         while (true)
         {
-            uint32 remaining = (uint32)(p - inputStr);
-            uint32 backwardOffset = 0;
+            uint32_t remaining = (uint32_t)(p - inputStr);
+            uint32_t backwardOffset = 0;
             // first character match, keep checking
             if (*p == searchFirst)
             {
@@ -3529,7 +3529,7 @@ case_2:
             {
                 if ( jmpTable[c].shift == 0 )
                 {
-                    jmpTable[c].shift = (uint32)(searchStr + searchLen - 1 - p2);
+                    jmpTable[c].shift = (uint32_t)(searchStr + searchLen - 1 - p2);
                 }
             }
             else
@@ -3558,7 +3558,7 @@ case_2:
             {
                 if ( jmpTable[c].shift == 0 )
                 {
-                    jmpTable[c].shift = (uint32)(p2 - searchStr);
+                    jmpTable[c].shift = (uint32_t)(p2 - searchStr);
                 }
             }
             else
@@ -3875,7 +3875,7 @@ case_2:
         return JavascriptString::GetPropertyQuery(originalInstance, propertyId, value, info, requestContext);
     }
 
-    BOOL JavascriptString::SetItem(uint32 index, Var value, PropertyOperationFlags propertyOperationFlags)
+    BOOL JavascriptString::SetItem(uint32_t index, Var value, PropertyOperationFlags propertyOperationFlags)
     {
         if (this->HasItemAt(index))
         {
@@ -3887,7 +3887,7 @@ case_2:
         return __super::SetItem(index, value, propertyOperationFlags);
     }
 
-    BOOL JavascriptString::DeleteItem(uint32 index, PropertyOperationFlags propertyOperationFlags)
+    BOOL JavascriptString::DeleteItem(uint32_t index, PropertyOperationFlags propertyOperationFlags)
     {
         if (this->HasItemAt(index))
         {
@@ -3899,19 +3899,19 @@ case_2:
         return __super::DeleteItem(index, propertyOperationFlags);
     }
 
-    PropertyQueryFlags JavascriptString::HasItemQuery(uint32 index)
+    PropertyQueryFlags JavascriptString::HasItemQuery(uint32_t index)
     {
         return JavascriptConversion::BooleanToPropertyQueryFlags(this->HasItemAt(index));
     }
 
-    PropertyQueryFlags JavascriptString::GetItemQuery(Var originalInstance, uint32 index, Var* value, ScriptContext* requestContext)
+    PropertyQueryFlags JavascriptString::GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext* requestContext)
     {
         // String should always be marshalled to the current context
         Assert(requestContext == this->GetScriptContext());
         return JavascriptConversion::BooleanToPropertyQueryFlags(this->GetItemAt(index, value));
     }
 
-    PropertyQueryFlags JavascriptString::GetItemReferenceQuery(Var originalInstance, uint32 index, Var* value, ScriptContext* requestContext)
+    PropertyQueryFlags JavascriptString::GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext* requestContext)
     {
         // String should always be marshalled to the current context
         return JavascriptConversion::BooleanToPropertyQueryFlags(this->GetItemAt(index, value));

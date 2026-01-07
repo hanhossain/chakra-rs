@@ -53,7 +53,7 @@ namespace Js
         virtual BOOL Get(int i, ResolvedObject* pResolvedObject) = 0;
 
         // Returns number of children for the current diag object.
-        virtual uint32 GetChildrenCount() = 0;
+        virtual uint32_t GetChildrenCount() = 0;
 
         virtual BOOL GetGroupObject(ResolvedObject* pResolvedObject) = 0;
 
@@ -186,7 +186,7 @@ namespace Js
         /// IDiagObjectModelWalkerBase
 
         virtual BOOL Get(int i, ResolvedObject* pResolvedObject) override;
-        virtual uint32 GetChildrenCount() override;
+        virtual uint32_t GetChildrenCount() override;
         virtual BOOL GetGroupObject(ResolvedObject* pResolvedObject) override;
 
         virtual IDiagObjectAddress *FindPropertyAddress(PropertyId propId, bool& isConst) override;
@@ -284,7 +284,7 @@ namespace Js
     public:
         // Represent catch/with scope objects, (ie. the representation for the diagnostics purposes.)
         JsUtil::List<IDiagObjectModelWalkerBase*, ArenaAllocator> *pDiagScopeObjects;
-        uint32 diagScopeVarCount;
+        uint32_t diagScopeVarCount;
 
         bool scopeIsInitialized;
         bool enumWithScopeAlso;
@@ -297,7 +297,7 @@ namespace Js
         DiagScopeVariablesWalker(DiagStackFrame* _pFrame, Var _instance, IDiagObjectModelWalkerBase* innerWalker);
 
         virtual BOOL Get(int i, ResolvedObject* pResolvedObject) override;
-        virtual uint32 GetChildrenCount() override;
+        virtual uint32_t GetChildrenCount() override;
 
         virtual IDiagObjectAddress *FindPropertyAddress(PropertyId propId, bool& isConst) override;
     };
@@ -322,8 +322,8 @@ namespace Js
         LocalsWalker(DiagStackFrame* _frame, uint32_t _frameWalkerFlags);
         virtual BOOL Get(int i, ResolvedObject* pResolvedObject) override;
 
-        virtual uint32 GetChildrenCount() override;
-        virtual uint32 GetLocalVariablesCount();
+        virtual uint32_t GetChildrenCount() override;
+        virtual uint32_t GetLocalVariablesCount();
         BOOL GetLocal(int i, ResolvedObject* pResolvedObject);
 
         BOOL GetScopeObject(int i, ResolvedObject* pResolvedObject);
@@ -345,11 +345,11 @@ namespace Js
         {
             Assert(scriptContext);
             Js::DynamicObject* activeScopeObject = nullptr;
-            uint32 count = this->GetChildrenCount();
+            uint32_t count = this->GetChildrenCount();
             if (count > 0)
             {
                 activeScopeObject = scriptContext->GetLibrary()->CreateActivationObject();
-                for (uint32 i = 0; i < count; i++)
+                for (uint32_t i = 0; i < count; i++)
                 {
                     Js::ResolvedObject resolveObject;
                     if (this->Get(i, &resolveObject) && resolveObject.propId != Js::Constants::NoProperty)
@@ -458,7 +458,7 @@ namespace Js
         /// IDiagObjectModelWalkerBase
 
         virtual BOOL Get(int i, ResolvedObject* pResolvedObject) override;
-        virtual uint32 GetChildrenCount() override;
+        virtual uint32_t GetChildrenCount() override;
         virtual BOOL GetGroupObject(ResolvedObject* pResolvedObject) override { return FALSE; }
         virtual IDiagObjectAddress *FindPropertyAddress(PropertyId propId, bool& isConst) override;
     private:
@@ -489,7 +489,7 @@ namespace Js
         RecyclableObjectWalker(ScriptContext* pContext, Var slot, Var originalInstance);
 
         virtual BOOL Get(int i, ResolvedObject* pResolvedObject) override;
-        virtual uint32 GetChildrenCount() override;
+        virtual uint32_t GetChildrenCount() override;
 
         virtual BOOL GetGroupObject(ResolvedObject* pResolvedObject)  { return FALSE; };
         virtual IDiagObjectAddress *FindPropertyAddress(PropertyId propertyId, bool& isConst) override;
@@ -576,18 +576,18 @@ namespace Js
     class RecyclableArrayWalker : public RecyclableObjectWalker
     {
     protected:
-        uint32 indexedItemCount;
-        JsUtil::List<uint32, ArenaAllocator> * pAbsoluteIndexList;
+        uint32_t indexedItemCount;
+        JsUtil::List<uint32_t, ArenaAllocator> * pAbsoluteIndexList;
 
         // Just populate the indexes only.
         bool fOnlyOwnProperties;
 
-        uint32 GetItemCount(Js::JavascriptArray* arrayObj);
+        uint32_t GetItemCount(Js::JavascriptArray* arrayObj);
 
         // ES5Array will extend this.
-        virtual uint32 GetNextDescriptor(uint32 currentDescriptor) { return Js::JavascriptArray::InvalidIndex; }
+        virtual uint32_t GetNextDescriptor(uint32_t currentDescriptor) { return Js::JavascriptArray::InvalidIndex; }
 
-        const char16_t* GetIndexName(uint32 index, StringBuilder<ArenaAllocator>* stringBuilder);
+        const char16_t* GetIndexName(uint32_t index, StringBuilder<ArenaAllocator>* stringBuilder);
 
         Js::JavascriptArray* GetArrayObject();
 
@@ -596,10 +596,10 @@ namespace Js
         void SetOnlyWalkOwnProperties(bool set) { fOnlyOwnProperties = set; }
 
         virtual BOOL Get(int i, ResolvedObject* pResolvedObject) override;
-        virtual uint32 GetChildrenCount() override;
-        virtual BOOL FetchItemAtIndex(Js::JavascriptArray* arrayObj, uint32 index, Var *value);
-        virtual Var FetchItemAt(Js::JavascriptArray* arrayObj, uint32 index);
-        virtual BOOL GetResolvedObject(Js::JavascriptArray* arrayObj, int index, ResolvedObject* pResolvedObject, uint32 * pabsIndex);
+        virtual uint32_t GetChildrenCount() override;
+        virtual BOOL FetchItemAtIndex(Js::JavascriptArray* arrayObj, uint32_t index, Var *value);
+        virtual Var FetchItemAt(Js::JavascriptArray* arrayObj, uint32_t index);
+        virtual BOOL GetResolvedObject(Js::JavascriptArray* arrayObj, int index, ResolvedObject* pResolvedObject, uint32_t * pabsIndex);
 
         StringBuilder<ArenaAllocator>* GetBuilder();
     };
@@ -623,7 +623,7 @@ namespace Js
     public:
         RecyclableArgumentsObjectWalker(ScriptContext* pContext, Var instance, LocalsWalker * localsWalker);
 
-        virtual uint32 GetChildrenCount() override;
+        virtual uint32_t GetChildrenCount() override;
     };
 
     class RecyclableArgumentsArrayAddress : public IDiagObjectAddress
@@ -644,7 +644,7 @@ namespace Js
         RecyclableArgumentsArrayWalker(ScriptContext* pContext, Var slot, Var originalInstance);
 
         virtual BOOL Get(int i, ResolvedObject* pResolvedObject) override;
-        virtual uint32 GetChildrenCount() override;
+        virtual uint32_t GetChildrenCount() override;
 
         void FetchFormalsAddress (LocalsWalker * localsWalker);
     };
@@ -674,7 +674,7 @@ namespace Js
         RecyclableTypedArrayWalker(ScriptContext* pContext, Var slot, Var originalInstance);
 
         virtual BOOL Get(int i, ResolvedObject* pResolvedObject) override;
-        virtual uint32 GetChildrenCount() override;
+        virtual uint32_t GetChildrenCount() override;
     };
 
     // Concrete classes for Pixel array objects
@@ -702,7 +702,7 @@ namespace Js
         RecyclablePixelArrayWalker(ScriptContext* pContext, Var slot, Var originalInstance);
 
         virtual BOOL Get(int i, ResolvedObject* pResolvedObject) override;
-        virtual uint32 GetChildrenCount() override;
+        virtual uint32_t GetChildrenCount() override;
     };
 
     // Concrete classes for ES5 array objects
@@ -729,10 +729,10 @@ namespace Js
     public:
         RecyclableES5ArrayWalker(ScriptContext* pContext, Var slot, Var originalInstance);
 
-        virtual uint32 GetNextDescriptor(uint32 currentDescriptor) override;
+        virtual uint32_t GetNextDescriptor(uint32_t currentDescriptor) override;
 
-        virtual BOOL FetchItemAtIndex(Js::JavascriptArray* arrayObj, uint32 index, Var *value) override;
-        virtual Var FetchItemAt(Js::JavascriptArray* arrayObj, uint32 index) override;
+        virtual BOOL FetchItemAtIndex(Js::JavascriptArray* arrayObj, uint32_t index, Var *value) override;
+        virtual Var FetchItemAt(Js::JavascriptArray* arrayObj, uint32_t index) override;
     };
 
     // Concrete classes for Proto group object
@@ -797,7 +797,7 @@ namespace Js
         RecyclableCollectionObjectWalker(ScriptContext* scriptContext, Var instance):scriptContext(scriptContext), instance(instance), propertyList(nullptr) { }
         virtual BOOL GetGroupObject(ResolvedObject* pResolvedObject) override;
         virtual BOOL Get(int i, ResolvedObject* pResolvedObject) override;
-        virtual uint32 GetChildrenCount() override;
+        virtual uint32_t GetChildrenCount() override;
     };
 
     typedef RecyclableCollectionObjectWalker<JavascriptMap> RecyclableMapObjectWalker;
@@ -861,7 +861,7 @@ namespace Js
 
         virtual BOOL Get(int i, ResolvedObject* pResolvedObject) override;
         // Children count is 2 for 'key' and 'value'
-        virtual uint32 GetChildrenCount() override { return 2; }
+        virtual uint32_t GetChildrenCount() override { return 2; }
         virtual BOOL GetGroupObject(ResolvedObject* pResolvedObject) override { return FALSE; }
     };
 
@@ -882,7 +882,7 @@ namespace Js
         virtual BOOL Get(int i, ResolvedObject* pResolvedObject) override;
 
         // Children count is 2 for '[target]' and '[handler]'
-        virtual uint32 GetChildrenCount() override { return 2; }
+        virtual uint32_t GetChildrenCount() override { return 2; }
         virtual BOOL GetGroupObject(ResolvedObject* pResolvedObject) override;
     };
 
@@ -902,7 +902,7 @@ namespace Js
 
         virtual BOOL Get(int i, ResolvedObject* pResolvedObject) override;
         // Children count is 2 for '[status]' and '[value]'
-        virtual uint32 GetChildrenCount() override { return 2; }
+        virtual uint32_t GetChildrenCount() override { return 2; }
         virtual BOOL GetGroupObject(ResolvedObject* pResolvedObject) override;
     };
 
@@ -916,7 +916,7 @@ namespace Js
         void AddItem(Js::PropertyId propertyId, Var obj);
 
         virtual BOOL Get(int i, ResolvedObject* pResolvedObject) override;
-        virtual uint32 GetChildrenCount() override;
+        virtual uint32_t GetChildrenCount() override;
         virtual BOOL GetGroupObject(ResolvedObject* pResolvedObject) override;
 
         void Sort();
@@ -991,7 +991,7 @@ namespace Js
         PendingMutationBreakpointWalker(ScriptContext* pContext, Var instance, MutationType mutationType);
 
         virtual BOOL Get(int i, ResolvedObject* pResolvedObject) override;
-        virtual uint32 GetChildrenCount() override;
+        virtual uint32_t GetChildrenCount() override;
     };
 #endif
 }

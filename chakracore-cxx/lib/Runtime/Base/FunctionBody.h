@@ -598,7 +598,7 @@ namespace Js
 #endif
 #if DBG_DUMP || defined(VTUNE_PROFILING)
     public:
-        void RecordNativeMap(uint32 offset, uint32 statementIndex);
+        void RecordNativeMap(uint32_t offset, uint32_t statementIndex);
         int GetNativeOffsetMapCount() const;
 #endif
 #if DBG_DUMP && ENABLE_NATIVE_CODEGEN
@@ -625,8 +625,8 @@ namespace Js
         Field(int32) localVarChangedOffset;
         Field(uint) entryPointIndex;
 
-        Field(uint32) callsCount;
-        Field(uint32) lastCallsCount;
+        Field(uint32_t) callsCount;
+        Field(uint32_t) lastCallsCount;
 
     private:
         Field(ExecutionMode) jitMode;
@@ -957,7 +957,7 @@ namespace Js
         AuxPointerTypeEntry(AuxPointerType::ScopeInfo, ScopeInfo*);
         AuxPointerTypeEntry(AuxPointerType::FormalsPropIdArray, PropertyIdArray*);
         AuxPointerTypeEntry(AuxPointerType::ForInCacheArray, EnumeratorCache*);
-        AuxPointerTypeEntry(AuxPointerType::SlotIdInCachedScopeToNestedIndexArray, Js::AuxArray<uint32>*);
+        AuxPointerTypeEntry(AuxPointerType::SlotIdInCachedScopeToNestedIndexArray, Js::AuxArray<uint32_t>*);
         AuxPointerTypeEntry(AuxPointerType::CodeGenCallbackRuntimeData, Field(FunctionCodeGenRuntimeData*)*);
 #if ENABLE_PROFILE_INFO
         AuxPointerTypeEntry(AuxPointerType::CallbackArgOutInfoList, CallbackInfoList*);
@@ -1054,7 +1054,7 @@ namespace Js
         void SetAttributes(FunctionInfo::Attributes attributes);
 
         Recycler* GetRecycler() const;
-        uint32 GetSourceContextId() const;
+        uint32_t GetSourceContextId() const;
         char16_t* GetDebugNumberSet(wchar(&bufferToWriteTo)[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE]) const;
         bool GetIsTopLevel() { return m_isTopLevel; }
         void SetIsTopLevel(bool set) { m_isTopLevel = set; }
@@ -1500,9 +1500,9 @@ namespace Js
     public:
         struct NestedArray
         {
-            NestedArray(uint32 count): nestedCount(count) {}
+            NestedArray(uint32_t count): nestedCount(count) {}
 
-            Field(uint32) nestedCount;
+            Field(uint32_t) nestedCount;
             Field(FunctionInfo*) functionInfoArray[];
         };
 
@@ -1583,7 +1583,7 @@ namespace Js
         // Fake global ->
         //    1) new Function code's global code
         //    2) global code generated from the reparsing deferred parse function
-        bool IsFakeGlobalFunc(uint32 flags) const;
+        bool IsFakeGlobalFunc(uint32_t flags) const;
 
         void SetIsGlobalFunc(bool is) { m_isGlobalFunc = is; }
         bool GetIsStrictMode() const { return m_isStrictMode; }
@@ -1614,8 +1614,8 @@ namespace Js
 
         bool GetHasImplicitArgIns() { return m_hasImplicitArgIns; }
         void SetHasImplicitArgIns(bool has) { m_hasImplicitArgIns = has; }
-        uint32 GetGrfscr() const;
-        void SetGrfscr(uint32 grfscr);
+        uint32_t GetGrfscr() const;
+        void SetGrfscr(uint32_t grfscr);
 
         ScriptFunctionType * GetCrossSiteDeferredFunctionType() const { return crossSiteDeferredFunctionType; }
         void SetCrossSiteDeferredFunctionType(ScriptFunctionType * type) { Assert(!crossSiteDeferredFunctionType); crossSiteDeferredFunctionType = type; }
@@ -1779,7 +1779,7 @@ namespace Js
         FunctionInfoPtrPtr GetNestedFuncReference(uint index);
         FunctionProxy* GetNestedFunctionProxy(uint index);
         ParseableFunctionInfo* GetNestedFunctionForExecution(uint index);
-        void SetNestedFunc(FunctionInfo* nestedFunc, uint index, uint32 flags);
+        void SetNestedFunc(FunctionInfo* nestedFunc, uint index, uint32_t flags);
         void BuildDeferredStubs(ParseNodeFnc* pnodeFnc);
         DeferredFunctionStub *GetDeferredStubs() const { return this->GetAuxPtr<AuxPointerType::DeferredStubs>(); }
         void SetDeferredStubs(DeferredFunctionStub *stub) { this->SetAuxPtr<AuxPointerType::DeferredStubs>(stub); }
@@ -1943,7 +1943,7 @@ namespace Js
                 InnerScopeCount                         = 17,
                 ProfiledCallApplyCallSiteCount          = 18,
 
-                // Following counters uses ((uint32)-1) as default value
+                // Following counters uses ((uint32_t)-1) as default value
                 LocalClosureRegister                    = 19,
                 ParamClosureRegister                    = 20,
                 LocalFrameDisplayRegister               = 21,
@@ -1962,9 +1962,9 @@ namespace Js
             friend CounterT;
 
     public:
-            uint32 GetCountField(FunctionBody::CounterFields fieldEnum) const;
-            uint32 SetCountField(FunctionBody::CounterFields fieldEnum, uint32 val);
-            uint32 IncreaseCountField(FunctionBody::CounterFields fieldEnum);
+            uint32_t GetCountField(FunctionBody::CounterFields fieldEnum) const;
+            uint32_t SetCountField(FunctionBody::CounterFields fieldEnum, uint32_t val);
+            uint32_t IncreaseCountField(FunctionBody::CounterFields fieldEnum);
 #if DBG
             void LockDownCounters() { counters.isLockedDown = true; };
             void UnlockCounters() { counters.isLockedDown = false; };
@@ -2232,9 +2232,9 @@ namespace Js
         // Indicates how many times the function has been entered (so increases by one on each recursive call, decreases by one when we're done)
         FieldWithBarrier(uint) m_depth;
 
-        FieldWithBarrier(uint32) loopInterpreterLimit;
-        FieldWithBarrier(uint32) debuggerScopeIndex;
-        FieldWithBarrier(uint32) savedPolymorphicCacheState;
+        FieldWithBarrier(uint32_t) loopInterpreterLimit;
+        FieldWithBarrier(uint32_t) debuggerScopeIndex;
+        FieldWithBarrier(uint32_t) savedPolymorphicCacheState;
 
         // >>>>>>WARNING! WARNING!<<<<<<<<<<
         //
@@ -2388,15 +2388,15 @@ namespace Js
         bool HasCachedScopePropIds() const { return hasCachedScopePropIds; }
         void SetHasCachedScopePropIds(bool has) { hasCachedScopePropIds = has; }
 
-        uint32 GetInterpretedCount() const;
-        uint32 IncreaseInterpretedCount();
+        uint32_t GetInterpretedCount() const;
+        uint32_t IncreaseInterpretedCount();
 
-        uint32 GetLoopInterpreterLimit() const { return loopInterpreterLimit; }
-        uint32 SetLoopInterpreterLimit(uint32 val) { return loopInterpreterLimit = val; }
+        uint32_t GetLoopInterpreterLimit() const { return loopInterpreterLimit; }
+        uint32_t SetLoopInterpreterLimit(uint32_t val) { return loopInterpreterLimit = val; }
 
         // Gets the next index for tracking debugger scopes (increments the internal counter as well).
-        uint32 GetNextDebuggerScopeIndex() { return debuggerScopeIndex++; }
-        void SetDebuggerScopeIndex(uint32 index) { debuggerScopeIndex = index; }
+        uint32_t GetNextDebuggerScopeIndex() { return debuggerScopeIndex++; }
+        void SetDebuggerScopeIndex(uint32_t index) { debuggerScopeIndex = index; }
 
         size_t GetLoopBodyName(uint loopNumber, _Out_writes_opt_z_(sizeInChars) char16_t* displayName, _In_ size_t sizeInChars);
 
@@ -2415,7 +2415,7 @@ namespace Js
 #ifdef ASMJS_PLAT
         void SetIsAsmJsFullJitScheduled(bool val){ m_isAsmJsScheduledForFullJIT = val; }
         bool GetIsAsmJsFullJitScheduled(){ return m_isAsmJsScheduledForFullJIT; }
-        uint32 GetAsmJSTotalLoopCount() const
+        uint32_t GetAsmJSTotalLoopCount() const
         {
             return m_asmJsTotalLoopCount;
         }
@@ -2537,11 +2537,11 @@ namespace Js
         static bool DoObjectHeaderInlining();
         static bool DoObjectHeaderInliningForConstructors();
     public:
-        static bool DoObjectHeaderInliningForConstructor(const uint32 inlineSlotCapacity);
+        static bool DoObjectHeaderInliningForConstructor(const uint32_t inlineSlotCapacity);
     private:
         static bool DoObjectHeaderInliningForObjectLiterals();
     public:
-        static bool DoObjectHeaderInliningForObjectLiteral(const uint32 inlineSlotCapacity);
+        static bool DoObjectHeaderInliningForObjectLiteral(const uint32_t inlineSlotCapacity);
         static bool DoObjectHeaderInliningForObjectLiteral(const PropertyIdArray *const propIds);
         static bool DoObjectHeaderInliningForEmptyObjects();
 
@@ -2963,7 +2963,7 @@ namespace Js
         uint8_t IncrementBailOnMisingProfileCount() { return ++bailOnMisingProfileCount; }
         void ResetBailOnMisingProfileCount() { bailOnMisingProfileCount = 0; }
         uint8_t IncrementBailOnMisingProfileRejitCount() { return ++bailOnMisingProfileRejitCount; }
-        uint32 GetFrameHeight(EntryPointInfo* entryPointInfo) const;
+        uint32_t GetFrameHeight(EntryPointInfo* entryPointInfo) const;
 #endif
 
         RegSlot GetLocalsCount();
@@ -2989,10 +2989,10 @@ namespace Js
         }
         bool RegIsConst(RegSlot reg) { return reg > REGSLOT_TO_CONSTREG(this->GetConstantCount()); }
 
-        uint32 GetNonTempLocalVarCount();
-        uint32 GetFirstNonTempLocalIndex();
-        uint32 GetEndNonTempLocalIndex();
-        bool IsNonTempLocalVar(uint32 varIndex);
+        uint32_t GetNonTempLocalVarCount();
+        uint32_t GetFirstNonTempLocalIndex();
+        uint32_t GetEndNonTempLocalIndex();
+        bool IsNonTempLocalVar(uint32_t varIndex);
         bool GetSlotOffset(RegSlot slotId, int32 * slotOffset, bool allowTemp = false);
 
         RegSlot GetOutParamMaxDepth();
@@ -3021,8 +3021,8 @@ namespace Js
         void RecordTrueObject(RegSlot location);
         void RecordFalseObject(RegSlot location);
         void RecordIntConstant(RegSlot location, unsigned int val);
-        void RecordStrConstant(RegSlot location, LPCOLESTR psz, uint32 cch, bool forcePropertyString);
-        void RecordBigIntConstant(RegSlot location, LPCOLESTR psz, uint32 cch, bool isNegative);
+        void RecordStrConstant(RegSlot location, LPCOLESTR psz, uint32_t cch, bool forcePropertyString);
+        void RecordBigIntConstant(RegSlot location, LPCOLESTR psz, uint32_t cch, bool isNegative);
         void RecordFloatConstant(RegSlot location, double d);
         void RecordNullDisplayConstant(RegSlot location);
         void RecordStrictNullDisplayConstant(RegSlot location);
@@ -3093,7 +3093,7 @@ namespace Js
 
         void ResetInlineCaches();
         PolymorphicInlineCache * CreatePolymorphicInlineCache(uint index, uint16 size);
-        FieldWithBarrier(uint32) m_asmJsTotalLoopCount;
+        FieldWithBarrier(uint32_t) m_asmJsTotalLoopCount;
     public:
         void CreateCacheIdToPropertyIdMap();
         void CreateCacheIdToPropertyIdMap(uint rootObjectLoadInlineCacheStart, uint rootObjectLoadMethodInlineCacheStart, uint rootObjectStoreInlineCacheStart,
@@ -3157,9 +3157,9 @@ namespace Js
         Field(DynamicType*)* GetObjectLiteralTypes() const { return this->GetAuxPtr<AuxPointerType::ObjLiteralTypes>(); }
         Field(DynamicType*)* GetObjectLiteralTypesWithLock() const { return this->GetAuxPtrWithLock<AuxPointerType::ObjLiteralTypes>(); }
 
-        Js::AuxArray<uint32> * GetSlotIdInCachedScopeToNestedIndexArray() const { return this->GetAuxPtr<AuxPointerType::SlotIdInCachedScopeToNestedIndexArray>(); }
-        Js::AuxArray<uint32> * GetSlotIdInCachedScopeToNestedIndexArrayWithLock() const { return this->GetAuxPtrWithLock<AuxPointerType::SlotIdInCachedScopeToNestedIndexArray>(); }
-        Js::AuxArray<uint32> * AllocateSlotIdInCachedScopeToNestedIndexArray(uint32 slotCount);
+        Js::AuxArray<uint32_t> * GetSlotIdInCachedScopeToNestedIndexArray() const { return this->GetAuxPtr<AuxPointerType::SlotIdInCachedScopeToNestedIndexArray>(); }
+        Js::AuxArray<uint32_t> * GetSlotIdInCachedScopeToNestedIndexArrayWithLock() const { return this->GetAuxPtrWithLock<AuxPointerType::SlotIdInCachedScopeToNestedIndexArray>(); }
+        Js::AuxArray<uint32_t> * AllocateSlotIdInCachedScopeToNestedIndexArray(uint32_t slotCount);
 
 #if ENABLE_NATIVE_CODEGEN
         ProfileId* GetCallSiteToCallApplyCallSiteArray() const { return this->GetAuxPtr<AuxPointerType::CallSiteToCallApplyCallSiteArray>(); }
@@ -3171,7 +3171,7 @@ namespace Js
         void ResetLiteralRegexes();
         void ResetObjectLiteralTypes();
         void SetObjectLiteralTypes(DynamicType** objLiteralTypes) { this->SetAuxPtr<AuxPointerType::ObjLiteralTypes>(objLiteralTypes); };
-        void SetSlotIdInCachedScopeToNestedIndexArray(Js::AuxArray<uint32> * slotIdInCachedScopeToNestedIndexArray) { this->SetAuxPtr<AuxPointerType::SlotIdInCachedScopeToNestedIndexArray>(slotIdInCachedScopeToNestedIndexArray); }
+        void SetSlotIdInCachedScopeToNestedIndexArray(Js::AuxArray<uint32_t> * slotIdInCachedScopeToNestedIndexArray) { this->SetAuxPtr<AuxPointerType::SlotIdInCachedScopeToNestedIndexArray>(slotIdInCachedScopeToNestedIndexArray); }
         void ResetSlotIdInCachedScopeToNestedIndexArray() { SetSlotIdInCachedScopeToNestedIndexArray(nullptr); }
 #if ENABLE_NATIVE_CODEGEN
         void SetCallSiteToCallApplyCallSiteArray(ProfileId* mapping) { this->SetAuxPtr<AuxPointerType::CallSiteToCallApplyCallSiteArray>(mapping); }
@@ -3223,16 +3223,16 @@ namespace Js
         DynamicProfileInfo * EnsureDynamicProfileInfo();
         DynamicProfileInfo * AllocateDynamicProfile();
         uint8_t GetSavedInlinerVersion() const;
-        uint32 GetSavedPolymorphicCacheState() const;
-        void SetSavedPolymorphicCacheState(uint32 state);
+        uint32_t GetSavedPolymorphicCacheState() const;
+        void SetSavedPolymorphicCacheState(uint32_t state);
         ImplicitCallFlags GetSavedImplicitCallsFlags() const;
         bool HasNonBuiltInCallee();
 
-        void RecordNativeThrowMap(SmallSpanSequenceIter& iter, uint32 offset, uint32 statementIndex, EntryPointInfo* entryPoint, uint loopNum);
+        void RecordNativeThrowMap(SmallSpanSequenceIter& iter, uint32_t offset, uint32_t statementIndex, EntryPointInfo* entryPoint, uint loopNum);
         void SetNativeThrowSpanSequence(SmallSpanSequence *seq, uint loopNum, LoopEntryPointInfo* entryPoint);
 
         BOOL GetMatchingStatementMapFromNativeAddress(unsigned long codeAddress, StatementData &data, uint loopNum, FunctionBody *inlinee = nullptr);
-        BOOL GetMatchingStatementMapFromNativeOffset(unsigned long codeAddress, uint32 offset, StatementData &data, uint loopNum, FunctionBody *inlinee = nullptr);
+        BOOL GetMatchingStatementMapFromNativeOffset(unsigned long codeAddress, uint32_t offset, StatementData &data, uint loopNum, FunctionBody *inlinee = nullptr);
 
         FunctionEntryPointInfo * GetEntryPointFromNativeAddress(unsigned long codeAddress);
         LoopEntryPointInfo * GetLoopEntryPointInfoFromNativeAddress(unsigned long codeAddress, uint loopNum) const;
@@ -3241,7 +3241,7 @@ namespace Js
         void InsertSymbolToRegSlotList(JsUtil::CharacterBuffer<char16_t> const& propName, RegSlot reg, RegSlot totalRegsCount);
         void InsertSymbolToRegSlotList(RegSlot reg, PropertyId propertyId, RegSlot totalRegsCount);
         void SetPropertyIdsOfFormals(PropertyIdArray * formalArgs);
-        PropertyIdArray * AllocatePropertyIdArrayForFormals(uint32 size, uint32 count, byte extraSlots);
+        PropertyIdArray * AllocatePropertyIdArrayForFormals(uint32_t size, uint32_t count, byte extraSlots);
 
         bool DontRethunkAfterBailout() const { return dontRethunkAfterBailout; }
         void SetDontRethunkAfterBailout() { dontRethunkAfterBailout = true; }
@@ -3437,7 +3437,7 @@ namespace Js
         BOOL               GetMatchingStatementMap(StatementData &data, int statementIndex, FunctionBody *inlinee);
 
 #if ENABLE_NATIVE_CODEGEN
-        int                GetStatementIndexFromNativeOffset(SmallSpanSequence *pThrowSpanSequence, uint32 nativeOffset);
+        int                GetStatementIndexFromNativeOffset(SmallSpanSequence *pThrowSpanSequence, uint32_t nativeOffset);
         int                GetStatementIndexFromNativeAddress(SmallSpanSequence *pThrowSpanSequence, unsigned long codeAddress, unsigned long nativeBaseAddress);
 #endif
 
@@ -3602,9 +3602,9 @@ namespace Js
         void   SetStrictMode(bool flag) { this->strictMode = flag; }
 
         Field(void*)* GetDataAddress() { return this->scopes; }
-        static uint32 GetOffsetOfStrictMode() { return offsetof(FrameDisplay, strictMode); }
-        static uint32 GetOffsetOfLength() { return offsetof(FrameDisplay, length); }
-        static uint32 GetOffsetOfScopes() { return offsetof(FrameDisplay, scopes); }
+        static uint32_t GetOffsetOfStrictMode() { return offsetof(FrameDisplay, strictMode); }
+        static uint32_t GetOffsetOfLength() { return offsetof(FrameDisplay, length); }
+        static uint32_t GetOffsetOfScopes() { return offsetof(FrameDisplay, scopes); }
         static ScopeType GetScopeType(void* scope);
 
     private:
@@ -3613,7 +3613,7 @@ namespace Js
         Field(uint16) length;
 
 #if defined(TARGET_64)
-        Field(uint32) unused;
+        Field(uint32_t) unused;
 #endif
         Field(void*) scopes[];
     };
@@ -3646,7 +3646,7 @@ namespace Js
         ushort sourceBegin;
         ushort bytecodeBegin;
 
-        SmallSpan(uint32 val)
+        SmallSpan(uint32_t val)
         {
             sourceBegin = (ushort)(val >> 16);
             bytecodeBegin = (ushort)(val & 0x0000FFFF);
@@ -3654,7 +3654,7 @@ namespace Js
 
         operator unsigned int()
         {
-            return (uint32)sourceBegin << 16 | bytecodeBegin;
+            return (uint32_t)sourceBegin << 16 | bytecodeBegin;
         }
     };
 
@@ -3685,8 +3685,8 @@ namespace Js
 
     struct ThrowMapEntry
     {
-        uint32 nativeBufferOffset;
-        uint32 statementIndex;
+        uint32_t nativeBufferOffset;
+        uint32_t statementIndex;
     };
 
     // This class compacts the range of the statement to BYTEs instead of ints.
@@ -3744,7 +3744,7 @@ namespace Js
         // Reset the accumulator's state and value.
         void Reset(SmallSpanSequenceIter &iter);
 
-        uint32 Count() const { return pStatementBuffer ? pStatementBuffer->Count() : 0; }
+        uint32_t Count() const { return pStatementBuffer ? pStatementBuffer->Count() : 0; }
 
         BOOL Item(int index, SmallSpanSequenceIter &iter, StatementData &data);
 
@@ -3894,7 +3894,7 @@ namespace Js
 #endif
 
 #if ENABLE_TTD
-        Js::PropertyId GetPropertyIdForSlotIndex_TTD(uint32 slotIndex) const;
+        Js::PropertyId GetPropertyIdForSlotIndex_TTD(uint32_t slotIndex) const;
 #endif
 
     public:

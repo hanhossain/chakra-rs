@@ -142,7 +142,7 @@ namespace Js
     }
 
     template <typename EncodedChar>
-    void JavascriptBigInt::InitFromCharDigits(const EncodedChar *pChar, uint32 charLength, bool isNegative)
+    void JavascriptBigInt::InitFromCharDigits(const EncodedChar *pChar, uint32_t charLength, bool isNegative)
     {
         Assert(charLength >= 0);
         Assert(pChar != 0);

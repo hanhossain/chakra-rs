@@ -41,7 +41,7 @@ void WasmByteCodeWriter::SetCallSiteCount(Js::ProfileId callSiteCount)
     ByteCodeWriter::SetCallSiteCount(callSiteCount);
 }
 
-uint32 WasmByteCodeWriter::WasmLoopStart(ByteCodeLabel loopEntrance, __in_ecount(WAsmJs::LIMIT) RegSlot* curRegs)
+uint32_t WasmByteCodeWriter::WasmLoopStart(ByteCodeLabel loopEntrance, __in_ecount(WAsmJs::LIMIT) RegSlot* curRegs)
 {
     uint loopId = m_functionWrite->IncrLoopCount();
     Assert((uint)m_loopHeaders->Count() == loopId);

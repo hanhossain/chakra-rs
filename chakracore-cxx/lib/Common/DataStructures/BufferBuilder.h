@@ -33,12 +33,12 @@ namespace Js
         BufferBuilder(const char16_t* clue)
             : clue(clue), offset(0xffffffff) { }
     public:
-        uint32 offset;
-        virtual uint32 FixOffset(uint32 offset) = 0;
-        virtual void Write(__in_bcount(bufferSize) byte * buffer, uint32 bufferSize) const = 0;
+        uint32_t offset;
+        virtual uint32_t FixOffset(uint32_t offset) = 0;
+        virtual void Write(__in_bcount(bufferSize) byte * buffer, uint32_t bufferSize) const = 0;
 #if DBG
     protected:
-        void TraceOutput(byte * buffer, uint32 size) const;
+        void TraceOutput(byte * buffer, uint32_t size) const;
 #endif
     };
 
@@ -84,7 +84,7 @@ namespace Js
             return value > ONE_BYTE_MAX && value <= TWO_BYTE_MAX;
         }
 
-        uint32 FixOffset(uint32 offset) override
+        uint32_t FixOffset(uint32_t offset) override
         {
             this->offset = offset;
 
@@ -107,9 +107,9 @@ namespace Js
             }
         }
 
-        void Write(__in_bcount(bufferSize) byte * buffer, uint32 bufferSize) const
+        void Write(__in_bcount(bufferSize) byte * buffer, uint32_t bufferSize) const
         {
-            DebugOnly(uint32 size = sizeof(T));
+            DebugOnly(uint32_t size = sizeof(T));
 
 #if INSTRUMENT_BUFFER_INTS
             if (value < ((1 << 8)))
@@ -187,14 +187,14 @@ namespace Js
             : BufferBuilder(clue), value(value)
         { }
 
-        uint32 FixOffset(uint32 offset) override
+        uint32_t FixOffset(uint32_t offset) override
         {
             this->offset = offset;
 
             return this->offset + sizeof(serialization_alignment T);
         }
 
-        void Write(__in_bcount(bufferSize) byte * buffer, uint32 bufferSize) const
+        void Write(__in_bcount(bufferSize) byte * buffer, uint32_t bufferSize) const
         {
             if (bufferSize - this->offset<sizeof(serialization_alignment T))
             {
@@ -239,15 +239,15 @@ namespace Js
             : BufferBuilder(clue), list(nullptr)
         { }
 
-        uint32 FixOffset(uint32 offset) override
+        uint32_t FixOffset(uint32_t offset) override
         {
             this->offset = offset;
-            return list->Accumulate(offset,[](uint32 size, BufferBuilder * builder)->uint32 {
+            return list->Accumulate(offset,[](uint32_t size, BufferBuilder * builder)->uint32_t {
                 return builder->FixOffset(size);
             });
         }
 
-        void Write(__in_bcount(bufferSize) byte * buffer, uint32 bufferSize) const
+        void Write(__in_bcount(bufferSize) byte * buffer, uint32_t bufferSize) const
         {
             return list->Iterate([&](BufferBuilder * builder) {
                 builder->Write(buffer, bufferSize);
@@ -262,21 +262,21 @@ namespace Js
     struct BufferBuilderRelativeOffset : BufferBuilder
     {
         BufferBuilder * pointsTo;
-        uint32 additionalOffset;
-        BufferBuilderRelativeOffset(const char16_t* clue, BufferBuilder * pointsTo, uint32 additionalOffset)
+        uint32_t additionalOffset;
+        BufferBuilderRelativeOffset(const char16_t* clue, BufferBuilder * pointsTo, uint32_t additionalOffset)
             : BufferBuilder(clue), pointsTo(pointsTo), additionalOffset(additionalOffset)
         { }
         BufferBuilderRelativeOffset(const char16_t* clue, BufferBuilder * pointsTo)
             : BufferBuilder(clue), pointsTo(pointsTo), additionalOffset(0)
         { }
 
-        uint32 FixOffset(uint32 offset) override
+        uint32_t FixOffset(uint32_t offset) override
         {
             this->offset = offset;
             return this->offset + sizeof(int);
         }
 
-        void Write(__in_bcount(bufferSize) byte * buffer, uint32 bufferSize) const
+        void Write(__in_bcount(bufferSize) byte * buffer, uint32_t bufferSize) const
         {
             if (bufferSize - this->offset<sizeof(int))
             {
@@ -292,19 +292,19 @@ namespace Js
     // A buffer builder which holds a raw byte buffer
     struct BufferBuilderRaw : BufferBuilder
     {
-        uint32 size;
+        uint32_t size;
         const byte * raw;
-        BufferBuilderRaw(const char16_t* clue, uint32 size, __in_bcount(size) const byte * raw)
+        BufferBuilderRaw(const char16_t* clue, uint32_t size, __in_bcount(size) const byte * raw)
             : BufferBuilder(clue), size(size), raw(raw)
         { }
 
-        uint32 FixOffset(uint32 offset) override
+        uint32_t FixOffset(uint32_t offset) override
         {
             this->offset = offset;
             return this->offset + size;
         }
 
-        void Write(__in_bcount(bufferSize) byte * buffer, uint32 bufferSize) const
+        void Write(__in_bcount(bufferSize) byte * buffer, uint32_t bufferSize) const
         {
             if (bufferSize - this->offset<size)
             {
@@ -320,14 +320,14 @@ namespace Js
     struct BufferBuilderAligned : BufferBuilder
     {
         BufferBuilder * content;
-        uint32 alignment;
-        uint32 padding;
+        uint32_t alignment;
+        uint32_t padding;
 
-        BufferBuilderAligned(const char16_t* clue, BufferBuilder * content, uint32 alignment)
+        BufferBuilderAligned(const char16_t* clue, BufferBuilder * content, uint32_t alignment)
             : BufferBuilder(clue), content(content), alignment(alignment), padding(0)
         { }
 
-        uint32 FixOffset(uint32 offset) override
+        uint32_t FixOffset(uint32_t offset) override
         {
             this->offset = offset;
 
@@ -339,14 +339,14 @@ namespace Js
             return content->FixOffset(offset);
         }
 
-        void Write(__in_bcount(bufferSize) byte * buffer, uint32 bufferSize) const
+        void Write(__in_bcount(bufferSize) byte * buffer, uint32_t bufferSize) const
         {
             if (bufferSize - this->offset < this->padding)
             {
                 Throw::FatalInternalError();
             }
 
-            for (uint32 i = 0; i < this->padding; i++)
+            for (uint32_t i = 0; i < this->padding; i++)
             {
                 buffer[this->offset + i] = 0;
             }

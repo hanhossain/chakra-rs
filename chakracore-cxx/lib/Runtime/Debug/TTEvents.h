@@ -80,7 +80,7 @@ namespace TTD
     namespace NSLogEvents
     {
         //An enumeration of the event kinds in the system
-        enum class EventKind : uint32
+        enum class EventKind : uint32_t
         {
             Invalid = 0x0,
             //Tags for internal engine events
@@ -279,11 +279,11 @@ namespace TTD
             SnapShot* Snap;
 
             //The logids of live contexts
-            uint32 LiveContextCount;
+            uint32_t LiveContextCount;
             TTD_LOG_PTR_ID* LiveContextIdArray;
 
             //The logids of live roots (with non-zero weak references)
-            uint32 LongLivedRefRootsCount;
+            uint32_t LongLivedRefRootsCount;
             TTD_LOG_PTR_ID* LongLivedRefRootsIdArray;
         };
 
@@ -313,7 +313,7 @@ namespace TTD
         struct CodeLoadEventLogEntry
         {
             //The code counter id for the TopLevelFunctionBodyInfo
-            uint32 BodyCounterId;
+            uint32_t BodyCounterId;
         };
 
         void CodeLoadEventLogEntry_Emit(const EventLogEntry* evt, FileWriter* writer, ThreadContext* threadContext);
@@ -435,7 +435,7 @@ namespace TTD
             int32 RootNestingDepth;
 
             //the number of arguments and the argument array -- function is always argument[0]
-            uint32 ArgCount;
+            uint32_t ArgCount;
             TTDVar* ArgArray;
 
             //the value of new.target if present
@@ -489,12 +489,12 @@ namespace TTD
             long FunctionTime;  //-1 indicates any ftime is OK
             long LoopTime;  //-1 indicates any ltime is OK
 
-            uint32 TopLevelBodyId;
-            uint32 FunctionLine; //line containing function starts at
-            uint32 FunctionColumn; //column containing function starts at
+            uint32_t TopLevelBodyId;
+            uint32_t FunctionLine; //line containing function starts at
+            uint32_t FunctionColumn; //column containing function starts at
 
-            uint32 Line; //line in source
-            uint32 Column; //column in source
+            uint32_t Line; //line in source
+            uint32_t Column; //column in source
         };
 
         void TTDInnerLoopLogWriteEventLogEntry_Emit(const EventLogEntry* evt, FileWriter* writer, ThreadContext* threadContext);

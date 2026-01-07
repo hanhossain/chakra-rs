@@ -192,7 +192,7 @@ namespace Js
     Js::ScriptFunction* DiagStackFrame::TryGetFunctionForEval(Js::ScriptContext* scriptContext, const char16_t *source, int sourceLength, BOOL isLibraryCode /* = FALSE */)
     {
         // TODO: pass the real length of the source code instead of wcslen
-        uint32 grfscr = fscrReturnExpression | fscrEval | fscrEvalCode | fscrGlobalCode | fscrConsoleScopeEval;
+        uint32_t grfscr = fscrReturnExpression | fscrEval | fscrEvalCode | fscrGlobalCode | fscrConsoleScopeEval;
         if (!this->IsThisAvailable())
         {
             grfscr |= fscrDebuggerErrorOnGlobalThis;
@@ -325,7 +325,7 @@ namespace Js
 #endif
 
 #if DBG
-        uint32 countForVerification = activeScopeObject->GetPropertyCount();
+        uint32_t countForVerification = activeScopeObject->GetPropertyCount();
 #endif
 
         // Dummy scope object in the front, so that no new variable will be added to the scope.
@@ -370,13 +370,13 @@ namespace Js
         debugManager->UpdateConsoleScope(dummyObject, scriptContext);
 
         // We need to find out the edits have been done to the dummy scope object during the eval. We need to apply those mutations to the actual vars.
-        uint32 count = activeScopeObject->GetPropertyCount();
+        uint32_t count = activeScopeObject->GetPropertyCount();
 
 #if DBG
         Assert(countForVerification == count);
 #endif
 
-        for (uint32 i = 0; i < count; i++)
+        for (uint32_t i = 0; i < count; i++)
         {
             Js::PropertyId propertyId = activeScopeObject->GetPropertyId((Js::PropertyIndex)i);
             if (propertyId != Js::Constants::NoProperty)

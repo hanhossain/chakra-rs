@@ -38,21 +38,21 @@
 
 namespace Js
 {
-    NUMBER_UTIL_INLINE uint32 &NumberUtilities::LuHiDbl(double &dbl)
+    NUMBER_UTIL_INLINE uint32_t &NumberUtilities::LuHiDbl(double &dbl)
     {
 #if defined(__BIG_ENDIAN__)
-        return ((uint32 *)&dbl)[0];
+        return ((uint32_t *)&dbl)[0];
 #else //!BIG_ENDIAN
-        return ((uint32 *)&dbl)[1];
+        return ((uint32_t *)&dbl)[1];
 #endif //!BIG_ENDIAN
     }
 
-    NUMBER_UTIL_INLINE uint32 &NumberUtilities::LuLoDbl(double &dbl)
+    NUMBER_UTIL_INLINE uint32_t &NumberUtilities::LuLoDbl(double &dbl)
     {
 #if defined(__BIG_ENDIAN__)
-        return ((uint32 *)&dbl)[1];
+        return ((uint32_t *)&dbl)[1];
 #else //!BIG_ENDIAN
-        return ((uint32 *)&dbl)[0];
+        return ((uint32_t *)&dbl)[0];
 #endif //!BIG_ENDIAN
     }
 
@@ -130,8 +130,8 @@ namespace Js
             0 != (nCompare & 0x000FFFFFFFFFFFFFull));
         return isNan;
 #else
-        const uint32 hi = (uint32)(nCompare >> 32);
-        const uint32 lo = (uint32)nCompare;
+        const uint32_t hi = (uint32_t)(nCompare >> 32);
+        const uint32_t lo = (uint32_t)nCompare;
         return 0 == (~hi & 0x7FF00000) &&
             (0 != lo || 0 != (hi & 0x000FFFFF));
 #endif
@@ -162,14 +162,14 @@ namespace Js
 #endif
     }
 
-    NUMBER_UTIL_INLINE uint32 NumberUtilities::ToSpecial(float value)
+    NUMBER_UTIL_INLINE uint32_t NumberUtilities::ToSpecial(float value)
     {
 #if defined(_AMD64_) || _M_IX86_FP >= 2 || defined(__AVX__)
         return _mm_cvtsi128_si32(_mm_castps_si128(_mm_set_ss(value)));
 #elif defined(_M_ARM32_OR_ARM64) && defined(_CopyInt32FromFloat)
         return _CopyInt32FromFloat(value);
 #else
-        return  *(reinterpret_cast<uint32 *>(&value));
+        return  *(reinterpret_cast<uint32_t *>(&value));
 #endif
     }
 
@@ -197,7 +197,7 @@ namespace Js
 
     NUMBER_UTIL_INLINE bool NumberUtilities::IsFloat32NegZero(float value)
     {
-        uint32 nCompare = ToSpecial(value);
+        uint32_t nCompare = ToSpecial(value);
         return nCompare == NumberConstants::k_Float32NegZero;
     }
 }

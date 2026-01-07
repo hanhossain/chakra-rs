@@ -37,9 +37,9 @@ public:
     void UpdateHeapBlock();
     void SetExplicitFreeList(FreeObject* list);
 
-    static uint32 GetEndAddressOffset() { return offsetof(SmallHeapBlockAllocator, endAddress); }
+    static uint32_t GetEndAddressOffset() { return offsetof(SmallHeapBlockAllocator, endAddress); }
     char *GetEndAddress() { return endAddress; }
-    static uint32 GetFreeObjectListOffset() { return offsetof(SmallHeapBlockAllocator, freeObjectList); }
+    static uint32_t GetFreeObjectListOffset() { return offsetof(SmallHeapBlockAllocator, freeObjectList); }
     FreeObject *GetFreeObjectList() { return freeObjectList; }
     void SetFreeObjectList(FreeObject *freeObject) { freeObjectList = freeObject; }
 

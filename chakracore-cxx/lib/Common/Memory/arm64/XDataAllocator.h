@@ -75,15 +75,15 @@ namespace Memory
         uint8_t* End() { return start + size; }
 
         // Read .eh_frame data head (length record). 0 means empty.
-        static uint32 ReadHead(const void* p)
+        static uint32_t ReadHead(const void* p)
         {
-            return *reinterpret_cast<const uint32*>(p);
+            return *reinterpret_cast<const uint32_t*>(p);
         }
 
         // Clear .eh_frame data head (length record). Set to 0 to mark empty.
         static void ClearHead(void* p)
         {
-            *reinterpret_cast<uint32*>(p) = 0;
+            *reinterpret_cast<uint32_t*>(p) = 0;
         }
 
         void ClearFreeList();

@@ -1224,19 +1224,19 @@ namespace Js
     }
 
     /* static */
-    uint32 IsInstInlineCache::OffsetOfFunction()
+    uint32_t IsInstInlineCache::OffsetOfFunction()
     {
         return offsetof(IsInstInlineCache, function);
     }
 
     /* static */
-    uint32 IsInstInlineCache::OffsetOfType()
+    uint32_t IsInstInlineCache::OffsetOfType()
     {
         return offsetof(IsInstInlineCache, type);
     }
 
     /* static */
-    uint32 IsInstInlineCache::OffsetOfResult()
+    uint32_t IsInstInlineCache::OffsetOfResult()
     {
         return offsetof(IsInstInlineCache, result);
     }

@@ -43,8 +43,8 @@ namespace Js
 
     private:
         static Var ValidateSharedIntegerTypedArray(Var typedArray, ScriptContext *scriptContext, bool onlyInt32);
-        static uint32 ValidateAtomicAccess(Var typedArray, Var index, ScriptContext *scriptContext);
+        static uint32_t ValidateAtomicAccess(Var typedArray, Var index, ScriptContext *scriptContext);
 
-        static TypedArrayBase * ValidateAndGetTypedArray(Var typedArray, Var index, uint32 *accessIndex, ScriptContext *scriptContext, bool onlyInt32 = false);
+        static TypedArrayBase * ValidateAndGetTypedArray(Var typedArray, Var index, uint32_t *accessIndex, ScriptContext *scriptContext, bool onlyInt32 = false);
     };
 }

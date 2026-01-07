@@ -51,13 +51,13 @@ namespace Js
 #if ENABLE_FIXED_FIELDS
         virtual BOOL IsFixedProperty(PropertyId propertyId) override { return false; }
 #endif
-        virtual PropertyQueryFlags HasItemQuery(uint32 index) override { return PropertyQueryFlags::Property_NotFound; }
-        virtual BOOL HasOwnItem(uint32 index) override { return false; }
-        virtual PropertyQueryFlags GetItemQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext) override { return PropertyQueryFlags::Property_NotFound; }
-        virtual PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext) override { return PropertyQueryFlags::Property_NotFound; }
-        virtual DescriptorFlags GetItemSetter(uint32 index, Var* setterValue, ScriptContext* requestContext) override { *setterValue = nullptr; return DescriptorFlags::None; }
-        virtual BOOL SetItem(uint32 index, Var value, PropertyOperationFlags flags) override { return false; }
-        virtual BOOL DeleteItem(uint32 index, PropertyOperationFlags flags) override { return true; }
+        virtual PropertyQueryFlags HasItemQuery(uint32_t index) override { return PropertyQueryFlags::Property_NotFound; }
+        virtual BOOL HasOwnItem(uint32_t index) override { return false; }
+        virtual PropertyQueryFlags GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override { return PropertyQueryFlags::Property_NotFound; }
+        virtual PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override { return PropertyQueryFlags::Property_NotFound; }
+        virtual DescriptorFlags GetItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext) override { *setterValue = nullptr; return DescriptorFlags::None; }
+        virtual BOOL SetItem(uint32_t index, Var value, PropertyOperationFlags flags) override { return false; }
+        virtual BOOL DeleteItem(uint32_t index, PropertyOperationFlags flags) override { return true; }
         virtual BOOL GetEnumerator(JavascriptStaticEnumerator * enumerator, EnumeratorFlags flags, ScriptContext* requestContext, EnumeratorCache * enumeratorCache = nullptr);
         virtual BOOL SetAccessors(PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags = PropertyOperation_None) override { return false; }
         _Check_return_ _Success_(return) virtual BOOL GetAccessors(PropertyId propertyId, _Outptr_result_maybenull_ Var* getter, _Outptr_result_maybenull_ Var* setter, ScriptContext* requestContext) override { return FALSE; };

@@ -1050,7 +1050,7 @@ namespace Js
     void
         JavascriptExceptionOperators::WalkStackForExceptionContext(ScriptContext& scriptContext, JavascriptExceptionContext& exceptionContext, Var thrownObject, unsigned long stackCrawlLimit, void * returnAddress, bool isThrownException, bool resetSatck)
     {
-        uint32 callerBytecodeOffset;
+        uint32_t callerBytecodeOffset;
         JavascriptFunction * jsFunc = WalkStackForExceptionContextInternal(scriptContext, exceptionContext, thrownObject, callerBytecodeOffset, stackCrawlLimit, returnAddress, isThrownException, resetSatck);
 
         if (jsFunc)
@@ -1064,7 +1064,7 @@ namespace Js
 
     JavascriptFunction *
     JavascriptExceptionOperators::WalkStackForExceptionContextInternal(ScriptContext& scriptContext, JavascriptExceptionContext& exceptionContext, Var thrownObject,
-        uint32& callerByteCodeOffset, unsigned long stackCrawlLimit, void * returnAddress, bool isThrownException, bool resetStack)
+        uint32_t& callerByteCodeOffset, unsigned long stackCrawlLimit, void * returnAddress, bool isThrownException, bool resetStack)
     {
         JavascriptStackWalker walker(&scriptContext, true, returnAddress);
         JavascriptFunction* jsFunc = nullptr;

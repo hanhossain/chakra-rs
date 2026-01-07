@@ -12,7 +12,7 @@
 
 namespace Js
 {
-    const uint32 ModuleRecordBase::ModuleMagicNumber = *(const uint32*)"Mode";
+    const uint32_t ModuleRecordBase::ModuleMagicNumber = *(const uint32_t*)"Mode";
 
     SourceTextModuleRecord::SourceTextModuleRecord(ScriptContext* scriptContext) :
         ModuleRecordBase(scriptContext->GetLibrary()),
@@ -78,7 +78,7 @@ namespace Js
         }
     }
 
-    int32_t SourceTextModuleRecord::ParseSource(__in_bcount(sourceLength) byte* sourceText, uint32 sourceLength, SRCINFO * srcInfo, Var* exceptionVar, bool isUtf8)
+    int32_t SourceTextModuleRecord::ParseSource(__in_bcount(sourceLength) byte* sourceText, uint32_t sourceLength, SRCINFO * srcInfo, Var* exceptionVar, bool isUtf8)
     {
         Assert(!wasParsed || sourceText == nullptr);
         Assert(parser == nullptr);

@@ -384,7 +384,7 @@ namespace Js
     }
 
     template <typename SizePolicy>
-    bool AsmJsByteCodeWriter::TryWriteAsmSlot(OpCodeAsmJs op, RegSlot value, RegSlot instance, uint32 slotId)
+    bool AsmJsByteCodeWriter::TryWriteAsmSlot(OpCodeAsmJs op, RegSlot value, RegSlot instance, uint32_t slotId)
     {
         OpLayoutT_ElementSlot<SizePolicy> layout;
         if (SizePolicy::Assign(layout.Value, value) && SizePolicy::Assign(layout.Instance, instance)
@@ -397,7 +397,7 @@ namespace Js
     }
 
     template <typename SizePolicy>
-    bool AsmJsByteCodeWriter::TryWriteWasmMemAccess(OpCodeAsmJs op, RegSlot value, uint32 slotIndex, uint32 offset, ArrayBufferView::ViewType viewType)
+    bool AsmJsByteCodeWriter::TryWriteWasmMemAccess(OpCodeAsmJs op, RegSlot value, uint32_t slotIndex, uint32_t offset, ArrayBufferView::ViewType viewType)
     {
         OpLayoutT_WasmMemAccess<SizePolicy> layout;
         if (SizePolicy::Assign(layout.Value, value) && SizePolicy::template Assign<ArrayBufferView::ViewType>(layout.ViewType, viewType)
@@ -411,7 +411,7 @@ namespace Js
     }
 
     template <typename SizePolicy>
-    bool AsmJsByteCodeWriter::TryWriteAsmTypedArr(OpCodeAsmJs op, RegSlot value, uint32 slotIndex, ArrayBufferView::ViewType viewType)
+    bool AsmJsByteCodeWriter::TryWriteAsmTypedArr(OpCodeAsmJs op, RegSlot value, uint32_t slotIndex, ArrayBufferView::ViewType viewType)
     {
         OpLayoutT_AsmTypedArr<SizePolicy> layout;
         if (SizePolicy::Assign(layout.Value, value) && SizePolicy::template Assign<ArrayBufferView::ViewType>(layout.ViewType, viewType)
@@ -424,7 +424,7 @@ namespace Js
     }
 
     template <typename SizePolicy>
-    bool AsmJsByteCodeWriter::TryWriteAsmSimdTypedArr(OpCodeAsmJs op, RegSlot value, uint32 slotIndex, uint8_t dataWidth, ArrayBufferView::ViewType viewType, uint32 offset)
+    bool AsmJsByteCodeWriter::TryWriteAsmSimdTypedArr(OpCodeAsmJs op, RegSlot value, uint32_t slotIndex, uint8_t dataWidth, ArrayBufferView::ViewType viewType, uint32_t offset)
     {
         OpLayoutT_AsmSimdTypedArr<SizePolicy> layout;
         if (SizePolicy::Assign(layout.Value, value) && SizePolicy::template Assign<ArrayBufferView::ViewType>(layout.ViewType, viewType)
@@ -607,23 +607,23 @@ namespace Js
         }
     }
 
-    void AsmJsByteCodeWriter::AsmTypedArr(OpCodeAsmJs op, RegSlot value, uint32 slotIndex, ArrayBufferView::ViewType viewType)
+    void AsmJsByteCodeWriter::AsmTypedArr(OpCodeAsmJs op, RegSlot value, uint32_t slotIndex, ArrayBufferView::ViewType viewType)
     {
         MULTISIZE_LAYOUT_WRITE(AsmTypedArr, op, value, slotIndex, viewType);
     }
 
-    void AsmJsByteCodeWriter::WasmMemAccess(OpCodeAsmJs op, RegSlot value, uint32 slotIndex, uint32 offset, ArrayBufferView::ViewType viewType)
+    void AsmJsByteCodeWriter::WasmMemAccess(OpCodeAsmJs op, RegSlot value, uint32_t slotIndex, uint32_t offset, ArrayBufferView::ViewType viewType)
     {
         MULTISIZE_LAYOUT_WRITE(WasmMemAccess, op, value, slotIndex, offset, viewType);
     }
 
-    void AsmJsByteCodeWriter::AsmSimdTypedArr(OpCodeAsmJs op, RegSlot value, uint32 slotIndex, uint8_t dataWidth, ArrayBufferView::ViewType viewType, uint32 offset)
+    void AsmJsByteCodeWriter::AsmSimdTypedArr(OpCodeAsmJs op, RegSlot value, uint32_t slotIndex, uint8_t dataWidth, ArrayBufferView::ViewType viewType, uint32_t offset)
     {
         Assert(dataWidth >= 4 && dataWidth <= 16);
         MULTISIZE_LAYOUT_WRITE(AsmSimdTypedArr, op, value, slotIndex, dataWidth, viewType, offset);
     }
 
-    void AsmJsByteCodeWriter::AsmSlot(OpCodeAsmJs op, RegSlot value, RegSlot instance, uint32 slotId)
+    void AsmJsByteCodeWriter::AsmSlot(OpCodeAsmJs op, RegSlot value, RegSlot instance, uint32_t slotId)
     {
         MULTISIZE_LAYOUT_WRITE(AsmSlot, op, value, instance, slotId);
     }

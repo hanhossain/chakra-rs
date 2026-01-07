@@ -61,7 +61,7 @@ namespace Js
         }
         virtual Var GetHomeObj() const override { return homeObj; }
         virtual void SetHomeObj(Var homeObj) override { this->homeObj = homeObj; }
-        static uint32 GetOffsetOfHomeObj() { return  offsetof(FunctionWithHomeObj<BaseClass>, homeObj); }
+        static uint32_t GetOffsetOfHomeObj() { return  offsetof(FunctionWithHomeObj<BaseClass>, homeObj); }
         virtual VTableValue DummyVirtualFunctionToHinderLinkerICF() const;
     };
 
@@ -103,9 +103,9 @@ namespace Js
         void SetCachedScope(ActivationObjectEx *obj) { cachedScopeObj = obj; }
         void InvalidateCachedScopeChain();
 
-        static uint32 GetOffsetOfEnvironment() { return offsetof(ScriptFunction, environment); }
-        static uint32 GetOffsetOfCachedScopeObj() { return offsetof(ScriptFunction, cachedScopeObj); };
-        static uint32 GetOffsetOfHasInlineCaches() { return offsetof(ScriptFunction, hasInlineCaches); };
+        static uint32_t GetOffsetOfEnvironment() { return offsetof(ScriptFunction, environment); }
+        static uint32_t GetOffsetOfCachedScopeObj() { return offsetof(ScriptFunction, cachedScopeObj); };
+        static uint32_t GetOffsetOfHasInlineCaches() { return offsetof(ScriptFunction, hasInlineCaches); };
 
         void ChangeEntryPoint(ProxyEntryPointInfo* entryPointInfo, JavascriptMethod entryPoint);
         JavascriptMethod UpdateThunkEntryPoint(FunctionEntryPointInfo* entryPointInfo, JavascriptMethod entryPoint);
@@ -174,7 +174,7 @@ namespace Js
 
         void SetModuleEnvironment(Field(Var)* mem) { m_moduleEnvironment = mem; }
         Field(Var)* GetModuleEnvironment() const { return m_moduleEnvironment; }
-        static uint32 GetOffsetOfModuleMemory() { return offsetof(AsmJsScriptFunction, m_moduleEnvironment); }
+        static uint32_t GetOffsetOfModuleMemory() { return offsetof(AsmJsScriptFunction, m_moduleEnvironment); }
 
         class JavascriptArrayBuffer* GetAsmJsArrayBuffer() const;
     protected:
@@ -200,7 +200,7 @@ namespace Js
 
         void SetSignature(Wasm::WasmSignature * sig) { m_signature = sig; }
         Wasm::WasmSignature * GetSignature() const { return m_signature; }
-        static uint32 GetOffsetOfSignature() { return offsetof(WasmScriptFunction, m_signature); }
+        static uint32_t GetOffsetOfSignature() { return offsetof(WasmScriptFunction, m_signature); }
 
         WebAssemblyMemory* GetWebAssemblyMemory() const;
 
@@ -254,7 +254,7 @@ namespace Js
         InlineCache * GetInlineCache(uint index);
         uint GetInlineCacheCount() { return inlineCacheCount; }
         Field(void**) GetInlineCaches() const { return m_inlineCaches; }
-        static uint32 GetOffsetOfInlineCaches() { return offsetof(ScriptFunctionWithInlineCache, m_inlineCaches); };
+        static uint32_t GetOffsetOfInlineCaches() { return offsetof(ScriptFunctionWithInlineCache, m_inlineCaches); };
         template<bool isShutdown>
         void FreeOwnInlineCaches();
         virtual void Finalize(bool isShutdown) override;

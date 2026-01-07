@@ -88,7 +88,7 @@ namespace Js
         void SetRequestedModuleList(IdentPtrList* requestModules) { requestedModuleList = requestModules; }
 
         ScriptContext* GetScriptContext() const { return scriptContext; }
-        int32_t ParseSource(__in_bcount(sourceLength) byte* sourceText, uint32 sourceLength, SRCINFO * srcInfo, Var* exceptionVar, bool isUtf8);
+        int32_t ParseSource(__in_bcount(sourceLength) byte* sourceText, uint32_t sourceLength, SRCINFO * srcInfo, Var* exceptionVar, bool isUtf8);
         int32_t OnHostException(void* errorVar);
 
         static SourceTextModuleRecord* FromHost(void* hostModuleRecord)

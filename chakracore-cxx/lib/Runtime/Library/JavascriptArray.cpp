@@ -33,7 +33,7 @@ using namespace Js;
     const Var JavascriptArray::MissingItem = (Var)VarMissingItemPattern;
 
 #if defined(TARGET_64)
-    const Var JavascriptArray::IntMissingItemVar = (Var)(((unsigned long)IntMissingItemPattern << 32) | (uint32)IntMissingItemPattern);
+    const Var JavascriptArray::IntMissingItemVar = (Var)(((unsigned long)IntMissingItemPattern << 32) | (uint32_t)IntMissingItemPattern);
     uint JavascriptNativeIntArray::allocationBuckets[][AllocationBucketsInfoSize] =
     {
         // See comments above on how to read this
@@ -81,7 +81,7 @@ using namespace Js;
     {
     }
 
-    uint32 SegmentBTree::GetLazyCrossOverLimit()
+    uint32_t SegmentBTree::GetLazyCrossOverLimit()
     {
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.DisableArrayBTree)
@@ -111,9 +111,9 @@ using namespace Js;
         return segmentCount == MaxKeys;
     }
 
-    void SegmentBTree::InternalFind(SegmentBTree* node, uint32 itemIndex, SparseArraySegmentBase*& prev, SparseArraySegmentBase*& matchOrNext)
+    void SegmentBTree::InternalFind(SegmentBTree* node, uint32_t itemIndex, SparseArraySegmentBase*& prev, SparseArraySegmentBase*& matchOrNext)
     {
-        uint32 i = 0;
+        uint32_t i = 0;
 
         for(; i < node->segmentCount; i++)
         {
@@ -174,7 +174,7 @@ using namespace Js;
         }
     }
 
-    void SegmentBTreeRoot::Find(uint32 itemIndex, SparseArraySegmentBase*& prev, SparseArraySegmentBase*& matchOrNext)
+    void SegmentBTreeRoot::Find(uint32_t itemIndex, SparseArraySegmentBase*& prev, SparseArraySegmentBase*& matchOrNext)
     {
         prev = matchOrNext = NULL;
         InternalFind(this, itemIndex, prev, matchOrNext);
@@ -195,7 +195,7 @@ using namespace Js;
             // as well.  So just make it a leaf allocation
             this->segmentCount = 0;
             this->segments = AllocatorNewArrayLeafZ(Recycler, recycler, SparseArraySegmentBase*, MaxKeys);
-            this->keys = AllocatorNewArrayLeafZ(Recycler,recycler,uint32,MaxKeys);
+            this->keys = AllocatorNewArrayLeafZ(Recycler,recycler,uint32_t,MaxKeys);
             this->children = children;
 
             // This split is the only way the tree gets deeper
@@ -204,11 +204,11 @@ using namespace Js;
         InsertNonFullNode(recycler, this, newSeg);
     }
 
-    void SegmentBTree::SwapSegment(uint32 originalKey, SparseArraySegmentBase* oldSeg, SparseArraySegmentBase* newSeg)
+    void SegmentBTree::SwapSegment(uint32_t originalKey, SparseArraySegmentBase* oldSeg, SparseArraySegmentBase* newSeg)
     {
         // Find old segment
-        uint32 itemIndex = originalKey;
-        uint32 i = 0;
+        uint32_t itemIndex = originalKey;
+        uint32_t i = 0;
 
         for(; i < segmentCount; i++)
         {
@@ -236,7 +236,7 @@ using namespace Js;
     }
 
 
-    void SegmentBTree::SplitChild(Recycler* recycler, SegmentBTree* parent, uint32 iChild, SegmentBTree* child)
+    void SegmentBTree::SplitChild(Recycler* recycler, SegmentBTree* parent, uint32_t iChild, SegmentBTree* child)
     {
         // Split child in two, move it's median key up to parent, and put the result of the split
         // on either side of the key moved up into parent
@@ -252,10 +252,10 @@ using namespace Js;
         // Even though the segments point to a GC pointer, the main array should keep a references
         // as well.  So just make it a leaf allocation
         newNode.segments = AllocatorNewArrayLeafZ(Recycler, recycler, SparseArraySegmentBase*, MaxKeys);
-        newNode.keys = AllocatorNewArrayLeafZ(Recycler,recycler,uint32,MaxKeys);
+        newNode.keys = AllocatorNewArrayLeafZ(Recycler,recycler,uint32_t,MaxKeys);
 
         // Move the keys above the median into the new node
-        for(uint32 i = 0; i < MinKeys; i++)
+        for(uint32_t i = 0; i < MinKeys; i++)
         {
             newNode.segments[i] = child->segments[i+MinDegree];
             newNode.keys[i] = child->keys[i+MinDegree];
@@ -268,7 +268,7 @@ using namespace Js;
         if (!child->IsLeaf())
         {
             newNode.children = AllocatorNewArrayZ(Recycler, recycler, SegmentBTree, MaxDegree);
-            for(uint32 j = 0; j < MinDegree; j++)
+            for(uint32_t j = 0; j < MinDegree; j++)
             {
                 newNode.children[j] = child->children[j+MinDegree];
 
@@ -280,7 +280,7 @@ using namespace Js;
         child->segmentCount = MinKeys;
 
         // Make room for the new child in parent
-        for(uint32 j = parent->segmentCount; j > iChild; j--)
+        for(uint32_t j = parent->segmentCount; j > iChild; j--)
         {
             parent->children[j+1] = parent->children[j];
         }
@@ -288,7 +288,7 @@ using namespace Js;
         parent->children[iChild+1] = newNode;
 
         // Move the keys to make room for the median key
-        for(uint32 k = parent->segmentCount; k > iChild; k--)
+        for(uint32_t k = parent->segmentCount; k > iChild; k--)
         {
             parent->segments[k] = parent->segments[k-1];
             parent->keys[k] = parent->keys[k-1];
@@ -313,7 +313,7 @@ using namespace Js;
         if (node->IsLeaf())
         {
             // Move the keys
-            uint32 i = node->segmentCount - 1;
+            uint32_t i = node->segmentCount - 1;
             while( (i != -1) && (newSeg->left < node->keys[i]))
             {
                 node->segments[i+1] = node->segments[i];
@@ -325,7 +325,7 @@ using namespace Js;
                 // Even though the segments point to a GC pointer, the main array should keep a references
                 // as well.  So just make it a leaf allocation
                 node->segments = AllocatorNewArrayLeafZ(Recycler, recycler, SparseArraySegmentBase*, MaxKeys);
-                node->keys = AllocatorNewArrayLeafZ(Recycler, recycler, uint32, MaxKeys);
+                node->keys = AllocatorNewArrayLeafZ(Recycler, recycler, uint32_t, MaxKeys);
             }
             node->segments[i + 1] = newSeg;
             node->keys[i + 1] = newSeg->left;
@@ -334,7 +334,7 @@ using namespace Js;
         else
         {
             // find the correct child node
-            uint32 i = node->segmentCount-1;
+            uint32_t i = node->segmentCount-1;
 
             while((i != -1) && (newSeg->left < node->keys[i]))
             {
@@ -387,7 +387,7 @@ using namespace Js;
 
     }
 
-    JavascriptArray::JavascriptArray(uint32 length, DynamicType * type)
+    JavascriptArray::JavascriptArray(uint32_t length, DynamicType * type)
         : ArrayObject(type, false, length)
     {
         Assert(JavascriptArray::IsNonES5Array(type->GetTypeId()));
@@ -396,7 +396,7 @@ using namespace Js;
         SetHeadAndLastUsedSegment(const_cast<SparseArraySegmentBase *>(EmptySegment));
     }
 
-    JavascriptArray::JavascriptArray(uint32 length, uint32 size, DynamicType * type)
+    JavascriptArray::JavascriptArray(uint32_t length, uint32_t size, DynamicType * type)
         : ArrayObject(type, false, length)
     {
         Assert(type->GetTypeId() == TypeIds_Array);
@@ -405,7 +405,7 @@ using namespace Js;
         SetHeadAndLastUsedSegment(SparseArraySegment<Var>::AllocateSegment(recycler, 0, 0, size, nullptr));
     }
 
-    JavascriptArray::JavascriptArray(DynamicType * type, uint32 size)
+    JavascriptArray::JavascriptArray(DynamicType * type, uint32_t size)
         : ArrayObject(type, false)
     {
         InitArrayFlags(DynamicObjectFlags::InitialArrayValue);
@@ -419,7 +419,7 @@ using namespace Js;
         }
     }
 
-    JavascriptNativeIntArray::JavascriptNativeIntArray(uint32 length, uint32 size, DynamicType * type)
+    JavascriptNativeIntArray::JavascriptNativeIntArray(uint32_t length, uint32_t size, DynamicType * type)
         : JavascriptNativeArray(type)
     {
         Assert(type->GetTypeId() == TypeIds_NativeIntArray);
@@ -428,7 +428,7 @@ using namespace Js;
         SetHeadAndLastUsedSegment(SparseArraySegment<int32>::AllocateSegment(recycler, 0, 0, size, nullptr));
     }
 
-    JavascriptNativeIntArray::JavascriptNativeIntArray(DynamicType * type, uint32 size)
+    JavascriptNativeIntArray::JavascriptNativeIntArray(DynamicType * type, uint32_t size)
         : JavascriptNativeArray(type)
     {
         SetHeadAndLastUsedSegment(DetermineInlineHeadSegmentPointer<JavascriptNativeIntArray, 0, false>(this));
@@ -437,7 +437,7 @@ using namespace Js;
         SparseArraySegment<int32>::From(head)->FillSegmentBuffer(0, size);
     }
 
-    JavascriptNativeFloatArray::JavascriptNativeFloatArray(uint32 length, uint32 size, DynamicType * type)
+    JavascriptNativeFloatArray::JavascriptNativeFloatArray(uint32_t length, uint32_t size, DynamicType * type)
         : JavascriptNativeArray(type)
     {
         Assert(type->GetTypeId() == TypeIds_NativeFloatArray);
@@ -446,7 +446,7 @@ using namespace Js;
         SetHeadAndLastUsedSegment(SparseArraySegment<double>::AllocateSegment(recycler, 0, 0, size, nullptr));
     }
 
-    JavascriptNativeFloatArray::JavascriptNativeFloatArray(DynamicType * type, uint32 size)
+    JavascriptNativeFloatArray::JavascriptNativeFloatArray(DynamicType * type, uint32_t size)
         : JavascriptNativeArray(type)
     {
         SetHeadAndLastUsedSegment(DetermineInlineHeadSegmentPointer<JavascriptNativeFloatArray, 0, false>(this));
@@ -483,14 +483,14 @@ using namespace Js;
     }
 
     template<typename T>
-    bool JavascriptArray::IsMissingItemAt(uint32 index) const
+    bool JavascriptArray::IsMissingItemAt(uint32_t index) const
     {
         SparseArraySegment<T>* headSeg = SparseArraySegment<T>::From(this->head);
 
         return SparseArraySegment<T>::IsMissingItem(&headSeg->elements[index]);
     }
 
-    bool JavascriptArray::IsMissingItem(uint32 index)
+    bool JavascriptArray::IsMissingItem(uint32_t index)
     {
         if (!(this->head->left <= index && index < (this->head->left+ this->head->length)))
         {
@@ -720,7 +720,7 @@ using namespace Js;
         JIT_HELPER_END(Array_Jit_GetArrayHeadSegmentForArrayOrObjectWithArray);
     }
 
-    uint32 JavascriptArray::Jit_GetArrayHeadSegmentLength(const SparseArraySegmentBase *const headSegment)
+    uint32_t JavascriptArray::Jit_GetArrayHeadSegmentLength(const SparseArraySegmentBase *const headSegment)
     {
         JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Array_Jit_GetArrayHeadSegmentLength);
         return headSegment ? headSegment->length : 0;
@@ -729,7 +729,7 @@ using namespace Js;
 
     bool JavascriptArray::Jit_OperationInvalidatedArrayHeadSegment(
         const SparseArraySegmentBase *const headSegmentBeforeOperation,
-        const uint32 headSegmentLengthBeforeOperation,
+        const uint32_t headSegmentLengthBeforeOperation,
         const Var varAfterOperation)
     {
         JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Array_Jit_OperationInvalidatedArrayHeadSegment);
@@ -748,7 +748,7 @@ using namespace Js;
         JIT_HELPER_END(Array_Jit_OperationInvalidatedArrayHeadSegment);
     }
 
-    uint32 JavascriptArray::Jit_GetArrayLength(const Var var)
+    uint32_t JavascriptArray::Jit_GetArrayLength(const Var var)
     {
         JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Array_Jit_GetArrayLength);
         bool isObjectWithArray;
@@ -757,7 +757,7 @@ using namespace Js;
         JIT_HELPER_END(Array_Jit_GetArrayLength);
     }
 
-    bool JavascriptArray::Jit_OperationInvalidatedArrayLength(const uint32 lengthBeforeOperation, const Var varAfterOperation)
+    bool JavascriptArray::Jit_OperationInvalidatedArrayLength(const uint32_t lengthBeforeOperation, const Var varAfterOperation)
     {
         JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Array_Jit_OperationInvalidatedArrayLength);
         return Jit_GetArrayLength(varAfterOperation) != lengthBeforeOperation;
@@ -805,14 +805,14 @@ using namespace Js;
     }
 
     template<class T>
-    bool JavascriptArray::IsMissingHeadSegmentItemImpl(const uint32 index) const
+    bool JavascriptArray::IsMissingHeadSegmentItemImpl(const uint32_t index) const
     {
         Assert(index < head->length);
 
         return SparseArraySegment<T>::IsMissingItem(&SparseArraySegment<T>::From(head)->elements[index]);
     }
 
-    bool JavascriptArray::IsMissingHeadSegmentItem(const uint32 index) const
+    bool JavascriptArray::IsMissingHeadSegmentItem(const uint32_t index) const
     {
         return IsMissingHeadSegmentItemImpl<Var>(index);
     }
@@ -820,7 +820,7 @@ using namespace Js;
 #if ENABLE_COPYONACCESS_ARRAY
     void JavascriptCopyOnAccessNativeIntArray::ConvertCopyOnAccessSegment()
     {
-        Assert(this->GetScriptContext()->GetLibrary()->cacheForCopyOnAccessArraySegments->IsValidIndex(::Math::PointerCastToIntegral<uint32>(this->GetHead())));
+        Assert(this->GetScriptContext()->GetLibrary()->cacheForCopyOnAccessArraySegments->IsValidIndex(::Math::PointerCastToIntegral<uint32_t>(this->GetHead())));
         SparseArraySegment<int32> *seg = this->GetScriptContext()->GetLibrary()->cacheForCopyOnAccessArraySegments->GetSegmentByIndex(::Math::PointerCastToIntegral<byte>(this->GetHead()));
         SparseArraySegment<int32> *newSeg = SparseArraySegment<int32>::AllocateLiteralHeadSegment(this->GetRecycler(), seg->length);
 
@@ -845,7 +845,7 @@ using namespace Js;
         }
     }
 
-    uint32 JavascriptCopyOnAccessNativeIntArray::GetNextIndex(uint32 index) const
+    uint32_t JavascriptCopyOnAccessNativeIntArray::GetNextIndex(uint32_t index) const
     {
         if (this->length == 0 || (index != Js::JavascriptArray::InvalidIndex && index >= this->length))
         {
@@ -861,9 +861,9 @@ using namespace Js;
         }
     }
 
-    BOOL JavascriptCopyOnAccessNativeIntArray::DirectGetItemAt(uint32 index, int* outVal)
+    BOOL JavascriptCopyOnAccessNativeIntArray::DirectGetItemAt(uint32_t index, int* outVal)
     {
-        Assert(this->GetScriptContext()->GetLibrary()->cacheForCopyOnAccessArraySegments->IsValidIndex(::Math::PointerCastToIntegral<uint32>(this->GetHead())));
+        Assert(this->GetScriptContext()->GetLibrary()->cacheForCopyOnAccessArraySegments->IsValidIndex(::Math::PointerCastToIntegral<uint32_t>(this->GetHead())));
         SparseArraySegment<int32> *seg = this->GetScriptContext()->GetLibrary()->cacheForCopyOnAccessArraySegments->GetSegmentByIndex(::Math::PointerCastToIntegral<byte>(this->GetHead()));
 
         if (this->length == 0 || index == Js::JavascriptArray::InvalidIndex || index >= this->length)
@@ -878,23 +878,23 @@ using namespace Js;
     }
 #endif
 
-    bool JavascriptNativeIntArray::IsMissingHeadSegmentItem(const uint32 index) const
+    bool JavascriptNativeIntArray::IsMissingHeadSegmentItem(const uint32_t index) const
     {
         return IsMissingHeadSegmentItemImpl<int32>(index);
     }
 
-    bool JavascriptNativeFloatArray::IsMissingHeadSegmentItem(const uint32 index) const
+    bool JavascriptNativeFloatArray::IsMissingHeadSegmentItem(const uint32_t index) const
     {
         return IsMissingHeadSegmentItemImpl<double>(index);
     }
 
-    void JavascriptArray::InternalFillFromPrototype(JavascriptArray *dstArray, uint32 dstIndex, JavascriptArray *srcArray, uint32 start, uint32 end, uint32 count)
+    void JavascriptArray::InternalFillFromPrototype(JavascriptArray *dstArray, uint32_t dstIndex, JavascriptArray *srcArray, uint32_t start, uint32_t end, uint32_t count)
     {
         RecyclableObject* prototype = srcArray->GetPrototype();
         while (start + count != end && !JavascriptOperators::IsNull(prototype))
         {
-            ForEachOwnMissingArrayIndexOfObject(srcArray, dstArray, prototype, start, end, dstIndex, [&](uint32 index, Var value) {
-                uint32 n = dstIndex + (index - start);
+            ForEachOwnMissingArrayIndexOfObject(srcArray, dstArray, prototype, start, end, dstIndex, [&](uint32_t index, Var value) {
+                uint32_t n = dstIndex + (index - start);
                 dstArray->SetItem(n, value, PropertyOperation_None);
 
                 count++;
@@ -905,12 +905,12 @@ using namespace Js;
     }
 
     /* static */
-    bool JavascriptArray::HasInlineHeadSegment(uint32 length)
+    bool JavascriptArray::HasInlineHeadSegment(uint32_t length)
     {
         return length <= SparseArraySegmentBase::INLINE_CHUNK_SIZE;
     }
 
-    Var JavascriptArray::OP_NewScArray(uint32 elementCount, ScriptContext* scriptContext)
+    Var JavascriptArray::OP_NewScArray(uint32_t elementCount, ScriptContext* scriptContext)
     {
         JIT_HELPER_NOT_REENTRANT_HEADER(ScrArr_OP_NewScArray, reentrancylock, scriptContext->GetThreadContext());
         // Called only to create array literals: size is known.
@@ -918,7 +918,7 @@ using namespace Js;
         JIT_HELPER_END(ScrArr_OP_NewScArray);
     }
 
-    Var JavascriptArray::OP_NewScArrayWithElements(uint32 elementCount, Var *elements, ScriptContext* scriptContext)
+    Var JavascriptArray::OP_NewScArrayWithElements(uint32_t elementCount, Var *elements, ScriptContext* scriptContext)
     {
         JIT_HELPER_NOT_REENTRANT_HEADER(ScrArr_OP_NewScArrayWithElements, reentrancylock, scriptContext->GetThreadContext());
         // Called only to create array literals: size is known.
@@ -936,7 +936,7 @@ using namespace Js;
         JIT_HELPER_END(ScrArr_OP_NewScArrayWithElements);
     }
 
-    Var JavascriptArray::OP_NewScArrayWithMissingValues(uint32 elementCount, ScriptContext* scriptContext)
+    Var JavascriptArray::OP_NewScArrayWithMissingValues(uint32_t elementCount, ScriptContext* scriptContext)
     {
         JIT_HELPER_NOT_REENTRANT_HEADER(ScrArr_OP_NewScArrayWithMissingValues, reentrancylock, scriptContext->GetThreadContext());
         // Called only to create array literals: size is known.
@@ -950,7 +950,7 @@ using namespace Js;
     }
 
 #if ENABLE_PROFILE_INFO
-    Var JavascriptArray::ProfiledNewScArray(uint32 elementCount, ScriptContext *scriptContext, ArrayCallSiteInfo *arrayInfo, RecyclerWeakReference<FunctionBody> *weakFuncRef)
+    Var JavascriptArray::ProfiledNewScArray(uint32_t elementCount, ScriptContext *scriptContext, ArrayCallSiteInfo *arrayInfo, RecyclerWeakReference<FunctionBody> *weakFuncRef)
     {
         JIT_HELPER_NOT_REENTRANT_HEADER(ScrArr_ProfiledNewScArray, reentrancylock, scriptContext->GetThreadContext());
         if (arrayInfo->IsNativeIntArray())
@@ -991,7 +991,7 @@ using namespace Js;
     {
         JIT_HELPER_NOT_REENTRANT_HEADER(ScrArr_ProfiledNewScIntArray, reentrancylock, scriptContext->GetThreadContext());
         // Called only to create array literals: size is known.
-        uint32 count = ints->count;
+        uint32_t count = ints->count;
 
         if (arrayInfo->IsNativeIntArray())
         {
@@ -1070,7 +1070,7 @@ using namespace Js;
         if (arrayInfo->IsNativeFloatArray())
         {
             arrayInfo->SetIsNotNativeIntArray();
-            uint32 count = doubles->count;
+            uint32_t count = doubles->count;
             JavascriptNativeFloatArray *arr = scriptContext->GetLibrary()->CreateNativeFloatArrayLiteral(count);
             SparseArraySegment<double> *head = SparseArraySegment<double>::From(arr->head);
             Assert(count > 0 && count == head->length);
@@ -1080,7 +1080,7 @@ using namespace Js;
             return arr;
         }
 
-        uint32 count = doubles->count;
+        uint32_t count = doubles->count;
         JavascriptArray *arr = scriptContext->GetLibrary()->CreateArrayLiteral(count);
         SparseArraySegment<Var> *head = SparseArraySegment<Var>::From(arr->head);
         Assert(count > 0 && count == head->length);
@@ -1117,7 +1117,7 @@ using namespace Js;
 
         if (callInfo.Count == 2)
         {
-            // Exactly one argument, which is the array length if it's a uint32.
+            // Exactly one argument, which is the array length if it's a uint32_t.
             Var firstArgument = args[1];
             int elementCount;
             if (TaggedInt::Is(firstArgument))
@@ -1145,9 +1145,9 @@ using namespace Js;
             }
             else if (JavascriptNumber::Is_NoTaggedIntCheck(firstArgument))
             {
-                // Non-tagged-int number: make sure the double value is really a uint32.
+                // Non-tagged-int number: make sure the double value is really a uint32_t.
                 double value = JavascriptNumber::GetValue(firstArgument);
-                uint32 uvalue = JavascriptConversion::ToUInt32(value);
+                uint32_t uvalue = JavascriptConversion::ToUInt32(value);
                 if (value != uvalue)
                 {
                     JavascriptError::ThrowRangeError(function->GetScriptContext(), JSERR_ArrayLengthConstructIncorrect);
@@ -1243,7 +1243,7 @@ using namespace Js;
 
         if (callInfo.Count == 2)
         {
-            // Exactly one argument, which is the array length if it's a uint32.
+            // Exactly one argument, which is the array length if it's a uint32_t.
             Var firstArgument = args[1];
             int elementCount;
 
@@ -1259,9 +1259,9 @@ using namespace Js;
             }
             else if (JavascriptNumber::Is_NoTaggedIntCheck(firstArgument))
             {
-                // Non-tagged-int number: make sure the double value is really a uint32.
+                // Non-tagged-int number: make sure the double value is really a uint32_t.
                 double value = JavascriptNumber::GetValue(firstArgument);
-                uint32 uvalue = JavascriptConversion::ToUInt32(value);
+                uint32_t uvalue = JavascriptConversion::ToUInt32(value);
                 if (value != uvalue)
                 {
                     JavascriptError::ThrowRangeError(scriptContext, JSERR_ArrayLengthConstructIncorrect);
@@ -1305,7 +1305,7 @@ using namespace Js;
             pNew;
     }
 
-    JavascriptArray* JavascriptArray::CreateArrayFromConstructor(RecyclableObject* constructor, uint32 length, ScriptContext* scriptContext)
+    JavascriptArray* JavascriptArray::CreateArrayFromConstructor(RecyclableObject* constructor, uint32_t length, ScriptContext* scriptContext)
     {
         JavascriptLibrary* library = constructor->GetLibrary();
 
@@ -1370,7 +1370,7 @@ using namespace Js;
         JavascriptArray* pNew = nullptr;
         if (callInfo.Count == 2)
         {
-            // Exactly one argument, which is the array length if it's a uint32.
+            // Exactly one argument, which is the array length if it's a uint32_t.
             Var firstArgument = args[1];
             int elementCount;
             if (TaggedInt::Is(firstArgument))
@@ -1385,9 +1385,9 @@ using namespace Js;
             }
             else if (JavascriptNumber::Is_NoTaggedIntCheck(firstArgument))
             {
-                // Non-tagged-int number: make sure the double value is really a uint32.
+                // Non-tagged-int number: make sure the double value is really a uint32_t.
                 double value = JavascriptNumber::GetValue(firstArgument);
-                uint32 uvalue = JavascriptConversion::ToUInt32(value);
+                uint32_t uvalue = JavascriptConversion::ToUInt32(value);
                 if (value != uvalue)
                 {
                     JavascriptError::ThrowRangeError(
@@ -1445,7 +1445,7 @@ using namespace Js;
         JavascriptArray* pNew = nullptr;
         if (callInfo.Count == 2)
         {
-            // Exactly one argument, which is the array length if it's a uint32.
+            // Exactly one argument, which is the array length if it's a uint32_t.
             Var firstArgument = args[1];
             int elementCount;
             if (TaggedInt::Is(firstArgument))
@@ -1460,9 +1460,9 @@ using namespace Js;
             }
             else if (JavascriptNumber::Is_NoTaggedIntCheck(firstArgument))
             {
-                // Non-tagged-int number: make sure the double value is really a uint32.
+                // Non-tagged-int number: make sure the double value is really a uint32_t.
                 double value = JavascriptNumber::GetValue(firstArgument);
-                uint32 uvalue = JavascriptConversion::ToUInt32(value);
+                uint32_t uvalue = JavascriptConversion::ToUInt32(value);
                 if (value != uvalue)
                 {
                     JavascriptError::ThrowRangeError(
@@ -1629,7 +1629,7 @@ using namespace Js;
     JavascriptArray * JavascriptArray::FillFromArgs(uint length, uint start, Var *args, bool dontCreateNewArray)
 #endif
     {
-        uint32 i;
+        uint32_t i;
         for (i = start; i < length; i++)
         {
             Var item = args[i + 1];
@@ -1712,19 +1712,19 @@ using namespace Js;
         for (seg = intArray->head; seg; seg = nextSeg)
         {
             nextSeg = seg->next;
-            uint32 size = seg->size;
+            uint32_t size = seg->size;
             if (size == 0)
             {
                 continue;
             }
 
-            uint32 left = seg->left;
-            uint32 length = seg->length;
+            uint32_t left = seg->left;
+            uint32_t length = seg->length;
             int i;
             int32 ival;
 
             // The old segment will have size/2 and length capped by the new size.
-            uint32 newSegSize = seg->size >> 1;
+            uint32_t newSegSize = seg->size >> 1;
             if (seg == intArray->head || seg->length > (newSegSize >> 1))
             {
                 // Some live elements are being pushed out of this segment, so allocate a new one.
@@ -1942,7 +1942,7 @@ using namespace Js;
         for (seg = varArray->head; seg; seg = nextSeg)
         {
             nextSeg = seg->next;
-            uint32 size = seg->size;
+            uint32_t size = seg->size;
             if (size == 0)
             {
                 continue;
@@ -1951,7 +1951,7 @@ using namespace Js;
             int i;
             Var ival;
 
-            uint32 growFactor = sizeof(Var) / sizeof(T);
+            uint32_t growFactor = sizeof(Var) / sizeof(T);
             AssertMsg(growFactor == 1, "We support only in place conversion of Var array to Native Array");
 
             // Now convert the contents that will remain in the old segment.
@@ -1991,19 +1991,19 @@ using namespace Js;
         for (seg = intArray->head; seg; seg = nextSeg)
         {
             nextSeg = seg->next;
-            uint32 size = seg->size;
+            uint32_t size = seg->size;
             if (size == 0)
             {
                 continue;
             }
 
-            uint32 left = seg->left;
-            uint32 length = seg->length;
+            uint32_t left = seg->left;
+            uint32_t length = seg->length;
             int i;
             int32 ival;
 
             // Shrink?
-            uint32 growFactor = sizeof(Var) / sizeof(int32);
+            uint32_t growFactor = sizeof(Var) / sizeof(int32);
             if ((growFactor != 1 && (seg == intArray->head || seg->length > (seg->size / growFactor))) ||
                 (seg->next == nullptr && SparseArraySegmentBase::IsLeafSegment(seg, recycler)))
             {
@@ -2178,7 +2178,7 @@ using namespace Js;
         // We can't be growing the size of the element.
         Assert(sizeof(double) >= sizeof(Var));
 
-        uint32 shrinkFactor = sizeof(double) / sizeof(Var);
+        uint32_t shrinkFactor = sizeof(double) / sizeof(Var);
         ScriptContext *scriptContext = fArray->GetScriptContext();
         Recycler *recycler = scriptContext->GetRecycler();
         SparseArraySegmentBase *seg, *nextSeg, *prevSeg = nullptr;
@@ -2200,8 +2200,8 @@ using namespace Js;
             {
                 continue;
             }
-            uint32 left = seg->left;
-            uint32 length = seg->length;
+            uint32_t left = seg->left;
+            uint32_t length = seg->length;
             SparseArraySegment<Var> *newSeg = nullptr;
             if (seg->next == nullptr && SparseArraySegmentBase::IsLeafSegment(seg, recycler))
             {
@@ -2215,8 +2215,8 @@ using namespace Js;
                 prevSeg = seg;
                 if (shrinkFactor != 1)
                 {
-                    uint32 newSize = seg->size * shrinkFactor;
-                    uint32 limit;
+                    uint32_t newSize = seg->size * shrinkFactor;
+                    uint32_t limit;
                     if (seg->next)
                     {
                         limit = seg->next->left;
@@ -2229,7 +2229,7 @@ using namespace Js;
                     seg->CheckLengthvsSize();
                 }
             }
-            uint32 i;
+            uint32_t i;
             for (i = 0; i < seg->length; i++)
             {
                 if (SparseArraySegment<double>::IsMissingItem(&((SparseArraySegment<double>*)seg)->elements[i]))
@@ -2438,7 +2438,7 @@ using namespace Js;
         return index;
     }
 
-    TypeId JavascriptArray::OP_SetNativeIntElementC(JavascriptNativeIntArray *arr, uint32 index, Var value, ScriptContext *scriptContext)
+    TypeId JavascriptArray::OP_SetNativeIntElementC(JavascriptNativeIntArray *arr, uint32_t index, Var value, ScriptContext *scriptContext)
     {
         JIT_HELPER_NOT_REENTRANT_HEADER(ScrArr_SetNativeIntElementC, reentrancylock, scriptContext->GetThreadContext());
         int32 iValue;
@@ -2461,7 +2461,7 @@ using namespace Js;
         JIT_HELPER_END(ScrArr_SetNativeIntElementC);
     }
 
-    TypeId JavascriptArray::OP_SetNativeFloatElementC(JavascriptNativeFloatArray *arr, uint32 index, Var value, ScriptContext *scriptContext)
+    TypeId JavascriptArray::OP_SetNativeFloatElementC(JavascriptNativeFloatArray *arr, uint32_t index, Var value, ScriptContext *scriptContext)
     {
         JIT_HELPER_NOT_REENTRANT_HEADER(ScrArr_SetNativeFloatElementC, reentrancylock, scriptContext->GetThreadContext());
         double dValue;
@@ -2479,7 +2479,7 @@ using namespace Js;
     }
 
     template<typename T>
-    void JavascriptArray::SetArrayLiteralItem(uint32 index, T value)
+    void JavascriptArray::SetArrayLiteralItem(uint32_t index, T value)
     {
         SparseArraySegment<T> * segment = SparseArraySegment<T>::From(this->head);
 
@@ -2731,7 +2731,7 @@ using namespace Js;
         return false;
     }
 
-    SparseArraySegmentBase * JavascriptArray::GetBeginLookupSegment(uint32 index, const bool useSegmentMap) const
+    SparseArraySegmentBase * JavascriptArray::GetBeginLookupSegment(uint32_t index, const bool useSegmentMap) const
     {
         SparseArraySegmentBase *seg = nullptr;
         SparseArraySegmentBase * lastUsedSeg = this->GetLastUsedSegment();
@@ -2773,7 +2773,7 @@ using namespace Js;
         return seg ? seg : matchOrNextSeg;
     }
 
-    uint32 JavascriptArray::GetNextIndex(uint32 index) const
+    uint32_t JavascriptArray::GetNextIndex(uint32_t index) const
     {
         if (VarIs<JavascriptNativeIntArray>((Var)this))
         {
@@ -2787,7 +2787,7 @@ using namespace Js;
     }
 
     template<typename T>
-    uint32 JavascriptArray::GetNextIndexHelper(uint32 index) const
+    uint32_t JavascriptArray::GetNextIndexHelper(uint32_t index) const
     {
         AssertMsg(this->head, "array head should never be null");
         uint candidateIndex;
@@ -2829,7 +2829,7 @@ using namespace Js;
 
     // If new length > length, we just reset the length
     // If new length < length, we need to remove the rest of the elements and segment
-    void JavascriptArray::SetLength(uint32 newLength)
+    void JavascriptArray::SetLength(uint32_t newLength)
     {
         if (newLength == length)
             return;
@@ -2879,7 +2879,7 @@ using namespace Js;
                         ClearSegmentMap(); // Will truncate segments, null out segmentMap
                     }
 
-                    uint32 newSegmentLength = newLength - next->left;
+                    uint32_t newSegmentLength = newLength - next->left;
                     this->ClearElements(next, newSegmentLength);
                     next->next = nullptr;
                     next->length = newSegmentLength;
@@ -2923,7 +2923,7 @@ using namespace Js;
         }
 
         scriptContext = GetScriptContext();
-        uint32 uintValue = JavascriptConversion::ToUInt32(newLength, scriptContext);
+        uint32_t uintValue = JavascriptConversion::ToUInt32(newLength, scriptContext);
         double dblValue = JavascriptConversion::ToNumber(newLength, scriptContext);
         if (dblValue == uintValue)
         {
@@ -2952,25 +2952,25 @@ using namespace Js;
         return TRUE;
     }
 
-    void JavascriptArray::ClearElements(SparseArraySegmentBase *seg, uint32 newSegmentLength)
+    void JavascriptArray::ClearElements(SparseArraySegmentBase *seg, uint32_t newSegmentLength)
     {
         SparseArraySegment<Var>::ClearElements(((SparseArraySegment<Var>*)seg)->elements + newSegmentLength, seg->length - newSegmentLength);
     }
 
-    void JavascriptNativeIntArray::ClearElements(SparseArraySegmentBase *seg, uint32 newSegmentLength)
+    void JavascriptNativeIntArray::ClearElements(SparseArraySegmentBase *seg, uint32_t newSegmentLength)
     {
         SparseArraySegment<int32>::ClearElements(((SparseArraySegment<int32>*)seg)->elements + newSegmentLength, seg->length - newSegmentLength);
     }
 
-    void JavascriptNativeFloatArray::ClearElements(SparseArraySegmentBase *seg, uint32 newSegmentLength)
+    void JavascriptNativeFloatArray::ClearElements(SparseArraySegmentBase *seg, uint32_t newSegmentLength)
     {
         SparseArraySegment<double>::ClearElements(((SparseArraySegment<double>*)seg)->elements + newSegmentLength, seg->length - newSegmentLength);
     }
 
-    Var JavascriptArray::DirectGetItem(uint32 index)
+    Var JavascriptArray::DirectGetItem(uint32_t index)
     {
         SparseArraySegment<Var> *seg = (SparseArraySegment<Var>*)this->GetLastUsedSegment();
-        uint32 offset = index - seg->left;
+        uint32_t offset = index - seg->left;
         if (index >= seg->left && offset < seg->length)
         {
             if (!SparseArraySegment<Var>::IsMissingItem(&seg->elements[offset]))
@@ -2986,13 +2986,13 @@ using namespace Js;
         return GetType()->GetLibrary()->GetUndefined();
     }
 
-    Var JavascriptNativeIntArray::DirectGetItem(uint32 index)
+    Var JavascriptNativeIntArray::DirectGetItem(uint32_t index)
     {
 #if ENABLE_COPYONACCESS_ARRAY
         JavascriptLibrary::CheckAndConvertCopyOnAccessNativeIntArray<Var>(this);
 #endif
         SparseArraySegment<int32> *seg = (SparseArraySegment<int32>*)this->GetLastUsedSegment();
-        uint32 offset = index - seg->left;
+        uint32_t offset = index - seg->left;
         if (index >= seg->left && offset < seg->length)
         {
             if (!SparseArraySegment<int32>::IsMissingItem(&seg->elements[offset]))
@@ -3008,7 +3008,7 @@ using namespace Js;
         return GetType()->GetLibrary()->GetUndefined();
     }
 
-    DescriptorFlags JavascriptNativeIntArray::GetItemSetter(uint32 index, Var* setterValue, ScriptContext* requestContext)
+    DescriptorFlags JavascriptNativeIntArray::GetItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext)
     {
 #if ENABLE_COPYONACCESS_ARRAY
         JavascriptLibrary::CheckAndConvertCopyOnAccessNativeIntArray<Var>(this);
@@ -3018,10 +3018,10 @@ using namespace Js;
     }
 
 
-    Var JavascriptNativeFloatArray::DirectGetItem(uint32 index)
+    Var JavascriptNativeFloatArray::DirectGetItem(uint32_t index)
     {
         SparseArraySegment<double> *seg = (SparseArraySegment<double>*)this->GetLastUsedSegment();
-        uint32 offset = index - seg->left;
+        uint32_t offset = index - seg->left;
         if (index >= seg->left && offset < seg->length)
         {
             if (!SparseArraySegment<double>::IsMissingItem(&seg->elements[offset]))
@@ -3044,7 +3044,7 @@ using namespace Js;
         return JavascriptOperators::GetProperty(this, propertyRecord->GetPropertyId(), scriptContext, NULL);
     }
 
-    BOOL JavascriptArray::DirectGetItemAtFull(uint32 index, Var* outVal)
+    BOOL JavascriptArray::DirectGetItemAtFull(uint32_t index, Var* outVal)
     {
         if (this->DirectGetItemAt(index, outVal))
         {
@@ -3072,7 +3072,7 @@ using namespace Js;
     }
 
     template<typename T>
-    BOOL JavascriptArray::DirectDeleteItemAt(uint32 itemIndex)
+    BOOL JavascriptArray::DirectDeleteItemAt(uint32_t itemIndex)
     {
         if (itemIndex >= length)
         {
@@ -3081,7 +3081,7 @@ using namespace Js;
         SparseArraySegment<T>* next = (SparseArraySegment<T>*)GetBeginLookupSegment(itemIndex);
         while(next != nullptr && next->left <= itemIndex)
         {
-            uint32 limit = next->left + next->length;
+            uint32_t limit = next->left + next->length;
             if (itemIndex < limit)
             {
                 next->SetElement(GetRecycler(), itemIndex, SparseArraySegment<T>::GetMissingItem());
@@ -3109,18 +3109,18 @@ using namespace Js;
         return idxDest.ToNumber(scriptContext);
     }
 
-    template <> uint32 JavascriptArray::ConvertToIndex(BigIndex idxDest, ScriptContext* scriptContext)
+    template <> uint32_t JavascriptArray::ConvertToIndex(BigIndex idxDest, ScriptContext* scriptContext)
     {
-        // Note this is only for setting Array length which is a uint32
+        // Note this is only for setting Array length which is a uint32_t
         return idxDest.IsSmallIndex() ? idxDest.GetSmallIndex() : UINT_MAX;
     }
 
-    template <> Var JavascriptArray::ConvertToIndex(uint32 idxDest, ScriptContext* scriptContext)
+    template <> Var JavascriptArray::ConvertToIndex(uint32_t idxDest, ScriptContext* scriptContext)
     {
         return  JavascriptNumber::ToVar(idxDest, scriptContext);
     }
 
-    void JavascriptArray::ThrowErrorOnFailure(BOOL succeeded, ScriptContext* scriptContext, uint32 index)
+    void JavascriptArray::ThrowErrorOnFailure(BOOL succeeded, ScriptContext* scriptContext, uint32_t index)
     {
         if (!succeeded)
         {
@@ -3151,7 +3151,7 @@ using namespace Js;
         }
     }
 
-    BOOL JavascriptArray::SetArrayLikeObjects(RecyclableObject* pDestObj, uint32 idxDest, Var aItem)
+    BOOL JavascriptArray::SetArrayLikeObjects(RecyclableObject* pDestObj, uint32_t idxDest, Var aItem)
     {
         return pDestObj->SetItem(idxDest, aItem, Js::PropertyOperation_ThrowIfNotExtensible);
     }
@@ -3331,8 +3331,8 @@ using namespace Js;
 
                 RecyclableObject* itemObject = VarTo<RecyclableObject>(aItem);
                 Var subItem;
-                uint32 lengthToUin32Max = length.IsSmallIndex() ? length.GetSmallIndex() : MaxArrayLength;
-                for (uint32 idxSubItem = 0u; idxSubItem < lengthToUin32Max; ++idxSubItem)
+                uint32_t lengthToUin32Max = length.IsSmallIndex() ? length.GetSmallIndex() : MaxArrayLength;
+                for (uint32_t idxSubItem = 0u; idxSubItem < lengthToUin32Max; ++idxSubItem)
                 {
                     JS_REENTRANT(jsReentLock, BOOL hasItem = JavascriptOperators::HasItem(itemObject, idxSubItem));
                     if (hasItem)
@@ -3379,9 +3379,9 @@ using namespace Js;
         {
             JS_REENTRANT(jsReentLock, pDestObj->SetProperty(PropertyIds::length, ConvertToIndex<T, Var>(idxDest, scriptContext), Js::PropertyOperation_None, nullptr));
         }
-        else if (pDestArray->GetLength() != ConvertToIndex<T, uint32>(idxDest, scriptContext))
+        else if (pDestArray->GetLength() != ConvertToIndex<T, uint32_t>(idxDest, scriptContext))
         {
-            pDestArray->SetLength(ConvertToIndex<T, uint32>(idxDest, scriptContext));
+            pDestArray->SetLength(ConvertToIndex<T, uint32_t>(idxDest, scriptContext));
         }
     }
 
@@ -3390,7 +3390,7 @@ using namespace Js;
         return false; // already a big index
     }
 
-    bool JavascriptArray::PromoteToBigIndex(BigIndex lhs, uint32 rhs)
+    bool JavascriptArray::PromoteToBigIndex(BigIndex lhs, uint32_t rhs)
     {
         ::Math::RecordOverflowPolicy destLengthOverflow;
         if (lhs.IsSmallIndex())
@@ -3608,7 +3608,7 @@ using namespace Js;
         // - Each item, flattening only one level if a ScriptArray.
         //
 
-        uint32 cDestLength = 0;
+        uint32_t cDestLength = 0;
         JavascriptArray * pDestArray = NULL;
 
         PROBE_STACK_NO_DISPOSE(function->GetScriptContext(), Js::Constants::MinStackDefault + (args.Info.Count * sizeof(TypeId*)));
@@ -3657,7 +3657,7 @@ using namespace Js;
                             JS_REENTRANT(jsReentLock,
                                 long len = JavascriptConversion::ToLength(JavascriptOperators::OP_GetLength(aItem, scriptContext), scriptContext));
                             // clipping to MaxArrayLength will overflow when added to cDestLength which we catch below
-                            cDestLength = UInt32Math::Add(cDestLength, len < MaxArrayLength ? (uint32)len : MaxArrayLength, destLengthOverflow);
+                            cDestLength = UInt32Math::Add(cDestLength, len < MaxArrayLength ? (uint32_t)len : MaxArrayLength, destLengthOverflow);
                         }
                         else
                         {
@@ -3836,8 +3836,8 @@ using namespace Js;
         }
         else
         {
-            // Use faster uint32 version if no overflow
-            ConcatArgs<uint32>(pDestObj, remoteTypeIds, args, scriptContext);
+            // Use faster uint32_t version if no overflow
+            ConcatArgs<uint32_t>(pDestObj, remoteTypeIds, args, scriptContext);
         }
     }
 
@@ -3886,7 +3886,7 @@ using namespace Js;
             {
                 fromIndex = min<long>(intValue, length - 1);
             }
-            else if ((uint32)-intValue > length)
+            else if ((uint32_t)-intValue > length)
             {
                 return length;
             }
@@ -3936,7 +3936,7 @@ using namespace Js;
 
         JS_REENTRANT(jsReentLock, TryGetArrayAndLength(args[0], scriptContext, u"Array.prototype.indexOf", &pArr, &obj, &length));
         Var search;
-        uint32 fromIndex = 0;
+        uint32_t fromIndex = 0;
         unsigned long fromIndex64 = 0;
 
         // The evaluation of method arguments may change the type of the array. Hence, we do that prior to the actual helper method calls.
@@ -3944,7 +3944,7 @@ using namespace Js;
         // clauses apply to an ES5Array or other valid Javascript objects.
         if ((pArr || VarIs<TypedArrayBase>(obj)) && (length.IsSmallIndex() || length.IsUint32Max()))
         {
-            uint32 len = length.IsUint32Max() ? MaxArrayLength : length.GetSmallIndex();
+            uint32_t len = length.IsUint32Max() ? MaxArrayLength : length.GetSmallIndex();
             JS_REENTRANT(jsReentLock, BOOL gotParam = GetParamForIndexOf(len, args, search, fromIndex, scriptContext));
             if (!gotParam)
             {
@@ -3979,7 +3979,7 @@ using namespace Js;
         {
             if (length.IsSmallIndex() || length.IsUint32Max())
             {
-                uint32 len = length.IsUint32Max() ? MaxArrayLength : length.GetSmallIndex();
+                uint32_t len = length.IsUint32Max() ? MaxArrayLength : length.GetSmallIndex();
                 JS_REENTRANT(jsReentLock, int32 index = pArr->HeadSegmentIndexOfHelper(search, fromIndex, len, includesAlgorithm, scriptContext));
 
                 // If we found the search value in the head segment, or if we determined there is no need to search other segments,
@@ -4101,7 +4101,7 @@ using namespace Js;
     }
 
     template <>
-    BOOL JavascriptArray::TemplatedGetItem(RecyclableObject * obj, uint32 index, Var * element, ScriptContext * scriptContext, bool checkHasItem)
+    BOOL JavascriptArray::TemplatedGetItem(RecyclableObject * obj, uint32_t index, Var * element, ScriptContext * scriptContext, bool checkHasItem)
     {
         // Note: Sometime cross site array go down this path to get the marshalling
         Assert(!VirtualTableInfo<JavascriptArray>::HasVirtualTable(obj)
@@ -4134,7 +4134,7 @@ using namespace Js;
     }
 
     template <>
-    BOOL JavascriptArray::TemplatedGetItem(JavascriptArray *pArr, uint32 index, Var * element, ScriptContext * scriptContext, bool checkHasItem)
+    BOOL JavascriptArray::TemplatedGetItem(JavascriptArray *pArr, uint32_t index, Var * element, ScriptContext * scriptContext, bool checkHasItem)
     {
         Assert(VirtualTableInfo<JavascriptArray>::HasVirtualTable(pArr)
             || VirtualTableInfo<CrossSiteObject<JavascriptArray>>::HasVirtualTable(pArr));
@@ -4149,7 +4149,7 @@ using namespace Js;
     }
 
     template <>
-    BOOL JavascriptArray::TemplatedGetItem(JavascriptNativeIntArray *pArr, uint32 index, Var * element, ScriptContext * scriptContext, bool checkHasItem)
+    BOOL JavascriptArray::TemplatedGetItem(JavascriptNativeIntArray *pArr, uint32_t index, Var * element, ScriptContext * scriptContext, bool checkHasItem)
     {
         Assert(VirtualTableInfo<JavascriptNativeIntArray>::HasVirtualTable(pArr)
             || VirtualTableInfo<CrossSiteObject<JavascriptNativeIntArray>>::HasVirtualTable(pArr));
@@ -4165,7 +4165,7 @@ using namespace Js;
     }
 
     template <>
-    BOOL JavascriptArray::TemplatedGetItem(JavascriptNativeFloatArray *pArr, uint32 index, Var * element, ScriptContext * scriptContext, bool checkHasItem)
+    BOOL JavascriptArray::TemplatedGetItem(JavascriptNativeFloatArray *pArr, uint32_t index, Var * element, ScriptContext * scriptContext, bool checkHasItem)
     {
         Assert(VirtualTableInfo<JavascriptNativeFloatArray>::HasVirtualTable(pArr)
             || VirtualTableInfo<CrossSiteObject<JavascriptNativeFloatArray>>::HasVirtualTable(pArr));
@@ -4181,7 +4181,7 @@ using namespace Js;
     }
 
     template <>
-    BOOL JavascriptArray::TemplatedGetItem(TypedArrayBase * typedArrayBase, uint32 index, Var * element, ScriptContext * scriptContext, bool checkHasItem)
+    BOOL JavascriptArray::TemplatedGetItem(TypedArrayBase * typedArrayBase, uint32_t index, Var * element, ScriptContext * scriptContext, bool checkHasItem)
     {
         // We need to do explicit check for items since length value may not actually match the actual TypedArray length.
         // User could add a length property to a TypedArray instance which lies and returns a different value from the underlying length.
@@ -4256,7 +4256,7 @@ using namespace Js;
         return includesAlgorithm ? falseValue :  TaggedInt::ToVarUnchecked(-1);
     }
 
-    int32 JavascriptArray::HeadSegmentIndexOfHelper(Var search, uint32 &fromIndex, uint32 toIndex, bool includesAlgorithm, ScriptContext * scriptContext)
+    int32 JavascriptArray::HeadSegmentIndexOfHelper(Var search, uint32_t &fromIndex, uint32_t toIndex, bool includesAlgorithm, ScriptContext * scriptContext)
     {
         Assert(IsNonES5Array(GetTypeId()) && !JavascriptNativeArray::Is(GetTypeId()));
 
@@ -4270,8 +4270,8 @@ using namespace Js;
         // virtual method on JavascriptNativeIntArray and JavascriptNativeFloatArray, we know this version of this method will only be called for true JavascriptArray, and not for
         // either of the derived native arrays, so the elements of each segment used here must be Vars. Hence, the cast is safe.
         SparseArraySegment<Var>* head = static_cast<SparseArraySegment<Var>*>(GetHead());
-        uint32 toIndexTrimmed = toIndex <= head->length ? toIndex : head->length;
-        for (uint32 i = fromIndex; i < toIndexTrimmed; i++)
+        uint32_t toIndexTrimmed = toIndex <= head->length ? toIndex : head->length;
+        for (uint32_t i = fromIndex; i < toIndexTrimmed; i++)
         {
             Var element = head->GetElement(i);
             if (isSearchTaggedInt && TaggedInt::Is(element))
@@ -4319,7 +4319,7 @@ using namespace Js;
     }
 
     template<>
-    void JavascriptArray::CopyValueToSegmentBuferNoCheck(Field(double)* buffer, uint32 length, double value)
+    void JavascriptArray::CopyValueToSegmentBuferNoCheck(Field(double)* buffer, uint32_t length, double value)
     {
         if (JavascriptNumber::IsZero(value) && !JavascriptNumber::IsNegZero(value))
         {
@@ -4327,7 +4327,7 @@ using namespace Js;
         }
         else
         {
-            for (uint32 i = 0; i < length; i++)
+            for (uint32_t i = 0; i < length; i++)
             {
                 buffer[i] = value;
             }
@@ -4335,7 +4335,7 @@ using namespace Js;
     }
 
     template<>
-    void JavascriptArray::CopyValueToSegmentBuferNoCheck(Field(int32)* buffer, uint32 length, int32 value)
+    void JavascriptArray::CopyValueToSegmentBuferNoCheck(Field(int32)* buffer, uint32_t length, int32 value)
     {
         if (value == 0 || AreAllBytesEqual(value))
         {
@@ -4343,7 +4343,7 @@ using namespace Js;
         }
         else
         {
-            for (uint32 i = 0; i < length; i++)
+            for (uint32_t i = 0; i < length; i++)
             {
                 buffer[i] = value;
             }
@@ -4351,15 +4351,15 @@ using namespace Js;
     }
 
     template<>
-    void JavascriptArray::CopyValueToSegmentBuferNoCheck(Field(Js::Var)* buffer, uint32 length, Js::Var value)
+    void JavascriptArray::CopyValueToSegmentBuferNoCheck(Field(Js::Var)* buffer, uint32_t length, Js::Var value)
     {
-        for (uint32 i = 0; i < length; i++)
+        for (uint32_t i = 0; i < length; i++)
         {
             buffer[i] = value;
         }
     }
 
-    int32 JavascriptNativeIntArray::HeadSegmentIndexOfHelper(Var search, uint32 &fromIndex, uint32 toIndex, bool includesAlgorithm,  ScriptContext * scriptContext)
+    int32 JavascriptNativeIntArray::HeadSegmentIndexOfHelper(Var search, uint32_t &fromIndex, uint32_t toIndex, bool includesAlgorithm,  ScriptContext * scriptContext)
     {
         // We proceed largely in the same manner as in JavascriptArray's version of this method (see comments there for more information),
         // except when we can further optimize thanks to the knowledge that all elements in the array are int32's. This allows for two additional optimizations:
@@ -4399,8 +4399,8 @@ using namespace Js;
         // the other two, so the elements of each segment used here must be int32's. Hence, the cast is safe.
 
         SparseArraySegment<int32> * head = static_cast<SparseArraySegment<int32>*>(GetHead());
-        uint32 toIndexTrimmed = toIndex <= head->length ? toIndex : head->length;
-        for (uint32 i = fromIndex; i < toIndexTrimmed; i++)
+        uint32_t toIndexTrimmed = toIndex <= head->length ? toIndex : head->length;
+        for (uint32_t i = fromIndex; i < toIndexTrimmed; i++)
         {
             int32 element = head->GetElement(i);
             if (searchAsInt32 == element)
@@ -4415,7 +4415,7 @@ using namespace Js;
         return -1;
     }
 
-    int32 JavascriptNativeFloatArray::HeadSegmentIndexOfHelper(Var search, uint32 &fromIndex, uint32 toIndex, bool includesAlgorithm, ScriptContext * scriptContext)
+    int32 JavascriptNativeFloatArray::HeadSegmentIndexOfHelper(Var search, uint32_t &fromIndex, uint32_t toIndex, bool includesAlgorithm, ScriptContext * scriptContext)
     {
         // We proceed largely in the same manner as in JavascriptArray's version of this method (see comments there for more information),
         // except when we can further optimize thanks to the knowledge that all elements in the array are doubles. This allows for two additional optimizations:
@@ -4446,11 +4446,11 @@ using namespace Js;
 
 
         SparseArraySegment<double> * head = static_cast<SparseArraySegment<double>*>(GetHead());
-        uint32 toIndexTrimmed = toIndex <= head->length ? toIndex : head->length;
+        uint32_t toIndexTrimmed = toIndex <= head->length ? toIndex : head->length;
 
         bool matchNaN = includesAlgorithm && JavascriptNumber::IsNan(searchAsDouble);
 
-        for (uint32 i = fromIndex; i < toIndexTrimmed; i++)
+        for (uint32_t i = fromIndex; i < toIndexTrimmed; i++)
         {
             double element = head->GetElement(i);
 
@@ -4629,7 +4629,7 @@ using namespace Js;
         SETOBJECT_FOR_MUTATION(jsReentLock, arr);
 
         Assert(VirtualTableInfo<T>::HasVirtualTable(arr) || VirtualTableInfo<CrossSiteObject<T>>::HasVirtualTable(arr));
-        const uint32 arrLength = arr->length;
+        const uint32_t arrLength = arr->length;
         switch(arrLength)
         {
             default:
@@ -4650,7 +4650,7 @@ CaseDefault:
                     JS_REENTRANT(jsReentLock, cs->Append(JavascriptArray::JoinToString(item, scriptContext)));
                 }
 
-                for (uint32 i = 1; i < arrLength; i++)
+                for (uint32_t i = 1; i < arrLength; i++)
                 {
                     if (hasSeparator)
                     {
@@ -4746,7 +4746,7 @@ CaseDefault:
                 {
                     JS_REENTRANT(jsReentLock, cs->Append(JavascriptArray::JoinToString(value, scriptContext)));
                 }
-                for (uint32 i = 1; i < cSrcLength; i++)
+                for (uint32_t i = 1; i < cSrcLength; i++)
                 {
                     if (hasSeparator)
                     {
@@ -4931,12 +4931,12 @@ Case0:
 
         Assert(fromIndex < MaxArrayLength);
 
-        // fromIndex now has to be < MaxArrayLength so casting to uint32 is safe
-        uint32 end = static_cast<uint32>(fromIndex);
+        // fromIndex now has to be < MaxArrayLength so casting to uint32_t is safe
+        uint32_t end = static_cast<uint32_t>(fromIndex);
 
-        for (uint32 i = 0; i <= end; i++)
+        for (uint32_t i = 0; i <= end; i++)
         {
-            uint32 index = end - i;
+            uint32_t index = end - i;
 
             if (!TryTemplatedGetItem<T>(pArr, index, &element, scriptContext))
             {
@@ -4981,7 +4981,7 @@ Case0:
             return;
         }
 
-        uint32 index = arr->GetLength() - 1;
+        uint32_t index = arr->GetLength() - 1;
         arr->SetLength(index);
         JIT_HELPER_END(Array_NativePopWithNoDst);
     }
@@ -5002,7 +5002,7 @@ Case0:
 
         Assert(arr->GetLength() != 0);
 
-        uint32 index = arr->length - 1;
+        uint32_t index = arr->length - 1;
 
         int32 element = Js::JavascriptOperators::OP_GetNativeIntElementI_UInt32(object, index, scriptContext);
 
@@ -5032,7 +5032,7 @@ Case0:
 
         Assert(arr->GetLength() != 0);
 
-        uint32 index = arr->length - 1;
+        uint32_t index = arr->length - 1;
 
         double element = Js::JavascriptOperators::OP_GetNativeFloatElementI_UInt32(object, index, scriptContext);
 
@@ -5069,7 +5069,7 @@ Case0:
         JS_REENTRANCY_LOCK(jsReentLock, scriptContext->GetThreadContext());
         SETOBJECT_FOR_MUTATION(jsReentLock, arr);
 
-        uint32 length = arr->length;
+        uint32_t length = arr->length;
 
         if (length == 0)
         {
@@ -5077,7 +5077,7 @@ Case0:
             return scriptContext->GetLibrary()->GetUndefined();
         }
 
-        uint32 index = length - 1;
+        uint32_t index = length - 1;
         Var element;
         JS_REENTRANT(jsReentLock, BOOL gotItem = arr->DirectGetItemAtFull(index, &element));
 
@@ -5198,7 +5198,7 @@ Case0:
                 return EntryPushNonJavascriptArray(scriptContext, args, 2);
             }
             Assert(!nativeIntArray->IsCrossSiteObject());
-            uint32 n = nativeIntArray->length;
+            uint32_t n = nativeIntArray->length;
             if (n < JavascriptArray::MaxArrayLength)
             {
                 nativeIntArray->SetItem(n, value);
@@ -5238,7 +5238,7 @@ Case0:
                 return EntryPushNonJavascriptArray(scriptContext, args, 2);
             }
             Assert(!nativeFloatArray->IsCrossSiteObject());
-            uint32 n = nativeFloatArray->length;
+            uint32_t n = nativeFloatArray->length;
             if( n < JavascriptArray::MaxArrayLength)
             {
                 nativeFloatArray->SetItem(n, value);
@@ -5660,13 +5660,13 @@ Case0:
                 // so we cannot fill it from the prototypes.
                 if (length % 2 == 0)
                 {
-                    pArr->FillFromPrototypes(0, (uint32)length);
+                    pArr->FillFromPrototypes(0, (uint32_t)length);
                 }
                 else
                 {
                     middle = length / 2;
-                    pArr->FillFromPrototypes(0, (uint32)middle);
-                    pArr->FillFromPrototypes(1 + (uint32)middle, (uint32)length);
+                    pArr->FillFromPrototypes(0, (uint32_t)middle);
+                    pArr->FillFromPrototypes(1 + (uint32_t)middle, (uint32_t)length);
                 }
             }
 
@@ -5757,11 +5757,11 @@ Case0:
                         ((SparseArraySegment<Var>*)seg)->ReverseSegment(recycler);
                     }
 
-                    if (((uint32)length) < (seg->left + seg->length))
+                    if (((uint32_t)length) < (seg->left + seg->length))
                     {
                         Js::Throw::FatalInternalError();
                     }
-                    seg->left = ((uint32)length) - (seg->left + seg->length);
+                    seg->left = ((uint32_t)length) - (seg->left + seg->length);
 
                     seg->next = prevSeg;
                     // Make sure size doesn't overlap with next segment.
@@ -5803,9 +5803,9 @@ Case0:
             {
                 // If typedArrayBase->length == length then we know that the TypedArray will have all items < length
                 // and we won't have to check that the elements exist or not.
-                for (uint32 lower = 0; lower < (uint32)middle; lower++)
+                for (uint32_t lower = 0; lower < (uint32_t)middle; lower++)
                 {
-                    uint32 upper = (uint32)length - lower - 1;
+                    uint32_t upper = (uint32_t)length - lower - 1;
 
                     lowerValue = typedArrayBase->DirectGetItem(lower);
                     upperValue = typedArrayBase->DirectGetItem(upper);
@@ -5823,9 +5823,9 @@ Case0:
             else
             {
                 Assert(middle <= UINT_MAX);
-                for (uint32 lower = 0; lower < (uint32)middle; lower++)
+                for (uint32_t lower = 0; lower < (uint32_t)middle; lower++)
                 {
-                    uint32 upper = (uint32)length - lower - 1;
+                    uint32_t upper = (uint32_t)length - lower - 1;
 
                     lowerValue = typedArrayBase->DirectGetItem(lower);
                     upperValue = typedArrayBase->DirectGetItem(upper);
@@ -5926,7 +5926,7 @@ Case0:
             // Merge the two adjacent segments
             if (next->length != 0)
             {
-                uint32 offset = head->size - 1;
+                uint32_t offset = head->size - 1;
                 // There is room for one unshifted element in head segment.
                 // Hence it's enough if we grow the head segment by next->length - 1
 
@@ -5938,7 +5938,7 @@ Case0:
                     // So we just need to grow to the end of the next segment
                     // TODO: merge that segment too?
                     Assert(next->next->left >= head->size);
-                    uint32 maxGrowSize = next->next->left - head->size;
+                    uint32_t maxGrowSize = next->next->left - head->size;
                     if (maxGrowSize != 0)
                     {
                         head = head->GrowByMinMax(recycler, next->length - 1, maxGrowSize); //-1 is to account for unshift
@@ -6010,7 +6010,7 @@ Case0:
                 return res;
             }
 
-            uint32 length = pArr->length;
+            uint32_t length = pArr->length;
 
             if(pArr->IsFillFromPrototypes())
             {
@@ -6138,8 +6138,8 @@ Case0:
                 res = scriptContext->GetLibrary()->GetUndefined();
             }
             --length;
-            uint32 lengthToUin32Max = length.IsSmallIndex() ? length.GetSmallIndex() : MaxArrayLength;
-            for (uint32 i = 0u; i < lengthToUin32Max; i++)
+            uint32_t lengthToUin32Max = length.IsSmallIndex() ? length.GetSmallIndex() : MaxArrayLength;
+            for (uint32_t i = 0u; i < lengthToUin32Max; i++)
             {
                 JS_REENTRANT(jsReentLock, BOOL hasItem = JavascriptOperators::HasItem(dynamicObject, i + 1));
                 if (hasItem)
@@ -6188,7 +6188,7 @@ Case0:
         JIT_HELPER_END(Array_Shift);
     }
 
-    Js::JavascriptArray* JavascriptArray::CreateNewArrayHelper(uint32 len, bool isIntArray, bool isFloatArray,  Js::JavascriptArray* baseArray, ScriptContext* scriptContext)
+    Js::JavascriptArray* JavascriptArray::CreateNewArrayHelper(uint32_t len, bool isIntArray, bool isFloatArray,  Js::JavascriptArray* baseArray, ScriptContext* scriptContext)
     {
         if (isIntArray)
         {
@@ -6219,7 +6219,7 @@ Case0:
    }
 
     template<typename T>
-    void JavascriptArray::SliceHelper(JavascriptArray* pArr,  JavascriptArray* pnewArr, uint32 start, uint32 newLen)
+    void JavascriptArray::SliceHelper(JavascriptArray* pArr,  JavascriptArray* pnewArr, uint32_t start, uint32_t newLen)
     {
         JS_REENTRANCY_LOCK(jsReentLock, pArr->GetScriptContext()->GetThreadContext());
         SETOBJECT_FOR_MUTATION(jsReentLock, pArr);
@@ -6236,7 +6236,7 @@ Case0:
         // Prototype lookup for missing elements
         if (!pArr->HasNoMissingValues())
         {
-            for (uint32 i = 0; i < newLen; i++)
+            for (uint32_t i = 0; i < newLen; i++)
             {
                 if (!(pArr->head->left <= (i + start) && (i + start) <  (pArr->head->left + pArr->head->length)))
                 {
@@ -6260,7 +6260,7 @@ Case0:
 #ifdef DBG
         else
         {
-            for (uint32 i = 0; i < newLen; i++)
+            for (uint32_t i = 0; i < newLen; i++)
             {
                 AssertMsg(!SparseArraySegment<T>::IsMissingItem(&headSeg->elements[i+start]), "Array marked incorrectly as having missing value");
             }
@@ -6420,7 +6420,7 @@ Case0:
                     {
                         Js::Var constructorArgs[] = { constructor, JavascriptNumber::ToVar(newLenT, scriptContext) };
                         Js::CallInfo constructorCallInfo(Js::CallFlags_New, _countof(constructorArgs));
-                        return TypedArrayBase::TypedArrayCreate(constructor, &Js::Arguments(constructorCallInfo, constructorArgs), (uint32)newLenT, scriptContext);
+                        return TypedArrayBase::TypedArrayCreate(constructor, &Js::Arguments(constructorCallInfo, constructorArgs), (uint32_t)newLenT, scriptContext);
                     }));
             );
         }
@@ -6450,7 +6450,7 @@ Case0:
                 JavascriptError::ThrowRangeError(scriptContext, JSERR_ArrayLengthConstructIncorrect);
             }
 
-            newArr = CreateNewArrayHelper(static_cast<uint32>(newLenT), isIntArray, isFloatArray, pArr, scriptContext);
+            newArr = CreateNewArrayHelper(static_cast<uint32_t>(newLenT), isIntArray, isFloatArray, pArr, scriptContext);
 #if ENABLE_COPYONACCESS_ARRAY
             JavascriptLibrary::CheckAndConvertCopyOnAccessNativeIntArray<Var>(newArr);
 #endif
@@ -6469,8 +6469,8 @@ Case0:
             }
         }
 
-        uint32 start  = (uint32) startT;
-        uint32 newLen = (uint32) newLenT;
+        uint32_t start  = (uint32_t) startT;
+        uint32_t newLen = (uint32_t) newLenT;
 
         // We at least have to have newObj as a valid object
         Assert(newObj);
@@ -6536,7 +6536,7 @@ Case0:
                 {
                     AssertMsg(CONFIG_FLAG(ForceES5Array), "newArr can only be ES5Array when it is forced");
                     Var element;
-                    for (uint32 i = 0; i < newLen; i++)
+                    for (uint32_t i = 0; i < newLen; i++)
                     {
                         JS_REENTRANT(jsReentLock, BOOL gotItem = pArr->DirectGetItemAtFull(i + start, &element));
                         if (!gotItem)
@@ -6561,7 +6561,7 @@ Case0:
                 // The constructed object isn't an array, we'll need to use normal object manipulation
                 Var element;
 
-                for (uint32 i = 0; i < newLen; i++)
+                for (uint32_t i = 0; i < newLen; i++)
                 {
                     JS_REENTRANT(jsReentLock, BOOL gotItem = pArr->DirectGetItemAtFull(i + start, &element));
                     if (!gotItem)
@@ -6595,7 +6595,7 @@ Case0:
 
             Var element;
 
-            for (uint32 i = 0; i < newLen; i++)
+            for (uint32_t i = 0; i < newLen; i++)
             {
                 // We only need to call HasItem in the case that we are called from Array.prototype.slice
                 if (!isTypedArrayEntryPoint && !typedArrayBase->HasItem(i + start))
@@ -6637,12 +6637,12 @@ Case0:
         return newObj;
     }
 
-    Var JavascriptArray::SliceObjectHelper(RecyclableObject* obj, uint32 sliceStart, uint32 start, JavascriptArray* newArr, RecyclableObject* newObj, uint32 newLen, ScriptContext* scriptContext)
+    Var JavascriptArray::SliceObjectHelper(RecyclableObject* obj, uint32_t sliceStart, uint32_t start, JavascriptArray* newArr, RecyclableObject* newObj, uint32_t newLen, ScriptContext* scriptContext)
     {
         JS_REENTRANCY_LOCK(jsReentLock, scriptContext->GetThreadContext());
         SETOBJECT_FOR_MUTATION(jsReentLock, obj);
 
-        for (uint32 i = start; i < newLen; i++)
+        for (uint32_t i = start; i < newLen; i++)
         {
             JS_REENTRANT(jsReentLock, BOOL hasItem = JavascriptOperators::HasItem(obj, i + sliceStart));
             if (hasItem)
@@ -6768,10 +6768,10 @@ Case0:
 
     // Sorting Algorithm used for short arrays
     template<typename T>
-    void JavascriptArray::InsertionSort(T* list, uint32 length, JavascriptArray::CompareVarsInfo* cvInfo)
+    void JavascriptArray::InsertionSort(T* list, uint32_t length, JavascriptArray::CompareVarsInfo* cvInfo)
     {
         bool (*compareType)(JavascriptArray::CompareVarsInfo*, const void*, const void*) = cvInfo->compareType;
-        uint32 sortedCount = 1, lowerBound = 0, insertPoint = 0, upperBound = 0;
+        uint32_t sortedCount = 1, lowerBound = 0, insertPoint = 0, upperBound = 0;
         T item;
         while (sortedCount < length)
         {
@@ -6808,12 +6808,12 @@ Case0:
 
     // Sorting algorithm for longer arrays
     template<typename T>
-    void JavascriptArray::MergeSort(T* list, uint32 length, JavascriptArray::CompareVarsInfo* cvInfo, ArenaAllocator* allocator)
+    void JavascriptArray::MergeSort(T* list, uint32_t length, JavascriptArray::CompareVarsInfo* cvInfo, ArenaAllocator* allocator)
     {
         bool (*compareType)(JavascriptArray::CompareVarsInfo*, const void*, const void*) = cvInfo->compareType;
         T* buffer = AnewArray(allocator, T, length);
-        uint32 bucketSize = 2, lastSize = 1, position = 0, left = 0, mid = 0, right = 0, i = 0, j = 0, k = 0;
-        uint32 doubleLength = length + length;
+        uint32_t bucketSize = 2, lastSize = 1, position = 0, left = 0, mid = 0, right = 0, i = 0, j = 0, k = 0;
+        uint32_t doubleLength = length + length;
         T rightElement, leftElement;
 
         while (bucketSize < doubleLength)
@@ -6882,12 +6882,12 @@ Case0:
 
     // Set and Get helpers used in JavascriptArray::SortHelper below
     // These allow the SortHelper to handle either a row of Var OR a row of StringItem
-    inline void SortSetHelper(Field(Var)* list, Var item, uint32 index, JsReentLock* jsReentLock, ScriptContext* scriptContext)
+    inline void SortSetHelper(Field(Var)* list, Var item, uint32_t index, JsReentLock* jsReentLock, ScriptContext* scriptContext)
     {
         list[index] = item;
     }
 
-    inline void SortSetHelper(StringItem* list, Var item, uint32 index, JsReentLock* jsReentLock, ScriptContext* scriptContext)
+    inline void SortSetHelper(StringItem* list, Var item, uint32_t index, JsReentLock* jsReentLock, ScriptContext* scriptContext)
     {
         StringItem current;
         current.Value = item;
@@ -6896,12 +6896,12 @@ Case0:
         list[index] = current;
     }
 
-    inline Var SortGetHelper(Field(Var)* list, uint32 index)
+    inline Var SortGetHelper(Field(Var)* list, uint32_t index)
     {
         return list[index];
     }
 
-    inline Var SortGetHelper(StringItem* list, uint32 index)
+    inline Var SortGetHelper(StringItem* list, uint32_t index)
     {
         return list[index].Value;
     }
@@ -6928,7 +6928,7 @@ Case0:
 
         // Get the Length
         JS_REENTRANT(jsReentLock,
-            uint32 len = JavascriptConversion::ToUInt32(JavascriptOperators::OP_GetLength(obj, scriptContext), scriptContext));
+            uint32_t len = JavascriptConversion::ToUInt32(JavascriptOperators::OP_GetLength(obj, scriptContext), scriptContext));
 
         // Early return if length = 0
         // Note cannot return early for length = 1 without further checks
@@ -6944,10 +6944,10 @@ Case0:
             // This severely limits the potential for sort side-effects to alter the result
             T* list = AnewArray(tempAlloc, T, len);
 
-            uint32 values = 0;
-            uint32 undefinedValues = 0;
-            uint32 holes = 0;
-            uint32 i = 0, j = 0;
+            uint32_t values = 0;
+            uint32_t undefinedValues = 0;
+            uint32_t holes = 0;
+            uint32_t i = 0, j = 0;
 
             for (; i < len; ++i)
             {
@@ -7076,7 +7076,7 @@ Case0:
     // Typed Array Sort is a helper method to call the correct Sorting algorithm for TypedArray.prototype.sort
     // Included in this file in order to instantiate type specific instances of thee algorithms
     template <typename T>
-    void JavascriptArray::TypedArraySort(T* list, uint32 length, JavascriptArray::CompareVarsInfo* cvInfo, ArenaAllocator* allocator)
+    void JavascriptArray::TypedArraySort(T* list, uint32_t length, JavascriptArray::CompareVarsInfo* cvInfo, ArenaAllocator* allocator)
     {
         ScriptContext* scriptContext = cvInfo->scriptContext;
         JS_REENTRANCY_LOCK(jsReentLock, scriptContext->GetThreadContext());
@@ -7140,13 +7140,13 @@ Case0:
         }
 
         Var* insertArgs = args.Info.Count > 3 ? &args.Values[3] : nullptr;
-        uint32 insertLen = args.Info.Count > 3 ? args.Info.Count - 3 : 0;
+        uint32_t insertLen = args.Info.Count > 3 ? args.Info.Count - 3 : 0;
 
         // Force check the prototype as we may insert values more than current elements
         if (pArr != nullptr && !HasAnyES5ArrayInPrototypeChain(pArr, true /*forceCheckProtoChain*/))
         {
             JS_REENTRANT_UNLOCK(jsReentLock,
-                return TryArraySplice(pArr, (uint32)start, (uint32)length, (uint32)deleteLen, insertArgs, insertLen, scriptContext));
+                return TryArraySplice(pArr, (uint32_t)start, (uint32_t)length, (uint32_t)deleteLen, insertArgs, insertLen, scriptContext));
         }
 
         unsigned long newLen = (length - deleteLen) + insertLen;
@@ -7158,7 +7158,7 @@ Case0:
         else
         {
             JS_REENTRANT_UNLOCK(jsReentLock,
-                return ObjectSpliceHelper<uint32>(pObj, (uint32)length, (uint32)start, (uint32)deleteLen, (Var*)insertArgs, insertLen, scriptContext, nullptr));
+                return ObjectSpliceHelper<uint32_t>(pObj, (uint32_t)length, (uint32_t)start, (uint32_t)deleteLen, (Var*)insertArgs, insertLen, scriptContext, nullptr));
         }
         JIT_HELPER_END(Array_Splice);
     }
@@ -7171,16 +7171,16 @@ Case0:
     template<typename T>
     void JavascriptArray::ArraySegmentSpliceHelper(
         JavascriptArray *pnewArr, SparseArraySegment<T> *seg, Field(SparseArraySegment<T>*) *prev,
-        uint32 start, uint32 deleteLen, Var* insertArgs, uint32 insertLen, Recycler *recycler)
+        uint32_t start, uint32_t deleteLen, Var* insertArgs, uint32_t insertLen, Recycler *recycler)
     {
         // book keeping variables
-        uint32 relativeStart    = start - seg->left;  // This will be different from start when head->left is non zero -
+        uint32_t relativeStart    = start - seg->left;  // This will be different from start when head->left is non zero -
                                                       //(Missing elements at the beginning)
 
-        uint32 headDeleteLen    = min(start + deleteLen , seg->left + seg->length) - start;   // actual number of elements to delete in
+        uint32_t headDeleteLen    = min(start + deleteLen , seg->left + seg->length) - start;   // actual number of elements to delete in
                                                                                               // head if deleteLen overflows the length of head
 
-        uint32 newHeadLen       = seg->length - headDeleteLen + insertLen;     // new length of the head after splice
+        uint32_t newHeadLen       = seg->length - headDeleteLen + insertLen;     // new length of the head after splice
 
         // Save the deleted elements
         if (headDeleteLen != 0)
@@ -7216,7 +7216,7 @@ Case0:
             // Move the elements if necessary
             if (headDeleteLen != insertLen)
             {
-                uint32 noElementsToMove = seg->length - (relativeStart + headDeleteLen);
+                uint32_t noElementsToMove = seg->length - (relativeStart + headDeleteLen);
                 MoveArray(seg->elements + relativeStart + insertLen,
                             seg->elements + relativeStart + headDeleteLen,
                             noElementsToMove);
@@ -7246,7 +7246,7 @@ Case0:
     }
 
     template<typename T>
-    void JavascriptArray::ArraySpliceHelper(JavascriptArray* pnewArr, JavascriptArray* pArr, uint32 start, uint32 deleteLen, Var* insertArgs, uint32 insertLen, ScriptContext *scriptContext)
+    void JavascriptArray::ArraySpliceHelper(JavascriptArray* pnewArr, JavascriptArray* pArr, uint32_t start, uint32_t deleteLen, Var* insertArgs, uint32_t insertLen, ScriptContext *scriptContext)
     {
         // Skip pnewArr->EnsureHead(): we don't use existing segment at all.
         Recycler *recycler  = scriptContext->GetRecycler();
@@ -7259,8 +7259,8 @@ Case0:
         pArr->EnsureHead<T>();
         SparseArraySegment<T>* startSeg = SparseArraySegment<T>::From(pArr->head);
 
-        const uint32 limit = start + deleteLen;
-        uint32 rightLimit;
+        const uint32_t limit = start + deleteLen;
+        uint32_t rightLimit;
         if (UInt32Math::Add(startSeg->left, startSeg->size, &rightLimit))
         {
             rightLimit = JavascriptArray::MaxArrayLength;
@@ -7327,7 +7327,7 @@ Case0:
                 {
                     if (start < startSeg->left + startSeg->length)
                     {
-                        uint32 headDeleteLen = startSeg->left + startSeg->length - start;
+                        uint32_t headDeleteLen = startSeg->left + startSeg->length - start;
 
                         if (startSeg->next)
                         {
@@ -7356,7 +7356,7 @@ Case0:
                     // start should be in between left and left + length
                     if (startSeg->left  <= start && start < startSeg->left + startSeg->length)
                     {
-                        uint32 headDeleteLen = startSeg->left + startSeg->length - start;
+                        uint32_t headDeleteLen = startSeg->left + startSeg->length - start;
                         if (startSeg->next)
                         {
                             // We know the new segment will have a next segment, so allocate it as non-leaf.
@@ -7420,7 +7420,7 @@ Case0:
                 if (startSeg && (startSeg->left < limit))
                 {
                     // copy the first part of the last segment to be deleted to new array
-                    uint32 headDeleteLen = start + deleteLen - startSeg->left ;
+                    uint32_t headDeleteLen = start + deleteLen - startSeg->left ;
 
                     newHeadSeg = SparseArraySegment<T>::AllocateSegment(recycler, startSeg->left -  start, headDeleteLen, (SparseArraySegmentBase *)nullptr);
                     newHeadSeg = SparseArraySegment<T>::CopySegment(recycler, newHeadSeg, startSeg->left -  start, startSeg, startSeg->left, headDeleteLen);
@@ -7478,7 +7478,7 @@ Case0:
             if (savePrev && (start - savePrev->left < savePrev->size))
             {
                 segInsert = (SparseArraySegment<T>*)savePrev;
-                uint32 spaceLeft = segInsert->size - (start - segInsert->left);
+                uint32_t spaceLeft = segInsert->size - (start - segInsert->left);
                 if(spaceLeft < insertLen)
                 {
                     SparseArraySegment<T> *oldSegInsert = segInsert;
@@ -7509,15 +7509,15 @@ Case0:
                 savePrev = segInsert;
             }
 
-            uint32 relativeStart = start - segInsert->left;
+            uint32_t relativeStart = start - segInsert->left;
             // inserted elements starts at argument 3 of splice(start, deleteNumber, insertelem1, insertelem2, insertelem3, ...);
             CopyArray(segInsert->elements + relativeStart, insertLen,
                       reinterpret_cast<const T*>(insertArgs), insertLen);
         }
     }
 
-    Var JavascriptArray::TryArraySplice(JavascriptArray* pArr, uint32 start, uint32 len, uint32 deleteLen,
-        Var* insertArgs, uint32 insertLen, ScriptContext *scriptContext)
+    Var JavascriptArray::TryArraySplice(JavascriptArray* pArr, uint32_t start, uint32_t len, uint32_t deleteLen,
+        Var* insertArgs, uint32_t insertLen, ScriptContext *scriptContext)
     {
         JS_REENTRANCY_LOCK(jsReentLock, scriptContext->GetThreadContext());
         SETOBJECT_FOR_MUTATION(jsReentLock, pArr);
@@ -7528,7 +7528,7 @@ Case0:
         Recycler *recycler = scriptContext->GetRecycler();
 
         ::Math::RecordOverflowPolicy newLenOverflow;
-        uint32 newLen = UInt32Math::Add(len - deleteLen, insertLen, newLenOverflow); // new length of the array after splice
+        uint32_t newLen = UInt32Math::Add(len - deleteLen, insertLen, newLenOverflow); // new length of the array after splice
 
         // If newLen overflowed, take the slower path to do splicing.
         if (newLenOverflow.HasOverflowed())
@@ -7707,12 +7707,12 @@ Case0:
             return newArr;
         }
 
-        JS_REENTRANT_UNLOCK(jsReentLock, return ObjectSpliceHelper<uint32>(pArr, len, start, deleteLen, insertArgs, insertLen, scriptContext, newObj));
+        JS_REENTRANT_UNLOCK(jsReentLock, return ObjectSpliceHelper<uint32_t>(pArr, len, start, deleteLen, insertArgs, insertLen, scriptContext, newObj));
    }
 
     template<typename T>
     RecyclableObject* JavascriptArray::ObjectSpliceHelper(RecyclableObject* pObj, T len, T start,
-        T deleteLen, Var* insertArgs, uint32 insertLen, ScriptContext *scriptContext, RecyclableObject* pNewObj)
+        T deleteLen, Var* insertArgs, uint32_t insertLen, ScriptContext *scriptContext, RecyclableObject* pNewObj)
     {
         JS_REENTRANCY_LOCK(jsReentLock, scriptContext->GetThreadContext());
         SETOBJECT_FOR_MUTATION(jsReentLock, pObj);
@@ -7729,7 +7729,7 @@ Case0:
                     JavascriptError::ThrowRangeError(scriptContext, JSERR_ArrayLengthConstructIncorrect);
                 }
 
-                pnewArr = scriptContext->GetLibrary()->CreateArray(static_cast<uint32>(deleteLen));
+                pnewArr = scriptContext->GetLibrary()->CreateArray(static_cast<uint32_t>(deleteLen));
                 pnewArr->EnsureHead<Var>();
 
                 pNewObj = pnewArr;
@@ -7748,7 +7748,7 @@ Case0:
         // copy elements to delete to new array
         if (pnewArr != nullptr)
         {
-            for (uint32 i = 0; i < deleteLen; i++)
+            for (uint32_t i = 0; i < deleteLen; i++)
             {
                 JS_REENTRANT(jsReentLock, BOOL hasItem = JavascriptOperators::HasItem(pObj, start + i));
                 if (hasItem)
@@ -7812,7 +7812,7 @@ Case0:
         if (insertLen > 0)
         {
             T dstIndex = start; // insert index might overflow max array length
-            for (uint32 i = 0; i < insertLen; i++)
+            for (uint32_t i = 0; i < insertLen; i++)
             {
                 JS_REENTRANT(jsReentLock,
                     h.ThrowTypeErrorOnFailure(IndexTrace<BigIndex>::SetItem(pObj, dstIndex, insertArgs[i], PropertyOperation_ThrowIfNotExtensible)));
@@ -7907,7 +7907,7 @@ Case0:
     }
 
     template<typename T>
-    void JavascriptArray::GrowArrayHeadHelperForUnshift(JavascriptArray* pArr, uint32 unshiftElements, ScriptContext * scriptContext)
+    void JavascriptArray::GrowArrayHeadHelperForUnshift(JavascriptArray* pArr, uint32_t unshiftElements, ScriptContext * scriptContext)
     {
         SparseArraySegmentBase* nextToHeadSeg = pArr->head->next;
         Recycler* recycler = scriptContext->GetRecycler();
@@ -7931,12 +7931,12 @@ Case0:
     }
 
     template<typename T>
-    void JavascriptArray::UnshiftHelper(JavascriptArray* pArr, uint32 unshiftElements, Js::Var * elements)
+    void JavascriptArray::UnshiftHelper(JavascriptArray* pArr, uint32_t unshiftElements, Js::Var * elements)
     {
         SparseArraySegment<T>* head = SparseArraySegment<T>::From(pArr->head);
         // Make enough room in the head segment to insert new elements at the front
         MoveArray(head->elements + unshiftElements, head->elements, pArr->head->length);
-        uint32 oldHeadLength = head->length;
+        uint32_t oldHeadLength = head->length;
         head->length += unshiftElements;
         head->CheckLengthvsSize();
 
@@ -7971,14 +7971,14 @@ Case0:
         {
             JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NullOrUndefined, u"Array.prototype.unshift");
         }
-        uint32 unshiftElements = args.Info.Count - 1;
+        uint32_t unshiftElements = args.Info.Count - 1;
 
         JS_REENTRANT(jsReentLock, BigIndex length = OP_GetLength(dynamicObject, scriptContext));
         if (unshiftElements > 0)
         {
-            uint32 MaxSpaceUint32 = MaxArrayLength - unshiftElements;
+            uint32_t MaxSpaceUint32 = MaxArrayLength - unshiftElements;
             // Note: end will always be a smallIndex either it is less than length in which case it is MaxSpaceUint32
-            // or MaxSpaceUint32 is greater than length meaning length is a uint32 number
+            // or MaxSpaceUint32 is greater than length meaning length is a uint32_t number
             BigIndex end = length > MaxSpaceUint32 ? MaxSpaceUint32 : length;
             if (end < length)
             {
@@ -7996,9 +7996,9 @@ Case0:
 
             // Unshift [0, end) to unshiftElements
             // unshiftElements + (MaxSpaceUint32 - 0 - 1) = MaxArrayLength -1 therefore this unshift covers up to MaxArrayLength - 1
-            JS_REENTRANT(jsReentLock, Unshift<uint32>(dynamicObject, unshiftElements, (uint32)0, end.GetSmallIndex(), scriptContext));
+            JS_REENTRANT(jsReentLock, Unshift<uint32_t>(dynamicObject, unshiftElements, (uint32_t)0, end.GetSmallIndex(), scriptContext));
 
-            for (uint32 i = 0; i < unshiftElements; i++)
+            for (uint32_t i = 0; i < unshiftElements; i++)
             {
                 JS_REENTRANT(jsReentLock,
                     JavascriptOperators::SetItem(dynamicObject, dynamicObject, i, args[i + 1], scriptContext, PropertyOperation_ThrowIfNotExtensible, true));
@@ -8045,7 +8045,7 @@ Case0:
             pArr = VarTo<JavascriptArray>(args[0]);
         }
 
-        uint32 unshiftElements = args.Info.Count - 1;
+        uint32_t unshiftElements = args.Info.Count - 1;
 
         // forceCheckProtoChain - since the array expand to accommodate new items thus we have to check if we have accessor on the proto chain.
         bool useNoSideEffectUnshift = pArr != nullptr && (unshiftElements == 0 || !HasAnyES5ArrayInPrototypeChain(pArr, true /*forceCheckProtoChain*/));
@@ -8054,7 +8054,7 @@ Case0:
         {
             if (unshiftElements > 0)
             {
-                uint32 length = pArr->length;
+                uint32_t length = pArr->length;
                 if (pArr->IsFillFromPrototypes())
                 {
                     pArr->FillFromPrototypes(0, pArr->length); // We need find all missing value from [[proto]] object
@@ -8068,7 +8068,7 @@ Case0:
 
                 // Pre-process: truncate overflowing elements to properties
                 bool newLenOverflowed = false;
-                uint32 maxLen = MaxArrayLength - unshiftElements;
+                uint32_t maxLen = MaxArrayLength - unshiftElements;
                 if (pArr->length > maxLen)
                 {
                     newLenOverflowed = true;
@@ -8245,9 +8245,9 @@ Case0:
     }
 
 #if DEBUG
-    BOOL JavascriptArray::GetIndex(const char16_t* propName, uint32 *pIndex)
+    BOOL JavascriptArray::GetIndex(const char16_t* propName, uint32_t *pIndex)
     {
-        uint32 lu, luDig;
+        uint32_t lu, luDig;
 
         int32 cch = (int32)wcslen(propName);
         char16_t* pch = const_cast<char16_t *>(propName);
@@ -8294,7 +8294,7 @@ Case0:
         JS_REENTRANCY_LOCK(jsReentLock, scriptContext->GetThreadContext());
         SETOBJECT_FOR_MUTATION(jsReentLock, arr);
 
-        uint32 length = 0;
+        uint32_t length = 0;
         TypedArrayBase * typedArray = JavascriptOperators::TryFromVar<Js::TypedArrayBase>(static_cast<RecyclableObject*>(arr));
         if (typedArray)
         {
@@ -8329,7 +8329,7 @@ Case0:
 
             if (length > 1)
             {
-                uint32 sepSize = 0;
+                uint32_t sepSize = 0;
                 char16_t szSeparator[Arrays::SeparatorBufferSize];
 
                 bool hasLocaleSeparator = Arrays::GetLocaleSeparator(szSeparator, &sepSize, Arrays::SeparatorBufferSize);
@@ -8345,7 +8345,7 @@ Case0:
                     separator = scriptContext->GetLibrary()->GetCommaDisplayString();
                 }
 
-                for (uint32 i = 1; i < length; i++)
+                for (uint32_t i = 1; i < length; i++)
                 {
                     res = JavascriptString::Concat(res, separator);
                     JS_REENTRANT(jsReentLock, gotItem = ItemTrace<T>::GetItem(arr, i, &element, scriptContext));
@@ -8469,7 +8469,7 @@ Case0:
         CallFlags flags = CallFlags_Value;
         Var element = nullptr;
         Var testResult = nullptr;
-        uint32 loopStart = reversed ? (uint32)length - 1 : 0;
+        uint32_t loopStart = reversed ? (uint32_t)length - 1 : 0;
         int8_t loopDelta = reversed ? -1 : 1;
 
         if (pArr)
@@ -8477,7 +8477,7 @@ Case0:
             Var undefined = scriptContext->GetLibrary()->GetUndefined();
 
             Assert(length <= UINT_MAX);
-            for (uint32 k = loopStart; k < length; k += loopDelta)
+            for (uint32_t k = loopStart; k < length; k += loopDelta)
             {
                 element = undefined;
                 JS_REENTRANT(jsReentLock, pArr->DirectGetItemAtFull(k, &element));
@@ -8512,7 +8512,7 @@ Case0:
         else if (typedArrayBase)
         {
             Assert(length <= UINT_MAX);
-            for (uint32 k = loopStart; k < length; k+= loopDelta)
+            for (uint32_t k = loopStart; k < length; k+= loopDelta)
             {
                 // Spec does not ask to call HasItem, so we need to go to visit the whole length
 
@@ -8553,10 +8553,10 @@ Case0:
 
         Var element = nullptr;
         Var testResult = nullptr;
-        uint32 loopStart = reversed ? (uint32)length - 1 : (uint32)start;
+        uint32_t loopStart = reversed ? (uint32_t)length - 1 : (uint32_t)start;
         int8_t loopDelta = reversed ? -1 : 1;
 
-        for (uint32 k = loopStart; k < length; k += loopDelta)
+        for (uint32_t k = loopStart; k < length; k += loopDelta)
         {
             JS_REENTRANT(jsReentLock, element = JavascriptOperators::GetItem(obj, k, scriptContext));
             Var index = JavascriptNumber::ToVar(k, scriptContext);
@@ -8941,9 +8941,9 @@ Case0:
         if (typedArrayBase)
         {
             AssertAndFailFast(VarIsCorrectType(typedArrayBase));
-            uint32 end = (uint32)min(length, (T)typedArrayBase->GetLength());
+            uint32_t end = (uint32_t)min(length, (T)typedArrayBase->GetLength());
 
-            for (uint32 k = 0; k < end; k++)
+            for (uint32_t k = 0; k < end; k++)
             {
                 // No need to do HasItem, as it cannot be observable unless 'typedArrayBase' is proxy. And we have established that it is indeed typedarray.
 
@@ -9088,9 +9088,9 @@ Case0:
         if (typedArrayBase)
         {
             AssertAndFailFast(VarIsCorrectType(typedArrayBase));
-            uint32 end = (uint32)min(length, (T)typedArrayBase->GetLength());
+            uint32_t end = (uint32_t)min(length, (T)typedArrayBase->GetLength());
 
-            for (uint32 k = 0; k < end; k++)
+            for (uint32_t k = 0; k < end; k++)
             {
                 // No need to do HasItem, as it cannot be observable unless 'typedArrayBase' is proxy. And we have established that it is indeed typedarray.
 
@@ -9202,7 +9202,7 @@ Case0:
 
         CallFlags flags = CallFlags_Value;
         auto fn32 = [dynamicObject, callBackFn, flags, thisArg,
-            scriptContext](uint32 k, Var element)
+            scriptContext](uint32_t k, Var element)
         {
             BEGIN_SAFE_REENTRANT_CALL(scriptContext->GetThreadContext())
             {
@@ -9328,7 +9328,7 @@ Case0:
 
             AssertOrFailFast(length == typedArrayBase->GetLength());
 
-            uint32 bytesPerElement = typedArrayBase->GetBytesPerElement();
+            uint32_t bytesPerElement = typedArrayBase->GetBytesPerElement();
             byte *buffer = typedArrayBase->GetByteBuffer();
             size_t fromByteIndex = static_cast<size_t>(fromVal) * bytesPerElement;
             size_t toByteIndex = static_cast<size_t>(toVal) * bytesPerElement;
@@ -9396,8 +9396,8 @@ Case0:
             Assert(toVal < MaxArrayLength);
             Assert(direction == -1 || (fromVal + count < MaxArrayLength && toVal + count < MaxArrayLength));
 
-            uint32 fromIndex = static_cast<uint32>(fromVal);
-            uint32 toIndex = static_cast<uint32>(toVal);
+            uint32_t fromIndex = static_cast<uint32_t>(fromVal);
+            uint32_t toIndex = static_cast<uint32_t>(toVal);
 
             while (count > 0)
             {
@@ -9520,7 +9520,7 @@ Case0:
         if (k < MaxArrayLength)
         {
             long end = min<long>(finalVal, MaxArrayLength);
-            uint32 u32k = static_cast<uint32>(k);
+            uint32_t u32k = static_cast<uint32_t>(k);
 
             while (u32k < end)
             {
@@ -9672,7 +9672,7 @@ Case0:
                     {
                         Js::Var constructorArgs[] = {constructor, JavascriptNumber::ToVar(length, scriptContext) };
                         Js::CallInfo constructorCallInfo(Js::CallFlags_New, _countof(constructorArgs));
-                        return TypedArrayBase::TypedArrayCreate(constructor, &Js::Arguments(constructorCallInfo, constructorArgs), (uint32)length, scriptContext);
+                        return TypedArrayBase::TypedArrayCreate(constructor, &Js::Arguments(constructorCallInfo, constructorArgs), (uint32_t)length, scriptContext);
                     }));
             )
         }
@@ -9688,7 +9688,7 @@ Case0:
             {
                 JavascriptError::ThrowRangeError(scriptContext, JSERR_ArrayLengthConstructIncorrect);
             }
-            newArr = scriptContext->GetLibrary()->CreateArray(static_cast<uint32>(length));
+            newArr = scriptContext->GetLibrary()->CreateArray(static_cast<uint32_t>(length));
             newArr->EnsureHead<Var>();
             newObj = newArr;
         }
@@ -9724,7 +9724,7 @@ Case0:
         {
             // If source is a JavascriptArray, newObj may or may not be an array based on what was in source's constructor property
             Assert(length <= UINT_MAX);
-            for (uint32 k = 0; k < (uint32)length; k++)
+            for (uint32_t k = 0; k < (uint32_t)length; k++)
             {
                 JS_REENTRANT(jsReentLock, BOOL gotItem = pArr->DirectGetItemAtFull(k, &element));
                 if (!gotItem)
@@ -9775,9 +9775,9 @@ Case0:
             }
 
             Assert(length <= UINT_MAX);
-            uint32 end = (uint32)min(length, (T)typedArrayBase->GetLength());
+            uint32_t end = (uint32_t)min(length, (T)typedArrayBase->GetLength());
 
-            for (uint32 k = 0; k < end; k++)
+            for (uint32_t k = 0; k < end; k++)
             {
                 // No need to do HasItem, as it cannot be observable unless 'typedArrayBase' is proxy. And we have established that it is indeed typedarray.
 
@@ -9849,7 +9849,7 @@ Case0:
 
                     if (newArr && isBuiltinArrayCtor)
                     {
-                        newArr->SetItem((uint32)k, mappedValue, PropertyOperation_None);
+                        newArr->SetItem((uint32_t)k, mappedValue, PropertyOperation_None);
                     }
                     else
                     {
@@ -10092,13 +10092,13 @@ Case0:
             if (typedArrayBase)
             {
                 AssertAndFailFast(VarIsCorrectType(typedArrayBase));
-                uint32 end = (uint32)min(length, (T)typedArrayBase->GetLength());
+                uint32_t end = (uint32_t)min(length, (T)typedArrayBase->GetLength());
 
                 for (; k < end && bPresent == false; k++)
                 {
                     // No need to do HasItem, as it cannot be observable unless 'typedArrayBase' is proxy. And we have established that it is indeed typedarray.
 
-                    element = typedArrayBase->DirectGetItem((uint32)k);
+                    element = typedArrayBase->DirectGetItem((uint32_t)k);
 
                     bPresent = true;
                     accumulator = element;
@@ -10137,13 +10137,13 @@ Case0:
         if (typedArrayBase)
         {
             AssertAndFailFast(VarIsCorrectType(typedArrayBase));
-            uint32 end = (uint32)min(length, (T)typedArrayBase->GetLength());
+            uint32_t end = (uint32_t)min(length, (T)typedArrayBase->GetLength());
 
             for (; k < end; k++)
             {
                 // No need to do HasItem, as it cannot be observable unless 'typedArrayBase' is proxy. And we have established that it is indeed typedarray.
 
-                element = typedArrayBase->DirectGetItem((uint32)k);
+                element = typedArrayBase->DirectGetItem((uint32_t)k);
 
                 JS_REENTRANT(jsReentLock,
                     BEGIN_SAFE_REENTRANT_CALL(scriptContext->GetThreadContext())
@@ -10274,14 +10274,14 @@ Case0:
             if (typedArrayBase)
             {
                 AssertAndFailFast(VarIsCorrectType(typedArrayBase));
-                uint32 end = (uint32)min(length, (T)typedArrayBase->GetLength());
+                uint32_t end = (uint32_t)min(length, (T)typedArrayBase->GetLength());
 
                 for (; k < end && bPresent == false; k++)
                 {
                     // No need to do HasItem, as it cannot be observable unless 'typedArrayBase' is proxy. And we have established that it is indeed typedarray.
 
                     index = length - k - 1;
-                    element = typedArrayBase->DirectGetItem((uint32)index);
+                    element = typedArrayBase->DirectGetItem((uint32_t)index);
                     bPresent = true;
                     accumulator = element;
                 }
@@ -10310,14 +10310,14 @@ Case0:
         if (typedArrayBase)
         {
             AssertAndFailFast(VarIsCorrectType(typedArrayBase));
-            uint32 end = (uint32)min(length, (T)typedArrayBase->GetLength());
+            uint32_t end = (uint32_t)min(length, (T)typedArrayBase->GetLength());
 
             for (; k < end; k++)
             {
                 // No need to do HasItem, as it cannot be observable unless 'typedArrayBase' is proxy. And we have established that it is indeed typedarray.
 
                 index = length - k - 1;
-                element = typedArrayBase->DirectGetItem((uint32)index);
+                element = typedArrayBase->DirectGetItem((uint32_t)index);
 
                 JS_REENTRANT(jsReentLock,
                     BEGIN_SAFE_REENTRANT_CALL(scriptContext->GetThreadContext())
@@ -10472,7 +10472,7 @@ Case0:
                 newObj = newArr;
             }
 
-            uint32 k = 0;
+            uint32_t k = 0;
 
             JS_REENTRANT(jsReentLock, JavascriptOperators::DoIteratorStepAndValue(iterator, scriptContext, [&](Var nextValue) {
                 if (mapping)
@@ -10535,12 +10535,12 @@ Case0:
                 }
 
                 // Static cast len should be valid (len < 2^32) or we would throw above
-                newArr = scriptContext->GetLibrary()->CreateArray(static_cast<uint32>(len));
+                newArr = scriptContext->GetLibrary()->CreateArray(static_cast<uint32_t>(len));
                 newArr->EnsureHead<Var>();
                 newObj = newArr;
             }
 
-            uint32 k = 0;
+            uint32_t k = 0;
 
             for ( ; k < len; k++)
             {
@@ -10620,7 +10620,7 @@ Case0:
         Assert(args.Info.Count > 0);
 
         // args.Info.Count cannot equal zero or we would have thrown above so no chance of underflowing
-        uint32 len = args.Info.Count - 1;
+        uint32_t len = args.Info.Count - 1;
         Var newObj = nullptr;
         JavascriptArray* newArr = nullptr;
         TypedArrayBase* newTypedArray = nullptr;
@@ -10683,7 +10683,7 @@ Case0:
 
         if (isBuiltinArrayCtor)
         {
-            for (uint32 k = 0; k < len; k++)
+            for (uint32_t k = 0; k < len; k++)
             {
                 Var kValue = args[k + 1];
 
@@ -10692,7 +10692,7 @@ Case0:
         }
         else if (newTypedArray)
         {
-            for (uint32 k = 0; k < len; k++)
+            for (uint32_t k = 0; k < len; k++)
             {
                 Var kValue = args[k + 1];
 
@@ -10701,7 +10701,7 @@ Case0:
         }
         else
         {
-            for (uint32 k = 0; k < len; k++)
+            for (uint32_t k = 0; k < len; k++)
             {
                 Var kValue = args[k + 1];
                 JS_REENTRANT(jsReentLock, ThrowErrorOnFailure(JavascriptArray::SetArrayLikeObjects(VarTo<RecyclableObject>(newObj), k, kValue), scriptContext, k));
@@ -10752,7 +10752,7 @@ Case0:
 
     // Fill all missing value in the array and fill it from prototype between startIndex and limitIndex
     // typically startIndex = 0 and limitIndex = length. From start of the array till end of the array.
-    void JavascriptArray::FillFromPrototypes(uint32 startIndex, uint32 limitIndex)
+    void JavascriptArray::FillFromPrototypes(uint32_t startIndex, uint32_t limitIndex)
     {
         if (startIndex >= limitIndex)
         {
@@ -10763,7 +10763,7 @@ Case0:
         // Fill all missing values by walking through prototype
         while (!JavascriptOperators::IsNull(prototype))
         {
-            ForEachOwnMissingArrayIndexOfObject(this, nullptr, prototype, startIndex, limitIndex,0, [this](uint32 index, Var value) {
+            ForEachOwnMissingArrayIndexOfObject(this, nullptr, prototype, startIndex, limitIndex,0, [this](uint32_t index, Var value) {
                 this->SetItem(index, value, PropertyOperation_None);
             });
 
@@ -10823,12 +10823,12 @@ Case0:
     {
         // Type transition
 
-        uint32 random1 = static_cast<uint32>(rand());
+        uint32_t random1 = static_cast<uint32_t>(rand());
         if (random1 % 2 == 0)
         {
             if (VarIs<JavascriptNativeIntArray>(this))
             {
-                uint32 random2 = static_cast<uint32>(rand());
+                uint32_t random2 = static_cast<uint32_t>(rand());
                 if (random2 % 2 == 0)
                 {
                     JavascriptNativeIntArray::ToNativeFloatArray(static_cast<JavascriptNativeIntArray*>(this));
@@ -10847,7 +10847,7 @@ Case0:
 #endif
 
     template <typename Fn>
-    void JavascriptArray::ForEachOwnMissingArrayIndexOfObject(JavascriptArray *baseArray, JavascriptArray *destArray, RecyclableObject* obj, uint32 startIndex, uint32 limitIndex, uint32 destIndex, Fn fn)
+    void JavascriptArray::ForEachOwnMissingArrayIndexOfObject(JavascriptArray *baseArray, JavascriptArray *destArray, RecyclableObject* obj, uint32_t startIndex, uint32_t limitIndex, uint32_t destIndex, Fn fn)
     {
         JS_REENTRANCY_LOCK(jsReentLock, baseArray->GetScriptContext()->GetThreadContext());
         SETOBJECT_FOR_MUTATION(jsReentLock, baseArray);
@@ -10877,10 +10877,10 @@ Case0:
 
                 while(e.MoveNext<Var>())
                 {
-                    uint32 index = e.GetIndex();
+                    uint32_t index = e.GetIndex();
                     if (!baseArray->DirectGetVarItemAt(index, &oldValue, baseArray->GetScriptContext()))
                     {
-                        uint32 n = destIndex + (index - startIndex);
+                        uint32_t n = destIndex + (index - startIndex);
                         if (destArray == nullptr || !destArray->DirectGetItemAt(n, &oldValue))
                         {
                             JS_REENTRANT(jsReentLock, fn(index, e.GetItem<Var>()));
@@ -10899,13 +10899,13 @@ Case0:
 
                 while (e.MoveNext())
                 {
-                    uint32 index = e.GetIndex();
+                    uint32_t index = e.GetIndex();
                     if (index < startIndex) continue;
                     else if (index >= limitIndex) break;
 
                     if (!baseArray->DirectGetVarItemAt(index, &oldValue, baseArray->GetScriptContext()))
                     {
-                        uint32 n = destIndex + (index - startIndex);
+                        uint32_t n = destIndex + (index - startIndex);
                         if (destArray == nullptr || !destArray->DirectGetItemAt(n, &oldValue))
                         {
                             Var value = nullptr;
@@ -10924,7 +10924,7 @@ Case0:
     //
     // ArrayElementEnumerator to enumerate array elements (not including elements from prototypes).
     //
-    JavascriptArray::ArrayElementEnumerator::ArrayElementEnumerator(JavascriptArray* arr, uint32 start, uint32 end)
+    JavascriptArray::ArrayElementEnumerator::ArrayElementEnumerator(JavascriptArray* arr, uint32_t start, uint32_t end)
         : start(start), end(min(end, arr->length))
     {
         Init(arr);
@@ -10986,7 +10986,7 @@ Case0:
                 }
                 else
                 {
-                    index = static_cast<uint32>(-1);
+                    index = static_cast<uint32_t>(-1);
                     endIndex = min(end - seg->left, seg->length);
                 }
             }
@@ -10998,7 +10998,7 @@ Case0:
     //
     // Get current array element index.
     //
-    uint32 JavascriptArray::ArrayElementEnumerator::GetIndex() const
+    uint32_t JavascriptArray::ArrayElementEnumerator::GetIndex() const
     {
         Assert(seg && index < seg->length && index < endIndex);
         return seg->left + index;
@@ -11016,9 +11016,9 @@ Case0:
     }
 
     //
-    // Construct a BigIndex initialized to a given uint32 (small index).
+    // Construct a BigIndex initialized to a given uint32_t (small index).
     //
-    JavascriptArray::BigIndex::BigIndex(uint32 initIndex)
+    JavascriptArray::BigIndex::BigIndex(uint32_t initIndex)
         : index(initIndex), bigIndex(InvalidIndex)
     {
         //ok if initIndex == InvalidIndex
@@ -11032,7 +11032,7 @@ Case0:
     {
         if (bigIndex < InvalidIndex) // if it's actually small index
         {
-            index = static_cast<uint32>(bigIndex);
+            index = static_cast<uint32_t>(bigIndex);
             bigIndex = InvalidIndex;
         }
     }
@@ -11046,7 +11046,7 @@ Case0:
         return index < InvalidIndex;
     }
 
-    uint32 JavascriptArray::BigIndex::GetSmallIndex() const
+    uint32_t JavascriptArray::BigIndex::GetSmallIndex() const
     {
         Assert(IsSmallIndex());
         return index;
@@ -11131,11 +11131,11 @@ Case0:
     //
     // Get a new BigIndex representing this + delta.
     //
-    JavascriptArray::BigIndex JavascriptArray::BigIndex::operator+(uint32 delta) const
+    JavascriptArray::BigIndex JavascriptArray::BigIndex::operator+(uint32_t delta) const
     {
         if (IsSmallIndex())
         {
-            uint32 newIndex;
+            uint32_t newIndex;
             if (UInt32Math::Add(index, delta, &newIndex))
             {
                 return static_cast<unsigned long>(index) + static_cast<unsigned long>(delta);
@@ -11343,13 +11343,13 @@ Case0:
     //
     // Truncate the array at start and clone the truncated span as properties starting at dstIndex (asserting dstIndex >= MaxArrayLength).
     //
-    void JavascriptArray::TruncateToProperties(const BigIndex& dstIndex, uint32 start)
+    void JavascriptArray::TruncateToProperties(const BigIndex& dstIndex, uint32_t start)
     {
         Assert(!dstIndex.IsSmallIndex());
         typedef IndexTrace<BigIndex> index_trace;
 
         BigIndex dst = dstIndex;
-        uint32 i = start;
+        uint32_t i = start;
 
         ArrayElementEnumerator e(this, start);
         while(e.MoveNext<Var>())
@@ -11383,17 +11383,17 @@ Case0:
     //
     // Copy a srcArray elements (including elements from prototypes) to a dstArray starting from an index.
     //
-    void JavascriptArray::InternalCopyArrayElements(JavascriptArray* dstArray, const uint32 dstIndex, JavascriptArray* srcArray, uint32 start, uint32 end)
+    void JavascriptArray::InternalCopyArrayElements(JavascriptArray* dstArray, const uint32_t dstIndex, JavascriptArray* srcArray, uint32_t start, uint32_t end)
     {
         Assert(start < end && end <= srcArray->length);
 
-        uint32 count = 0;
+        uint32_t count = 0;
 
         // iterate on the array itself
         ArrayElementEnumerator e(srcArray, start, end);
         while(e.MoveNext<Var>())
         {
-            uint32 n = dstIndex + (e.GetIndex() - start);
+            uint32_t n = dstIndex + (e.GetIndex() - start);
             dstArray->DirectSetItemAt(n, e.GetItem<Var>());
             count++;
         }
@@ -11406,9 +11406,9 @@ Case0:
     }
 
     //
-    // Faster small_index overload of CopyArrayElements, asserting the uint32 dstIndex won't overflow.
+    // Faster small_index overload of CopyArrayElements, asserting the uint32_t dstIndex won't overflow.
     //
-    void JavascriptArray::CopyArrayElements(JavascriptArray* dstArray, uint32 dstIndex, JavascriptArray* srcArray, uint32 start, uint32 end)
+    void JavascriptArray::CopyArrayElements(JavascriptArray* dstArray, uint32_t dstIndex, JavascriptArray* srcArray, uint32_t start, uint32_t end)
     {
         end = min(end, srcArray->length);
         if (start < end)
@@ -11419,7 +11419,7 @@ Case0:
     }
 
     template <typename T>
-    void JavascriptArray::CopyAnyArrayElementsToVar(JavascriptArray* dstArray, T dstIndex, JavascriptArray* srcArray, uint32 start, uint32 end)
+    void JavascriptArray::CopyAnyArrayElementsToVar(JavascriptArray* dstArray, T dstIndex, JavascriptArray* srcArray, uint32_t start, uint32_t end)
     {
 #if ENABLE_COPYONACCESS_ARRAY
         JavascriptLibrary::CheckAndConvertCopyOnAccessNativeIntArray<Var>(srcArray);
@@ -11447,9 +11447,9 @@ Case0:
     }
 
     //
-    // Faster small_index overload of CopyArrayElements, asserting the uint32 dstIndex won't overflow.
+    // Faster small_index overload of CopyArrayElements, asserting the uint32_t dstIndex won't overflow.
     //
-    void JavascriptArray::CopyNativeIntArrayElementsToVar(JavascriptArray* dstArray, uint32 dstIndex, JavascriptNativeIntArray* srcArray, uint32 start, uint32 end)
+    void JavascriptArray::CopyNativeIntArrayElementsToVar(JavascriptArray* dstArray, uint32_t dstIndex, JavascriptNativeIntArray* srcArray, uint32_t start, uint32_t end)
     {
         end = min(end, srcArray->length);
         if (start < end)
@@ -11459,7 +11459,7 @@ Case0:
         }
     }
 
-    bool JavascriptArray::CopyNativeIntArrayElements(JavascriptNativeIntArray* dstArray, uint32 dstIndex, JavascriptNativeIntArray* srcArray, uint32 start, uint32 end)
+    bool JavascriptArray::CopyNativeIntArrayElements(JavascriptNativeIntArray* dstArray, uint32_t dstIndex, JavascriptNativeIntArray* srcArray, uint32_t start, uint32_t end)
     {
         end = min(end, srcArray->length);
         if (start >= end)
@@ -11470,7 +11470,7 @@ Case0:
         Assert(end - start <= MaxArrayLength - dstIndex);
         Assert(start < end && end <= srcArray->length);
 
-        uint32 count = 0;
+        uint32_t count = 0;
 
         // iterate on the array itself
         ArrayElementEnumerator e(srcArray, start, end);
@@ -11492,7 +11492,7 @@ Case0:
         return false;
     }
 
-    bool JavascriptArray::CopyNativeIntArrayElementsToFloat(JavascriptNativeFloatArray* dstArray, uint32 dstIndex, JavascriptNativeIntArray* srcArray, uint32 start, uint32 end)
+    bool JavascriptArray::CopyNativeIntArrayElementsToFloat(JavascriptNativeFloatArray* dstArray, uint32_t dstIndex, JavascriptNativeIntArray* srcArray, uint32_t start, uint32_t end)
     {
         end = min(end, srcArray->length);
         if (start >= end)
@@ -11503,7 +11503,7 @@ Case0:
         Assert(end - start <= MaxArrayLength - dstIndex);
         Assert(start < end && end <= srcArray->length);
 
-        uint32 count = 0;
+        uint32_t count = 0;
 
         // iterate on the array itself
         ArrayElementEnumerator e(srcArray, start, end);
@@ -11526,9 +11526,9 @@ Case0:
     }
 
     //
-    // Faster small_index overload of CopyArrayElements, asserting the uint32 dstIndex won't overflow.
+    // Faster small_index overload of CopyArrayElements, asserting the uint32_t dstIndex won't overflow.
     //
-    void JavascriptArray::CopyNativeFloatArrayElementsToVar(JavascriptArray* dstArray, uint32 dstIndex, JavascriptNativeFloatArray* srcArray, uint32 start, uint32 end)
+    void JavascriptArray::CopyNativeFloatArrayElementsToVar(JavascriptArray* dstArray, uint32_t dstIndex, JavascriptNativeFloatArray* srcArray, uint32_t start, uint32_t end)
     {
         end = min(end, srcArray->length);
         if (start < end)
@@ -11538,7 +11538,7 @@ Case0:
         }
     }
 
-    bool JavascriptArray::CopyNativeFloatArrayElements(JavascriptNativeFloatArray* dstArray, uint32 dstIndex, JavascriptNativeFloatArray* srcArray, uint32 start, uint32 end)
+    bool JavascriptArray::CopyNativeFloatArrayElements(JavascriptNativeFloatArray* dstArray, uint32_t dstIndex, JavascriptNativeFloatArray* srcArray, uint32_t start, uint32_t end)
     {
         end = min(end, srcArray->length);
         if (start >= end)
@@ -11549,7 +11549,7 @@ Case0:
         Assert(end - start <= MaxArrayLength - dstIndex);
         Assert(start < end && end <= srcArray->length);
 
-        uint32 count = 0;
+        uint32_t count = 0;
 
         // iterate on the array itself
         ArrayElementEnumerator e(srcArray, start, end);
@@ -11588,7 +11588,7 @@ Case0:
         return arr;
     }
 
-    BOOL JavascriptNativeIntArray::DirectGetItemAtFull(uint32 index, Var* outVal)
+    BOOL JavascriptNativeIntArray::DirectGetItemAtFull(uint32_t index, Var* outVal)
     {
         ScriptContext* requestContext = type->GetScriptContext();
         if (JavascriptConversion::PropertyQueryFlagsToBoolean(JavascriptNativeIntArray::GetItemQuery(this, index, outVal, requestContext)))
@@ -11599,7 +11599,7 @@ Case0:
         return JavascriptOperators::GetItem(this, this->GetPrototype(), index, outVal, requestContext);
     }
 
-    BOOL JavascriptNativeFloatArray::DirectGetItemAtFull(uint32 index, Var* outVal)
+    BOOL JavascriptNativeFloatArray::DirectGetItemAtFull(uint32_t index, Var* outVal)
     {
         ScriptContext* requestContext = type->GetScriptContext();
         if (JavascriptConversion::PropertyQueryFlagsToBoolean(JavascriptNativeFloatArray::GetItemQuery(this, index, outVal, requestContext)))
@@ -11610,11 +11610,11 @@ Case0:
         return JavascriptOperators::GetItem(this, this->GetPrototype(), index, outVal, requestContext);
     }
 
-    void JavascriptArray::InternalCopyNativeIntArrayElements(JavascriptArray* dstArray, uint32 dstIndex, JavascriptNativeIntArray* srcArray, uint32 start, uint32 end)
+    void JavascriptArray::InternalCopyNativeIntArrayElements(JavascriptArray* dstArray, uint32_t dstIndex, JavascriptNativeIntArray* srcArray, uint32_t start, uint32_t end)
     {
         Assert(start < end && end <= srcArray->length);
 
-        uint32 count = 0;
+        uint32_t count = 0;
 
         // iterate on the array itself
         ScriptContext *scriptContext = dstArray->GetScriptContext();
@@ -11622,7 +11622,7 @@ Case0:
         ArrayElementEnumerator e(srcArray, start, end);
         while(e.MoveNext<int32>())
         {
-            uint32 n = dstIndex + (e.GetIndex() - start);
+            uint32_t n = dstIndex + (e.GetIndex() - start);
             dstArray->DirectSetItemAt(n, JavascriptNumber::ToVar(e.GetItem<int32>(), scriptContext));
             count++;
         }
@@ -11634,18 +11634,18 @@ Case0:
         }
     }
 
-    void JavascriptArray::InternalCopyNativeFloatArrayElements(JavascriptArray* dstArray, uint32 dstIndex, JavascriptNativeFloatArray* srcArray, uint32 start, uint32 end)
+    void JavascriptArray::InternalCopyNativeFloatArrayElements(JavascriptArray* dstArray, uint32_t dstIndex, JavascriptNativeFloatArray* srcArray, uint32_t start, uint32_t end)
     {
         Assert(start < end && end <= srcArray->length);
 
-        uint32 count = 0;
+        uint32_t count = 0;
 
         // iterate on the array itself
         ScriptContext *scriptContext = dstArray->GetScriptContext();
         ArrayElementEnumerator e(srcArray, start, end);
         while(e.MoveNext<double>())
         {
-            uint32 n = dstIndex + (e.GetIndex() - start);
+            uint32_t n = dstIndex + (e.GetIndex() - start);
             dstArray->DirectSetItemAt(n, JavascriptNumber::ToVarWithCheck(e.GetItem<double>(), scriptContext));
             count++;
         }
@@ -11657,7 +11657,7 @@ Case0:
         }
     }
 
-    Var JavascriptArray::SpreadArrayArgs(Var arrayToSpread, const Js::AuxArray<uint32> *spreadIndices, ScriptContext *scriptContext)
+    Var JavascriptArray::SpreadArrayArgs(Var arrayToSpread, const Js::AuxArray<uint32_t> *spreadIndices, ScriptContext *scriptContext)
     {
         JS_REENTRANCY_LOCK(jsReentLock, scriptContext->GetThreadContext());
         SETOBJECT_FOR_MUTATION(jsReentLock, arrayToSpread);
@@ -11668,8 +11668,8 @@ Case0:
         JavascriptLibrary::CheckAndConvertCopyOnAccessNativeIntArray<Var>(arrayToSpread);
 #endif
         JavascriptArray *array = VarTo<JavascriptArray>(arrayToSpread);
-        uint32 arrayLength = array->GetLength();
-        uint32 actualLength = arrayLength;
+        uint32_t arrayLength = array->GetLength();
+        uint32_t actualLength = arrayLength;
 
         for (unsigned i = 0; i < spreadIndices->count; ++i)
         {
@@ -11682,7 +11682,7 @@ Case0:
         // Now we copy each element and expand the spread parameters inline.
         for (unsigned i = 0, spreadArrIndex = 0, resultIndex = 0; i < arrayLength && resultIndex < actualLength; ++i)
         {
-            uint32 spreadIndex = spreadIndices->elements[spreadArrIndex]; // The index of the next element to be spread.
+            uint32_t spreadIndex = spreadIndices->elements[spreadArrIndex]; // The index of the next element to be spread.
 
             // An array needs a slow copy if it is a cross-site object or we have missing values that need to be set to undefined.
             auto needArraySlowCopy = [&](Var instance) {
@@ -11696,7 +11696,7 @@ Case0:
 
             // Designed to have interchangeable arguments with CopyAnyArrayElementsToVar.
             auto slowCopy = [&scriptContext, &needArraySlowCopy
-                ](JavascriptArray *dstArray, unsigned dstIndex, Var srcArray, uint32 start, uint32 end) {
+                ](JavascriptArray *dstArray, unsigned dstIndex, Var srcArray, uint32_t start, uint32_t end) {
                 Assert(needArraySlowCopy(srcArray) || VarIs<ArgumentsObject>(srcArray) || VarIs<TypedArrayBase>(srcArray) || VarIs<JavascriptString>(srcArray));
                 JS_REENTRANCY_LOCK(jsReentLock, scriptContext->GetThreadContext());
 
@@ -11706,7 +11706,7 @@ Case0:
                     JavascriptError::ThrowTypeError(scriptContext, JSERR_InvalidSpreadArgument);
                 }
 
-                for (uint32 j = start; j < end; j++)
+                for (uint32_t j = start; j < end; j++)
                 {
                     Var element;
                     JS_REENTRANT(jsReentLock, BOOL gotItem = JavascriptOperators::GetItem(srcArray, propertyObject, j, &element, scriptContext));
@@ -11759,9 +11759,9 @@ Case0:
                 if (VarIs<SpreadArgument>(instance))
                 {
                     SpreadArgument* spreadArgument = VarTo<SpreadArgument>(instance);
-                    uint32 len = spreadArgument->GetArgumentSpreadCount();
+                    uint32_t len = spreadArgument->GetArgumentSpreadCount();
                     const Var*  spreadItems = spreadArgument->GetArgumentSpread();
-                    for (uint32 j = 0; j < len; j++)
+                    for (uint32_t j = 0; j < len; j++)
                     {
                         result->DirectSetItemAt(resultIndex++, spreadItems[j]);
                     }
@@ -11783,7 +11783,7 @@ Case0:
         return result;
     }
 
-    uint32 JavascriptArray::GetSpreadArgLen(Var spreadArg, ScriptContext *scriptContext)
+    uint32_t JavascriptArray::GetSpreadArgLen(Var spreadArg, ScriptContext *scriptContext)
     {
         // A spread argument can be anything that returns a 'length' property, even if that
         // property is null or undefined.
@@ -11941,7 +11941,7 @@ Case0:
         double inspectDouble;
         while (seg)
         {
-            uint32 i = 0;
+            uint32_t i = 0;
             for (i = 0; i < seg->length; i++)
             {
                 if (SparseArraySegment<Var>::IsMissingItem(&seg->elements[i]))
@@ -11978,7 +11978,7 @@ Case0:
 
         while (seg)
         {
-            uint32 i = seg->length;
+            uint32_t i = seg->length;
             while (i < seg->size)
             {
                 AssertMsg(SparseArraySegment<T>::IsMissingItem(&seg->elements[i]), "Non missing value the end of the segment");
@@ -11999,7 +11999,7 @@ Case0:
         SparseArraySegment<typename T::TElement>* src = SparseArraySegment<typename T::TElement>::From(instance->head);
         SparseArraySegment<typename T::TElement>* dst;
 
-        uint32 sourceSize = src->size;
+        uint32_t sourceSize = src->size;
         if (IsInlineSegment(src, instance))
         {
             // Copy head segment data between inlined head segments
@@ -12191,7 +12191,7 @@ Case0:
 
         ScriptContext* ctx = this->GetScriptContext();
 
-        uint32 index = Js::JavascriptArray::InvalidIndex;
+        uint32_t index = Js::JavascriptArray::InvalidIndex;
         while(true)
         {
             index = this->GetNextIndex(index);
@@ -12214,7 +12214,7 @@ Case0:
 
         ScriptContext* ctx = this->GetScriptContext();
 
-        uint32 index = Js::JavascriptArray::InvalidIndex;
+        uint32_t index = Js::JavascriptArray::InvalidIndex;
         while(true)
         {
             index = this->GetNextIndex(index);
@@ -12414,14 +12414,14 @@ Case0:
 
             if (nullptr == pIsIntArray)
             {
-                return library->CreateArray(static_cast<uint32>(length));
+                return library->CreateArray(static_cast<uint32_t>(length));
             }
             else
             {
                 // If the constructor function is the built-in Array constructor, we can be smart and create the right type of native array.
                 JavascriptArray* pArr = VarTo<JavascriptArray>(originalArray);
                 pArr->GetArrayTypeAndConvert(pIsIntArray, pIsFloatArray);
-                return CreateNewArrayHelper(static_cast<uint32>(length), *pIsIntArray, *pIsFloatArray, pArr, scriptContext);
+                return CreateNewArrayHelper(static_cast<uint32_t>(length), *pIsIntArray, *pIsFloatArray, pArr, scriptContext);
             }
         }
 
@@ -12484,7 +12484,7 @@ Case0:
         }
 
         ScriptContext* scriptContext = GetScriptContext();
-        uint32 index;
+        uint32_t index;
         if (scriptContext->IsNumericPropertyId(propertyId, &index))
         {
             return JavascriptConversion::BooleanToPropertyQueryFlags(this->HasItem(index));
@@ -12525,7 +12525,7 @@ Case0:
 
         ScriptContext* scriptContext = this->GetScriptContext();
 
-        uint32 index;
+        uint32_t index;
         if (scriptContext->IsNumericPropertyId(propertyId, &index))
         {
             return GetTypeHandler()->ConvertToTypeWithItemAttributes(this)
@@ -12542,7 +12542,7 @@ Case0:
     BOOL JavascriptArray::SetWritable(PropertyId propertyId, BOOL value)
     {
         ScriptContext* scriptContext = this->GetScriptContext();
-        uint32 index;
+        uint32_t index;
 
         bool setLengthNonWritable = (propertyId == PropertyIds::length && !value);
         if (setLengthNonWritable || scriptContext->IsNumericPropertyId(propertyId, &index))
@@ -12568,7 +12568,7 @@ Case0:
 
         ScriptContext* scriptContext = this->GetScriptContext();
 
-        uint32 index;
+        uint32_t index;
         if (scriptContext->IsNumericPropertyId(propertyId, &index))
         {
             return GetTypeHandler()->ConvertToTypeWithItemAttributes(this)
@@ -12590,7 +12590,7 @@ Case0:
         // changed, we need to handle it here.
         Assert(propertyId != PropertyIds::length);
 
-        uint32 index;
+        uint32_t index;
         if (scriptContext->IsNumericPropertyId(propertyId, &index))
         {
             return GetTypeHandler()->ConvertToTypeWithItemAttributes(this)
@@ -12608,7 +12608,7 @@ Case0:
     {
         ScriptContext* scriptContext = this->GetScriptContext();
 
-        uint32 index;
+        uint32_t index;
         if (scriptContext->IsNumericPropertyId(propertyId, &index))
         {
             return GetTypeHandler()->ConvertToTypeWithItemAttributes(this)
@@ -12622,7 +12622,7 @@ Case0:
     // Evolve typeHandlers explicitly so that simple typeHandlers can skip array
     // handling and only check instance objectArray for numeric propertyIds.
     //
-    BOOL JavascriptArray::SetItemWithAttributes(uint32 index, Var value, PropertyAttributes attributes)
+    BOOL JavascriptArray::SetItemWithAttributes(uint32_t index, Var value, PropertyAttributes attributes)
     {
         return GetTypeHandler()->ConvertToTypeWithItemAttributes(this)
             ->SetItemWithAttributes(this, index, value, attributes);
@@ -12632,7 +12632,7 @@ Case0:
     // Evolve typeHandlers explicitly so that simple typeHandlers can skip array
     // handling and only check instance objectArray for numeric propertyIds.
     //
-    BOOL JavascriptArray::SetItemAttributes(uint32 index, PropertyAttributes attributes)
+    BOOL JavascriptArray::SetItemAttributes(uint32_t index, PropertyAttributes attributes)
     {
         return GetTypeHandler()->ConvertToTypeWithItemAttributes(this)
             ->SetItemAttributes(this, index, attributes);
@@ -12642,7 +12642,7 @@ Case0:
     // Evolve typeHandlers explicitly so that simple typeHandlers can skip array
     // handling and only check instance objectArray for numeric propertyIds.
     //
-    BOOL JavascriptArray::SetItemAccessors(uint32 index, Var getter, Var setter)
+    BOOL JavascriptArray::SetItemAccessors(uint32_t index, Var getter, Var setter)
     {
         return GetTypeHandler()->ConvertToTypeWithItemAttributes(this)
             ->SetItemAccessors(this, index, getter, setter);
@@ -12676,7 +12676,7 @@ Case0:
         return enumerator->Initialize(nullptr, nullptr, this, EnumeratorFlags::SnapShotSemantics, requestContext, nullptr);
     }
 
-    BOOL JavascriptArray::IsItemEnumerable(uint32 index)
+    BOOL JavascriptArray::IsItemEnumerable(uint32_t index)
     {
         return true;
     }
@@ -12708,7 +12708,7 @@ Case0:
         return GetTypeHandler()->ConvertToTypeWithItemAttributes(this)->Freeze(this);
     }
 
-    BOOL JavascriptArray::GetSpecialPropertyName(uint32 index, JavascriptString ** propertyName, ScriptContext * requestContext)
+    BOOL JavascriptArray::GetSpecialPropertyName(uint32_t index, JavascriptString ** propertyName, ScriptContext * requestContext)
     {
         if (index == 0)
         {
@@ -12746,7 +12746,7 @@ Case0:
         }
 
         ScriptContext* scriptContext = GetScriptContext();
-        uint32 index;
+        uint32_t index;
         if (scriptContext->IsNumericPropertyId(propertyId, &index))
         {
             return JavascriptConversion::BooleanToPropertyQueryFlags(this->GetItem(this, index, value, scriptContext));
@@ -12788,28 +12788,28 @@ Case0:
         return false;
     }
 
-    PropertyQueryFlags JavascriptArray::HasItemQuery(uint32 index)
+    PropertyQueryFlags JavascriptArray::HasItemQuery(uint32_t index)
     {
         Var value;
         return JavascriptConversion::BooleanToPropertyQueryFlags(this->DirectGetItemAt<Var>(index, &value));
     }
 
-    PropertyQueryFlags JavascriptArray::GetItemQuery(Var originalInstance, uint32 index, Var* value, ScriptContext* requestContext)
+    PropertyQueryFlags JavascriptArray::GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext* requestContext)
     {
         return JavascriptConversion::BooleanToPropertyQueryFlags(this->DirectGetItemAt<Var>(index, value));
     }
 
-    PropertyQueryFlags JavascriptArray::GetItemReferenceQuery(Var originalInstance, uint32 index, Var* value, ScriptContext* requestContext)
+    PropertyQueryFlags JavascriptArray::GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext* requestContext)
     {
         return JavascriptConversion::BooleanToPropertyQueryFlags(this->DirectGetItemAt<Var>(index, value));
     }
 
-    BOOL JavascriptArray::DirectGetVarItemAt(uint32 index, Var *value, ScriptContext *requestContext)
+    BOOL JavascriptArray::DirectGetVarItemAt(uint32_t index, Var *value, ScriptContext *requestContext)
     {
         return this->DirectGetItemAt<Var>(index, value);
     }
 
-    PropertyQueryFlags JavascriptNativeIntArray::HasItemQuery(uint32 index)
+    PropertyQueryFlags JavascriptNativeIntArray::HasItemQuery(uint32_t index)
     {
 #if ENABLE_COPYONACCESS_ARRAY
         JavascriptLibrary::CheckAndConvertCopyOnAccessNativeIntArray<Var>(this);
@@ -12818,13 +12818,13 @@ Case0:
         return JavascriptConversion::BooleanToPropertyQueryFlags(this->DirectGetItemAt<int32>(index, &value));
     }
 
-    PropertyQueryFlags JavascriptNativeFloatArray::HasItemQuery(uint32 index)
+    PropertyQueryFlags JavascriptNativeFloatArray::HasItemQuery(uint32_t index)
     {
         double dvalue;
         return JavascriptConversion::BooleanToPropertyQueryFlags(this->DirectGetItemAt<double>(index, &dvalue));
     }
 
-    PropertyQueryFlags JavascriptNativeIntArray::GetItemQuery(Var originalInstance, uint32 index, Var* value, ScriptContext* requestContext)
+    PropertyQueryFlags JavascriptNativeIntArray::GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext* requestContext)
     {
 #if ENABLE_COPYONACCESS_ARRAY
         JavascriptLibrary::CheckAndConvertCopyOnAccessNativeIntArray<Var>(this);
@@ -12832,7 +12832,7 @@ Case0:
         return JavascriptConversion::BooleanToPropertyQueryFlags(JavascriptNativeIntArray::DirectGetVarItemAt(index, value, requestContext));
     }
 
-    BOOL JavascriptNativeIntArray::DirectGetVarItemAt(uint32 index, Var *value, ScriptContext *requestContext)
+    BOOL JavascriptNativeIntArray::DirectGetVarItemAt(uint32_t index, Var *value, ScriptContext *requestContext)
     {
         int32 intvalue;
         if (!this->DirectGetItemAt<int32>(index, &intvalue))
@@ -12843,17 +12843,17 @@ Case0:
         return TRUE;
     }
 
-    PropertyQueryFlags JavascriptNativeIntArray::GetItemReferenceQuery(Var originalInstance, uint32 index, Var* value, ScriptContext* requestContext)
+    PropertyQueryFlags JavascriptNativeIntArray::GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext* requestContext)
     {
         return JavascriptNativeIntArray::GetItemQuery(originalInstance, index, value, requestContext);
     }
 
-    PropertyQueryFlags JavascriptNativeFloatArray::GetItemQuery(Var originalInstance, uint32 index, Var* value, ScriptContext* requestContext)
+    PropertyQueryFlags JavascriptNativeFloatArray::GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext* requestContext)
     {
         return JavascriptConversion::BooleanToPropertyQueryFlags(JavascriptNativeFloatArray::DirectGetVarItemAt(index, value, requestContext));
     }
 
-    BOOL JavascriptNativeFloatArray::DirectGetVarItemAt(uint32 index, Var *value, ScriptContext *requestContext)
+    BOOL JavascriptNativeFloatArray::DirectGetVarItemAt(uint32_t index, Var *value, ScriptContext *requestContext)
     {
         double dvalue;
         int32 ivalue;
@@ -12876,7 +12876,7 @@ Case0:
         return TRUE;
     }
 
-    PropertyQueryFlags JavascriptNativeFloatArray::GetItemReferenceQuery(Var originalInstance, uint32 index, Var* value, ScriptContext* requestContext)
+    PropertyQueryFlags JavascriptNativeFloatArray::GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext* requestContext)
     {
         return JavascriptNativeFloatArray::GetItemQuery(originalInstance, index, value, requestContext);
     }
@@ -12886,7 +12886,7 @@ Case0:
 #if ENABLE_COPYONACCESS_ARRAY
         JavascriptLibrary::CheckAndConvertCopyOnAccessNativeIntArray<Var>(this);
 #endif
-        uint32 indexValue;
+        uint32_t indexValue;
         if (propertyId == PropertyIds::length)
         {
             return this->SetLength(value);
@@ -12935,7 +12935,7 @@ Case0:
             return this->SetLength(value);
         }
 
-        uint32 index;
+        uint32_t index;
         if (scriptContext->IsNumericPropertyId(propertyId, &index))
         {
             // Call this or subclass method
@@ -12945,13 +12945,13 @@ Case0:
         return __super::SetPropertyWithAttributes(propertyId, value, attributes, info, flags, possibleSideEffects);
     }
 
-    BOOL JavascriptArray::SetItem(uint32 index, Var value, PropertyOperationFlags flags)
+    BOOL JavascriptArray::SetItem(uint32_t index, Var value, PropertyOperationFlags flags)
     {
         this->DirectSetItemAt(index, value);
         return true;
     }
 
-    BOOL JavascriptNativeIntArray::SetItem(uint32 index, Var value, PropertyOperationFlags flags)
+    BOOL JavascriptNativeIntArray::SetItem(uint32_t index, Var value, PropertyOperationFlags flags)
     {
         int32 iValue;
         double dValue;
@@ -13011,7 +13011,7 @@ Case0:
         return TypeIds_Array;
     }
 
-    BOOL JavascriptNativeIntArray::SetItem(uint32 index, int32 iValue)
+    BOOL JavascriptNativeIntArray::SetItem(uint32_t index, int32 iValue)
     {
         if (iValue == JavascriptNativeIntArray::MissingItem)
         {
@@ -13024,7 +13024,7 @@ Case0:
         return TRUE;
     }
 
-    BOOL JavascriptNativeFloatArray::SetItem(uint32 index, Var value, PropertyOperationFlags flags)
+    BOOL JavascriptNativeFloatArray::SetItem(uint32_t index, Var value, PropertyOperationFlags flags)
     {
         double dValue;
         TypeId typeId = this->TrySetNativeFloatArrayItem(value, &dValue);
@@ -13056,7 +13056,7 @@ Case0:
         return TypeIds_Array;
     }
 
-    BOOL JavascriptNativeFloatArray::SetItem(uint32 index, double dValue)
+    BOOL JavascriptNativeFloatArray::SetItem(uint32_t index, double dValue)
     {
         if (*(unsigned long*)&dValue == *(unsigned long*)&JavascriptNativeFloatArray::MissingItem)
         {
@@ -13069,17 +13069,17 @@ Case0:
         return TRUE;
     }
 
-    BOOL JavascriptArray::DeleteItem(uint32 index, PropertyOperationFlags flags)
+    BOOL JavascriptArray::DeleteItem(uint32_t index, PropertyOperationFlags flags)
     {
         return this->DirectDeleteItemAt<Var>(index);
     }
 
-    BOOL JavascriptNativeIntArray::DeleteItem(uint32 index, PropertyOperationFlags flags)
+    BOOL JavascriptNativeIntArray::DeleteItem(uint32_t index, PropertyOperationFlags flags)
     {
         return this->DirectDeleteItemAt<int32>(index);
     }
 
-    BOOL JavascriptNativeFloatArray::DeleteItem(uint32 index, PropertyOperationFlags flags)
+    BOOL JavascriptNativeFloatArray::DeleteItem(uint32_t index, PropertyOperationFlags flags)
     {
         return this->DirectDeleteItemAt<double>(index);
     }
@@ -13157,15 +13157,15 @@ Case0:
     template void* Js::JavascriptArray::TemplatedIndexOfHelper<true, Js::TypedArrayBase, unsigned int>(Js::TypedArrayBase*, void*, unsigned int, unsigned int, Js::ScriptContext*);
 
     // Explicit instantiation of Sorting Algorithms for each form of typed array
-    template void Js::JavascriptArray::TypedArraySort<char16_t>(char16_t*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
-    template void Js::JavascriptArray::TypedArraySort<int8_t>(int8_t*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
-    template void Js::JavascriptArray::TypedArraySort<uint8_t>(uint8_t*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
-    template void Js::JavascriptArray::TypedArraySort<int16>(int16*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
-    template void Js::JavascriptArray::TypedArraySort<uint16>(uint16*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
-    template void Js::JavascriptArray::TypedArraySort<int32>(int32*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
-    template void Js::JavascriptArray::TypedArraySort<uint32>(uint32*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
-    template void Js::JavascriptArray::TypedArraySort<float>(float*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
-    template void Js::JavascriptArray::TypedArraySort<double>(double*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
-    template void Js::JavascriptArray::TypedArraySort<long>(long*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
-    template void Js::JavascriptArray::TypedArraySort<unsigned long>(unsigned long*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
-    template void Js::JavascriptArray::TypedArraySort<bool>(bool*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
+    template void Js::JavascriptArray::TypedArraySort<char16_t>(char16_t*, uint32_t, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
+    template void Js::JavascriptArray::TypedArraySort<int8_t>(int8_t*, uint32_t, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
+    template void Js::JavascriptArray::TypedArraySort<uint8_t>(uint8_t*, uint32_t, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
+    template void Js::JavascriptArray::TypedArraySort<int16>(int16*, uint32_t, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
+    template void Js::JavascriptArray::TypedArraySort<uint16>(uint16*, uint32_t, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
+    template void Js::JavascriptArray::TypedArraySort<int32>(int32*, uint32_t, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
+    template void Js::JavascriptArray::TypedArraySort<uint32_t>(uint32_t*, uint32_t, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
+    template void Js::JavascriptArray::TypedArraySort<float>(float*, uint32_t, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
+    template void Js::JavascriptArray::TypedArraySort<double>(double*, uint32_t, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
+    template void Js::JavascriptArray::TypedArraySort<long>(long*, uint32_t, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
+    template void Js::JavascriptArray::TypedArraySort<unsigned long>(unsigned long*, uint32_t, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
+    template void Js::JavascriptArray::TypedArraySort<bool>(bool*, uint32_t, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);

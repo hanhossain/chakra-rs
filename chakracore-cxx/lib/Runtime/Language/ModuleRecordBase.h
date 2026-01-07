@@ -28,7 +28,7 @@ namespace Js
     class ModuleRecordBase : public FinalizableObject
     {
     public:
-        static const uint32 ModuleMagicNumber;
+        static const uint32_t ModuleMagicNumber;
         ModuleRecordBase(JavascriptLibrary* library) :
             namespaceObject(nullptr), wasEvaluated(false),
             javascriptLibrary(library),  magicNumber(ModuleMagicNumber){};
@@ -48,7 +48,7 @@ namespace Js
         virtual bool IsSourceTextModuleRecord() { return false; }
 
     protected:
-        Field(uint32) magicNumber;
+        Field(uint32_t) magicNumber;
         Field(ModuleNamespace*) namespaceObject;
         Field(bool) wasEvaluated;
         Field(JavascriptLibrary*) javascriptLibrary;
