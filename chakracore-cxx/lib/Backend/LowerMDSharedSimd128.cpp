@@ -17,7 +17,7 @@ static IR::Instr* removeInstr(IR::Instr* instr)
     return prevInstr;
 }
 
-#define GET_SIMDOPCODE(irOpcode) m_simd128OpCodesMap[(uint32)(irOpcode - Js::OpCode::Simd128_Start)]
+#define GET_SIMDOPCODE(irOpcode) m_simd128OpCodesMap[(uint32_t)(irOpcode - Js::OpCode::Simd128_Start)]
 
 #define SET_SIMDOPCODE(irOpcode, mdOpcode) \
     Assert((uint32)m_simd128OpCodesMap[(uint32)(Js::OpCode::irOpcode - Js::OpCode::Simd128_Start)] == 0);\

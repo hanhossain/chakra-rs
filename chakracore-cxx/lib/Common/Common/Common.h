@@ -11,5 +11,5 @@
 namespace Js
 {
     typedef int32 PropertyId;
-    typedef uint32 ModuleID;
+    typedef uint32_t ModuleID;
 }

@@ -1177,7 +1177,7 @@ JITTimeFunctionBody::InitializeStatementMap(Js::SmallSpanSequence * statementMap
 
     // TODO: (leish OOP JIT) using arena to prevent memory leak, fix to really implement GrowingUint32ArenaArray::Create()
     // or find other way to reuse like michhol's comments
-    typedef JsUtil::GrowingArray<uint32, ArenaAllocator> GrowingUint32ArenaArray;
+    typedef JsUtil::GrowingArray<uint32_t, ArenaAllocator> GrowingUint32ArenaArray;
 
     if (statementsLength > 0)
     {

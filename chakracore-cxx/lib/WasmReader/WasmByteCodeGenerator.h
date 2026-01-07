@@ -150,7 +150,7 @@ namespace Wasm
         }
     };
 
-    typedef JsUtil::BaseDictionary<uint32, LPCUTF8, ArenaAllocator> WasmExportDictionary;
+    typedef JsUtil::BaseDictionary<uint32_t, LPCUTF8, ArenaAllocator> WasmExportDictionary;
 
     class WasmModuleGenerator
     {

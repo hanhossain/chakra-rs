@@ -366,7 +366,7 @@ private:
     IR::Opnd**          m_saveLoopImplicitCallFlags;
     IR::RegOpnd *       m_loopBodyForInEnumeratorArrayOpnd;
 #ifdef BYTECODE_BRANCH_ISLAND
-    typedef JsUtil::BaseDictionary<uint32, uint32, JitArenaAllocator> LongBranchMap;
+    typedef JsUtil::BaseDictionary<uint32_t, uint32_t, JitArenaAllocator> LongBranchMap;
     LongBranchMap * longBranchMap;
     static IR::Instr * const VirtualLongBranchInstr;
 #endif

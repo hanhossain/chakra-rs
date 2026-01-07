@@ -10,7 +10,7 @@ namespace Wasm
     const uint16 EXTENDED_OFFSET = 256;
     namespace Simd {
         const size_t VEC_WIDTH = 4;
-        typedef uint32 simdvec [VEC_WIDTH]; //TODO: maybe we should pull in SIMDValue?
+        typedef uint32_t simdvec [VEC_WIDTH]; //TODO: maybe we should pull in SIMDValue?
         const size_t MAX_LANES = 16;
         void EnsureSimdIsEnabled();
         bool IsEnabled();

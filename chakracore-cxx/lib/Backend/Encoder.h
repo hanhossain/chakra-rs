@@ -14,7 +14,7 @@
 
 typedef JsUtil::List<NativeOffsetInlineeFramePair, ArenaAllocator> ArenaInlineeFrameMap;
 typedef JsUtil::List<IR::PragmaInstr*, ArenaAllocator> PragmaInstrList;
-typedef JsUtil::List<uint32, ArenaAllocator> OffsetList;
+typedef JsUtil::List<uint32_t, ArenaAllocator> OffsetList;
 typedef JsUtil::List<BranchJumpTableWrapper*, ArenaAllocator> JmpTableList;
 typedef JsUtil::List<LazyBailOutRecord, ArenaAllocator> ArenaLazyBailoutRecordList;
 

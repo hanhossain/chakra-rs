@@ -34,7 +34,7 @@ namespace Js
     {
     private:
         // Note: IndexPropertyDescriptor contains references. We need to allocate entries as non-leaf node.
-        typedef JsUtil::BaseDictionary<uint32, IndexPropertyDescriptor, ForceNonLeafAllocator<Recycler>::AllocatorType, PowerOf2SizePolicy>
+        typedef JsUtil::BaseDictionary<uint32_t, IndexPropertyDescriptor, ForceNonLeafAllocator<Recycler>::AllocatorType, PowerOf2SizePolicy>
             InnerMap;
 
         FieldNoBarrier(Recycler*) recycler;

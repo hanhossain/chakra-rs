@@ -9,7 +9,7 @@
 
 namespace Js
 {
-    typedef Var (*PFNCreateTypedArray)(Js::ArrayBufferBase* arrayBuffer, uint32 offSet, uint32 mappedLength, Js::JavascriptLibrary* javascriptLibrary);
+    typedef Var (*PFNCreateTypedArray)(Js::ArrayBufferBase* arrayBuffer, uint32_t offSet, uint32_t mappedLength, Js::JavascriptLibrary* javascriptLibrary);
 
     template<typename T> bool TypedArrayCompareElementsHelper(JavascriptArray::CompareVarsInfo* cvInfo, const void* elem1, const void* elem2);
 
@@ -236,7 +236,7 @@ namespace Js
     typedef TypedArray<int16>               Int16Array;
     typedef TypedArray<uint16>              Uint16Array;
     typedef TypedArray<int32>               Int32Array;
-    typedef TypedArray<uint32>              Uint32Array;
+    typedef TypedArray<uint32_t>              Uint32Array;
     typedef TypedArray<float>               Float32Array;
     typedef TypedArray<double>              Float64Array;
     typedef TypedArray<long>               Int64Array;
@@ -248,7 +248,7 @@ namespace Js
     typedef TypedArray<int16, false, true>  Int16VirtualArray;
     typedef TypedArray<uint16, false, true> Uint16VirtualArray;
     typedef TypedArray<int32, false, true>  Int32VirtualArray;
-    typedef TypedArray<uint32, false, true> Uint32VirtualArray;
+    typedef TypedArray<uint32_t, false, true> Uint32VirtualArray;
     typedef TypedArray<float, false, true>  Float32VirtualArray;
     typedef TypedArray<double, false, true> Float64VirtualArray;
 
