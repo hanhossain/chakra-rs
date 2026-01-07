@@ -10,7 +10,7 @@ namespace Js
     {
     private:
         Field(TypedArrayBase*) typedArrayObject;
-        Field(uint32) index;
+        Field(uint32_t) index;
         Field(bool) doneArray;
         Field(EnumeratorFlags) flags;
 
@@ -21,6 +21,6 @@ namespace Js
         TypedArrayIndexEnumerator(TypedArrayBase* typeArrayBase, EnumeratorFlags flags, ScriptContext* scriptContext);
         virtual JavascriptString * MoveAndGetNext(PropertyId& propertyId, PropertyAttributes* attributes = nullptr) override;
         virtual void Reset() override;
-        virtual uint32 GetCurrentItemIndex()  override { return index; }
+        virtual uint32_t GetCurrentItemIndex()  override { return index; }
     };
 }

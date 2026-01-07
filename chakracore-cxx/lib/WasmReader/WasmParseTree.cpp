@@ -89,7 +89,7 @@ bool IsLocalType(WasmTypes::WasmType type)
     return type >= WasmTypes::FirstLocalType && type < WasmTypes::Limit;
 }
 
-uint32 GetTypeByteSize(WasmType type)
+uint32_t GetTypeByteSize(WasmType type)
 {
     switch (type)
     {

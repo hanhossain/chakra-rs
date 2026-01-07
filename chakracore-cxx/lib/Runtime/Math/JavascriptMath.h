@@ -93,7 +93,7 @@ namespace Js
 
             static double Random(ScriptContext *scriptContext);
             static int32 ToInt32Core(double T1);
-            static uint32 ToUInt32(double value);
+            static uint32_t ToUInt32(double value);
             static long TryToInt64(double T1);
             static int32 ToInt32_NoObjects(Var aValue, ScriptContext* scriptContext, bool& isObject);
             static int32 ToInt32(Var aValue, ScriptContext* scriptContext);

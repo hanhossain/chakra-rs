@@ -185,7 +185,7 @@ public:
     void            ApplyRelocs(size_t codeBufferAddress, size_t codeSize, uint* bufferCRC, BOOL isBrShorteningSucceeded, bool isFinalBufferValidation = false);
     uint            GetRelocDataSize(EncodeRelocAndLabels *reloc);
     uint8_t *          GetRelocBufferAddress(EncodeRelocAndLabels * reloc);
-    void            EncodeInlineeCallInfo(IR::Instr *instr, uint32 offset);
+    void            EncodeInlineeCallInfo(IR::Instr *instr, uint32_t offset);
     static bool     TryConstFold(IR::Instr *instr, IR::RegOpnd *regOpnd);
     static bool     TryFold(IR::Instr *instr, IR::RegOpnd *regOpnd);
     static bool     SetsConditionCode(IR::Instr *instr);
@@ -195,8 +195,8 @@ public:
     static bool     IsMOVEncoding(IR::Instr *instr);
     RelocList*      GetRelocList() const { return m_relocList; }
     int             AppendRelocEntry(RelocType type, void *ptr, IR::LabelInstr *label= nullptr);
-    int             FixRelocListEntry(uint32 index, int totalBytesSaved, uint8_t *buffStart, uint8_t* buffEnd);
-    void            FixMaps(uint32 brOffset, uint32 bytesSaved, FixUpMapIndex *mapIndices);
+    int             FixRelocListEntry(uint32_t index, int totalBytesSaved, uint8_t *buffStart, uint8_t* buffEnd);
+    void            FixMaps(uint32_t brOffset, uint32_t bytesSaved, FixUpMapIndex *mapIndices);
     void            UpdateRelocListWithNewBuffer(RelocList * relocList, uint8_t * newBuffer, uint8_t * oldBufferStart, uint8_t * oldBufferEnd);
 #ifdef DBG
     void            VerifyRelocList(uint8_t *buffStart, uint8_t *buffEnd);
@@ -210,8 +210,8 @@ private:
     const uint8_t *    GetOpbyte(IR::Instr *instr);
     uint8_t            GetRegEncode(IR::RegOpnd *regOpnd);
     uint8_t            GetRegEncode(RegNum reg);
-    static uint32   GetOpdope(IR::Instr *instr);
-    uint32          GetLeadIn(IR::Instr * instr);
+    static uint32_t   GetOpdope(IR::Instr *instr);
+    uint32_t          GetLeadIn(IR::Instr * instr);
     uint8_t            EmitModRM(IR::Instr * instr, IR::Opnd *opnd, uint8_t reg1);
     void            EmitConst(size_t val, int size, bool allowImm64 = false);
     uint8_t            EmitImmed(IR::Opnd * opnd, int opSize, int sbit, bool allowImm64 = false);

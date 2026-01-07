@@ -27,10 +27,10 @@ namespace Js
         static Var EntryGrow(RecyclableObject* function, CallInfo callInfo, ...);
         static Var EntryGetterBuffer(RecyclableObject* function, CallInfo callInfo, ...);
 
-        static WebAssemblyMemory * CreateMemoryObject(uint32 initial, uint32 maximum, bool isShared, ScriptContext * scriptContext);
-        static WebAssemblyMemory * CreateForExistingBuffer(uint32 initial, uint32 maximum, uint32 currentByteLength, ScriptContext * scriptContext);
+        static WebAssemblyMemory * CreateMemoryObject(uint32_t initial, uint32_t maximum, bool isShared, ScriptContext * scriptContext);
+        static WebAssemblyMemory * CreateForExistingBuffer(uint32_t initial, uint32_t maximum, uint32_t currentByteLength, ScriptContext * scriptContext);
 #ifdef ENABLE_WASM_THREADS
-        static WebAssemblyMemory * CreateFromSharedContents(uint32 initial, uint32 maximum, SharedContents* sharedContents, ScriptContext * scriptContext);
+        static WebAssemblyMemory * CreateFromSharedContents(uint32_t initial, uint32_t maximum, SharedContents* sharedContents, ScriptContext * scriptContext);
 #endif
 
         ArrayBufferBase * GetBuffer() const;
@@ -41,17 +41,17 @@ namespace Js
         bool IsSharedMemory() const;
 #endif
 
-        int32 GrowInternal(uint32 deltaPages);
-        static int32 GrowHelper(Js::WebAssemblyMemory * memory, uint32 deltaPages);
+        int32 GrowInternal(uint32_t deltaPages);
+        static int32 GrowHelper(Js::WebAssemblyMemory * memory, uint32_t deltaPages);
 
         static int GetOffsetOfArrayBuffer() { return offsetof(WebAssemblyMemory, m_buffer); }
 #if DBG
-        static void TraceMemWrite(WebAssemblyMemory* mem, uint32 index, uint32 offset, Js::ArrayBufferView::ViewType viewType, uint32 bytecodeOffset, ScriptContext* context);
+        static void TraceMemWrite(WebAssemblyMemory* mem, uint32_t index, uint32_t offset, Js::ArrayBufferView::ViewType viewType, uint32_t bytecodeOffset, ScriptContext* context);
 #endif
     private:
-        WebAssemblyMemory(ArrayBufferBase* buffer, uint32 initial, uint32 maximum, DynamicType * type);
-        static void CheckLimits(ScriptContext * scriptContext, uint32 initial, uint32 maximum);
-        static void CheckLimits(ScriptContext * scriptContext, uint32 initial, uint32 maximum, uint32 bufferLength);
+        WebAssemblyMemory(ArrayBufferBase* buffer, uint32_t initial, uint32_t maximum, DynamicType * type);
+        static void CheckLimits(ScriptContext * scriptContext, uint32_t initial, uint32_t maximum);
+        static void CheckLimits(ScriptContext * scriptContext, uint32_t initial, uint32_t maximum, uint32_t bufferLength);
 
         Field(ArrayBufferBase*) m_buffer;
 

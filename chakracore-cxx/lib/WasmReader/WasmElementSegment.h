@@ -11,19 +11,19 @@ namespace Wasm
     class WasmElementSegment
     {
     public:
-        WasmElementSegment(ArenaAllocator* alloc, const uint32 index, const WasmNode initExpr, const uint32 numElem);
-        void AddElement(const uint32 funcIndex);
-        uint32 GetElement(const uint32 tableIndex) const;
-        uint32 GetNumElements() const { return m_numElem; }
+        WasmElementSegment(ArenaAllocator* alloc, const uint32_t index, const WasmNode initExpr, const uint32_t numElem);
+        void AddElement(const uint32_t funcIndex);
+        uint32_t GetElement(const uint32_t tableIndex) const;
+        uint32_t GetNumElements() const { return m_numElem; }
         WasmNode GetOffsetExpr() const { return m_offsetExpr; }
     private:
         ArenaAllocator* m_alloc;
-        uint32 m_index;
+        uint32_t m_index;
         const WasmNode m_offsetExpr;
-        uint32 m_numElem;
-        uint32 m_offset;
-        uint32 m_elemIdx;
-        uint32* m_elems;
+        uint32_t m_numElem;
+        uint32_t m_offset;
+        uint32_t m_elemIdx;
+        uint32_t* m_elems;
 
         void Init();
     };

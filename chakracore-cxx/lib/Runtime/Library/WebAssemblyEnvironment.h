@@ -22,19 +22,19 @@ namespace Js
 
         Field(Var)* GetStartPtr() const { return start; }
 
-        WasmScriptFunction* GetWasmFunction(uint32 index) const;
-        void SetWasmFunction(uint32 index, WasmScriptFunction* func);
-        void SetImportedFunction(uint32 index, Var importedFunc);
-        WebAssemblyTable* GetTable(uint32 index) const;
-        void SetTable(uint32 index, class WebAssemblyTable* table);
-        WebAssemblyMemory* GetMemory(uint32 index) const;
-        void SetMemory(uint32 index, WebAssemblyMemory* mem);
+        WasmScriptFunction* GetWasmFunction(uint32_t index) const;
+        void SetWasmFunction(uint32_t index, WasmScriptFunction* func);
+        void SetImportedFunction(uint32_t index, Var importedFunc);
+        WebAssemblyTable* GetTable(uint32_t index) const;
+        void SetTable(uint32_t index, class WebAssemblyTable* table);
+        WebAssemblyMemory* GetMemory(uint32_t index) const;
+        void SetMemory(uint32_t index, WebAssemblyMemory* mem);
         Wasm::WasmConstLitNode GetGlobalValue(Wasm::WasmGlobal* global) const;
         void SetGlobalValue(class Wasm::WasmGlobal* global, Wasm::WasmConstLitNode cnst);
 
         void CalculateOffsets(WebAssemblyTable* table, WebAssemblyMemory* memory);
-        uint32 GetElementSegmentOffset(uint32 index) const;
-        uint32 GetDataSegmentOffset(uint32 index) const;
+        uint32_t GetElementSegmentOffset(uint32_t index) const;
+        uint32_t GetDataSegmentOffset(uint32_t index) const;
 
     private:
         Field(WebAssemblyModule*) module;
@@ -47,17 +47,17 @@ namespace Js
         Field(Field(Var)*) table;
         Field(Field(Var)*) globals;
 
-        uint32* elementSegmentOffsets;
-        uint32* dataSegmentOffsets;
+        uint32_t* elementSegmentOffsets;
+        uint32_t* dataSegmentOffsets;
         DebugOnly(bool offsetInitialized = false);
 
         ArenaAllocator m_alloc;
     private:
         template<typename T> void CheckPtrIsValid(intptr_t ptr) const;
-        template<typename T> T* GetVarElement(Field(Var)* ptr, uint32 index, uint32 maxCount) const;
-        template<typename T> void SetVarElement(Field(Var)* ptr, T* val, uint32 index, uint32 maxCount);
-        template<typename T> T GetGlobalInternal(uint32 offset) const;
-        template<typename T> void SetGlobalInternal(uint32 offset, T val);
+        template<typename T> T* GetVarElement(Field(Var)* ptr, uint32_t index, uint32_t maxCount) const;
+        template<typename T> void SetVarElement(Field(Var)* ptr, T* val, uint32_t index, uint32_t maxCount);
+        template<typename T> T GetGlobalInternal(uint32_t offset) const;
+        template<typename T> void SetGlobalInternal(uint32_t offset, T val);
     };
 
 } // namespace Js

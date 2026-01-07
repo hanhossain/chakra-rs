@@ -29,7 +29,7 @@ namespace Js
         return this->GetType()->IsExternal();
     }
 
-    inline BOOL RecyclableObject::HasItem(uint32 index)
+    inline BOOL RecyclableObject::HasItem(uint32_t index)
     {
         return JavascriptConversion::PropertyQueryFlagsToBoolean(HasItemQuery(index));
     }
@@ -54,12 +54,12 @@ namespace Js
         return JavascriptConversion::PropertyQueryFlagsToBoolean(GetPropertyReferenceQuery(originalInstance, propertyId, value, info, requestContext));
     }
 
-    inline BOOL RecyclableObject::GetItem(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext)
+    inline BOOL RecyclableObject::GetItem(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext)
     {
         return JavascriptConversion::PropertyQueryFlagsToBoolean(GetItemQuery(originalInstance, index, value, requestContext));
     }
 
-    inline BOOL RecyclableObject::GetItemReference(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext)
+    inline BOOL RecyclableObject::GetItemReference(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext)
     {
         return JavascriptConversion::PropertyQueryFlagsToBoolean(GetItemReferenceQuery(originalInstance, index, value, requestContext));
     }

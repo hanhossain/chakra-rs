@@ -22,12 +22,12 @@ void WasmCustomReader::SeekToFunctionBody(class WasmFunctionInfo* funcInfo)
 
 bool WasmCustomReader::IsCurrentFunctionCompleted() const
 {
-    return m_state >= (uint32)m_nodes.Count();
+    return m_state >= (uint32_t)m_nodes.Count();
 }
 
 WasmOp WasmCustomReader::ReadExpr()
 {
-    if (m_state < (uint32)m_nodes.Count())
+    if (m_state < (uint32_t)m_nodes.Count())
     {
         m_currentNode = m_nodes.Item(m_state++);
         return m_currentNode.op;
@@ -44,9 +44,9 @@ void WasmCustomReader::AddNode(WasmNode node)
     m_nodes.Add(node);
 }
 
-uint32 WasmCustomReader::EstimateCurrentFunctionBytecodeSize() const
+uint32_t WasmCustomReader::EstimateCurrentFunctionBytecodeSize() const
 {
-    uint32 count = min((uint32)m_nodes.Count(), (uint32)AutoSystemInfo::PageSize);
+    uint32_t count = min((uint32_t)m_nodes.Count(), (uint32_t)AutoSystemInfo::PageSize);
     // On average each node takes between 3 - 7 bytes to encode
     return count * 5;
 }

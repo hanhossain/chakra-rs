@@ -51,10 +51,10 @@ void WasmBytecodeGenerator::WriteTypeStack(WriteFn writefn) const
     writefn(u"]");
 }
 
-uint32 WasmBytecodeGenerator::WriteTypeStackToString(_Out_writes_(maxlen) char16_t* out, uint32 maxlen) const
+uint32_t WasmBytecodeGenerator::WriteTypeStackToString(_Out_writes_(maxlen) char16_t* out, uint32_t maxlen) const
 {
     AssertOrFailFast(out != nullptr);
-    uint32 numwritten = 0;
+    uint32_t numwritten = 0;
     WriteTypeStack([&] (const char16_t* msg)
     {
         numwritten += _snwprintf_s(out + numwritten, maxlen - numwritten, _TRUNCATE, msg);
@@ -87,7 +87,7 @@ void WasmBytecodeGenerator::PrintOpBegin(WasmOp op)
     {
         Output::SkipToColumn(depth);
     }
-    const auto PrintSignature = [this](uint32 sigId)
+    const auto PrintSignature = [this](uint32_t sigId)
     {
         if (sigId < m_module->GetSignatureCount())
         {
@@ -129,7 +129,7 @@ case wb##opname: \
     case wbCallIndirect: PrintSignature(GetReader()->m_currentNode.call.num); break;
     case wbCall:
     {
-        uint32 id = GetReader()->m_currentNode.call.num;
+        uint32_t id = GetReader()->m_currentNode.call.num;
         if (id < m_module->GetWasmFunctionCount())
         {
             FunctionIndexTypes::Type funcType = GetReader()->m_currentNode.call.funcType;
@@ -163,7 +163,7 @@ case wb##opname: \
 #include "WasmBinaryOpCodes.h"
     {
         const uint8_t alignment = GetReader()->m_currentNode.mem.alignment;
-        const uint32 offset = GetReader()->m_currentNode.mem.offset;
+        const uint32_t offset = GetReader()->m_currentNode.mem.offset;
         switch (((!!alignment) << 1) | (!!offset))
         {
         case 0: // no alignment, no offset
@@ -296,26 +296,26 @@ Js::WebAssemblyModule* WasmModuleGenerator::GenerateModule()
         }
     }
 
-    uint32 funcCount = m_module->GetWasmFunctionCount();
+    uint32_t funcCount = m_module->GetWasmFunctionCount();
     SourceContextInfo * sourceContextInfo = m_sourceInfo->GetSrcInfo()->sourceContextInfo;
     m_sourceInfo->EnsureInitialized(funcCount);
     sourceContextInfo->nextLocalFunctionId += funcCount;
     sourceContextInfo->EnsureInitialized();
 
-    for (uint32 i = 0; i < funcCount; ++i)
+    for (uint32_t i = 0; i < funcCount; ++i)
     {
         GenerateFunctionHeader(i);
     }
 
 #if ENABLE_DEBUG_CONFIG_OPTIONS
     WasmFunctionInfo* firstThunk = nullptr, *lastThunk = nullptr;
-    for (uint32 i = 0; i < funcCount; ++i)
+    for (uint32_t i = 0; i < funcCount; ++i)
     {
         WasmFunctionInfo* info = m_module->GetWasmFunctionInfo(i);
         Assert(info->GetBody());
         if (PHASE_TRACE(Js::WasmInOutPhase, info->GetBody()))
         {
-            uint32 index = m_module->GetWasmFunctionCount();
+            uint32_t index = m_module->GetWasmFunctionCount();
             WasmFunctionInfo* newInfo = m_module->AddWasmFunctionInfo(info->GetSignature());
             if (!firstThunk)
             {
@@ -361,7 +361,7 @@ WasmBinaryReader* WasmModuleGenerator::GetReader() const
     return m_module->GetReader();
 }
 
-void WasmModuleGenerator::GenerateFunctionHeader(uint32 index)
+void WasmModuleGenerator::GenerateFunctionHeader(uint32_t index)
 {
     WasmFunctionInfo* wasmInfo = m_module->GetWasmFunctionInfo(index);
     if (!wasmInfo)
@@ -379,7 +379,7 @@ void WasmModuleGenerator::GenerateFunctionHeader(uint32 index)
     }
     else
     {
-        for (uint32 iExport = 0; iExport < m_module->GetExportCount(); ++iExport)
+        for (uint32_t iExport = 0; iExport < m_module->GetExportCount(); ++iExport)
         {
             Wasm::WasmExport* wasmExport = m_module->GetExport(iExport);
             if (wasmExport  &&
@@ -442,7 +442,7 @@ void WasmModuleGenerator::GenerateFunctionHeader(uint32 index)
     info->SetWasmSignature(wasmInfo->GetSignature());
     Js::ArgSlot argSizeLength = max(paramCount, 3ui16);
     info->SetArgSizeArrayLength(argSizeLength);
-    uint32* argSizeArray = RecyclerNewArrayLeafZ(m_recycler, uint32, argSizeLength);
+    uint32_t* argSizeArray = RecyclerNewArrayLeafZ(m_recycler, uint32_t, argSizeLength);
     info->SetArgsSizesArray(argSizeArray);
 
     if (paramCount > 0)
@@ -508,7 +508,7 @@ WasmBytecodeGenerator::WasmBytecodeGenerator(Js::ScriptContext* scriptContext, W
     // Init reader to current func offset
     GetReader()->SeekToFunctionBody(m_funcInfo);
 
-    const uint32 estimated = GetReader()->EstimateCurrentFunctionBytecodeSize();
+    const uint32_t estimated = GetReader()->EstimateCurrentFunctionBytecodeSize();
     m_writer->InitData(&m_alloc, estimated);
 }
 
@@ -610,11 +610,11 @@ void WasmBytecodeGenerator::GenerateFunction()
 
 void WasmBytecodeGenerator::EnregisterLocals()
 {
-    uint32 nLocals = m_funcInfo->GetLocalCount();
+    uint32_t nLocals = m_funcInfo->GetLocalCount();
     m_locals = AnewArray(&m_alloc, WasmLocal, nLocals);
 
     m_funcInfo->GetBody()->SetFirstTmpReg(nLocals);
-    for (uint32 i = 0; i < nLocals; ++i)
+    for (uint32_t i = 0; i < nLocals; ++i)
     {
         WasmTypes::WasmType type = m_funcInfo->GetLocal(i);
         WasmRegisterSpace* regSpace = GetRegisterSpace(type);
@@ -836,7 +836,7 @@ void WasmBytecodeGenerator::EmitExpr(WasmOp op)
 
 EmitInfo WasmBytecodeGenerator::EmitGetGlobal()
 {
-    uint32 globalIndex = GetReader()->m_currentNode.var.num;
+    uint32_t globalIndex = GetReader()->m_currentNode.var.num;
     WasmGlobal* global = m_module->GetGlobal(globalIndex);
 
     WasmTypes::WasmType type = global->GetType();
@@ -865,7 +865,7 @@ EmitInfo WasmBytecodeGenerator::EmitGetGlobal()
 
 EmitInfo WasmBytecodeGenerator::EmitSetGlobal()
 {
-    uint32 globalIndex = GetReader()->m_currentNode.var.num;
+    uint32_t globalIndex = GetReader()->m_currentNode.var.num;
     WasmGlobal* global = m_module->GetGlobal(globalIndex);
     Js::RegSlot slot = m_module->GetOffsetForGlobal(global);
 
@@ -891,7 +891,7 @@ EmitInfo WasmBytecodeGenerator::EmitSetGlobal()
 
 EmitInfo WasmBytecodeGenerator::EmitGetLocal()
 {
-    uint32 localIndex = GetReader()->m_currentNode.var.num;
+    uint32_t localIndex = GetReader()->m_currentNode.var.num;
     if (m_funcInfo->GetLocalCount() <= localIndex)
     {
         throw WasmCompilationException(u"%u is not a valid local", localIndex);
@@ -911,7 +911,7 @@ EmitInfo WasmBytecodeGenerator::EmitGetLocal()
 
 EmitInfo WasmBytecodeGenerator::EmitSetLocal(bool tee)
 {
-    uint32 localNum = GetReader()->m_currentNode.var.num;
+    uint32_t localNum = GetReader()->m_currentNode.var.num;
     if (localNum >= m_funcInfo->GetLocalCount())
     {
         throw WasmCompilationException(u"%u is not a valid local", localNum);
@@ -1052,15 +1052,15 @@ PolymorphicEmitInfo WasmBytecodeGenerator::EmitLoop()
     Js::RegSlot curRegs[WAsmJs::LIMIT];
     for (WAsmJs::Types type = WAsmJs::Types(0); type != WAsmJs::LIMIT; type = WAsmJs::Types(type + 1))
     {
-        uint32 minYield = 0;
+        uint32_t minYield = 0;
         if (!mTypedRegisterAllocator.IsTypeExcluded(type))
         {
             CompileAssert(sizeof(minYield) == sizeof(Js::RegSlot));
-            minYield = static_cast<uint32>(mTypedRegisterAllocator.GetRegisterSpace(type)->PeekNextTmpRegister());
+            minYield = static_cast<uint32_t>(mTypedRegisterAllocator.GetRegisterSpace(type)->PeekNextTmpRegister());
         }
         curRegs[type] = minYield;
     }
-    uint32 loopId = m_writer->WasmLoopStart(loopHeadLabel, curRegs);
+    uint32_t loopId = m_writer->WasmLoopStart(loopHeadLabel, curRegs);
 
     // Internally we create a block for loop to exit, but semantically, they don't exist so pop it
     m_blockInfos.Pop();
@@ -1089,8 +1089,8 @@ PolymorphicEmitInfo WasmBytecodeGenerator::EmitLoop()
 template<WasmOp wasmOp>
 PolymorphicEmitInfo WasmBytecodeGenerator::EmitCall()
 {
-    uint32 funcNum = Js::Constants::UninitializedValue;
-    uint32 signatureId = Js::Constants::UninitializedValue;
+    uint32_t funcNum = Js::Constants::UninitializedValue;
+    uint32_t signatureId = Js::Constants::UninitializedValue;
     WasmSignature* calleeSignature = nullptr;
     Js::ProfileId profileId = Js::Constants::NoProfileId;
     EmitInfo indirectIndexInfo;
@@ -1160,7 +1160,7 @@ PolymorphicEmitInfo WasmBytecodeGenerator::EmitCall()
     }
 
     // Skip the this pointer (aka undefined)
-    uint32 argLoc = 1;
+    uint32_t argLoc = 1;
     for (Js::ArgSlot i = 0; i < nArgs; ++i)
     {
         EmitInfo info = argsList[i];
@@ -1222,8 +1222,8 @@ PolymorphicEmitInfo WasmBytecodeGenerator::EmitCall()
     {
     case wbCall:
     {
-        uint32 offset = isImportCall ? m_module->GetImportFuncOffset() : m_module->GetFuncOffset();
-        uint32 index = UInt32Math::Add(offset, funcNum);
+        uint32_t offset = isImportCall ? m_module->GetImportFuncOffset() : m_module->GetFuncOffset();
+        uint32_t index = UInt32Math::Add(offset, funcNum);
         m_writer->AsmSlot(Js::OpCodeAsmJs::LdSlot, funcReg, Js::AsmJsFunctionMemory::ModuleEnvRegister, index);
         break;
     }
@@ -1243,7 +1243,7 @@ PolymorphicEmitInfo WasmBytecodeGenerator::EmitCall()
     // calculate number of RegSlots(Js::Var) the call consumes
     PolymorphicEmitInfo retInfo;
     retInfo.Init(calleeSignature->GetResultCount(), &m_alloc);
-    for (uint32 i = 0; i < calleeSignature->GetResultCount(); ++i)
+    for (uint32_t i = 0; i < calleeSignature->GetResultCount(); ++i)
     {
         retInfo.SetInfo(EmitInfo(calleeSignature->GetResult(i)), i);
     }
@@ -1263,7 +1263,7 @@ PolymorphicEmitInfo WasmBytecodeGenerator::EmitCall()
 
         ReleaseLocation(&indirectIndexInfo);
         //registers need to be released from higher ordinals to lower
-        for (uint32 i = nArgs; i > 0; --i)
+        for (uint32_t i = nArgs; i > 0; --i)
         {
             ReleaseLocation(&(argsList[i - 1]));
         }
@@ -1304,12 +1304,12 @@ PolymorphicEmitInfo WasmBytecodeGenerator::EmitCall()
         GetRegisterSpace(WasmTypes::Ptr)->ReleaseTmpRegister(funcReg);
         ReleaseLocation(&indirectIndexInfo);
         //registers need to be released from higher ordinals to lower
-        for (uint32 i = nArgs; i > 0; --i)
+        for (uint32_t i = nArgs; i > 0; --i)
         {
             ReleaseLocation(&(argsList[i - 1]));
         }
 
-        for (uint32 i = 0; i < calleeSignature->GetResultCount(); ++i)
+        for (uint32_t i = 0; i < calleeSignature->GetResultCount(); ++i)
         {
             EmitInfo info(calleeSignature->GetResult(i));
             info.location = GetRegisterSpace(info.type)->AcquireTmpRegister();
@@ -1328,7 +1328,7 @@ PolymorphicEmitInfo WasmBytecodeGenerator::EmitCall()
     // track stack requirements for out params
 
     // + 1 for return address
-    uint32 maxDepthForLevel = args + 1;
+    uint32_t maxDepthForLevel = args + 1;
     if (maxDepthForLevel > m_maxArgOutDepth)
     {
         m_maxArgOutDepth = maxDepthForLevel;
@@ -1378,9 +1378,9 @@ PolymorphicEmitInfo WasmBytecodeGenerator::EmitIfElseExpr()
 
 void WasmBytecodeGenerator::EmitBrTable()
 {
-    const uint32 numTargets = GetReader()->m_currentNode.brTable.numTargets;
-    const uint32* targetTable = GetReader()->m_currentNode.brTable.targetTable;
-    const uint32 defaultEntry = GetReader()->m_currentNode.brTable.defaultTarget;
+    const uint32_t numTargets = GetReader()->m_currentNode.brTable.numTargets;
+    const uint32_t* targetTable = GetReader()->m_currentNode.brTable.targetTable;
+    const uint32_t defaultEntry = GetReader()->m_currentNode.brTable.defaultTarget;
 
     // Compile scrutinee
     EmitInfo scrutineeInfo = PopStackPolymorphic(EmitInfo(WasmTypes::I32), u"br_table expression must be of type i32").GetInfo(0);
@@ -1394,9 +1394,9 @@ void WasmBytecodeGenerator::EmitBrTable()
     }
 
     // Compile cases
-    for (uint32 i = 0; i < numTargets; i++)
+    for (uint32_t i = 0; i < numTargets; i++)
     {
-        uint32 target = targetTable[i];
+        uint32_t target = targetTable[i];
         BlockInfo* blockInfo = GetBlockInfo(target);
         if (!defaultBlockInfo->IsEquivalent(blockInfo))
         {
@@ -1605,7 +1605,7 @@ EmitInfo WasmBytecodeGenerator::EmitSimdMemAccess(Js::OpCodeAsmJs op, const Wasm
     WasmTypes::WasmType type = signature[0];
     SetUsesMemory(0);
 
-    const uint32 naturalAlignment = 16;
+    const uint32_t naturalAlignment = 16;
     const uint alignment = GetReader()->m_currentNode.mem.alignment;
     const uint offset = GetReader()->m_currentNode.mem.offset;
 
@@ -1648,9 +1648,9 @@ EmitInfo WasmBytecodeGenerator::EmitMemAccess(WasmOp wasmOp, const WasmTypes::Wa
     WasmTypes::WasmType type = signature[0];
     SetUsesMemory(0);
 
-    const uint32 naturalAlignment = Js::ArrayBufferView::NaturalAlignment[viewType];
-    const uint32 alignment = GetReader()->m_currentNode.mem.alignment;
-    const uint32 offset = GetReader()->m_currentNode.mem.offset;
+    const uint32_t naturalAlignment = Js::ArrayBufferView::NaturalAlignment[viewType];
+    const uint32_t alignment = GetReader()->m_currentNode.mem.alignment;
+    const uint32_t offset = GetReader()->m_currentNode.mem.offset;
 
     if (alignment > naturalAlignment)
     {
@@ -1687,7 +1687,7 @@ EmitInfo WasmBytecodeGenerator::EmitMemAccess(WasmOp wasmOp, const WasmTypes::Wa
 void WasmBytecodeGenerator::EmitReturnExpr(PolymorphicEmitInfo* explicitRetInfo)
 {
     PolymorphicEmitInfo retExprInfo = explicitRetInfo ? *explicitRetInfo : PopStackPolymorphic(m_funcBlock);
-    for (uint32 i = 0; i < retExprInfo.Count(); ++i)
+    for (uint32_t i = 0; i < retExprInfo.Count(); ++i)
     {
         EmitInfo info = retExprInfo.GetInfo(i);
         Js::OpCodeAsmJs retOp = GetReturnOp(info.type);
@@ -1745,7 +1745,7 @@ EmitInfo WasmBytecodeGenerator::EmitSelect()
 
 void WasmBytecodeGenerator::EmitBr()
 {
-    uint32 depth = GetReader()->m_currentNode.br.depth;
+    uint32_t depth = GetReader()->m_currentNode.br.depth;
 
     BlockInfo* blockInfo = GetBlockInfo(depth);
     if (blockInfo->HasYield())
@@ -1760,7 +1760,7 @@ void WasmBytecodeGenerator::EmitBr()
 
 PolymorphicEmitInfo WasmBytecodeGenerator::EmitBrIf()
 {
-    uint32 depth = GetReader()->m_currentNode.br.depth;
+    uint32_t depth = GetReader()->m_currentNode.br.depth;
 
     EmitInfo conditionInfo = PopEvalStack(WasmTypes::I32, u"br_if condition must have i32 type");
     ReleaseLocation(&conditionInfo);
@@ -1777,7 +1777,7 @@ PolymorphicEmitInfo WasmBytecodeGenerator::EmitBrIf()
             Assert(IsUnreachable());
             Assert(info.Count() == blockInfo->yieldInfo.Count());
             // Use the block's yield type to continue type check
-            for (uint32 i = 0; i < info.Count(); ++i)
+            for (uint32_t i = 0; i < info.Count(); ++i)
             {
                 info.SetInfo(EmitInfo(blockInfo->yieldInfo.GetInfo(i).type), i);
             }
@@ -1866,7 +1866,7 @@ void WasmBytecodeGenerator::ReleaseLocation(EmitInfo* info)
 
 void WasmBytecodeGenerator::ReleaseLocation(PolymorphicEmitInfo* info)
 {
-    for (uint32 i = 0; i < info->Count(); ++i)
+    for (uint32_t i = 0; i < info->Count(); ++i)
     {
         ReleaseLocation(&info->GetInfo(i));
     }
@@ -1883,7 +1883,7 @@ PolymorphicEmitInfo WasmBytecodeGenerator::EnsureYield(BlockInfo* blockInfo)
             // Emit a load to the yield location to make sure we have a dest there
             // Most likely we can't reach this code so the value doesn't matter
             blockInfo->didYield = true;
-            for (uint32 i = 0; i < yieldEmitInfo.Count(); ++i)
+            for (uint32_t i = 0; i < yieldEmitInfo.Count(); ++i)
             {
                 EmitLoadConst(yieldEmitInfo.GetInfo(i), GetZeroCnst());
             }
@@ -1916,7 +1916,7 @@ BlockInfo* WasmBytecodeGenerator::PushLabel(WasmBlock blockData, Js::ByteCodeLab
         }
         else
         {
-            uint32 sigId = blockData.GetSignatureId();
+            uint32_t sigId = blockData.GetSignatureId();
             WasmSignature* signature = m_module->GetSignature(sigId);
 
             Js::ArgSlot paramCount = signature->GetParamCount();
@@ -1935,11 +1935,11 @@ BlockInfo* WasmBytecodeGenerator::PushLabel(WasmBlock blockData, Js::ByteCodeLab
                 }
             }
 
-            uint32 resultCount = signature->GetResultCount();
+            uint32_t resultCount = signature->GetResultCount();
             if (resultCount > 0)
             {
                 blockInfo->yieldInfo.Init(resultCount, &m_alloc);
-                for (uint32 i = 0; i < resultCount; ++i)
+                for (uint32_t i = 0; i < resultCount; ++i)
                 {
                     WasmTypes::WasmType type = signature->GetResult(i);
                     blockInfo->yieldInfo.SetInfo(EmitInfo(GetRegisterSpace(type)->AcquireTmpRegister(), type), i);
@@ -1950,7 +1950,7 @@ BlockInfo* WasmBytecodeGenerator::PushLabel(WasmBlock blockData, Js::ByteCodeLab
             {
                 blockInfo->paramInfo.Init(paramCount, &m_alloc);
                 // Acquire tmp registers in order
-                for (uint32 i = 0; i < paramCount; ++i)
+                for (uint32_t i = 0; i < paramCount; ++i)
                 {
                     EmitInfo info = inParams.GetInfo(i);
                     EmitInfo newInfo = info;
@@ -1989,7 +1989,7 @@ void WasmBytecodeGenerator::YieldToBlock(BlockInfo* blockInfo, PolymorphicEmitIn
         if (!IsUnreachable())
         {
             blockInfo->didYield = true;
-            for (uint32 i = 0; i < polyExpr.Count(); ++i)
+            for (uint32_t i = 0; i < polyExpr.Count(); ++i)
             {
                 EmitInfo expr = polyExpr.GetInfo(i);
                 EmitInfo yieldInfo = polyYieldInfo.GetInfo(i);
@@ -1999,9 +1999,9 @@ void WasmBytecodeGenerator::YieldToBlock(BlockInfo* blockInfo, PolymorphicEmitIn
     }
 }
 
-BlockInfo* WasmBytecodeGenerator::GetBlockInfo(uint32 relativeDepth) const
+BlockInfo* WasmBytecodeGenerator::GetBlockInfo(uint32_t relativeDepth) const
 {
-    if (relativeDepth >= (uint32)m_blockInfos.Count())
+    if (relativeDepth >= (uint32_t)m_blockInfos.Count())
     {
         throw WasmCompilationException(u"Invalid branch target");
     }
@@ -2044,10 +2044,10 @@ WasmRegisterSpace* WasmBytecodeGenerator::GetRegisterSpace(WasmTypes::WasmType t
 PolymorphicEmitInfo WasmBytecodeGenerator::PopStackPolymorphic(PolymorphicEmitInfo expectedTypes, const char16_t* mismatchMessage /*= nullptr*/)
 {
     PolymorphicEmitInfo info;
-    uint32 count = expectedTypes.Count();
+    uint32_t count = expectedTypes.Count();
     info.Init(count, &m_alloc);
 
-    for (uint32 i = 0; i < count; ++i)
+    for (uint32_t i = 0; i < count; ++i)
     {
         // Check the stack before popping, it is valid to yield nothing if we are Unreachable
         if (IsUnreachable() && m_evalStack.Peek().type == WasmTypes::Limit)
@@ -2094,7 +2094,7 @@ EmitInfo WasmBytecodeGenerator::PopEvalStack(WasmTypes::WasmType expectedType, c
 void WasmBytecodeGenerator::PushEvalStack(PolymorphicEmitInfo info)
 {
     Assert(!m_evalStack.Empty());
-    for (uint32 i = 0; i < info.Count(); ++i)
+    for (uint32_t i = 0; i < info.Count(); ++i)
     {
         m_evalStack.Push(info.GetInfo(i));
     }
@@ -2104,7 +2104,7 @@ void WasmBytecodeGenerator::EnterEvalStackScope(const BlockInfo* blockInfo)
 {
     m_evalStack.Push(EmitInfo(WasmTypes::Limit));
     // Push the in-params of the block upon entering the scope
-    for (uint32 i = 0; i < blockInfo->paramInfo.Count(); ++i)
+    for (uint32_t i = 0; i < blockInfo->paramInfo.Count(); ++i)
     {
         m_evalStack.Push(blockInfo->paramInfo.GetInfo(i));
     }
@@ -2137,7 +2137,7 @@ void WasmBytecodeGenerator::SetUnreachableState(bool isUnreachable)
     {
         // Replace the current stack with the any type
         Assert(!m_evalStack.Empty());
-        uint32 popped = 0;
+        uint32_t popped = 0;
         while (m_evalStack.Top().type != WasmTypes::Limit)
         {
             EmitInfo info = m_evalStack.Pop();
@@ -2152,7 +2152,7 @@ void WasmBytecodeGenerator::SetUnreachableState(bool isUnreachable)
     this->isUnreachable = isUnreachable;
 }
 
-void WasmBytecodeGenerator::SetUsesMemory(uint32 memoryIndex)
+void WasmBytecodeGenerator::SetUsesMemory(uint32_t memoryIndex)
 {
     // Only support one memory at this time
     Assert(memoryIndex == 0);
@@ -2207,7 +2207,7 @@ void PolymorphicEmitInfo::Init(EmitInfo info)
     }
 }
 
-void PolymorphicEmitInfo::Init(uint32 count, ArenaAllocator* alloc)
+void PolymorphicEmitInfo::Init(uint32_t count, ArenaAllocator* alloc)
 {
     infos = nullptr;
     if (count > 1)
@@ -2217,7 +2217,7 @@ void PolymorphicEmitInfo::Init(uint32 count, ArenaAllocator* alloc)
     this->count = count;
 }
 
-void PolymorphicEmitInfo::SetInfo(EmitInfo info, uint32 index)
+void PolymorphicEmitInfo::SetInfo(EmitInfo info, uint32_t index)
 {
     AssertOrFailFast(index < count);
     if (count == 1)
@@ -2230,7 +2230,7 @@ void PolymorphicEmitInfo::SetInfo(EmitInfo info, uint32 index)
     }
 }
 
-Wasm::EmitInfo PolymorphicEmitInfo::GetInfo(uint32 index) const
+Wasm::EmitInfo PolymorphicEmitInfo::GetInfo(uint32_t index) const
 {
     AssertOrFailFast(index < count);
     if (count == 1)
@@ -2250,7 +2250,7 @@ bool PolymorphicEmitInfo::IsUnreachable() const
     {
         return singleInfo.type == WasmTypes::Any;
     }
-    for (uint32 i = 0; i < count; ++i)
+    for (uint32_t i = 0; i < count; ++i)
     {
         if (infos[i].type == WasmTypes::Any)
         {
@@ -2266,7 +2266,7 @@ bool PolymorphicEmitInfo::IsEquivalent(PolymorphicEmitInfo other) const
     {
         return false;
     }
-    for (uint32 i = 0; i < Count(); ++i)
+    for (uint32_t i = 0; i < Count(); ++i)
     {
         if (GetInfo(i).type != other.GetInfo(i).type)
         {

@@ -2526,7 +2526,7 @@ namespace Js
     // Note that we don't need to override SetItemWithAttributes because for that one base class implementation calls ConvertToTypeWithItemAttributes
     // which converts both this type and its objectArray to DictionaryTypeHandler/ES5ArrayTypeHandler.
     template <typename TPropertyIndex, typename TMapKey, bool IsNotExtensibleSupported>
-    BOOL SimpleDictionaryTypeHandlerBase<TPropertyIndex, TMapKey, IsNotExtensibleSupported>::SetItem(DynamicObject* instance, uint32 index, Var value, PropertyOperationFlags flags)
+    BOOL SimpleDictionaryTypeHandlerBase<TPropertyIndex, TMapKey, IsNotExtensibleSupported>::SetItem(DynamicObject* instance, uint32_t index, Var value, PropertyOperationFlags flags)
     {
         if (IsNotExtensibleSupported)
         {
@@ -3389,16 +3389,16 @@ namespace Js
     }
 
     template <typename TPropertyIndex, typename TMapKey, bool IsNotExtensibleSupported>
-    uint32 SimpleDictionaryTypeHandlerBase<TPropertyIndex, TMapKey, IsNotExtensibleSupported>::ExtractSlotInfo_TTD(TTD::NSSnapType::SnapHandlerPropertyEntry* entryInfo, ThreadContext* threadContext, TTD::SlabAllocator& alloc) const
+    uint32_t SimpleDictionaryTypeHandlerBase<TPropertyIndex, TMapKey, IsNotExtensibleSupported>::ExtractSlotInfo_TTD(TTD::NSSnapType::SnapHandlerPropertyEntry* entryInfo, ThreadContext* threadContext, TTD::SlabAllocator& alloc) const
     {
-        uint32 maxSlot = 0;
+        uint32_t maxSlot = 0;
 
         for(auto iter = this->propertyMap->GetIterator(); iter.IsValid(); iter.MoveNext())
         {
             SimpleDictionaryPropertyDescriptor<TPropertyIndex> descriptor = iter.CurrentValue();
             TTDAssert(descriptor.propertyIndex != NoSlots, "Huh");
 
-            uint32 index = descriptor.propertyIndex;
+            uint32_t index = descriptor.propertyIndex;
             maxSlot = max(maxSlot, index);
 
             TMapKey key = iter.CurrentKey();

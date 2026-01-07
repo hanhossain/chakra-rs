@@ -40,7 +40,7 @@ namespace DateTime
                 return 0;
             }
 
-            uint32 length = 0;
+            uint32_t length = 0;
             for (; length < __CC_PA_TIMEZONE_ABVR_NAME_LENGTH
                 && tm_result->tm_zone[length] != 0; length++)
             {

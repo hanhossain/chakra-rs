@@ -136,7 +136,7 @@ namespace PlatformAgnostic
         //   length of the normalized string in the destination buffer
         //   If the return value is less than or equal to 0, then see the value of pErrorOut to understand the error
         //
-        int32 NormalizeString(NormalizationForm normalizationForm, const char16_t* sourceString, uint32 sourceLength, char16_t* destString, int32 destLength, ApiError* pErrorOut);
+        int32 NormalizeString(NormalizationForm normalizationForm, const char16_t* sourceString, uint32_t sourceLength, char16_t* destString, int32 destLength, ApiError* pErrorOut);
 
         //
         // This method verifies that a given UTF16 string is normalized according to the rules of Unicode 4.0 TR#15.

@@ -385,7 +385,7 @@ using namespace Js;
         JIT_HELPER_END(Op_GetElementI_ExpectingVarArray);
     }
 
-    Var JavascriptNativeOperators::OP_GetElementI_UInt32_ExpectingNativeFloatArray(Var instance, uint32 index, ScriptContext* scriptContext)
+    Var JavascriptNativeOperators::OP_GetElementI_UInt32_ExpectingNativeFloatArray(Var instance, uint32_t index, ScriptContext* scriptContext)
     {
         JIT_HELPER_REENTRANT_HEADER(Op_GetElementI_UInt32_ExpectingNativeFloatArray);
 #if ENABLE_PROFILE_INFO
@@ -395,7 +395,7 @@ using namespace Js;
         JIT_HELPER_END(Op_GetElementI_UInt32_ExpectingNativeFloatArray);
     }
 
-    Var JavascriptNativeOperators::OP_GetElementI_UInt32_ExpectingVarArray(Var instance, uint32 index, ScriptContext* scriptContext)
+    Var JavascriptNativeOperators::OP_GetElementI_UInt32_ExpectingVarArray(Var instance, uint32_t index, ScriptContext* scriptContext)
     {
         JIT_HELPER_REENTRANT_HEADER(Op_GetElementI_UInt32_ExpectingVarArray);
 #if ENABLE_PROFILE_INFO

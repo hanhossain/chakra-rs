@@ -172,22 +172,22 @@ namespace Js
         }
     }
 
-    uint32 Type::GetOffsetOfTypeId()
+    uint32_t Type::GetOffsetOfTypeId()
     {
         return offsetof(Type, typeId);
     }
 
-    uint32 Type::GetOffsetOfFlags()
+    uint32_t Type::GetOffsetOfFlags()
     {
         return offsetof(Type, flags);
     }
 
-    uint32 Type::GetOffsetOfEntryPoint()
+    uint32_t Type::GetOffsetOfEntryPoint()
     {
         return offsetof(Type, entryPoint);
     }
 
-    uint32 Type::GetOffsetOfPrototype()
+    uint32_t Type::GetOffsetOfPrototype()
     {
         return offsetof(Type, prototype);
     }

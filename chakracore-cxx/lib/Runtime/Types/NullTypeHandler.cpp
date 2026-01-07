@@ -75,7 +75,7 @@ namespace Js
     BOOL NullTypeHandlerBase::HasProperty(DynamicObject* instance, PropertyId propertyId, __out_opt bool *noRedecl, _Inout_opt_ PropertyValueInfo* info)
     {
         // Check numeric propertyId only if objectArray is available
-        uint32 indexVal;
+        uint32_t indexVal;
         ScriptContext* scriptContext = instance->GetScriptContext();
 
         if (noRedecl != nullptr)
@@ -103,7 +103,7 @@ namespace Js
     BOOL NullTypeHandlerBase::GetProperty(DynamicObject* instance, Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext)
     {
         // Check numeric propertyId only if objectArray is available
-        uint32 indexVal;
+        uint32_t indexVal;
         ScriptContext* scriptContext = instance->GetScriptContext();
         if (instance->HasObjectArray() && scriptContext->IsNumericPropertyId(propertyId, &indexVal))
         {
@@ -156,7 +156,7 @@ namespace Js
     {
         // Check numeric propertyId only if objectArray is available
         ScriptContext* scriptContext = instance->GetScriptContext();
-        uint32 indexVal;
+        uint32_t indexVal;
         if (instance->HasObjectArray() && scriptContext->IsNumericPropertyId(propertyId, &indexVal))
         {
             return DynamicTypeHandler::DeleteItem(instance, indexVal, flags);
@@ -294,7 +294,7 @@ namespace Js
     BOOL NullTypeHandlerBase::SetPropertyWithAttributes(DynamicObject* instance, PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags, SideEffects possibleSideEffects)
     {
         // Always check numeric propertyId. May create objectArray.
-        uint32 indexVal;
+        uint32_t indexVal;
         if (instance->GetScriptContext()->IsNumericPropertyId(propertyId, &indexVal))
         {
             return NullTypeHandlerBase::SetItemWithAttributes(instance, indexVal, value, attributes);

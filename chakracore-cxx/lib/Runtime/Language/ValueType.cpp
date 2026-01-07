@@ -25,7 +25,7 @@ inline ValueType::Bits ValueType::BitPattern(const TSize onCount)
     CompileAssert(sizeof(TSize) <= sizeof(size_t));
     Assert(onCount && onCount <= sizeof(TSize) * 8);
 
-#pragma prefast(suppress:6235, "Non-Zero Constant TSize and size_t in Condition. This is By Design to allow for TSize to be increased in size to uint32 without breaking anything")
+#pragma prefast(suppress:6235, "Non-Zero Constant TSize and size_t in Condition. This is By Design to allow for TSize to be increased in size to uint32_t without breaking anything")
     return
         static_cast<Bits>(
             sizeof(TSize) < sizeof(size_t) || onCount < sizeof(TSize) * 8

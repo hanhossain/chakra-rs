@@ -430,7 +430,7 @@ Instr::ForEachCallDirectArgOutInstrBackward(Fn fn, uint argsOpndLength) const
 
     // ArgOut_A_InlineSpecialized src2; link to actual argouts.
     linkOpnd = tmpInstr->GetSrc2();
-    uint32 argCount = linkOpnd->AsSymOpnd()->m_sym->AsStackSym()->GetArgSlotNum();
+    uint32_t argCount = linkOpnd->AsSymOpnd()->m_sym->AsStackSym()->GetArgSlotNum();
 
     if (argCount != argsOpndLength)
     {
@@ -558,7 +558,7 @@ BranchInstr::IsUnconditional() const
 ///
 ///----------------------------------------------------------------------------
 inline void
-MultiBranchInstr::AddtoDictionary(uint32 offset, TBranchKey key, void* remoteVar)
+MultiBranchInstr::AddtoDictionary(uint32_t offset, TBranchKey key, void* remoteVar)
 {
     Assert(this->m_kind == StrDictionary);
     Assert(key);
@@ -567,7 +567,7 @@ MultiBranchInstr::AddtoDictionary(uint32 offset, TBranchKey key, void* remoteVar
 }
 
 inline void
-MultiBranchInstr::AddtoJumpTable(uint32 offset, uint32 jmpIndex)
+MultiBranchInstr::AddtoJumpTable(uint32_t offset, uint32_t jmpIndex)
 {
     Assert(this->m_kind == IntJumpTable || this->m_kind == SingleCharStrJumpTable);
     Assert(jmpIndex != -1);
@@ -576,7 +576,7 @@ MultiBranchInstr::AddtoJumpTable(uint32 offset, uint32 jmpIndex)
 }
 
 inline void
-MultiBranchInstr::FixMultiBrDefaultTarget(uint32 targetOffset)
+MultiBranchInstr::FixMultiBrDefaultTarget(uint32_t targetOffset)
 {
     this->GetBranchJumpTable()->defaultTarget = (void *)targetOffset;
 }

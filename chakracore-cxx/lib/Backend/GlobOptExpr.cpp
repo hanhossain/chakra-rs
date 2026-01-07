@@ -441,11 +441,11 @@ GlobOpt::OptimizeChecks(IR::Instr * const instr)
         {
             long val = src1->GetImmediateValue(func);
             Assert(src2->IsImmediateOpnd());
-            uint32 cmpValue = (uint32)src2->GetImmediateValue(func);
-            uint32 mask = src2->GetSize() - 1;
+            uint32_t cmpValue = (uint32_t)src2->GetImmediateValue(func);
+            uint32_t mask = src2->GetSize() - 1;
             Assert((cmpValue & ~mask) == 0);
 
-            if (((uint32)val & mask) == cmpValue)
+            if (((uint32_t)val & mask) == cmpValue)
             {
                 instr->FreeSrc2();
                 instr->m_opcode = Js::OpCode::Ld_I4;

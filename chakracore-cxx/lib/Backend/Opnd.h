@@ -396,7 +396,7 @@ public:
 
     void SetValue(IntConstType value);
     int32 AsInt32();
-    uint32 AsUint32();
+    uint32_t AsUint32();
 };
 
 ///---------------------------------------------------------------------------
@@ -545,7 +545,7 @@ class SymOpnd: public Opnd
 {
 public:
     static SymOpnd *        New(Sym *sym, IRType type, Func *func);
-    static SymOpnd *        New(Sym *sym, uint32 offset, IRType type, Func *func);
+    static SymOpnd *        New(Sym *sym, uint32_t offset, IRType type, Func *func);
 
 public:
     // Note type: OpndKindSym
@@ -562,7 +562,7 @@ public:
     }
 public:
     Sym *                   m_sym;
-    uint32                  m_offset;
+    uint32_t                  m_offset;
 
 private:
 #if DBG

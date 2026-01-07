@@ -56,9 +56,9 @@ namespace Js
     // the number of characters in the output array.
     // This routine assumes that it's input 'uVal' is a valid Unicode code-point value
     // and does no error checking.
-    uint32 UriHelper::ToUTF8( uint32 uVal, uint8_t bUTF8[MaxUTF8Len])
+    uint32_t UriHelper::ToUTF8( uint32_t uVal, uint8_t bUTF8[MaxUTF8Len])
     {
-        uint32 uRet;
+        uint32_t uRet;
         if( uVal <= 0x007F )
         {
             bUTF8[0] = (uint8_t)uVal;
@@ -66,8 +66,8 @@ namespace Js
         }
         else if( uVal <= 0x07FF )
         {
-            uint32 z = uVal & 0x3F;
-            uint32 y = uVal >> 6;
+            uint32_t z = uVal & 0x3F;
+            uint32_t y = uVal >> 6;
             bUTF8[0] = (uint8_t) (0xC0 | y);
             bUTF8[1] = (uint8_t) (0x80 | z);
             uRet = 2;
@@ -75,9 +75,9 @@ namespace Js
         else if( uVal <= 0xFFFF )
         {
             Assert( uVal <= 0xD7FF || uVal >= 0xE000 );
-            uint32 z = uVal & 0x3F;
-            uint32 y = (uVal >> 6) & 0x3F;
-            uint32 x = (uVal >> 12);
+            uint32_t z = uVal & 0x3F;
+            uint32_t y = (uVal >> 6) & 0x3F;
+            uint32_t x = (uVal >> 12);
             bUTF8[0] = (uint8_t) (0xE0 | x);
             bUTF8[1] = (uint8_t) (0x80 | y);
             bUTF8[2] = (uint8_t) (0x80 | z);
@@ -85,10 +85,10 @@ namespace Js
         }
         else
         {
-            uint32 z = uVal & 0x3F;
-            uint32 y = (uVal >> 6) &0x3F;
-            uint32 x = (uVal >> 12) &0x3F;
-            uint32 w = (uVal >> 18);
+            uint32_t z = uVal & 0x3F;
+            uint32_t y = (uVal >> 6) &0x3F;
+            uint32_t x = (uVal >> 12) &0x3F;
+            uint32_t w = (uVal >> 18);
             bUTF8[0] = (uint8_t) (0xF0 | w);
             bUTF8[1] = (uint8_t) (0x80 | x);
             bUTF8[2] = (uint8_t) (0x80 | y);
@@ -103,7 +103,7 @@ namespace Js
     // array 'bUTF8'. uLen is the number of characters in the UTF-8 encoding.
     // This routine assumes that a valid UTF-8 encoding of a character is passed in
     // and does no error checking.
-    uint32 UriHelper::FromUTF8( uint8_t bUTF8[MaxUTF8Len], uint32 uLen )
+    uint32_t UriHelper::FromUTF8( uint8_t bUTF8[MaxUTF8Len], uint32_t uLen )
     {
         Assert( 1 <= uLen && uLen <= MaxUTF8Len );
         if( uLen == 1 )
@@ -136,11 +136,11 @@ namespace Js
         uint8_t bUTF8[MaxUTF8Len];
 
         // pass 1 calculate output length and error check
-        uint32 outputLen = 0;
-        for( uint32 k = 0; k < len; k++ )
+        uint32_t outputLen = 0;
+        for( uint32_t k = 0; k < len; k++ )
         {
             char16_t c = input[k];
-            uint32 uVal;
+            uint32_t uVal;
             if( InURISet(c, unescapedFlags) )
             {
                 outputLen = UInt32Math::Add(outputLen, 1);
@@ -155,7 +155,7 @@ namespace Js
                 }
                 else if( c < 0xD800 || c > 0xDBFF )
                 {
-                    uVal = (uint32)c;
+                    uVal = (uint32_t)c;
                 }
                 else
                 {
@@ -171,7 +171,7 @@ namespace Js
                     }
                     uVal = (c - 0xD800) * 0x400 + (c1 - 0xDC00) + 0x10000;
                 }
-                uint32 utfLen = ToUTF8(uVal, bUTF8);
+                uint32_t utfLen = ToUTF8(uVal, bUTF8);
                 utfLen = UInt32Math::Mul(utfLen, 3);
                 outputLen = UInt32Math::Add(outputLen, utfLen);
             }
@@ -186,15 +186,15 @@ namespace Js
 
         //pass 2 generate the encoded URI
 
-        uint32 allocSize = UInt32Math::Add(outputLen, 1);
+        uint32_t allocSize = UInt32Math::Add(outputLen, 1);
         char16_t* outURI = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, allocSize);
         char16_t* outCurrent = outURI;
         const char16_t *hexStream = u"0123456789ABCDEF";
 
-        for( uint32 k = 0; k < len; k++ )
+        for( uint32_t k = 0; k < len; k++ )
         {
             char16_t c = input[k];
-            uint32 uVal;
+            uint32_t uVal;
             if( InURISet(c, unescapedFlags) )
             {
                 *outCurrent++ = c;
@@ -209,7 +209,7 @@ namespace Js
 #endif
                 if( c < 0xD800 || c > 0xDBFF )
                 {
-                    uVal = (uint32)c;
+                    uVal = (uint32_t)c;
                 }
                 else
                 {
@@ -231,8 +231,8 @@ namespace Js
                     uVal = (c - 0xD800) * 0x400 + (c1 - 0xDC00) + 0x10000;
                 }
 
-                uint32 utfLen = ToUTF8(uVal, bUTF8);
-                for( uint32 j = 0; j < utfLen; j++ )
+                uint32_t utfLen = ToUTF8(uVal, bUTF8);
+                for( uint32_t j = 0; j < utfLen; j++ )
                 {
 #pragma prefast(disable: 26014, "buffer length was calculated earlier");
                     uint8_t val = bUTF8[j];
@@ -287,8 +287,8 @@ namespace Js
         char16_t c1;
         char16_t c;
         // pass 1 calculate output length and error check
-        uint32 outputLen = 0;
-        for( uint32 k = 0; k < len; k++ )
+        uint32_t outputLen = 0;
+        for( uint32_t k = 0; k < len; k++ )
         {
             c = input[k];
 
@@ -296,7 +296,7 @@ namespace Js
             {
                 needsChanges = true;
 
-                uint32 start = k;
+                uint32_t start = k;
                 if( k + 2 >= len )
                 {
                     JavascriptError::ThrowURIError(scriptContext, JSERR_URIDecodeError /* TODO-ERROR: u"NEED MESSAGE" */);
@@ -360,7 +360,7 @@ namespace Js
                         bOctets[j] = b;
                     }
 
-                    uint32 uVal = UriHelper::FromUTF8( bOctets, n );
+                    uint32_t uVal = UriHelper::FromUTF8( bOctets, n );
 
                     if( uVal >= 0xD800 && uVal <= 0xDFFF)
                     {
@@ -404,17 +404,17 @@ namespace Js
         }
 
         //pass 2 generate the decoded URI
-        uint32 allocSize = UInt32Math::Add(outputLen, 1);
+        uint32_t allocSize = UInt32Math::Add(outputLen, 1);
         char16_t* outURI = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, allocSize);
         char16_t* outCurrent = outURI;
 
 
-        for( uint32 k = 0; k < len; k++ )
+        for( uint32_t k = 0; k < len; k++ )
         {
             c = input[k];
             if( c == '%')
             {
-                uint32 start = k;
+                uint32_t start = k;
 #if DBG
                 Assert(!(k + 2 >= len));
                 if( k + 2 >= len )
@@ -500,7 +500,7 @@ namespace Js
                         bOctets[j] = b;
                     }
 
-                    uint32 uVal = UriHelper::FromUTF8( bOctets, n );
+                    uint32_t uVal = UriHelper::FromUTF8( bOctets, n );
 
 #if DBG
                     Assert(!(uVal >= 0xD800 && uVal <= 0xDFFF));
@@ -524,8 +524,8 @@ namespace Js
 #endif
                     else
                     {
-                        uint32 l = (( uVal - 0x10000) & 0x3ff) + 0xdc00;
-                        uint32 h = ((( uVal - 0x10000) >> 10) & 0x3ff) + 0xd800;
+                        uint32_t l = (( uVal - 0x10000) & 0x3ff) + 0xdc00;
+                        uint32_t h = ((( uVal - 0x10000) >> 10) & 0x3ff) + 0xd800;
                         *outCurrent++ = (char16_t)h;
                         *outCurrent++ = (char16_t)l;
                         continue;

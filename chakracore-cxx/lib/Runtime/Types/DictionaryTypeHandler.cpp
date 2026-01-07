@@ -1146,7 +1146,7 @@ namespace Js
 #endif
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::SetItem(DynamicObject* instance, uint32 index, Var value, PropertyOperationFlags flags)
+    BOOL DictionaryTypeHandlerBase<T>::SetItem(DynamicObject* instance, uint32_t index, Var value, PropertyOperationFlags flags)
     {
         if (!(this->GetFlags() & IsExtensibleFlag) && !instance->HasObjectArray())
         {
@@ -1158,25 +1158,25 @@ namespace Js
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::SetItemWithAttributes(DynamicObject* instance, uint32 index, Var value, PropertyAttributes attributes)
+    BOOL DictionaryTypeHandlerBase<T>::SetItemWithAttributes(DynamicObject* instance, uint32_t index, Var value, PropertyAttributes attributes)
     {
         return instance->SetObjectArrayItemWithAttributes(index, value, attributes);
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::SetItemAttributes(DynamicObject* instance, uint32 index, PropertyAttributes attributes)
+    BOOL DictionaryTypeHandlerBase<T>::SetItemAttributes(DynamicObject* instance, uint32_t index, PropertyAttributes attributes)
     {
         return instance->SetObjectArrayItemAttributes(index, attributes);
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::SetItemAccessors(DynamicObject* instance, uint32 index, Var getter, Var setter)
+    BOOL DictionaryTypeHandlerBase<T>::SetItemAccessors(DynamicObject* instance, uint32_t index, Var getter, Var setter)
     {
         return instance->SetObjectArrayItemAccessors(index, getter, setter);
     }
 
     template <typename T>
-    DescriptorFlags DictionaryTypeHandlerBase<T>::GetItemSetter(DynamicObject* instance, uint32 index, Var* setterValue, ScriptContext* requestContext)
+    DescriptorFlags DictionaryTypeHandlerBase<T>::GetItemSetter(DynamicObject* instance, uint32_t index, Var* setterValue, ScriptContext* requestContext)
     {
         if (instance->HasObjectArray())
         {
@@ -1825,7 +1825,7 @@ namespace Js
         bool throwIfNotExtensible = (flags & PropertyOperation_ThrowIfNotExtensible) != 0;
 
 #ifdef DEBUG
-        uint32 debugIndex;
+        uint32_t debugIndex;
         Assert(!(throwIfNotExtensible && scriptContext->IsNumericPropertyId(propertyId, &debugIndex)));
 #endif
         Assert(propertyId != Constants::NoProperty);
@@ -2873,7 +2873,7 @@ namespace Js
     }
 
     template <typename T>
-    uint32 DictionaryTypeHandlerBase<T>::ExtractSlotInfo_TTD(TTD::NSSnapType::SnapHandlerPropertyEntry* entryInfo, ThreadContext* threadContext, TTD::SlabAllocator& alloc) const
+    uint32_t DictionaryTypeHandlerBase<T>::ExtractSlotInfo_TTD(TTD::NSSnapType::SnapHandlerPropertyEntry* entryInfo, ThreadContext* threadContext, TTD::SlabAllocator& alloc) const
     {
         T maxSlot = 0;
 
@@ -2926,7 +2926,7 @@ namespace Js
         }
         else
         {
-            return (uint32)(maxSlot + 1);
+            return (uint32_t)(maxSlot + 1);
         }
     }
 

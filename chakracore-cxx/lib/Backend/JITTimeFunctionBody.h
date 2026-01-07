@@ -88,7 +88,7 @@ public:
     bool IsGlobalFunc() const;
     void DisableInlineApply();
     bool IsInlineApplyDisabled() const;
-    bool IsNonTempLocalVar(uint32 varIndex) const;
+    bool IsNonTempLocalVar(uint32_t varIndex) const;
     bool DoJITLoopBody() const;
     bool IsInlineSpreadDisabled() const;
     void DisableInlineSpread();

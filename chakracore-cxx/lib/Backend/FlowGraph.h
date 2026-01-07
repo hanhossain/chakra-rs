@@ -216,7 +216,7 @@ private:
 #endif
 
 private:
-    void        InsertInlineeOnFLowEdge(IR::BranchInstr *instrBr, IR::Instr *inlineeEndInstr, IR::Instr *instrBytecode, Func* origBrFunc, uint32 origByteCodeOffset, bool origBranchSrcOpndIsJITOpt, uint32 origBranchSrcSymId);
+    void        InsertInlineeOnFLowEdge(IR::BranchInstr *instrBr, IR::Instr *inlineeEndInstr, IR::Instr *instrBytecode, Func* origBrFunc, uint32_t origByteCodeOffset, bool origBranchSrcOpndIsJITOpt, uint32_t origBranchSrcSymId);
 
 private:
     Func *                 func;
@@ -574,7 +574,7 @@ private:
     BasicBlock *        headBlock;
 public:
     Func *              topFunc;
-    uint32              loopNumber;
+    uint32_t              loopNumber;
     SList<BasicBlock *> blockList;
     Loop *              next;
     Loop *              parent;
@@ -720,9 +720,9 @@ public:
         BVSparse<JitArenaAllocator> *  defdInLoopBv;        // Was a lifetime defined in the loop?
         BVSparse<JitArenaAllocator> *  liveOnBackEdgeSyms;  // Is a lifetime live on the back-edge of the loop?
         BitVector                   regUseBv;               // Registers used in this loop so far
-        uint32                      loopStart;              // loopTopLabel->GetNumber()
-        uint32                      loopEnd;                // loopTailBranch->GetNumber()
-        uint32                      helperLength;           // Number of instrs in helper code in loop
+        uint32_t                      loopStart;              // loopTopLabel->GetNumber()
+        uint32_t                      loopEnd;                // loopTailBranch->GetNumber()
+        uint32_t                      helperLength;           // Number of instrs in helper code in loop
         SList<Lifetime *>        *  extendedLifetime;       // Lifetimes to extend for this loop
         SList<Lifetime **>       *  exitRegContentList;     // Linked list of regContents for the exit edges
         bool                        hasNonOpHelperCall;

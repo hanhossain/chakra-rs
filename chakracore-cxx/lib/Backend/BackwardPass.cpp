@@ -2666,7 +2666,7 @@ BackwardPass::ProcessBailOutInfo(IR::Instr * instr, BailOutInfo * bailOutInfo)
         bailOutInfo->bailOutFunc->HasByteCodeOffset() &&
         bailOutInfo->bailOutFunc->byteCodeRegisterUses)
     {
-        uint32 offset = bailOutInfo->bailOutOffset;
+        uint32_t offset = bailOutInfo->bailOutOffset;
         Assert(offset != Js::Constants::NoByteCodeOffset);
         BVSparse<JitArenaAllocator>* trackingByteCodeUpwardExposedUsed = bailOutInfo->bailOutFunc->GetByteCodeOffsetUses(offset);
         if (trackingByteCodeUpwardExposedUsed)
@@ -2676,7 +2676,7 @@ BackwardPass::ProcessBailOutInfo(IR::Instr * instr, BailOutInfo * bailOutInfo)
             {
                 IR::BranchInstr* branchInstr = instr->AsBranchInstr();
                 IR::LabelInstr* target = branchInstr->GetTarget();
-                uint32 targetOffset = target->GetByteCodeOffset();
+                uint32_t targetOffset = target->GetByteCodeOffset();
 
                 // If the instr's label has the same bytecode offset as the instr then move the targetOffset
                 // to the next bytecode instr. This can happen when we have airlock blocks or compensation
@@ -2910,7 +2910,7 @@ BackwardPass::ProcessBlock(BasicBlock * block)
     struct ByteCodeRegisterUsesTracker
     {
         Js::OpCode opcode = Js::OpCode::Nop;
-        uint32 offset = Js::Constants::NoByteCodeOffset;
+        uint32_t offset = Js::Constants::NoByteCodeOffset;
         Func* func = nullptr;
         bool active = false;
 
@@ -2938,7 +2938,7 @@ BackwardPass::ProcessBlock(BasicBlock * block)
                 }
                 else
                 {
-                    uint32 bytecodeOffset = instr->GetByteCodeOffset();
+                    uint32_t bytecodeOffset = instr->GetByteCodeOffset();
                     IR::Instr* prev = instr->m_prev;
                     while (prev && !IsValidByteCodeOffset(prev))
                     {
@@ -7052,7 +7052,7 @@ BackwardPass::TrackIntUsage(IR::Instr *const instr)
         case Js::OpCode::Shr_A:
             // These instructions convert their srcs to int32s, and hence don't care about int-overflowed values in the srcs (as
             // long as the overflowed values did not overflow the 53 bits that 'double' values have to precisely represent
-            // ints). ShrU_A is not included here because it converts its srcs to uint32 rather than int32, so it would make a
+            // ints). ShrU_A is not included here because it converts its srcs to uint32_t rather than int32, so it would make a
             // difference if the srcs have int32-overflowed values.
             SetIntOverflowDoesNotMatterIfLastUse(instr->GetSrc1());
             SetIntOverflowDoesNotMatterIfLastUse(instr->GetSrc2());
@@ -7156,7 +7156,7 @@ BackwardPass::TrackIntUsage(IR::Instr *const instr)
         case Js::OpCode::Shr_A:
             // These instructions convert their srcs to int32s, and hence don't care about int-overflowed values in the srcs (as
             // long as the overflowed values did not overflow the 53 bits that 'double' values have to precisely represent
-            // ints). ShrU_A is not included here because it converts its srcs to uint32 rather than int32, so it would make a
+            // ints). ShrU_A is not included here because it converts its srcs to uint32_t rather than int32, so it would make a
             // difference if the srcs have int32-overflowed values.
             instr->ignoreIntOverflowInRange = true;
             lossy = true;
@@ -8895,7 +8895,7 @@ BackwardPass::CheckWriteThroughSymInRegion(Region* region, StackSym* sym)
 
 #if DBG
 void
-BackwardPass::VerifyByteCodeUpwardExposed(BasicBlock* block, Func* func, BVSparse<JitArenaAllocator>* trackingByteCodeUpwardExposedUsed, IR::Instr* instr, uint32 bytecodeOffset)
+BackwardPass::VerifyByteCodeUpwardExposed(BasicBlock* block, Func* func, BVSparse<JitArenaAllocator>* trackingByteCodeUpwardExposedUsed, IR::Instr* instr, uint32_t bytecodeOffset)
 {
     Assert(instr);
     Assert(bytecodeOffset != Js::Constants::NoByteCodeOffset);
@@ -8931,7 +8931,7 @@ BackwardPass::VerifyByteCodeUpwardExposed(BasicBlock* block, Func* func, BVSpars
 }
 
 void
-BackwardPass::CaptureByteCodeUpwardExposed(BasicBlock* block, Func* func, Js::OpCode opcode, uint32 offset)
+BackwardPass::CaptureByteCodeUpwardExposed(BasicBlock* block, Func* func, Js::OpCode opcode, uint32_t offset)
 {
     Assert(this->DoCaptureByteCodeUpwardExposedUsed());
     // Keep track of all the bytecode upward exposed after Backward's pass

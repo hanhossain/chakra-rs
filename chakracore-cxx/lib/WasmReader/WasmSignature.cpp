@@ -42,7 +42,7 @@ void WasmSignature::SetParam(WasmTypes::WasmType type, Js::ArgSlot index)
 }
 
 
-void WasmSignature::AllocateResults(uint32 count, Recycler * recycler)
+void WasmSignature::AllocateResults(uint32_t count, Recycler * recycler)
 {
     if (GetResultCount() != 0)
     {
@@ -55,7 +55,7 @@ void WasmSignature::AllocateResults(uint32 count, Recycler * recycler)
     m_resultsCount = count;
 }
 
-void WasmSignature::SetResult(Local type, uint32 index)
+void WasmSignature::SetResult(Local type, uint32_t index)
 {
     if (index >= GetResultCount())
     {
@@ -64,7 +64,7 @@ void WasmSignature::SetResult(Local type, uint32 index)
     m_results[index] = type;
 }
 
-Wasm::Local WasmSignature::GetResult(uint32 index) const
+Wasm::Local WasmSignature::GetResult(uint32_t index) const
 {
     if (index >= GetResultCount())
     {
@@ -73,7 +73,7 @@ Wasm::Local WasmSignature::GetResult(uint32 index) const
     return m_results[index];
 }
 
-void WasmSignature::SetSignatureId(uint32 id)
+void WasmSignature::SetSignatureId(uint32_t id)
 {
     Assert(m_id == Js::Constants::UninitializedValue);
     m_id = id;
@@ -93,7 +93,7 @@ Js::ArgSlot WasmSignature::GetParamCount() const
     return m_paramsCount;
 }
 
-uint32 WasmSignature::GetSignatureId() const
+uint32_t WasmSignature::GetSignatureId() const
 {
     return m_id;
 }
@@ -181,12 +181,12 @@ void WasmSignature::FinalizeSignature()
     }
 
     // 3 bits for result type, 3 for each arg
-    const uint32 nBitsForResult = 3;
+    const uint32_t nBitsForResult = 3;
 #ifdef ENABLE_WASM_SIMD
-    const uint32 nBitsForArgs = 3;
+    const uint32_t nBitsForArgs = 3;
 #else
     // We can drop 1 bit by excluding void
-    const uint32 nBitsForArgs = 2;
+    const uint32_t nBitsForArgs = 2;
 #endif
     CompileAssert(Local::Void == 0);
     // Make sure we can encode all types (including void) with the number of bits reserved
@@ -195,7 +195,7 @@ void WasmSignature::FinalizeSignature()
     CompileAssert(Local::Limit - 1 <= (1 << nBitsForArgs));
 
     ::Math::RecordOverflowPolicy sigOverflow;
-    const uint32 bitsRequiredForSig = UInt32Math::MulAdd<nBitsForArgs, nBitsForResult>((uint32)paramCount, sigOverflow);
+    const uint32_t bitsRequiredForSig = UInt32Math::MulAdd<nBitsForArgs, nBitsForResult>((uint32_t)paramCount, sigOverflow);
     if (sigOverflow.HasOverflowed())
     {
         return;
@@ -203,7 +203,7 @@ void WasmSignature::FinalizeSignature()
 
     // we don't need to reserve a sentinel bit because there is no result type with value of 7
     CompileAssert(Local::Limit <= 0b111);
-    const uint32 nAvailableBits = sizeof(m_shortSig) * 8;
+    const uint32_t nAvailableBits = sizeof(m_shortSig) * 8;
     if (bitsRequiredForSig <= nAvailableBits)
     {
         // Append the result type to the signature
@@ -237,13 +237,13 @@ WasmSignature* WasmSignature::FromIDL(WasmSignatureIDL* sig)
     return reinterpret_cast<WasmSignature*>(sig);
 }
 
-uint32 WasmSignature::WriteSignatureToString(_Out_writes_(maxlen) char16_t* out, uint32 maxlen)
+uint32_t WasmSignature::WriteSignatureToString(_Out_writes_(maxlen) char16_t* out, uint32_t maxlen)
 {
     bool hasMultiResults = GetResultCount() > 1;
-    const uint32 minEnd = GetResultCount() > 1 ? 20 : 12;
+    const uint32_t minEnd = GetResultCount() > 1 ? 20 : 12;
     AssertOrFailFast(maxlen > minEnd);
     AssertOrFailFast(out != nullptr);
-    uint32 numwritten = 0;
+    uint32_t numwritten = 0;
 #define WRITE_BUF(msg, ...) numwritten += _snwprintf_s(out+numwritten, maxlen-numwritten, _TRUNCATE, msg, ##__VA_ARGS__);
     WRITE_BUF(u"(");
     for (Js::ArgSlot i = 0; i < GetParamCount(); i++)
@@ -256,7 +256,7 @@ uint32 WasmSignature::WriteSignatureToString(_Out_writes_(maxlen) char16_t* out,
     }
     if (numwritten >= maxlen - minEnd) {
         // null out the last 12 characters so we can properly end it 
-        for (uint32 i = 1; i <= minEnd; i++)
+        for (uint32_t i = 1; i <= minEnd; i++)
         {
             *(out + maxlen - i) = 0;
         }
@@ -288,7 +288,7 @@ uint32 WasmSignature::WriteSignatureToString(_Out_writes_(maxlen) char16_t* out,
     else
     {
         WRITE_BUF(u")->(");
-        for (uint32 i = 0; i < GetResultCount(); i++)
+        for (uint32_t i = 0; i < GetResultCount(); i++)
         {
             if (i != 0)
             {
@@ -302,7 +302,7 @@ uint32 WasmSignature::WriteSignatureToString(_Out_writes_(maxlen) char16_t* out,
     return numwritten;
 }
 
-void WasmSignature::Dump(uint32 maxlen)
+void WasmSignature::Dump(uint32_t maxlen)
 {
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     char16_t buf[512] = { 0 };

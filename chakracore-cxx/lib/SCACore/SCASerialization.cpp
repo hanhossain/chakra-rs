@@ -86,7 +86,7 @@ namespace Js
         if (this->CanBeTransferred(typeId) && this->GetEngine()->TryGetTransferredOrShared(src, &transferredIndex))
         {
             WriteTypeId(SCA_Transferable);
-            m_writer->Write((uint32)transferredIndex);
+            m_writer->Write((uint32_t)transferredIndex);
         }
         else if (JavascriptOperators::IsObjectDetached(src))
         {
@@ -230,7 +230,7 @@ namespace Js
                 Write(wasmMem->GetInitialLength());
                 Write(wasmMem->GetMaximumLength());
 #ifdef ENABLE_WASM_THREADS
-                Write((uint32)wasmMem->IsSharedMemory());
+                Write((uint32_t)wasmMem->IsSharedMemory());
                 if (wasmMem->IsSharedMemory())
                 {
                     WebAssemblySharedArrayBuffer* buf = VarTo<WebAssemblySharedArrayBuffer>(buffer);
@@ -311,7 +311,7 @@ namespace Js
         else if (!obj->GetEnumerator(&enumerator, EnumeratorFlags::SnapShotSemantics, scriptContext))
         {
             // Mark property end if we don't have enumerator
-            m_writer->Write(static_cast<uint32>(SCA_PROPERTY_TERMINATOR));
+            m_writer->Write(static_cast<uint32_t>(SCA_PROPERTY_TERMINATOR));
             return;
         }
 
@@ -362,14 +362,14 @@ namespace Js
     template <class Writer>
     void SerializationCloner<Writer>::Write(const char16_t* str, charcount_t len) const
     {
-        uint32 byteLen = static_cast<uint32>(sizeof(char16_t) * len);
+        uint32_t byteLen = static_cast<uint32_t>(sizeof(char16_t) * len);
         m_writer->Write(byteLen);
         m_writer->Write(str, byteLen);
-        uint32 unalignedLen = byteLen % sizeof(uint32);
+        uint32_t unalignedLen = byteLen % sizeof(uint32_t);
         if (unalignedLen)
         {
-            uint32 padding = 0;
-            m_writer->Write(&padding, sizeof(uint32) - unalignedLen);
+            uint32_t padding = 0;
+            m_writer->Write(&padding, sizeof(uint32_t) - unalignedLen);
         }
     }
 
@@ -377,15 +377,15 @@ namespace Js
     // Write layout: [byteLen] [byte data] [padding]
     //
     template <class Writer>
-    void SerializationCloner<Writer>::Write(const uint8_t* bytes, uint32 len) const
+    void SerializationCloner<Writer>::Write(const uint8_t* bytes, uint32_t len) const
     {
         m_writer->Write(len);
         m_writer->Write(bytes, len);
-        uint32 unalignedLen = len % sizeof(uint32);
+        uint32_t unalignedLen = len % sizeof(uint32_t);
         if (unalignedLen)
         {
-            uint32 padding = 0;
-            m_writer->Write(&padding, sizeof(uint32) - unalignedLen);
+            uint32_t padding = 0;
+            m_writer->Write(&padding, sizeof(uint32_t) - unalignedLen);
         }
     }
 
@@ -476,11 +476,11 @@ namespace Js
         case TypeIds_Uint32Array:
             if (Uint32VirtualArray::HasVirtualTableInfo(src))
             {
-                WriteTypedArray<uint32, false, true>(src);
+                WriteTypedArray<uint32_t, false, true>(src);
             }
             else
             {
-                WriteTypedArray<uint32, false>(src);
+                WriteTypedArray<uint32_t, false>(src);
             }
             break;
 
@@ -521,7 +521,7 @@ namespace Js
     template <class Writer>
     bool SerializationCloner<Writer>::IsSparseArray(JavascriptArray* arr)
     {
-        uint32 length = arr->GetLength();
+        uint32_t length = arr->GetLength();
         if (length > SparseArraySegmentBase::HEAD_CHUNK_SIZE)
         {
             // Consider it a sparse array if the array size is non-trivial, and there
@@ -629,7 +629,7 @@ namespace Js
         ScriptContext* scriptContext = writer->GetScriptContext();
 
         // Write version
-        writer->Write(static_cast<uint32>(SCA_FORMAT_VERSION));
+        writer->Write(static_cast<uint32_t>(SCA_FORMAT_VERSION));
 
         StreamSerializationCloner cloner(scriptContext, writer, sharedContentsList);
         SCAEngine<Var, scaposition_t, StreamSerializationCloner>::Clone(root, &cloner, transferableVars, cTransferableVars);

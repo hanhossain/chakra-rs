@@ -164,8 +164,8 @@ public:
     uint8_t            GetRegEncode(IR::RegOpnd *regOpnd);
     uint8_t            GetFloatRegEncode(IR::RegOpnd *regOpnd);
     static uint8_t     GetRegEncode(RegNum reg);
-    static uint32   GetOpdope(IR::Instr *instr);
-    static uint32   GetOpdope(Js::OpCode op);
+    static uint32_t   GetOpdope(IR::Instr *instr);
+    static uint32_t   GetOpdope(Js::OpCode op);
 
     static bool     IsLoad(IR::Instr *instr)
     {
@@ -205,7 +205,7 @@ public:
     // ToDo (SaAgarwa) Copied from ARM32 to compile. Validate is this correct
     static bool     CanEncodeLoadStoreOffset(int32 offset) { return IS_CONST_UINT12(offset); }
     static void     BaseAndOffsetFromSym(IR::SymOpnd *symOpnd, RegNum *pBaseReg, int32 *pOffset, Func * func);
-    void            EncodeInlineeCallInfo(IR::Instr *instr, uint32 offset);
+    void            EncodeInlineeCallInfo(IR::Instr *instr, uint32_t offset);
 private:
     Func *          m_func;
     Encoder *       m_encoder;

@@ -10,10 +10,10 @@ namespace Js
     void StreamWriter::Write(const void* pv, size_t cb)
     {
         ScriptContext* scriptContext = GetScriptContext();
-        uint32 newSize = UInt32Math::Add((uint32)m_current, (uint32)cb);
+        uint32_t newSize = UInt32Math::Add((uint32_t)m_current, (uint32_t)cb);
         if (newSize >= m_capacity)
         {
-            size_t newCapacity = UInt32Math::Add(max(newSize, UInt32Math::Mul((uint32)m_capacity, 2)), 100);
+            size_t newCapacity = UInt32Math::Add(max(newSize, UInt32Math::Mul((uint32_t)m_capacity, 2)), 100);
             BEGIN_LEAVE_SCRIPT(scriptContext)
             {
                 m_buffer = m_stream->ExtendBuffer(m_buffer, newCapacity, &m_capacity);

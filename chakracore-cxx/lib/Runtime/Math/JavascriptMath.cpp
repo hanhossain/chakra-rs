@@ -222,7 +222,7 @@ using namespace Js;
         {
             JIT_HELPER_REENTRANT_HEADER(Op_ShiftLeft_Full);
             int32 nValue    = JavascriptConversion::ToInt32(aLeft, scriptContext);
-            uint32 nShift   = JavascriptConversion::ToUInt32(aRight, scriptContext);
+            uint32_t nShift   = JavascriptConversion::ToUInt32(aRight, scriptContext);
             int32 nResult   = nValue << (nShift & 0x1F);
 
             return JavascriptNumber::ToVar(nResult,scriptContext);
@@ -234,7 +234,7 @@ using namespace Js;
         {
             JIT_HELPER_REENTRANT_HEADER(Op_ShiftRight_Full);
             int32 nValue    = JavascriptConversion::ToInt32(aLeft, scriptContext);
-            uint32 nShift   = JavascriptConversion::ToUInt32(aRight, scriptContext);
+            uint32_t nShift   = JavascriptConversion::ToUInt32(aRight, scriptContext);
 
             int32 nResult   = nValue >> (nShift & 0x1F);
 
@@ -245,10 +245,10 @@ using namespace Js;
         Var JavascriptMath::ShiftRightU_Full(Var aLeft, Var aRight, ScriptContext* scriptContext)
         {
             JIT_HELPER_REENTRANT_HEADER(Op_ShiftRightU_Full);
-            uint32 nValue   = JavascriptConversion::ToUInt32(aLeft, scriptContext);
-            uint32 nShift   = JavascriptConversion::ToUInt32(aRight, scriptContext);
+            uint32_t nValue   = JavascriptConversion::ToUInt32(aLeft, scriptContext);
+            uint32_t nShift   = JavascriptConversion::ToUInt32(aRight, scriptContext);
 
-            uint32 nResult  = nValue >> (nShift & 0x1F);
+            uint32_t nResult  = nValue >> (nShift & 0x1F);
 
             return JavascriptNumber::ToVar(nResult,scriptContext);
             JIT_HELPER_END(Op_ShiftRightU_Full);
@@ -1367,10 +1367,10 @@ StringCommon:
             JIT_HELPER_END(DirectMath_Random);
         }
 
-        uint32 JavascriptMath::ToUInt32(double T1)
+        uint32_t JavascriptMath::ToUInt32(double T1)
         {
-            // Same as doing ToInt32 and reinterpret the bits as uint32
-            return (uint32)ToInt32Core(T1);
+            // Same as doing ToInt32 and reinterpret the bits as uint32_t
+            return (uint32_t)ToInt32Core(T1);
         }
 
         int32 JavascriptMath::ToInt32(double T1)

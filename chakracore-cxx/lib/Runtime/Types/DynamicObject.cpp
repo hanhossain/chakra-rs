@@ -236,12 +236,12 @@ namespace Js
         return IsAnyArrayTypeId(JavascriptOperators::GetTypeId(obj));
     }
 
-    BOOL DynamicObject::HasObjectArrayItem(uint32 index)
+    BOOL DynamicObject::HasObjectArrayItem(uint32_t index)
     {
         return HasObjectArray() && GetObjectArrayOrFlagsAsArray()->HasItem(index);
     }
 
-    BOOL DynamicObject::DeleteObjectArrayItem(uint32 index, PropertyOperationFlags flags)
+    BOOL DynamicObject::DeleteObjectArrayItem(uint32_t index, PropertyOperationFlags flags)
     {
         if (HasObjectArray())
         {
@@ -250,18 +250,18 @@ namespace Js
         return true;
     }
 
-    BOOL DynamicObject::GetObjectArrayItem(Var originalInstance, uint32 index, Var* value, ScriptContext* requestContext)
+    BOOL DynamicObject::GetObjectArrayItem(Var originalInstance, uint32_t index, Var* value, ScriptContext* requestContext)
     {
         *value = requestContext->GetMissingItemResult();
         return HasObjectArray() && GetObjectArrayOrFlagsAsArray()->GetItem(originalInstance, index, value, requestContext);
     }
 
-    DescriptorFlags DynamicObject::GetObjectArrayItemSetter(uint32 index, Var* setterValue, ScriptContext* requestContext)
+    DescriptorFlags DynamicObject::GetObjectArrayItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext)
     {
         return HasObjectArray() ? GetObjectArrayOrFlagsAsArray()->GetItemSetter(index, setterValue, requestContext) : None;
     }
 
-    BOOL DynamicObject::SetObjectArrayItem(uint32 index, Var value, PropertyOperationFlags flags)
+    BOOL DynamicObject::SetObjectArrayItem(uint32_t index, Var value, PropertyOperationFlags flags)
     {
         const auto result = EnsureObjectArray()->SetItem(index, value, flags);
 
@@ -272,7 +272,7 @@ namespace Js
         return result;
     }
 
-    BOOL DynamicObject::SetObjectArrayItemWithAttributes(uint32 index, Var value, PropertyAttributes attributes)
+    BOOL DynamicObject::SetObjectArrayItemWithAttributes(uint32_t index, Var value, PropertyAttributes attributes)
     {
         const auto result = EnsureObjectArray()->SetItemWithAttributes(index, value, attributes);
 
@@ -290,7 +290,7 @@ namespace Js
         return result;
     }
 
-    BOOL DynamicObject::SetObjectArrayItemAttributes(uint32 index, PropertyAttributes attributes)
+    BOOL DynamicObject::SetObjectArrayItemAttributes(uint32_t index, PropertyAttributes attributes)
     {
         const auto result = HasObjectArray() && GetObjectArrayOrFlagsAsArray()->SetItemAttributes(index, attributes);
 
@@ -318,7 +318,7 @@ namespace Js
         return result;
     }
 
-    BOOL DynamicObject::SetObjectArrayItemAccessors(uint32 index, Var getter, Var setter)
+    BOOL DynamicObject::SetObjectArrayItemAccessors(uint32_t index, Var getter, Var setter)
     {
         const auto result = EnsureObjectArray()->SetItemAccessors(index, getter, setter);
         if (result)

@@ -14,7 +14,7 @@ Var GetImportVariable(Wasm::WasmImport* wi, ScriptContext* ctx, Var ffi)
 {
     PropertyRecord const * modPropertyRecord = nullptr;
     const char16_t* modName = wi->modName;
-    uint32 modNameLen = wi->modNameLen;
+    uint32_t modNameLen = wi->modNameLen;
     ctx->GetOrAddPropertyRecord(modName, modNameLen, &modPropertyRecord);
     Var modProp = JavascriptOperators::OP_GetProperty(ffi, modPropertyRecord->GetPropertyId(), ctx);
     if (!JavascriptOperators::IsObject(modProp))
@@ -23,7 +23,7 @@ Var GetImportVariable(Wasm::WasmImport* wi, ScriptContext* ctx, Var ffi)
     }
 
     const char16_t* name = wi->importName;
-    uint32 nameLen = wi->importNameLen;
+    uint32_t nameLen = wi->importNameLen;
     PropertyRecord const * propertyRecord = nullptr;
     ctx->GetOrAddPropertyRecord(name, nameLen, &propertyRecord);
 
@@ -135,7 +135,7 @@ WebAssemblyInstance::CreateInstance(WebAssemblyModule * module, Var importObject
         JavascriptError::ThrowWebAssemblyLinkErrorVar(scriptContext, WASMERR_WasmLinkError, e.GetTempErrorMessageRef());
     }
 
-    uint32 startFuncIdx = module->GetStartFunction();
+    uint32_t startFuncIdx = module->GetStartFunction();
     if (startFuncIdx != Js::Constants::UninitializedValue)
     {
         WasmScriptFunction* start = environment.GetWasmFunction(startFuncIdx);
@@ -192,16 +192,16 @@ void WebAssemblyInstance::InitializeDataSegs(WebAssemblyModule * wasmModule, Scr
     Assert(mem);
     ArrayBufferBase* buffer = mem->GetBuffer();
 
-    for (uint32 iSeg = 0; iSeg < wasmModule->GetDataSegCount(); ++iSeg)
+    for (uint32_t iSeg = 0; iSeg < wasmModule->GetDataSegCount(); ++iSeg)
     {
         Wasm::WasmDataSegment* segment = wasmModule->GetDataSeg(iSeg);
         Assert(segment != nullptr);
-        const uint32 offset = env->GetDataSegmentOffset(iSeg);
-        const uint32 size = segment->GetSourceSize();
+        const uint32_t offset = env->GetDataSegmentOffset(iSeg);
+        const uint32_t size = segment->GetSourceSize();
 
         if (size > 0)
         {
-            js_memcpy_s(buffer->GetBuffer() + offset, (uint32)buffer->GetByteLength() - offset, segment->GetData(), size);
+            js_memcpy_s(buffer->GetBuffer() + offset, (uint32_t)buffer->GetByteLength() - offset, segment->GetData(), size);
         }
     }
 }
@@ -209,7 +209,7 @@ void WebAssemblyInstance::InitializeDataSegs(WebAssemblyModule * wasmModule, Scr
 Var WebAssemblyInstance::CreateExportObject(WebAssemblyModule * wasmModule, ScriptContext* scriptContext, WebAssemblyEnvironment* env)
 {
     Js::Var exportsNamespace = scriptContext->GetLibrary()->CreateObject(scriptContext->GetLibrary()->GetNull());
-    for (uint32 iExport = 0; iExport < wasmModule->GetExportCount(); ++iExport)
+    for (uint32_t iExport = 0; iExport < wasmModule->GetExportCount(); ++iExport)
     {
         Wasm::WasmExport* wasmExport = wasmModule->GetExport(iExport);
         Assert(wasmExport);
@@ -271,19 +271,19 @@ void WebAssemblyInstance::LoadImports(
     Var ffi,
     WebAssemblyEnvironment* env)
 {
-    const uint32 importCount = wasmModule->GetImportCount();
+    const uint32_t importCount = wasmModule->GetImportCount();
     if (importCount > 0 && (!ffi || !JavascriptOperators::IsObject(ffi)))
     {
         JavascriptError::ThrowTypeError(ctx, WASMERR_InvalidImport);
     }
 
-    uint32 counters[(uint32)Wasm::ExternalKinds::Limit];
+    uint32_t counters[(uint32_t)Wasm::ExternalKinds::Limit];
     memset(counters, 0, sizeof(counters));
-    for (uint32 i = 0; i < importCount; ++i)
+    for (uint32_t i = 0; i < importCount; ++i)
     {
         Wasm::WasmImport* import = wasmModule->GetImport(i);
         Var prop = GetImportVariable(import, ctx, ffi);
-        uint32& counter = counters[(uint32)import->kind];
+        uint32_t& counter = counters[(uint32_t)import->kind];
         switch (import->kind)
         {
         case Wasm::ExternalKinds::Function:

@@ -6,12 +6,12 @@ class BailOutRecord;
 
 struct LazyBailOutRecord
 {
-    uint32 offset;
+    uint32_t offset;
     BailOutRecord* bailOutRecord;
 
     LazyBailOutRecord() : offset(0), bailOutRecord(nullptr) {}
 
-    LazyBailOutRecord(uint32 offset, BailOutRecord* record) :
+    LazyBailOutRecord(uint32_t offset, BailOutRecord* record) :
         offset(offset), bailOutRecord(record)
     {}
 

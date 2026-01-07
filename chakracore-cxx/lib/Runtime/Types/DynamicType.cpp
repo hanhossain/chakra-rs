@@ -349,37 +349,37 @@ namespace Js
     }
 #endif
 
-    PropertyQueryFlags DynamicObject::HasItemQuery(uint32 index)
+    PropertyQueryFlags DynamicObject::HasItemQuery(uint32_t index)
     {
         return JavascriptConversion::BooleanToPropertyQueryFlags(GetTypeHandler()->HasItem(this, index));
     }
 
-    BOOL DynamicObject::HasOwnItem(uint32 index)
+    BOOL DynamicObject::HasOwnItem(uint32_t index)
     {
         return HasItem(index);
     }
 
-    PropertyQueryFlags DynamicObject::GetItemQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext)
+    PropertyQueryFlags DynamicObject::GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext)
     {
         return JavascriptConversion::BooleanToPropertyQueryFlags(GetTypeHandler()->GetItem(this, originalInstance, index, value, requestContext));
     }
 
-    PropertyQueryFlags DynamicObject::GetItemReferenceQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext)
+    PropertyQueryFlags DynamicObject::GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext)
     {
         return JavascriptConversion::BooleanToPropertyQueryFlags(GetTypeHandler()->GetItem(this, originalInstance, index, value, requestContext));
     }
 
-    DescriptorFlags DynamicObject::GetItemSetter(uint32 index, Var* setterValue, ScriptContext* requestContext)
+    DescriptorFlags DynamicObject::GetItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext)
     {
         return GetTypeHandler()->GetItemSetter(this, index, setterValue, requestContext);
     }
 
-    BOOL DynamicObject::SetItem(uint32 index, Var value, PropertyOperationFlags flags)
+    BOOL DynamicObject::SetItem(uint32_t index, Var value, PropertyOperationFlags flags)
     {
         return GetTypeHandler()->SetItem(this, index, value, flags);
     }
 
-    BOOL DynamicObject::DeleteItem(uint32 index, PropertyOperationFlags flags)
+    BOOL DynamicObject::DeleteItem(uint32_t index, PropertyOperationFlags flags)
     {
         return GetTypeHandler()->DeleteItem(this, index, flags);
     }

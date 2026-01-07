@@ -508,10 +508,10 @@ void IRtoJSObjectBuilder::CreatePragmaInstruction(Js::ScriptContext *scriptConte
 
     SetProperty(currObject, u"source", sourceString);
 
-    Js::Var lineVar = Js::JavascriptNumber::ToVar((uint32)line, scriptContext);
+    Js::Var lineVar = Js::JavascriptNumber::ToVar((uint32_t)line, scriptContext);
     SetProperty(currObject, u"line", lineVar);
 
-    Js::Var colVar = Js::JavascriptNumber::ToVar((uint32)col, scriptContext);
+    Js::Var colVar = Js::JavascriptNumber::ToVar((uint32_t)col, scriptContext);
     SetProperty(currObject, u"col", colVar);
 
     if (statementIndex != -1)

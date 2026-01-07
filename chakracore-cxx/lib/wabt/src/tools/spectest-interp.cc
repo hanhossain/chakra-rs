@@ -342,7 +342,7 @@ wabt::Result JSONParser::ParseUint32(uint32_t* out_int) {
       uint32_t last_result = result;
       result = result * 10 + static_cast<uint32_t>(c - '0');
       if (result < last_result) {
-        PrintError("uint32 overflow");
+        PrintError("uint32_t overflow");
         return wabt::Result::Error;
       }
     } else {

@@ -501,19 +501,19 @@ using namespace Js;
     //
     // Default implementations delegate to instance objectArray
     //
-    BOOL DynamicTypeHandler::HasItem(DynamicObject* instance, uint32 index)
+    BOOL DynamicTypeHandler::HasItem(DynamicObject* instance, uint32_t index)
     {
         return instance->HasObjectArrayItem(index);
     }
-    BOOL DynamicTypeHandler::SetItem(DynamicObject* instance, uint32 index, Var value, PropertyOperationFlags flags)
+    BOOL DynamicTypeHandler::SetItem(DynamicObject* instance, uint32_t index, Var value, PropertyOperationFlags flags)
     {
         return instance->SetObjectArrayItem(index, value, flags);
     }
-    BOOL DynamicTypeHandler::DeleteItem(DynamicObject* instance, uint32 index, PropertyOperationFlags flags)
+    BOOL DynamicTypeHandler::DeleteItem(DynamicObject* instance, uint32_t index, PropertyOperationFlags flags)
     {
         return instance->DeleteObjectArrayItem(index, flags);
     }
-    BOOL DynamicTypeHandler::GetItem(DynamicObject* instance, Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext)
+    BOOL DynamicTypeHandler::GetItem(DynamicObject* instance, Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext)
     {
         return instance->GetObjectArrayItem(originalInstance, index, value, requestContext);
     }
@@ -530,7 +530,7 @@ using namespace Js;
         return this->HasProperty(instance, propertyNameString) ? WritableData : None;
     }
 
-    DescriptorFlags DynamicTypeHandler::GetItemSetter(DynamicObject* instance, uint32 index, Var* setterValue, ScriptContext* requestContext)
+    DescriptorFlags DynamicTypeHandler::GetItemSetter(DynamicObject* instance, uint32_t index, Var* setterValue, ScriptContext* requestContext)
     {
         return this->HasItem(instance, index) ? WritableData : None;
     }
@@ -538,15 +538,15 @@ using namespace Js;
     //
     // Default implementations upgrades type handler with item attribute/getter/setter support
     //
-    BOOL DynamicTypeHandler::SetItemWithAttributes(DynamicObject* instance, uint32 index, Var value, PropertyAttributes attributes)
+    BOOL DynamicTypeHandler::SetItemWithAttributes(DynamicObject* instance, uint32_t index, Var value, PropertyAttributes attributes)
     {
         return ConvertToTypeWithItemAttributes(instance)->SetItemWithAttributes(instance, index, value, attributes);
     }
-    BOOL DynamicTypeHandler::SetItemAttributes(DynamicObject* instance, uint32 index, PropertyAttributes attributes)
+    BOOL DynamicTypeHandler::SetItemAttributes(DynamicObject* instance, uint32_t index, PropertyAttributes attributes)
     {
         return ConvertToTypeWithItemAttributes(instance)->SetItemAttributes(instance, index, attributes);
     }
-    BOOL DynamicTypeHandler::SetItemAccessors(DynamicObject* instance, uint32 index, Var getter, Var setter)
+    BOOL DynamicTypeHandler::SetItemAccessors(DynamicObject* instance, uint32_t index, Var getter, Var setter)
     {
         return ConvertToTypeWithItemAttributes(instance)->SetItemAccessors(instance, index, getter, setter);
     }
@@ -849,7 +849,7 @@ using namespace Js;
         this->flags |= Js::DynamicTypeHandler::IsExtensibleFlag;
     }
 
-    bool DynamicTypeHandler::IsResetableForTTD(uint32 snapMaxIndex) const
+    bool DynamicTypeHandler::IsResetableForTTD(uint32_t snapMaxIndex) const
     {
         return false;
     }

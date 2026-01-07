@@ -19,7 +19,7 @@ namespace Wasm
         return m_init.cnst;
     }
 
-    uint32 WasmGlobal::GetGlobalIndexInit() const
+    uint32_t WasmGlobal::GetGlobalIndexInit() const
     {
         if (GetReferenceType() != GlobalReferenceTypes::LocalReference)
         {

@@ -25,28 +25,28 @@ enum AuxArrayValue {
 class BranchReloc
 {
 public:
-    BranchReloc(IR::BranchInstr * instr, uint32 branchOffset, uint32 offs)
+    BranchReloc(IR::BranchInstr * instr, uint32_t branchOffset, uint32_t offs)
         : branchInstr(instr), branchOffset(branchOffset), offset(offs), isNotBackEdge(false)
     { }
 
 private:
     IR::BranchInstr * branchInstr;
-    uint32            offset;
+    uint32_t            offset;
     bool              isNotBackEdge;
 
-    uint32            branchOffset;
+    uint32_t            branchOffset;
 public:
     IR::BranchInstr * GetBranchInstr()
     {
         return this->branchInstr;
     }
 
-    uint32 GetOffset() const
+    uint32_t GetOffset() const
     {
         return this->offset;
     }
 
-    uint32 GetBranchOffset() const
+    uint32_t GetBranchOffset() const
     {
         return this->branchOffset;
     }
@@ -124,119 +124,119 @@ public:
 
 private:
     void                InsertInstr(IR::Instr *instr, IR::Instr* insertBeforeInstr);
-    void                AddInstr(IR::Instr *instr, uint32 offset);
-    BranchReloc *       AddBranchInstr(IR::BranchInstr *instr, uint32 offset, uint32 targetOffset);
+    void                AddInstr(IR::Instr *instr, uint32_t offset);
+    BranchReloc *       AddBranchInstr(IR::BranchInstr *instr, uint32_t offset, uint32_t targetOffset);
 #ifdef BYTECODE_BRANCH_ISLAND
     void                ConsumeBranchIsland();
     void                EnsureConsumeBranchIsland();
     uint                ResolveVirtualLongBranch(IR::BranchInstr * branchInstr, uint offset);
 #endif
-    BranchReloc *       CreateRelocRecord(IR::BranchInstr * branchInstr, uint32 offset, uint32 targetOffset);
+    BranchReloc *       CreateRelocRecord(IR::BranchInstr * branchInstr, uint32_t offset, uint32_t targetOffset);
     void                LoadNativeCodeData();
     void                BuildConstantLoads();
     void                BuildImplicitArgIns();    
 
 #define LAYOUT_TYPE(layout) \
-    void                Build##layout(Js::OpCode newOpcode, uint32 offset);
+    void                Build##layout(Js::OpCode newOpcode, uint32_t offset);
 #define LAYOUT_TYPE_WMS(layout) \
-    template <typename SizePolicy> void Build##layout(Js::OpCode newOpcode, uint32 offset);
+    template <typename SizePolicy> void Build##layout(Js::OpCode newOpcode, uint32_t offset);
 #include "ByteCode/LayoutTypes.h"
 
-    void                BuildReg1(Js::OpCode newOpcode, uint32 offset, Js::RegSlot R0);
-    void                BuildReg2(Js::OpCode newOpcode, uint32 offset, Js::RegSlot R0, Js::RegSlot R1, uint32 nextOffset);
-    void                BuildProfiledReg2(Js::OpCode newOpcode, uint32 offset, Js::RegSlot dstRegSlot, Js::RegSlot srcRegSlot, Js::ProfileId profileId);
-    void                BuildReg3(Js::OpCode newOpcode, uint32 offset, Js::RegSlot dstRegSlot, Js::RegSlot src1RegSlot,
+    void                BuildReg1(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot R0);
+    void                BuildReg2(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot R0, Js::RegSlot R1, uint32_t nextOffset);
+    void                BuildProfiledReg2(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot dstRegSlot, Js::RegSlot srcRegSlot, Js::ProfileId profileId);
+    void                BuildReg3(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot dstRegSlot, Js::RegSlot src1RegSlot,
                             Js::RegSlot src2RegSlot, Js::ProfileId profileId);
-    void                BuildReg3U(Js::OpCode newOpCode, uint32 offset, Js::RegSlot dstRegSlot, Js::RegSlot src1RegSlot,
+    void                BuildReg3U(Js::OpCode newOpCode, uint32_t offset, Js::RegSlot dstRegSlot, Js::RegSlot src1RegSlot,
                             Js::RegSlot src2RegSlot, uint slotIndex);
-    void                BuildIsIn(Js::OpCode newOpcode, uint32 offset, Js::RegSlot dstRegSlot, Js::RegSlot src1RegSlot, Js::RegSlot src2RegSlot, Js::ProfileId profileId);
-    void                BuildReg3C(Js::OpCode newOpCode, uint32 offset, Js::RegSlot dstRegSlot, Js::RegSlot src1RegSlot,
+    void                BuildIsIn(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot dstRegSlot, Js::RegSlot src1RegSlot, Js::RegSlot src2RegSlot, Js::ProfileId profileId);
+    void                BuildReg3C(Js::OpCode newOpCode, uint32_t offset, Js::RegSlot dstRegSlot, Js::RegSlot src1RegSlot,
                             Js::RegSlot src2RegSlot, Js::CacheId inlineCacheIndex);
-    void                BuildReg3UC(Js::OpCode newOpCode, uint32 offset, Js::RegSlot dstRegSlot, Js::RegSlot src1RegSlot,
+    void                BuildReg3UC(Js::OpCode newOpCode, uint32_t offset, Js::RegSlot dstRegSlot, Js::RegSlot src1RegSlot,
                             Js::RegSlot src2RegSlot, uint slotIndex, Js::CacheId inlineCacheIndex);
-    void                BuildReg4(Js::OpCode newOpcode, uint32 offset, Js::RegSlot dstRegSlot, Js::RegSlot src1RegSlot,
+    void                BuildReg4(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot dstRegSlot, Js::RegSlot src1RegSlot,
                             Js::RegSlot src2RegSlot, Js::RegSlot src3RegSlot);
-    void                BuildReg4U(Js::OpCode newOpcode, uint32 offset, Js::RegSlot R0, Js::RegSlot R1, Js::RegSlot R2, Js::RegSlot R3, uint slotIndex);
-    void                BuildReg5U(Js::OpCode newOpcode, uint32 offset, Js::RegSlot R0, Js::RegSlot R1, Js::RegSlot R2, Js::RegSlot R3, Js::RegSlot R4, 
+    void                BuildReg4U(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot R0, Js::RegSlot R1, Js::RegSlot R2, Js::RegSlot R3, uint slotIndex);
+    void                BuildReg5U(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot R0, Js::RegSlot R1, Js::RegSlot R2, Js::RegSlot R3, Js::RegSlot R4, 
                             uint slotIndex);
-    void                BuildReg2B1(Js::OpCode newOpcode, uint32 offset, Js::RegSlot dstRegSlot, Js::RegSlot srcRegSlot, byte index);
-    void                BuildReg3B1(Js::OpCode newOpcode, uint32 offset, Js::RegSlot dstRegSlot, Js::RegSlot src1RegSlot,
+    void                BuildReg2B1(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot dstRegSlot, Js::RegSlot srcRegSlot, byte index);
+    void                BuildReg3B1(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot dstRegSlot, Js::RegSlot src1RegSlot,
                             Js::RegSlot src2RegSlot, uint8_t index);
-    void                BuildReg5(Js::OpCode newOpcode, uint32 offset, Js::RegSlot dstRegSlot, Js::RegSlot src1RegSlot,
+    void                BuildReg5(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot dstRegSlot, Js::RegSlot src1RegSlot,
                             Js::RegSlot src2RegSlot, Js::RegSlot src3RegSlot, Js::RegSlot src4RegSlot);
-    void                BuildUnsigned1(Js::OpCode newOpcode, uint32 offset, uint32 C1);
-    void                BuildReg1Unsigned1(Js::OpCode newOpcode, uint32 offset, Js::RegSlot R0, int32 C1);
-    void                BuildProfiledReg1Unsigned1(Js::OpCode newOpcode, uint32 offset, Js::RegSlot R0, int32 C1, Js::ProfileId profileId);
-    void                BuildReg2Int1(Js::OpCode newOpcode, uint32 offset, Js::RegSlot dstRegSlot, Js::RegSlot srcRegSlot, int32 value);
-    void                BuildReg2U(Js::OpCode newOpcode, uint32 offset, Js::RegSlot R0, Js::RegSlot R1, uint index);
-    void                BuildElementC(Js::OpCode newOpcode, uint32 offset, Js::RegSlot fieldRegSlot, Js::RegSlot regSlot,
+    void                BuildUnsigned1(Js::OpCode newOpcode, uint32_t offset, uint32_t C1);
+    void                BuildReg1Unsigned1(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot R0, int32 C1);
+    void                BuildProfiledReg1Unsigned1(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot R0, int32 C1, Js::ProfileId profileId);
+    void                BuildReg2Int1(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot dstRegSlot, Js::RegSlot srcRegSlot, int32 value);
+    void                BuildReg2U(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot R0, Js::RegSlot R1, uint index);
+    void                BuildElementC(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot fieldRegSlot, Js::RegSlot regSlot,
                             Js::PropertyIdIndexType propertyIdIndex);
-    void                BuildElementScopedC(Js::OpCode newOpcode, uint32 offset, Js::RegSlot regSlot,
+    void                BuildElementScopedC(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot regSlot,
                             Js::PropertyIdIndexType propertyIdIndex);
-    void                BuildElementSlot(Js::OpCode newOpcode, uint32 offset, Js::RegSlot fieldRegSlot, Js::RegSlot regSlot,
+    void                BuildElementSlot(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot fieldRegSlot, Js::RegSlot regSlot,
                             int32 slotId, Js::ProfileId profileId);
-    void                BuildElementSlotI1(Js::OpCode newOpcode, uint32 offset, Js::RegSlot regSlot,
+    void                BuildElementSlotI1(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot regSlot,
                             int32 slotId, Js::ProfileId profileId);
-    void                BuildElementSlotI2(Js::OpCode newOpcode, uint32 offset, Js::RegSlot regSlot,
+    void                BuildElementSlotI2(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot regSlot,
                             int32 slotId1, int32 slotId2, Js::ProfileId profileId);
-    void                BuildElementSlotI3(Js::OpCode newOpcode, uint32 offset, Js::RegSlot fieldRegSlot, Js::RegSlot regSlot,
+    void                BuildElementSlotI3(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot fieldRegSlot, Js::RegSlot regSlot,
                             int32 slotId, Js::RegSlot homeObjLocation, Js::ProfileId profileId);
-    void                BuildArgIn0(uint32 offset, Js::RegSlot R0);
-    void                BuildArg(Js::OpCode newOpcode, uint32 offset, Js::ArgSlot argument, Js::RegSlot srcRegSlot);
-    void                BuildArgIn(uint32 offset, Js::RegSlot dstRegSlot, uint16 argument);
+    void                BuildArgIn0(uint32_t offset, Js::RegSlot R0);
+    void                BuildArg(Js::OpCode newOpcode, uint32_t offset, Js::ArgSlot argument, Js::RegSlot srcRegSlot);
+    void                BuildArgIn(uint32_t offset, Js::RegSlot dstRegSlot, uint16 argument);
     void                BuildArgInRest();
-    void                BuildElementP(Js::OpCode newOpcode, uint32 offset, Js::RegSlot regSlot, Js::CacheId inlineCacheIndex);
-    void                BuildElementCP(Js::OpCode newOpcode, uint32 offset, Js::RegSlot instance, Js::RegSlot regSlot, Js::CacheId inlineCacheIndex);
-    void                BuildProfiledElementCP(Js::OpCode newOpcode, uint32 offset, Js::RegSlot instance, Js::RegSlot regSlot, Js::CacheId inlineCacheIndex, Js::ProfileId profileId);
-    void                BuildElementC2(Js::OpCode newOpcode, uint32 offset, Js::RegSlot instanceSlot, Js::RegSlot instance2Slot,
+    void                BuildElementP(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot regSlot, Js::CacheId inlineCacheIndex);
+    void                BuildElementCP(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot instance, Js::RegSlot regSlot, Js::CacheId inlineCacheIndex);
+    void                BuildProfiledElementCP(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot instance, Js::RegSlot regSlot, Js::CacheId inlineCacheIndex, Js::ProfileId profileId);
+    void                BuildElementC2(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot instanceSlot, Js::RegSlot instance2Slot,
                             Js::RegSlot regSlot, Js::PropertyIdIndexType propertyIdIndex);
-    void                BuildElementScopedC2(Js::OpCode newOpcode, uint32 offset, Js::RegSlot instance2Slot,
+    void                BuildElementScopedC2(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot instance2Slot,
                             Js::RegSlot regSlot, Js::PropertyIdIndexType propertyIdIndex);
-    void                BuildElementU(Js::OpCode newOpcode, uint32 offset, Js::RegSlot instance, Js::PropertyIdIndexType propertyIdIndex);
-    void                BuildElementI(Js::OpCode newOpcode, uint32 offset, Js::RegSlot baseRegSlot, Js::RegSlot indexRegSlot,
+    void                BuildElementU(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot instance, Js::PropertyIdIndexType propertyIdIndex);
+    void                BuildElementI(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot baseRegSlot, Js::RegSlot indexRegSlot,
                             Js::RegSlot regSlot, Js::ProfileId profileId);
-    void                BuildElementUnsigned1(Js::OpCode newOpcode, uint32 offset, Js::RegSlot baseRegSlot, uint32 index, Js::RegSlot regSlot);
-    IR::Instr *         BuildCallI_Helper(Js::OpCode newOpcode, uint32 offset, Js::RegSlot Return, Js::RegSlot Function, Js::ArgSlot ArgCount,
+    void                BuildElementUnsigned1(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot baseRegSlot, uint32_t index, Js::RegSlot regSlot);
+    IR::Instr *         BuildCallI_Helper(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot Return, Js::RegSlot Function, Js::ArgSlot ArgCount,
                             Js::ProfileId profileId, Js::CallFlags flags = Js::CallFlags_None, Js::InlineCacheIndex inlineCacheIndex = Js::Constants::NoInlineCacheIndex);
-    IR::Instr *         BuildProfiledCallI(Js::OpCode opcode, uint32 offset, Js::RegSlot returnValue, Js::RegSlot function,
+    IR::Instr *         BuildProfiledCallI(Js::OpCode opcode, uint32_t offset, Js::RegSlot returnValue, Js::RegSlot function,
                             Js::ArgSlot argCount, Js::ProfileId profileId, Js::CallFlags flags = Js::CallFlags_None, Js::InlineCacheIndex inlineCacheIndex = Js::Constants::NoInlineCacheIndex);
-    IR::Instr *         BuildProfiledCallIExtended(Js::OpCode opcode, uint32 offset, Js::RegSlot returnValue, Js::RegSlot function,
-                            Js::ArgSlot argCount, Js::ProfileId profileId, Js::CallIExtendedOptions options, uint32 spreadAuxOffset, Js::CallFlags flags = Js::CallFlags_None);
-    IR::Instr *         BuildProfiledCallIWithICIndex(Js::OpCode opcode, uint32 offset, Js::RegSlot returnValue, Js::RegSlot function,
+    IR::Instr *         BuildProfiledCallIExtended(Js::OpCode opcode, uint32_t offset, Js::RegSlot returnValue, Js::RegSlot function,
+                            Js::ArgSlot argCount, Js::ProfileId profileId, Js::CallIExtendedOptions options, uint32_t spreadAuxOffset, Js::CallFlags flags = Js::CallFlags_None);
+    IR::Instr *         BuildProfiledCallIWithICIndex(Js::OpCode opcode, uint32_t offset, Js::RegSlot returnValue, Js::RegSlot function,
                             Js::ArgSlot argCount, Js::ProfileId profileId, Js::InlineCacheIndex inlineCacheIndex);
-    void                BuildProfiledCallIExtendedFlags(Js::OpCode opcode, uint32 offset, Js::RegSlot returnValue, Js::RegSlot function,
-                            Js::ArgSlot argCount, Js::ProfileId profileId, Js::CallIExtendedOptions options, uint32 spreadAuxOffset);
-    void                BuildProfiledCallIExtendedWithICIndex(Js::OpCode opcode, uint32 offset, Js::RegSlot returnValue, Js::RegSlot function,
-                            Js::ArgSlot argCount, Js::ProfileId profileId, Js::CallIExtendedOptions options, uint32 spreadAuxOffset);
-    void                BuildProfiledCallIExtendedFlagsWithICIndex(Js::OpCode opcode, uint32 offset, Js::RegSlot returnValue, Js::RegSlot function,
-                            Js::ArgSlot argCount, Js::ProfileId profileId, Js::CallIExtendedOptions options, uint32 spreadAuxOffset);
-    void                BuildProfiled2CallI(Js::OpCode opcode, uint32 offset, Js::RegSlot returnValue, Js::RegSlot function,
+    void                BuildProfiledCallIExtendedFlags(Js::OpCode opcode, uint32_t offset, Js::RegSlot returnValue, Js::RegSlot function,
+                            Js::ArgSlot argCount, Js::ProfileId profileId, Js::CallIExtendedOptions options, uint32_t spreadAuxOffset);
+    void                BuildProfiledCallIExtendedWithICIndex(Js::OpCode opcode, uint32_t offset, Js::RegSlot returnValue, Js::RegSlot function,
+                            Js::ArgSlot argCount, Js::ProfileId profileId, Js::CallIExtendedOptions options, uint32_t spreadAuxOffset);
+    void                BuildProfiledCallIExtendedFlagsWithICIndex(Js::OpCode opcode, uint32_t offset, Js::RegSlot returnValue, Js::RegSlot function,
+                            Js::ArgSlot argCount, Js::ProfileId profileId, Js::CallIExtendedOptions options, uint32_t spreadAuxOffset);
+    void                BuildProfiled2CallI(Js::OpCode opcode, uint32_t offset, Js::RegSlot returnValue, Js::RegSlot function,
                             Js::ArgSlot argCount, Js::ProfileId profileId, Js::ProfileId profileId2);
-    void                BuildProfiled2CallIExtended(Js::OpCode opcode, uint32 offset, Js::RegSlot returnValue, Js::RegSlot function,
-                            Js::ArgSlot argCount, Js::ProfileId profileId, Js::ProfileId profileId2, Js::CallIExtendedOptions options, uint32 spreadAuxOffset);
-    void                BuildLdSpreadIndices(uint32 offset, uint32 spreadAuxOffset);
-    IR::Instr *         BuildCallIExtended(Js::OpCode newOpcode, uint32 offset, Js::RegSlot returnValue, Js::RegSlot function,
-                            Js::ArgSlot argCount, Js::CallIExtendedOptions options, uint32 spreadAuxOffset, Js::CallFlags flags = Js::CallFlags_None);
+    void                BuildProfiled2CallIExtended(Js::OpCode opcode, uint32_t offset, Js::RegSlot returnValue, Js::RegSlot function,
+                            Js::ArgSlot argCount, Js::ProfileId profileId, Js::ProfileId profileId2, Js::CallIExtendedOptions options, uint32_t spreadAuxOffset);
+    void                BuildLdSpreadIndices(uint32_t offset, uint32_t spreadAuxOffset);
+    IR::Instr *         BuildCallIExtended(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot returnValue, Js::RegSlot function,
+                            Js::ArgSlot argCount, Js::CallIExtendedOptions options, uint32_t spreadAuxOffset, Js::CallFlags flags = Js::CallFlags_None);
     void                BuildCallCommon(IR::Instr *instr, StackSym *symDst, Js::ArgSlot argCount, Js::CallFlags flags = Js::CallFlags_None);
-    void                BuildRegexFromPattern(Js::RegSlot dstRegSlot, uint32 patternIndex, uint32 offset);
-    void                BuildInitClass(uint32 offset, Js::RegSlot constructor, Js::RegSlot proto, IR::Opnd * opndProtoParent, IR::Opnd * opndCtorParent, IR::Opnd * opndEnvironment, uint index);
-    void                BuildBrReg1(Js::OpCode newOpcode, uint32 offset, uint targetOffset, Js::RegSlot srcRegSlot);
-    void                BuildBrReg2(Js::OpCode newOpcode, uint32 offset, uint targetOffset, Js::RegSlot src1RegSlot, Js::RegSlot src2RegSlot);
-    void                BuildBrBReturn(Js::OpCode newOpcode, uint32 offset, Js::RegSlot DestRegSlot, uint32 forInLoopLevel, uint32 targetOffset);
+    void                BuildRegexFromPattern(Js::RegSlot dstRegSlot, uint32_t patternIndex, uint32_t offset);
+    void                BuildInitClass(uint32_t offset, Js::RegSlot constructor, Js::RegSlot proto, IR::Opnd * opndProtoParent, IR::Opnd * opndCtorParent, IR::Opnd * opndEnvironment, uint index);
+    void                BuildBrReg1(Js::OpCode newOpcode, uint32_t offset, uint targetOffset, Js::RegSlot srcRegSlot);
+    void                BuildBrReg2(Js::OpCode newOpcode, uint32_t offset, uint targetOffset, Js::RegSlot src1RegSlot, Js::RegSlot src2RegSlot);
+    void                BuildBrBReturn(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot DestRegSlot, uint32_t forInLoopLevel, uint32_t targetOffset);
 
     IR::IndirOpnd *     BuildIndirOpnd(IR::RegOpnd *baseReg, IR::RegOpnd *indexReg);
-    IR::IndirOpnd *     BuildIndirOpnd(IR::RegOpnd *baseReg, uint32 offset);
+    IR::IndirOpnd *     BuildIndirOpnd(IR::RegOpnd *baseReg, uint32_t offset);
 #if DBG_DUMP || defined(ENABLE_IR_VIEWER)
-    IR::IndirOpnd *     BuildIndirOpnd(IR::RegOpnd *baseReg, uint32 offset, const char16_t *desc);
+    IR::IndirOpnd *     BuildIndirOpnd(IR::RegOpnd *baseReg, uint32_t offset, const char16_t *desc);
 #endif
     IR::SymOpnd *       BuildFieldOpnd(Js::OpCode newOpCode, Js::RegSlot reg, Js::PropertyId propertyId, Js::PropertyIdIndexType propertyIdIndex, PropertyKind propertyKind, uint inlineCacheIndex = -1);
     PropertySym *       BuildFieldSym(Js::RegSlot reg, Js::PropertyId propertyId, Js::PropertyIdIndexType propertyIdIndex, uint inlineCacheIndex, PropertyKind propertyKind);
     SymID               BuildSrcStackSymID(Js::RegSlot regSlot);
     IR::RegOpnd *       BuildDstOpnd(Js::RegSlot dstRegSlot, IRType type = TyVar, bool isCatchObjectSym = false, bool reuseTemp = false);
     IR::RegOpnd *       BuildSrcOpnd(Js::RegSlot srcRegSlot, IRType type = TyVar);
-    IR::AddrOpnd *      BuildAuxArrayOpnd(AuxArrayValue auxArrayType, uint32 auxArrayOffset);
+    IR::AddrOpnd *      BuildAuxArrayOpnd(AuxArrayValue auxArrayType, uint32_t auxArrayOffset);
     IR::Opnd *          BuildAuxObjectLiteralTypeRefOpnd(int objectId);
-    IR::Opnd *          BuildForInEnumeratorOpnd(uint forInLoopLevel, uint32 offset);
+    IR::Opnd *          BuildForInEnumeratorOpnd(uint forInLoopLevel, uint32_t offset);
     IR::RegOpnd *       EnsureLoopBodyForInEnumeratorArrayOpnd();
 private:
     uint                AddStatementBoundary(uint statementIndex, uint offset);
@@ -278,7 +278,7 @@ private:
     bool                IsParamScopeDone() const { return m_paramScopeDone; }
     void                SetParamScopeDone(bool done = true) { m_paramScopeDone = done; }
 
-    Js::RegSlot         InnerScopeIndexToRegSlot(uint32) const;
+    Js::RegSlot         InnerScopeIndexToRegSlot(uint32_t) const;
     Js::RegSlot         GetEnvReg() const;
     Js::RegSlot         GetEnvRegForEvalCode() const;
     Js::RegSlot         GetEnvRegForInnerFrameDisplay() const;
@@ -309,10 +309,10 @@ private:
 
     void                InsertIncrLoopBodyLoopCounter(IR::LabelInstr *loopTopLabelInstr);
     void                InsertInitLoopBodyLoopCounter(uint loopNum);
-    void                InsertDoneLoopBodyLoopCounter(uint32 lastOffset);
+    void                InsertDoneLoopBodyLoopCounter(uint32_t lastOffset);
 
     IR::RegOpnd *       InsertConvPrimStr(IR::RegOpnd * srcOpnd, uint offset, bool forcePreOpBailOutIfNeeded);
-    IR::Opnd *          GetEnvironmentOperand(uint32 offset);
+    IR::Opnd *          GetEnvironmentOperand(uint32_t offset);
     bool                DoLoadInstructionArrayProfileInfo();
     bool                AllowNativeArrayProfileInfo();
 
@@ -329,8 +329,8 @@ private:
     Func *              m_func;
     IR::Instr *         m_lastInstr;
     IR::Instr **        m_offsetToInstruction;
-    uint32              m_offsetToInstructionCount;
-    uint32              m_functionStartOffset;
+    uint32_t              m_offsetToInstructionCount;
+    uint32_t              m_functionStartOffset;
     Js::ByteCodeReader  m_jnReader;
     Js::StatementReader<Js::FunctionBody::ArenaStatementMapList> m_statementReader;
     SList<IR::Instr *> *m_argStack;
@@ -359,9 +359,9 @@ private:
     // used to estimate how much stack we should probe for at the
     // beginning of a JITted function.
 #if DBG
-    uint32              m_callsOnStack;
+    uint32_t              m_callsOnStack;
 #endif
-    uint32              m_argsOnStack;
+    uint32_t              m_argsOnStack;
     Js::PropertyId      m_loopBodyLocalsStartSlot;
     IR::Opnd**          m_saveLoopImplicitCallFlags;
     IR::RegOpnd *       m_loopBodyForInEnumeratorArrayOpnd;
@@ -380,7 +380,7 @@ private:
     public:
         GeneratorJumpTable(Func* func, IRBuilder* irBuilder);
         IR::Instr* BuildJumpTable();
-        IR::RegOpnd* BuildForInEnumeratorArrayOpnd(uint32 offset);
+        IR::RegOpnd* BuildForInEnumeratorArrayOpnd(uint32_t offset);
     };
 
     GeneratorJumpTable m_generatorJumpTable;

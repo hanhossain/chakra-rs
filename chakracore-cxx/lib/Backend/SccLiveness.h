@@ -37,8 +37,8 @@ private:
     Func *          func;
     JitArenaAllocator *tempAlloc;
     Loop *          curLoop;
-    uint32          lastCall;
-    uint32          lastNonOpHelperCall;
+    uint32_t          lastCall;
+    uint32_t          lastNonOpHelperCall;
     uint16          loopNest;
     IR::LabelInstr * lastOpHelperLabel;
     Region *        curRegion;

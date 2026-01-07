@@ -82,7 +82,7 @@ namespace Js
     template<>
     inline float AsmJsMath::Abs<float>(float aLeft)
     {
-        uint32 x = (*(uint32*)(&aLeft) & 0x7FFFFFFF);
+        uint32_t x = (*(uint32_t*)(&aLeft) & 0x7FFFFFFF);
         return *(float*)(&x);
     }
 

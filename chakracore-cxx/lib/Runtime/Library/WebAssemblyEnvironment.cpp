@@ -15,7 +15,7 @@ WebAssemblyEnvironment::WebAssemblyEnvironment(WebAssemblyModule* module):
 {
     this->module = module;
     ScriptContext* scriptContext = module->GetScriptContext();
-    uint32 size = module->GetModuleEnvironmentSize();
+    uint32_t size = module->GetModuleEnvironmentSize();
     this->start = RecyclerNewArrayZ(scriptContext->GetRecycler(), Field(Var), size);
     this->end = start + size;
     Assert(start < end);
@@ -25,7 +25,7 @@ WebAssemblyEnvironment::WebAssemblyEnvironment(WebAssemblyModule* module):
     this->table = this->start + module->GetTableEnvironmentOffset();
     this->globals = this->start + module->GetGlobalOffset();
 
-    uint32 globalsSize = WAsmJs::ConvertOffset<byte, Js::Var>(module->GetGlobalsByteSize());
+    uint32_t globalsSize = WAsmJs::ConvertOffset<byte, Js::Var>(module->GetGlobalsByteSize());
     // Assumes globals are last
     Assert(globals > table && globals > functions && globals > imports && globals > memory);
     if (globals < start ||
@@ -50,7 +50,7 @@ void WebAssemblyEnvironment::CheckPtrIsValid(intptr_t ptr) const
 }
 
 template<typename T>
-T* WebAssemblyEnvironment::GetVarElement(Field(Var)* ptr, uint32 index, uint32 maxCount) const
+T* WebAssemblyEnvironment::GetVarElement(Field(Var)* ptr, uint32_t index, uint32_t maxCount) const
 {
     if (index >= maxCount)
     {
@@ -72,7 +72,7 @@ T* WebAssemblyEnvironment::GetVarElement(Field(Var)* ptr, uint32 index, uint32 m
 }
 
 template<typename T>
-void WebAssemblyEnvironment::SetVarElement(Field(Var)* ptr, T* val, uint32 index, uint32 maxCount)
+void WebAssemblyEnvironment::SetVarElement(Field(Var)* ptr, T* val, uint32_t index, uint32_t maxCount)
 {
     if (index >= maxCount ||
         !VarIsCorrectType(val))
@@ -86,7 +86,7 @@ void WebAssemblyEnvironment::SetVarElement(Field(Var)* ptr, T* val, uint32 index
     *dst = val;
 }
 
-WasmScriptFunction* WebAssemblyEnvironment::GetWasmFunction(uint32 index) const
+WasmScriptFunction* WebAssemblyEnvironment::GetWasmFunction(uint32_t index) const
 {
     if (!(module->GetFunctionIndexType(index) == Wasm::FunctionIndexTypes::Function ||
           module->GetFunctionIndexType(index) == Wasm::FunctionIndexTypes::ImportThunk))
@@ -96,7 +96,7 @@ WasmScriptFunction* WebAssemblyEnvironment::GetWasmFunction(uint32 index) const
     return GetVarElement<WasmScriptFunction>(functions, index, module->GetWasmFunctionCount());
 }
 
-void WebAssemblyEnvironment::SetWasmFunction(uint32 index, WasmScriptFunction* func)
+void WebAssemblyEnvironment::SetWasmFunction(uint32_t index, WasmScriptFunction* func)
 {
     if (!(module->GetFunctionIndexType(index) == Wasm::FunctionIndexTypes::Function ||
           module->GetFunctionIndexType(index) == Wasm::FunctionIndexTypes::ImportThunk))
@@ -106,33 +106,33 @@ void WebAssemblyEnvironment::SetWasmFunction(uint32 index, WasmScriptFunction* f
     SetVarElement<WasmScriptFunction>(functions, func, index, module->GetWasmFunctionCount());
 }
 
-void WebAssemblyEnvironment::SetImportedFunction(uint32 index, Var importedFunc)
+void WebAssemblyEnvironment::SetImportedFunction(uint32_t index, Var importedFunc)
 {
     SetVarElement<JavascriptFunction>(imports, (JavascriptFunction*)importedFunc, index, module->GetWasmFunctionCount());
 }
 
-Js::WebAssemblyTable* WebAssemblyEnvironment::GetTable(uint32 index) const
+Js::WebAssemblyTable* WebAssemblyEnvironment::GetTable(uint32_t index) const
 {
     return GetVarElement<WebAssemblyTable>(table, index, 1);
 }
 
-void WebAssemblyEnvironment::SetTable(uint32 index, WebAssemblyTable* table)
+void WebAssemblyEnvironment::SetTable(uint32_t index, WebAssemblyTable* table)
 {
     SetVarElement<WebAssemblyTable>(this->table, table, index, 1);
 }
 
-WebAssemblyMemory* WebAssemblyEnvironment::GetMemory(uint32 index) const
+WebAssemblyMemory* WebAssemblyEnvironment::GetMemory(uint32_t index) const
 {
     return GetVarElement<WebAssemblyMemory>(memory, index, 1);
 }
 
-void WebAssemblyEnvironment::SetMemory(uint32 index, WebAssemblyMemory* mem)
+void WebAssemblyEnvironment::SetMemory(uint32_t index, WebAssemblyMemory* mem)
 {
     SetVarElement<WebAssemblyMemory>(this->memory, mem, index, 1);
 }
 
 template<typename T>
-T WebAssemblyEnvironment::GetGlobalInternal(uint32 offset) const
+T WebAssemblyEnvironment::GetGlobalInternal(uint32_t offset) const
 {
     Field(T)* ptr = (Field(T)*)PointerValue(start) + offset;
     CheckPtrIsValid<T>((intptr_t)ptr);
@@ -140,7 +140,7 @@ T WebAssemblyEnvironment::GetGlobalInternal(uint32 offset) const
 }
 
 template<typename T>
-void WebAssemblyEnvironment::SetGlobalInternal(uint32 offset, T val)
+void WebAssemblyEnvironment::SetGlobalInternal(uint32_t offset, T val)
 {
     Field(T)* ptr = (Field(T)*)PointerValue(start) + offset;
     CheckPtrIsValid<T>((intptr_t)PointerValue(ptr));
@@ -152,7 +152,7 @@ Wasm::WasmConstLitNode WebAssemblyEnvironment::GetGlobalValue(Wasm::WasmGlobal* 
 {
     AssertOrFailFast(global);
     Wasm::WasmConstLitNode cnst;
-    uint32 offset = module->GetOffsetForGlobal(global);
+    uint32_t offset = module->GetOffsetForGlobal(global);
 
     switch (global->GetType())
     {
@@ -172,7 +172,7 @@ Wasm::WasmConstLitNode WebAssemblyEnvironment::GetGlobalValue(Wasm::WasmGlobal* 
 void WebAssemblyEnvironment::SetGlobalValue(Wasm::WasmGlobal* global, Wasm::WasmConstLitNode cnst)
 {
     AssertOrFailFast(global);
-    uint32 offset = module->GetOffsetForGlobal(global);
+    uint32_t offset = module->GetOffsetForGlobal(global);
 
     switch (global->GetType())
     {
@@ -214,12 +214,12 @@ void WebAssemblyEnvironment::CalculateOffsets(WebAssemblyTable* table, WebAssemb
     ArrayBufferBase* buffer = memory->GetBuffer();
     Assert(!buffer->IsDetached());
     hCode = WASMERR_DataSegOutOfRange;
-    for (uint32 iSeg = 0; iSeg < module->GetDataSegCount(); ++iSeg)
+    for (uint32_t iSeg = 0; iSeg < module->GetDataSegCount(); ++iSeg)
     {
         Wasm::WasmDataSegment* segment = module->GetDataSeg(iSeg);
         Assert(segment != nullptr);
-        const uint32 offset = module->GetOffsetFromInit(segment->GetOffsetExpr(), this);
-        const uint32 size = segment->GetSourceSize();
+        const uint32_t offset = module->GetOffsetFromInit(segment->GetOffsetExpr(), this);
+        const uint32_t size = segment->GetSourceSize();
 
         if (UInt32Math::Add(offset, size, outOfRangeError) > buffer->GetByteLength())
         {
@@ -229,7 +229,7 @@ void WebAssemblyEnvironment::CalculateOffsets(WebAssemblyTable* table, WebAssemb
     }
 }
 
-uint32 WebAssemblyEnvironment::GetElementSegmentOffset(uint32 index) const
+uint32_t WebAssemblyEnvironment::GetElementSegmentOffset(uint32_t index) const
 {
     Assert(offsetInitialized);
     if (index >= module->GetElementSegCount())
@@ -240,7 +240,7 @@ uint32 WebAssemblyEnvironment::GetElementSegmentOffset(uint32 index) const
     return elementSegmentOffsets[index];
 }
 
-uint32 WebAssemblyEnvironment::GetDataSegmentOffset(uint32 index) const
+uint32_t WebAssemblyEnvironment::GetDataSegmentOffset(uint32_t index) const
 {
     Assert(offsetInitialized);
     if (index >= module->GetDataSegCount())

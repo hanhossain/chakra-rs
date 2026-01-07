@@ -34,7 +34,7 @@ public:
     static Var EntryInstantiateBound(RecyclableObject* function, CallInfo callInfo, ...);
     static Var EntryQueryResponse(RecyclableObject* function, CallInfo callInfo, ...);
 
-    static uint32 ToNonWrappingUint32(Var val, ScriptContext * ctx);
+    static uint32_t ToNonWrappingUint32(Var val, ScriptContext * ctx);
     static void CheckSignature(ScriptContext * scriptContext, Wasm::WasmSignature * sig1, Wasm::WasmSignature * sig2);
     static uint GetSignatureSize();
 

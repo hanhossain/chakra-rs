@@ -97,7 +97,7 @@ private:
         Js::FunctionCodeGenRuntimeData *const runtimeData,
         Js::JavascriptFunction* function = nullptr,
         bool isJitTimeDataComputed = false,
-        uint32 recursiveInlineDepth = 0);
+        uint32_t recursiveInlineDepth = 0);
     Js::CodeGenRecyclableData *GatherCodeGenData(Js::FunctionBody *const topFunctionBody, Js::FunctionBody *const functionBody, Js::EntryPointInfo *const entryPoint, CodeGenWorkItem* workItem, void* function = nullptr);
 
 public:
@@ -178,7 +178,7 @@ private:
 
     static ExecutionMode PrejitJitMode(Js::FunctionBody *const functionBody);
 
-    bool TryAggressiveInlining(Js::FunctionBody *const topFunctionBody, Js::FunctionBody *const functionBody, InliningDecider &inliningDecider, uint32& inlineeCount, uint recursiveInlineDepth);
+    bool TryAggressiveInlining(Js::FunctionBody *const topFunctionBody, Js::FunctionBody *const functionBody, InliningDecider &inliningDecider, uint32_t& inlineeCount, uint recursiveInlineDepth);
 
 private:
     Js::ScriptContext * scriptContext;

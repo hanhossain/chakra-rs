@@ -770,7 +770,7 @@ GlobOpt::EnsurePropertyWriteGuardSym(PropertySym * propertySym)
     // Make sure that the PropertySym has a proto cache sym which is chained into the propertySym list.
     if (!propertySym->m_writeGuardSym)
     {
-        propertySym->m_writeGuardSym = PropertySym::New(propertySym->m_stackSym, propertySym->m_propertyId, (uint32)-1, (uint)-1, PropertyKindWriteGuard, this->func);
+        propertySym->m_writeGuardSym = PropertySym::New(propertySym->m_stackSym, propertySym->m_propertyId, (uint32_t)-1, (uint)-1, PropertyKindWriteGuard, this->func);
     }
 
     return propertySym->m_writeGuardSym;

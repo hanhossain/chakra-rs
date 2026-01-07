@@ -618,7 +618,7 @@ void LegalizeMD::LegalizeLDIMM(IR::Instr * instr, IntConstType immed)
     if (!instr->isInlineeEntryInstr)
     {
 
-        // If the source is a tagged int, and the dest is int32 or uint32, untag the value so that it fits in 32 bits.
+        // If the source is a tagged int, and the dest is int32 or uint32_t, untag the value so that it fits in 32 bits.
         if (instr->GetDst()->IsIntegral32() && instr->GetSrc1()->IsTaggedInt())
         {
             immed = (int32)immed;
@@ -629,7 +629,7 @@ void LegalizeMD::LegalizeLDIMM(IR::Instr * instr, IntConstType immed)
         if ((immed & 0xffff) == immed || (immed & 0xffff0000) == immed || (immed & 0xffff00000000ll) == immed || (immed & 0xffff000000000000ll) == immed)
         {
             instr->m_opcode = Js::OpCode::MOVZ;
-            uint32 shift = ShiftTo16((UIntConstType*)&immed);
+            uint32_t shift = ShiftTo16((UIntConstType*)&immed);
             instr->ReplaceSrc1(IR::IntConstOpnd::New(immed, TyUint16, instr->m_func));
             instr->SetSrc2(IR::IntConstOpnd::New(shift, TyUint8, instr->m_func));
             return;
@@ -641,20 +641,20 @@ void LegalizeMD::LegalizeLDIMM(IR::Instr * instr, IntConstType immed)
         {
             instr->m_opcode = Js::OpCode::MOVN;
             immed = invImmed;
-            uint32 shift = ShiftTo16((UIntConstType*)&immed);
+            uint32_t shift = ShiftTo16((UIntConstType*)&immed);
             instr->ReplaceSrc1(IR::IntConstOpnd::New(immed, TyUint16, instr->m_func));
             instr->SetSrc2(IR::IntConstOpnd::New(shift, TyUint8, instr->m_func));
             return;
         }
 
         // Short-circuit simple inverted 16-bit immediates that can be implicitly truncated to 32 bits
-        if (immed == (uint32)immed)
+        if (immed == (uint32_t)immed)
         {
             IntConstType invImmed32 = ~immed & 0xffffffffull;
             if ((invImmed32 & 0xffff) == invImmed32 || (invImmed32 & 0xffff0000) == invImmed32)
             {
                 instr->GetDst()->SetType(TyInt32);
-                uint32 shift = ShiftTo16((UIntConstType*)&invImmed32);
+                uint32_t shift = ShiftTo16((UIntConstType*)&invImmed32);
                 IR::IntConstOpnd *src1 = IR::IntConstOpnd::New(invImmed32 & 0xFFFF, TyInt16, instr->m_func);
                 IR::IntConstOpnd *src2 = IR::IntConstOpnd::New(shift, TyUint8, instr->m_func);
                 instr->ReplaceSrc1(src1);
@@ -763,7 +763,7 @@ void LegalizeMD::LegalizeLDIMM(IR::Instr * instr, IntConstType immed)
         IR::LabelInstr *label = IR::LabelInstr::New(Js::OpCode::Label, instr->m_func, false);
         instr->InsertBefore(label);
         Assert((immed & 0x0000000F) == immed);
-        label->SetOffset((uint32)immed);
+        label->SetOffset((uint32_t)immed);
         label->isInlineeEntryInstr = true;
 
         IR::LabelOpnd *target = IR::LabelOpnd::New(label, instr->m_func);

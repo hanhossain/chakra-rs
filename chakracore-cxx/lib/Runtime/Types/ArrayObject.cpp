@@ -32,13 +32,13 @@ namespace Js
         }
     }
 
-    BOOL ArrayObject::SetItemAttributes(uint32 index, PropertyAttributes attributes)
+    BOOL ArrayObject::SetItemAttributes(uint32_t index, PropertyAttributes attributes)
     {
         VerifySetItemAttributes(Constants::NoProperty, attributes);
         return TRUE;
     }
 
-    BOOL ArrayObject::SetItemAccessors(uint32 index, Var getter, Var setter)
+    BOOL ArrayObject::SetItemAccessors(uint32_t index, Var getter, Var setter)
     {
         ThrowItemNotConfigurableError();
     }

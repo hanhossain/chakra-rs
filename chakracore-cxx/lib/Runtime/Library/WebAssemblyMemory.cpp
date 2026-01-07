@@ -11,7 +11,7 @@
 
 using namespace Js;
 
-WebAssemblyMemory::WebAssemblyMemory(ArrayBufferBase* buffer, uint32 initial, uint32 maximum, DynamicType * type) :
+WebAssemblyMemory::WebAssemblyMemory(ArrayBufferBase* buffer, uint32_t initial, uint32_t maximum, DynamicType * type) :
     DynamicObject(type),
     m_buffer(buffer),
     m_initial(initial),
@@ -23,7 +23,7 @@ WebAssemblyMemory::WebAssemblyMemory(ArrayBufferBase* buffer, uint32 initial, ui
 }
 
 
-void WebAssemblyMemory::CheckLimits(ScriptContext * scriptContext, uint32 initial, uint32 maximum)
+void WebAssemblyMemory::CheckLimits(ScriptContext * scriptContext, uint32_t initial, uint32_t maximum)
 {
     if (maximum < initial)
     {
@@ -40,12 +40,12 @@ void WebAssemblyMemory::CheckLimits(ScriptContext * scriptContext, uint32 initia
 }
 
 
-void WebAssemblyMemory::CheckLimits(ScriptContext * scriptContext, uint32 initial, uint32 maximum, uint32 bufferLength)
+void WebAssemblyMemory::CheckLimits(ScriptContext * scriptContext, uint32_t initial, uint32_t maximum, uint32_t bufferLength)
 {
     CheckLimits(scriptContext, initial, maximum);
     // Do the mul after initial checks to avoid potential unneeded OOM exception
-    const uint32 initBytes = UInt32Math::Mul<WebAssembly::PageSize>(initial);
-    const uint32 maxBytes = UInt32Math::Mul<WebAssembly::PageSize>(maximum);
+    const uint32_t initBytes = UInt32Math::Mul<WebAssembly::PageSize>(initial);
+    const uint32_t maxBytes = UInt32Math::Mul<WebAssembly::PageSize>(maximum);
     if (initBytes > bufferLength || bufferLength > maxBytes)
     {
         JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_Invalid);
@@ -81,9 +81,9 @@ WebAssemblyMemory::NewInstance(RecyclableObject* function, CallInfo callInfo, ..
     {
         JavascriptError::ThrowTypeError(scriptContext, JSERR_NeedNumber, u"descriptor.initial");
     }
-    uint32 initial = WebAssembly::ToNonWrappingUint32(initVar, scriptContext);
+    uint32_t initial = WebAssembly::ToNonWrappingUint32(initVar, scriptContext);
 
-    uint32 maximum = Wasm::Limits::GetMaxMemoryMaximumPages();
+    uint32_t maximum = Wasm::Limits::GetMaxMemoryMaximumPages();
     bool hasMaximum = false;
     Var maxVar = JavascriptOperators::OP_GetProperty(memoryDescriptor, PropertyIds::maximum, scriptContext);
     if (!Js::JavascriptOperators::IsUndefined(maxVar))
@@ -136,7 +136,7 @@ WebAssemblyMemory::EntryGrow(RecyclableObject* function, CallInfo callInfo, ...)
         deltaVar = args[1];
     }
 
-    uint32 deltaPages = WebAssembly::ToNonWrappingUint32(deltaVar, scriptContext);
+    uint32_t deltaPages = WebAssembly::ToNonWrappingUint32(deltaVar, scriptContext);
     if (memory->m_buffer->IsDetached())
     {
         JavascriptError::ThrowTypeError(scriptContext, JSERR_DetachedTypedArray);
@@ -152,26 +152,26 @@ WebAssemblyMemory::EntryGrow(RecyclableObject* function, CallInfo callInfo, ...)
 }
 
 int32
-WebAssemblyMemory::GrowInternal(uint32 deltaPages)
+WebAssemblyMemory::GrowInternal(uint32_t deltaPages)
 {
     const unsigned long deltaBytes = (unsigned long)deltaPages * WebAssembly::PageSize;
     if (deltaBytes > ArrayBuffer::MaxArrayBufferLength)
     {
         return -1;
     }
-    const uint32 oldBytes = m_buffer->GetByteLength();
+    const uint32_t oldBytes = m_buffer->GetByteLength();
     const unsigned long newBytesLong = deltaBytes + oldBytes;
     if (newBytesLong > ArrayBuffer::MaxArrayBufferLength)
     {
         return -1;
     }
     CompileAssert(ArrayBuffer::MaxArrayBufferLength <= UINT32_MAX);
-    const uint32 newBytes = (uint32)newBytesLong;
+    const uint32_t newBytes = (uint32_t)newBytesLong;
 
-    const uint32 oldPageCount = oldBytes / WebAssembly::PageSize;
+    const uint32_t oldPageCount = oldBytes / WebAssembly::PageSize;
     Assert(oldBytes % WebAssembly::PageSize == 0);
 
-    const uint32 newPageCount = oldPageCount + deltaPages;
+    const uint32_t newPageCount = oldPageCount + deltaPages;
     if (newPageCount > m_maximum)
     {
         return -1;
@@ -213,7 +213,7 @@ WebAssemblyMemory::GrowInternal(uint32 deltaPages)
 }
 
 int32
-WebAssemblyMemory::GrowHelper(WebAssemblyMemory * mem, uint32 deltaPages)
+WebAssemblyMemory::GrowHelper(WebAssemblyMemory * mem, uint32_t deltaPages)
 {
     JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Op_GrowWasmMemory);
     return mem->GrowInternal(deltaPages);
@@ -221,7 +221,7 @@ WebAssemblyMemory::GrowHelper(WebAssemblyMemory * mem, uint32 deltaPages)
 }
 
 #if DBG
-void WebAssemblyMemory::TraceMemWrite(WebAssemblyMemory* mem, uint32 index, uint32 offset, Js::ArrayBufferView::ViewType viewType, uint32 bytecodeOffset, ScriptContext* context)
+void WebAssemblyMemory::TraceMemWrite(WebAssemblyMemory* mem, uint32_t index, uint32_t offset, Js::ArrayBufferView::ViewType viewType, uint32_t bytecodeOffset, ScriptContext* context)
 {
     JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Op_WasmMemoryTraceWrite);
     // Must call after the write
@@ -254,7 +254,7 @@ void WebAssemblyMemory::TraceMemWrite(WebAssemblyMemory* mem, uint32 index, uint
     case ArrayBufferView::ViewType::TYPE_INT32_TO_INT64:
     case ArrayBufferView::ViewType::TYPE_INT32: Output::Print(u".int32 = %d\n", *(int32*)(buffer + bigIndex)); break;
     case ArrayBufferView::ViewType::TYPE_UINT32_TO_INT64:
-    case ArrayBufferView::ViewType::TYPE_UINT32: Output::Print(u".uint32 = %u\n", *(uint32*)(buffer + bigIndex)); break;
+    case ArrayBufferView::ViewType::TYPE_UINT32: Output::Print(u".uint32_t = %u\n", *(uint32_t*)(buffer + bigIndex)); break;
     case ArrayBufferView::ViewType::TYPE_FLOAT32: Output::Print(u".f32 = %.4f\n", *(float*)(buffer + bigIndex)); break;
     case ArrayBufferView::ViewType::TYPE_FLOAT64: Output::Print(u".f64 = %.8f\n", *(double*)(buffer + bigIndex)); break;
     case ArrayBufferView::ViewType::TYPE_INT64: Output::Print(u".long = %lld\n", *(long*)(buffer + bigIndex)); break;
@@ -288,16 +288,16 @@ WebAssemblyMemory::EntryGetterBuffer(RecyclableObject* function, CallInfo callIn
 }
 
 WebAssemblyMemory *
-WebAssemblyMemory::CreateMemoryObject(uint32 initial, uint32 maximum, bool isShared, ScriptContext * scriptContext)
+WebAssemblyMemory::CreateMemoryObject(uint32_t initial, uint32_t maximum, bool isShared, ScriptContext * scriptContext)
 {
     CheckLimits(scriptContext, initial, maximum);
-    uint32 byteLength = UInt32Math::Mul<WebAssembly::PageSize>(initial);
+    uint32_t byteLength = UInt32Math::Mul<WebAssembly::PageSize>(initial);
     ArrayBufferBase* buffer = nullptr;
 #ifdef ENABLE_WASM_THREADS
     if (isShared)
     {
         Assert(Wasm::Threads::IsEnabled());
-        uint32 maxByteLength = UInt32Math::Mul<WebAssembly::PageSize>(maximum);
+        uint32_t maxByteLength = UInt32Math::Mul<WebAssembly::PageSize>(maximum);
         buffer = scriptContext->GetLibrary()->CreateWebAssemblySharedArrayBuffer(byteLength, maxByteLength);
     }
     else
@@ -314,7 +314,7 @@ WebAssemblyMemory::CreateMemoryObject(uint32 initial, uint32 maximum, bool isSha
     return RecyclerNewFinalized(scriptContext->GetRecycler(), WebAssemblyMemory, buffer, initial, maximum, scriptContext->GetLibrary()->GetWebAssemblyMemoryType());
 }
 
-WebAssemblyMemory * WebAssemblyMemory::CreateForExistingBuffer(uint32 initial, uint32 maximum, uint32 currentByteLength, ScriptContext * scriptContext)
+WebAssemblyMemory * WebAssemblyMemory::CreateForExistingBuffer(uint32_t initial, uint32_t maximum, uint32_t currentByteLength, ScriptContext * scriptContext)
 {
     CheckLimits(scriptContext, initial, maximum, currentByteLength);
     ArrayBufferBase* buffer = scriptContext->GetLibrary()->CreateWebAssemblyArrayBuffer(currentByteLength);
@@ -328,7 +328,7 @@ WebAssemblyMemory * WebAssemblyMemory::CreateForExistingBuffer(uint32 initial, u
 }
 
 #ifdef ENABLE_WASM_THREADS
-WebAssemblyMemory * WebAssemblyMemory::CreateFromSharedContents(uint32 initial, uint32 maximum, SharedContents* sharedContents, ScriptContext * scriptContext)
+WebAssemblyMemory * WebAssemblyMemory::CreateFromSharedContents(uint32_t initial, uint32_t maximum, SharedContents* sharedContents, ScriptContext * scriptContext)
 {
     if (!sharedContents)
     {

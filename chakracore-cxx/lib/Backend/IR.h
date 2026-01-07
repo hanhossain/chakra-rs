@@ -316,7 +316,7 @@ public:
     IR::Instr *     Copy(bool copyDst = true);
     IR::Instr *     CopyWithoutDst();
     IR::Instr *     Clone();
-    IR::Instr *     ConvertToBailOutInstr(IR::Instr *bailOutTarget, BailOutKind kind, uint32 bailOutOffset = Js::Constants::NoByteCodeOffset);
+    IR::Instr *     ConvertToBailOutInstr(IR::Instr *bailOutTarget, BailOutKind kind, uint32_t bailOutOffset = Js::Constants::NoByteCodeOffset);
     IR::Instr *     ConvertToBailOutInstr(BailOutInfo *bailOutInfo, BailOutKind kind, bool useAuxBailout = false);
     IR::Instr *     ConvertToBailOutInstrWithBailOutInfoCopy(BailOutInfo *bailOutInfo, IR::BailOutKind bailOutKind);
 #if DBG
@@ -385,8 +385,8 @@ public:
     void            DumpTestTrace();
     void            DumpFieldCopyPropTestTrace(bool inLandingPad);
 #endif
-    uint32          GetByteCodeOffset() const;
-    uint32          GetNumber() const;
+    uint32_t          GetByteCodeOffset() const;
+    uint32_t          GetNumber() const;
 
     void            SetByteCodeOffset(IR::Instr * instr);
     void            ClearByteCodeOffset();
@@ -530,13 +530,13 @@ public:
 private:
     int             GetOpndCount() const;
     void            ClearNumber() { this->m_number = 0; }
-    void            SetNumber(uint32 number);
+    void            SetNumber(uint32_t number);
     friend class ::Func;
     friend class ::Lowerer;
     friend class IR::ByteCodeUsesInstr;
     friend class ::SCCLiveness;
 
-    void            SetByteCodeOffset(uint32 number);
+    void            SetByteCodeOffset(uint32_t number);
     friend class ::IRBuilder;
     friend class ::IRBuilderAsmJs;
     friend class ::FlowGraph;
@@ -554,7 +554,7 @@ public:
 #if DBG_DUMP
     char16_t *       globOptInstrString;
 #endif
-    // These should be together to pack into a uint32
+    // These should be together to pack into a uint32_t
     Js::OpCode      m_opcode;
     uint8_t           ignoreOverflowBitCount;      // Number of bits after which ovf matters. Currently used for MULs.
 
@@ -596,7 +596,7 @@ protected:
     bool            hasAuxBailOut:1;
     IRKind          m_kind;
 
-    uint32          m_number;
+    uint32_t          m_number;
     Opnd *          m_dst;
     Opnd *          m_src1;
     Opnd *          m_src2;
@@ -612,7 +612,7 @@ private:
     
 public:
     static ByteCodeUsesInstr * New(IR::Instr * originalBytecodeInstr);
-    static ByteCodeUsesInstr * New(Func * containingFunction, uint32 offset);
+    static ByteCodeUsesInstr * New(Func * containingFunction, uint32_t offset);
     const BVSparse<JitArenaAllocator> * GetByteCodeUpwardExposedUsed() const;
 
     PropertySym *              propertySymUse;
@@ -956,12 +956,12 @@ public:
 #endif
     }
 
-    void                            AddtoDictionary(uint32 offset, TBranchKey key, void* remoteVar);
-    void                            AddtoJumpTable(uint32 offset, uint32 jmpIndex);
+    void                            AddtoDictionary(uint32_t offset, TBranchKey key, void* remoteVar);
+    void                            AddtoJumpTable(uint32_t offset, uint32_t jmpIndex);
     void                            CreateBranchTargetsAndSetDefaultTarget(int dictionarySize, Kind kind, uint defaultTargetOffset);
     void                            ChangeLabelRef(LabelInstr * oldTarget, LabelInstr * newTarget);
     bool                            ReplaceTarget(IR::LabelInstr * oldLabelInstr, IR::LabelInstr * newLabelInstr);
-    void                            FixMultiBrDefaultTarget(uint32 targetOffset);
+    void                            FixMultiBrDefaultTarget(uint32_t targetOffset);
     void                            ClearTarget();
     BranchDictionaryWrapper *       GetBranchDictionary();
     BranchJumpTable *               GetBranchJumpTable();
@@ -1011,7 +1011,7 @@ public:
     {
         MapMultiBrTargetByAddress([fn](void ** value) -> void
         {
-            *value = (void*)fn(::Math::PointerCastToIntegral<uint32>(*value));
+            *value = (void*)fn(::Math::PointerCastToIntegral<uint32_t>(*value));
         });
     }
 
@@ -1092,11 +1092,11 @@ public:
 class PragmaInstr : public Instr
 {
 public:
-    uint32               m_statementIndex;
-    uint32               m_offsetInBuffer; // offset in the binary code buffer
+    uint32_t               m_statementIndex;
+    uint32_t               m_offsetInBuffer; // offset in the binary code buffer
 
 public:
-    static PragmaInstr * New(Js::OpCode opcode, uint32 index, Func *func);
+    static PragmaInstr * New(Js::OpCode opcode, uint32_t index, Func *func);
 
     PragmaInstr() : Instr(), m_statementIndex(0)
     {
@@ -1108,7 +1108,7 @@ public:
 
 #endif
 #if DBG_DUMP | defined(VTUNE_PROFILING)
-    void Record(uint32 nativeBufferOffset);
+    void Record(uint32_t nativeBufferOffset);
 #endif
     PragmaInstr * ClonePragma();
     PragmaInstr * CopyPragma();

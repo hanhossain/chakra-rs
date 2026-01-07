@@ -516,12 +516,12 @@ void InterpreterThunkEmitter::EncodeInterpreterThunk(
     const intptr_t interpreterThunk)
 {
     // Encode MOVW
-    uint32_t lowerThunkBits = (uint32)interpreterThunk & 0x0000FFFF;
+    uint32_t lowerThunkBits = (uint32_t)interpreterThunk & 0x0000FFFF;
     uint32_t movW = EncodeMove(/*Opcode*/ 0x0000F240, /*register*/1, lowerThunkBits);
     Emit(thunkBuffer,ThunkAddressOffset, movW);
 
     // Encode MOVT
-    uint32_t higherThunkBits = ((uint32)interpreterThunk & 0xFFFF0000) >> 16;
+    uint32_t higherThunkBits = ((uint32_t)interpreterThunk & 0xFFFF0000) >> 16;
     uint32_t movT = EncodeMove(/*Opcode*/ 0x0000F2C0, /*register*/1, higherThunkBits);
     Emit(thunkBuffer, ThunkAddressOffset + sizeof(movW), movT);
 

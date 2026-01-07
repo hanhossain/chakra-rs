@@ -285,7 +285,7 @@ Var WebAssembly::TryResolveResponse(RecyclableObject* function, Var thisArg, Var
     return responsePromise;
 }
 
-uint32
+uint32_t
 WebAssembly::ToNonWrappingUint32(Var val, ScriptContext * ctx)
 {
     double i = JavascriptConversion::ToNumber(val, ctx);
@@ -299,7 +299,7 @@ WebAssembly::ToNonWrappingUint32(Var val, ScriptContext * ctx)
     {
         JavascriptError::ThrowTypeError(ctx, JSERR_NeedNumber);
     }
-    return (uint32)JavascriptConversion::ToInteger(i);
+    return (uint32_t)JavascriptConversion::ToInteger(i);
 }
 
 void

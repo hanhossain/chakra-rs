@@ -466,7 +466,7 @@ InProcNativeEntryPointData::SetLazyBailOutRecordSlotOffset(int32 argSlotOffset)
     this->lazyBailOutRecordSlotOffset = argSlotOffset;
 }
 
-uint32
+uint32_t
 InProcNativeEntryPointData::GetLazyBailOutThunkOffset() const
 {
     Assert(this->lazyBailOutThunkOffset != 0);
@@ -474,7 +474,7 @@ InProcNativeEntryPointData::GetLazyBailOutThunkOffset() const
 }
 
 void
-InProcNativeEntryPointData::SetLazyBailOutThunkOffset(uint32 thunkOffset)
+InProcNativeEntryPointData::SetLazyBailOutThunkOffset(uint32_t thunkOffset)
 {
     Assert(this->lazyBailOutThunkOffset == 0 && thunkOffset != 0);
     this->lazyBailOutThunkOffset = thunkOffset;
@@ -538,7 +538,7 @@ OOPNativeEntryPointData::SetNativeDataBuffer(char * buffer)
     this->nativeDataBuffer = buffer;
 }
 
-uint32
+uint32_t
 OOPNativeEntryPointData::GetOffsetOfNativeDataBuffer()
 {
     Assert(JITManager::GetJITManager()->IsOOPJITEnabled());

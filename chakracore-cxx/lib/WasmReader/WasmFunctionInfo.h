@@ -14,30 +14,30 @@ namespace Wasm
     struct FunctionBodyReaderInfo
     {
         friend class WasmBinaryReader;
-        FunctionBodyReaderInfo(uint32 size = 0, size_t startOffset = 0): size(size), startOffset(startOffset) {}
+        FunctionBodyReaderInfo(uint32_t size = 0, size_t startOffset = 0): size(size), startOffset(startOffset) {}
     private:
-        Field(uint32) size = 0;
+        Field(uint32_t) size = 0;
         Field(size_t) startOffset = 0;
     };
 
     class WasmFunctionInfo
     {
     public:
-        WasmFunctionInfo(ArenaAllocator* alloc, WasmSignature* signature, uint32 number);
+        WasmFunctionInfo(ArenaAllocator* alloc, WasmSignature* signature, uint32_t number);
 
-        void AddLocal(WasmTypes::WasmType type, uint32 count = 1);
-        Local GetLocal(uint32 index) const;
-        uint32 GetResultCount() const;
-        Local GetResult(uint32 index) const;
+        void AddLocal(WasmTypes::WasmType type, uint32_t count = 1);
+        Local GetLocal(uint32_t index) const;
+        uint32_t GetResultCount() const;
+        Local GetResult(uint32_t index) const;
 
-        uint32 GetLocalCount() const;
+        uint32_t GetLocalCount() const;
         Js::ArgSlot GetParamCount() const;
 
-        void SetName(const char16_t* name, uint32 nameLength) { m_name = name; m_nameLength = nameLength; }
+        void SetName(const char16_t* name, uint32_t nameLength) { m_name = name; m_nameLength = nameLength; }
         const char16_t* GetName() const { return m_name; }
-        uint32 GetNameLength() const { return m_nameLength; }
+        uint32_t GetNameLength() const { return m_nameLength; }
 
-        uint32 GetNumber() const { return m_number; }
+        uint32_t GetNumber() const { return m_number; }
         WasmSignature* GetSignature() const { return m_signature; }
 
         void SetExitLabel(Js::ByteCodeLabel label) { m_ExitLabel = label; }
@@ -71,8 +71,8 @@ namespace Wasm
         Field(Js::ByteCodeLabel) m_ExitLabel;
         Field(WasmReaderBase*) m_customReader;
         Field(const char16_t*) m_name;
-        Field(uint32) m_nameLength;
-        Field(uint32) m_number;
+        Field(uint32_t) m_nameLength;
+        Field(uint32_t) m_number;
         Field(FunctionBodyReaderInfo) m_readerInfo;
     };
 } // namespace Wasm

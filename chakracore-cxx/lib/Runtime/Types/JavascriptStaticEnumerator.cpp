@@ -53,7 +53,7 @@ namespace Js
         return this->propertyEnumerator.CanUseJITFastPath() && this->currentEnumerator == nullptr;
     }
 
-    uint32 JavascriptStaticEnumerator::GetCurrentItemIndex()
+    uint32_t JavascriptStaticEnumerator::GetCurrentItemIndex()
     {
         if (currentEnumerator)
         {

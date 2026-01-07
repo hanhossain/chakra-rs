@@ -247,7 +247,7 @@ JITTimeFunctionBody::InitializeJITFunctionData(
     jitBody->literalRegexCount = functionBody->GetLiteralRegexCount();
     jitBody->literalRegexes = unsafe_write_barrier_cast<intptr_t*>(functionBody->GetLiteralRegexesWithLock());
 
-    Js::AuxArray<uint32> * slotIdInCachedScopeToNestedIndexArray = functionBody->GetSlotIdInCachedScopeToNestedIndexArrayWithLock();
+    Js::AuxArray<uint32_t> * slotIdInCachedScopeToNestedIndexArray = functionBody->GetSlotIdInCachedScopeToNestedIndexArrayWithLock();
     if (slotIdInCachedScopeToNestedIndexArray)
     {
         jitBody->functionSlotsInCachedScopeCount = slotIdInCachedScopeToNestedIndexArray->count;
@@ -746,7 +746,7 @@ JITTimeFunctionBody::IsInlineApplyDisabled() const
 }
 
 bool
-JITTimeFunctionBody::IsNonTempLocalVar(uint32 varIndex) const
+JITTimeFunctionBody::IsNonTempLocalVar(uint32_t varIndex) const
 {
     return GetFirstNonTempLocalIndex() <= varIndex && varIndex < GetEndNonTempLocalIndex();
 }
@@ -1094,7 +1094,7 @@ JITTimeFunctionBody::IsRegSlotFormal(Js::RegSlot reg) const
     AssertOrFailFast(reg < m_bodyData.propertyIdsForRegSlotsCount);
     Js::PropertyId propId = (Js::PropertyId)m_bodyData.propertyIdsForRegSlots[reg];
     Js::PropertyIdArray * formalProps = GetFormalsPropIdArray();
-    for (uint32 i = 0; i < formalProps->count; i++)
+    for (uint32_t i = 0; i < formalProps->count; i++)
     {
         if (formalProps->elements[i] == propId)
         {
@@ -1186,9 +1186,9 @@ JITTimeFunctionBody::InitializeStatementMap(Js::SmallSpanSequence * statementMap
         statementMap->pStatementBuffer->SetCount(statementsLength);
         js_memcpy_s(
             statementMap->pStatementBuffer->GetBuffer(),
-            statementMap->pStatementBuffer->Count() * sizeof(uint32),
+            statementMap->pStatementBuffer->Count() * sizeof(uint32_t),
             m_bodyData.statementMap->statementBuffer,
-            statementsLength * sizeof(uint32));
+            statementsLength * sizeof(uint32_t));
     }
 
     if (offsetsLength > 0)
@@ -1197,9 +1197,9 @@ JITTimeFunctionBody::InitializeStatementMap(Js::SmallSpanSequence * statementMap
         statementMap->pActualOffsetList->SetCount(offsetsLength);
         js_memcpy_s(
             statementMap->pActualOffsetList->GetBuffer(),
-            statementMap->pActualOffsetList->Count() * sizeof(uint32),
+            statementMap->pActualOffsetList->Count() * sizeof(uint32_t),
             m_bodyData.statementMap->actualOffsetList,
-            offsetsLength * sizeof(uint32));
+            offsetsLength * sizeof(uint32_t));
     }
     return true;
 }

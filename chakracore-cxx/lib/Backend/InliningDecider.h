@@ -13,8 +13,8 @@ private:
     bool isInDebugMode;
 
     // These variables capture the temporary state
-    uint32 bytecodeInlinedCount;
-    uint32 numberOfInlineesWithLoop;
+    uint32_t bytecodeInlinedCount;
+    uint32_t numberOfInlineesWithLoop;
 
 public:
     const ExecutionMode jitMode;      // Disable certain parts for certain JIT modes
@@ -38,7 +38,7 @@ public:
     bool HasCallSiteInfo(Js::FunctionBody *const inliner, const Js::ProfileId profiledCallSiteId);
     uint InlinePolymorphicCallSite(Js::FunctionBody *const inliner, const Js::ProfileId profiledCallSiteId, Js::FunctionBody** functionBodyArray, uint functionBodyArrayLength, bool* canInlineArray, uint recursiveInlineDepth = 0);
     bool GetIsLoopBody() const { return isLoopBody;};
-    bool ContinueInliningUserDefinedFunctions(uint32 bytecodeInlinedCount) const;
+    bool ContinueInliningUserDefinedFunctions(uint32_t bytecodeInlinedCount) const;
     bool CanRecursivelyInline(Js::FunctionBody * inlinee, Js::FunctionBody * inliner, bool allowRecursiveInlining, uint recursiveInlineDepth);
     bool DeciderInlineIntoInliner(Js::FunctionBody * inlinee, Js::FunctionBody * inliner, bool isConstructorCall, bool isPolymorphicCall, uint16 constantArgInfo, uint recursiveInlineDepth, bool allowRecursiveInlining);
 
@@ -58,7 +58,7 @@ public:
         bytecodeInlinedCount = 0;
         numberOfInlineesWithLoop = 0;
     }
-    uint32 GetNumberOfInlineesWithLoop() { return numberOfInlineesWithLoop; }
+    uint32_t GetNumberOfInlineesWithLoop() { return numberOfInlineesWithLoop; }
     void IncrementNumberOfInlineesWithLoop() { numberOfInlineesWithLoop++; }
 
 

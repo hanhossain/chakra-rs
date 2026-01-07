@@ -19,7 +19,7 @@ Instr::Init(Js::OpCode opcode, IRKind kind, Func * func)
 #endif
 }
 
-uint32
+uint32_t
 Instr::GetByteCodeOffset() const
 {
     Assert(m_func->HasByteCodeOffset());
@@ -27,7 +27,7 @@ Instr::GetByteCodeOffset() const
 }
 
 void
-Instr::SetByteCodeOffset(uint32 offset)
+Instr::SetByteCodeOffset(uint32_t offset)
 {
     Assert(m_func->HasByteCodeOffset());
     Assert(m_number == Js::Constants::NoByteCodeOffset);
@@ -47,7 +47,7 @@ Instr::ClearByteCodeOffset()
     m_number = Js::Constants::NoByteCodeOffset;
 }
 
-uint32
+uint32_t
 Instr::GetNumber() const
 {
     Assert(m_func->HasInstrNumber());
@@ -55,7 +55,7 @@ Instr::GetNumber() const
 }
 
 void
-Instr::SetNumber(uint32 number)
+Instr::SetNumber(uint32_t number)
 {
     Assert(m_func->HasInstrNumber());
     m_number = number;
@@ -906,7 +906,7 @@ ByteCodeUsesInstr::New(IR::Instr * originalBytecodeInstr)
 }
 
 ByteCodeUsesInstr *
-ByteCodeUsesInstr::New(Func * func, uint32 offset)
+ByteCodeUsesInstr::New(Func * func, uint32_t offset)
 {
     ByteCodeUsesInstr * byteCodeUses = JitAnew(func->m_alloc, IR::ByteCodeUsesInstr);
     byteCodeUses->Init(Js::OpCode::ByteCodeUses, InstrKindByteCodeUses, func);
@@ -2026,7 +2026,7 @@ BranchInstr::IsLoopTail(Func * func)
     }
 
     IR::BranchInstr * lastBranchInstr = nullptr;
-    uint32 lastBranchNum = 0;
+    uint32_t lastBranchNum = 0;
     FOREACH_SLISTCOUNTED_ENTRY(IR::BranchInstr *, ref, &target->labelRefs)
     {
         if (ref->GetNumber() > lastBranchNum)
@@ -2053,7 +2053,7 @@ BranchInstr::IsLoopTail(Func * func)
 ///----------------------------------------------------------------------------
 
 PragmaInstr *
-PragmaInstr::New(Js::OpCode opcode, uint32 index, Func *func)
+PragmaInstr::New(Js::OpCode opcode, uint32_t index, Func *func)
 {
     PragmaInstr * pragmaInstr;
 
@@ -2074,7 +2074,7 @@ PragmaInstr::New(Js::OpCode opcode, uint32 index, Func *func)
 
 #if DBG_DUMP | defined(VTUNE_PROFILING)
 void
-PragmaInstr::Record(uint32 nativeBufferOffset)
+PragmaInstr::Record(uint32_t nativeBufferOffset)
 {
     // Currently the only pragma instructions are for Source Info
     Assert(this->m_func->GetTopFunc()->DoRecordNativeMap());
@@ -2815,7 +2815,7 @@ IR::Instr *
 Instr::GetNextByteCodeInstr() const
 {
     IR::Instr * nextInstr = GetNextRealInstrOrLabel();
-    uint32 currentOffset = GetByteCodeOffset();
+    uint32_t currentOffset = GetByteCodeOffset();
     const auto getNext = [](IR::Instr* nextInstr) -> IR::Instr*
     {
         if (nextInstr->IsBranchInstr())
@@ -2934,7 +2934,7 @@ Instr::GetBlockStartInstr() const
 ///----------------------------------------------------------------------------
 IR::Instr *Instr::GetInsertBeforeByteCodeUsesInstr()
 {
-    const uint32 byteCodeOffset = GetByteCodeOffset();
+    const uint32_t byteCodeOffset = GetByteCodeOffset();
     IR::Instr *insertBeforeInstr = this;
     IR::Instr *prevInstr = insertBeforeInstr->m_prev;
     while(prevInstr && prevInstr->IsByteCodeUsesInstr() && prevInstr->GetByteCodeOffset() == byteCodeOffset)
@@ -3219,7 +3219,7 @@ Instr::ConvertToBailOutInstrWithBailOutInfoCopy(BailOutInfo *bailOutInfo, IR::Ba
 }
 
 IR::Instr *
-Instr::ConvertToBailOutInstr(IR::Instr * bailOutTarget, IR::BailOutKind kind, uint32 bailOutOffset)
+Instr::ConvertToBailOutInstr(IR::Instr * bailOutTarget, IR::BailOutKind kind, uint32_t bailOutOffset)
 {
     Func * func = bailOutTarget->m_func;
     BailOutInfo * bailOutInfo = JitAnew(func->m_alloc, BailOutInfo, bailOutOffset == Js::Constants::NoByteCodeOffset ? bailOutTarget->GetByteCodeOffset() : bailOutOffset , func);
@@ -3803,7 +3803,7 @@ IR::Instr* IR::Instr::NewConstantLoad(IR::RegOpnd* dstOpnd, intptr_t varConst, V
 #if FLOATVAR
                     dstOpnd->m_sym->m_isNotNumber = FALSE;
 #else
-                    // Don't set m_isNotNumber to true if the float constant value is an int32 or uint32. Uint32s may sometimes be
+                    // Don't set m_isNotNumber to true if the float constant value is an int32 or uint32_t. Uint32s may sometimes be
                     // treated as int32s for the purposes of int specialization.
                     dstOpnd->m_sym->m_isNotNumber = !Js::JavascriptNumber::IsInt32OrUInt32(((IR::FloatConstOpnd*)srcOpnd)->m_value);
 

@@ -104,7 +104,7 @@ namespace Js
             return NativeCodeDataNew(allocator, BranchDictionaryWrapper, allocator, dictionarySize, remoteKeyAlloc);
         }
 
-        void AddEntry(uint32 offset, T key, void* remoteVar)
+        void AddEntry(uint32_t offset, T key, void* remoteVar)
         {
             int index = dictionary.AddNew(key, (void**)offset);
             if (JITManager::GetJITManager()->IsJITServer())
@@ -140,8 +140,8 @@ namespace Js
         static Var OP_GetElementI_JIT_ExpectingNativeFloatArray(Var instance, Var index, ScriptContext *scriptContext);
         static Var OP_GetElementI_JIT_ExpectingVarArray(Var instance, Var index, ScriptContext *scriptContext);
 
-        static Var OP_GetElementI_UInt32_ExpectingNativeFloatArray(Var instance, uint32 aElementIndex, ScriptContext* scriptContext);
-        static Var OP_GetElementI_UInt32_ExpectingVarArray(Var instance, uint32 aElementIndex, ScriptContext* scriptContext);
+        static Var OP_GetElementI_UInt32_ExpectingNativeFloatArray(Var instance, uint32_t aElementIndex, ScriptContext* scriptContext);
+        static Var OP_GetElementI_UInt32_ExpectingVarArray(Var instance, uint32_t aElementIndex, ScriptContext* scriptContext);
 
         static Var OP_GetElementI_Int32_ExpectingNativeFloatArray(Var instance, int32 aElementIndex, ScriptContext* scriptContext);
         static Var OP_GetElementI_Int32_ExpectingVarArray(Var instance, int32 aElementIndex, ScriptContext* scriptContext);

@@ -2790,8 +2790,8 @@ FlowGraph::PeepCm(IR::Instr *instr)
     // Keep a copy of the inliner func and the bytecode offset of the original BrTrue/BrFalse if we end up inserting a new branch out of the inlinee,
     // and sym id of t1 for proper restoration on a bailout before the branch.
     Func* origBrFunc = instrBr->m_func;
-    uint32 origBrByteCodeOffset = instrBr->GetByteCodeOffset();
-    uint32 origBranchSrcSymId = instrBr->GetSrc1()->GetStackSym()->m_id;
+    uint32_t origBrByteCodeOffset = instrBr->GetByteCodeOffset();
+    uint32_t origBranchSrcSymId = instrBr->GetSrc1()->GetStackSym()->m_id;
     bool origBranchSrcOpndIsJITOpt = instrBr->GetSrc1()->GetIsJITOptimizedReg();
 
     instrBr->Unlink();
@@ -3072,7 +3072,7 @@ FlowGraph::PeepCm(IR::Instr *instr)
 }
 
 void
-FlowGraph::InsertInlineeOnFLowEdge(IR::BranchInstr *instrBr, IR::Instr *inlineeEndInstr, IR::Instr *instrBytecode, Func* origBrFunc, uint32 origByteCodeOffset, bool origBranchSrcOpndIsJITOpt, uint32 origBranchSrcSymId)
+FlowGraph::InsertInlineeOnFLowEdge(IR::BranchInstr *instrBr, IR::Instr *inlineeEndInstr, IR::Instr *instrBytecode, Func* origBrFunc, uint32_t origByteCodeOffset, bool origBranchSrcOpndIsJITOpt, uint32_t origBranchSrcSymId)
 {
     // Helper for PeepsCm code.
     //

@@ -950,7 +950,7 @@ StackSym *StackSym::EnsureAuxSlotPtrSym(Func * func)
 ///----------------------------------------------------------------------------
 
 PropertySym *
-PropertySym::New(SymID stackSymID, int32 propertyId, uint32 propertyIdIndex, uint inlineCacheIndex, PropertyKind fieldKind, Func *func)
+PropertySym::New(SymID stackSymID, int32 propertyId, uint32_t propertyIdIndex, uint inlineCacheIndex, PropertyKind fieldKind, Func *func)
 {
     StackSym *  stackSym;
 
@@ -961,7 +961,7 @@ PropertySym::New(SymID stackSymID, int32 propertyId, uint32 propertyIdIndex, uin
 }
 
 PropertySym *
-PropertySym::New(StackSym *stackSym, int32 propertyId, uint32 propertyIdIndex, uint inlineCacheIndex, PropertyKind fieldKind, Func *func)
+PropertySym::New(StackSym *stackSym, int32 propertyId, uint32_t propertyIdIndex, uint inlineCacheIndex, PropertyKind fieldKind, Func *func)
 {
     PropertySym *  propertySym;
 
@@ -1023,7 +1023,7 @@ PropertySym::Find(SymID stackSymID, int32 propertyId, Func *func)
 ///----------------------------------------------------------------------------
 
 PropertySym *
-PropertySym::FindOrCreate(SymID stackSymID, int32 propertyId, uint32 propertyIdIndex, uint inlineCacheIndex, PropertyKind fieldKind, Func *func)
+PropertySym::FindOrCreate(SymID stackSymID, int32 propertyId, uint32_t propertyIdIndex, uint inlineCacheIndex, PropertyKind fieldKind, Func *func)
 {
     PropertySym *  propertySym;
 

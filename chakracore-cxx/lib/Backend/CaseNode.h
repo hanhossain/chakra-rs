@@ -11,8 +11,8 @@ using namespace JsUtil;
 class CaseNode
 {
 private:
-    uint32              offset;         // offset - indicates the bytecode offset of the case instruction
-    uint32              targetOffset;   // targetOffset - indicates the bytecode offset of the target instruction (case block)
+    uint32_t              offset;         // offset - indicates the bytecode offset of the case instruction
+    uint32_t              targetOffset;   // targetOffset - indicates the bytecode offset of the target instruction (case block)
     IR::BranchInstr*    caseInstr;      // caseInstr - stores the case instruction
     IR::Opnd*           lowerBound;     // lowerBound - used for integer cases
 
@@ -33,7 +33,7 @@ private:
     }
 
 public:
-    CaseNode(IR::BranchInstr* caseInstr, uint32 offset, uint32 targetOffset, IR::Opnd* lowerBound = nullptr)
+    CaseNode(IR::BranchInstr* caseInstr, uint32_t offset, uint32_t targetOffset, IR::Opnd* lowerBound = nullptr)
         : caseInstr(caseInstr),
         offset(offset),
         targetOffset(targetOffset),
@@ -85,12 +85,12 @@ public:
         return IsStrConst(lowerBound);
     }
 
-    uint32 GetOffset()
+    uint32_t GetOffset()
     {
         return offset;
     }
 
-    uint32 GetTargetOffset()
+    uint32_t GetTargetOffset()
     {
         return targetOffset;
     }

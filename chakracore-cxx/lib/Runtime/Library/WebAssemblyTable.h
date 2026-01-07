@@ -24,29 +24,29 @@ namespace Js
             static FunctionInfo Set;
         };
         WebAssemblyTable(
-            Field(Var) * values, uint32 currentLength, uint32 initialLength, uint32 maxLength, DynamicType * type);
+            Field(Var) * values, uint32_t currentLength, uint32_t initialLength, uint32_t maxLength, DynamicType * type);
         static Var NewInstance(RecyclableObject* function, CallInfo callInfo, ...);
         static Var EntryGetterLength(RecyclableObject* function, CallInfo callInfo, ...);
         static Var EntryGrow(RecyclableObject* function, CallInfo callInfo, ...);
         static Var EntryGet(RecyclableObject* function, CallInfo callInfo, ...);
         static Var EntrySet(RecyclableObject* function, CallInfo callInfo, ...);
 
-        static WebAssemblyTable * Create(uint32 initial, uint32 maximum, ScriptContext * scriptContext);
+        static WebAssemblyTable * Create(uint32_t initial, uint32_t maximum, ScriptContext * scriptContext);
 
-        uint32 GetCurrentLength() const;
-        uint32 GetInitialLength() const;
-        uint32 GetMaximumLength() const;
+        uint32_t GetCurrentLength() const;
+        uint32_t GetInitialLength() const;
+        uint32_t GetMaximumLength() const;
 
         void DirectSetValue(uint index, Var val);
         Var DirectGetValue(uint index) const;
 
-        static uint32 GetOffsetOfValues() { return offsetof(WebAssemblyTable, m_values); }
-        static uint32 GetOffsetOfCurrentLength() { return offsetof(WebAssemblyTable, m_currentLength); }
+        static uint32_t GetOffsetOfValues() { return offsetof(WebAssemblyTable, m_values); }
+        static uint32_t GetOffsetOfCurrentLength() { return offsetof(WebAssemblyTable, m_currentLength); }
     private:
-        Field(uint32) m_initialLength;
-        Field(uint32) m_maxLength;
+        Field(uint32_t) m_initialLength;
+        Field(uint32_t) m_maxLength;
 
-        Field(uint32) m_currentLength;
+        Field(uint32_t) m_currentLength;
         Field(Field(Var)*) m_values;
 #endif
     };

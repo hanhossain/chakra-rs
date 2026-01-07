@@ -64,31 +64,31 @@ public:
     uint GetBinaryBufferLength() const { return m_binaryBufferLength; }
 
     // The index used by those methods is the function index as describe by the WebAssembly design, ie: imports first then wasm functions
-    uint32 GetMaxFunctionIndex() const;
-    Wasm::FunctionIndexTypes::Type GetFunctionIndexType(uint32 funcIndex) const;
+    uint32_t GetMaxFunctionIndex() const;
+    Wasm::FunctionIndexTypes::Type GetFunctionIndexType(uint32_t funcIndex) const;
 
     void InitializeMemory(_In_ Wasm::MemorySectionLimits* memoryLimits);
     WebAssemblyMemory * CreateMemory() const;
     bool HasMemory() const { return m_hasMemory; }
     bool HasMemoryImport() const { return m_memImport != nullptr; }
     bool IsSharedMemory() const { return m_memoryIsShared; }
-    uint32 GetMemoryInitSize() const { return m_memoryInitSize; }
-    uint32 GetMemoryMaxSize() const { return m_memoryMaxSize; }
+    uint32_t GetMemoryInitSize() const { return m_memoryInitSize; }
+    uint32_t GetMemoryMaxSize() const { return m_memoryMaxSize; }
 
     Wasm::WasmSignature * GetSignatures() const;
-    bool IsSignatureIndexValid(uint32 index) const;
-    Wasm::WasmSignature* GetSignature(uint32 index) const;
-    void SetSignatureCount(uint32 count);
-    uint32 GetSignatureCount() const;
+    bool IsSignatureIndexValid(uint32_t index) const;
+    Wasm::WasmSignature* GetSignature(uint32_t index) const;
+    void SetSignatureCount(uint32_t count);
+    uint32_t GetSignatureCount() const;
 
-    uint32 GetEquivalentSignatureId(uint32 sigId) const;
+    uint32_t GetEquivalentSignatureId(uint32_t sigId) const;
 
     void InitializeTable(_In_ Wasm::TableSectionLimits* tableLimits);
     WebAssemblyTable * CreateTable() const;
     bool HasTable() const { return m_hasTable; }
     bool HasTableImport() const { return m_tableImport != nullptr; }
-    uint32 GetTableInitSize() const { return m_tableInitSize; }
-    uint32 GetTableMaxSize() const { return m_tableMaxSize; }
+    uint32_t GetTableInitSize() const { return m_tableInitSize; }
+    uint32_t GetTableMaxSize() const { return m_tableMaxSize; }
 
     uint GetWasmFunctionCount() const;
     Wasm::WasmFunctionInfo* AddWasmFunctionInfo(Wasm::WasmSignature* funsig);
@@ -98,40 +98,40 @@ public:
     void AttachCustomInOutTracingReader(Wasm::WasmFunctionInfo* func, uint callIndex);
 #endif
 
-    void AllocateFunctionExports(uint32 entries);
+    void AllocateFunctionExports(uint32_t entries);
     uint GetExportCount() const { return m_exportCount; }
-    void SetExport(uint32 iExport, uint32 funcIndex, const char16_t* exportName, uint32 nameLength, Wasm::ExternalKinds kind);
-    Wasm::WasmExport* GetExport(uint32 iExport) const;
+    void SetExport(uint32_t iExport, uint32_t funcIndex, const char16_t* exportName, uint32_t nameLength, Wasm::ExternalKinds kind);
+    Wasm::WasmExport* GetExport(uint32_t iExport) const;
 
-    uint32 GetImportCount() const;
-    Wasm::WasmImport* GetImport(uint32 i) const;
-    void AddFunctionImport(uint32 sigId, const char16_t* modName, uint32 modNameLen, const char16_t* fnName, uint32 fnNameLen);
-    void AddGlobalImport(const char16_t* modName, uint32 modNameLen, const char16_t* importName, uint32 importNameLen);
-    void AddMemoryImport(const char16_t* modName, uint32 modNameLen, const char16_t* importName, uint32 importNameLen);
-    void AddTableImport(const char16_t* modName, uint32 modNameLen, const char16_t* importName, uint32 importNameLen);
-    uint32 GetImportedFunctionCount() const { return m_importedFunctionCount; }
+    uint32_t GetImportCount() const;
+    Wasm::WasmImport* GetImport(uint32_t i) const;
+    void AddFunctionImport(uint32_t sigId, const char16_t* modName, uint32_t modNameLen, const char16_t* fnName, uint32_t fnNameLen);
+    void AddGlobalImport(const char16_t* modName, uint32_t modNameLen, const char16_t* importName, uint32_t importNameLen);
+    void AddMemoryImport(const char16_t* modName, uint32_t modNameLen, const char16_t* importName, uint32_t importNameLen);
+    void AddTableImport(const char16_t* modName, uint32_t modNameLen, const char16_t* importName, uint32_t importNameLen);
+    uint32_t GetImportedFunctionCount() const { return m_importedFunctionCount; }
 
     uint GetOffsetFromInit(const Wasm::WasmNode& initExpr, const class WebAssemblyEnvironment* env) const;
     void ValidateInitExportForOffset(const Wasm::WasmNode& initExpr) const;
 
     void AddGlobal(Wasm::GlobalReferenceTypes::Type refType, Wasm::WasmTypes::WasmType type, bool isMutable, Wasm::WasmNode init);
-    uint32 GetGlobalCount() const;
-    Wasm::WasmGlobal* GetGlobal(uint32 index) const;
+    uint32_t GetGlobalCount() const;
+    Wasm::WasmGlobal* GetGlobal(uint32_t index) const;
 
-    void AllocateDataSegs(uint32 count);
-    void SetDataSeg(Wasm::WasmDataSegment* seg, uint32 index);
-    Wasm::WasmDataSegment* GetDataSeg(uint32 index) const;
-    uint32 GetDataSegCount() const { return m_datasegCount; }
+    void AllocateDataSegs(uint32_t count);
+    void SetDataSeg(Wasm::WasmDataSegment* seg, uint32_t index);
+    Wasm::WasmDataSegment* GetDataSeg(uint32_t index) const;
+    uint32_t GetDataSegCount() const { return m_datasegCount; }
 
-    void AllocateElementSegs(uint32 count);
-    void SetElementSeg(Wasm::WasmElementSegment* seg, uint32 index);
-    Wasm::WasmElementSegment* GetElementSeg(uint32 index) const;
-    uint32 GetElementSegCount() const { return m_elementsegCount; }
+    void AllocateElementSegs(uint32_t count);
+    void SetElementSeg(Wasm::WasmElementSegment* seg, uint32_t index);
+    Wasm::WasmElementSegment* GetElementSeg(uint32_t index) const;
+    uint32_t GetElementSegCount() const { return m_elementsegCount; }
 
-    void SetStartFunction(uint32 i);
-    uint32 GetStartFunction() const;
+    void SetStartFunction(uint32_t i);
+    uint32_t GetStartFunction() const;
 
-    uint32 GetModuleEnvironmentSize() const;
+    uint32_t GetModuleEnvironmentSize() const;
 
     // elements at known offsets
     static uint GetMemoryOffset() { return 0; }
@@ -142,12 +142,12 @@ public:
     uint GetTableEnvironmentOffset() const { return GetFuncOffset() + GetWasmFunctionCount(); }
     uint GetGlobalOffset() const { return GetTableEnvironmentOffset() + 1; }
     uint GetOffsetForGlobal(Wasm::WasmGlobal* global) const;
-    uint AddGlobalByteSizeToOffset(Wasm::WasmTypes::WasmType type, uint32 offset) const;
+    uint AddGlobalByteSizeToOffset(Wasm::WasmTypes::WasmType type, uint32_t offset) const;
     uint GetGlobalsByteSize() const;
 
     void AddCustomSection(Wasm::CustomSection customSection);
-    uint32 GetCustomSectionCount() const;
-    Wasm::CustomSection GetCustomSection(uint32 index) const;
+    uint32_t GetCustomSectionCount() const;
+    Wasm::CustomSection GetCustomSection(uint32_t index) const;
 
     Wasm::WasmBinaryReader* GetReader() const { return m_reader; }
 
@@ -166,12 +166,12 @@ private:
     // The binary buffer is recycler allocated, tied the lifetime of the buffer to the module
     Field(const byte*) m_binaryBuffer;
     Field(uint) m_binaryBufferLength;
-    Field(uint32) m_memoryInitSize;
-    Field(uint32) m_memoryMaxSize;
-    Field(uint32) m_tableInitSize;
-    Field(uint32) m_tableMaxSize;
+    Field(uint32_t) m_memoryInitSize;
+    Field(uint32_t) m_memoryMaxSize;
+    Field(uint32_t) m_tableInitSize;
+    Field(uint32_t) m_tableMaxSize;
     Field(Wasm::WasmSignature*) m_signatures;
-    Field(uint32*) m_indirectfuncs;
+    Field(uint32_t*) m_indirectfuncs;
     Field(Wasm::WasmElementSegment**) m_elementsegs;
     typedef JsUtil::List<Wasm::WasmFunctionInfo*, Recycler> WasmFunctionInfosList;
     Field(WasmFunctionInfosList*) m_functionsInfo;
@@ -180,10 +180,10 @@ private:
     Field(WasmImportsList*) m_imports;
     Field(Wasm::WasmImport*) m_memImport;
     Field(Wasm::WasmImport*) m_tableImport;
-    Field(uint32) m_importedFunctionCount;
+    Field(uint32_t) m_importedFunctionCount;
     Field(Wasm::WasmDataSegment**) m_datasegs;
     Field(Wasm::WasmBinaryReader*) m_reader;
-    Field(uint32*) m_equivalentSignatureMap;
+    Field(uint32_t*) m_equivalentSignatureMap;
     typedef JsUtil::List<Wasm::CustomSection, ArenaAllocator> CustomSectionsList;
     Field(CustomSectionsList*) m_customSections;
 
@@ -193,10 +193,10 @@ private:
 
     Field(uint) m_signaturesCount;
     Field(uint) m_exportCount;
-    Field(uint32) m_datasegCount;
-    Field(uint32) m_elementsegCount;
+    Field(uint32_t) m_datasegCount;
+    Field(uint32_t) m_elementsegCount;
 
-    Field(uint32) m_startFuncIndex;
+    Field(uint32_t) m_startFuncIndex;
 
     FieldNoBarrier(ArenaAllocator*) m_alloc;
 };

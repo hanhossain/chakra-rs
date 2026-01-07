@@ -15,12 +15,12 @@ namespace Wasm
         virtual bool IsCurrentFunctionCompleted() const override;
         virtual WasmOp ReadExpr() override;
         virtual void FunctionEnd() override;
-        virtual uint32 EstimateCurrentFunctionBytecodeSize() const override;
+        virtual uint32_t EstimateCurrentFunctionBytecodeSize() const override;
 
         void AddNode(WasmNode node);
     private:
         JsUtil::List<WasmNode, ArenaAllocator> m_nodes;
-        uint32 m_state = 0;
+        uint32_t m_state = 0;
     };
 } // namespace Wasm
 #endif // ENABLE_WASM

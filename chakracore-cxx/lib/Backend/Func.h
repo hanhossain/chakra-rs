@@ -97,9 +97,9 @@ typedef HashTable<uint32_t, JitArenaAllocator> SlotArrayCheckTable;
 struct FrameDisplayCheckRecord
 {
     SlotArrayCheckTable *table;
-    uint32               slotId;
+    uint32_t               slotId;
 
-    FrameDisplayCheckRecord() : table(nullptr), slotId((uint32)-1) {}
+    FrameDisplayCheckRecord() : table(nullptr), slotId((uint32_t)-1) {}
 };
 typedef HashTable<FrameDisplayCheckRecord*, JitArenaAllocator> FrameDisplayCheckTable;
 
@@ -313,7 +313,7 @@ public:
     int32 GetLocalVarSlotOffset(int32 slotId);
     int32 GetHasLocalVarChangedOffset();
     bool IsJitInDebugMode() const;
-    bool IsNonTempLocalVar(uint32 slotIndex);
+    bool IsNonTempLocalVar(uint32_t slotIndex);
     void OnAddSym(Sym* sym);
 
     uint GetLocalFunctionId() const
@@ -333,7 +333,7 @@ public:
 
     static int32 AdjustOffsetValue(int32 offset);
 
-    static inline uint32 GetDiagLocalSlotSize()
+    static inline uint32_t GetDiagLocalSlotSize()
     {
         // For the debug purpose we will have fixed stack slot size
         // We will allocated the 8 bytes for each variable.
@@ -344,11 +344,11 @@ public:
     // The pattern used to pre-fill locals for CHK builds.
     // When we restore bailout values we check for this pattern, this is how we assert for non-initialized variables/garbage.
 
-static const uint32 c_debugFillPattern4 = 0xcececece;
+static const uint32_t c_debugFillPattern4 = 0xcececece;
 static const unsigned long c_debugFillPattern8 = 0xcececececececece;
 
 #if defined(TARGET_32)
-    static const uint32 c_debugFillPattern = c_debugFillPattern4;
+    static const uint32_t c_debugFillPattern = c_debugFillPattern4;
 #elif defined(TARGET_64)
     static const unsigned long c_debugFillPattern = c_debugFillPattern8;
 #else
@@ -356,7 +356,7 @@ static const unsigned long c_debugFillPattern8 = 0xcececececececece;
 #endif
 
 #endif
-    uint32 GetInstrCount();
+    uint32_t GetInstrCount();
     inline Js::ScriptContext* GetScriptContext() const
     {
         Assert(!IsOOPJIT());
@@ -429,8 +429,8 @@ static const unsigned long c_debugFillPattern8 = 0xcececececececece;
 
     void EnsureEquivalentTypeGuards();
     void InitializeEquivalentTypeGuard(Js::JitEquivalentTypeGuard * guard);
-    Js::JitEquivalentTypeGuard * CreateEquivalentTypeGuard(JITTypeHolder type, uint32 objTypeSpecFldId);
-    Js::JitPolyEquivalentTypeGuard * CreatePolyEquivalentTypeGuard(uint32 objTypeSpecFldId);
+    Js::JitEquivalentTypeGuard * CreateEquivalentTypeGuard(JITTypeHolder type, uint32_t objTypeSpecFldId);
+    Js::JitPolyEquivalentTypeGuard * CreatePolyEquivalentTypeGuard(uint32_t objTypeSpecFldId);
 
     void ThrowIfScriptClosed();
     void EnsurePropertyGuardsByPropertyId();
@@ -658,14 +658,14 @@ public:
 
     int32               m_localStackHeight;
     uint                frameSize;
-    uint32              inlineDepth;
-    uint32              postCallByteCodeOffset;
+    uint32_t              inlineDepth;
+    uint32_t              postCallByteCodeOffset;
     Js::RegSlot         returnValueRegSlot;
     Js::RegSlot         firstIRTemp;
     Js::ArgSlot         actualCount;
     int32               firstActualStackOffset;
-    uint32              tryCatchNestingLevel;
-    uint32              m_totalJumpTableSizeInBytesForSwitchStatements;
+    uint32_t              tryCatchNestingLevel;
+    uint32_t              m_totalJumpTableSizeInBytesForSwitchStatements;
 #if defined(_M_ARM32_OR_ARM64)
     //Offset to arguments from sp + m_localStackHeight;
     //For non leaf functions this is (callee saved register count + LR + R11) * MachRegInt
@@ -678,16 +678,16 @@ public:
     IR::LabelInstr *    m_funcEndLabel;
 
     // Keep track of the maximum number of args on the stack.
-    uint32              m_argSlotsForFunctionsCalled;
+    uint32_t              m_argSlotsForFunctionsCalled;
 #if DBG
-    uint32              m_callSiteCount;
+    uint32_t              m_callSiteCount;
 #endif
     FlowGraph *         m_fg;
     unsigned int        m_labelCount;
     BitVector           m_regsUsed;
-    uint32              loopCount;
-    uint32              unoptimizableArgumentsObjReference;
-    uint32              unoptimizableArgumentsObjReferenceInInlinees;
+    uint32_t              loopCount;
+    uint32_t              unoptimizableArgumentsObjReference;
+    uint32_t              unoptimizableArgumentsObjReferenceInInlinees;
     Js::ProfileId       callSiteIdInParentFunc;
     InlineeFrameInfo*   cachedInlineeFrameInfo;
     bool                m_hasCalls: 1; // This is more accurate compared to m_isLeaf
@@ -913,7 +913,7 @@ public:
         }
     }
 
-    void AddYieldOffsetResumeLabel(uint32 offset, IR::LabelInstr* label)
+    void AddYieldOffsetResumeLabel(uint32_t offset, IR::LabelInstr* label)
     {
         m_yieldOffsetResumeLabelList->Add(YieldOffsetResumeLabel(offset, label));
     }
@@ -937,7 +937,7 @@ public:
 
     void RemoveDeadYieldOffsetResumeLabel(IR::LabelInstr* label)
     {
-        uint32 offset;
+        uint32_t offset;
         bool found = m_yieldOffsetResumeLabelList->MapUntil([&offset, &label](int i, YieldOffsetResumeLabel& yorl)
         {
             if (yorl.Second() == label)
@@ -957,7 +957,7 @@ public:
     void MarkConstantAddressSyms(BVSparse<JitArenaAllocator> * bv);
     void DisableConstandAddressLoadHoist() { canHoistConstantAddressLoad = false; }
 
-    void AddFrameDisplayCheck(IR::SymOpnd *fieldOpnd, uint32 slotId = (uint32)-1);
+    void AddFrameDisplayCheck(IR::SymOpnd *fieldOpnd, uint32_t slotId = (uint32_t)-1);
 
     void EnsureStackArgWithFormalsTracker();
 
@@ -997,7 +997,7 @@ public:
     InlineeFrameInfo*              frameInfo;
     Js::ArgSlot argInsCount;        // This count doesn't include the ArgIn instr for "this".
 
-    uint32 m_inlineeId;
+    uint32_t m_inlineeId;
 
     IR::Instr *    m_bailOutForElidedYieldInsertionPoint;
 
