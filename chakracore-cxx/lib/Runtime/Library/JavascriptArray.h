@@ -1072,7 +1072,7 @@ namespace Js
 
         static bool Is(TypeId typeId);
 
-        typedef int32 TElement;
+        typedef int32_t TElement;
 
         static const uint8_t AllocationBucketsCount = 3;
         static uint allocationBuckets[AllocationBucketsCount][AllocationBucketsInfoSize];

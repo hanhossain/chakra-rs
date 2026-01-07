@@ -629,7 +629,7 @@ public:
     typedef JsUtil::BaseDictionary<Js::PropertyId, CtorCacheSet*, JitArenaAllocator, PowerOf2SizePolicy> CtorCachesByPropertyIdMap;
     CtorCachesByPropertyIdMap* ctorCachesByPropertyId;
 
-    typedef JsUtil::BaseDictionary<Js::ProfileId, int32, JitArenaAllocator, PrimeSizePolicy> CallSiteToArgumentsOffsetFixupMap;
+    typedef JsUtil::BaseDictionary<Js::ProfileId, int32_t, JitArenaAllocator, PrimeSizePolicy> CallSiteToArgumentsOffsetFixupMap;
     CallSiteToArgumentsOffsetFixupMap* callSiteToArgumentsOffsetFixupMap;
     int indexedPropertyGuardCount;
 

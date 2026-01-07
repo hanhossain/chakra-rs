@@ -301,7 +301,7 @@ namespace JsUtil
 }
 
 typedef JsUtil::BaseDictionary<IntConstType, StackSym *, JitArenaAllocator> IntConstantToStackSymMap;
-typedef JsUtil::BaseDictionary<int32, Value *, JitArenaAllocator> IntConstantToValueMap;
+typedef JsUtil::BaseDictionary<int32_t, Value *, JitArenaAllocator> IntConstantToValueMap;
 typedef JsUtil::BaseDictionary<long, Value *, JitArenaAllocator> Int64ConstantToValueMap;
 
 typedef JsUtil::BaseDictionary<Js::Var, Value *, JitArenaAllocator> AddrConstantToValueMap;

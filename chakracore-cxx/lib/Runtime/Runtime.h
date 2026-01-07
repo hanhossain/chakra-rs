@@ -71,7 +71,7 @@ namespace Js
     // Forward declarations
     //
     class CharClassifier;
-    typedef int32 MessageId;
+    typedef int32_t MessageId;
     /* enum */ struct PropertyIds;
     class DebugDocument;
     struct Utf8SourceInfo;
