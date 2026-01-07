@@ -27,7 +27,7 @@ enum SymKind : uint8_t
     SymKindProperty
 };
 
-typedef uint32 SymID;
+typedef uint32_t SymID;
 constexpr SymID SymID_Invalid = (SymID)-1;
 
 

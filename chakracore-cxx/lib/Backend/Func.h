@@ -91,9 +91,9 @@ public:
     StackSym * GetScopeObjSym();
 };
 
-typedef JsUtil::Pair<uint32, IR::LabelInstr*> YieldOffsetResumeLabel;
+typedef JsUtil::Pair<uint32_t, IR::LabelInstr*> YieldOffsetResumeLabel;
 typedef JsUtil::List<YieldOffsetResumeLabel, JitArenaAllocator> YieldOffsetResumeLabelList;
-typedef HashTable<uint32, JitArenaAllocator> SlotArrayCheckTable;
+typedef HashTable<uint32_t, JitArenaAllocator> SlotArrayCheckTable;
 struct FrameDisplayCheckRecord
 {
     SlotArrayCheckTable *table;
@@ -722,7 +722,7 @@ public:
         Js::OpCode capturingOpCode;
         BVSparse<JitArenaAllocator>* bv;
     };
-    typedef JsUtil::BaseDictionary<uint32, InstrByteCodeRegisterUses, JitArenaAllocator> ByteCodeRegisterUses;
+    typedef JsUtil::BaseDictionary<uint32_t, InstrByteCodeRegisterUses, JitArenaAllocator> ByteCodeRegisterUses;
     ByteCodeRegisterUses* byteCodeRegisterUses = nullptr;
     BVSparse<JitArenaAllocator>* GetByteCodeOffsetUses(uint offset) const;
 

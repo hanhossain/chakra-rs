@@ -6,7 +6,7 @@
 
 typedef uint8_t ubyte;
 typedef uint16 uhalf;
-typedef uint32 uword;
+typedef uint32_t uword;
 CompileAssert(sizeof(ubyte) == 1);
 CompileAssert(sizeof(uhalf) == 2);
 CompileAssert(sizeof(uword) == 4);
