@@ -551,7 +551,7 @@ namespace TTD
 
         //////////////////
 
-        //A struct that represents Javascript arrays and Native arrays (T can be Var, int32, or double)
+        //A struct that represents Javascript arrays and Native arrays (T can be Var, int32_t, or double)
         template<typename T>
         struct SnapArrayInfoBlock
         {
@@ -567,7 +567,7 @@ namespace TTD
             SnapArrayInfoBlock<T>* Next;
         };
 
-        //A struct that represents Javascript arrays and Native arrays (T can be Var, int32, or double)
+        //A struct that represents Javascript arrays and Native arrays (T can be Var, int32_t, or double)
         template<typename T>
         struct SnapArrayInfo
         {
@@ -649,9 +649,9 @@ namespace TTD
             return res;
         }
 
-        int32 SnapArrayInfo_InflateValue(int32 value, InflateMap* inflator);
-        void SnapArrayInfo_EmitValue(int32 value, FileWriter* writer);
-        void SnapArrayInfo_ParseValue(int32* into, FileReader* reader, SlabAllocator& alloc);
+        int32_t SnapArrayInfo_InflateValue(int32_t value, InflateMap* inflator);
+        void SnapArrayInfo_EmitValue(int32_t value, FileWriter* writer);
+        void SnapArrayInfo_ParseValue(int32_t* into, FileReader* reader, SlabAllocator& alloc);
 
         double SnapArrayInfo_InflateValue(double value, InflateMap* inflator);
         void SnapArrayInfo_EmitValue(double value, FileWriter* writer);
@@ -662,9 +662,9 @@ namespace TTD
         void SnapArrayInfo_ParseValue(TTDVar* into, FileReader* reader, SlabAllocator& alloc);
 
 #if ENABLE_SNAPSHOT_COMPARE
-        void SnapArrayInfo_EquivValue(int32 val1, int32 val2, TTDCompareMap& compareMap, int32 i);
-        void SnapArrayInfo_EquivValue(double val1, double val2, TTDCompareMap& compareMap, int32 i);
-        void SnapArrayInfo_EquivValue(TTDVar val1, TTDVar val2, TTDCompareMap& compareMap, int32 i);
+        void SnapArrayInfo_EquivValue(int32_t val1, int32_t val2, TTDCompareMap& compareMap, int32_t i);
+        void SnapArrayInfo_EquivValue(double val1, double val2, TTDCompareMap& compareMap, int32_t i);
+        void SnapArrayInfo_EquivValue(TTDVar val1, TTDVar val2, TTDCompareMap& compareMap, int32_t i);
 #endif
 
         ////

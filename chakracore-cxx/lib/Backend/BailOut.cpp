@@ -276,7 +276,7 @@ BailOutInfo::FinalizeOffsets(__in_ecount(count) int * offsets, uint count, Func 
 {
     // Turn positive SP-relative sym offsets into negative frame-pointer-relative offsets for the convenience
     // of the restore-value logic.
-    int32 inlineeArgStackSize = func->GetInlineeArgumentStackSize();
+    int32_t inlineeArgStackSize = func->GetInlineeArgumentStackSize();
     int localsSize = func->m_localStackHeight + func->m_ArgumentsOffset;
     for (uint i = 0; i < count; i++)
     {
@@ -327,7 +327,7 @@ BailOutInfo::FinalizeBailOutRecord(Func * func)
     while (currentBailOutRecord->parent != nullptr)
     {
         Assert(currentBailOutRecord->globalBailOutRecordTable->firstActualStackOffset == -1 ||
-            currentBailOutRecord->globalBailOutRecordTable->firstActualStackOffset == (int32)(currentBailOutFunc->firstActualStackOffset - inlinedArgSlotAdjust));
+            currentBailOutRecord->globalBailOutRecordTable->firstActualStackOffset == (int32_t)(currentBailOutFunc->firstActualStackOffset - inlinedArgSlotAdjust));
         Assert(!currentBailOutFunc->IsTopFunc());
         Assert(currentBailOutFunc->firstActualStackOffset != -1);
 
@@ -372,7 +372,7 @@ BailOutInfo::FinalizeBailOutRecord(Func * func)
     }
 
     currentBailOutRecord = bailOutRecord;
-    int32 inlineeArgStackSize = func->GetInlineeArgumentStackSize();
+    int32_t inlineeArgStackSize = func->GetInlineeArgumentStackSize();
     do
     {
         // Note: do this only once
@@ -822,10 +822,10 @@ BailOutRecord::AdjustOffsetsForDiagMode(Js::JavascriptCallStackLayout * layout, 
             // Get the corresponding offset on the stack related to the frame.
 
             globalBailOutRecordTable->IterateGlobalBailOutRecordTableRows(m_bailOutRecordId, [=](GlobalBailOutRecordDataRow *row) {
-                int32 offset = row->offset;
+                int32_t offset = row->offset;
                 // offset is zero, is it possible that a locals is not living in the debug mode?
                 Assert(offset != 0);
-                int32 slotOffset;
+                int32_t slotOffset;
                 if (functionBody->GetSlotOffset(row->regSlot, &slotOffset))
                 {
                     slotOffset = entryPointInfo->localVarSlotsOffset + slotOffset;
@@ -857,7 +857,7 @@ BailOutRecord::RestoreValue(IR::BailOutKind bailOutKind, Js::JavascriptCallStack
     bool boxStackInstance = true;
     Js::Var value = 0;
     double dblValue = 0.0;
-    int32 int32Value = 0;
+    int32_t int32Value = 0;
 
 #if ENABLE_DEBUG_CONFIG_OPTIONS
     char16_t const * name = u"OutParam";
@@ -934,7 +934,7 @@ BailOutRecord::RestoreValue(IR::BailOutKind bailOutKind, Js::JavascriptCallStack
                 if (isInt32)
                 {
                     Assert(RegTypes[LinearScanMD::GetRegisterFromSaveIndex(offset)] != TyFloat64);
-                    int32Value = ::Math::PointerCastToIntegralTruncate<int32>(registerSaves[offset - 1]);
+                    int32Value = ::Math::PointerCastToIntegralTruncate<int32_t>(registerSaves[offset - 1]);
                 }
                 else
                 {
@@ -965,7 +965,7 @@ BailOutRecord::RestoreValue(IR::BailOutKind bailOutKind, Js::JavascriptCallStack
             uint constantIndex = offset - (GetBailOutRegisterSaveSlotCount() + GetBailOutReserveSlotCount()) - 1;
             if (isInt32)
             {
-                int32Value = ::Math::PointerCastToIntegralTruncate<int32>(this->constants[constantIndex]);
+                int32Value = ::Math::PointerCastToIntegralTruncate<int32_t>(this->constants[constantIndex]);
             }
             else
             {
@@ -2995,7 +2995,7 @@ void GlobalBailOutRecordDataTable::Finalize(NativeCodeData::Allocator *allocator
 #endif
 }
 
-void  GlobalBailOutRecordDataTable::AddOrUpdateRow(JitArenaAllocator *allocator, uint32_t bailOutRecordId, uint32_t regSlot, bool isFloat, bool isInt, int32 offset, uint *lastUpdatedRowIndex)
+void  GlobalBailOutRecordDataTable::AddOrUpdateRow(JitArenaAllocator *allocator, uint32_t bailOutRecordId, uint32_t regSlot, bool isFloat, bool isInt, int32_t offset, uint *lastUpdatedRowIndex)
 {
     Assert(offset != 0);
     const int INITIAL_TABLE_SIZE = 64;

@@ -3,9 +3,9 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #if defined(_M_ARM32_OR_ARM64) || defined(_M_X64)
-const int32 AstBytecodeRatioEstimate = 4;
+const int32_t AstBytecodeRatioEstimate = 4;
 #else
-const int32 AstBytecodeRatioEstimate = 5;
+const int32_t AstBytecodeRatioEstimate = 5;
 #endif
 
 
@@ -65,7 +65,7 @@ private:
     using JumpCleanupList = DList<JumpCleanupInfo, ArenaAllocator>;
     JumpCleanupList* jumpCleanupList;
 
-    int32 maxAstSize;
+    int32_t maxAstSize;
     uint16 envDepth;
     uint sourceIndex;
     uint dynamicScopeCount;

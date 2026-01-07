@@ -1136,7 +1136,7 @@ namespace Js
     }
 
     bool
-    FunctionBody::GetSlotOffset(RegSlot slotId, int32 * slotOffset, bool allowTemp)
+    FunctionBody::GetSlotOffset(RegSlot slotId, int32_t * slotOffset, bool allowTemp)
     {
         if (IsNonTempLocalVar(slotId) || allowTemp)
         {
@@ -3423,7 +3423,7 @@ namespace Js
         return FALSE;
     }
 
-    void FunctionBody::FindClosestStatements(int32 characterOffset, StatementLocation *firstStatementLocation, StatementLocation *secondStatementLocation)
+    void FunctionBody::FindClosestStatements(int32_t characterOffset, StatementLocation *firstStatementLocation, StatementLocation *secondStatementLocation)
     {
         auto statementMaps = this->GetStatementMaps();
         if (statementMaps)
@@ -4370,10 +4370,10 @@ namespace Js
         ScriptContext *scriptContext = this->GetScriptContext();
 #ifdef ENABLE_TEST_HOOKS
         Var intConst = scriptContext->GetConfig()->Force32BitByteCode() ?
-            JavascriptNumber::ToVarFor32BitBytecode((int32)val, scriptContext) :
-            JavascriptNumber::ToVar((int32)val, scriptContext);
+            JavascriptNumber::ToVarFor32BitBytecode((int32_t)val, scriptContext) :
+            JavascriptNumber::ToVar((int32_t)val, scriptContext);
 #else
-        Var intConst = JavascriptNumber::ToVar((int32)val, scriptContext);
+        Var intConst = JavascriptNumber::ToVar((int32_t)val, scriptContext);
 #endif
         this->RecordConstant(location, intConst);
     }
@@ -9568,7 +9568,7 @@ namespace Js
     size_t FunctionBody::GetLoopBodyName(uint loopNumber, _Out_writes_opt_z_(sizeInChars) char16_t* displayName, _In_ size_t sizeInChars)
     {
         const char16_t* functionName = this->GetExternalDisplayName();
-        size_t length = wcslen(functionName) + /*length of largest int32*/ 10 + _countof(LoopWStr) + /*null*/ 1;
+        size_t length = wcslen(functionName) + /*length of largest int32_t*/ 10 + _countof(LoopWStr) + /*null*/ 1;
         if (sizeInChars < length || displayName == nullptr)
         {
             return length;

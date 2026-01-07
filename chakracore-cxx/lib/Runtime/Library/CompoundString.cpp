@@ -705,8 +705,8 @@ using namespace Js;
         void * *const packedSubstringInfoRef,
         void * *const packedSubstringInfo2Ref)
     {
-        Assert(static_cast<int32>(startIndex) >= 0);
-        Assert(static_cast<int32>(length) >= 0);
+        Assert(static_cast<int32_t>(startIndex) >= 0);
+        Assert(static_cast<int32_t>(length) >= 0);
         Assert(packedSubstringInfoRef);
         Assert(packedSubstringInfo2Ref);
 
@@ -719,7 +719,7 @@ using namespace Js;
                 1);
         *packedSubstringInfo2Ref = nullptr;
     #else
-        CompileAssert(sizeof(void *) == sizeof(int32));
+        CompileAssert(sizeof(void *) == sizeof(int32_t));
 
         // On 32-bit architectures, it will be attempted to fit both pieces of into one pointer by using 16 bits for the
         // start index, 15 for the length, and 1 for the tag. If it does not fit, an additional pointer will be used.
@@ -775,7 +775,7 @@ using namespace Js;
         *startIndexRef = static_cast<CharCount>(packedSubstringInfo >> 32);
         *lengthRef = static_cast<CharCount>(static_cast<uint32_t>(packedSubstringInfo) >> 1);
     #else
-        CompileAssert(sizeof(void *) == sizeof(int32));
+        CompileAssert(sizeof(void *) == sizeof(int32_t));
 
         // On 32-bit architectures, it will be attempted to fit both pieces of into one pointer by using 16 bits for the
         // start index, 15 for the length, and 1 for the tag. If it does not fit, an additional pointer will be used.

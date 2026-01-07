@@ -140,7 +140,7 @@ namespace TTD
             TTD_REPLAY_ACTIVE_CONTEXT(executeContext);
             const JsRTIntegralArgumentAction* action = GetInlineEventDataAs<JsRTIntegralArgumentAction, EventKind::CreateIntegerActionTag>(evt);
 
-            Js::Var res = Js::JavascriptNumber::ToVar((int32)action->Scalar, ctx);
+            Js::Var res = Js::JavascriptNumber::ToVar((int32_t)action->Scalar, ctx);
 
             JsRTActionHandleResultForReplay<JsRTIntegralArgumentAction, EventKind::CreateIntegerActionTag>(executeContext, evt, res);
         }
@@ -1086,7 +1086,7 @@ namespace TTD
         }
 #endif
 
-        void JsRTCallFunctionAction_ProcessArgs(EventLogEntry* evt, int32 rootDepth, long callEventTime, Js::Var funcVar, uint32_t argc, Js::Var* argv, long topLevelCallbackEventTime, UnlinkableSlabAllocator& alloc)
+        void JsRTCallFunctionAction_ProcessArgs(EventLogEntry* evt, int32_t rootDepth, long callEventTime, Js::Var funcVar, uint32_t argc, Js::Var* argv, long topLevelCallbackEventTime, UnlinkableSlabAllocator& alloc)
         {
             JsRTCallFunctionAction* cfAction = GetInlineEventDataAs<JsRTCallFunctionAction, EventKind::CallExistingFunctionActionTag>(evt);
 

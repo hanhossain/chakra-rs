@@ -521,7 +521,7 @@ void BGParseWorkItem::ParseUTF8Core(Js::ScriptContext* scriptContext)
     };
 
     ENTER_PINNED_SCOPE(Js::Utf8SourceInfo, sourceInfo);
-    sourceInfo = Js::Utf8SourceInfo::NewWithNoCopy(scriptContext, (LPUTF8)this->script, (int32)this->cb, static_cast<int32>(this->cb), &si, false);    
+    sourceInfo = Js::Utf8SourceInfo::NewWithNoCopy(scriptContext, (LPUTF8)this->script, (int32_t)this->cb, static_cast<int32_t>(this->cb), &si, false);    
 
     charcount_t cchLength = 0;
     uint sourceIndex = 0;

@@ -359,17 +359,17 @@ public:
     template <typename CharType>
     IdentPtr PidHashNameLen(CharType const * psz, uint32_t cch);
     template <typename CharType>
-    IdentPtr PidHashNameLenWithHash(_In_reads_(cch) CharType const * psz, CharType const * end, int32 cch, uint32_t luHash);
+    IdentPtr PidHashNameLenWithHash(_In_reads_(cch) CharType const * psz, CharType const * end, int32_t cch, uint32_t luHash);
 
 
     template <typename CharType>
     inline IdentPtr FindExistingPid(
         CharType const * prgch,
         CharType const * end,
-        int32 cch,
+        int32_t cch,
         uint32_t luHash,
         IdentPtr **pppInsert,
-        int32 *pBucketCount
+        int32_t *pBucketCount
 #if PROFILE_DICTIONARY
         , int& depth
 #endif
@@ -377,7 +377,7 @@ public:
 
     NoReleaseAllocator* GetAllocator() {return &m_noReleaseAllocator;}
 
-    bool Contains(_In_reads_(cch) LPCOLESTR prgch, int32 cch);
+    bool Contains(_In_reads_(cch) LPCOLESTR prgch, int32_t cch);
 
     template<typename Fn>
     void VisitPids(Fn fn)

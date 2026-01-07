@@ -73,7 +73,7 @@ namespace Js {
     }
 
 
-    inline int32 JavascriptConversion::ToInt32(Var aValue, ScriptContext* scriptContext)
+    inline int32_t JavascriptConversion::ToInt32(Var aValue, ScriptContext* scriptContext)
     {
         return
             TaggedInt::Is(aValue) ?
@@ -118,7 +118,7 @@ namespace Js {
 
        if (TaggedInt::Is(aValue))
        {
-           int32 val = Js::TaggedInt::ToInt32(aValue);
+           int32_t val = Js::TaggedInt::ToInt32(aValue);
 
            // Values larger than 0xff should be clamped to 0xff
            if (val > UINT8_MAX)
@@ -243,13 +243,13 @@ namespace Js {
        case TypeIds_Number:
        {
            double doubleVal = JavascriptNumber::GetValue(value);
-           int32 intVal = 0;
+           int32_t intVal = 0;
 
            if (!JavascriptNumber::TryGetInt32Value<allowLossyConversion>(doubleVal, &intVal))
            {
                return nullptr;
            }
-           return TryCanonicalizeIntHelper<int32, allowNegOne>(intVal);
+           return TryCanonicalizeIntHelper<int32_t, allowNegOne>(intVal);
        }
        case TypeIds_Int64Number:
        {

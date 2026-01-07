@@ -26,7 +26,7 @@ namespace Js
         DebugOnly(isInUse = false);
     }
 
-    void ByteCodeWriter::InitData(ArenaAllocator* alloc, int32 initCodeBufferSize)
+    void ByteCodeWriter::InitData(ArenaAllocator* alloc, int32_t initCodeBufferSize)
     {
         Assert(!isInUse);
         Assert(!isInitialized);
@@ -127,7 +127,7 @@ namespace Js
     ///
     ///----------------------------------------------------------------------------
 #ifdef LOG_BYTECODE_AST_RATIO
-    void ByteCodeWriter::End(int32 currentAstSize, int32 maxAstSize)
+    void ByteCodeWriter::End(int32_t currentAstSize, int32_t maxAstSize)
 #else
     void ByteCodeWriter::End()
 #endif
@@ -909,7 +909,7 @@ namespace Js
         AddJumpOffset(op, labelID, offsetOfRelativeJumpOffsetFromEnd);
     }
 
-    void ByteCodeWriter::BrEnvProperty(OpCode op, ByteCodeLabel labelID, PropertyIdIndexType index, int32 slotIndex)
+    void ByteCodeWriter::BrEnvProperty(OpCode op, ByteCodeLabel labelID, PropertyIdIndexType index, int32_t slotIndex)
     {
         CheckOpen();
         CheckOp(op, OpLayoutType::BrEnvProperty);
@@ -2758,7 +2758,7 @@ StoreCommon:
     }
 
 #ifdef BYTECODE_BRANCH_ISLAND
-    int32 ByteCodeWriter::GetBranchLimit()
+    int32_t ByteCodeWriter::GetBranchLimit()
     {
 #ifdef BYTECODE_TESTING
         if (Js::Configuration::Global.flags.IsEnabled(Js::ByteCodeBranchLimitFlag))

@@ -1193,7 +1193,7 @@ using namespace Js;
         _declspec(align(16)) PossibleAsmJsReturnValues retVals;
         CompileAssert(sizeof(PossibleAsmJsReturnValues) == sizeof(long) + sizeof(AsmJsSIMDValue));
         CompileAssert(offsetof(PossibleAsmJsReturnValues, low) == offsetof(PossibleAsmJsReturnValues, i32));
-        CompileAssert(offsetof(PossibleAsmJsReturnValues, high) == offsetof(PossibleAsmJsReturnValues, i32) + sizeof(int32));
+        CompileAssert(offsetof(PossibleAsmJsReturnValues, high) == offsetof(PossibleAsmJsReturnValues, i32) + sizeof(int32_t));
 
         // call variable argument function provided in entryPoint
         __asm
@@ -1926,7 +1926,7 @@ LABEL1:
                 Js::FunctionBody* funcBody = func->GetFunctionBody();
                 if (funcBody && funcBody->IsWasmFunction())
                 {
-                    int32 code = exceptionCode == STATUS_INTEGER_DIVIDE_BY_ZERO ? WASMERR_DivideByZero : VBSERR_Overflow;
+                    int32_t code = exceptionCode == STATUS_INTEGER_DIVIDE_BY_ZERO ? WASMERR_DivideByZero : VBSERR_Overflow;
                     JavascriptError::ThrowWebAssemblyRuntimeError(func->GetScriptContext(), code);
                 }
             }
@@ -3225,7 +3225,7 @@ LABEL1:
         {
             if (TaggedInt::Is(sourceString))
             {
-                int32 propertyIdOfSourceString = TaggedInt::ToInt32(sourceString);
+                int32_t propertyIdOfSourceString = TaggedInt::ToInt32(sourceString);
                 *name = scriptContext->GetPropertyString(propertyIdOfSourceString);
                 return true;
             }

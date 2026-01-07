@@ -22,7 +22,7 @@ namespace Js
             // An IntSet is a set containing only int elements
             //
             // Adding any TaggedInt or JavascriptNumber that can be represented as a TaggedInt
-            // will succeed and be stored as an int32 in the set, EXCEPT for the value -1
+            // will succeed and be stored as an int32_t in the set, EXCEPT for the value -1
             // Adding any other value will cause the set to be promoted to a SimpleVarSet or ComplexVarSet,
             // depending on the value being added
             //

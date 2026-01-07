@@ -291,7 +291,7 @@ Encoder::Encode()
     if (this->m_func->DoRecordNativeMap())
     {
         // Record PragmaInstr offsets and throw maps
-        for (int32 i = 0; i < m_pragmaInstrToRecordOffset->Count(); i++)
+        for (int32_t i = 0; i < m_pragmaInstrToRecordOffset->Count(); i++)
         {
             IR::PragmaInstr *inst = m_pragmaInstrToRecordOffset->Item(i);
             inst->Record(inst->m_offsetInBuffer);
@@ -318,7 +318,7 @@ Encoder::Encode()
             auto entryPointInfo = m_func->GetInProcJITEntryPointInfo();
             auto functionBody = entryPointInfo->GetFunctionBody();
             Js::SmallSpanSequenceIter iter;
-            for (int32 i = 0; i < m_pragmaInstrToRecordMap->Count(); i++)
+            for (int32_t i = 0; i < m_pragmaInstrToRecordMap->Count(); i++)
             {
                 IR::PragmaInstr *inst = m_pragmaInstrToRecordMap->Item(i);
                 functionBody->RecordNativeThrowMap(iter, inst->m_offsetInBuffer, inst->m_statementIndex, entryPointInfo, Js::LoopHeader::NoLoop);
@@ -1201,13 +1201,13 @@ Encoder::ShortenBranchesAndLabelAlign(uint8_t **codeStart, ptrdiff_t *codeSize, 
     // Here we mark BRs to be shortened and adjust Labels and relocList entries offsets.
     FixUpMapIndex mapIndices;
 
-    int32 totalBytesSaved = 0;
+    int32_t totalBytesSaved = 0;
 
     // loop over all BRs, find the ones we can convert to short form
-    for (int32 j = 0; j < relocList->Count(); j++)
+    for (int32_t j = 0; j < relocList->Count(); j++)
     {
         IR::LabelInstr *targetLabel;
-        int32 relOffset;
+        int32_t relOffset;
         uint32_t bytesSaved = 0;
         uint8_t* labelPc, *opcodeByte;
         uint8_t* shortBrPtr, *fixedBrPtr; // without shortening
@@ -1218,7 +1218,7 @@ Encoder::ShortenBranchesAndLabelAlign(uint8_t **codeStart, ptrdiff_t *codeSize, 
         if (!reloc.isLongBr())
         {
             // if loop alignment is required, total bytes saved can change
-            int32 newTotalBytesSaved = m_encoderMD.FixRelocListEntry(j, totalBytesSaved, buffStart, buffEnd);
+            int32_t newTotalBytesSaved = m_encoderMD.FixRelocListEntry(j, totalBytesSaved, buffStart, buffEnd);
 
             if (newTotalBytesSaved != totalBytesSaved)
             {
@@ -1262,13 +1262,13 @@ Encoder::ShortenBranchesAndLabelAlign(uint8_t **codeStart, ptrdiff_t *codeSize, 
         if (labelPc >= (uint8_t*) reloc.m_ptr)
         {
             // forward Br. We compare using the unfixed m_ptr, because the label is ahead and its Pc is not fixed it.
-            relOffset = (int32)(labelPc - ((uint8_t*)reloc.m_ptr + 4));
+            relOffset = (int32_t)(labelPc - ((uint8_t*)reloc.m_ptr + 4));
         }
         else
         {
             // backward Br. We compute relOffset after fixing the Br, since the label is already fixed.
             // We also include the 3-4 bytes saved after shortening the Br since the Br itself is included in the relative offset.
-            relOffset =  (int32)(labelPc - (shortBrPtr + 1));
+            relOffset =  (int32_t)(labelPc - (shortBrPtr + 1));
         }
 
         // update Br offset (overwritten later if Br is shortened)
@@ -1337,7 +1337,7 @@ Encoder::ShortenBranchesAndLabelAlign(uint8_t **codeStart, ptrdiff_t *codeSize, 
     uint8_t *dst_p = (uint8_t*)tmpBuffer;
     size_t dst_size = newCodeSize;
     size_t src_size;
-    for (int32 i = 0; i < relocList->Count(); i++)
+    for (int32_t i = 0; i < relocList->Count(); i++)
     {
         EncodeRelocAndLabels &reloc = relocList->Item(i);
         // shorten BR and copy
@@ -1500,7 +1500,7 @@ void Encoder::CopyPartialBufferAndCalculateCRC(uint8_t ** ptrDstBuffer, size_t &
 void Encoder::InsertNopsForLabelAlignment(int nopCount, uint8_t ** ptrDstBuffer)
 {
     // write NOPs
-    for (int32 i = 0; i < nopCount; i++, (*ptrDstBuffer)++)
+    for (int32_t i = 0; i < nopCount; i++, (*ptrDstBuffer)++)
     {
         **ptrDstBuffer = 0x90;
     }
@@ -1509,7 +1509,7 @@ void Encoder::revertRelocList()
 {
     RelocList* relocList = m_encoderMD.GetRelocList();
 
-    for (int32 i = 0; i < relocList->Count(); i++)
+    for (int32_t i = 0; i < relocList->Count(); i++)
     {
         relocList->Item(i).revert();
     }

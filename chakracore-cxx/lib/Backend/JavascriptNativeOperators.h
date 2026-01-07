@@ -143,8 +143,8 @@ namespace Js
         static Var OP_GetElementI_UInt32_ExpectingNativeFloatArray(Var instance, uint32_t aElementIndex, ScriptContext* scriptContext);
         static Var OP_GetElementI_UInt32_ExpectingVarArray(Var instance, uint32_t aElementIndex, ScriptContext* scriptContext);
 
-        static Var OP_GetElementI_Int32_ExpectingNativeFloatArray(Var instance, int32 aElementIndex, ScriptContext* scriptContext);
-        static Var OP_GetElementI_Int32_ExpectingVarArray(Var instance, int32 aElementIndex, ScriptContext* scriptContext);
+        static Var OP_GetElementI_Int32_ExpectingNativeFloatArray(Var instance, int32_t aElementIndex, ScriptContext* scriptContext);
+        static Var OP_GetElementI_Int32_ExpectingVarArray(Var instance, int32_t aElementIndex, ScriptContext* scriptContext);
 
 #if DBG
         static void IntRangeCheckFailure();

@@ -82,7 +82,7 @@ uint8_t PrologEncoderMD::GetXmmRegToSave(IR::Instr *instr, uint16_t *scaledOffse
     offsetFromInstr += topFunc->GetArgsSize() + topFunc->GetSavedRegSize();
 
     // Can only encode nonnegative 16-byte-aligned offsets in the unwind info
-    Assert(static_cast<int32>(offsetFromInstr) >= 0);
+    Assert(static_cast<int32_t>(offsetFromInstr) >= 0);
     Assert(::Math::Align(offsetFromInstr, static_cast<uint32_t>(MachDouble * 2)) == offsetFromInstr);
 
     // Stored offset is scaled by 16

@@ -160,7 +160,7 @@ namespace Wasm
         {
             float f32;
             double f64;
-            int32 i32;
+            int32_t i32;
             long i64;
             Simd::simdvec v128;
         };

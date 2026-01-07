@@ -3775,7 +3775,7 @@ bool FlowGraph::IsUnsignedOpnd(IR::Opnd *src, IR::Opnd **pShrSrc1)
 
     if (src->AsRegOpnd()->m_sym->IsIntConst())
     {
-        int32 intConst = src->AsRegOpnd()->m_sym->GetIntConstValue();
+        int32_t intConst = src->AsRegOpnd()->m_sym->GetIntConstValue();
 
         if (intConst >= 0)
         {

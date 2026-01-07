@@ -97,7 +97,7 @@ using namespace Js;
                 break;
             }
 
-            const int32 index = TaggedInt::ToInt32(varIndex);
+            const int32_t index = TaggedInt::ToInt32(varIndex);
             const uint32_t offset = index;
             if(index < 0 || offset >= headSegmentLength || (array && array->IsMissingHeadSegmentItem(offset)))
             {
@@ -163,7 +163,7 @@ using namespace Js;
                 break;
             }
 
-            int32 index = TaggedInt::ToInt32(varIndex);
+            int32_t index = TaggedInt::ToInt32(varIndex);
 
             if (index < 0)
             {
@@ -335,7 +335,7 @@ using namespace Js;
                 break;
             }
 
-            const int32 index = TaggedInt::ToInt32(varIndex);
+            const int32_t index = TaggedInt::ToInt32(varIndex);
             if(index < 0)
             {
                 stElemInfo.neededHelperCall = true;
@@ -416,7 +416,7 @@ using namespace Js;
                 break;
             }
 
-            int32 index = TaggedInt::ToInt32(varIndex);
+            int32_t index = TaggedInt::ToInt32(varIndex);
 
             if (index < 0)
             {

@@ -32,8 +32,8 @@ class ActiveScriptError;
 class ScriptException
 {
 public:
-    int32 ichMin;
-    int32 ichLim;
+    int32_t ichMin;
+    int32_t ichLim;
     EXCEPINFO ei;
 
 public:
@@ -50,8 +50,8 @@ public:
 class CompileScriptException : public ScriptException
 {
 public:
-    int32 line;       // line number of error (zero based)
-    int32 ichMinLine; // starting char of the line
+    int32_t line;       // line number of error (zero based)
+    int32_t ichMinLine; // starting char of the line
     bool hasLineNumberInfo;
     // TODO: if the line contains \0 character the substring following \0 will not be included:
     BSTR bstrLine;   // source line (if available)

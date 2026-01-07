@@ -219,7 +219,7 @@ namespace TTD
             EventKind EventKind;
 
             //The result status code
-            int32 ResultStatus;
+            int32_t ResultStatus;
 
 #if ENABLE_TTD_INTERNAL_DIAGNOSTICS
             //The event time for this event
@@ -432,7 +432,7 @@ namespace TTD
         struct ExternalCallEventLogEntry
         {
             //The root nesting depth
-            int32 RootNestingDepth;
+            int32_t RootNestingDepth;
 
             //the number of arguments and the argument array -- function is always argument[0]
             uint32_t ArgCount;
@@ -462,7 +462,7 @@ namespace TTD
 
         long ExternalCallEventLogEntry_GetLastNestedEventTime(const EventLogEntry* evt);
 
-        void ExternalCallEventLogEntry_ProcessArgs(EventLogEntry* evt, int32 rootDepth, Js::JavascriptFunction* function, const Js::Arguments& args, bool checkExceptions, UnlinkableSlabAllocator& alloc);
+        void ExternalCallEventLogEntry_ProcessArgs(EventLogEntry* evt, int32_t rootDepth, Js::JavascriptFunction* function, const Js::Arguments& args, bool checkExceptions, UnlinkableSlabAllocator& alloc);
         void ExternalCallEventLogEntry_ProcessReturn(EventLogEntry* evt, Js::Var res, long lastNestedEvent);
 
         void ExternalCallEventLogEntry_UnloadEventMemory(EventLogEntry* evt, UnlinkableSlabAllocator& alloc);

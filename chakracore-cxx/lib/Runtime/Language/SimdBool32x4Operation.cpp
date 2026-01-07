@@ -42,11 +42,11 @@ namespace Js
         return simd.i32[SIMD_X] && simd.i32[SIMD_Y] && simd.i32[SIMD_Z] && simd.i32[SIMD_W];
     }
 
-    template bool SIMDBool32x4Operation::OpAllTrue<int32>(const SIMDValue& val);
+    template bool SIMDBool32x4Operation::OpAllTrue<int32_t>(const SIMDValue& val);
     template bool SIMDBool32x4Operation::OpAllTrue<int16>(const SIMDValue& val);
     template bool SIMDBool32x4Operation::OpAllTrue<int8_t>(const SIMDValue& val);
     //
-    template bool SIMDBool32x4Operation::OpAnyTrue<int32>(const SIMDValue& val);
+    template bool SIMDBool32x4Operation::OpAnyTrue<int32_t>(const SIMDValue& val);
     template bool SIMDBool32x4Operation::OpAnyTrue<int16>(const SIMDValue& val);
     template bool SIMDBool32x4Operation::OpAnyTrue<int8_t>(const SIMDValue& val);
 }

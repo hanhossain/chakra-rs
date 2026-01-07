@@ -313,8 +313,8 @@ void GlobOpt::ArraySrcOpt::CheckVirtualArrayBounds()
                     if (indexValue && indexValue->GetValueInfo()->TryGetIntConstantBounds(&idxConstantBounds))
                     {
                         uint8_t indirScale = Lowerer::GetArrayIndirScale(baseValueType);
-                        int32 upperBound = idxConstantBounds.UpperBound();
-                        int32 lowerBound = idxConstantBounds.LowerBound();
+                        int32_t upperBound = idxConstantBounds.UpperBound();
+                        int32_t lowerBound = idxConstantBounds.LowerBound();
                         if (lowerBound >= 0 && ((static_cast<unsigned long>(upperBound) << indirScale) < MAX_ASMJS_ARRAYBUFFER_LENGTH))
                         {
                             eliminatedLowerBoundCheck = true;
@@ -412,7 +412,7 @@ void GlobOpt::ArraySrcOpt::TryEliminiteBoundsCheck()
     }
     else
     {
-        const int32 indexConstantValue = indexOpnd ? indexOpnd->AsIntConstOpnd()->AsInt32() : baseOwnerIndir->GetOffset();
+        const int32_t indexConstantValue = indexOpnd ? indexOpnd->AsIntConstOpnd()->AsInt32() : baseOwnerIndir->GetOffset();
         if (indexConstantValue < 0)
         {
             eliminatedUpperBoundCheck = true;

@@ -541,7 +541,7 @@ namespace Js
     {
         Assert(GetFunction() != NULL);
 
-        int32 slotOffset;
+        int32_t slotOffset;
         if (GetFunction()->GetSlotOffset(slotId, &slotOffset, allowTemp))
         {
             Assert(m_localVarSlotsOffset != InvalidOffset);

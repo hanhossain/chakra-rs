@@ -16,7 +16,7 @@ private:
     IR::BranchInstr*    caseInstr;      // caseInstr - stores the case instruction
     IR::Opnd*           lowerBound;     // lowerBound - used for integer cases
 
-    int32 GetIntConst(IR::Opnd* opnd)
+    int32_t GetIntConst(IR::Opnd* opnd)
     {
         Assert(IsIntConst(opnd));
         return opnd->IsIntConstOpnd() ? opnd->AsIntConstOpnd()->AsInt32() : opnd->GetStackSym()->GetIntConstValue();
@@ -41,7 +41,7 @@ public:
     {
     }
 
-    int32 GetUpperBoundIntConst()
+    int32_t GetUpperBoundIntConst()
     {
         AssertMsg(IsUpperBoundIntConst(), "Source2 operand is not an integer constant");
         return GetIntConst(GetUpperBound());
@@ -69,7 +69,7 @@ public:
         return IsStrConst(GetUpperBound());
     }
 
-    int32 GetLowerBoundIntConst()
+    int32_t GetLowerBoundIntConst()
     {
         AssertMsg(IsLowerBoundIntConst(), "LowerBound is not an integer constant");
         return GetIntConst(lowerBound);

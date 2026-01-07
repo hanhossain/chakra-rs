@@ -656,7 +656,7 @@ IndirOpnd::GetIndexOpnd() const
 ///
 ///----------------------------------------------------------------------------
 
-inline int32
+inline int32_t
 IndirOpnd::GetOffset() const
 {
     return m_offset;
@@ -669,7 +669,7 @@ IndirOpnd::GetOffset() const
 ///----------------------------------------------------------------------------
 
 inline void
-IndirOpnd::SetOffset(int32 offset, bool dontEncode /* = false */)
+IndirOpnd::SetOffset(int32_t offset, bool dontEncode /* = false */)
 {
     m_offset = offset;
     m_dontEncode = dontEncode;

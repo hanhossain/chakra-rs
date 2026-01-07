@@ -264,7 +264,7 @@ namespace Js
     {
         static SCATypeId GetSCATypeId() { return SCA_Uint16Array; }
     };
-    template<> struct TypedArrayTrace<int32>: TypedArrayTraceBase<int32>
+    template<> struct TypedArrayTrace<int32_t>: TypedArrayTraceBase<int32_t>
     {
         static SCATypeId GetSCATypeId() { return SCA_Int32Array; }
     };
@@ -300,7 +300,7 @@ namespace Js
     {
         static SCATypeId GetSCATypeId() { return SCA_Uint16Array; }
     };
-    template<> struct TypedArrayTrace<int32,false,true>: TypedArrayTraceBase<int32,false,true>
+    template<> struct TypedArrayTrace<int32_t,false,true>: TypedArrayTraceBase<int32_t,false,true>
     {
         static SCATypeId GetSCATypeId() { return SCA_Int32Array; }
     };

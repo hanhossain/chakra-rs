@@ -78,14 +78,14 @@ namespace UnifiedRegex
     }
 
     template <typename C>
-    int32 * TextbookBoyerMooreSetup<C>::GetGoodSuffix(ArenaAllocator* allocator, const Char * pat, CharCount patLen, int skip)
+    int32_t * TextbookBoyerMooreSetup<C>::GetGoodSuffix(ArenaAllocator* allocator, const Char * pat, CharCount patLen, int skip)
     {
         // pat offset q |-> longest prefix of pat which is a proper suffix of pat[0..q]
         // (thanks to equivalence classes being in canonical order we only need to look at the first
         //  character of each skip grouping in the pattern)
-        int32* prefix = AnewArray(allocator, int32, patLen);
+        int32_t* prefix = AnewArray(allocator, int32_t, patLen);
         prefix[0] = 0;
-        int32 k = 0;
+        int32_t k = 0;
         for (CharCount q = 1; q < patLen; q++)
         {
             while (k > 0 && pat[k * skip] != pat[q * skip])
@@ -96,7 +96,7 @@ namespace UnifiedRegex
         }
 
         // As above, but for rev(pat)
-        int32* revPrefix = AnewArray(allocator, int32, patLen);
+        int32_t* revPrefix = AnewArray(allocator, int32_t, patLen);
         revPrefix[0] = 0;
         k = 0;
         for (CharCount q = 1; q < patLen; q++)
@@ -109,13 +109,13 @@ namespace UnifiedRegex
         }
 
         // pat prefix length l |-> least shift s.t. pat[0..l-1] is not mismatched
-        int32 * goodSuffix = AnewArray(allocator, int32, patLen + 1);
+        int32_t * goodSuffix = AnewArray(allocator, int32_t, patLen + 1);
         for (CharCount j = 0; j <= patLen; j++)
             goodSuffix[j] = patLen - prefix[patLen - 1];
         for (CharCount l = 1; l <= patLen; l++)
         {
             CharCount j = patLen - revPrefix[l - 1];
-            int32 s = l - revPrefix[l - 1];
+            int32_t s = l - revPrefix[l - 1];
             if (goodSuffix[j] > s)
                 goodSuffix[j] = s;
         }
@@ -191,7 +191,7 @@ namespace UnifiedRegex
         CharCount offset = inputOffset;
 
         const CharCount endOffset = inputLength - (patLen - 1);
-        const int32* const localGoodSuffix = goodSuffix;
+        const int32_t* const localGoodSuffix = goodSuffix;
         const LastOccMap* const localLastOccurrence = &lastOccurrence;
 
         const CharCount lastPatCharIndex = (patLen - 1);
@@ -248,7 +248,7 @@ namespace UnifiedRegex
             }
 
             // Match the rest of the pattern
-            int32 j = lastPatCharIndex - 1;
+            int32_t j = lastPatCharIndex - 1;
             while (true)
             {
 #if ENABLE_REGEX_CONFIG_OPTIONS
@@ -258,7 +258,7 @@ namespace UnifiedRegex
                 uint inputChar = Chars<Char>::CTU(input[offset + j]);
                 if (!MatchPatternAt<equivClassSize, equivClassSize>(inputChar, pat, j))
                 {
-                    const int32 e = j - localLastOccurrence->Get((Char)inputChar);
+                    const int32_t e = j - localLastOccurrence->Get((Char)inputChar);
                     offset += e > localGoodSuffix[j] ? e : localGoodSuffix[j];
                     break;
                 }
@@ -313,7 +313,7 @@ namespace UnifiedRegex
         if (inputLength < patLen)
             return false;
 
-        const int32* const localGoodSuffix = goodSuffix;
+        const int32_t* const localGoodSuffix = goodSuffix;
         const LastOccMap* const localLastOccurrence = &lastOccurrence;
 
         CharCount offset = inputOffset;
@@ -343,7 +343,7 @@ namespace UnifiedRegex
                 // Negative case is more common,
                 // Write the checks so that we have a super tight loop
                 Assert(inputChar != localLastOccurrence->GetChar(0));
-                int32 lastOcc;
+                int32_t lastOcc;
                 if (localLastOccurrence->GetChar(1) != inputChar)
                 {
                     if (localLastOccurrence->GetChar(2) != inputChar)
@@ -385,7 +385,7 @@ namespace UnifiedRegex
             }
 
             // Match the rest of the pattern
-            int32 j = lastPatCharIndex - 1;
+            int32_t j = lastPatCharIndex - 1;
             while (true)
             {
 #if ENABLE_REGEX_CONFIG_OPTIONS
@@ -403,7 +403,7 @@ namespace UnifiedRegex
                     }
                     else
                     {
-                        const int32 e = j - localLastOccurrence->Get(inputChar);
+                        const int32_t e = j - localLastOccurrence->Get(inputChar);
                         offset += e > goodSuffix ? e : goodSuffix;
                     }
                     break;

@@ -75,17 +75,17 @@ namespace Js
 
         static void __declspec(noreturn) MapAndThrowError(ScriptContext* scriptContext, int32_t hr);
         static void __declspec(noreturn) MapAndThrowError(ScriptContext* scriptContext, int32_t hr, ErrorTypeEnum errorType, EXCEPINFO *ei);
-        static void __declspec(noreturn) SetMessageAndThrowError(ScriptContext* scriptContext, JavascriptError *pError, int32 hCode, EXCEPINFO* pei);
+        static void __declspec(noreturn) SetMessageAndThrowError(ScriptContext* scriptContext, JavascriptError *pError, int32_t hCode, EXCEPINFO* pei);
         static JavascriptError* MapError(ScriptContext* scriptContext, ErrorTypeEnum errorType);
 
         //HELPERCALL needs a non-overloaded function pointer
         static void __declspec(noreturn) ThrowUnreachable(ScriptContext* scriptContext);
 
 #define THROW_ERROR_DECL(err_method) \
-        static void __declspec(noreturn) err_method(ScriptContext* scriptContext, int32 hCode, EXCEPINFO* ei); \
-        static void __declspec(noreturn) err_method(ScriptContext* scriptContext, int32 hCode, const char16_t * varName = nullptr); \
-        static void __declspec(noreturn) err_method(ScriptContext* scriptContext, int32 hCode, JavascriptString* varName); \
-        static void __declspec(noreturn) err_method##Var(ScriptContext* scriptContext, int32 hCode, ...);
+        static void __declspec(noreturn) err_method(ScriptContext* scriptContext, int32_t hCode, EXCEPINFO* ei); \
+        static void __declspec(noreturn) err_method(ScriptContext* scriptContext, int32_t hCode, const char16_t * varName = nullptr); \
+        static void __declspec(noreturn) err_method(ScriptContext* scriptContext, int32_t hCode, JavascriptString* varName); \
+        static void __declspec(noreturn) err_method##Var(ScriptContext* scriptContext, int32_t hCode, ...);
 
         THROW_ERROR_DECL(ThrowError)
         THROW_ERROR_DECL(ThrowRangeError)
@@ -101,8 +101,8 @@ namespace Js
         static void __declspec(noreturn) ThrowDispatchError(ScriptContext* scriptContext, int32_t hCode, const char16_t * message);
         static void __declspec(noreturn) ThrowOutOfMemoryError(ScriptContext *scriptContext);
         static void __declspec(noreturn) ThrowParserError(ScriptContext* scriptContext, int32_t hrParser, CompileScriptException* se);
-        static ErrorTypeEnum MapParseError(int32 hCode);
-        static JavascriptError* MapParseError(ScriptContext* scriptContext, int32 hCode);
+        static ErrorTypeEnum MapParseError(int32_t hCode);
+        static JavascriptError* MapParseError(ScriptContext* scriptContext, int32_t hCode);
         static int32_t GetRuntimeError(RecyclableObject* errorObject, __out_opt const char16_t* * pMessage);
         static int32_t GetRuntimeErrorWithScriptEnter(RecyclableObject* errorObject, __out_opt const char16_t* * pMessage);
         static void __declspec(noreturn) ThrowStackOverflowError(ScriptContext *scriptContext, void * returnAddress = nullptr);
@@ -139,12 +139,12 @@ namespace Js
 
         static uint32_t GetAdjustedResourceStringHr(uint32_t hr, bool isFormatString);
 
-        static int32 GetErrorNumberFromResourceID(int32 resourceId);
+        static int32_t GetErrorNumberFromResourceID(int32_t resourceId);
         static bool ShouldTypeofErrorBeReThrown(Var errorObject);
 
         virtual JavascriptError* CreateNewErrorOfSameType(JavascriptLibrary* targetJavascriptLibrary);
         JavascriptError* CloneErrorMsgAndNumber(JavascriptLibrary* targetJavascriptLibrary);
-        static void TryThrowTypeError(ScriptContext * checkScriptContext, ScriptContext * scriptContext, int32 hCode, const char16_t * varName = nullptr);
+        static void TryThrowTypeError(ScriptContext * checkScriptContext, ScriptContext * scriptContext, int32_t hCode, const char16_t * varName = nullptr);
         static JavascriptError* CreateFromCompileScriptException(ScriptContext* scriptContext, CompileScriptException* cse, const char16_t * sourceUrl = nullptr);
 
         static Var NewAggregateErrorInstance(RecyclableObject* function, CallInfo callinfo, ...);

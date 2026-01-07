@@ -197,7 +197,7 @@ private:
     void                    BuildSimdConversion(Js::OpCodeAsmJs newOpcode, uint32_t offset, Js::RegSlot dstRegSlot, Js::RegSlot srcRegSlot, IRType dstSimdType, IRType srcSimdType);
     ValueType               GetSimdValueTypeFromIRType(IRType type);
 
-    void                    BuildElementSlot(Js::OpCodeAsmJs newOpcode, uint32_t offset, int32 slotIndex, Js::RegSlot value, Js::RegSlot instance);
+    void                    BuildElementSlot(Js::OpCodeAsmJs newOpcode, uint32_t offset, int32_t slotIndex, Js::RegSlot value, Js::RegSlot instance);
     void                    BuildAsmUnsigned1(Js::OpCodeAsmJs newOpcode, uint offset);
     void                    BuildWasmLoopStart(Js::OpCodeAsmJs newOpcode, uint offset);
     void                    BuildWasmMemAccess(Js::OpCodeAsmJs newOpcode, uint32_t offset, uint32_t slotIndex, Js::RegSlot value, uint32_t constOffset, Js::ArrayBufferView::ViewType viewType);
@@ -205,10 +205,10 @@ private:
     void                    BuildAsmSimdTypedArr(Js::OpCodeAsmJs newOpcode, uint32_t offset, uint32_t slotIndex, Js::RegSlot value, Js::ArrayBufferView::ViewType viewType, uint8_t DataWidth, uint32_t simdOffset);
     void                    BuildAsmCall(Js::OpCodeAsmJs newOpcode, uint32_t offset, Js::ArgSlot argCount, Js::RegSlot ret, Js::RegSlot function, int8_t returnType, Js::ProfileId profileId);
     void                    BuildAsmReg1(Js::OpCodeAsmJs newOpcode, uint32_t offset, Js::RegSlot dstReg);
-    void                    BuildBrInt1(Js::OpCodeAsmJs newOpcode, uint32_t offset, int32 relativeOffset, Js::RegSlot src);
-    void                    BuildBrInt2(Js::OpCodeAsmJs newOpcode, uint32_t offset, int32 relativeOffset, Js::RegSlot src1, Js::RegSlot src2);
-    void                    BuildBrInt1Const1(Js::OpCodeAsmJs newOpcode, uint32_t offset, int32 relativeOffset, Js::RegSlot src1, int32 src2);
-    void                    BuildBrCmp(Js::OpCodeAsmJs newOpcode, uint32_t offset, int32 relativeOffset, IR::RegOpnd* src1Opnd, IR::Opnd* src2Opnd);
+    void                    BuildBrInt1(Js::OpCodeAsmJs newOpcode, uint32_t offset, int32_t relativeOffset, Js::RegSlot src);
+    void                    BuildBrInt2(Js::OpCodeAsmJs newOpcode, uint32_t offset, int32_t relativeOffset, Js::RegSlot src1, Js::RegSlot src2);
+    void                    BuildBrInt1Const1(Js::OpCodeAsmJs newOpcode, uint32_t offset, int32_t relativeOffset, Js::RegSlot src1, int32_t src2);
+    void                    BuildBrCmp(Js::OpCodeAsmJs newOpcode, uint32_t offset, int32_t relativeOffset, IR::RegOpnd* src1Opnd, IR::Opnd* src2Opnd);
     void                    GenerateLoopBodySlotAccesses(uint offset);
 
     static void             InitializeMemAccessTypeInfo(Js::ArrayBufferView::ViewType viewType, _Out_ MemAccessTypeInfo * typeInfo);
@@ -229,7 +229,7 @@ private:
     Js::StatementReader<Js::FunctionBody::ArenaStatementMapList>* m_statementReader = nullptr;
     SListCounted<IR::Instr *> *m_argStack;
     SList<IR::Instr *> *    m_tempList;
-    SList<int32> *          m_argOffsetStack;
+    SList<int32_t> *          m_argOffsetStack;
     SList<BranchReloc *> *  m_branchRelocList;
     // 1 for const, 1 for var, 1 for temps for each type and 1 for last
     static const uint32_t     m_firstsTypeCount = WAsmJs::LIMIT * 3 + 1;

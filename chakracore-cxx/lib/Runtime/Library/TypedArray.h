@@ -205,7 +205,7 @@ namespace Js
         virtual void SortHelper(byte* listBuffer, uint32_t length, RecyclableObject* compareFn, ScriptContext* scriptContext, ArenaAllocator* allocator) = 0;
 
         virtual Var Subarray(uint32_t begin, uint32_t end) = 0;
-        Field(int32) BYTES_PER_ELEMENT;
+        Field(int32_t) BYTES_PER_ELEMENT;
         Field(uint32_t) byteOffset;
         FieldNoBarrier(uint8_t*) buffer;   // beginning of mapped array.
 
@@ -335,7 +335,7 @@ namespace Js
             return JavascriptNumber::ToVarWithCheck(typedBuffer[index], GetScriptContext());
         }
 
-        inline BOOL DirectSetItemAtRange(TypedArray *fromArray, int32 iSrcStart, int32 iDstStart, uint32_t length, TypeName(*convFunc)(Var value, ScriptContext* scriptContext))
+        inline BOOL DirectSetItemAtRange(TypedArray *fromArray, int32_t iSrcStart, int32_t iDstStart, uint32_t length, TypeName(*convFunc)(Var value, ScriptContext* scriptContext))
         {
             TypeName* dstBuffer = (TypeName*)buffer;
             TypeName* srcBuffer = (TypeName*)fromArray->buffer;
@@ -385,7 +385,7 @@ namespace Js
             return true;
         }
 
-        inline BOOL DirectSetItemAtRange(int32 start, uint32_t length, TypeName typedValue)
+        inline BOOL DirectSetItemAtRange(int32_t start, uint32_t length, TypeName typedValue)
         {
             if (CrossSite::IsCrossSiteObjectTyped(this))
             {

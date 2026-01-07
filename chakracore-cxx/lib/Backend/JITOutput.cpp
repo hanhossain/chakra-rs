@@ -21,13 +21,13 @@ JITOutput::SetHasJITStackClosure()
 }
 
 void
-JITOutput::SetVarSlotsOffset(int32 offset)
+JITOutput::SetVarSlotsOffset(int32_t offset)
 {
     m_outputData->localVarSlotsOffset = offset;
 }
 
 void
-JITOutput::SetVarChangedOffset(int32 offset)
+JITOutput::SetVarChangedOffset(int32_t offset)
 {
     m_outputData->localVarChangedOffset = offset;
 }

@@ -8,13 +8,13 @@ namespace Js
 {
     Var TaggedInt::Negate(Var aRight,ScriptContext* scriptContext)
     {
-        int32 nValue = ToInt32(aRight);
+        int32_t nValue = ToInt32(aRight);
         return JavascriptNumber::ToVar(-nValue,scriptContext);
     }
 
     Var TaggedInt::Not(Var aRight,ScriptContext* scriptContext)
     {
-        int32 nValue = ToInt32(aRight);
+        int32_t nValue = ToInt32(aRight);
 
         return JavascriptNumber::ToVar(~nValue,scriptContext);
     }
@@ -279,7 +279,7 @@ namespace Js
                                     // overflowed (>INT_MAX) or underflowed (< INT_MIN)
             push    scriptContext
             cmc                     // For subtraction, CF=1 indicates an overflow, so reverse the flag
-            rcr     eax, 1          // Convert to int32 and set the sign to the carry bit
+            rcr     eax, 1          // Convert to int32_t and set the sign to the carry bit
             push    eax
             call    TaggedInt::OverflowHelper
             dec     eax             // Adjust for the upcoming inc eax
@@ -365,7 +365,7 @@ LblDone:
 #if INT32VAR
     Var TaggedInt::Xor(Var aLeft, Var aRight)
     {
-        int32 nResult = ToInt32(aLeft) ^ ToInt32(aRight);
+        int32_t nResult = ToInt32(aLeft) ^ ToInt32(aRight);
         return TaggedInt::ToVarUnchecked(nResult);
     }
 #else
@@ -630,7 +630,7 @@ LblDone:
         return (nValue < k_nMinValue) || (nValue > k_nMaxValue);
     }
 #endif
-    bool TaggedInt::IsOverflow(int32 nValue)
+    bool TaggedInt::IsOverflow(int32_t nValue)
     {
         return (nValue < k_nMinValue) || (nValue > k_nMaxValue);
     }
@@ -679,18 +679,18 @@ LblDone:
         return result;
     }
 
-    int32 TaggedInt::ToInt32(Var aValue)
+    int32_t TaggedInt::ToInt32(Var aValue)
     {
         AssertMsg(Is(aValue), "Ensure var is actually a 'TaggedInt'");
 
-        return ::Math::PointerCastToIntegralTruncate<int32>(aValue);
+        return ::Math::PointerCastToIntegralTruncate<int32_t>(aValue);
     }
 
-    int32 TaggedInt::ToInt32(intptr_t aValue)
+    int32_t TaggedInt::ToInt32(intptr_t aValue)
     {
         AssertMsg(Is(aValue), "Ensure var is actually an 'TaggedInt'");
 
-        return (int32)aValue;
+        return (int32_t)aValue;
     }
 
     uint32_t TaggedInt::ToUInt32(Var aValue)
@@ -704,7 +704,7 @@ LblDone:
     {
         AssertMsg(Is(aValue), "Ensure var is actually a 'TaggedInt'");
 
-        long nValue = (long)(::Math::PointerCastToIntegralTruncate<int32>(aValue));
+        long nValue = (long)(::Math::PointerCastToIntegralTruncate<int32_t>(aValue));
         AssertMsg(nValue == (long) ToInt32(aValue),
                 "Ensure 32-bit and 64-bit operations return same result");
 
@@ -720,7 +720,7 @@ LblDone:
 
     double TaggedInt::ToDouble(Var aValue)
     {
-        return (double)::Math::PointerCastToIntegralTruncate<int32>(aValue);
+        return (double)::Math::PointerCastToIntegralTruncate<int32_t>(aValue);
     }
 
     Var TaggedInt::ToVarUnchecked(int nValue)
@@ -759,10 +759,10 @@ LblDone:
         return (((uintptr_t) aLeft) & ((uintptr_t) aRight) & AtomTag) == AtomTag_IntPtr;
     }
 
-    int32 TaggedInt::ToInt32(Var aValue)
+    int32_t TaggedInt::ToInt32(Var aValue)
     {
         //
-        // To convert from a var, must first convert to an 'int32' to properly sign-extend
+        // To convert from a var, must first convert to an 'int32_t' to properly sign-extend
         // negative values.  Then, use shift operation to remove the tag bits.
         //
 
@@ -790,7 +790,7 @@ LblDone:
 
         AssertMsg(Is(aValue), "Ensure var is actually a 'TaggedInt'");
 
-        long nValue = ((int32) aValue) >> VarTag_Shift;
+        long nValue = ((int32_t) aValue) >> VarTag_Shift;
         AssertMsg(nValue == (long) ToInt32(aValue),
                 "Ensure 32-bit and 64-bit operations return same result");
 
@@ -876,7 +876,7 @@ LblDone:
                                     // overflowed (>INT_MAX) or underflowed (< INT_MIN)
 
             push    scriptContext
-            rcr     eax, 1          // Convert to int32 and set the sign to the carry bit
+            rcr     eax, 1          // Convert to int32_t and set the sign to the carry bit
             push    eax
             call    TaggedInt::OverflowHelper
 

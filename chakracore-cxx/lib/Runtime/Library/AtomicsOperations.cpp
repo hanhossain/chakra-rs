@@ -10,7 +10,7 @@ template<> struct ConvertType<int8_t> { typedef char _t; };
 template<> struct ConvertType<uint8_t> { typedef char _t; };
 template<> struct ConvertType<int16> { typedef short _t; };
 template<> struct ConvertType<uint16> { typedef short _t; };
-template<> struct ConvertType<int32> { typedef int32_t _t; };
+template<> struct ConvertType<int32_t> { typedef int32_t _t; };
 template<> struct ConvertType<uint32_t> { typedef int32_t _t; };
 template<> struct ConvertType<long> { typedef long _t; };
 
@@ -204,7 +204,7 @@ ExplicitImplementation(int8_t);
 ExplicitImplementation(uint8_t);
 ExplicitImplementation(int16);
 ExplicitImplementation(uint16);
-ExplicitImplementation(int32);
+ExplicitImplementation(int32_t);
 ExplicitImplementation(uint32_t);
 ExplicitImplementation(long);
 

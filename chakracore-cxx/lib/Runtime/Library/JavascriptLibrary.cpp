@@ -2434,7 +2434,7 @@ namespace Js
     INIT_TYPEDARRAY_CONSTRUCTOR(Uint8ClampedArray, Uint8ClampedArrayPrototype, uint8_t);
     INIT_TYPEDARRAY_CONSTRUCTOR(Int16Array, Int16ArrayPrototype, int16);
     INIT_TYPEDARRAY_CONSTRUCTOR(Uint16Array, Uint16ArrayPrototype, uint16);
-    INIT_TYPEDARRAY_CONSTRUCTOR(Int32Array, Int32ArrayPrototype, int32);
+    INIT_TYPEDARRAY_CONSTRUCTOR(Int32Array, Int32ArrayPrototype, int32_t);
     INIT_TYPEDARRAY_CONSTRUCTOR(Uint32Array, Uint32ArrayPrototype, uint32_t);
     INIT_TYPEDARRAY_CONSTRUCTOR(Float32Array, Float32ArrayPrototype, float);
     INIT_TYPEDARRAY_CONSTRUCTOR(Float64Array, Float64ArrayPrototype, double);
@@ -2455,7 +2455,7 @@ namespace Js
     INIT_TYPEDARRAY_PROTOTYPE(Uint8ClampedArray, Uint8ClampedArrayPrototype, uint8_t);
     INIT_TYPEDARRAY_PROTOTYPE(Int16Array, Int16ArrayPrototype, int16);
     INIT_TYPEDARRAY_PROTOTYPE(Uint16Array, Uint16ArrayPrototype, uint16);
-    INIT_TYPEDARRAY_PROTOTYPE(Int32Array, Int32ArrayPrototype, int32);
+    INIT_TYPEDARRAY_PROTOTYPE(Int32Array, Int32ArrayPrototype, int32_t);
     INIT_TYPEDARRAY_PROTOTYPE(Uint32Array, Uint32ArrayPrototype, uint32_t);
     INIT_TYPEDARRAY_PROTOTYPE(Float32Array, Float32ArrayPrototype, float);
     INIT_TYPEDARRAY_PROTOTYPE(Float64Array, Float64ArrayPrototype, double);
@@ -5929,13 +5929,13 @@ namespace Js
     JavascriptNativeIntArray* JavascriptLibrary::CreateNativeIntArray()
     {
         AssertMsg(nativeIntArrayType, "Where's nativeIntArrayType?");
-        return JavascriptArray::New<int32, JavascriptNativeIntArray>(this->GetRecycler(), nativeIntArrayType);
+        return JavascriptArray::New<int32_t, JavascriptNativeIntArray>(this->GetRecycler(), nativeIntArrayType);
     }
 
     JavascriptNativeIntArray* JavascriptLibrary::CreateNativeIntArray(uint32_t length)
     {
         AssertMsg(nativeIntArrayType, "Where's nativeIntArrayType?");
-        JavascriptNativeIntArray* arr = JavascriptArray::New<int32, JavascriptNativeIntArray, 0>(length, nativeIntArrayType, this->GetRecycler());
+        JavascriptNativeIntArray* arr = JavascriptArray::New<int32_t, JavascriptNativeIntArray, 0>(length, nativeIntArrayType, this->GetRecycler());
 
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         arr->CheckForceES5Array();
@@ -5974,16 +5974,16 @@ namespace Js
     JavascriptNativeIntArray* JavascriptLibrary::CreateNativeIntArrayLiteral(uint32_t length)
     {
         AssertMsg(nativeIntArrayType, "Where's arrayType?");
-        JavascriptNativeIntArray* arr = JavascriptArray::NewLiteral<int32, JavascriptNativeIntArray, 0>(length, nativeIntArrayType, this->GetRecycler());
+        JavascriptNativeIntArray* arr = JavascriptArray::NewLiteral<int32_t, JavascriptNativeIntArray, 0>(length, nativeIntArrayType, this->GetRecycler());
 
         return arr;
     }
 
 #if ENABLE_COPYONACCESS_ARRAY
-    JavascriptNativeIntArray* JavascriptLibrary::CreateCopyOnAccessNativeIntArrayLiteral(ArrayCallSiteInfo *arrayInfo, FunctionBody *functionBody, const Js::AuxArray<int32> *ints)
+    JavascriptNativeIntArray* JavascriptLibrary::CreateCopyOnAccessNativeIntArrayLiteral(ArrayCallSiteInfo *arrayInfo, FunctionBody *functionBody, const Js::AuxArray<int32_t> *ints)
     {
         AssertMsg(copyOnAccessNativeIntArrayType, "Where's arrayType?");
-        JavascriptNativeIntArray* arr = JavascriptArray::NewCopyOnAccessLiteral<int32, JavascriptCopyOnAccessNativeIntArray, 0>(copyOnAccessNativeIntArrayType, arrayInfo, functionBody, ints, this->GetRecycler());
+        JavascriptNativeIntArray* arr = JavascriptArray::NewCopyOnAccessLiteral<int32_t, JavascriptCopyOnAccessNativeIntArray, 0>(copyOnAccessNativeIntArrayType, arrayInfo, functionBody, ints, this->GetRecycler());
 
         return arr;
     }

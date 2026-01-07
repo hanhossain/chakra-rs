@@ -29,7 +29,7 @@ namespace Js
         static const RegSlot            NoRegister                  = (RegSlot)-1;
         static const ByteCodeLabel      NoByteCodeLabel             = (ByteCodeLabel)-1;
         static const RegSlot            OneByteRegister             = (RegSlot_OneByte)-1;
-        static const int32              InvalidOffset               = -1;
+        static const int32_t              InvalidOffset               = -1;
         static const unsigned int       PropertyGroupSize           = 512;
         static const unsigned int       PropertyGroupMask           = PropertyGroupSize-1;
         static const unsigned int       PropertyGroupShift          = 9;

@@ -46,10 +46,10 @@ namespace Js {
         static double ToInteger(double value);
         static double ToInteger_Full(Var aValue, ScriptContext* scriptContext);
 
-        static int32 ToInt32(Var aValue, ScriptContext* scriptContext);
+        static int32_t ToInt32(Var aValue, ScriptContext* scriptContext);
         static long ToInt64(Var aValue, ScriptContext* scriptContext);
-        static int32 ToInt32(double value);
-        static int32 ToInt32_Full(Var aValue, ScriptContext* scriptContext);
+        static int32_t ToInt32(double value);
+        static int32_t ToInt32_Full(Var aValue, ScriptContext* scriptContext);
 
         static int8_t ToInt8(Var aValue, ScriptContext* scriptContext);
         static int8_t ToInt8(double aValue);
@@ -76,7 +76,7 @@ namespace Js {
         static bool IsCallable(Var aValue);
         static bool IsCallable(_In_ RecyclableObject* aValue);
 
-        static BOOL ToInt32Finite(Var aValue, ScriptContext* scriptContext, int32* result);
+        static BOOL ToInt32Finite(Var aValue, ScriptContext* scriptContext, int32_t* result);
 
         // ToString(ToPrimitive(aValue), for convert to string on concat
         static JavascriptString * ToPrimitiveString(Var aValue, ScriptContext * scriptContext);
@@ -101,7 +101,7 @@ namespace Js {
         template <typename T, bool allowNegOne>
         static Var TryCanonicalizeIntHelper(T val);
 
-        static BOOL ToInt32Finite(double value, int32* result);
+        static BOOL ToInt32Finite(double value, int32_t* result);
         template<bool zero>
         static bool SameValueCommon(Var aValue, Var bValue);
     };

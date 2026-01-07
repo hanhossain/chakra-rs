@@ -246,11 +246,11 @@ namespace JsUtil
             EnsureArray(0);
         }
 
-        void EnsureArray(int32 requiredCapacity)
+        void EnsureArray(int32_t requiredCapacity)
         {
             if (this->buffer == nullptr)
             {
-                int32 newSize = max(requiredCapacity, increment);
+                int32_t newSize = max(requiredCapacity, increment);
 
                 this->buffer = AllocArray(newSize);
                 this->count = 0;
@@ -258,7 +258,7 @@ namespace JsUtil
             }
             else if (this->count == length || requiredCapacity > this->length)
             {
-                int32 newLength = 0, newBufferSize = 0, oldBufferSize = 0;
+                int32_t newLength = 0, newBufferSize = 0, oldBufferSize = 0;
 
                 if (Int32Math::Add(length, 1u, &newLength)
                     || Int32Math::Shl(newLength, 1u, &newLength))
@@ -401,12 +401,12 @@ namespace JsUtil
             return pos;
         }
 
-        int32 AddRange(__readonly _In_reads_(count) T const * items, int32 count)
+        int32_t AddRange(__readonly _In_reads_(count) T const * items, int32_t count)
         {
             Assert(items != nullptr);
             Assert(count > 0);
 
-            int32 requiredSize = 0, availableByteSpace = 0, givenBufferSize = 0;
+            int32_t requiredSize = 0, availableByteSpace = 0, givenBufferSize = 0;
 
             if (Int32Math::Add(this->count,  count, &requiredSize))
             {

@@ -107,7 +107,7 @@ public:
     bool            IsParamSlotSym() const;
     bool            IsImplicitParamSym() const { return this->m_isImplicitParamSym; }
     bool            IsAllocated() const;
-    int32           GetIntConstValue() const;
+    int32_t           GetIntConstValue() const;
     Js::Var         GetFloatConstValueAsVar_PostGlobOpt() const;
     void *          GetConstAddress(bool useLocal = false) const;
     StackSym *      CloneDef(Func *func);
@@ -236,10 +236,10 @@ public:
     Js::BuiltinFunction m_builtInIndex;
 
 
-    int32           m_offset;
+    int32_t           m_offset;
 #ifdef  _M_AMD64
     // Only for AsmJs on x64. Argument position for ArgSyms.
-    int32           m_argPosition;
+    int32_t           m_argPosition;
 #endif
     union
     {
@@ -304,16 +304,16 @@ class PropertySym: public Sym
 {
     friend class Sym;
 public:
-    static PropertySym * New(SymID stackSymID, int32 propertyId, uint32_t propertyIdIndex, uint inlineCacheIndex, PropertyKind fieldKind, Func *func);
-    static PropertySym * New(StackSym *stackSym, int32 propertyId, uint32_t propertyIdIndex, uint inlineCacheIndex, PropertyKind fieldKind, Func *func);
-    static PropertySym * Find(SymID stackSymID, int32 propertyId, Func *func);
-    static PropertySym * FindOrCreate(SymID stackSymID, int32 propertyId, uint32_t propertyIdIndex, uint inlineCacheIndex, PropertyKind fieldKind, Func *func);
+    static PropertySym * New(SymID stackSymID, int32_t propertyId, uint32_t propertyIdIndex, uint inlineCacheIndex, PropertyKind fieldKind, Func *func);
+    static PropertySym * New(StackSym *stackSym, int32_t propertyId, uint32_t propertyIdIndex, uint inlineCacheIndex, PropertyKind fieldKind, Func *func);
+    static PropertySym * Find(SymID stackSymID, int32_t propertyId, Func *func);
+    static PropertySym * FindOrCreate(SymID stackSymID, int32_t propertyId, uint32_t propertyIdIndex, uint inlineCacheIndex, PropertyKind fieldKind, Func *func);
 
     Func *GetFunc() { return m_func; }
     bool HasPropertyIdIndex() { return m_propertyIdIndex != -1; }
-    int32 GetPropertyIdIndex() { return m_propertyIdIndex; }
+    int32_t GetPropertyIdIndex() { return m_propertyIdIndex; }
     bool HasInlineCacheIndex() { return m_inlineCacheIndex != -1; }
-    int32 GetInlineCacheIndex() { return m_inlineCacheIndex; }
+    int32_t GetInlineCacheIndex() { return m_inlineCacheIndex; }
     bool HasObjectTypeSym() const { return this->m_stackSym->HasObjectTypeSym(); }
     bool HasWriteGuardSym() const { return this->m_writeGuardSym != nullptr; }
     StackSym * GetObjectTypeSym() const { return this->m_stackSym->GetObjectTypeSym(); }
@@ -322,7 +322,7 @@ public:
 
 public:
     PropertyKind    m_fieldKind;
-    int32           m_propertyId;
+    int32_t           m_propertyId;
     StackSym *      m_stackSym;
     BVSparse<JitArenaAllocator> *m_propertyEquivSet;  // Bit vector of all propertySyms with same propertyId
     PropertySym *   m_nextInStackSymList;

@@ -51,7 +51,7 @@ namespace Js
         X86SIMDValue tmpbValue = X86SIMDValue::ToX86SIMDValue(bValue);
 
 #pragma warning(push)
-#pragma warning(disable:4838) // conversion from 'unsigned int' to 'int32' requires a narrowing conversion
+#pragma warning(disable:4838) // conversion from 'unsigned int' to 'int32_t' requires a narrowing conversion
         X86SIMDValue signBits = { {{0x80808080,0x80808080, 0x80808080, 0x80808080}} };
 #pragma warning(pop)
 
@@ -70,7 +70,7 @@ namespace Js
         X86SIMDValue tmpbValue = X86SIMDValue::ToX86SIMDValue(bValue);
 
 #pragma warning(push)
-#pragma warning(disable:4838) // conversion from 'unsigned int' to 'int32' requires a narrowing conversion
+#pragma warning(disable:4838) // conversion from 'unsigned int' to 'int32_t' requires a narrowing conversion
         X86SIMDValue signBits = { { {0x80808080,0x80808080, 0x80808080, 0x80808080} } };
 #pragma warning(pop)
 

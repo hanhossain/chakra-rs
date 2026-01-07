@@ -116,7 +116,7 @@ using namespace Js;
         if (JavascriptNumber::Is_NoTaggedIntCheck(indexVar))
         {
             // If this double can be a positive integer index, convert it.
-            int32 value = 0;
+            int32_t value = 0;
             bool isInt32 = false;
             if (JavascriptNumber::TryGetInt32OrUInt32Value(JavascriptNumber::GetValue(indexVar), &value, &isInt32)
                 && !isInt32
@@ -262,7 +262,7 @@ using namespace Js;
 
 #ifdef _M_IX86
     // Alias for overloaded JavascriptNumber::ToVar so it can be called unambiguously from native code
-    Var JavascriptOperators::Int32ToVar(int32 value, ScriptContext* scriptContext)
+    Var JavascriptOperators::Int32ToVar(int32_t value, ScriptContext* scriptContext)
     {
         JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Op_Int32ToAtom);
         return JavascriptNumber::ToVar(value, scriptContext);
@@ -270,7 +270,7 @@ using namespace Js;
     }
 
     // Alias for overloaded JavascriptNumber::ToVar so it can be called unambiguously from native code
-    Var JavascriptOperators::Int32ToVarInPlace(int32 value, ScriptContext* scriptContext, JavascriptNumber* result)
+    Var JavascriptOperators::Int32ToVarInPlace(int32_t value, ScriptContext* scriptContext, JavascriptNumber* result)
     {
         JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Op_Int32ToAtomInPlace);
         return JavascriptNumber::ToVarInPlace(value, scriptContext, result);
@@ -412,7 +412,7 @@ using namespace Js;
         JIT_HELPER_END(Op_TypeofElem_UInt32);
     }
 
-    Var JavascriptOperators::TypeofElem_Int32(Var instance, int32 index, ScriptContext* scriptContext)
+    Var JavascriptOperators::TypeofElem_Int32(Var instance, int32_t index, ScriptContext* scriptContext)
     {
         JIT_HELPER_REENTRANT_HEADER(Op_TypeofElem_Int32);
         if (JavascriptOperators::IsNumberFromNativeArray(instance, index, scriptContext))
@@ -3470,7 +3470,7 @@ using namespace Js;
         JIT_HELPER_END(Op_GetElementI_UInt32);
     }
 
-    Var JavascriptOperators::OP_GetElementI_Int32(Var instance, int32 index, ScriptContext* scriptContext)
+    Var JavascriptOperators::OP_GetElementI_Int32(Var instance, int32_t index, ScriptContext* scriptContext)
     {
         JIT_HELPER_REENTRANT_HEADER(Op_GetElementI_Int32);
 #if FLOATVAR
@@ -3483,7 +3483,7 @@ using namespace Js;
         JIT_HELPER_END(Op_GetElementI_Int32);
     }
 
-    BOOL JavascriptOperators::GetItemFromArrayPrototype(JavascriptArray * arr, int32 indexInt, Var * result, ScriptContext * scriptContext)
+    BOOL JavascriptOperators::GetItemFromArrayPrototype(JavascriptArray * arr, int32_t indexInt, Var * result, ScriptContext * scriptContext)
     {
         // try get from Array prototype
         RecyclableObject* prototype = arr->GetPrototype();
@@ -3568,7 +3568,7 @@ using namespace Js;
         case TypeIds_Int8Array:
         {
             // The typed array will deal with all possible values for the index
-            int32 indexInt = TaggedInt::ToInt32(index);
+            int32_t indexInt = TaggedInt::ToInt32(index);
             if (VirtualTableInfo<Int8VirtualArray>::HasVirtualTable(instance))
             {
                 Int8VirtualArray* int8Array = UnsafeVarTo<Int8VirtualArray>(instance);
@@ -3591,7 +3591,7 @@ using namespace Js;
         case TypeIds_Uint8Array:
         {
             // The typed array will deal with all possible values for the index
-            int32 indexInt = TaggedInt::ToInt32(index);
+            int32_t indexInt = TaggedInt::ToInt32(index);
             if (VirtualTableInfo<Uint8VirtualArray>::HasVirtualTable(instance))
             {
                 Uint8VirtualArray* uint8Array = UnsafeVarTo<Uint8VirtualArray>(instance);
@@ -3614,7 +3614,7 @@ using namespace Js;
         case TypeIds_Uint8ClampedArray:
         {
             // The typed array will deal with all possible values for the index
-            int32 indexInt = TaggedInt::ToInt32(index);
+            int32_t indexInt = TaggedInt::ToInt32(index);
             if (VirtualTableInfo<Uint8ClampedVirtualArray>::HasVirtualTable(instance))
             {
                 Uint8ClampedVirtualArray* uint8ClampedArray = UnsafeVarTo<Uint8ClampedVirtualArray>(instance);
@@ -3637,7 +3637,7 @@ using namespace Js;
         case TypeIds_Int16Array:
         {
             // The type array will deal with all possible values for the index
-            int32 indexInt = TaggedInt::ToInt32(index);
+            int32_t indexInt = TaggedInt::ToInt32(index);
 
             if (VirtualTableInfo<Int16VirtualArray>::HasVirtualTable(instance))
             {
@@ -3661,7 +3661,7 @@ using namespace Js;
         case TypeIds_Uint16Array:
         {
             // The type array will deal with all possible values for the index
-            int32 indexInt = TaggedInt::ToInt32(index);
+            int32_t indexInt = TaggedInt::ToInt32(index);
 
             if (VirtualTableInfo<Uint16VirtualArray>::HasVirtualTable(instance))
             {
@@ -3684,7 +3684,7 @@ using namespace Js;
         case TypeIds_Int32Array:
         {
             // The type array will deal with all possible values for the index
-            int32 indexInt = TaggedInt::ToInt32(index);
+            int32_t indexInt = TaggedInt::ToInt32(index);
             if (VirtualTableInfo<Int32VirtualArray>::HasVirtualTable(instance))
             {
                 Int32VirtualArray* int32Array = UnsafeVarTo<Int32VirtualArray>(instance);
@@ -3707,7 +3707,7 @@ using namespace Js;
         case TypeIds_Uint32Array:
         {
             // The type array will deal with all possible values for the index
-            int32 indexInt = TaggedInt::ToInt32(index);
+            int32_t indexInt = TaggedInt::ToInt32(index);
             if (VirtualTableInfo<Uint32VirtualArray>::HasVirtualTable(instance))
             {
                 Uint32VirtualArray* uint32Array = UnsafeVarTo<Uint32VirtualArray>(instance);
@@ -3729,7 +3729,7 @@ using namespace Js;
         case TypeIds_Float32Array:
         {
             // The type array will deal with all possible values for the index
-            int32 indexInt = TaggedInt::ToInt32(index);
+            int32_t indexInt = TaggedInt::ToInt32(index);
 
             if (VirtualTableInfo<Float32VirtualArray>::HasVirtualTable(instance))
             {
@@ -3752,7 +3752,7 @@ using namespace Js;
         case TypeIds_Float64Array:
         {
             // The type array will deal with all possible values for the index
-            int32 indexInt = TaggedInt::ToInt32(index);
+            int32_t indexInt = TaggedInt::ToInt32(index);
             if (VirtualTableInfo<Float64VirtualArray>::HasVirtualTable(instance))
             {
                 Float64VirtualArray* float64Array = UnsafeVarTo<Float64VirtualArray>(instance);
@@ -4061,7 +4061,7 @@ using namespace Js;
         return scriptContext->GetMissingItemResult();
     }
 
-    int32 JavascriptOperators::OP_GetNativeIntElementI(Var instance, Var index)
+    int32_t JavascriptOperators::OP_GetNativeIntElementI(Var instance, Var index)
     {
         JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Op_GetNativeIntElementI);
 #if ENABLE_COPYONACCESS_ARRAY
@@ -4069,13 +4069,13 @@ using namespace Js;
 #endif
         if (TaggedInt::Is(index))
         {
-            int32 indexInt = TaggedInt::ToInt32(index);
+            int32_t indexInt = TaggedInt::ToInt32(index);
             if (indexInt < 0)
             {
                 return JavascriptNativeIntArray::MissingItem;
             }
             JavascriptArray * arr = VarTo<JavascriptArray>(instance);
-            int32 result;
+            int32_t result;
             if (arr->DirectGetItemAt((uint32_t)indexInt, &result))
             {
                 return result;
@@ -4083,7 +4083,7 @@ using namespace Js;
         }
         else if (JavascriptNumber::Is_NoTaggedIntCheck(index))
         {
-            int32 indexInt;
+            int32_t indexInt;
             bool isInt32;
             double dIndex = JavascriptNumber::GetValue(index);
             if (JavascriptNumber::TryGetInt32OrUInt32Value(dIndex, &indexInt, &isInt32))
@@ -4093,7 +4093,7 @@ using namespace Js;
                     return JavascriptNativeIntArray::MissingItem;
                 }
                 JavascriptArray * arr = VarTo<JavascriptArray>(instance);
-                int32 result;
+                int32_t result;
                 if (arr->DirectGetItemAt((uint32_t)indexInt, &result))
                 {
                     return result;
@@ -4109,7 +4109,7 @@ using namespace Js;
         JIT_HELPER_END(Op_GetNativeIntElementI);
     }
 
-    int32 JavascriptOperators::OP_GetNativeIntElementI_UInt32(Var instance, uint32_t index, ScriptContext* scriptContext)
+    int32_t JavascriptOperators::OP_GetNativeIntElementI_UInt32(Var instance, uint32_t index, ScriptContext* scriptContext)
     {
         JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Op_GetNativeIntElementI_UInt32);
         JIT_HELPER_SAME_ATTRIBUTES(Op_GetNativeIntElementI_UInt32, Op_GetNativeIntElementI);
@@ -4123,7 +4123,7 @@ using namespace Js;
         JIT_HELPER_END(Op_GetNativeIntElementI_UInt32);
     }
 
-    int32 JavascriptOperators::OP_GetNativeIntElementI_Int32(Var instance, int32 index, ScriptContext* scriptContext)
+    int32_t JavascriptOperators::OP_GetNativeIntElementI_Int32(Var instance, int32_t index, ScriptContext* scriptContext)
     {
         JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Op_GetNativeIntElementI_Int32);
         JIT_HELPER_SAME_ATTRIBUTES(Op_GetNativeIntElementI_Int32, Op_GetNativeIntElementI);
@@ -4144,7 +4144,7 @@ using namespace Js;
 
         if (TaggedInt::Is(index))
         {
-            int32 indexInt = TaggedInt::ToInt32(index);
+            int32_t indexInt = TaggedInt::ToInt32(index);
             if (indexInt < 0)
             {
                 result = JavascriptNativeFloatArray::MissingItem;
@@ -4160,7 +4160,7 @@ using namespace Js;
         }
         else if (JavascriptNumber::Is_NoTaggedIntCheck(index))
         {
-            int32 indexInt;
+            int32_t indexInt;
             bool isInt32;
             double dIndex = JavascriptNumber::GetValue(index);
             if (JavascriptNumber::TryGetInt32OrUInt32Value(dIndex, &indexInt, &isInt32))
@@ -4202,7 +4202,7 @@ using namespace Js;
         JIT_HELPER_END(Op_GetNativeFloatElementI_UInt32);
     }
 
-    double JavascriptOperators::OP_GetNativeFloatElementI_Int32(Var instance, int32 index, ScriptContext* scriptContext)
+    double JavascriptOperators::OP_GetNativeFloatElementI_Int32(Var instance, int32_t index, ScriptContext* scriptContext)
     {
         JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Op_GetNativeFloatElementI_Int32);
         JIT_HELPER_SAME_ATTRIBUTES(Op_GetNativeFloatElementI_Int32, Op_GetNativeFloatElementI);
@@ -4230,7 +4230,7 @@ using namespace Js;
         JIT_HELPER_END(Op_GetMethodElement_UInt32);
     }
 
-    Var JavascriptOperators::OP_GetMethodElement_Int32(Var instance, int32 index, ScriptContext* scriptContext)
+    Var JavascriptOperators::OP_GetMethodElement_Int32(Var instance, int32_t index, ScriptContext* scriptContext)
     {
         JIT_HELPER_REENTRANT_HEADER(Op_GetMethodElement_Int32);
         JIT_HELPER_SAME_ATTRIBUTES(Op_GetMethodElement_Int32, Op_GetMethodElement);
@@ -4338,7 +4338,7 @@ using namespace Js;
         JIT_HELPER_END(Op_SetElementI_UInt32);
     }
 
-    BOOL JavascriptOperators::OP_SetElementI_Int32(Var instance, int32 index, Var value, ScriptContext* scriptContext, PropertyOperationFlags flags)
+    BOOL JavascriptOperators::OP_SetElementI_Int32(Var instance, int32_t index, Var value, ScriptContext* scriptContext, PropertyOperationFlags flags)
     {
         JIT_HELPER_REENTRANT_HEADER(Op_SetElementI_Int32);
         JIT_HELPER_SAME_ATTRIBUTES(Op_SetElementI_Int32, Op_SetElementI);
@@ -4644,7 +4644,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     BOOL JavascriptOperators::OP_SetNativeIntElementI_NoConvert(
         Var instance,
         Var aElementIndex,
-        int32 iValue,
+        int32_t iValue,
         ScriptContext* scriptContext,
         PropertyOperationFlags flags)
     {
@@ -4663,7 +4663,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     BOOL JavascriptOperators::OP_SetNativeIntElementI_UInt32_NoConvert(
         Var instance,
         uint32_t aElementIndex,
-        int32 iValue,
+        int32_t iValue,
         ScriptContext* scriptContext,
         PropertyOperationFlags flags)
     {
@@ -4681,8 +4681,8 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 
     BOOL JavascriptOperators::OP_SetNativeIntElementI_Int32_NoConvert(
         Var instance,
-        int32 aElementIndex,
-        int32 iValue,
+        int32_t aElementIndex,
+        int32_t iValue,
         ScriptContext* scriptContext,
         PropertyOperationFlags flags)
     {
@@ -4738,7 +4738,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 
     BOOL JavascriptOperators::OP_SetNativeFloatElementI_Int32_NoConvert(
         Var instance,
-        int32 aElementIndex,
+        int32_t aElementIndex,
         ScriptContext* scriptContext,
         PropertyOperationFlags flags,
         double dValue)
@@ -4758,7 +4758,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     BOOL JavascriptOperators::OP_SetNativeIntElementI(
         Var instance,
         Var aElementIndex,
-        int32 iValue,
+        int32_t iValue,
         ScriptContext* scriptContext,
         PropertyOperationFlags flags)
     {
@@ -4769,11 +4769,11 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 
         if (TaggedInt::Is(aElementIndex))
         {
-            int32 indexInt = TaggedInt::ToInt32(aElementIndex);
+            int32_t indexInt = TaggedInt::ToInt32(aElementIndex);
             if (indexInt >= 0 && scriptContext->optimizationOverrides.IsEnabledArraySetElementFastPath())
             {
                 JavascriptNativeIntArray *arr = VarTo<JavascriptNativeIntArray>(instance);
-                if (!(arr->TryGrowHeadSegmentAndSetItem<int32, JavascriptNativeIntArray>((uint32_t)indexInt, iValue)))
+                if (!(arr->TryGrowHeadSegmentAndSetItem<int32_t, JavascriptNativeIntArray>((uint32_t)indexInt, iValue)))
                 {
                     arr->SetItem(indexInt, iValue);
                 }
@@ -4789,7 +4789,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     BOOL JavascriptOperators::OP_SetNativeIntElementI_UInt32(
         Var instance,
         uint32_t aElementIndex,
-        int32 iValue,
+        int32_t iValue,
         ScriptContext* scriptContext,
         PropertyOperationFlags flags)
     {
@@ -4808,7 +4808,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     BOOL JavascriptOperators::OP_SetNativeIntElementI_Int32(
         Var instance,
         int aElementIndex,
-        int32 iValue,
+        int32_t iValue,
         ScriptContext* scriptContext,
         PropertyOperationFlags flags)
     {
@@ -4838,7 +4838,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 
         if (TaggedInt::Is(aElementIndex))
         {
-            int32 indexInt = TaggedInt::ToInt32(aElementIndex);
+            int32_t indexInt = TaggedInt::ToInt32(aElementIndex);
             if (indexInt >= 0 && scriptContext->optimizationOverrides.IsEnabledArraySetElementFastPath())
             {
                 JavascriptNativeFloatArray *arr = VarTo<JavascriptNativeFloatArray>(instance);
@@ -4892,7 +4892,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 #endif
         JIT_HELPER_END(Op_SetNativeFloatElementI_Int32);
     }
-    BOOL JavascriptOperators::OP_Memcopy(Var dstInstance, int32 dstStart, Var srcInstance, int32 srcStart, int32 length, ScriptContext* scriptContext)
+    BOOL JavascriptOperators::OP_Memcopy(Var dstInstance, int32_t dstStart, Var srcInstance, int32_t srcStart, int32_t length, ScriptContext* scriptContext)
     {
         JIT_HELPER_NOT_REENTRANT_HEADER(Op_Memcopy, reentrancylock, scriptContext->GetThreadContext());
         if (length <= 0)
@@ -4982,7 +4982,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
                 }
                 else if (instanceType == TypeIds_NativeIntArray)
                 {
-                    returnValue = dstArray->DirectSetItemAtRangeFromArray<int32>(dstStart, length, srcArray, srcStart);
+                    returnValue = dstArray->DirectSetItemAtRangeFromArray<int32_t>(dstStart, length, srcArray, srcStart);
                 }
                 else
                 {
@@ -5010,7 +5010,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         return (flags & (~ImplicitCall_None)) == 0;
     }
 
-    BOOL JavascriptOperators::OP_Memset(Var instance, int32 start, Var value, int32 length, ScriptContext* scriptContext)
+    BOOL JavascriptOperators::OP_Memset(Var instance, int32_t start, Var value, int32_t length, ScriptContext* scriptContext)
     {
         JIT_HELPER_NOT_REENTRANT_HEADER(Op_Memset, reentrancylock, scriptContext->GetThreadContext());
         if (length <= 0)
@@ -5069,17 +5069,17 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
                     {
                         return false;
                     }
-                    int32 intValue = 0;
-                    if (!MemsetConversion<int32, JavascriptConversion::ToInt32>(value, scriptContext, &intValue))
+                    int32_t intValue = 0;
+                    if (!MemsetConversion<int32_t, JavascriptConversion::ToInt32>(value, scriptContext, &intValue))
                     {
                         return false;
                     }
                      // Special case for missing item
-                    if (SparseArraySegment<int32>::IsMissingItem(&intValue))
+                    if (SparseArraySegment<int32_t>::IsMissingItem(&intValue))
                     {
                         return false;
                     }
-                    returnValue = UnsafeVarTo<JavascriptArray>(instance)->DirectSetItemAtRange<int32>(start, length, intValue);
+                    returnValue = UnsafeVarTo<JavascriptArray>(instance)->DirectSetItemAtRange<int32_t>(start, length, intValue);
                 }
                 else
                 {
@@ -5129,7 +5129,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         JIT_HELPER_END(Op_DeleteElementI_UInt32);
     }
 
-    Var JavascriptOperators::OP_DeleteElementI_Int32(Var instance, int32 index, ScriptContext* scriptContext, PropertyOperationFlags propertyOperationFlags)
+    Var JavascriptOperators::OP_DeleteElementI_Int32(Var instance, int32_t index, ScriptContext* scriptContext, PropertyOperationFlags propertyOperationFlags)
     {
         JIT_HELPER_REENTRANT_HEADER(Op_DeleteElementI_Int32);
         JIT_HELPER_SAME_ATTRIBUTES(Op_DeleteElementI_Int32, Op_DeleteElementI);
@@ -5868,7 +5868,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         JIT_HELPER_END(OP_InitCachedScope);
     }
 
-    void JavascriptOperators::OP_InvalidateCachedScope(void* varEnv, int32 envIndex)
+    void JavascriptOperators::OP_InvalidateCachedScope(void* varEnv, int32_t envIndex)
     {
         JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(OP_InvalidateCachedScope);
         FrameDisplay *disp = (FrameDisplay*)varEnv;
@@ -5963,7 +5963,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         JIT_HELPER_END(ArraySegmentVars);
     }
 
-    void JavascriptOperators::AddIntsToArraySegment(SparseArraySegment<int32> * segment, const Js::AuxArray<int32> *ints)
+    void JavascriptOperators::AddIntsToArraySegment(SparseArraySegment<int32_t> * segment, const Js::AuxArray<int32_t> *ints)
     {
         uint32_t count = ints->count;
 
@@ -5975,7 +5975,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             segment->length = count;
             segment->CheckLengthvsSize();
         }
-        js_memcpy_s(segment->elements, sizeof(int32) * segment->length, ints->elements, sizeof(int32) * count);
+        js_memcpy_s(segment->elements, sizeof(int32_t) * segment->length, ints->elements, sizeof(int32_t) * count);
     }
 
     void JavascriptOperators::AddFloatsToArraySegment(SparseArraySegment<double> * segment, const Js::AuxArray<double> *doubles)
@@ -9564,7 +9564,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             }
             if (descriptor->WritableSpecified())
             {
-                int32 hCode = descriptor->IsWritable() ? JSERR_InvalidAttributeTrue : JSERR_InvalidAttributeFalse;
+                int32_t hCode = descriptor->IsWritable() ? JSERR_InvalidAttributeTrue : JSERR_InvalidAttributeFalse;
                 JavascriptError::ThrowTypeError(scriptContext, hCode, u"writable");
             }
         }
@@ -9675,7 +9675,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         JIT_HELPER_END(OP_ClearAttributes);
     }
 
-    BOOL JavascriptOperators::Reject(bool throwOnError, ScriptContext* scriptContext, int32 errorCode, PropertyId propertyId)
+    BOOL JavascriptOperators::Reject(bool throwOnError, ScriptContext* scriptContext, int32_t errorCode, PropertyId propertyId)
     {
         Assert(scriptContext);
 
@@ -10339,12 +10339,12 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             }
             break;
         case JsInt32Type:
-            AnalysisAssert(elementSize == sizeof(int32));
+            AnalysisAssert(elementSize == sizeof(int32_t));
             for (uint32_t i = 0; i < length; i++)
             {
                 element = GetElementAtIndex(arrayObject, i, scriptContext);
-                AnalysisAssert((i + 1) * sizeof(int32) <= allocSize);
-                ((int32*)buffer)[i] = Js::JavascriptConversion::ToInt32(element, scriptContext);
+                AnalysisAssert((i + 1) * sizeof(int32_t) <= allocSize);
+                ((int32_t*)buffer)[i] = Js::JavascriptConversion::ToInt32(element, scriptContext);
             }
             break;
         case JsUint32Type:

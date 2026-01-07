@@ -83,10 +83,10 @@ namespace Js
         ScriptFunction* m_function;
         int m_byteCodeOffset;
         void* m_stackAddr;
-        int32 m_localVarSlotsOffset; // the offset on the native stack frame where the locals are residing.
-        int32 m_localVarChangedOffset; // The offset which stores if any locals is changed from the debugger.
+        int32_t m_localVarSlotsOffset; // the offset on the native stack frame where the locals are residing.
+        int32_t m_localVarChangedOffset; // The offset which stores if any locals is changed from the debugger.
 
-        static const int32 InvalidOffset = -1;
+        static const int32_t InvalidOffset = -1;
 
     public:
         DiagNativeStackFrame(ScriptFunction* function, int byteCodeOffset, void* stackAddr, void *codeAddr);

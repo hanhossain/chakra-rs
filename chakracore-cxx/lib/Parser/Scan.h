@@ -27,9 +27,9 @@ private:
         {
             IdentPtr pid;
             const char * pchMin;
-            int32 length;
+            int32_t length;
         };
-        int32 lw;
+        int32_t lw;
         struct
         {
             double dbl;
@@ -70,7 +70,7 @@ public:
         return CreateIdentifier(hashTbl);
     }
 
-    int32 GetLong() const
+    int32_t GetLong() const
     {
         Assert(tk == tkIntCon);
         return u.lw;
@@ -123,7 +123,7 @@ public:
 
     // UTF16 Scanner are only for syntax coloring.  Only support
     // defer pid creation for UTF8
-    void SetIdentifier(const char * pchMin, int32 len)
+    void SetIdentifier(const char * pchMin, int32_t len)
     {
         this->u.pid = nullptr;
         this->u.pchMin = pchMin;
@@ -135,7 +135,7 @@ public:
         this->u.pchMin = nullptr;
     }
 
-    void SetLong(int32 value)
+    void SetLong(int32_t value)
     {
         this->u.lw = value;
     }
@@ -338,8 +338,8 @@ typedef UTF8EncodingPolicyBase<false> NotNullTerminatedUTF8EncodingPolicy;
 
 interface IScanner
 {
-    virtual void GetErrorLineInfo(int32& ichMin, int32& ichLim, int32& line, int32& ichMinLine) = 0;
-    virtual int32_t SysAllocErrorLine(int32 ichMinLine, BSTR* pbstrLine) = 0;
+    virtual void GetErrorLineInfo(int32_t& ichMin, int32_t& ichLim, int32_t& line, int32_t& ichMinLine) = 0;
+    virtual int32_t SysAllocErrorLine(int32_t ichMinLine, BSTR* pbstrLine) = 0;
 };
 
 // Flags that can be provided to the Scan functions.
@@ -451,10 +451,10 @@ public:
     {
         return m_fHadEol;
     }
-    IdentPtr PidFromLong(int32 lw);
+    IdentPtr PidFromLong(int32_t lw);
     IdentPtr PidFromDbl(double dbl);
 
-    LPCOLESTR StringFromLong(int32 lw);
+    LPCOLESTR StringFromLong(int32_t lw);
     LPCOLESTR StringFromDbl(double dbl);
 
     IdentPtr GetSecondaryBufferAsPid();
@@ -595,7 +595,7 @@ public:
     }
 
     // IScanner methods
-    virtual void GetErrorLineInfo(int32& ichMin, int32& ichLim, int32& line, int32& ichMinLine)
+    virtual void GetErrorLineInfo(int32_t& ichMin, int32_t& ichLim, int32_t& line, int32_t& ichMinLine)
     {
         ichMin = this->IchMinError();
         ichLim = this->IchLimError();
@@ -608,7 +608,7 @@ public:
         }
     }
 
-    virtual int32_t SysAllocErrorLine(int32 ichMinLine, BSTR* pbstrLine);
+    virtual int32_t SysAllocErrorLine(int32_t ichMinLine, BSTR* pbstrLine);
 
     class TemporaryBuffer
     {
@@ -863,5 +863,5 @@ private:
         return false;
     }
 
-    charcount_t UpdateLine(int32 &line, EncodedCharPtr start, EncodedCharPtr last, charcount_t ichStart, charcount_t ichEnd);
+    charcount_t UpdateLine(int32_t &line, EncodedCharPtr start, EncodedCharPtr last, charcount_t ichStart, charcount_t ichEnd);
 };

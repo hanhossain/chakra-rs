@@ -302,9 +302,9 @@ public:
 class ParseNodeInt : public ParseNode
 {
 public:
-    ParseNodeInt(charcount_t ichMin, charcount_t ichMax, int32 lw);
+    ParseNodeInt(charcount_t ichMin, charcount_t ichMax, int32_t lw);
 
-    int32 lw;
+    int32_t lw;
 
     DISABLE_SELF_CAST(ParseNodeInt);
 };
@@ -516,7 +516,7 @@ public:
     uint nestedIndex; // Index within the parent function (Used by ByteCodeGenerator)
 
     FncFlags fncFlags;
-    int32 astSize;
+    int32_t astSize;
     size_t cbMin; // Min an Lim UTF8 offsets.
     size_t cbStringMin;
     size_t cbStringLim;
@@ -538,7 +538,7 @@ public:
                                     // We cannot merge both scopes together if there is any closure capture or eval is present in the param scope.
     Js::RegSlot homeObjLocation;    // Stores the RegSlot from where the home object needs to be copied
 
-    static const int32 MaxStackClosureAST = 800000;
+    static const int32_t MaxStackClosureAST = 800000;
 
     SuperRestrictionState::State superRestrictionState;
 

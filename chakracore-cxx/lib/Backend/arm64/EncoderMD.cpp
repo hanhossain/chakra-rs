@@ -111,7 +111,7 @@ bool EncoderMD::CanonicalizeInstr(IR::Instr* instr)
 
 void EncoderMD::CanonicalizeLea(IR::Instr * instr)
 {
-    int32 offset;
+    int32_t offset;
 
     IR::Opnd* src1 = instr->UnlinkSrc1();
 
@@ -156,7 +156,7 @@ void EncoderMD::CanonicalizeLea(IR::Instr * instr)
 }
 
 bool
-EncoderMD::DecodeMemoryOpnd(IR::Opnd* opnd, ARM64_REGISTER &baseRegResult, ARM64_REGISTER &indexRegResult, uint8_t &indexScale, int32 &offset)
+EncoderMD::DecodeMemoryOpnd(IR::Opnd* opnd, ARM64_REGISTER &baseRegResult, ARM64_REGISTER &indexRegResult, uint8_t &indexScale, int32_t &offset)
 {
     RegNum baseReg;
 
@@ -371,7 +371,7 @@ int EncoderMD::EmitPrefetch(Arm64CodeEmitter &Emitter, IR::Instr* instr, IR::Opn
     ARM64_REGISTER indexReg;
     ARM64_REGISTER baseReg;
     uint8_t indexScale;
-    int32 offset;
+    int32_t offset;
     if (DecodeMemoryOpnd(memOpnd, baseReg, indexReg, indexScale, offset))
     {
         return EmitPrfmRegister(Emitter, baseReg, Arm64RegisterParam(indexReg, SHIFT_LSL, indexScale));
@@ -394,7 +394,7 @@ int EncoderMD::EmitLoadStore(Arm64CodeEmitter &Emitter, IR::Instr* instr, IR::Op
     ARM64_REGISTER indexReg;
     ARM64_REGISTER baseReg;
     uint8_t indexScale;
-    int32 offset;
+    int32_t offset;
     if (DecodeMemoryOpnd(memOpnd, baseReg, indexReg, indexScale, offset))
     {
         if (size == 8)
@@ -446,7 +446,7 @@ int EncoderMD::EmitLoadStorePair(Arm64CodeEmitter &Emitter, IR::Instr* instr, IR
     ARM64_REGISTER indexReg;
     ARM64_REGISTER baseReg;
     uint8_t indexScale;
-    int32 offset;
+    int32_t offset;
     if (DecodeMemoryOpnd(memOpnd, baseReg, indexReg, indexScale, offset))
     {
         // Should never get here
@@ -687,7 +687,7 @@ int EncoderMD::EmitLoadStoreFp(Arm64CodeEmitter &Emitter, IR::Instr* instr, IR::
     ARM64_REGISTER indexReg;
     ARM64_REGISTER baseReg;
     uint8_t indexScale;
-    int32 offset;
+    int32_t offset;
     if (DecodeMemoryOpnd(memOpnd, baseReg, indexReg, indexScale, offset))
     {
         // Should never get here
@@ -711,7 +711,7 @@ int EncoderMD::EmitLoadStoreFpPair(Arm64CodeEmitter &Emitter, IR::Instr* instr, 
     ARM64_REGISTER indexReg;
     ARM64_REGISTER baseReg;
     uint8_t indexScale;
-    int32 offset;
+    int32_t offset;
     if (DecodeMemoryOpnd(memOpnd, baseReg, indexReg, indexScale, offset))
     {
         // Should never get here
@@ -1487,12 +1487,12 @@ EncodeReloc::New(EncodeReloc **pHead, RelocType relocType, uint8_t *offset, IR::
 }
 
 void
-EncoderMD::BaseAndOffsetFromSym(IR::SymOpnd *symOpnd, RegNum *pBaseReg, int32 *pOffset, Func * func)
+EncoderMD::BaseAndOffsetFromSym(IR::SymOpnd *symOpnd, RegNum *pBaseReg, int32_t *pOffset, Func * func)
 {
     StackSym *stackSym = symOpnd->m_sym->AsStackSym();
 
     RegNum baseReg = func->GetLocalsPointer();
-    int32 offset = stackSym->m_offset + symOpnd->m_offset;
+    int32_t offset = stackSym->m_offset + symOpnd->m_offset;
     if (baseReg == RegSP)
     {
         // SP points to the base of the argument area. Non-reg SP points directly to the locals.
@@ -1539,7 +1539,7 @@ EncoderMD::BaseAndOffsetFromSym(IR::SymOpnd *symOpnd, RegNum *pBaseReg, int32 *p
             {
                 AssertMsg(stackSym->IsAllocated(), "StackSym offset should be set");
                 //Assert((uint)offset > ((func->m_argSlotsForFunctionsCalled + func->GetMaxInlineeArgOutCount()) * MachRegInt));
-                //Assert(offset > (func->HasTry() ? (int32)func->GetMaxInlineeArgOutSize() : (int32)(func->m_argSlotsForFunctionsCalled * MachRegInt + func->GetMaxInlineeArgOutSize())));
+                //Assert(offset > (func->HasTry() ? (int32_t)func->GetMaxInlineeArgOutSize() : (int32_t)(func->m_argSlotsForFunctionsCalled * MachRegInt + func->GetMaxInlineeArgOutSize())));
             }
         }
         // TODO: restore the following assert (very useful) once we have a way to tell whether prolog/epilog

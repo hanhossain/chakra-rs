@@ -319,7 +319,7 @@ JavascriptSet::AddToEmptySet(Var value)
     Var taggedInt = JavascriptConversion::TryCanonicalizeAsTaggedInt<false /* allowNegOne */, false /* allowLossyConversion */>(value);
     if (taggedInt)
     {
-        int32 intVal = TaggedInt::ToInt32(taggedInt);
+        int32_t intVal = TaggedInt::ToInt32(taggedInt);
 
         BVSparse<Recycler>* newIntSet = RecyclerNew(this->GetRecycler(), BVSparse<Recycler>, this->GetRecycler());
         newIntSet->Set(intVal);
@@ -363,7 +363,7 @@ JavascriptSet::TryAddToIntSet(Var value)
         return false;
     }
 
-    int32 intVal = TaggedInt::ToInt32(taggedInt);
+    int32_t intVal = TaggedInt::ToInt32(taggedInt);
     if (!this->u.intSet->TestAndSet(intVal))
     {
         this->list.Append(taggedInt, this->GetRecycler());
@@ -483,7 +483,7 @@ JavascriptSet::IsInIntSet(Var value)
     {
         return false;
     }
-    int32 intVal = TaggedInt::ToInt32(taggedInt);
+    int32_t intVal = TaggedInt::ToInt32(taggedInt);
     return this->u.intSet->Test(intVal);
 }
 
@@ -564,7 +564,7 @@ bool JavascriptSet::Has(Var value)
         {
             return false;
         }
-        int32 intVal = TaggedInt::ToInt32(taggedInt);
+        int32_t intVal = TaggedInt::ToInt32(taggedInt);
         return this->u.intSet->Test(intVal);
     }
 

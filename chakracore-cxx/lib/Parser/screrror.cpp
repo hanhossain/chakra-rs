@@ -111,7 +111,7 @@ const MHR g_rgmhr[] =
     /*0x800401F5*/ MAPHR(CO_E_APPNOTFOUND, VBSERR_CantCreateObject),
     /*0x800401FE*/ MAPHR(CO_E_APPDIDNTREG, VBSERR_CantCreateObject),
 };
-const int32 kcmhr = sizeof(g_rgmhr) / sizeof(g_rgmhr[0]);
+const int32_t kcmhr = sizeof(g_rgmhr) / sizeof(g_rgmhr[0]);
 
 
 int32_t MapHr(int32_t hr, ErrorTypeEnum * errorTypeOut)

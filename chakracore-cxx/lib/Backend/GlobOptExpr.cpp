@@ -244,7 +244,7 @@ GlobOpt::CSEAddInstr(
     }
 
     case Js::OpCode::Mul_I4:
-        // If int32 overflow is ignored, we only add MULs with 53-bit overflow check to expr map
+        // If int32_t overflow is ignored, we only add MULs with 53-bit overflow check to expr map
         if (instr->HasBailOutInfo() && (instr->GetBailOutKind() & IR::BailOutOnMulOverflow) &&
             !instr->ShouldCheckFor32BitOverflow() && instr->ignoreOverflowBitCount != 53)
         {
@@ -305,7 +305,7 @@ GlobOpt::CSEAddInstr(
         return;
     }
 
-    int32 intConstantValue;
+    int32_t intConstantValue;
     if(valueInfo && !valueInfo->GetSymStore() && valueInfo->TryGetIntConstantValue(&intConstantValue))
     {
         Assert(isArray);
@@ -399,7 +399,7 @@ GlobOpt::OptimizeChecks(IR::Instr * const instr)
         if (src1 && src1->IsImmediateOpnd())
         {
             long val = src1->GetImmediateValue(func);
-            bool isMintInt = src1->GetSize() == 8 ? val == INT64_MIN : (int32)val == INT_MIN;
+            bool isMintInt = src1->GetSize() == 8 ? val == INT64_MIN : (int32_t)val == INT_MIN;
             if (!isMintInt)
             {
                 instr->m_opcode = Js::OpCode::Ld_I4;
@@ -412,7 +412,7 @@ GlobOpt::OptimizeChecks(IR::Instr * const instr)
         if (src2 && src2->IsImmediateOpnd())
         {
             long val = src2->GetImmediateValue(func);
-            bool isNegOne = src2->GetSize() == 8 ? val == -1 : (int32)val == -1;
+            bool isNegOne = src2->GetSize() == 8 ? val == -1 : (int32_t)val == -1;
             if (!isNegOne)
             {
                 instr->m_opcode = Js::OpCode::Ld_I4;
@@ -588,7 +588,7 @@ GlobOpt::CSEOptimize(BasicBlock *block, IR::Instr * *const instrRef, Value **pSr
         symStore = valueInfo->GetSymStore();
         Value * symStoreVal = NULL;
 
-        int32 intConstantValue;
+        int32_t intConstantValue;
         if (!symStore && valueInfo->TryGetIntConstantValue(&intConstantValue))
         {
             // Handle:
@@ -783,7 +783,7 @@ GlobOpt::CSEOptimize(BasicBlock *block, IR::Instr * *const instrRef, Value **pSr
         this->CaptureNoImplicitCallUses(cseOpnd, false);
     }
 
-    int32 intConstantValue;
+    int32_t intConstantValue;
     if (valueInfo->TryGetIntConstantValue(&intConstantValue) && valueInfo->IsIntAndLikelyTagged())
     {
         cseOpnd->Free(func);

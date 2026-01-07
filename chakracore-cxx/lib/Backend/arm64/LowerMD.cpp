@@ -431,7 +431,7 @@ LowererMD::SetMaxArgSlots(Js::ArgSlot actualCount /*including this*/)
 }
 
 void
-LowererMD::GenerateMemInit(IR::RegOpnd * opnd, int32 offset, size_t value, IR::Instr * insertBeforeInstr, bool isZeroed)
+LowererMD::GenerateMemInit(IR::RegOpnd * opnd, int32_t offset, size_t value, IR::Instr * insertBeforeInstr, bool isZeroed)
 {
     m_lowerer->GenerateMemInit(opnd, offset, (uint32_t)value, insertBeforeInstr, isZeroed);
 }
@@ -590,7 +590,7 @@ LowererMD::LowerCallI(IR::Instr * callInstr, ushort callFlags, bool isHelper, IR
 
     // We need to get the calculated CallInfo in SimpleJit because that doesn't include any changes for stack alignment
     IR::IntConstOpnd *callInfo;
-    int32 argCount = this->LowerCallArgs(callInstr, stackParamInsert, callFlags, 1, &callInfo);
+    int32_t argCount = this->LowerCallArgs(callInstr, stackParamInsert, callFlags, 1, &callInfo);
 
     // functionObjOpnd is the first argument.
     IR::Opnd * opndParam = this->GetOpndForArgSlot(0);
@@ -633,7 +633,7 @@ LowererMD::LowerCallI(IR::Instr * callInstr, ushort callFlags, bool isHelper, IR
     return ret;
 }
 
-int32
+int32_t
 LowererMD::LowerCallArgs(IR::Instr *callInstr, IR::Instr *stackParamInsert, ushort callFlags, Js::ArgSlot extraParams, IR::IntConstOpnd **callInfoOpndRef)
 {
     AssertMsg(this->helperCallArgsCount == 0, "We don't support nested helper calls yet");
@@ -767,7 +767,7 @@ LowererMD::GetOpndForArgSlot(Js::ArgSlot argSlot, IR::Opnd * argOpnd)
             argSlot = argSlot - NUM_INT_ARG_REGS;
             IntConstType offset = argSlot * MachRegInt;
             IR::RegOpnd * spBase = IR::RegOpnd::New(nullptr, this->GetRegStackPointer(), TyMachReg, this->m_func);
-            opndParam = IR::IndirOpnd::New(spBase, int32(offset), type, this->m_func);
+            opndParam = IR::IndirOpnd::New(spBase, int32_t(offset), type, this->m_func);
 
             if (this->m_func->m_argSlotsForFunctionsCalled < (uint32_t)(argSlot + 1))
             {
@@ -901,7 +901,7 @@ LowererMD::GenerateStackProbe(IR::Instr *insertInstr, bool afterProlog)
     IR::RegOpnd *frameReg = IR::RegOpnd::New(nullptr, GetRegFramePointer(), TyMachReg, m_func);
     Lowerer::InsertMove(scratchOpnd, IR::IntConstOpnd::New(0, TyMachReg, m_func), insertInstr);
     IR::Opnd *indirOpnd = IR::IndirOpnd::New(
-        frameReg, -(int32)(Js::Constants::StackNestedFuncList * sizeof(Js::Var)), TyMachReg, m_func);
+        frameReg, -(int32_t)(Js::Constants::StackNestedFuncList * sizeof(Js::Var)), TyMachReg, m_func);
     Lowerer::InsertMove(indirOpnd, scratchOpnd, insertInstr);
     */
     IR::RegOpnd *r0Opnd = IR::RegOpnd::New(nullptr, RegR0, TyMachReg, this->m_func);
@@ -1178,7 +1178,7 @@ LowererMD::LowerEntryInstr(IR::EntryInstr * entryInstr)
     }
 
     // Ensure the locals area is 16 byte aligned.
-    this->m_func->m_localStackHeight = Math::Align<int32>(this->m_func->m_localStackHeight, MachStackAlignment);
+    this->m_func->m_localStackHeight = Math::Align<int32_t>(this->m_func->m_localStackHeight, MachStackAlignment);
 
     // Now that the localStackHeight has been adjusted, compute the final layout
     ARM64StackLayout layout(this->m_func);
@@ -1674,7 +1674,7 @@ LowererMD::LoadStackArgPtr(IR::Instr * instr)
         Assert(this->m_func->GetLoopParamSym());
         IR::RegOpnd *baseOpnd = IR::RegOpnd::New(this->m_func->GetLoopParamSym(), TyMachReg, this->m_func);
         size_t offset = Js::InterpreterStackFrame::GetOffsetOfInParams();
-        IR::IndirOpnd *indirOpnd = IR::IndirOpnd::New(baseOpnd, (int32)offset, TyMachReg, this->m_func);
+        IR::IndirOpnd *indirOpnd = IR::IndirOpnd::New(baseOpnd, (int32_t)offset, TyMachReg, this->m_func);
         IR::RegOpnd *tmpOpnd = IR::RegOpnd::New(TyMachReg, this->m_func);
         Lowerer::InsertMove(tmpOpnd, indirOpnd, instr);
 
@@ -1708,7 +1708,7 @@ IR::Instr *
 LowererMD::LoadArgumentsFromFrame(IR::Instr * instr)
 {
     IR::RegOpnd *baseOpnd;
-    int32 offset;
+    int32_t offset;
 
     if (this->m_func->IsLoopBody())
     {
@@ -1735,7 +1735,7 @@ IR::Instr *
 LowererMD::LoadArgumentCount(IR::Instr * instr)
 {
     IR::RegOpnd *baseOpnd;
-    int32 offset;
+    int32_t offset;
 
     if (this->m_func->IsLoopBody())
     {
@@ -2553,7 +2553,7 @@ LowererMD::GenerateFastDivByPow2(IR::Instr *instrDiv)
     //IR::Instr      *instr;
 
     //Assert(src2 && src2->IsVar() && Js::TaggedInt::Is(src2->m_address) && (Math::IsPow2(Js::TaggedInt::ToInt32(src2->m_address))));
-    //int32          src2Value = Js::TaggedInt::ToInt32(src2->m_address);
+    //int32_t          src2Value = Js::TaggedInt::ToInt32(src2->m_address);
 
     //// s1 =  AND  src1, 0x80000001 | ((src2Value - 1) << 1)
     //instr = IR::Instr::New(Js::OpCode::AND, s1, src1, IR::IntConstOpnd::New((0x80000001 | ((src2Value - 1) << 1)), TyInt32, m_func), m_func);
@@ -3605,7 +3605,7 @@ LowererMD::GenerateFastNeg(IR::Instr * instrNeg)
         }
         else
         {
-            // negation below can overflow because max negative int32 value > max positive value by 1.
+            // negation below can overflow because max negative int32_t value > max positive value by 1.
             newOpnd = IR::AddrOpnd::NewFromNumber(-(long)value, m_func);
         }
 
@@ -4975,7 +4975,7 @@ LowererMD::GenerateFastRecyclerAlloc(size_t allocSize, IR::RegOpnd* newObjDst, I
 
     // nextMemBlock = ADD newObjDst, allocSize
     IR::RegOpnd * nextMemBlockOpnd = IR::RegOpnd::New(TyMachPtr, this->m_func);
-    IR::IntConstOpnd* allocSizeOpnd = IR::IntConstOpnd::New((int32)allocSize, TyInt32, this->m_func);
+    IR::IntConstOpnd* allocSizeOpnd = IR::IntConstOpnd::New((int32_t)allocSize, TyInt32, this->m_func);
     IR::Instr * loadNextMemBlockInstr = IR::Instr::New(Js::OpCode::ADD, nextMemBlockOpnd, newObjDst, allocSizeOpnd, this->m_func);
     insertionPointInstr->InsertBefore(loadNextMemBlockInstr);
     LegalizeMD::LegalizeInstr(loadNextMemBlockInstr);
@@ -5121,7 +5121,7 @@ LowererMD::GenerateFastAbs(IR::Opnd *dst, IR::Opnd *src, IR::Instr *callInstr, I
 
         if (!Js::TaggedInt::IsOverflow(absValue))
         {
-            varOpnd->SetAddress(Js::TaggedInt::ToVarUnchecked((int32)absValue), IR::AddrOpndKindConstantVar);
+            varOpnd->SetAddress(Js::TaggedInt::ToVarUnchecked((int32_t)absValue), IR::AddrOpndKindConstantVar);
 
             instr = IR::Instr::New(Js::OpCode::MOV, dst, varOpnd, this->m_func);
             insertInstr->InsertBefore(instr);
@@ -6078,7 +6078,7 @@ LowererMD::GenerateFastInlineBuiltInMathAbs(IR::Instr *inlineInstr)
     continueInstr->InsertAfter(nextInstr);
     if (srcType == IRType::TyInt32)
     {
-        // Note: if execution gets so far, we always get (untagged) int32 here.
+        // Note: if execution gets so far, we always get (untagged) int32_t here.
         Assert(src->IsRegOpnd());
 
         // CMP src, #0
@@ -6560,7 +6560,7 @@ LowererMD::CheckOverflowOnFloatToInt32(IR::Instr* instrInsert, IR::Opnd* intOpnd
     // Test for 0x80000000 or 0x7FFFFFFF
 
     // tmp = EOR src, 0x80000000;   gives 0 or -1 for overflow values
-    // tmp = EOR_ASR31 tmp, tmp;    tmp = tmp ^ ((int32)tmp >> 31) -- converts -1 or 0 to 0
+    // tmp = EOR_ASR31 tmp, tmp;    tmp = tmp ^ ((int32_t)tmp >> 31) -- converts -1 or 0 to 0
     // CBZ tmp, helper;             branch if tmp was -1 or 0
     // B done;
 

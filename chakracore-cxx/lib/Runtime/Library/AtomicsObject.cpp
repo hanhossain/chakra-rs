@@ -55,7 +55,7 @@ namespace Js
     {
         Assert(VarIs<TypedArrayBase>(typedArray));
 
-        int32 accessIndex = -1;
+        int32_t accessIndex = -1;
         if (TaggedInt::Is(requestIndex))
         {
             accessIndex = TaggedInt::ToInt32(requestIndex);
@@ -74,7 +74,7 @@ namespace Js
             }
         }
 
-        if (accessIndex < 0 || accessIndex >= (int32)VarTo<TypedArrayBase>(typedArray)->GetLength())
+        if (accessIndex < 0 || accessIndex >= (int32_t)VarTo<TypedArrayBase>(typedArray)->GetLength())
         {
             JavascriptError::ThrowRangeError(scriptContext, JSERR_InvalidTypedArrayIndex);
         }
@@ -182,7 +182,7 @@ namespace Js
         uint32_t accessIndex = 0;
         TypedArrayBase *typedArrayBase = ValidateAndGetTypedArray(args[1], args[2], &accessIndex, scriptContext, true /*onlyInt32*/);
 
-        int32 value = JavascriptConversion::ToInt32(args[3], scriptContext);
+        int32_t value = JavascriptConversion::ToInt32(args[3], scriptContext);
         uint32_t timeout = INFINITE;
 
         if (args.Info.Count > 4 && !JavascriptOperators::IsUndefinedObject(args[4]))
@@ -190,7 +190,7 @@ namespace Js
             double t =JavascriptConversion::ToNumber(args[4], scriptContext);
             if (!(NumberUtilities::IsNan(t) || JavascriptNumber::IsPosInf(t)))
             {
-                int32 t1 = JavascriptConversion::ToInt32(t);
+                int32_t t1 = JavascriptConversion::ToInt32(t);
                 timeout = (uint32_t)max(0, t1);
             }
         }
@@ -212,7 +212,7 @@ namespace Js
         {
             AutoCriticalSection autoCS(waiterList->GetCriticalSectionForAccess());
 
-            int32 w = JavascriptConversion::ToInt32(typedArrayBase->DirectGetItem(accessIndex), scriptContext);
+            int32_t w = JavascriptConversion::ToInt32(typedArrayBase->DirectGetItem(accessIndex), scriptContext);
             if (value != w)
             {
                 return scriptContext->GetLibrary()->CreateStringFromCppLiteral(u"not-equal");
@@ -238,13 +238,13 @@ namespace Js
 
         uint32_t accessIndex = 0;
         TypedArrayBase *typedArrayBase = ValidateAndGetTypedArray(args[1], args[2], &accessIndex, scriptContext, true /*onlyInt32*/);
-        int32 count = INT_MAX;
+        int32_t count = INT_MAX;
         if (args.Info.Count > 3 && !JavascriptOperators::IsUndefinedObject(args[3]))
         {
             double d = JavascriptConversion::ToInteger(args[3], scriptContext);
             if (!(NumberUtilities::IsNan(d) || JavascriptNumber::IsPosInf(d)))
             {
-                int32 c = JavascriptConversion::ToInt32(d);
+                int32_t c = JavascriptConversion::ToInt32(d);
                 count = max(0, c);
             }
         }

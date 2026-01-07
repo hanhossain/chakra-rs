@@ -15,16 +15,16 @@ namespace Js
     class EHBailoutData
     {
     public:
-        int32 nestingDepth;
-        int32 catchOffset;
-        int32 finallyOffset;
+        int32_t nestingDepth;
+        int32_t catchOffset;
+        int32_t finallyOffset;
         HandlerType ht;
         EHBailoutData * parent;
         EHBailoutData * child;
 
     public:
         EHBailoutData() : nestingDepth(-1), catchOffset(0), finallyOffset(0), parent(nullptr), child(nullptr),  ht(HT_None) {}
-        EHBailoutData(int32 nestingDepth, int32 catchOffset, int32 finallyOffset, HandlerType ht, EHBailoutData * parent)
+        EHBailoutData(int32_t nestingDepth, int32_t catchOffset, int32_t finallyOffset, HandlerType ht, EHBailoutData * parent)
         {
             this->nestingDepth = nestingDepth;
             this->catchOffset = catchOffset;

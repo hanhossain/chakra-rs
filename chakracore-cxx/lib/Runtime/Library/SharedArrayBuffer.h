@@ -187,7 +187,7 @@ namespace Js
 
         bool _Requires_lock_held_(csForAccess.cs) AddAndSuspendWaiter(unsigned long waiter, uint32_t timeout);
         void RemoveWaiter(unsigned long waiter);
-        uint32_t RemoveAndWakeWaiters(int32 count);
+        uint32_t RemoveAndWakeWaiters(int32_t count);
 
         CriticalSection * GetCriticalSectionForAccess() { return &csForAccess; }
 

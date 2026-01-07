@@ -200,7 +200,7 @@ namespace TTD
         virtual void WriteRecordStart(NSTokens::Separator separator = NSTokens::Separator::NoSeparator) = 0;
         virtual void WriteRecordEnd(NSTokens::Separator separator = NSTokens::Separator::NoSeparator) = 0;
 
-        virtual void AdjustIndent(int32 delta) = 0;
+        virtual void AdjustIndent(int32_t delta) = 0;
         virtual void SetIndent(uint32_t depth) = 0;
 
         ////
@@ -211,8 +211,8 @@ namespace TTD
         virtual void WriteNakedByte(byte val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) = 0;
         virtual void WriteBool(NSTokens::Key key, bool val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) = 0;
 
-        virtual void WriteNakedInt32(int32 val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) = 0;
-        void WriteInt32(NSTokens::Key key, int32 val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator);
+        virtual void WriteNakedInt32(int32_t val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) = 0;
+        void WriteInt32(NSTokens::Key key, int32_t val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator);
 
         virtual void WriteNakedUInt32(uint32_t val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) = 0;
         void WriteUInt32(NSTokens::Key key, uint32_t val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator);
@@ -278,7 +278,7 @@ namespace TTD
         virtual void WriteRecordStart(NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
         virtual void WriteRecordEnd(NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
 
-        virtual void AdjustIndent(int32 delta) override;
+        virtual void AdjustIndent(int32_t delta) override;
         virtual void SetIndent(uint32_t depth) override;
 
         ////
@@ -288,7 +288,7 @@ namespace TTD
         virtual void WriteNakedByte(byte val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
         virtual void WriteBool(NSTokens::Key key, bool val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
 
-        virtual void WriteNakedInt32(int32 val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
+        virtual void WriteNakedInt32(int32_t val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
         virtual void WriteNakedUInt32(uint32_t val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
         virtual void WriteNakedInt64(long val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
         virtual void WriteNakedUInt64(unsigned long val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
@@ -325,7 +325,7 @@ namespace TTD
         virtual void WriteRecordStart(NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
         virtual void WriteRecordEnd(NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
 
-        virtual void AdjustIndent(int32 delta) override;
+        virtual void AdjustIndent(int32_t delta) override;
         virtual void SetIndent(uint32_t depth) override;
 
         ////
@@ -335,7 +335,7 @@ namespace TTD
         virtual void WriteNakedByte(byte val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
         virtual void WriteBool(NSTokens::Key key, bool val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
 
-        virtual void WriteNakedInt32(int32 val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
+        virtual void WriteNakedInt32(int32_t val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
         virtual void WriteNakedUInt32(uint32_t val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
         virtual void WriteNakedInt64(long val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
         virtual void WriteNakedUInt64(unsigned long val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
@@ -365,7 +365,7 @@ namespace TTD
         TTDReadBytesFromStreamCallback m_pfRead;
         TTDFlushAndCloseStreamCallback m_pfClose;
 
-        int32 m_peekChar;
+        int32_t m_peekChar;
 
         size_t m_cursor;
         size_t m_buffCount;
@@ -527,8 +527,8 @@ namespace TTD
         virtual byte ReadNakedByte(bool readSeparator = false) = 0;
         virtual bool ReadBool(NSTokens::Key keyCheck, bool readSeparator = false) = 0;
 
-        virtual int32 ReadNakedInt32(bool readSeparator = false) = 0;
-        int32 ReadInt32(NSTokens::Key keyCheck, bool readSeparator = false);
+        virtual int32_t ReadNakedInt32(bool readSeparator = false) = 0;
+        int32_t ReadInt32(NSTokens::Key keyCheck, bool readSeparator = false);
 
         virtual uint32_t ReadNakedUInt32(bool readSeparator = false) = 0;
         uint32_t ReadUInt32(NSTokens::Key keyCheck, bool readSeparator = false);
@@ -634,7 +634,7 @@ namespace TTD
         virtual byte ReadNakedByte(bool readSeparator = false) override;
         virtual bool ReadBool(NSTokens::Key keyCheck, bool readSeparator = false) override;
 
-        virtual int32 ReadNakedInt32(bool readSeparator = false) override;
+        virtual int32_t ReadNakedInt32(bool readSeparator = false) override;
         virtual uint32_t ReadNakedUInt32(bool readSeparator = false) override;
         virtual long ReadNakedInt64(bool readSeparator = false) override;
         virtual unsigned long ReadNakedUInt64(bool readSeparator = false) override;
@@ -676,7 +676,7 @@ namespace TTD
         virtual byte ReadNakedByte(bool readSeparator = false) override;
         virtual bool ReadBool(NSTokens::Key keyCheck, bool readSeparator = false) override;
 
-        virtual int32 ReadNakedInt32(bool readSeparator = false) override;
+        virtual int32_t ReadNakedInt32(bool readSeparator = false) override;
         virtual uint32_t ReadNakedUInt32(bool readSeparator = false) override;
         virtual long ReadNakedInt64(bool readSeparator = false) override;
         virtual unsigned long ReadNakedUInt64(bool readSeparator = false) override;
@@ -703,7 +703,7 @@ namespace TTD
     //A struct that we use for tracking where objects have been allocated
     struct DiagnosticOrigin
     {
-        int32 SourceLine;
+        int32_t SourceLine;
         uint32_t EventTime;
         unsigned long TimeHash;
     };
@@ -729,8 +729,8 @@ namespace TTD
         char* m_buffer;
         char* m_indentBuffer;
 
-        int32 m_currLength;
-        int32 m_indentSize;
+        int32_t m_currLength;
+        int32_t m_indentSize;
         FILE* m_outfile;
 
         void EnsureSpace(uint32_t length)

@@ -2570,8 +2570,8 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         Assert(args.Info.Count >= 3 && VarIs<JavascriptFunction>(args.Values[1]) && TaggedInt::Is(args.Values[2]));
 
         JavascriptFunction *func = VarTo<JavascriptFunction>(args.Values[1]);
-        int32 id = TaggedInt::ToInt32(args.Values[2]);
-        Assert(id >= 0 && id < (int32)BuiltInFunctionID::Max);
+        int32_t id = TaggedInt::ToInt32(args.Values[2]);
+        Assert(id >= 0 && id < (int32_t)BuiltInFunctionID::Max);
 
         EngineInterfaceObject* nativeEngineInterfaceObj = scriptContext->GetLibrary()->GetEngineInterfaceObject();
         IntlEngineInterfaceExtensionObject* extensionObject = static_cast<IntlEngineInterfaceExtensionObject*>(nativeEngineInterfaceObj->GetEngineExtension(EngineInterfaceExtensionKind_Intl));

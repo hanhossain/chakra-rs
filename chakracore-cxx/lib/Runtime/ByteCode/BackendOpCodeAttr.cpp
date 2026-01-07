@@ -38,7 +38,7 @@ enum OpCodeAttrEnum
 
     OpInlinableBuiltIn          = 0x00010000, // OpCode is an inlinable built-in, such as InlineMathSin, etc.
     OpNonIntTransfer            = 0x00020000, // OpCode may transfer a non-integer value from the non-constant source to the destination
-    OpIsInt32                   = 0x00040000, // OpCode converts its srcs to int32 or a narrower int type, and produces an int32
+    OpIsInt32                   = 0x00040000, // OpCode converts its srcs to int32_t or a narrower int type, and produces an int32_t
     OpProducesNumber            = 0x00080000, // OpCode always produces a number
     OpCanLoadFixedFields        = 0x00100000, // OpCode can use fixed fields
     OpCanCSE                    = 0x00200000, // Opcode has no side-effect and always produces the same value for a given input (InlineMathAbs is OK, InlineMathRandom is not)

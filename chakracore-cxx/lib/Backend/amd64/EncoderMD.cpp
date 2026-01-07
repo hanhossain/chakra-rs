@@ -242,7 +242,7 @@ uint8_t
 EncoderMD::GetMod(IR::SymOpnd * symOpnd, int * pDispSize, RegNum& rmReg)
 {
     StackSym * stackSym = symOpnd->m_sym->AsStackSym();
-    int32 offset = stackSym->m_offset;
+    int32_t offset = stackSym->m_offset;
     rmReg = RegRBP;
     if (stackSym->IsArgSlotSym() && !stackSym->m_isOrphanedArg)
     {
@@ -1545,7 +1545,7 @@ void
 EncoderMD::FixMaps(uint32_t brOffset, uint32_t bytesSaved, FixUpMapIndex *mapIndices)
 
 {
-    int32 i;
+    int32_t i;
 
     {
         InlineeFrameRecords *recList = m_encoder->m_inlineeFrameRecords;
@@ -1615,7 +1615,7 @@ EncoderMD::ApplyRelocs(size_t codeBufferAddress_, size_t codeSize, uint * buffer
         return;
     }
 
-    for (int32 i = 0; i < m_relocList->Count(); i++)
+    for (int32_t i = 0; i < m_relocList->Count(); i++)
     {
         EncodeRelocAndLabels *reloc = &m_relocList->Item(i);
         uint8_t * relocAddress = (uint8_t*)reloc->m_ptr;
@@ -1641,7 +1641,7 @@ EncoderMD::ApplyRelocs(size_t codeBufferAddress_, size_t codeSize, uint * buffer
                 {
                     // short branch
                     pcrel = (uint32_t)(labelInstr->GetPC() - ((uint8_t*)reloc->m_ptr + 1));
-                    AssertMsg((int32)pcrel >= -128 && (int32)pcrel <= 127, "Offset doesn't fit in imm8.");
+                    AssertMsg((int32_t)pcrel >= -128 && (int32_t)pcrel <= 127, "Offset doesn't fit in imm8.");
                     if (!isFinalBufferValidation)
                     {
                         Assert(*(uint8_t*)relocAddress == 0);
@@ -1750,7 +1750,7 @@ EncoderMD::VerifyRelocList(uint8_t *buffStart, uint8_t *buffEnd)
         return;
     }
 
-    for (int32 i = 0; i < m_relocList->Count(); i ++)
+    for (int32_t i = 0; i < m_relocList->Count(); i ++)
     {
         EncodeRelocAndLabels &p = m_relocList->Item(i);
         // LabelInstr ?
@@ -1898,7 +1898,7 @@ bool EncoderMD::TryConstFold(IR::Instr *instr, IR::RegOpnd *regOpnd)
             }
 
             // offset = indir.offset + (index << scale)
-            int32 offset = regOpnd->m_sym->GetIntConstValue();
+            int32_t offset = regOpnd->m_sym->GetIntConstValue();
             if ((indir->GetScale() != 0 && Int32Math::Shl(offset, indir->GetScale(), &offset)) ||
                 (indir->GetOffset() != 0 && Int32Math::Add(indir->GetOffset(), offset, &offset)))
             {
@@ -2047,7 +2047,7 @@ bool EncoderMD::IsMOVEncoding(IR::Instr *instr)
 
 void EncoderMD::UpdateRelocListWithNewBuffer(RelocList * relocList, uint8_t * newBuffer, uint8_t * oldBufferStart, uint8_t * oldBufferEnd)
 {
-    for (int32 i = 0; i < relocList->Count(); i++)
+    for (int32_t i = 0; i < relocList->Count(); i++)
     {
         EncodeRelocAndLabels &reloc = relocList->Item(i);
         if (reloc.isLabel())

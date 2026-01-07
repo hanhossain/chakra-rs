@@ -20,12 +20,12 @@ namespace Js
         };
         union
         {
-            int32 i32;
+            int32_t i32;
             long i64;
             struct
             {
-                int32 low;
-                int32 high;
+                int32_t low;
+                int32_t high;
             };
         };
     };

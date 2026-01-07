@@ -333,7 +333,7 @@ ParseNodeTri::ParseNodeTri(OpCode nop, charcount_t ichMin, charcount_t ichLim)
 {
 }
 
-ParseNodeInt::ParseNodeInt(charcount_t ichMin, charcount_t ichLim, int32 lw)
+ParseNodeInt::ParseNodeInt(charcount_t ichMin, charcount_t ichLim, int32_t lw)
     : ParseNode(knopInt, ichMin, ichLim)
 {
     this->lw = lw;

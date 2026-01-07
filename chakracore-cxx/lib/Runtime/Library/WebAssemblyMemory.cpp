@@ -142,7 +142,7 @@ WebAssemblyMemory::EntryGrow(RecyclableObject* function, CallInfo callInfo, ...)
         JavascriptError::ThrowTypeError(scriptContext, JSERR_DetachedTypedArray);
     }
 
-    int32 oldPageCount = memory->GrowInternal(deltaPages);
+    int32_t oldPageCount = memory->GrowInternal(deltaPages);
     if (oldPageCount == -1)
     {
         JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgumentOutOfRange);
@@ -151,7 +151,7 @@ WebAssemblyMemory::EntryGrow(RecyclableObject* function, CallInfo callInfo, ...)
     return JavascriptNumber::ToVar(oldPageCount, scriptContext);
 }
 
-int32
+int32_t
 WebAssemblyMemory::GrowInternal(uint32_t deltaPages)
 {
     const unsigned long deltaBytes = (unsigned long)deltaPages * WebAssembly::PageSize;
@@ -209,10 +209,10 @@ WebAssemblyMemory::GrowInternal(uint32_t deltaPages)
     }
 
     CompileAssert(ArrayBuffer::MaxArrayBufferLength / WebAssembly::PageSize <= INT32_MAX);
-    return (int32)oldPageCount;
+    return (int32_t)oldPageCount;
 }
 
-int32
+int32_t
 WebAssemblyMemory::GrowHelper(WebAssemblyMemory * mem, uint32_t deltaPages)
 {
     JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Op_GrowWasmMemory);
@@ -252,7 +252,7 @@ void WebAssemblyMemory::TraceMemWrite(WebAssemblyMemory* mem, uint32_t index, ui
     case ArrayBufferView::ViewType::TYPE_UINT16_TO_INT64:
     case ArrayBufferView::ViewType::TYPE_UINT16: Output::Print(u".uint16 = %u\n", *(uint16*)(buffer + bigIndex)); break;
     case ArrayBufferView::ViewType::TYPE_INT32_TO_INT64:
-    case ArrayBufferView::ViewType::TYPE_INT32: Output::Print(u".int32 = %d\n", *(int32*)(buffer + bigIndex)); break;
+    case ArrayBufferView::ViewType::TYPE_INT32: Output::Print(u".int32_t = %d\n", *(int32_t*)(buffer + bigIndex)); break;
     case ArrayBufferView::ViewType::TYPE_UINT32_TO_INT64:
     case ArrayBufferView::ViewType::TYPE_UINT32: Output::Print(u".uint32_t = %u\n", *(uint32_t*)(buffer + bigIndex)); break;
     case ArrayBufferView::ViewType::TYPE_FLOAT32: Output::Print(u".f32 = %.4f\n", *(float*)(buffer + bigIndex)); break;

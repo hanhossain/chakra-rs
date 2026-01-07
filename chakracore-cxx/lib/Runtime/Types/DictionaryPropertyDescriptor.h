@@ -364,9 +364,9 @@ namespace Js
         }
         Output::Print(u"\n");
 
-        Output::Print(u"%*sData: %d\n", fieldIndent, padding, static_cast<int32>(this->Data));
-        Output::Print(u"%*sGetter: %d\n", fieldIndent, padding, static_cast<int32>(this->Getter));
-        Output::Print(u"%*sSetter: %d\n", fieldIndent, padding, static_cast<int32>(this->Setter));
+        Output::Print(u"%*sData: %d\n", fieldIndent, padding, static_cast<int32_t>(this->Data));
+        Output::Print(u"%*sGetter: %d\n", fieldIndent, padding, static_cast<int32_t>(this->Getter));
+        Output::Print(u"%*sSetter: %d\n", fieldIndent, padding, static_cast<int32_t>(this->Setter));
     }
 #endif
 }

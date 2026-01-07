@@ -22,7 +22,7 @@ struct GlobalBailOutRecordDataRow;
 
 struct StackSlot
 {
-    int32 offset;
+    int32_t offset;
     uint32_t size;
     uint32_t lastUse;
 };
@@ -151,7 +151,7 @@ private:
 
     // This helper function is used to save bytecode stack sym value to memory / local slots on stack so that we can read it for the locals inspection.
     void                WriteThroughForLocal(IR::RegOpnd* regOpnd, Lifetime* lifetime, IR::Instr* instrInsertAfter);
-    int32               GetStackOffset(Js::RegSlot regSlotId);
+    int32_t               GetStackOffset(Js::RegSlot regSlotId);
     bool                IsSymNonTempLocalVar(StackSym *sym);
     bool                NeedsWriteThrough(StackSym * sym);
     bool                NeedsWriteThroughForEH(StackSym * sym);

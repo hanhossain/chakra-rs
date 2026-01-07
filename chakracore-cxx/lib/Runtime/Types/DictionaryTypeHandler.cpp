@@ -2980,7 +2980,7 @@ namespace Js
                 value.Dump(mapValueIndent);
             });
         }
-        Output::Print(u"%*snextPropertyIndex: %d\n", fieldIndent, padding, static_cast<int32>(this->nextPropertyIndex));
+        Output::Print(u"%*snextPropertyIndex: %d\n", fieldIndent, padding, static_cast<int32_t>(this->nextPropertyIndex));
     }
 
 #endif

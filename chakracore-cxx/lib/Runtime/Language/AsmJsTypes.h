@@ -520,8 +520,8 @@ namespace Js
     {
         inline static bool Equals(float x, float y)
         {
-            int32 i32x = *(int32*)&x;
-            int32 i32y = *(int32*)&y;
+            int32_t i32x = *(int32_t*)&x;
+            int32_t i32y = *(int32_t*)&y;
             return i32x == i32y;
         }
 

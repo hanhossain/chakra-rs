@@ -671,8 +671,8 @@ void WasmBinaryReader::ConstNode()
         break;
     case WasmTypes::F32:
     {
-        m_currentNode.cnst.i32 = ReadConst<int32>();
-        CompileAssert(sizeof(int32) == sizeof(float));
+        m_currentNode.cnst.i32 = ReadConst<int32_t>();
+        CompileAssert(sizeof(int32_t) == sizeof(float));
         m_funcState.count += sizeof(float);
         break;
     }

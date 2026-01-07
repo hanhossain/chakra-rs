@@ -17,7 +17,7 @@ namespace Js
         virtual void Reset() = 0;
         virtual ByteCodeLabel DefineLabel() = 0;
 
-        virtual void InitData(ArenaAllocator* alloc, int32 initCodeBufferSize) = 0;
+        virtual void InitData(ArenaAllocator* alloc, int32_t initCodeBufferSize) = 0;
         virtual void MarkAsmJsLabel(ByteCodeLabel labelID) = 0;
         virtual void EmptyAsm(OpCodeAsmJs op) = 0;
         virtual void Conv(OpCodeAsmJs op, RegSlot R0, RegSlot R1) = 0;

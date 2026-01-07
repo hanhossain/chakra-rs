@@ -139,7 +139,7 @@ namespace Js
             return -value;
         }
 
-        inline int32 JavascriptMath::And_Helper(Var aLeft, Var aRight, ScriptContext* scriptContext)
+        inline int32_t JavascriptMath::And_Helper(Var aLeft, Var aRight, ScriptContext* scriptContext)
         {
             Assert(aLeft != nullptr);
             Assert(aRight != nullptr);
@@ -148,12 +148,12 @@ namespace Js
             AssertMsg(!TaggedInt::IsPair(aLeft, aRight), "TaggedInt bitwise and should have been handled already");
 #endif
 
-            int32 nLeft = JavascriptConversion::ToInt32(aLeft, scriptContext);
-            int32 nRight = JavascriptConversion::ToInt32(aRight, scriptContext);
+            int32_t nLeft = JavascriptConversion::ToInt32(aLeft, scriptContext);
+            int32_t nRight = JavascriptConversion::ToInt32(aRight, scriptContext);
             return nLeft & nRight;
         }
 
-        inline int32 JavascriptMath::Or_Helper(Var aLeft, Var aRight, ScriptContext* scriptContext)
+        inline int32_t JavascriptMath::Or_Helper(Var aLeft, Var aRight, ScriptContext* scriptContext)
         {
             Assert(aLeft != nullptr);
             Assert(aRight != nullptr);
@@ -161,8 +161,8 @@ namespace Js
 #if _M_IX86
             AssertMsg(!TaggedInt::IsPair(aLeft, aRight), "TaggedInt bitwise or should have been handled already");
 #endif
-            int32 nLeft = JavascriptConversion::ToInt32(aLeft, scriptContext);
-            int32 nRight = JavascriptConversion::ToInt32(aRight, scriptContext);
+            int32_t nLeft = JavascriptConversion::ToInt32(aLeft, scriptContext);
+            int32_t nRight = JavascriptConversion::ToInt32(aRight, scriptContext);
             return nLeft | nRight;
         }
 
@@ -272,10 +272,10 @@ namespace Js
         }
 
 #if defined(_M_ARM32_OR_ARM64)
-        inline int32 JavascriptMath::ToInt32Core(double T1)
+        inline int32_t JavascriptMath::ToInt32Core(double T1)
         {
             JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Conv_ToInt32Core);
-            // Try the int32 conversion first and only do the more expensive (& closer to spec)
+            // Try the int32_t conversion first and only do the more expensive (& closer to spec)
             // i64 conversion if it fails.
             int32_t i32 = (int32_t)T1;
             if ((i32 != 0x80000000) && (i32 != 0x7fffffff))
@@ -287,10 +287,10 @@ namespace Js
                 T4_64 = ToInt32ES5OverflowHelper(T1);
             }
 
-            return static_cast<int32>(T4_64);
+            return static_cast<int32_t>(T4_64);
         }
 #else
-        inline int32 JavascriptMath::ToInt32Core(double T1)
+        inline int32_t JavascriptMath::ToInt32Core(double T1)
         {
             JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Conv_ToInt32Core);
             // ES5 Spec for ToUInt32
@@ -301,8 +301,8 @@ namespace Js
             // Casting gives equivalent result, except when T1 > INT64_MAX, or T1 < INT64_MIN (or NaN Inf Zero),
             // in which case we'll use slow path.
 
-            // Try casting to int32 first. Results in 0x80000000 if it overflows.
-            int32 T4_32 = static_cast<int32>(T1);
+            // Try casting to int32_t first. Results in 0x80000000 if it overflows.
+            int32_t T4_32 = static_cast<int32_t>(T1);
             if (T4_32 != 0x80000000)
             {
                 return T4_32;
@@ -314,11 +314,11 @@ namespace Js
                 T4_64 = ToInt32ES5OverflowHelper(T1);
             }
 
-            return static_cast<int32>(T4_64);
+            return static_cast<int32_t>(T4_64);
         }
 #endif
 
-        // Implements platform-agnostic part of handling overflow when converting Number to int32, ES5 version.
+        // Implements platform-agnostic part of handling overflow when converting Number to int32_t, ES5 version.
         inline long JavascriptMath::ToInt32ES5OverflowHelper(double d)
         {
             if (IsNanInfZero(d)) // ShortCut NaN Inf Zero
@@ -348,7 +348,7 @@ namespace Js
             return Js::NumberUtilities::TryToInt64(T1);
         }
 
-        inline int32 JavascriptMath::ToInt32_NoObjects(Var aValue, ScriptContext* scriptContext, bool& isObject)
+        inline int32_t JavascriptMath::ToInt32_NoObjects(Var aValue, ScriptContext* scriptContext, bool& isObject)
         {
             JIT_HELPER_NOT_REENTRANT_HEADER(Conv_ToInt32_NoObjects, reentrancylock, scriptContext->GetThreadContext());
             if (JavascriptOperators::IsObject(aValue))
@@ -361,7 +361,7 @@ namespace Js
             return ToInt32(aValue, scriptContext);
         }
 
-        inline int32 JavascriptMath::ToInt32(Var aValue, ScriptContext* scriptContext)
+        inline int32_t JavascriptMath::ToInt32(Var aValue, ScriptContext* scriptContext)
         {
             JIT_HELPER_REENTRANT_HEADER(Conv_ToInt32);
             return

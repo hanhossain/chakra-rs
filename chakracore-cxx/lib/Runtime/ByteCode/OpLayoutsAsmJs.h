@@ -506,20 +506,20 @@ namespace Js
 
     struct OpLayoutAsmBr
     {
-        int32  RelativeJumpOffset;
+        int32_t  RelativeJumpOffset;
     };
 
     template <typename SizePolicy>
     struct OpLayoutT_BrInt1
     {
-        int32  RelativeJumpOffset;
+        int32_t  RelativeJumpOffset;
         typename SizePolicy::RegSlotType     I1;
     };
 
     template <typename SizePolicy>
     struct OpLayoutT_BrInt2
     {
-        int32  RelativeJumpOffset;
+        int32_t  RelativeJumpOffset;
         typename SizePolicy::RegSlotType     I1;
         typename SizePolicy::RegSlotType     I2;
     };
@@ -527,9 +527,9 @@ namespace Js
     template <typename SizePolicy>
     struct OpLayoutT_BrInt1Const1
     {
-        int32  RelativeJumpOffset;
+        int32_t  RelativeJumpOffset;
         typename SizePolicy::RegSlotType     I1;
-        int32     C1;
+        int32_t     C1;
     };
 
     template <typename SizePolicy>

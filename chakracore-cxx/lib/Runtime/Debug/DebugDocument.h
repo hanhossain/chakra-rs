@@ -6,8 +6,8 @@
 
 struct StatementSpan
 {
-    int32 ich;
-    int32 cch;
+    int32_t ich;
+    int32_t cch;
 };
 
 // A Document in Engine means a file, eval code or new function code. For each of these there is a Utf8SourceInfo.
@@ -22,7 +22,7 @@ namespace Js
         ~DebugDocument();
         virtual void CloseDocument();
 
-        int32_t SetBreakPoint(int32 ibos, BREAKPOINT_STATE bps);
+        int32_t SetBreakPoint(int32_t ibos, BREAKPOINT_STATE bps);
         BreakpointProbe* SetBreakPoint(StatementLocation statement, BREAKPOINT_STATE bps);
         void RemoveBreakpointProbe(BreakpointProbe *probe);
         void ClearAllBreakPoints(void);
@@ -34,8 +34,8 @@ namespace Js
         BreakpointProbe* FindBreakpoint(StatementLocation statement);
         bool FindBPStatementLocation(uint32_t bpId, StatementLocation * statement);
 
-        BOOL GetStatementSpan(int32 ibos, StatementSpan* pBos);
-        BOOL GetStatementLocation(int32 ibos, StatementLocation* plocation);
+        BOOL GetStatementSpan(int32_t ibos, StatementSpan* pBos);
+        BOOL GetStatementLocation(int32_t ibos, StatementLocation* plocation);
 
         virtual bool HasDocumentText() const
         {
@@ -48,7 +48,7 @@ namespace Js
             return nullptr;
         };
 
-        Js::FunctionBody * GetFunctionBodyAt(int32 ibos);
+        Js::FunctionBody * GetFunctionBodyAt(int32_t ibos);
 
         Utf8SourceInfo* GetUtf8SourceInfo() { return this->utf8SourceInfo; }
 
@@ -60,6 +60,6 @@ namespace Js
         BreakpointProbeList* NewBreakpointList(ArenaAllocator* arena);
         BreakpointProbeList* GetBreakpointList();
 
-        BOOL HasLineBreak(int32 _start, int32 _end);
+        BOOL HasLineBreak(int32_t _start, int32_t _end);
     };
 }

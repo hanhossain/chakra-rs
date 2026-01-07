@@ -661,7 +661,7 @@ namespace TTD
             TTDVar Result;
 
             //The re-entry depth we are at when this happens
-            int32 CallbackDepth;
+            int32_t CallbackDepth;
 
             //the number of arguments and the argument array -- function is always argument[0]
             uint32_t ArgCount;
@@ -692,7 +692,7 @@ namespace TTD
         void JsRTCallFunctionAction_ProcessDiagInfoPost(EventLogEntry* evt, long lastNestedEvent);
 #endif
 
-        void JsRTCallFunctionAction_ProcessArgs(EventLogEntry* evt, int32 rootDepth, long callEventTime, Js::Var funcVar, uint32_t argc, Js::Var* argv, long topLevelCallbackEventTime, UnlinkableSlabAllocator& alloc);
+        void JsRTCallFunctionAction_ProcessArgs(EventLogEntry* evt, int32_t rootDepth, long callEventTime, Js::Var funcVar, uint32_t argc, Js::Var* argv, long topLevelCallbackEventTime, UnlinkableSlabAllocator& alloc);
 
         void JsRTCallFunctionAction_Execute(const EventLogEntry* evt, ThreadContextTTD* executeContext);
         void JsRTCallFunctionAction_UnloadEventMemory(EventLogEntry* evt, UnlinkableSlabAllocator& alloc);

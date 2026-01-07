@@ -95,7 +95,7 @@ namespace Js
     {
         mWriter.Create();
 
-        const int32 astSize = func->GetFncNode()->astSize/AstBytecodeRatioEstimate;
+        const int32_t astSize = func->GetFncNode()->astSize/AstBytecodeRatioEstimate;
         // Use the temp allocator in bytecode write temp buffer.
         mWriter.InitData(&mAllocator, astSize);
 
@@ -2478,11 +2478,11 @@ namespace Js
    // int tab = 0;
     void AsmJSByteCodeGenerator::LoadModuleInt( RegSlot dst, RegSlot index )
     {
-        mWriter.AsmSlot(OpCodeAsmJs::LdSlot_Int, dst, AsmJsFunctionMemory::ModuleEnvRegister, index + (int32)(mCompiler->GetIntOffset() / WAsmJs::INT_SLOTS_SPACE + 0.5));
+        mWriter.AsmSlot(OpCodeAsmJs::LdSlot_Int, dst, AsmJsFunctionMemory::ModuleEnvRegister, index + (int32_t)(mCompiler->GetIntOffset() / WAsmJs::INT_SLOTS_SPACE + 0.5));
     }
     void AsmJSByteCodeGenerator::LoadModuleFloat(RegSlot dst, RegSlot index)
     {
-        mWriter.AsmSlot(OpCodeAsmJs::LdSlot_Flt, dst, AsmJsFunctionMemory::ModuleEnvRegister, index + (int32)(mCompiler->GetFloatOffset() / WAsmJs::FLOAT_SLOTS_SPACE + 0.5));
+        mWriter.AsmSlot(OpCodeAsmJs::LdSlot_Flt, dst, AsmJsFunctionMemory::ModuleEnvRegister, index + (int32_t)(mCompiler->GetFloatOffset() / WAsmJs::FLOAT_SLOTS_SPACE + 0.5));
     }
     void AsmJSByteCodeGenerator::LoadModuleDouble( RegSlot dst, RegSlot index )
     {
@@ -2510,12 +2510,12 @@ namespace Js
 
     void AsmJSByteCodeGenerator::SetModuleInt( Js::RegSlot dst, RegSlot src )
     {
-        mWriter.AsmSlot(OpCodeAsmJs::StSlot_Int, src, AsmJsFunctionMemory::ModuleEnvRegister, dst + (int32)(mCompiler->GetIntOffset() / WAsmJs::INT_SLOTS_SPACE + 0.5));
+        mWriter.AsmSlot(OpCodeAsmJs::StSlot_Int, src, AsmJsFunctionMemory::ModuleEnvRegister, dst + (int32_t)(mCompiler->GetIntOffset() / WAsmJs::INT_SLOTS_SPACE + 0.5));
     }
 
     void AsmJSByteCodeGenerator::SetModuleFloat(Js::RegSlot dst, RegSlot src)
     {
-        mWriter.AsmSlot(OpCodeAsmJs::StSlot_Flt, src, AsmJsFunctionMemory::ModuleEnvRegister, dst + (int32)(mCompiler->GetFloatOffset() / WAsmJs::FLOAT_SLOTS_SPACE + 0.5));
+        mWriter.AsmSlot(OpCodeAsmJs::StSlot_Flt, src, AsmJsFunctionMemory::ModuleEnvRegister, dst + (int32_t)(mCompiler->GetFloatOffset() / WAsmJs::FLOAT_SLOTS_SPACE + 0.5));
     }
 
     void AsmJSByteCodeGenerator::SetModuleDouble( Js::RegSlot dst, RegSlot src )

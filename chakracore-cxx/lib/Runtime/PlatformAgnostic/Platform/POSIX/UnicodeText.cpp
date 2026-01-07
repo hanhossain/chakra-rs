@@ -29,7 +29,7 @@ namespace PlatformAgnostic
             return CharacterClassificationType::Invalid;
         }
 
-        int32 NormalizeString(NormalizationForm normalizationForm, const char16_t* sourceString, uint32_t sourceLength, char16_t* destString, int32 destLength, ApiError* pErrorOut)
+        int32_t NormalizeString(NormalizationForm normalizationForm, const char16_t* sourceString, uint32_t sourceLength, char16_t* destString, int32_t destLength, ApiError* pErrorOut)
         {
             *pErrorOut = ApiError::NoError;
             if (destString == nullptr)
@@ -37,13 +37,13 @@ namespace PlatformAgnostic
                 return sourceLength;
             }
 
-            int32 len = (int32)minm(minm(destLength, sourceLength), INT_MAX);
+            int32_t len = (int32_t)minm(minm(destLength, sourceLength), INT_MAX);
             memcpy(destString, sourceString, len * sizeof(char16_t));
 
             return len;
         }
 
-        bool IsNormalizedString(NormalizationForm normalizationForm, const char16_t* testString, int32 testStringLength) {
+        bool IsNormalizedString(NormalizationForm normalizationForm, const char16_t* testString, int32_t testStringLength) {
             // TODO: implement this
             return true;
         }

@@ -60,7 +60,7 @@ public:
         return JitAnew(alloc, ValueInfo, type, ValueStructureKind::Generic);
     }
     static ValueInfo * MergeLikelyIntValueInfo(JitArenaAllocator* alloc, Value *toDataVal, Value *fromDataVal, const ValueType newValueType);
-    static ValueInfo * NewIntRangeValueInfo(JitArenaAllocator* alloc, int32 min, int32 max, bool wasNegativeZeroPreventedByBailout);
+    static ValueInfo * NewIntRangeValueInfo(JitArenaAllocator* alloc, int32_t min, int32_t max, bool wasNegativeZeroPreventedByBailout);
 
     const ValueType &  Type() const { return *this; }
     ValueType &        Type() { return *this; }
@@ -214,34 +214,34 @@ public:
 
 public:
     bool HasIntConstantValue(const bool includeLikelyInt = false) const;
-    bool TryGetIntConstantValue(int32 *const intValueRef, const bool includeLikelyInt = false) const;
+    bool TryGetIntConstantValue(int32_t *const intValueRef, const bool includeLikelyInt = false) const;
     bool TryGetIntConstantValue(long *const intValueRef, const bool isUnsigned) const;
     bool TryGetInt64ConstantValue(long *const intValueRef, const bool isUnsigned) const;
-    bool TryGetIntConstantLowerBound(int32 *const intConstantBoundRef, const bool includeLikelyInt = false) const;
-    bool TryGetIntConstantUpperBound(int32 *const intConstantBoundRef, const bool includeLikelyInt = false) const;
+    bool TryGetIntConstantLowerBound(int32_t *const intConstantBoundRef, const bool includeLikelyInt = false) const;
+    bool TryGetIntConstantUpperBound(int32_t *const intConstantBoundRef, const bool includeLikelyInt = false) const;
     bool TryGetIntConstantBounds(IntConstantBounds *const intConstantBoundsRef, const bool includeLikelyInt = false) const;
     bool WasNegativeZeroPreventedByBailout() const;
 
 public:
-    static bool IsEqualTo(const Value *const src1Value, const int32 min1, const int32 max1, const Value *const src2Value, const int32 min2, const int32 max2);
-    static bool IsNotEqualTo(const Value *const src1Value, const int32 min1, const int32 max1, const Value *const src2Value, const int32 min2, const int32 max2);
+    static bool IsEqualTo(const Value *const src1Value, const int32_t min1, const int32_t max1, const Value *const src2Value, const int32_t min2, const int32_t max2);
+    static bool IsNotEqualTo(const Value *const src1Value, const int32_t min1, const int32_t max1, const Value *const src2Value, const int32_t min2, const int32_t max2);
 private:
-    static bool IsEqualTo_NoConverse(const Value *const src1Value, const int32 min1, const int32 max1, const Value *const src2Value, const int32 min2, const int32 max2);
-    static bool IsNotEqualTo_NoConverse(const Value *const src1Value, const int32 min1, const int32 max1, const Value *const src2Value, const int32 min2, const int32 max2);
+    static bool IsEqualTo_NoConverse(const Value *const src1Value, const int32_t min1, const int32_t max1, const Value *const src2Value, const int32_t min2, const int32_t max2);
+    static bool IsNotEqualTo_NoConverse(const Value *const src1Value, const int32_t min1, const int32_t max1, const Value *const src2Value, const int32_t min2, const int32_t max2);
 
 public:
-    static bool IsGreaterThanOrEqualTo(const Value *const src1Value, const int32 min1, const int32 max1, const Value *const src2Value, const int32 min2, const int32 max2);
-    static bool IsGreaterThan(const Value *const src1Value, const int32 min1, const int32 max1, const Value *const src2Value, const int32 min2, const int32 max2);
-    static bool IsLessThanOrEqualTo(const Value *const src1Value, const int32 min1, const int32 max1, const Value *const src2Value, const int32 min2, const int32 max2);
-    static bool IsLessThan(const Value *const src1Value, const int32 min1, const int32 max1, const Value *const src2Value, const int32 min2, const int32 max2);
+    static bool IsGreaterThanOrEqualTo(const Value *const src1Value, const int32_t min1, const int32_t max1, const Value *const src2Value, const int32_t min2, const int32_t max2);
+    static bool IsGreaterThan(const Value *const src1Value, const int32_t min1, const int32_t max1, const Value *const src2Value, const int32_t min2, const int32_t max2);
+    static bool IsLessThanOrEqualTo(const Value *const src1Value, const int32_t min1, const int32_t max1, const Value *const src2Value, const int32_t min2, const int32_t max2);
+    static bool IsLessThan(const Value *const src1Value, const int32_t min1, const int32_t max1, const Value *const src2Value, const int32_t min2, const int32_t max2);
 
 public:
-    static bool IsGreaterThanOrEqualTo(const Value *const src1Value, const int32 min1, const int32 max1, const Value *const src2Value, const int32 min2, const int32 max2, const int src2Offset);
-    static bool IsLessThanOrEqualTo(const Value *const src1Value, const int32 min1, const int32 max1, const Value *const src2Value, const int32 min2, const int32 max2, const int src2Offset);
+    static bool IsGreaterThanOrEqualTo(const Value *const src1Value, const int32_t min1, const int32_t max1, const Value *const src2Value, const int32_t min2, const int32_t max2, const int src2Offset);
+    static bool IsLessThanOrEqualTo(const Value *const src1Value, const int32_t min1, const int32_t max1, const Value *const src2Value, const int32_t min2, const int32_t max2, const int src2Offset);
 
 private:
-    static bool IsGreaterThanOrEqualTo_NoConverse(const Value *const src1Value, const int32 min1, const int32 max1, const Value *const src2Value, const int32 min2, const int32 max2, const int src2Offset);
-    static bool IsLessThanOrEqualTo_NoConverse(const Value *const src1Value, const int32 min1, const int32 max1, const Value *const src2Value, const int32 min2, const int32 max2, const int src2Offset);
+    static bool IsGreaterThanOrEqualTo_NoConverse(const Value *const src1Value, const int32_t min1, const int32_t max1, const Value *const src2Value, const int32_t min2, const int32_t max2, const int src2Offset);
+    static bool IsLessThanOrEqualTo_NoConverse(const Value *const src1Value, const int32_t min1, const int32_t max1, const Value *const src2Value, const int32_t min2, const int32_t max2, const int src2Offset);
 
 public:
     ValueInfo *SpecializeToInt32(JitArenaAllocator *const allocator, const bool isForLoopBackEdgeCompensation = false);
@@ -409,8 +409,8 @@ protected:
 public:
     static IntRangeValueInfo *New(
         JitArenaAllocator *const allocator,
-        const int32 lowerBound,
-        const int32 upperBound,
+        const int32_t lowerBound,
+        const int32_t upperBound,
         const bool wasNegativeZeroPreventedByBailout)
     {
         return

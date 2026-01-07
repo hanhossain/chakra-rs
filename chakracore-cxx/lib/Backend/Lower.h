@@ -175,8 +175,8 @@ private:
                         IR::LabelInstr* labelObjCheckFailed, IR::LabelInstr *labelTypeCheckFailed, IR::LabelInstr *labelSecondChance = nullptr);
     void            GenerateCachedTypeWithoutPropertyCheck(IR::Instr *instrInsert, IR::PropertySymOpnd *propertySymOpnd, IR::Opnd *typeOpnd, IR::LabelInstr *labelTypeCheckFailed);
     IR::RegOpnd *   GeneratePolymorphicTypeIndex(IR::RegOpnd * typeOpnd, Js::PropertyGuard * typeCheckGuard, IR::Instr * instrInsert);
-    void            GenerateLeaOfOOPData(IR::RegOpnd * regOpnd, void * address, int32 offset, IR::Instr * instrInsert);
-    IR::Opnd *      GenerateIndirOfOOPData(void * address, int32 offset, IR::Instr * instrInsert);
+    void            GenerateLeaOfOOPData(IR::RegOpnd * regOpnd, void * address, int32_t offset, IR::Instr * instrInsert);
+    IR::Opnd *      GenerateIndirOfOOPData(void * address, int32_t offset, IR::Instr * instrInsert);
     bool            GenerateFixedFieldGuardCheck(IR::Instr *insertPointInstr, IR::PropertySymOpnd *propertySymOpnd, IR::LabelInstr *labelBailOut);
     Js::JitTypePropertyGuard* CreateTypePropertyGuardForGuardedProperties(JITTypeHolder type, IR::PropertySymOpnd* propertySymOpnd);
     Js::JitEquivalentTypeGuard* CreateEquivalentTypeGuardAndLinkToGuardedProperties(IR::PropertySymOpnd* propertySymOpnd);
@@ -445,7 +445,7 @@ public:
     static IR::Opnd *           GetMissingItemOpndForAssignment(IRType type, Func *func);
     static IR::Opnd *           GetMissingItemOpndForCompare(IRType type, Func *func);
     static IR::Opnd *           GetImplicitCallFlagsOpnd(Func * func);
-    inline static IR::IntConstOpnd* MakeCallInfoConst(ushort flags, int32 argCount, Func* func) {
+    inline static IR::IntConstOpnd* MakeCallInfoConst(ushort flags, int32_t argCount, Func* func) {
         argCount = Js::CallInfo::GetArgCountWithoutExtraArgs((Js::CallFlags)flags, (uint16)argCount);
 #ifdef _M_X64
         // This was defined differently for x64
@@ -643,7 +643,7 @@ private:
     IR::Opnd*       GenerateArgOutForInlineeStackArgs(IR::Instr* callInstr, IR::Instr* stackArgsInstr);
     IR::Opnd*       GenerateArgOutForStackArgs(IR::Instr* callInstr, IR::Instr* stackArgsInstr);
 
-    void            GenerateLoadStackArgumentByIndex(IR::Opnd *dst, IR::RegOpnd *indexOpnd, IR::Instr *instr, int32 offset, Func *func);
+    void            GenerateLoadStackArgumentByIndex(IR::Opnd *dst, IR::RegOpnd *indexOpnd, IR::Instr *instr, int32_t offset, Func *func);
     bool            GenerateFastStackArgumentsLdElemI(IR::Instr* ldElem);
     IR::IndirOpnd*  GetArgsIndirOpndForInlinee(IR::Instr* ldElem, IR::Opnd* valueOpnd);
     IR::IndirOpnd*  GetArgsIndirOpndForTopFunction(IR::Instr* ldElem, IR::Opnd* valueOpnd);
@@ -718,15 +718,15 @@ private:
     bool            GenerateProfiledNewScObjArrayFastPath(IR::Instr *instr, Js::ArrayCallSiteInfo * arrayInfo, intptr_t arrayInfoAddr, intptr_t weakFuncRef, IR::LabelInstr* helperLabel, IR::LabelInstr* labelDone, IR::Opnd* lengthOpnd, uint32_t offsetOfCallSiteIndex, uint32_t offsetOfWeakFuncRef);
     bool            GenerateProfiledNewScArrayFastPath(IR::Instr *instr, Js::ArrayCallSiteInfo * arrayInfo, intptr_t arrayInfoAddr, intptr_t weakFuncRef, uint32_t length);
      
-    void            GenerateMemInit(IR::RegOpnd * opnd, int32 offset, int32 value, IR::Instr * insertBeforeInstr, bool isZeroed = false);
-    void            GenerateMemInit(IR::RegOpnd * opnd, int32 offset, uint32_t value, IR::Instr * insertBeforeInstr, bool isZeroed = false);
-    void            GenerateMemInitNull(IR::RegOpnd * opnd, int32 offset, IR::Instr * insertBeforeInstr, bool isZeroed = false);
-    void            GenerateMemInit(IR::RegOpnd * opnd, int32 offset, IR::Opnd * value, IR::Instr * insertBeforeInstr, bool isZeroed = false);
+    void            GenerateMemInit(IR::RegOpnd * opnd, int32_t offset, int32_t value, IR::Instr * insertBeforeInstr, bool isZeroed = false);
+    void            GenerateMemInit(IR::RegOpnd * opnd, int32_t offset, uint32_t value, IR::Instr * insertBeforeInstr, bool isZeroed = false);
+    void            GenerateMemInitNull(IR::RegOpnd * opnd, int32_t offset, IR::Instr * insertBeforeInstr, bool isZeroed = false);
+    void            GenerateMemInit(IR::RegOpnd * opnd, int32_t offset, IR::Opnd * value, IR::Instr * insertBeforeInstr, bool isZeroed = false);
     void            GenerateMemInit(IR::RegOpnd * opnd, IR::RegOpnd * offset, IR::Opnd * value, IR::Instr * insertBeforeInstr, bool isZeroed = false);
-    void            GenerateRecyclerMemInit(IR::RegOpnd * opnd, int32 offset, int32 value, IR::Instr * insertBeforeInstr);
-    void            GenerateRecyclerMemInit(IR::RegOpnd * opnd, int32 offset, uint32_t value, IR::Instr * insertBeforeInstr);
-    void            GenerateRecyclerMemInitNull(IR::RegOpnd * opnd, int32 offset, IR::Instr * insertBeforeInstr);
-    void            GenerateRecyclerMemInit(IR::RegOpnd * opnd, int32 offset, IR::Opnd * value, IR::Instr * insertBeforeInstr);
+    void            GenerateRecyclerMemInit(IR::RegOpnd * opnd, int32_t offset, int32_t value, IR::Instr * insertBeforeInstr);
+    void            GenerateRecyclerMemInit(IR::RegOpnd * opnd, int32_t offset, uint32_t value, IR::Instr * insertBeforeInstr);
+    void            GenerateRecyclerMemInitNull(IR::RegOpnd * opnd, int32_t offset, IR::Instr * insertBeforeInstr);
+    void            GenerateRecyclerMemInit(IR::RegOpnd * opnd, int32_t offset, IR::Opnd * value, IR::Instr * insertBeforeInstr);
     void            GenerateMemCopy(IR::Opnd * dst, IR::Opnd * src, uint32_t size, IR::Instr * insertBeforeInstr);
 
     void            GenerateDynamicObjectAlloc(IR::Instr * newObjInstr, uint inlineSlotCount, uint slotCount, IR::RegOpnd * newObjDst, IR::Opnd * typeSrc);

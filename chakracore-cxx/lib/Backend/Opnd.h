@@ -258,7 +258,7 @@ public:
     long               GetImmediateValue(Func * func);
 #if defined(_M_ARM)
     // Helper for 32bits systems without long const operand support
-    int32               GetImmediateValueAsInt32(Func * func);
+    int32_t               GetImmediateValueAsInt32(Func * func);
 #endif
     BailoutConstantValue GetConstValue();
     bool                GetIsJITOptimizedReg() const { return m_isJITOptimizedReg; }
@@ -395,7 +395,7 @@ public:
     }
 
     void SetValue(IntConstType value);
-    int32 AsInt32();
+    int32_t AsInt32();
     uint32_t AsUint32();
 };
 
@@ -1519,7 +1519,7 @@ public:
     static AddrOpnd *       New(intptr_t address, AddrOpndKind addrOpndKind, Func *func, bool dontEncode = false, Js::Var varLocal = nullptr);
     static AddrOpnd *       New(Js::Var address, AddrOpndKind addrOpndKind, Func *func, bool dontEncode = false, Js::Var varLocal = nullptr);
     static AddrOpnd *       NewFromNumber(double value, Func *func, bool dontEncode = false);
-    static AddrOpnd *       NewFromNumber(int32 value, Func *func, bool dontEncode = false);
+    static AddrOpnd *       NewFromNumber(int32_t value, Func *func, bool dontEncode = false);
     static AddrOpnd *       NewFromNumber(long value, Func *func, bool dontEncode = false);
     static AddrOpnd *       NewFromNumberVar(double value, Func *func, bool dontEncode = false);
     static AddrOpnd *       NewNull(Func * func);
@@ -1665,10 +1665,10 @@ class IndirOpnd: public Opnd
 public:
     static IndirOpnd *      New(RegOpnd * baseOpnd, RegOpnd * indexOpnd, IRType type, Func *func);
     static IndirOpnd *      New(RegOpnd * baseOpnd, RegOpnd * indexOpnd, byte scale, IRType type, Func *func);
-    static IndirOpnd *      New(RegOpnd * indexOpnd, int32 offset, byte scale, IRType type, Func *func);
-    static IndirOpnd *      New(RegOpnd * baseOpnd, int32 offset, IRType type, Func *func, bool dontEncode = false);
+    static IndirOpnd *      New(RegOpnd * indexOpnd, int32_t offset, byte scale, IRType type, Func *func);
+    static IndirOpnd *      New(RegOpnd * baseOpnd, int32_t offset, IRType type, Func *func, bool dontEncode = false);
 #if DBG_DUMP || defined(ENABLE_IR_VIEWER)
-    static IndirOpnd *      New(RegOpnd * baseOpnd, int32 offset, IRType type, const char16_t *desc, Func *func, bool dontEncode = false);
+    static IndirOpnd *      New(RegOpnd * baseOpnd, int32_t offset, IRType type, const char16_t *desc, Func *func, bool dontEncode = false);
 #endif
 
 public:
@@ -1700,8 +1700,8 @@ public:
     void                    SetIndexOpnd(RegOpnd *indexOpnd);
     RegOpnd *               UnlinkIndexOpnd();
     void                    ReplaceIndexOpnd(RegOpnd *newIndex);
-    int32                   GetOffset() const;
-    void                    SetOffset(int32 offset, bool dontEncode = false);
+    int32_t                   GetOffset() const;
+    void                    SetOffset(int32_t offset, bool dontEncode = false);
     byte                    GetScale() const;
     void                    SetScale(byte scale);
     bool                    TryGetIntConstIndexValue(bool trySym, IntConstType *pValue, bool *pIsNotInt);
@@ -1721,7 +1721,7 @@ public:
 private:
     RegOpnd *               m_baseOpnd;
     RegOpnd *               m_indexOpnd;
-    int32                   m_offset;
+    int32_t                   m_offset;
     byte                    m_scale;
     bool                    m_conversionAllowed;
     Func *                  m_func;  // We need the allocator to copy the base and index...

@@ -52,7 +52,7 @@ namespace Js
         return RecyclerNew(recycler, ThrowErrorObject, type, error);
     }
 
-    RecyclableObject* ThrowErrorObject::CreateThrowErrorObject(CreateErrorFunc createError, ScriptContext* scriptContext, int32 hCode, const char16_t * varName)
+    RecyclableObject* ThrowErrorObject::CreateThrowErrorObject(CreateErrorFunc createError, ScriptContext* scriptContext, int32_t hCode, const char16_t * varName)
     {
         JavascriptLibrary* library = scriptContext->GetLibrary();
         JavascriptError *pError = (library->*createError)();
@@ -60,12 +60,12 @@ namespace Js
         return library->CreateThrowErrorObject(pError);
     }
 
-    RecyclableObject* ThrowErrorObject::CreateThrowTypeErrorObject(ScriptContext* scriptContext, int32 hCode, const char16_t * varName)
+    RecyclableObject* ThrowErrorObject::CreateThrowTypeErrorObject(ScriptContext* scriptContext, int32_t hCode, const char16_t * varName)
     {
         return CreateThrowErrorObject(&JavascriptLibrary::CreateTypeError, scriptContext, hCode, varName);
     }
 
-    RecyclableObject* ThrowErrorObject::CreateThrowTypeErrorObject(ScriptContext* scriptContext, int32 hCode, JavascriptString* varName)
+    RecyclableObject* ThrowErrorObject::CreateThrowTypeErrorObject(ScriptContext* scriptContext, int32_t hCode, JavascriptString* varName)
     {
         return CreateThrowTypeErrorObject(scriptContext, hCode, varName->GetSz());
     }

@@ -94,7 +94,7 @@ uint32_t GetTypeByteSize(WasmType type)
     switch (type)
     {
     case Void: return sizeof(Js::Var);
-    case I32: return sizeof(int32);
+    case I32: return sizeof(int32_t);
     case I64: return sizeof(long);
     case F32: return sizeof(float);
     case F64: return sizeof(double);

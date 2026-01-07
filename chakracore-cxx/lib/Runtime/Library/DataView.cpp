@@ -22,7 +22,7 @@ namespace Js
         bool isCtorSuperCall = JavascriptOperators::GetAndAssertIsConstructorSuperCall(args);
         uint32_t byteLength = 0;
         uint32_t mappedLength;
-        int32 offset = 0;
+        int32_t offset = 0;
         ArrayBufferBase* arrayBuffer = nullptr;
         DataView* dataView;
 
@@ -269,7 +269,7 @@ namespace Js
         }
 
         DataView* dataView = VarTo<DataView>(args[0]);
-        return dataView->GetValue<int32>(args[1], u"DataView.prototype.GetInt32", isLittleEndian);
+        return dataView->GetValue<int32_t>(args[1], u"DataView.prototype.GetInt32", isLittleEndian);
     }
 
     Var DataView::EntryGetFloat32(RecyclableObject* function, CallInfo callInfo, ...)
@@ -496,7 +496,7 @@ namespace Js
         Assert(!(callInfo.Flags & CallFlags_New));
 
         BOOL isLittleEndian = FALSE;
-        int32 value = 0;
+        int32_t value = 0;
         switch (args.Info.Count)
         {
         case 0:
@@ -526,7 +526,7 @@ namespace Js
         }
 
         DataView* dataView = VarTo<DataView>(args[0]);
-        dataView->SetValue<int32>(args[1], value, u"DataView.prototype.SetInt32", isLittleEndian);
+        dataView->SetValue<int32_t>(args[1], value, u"DataView.prototype.SetInt32", isLittleEndian);
         return scriptContext->GetLibrary()->GetUndefined();
     }
 

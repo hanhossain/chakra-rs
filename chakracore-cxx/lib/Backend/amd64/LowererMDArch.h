@@ -82,7 +82,7 @@ public:
     IR::Opnd *          GetArgSlotOpnd(Js::ArgSlot slotIndex, StackSym * argSym = nullptr, bool isHelper = false);
     IR::Instr *         LoadNewScObjFirstArg(IR::Instr * instr, IR::Opnd * dst, ushort extraArgs = 0);
     IR::Instr *         LoadInputParamPtr(IR::Instr *instrInsert, IR::RegOpnd *optionalDstOpnd = nullptr);
-    int32               LowerCallArgs(IR::Instr *callInstr, ushort callFlags, Js::ArgSlot extraParams = 1 /* for function object */, IR::IntConstOpnd **callInfoOpndRef = nullptr);
+    int32_t               LowerCallArgs(IR::Instr *callInstr, ushort callFlags, Js::ArgSlot extraParams = 1 /* for function object */, IR::IntConstOpnd **callInfoOpndRef = nullptr);
     IR::Instr *         LowerCall(IR::Instr * callInstr, uint32_t argCount);
     IR::Instr *         LowerCallI(IR::Instr * callInstr, ushort callFlags, bool isHelper = false, IR::Instr * insertBeforeInstrForCFG = nullptr);
     IR::Instr *         LowerCallIDynamic(IR::Instr * callInstr, IR::Instr* saveThis, IR::Opnd* argsLengthOpnd, ushort callFlags, IR::Instr * insertBeforeInstrForCFG = nullptr);
@@ -129,8 +129,8 @@ public:
     static RegNum       GetRegChkStkParam();
     static RegNum       GetRegIMulDestLower();
     static RegNum       GetRegIMulHighDestLower();
-    static RegNum       GetRegArgI4(int32 argNum);
-    static RegNum       GetRegArgR8(int32 argNum);
+    static RegNum       GetRegArgI4(int32_t argNum);
+    static RegNum       GetRegArgR8(int32_t argNum);
     static Js::OpCode   GetAssignOp(IRType type);
 
     bool                GenerateFastAnd(IR::Instr * instrAnd);
@@ -156,7 +156,7 @@ private:
     IR::LabelInstr *    GetBailOutStackRestoreLabel(BailOutInfo * bailOutInfo, IR::LabelInstr * exitTargetInstr);
     void                GeneratePreCall(IR::Instr * callInstr, IR::Opnd  *functionObjOpnd, IR::Instr* insertBeforeInstrForCFGCheck = nullptr);
     void                SetMaxArgSlots(Js::ArgSlot actualCount /*including this*/);
-    void                GenerateMemInit(IR::RegOpnd * opnd, int32 offset, size_t value, IR::Instr * insertBeforeInstr, bool isZeroed = false);
+    void                GenerateMemInit(IR::RegOpnd * opnd, int32_t offset, size_t value, IR::Instr * insertBeforeInstr, bool isZeroed = false);
     bool                GenerateFastDivAndRem_Signed(IR::Instr* instrDiv);
     bool                GenerateFastDivAndRem_Unsigned(IR::Instr* instrDiv);
 };

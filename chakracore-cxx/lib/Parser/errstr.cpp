@@ -109,14 +109,14 @@ LError:
 }
 
 
-BOOL FGetResourceString(int32 isz, __out_ecount(cchMax) OLECHAR *psz, int cchMax)
+BOOL FGetResourceString(int32_t isz, __out_ecount(cchMax) OLECHAR *psz, int cchMax)
 {
     return FGetStringFromLibrary((HINSTANCE)g_hInstance, isz, psz, cchMax);
 }
 
 // Get a bstr version of the error string
 // Don't inline. This function needs 2KB stack.
-BSTR BstrGetResourceString(int32 isz)
+BSTR BstrGetResourceString(int32_t isz)
 {
     // NOTE - isz is expected to be int32_t
 

@@ -83,7 +83,7 @@ namespace Js
         template<> void SwapRoutine(uint8_t* input, uint8_t* dest) {*dest =  *input; }
         template<> void SwapRoutine(int16* input, int16* dest) {*dest =  RtlUshortByteSwap(*input); }
         template<> void SwapRoutine(uint16* input, uint16* dest) {*dest =  RtlUshortByteSwap(*input);}
-        template<> void SwapRoutine(int32* input, int32* dest) {*dest =  RtlUlongByteSwap(*input);}
+        template<> void SwapRoutine(int32_t* input, int32_t* dest) {*dest =  RtlUlongByteSwap(*input);}
         template<> void SwapRoutine(uint32_t* input, uint32_t* dest) {*dest =  RtlUlongByteSwap(*input);}
         // we don't want type conversion here, we just want to swap the bytes.
         template<> void SwapRoutine(float* input, float* dest) { *((uint32_t*)dest) = RtlUlongByteSwap(*((uint32_t*)input)); }

@@ -6,7 +6,7 @@
 
 bool ValueInfo::HasIntConstantValue(const bool includeLikelyInt) const
 {
-    int32 constantValue;
+    int32_t constantValue;
     return TryGetIntConstantValue(&constantValue, includeLikelyInt);
 }
 
@@ -19,7 +19,7 @@ bool ValueInfo::TryGetInt64ConstantValue(long *const intValueRef, const bool isU
     }
     else
     {
-        int32 int32ValueRef;
+        int32_t int32ValueRef;
         if (TryGetIntConstantValue(&int32ValueRef, false))
         {
             if (isUnsigned)
@@ -47,7 +47,7 @@ bool ValueInfo::TryGetIntConstantValue(long *const intValueRef, const bool isUns
     return false;
 }
 
-bool ValueInfo::TryGetIntConstantValue(int32 *const intValueRef, const bool includeLikelyInt) const
+bool ValueInfo::TryGetIntConstantValue(int32_t *const intValueRef, const bool includeLikelyInt) const
 {
     Assert(intValueRef);
     if (!(includeLikelyInt ? IsLikelyInt() : IsInt()))
@@ -83,7 +83,7 @@ bool ValueInfo::TryGetIntConstantValue(int32 *const intValueRef, const bool incl
     return false;
 }
 
-bool ValueInfo::TryGetIntConstantLowerBound(int32 *const intConstantBoundRef, const bool includeLikelyInt) const
+bool ValueInfo::TryGetIntConstantLowerBound(int32_t *const intConstantBoundRef, const bool includeLikelyInt) const
 {
     Assert(intConstantBoundRef);
 
@@ -119,7 +119,7 @@ bool ValueInfo::TryGetIntConstantLowerBound(int32 *const intConstantBoundRef, co
     return true;
 }
 
-bool ValueInfo::TryGetIntConstantUpperBound(int32 *const intConstantBoundRef, const bool includeLikelyInt) const
+bool ValueInfo::TryGetIntConstantUpperBound(int32_t *const intConstantBoundRef, const bool includeLikelyInt) const
 {
     Assert(intConstantBoundRef);
 
@@ -169,7 +169,7 @@ bool ValueInfo::TryGetIntConstantBounds(IntConstantBounds *const intConstantBoun
     case ValueStructureKind::IntConstant:
         if (!includeLikelyInt || IsInt())
         {
-            const int32 intValue = AsIntConstant()->IntValue();
+            const int32_t intValue = AsIntConstant()->IntValue();
             *intConstantBoundsRef = IntConstantBounds(intValue, intValue);
             return true;
         }
@@ -215,11 +215,11 @@ bool ValueInfo::WasNegativeZeroPreventedByBailout() const
 
 bool ValueInfo::IsEqualTo(
     const Value *const src1Value,
-    const int32 min1,
-    const int32 max1,
+    const int32_t min1,
+    const int32_t max1,
     const Value *const src2Value,
-    const int32 min2,
-    const int32 max2)
+    const int32_t min2,
+    const int32_t max2)
 {
     const bool result =
         IsEqualTo_NoConverse(src1Value, min1, max1, src2Value, min2, max2) ||
@@ -231,11 +231,11 @@ bool ValueInfo::IsEqualTo(
 
 bool ValueInfo::IsNotEqualTo(
     const Value *const src1Value,
-    const int32 min1,
-    const int32 max1,
+    const int32_t min1,
+    const int32_t max1,
     const Value *const src2Value,
-    const int32 min2,
-    const int32 max2)
+    const int32_t min2,
+    const int32_t max2)
 {
     const bool result =
         IsNotEqualTo_NoConverse(src1Value, min1, max1, src2Value, min2, max2) ||
@@ -247,11 +247,11 @@ bool ValueInfo::IsNotEqualTo(
 
 bool ValueInfo::IsEqualTo_NoConverse(
     const Value *const src1Value,
-    const int32 min1,
-    const int32 max1,
+    const int32_t min1,
+    const int32_t max1,
     const Value *const src2Value,
-    const int32 min2,
-    const int32 max2)
+    const int32_t min2,
+    const int32_t max2)
 {
     return
         IsGreaterThanOrEqualTo(src1Value, min1, max1, src2Value, min2, max2) &&
@@ -260,11 +260,11 @@ bool ValueInfo::IsEqualTo_NoConverse(
 
 bool ValueInfo::IsNotEqualTo_NoConverse(
     const Value *const src1Value,
-    const int32 min1,
-    const int32 max1,
+    const int32_t min1,
+    const int32_t max1,
     const Value *const src2Value,
-    const int32 min2,
-    const int32 max2)
+    const int32_t min2,
+    const int32_t max2)
 {
     return
         IsGreaterThan(src1Value, min1, max1, src2Value, min2, max2) ||
@@ -273,55 +273,55 @@ bool ValueInfo::IsNotEqualTo_NoConverse(
 
 bool ValueInfo::IsGreaterThanOrEqualTo(
     const Value *const src1Value,
-    const int32 min1,
-    const int32 max1,
+    const int32_t min1,
+    const int32_t max1,
     const Value *const src2Value,
-    const int32 min2,
-    const int32 max2)
+    const int32_t min2,
+    const int32_t max2)
 {
     return IsGreaterThanOrEqualTo(src1Value, min1, max1, src2Value, min2, max2, 0);
 }
 
 bool ValueInfo::IsGreaterThan(
     const Value *const src1Value,
-    const int32 min1,
-    const int32 max1,
+    const int32_t min1,
+    const int32_t max1,
     const Value *const src2Value,
-    const int32 min2,
-    const int32 max2)
+    const int32_t min2,
+    const int32_t max2)
 {
     return IsGreaterThanOrEqualTo(src1Value, min1, max1, src2Value, min2, max2, 1);
 }
 
 bool ValueInfo::IsLessThanOrEqualTo(
     const Value *const src1Value,
-    const int32 min1,
-    const int32 max1,
+    const int32_t min1,
+    const int32_t max1,
     const Value *const src2Value,
-    const int32 min2,
-    const int32 max2)
+    const int32_t min2,
+    const int32_t max2)
 {
     return IsLessThanOrEqualTo(src1Value, min1, max1, src2Value, min2, max2, 0);
 }
 
 bool ValueInfo::IsLessThan(
     const Value *const src1Value,
-    const int32 min1,
-    const int32 max1,
+    const int32_t min1,
+    const int32_t max1,
     const Value *const src2Value,
-    const int32 min2,
-    const int32 max2)
+    const int32_t min2,
+    const int32_t max2)
 {
     return IsLessThanOrEqualTo(src1Value, min1, max1, src2Value, min2, max2, -1);
 }
 
 bool ValueInfo::IsGreaterThanOrEqualTo(
     const Value *const src1Value,
-    const int32 min1,
-    const int32 max1,
+    const int32_t min1,
+    const int32_t max1,
     const Value *const src2Value,
-    const int32 min2,
-    const int32 max2,
+    const int32_t min2,
+    const int32_t max2,
     const int src2Offset)
 {
     return
@@ -332,11 +332,11 @@ bool ValueInfo::IsGreaterThanOrEqualTo(
 
 bool ValueInfo::IsLessThanOrEqualTo(
     const Value *const src1Value,
-    const int32 min1,
-    const int32 max1,
+    const int32_t min1,
+    const int32_t max1,
     const Value *const src2Value,
-    const int32 min2,
-    const int32 max2,
+    const int32_t min2,
+    const int32_t max2,
     const int src2Offset)
 {
     return
@@ -349,11 +349,11 @@ bool ValueInfo::IsLessThanOrEqualTo(
 
 bool ValueInfo::IsGreaterThanOrEqualTo_NoConverse(
     const Value *const src1Value,
-    const int32 min1,
-    const int32 max1,
+    const int32_t min1,
+    const int32_t max1,
     const Value *const src2Value,
-    const int32 min2,
-    const int32 max2,
+    const int32_t min2,
+    const int32_t max2,
     const int src2Offset)
 {
     Assert(src1Value || min1 == max1);
@@ -383,11 +383,11 @@ bool ValueInfo::IsGreaterThanOrEqualTo_NoConverse(
 
 bool ValueInfo::IsLessThanOrEqualTo_NoConverse(
     const Value *const src1Value,
-    const int32 min1,
-    const int32 max1,
+    const int32_t min1,
+    const int32_t max1,
     const Value *const src2Value,
-    const int32 min2,
-    const int32 max2,
+    const int32_t min2,
+    const int32_t max2,
     const int src2Offset)
 {
     Assert(src1Value || min1 == max1);
@@ -677,7 +677,7 @@ ValueInfo::MergeLikelyIntValueInfo(JitArenaAllocator* alloc, Value *toDataVal, V
     bool wasNegativeZeroPreventedByBailout;
     if(newValueType.IsInt())
     {
-        int32 toDataIntConstantValue, fromDataIntConstantValue;
+        int32_t toDataIntConstantValue, fromDataIntConstantValue;
         if (toDataValueInfo->TryGetIntConstantValue(&toDataIntConstantValue) &&
             fromDataValueInfo->TryGetIntConstantValue(&fromDataIntConstantValue) &&
             toDataIntConstantValue == fromDataIntConstantValue)
@@ -740,10 +740,10 @@ ValueInfo::MergeLikelyIntValueInfo(JitArenaAllocator* alloc, Value *toDataVal, V
 
     if(newValueType.IsInt())
     {
-        int32 min1 = INT32_MIN;
-        int32 max1 = INT32_MAX;
-        int32 min2 = INT32_MIN;
-        int32 max2 = INT32_MAX;
+        int32_t min1 = INT32_MIN;
+        int32_t max1 = INT32_MAX;
+        int32_t min2 = INT32_MIN;
+        int32_t max2 = INT32_MAX;
         toDataValueInfo->GetIntValMinMax(&min1, &max1, false);
         fromDataValueInfo->GetIntValMinMax(&min2, &max2, false);
         return ValueInfo::NewIntRangeValueInfo(alloc, min(min1, min2), max(max1, max2), wasNegativeZeroPreventedByBailout);
@@ -752,7 +752,7 @@ ValueInfo::MergeLikelyIntValueInfo(JitArenaAllocator* alloc, Value *toDataVal, V
     return ValueInfo::New(alloc, newValueType);
 }
 
-ValueInfo * ValueInfo::NewIntRangeValueInfo(JitArenaAllocator * alloc, int32 min, int32 max, bool wasNegativeZeroPreventedByBailout)
+ValueInfo * ValueInfo::NewIntRangeValueInfo(JitArenaAllocator * alloc, int32_t min, int32_t max, bool wasNegativeZeroPreventedByBailout)
 {
     if (min == max)
     {

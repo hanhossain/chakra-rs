@@ -393,7 +393,7 @@ uint32_t Arm64UnwindCodeGenerator::GenerateSingleOpcode(uint32_t * opcodePtr, ui
     {
         int rt = opcode & 31;
         int rt2 = (opcode >> 10) & 31;
-        int offset = (int32(opcode << 10) >> 25) << 3;
+        int offset = (int32_t(opcode << 10) >> 25) << 3;
 
         // special case for homing parameters / volatile registers
         if (rt < 19 && rt2 < 19)
@@ -411,7 +411,7 @@ uint32_t Arm64UnwindCodeGenerator::GenerateSingleOpcode(uint32_t * opcodePtr, ui
     {
         int rt = opcode & 31;
         int rt2 = (opcode >> 10) & 31;
-        int offset = (int32(opcode << 10) >> 25) << 3;
+        int offset = (int32_t(opcode << 10) >> 25) << 3;
         return this->EncodeStorePairPredec(rt, rt2, offset);
     }
 
@@ -427,7 +427,7 @@ uint32_t Arm64UnwindCodeGenerator::GenerateSingleOpcode(uint32_t * opcodePtr, ui
     else if (opcodeList.strRtSpOffsBang.Matches(opcode))
     {
         int rt = opcode & 31;
-        int offset = int32(opcode << 11) >> 23;
+        int offset = int32_t(opcode << 11) >> 23;
         return this->EncodeStoreRegPredec(rt, offset);
     }
 
@@ -436,7 +436,7 @@ uint32_t Arm64UnwindCodeGenerator::GenerateSingleOpcode(uint32_t * opcodePtr, ui
     {
         int rt = opcode & 31;
         int rt2 = (opcode >> 10) & 31;
-        int offset = (int32(opcode << 10) >> 25) << 3;
+        int offset = (int32_t(opcode << 10) >> 25) << 3;
         return this->EncodeStoreFpPair(rt, rt2, offset);
     }
 
@@ -445,7 +445,7 @@ uint32_t Arm64UnwindCodeGenerator::GenerateSingleOpcode(uint32_t * opcodePtr, ui
     {
         int rt = opcode & 31;
         int rt2 = (opcode >> 10) & 31;
-        int offset = (int32(opcode << 10) >> 25) << 3;
+        int offset = (int32_t(opcode << 10) >> 25) << 3;
         return this->EncodeStoreFpPairPredec(rt, rt2, offset);
     }
 
@@ -461,7 +461,7 @@ uint32_t Arm64UnwindCodeGenerator::GenerateSingleOpcode(uint32_t * opcodePtr, ui
     else if (opcodeList.strDtSpOffsBang.Matches(opcode))
     {
         int rt = opcode & 31;
-        int offset = int32(opcode << 11) >> 23;
+        int offset = int32_t(opcode << 11) >> 23;
         return this->EncodeStoreFpRegPredec(rt, offset);
     }
 

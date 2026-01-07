@@ -1595,7 +1595,7 @@ namespace Js
         JavascriptFunction * func = stack->functionObject;
         AsmJsFunctionInfo* asmInfo = func->GetFunctionBody()->GetAsmJsFunctionInfo();
         uint argSize = (uint)(asmInfo->GetArgByteSize());
-        argSize = ::Math::Align<int32>(argSize, 8);
+        argSize = ::Math::Align<int32_t>(argSize, 8);
         // 2 * sizeof(Var) is for functionObject, and another push that DynamicInterpreterThunk does
         return argSize + 2 * sizeof(Var);
     }
@@ -5226,11 +5226,11 @@ skipThunk:
 
     void InterpreterStackFrame::OP_NewScIntArray(const unaligned OpLayoutAuxiliary * playout)
     {
-        const Js::AuxArray<int32> *ints = Js::ByteCodeReader::ReadAuxArray<int32>(playout->Offset, this->GetFunctionBody());
+        const Js::AuxArray<int32_t> *ints = Js::ByteCodeReader::ReadAuxArray<int32_t>(playout->Offset, this->GetFunctionBody());
 
         JavascriptNativeIntArray *arr = scriptContext->GetLibrary()->CreateNativeIntArrayLiteral(ints->count);
 
-        SparseArraySegment<int32> * segment = (SparseArraySegment<int32>*)arr->GetHead();
+        SparseArraySegment<int32_t> * segment = (SparseArraySegment<int32_t>*)arr->GetHead();
 
         JavascriptOperators::AddIntsToArraySegment(segment, ints);
 
@@ -5251,7 +5251,7 @@ skipThunk:
             return;
         }
 
-        const Js::AuxArray<int32> *ints = Js::ByteCodeReader::ReadAuxArray<int32>(playout->Offset, this->GetFunctionBody());
+        const Js::AuxArray<int32_t> *ints = Js::ByteCodeReader::ReadAuxArray<int32_t>(playout->Offset, this->GetFunctionBody());
 
         Js::ProfileId profileId = playout->profileId;
         FunctionBody *functionBody = this->m_functionBody;
@@ -5273,7 +5273,7 @@ skipThunk:
 #endif
             {
                 arr = scriptContext->GetLibrary()->CreateNativeIntArrayLiteral(ints->count);
-                SparseArraySegment<int32> *segment = (SparseArraySegment<int32>*)arr->GetHead();
+                SparseArraySegment<int32_t> *segment = (SparseArraySegment<int32_t>*)arr->GetHead();
                 JavascriptOperators::AddIntsToArraySegment(segment, ints);
             }
 
@@ -5509,7 +5509,7 @@ skipThunk:
         JavascriptOperators::OP_InitCachedFuncs(this->localClosure, GetLocalFrameDisplay(), info, GetScriptContext());
     }
 
-    Var InterpreterStackFrame::OP_GetCachedFunc(Var instance, int32 index)
+    Var InterpreterStackFrame::OP_GetCachedFunc(Var instance, int32_t index)
     {
         ActivationObjectEx *obj = VarTo<ActivationObjectEx>(instance);
 
@@ -6542,7 +6542,7 @@ skipThunk:
         return this->scriptContext->GetLibrary()->GetUndeclBlockVar();
     }
 
-    void InterpreterStackFrame::OP_InitUndeclSlot(Var aValue, int32 slot)
+    void InterpreterStackFrame::OP_InitUndeclSlot(Var aValue, int32_t slot)
     {
         this->OP_StSlot(aValue, slot, this->scriptContext->GetLibrary()->GetUndeclBlockVar());
     }
@@ -7885,7 +7885,7 @@ skipThunk:
     void InterpreterStackFrame::SetRegRawPtr(RegSlotType localRegisterID, void* val)
     {
 #if TARGET_32
-        m_localIntSlots[localRegisterID] = (int32)val;
+        m_localIntSlots[localRegisterID] = (int32_t)val;
 #elif TARGET_64
         m_localInt64Slots[localRegisterID] = (long)val;
 #endif
@@ -8003,7 +8003,7 @@ skipThunk:
 #endif
     }
 
-    int InterpreterStackFrame::OP_GrowMemory(int32 delta)
+    int InterpreterStackFrame::OP_GrowMemory(int32_t delta)
     {
 #ifdef ENABLE_WASM
         return GetWebAssemblyMemory()->GrowInternal((uint32_t)delta);
@@ -8486,7 +8486,7 @@ skipThunk:
             this->m_functionBody->GetReferencedPropertyId(propertyIdIndex), scriptContext);
     }
 
-    BOOL InterpreterStackFrame::OP_BrOnHasEnvProperty(Var envInstance, int32 slotIndex, uint propertyIdIndex, ScriptContext* scriptContext)
+    BOOL InterpreterStackFrame::OP_BrOnHasEnvProperty(Var envInstance, int32_t slotIndex, uint propertyIdIndex, ScriptContext* scriptContext)
     {
         Var instance = OP_LdFrameDisplaySlot(envInstance, slotIndex);
         return JavascriptOperators::OP_HasProperty(instance,
@@ -9001,7 +9001,7 @@ skipThunk:
     }
 #endif
 
-    Var InterpreterStackFrame::OP_LdSlot(Var instance, int32 slotIndex)
+    Var InterpreterStackFrame::OP_LdSlot(Var instance, int32_t slotIndex)
     {
         if (!PHASE_OFF(ClosureRangeCheckPhase, this->m_functionBody))
         {
@@ -9061,7 +9061,7 @@ skipThunk:
     }
 #endif
 
-    Var InterpreterStackFrame::OP_LdFrameDisplaySlot(Var instance, int32 slotIndex)
+    Var InterpreterStackFrame::OP_LdFrameDisplaySlot(Var instance, int32_t slotIndex)
     {
         if (!PHASE_OFF(ClosureRangeCheckPhase, this->m_functionBody))
         {
@@ -9096,7 +9096,7 @@ skipThunk:
     }
 #endif
 
-    Var InterpreterStackFrame::OP_LdObjSlot(Var instance, int32 slotIndex)
+    Var InterpreterStackFrame::OP_LdObjSlot(Var instance, int32_t slotIndex)
     {
         Var *slotArray = *(Var**)((char*)instance + DynamicObject::GetOffsetOfAuxSlots());
         return slotArray[slotIndex];
@@ -9146,7 +9146,7 @@ skipThunk:
     }
 #endif
 
-    void InterpreterStackFrame::OP_StSlot(Var instance, int32 slotIndex, Var value)
+    void InterpreterStackFrame::OP_StSlot(Var instance, int32_t slotIndex, Var value)
     {
         // We emit OpCode::StSlot in the bytecode only for scope slot arrays, which are not recyclable objects.
         if (!PHASE_OFF(ClosureRangeCheckPhase, this->m_functionBody))
@@ -9159,13 +9159,13 @@ skipThunk:
         ((Field(Var)*)(instance))[slotIndex] = value;
     }
 
-    void InterpreterStackFrame::OP_StEnvSlot(Var instance, int32 slotIndex1, int32 slotIndex2, Var value)
+    void InterpreterStackFrame::OP_StEnvSlot(Var instance, int32_t slotIndex1, int32_t slotIndex2, Var value)
     {
         Var slotArray = (Var*)OP_LdFrameDisplaySlot(instance, slotIndex1);
         OP_StSlot(slotArray, slotIndex2, value);
     }
 
-    void InterpreterStackFrame::OP_StSlotChkUndecl(Var instance, int32 slotIndex, Var value)
+    void InterpreterStackFrame::OP_StSlotChkUndecl(Var instance, int32_t slotIndex, Var value)
     {
         // We emit OpCode::StSlot in the bytecode only for scope slot arrays, which are not recyclable objects.
         if (!PHASE_OFF(ClosureRangeCheckPhase, this->m_functionBody))
@@ -9179,20 +9179,20 @@ skipThunk:
         ((Field(Var)*)(instance))[slotIndex] = value;
     }
 
-    void InterpreterStackFrame::OP_StEnvSlotChkUndecl(Var instance, int32 slotIndex1, int32 slotIndex2, Var value)
+    void InterpreterStackFrame::OP_StEnvSlotChkUndecl(Var instance, int32_t slotIndex1, int32_t slotIndex2, Var value)
     {
         Var slotArray = OP_LdFrameDisplaySlot(instance, slotIndex1);
         OP_StSlotChkUndecl(slotArray, slotIndex2, value);
     }
 
-    void InterpreterStackFrame::OP_StObjSlot(Var instance, int32 slotIndex, Var value)
+    void InterpreterStackFrame::OP_StObjSlot(Var instance, int32_t slotIndex, Var value)
     {
         // It would be nice to assert that it's ok to store directly to slot, but we don't have the propertyId.
         Field(Var) *slotArray = *(Field(Var)**)((char*)instance + DynamicObject::GetOffsetOfAuxSlots());
         slotArray[slotIndex] = value;
     }
 
-    void InterpreterStackFrame::OP_StObjSlotChkUndecl(Var instance, int32 slotIndex, Var value)
+    void InterpreterStackFrame::OP_StObjSlotChkUndecl(Var instance, int32_t slotIndex, Var value)
     {
         // It would be nice to assert that it's ok to store directly to slot, but we don't have the propertyId.
         Field(Var) *slotArray = *(Field(Var)**)((char*)instance + DynamicObject::GetOffsetOfAuxSlots());
@@ -9200,14 +9200,14 @@ skipThunk:
         slotArray[slotIndex] = value;
     }
 
-    void InterpreterStackFrame::OP_StEnvObjSlot(Var instance, int32 slotIndex1, int32 slotIndex2, Var value)
+    void InterpreterStackFrame::OP_StEnvObjSlot(Var instance, int32_t slotIndex1, int32_t slotIndex2, Var value)
     {
         // It would be nice to assert that it's ok to store directly to slot, but we don't have the propertyId.
         Var envInstance = (Var*)OP_LdFrameDisplaySlot(instance, slotIndex1);
         OP_StObjSlot(envInstance, slotIndex2, value);
     }
 
-    void InterpreterStackFrame::OP_StEnvObjSlotChkUndecl(Var instance, int32 slotIndex1, int32 slotIndex2, Var value)
+    void InterpreterStackFrame::OP_StEnvObjSlotChkUndecl(Var instance, int32_t slotIndex1, int32_t slotIndex2, Var value)
     {
         // It would be nice to assert that it's ok to store directly to slot, but we don't have the propertyId.
         Var envInstance = (Var*)OP_LdFrameDisplaySlot(instance, slotIndex1);

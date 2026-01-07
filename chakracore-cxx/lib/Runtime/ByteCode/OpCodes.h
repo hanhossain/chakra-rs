@@ -192,18 +192,18 @@ MACRO_BACKEND_ONLY(     DeadBrRelational,   Reg3,           OpSideEffect|OpOpndH
 MACRO_BACKEND_ONLY(     DeadBrOnHasProperty,Reg2,           OpSideEffect|OpOpndHasImplicitCall|OpTempNumberSources|OpTempObjectSources) // Dead BrOnHasProperty, but still need to reference srcs
 MACRO_BACKEND_ONLY(     DeletedNonHelperBranch,Empty,       OpSideEffect)        // Deleted branch to non-helper.  Used to avoid opHleper asserts.
 
-MACRO_BACKEND_ONLY(     BrEq_I4,            Empty,          OpSideEffect|OpTempNumberSources)        // int32 Branch if '=='  (general equals)
-MACRO_BACKEND_ONLY(     BrTrue_I4,          Empty,          OpSideEffect|OpTempNumberSources)        // int32 Branch if 'true'
-MACRO_BACKEND_ONLY(     BrFalse_I4,         Empty,          OpSideEffect|OpTempNumberSources)        // int32 Branch if 'false'
-MACRO_BACKEND_ONLY(     BrGe_I4,            Empty,          OpSideEffect|OpTempNumberSources)        // int32 Branch if '>='
+MACRO_BACKEND_ONLY(     BrEq_I4,            Empty,          OpSideEffect|OpTempNumberSources)        // int32_t Branch if '=='  (general equals)
+MACRO_BACKEND_ONLY(     BrTrue_I4,          Empty,          OpSideEffect|OpTempNumberSources)        // int32_t Branch if 'true'
+MACRO_BACKEND_ONLY(     BrFalse_I4,         Empty,          OpSideEffect|OpTempNumberSources)        // int32_t Branch if 'false'
+MACRO_BACKEND_ONLY(     BrGe_I4,            Empty,          OpSideEffect|OpTempNumberSources)        // int32_t Branch if '>='
 MACRO_BACKEND_ONLY(     BrUnGe_I4,          Empty,          OpSideEffect|OpTempNumberSources)        // uint32_t Branch if '>='
-MACRO_BACKEND_ONLY(     BrGt_I4,            Empty,          OpSideEffect|OpTempNumberSources)        // int32 Branch if '>'
+MACRO_BACKEND_ONLY(     BrGt_I4,            Empty,          OpSideEffect|OpTempNumberSources)        // int32_t Branch if '>'
 MACRO_BACKEND_ONLY(     BrUnGt_I4,          Empty,          OpSideEffect|OpTempNumberSources)        // uint32_t Branch if '>'
-MACRO_BACKEND_ONLY(     BrLt_I4,            Empty,          OpSideEffect|OpTempNumberSources)        // int32 Branch if '<'
+MACRO_BACKEND_ONLY(     BrLt_I4,            Empty,          OpSideEffect|OpTempNumberSources)        // int32_t Branch if '<'
 MACRO_BACKEND_ONLY(     BrUnLt_I4,          Empty,          OpSideEffect|OpTempNumberSources)        // uint32_t Branch if '<'
-MACRO_BACKEND_ONLY(     BrLe_I4,            Empty,          OpSideEffect|OpTempNumberSources)        // int32 Branch if '<='
+MACRO_BACKEND_ONLY(     BrLe_I4,            Empty,          OpSideEffect|OpTempNumberSources)        // int32_t Branch if '<='
 MACRO_BACKEND_ONLY(     BrUnLe_I4,          Empty,          OpSideEffect|OpTempNumberSources)        // uint32_t Branch if '<='
-MACRO_BACKEND_ONLY(     BrNeq_I4,           Empty,          OpSideEffect|OpTempNumberSources)        // int32 Branch if '!='  (not general equals)
+MACRO_BACKEND_ONLY(     BrNeq_I4,           Empty,          OpSideEffect|OpTempNumberSources)        // int32_t Branch if '!='  (not general equals)
 
 // For Switch Case optimization
 MACRO(                  EndSwitch,          Br,             OpSideEffect)                       // Unconditional branch - This is equivalent to Br OpCode
@@ -245,8 +245,8 @@ MACRO_WMS(              Neg_A,              Reg2,           OpTempNumberProducin
 MACRO_WMS(              Not_A,              Reg2,           OpTempNumberProducing|OpOpndHasImplicitCall|OpDoNotTransfer|OpIsInt32|OpTempNumberSources|OpTempObjectSources|OpCanCSE|OpPostOpDbgBailOut|OpProducesNumber) // Boolean '!' (not)
 
 // Integer Unary operations
-MACRO_BACKEND_ONLY(     Neg_I4,             Empty,          OpDoNotTransfer|OpTempNumberSources|OpCanCSE)       // int32 Arithmetic '-' (negate)
-MACRO_BACKEND_ONLY(     Not_I4,             Empty,          OpDoNotTransfer|OpTempNumberSources|OpCanCSE)       // int32 '!' (not)
+MACRO_BACKEND_ONLY(     Neg_I4,             Empty,          OpDoNotTransfer|OpTempNumberSources|OpCanCSE)       // int32_t Arithmetic '-' (negate)
+MACRO_BACKEND_ONLY(     Not_I4,             Empty,          OpDoNotTransfer|OpTempNumberSources|OpCanCSE)       // int32_t '!' (not)
 
 // NOTE:
 // Typeof
@@ -281,21 +281,21 @@ MACRO_WMS(              Shr_A,              Reg3,           OpTempNumberProducin
 MACRO_WMS(              ShrU_A,             Reg3,           OpTempNumberProducing|OpOpndHasImplicitCall|OpTempNumberSources|OpTempObjectSources|OpCanCSE|OpPostOpDbgBailOut|OpProducesNumber)           // Shift '>>>'(unsigned, truncate)
 
 // Integer Binary operations used only by backend, hence no need for one byte variant
-MACRO_BACKEND_ONLY(     Add_I4,             Empty,          OpTempNumberSources|OpCanCSE)                                    // int32 Arithmetic '+'
-MACRO_BACKEND_ONLY(     Sub_I4,             Empty,          OpTempNumberSources|OpCanCSE)                                    // int32 Arithmetic '-' (subtract)
-MACRO_BACKEND_ONLY(     Mul_I4,             Empty,          OpTempNumberSources|OpCanCSE)                                    // int32 Arithmetic '*'
-MACRO_BACKEND_ONLY(     Div_I4,             Empty,          OpTempNumberSources|OpCanCSE)                                    // int32 Arithmetic '/'
+MACRO_BACKEND_ONLY(     Add_I4,             Empty,          OpTempNumberSources|OpCanCSE)                                    // int32_t Arithmetic '+'
+MACRO_BACKEND_ONLY(     Sub_I4,             Empty,          OpTempNumberSources|OpCanCSE)                                    // int32_t Arithmetic '-' (subtract)
+MACRO_BACKEND_ONLY(     Mul_I4,             Empty,          OpTempNumberSources|OpCanCSE)                                    // int32_t Arithmetic '*'
+MACRO_BACKEND_ONLY(     Div_I4,             Empty,          OpTempNumberSources|OpCanCSE)                                    // int32_t Arithmetic '/'
 MACRO_BACKEND_ONLY(     DivU_I4,            Empty,          OpTempNumberSources|OpCanCSE)                                    // uint32_t Arithmetic '/'
-MACRO_BACKEND_ONLY(     Rem_I4,             Empty,          OpTempNumberSources|OpCanCSE)                                    // int32 Arithmetic '%'
+MACRO_BACKEND_ONLY(     Rem_I4,             Empty,          OpTempNumberSources|OpCanCSE)                                    // int32_t Arithmetic '%'
 MACRO_BACKEND_ONLY(     RemU_I4,            Empty,          OpTempNumberSources|OpCanCSE)                                    // uint32_t Arithmetic '%'
-MACRO_BACKEND_ONLY(     And_I4,             Empty,          OpTempNumberSources|OpCanCSE)                                    // int32 Bitwise '&'
-MACRO_BACKEND_ONLY(     Or_I4,              Empty,          OpTempNumberSources|OpCanCSE)                                    // int32 Bitwise '|'
-MACRO_BACKEND_ONLY(     Xor_I4,             Empty,          OpTempNumberSources|OpCanCSE)                                    // int32 Bitwise '^'
-MACRO_BACKEND_ONLY(     Shl_I4,             Empty,          OpTempNumberSources|OpCanCSE)                                    // int32 Shift '<<' (signed, truncate)
-MACRO_BACKEND_ONLY(     Shr_I4,             Empty,          OpTempNumberSources|OpCanCSE)                                    // int32 Shift '>>' (signed, truncate)
+MACRO_BACKEND_ONLY(     And_I4,             Empty,          OpTempNumberSources|OpCanCSE)                                    // int32_t Bitwise '&'
+MACRO_BACKEND_ONLY(     Or_I4,              Empty,          OpTempNumberSources|OpCanCSE)                                    // int32_t Bitwise '|'
+MACRO_BACKEND_ONLY(     Xor_I4,             Empty,          OpTempNumberSources|OpCanCSE)                                    // int32_t Bitwise '^'
+MACRO_BACKEND_ONLY(     Shl_I4,             Empty,          OpTempNumberSources|OpCanCSE)                                    // int32_t Shift '<<' (signed, truncate)
+MACRO_BACKEND_ONLY(     Shr_I4,             Empty,          OpTempNumberSources|OpCanCSE)                                    // int32_t Shift '>>' (signed, truncate)
 MACRO_BACKEND_ONLY(     ShrU_I4,            Empty,          OpTempNumberSources|OpCanCSE)                                    // uint32_t Shift '>>>'(unsigned, truncate)
-MACRO_BACKEND_ONLY(     Rol_I4,             Empty,          OpTempNumberSources|OpCanCSE)                                    // int32 rol (signed)
-MACRO_BACKEND_ONLY(     Ror_I4,             Empty,          OpTempNumberSources|OpCanCSE)                                    // int32 ror (signed)
+MACRO_BACKEND_ONLY(     Rol_I4,             Empty,          OpTempNumberSources|OpCanCSE)                                    // int32_t rol (signed)
+MACRO_BACKEND_ONLY(     Ror_I4,             Empty,          OpTempNumberSources|OpCanCSE)                                    // int32_t ror (signed)
 
 // Comparison
 MACRO_WMS(              CmEq_A,             Reg3,           OpOpndHasImplicitCall|OpTempNumberSources|OpTempObjectSources|OpCanCSE)                          // Compare if '=='  (general equals)
@@ -334,14 +334,14 @@ MACRO_EXTEND_WMS(       Conv_Prop,          Reg2,           OpOpndHasImplicitCal
 //      Do not call valueOf/toString no implicit call
 MACRO_WMS(              Conv_Obj,           Reg2,           OpSideEffect|OpPostOpDbgBailOut|OpTempObjectTransfer)   // Convert to Object
 MACRO_EXTEND_WMS(       NewUnscopablesWrapperObject,      Reg2,           OpSideEffect | OpPostOpDbgBailOut)  // Wrap in a with Object
-MACRO_BACKEND_ONLY(     ToVar,              Reg2,           OpTempNumberProducing|OpTempNumberSources|OpCanCSE)     // Load from int32/float64 to Var(reg)
-// Load from Var(reg) to int32/float64, NOTE: always bail if it is not primitive. so no implicit call, but still mark with CallsValueOf so it won't get automatically dead stored
+MACRO_BACKEND_ONLY(     ToVar,              Reg2,           OpTempNumberProducing|OpTempNumberSources|OpCanCSE)     // Load from int32_t/float64 to Var(reg)
+// Load from Var(reg) to int32_t/float64, NOTE: always bail if it is not primitive. so no implicit call, but still mark with CallsValueOf so it won't get automatically dead stored
 // TODO: Consider changing the code so we don't have mark this as CallsValueOf
 MACRO_BACKEND_ONLY(     FromVar,            Reg2,           OpTempNumberSources|OpTempObjectSources|OpCanCSE)
-MACRO_BACKEND_ONLY(     Conv_Prim,          Reg2,           OpTempNumberProducing|OpTempNumberSources|OpCanCSE|OpPostOpDbgBailOut)  // Convert between primitives (int32/float64)
+MACRO_BACKEND_ONLY(     Conv_Prim,          Reg2,           OpTempNumberProducing|OpTempNumberSources|OpCanCSE|OpPostOpDbgBailOut)  // Convert between primitives (int32_t/float64)
 MACRO_BACKEND_ONLY(     Conv_Prim_Sat,      Reg2,           OpTempNumberProducing|OpTempNumberSources|OpCanCSE)  // Convert between primitives (int/float), saturating OOB values
 MACRO_BACKEND_ONLY(     Conv_Bool,          Reg2,           OpTempNumberSources|OpCanCSE)                           // Convert from i4 to bool
-MACRO_BACKEND_ONLY(     Reinterpret_Prim,   Reg2,           OpTempNumberProducing|OpTempNumberSources|OpCanCSE)  // Reinterpret bits between primitives (int32/float32)
+MACRO_BACKEND_ONLY(     Reinterpret_Prim,   Reg2,           OpTempNumberProducing|OpTempNumberSources|OpCanCSE)  // Reinterpret bits between primitives (int32_t/float32)
 MACRO_BACKEND_ONLY(     TrapIfTruncOverflow,  Reg2,         OpSideEffect)
 
 // Register
@@ -356,7 +356,7 @@ MACRO_EXTEND_WMS(       LdParamObj,         Reg1,           OpCanCSE) // Load no
 MACRO_WMS(              LdInnerScope,       Reg1Unsigned1,  OpCanCSE) // Load non-stack inner scope
 MACRO_WMS(              LdC_A_Null,         Reg1,           OpByteCodeOnly|OpCanCSE)   // Load from 'null' as Var
 MACRO_BACKEND_ONLY(     Ld_I4,              Empty,          OpCanCSE)                  // Copy I4 register
-MACRO_BACKEND_ONLY(     LdC_A_I4,           Empty,          OpCanCSE)                  // Load from 'int32' as Var(C)
+MACRO_BACKEND_ONLY(     LdC_A_I4,           Empty,          OpCanCSE)                  // Load from 'int32_t' as Var(C)
 MACRO_BACKEND_ONLY(     LdC_A_R8,           Empty,          OpCanCSE)                  // Load from 'double' constant
 MACRO_BACKEND_ONLY(     LdC_F8_R8,          Empty,          OpCanCSE)                  // Load 'double' constant
 MACRO_BACKEND_ONLY(     LdIndir,            Empty,          OpTempNumberSources|OpTempObjectSources|OpCanCSE)

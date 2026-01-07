@@ -405,7 +405,7 @@ namespace Js {
             const charcount_t cchWritten = NumberUtilities::UInt16ToString(value, buffer, charCapacity, 2);
             Assert(cchWritten != 0);
         };
-        const auto ConvertLongToString = [](const int32 value, char16_t *const buffer, const CharCount charCapacity)
+        const auto ConvertLongToString = [](const int32_t value, char16_t *const buffer, const CharCount charCapacity)
         {
             const errno_t err = _ltow_s(value, buffer, charCapacity, 10);
             Assert(err == 0);

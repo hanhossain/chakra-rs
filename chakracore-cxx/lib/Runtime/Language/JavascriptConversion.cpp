@@ -534,7 +534,7 @@ CommonNumber:
         {
             ScriptContext *const scriptContext = value->GetScriptContext();
 
-            int32 hCode;
+            int32_t hCode;
 
             switch (hint)
             {
@@ -964,14 +964,14 @@ CommonNumber:
     // ToInt32() converts the given Var to an Int32 value, as described in
     // (ES3.0: S9.5).
     //----------------------------------------------------------------------------
-    int32 JavascriptConversion::ToInt32_Full(Var aValue, ScriptContext* scriptContext)
+    int32_t JavascriptConversion::ToInt32_Full(Var aValue, ScriptContext* scriptContext)
     {
         JIT_HELPER_REENTRANT_HEADER(Conv_ToInt32_Full);
         Assert(Js::JavascriptStackWalker::ValidateTopJitFrame(scriptContext));
         AssertMsg(!TaggedInt::Is(aValue), "Should be detected");
 
         ScriptContext * objectScriptContext = VarIs<RecyclableObject>(aValue) ? UnsafeVarTo<RecyclableObject>(aValue)->GetScriptContext() : nullptr;
-        // This is used when TaggedInt's overflow but remain under int32
+        // This is used when TaggedInt's overflow but remain under int32_t
         // so Number is our most critical case:
 
         TypeId typeId = JavascriptOperators::GetTypeId(aValue);
@@ -1068,8 +1068,8 @@ CommonNumber:
         JIT_HELPER_END(Conv_ToInt32_Full);
     }
 
-    // a strict version of ToInt32 conversion that returns false for non int32 values like, inf, NaN, undef
-    BOOL JavascriptConversion::ToInt32Finite(Var aValue, ScriptContext* scriptContext, int32* result)
+    // a strict version of ToInt32 conversion that returns false for non int32_t values like, inf, NaN, undef
+    BOOL JavascriptConversion::ToInt32Finite(Var aValue, ScriptContext* scriptContext, int32_t* result)
     {
         ScriptContext * objectScriptContext = VarIs<RecyclableObject>(aValue) ? UnsafeVarTo<RecyclableObject>(aValue)->GetScriptContext() : nullptr;
         BOOL fPrimitiveOnly = false;
@@ -1127,7 +1127,7 @@ CommonNumber:
         }
     }
 
-    int32 JavascriptConversion::ToInt32(double T1)
+    int32_t JavascriptConversion::ToInt32(double T1)
     {
         return JavascriptMath::ToInt32Core(T1);
     }
@@ -1182,7 +1182,7 @@ CommonNumber:
         }
     }
 
-    BOOL JavascriptConversion::ToInt32Finite(double value, int32* result)
+    BOOL JavascriptConversion::ToInt32Finite(double value, int32_t* result)
     {
         if((!NumberUtilities::IsFinite(value)) || JavascriptNumber::IsNan(value))
         {

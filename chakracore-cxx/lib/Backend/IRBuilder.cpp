@@ -2957,7 +2957,7 @@ IRBuilder::BuildProfiledReg1Unsigned1(Js::OpCode newOpcode, uint32_t offset)
 }
 
 void
-IRBuilder::BuildProfiledReg1Unsigned1(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot R0, int32 C1, Js::ProfileId profileId)
+IRBuilder::BuildProfiledReg1Unsigned1(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot R0, int32_t C1, Js::ProfileId profileId)
 {
     Assert(newOpcode == Js::OpCode::ProfiledNewScArray || newOpcode == Js::OpCode::ProfiledInitForInEnumerator);
     Js::OpCodeUtil::ConvertNonCallOpToNonProfiled(newOpcode);
@@ -2977,7 +2977,7 @@ IRBuilder::BuildProfiledReg1Unsigned1(Js::OpCode newOpcode, uint32_t offset, Js:
     IR::RegOpnd *   dstOpnd = this->BuildDstOpnd(dstRegSlot);
 
     StackSym *      dstSym = dstOpnd->m_sym;
-    int32           value = C1;
+    int32_t           value = C1;
     IR::IntConstOpnd * srcOpnd;
 
     srcOpnd = IR::IntConstOpnd::New(value, TyInt32, m_func);
@@ -3046,7 +3046,7 @@ IRBuilder::BuildReg1Unsigned1(Js::OpCode newOpcode, uint32_t offset)
 }
 
 void
-IRBuilder::BuildReg1Unsigned1(Js::OpCode newOpcode, uint offset, Js::RegSlot R0, int32 C1)
+IRBuilder::BuildReg1Unsigned1(Js::OpCode newOpcode, uint offset, Js::RegSlot R0, int32_t C1)
 {
     switch (newOpcode)
     {
@@ -3172,7 +3172,7 @@ IRBuilder::BuildReg2Int1(Js::OpCode newOpcode, uint32_t offset)
 }
 
 void
-IRBuilder::BuildReg2Int1(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot dstRegSlot, Js::RegSlot srcRegSlot, int32 value)
+IRBuilder::BuildReg2Int1(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot dstRegSlot, Js::RegSlot srcRegSlot, int32_t value)
 {
     Assert(OpCodeAttr::HasMultiSizeLayout(newOpcode));
 
@@ -3437,7 +3437,7 @@ IRBuilder::BuildProfiledElementSlot(Js::OpCode newOpcode, uint32_t offset)
 
 void
 IRBuilder::BuildElementSlot(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot fieldRegSlot, Js::RegSlot regSlot,
-    int32 slotId, Js::ProfileId profileId)
+    int32_t slotId, Js::ProfileId profileId)
 {
     Assert(OpCodeAttr::HasMultiSizeLayout(newOpcode));
 
@@ -3649,7 +3649,7 @@ IRBuilder::BuildProfiledElementSlotI1(Js::OpCode newOpcode, uint32_t offset)
 
 void
 IRBuilder::BuildElementSlotI1(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot regSlot,
-                              int32 slotId, Js::ProfileId profileId)
+                              int32_t slotId, Js::ProfileId profileId)
 {
     IR::RegOpnd *regOpnd;
     IR::SymOpnd *fieldOpnd;
@@ -3996,7 +3996,7 @@ IRBuilder::BuildProfiledElementSlotI2(Js::OpCode newOpcode, uint32_t offset)
 
 void
 IRBuilder::BuildElementSlotI2(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot regSlot,
-                              int32 slotId1, int32 slotId2, Js::ProfileId profileId)
+                              int32_t slotId1, int32_t slotId2, Js::ProfileId profileId)
 {
     IR::RegOpnd *regOpnd;
     IR::SymOpnd *fieldOpnd;
@@ -4224,7 +4224,7 @@ IRBuilder::BuildProfiledElementSlotI3(Js::OpCode newOpcode, uint32_t offset)
 
 void
 IRBuilder::BuildElementSlotI3(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot fieldRegSlot, Js::RegSlot regSlot,
-    int32 slotId, Js::RegSlot homeObj, Js::ProfileId profileId)
+    int32_t slotId, Js::RegSlot homeObj, Js::ProfileId profileId)
 {
     Assert(OpCodeAttr::HasMultiSizeLayout(newOpcode));
 

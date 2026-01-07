@@ -50,7 +50,7 @@ void JsrtDebugUtils::AddLineColumnToObject(Js::DynamicObject* object, Js::Functi
         if (functionBody->GetLineCharOffset(byteCodeOffset, &line, &col, false))
         {
             JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::line, (uint32_t) line, functionBody->GetScriptContext());
-            JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::column, (int32) col, functionBody->GetScriptContext());
+            JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::column, (int32_t) col, functionBody->GetScriptContext());
         }
     }
 }
@@ -93,7 +93,7 @@ void JsrtDebugUtils::AddLineCountToObject(Js::DynamicObject * object, Js::Utf8So
 
 void JsrtDebugUtils::AddSourceToObject(Js::DynamicObject * object, Js::Utf8SourceInfo * utf8SourceInfo)
 {
-    int32 cchLength = utf8SourceInfo->GetCchLength();
+    int32_t cchLength = utf8SourceInfo->GetCchLength();
     AutoArrayPtr<char16_t> sourceContent(HeapNewNoThrowArray(char16_t, cchLength + 1), cchLength + 1);
     if (sourceContent != nullptr)
     {
@@ -377,7 +377,7 @@ void JsrtDebugUtils::AddPropertyToObject(Js::DynamicObject * object, JsrtDebugPr
     JsrtDebugUtils::AddVarPropertyToObject(object, propertyId, Js::JavascriptNumber::ToVarNoCheck(value, scriptContext), scriptContext);
 }
 
-void JsrtDebugUtils::AddPropertyToObject(Js::DynamicObject * object, JsrtDebugPropertyId propertyId, int32 value, Js::ScriptContext * scriptContext)
+void JsrtDebugUtils::AddPropertyToObject(Js::DynamicObject * object, JsrtDebugPropertyId propertyId, int32_t value, Js::ScriptContext * scriptContext)
 {
     JsrtDebugUtils::AddVarPropertyToObject(object, propertyId, Js::JavascriptNumber::ToVarNoCheck(value, scriptContext), scriptContext);
 }

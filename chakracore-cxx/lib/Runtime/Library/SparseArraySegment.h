@@ -130,7 +130,7 @@ namespace Js
     }
 
     template<>
-    inline int32 SparseArraySegment<int32>::GetMissingItem()
+    inline int32_t SparseArraySegment<int32_t>::GetMissingItem()
     {
         return IntMissingItemPattern;
     }
@@ -146,7 +146,7 @@ namespace Js
     {
         return JavascriptArray::MissingItem;
     }
-    template<> Var SparseArraySegment<int32>::GetMissingItemVar();
+    template<> Var SparseArraySegment<int32_t>::GetMissingItemVar();
     template<> Var SparseArraySegment<double>::GetMissingItemVar();
 
     template<>

@@ -208,7 +208,7 @@ namespace Js
         void PatchJumpOffset(JsUtil::List<JumpInfo, ArenaAllocator> * jumpOffsets, byte * byteBuffer, uint byteCount);
 
 #ifdef BYTECODE_BRANCH_ISLAND
-        static int32 GetBranchLimit();
+        static int32_t GetBranchLimit();
         void AddLongJumpOffset(ByteCodeLabel labelId, uint fieldByteOffset);
         void EnsureLongBranch(Js::OpCode op);
         void UpdateNextBranchIslandOffset(uint firstUnknownJumpInfo, uint firstUnknownJumpOffset);
@@ -225,10 +225,10 @@ namespace Js
 #endif
 
         void Create();
-        void InitData(ArenaAllocator* alloc, int32 initCodeBufferSize);
+        void InitData(ArenaAllocator* alloc, int32_t initCodeBufferSize);
         void Begin(FunctionBody* functionWrite, ArenaAllocator* alloc, bool doJitLoopBodies, bool hasLoop, bool inDebugMode);
 #ifdef LOG_BYTECODE_AST_RATIO
-        void End(int32 currentAstSize, int32 maxAstSize);
+        void End(int32_t currentAstSize, int32_t maxAstSize);
 #else
         void End();
 #endif
@@ -270,7 +270,7 @@ namespace Js
         void BrReg2(OpCode op, ByteCodeLabel labelID, RegSlot R1, RegSlot R2);
         void BrProperty(OpCode op, ByteCodeLabel labelID, RegSlot R1, PropertyIdIndexType propertyIdIndex);
         void BrLocalProperty(OpCode op, ByteCodeLabel labelID, PropertyIdIndexType propertyIdIndex);
-        void BrEnvProperty(OpCode op, ByteCodeLabel labelID, PropertyIdIndexType propertyIdIndex, int32 slotIndex);
+        void BrEnvProperty(OpCode op, ByteCodeLabel labelID, PropertyIdIndexType propertyIdIndex, int32_t slotIndex);
         void StartCall(OpCode op, ArgSlot ArgCount);
         void CallI(OpCode op, RegSlot returnValueRegister, RegSlot functionRegister, ArgSlot givenArgCount, ProfileId callSiteId, CallFlags callFlags = CallFlags_None);
         void CallIExtended(OpCode op, RegSlot returnValueRegister, RegSlot functionRegister, ArgSlot givenArgCount, CallIExtendedOptions options, const void *buffer, uint byteCount, ProfileId callSiteId, CallFlags callFlags = CallFlags_None);

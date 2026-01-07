@@ -182,7 +182,7 @@ private:
     // And s0 has a 32-bit (signed or unsigned) int value, then we can do 53 - 32 such add/sub operations and guarantee that the
     // final result does not overflow the 53 bits. So long as that is the case, and the final result is only used in operations
     // that convert their srcs to int32s (such as bitwise operations), then overflow checks can be omitted on these adds/subs.
-    // Once the result overflows 53 bits, the semantics of converting that imprecisely represented float value to int32 changes
+    // Once the result overflows 53 bits, the semantics of converting that imprecisely represented float value to int32_t changes
     // and is no longer equivalent to a simple truncate of the precise int value.
     static const int MaxCompoundedUsesInAddSubForIgnoringIntOverflow = 53 - 32;
 

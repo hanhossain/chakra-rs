@@ -34,7 +34,7 @@ namespace TTD
         const Js::PropertyRecord* InflatePropertyRecord_CreateNew(const SnapPropertyRecord* pRecord, ThreadContext* threadContext)
         {
             const char16_t* pname = pRecord->PropertyName.Contents;
-            int32 plen = pRecord->PropertyName.Length;
+            int32_t plen = pRecord->PropertyName.Length;
 
             const Js::PropertyRecord* newPropertyRecord = nullptr;
             if(pRecord->IsSymbol)

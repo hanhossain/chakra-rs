@@ -191,7 +191,7 @@ private:
     StackSym *srcSym;
     Value *srcValue;
     bool srcValueIsLikelyConstant;
-    int32 offset;
+    int32_t offset;
 
 public:
     AddSubConstantInfo() : srcSym(nullptr)
@@ -222,14 +222,14 @@ public:
         return srcValueIsLikelyConstant;
     }
 
-    int32 Offset() const
+    int32_t Offset() const
     {
         Assert(HasInfo());
         return offset;
     }
 
 public:
-    void Set(StackSym *const srcSym, Value *const srcValue, const bool srcValueIsLikelyConstant, const int32 offset);
+    void Set(StackSym *const srcSym, Value *const srcValue, const bool srcValueIsLikelyConstant, const int32_t offset);
 };
 
 class GlobOpt::ArrayLowerBoundCheckHoistInfo
@@ -288,7 +288,7 @@ public:
         return offset;
     }
 
-    int32 IndexOffset() const
+    int32_t IndexOffset() const
     {
         Assert(HasAnyInfo());
         return indexOffset;

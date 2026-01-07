@@ -40,19 +40,19 @@ namespace Js
             free(m_prglu);
     }
 
-    int32 BigUInt::Clu(void)
+    int32_t BigUInt::Clu(void)
     {
         return m_clu;
     }
 
-    uint32_t BigUInt::Lu(int32 ilu)
+    uint32_t BigUInt::Lu(int32_t ilu)
     {
         AssertBi(this);
         Assert(ilu < m_clu);
         return m_prglu[ilu];
     }
 
-    bool BigUInt::FResize(int32 clu)
+    bool BigUInt::FResize(int32_t clu)
     {
         AssertBiNoVal(this);
 
@@ -79,7 +79,7 @@ namespace Js
         return true;
     }
 
-    bool BigUInt::FInitFromRglu(uint32_t *prglu, int32 clu)
+    bool BigUInt::FInitFromRglu(uint32_t *prglu, int32_t clu)
     {
         AssertBi(this);
         Assert(clu >= 0);
@@ -105,7 +105,7 @@ namespace Js
     }
 
     template <typename EncodedChar>
-    bool BigUInt::FInitFromDigits(const EncodedChar *prgch, int32 cch, int32 *pcchDig)
+    bool BigUInt::FInitFromDigits(const EncodedChar *prgch, int32_t cch, int32_t *pcchDig)
     {
         AssertBi(this);
         Assert(cch >= 0);
@@ -114,7 +114,7 @@ namespace Js
 
         uint32_t luAdd;
         uint32_t luMul;
-        int32 clu = (cch + 8) / 9;
+        int32_t clu = (cch + 8) / 9;
         const EncodedChar *pchLim = prgch + cch;
 
         if (clu > m_cluMax && !FResize(clu))
@@ -174,13 +174,13 @@ LDone:
         return true;
     }
 
-    bool BigUInt::FMulPow5(int32 c5)
+    bool BigUInt::FMulPow5(int32_t c5)
     {
         AssertBi(this);
         Assert(c5 >= 0);
 
         const uint32_t k5to13 = 1220703125;
-        int32 clu = (c5 + 12) / 13;
+        int32_t clu = (c5 + 12) / 13;
         uint32_t luT;
 
         if (0 == m_clu || 0 == c5)
@@ -203,13 +203,13 @@ LDone:
         return true;
     }
 
-    bool BigUInt::FShiftLeft(int32 cbit)
+    bool BigUInt::FShiftLeft(int32_t cbit)
     {
         AssertBi(this);
         Assert(cbit >= 0);
 
-        int32 ilu;
-        int32 clu;
+        int32_t ilu;
+        int32_t clu;
         uint32_t luExtra;
 
         if (0 == cbit || 0 == m_clu)
@@ -258,7 +258,7 @@ LDone:
         return true;
     }
 
-    void BigUInt::ShiftLusRight(int32 clu)
+    void BigUInt::ShiftLusRight(int32_t clu)
     {
         AssertBi(this);
         Assert(clu >= 0);
@@ -278,13 +278,13 @@ LDone:
         AssertBi(this);
     }
 
-    void BigUInt::ShiftRight(int32 cbit)
+    void BigUInt::ShiftRight(int32_t cbit)
     {
         AssertBi(this);
         Assert(cbit >= 0);
 
-        int32 ilu;
-        int32 clu = cbit >> 5;
+        int32_t ilu;
+        int32_t clu = cbit >> 5;
         cbit &= 0x001F;
 
         if (clu > 0)
@@ -317,7 +317,7 @@ LDone:
         AssertBi(this);
         AssertBi(pbi);
 
-        int32 ilu;
+        int32_t ilu;
 
         if (m_clu > pbi->m_clu)
             return 1;
@@ -344,8 +344,8 @@ LDone:
         AssertBi(pbi);
         Assert(this != pbi);
 
-        int32 cluMax, cluMin;
-        int32 ilu;
+        int32_t cluMax, cluMin;
+        int32_t ilu;
         int wCarry;
 
         if ((cluMax = m_clu) < (cluMin = pbi->m_clu))
@@ -397,7 +397,7 @@ LDone:
         AssertBi(pbi);
         Assert(this != pbi);
 
-        int32 ilu;
+        int32_t ilu;
         int wCarry;
         uint32_t luT;
 
@@ -449,7 +449,7 @@ LNegative:
         AssertBi(pbi);
         Assert(this != pbi);
 
-        int32 ilu, clu;
+        int32_t ilu, clu;
         int wCarry;
         int wQuo;
         int wT;
@@ -515,7 +515,7 @@ LNegative:
         double dbl;
         uint32_t luHi, luLo;
         uint32_t lu1, lu2, lu3;
-        int32 ilu;
+        int32_t ilu;
         int cbit;
 
         switch (m_clu)
@@ -591,6 +591,6 @@ LNegative:
         return dbl;
     }
 
-    template bool BigUInt::FInitFromDigits<char16_t>(const char16_t *prgch, int32 cch, int32 *pcchDig);
-    template bool BigUInt::FInitFromDigits<utf8char_t>(const utf8char_t *prgch, int32 cch, int32 *pcchDig);
+    template bool BigUInt::FInitFromDigits<char16_t>(const char16_t *prgch, int32_t cch, int32_t *pcchDig);
+    template bool BigUInt::FInitFromDigits<utf8char_t>(const utf8char_t *prgch, int32_t cch, int32_t *pcchDig);
 }

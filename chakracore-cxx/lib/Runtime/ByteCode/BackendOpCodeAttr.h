@@ -50,7 +50,7 @@ namespace OpCodeAttr
     bool IsInlineBuiltIn(Js::OpCode opcode);
     // True if the opcode may transfer a non-integer value from the non-constant source to the destination
     bool NonIntTransfer(Js::OpCode opcode);
-    // True if the opcode converts its srcs to int32 or a narrower int type, and produces an int32
+    // True if the opcode converts its srcs to int32_t or a narrower int type, and produces an int32_t
     bool IsInt32(Js::OpCode opcode);
     // True if the opcode always produces a number
     bool ProducesNumber(Js::OpCode opcode);

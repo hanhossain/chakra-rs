@@ -380,7 +380,7 @@ namespace TTD
 
         //Set fast path values on ThreadContext
         const JsUtil::List<Js::ScriptContext*, HeapAllocator>& contexts = this->m_threadContext->TTDContext->GetTTDContexts();
-        for(int32 i = 0; i < contexts.Count(); ++i)
+        for(int32_t i = 0; i < contexts.Count(); ++i)
         {
             this->SetModeFlagsOnContext(contexts.Item(i));
         }
@@ -433,7 +433,7 @@ namespace TTD
             JsUtil::BaseHashSet<Js::FunctionBody*, HeapAllocator> liveTopLevelBodies(&HeapAllocator::Instance);
             snap = this->DoSnapshotExtract_Helper(0.0, liveTopLevelBodies);
 
-            for(int32 i = 0; i < this->m_threadContext->TTDContext->GetTTDContexts().Count(); ++i)
+            for(int32_t i = 0; i < this->m_threadContext->TTDContext->GetTTDContexts().Count(); ++i)
             {
                 this->m_threadContext->TTDContext->GetTTDContexts().Item(i)->TTDContextInfo->CleanUnreachableTopLevelBodies(liveTopLevelBodies);
             }
@@ -692,7 +692,7 @@ namespace TTD
     void EventLog::SetSnapshotOrInflateInProgress(bool flag)
     {
         const JsUtil::List<Js::ScriptContext*, HeapAllocator>& contexts = this->m_threadContext->TTDContext->GetTTDContexts();
-        for(int32 i = 0; i < contexts.Count(); ++i)
+        for(int32_t i = 0; i < contexts.Count(); ++i)
         {
             TTDAssert(contexts.Item(i)->TTDSnapshotOrInflateInProgress != flag, "This is not re-entrant!!!");
 
@@ -1022,7 +1022,7 @@ namespace TTD
         return wcEvent->ContainsValue;
     }
 
-    NSLogEvents::EventLogEntry* EventLog::RecordExternalCallEvent(Js::JavascriptFunction* func, int32 rootDepth, const Js::Arguments& args, bool checkExceptions)
+    NSLogEvents::EventLogEntry* EventLog::RecordExternalCallEvent(Js::JavascriptFunction* func, int32_t rootDepth, const Js::Arguments& args, bool checkExceptions)
     {
         NSLogEvents::ExternalCallEventLogEntry* ecEvent = nullptr;
         NSLogEvents::EventLogEntry* evt = this->RecordGetInitializedEvent<NSLogEvents::ExternalCallEventLogEntry, NSLogEvents::EventKind::ExternalCallTag>(&ecEvent);
@@ -1306,7 +1306,7 @@ namespace TTD
         JsUtil::BaseHashSet<Js::FunctionBody*, HeapAllocator> liveTopLevelBodies(&HeapAllocator::Instance);
         snapEvent->Snap = this->DoSnapshotExtract_Helper((endTime - startTime) / 1000.0, liveTopLevelBodies);
 
-        for(int32 i = 0; i < this->m_threadContext->TTDContext->GetTTDContexts().Count(); ++i)
+        for(int32_t i = 0; i < this->m_threadContext->TTDContext->GetTTDContexts().Count(); ++i)
         {
             this->m_threadContext->TTDContext->GetTTDContexts().Item(i)->TTDContextInfo->CleanUnreachableTopLevelBodies(liveTopLevelBodies);
         }
@@ -1577,7 +1577,7 @@ namespace TTD
             {
                 const NSSnapValues::SnapContext* sCtx = iter.Current();
                 Js::ScriptContext* vCtx = nullptr;
-                for(int32 i = 0; i < oldCtxts.Count(); ++i)
+                for(int32_t i = 0; i < oldCtxts.Count(); ++i)
                 {
                     if(oldCtxts.Item(i)->ScriptContextLogTag == sCtx->ScriptContextLogId)
                     {
@@ -1624,7 +1624,7 @@ namespace TTD
 
             if(shouldReleaseCtxs)
             {
-                for(int32 i = 0; i < deadCtxs.Count(); ++i)
+                for(int32_t i = 0; i < deadCtxs.Count(); ++i)
                 {
                     threadCtx->TTDExternalObjectFunctions.pfReleaseJsRTContextCallback(deadCtxs.Item(i));
                 }
@@ -2152,7 +2152,7 @@ namespace TTD
         actionPopper.InitializeWithEventAndEnterWResult(evt, &(cAction->Result));
     }
 
-    void EventLog::RecordJsRTHostExitProcess(TTDJsRTActionResultAutoRecorder& actionPopper, int32 exitCode)
+    void EventLog::RecordJsRTHostExitProcess(TTDJsRTActionResultAutoRecorder& actionPopper, int32_t exitCode)
     {
         NSLogEvents::JsRTIntegralArgumentAction* eAction = nullptr;
         NSLogEvents::EventLogEntry* evt = this->RecordGetInitializedEvent<NSLogEvents::JsRTIntegralArgumentAction, NSLogEvents::EventKind::HostExitProcessTag>(&eAction);
@@ -2521,7 +2521,7 @@ namespace TTD
         return evt;
     }
 
-    NSLogEvents::EventLogEntry* EventLog::RecordJsRTCallFunction(TTDJsRTActionResultAutoRecorder& actionPopper, int32 rootDepth, Js::Var funcVar, uint32_t argCount, Js::Var* args)
+    NSLogEvents::EventLogEntry* EventLog::RecordJsRTCallFunction(TTDJsRTActionResultAutoRecorder& actionPopper, int32_t rootDepth, Js::Var funcVar, uint32_t argCount, Js::Var* args)
     {
         NSLogEvents::JsRTCallFunctionAction* cAction = nullptr;
         NSLogEvents::EventLogEntry* evt = this->RecordGetInitializedEvent<NSLogEvents::JsRTCallFunctionAction, NSLogEvents::EventKind::CallExistingFunctionActionTag>(&cAction);

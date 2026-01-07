@@ -1002,9 +1002,9 @@ LinearScan::SetDstReg(IR::Instr *instr)
 }
 
 // Get the stack offset of the non temp locals from the stack.
-int32 LinearScan::GetStackOffset(Js::RegSlot regSlotId)
+int32_t LinearScan::GetStackOffset(Js::RegSlot regSlotId)
 {
-    int32 stackSlotId = regSlotId - this->func->GetJITFunctionBody()->GetFirstNonTempLocalIndex();
+    int32_t stackSlotId = regSlotId - this->func->GetJITFunctionBody()->GetFirstNonTempLocalIndex();
     Assert(stackSlotId >= 0);
     return this->func->GetLocalVarSlotOffset(stackSlotId);
 }
@@ -1611,7 +1611,7 @@ LinearScan::FillBailOutRecord(IR::Instr * instr)
                         // Filling in which are not filled already.
                         if (funcBailOutData[dataIndex].localOffsets[regSlotId] == 0)
                         {
-                            int32 offset = GetStackOffset(regSlotId);
+                            int32_t offset = GetStackOffset(regSlotId);
 
 #ifdef MD_GROW_LOCALS_AREA_UP
                             Assert(offset >= 0);
@@ -1934,7 +1934,7 @@ LinearScan::FillBailOutRecord(IR::Instr * instr)
                 {
                     uint argCount = bailOutInfo->startCallInfo[i + 1].isOrphanedCall ? 0 : bailOutInfo->startCallInfo[i + 1].argCount;
                     argRestoreAdjustCount = bailOutInfo->startCallInfo[i + 1].argRestoreAdjustCount + argCount;
-                    if ((Math::Align<int32>(argCount * MachPtr, MachStackAlignment) - (argCount * MachPtr)) != 0)
+                    if ((Math::Align<int32_t>(argCount * MachPtr, MachStackAlignment) - (argCount * MachPtr)) != 0)
                     {
                         argRestoreAdjustCount++;
                     }

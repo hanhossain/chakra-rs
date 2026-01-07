@@ -166,7 +166,7 @@ using namespace Js;
         Var JavascriptMath::And_Full(Var aLeft, Var aRight, ScriptContext* scriptContext)
         {
             JIT_HELPER_REENTRANT_HEADER(Op_And_Full);
-            int32 value = And_Helper(aLeft, aRight, scriptContext);
+            int32_t value = And_Helper(aLeft, aRight, scriptContext);
             return JavascriptNumber::ToVar(value, scriptContext);
             JIT_HELPER_END(Op_And_Full);
         }
@@ -175,7 +175,7 @@ using namespace Js;
         Var JavascriptMath::And_InPlace(Var aLeft, Var aRight, ScriptContext* scriptContext, JavascriptNumber* result)
         {
             JIT_HELPER_REENTRANT_HEADER(Op_AndInPlace);
-            int32 value = And_Helper(aLeft, aRight, scriptContext);
+            int32_t value = And_Helper(aLeft, aRight, scriptContext);
             return JavascriptNumber::ToVarInPlace(value, scriptContext, result);
             JIT_HELPER_END(Op_AndInPlace);
         }
@@ -183,7 +183,7 @@ using namespace Js;
         Var JavascriptMath::Or_Full(Var aLeft, Var aRight, ScriptContext* scriptContext)
         {
             JIT_HELPER_REENTRANT_HEADER(Op_Or_Full);
-            int32 value = Or_Helper(aLeft, aRight, scriptContext);
+            int32_t value = Or_Helper(aLeft, aRight, scriptContext);
             return JavascriptNumber::ToVar(value, scriptContext);
             JIT_HELPER_END(Op_Or_Full);
         }
@@ -192,7 +192,7 @@ using namespace Js;
         Var JavascriptMath::Or_InPlace(Var aLeft, Var aRight, ScriptContext* scriptContext, JavascriptNumber* result)
         {
             JIT_HELPER_REENTRANT_HEADER(Op_OrInPlace);
-            int32 value = Or_Helper(aLeft, aRight, scriptContext);
+            int32_t value = Or_Helper(aLeft, aRight, scriptContext);
             return JavascriptNumber::ToVarInPlace(value, scriptContext, result);
             JIT_HELPER_END(Op_OrInPlace);
         }
@@ -200,8 +200,8 @@ using namespace Js;
         Var JavascriptMath::Xor_Full(Var aLeft, Var aRight, ScriptContext* scriptContext)
         {
             JIT_HELPER_REENTRANT_HEADER(Op_Xor_Full);
-            int32 nLeft = TaggedInt::Is(aLeft) ? TaggedInt::ToInt32(aLeft) : JavascriptConversion::ToInt32(aLeft, scriptContext);
-            int32 nRight = TaggedInt::Is(aRight) ? TaggedInt::ToInt32(aRight) : JavascriptConversion::ToInt32(aRight, scriptContext);
+            int32_t nLeft = TaggedInt::Is(aLeft) ? TaggedInt::ToInt32(aLeft) : JavascriptConversion::ToInt32(aLeft, scriptContext);
+            int32_t nRight = TaggedInt::Is(aRight) ? TaggedInt::ToInt32(aRight) : JavascriptConversion::ToInt32(aRight, scriptContext);
 
             return JavascriptNumber::ToVar(nLeft ^ nRight,scriptContext);
             JIT_HELPER_END(Op_Xor_Full);
@@ -211,8 +211,8 @@ using namespace Js;
         Var JavascriptMath::Xor_InPlace(Var aLeft, Var aRight, ScriptContext* scriptContext,  JavascriptNumber* result)
         {
             JIT_HELPER_REENTRANT_HEADER(Op_XorInPlace);
-            int32 nLeft = TaggedInt::Is(aLeft) ? TaggedInt::ToInt32(aLeft) : JavascriptConversion::ToInt32(aLeft, scriptContext);
-            int32 nRight = TaggedInt::Is(aRight) ? TaggedInt::ToInt32(aRight) : JavascriptConversion::ToInt32(aRight, scriptContext);
+            int32_t nLeft = TaggedInt::Is(aLeft) ? TaggedInt::ToInt32(aLeft) : JavascriptConversion::ToInt32(aLeft, scriptContext);
+            int32_t nRight = TaggedInt::Is(aRight) ? TaggedInt::ToInt32(aRight) : JavascriptConversion::ToInt32(aRight, scriptContext);
 
             return JavascriptNumber::ToVarInPlace(nLeft ^ nRight, scriptContext, result);
             JIT_HELPER_END(Op_XorInPlace);
@@ -221,9 +221,9 @@ using namespace Js;
         Var JavascriptMath::ShiftLeft_Full(Var aLeft, Var aRight, ScriptContext* scriptContext)
         {
             JIT_HELPER_REENTRANT_HEADER(Op_ShiftLeft_Full);
-            int32 nValue    = JavascriptConversion::ToInt32(aLeft, scriptContext);
+            int32_t nValue    = JavascriptConversion::ToInt32(aLeft, scriptContext);
             uint32_t nShift   = JavascriptConversion::ToUInt32(aRight, scriptContext);
-            int32 nResult   = nValue << (nShift & 0x1F);
+            int32_t nResult   = nValue << (nShift & 0x1F);
 
             return JavascriptNumber::ToVar(nResult,scriptContext);
             JIT_HELPER_END(Op_ShiftLeft_Full);
@@ -233,10 +233,10 @@ using namespace Js;
         Var JavascriptMath::ShiftRight_Full(Var aLeft, Var aRight, ScriptContext* scriptContext)
         {
             JIT_HELPER_REENTRANT_HEADER(Op_ShiftRight_Full);
-            int32 nValue    = JavascriptConversion::ToInt32(aLeft, scriptContext);
+            int32_t nValue    = JavascriptConversion::ToInt32(aLeft, scriptContext);
             uint32_t nShift   = JavascriptConversion::ToUInt32(aRight, scriptContext);
 
-            int32 nResult   = nValue >> (nShift & 0x1F);
+            int32_t nResult   = nValue >> (nShift & 0x1F);
 
             return JavascriptNumber::ToVar(nResult,scriptContext);
             JIT_HELPER_END(Op_ShiftRight_Full);
@@ -324,7 +324,7 @@ using namespace Js;
 #if INT32VAR
                             long sum = TaggedInt::ToInt64(aLeft) + TaggedInt::ToInt64(aRight);
 #else
-                            int32 sum = TaggedInt::ToInt32(aLeft) + TaggedInt::ToInt32(aRight);
+                            int32_t sum = TaggedInt::ToInt32(aLeft) + TaggedInt::ToInt32(aRight);
 #endif
                             return JavascriptNumber::ToVar(sum, scriptContext );
                         }
@@ -394,7 +394,7 @@ using namespace Js;
 #if INT32VAR
                     long sum = TaggedInt::ToInt64(aLeft) + TaggedInt::ToInt64(aRight);
 #else
-                    int32 sum = TaggedInt::ToInt32(aLeft) + TaggedInt::ToInt32(aRight);
+                    int32_t sum = TaggedInt::ToInt32(aLeft) + TaggedInt::ToInt32(aRight);
 #endif
 
                     return JavascriptNumber::ToVarInPlace(sum, scriptContext, result);
@@ -1088,14 +1088,14 @@ StringCommon:
         }
 
 
-        Var JavascriptMath::FinishOddDivByPow2(int32 value, ScriptContext *scriptContext)
+        Var JavascriptMath::FinishOddDivByPow2(int32_t value, ScriptContext *scriptContext)
         {
             JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Op_FinishOddDivByPow2);
             return JavascriptNumber::New((double)(value + 0.5), scriptContext);
             JIT_HELPER_END(Op_FinishOddDivByPow2);
         }
 
-        Var JavascriptMath::FinishOddDivByPow2_InPlace(int32 value, ScriptContext *scriptContext, JavascriptNumber* result)
+        Var JavascriptMath::FinishOddDivByPow2_InPlace(int32_t value, ScriptContext *scriptContext, JavascriptNumber* result)
         {
             JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Op_FinishOddDivByPow2InPlace);
             return JavascriptNumber::InPlaceNew((double)(value + 0.5), scriptContext, result);
@@ -1373,16 +1373,16 @@ StringCommon:
             return (uint32_t)ToInt32Core(T1);
         }
 
-        int32 JavascriptMath::ToInt32(double T1)
+        int32_t JavascriptMath::ToInt32(double T1)
         {
             return JavascriptMath::ToInt32Core(T1);
         }
 
-        int32 JavascriptMath::ToInt32_Full(Var aValue, ScriptContext* scriptContext)
+        int32_t JavascriptMath::ToInt32_Full(Var aValue, ScriptContext* scriptContext)
         {
             AssertMsg(!TaggedInt::Is(aValue), "Should be detected");
 
-            // This is used when TaggedInt's overflow but remain under int32
+            // This is used when TaggedInt's overflow but remain under int32_t
             // so Number is our most critical case:
 
             TypeId typeId = JavascriptOperators::GetTypeId(aValue);

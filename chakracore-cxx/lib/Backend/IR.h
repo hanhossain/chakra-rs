@@ -142,7 +142,7 @@ enum IRKind : uint8_t {
     InstrKindJitProfiling,
 };
 
-const int32 InvalidInstrLayout = -1;
+const int32_t InvalidInstrLayout = -1;
 
 ///---------------------------------------------------------------------------
 ///

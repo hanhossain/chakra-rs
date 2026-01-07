@@ -388,7 +388,7 @@ BackwardPass::Optimize()
     this->CleanupBackwardPassInfoInFlowGraph();
 
     // Info about whether a sym is used in a way in which -0 differs from +0, or whether the sym is used in a way in which an
-    // int32 overflow when generating the value of the sym matters, in the current block. The info is transferred to
+    // int32_t overflow when generating the value of the sym matters, in the current block. The info is transferred to
     // instructions that define the sym in the current block as they are encountered. The info in these bit vectors is discarded
     // after optimizing each block, so the only info that remains for GlobOpt is that which is transferred to instructions.
     BVSparse<JitArenaAllocator> localNegativeZeroDoesNotMatterBySymId(tempAlloc);
@@ -1875,14 +1875,14 @@ BackwardPass::ProcessBailOutCopyProps(BailOutInfo * bailOutInfo, BVSparse<JitAre
             {
                 if (bailOutInfo->liveLosslessInt32Syms->Test(symId))
                 {
-                    // Var version of the sym is not live, use the int32 version
+                    // Var version of the sym is not live, use the int32_t version
                     int32StackSym = stackSym->GetInt32EquivSym(nullptr);
                     typeSpecSym = int32StackSym;
                     Assert(int32StackSym);
                 }
                 else if(bailOutInfo->liveFloat64Syms->Test(symId))
                 {
-                    // Var/int32 version of the sym is not live, use the float64 version
+                    // Var/int32_t version of the sym is not live, use the float64 version
                     float64StackSym = stackSym->GetFloat64EquivSym(nullptr);
                     typeSpecSym = float64StackSym;
                     Assert(float64StackSym);
@@ -3700,7 +3700,7 @@ BackwardPass::ProcessBlock(BasicBlock * block)
                     //     UnsignedBoundCheck s1 <= s2 + c
                     //
                     // The BoundCheck instruction is a signed operation, so any unsigned operand used in the instruction must be
-                    // guaranteed to be >= 0 and <= int32 max when its value is interpreted as signed. Due to the restricted
+                    // guaranteed to be >= 0 and <= int32_t max when its value is interpreted as signed. Due to the restricted
                     // range of s2 above, by using an unsigned comparison instead, the negative check on s1 will also be
                     // covered.
                     //
@@ -6779,7 +6779,7 @@ BackwardPass::TrackIntUsage(IR::Instr *const instr)
 
                 if(instr->GetDst()->IsInt32())
                 {
-                    // Conversion to int32 that is either explicit, or has a bailout check ensuring that it's an int value
+                    // Conversion to int32_t that is either explicit, or has a bailout check ensuring that it's an int value
                     SetNegativeZeroDoesNotMatterIfLastUse(instr->GetSrc1());
                     break;
                 }
@@ -7012,7 +7012,7 @@ BackwardPass::TrackIntUsage(IR::Instr *const instr)
         case Js::OpCode::Decr_A:
         case Js::OpCode::Add_A:
         case Js::OpCode::Sub_A:
-            // The sources are not guaranteed to be converted to int32. Let the compounded int overflow tracking handle this.
+            // The sources are not guaranteed to be converted to int32_t. Let the compounded int overflow tracking handle this.
             SetIntOverflowMatters(instr->GetSrc1());
             SetIntOverflowMatters(instr->GetSrc2());
             break;
@@ -7052,8 +7052,8 @@ BackwardPass::TrackIntUsage(IR::Instr *const instr)
         case Js::OpCode::Shr_A:
             // These instructions convert their srcs to int32s, and hence don't care about int-overflowed values in the srcs (as
             // long as the overflowed values did not overflow the 53 bits that 'double' values have to precisely represent
-            // ints). ShrU_A is not included here because it converts its srcs to uint32_t rather than int32, so it would make a
-            // difference if the srcs have int32-overflowed values.
+            // ints). ShrU_A is not included here because it converts its srcs to uint32_t rather than int32_t, so it would make a
+            // difference if the srcs have int32_t-overflowed values.
             SetIntOverflowDoesNotMatterIfLastUse(instr->GetSrc1());
             SetIntOverflowDoesNotMatterIfLastUse(instr->GetSrc2());
             break;
@@ -7156,8 +7156,8 @@ BackwardPass::TrackIntUsage(IR::Instr *const instr)
         case Js::OpCode::Shr_A:
             // These instructions convert their srcs to int32s, and hence don't care about int-overflowed values in the srcs (as
             // long as the overflowed values did not overflow the 53 bits that 'double' values have to precisely represent
-            // ints). ShrU_A is not included here because it converts its srcs to uint32_t rather than int32, so it would make a
-            // difference if the srcs have int32-overflowed values.
+            // ints). ShrU_A is not included here because it converts its srcs to uint32_t rather than int32_t, so it would make a
+            // difference if the srcs have int32_t-overflowed values.
             instr->ignoreIntOverflowInRange = true;
             lossy = true;
             SetIntOverflowDoesNotMatterInRangeIfLastUse(instr->GetSrc1(), 0);
@@ -7247,7 +7247,7 @@ BackwardPass::TrackIntUsage(IR::Instr *const instr)
         case Js::OpCode::Mul_A:
             if (trackNon32BitOverflow)
             {
-                // MULs will always be at the start of a range. Either included in the range if int32 overflow is ignored, or excluded if int32 overflow matters. Even if int32 can be ignored, MULs can still bailout on 53-bit.
+                // MULs will always be at the start of a range. Either included in the range if int32_t overflow is ignored, or excluded if int32_t overflow matters. Even if int32_t can be ignored, MULs can still bailout on 53-bit.
                 // That's why it cannot be in the middle of a range.
                 if (instr->ignoreIntOverflowInRange)
                 {
@@ -7347,7 +7347,7 @@ BackwardPass::TrackIntUsage(IR::Instr *const instr)
     // MULs with ignoreIntOverflow can still bailout on 53-bit overflow, so they cannot be in the middle of a range
     if (trackNon32BitOverflow && instr->m_opcode == Js::OpCode::Mul_A)
     {
-        // range would have ended already if int32 overflow matters
+        // range would have ended already if int32_t overflow matters
         Assert(instr->ignoreIntOverflowInRange && instr->ignoreOverflowBitCount != 32);
         EndIntOverflowDoesNotMatterRange();
     }
@@ -7945,7 +7945,7 @@ BackwardPass::ProcessDef(IR::Opnd * opnd)
         // A bailout inserted for aggressive or lossy int type specialization causes assumptions to be made on the value of
         // the instruction's destination later on, as though the bailout did not happen. If the value is an int constant and
         // that value is propagated forward, it can cause the bailout instruction to become a dead store and be removed,
-        // thereby invalidating the assumptions made. Or for lossy int type specialization, the lossy conversion to int32
+        // thereby invalidating the assumptions made. Or for lossy int type specialization, the lossy conversion to int32_t
         // may have side effects and so cannot be dead-store-removed. As one way of solving that problem, bailout
         // instructions resulting from aggressive or lossy int type spec are not dead-stored.
         const auto bailOutKind = instr->GetBailOutKind();

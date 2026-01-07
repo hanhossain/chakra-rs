@@ -39,7 +39,7 @@ Inline::Optimize(Func *func, __in_ecount_opt(callerArgOutCount) IR::Instr *calle
     StackSym *symThis = nullptr;
     lastStatementBoundary = nullptr;
     IR::LabelInstr* loopTop = nullptr;
-    int32 backEdgeCount = 0;
+    int32_t backEdgeCount = 0;
 
     // Profile data already filter call site outside of loops if the function has loops, so we don't need to detect that here.
     FOREACH_INSTR_EDITING(instr, instrNext, func->m_headInstr)
@@ -4998,7 +4998,7 @@ Inline::MapActuals(IR::Instr *callInstr, __out_ecount(maxParamCount) IR::Instr *
     {
         // TODO: Is an underflow here intended, it triggers on test\inlining\OS_2733280.js
         IR::IntConstOpnd * countOpnd = linkOpnd->AsRegOpnd()->m_sym->m_instrDef->GetSrc1()->AsIntConstOpnd();
-        int32 count = countOpnd->AsInt32();
+        int32_t count = countOpnd->AsInt32();
         count += fixupArgoutCount - 1;
         countOpnd->SetValue(count);
 

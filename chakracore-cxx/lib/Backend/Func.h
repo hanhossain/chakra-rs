@@ -306,12 +306,12 @@ public:
 #endif
         Js::ScriptContextProfiler *const codeGenProfiler, const bool isBackgroundJIT);
 
-    int32 StackAllocate(int size);
-    int32 StackAllocate(StackSym *stackSym, int size);
-    void SetArgOffset(StackSym *stackSym, int32 offset);
+    int32_t StackAllocate(int size);
+    int32_t StackAllocate(StackSym *stackSym, int size);
+    void SetArgOffset(StackSym *stackSym, int32_t offset);
 
-    int32 GetLocalVarSlotOffset(int32 slotId);
-    int32 GetHasLocalVarChangedOffset();
+    int32_t GetLocalVarSlotOffset(int32_t slotId);
+    int32_t GetHasLocalVarChangedOffset();
     bool IsJitInDebugMode() const;
     bool IsNonTempLocalVar(uint32_t slotIndex);
     void OnAddSym(Sym* sym);
@@ -331,7 +331,7 @@ public:
     void AjustLocalVarSlotOffset();
 #endif
 
-    static int32 AdjustOffsetValue(int32 offset);
+    static int32_t AdjustOffsetValue(int32_t offset);
 
     static inline uint32_t GetDiagLocalSlotSize()
     {
@@ -452,32 +452,32 @@ static const unsigned long c_debugFillPattern8 = 0xcececececececece;
     IR::LabelInstr * GetFuncEndLabel();
 
 #ifdef _M_X64
-    void SetSpillSize(int32 spillSize)
+    void SetSpillSize(int32_t spillSize)
     {
         m_spillSize = spillSize;
     }
 
-    int32 GetSpillSize()
+    int32_t GetSpillSize()
     {
         return m_spillSize;
     }
 
-    void SetArgsSize(int32 argsSize)
+    void SetArgsSize(int32_t argsSize)
     {
         m_argsSize = argsSize;
     }
 
-    int32 GetArgsSize()
+    int32_t GetArgsSize()
     {
         return m_argsSize;
     }
 
-    void SetSavedRegSize(int32 savedRegSize)
+    void SetSavedRegSize(int32_t savedRegSize)
     {
         m_savedRegSize = savedRegSize;
     }
 
-    int32 GetSavedRegSize()
+    int32_t GetSavedRegSize()
     {
         return m_savedRegSize;
     }
@@ -644,9 +644,9 @@ public:
     IR::Instr *         m_exitInstr;
     IR::Instr *         m_tailInstr;
 #ifdef _M_X64
-    int32               m_spillSize;
-    int32               m_argsSize;
-    int32               m_savedRegSize;
+    int32_t               m_spillSize;
+    int32_t               m_argsSize;
+    int32_t               m_savedRegSize;
     PrologEncoder       m_prologEncoder;
 #endif
 
@@ -654,23 +654,23 @@ public:
 
     uint                m_forInLoopMaxDepth;
     uint                m_forInLoopBaseDepth;
-    int32               m_forInEnumeratorArrayOffset;
+    int32_t               m_forInEnumeratorArrayOffset;
 
-    int32               m_localStackHeight;
+    int32_t               m_localStackHeight;
     uint                frameSize;
     uint32_t              inlineDepth;
     uint32_t              postCallByteCodeOffset;
     Js::RegSlot         returnValueRegSlot;
     Js::RegSlot         firstIRTemp;
     Js::ArgSlot         actualCount;
-    int32               firstActualStackOffset;
+    int32_t               firstActualStackOffset;
     uint32_t              tryCatchNestingLevel;
     uint32_t              m_totalJumpTableSizeInBytesForSwitchStatements;
 #if defined(_M_ARM32_OR_ARM64)
     //Offset to arguments from sp + m_localStackHeight;
     //For non leaf functions this is (callee saved register count + LR + R11) * MachRegInt
     //For leaf functions this is (saved registers) * MachRegInt
-    int32               m_ArgumentsOffset;
+    int32_t               m_ArgumentsOffset;
     UnwindInfoManager   m_unwindInfo;
     IR::LabelInstr *    m_epilogLabel;
 #endif
@@ -980,9 +980,9 @@ public:
 #endif
 
 #if defined(_M_ARM32_OR_ARM64)
-    int32               GetInlineeArgumentStackSize()
+    int32_t               GetInlineeArgumentStackSize()
     {
-        int32 size = this->GetMaxInlineeArgOutSize();
+        int32_t size = this->GetMaxInlineeArgOutSize();
         if (size)
         {
             return size + MachPtr; // +1 for the dedicated zero out argc slot
@@ -1030,13 +1030,13 @@ private:
 #if !FLOATVAR
     CodeGenNumberAllocator *        numberAllocator;
 #endif
-    int32           m_localVarSlotsOffset;
-    int32           m_hasLocalVarChangedOffset;    // Offset on stack of 1 byte which indicates if any local var has changed.
+    int32_t           m_localVarSlotsOffset;
+    int32_t           m_hasLocalVarChangedOffset;    // Offset on stack of 1 byte which indicates if any local var has changed.
     void * const    m_codeGenAllocators;
     YieldOffsetResumeLabelList * m_yieldOffsetResumeLabelList;
     StackArgWithFormalsTracker * stackArgWithFormalsTracker;
     ObjTypeSpecFldInfo ** m_globalObjTypeSpecFldInfoArray;
-    IR::SymOpnd *GetInlineeOpndAtOffset(int32 offset);
+    IR::SymOpnd *GetInlineeOpndAtOffset(int32_t offset);
     bool HasLocalVarSlotCreated() const { return m_localVarSlotsOffset != Js::Constants::InvalidOffset; }
     void EnsureLocalVarSlots();
     SList<IR::RegOpnd *> constantAddressRegOpnd;
@@ -1047,7 +1047,7 @@ private:
 #endif
 #if LOWER_SPLIT_INT64
     struct Int64SymPair {StackSym* high = nullptr; StackSym* low = nullptr;};
-    // Key is an long symId, value is a pair of int32 StackSym
+    // Key is an long symId, value is a pair of int32_t StackSym
     typedef JsUtil::BaseDictionary<SymID, Int64SymPair, JitArenaAllocator> Int64SymPairMap;
     Int64SymPairMap* m_int64SymPairMap;
 #endif

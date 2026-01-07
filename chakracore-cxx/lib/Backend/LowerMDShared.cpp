@@ -67,7 +67,7 @@ LowererMD::GenerateMemRef(intptr_t addr, IRType type, IR::Instr *instr, bool don
 }
 
 void
-LowererMD::GenerateMemInit(IR::RegOpnd * opnd, int32 offset, size_t value, IR::Instr * insertBeforeInstr, bool isZeroed)
+LowererMD::GenerateMemInit(IR::RegOpnd * opnd, int32_t offset, size_t value, IR::Instr * insertBeforeInstr, bool isZeroed)
 {
 #if _M_X64
     lowererMDArch.GenerateMemInit(opnd, offset, value, insertBeforeInstr, isZeroed);
@@ -574,7 +574,7 @@ LowererMD::LoadStackArgPtr(IR::Instr * instr)
         Assert(this->m_func->GetLoopParamSym());
         IR::RegOpnd *baseOpnd = IR::RegOpnd::New(this->m_func->GetLoopParamSym(), TyMachReg, this->m_func);
         size_t offset = Js::InterpreterStackFrame::GetOffsetOfInParams();
-        IR::IndirOpnd *indirOpnd = IR::IndirOpnd::New(baseOpnd, (int32)offset, TyMachReg, this->m_func);
+        IR::IndirOpnd *indirOpnd = IR::IndirOpnd::New(baseOpnd, (int32_t)offset, TyMachReg, this->m_func);
         IR::RegOpnd *tmpOpnd = IR::RegOpnd::New(TyMachReg, this->m_func);
         IR::Instr *instrLdParams = IR::Instr::New(Js::OpCode::MOV, tmpOpnd, indirOpnd, this->m_func);
         instr->InsertBefore(instrLdParams);
@@ -599,7 +599,7 @@ LowererMD::LoadArgumentsFromFrame(IR::Instr * instr)
         // Get the arguments ptr from the interpreter frame instance that was passed in.
         Assert(this->m_func->GetLoopParamSym());
         IR::RegOpnd *baseOpnd = IR::RegOpnd::New(this->m_func->GetLoopParamSym(), TyMachReg, this->m_func);
-        int32 offset = (int32)Js::InterpreterStackFrame::GetOffsetOfArguments();
+        int32_t offset = (int32_t)Js::InterpreterStackFrame::GetOffsetOfArguments();
         instr->SetSrc1(IR::IndirOpnd::New(baseOpnd, offset, TyMachReg, this->m_func));
     }
     else
@@ -623,7 +623,7 @@ LowererMD::LoadArgumentCount(IR::Instr * instr)
         Assert(this->m_func->GetLoopParamSym());
         IR::RegOpnd *baseOpnd = IR::RegOpnd::New(this->m_func->GetLoopParamSym(), TyMachReg, this->m_func);
         size_t offset = Js::InterpreterStackFrame::GetOffsetOfInSlotsCount();
-        instr->SetSrc1(IR::IndirOpnd::New(baseOpnd, (int32)offset, TyInt32, this->m_func));
+        instr->SetSrc1(IR::IndirOpnd::New(baseOpnd, (int32_t)offset, TyInt32, this->m_func));
     }
     else
     {
@@ -1606,7 +1606,7 @@ LowererMD::Legalize(IR::Instr *const instr, bool fPostRegAlloc)
                     case TyInt32:
                         if(intConstantSrc)
                         {
-                            UpdateIntConstantSrc(static_cast<int32>(intConstantSrc->GetValue())); // sign-extend
+                            UpdateIntConstantSrc(static_cast<int32_t>(intConstantSrc->GetValue())); // sign-extend
                             break;
                         }
                         instr->m_opcode = Js::OpCode::MOVSXD;
@@ -2278,7 +2278,7 @@ LowererMD::GenerateFastDivByPow2(IR::Instr *instr)
     //
     // Generate:
     //     MOV  s1, src1
-    //     AND  s1, 0xFFFF000000000000 | (src2Value-1)            ----- test for tagged int and divisibility by src2Value     [int32]
+    //     AND  s1, 0xFFFF000000000000 | (src2Value-1)            ----- test for tagged int and divisibility by src2Value     [int32_t]
     //     AND  s1, 0x00000001 | ((src2Value-1)<<1)                                                                           [int31]
     //     CMP  s1, AtomTag_IntPtr
     //     JNE  $divbyhalf
@@ -2288,12 +2288,12 @@ LowererMD::GenerateFastDivByPow2(IR::Instr *instr)
     //     MOV  dst, s1
     //     JMP  $done
     // $divbyhalf:
-    //     AND  s1, 0xFFFF000000000000 | (src2Value-1>>1)        ----- test for tagged int and divisibility by src2Value /2  [int32]
+    //     AND  s1, 0xFFFF000000000000 | (src2Value-1>>1)        ----- test for tagged int and divisibility by src2Value /2  [int32_t]
     //     AND  s1, 0x00000001 | ((src2Value-1))                                                                             [int31]
     //     CMP  s1, AtomTag_IntPtr
     //     JNE  $helper
     //     MOV  s1, src1
-    //     SAR  s1, log2(src2Value)                                                                                          [int32]
+    //     SAR  s1, log2(src2Value)                                                                                          [int32_t]
     //     SAR  s1, log2(src2Value) + 1                         ------ removes the tag and divides                           [int31]
     //     PUSH s1
     //     PUSH 0xXXXXXXXX (ScriptContext)
@@ -2318,7 +2318,7 @@ LowererMD::GenerateFastDivByPow2(IR::Instr *instr)
 
     AnalysisAssert(src2);
     Assert(src2->IsVar() && Js::TaggedInt::Is(src2->m_address) && (Math::IsPow2(Js::TaggedInt::ToInt32(src2->m_address))));
-    int32           src2Value = Js::TaggedInt::ToInt32(src2->m_address);
+    int32_t           src2Value = Js::TaggedInt::ToInt32(src2->m_address);
 
     // MOV s1, src1
     instr->InsertBefore(IR::Instr::New(Js::OpCode::MOV, s1, src1, m_func));
@@ -3572,7 +3572,7 @@ LowererMD::GenerateFastNeg(IR::Instr * instrNeg)
     // dst = NEG dst        -- do an inline NEG
     // dst = ADD dst, 2     -- restore the var tag on the result             [int31 only]
     //       JO $helper
-    // dst = OR dst, AtomTag_Ptr                                             [int32 only]
+    // dst = OR dst, AtomTag_Ptr                                             [int32_t only]
     //       JMP $fallthru
     // $helper:
     //      (caller generates helper call)
@@ -3609,7 +3609,7 @@ LowererMD::GenerateFastNeg(IR::Instr * instrNeg)
         }
         else
         {
-            // negation below can overflow because max negative int32 value > max positive value by 1.
+            // negation below can overflow because max negative int32_t value > max positive value by 1.
             newOpnd = IR::AddrOpnd::NewFromNumber(-(long)value, m_func);
         }
 
@@ -4246,7 +4246,7 @@ LowererMD::GenerateStFldFromLocalInlineCache(
 
     // slotIndex = MOV [&inlineCache->u.local.inlineSlotOffsetOrAuxSlotIndex] -- load the cached slot offset or index
     IR::RegOpnd * opndSlotIndex = IR::RegOpnd::New(TyMachReg, instrStFld->m_func);
-    slotIndexOpnd = IR::IndirOpnd::New(inlineCache, (int32)offsetof(Js::InlineCache, u.local.slotIndex), TyUint16, instrStFld->m_func);
+    slotIndexOpnd = IR::IndirOpnd::New(inlineCache, (int32_t)offsetof(Js::InlineCache, u.local.slotIndex), TyUint16, instrStFld->m_func);
     instr = IR::Instr::New(Js::OpCode::MOVZXW, opndSlotIndex, slotIndexOpnd, instrStFld->m_func);
     instrStFld->InsertBefore(instr);
 
@@ -4850,7 +4850,7 @@ LowererMD::GenerateFastAbs(IR::Opnd *dst, IR::Opnd *src, IR::Instr *callInstr, I
     {
 #if defined(_M_IX86)
         // CMP [src], JavascriptNumber.vtable
-        IR::Opnd *opnd = IR::IndirOpnd::New(src->AsRegOpnd(), (int32)0, TyMachPtr, this->m_func);
+        IR::Opnd *opnd = IR::IndirOpnd::New(src->AsRegOpnd(), (int32_t)0, TyMachPtr, this->m_func);
         instr = IR::Instr::New(Js::OpCode::CMP, this->m_func);
         instr->SetSrc1(opnd);
         instr->SetSrc2(m_lowerer->LoadVTableValueOpnd(insertInstr, VTableValue::VtableJavascriptNumber));
@@ -5244,7 +5244,7 @@ LowererMD::GenerateFastRecyclerAlloc(size_t allocSize, IR::RegOpnd* newObjDst, I
 
     // LEA nextMemBlock, [newObjDst + allocSize]
     IR::RegOpnd * nextMemBlockOpnd = IR::RegOpnd::New(TyMachPtr, this->m_func);
-    IR::IndirOpnd* nextMemBlockSrc = IR::IndirOpnd::New(newObjDst, (int32)alignedSize, TyMachPtr, this->m_func);
+    IR::IndirOpnd* nextMemBlockSrc = IR::IndirOpnd::New(newObjDst, (int32_t)alignedSize, TyMachPtr, this->m_func);
     IR::Instr * loadNextMemBlockInstr = IR::Instr::New(Js::OpCode::LEA, nextMemBlockOpnd, nextMemBlockSrc, this->m_func);
     insertionPointInstr->InsertBefore(loadNextMemBlockInstr);
 
@@ -6259,7 +6259,7 @@ LowererMD::LowerInt4MulWithBailOut(
 
     if(needsOverflowCheck)
     {
-        // do we care about int32 or non-int32 overflow ?
+        // do we care about int32_t or non-int32_t overflow ?
         if (!simplifiedMul && !instr->ShouldCheckFor32BitOverflow() && instr->ShouldCheckForNon32BitOverflow())
             LowererMD::EmitNon32BitOvfCheck(instr, insertBeforeInstr, bailOutLabel);
         else
@@ -6453,7 +6453,7 @@ LowererMD::EnsureAdjacentArgs(IR::Instr * instrArg)
 
 #if INT32VAR
 //
-// Convert an int32 to Var representation.
+// Convert an int32_t to Var representation.
 //
 void LowererMD::GenerateInt32ToVarConversion( IR::Opnd * opndSrc, IR::Instr * insertInstr )
 {
@@ -6579,7 +6579,7 @@ bool LowererMD::GenerateObjectTest(IR::Opnd * opndSrc, IR::Instr * insertInstr, 
 
 #else
 //
-// Convert an int32 value to a Var.
+// Convert an int32_t value to a Var.
 //
 void LowererMD::GenerateInt32ToVarConversion( IR::Opnd * opndSrc, IR::Instr * insertInstr )
 {
@@ -7135,7 +7135,7 @@ void LowererMD::ConvertFloatToInt32(IR::Opnd* intOpnd, IR::Opnd* floatOpnd, IR::
         Legalize(instr);
 
 #ifdef _M_X64
-        // Truncate to int32 for x64.  We still need to go to helper though if we have long overflow.
+        // Truncate to int32_t for x64.  We still need to go to helper though if we have long overflow.
 
         // MOV_TRUNC intOpnd, tmpOpnd
         instr = IR::Instr::New(Js::OpCode::MOV_TRUNC, intOpnd, dstOpnd, this->m_func);
@@ -8385,7 +8385,7 @@ void LowererMD::GenerateFastInlineBuiltInMathAbs(IR::Instr* inlineInstr)
     IRType srcType = src->GetType();
     if (srcType == IRType::TyInt32)
     {
-        // Note: if execution gets so far, we always get (untagged) int32 here.
+        // Note: if execution gets so far, we always get (untagged) int32_t here.
         // Since -x = ~x + 1, abs(x) = x, abs(-x) = -x, sign-extend(x) = 0, sign_extend(-x) = -1, where 0 <= x.
         // Then: abs(x) = sign-extend(x) XOR x - sign-extend(x)
 

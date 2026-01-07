@@ -194,7 +194,7 @@ class PathDependentInfo
 {
 private:
     Value *leftValue, *rightValue;
-    int32 rightConstantValue;
+    int32_t rightConstantValue;
     PathDependentRelationship relationship;
 
 public:
@@ -209,7 +209,7 @@ public:
         const PathDependentRelationship relationship,
         Value *const leftValue,
         Value *const rightValue,
-        const int32 rightConstantValue)
+        const int32_t rightConstantValue)
         : leftValue(leftValue), rightValue(rightValue), rightConstantValue(rightConstantValue), relationship(relationship)
     {
         Assert(leftValue);
@@ -239,7 +239,7 @@ public:
         return rightValue;
     }
 
-    int32 RightConstantValue() const
+    int32_t RightConstantValue() const
     {
         Assert(!RightValue());
         return rightConstantValue;
@@ -572,7 +572,7 @@ private:
     bool                    IsPrepassSrcValueInfoPrecise(IR::Instr *const instr, Value *const src1Value, Value *const src2Value, bool * canTransferValueNumberToDst = nullptr) const;
     bool                    IsSafeToTransferInPrepass(StackSym * const sym, ValueInfo *const srcValueInfo) const;
     bool                    SafeToCopyPropInPrepass(StackSym * const originalSym, StackSym * const copySym, Value *const value) const;
-    Value *                 CreateDstUntransferredIntValue(const int32 min, const int32 max, IR::Instr *const instr, Value *const src1Value, Value *const src2Value);
+    Value *                 CreateDstUntransferredIntValue(const int32_t min, const int32_t max, IR::Instr *const instr, Value *const src1Value, Value *const src2Value);
     Value *                 CreateDstUntransferredValue(const ValueType desiredValueType, IR::Instr *const instr, Value *const src1Value, Value *const src2Value);
     Value *                 ValueNumberTransferDst(IR::Instr *const instr, Value *src1Val);
     bool                    IsSafeToTransferInPrePass(IR::Opnd *src, Value *srcValue);
@@ -589,13 +589,13 @@ private:
     Value *                 NewGenericValue(const ValueType valueType);
     Value *                 NewGenericValue(const ValueType valueType, IR::Opnd *const opnd);
     Value *                 NewGenericValue(const ValueType valueType, Sym *const sym);
-    Value *                 GetIntConstantValue(const int32 intConst, IR::Instr * instr, IR::Opnd *const opnd = nullptr);
+    Value *                 GetIntConstantValue(const int32_t intConst, IR::Instr * instr, IR::Opnd *const opnd = nullptr);
     Value *                 GetIntConstantValue(const long intConst, IR::Instr * instr, IR::Opnd *const opnd = nullptr);
-    Value *                 NewIntConstantValue(const int32 intConst, IR::Instr * instr, bool isTaggable);
+    Value *                 NewIntConstantValue(const int32_t intConst, IR::Instr * instr, bool isTaggable);
     Value *                 NewInt64ConstantValue(const long intConst, IR::Instr * instr);
-    ValueInfo *             NewIntRangeValueInfo(const int32 min, const int32 max, const bool wasNegativeZeroPreventedByBailout);
-    ValueInfo *             NewIntRangeValueInfo(const ValueInfo *const originalValueInfo, const int32 min, const int32 max) const;
-    Value *                 NewIntRangeValue(const int32 min, const int32 max, const bool wasNegativeZeroPreventedByBailout, IR::Opnd *const opnd = nullptr);
+    ValueInfo *             NewIntRangeValueInfo(const int32_t min, const int32_t max, const bool wasNegativeZeroPreventedByBailout);
+    ValueInfo *             NewIntRangeValueInfo(const ValueInfo *const originalValueInfo, const int32_t min, const int32_t max) const;
+    Value *                 NewIntRangeValue(const int32_t min, const int32_t max, const bool wasNegativeZeroPreventedByBailout, IR::Opnd *const opnd = nullptr);
     IntBoundedValueInfo *   NewIntBoundedValueInfo(const ValueInfo *const originalValueInfo, const IntBounds *const bounds) const;
     Value *                 NewIntBoundedValue(const ValueType valueType, const IntBounds *const bounds, const bool wasNegativeZeroPreventedByBailout, IR::Opnd *const opnd = nullptr);
     Value *                 NewFloatConstantValue(const FloatConstType floatValue, IR::Opnd *const opnd = nullptr);
@@ -604,8 +604,8 @@ private:
     Value *                 HoistConstantLoadAndPropagateValueBackward(Js::Var varConst, IR::Instr * origInstr, Value * value);
     Value *                 NewFixedFunctionValue(Js::JavascriptFunction *functionValue, IR::AddrOpnd *addrOpnd);
 
-    StackSym *              GetTaggedIntConstantStackSym(const int32 intConstantValue) const;
-    StackSym *              GetOrCreateTaggedIntConstantStackSym(const int32 intConstantValue) const;
+    StackSym *              GetTaggedIntConstantStackSym(const int32_t intConstantValue) const;
+    StackSym *              GetOrCreateTaggedIntConstantStackSym(const int32_t intConstantValue) const;
     Sym *                   SetSymStore(ValueInfo *valueInfo, Sym *sym);
     void                    SetSymStoreDirect(ValueInfo *valueInfo, Sym *sym);
     IR::Instr *             TypeSpecialization(IR::Instr *instr, Value **pSrc1Val, Value **pSrc2Val, Value **pDstVal, bool *redoTypeSpecRef, bool *const forceInvariantHoistingRef);
@@ -618,7 +618,7 @@ private:
     template <typename T>
     IR::Opnd*               ReplaceWConst(IR::Instr **pInstr, T value, Value **pDstVal);
     bool                    OptConstFoldBinary(IR::Instr * *pInstr, const IntConstantBounds &src1IntConstantBounds, const IntConstantBounds &src2IntConstantBounds, Value **pDstVal);
-    bool                    OptConstFoldUnary(IR::Instr * *pInstr, const int32 intConstantValue, const bool isUsingOriginalSrc1Value, Value **pDstVal);
+    bool                    OptConstFoldUnary(IR::Instr * *pInstr, const int32_t intConstantValue, const bool isUsingOriginalSrc1Value, Value **pDstVal);
     bool                    OptConstPeep(IR::Instr *instr, IR::Opnd *constSrc, Value **pDstVal, ValueInfo *vInfo);
     bool                    CanProveConditionalBranch(IR::Instr *instr, Value *src1Val, Value *src2Val, Js::Var src1Var, Js::Var src2Var, bool *result);
     bool                    OptConstFoldBranch(IR::Instr *instr, Value *src1Val, Value*src2Val, Value **pDstVal);
@@ -627,8 +627,8 @@ private:
     bool                    IsWorthSpecializingToInt32DueToDst(IR::Opnd *const dst);
     bool                    IsWorthSpecializingToInt32(IR::Instr *const instr, Value *const src1Val, Value *const src2Val = nullptr);
     bool                    TypeSpecializeNumberUnary(IR::Instr *instr, Value *src1Val, Value **pDstVal);
-    bool                    TypeSpecializeIntUnary(IR::Instr **pInstr, Value **pSrc1Val, Value **pDstVal, int32 min, int32 max, Value *const src1OriginalVal, bool *redoTypeSpecRef, bool skipDst = false);
-    bool                    TypeSpecializeIntBinary(IR::Instr **pInstr, Value *src1Val, Value *src2Val, Value **pDstVal, int32 min, int32 max, bool skipDst = false);
+    bool                    TypeSpecializeIntUnary(IR::Instr **pInstr, Value **pSrc1Val, Value **pDstVal, int32_t min, int32_t max, Value *const src1OriginalVal, bool *redoTypeSpecRef, bool skipDst = false);
+    bool                    TypeSpecializeIntBinary(IR::Instr **pInstr, Value *src1Val, Value *src2Val, Value **pDstVal, int32_t min, int32_t max, bool skipDst = false);
     void                    TypeSpecializeInlineBuiltInUnary(IR::Instr **pInstr, Value **pSrc1Val, Value **pDstVal, Value *const src1OriginalVal, bool *redoTypeSpecRef);
     void                    TypeSpecializeInlineBuiltInBinary(IR::Instr **pInstr, Value *src1Val, Value* src2Val, Value **pDstVal, Value *const src1OriginalVal, Value *const src2OriginalVal);
     void                    TypeSpecializeInlineBuiltInDst(IR::Instr **pInstr, Value **pDstVal);
@@ -638,9 +638,9 @@ private:
     bool                    TypeSpecializeFloatBinary(IR::Instr *instr, Value *src1Val, Value *src2Val, Value **pDstVal);
     void                    TypeSpecializeFloatDst(IR::Instr *instr, Value *valToTransfer, Value *const src1Value, Value *const src2Value, Value **pDstVal);
     bool                    TypeSpecializeLdLen(IR::Instr * *const instrRef, Value * *const src1ValueRef, Value * *const dstValueRef, bool *const forceInvariantHoistingRef);
-    void                    TypeSpecializeIntDst(IR::Instr* instr, Js::OpCode originalOpCode, Value* valToTransfer, Value *const src1Value, Value *const src2Value, const IR::BailOutKind bailOutKind, int32 newMin, int32 newMax, Value** pDstVal, const AddSubConstantInfo *const addSubConstantInfo = nullptr);
+    void                    TypeSpecializeIntDst(IR::Instr* instr, Js::OpCode originalOpCode, Value* valToTransfer, Value *const src1Value, Value *const src2Value, const IR::BailOutKind bailOutKind, int32_t newMin, int32_t newMax, Value** pDstVal, const AddSubConstantInfo *const addSubConstantInfo = nullptr);
     void                    TypeSpecializeIntDst(IR::Instr* instr, Js::OpCode originalOpCode, Value* valToTransfer, Value *const src1Value, Value *const src2Value, const IR::BailOutKind bailOutKind, ValueType valueType, Value** pDstVal, const AddSubConstantInfo *const addSubConstantInfo = nullptr);
-    void                    TypeSpecializeIntDst(IR::Instr* instr, Js::OpCode originalOpCode, Value* valToTransfer, Value *const src1Value, Value *const src2Value, const IR::BailOutKind bailOutKind, ValueType valueType, int32 newMin, int32 newMax, Value** pDstVal, const AddSubConstantInfo *const addSubConstantInfo = nullptr);
+    void                    TypeSpecializeIntDst(IR::Instr* instr, Js::OpCode originalOpCode, Value* valToTransfer, Value *const src1Value, Value *const src2Value, const IR::BailOutKind bailOutKind, ValueType valueType, int32_t newMin, int32_t newMax, Value** pDstVal, const AddSubConstantInfo *const addSubConstantInfo = nullptr);
 
     bool                    TryTypeSpecializeUnaryToFloatHelper(IR::Instr** pInstr, Value** pSrc1Val, Value* const src1OriginalVal, Value **pDstVal);
     bool                    TypeSpecializeBailoutExpectedInteger(IR::Instr* instr, Value* src1Val, Value** dstVal);
@@ -764,9 +764,9 @@ private:
     void                    ToFloat64Dst(IR::Instr *instr, IR::RegOpnd *dst, BasicBlock *block);
 
     void                    OptConstFoldBr(bool test, IR::Instr *instr, Value * intTypeSpecSrc1Val = nullptr, Value * intTypeSpecSrc2Val = nullptr);
-    void                    PropagateIntRangeForNot(int32 minimum, int32 maximum, int32 *pNewMin, int32 * pNewMax);
-    void                    PropagateIntRangeBinary(IR::Instr *instr, int32 min1, int32 max1,
-                            int32 min2, int32 max2, int32 *pNewMin, int32 *pNewMax);
+    void                    PropagateIntRangeForNot(int32_t minimum, int32_t maximum, int32_t *pNewMin, int32_t * pNewMax);
+    void                    PropagateIntRangeBinary(IR::Instr *instr, int32_t min1, int32_t max1,
+                            int32_t min2, int32_t max2, int32_t *pNewMin, int32_t *pNewMax);
     bool                    OptIsInvariant(IR::Opnd *src, BasicBlock *block, Loop *loop, Value *srcVal, bool isNotTypeSpecConv, bool allowNonPrimitives);
     bool                    OptIsInvariant(Sym *sym, BasicBlock *block, Loop *loop, Value *srcVal, bool isNotTypeSpecConv, bool allowNonPrimitives, Value **loopHeadValRef = nullptr);
     bool                    OptDstIsInvariant(IR::RegOpnd *dst);
@@ -1003,15 +1003,15 @@ private:
 
     bool                    IsWorthSpecializingToInt32Branch(IR::Instr const * instr, Value const * src1Val, Value const * src2Val) const;
 
-    bool                    TryOptConstFoldBrFalse(IR::Instr *const instr, Value *const srcValue, const int32 min, const int32 max);
-    bool                    TryOptConstFoldBrEqual(IR::Instr *const instr, const bool branchOnEqual, Value *const src1Value, const int32 min1, const int32 max1, Value *const src2Value, const int32 min2, const int32 max2);
-    bool                    TryOptConstFoldBrGreaterThan(IR::Instr *const instr, const bool branchOnGreaterThan, Value *const src1Value, const int32 min1, const int32 max1, Value *const src2Value, const int32 min2, const int32 max2);
-    bool                    TryOptConstFoldBrGreaterThanOrEqual(IR::Instr *const instr, const bool branchOnGreaterThanOrEqual, Value *const src1Value, const int32 min1, const int32 max1, Value *const src2Value, const int32 min2, const int32 max2);
-    bool                    TryOptConstFoldBrUnsignedLessThan(IR::Instr *const instr, const bool branchOnLessThan, Value *const src1Value, const int32 min1, const int32 max1, Value *const src2Value, const int32 min2, const int32 max2);
-    bool                    TryOptConstFoldBrUnsignedGreaterThan(IR::Instr *const instr, const bool branchOnGreaterThan, Value *const src1Value, const int32 min1, const int32 max1, Value *const src2Value, const int32 min2, const int32 max2);
+    bool                    TryOptConstFoldBrFalse(IR::Instr *const instr, Value *const srcValue, const int32_t min, const int32_t max);
+    bool                    TryOptConstFoldBrEqual(IR::Instr *const instr, const bool branchOnEqual, Value *const src1Value, const int32_t min1, const int32_t max1, Value *const src2Value, const int32_t min2, const int32_t max2);
+    bool                    TryOptConstFoldBrGreaterThan(IR::Instr *const instr, const bool branchOnGreaterThan, Value *const src1Value, const int32_t min1, const int32_t max1, Value *const src2Value, const int32_t min2, const int32_t max2);
+    bool                    TryOptConstFoldBrGreaterThanOrEqual(IR::Instr *const instr, const bool branchOnGreaterThanOrEqual, Value *const src1Value, const int32_t min1, const int32_t max1, Value *const src2Value, const int32_t min2, const int32_t max2);
+    bool                    TryOptConstFoldBrUnsignedLessThan(IR::Instr *const instr, const bool branchOnLessThan, Value *const src1Value, const int32_t min1, const int32_t max1, Value *const src2Value, const int32_t min2, const int32_t max2);
+    bool                    TryOptConstFoldBrUnsignedGreaterThan(IR::Instr *const instr, const bool branchOnGreaterThan, Value *const src1Value, const int32_t min1, const int32_t max1, Value *const src2Value, const int32_t min2, const int32_t max2);
 
-    void                    UpdateIntBoundsForEqualBranch(Value *const src1Value, Value *const src2Value, const int32 src2ConstantValue = 0);
-    void                    UpdateIntBoundsForNotEqualBranch(Value *const src1Value, Value *const src2Value, const int32 src2ConstantValue = 0);
+    void                    UpdateIntBoundsForEqualBranch(Value *const src1Value, Value *const src2Value, const int32_t src2ConstantValue = 0);
+    void                    UpdateIntBoundsForNotEqualBranch(Value *const src1Value, Value *const src2Value, const int32_t src2ConstantValue = 0);
     void                    UpdateIntBoundsForGreaterThanOrEqualBranch(Value *const src1Value, Value *const src2Value);
     void                    UpdateIntBoundsForGreaterThanBranch(Value *const src1Value, Value *const src2Value);
     void                    UpdateIntBoundsForLessThanOrEqualBranch(Value *const src1Value, Value *const src2Value);

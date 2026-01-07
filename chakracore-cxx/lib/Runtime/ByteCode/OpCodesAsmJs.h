@@ -157,21 +157,21 @@ MACRO_WMS       ( Neg_Int                    , Int2            , None           
 MACRO_WMS       ( Not_Int                    , Int2            , None            ) // int unary '~'
 MACRO_WMS       ( LogNot_Int                 , Int2            , None            ) // int unary '!'
 MACRO_WMS       ( Conv_ITB                   , Int2            , None            ) // int unary '!!' transform an int into a bool (0|1)
-MACRO_WMS       ( Add_Int                    , Int3            , None            ) // int32 Arithmetic '+'
-MACRO_WMS       ( Sub_Int                    , Int3            , None            ) // int32 Arithmetic '-' (subtract)
-MACRO_WMS       ( Mul_Int                    , Int3            , None            ) // int32 Arithmetic '*'
-MACRO_WMS       ( Div_Int                    , Int3            , None            ) // int32 Arithmetic '/'
-MACRO_WMS       ( Div_Trap_Int              , Int3            , None            ) // (checked) int32 Arithmetic '/'
-MACRO_WMS       ( Rem_Int                    , Int3            , None            ) // int32 Arithmetic '%'
-MACRO_WMS       ( Rem_Trap_Int              , Int3            , None            ) // (checked) int32 Arithmetic '%'
-MACRO_WMS       ( And_Int                    , Int3            , None            ) // int32 Bitwise '&'
-MACRO_WMS       ( Or_Int                     , Int3            , None            ) // int32 Bitwise '|'
-MACRO_WMS       ( Xor_Int                    , Int3            , None            ) // int32 Bitwise '^'
-MACRO_WMS       ( Shl_Int                    , Int3            , None            ) // int32 Shift '<<' (signed, truncate)
-MACRO_WMS       ( Shr_Int                    , Int3            , None            ) // int32 Shift '>>' (signed, truncate)
-MACRO_WMS       ( Shr_UInt                   , Int3            , None            ) // int32 Shift '>>>'(unsigned, truncate)
-MACRO_WMS       ( Rol_Int                    , Int3            , None            ) // int32 Rotate left
-MACRO_WMS       ( Ror_Int                    , Int3            , None            ) // int32 Rotate right
+MACRO_WMS       ( Add_Int                    , Int3            , None            ) // int32_t Arithmetic '+'
+MACRO_WMS       ( Sub_Int                    , Int3            , None            ) // int32_t Arithmetic '-' (subtract)
+MACRO_WMS       ( Mul_Int                    , Int3            , None            ) // int32_t Arithmetic '*'
+MACRO_WMS       ( Div_Int                    , Int3            , None            ) // int32_t Arithmetic '/'
+MACRO_WMS       ( Div_Trap_Int              , Int3            , None            ) // (checked) int32_t Arithmetic '/'
+MACRO_WMS       ( Rem_Int                    , Int3            , None            ) // int32_t Arithmetic '%'
+MACRO_WMS       ( Rem_Trap_Int              , Int3            , None            ) // (checked) int32_t Arithmetic '%'
+MACRO_WMS       ( And_Int                    , Int3            , None            ) // int32_t Bitwise '&'
+MACRO_WMS       ( Or_Int                     , Int3            , None            ) // int32_t Bitwise '|'
+MACRO_WMS       ( Xor_Int                    , Int3            , None            ) // int32_t Bitwise '^'
+MACRO_WMS       ( Shl_Int                    , Int3            , None            ) // int32_t Shift '<<' (signed, truncate)
+MACRO_WMS       ( Shr_Int                    , Int3            , None            ) // int32_t Shift '>>' (signed, truncate)
+MACRO_WMS       ( Shr_UInt                   , Int3            , None            ) // int32_t Shift '>>>'(unsigned, truncate)
+MACRO_WMS       ( Rol_Int                    , Int3            , None            ) // int32_t Rotate left
+MACRO_WMS       ( Ror_Int                    , Int3            , None            ) // int32_t Rotate right
 MACRO_WMS       ( PopCnt_Int                 , Int2            , None            )
 
 // Unsigned int math
@@ -215,13 +215,13 @@ MACRO_WMS       ( Sub_Flt                    , Float3          , None           
 MACRO_WMS       ( Mul_Flt                    , Float3          , None            ) // Float Arithmetic '*'
 MACRO_WMS       ( Div_Flt                    , Float3          , None            ) // Float Arithmetic '/'
 // Int comparisons
-MACRO_WMS       ( CmLt_Int                   , Int3            , None            ) // int32 Comparison <
-MACRO_WMS       ( CmLe_Int                   , Int3            , None            ) // int32 Comparison <=
-MACRO_WMS       ( CmGt_Int                   , Int3            , None            ) // int32 Comparison >
-MACRO_WMS       ( CmGe_Int                   , Int3            , None            ) // int32 Comparison >=
-MACRO_WMS       ( CmEq_Int                   , Int3            , None            ) // int32 Comparison ==
-MACRO_WMS       ( CmNe_Int                   , Int3            , None            ) // int32 Comparison !=
-MACRO_WMS       ( Eqz_Int                    , Int2            , None            ) // int32 Comparison with 0
+MACRO_WMS       ( CmLt_Int                   , Int3            , None            ) // int32_t Comparison <
+MACRO_WMS       ( CmLe_Int                   , Int3            , None            ) // int32_t Comparison <=
+MACRO_WMS       ( CmGt_Int                   , Int3            , None            ) // int32_t Comparison >
+MACRO_WMS       ( CmGe_Int                   , Int3            , None            ) // int32_t Comparison >=
+MACRO_WMS       ( CmEq_Int                   , Int3            , None            ) // int32_t Comparison ==
+MACRO_WMS       ( CmNe_Int                   , Int3            , None            ) // int32_t Comparison !=
+MACRO_WMS       ( Eqz_Int                    , Int2            , None            ) // int32_t Comparison with 0
 
 // Unsigned int comparisons
 MACRO_WMS       ( CmLt_UInt                  , Int3            , None            ) // uint32_t Comparison <

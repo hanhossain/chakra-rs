@@ -496,7 +496,7 @@ namespace TTD
     {
         if(this->m_unRestoredBreakpoints.Count() != 0)
         {
-            for(int32 i = 0; i < this->m_unRestoredBreakpoints.Count(); ++i)
+            for(int32_t i = 0; i < this->m_unRestoredBreakpoints.Count(); ++i)
             {
                 HeapDelete(this->m_unRestoredBreakpoints.Item(i));
             }
@@ -800,7 +800,7 @@ namespace TTD
         }
 
         const JsUtil::List<Js::ScriptContext*, HeapAllocator>& ctxs = threadContext->TTDContext->GetTTDContexts();
-        for(int32 i = 0; i < ctxs.Count(); ++i)
+        for(int32_t i = 0; i < ctxs.Count(); ++i)
         {
             Js::ScriptContext* ctx = ctxs.Item(i);
             JsUtil::List<uint32_t, HeapAllocator> bpIdsToDelete(&HeapAllocator::Instance);
@@ -812,7 +812,7 @@ namespace TTD
                 if((long)bp->GetId() != this->m_activeBPId)
                 {
                     Js::FunctionBody* body = bp->GetFunctionBody();
-                    int32 bpIndex = body->GetEnclosingStatementIndexFromByteCode(bp->GetBytecodeOffset());
+                    int32_t bpIndex = body->GetEnclosingStatementIndexFromByteCode(bp->GetBytecodeOffset());
 
                     uint32_t srcLine = 0;
                     int32_t srcColumn = -1;
@@ -827,7 +827,7 @@ namespace TTD
                 }
             });
 
-            for(int32 j = 0; j < bpIdsToDelete.Count(); ++j)
+            for(int32_t j = 0; j < bpIdsToDelete.Count(); ++j)
             {
                 ctx->TTDHostCallbackFunctor.pfOnBPDeleteCallback(ctx->TTDHostCallbackFunctor.HostRuntime, bpIdsToDelete.Item(j));
             }
@@ -845,7 +845,7 @@ namespace TTD
         Js::ScriptContext* ctx = body->GetScriptContext();
         Js::Utf8SourceInfo* utf8SourceInfo = body->GetUtf8SourceInfo();
 
-        for(int32 i = 0; i < this->m_unRestoredBreakpoints.Count(); ++i)
+        for(int32_t i = 0; i < this->m_unRestoredBreakpoints.Count(); ++i)
         {
             if(this->m_unRestoredBreakpoints.Item(i) == nullptr)
             {
@@ -891,7 +891,7 @@ namespace TTD
 
             if (!fb->GetUtf8SourceInfo()->GetIsLibraryCode())
             {
-                int32 cIndex = fb->GetEnclosingStatementIndexFromByteCode(bytecodeOffset, true);
+                int32_t cIndex = fb->GetEnclosingStatementIndexFromByteCode(bytecodeOffset, true);
 
                 //We moved to a new statement
                 Js::FunctionBody::StatementMap* pstmt = fb->GetStatementMaps()->Item(cIndex);
@@ -995,7 +995,7 @@ namespace TTD
 
         //if we are at the first statement in the function then we want the parents current
         Js::FunctionBody* fbody = nullptr;
-        int32 statementIndex = -1;
+        int32_t statementIndex = -1;
         unsigned long ftime = 0;
         unsigned long ltime = 0;
         if(cfinfo.LastStatementIndex == -1)

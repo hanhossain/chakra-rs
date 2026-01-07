@@ -43,14 +43,14 @@ public:
         return value;
     }
 
-    static bool     FitsInDWord(int32 value) { return true; }
+    static bool     FitsInDWord(int32_t value) { return true; }
     static bool     FitsInDWord(size_t value) { return ((size_t)(signed int)(value & 0xFFFFFFFF) == value); }
     static bool     FitsInDWord(long value) { return ((long)(signed int)(value & 0xFFFFFFFF) == value); }
 
-    static bool     FitsInWord(int32 value) { return ((int32)(int16)(value & 0xFFFF) == value); }
+    static bool     FitsInWord(int32_t value) { return ((int32_t)(int16)(value & 0xFFFF) == value); }
 
     static unsigned long Rand();
-    static bool     IsPow2(int32 val) { return (val > 0 && ((val-1) & val) == 0); }
+    static bool     IsPow2(int32_t val) { return (val > 0 && ((val-1) & val) == 0); }
     static uint32_t   NextPowerOf2(uint32_t n);
 
     // Use for compile-time evaluation of powers of 2

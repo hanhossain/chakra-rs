@@ -105,7 +105,7 @@ template <typename T>
 class VirtualTableRecorder
 {
 public:
-    static void RecordVirtualTableAddress(long * vtableAddresses, int32 value)
+    static void RecordVirtualTableAddress(long * vtableAddresses, int32_t value)
     {
         vtableAddresses[value] = VirtualTableInfo<T>::Address;
 

@@ -11,7 +11,6 @@ namespace Js
     typedef void* Var;
 }
 typedef unsigned int uint;
-typedef int32_t int32;
 typedef int32_t PropertyId;
 
 namespace ChakraWabt

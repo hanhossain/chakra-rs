@@ -62,7 +62,7 @@ namespace Js
 
     private:
         static BOOL Equals(JavascriptSymbol* left, Var right, BOOL* value, ScriptContext * requestContext);
-        static Var TryInvokeRemotelyOrThrow(JavascriptMethod entryPoint, ScriptContext * scriptContext, Arguments & args, int32 errorCode, const char16_t * varName);
+        static Var TryInvokeRemotelyOrThrow(JavascriptMethod entryPoint, ScriptContext * scriptContext, Arguments & args, int32_t errorCode, const char16_t * varName);
     };
 
     template <> inline bool VarIsImpl<JavascriptSymbol>(RecyclableObject* obj)

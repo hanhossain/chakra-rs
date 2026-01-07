@@ -10,7 +10,7 @@ class Value;
 
 struct BailoutConstantValue {
 public:
-    void InitIntConstValue(int32 value) { this->type = TyInt32; this->u.intConst.value = (IntConstType)value; };
+    void InitIntConstValue(int32_t value) { this->type = TyInt32; this->u.intConst.value = (IntConstType)value; };
     void InitIntConstValue(IntConstType value, IRType type) {
         Assert(IRType_IsSignedInt(type));
         this->type = type; this->u.intConst.value = value;

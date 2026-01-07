@@ -572,7 +572,7 @@ bool Heap<TAlloc, TPreReservedAlloc>::AllocInPage(Page* page, size_t bytes, usho
         return true;
     }
 
-    Assert(Math::IsPow2((int32)bytes));
+    Assert(Math::IsPow2((int32_t)bytes));
 
     uint length = GetChunkSizeForBytes(bytes);
     BVIndex index = GetFreeIndexForPage(page, bytes);

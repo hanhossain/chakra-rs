@@ -135,7 +135,7 @@ namespace WAsmJs
         CompileAssert(WAsmJs::LIMIT == 5);
         switch (type)
         {
-        case INT32  : return sizeof(int32);
+        case INT32  : return sizeof(int32_t);
         case INT64  : return sizeof(int64_t);
         case FLOAT32: return sizeof(float);
         case FLOAT64: return sizeof(double);
@@ -179,7 +179,7 @@ namespace WAsmJs
         return WAsmJs::LIMIT;
     }
 
-    template<> Types FromPrimitiveType<int32>() { return WAsmJs::INT32; }
+    template<> Types FromPrimitiveType<int32_t>() { return WAsmJs::INT32; }
     template<> Types FromPrimitiveType<long>() { return WAsmJs::INT64; }
     template<> Types FromPrimitiveType<float>() { return WAsmJs::FLOAT32; }
     template<> Types FromPrimitiveType<double>() { return WAsmJs::FLOAT64; }

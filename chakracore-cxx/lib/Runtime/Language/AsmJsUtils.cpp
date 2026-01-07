@@ -196,13 +196,13 @@ namespace Js
 
             if (info->GetArgType(i).isInt())
             {
-                int32 intVal;
+                int32_t intVal;
                 if (i < actualArgCount)
                 {
 #if ENABLE_DEBUG_CONFIG_OPTIONS
                     if (allowTestInputs && VarIs<JavascriptString>(*origArgs))
                     {
-                        intVal = (int32)ConvertStringToInt64(*origArgs, scriptContext);
+                        intVal = (int32_t)ConvertStringToInt64(*origArgs, scriptContext);
                     }
                     else
 #endif
@@ -216,7 +216,7 @@ namespace Js
 #if TARGET_64
                 *(long*)(argDst) = 0;
 #endif
-                *(int32*)argDst = intVal;
+                *(int32_t*)argDst = intVal;
                 argDst = argDst + MachPtr;
             }
             else if (info->GetArgType(i).isInt64())
@@ -252,7 +252,7 @@ namespace Js
                     }
                     else
                     {
-                        int32 intVal = JavascriptMath::ToInt32(*origArgs, scriptContext);
+                        int32_t intVal = JavascriptMath::ToInt32(*origArgs, scriptContext);
                         val = (long)intVal;
                     }
                 }
@@ -273,7 +273,7 @@ namespace Js
 #if ENABLE_DEBUG_CONFIG_OPTIONS
                     if (allowTestInputs && VarIs<JavascriptString>(*origArgs))
                     {
-                        int32 val = (int32)ConvertStringToInt64(*origArgs, scriptContext);
+                        int32_t val = (int32_t)ConvertStringToInt64(*origArgs, scriptContext);
                         floatVal = *(float*)&val;
                     }
                     else
@@ -345,7 +345,7 @@ namespace Js
     {
         AsmJsFunctionInfo* info = func->GetFunctionBody()->GetAsmJsFunctionInfo();
         int argSize = info->GetArgByteSize() + MachPtr;
-        argSize = ::Math::Align<int32>(argSize, 16);
+        argSize = ::Math::Align<int32_t>(argSize, 16);
 
         if (argSize < 32)
         {
@@ -429,7 +429,7 @@ namespace Js
         void* dst;
         Var returnValue = 0;
 
-        argSize = ::Math::Align<int32>(argSize, 8);
+        argSize = ::Math::Align<int32_t>(argSize, 8);
         // Allocate stack space for args
         PROBE_STACK_CALL(func->GetScriptContext(), func, argSize + Js::Constants::MinStackDefault);
 
@@ -449,7 +449,7 @@ namespace Js
             returnValue = JavascriptOperators::OP_LdUndef(func->GetScriptContext());
             break;
         case AsmJsRetType::Signed:{
-            int32 ival = 0;
+            int32_t ival = 0;
             __asm
             {
                 mov  ecx, asmJSEntryPoint
@@ -462,7 +462,7 @@ namespace Js
         }
         case AsmJsRetType::Int64:
         {
-            int32 iLow = 0, iHigh = 0;
+            int32_t iLow = 0, iHigh = 0;
             __asm
             {
                 mov  ecx, asmJSEntryPoint
