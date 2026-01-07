@@ -10,6 +10,6 @@
 #include "Common/GetCurrentFrameId.h"
 namespace Js
 {
-    typedef int32 PropertyId;
+    typedef int32_t PropertyId;
     typedef uint32_t ModuleID;
 }

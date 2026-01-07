@@ -1855,7 +1855,7 @@ namespace Js
 
         PropagateLastMatch(scriptContext, pattern->IsGlobal(), pattern->IsSticky(), regularExpression, input, match, match, false, true);
 
-        return JavascriptNumber::ToVar(match.IsUndefined() ? -1 : (int32)match.offset, scriptContext);
+        return JavascriptNumber::ToVar(match.IsUndefined() ? -1 : (int32_t)match.offset, scriptContext);
     }
 
     // String.prototype.split (ES5 15.5.4.14)

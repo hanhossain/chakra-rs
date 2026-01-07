@@ -51,7 +51,7 @@ namespace UnifiedRegex
         friend struct TextbookBoyerMooreSetup;
         typedef typename Chars<C>::Char Char;
     private:
-        typedef CharMap<Char, int32, CharMapScheme_Linear> LastOccMap;
+        typedef CharMap<Char, int32_t, CharMapScheme_Linear> LastOccMap;
 
         // NOTE: We don't store the actual pattern here since it may be moved between
         //       constructing the scanner and running it.
@@ -101,7 +101,7 @@ namespace UnifiedRegex
         typedef typename Chars<C>::Char Char;
 
     private:
-        typedef CharMap<Char, int32> LastOccMap;
+        typedef CharMap<Char, int32_t> LastOccMap;
 
         // NOTE: We don't store the actual pattern here since it may be moved between
         //       constructing the scanner and running it.

@@ -235,7 +235,7 @@ namespace Js
     typedef TypedArray<uint8_t,true>          Uint8ClampedArray;
     typedef TypedArray<int16>               Int16Array;
     typedef TypedArray<uint16>              Uint16Array;
-    typedef TypedArray<int32>               Int32Array;
+    typedef TypedArray<int32_t>               Int32Array;
     typedef TypedArray<uint32_t>              Uint32Array;
     typedef TypedArray<float>               Float32Array;
     typedef TypedArray<double>              Float64Array;
@@ -247,7 +247,7 @@ namespace Js
     typedef TypedArray<uint8_t, true, true>   Uint8ClampedVirtualArray;
     typedef TypedArray<int16, false, true>  Int16VirtualArray;
     typedef TypedArray<uint16, false, true> Uint16VirtualArray;
-    typedef TypedArray<int32, false, true>  Int32VirtualArray;
+    typedef TypedArray<int32_t, false, true>  Int32VirtualArray;
     typedef TypedArray<uint32_t, false, true> Uint32VirtualArray;
     typedef TypedArray<float, false, true>  Float32VirtualArray;
     typedef TypedArray<double, false, true> Float64VirtualArray;
