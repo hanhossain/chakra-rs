@@ -67,7 +67,7 @@ namespace Js
     }
 #endif
 
-    inline Var JavascriptNumber::ToVar(uint32 nValue, ScriptContext* scriptContext)
+    inline Var JavascriptNumber::ToVar(uint32_t nValue, ScriptContext* scriptContext)
     {
         return !TaggedInt::IsOverflow(nValue) ? TaggedInt::ToVarUnchecked(nValue) :
             JavascriptNumber::New((double) nValue,scriptContext);

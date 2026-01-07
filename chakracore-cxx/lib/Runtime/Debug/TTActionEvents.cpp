@@ -328,7 +328,7 @@ namespace TTD
             TTD_REPLAY_ACTIVE_CONTEXT(executeContext);
             const JsRTIntegralArgumentAction* action = GetInlineEventDataAs<JsRTIntegralArgumentAction, EventKind::AllocateArrayActionTag>(evt);
 
-            Js::Var res = ctx->GetLibrary()->CreateArray((uint32)action->Scalar);
+            Js::Var res = ctx->GetLibrary()->CreateArray((uint32_t)action->Scalar);
 
             JsRTActionHandleResultForReplay<JsRTIntegralArgumentAction, EventKind::AllocateArrayActionTag>(executeContext, evt, res);
         }
@@ -338,8 +338,8 @@ namespace TTD
             TTD_REPLAY_ACTIVE_CONTEXT(executeContext);
             const JsRTIntegralArgumentAction* action = GetInlineEventDataAs<JsRTIntegralArgumentAction, EventKind::AllocateArrayBufferActionTag>(evt);
 
-            Js::ArrayBuffer* abuff = ctx->GetLibrary()->CreateArrayBuffer((uint32)action->Scalar);
-            TTDAssert(abuff->GetByteLength() == (uint32)action->Scalar, "Something is wrong with our sizes.");
+            Js::ArrayBuffer* abuff = ctx->GetLibrary()->CreateArrayBuffer((uint32_t)action->Scalar);
+            TTDAssert(abuff->GetByteLength() == (uint32_t)action->Scalar, "Something is wrong with our sizes.");
 
             JsRTActionHandleResultForReplay<JsRTIntegralArgumentAction, EventKind::AllocateArrayBufferActionTag>(executeContext, evt, (Js::Var)abuff);
         }
@@ -847,7 +847,7 @@ namespace TTD
             TTD_REPLAY_VALIDATE_INCOMING_FUNCTION(jsFunctionVar, ctx);
 
             //remove implicit constructor function as first arg in callInfo and argument loop below
-            for (uint32 i = 1; i < ccAction->ArgCount; ++i)
+            for (uint32_t i = 1; i < ccAction->ArgCount; ++i)
             {
                 Js::Var argi = InflateVarInReplay(executeContext, ccAction->ArgArray[i]);
                 TTD_REPLAY_VALIDATE_INCOMING_REFERENCE(argi, ctx);
@@ -899,7 +899,7 @@ namespace TTD
 
             writer->WriteLengthValue(ccAction->ArgCount, NSTokens::Separator::CommaSeparator);
             writer->WriteSequenceStart_DefaultKey(NSTokens::Separator::CommaSeparator);
-            for(uint32 i = 0; i < ccAction->ArgCount; ++i)
+            for(uint32_t i = 0; i < ccAction->ArgCount; ++i)
             {
                 NSTokens::Separator sep = (i != 0) ? NSTokens::Separator::CommaSeparator : NSTokens::Separator::NoSeparator;
                 NSSnapValues::EmitTTDVar(ccAction->ArgArray[i], writer, sep);
@@ -918,7 +918,7 @@ namespace TTD
             ccAction->ArgArray = alloc.SlabAllocateArray<TTDVar>(ccAction->ArgCount);
 
             reader->ReadSequenceStart_WDefaultKey(true);
-            for(uint32 i = 0; i < ccAction->ArgCount; ++i)
+            for(uint32_t i = 0; i < ccAction->ArgCount; ++i)
             {
                 ccAction->ArgArray[i] = NSSnapValues::ParseTTDVar(i != 0, reader);
             }
@@ -927,7 +927,7 @@ namespace TTD
             ccAction->ExecArgs = (ccAction->ArgCount > 1) ? alloc.SlabAllocateArray<Js::Var>(ccAction->ArgCount - 1) : nullptr; //ArgCount includes slot for function which we don't use in exec
         }
 
-        void JsRTCodeParseAction_SetBodyCtrId(EventLogEntry* parseEvent, uint32 bodyCtrId)
+        void JsRTCodeParseAction_SetBodyCtrId(EventLogEntry* parseEvent, uint32_t bodyCtrId)
         {
             JsRTCodeParseAction* cpAction = GetInlineEventDataAs<JsRTCodeParseAction, EventKind::CodeParseActionTag>(parseEvent);
             cpAction->BodyCtrId = bodyCtrId;
@@ -941,7 +941,7 @@ namespace TTD
             Js::JavascriptFunction* function = nullptr;
 
             byte* script = cpAction->SourceCode;
-            uint32 scriptByteLength = cpAction->SourceByteLength;
+            uint32_t scriptByteLength = cpAction->SourceByteLength;
 
             TTDAssert(cpAction->IsUtf8 == ((cpAction->LoadFlag & LoadScriptFlag_Utf8Source) == LoadScriptFlag_Utf8Source), "Utf8 status is inconsistent!!!");
 
@@ -950,7 +950,7 @@ namespace TTD
             if(sourceContextInfo == nullptr)
             {
                 const char16_t* srcUri = cpAction->SourceUri.Contents;
-                uint32 srcUriLength = cpAction->SourceUri.Length;
+                uint32_t srcUriLength = cpAction->SourceUri.Length;
 
                 sourceContextInfo = ctx->CreateSourceContextInfo((unsigned long)cpAction->SourceContextId, srcUri, srcUriLength, nullptr);
             }
@@ -1086,7 +1086,7 @@ namespace TTD
         }
 #endif
 
-        void JsRTCallFunctionAction_ProcessArgs(EventLogEntry* evt, int32 rootDepth, long callEventTime, Js::Var funcVar, uint32 argc, Js::Var* argv, long topLevelCallbackEventTime, UnlinkableSlabAllocator& alloc)
+        void JsRTCallFunctionAction_ProcessArgs(EventLogEntry* evt, int32 rootDepth, long callEventTime, Js::Var funcVar, uint32_t argc, Js::Var* argv, long topLevelCallbackEventTime, UnlinkableSlabAllocator& alloc)
         {
             JsRTCallFunctionAction* cfAction = GetInlineEventDataAs<JsRTCallFunctionAction, EventKind::CallExistingFunctionActionTag>(evt);
 
@@ -1123,7 +1123,7 @@ namespace TTD
 
             //remove implicit constructor function as first arg in callInfo and argument loop below
             Js::CallInfo callInfo((ushort)(cfAction->ArgCount - 1));
-            for(uint32 i = 1; i < cfAction->ArgCount; ++i)
+            for(uint32_t i = 1; i < cfAction->ArgCount; ++i)
             {
                  Js::Var argi = InflateVarInReplay(executeContext, cfAction->ArgArray[i]);
                  TTD_REPLAY_VALIDATE_INCOMING_REFERENCE(argi, ctx);
@@ -1259,7 +1259,7 @@ namespace TTD
             writer->WriteLengthValue(cfAction->ArgCount, NSTokens::Separator::CommaSeparator);
 
             writer->WriteSequenceStart_DefaultKey(NSTokens::Separator::CommaSeparator);
-            for(uint32 i = 0; i < cfAction->ArgCount; ++i)
+            for(uint32_t i = 0; i < cfAction->ArgCount; ++i)
             {
                 NSTokens::Separator sep = (i != 0) ? NSTokens::Separator::CommaSeparator : NSTokens::Separator::NoSeparator;
                 NSSnapValues::EmitTTDVar(cfAction->ArgArray[i], writer, sep);
@@ -1289,7 +1289,7 @@ namespace TTD
             cfAction->ArgArray = alloc.SlabAllocateArray<TTDVar>(cfAction->ArgCount);
 
             reader->ReadSequenceStart_WDefaultKey(true);
-            for(uint32 i = 0; i < cfAction->ArgCount; ++i)
+            for(uint32_t i = 0; i < cfAction->ArgCount; ++i)
             {
                 cfAction->ArgArray[i] = NSSnapValues::ParseTTDVar(i != 0, reader);
             }

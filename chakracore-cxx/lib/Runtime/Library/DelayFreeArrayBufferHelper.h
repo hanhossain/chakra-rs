@@ -50,12 +50,12 @@ namespace Js
     class ArrayBufferContentForDelayedFreeBase
     {
         RefCountedBuffer *buffer;
-        uint32 bufferLength;
+        uint32_t bufferLength;
         Recycler * recycler;
         bool markBit; // This bit will be used when Recycler tries to determine to keep the object based on the object on the stack
 
     public:
-        ArrayBufferContentForDelayedFreeBase(RefCountedBuffer *content, uint32 len, Recycler *r)
+        ArrayBufferContentForDelayedFreeBase(RefCountedBuffer *content, uint32_t len, Recycler *r)
             : buffer(content), bufferLength(len), recycler(r), markBit(false)
         {}
 
@@ -96,7 +96,7 @@ namespace Js
         FreeFN freeFunction;
 
     public:
-        ArrayBufferContentForDelayedFree(RefCountedBuffer *content, uint32 len, Recycler *r, FreeFN freeFunction)
+        ArrayBufferContentForDelayedFree(RefCountedBuffer *content, uint32_t len, Recycler *r, FreeFN freeFunction)
             : ArrayBufferContentForDelayedFreeBase( content, len, r), freeFunction(freeFunction)
         {}
 

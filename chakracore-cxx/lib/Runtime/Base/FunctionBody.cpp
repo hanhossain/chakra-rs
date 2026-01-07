@@ -237,7 +237,7 @@ namespace Js
         return offset < this->StartOffset() + this->LengthInBytes();
     }
 
-    uint32 FunctionBody::GetCountField(FunctionBody::CounterFields fieldEnum) const
+    uint32_t FunctionBody::GetCountField(FunctionBody::CounterFields fieldEnum) const
     {
 #if DBG
         bool isCountersLockedDown = counters.isLockedDown;
@@ -246,13 +246,13 @@ namespace Js
 #endif
         return counters.Get(fieldEnum);
     }
-    uint32 FunctionBody::SetCountField(FunctionBody::CounterFields fieldEnum, uint32 val)
+    uint32_t FunctionBody::SetCountField(FunctionBody::CounterFields fieldEnum, uint32_t val)
     {
         DebugOnly(bool isCountersLockedDown = counters.isLockedDown);
         Assert(!isCountersLockedDown || counters.isClosing);
         return counters.Set(fieldEnum, val, this);
     }
-    uint32 FunctionBody::IncreaseCountField(FunctionBody::CounterFields fieldEnum)
+    uint32_t FunctionBody::IncreaseCountField(FunctionBody::CounterFields fieldEnum)
     {
         DebugOnly(bool isCountersLockedDown = counters.isLockedDown);
         Assert(!isCountersLockedDown || counters.isClosing);
@@ -349,7 +349,7 @@ namespace Js
 #if ENABLE_NATIVE_CODEGEN
 #if DBG_DUMP | defined(VTUNE_PROFILING)
     void
-    EntryPointInfo::RecordNativeMap(uint32 nativeOffset, uint32 statementIndex)
+    EntryPointInfo::RecordNativeMap(uint32_t nativeOffset, uint32_t statementIndex)
     {
         auto& nativeOffsetMaps = this->GetNativeEntryPointData()->GetNativeOffsetMaps();
         int count = nativeOffsetMaps.Count();
@@ -366,7 +366,7 @@ namespace Js
                 }
 
                 // If the range is empty, replace the previous range.
-                if ((uint32)previous->nativeOffsetSpan.begin == nativeOffset)
+                if ((uint32_t)previous->nativeOffsetSpan.begin == nativeOffset)
                 {
                     if (statementIndex == Js::Constants::NoStatementIndex)
                     {
@@ -1107,21 +1107,21 @@ namespace Js
     }
 
     // Returns the number of non-temp local vars.
-    uint32
+    uint32_t
     FunctionBody::GetNonTempLocalVarCount()
     {
         Assert(this->GetEndNonTempLocalIndex() >= this->GetFirstNonTempLocalIndex());
         return this->GetEndNonTempLocalIndex() - this->GetFirstNonTempLocalIndex();
     }
 
-    uint32
+    uint32_t
     FunctionBody::GetFirstNonTempLocalIndex()
     {
         // First local var starts when the const vars end.
         return GetConstantCount();
     }
 
-    uint32
+    uint32_t
     FunctionBody::GetEndNonTempLocalIndex()
     {
         // It will give the index on which current non temp locals ends, which is a first temp reg.
@@ -1130,7 +1130,7 @@ namespace Js
     }
 
     bool
-    FunctionBody::IsNonTempLocalVar(uint32 varIndex)
+    FunctionBody::IsNonTempLocalVar(uint32_t varIndex)
     {
         return GetFirstNonTempLocalIndex() <= varIndex && varIndex < GetEndNonTempLocalIndex();
     }
@@ -1366,7 +1366,7 @@ namespace Js
     }
 
 #if ENABLE_NATIVE_CODEGEN
-    uint32 FunctionBody::GetFrameHeight(EntryPointInfo* entryPointInfo) const
+    uint32_t FunctionBody::GetFrameHeight(EntryPointInfo* entryPointInfo) const
     {
         return entryPointInfo->GetNativeEntryPointData()->GetFrameHeight();
     }
@@ -1383,7 +1383,7 @@ namespace Js
     }
 
     void
-    FunctionBody::RecordNativeThrowMap(SmallSpanSequenceIter& iter, uint32 nativeOffset, uint32 statementIndex, EntryPointInfo* entryPoint, uint loopNum)
+    FunctionBody::RecordNativeThrowMap(SmallSpanSequenceIter& iter, uint32_t nativeOffset, uint32_t statementIndex, EntryPointInfo* entryPoint, uint loopNum)
     {
         SmallSpanSequence *pSpanSequence;
 
@@ -1457,7 +1457,7 @@ namespace Js
         span.sourceBegin = GetDiff(data->sourceBegin, iter.accumulatedSourceBegin);
         span.bytecodeBegin = GetDiff(data->bytecodeBegin, iter.accumulatedBytecodeBegin);
 
-        this->pStatementBuffer->Add((uint32)span);
+        this->pStatementBuffer->Add((uint32_t)span);
 
         // Update iterator for the next set
 
@@ -1891,12 +1891,12 @@ namespace Js
     }
 
     void
-    ParseableFunctionInfo::SetGrfscr(uint32 grfscr)
+    ParseableFunctionInfo::SetGrfscr(uint32_t grfscr)
     {
         this->m_grfscr = grfscr;
     }
 
-    uint32
+    uint32_t
     ParseableFunctionInfo::GetGrfscr() const
     {
         return this->m_grfscr;
@@ -2002,7 +2002,7 @@ namespace Js
         return GetNestedArray()->functionInfoArray;
     }
 
-    void ParseableFunctionInfo::SetNestedFunc(FunctionInfo* nestedFunc, uint index, uint32 flags)
+    void ParseableFunctionInfo::SetNestedFunc(FunctionInfo* nestedFunc, uint index, uint32_t flags)
     {
         AssertMsg(index < this->GetNestedCount(), "Trying to write past the nested func array");
 
@@ -2412,7 +2412,7 @@ namespace Js
 
                     LPCUTF8 pszStart = this->GetStartOfDocument();
 
-                    uint32 grfscr = funcBody->GetGrfscr() | fscrDeferredFnc;
+                    uint32_t grfscr = funcBody->GetGrfscr() | fscrDeferredFnc;
 
                     // For the global function we want to re-use the glo functionbody which is already created in the non-debug mode
                     if (!funcBody->GetIsGlobalFunc())
@@ -2650,7 +2650,7 @@ namespace Js
 
         LPCUTF8 pszStart = this->GetStartOfDocument();
 
-        uint32 grfscr = funcBody->GetGrfscr() | fscrDeferredFnc | fscrDeferredFncExpression;
+        uint32_t grfscr = funcBody->GetGrfscr() | fscrDeferredFnc | fscrDeferredFncExpression;
 
         uint nextFunctionId = funcBody->GetLocalFunctionId();
 
@@ -2708,7 +2708,7 @@ namespace Js
         }
     }
 
-    bool ParseableFunctionInfo::IsFakeGlobalFunc(uint32 flags) const
+    bool ParseableFunctionInfo::IsFakeGlobalFunc(uint32_t flags) const
     {
         return GetIsGlobalFunc() && !(flags & fscrGlobalCode);
     }
@@ -3352,7 +3352,7 @@ namespace Js
         return entryPoint;
     }
 
-    int FunctionBody::GetStatementIndexFromNativeOffset(SmallSpanSequence *pThrowSpanSequence, uint32 nativeOffset)
+    int FunctionBody::GetStatementIndexFromNativeOffset(SmallSpanSequence *pThrowSpanSequence, uint32_t nativeOffset)
     {
         int statementIndex = -1;
         if (pThrowSpanSequence)
@@ -3377,7 +3377,7 @@ namespace Js
 
     int FunctionBody::GetStatementIndexFromNativeAddress(SmallSpanSequence *pThrowSpanSequence, unsigned long codeAddress, unsigned long nativeBaseAddress)
     {
-        uint32 nativeOffset = (uint32)(codeAddress - nativeBaseAddress);
+        uint32_t nativeOffset = (uint32_t)(codeAddress - nativeBaseAddress);
 
         return GetStatementIndexFromNativeOffset(pThrowSpanSequence, nativeOffset);
     }
@@ -3482,7 +3482,7 @@ namespace Js
         return GetMatchingStatementMap(data, statementIndex, inlinee);
     }
 
-    BOOL FunctionBody::GetMatchingStatementMapFromNativeOffset(unsigned long codeAddress, uint32 offset, StatementData &data, uint loopNum, FunctionBody *inlinee /* = nullptr */)
+    BOOL FunctionBody::GetMatchingStatementMapFromNativeOffset(unsigned long codeAddress, uint32_t offset, StatementData &data, uint loopNum, FunctionBody *inlinee /* = nullptr */)
     {
         EntryPointInfo * entryPoint;
 
@@ -4378,7 +4378,7 @@ namespace Js
         this->RecordConstant(location, intConst);
     }
 
-    void FunctionBody::RecordStrConstant(RegSlot location, LPCOLESTR psz, uint32 cch, bool forcePropertyString)
+    void FunctionBody::RecordStrConstant(RegSlot location, LPCOLESTR psz, uint32_t cch, bool forcePropertyString)
     {
         ScriptContext *scriptContext = this->GetScriptContext();
         PropertyRecord const * propertyRecord;
@@ -4404,7 +4404,7 @@ namespace Js
         this->RecordConstant(location, str);
     }
 
-    void FunctionBody::RecordBigIntConstant(RegSlot location, LPCOLESTR psz, uint32 cch, bool isNegative)
+    void FunctionBody::RecordBigIntConstant(RegSlot location, LPCOLESTR psz, uint32_t cch, bool isNegative)
     {
         ScriptContext *scriptContext = this->GetScriptContext();
         Var bigintConst = JavascriptBigInt::Create(psz, cch, isNegative, scriptContext);
@@ -4432,7 +4432,7 @@ namespace Js
     void FunctionBody::InitConstantSlots(Var *dstSlots)
     {
         // Initialize the given slots from the constant table.
-        uint32 constCount = GetConstantCount();
+        uint32_t constCount = GetConstantCount();
         Assert(constCount > FunctionBody::FirstRegSlot);
 
         js_memcpy_s(dstSlots, (constCount - FunctionBody::FirstRegSlot) * sizeof(Var),
@@ -4792,7 +4792,7 @@ namespace Js
         for(int i = 0; i < count; i++)
         {
             const NativeEntryPointData::NativeOffsetMap* map = &nativeOffsetMaps.Item(i);
-            uint32 statementIndex = map->statementIndex;
+            uint32_t statementIndex = map->statementIndex;
             if (statementIndex == 0)
             {
                 // statementIndex is 0, first line in the function, populate with function line number
@@ -4862,7 +4862,7 @@ namespace Js
         SetFlags(set, Flags_NonUserCode);
 
         // Propagate setting for all functions in this scope (nested).
-        this->ForEachNestedFunc([&](FunctionProxy* proxy, uint32 index)
+        this->ForEachNestedFunc([&](FunctionProxy* proxy, uint32_t index)
         {
             ParseableFunctionInfo * pBody = proxy->GetParseableFunctionInfo();
             if (pBody != nullptr)
@@ -5078,7 +5078,7 @@ namespace Js
 #endif
         // The current function is already compiled. In order to prep this function to ready for debug mode, most of the previous information need to be thrown away.
         // Clean up the nested functions
-        this->ForEachNestedFunc([&](FunctionProxy* proxy, uint32 index)
+        this->ForEachNestedFunc([&](FunctionProxy* proxy, uint32_t index)
         {
             // Note: redeferred functions may have fully compiled children. If we find a redeferred function, keep walking.
             if (proxy && ((proxy->CanBeDeferred() && proxy->GetFunctionInfo()->GetCompileCount() > 0) || proxy->IsFunctionBody()))
@@ -5409,9 +5409,9 @@ namespace Js
     // Get Values of the beginning of the statement at particular index.
     BOOL SmallSpanSequence::GetRangeAt(int index, SmallSpanSequenceIter &iter, int * pCountOfMissed, StatementData & data)
     {
-        Assert((uint32)index < pStatementBuffer->Count());
+        Assert((uint32_t)index < pStatementBuffer->Count());
 
-        SmallSpan span(pStatementBuffer->ItemInBuffer((uint32)index));
+        SmallSpan span(pStatementBuffer->ItemInBuffer((uint32_t)index));
 
         int countOfMissed = 0;
 
@@ -5420,9 +5420,9 @@ namespace Js
             // Look in ActualOffset store
             Assert(this->pActualOffsetList);
             Assert(this->pActualOffsetList->Count() > 0);
-            Assert(this->pActualOffsetList->Count() > (uint32)iter.indexOfActualOffset);
+            Assert(this->pActualOffsetList->Count() > (uint32_t)iter.indexOfActualOffset);
 
-            data.sourceBegin = this->pActualOffsetList->ItemInBuffer((uint32)iter.indexOfActualOffset);
+            data.sourceBegin = this->pActualOffsetList->ItemInBuffer((uint32_t)iter.indexOfActualOffset);
             countOfMissed++;
         }
         else
@@ -5435,9 +5435,9 @@ namespace Js
             // Look in ActualOffset store
             Assert(this->pActualOffsetList);
             Assert(this->pActualOffsetList->Count() > 0);
-            Assert(this->pActualOffsetList->Count() > (uint32)(iter.indexOfActualOffset + countOfMissed));
+            Assert(this->pActualOffsetList->Count() > (uint32_t)(iter.indexOfActualOffset + countOfMissed));
 
-            data.bytecodeBegin = this->pActualOffsetList->ItemInBuffer((uint32)iter.indexOfActualOffset + countOfMissed);
+            data.bytecodeBegin = this->pActualOffsetList->ItemInBuffer((uint32_t)iter.indexOfActualOffset + countOfMissed);
             countOfMissed++;
         }
         else
@@ -5467,13 +5467,13 @@ namespace Js
         {
             // Support only in forward direction
             if (bytecode < iter.accumulatedBytecodeBegin
-                || iter.accumulatedIndex <= 0 || (uint32)iter.accumulatedIndex >= Count())
+                || iter.accumulatedIndex <= 0 || (uint32_t)iter.accumulatedIndex >= Count())
             {
                 // re-initialize the accumulators
                 Reset(iter);
             }
 
-            while ((uint32)iter.accumulatedIndex < Count())
+            while ((uint32_t)iter.accumulatedIndex < Count())
             {
                 int countOfMissed = 0;
                 if (!GetRangeAt(iter.accumulatedIndex, iter, &countOfMissed, data))
@@ -5520,7 +5520,7 @@ namespace Js
 
     BOOL SmallSpanSequence::Item(int index, SmallSpanSequenceIter &iter, StatementData & data)
     {
-        if (!pStatementBuffer || (uint32)index >= pStatementBuffer->Count())
+        if (!pStatementBuffer || (uint32_t)index >= pStatementBuffer->Count())
         {
             return FALSE;
         }
@@ -5532,7 +5532,7 @@ namespace Js
 
         while (iter.accumulatedIndex <= index)
         {
-            Assert((uint32)iter.accumulatedIndex < pStatementBuffer->Count());
+            Assert((uint32_t)iter.accumulatedIndex < pStatementBuffer->Count());
 
             int countOfMissed = 0;
             if (!GetRangeAt(iter.accumulatedIndex, iter, &countOfMissed, data))
@@ -5628,7 +5628,7 @@ namespace Js
         if (propertyIdsForFormalArgs != nullptr && reg < length)
         {
             PropertyId propId = propertyIdsForRegSlots[reg];
-            for (uint32 i = 0; i < propertyIdsForFormalArgs->count; i++)
+            for (uint32_t i = 0; i < propertyIdsForFormalArgs->count; i++)
             {
                 if (propertyIdsForFormalArgs->elements[i] == propId)
                 {
@@ -5791,7 +5791,7 @@ namespace Js
 #endif
 
 #if ENABLE_TTD
-    Js::PropertyId DebuggerScope::GetPropertyIdForSlotIndex_TTD(uint32 slotIndex) const
+    Js::PropertyId DebuggerScope::GetPropertyIdForSlotIndex_TTD(uint32_t slotIndex) const
     {
         const Js::DebuggerScopeProperty& scopeProperty = this->scopeProperties->Item(slotIndex);
         return scopeProperty.propId;
@@ -6481,7 +6481,7 @@ namespace Js
     void FunctionBody::AllocateLiteralRegexArray()
     {
         Assert(!this->GetLiteralRegexes());
-        uint32 literalRegexCount = GetLiteralRegexCount();
+        uint32_t literalRegexCount = GetLiteralRegexCount();
         if (literalRegexCount == 0)
         {
             return;
@@ -6507,7 +6507,7 @@ namespace Js
     }
 #endif
 
-    PropertyIdArray * FunctionBody::AllocatePropertyIdArrayForFormals(uint32 size, uint32 count, byte extraSlots)
+    PropertyIdArray * FunctionBody::AllocatePropertyIdArrayForFormals(uint32_t size, uint32_t count, byte extraSlots)
     {
         //TODO: saravind: Should the allocation be a Leaf Allocation?
         PropertyIdArray * formalsPropIdArray = RecyclerNewPlus(GetScriptContext()->GetRecycler(), size, Js::PropertyIdArray, count, extraSlots);
@@ -6558,9 +6558,9 @@ namespace Js
         this->SetLiteralRegexs(nullptr);
     }
 
-    Js::AuxArray<uint32> * FunctionBody::AllocateSlotIdInCachedScopeToNestedIndexArray(uint32 slotCount)
+    Js::AuxArray<uint32_t> * FunctionBody::AllocateSlotIdInCachedScopeToNestedIndexArray(uint32_t slotCount)
     {
-        Js::AuxArray<uint32> * slotIdToNestedIndexArray = RecyclerNewPlusLeaf(GetScriptContext()->GetRecycler(), slotCount * sizeof(uint32), Js::AuxArray<uint32>, slotCount);
+        Js::AuxArray<uint32_t> * slotIdToNestedIndexArray = RecyclerNewPlusLeaf(GetScriptContext()->GetRecycler(), slotCount * sizeof(uint32_t), Js::AuxArray<uint32_t>, slotCount);
         SetSlotIdInCachedScopeToNestedIndexArray(slotIdToNestedIndexArray);
         return slotIdToNestedIndexArray;
     }
@@ -6917,12 +6917,12 @@ namespace Js
     }
 
 
-    uint32 FunctionBody::GetInterpretedCount() const
+    uint32_t FunctionBody::GetInterpretedCount() const
     {
         return executionState.GetInterpretedCount();
     }
 
-    uint32 FunctionBody::IncreaseInterpretedCount()
+    uint32_t FunctionBody::IncreaseInterpretedCount()
     {
         return executionState.IncreaseInterpretedCount();
     }
@@ -7010,7 +7010,7 @@ namespace Js
 
     void FunctionBody::ResetSimpleJitCallCount()
     {
-        uint32 interpretedCount = GetInterpretedCount();
+        uint32_t interpretedCount = GetInterpretedCount();
         uint16 simpleJitLimit = static_cast<uint16>(executionState.GetSimpleJitLimit());
         SetSimpleJitCallCount(
             simpleJitLimit > interpretedCount
@@ -7298,7 +7298,7 @@ namespace Js
         return !PHASE_OFF1(ObjectHeaderInliningForConstructorsPhase) && DoObjectHeaderInlining();
     }
 
-    bool FunctionBody::DoObjectHeaderInliningForConstructor(const uint32 inlineSlotCapacity)
+    bool FunctionBody::DoObjectHeaderInliningForConstructor(const uint32_t inlineSlotCapacity)
     {
         return inlineSlotCapacity == 0 ? DoObjectHeaderInliningForEmptyObjects() : DoObjectHeaderInliningForConstructors();
     }
@@ -7308,13 +7308,13 @@ namespace Js
         return !PHASE_OFF1(ObjectHeaderInliningForObjectLiteralsPhase) && DoObjectHeaderInlining();
     }
 
-    bool FunctionBody::DoObjectHeaderInliningForObjectLiteral(const uint32 inlineSlotCapacity)
+    bool FunctionBody::DoObjectHeaderInliningForObjectLiteral(const uint32_t inlineSlotCapacity)
     {
         return
             inlineSlotCapacity == 0
                 ?   DoObjectHeaderInliningForEmptyObjects()
                 :   DoObjectHeaderInliningForObjectLiterals() &&
-                    inlineSlotCapacity <= static_cast<uint32>(MaxPreInitializedObjectHeaderInlinedTypeInlineSlotCount);
+                    inlineSlotCapacity <= static_cast<uint32_t>(MaxPreInitializedObjectHeaderInlinedTypeInlineSlotCount);
     }
 
     bool FunctionBody::DoObjectHeaderInliningForObjectLiteral(
@@ -7718,12 +7718,12 @@ namespace Js
         return this->savedInlinerVersion;
     }
 
-    uint32 FunctionBody::GetSavedPolymorphicCacheState() const
+    uint32_t FunctionBody::GetSavedPolymorphicCacheState() const
     {
         Assert(this->dynamicProfileInfo != nullptr);
         return this->savedPolymorphicCacheState;
     }
-    void FunctionBody::SetSavedPolymorphicCacheState(uint32 state)
+    void FunctionBody::SetSavedPolymorphicCacheState(uint32_t state)
     {
         this->savedPolymorphicCacheState = state;
     }
@@ -8767,7 +8767,7 @@ namespace Js
         {
             auto inProcNativeEntryPointData = this->GetInProcNativeEntryPointData();
             const LazyBailOutRecord& record = bailOutRecordList->Item(found);
-            const uint32 lazyBailOutThunkOffset = inProcNativeEntryPointData->GetLazyBailOutThunkOffset();
+            const uint32_t lazyBailOutThunkOffset = inProcNativeEntryPointData->GetLazyBailOutThunkOffset();
             uint8_t * const lazyBailOutThunkAddress = (uint8_t *) nativeAddress + lazyBailOutThunkOffset;
 
             // Change the instruction pointer of the frame to our thunk so that

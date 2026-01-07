@@ -101,8 +101,8 @@ namespace Js
 
         for (uint idx = 0; idx < 8; ++idx)
         {
-            uint32 a = (uint32)aValue.u16[idx];
-            uint32 b = (uint32)bValue.u16[idx];
+            uint32_t a = (uint32_t)aValue.u16[idx];
+            uint32_t b = (uint32_t)bValue.u16[idx];
 
             result.u16[idx] = ((a + b) > MAXUINT16) ? MAXUINT16 : (uint16)(a + b);
         }

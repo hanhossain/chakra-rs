@@ -7,7 +7,7 @@
 namespace Js
 {
     //
-    // An enumerator to enumerate ES5Array index property names as uint32 indices.
+    // An enumerator to enumerate ES5Array index property names as uint32_t indices.
     //
     template <bool enumNonEnumerable = false>
     class ES5ArrayIndexStaticEnumerator
@@ -18,10 +18,10 @@ namespace Js
     private:
         ES5Array* m_array;                      // The ES5Array to enumerate on
 
-        uint32 m_initialLength;                 // Initial length of the array, for snapshot
-        uint32 m_index;                         // Current index
-        uint32 m_dataIndex;                     // Current data item index
-        uint32 m_descriptorIndex;               // Current descriptor item index
+        uint32_t m_initialLength;                 // Initial length of the array, for snapshot
+        uint32_t m_index;                         // Current index
+        uint32_t m_dataIndex;                     // Current data item index
+        uint32_t m_descriptorIndex;               // Current descriptor item index
         IndexPropertyDescriptor* m_descriptor;  // Current descriptor associated with m_descriptorIndex
         void * m_descriptorValidationToken;
     public:
@@ -47,7 +47,7 @@ namespace Js
         //
         // Get the current index. Valid only when MoveNext() returns true.
         //
-        uint32 GetIndex() const
+        uint32_t GetIndex() const
         {
             return m_index;
         }

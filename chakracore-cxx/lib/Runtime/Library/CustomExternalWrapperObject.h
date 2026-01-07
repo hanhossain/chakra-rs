@@ -95,12 +95,12 @@ namespace Js
         virtual BOOL InitProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags = PropertyOperation_None, PropertyValueInfo* info = nullptr) override;
         virtual BOOL DeleteProperty(PropertyId propertyId, PropertyOperationFlags flags) override;
         virtual BOOL DeleteProperty(JavascriptString *propertyNameString, PropertyOperationFlags flags) override;
-        virtual PropertyQueryFlags HasItemQuery(uint32 index) override;
-        virtual BOOL HasOwnItem(uint32 index) override;
-        virtual PropertyQueryFlags GetItemQuery(Var originalInstance, uint32 index, Var * value, ScriptContext * requestContext) override;
-        virtual PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32 index, Var * value, ScriptContext * requestContext) override;
-        virtual BOOL SetItem(uint32 index, Var value, PropertyOperationFlags flags) override;
-        virtual BOOL DeleteItem(uint32 index, PropertyOperationFlags flags) override;
+        virtual PropertyQueryFlags HasItemQuery(uint32_t index) override;
+        virtual BOOL HasOwnItem(uint32_t index) override;
+        virtual PropertyQueryFlags GetItemQuery(Var originalInstance, uint32_t index, Var * value, ScriptContext * requestContext) override;
+        virtual PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32_t index, Var * value, ScriptContext * requestContext) override;
+        virtual BOOL SetItem(uint32_t index, Var value, PropertyOperationFlags flags) override;
+        virtual BOOL DeleteItem(uint32_t index, PropertyOperationFlags flags) override;
         virtual BOOL GetEnumerator(JavascriptStaticEnumerator * enumerator, EnumeratorFlags flags, ScriptContext * requestContext, EnumeratorCache * enumeratorCache = nullptr) override;
         virtual BOOL Equals(Var other, BOOL* value, ScriptContext* requestContext) override;
         virtual BOOL StrictEquals(Var other, BOOL* value, ScriptContext* requestContext) override;
@@ -108,7 +108,7 @@ namespace Js
         virtual DynamicType* DuplicateType() override;
         virtual void SetPrototype(RecyclableObject* newPrototype) override;
 
-        void PropertyIdFromInt(uint32 index, PropertyRecord const** propertyRecord);
+        void PropertyIdFromInt(uint32_t index, PropertyRecord const** propertyRecord);
 
         template <class Fn, class GetPropertyNameFunc>
         BOOL SetPropertyTrap(Var receiver, SetPropertyTrapKind setPropertyTrapKind, GetPropertyNameFunc getPropertyName, Var newValue, ScriptContext * requestContext, PropertyOperationFlags propertyOperationFlags, BOOL skipPrototypeCheck, Fn fn, Js::PropertyValueInfo* info);
@@ -128,7 +128,7 @@ namespace Js
 #if ENABLE_FIXED_FIELDS
         virtual BOOL IsFixedProperty(PropertyId propertyId) override { if (!EnsureInitialized(GetScriptContext())) { return FALSE; } return DynamicObject::IsFixedProperty(propertyId); }
 #endif
-        virtual DescriptorFlags GetItemSetter(uint32 index, Var* setterValue, ScriptContext* requestContext) override { if (!EnsureInitialized(GetScriptContext())) { return None; } return DynamicObject::GetItemSetter(index, setterValue, requestContext); }
+        virtual DescriptorFlags GetItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext) override { if (!EnsureInitialized(GetScriptContext())) { return None; } return DynamicObject::GetItemSetter(index, setterValue, requestContext); }
         virtual BOOL ToPrimitive(JavascriptHint hint, Var* result, ScriptContext * requestContext) override { if (!EnsureInitialized(GetScriptContext())) { return FALSE; } return DynamicObject::ToPrimitive(hint, result, requestContext); }
         virtual BOOL SetAccessors(PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags = PropertyOperation_None) override { if (!EnsureInitialized(GetScriptContext())) { return FALSE; } return DynamicObject::SetAccessors(propertyId, getter, setter, flags); }
         _Check_return_ _Success_(return) virtual BOOL GetAccessors(PropertyId propertyId, _Outptr_result_maybenull_ Var* getter, _Outptr_result_maybenull_ Var* setter, ScriptContext* requestContext) override { if (!EnsureInitialized(GetScriptContext())) { return FALSE; } return DynamicObject::GetAccessors(propertyId, getter, setter, requestContext); }
@@ -180,14 +180,14 @@ namespace Js
         BOOL HasPropertyTrap(Fn fn, GetPropertyNameFunc getPropertyName, Js::PropertyValueInfo* info);
 
         template <class Fn>
-        void GetOwnPropertyKeysHelper(ScriptContext * scriptContext, RecyclableObject * trapResultArray, uint32 len, JavascriptArray * trapResult,
+        void GetOwnPropertyKeysHelper(ScriptContext * scriptContext, RecyclableObject * trapResultArray, uint32_t len, JavascriptArray * trapResult,
             JsUtil::BaseDictionary<PropertyId, bool, Memory::ArenaAllocator>& targetToTrapResultMap, Fn fn)
         {
             Var element = nullptr;
             const PropertyRecord* propertyRecord;
-            uint32 trapResultIndex = 0;
+            uint32_t trapResultIndex = 0;
             PropertyId propertyId;
-            for (uint32 i = 0; i < len; i++)
+            for (uint32_t i = 0; i < len; i++)
             {
                 if (!JavascriptOperators::GetItem(trapResultArray, i, &element, scriptContext) || // missing
                     !(VarIs<JavascriptString>(element) || VarIs<JavascriptSymbol>(element)))  // neither String nor Symbol

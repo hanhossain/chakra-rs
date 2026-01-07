@@ -8,12 +8,12 @@
 namespace Js {
 
     typedef uint8_t ArgSlot_OneByte;
-    typedef uint32 CacheId;
+    typedef uint32_t CacheId;
     typedef uint8_t CacheId_OneByte;
     typedef uint16 CacheId_TwoByte;
-    typedef uint32 RootCacheId;
+    typedef uint32_t RootCacheId;
     typedef uint16 PropertyIdIndexType_TwoByte;
-    typedef uint32 PropertyIdIndexType;
+    typedef uint32_t PropertyIdIndexType;
 #ifdef BYTECODE_BRANCH_ISLAND
     typedef int16 JumpOffset;
     typedef int32 LongJumpOffset;
@@ -44,7 +44,7 @@ namespace Js {
         typedef ArgSlot ArgSlotType;
         typedef CacheId CacheIdType;
         typedef PropertyIdIndexType PropertyIdIndexType;
-        typedef uint32 UnsignedType;
+        typedef uint32_t UnsignedType;
         static const LayoutSize LayoutEnum = LargeLayout;
         template <typename T>
         static bool Assign(T& dst, T src) { dst = src; return true; }

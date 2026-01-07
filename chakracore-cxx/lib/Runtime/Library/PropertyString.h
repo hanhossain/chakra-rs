@@ -55,9 +55,9 @@ public:
     virtual void const * GetOriginalStringReference() override;
     virtual RecyclableObject * CloneToScriptContext(ScriptContext* requestContext) override;
 
-    static uint32 GetOffsetOfLdElemInlineCache() { return offsetof(PropertyString, propertyRecordUsageCache) + PropertyRecordUsageCache::GetOffsetOfLdElemInlineCache(); }
-    static uint32 GetOffsetOfStElemInlineCache() { return offsetof(PropertyString, propertyRecordUsageCache) + PropertyRecordUsageCache::GetOffsetOfStElemInlineCache(); }
-    static uint32 GetOffsetOfHitRate() { return offsetof(PropertyString, propertyRecordUsageCache) + PropertyRecordUsageCache::GetOffsetOfHitRate(); }
+    static uint32_t GetOffsetOfLdElemInlineCache() { return offsetof(PropertyString, propertyRecordUsageCache) + PropertyRecordUsageCache::GetOffsetOfLdElemInlineCache(); }
+    static uint32_t GetOffsetOfStElemInlineCache() { return offsetof(PropertyString, propertyRecordUsageCache) + PropertyRecordUsageCache::GetOffsetOfStElemInlineCache(); }
+    static uint32_t GetOffsetOfHitRate() { return offsetof(PropertyString, propertyRecordUsageCache) + PropertyRecordUsageCache::GetOffsetOfHitRate(); }
 
 #if ENABLE_TTD
     //Get the associated property id for this string if there is on (e.g. it is a propertystring otherwise return Js::PropertyIds::_none)

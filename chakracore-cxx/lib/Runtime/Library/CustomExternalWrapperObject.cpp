@@ -283,7 +283,7 @@ Js::Var CustomExternalWrapperObject::GetValueFromDescriptor(Js::Var instance, Js
     return requestContext->GetLibrary()->GetUndefined();
 }
 
-void CustomExternalWrapperObject::PropertyIdFromInt(uint32 index, Js::PropertyRecord const** propertyRecord)
+void CustomExternalWrapperObject::PropertyIdFromInt(uint32_t index, Js::PropertyRecord const** propertyRecord)
 {
     char16_t buffer[22];
     int pos = Js::TaggedInt::ToBuffer(index, buffer, _countof(buffer));
@@ -735,7 +735,7 @@ Js::PropertyQueryFlags CustomExternalWrapperObject::GetPropertyReferenceQuery(Js
     return Js::JavascriptConversion::BooleanToPropertyQueryFlags(foundProperty);
 }
 
-Js::PropertyQueryFlags CustomExternalWrapperObject::HasItemQuery(uint32 index)
+Js::PropertyQueryFlags CustomExternalWrapperObject::HasItemQuery(uint32_t index)
 {
     auto fn = [&](Js::RecyclableObject* object)-> BOOL {
         return JavascriptConversion::PropertyQueryFlagsToBoolean(DynamicObject::HasItemQuery(index));
@@ -751,7 +751,7 @@ Js::PropertyQueryFlags CustomExternalWrapperObject::HasItemQuery(uint32 index)
     return Js::JavascriptConversion::BooleanToPropertyQueryFlags(HasPropertyTrap(fn, getPropertyName, nullptr));
 }
 
-BOOL CustomExternalWrapperObject::HasOwnItem(uint32 index)
+BOOL CustomExternalWrapperObject::HasOwnItem(uint32_t index)
 {
     auto fn = [&](Js::RecyclableObject* object)-> BOOL {
         return DynamicObject::HasOwnItem(index);
@@ -766,7 +766,7 @@ BOOL CustomExternalWrapperObject::HasOwnItem(uint32 index)
     return HasPropertyTrap(fn, getPropertyName, nullptr);
 }
 
-Js::PropertyQueryFlags CustomExternalWrapperObject::GetItemQuery(Js::Var originalInstance, uint32 index, Js::Var* value, Js::ScriptContext * requestContext)
+Js::PropertyQueryFlags CustomExternalWrapperObject::GetItemQuery(Js::Var originalInstance, uint32_t index, Js::Var* value, Js::ScriptContext * requestContext)
 {
     if (!this->VerifyObjectAlive()) return Js::PropertyQueryFlags::Property_NotFound;
     Js::PropertyDescriptor result;
@@ -796,7 +796,7 @@ Js::PropertyQueryFlags CustomExternalWrapperObject::GetItemQuery(Js::Var origina
     return Js::JavascriptConversion::BooleanToPropertyQueryFlags(foundProperty);
 }
 
-Js::PropertyQueryFlags CustomExternalWrapperObject::GetItemReferenceQuery(Js::Var originalInstance, uint32 index, Js::Var* value, Js::ScriptContext * requestContext)
+Js::PropertyQueryFlags CustomExternalWrapperObject::GetItemReferenceQuery(Js::Var originalInstance, uint32_t index, Js::Var* value, Js::ScriptContext * requestContext)
 {
     if (!this->VerifyObjectAlive()) return Js::PropertyQueryFlags::Property_NotFound;
 
@@ -826,7 +826,7 @@ Js::PropertyQueryFlags CustomExternalWrapperObject::GetItemReferenceQuery(Js::Va
     return Js::JavascriptConversion::BooleanToPropertyQueryFlags(foundProperty);
 }
 
-BOOL CustomExternalWrapperObject::SetItem(uint32 index, Js::Var value, Js::PropertyOperationFlags flags)
+BOOL CustomExternalWrapperObject::SetItem(uint32_t index, Js::Var value, Js::PropertyOperationFlags flags)
 {
     if (!this->VerifyObjectAlive()) return FALSE;
 
@@ -856,7 +856,7 @@ BOOL CustomExternalWrapperObject::SetItem(uint32 index, Js::Var value, Js::Prope
     return TRUE;
 }
 
-BOOL CustomExternalWrapperObject::DeleteItem(uint32 index, Js::PropertyOperationFlags flags)
+BOOL CustomExternalWrapperObject::DeleteItem(uint32_t index, Js::PropertyOperationFlags flags)
 {
     if (!this->VerifyObjectAlive()) return FALSE;
     const PropertyRecord* propertyRecord = nullptr;
@@ -914,7 +914,7 @@ BOOL CustomExternalWrapperObject::GetEnumerator(Js::JavascriptStaticEnumerator *
         Field(JavascriptArray*) trapResult;
         Field(CustomExternalWrapperObject*) wrapper;
         FieldNoBarrier(ScriptContext*) scriptContext;
-        Field(uint32) index;
+        Field(uint32_t) index;
 
         DEFINE_VTABLE_CTOR_ABSTRACT(WrapperOwnKeysEnumerator, JavascriptEnumerator)
 
@@ -940,7 +940,7 @@ BOOL CustomExternalWrapperObject::GetEnumerator(Js::JavascriptStaticEnumerator *
             // for (let key of Reflect.ownKeys(obj)) {
             if (trapResult != nullptr)
             {
-                uint32 len = trapResult->GetLength();
+                uint32_t len = trapResult->GetLength();
                 while (index < len)
                 {
                     Var var = trapResult->DirectGetItem(index++);

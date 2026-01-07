@@ -45,7 +45,7 @@ Js::DynamicObject * JsrtDebuggerObjectBase::GetChildren(WeakArenaReference<Js::I
 
     Js::IDiagObjectModelWalkerBase* walker = walkerRef->GetStrongReference();
 
-    uint32 childrensCount = 0;
+    uint32_t childrensCount = 0;
 
     if (walker != nullptr)
     {
@@ -60,7 +60,7 @@ Js::DynamicObject * JsrtDebuggerObjectBase::GetChildren(WeakArenaReference<Js::I
 
         if (fromCount < childrensCount)
         {
-            for (uint32 i = fromCount; i < childrensCount && (propertiesArrayCount + debuggerOnlyPropertiesArrayCount) < totalCount; ++i)
+            for (uint32_t i = fromCount; i < childrensCount && (propertiesArrayCount + debuggerOnlyPropertiesArrayCount) < totalCount; ++i)
             {
                 Js::ResolvedObject resolvedObject;
 
@@ -335,7 +335,7 @@ Js::DynamicObject * JsrtDebuggerStackFrame::GetLocalsObject(Js::ScriptContext* s
                 });
             }
 
-            uint32 totalProperties = localsWalker->GetChildrenCount();
+            uint32_t totalProperties = localsWalker->GetChildrenCount();
             if (totalProperties > 0)
             {
                 int index = 0;
@@ -397,8 +397,8 @@ Js::DynamicObject * JsrtDebuggerStackFrame::GetLocalsObject(Js::ScriptContext* s
                 }
 
                 // Add all locals variable(s) available under 'locals'
-                uint32 localsCount = localsWalker->GetLocalVariablesCount();
-                for (uint32 i = 0; i < localsCount; ++i)
+                uint32_t localsCount = localsWalker->GetLocalVariablesCount();
+                for (uint32_t i = 0; i < localsCount; ++i)
                 {
                     if (!localsWalker->GetLocal(i, &resolvedObject))
                     {
@@ -726,8 +726,8 @@ Js::DynamicObject * JsrtDebuggerObjectFunction::GetJSONObject(Js::ScriptContext 
 
     Js::FunctionBody* functionBody  = this->javascriptFunction->GetFunctionBody();
     JsrtDebugUtils::AddScriptIdToObject(functionObject, functionBody->GetUtf8SourceInfo());
-    JsrtDebugUtils::AddPropertyToObject(functionObject, JsrtDebugPropertyId::line, (uint32)functionBody->GetLineNumber(), scriptContext);
-    JsrtDebugUtils::AddPropertyToObject(functionObject, JsrtDebugPropertyId::column, (uint32)functionBody->GetColumnNumber(), scriptContext);
+    JsrtDebugUtils::AddPropertyToObject(functionObject, JsrtDebugPropertyId::line, (uint32_t)functionBody->GetLineNumber(), scriptContext);
+    JsrtDebugUtils::AddPropertyToObject(functionObject, JsrtDebugPropertyId::column, (uint32_t)functionBody->GetColumnNumber(), scriptContext);
     JsrtDebugUtils::AddPropertyToObject(functionObject, JsrtDebugPropertyId::name, functionBody->GetDisplayName(), functionBody->GetDisplayNameLength(), scriptContext);
     JsrtDebugUtils::AddPropertyToObject(functionObject, JsrtDebugPropertyId::type, scriptContext->GetLibrary()->GetFunctionTypeDisplayString(), scriptContext);
     JsrtDebugUtils::AddPropertyToObject(functionObject, JsrtDebugPropertyId::handle, this->GetHandle(), scriptContext);

@@ -10,11 +10,11 @@
 // meant to be initialized statically. However, flexible array initialization
 // is not allowed in standard C++. We declare each StaticSym with length
 // instead and cast to common StaticSymLen<0>* (StaticSym*) to access.
-template <uint32 N>
+template <uint32_t N>
 struct StaticSymLen
 {
-    uint32 luHash;
-    uint32 cch;
+    uint32_t luHash;
+    uint32_t cch;
     OLECHAR sz[N];
 };
 
@@ -112,9 +112,9 @@ private:
     PidRefStack *m_pidRefStack;
     ushort m_tk;         // token# if identifier is a keyword
     ushort m_grfid;      // see fidXXX above
-    uint32 m_luHash;      // hash value
+    uint32_t m_luHash;      // hash value
 
-    uint32 m_cch;                   // length of the identifier spelling
+    uint32_t m_cch;                   // length of the identifier spelling
     Js::PropertyId m_propertyId;
 
     AssignmentState assignmentState;
@@ -126,10 +126,10 @@ private:
 public:
     LPCOLESTR Psz(void)
     { return m_sz; }
-    uint32 Cch(void)
+    uint32_t Cch(void)
     { return m_cch; }
     tokens Tk(bool isStrictMode);
-    uint32 Hash(void)
+    uint32_t Hash(void)
     { return m_luHash; }
 
     PidRefStack *GetTopRef() const
@@ -299,10 +299,10 @@ public:
     void SetIsModuleExport() { m_grfid |= fidModuleExport; }
     BOOL GetIsModuleExport() const { return m_grfid & fidModuleExport; }
 
-    static tokens TkFromNameLen(uint32 luHash, _In_reads_(cch) LPCOLESTR prgch, uint32 cch, bool isStrictMode, ushort * pgrfid, ushort * ptk);
+    static tokens TkFromNameLen(uint32_t luHash, _In_reads_(cch) LPCOLESTR prgch, uint32_t cch, bool isStrictMode, ushort * pgrfid, ushort * ptk);
 
 #if DBG
-    static tokens TkFromNameLen(_In_reads_(cch) LPCOLESTR prgch, uint32 cch, bool isStrictMode);
+    static tokens TkFromNameLen(_In_reads_(cch) LPCOLESTR prgch, uint32_t cch, bool isStrictMode);
 #endif
 };
 
@@ -351,15 +351,15 @@ public:
     {
         size_t csz = wcslen(psz);
         Assert(csz <= UINT_MAX);
-        return PidHashNameLen(psz, static_cast<uint32>(csz));
+        return PidHashNameLen(psz, static_cast<uint32_t>(csz));
     }
 
     template <typename CharType>
-    IdentPtr PidHashNameLen(CharType const * psz, CharType const * end, uint32 cch);
+    IdentPtr PidHashNameLen(CharType const * psz, CharType const * end, uint32_t cch);
     template <typename CharType>
-    IdentPtr PidHashNameLen(CharType const * psz, uint32 cch);
+    IdentPtr PidHashNameLen(CharType const * psz, uint32_t cch);
     template <typename CharType>
-    IdentPtr PidHashNameLenWithHash(_In_reads_(cch) CharType const * psz, CharType const * end, int32 cch, uint32 luHash);
+    IdentPtr PidHashNameLenWithHash(_In_reads_(cch) CharType const * psz, CharType const * end, int32 cch, uint32_t luHash);
 
 
     template <typename CharType>
@@ -367,7 +367,7 @@ public:
         CharType const * prgch,
         CharType const * end,
         int32 cch,
-        uint32 luHash,
+        uint32_t luHash,
         IdentPtr **pppInsert,
         int32 *pBucketCount
 #if PROFILE_DICTIONARY
@@ -397,8 +397,8 @@ private:
     NoReleaseAllocator m_noReleaseAllocator;            // to allocate identifiers
     Ident ** m_prgpidName;        // hash table for names
 
-    uint32 m_luMask;                // hash mask
-    uint32 m_luCount;              // count of the number of entires in the hash table    
+    uint32_t m_luMask;                // hash mask
+    uint32_t m_luCount;              // count of the number of entires in the hash table    
     IdentPtr m_rpid[tkLimKwd];
 
     // Called to grow the number of buckets in the table to reduce the table density.

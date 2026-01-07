@@ -175,10 +175,10 @@ MACRO_WMS       ( Ror_Int                    , Int3            , None           
 MACRO_WMS       ( PopCnt_Int                 , Int2            , None            )
 
 // Unsigned int math
-MACRO_WMS       ( Div_UInt                   , Int3            , None            ) // uint32 Arithmetic '/'
-MACRO_WMS       ( Div_Trap_UInt             , Int3            , None            ) // (checked) uint32 Arithmetic '/'
-MACRO_WMS       ( Rem_UInt                   , Int3            , None            ) // uint32 Arithmetic '%'
-MACRO_WMS       ( Rem_Trap_UInt             , Int3            , None            ) // (checked) uint32 Arithmetic '%'
+MACRO_WMS       ( Div_UInt                   , Int3            , None            ) // uint32_t Arithmetic '/'
+MACRO_WMS       ( Div_Trap_UInt             , Int3            , None            ) // (checked) uint32_t Arithmetic '/'
+MACRO_WMS       ( Rem_UInt                   , Int3            , None            ) // uint32_t Arithmetic '%'
+MACRO_WMS       ( Rem_Trap_UInt             , Int3            , None            ) // (checked) uint32_t Arithmetic '%'
 
 // Int64 Math
 MACRO_WMS       ( Add_Long                   , Long3            , None            ) // long Arithmetic '+'
@@ -224,10 +224,10 @@ MACRO_WMS       ( CmNe_Int                   , Int3            , None           
 MACRO_WMS       ( Eqz_Int                    , Int2            , None            ) // int32 Comparison with 0
 
 // Unsigned int comparisons
-MACRO_WMS       ( CmLt_UInt                  , Int3            , None            ) // uint32 Comparison <
-MACRO_WMS       ( CmLe_UInt                  , Int3            , None            ) // uint32 Comparison <=
-MACRO_WMS       ( CmGt_UInt                  , Int3            , None            ) // uint32 Comparison >
-MACRO_WMS       ( CmGe_UInt                  , Int3            , None            ) // uint32 Comparison >=
+MACRO_WMS       ( CmLt_UInt                  , Int3            , None            ) // uint32_t Comparison <
+MACRO_WMS       ( CmLe_UInt                  , Int3            , None            ) // uint32_t Comparison <=
+MACRO_WMS       ( CmGt_UInt                  , Int3            , None            ) // uint32_t Comparison >
+MACRO_WMS       ( CmGe_UInt                  , Int3            , None            ) // uint32_t Comparison >=
 
 // Int64 comparisons
 MACRO_WMS       ( CmEq_Long                  , Int1Long2       , None            ) // long Comparison ==

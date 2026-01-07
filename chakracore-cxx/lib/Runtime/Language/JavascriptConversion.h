@@ -60,10 +60,10 @@ namespace Js {
         static int16 ToInt16(double aValue);
         static float ToFloat(Var aValue, ScriptContext* scriptContext);
 
-        static uint32 ToUInt32(Var aValue, ScriptContext* scriptContext);
+        static uint32_t ToUInt32(Var aValue, ScriptContext* scriptContext);
         static unsigned long ToUInt64(Var aValue, ScriptContext* scriptContext);
-        static uint32 ToUInt32(double value);
-        static uint32 ToUInt32_Full(Var aValue, ScriptContext* scriptContext);
+        static uint32_t ToUInt32(double value);
+        static uint32_t ToUInt32_Full(Var aValue, ScriptContext* scriptContext);
 
         static uint16 ToUInt16(Var aValue, ScriptContext* scriptContext);
         static uint16 ToUInt16(double value);

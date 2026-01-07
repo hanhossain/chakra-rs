@@ -312,7 +312,7 @@ namespace UnifiedRegex
     //     - If a previous location is tracked, then it is of a parsed character (not given character) before current, and not same to current
     //       This can't be asserted directly, and has to be followed by callers. Term pass can reset with each iteration, as well as this method in cases it needs.
     template <typename P, const bool IsLiteral>
-    void Parser<P, IsLiteral>:: TrackIfSurrogatePair(codepoint_t codePoint,  const EncodedChar* location, uint32 consumptionLength)
+    void Parser<P, IsLiteral>:: TrackIfSurrogatePair(codepoint_t codePoint,  const EncodedChar* location, uint32_t consumptionLength)
     {
         Assert(codePoint < 0x110000);
         Assert(location != nullptr);
@@ -328,7 +328,7 @@ namespace UnifiedRegex
             if(Js::NumberUtilities::IsSurrogateUpperPart(codePoint) && this->tempLocationOfSurrogatePair != nullptr)
             {
                 Assert(Js::NumberUtilities::IsSurrogateLowerPart(codePointAtTempLocation));
-                consumptionLength = (uint32)(location - this->tempLocationOfSurrogatePair) + consumptionLength;
+                consumptionLength = (uint32_t)(location - this->tempLocationOfSurrogatePair) + consumptionLength;
                 codePoint = Js::NumberUtilities::SurrogatePairAsCodePoint(codePointAtTempLocation, codePoint);
                 location = this->tempLocationOfSurrogatePair;
             }
@@ -1249,7 +1249,7 @@ namespace UnifiedRegex
                 Char c = NextChar();
                 if (scriptContext->GetConfig()->IsES6UnicodeExtensionsEnabled())
                 {
-                    TrackIfSurrogatePair(c, current, (uint32)(next - current));
+                    TrackIfSurrogatePair(c, current, (uint32_t)(next - current));
                 }
                 // Closing '/' in literals should be caught explicitly
                 Assert(!IsLiteral || c != '/');
@@ -2011,7 +2011,7 @@ namespace UnifiedRegex
 
                 if (scriptContext->GetConfig()->IsES6UnicodeExtensionsEnabled())
                 {
-                    TrackIfSurrogatePair(lastCodepoint, current, (uint32)(next - current));
+                    TrackIfSurrogatePair(lastCodepoint, current, (uint32_t)(next - current));
                 }
             }
 
@@ -2714,7 +2714,7 @@ namespace UnifiedRegex
                 }
                 else
                 {
-                    uint32 n = (standardEncodedChars->DigitValue(ECLookahead(2)) << 12) |
+                    uint32_t n = (standardEncodedChars->DigitValue(ECLookahead(2)) << 12) |
                                (standardEncodedChars->DigitValue(ECLookahead(3)) << 8) |
                                (standardEncodedChars->DigitValue(ECLookahead(4)) << 4) |
                                (standardEncodedChars->DigitValue(ECLookahead(5)));

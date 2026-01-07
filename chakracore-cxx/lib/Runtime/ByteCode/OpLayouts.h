@@ -321,7 +321,7 @@ namespace Js {
     struct OpLayoutT_CallIExtended : public OpLayoutT_CallI<SizePolicy>
     {
         CallIExtendedOptions Options;
-        uint32 SpreadAuxOffset; // Valid with Options & CallIExtended_SpreadArgs
+        uint32_t SpreadAuxOffset; // Valid with Options & CallIExtended_SpreadArgs
     };
 
     template <typename SizePolicy>
@@ -504,7 +504,7 @@ namespace Js {
 
     struct OpLayoutAuxNoReg
     {
-        uint32      Offset;
+        uint32_t      Offset;
         int32       C1;
     };
 

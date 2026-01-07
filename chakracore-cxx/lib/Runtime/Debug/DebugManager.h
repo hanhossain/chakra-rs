@@ -20,7 +20,7 @@ namespace Js
     private:
         InterpreterHaltState* pCurrentInterpreterLocation; // NULL if not Halted at a Probe
         unsigned long secondaryCurrentSourceContext;           // For resolving ambiguity among generated files, e.g. eval, anonymous, etc.
-        uint32 debugSessionNumber;                          // A unique number, which will be used to sync all probecontainer when on break
+        uint32_t debugSessionNumber;                          // A unique number, which will be used to sync all probecontainer when on break
         RecyclerRootPtr<Js::DynamicObject> pConsoleScope;
         ThreadContext* pThreadContext;
         bool isAtDispatchHalt;
@@ -56,7 +56,7 @@ namespace Js
         void SetCurrentInterpreterLocation(InterpreterHaltState* pHaltState);
         void UnsetCurrentInterpreterLocation();
         bool IsMatchTopFrameStackAddress(DiagStackFrame* frame) const;
-        uint32 GetDebugSessionNumber() const { return debugSessionNumber; }
+        uint32_t GetDebugSessionNumber() const { return debugSessionNumber; }
 #ifdef ENABLE_MUTATION_BREAKPOINT
         MutationBreakpoint* GetActiveMutationBreakpoint() const;
 #endif

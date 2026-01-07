@@ -58,7 +58,7 @@ public:
     static uint16 Mul(uint16 lhs, uint16 rhs, Func& overflowFn)
     {
         // Do the multiplication using 32-bit unsigned math.
-        uint32 result = static_cast<uint32>(lhs) * static_cast<uint32>(rhs);
+        uint32_t result = static_cast<uint32_t>(lhs) * static_cast<uint32_t>(rhs);
 
         // Does the result fit in 16-bits?
         if(result > UINT16_MAX)

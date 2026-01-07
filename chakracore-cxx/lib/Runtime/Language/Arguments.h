@@ -256,8 +256,8 @@ namespace Js
         FieldNoBarrier(CallInfo) Info;
         FieldNoBarrier(Var*) Values;
 
-        static uint32 GetCallInfoOffset() { return offsetof(Arguments, Info); }
-        static uint32 GetValuesOffset() { return offsetof(Arguments, Values); }
+        static uint32_t GetCallInfoOffset() { return offsetof(Arguments, Info); }
+        static uint32_t GetValuesOffset() { return offsetof(Arguments, Values); }
 
         // Prevent heap/recycler allocation, so we don't need write barrier for this
         static void* operator new   (size_t)    = delete;

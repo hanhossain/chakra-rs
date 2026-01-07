@@ -683,7 +683,7 @@ private:
     static const uint MainRedeferralInactiveThreshold = 10;
 
     Js::TypeId nextTypeId;
-    uint32 polymorphicCacheState;
+    uint32_t polymorphicCacheState;
 
 #if ENABLE_NATIVE_CODEGEN
     JsUtil::JobProcessor *jobProcessor;
@@ -718,7 +718,7 @@ private:
     // Count stack probes and poll for continuation every n probes
     static const int StackProbePollThreshold = 1000;
     EXCEPTION_POINTERS exceptionInfo;
-    uint32 exceptionCode;
+    uint32_t exceptionCode;
 
     ArenaAllocator inlineCacheThreadInfoAllocator;
     ArenaAllocator isInstInlineCacheThreadInfoAllocator;
@@ -872,8 +872,8 @@ public:
 #endif
 
     void SetAbnormalExceptionRecord(EXCEPTION_POINTERS *exceptionInfo) { this->exceptionInfo = *exceptionInfo; }
-    void SetAbnormalExceptionCode(uint32 exceptionInfo) { this->exceptionCode = exceptionInfo; }
-    uint32 GetAbnormalExceptionCode() const { return this->exceptionCode; }
+    void SetAbnormalExceptionCode(uint32_t exceptionInfo) { this->exceptionCode = exceptionInfo; }
+    uint32_t GetAbnormalExceptionCode() const { return this->exceptionCode; }
 
     void *tridentLoadAddress;
 
@@ -993,7 +993,7 @@ public:
     }
 
     //Initialize the context for time-travel
-    void InitTimeTravel(ThreadContext* threadContext, void* runtimeHandle, uint32 snapInterval, uint32 snapHistoryLength);
+    void InitTimeTravel(ThreadContext* threadContext, void* runtimeHandle, uint32_t snapInterval, uint32_t snapHistoryLength);
 
     void InitHostFunctionsAndTTData(bool record, bool replay, bool debug, size_t optTTUriLength, const char* optTTUri,
         TTD::TTDOpenResourceStreamCallback openResourceStreamfp, TTD::TTDReadBytesFromStreamCallback readBytesFromStreamfp,
@@ -1023,7 +1023,7 @@ public:
     //  typeId:         The type id which matches to the well known type
     void SetWellKnownHostTypeId(WellKnownHostType wellKnownType, Js::TypeId typeId);
 
-    uint32 GetNextPolymorphicCacheState()
+    uint32_t GetNextPolymorphicCacheState()
     {
         return ++polymorphicCacheState;
     };
@@ -1131,7 +1131,7 @@ private:
 public:
     void UncheckedAddBuiltInPropertyId();
 
-    BOOL IsNumericPropertyId(Js::PropertyId propertyId, uint32* value);
+    BOOL IsNumericPropertyId(Js::PropertyId propertyId, uint32_t* value);
     bool IsActivePropertyId(Js::PropertyId pid);
     void InvalidatePropertyRecord(const Js::PropertyRecord * propertyRecord);
     Js::PropertyId GetNextPropertyId();
@@ -1422,7 +1422,7 @@ public:
     void ProbeStack(size_t size);
     static void ProbeCurrentStackNoDispose(size_t size, Js::ScriptContext *scriptContext);
     static void ProbeCurrentStack(size_t size, Js::ScriptContext *scriptContext);
-    static void ProbeCurrentStack2(size_t size, Js::ScriptContext *scriptContext, uint32 u1, uint32 u2)
+    static void ProbeCurrentStack2(size_t size, Js::ScriptContext *scriptContext, uint32_t u1, uint32_t u2)
     {
         ProbeCurrentStack(size, scriptContext);
     }

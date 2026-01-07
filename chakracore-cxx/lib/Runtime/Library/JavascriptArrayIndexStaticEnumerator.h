@@ -7,7 +7,7 @@
 namespace Js
 {
     //
-    // An enumerator to enumerate JavascriptArray index property names as uint32 indices.
+    // An enumerator to enumerate JavascriptArray index property names as uint32_t indices.
     //
     class JavascriptArrayIndexStaticEnumerator
     {
@@ -16,7 +16,7 @@ namespace Js
 
     private:
         JavascriptArray* m_array;       // The JavascriptArray to enumerate on
-        uint32 m_index;                 // Current index
+        uint32_t m_index;                 // Current index
 
     public:
         JavascriptArrayIndexStaticEnumerator(JavascriptArray* array)
@@ -39,7 +39,7 @@ namespace Js
         //
         // Get the current index. Valid only when MoveNext() returns true.
         //
-        uint32 GetIndex() const
+        uint32_t GetIndex() const
         {
             return m_index;
         }

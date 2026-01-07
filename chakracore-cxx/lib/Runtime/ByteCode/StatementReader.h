@@ -30,7 +30,7 @@ namespace Js
             TStatementMapList* fullstatementMap);
 
         inline bool AtStatementBoundary(ByteCodeReader * reader) { return m_nextStatementBoundary == reader->GetIP(); }
-        inline uint32 MoveNextStatementBoundary();
-        inline uint32 GetStatementIndex() const { return m_statementIndex; }
+        inline uint32_t MoveNextStatementBoundary();
+        inline uint32_t GetStatementIndex() const { return m_statementIndex; }
     };
 } // namespace Js

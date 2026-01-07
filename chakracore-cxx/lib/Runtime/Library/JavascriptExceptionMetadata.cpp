@@ -56,7 +56,7 @@ namespace Js {
     }
 
     bool JavascriptExceptionMetadata::PopulateMetadataFromException(Var metadata, JavascriptExceptionObject * recordedException, ScriptContext * scriptContext) {
-        uint32 offset = recordedException->GetByteCodeOffset();
+        uint32_t offset = recordedException->GetByteCodeOffset();
         FunctionBody * functionBody = recordedException->GetFunctionBody();
         uint32_t line;
         int32_t column;
@@ -75,7 +75,7 @@ namespace Js {
             return false;
         }
 
-        uint32 nextLine;
+        uint32_t nextLine;
         if (UInt32Math::Add(line, 1, &nextLine))
         {
             // Overflowed

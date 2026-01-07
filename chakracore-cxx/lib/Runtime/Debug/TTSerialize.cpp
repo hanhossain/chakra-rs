@@ -12,10 +12,10 @@ namespace TTD
     {
         void InitKeyNamesArray(const char16_t*** names, size_t** lengths)
         {
-            const char16_t** nameArray = TT_HEAP_ALLOC_ARRAY(const char16_t*, (uint32)Key::Count);
-            size_t* lengthArray = TT_HEAP_ALLOC_ARRAY(size_t, (uint32)Key::Count);
+            const char16_t** nameArray = TT_HEAP_ALLOC_ARRAY(const char16_t*, (uint32_t)Key::Count);
+            size_t* lengthArray = TT_HEAP_ALLOC_ARRAY(size_t, (uint32_t)Key::Count);
 
-#define ENTRY_SERIALIZE_ENUM(K) { nameArray[(uint32)Key::##K] = _u(#K); lengthArray[(uint32)Key::##K] = wcslen(_u(#K)); }
+#define ENTRY_SERIALIZE_ENUM(K) { nameArray[(uint32_t)Key::##K] = _u(#K); lengthArray[(uint32_t)Key::##K] = wcslen(_u(#K)); }
 #include "TTSerializeEnum.h"
 
             *names = nameArray;
@@ -26,13 +26,13 @@ namespace TTD
         {
             if(*names != nullptr)
             {
-                TT_HEAP_FREE_ARRAY(char16_t*, *names, (uint32)NSTokens::Key::Count);
+                TT_HEAP_FREE_ARRAY(char16_t*, *names, (uint32_t)NSTokens::Key::Count);
                 *names = nullptr;
             }
 
             if(*lengths != nullptr)
             {
-                TT_HEAP_FREE_ARRAY(size_t, *lengths, (uint32)NSTokens::Key::Count);
+                TT_HEAP_FREE_ARRAY(size_t, *lengths, (uint32_t)NSTokens::Key::Count);
                 *lengths = nullptr;
             }
         }
@@ -81,7 +81,7 @@ namespace TTD
         }
     }
 
-    void FileWriter::WriteLengthValue(uint32 length, NSTokens::Separator separator)
+    void FileWriter::WriteLengthValue(uint32_t length, NSTokens::Separator separator)
     {
         this->WriteKey(NSTokens::Key::count, separator);
         this->WriteNakedUInt32(length);
@@ -111,7 +111,7 @@ namespace TTD
         this->WriteNakedInt32(val);
     }
 
-    void FileWriter::WriteUInt32(NSTokens::Key key, uint32 val, NSTokens::Separator separator)
+    void FileWriter::WriteUInt32(NSTokens::Key key, uint32_t val, NSTokens::Separator separator)
     {
         this->WriteKey(key, separator);
         this->WriteNakedUInt32(val);
@@ -186,7 +186,7 @@ namespace TTD
             if((separator & NSTokens::Separator::BigSpaceSeparator) == NSTokens::Separator::BigSpaceSeparator)
             {
                 this->WriteRawChar(u'\n');
-                for(uint32 i = 0; i < this->m_indentSize; ++i)
+                for(uint32_t i = 0; i < this->m_indentSize; ++i)
                 {
                     this->WriteRawChar(u' ');
                     this->WriteRawChar(u' ');
@@ -201,7 +201,7 @@ namespace TTD
         if(separator == NSTokens::Separator::BigSpaceSeparator)
         {
             this->WriteRawChar(u'\n');
-            for(uint32 i = 0; i < this->m_indentSize; ++i)
+            for(uint32_t i = 0; i < this->m_indentSize; ++i)
             {
                 this->WriteRawChar(u' ');
                 this->WriteRawChar(u' ');
@@ -213,9 +213,9 @@ namespace TTD
     {
         this->WriteSeparator(separator);
 
-        TTDAssert(1 <= (uint32)key && (uint32)key < (uint32)NSTokens::Key::Count, "Key not in valid range!");
-        const char16_t* kname = this->m_keyNameArray[(uint32)key];
-        size_t ksize = this->m_keyNameLengthArray[(uint32)key];
+        TTDAssert(1 <= (uint32_t)key && (uint32_t)key < (uint32_t)NSTokens::Key::Count, "Key not in valid range!");
+        const char16_t* kname = this->m_keyNameArray[(uint32_t)key];
+        size_t ksize = this->m_keyNameLengthArray[(uint32_t)key];
 
         this->WriteRawCharBuff(kname, ksize);
         this->WriteRawChar(u':');
@@ -254,7 +254,7 @@ namespace TTD
         this->m_indentSize += delta;
     }
 
-    void TextFormatWriter::SetIndent(uint32 depth)
+    void TextFormatWriter::SetIndent(uint32_t depth)
     {
         this->m_indentSize = depth;
     }
@@ -269,7 +269,7 @@ namespace TTD
     void TextFormatWriter::WriteNakedByte(byte val, NSTokens::Separator separator)
     {
         this->WriteSeparator(separator);
-        this->WriteFormattedCharData(u"%I32u", (uint32)val);
+        this->WriteFormattedCharData(u"%I32u", (uint32_t)val);
     }
 
     void TextFormatWriter::WriteBool(NSTokens::Key key, bool val, NSTokens::Separator separator)
@@ -291,7 +291,7 @@ namespace TTD
         this->WriteFormattedCharData(u"%I32i", val);
     }
 
-    void TextFormatWriter::WriteNakedUInt32(uint32 val, NSTokens::Separator separator)
+    void TextFormatWriter::WriteNakedUInt32(uint32_t val, NSTokens::Separator separator)
     {
         this->WriteSeparator(separator);
         this->WriteFormattedCharData(u"%I32u", val);
@@ -367,7 +367,7 @@ namespace TTD
         this->WriteFormattedCharData(u"!%I64i", val);
     }
 
-    void TextFormatWriter::WriteNakedTag(uint32 tagvalue, NSTokens::Separator separator)
+    void TextFormatWriter::WriteNakedTag(uint32_t tagvalue, NSTokens::Separator separator)
     {
         this->WriteSeparator(separator);
         this->WriteFormattedCharData(u"$%I32i", tagvalue);
@@ -402,7 +402,7 @@ namespace TTD
         this->WriteRawChar(u'~');
     }
 
-    void TextFormatWriter::WriteInlineCode(_In_reads_(length) const char16_t* code, uint32 length, NSTokens::Separator separator)
+    void TextFormatWriter::WriteInlineCode(_In_reads_(length) const char16_t* code, uint32_t length, NSTokens::Separator separator)
     {
         this->WriteSeparator(separator);
 
@@ -413,7 +413,7 @@ namespace TTD
         this->WriteRawChar(u'\"');
     }
 
-    void TextFormatWriter::WriteInlinePropertyRecordName(_In_reads_(length) const char16_t* pname, uint32 length, NSTokens::Separator separator)
+    void TextFormatWriter::WriteInlinePropertyRecordName(_In_reads_(length) const char16_t* pname, uint32_t length, NSTokens::Separator separator)
     {
         this->WriteSeparator(separator);
 
@@ -478,7 +478,7 @@ namespace TTD
         ;
     }
 
-    void BinaryFormatWriter::SetIndent(uint32 depth)
+    void BinaryFormatWriter::SetIndent(uint32_t depth)
     {
         ;
     }
@@ -507,10 +507,10 @@ namespace TTD
         this->WriteRawByteBuff_Fixed<int32>(val);
     }
 
-    void BinaryFormatWriter::WriteNakedUInt32(uint32 val, NSTokens::Separator separator)
+    void BinaryFormatWriter::WriteNakedUInt32(uint32_t val, NSTokens::Separator separator)
     {
         this->WriteSeparator(separator);
-        this->WriteRawByteBuff_Fixed<uint32>(val);
+        this->WriteRawByteBuff_Fixed<uint32_t>(val);
     }
 
     void BinaryFormatWriter::WriteNakedInt64(long val, NSTokens::Separator separator)
@@ -543,10 +543,10 @@ namespace TTD
         this->WriteRawByteBuff_Fixed<TTD_LOG_PTR_ID>(val);
     }
 
-    void BinaryFormatWriter::WriteNakedTag(uint32 tagvalue, NSTokens::Separator separator)
+    void BinaryFormatWriter::WriteNakedTag(uint32_t tagvalue, NSTokens::Separator separator)
     {
         this->WriteSeparator(separator);
-        this->WriteRawByteBuff_Fixed<uint32>(tagvalue);
+        this->WriteRawByteBuff_Fixed<uint32_t>(tagvalue);
     }
 
     void BinaryFormatWriter::WriteNakedString(const TTString& val, NSTokens::Separator separator)
@@ -555,11 +555,11 @@ namespace TTD
 
         if(IsNullPtrTTString(val))
         {
-            this->WriteRawByteBuff_Fixed<uint32>(UINT32_MAX);
+            this->WriteRawByteBuff_Fixed<uint32_t>(UINT32_MAX);
         }
         else
         {
-            this->WriteRawByteBuff_Fixed<uint32>(val.Length);
+            this->WriteRawByteBuff_Fixed<uint32_t>(val.Length);
             this->WriteRawByteBuff((const byte*)val.Contents, val.Length * sizeof(char16_t));
         }
     }
@@ -568,24 +568,24 @@ namespace TTD
     {
         this->WriteSeparator(separator);
 
-        uint32 charLen = (uint32)wcslen(val);
-        this->WriteRawByteBuff_Fixed<uint32>(charLen);
+        uint32_t charLen = (uint32_t)wcslen(val);
+        this->WriteRawByteBuff_Fixed<uint32_t>(charLen);
         this->WriteRawByteBuff((const byte*)val, charLen * sizeof(char16_t));
     }
 
-    void BinaryFormatWriter::WriteInlineCode(_In_reads_(length) const char16_t* code, uint32 length, NSTokens::Separator separator)
+    void BinaryFormatWriter::WriteInlineCode(_In_reads_(length) const char16_t* code, uint32_t length, NSTokens::Separator separator)
     {
         this->WriteSeparator(separator);
 
-        this->WriteRawByteBuff_Fixed<uint32>(length);
+        this->WriteRawByteBuff_Fixed<uint32_t>(length);
         this->WriteRawByteBuff((const byte*)code, length * sizeof(char16_t));
     }
 
-    void BinaryFormatWriter::WriteInlinePropertyRecordName(_In_reads_(length) const char16_t* pname, uint32 length, NSTokens::Separator separator)
+    void BinaryFormatWriter::WriteInlinePropertyRecordName(_In_reads_(length) const char16_t* pname, uint32_t length, NSTokens::Separator separator)
     {
         this->WriteSeparator(separator);
 
-        this->WriteRawByteBuff_Fixed<uint32>(length);
+        this->WriteRawByteBuff_Fixed<uint32_t>(length);
         this->WriteRawByteBuff((const byte*)pname, length * sizeof(char16_t));
     }
 
@@ -622,7 +622,7 @@ namespace TTD
         }
     }
 
-    uint32 FileReader::ReadLengthValue(bool readSeparator)
+    uint32_t FileReader::ReadLengthValue(bool readSeparator)
     {
         this->ReadKey(NSTokens::Key::count, readSeparator);
         return this->ReadNakedUInt32();
@@ -652,7 +652,7 @@ namespace TTD
         return this->ReadNakedInt32();
     }
 
-    uint32 FileReader::ReadUInt32(NSTokens::Key keyCheck, bool readSeparator)
+    uint32_t FileReader::ReadUInt32(NSTokens::Key keyCheck, bool readSeparator)
     {
         this->ReadKey(keyCheck, readSeparator);
         return this->ReadNakedUInt32();
@@ -987,7 +987,7 @@ namespace TTD
 
         // Convert this number to get the length of the string (not including ""),
         // charList is already null-terminated by the call to ScanNumber.
-        uint32 length = (uint32)this->ReadUIntFromCharArray(charList.GetBuffer());
+        uint32_t length = (uint32_t)this->ReadUIntFromCharArray(charList.GetBuffer());
 
         //read the lead "\""
         ok = this->ReadRawChar(&c);
@@ -998,7 +998,7 @@ namespace TTD
 
         //read that many chars and check for the terminating "\""
         charList.Clear();
-        for(uint32 i = 0; i < length; ++i)
+        for(uint32_t i = 0; i < length; ++i)
         {
             ok = this->ReadRawChar(&c);
             if(!ok)
@@ -1123,7 +1123,7 @@ namespace TTD
         for(int32 i = digitCount - 1; i >= lastIdx; --i)
         {
             char16_t digit = buff[i];
-            uint32 digitValue = (digit - u'0');
+            uint32_t digitValue = (digit - u'0');
 
             value += (multiplier * digitValue);
             multiplier *= 10;
@@ -1141,7 +1141,7 @@ namespace TTD
         for(int32 i = digitCount - 1; i >= 0; --i)
         {
             char16_t digit = buff[i];
-            uint32 digitValue = (digit - u'0');
+            uint32_t digitValue = (digit - u'0');
 
             value += (multiplier * digitValue);
             multiplier *= 10;
@@ -1196,8 +1196,8 @@ namespace TTD
         const char16_t* keystr = this->m_charListPrimary.GetBuffer();
 
         //check key strings are the same
-        TTDAssert(1 <= (uint32)keyCheck && (uint32)keyCheck < (uint32)NSTokens::Key::Count, "Error in parse.");
-        const char16_t* kname = this->m_keyNameArray[(uint32)keyCheck];
+        TTDAssert(1 <= (uint32_t)keyCheck && (uint32_t)keyCheck < (uint32_t)NSTokens::Key::Count, "Error in parse.");
+        const char16_t* kname = this->m_keyNameArray[(uint32_t)keyCheck];
         TTDAssert(kname != nullptr, "Error in parse.");
         TTDAssert(wcscmp(keystr, kname) == 0, "Error in parse.");
 
@@ -1277,7 +1277,7 @@ namespace TTD
         return (int32)ival;
     }
 
-    uint32 TextFormatReader::ReadNakedUInt32(bool readSeparator)
+    uint32_t TextFormatReader::ReadNakedUInt32(bool readSeparator)
     {
         this->ReadSeparator(readSeparator);
 
@@ -1287,7 +1287,7 @@ namespace TTD
         unsigned long uval = this->ReadUIntFromCharArray(this->m_charListOpt.GetBuffer());
         TTDAssert(uval <= UINT32_MAX, "Error in parse.");
 
-        return (uint32)uval;
+        return (uint32_t)uval;
     }
 
     long TextFormatReader::ReadNakedInt64(bool readSeparator)
@@ -1370,7 +1370,7 @@ namespace TTD
         return (TTD_LOG_PTR_ID)this->ReadUIntFromCharArray(this->m_charListOpt.GetBuffer());
     }
 
-    uint32 TextFormatReader::ReadNakedTag(bool readSeparator)
+    uint32_t TextFormatReader::ReadNakedTag(bool readSeparator)
     {
         this->ReadSeparator(readSeparator);
 
@@ -1380,7 +1380,7 @@ namespace TTD
         unsigned long tval = this->ReadUIntFromCharArray(this->m_charListOpt.GetBuffer());
         TTDAssert(tval <= UINT32_MAX, "Error in parse.");
 
-        return (uint32)tval;
+        return (uint32_t)tval;
     }
 
     ////
@@ -1441,7 +1441,7 @@ namespace TTD
         return alloc.CopyRawNullTerminatedStringInto(this->m_charListOpt.GetBuffer() + 1);
     }
 
-    void TextFormatReader::ReadInlineCode(_Out_writes_(length) char16_t* code, uint32 length, bool readSeparator)
+    void TextFormatReader::ReadInlineCode(_Out_writes_(length) char16_t* code, uint32_t length, bool readSeparator)
     {
         this->ReadSeparator(readSeparator);
 
@@ -1559,12 +1559,12 @@ namespace TTD
         return i;
     }
 
-    uint32 BinaryFormatReader::ReadNakedUInt32(bool readSeparator)
+    uint32_t BinaryFormatReader::ReadNakedUInt32(bool readSeparator)
     {
         this->ReadSeparator(readSeparator);
 
-        uint32 i = 0;
-        this->ReadBytesInto_Fixed<uint32>(i);
+        uint32_t i = 0;
+        this->ReadBytesInto_Fixed<uint32_t>(i);
 
         return i;
     }
@@ -1619,12 +1619,12 @@ namespace TTD
         return tag;
     }
 
-    uint32 BinaryFormatReader::ReadNakedTag(bool readSeparator)
+    uint32_t BinaryFormatReader::ReadNakedTag(bool readSeparator)
     {
         this->ReadSeparator(readSeparator);
 
-        uint32 tag = 0;
-        this->ReadBytesInto_Fixed<uint32>(tag);
+        uint32_t tag = 0;
+        this->ReadBytesInto_Fixed<uint32_t>(tag);
 
         return tag;
     }
@@ -1633,8 +1633,8 @@ namespace TTD
     {
         this->ReadSeparator(readSeparator);
 
-        uint32 sizeField = 0;
-        this->ReadBytesInto_Fixed<uint32>(sizeField);
+        uint32_t sizeField = 0;
+        this->ReadBytesInto_Fixed<uint32_t>(sizeField);
 
         if(sizeField == UINT32_MAX)
         {
@@ -1652,8 +1652,8 @@ namespace TTD
     {
         this->ReadSeparator(readSeparator);
 
-        uint32 sizeField = 0;
-        this->ReadBytesInto_Fixed<uint32>(sizeField);
+        uint32_t sizeField = 0;
+        this->ReadBytesInto_Fixed<uint32_t>(sizeField);
 
         if(sizeField == UINT32_MAX)
         {
@@ -1671,8 +1671,8 @@ namespace TTD
     {
         this->ReadSeparator(readSeparator);
 
-        uint32 charLen = 0;
-        this->ReadBytesInto_Fixed<uint32>(charLen);
+        uint32_t charLen = 0;
+        this->ReadBytesInto_Fixed<uint32_t>(charLen);
 
         char16_t* cbuff = alloc.SlabAllocateArray<char16_t>(charLen + 1);
         this->ReadBytesInto((byte*)cbuff, charLen * sizeof(char16_t));
@@ -1685,8 +1685,8 @@ namespace TTD
     {
         this->ReadSeparator(readSeparator);
 
-        uint32 charLen = 0;
-        this->ReadBytesInto_Fixed<uint32>(charLen);
+        uint32_t charLen = 0;
+        this->ReadBytesInto_Fixed<uint32_t>(charLen);
 
         char16_t* cbuff = alloc.SlabAllocateArray<char16_t>(charLen + 1);
         this->ReadBytesInto((byte*)cbuff, charLen * sizeof(char16_t));
@@ -1695,10 +1695,10 @@ namespace TTD
         return cbuff;
     }
 
-    void BinaryFormatReader::ReadInlineCode(_Out_writes_(length) char16_t* code, uint32 length, bool readSeparator)
+    void BinaryFormatReader::ReadInlineCode(_Out_writes_(length) char16_t* code, uint32_t length, bool readSeparator)
     {
-        uint32 wlen = 0;
-        this->ReadBytesInto_Fixed<uint32>(wlen);
+        uint32_t wlen = 0;
+        this->ReadBytesInto_Fixed<uint32_t>(wlen);
         TTDAssert(wlen == length, "Not expected string length!!!");
 
         this->ReadBytesInto((byte*)code, length * sizeof(char16_t));
@@ -1726,11 +1726,11 @@ namespace TTD
         infoInto.TimeHash = infoFrom.TimeHash;
     }
 
-    void SetDiagnosticOriginInformation(DiagnosticOrigin& info, uint32 sourceLine, unsigned long eTime, unsigned long fTime, unsigned long lTime)
+    void SetDiagnosticOriginInformation(DiagnosticOrigin& info, uint32_t sourceLine, unsigned long eTime, unsigned long fTime, unsigned long lTime)
     {
         info.SourceLine = sourceLine;
-        info.EventTime = (uint32)eTime;
-        info.TimeHash = ((uint32)(lTime << 32)) | ((uint32)fTime);
+        info.EventTime = (uint32_t)eTime;
+        info.TimeHash = ((uint32_t)(lTime << 32)) | ((uint32_t)fTime);
     }
 
     void EmitDiagnosticOriginInformation(const DiagnosticOrigin& info, FileWriter* writer, NSTokens::Separator separator)
@@ -1753,13 +1753,13 @@ namespace TTD
 #endif
 
 #if ENABLE_BASIC_TRACE || ENABLE_FULL_BC_TRACE
-    void TraceLogger::AppendText(char* text, uint32 length)
+    void TraceLogger::AppendText(char* text, uint32_t length)
     {
         this->EnsureSpace(length);
         this->AppendRaw(text, length);
     }
 
-    void TraceLogger::AppendText(const char16_t* text, uint32 length)
+    void TraceLogger::AppendText(const char16_t* text, uint32_t length)
     {
         this->EnsureSpace(length);
         this->AppendRaw(text, length);
@@ -1767,7 +1767,7 @@ namespace TTD
 
     void TraceLogger::AppendIndent()
     {
-        uint32 totalIndent = this->m_indentSize * 2;
+        uint32_t totalIndent = this->m_indentSize * 2;
         while(totalIndent > TRACE_LOGGER_INDENT_BUFFER_SIZE)
         {
             this->EnsureSpace(TRACE_LOGGER_INDENT_BUFFER_SIZE);
@@ -1782,7 +1782,7 @@ namespace TTD
 
     void TraceLogger::AppendString(char* text)
     {
-        uint32 length = (uint32)strlen(text);
+        uint32_t length = (uint32_t)strlen(text);
         this->AppendText(text, length);
     }
 
@@ -1882,7 +1882,7 @@ namespace TTD
             this->AppendLiteral(", attrib: ");
             this->AppendInteger(attrib);
             this->AppendLiteral(", name: ");
-            this->AppendText(pname->GetString(), (uint32)pname->GetLength());
+            this->AppendText(pname->GetString(), (uint32_t)pname->GetLength());
         }
 
         this->AppendLiteral(")\n");
@@ -1978,13 +1978,13 @@ namespace TTD
         }
     }
 
-    void TraceLogger::WriteCall(Js::JavascriptFunction* function, bool isExternal, uint32 argc, Js::Var* argv, long etime)
+    void TraceLogger::WriteCall(Js::JavascriptFunction* function, bool isExternal, uint32_t argc, Js::Var* argv, long etime)
     {
         Js::JavascriptString* displayName = function->GetDisplayName();
 
         this->AppendIndent();
         const char16_t* nameStr = displayName->GetString();
-        uint32 nameLength = displayName->GetLength();
+        uint32_t nameLength = displayName->GetLength();
         this->AppendText(nameStr, nameLength);
 
         if(isExternal)
@@ -1996,7 +1996,7 @@ namespace TTD
             this->AppendLiteral("(");
         }
 
-        for(uint32 i = 0; i < argc; ++i)
+        for(uint32_t i = 0; i < argc; ++i)
         {
             if(i != 0)
             {
@@ -2051,7 +2051,7 @@ namespace TTD
         this->AppendLiteral("\n");
     }
 
-    void TraceLogger::WriteStmtIndex(uint32 line, uint32 column)
+    void TraceLogger::WriteStmtIndex(uint32_t line, uint32_t column)
     {
         this->AppendIndent();
 

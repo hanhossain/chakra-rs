@@ -93,13 +93,13 @@ namespace Js
         if (typedRegister)
         {
             Output::Print(u"    Implicit Arg Ins:\n    ======== =====\n    ");
-            uint32 iArgs[WAsmJs::LIMIT];
+            uint32_t iArgs[WAsmJs::LIMIT];
             typedRegister->GetArgumentStartIndex(iArgs);
-            uint32 iArg = iArgs[WAsmJs::INT32];
-            uint32 lArg = iArgs[WAsmJs::INT64];
-            uint32 dArg = iArgs[WAsmJs::FLOAT64];
-            uint32 fArg = iArgs[WAsmJs::FLOAT32];
-            uint32 simdArg = iArgs[WAsmJs::SIMD];
+            uint32_t iArg = iArgs[WAsmJs::INT32];
+            uint32_t lArg = iArgs[WAsmJs::INT64];
+            uint32_t dArg = iArgs[WAsmJs::FLOAT64];
+            uint32_t fArg = iArgs[WAsmJs::FLOAT32];
+            uint32_t simdArg = iArgs[WAsmJs::SIMD];
             for (ArgSlot i = 0; i < argCount; i++)
             {
                 AsmJsVarType var = funcInfo->GetArgType(i);
@@ -132,7 +132,7 @@ namespace Js
             Output::Print(u"\n");
         }
 
-        uint32 statementIndex = 0;
+        uint32_t statementIndex = 0;
         while (true)
         {
             while (statementReader.AtStatementBoundary(&reader))

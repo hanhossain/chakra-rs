@@ -882,7 +882,7 @@ namespace Js
         }
     }
 
-    BOOL ScriptContext::IsNumericPropertyId(PropertyId propertyId, uint32* value)
+    BOOL ScriptContext::IsNumericPropertyId(PropertyId propertyId, uint32_t* value)
     {
         BOOL isNumericPropertyId = threadContext->IsNumericPropertyId(propertyId, value);
 
@@ -897,7 +897,7 @@ namespace Js
                 return false;
             }
 
-            uint32 index;
+            uint32_t index;
             BOOL isIndex = JavascriptArray::GetIndex(name->GetBuffer(), &index);
             if (isNumericPropertyId != isIndex)
             {
@@ -908,7 +908,7 @@ namespace Js
             }
             else if (isNumericPropertyId)
             {
-                Assert((uint32)*value == index);
+                Assert((uint32_t)*value == index);
             }
         }
 #endif
@@ -2566,7 +2566,7 @@ ExitTempAllocator:
         return nullptr;
     }
 
-    JavascriptFunction* ScriptContext::GenerateRootFunction(ParseNodeProg * parseTree, uint sourceIndex, Parser* parser, uint32 grfscr, CompileScriptException * pse, const char16_t *rootDisplayName)
+    JavascriptFunction* ScriptContext::GenerateRootFunction(ParseNodeProg * parseTree, uint sourceIndex, Parser* parser, uint32_t grfscr, CompileScriptException * pse, const char16_t *rootDisplayName)
     {
         int32_t hr;
 

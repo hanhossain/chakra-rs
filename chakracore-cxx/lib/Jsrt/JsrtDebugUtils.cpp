@@ -49,7 +49,7 @@ void JsrtDebugUtils::AddLineColumnToObject(Js::DynamicObject* object, Js::Functi
         int32_t col = 0;
         if (functionBody->GetLineCharOffset(byteCodeOffset, &line, &col, false))
         {
-            JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::line, (uint32) line, functionBody->GetScriptContext());
+            JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::line, (uint32_t) line, functionBody->GetScriptContext());
             JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::column, (int32) col, functionBody->GetScriptContext());
         }
     }
@@ -88,7 +88,7 @@ void JsrtDebugUtils::AddLineCountToObject(Js::DynamicObject * object, Js::Utf8So
     utf8SourceInfo->EnsureLineOffsetCache();
 
     Assert(utf8SourceInfo->GetLineCount() < UINT32_MAX);
-    JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::lineCount, (uint32)utf8SourceInfo->GetLineCount(), utf8SourceInfo->GetScriptContext());
+    JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::lineCount, (uint32_t)utf8SourceInfo->GetLineCount(), utf8SourceInfo->GetScriptContext());
 }
 
 void JsrtDebugUtils::AddSourceToObject(Js::DynamicObject * object, Js::Utf8SourceInfo * utf8SourceInfo)
@@ -372,7 +372,7 @@ void JsrtDebugUtils::AddPropertyToObject(Js::DynamicObject * object, JsrtDebugPr
     JsrtDebugUtils::AddVarPropertyToObject(object, propertyId, Js::JavascriptNumber::ToVarNoCheck(value, scriptContext), scriptContext);
 }
 
-void JsrtDebugUtils::AddPropertyToObject(Js::DynamicObject * object, JsrtDebugPropertyId propertyId, uint32 value, Js::ScriptContext * scriptContext)
+void JsrtDebugUtils::AddPropertyToObject(Js::DynamicObject * object, JsrtDebugPropertyId propertyId, uint32_t value, Js::ScriptContext * scriptContext)
 {
     JsrtDebugUtils::AddVarPropertyToObject(object, propertyId, Js::JavascriptNumber::ToVarNoCheck(value, scriptContext), scriptContext);
 }

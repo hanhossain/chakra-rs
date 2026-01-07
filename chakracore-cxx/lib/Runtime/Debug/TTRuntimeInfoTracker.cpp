@@ -41,7 +41,7 @@ namespace TTD
         });
     }
 
-    ThreadContextTTD::ThreadContextTTD(ThreadContext* threadContext, void* runtimeHandle, uint32 snapInterval, uint32 snapHistoryLength)
+    ThreadContextTTD::ThreadContextTTD(ThreadContext* threadContext, void* runtimeHandle, uint32_t snapInterval, uint32_t snapHistoryLength)
         : m_threadCtx(threadContext), m_runtimeHandle(runtimeHandle), m_contextCreatedOrDestoyedInReplay(false),
         SnapInterval(snapInterval), SnapHistoryLength(snapHistoryLength),
         m_activeContext(nullptr), m_contextList(&HeapAllocator::Instance), m_ttdContextToExternalRefMap(&HeapAllocator::Instance),
@@ -238,11 +238,11 @@ namespace TTD
         });
     }
 
-    void ThreadContextTTD::SyncCtxtsAndRootsWithSnapshot_Replay(uint32 liveContextCount, TTD_LOG_PTR_ID* liveContextIdArray, uint32 liveRootCount, TTD_LOG_PTR_ID* liveRootIdArray)
+    void ThreadContextTTD::SyncCtxtsAndRootsWithSnapshot_Replay(uint32_t liveContextCount, TTD_LOG_PTR_ID* liveContextIdArray, uint32_t liveRootCount, TTD_LOG_PTR_ID* liveRootIdArray)
     {
         //First sync up the context list -- releasing any contexts that are not also there in our initial recording
         JsUtil::BaseHashSet<TTD_LOG_PTR_ID, HeapAllocator> lctxSet(&HeapAllocator::Instance);
-        for(uint32 i = 0; i < liveContextCount; ++i)
+        for(uint32_t i = 0; i < liveContextCount; ++i)
         {
             lctxSet.AddNew(liveContextIdArray[i]);
         }
@@ -273,7 +273,7 @@ namespace TTD
 
         //Now sync up the root list wrt. long lived roots that we recorded
         JsUtil::BaseHashSet<TTD_LOG_PTR_ID, HeapAllocator> refInfoMap(&HeapAllocator::Instance);
-        for(uint32 i = 0; i < liveRootCount; ++i)
+        for(uint32_t i = 0; i < liveRootCount; ++i)
         {
             refInfoMap.AddNew(liveRootIdArray[i]);
         }
@@ -332,7 +332,7 @@ namespace TTD
         }
     }
 
-    void ScriptContextTTD::AddToAsyncPendingList(Js::ArrayBuffer* trgt, uint32 index)
+    void ScriptContextTTD::AddToAsyncPendingList(Js::ArrayBuffer* trgt, uint32_t index)
     {
         TTDPendingAsyncBufferModification pending = { trgt, index };
         this->m_ttdPendingAsyncModList.Add(pending);
@@ -430,7 +430,7 @@ namespace TTD
 
         this->m_ttdFunctionBodyParentMap.AddNew(body, parent);
 
-        for(uint32 i = 0; i < body->GetNestedCount(); ++i)
+        for(uint32_t i = 0; i < body->GetNestedCount(); ++i)
         {
             Js::ParseableFunctionInfo* pfiMid = body->GetNestedFunctionForExecution(i);
             Js::FunctionBody* currfb = TTD::JsSupport::ForceAndGetFunctionBody(pfiMid);
@@ -450,7 +450,7 @@ namespace TTD
 
         this->m_ttdFunctionBodyParentMap.Remove(body);
 
-        for(uint32 i = 0; i < body->GetNestedCount(); ++i)
+        for(uint32_t i = 0; i < body->GetNestedCount(); ++i)
         {
             Js::ParseableFunctionInfo* pfiMid = body->GetNestedFunctionForExecution(i);
             Js::FunctionBody* currfb = TTD::JsSupport::ForceAndGetFunctionBody(pfiMid);
@@ -459,7 +459,7 @@ namespace TTD
         }
     }
 
-    void ScriptContextTTD::RegisterLoadedScript(Js::FunctionBody* body, uint32 bodyCtrId)
+    void ScriptContextTTD::RegisterLoadedScript(Js::FunctionBody* body, uint32_t bodyCtrId)
     {
         TTD::TopLevelFunctionInContextRelation relation;
         relation.TopLevelBodyCtr = bodyCtrId;
@@ -468,7 +468,7 @@ namespace TTD
         this->m_ttdTopLevelScriptLoad.Add(relation.ContextSpecificBodyPtrId, relation);
     }
 
-    void ScriptContextTTD::RegisterNewScript(Js::FunctionBody* body, uint32 bodyCtrId)
+    void ScriptContextTTD::RegisterNewScript(Js::FunctionBody* body, uint32_t bodyCtrId)
     {
         TTD::TopLevelFunctionInContextRelation relation;
         relation.TopLevelBodyCtr = bodyCtrId;
@@ -477,7 +477,7 @@ namespace TTD
         this->m_ttdTopLevelNewFunction.Add(relation.ContextSpecificBodyPtrId, relation);
     }
 
-    void ScriptContextTTD::RegisterEvalScript(Js::FunctionBody* body, uint32 bodyCtrId)
+    void ScriptContextTTD::RegisterEvalScript(Js::FunctionBody* body, uint32_t bodyCtrId)
     {
         TTD::TopLevelFunctionInContextRelation relation;
         relation.TopLevelBodyCtr = bodyCtrId;
@@ -523,7 +523,7 @@ namespace TTD
         return this->m_ttdFunctionBodyParentMap.LookupWithKey(body, nullptr);
     }
 
-    uint32 ScriptContextTTD::FindTopLevelCtrForBody(Js::FunctionBody* body) const
+    uint32_t ScriptContextTTD::FindTopLevelCtrForBody(Js::FunctionBody* body) const
     {
         Js::FunctionBody* rootBody = body;
         while(this->ResolveParentBody(rootBody) != nullptr)
@@ -561,7 +561,7 @@ namespace TTD
         return 0;
     }
 
-    Js::FunctionBody* ScriptContextTTD::FindRootBodyByTopLevelCtr(uint32 bodyCtrId) const
+    Js::FunctionBody* ScriptContextTTD::FindRootBodyByTopLevelCtr(uint32_t bodyCtrId) const
     {
         for(auto iter = this->m_ttdTopLevelScriptLoad.GetIterator(); iter.IsValid(); iter.MoveNext())
         {
@@ -620,10 +620,10 @@ namespace TTD
         TTDAssert(propertyList.Count() == 0, "This should be empty.");
 
         Js::ScriptContext* ctx = obj->GetScriptContext();
-        uint32 propcount = (uint32)obj->GetPropertyCount();
+        uint32_t propcount = (uint32_t)obj->GetPropertyCount();
 
         //get all of the properties
-        for(uint32 i = 0; i < propcount; ++i)
+        for(uint32_t i = 0; i < propcount; ++i)
         {
             Js::PropertyIndex propertyIndex = (Js::PropertyIndex)i;
             Js::PropertyId propertyId = obj->GetPropertyId(propertyIndex);
@@ -641,7 +641,7 @@ namespace TTD
         const int32 gaps[6] = { 132, 57, 23, 10, 4, 1 };
 
         int32 llen = propertyList.Count();
-        for(uint32 gapi = 0; gapi < 6; ++gapi)
+        for(uint32_t gapi = 0; gapi < 6; ++gapi)
         {
             int32 gap = gaps[gapi];
 
@@ -803,7 +803,7 @@ namespace TTD
         this->EnqueueRootPathObject(u"_generatorFunctionConstructor", ctx->GetLibrary()->GetGeneratorFunctionConstructor());
         this->EnqueueRootPathObject(u"_asyncFunctionConstructor", ctx->GetLibrary()->GetAsyncFunctionConstructor());
 
-        uint32 counter = 0;
+        uint32_t counter = 0;
         while(!this->m_worklist.Empty())
         {
             Js::RecyclableObject* curr = this->m_worklist.Dequeue();
@@ -939,7 +939,7 @@ namespace TTD
         }
     }
 
-    void RuntimeContextInfo::AddWellKnownDebuggerScopePath(Js::RecyclableObject* parent, Js::DebuggerScope* dbgScope, uint32 index)
+    void RuntimeContextInfo::AddWellKnownDebuggerScopePath(Js::RecyclableObject* parent, Js::DebuggerScope* dbgScope, uint32_t index)
     {
         if(!this->m_coreDbgScopeToPathMap.ContainsKey(dbgScope))
         {
@@ -955,21 +955,21 @@ namespace TTD
         }
     }
 
-    void RuntimeContextInfo::BuildArrayIndexBuffer(uint32 arrayidx, UtilSupport::TTAutoString& res)
+    void RuntimeContextInfo::BuildArrayIndexBuffer(uint32_t arrayidx, UtilSupport::TTAutoString& res)
     {
         res.Append(u"!arrayContents[");
         res.Append(arrayidx);
         res.Append(u"]");
     }
 
-    void RuntimeContextInfo::BuildEnvironmentIndexBuffer(uint32 envidx, UtilSupport::TTAutoString& res)
+    void RuntimeContextInfo::BuildEnvironmentIndexBuffer(uint32_t envidx, UtilSupport::TTAutoString& res)
     {
         res.Append(u"!env[");
         res.Append(envidx);
         res.Append(u"]");
     }
 
-    void RuntimeContextInfo::BuildEnvironmentIndexAndSlotBuffer(uint32 envidx, uint32 slotidx, UtilSupport::TTAutoString& res)
+    void RuntimeContextInfo::BuildEnvironmentIndexAndSlotBuffer(uint32_t envidx, uint32_t slotidx, UtilSupport::TTAutoString& res)
     {
         res.Append(u"!env[");
         res.Append(envidx);

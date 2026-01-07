@@ -395,7 +395,7 @@ LblDone:
         //
 
         int nValue      = ToInt32(aLeft);
-        uint32 nShift   = ToUInt32(aRight);
+        uint32_t nShift   = ToUInt32(aRight);
 
         return JavascriptNumber::ToVar(nValue << (nShift & 0x1F),scriptContext);
     }
@@ -409,7 +409,7 @@ LblDone:
         //
 
         int nValue      = ToInt32(aLeft);
-        uint32 nShift   = ToUInt32(aRight);
+        uint32_t nShift   = ToUInt32(aRight);
 
         return ToVarUnchecked(nValue >> (nShift & 0x1F));
     }
@@ -422,8 +422,8 @@ LblDone:
         // directly.
         //
 
-        uint32 uValue   = ToUInt32(aLeft);
-        uint32 nShift   = ToUInt32(aRight);
+        uint32_t uValue   = ToUInt32(aLeft);
+        uint32_t nShift   = ToUInt32(aRight);
 
         return JavascriptNumber::ToVar(uValue >> (nShift & 0x1F), scriptContext);
     }
@@ -635,7 +635,7 @@ LblDone:
         return (nValue < k_nMinValue) || (nValue > k_nMaxValue);
     }
 
-    bool TaggedInt::IsOverflow(uint32 nValue)
+    bool TaggedInt::IsOverflow(uint32_t nValue)
     {
         return nValue > k_nMaxValue;
     }
@@ -673,7 +673,7 @@ LblDone:
 
     bool TaggedInt::IsPair(Var aLeft, Var aRight)
     {
-        uint32 tags = (uint32)((unsigned long)aLeft >> 32 | (unsigned long)aRight >> 48);
+        uint32_t tags = (uint32_t)((unsigned long)aLeft >> 32 | (unsigned long)aRight >> 48);
         bool result = (tags == AtomTag_Pair);
         AssertMsg(result == (TaggedInt::Is(aLeft) && TaggedInt::Is(aRight)), "TaggedInt::IsPair() logic is incorrect");
         return result;
@@ -693,11 +693,11 @@ LblDone:
         return (int32)aValue;
     }
 
-    uint32 TaggedInt::ToUInt32(Var aValue)
+    uint32_t TaggedInt::ToUInt32(Var aValue)
     {
         AssertMsg(Is(aValue), "Ensure var is actually a 'TaggedInt'");
 
-        return ::Math::PointerCastToIntegralTruncate<uint32>(aValue);
+        return ::Math::PointerCastToIntegralTruncate<uint32_t>(aValue);
     }
 
     long TaggedInt::ToInt64(Var aValue)
@@ -726,13 +726,13 @@ LblDone:
     Var TaggedInt::ToVarUnchecked(int nValue)
     {
         //
-        // To convert to a var we first cast to uint32 to lose the signedness and then
+        // To convert to a var we first cast to uint32_t to lose the signedness and then
         // extend it to a 64-bit uintptr_t before OR'ing the 64-bit atom tag.
         //
 
         AssertMsg(!IsOverflow(nValue), "Ensure no information loss from conversion");
 
-        return reinterpret_cast<Var>(((uintptr_t)(uint32)nValue) | AtomTag_IntPtr);
+        return reinterpret_cast<Var>(((uintptr_t)(uint32_t)nValue) | AtomTag_IntPtr);
     }
 
 #else
@@ -771,14 +771,14 @@ LblDone:
         return ((int) aValue) >> VarTag_Shift;
     }
 
-    uint32 TaggedInt::ToUInt32(Var aValue)
+    uint32_t TaggedInt::ToUInt32(Var aValue)
     {
         //
         // To convert from a var, must use ToInt32() to properly sign-extend negative values, then
-        // convert to an (unsigned) uint32.
+        // convert to an (unsigned) uint32_t.
         //
 
-        return (uint32) ToInt32(aValue);
+        return (uint32_t) ToInt32(aValue);
     }
 
     long TaggedInt::ToInt64(Var aValue)

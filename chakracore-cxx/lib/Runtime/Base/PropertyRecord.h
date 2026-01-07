@@ -51,7 +51,7 @@ namespace Js
         PropertyRecord(const char16_t* buffer, const int length, uint32_t bytelength, bool isSymbol);
         PropertyRecord() { Assert(false); } // never used, needed by compiler for BuiltInPropertyRecord
 
-        static bool IsPropertyNameNumeric(const char16_t* str, int length, uint32* intVal);
+        static bool IsPropertyNameNumeric(const char16_t* str, int length, uint32_t* intVal);
     public:
 #ifdef DEBUG
         static bool IsPropertyNameNumeric(const char16_t* str, int length);
@@ -73,7 +73,7 @@ namespace Js
         }
 
         bool IsNumeric() const { return isNumeric; }
-        uint32 GetNumericValue() const;
+        uint32_t GetNumericValue() const;
 
         bool IsBound() const { return isBound; }
         bool IsSymbol() const { return isSymbol; }

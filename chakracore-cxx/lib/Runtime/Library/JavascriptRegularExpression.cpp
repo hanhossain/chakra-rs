@@ -838,7 +838,7 @@ using namespace Js;
         // However, there doesn't seem to be any reason why "limit" processing can't be pulled above the rest
         // in the spec. Therefore, we should see if such a spec update is OK. If not, this would have to be
         // moved to its correct place in the code.
-        uint32 limit = (args.Info.Count < 3 || JavascriptOperators::IsUndefinedObject(args[2]))
+        uint32_t limit = (args.Info.Count < 3 || JavascriptOperators::IsUndefinedObject(args[2]))
             ? UINT_MAX
             : JavascriptConversion::ToUInt32(args[2], scriptContext);
 
@@ -1546,7 +1546,7 @@ using namespace Js;
 
 #undef IS_WRITABLE
     }
-    BOOL JavascriptRegExp::GetSpecialPropertyName(uint32 index, JavascriptString ** propertyName, ScriptContext * requestContext)
+    BOOL JavascriptRegExp::GetSpecialPropertyName(uint32_t index, JavascriptString ** propertyName, ScriptContext * requestContext)
     {
         uint length = GetSpecialPropertyCount();
 

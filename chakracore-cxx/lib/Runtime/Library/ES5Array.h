@@ -42,15 +42,15 @@ namespace Js
         bool GetSetterBuiltIns(PropertyId propertyId, PropertyValueInfo* info, DescriptorFlags* result);
 
     public:
-        static uint32 ToLengthValue(Var value, ScriptContext* scriptContext);
+        static uint32_t ToLengthValue(Var value, ScriptContext* scriptContext);
         bool IsLengthWritable() const;
 
         virtual DynamicType* DuplicateType() override;
 
         // Enumerate
         BOOL IsValidDescriptorToken(void * descriptorValidationToken) const;
-        uint32 GetNextDescriptor(uint32 key, IndexPropertyDescriptor** descriptor, void ** descriptorValidationToken);
-        BOOL GetDescriptor(uint32 index, Js::IndexPropertyDescriptor **ppDescriptor);
+        uint32_t GetNextDescriptor(uint32_t key, IndexPropertyDescriptor** descriptor, void ** descriptorValidationToken);
+        BOOL GetDescriptor(uint32_t index, Js::IndexPropertyDescriptor **ppDescriptor);
 
         //
         // To skip JavascriptArray overrides
@@ -69,15 +69,15 @@ namespace Js
         virtual BOOL SetProperty(JavascriptString* propertyNameString, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
         virtual BOOL SetPropertyWithAttributes(PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags = PropertyOperation_None, SideEffects possibleSideEffects = SideEffects_Any) override;
 
-        virtual PropertyQueryFlags HasItemQuery(uint32 index) override;
-        virtual PropertyQueryFlags GetItemQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext) override;
-        virtual PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext) override;
-        virtual BOOL SetItem(uint32 index, Var value, PropertyOperationFlags flags) override;
-        virtual BOOL DeleteItem(uint32 index, PropertyOperationFlags flags) override;
+        virtual PropertyQueryFlags HasItemQuery(uint32_t index) override;
+        virtual PropertyQueryFlags GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
+        virtual PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
+        virtual BOOL SetItem(uint32_t index, Var value, PropertyOperationFlags flags) override;
+        virtual BOOL DeleteItem(uint32_t index, PropertyOperationFlags flags) override;
         virtual DescriptorFlags GetSetter(PropertyId propertyId, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
         virtual DescriptorFlags GetSetter(JavascriptString* propertyNameString, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
 
-        virtual DescriptorFlags GetItemSetter(uint32 index, Var* setterValue, ScriptContext* requestContext) override;
+        virtual DescriptorFlags GetItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext) override;
 
         virtual BOOL SetAccessors(PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags) override;
         virtual BOOL PreventExtensions() override;
@@ -87,14 +87,14 @@ namespace Js
         virtual BOOL GetEnumerator(JavascriptStaticEnumerator * enumerator, EnumeratorFlags flags, ScriptContext* requestContext, EnumeratorCache * enumeratorCache = nullptr) override;
 
         // objectArray support
-        virtual BOOL SetItemWithAttributes(uint32 index, Var value, PropertyAttributes attributes) override;
-        virtual BOOL SetItemAttributes(uint32 index, PropertyAttributes attributes) override;
-        virtual BOOL SetItemAccessors(uint32 index, Var getter, Var setter) override;
+        virtual BOOL SetItemWithAttributes(uint32_t index, Var value, PropertyAttributes attributes) override;
+        virtual BOOL SetItemAttributes(uint32_t index, PropertyAttributes attributes) override;
+        virtual BOOL SetItemAccessors(uint32_t index, Var getter, Var setter) override;
         virtual BOOL IsObjectArrayFrozen() override;
         virtual JavascriptEnumerator * GetIndexEnumerator(EnumeratorFlags flags, ScriptContext* requestContext) override;
 
         // for SCA
-        virtual BOOL IsItemEnumerable(uint32 index) override;
+        virtual BOOL IsItemEnumerable(uint32_t index) override;
 
 #if ENABLE_TTD
     public:

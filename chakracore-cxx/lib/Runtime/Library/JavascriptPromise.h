@@ -175,7 +175,7 @@ namespace Js
 
     struct JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper
     {
-        Field(uint32) remainingElements;
+        Field(uint32_t) remainingElements;
     };
 
     class JavascriptPromiseAllResolveElementFunction : public RuntimeFunction
@@ -186,20 +186,20 @@ namespace Js
 
     public:
         JavascriptPromiseAllResolveElementFunction(DynamicType* type);
-        JavascriptPromiseAllResolveElementFunction(DynamicType* type, FunctionInfo* functionInfo, uint32 index, JavascriptArray* values, JavascriptPromiseCapability* capabilities, JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* remainingElementsWrapper);
+        JavascriptPromiseAllResolveElementFunction(DynamicType* type, FunctionInfo* functionInfo, uint32_t index, JavascriptArray* values, JavascriptPromiseCapability* capabilities, JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* remainingElementsWrapper);
 
         JavascriptPromiseCapability* GetCapabilities();
-        uint32 GetIndex();
-        uint32 GetRemainingElements();
+        uint32_t GetIndex();
+        uint32_t GetRemainingElements();
         JavascriptArray* GetValues();
         bool IsAlreadyCalled() const;
         void SetAlreadyCalled(const bool is);
 
-        uint32 DecrementRemainingElements();
+        uint32_t DecrementRemainingElements();
 
     protected:
         Field(JavascriptPromiseCapability*) capabilities;
-        Field(uint32) index;
+        Field(uint32_t) index;
         Field(JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper*) remainingElementsWrapper;
         Field(JavascriptArray*) values;
         Field(bool) alreadyCalled;
@@ -223,7 +223,7 @@ namespace Js
 
     public:
         JavascriptPromiseAllSettledResolveOrRejectElementFunction(DynamicType* type);
-        JavascriptPromiseAllSettledResolveOrRejectElementFunction(DynamicType* type, FunctionInfo* functionInfo, uint32 index, JavascriptArray* values, JavascriptPromiseCapability* capabilities, JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* remainingElementsWrapper, JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* alreadyCalledWrapper, bool isRejecting);
+        JavascriptPromiseAllSettledResolveOrRejectElementFunction(DynamicType* type, FunctionInfo* functionInfo, uint32_t index, JavascriptArray* values, JavascriptPromiseCapability* capabilities, JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* remainingElementsWrapper, JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* alreadyCalledWrapper, bool isRejecting);
 
         bool IsAlreadyCalled() const;
         void SetAlreadyCalled(const bool is);
@@ -482,7 +482,7 @@ namespace Js
         virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
         virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
 
-        static JavascriptPromise* InitializePromise_TTD(ScriptContext* scriptContext, uint32 status, bool isHandled, Var result, SList<Js::JavascriptPromiseReaction*, HeapAllocator>& resolveReactions, SList<Js::JavascriptPromiseReaction*, HeapAllocator>& rejectReactions);
+        static JavascriptPromise* InitializePromise_TTD(ScriptContext* scriptContext, uint32_t status, bool isHandled, Var result, SList<Js::JavascriptPromiseReaction*, HeapAllocator>& resolveReactions, SList<Js::JavascriptPromiseReaction*, HeapAllocator>& rejectReactions);
 #endif
     };
 
@@ -498,7 +498,7 @@ namespace Js
 
     public:
         JavascriptPromiseAnyRejectElementFunction(DynamicType* type);
-        JavascriptPromiseAnyRejectElementFunction(DynamicType* type, FunctionInfo* functionInfo, uint32 index, JavascriptArray* values, JavascriptPromiseCapability* capabilities, JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* remainingElementsWrapper, JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* alreadyCalledWrapper);
+        JavascriptPromiseAnyRejectElementFunction(DynamicType* type, FunctionInfo* functionInfo, uint32_t index, JavascriptArray* values, JavascriptPromiseCapability* capabilities, JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* remainingElementsWrapper, JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* alreadyCalledWrapper);
 
     private:
         Field(JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper*) alreadyCalledWrapper;

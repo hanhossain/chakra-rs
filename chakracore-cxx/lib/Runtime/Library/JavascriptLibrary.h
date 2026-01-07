@@ -119,11 +119,11 @@ namespace Js
 #if ENABLE_COPYONACCESS_ARRAY
     struct CacheForCopyOnAccessArraySegments
     {
-        static const uint32 MAX_SIZE = 31;
+        static const uint32_t MAX_SIZE = 31;
         Field(SparseArraySegment<int32> *) cache[MAX_SIZE];
-        Field(uint32) count;
+        Field(uint32_t) count;
 
-        uint32 AddSegment(SparseArraySegment<int32> *segment)
+        uint32_t AddSegment(SparseArraySegment<int32> *segment)
         {
             cache[count++] = segment;
             return count;
@@ -142,16 +142,16 @@ namespace Js
 
         bool IsNotFull()
         {
-            return count < (uint32) CONFIG_FLAG(CopyOnAccessArraySegmentCacheSize);
+            return count < (uint32_t) CONFIG_FLAG(CopyOnAccessArraySegmentCacheSize);
         }
 
-        bool IsValidIndex(uint32 index)
+        bool IsValidIndex(uint32_t index)
         {
             return count && index && index <= count;
         }
 
 #if ENABLE_DEBUG_CONFIG_OPTIONS
-        uint32 GetCount()
+        uint32_t GetCount()
         {
             return count;
         }
@@ -633,7 +633,7 @@ namespace Js
         void SetBoxedObjectValue_TTD(Js::RecyclableObject* obj, Js::Var value);
 
         Js::RecyclableObject* CreateDate_TTD(double value);
-        Js::RecyclableObject* CreateRegex_TTD(const char16_t* patternSource, uint32 patternLength, UnifiedRegex::RegexFlags flags, CharCount lastIndex, Js::Var lastVar);
+        Js::RecyclableObject* CreateRegex_TTD(const char16_t* patternSource, uint32_t patternLength, UnifiedRegex::RegexFlags flags, CharCount lastIndex, Js::Var lastVar);
         Js::RecyclableObject* CreateError_TTD();
 
         Js::RecyclableObject* CreateES5Array_TTD();
@@ -651,26 +651,26 @@ namespace Js
 
         Js::RecyclableObject* CreateExternalFunction_TTD(Js::Var fname);
         Js::RecyclableObject* CreateBoundFunction_TTD(
-                RecyclableObject* function, Var bThis, uint32 ct, Field(Var)* args);
+                RecyclableObject* function, Var bThis, uint32_t ct, Field(Var)* args);
 
         Js::RecyclableObject* CreateProxy_TTD(RecyclableObject* handler, RecyclableObject* target);
         Js::RecyclableObject* CreateRevokeFunction_TTD(RecyclableObject* proxy);
 
-        Js::RecyclableObject* CreateHeapArguments_TTD(uint32 numOfArguments, uint32 formalCount, ActivationObject* frameObject, byte* deletedArray);
-        Js::RecyclableObject* CreateES5HeapArguments_TTD(uint32 numOfArguments, uint32 formalCount, ActivationObject* frameObject, byte* deletedArray);
+        Js::RecyclableObject* CreateHeapArguments_TTD(uint32_t numOfArguments, uint32_t formalCount, ActivationObject* frameObject, byte* deletedArray);
+        Js::RecyclableObject* CreateES5HeapArguments_TTD(uint32_t numOfArguments, uint32_t formalCount, ActivationObject* frameObject, byte* deletedArray);
 
         Js::JavascriptPromiseCapability* CreatePromiseCapability_TTD(Var promise, Var resolve, Var reject);
         Js::JavascriptPromiseReaction* CreatePromiseReaction_TTD(RecyclableObject* handler, JavascriptPromiseCapability* capabilities);
 
-        Js::RecyclableObject* CreatePromise_TTD(uint32 status, bool isHandled, Var result, SList<Js::JavascriptPromiseReaction*, HeapAllocator>& resolveReactions, SList<Js::JavascriptPromiseReaction*, HeapAllocator>& rejectReactions);
+        Js::RecyclableObject* CreatePromise_TTD(uint32_t status, bool isHandled, Var result, SList<Js::JavascriptPromiseReaction*, HeapAllocator>& resolveReactions, SList<Js::JavascriptPromiseReaction*, HeapAllocator>& rejectReactions);
         JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* CreateAlreadyDefinedWrapper_TTD(bool alreadyDefined);
         Js::RecyclableObject* CreatePromiseResolveOrRejectFunction_TTD(RecyclableObject* promise, bool isReject, JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* alreadyResolved);
         Js::RecyclableObject* CreatePromiseReactionTaskFunction_TTD(JavascriptPromiseReaction* reaction, Var argument);
 
-        Js::JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* CreateRemainingElementsWrapper_TTD(Js::ScriptContext* ctx, uint32 value);
+        Js::JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* CreateRemainingElementsWrapper_TTD(Js::ScriptContext* ctx, uint32_t value);
         Js::JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* CreateAlreadyCalledWrapper_TTD(Js::ScriptContext* ctx, bool value);
-        Js::RecyclableObject* CreatePromiseAllResolveElementFunction_TTD(Js::JavascriptPromiseCapability* capabilities, uint32 index, Js::JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* wrapper, Js::RecyclableObject* values, bool alreadyCalled);
-        Js::RecyclableObject* CreatePromiseAllSettledResolveOrRejectElementFunction_TTD(Js::JavascriptPromiseCapability* capabilities, uint32 index, Js::JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* wrapper, Js::RecyclableObject* values, JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* alreadyCalledWrapper, bool isRejecting);
+        Js::RecyclableObject* CreatePromiseAllResolveElementFunction_TTD(Js::JavascriptPromiseCapability* capabilities, uint32_t index, Js::JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* wrapper, Js::RecyclableObject* values, bool alreadyCalled);
+        Js::RecyclableObject* CreatePromiseAllSettledResolveOrRejectElementFunction_TTD(Js::JavascriptPromiseCapability* capabilities, uint32_t index, Js::JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* wrapper, Js::RecyclableObject* values, JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* alreadyCalledWrapper, bool isRejecting);
         Js::RecyclableObject* CreateJavascriptGenerator_TTD(Js::ScriptContext *ctx,
                                                             Js::RecyclableObject *prototype, Js::Arguments &arguments,
                                                             Js::JavascriptGenerator::GeneratorState generatorState);
@@ -837,35 +837,35 @@ namespace Js
 
         HeapArgumentsObject* CreateHeapArguments(Var frameObj, uint formalCount, bool isStrictMode = false);
         JavascriptArray* CreateArray();
-        JavascriptArray* CreateArray(uint32 length);
+        JavascriptArray* CreateArray(uint32_t length);
         JavascriptArray *CreateArrayOnStack(void *const stackAllocationPointer);
         JavascriptNativeIntArray* CreateNativeIntArray();
-        JavascriptNativeIntArray* CreateNativeIntArray(uint32 length);
+        JavascriptNativeIntArray* CreateNativeIntArray(uint32_t length);
 #if ENABLE_COPYONACCESS_ARRAY
         JavascriptCopyOnAccessNativeIntArray* CreateCopyOnAccessNativeIntArray();
-        JavascriptCopyOnAccessNativeIntArray* CreateCopyOnAccessNativeIntArray(uint32 length);
+        JavascriptCopyOnAccessNativeIntArray* CreateCopyOnAccessNativeIntArray(uint32_t length);
 #endif
         JavascriptNativeFloatArray* CreateNativeFloatArray();
-        JavascriptNativeFloatArray* CreateNativeFloatArray(uint32 length);
-        JavascriptArray* CreateArray(uint32 length, uint32 size);
-        ArrayBuffer* CreateArrayBuffer(uint32 length);
-        ArrayBuffer* CreateArrayBuffer(byte* buffer, uint32 length);
-        ArrayBuffer* CreateArrayBuffer(RefCountedBuffer* buffer, uint32 length);
+        JavascriptNativeFloatArray* CreateNativeFloatArray(uint32_t length);
+        JavascriptArray* CreateArray(uint32_t length, uint32_t size);
+        ArrayBuffer* CreateArrayBuffer(uint32_t length);
+        ArrayBuffer* CreateArrayBuffer(byte* buffer, uint32_t length);
+        ArrayBuffer* CreateArrayBuffer(RefCountedBuffer* buffer, uint32_t length);
 #ifdef ENABLE_WASM
-        class WebAssemblyArrayBuffer* CreateWebAssemblyArrayBuffer(uint32 length);
-        class WebAssemblyArrayBuffer* CreateWebAssemblyArrayBuffer(byte* buffer, uint32 length);
+        class WebAssemblyArrayBuffer* CreateWebAssemblyArrayBuffer(uint32_t length);
+        class WebAssemblyArrayBuffer* CreateWebAssemblyArrayBuffer(byte* buffer, uint32_t length);
 #ifdef ENABLE_WASM_THREADS
-        class WebAssemblySharedArrayBuffer* CreateWebAssemblySharedArrayBuffer(uint32 length, uint32 maxLength);
+        class WebAssemblySharedArrayBuffer* CreateWebAssemblySharedArrayBuffer(uint32_t length, uint32_t maxLength);
         class WebAssemblySharedArrayBuffer* CreateWebAssemblySharedArrayBuffer(SharedContents *contents);
 #endif
 #endif
-        SharedArrayBuffer* CreateSharedArrayBuffer(uint32 length);
+        SharedArrayBuffer* CreateSharedArrayBuffer(uint32_t length);
         SharedArrayBuffer* CreateSharedArrayBuffer(SharedContents *contents);
-        ArrayBuffer* CreateProjectionArraybuffer(uint32 length);
-        ArrayBuffer* CreateProjectionArraybuffer(byte* buffer, uint32 length);
-        ArrayBuffer* CreateProjectionArraybuffer(RefCountedBuffer* buffer, uint32 length);
-        ArrayBuffer* CreateExternalArrayBuffer(RefCountedBuffer* buffer, uint32 length);
-        DataView* CreateDataView(ArrayBufferBase* arrayBuffer, uint32 offSet, uint32 mappedLength);
+        ArrayBuffer* CreateProjectionArraybuffer(uint32_t length);
+        ArrayBuffer* CreateProjectionArraybuffer(byte* buffer, uint32_t length);
+        ArrayBuffer* CreateProjectionArraybuffer(RefCountedBuffer* buffer, uint32_t length);
+        ArrayBuffer* CreateExternalArrayBuffer(RefCountedBuffer* buffer, uint32_t length);
+        DataView* CreateDataView(ArrayBufferBase* arrayBuffer, uint32_t offSet, uint32_t mappedLength);
 
         template <typename TypeName, bool clamped>
         inline DynamicType* GetTypedArrayType(TypeName);
@@ -876,7 +876,7 @@ namespace Js
         template<> inline DynamicType* GetTypedArrayType<int16,false>(int16) { return int16ArrayType; };
         template<> inline DynamicType* GetTypedArrayType<uint16,false>(uint16) { return uint16ArrayType; };
         template<> inline DynamicType* GetTypedArrayType<int32,false>(int32) { return int32ArrayType; };
-        template<> inline DynamicType* GetTypedArrayType<uint32,false>(uint32) { return uint32ArrayType; };
+        template<> inline DynamicType* GetTypedArrayType<uint32_t,false>(uint32_t) { return uint32ArrayType; };
         template<> inline DynamicType* GetTypedArrayType<float,false>(float) { return float32ArrayType; };
         template<> inline DynamicType* GetTypedArrayType<double,false>(double) { return float64ArrayType; };
         template<> inline DynamicType* GetTypedArrayType<long,false>(long) { return int64ArrayType; };
@@ -889,14 +889,14 @@ namespace Js
         // This method would be used for creating array literals, when we really need to create a huge array
         // Avoids checks at runtime.
         //
-        JavascriptArray*            CreateArrayLiteral(uint32 length);
-        JavascriptNativeIntArray*   CreateNativeIntArrayLiteral(uint32 length);
+        JavascriptArray*            CreateArrayLiteral(uint32_t length);
+        JavascriptNativeIntArray*   CreateNativeIntArrayLiteral(uint32_t length);
 
 #if ENABLE_PROFILE_INFO
         JavascriptNativeIntArray*   CreateCopyOnAccessNativeIntArrayLiteral(ArrayCallSiteInfo *arrayInfo, FunctionBody *functionBody, const Js::AuxArray<int32> *ints);
 #endif
 
-        JavascriptNativeFloatArray* CreateNativeFloatArrayLiteral(uint32 length);
+        JavascriptNativeFloatArray* CreateNativeFloatArrayLiteral(uint32_t length);
 
         JavascriptBoolean* CreateBoolean(BOOL value);
         JavascriptDate* CreateDate();
@@ -1017,9 +1017,9 @@ namespace Js
         JavascriptPromiseResolveOrRejectFunction* CreatePromiseResolveOrRejectFunction(JavascriptMethod entryPoint, JavascriptPromise* promise, bool isReject, JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* alreadyResolvedRecord);
         JavascriptPromiseReactionTaskFunction* CreatePromiseReactionTaskFunction(JavascriptMethod entryPoint, JavascriptPromiseReaction* reaction, Var argument);
         JavascriptPromiseResolveThenableTaskFunction* CreatePromiseResolveThenableTaskFunction(JavascriptMethod entryPoint, JavascriptPromise* promise, RecyclableObject* thenable, RecyclableObject* thenFunction);
-        JavascriptPromiseAllResolveElementFunction* CreatePromiseAllResolveElementFunction(JavascriptMethod entryPoint, uint32 index, JavascriptArray* values, JavascriptPromiseCapability* capabilities, JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* remainingElements);
-        JavascriptPromiseAnyRejectElementFunction* CreatePromiseAnyRejectElementFunction(JavascriptMethod entryPoint, uint32 index, JavascriptArray* errors, JavascriptPromiseCapability* capabilities, JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* remainingElements, JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* alreadyCalledWrapper);
-        JavascriptPromiseAllSettledResolveOrRejectElementFunction* CreatePromiseAllSettledResolveOrRejectElementFunction(JavascriptMethod entryPoint, uint32 index, JavascriptArray* values, JavascriptPromiseCapability* capabilities, JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* remainingElements, JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* alreadyCalledWrapper, bool isRejecting);
+        JavascriptPromiseAllResolveElementFunction* CreatePromiseAllResolveElementFunction(JavascriptMethod entryPoint, uint32_t index, JavascriptArray* values, JavascriptPromiseCapability* capabilities, JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* remainingElements);
+        JavascriptPromiseAnyRejectElementFunction* CreatePromiseAnyRejectElementFunction(JavascriptMethod entryPoint, uint32_t index, JavascriptArray* errors, JavascriptPromiseCapability* capabilities, JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* remainingElements, JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* alreadyCalledWrapper);
+        JavascriptPromiseAllSettledResolveOrRejectElementFunction* CreatePromiseAllSettledResolveOrRejectElementFunction(JavascriptMethod entryPoint, uint32_t index, JavascriptArray* values, JavascriptPromiseCapability* capabilities, JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* remainingElements, JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* alreadyCalledWrapper, bool isRejecting);
         JavascriptPromiseThenFinallyFunction* CreatePromiseThenFinallyFunction(JavascriptMethod entryPoint, RecyclableObject* OnFinally, RecyclableObject* Constructor, bool shouldThrow);
         JavascriptPromiseThunkFinallyFunction* CreatePromiseThunkFinallyFunction(JavascriptMethod entryPoint, Var value, bool shouldThrow);
         JavascriptExternalFunction* CreateWrappedExternalFunction(JavascriptExternalFunction* wrappedFunction);
@@ -1107,7 +1107,7 @@ namespace Js
         int32_t ProfilerRegisterBuiltIns();
 
 #if ENABLE_COPYONACCESS_ARRAY
-        static bool IsCopyOnAccessArrayCallSite(JavascriptLibrary *lib, ArrayCallSiteInfo *arrayInfo, uint32 length);
+        static bool IsCopyOnAccessArrayCallSite(JavascriptLibrary *lib, ArrayCallSiteInfo *arrayInfo, uint32_t length);
         static bool IsCachedCopyOnAccessArrayCallSite(const JavascriptLibrary *lib, ArrayCallSiteInfo *arrayInfo);
         template <typename T>
         static void CheckAndConvertCopyOnAccessNativeIntArray(const T instance);

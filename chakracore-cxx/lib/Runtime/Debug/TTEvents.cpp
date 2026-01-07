@@ -53,7 +53,7 @@ namespace TTD
             writer->WriteInt64(NSTokens::Key::eventTime, evt->EventTimeStamp, NSTokens::Separator::CommaSeparator);
 #endif
 
-            auto emitFP = evtFPVTable[(uint32)evt->EventKind].EmitFP;
+            auto emitFP = evtFPVTable[(uint32_t)evt->EventKind].EmitFP;
             if(emitFP != nullptr)
             {
                 emitFP(evt, writer, threadContext);
@@ -77,7 +77,7 @@ namespace TTD
             evt->EventTimeStamp = reader->ReadInt64(NSTokens::Key::eventTime, true);
 #endif
 
-            auto parseFP = evtFPVTable[(uint32)evt->EventKind].ParseFP;
+            auto parseFP = evtFPVTable[(uint32_t)evt->EventKind].ParseFP;
             if(parseFP != nullptr)
             {
                 parseFP(evt, threadContext, reader, alloc);
@@ -133,7 +133,7 @@ namespace TTD
 
             writer->WriteLengthValue(snapEvt->LiveContextCount, NSTokens::Separator::CommaSeparator);
             writer->WriteSequenceStart_DefaultKey(NSTokens::Separator::CommaSeparator);
-            for(uint32 i = 0; i < snapEvt->LiveContextCount; ++i)
+            for(uint32_t i = 0; i < snapEvt->LiveContextCount; ++i)
             {
                 writer->WriteNakedLogTag(snapEvt->LiveContextIdArray[i], i != 0 ? NSTokens::Separator::CommaSeparator : NSTokens::Separator::NoSeparator);
             }
@@ -141,7 +141,7 @@ namespace TTD
 
             writer->WriteLengthValue(snapEvt->LongLivedRefRootsCount, NSTokens::Separator::CommaSeparator);
             writer->WriteSequenceStart_DefaultKey(NSTokens::Separator::CommaSeparator);
-            for(uint32 i = 0; i < snapEvt->LongLivedRefRootsCount; ++i)
+            for(uint32_t i = 0; i < snapEvt->LongLivedRefRootsCount; ++i)
             {
                 writer->WriteNakedLogTag(snapEvt->LongLivedRefRootsIdArray[i], i != 0 ? NSTokens::Separator::CommaSeparator : NSTokens::Separator::NoSeparator);
             }
@@ -163,7 +163,7 @@ namespace TTD
             snapEvt->LiveContextIdArray = (snapEvt->LiveContextCount != 0) ? alloc.SlabAllocateArray<TTD_LOG_PTR_ID>(snapEvt->LiveContextCount) : nullptr;
 
             reader->ReadSequenceStart_WDefaultKey(true);
-            for(uint32 i = 0; i < snapEvt->LiveContextCount; ++i)
+            for(uint32_t i = 0; i < snapEvt->LiveContextCount; ++i)
             {
                 snapEvt->LiveContextIdArray[i] = reader->ReadNakedLogTag(i != 0);
             }
@@ -173,7 +173,7 @@ namespace TTD
             snapEvt->LongLivedRefRootsIdArray = (snapEvt->LongLivedRefRootsCount != 0) ? alloc.SlabAllocateArray<TTD_LOG_PTR_ID>(snapEvt->LongLivedRefRootsCount) : nullptr;
 
             reader->ReadSequenceStart_WDefaultKey(true);
-            for(uint32 i = 0; i < snapEvt->LongLivedRefRootsCount; ++i)
+            for(uint32_t i = 0; i < snapEvt->LongLivedRefRootsCount; ++i)
             {
                 snapEvt->LongLivedRefRootsIdArray[i] = reader->ReadNakedLogTag(i != 0);
             }
@@ -503,7 +503,7 @@ namespace TTD
 
             writer->WriteLengthValue(callEvt->ArgCount, NSTokens::Separator::CommaSeparator);
             writer->WriteSequenceStart_DefaultKey(NSTokens::Separator::CommaSeparator);
-            for(uint32 i = 0; i < callEvt->ArgCount; ++i)
+            for(uint32_t i = 0; i < callEvt->ArgCount; ++i)
             {
                 NSTokens::Separator sep = (i != 0) ? NSTokens::Separator::CommaSeparator : NSTokens::Separator::NoSeparator;
                 NSSnapValues::EmitTTDVar(callEvt->ArgArray[i], writer, sep);
@@ -535,7 +535,7 @@ namespace TTD
             callEvt->ArgArray = alloc.SlabAllocateArray<TTDVar>(callEvt->ArgCount);
 
             reader->ReadSequenceStart_WDefaultKey(true);
-            for(uint32 i = 0; i < callEvt->ArgCount; ++i)
+            for(uint32_t i = 0; i < callEvt->ArgCount; ++i)
             {
                 callEvt->ArgArray[i] = NSSnapValues::ParseTTDVar(i != 0, reader);
             }

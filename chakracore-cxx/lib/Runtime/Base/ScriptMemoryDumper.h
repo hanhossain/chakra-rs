@@ -11,12 +11,12 @@ public:
     struct HeapStats
     {
         size_t pageCount;
-        uint32 objectSize;
-        uint32 freeObjectCount;
-        uint32 activeObjectCount;
+        uint32_t objectSize;
+        uint32_t freeObjectCount;
+        uint32_t activeObjectCount;
         size_t activeObjectByteSize;
         size_t totalByteCount;
-        uint32 finalizeCount; // hostdispatch etc.
+        uint32_t finalizeCount; // hostdispatch etc.
     };
 
     ScriptMemoryDumper(Js::ScriptContext* scriptContext);
@@ -40,7 +40,7 @@ private:
 
     void ResetCurrentStats();
     void MergeCurrentStats();
-    void SaveCurrentAtIndex(uint32 index);
+    void SaveCurrentAtIndex(uint32_t index);
     void SaveCurrentAsLargeBlock();
     void SaveSummary();
     void FillObjectWithStats(Js::DynamicObject* dynamicObject, HeapStats stats);

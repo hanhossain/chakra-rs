@@ -17,15 +17,15 @@ namespace UnifiedRegex
         static const int Size = NumChars;
 
     private:
-        static const int wordSize = sizeof(uint32) * 8;
+        static const int wordSize = sizeof(uint32_t) * 8;
         static const int vecSize = Size / wordSize;
-        static const uint32 ones = (uint32)-1;
+        static const uint32_t ones = (uint32_t)-1;
 
         static const uint8_t oneBits[Size];
 
-        uint32 vec[vecSize];
+        uint32_t vec[vecSize];
 
-        inline static void setrng(uint32 &v, uint l, uint h)
+        inline static void setrng(uint32_t &v, uint l, uint h)
         {
             uint w = h - l + 1;
             if (w == wordSize)
@@ -38,7 +38,7 @@ namespace UnifiedRegex
             }
         }
 
-        inline static void clearrng(uint32 &v, uint l, uint h)
+        inline static void clearrng(uint32_t &v, uint l, uint h)
         {
             uint w = h - l + 1;
             if (w == wordSize)
@@ -207,7 +207,7 @@ namespace UnifiedRegex
         {
             for (int w = 0; w < vecSize; w++)
             {
-                uint32 v = other.vec[w];
+                uint32_t v = other.vec[w];
                 if (v != (vec[w] | v))
                 {
                     return false;

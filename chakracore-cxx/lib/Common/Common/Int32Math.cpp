@@ -80,7 +80,7 @@ bool
 Int32Math::Shl(int32 left, int32 right, int32 *pResult)
 {
     *pResult = left << (right & 0x1F);
-    return (left != (int32)((uint32)*pResult >> right));
+    return (left != (int32)((uint32_t)*pResult >> right));
 }
 
 bool
@@ -93,7 +93,7 @@ Int32Math::Shr(int32 left, int32 right, int32 *pResult)
 bool
 Int32Math::ShrU(int32 left, int32 right, int32 *pResult)
 {
-    uint32 uResult = ((uint32)left) >> (right & 0x1F);
+    uint32_t uResult = ((uint32_t)left) >> (right & 0x1F);
     *pResult = uResult;
     return false;
 }

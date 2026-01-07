@@ -83,7 +83,7 @@ ThreadContextInfo::GetUIntConvertConstAddr() const
 intptr_t
 ThreadContextInfo::GetUint8ClampedArraySetItemAddr() const
 {
-    return ShiftAddr(this, (BOOL(*)(Js::Uint8ClampedArray * arr, uint32 index, Js::Var value))&Js::Uint8ClampedArray::DirectSetItem);
+    return ShiftAddr(this, (BOOL(*)(Js::Uint8ClampedArray * arr, uint32_t index, Js::Var value))&Js::Uint8ClampedArray::DirectSetItem);
 }
 
 intptr_t

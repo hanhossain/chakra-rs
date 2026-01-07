@@ -244,12 +244,12 @@ namespace Js
     // explicit instantiations
     template AuxArray<Var> const * ByteCodeReader::ReadAuxArray<Var>(uint offset, FunctionBody * functionBody);
     template AuxArray<int32> const * ByteCodeReader::ReadAuxArray<int32>(uint offset, FunctionBody * functionBody);
-    template AuxArray<uint32> const * ByteCodeReader::ReadAuxArray<uint32>(uint offset, FunctionBody * functionBody);
+    template AuxArray<uint32_t> const * ByteCodeReader::ReadAuxArray<uint32_t>(uint offset, FunctionBody * functionBody);
     template AuxArray<double> const * ByteCodeReader::ReadAuxArray<double>(uint offset, FunctionBody * functionBody);
     template AuxArray<FuncInfoEntry> const * ByteCodeReader::ReadAuxArray<FuncInfoEntry>(uint offset, FunctionBody * functionBody);
     template AuxArray<Var> const * ByteCodeReader::ReadAuxArrayWithLock<Var>(uint offset, FunctionBody * functionBody);
     template AuxArray<int32> const * ByteCodeReader::ReadAuxArrayWithLock<int32>(uint offset, FunctionBody * functionBody);
-    template AuxArray<uint32> const * ByteCodeReader::ReadAuxArrayWithLock<uint32>(uint offset, FunctionBody * functionBody);
+    template AuxArray<uint32_t> const * ByteCodeReader::ReadAuxArrayWithLock<uint32_t>(uint offset, FunctionBody * functionBody);
     template AuxArray<double> const * ByteCodeReader::ReadAuxArrayWithLock<double>(uint offset, FunctionBody * functionBody);
     template AuxArray<FuncInfoEntry> const * ByteCodeReader::ReadAuxArrayWithLock<FuncInfoEntry>(uint offset, FunctionBody * functionBody);
     template const unaligned Js::OpLayoutT_Unsigned1<Js::LayoutSizePolicy<(Js::LayoutSize)0> >* Js::ByteCodeReader::GetLayout<Js::OpLayoutT_Unsigned1<Js::LayoutSizePolicy<(Js::LayoutSize)0> > >(const byte*&);

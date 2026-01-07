@@ -26,12 +26,12 @@ namespace Js
 {
     NumberSet::NumberSet() : set(&NoCheckHeapAllocator::Instance) {}
 
-    void NumberSet::Add(uint32 x)
+    void NumberSet::Add(uint32_t x)
     {
         set.Item(x);
     }
 
-    bool NumberSet::Contains(uint32 x)
+    bool NumberSet::Contains(uint32_t x)
     {
         return set.Contains(x);
     }
@@ -39,24 +39,24 @@ namespace Js
 
     NumberPairSet::NumberPairSet() : set(&NoCheckHeapAllocator::Instance) {}
 
-    void NumberPairSet::Add(uint32 x, uint32 y)
+    void NumberPairSet::Add(uint32_t x, uint32_t y)
     {
         set.Item(NumberPair(x, y));
     }
 
-    bool NumberPairSet::Contains(uint32 x, uint32 y)
+    bool NumberPairSet::Contains(uint32_t x, uint32_t y)
     {
         return set.Contains(NumberPair(x, y));
     }
 
     NumberTrioSet::NumberTrioSet() : set(&NoCheckHeapAllocator::Instance) {}
 
-    void NumberTrioSet::Add(uint32 x, uint32 y, uint32 z)
+    void NumberTrioSet::Add(uint32_t x, uint32_t y, uint32_t z)
     {
         set.Item(NumberTrio(x, y, z));
     }
 
-    bool NumberTrioSet::Contains(uint32 x, uint32 y, uint32 z)
+    bool NumberTrioSet::Contains(uint32_t x, uint32_t y, uint32_t z)
     {
         return set.Contains(NumberTrio(x, y, z));
     }
@@ -120,7 +120,7 @@ namespace Js
     template <>
     bool RangeUnitContains<SourceFunctionNode>(RangeUnit<SourceFunctionNode> unit, SourceFunctionNode n)
     {
-        Assert(n.functionId != (uint32)-1);
+        Assert(n.functionId != (uint32_t)-1);
 
         if ((n.sourceContextId >= unit.i.sourceContextId) &&
             (n.sourceContextId <= unit.j.sourceContextId)

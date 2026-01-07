@@ -27,19 +27,19 @@ namespace TTD
         TT_HEAP_FREE_ARRAY(TTDMode, this->m_stackEntries, this->m_stackMax);
     }
 
-    uint32 TTModeStack::Count() const
+    uint32_t TTModeStack::Count() const
     {
         return this->m_stackTop;
     }
 
-    TTDMode TTModeStack::GetAt(uint32 index) const
+    TTDMode TTModeStack::GetAt(uint32_t index) const
     {
         TTDAssert(index < this->m_stackTop, "index is out of range");
 
         return this->m_stackEntries[index];
     }
 
-    void TTModeStack::SetAt(uint32 index, TTDMode m)
+    void TTModeStack::SetAt(uint32_t index, TTDMode m)
     {
         TTDAssert(index < this->m_stackTop, "index is out of range");
 
@@ -50,7 +50,7 @@ namespace TTD
     {
         if(this->m_stackTop == this->m_stackMax)
         {
-            uint32 newMax = this->m_stackMax + 16;
+            uint32_t newMax = this->m_stackMax + 16;
             TTDMode* newStack = TT_HEAP_ALLOC_ARRAY_ZERO(TTDMode, newMax);
             js_memcpy_s(newStack, newMax * sizeof(TTDMode), this->m_stackEntries, this->m_stackMax * sizeof(TTDMode));
 
@@ -249,7 +249,7 @@ namespace TTD
 
     //////////////////
 
-    void LoadValuesForHashTables(uint32 targetSize, uint32* powerOf2, uint32* closePrime, uint32* midPrime)
+    void LoadValuesForHashTables(uint32_t targetSize, uint32_t* powerOf2, uint32_t* closePrime, uint32_t* midPrime)
     {
         TTD_TABLE_FACTORLOAD_BASE(128, 127, 61)
 
@@ -299,7 +299,7 @@ namespace TTD
             return false;
         }
 
-        for(uint32 i = 0; i < str1.Length; ++i)
+        for(uint32_t i = 0; i < str1.Length; ++i)
         {
             if(str1.Contents[i] != str2.Contents[i])
             {
@@ -319,7 +319,7 @@ namespace TTD
         this->m_addrArray = TT_HEAP_ALLOC_ARRAY_ZERO(unsigned long, this->m_capcity);
         this->m_markArray = TT_HEAP_ALLOC_ARRAY_ZERO(MarkTableTag, this->m_capcity);
 
-        memset(this->m_handlerCounts, 0, ((uint32)MarkTableTag::KindTagCount) * sizeof(uint32));
+        memset(this->m_handlerCounts, 0, ((uint32_t)MarkTableTag::KindTagCount) * sizeof(uint32_t));
     }
 
     MarkTable::~MarkTable()
@@ -349,7 +349,7 @@ namespace TTD
         this->m_count = 0;
         this->m_iterPos = 0;
 
-        memset(this->m_handlerCounts, 0, ((uint32)MarkTableTag::KindTagCount) * sizeof(uint32));
+        memset(this->m_handlerCounts, 0, ((uint32_t)MarkTableTag::KindTagCount) * sizeof(uint32_t));
     }
 }
 

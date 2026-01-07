@@ -975,7 +975,7 @@ namespace Js
     }
 
     template <typename SizePolicy>
-    bool ByteCodeWriter::TryWriteCallIExtended(OpCode op, RegSlot returnValueRegister, RegSlot functionRegister, ArgSlot givenArgCount, CallIExtendedOptions options, uint32 spreadArgsOffset)
+    bool ByteCodeWriter::TryWriteCallIExtended(OpCode op, RegSlot returnValueRegister, RegSlot functionRegister, ArgSlot givenArgCount, CallIExtendedOptions options, uint32_t spreadArgsOffset)
     {
         OpLayoutT_CallIExtended<SizePolicy> layout;
         if (SizePolicy::Assign(layout.Return, returnValueRegister) && SizePolicy::Assign(layout.Function, functionRegister)
@@ -989,7 +989,7 @@ namespace Js
     }
 
     template <typename SizePolicy>
-    bool ByteCodeWriter::TryWriteCallIExtendedWithICIndex(OpCode op, RegSlot returnValueRegister, RegSlot functionRegister, ArgSlot givenArgCount, InlineCacheIndex inlineCacheIndex, bool isRootLoad, CallIExtendedOptions options, uint32 spreadArgsOffset)
+    bool ByteCodeWriter::TryWriteCallIExtendedWithICIndex(OpCode op, RegSlot returnValueRegister, RegSlot functionRegister, ArgSlot givenArgCount, InlineCacheIndex inlineCacheIndex, bool isRootLoad, CallIExtendedOptions options, uint32_t spreadArgsOffset)
     {
         OpLayoutT_CallIExtendedWithICIndex<SizePolicy> layout;
         if (SizePolicy::Assign(layout.Return, returnValueRegister) && SizePolicy::Assign(layout.Function, functionRegister)
@@ -1012,7 +1012,7 @@ namespace Js
     }
 
     template <typename SizePolicy>
-    bool ByteCodeWriter::TryWriteCallIExtendedFlags(OpCode op, RegSlot returnValueRegister, RegSlot functionRegister, ArgSlot givenArgCount, CallIExtendedOptions options, uint32 spreadArgsOffset, CallFlags callFlags)
+    bool ByteCodeWriter::TryWriteCallIExtendedFlags(OpCode op, RegSlot returnValueRegister, RegSlot functionRegister, ArgSlot givenArgCount, CallIExtendedOptions options, uint32_t spreadArgsOffset, CallFlags callFlags)
     {
         OpLayoutT_CallIExtendedFlags<SizePolicy> layout;
         if (SizePolicy::Assign(layout.Return, returnValueRegister) && SizePolicy::Assign(layout.Function, functionRegister)
@@ -1026,7 +1026,7 @@ namespace Js
     }
 
     template <typename SizePolicy>
-    bool ByteCodeWriter::TryWriteCallIExtendedFlagsWithICIndex(OpCode op, RegSlot returnValueRegister, RegSlot functionRegister, ArgSlot givenArgCount, InlineCacheIndex inlineCacheIndex, bool isRootLoad, CallIExtendedOptions options, uint32 spreadArgsOffset, CallFlags callFlags)
+    bool ByteCodeWriter::TryWriteCallIExtendedFlagsWithICIndex(OpCode op, RegSlot returnValueRegister, RegSlot functionRegister, ArgSlot givenArgCount, InlineCacheIndex inlineCacheIndex, bool isRootLoad, CallIExtendedOptions options, uint32_t spreadArgsOffset, CallFlags callFlags)
     {
         OpLayoutT_CallIExtendedFlagsWithICIndex<SizePolicy> layout;
         if (SizePolicy::Assign(layout.Return, returnValueRegister) && SizePolicy::Assign(layout.Function, functionRegister)
@@ -1420,7 +1420,7 @@ StoreCommon:
     }
 
     template <typename SizePolicy>
-    bool ByteCodeWriter::TryWriteElementUnsigned1(OpCode op, RegSlot Value, RegSlot Instance, uint32 Element)
+    bool ByteCodeWriter::TryWriteElementUnsigned1(OpCode op, RegSlot Value, RegSlot Instance, uint32_t Element)
     {
         OpLayoutT_ElementUnsigned1<SizePolicy> layout;
         if (SizePolicy::Assign(layout.Value, Value) && SizePolicy::Assign(layout.Instance, Instance)
@@ -1432,7 +1432,7 @@ StoreCommon:
         return false;
     }
 
-    void ByteCodeWriter::ElementUnsigned1(OpCode op, RegSlot Value, RegSlot Instance, uint32 Element)
+    void ByteCodeWriter::ElementUnsigned1(OpCode op, RegSlot Value, RegSlot Instance, uint32_t Element)
     {
         CheckOpen();
         CheckOp(op, OpLayoutType::ElementUnsigned1);
@@ -1551,7 +1551,7 @@ StoreCommon:
     }
 
     template <typename SizePolicy>
-    bool ByteCodeWriter::TryWriteElementSlot(OpCode op, RegSlot value, RegSlot instance, uint32 slotId)
+    bool ByteCodeWriter::TryWriteElementSlot(OpCode op, RegSlot value, RegSlot instance, uint32_t slotId)
     {
         OpLayoutT_ElementSlot<SizePolicy> layout;
         if (SizePolicy::Assign(layout.Value, value) && SizePolicy::Assign(layout.Instance, instance)
@@ -1563,7 +1563,7 @@ StoreCommon:
         return false;
     }
 
-    void ByteCodeWriter::Slot(OpCode op, RegSlot value, RegSlot instance, uint32 slotId)
+    void ByteCodeWriter::Slot(OpCode op, RegSlot value, RegSlot instance, uint32_t slotId)
     {
         CheckOpen();
         CheckOp(op, OpLayoutType::ElementSlot);
@@ -1594,7 +1594,7 @@ StoreCommon:
         MULTISIZE_LAYOUT_WRITE(ElementSlot, op, value, instance, slotId);
     }
 
-    void ByteCodeWriter::Slot(OpCode op, RegSlot value, RegSlot instance, uint32 slotId, ProfileId profileId)
+    void ByteCodeWriter::Slot(OpCode op, RegSlot value, RegSlot instance, uint32_t slotId, ProfileId profileId)
     {
         CheckOpen();
         CheckOp(op, OpLayoutType::ElementSlot);
@@ -1627,7 +1627,7 @@ StoreCommon:
     }
 
     template <typename SizePolicy>
-    bool ByteCodeWriter::TryWriteElementSlotI1(OpCode op, RegSlot value, uint32 slotId)
+    bool ByteCodeWriter::TryWriteElementSlotI1(OpCode op, RegSlot value, uint32_t slotId)
     {
         OpLayoutT_ElementSlotI1<SizePolicy> layout;
         if (SizePolicy::Assign(layout.Value, value)
@@ -1639,7 +1639,7 @@ StoreCommon:
         return false;
     }
 
-    void ByteCodeWriter::SlotI1(OpCode op, RegSlot value, uint32 slotId)
+    void ByteCodeWriter::SlotI1(OpCode op, RegSlot value, uint32_t slotId)
     {
         CheckOpen();
         CheckOp(op, OpLayoutType::ElementSlotI1);
@@ -1675,7 +1675,7 @@ StoreCommon:
         MULTISIZE_LAYOUT_WRITE(ElementSlotI1, op, value, slotId);
     }
 
-    void ByteCodeWriter::SlotI1(OpCode op, RegSlot value, uint32 slotId, ProfileId profileId)
+    void ByteCodeWriter::SlotI1(OpCode op, RegSlot value, uint32_t slotId, ProfileId profileId)
     {
         CheckOpen();
         CheckOp(op, OpLayoutType::ElementSlotI1);
@@ -1710,7 +1710,7 @@ StoreCommon:
     }
 
     template <typename SizePolicy>
-    bool ByteCodeWriter::TryWriteElementSlotI2(OpCode op, RegSlot value, uint32 slotId1, uint32 slotId2)
+    bool ByteCodeWriter::TryWriteElementSlotI2(OpCode op, RegSlot value, uint32_t slotId1, uint32_t slotId2)
     {
         OpLayoutT_ElementSlotI2<SizePolicy> layout;
         if (SizePolicy::Assign(layout.Value, value)
@@ -1723,7 +1723,7 @@ StoreCommon:
         return false;
     }
 
-    void ByteCodeWriter::SlotI2(OpCode op, RegSlot value, uint32 slotId1, uint32 slotId2)
+    void ByteCodeWriter::SlotI2(OpCode op, RegSlot value, uint32_t slotId1, uint32_t slotId2)
     {
         CheckOpen();
         CheckOp(op, OpLayoutType::ElementSlotI2);
@@ -1759,7 +1759,7 @@ StoreCommon:
         MULTISIZE_LAYOUT_WRITE(ElementSlotI2, op, value, slotId1, slotId2);
     }
 
-    void ByteCodeWriter::SlotI2(OpCode op, RegSlot value, uint32 slotId1, uint32 slotId2, ProfileId profileId)
+    void ByteCodeWriter::SlotI2(OpCode op, RegSlot value, uint32_t slotId1, uint32_t slotId2, ProfileId profileId)
     {
         CheckOpen();
         CheckOp(op, OpLayoutType::ElementSlotI2);
@@ -1796,7 +1796,7 @@ StoreCommon:
     }
 
     template <typename SizePolicy>
-    bool ByteCodeWriter::TryWriteElementSlotI3(OpCode op, RegSlot value, RegSlot instance, uint32 slotId, RegSlot homeObj)
+    bool ByteCodeWriter::TryWriteElementSlotI3(OpCode op, RegSlot value, RegSlot instance, uint32_t slotId, RegSlot homeObj)
     {
         OpLayoutT_ElementSlotI3<SizePolicy> layout;
         if (SizePolicy::Assign(layout.Value, value)
@@ -2031,7 +2031,7 @@ StoreCommon:
     }
 
     template <typename SizePolicy>
-    bool ByteCodeWriter::TryWriteElementPIndexed(OpCode op, RegSlot value, uint32 scopeIndex, CacheId cacheId)
+    bool ByteCodeWriter::TryWriteElementPIndexed(OpCode op, RegSlot value, uint32_t scopeIndex, CacheId cacheId)
     {
         OpLayoutT_ElementPIndexed<SizePolicy> layout;
         if (SizePolicy::Assign(layout.Value, value)
@@ -2044,7 +2044,7 @@ StoreCommon:
         return false;
     }
 
-    void ByteCodeWriter::ElementPIndexed(OpCode op, RegSlot value, uint32 scopeIndex, uint cacheId)
+    void ByteCodeWriter::ElementPIndexed(OpCode op, RegSlot value, uint32_t scopeIndex, uint cacheId)
     {
         CheckOpen();
         CheckOp(op, OpLayoutType::ElementPIndexed);
@@ -2936,7 +2936,7 @@ StoreCommon:
     }
 #endif
 
-    void ByteCodeWriter::StartStatement(ParseNode* node, uint32 tmpRegCount)
+    void ByteCodeWriter::StartStatement(ParseNode* node, uint32_t tmpRegCount)
     {
         if (m_pMatchingNode)
         {

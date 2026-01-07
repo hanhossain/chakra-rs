@@ -22,7 +22,7 @@ namespace Js
 
         void RevokeObject();
     public:
-        static const uint32 MAX_STACK_CALL_ARGUMENT_COUNT = 20;
+        static const uint32_t MAX_STACK_CALL_ARGUMENT_COUNT = 20;
         class EntryInfo
         {
         public:
@@ -101,13 +101,13 @@ namespace Js
 #if ENABLE_FIXED_FIELDS
         virtual BOOL IsFixedProperty(PropertyId propertyId) override;
 #endif
-        virtual PropertyQueryFlags HasItemQuery(uint32 index) override;
-        virtual BOOL HasOwnItem(uint32 index) override;
-        virtual PropertyQueryFlags GetItemQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext) override;
-        virtual PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext) override;
-        virtual DescriptorFlags GetItemSetter(uint32 index, Var* setterValue, ScriptContext* requestContext) override;
-        virtual BOOL SetItem(uint32 index, Var value, PropertyOperationFlags flags) override;
-        virtual BOOL DeleteItem(uint32 index, PropertyOperationFlags flags) override;
+        virtual PropertyQueryFlags HasItemQuery(uint32_t index) override;
+        virtual BOOL HasOwnItem(uint32_t index) override;
+        virtual PropertyQueryFlags GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
+        virtual PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
+        virtual DescriptorFlags GetItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext) override;
+        virtual BOOL SetItem(uint32_t index, Var value, PropertyOperationFlags flags) override;
+        virtual BOOL DeleteItem(uint32_t index, PropertyOperationFlags flags) override;
         virtual BOOL GetEnumerator(JavascriptStaticEnumerator * enumerator, EnumeratorFlags flags, ScriptContext* requestContext, EnumeratorCache * enumeratorCache = nullptr) override;
         virtual BOOL SetAccessors(PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags = PropertyOperation_None) override;
         virtual BOOL Equals(Var other, BOOL* value, ScriptContext* requestContext) override;
@@ -126,7 +126,7 @@ namespace Js
         virtual BOOL SetConfigurable(PropertyId propertyId, BOOL value) override;
         virtual BOOL SetEnumerable(PropertyId propertyId, BOOL value) override;
         virtual BOOL SetAttributes(PropertyId propertyId, PropertyAttributes attributes) override;
-        virtual BOOL GetSpecialPropertyName(uint32 index, JavascriptString ** propertyName, ScriptContext * requestContext) { return false; }
+        virtual BOOL GetSpecialPropertyName(uint32_t index, JavascriptString ** propertyName, ScriptContext * requestContext) { return false; }
         virtual uint GetSpecialPropertyCount() const { return 0; }
         virtual PropertyId const * GetSpecialPropertyIds() const { return nullptr; }
         virtual BOOL HasInstance(Var instance, ScriptContext* scriptContext, IsInstInlineCache* inlineCache = NULL) override;
@@ -155,19 +155,19 @@ namespace Js
         BOOL SetPropertyTrap(Var receiver, SetPropertyTrapKind setPropertyTrapKind, PropertyId propertyId, Var newValue, ScriptContext* requestContext, PropertyOperationFlags propertyOperationFlags, BOOL skipPrototypeCheck = FALSE);
         BOOL SetPropertyTrap(Var receiver, SetPropertyTrapKind setPropertyTrapKind, Js::JavascriptString * propertyString, Var newValue, ScriptContext* requestContext, PropertyOperationFlags propertyOperationFlags);
 
-        void PropertyIdFromInt(uint32 index, PropertyRecord const** propertyRecord);
+        void PropertyIdFromInt(uint32_t index, PropertyRecord const** propertyRecord);
 
         JavascriptArray* PropertyKeysTrap(KeysTrapKind keysTrapKind, ScriptContext* requestContext);
 
         template <class Fn>
-        void GetOwnPropertyKeysHelper(ScriptContext* scriptContext, RecyclableObject* trapResultArray, uint32 len, JavascriptArray* trapResult,
+        void GetOwnPropertyKeysHelper(ScriptContext* scriptContext, RecyclableObject* trapResultArray, uint32_t len, JavascriptArray* trapResult,
             JsUtil::BaseDictionary<Js::PropertyId, bool, ArenaAllocator>& targetToTrapResultMap, Fn fn)
         {
             Var element = nullptr;
             const PropertyRecord* propertyRecord;
-            uint32 trapResultIndex = 0;
+            uint32_t trapResultIndex = 0;
             PropertyId propertyId;
-            for (uint32 i = 0; i < len; i++)
+            for (uint32_t i = 0; i < len; i++)
             {
                 if (!JavascriptOperators::GetItem(trapResultArray, i, &element, scriptContext) || // missing
                     !(VarIs<JavascriptString>(element) || VarIs<JavascriptSymbol>(element)))  // neither String nor Symbol
@@ -193,7 +193,7 @@ namespace Js
             }
         }
 
-        Var ConstructorTrap(Arguments args, ScriptContext* scriptContext, const Js::AuxArray<uint32> *spreadIndices);
+        Var ConstructorTrap(Arguments args, ScriptContext* scriptContext, const Js::AuxArray<uint32_t> *spreadIndices);
 
 
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS

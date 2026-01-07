@@ -15,7 +15,7 @@ namespace Js
         friend class RemoteFunctionBody;
 
     public:
-        enum Attributes : uint32
+        enum Attributes : uint32_t
         {
             None                           = 0x00000,
             ErrorOnNew                     = 0x00001,

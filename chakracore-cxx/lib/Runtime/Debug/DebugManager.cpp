@@ -170,8 +170,8 @@ namespace Js
         Assert(copyFromScope != nullptr);
         DynamicObject* consoleScope = this->GetConsoleScope(scriptContext);
 
-        uint32 newPropCount = copyFromScope->GetPropertyCount();
-        for (uint32 i = 0; i < newPropCount; i++)
+        uint32_t newPropCount = copyFromScope->GetPropertyCount();
+        for (uint32_t i = 0; i < newPropCount; i++)
         {
             Js::PropertyId propertyId = copyFromScope->GetPropertyId((Js::PropertyIndex)i);
             // For deleted properties we won't have a property id

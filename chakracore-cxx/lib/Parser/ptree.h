@@ -500,8 +500,8 @@ public:
     ParseNodeVar * pnodeName;
     IdentPtr pid;
     LPCOLESTR hint;
-    uint32 hintLength;
-    uint32 hintOffset;
+    uint32_t hintLength;
+    uint32_t hintOffset;
     ParseNodeBlock * pnodeScopes;
     ParseNodeBlock * pnodeBodyScope;
     ParseNodePtr pnodeParams;

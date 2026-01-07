@@ -23,8 +23,8 @@ namespace Js
         virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
         virtual BOOL GetEnumerator(JavascriptStaticEnumerator * enumerator, EnumeratorFlags flags, ScriptContext* requestContext, EnumeratorCache * enumeratorCache = nullptr) override;
 
-        virtual uint32 GetNumberOfArguments() const = 0;
-        virtual uint32 GetNextFormalArgIndex(uint32 index, BOOL enumNonEnumerable = FALSE, PropertyAttributes* attributes = nullptr) const = 0;
+        virtual uint32_t GetNumberOfArguments() const = 0;
+        virtual uint32_t GetNextFormalArgIndex(uint32_t index, BOOL enumNonEnumerable = FALSE, PropertyAttributes* attributes = nullptr) const = 0;
         virtual Var GetHeapArguments() = 0;
         virtual void SetHeapArguments(HeapArgumentsObject *args) = 0;
         virtual BOOL AdvanceWalkerToArgsFrame(JavascriptStackWalker *walker) = 0;
@@ -56,27 +56,27 @@ namespace Js
 
     private:
         // We currently support only 2^24 arguments
-        Field(uint32)              numOfArguments:31;
-        Field(uint32)              callerDeleted:1;
+        Field(uint32_t)              numOfArguments:31;
+        Field(uint32_t)              callerDeleted:1;
 
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(HeapArgumentsObject);
 
     protected:
-        Field(uint32)              formalCount;
+        Field(uint32_t)              formalCount;
         Field(ActivationObject*)   frameObject;
         Field(BVSparse<Recycler>*) deletedArgs;
 
     public:
         HeapArgumentsObject(DynamicType * type);
-        HeapArgumentsObject(Recycler *recycler, ActivationObject* obj, uint32 formalCount, DynamicType * type);
-        void SetNumberOfArguments(uint32 len);
+        HeapArgumentsObject(Recycler *recycler, ActivationObject* obj, uint32_t formalCount, DynamicType * type);
+        void SetNumberOfArguments(uint32_t len);
 
         static HeapArgumentsObject* As(Var aValue);
 
-        BOOL HasItemAt(uint32 index);
-        virtual BOOL GetItemAt(uint32 index, Var *value, ScriptContext * scriptContext);
-        virtual BOOL SetItemAt(uint32 index, Var value);
-        virtual BOOL DeleteItemAt(uint32 index);
+        BOOL HasItemAt(uint32_t index);
+        virtual BOOL GetItemAt(uint32_t index, Var *value, ScriptContext * scriptContext);
+        virtual BOOL SetItemAt(uint32_t index, Var value);
+        virtual BOOL DeleteItemAt(uint32_t index);
 
         virtual PropertyQueryFlags HasPropertyQuery(PropertyId propertyId, _Inout_opt_ PropertyValueInfo* info) override;
         virtual PropertyQueryFlags GetPropertyQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
@@ -84,14 +84,14 @@ namespace Js
         virtual PropertyQueryFlags GetPropertyReferenceQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
         virtual BOOL SetProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
         virtual BOOL SetProperty(JavascriptString* propertyNameString, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
-        virtual PropertyQueryFlags HasItemQuery(uint32 index) override;
-        virtual PropertyQueryFlags GetItemQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext) override;
-        virtual PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext) override;
-        virtual BOOL SetItem(uint32 index, Var value, PropertyOperationFlags flags) override;
-        virtual BOOL DeleteItem(uint32 index, PropertyOperationFlags flags) override;
+        virtual PropertyQueryFlags HasItemQuery(uint32_t index) override;
+        virtual PropertyQueryFlags GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
+        virtual PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
+        virtual BOOL SetItem(uint32_t index, Var value, PropertyOperationFlags flags) override;
+        virtual BOOL DeleteItem(uint32_t index, PropertyOperationFlags flags) override;
 
-        virtual uint32 GetNumberOfArguments() const override;
-        virtual uint32 GetNextFormalArgIndex(uint32 index, BOOL enumNonEnumerable = FALSE, PropertyAttributes* attributes = nullptr) const override;
+        virtual uint32_t GetNumberOfArguments() const override;
+        virtual uint32_t GetNextFormalArgIndex(uint32_t index, BOOL enumNonEnumerable = FALSE, PropertyAttributes* attributes = nullptr) const override;
         virtual Var GetHeapArguments() { return this; }
         virtual void SetHeapArguments(HeapArgumentsObject *args)
         {
@@ -108,12 +108,12 @@ namespace Js
         virtual BOOL Seal() override;
         virtual BOOL Freeze() override;
 
-        uint32 GetFormalCount() const
+        uint32_t GetFormalCount() const
         {
             return this->formalCount;
         }
 
-        void SetFormalCount(uint32 value)
+        void SetFormalCount(uint32_t value)
         {
             this->formalCount = value;
         }
@@ -131,10 +131,10 @@ namespace Js
         ES5HeapArgumentsObject* ConvertToES5HeapArgumentsObject(bool overwriteArgsUsingFrameObject = true);
 
     protected:
-        BOOL IsFormalArgument(uint32 index);
+        BOOL IsFormalArgument(uint32_t index);
         BOOL IsFormalArgument(PropertyId propertyId);
-        BOOL IsFormalArgument(PropertyId propertyId, uint32* pIndex);    // Checks whether property is numeric, and on success sets that index.
-        BOOL IsArgumentDeleted(uint32 index) const;
+        BOOL IsFormalArgument(PropertyId propertyId, uint32_t* pIndex);    // Checks whether property is numeric, and on success sets that index.
+        BOOL IsArgumentDeleted(uint32_t index) const;
 
 #if ENABLE_TTD
     public:
@@ -171,19 +171,19 @@ namespace Js
         {
             ES5HeapArgumentsObject* m_args;
             bool m_isReleaseItemNeeded;
-            uint32 m_index;
+            uint32_t m_index;
 
-            AutoObjectArrayItemExistsValidator(ES5HeapArgumentsObject* args, uint32 index);
+            AutoObjectArrayItemExistsValidator(ES5HeapArgumentsObject* args, uint32_t index);
             ~AutoObjectArrayItemExistsValidator();
         };
 
     private:
         DEFINE_VTABLE_CTOR(ES5HeapArgumentsObject, HeapArgumentsObject);
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(ES5HeapArgumentsObject);
-        uint32 GetNextFormalArgIndexHelper(uint32 index, BOOL enumNonEnumerable, PropertyAttributes* attributes = nullptr) const;
+        uint32_t GetNextFormalArgIndexHelper(uint32_t index, BOOL enumNonEnumerable, PropertyAttributes* attributes = nullptr) const;
 
     public:
-        ES5HeapArgumentsObject(Recycler *recycler, ActivationObject* obj, uint32 formalCount, DynamicType * type)
+        ES5HeapArgumentsObject(Recycler *recycler, ActivationObject* obj, uint32_t formalCount, DynamicType * type)
             : HeapArgumentsObject(recycler, obj, formalCount, type)
         {
         }
@@ -198,20 +198,20 @@ namespace Js
         virtual BOOL Seal() override;
         virtual BOOL Freeze() override;
 
-        virtual uint32 GetNextFormalArgIndex(uint32 index, BOOL enumNonEnumerable = FALSE, PropertyAttributes* attributes = nullptr) const override;
-        virtual BOOL GetItemAt(uint32 index, Var *value, ScriptContext * scriptContext) override;
-        virtual BOOL SetItemAt(uint32 index, Var value) override;
-        virtual BOOL DeleteItemAt(uint32 index) override;
+        virtual uint32_t GetNextFormalArgIndex(uint32_t index, BOOL enumNonEnumerable = FALSE, PropertyAttributes* attributes = nullptr) const override;
+        virtual BOOL GetItemAt(uint32_t index, Var *value, ScriptContext * scriptContext) override;
+        virtual BOOL SetItemAt(uint32_t index, Var value) override;
+        virtual BOOL DeleteItemAt(uint32_t index) override;
 
-        void DisconnectFormalFromNamedArgument(uint32 index);
-        BOOL IsFormalDisconnectedFromNamedArgument(uint32 index);
-        BOOL IsEnumerableByIndex(uint32 index);
+        void DisconnectFormalFromNamedArgument(uint32_t index);
+        BOOL IsFormalDisconnectedFromNamedArgument(uint32_t index);
+        BOOL IsEnumerableByIndex(uint32_t index);
 
-        BOOL SetConfigurableForFormal(uint32 index, PropertyId propertyId, BOOL value);
-        BOOL SetEnumerableForFormal(uint32 index, PropertyId propertyId, BOOL value);
-        BOOL SetWritableForFormal(uint32 index, PropertyId propertyId, BOOL value);
-        BOOL SetAccessorsForFormal(uint32 index, PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags = PropertyOperation_None);
-        BOOL SetPropertyWithAttributesForFormal(uint32 index, PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags = PropertyOperation_None, SideEffects possibleSideEffects = SideEffects_Any);
+        BOOL SetConfigurableForFormal(uint32_t index, PropertyId propertyId, BOOL value);
+        BOOL SetEnumerableForFormal(uint32_t index, PropertyId propertyId, BOOL value);
+        BOOL SetWritableForFormal(uint32_t index, PropertyId propertyId, BOOL value);
+        BOOL SetAccessorsForFormal(uint32_t index, PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags = PropertyOperation_None);
+        BOOL SetPropertyWithAttributesForFormal(uint32_t index, PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags = PropertyOperation_None, SideEffects possibleSideEffects = SideEffects_Any);
 
 #if ENABLE_TTD
     public:

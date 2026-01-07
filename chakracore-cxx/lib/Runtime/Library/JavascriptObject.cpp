@@ -1110,12 +1110,12 @@ Var JavascriptObject::GetValuesOrEntries(RecyclableObject* object, bool valuesTo
     JavascriptArray* valuesArray = scriptContext->GetLibrary()->CreateArray(0);
 
     JavascriptArray* ownKeysResult = JavascriptOperators::GetOwnPropertyNames(object, scriptContext);
-    uint32 length = ownKeysResult->GetLength();
+    uint32_t length = ownKeysResult->GetLength();
 
     Var nextKey;
     const PropertyRecord* propertyRecord = nullptr;
     PropertyId propertyId;
-    for (uint32 i = 0, index = 0; i < length; i++)
+    for (uint32_t i = 0, index = 0; i < length; i++)
     {
         nextKey = ownKeysResult->DirectGetItem(i);
         Assert(VarIs<JavascriptString>(nextKey));
@@ -1235,8 +1235,8 @@ JavascriptArray* JavascriptObject::CreateKeysHelper(RecyclableObject* object, Sc
 
     JavascriptString * propertyName = nullptr;
     PropertyId propertyId;
-    uint32 propertyIndex = 0;
-    uint32 symbolIndex = 0;
+    uint32_t propertyIndex = 0;
+    uint32_t symbolIndex = 0;
     const PropertyRecord* propertyRecord;
     JavascriptSymbol* symbol;
     JavascriptArray* newArrForSymbols = nullptr;
@@ -1270,7 +1270,7 @@ JavascriptArray* JavascriptObject::CreateKeysHelper(RecyclableObject* object, Sc
     // Special properties
     if (includeSpecialProperties && includeStringProperties)
     {
-        uint32 index = 0;
+        uint32_t index = 0;
         while (object->GetSpecialPropertyName(index, &propertyName, scriptContext))
         {
             newArr->DirectSetItemAt(propertyIndex++, propertyName);
@@ -1281,8 +1281,8 @@ JavascriptArray* JavascriptObject::CreateKeysHelper(RecyclableObject* object, Sc
     if (newArrForSymbols)
     {
         // Append all the symbols at the end of list
-        uint32 totalSymbols = newArrForSymbols->GetLength();
-        for (uint32 symIndex = 0; symIndex < totalSymbols; symIndex++)
+        uint32_t totalSymbols = newArrForSymbols->GetLength();
+        for (uint32_t symIndex = 0; symIndex < totalSymbols; symIndex++)
         {
             newArr->DirectSetItemAt(propertyIndex++, newArrForSymbols->DirectGetItem(symIndex));
         }
@@ -1749,12 +1749,12 @@ void JavascriptObject::CopyDataPropertiesForProxyObjects(RecyclableObject* from,
 {
     // Steps 4 and 5 of CopyDataPropertiesHelper
     JavascriptArray *keys = JavascriptOperators::GetOwnEnumerablePropertyNamesSymbols(from, scriptContext);
-    uint32 length = keys->GetLength();
+    uint32_t length = keys->GetLength();
     Var nextKey;
     const PropertyRecord* propertyRecord = nullptr;
     PropertyId propertyId;
     Var propValue = nullptr;
-    for (uint32 j = 0; j < length; j++)
+    for (uint32_t j = 0; j < length; j++)
     {
         PropertyDescriptor propertyDescriptor;
         nextKey = keys->DirectGetItem(j);
@@ -1974,7 +1974,7 @@ Var JavascriptObject::DefinePropertiesHelperForProxyObjects(RecyclableObject *ob
     //4.  ReturnIfAbrupt(keys).
     //5.  Let descriptors be an empty List.
     JavascriptArray* keys = JavascriptOperators::GetOwnEnumerablePropertyNamesSymbols(props, scriptContext);
-    uint32 length = keys->GetLength();
+    uint32_t length = keys->GetLength();
 
     ENTER_PINNED_SCOPE(DescriptorMap, descriptors);
     descriptors = RecyclerNewArray(scriptContext->GetRecycler(), DescriptorMap, length);
@@ -1993,7 +1993,7 @@ Var JavascriptObject::DefinePropertiesHelperForProxyObjects(RecyclableObject *ob
     const PropertyRecord* propertyRecord = nullptr;
     PropertyId propertyId;
     Var descObj;
-    for (uint32 j = 0; j < length; j++)
+    for (uint32_t j = 0; j < length; j++)
     {
         PropertyDescriptor propertyDescriptor;
         nextKey = keys->DirectGetItem(j);
@@ -2216,7 +2216,7 @@ void JavascriptObject::Restify(Var source, Var to, void* excludedStatic, void* e
     const Js::PropertyIdArray* propIdsComputed = reinterpret_cast<const Js::PropertyIdArray*>(excludedComputed);
     // Create a set of the property ids for faster lookup
     BVSparse<Recycler> excluded(scriptContext->GetRecycler());
-    for (uint32 i = 0; i < propIdsStatic->count; i++)
+    for (uint32_t i = 0; i < propIdsStatic->count; i++)
     {
         PropertyId id = propIdsStatic->elements[i];
         excluded.Set(id);
@@ -2225,7 +2225,7 @@ void JavascriptObject::Restify(Var source, Var to, void* excludedStatic, void* e
     // and the static array was passed in to indicate this
     if (propIdsStatic != propIdsComputed)
     {
-        for (uint32 i = 0; i < propIdsComputed->count; i++)
+        for (uint32_t i = 0; i < propIdsComputed->count; i++)
         {
             PropertyId id = propIdsComputed->elements[i];
             excluded.Set(id);

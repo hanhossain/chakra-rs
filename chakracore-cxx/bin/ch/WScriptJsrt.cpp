@@ -448,7 +448,7 @@ JsValueRef WScriptJsrt::Deserialize(JsValueRef callee, bool isConstructCall, JsV
     else
     {
         JsValueRef dataObject = arguments[1];
-        uint32 dataLength = 0;
+        uint32_t dataLength = 0;
         uint8_t *data = nullptr;
         IfJsrtErrorSetGo(ChakraRTInterface::JsGetArrayBufferStorage(dataObject, &data, &dataLength));
         SerializerBlob *blob = (SerializerBlob*)data;

@@ -127,7 +127,7 @@ namespace Js
         static Var ConstructHelper(RecyclableObject* function, Var thisArg, Var overridingNewTarget, Var argArray, ScriptContext* scriptContext);
         static Var CallRootFunctionInScript(JavascriptFunction* func, Arguments args);
 
-        static Var CallAsConstructor(Var v, Var overridingNewTarget, Arguments args, ScriptContext* scriptContext, const Js::AuxArray<uint32> *spreadIndices = nullptr);
+        static Var CallAsConstructor(Var v, Var overridingNewTarget, Arguments args, ScriptContext* scriptContext, const Js::AuxArray<uint32_t> *spreadIndices = nullptr);
         static Var FinishConstructor(const Var constructorReturnValue, Var newObject, JavascriptFunction *const function, bool hasOverridingNewTarget = false);
 
 #if DBG
@@ -137,10 +137,10 @@ namespace Js
         static Var CallFunction(RecyclableObject* obj, JavascriptMethod entryPoint, Arguments args, bool useLargeArgCount = false);
         static Var CallRootFunction(RecyclableObject* obj, Arguments args, ScriptContext * scriptContext, bool inScript);
         static Var CallRootFunctionInternal(RecyclableObject* obj, Arguments args, ScriptContext * scriptContext, bool inScript);
-        static Var CallSpreadFunction(RecyclableObject* obj, Arguments args, const Js::AuxArray<uint32> *spreadIndices);
-        static uint GetSpreadSize(const Arguments args, const Js::AuxArray<uint32> *spreadIndices, ScriptContext *scriptContext);
-        static void SpreadArgs(const Arguments args, Arguments& destArgs, const Js::AuxArray<uint32> *spreadIndices, ScriptContext *scriptContext);
-        static Var EntrySpreadCall(const Js::AuxArray<uint32> *spreadIndices, RecyclableObject* function, CallInfo callInfo, ...);
+        static Var CallSpreadFunction(RecyclableObject* obj, Arguments args, const Js::AuxArray<uint32_t> *spreadIndices);
+        static uint GetSpreadSize(const Arguments args, const Js::AuxArray<uint32_t> *spreadIndices, ScriptContext *scriptContext);
+        static void SpreadArgs(const Arguments args, Arguments& destArgs, const Js::AuxArray<uint32_t> *spreadIndices, ScriptContext *scriptContext);
+        static Var EntrySpreadCall(const Js::AuxArray<uint32_t> *spreadIndices, RecyclableObject* function, CallInfo callInfo, ...);
         static void CheckAlignment();
         static BOOL IsNativeAddress(ScriptContext * scriptContext, void * codeAddr);
         static Var DeferredParsingThunk(RecyclableObject* function, CallInfo callInfo, ...);
@@ -155,7 +155,7 @@ namespace Js
             CompileAssert(offsetof(JavascriptFunction, functionInfo) <= UCHAR_MAX);
             return offsetof(JavascriptFunction, functionInfo);
         }
-        static uint32 GetOffsetOfConstructorCache() { return offsetof(JavascriptFunction, constructorCache); };
+        static uint32_t GetOffsetOfConstructorCache() { return offsetof(JavascriptFunction, constructorCache); };
 
         static JavascriptString* GetNativeFunctionDisplayString(ScriptContext *scriptContext, JavascriptString *name);
         static JavascriptString* GetLibraryCodeDisplayString(ScriptContext* scriptContext, const char16_t * displayName);
@@ -207,7 +207,7 @@ namespace Js
         virtual BOOL IsConfigurable(PropertyId propertyId) override;
         virtual BOOL IsEnumerable(PropertyId propertyId) override;
         virtual BOOL IsWritable(PropertyId propertyId) override;
-        virtual BOOL GetSpecialPropertyName(uint32 index, JavascriptString ** propertyName, ScriptContext * requestContext) override;
+        virtual BOOL GetSpecialPropertyName(uint32_t index, JavascriptString ** propertyName, ScriptContext * requestContext) override;
         virtual uint GetSpecialPropertyCount() const override;
         virtual PropertyId const * GetSpecialPropertyIds() const override;
         virtual BOOL DeleteProperty(PropertyId propertyId, PropertyOperationFlags flags) override;

@@ -105,12 +105,12 @@ void CALLBACK OnScriptLoad_TTDCallback(FinalizableObject* jsrtCtx, Js::FunctionB
     ((JsrtContext*)jsrtCtx)->OnScriptLoad_TTDCallback(body, utf8SourceInfo, compileException, notify);
 }
 
-uint32 CALLBACK OnBPRegister_TTDCallback(void* runtimeRcvr, long bpID, Js::ScriptContext* scriptContext, Js::Utf8SourceInfo* utf8SourceInfo, uint32 line, uint32 column, BOOL* isNewBP)
+uint32_t CALLBACK OnBPRegister_TTDCallback(void* runtimeRcvr, long bpID, Js::ScriptContext* scriptContext, Js::Utf8SourceInfo* utf8SourceInfo, uint32_t line, uint32_t column, BOOL* isNewBP)
 {
     return ((JsrtRuntime*)runtimeRcvr)->BPRegister_TTD(bpID, scriptContext, utf8SourceInfo, line, column, isNewBP);
 }
 
-void CALLBACK OnBPDelete_TTDCallback(void* runtimeRcvr, uint32 bpID)
+void CALLBACK OnBPDelete_TTDCallback(void* runtimeRcvr, uint32_t bpID)
 {
     ((JsrtRuntime*)runtimeRcvr)->BPDelete_TTD(bpID);
 }
@@ -406,7 +406,7 @@ JsErrorCode CreateRuntimeCore(_In_ JsRuntimeAttributes attributes,
             ThreadContextScope scope(threadContext);
             threadContext->EnsureRecycler();
 
-            threadContext->InitTimeTravel(threadContext, *runtimeHandle, snapInterval, max<uint32>(2, snapHistoryLength));
+            threadContext->InitTimeTravel(threadContext, *runtimeHandle, snapInterval, max<uint32_t>(2, snapHistoryLength));
             threadContext->InitHostFunctionsAndTTData(isRecord, isReplay, isDebug, optTTUriCount, optTTUri,
                 openResourceStream, readBytesFromStream, writeBytesToStream, flushAndCloseStream,
                 &CreateExternalObject_TTDCallback, &CreateJsRTContext_TTDCallback, &ReleaseJsRTContext_TTDCallback, &SetActiveJsRTContext_TTDCallback);
@@ -2315,7 +2315,7 @@ CHAKRA_API JsGetTypedArrayStorage(_In_ JsValueRef instance, _Outptr_result_byteb
                     *elementSize = sizeof(int32);
                     break;
                 case Js::TypeIds_Uint32Array:
-                    *elementSize = sizeof(uint32);
+                    *elementSize = sizeof(uint32_t);
                     break;
                 case Js::TypeIds_Float32Array:
                     *elementSize = sizeof(float);
@@ -2452,7 +2452,7 @@ template<> struct TypedArrayTypeTraits<uint8_t, true> { static const JsTypedArra
 template<> struct TypedArrayTypeTraits<int16> { static const JsTypedArrayType cTypedArrayType = JsTypedArrayType::JsArrayTypeInt16; };
 template<> struct TypedArrayTypeTraits<uint16> { static const JsTypedArrayType cTypedArrayType = JsTypedArrayType::JsArrayTypeUint16; };
 template<> struct TypedArrayTypeTraits<int32> { static const JsTypedArrayType cTypedArrayType = JsTypedArrayType::JsArrayTypeInt32; };
-template<> struct TypedArrayTypeTraits<uint32> { static const JsTypedArrayType cTypedArrayType = JsTypedArrayType::JsArrayTypeUint32; };
+template<> struct TypedArrayTypeTraits<uint32_t> { static const JsTypedArrayType cTypedArrayType = JsTypedArrayType::JsArrayTypeUint32; };
 template<> struct TypedArrayTypeTraits<float> { static const JsTypedArrayType cTypedArrayType = JsTypedArrayType::JsArrayTypeFloat32; };
 template<> struct TypedArrayTypeTraits<double> { static const JsTypedArrayType cTypedArrayType = JsTypedArrayType::JsArrayTypeFloat64; };
 
@@ -2531,7 +2531,7 @@ CHAKRA_API JsSetIndexedPropertiesToExternalData(
             newTypedArray = CreateTypedArray<int32>(scriptContext, data, elementLength);
             break;
         case JsArrayTypeUint32:
-            newTypedArray = CreateTypedArray<uint32>(scriptContext, data, elementLength);
+            newTypedArray = CreateTypedArray<uint32_t>(scriptContext, data, elementLength);
             break;
         case JsArrayTypeFloat32:
             newTypedArray = CreateTypedArray<float>(scriptContext, data, elementLength);
@@ -2619,7 +2619,7 @@ CHAKRA_API JsGetIndexedPropertiesExternalData(
             GetObjectArrayData<int32>(objectArray, buffer, arrayType, elementLength);
             break;
         case Js::TypeIds_Uint32Array:
-            GetObjectArrayData<uint32>(objectArray, buffer, arrayType, elementLength);
+            GetObjectArrayData<uint32_t>(objectArray, buffer, arrayType, elementLength);
             break;
         case Js::TypeIds_Float32Array:
             GetObjectArrayData<float>(objectArray, buffer, arrayType, elementLength);
@@ -3563,7 +3563,7 @@ JsErrorCode RunScriptCore(JsValueRef scriptSource, const byte *script, size_t cb
         {
             parseEvent = scriptContext->GetThreadContext()->TTDLog->RecordJsRTCodeParse(_actionEntryPopper,
                 loadScriptFlag, ((loadScriptFlag & LoadScriptFlag_Utf8Source) == LoadScriptFlag_Utf8Source),
-                script, (uint32)cb, sourceContext, sourceUrl);
+                script, (uint32_t)cb, sourceContext, sourceUrl);
         }
 #endif
 
@@ -3585,7 +3585,7 @@ JsErrorCode RunScriptCore(JsValueRef scriptSource, const byte *script, size_t cb
             //Make sure we have the body and text information available
             Js::FunctionBody* globalBody = TTD::JsSupport::ForceAndGetFunctionBody(scriptFunction->GetParseableFunctionInfo());
 
-            const TTD::NSSnapValues::TopLevelScriptLoadFunctionBodyResolveInfo* tbfi = scriptContext->GetThreadContext()->TTDLog->AddScriptLoad(globalBody, kmodGlobal, sourceContext, script, (uint32)cb, loadScriptFlag);
+            const TTD::NSSnapValues::TopLevelScriptLoadFunctionBodyResolveInfo* tbfi = scriptContext->GetThreadContext()->TTDLog->AddScriptLoad(globalBody, kmodGlobal, sourceContext, script, (uint32_t)cb, loadScriptFlag);
             if(parseEvent != nullptr)
             {
                 TTD::NSLogEvents::JsRTCodeParseAction_SetBodyCtrId(parseEvent, tbfi->TopLevelBase.TopLevelBodyCtr);
@@ -3944,7 +3944,7 @@ JsErrorCode RunSerializedScriptCore(
 
         if (bgParseCookie == 0)
         {
-            uint32 flags = 0;
+            uint32_t flags = 0;
 
             if (CONFIG_FLAG(CreateFunctionProxy) && !scriptContext->IsProfiling())
             {
@@ -4035,7 +4035,7 @@ CHAKRA_API JsTTDCreateRecordRuntime(_In_ JsRuntimeAttributes attributes, _In_ bo
         return JsErrorInvalidArgument;
     }
 
-    return CreateRuntimeCore(attributes, nullptr, 0, true, false, enableDebugging, (uint32)snapInterval, (uint32)snapHistoryLength,
+    return CreateRuntimeCore(attributes, nullptr, 0, true, false, enableDebugging, (uint32_t)snapInterval, (uint32_t)snapHistoryLength,
         openResourceStream, nullptr, writeBytesToStream, flushAndCloseStream,
         threadService, runtime);
 #endif
@@ -4273,7 +4273,7 @@ CHAKRA_API JsTTDRawBufferCopySyncIndirect(_In_ JsValueRef dst, _In_ size_t dstIn
     }
 
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
-        PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTRawBufferCopySync, dst, (uint32)dstIndex, src, (uint32)srcIndex, (uint32)count);
+        PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTRawBufferCopySync, dst, (uint32_t)dstIndex, src, (uint32_t)srcIndex, (uint32_t)count);
 
         return JsNoError;
     });
@@ -4291,7 +4291,7 @@ CHAKRA_API JsTTDRawBufferModifySyncIndirect(_In_ JsValueRef buffer, _In_ size_t 
     }
 
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
-        PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTRawBufferModifySync, buffer, (uint32)index, (uint32)count);
+        PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTRawBufferModifySync, buffer, (uint32_t)index, (uint32_t)count);
 
         return JsNoError;
     });
@@ -4315,9 +4315,9 @@ CHAKRA_API JsTTDRawBufferAsyncModificationRegister(_In_ JsValueRef instance, _In
             TTDAssert(initialModPos - dstBuff->GetBuffer() < UINT32_MAX, "This is really big!!!");
             ptrdiff_t index = initialModPos - Js::VarTo<Js::ArrayBuffer>(instance)->GetBuffer();
 
-            scriptContext->TTDContextInfo->AddToAsyncPendingList(dstBuff, (uint32)index);
+            scriptContext->TTDContextInfo->AddToAsyncPendingList(dstBuff, (uint32_t)index);
 
-            PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTRawBufferAsyncModificationRegister, instance, (uint32)index);
+            PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTRawBufferAsyncModificationRegister, instance, (uint32_t)index);
         }
 
         return JsNoError;

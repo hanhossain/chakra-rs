@@ -139,7 +139,7 @@ namespace UnifiedRegex
         // Allocated and filled only if invoke Match below.
         Field(uint8_t) charToBits[TrigramAlphabet::AsciiTableSize];
 
-        Field(uint32) patterns[OctoquadIdentifier::NumPatterns];
+        Field(uint32_t) patterns[OctoquadIdentifier::NumPatterns];
 
     public:
         static OctoquadMatcher *New(Recycler* recycler, const StandardChars<Char>* standardChars, CaseInsensitive::MappingSource mappingSource, OctoquadIdentifier* identifier);

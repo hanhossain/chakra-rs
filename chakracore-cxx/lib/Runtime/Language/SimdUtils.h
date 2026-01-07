@@ -21,7 +21,7 @@
     Field(int32)   i32[4];\
     Field(int16)   i16[8];\
     Field(int8_t)    i8[16];\
-    Field(uint32)  u32[4];\
+    Field(uint32_t)  u32[4];\
     Field(uint16)  u16[8];\
     Field(uint8_t)   u8[16];\
     Field(float)   f32[4];\
@@ -166,76 +166,76 @@ namespace Js {
     class SIMDUtils
     {
     public:
-        static uint32 inline SIMDGetShiftAmountMask(uint32 eleSizeInBytes) { return (eleSizeInBytes << 3) - 1; }
+        static uint32_t inline SIMDGetShiftAmountMask(uint32_t eleSizeInBytes) { return (eleSizeInBytes << 3) - 1; }
 
         ////////////////////////////////////////////
         //SIMD Extract Lane / Replace Lane Helpers
         ////////////////////////////////////////////
-        static inline SIMDValue SIMD128InnerReplaceLaneF4(SIMDValue simdVal, const uint32 lane, const float value)
+        static inline SIMDValue SIMD128InnerReplaceLaneF4(SIMDValue simdVal, const uint32_t lane, const float value)
         {
             Assert(lane < 4);
             simdVal.f32[lane] = value;
             return simdVal;
         };
-        static inline SIMDValue SIMD128InnerReplaceLaneD2(SIMDValue simdVal, const uint32 lane, const double value)
+        static inline SIMDValue SIMD128InnerReplaceLaneD2(SIMDValue simdVal, const uint32_t lane, const double value)
         {
             Assert(lane < 2);
             simdVal.f64[lane] = value;
             return simdVal;
         };
 
-        static inline SIMDValue SIMD128InnerReplaceLaneI2(SIMDValue simdVal, const uint32 lane, const long value)
+        static inline SIMDValue SIMD128InnerReplaceLaneI2(SIMDValue simdVal, const uint32_t lane, const long value)
         {
             Assert(lane < 2);
             simdVal.i64[lane] = value;
             return simdVal;
         };
-        static inline SIMDValue SIMD128InnerReplaceLaneI4(SIMDValue simdVal, const uint32 lane, const int32 value)
+        static inline SIMDValue SIMD128InnerReplaceLaneI4(SIMDValue simdVal, const uint32_t lane, const int32 value)
         {
             Assert(lane < 4);
             simdVal.i32[lane] = value;
             return simdVal;
         };
-        static inline SIMDValue SIMD128InnerReplaceLaneI8(SIMDValue simdVal, const uint32 lane, const int16 value)
+        static inline SIMDValue SIMD128InnerReplaceLaneI8(SIMDValue simdVal, const uint32_t lane, const int16 value)
         {
             Assert(lane < 8);
             simdVal.i16[lane] = value;
             return simdVal;
         };
-        static inline SIMDValue SIMD128InnerReplaceLaneI16(SIMDValue simdVal, const uint32 lane, const int8_t value)
+        static inline SIMDValue SIMD128InnerReplaceLaneI16(SIMDValue simdVal, const uint32_t lane, const int8_t value)
         {
             Assert(lane < 16);
             simdVal.i8[lane] = value;
             return simdVal;
         };
 
-        static inline int32 SIMD128InnerExtractLaneB4(const SIMDValue src1, const uint32 lane) 
+        static inline int32 SIMD128InnerExtractLaneB4(const SIMDValue src1, const uint32_t lane) 
         {
             Assert(lane < 4);
             int val = SIMD128InnerExtractLaneI4(src1, lane);
             return val ? 1 : 0;
         };
 
-        static inline int16 SIMD128InnerExtractLaneB8(const SIMDValue src1, const uint32 lane)
+        static inline int16 SIMD128InnerExtractLaneB8(const SIMDValue src1, const uint32_t lane)
         {
             Assert(lane < 8);
             int16 val = SIMD128InnerExtractLaneI8(src1, lane);
             return val ? 1 : 0;
         };
 
-        static inline int8_t SIMD128InnerExtractLaneB16(const SIMDValue src1, const uint32 lane)
+        static inline int8_t SIMD128InnerExtractLaneB16(const SIMDValue src1, const uint32_t lane)
         {
             Assert(lane < 16);
             int8_t val = SIMD128InnerExtractLaneI16(src1, lane);
             return val ? 1 : 0;
         };
 
-        static inline double SIMD128InnerExtractLaneD2(const SIMDValue src1, const uint32 lane) { Assert(lane < 2); return src1.f64[lane]; };
-        static inline float SIMD128InnerExtractLaneF4(const SIMDValue src1, const uint32 lane) { Assert(lane < 4); return src1.f32[lane]; };
-        static inline long SIMD128InnerExtractLaneI2(const SIMDValue src1, const uint32 lane) { Assert(lane < 2); return src1.i64[lane]; };
-        static inline int32 SIMD128InnerExtractLaneI4(const SIMDValue src1, const uint32 lane) { Assert(lane < 4); return src1.i32[lane]; };
-        static inline int16 SIMD128InnerExtractLaneI8(const SIMDValue src1, const uint32 lane) { Assert(lane < 8); return src1.i16[lane]; };
-        static inline int8_t SIMD128InnerExtractLaneI16(const SIMDValue src1, const uint32 lane) { Assert(lane < 16); return src1.i8[lane];  };
+        static inline double SIMD128InnerExtractLaneD2(const SIMDValue src1, const uint32_t lane) { Assert(lane < 2); return src1.f64[lane]; };
+        static inline float SIMD128InnerExtractLaneF4(const SIMDValue src1, const uint32_t lane) { Assert(lane < 4); return src1.f32[lane]; };
+        static inline long SIMD128InnerExtractLaneI2(const SIMDValue src1, const uint32_t lane) { Assert(lane < 2); return src1.i64[lane]; };
+        static inline int32 SIMD128InnerExtractLaneI4(const SIMDValue src1, const uint32_t lane) { Assert(lane < 4); return src1.i32[lane]; };
+        static inline int16 SIMD128InnerExtractLaneI8(const SIMDValue src1, const uint32_t lane) { Assert(lane < 8); return src1.i16[lane]; };
+        static inline int8_t SIMD128InnerExtractLaneI16(const SIMDValue src1, const uint32_t lane) { Assert(lane < 16); return src1.i8[lane];  };
 
         static inline SIMDValue SIMD128BitSelect(const SIMDValue src1, const SIMDValue src2, const SIMDValue mask)
         {
@@ -250,7 +250,7 @@ namespace Js {
         ////////////////////////////////////////////
         // SIMD Shuffle Swizzle helpers
         ////////////////////////////////////////////
-        static SIMDValue SIMD128InnerShuffle(const SIMDValue src1, const SIMDValue src2, uint32 laneCount, const uint32* lanes = nullptr);
+        static SIMDValue SIMD128InnerShuffle(const SIMDValue src1, const SIMDValue src2, uint32_t laneCount, const uint32_t* lanes = nullptr);
 
         ///////////////////////////////////////////
         // SIMD Type conversion
@@ -284,6 +284,6 @@ namespace Js {
 #endif
         }
 
-        static uint32 SimdOpcodeAsIndex(Js::OpCode op);
+        static uint32_t SimdOpcodeAsIndex(Js::OpCode op);
     };
 }

@@ -1391,21 +1391,21 @@ public:
     }
 
     template <ObjectInfoBits attributes>
-    uint32 GetEndAddressOffset(size_t sizeCat)
+    uint32_t GetEndAddressOffset(size_t sizeCat)
     {
         Assert(HeapInfo::IsAlignedSmallObjectSize(sizeCat));
         return this->GetHeapInfo<attributes>()->template GetBucket<(ObjectInfoBits)(attributes & GetBlockTypeBitMask)>(sizeCat).GetAllocator()->GetEndAddressOffset();
     }
 
     template <ObjectInfoBits attributes>
-    uint32 GetFreeObjectListOffset(size_t sizeCat)
+    uint32_t GetFreeObjectListOffset(size_t sizeCat)
     {
         Assert(HeapInfo::IsAlignedSmallObjectSize(sizeCat));
         return this->GetHeapInfo<attributes>()->template GetBucket<(ObjectInfoBits)(attributes & GetBlockTypeBitMask)>(sizeCat).GetAllocator()->GetFreeObjectListOffset();
     }
 
-    void GetNormalHeapBlockAllocatorInfoForNativeAllocation(size_t sizeCat, void*& allocatorAddress, uint32& endAddressOffset, uint32& freeListOffset, bool allowBumpAllocation, bool isOOPJIT);
-    static void GetNormalHeapBlockAllocatorInfoForNativeAllocation(void* recyclerAddr, size_t sizeCat, void*& allocatorAddress, uint32& endAddressOffset, uint32& freeListOffset, bool allowBumpAllocation, bool isOOPJIT);
+    void GetNormalHeapBlockAllocatorInfoForNativeAllocation(size_t sizeCat, void*& allocatorAddress, uint32_t& endAddressOffset, uint32_t& freeListOffset, bool allowBumpAllocation, bool isOOPJIT);
+    static void GetNormalHeapBlockAllocatorInfoForNativeAllocation(void* recyclerAddr, size_t sizeCat, void*& allocatorAddress, uint32_t& endAddressOffset, uint32_t& freeListOffset, bool allowBumpAllocation, bool isOOPJIT);
     bool AllowNativeCodeBumpAllocation();
     static void TrackNativeAllocatedMemoryBlock(Recycler * recycler, void * memBlock, size_t sizeCat);
 

@@ -29,7 +29,7 @@ namespace Js
     }
 #endif
 
-    SIMDValue SIMDUtils::SIMD128InnerShuffle(const SIMDValue src1, const SIMDValue src2, uint32 laneCount, const uint32* lanes)
+    SIMDValue SIMDUtils::SIMD128InnerShuffle(const SIMDValue src1, const SIMDValue src2, uint32_t laneCount, const uint32_t* lanes)
     {
         SIMDValue result = { {{0}} };
         Assert(laneCount == 16 || laneCount == 8 || laneCount == 4);
@@ -108,16 +108,16 @@ namespace Js
 
 #if ENABLE_NATIVE_CODEGEN
     // Maps Simd opcodes which are non-contiguous to a zero-based linear space. Used to index a table using a Simd opcode.
-    uint32 SIMDUtils::SimdOpcodeAsIndex(Js::OpCode op)
+    uint32_t SIMDUtils::SimdOpcodeAsIndex(Js::OpCode op)
     {
         if (op <= Js::OpCode::Simd128_End)
         {
-            return (uint32)((Js::OpCode)op - Js::OpCode::Simd128_Start);
+            return (uint32_t)((Js::OpCode)op - Js::OpCode::Simd128_Start);
         }
         else
         {
             Assert(op >= Js::OpCode::Simd128_Start_Extend && op <= Js::OpCode::Simd128_End_Extend);
-            return (uint32)((Js::OpCode)op - Js::OpCode::Simd128_Start_Extend) + (uint32)(Js::OpCode::Simd128_End - Js::OpCode::Simd128_Start) + 1;
+            return (uint32_t)((Js::OpCode)op - Js::OpCode::Simd128_Start_Extend) + (uint32_t)(Js::OpCode::Simd128_End - Js::OpCode::Simd128_Start) + 1;
         }
     }
 #endif

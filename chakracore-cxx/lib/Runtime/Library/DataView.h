@@ -39,9 +39,9 @@ namespace Js
             static FunctionInfo GetterByteOffset;
         };
 
-        DataView(ArrayBufferBase* arrayBuffer, uint32 byteOffset, uint32 mappedLength, DynamicType* type);
+        DataView(ArrayBufferBase* arrayBuffer, uint32_t byteOffset, uint32_t mappedLength, DynamicType* type);
 
-        uint32 GetByteOffset() const { return byteOffset; }
+        uint32_t GetByteOffset() const { return byteOffset; }
         void ClearLengthAndBufferOnDetach();
 
         static Var NewInstance(RecyclableObject* function, CallInfo callInfo, ...);
@@ -68,7 +68,7 @@ namespace Js
         static Var EntryGetterByteOffset(RecyclableObject* function, CallInfo callInfo, ...);
 
         // objectArray support
-        virtual BOOL SetItemWithAttributes(uint32 index, Var value, PropertyAttributes attributes) override;
+        virtual BOOL SetItemWithAttributes(uint32_t index, Var value, PropertyAttributes attributes) override;
         virtual JavascriptEnumerator * GetIndexEnumerator(EnumeratorFlags flags, ScriptContext * requestContext) override
         {
             // Data View can not be an objectArray
@@ -84,9 +84,9 @@ namespace Js
         template<> void SwapRoutine(int16* input, int16* dest) {*dest =  RtlUshortByteSwap(*input); }
         template<> void SwapRoutine(uint16* input, uint16* dest) {*dest =  RtlUshortByteSwap(*input);}
         template<> void SwapRoutine(int32* input, int32* dest) {*dest =  RtlUlongByteSwap(*input);}
-        template<> void SwapRoutine(uint32* input, uint32* dest) {*dest =  RtlUlongByteSwap(*input);}
+        template<> void SwapRoutine(uint32_t* input, uint32_t* dest) {*dest =  RtlUlongByteSwap(*input);}
         // we don't want type conversion here, we just want to swap the bytes.
-        template<> void SwapRoutine(float* input, float* dest) { *((uint32*)dest) = RtlUlongByteSwap(*((uint32*)input)); }
+        template<> void SwapRoutine(float* input, float* dest) { *((uint32_t*)dest) = RtlUlongByteSwap(*((uint32_t*)input)); }
         template<> void SwapRoutine(double* input, double* dest) {*((unsigned long*)dest) = RtlUlonglongByteSwap(*((unsigned long*)input)); }
 
         template<typename TypeName>
@@ -94,13 +94,13 @@ namespace Js
         {
             ScriptContext* scriptContext = GetScriptContext();
 
-            uint32 length = GetLength();
+            uint32_t length = GetLength();
             if (length < sizeof(TypeName))
             {
                 JavascriptError::ThrowRangeError(scriptContext, JSERR_DataView_InvalidOffset, funcName);
             }
 
-            uint32 byteOffset = ArrayBuffer::ToIndex(offset, JSERR_DataView_InvalidOffset, scriptContext, length - sizeof(TypeName), false);
+            uint32_t byteOffset = ArrayBuffer::ToIndex(offset, JSERR_DataView_InvalidOffset, scriptContext, length - sizeof(TypeName), false);
             if (this->GetArrayBuffer()->IsDetached())
             {
                 JavascriptError::ThrowTypeError(scriptContext, JSERR_DetachedTypedArray, funcName);
@@ -130,13 +130,13 @@ namespace Js
         {
             ScriptContext* scriptContext = GetScriptContext();
 
-            uint32 length = GetLength();
+            uint32_t length = GetLength();
             if (length < sizeof(TypeName))
             {
                 JavascriptError::ThrowRangeError(scriptContext, JSERR_DataView_InvalidOffset, funcName);
             }
 
-            uint32 byteOffset = ArrayBuffer::ToIndex(offset, JSERR_DataView_InvalidOffset, scriptContext, length - sizeof(TypeName), false);
+            uint32_t byteOffset = ArrayBuffer::ToIndex(offset, JSERR_DataView_InvalidOffset, scriptContext, length - sizeof(TypeName), false);
             if (this->GetArrayBuffer()->IsDetached())
             {
                 JavascriptError::ThrowTypeError(scriptContext, JSERR_DetachedTypedArray, funcName);
@@ -166,13 +166,13 @@ namespace Js
         {
             ScriptContext* scriptContext = GetScriptContext();
 
-            uint32 length = GetLength();
+            uint32_t length = GetLength();
             if (length < sizeof(TypeName))
             {
                 JavascriptError::ThrowRangeError(scriptContext, JSERR_DataView_InvalidOffset, funcName);
             }
 
-            uint32 byteOffset = ArrayBuffer::ToIndex(offset, JSERR_DataView_InvalidOffset, scriptContext, length - sizeof(TypeName), false);
+            uint32_t byteOffset = ArrayBuffer::ToIndex(offset, JSERR_DataView_InvalidOffset, scriptContext, length - sizeof(TypeName), false);
             if (this->GetArrayBuffer()->IsDetached())
             {
                 JavascriptError::ThrowTypeError(scriptContext, JSERR_DetachedTypedArray, funcName);
@@ -198,7 +198,7 @@ namespace Js
         template<> void SetValue<double>(Var offset, double value, const char16_t *funcName, BOOL isLittleEndian /* = FALSE */);
 #endif
 
-        Field(uint32) byteOffset;
+        Field(uint32_t) byteOffset;
         Field(uint8_t*) buffer;   // beginning of buffer
 
     };

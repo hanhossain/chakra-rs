@@ -130,7 +130,7 @@ namespace Js
         };
 
       private:
-        static JavascriptFunction * WalkStackForExceptionContextInternal(ScriptContext& scriptContext, JavascriptExceptionContext& exceptionContext, Var thrownObject, uint32& callerByteCodeOffset,
+        static JavascriptFunction * WalkStackForExceptionContextInternal(ScriptContext& scriptContext, JavascriptExceptionContext& exceptionContext, Var thrownObject, uint32_t& callerByteCodeOffset,
             unsigned long stackCrawlLimit, void * returnAddress, bool isThrownException, bool resetStack = false);
 
         static void ThrowExceptionObjectInternal(Js::JavascriptExceptionObject * exceptionObject, ScriptContext* scriptContext, bool fillExceptionContext, bool considerPassingToDebugger, void * returnAddress, bool resetStack);

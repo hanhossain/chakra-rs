@@ -25,17 +25,17 @@ public:
         Completed
     };
 
-    static uint32 GetFrameOffset()
+    static uint32_t GetFrameOffset()
     {
         return offsetof(JavascriptGenerator, frame);
     }
 
-    static uint32 GetCallInfoOffset()
+    static uint32_t GetCallInfoOffset()
     {
         return offsetof(JavascriptGenerator, args) + Arguments::GetCallInfoOffset();
     }
 
-    static uint32 GetArgsPtrOffset()
+    static uint32_t GetArgsPtrOffset()
     {
         return offsetof(JavascriptGenerator, args) + Arguments::GetValuesOffset();
     }
@@ -137,21 +137,21 @@ public:
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
 public:
     struct BailInSymbol {
-        uint32 id;
+        uint32_t id;
         Var value;
-        static uint32 GetBailInSymbolIdOffset() { return offsetof(BailInSymbol, id); }
-        static uint32 GetBailInSymbolValueOffset() { return offsetof(BailInSymbol, value); }
+        static uint32_t GetBailInSymbolIdOffset() { return offsetof(BailInSymbol, id); }
+        static uint32_t GetBailInSymbolValueOffset() { return offsetof(BailInSymbol, value); }
     };
 
     Field(BailInSymbol*) bailInSymbolsTraceArray = nullptr;
     Field(int) bailInSymbolsTraceArrayCount = 0;
 
-    static uint32 GetBailInSymbolsTraceArrayOffset()
+    static uint32_t GetBailInSymbolsTraceArrayOffset()
     {
         return offsetof(JavascriptGenerator, bailInSymbolsTraceArray);
     }
 
-    static uint32 GetBailInSymbolsTraceArrayCountOffset()
+    static uint32_t GetBailInSymbolsTraceArrayCountOffset()
     {
         return offsetof(JavascriptGenerator, bailInSymbolsTraceArrayCount);
     }

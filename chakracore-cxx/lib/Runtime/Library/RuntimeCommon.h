@@ -33,14 +33,14 @@ namespace Js
 #error Must define alignment capabilities for processor
 #endif
 
-    typedef uint32 RegSlot;
+    typedef uint32_t RegSlot;
     typedef uint16 ArgSlot;
     typedef uint16 PropertyIndex;
     typedef int32 BigPropertyIndex;
     typedef unsigned char PropertyAttributes;
-    typedef uint32 SourceId;
+    typedef uint32_t SourceId;
     typedef uint16 ProfileId;
-    typedef uint32 InlineCacheIndex;
+    typedef uint32_t InlineCacheIndex;
 
     // Inline cache flags when property of the object is not writable
     enum InlineCacheFlags : char {

@@ -5,8 +5,8 @@
 #include "CommonCommonPch.h"
 #include "MathUtil.h"
 
-uint32
-Math::NextPowerOf2(uint32 n)
+uint32_t
+Math::NextPowerOf2(uint32_t n)
 {
     n = n - 1;
     n = n | (n >> 1);

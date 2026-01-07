@@ -23,7 +23,7 @@ namespace Js
             , bool oopJIT = false
 #endif
         );
-        static uint32 GetValueOffset()
+        static uint32_t GetValueOffset()
         {
             return offsetof(JavascriptNumber, m_value);
         }
@@ -45,8 +45,8 @@ namespace Js
 #endif
         static Var ToVarInPlace(int32 nValue, ScriptContext* scriptContext, JavascriptNumber *result);
         static Var ToVarInPlace(long value, ScriptContext* scriptContext, JavascriptNumber *result);
-        static Var ToVarInPlace(uint32 nValue, ScriptContext* scriptContext, JavascriptNumber *result);
-        static Var ToVar(uint32 nValue, ScriptContext* scriptContext);
+        static Var ToVarInPlace(uint32_t nValue, ScriptContext* scriptContext, JavascriptNumber *result);
+        static Var ToVar(uint32_t nValue, ScriptContext* scriptContext);
         static Var ToVar(long nValue, ScriptContext* scriptContext);
         static Var ToVar(unsigned long nValue, ScriptContext* scriptContext);
         static double GetValue(Var aValue);

@@ -59,7 +59,7 @@ namespace Js
         virtual ArrayBuffer * GetAsArrayBuffer() = 0;
         virtual SharedArrayBuffer * GetAsSharedArrayBuffer() { return nullptr; }
         virtual void AddParent(ArrayBufferParent* parent) { }
-        virtual uint32 GetByteLength() const = 0;
+        virtual uint32_t GetByteLength() const = 0;
         virtual uint8_t* GetBuffer() const = 0;
         virtual bool IsValidVirtualBufferLength(uint length) const { return false; };
 
@@ -115,7 +115,7 @@ namespace Js
         public:
             FreeFN freeFunction;
             Recycler* recycler;
-            ArrayBufferDetachedState(RefCountedBuffer* buffer, uint32 bufferLength, FreeFN freeFunction, Recycler* r, ArrayBufferAllocationType allocationType)
+            ArrayBufferDetachedState(RefCountedBuffer* buffer, uint32_t bufferLength, FreeFN freeFunction, Recycler* r, ArrayBufferAllocationType allocationType)
                 : ArrayBufferDetachedStateBase(TypeIds_ArrayBuffer, buffer, bufferLength, allocationType),
                 recycler(r),
                 freeFunction(freeFunction)
@@ -138,11 +138,11 @@ namespace Js
         };
 
         template <typename Allocator>
-        ArrayBuffer(uint32 length, DynamicType * type, Allocator allocator);
+        ArrayBuffer(uint32_t length, DynamicType * type, Allocator allocator);
 
-        ArrayBuffer(byte* buffer, uint32 length, DynamicType * type, bool isExternal = false);
+        ArrayBuffer(byte* buffer, uint32_t length, DynamicType * type, bool isExternal = false);
 
-        ArrayBuffer(RefCountedBuffer* buffContent, uint32 length, DynamicType * type);
+        ArrayBuffer(RefCountedBuffer* buffContent, uint32_t length, DynamicType * type);
 
         class EntryInfo
         {
@@ -172,7 +172,7 @@ namespace Js
         virtual BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
 
         ArrayBufferDetachedStateBase* DetachAndGetState(bool queueForDelayFree = true);
-        virtual uint32 GetByteLength() const override;
+        virtual uint32_t GetByteLength() const override;
         virtual uint8_t* GetBuffer() const override;
         RefCountedBuffer *GetBufferContent() { return bufferContent;  }
         static int GetBufferContentsOffset() { return offsetof(ArrayBuffer, bufferContent); }
@@ -185,26 +185,26 @@ namespace Js
         void Detach();
 #if defined(TARGET_64)
         //maximum 2G -1  for amd64
-        static const uint32 MaxArrayBufferLength = 0x7FFFFFFF;
+        static const uint32_t MaxArrayBufferLength = 0x7FFFFFFF;
 #else
         // maximum 1G to avoid arithmetic overflow.
-        static const uint32 MaxArrayBufferLength = 1 << 30;
+        static const uint32_t MaxArrayBufferLength = 1 << 30;
 #endif
-        static const uint32 ParentsCleanupThreshold = 1000;
+        static const uint32_t ParentsCleanupThreshold = 1000;
 
         virtual bool IsValidAsmJsBufferLength(uint length, bool forceCheck = false) { return false; }
         virtual bool IsArrayBuffer() override { return true; }
         virtual bool IsSharedArrayBuffer() override { return false; }
         virtual ArrayBuffer * GetAsArrayBuffer() override;
 
-        virtual ArrayBufferContentForDelayedFreeBase* CopyBufferContentForDelayedFree(RefCountedBuffer * content, uint32 bufferLength);
+        virtual ArrayBufferContentForDelayedFreeBase* CopyBufferContentForDelayedFree(RefCountedBuffer * content, uint32_t bufferLength);
 
-        static uint32 ToIndex(Var value, int32 errorCode, ScriptContext *scriptContext, uint32 MaxAllowedLength, bool checkSameValueZero = true);
+        static uint32_t ToIndex(Var value, int32 errorCode, ScriptContext *scriptContext, uint32_t MaxAllowedLength, bool checkSameValueZero = true);
 
     protected:
         virtual void ReportExternalMemoryFree();
 
-        virtual ArrayBufferDetachedStateBase* CreateDetachedState(RefCountedBuffer * content, uint32 bufferLength) = 0;
+        virtual ArrayBufferDetachedStateBase* CreateDetachedState(RefCountedBuffer * content, uint32_t bufferLength) = 0;
 
         // This function will be called from External buffer and projection buffer as they pass the buffer
         virtual void ReleaseBufferContent();
@@ -223,7 +223,7 @@ namespace Js
 
         Field(OtherParents*) otherParents;
         FieldNoBarrier(RefCountedBuffer *) bufferContent;
-        Field(uint32) bufferLength;       // Number of bytes allocated
+        Field(uint32_t) bufferLength;       // Number of bytes allocated
     };
 
     template <> inline bool VarIsImpl<ArrayBuffer>(RecyclableObject* obj)
@@ -242,7 +242,7 @@ namespace Js
     protected:
         DEFINE_VTABLE_CTOR_ABSTRACT(ArrayBufferParent, ArrayObject);
 
-        ArrayBufferParent(DynamicType * type, uint32 length, ArrayBufferBase* arrayBuffer)
+        ArrayBufferParent(DynamicType * type, uint32_t length, ArrayBufferBase* arrayBuffer)
             : ArrayObject(type, /*initSlots*/true, length),
             arrayBuffer(arrayBuffer)
         {
@@ -271,9 +271,9 @@ namespace Js
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptArrayBuffer);
 
     public:
-        static JavascriptArrayBuffer* Create(uint32 length, DynamicType * type);
-        static JavascriptArrayBuffer* Create(byte* buffer, uint32 length, DynamicType * type);
-        static JavascriptArrayBuffer* Create(RefCountedBuffer* buffer, uint32 length, DynamicType * type);
+        static JavascriptArrayBuffer* Create(uint32_t length, DynamicType * type);
+        static JavascriptArrayBuffer* Create(byte* buffer, uint32_t length, DynamicType * type);
+        static JavascriptArrayBuffer* Create(RefCountedBuffer* buffer, uint32_t length, DynamicType * type);
         virtual void Dispose(bool isShutdown) override;
         virtual void Finalize(bool isShutdown) override;
 
@@ -285,13 +285,13 @@ namespace Js
 
        protected:
         JavascriptArrayBuffer(DynamicType * type);
-        virtual ArrayBufferDetachedStateBase* CreateDetachedState(RefCountedBuffer * content, uint32 bufferLength) override;
+        virtual ArrayBufferDetachedStateBase* CreateDetachedState(RefCountedBuffer * content, uint32_t bufferLength) override;
 
         template<typename Allocator>
-        JavascriptArrayBuffer(uint32 length, DynamicType * type, Allocator allocator): ArrayBuffer(length, type, allocator){}
-        JavascriptArrayBuffer(uint32 length, DynamicType * type);
-        JavascriptArrayBuffer(byte* buffer, uint32 length, DynamicType * type);
-        JavascriptArrayBuffer(RefCountedBuffer* buffer, uint32 length, DynamicType * type);
+        JavascriptArrayBuffer(uint32_t length, DynamicType * type, Allocator allocator): ArrayBuffer(length, type, allocator){}
+        JavascriptArrayBuffer(uint32_t length, DynamicType * type);
+        JavascriptArrayBuffer(byte* buffer, uint32_t length, DynamicType * type);
+        JavascriptArrayBuffer(RefCountedBuffer* buffer, uint32_t length, DynamicType * type);
 
 #if ENABLE_TTD
     public:
@@ -304,21 +304,21 @@ namespace Js
     class WebAssemblyArrayBuffer : public JavascriptArrayBuffer
     {
         template<typename Allocator>
-        WebAssemblyArrayBuffer(uint32 length, DynamicType * type, Allocator allocator);
-        WebAssemblyArrayBuffer(uint32 length, DynamicType * type);
-        WebAssemblyArrayBuffer(byte* buffer, uint32 length, DynamicType * type);
+        WebAssemblyArrayBuffer(uint32_t length, DynamicType * type, Allocator allocator);
+        WebAssemblyArrayBuffer(uint32_t length, DynamicType * type);
+        WebAssemblyArrayBuffer(byte* buffer, uint32_t length, DynamicType * type);
     protected:
         DEFINE_VTABLE_CTOR(WebAssemblyArrayBuffer, JavascriptArrayBuffer);
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(WebAssemblyArrayBuffer);
     public:
-        static WebAssemblyArrayBuffer* Create(byte* buffer, uint32 length, DynamicType * type);
-        WebAssemblyArrayBuffer* GrowMemory(uint32 newBufferLength);
+        static WebAssemblyArrayBuffer* Create(byte* buffer, uint32_t length, DynamicType * type);
+        WebAssemblyArrayBuffer* GrowMemory(uint32_t newBufferLength);
 
         virtual bool IsValidVirtualBufferLength(uint length) const override;
         virtual bool IsWebAssemblyArrayBuffer() override { return true; }
 
     protected:
-        virtual ArrayBufferDetachedStateBase* CreateDetachedState(RefCountedBuffer * content, uint32 bufferLength) override;
+        virtual ArrayBufferDetachedStateBase* CreateDetachedState(RefCountedBuffer * content, uint32_t bufferLength) override;
     };
 #endif
 
@@ -330,26 +330,26 @@ namespace Js
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(ProjectionArrayBuffer);
 
         typedef void (*FreeFn)(void * ptr);
-        virtual ArrayBufferDetachedStateBase* CreateDetachedState(RefCountedBuffer * content, uint32 bufferLength) override
+        virtual ArrayBufferDetachedStateBase* CreateDetachedState(RefCountedBuffer * content, uint32_t bufferLength) override
         {
             return HeapNew(ArrayBufferDetachedState<FreeFn>, content, bufferLength, CoTaskMemFree, GetScriptContext()->GetRecycler(), ArrayBufferAllocationType::CoTask);
         }
 
     public:
         // Create constructor. script engine creates a buffer allocated via CoTaskMemAlloc.
-        static ProjectionArrayBuffer* Create(uint32 length, DynamicType * type);
+        static ProjectionArrayBuffer* Create(uint32_t length, DynamicType * type);
         // take over ownership. a CoTaskMemAlloc'ed buffer passed in via projection.
-        static ProjectionArrayBuffer* Create(byte* buffer, uint32 length, DynamicType * type);
-        static ProjectionArrayBuffer* Create(RefCountedBuffer* buffer, uint32 length, DynamicType * type);
+        static ProjectionArrayBuffer* Create(byte* buffer, uint32_t length, DynamicType * type);
+        static ProjectionArrayBuffer* Create(RefCountedBuffer* buffer, uint32_t length, DynamicType * type);
 
-        virtual ArrayBufferContentForDelayedFreeBase* CopyBufferContentForDelayedFree(RefCountedBuffer * content, uint32 bufferLength) override;
+        virtual ArrayBufferContentForDelayedFreeBase* CopyBufferContentForDelayedFree(RefCountedBuffer * content, uint32_t bufferLength) override;
 
         virtual void Dispose(bool isShutdown) override;
         virtual void Finalize(bool isShutdown) override;
     private:
-        ProjectionArrayBuffer(uint32 length, DynamicType * type);
-        ProjectionArrayBuffer(byte* buffer, uint32 length, DynamicType * type);
-        ProjectionArrayBuffer(RefCountedBuffer* buffer, uint32 length, DynamicType * type);
+        ProjectionArrayBuffer(uint32_t length, DynamicType * type);
+        ProjectionArrayBuffer(byte* buffer, uint32_t length, DynamicType * type);
+        ProjectionArrayBuffer(RefCountedBuffer* buffer, uint32_t length, DynamicType * type);
     };
 
     // non-owning ArrayBuffer used for wrapping external data
@@ -360,11 +360,11 @@ namespace Js
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(ExternalArrayBuffer);
 
     public:
-        ExternalArrayBuffer(byte *buffer, uint32 length, DynamicType *type);
-        ExternalArrayBuffer(RefCountedBuffer *buffer, uint32 length, DynamicType *type);
-        static ExternalArrayBuffer* Create(RefCountedBuffer* buffer, uint32 length, DynamicType * type);
+        ExternalArrayBuffer(byte *buffer, uint32_t length, DynamicType *type);
+        ExternalArrayBuffer(RefCountedBuffer *buffer, uint32_t length, DynamicType *type);
+        static ExternalArrayBuffer* Create(RefCountedBuffer* buffer, uint32_t length, DynamicType * type);
     protected:
-        virtual ArrayBufferDetachedStateBase* CreateDetachedState(RefCountedBuffer* buffer, uint32 bufferLength) override;
+        virtual ArrayBufferDetachedStateBase* CreateDetachedState(RefCountedBuffer* buffer, uint32_t bufferLength) override;
         virtual void ReportExternalMemoryFree() override;
 
 #if ENABLE_TTD
@@ -377,7 +377,7 @@ namespace Js
     class ExternalArrayBufferDetachedState : public ArrayBufferDetachedStateBase
     {
     public:
-        ExternalArrayBufferDetachedState(RefCountedBuffer* buffer, uint32 bufferLength);
+        ExternalArrayBufferDetachedState(RefCountedBuffer* buffer, uint32_t bufferLength);
         virtual void ClearSelfOnly() override;
         virtual void DiscardState() override;
         virtual void Discard() override;

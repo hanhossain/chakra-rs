@@ -36,7 +36,7 @@ namespace Js {
         static bool IsOverflow(intptr_t nValue);
 #endif
         static bool IsOverflow(int32 nValue);
-        static bool IsOverflow(uint32 nValue);
+        static bool IsOverflow(uint32_t nValue);
         static bool IsOverflow(long nValue);
         static bool IsOverflow(unsigned long nValue);
 
@@ -48,7 +48,7 @@ namespace Js {
         static double ToDouble(Var aValue);
         static int32 ToInt32(Var aValue);
         static int32 ToInt32(intptr_t aValue);
-        static uint32 ToUInt32(Var aValue);
+        static uint32_t ToUInt32(Var aValue);
         static long ToInt64(Var aValue);
         static uint16 ToUInt16(Var aValue);
         static Var ToVarUnchecked(int nValue);

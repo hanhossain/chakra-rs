@@ -27,7 +27,7 @@ namespace Js
         {
             while (true)
             {
-                uint32 lastIndex = index;
+                uint32_t lastIndex = index;
                 index = arrayObject->GetNextIndex(index);
                 if (index == JavascriptArray::InvalidIndex) // End of array
                 {

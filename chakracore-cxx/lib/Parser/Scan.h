@@ -618,8 +618,8 @@ public:
         // Keep a reference to the scanner.
         // We will use it to signal an error if we fail to allocate the buffer.
         Scanner<EncodingPolicy>* m_pscanner;
-        uint32 m_cchMax;
-        uint32 m_ichCur;
+        uint32_t m_cchMax;
+        uint32_t m_ichCur;
         __notnull __elem_writableTo(m_cchMax) OLECHAR *m_prgch;
         byte m_rgbInit[256];
 
@@ -810,7 +810,7 @@ private:
     EncodedCharPtr FScanNumber(EncodedCharPtr p, double *pdbl, LikelyNumberType& likelyInt, size_t savedMultiUnits);
     IdentPtr PidOfIdentiferAt(EncodedCharPtr p, EncodedCharPtr last, bool fHadEscape, bool fHasMultiChar);
     IdentPtr PidOfIdentiferAt(EncodedCharPtr p, EncodedCharPtr last);
-    uint32 UnescapeToTempBuf(EncodedCharPtr p, EncodedCharPtr last);
+    uint32_t UnescapeToTempBuf(EncodedCharPtr p, EncodedCharPtr last);
 
     void SaveSrcPos(void)
     {

@@ -19,7 +19,7 @@ namespace Js
         static void DumpImplicitArgIns(FunctionBody * dumpFunction);
         static void DumpI4(int value);
         static void DumpI8(long value);
-        static void DumpU4(uint32 value);
+        static void DumpU4(uint32_t value);
         static void DumpU2(uint16 value);
         static void DumpOffset(int byteOffset, ByteCodeReader const& reader);
         static void DumpAddr(void* addr);

@@ -178,14 +178,14 @@ namespace Js
         static int32_t SerializeToBuffer(ScriptContext * scriptContext, ArenaAllocator * alloc, uint32_t sourceByteLength, LPCUTF8 utf8Source, FunctionBody * function, SRCINFO const* srcInfo, byte ** buffer, uint32_t * bufferBytes, uint32_t dwFlags = 0);
 
         // Deserialize a function body. The content of utf8Source must be the same as was originally passed to SerializeToBuffer
-        static int32_t DeserializeFromBuffer(ScriptContext * scriptContext, uint32 scriptFlags, LPCUTF8 utf8Source, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, Field(FunctionBody*)* function, uint sourceIndex = Js::Constants::InvalidSourceIndex);
-        static int32_t DeserializeFromBuffer(ScriptContext * scriptContext, uint32 scriptFlags, ISourceHolder* sourceHolder, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, Field(FunctionBody*)* function, uint sourceIndex = Js::Constants::InvalidSourceIndex);
+        static int32_t DeserializeFromBuffer(ScriptContext * scriptContext, uint32_t scriptFlags, LPCUTF8 utf8Source, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, Field(FunctionBody*)* function, uint sourceIndex = Js::Constants::InvalidSourceIndex);
+        static int32_t DeserializeFromBuffer(ScriptContext * scriptContext, uint32_t scriptFlags, ISourceHolder* sourceHolder, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, Field(FunctionBody*)* function, uint sourceIndex = Js::Constants::InvalidSourceIndex);
 
         static FunctionBody* DeserializeFunction(ScriptContext* scriptContext, DeferDeserializeFunctionInfo* deferredFunction);
 
         // Deserialize a string from the string table based on the stringId.
         // Note: Returns the count of characters (not bytes) of the string via the stringLength argument.
-        static const char16_t* DeserializeString(const DeferredFunctionStub* deferredStub, uint stringId, uint32& stringLength);
+        static const char16_t* DeserializeString(const DeferredFunctionStub* deferredStub, uint stringId, uint32_t& stringLength);
 
         // This lib doesn't directly depend on the generated interfaces. Ensure the same codes with a C_ASSERT
         static const int32_t CantGenerate = 0x80020201L;
@@ -194,6 +194,6 @@ namespace Js
         static void ReadSourceInfo(const DeferDeserializeFunctionInfo* deferredFunction, int& lineNumber, int& columnNumber, bool& m_isEval, bool& m_isDynamicFunction);
 
     private:
-        static int32_t DeserializeFromBufferInternal(ScriptContext * scriptContext, uint32 scriptFlags, LPCUTF8 utf8Source, ISourceHolder* sourceHolder, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, Field(FunctionBody*)* function, uint sourceIndex = Js::Constants::InvalidSourceIndex);
+        static int32_t DeserializeFromBufferInternal(ScriptContext * scriptContext, uint32_t scriptFlags, LPCUTF8 utf8Source, ISourceHolder* sourceHolder, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, Field(FunctionBody*)* function, uint sourceIndex = Js::Constants::InvalidSourceIndex);
     };
 }

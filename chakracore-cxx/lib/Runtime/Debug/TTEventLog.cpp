@@ -7,8 +7,8 @@
 
 #if ENABLE_TTD
 
-#define TTD_CREATE_EVENTLIST_VTABLE_ENTRY(TAG, WRAPPER, TYPE, EXEC_FP, UNLOAD_FP, EMIT_FP, PARSE_FP) this->m_eventListVTable[(uint32)NSLogEvents::EventKind:: ## TAG] = { NSLogEvents::ContextExecuteKind:: ## WRAPPER, EXEC_FP, UNLOAD_FP, EMIT_FP, PARSE_FP, TTD_EVENT_PLUS_DATA_SIZE_DIRECT(sizeof(NSLogEvents:: TYPE)) }
-#define TTD_CREATE_EVENTLIST_VTABLE_ENTRY_COMMON(TAG, WRAPPER, TYPE, EXEC_FP) this->m_eventListVTable[(uint32)NSLogEvents::EventKind:: ## TAG] = { NSLogEvents::ContextExecuteKind:: ## WRAPPER, NSLogEvents:: ## EXEC_FP, nullptr, NSLogEvents:: ## TYPE ## _Emit ## <NSLogEvents::EventKind:: ## TAG ## >, NSLogEvents:: ## TYPE ## _Parse ## <NSLogEvents::EventKind:: ## TAG ## >, TTD_EVENT_PLUS_DATA_SIZE_DIRECT(sizeof(NSLogEvents:: ## TYPE)) }
+#define TTD_CREATE_EVENTLIST_VTABLE_ENTRY(TAG, WRAPPER, TYPE, EXEC_FP, UNLOAD_FP, EMIT_FP, PARSE_FP) this->m_eventListVTable[(uint32_t)NSLogEvents::EventKind:: ## TAG] = { NSLogEvents::ContextExecuteKind:: ## WRAPPER, EXEC_FP, UNLOAD_FP, EMIT_FP, PARSE_FP, TTD_EVENT_PLUS_DATA_SIZE_DIRECT(sizeof(NSLogEvents:: TYPE)) }
+#define TTD_CREATE_EVENTLIST_VTABLE_ENTRY_COMMON(TAG, WRAPPER, TYPE, EXEC_FP) this->m_eventListVTable[(uint32_t)NSLogEvents::EventKind:: ## TAG] = { NSLogEvents::ContextExecuteKind:: ## WRAPPER, NSLogEvents:: ## EXEC_FP, nullptr, NSLogEvents:: ## TYPE ## _Emit ## <NSLogEvents::EventKind:: ## TAG ## >, NSLogEvents:: ## TYPE ## _Parse ## <NSLogEvents::EventKind:: ## TAG ## >, TTD_EVENT_PLUS_DATA_SIZE_DIRECT(sizeof(NSLogEvents:: ## TYPE)) }
 
 namespace TTD
 {
@@ -116,7 +116,7 @@ namespace TTD
                 }
 
                 ppos = cpos;
-                cpos += this->m_vtable[(uint32)data->EventKind].DataSize;
+                cpos += this->m_vtable[(uint32_t)data->EventKind].DataSize;
             }
         }
     }
@@ -141,14 +141,14 @@ namespace TTD
             while(cpos < curr->CurrPos)
             {
                 NSLogEvents::EventLogEntry* entry = reinterpret_cast<NSLogEvents::EventLogEntry*>(curr->BlockData + cpos);
-                auto unloadFP = this->m_vtable[(uint32)entry->EventKind].UnloadFP; //use vtable magic here
+                auto unloadFP = this->m_vtable[(uint32_t)entry->EventKind].UnloadFP; //use vtable magic here
 
                 if(unloadFP != nullptr)
                 {
                     unloadFP(entry, *(this->m_alloc));
                 }
 
-                cpos += this->m_vtable[(uint32)entry->EventKind].DataSize;
+                cpos += this->m_vtable[(uint32_t)entry->EventKind].DataSize;
             }
             curr->StartPos = curr->CurrPos;
 
@@ -177,14 +177,14 @@ namespace TTD
     {
         TTDAssert(reinterpret_cast<NSLogEvents::EventLogEntry*>(block->BlockData + block->StartPos) == data, "Not the data at the start of the list!!!");
 
-        auto unloadFP = this->m_vtable[(uint32)data->EventKind].UnloadFP; //use vtable magic here
+        auto unloadFP = this->m_vtable[(uint32_t)data->EventKind].UnloadFP; //use vtable magic here
 
         if(unloadFP != nullptr)
         {
             unloadFP(data, *(this->m_alloc));
         }
 
-        block->StartPos += this->m_vtable[(uint32)data->EventKind].DataSize;
+        block->StartPos += this->m_vtable[(uint32_t)data->EventKind].DataSize;
         if(block->StartPos == block->CurrPos)
         {
             this->RemoveArrayLink(block);
@@ -196,9 +196,9 @@ namespace TTD
         return this->m_headBlock == nullptr;
     }
 
-    uint32 TTEventList::Count() const
+    uint32_t TTEventList::Count() const
     {
-        uint32 count = 0;
+        uint32_t count = 0;
 
         for(TTEventListLink* curr = this->m_headBlock; curr != nullptr; curr = curr->Previous)
         {
@@ -208,7 +208,7 @@ namespace TTD
                 count++;
 
                 NSLogEvents::EventLogEntry* data = reinterpret_cast<NSLogEvents::EventLogEntry*>(curr->BlockData + cpos);
-                cpos += this->m_vtable[(uint32)data->EventKind].DataSize;
+                cpos += this->m_vtable[(uint32_t)data->EventKind].DataSize;
             }
         }
 
@@ -254,7 +254,7 @@ namespace TTD
     void TTEventList::Iterator::MoveNext()
     {
         NSLogEvents::EventLogEntry* data = this->Current();
-        size_t dataSize = this->m_vtable[(uint32)data->EventKind].DataSize;
+        size_t dataSize = this->m_vtable[(uint32_t)data->EventKind].DataSize;
 
         if(this->m_currIdx + dataSize < this->m_currLink->CurrPos)
         {
@@ -282,12 +282,12 @@ namespace TTD
             if(this->m_currLink != nullptr && this->m_currIdx < this->m_currLink->CurrPos)
             {
                 NSLogEvents::EventLogEntry* data = this->Current();
-                size_t npos = this->m_vtable[(uint32)data->EventKind].DataSize;
+                size_t npos = this->m_vtable[(uint32_t)data->EventKind].DataSize;
                 while(npos < this->m_currLink->CurrPos)
                 {
                     this->m_currIdx = npos;
                     data = this->Current();
-                    npos += this->m_vtable[(uint32)data->EventKind].DataSize;
+                    npos += this->m_vtable[(uint32_t)data->EventKind].DataSize;
                 }
             }
         }
@@ -326,7 +326,7 @@ namespace TTD
                 ipos = cpos;
 
                 NSLogEvents::EventLogEntry* data = reinterpret_cast<NSLogEvents::EventLogEntry*>(this->m_headBlock->BlockData + cpos);
-                cpos += this->m_vtable[(uint32)data->EventKind].DataSize;
+                cpos += this->m_vtable[(uint32_t)data->EventKind].DataSize;
             } while(cpos != this->m_headBlock->CurrPos);
 
             return Iterator(this->m_headBlock, ipos, this->m_vtable, &this->m_previousEventMap);
@@ -350,7 +350,7 @@ namespace TTD
         TTDAssert(this->m_modeStack.Count() > 0, "Should never be empty!!!");
 
         TTDMode cm = TTDMode::Invalid;
-        for(uint32 i = 0; i < this->m_modeStack.Count(); ++i)
+        for(uint32_t i = 0; i < this->m_modeStack.Count(); ++i)
         {
             TTDMode m = this->m_modeStack.GetAt(i);
             switch(m)
@@ -493,7 +493,7 @@ namespace TTD
 
     void EventLog::InitializeEventListVTable()
     {
-        this->m_eventListVTable = this->m_miscSlabAllocator.SlabAllocateArray<NSLogEvents::EventLogEntryVTableEntry>((uint32)NSLogEvents::EventKind::Count);
+        this->m_eventListVTable = this->m_miscSlabAllocator.SlabAllocateArray<NSLogEvents::EventLogEntryVTableEntry>((uint32_t)NSLogEvents::EventKind::Count);
 
         TTD_CREATE_EVENTLIST_VTABLE_ENTRY(SnapshotTag, GlobalAPIWrapper, SnapshotEventLogEntry, nullptr, NSLogEvents::SnapshotEventLogEntry_UnloadEventMemory, NSLogEvents::SnapshotEventLogEntry_Emit, NSLogEvents::SnapshotEventLogEntry_Parse);
         TTD_CREATE_EVENTLIST_VTABLE_ENTRY(EventLoopYieldPointTag, GlobalAPIWrapper, EventLoopYieldPointEntry, nullptr, nullptr, NSLogEvents::EventLoopYieldPointEntry_Emit, NSLogEvents::EventLoopYieldPointEntry_Parse);
@@ -760,10 +760,10 @@ namespace TTD
         this->m_propertyRecordPinSet->AddNew(const_cast<Js::PropertyRecord*>(record));
     }
 
-    const NSSnapValues::TopLevelScriptLoadFunctionBodyResolveInfo* EventLog::AddScriptLoad(Js::FunctionBody* fb, Js::ModuleID moduleId, unsigned long sourceContextId, const byte* source, uint32 sourceLen, LoadScriptFlag loadFlag)
+    const NSSnapValues::TopLevelScriptLoadFunctionBodyResolveInfo* EventLog::AddScriptLoad(Js::FunctionBody* fb, Js::ModuleID moduleId, unsigned long sourceContextId, const byte* source, uint32_t sourceLen, LoadScriptFlag loadFlag)
     {
         NSSnapValues::TopLevelScriptLoadFunctionBodyResolveInfo* fbInfo = this->m_loadedTopLevelScripts.NextOpenEntry();
-        uint32 fCount = (this->m_loadedTopLevelScripts.Count() + this->m_newFunctionTopLevelScripts.Count() + this->m_evalTopLevelScripts.Count());
+        uint32_t fCount = (this->m_loadedTopLevelScripts.Count() + this->m_newFunctionTopLevelScripts.Count() + this->m_evalTopLevelScripts.Count());
         bool isUtf8 = ((loadFlag & LoadScriptFlag_Utf8Source) == LoadScriptFlag_Utf8Source);
 
         NSSnapValues::ExtractTopLevelLoadedFunctionBodyInfo(fbInfo, fb, fCount, moduleId, sourceContextId, isUtf8, source, sourceLen, loadFlag, this->m_miscSlabAllocator);
@@ -772,10 +772,10 @@ namespace TTD
         return fbInfo;
     }
 
-    const NSSnapValues::TopLevelNewFunctionBodyResolveInfo* EventLog::AddNewFunction(Js::FunctionBody* fb, Js::ModuleID moduleId, const char16_t* source, uint32 sourceLen)
+    const NSSnapValues::TopLevelNewFunctionBodyResolveInfo* EventLog::AddNewFunction(Js::FunctionBody* fb, Js::ModuleID moduleId, const char16_t* source, uint32_t sourceLen)
     {
         NSSnapValues::TopLevelNewFunctionBodyResolveInfo* fbInfo = this->m_newFunctionTopLevelScripts.NextOpenEntry();
-        uint32 fCount = (this->m_loadedTopLevelScripts.Count() + this->m_newFunctionTopLevelScripts.Count() + this->m_evalTopLevelScripts.Count());
+        uint32_t fCount = (this->m_loadedTopLevelScripts.Count() + this->m_newFunctionTopLevelScripts.Count() + this->m_evalTopLevelScripts.Count());
 
         NSSnapValues::ExtractTopLevelNewFunctionBodyInfo(fbInfo, fb, fCount, moduleId, source, sourceLen, this->m_miscSlabAllocator);
         this->m_sourceInfoCount = max(this->m_sourceInfoCount, fb->GetUtf8SourceInfo()->GetSourceInfoId() + 1);
@@ -783,10 +783,10 @@ namespace TTD
         return fbInfo;
     }
 
-    const NSSnapValues::TopLevelEvalFunctionBodyResolveInfo* EventLog::AddEvalFunction(Js::FunctionBody* fb, Js::ModuleID moduleId, const char16_t* source, uint32 sourceLen, uint32 grfscr, bool registerDocument, BOOL isIndirect, BOOL strictMode)
+    const NSSnapValues::TopLevelEvalFunctionBodyResolveInfo* EventLog::AddEvalFunction(Js::FunctionBody* fb, Js::ModuleID moduleId, const char16_t* source, uint32_t sourceLen, uint32_t grfscr, bool registerDocument, BOOL isIndirect, BOOL strictMode)
     {
         NSSnapValues::TopLevelEvalFunctionBodyResolveInfo* fbInfo = this->m_evalTopLevelScripts.NextOpenEntry();
-        uint32 fCount = (this->m_loadedTopLevelScripts.Count() + this->m_newFunctionTopLevelScripts.Count() + this->m_evalTopLevelScripts.Count());
+        uint32_t fCount = (this->m_loadedTopLevelScripts.Count() + this->m_newFunctionTopLevelScripts.Count() + this->m_evalTopLevelScripts.Count());
 
         NSSnapValues::ExtractTopLevelEvalFunctionBodyInfo(fbInfo, fb, fCount, moduleId, source, sourceLen, grfscr, registerDocument, isIndirect, strictMode, this->m_miscSlabAllocator);
         this->m_sourceInfoCount = max(this->m_sourceInfoCount, fb->GetUtf8SourceInfo()->GetSourceInfoId() + 1);
@@ -794,18 +794,18 @@ namespace TTD
         return fbInfo;
     }
 
-    uint32 EventLog::GetSourceInfoCount() const
+    uint32_t EventLog::GetSourceInfoCount() const
     {
         return this->m_sourceInfoCount;
     }
 
-    void EventLog::RecordTopLevelCodeAction(uint32 bodyCtrId)
+    void EventLog::RecordTopLevelCodeAction(uint32_t bodyCtrId)
     {
         NSLogEvents::CodeLoadEventLogEntry* clEvent = this->RecordGetInitializedEvent_DataOnly<NSLogEvents::CodeLoadEventLogEntry, NSLogEvents::EventKind::TopLevelCodeTag>();
         clEvent->BodyCounterId = bodyCtrId;
     }
 
-    uint32 EventLog::ReplayTopLevelCodeAction()
+    uint32_t EventLog::ReplayTopLevelCodeAction()
     {
         const NSLogEvents::CodeLoadEventLogEntry* clEvent = this->ReplayGetReplayEvent_Helper<NSLogEvents::CodeLoadEventLogEntry, NSLogEvents::EventKind::TopLevelCodeTag>();
 
@@ -830,7 +830,7 @@ namespace TTD
 #else
         const NSLogEvents::TelemetryEventLogEntry* tEvent = this->ReplayGetReplayEvent_Helper<NSLogEvents::TelemetryEventLogEntry, NSLogEvents::EventKind::TelemetryLogTag>();
 
-        uint32 infoStrLength = (uint32)infoStringJs->GetLength();
+        uint32_t infoStrLength = (uint32_t)infoStringJs->GetLength();
         const char16_t* infoStr = infoStringJs->GetSz();
 
         if(tEvent->InfoString.Length != infoStrLength)
@@ -841,7 +841,7 @@ namespace TTD
         }
         else
         {
-            for(uint32 i = 0; i < infoStrLength; ++i)
+            for(uint32_t i = 0; i < infoStrLength; ++i)
             {
                 if(tEvent->InfoString.Contents[i] != infoStr[i])
                 {
@@ -1074,7 +1074,7 @@ namespace TTD
         TTDVar recordedFunction = ecEvent->ArgArray[0];
         NSLogEvents::PassVarToHostInReplay(executeContext, recordedFunction, function);
 
-        for(uint32 i = 0; i < args.Info.Count; ++i)
+        for(uint32_t i = 0; i < args.Info.Count; ++i)
         {
             Js::Var replayVar = args.Values[i];
             TTDVar recordedVar = ecEvent->ArgArray[i + 1];
@@ -1211,9 +1211,9 @@ namespace TTD
         return -1;
     }
 
-    long EventLog::GetKthEventTimeInLog(uint32 k) const
+    long EventLog::GetKthEventTimeInLog(uint32_t k) const
     {
-        uint32 topLevelCount = 0;
+        uint32_t topLevelCount = 0;
         for(auto iter = this->m_eventList.GetIteratorAtFirst(); iter.IsValid(); iter.MoveNext())
         {
             if(NSLogEvents::IsJsRTActionRootCall(iter.Current()))
@@ -1243,8 +1243,8 @@ namespace TTD
 
     void EventLog::PruneLogLength()
     {
-        uint32 maxSnaps = this->m_threadContext->TTDContext->SnapHistoryLength;
-        uint32 snapCount = 0;
+        uint32_t maxSnaps = this->m_threadContext->TTDContext->SnapHistoryLength;
+        uint32_t snapCount = 0;
         for(auto iter = this->m_eventList.GetIteratorAtFirst(); iter.IsValid(); iter.MoveNext())
         {
             if(iter.Current()->EventKind == NSLogEvents::EventKind::SnapshotTag)
@@ -1256,7 +1256,7 @@ namespace TTD
         //If we have more than the desired number of snaps we will trim them off
         if(snapCount > maxSnaps)
         {
-            uint32 snapDelCount = snapCount - maxSnaps;
+            uint32_t snapDelCount = snapCount - maxSnaps;
             auto delIter = this->m_eventList.GetIteratorAtFirst();
 
             while(true)
@@ -1317,7 +1317,7 @@ namespace TTD
         if(snapEvent->LiveContextCount != 0)
         {
             snapEvent->LiveContextIdArray = this->m_eventSlabAllocator.SlabAllocateArray<TTD_LOG_PTR_ID>(snapEvent->LiveContextCount);
-            uint32 clpos = 0;
+            uint32_t clpos = 0;
             for(auto iter = snapEvent->Snap->GetContextList().GetIterator(); iter.IsValid(); iter.MoveNext())
             {
                 snapEvent->LiveContextIdArray[clpos] = iter.Current()->ScriptContextLogId;
@@ -1341,7 +1341,7 @@ namespace TTD
         if(snapEvent->LongLivedRefRootsCount != 0)
         {
             snapEvent->LongLivedRefRootsIdArray = this->m_eventSlabAllocator.SlabAllocateArray<TTD_LOG_PTR_ID>(snapEvent->LongLivedRefRootsCount);
-            uint32 rpos = 0;
+            uint32_t rpos = 0;
             for(auto iter = snapEvent->Snap->GetRootList().GetIterator(); iter.IsValid(); iter.MoveNext())
             {
                 const NSSnapValues::SnapRootInfoEntry* spe = iter.Current();
@@ -1523,7 +1523,7 @@ namespace TTD
         }
         TTDAssert(snap != nullptr, "Log should start with a snapshot!!!");
 
-        uint32 dbgScopeCount = snap->GetDbgScopeCountNonTopLevel();
+        uint32_t dbgScopeCount = snap->GetDbgScopeCountNonTopLevel();
 
         TTDIdentifierDictionary<unsigned long, NSSnapValues::TopLevelScriptLoadFunctionBodyResolveInfo*> topLevelLoadScriptMap;
         topLevelLoadScriptMap.Initialize(this->m_loadedTopLevelScripts.Count());
@@ -1549,7 +1549,7 @@ namespace TTD
             dbgScopeCount += iter.Current()->TopLevelBase.ScopeChainInfo.ScopeCount;
         }
 
-        uint32 topFunctionCount = topLevelLoadScriptMap.Count() + topLevelNewScriptMap.Count() + topLevelEvalScriptMap.Count();
+        uint32_t topFunctionCount = topLevelLoadScriptMap.Count() + topLevelNewScriptMap.Count() + topLevelEvalScriptMap.Count();
 
         ThreadContextTTD* threadCtx = this->m_threadContext->TTDContext;
         const UnorderedArrayList<NSSnapValues::SnapContext, TTD_ARRAY_LIST_SIZE_XSMALL>& snpCtxs = snap->GetContextList();
@@ -1750,8 +1750,8 @@ namespace TTD
         NSLogEvents::EventLogEntry* evt = this->m_currentReplayEventIterator.Current();
         this->AdvanceTimeAndPositionForReplay();
 
-        NSLogEvents::ContextExecuteKind execKind = this->m_eventListVTable[(uint32)evt->EventKind].ContextKind;
-        auto executeFP = this->m_eventListVTable[(uint32)evt->EventKind].ExecuteFP;
+        NSLogEvents::ContextExecuteKind execKind = this->m_eventListVTable[(uint32_t)evt->EventKind].ContextKind;
+        auto executeFP = this->m_eventListVTable[(uint32_t)evt->EventKind].ExecuteFP;
 
         TTDAssert(!NSLogEvents::EventFailsWithRuntimeError(evt), "We have a failing Event in the Log -- we assume host is correct!");
 
@@ -1956,7 +1956,7 @@ namespace TTD
     {
         NSLogEvents::JsRTStringArgumentAction* sAction = nullptr;
         NSLogEvents::EventLogEntry* evt = this->RecordGetInitializedEvent<NSLogEvents::JsRTStringArgumentAction, NSLogEvents::EventKind::CreateStringActionTag>(&sAction);
-        this->m_eventSlabAllocator.CopyStringIntoWLength(stringValue, (uint32)stringLength, sAction->StringValue);
+        this->m_eventSlabAllocator.CopyStringIntoWLength(stringValue, (uint32_t)stringLength, sAction->StringValue);
 
         actionPopper.InitializeWithEventAndEnterWResult(evt, &(sAction->Result));
     }
@@ -2109,7 +2109,7 @@ namespace TTD
         actionPopper.InitializeWithEventAndEnterWResult(evt, &(cAction->Result));
     }
 
-    void EventLog::RecordJsRTAllocateBasicArray(TTDJsRTActionResultAutoRecorder& actionPopper, uint32 length)
+    void EventLog::RecordJsRTAllocateBasicArray(TTDJsRTActionResultAutoRecorder& actionPopper, uint32_t length)
     {
         NSLogEvents::JsRTIntegralArgumentAction* cAction = nullptr;
         NSLogEvents::EventLogEntry* evt = this->RecordGetInitializedEvent<NSLogEvents::JsRTIntegralArgumentAction, NSLogEvents::EventKind::AllocateArrayActionTag>(&cAction);
@@ -2118,7 +2118,7 @@ namespace TTD
         actionPopper.InitializeWithEventAndEnterWResult(evt, &(cAction->Result));
     }
 
-    void EventLog::RecordJsRTAllocateArrayBuffer(TTDJsRTActionResultAutoRecorder& actionPopper, uint32 size)
+    void EventLog::RecordJsRTAllocateArrayBuffer(TTDJsRTActionResultAutoRecorder& actionPopper, uint32_t size)
     {
         NSLogEvents::JsRTIntegralArgumentAction* cAction = nullptr;
         NSLogEvents::EventLogEntry* evt = this->RecordGetInitializedEvent<NSLogEvents::JsRTIntegralArgumentAction, NSLogEvents::EventKind::AllocateArrayBufferActionTag>(&cAction);
@@ -2127,7 +2127,7 @@ namespace TTD
         actionPopper.InitializeWithEventAndEnterWResult(evt, &(cAction->Result));
     }
 
-    void EventLog::RecordJsRTAllocateExternalArrayBuffer(TTDJsRTActionResultAutoRecorder& actionPopper, byte* buff, uint32 size)
+    void EventLog::RecordJsRTAllocateExternalArrayBuffer(TTDJsRTActionResultAutoRecorder& actionPopper, byte* buff, uint32_t size)
     {
         NSLogEvents::JsRTByteBufferAction* cAction = nullptr;
         NSLogEvents::EventLogEntry* evt = this->RecordGetInitializedEvent<NSLogEvents::JsRTByteBufferAction, NSLogEvents::EventKind::AllocateExternalArrayBufferActionTag>(&cAction);
@@ -2420,7 +2420,7 @@ namespace TTD
         giAction->Result = TTD_CONVERT_JSVAR_TO_TTDVAR(result);
     }
 
-    void EventLog::RecordJsRTRawBufferCopySync(TTDJsRTActionResultAutoRecorder& actionPopper, Js::Var dst, uint32 dstIndex, Js::Var src, uint32 srcIndex, uint32 length)
+    void EventLog::RecordJsRTRawBufferCopySync(TTDJsRTActionResultAutoRecorder& actionPopper, Js::Var dst, uint32_t dstIndex, Js::Var src, uint32_t srcIndex, uint32_t length)
     {
         TTDAssert(Js::VarIs<Js::ArrayBuffer>(dst) && Js::VarIs<Js::ArrayBuffer>(src), "Not array buffer objects!!!");
         TTDAssert(dstIndex + length <= Js::VarTo<Js::ArrayBuffer>(dst)->GetByteLength(), "Copy off end of buffer!!!");
@@ -2437,7 +2437,7 @@ namespace TTD
         actionPopper.InitializeWithEventAndEnter(evt);
     }
 
-    void EventLog::RecordJsRTRawBufferModifySync(TTDJsRTActionResultAutoRecorder& actionPopper, Js::Var dst, uint32 index, uint32 count)
+    void EventLog::RecordJsRTRawBufferModifySync(TTDJsRTActionResultAutoRecorder& actionPopper, Js::Var dst, uint32_t index, uint32_t count)
     {
         TTDAssert(Js::VarIs<Js::ArrayBuffer>(dst), "Not array buffer object!!!");
         TTDAssert(index + count <= Js::VarTo<Js::ArrayBuffer>(dst)->GetByteLength(), "Copy off end of buffer!!!");
@@ -2455,7 +2455,7 @@ namespace TTD
         actionPopper.InitializeWithEventAndEnter(evt);
     }
 
-    void EventLog::RecordJsRTRawBufferAsyncModificationRegister(TTDJsRTActionResultAutoRecorder& actionPopper, Js::Var dst, uint32 index)
+    void EventLog::RecordJsRTRawBufferAsyncModificationRegister(TTDJsRTActionResultAutoRecorder& actionPopper, Js::Var dst, uint32_t index)
     {
             NSLogEvents::JsRTRawBufferModifyAction* rbrAction = nullptr;
             NSLogEvents::EventLogEntry* evt = this->RecordGetInitializedEvent<NSLogEvents::JsRTRawBufferModifyAction, NSLogEvents::EventKind::RawBufferAsyncModificationRegister>(&rbrAction);
@@ -2473,8 +2473,8 @@ namespace TTD
         NSLogEvents::JsRTRawBufferModifyAction* rbrAction = nullptr;
         NSLogEvents::EventLogEntry* evt = this->RecordGetInitializedEvent<NSLogEvents::JsRTRawBufferModifyAction, NSLogEvents::EventKind::RawBufferAsyncModifyComplete>(&rbrAction);
         rbrAction->Trgt = TTD_CONVERT_JSVAR_TO_TTDVAR(dstBuff);
-        rbrAction->Index = (uint32)pendingAsyncInfo.Index;
-        rbrAction->Length = (uint32)(finalModPos - copyBuff);
+        rbrAction->Index = (uint32_t)pendingAsyncInfo.Index;
+        rbrAction->Length = (uint32_t)(finalModPos - copyBuff);
 
         rbrAction->Data = (rbrAction->Length != 0) ? this->m_eventSlabAllocator.SlabAllocateArray<byte>(rbrAction->Length) : nullptr;
         js_memcpy_s(rbrAction->Data, rbrAction->Length, copyBuff, rbrAction->Length);
@@ -2482,7 +2482,7 @@ namespace TTD
         actionPopper.InitializeWithEventAndEnter(evt);
     }
 
-    void EventLog::RecordJsRTConstructCall(TTDJsRTActionResultAutoRecorder& actionPopper, Js::Var funcVar, uint32 argCount, Js::Var* args)
+    void EventLog::RecordJsRTConstructCall(TTDJsRTActionResultAutoRecorder& actionPopper, Js::Var funcVar, uint32_t argCount, Js::Var* args)
     {
         NSLogEvents::JsRTConstructCallAction* ccAction = nullptr;
         NSLogEvents::EventLogEntry* evt = this->RecordGetInitializedEvent<NSLogEvents::JsRTConstructCallAction, NSLogEvents::EventKind::ConstructCallActionTag>(&ccAction);
@@ -2498,7 +2498,7 @@ namespace TTD
         actionPopper.InitializeWithEventAndEnterWResult(evt, &(ccAction->Result));
     }
 
-    NSLogEvents::EventLogEntry* EventLog::RecordJsRTCodeParse(TTDJsRTActionResultAutoRecorder& actionPopper, LoadScriptFlag loadFlag, bool isUft8, const byte* script, uint32 scriptByteLength, unsigned long sourceContextId, const char16_t* sourceUri)
+    NSLogEvents::EventLogEntry* EventLog::RecordJsRTCodeParse(TTDJsRTActionResultAutoRecorder& actionPopper, LoadScriptFlag loadFlag, bool isUft8, const byte* script, uint32_t scriptByteLength, unsigned long sourceContextId, const char16_t* sourceUri)
     {
         NSLogEvents::JsRTCodeParseAction* cpAction = nullptr;
         NSLogEvents::EventLogEntry* evt = this->RecordGetInitializedEvent<NSLogEvents::JsRTCodeParseAction, NSLogEvents::EventKind::CodeParseActionTag>(&cpAction);
@@ -2521,7 +2521,7 @@ namespace TTD
         return evt;
     }
 
-    NSLogEvents::EventLogEntry* EventLog::RecordJsRTCallFunction(TTDJsRTActionResultAutoRecorder& actionPopper, int32 rootDepth, Js::Var funcVar, uint32 argCount, Js::Var* args)
+    NSLogEvents::EventLogEntry* EventLog::RecordJsRTCallFunction(TTDJsRTActionResultAutoRecorder& actionPopper, int32 rootDepth, Js::Var funcVar, uint32_t argCount, Js::Var* args)
     {
         NSLogEvents::JsRTCallFunctionAction* cAction = nullptr;
         NSLogEvents::EventLogEntry* evt = this->RecordGetInitializedEvent<NSLogEvents::JsRTCallFunctionAction, NSLogEvents::EventKind::CallExistingFunctionActionTag>(&cAction);
@@ -2641,7 +2641,7 @@ namespace TTD
         writer.WriteUInt64(NSTokens::Key::usedMemory, usedSpace, NSTokens::Separator::CommaSeparator);
         writer.WriteUInt64(NSTokens::Key::reservedMemory, reservedSpace, NSTokens::Separator::CommaSeparator);
 
-        uint32 ecount = this->m_eventList.Count() + (optInnerLoopEvent != nullptr ? 1 : 0);
+        uint32_t ecount = this->m_eventList.Count() + (optInnerLoopEvent != nullptr ? 1 : 0);
         writer.WriteLengthValue(ecount, NSTokens::Separator::CommaAndBigSpaceSeparator);
 
 #if ENABLE_TTD_INTERNAL_DIAGNOSTICS
@@ -2844,13 +2844,13 @@ namespace TTD
         bool doSep = false;
 #endif
 
-        uint32 ecount = reader.ReadLengthValue(true);
+        uint32_t ecount = reader.ReadLengthValue(true);
         reader.ReadSequenceStart_WDefaultKey(true);
-        for(uint32 i = 0; i < ecount; ++i)
+        for(uint32_t i = 0; i < ecount; ++i)
         {
             NSLogEvents::EventKind evtKind = NSLogEvents::EventLogEntry_ParseHeader(false, &reader);
 
-            NSLogEvents::EventLogEntry* evt = this->m_eventList.GetNextAvailableEntry(this->m_eventListVTable[(uint32)evtKind].DataSize);
+            NSLogEvents::EventLogEntry* evt = this->m_eventList.GetNextAvailableEntry(this->m_eventListVTable[(uint32_t)evtKind].DataSize);
             evt->EventKind = evtKind;
 
             NSLogEvents::EventLogEntry_ParseRest(evt, this->m_eventListVTable, this->m_threadContext, &reader, this->m_eventSlabAllocator);
@@ -2891,9 +2891,9 @@ namespace TTD
         reader.ReadSequenceEnd();
 
         //parse the properties
-        uint32 propertyCount = reader.ReadLengthValue(true);
+        uint32_t propertyCount = reader.ReadLengthValue(true);
         reader.ReadSequenceStart_WDefaultKey(true);
-        for(uint32 i = 0; i < propertyCount; ++i)
+        for(uint32_t i = 0; i < propertyCount; ++i)
         {
             NSSnapType::SnapPropertyRecord* sRecord = this->m_propertyRecordList.NextOpenEntry();
             NSSnapType::ParseSnapPropertyRecord(sRecord, i != 0, &reader, this->m_miscSlabAllocator);
@@ -2903,27 +2903,27 @@ namespace TTD
         //do top level script processing here
         this->m_sourceInfoCount = reader.ReadUInt32(NSTokens::Key::u32Val, true);
 
-        uint32 loadedScriptCount = reader.ReadLengthValue(true);
+        uint32_t loadedScriptCount = reader.ReadLengthValue(true);
         reader.ReadSequenceStart_WDefaultKey(true);
-        for(uint32 i = 0; i < loadedScriptCount; ++i)
+        for(uint32_t i = 0; i < loadedScriptCount; ++i)
         {
             NSSnapValues::TopLevelScriptLoadFunctionBodyResolveInfo* fbInfo = this->m_loadedTopLevelScripts.NextOpenEntry();
             NSSnapValues::ParseTopLevelLoadedFunctionBodyInfo(fbInfo, i != 0, this->m_threadContext, &reader, this->m_miscSlabAllocator);
         }
         reader.ReadSequenceEnd();
 
-        uint32 newScriptCount = reader.ReadLengthValue(true);
+        uint32_t newScriptCount = reader.ReadLengthValue(true);
         reader.ReadSequenceStart_WDefaultKey(true);
-        for(uint32 i = 0; i < newScriptCount; ++i)
+        for(uint32_t i = 0; i < newScriptCount; ++i)
         {
             NSSnapValues::TopLevelNewFunctionBodyResolveInfo* fbInfo = this->m_newFunctionTopLevelScripts.NextOpenEntry();
             NSSnapValues::ParseTopLevelNewFunctionBodyInfo(fbInfo, i != 0, this->m_threadContext, &reader, this->m_miscSlabAllocator);
         }
         reader.ReadSequenceEnd();
 
-        uint32 evalScriptCount = reader.ReadLengthValue(true);
+        uint32_t evalScriptCount = reader.ReadLengthValue(true);
         reader.ReadSequenceStart_WDefaultKey(true);
-        for(uint32 i = 0; i < evalScriptCount; ++i)
+        for(uint32_t i = 0; i < evalScriptCount; ++i)
         {
             NSSnapValues::TopLevelEvalFunctionBodyResolveInfo* fbInfo = this->m_evalTopLevelScripts.NextOpenEntry();
             NSSnapValues::ParseTopLevelEvalFunctionBodyInfo(fbInfo, i != 0, this->m_threadContext, &reader, this->m_miscSlabAllocator);

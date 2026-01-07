@@ -18,8 +18,8 @@ namespace Js
 
         int32 m_cluMax; // current maximum length (or number of digits) it can contains
         int32 m_clu; // current length (or number of digits)
-        uint32 *m_prglu; // pointer to array of digits
-        uint32 m_rgluInit[kcluMaxInit]; // pre-defined space to store array
+        uint32_t *m_prglu; // pointer to array of digits
+        uint32_t m_rgluInit[kcluMaxInit]; // pre-defined space to store array
 
         inline BigUInt & operator= (BigUInt &bi);
         bool FResize(int32 clu);// allocate more space if length go over maximum
@@ -37,11 +37,11 @@ namespace Js
         BigUInt(void);
         ~BigUInt(void);
 
-        bool FInitFromRglu(uint32 *prglu, int32 clu); // init from array and length
+        bool FInitFromRglu(uint32_t *prglu, int32 clu); // init from array and length
         bool FInitFromBigint(BigUInt *pbiSrc); 
         template <typename EncodedChar>
         bool FInitFromDigits(const EncodedChar *prgch, int32 cch, int32 *pcchDec); // init from char of digits
-        bool FMulAdd(uint32 luMul, uint32 luAdd);
+        bool FMulAdd(uint32_t luMul, uint32_t luAdd);
         bool FMulPow5(int32 c5);
         bool FShiftLeft(int32 cbit);
         void ShiftLusRight(int32 clu);
@@ -52,7 +52,7 @@ namespace Js
         int DivRem(BigUInt *pbi);
 
         int32 Clu(void); // return current length
-        uint32 Lu(int32 ilu); // return digit at position ilu start from 0
+        uint32_t Lu(int32 ilu); // return digit at position ilu start from 0
         double GetDbl(void);
     };
 }

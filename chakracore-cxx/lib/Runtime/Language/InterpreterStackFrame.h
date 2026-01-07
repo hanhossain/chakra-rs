@@ -150,16 +150,16 @@ namespace Js
 #if ENABLE_PROFILE_INFO
         bool switchProfileMode : 1;
         bool isAutoProfiling : 1;
-        uint32 switchProfileModeOnLoopEndNumber;
+        uint32_t switchProfileModeOnLoopEndNumber;
 #endif
         int16 nestedTryDepth;
         int16 nestedCatchDepth;
         uint retOffset;
         int16 nestedFinallyDepth;
 
-        void (InterpreterStackFrame::*opLoopBodyStart)(uint32 loopNumber, LayoutSize layoutSize, bool isFirstIteration);
+        void (InterpreterStackFrame::*opLoopBodyStart)(uint32_t loopNumber, LayoutSize layoutSize, bool isFirstIteration);
 #if ENABLE_PROFILE_INFO
-        void (InterpreterStackFrame::*opProfiledLoopBodyStart)(uint32 loopNumber, LayoutSize layoutSize, bool isFirstIteration);
+        void (InterpreterStackFrame::*opProfiledLoopBodyStart)(uint32_t loopNumber, LayoutSize layoutSize, bool isFirstIteration);
 #endif
 #if DBG || DBG_DUMP
         void * DEBUG_currentByteOffset;
@@ -310,20 +310,20 @@ namespace Js
         bool IsCurrentLoopNativeAddr(void * codeAddr) const;
         void * GetReturnAddress() { return returnAddress; }
 
-        static uint32 GetOffsetOfLocals() { return offsetof(InterpreterStackFrame, m_localSlots); }
+        static uint32_t GetOffsetOfLocals() { return offsetof(InterpreterStackFrame, m_localSlots); }
 
-        static uint32 GetOffsetOfInParams() { return offsetof(InterpreterStackFrame, m_inParams); }
-        static uint32 GetOffsetOfInSlotsCount() { return offsetof(InterpreterStackFrame, m_inSlotsCount); }
-        static uint32 GetOffsetOfStackNestedFunctions() { return offsetof(InterpreterStackFrame, stackNestedFunctions); }
-        static uint32 GetOffsetOfForInEnumerators() { return offsetof(InterpreterStackFrame, forInObjectEnumerators); }
+        static uint32_t GetOffsetOfInParams() { return offsetof(InterpreterStackFrame, m_inParams); }
+        static uint32_t GetOffsetOfInSlotsCount() { return offsetof(InterpreterStackFrame, m_inSlotsCount); }
+        static uint32_t GetOffsetOfStackNestedFunctions() { return offsetof(InterpreterStackFrame, stackNestedFunctions); }
+        static uint32_t GetOffsetOfForInEnumerators() { return offsetof(InterpreterStackFrame, forInObjectEnumerators); }
 
-        static uint32 GetOffsetOfArguments() { return offsetof(InterpreterStackFrame, m_arguments); }
-        static uint32 GetOffsetOfLocalFrameDisplay() { return offsetof(InterpreterStackFrame, localFrameDisplay); }
-        static uint32 GetOffsetOfLocalClosure() { return offsetof(InterpreterStackFrame, localClosure); }
-        static uint32 GetOffsetOfParamClosure() { return offsetof(InterpreterStackFrame, paramClosure); }
+        static uint32_t GetOffsetOfArguments() { return offsetof(InterpreterStackFrame, m_arguments); }
+        static uint32_t GetOffsetOfLocalFrameDisplay() { return offsetof(InterpreterStackFrame, localFrameDisplay); }
+        static uint32_t GetOffsetOfLocalClosure() { return offsetof(InterpreterStackFrame, localClosure); }
+        static uint32_t GetOffsetOfParamClosure() { return offsetof(InterpreterStackFrame, paramClosure); }
 
-        static uint32 GetStartLocationOffset() { return offsetof(InterpreterStackFrame, m_reader) + ByteCodeReader::GetStartLocationOffset(); }
-        static uint32 GetCurrentLocationOffset() { return offsetof(InterpreterStackFrame, m_reader) + ByteCodeReader::GetCurrentLocationOffset(); }
+        static uint32_t GetStartLocationOffset() { return offsetof(InterpreterStackFrame, m_reader) + ByteCodeReader::GetStartLocationOffset(); }
+        static uint32_t GetCurrentLocationOffset() { return offsetof(InterpreterStackFrame, m_reader) + ByteCodeReader::GetCurrentLocationOffset(); }
 
         bool IsParamScopeDone() const { return isParamScopeDone; }
         void SetIsParamScopeDone(bool value) { isParamScopeDone = value; }
@@ -372,8 +372,8 @@ namespace Js
 
         void InitializeClosures();
 
-        static void OP_StPropIdArrFromVar(Var instance, uint32 index, Var value, ScriptContext* scriptContext);
-        static Js::PropertyIdArray * OP_NewPropIdArrForCompProps(uint32 size, ScriptContext* scriptContext);
+        static void OP_StPropIdArrFromVar(Var instance, uint32_t index, Var value, ScriptContext* scriptContext);
+        static Js::PropertyIdArray * OP_NewPropIdArrForCompProps(uint32_t size, ScriptContext* scriptContext);
 
         static const int LocalsThreshold = 32 * 1024; // Number of locals vars we'll allocate on the frame.
                                                       // If there are more, we'll use an arena.
@@ -488,7 +488,7 @@ namespace Js
         void OP_AsmStartCall(const unaligned OpLayoutStartCall * playout);
         void OP_StartCall( const unaligned OpLayoutStartCall * playout );
         void OP_StartCall(uint outParamCount);
-        template <class T> void OP_CallCommon(const unaligned T *playout, RecyclableObject * aFunc, unsigned flags, const Js::AuxArray<uint32> *spreadIndices = nullptr);
+        template <class T> void OP_CallCommon(const unaligned T *playout, RecyclableObject * aFunc, unsigned flags, const Js::AuxArray<uint32_t> *spreadIndices = nullptr);
         void OP_CallAsmInternalCommon(ScriptFunction* function, RegSlot returnReg);
         void OP_CallAsmInternal(RegSlot funcReg, RegSlot returnReg);
         template <class T> void OP_I_AsmCall(const unaligned T* playout) { OP_CallAsmInternal(playout->Function, playout->Return); }
@@ -496,31 +496,31 @@ namespace Js
         template <class T> void OP_ProfiledI_AsmCall(const unaligned T* playout) { OP_ProfiledCallAsmInternal(playout->Function, playout->Return, playout->profileId); }
 
         template <class T> void OP_CallCommonI(const unaligned T *playout, RecyclableObject * aFunc, unsigned flags);
-        template <class T> void OP_ProfileCallCommon(const unaligned T *playout, RecyclableObject * aFunc, unsigned flags, ProfileId profileId, InlineCacheIndex inlineCacheIndex = Js::Constants::NoInlineCacheIndex, const Js::AuxArray<uint32> *spreadIndices = nullptr);
-        template <class T> void OP_ProfileReturnTypeCallCommon(const unaligned T *playout, RecyclableObject * aFunc, unsigned flags, ProfileId profileId, const Js::AuxArray<uint32> *spreadIndices = nullptr);
+        template <class T> void OP_ProfileCallCommon(const unaligned T *playout, RecyclableObject * aFunc, unsigned flags, ProfileId profileId, InlineCacheIndex inlineCacheIndex = Js::Constants::NoInlineCacheIndex, const Js::AuxArray<uint32_t> *spreadIndices = nullptr);
+        template <class T> void OP_ProfileReturnTypeCallCommon(const unaligned T *playout, RecyclableObject * aFunc, unsigned flags, ProfileId profileId, const Js::AuxArray<uint32_t> *spreadIndices = nullptr);
 
         template <class T> void OP_AsmCall(const unaligned T* playout);
         template <class T> void OP_EnsureHeapAttached(const unaligned T* playout);
 
         template <class T> void OP_CallI(const unaligned T* playout) { OP_CallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), Js::CallFlags_None); }
         template <class T> void OP_CallIFlags(const unaligned T* playout) { OP_CallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), playout->callFlags); }
-        template <class T> void OP_CallIExtended(const unaligned T* playout) { OP_CallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), Js::CallFlags_None, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
-        template <class T> void OP_CallIExtendedFlags(const unaligned T* playout) { OP_CallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), playout->callFlags, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
+        template <class T> void OP_CallIExtended(const unaligned T* playout) { OP_CallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), Js::CallFlags_None, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
+        template <class T> void OP_CallIExtendedFlags(const unaligned T* playout) { OP_CallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), playout->callFlags, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
 
         template <class T> void OP_ProfiledCallI(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfileCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), Js::CallFlags_None, playout->profileId); }
         template <class T> void OP_ProfiledCallIFlags(const unaligned T* playout) { OP_ProfileCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), playout->callFlags, playout->profileId); }
-        template <class T> void OP_ProfiledCallIExtended(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfileCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), Js::CallFlags_None, playout->profileId, Js::Constants::NoInlineCacheIndex, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
-        template <class T> void OP_ProfiledCallIExtendedFlags(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfileCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)),  playout->callFlags, playout->profileId, Js::Constants::NoInlineCacheIndex, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
+        template <class T> void OP_ProfiledCallIExtended(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfileCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), Js::CallFlags_None, playout->profileId, Js::Constants::NoInlineCacheIndex, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
+        template <class T> void OP_ProfiledCallIExtendedFlags(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfileCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)),  playout->callFlags, playout->profileId, Js::Constants::NoInlineCacheIndex, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
 
         template <class T> void OP_ProfiledCallIWithICIndex(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfileCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), Js::CallFlags_None, playout->profileId, playout->inlineCacheIndex); }
         template <class T> void OP_ProfiledCallIFlagsWithICIndex(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfileCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), playout->callFlags, playout->profileId, playout->inlineCacheIndex); }
-        template <class T> void OP_ProfiledCallIExtendedWithICIndex(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfileCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), Js::CallFlags_None, playout->profileId, playout->inlineCacheIndex, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
-        template <class T> void OP_ProfiledCallIExtendedFlagsWithICIndex(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfileCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), playout->callFlags, playout->profileId, playout->inlineCacheIndex, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
+        template <class T> void OP_ProfiledCallIExtendedWithICIndex(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfileCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), Js::CallFlags_None, playout->profileId, playout->inlineCacheIndex, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
+        template <class T> void OP_ProfiledCallIExtendedFlagsWithICIndex(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfileCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), playout->callFlags, playout->profileId, playout->inlineCacheIndex, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
 
         template <class T> void OP_ProfiledReturnTypeCallI(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfileReturnTypeCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), Js::CallFlags_None, playout->profileId); }
         template <class T> void OP_ProfiledReturnTypeCallIFlags(const unaligned T* playout) { OP_ProfileReturnTypeCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), playout->callFlags, playout->profileId); }
-        template <class T> void OP_ProfiledReturnTypeCallIExtended(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfileReturnTypeCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), Js::CallFlags_None, playout->profileId, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
-        template <class T> void OP_ProfiledReturnTypeCallIExtendedFlags(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfileReturnTypeCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)),  playout->callFlags, playout->profileId, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
+        template <class T> void OP_ProfiledReturnTypeCallIExtended(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfileReturnTypeCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), Js::CallFlags_None, playout->profileId, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
+        template <class T> void OP_ProfiledReturnTypeCallIExtendedFlags(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfileReturnTypeCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)),  playout->callFlags, playout->profileId, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
 
         // Patching Fastpath Operations
         template <class T> void OP_GetRootProperty(unaligned T* playout);
@@ -636,7 +636,7 @@ namespace Js
         template <class T> void OP_SetArrayItemI_CI4(const unaligned T* playout);
         template <class T> void OP_SetArrayItemC_CI4(const unaligned T* playout);
         template <class T> void OP_SetArraySegmentItem_CI4(const unaligned T* playout);
-        template <class T> void SetArrayLiteralItem(JavascriptArray *arr, uint32 index, T value);
+        template <class T> void SetArrayLiteralItem(JavascriptArray *arr, uint32_t index, T value);
         void OP_SetArraySegmentVars(const unaligned OpLayoutAuxiliary * playout);
 
         template <class T> void OP_NewScArray(const unaligned T * playout);
@@ -689,12 +689,12 @@ namespace Js
         template <class T> inline void OP_InitClassMemberSet(const unaligned T * playout);
         template <class T> inline void OP_InitClassMemberGetComputedName(const unaligned T * playout);
         template <class T> inline void OP_InitClassMemberSetComputedName(const unaligned T * playout);
-        template <typename ArrayType, typename RegType = ArrayType> inline void OP_LdArr(  uint32 index, RegSlot value  );
+        template <typename ArrayType, typename RegType = ArrayType> inline void OP_LdArr(  uint32_t index, RegSlot value  );
         template <class T> inline void OP_LdArrFunc(const unaligned T* playout);
         template <class T> inline void OP_LdArrWasmFunc(const unaligned T* playout);
         template <class T> inline void OP_CheckSignature(const unaligned T* playout);
         template<typename T> T GetArrayViewOverflowVal();
-        template <typename ArrayType, typename RegType = ArrayType> inline void OP_StArr( uint32 index, RegSlot value );
+        template <typename ArrayType, typename RegType = ArrayType> inline void OP_StArr( uint32_t index, RegSlot value );
         template <class T> inline void OP_LdAsmJsSlot(const unaligned T* playout );
         template <class T, typename T2> inline void OP_StSlotPrimitive(const unaligned T* playout);
         template <class T, typename T2> inline void OP_LdSlotPrimitive( const unaligned T* playout );
@@ -706,8 +706,8 @@ namespace Js
         template <class T> inline void OP_StArrConstIndex( const unaligned T* playout );
         template <class T> inline void OP_LdArrAtomic    ( const unaligned T* playout );
         template <class T> inline void OP_StArrAtomic    ( const unaligned T* playout );
-        template<typename MemType> void WasmArrayBoundsCheck(unsigned long index, uint32 byteLength);
-        template<typename MemType> MemType* WasmAtomicsArrayBoundsCheck(byte* buffer, unsigned long index, uint32 byteLength);
+        template<typename MemType> void WasmArrayBoundsCheck(unsigned long index, uint32_t byteLength);
+        template<typename MemType> MemType* WasmAtomicsArrayBoundsCheck(byte* buffer, unsigned long index, uint32_t byteLength);
         inline Var OP_LdSlot(Var instance, int32 slotIndex);
         inline Var OP_LdObjSlot(Var instance, int32 slotIndex);
         inline Var OP_LdFrameDisplaySlot(Var instance, int32 slotIndex);
@@ -725,7 +725,7 @@ namespace Js
         template <class T> inline Var OP_LdEnvObjSlot(Var instance, const unaligned T* playout);
         template <class T> inline Var OP_ProfiledLdEnvObjSlot(Var instance, const unaligned T* playout);
         template <class T> inline Var OP_LdModuleSlot(Var instance, const unaligned T* playout);
-        inline void OP_StModuleSlot(Var instance, uint32 slotIndex1, uint32 slotIndex2, Var value);
+        inline void OP_StModuleSlot(Var instance, uint32_t slotIndex1, uint32_t slotIndex2, Var value);
         inline void OP_StSlot(Var instance, int32 slotIndex, Var value);
         inline void OP_StSlotChkUndecl(Var instance, int32 slotIndex, Var value);
         inline void OP_StEnvSlot(Var instance, int32 slotIndex1, int32 slotIndex2, Var value);
@@ -746,28 +746,28 @@ namespace Js
         void OP_NewScObjectLiteral(const unaligned OpLayoutAuxiliary * playout);
         void OP_NewScObjectLiteral_LS(const unaligned OpLayoutAuxiliary * playout, RegSlot& target);
         void OP_LdPropIds(const unaligned OpLayoutAuxiliary * playout);
-        template <bool Profile, bool JITLoopBody> void LoopBodyStart(uint32 loopNumber, LayoutSize layoutSize, bool isFirstIteration);
-        LoopHeader const * DoLoopBodyStart(uint32 loopNumber, LayoutSize layoutSize, const bool doProfileLoopCheck, bool isFirstIteration);
-        template <bool Profile, bool JITLoopBody> void ProfiledLoopBodyStart(uint32 loopNumber, LayoutSize layoutSize, bool isFirstIteration);
+        template <bool Profile, bool JITLoopBody> void LoopBodyStart(uint32_t loopNumber, LayoutSize layoutSize, bool isFirstIteration);
+        LoopHeader const * DoLoopBodyStart(uint32_t loopNumber, LayoutSize layoutSize, const bool doProfileLoopCheck, bool isFirstIteration);
+        template <bool Profile, bool JITLoopBody> void ProfiledLoopBodyStart(uint32_t loopNumber, LayoutSize layoutSize, bool isFirstIteration);
         void OP_RecordImplicitCall(uint loopNumber);
-        template <class T, bool Profiled, bool ICIndex> void OP_NewScObject_Impl(const unaligned T* playout, InlineCacheIndex inlineCacheIndex = Js::Constants::NoInlineCacheIndex, const Js::AuxArray<uint32> *spreadIndices = nullptr);
-        template <class T, bool Profiled, bool ICIndex> void OP_ProfiledNewScObject_Impl(const unaligned T* playout, InlineCacheIndex inlineCacheIndex = Js::Constants::NoInlineCacheIndex, const Js::AuxArray<uint32> *spreadIndices = nullptr) { OP_NewScObject_Impl<T, Profiled, ICIndex>(playout, inlineCacheIndex, spreadIndices); }
-        template <class T, bool Profiled> void OP_NewScObjArray_Impl(const unaligned T* playout, const Js::AuxArray<uint32> *spreadIndices = nullptr) { OP_NewScObject_Impl<T, Profiled, false>(playout, Js::Constants::NoInlineCacheIndex, spreadIndices); }
-        template <class T, bool Profiled> void OP_ProfiledNewScObjArray_Impl(const unaligned T* playout, const Js::AuxArray<uint32> *spreadIndices = nullptr);
+        template <class T, bool Profiled, bool ICIndex> void OP_NewScObject_Impl(const unaligned T* playout, InlineCacheIndex inlineCacheIndex = Js::Constants::NoInlineCacheIndex, const Js::AuxArray<uint32_t> *spreadIndices = nullptr);
+        template <class T, bool Profiled, bool ICIndex> void OP_ProfiledNewScObject_Impl(const unaligned T* playout, InlineCacheIndex inlineCacheIndex = Js::Constants::NoInlineCacheIndex, const Js::AuxArray<uint32_t> *spreadIndices = nullptr) { OP_NewScObject_Impl<T, Profiled, ICIndex>(playout, inlineCacheIndex, spreadIndices); }
+        template <class T, bool Profiled> void OP_NewScObjArray_Impl(const unaligned T* playout, const Js::AuxArray<uint32_t> *spreadIndices = nullptr) { OP_NewScObject_Impl<T, Profiled, false>(playout, Js::Constants::NoInlineCacheIndex, spreadIndices); }
+        template <class T, bool Profiled> void OP_ProfiledNewScObjArray_Impl(const unaligned T* playout, const Js::AuxArray<uint32_t> *spreadIndices = nullptr);
         template <class T> void OP_NewScObject(const unaligned T* playout) { OP_NewScObject_Impl<T, false, false>(playout); }
         template <class T> void OP_NewScObjectNoCtorFull(const unaligned T* playout);
-        template <class T> void OP_NewScObjectSpread(const unaligned T* playout) { OP_NewScObject_Impl<T, false, false>(playout, Js::Constants::NoInlineCacheIndex, m_reader.ReadAuxArray<uint32>(playout->SpreadAuxOffset, this->GetFunctionBody())); }
+        template <class T> void OP_NewScObjectSpread(const unaligned T* playout) { OP_NewScObject_Impl<T, false, false>(playout, Js::Constants::NoInlineCacheIndex, m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody())); }
         template <class T> void OP_NewScObjArray(const unaligned T* playout) { OP_NewScObjArray_Impl<T, false>(playout); }
-        template <class T> void OP_NewScObjArraySpread(const unaligned T* playout) { OP_NewScObjArray_Impl<T, false>(playout, m_reader.ReadAuxArray<uint32>(playout->SpreadAuxOffset, this->GetFunctionBody())); }
+        template <class T> void OP_NewScObjArraySpread(const unaligned T* playout) { OP_NewScObjArray_Impl<T, false>(playout, m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody())); }
         template <class T> void OP_ProfiledNewScObject(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfiledNewScObject_Impl<T, true, false>(playout); }
-        template <class T> void OP_ProfiledNewScObjectSpread(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfiledNewScObject_Impl<T, true, false>(playout, Js::Constants::NoInlineCacheIndex, m_reader.ReadAuxArray<uint32>(playout->SpreadAuxOffset, this->GetFunctionBody())); }
+        template <class T> void OP_ProfiledNewScObjectSpread(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfiledNewScObject_Impl<T, true, false>(playout, Js::Constants::NoInlineCacheIndex, m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody())); }
         template <class T> void OP_ProfiledNewScObjectWithICIndex(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfiledNewScObject_Impl<T, true, true>(playout, playout->inlineCacheIndex); }
         template <class T> void OP_ProfiledNewScObjArray(const unaligned OpLayoutDynamicProfile2<T>* playout) { OP_ProfiledNewScObjArray_Impl<T, true>(playout); }
         template <class T> void OP_ProfiledNewScObjArray_NoProfile(const unaligned OpLayoutDynamicProfile2<T>* playout) { OP_ProfiledNewScObjArray_Impl<T, false>(playout); }
-        template <class T> void OP_ProfiledNewScObjArraySpread(const unaligned OpLayoutDynamicProfile2<T>* playout) { OP_ProfiledNewScObjArray_Impl<T, true>(playout, m_reader.ReadAuxArray<uint32>(playout->SpreadAuxOffset, this->GetFunctionBody())); }
-        template <class T> void OP_ProfiledNewScObjArraySpread_NoProfile(const unaligned OpLayoutDynamicProfile2<T>* playout) { OP_ProfiledNewScObjArray_Impl<T, false>(playout, m_reader.ReadAuxArray<uint32>(playout->SpreadAuxOffset, this->GetFunctionBody())); }
-        Var NewScObject_Helper(Var target, ArgSlot ArgCount, const Js::AuxArray<uint32> *spreadIndices = nullptr);
-        Var ProfiledNewScObject_Helper(Var target, ArgSlot ArgCount, ProfileId profileId, InlineCacheIndex inlineCacheIndex, const Js::AuxArray<uint32> *spreadIndices = nullptr);
+        template <class T> void OP_ProfiledNewScObjArraySpread(const unaligned OpLayoutDynamicProfile2<T>* playout) { OP_ProfiledNewScObjArray_Impl<T, true>(playout, m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody())); }
+        template <class T> void OP_ProfiledNewScObjArraySpread_NoProfile(const unaligned OpLayoutDynamicProfile2<T>* playout) { OP_ProfiledNewScObjArray_Impl<T, false>(playout, m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody())); }
+        Var NewScObject_Helper(Var target, ArgSlot ArgCount, const Js::AuxArray<uint32_t> *spreadIndices = nullptr);
+        Var ProfiledNewScObject_Helper(Var target, ArgSlot ArgCount, ProfileId profileId, InlineCacheIndex inlineCacheIndex, const Js::AuxArray<uint32_t> *spreadIndices = nullptr);
         template <class T, bool Profiled, bool ICIndex> Var OP_NewScObjectNoArg_Impl(const unaligned T *playout, InlineCacheIndex inlineCacheIndex = Js::Constants::NoInlineCacheIndex);
         void OP_NewScObject_A_Impl(const unaligned OpLayoutAuxiliary * playout, RegSlot *target = nullptr);
         void OP_NewScObject_A(const unaligned OpLayoutAuxiliary * playout) { return OP_NewScObject_A_Impl(playout); }
@@ -778,7 +778,7 @@ namespace Js
         void OP_TryCatch(const unaligned OpLayoutBr* playout);
         void ProcessCatch();
         int ProcessFinally();
-        void ProcessTryHandlerBailout(EHBailoutData * innermostEHBailoutData, uint32 tryNestingDepth);
+        void ProcessTryHandlerBailout(EHBailoutData * innermostEHBailoutData, uint32_t tryNestingDepth);
         void OP_TryFinally(const unaligned OpLayoutBr* playout);
         void OP_TryFinallyWithYield(const byte* ip, Js::JumpOffset jumpOffset, Js::RegSlot regException, Js::RegSlot regOffset);
         void OP_ResumeCatch();
@@ -805,8 +805,8 @@ namespace Js
 
         HeapArgumentsObject * CreateEmptyHeapArgumentsObject(ScriptContext* scriptContext);
         void TrySetFrameObjectInHeapArgObj(ScriptContext * scriptContext, bool hasNonSimpleParam, bool isScopeObjRestored);
-        Var InnerScopeFromIndex(uint32 index) const;
-        void SetInnerScopeFromIndex(uint32 index, Var scope);
+        Var InnerScopeFromIndex(uint32_t index) const;
+        void SetInnerScopeFromIndex(uint32_t index, Var scope);
         void OP_NewInnerScopeSlots(uint index, uint count, int scopeIndex, ScriptContext *scriptContext, FunctionBody *functionBody);
         template <typename T> void OP_CloneInnerScopeSlots(const unaligned OpLayoutT_Unsigned1<T> *playout);
         template <typename T> void OP_CloneBlockScope(const unaligned OpLayoutT_Unsigned1<T> *playout);

@@ -87,7 +87,7 @@ namespace Js
         virtual void MarkVisitKindSpecificPtrs(TTD::SnapshotExtractor* extractor) override;
         virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
         virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-        void CreateSnapObjectInfo(TTD::SlabAllocator& alloc, _Out_ TTD::NSSnapObjects::SnapGeneratorFunctionInfo** info, _Out_ TTD_PTR_ID** depArray, _Out_ uint32* depCount);
+        void CreateSnapObjectInfo(TTD::SlabAllocator& alloc, _Out_ TTD::NSSnapObjects::SnapGeneratorFunctionInfo** info, _Out_ TTD_PTR_ID** depArray, _Out_ uint32_t* depCount);
 #endif
 
     public:
@@ -113,7 +113,7 @@ namespace Js
     public:
         GeneratorVirtualScriptFunction(FunctionProxy* proxy, ScriptFunctionType* deferredPrototypeType) : ScriptFunction(proxy, deferredPrototypeType) { }
 
-        static uint32 GetRealFunctionOffset() { return offsetof(GeneratorVirtualScriptFunction, realFunction); }
+        static uint32_t GetRealFunctionOffset() { return offsetof(GeneratorVirtualScriptFunction, realFunction); }
 
         virtual JavascriptFunction* GetRealFunctionObject() override { return realFunction; }
         void SetRealGeneratorFunction(JavascriptGeneratorFunction* realFunction) { this->realFunction = realFunction; }

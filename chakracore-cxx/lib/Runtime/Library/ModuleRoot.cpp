@@ -422,18 +422,18 @@ namespace Js
         return this->GetLibrary()->GetGlobalObject()->GlobalObject::DeleteRootProperty(propertyId, flags);
     }
 
-    PropertyQueryFlags ModuleRoot::HasItemQuery(uint32 index)
+    PropertyQueryFlags ModuleRoot::HasItemQuery(uint32_t index)
     {
         return JavascriptConversion::BooleanToPropertyQueryFlags(JavascriptConversion::PropertyQueryFlagsToBoolean(DynamicObject::HasItemQuery(index))
             || (this->hostObject && JavascriptOperators::HasItem(this->hostObject, index)));
     }
 
-    BOOL ModuleRoot::HasOwnItem(uint32 index)
+    BOOL ModuleRoot::HasOwnItem(uint32_t index)
     {
         return JavascriptConversion::PropertyQueryFlagsToBoolean(DynamicObject::HasItemQuery(index));
     }
 
-    PropertyQueryFlags ModuleRoot::GetItemReferenceQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext)
+    PropertyQueryFlags ModuleRoot::GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext)
     {
         if (JavascriptConversion::PropertyQueryFlagsToBoolean(DynamicObject::GetItemReferenceQuery(originalInstance, index, value, requestContext)))
         {
@@ -447,7 +447,7 @@ namespace Js
         return PropertyQueryFlags::Property_NotFound;
     }
 
-    BOOL ModuleRoot::SetItem(uint32 index, Var value, PropertyOperationFlags flags)
+    BOOL ModuleRoot::SetItem(uint32_t index, Var value, PropertyOperationFlags flags)
     {
         if (DynamicObject::SetItem(index, value, flags))
         {
@@ -461,7 +461,7 @@ namespace Js
         return FALSE;
     }
 
-    PropertyQueryFlags ModuleRoot::GetItemQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext)
+    PropertyQueryFlags ModuleRoot::GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext)
     {
         if (JavascriptConversion::PropertyQueryFlagsToBoolean(DynamicObject::GetItemQuery(originalInstance, index, value, requestContext)))
         {

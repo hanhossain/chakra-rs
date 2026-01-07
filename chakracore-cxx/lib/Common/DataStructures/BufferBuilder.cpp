@@ -13,7 +13,7 @@ namespace Js
 
 #if DBG
 void
-BufferBuilder::TraceOutput(byte * buffer, uint32 size) const
+BufferBuilder::TraceOutput(byte * buffer, uint32_t size) const
 {
     if (PHASE_TRACE1(Js::ByteCodeSerializationPhase))
     {

@@ -24,7 +24,7 @@ ARRAYBUFFER_VIEW_INT(INT16           , 1     , int32  , int16   , Int16    )
 ARRAYBUFFER_VIEW_INT(UINT16          , 1     , int32  , uint16  , Uint16   )
 ARRAYBUFFER_VIEW_INT(INT32           , 2     , int32  , int32   , Int32    )
 // TODO (hanhossain): remove in favor of uint32_t
-ARRAYBUFFER_VIEW_INT(UINT32          , 2     , int32  , uint32  , Uint32   )
+ARRAYBUFFER_VIEW_INT(UINT32          , 2     , int32  , uint32_t  , Uint32   )
 ARRAYBUFFER_VIEW_FLT(FLOAT32         , 2     , float  , float   , Float32  )
 ARRAYBUFFER_VIEW_FLT(FLOAT64         , 3     , double , double  , Float64  )
 // TODO (hanhossain): remove in favor of int64_t
@@ -34,7 +34,7 @@ ARRAYBUFFER_VIEW_INT(UINT8_TO_INT64  , 0     , long  , uint8_t   , Uint8    )
 ARRAYBUFFER_VIEW_INT(INT16_TO_INT64  , 1     , long  , int16   , Int16    )
 ARRAYBUFFER_VIEW_INT(UINT16_TO_INT64 , 1     , long  , uint16  , Uint16   )
 ARRAYBUFFER_VIEW_INT(INT32_TO_INT64  , 2     , long  , int32   , Int32    )
-ARRAYBUFFER_VIEW_INT(UINT32_TO_INT64 , 2     , long  , uint32  , Uint32   )
+ARRAYBUFFER_VIEW_INT(UINT32_TO_INT64 , 2     , long  , uint32_t  , Uint32   )
 
 #undef ARRAYBUFFER_VIEW
 #undef ARRAYBUFFER_VIEW_INT

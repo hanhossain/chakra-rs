@@ -8,7 +8,7 @@
 
 namespace TTD
 {
-    TTDebuggerAbortException::TTDebuggerAbortException(uint32 abortCode, long optEventTime, long optMoveMode, const char16_t* staticAbortMessage)
+    TTDebuggerAbortException::TTDebuggerAbortException(uint32_t abortCode, long optEventTime, long optMoveMode, const char16_t* staticAbortMessage)
         : m_abortCode(abortCode), m_optEventTime(optEventTime), m_optMoveMode(optMoveMode), m_staticAbortMessage(staticAbortMessage)
     {
         ;
@@ -66,7 +66,7 @@ namespace TTD
 
     Js::FunctionBody* TTDebuggerSourceLocation::UpdatePostInflateFunctionBody_Helper(Js::FunctionBody* rootBody) const
     {
-        for(uint32 i = 0; i < rootBody->GetNestedCount(); ++i)
+        for(uint32_t i = 0; i < rootBody->GetNestedCount(); ++i)
         {
             Js::ParseableFunctionInfo* ipfi = rootBody->GetNestedFunctionForExecution(i);
             Js::FunctionBody* ifb = JsSupport::ForceAndGetFunctionBody(ipfi);
@@ -204,20 +204,20 @@ namespace TTD
     {
         uint32_t srcLine = 0;
         int32_t srcColumn = -1;
-        uint32 startOffset = callFrame.Function->GetStatementStartOffset(callFrame.CurrentStatementIndex);
+        uint32_t startOffset = callFrame.Function->GetStatementStartOffset(callFrame.CurrentStatementIndex);
         callFrame.Function->GetSourceLineFromStartOffset_TTD(startOffset, &srcLine, &srcColumn);
 
-        this->SetLocationFull(topLevelETime, callFrame.FunctionTime, callFrame.LoopTime, callFrame.Function, (uint32)srcLine, (uint32)srcColumn);
+        this->SetLocationFull(topLevelETime, callFrame.FunctionTime, callFrame.LoopTime, callFrame.Function, (uint32_t)srcLine, (uint32_t)srcColumn);
     }
 
     void TTDebuggerSourceLocation::SetLocationFromFunctionEntryAnyTime(long topLevelETime, Js::FunctionBody* body)
     {
         uint32_t srcLine = 0;
         int32_t srcColumn = -1;
-        uint32 startOffset = body->GetStatementStartOffset(0);
+        uint32_t startOffset = body->GetStatementStartOffset(0);
         body->GetSourceLineFromStartOffset_TTD(startOffset, &srcLine, &srcColumn);
 
-        this->SetLocationFull(topLevelETime, -1, -1, body, (uint32)srcLine, (uint32)srcColumn);
+        this->SetLocationFull(topLevelETime, -1, -1, body, (uint32_t)srcLine, (uint32_t)srcColumn);
     }
 
     void TTDebuggerSourceLocation::SetLocationFull(long etime, long ftime, long ltime, Js::FunctionBody* body, uint32_t line, int32_t column)
@@ -234,11 +234,11 @@ namespace TTD
         this->m_functionLine = body->GetLineNumber();
         this->m_functionColumn = body->GetColumnNumber();
 
-        this->m_line = (uint32)line;
-        this->m_column = (uint32)column;
+        this->m_line = (uint32_t)line;
+        this->m_column = (uint32_t)column;
     }
 
-    void TTDebuggerSourceLocation::SetLocationFullRaw(TTD_LOG_PTR_ID sourceScriptLogId, long etime, long ftime, long ltime, uint32 topLevelBodyId, uint32 functionLine, uint32 functionColumn, uint32_t line, int32_t column)
+    void TTDebuggerSourceLocation::SetLocationFullRaw(TTD_LOG_PTR_ID sourceScriptLogId, long etime, long ftime, long ltime, uint32_t topLevelBodyId, uint32_t functionLine, uint32_t functionColumn, uint32_t line, int32_t column)
     {
         this->m_sourceScriptLogId = sourceScriptLogId;
         this->m_bpId = -1;
@@ -252,8 +252,8 @@ namespace TTD
         this->m_functionLine = functionLine;
         this->m_functionColumn = functionColumn;
 
-        this->m_line = (uint32)line;
-        this->m_column = (uint32)column;
+        this->m_line = (uint32_t)line;
+        this->m_column = (uint32_t)column;
     }
 
     void TTDebuggerSourceLocation::SetLocationWithBP(long bpId, Js::FunctionBody* body, uint32_t line, int32_t column)
@@ -270,8 +270,8 @@ namespace TTD
         this->m_functionLine = body->GetLineNumber();
         this->m_functionColumn = body->GetColumnNumber();
 
-        this->m_line = (uint32)line;
-        this->m_column = (uint32)column;
+        this->m_line = (uint32_t)line;
+        this->m_column = (uint32_t)column;
     }
 
     long TTDebuggerSourceLocation::GetRootEventTime() const
@@ -317,27 +317,27 @@ namespace TTD
         return this->m_bpId;
     }
 
-    uint32 TTDebuggerSourceLocation::GetTopLevelBodyId() const
+    uint32_t TTDebuggerSourceLocation::GetTopLevelBodyId() const
     {
         return this->m_topLevelBodyId;
     }
 
-    uint32 TTDebuggerSourceLocation::GetFunctionSourceLine() const
+    uint32_t TTDebuggerSourceLocation::GetFunctionSourceLine() const
     {
         return this->m_functionLine;
     }
 
-    uint32 TTDebuggerSourceLocation::GetFunctionSourceColumn() const
+    uint32_t TTDebuggerSourceLocation::GetFunctionSourceColumn() const
     {
         return this->m_functionColumn;
     }
 
-    uint32 TTDebuggerSourceLocation::GetSourceLine() const
+    uint32_t TTDebuggerSourceLocation::GetSourceLine() const
     {
         return this->m_line;
     }
 
-    uint32 TTDebuggerSourceLocation::GetSourceColumn() const
+    uint32_t TTDebuggerSourceLocation::GetSourceColumn() const
     {
         return this->m_column;
     }
@@ -446,7 +446,7 @@ namespace TTD
         return this->m_eventTime != -1;
     }
 
-    void TTInnerLoopLastStatementInfo::SetLastLine(long etime, long ftime, long ltime, uint32 line, uint32 column)
+    void TTInnerLoopLastStatementInfo::SetLastLine(long etime, long ftime, long ltime, uint32_t line, uint32_t column)
     {
         this->m_eventTime = etime;
         this->m_functionTime = ftime;
@@ -461,7 +461,7 @@ namespace TTD
         return (this->m_eventTime == etime) & (this->m_functionTime == ftime) & (this->m_loopTime == ltime);
     }
 
-    bool TTInnerLoopLastStatementInfo::CheckLineColumnMatch(uint32 line, uint32 column) const
+    bool TTInnerLoopLastStatementInfo::CheckLineColumnMatch(uint32_t line, uint32_t column) const
     {
         return (this->m_line == line) & (this->m_column == column);
     }
@@ -537,7 +537,7 @@ namespace TTD
         }
     }
 
-    void ExecutionInfoManager::PushCallEvent(Js::JavascriptFunction* function, uint32 argc, Js::Var* argv, bool isInFinally)
+    void ExecutionInfoManager::PushCallEvent(Js::JavascriptFunction* function, uint32_t argc, Js::Var* argv, bool isInFinally)
     {
         //Clear any previous last return frame info
         this->m_lastReturnLocation.ClearReturnOnly();
@@ -710,10 +710,10 @@ namespace TTD
 
         uint32_t srcLine = 0;
         int32_t srcColumn = -1;
-        uint32 startOffset = cfinfo.Function->GetStatementStartOffset(cfinfo.CurrentStatementIndex);
+        uint32_t startOffset = cfinfo.Function->GetStatementStartOffset(cfinfo.CurrentStatementIndex);
         cfinfo.Function->GetSourceLineFromStartOffset_TTD(startOffset, &srcLine, &srcColumn);
 
-        bool locationOk = ((uint32)srcLine == this->m_activeTTDBP.GetSourceLine()) & ((uint32)srcColumn == this->m_activeTTDBP.GetSourceColumn());
+        bool locationOk = ((uint32_t)srcLine == this->m_activeTTDBP.GetSourceLine()) & ((uint32_t)srcColumn == this->m_activeTTDBP.GetSourceColumn());
         bool ftimeOk = (this->m_activeTTDBP.GetFunctionTime() == -1) | ((unsigned long)this->m_activeTTDBP.GetFunctionTime() == cfinfo.FunctionTime);
         bool ltimeOk = (this->m_activeTTDBP.GetLoopTime() == -1) | ((unsigned long)this->m_activeTTDBP.GetLoopTime() == cfinfo.CurrentStatementLoopTime);
 
@@ -803,7 +803,7 @@ namespace TTD
         for(int32 i = 0; i < ctxs.Count(); ++i)
         {
             Js::ScriptContext* ctx = ctxs.Item(i);
-            JsUtil::List<uint32, HeapAllocator> bpIdsToDelete(&HeapAllocator::Instance);
+            JsUtil::List<uint32_t, HeapAllocator> bpIdsToDelete(&HeapAllocator::Instance);
 
             Js::ProbeContainer* probeContainer = ctx->GetDebugContext()->GetProbeContainer();
             probeContainer->MapProbes([&](int j, Js::Probe* pProbe)
@@ -816,7 +816,7 @@ namespace TTD
 
                     uint32_t srcLine = 0;
                     int32_t srcColumn = -1;
-                    uint32 startOffset = body->GetStatementStartOffset(bpIndex);
+                    uint32_t startOffset = body->GetStatementStartOffset(bpIndex);
                     body->GetSourceLineFromStartOffset_TTD(startOffset, &srcLine, &srcColumn);
 
                     TTDebuggerSourceLocation* bpLocation = TT_HEAP_NEW(TTDebuggerSourceLocation);
@@ -840,7 +840,7 @@ namespace TTD
         }
     }
 
-    void ExecutionInfoManager::AddPreservedBPsForTopLevelLoad(uint32 topLevelBodyId, Js::FunctionBody* body)
+    void ExecutionInfoManager::AddPreservedBPsForTopLevelLoad(uint32_t topLevelBodyId, Js::FunctionBody* body)
     {
         Js::ScriptContext* ctx = body->GetScriptContext();
         Js::Utf8SourceInfo* utf8SourceInfo = body->GetUtf8SourceInfo();
@@ -909,16 +909,16 @@ namespace TTD
                     cfinfo.CurrentStatementIndex = cIndex;
                     cfinfo.CurrentStatementLoopTime = cfinfo.LoopTime;
 
-                    cfinfo.CurrentStatementBytecodeMin = (uint32)pstmt->byteCodeSpan.begin;
-                    cfinfo.CurrentStatementBytecodeMax = (uint32)pstmt->byteCodeSpan.end;
+                    cfinfo.CurrentStatementBytecodeMin = (uint32_t)pstmt->byteCodeSpan.begin;
+                    cfinfo.CurrentStatementBytecodeMax = (uint32_t)pstmt->byteCodeSpan.end;
 
 #if ENABLE_FULL_BC_TRACE
                     uint32_t srcLine = 0;
                     int32_t srcColumn = -1;
-                    uint32 startOffset = cfinfo.Function->GetFunctionBody()->GetStatementStartOffset(cfinfo.CurrentStatementIndex);
+                    uint32_t startOffset = cfinfo.Function->GetFunctionBody()->GetStatementStartOffset(cfinfo.CurrentStatementIndex);
                     cfinfo.Function->GetFunctionBody()->GetSourceLineFromStartOffset_TTD(startOffset, &srcLine, &srcColumn);
 
-                    this->m_diagnosticLogger.WriteStmtIndex((uint32)srcLine, (uint32)srcColumn);
+                    this->m_diagnosticLogger.WriteStmtIndex((uint32_t)srcLine, (uint32_t)srcColumn);
 #endif
                 }
             }
@@ -957,9 +957,9 @@ namespace TTD
 
         uint32_t srcLine = 0;
         int32_t srcColumn = -1;
-        uint32 startOffset = cfinfo.Function->GetStatementStartOffset(cfinfo.CurrentStatementIndex);
+        uint32_t startOffset = cfinfo.Function->GetStatementStartOffset(cfinfo.CurrentStatementIndex);
         cfinfo.Function->GetSourceLineFromStartOffset_TTD(startOffset, &srcLine, &srcColumn);
-        return this->m_innerloopLastLocation.CheckLineColumnMatch((uint32) srcLine, (uint32)srcColumn);
+        return this->m_innerloopLastLocation.CheckLineColumnMatch((uint32_t) srcLine, (uint32_t)srcColumn);
     }
 
     void ExecutionInfoManager::GetTimeAndPositionForDebugger(TTDebuggerSourceLocation& sourceLocation) const
@@ -968,7 +968,7 @@ namespace TTD
 
         uint32_t srcLine = 0;
         int32_t srcColumn = -1;
-        uint32 startOffset = cfinfo.Function->GetStatementStartOffset(cfinfo.CurrentStatementIndex);
+        uint32_t startOffset = cfinfo.Function->GetStatementStartOffset(cfinfo.CurrentStatementIndex);
         cfinfo.Function->GetSourceLineFromStartOffset_TTD(startOffset, &srcLine, &srcColumn);
 
         sourceLocation.SetLocationFull(this->m_topLevelCallbackEventTime, cfinfo.FunctionTime, cfinfo.LoopTime, cfinfo.Function, srcLine, srcColumn);
@@ -981,7 +981,7 @@ namespace TTD
 
         uint32_t srcLine = 0;
         int32_t srcColumn = -1;
-        uint32 startOffset = cfinfo.Function->GetStatementStartOffset(cfinfo.CurrentStatementIndex);
+        uint32_t startOffset = cfinfo.Function->GetStatementStartOffset(cfinfo.CurrentStatementIndex);
         cfinfo.Function->GetSourceLineFromStartOffset_TTD(startOffset, &srcLine, &srcColumn);
 
         SetDiagnosticOriginInformation(originInfo, srcLine, cfinfo.Function->GetFunctionBody()->GetScriptContext()->GetThreadContext()->TTDLog->GetLastEventTime(), cfinfo.FunctionTime, cfinfo.LoopTime);
@@ -1033,7 +1033,7 @@ namespace TTD
 
         uint32_t srcLine = 0;
         int32_t srcColumn = -1;
-        uint32 startOffset = fbody->GetStatementStartOffset(statementIndex);
+        uint32_t startOffset = fbody->GetStatementStartOffset(statementIndex);
         fbody->GetSourceLineFromStartOffset_TTD(startOffset, &srcLine, &srcColumn);
 
         sourceLocation.SetLocationFull(this->m_topLevelCallbackEventTime, ftime, ltime, fbody, srcLine, srcColumn);
@@ -1054,7 +1054,7 @@ namespace TTD
         {
             uint32_t srcLine = 0;
             int32_t srcColumn = -1;
-            uint32 startOffset = cframe.GetLocation().Function->GetStatementStartOffset(cframe.GetLocation().CurrentStatementIndex);
+            uint32_t startOffset = cframe.GetLocation().Function->GetStatementStartOffset(cframe.GetLocation().CurrentStatementIndex);
             cframe.GetLocation().Function->GetSourceLineFromStartOffset_TTD(startOffset, &srcLine, &srcColumn);
 
             sourceLocation.SetLocationFull(this->m_topLevelCallbackEventTime, cframe.GetLocation().FunctionTime, cframe.GetLocation().CurrentStatementLoopTime, cframe.GetLocation().Function, srcLine, srcColumn);
@@ -1162,7 +1162,7 @@ namespace TTD
         this->m_activeTTDBP.Clear();
     }
 
-    void ExecutionInfoManager::ProcessScriptLoad(Js::ScriptContext* ctx, uint32 topLevelBodyId, Js::FunctionBody* body, Js::Utf8SourceInfo* utf8SourceInfo, CompileScriptException* se)
+    void ExecutionInfoManager::ProcessScriptLoad(Js::ScriptContext* ctx, uint32_t topLevelBodyId, Js::FunctionBody* body, Js::Utf8SourceInfo* utf8SourceInfo, CompileScriptException* se)
     {
         bool newScript = !this->m_debuggerNotifiedTopLevelBodies.Contains(topLevelBodyId);
 
@@ -1180,7 +1180,7 @@ namespace TTD
         this->AddPreservedBPsForTopLevelLoad(topLevelBodyId, body);
     }
 
-    void ExecutionInfoManager::ProcessScriptLoad_InflateReuseBody(uint32 topLevelBodyId, Js::FunctionBody* body)
+    void ExecutionInfoManager::ProcessScriptLoad_InflateReuseBody(uint32_t topLevelBodyId, Js::FunctionBody* body)
     {
         this->AddPreservedBPsForTopLevelLoad(topLevelBodyId, body);
     }

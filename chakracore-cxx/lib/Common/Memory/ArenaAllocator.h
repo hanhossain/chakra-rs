@@ -871,14 +871,14 @@ protected:
     }
 
 public:
-    uint32 AddRef(void)
+    uint32_t AddRef(void)
     {
-        return (uint32)InterlockedIncrement(&refCount);
+        return (uint32_t)InterlockedIncrement(&refCount);
     }
 
-    uint32 Release(void)
+    uint32_t Release(void)
     {
-        uint32 refs = (uint32)InterlockedDecrement(&refCount);
+        uint32_t refs = (uint32_t)InterlockedDecrement(&refCount);
 
         if (0 == refs)
         {
@@ -936,7 +936,7 @@ public:
 class ReferencedArenaAdapter : public RefCounted
 {
     CriticalSection adapterLock;
-    uint32 strongRefCount;
+    uint32_t strongRefCount;
     ArenaAllocator* arena;
     bool deleteFlag;
 

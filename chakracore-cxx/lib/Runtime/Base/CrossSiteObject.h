@@ -24,10 +24,10 @@ namespace Js
         virtual BOOL InitPropertyScoped(PropertyId propertyId, Var value) override;
         virtual BOOL InitFuncScoped(PropertyId propertyId, Var value) override;
 
-        virtual PropertyQueryFlags GetItemQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext) override;
-        virtual PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext) override;
-        virtual DescriptorFlags GetItemSetter(uint32 index, Var* setterValue, ScriptContext* requestContext) override;
-        virtual BOOL SetItem(uint32 index, Var value, PropertyOperationFlags flags) override;
+        virtual PropertyQueryFlags GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
+        virtual PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
+        virtual DescriptorFlags GetItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext) override;
+        virtual BOOL SetItem(uint32_t index, Var value, PropertyOperationFlags flags) override;
         virtual Var GetHostDispatchVar() override;
 
         virtual DescriptorFlags GetSetter(PropertyId propertyId, Var* setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
@@ -147,7 +147,7 @@ namespace Js
     }
 
     template <typename T>
-    PropertyQueryFlags CrossSiteObject<T>::GetItemQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext)
+    PropertyQueryFlags CrossSiteObject<T>::GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext)
     {
         originalInstance = CrossSite::MarshalVar(this->GetScriptContext(), originalInstance);
         PropertyQueryFlags result = __super::GetItemQuery(originalInstance, index, value, requestContext);
@@ -159,7 +159,7 @@ namespace Js
     }
 
     template <typename T>
-    PropertyQueryFlags CrossSiteObject<T>::GetItemReferenceQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext)
+    PropertyQueryFlags CrossSiteObject<T>::GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext)
     {
         originalInstance = CrossSite::MarshalVar(this->GetScriptContext(), originalInstance);
         PropertyQueryFlags result = __super::GetItemReferenceQuery(originalInstance, index, value, requestContext);
@@ -171,7 +171,7 @@ namespace Js
     }
 
     template <typename T>
-    DescriptorFlags CrossSiteObject<T>::GetItemSetter(uint32 index, Var *setterValue, ScriptContext* requestContext)
+    DescriptorFlags CrossSiteObject<T>::GetItemSetter(uint32_t index, Var *setterValue, ScriptContext* requestContext)
     {
         DescriptorFlags flags = __super::GetItemSetter(index, setterValue, requestContext);
         if ((flags & Accessor) == Accessor && *setterValue)
@@ -182,7 +182,7 @@ namespace Js
     }
 
     template <typename T>
-    BOOL CrossSiteObject<T>::SetItem(uint32 index, Var value, PropertyOperationFlags flags)
+    BOOL CrossSiteObject<T>::SetItem(uint32_t index, Var value, PropertyOperationFlags flags)
     {
         value = CrossSite::MarshalVar(this->GetScriptContext(), value);
         return __super::SetItem(index, value, flags);

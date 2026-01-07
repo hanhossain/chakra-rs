@@ -164,7 +164,7 @@ namespace Js
     void JavascriptError::SetErrorsList(JavascriptError* pError, SList<Var, Recycler>* errorsList, ScriptContext* scriptContext)
     {
         JavascriptArray* errors = scriptContext->GetLibrary()->CreateArray(errorsList->Count());
-        uint32 n = 0;
+        uint32_t n = 0;
         SList<Var, Recycler>::Iterator it = errorsList->GetIterator();
         while (it.Next())
         {
@@ -430,7 +430,7 @@ namespace Js
                 }
                 if (message != nullptr)
                 {
-                    uint32 len = SysStringLen(message) +1;
+                    uint32_t len = SysStringLen(message) +1;
                     allocatedString = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, len);
                     wcscpy_s(allocatedString, len, message);
                     SysFreeString(message);
@@ -454,7 +454,7 @@ namespace Js
                 BSTR message = BstrGetResourceString(hrAdjusted);
                 if (message != nullptr)
                 {
-                    uint32 msglen = SysStringLen(message);
+                    uint32_t msglen = SysStringLen(message);
                     size_t varlen = wcslen(varName);
                     size_t len = AllocSizeMath::Add(msglen, varlen);
                     allocatedString = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, len);
@@ -495,7 +495,7 @@ namespace Js
                 }
                 if (message != nullptr)
                 {
-                    uint32 len = SysStringLen(message) +1;
+                    uint32_t len = SysStringLen(message) +1;
                     allocatedString = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, len);
                     wcscpy_s(allocatedString, len, message);
                     SysFreeString(message);
@@ -636,7 +636,7 @@ namespace Js
 
         if (ei.bstrDescription != nullptr)
         {
-            uint32 len = SysStringLen(ei.bstrDescription) + 1;
+            uint32_t len = SysStringLen(ei.bstrDescription) + 1;
             char16_t *allocatedString = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, len);
             wcscpy_s(allocatedString, len, ei.bstrDescription);
             JavascriptError::SetErrorMessageProperties(pError, ei.scode, allocatedString, scriptContext);
@@ -690,7 +690,7 @@ namespace Js
         return false;
     }
 
-    bool JavascriptError::ThrowCantAssign(PropertyOperationFlags flags, ScriptContext* scriptContext, uint32 index)
+    bool JavascriptError::ThrowCantAssign(PropertyOperationFlags flags, ScriptContext* scriptContext, uint32_t index)
     {
         if (flags & PropertyOperation_ThrowIfNonWritable)
         {

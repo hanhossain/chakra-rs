@@ -96,12 +96,12 @@ namespace Js
         if (pArr != nullptr)
         {
             Assert(index <= UINT_MAX);
-            value = pArr->DirectGetItem((uint32)index);
+            value = pArr->DirectGetItem((uint32_t)index);
         }
         else if (typedArrayBase != nullptr)
         {
             Assert(index <= UINT_MAX);
-            value = typedArrayBase->DirectGetItem((uint32)index);
+            value = typedArrayBase->DirectGetItem((uint32_t)index);
         }
         else
         {

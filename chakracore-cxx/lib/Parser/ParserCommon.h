@@ -11,7 +11,7 @@
 namespace Js
 {
     typedef int32  ByteCodeLabel;       // Size of this match the offset size in layouts
-    typedef uint32 RegSlot;
+    typedef uint32_t RegSlot;
     typedef uint8_t  RegSlot_OneByte;
     typedef int8_t   RegSlot_OneSByte;
     typedef int16  RegSlot_TwoSByte;

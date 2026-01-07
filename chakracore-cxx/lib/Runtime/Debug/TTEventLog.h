@@ -166,7 +166,7 @@ namespace TTD
         bool IsEmpty() const;
 
         //NOT constant time
-        uint32 Count() const;
+        uint32_t Count() const;
 
         class Iterator
         {
@@ -243,7 +243,7 @@ namespace TTD
         UnorderedArrayList<NSSnapType::SnapPropertyRecord, TTD_ARRAY_LIST_SIZE_DEFAULT> m_propertyRecordList;
 
         //The value of the threadContext sourceInfoCounter in record -- in replay initialize to this value to avoid collisions
-        uint32 m_sourceInfoCount;
+        uint32_t m_sourceInfoCount;
 
         //A list of all *root* scripts that have been loaded during this session
         UnorderedArrayList<NSSnapValues::TopLevelScriptLoadFunctionBodyResolveInfo, TTD_ARRAY_LIST_SIZE_MID> m_loadedTopLevelScripts;
@@ -277,7 +277,7 @@ namespace TTD
         template <typename T, NSLogEvents::EventKind tag>
         NSLogEvents::EventLogEntry* RecordGetInitializedEvent(T** extraData)
         {
-            AssertMsg(TTD_EVENT_PLUS_DATA_SIZE_DIRECT(sizeof(T)) == this->m_eventListVTable[(uint32)tag].DataSize, "Computed and extracted data sizes don't match!!!");
+            AssertMsg(TTD_EVENT_PLUS_DATA_SIZE_DIRECT(sizeof(T)) == this->m_eventListVTable[(uint32_t)tag].DataSize, "Computed and extracted data sizes don't match!!!");
 
             NSLogEvents::EventLogEntry* res = this->m_eventList.GetNextAvailableEntry<T>();
             NSLogEvents::EventLogEntry_Initialize<tag>(res, this->GetCurrentEventTimeAndAdvance());
@@ -289,7 +289,7 @@ namespace TTD
         template <typename T, NSLogEvents::EventKind tag>
         T* RecordGetInitializedEvent_DataOnly()
         {
-            AssertMsg(TTD_EVENT_PLUS_DATA_SIZE_DIRECT(sizeof(T)) == this->m_eventListVTable[(uint32)tag].DataSize, "Computed and extracted data sizes don't match!!!");
+            AssertMsg(TTD_EVENT_PLUS_DATA_SIZE_DIRECT(sizeof(T)) == this->m_eventListVTable[(uint32_t)tag].DataSize, "Computed and extracted data sizes don't match!!!");
 
             NSLogEvents::EventLogEntry* res = this->m_eventList.GetNextAvailableEntry<T>();
             NSLogEvents::EventLogEntry_Initialize<tag>(res, this->GetCurrentEventTimeAndAdvance());
@@ -370,14 +370,14 @@ namespace TTD
         void AddPropertyRecord(const Js::PropertyRecord* record);
 
         //Add top level function load info to our sets
-        const NSSnapValues::TopLevelScriptLoadFunctionBodyResolveInfo* AddScriptLoad(Js::FunctionBody* fb, Js::ModuleID moduleId, unsigned long sourceContextId, const byte* source, uint32 sourceLen, LoadScriptFlag loadFlag);
-        const NSSnapValues::TopLevelNewFunctionBodyResolveInfo* AddNewFunction(Js::FunctionBody* fb, Js::ModuleID moduleId, const char16_t* source, uint32 sourceLen);
-        const NSSnapValues::TopLevelEvalFunctionBodyResolveInfo* AddEvalFunction(Js::FunctionBody* fb, Js::ModuleID moduleId, const char16_t* source, uint32 sourceLen, uint32 grfscr, bool registerDocument, BOOL isIndirect, BOOL strictMode);
+        const NSSnapValues::TopLevelScriptLoadFunctionBodyResolveInfo* AddScriptLoad(Js::FunctionBody* fb, Js::ModuleID moduleId, unsigned long sourceContextId, const byte* source, uint32_t sourceLen, LoadScriptFlag loadFlag);
+        const NSSnapValues::TopLevelNewFunctionBodyResolveInfo* AddNewFunction(Js::FunctionBody* fb, Js::ModuleID moduleId, const char16_t* source, uint32_t sourceLen);
+        const NSSnapValues::TopLevelEvalFunctionBodyResolveInfo* AddEvalFunction(Js::FunctionBody* fb, Js::ModuleID moduleId, const char16_t* source, uint32_t sourceLen, uint32_t grfscr, bool registerDocument, BOOL isIndirect, BOOL strictMode);
 
-        uint32 GetSourceInfoCount() const;
+        uint32_t GetSourceInfoCount() const;
 
-        void RecordTopLevelCodeAction(uint32 bodyCtrId);
-        uint32 ReplayTopLevelCodeAction();
+        void RecordTopLevelCodeAction(uint32_t bodyCtrId);
+        uint32_t ReplayTopLevelCodeAction();
 
         ////////////////////////////////
         //Logging support
@@ -454,7 +454,7 @@ namespace TTD
         //Get the event time corresponding to the first/last/k-th top-level event in the log
         long GetFirstEventTimeInLog() const;
         long GetLastEventTimeInLog() const;
-        long GetKthEventTimeInLog(uint32 k) const;
+        long GetKthEventTimeInLog(uint32_t k) const;
 
         //Ensure the call stack is clear and counters are zeroed appropriately
         void ResetCallStackForTopLevelCall(long topLevelCallbackEventTime);
@@ -551,9 +551,9 @@ namespace TTD
         //Record object allocate operations
         void RecordJsRTAllocateBasicObject(TTDJsRTActionResultAutoRecorder& actionPopper);
         void RecordJsRTAllocateExternalObject(TTDJsRTActionResultAutoRecorder& actionPopper, Js::Var prototype);
-        void RecordJsRTAllocateBasicArray(TTDJsRTActionResultAutoRecorder& actionPopper, uint32 length);
-        void RecordJsRTAllocateArrayBuffer(TTDJsRTActionResultAutoRecorder& actionPopper, uint32 size);
-        void RecordJsRTAllocateExternalArrayBuffer(TTDJsRTActionResultAutoRecorder& actionPopper, byte* buff, uint32 size);
+        void RecordJsRTAllocateBasicArray(TTDJsRTActionResultAutoRecorder& actionPopper, uint32_t length);
+        void RecordJsRTAllocateArrayBuffer(TTDJsRTActionResultAutoRecorder& actionPopper, uint32_t size);
+        void RecordJsRTAllocateExternalArrayBuffer(TTDJsRTActionResultAutoRecorder& actionPopper, byte* buff, uint32_t size);
         void RecordJsRTAllocateFunction(TTDJsRTActionResultAutoRecorder& actionPopper, Js::Var optMetadata);
 
         //Record GetAndClearException
@@ -592,19 +592,19 @@ namespace TTD
         void RecordJsRTGetDataViewInfo(Js::Var var, Js::Var result);
 
         //Record various raw byte* from ArrayBuffer manipulations
-        void RecordJsRTRawBufferCopySync(TTDJsRTActionResultAutoRecorder& actionPopper, Js::Var dst, uint32 dstIndex, Js::Var src, uint32 srcIndex, uint32 length);
-        void RecordJsRTRawBufferModifySync(TTDJsRTActionResultAutoRecorder& actionPopper, Js::Var dst, uint32 index, uint32 count);
-        void RecordJsRTRawBufferAsyncModificationRegister(TTDJsRTActionResultAutoRecorder& actionPopper, Js::Var dst, uint32 index);
+        void RecordJsRTRawBufferCopySync(TTDJsRTActionResultAutoRecorder& actionPopper, Js::Var dst, uint32_t dstIndex, Js::Var src, uint32_t srcIndex, uint32_t length);
+        void RecordJsRTRawBufferModifySync(TTDJsRTActionResultAutoRecorder& actionPopper, Js::Var dst, uint32_t index, uint32_t count);
+        void RecordJsRTRawBufferAsyncModificationRegister(TTDJsRTActionResultAutoRecorder& actionPopper, Js::Var dst, uint32_t index);
         void RecordJsRTRawBufferAsyncModifyComplete(TTDJsRTActionResultAutoRecorder& actionPopper, TTDPendingAsyncBufferModification& pendingAsyncInfo, byte* finalModPos);
 
         //Record a constructor call from JsRT
-        void RecordJsRTConstructCall(TTDJsRTActionResultAutoRecorder& actionPopper, Js::Var funcVar, uint32 argCount, Js::Var* args);
+        void RecordJsRTConstructCall(TTDJsRTActionResultAutoRecorder& actionPopper, Js::Var funcVar, uint32_t argCount, Js::Var* args);
 
         //Record code parse
-        NSLogEvents::EventLogEntry* RecordJsRTCodeParse(TTDJsRTActionResultAutoRecorder& actionPopper, LoadScriptFlag loadFlag, bool isUft8, const byte* script, uint32 scriptByteLength, unsigned long sourceContextId, const char16_t* sourceUri);
+        NSLogEvents::EventLogEntry* RecordJsRTCodeParse(TTDJsRTActionResultAutoRecorder& actionPopper, LoadScriptFlag loadFlag, bool isUft8, const byte* script, uint32_t scriptByteLength, unsigned long sourceContextId, const char16_t* sourceUri);
 
         //Record callback of an existing function
-        NSLogEvents::EventLogEntry* RecordJsRTCallFunction(TTDJsRTActionResultAutoRecorder& actionPopper, int32 rootDepth, Js::Var funcVar, uint32 argCount, Js::Var* args);
+        NSLogEvents::EventLogEntry* RecordJsRTCallFunction(TTDJsRTActionResultAutoRecorder& actionPopper, int32 rootDepth, Js::Var funcVar, uint32_t argCount, Js::Var* args);
 
         ////////////////////////////////
         //Emit code and support

@@ -37,7 +37,7 @@ namespace Js
 
         charcount_t GetCharacterOffsetForLine(charcount_t line, charcount_t *outByteOffset) const;
 
-        uint32 GetLineCount() const;
+        uint32_t GetLineCount() const;
 
         const charcount_t * GetLineCharacterOffsetBuffer() const;
         const charcount_t * GetLineByteOffsetBuffer() const;

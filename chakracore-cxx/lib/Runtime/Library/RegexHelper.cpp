@@ -531,7 +531,7 @@ namespace Js
             offset = regularExpression->GetLastIndex();
         }
 
-        uint32 globalIndex = 0;
+        uint32_t globalIndex = 0;
         PrimBeginMatch(state, scriptContext, pattern, inputStr, inputLength, false);
 
         do
@@ -2375,7 +2375,7 @@ namespace Js
     JavascriptString* RegexHelper::GetMatchStrFromResult(RecyclableObject* result, ScriptContext* scriptContext)
     {
         return JavascriptConversion::ToString(
-            JavascriptOperators::GetItem(result, (uint32)0, scriptContext),
+            JavascriptOperators::GetItem(result, (uint32_t)0, scriptContext),
             scriptContext);
     }
 

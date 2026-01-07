@@ -355,7 +355,7 @@ namespace TTD
         {
             TTDVar Result;
             byte* Buffer;
-            uint32 Length;
+            uint32_t Length;
         };
 
         template <EventKind tag>
@@ -384,7 +384,7 @@ namespace TTD
             writer->WriteSequenceStart_DefaultKey(NSTokens::Separator::CommaSeparator);
             if(!badValue)
             {
-                for(uint32 i = 0; i < bufferAction->Length; ++i)
+                for(uint32_t i = 0; i < bufferAction->Length; ++i)
                 {
                     writer->WriteNakedByte(bufferAction->Buffer[i], i != 0 ? NSTokens::Separator::CommaSeparator : NSTokens::Separator::NoSeparator);
                 }
@@ -410,7 +410,7 @@ namespace TTD
             {
                 bufferAction->Buffer = (bufferAction->Length != 0) ? alloc.SlabAllocateArray<byte>(bufferAction->Length) : nullptr;
 
-                for(uint32 i = 0; i < bufferAction->Length; ++i)
+                for(uint32_t i = 0; i < bufferAction->Length; ++i)
                 {
                     bufferAction->Buffer[i] = reader->ReadNakedByte(i != 0);
                 }
@@ -519,9 +519,9 @@ namespace TTD
         {
             TTDVar Dst;
             TTDVar Src;
-            uint32 DstIndx;
-            uint32 SrcIndx;
-            uint32 Count;
+            uint32_t DstIndx;
+            uint32_t SrcIndx;
+            uint32_t Count;
         };
 
         void JsRTRawBufferCopyAction_Emit(const EventLogEntry* evt, FileWriter* writer, ThreadContext* threadContext);
@@ -532,8 +532,8 @@ namespace TTD
         {
             TTDVar Trgt;
             byte* Data;
-            uint32 Index;
-            uint32 Length;
+            uint32_t Index;
+            uint32_t Length;
         };
 
         template <EventKind tag>
@@ -559,7 +559,7 @@ namespace TTD
 
             writer->WriteLengthValue(bufferAction->Length, NSTokens::Separator::CommaSeparator);
             writer->WriteSequenceStart_DefaultKey(NSTokens::Separator::CommaSeparator);
-            for(uint32 i = 0; i < bufferAction->Length; ++i)
+            for(uint32_t i = 0; i < bufferAction->Length; ++i)
             {
                 writer->WriteNakedByte(bufferAction->Data[i], i != 0 ? NSTokens::Separator::CommaSeparator : NSTokens::Separator::NoSeparator);
             }
@@ -580,7 +580,7 @@ namespace TTD
             bufferAction->Data = (bufferAction->Length != 0) ? alloc.SlabAllocateArray<byte>(bufferAction->Length) : nullptr;
 
             reader->ReadSequenceStart_WDefaultKey(true);
-            for(uint32 i = 0; i < bufferAction->Length; ++i)
+            for(uint32_t i = 0; i < bufferAction->Length; ++i)
             {
                 bufferAction->Data[i] = reader->ReadNakedByte(i != 0);
             }
@@ -600,7 +600,7 @@ namespace TTD
             TTDVar Result;
 
             //The arguments info (constructor function is always args[0])
-            uint32 ArgCount;
+            uint32_t ArgCount;
             TTDVar* ArgArray;
 
             //A buffer we can use for the actual invocation
@@ -618,14 +618,14 @@ namespace TTD
             TTDVar Result;
 
             //The body counter id associated with this load
-            uint32 BodyCtrId;
+            uint32_t BodyCtrId;
 
             //Is the code utf8
             bool IsUtf8;
 
             //The actual source code and the length in bytes
             byte* SourceCode;
-            uint32 SourceByteLength;
+            uint32_t SourceByteLength;
 
             //The URI the souce code was loaded from and the source context id
             TTString SourceUri;
@@ -635,7 +635,7 @@ namespace TTD
             LoadScriptFlag LoadFlag;
         };
 
-        void JsRTCodeParseAction_SetBodyCtrId(EventLogEntry* parseEvent, uint32 bodyCtrId);
+        void JsRTCodeParseAction_SetBodyCtrId(EventLogEntry* parseEvent, uint32_t bodyCtrId);
 
         void JsRTCodeParseAction_Execute(const EventLogEntry* evt, ThreadContextTTD* executeContext);
         void JsRTCodeParseAction_UnloadEventMemory(EventLogEntry* evt, UnlinkableSlabAllocator& alloc);
@@ -664,7 +664,7 @@ namespace TTD
             int32 CallbackDepth;
 
             //the number of arguments and the argument array -- function is always argument[0]
-            uint32 ArgCount;
+            uint32_t ArgCount;
             TTDVar* ArgArray;
 
             //The actual event time associated with this call (is >= the TopLevelCallbackEventTime)
@@ -692,7 +692,7 @@ namespace TTD
         void JsRTCallFunctionAction_ProcessDiagInfoPost(EventLogEntry* evt, long lastNestedEvent);
 #endif
 
-        void JsRTCallFunctionAction_ProcessArgs(EventLogEntry* evt, int32 rootDepth, long callEventTime, Js::Var funcVar, uint32 argc, Js::Var* argv, long topLevelCallbackEventTime, UnlinkableSlabAllocator& alloc);
+        void JsRTCallFunctionAction_ProcessArgs(EventLogEntry* evt, int32 rootDepth, long callEventTime, Js::Var funcVar, uint32_t argc, Js::Var* argv, long topLevelCallbackEventTime, UnlinkableSlabAllocator& alloc);
 
         void JsRTCallFunctionAction_Execute(const EventLogEntry* evt, ThreadContextTTD* executeContext);
         void JsRTCallFunctionAction_UnloadEventMemory(EventLogEntry* evt, UnlinkableSlabAllocator& alloc);

@@ -102,7 +102,7 @@ namespace TTD
 
             slotInfo->Slots = this->m_pendingSnap->GetSnapshotSlabAllocator().SlabAllocateArray<TTDVar>(slotInfo->SlotCount);
 
-            for(uint32 j = 0; j < slotInfo->SlotCount; ++j)
+            for(uint32_t j = 0; j < slotInfo->SlotCount; ++j)
             {
                 slotInfo->Slots[j] = slots.Get(j);
             }
@@ -140,7 +140,7 @@ namespace TTD
 
                 slotInfo->PIDArray = this->m_pendingSnap->GetSnapshotSlabAllocator().SlabAllocateArray<Js::PropertyId>(slotInfo->SlotCount);
 
-                for(uint32 j = 0; j < slotInfo->SlotCount; ++j)
+                for(uint32_t j = 0; j < slotInfo->SlotCount; ++j)
                 {
                     slotInfo->PIDArray[j] = dbgScope->GetPropertyIdForSlotIndex_TTD(j);
                 }
@@ -304,9 +304,9 @@ namespace TTD
     {
         if(this->m_marks.MarkAndTestAddr<MarkTableTag::EnvironmentTag>(environment))
         {
-            uint32 scopeCount = environment->GetLength();
+            uint32_t scopeCount = environment->GetLength();
 
-            for(uint32 i = 0; i < scopeCount; ++i)
+            for(uint32_t i = 0; i < scopeCount; ++i)
             {
                 void* scope = environment->GetItem(i);
 

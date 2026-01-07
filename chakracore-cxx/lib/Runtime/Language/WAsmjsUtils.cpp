@@ -113,7 +113,7 @@ namespace WAsmJs
 #endif
     }
 
-    uint32 ConvertOffset(uint32 offset, uint32 fromSize, uint32 toSize)
+    uint32_t ConvertOffset(uint32_t offset, uint32_t fromSize, uint32_t toSize)
     {
         if (fromSize == toSize)
         {
@@ -126,10 +126,10 @@ namespace WAsmJs
         {
             Math::DefaultOverflowPolicy();
         }
-        return (uint32)tmp;
+        return (uint32_t)tmp;
     }
 
-    uint32 GetTypeByteSize(Types type)
+    uint32_t GetTypeByteSize(Types type)
     {
         // Since this needs to be done manually for each type, this assert will make sure to not forget to update this if a new type is added
         CompileAssert(WAsmJs::LIMIT == 5);
@@ -213,7 +213,7 @@ namespace WAsmJs
     }
 #endif
 
-    TypedRegisterAllocator::TypedRegisterAllocator(ArenaAllocator* allocator, AllocateRegisterSpaceFunc allocateFunc, uint32 excludedMask/* = 0*/)
+    TypedRegisterAllocator::TypedRegisterAllocator(ArenaAllocator* allocator, AllocateRegisterSpaceFunc allocateFunc, uint32_t excludedMask/* = 0*/)
     {
         Assert(allocateFunc);
         AssertMsg(excludedMask >> WAsmJs::LIMIT == 0, "Invalid type in the excluded mask");
@@ -235,7 +235,7 @@ namespace WAsmJs
 
     void TypedRegisterAllocator::CommitToFunctionInfo(Js::AsmJsFunctionInfo* funcInfo, Js::FunctionBody* body) const
     {
-        uint32 offset = Js::AsmJsFunctionMemory::RequiredVarConstants * sizeof(Js::Var);
+        uint32_t offset = Js::AsmJsFunctionMemory::RequiredVarConstants * sizeof(Js::Var);
         WAsmJs::TypedConstSourcesInfo constSourcesInfo = GetConstSourceInfos();
 
 #if DBG_DUMP
@@ -265,7 +265,7 @@ namespace WAsmJs
                 slotInfo.byteOffset = offset;
 
                 // Update offset for next type
-                uint32 totalTypeCount = 0;
+                uint32_t totalTypeCount = 0;
                 totalTypeCount = UInt32Math::Add(totalTypeCount, slotInfo.constCount);
                 totalTypeCount = UInt32Math::Add(totalTypeCount, slotInfo.varCount);
                 totalTypeCount = UInt32Math::Add(totalTypeCount, slotInfo.tmpCount);
@@ -294,12 +294,12 @@ namespace WAsmJs
         funcInfo->SetTotalSizeinBytes(offset);
 
         // These bytes offset already calculated the alignment, used them to determine how many Js::Var we need to do the allocation
-        uint32 stackByteSize = offset;
-        uint32 bytesUsedForConst = constSourcesInfo.bytesUsed;
-        uint32 jsVarUsedForConstsTable = ConvertOffset<byte, Js::Var>(bytesUsedForConst);
-        uint32 totalVarsNeeded = ConvertOffset<byte, Js::Var>(stackByteSize);
+        uint32_t stackByteSize = offset;
+        uint32_t bytesUsedForConst = constSourcesInfo.bytesUsed;
+        uint32_t jsVarUsedForConstsTable = ConvertOffset<byte, Js::Var>(bytesUsedForConst);
+        uint32_t totalVarsNeeded = ConvertOffset<byte, Js::Var>(stackByteSize);
 
-        uint32 jsVarNeededForVars = totalVarsNeeded - jsVarUsedForConstsTable;
+        uint32_t jsVarNeededForVars = totalVarsNeeded - jsVarUsedForConstsTable;
         if (totalVarsNeeded < jsVarUsedForConstsTable)
         {
             // If for some reason we allocated more space in the const table than what we need, just don't allocate anymore vars
@@ -324,9 +324,9 @@ namespace WAsmJs
     void TypedRegisterAllocator::CommitToFunctionBody(Js::FunctionBody* body)
     {
         // this value is the number of Var slots needed to allocate all the const
-        uint32 bytesUsedForConst = GetConstSourceInfos().bytesUsed;
+        uint32_t bytesUsedForConst = GetConstSourceInfos().bytesUsed;
         // Add the registers not included in the const table
-        uint32 nbConst = ConvertOffset<byte, Js::Var>(bytesUsedForConst) + Js::FunctionBody::FirstRegSlot;
+        uint32_t nbConst = ConvertOffset<byte, Js::Var>(bytesUsedForConst) + Js::FunctionBody::FirstRegSlot;
         body->CheckAndSetConstantCount(nbConst);
     }
 
@@ -334,22 +334,22 @@ namespace WAsmJs
     {
         WAsmJs::TypedConstSourcesInfo infos;
         // The const table doesn't contain the first reg slots (aka return register)
-        uint32 offset = ConvertOffset<Js::Var, byte>(Js::AsmJsFunctionMemory::RequiredVarConstants - Js::FunctionBody::FirstRegSlot);
+        uint32_t offset = ConvertOffset<Js::Var, byte>(Js::AsmJsFunctionMemory::RequiredVarConstants - Js::FunctionBody::FirstRegSlot);
         for (int i = 0; i < WAsmJs::LIMIT; ++i)
         {
             Types type = (Types)i;
             if (!IsTypeExcluded(type))
             {
                 infos.srcByteOffsets[i] = offset;
-                uint32 typeSize = GetTypeByteSize(type);
-                uint32 constCount = GetRegisterSpace(type)->GetConstCount();
-                uint32 typeBytesUsage = ConvertOffset<byte>(constCount, typeSize);
+                uint32_t typeSize = GetTypeByteSize(type);
+                uint32_t constCount = GetRegisterSpace(type)->GetConstCount();
+                uint32_t typeBytesUsage = ConvertOffset<byte>(constCount, typeSize);
                 offset = Math::AlignOverflowCheck(offset, typeSize);
                 offset = UInt32Math::Add(offset, typeBytesUsage);
             }
             else
             {
-                infos.srcByteOffsets[i] = (uint32)Js::Constants::InvalidOffset;
+                infos.srcByteOffsets[i] = (uint32_t)Js::Constants::InvalidOffset;
             }
         }
         infos.bytesUsed = offset;
@@ -390,7 +390,7 @@ namespace WAsmJs
         }
     }
 
-    void TypedRegisterAllocator::GetArgumentStartIndex(uint32* indexes) const
+    void TypedRegisterAllocator::GetArgumentStartIndex(uint32_t* indexes) const
     {
         for (int i = 0; i < WAsmJs::LIMIT; ++i)
         {

@@ -128,7 +128,7 @@ int32_t MapHr(int32_t hr, ErrorTypeEnum * errorTypeOut)
     {
         fCheckSort = FALSE;
         for (imhr = 1; imhr < kcmhr; imhr++)
-            Assert((uint32)g_rgmhr[imhr - 1].hrIn < (uint32)g_rgmhr[imhr].hrIn);
+            Assert((uint32_t)g_rgmhr[imhr - 1].hrIn < (uint32_t)g_rgmhr[imhr].hrIn);
     }
 #endif // DEBUG
 
@@ -146,7 +146,7 @@ int32_t MapHr(int32_t hr, ErrorTypeEnum * errorTypeOut)
     for (imhrMin = 0, imhrLim = kcmhr; imhrMin < imhrLim; )
     {
         imhr = (imhrMin + imhrLim) / 2;
-        if ((uint32)g_rgmhr[imhr].hrIn < (uint32)hr)
+        if ((uint32_t)g_rgmhr[imhr].hrIn < (uint32_t)hr)
             imhrMin = imhr + 1;
         else
             imhrLim = imhr;

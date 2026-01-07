@@ -55,8 +55,8 @@ namespace TTD
         void CleanRecordWeakRootMap();
 
     public:
-        uint32 SnapInterval;
-        uint32 SnapHistoryLength;
+        uint32_t SnapInterval;
+        uint32_t SnapHistoryLength;
 
         //Callback functions provided by the host for writing info to some type of storage location
         TTDataIOInfo TTDataIOInfo;
@@ -64,7 +64,7 @@ namespace TTD
         //Callback functions provided by the host for creating external objects 
         ExternalObjectFunctions TTDExternalObjectFunctions;
 
-        ThreadContextTTD(ThreadContext* threadContext, void* runtimeHandle, uint32 snapInterval, uint32 snapHistoryLength);
+        ThreadContextTTD(ThreadContext* threadContext, void* runtimeHandle, uint32_t snapInterval, uint32_t snapHistoryLength);
         ~ThreadContextTTD();
 
         ThreadContext* GetThreadContext();
@@ -128,7 +128,7 @@ namespace TTD
         void SyncRootsBeforeSnapshot_Record();
 
         //When we are replaying and hit a snapshot we need to sync up with the live script contexts and roots as in replay (so do that here)
-        void SyncCtxtsAndRootsWithSnapshot_Replay(uint32 liveContextCount, TTD_LOG_PTR_ID* liveContextIdArray, uint32 liveRootCount, TTD_LOG_PTR_ID* liveRootIdArray);
+        void SyncCtxtsAndRootsWithSnapshot_Replay(uint32_t liveContextCount, TTD_LOG_PTR_ID* liveContextIdArray, uint32_t liveRootCount, TTD_LOG_PTR_ID* liveRootIdArray);
 
         Js::ScriptContext* LookupContextForScriptId(TTD_LOG_PTR_ID ctxId) const;
     };
@@ -137,7 +137,7 @@ namespace TTD
     struct TTDPendingAsyncBufferModification
     {
         Js::Var ArrayBufferVar; //the actual array buffer that is pending
-        uint32 Index; //the start index that we are monitoring from
+        uint32_t Index; //the start index that we are monitoring from
     };
 
     //This class implements the data structures and algorithms needed to manage the ScriptContext TTD runtime info.
@@ -170,7 +170,7 @@ namespace TTD
         ~ScriptContextTTD();
 
         //Keep track of pending async ArrayBuffer modification
-        void AddToAsyncPendingList(Js::ArrayBuffer* trgt, uint32 index);
+        void AddToAsyncPendingList(Js::ArrayBuffer* trgt, uint32_t index);
         void GetFromAsyncPendingList(TTDPendingAsyncBufferModification* pendingInfo, byte* finalModPos);
 
         const JsUtil::List<TTDPendingAsyncBufferModification, HeapAllocator>& GetPendingAsyncModListForSnapshot() const;
@@ -186,9 +186,9 @@ namespace TTD
         void ProcessFunctionBodyOnLoad(Js::FunctionBody* body, Js::FunctionBody* parent);
         void ProcessFunctionBodyOnUnLoad(Js::FunctionBody* body, Js::FunctionBody* parent);
 
-        void RegisterLoadedScript(Js::FunctionBody* body, uint32 bodyCtrId);
-        void RegisterNewScript(Js::FunctionBody* body, uint32 bodyCtrId);
-        void RegisterEvalScript(Js::FunctionBody* body, uint32 bodyCtrId);
+        void RegisterLoadedScript(Js::FunctionBody* body, uint32_t bodyCtrId);
+        void RegisterNewScript(Js::FunctionBody* body, uint32_t bodyCtrId);
+        void RegisterEvalScript(Js::FunctionBody* body, uint32_t bodyCtrId);
 
         void CleanUnreachableTopLevelBodies(const JsUtil::BaseHashSet<Js::FunctionBody*, HeapAllocator>& liveTopLevelBodies);
 
@@ -196,8 +196,8 @@ namespace TTD
         Js::FunctionBody* ResolveParentBody(Js::FunctionBody* body) const;
 
         //Helpers for resolving top level bodies accross snapshots
-        uint32 FindTopLevelCtrForBody(Js::FunctionBody* body) const;
-        Js::FunctionBody* FindRootBodyByTopLevelCtr(uint32 bodyCtrId) const;
+        uint32_t FindTopLevelCtrForBody(Js::FunctionBody* body) const;
+        Js::FunctionBody* FindRootBodyByTopLevelCtr(uint32_t bodyCtrId) const;
 
         void ClearLoadedSourcesForSnapshotRestore();
     };
@@ -266,16 +266,16 @@ namespace TTD
         void EnqueueNewFunctionBodyObject(Js::RecyclableObject* parent, Js::FunctionBody* fbody, const char16_t* name);
 
         //Add a well known token for a debugger scope object (in a slot array)
-        void AddWellKnownDebuggerScopePath(Js::RecyclableObject* parent, Js::DebuggerScope* dbgScope, uint32 index);
+        void AddWellKnownDebuggerScopePath(Js::RecyclableObject* parent, Js::DebuggerScope* dbgScope, uint32_t index);
 
         //Build a path string based on a root path and an array index
-        void BuildArrayIndexBuffer(uint32 arrayidx, UtilSupport::TTAutoString& res);
+        void BuildArrayIndexBuffer(uint32_t arrayidx, UtilSupport::TTAutoString& res);
 
         //Build a path string based on a root path and an environment index
-        void BuildEnvironmentIndexBuffer(uint32 envidx, UtilSupport::TTAutoString& res);
+        void BuildEnvironmentIndexBuffer(uint32_t envidx, UtilSupport::TTAutoString& res);
 
         //Build a path string based on an environment index and a slot index
-        void BuildEnvironmentIndexAndSlotBuffer(uint32 envidx, uint32 slotidx, UtilSupport::TTAutoString& res);
+        void BuildEnvironmentIndexAndSlotBuffer(uint32_t envidx, uint32_t slotidx, UtilSupport::TTAutoString& res);
     };
 
     //////////////////
@@ -296,7 +296,7 @@ namespace TTD
         const int32 gaps[8] = { 701, 301, 132, 57, 23, 10, 4, 1 };
 
         int32 llen = sortedObjList.Count();
-        for(uint32 gapi = 0; gapi < 8; ++gapi)
+        for(uint32_t gapi = 0; gapi < 8; ++gapi)
         {
             int32 gap = gaps[gapi];
 

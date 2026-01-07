@@ -20,8 +20,8 @@ namespace Js
 
         Var newTarget = args.GetNewTarget();
         bool isCtorSuperCall = JavascriptOperators::GetAndAssertIsConstructorSuperCall(args);
-        uint32 byteLength = 0;
-        uint32 mappedLength;
+        uint32_t byteLength = 0;
+        uint32_t mappedLength;
         int32 offset = 0;
         ArrayBufferBase* arrayBuffer = nullptr;
         DataView* dataView;
@@ -67,7 +67,7 @@ namespace Js
         //6.    Let bufferByteLength be the value of buffer's[[ArrayBufferByteLength]] internal slot.
         //7.   If offset > bufferByteLength, throw a RangeError exception.
         byteLength = arrayBuffer->GetByteLength();
-        if ((uint32)offset > byteLength)
+        if ((uint32_t)offset > byteLength)
         {
             JavascriptError::ThrowRangeError(
                 scriptContext, JSERR_DataView_InvalidArgument, u"byteOffset");
@@ -82,7 +82,7 @@ namespace Js
         {
             Var thirdArgument = args[3];
             mappedLength = ArrayBuffer::ToIndex(thirdArgument, JSERR_ArrayLengthConstructIncorrect, scriptContext, ArrayBuffer::MaxArrayBufferLength, false);
-            uint32 viewRange = mappedLength + offset;
+            uint32_t viewRange = mappedLength + offset;
 
             if (viewRange > byteLength || viewRange < mappedLength) // overflow indicates out-of-range
             {
@@ -113,7 +113,7 @@ namespace Js
             dataView;
     }
 
-    DataView::DataView(ArrayBufferBase* arrayBuffer, uint32 byteoffset, uint32 mappedLength, DynamicType* type)
+    DataView::DataView(ArrayBufferBase* arrayBuffer, uint32_t byteoffset, uint32_t mappedLength, DynamicType* type)
         : ArrayBufferParent(type, mappedLength, arrayBuffer),
           byteOffset(byteoffset)
     {
@@ -242,7 +242,7 @@ namespace Js
         }
 
         DataView* dataView = VarTo<DataView>(args[0]);
-        return dataView->GetValue<uint32>(args[1], u"DataView.prototype.GetUint32", isLittleEndian);
+        return dataView->GetValue<uint32_t>(args[1], u"DataView.prototype.GetUint32", isLittleEndian);
     }
 
     Var DataView::EntryGetInt32(RecyclableObject* function, CallInfo callInfo, ...)
@@ -540,7 +540,7 @@ namespace Js
         Assert(!(callInfo.Flags & CallFlags_New));
 
         BOOL isLittleEndian = FALSE;
-        uint32 value = 0;
+        uint32_t value = 0;
         switch (args.Info.Count)
         {
         case 0:
@@ -570,7 +570,7 @@ namespace Js
         }
 
         DataView* dataView = VarTo<DataView>(args[0]);
-        dataView->SetValue<uint32>(args[1], value, u"DataView.prototype.SetUint32", isLittleEndian);
+        dataView->SetValue<uint32_t>(args[1], value, u"DataView.prototype.SetUint32", isLittleEndian);
         return scriptContext->GetLibrary()->GetUndefined();
     }
 
@@ -744,7 +744,7 @@ namespace Js
         return JavascriptNumber::ToVar(dataView->GetByteOffset(), scriptContext);
     }
 
-    BOOL DataView::SetItemWithAttributes(uint32 index, Var value, PropertyAttributes attributes)
+    BOOL DataView::SetItemWithAttributes(uint32_t index, Var value, PropertyAttributes attributes)
     {
         AssertMsg(false, "We don't need a DataView to serve as object's internal array");
         return FALSE;

@@ -81,7 +81,7 @@ namespace Js {
             ToInt32_Full(aValue, scriptContext);
     }
 
-    inline uint32 JavascriptConversion::ToUInt32(Var aValue, ScriptContext* scriptContext)
+    inline uint32_t JavascriptConversion::ToUInt32(Var aValue, ScriptContext* scriptContext)
     {
         JIT_HELPER_REENTRANT_HEADER(Conv_ToUInt32);
         return

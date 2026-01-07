@@ -18,8 +18,8 @@ namespace Js
     public:
         uint8_t  *buffer;             // Points to a heap allocated RGBA buffer, can be null
         IndexToWaitersMap *indexToWaiterList;  // Map of agents waiting on a particular index.
-        uint32 bufferLength;       // Number of bytes allocated
-        uint32 maxBufferLength = 0; // Maximum number of bytes to allocate (only used by WebAssemblySharedArrayBuffer)
+        uint32_t bufferLength;       // Number of bytes allocated
+        uint32_t maxBufferLength = 0; // Maximum number of bytes to allocate (only used by WebAssemblySharedArrayBuffer)
         bool isWebAssembly = false;
     private:
         // Addref/release counter for current buffer, this is needed as the current buffer will be shared among different workers
@@ -43,7 +43,7 @@ namespace Js
 
         void Cleanup();
 
-        SharedContents(uint8_t* b, uint32 l, uint32 m)
+        SharedContents(uint8_t* b, uint32_t l, uint32_t m)
             : buffer(b), bufferLength(l), maxBufferLength(m), refCount(1), indexToWaiterList(nullptr)
 #if DBG
             , allowedAgents(nullptr)
@@ -76,7 +76,7 @@ namespace Js
         virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
         virtual BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
 
-        virtual uint32 GetByteLength() const override;
+        virtual uint32_t GetByteLength() const override;
         virtual uint8_t* GetBuffer() const override;
 
         static int GetByteLengthOffset() { Assert(false); return 0; }
@@ -92,19 +92,19 @@ namespace Js
 
 #if defined(TARGET_64)
         //maximum 2G -1  for amd64
-        static const uint32 MaxSharedArrayBufferLength = 0x7FFFFFFF;
+        static const uint32_t MaxSharedArrayBufferLength = 0x7FFFFFFF;
 #else
         // maximum 1G to avoid arithmetic overflow.
-        static const uint32 MaxSharedArrayBufferLength = 1 << 30;
+        static const uint32_t MaxSharedArrayBufferLength = 1 << 30;
 #endif
         virtual bool IsValidVirtualBufferLength(uint length) const;
 
     protected:
         // maxLength is necessary only for WebAssemblySharedArrayBuffer to know how much it can grow
         // Must call after constructor of child class is completed. Required to be able to make correct virtual calls
-        void Init(uint32 length, uint32 maxLength);
-        virtual uint8_t* AllocBuffer(uint32 length, uint32 maxLength);
-        virtual void FreeBuffer(uint8_t* buffer, uint32 length, uint32 maxLength);
+        void Init(uint32_t length, uint32_t maxLength);
+        virtual uint8_t* AllocBuffer(uint32_t length, uint32_t maxLength);
+        virtual void FreeBuffer(uint8_t* buffer, uint32_t length, uint32_t maxLength);
 
         FieldNoBarrier(SharedContents *) sharedContents;
 
@@ -123,7 +123,7 @@ namespace Js
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptSharedArrayBuffer);
 
     public:
-        static JavascriptSharedArrayBuffer* Create(uint32 length, DynamicType * type);
+        static JavascriptSharedArrayBuffer* Create(uint32_t length, DynamicType * type);
         static JavascriptSharedArrayBuffer* Create(SharedContents *sharedContents, DynamicType * type);
         virtual void Dispose(bool isShutdown) override;
         virtual void Finalize(bool isShutdown) override;
@@ -142,16 +142,16 @@ namespace Js
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(WebAssemblySharedArrayBuffer);
 
     public:
-        static WebAssemblySharedArrayBuffer* Create(uint32 length, uint32 maxLength, DynamicType * type);
+        static WebAssemblySharedArrayBuffer* Create(uint32_t length, uint32_t maxLength, DynamicType * type);
         static WebAssemblySharedArrayBuffer* Create(SharedContents *sharedContents, DynamicType * type);
 
         virtual bool IsValidVirtualBufferLength(uint length) const override;
         virtual bool IsWebAssemblyArrayBuffer() override { return true; }
-        _Must_inspect_result_ bool GrowMemory(uint32 newBufferLength);
+        _Must_inspect_result_ bool GrowMemory(uint32_t newBufferLength);
 
     protected:
-        virtual uint8_t* AllocBuffer(uint32 length, uint32 maxLength) override;
-        virtual void FreeBuffer(uint8_t* buffer, uint32 length, uint32 maxLength) override;
+        virtual uint8_t* AllocBuffer(uint32_t length, uint32_t maxLength) override;
+        virtual void FreeBuffer(uint8_t* buffer, uint32_t length, uint32_t maxLength) override;
 
     private:
         WebAssemblySharedArrayBuffer(DynamicType * type);
@@ -185,9 +185,9 @@ namespace Js
         WaiterList();
         void Cleanup();
 
-        bool _Requires_lock_held_(csForAccess.cs) AddAndSuspendWaiter(unsigned long waiter, uint32 timeout);
+        bool _Requires_lock_held_(csForAccess.cs) AddAndSuspendWaiter(unsigned long waiter, uint32_t timeout);
         void RemoveWaiter(unsigned long waiter);
-        uint32 RemoveAndWakeWaiters(int32 count);
+        uint32_t RemoveAndWakeWaiters(int32 count);
 
         CriticalSection * GetCriticalSectionForAccess() { return &csForAccess; }
 

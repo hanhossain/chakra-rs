@@ -155,7 +155,7 @@ namespace Js
         Assert(IsJavascriptFrame());
         AssertMsg(this->GetCurrentFunction()->IsScriptFunction(), "GetPermanentArguments should not be called for non-script function as there is no slot allocated for it.");
 
-        const uint32 paramCount = GetCallInfo().Count;
+        const uint32_t paramCount = GetCallInfo().Count;
         if (paramCount == 0)
         {
             // glob function doesn't allocate ArgumentsObject slot on stack
@@ -290,9 +290,9 @@ namespace Js
         }
     }
 
-    uint32 JavascriptStackWalker::GetByteCodeOffset() const
+    uint32_t JavascriptStackWalker::GetByteCodeOffset() const
     {
-        uint32 offset = 0;
+        uint32_t offset = 0;
         if (this->IsJavascriptFrame())
         {
             if (this->interpreterFrame)
@@ -313,7 +313,7 @@ namespace Js
         return offset;
     }
 
-    bool JavascriptStackWalker::TryGetByteCodeOffsetFromInterpreterFrame(uint32& offset) const
+    bool JavascriptStackWalker::TryGetByteCodeOffsetFromInterpreterFrame(uint32_t& offset) const
     {
 #if ENABLE_NATIVE_CODEGEN
         if (this->lastInternalFrameInfo.codeAddress != nullptr)
@@ -338,7 +338,7 @@ namespace Js
     }
 
 #if ENABLE_NATIVE_CODEGEN
-    bool JavascriptStackWalker::TryGetByteCodeOffsetFromNativeFrame(uint32& offset) const
+    bool JavascriptStackWalker::TryGetByteCodeOffsetFromNativeFrame(uint32_t& offset) const
     {
         unsigned long pCodeAddr;
         if (this->lastInternalFrameInfo.codeAddress != nullptr)
@@ -423,7 +423,7 @@ namespace Js
         return loopNum;
     }
 
-    bool JavascriptStackWalker::TryGetByteCodeOffsetOfInlinee(Js::JavascriptFunction* parentFunction, uint loopNum, unsigned long pCodeAddr, Js::FunctionBody** inlinee, uint32& offset, bool useInternalFrameInfo) const
+    bool JavascriptStackWalker::TryGetByteCodeOffsetOfInlinee(Js::JavascriptFunction* parentFunction, uint loopNum, unsigned long pCodeAddr, Js::FunctionBody** inlinee, uint32_t& offset, bool useInternalFrameInfo) const
     {
         // For inlined frames, translation from native offset -> source code happens in two steps.
         // The native offset is first translated into a statement index using the physical frame's
@@ -437,7 +437,7 @@ namespace Js
         // to calculate the byte code offset of the callsite of the inlinee they called.
 
         StatementData data;
-        uint32 inlineeOffset = 0;
+        uint32_t inlineeOffset = 0;
         *inlinee = InlinedFramesBeingWalked() ? inlinedFrameWalker.GetFunctionObject()->GetFunctionBody() : nullptr;
 
         InlinedFrameWalker  tmpFrameWalker;
@@ -1179,7 +1179,7 @@ namespace Js
         return walker.GetCaller(ppFunc);
     }
 
-    BOOL JavascriptStackWalker::GetCaller(_Out_opt_ JavascriptFunction** ppFunc, uint32* byteCodeOffset, ScriptContext* scriptContext)
+    BOOL JavascriptStackWalker::GetCaller(_Out_opt_ JavascriptFunction** ppFunc, uint32_t* byteCodeOffset, ScriptContext* scriptContext)
     {
         JavascriptStackWalker walker(scriptContext);
         if (walker.GetCaller(ppFunc))
@@ -1460,7 +1460,7 @@ namespace Js
         return currentIndex == 0;
     }
 
-    uint32 InlinedFrameWalker::GetCurrentInlineeOffset() const
+    uint32_t InlinedFrameWalker::GetCurrentInlineeOffset() const
     {
         Assert(!IsTopMostFrame());
         Assert(currentIndex);
@@ -1468,7 +1468,7 @@ namespace Js
         return GetFrameAtIndex(currentIndex - 1)->callInfo.InlineeStartOffset;
     }
 
-    uint32 InlinedFrameWalker::GetBottomMostInlineeOffset() const
+    uint32_t InlinedFrameWalker::GetBottomMostInlineeOffset() const
     {
         Assert(frameCount);
 

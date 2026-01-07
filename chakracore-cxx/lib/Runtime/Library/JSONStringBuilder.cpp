@@ -131,7 +131,7 @@ JSONStringBuilder::EscapeAndAppendString(_In_ JavascriptString* str)
 }
 
 void
-JSONStringBuilder::AppendGap(uint32 count)
+JSONStringBuilder::AppendGap(uint32_t count)
 {
     for (uint i = 0; i < count; ++i)
     {
@@ -150,7 +150,7 @@ JSONStringBuilder::AppendObjectString(_In_ JSONObject* valueList)
         return;
     }
 
-    const uint32 stepbackLevel = this->indentLevel;
+    const uint32_t stepbackLevel = this->indentLevel;
     ++this->indentLevel;
 
     this->AppendCharacter(u'{');
@@ -203,7 +203,7 @@ JSONStringBuilder::AppendObjectString(_In_ JSONObject* valueList)
 void
 JSONStringBuilder::AppendArrayString(_In_ JSONArray* valueArray)
 {
-    uint32 length = valueArray->length;
+    uint32_t length = valueArray->length;
     if (length == 0)
     {
         this->AppendCharacter(u'[');
@@ -211,7 +211,7 @@ JSONStringBuilder::AppendArrayString(_In_ JSONArray* valueArray)
         return;
     }
 
-    const uint32 stepbackLevel = this->indentLevel;
+    const uint32_t stepbackLevel = this->indentLevel;
     ++this->indentLevel;
 
     JSONProperty* arr = valueArray->arr;
@@ -226,7 +226,7 @@ JSONStringBuilder::AppendArrayString(_In_ JSONArray* valueArray)
 
     this->AppendJSONPropertyString(&arr[0]);
 
-    for (uint32 i = 1; i < length; ++i)
+    for (uint32_t i = 1; i < length; ++i)
     {
         if (this->gap == nullptr)
         {

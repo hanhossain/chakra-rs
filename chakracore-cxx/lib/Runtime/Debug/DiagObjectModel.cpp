@@ -413,7 +413,7 @@ namespace Js
         return displayInfo->IsConst() || displayInfo->IsInDeadZone();
     }
 
-    uint32 VariableWalkerBase::GetChildrenCount()
+    uint32_t VariableWalkerBase::GetChildrenCount()
     {
         PopulateMembers();
         return GetMemberCount();
@@ -580,7 +580,7 @@ namespace Js
                     uint slotArrayCount = pFBody->paramScopeSlotArraySize;
                     pMembersList = JsUtil::List<DebuggerPropertyDisplayInfo *, ArenaAllocator>::New(arena, slotArrayCount);
 
-                    for (uint32 i = 0; i < slotArrayCount; i++)
+                    for (uint32_t i = 0; i < slotArrayCount; i++)
                     {
                         Js::DebuggerScopeProperty scopeProperty = formalScope->scopeProperties->Item(i);
 
@@ -603,7 +603,7 @@ namespace Js
 
                     pMembersList = JsUtil::List<DebuggerPropertyDisplayInfo *, ArenaAllocator>::New(arena, slotArrayCount);
 
-                    for (uint32 i = 0; i < slotArrayCount; i++)
+                    for (uint32_t i = 0; i < slotArrayCount; i++)
                     {
                         Js::PropertyId propertyId = pFBody->GetPropertyIdsForScopeSlotArray()[i];
                         bool isConst = false;
@@ -932,7 +932,7 @@ namespace Js
         scopeIsInitialized = true;
     }
 
-    uint32 DiagScopeVariablesWalker::GetChildrenCount()
+    uint32_t DiagScopeVariablesWalker::GetChildrenCount()
     {
         if (scopeIsInitialized)
         {
@@ -1334,7 +1334,7 @@ namespace Js
         return hasUserNotDefinedArguments;
     }
 
-    uint32 LocalsWalker::GetChildrenCount()
+    uint32_t LocalsWalker::GetChildrenCount()
     {
         if (totalLocalsCount == 0)
         {
@@ -1379,9 +1379,9 @@ namespace Js
         return totalLocalsCount;
     }
 
-    uint32 LocalsWalker::GetLocalVariablesCount()
+    uint32_t LocalsWalker::GetLocalVariablesCount()
     {
-        uint32 localsCount = 0;
+        uint32_t localsCount = 0;
         if (pVarWalkers)
         {
             for (int i = 0; i < pVarWalkers->Count(); i++)
@@ -1738,7 +1738,7 @@ namespace Js
         return TRUE;
     }
 
-    uint32 CatchScopeWalker::GetChildrenCount()
+    uint32_t CatchScopeWalker::GetChildrenCount()
     {
         return debuggerScope->scopeProperties->Count();
     }
@@ -2048,7 +2048,7 @@ namespace Js
                     if (value < 0)
                     {
                         // On the tools side we show unsigned value.
-                        uint32 ul = static_cast<uint32>(static_cast<int32>(value)); // ARM: casting negative value to uint32 gives 0
+                        uint32_t ul = static_cast<uint32_t>(static_cast<int32>(value)); // ARM: casting negative value to uint32_t gives 0
                         value = (double)ul;
                     }
                     valueStr = Js::JavascriptString::Concat(scriptContext->GetLibrary()->CreateStringFromCppLiteral(u"0x"),
@@ -2398,7 +2398,7 @@ namespace Js
         return nullptr;
     }
 
-    uint32 RecyclableObjectWalker::GetChildrenCount()
+    uint32_t RecyclableObjectWalker::GetChildrenCount()
     {
         if (pMembersList == nullptr)
         {
@@ -2439,7 +2439,7 @@ namespace Js
                                     // MoveAndGetNext shouldn't return an internal property id
                                     Assert(!Js::IsInternalPropertyId(propertyId));
 
-                                    uint32 indexVal;
+                                    uint32_t indexVal;
                                     Var varValue;
                                     if (objectContext->IsNumericPropertyId(propertyId, &indexVal) && object->GetItem(object, indexVal, &varValue, objectContext))
                                     {
@@ -2673,7 +2673,7 @@ namespace Js
             }
         }
 
-        uint32 childrenCount =
+        uint32_t childrenCount =
             pMembersList->Count()
           + (innerArrayObjectWalker ? innerArrayObjectWalker->GetChildrenCount() : 0)
           + (fakeGroupObjectWalkerList ? fakeGroupObjectWalkerList->Count() : 0);
@@ -2829,7 +2829,7 @@ namespace Js
             return TRUE;
         }
 
-        uint32 index = arrayObj->GetNextIndex(Js::JavascriptArray::InvalidIndex);
+        uint32_t index = arrayObj->GetNextIndex(Js::JavascriptArray::InvalidIndex);
         return index != Js::JavascriptArray::InvalidIndex && index < arrayObj->GetLength();
     }
 
@@ -2857,18 +2857,18 @@ namespace Js
     // RecyclableArrayWalker
 
 
-    uint32 RecyclableArrayWalker::GetItemCount(Js::JavascriptArray* arrayObj)
+    uint32_t RecyclableArrayWalker::GetItemCount(Js::JavascriptArray* arrayObj)
     {
         if (pAbsoluteIndexList == nullptr)
         {
             Assert(arrayObj);
 
-            pAbsoluteIndexList = JsUtil::List<uint32, ArenaAllocator>::New(GetArenaFromContext(scriptContext));
+            pAbsoluteIndexList = JsUtil::List<uint32_t, ArenaAllocator>::New(GetArenaFromContext(scriptContext));
             Assert(pAbsoluteIndexList);
 
-            uint32 dataIndex = Js::JavascriptArray::InvalidIndex;
-            uint32 descriptorIndex = Js::JavascriptArray::InvalidIndex;
-            uint32 absIndex = Js::JavascriptArray::InvalidIndex;
+            uint32_t dataIndex = Js::JavascriptArray::InvalidIndex;
+            uint32_t descriptorIndex = Js::JavascriptArray::InvalidIndex;
+            uint32_t absIndex = Js::JavascriptArray::InvalidIndex;
 
             do
             {
@@ -2893,10 +2893,10 @@ namespace Js
             } while (absIndex < arrayObj->GetLength());
         }
 
-        return (uint32)pAbsoluteIndexList->Count();
+        return (uint32_t)pAbsoluteIndexList->Count();
     }
 
-    BOOL RecyclableArrayWalker::FetchItemAtIndex(Js::JavascriptArray* arrayObj, uint32 index, Var * value)
+    BOOL RecyclableArrayWalker::FetchItemAtIndex(Js::JavascriptArray* arrayObj, uint32_t index, Var * value)
     {
         Assert(arrayObj);
         Assert(value);
@@ -2904,13 +2904,13 @@ namespace Js
         return arrayObj->DirectGetItemAt(index, value);
     }
 
-    Var RecyclableArrayWalker::FetchItemAt(Js::JavascriptArray* arrayObj, uint32 index)
+    Var RecyclableArrayWalker::FetchItemAt(Js::JavascriptArray* arrayObj, uint32_t index)
     {
         Assert(arrayObj);
         return arrayObj->DirectGetItem(index);
     }
 
-    const char16_t* RecyclableArrayWalker::GetIndexName(uint32 index, StringBuilder<ArenaAllocator>* stringBuilder)
+    const char16_t* RecyclableArrayWalker::GetIndexName(uint32_t index, StringBuilder<ArenaAllocator>* stringBuilder)
     {
         stringBuilder->Append(u'[');
         if (stringBuilder->AppendUint64(index) != 0)
@@ -2929,7 +2929,7 @@ namespace Js
     {
     }
 
-    BOOL RecyclableArrayWalker::GetResolvedObject(Js::JavascriptArray* arrayObj, int index, ResolvedObject* pResolvedObject, uint32 * pabsIndex)
+    BOOL RecyclableArrayWalker::GetResolvedObject(Js::JavascriptArray* arrayObj, int index, ResolvedObject* pResolvedObject, uint32_t * pabsIndex)
     {
         Assert(arrayObj);
         Assert(pResolvedObject);
@@ -2937,7 +2937,7 @@ namespace Js
         Assert(pAbsoluteIndexList->Count() > index);
 
         // translate i'th Item to the correct array index and return
-        uint32 absIndex = pAbsoluteIndexList->Item(index);
+        uint32_t absIndex = pAbsoluteIndexList->Item(index);
         pResolvedObject->obj = FetchItemAt(arrayObj, absIndex);
         pResolvedObject->scriptContext = scriptContext;
         pResolvedObject->typeId = JavascriptOperators::GetTypeId(pResolvedObject->obj);
@@ -2972,7 +2972,7 @@ namespace Js
             else
             {
                 i -= nonArrayElementCount;
-                uint32 absIndex; // Absolute index
+                uint32_t absIndex; // Absolute index
                 GetResolvedObject(arrayObj, i, pResolvedObject, &absIndex);
 
                 pResolvedObject->address = Anew(GetArenaFromContext(scriptContext),
@@ -2994,11 +2994,11 @@ namespace Js
                     Js::VarTo<Js::JavascriptArray>(instance);
     }
 
-    uint32 RecyclableArrayWalker::GetChildrenCount()
+    uint32_t RecyclableArrayWalker::GetChildrenCount()
     {
         if (Js::JavascriptArray::IsNonES5Array(instance) || Js::VarIs<Js::ES5Array>(instance))
         {
-            uint32 count = (!fOnlyOwnProperties ? RecyclableObjectWalker::GetChildrenCount() : 0);
+            uint32_t count = (!fOnlyOwnProperties ? RecyclableObjectWalker::GetChildrenCount() : 0);
 
             Js::JavascriptArray* arrayObj = GetArrayObject();
 
@@ -3067,11 +3067,11 @@ namespace Js
     {
     }
 
-    uint32 RecyclableArgumentsObjectWalker::GetChildrenCount()
+    uint32_t RecyclableArgumentsObjectWalker::GetChildrenCount()
     {
         if (innerArrayObjectWalker == nullptr)
         {
-            uint32 count = RecyclableObjectWalker::GetChildrenCount();
+            uint32_t count = RecyclableObjectWalker::GetChildrenCount();
             if (innerArrayObjectWalker != nullptr)
             {
                 RecyclableArgumentsArrayWalker *pWalker = static_cast<RecyclableArgumentsArrayWalker *> (innerArrayObjectWalker);
@@ -3092,7 +3092,7 @@ namespace Js
     {
     }
 
-    uint32 RecyclableArgumentsArrayWalker::GetChildrenCount()
+    uint32_t RecyclableArgumentsArrayWalker::GetChildrenCount()
     {
         if (pMembersList == nullptr)
         {
@@ -3102,14 +3102,14 @@ namespace Js
             pMembersList = JsUtil::List<DebuggerPropertyDisplayInfo *, ArenaAllocator>::New(GetArenaFromContext(scriptContext));
             Assert(pMembersList);
 
-            uint32 totalCount = argObj->GetNumberOfArguments();
+            uint32_t totalCount = argObj->GetNumberOfArguments();
             Js::ArrayObject * objectArray = argObj->GetObjectArray();
             if (objectArray != nullptr && objectArray->GetLength() > totalCount)
             {
                 totalCount = objectArray->GetLength();
             }
 
-            for (uint32 index = 0; index < totalCount; index++)
+            for (uint32_t index = 0; index < totalCount; index++)
             {
                 Var itemObj;
                 if (argObj->GetItem(argObj, index, &itemObj, scriptContext))
@@ -3134,7 +3134,7 @@ namespace Js
         PropertyIdOnRegSlotsContainer * container = pFBody->GetPropertyIdOnRegSlotsContainer();
         if (container &&  container->propertyIdsForFormalArgs)
         {
-            for (uint32 i = 0; i < container->propertyIdsForFormalArgs->count; i++)
+            for (uint32_t i = 0; i < container->propertyIdsForFormalArgs->count; i++)
             {
                 if (container->propertyIdsForFormalArgs->elements[i] != Js::Constants::NoRegister)
                 {
@@ -3179,7 +3179,7 @@ namespace Js
                 {
                     // We set the formals value in the object itself, so that expression evaluation can reflect them correctly
                     Js::HeapArgumentsObject* argObj = static_cast<Js::HeapArgumentsObject*>(instance);
-                    JavascriptOperators::SetItem(instance, argObj, (uint32)pMembersList->Item(i)->propId, pResolvedObject->obj, scriptContext, PropertyOperation_None);
+                    JavascriptOperators::SetItem(instance, argObj, (uint32_t)pMembersList->Item(i)->propId, pResolvedObject->obj, scriptContext, PropertyOperation_None);
                 }
             }
             else
@@ -3264,7 +3264,7 @@ namespace Js
     {
     }
 
-    uint32 RecyclableTypedArrayWalker::GetChildrenCount()
+    uint32_t RecyclableTypedArrayWalker::GetChildrenCount()
     {
         if (!indexedItemCount)
         {
@@ -3370,7 +3370,7 @@ namespace Js
     {
     }
 
-    uint32 RecyclableES5ArrayWalker::GetNextDescriptor(uint32 currentDescriptor)
+    uint32_t RecyclableES5ArrayWalker::GetNextDescriptor(uint32_t currentDescriptor)
     {
         Js::ES5Array *es5Array = static_cast<Js::ES5Array *>(VarTo<RecyclableObject>(instance));
         IndexPropertyDescriptor* descriptor = nullptr;
@@ -3379,7 +3379,7 @@ namespace Js
     }
 
 
-    BOOL RecyclableES5ArrayWalker::FetchItemAtIndex(Js::JavascriptArray* arrayObj, uint32 index, Var *value)
+    BOOL RecyclableES5ArrayWalker::FetchItemAtIndex(Js::JavascriptArray* arrayObj, uint32_t index, Var *value)
     {
         Assert(arrayObj);
         Assert(value);
@@ -3387,7 +3387,7 @@ namespace Js
         return arrayObj->GetItem(arrayObj, index, value, scriptContext);
     }
 
-    Var RecyclableES5ArrayWalker::FetchItemAt(Js::JavascriptArray* arrayObj, uint32 index)
+    Var RecyclableES5ArrayWalker::FetchItemAt(Js::JavascriptArray* arrayObj, uint32_t index)
     {
         Assert(arrayObj);
         Var value = nullptr;
@@ -3554,7 +3554,7 @@ namespace Js
     }
 
     template <typename TData>
-    uint32 RecyclableCollectionObjectWalker<TData>::GetChildrenCount()
+    uint32_t RecyclableCollectionObjectWalker<TData>::GetChildrenCount()
     {
         TData* data = VarTo<TData>(instance);
         if (data->Size() > 0 && propertyList == nullptr)
@@ -3901,7 +3901,7 @@ namespace Js
         pMembersList->Add(info);
     }
 
-    uint32 RecyclableMethodsGroupWalker::GetChildrenCount()
+    uint32_t RecyclableMethodsGroupWalker::GetChildrenCount()
     {
         return pMembersList ? pMembersList->Count() : 0;
     }
@@ -4129,7 +4129,7 @@ namespace Js
         return nullptr;
     }
 
-    uint32 PendingMutationBreakpointWalker::GetChildrenCount()
+    uint32_t PendingMutationBreakpointWalker::GetChildrenCount()
     {
         switch (this->mutationType)
         {

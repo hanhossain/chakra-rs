@@ -205,7 +205,7 @@ class JitEquivalentTypeGuard : public JitIndexedPropertyGuard
     // This pointer is allocated from background thread first, and then transferred to recycler,
     // so as to keep the cached types alive.
     EquivalentTypeCache* cache;
-    uint32 objTypeSpecFldId;
+    uint32_t objTypeSpecFldId;
     // TODO: OOP JIT, reenable these asserts
 #if DBG && 0
     // Intentionally have as intptr_t so this guard doesn't hold scriptContext
@@ -213,7 +213,7 @@ class JitEquivalentTypeGuard : public JitIndexedPropertyGuard
 #endif
 
 public:
-    JitEquivalentTypeGuard(intptr_t typeAddr, int index, uint32 objTypeSpecFldId) :
+    JitEquivalentTypeGuard(intptr_t typeAddr, int index, uint32_t objTypeSpecFldId) :
         JitIndexedPropertyGuard(typeAddr, index), cache(nullptr), objTypeSpecFldId(objTypeSpecFldId)
     {
 #if DBG && 0
@@ -221,7 +221,7 @@ public:
 #endif
     }
 
-    JitEquivalentTypeGuard(int index, uint32 objTypeSpecFldId) :
+    JitEquivalentTypeGuard(int index, uint32_t objTypeSpecFldId) :
         JitIndexedPropertyGuard(index), cache(nullptr), objTypeSpecFldId(objTypeSpecFldId)
     {
     }
@@ -243,7 +243,7 @@ public:
         this->SetValue(typeAddr);
     }
 
-    uint32 GetObjTypeSpecFldId() const
+    uint32_t GetObjTypeSpecFldId() const
     {
         return this->objTypeSpecFldId;
     }
@@ -262,7 +262,7 @@ public:
 class JitPolyEquivalentTypeGuard : public JitEquivalentTypeGuard
 {
 public:
-    JitPolyEquivalentTypeGuard(int index, uint32 objTypeSpecFldId) : JitEquivalentTypeGuard(index, objTypeSpecFldId)
+    JitPolyEquivalentTypeGuard(int index, uint32_t objTypeSpecFldId) : JitEquivalentTypeGuard(index, objTypeSpecFldId)
     {
         isPoly = true;
 

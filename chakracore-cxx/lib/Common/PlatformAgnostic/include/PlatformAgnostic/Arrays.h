@@ -25,13 +25,13 @@ namespace Arrays
 
 #endif   
 
-    static const uint32 SeparatorBufferSize = 6;
+    static const uint32_t SeparatorBufferSize = 6;
 
     // According to MSDN the maximum number of characters for the list separator (LOCALE_SLIST) is four, including a terminating null character.
-    bool GetLocaleSeparator(char16_t* szSeparator, uint32* sepOutLength, uint32 sepBufferSize);
+    bool GetLocaleSeparator(char16_t* szSeparator, uint32_t* sepOutLength, uint32_t sepBufferSize);
 
-    template <uint32 sepBufferSize>
-    inline bool GetLocaleSeparator(char16_t(&szSeparator)[sepBufferSize], uint32 *sepOutLength)
+    template <uint32_t sepBufferSize>
+    inline bool GetLocaleSeparator(char16_t(&szSeparator)[sepBufferSize], uint32_t *sepOutLength)
     {
         return GetLocaleSeparator(szSeparator, sepOutLength, sepBufferSize);
     }

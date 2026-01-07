@@ -151,15 +151,15 @@ typedef const char16_t* TTD_WELLKNOWN_TOKEN;
 
 //A basic universal hash function for our dictionary
 #define TTD_DICTIONARY_LOAD_FACTOR 2
-#define TTD_DICTIONARY_HASH(X, P) ((uint32)((X) % P))
-#define TTD_DICTIONARY_INDEX(X, M) ((uint32)((X) & (M - 1)))
+#define TTD_DICTIONARY_HASH(X, P) ((uint32_t)((X) % P))
+#define TTD_DICTIONARY_INDEX(X, M) ((uint32_t)((X) & (M - 1)))
 
 //Support for our mark table
 #define TTD_MARK_TABLE_INIT_SIZE 65536
 #define TTD_MARK_TABLE_INIT_H2PRIME 32749
-#define TTD_MARK_TABLE_HASH1(X, S) ((uint32)((X) & (S - 1)))
-#define TTD_MARK_TABLE_HASH2(X, P) ((uint32)((X) % P))
-#define TTD_MARK_TABLE_INDEX(X, M) ((uint32)((X) & (M - 1)))
+#define TTD_MARK_TABLE_HASH1(X, S) ((uint32_t)((X) & (S - 1)))
+#define TTD_MARK_TABLE_HASH2(X, P) ((uint32_t)((X) % P))
+#define TTD_MARK_TABLE_INDEX(X, M) ((uint32_t)((X) & (M - 1)))
 
 #define TTD_TABLE_FACTORLOAD_BASE(C, P1, P2) if(targetSize < C) { *powerOf2 = C; *closePrime = P1; *midPrime = P2; }
 #define TTD_TABLE_FACTORLOAD(C, P1, P2) else TTD_TABLE_FACTORLOAD_BASE(C, P1, P2)
@@ -194,16 +194,16 @@ namespace TTD
     private:
         TTDMode * m_stackEntries;
 
-        uint32 m_stackTop;
-        uint32 m_stackMax;
+        uint32_t m_stackTop;
+        uint32_t m_stackMax;
 
     public:
         TTModeStack();
         ~TTModeStack();
 
-        uint32 Count() const;
-        TTDMode GetAt(uint32 index) const;
-        void SetAt(uint32 index, TTDMode m);
+        uint32_t Count() const;
+        TTDMode GetAt(uint32_t index) const;
+        void SetAt(uint32_t index, TTDMode m);
 
         void Push(TTDMode m);
         TTDMode Peek() const;
@@ -274,7 +274,7 @@ namespace TTD
     struct TopLevelFunctionInContextRelation
     {
         //The globally unique body counter id from the log
-        uint32 TopLevelBodyCtr;
+        uint32_t TopLevelBodyCtr;
 
         //The PTR_ID that is used to refer to this top-level body within the given script context
         TTD_PTR_ID ContextSpecificBodyPtrId;
@@ -357,7 +357,7 @@ namespace TTD
     }
 
     //Given a target capacity return (1) the nearest upper power of 2, (2) a good close prime, and (3) a good mid prime
-    void LoadValuesForHashTables(uint32 targetSize, uint32* powerOf2, uint32* closePrime, uint32* midPrime);
+    void LoadValuesForHashTables(uint32_t targetSize, uint32_t* powerOf2, uint32_t* closePrime, uint32_t* midPrime);
 
     //////////////////
 
@@ -365,7 +365,7 @@ namespace TTD
     struct TTString
     {
         //Length of the string in terms of char16s -- excluding any '\0' termination
-        uint32 Length;
+        uint32_t Length;
 
         //The char contents of the string (null terminated -- may be null if empty)
         char16_t* Contents;
@@ -406,7 +406,7 @@ namespace TTD
             byte* BlockData;
 
             //The size of the block in bytes (includes both LargeSlabBlock and data memory)
-            uint32 TotalBlockSize;
+            uint32_t TotalBlockSize;
 
             //The previous/next block in the list
             LargeSlabBlock* Previous;
@@ -421,7 +421,7 @@ namespace TTD
         byte* m_endPos;
 
         //The size we want to allocate for each SlabBlock -- set in constructor and unchanged after
-        const uint32 m_slabBlockSize;
+        const uint32_t m_slabBlockSize;
 
         //The list of slab blocks used in the allocator (the current block to allocate from is always at the head)
         SlabBlock* m_headBlock;
@@ -430,7 +430,7 @@ namespace TTD
         LargeSlabBlock* m_largeBlockList;
 
         //Allow us to speculatively reserve blocks for data and make sure we don't double allocate anything
-        uint32 m_reserveActiveBytes;
+        uint32_t m_reserveActiveBytes;
         LargeSlabBlock* m_reserveActiveLargeBlock;
 
 #if ENABLE_TTD_INTERNAL_DIAGNOSTICS
@@ -466,7 +466,7 @@ namespace TTD
             TTDAssert(this->m_reserveActiveBytes == 0, "Don't double allocate memory.");
             TTDAssert(n <= TTD_SLAB_LARGE_BLOCK_SIZE, "Don't allocate large requests in the bump pool.");
 
-            uint32 desiredsize = TTD_WORD_ALIGN_ALLOC_SIZE(n + canUnlink); //make alloc size word aligned
+            uint32_t desiredsize = TTD_WORD_ALIGN_ALLOC_SIZE(n + canUnlink); //make alloc size word aligned
             TTDAssert((desiredsize % 4 == 0) & (desiredsize >= (n + canUnlink)) & (desiredsize < TTD_SLAB_BLOCK_USABLE_SIZE(this->m_slabBlockSize)), "We can never allocate a block this big with the slab allocator!!");
 
             if (this->m_currPos + desiredsize > this->m_endPos)
@@ -505,7 +505,7 @@ namespace TTD
             TTDAssert(requestedBytes <= TTD_SLAB_LARGE_BLOCK_SIZE, "Don't allocate large requests in the bump pool.");
 
             byte* res = nullptr;
-            uint32 desiredsize = TTD_WORD_ALIGN_ALLOC_SIZE(requestedBytes + canUnlink); //make alloc size word aligned
+            uint32_t desiredsize = TTD_WORD_ALIGN_ALLOC_SIZE(requestedBytes + canUnlink); //make alloc size word aligned
             TTDAssert((desiredsize % 4 == 0) & (desiredsize >= (requestedBytes + canUnlink)) & (desiredsize < TTD_SLAB_BLOCK_USABLE_SIZE(this->m_slabBlockSize)), "We can never allocate a block this big with the slab allocator!!");
 
             if (reserve)
@@ -580,7 +580,7 @@ namespace TTD
         {
             TTDAssert(requestedBytes > TTD_SLAB_LARGE_BLOCK_SIZE, "Don't allocate small requests in the large pool.");
 
-            uint32 desiredsize = TTD_WORD_ALIGN_ALLOC_SIZE(requestedBytes + TTD_LARGE_SLAB_BLOCK_SIZE); //make alloc size word aligned
+            uint32_t desiredsize = TTD_WORD_ALIGN_ALLOC_SIZE(requestedBytes + TTD_LARGE_SLAB_BLOCK_SIZE); //make alloc size word aligned
             TTDAssert((desiredsize % 4 == 0) & (desiredsize >= (requestedBytes + TTD_LARGE_SLAB_BLOCK_SIZE)), "We can never allocate a block this big with the slab allocator!!");
 
             TTDAssert(this->m_reserveActiveBytes == 0, "Don't double allocate memory.");
@@ -610,7 +610,7 @@ namespace TTD
         }
 
     public:
-        SlabAllocatorBase(uint32 slabBlockSize)
+        SlabAllocatorBase(uint32_t slabBlockSize)
             : m_largeBlockList(nullptr), m_slabBlockSize(slabBlockSize)
         {
             byte* allocBlock = TT_HEAP_ALLOC_ARRAY(byte, this->m_slabBlockSize);
@@ -688,7 +688,7 @@ namespace TTD
         }
 
         //clone a string into the allocator of a known length
-        void CopyStringIntoWLength(const char16_t* str, uint32 length, TTString& into)
+        void CopyStringIntoWLength(const char16_t* str, uint32_t length, TTString& into)
         {
             TTDAssert(str != nullptr, "Not allowed for string + length");
 
@@ -701,7 +701,7 @@ namespace TTD
         }
 
         //initialize and allocate the memory for a string of a given length (but don't set contents yet)
-        void InitializeAndAllocateWLength(uint32 length, TTString& into)
+        void InitializeAndAllocateWLength(uint32_t length, TTString& into)
         {
             into.Length = length;
             into.Contents = this->SlabAllocateArray<char16_t>(into.Length + 1);
@@ -718,7 +718,7 @@ namespace TTD
             }
             else
             {
-                this->CopyStringIntoWLength(str, (uint32)wcslen(str), into);
+                this->CopyStringIntoWLength(str, (uint32_t)wcslen(str), into);
             }
         }
 
@@ -1059,7 +1059,7 @@ namespace TTD
         }
 
         //NOT constant time
-        uint32 Count() const
+        uint32_t Count() const
         {
             size_t count = (((byte*)this->m_inlineHeadBlock.CurrPos) - ((byte*)this->m_inlineHeadBlock.BlockData)) / sizeof(T);
             TTDAssert(count <= allocSize, "We somehow wrote in too much data.");
@@ -1072,7 +1072,7 @@ namespace TTD
                 count += ncount;
             }
 
-            return (uint32)count;
+            return (uint32_t)count;
         }
 
         class Iterator
@@ -1147,15 +1147,15 @@ namespace TTD
         };
 
         //The 2 prime numbers we use for our hasing function
-        uint32 m_h1Prime;
-        uint32 m_h2Prime;
+        uint32_t m_h1Prime;
+        uint32_t m_h2Prime;
 
         //The hash max capcity and data array
-        uint32 m_capacity;
+        uint32_t m_capacity;
         Entry* m_hashArray;
 
         //Count of elements in the dictionary
-        uint32 m_count;
+        uint32_t m_count;
 
         template <bool findEmpty>
         Entry* FindSlotForId(Tag id) const
@@ -1166,15 +1166,15 @@ namespace TTD
             Tag searchKey = findEmpty ? 0 : id;
 
             //h1Prime is less than table size by construction so we dont need to re-index
-            uint32 primaryIndex = TTD_DICTIONARY_HASH(id, this->m_h1Prime);
+            uint32_t primaryIndex = TTD_DICTIONARY_HASH(id, this->m_h1Prime);
             if (this->m_hashArray[primaryIndex].Key == searchKey)
             {
                 return (this->m_hashArray + primaryIndex);
             }
 
             //do a hash for the second offset to avoid clustering and then do linear probing
-            uint32 offset = TTD_DICTIONARY_HASH(id, this->m_h2Prime);
-            uint32 probeIndex = TTD_DICTIONARY_INDEX(primaryIndex + offset, this->m_capacity);
+            uint32_t offset = TTD_DICTIONARY_HASH(id, this->m_h2Prime);
+            uint32_t probeIndex = TTD_DICTIONARY_INDEX(primaryIndex + offset, this->m_capacity);
             while (true)
             {
                 Entry* curr = (this->m_hashArray + probeIndex);
@@ -1210,11 +1210,11 @@ namespace TTD
             }
         }
 
-        void Initialize(uint32 capacity)
+        void Initialize(uint32_t capacity)
         {
             TTDAssert(this->m_hashArray == nullptr, "Should not already be initialized.");
 
-            uint32 desiredSize = capacity * TTD_DICTIONARY_LOAD_FACTOR;
+            uint32_t desiredSize = capacity * TTD_DICTIONARY_LOAD_FACTOR;
 
             LoadValuesForHashTables(desiredSize, &(this->m_capacity), &(this->m_h1Prime), &(this->m_h2Prime));
 
@@ -1248,7 +1248,7 @@ namespace TTD
             return this->m_hashArray != nullptr;
         }
 
-        uint32 Count() const
+        uint32_t Count() const
         {
             return this->m_count;
         }
@@ -1259,7 +1259,7 @@ namespace TTD
             TTDAssert(this->m_hashArray != nullptr, "Not valid!!");
 
             //h1Prime is less than table size by construction so we dont need to re-index
-            uint32 primaryIndex = TTD_DICTIONARY_HASH(id, this->m_h1Prime);
+            uint32_t primaryIndex = TTD_DICTIONARY_HASH(id, this->m_h1Prime);
             if (this->m_hashArray[primaryIndex].Key == id)
             {
                 return true;
@@ -1271,8 +1271,8 @@ namespace TTD
             }
 
             //do a hash for the second offset to avoid clustering and then do linear probing
-            uint32 offset = TTD_DICTIONARY_HASH(id, this->m_h2Prime);
-            uint32 probeIndex = TTD_DICTIONARY_INDEX(primaryIndex + offset, this->m_capacity);
+            uint32_t offset = TTD_DICTIONARY_HASH(id, this->m_h2Prime);
+            uint32_t probeIndex = TTD_DICTIONARY_INDEX(primaryIndex + offset, this->m_capacity);
             while (true)
             {
                 Entry* curr = (this->m_hashArray + probeIndex);
@@ -1346,23 +1346,23 @@ namespace TTD
         MarkTableTag* m_markArray;
 
         //Capcity and count of the table (we use capcity for fast & hashing instead of %);
-        uint32 m_capcity;
-        uint32 m_count;
-        uint32 m_h2Prime;
+        uint32_t m_capcity;
+        uint32_t m_count;
+        uint32_t m_h2Prime;
 
         //iterator position
-        uint32 m_iterPos;
+        uint32_t m_iterPos;
 
         //Counts of how many handlers/types/... we have marked
-        uint32 m_handlerCounts[(uint32)MarkTableTag::KindTagCount];
+        uint32_t m_handlerCounts[(uint32_t)MarkTableTag::KindTagCount];
 
         int32 FindIndexForKey(unsigned long addr) const
         {
             TTDAssert(this->m_addrArray != nullptr, "Not valid!!");
 
-            uint32 primaryMask = this->m_capcity - 1;
+            uint32_t primaryMask = this->m_capcity - 1;
 
-            uint32 primaryIndex = TTD_MARK_TABLE_HASH1(addr, this->m_capcity);
+            uint32_t primaryIndex = TTD_MARK_TABLE_HASH1(addr, this->m_capcity);
             unsigned long primaryAddr = this->m_addrArray[primaryIndex];
             if ((primaryAddr == addr) | (primaryAddr == 0))
             {
@@ -1370,8 +1370,8 @@ namespace TTD
             }
 
             //do a hash for the second offset to avoid clustering and then do linear probing
-            uint32 offset = TTD_MARK_TABLE_HASH2(addr, this->m_h2Prime);
-            uint32 probeIndex = TTD_MARK_TABLE_INDEX(primaryIndex + offset, this->m_capcity);
+            uint32_t offset = TTD_MARK_TABLE_HASH2(addr, this->m_h2Prime);
+            uint32_t probeIndex = TTD_MARK_TABLE_INDEX(primaryIndex + offset, this->m_capcity);
             while (true)
             {
                 unsigned long currAddr = this->m_addrArray[probeIndex];
@@ -1387,20 +1387,20 @@ namespace TTD
 
         void Grow()
         {
-            uint32 oldCapacity = this->m_capcity;
+            uint32_t oldCapacity = this->m_capcity;
             unsigned long* oldAddrArray = this->m_addrArray;
             MarkTableTag* oldMarkArray = this->m_markArray;
 
             this->m_capcity = this->m_capcity << 1; //double capacity
 
-            uint32 dummyPowerOf2 = 0;
-            uint32 dummyNearPrime = 0;
+            uint32_t dummyPowerOf2 = 0;
+            uint32_t dummyNearPrime = 0;
             LoadValuesForHashTables(this->m_capcity, &dummyPowerOf2, &dummyNearPrime, &(this->m_h2Prime));
 
             this->m_addrArray = TT_HEAP_ALLOC_ARRAY_ZERO(unsigned long, this->m_capcity);
             this->m_markArray = TT_HEAP_ALLOC_ARRAY_ZERO(MarkTableTag, this->m_capcity);
 
-            for (uint32 i = 0; i < oldCapacity; ++i)
+            for (uint32_t i = 0; i < oldCapacity; ++i)
             {
                 int32 idx = this->FindIndexForKey(oldAddrArray[i]);
                 this->m_addrArray[idx] = oldAddrArray[i];
@@ -1443,7 +1443,7 @@ namespace TTD
                 this->m_markArray[idx] = kindtag;
 
                 this->m_count++;
-                (this->m_handlerCounts[(uint32)kindtag])++;
+                (this->m_handlerCounts[(uint32_t)kindtag])++;
             }
             TTDAssert(this->m_markArray[idx] == kindtag, "We had some sort of collision.");
 
@@ -1512,9 +1512,9 @@ namespace TTD
         }
 
         template <MarkTableTag kindtag>
-        uint32 GetCountForTag()
+        uint32_t GetCountForTag()
         {
-            return this->m_handlerCounts[(uint32)kindtag];
+            return this->m_handlerCounts[(uint32_t)kindtag];
         }
 
         void MoveToNextAddress()

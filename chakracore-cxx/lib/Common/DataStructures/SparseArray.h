@@ -9,7 +9,7 @@ class SAChunk
 {
 public:
     SAChunk<T> *        next;
-    uint32              startIndex;
+    uint32_t              startIndex;
     T *                 data[];
 };
 
@@ -19,11 +19,11 @@ class SparseArray
 {
 private:
     ArenaAllocator *    alloc;
-    uint32              chunkSize;
+    uint32_t              chunkSize;
     SAChunk<T> *        firstChunk;
 
 public:
-    static SparseArray<T> * New(ArenaAllocator *allocator, uint32 chunkSize)
+    static SparseArray<T> * New(ArenaAllocator *allocator, uint32_t chunkSize)
     {
         SparseArray<T> * array;
 
@@ -42,10 +42,10 @@ public:
         return array;
     }
 
-    void Set(uint32 index, T *element)
+    void Set(uint32_t index, T *element)
     {
         SAChunk<T> * chunk, **pPrev = &(this->firstChunk);
-        uint32 indexInChunk = (index % this->chunkSize);
+        uint32_t indexInChunk = (index % this->chunkSize);
 
         for (chunk = this->firstChunk; chunk; chunk = chunk->next)
         {
@@ -75,10 +75,10 @@ public:
         chunk->data[indexInChunk] = element;
     }
 
-    T * Get(uint32 index)
+    T * Get(uint32_t index)
     {
         SAChunk<T> * chunk;
-        uint32 indexInChunk = (index % this->chunkSize);
+        uint32_t indexInChunk = (index % this->chunkSize);
 
         for (chunk = this->firstChunk; chunk; chunk = chunk->next)
         {

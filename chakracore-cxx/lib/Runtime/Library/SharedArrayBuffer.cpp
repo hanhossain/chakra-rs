@@ -88,7 +88,7 @@ namespace Js
             JavascriptError::ThrowTypeError(scriptContext, JSERR_ClassConstructorCannotBeCalledWithoutNew, u"SharedArrayBuffer");
         }
 
-        uint32 byteLength = 0;
+        uint32_t byteLength = 0;
         if (args.Info.Count > 1)
         {
             byteLength = ArrayBuffer::ToIndex(args[1], JSERR_ArrayLengthConstructIncorrect, scriptContext, MaxSharedArrayBufferLength);
@@ -168,9 +168,9 @@ namespace Js
 
         // We can't have allocated an SharedArrayBuffer with byteLength > MaxArrayBufferLength.
         // start and end are clamped to valid indices, so the new length also cannot exceed MaxArrayBufferLength.
-        // Therefore, should be safe to cast down newLen to uint32.
+        // Therefore, should be safe to cast down newLen to uint32_t.
         Assert(newLen < MaxSharedArrayBufferLength);
-        uint32 newbyteLength = static_cast<uint32>(newLen);
+        uint32_t newbyteLength = static_cast<uint32_t>(newLen);
 
         SharedArrayBuffer* newBuffer = nullptr;
 
@@ -226,7 +226,7 @@ namespace Js
         return args[0];
     }
 
-    uint8_t* SharedArrayBuffer::AllocBuffer(uint32 length, uint32 maxLength)
+    uint8_t* SharedArrayBuffer::AllocBuffer(uint32_t length, uint32_t maxLength)
     {
         Unused(maxLength); // WebAssembly only
 #if ENABLE_FAST_ARRAYBUFFER
@@ -241,7 +241,7 @@ namespace Js
         }
     }
 
-    void SharedArrayBuffer::FreeBuffer(uint8_t* buffer, uint32 length, uint32 maxLength)
+    void SharedArrayBuffer::FreeBuffer(uint8_t* buffer, uint32_t length, uint32_t maxLength)
     {
         Unused(maxLength); // WebAssembly only
 #if ENABLE_FAST_ARRAYBUFFER
@@ -257,7 +257,7 @@ namespace Js
         }
     }
 
-    void SharedArrayBuffer::Init(uint32 length, uint32 maxLength)
+    void SharedArrayBuffer::Init(uint32_t length, uint32_t maxLength)
     {
         AssertOrFailFast(!sharedContents && length <= maxLength);
         uint8_t * buffer = nullptr;
@@ -382,7 +382,7 @@ namespace Js
         return nullptr;
     }
 
-    uint32 SharedArrayBuffer::GetByteLength() const
+    uint32_t SharedArrayBuffer::GetByteLength() const
     {
         return sharedContents != nullptr ? sharedContents->bufferLength : 0;
     }
@@ -413,7 +413,7 @@ namespace Js
     {
     }
 
-    JavascriptSharedArrayBuffer* JavascriptSharedArrayBuffer::Create(uint32 length, DynamicType * type)
+    JavascriptSharedArrayBuffer* JavascriptSharedArrayBuffer::Create(uint32_t length, DynamicType * type)
     {
         Recycler* recycler = type->GetScriptContext()->GetRecycler();
         JavascriptSharedArrayBuffer* result = RecyclerNewFinalized(recycler, JavascriptSharedArrayBuffer, type);
@@ -490,7 +490,7 @@ namespace Js
     {
     }
 
-    WebAssemblySharedArrayBuffer* WebAssemblySharedArrayBuffer::Create(uint32 length, uint32 maxLength, DynamicType * type)
+    WebAssemblySharedArrayBuffer* WebAssemblySharedArrayBuffer::Create(uint32_t length, uint32_t maxLength, DynamicType * type)
     {
         AssertOrFailFast(Wasm::Threads::IsEnabled());
         Recycler* recycler = type->GetScriptContext()->GetRecycler();
@@ -522,9 +522,9 @@ namespace Js
         return false;
     }
 
-    _Must_inspect_result_ bool WebAssemblySharedArrayBuffer::GrowMemory(uint32 newBufferLength)
+    _Must_inspect_result_ bool WebAssemblySharedArrayBuffer::GrowMemory(uint32_t newBufferLength)
     {
-        uint32 bufferLength = sharedContents->bufferLength;
+        uint32_t bufferLength = sharedContents->bufferLength;
         uint8_t* buffer = sharedContents->buffer;
         if (newBufferLength < bufferLength || newBufferLength > sharedContents->maxBufferLength)
         {
@@ -533,7 +533,7 @@ namespace Js
             JavascriptError::ThrowTypeError(GetScriptContext(), WASMERR_BufferGrowOnly);
         }
 
-        uint32 growSize = newBufferLength - bufferLength;
+        uint32_t growSize = newBufferLength - bufferLength;
 
         // We're not growing the buffer, do nothing
         if (growSize == 0)
@@ -565,7 +565,7 @@ namespace Js
         return true;
     }
 
-    uint8_t* WebAssemblySharedArrayBuffer::AllocBuffer(uint32 length, uint32 maxLength)
+    uint8_t* WebAssemblySharedArrayBuffer::AllocBuffer(uint32_t length, uint32_t maxLength)
     {
 #if ENABLE_FAST_ARRAYBUFFER
         if (CONFIG_FLAG(WasmFastArray))
@@ -574,7 +574,7 @@ namespace Js
         }
 #endif
         AssertOrFailFast(maxLength >= length);
-        uint32 additionalSize = maxLength - length;
+        uint32_t additionalSize = maxLength - length;
         if (additionalSize > 0)
         {
             // SharedArrayBuffer::Init already requested External Memory for `length`, we need to request the balance
@@ -588,7 +588,7 @@ namespace Js
         return HeapNewNoThrowArray(uint8_t, maxLength);
     }
 
-    void WebAssemblySharedArrayBuffer::FreeBuffer(uint8_t* buffer, uint32 length, uint32 maxLength)
+    void WebAssemblySharedArrayBuffer::FreeBuffer(uint8_t* buffer, uint32_t length, uint32_t maxLength)
     {
         if (IsValidVirtualBufferLength(length))
         {
@@ -600,7 +600,7 @@ namespace Js
 
             AssertOrFailFast(maxLength >= length);
             // JavascriptSharedArrayBuffer::Finalize will only report freeing `length`, we have to take care of the balance
-            uint32 additionalSize = maxLength - length;
+            uint32_t additionalSize = maxLength - length;
             if (additionalSize > 0)
             {
                 Recycler* recycler = GetType()->GetLibrary()->GetRecycler();
@@ -645,7 +645,7 @@ namespace Js
         return false;
     }
 
-    bool _Requires_lock_held_(csForAccess.cs) WaiterList::AddAndSuspendWaiter(unsigned long waiter, uint32 timeout)
+    bool _Requires_lock_held_(csForAccess.cs) WaiterList::AddAndSuspendWaiter(unsigned long waiter, uint32_t timeout)
     {
         // TODO for xplat
         return false;
@@ -656,11 +656,11 @@ namespace Js
         // TODO for xplat
     }
 
-    uint32 WaiterList::RemoveAndWakeWaiters(int32 count)
+    uint32_t WaiterList::RemoveAndWakeWaiters(int32 count)
     {
         Assert(m_waiters != nullptr);
         Assert(count >= 0);
-        uint32 removed = 0;
+        uint32_t removed = 0;
         return removed;
     }
 

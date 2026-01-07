@@ -58,7 +58,7 @@ using namespace Js;
         IndexType_JavascriptString
     };
 
-    IndexType GetIndexTypeFromString(char16_t const * propertyName, charcount_t propertyLength, ScriptContext* scriptContext, uint32* index, PropertyRecord const** propertyRecord, bool createIfNotFound)
+    IndexType GetIndexTypeFromString(char16_t const * propertyName, charcount_t propertyLength, ScriptContext* scriptContext, uint32_t* index, PropertyRecord const** propertyRecord, bool createIfNotFound)
     {
         if (JavascriptOperators::TryConvertToUInt32(propertyName, propertyLength, index) &&
             (*index != JavascriptArray::InvalidIndex))
@@ -79,7 +79,7 @@ using namespace Js;
         }
     }
 
-    IndexType GetIndexTypeFromPrimitive(Var indexVar, ScriptContext* scriptContext, uint32* index, PropertyRecord const ** propertyRecord, JavascriptString ** propertyNameString, bool createIfNotFound, bool preferJavascriptStringOverPropertyRecord)
+    IndexType GetIndexTypeFromPrimitive(Var indexVar, ScriptContext* scriptContext, uint32_t* index, PropertyRecord const ** propertyRecord, JavascriptString ** propertyNameString, bool createIfNotFound, bool preferJavascriptStringOverPropertyRecord)
     {
         // CONSIDER: Only OP_SetElementI and OP_GetElementI use and take advantage of the
         // IndexType_JavascriptString result. Consider modifying other callers of GetIndexType to take
@@ -120,9 +120,9 @@ using namespace Js;
             bool isInt32 = false;
             if (JavascriptNumber::TryGetInt32OrUInt32Value(JavascriptNumber::GetValue(indexVar), &value, &isInt32)
                 && !isInt32
-                && static_cast<uint32>(value) < JavascriptArray::InvalidIndex)
+                && static_cast<uint32_t>(value) < JavascriptArray::InvalidIndex)
             {
-                *index = static_cast<uint32>(value);
+                *index = static_cast<uint32_t>(value);
                 return IndexType_Number;
             }
 
@@ -160,18 +160,18 @@ using namespace Js;
         }
     }
 
-    IndexType GetIndexTypeFromPrimitive(Var indexVar, ScriptContext* scriptContext, uint32* index, PropertyRecord const ** propertyRecord, bool createIfNotFound)
+    IndexType GetIndexTypeFromPrimitive(Var indexVar, ScriptContext* scriptContext, uint32_t* index, PropertyRecord const ** propertyRecord, bool createIfNotFound)
     {
         return GetIndexTypeFromPrimitive(indexVar, scriptContext, index, propertyRecord, nullptr, createIfNotFound, false);
     }
 
-    IndexType GetIndexType(Var& indexVar, ScriptContext* scriptContext, uint32* index, PropertyRecord const ** propertyRecord, JavascriptString ** propertyNameString, bool createIfNotFound, bool preferJavascriptStringOverPropertyRecord)
+    IndexType GetIndexType(Var& indexVar, ScriptContext* scriptContext, uint32_t* index, PropertyRecord const ** propertyRecord, JavascriptString ** propertyNameString, bool createIfNotFound, bool preferJavascriptStringOverPropertyRecord)
     {
         indexVar = JavascriptConversion::ToPrimitive<JavascriptHint::HintString>(indexVar, scriptContext);
         return GetIndexTypeFromPrimitive(indexVar, scriptContext, index, propertyRecord, propertyNameString, createIfNotFound, preferJavascriptStringOverPropertyRecord);
     }
 
-    IndexType GetIndexType(Var& indexVar, ScriptContext* scriptContext, uint32* index, PropertyRecord const ** propertyRecord, bool createIfNotFound)
+    IndexType GetIndexType(Var& indexVar, ScriptContext* scriptContext, uint32_t* index, PropertyRecord const ** propertyRecord, bool createIfNotFound)
     {
         return GetIndexType(indexVar, scriptContext, index, propertyRecord, nullptr, createIfNotFound, false);
     }
@@ -278,7 +278,7 @@ using namespace Js;
     }
 
     // Alias for overloaded JavascriptNumber::ToVar so it can be called unambiguously from native code
-    Var JavascriptOperators::UInt32ToVar(uint32 value, ScriptContext* scriptContext)
+    Var JavascriptOperators::UInt32ToVar(uint32_t value, ScriptContext* scriptContext)
     {
         JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Op_UInt32ToAtom);
         return JavascriptNumber::ToVar(value, scriptContext);
@@ -286,7 +286,7 @@ using namespace Js;
     }
 
     // Alias for overloaded JavascriptNumber::ToVar so it can be called unambiguously from native code
-    Var JavascriptOperators::UInt32ToVarInPlace(uint32 value, ScriptContext* scriptContext, JavascriptNumber* result)
+    Var JavascriptOperators::UInt32ToVarInPlace(uint32_t value, ScriptContext* scriptContext, JavascriptNumber* result)
     {
         JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Op_UInt32ToAtomInPlace);
         return JavascriptNumber::ToVarInPlace(value, scriptContext, result);
@@ -294,7 +294,7 @@ using namespace Js;
     }
 #endif
 
-    Var JavascriptOperators::OP_FinishOddDivBy2(uint32 value, ScriptContext *scriptContext)
+    Var JavascriptOperators::OP_FinishOddDivBy2(uint32_t value, ScriptContext *scriptContext)
     {
         return JavascriptNumber::New((double)(value + 0.5), scriptContext);
     }
@@ -396,7 +396,7 @@ using namespace Js;
     }
 
 
-    Var JavascriptOperators::TypeofElem_UInt32(Var instance, uint32 index, ScriptContext* scriptContext)
+    Var JavascriptOperators::TypeofElem_UInt32(Var instance, uint32_t index, ScriptContext* scriptContext)
     {
         JIT_HELPER_REENTRANT_HEADER(Op_TypeofElem_UInt32);
         if (JavascriptOperators::IsNumberFromNativeArray(instance, index, scriptContext))
@@ -455,7 +455,7 @@ using namespace Js;
         }
 
         Var member = nullptr;
-        uint32 indexVal;
+        uint32_t indexVal;
         PropertyRecord const * propertyRecord = nullptr;
 
         ThreadContext* threadContext = scriptContext->GetThreadContext();
@@ -1094,11 +1094,11 @@ using namespace Js;
             JavascriptArray* proxyResultToReturn = scriptContext->GetLibrary()->CreateArray(0);
 
             // filter enumerable keys
-            uint32 resultLength = proxyResult->GetLength();
+            uint32_t resultLength = proxyResult->GetLength();
             Var element;
             const Js::PropertyRecord *propertyRecord = nullptr;
-            uint32 index = 0;
-            for (uint32 i = 0; i < resultLength; i++)
+            uint32_t index = 0;
+            for (uint32_t i = 0; i < resultLength; i++)
             {
                 element = proxyResult->DirectGetItem(i);
 
@@ -2251,7 +2251,7 @@ using namespace Js;
     // Checks to see if any object in the prototype chain has a property descriptor for the given index
     // that specifies either an accessor or a non-writable attribute.
     // If TRUE, check flags for details.
-    BOOL JavascriptOperators::CheckPrototypesForAccessorOrNonWritableItem(RecyclableObject* instance, uint32 index,
+    BOOL JavascriptOperators::CheckPrototypesForAccessorOrNonWritableItem(RecyclableObject* instance, uint32_t index,
         Var* setterValue, DescriptorFlags *flags, ScriptContext* scriptContext, BOOL skipPrototypeCheck /* = FALSE */)
     {
         Assert(setterValue);
@@ -2280,7 +2280,7 @@ using namespace Js;
     BOOL JavascriptOperators::SetGlobalPropertyNoHost(char16_t const * propertyName, charcount_t propertyLength, Var value, ScriptContext * scriptContext)
     {
         GlobalObject * globalObject = scriptContext->GetGlobalObject();
-        uint32 index;
+        uint32_t index;
         PropertyRecord const * propertyRecord = nullptr;
         IndexType indexType = GetIndexTypeFromString(propertyName, propertyLength, scriptContext, &index, &propertyRecord, true);
 
@@ -2386,7 +2386,7 @@ using namespace Js;
         return FALSE;
     }
 
-    BOOL JavascriptOperators::SetItemOnTaggedNumber(Var receiver, RecyclableObject* object, uint32 index, Var newValue, ScriptContext* requestContext,
+    BOOL JavascriptOperators::SetItemOnTaggedNumber(Var receiver, RecyclableObject* object, uint32_t index, Var newValue, ScriptContext* requestContext,
         PropertyOperationFlags propertyOperationFlags)
     {
         Assert(TaggedNumber::Is(receiver));
@@ -2672,7 +2672,7 @@ using namespace Js;
         return FALSE;
     }
 
-    BOOL JavascriptOperators::IsNumberFromNativeArray(Var instance, uint32 index, ScriptContext* scriptContext)
+    BOOL JavascriptOperators::IsNumberFromNativeArray(Var instance, uint32_t index, ScriptContext* scriptContext)
     {
 #if ENABLE_COPYONACCESS_ARRAY
         JavascriptLibrary::CheckAndConvertCopyOnAccessNativeIntArray<Var>(instance);
@@ -3205,7 +3205,7 @@ using namespace Js;
         JIT_HELPER_END(Op_TypeofPropertyScoped);
     }
 
-    BOOL JavascriptOperators::HasOwnItem(RecyclableObject* object, uint32 index)
+    BOOL JavascriptOperators::HasOwnItem(RecyclableObject* object, uint32_t index)
     {
         return object->HasOwnItem(index);
     }
@@ -3218,7 +3218,7 @@ using namespace Js;
         return JavascriptOperators::HasProperty(object, propertyRecord->GetPropertyId());
     }
 
-    BOOL JavascriptOperators::HasItem(RecyclableObject* object, uint32 index)
+    BOOL JavascriptOperators::HasItem(RecyclableObject* object, uint32_t index)
     {
 #if ENABLE_COPYONACCESS_ARRAY
         JavascriptLibrary::CheckAndConvertCopyOnAccessNativeIntArray<Var>(object);
@@ -3237,12 +3237,12 @@ using namespace Js;
         return false;
     }
 
-    BOOL JavascriptOperators::GetOwnItem(RecyclableObject* object, uint32 index, Var* value, ScriptContext* requestContext)
+    BOOL JavascriptOperators::GetOwnItem(RecyclableObject* object, uint32_t index, Var* value, ScriptContext* requestContext)
     {
         return object->GetItem(object, index, value, requestContext);
     }
 
-    BOOL JavascriptOperators::GetItem(Var instance, RecyclableObject* propertyObject, uint32 index, Var* value, ScriptContext* requestContext)
+    BOOL JavascriptOperators::GetItem(Var instance, RecyclableObject* propertyObject, uint32_t index, Var* value, ScriptContext* requestContext)
     {
         RecyclableObject* object = propertyObject;
         while (!JavascriptOperators::IsNull(object))
@@ -3262,7 +3262,7 @@ using namespace Js;
         return false;
     }
 
-    BOOL JavascriptOperators::GetItemReference(Var instance, RecyclableObject* propertyObject, uint32 index, Var* value, ScriptContext* requestContext)
+    BOOL JavascriptOperators::GetItemReference(Var instance, RecyclableObject* propertyObject, uint32_t index, Var* value, ScriptContext* requestContext)
     {
         RecyclableObject* object = propertyObject;
         while (!JavascriptOperators::IsNull(object))
@@ -3289,7 +3289,7 @@ using namespace Js;
         return JavascriptOperators::SetProperty(receiver, object, propertyRecord->GetPropertyId(), value, scriptContext, propertyOperationFlags);
     }
 
-    BOOL JavascriptOperators::SetItem(Var receiver, RecyclableObject* object, uint32 index, Var value, ScriptContext* scriptContext, PropertyOperationFlags propertyOperationFlags, BOOL skipPrototypeCheck /* = FALSE */)
+    BOOL JavascriptOperators::SetItem(Var receiver, RecyclableObject* object, uint32_t index, Var value, ScriptContext* scriptContext, PropertyOperationFlags propertyOperationFlags, BOOL skipPrototypeCheck /* = FALSE */)
     {
         Var setterValueOrProxy = nullptr;
         DescriptorFlags flags = None;
@@ -3341,7 +3341,7 @@ using namespace Js;
         return (VarTo<RecyclableObject>(receiver))->SetItem(index, value, propertyOperationFlags);
     }
 
-    BOOL JavascriptOperators::DeleteItem(RecyclableObject* object, uint32 index, PropertyOperationFlags propertyOperationFlags)
+    BOOL JavascriptOperators::DeleteItem(RecyclableObject* object, uint32_t index, PropertyOperationFlags propertyOperationFlags)
     {
         return object->DeleteItem(index, propertyOperationFlags);
     }
@@ -3358,7 +3358,7 @@ using namespace Js;
             scriptContext->GetLibrary()->GetNumberPrototype() :
             VarTo<RecyclableObject>(instance);
 
-        uint32 indexVal;
+        uint32_t indexVal;
         PropertyRecord const * propertyRecord = nullptr;
         IndexType indexType = GetIndexType(index, scriptContext, &indexVal, &propertyRecord, false);
 
@@ -3457,7 +3457,7 @@ using namespace Js;
         JIT_HELPER_END(Op_GetElementI);
     }
 
-    Var JavascriptOperators::OP_GetElementI_UInt32(Var instance, uint32 index, ScriptContext* scriptContext)
+    Var JavascriptOperators::OP_GetElementI_UInt32(Var instance, uint32_t index, ScriptContext* scriptContext)
     {
         JIT_HELPER_REENTRANT_HEADER(Op_GetElementI_UInt32);
 #if FLOATVAR
@@ -3493,7 +3493,7 @@ using namespace Js;
         }
 
         JavascriptArray* arrayPrototype = UnsafeVarTo<JavascriptArray>(prototype); //Prototype must be Array.prototype (unless changed through __proto__)
-        if (arrayPrototype->GetLength() && arrayPrototype->GetItem(arrayPrototype, (uint32)indexInt, result, scriptContext))
+        if (arrayPrototype->GetLength() && arrayPrototype->GetItem(arrayPrototype, (uint32_t)indexInt, result, scriptContext))
         {
             return true;
         }
@@ -3506,7 +3506,7 @@ using namespace Js;
 
         if (VarTo<DynamicObject>(prototype)->HasNonEmptyObjectArray())
         {
-            if (prototype->GetItem(arr, (uint32)indexInt, result, scriptContext))
+            if (prototype->GetItem(arr, (uint32_t)indexInt, result, scriptContext))
             {
                 return true;
             }
@@ -3788,14 +3788,14 @@ using namespace Js;
         {
             if (!CrossSite::IsCrossSiteObjectTyped(arr))
             {
-                if (arr->T::DirectGetVarItemAt((uint32)indexInt, result, scriptContext))
+                if (arr->T::DirectGetVarItemAt((uint32_t)indexInt, result, scriptContext))
                 {
                     return true;
                 }
             }
             else
             {
-                if (arr->GetItem(arr, (uint32)indexInt, result, scriptContext))
+                if (arr->GetItem(arr, (uint32_t)indexInt, result, scriptContext))
                 {
                     return true;
                 }
@@ -3817,7 +3817,7 @@ using namespace Js;
 
         if (JavascriptNumber::Is_NoTaggedIntCheck(index))
         {
-            uint32 uint32Index = JavascriptConversion::ToUInt32(index, scriptContext);
+            uint32_t uint32Index = JavascriptConversion::ToUInt32(index, scriptContext);
 
             if ((double)uint32Index == JavascriptNumber::GetValue(index) && !TaggedInt::IsOverflow(uint32Index))
             {
@@ -3903,7 +3903,7 @@ using namespace Js;
     {
         Assert(TaggedNumber::Is(receiver));
 
-        uint32 indexVal = 0;
+        uint32_t indexVal = 0;
         PropertyRecord const * propertyRecord = nullptr;
         IndexType indexType = GetIndexType(index, requestContext, &indexVal, &propertyRecord, true);
         if (indexType == IndexType_Number)
@@ -4007,7 +4007,7 @@ using namespace Js;
             return scriptContext->GetLibrary()->GetUndefined();
         }
 
-        uint32 indexVal;
+        uint32_t indexVal;
         PropertyRecord const * propertyRecord = nullptr;
         JavascriptString * propertyNameString = nullptr;
         Var value = nullptr;
@@ -4076,7 +4076,7 @@ using namespace Js;
             }
             JavascriptArray * arr = VarTo<JavascriptArray>(instance);
             int32 result;
-            if (arr->DirectGetItemAt((uint32)indexInt, &result))
+            if (arr->DirectGetItemAt((uint32_t)indexInt, &result))
             {
                 return result;
             }
@@ -4094,7 +4094,7 @@ using namespace Js;
                 }
                 JavascriptArray * arr = VarTo<JavascriptArray>(instance);
                 int32 result;
-                if (arr->DirectGetItemAt((uint32)indexInt, &result))
+                if (arr->DirectGetItemAt((uint32_t)indexInt, &result))
                 {
                     return result;
                 }
@@ -4109,7 +4109,7 @@ using namespace Js;
         JIT_HELPER_END(Op_GetNativeIntElementI);
     }
 
-    int32 JavascriptOperators::OP_GetNativeIntElementI_UInt32(Var instance, uint32 index, ScriptContext* scriptContext)
+    int32 JavascriptOperators::OP_GetNativeIntElementI_UInt32(Var instance, uint32_t index, ScriptContext* scriptContext)
     {
         JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Op_GetNativeIntElementI_UInt32);
         JIT_HELPER_SAME_ATTRIBUTES(Op_GetNativeIntElementI_UInt32, Op_GetNativeIntElementI);
@@ -4152,7 +4152,7 @@ using namespace Js;
             else
             {
                 JavascriptArray * arr = VarTo<JavascriptArray>(instance);
-                if (!arr->DirectGetItemAt((uint32)indexInt, &result))
+                if (!arr->DirectGetItemAt((uint32_t)indexInt, &result))
                 {
                     result = JavascriptNativeFloatArray::MissingItem;
                 }
@@ -4172,7 +4172,7 @@ using namespace Js;
                 else
                 {
                     JavascriptArray * arr = VarTo<JavascriptArray>(instance);
-                    if (!arr->DirectGetItemAt((uint32)indexInt, &result))
+                    if (!arr->DirectGetItemAt((uint32_t)indexInt, &result))
                     {
                         result = JavascriptNativeFloatArray::MissingItem;
                     }
@@ -4188,7 +4188,7 @@ using namespace Js;
         JIT_HELPER_END(Op_GetNativeFloatElementI);
     }
 
-    double JavascriptOperators::OP_GetNativeFloatElementI_UInt32(Var instance, uint32 index, ScriptContext* scriptContext)
+    double JavascriptOperators::OP_GetNativeFloatElementI_UInt32(Var instance, uint32_t index, ScriptContext* scriptContext)
     {
         JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Op_GetNativeFloatElementI_UInt32);
         JIT_HELPER_SAME_ATTRIBUTES(Op_GetNativeFloatElementI_UInt32, Op_GetNativeFloatElementI);
@@ -4216,7 +4216,7 @@ using namespace Js;
         JIT_HELPER_END(Op_GetNativeFloatElementI_Int32);
     }
 
-    Var JavascriptOperators::OP_GetMethodElement_UInt32(Var instance, uint32 index, ScriptContext* scriptContext)
+    Var JavascriptOperators::OP_GetMethodElement_UInt32(Var instance, uint32_t index, ScriptContext* scriptContext)
     {
         JIT_HELPER_REENTRANT_HEADER(Op_GetMethodElement_UInt32);
         JIT_HELPER_SAME_ATTRIBUTES(Op_GetMethodElement_UInt32, Op_GetMethodElement);
@@ -4257,7 +4257,7 @@ using namespace Js;
         ImplicitCallFlags savedImplicitCallFlags = threadContext->GetImplicitCallFlags();
         threadContext->ClearImplicitCallFlags();
 
-        uint32 indexVal;
+        uint32_t indexVal;
         PropertyRecord const * propertyRecord = nullptr;
         Var value = NULL;
         BOOL hasProperty = FALSE;
@@ -4324,7 +4324,7 @@ using namespace Js;
         JIT_HELPER_END(Op_GetMethodElement);
     }
 
-    BOOL JavascriptOperators::OP_SetElementI_UInt32(Var instance, uint32 index, Var value, ScriptContext* scriptContext, PropertyOperationFlags flags)
+    BOOL JavascriptOperators::OP_SetElementI_UInt32(Var instance, uint32_t index, Var value, ScriptContext* scriptContext, PropertyOperationFlags flags)
     {
         JIT_HELPER_REENTRANT_HEADER(Op_SetElementI_UInt32);
         JIT_HELPER_SAME_ATTRIBUTES(Op_SetElementI_UInt32, Op_SetElementI);
@@ -4551,7 +4551,7 @@ using namespace Js;
                     int indexInt = TaggedInt::ToInt32(index);
                     if (indexInt >= 0 && scriptContext->optimizationOverrides.IsEnabledArraySetElementFastPath())
                     {
-                        UnsafeVarTo<JavascriptArray>(instance)->SetItem((uint32)indexInt, value, flags);
+                        UnsafeVarTo<JavascriptArray>(instance)->SetItem((uint32_t)indexInt, value, flags);
                         return TRUE;
                     }
                     break;
@@ -4561,7 +4561,7 @@ using namespace Js;
             else if (JavascriptNumber::Is_NoTaggedIntCheck(index))
             {
                 double dIndexValue = JavascriptNumber::GetValue(index);
-                uint32 uint32Index = JavascriptConversion::ToUInt32(index, scriptContext);
+                uint32_t uint32Index = JavascriptConversion::ToUInt32(index, scriptContext);
 
                 if ((double)uint32Index == dIndexValue && !TaggedInt::IsOverflow(uint32Index))
                 {
@@ -4583,7 +4583,7 @@ using namespace Js;
     BOOL JavascriptOperators::SetElementIHelper(Var receiver, RecyclableObject* object, Var index, Var value, ScriptContext* scriptContext, PropertyOperationFlags flags)
     {
         IndexType indexType;
-        uint32 indexVal = 0;
+        uint32_t indexVal = 0;
         PropertyRecord const * propertyRecord = nullptr;
         JavascriptString * propertyNameString = nullptr;
         PropertyValueInfo propertyValueInfo;
@@ -4662,7 +4662,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 
     BOOL JavascriptOperators::OP_SetNativeIntElementI_UInt32_NoConvert(
         Var instance,
-        uint32 aElementIndex,
+        uint32_t aElementIndex,
         int32 iValue,
         ScriptContext* scriptContext,
         PropertyOperationFlags flags)
@@ -4719,7 +4719,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 
     BOOL JavascriptOperators::OP_SetNativeFloatElementI_UInt32_NoConvert(
         Var instance,
-        uint32 aElementIndex,
+        uint32_t aElementIndex,
         ScriptContext* scriptContext,
         PropertyOperationFlags flags,
         double dValue)
@@ -4773,7 +4773,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             if (indexInt >= 0 && scriptContext->optimizationOverrides.IsEnabledArraySetElementFastPath())
             {
                 JavascriptNativeIntArray *arr = VarTo<JavascriptNativeIntArray>(instance);
-                if (!(arr->TryGrowHeadSegmentAndSetItem<int32, JavascriptNativeIntArray>((uint32)indexInt, iValue)))
+                if (!(arr->TryGrowHeadSegmentAndSetItem<int32, JavascriptNativeIntArray>((uint32_t)indexInt, iValue)))
                 {
                     arr->SetItem(indexInt, iValue);
                 }
@@ -4788,7 +4788,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 
     BOOL JavascriptOperators::OP_SetNativeIntElementI_UInt32(
         Var instance,
-        uint32 aElementIndex,
+        uint32_t aElementIndex,
         int32 iValue,
         ScriptContext* scriptContext,
         PropertyOperationFlags flags)
@@ -4842,7 +4842,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             if (indexInt >= 0 && scriptContext->optimizationOverrides.IsEnabledArraySetElementFastPath())
             {
                 JavascriptNativeFloatArray *arr = VarTo<JavascriptNativeFloatArray>(instance);
-                if (!(arr->TryGrowHeadSegmentAndSetItem<double, JavascriptNativeFloatArray>((uint32)indexInt, dValue)))
+                if (!(arr->TryGrowHeadSegmentAndSetItem<double, JavascriptNativeFloatArray>((uint32_t)indexInt, dValue)))
                 {
                     arr->SetItem(indexInt, dValue);
                 }
@@ -4857,7 +4857,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 
     BOOL JavascriptOperators::OP_SetNativeFloatElementI_UInt32(
         Var instance,
-        uint32 aElementIndex,
+        uint32_t aElementIndex,
         ScriptContext* scriptContext,
         PropertyOperationFlags flags,
         double dValue)
@@ -5115,7 +5115,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         JIT_HELPER_END(Op_Memset);
     }
 
-    Var JavascriptOperators::OP_DeleteElementI_UInt32(Var instance, uint32 index, ScriptContext* scriptContext, PropertyOperationFlags propertyOperationFlags)
+    Var JavascriptOperators::OP_DeleteElementI_UInt32(Var instance, uint32_t index, ScriptContext* scriptContext, PropertyOperationFlags propertyOperationFlags)
     {
         JIT_HELPER_REENTRANT_HEADER(Op_DeleteElementI_UInt32);
         JIT_HELPER_SAME_ATTRIBUTES(Op_DeleteElementI_UInt32, Op_DeleteElementI);
@@ -5160,7 +5160,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             JavascriptError::ThrowTypeError(scriptContext, JSERR_Property_CannotDelete_NullOrUndefined, GetPropertyDisplayNameForError(index, scriptContext));
         }
 
-        uint32 indexVal;
+        uint32_t indexVal;
         PropertyRecord const * propertyRecord = nullptr;
         JavascriptString * propertyNameString = nullptr;
         BOOL result = TRUE;
@@ -5696,7 +5696,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
                     ?   scriptContext->GetLibrary()->GetObjectHeaderInlinedLiteralType((uint16)propIds->count)
                     :   scriptContext->GetLibrary()->GetObjectLiteralType(
                             static_cast<PropertyIndex>(
-                                min(propIds->count, static_cast<uint32>(MaxPreInitializedObjectTypeInlineSlotCount))));
+                                min(propIds->count, static_cast<uint32_t>(MaxPreInitializedObjectTypeInlineSlotCount))));
             newType = PathTypeHandlerBase::CreateTypeForNewScObject(scriptContext, objectType, propIds, false);
             *literalType = newType;
         }
@@ -5761,7 +5761,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
                 ?   DynamicTypeHandler::RoundUpObjectHeaderInlinedInlineSlotCapacity(static_cast<PropertyIndex>(propIds->count))
                 :   DynamicTypeHandler::RoundUpInlineSlotCapacity(
                         static_cast<PropertyIndex>(
-                            min(propIds->count, static_cast<uint32>(MaxPreInitializedObjectTypeInlineSlotCount))));
+                            min(propIds->count, static_cast<uint32_t>(MaxPreInitializedObjectTypeInlineSlotCount))));
     }
 
     Var JavascriptOperators::OP_InitCachedScope(Var varFunc, const Js::PropertyIdArray *propIds, Field(DynamicType*)* literalType, bool formalsAreLetDecls, ScriptContext *scriptContext)
@@ -5947,7 +5947,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     Var JavascriptOperators::AddVarsToArraySegment(SparseArraySegment<Var> * segment, const Js::VarArray *vars)
     {
         JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(ArraySegmentVars);
-        uint32 count = vars->count;
+        uint32_t count = vars->count;
 
         Assert(segment->left == 0);
         Assert(count <= segment->size);
@@ -5965,7 +5965,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 
     void JavascriptOperators::AddIntsToArraySegment(SparseArraySegment<int32> * segment, const Js::AuxArray<int32> *ints)
     {
-        uint32 count = ints->count;
+        uint32_t count = ints->count;
 
         Assert(segment->left == 0);
         Assert(count <= segment->size);
@@ -5980,7 +5980,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 
     void JavascriptOperators::AddFloatsToArraySegment(SparseArraySegment<double> * segment, const Js::AuxArray<double> *doubles)
     {
-        uint32 count = doubles->count;
+        uint32_t count = doubles->count;
 
         Assert(segment->left == 0);
         Assert(count <= segment->size);
@@ -6726,7 +6726,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 #endif
     }
 
-    Var JavascriptOperators::NewScObject(const Var callee, const Arguments args, ScriptContext *const scriptContext, const Js::AuxArray<uint32> *spreadIndices)
+    Var JavascriptOperators::NewScObject(const Var callee, const Arguments args, ScriptContext *const scriptContext, const Js::AuxArray<uint32_t> *spreadIndices)
     {
         Assert(callee);
         Assert(args.Info.Count != 0);
@@ -7216,15 +7216,15 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     }
 
     Var JavascriptOperators::ConvertToUnmappedArguments(HeapArgumentsObject *argumentsObject,
-        uint32 paramCount,
+        uint32_t paramCount,
         Var *paramAddr,
         DynamicObject* frameObject,
         Js::PropertyIdArray *propIds,
-        uint32 formalsCount,
+        uint32_t formalsCount,
         ScriptContext* scriptContext)
     {
         Var *paramIter = paramAddr;
-        uint32 i = 0;
+        uint32_t i = 0;
 
         for (paramIter = paramAddr + i; i < paramCount; i++, paramIter++)
         {
@@ -7242,14 +7242,14 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         return argumentsObject;
     }
 
-    Var JavascriptOperators::LoadHeapArguments(JavascriptFunction *funcCallee, uint32 actualsCount, Var *paramAddr, Var frameObj, Var vArray, ScriptContext* scriptContext, bool nonSimpleParamList)
+    Var JavascriptOperators::LoadHeapArguments(JavascriptFunction *funcCallee, uint32_t actualsCount, Var *paramAddr, Var frameObj, Var vArray, ScriptContext* scriptContext, bool nonSimpleParamList)
     {
         JIT_HELPER_NOT_REENTRANT_HEADER(Op_LoadHeapArguments, reentrancylock, scriptContext->GetThreadContext());
         AssertMsg(actualsCount != (unsigned int)-1, "Loading the arguments object in the global function?");
 
         // Create and initialize the Arguments object.
 
-        uint32 formalsCount = 0;
+        uint32_t formalsCount = 0;
         Js::PropertyIdArray *propIds = nullptr;
         if (vArray != scriptContext->GetLibrary()->GetNull())
         {
@@ -7263,11 +7263,11 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         JIT_HELPER_END(Op_LoadHeapArguments);
     }
 
-    Var JavascriptOperators::LoadHeapArgsCached(JavascriptFunction *funcCallee, uint32 actualsCount, uint32 formalsCount, Var *paramAddr, Var frameObj, ScriptContext* scriptContext, bool nonSimpleParamList)
+    Var JavascriptOperators::LoadHeapArgsCached(JavascriptFunction *funcCallee, uint32_t actualsCount, uint32_t formalsCount, Var *paramAddr, Var frameObj, ScriptContext* scriptContext, bool nonSimpleParamList)
     {
         JIT_HELPER_NOT_REENTRANT_HEADER(Op_LoadHeapArgsCached, reentrancylock, scriptContext->GetThreadContext());
         // Disregard the "this" param.
-        AssertMsg(actualsCount != (uint32)-1 && formalsCount != (uint32)-1,
+        AssertMsg(actualsCount != (uint32_t)-1 && formalsCount != (uint32_t)-1,
                   "Loading the arguments object in the global function?");
 
         HeapArgumentsObject *argsObj = JavascriptOperators::CreateHeapArguments(funcCallee, actualsCount, formalsCount, frameObj, scriptContext);
@@ -7276,13 +7276,13 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         JIT_HELPER_END(Op_LoadHeapArgsCached);
     }
 
-    Var JavascriptOperators::FillScopeObject(JavascriptFunction *funcCallee, uint32 actualsCount, uint32 formalsCount, Var frameObj, Var * paramAddr,
+    Var JavascriptOperators::FillScopeObject(JavascriptFunction *funcCallee, uint32_t actualsCount, uint32_t formalsCount, Var frameObj, Var * paramAddr,
         Js::PropertyIdArray *propIds, HeapArgumentsObject * argsObj, ScriptContext * scriptContext, bool nonSimpleParamList, bool useCachedScope)
     {
         Assert(formalsCount == 0 || frameObj != nullptr);
 
         // Transfer formal arguments (that were actually passed) from their ArgIn slots to the local frame object.
-        uint32 i;
+        uint32_t i;
 
         Var *tmpAddr = paramAddr;
 
@@ -7370,7 +7370,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         return argsObj;
     }
 
-    HeapArgumentsObject *JavascriptOperators::CreateHeapArguments(JavascriptFunction *funcCallee, uint32 actualsCount, uint32 formalsCount, Var frameObj, ScriptContext* scriptContext)
+    HeapArgumentsObject *JavascriptOperators::CreateHeapArguments(JavascriptFunction *funcCallee, uint32_t actualsCount, uint32_t formalsCount, Var frameObj, ScriptContext* scriptContext)
     {
         JavascriptLibrary *library = scriptContext->GetLibrary();
         HeapArgumentsObject *argsObj = library->CreateHeapArguments(frameObj, formalsCount, !!funcCallee->IsStrictMode());
@@ -7673,7 +7673,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         RecyclableObject* object = VarTo<RecyclableObject>(instance);
         BOOL result;
         PropertyRecord const * propertyRecord = nullptr;
-        uint32 index;
+        uint32_t index;
         IndexType indexType;
 
         // Fast path for JavascriptSymbols and PropertyStrings
@@ -8866,7 +8866,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         scriptContext->GetOrAddPropertyRecord(buffer, JavascriptString::GetBufferLength(buffer), propertyRecord);
     }
 
-    void JavascriptOperators::GetPropertyIdForInt(uint32 value, ScriptContext* scriptContext, PropertyRecord const ** propertyRecord)
+    void JavascriptOperators::GetPropertyIdForInt(uint32_t value, ScriptContext* scriptContext, PropertyRecord const ** propertyRecord)
     {
         GetPropertyIdForInt(static_cast<unsigned long>(value), scriptContext, propertyRecord);
     }
@@ -9223,10 +9223,10 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             }
 
             PropertyDescriptor newLenDesc = descriptor;
-            uint32 newLen = ES5Array::ToLengthValue(descriptor.GetValue(), scriptContext);
+            uint32_t newLen = ES5Array::ToLengthValue(descriptor.GetValue(), scriptContext);
             newLenDesc.SetValue(JavascriptNumber::ToVar(newLen, scriptContext));
 
-            uint32 oldLen = arr->GetLength();
+            uint32_t oldLen = arr->GetLength();
             if (newLen >= oldLen)
             {
                 return DefineOwnPropertyDescriptor(arr, PropertyIds::length, newLenDesc, throwOnError, scriptContext);
@@ -9280,7 +9280,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             return true;
         }
 
-        uint32 index;
+        uint32_t index;
         if (scriptContext->IsNumericPropertyId(propId, &index))
         {
             if (index >= arr->GetLength() && !arr->IsWritable(PropertyIds::length))
@@ -9316,9 +9316,9 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         // iii. If numericIndex < 0, return false.
 
         if (propertyRecord->IsNumeric()) {
-            uint32 uint32Index = propertyRecord->GetNumericValue();
+            uint32_t uint32Index = propertyRecord->GetNumericValue();
             // iv. Let length be O.[[ArrayLength]].
-            uint32 length = typedArray->GetLength();
+            uint32_t length = typedArray->GetLength();
             // v. If numericIndex >= length, return false.
             if (uint32Index >= length)
             {
@@ -10348,12 +10348,12 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             }
             break;
         case JsUint32Type:
-            AnalysisAssert(elementSize == sizeof(uint32));
+            AnalysisAssert(elementSize == sizeof(uint32_t));
             for (uint32_t i = 0; i < length; i++)
             {
                 element = GetElementAtIndex(arrayObject, i, scriptContext);
-                AnalysisAssert((i + 1) * sizeof(uint32) <= allocSize);
-                ((uint32*)buffer)[i] = Js::JavascriptConversion::ToUInt32(element, scriptContext);
+                AnalysisAssert((i + 1) * sizeof(uint32_t) <= allocSize);
+                ((uint32_t*)buffer)[i] = Js::JavascriptConversion::ToUInt32(element, scriptContext);
             }
             break;
         case JsInt64Type:
@@ -11136,7 +11136,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         return JavascriptOperators::GetPropertyReference(instance, instance, propertyId, value, requestContext, info);
     }
 
-    Var JavascriptOperators::GetItem(RecyclableObject* instance, uint32 index, ScriptContext* requestContext)
+    Var JavascriptOperators::GetItem(RecyclableObject* instance, uint32_t index, ScriptContext* requestContext)
     {
         Var value;
         if (GetItem(instance, index, &value, requestContext))
@@ -11162,20 +11162,20 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     {
         if (index < JavascriptArray::InvalidIndex)
         {
-            // In case index fits in uint32, we can avoid the (slower) big-index path
-            return GetItem(instance, static_cast<uint32>(index), value, requestContext);
+            // In case index fits in uint32_t, we can avoid the (slower) big-index path
+            return GetItem(instance, static_cast<uint32_t>(index), value, requestContext);
         }
         PropertyRecord const * propertyRecord = nullptr;
         JavascriptOperators::GetPropertyIdForInt(index, requestContext, &propertyRecord);
         return JavascriptOperators::GetProperty(instance, propertyRecord->GetPropertyId(), value, requestContext);
     }
 
-    BOOL JavascriptOperators::GetItem(RecyclableObject* instance, uint32 index, Var* value, ScriptContext* requestContext)
+    BOOL JavascriptOperators::GetItem(RecyclableObject* instance, uint32_t index, Var* value, ScriptContext* requestContext)
     {
         return JavascriptOperators::GetItem(instance, instance, index, value, requestContext);
     }
 
-    BOOL JavascriptOperators::GetItemReference(RecyclableObject* instance, uint32 index, Var* value, ScriptContext* requestContext)
+    BOOL JavascriptOperators::GetItemReference(RecyclableObject* instance, uint32_t index, Var* value, ScriptContext* requestContext)
     {
         return GetItemReference(instance, instance, index, value, requestContext);
     }
@@ -11218,7 +11218,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         return JavascriptOperators::SetProperty(instance, object, propertyId, newValue, &info, requestContext, propertyOperationFlags);
     }
 
-    BOOL JavascriptOperators::TryConvertToUInt32(const char16_t* str, int length, uint32* intVal)
+    BOOL JavascriptOperators::TryConvertToUInt32(const char16_t* str, int length, uint32_t* intVal)
     {
         return NumberUtilities::TryConvertToUInt32(str, length, intVal);
     }

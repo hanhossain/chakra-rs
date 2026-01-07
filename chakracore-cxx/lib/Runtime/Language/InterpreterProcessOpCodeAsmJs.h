@@ -795,7 +795,7 @@ if (switchProfileMode) \
     case OpCodeAsmJs::name: \
     { \
     PROCESS_READ_LAYOUT_ASMJS(name, Uint32x4_1Int1, suffix); \
-    SetRegRawSimd(playout->U4_0, func((uint32)GetRegRawInt(playout->I1))); \
+    SetRegRawSimd(playout->U4_0, func((uint32_t)GetRegRawInt(playout->I1))); \
     break; \
     }
 #define PROCESS_SIMD_I1toU4_1(name, func) PROCESS_SIMD_I1toU4_1_COMMON(name, func,)
@@ -937,7 +937,7 @@ if (switchProfileMode) \
     case OpCodeAsmJs::name: \
     { \
     PROCESS_READ_LAYOUT_ASMJS(name, Uint32x4_1Int4, suffix); \
-    SetRegRawSimd(playout->U4_0, func((uint32)GetRegRawInt(playout->I1), (uint32)GetRegRawInt(playout->I2), (uint32)GetRegRawInt(playout->I3), (uint32)GetRegRawInt(playout->I4))); \
+    SetRegRawSimd(playout->U4_0, func((uint32_t)GetRegRawInt(playout->I1), (uint32_t)GetRegRawInt(playout->I2), (uint32_t)GetRegRawInt(playout->I3), (uint32_t)GetRegRawInt(playout->I4))); \
     break; \
     }
 #define PROCESS_SIMD_I4toU4_1(name, func) PROCESS_SIMD_I4toU4_1_COMMON(name, func,)
@@ -1132,7 +1132,7 @@ if (switchProfileMode) \
     case OpCodeAsmJs::name: \
     { \
     PROCESS_READ_LAYOUT_ASMJS(name, Int8x16_2Int16, suffix); \
-    uint32 lanes[16]; \
+    uint32_t lanes[16]; \
     lanes[0] = GetRegRawInt(playout->I2);   lanes[1] = GetRegRawInt(playout->I3); \
     lanes[2] = GetRegRawInt(playout->I4);   lanes[3] = GetRegRawInt(playout->I5); \
     lanes[4] = GetRegRawInt(playout->I6);   lanes[5] = GetRegRawInt(playout->I7); \
@@ -1151,7 +1151,7 @@ if (switchProfileMode) \
     case OpCodeAsmJs::name: \
     { \
     PROCESS_READ_LAYOUT_ASMJS(name, Int8x16_3Int16, suffix); \
-    uint32 lanes[16]; \
+    uint32_t lanes[16]; \
     lanes[0] = GetRegRawInt(playout->I3);   lanes[1] = GetRegRawInt(playout->I4); \
     lanes[2] = GetRegRawInt(playout->I5);   lanes[3] = GetRegRawInt(playout->I6); \
     lanes[4] = GetRegRawInt(playout->I7);   lanes[5] = GetRegRawInt(playout->I8); \
@@ -1995,7 +1995,7 @@ if (switchProfileMode) \
     case OpCodeAsmJs::name: \
     { \
     PROCESS_READ_LAYOUT_ASMJS(name, Uint32x4_2Int2, suffix); \
-    SetRegRawSimd(playout->U4_0, func(GetRegRawSimd(playout->U4_1), GetRegRawInt(playout->I2), (uint32)GetRegRawInt(playout->I3))); \
+    SetRegRawSimd(playout->U4_0, func(GetRegRawSimd(playout->U4_1), GetRegRawInt(playout->I2), (uint32_t)GetRegRawInt(playout->I3))); \
     break; \
     }
 #define PROCESS_SIMD_U4_1I2toU4_1(name, func) PROCESS_SIMD_U4_1I2toU4_1_COMMON(name, func,)
@@ -2050,7 +2050,7 @@ if (switchProfileMode) \
     case OpCodeAsmJs::name: \
     { \
     PROCESS_READ_LAYOUT_ASMJS(name, Float32x4_2Int4, suffix); \
-    uint32 lanes[4]; \
+    uint32_t lanes[4]; \
     lanes[0] = GetRegRawInt(playout->I2);   lanes[1] = GetRegRawInt(playout->I3); \
     lanes[2] = GetRegRawInt(playout->I4);   lanes[3] = GetRegRawInt(playout->I5); \
     SetRegRawSimd(playout->F4_0, func(GetRegRawSimd(playout->F4_1), GetRegRawSimd(playout->F4_1), 4, lanes)); \
@@ -2063,7 +2063,7 @@ if (switchProfileMode) \
     case OpCodeAsmJs::name: \
     { \
     PROCESS_READ_LAYOUT_ASMJS(name, Float32x4_3Int4, suffix); \
-    uint32 lanes[4]; \
+    uint32_t lanes[4]; \
     lanes[0] = GetRegRawInt(playout->I3); lanes[1] = GetRegRawInt(playout->I4); \
     lanes[2] = GetRegRawInt(playout->I5); lanes[3] = GetRegRawInt(playout->I6); \
     SetRegRawSimd(playout->F4_0, func(GetRegRawSimd(playout->F4_1), GetRegRawSimd(playout->F4_2), 4, lanes)); \
@@ -2076,7 +2076,7 @@ if (switchProfileMode) \
     case OpCodeAsmJs::name: \
     { \
     PROCESS_READ_LAYOUT_ASMJS(name, Int32x4_2Int4, suffix); \
-    uint32 lanes[4]; \
+    uint32_t lanes[4]; \
     lanes[0] = GetRegRawInt(playout->I2);   lanes[1] = GetRegRawInt(playout->I3); \
     lanes[2] = GetRegRawInt(playout->I4);   lanes[3] = GetRegRawInt(playout->I5); \
     SetRegRawSimd(playout->I4_0, func(GetRegRawSimd(playout->I4_1), GetRegRawSimd(playout->I4_1), 4, lanes)); \
@@ -2089,7 +2089,7 @@ if (switchProfileMode) \
     case OpCodeAsmJs::name: \
     { \
     PROCESS_READ_LAYOUT_ASMJS(name, Int32x4_3Int4, suffix); \
-    uint32 lanes[4]; \
+    uint32_t lanes[4]; \
     lanes[0] = GetRegRawInt(playout->I3); lanes[1] = GetRegRawInt(playout->I4); \
     lanes[2] = GetRegRawInt(playout->I5); lanes[3] = GetRegRawInt(playout->I6); \
     SetRegRawSimd(playout->I4_0, func(GetRegRawSimd(playout->I4_1), GetRegRawSimd(playout->I4_2), 4, lanes)); \
@@ -2103,7 +2103,7 @@ if (switchProfileMode) \
     case OpCodeAsmJs::name: \
     { \
     PROCESS_READ_LAYOUT_ASMJS(name, Int16x8_2Int8, suffix); \
-    uint32 lanes[8]; \
+    uint32_t lanes[8]; \
     lanes[0] = GetRegRawInt(playout->I2); lanes[1] = GetRegRawInt(playout->I3); \
     lanes[2] = GetRegRawInt(playout->I4); lanes[3] = GetRegRawInt(playout->I5); \
     lanes[4] = GetRegRawInt(playout->I6); lanes[5] = GetRegRawInt(playout->I7); \
@@ -2118,7 +2118,7 @@ if (switchProfileMode) \
     case OpCodeAsmJs::name: \
     { \
     PROCESS_READ_LAYOUT_ASMJS(name, Int16x8_3Int8, suffix); \
-    uint32 lanes[8]; \
+    uint32_t lanes[8]; \
     lanes[0] = GetRegRawInt(playout->I3); lanes[1] = GetRegRawInt(playout->I4); \
     lanes[2] = GetRegRawInt(playout->I5); lanes[3] = GetRegRawInt(playout->I6); \
     lanes[4] = GetRegRawInt(playout->I7); lanes[5] = GetRegRawInt(playout->I8); \
@@ -2133,7 +2133,7 @@ if (switchProfileMode) \
     case OpCodeAsmJs::name: \
     { \
     PROCESS_READ_LAYOUT_ASMJS(name, Uint32x4_2Int4, suffix); \
-    uint32 lanes[4]; \
+    uint32_t lanes[4]; \
     lanes[0] = GetRegRawInt(playout->I2);   lanes[1] = GetRegRawInt(playout->I3); \
     lanes[2] = GetRegRawInt(playout->I4);   lanes[3] = GetRegRawInt(playout->I5); \
     SetRegRawSimd(playout->U4_0, func(GetRegRawSimd(playout->U4_1), GetRegRawSimd(playout->U4_1), 4, lanes)); \
@@ -2146,7 +2146,7 @@ if (switchProfileMode) \
     case OpCodeAsmJs::name: \
     { \
     PROCESS_READ_LAYOUT_ASMJS(name, Uint32x4_3Int4, suffix); \
-    uint32 lanes[4]; \
+    uint32_t lanes[4]; \
     lanes[0] = GetRegRawInt(playout->I3); lanes[1] = GetRegRawInt(playout->I4); \
     lanes[2] = GetRegRawInt(playout->I5); lanes[3] = GetRegRawInt(playout->I6); \
     SetRegRawSimd(playout->U4_0, func(GetRegRawSimd(playout->U4_1), GetRegRawSimd(playout->U4_2), 4, lanes)); \
@@ -2159,7 +2159,7 @@ if (switchProfileMode) \
     case OpCodeAsmJs::name: \
     { \
     PROCESS_READ_LAYOUT_ASMJS(name, Uint16x8_2Int8, suffix); \
-    uint32 lanes[8]; \
+    uint32_t lanes[8]; \
     lanes[0] = GetRegRawInt(playout->I2); lanes[1] = GetRegRawInt(playout->I3); \
     lanes[2] = GetRegRawInt(playout->I4); lanes[3] = GetRegRawInt(playout->I5); \
     lanes[4] = GetRegRawInt(playout->I6); lanes[5] = GetRegRawInt(playout->I7); \
@@ -2174,7 +2174,7 @@ if (switchProfileMode) \
     case OpCodeAsmJs::name: \
     { \
     PROCESS_READ_LAYOUT_ASMJS(name, Uint16x8_3Int8, suffix); \
-    uint32 lanes[8]; \
+    uint32_t lanes[8]; \
     lanes[0] = GetRegRawInt(playout->I3); lanes[1] = GetRegRawInt(playout->I4); \
     lanes[2] = GetRegRawInt(playout->I5); lanes[3] = GetRegRawInt(playout->I6); \
     lanes[4] = GetRegRawInt(playout->I7); lanes[5] = GetRegRawInt(playout->I8); \
@@ -2189,7 +2189,7 @@ if (switchProfileMode) \
     case OpCodeAsmJs::name: \
     { \
     PROCESS_READ_LAYOUT_ASMJS(name, Uint8x16_2Int16, suffix); \
-    uint32 lanes[16]; \
+    uint32_t lanes[16]; \
     lanes[0] = GetRegRawInt(playout->I2);   lanes[1] = GetRegRawInt(playout->I3); \
     lanes[2] = GetRegRawInt(playout->I4);   lanes[3] = GetRegRawInt(playout->I5); \
     lanes[4] = GetRegRawInt(playout->I6);   lanes[5] = GetRegRawInt(playout->I7); \
@@ -2208,7 +2208,7 @@ if (switchProfileMode) \
     case OpCodeAsmJs::name: \
     { \
     PROCESS_READ_LAYOUT_ASMJS(name, Uint8x16_3Int16, suffix); \
-    uint32 lanes[16]; \
+    uint32_t lanes[16]; \
     lanes[0] = GetRegRawInt(playout->I3);   lanes[1] = GetRegRawInt(playout->I4); \
     lanes[2] = GetRegRawInt(playout->I5);   lanes[3] = GetRegRawInt(playout->I6); \
     lanes[4] = GetRegRawInt(playout->I7);   lanes[5] = GetRegRawInt(playout->I8); \

@@ -115,7 +115,7 @@ LazyJSONString::ReconstructObject(_In_ JSONObject* valueList) const
 JavascriptArray*
 LazyJSONString::ReconstructArray(_In_ JSONArray* jsonArray) const
 {
-    const uint32 length = jsonArray->length;
+    const uint32_t length = jsonArray->length;
     JavascriptArray* arr = this->GetLibrary()->CreateArrayLiteral(length);
     JSONProperty* prop = jsonArray->arr;
     for (uint i = 0; i < length; ++i)

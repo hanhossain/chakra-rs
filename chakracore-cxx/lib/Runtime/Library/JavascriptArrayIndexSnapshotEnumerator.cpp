@@ -20,7 +20,7 @@ namespace Js
 
         if (!doneArray)
         {
-            uint32 lastIndex = index;
+            uint32_t lastIndex = index;
             index = arrayObject->GetNextIndex(index);
             if (index >= initialLength) // End of array
             {

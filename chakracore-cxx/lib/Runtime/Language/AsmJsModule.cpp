@@ -349,7 +349,7 @@ namespace Js
             }
             else if (ParserWrapper::IsUnsigned(pnode))
             {
-                func->AddConst<int>((int)(uint32)d);
+                func->AddConst<int>((int)(uint32_t)d);
             }
             else
             {
@@ -869,8 +869,8 @@ namespace Js
                 {
                     var->SetVarType(AsmJsVarType::Int);
                     var->SetLocation(func->AcquireRegister<int>());
-                    var->SetConstInitialiser((int)((uint32)pnodeInit->AsParseNodeFloat()->dbl));
-                    loc = func->GetConstRegister<int>((uint32)pnodeInit->AsParseNodeFloat()->dbl);
+                    var->SetConstInitialiser((int)((uint32_t)pnodeInit->AsParseNodeFloat()->dbl));
+                    loc = func->GetConstRegister<int>((uint32_t)pnodeInit->AsParseNodeFloat()->dbl);
                 }
                 else if (pnodeInit->nop == knopFlt)
                 {
@@ -1385,7 +1385,7 @@ namespace Js
             {
                 var->SetVarType(AsmJsVarType::Int);
                 var->SetLocation(mIntVarSpace.AcquireRegister());
-                var->SetConstInitialiser((int)((uint32)pnode->AsParseNodeFloat()->dbl));
+                var->SetConstInitialiser((int)((uint32_t)pnode->AsParseNodeFloat()->dbl));
             }
             else if (pnode->AsParseNodeFloat()->maybeInt)
             {
@@ -1525,7 +1525,7 @@ namespace Js
     {
         Assert(mExports.Count() == 0 && func);
         mExportFuncIndex = func->GetFunctionIndex();
-        return mExports.Count() == 0 && (uint32)mExportFuncIndex < (uint32)mFunctionArray.Count();
+        return mExports.Count() == 0 && (uint32_t)mExportFuncIndex < (uint32_t)mFunctionArray.Count();
     }
 
     AsmJsFunctionDeclaration* AsmJsModuleCompiler::LookupFunction(PropertyName name)
@@ -1872,7 +1872,7 @@ namespace Js
                     value = TypedArray<uint16, false, isOptimizedBuffer>::Create(asmBuffer, 0, asmBuffer->GetByteLength() >> 1, scriptContext->GetLibrary());
                     break;
                 case ArrayBufferView::TYPE_UINT32:
-                    value = TypedArray<uint32, false, isOptimizedBuffer>::Create(asmBuffer, 0, asmBuffer->GetByteLength() >> 2, scriptContext->GetLibrary());
+                    value = TypedArray<uint32_t, false, isOptimizedBuffer>::Create(asmBuffer, 0, asmBuffer->GetByteLength() >> 2, scriptContext->GetLibrary());
                     break;
                 default:
                     Assume(UNREACHED);

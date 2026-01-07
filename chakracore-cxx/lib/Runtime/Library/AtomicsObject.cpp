@@ -51,7 +51,7 @@ namespace Js
         return arrayBuffer;
     }
 
-    uint32 AtomicsObject::ValidateAtomicAccess(Var typedArray, Var requestIndex, ScriptContext *scriptContext)
+    uint32_t AtomicsObject::ValidateAtomicAccess(Var typedArray, Var requestIndex, ScriptContext *scriptContext)
     {
         Assert(VarIs<TypedArrayBase>(typedArray));
 
@@ -79,13 +79,13 @@ namespace Js
             JavascriptError::ThrowRangeError(scriptContext, JSERR_InvalidTypedArrayIndex);
         }
 
-        return (uint32)accessIndex;
+        return (uint32_t)accessIndex;
     }
 
-    TypedArrayBase * AtomicsObject::ValidateAndGetTypedArray(Var typedArray, Var index, uint32 *accessIndex, ScriptContext *scriptContext, bool onlyInt32)
+    TypedArrayBase * AtomicsObject::ValidateAndGetTypedArray(Var typedArray, Var index, uint32_t *accessIndex, ScriptContext *scriptContext, bool onlyInt32)
     {
         ValidateSharedIntegerTypedArray(typedArray, scriptContext, onlyInt32);
-        uint32 i = ValidateAtomicAccess(typedArray, index, scriptContext);
+        uint32_t i = ValidateAtomicAccess(typedArray, index, scriptContext);
         if (accessIndex != nullptr)
         {
             *accessIndex = i;
@@ -98,7 +98,7 @@ namespace Js
     {
         ATOMICS_FUNCTION_ENTRY_CHECKS(3, "Atomics.add");
 
-        uint32 accessIndex = 0;
+        uint32_t accessIndex = 0;
         TypedArrayBase *typedArrayBase = ValidateAndGetTypedArray(args[1], args[2], &accessIndex, scriptContext);
         return typedArrayBase->TypedAdd(accessIndex, args[3]);
     }
@@ -107,7 +107,7 @@ namespace Js
     {
         ATOMICS_FUNCTION_ENTRY_CHECKS(3, "Atomics.and");
 
-        uint32 accessIndex = 0;
+        uint32_t accessIndex = 0;
         TypedArrayBase *typedArrayBase = ValidateAndGetTypedArray(args[1], args[2], &accessIndex, scriptContext);
         return typedArrayBase->TypedAnd(accessIndex, args[3]);
     }
@@ -116,7 +116,7 @@ namespace Js
     {
         ATOMICS_FUNCTION_ENTRY_CHECKS(4, "Atomics.compareExchange");
 
-        uint32 accessIndex = 0;
+        uint32_t accessIndex = 0;
         TypedArrayBase *typedArrayBase = ValidateAndGetTypedArray(args[1], args[2], &accessIndex, scriptContext);
 
         return typedArrayBase->TypedCompareExchange(accessIndex, args[3], args[4]);
@@ -126,7 +126,7 @@ namespace Js
     {
         ATOMICS_FUNCTION_ENTRY_CHECKS(3, "Atomics.exchange");
 
-        uint32 accessIndex = 0;
+        uint32_t accessIndex = 0;
         TypedArrayBase *typedArrayBase = ValidateAndGetTypedArray(args[1], args[2], &accessIndex, scriptContext);
         return typedArrayBase->TypedExchange(accessIndex, args[3]);
     }
@@ -134,7 +134,7 @@ namespace Js
     Var AtomicsObject::EntryIsLockFree(RecyclableObject* function, CallInfo callInfo, ...)
     {
         ATOMICS_FUNCTION_ENTRY_CHECKS(1, "Atomics.isLockFree");
-        uint32 size = JavascriptConversion::ToUInt32(args[1], scriptContext);
+        uint32_t size = JavascriptConversion::ToUInt32(args[1], scriptContext);
         // TODO : Currently for the size 1, 2 and 4 we are treating them lock free, we will take a look at this later.
         return (size == 1 || size == 2 || size == 4) ? scriptContext->GetLibrary()->GetTrue() : scriptContext->GetLibrary()->GetFalse();
     }
@@ -143,7 +143,7 @@ namespace Js
     {
         ATOMICS_FUNCTION_ENTRY_CHECKS(2, "Atomics.load");
 
-        uint32 accessIndex = 0;
+        uint32_t accessIndex = 0;
         TypedArrayBase *typedArrayBase = ValidateAndGetTypedArray(args[1], args[2], &accessIndex, scriptContext);
         return typedArrayBase->TypedLoad(accessIndex);
     }
@@ -152,7 +152,7 @@ namespace Js
     {
         ATOMICS_FUNCTION_ENTRY_CHECKS(3, "Atomics.or");
 
-        uint32 accessIndex = 0;
+        uint32_t accessIndex = 0;
         TypedArrayBase *typedArrayBase = ValidateAndGetTypedArray(args[1], args[2], &accessIndex, scriptContext);
         return typedArrayBase->TypedOr(accessIndex, args[3]);
     }
@@ -161,7 +161,7 @@ namespace Js
     {
         ATOMICS_FUNCTION_ENTRY_CHECKS(3, "Atomics.store");
 
-        uint32 accessIndex = 0;
+        uint32_t accessIndex = 0;
         TypedArrayBase *typedArrayBase = ValidateAndGetTypedArray(args[1], args[2], &accessIndex, scriptContext);
         return typedArrayBase->TypedStore(accessIndex, args[3]);
     }
@@ -170,7 +170,7 @@ namespace Js
     {
         ATOMICS_FUNCTION_ENTRY_CHECKS(3, "Atomics.sub");
 
-        uint32 accessIndex = 0;
+        uint32_t accessIndex = 0;
         TypedArrayBase *typedArrayBase = ValidateAndGetTypedArray(args[1], args[2], &accessIndex, scriptContext);
         return typedArrayBase->TypedSub(accessIndex, args[3]);
     }
@@ -179,11 +179,11 @@ namespace Js
     {
         ATOMICS_FUNCTION_ENTRY_CHECKS(3, "Atomics.wait");
 
-        uint32 accessIndex = 0;
+        uint32_t accessIndex = 0;
         TypedArrayBase *typedArrayBase = ValidateAndGetTypedArray(args[1], args[2], &accessIndex, scriptContext, true /*onlyInt32*/);
 
         int32 value = JavascriptConversion::ToInt32(args[3], scriptContext);
-        uint32 timeout = INFINITE;
+        uint32_t timeout = INFINITE;
 
         if (args.Info.Count > 4 && !JavascriptOperators::IsUndefinedObject(args[4]))
         {
@@ -191,7 +191,7 @@ namespace Js
             if (!(NumberUtilities::IsNan(t) || JavascriptNumber::IsPosInf(t)))
             {
                 int32 t1 = JavascriptConversion::ToInt32(t);
-                timeout = (uint32)max(0, t1);
+                timeout = (uint32_t)max(0, t1);
             }
         }
 
@@ -201,7 +201,7 @@ namespace Js
         }
 
         Assert(typedArrayBase->GetBytesPerElement() == 4);
-        uint32 bufferIndex = (accessIndex * 4) + typedArrayBase->GetByteOffset();
+        uint32_t bufferIndex = (accessIndex * 4) + typedArrayBase->GetByteOffset();
         Assert(bufferIndex < typedArrayBase->GetArrayBuffer()->GetByteLength());
         SharedArrayBuffer *sharedArrayBuffer = typedArrayBase->GetArrayBuffer()->GetAsSharedArrayBuffer();
         WaiterList *waiterList = sharedArrayBuffer->GetWaiterList(bufferIndex);
@@ -236,7 +236,7 @@ namespace Js
     {
         ATOMICS_FUNCTION_ENTRY_CHECKS(2, "Atomics.notify");
 
-        uint32 accessIndex = 0;
+        uint32_t accessIndex = 0;
         TypedArrayBase *typedArrayBase = ValidateAndGetTypedArray(args[1], args[2], &accessIndex, scriptContext, true /*onlyInt32*/);
         int32 count = INT_MAX;
         if (args.Info.Count > 3 && !JavascriptOperators::IsUndefinedObject(args[3]))
@@ -250,12 +250,12 @@ namespace Js
         }
 
         Assert(typedArrayBase->GetBytesPerElement() == 4);
-        uint32 bufferIndex = (accessIndex * 4) + typedArrayBase->GetByteOffset();
+        uint32_t bufferIndex = (accessIndex * 4) + typedArrayBase->GetByteOffset();
         Assert(bufferIndex < typedArrayBase->GetArrayBuffer()->GetByteLength());
         SharedArrayBuffer *sharedArrayBuffer = typedArrayBase->GetArrayBuffer()->GetAsSharedArrayBuffer();
         WaiterList *waiterList = sharedArrayBuffer->GetWaiterList(bufferIndex);
 
-        uint32 removed = 0;
+        uint32_t removed = 0;
         {
             AutoCriticalSection autoCS(waiterList->GetCriticalSectionForAccess());
             removed = waiterList->RemoveAndWakeWaiters(count);
@@ -268,7 +268,7 @@ namespace Js
     {
         ATOMICS_FUNCTION_ENTRY_CHECKS(3, "Atomics.xor");
 
-        uint32 accessIndex = 0;
+        uint32_t accessIndex = 0;
         TypedArrayBase *typedArrayBase = ValidateAndGetTypedArray(args[1], args[2], &accessIndex, scriptContext);
         return typedArrayBase->TypedXor(accessIndex, args[3]);
     }

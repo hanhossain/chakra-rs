@@ -100,7 +100,7 @@ namespace TTD
             return fb;
         }
 
-        void WriteCodeToFile(ThreadContext* threadContext, bool fromEvent, uint32 bodyId, bool isUtf8Source, byte* sourceBuffer, uint32 length)
+        void WriteCodeToFile(ThreadContext* threadContext, bool fromEvent, uint32_t bodyId, bool isUtf8Source, byte* sourceBuffer, uint32_t length)
         {
             char asciiResourceName[64];
             sprintf_s(asciiResourceName, 64, "src%s_%I32u.js", (fromEvent ? "_ld" : ""), bodyId);
@@ -131,7 +131,7 @@ namespace TTD
             iofp.pfFlushAndCloseStream(srcStream, false, true);
         }
 
-        void ReadCodeFromFile(ThreadContext* threadContext, bool fromEvent, uint32 bodyId, bool isUtf8Source, byte* sourceBuffer, uint32 length)
+        void ReadCodeFromFile(ThreadContext* threadContext, bool fromEvent, uint32_t bodyId, bool isUtf8Source, byte* sourceBuffer, uint32_t length)
         {
             char asciiResourceName[64];
             sprintf_s(asciiResourceName, 64, "src%s_%I32u.js", (fromEvent ? "_ld" : ""), bodyId);
@@ -269,29 +269,29 @@ namespace TTD
 
         void AssertSnapEquivTTDVar_Property(const TTDVar v1, const TTDVar v2, TTDCompareMap& compareMap, Js::PropertyId pid)
         {
-            TTDComparePath::PathEntry next{ (uint32)pid, nullptr };
+            TTDComparePath::PathEntry next{ (uint32_t)pid, nullptr };
             AssertSnapEquivTTDVar_Helper(v1, v2, compareMap, TTDComparePath::StepKind::PropertyData, next);
         }
 
         void AssertSnapEquivTTDVar_PropertyGetter(const TTDVar v1, const TTDVar v2, TTDCompareMap& compareMap, Js::PropertyId pid)
         {
-            TTDComparePath::PathEntry next{ (uint32)pid, nullptr };
+            TTDComparePath::PathEntry next{ (uint32_t)pid, nullptr };
             AssertSnapEquivTTDVar_Helper(v1, v2, compareMap, TTDComparePath::StepKind::PropertyGetter, next);
         }
 
         void AssertSnapEquivTTDVar_PropertySetter(const TTDVar v1, const TTDVar v2, TTDCompareMap& compareMap, Js::PropertyId pid)
         {
-            TTDComparePath::PathEntry next{ (uint32)pid, nullptr };
+            TTDComparePath::PathEntry next{ (uint32_t)pid, nullptr };
             AssertSnapEquivTTDVar_Helper(v1, v2, compareMap, TTDComparePath::StepKind::PropertySetter, next);
         }
 
-        void AssertSnapEquivTTDVar_Array(const TTDVar v1, const TTDVar v2, TTDCompareMap& compareMap, uint32 index)
+        void AssertSnapEquivTTDVar_Array(const TTDVar v1, const TTDVar v2, TTDCompareMap& compareMap, uint32_t index)
         {
             TTDComparePath::PathEntry next{ index, nullptr };
             AssertSnapEquivTTDVar_Helper(v1, v2, compareMap, TTDComparePath::StepKind::Array, next);
         }
 
-        void AssertSnapEquivTTDVar_SlotArray(const TTDVar v1, const TTDVar v2, TTDCompareMap& compareMap, uint32 index)
+        void AssertSnapEquivTTDVar_SlotArray(const TTDVar v1, const TTDVar v2, TTDCompareMap& compareMap, uint32_t index)
         {
             TTDComparePath::PathEntry next{ index, nullptr };
             AssertSnapEquivTTDVar_Helper(v1, v2, compareMap, TTDComparePath::StepKind::SlotArray, next);
@@ -303,7 +303,7 @@ namespace TTD
             AssertSnapEquivTTDVar_Helper(v1, v2, compareMap, TTDComparePath::StepKind::Special, next);
         }
 
-        void AssertSnapEquivTTDVar_SpecialArray(const TTDVar v1, const TTDVar v2, TTDCompareMap& compareMap, const char16_t* specialField, uint32 index)
+        void AssertSnapEquivTTDVar_SpecialArray(const TTDVar v1, const TTDVar v2, TTDCompareMap& compareMap, const char16_t* specialField, uint32_t index)
         {
             TTDComparePath::PathEntry next{ index, specialField };
             AssertSnapEquivTTDVar_Helper(v1, v2, compareMap, TTDComparePath::StepKind::SpecialArray, next);
@@ -565,7 +565,7 @@ namespace TTD
             scopeSlots.SetCount(slotInfo->SlotCount);
 
             Js::Var undef = ctx->GetLibrary()->GetUndefined();
-            for(uint32 j = 0; j < slotInfo->SlotCount; j++)
+            for(uint32_t j = 0; j < slotInfo->SlotCount; j++)
             {
                 scopeSlots.Set(j, undef);
             }
@@ -577,10 +577,10 @@ namespace TTD
 
                 //This is a doubly nested lookup so if the scope slot array is large this could be expensive
                 Js::PropertyId* propertyIds = fbody->GetPropertyIdsForScopeSlotArray();
-                for(uint32 j = 0; j < slotInfo->SlotCount; j++)
+                for(uint32_t j = 0; j < slotInfo->SlotCount; j++)
                 {
                     Js::PropertyId trgtPid = slotInfo->PIDArray[j];
-                    for(uint32 i = 0; i < fbody->GetScopeSlotArraySize(); i++)
+                    for(uint32_t i = 0; i < fbody->GetScopeSlotArraySize(); i++)
                     {
                         if(trgtPid == propertyIds[i])
                         {
@@ -610,10 +610,10 @@ namespace TTD
                 scopeSlots.SetScopeMetadata(dbgScope);
 
                 //This is a doubly nested lookup so if the scope slot array is large this could be expensive
-                for(uint32 j = 0; j < slotInfo->SlotCount; j++)
+                for(uint32_t j = 0; j < slotInfo->SlotCount; j++)
                 {
                     Js::PropertyId trgtPid = slotInfo->PIDArray[j];
-                    for(uint32 i = 0; i < slotInfo->SlotCount; i++)
+                    for(uint32_t i = 0; i < slotInfo->SlotCount; i++)
                     {
                         if(trgtPid == dbgScope->GetPropertyIdForSlotIndex_TTD(i))
                         {
@@ -657,7 +657,7 @@ namespace TTD
             writer->WriteLengthValue(slotInfo->SlotCount, NSTokens::Separator::CommaAndBigSpaceSeparator);
             writer->WriteSequenceStart_DefaultKey(NSTokens::Separator::CommaAndBigSpaceSeparator);
             writer->AdjustIndent(1);
-            for(uint32 i = 0; i < slotInfo->SlotCount; ++i)
+            for(uint32_t i = 0; i < slotInfo->SlotCount; ++i)
             {
                 writer->WriteRecordStart(i != 0 ? NSTokens::Separator::CommaAndBigSpaceSeparator : NSTokens::Separator::BigSpaceSeparator);
                 writer->WriteUInt32(NSTokens::Key::pid, slotInfo->PIDArray[i], NSTokens::Separator::NoSeparator);
@@ -710,7 +710,7 @@ namespace TTD
 
             slotInfo->PIDArray = alloc.SlabAllocateArray<Js::PropertyId>(slotInfo->SlotCount);
 
-            for(uint32 i = 0; i < slotInfo->SlotCount; ++i)
+            for(uint32_t i = 0; i < slotInfo->SlotCount; ++i)
             {
                 reader->ReadRecordStart(i != 0);
                 slotInfo->PIDArray[i] = (Js::PropertyId)reader->ReadUInt32(NSTokens::Key::pid);
@@ -741,11 +741,11 @@ namespace TTD
             }
 
             compareMap.DiagnosticAssert(sai1->SlotCount == sai2->SlotCount);
-            for(uint32 i = 0; i < sai1->SlotCount; ++i)
+            for(uint32_t i = 0; i < sai1->SlotCount; ++i)
             {
                 Js::PropertyId id1 = sai1->PIDArray[i];
                 bool found = false;
-                for(uint32 j = 0; j < sai1->SlotCount; ++j)
+                for(uint32_t j = 0; j < sai1->SlotCount; ++j)
                 {
                     if(id1 == sai2->PIDArray[j])
                     {
@@ -805,7 +805,7 @@ namespace TTD
 
             writer->WriteSequenceStart_DefaultKey(NSTokens::Separator::CommaSeparator);
 
-            for(uint32 i = 0; i < funcScopeInfo->ScopeCount; ++i)
+            for(uint32_t i = 0; i < funcScopeInfo->ScopeCount; ++i)
             {
                 writer->WriteRecordStart(i != 0 ? NSTokens::Separator::CommaSeparator : NSTokens::Separator::NoSeparator);
 
@@ -831,7 +831,7 @@ namespace TTD
             reader->ReadSequenceStart_WDefaultKey(true);
 
             funcScopeInfo->ScopeArray = alloc.SlabAllocateArray<ScopeInfoEntry>(funcScopeInfo->ScopeCount);
-            for(uint32 i = 0; i < funcScopeInfo->ScopeCount; ++i)
+            for(uint32_t i = 0; i < funcScopeInfo->ScopeCount; ++i)
             {
                 reader->ReadRecordStart(i != 0);
 
@@ -852,7 +852,7 @@ namespace TTD
             compareMap.DiagnosticAssert(funcScopeInfo1->ScriptContextLogId == funcScopeInfo2->ScriptContextLogId);
 
             compareMap.DiagnosticAssert(funcScopeInfo1->ScopeCount == funcScopeInfo2->ScopeCount);
-            for(uint32 i = 0; i < funcScopeInfo1->ScopeCount; ++i)
+            for(uint32_t i = 0; i < funcScopeInfo1->ScopeCount; ++i)
             {
                 compareMap.DiagnosticAssert(funcScopeInfo1->ScopeArray[i].Tag == funcScopeInfo2->ScopeArray[i].Tag);
                 compareMap.CheckConsistentAndAddPtrIdMapping_Scope(funcScopeInfo1->ScopeArray[i].IDValue, funcScopeInfo2->ScopeArray[i].IDValue, i);
@@ -985,7 +985,7 @@ namespace TTD
             if(!isWellKnownFunction && fb->GetScopeObjectChain() != nullptr)
             {
                 Js::ScopeObjectChain* scChain = fb->GetScopeObjectChain();
-                scopeChain.ScopeCount = (uint32)scChain->pScopeChain->Count();
+                scopeChain.ScopeCount = (uint32_t)scChain->pScopeChain->Count();
 
                 if(scopeChain.ScopeCount == 0)
                 {
@@ -1010,7 +1010,7 @@ namespace TTD
 
             writer->WriteLengthValue(scopeChain.ScopeCount);
             writer->WriteSequenceStart_DefaultKey(NSTokens::Separator::CommaSeparator);
-            for(uint32 i = 0; i < scopeChain.ScopeCount; ++i)
+            for(uint32_t i = 0; i < scopeChain.ScopeCount; ++i)
             {
                 writer->WriteNakedAddr(scopeChain.ScopeArray[i], (i != 0) ? NSTokens::Separator::CommaSeparator : NSTokens::Separator::NoSeparator);
             }
@@ -1027,7 +1027,7 @@ namespace TTD
             scopeChain.ScopeArray = (scopeChain.ScopeCount != 0) ? alloc.SlabAllocateArray<TTD_PTR_ID>(scopeChain.ScopeCount) : nullptr;
 
             reader->ReadSequenceStart_WDefaultKey(true);
-            for(uint32 i = 0; i < scopeChain.ScopeCount; ++i)
+            for(uint32_t i = 0; i < scopeChain.ScopeCount; ++i)
             {
                 scopeChain.ScopeArray[i] = reader->ReadNakedAddr(i != 0);
             }
@@ -1047,7 +1047,7 @@ namespace TTD
 
         //////////////////
 
-        void ExtractTopLevelCommonBodyResolveInfo(TopLevelCommonBodyResolveInfo* fbInfo, Js::FunctionBody* fb, uint32 topLevelCtr, Js::ModuleID moduleId, unsigned long sourceContextId, bool isUtf8source, const byte* source, uint32 sourceLen, SlabAllocator& alloc)
+        void ExtractTopLevelCommonBodyResolveInfo(TopLevelCommonBodyResolveInfo* fbInfo, Js::FunctionBody* fb, uint32_t topLevelCtr, Js::ModuleID moduleId, unsigned long sourceContextId, bool isUtf8source, const byte* source, uint32_t sourceLen, SlabAllocator& alloc)
         {
             fbInfo->ScriptContextLogId = fb->GetScriptContext()->ScriptContextLogTag;
             fbInfo->TopLevelBodyCtr = topLevelCtr;
@@ -1148,7 +1148,7 @@ namespace TTD
             compareMap.DiagnosticAssert(fbInfo1->IsUtf8 == fbInfo2->IsUtf8);
             compareMap.DiagnosticAssert(fbInfo1->ByteLength == fbInfo2->ByteLength);
 
-            for(uint32 i = 0; i < fbInfo1->ByteLength; ++i)
+            for(uint32_t i = 0; i < fbInfo1->ByteLength; ++i)
             {
                 compareMap.DiagnosticAssert(fbInfo1->SourceBuffer[i] == fbInfo2->SourceBuffer[i]);
             }
@@ -1160,7 +1160,7 @@ namespace TTD
         ////
         //Regular script-load functions
 
-        void ExtractTopLevelLoadedFunctionBodyInfo(TopLevelScriptLoadFunctionBodyResolveInfo* fbInfo, Js::FunctionBody* fb, uint32 topLevelCtr, Js::ModuleID moduleId, unsigned long sourceContextId, bool isUtf8, const byte* source, uint32 sourceLen, LoadScriptFlag loadFlag, SlabAllocator& alloc)
+        void ExtractTopLevelLoadedFunctionBodyInfo(TopLevelScriptLoadFunctionBodyResolveInfo* fbInfo, Js::FunctionBody* fb, uint32_t topLevelCtr, Js::ModuleID moduleId, unsigned long sourceContextId, bool isUtf8, const byte* source, uint32_t sourceLen, LoadScriptFlag loadFlag, SlabAllocator& alloc)
         {
             NSSnapValues::ExtractTopLevelCommonBodyResolveInfo(&fbInfo->TopLevelBase, fb, topLevelCtr, moduleId, sourceContextId, isUtf8, source, sourceLen, alloc);
 
@@ -1170,14 +1170,14 @@ namespace TTD
         Js::FunctionBody* InflateTopLevelLoadedFunctionBodyInfo(const TopLevelScriptLoadFunctionBodyResolveInfo* fbInfo, Js::ScriptContext* ctx)
         {
             byte* script = fbInfo->TopLevelBase.SourceBuffer;
-            uint32 scriptLength = fbInfo->TopLevelBase.ByteLength;
+            uint32_t scriptLength = fbInfo->TopLevelBase.ByteLength;
             unsigned long sourceContext = fbInfo->TopLevelBase.SourceContextId;
 
             TTDAssert(ctx->GetSourceContextInfo((unsigned long)sourceContext, nullptr) == nullptr, "On inflate we should either have clean ctxts or we want to optimize the inflate process by skipping redoing this work!!!");
             TTDAssert(fbInfo->TopLevelBase.IsUtf8 == ((fbInfo->LoadFlag & LoadScriptFlag_Utf8Source) == LoadScriptFlag_Utf8Source), "Utf8 status is inconsistent!!!");
 
             const char16_t* srcUri = fbInfo->TopLevelBase.SourceUri.Contents;
-            uint32 srcUriLength = fbInfo->TopLevelBase.SourceUri.Length;
+            uint32_t srcUriLength = fbInfo->TopLevelBase.SourceUri.Length;
 
             SourceContextInfo * sourceContextInfo = ctx->CreateSourceContextInfo((unsigned long)sourceContext, srcUri, srcUriLength, nullptr);
 
@@ -1272,7 +1272,7 @@ namespace TTD
         ////
         //'new Function(...)' functions
 
-        void ExtractTopLevelNewFunctionBodyInfo(TopLevelNewFunctionBodyResolveInfo* fbInfo, Js::FunctionBody* fb, uint32 topLevelCtr, Js::ModuleID moduleId, const char16_t* source, uint32 sourceLen, SlabAllocator& alloc)
+        void ExtractTopLevelNewFunctionBodyInfo(TopLevelNewFunctionBodyResolveInfo* fbInfo, Js::FunctionBody* fb, uint32_t topLevelCtr, Js::ModuleID moduleId, const char16_t* source, uint32_t sourceLen, SlabAllocator& alloc)
         {
             NSSnapValues::ExtractTopLevelCommonBodyResolveInfo(&fbInfo->TopLevelBase, fb, topLevelCtr, moduleId, 0, false, (const byte*)source, sourceLen * sizeof(char16_t), alloc);
         }
@@ -1328,7 +1328,7 @@ namespace TTD
         ////
         //'eval(...)' functions
 
-        void ExtractTopLevelEvalFunctionBodyInfo(TopLevelEvalFunctionBodyResolveInfo* fbInfo, Js::FunctionBody* fb, uint32 topLevelCtr, Js::ModuleID moduleId, const char16_t* source, uint32 sourceLen, uint32 grfscr, bool registerDocument, BOOL isIndirect, BOOL strictMode, SlabAllocator& alloc)
+        void ExtractTopLevelEvalFunctionBodyInfo(TopLevelEvalFunctionBodyResolveInfo* fbInfo, Js::FunctionBody* fb, uint32_t topLevelCtr, Js::ModuleID moduleId, const char16_t* source, uint32_t sourceLen, uint32_t grfscr, bool registerDocument, BOOL isIndirect, BOOL strictMode, SlabAllocator& alloc)
         {
             NSSnapValues::ExtractTopLevelCommonBodyResolveInfo(&fbInfo->TopLevelBase, fb, topLevelCtr, moduleId, 0, false, (const byte*)source, sourceLen * sizeof(char16_t), alloc);
 
@@ -1340,7 +1340,7 @@ namespace TTD
 
         Js::FunctionBody* InflateTopLevelEvalFunctionBodyInfo(const TopLevelEvalFunctionBodyResolveInfo* fbInfo, Js::ScriptContext* ctx)
         {
-            uint32 grfscr = ((uint32)fbInfo->EvalFlags) | fscrReturnExpression | fscrEval | fscrEvalCode | fscrGlobalCode;
+            uint32_t grfscr = ((uint32_t)fbInfo->EvalFlags) | fscrReturnExpression | fscrEval | fscrEvalCode | fscrGlobalCode;
 
             char16_t* source = (char16_t*)fbInfo->TopLevelBase.SourceBuffer;
             int32 sourceLen = (int32)(fbInfo->TopLevelBase.ByteLength / sizeof(char16_t));
@@ -1456,8 +1456,8 @@ namespace TTD
                     //TODO: this is a potentially expensive linear search (but needed since classes dump implicit functions out-of-text order).
                     //      May want to add sort and save in inflator or our shaddow info in script context if this is looking expensive.
                     //
-                    uint32 blength = parentBody->GetNestedCount();
-                    for(uint32 i = 0; i < blength; ++i)
+                    uint32_t blength = parentBody->GetNestedCount();
+                    for(uint32_t i = 0; i < blength; ++i)
                     {
                         Js::ParseableFunctionInfo* pfi = parentBody->GetNestedFunctionForExecution(i);
                         Js::FunctionBody* currfb = JsSupport::ForceAndGetFunctionBody(pfi);
@@ -1485,7 +1485,7 @@ namespace TTD
             else
             {
                 const char16_t* fname = resfb->GetDisplayName();
-                for(uint32 i = 0; i < fbInfo->FunctionName.Length; ++i)
+                for(uint32_t i = 0; i < fbInfo->FunctionName.Length; ++i)
                 {
                     updateName |= (fbInfo->FunctionName.Contents[i] != fname[i]);
                 }
@@ -1493,8 +1493,8 @@ namespace TTD
 
             if(updateName)
             {
-                uint32 suffixWDotPos = (fbInfo->FunctionName.Length - 4);
-                uint32 suffixPos = (fbInfo->FunctionName.Length - 3);
+                uint32_t suffixWDotPos = (fbInfo->FunctionName.Length - 4);
+                uint32_t suffixPos = (fbInfo->FunctionName.Length - 3);
 
                 TTDAssert(wcsstr(fbInfo->FunctionName.Contents, u".get") == (fbInfo->FunctionName.Contents + suffixWDotPos) || wcsstr(fbInfo->FunctionName.Contents, u".set") == (fbInfo->FunctionName.Contents + suffixWDotPos), "Does not start with get or set");
 
@@ -1678,7 +1678,7 @@ namespace TTD
                 intoCtx->GetAndClearRecordedException(nullptr);
             }
 
-            for(uint32 i = 0; i < snpCtx->LoadedTopLevelScriptCount; ++i)
+            for(uint32_t i = 0; i < snpCtx->LoadedTopLevelScriptCount; ++i)
             {
                 const TopLevelFunctionInContextRelation& cri = snpCtx->LoadedTopLevelScriptArray[i];
 
@@ -1704,7 +1704,7 @@ namespace TTD
             //The inflation code for NewFunction and Eval uses the paths in the runtime (which assume they are in script) -- so enter here to make them happy
             BEGIN_ENTER_SCRIPT(intoCtx, true, true, true)
             {
-                for(uint32 i = 0; i < snpCtx->NewFunctionTopLevelScriptCount; ++i)
+                for(uint32_t i = 0; i < snpCtx->NewFunctionTopLevelScriptCount; ++i)
                 {
                     const TopLevelFunctionInContextRelation& cri = snpCtx->NewFunctionTopLevelScriptArray[i];
 
@@ -1727,7 +1727,7 @@ namespace TTD
                     inflator->AddInflationFunctionBody(cri.ContextSpecificBodyPtrId, fb);
                 }
 
-                for(uint32 i = 0; i < snpCtx->EvalTopLevelScriptCount; ++i)
+                for(uint32_t i = 0; i < snpCtx->EvalTopLevelScriptCount; ++i)
                 {
                     const TopLevelFunctionInContextRelation& cri = snpCtx->EvalTopLevelScriptArray[i];
 
@@ -1757,10 +1757,10 @@ namespace TTD
         {
             intoCtx->TTDContextInfo->ClearPendingAsyncModListForSnapRestore();
 
-            for(uint32 i = 0; i < snpCtx->PendingAsyncModCount; ++i)
+            for(uint32_t i = 0; i < snpCtx->PendingAsyncModCount; ++i)
             {
                 Js::RecyclableObject* buff = intoCtx->GetThreadContext()->TTDContext->LookupObjectForLogID(snpCtx->PendingAsyncModArray[i].LogId);
-                uint32 index = snpCtx->PendingAsyncModArray[i].Index;
+                uint32_t index = snpCtx->PendingAsyncModArray[i].Index;
 
                 TTDAssert(Js::VarIs<Js::ArrayBuffer>(buff), "Not an ArrayBuffer!!!");
                 intoCtx->TTDContextInfo->AddToAsyncPendingList(Js::VarTo<Js::ArrayBuffer>(buff), index);
@@ -1779,7 +1779,7 @@ namespace TTD
 
             writer->WriteLengthValue(snapCtx->LoadedTopLevelScriptCount, NSTokens::Separator::CommaSeparator);
             writer->WriteSequenceStart_DefaultKey(NSTokens::Separator::CommaSeparator);
-            for(uint32 i = 0; i < snapCtx->LoadedTopLevelScriptCount; ++i)
+            for(uint32_t i = 0; i < snapCtx->LoadedTopLevelScriptCount; ++i)
             {
                 const TopLevelFunctionInContextRelation* cri = snapCtx->LoadedTopLevelScriptArray + i;
                 NSTokens::Separator sep = (i != 0) ? NSTokens::Separator::CommaSeparator : NSTokens::Separator::NoSeparator;
@@ -1793,7 +1793,7 @@ namespace TTD
 
             writer->WriteLengthValue(snapCtx->NewFunctionTopLevelScriptCount, NSTokens::Separator::CommaSeparator);
             writer->WriteSequenceStart_DefaultKey(NSTokens::Separator::CommaSeparator);
-            for(uint32 i = 0; i < snapCtx->NewFunctionTopLevelScriptCount; ++i)
+            for(uint32_t i = 0; i < snapCtx->NewFunctionTopLevelScriptCount; ++i)
             {
                 const TopLevelFunctionInContextRelation* cri = snapCtx->NewFunctionTopLevelScriptArray + i;
                 NSTokens::Separator sep = (i != 0) ? NSTokens::Separator::CommaSeparator : NSTokens::Separator::NoSeparator;
@@ -1807,7 +1807,7 @@ namespace TTD
 
             writer->WriteLengthValue(snapCtx->EvalTopLevelScriptCount, NSTokens::Separator::CommaSeparator);
             writer->WriteSequenceStart_DefaultKey(NSTokens::Separator::CommaSeparator);
-            for(uint32 i = 0; i < snapCtx->EvalTopLevelScriptCount; ++i)
+            for(uint32_t i = 0; i < snapCtx->EvalTopLevelScriptCount; ++i)
             {
                 const TopLevelFunctionInContextRelation* cri = snapCtx->EvalTopLevelScriptArray + i;
                 NSTokens::Separator sep = (i != 0) ? NSTokens::Separator::CommaSeparator : NSTokens::Separator::NoSeparator;
@@ -1821,7 +1821,7 @@ namespace TTD
 
             writer->WriteLengthValue(snapCtx->PendingAsyncModCount, NSTokens::Separator::CommaSeparator);
             writer->WriteSequenceStart_DefaultKey(NSTokens::Separator::CommaSeparator);
-            for(uint32 i = 0; i < snapCtx->PendingAsyncModCount; ++i)
+            for(uint32_t i = 0; i < snapCtx->PendingAsyncModCount; ++i)
             {
                 NSTokens::Separator sep = (i != 0) ? NSTokens::Separator::CommaSeparator : NSTokens::Separator::NoSeparator;
                 writer->WriteRecordStart(sep);
@@ -1847,7 +1847,7 @@ namespace TTD
             intoCtx->LoadedTopLevelScriptCount = reader->ReadLengthValue(true);
             intoCtx->LoadedTopLevelScriptArray = (intoCtx->LoadedTopLevelScriptCount != 0) ? alloc.SlabAllocateArray<TopLevelFunctionInContextRelation>(intoCtx->LoadedTopLevelScriptCount) : nullptr;
             reader->ReadSequenceStart_WDefaultKey(true);
-            for(uint32 i = 0; i < intoCtx->LoadedTopLevelScriptCount; ++i)
+            for(uint32_t i = 0; i < intoCtx->LoadedTopLevelScriptCount; ++i)
             {
                 TopLevelFunctionInContextRelation* cri = intoCtx->LoadedTopLevelScriptArray + i;
 
@@ -1861,7 +1861,7 @@ namespace TTD
             intoCtx->NewFunctionTopLevelScriptCount = reader->ReadLengthValue(true);
             intoCtx->NewFunctionTopLevelScriptArray = (intoCtx->NewFunctionTopLevelScriptCount != 0) ? alloc.SlabAllocateArray<TopLevelFunctionInContextRelation>(intoCtx->NewFunctionTopLevelScriptCount) : nullptr;
             reader->ReadSequenceStart_WDefaultKey(true);
-            for(uint32 i = 0; i < intoCtx->NewFunctionTopLevelScriptCount; ++i)
+            for(uint32_t i = 0; i < intoCtx->NewFunctionTopLevelScriptCount; ++i)
             {
                 TopLevelFunctionInContextRelation* cri = intoCtx->NewFunctionTopLevelScriptArray + i;
 
@@ -1875,7 +1875,7 @@ namespace TTD
             intoCtx->EvalTopLevelScriptCount = reader->ReadLengthValue(true);
             intoCtx->EvalTopLevelScriptArray = (intoCtx->EvalTopLevelScriptCount != 0) ? alloc.SlabAllocateArray<TopLevelFunctionInContextRelation>(intoCtx->EvalTopLevelScriptCount) : nullptr;
             reader->ReadSequenceStart_WDefaultKey(true);
-            for(uint32 i = 0; i < intoCtx->EvalTopLevelScriptCount; ++i)
+            for(uint32_t i = 0; i < intoCtx->EvalTopLevelScriptCount; ++i)
             {
                 TopLevelFunctionInContextRelation* cri = intoCtx->EvalTopLevelScriptArray + i;
 
@@ -1890,7 +1890,7 @@ namespace TTD
             intoCtx->PendingAsyncModArray = (intoCtx->PendingAsyncModCount != 0) ? alloc.SlabAllocateArray<SnapPendingAsyncBufferModification>(intoCtx->PendingAsyncModCount) : nullptr;
 
             reader->ReadSequenceStart_WDefaultKey(true);
-            for(uint32 i = 0; i < intoCtx->PendingAsyncModCount; ++i)
+            for(uint32_t i = 0; i < intoCtx->PendingAsyncModCount; ++i)
             {
                 reader->ReadRecordStart(i != 0);
                 intoCtx->PendingAsyncModArray[i].LogId = reader->ReadLogTag(NSTokens::Key::logTag);
@@ -1928,7 +1928,7 @@ namespace TTD
 
             compareMap.DiagnosticAssert(snapCtx1->PendingAsyncModCount == snapCtx2->PendingAsyncModCount);
 
-            for(uint32 i = 0; i < snapCtx1->PendingAsyncModCount; ++i)
+            for(uint32_t i = 0; i < snapCtx1->PendingAsyncModCount; ++i)
             {
                 const SnapPendingAsyncBufferModification& pendEntry1 = snapCtx1->PendingAsyncModArray[i];
                 const SnapPendingAsyncBufferModification& pendEntry2 = snapCtx2->PendingAsyncModArray[i];

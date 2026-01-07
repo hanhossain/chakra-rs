@@ -32,9 +32,9 @@ namespace Js
 
         bool ShouldDisableWriteCache() const { return propertyRecord && propertyRecord->ShouldDisableWriteCache(); }
 
-        static uint32 GetOffsetOfLdElemInlineCache() { return offsetof(PropertyRecordUsageCache, ldElemInlineCache); }
-        static uint32 GetOffsetOfStElemInlineCache() { return offsetof(PropertyRecordUsageCache, stElemInlineCache); }
-        static uint32 GetOffsetOfHitRate() { return offsetof(PropertyRecordUsageCache, hitRate); }
+        static uint32_t GetOffsetOfLdElemInlineCache() { return offsetof(PropertyRecordUsageCache, ldElemInlineCache); }
+        static uint32_t GetOffsetOfStElemInlineCache() { return offsetof(PropertyRecordUsageCache, stElemInlineCache); }
+        static uint32_t GetOffsetOfHitRate() { return offsetof(PropertyRecordUsageCache, hitRate); }
 
         template <bool ReturnOperationInfo>
         _Success_(return) bool TrySetPropertyFromCache(

@@ -8,9 +8,9 @@ class UInt32Math
 {
 public:
     template< class Func >
-    static uint32 Add(uint32 lhs, uint32 rhs, __inout Func& overflowFn)
+    static uint32_t Add(uint32_t lhs, uint32_t rhs, __inout Func& overflowFn)
     {
-        uint32 result = lhs + rhs;
+        uint32_t result = lhs + rhs;
 
         // If the result is smaller than the LHS, then we overflowed
         if( result < lhs )
@@ -22,7 +22,7 @@ public:
     }
 
     template< class Func >
-    static void Inc(uint32& lhs, __inout Func& overflowFn)
+    static void Inc(uint32_t& lhs, __inout Func& overflowFn)
     {
         ++lhs;
 
@@ -34,7 +34,7 @@ public:
     }
 
     template< class Func >
-    static uint32 Mul(uint32 lhs, uint32 rhs, __inout Func& overflowFn)
+    static uint32_t Mul(uint32_t lhs, uint32_t rhs, __inout Func& overflowFn)
     {
         // Do the multiplication using 64-bit unsigned math.
         unsigned long result = static_cast<unsigned long>(lhs) * static_cast<unsigned long>(rhs);
@@ -45,11 +45,11 @@ public:
             overflowFn();
         }
 
-        return static_cast<uint32>(result);
+        return static_cast<uint32_t>(result);
     }
 
-    template<uint32 mul, class Func >
-    static uint32 Mul(uint32 left, __inout Func& overflowFn)
+    template<uint32_t mul, class Func >
+    static uint32_t Mul(uint32_t left, __inout Func& overflowFn)
     {
         CompileAssert(mul != 0);
 
@@ -63,8 +63,8 @@ public:
     }
 
     // Using 0 for mul will result in compile-time divide by zero error (which is desired behavior)
-    template< uint32 add, uint32 mul, class Func >
-    static uint32 AddMul(uint32 left, __inout Func& overflowFn)
+    template< uint32_t add, uint32_t mul, class Func >
+    static uint32_t AddMul(uint32_t left, __inout Func& overflowFn)
     {
         //
         // The result will overflow if (left+add)*mul > UINT_MAX
@@ -86,8 +86,8 @@ public:
     }
 
     // Using 0 for mul will result in compile-time divide by zero error (which is desired behavior)
-    template< uint32 mul, uint32 add, class Func >
-    static uint32 MulAdd(uint32 left, __inout Func& overflowFn)
+    template< uint32_t mul, uint32_t add, class Func >
+    static uint32_t MulAdd(uint32_t left, __inout Func& overflowFn)
     {
         //
         // The result will overflow if (left*mul)+add > UINT_MAX
@@ -107,46 +107,46 @@ public:
     }
 
     // Convenience functions which use the DefaultOverflowPolicy (throw OOM upon overflow)
-    template< uint32 add, uint32 mul >
-    static uint32 AddMul(uint32 left)
+    template< uint32_t add, uint32_t mul >
+    static uint32_t AddMul(uint32_t left)
     {
         return AddMul<add,mul>(left, ::Math::DefaultOverflowPolicy);
     }
 
     _When_(lhs + rhs < lhs, _Analysis_noreturn_)
     _Post_satisfies_(return == lhs + rhs)
-    static uint32 Add(uint32 lhs, uint32 rhs)
+    static uint32_t Add(uint32_t lhs, uint32_t rhs)
     {
-        uint32 result = Add( lhs, rhs, ::Math::DefaultOverflowPolicy );
+        uint32_t result = Add( lhs, rhs, ::Math::DefaultOverflowPolicy );
         return result;
     }
 
-    static uint32 Mul(uint32 lhs, uint32 rhs)
+    static uint32_t Mul(uint32_t lhs, uint32_t rhs)
     {
         return Mul(lhs, rhs, ::Math::DefaultOverflowPolicy );
     }
 
-    template<uint32 mul>
-    static uint32 Mul(uint32 lhs)
+    template<uint32_t mul>
+    static uint32_t Mul(uint32_t lhs)
     {
         return Mul<mul>(lhs, ::Math::DefaultOverflowPolicy);
     }
 
-    template< uint32 mul, uint32 add >
-    static uint32 MulAdd(uint32 left)
+    template< uint32_t mul, uint32_t add >
+    static uint32_t MulAdd(uint32_t left)
     {
         return MulAdd<mul,add>(left, ::Math::DefaultOverflowPolicy);
     }
 
     // Convenience functions which return a bool indicating overflow
-    static bool Add(uint32 lhs, uint32 rhs, uint32* result)
+    static bool Add(uint32_t lhs, uint32_t rhs, uint32_t* result)
     {
         ::Math::RecordOverflowPolicy overflowGuard;
         *result = Add(lhs, rhs, overflowGuard);
         return overflowGuard.HasOverflowed();
     }
 
-    static bool Mul(uint32 lhs, uint32 rhs, uint32* result)
+    static bool Mul(uint32_t lhs, uint32_t rhs, uint32_t* result)
     {
         ::Math::RecordOverflowPolicy overflowGuard;
         *result = Mul(lhs, rhs, overflowGuard);
@@ -154,7 +154,7 @@ public:
     }
 
     // Convenience function which uses DefaultOverflowPolicy (throws OOM upon overflow)
-    static void Inc(uint32& lhs)
+    static void Inc(uint32_t& lhs)
     {
         Inc(lhs, ::Math::DefaultOverflowPolicy);
     }

@@ -405,7 +405,7 @@ namespace Js
     void JavascriptWeakMap::ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc)
     {
         TTD::NSSnapObjects::SnapMapInfo* smi = alloc.SlabAllocateStruct<TTD::NSSnapObjects::SnapMapInfo>();
-        uint32 mapCountEst = this->Size() * 2;
+        uint32_t mapCountEst = this->Size() * 2;
 
         smi->MapSize = 0;
         smi->MapKeyValueArray = alloc.SlabReserveArraySpace<TTD::TTDVar>(mapCountEst + 1); //always reserve at least 1 element

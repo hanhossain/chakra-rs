@@ -1377,13 +1377,13 @@ Recycler::OutOfMemory()
     outOfMemoryFunc();
 }
 
-void Recycler::GetNormalHeapBlockAllocatorInfoForNativeAllocation(void* recyclerAddr, size_t allocSize, void*& allocatorAddress, uint32& endAddressOffset, uint32& freeListOffset, bool allowBumpAllocation, bool isOOPJIT)
+void Recycler::GetNormalHeapBlockAllocatorInfoForNativeAllocation(void* recyclerAddr, size_t allocSize, void*& allocatorAddress, uint32_t& endAddressOffset, uint32_t& freeListOffset, bool allowBumpAllocation, bool isOOPJIT)
 {
     Assert(recyclerAddr);
     return ((Recycler*)recyclerAddr)->GetNormalHeapBlockAllocatorInfoForNativeAllocation(allocSize, allocatorAddress, endAddressOffset, freeListOffset, allowBumpAllocation, isOOPJIT);
 }
 
-void Recycler::GetNormalHeapBlockAllocatorInfoForNativeAllocation(size_t allocSize, void*& allocatorAddress, uint32& endAddressOffset, uint32& freeListOffset, bool allowBumpAllocation, bool isOOPJIT)
+void Recycler::GetNormalHeapBlockAllocatorInfoForNativeAllocation(size_t allocSize, void*& allocatorAddress, uint32_t& endAddressOffset, uint32_t& freeListOffset, bool allowBumpAllocation, bool isOOPJIT)
 {
     Assert(HeapInfo::IsAlignedSize(allocSize));
     Assert(HeapInfo::IsSmallObject(allocSize));
@@ -6363,7 +6363,7 @@ Recycler::ShouldIdleCollectOnExit()
         return true;
     }
 
-    uint32 nextTime = tickCountNextCollection - tickDiffToNextCollect;
+    uint32_t nextTime = tickCountNextCollection - tickDiffToNextCollect;
     // We will try to start a concurrent collect if we are within .9 ms to next scheduled collection, AND,
     // the size of allocation is larger than 32M. This is similar to CollectionAllocation logic, just
     // earlier in both time heuristic and size heuristic, so we can do some concurrent GC while we are

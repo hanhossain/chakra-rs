@@ -6,9 +6,9 @@
 
 namespace Js
 {
-    const uint32 SparseArraySegmentBase::MaxLength = static_cast<uint32>(INT32_MAX);
+    const uint32_t SparseArraySegmentBase::MaxLength = static_cast<uint32_t>(INT32_MAX);
 
-    SparseArraySegmentBase::SparseArraySegmentBase(uint32 left, uint32 length, uint32 size) : left(left), length(length), size(size), next(nullptr)
+    SparseArraySegmentBase::SparseArraySegmentBase(uint32_t left, uint32_t length, uint32_t size) : left(left), length(length), size(size), next(nullptr)
     {
     }
 
@@ -19,9 +19,9 @@ namespace Js
     }
 
     // Reduce size if it exceeds next.left boundary or MaxArrayLength
-    void SparseArraySegmentBase::EnsureSizeInBound(uint32 left, uint32 length, uint32& size, SparseArraySegmentBase* next)
+    void SparseArraySegmentBase::EnsureSizeInBound(uint32_t left, uint32_t length, uint32_t& size, SparseArraySegmentBase* next)
     {
-        uint32 nextLeft = next ? next->left : JavascriptArray::MaxArrayLength;
+        uint32_t nextLeft = next ? next->left : JavascriptArray::MaxArrayLength;
         Assert(nextLeft > left);
 
         if(size != 0)
@@ -34,7 +34,7 @@ namespace Js
     }
 
     // Test if an element value is null/undefined.
-    inline static bool IsMissingOrUndefined(Var value, RecyclableObject *undefined, uint32& countUndefined)
+    inline static bool IsMissingOrUndefined(Var value, RecyclableObject *undefined, uint32_t& countUndefined)
     {
         if (SparseArraySegment<Var>::IsMissingItem(&value))
         {
@@ -68,7 +68,7 @@ namespace Js
     }
 
     // Remove null/undefined from this segment. May reorder elements and compact this segment in preparing for sort.
-    uint32 SparseArraySegmentBase::RemoveUndefined(ScriptContext* scriptContext)
+    uint32_t SparseArraySegmentBase::RemoveUndefined(ScriptContext* scriptContext)
     {
         SparseArraySegment<Var> *_this = (SparseArraySegment<Var>*)this;
         // Shortcut length==0, otherwise the code below will AV when left==length==0. (WOOB 1114975)
@@ -80,9 +80,9 @@ namespace Js
         //remove undefine values
         RecyclableObject *undefined = scriptContext->GetLibrary()->GetUndefined();
 
-        uint32 i = 0;
-        uint32 j = length - 1;
-        uint32 countUndefined = 0;
+        uint32_t i = 0;
+        uint32_t j = length - 1;
+        uint32_t countUndefined = 0;
 
         while (i <= j)
         {
@@ -119,7 +119,7 @@ namespace Js
 
         if (j != length - 1) // Truncate if j has changed
         {
-            uint32 newLen = j + 1;
+            uint32_t newLen = j + 1;
             Assert(newLen < length);
             Assert(countUndefined <= length - newLen);
 

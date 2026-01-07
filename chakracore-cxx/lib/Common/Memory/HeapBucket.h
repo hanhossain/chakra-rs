@@ -83,12 +83,12 @@ protected:
 #endif
 
 #if defined(RECYCLER_SLOW_CHECK_ENABLED) || ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    uint32 heapBlockCount;
-    uint32 newHeapBlockCount;       // count of heap bock that is in the heap info and not in the heap bucket yet
+    uint32_t heapBlockCount;
+    uint32_t newHeapBlockCount;       // count of heap bock that is in the heap info and not in the heap bucket yet
 #endif
 
 #if defined(RECYCLER_SLOW_CHECK_ENABLED)
-    uint32 emptyHeapBlockCount;
+    uint32_t emptyHeapBlockCount;
 #endif
 
 #ifdef RECYCLER_PAGE_HEAP

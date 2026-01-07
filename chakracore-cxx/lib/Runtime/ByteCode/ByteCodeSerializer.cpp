@@ -149,7 +149,7 @@ C_ASSERT(sizeof(GUID)==sizeof(uint32_t)*4);
 // Holds a buffer and size for use by the serializer
 struct ByteBuffer
 {
-    uint32 byteCount;
+    uint32_t byteCount;
     union
     {
         void * pv;
@@ -157,7 +157,7 @@ struct ByteBuffer
         const char * s8;
     };
 public:
-    ByteBuffer(uint32 byteCount, void * pv)
+    ByteBuffer(uint32_t byteCount, void * pv)
         : byteCount(byteCount), pv(pv)
     { }
 };
@@ -276,11 +276,11 @@ enum ConstantType : byte
 };
 
 
-// Try to convert from size_t to uint32. May overflow (and return false) on 64-bit.
-bool TryConvertToUInt32(size_t size, uint32 * out)
+// Try to convert from size_t to uint32_t. May overflow (and return false) on 64-bit.
+bool TryConvertToUInt32(size_t size, uint32_t * out)
 {
-    *out = (uint32)size;
-    if (sizeof(size) == sizeof(uint32))
+    *out = (uint32_t)size;
+    if (sizeof(size) == sizeof(uint32_t))
     {
         return true;
     }
@@ -441,7 +441,7 @@ class ByteCodeBufferBuilder
 
 public:
 
-    ByteCodeBufferBuilder(uint32 sourceSize, uint32 sourceCharLength, LPCUTF8 utf8Source, Utf8SourceInfo* sourceInfo, ScriptContext * scriptContext, ArenaAllocator * alloc, uint32_t dwFlags, int builtInPropertyCount)
+    ByteCodeBufferBuilder(uint32_t sourceSize, uint32_t sourceCharLength, LPCUTF8 utf8Source, Utf8SourceInfo* sourceInfo, ScriptContext * scriptContext, ArenaAllocator * alloc, uint32_t dwFlags, int builtInPropertyCount)
         : magic(u"Magic", magicConstant),
           totalSize(u"Total Size", 0),
           fileVersionKind(u"FileVersionKind", 0),
@@ -709,14 +709,14 @@ public:
         return indexEntry.id;
     }
 
-    uint32 PrependRelativeOffset(BufferBuilderList & builder, const char16_t* clue, BufferBuilder * pointedTo)
+    uint32_t PrependRelativeOffset(BufferBuilderList & builder, const char16_t* clue, BufferBuilder * pointedTo)
     {
         auto entry = Anew(alloc, BufferBuilderRelativeOffset, clue, pointedTo, 0);
         builder.list = builder.list->Prepend(entry, alloc);
         return sizeof(int32);
     }
 
-    uint32 PrependInt16(BufferBuilderList & builder, const char16_t* clue, int16 value, BufferBuilderInt16 ** entryOut = nullptr)
+    uint32_t PrependInt16(BufferBuilderList & builder, const char16_t* clue, int16 value, BufferBuilderInt16 ** entryOut = nullptr)
     {
         auto entry = Anew(alloc, BufferBuilderInt16, clue, value);
         builder.list = builder.list->Prepend(entry, alloc);
@@ -727,7 +727,7 @@ public:
         return sizeof(int16);
     }
 
-    uint32 PrependInt32(BufferBuilderList & builder, const char16_t* clue, int value, BufferBuilderInt32 ** entryOut = nullptr)
+    uint32_t PrependInt32(BufferBuilderList & builder, const char16_t* clue, int value, BufferBuilderInt32 ** entryOut = nullptr)
     {
         auto entry = Anew(alloc, BufferBuilderInt32, clue, value);
         builder.list = builder.list->Prepend(entry, alloc);
@@ -738,7 +738,7 @@ public:
         return sizeof(int32);
     }
 
-    uint32 PrependConstantInt16(BufferBuilderList & builder, const char16_t* clue, int16 value, ConstantSizedBufferBuilderOf<int16> ** entryOut = nullptr)
+    uint32_t PrependConstantInt16(BufferBuilderList & builder, const char16_t* clue, int16 value, ConstantSizedBufferBuilderOf<int16> ** entryOut = nullptr)
     {
         auto entry = Anew(alloc, ConstantSizedBufferBuilderOf<int16>, clue, value);
         builder.list = builder.list->Prepend(entry, alloc);
@@ -749,7 +749,7 @@ public:
         return sizeof(int16);
     }
 
-    uint32 PrependConstantInt32(BufferBuilderList & builder, const char16_t* clue, int value, ConstantSizedBufferBuilderOf<int> ** entryOut = nullptr)
+    uint32_t PrependConstantInt32(BufferBuilderList & builder, const char16_t* clue, int value, ConstantSizedBufferBuilderOf<int> ** entryOut = nullptr)
     {
         auto entry = Anew(alloc, ConstantSizedBufferBuilderOf<int>, clue, value);
         builder.list = builder.list->Prepend(entry, alloc);
@@ -760,7 +760,7 @@ public:
         return sizeof(int32);
     }
 
-    uint32 PrependConstantInt64(BufferBuilderList & builder, const char16_t* clue, long value, ConstantSizedBufferBuilderOf<long> ** entryOut = nullptr)
+    uint32_t PrependConstantInt64(BufferBuilderList & builder, const char16_t* clue, long value, ConstantSizedBufferBuilderOf<long> ** entryOut = nullptr)
     {
         auto entry = Anew(alloc, ConstantSizedBufferBuilderOf<long>, clue, value);
         builder.list = builder.list->Prepend(entry, alloc);
@@ -771,45 +771,45 @@ public:
         return sizeof(long);
     }
 
-    uint32 PrependByte(BufferBuilderList & builder, const char16_t* clue, byte value)
+    uint32_t PrependByte(BufferBuilderList & builder, const char16_t* clue, byte value)
     {
         auto entry = Anew(alloc, BufferBuilderByte, clue, value);
         builder.list = builder.list->Prepend(entry, alloc);
         return sizeof(byte);
     }
 
-    uint32 PrependFunctionBodyFlags(BufferBuilderList & builder, const char16_t* clue, FunctionBody::FunctionBodyFlags value)
+    uint32_t PrependFunctionBodyFlags(BufferBuilderList & builder, const char16_t* clue, FunctionBody::FunctionBodyFlags value)
     {
         return PrependByte(builder, clue, (byte) value);
     }
 
-    uint32 PrependBool(BufferBuilderList & builder, const char16_t* clue, bool value)
+    uint32_t PrependBool(BufferBuilderList & builder, const char16_t* clue, bool value)
     {
         return PrependByte(builder, clue, (byte) value);
     }
 
-    uint32 PrependFloat(BufferBuilderList & builder, const char16_t* clue, float value)
+    uint32_t PrependFloat(BufferBuilderList & builder, const char16_t* clue, float value)
     {
         auto entry = Anew(alloc, BufferBuilderFloat, clue, value);
         builder.list = builder.list->Prepend(entry, alloc);
         return sizeof(float);
     }
 
-    uint32 PrependDouble(BufferBuilderList & builder, const char16_t* clue, double value)
+    uint32_t PrependDouble(BufferBuilderList & builder, const char16_t* clue, double value)
     {
         auto entry = Anew(alloc, BufferBuilderDouble, clue, value);
         builder.list = builder.list->Prepend(entry, alloc);
         return sizeof(double);
     }
 
-    uint32 PrependSIMDValue(BufferBuilderList & builder, const char16_t* clue, SIMDValue value)
+    uint32_t PrependSIMDValue(BufferBuilderList & builder, const char16_t* clue, SIMDValue value)
     {
         auto entry = Anew(alloc, BufferBuilderSIMD, clue, value);
         builder.list = builder.list->Prepend(entry, alloc);
         return sizeof(SIMDValue);
     }
 
-    uint32 PrependString16(BufferBuilderList & builder, const char16_t* clue, __in_bcount_opt(byteLength) const char16_t* sz, uint32 byteLength)
+    uint32_t PrependString16(BufferBuilderList & builder, const char16_t* clue, __in_bcount_opt(byteLength) const char16_t* sz, uint32_t byteLength)
     {
         if (sz != nullptr)
         {
@@ -822,13 +822,13 @@ public:
         }
     }
 
-    uint32 PrependByteBuffer(BufferBuilderList & builder, const char16_t* clue, ByteBuffer * bb)
+    uint32_t PrependByteBuffer(BufferBuilderList & builder, const char16_t* clue, ByteBuffer * bb)
     {
         auto id = GetString16Id(bb);
         return PrependInt32(builder, clue, id);
     }
 
-    int GetIdOfString(__in_bcount_opt(byteLength) const char16_t* sz, uint32 byteLength)
+    int GetIdOfString(__in_bcount_opt(byteLength) const char16_t* sz, uint32_t byteLength)
     {
         auto bb = Anew(alloc, ByteBuffer, byteLength, (void*)sz); // Includes trailing null
         return GetString16Id(bb);
@@ -849,7 +849,7 @@ public:
         scriptContext->FindPropertyRecord(buffer, propertyRecord->GetLength(), &propertyRecordCheck);
         Assert(propertyRecordCheck == propertyRecord);
 #endif
-        auto bb = Anew(alloc, ByteBuffer, (uint32)byteCount, (void*)buffer);
+        auto bb = Anew(alloc, ByteBuffer, (uint32_t)byteCount, (void*)buffer);
         return GetString16Id(bb, /*isPropertyRecord=*/ true);
     }
 
@@ -863,7 +863,7 @@ public:
     }
 
     template<typename T>
-    uint32 Prepend(BufferBuilderList & builder, const char16_t* clue, T * t)
+    uint32_t Prepend(BufferBuilderList & builder, const char16_t* clue, T * t)
     {
         auto block = Anew(alloc, BufferBuilderRaw, clue, sizeof(serialization_alignment T), (const byte*)t);
         builder.list = builder.list->Prepend(block, alloc);
@@ -887,12 +887,12 @@ public:
         ByteCodeReader reader;
         reader.Create(function);
 
-        uint32 size = 0;
+        uint32_t size = 0;
         const byte * opStart = nullptr;
         bool cantGenerate = false;
 
         auto saveBlock = [&]() {
-            uint32 byteCount;
+            uint32_t byteCount;
             if (TryConvertToUInt32(reader.GetIP() - opStart, &byteCount))
             {
                 if (!GenerateByteCodeForNative())
@@ -986,12 +986,12 @@ public:
         ByteCodeReader reader;
         reader.Create(function);
 
-        uint32 size = 0;
+        uint32_t size = 0;
         const byte * opStart = nullptr;
         bool cantGenerate = false;
 
         auto saveBlock = [&]() {
-            uint32 byteCount;
+            uint32_t byteCount;
             if (TryConvertToUInt32(reader.GetIP()-opStart, &byteCount))
             {
                 if (!GenerateByteCodeForNative())
@@ -1386,7 +1386,7 @@ public:
             auto block = Anew(alloc, ConstantSizedBufferBuilderOf<T>, u"Property Id Array", header);
             builder.list = builder.list->Prepend(block, alloc);
 
-            for (uint32 i=0; i<propIds->count; i++)
+            for (uint32_t i=0; i<propIds->count; i++)
             {
                 auto original = propIds->elements[i];
                 auto encoded = encodePossiblyBuiltInPropertyId(original);
@@ -1412,7 +1412,7 @@ public:
             auto block = Anew(alloc, ConstantSizedBufferBuilderOf<T>, u"Funcinfo Array", header);
             builder.list = builder.list->Prepend(block, alloc);
 
-            for (uint32 i=0; i<funcInfos->count; i++)
+            for (uint32_t i=0; i<funcInfos->count; i++)
             {
                 auto funcInfo = funcInfos->elements[i];
                 PrependConstantInt32(builder, u"FuncInfo nestedIndex", funcInfo.nestedIndex);
@@ -1465,10 +1465,10 @@ public:
         });
     }
 
-    uint32 PrependStringConstant(BufferBuilderList & builder, Var var)
+    uint32_t PrependStringConstant(BufferBuilderList & builder, Var var)
     {
         auto str = VarTo<JavascriptString>(var);
-        uint32 size = 0;
+        uint32_t size = 0;
 
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
         size += PrependInt32(builder, u"Start String Constant", magicStartStringConstant);
@@ -1483,13 +1483,13 @@ public:
         return size;
     }
 
-    uint32 PrependStringTemplateCallsiteConstant(BufferBuilderList & builder, Var var)
+    uint32_t PrependStringTemplateCallsiteConstant(BufferBuilderList & builder, Var var)
     {
         ES5Array* callsite = VarTo<ES5Array>(var);
         Var element = nullptr;
         auto size = PrependInt32(builder, u"String Template Callsite Constant String Count", (int)callsite->GetLength());
 
-        for (uint32 i = 0; i < callsite->GetLength(); i++)
+        for (uint32_t i = 0; i < callsite->GetLength(); i++)
         {
             callsite->DirectGetItemAt(i, &element);
             size += PrependStringConstant(builder, element);
@@ -1498,7 +1498,7 @@ public:
         Var rawVar = JavascriptOperators::OP_GetProperty(callsite, Js::PropertyIds::raw, callsite->GetScriptContext());
         ES5Array* rawArray = VarTo<ES5Array>(rawVar);
 
-        for (uint32 i = 0; i < rawArray->GetLength(); i++)
+        for (uint32_t i = 0; i < rawArray->GetLength(); i++)
         {
             rawArray->DirectGetItemAt(i, &element);
             size += PrependStringConstant(builder, element);
@@ -1507,7 +1507,7 @@ public:
         return size;
     }
 
-    uint32 PrependVarConstant(BufferBuilderList & builder, Var var)
+    uint32_t PrependVarConstant(BufferBuilderList & builder, Var var)
     {
         if (var == (Js::Var)&Js::NullFrameDisplay)
         {
@@ -1579,9 +1579,9 @@ public:
     }
 
 #ifdef ASMJS_PLAT
-    uint32 AddAsmJsConstantTable(BufferBuilderList & builder, FunctionBody * function)
+    uint32_t AddAsmJsConstantTable(BufferBuilderList & builder, FunctionBody * function)
     {
-        uint32 size = 0;
+        uint32_t size = 0;
 
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
         size += PrependInt32(builder, u"Start Constant Table", magicStartOfConstantTable);
@@ -1594,13 +1594,13 @@ public:
         {
             WAsmJs::Types type = (WAsmJs::Types)i;
             WAsmJs::TypedSlotInfo* typedInfo = function->GetAsmJsFunctionInfo()->GetTypedSlotInfo(type);
-            uint32 constCount = typedInfo->constCount;
+            uint32_t constCount = typedInfo->constCount;
             if (constCount > FunctionBody::FirstRegSlot)
             {
-                uint32 typeSize = WAsmJs::GetTypeByteSize(type);
+                uint32_t typeSize = WAsmJs::GetTypeByteSize(type);
                 byte* byteTable = ((byte*)constTable) + typedInfo->constSrcByteOffset;
                 byteTable += typeSize * FunctionBody::FirstRegSlot;
-                for (uint32 reg = FunctionBody::FirstRegSlot; reg < constCount; ++reg)
+                for (uint32_t reg = FunctionBody::FirstRegSlot; reg < constCount; ++reg)
                 {
                     switch (type)
                     {
@@ -1631,9 +1631,9 @@ public:
     }
 #endif
 
-    uint32 AddConstantTable(BufferBuilderList & builder, FunctionBody * function)
+    uint32_t AddConstantTable(BufferBuilderList & builder, FunctionBody * function)
     {
-        uint32 size = 0;
+        uint32_t size = 0;
 
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
         size += PrependInt32(builder, u"Start Constant Table", magicStartOfConstantTable);
@@ -1653,13 +1653,13 @@ public:
         return size;
     }
 
-    uint32 AddPropertyIdsForScopeSlotArray(BufferBuilderList & builder, ParseableFunctionInfo* function)
+    uint32_t AddPropertyIdsForScopeSlotArray(BufferBuilderList & builder, ParseableFunctionInfo* function)
     {
         if (function->scopeSlotArraySize == 0)
         {
             return 0;
         }
-        uint32 size = 0;
+        uint32_t size = 0;
 
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
         size += PrependInt32(builder, u"Start PropertyIdsForScopeSlotsArray", magicStartOfPropertyIdsForScopeSlotArray);
@@ -1678,15 +1678,15 @@ public:
         return size;
     }
 
-    uint32 AddSlotIdInCachedScopeToNestedIndexArray(BufferBuilderList& builder, FunctionBody * functionBody)
+    uint32_t AddSlotIdInCachedScopeToNestedIndexArray(BufferBuilderList& builder, FunctionBody * functionBody)
     {
-        uint32 size = 0;
+        uint32_t size = 0;
 
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
         size += PrependInt32(builder, u"Start SlotIdInCachedScopeToNestedIndexArray", magicStartOfSlotIdToNestedIndexArray);
 #endif
 
-        Js::AuxArray<uint32> * slotIdToNestedIndexArray = functionBody->GetSlotIdInCachedScopeToNestedIndexArray();
+        Js::AuxArray<uint32_t> * slotIdToNestedIndexArray = functionBody->GetSlotIdInCachedScopeToNestedIndexArray();
         size += PrependInt32(builder, u"SlotIdInCachedScopeToNestedIndexArray count", slotIdToNestedIndexArray->count);
         for (uint i = 0; i < slotIdToNestedIndexArray->count; i++)
         {
@@ -1700,9 +1700,9 @@ public:
     }
 
 #if ENABLE_NATIVE_CODEGEN
-    uint32 AddCallSiteToCallApplyCallSiteArray(BufferBuilderList& builder, FunctionBody * functionBody)
+    uint32_t AddCallSiteToCallApplyCallSiteArray(BufferBuilderList& builder, FunctionBody * functionBody)
     {
-        uint32 size = 0;
+        uint32_t size = 0;
 
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
         size += PrependInt32(builder, u"Start CallSiteToCallApplyCallSiteArray", magicStartOfCallSiteToCallApplyCallSiteArray);
@@ -1721,7 +1721,7 @@ public:
 #endif
 
     // Gets the number of debugger slot array scopes there are in the function body's scope chain list.
-    uint32 GetDebuggerScopeSlotArrayCount(FunctionBody * function)
+    uint32_t GetDebuggerScopeSlotArrayCount(FunctionBody * function)
     {
         Assert(function);
         uint debuggerScopeSlotArraySize = 0;
@@ -1739,7 +1739,7 @@ public:
     // Adds the debugger scopes that are slot array type to the serialized bytecode.
     // This is to ensure that block scope slot array properties are captured along with
     // function level slot array properties.
-    uint32 AddSlotArrayDebuggerScopeProperties(BufferBuilderList & builder, DebuggerScope* debuggerScope, uint propertiesCount)
+    uint32_t AddSlotArrayDebuggerScopeProperties(BufferBuilderList & builder, DebuggerScope* debuggerScope, uint propertiesCount)
     {
         Assert(debuggerScope);
         if (propertiesCount == 0)
@@ -1747,7 +1747,7 @@ public:
             return 0u;
         }
 
-        uint32 size = 0u;
+        uint32_t size = 0u;
 
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
         size += PrependInt32(builder, u"Start SlotArrayDebuggerScopeProperties", magicStartOfDebuggerScopeProperties);
@@ -1775,7 +1775,7 @@ public:
     // Adds the debugger scopes that are slot array type to the serialized bytecode.
     // This is to ensure that block scope slot array properties are captured along with
     // function level slot array properties.
-    uint32 AddSlotArrayDebuggerScopes(BufferBuilderList & builder, FunctionBody* function, uint debuggerScopeSlotArraySize)
+    uint32_t AddSlotArrayDebuggerScopes(BufferBuilderList & builder, FunctionBody* function, uint debuggerScopeSlotArraySize)
     {
         Assert(function);
         if (function->GetScopeObjectChain() == nullptr || debuggerScopeSlotArraySize == 0)
@@ -1783,7 +1783,7 @@ public:
             return 0u;
         }
 
-        uint32 size = 0u;
+        uint32_t size = 0u;
 
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
         size += PrependInt32(builder, u"Start SlotArrayDebuggerScopes", magicStartOfDebuggerScopes);
@@ -1814,14 +1814,14 @@ public:
         return size;
     }
 
-    uint32 AddCacheIdToPropertyIdMap(BufferBuilderList & builder, FunctionBody * function)
+    uint32_t AddCacheIdToPropertyIdMap(BufferBuilderList & builder, FunctionBody * function)
     {
         uint count = function->GetInlineCacheCount();
         if (count == 0)
         {
             return 0;
         }
-        uint32 size = 0;
+        uint32_t size = 0;
 
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
         PrependInt32(builder, u"Start CacheId-to-PropertyId map", magicStartOfCacheIdToPropIdMap);
@@ -1840,14 +1840,14 @@ public:
         return size;
     }
 
-    uint32 AddReferencedPropertyIdMap(BufferBuilderList & builder, FunctionBody * function)
+    uint32_t AddReferencedPropertyIdMap(BufferBuilderList & builder, FunctionBody * function)
     {
         uint count = function->GetReferencedPropertyIdCount();
         if (count == 0)
         {
             return 0;
         }
-        uint32 size = 0;
+        uint32_t size = 0;
 
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
         PrependInt32(builder, u"Start Referenced-PropertyId map", magicStartOfReferencedPropIdMap);
@@ -1866,7 +1866,7 @@ public:
         return size;
     }
 
-    uint32 PrependByteArray(BufferBuilderList & builder, int length, byte * buffer)
+    uint32_t PrependByteArray(BufferBuilderList & builder, int length, byte * buffer)
     {
         int size = 0;
         for (int i = 0; i<length; ++i)
@@ -1876,7 +1876,7 @@ public:
         return size;
     }
 
-    uint32 PrependUInt32Array(BufferBuilderList & builder, int length, uint32 * buffer)
+    uint32_t PrependUInt32Array(BufferBuilderList & builder, int length, uint32_t * buffer)
     {
         int size = 0;
         for(int i=0;i<length;++i)
@@ -1886,7 +1886,7 @@ public:
         return size;
     }
 
-    uint32 PrependGrowingUint32Array(BufferBuilderList & builder, const char16_t* clue, JsUtil::GrowingUint32HeapArray * arr)
+    uint32_t PrependGrowingUint32Array(BufferBuilderList & builder, const char16_t* clue, JsUtil::GrowingUint32HeapArray * arr)
     {
         if (arr == nullptr || arr->Count() == 0 || arr->GetLength() == 0 || arr->GetBuffer() == nullptr)
         {
@@ -1897,7 +1897,7 @@ public:
         return size;
     }
 
-    uint32 PrependSmallSpanSequence(BufferBuilderList & builder, const char16_t* clue, SmallSpanSequence * spanSequence)
+    uint32_t PrependSmallSpanSequence(BufferBuilderList & builder, const char16_t* clue, SmallSpanSequence * spanSequence)
     {
         auto size = PrependInt32(builder, clue, spanSequence->baseValue);
         size += PrependGrowingUint32Array(builder, u"Statement Buffer", spanSequence->pStatementBuffer);
@@ -1906,7 +1906,7 @@ public:
     }
 
     template <typename TStructType>
-    uint32 PrependStruct(BufferBuilderList & builder, const char16_t* clue, TStructType * value)
+    uint32_t PrependStruct(BufferBuilderList & builder, const char16_t* clue, TStructType * value)
     {
         auto entry = Anew(alloc, ConstantSizedBufferBuilderOf<TStructType>, clue, *value);
         builder.list = builder.list->Prepend(entry, alloc);
@@ -1914,9 +1914,9 @@ public:
         return sizeof(serialization_alignment TStructType);
     }
 
-    uint32 AddPropertyIdOfFormals(BufferBuilderList & builder, PropertyIdArray * propIds, FunctionBody * function)
+    uint32_t AddPropertyIdOfFormals(BufferBuilderList & builder, PropertyIdArray * propIds, FunctionBody * function)
     {
-        uint32 size = 0;
+        uint32_t size = 0;
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
         size += PrependInt32(builder, u"Start propertyids of formals", magicStartOfPropIdsOfFormals);
 #endif
@@ -1951,9 +1951,9 @@ public:
     }
 
 #ifdef ASMJS_PLAT
-    uint32 AddAsmJsFunctionInfo(BufferBuilderList & builder, FunctionBody * function)
+    uint32_t AddAsmJsFunctionInfo(BufferBuilderList & builder, FunctionBody * function)
     {
-        uint32 size = 0;
+        uint32_t size = 0;
         AsmJsFunctionInfo* funcInfo = function->GetAsmJsFunctionInfo();
 
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
@@ -1991,9 +1991,9 @@ public:
         return size;
     }
 
-    uint32 AddAsmJsModuleInfo(BufferBuilderList & builder, FunctionBody * function)
+    uint32_t AddAsmJsModuleInfo(BufferBuilderList & builder, FunctionBody * function)
     {
-        uint32 size = 0;
+        uint32_t size = 0;
         AsmJsModuleInfo * moduleInfo = function->GetAsmJsModuleInfo();
 
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
@@ -2241,7 +2241,7 @@ public:
         PrependInt32(builder, u"Start Function Table", magicStartOfFunctionBody);
 #endif
 
-        uint32 sourceDiff = 0;
+        uint32_t sourceDiff = 0;
 
         if (!TryConvertToUInt32(function->StartOffset(), &sourceDiff))
         {
@@ -2400,7 +2400,7 @@ public:
         {
             auto nestedBodyList = Anew(alloc, BufferBuilderList, u"Nest Function Bodies");
 
-            for (uint32 i = 0; i < function->GetNestedCount(); ++i)
+            for (uint32_t i = 0; i < function->GetNestedCount(); ++i)
             {
                 auto nestedFunction = function->GetNestedFunc(i);
                 if (nestedFunction == nullptr || !nestedFunction->HasParseableInfo())
@@ -2888,7 +2888,7 @@ public:
         return ReadInt32(buffer, remainingBytes, (int*)value);
     }
 
-    const byte * ReadULong(const byte * buffer, uint32 * value)
+    const byte * ReadULong(const byte * buffer, uint32_t * value)
     {
         auto remainingBytes = (raw + totalSize) - buffer;
         return ReadInt32(buffer, remainingBytes, (int*)value);
@@ -2944,12 +2944,12 @@ public:
     const byte * ReadAuxiliary(const byte * buffer, FunctionBody * functionBody)
     {
         const byte * current = buffer;
-        uint32 countOfAuxiliaryStructure;
+        uint32_t countOfAuxiliaryStructure;
         current = ReadUInt32(current, &countOfAuxiliaryStructure);
         Assert(countOfAuxiliaryStructure != 0);
 
-        uint32 sizeOfAuxiliaryBlock;
-        uint32 sizeOfAuxiliaryContextBlock;
+        uint32_t sizeOfAuxiliaryBlock;
+        uint32_t sizeOfAuxiliaryContextBlock;
         current = ReadUInt32(current, &sizeOfAuxiliaryBlock);
         current = ReadUInt32(current, &sizeOfAuxiliaryContextBlock);
 
@@ -3028,7 +3028,7 @@ public:
         return (const char16_t*)addressOfString;
     }
 
-    uint32 GetString16LengthById(int id)
+    uint32_t GetString16LengthById(int id)
     {
         if(!(id >= this->expectedBuildInPropertyCount && id<=string16Count + this->expectedBuildInPropertyCount))
         {
@@ -3038,7 +3038,7 @@ public:
         const char16_t* s2 = GetString16ById(id + 1);
         auto result = s2 - s1 - 1;
         Assert(result <= UINT_MAX);
-        return (uint32)result;
+        return (uint32_t)result;
     }
 
     int32_t ReadHeader()
@@ -3195,18 +3195,18 @@ public:
         string16Table = (byte*)(string16IndexTable + string16Count + 1);
 
         // string16Table is aligned to 2-bytes
-        uint32 string16TableOffset = (uint32)(string16Table - raw);
-        string16TableOffset = ::Math::Align(string16TableOffset, (uint32)sizeof(char16_t));
+        uint32_t string16TableOffset = (uint32_t)(string16Table - raw);
+        string16TableOffset = ::Math::Align(string16TableOffset, (uint32_t)sizeof(char16_t));
         string16Table = raw + string16TableOffset;
 
         // Consume ScopeInfo count and advance to the relative offsets
         scopeInfoRelativeOffsets = ReadUInt32(scopeInfoRelativeOffsets, &scopeInfoCount);
-        scopeInfoTable = scopeInfoRelativeOffsets + sizeof(uint32) * scopeInfoCount;
+        scopeInfoTable = scopeInfoRelativeOffsets + sizeof(uint32_t) * scopeInfoCount;
 
         return S_OK;
     }
 
-    const byte* ReadStringConstant(const byte* current, FunctionBody* function, _Out_ const char16_t* * string, _Out_ uint32 * len)
+    const byte* ReadStringConstant(const byte* current, FunctionBody* function, _Out_ const char16_t* * string, _Out_ uint32_t * len)
     {
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
         int constant;
@@ -3236,8 +3236,8 @@ public:
         callsite = scriptContext->GetLibrary()->CreateArray(arrayLength);
 
         const char16_t* string;
-        uint32 len;
-        uint32 rawlen = 0;
+        uint32_t len;
+        uint32_t rawlen = 0;
 
         for (int i = 0; i < arrayLength; i++)
         {
@@ -3285,15 +3285,15 @@ public:
         {
             WAsmJs::Types type = (WAsmJs::Types)i;
             WAsmJs::TypedSlotInfo* typedInfo = function->GetAsmJsFunctionInfo()->GetTypedSlotInfo(type);
-            uint32 constCount = typedInfo->constCount;
+            uint32_t constCount = typedInfo->constCount;
             if (constCount > FunctionBody::FirstRegSlot)
             {
-                uint32 typeSize = WAsmJs::GetTypeByteSize(type);
+                uint32_t typeSize = WAsmJs::GetTypeByteSize(type);
                 byte* byteTable = ((byte*)constTable) + typedInfo->constSrcByteOffset;
                 byteTable += typeSize * FunctionBody::FirstRegSlot;
 
                 size_t remainingBytes = (raw + totalSize) - current;
-                for (uint32 reg = FunctionBody::FirstRegSlot; reg < constCount; ++reg)
+                for (uint32_t reg = FunctionBody::FirstRegSlot; reg < constCount; ++reg)
                 {
                     switch (type)
                     {
@@ -3346,7 +3346,7 @@ public:
             case ctString16:
                 {
                     const char16_t* string;
-                    uint32 len;
+                    uint32_t len;
                     current = ReadStringConstant(current, function, &string, &len);
 
                     function->RecordStrConstant(reg, string, len, false);
@@ -3355,7 +3355,7 @@ public:
             case ctPropertyString16:
                 {
                     const char16_t* string;
-                    uint32 len;
+                    uint32_t len;
                     current = ReadStringConstant(current, function, &string, &len);
 
                     function->RecordStrConstant(reg, string, len, true);
@@ -3466,12 +3466,12 @@ public:
         current = ReadInt32(current, &constant);
         Assert(constant == magicStartOfSlotIdToNestedIndexArray);
 #endif
-        uint32 count;
+        uint32_t count;
         current = ReadUInt32(current, &count);
 
-        Js::AuxArray<uint32> * slotIdInCachedScopeToNestedIndexArray = functionBody->AllocateSlotIdInCachedScopeToNestedIndexArray(count);
+        Js::AuxArray<uint32_t> * slotIdInCachedScopeToNestedIndexArray = functionBody->AllocateSlotIdInCachedScopeToNestedIndexArray(count);
 
-        uint32 value;
+        uint32_t value;
         for (uint i = 0; i < count; i++)
         {
             current = ReadUInt32(current, &value);
@@ -3673,9 +3673,9 @@ public:
            return current;
         }
         (*arr) = JsUtil::GrowingUint32HeapArray::Create(/*length=*/count);
-        js_memcpy_s((*arr)->GetBuffer(), count * sizeof(uint32), current, count*sizeof(uint32));
+        js_memcpy_s((*arr)->GetBuffer(), count * sizeof(uint32_t), current, count*sizeof(uint32_t));
         (*arr)->SetCount(count);
-        current += count * sizeof(uint32);
+        current += count * sizeof(uint32_t);
         return current;
     }
 
@@ -3748,7 +3748,7 @@ public:
         Assert(constant == magicStartOfPropIdsOfFormals);
 #endif
 
-        uint32 count = 0;
+        uint32_t count = 0;
         current = ReadUInt32(current, &count);
 
         byte extraSlotCount = 0;
@@ -3823,7 +3823,7 @@ public:
         {
             int32 size;
             current = ReadConstantSizedInt32(current, &size);
-            argArray[i] = (uint32)size;
+            argArray[i] = (uint32_t)size;
         }
 
         if (argCount > 0)
@@ -3907,7 +3907,7 @@ public:
             {
                 int32 loc;
                 current = ReadConstantSizedInt32(current, &loc);
-                exportLocations[i] = (uint32)loc;
+                exportLocations[i] = (uint32_t)loc;
             }
         }
         RegSlot regSlot;
@@ -4069,8 +4069,8 @@ public:
             current = ReadInt32(current, &attributes);
         }
 
-        uint32 offsetIntoSource = 0;
-        uint32 offsetIntoSourcePrintable = 0;
+        uint32_t offsetIntoSource = 0;
+        uint32_t offsetIntoSourcePrintable = 0;
         current = ReadUInt32(current, &offsetIntoSource);
         current = ReadUInt32(current, &offsetIntoSourcePrintable);
 
@@ -4992,17 +4992,17 @@ int32_t ByteCodeSerializer::SerializeToBuffer(ScriptContext * scriptContext, Are
     return hr;
 }
 
-int32_t ByteCodeSerializer::DeserializeFromBuffer(ScriptContext * scriptContext, uint32 scriptFlags, LPCUTF8 utf8Source, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, Field(FunctionBody*)* function, uint sourceIndex)
+int32_t ByteCodeSerializer::DeserializeFromBuffer(ScriptContext * scriptContext, uint32_t scriptFlags, LPCUTF8 utf8Source, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, Field(FunctionBody*)* function, uint sourceIndex)
 {
     return ByteCodeSerializer::DeserializeFromBufferInternal(scriptContext, scriptFlags, utf8Source, /* sourceHolder */ nullptr, srcInfo, buffer, nativeModule, function, sourceIndex);
 }
 // Deserialize function body from supplied buffer
-int32_t ByteCodeSerializer::DeserializeFromBuffer(ScriptContext * scriptContext, uint32 scriptFlags, ISourceHolder* sourceHolder, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, Field(FunctionBody*)* function, uint sourceIndex)
+int32_t ByteCodeSerializer::DeserializeFromBuffer(ScriptContext * scriptContext, uint32_t scriptFlags, ISourceHolder* sourceHolder, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, Field(FunctionBody*)* function, uint sourceIndex)
 {
     AssertMsg(sourceHolder != nullptr || sourceIndex != Js::Constants::InvalidSourceIndex, "SourceHolder can't be null, if you have an empty source then pass ISourceHolder::GetEmptySourceHolder()");
     return ByteCodeSerializer::DeserializeFromBufferInternal(scriptContext, scriptFlags, /* utf8Source */ nullptr, sourceHolder, srcInfo, buffer, nativeModule, function, sourceIndex);
 }
-int32_t ByteCodeSerializer::DeserializeFromBufferInternal(ScriptContext * scriptContext, uint32 scriptFlags, LPCUTF8 utf8Source, ISourceHolder* sourceHolder, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, Field(FunctionBody*)* function, uint sourceIndex)
+int32_t ByteCodeSerializer::DeserializeFromBufferInternal(ScriptContext * scriptContext, uint32_t scriptFlags, LPCUTF8 utf8Source, ISourceHolder* sourceHolder, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, Field(FunctionBody*)* function, uint sourceIndex)
 {
     auto alloc = scriptContext->SourceCodeAllocator();
     bool isLibraryCode = ((scriptFlags & fscrIsLibraryCode) == fscrIsLibraryCode);
@@ -5052,7 +5052,7 @@ int32_t ByteCodeSerializer::DeserializeFromBufferInternal(ScriptContext * script
     return hr;
 }
 
-const char16_t* ByteCodeSerializer::DeserializeString(const DeferredFunctionStub* deferredStub, uint stringId, uint32& stringLength)
+const char16_t* ByteCodeSerializer::DeserializeString(const DeferredFunctionStub* deferredStub, uint stringId, uint32_t& stringLength)
 {
     ByteCodeCache* cache = deferredStub->byteCodeCache;
     ByteCodeBufferReader* reader = cache->GetReader();

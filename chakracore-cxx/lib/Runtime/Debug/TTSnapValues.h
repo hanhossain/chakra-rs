@@ -53,8 +53,8 @@ namespace TTD
         //Ensure a function is fully parsed/deserialized
         Js::FunctionBody* ForceAndGetFunctionBody(Js::ParseableFunctionInfo* pfi);
 
-        void WriteCodeToFile(ThreadContext* threadContext, bool fromEvent, uint32 bodyId, bool isUtf8Source, byte* sourceBuffer, uint32 length);
-        void ReadCodeFromFile(ThreadContext* threadContext, bool fromEvent, uint32 bodyId, bool isUtf8Source, byte* sourceBuffer, uint32 length);
+        void WriteCodeToFile(ThreadContext* threadContext, bool fromEvent, uint32_t bodyId, bool isUtf8Source, byte* sourceBuffer, uint32_t length);
+        void ReadCodeFromFile(ThreadContext* threadContext, bool fromEvent, uint32_t bodyId, bool isUtf8Source, byte* sourceBuffer, uint32_t length);
     }
 
     namespace NSSnapValues
@@ -84,10 +84,10 @@ namespace TTD
         void AssertSnapEquivTTDVar_Property(const TTDVar v1, const TTDVar v2, TTDCompareMap& compareMap, Js::PropertyId pid);
         void AssertSnapEquivTTDVar_PropertyGetter(const TTDVar v1, const TTDVar v2, TTDCompareMap& compareMap, Js::PropertyId pid);
         void AssertSnapEquivTTDVar_PropertySetter(const TTDVar v1, const TTDVar v2, TTDCompareMap& compareMap, Js::PropertyId pid);
-        void AssertSnapEquivTTDVar_Array(const TTDVar v1, const TTDVar v2, TTDCompareMap& compareMap, uint32 index);
-        void AssertSnapEquivTTDVar_SlotArray(const TTDVar v1, const TTDVar v2, TTDCompareMap& compareMap, uint32 index);
+        void AssertSnapEquivTTDVar_Array(const TTDVar v1, const TTDVar v2, TTDCompareMap& compareMap, uint32_t index);
+        void AssertSnapEquivTTDVar_SlotArray(const TTDVar v1, const TTDVar v2, TTDCompareMap& compareMap, uint32_t index);
         void AssertSnapEquivTTDVar_Special(const TTDVar v1, const TTDVar v2, TTDCompareMap& compareMap, const char16_t* specialField);
-        void AssertSnapEquivTTDVar_SpecialArray(const TTDVar v1, const TTDVar v2, TTDCompareMap& compareMap, const char16_t* specialField, uint32 index);
+        void AssertSnapEquivTTDVar_SpecialArray(const TTDVar v1, const TTDVar v2, TTDCompareMap& compareMap, const char16_t* specialField, uint32_t index);
 #endif
 
         //////////////////
@@ -137,7 +137,7 @@ namespace TTD
             TTD_LOG_PTR_ID ScriptContextLogId;
 
             //The number of slots in the scope array
-            uint32 SlotCount;
+            uint32_t SlotCount;
 
             //The data values for the slots in the scope entry
             TTDVar* Slots;
@@ -245,7 +245,7 @@ namespace TTD
         struct SnapFunctionBodyScopeChain
         {
             //The number of scopes associated with this function body
-            uint32 ScopeCount;
+            uint32_t ScopeCount;
 
             //The Ids of the scopes
             TTD_PTR_ID* ScopeArray;
@@ -269,7 +269,7 @@ namespace TTD
             TTD_LOG_PTR_ID ScriptContextLogId;
 
             //A unique counter we produce for every top-level body as it is loaded
-            uint32 TopLevelBodyCtr;
+            uint32_t TopLevelBodyCtr;
 
             //The string name of the function
             TTString FunctionName;
@@ -283,7 +283,7 @@ namespace TTD
 
             //The source length/buffer and if it is utf8 or char16_t encoded
             bool IsUtf8;
-            uint32 ByteLength;
+            uint32_t ByteLength;
             byte* SourceBuffer;
 
             //The (possibly empty) scope chain info
@@ -295,7 +295,7 @@ namespace TTD
         };
 
         //Extract WITHOUT COPYING the info needed for this top level function -- use in script context when function is parsed to keep all the info together and then we do the copying later when doing snapshots
-        void ExtractTopLevelCommonBodyResolveInfo(TopLevelCommonBodyResolveInfo* fbInfo, Js::FunctionBody* fb, uint32 topLevelCtr, Js::ModuleID moduleId, unsigned long sourceContextId, bool isUtf8source, const byte* source, uint32 sourceLen, SlabAllocator& alloc);
+        void ExtractTopLevelCommonBodyResolveInfo(TopLevelCommonBodyResolveInfo* fbInfo, Js::FunctionBody* fb, uint32_t topLevelCtr, Js::ModuleID moduleId, unsigned long sourceContextId, bool isUtf8source, const byte* source, uint32_t sourceLen, SlabAllocator& alloc);
         void EmitTopLevelCommonBodyResolveInfo(const TopLevelCommonBodyResolveInfo* fbInfo, bool emitInline, ThreadContext* threadContext, FileWriter* writer, NSTokens::Separator separator);
         void ParseTopLevelCommonBodyResolveInfo(TopLevelCommonBodyResolveInfo* fbInfo, bool readSeparator, bool parseInline, ThreadContext* threadContext, FileReader* reader, SlabAllocator& alloc);
 
@@ -313,7 +313,7 @@ namespace TTD
             LoadScriptFlag LoadFlag;
         };
 
-        void ExtractTopLevelLoadedFunctionBodyInfo(TopLevelScriptLoadFunctionBodyResolveInfo* fbInfo, Js::FunctionBody* fb, uint32 topLevelCtr, Js::ModuleID moduleId, unsigned long sourceContextId, bool isUtf8, const byte* source, uint32 sourceLen, LoadScriptFlag loadFlag, SlabAllocator& alloc);
+        void ExtractTopLevelLoadedFunctionBodyInfo(TopLevelScriptLoadFunctionBodyResolveInfo* fbInfo, Js::FunctionBody* fb, uint32_t topLevelCtr, Js::ModuleID moduleId, unsigned long sourceContextId, bool isUtf8, const byte* source, uint32_t sourceLen, LoadScriptFlag loadFlag, SlabAllocator& alloc);
         Js::FunctionBody* InflateTopLevelLoadedFunctionBodyInfo(const TopLevelScriptLoadFunctionBodyResolveInfo* fbInfo, Js::ScriptContext* ctx);
 
         void EmitTopLevelLoadedFunctionBodyInfo(const TopLevelScriptLoadFunctionBodyResolveInfo* fbInfo, ThreadContext* threadContext, FileWriter* writer, NSTokens::Separator separator);
@@ -330,7 +330,7 @@ namespace TTD
             TopLevelCommonBodyResolveInfo TopLevelBase;
         };
 
-        void ExtractTopLevelNewFunctionBodyInfo(TopLevelNewFunctionBodyResolveInfo* fbInfo, Js::FunctionBody* fb, uint32 topLevelCtr, Js::ModuleID moduleId, const char16_t* source, uint32 sourceLen, SlabAllocator& alloc);
+        void ExtractTopLevelNewFunctionBodyInfo(TopLevelNewFunctionBodyResolveInfo* fbInfo, Js::FunctionBody* fb, uint32_t topLevelCtr, Js::ModuleID moduleId, const char16_t* source, uint32_t sourceLen, SlabAllocator& alloc);
         Js::FunctionBody* InflateTopLevelNewFunctionBodyInfo(const TopLevelNewFunctionBodyResolveInfo* fbInfo, Js::ScriptContext* ctx);
 
         void EmitTopLevelNewFunctionBodyInfo(const TopLevelNewFunctionBodyResolveInfo* fbInfo, ThreadContext* threadContext, FileWriter* writer, NSTokens::Separator separator);
@@ -353,7 +353,7 @@ namespace TTD
             bool IsStrictMode;
         };
 
-        void ExtractTopLevelEvalFunctionBodyInfo(TopLevelEvalFunctionBodyResolveInfo* fbInfo, Js::FunctionBody* fb, uint32 topLevelCtr, Js::ModuleID moduleId, const char16_t* source, uint32 sourceLen, uint32 grfscr, bool registerDocument, BOOL isIndirect, BOOL strictMode, SlabAllocator& alloc);
+        void ExtractTopLevelEvalFunctionBodyInfo(TopLevelEvalFunctionBodyResolveInfo* fbInfo, Js::FunctionBody* fb, uint32_t topLevelCtr, Js::ModuleID moduleId, const char16_t* source, uint32_t sourceLen, uint32_t grfscr, bool registerDocument, BOOL isIndirect, BOOL strictMode, SlabAllocator& alloc);
         Js::FunctionBody* InflateTopLevelEvalFunctionBodyInfo(const TopLevelEvalFunctionBodyResolveInfo* fbInfo, Js::ScriptContext* ctx);
 
         void EmitTopLevelEvalFunctionBodyInfo(const TopLevelEvalFunctionBodyResolveInfo* fbInfo, ThreadContext* threadContext, FileWriter* writer, NSTokens::Separator separator);
@@ -421,7 +421,7 @@ namespace TTD
             TTD_LOG_PTR_ID LogId;
 
             //The index value associated with this modification
-            uint32 Index;
+            uint32_t Index;
         };
 
         //A structure for serializing/tracking script contexts
@@ -439,17 +439,17 @@ namespace TTD
             TTString ContextSRC;
 
             //A list of all *root* scripts that have been loaded into this context
-            uint32 LoadedTopLevelScriptCount;
+            uint32_t LoadedTopLevelScriptCount;
             TopLevelFunctionInContextRelation* LoadedTopLevelScriptArray;
 
-            uint32 NewFunctionTopLevelScriptCount;
+            uint32_t NewFunctionTopLevelScriptCount;
             TopLevelFunctionInContextRelation* NewFunctionTopLevelScriptArray;
 
-            uint32 EvalTopLevelScriptCount;
+            uint32_t EvalTopLevelScriptCount;
             TopLevelFunctionInContextRelation* EvalTopLevelScriptArray;
 
             //A list of all the pending async buffer modifications
-            uint32 PendingAsyncModCount;
+            uint32_t PendingAsyncModCount;
             SnapPendingAsyncBufferModification* PendingAsyncModArray;
         };
 

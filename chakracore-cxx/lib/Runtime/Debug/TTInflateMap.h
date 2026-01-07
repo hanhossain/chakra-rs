@@ -49,8 +49,8 @@ namespace TTD
         InflateMap();
         ~InflateMap();
 
-        void PrepForInitialInflate(ThreadContext* threadContext, uint32 ctxCount, uint32 handlerCount, uint32 typeCount, uint32 objectCount, uint32 bodyCount, uint32 dbgScopeCount, uint32 envCount, uint32 slotCount);
-        void PrepForReInflate(uint32 ctxCount, uint32 handlerCount, uint32 typeCount, uint32 objectCount, uint32 bodyCount, uint32 dbgScopeCount, uint32 envCount, uint32 slotCount);
+        void PrepForInitialInflate(ThreadContext* threadContext, uint32_t ctxCount, uint32_t handlerCount, uint32_t typeCount, uint32_t objectCount, uint32_t bodyCount, uint32_t dbgScopeCount, uint32_t envCount, uint32_t slotCount);
+        void PrepForReInflate(uint32_t ctxCount, uint32_t handlerCount, uint32_t typeCount, uint32_t objectCount, uint32_t bodyCount, uint32_t dbgScopeCount, uint32_t envCount, uint32_t slotCount);
         void CleanupAfterInflate();
 
         bool IsObjectAlreadyInflated(TTD_PTR_ID objid) const;
@@ -234,7 +234,7 @@ namespace TTD
         //Check that the given mapping either (1) does not exist or (2) is consistent -- if needed add the mapping and to worklist as well
         void CheckConsistentAndAddPtrIdMapping_Helper(TTD_PTR_ID h1PtrId, TTD_PTR_ID h2PtrId, TTDComparePath::StepKind stepKind, const TTDComparePath::PathEntry& next);
 
-        void CheckConsistentAndAddPtrIdMapping_Scope(TTD_PTR_ID h1PtrId, TTD_PTR_ID h2PtrId, uint32 index);
+        void CheckConsistentAndAddPtrIdMapping_Scope(TTD_PTR_ID h1PtrId, TTD_PTR_ID h2PtrId, uint32_t index);
         void CheckConsistentAndAddPtrIdMapping_FunctionBody(TTD_PTR_ID h1PtrId, TTD_PTR_ID h2PtrId);
         void CheckConsistentAndAddPtrIdMapping_Special(TTD_PTR_ID h1PtrId, TTD_PTR_ID h2PtrId, const char16_t* specialField);
         void CheckConsistentAndAddPtrIdMapping_Root(TTD_PTR_ID h1PtrId, TTD_PTR_ID h2PtrId, TTD_LOG_PTR_ID tag);

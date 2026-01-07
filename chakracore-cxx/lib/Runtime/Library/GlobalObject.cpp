@@ -169,7 +169,7 @@ using namespace Js;
 
         // used arbitrary defaults for these, but it seems to work
         ModuleID moduleID = 0;
-        uint32 grfscr = 0;
+        uint32_t grfscr = 0;
         LPCOLESTR pszTitle = u"";
         BOOL registerDocument = false;
 
@@ -548,7 +548,7 @@ using namespace Js;
     }
 
     Var GlobalObject::VEval(JavascriptLibrary* library, FrameDisplay* environment, ModuleID moduleID, bool strictMode, bool isIndirect,
-        Arguments& args, bool isLibraryCode, bool registerDocument, uint32 additionalGrfscr, ScriptContext* debugEvalScriptContext)
+        Arguments& args, bool isLibraryCode, bool registerDocument, uint32_t additionalGrfscr, ScriptContext* debugEvalScriptContext)
     {
         Assert(library);
         ScriptContext* scriptContext = library->GetScriptContext();
@@ -592,7 +592,7 @@ using namespace Js;
         bool found = useEvalMap && scriptContext->IsInEvalMap(key, isIndirect, &pfuncScript);
         if (!found || (!isIndirect && pfuncScript->GetEnvironment() != &NullFrameDisplay))
         {
-            uint32 grfscr = additionalGrfscr | fscrReturnExpression | fscrEval | fscrEvalCode | fscrGlobalCode;
+            uint32_t grfscr = additionalGrfscr | fscrReturnExpression | fscrEval | fscrEvalCode | fscrGlobalCode;
 
             if (isLibraryCode)
             {
@@ -642,7 +642,7 @@ using namespace Js;
             FunctionBody* globalBody = TTD::JsSupport::ForceAndGetFunctionBody(pfuncScript->GetParseableFunctionInfo());
             if(!scriptContext->TTDContextInfo->IsBodyAlreadyLoadedAtTopLevel(globalBody))
             {
-                uint32 bodyIdCtr = 0;
+                uint32_t bodyIdCtr = 0;
 
                 if(scriptContext->IsTTDRecordModeEnabled())
                 {
@@ -725,7 +725,7 @@ using namespace Js;
     }
 
 #ifdef ENABLE_SCRIPT_PROFILING
-    ScriptFunction* GlobalObject::ProfileModeEvalHelper(ScriptContext* scriptContext, const char16_t *source, int sourceLength, ModuleID moduleID, uint32 grfscr, LPCOLESTR pszTitle, BOOL registerDocument, BOOL isIndirect, BOOL strictMode)
+    ScriptFunction* GlobalObject::ProfileModeEvalHelper(ScriptContext* scriptContext, const char16_t *source, int sourceLength, ModuleID moduleID, uint32_t grfscr, LPCOLESTR pszTitle, BOOL registerDocument, BOOL isIndirect, BOOL strictMode)
     {
 #if ENABLE_DEBUG_CONFIG_OPTIONS
         char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
@@ -812,7 +812,7 @@ using namespace Js;
         }
     }
 
-    ScriptFunction* GlobalObject::DefaultEvalHelper(ScriptContext* scriptContext, const char16_t *source, int sourceLength, ModuleID moduleID, uint32 grfscr, LPCOLESTR pszTitle, BOOL registerDocument, BOOL isIndirect, BOOL strictMode)
+    ScriptFunction* GlobalObject::DefaultEvalHelper(ScriptContext* scriptContext, const char16_t *source, int sourceLength, ModuleID moduleID, uint32_t grfscr, LPCOLESTR pszTitle, BOOL registerDocument, BOOL isIndirect, BOOL strictMode)
     {
         Assert(sourceLength >= 0);
         AnalysisAssert(scriptContext);
@@ -974,7 +974,7 @@ using namespace Js;
 
 #ifdef IR_VIEWER
     Var GlobalObject::IRDumpEvalHelper(ScriptContext* scriptContext, const char16_t *source,
-        int sourceLength, ModuleID moduleID, uint32 grfscr, LPCOLESTR pszTitle,
+        int sourceLength, ModuleID moduleID, uint32_t grfscr, LPCOLESTR pszTitle,
         BOOL registerDocument, BOOL isIndirect, BOOL strictMode)
     {
         // TODO (t-doilij) clean up this function, specifically used for IR dump (don't execute bytecode; potentially dangerous)
@@ -2105,7 +2105,7 @@ LHexError:
         return flags;
     }
 
-    DescriptorFlags GlobalObject::GetItemSetter(uint32 index, Var* setterValue, ScriptContext* requestContext)
+    DescriptorFlags GlobalObject::GetItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext)
     {
         DescriptorFlags flags = DynamicObject::GetItemSetter(index, setterValue, requestContext);
         if (flags == None)
@@ -2174,20 +2174,20 @@ LHexError:
         return TRUE;
     }
 
-    PropertyQueryFlags GlobalObject::HasItemQuery(uint32 index)
+    PropertyQueryFlags GlobalObject::HasItemQuery(uint32_t index)
     {
         return JavascriptConversion::BooleanToPropertyQueryFlags(JavascriptConversion::PropertyQueryFlagsToBoolean((DynamicObject::HasItemQuery(index)))
             || (this->directHostObject && JavascriptOperators::HasItem(this->directHostObject, index))
             || (this->hostObject && JavascriptOperators::HasItem(this->hostObject, index)));
     }
 
-    BOOL GlobalObject::HasOwnItem(uint32 index)
+    BOOL GlobalObject::HasOwnItem(uint32_t index)
     {
         return JavascriptConversion::PropertyQueryFlagsToBoolean(DynamicObject::HasItemQuery(index))
             || (this->directHostObject && this->directHostObject->HasItem(index));
     }
 
-    PropertyQueryFlags GlobalObject::GetItemReferenceQuery(Var originalInstance, uint32 index, Var* value, ScriptContext* requestContext)
+    PropertyQueryFlags GlobalObject::GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext* requestContext)
     {
         if (JavascriptConversion::PropertyQueryFlagsToBoolean(DynamicObject::GetItemReferenceQuery(originalInstance, index, value, requestContext)))
         {
@@ -2198,13 +2198,13 @@ LHexError:
             (this->hostObject && JavascriptConversion::PropertyQueryFlagsToBoolean(this->hostObject->GetItemReferenceQuery(originalInstance, index, value, requestContext))));
     }
 
-    BOOL GlobalObject::SetItem(uint32 index, Var value, PropertyOperationFlags flags)
+    BOOL GlobalObject::SetItem(uint32_t index, Var value, PropertyOperationFlags flags)
     {
         BOOL result = DynamicObject::SetItem(index, value, flags);
         return result;
     }
 
-    PropertyQueryFlags GlobalObject::GetItemQuery(Var originalInstance, uint32 index, Var* value, ScriptContext* requestContext)
+    PropertyQueryFlags GlobalObject::GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext* requestContext)
     {
         if (JavascriptConversion::PropertyQueryFlagsToBoolean(DynamicObject::GetItemQuery(originalInstance, index, value, requestContext)))
         {
@@ -2215,7 +2215,7 @@ LHexError:
             (this->hostObject && this->hostObject->GetItem(originalInstance, index, value, requestContext)));
     }
 
-    BOOL GlobalObject::DeleteItem(uint32 index, PropertyOperationFlags flags)
+    BOOL GlobalObject::DeleteItem(uint32_t index, PropertyOperationFlags flags)
     {
         if (DynamicObject::DeleteItem(index, flags))
         {

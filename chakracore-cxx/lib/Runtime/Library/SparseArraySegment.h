@@ -9,84 +9,84 @@ namespace Js
     class SparseArraySegmentBase
     {
     public:
-        static const uint32 MaxLength;
+        static const uint32_t MaxLength;
 
-        Field(uint32) left; // TODO: (leish)(swb) this can easily be recycler false positive on x86, or on x64 if combine with length field
+        Field(uint32_t) left; // TODO: (leish)(swb) this can easily be recycler false positive on x86, or on x64 if combine with length field
                             // find a way to either tag this or find a better solution
-        Field(uint32) length; //we use length instead of right so that we can denote a segment is empty
-        Field(uint32) size;
+        Field(uint32_t) length; //we use length instead of right so that we can denote a segment is empty
+        Field(uint32_t) size;
         Field(SparseArraySegmentBase*) next;
 
-        static const uint32 CHUNK_SIZE = 16;
-        static const uint32 HEAD_CHUNK_SIZE = 16;
-        static const uint32 INLINE_CHUNK_SIZE = 64; // Max number of elements in a segment that is initialized inline within the array.
-        static const uint32 SMALL_CHUNK_SIZE = 4;
-        static const uint32 BigLeft = 1 << 20;
+        static const uint32_t CHUNK_SIZE = 16;
+        static const uint32_t HEAD_CHUNK_SIZE = 16;
+        static const uint32_t INLINE_CHUNK_SIZE = 64; // Max number of elements in a segment that is initialized inline within the array.
+        static const uint32_t SMALL_CHUNK_SIZE = 4;
+        static const uint32_t BigLeft = 1 << 20;
 
-        SparseArraySegmentBase(uint32 left, uint32 length, uint32 size);
+        SparseArraySegmentBase(uint32_t left, uint32_t length, uint32_t size);
 
-        bool    HasIndex(uint32 index) { return (left <= index) && index < (left + length); };
+        bool    HasIndex(uint32_t index) { return (left <= index) && index < (left + length); };
 
-        uint32  RemoveUndefined(ScriptContext* scriptContext); //returns count of undefined removed
+        uint32_t  RemoveUndefined(ScriptContext* scriptContext); //returns count of undefined removed
         void    EnsureSizeInBound();
         void    CheckLengthvsSize() { AssertOrFailFast(this->length <= this->size); }
 
-        static uint32 GetOffsetOfLeft() { return offsetof(SparseArraySegmentBase, left); }
-        static uint32 GetOffsetOfLength() { return offsetof(SparseArraySegmentBase, length); }
-        static uint32 GetOffsetOfSize() { return offsetof(SparseArraySegmentBase, size); }
-        static uint32 GetOffsetOfNext() { return offsetof(SparseArraySegmentBase, next); }
+        static uint32_t GetOffsetOfLeft() { return offsetof(SparseArraySegmentBase, left); }
+        static uint32_t GetOffsetOfLength() { return offsetof(SparseArraySegmentBase, length); }
+        static uint32_t GetOffsetOfSize() { return offsetof(SparseArraySegmentBase, size); }
+        static uint32_t GetOffsetOfNext() { return offsetof(SparseArraySegmentBase, next); }
 
         static bool DoNativeArrayLeafSegment() { return !PHASE_OFF1(Js::NativeArrayLeafSegmentPhase); }
         static bool IsLeafSegment(SparseArraySegmentBase *seg, Recycler *recycler);
 
     protected:
-        static void EnsureSizeInBound(uint32 left, uint32 length, uint32& size, SparseArraySegmentBase* next);
+        static void EnsureSizeInBound(uint32_t left, uint32_t length, uint32_t& size, SparseArraySegmentBase* next);
     };
 
     template<typename T>
     class SparseArraySegment : public SparseArraySegmentBase
     {
     public:
-        SparseArraySegment(uint32 left, uint32 length, uint32 size) :
+        SparseArraySegment(uint32_t left, uint32_t length, uint32_t size) :
             SparseArraySegmentBase(left, length, size) {}
 
         Field(T) elements[]; // actual elements will follow this determined by size
 
         void FillSegmentBuffer(uint start, uint size);
-        T GetElement(uint32 index);
-        void SetElement(Recycler *recycler, uint32 index, T value); // sets elements within the segment
-        void RemoveElement(Recycler *recycler, uint32 index); // NOTE: RemoveElement calls memmove, for perf reasons use SetElement(index, null)
+        T GetElement(uint32_t index);
+        void SetElement(Recycler *recycler, uint32_t index, T value); // sets elements within the segment
+        void RemoveElement(Recycler *recycler, uint32_t index); // NOTE: RemoveElement calls memmove, for perf reasons use SetElement(index, null)
 
-        SparseArraySegment<T> *GrowBy(Recycler *recycler, uint32 n);
+        SparseArraySegment<T> *GrowBy(Recycler *recycler, uint32_t n);
 
-        SparseArraySegment<T>* GrowByMin(Recycler *recycler, uint32 minValue);
-        SparseArraySegment<T>* GrowByMinMax(Recycler *recycler, uint32 minValue, uint32 maxValue);
-        SparseArraySegment<T>* GrowFrontByMax(Recycler *recycler, uint32 n);
+        SparseArraySegment<T>* GrowByMin(Recycler *recycler, uint32_t minValue);
+        SparseArraySegment<T>* GrowByMinMax(Recycler *recycler, uint32_t minValue, uint32_t maxValue);
+        SparseArraySegment<T>* GrowFrontByMax(Recycler *recycler, uint32_t n);
 
         void ReverseSegment(Recycler *recycler);
-        void    Truncate(uint32 index);
+        void    Truncate(uint32_t index);
 
         //following will change the current segment allocation
-        SparseArraySegment<T> *SetElementGrow(Recycler *recycler, SparseArraySegmentBase* prev, uint32 index, T value);
+        SparseArraySegment<T> *SetElementGrow(Recycler *recycler, SparseArraySegmentBase* prev, uint32_t index, T value);
 
-        static SparseArraySegment<T> *AllocateLiteralHeadSegment(Recycler *const recycler, const uint32 length);
-        static SparseArraySegment<T> * AllocateSegment(Recycler* recycler, uint32 left, uint32 length, SparseArraySegmentBase *nextSeg);
-        static SparseArraySegment<T> * AllocateSegment(Recycler* recycler, uint32 left, uint32 length, uint32 size, SparseArraySegmentBase *nextSeg);
-        static SparseArraySegment<T> * AllocateSegment(Recycler* recycler, SparseArraySegmentBase* prev, uint32 index);
+        static SparseArraySegment<T> *AllocateLiteralHeadSegment(Recycler *const recycler, const uint32_t length);
+        static SparseArraySegment<T> * AllocateSegment(Recycler* recycler, uint32_t left, uint32_t length, SparseArraySegmentBase *nextSeg);
+        static SparseArraySegment<T> * AllocateSegment(Recycler* recycler, uint32_t left, uint32_t length, uint32_t size, SparseArraySegmentBase *nextSeg);
+        static SparseArraySegment<T> * AllocateSegment(Recycler* recycler, SparseArraySegmentBase* prev, uint32_t index);
         template<bool isLeaf>
-        static SparseArraySegment<T> * AllocateSegmentImpl(Recycler* recycler, uint32 left, uint32 length, SparseArraySegmentBase *nextSeg);
-
-        template<bool isLeaf>
-        static SparseArraySegment<T> * AllocateSegmentImpl(Recycler* recycler, uint32 left, uint32 length, uint32 size, SparseArraySegmentBase *nextSeg);
+        static SparseArraySegment<T> * AllocateSegmentImpl(Recycler* recycler, uint32_t left, uint32_t length, SparseArraySegmentBase *nextSeg);
 
         template<bool isLeaf>
-        static SparseArraySegment<T> * AllocateSegmentImpl(Recycler* recycler, SparseArraySegmentBase* prev, uint32 index);
+        static SparseArraySegment<T> * AllocateSegmentImpl(Recycler* recycler, uint32_t left, uint32_t length, uint32_t size, SparseArraySegmentBase *nextSeg);
 
         template<bool isLeaf>
-        static SparseArraySegment<T> *AllocateLiteralHeadSegmentImpl(Recycler *const recycler, const uint32 length);
+        static SparseArraySegment<T> * AllocateSegmentImpl(Recycler* recycler, SparseArraySegmentBase* prev, uint32_t index);
 
-        static void ClearElements(__out_ecount(len) Field(T)* elements, uint32 len);
-        static SparseArraySegment<T>* CopySegment(Recycler *recycler, SparseArraySegment<T>* dst, uint32 dstIndex, SparseArraySegment<T>* src, uint32 srcIndex, uint32 inputLen);
+        template<bool isLeaf>
+        static SparseArraySegment<T> *AllocateLiteralHeadSegmentImpl(Recycler *const recycler, const uint32_t length);
+
+        static void ClearElements(__out_ecount(len) Field(T)* elements, uint32_t len);
+        static SparseArraySegment<T>* CopySegment(Recycler *recycler, SparseArraySegment<T>* dst, uint32_t dstIndex, SparseArraySegment<T>* src, uint32_t srcIndex, uint32_t inputLen);
 
         static T GetMissingItem();
         static Var GetMissingItemVar();
@@ -98,7 +98,7 @@ namespace Js
             return IsMissingItem(AddressOf(value[0]));
         }
 
-        static uint32 GetAlignedSize(uint32 size);
+        static uint32_t GetAlignedSize(uint32_t size);
 
         static inline SparseArraySegment* From(SparseArraySegmentBase* seg)
         {
@@ -112,15 +112,15 @@ namespace Js
 
     private:
         template<bool isLeaf>
-        static SparseArraySegment<T>* Allocate(Recycler* recycler, uint32 left, uint32 length, uint32 size, uint32 fillStart = 0);
+        static SparseArraySegment<T>* Allocate(Recycler* recycler, uint32_t left, uint32_t length, uint32_t size, uint32_t fillStart = 0);
 
         template<bool isLeaf>
-        SparseArraySegment<T> *GrowByImpl(Recycler *recycler, uint32 n);
+        SparseArraySegment<T> *GrowByImpl(Recycler *recycler, uint32_t n);
 
         template<bool isLeaf>
-        SparseArraySegment<T>* GrowFrontByMaxImpl(Recycler *recycler, uint32 n);
+        SparseArraySegment<T>* GrowFrontByMaxImpl(Recycler *recycler, uint32_t n);
 
-        uint32 GetGrowByFactor();
+        uint32_t GetGrowByFactor();
     };
 
     template<typename T>

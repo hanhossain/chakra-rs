@@ -241,7 +241,7 @@ using namespace Js;
             FunctionBody* globalBody = TTD::JsSupport::ForceAndGetFunctionBody(pfuncScript->GetParseableFunctionInfo());
             if(!scriptContext->TTDContextInfo->IsBodyAlreadyLoadedAtTopLevel(globalBody))
             {
-                uint32 bodyIdCtr = 0;
+                uint32_t bodyIdCtr = 0;
 
                 if(scriptContext->IsTTDRecordModeEnabled())
                 {
@@ -713,7 +713,7 @@ using namespace Js;
         }
 
         // mark volatile, because otherwise VC will incorrectly optimize away load in the finally block
-        volatile uint32 exceptionCode = 0;
+        volatile uint32_t exceptionCode = 0;
         EXCEPTION_POINTERS exceptionInfo = { 0 };
         __try
         {
@@ -852,7 +852,7 @@ using namespace Js;
     }
 #endif
 
-    Var JavascriptFunction::CallAsConstructor(Var v, Var overridingNewTarget, Arguments args, ScriptContext* scriptContext, const Js::AuxArray<uint32> *spreadIndices)
+    Var JavascriptFunction::CallAsConstructor(Var v, Var overridingNewTarget, Arguments args, ScriptContext* scriptContext, const Js::AuxArray<uint32_t> *spreadIndices)
     {
         Assert(v);
         Assert(args.Info.Flags & CallFlags_New);
@@ -996,7 +996,7 @@ using namespace Js;
         return newObject;
     }
 
-    Var JavascriptFunction::EntrySpreadCall(const Js::AuxArray<uint32> *spreadIndices, RecyclableObject* function, CallInfo callInfo, ...)
+    Var JavascriptFunction::EntrySpreadCall(const Js::AuxArray<uint32_t> *spreadIndices, RecyclableObject* function, CallInfo callInfo, ...)
     {
         PROBE_STACK(function->GetScriptContext(), Js::Constants::MinStackDefault);
 
@@ -1009,17 +1009,17 @@ using namespace Js;
         END_SAFE_REENTRANT_CALL
     }
 
-    uint JavascriptFunction::GetSpreadSize(const Arguments args, const Js::AuxArray<uint32> *spreadIndices, ScriptContext *scriptContext)
+    uint JavascriptFunction::GetSpreadSize(const Arguments args, const Js::AuxArray<uint32_t> *spreadIndices, ScriptContext *scriptContext)
     {
         // Work out the expanded number of arguments.
         AssertOrFailFast(args.Info.Count < CallInfo::kMaxCountArgs && args.Info.Count >= spreadIndices->count);
 
         uint spreadArgsCount = spreadIndices->count;
-        uint32 totalLength = args.Info.Count - spreadArgsCount;
+        uint32_t totalLength = args.Info.Count - spreadArgsCount;
 
         for (unsigned i = 0; i < spreadArgsCount; ++i)
         {
-            uint32 elementLength = JavascriptArray::GetSpreadArgLen(args[spreadIndices->elements[i]], scriptContext);
+            uint32_t elementLength = JavascriptArray::GetSpreadArgLen(args[spreadIndices->elements[i]], scriptContext);
             if (elementLength >= CallInfo::kMaxCountArgs)
             {
                 JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgListTooLarge);
@@ -1035,7 +1035,7 @@ using namespace Js;
         return totalLength;
     }
 
-    void JavascriptFunction::SpreadArgs(const Arguments args, Arguments& destArgs, const Js::AuxArray<uint32> *spreadIndices, ScriptContext *scriptContext)
+    void JavascriptFunction::SpreadArgs(const Arguments args, Arguments& destArgs, const Js::AuxArray<uint32_t> *spreadIndices, ScriptContext *scriptContext)
     {
         Assert(args.Values != nullptr);
         Assert(destArgs.Values != nullptr);
@@ -1049,10 +1049,10 @@ using namespace Js;
 
         // Iterate over the arguments, spreading inline. We skip 'this'.
 
-        uint32 argsIndex = 1;
+        uint32_t argsIndex = 1;
         for (unsigned i = 1, spreadArgIndex = 0; i < argCount; ++i)
         {
-            uint32 spreadIndex = spreadIndices->elements[spreadArgIndex]; // Next index to be spread.
+            uint32_t spreadIndex = spreadIndices->elements[spreadArgIndex]; // Next index to be spread.
             if (i < spreadIndex)
             {
                 // Copy everything until the next spread index.
@@ -1112,13 +1112,13 @@ using namespace Js;
 
     }
 
-    Var JavascriptFunction::CallSpreadFunction(RecyclableObject* function, Arguments args, const Js::AuxArray<uint32> *spreadIndices)
+    Var JavascriptFunction::CallSpreadFunction(RecyclableObject* function, Arguments args, const Js::AuxArray<uint32_t> *spreadIndices)
     {
         ScriptContext* scriptContext = function->GetScriptContext();
 
         // Work out the expanded number of arguments.
         uint spreadSize = GetSpreadSize(args, spreadIndices, scriptContext);
-        uint32 actualLength = CallInfo::GetLargeArgCountWithExtraArgs(args.Info.Flags, spreadSize);
+        uint32_t actualLength = CallInfo::GetLargeArgCountWithExtraArgs(args.Info.Flags, spreadSize);
 
         // Allocate (if needed) space for the expanded arguments.
         Arguments outArgs(CallInfo(args.Info.Flags, spreadSize), nullptr);
@@ -2632,7 +2632,7 @@ LABEL1:
         return DynamicObject::IsWritable(propertyId);
     }
 
-    BOOL JavascriptFunction::GetSpecialPropertyName(uint32 index, JavascriptString ** propertyName, ScriptContext * requestContext)
+    BOOL JavascriptFunction::GetSpecialPropertyName(uint32_t index, JavascriptString ** propertyName, ScriptContext * requestContext)
     {
         uint length = GetSpecialPropertyCount();
         if (index < length)
@@ -3439,7 +3439,7 @@ LABEL1:
 
         ArrayBufferBase* arrayBuffer = VarTo<ArrayBufferBase>(args[1]);
         const byte* buffer = arrayBuffer->GetBuffer();
-        uint32 size = arrayBuffer->GetByteLength();
+        uint32_t size = arrayBuffer->GetByteLength();
         int32_t hr = JitFromEncodedWorkItem(scriptContext->GetNativeCodeGenerator(), buffer, size);
         if (FAILED(hr))
         {

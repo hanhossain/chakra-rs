@@ -20,7 +20,7 @@ namespace Js
                 int8_t i8Fields[static_cast<size_t>(CountT::Max)];
                 uint16 u16Fields[static_cast<size_t>(CountT::Max)];
                 int16 i16Fields[static_cast<size_t>(CountT::Max)];
-                uint32 u32Fields[static_cast<size_t>(CountT::Max)];
+                uint32_t u32Fields[static_cast<size_t>(CountT::Max)];
                 int32 i32Fields[static_cast<size_t>(CountT::Max)];
             };
             Fields() {}
@@ -48,11 +48,11 @@ namespace Js
             AllocCounters<uint8_t>(host);
         }
 
-        uint32 Get(CountT typeEnum) const
+        uint32_t Get(CountT typeEnum) const
         {
             uint8_t type = static_cast<uint8_t>(typeEnum);
             uint8_t localFieldSize = fieldSize;
-            uint32 value = 0;
+            uint32_t value = 0;
             if (localFieldSize == 1)
             {
                 value = this->fields->u8Fields[type];
@@ -73,7 +73,7 @@ namespace Js
             return value;
         }
 
-        uint32 Set(CountT typeEnum, uint32 val, T* host)
+        uint32_t Set(CountT typeEnum, uint32_t val, T* host)
         {
             uint8_t type = static_cast<uint8_t>(typeEnum);
             if (fieldSize == 1)
@@ -84,7 +84,7 @@ namespace Js
                 }
                 else
                 {
-                    (val <= UINT16_MAX) ? AllocCounters<uint16>(host) : AllocCounters<uint32>(host);
+                    (val <= UINT16_MAX) ? AllocCounters<uint16>(host) : AllocCounters<uint32_t>(host);
                     return host->counters.Set(typeEnum, val, host);
                 }
             }
@@ -97,7 +97,7 @@ namespace Js
                 }
                 else
                 {
-                    AllocCounters<uint32>(host);
+                    AllocCounters<uint32_t>(host);
                     return host->counters.Set(typeEnum, val, host);
                 }
             }
@@ -111,7 +111,7 @@ namespace Js
             return val;
         }
 
-        uint32 Increase(CountT typeEnum, T* host)
+        uint32_t Increase(CountT typeEnum, T* host)
         {
             uint8_t type = static_cast<uint8_t>(typeEnum);
             if (fieldSize == 1)
@@ -135,7 +135,7 @@ namespace Js
                 }
                 else
                 {
-                    AllocCounters<uint32>(host);
+                    AllocCounters<uint32_t>(host);
                     return host->counters.Increase(typeEnum, host);
                 }
             }

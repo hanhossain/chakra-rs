@@ -124,7 +124,7 @@
 
 #define BEGIN_ENUM_BYTE(name) BEGIN_ENUM(name, byte)
 #define BEGIN_ENUM_USHORT(name) BEGIN_ENUM(name, uint16)
-#define BEGIN_ENUM_UINT(name) BEGIN_ENUM(name, uint32)
+#define BEGIN_ENUM_UINT(name) BEGIN_ENUM(name, uint32_t)
 
 #define END_ENUM_BYTE()                        \
             Force8BitPadding = (byte) 0xffU \
@@ -143,10 +143,10 @@
 
 
 #define END_ENUM_UINT()                       \
-            Force32BitPadding = (uint32) 0xffffffffU \
+            Force32BitPadding = (uint32_t) 0xffffffffU \
         };                                  \
                                             \
-        uint32 _value;                       \
+        uint32_t _value;                       \
     };
 
 

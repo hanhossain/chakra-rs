@@ -10,13 +10,13 @@ namespace Js
     {
     protected:
         Field(JavascriptArray*) arrayObject;
-        Field(uint32) index;
+        Field(uint32_t) index;
         Field(bool) doneArray;
         Field(EnumeratorFlags) flags;
 
         DEFINE_VTABLE_CTOR_ABSTRACT(JavascriptArrayIndexEnumeratorBase, JavascriptEnumerator)
 
         JavascriptArrayIndexEnumeratorBase(JavascriptArray* arrayObject, EnumeratorFlags flags, ScriptContext* scriptContext);
-        virtual uint32 GetCurrentItemIndex()  override { return index; }
+        virtual uint32_t GetCurrentItemIndex()  override { return index; }
     };
 }

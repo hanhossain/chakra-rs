@@ -13,7 +13,7 @@ namespace TTD
     {
     private:
         //An integer code to describe the reason for the abort -- 0 invalid, 1 end of log, 2 request etime move, 3 uncaught exception (propagate to top-level)
-        const uint32 m_abortCode;
+        const uint32_t m_abortCode;
 
         //An optional target event time -- intent is interpreted based on the abort code
         const long m_optEventTime;
@@ -24,7 +24,7 @@ namespace TTD
         //An optional -- and static string message to include
         const char16_t* m_staticAbortMessage;
 
-        TTDebuggerAbortException(uint32 abortCode, long optEventTime, long optMoveMode, const char16_t* staticAbortMessage);
+        TTDebuggerAbortException(uint32_t abortCode, long optEventTime, long optMoveMode, const char16_t* staticAbortMessage);
 
     public:
         ~TTDebuggerAbortException();
@@ -62,8 +62,8 @@ namespace TTD
         unsigned long CurrentStatementLoopTime; //The currently executing statement
 
         //bytecode range of the current stmt
-        uint32 CurrentStatementBytecodeMin;
-        uint32 CurrentStatementBytecodeMax;
+        uint32_t CurrentStatementBytecodeMin;
+        uint32_t CurrentStatementBytecodeMax;
     };
 
     //A class to represent a source location
@@ -82,15 +82,15 @@ namespace TTD
         long m_ltime;  //-1 indicates any ltime is OK
 
         //The top-level body this source location is contained in
-        uint32 m_topLevelBodyId;
+        uint32_t m_topLevelBodyId;
 
         //The position of the function in the document
-        uint32 m_functionLine;
-        uint32 m_functionColumn;
+        uint32_t m_functionLine;
+        uint32_t m_functionColumn;
 
         //The location in the fnuction
-        uint32 m_line;
-        uint32 m_column;
+        uint32_t m_line;
+        uint32_t m_column;
 
         //Update the specific body of this location from the root body and line number info
         Js::FunctionBody* UpdatePostInflateFunctionBody_Helper(Js::FunctionBody* rootBody) const;
@@ -116,7 +116,7 @@ namespace TTD
         void SetLocationFromFrame(long topLevelETime, const SingleCallCounter& callFrame);
         void SetLocationFromFunctionEntryAnyTime(long topLevelETime, Js::FunctionBody* body);
         void SetLocationFull(long etime, long ftime, long ltime, Js::FunctionBody* body, uint32_t line, int32_t column);
-        void SetLocationFullRaw(TTD_LOG_PTR_ID sourceScriptLogId, long etime, long ftime, long ltime, uint32 topLevelBodyId, uint32 functionLine, uint32 functionColumn, uint32_t line, int32_t column);
+        void SetLocationFullRaw(TTD_LOG_PTR_ID sourceScriptLogId, long etime, long ftime, long ltime, uint32_t topLevelBodyId, uint32_t functionLine, uint32_t functionColumn, uint32_t line, int32_t column);
         void SetLocationWithBP(long bpId, Js::FunctionBody* body, uint32_t line, int32_t column);
 
         long GetRootEventTime() const;
@@ -127,12 +127,12 @@ namespace TTD
         Js::FunctionBody* LoadFunctionBodyIfPossible(Js::ScriptContext* ctx) const;
 
         long GetBPId() const;
-        uint32 GetTopLevelBodyId() const;
-        uint32 GetFunctionSourceLine() const;
-        uint32 GetFunctionSourceColumn() const;
+        uint32_t GetTopLevelBodyId() const;
+        uint32_t GetFunctionSourceLine() const;
+        uint32_t GetFunctionSourceColumn() const;
 
-        uint32 GetSourceLine() const;
-        uint32 GetSourceColumn() const;
+        uint32_t GetSourceLine() const;
+        uint32_t GetSourceColumn() const;
 
         //return true if the two locations refer to the same time/place
         static bool AreSameLocations(const TTDebuggerSourceLocation& sl1, const TTDebuggerSourceLocation& sl2);
@@ -172,18 +172,18 @@ namespace TTD
         long m_loopTime;
 
         //The location in the function
-        uint32 m_line;
-        uint32 m_column;
+        uint32_t m_line;
+        uint32_t m_column;
 
     public:
         TTInnerLoopLastStatementInfo();
         TTInnerLoopLastStatementInfo(const TTInnerLoopLastStatementInfo& lsi);
 
-        void SetLastLine(long etime, long ftime, long ltime, uint32 line, uint32 column);
+        void SetLastLine(long etime, long ftime, long ltime, uint32_t line, uint32_t column);
 
         bool IsEnabled() const;
         bool CheckLastTimeMatch(long etime, long ftime, long ltime) const;
-        bool CheckLineColumnMatch(uint32 line, uint32 column) const;
+        bool CheckLineColumnMatch(uint32_t line, uint32_t column) const;
     };
 
     //////////////////
@@ -203,7 +203,7 @@ namespace TTD
         JsUtil::List<SingleCallCounter, HeapAllocator> m_callStack;
 
         //A set containing every top level body that we have notified the debugger of (so we don't tell them multiple times)
-        JsUtil::BaseHashSet<uint32, HeapAllocator> m_debuggerNotifiedTopLevelBodies;
+        JsUtil::BaseHashSet<uint32_t, HeapAllocator> m_debuggerNotifiedTopLevelBodies;
 
         //The most recently executed statement before return -- normal return or exception
         //We clear this after executing any following statements so this can be used for:
@@ -265,7 +265,7 @@ namespace TTD
         bool TryGetTopCallCallerCounter(SingleCallCounter& caller) const;
 
         //Log a function call
-        void PushCallEvent(Js::JavascriptFunction* function, uint32 argc, Js::Var* argv, bool isInFinally);
+        void PushCallEvent(Js::JavascriptFunction* function, uint32_t argc, Js::Var* argv, bool isInFinally);
 
         //Log a function return in normal case and exception
         void PopCallEvent(Js::JavascriptFunction* function, Js::Var result);
@@ -307,7 +307,7 @@ namespace TTD
         void LoadPreservedBPInfo(ThreadContext* threadContext);
 
         //When we load in a top level function we need to add any breakpoints associated with it
-        void AddPreservedBPsForTopLevelLoad(uint32 topLevelBodyId, Js::FunctionBody* body);
+        void AddPreservedBPsForTopLevelLoad(uint32_t topLevelBodyId, Js::FunctionBody* body);
 
         //Update the loop count information
         void UpdateLoopCountInfo();
@@ -352,8 +352,8 @@ namespace TTD
         void ClearActiveBPInfo(ThreadContextTTD* ttdThreadContext);
 
         //After loading script process it to (1) notify the debugger if needed and (2) set any breakpoints we need
-        void ProcessScriptLoad(Js::ScriptContext* ctx, uint32 topLevelBodyId, Js::FunctionBody* body, Js::Utf8SourceInfo* utf8SourceInfo, CompileScriptException* se);
-        void ProcessScriptLoad_InflateReuseBody(uint32 topLevelBodyId, Js::FunctionBody* body);
+        void ProcessScriptLoad(Js::ScriptContext* ctx, uint32_t topLevelBodyId, Js::FunctionBody* body, Js::Utf8SourceInfo* utf8SourceInfo, CompileScriptException* se);
+        void ProcessScriptLoad_InflateReuseBody(uint32_t topLevelBodyId, Js::FunctionBody* body);
     };
 
     //A class to ensure that even when exceptions are thrown the pop action for the TTD call stack is executed -- defined after EventLog so we can refer to it in the .h file

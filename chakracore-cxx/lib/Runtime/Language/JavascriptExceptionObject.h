@@ -132,7 +132,7 @@ namespace Js
             this->hostWrapperCreateFunc = hostWrapperCreateFunc;
         }
 
-        uint32 GetByteCodeOffset()
+        uint32_t GetByteCodeOffset()
         {
             return exceptionContext.ThrowingFunctionByteCodeOffset();
         }

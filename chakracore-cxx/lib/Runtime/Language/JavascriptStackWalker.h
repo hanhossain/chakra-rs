@@ -108,8 +108,8 @@ namespace Js
         bool                    IsCallerPhysicalFrame() const;
         bool                    IsTopMostFrame() const;
         int32                   GetFrameIndex() const { Assert(currentIndex != -1); return currentIndex; }
-        uint32                  GetCurrentInlineeOffset() const;
-        uint32                  GetBottomMostInlineeOffset() const;
+        uint32_t                  GetCurrentInlineeOffset() const;
+        uint32_t                  GetBottomMostInlineeOffset() const;
         Js::JavascriptFunction *GetBottomMostFunctionObject() const;
         void                    FinalizeStackValues(__in_ecount(argCount) Js::Var args[], size_t argCount, bool deepCopy) const;
         int32                   GetFrameCount() { return frameCount; }
@@ -191,7 +191,7 @@ namespace Js
         BOOL WalkToTarget(JavascriptFunction * funcTarget);
         BOOL WalkToArgumentsFrame(ArgumentsObject *argsObj);
 
-        uint32 GetByteCodeOffset() const;
+        uint32_t GetByteCodeOffset() const;
         BOOL IsCallerGlobalFunction() const;
         BOOL IsEvalCaller() const;
         bool IsJavascriptFrame() const { return inlinedFramesBeingWalked || isJavascriptFrame; }
@@ -241,7 +241,7 @@ namespace Js
 
         // noinline, we want to use own stack frame.
         static BOOL GetCaller(_Out_opt_ JavascriptFunction** ppFunc, ScriptContext* scriptContext);
-        static BOOL GetCaller(_Out_opt_ JavascriptFunction** ppFunc, uint32* byteCodeOffset, ScriptContext* scriptContext);
+        static BOOL GetCaller(_Out_opt_ JavascriptFunction** ppFunc, uint32_t* byteCodeOffset, ScriptContext* scriptContext);
         static void GetThis(Var* pThis, int moduleId, ScriptContext* scriptContext);
         static void GetThis(Var* pThis, int moduleId, JavascriptFunction* func, ScriptContext* scriptContext);
 
@@ -343,10 +343,10 @@ namespace Js
         void SetCurrentArgumentsObject(Var args);       // sets arguments object for the current frame, which may be virtual (belonging to an inlinee)
         Var GetCurrentNativeArgumentsObject() const;    // returns arguments object from the physical native frame
         void SetCurrentNativeArgumentsObject(Var args); // sets arguments object on the physical native frame
-        bool TryGetByteCodeOffsetFromInterpreterFrame(uint32& offset) const;
+        bool TryGetByteCodeOffsetFromInterpreterFrame(uint32_t& offset) const;
 #if ENABLE_NATIVE_CODEGEN
-        bool TryGetByteCodeOffsetFromNativeFrame(uint32& offset) const;
-        bool TryGetByteCodeOffsetOfInlinee(Js::JavascriptFunction* function, uint loopNum, unsigned long pCodeAddr, Js::FunctionBody** inlinee, uint32& offset, bool useInternalFrameInfo) const;
+        bool TryGetByteCodeOffsetFromNativeFrame(uint32_t& offset) const;
+        bool TryGetByteCodeOffsetOfInlinee(Js::JavascriptFunction* function, uint loopNum, unsigned long pCodeAddr, Js::FunctionBody** inlinee, uint32_t& offset, bool useInternalFrameInfo) const;
         uint GetLoopNumber(bool& usedInternalFrameInfo) const;
         bool InlinedFramesBeingWalked() const;
         bool HasInlinedFramesOnStack() const;
