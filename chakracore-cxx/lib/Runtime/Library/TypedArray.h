@@ -108,21 +108,21 @@ namespace Js
 
         virtual DescriptorFlags GetSetter(PropertyId propertyId, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
         virtual DescriptorFlags GetSetter(JavascriptString* propertyNameString, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual DescriptorFlags GetItemSetter(uint32 index, Var* setterValue, ScriptContext* requestContext) override;
+        virtual DescriptorFlags GetItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext) override;
         virtual PropertyQueryFlags HasPropertyQuery(Js::PropertyId propertyId, _Inout_opt_ PropertyValueInfo* info) override;
         virtual BOOL HasOwnProperty(Js::PropertyId propertyId) override;
         virtual PropertyQueryFlags GetPropertyQuery(Js::Var originalInstance, Js::PropertyId propertyId, Js::Var* value, Js::PropertyValueInfo* info, Js::ScriptContext* requestContext) override;
         virtual PropertyQueryFlags GetPropertyQuery(Js::Var originalInstance, Js::JavascriptString* propertyNameString, Js::Var* value, Js::PropertyValueInfo* info, Js::ScriptContext* requestContext) override;
         virtual PropertyQueryFlags GetPropertyReferenceQuery(Js::Var originalInstance, Js::PropertyId propertyId, Js::Var* value, Js::PropertyValueInfo* info, Js::ScriptContext* requestContext) override;
-        virtual PropertyQueryFlags HasItemQuery(uint32 index) override;
-        virtual BOOL DeleteItem(uint32 index, Js::PropertyOperationFlags flags) override;
-        virtual PropertyQueryFlags GetItemQuery(Js::Var originalInstance, uint32 index, Js::Var* value, Js::ScriptContext * requestContext) override;
-        virtual BOOL SetItem(uint32 index, Js::Var value, Js::PropertyOperationFlags flags = PropertyOperation_None) override;
+        virtual PropertyQueryFlags HasItemQuery(uint32_t index) override;
+        virtual BOOL DeleteItem(uint32_t index, Js::PropertyOperationFlags flags) override;
+        virtual PropertyQueryFlags GetItemQuery(Js::Var originalInstance, uint32_t index, Js::Var* value, Js::ScriptContext * requestContext) override;
+        virtual BOOL SetItem(uint32_t index, Js::Var value, Js::PropertyOperationFlags flags = PropertyOperation_None) override;
         virtual BOOL SetProperty(Js::PropertyId propertyId, Js::Var value, Js::PropertyOperationFlags flags, Js::PropertyValueInfo* info) override;
         virtual BOOL SetProperty(Js::JavascriptString* propertyNameString, Js::Var value, Js::PropertyOperationFlags flags, Js::PropertyValueInfo* info) override;
         virtual BOOL DeleteProperty(Js::PropertyId propertyId, Js::PropertyOperationFlags flags) override;
         virtual BOOL DeleteProperty(JavascriptString *propertyNameString, Js::PropertyOperationFlags flags) override;
-        virtual PropertyQueryFlags GetItemReferenceQuery(Js::Var originalInstance, uint32 index, Js::Var* value, Js::ScriptContext * requestContext) override;
+        virtual PropertyQueryFlags GetItemReferenceQuery(Js::Var originalInstance, uint32_t index, Js::Var* value, Js::ScriptContext * requestContext) override;
         virtual BOOL GetEnumerator(JavascriptStaticEnumerator * enumerator, EnumeratorFlags flags, ScriptContext* requestContext, EnumeratorCache * enumeratorCache = nullptr) override;
         virtual JavascriptEnumerator * GetIndexEnumerator(EnumeratorFlags flags, ScriptContext * requestContext) override;
 
@@ -140,49 +140,49 @@ namespace Js
         static BOOL Is(TypeId typeId);
         // Returns false if this is not a TypedArray or it's not detached
         static BOOL IsDetachedTypedArray(Var aValue);
-        static int32_t GetBuffer(Var aValue, ArrayBuffer** outBuffer, uint32* outOffset, uint32* outLength);
+        static int32_t GetBuffer(Var aValue, ArrayBuffer** outBuffer, uint32_t* outOffset, uint32_t* outLength);
         static TypedArrayBase * ValidateTypedArray(Var aValue, ScriptContext *scriptContext, const char16_t* apiName);
         static TypedArrayBase * ValidateTypedArray(Arguments &args, ScriptContext *scriptContext, const char16_t* apiName);
-        static Var TypedArrayCreate(Var constructor, Arguments *args, uint32 length, ScriptContext *scriptContext);
+        static Var TypedArrayCreate(Var constructor, Arguments *args, uint32_t length, ScriptContext *scriptContext);
 
-        virtual BOOL DirectSetItem(uint32 index, Js::Var value) = 0;
-        virtual BOOL DirectSetItemNoSet(uint32 index, Js::Var value) = 0;
-        virtual Var  DirectGetItem(uint32 index) = 0;
-        virtual BOOL DirectSetItemNoDetachCheck(uint32 index, Js::Var value) = 0;
-        virtual Var  DirectGetItemNoDetachCheck(uint32 index) = 0;
+        virtual BOOL DirectSetItem(uint32_t index, Js::Var value) = 0;
+        virtual BOOL DirectSetItemNoSet(uint32_t index, Js::Var value) = 0;
+        virtual Var  DirectGetItem(uint32_t index) = 0;
+        virtual BOOL DirectSetItemNoDetachCheck(uint32_t index, Js::Var value) = 0;
+        virtual Var  DirectGetItemNoDetachCheck(uint32_t index) = 0;
 
-        virtual Var TypedAdd(uint32 index, Var second) = 0;
-        virtual Var TypedAnd(uint32 index, Var second) = 0;
-        virtual Var TypedLoad(uint32 index) = 0;
-        virtual Var TypedOr(uint32 index, Var second) = 0;
-        virtual Var TypedStore(uint32 index, Var second) = 0;
-        virtual Var TypedSub(uint32 index, Var second) = 0;
-        virtual Var TypedXor(uint32 index, Var second) = 0;
-        virtual Var TypedExchange(uint32 index, Var second) = 0;
-        virtual Var TypedCompareExchange(uint32 index, Var comparand, Var replacementValue) = 0;
+        virtual Var TypedAdd(uint32_t index, Var second) = 0;
+        virtual Var TypedAnd(uint32_t index, Var second) = 0;
+        virtual Var TypedLoad(uint32_t index) = 0;
+        virtual Var TypedOr(uint32_t index, Var second) = 0;
+        virtual Var TypedStore(uint32_t index, Var second) = 0;
+        virtual Var TypedSub(uint32_t index, Var second) = 0;
+        virtual Var TypedXor(uint32_t index, Var second) = 0;
+        virtual Var TypedExchange(uint32_t index, Var second) = 0;
+        virtual Var TypedCompareExchange(uint32_t index, Var comparand, Var replacementValue) = 0;
 
-        uint32 GetByteLength() const { return length * BYTES_PER_ELEMENT; }
-        uint32 GetByteOffset() const { return byteOffset; }
-        uint32 GetBytesPerElement() const { return BYTES_PER_ELEMENT; }
+        uint32_t GetByteLength() const { return length * BYTES_PER_ELEMENT; }
+        uint32_t GetByteOffset() const { return byteOffset; }
+        uint32_t GetBytesPerElement() const { return BYTES_PER_ELEMENT; }
         byte*  GetByteBuffer() const { return buffer; };
         bool IsDetachedBuffer() const { return this->GetArrayBuffer()->IsDetached(); }
         void ClearLengthAndBufferOnDetach();
         static Var CommonSet(Arguments& args);
         static Var CommonSubarray(Arguments& args);
 
-        void SetObject(RecyclableObject* arraySource, uint32 targetLength, uint32 offset = 0);
-        void SetObjectNoDetachCheck(RecyclableObject* arraySource, uint32 targetLength, uint32 offset = 0);
-        void Set(TypedArrayBase* typedArraySource, uint32 offset = 0);
+        void SetObject(RecyclableObject* arraySource, uint32_t targetLength, uint32_t offset = 0);
+        void SetObjectNoDetachCheck(RecyclableObject* arraySource, uint32_t targetLength, uint32_t offset = 0);
+        void Set(TypedArrayBase* typedArraySource, uint32_t offset = 0);
 
         virtual BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
         virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
 
-        static bool TryGetLengthForOptimizedTypedArray(const Var var, uint32 *const lengthRef, TypeId *const typeIdRef);
+        static bool TryGetLengthForOptimizedTypedArray(const Var var, uint32_t *const lengthRef, TypeId *const typeIdRef);
         BOOL ValidateIndexAndDirectSetItem(Js::Var index, Js::Var value, bool * isNumericIndex);
-        uint32 ValidateAndReturnIndex(Js::Var index, bool * skipOperation, bool * isNumericIndex);
+        uint32_t ValidateAndReturnIndex(Js::Var index, bool * skipOperation, bool * isNumericIndex);
 
         // objectArray support
-        virtual BOOL SetItemWithAttributes(uint32 index, Var value, PropertyAttributes attributes) override;
+        virtual BOOL SetItemWithAttributes(uint32_t index, Var value, PropertyAttributes attributes) override;
         virtual BOOL IsObjectArrayFrozen() override;
 
         Var FindMinOrMax(Js::ScriptContext * scriptContext, TypeId typeId, bool findMax);
@@ -190,28 +190,28 @@ namespace Js
 
         static Var GetKeysEntriesValuesHelper(Arguments& args, ScriptContext *scriptContext, const char16_t* apiName, JavascriptArrayIteratorKind kind);
 
-        static uint32 GetFromIndex(Var arg, uint32 length, ScriptContext *scriptContext);
+        static uint32_t GetFromIndex(Var arg, uint32_t length, ScriptContext *scriptContext);
 
     private:
-        uint32 GetSourceLength(RecyclableObject* arraySource, uint32 targetLength, uint32 offset);
+        uint32_t GetSourceLength(RecyclableObject* arraySource, uint32_t targetLength, uint32_t offset);
 
     protected:
-        static Var CreateNewInstanceFromIterator(RecyclableObject *iterator, ScriptContext *scriptContext, uint32 elementSize, PFNCreateTypedArray pfnCreateTypedArray);
-        static Var CreateNewInstance(Arguments& args, ScriptContext* scriptContext, uint32 elementSize, PFNCreateTypedArray pfnCreateTypedArray );
+        static Var CreateNewInstanceFromIterator(RecyclableObject *iterator, ScriptContext *scriptContext, uint32_t elementSize, PFNCreateTypedArray pfnCreateTypedArray);
+        static Var CreateNewInstance(Arguments& args, ScriptContext* scriptContext, uint32_t elementSize, PFNCreateTypedArray pfnCreateTypedArray );
         static bool ArrayIteratorPrototypeHasUserDefinedNext(ScriptContext *scriptContext);
         static BOOL CanonicalNumericIndexString(PropertyId propertyId, ScriptContext *scriptContext);
         static BOOL CanonicalNumericIndexString(JavascriptString *propertyString, ScriptContext *scriptContext);
 
-        virtual void SortHelper(byte* listBuffer, uint32 length, RecyclableObject* compareFn, ScriptContext* scriptContext, ArenaAllocator* allocator) = 0;
+        virtual void SortHelper(byte* listBuffer, uint32_t length, RecyclableObject* compareFn, ScriptContext* scriptContext, ArenaAllocator* allocator) = 0;
 
-        virtual Var Subarray(uint32 begin, uint32 end) = 0;
+        virtual Var Subarray(uint32_t begin, uint32_t end) = 0;
         Field(int32) BYTES_PER_ELEMENT;
-        Field(uint32) byteOffset;
+        Field(uint32_t) byteOffset;
         FieldNoBarrier(uint8_t*) buffer;   // beginning of mapped array.
 
     public:
-        static uint32 GetOffsetOfBuffer()  { return offsetof(TypedArrayBase, buffer); }
-        static uint32 GetOffsetOfLength()  { return offsetof(TypedArrayBase, length); }
+        static uint32_t GetOffsetOfBuffer()  { return offsetof(TypedArrayBase, buffer); }
+        static uint32_t GetOffsetOfLength()  { return offsetof(TypedArrayBase, length); }
 
 #if ENABLE_TTD
     public:
@@ -271,21 +271,21 @@ namespace Js
             static FunctionInfo Set;
         };
 
-        TypedArray(ArrayBufferBase* arrayBuffer, uint32 byteOffset, uint32 mappedLength, DynamicType* type);
+        TypedArray(ArrayBufferBase* arrayBuffer, uint32_t byteOffset, uint32_t mappedLength, DynamicType* type);
 
-        static Var Create(ArrayBufferBase* arrayBuffer, uint32 byteOffSet, uint32 mappedLength, JavascriptLibrary* javascriptLibrary);
+        static Var Create(ArrayBufferBase* arrayBuffer, uint32_t byteOffSet, uint32_t mappedLength, JavascriptLibrary* javascriptLibrary);
         static Var NewInstance(RecyclableObject* function, CallInfo callInfo, ...);
 
         static Var EntrySet(RecyclableObject* function, CallInfo callInfo, ...);
 
-        Var Subarray(uint32 begin, uint32 end);
+        Var Subarray(uint32_t begin, uint32_t end);
 
         static BOOL HasVirtualTableInfo(Var aValue)
         {
             return VirtualTableInfo<TypedArray<TypeName, clamped, virtualAllocated>>::HasVirtualTable(aValue) || VirtualTableInfo<CrossSiteObject<TypedArray<TypeName, clamped, virtualAllocated>>>::HasVirtualTable(aValue);
         }
 
-        inline Var BaseTypedDirectGetItem(uint32 index)
+        inline Var BaseTypedDirectGetItem(uint32_t index)
         {
             if (this->IsDetachedBuffer()) // 9.4.5.8 IntegerIndexedElementGet
             {
@@ -301,7 +301,7 @@ namespace Js
             return GetLibrary()->GetUndefined();
         }
 
-        inline Var TypedDirectGetItemWithCheck(uint32 index)
+        inline Var TypedDirectGetItemWithCheck(uint32_t index)
         {
             if (this->IsDetachedBuffer()) // 9.4.5.8 IntegerIndexedElementGet
             {
@@ -317,7 +317,7 @@ namespace Js
             return GetLibrary()->GetUndefined();
         }
 
-        inline Var BaseTypedDirectGetItemNoDetachCheck(uint32 index)
+        inline Var BaseTypedDirectGetItemNoDetachCheck(uint32_t index)
         {
             Assert(!IsDetachedBuffer());
             Assert(index < GetLength());
@@ -326,7 +326,7 @@ namespace Js
             return JavascriptNumber::ToVar(typedBuffer[index], GetScriptContext());
         }
 
-        inline Var DirectGetItemVarCheckNoDetachCheck(uint32 index)
+        inline Var DirectGetItemVarCheckNoDetachCheck(uint32_t index)
         {
             Assert(!IsDetachedBuffer());
             Assert(index < GetLength());
@@ -335,7 +335,7 @@ namespace Js
             return JavascriptNumber::ToVarWithCheck(typedBuffer[index], GetScriptContext());
         }
 
-        inline BOOL DirectSetItemAtRange(TypedArray *fromArray, int32 iSrcStart, int32 iDstStart, uint32 length, TypeName(*convFunc)(Var value, ScriptContext* scriptContext))
+        inline BOOL DirectSetItemAtRange(TypedArray *fromArray, int32 iSrcStart, int32 iDstStart, uint32_t length, TypeName(*convFunc)(Var value, ScriptContext* scriptContext))
         {
             TypeName* dstBuffer = (TypeName*)buffer;
             TypeName* srcBuffer = (TypeName*)fromArray->buffer;
@@ -350,7 +350,7 @@ namespace Js
             }
 
             // Fixup destination start in case it's negative
-            uint32 start = iDstStart;
+            uint32_t start = iDstStart;
             if (iDstStart < 0)
             {
                 if ((long)(length) + iDstStart < 0)
@@ -363,8 +363,8 @@ namespace Js
                 start = 0;
             }
 
-            uint32 dstLength = UInt32Math::Add(start, length) < GetLength() ? length : GetLength() > start ? GetLength() - start : 0;
-            uint32 srcLength = start + length < fromArray->GetLength() ? length : (fromArray->GetLength() > start ? fromArray->GetLength() - start : 0);
+            uint32_t dstLength = UInt32Math::Add(start, length) < GetLength() ? length : GetLength() > start ? GetLength() - start : 0;
+            uint32_t srcLength = start + length < fromArray->GetLength() ? length : (fromArray->GetLength() > start ? fromArray->GetLength() - start : 0);
 
             // length is the minimum of length, srcLength and dstLength
             length = length < srcLength ? (length < dstLength ? length : dstLength) : (srcLength < dstLength ? srcLength : dstLength);
@@ -376,7 +376,7 @@ namespace Js
             if (dstLength > length)
             {
                 TypeName undefinedValue = convFunc(GetLibrary()->GetUndefined(), GetScriptContext());
-                for (uint32 i = length; i < dstLength; i++)
+                for (uint32_t i = length; i < dstLength; i++)
                 {
                     dstBuffer[i] = undefinedValue;
                 }
@@ -385,7 +385,7 @@ namespace Js
             return true;
         }
 
-        inline BOOL DirectSetItemAtRange(int32 start, uint32 length, TypeName typedValue)
+        inline BOOL DirectSetItemAtRange(int32 start, uint32_t length, TypeName typedValue)
         {
             if (CrossSite::IsCrossSiteObjectTyped(this))
             {
@@ -396,7 +396,7 @@ namespace Js
             {
                 JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_DetachedTypedArray);
             }
-            uint32 newStart = start, newLength = length;
+            uint32_t newStart = start, newLength = length;
 
             if (start < 0)
             {
@@ -429,7 +429,7 @@ namespace Js
             }
             else
             {
-                for (uint32 i = 0; i < newLength; i++)
+                for (uint32_t i = 0; i < newLength; i++)
                 {
                     typedBuffer[newStart + i] = typedValue;
                 }
@@ -438,7 +438,7 @@ namespace Js
             return TRUE;
         }
 
-        inline BOOL BaseTypedDirectSetItem(uint32 index, Js::Var value, TypeName (*convFunc)(Var value, ScriptContext* scriptContext))
+        inline BOOL BaseTypedDirectSetItem(uint32_t index, Js::Var value, TypeName (*convFunc)(Var value, ScriptContext* scriptContext))
         {
             // This call can potentially invoke user code, and may end up detaching the underlying array (this).
             // Therefore it was brought out and above the IsDetached check
@@ -463,7 +463,7 @@ namespace Js
             return TRUE;
         }
 
-        inline BOOL BaseTypedDirectSetItemNoSet(uint32 index, Js::Var value, TypeName (*convFunc)(Var value, ScriptContext* scriptContext))
+        inline BOOL BaseTypedDirectSetItemNoSet(uint32_t index, Js::Var value, TypeName (*convFunc)(Var value, ScriptContext* scriptContext))
         {
             // This call can potentially invoke user code, and may end up detaching the underlying array (this).
             // Therefore it was brought out and above the IsDetached check
@@ -477,7 +477,7 @@ namespace Js
             return FALSE;
         }
 
-        inline BOOL BaseTypedDirectSetItemNoDetachCheck(uint32 index, Js::Var value, TypeName(*convFunc)(Var value, ScriptContext* scriptContext))
+        inline BOOL BaseTypedDirectSetItemNoDetachCheck(uint32_t index, Js::Var value, TypeName(*convFunc)(Var value, ScriptContext* scriptContext))
         {
             TypeName typedValue = convFunc(value, GetScriptContext());
 
@@ -494,22 +494,22 @@ namespace Js
             return TRUE;
         }
 
-        virtual BOOL DirectSetItem(uint32 index, Js::Var value) override;
-        virtual BOOL DirectSetItemNoSet(uint32 index, Js::Var value) override;
-        virtual Var  DirectGetItem(uint32 index) override;
-        virtual BOOL DirectSetItemNoDetachCheck(uint32 index, Js::Var value) override;
-        virtual Var  DirectGetItemNoDetachCheck(uint32 index) override;
-        virtual Var TypedAdd(uint32 index, Var second) override;
-        virtual Var TypedAnd(uint32 index, Var second) override;
-        virtual Var TypedLoad(uint32 index) override;
-        virtual Var TypedOr(uint32 index, Var second) override;
-        virtual Var TypedStore(uint32 index, Var second) override;
-        virtual Var TypedSub(uint32 index, Var second) override;
-        virtual Var TypedXor(uint32 index, Var second) override;
-        virtual Var TypedExchange(uint32 index, Var second) override;
-        virtual Var TypedCompareExchange(uint32 index, Var comparand, Var replacementValue) override;
+        virtual BOOL DirectSetItem(uint32_t index, Js::Var value) override;
+        virtual BOOL DirectSetItemNoSet(uint32_t index, Js::Var value) override;
+        virtual Var  DirectGetItem(uint32_t index) override;
+        virtual BOOL DirectSetItemNoDetachCheck(uint32_t index, Js::Var value) override;
+        virtual Var  DirectGetItemNoDetachCheck(uint32_t index) override;
+        virtual Var TypedAdd(uint32_t index, Var second) override;
+        virtual Var TypedAnd(uint32_t index, Var second) override;
+        virtual Var TypedLoad(uint32_t index) override;
+        virtual Var TypedOr(uint32_t index, Var second) override;
+        virtual Var TypedStore(uint32_t index, Var second) override;
+        virtual Var TypedSub(uint32_t index, Var second) override;
+        virtual Var TypedXor(uint32_t index, Var second) override;
+        virtual Var TypedExchange(uint32_t index, Var second) override;
+        virtual Var TypedCompareExchange(uint32_t index, Var comparand, Var replacementValue) override;
 
-        static BOOL DirectSetItem(TypedArray* arr, uint32 index, Js::Var value)
+        static BOOL DirectSetItem(TypedArray* arr, uint32_t index, Js::Var value)
         {
             AssertMsg(arr != nullptr, "Array shouldn't be nullptr.");
 
@@ -517,7 +517,7 @@ namespace Js
         }
 
     protected:
-        void SortHelper(byte* listBuffer, uint32 length, RecyclableObject* compareFn, ScriptContext* scriptContext, ArenaAllocator* allocator)
+        void SortHelper(byte* listBuffer, uint32_t length, RecyclableObject* compareFn, ScriptContext* scriptContext, ArenaAllocator* allocator)
         {
             TypeName* list = reinterpret_cast<TypeName*>(listBuffer);
             JavascriptArray::CompareVarsInfo cvInfo;
@@ -551,7 +551,7 @@ namespace Js
         static Var EntrySet(RecyclableObject* function, CallInfo callInfo, ...);
         static Var EntrySubarray(RecyclableObject* function, CallInfo callInfo, ...);
 
-        CharArray(ArrayBufferBase* arrayBuffer, uint32 byteOffset, uint32 mappedLength, DynamicType* type) :
+        CharArray(ArrayBufferBase* arrayBuffer, uint32_t byteOffset, uint32_t mappedLength, DynamicType* type) :
         TypedArrayBase(arrayBuffer, byteOffset, mappedLength, sizeof(char16_t), type)
         {
             AssertMsg(arrayBuffer->GetByteLength() >= byteOffset, "invalid offset");
@@ -559,29 +559,29 @@ namespace Js
             buffer = arrayBuffer->GetBuffer() + byteOffset;
         }
 
-        static Var Create(ArrayBufferBase* arrayBuffer, uint32 byteOffSet, uint32 mappedLength, JavascriptLibrary* javascriptLibrary);
+        static Var Create(ArrayBufferBase* arrayBuffer, uint32_t byteOffSet, uint32_t mappedLength, JavascriptLibrary* javascriptLibrary);
         static Var NewInstance(RecyclableObject* function, CallInfo callInfo, ...);
 
-        Var Subarray(uint32 begin, uint32 end);
+        Var Subarray(uint32_t begin, uint32_t end);
 
-        virtual BOOL DirectSetItem(uint32 index, Js::Var value) override;
-        virtual BOOL DirectSetItemNoSet(uint32 index, Js::Var value) override;
-        virtual Var  DirectGetItem(uint32 index) override;
-        virtual BOOL DirectSetItemNoDetachCheck(uint32 index, Js::Var value) override;
-        virtual Var  DirectGetItemNoDetachCheck(uint32 index) override;
+        virtual BOOL DirectSetItem(uint32_t index, Js::Var value) override;
+        virtual BOOL DirectSetItemNoSet(uint32_t index, Js::Var value) override;
+        virtual Var  DirectGetItem(uint32_t index) override;
+        virtual BOOL DirectSetItemNoDetachCheck(uint32_t index, Js::Var value) override;
+        virtual Var  DirectGetItemNoDetachCheck(uint32_t index) override;
 
-        virtual Var TypedAdd(uint32 index, Var second) override;
-        virtual Var TypedAnd(uint32 index, Var second) override;
-        virtual Var TypedLoad(uint32 index) override;
-        virtual Var TypedOr(uint32 index, Var second) override;
-        virtual Var TypedStore(uint32 index, Var second) override;
-        virtual Var TypedSub(uint32 index, Var second) override;
-        virtual Var TypedXor(uint32 index, Var second) override;
-        virtual Var TypedExchange(uint32 index, Var second) override;
-        virtual Var TypedCompareExchange(uint32 index, Var comparand, Var replacementValue) override;
+        virtual Var TypedAdd(uint32_t index, Var second) override;
+        virtual Var TypedAnd(uint32_t index, Var second) override;
+        virtual Var TypedLoad(uint32_t index) override;
+        virtual Var TypedOr(uint32_t index, Var second) override;
+        virtual Var TypedStore(uint32_t index, Var second) override;
+        virtual Var TypedSub(uint32_t index, Var second) override;
+        virtual Var TypedXor(uint32_t index, Var second) override;
+        virtual Var TypedExchange(uint32_t index, Var second) override;
+        virtual Var TypedCompareExchange(uint32_t index, Var comparand, Var replacementValue) override;
 
     protected:
-        void SortHelper(byte* listBuffer, uint32 length, RecyclableObject* compareFn, ScriptContext* scriptContext, ArenaAllocator* allocator)
+        void SortHelper(byte* listBuffer, uint32_t length, RecyclableObject* compareFn, ScriptContext* scriptContext, ArenaAllocator* allocator)
         {
             char16_t* list = reinterpret_cast<char16_t*>(listBuffer);
             JavascriptArray::CompareVarsInfo cvInfo;
@@ -601,7 +601,7 @@ namespace Js
     template <> bool VarIsImpl<CharArray>(RecyclableObject* obj);
 
     template <typename TypeName, bool clamped, bool virtualAllocated>
-    TypedArray<TypeName, clamped, virtualAllocated>::TypedArray(ArrayBufferBase* arrayBuffer, uint32 byteOffset, uint32 mappedLength, DynamicType* type) :
+    TypedArray<TypeName, clamped, virtualAllocated>::TypedArray(ArrayBufferBase* arrayBuffer, uint32_t byteOffset, uint32_t mappedLength, DynamicType* type) :
         TypedArrayBase(arrayBuffer, byteOffset, mappedLength, sizeof(TypeName), type)
     {
         AssertMsg(arrayBuffer->GetByteLength() >= byteOffset, "invalid offset");
@@ -649,9 +649,9 @@ namespace Js
     }
 
     template <typename TypeName, bool clamped, bool virtualAllocated>
-    Var TypedArray<TypeName, clamped, virtualAllocated>::Create(ArrayBufferBase* arrayBuffer, uint32 byteOffSet, uint32 mappedLength, JavascriptLibrary* javascriptLibrary)
+    Var TypedArray<TypeName, clamped, virtualAllocated>::Create(ArrayBufferBase* arrayBuffer, uint32_t byteOffSet, uint32_t mappedLength, JavascriptLibrary* javascriptLibrary)
     {
-        uint32 totalLength, mappedByteLength;
+        uint32_t totalLength, mappedByteLength;
 
         if (UInt32Math::Mul(mappedLength, sizeof(TypeName), &mappedByteLength) ||
             UInt32Math::Add(byteOffSet, mappedByteLength, &totalLength) ||

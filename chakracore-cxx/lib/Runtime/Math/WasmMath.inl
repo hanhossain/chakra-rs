@@ -114,9 +114,9 @@ inline double WasmMath::Copysign(double aLeft, double aRight)
 template<>
 inline float WasmMath::Copysign(float aLeft, float aRight)
 {
-    uint32 aLeftI32 = *(uint32*)(&aLeft);
-    uint32 aRightI32 = *(uint32*)(&aRight);
-    uint32 res = ((aLeftI32 & 0x7fffffffu) | (aRightI32 & 0x80000000u));
+    uint32_t aLeftI32 = *(uint32_t*)(&aLeft);
+    uint32_t aRightI32 = *(uint32_t*)(&aRight);
+    uint32_t res = ((aLeftI32 & 0x7fffffffu) | (aRightI32 & 0x80000000u));
     return *(float*)(&res);
 }
 
@@ -260,12 +260,12 @@ int32 WasmMath::F32ToI32(float src, _In_ Js::ScriptContext* scriptContext)
     return WasmMath::ConvertFloatToInt<
         float, // SrcType
         int32, // DstType
-        uint32, // ReinterpretType
+        uint32_t, // ReinterpretType
         Js::NumberConstants::k_Float32TwoTo31,
         Js::NumberConstants::k_Float32NegZero,
         Js::NumberConstants::k_Float32NegTwoTo31,
-        &WasmMath::LessThan<uint32>,
-        &WasmMath::LessOrEqual<uint32>,
+        &WasmMath::LessThan<uint32_t>,
+        &WasmMath::LessOrEqual<uint32_t>,
         Saturate,
         INT32_MIN,
         INT32_MAX>(
@@ -274,17 +274,17 @@ int32 WasmMath::F32ToI32(float src, _In_ Js::ScriptContext* scriptContext)
 }
 
 template <bool Saturate>
-uint32 WasmMath::F32ToU32(float src, _In_ Js::ScriptContext* scriptContext)
+uint32_t WasmMath::F32ToU32(float src, _In_ Js::ScriptContext* scriptContext)
 {
     return WasmMath::ConvertFloatToInt<
         float, // SrcType
-        uint32, // DstType
-        uint32, // ReinterpretType
+        uint32_t, // DstType
+        uint32_t, // ReinterpretType
         Js::NumberConstants::k_Float32TwoTo32,
         Js::NumberConstants::k_Float32NegZero,
         Js::NumberConstants::k_Float32NegOne,
-        &WasmMath::LessThan<uint32>,
-        &WasmMath::LessThan<uint32>,
+        &WasmMath::LessThan<uint32_t>,
+        &WasmMath::LessThan<uint32_t>,
         Saturate,
         0,
         UINT32_MAX>(
@@ -312,11 +312,11 @@ int32 WasmMath::F64ToI32(double src, _In_ Js::ScriptContext* scriptContext)
 }
 
 template <bool Saturate>
-uint32 WasmMath::F64ToU32(double src, _In_ Js::ScriptContext* scriptContext)
+uint32_t WasmMath::F64ToU32(double src, _In_ Js::ScriptContext* scriptContext)
 {
     return WasmMath::ConvertFloatToInt<
         double, // SrcType
-        uint32, // DstType
+        uint32_t, // DstType
         unsigned long, // ReinterpretType
         Js::NumberConstants::k_TwoTo32,
         Js::NumberConstants::k_NegZero,
@@ -336,12 +336,12 @@ long WasmMath::F32ToI64(float src, _In_ Js::ScriptContext* scriptContext)
     return WasmMath::ConvertFloatToInt<
         float, // SrcType
         long, // DstType
-        uint32, // ReinterpretType
+        uint32_t, // ReinterpretType
         Js::NumberConstants::k_Float32TwoTo63,
         Js::NumberConstants::k_Float32NegZero,
         Js::NumberConstants::k_Float32NegTwoTo63,
-        &WasmMath::LessThan<uint32>,
-        &WasmMath::LessOrEqual<uint32>,
+        &WasmMath::LessThan<uint32_t>,
+        &WasmMath::LessOrEqual<uint32_t>,
         Saturate,
         INT64_MIN,
         INT64_MAX>(
@@ -355,12 +355,12 @@ unsigned long WasmMath::F32ToU64(float src, _In_ Js::ScriptContext* scriptContex
     return WasmMath::ConvertFloatToInt<
         float, // SrcType
         unsigned long, // DstType
-        uint32, // ReinterpretType
+        uint32_t, // ReinterpretType
         Js::NumberConstants::k_Float32TwoTo64,
         Js::NumberConstants::k_Float32NegZero,
         Js::NumberConstants::k_Float32NegOne,
-        &WasmMath::LessThan<uint32>,
-        &WasmMath::LessThan<uint32>,
+        &WasmMath::LessThan<uint32_t>,
+        &WasmMath::LessThan<uint32_t>,
         Saturate,
         0,
         UINT64_MAX>(

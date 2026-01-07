@@ -478,7 +478,7 @@ typedef unsigned short char16_t;
         /// </summary>
         JsArrayTypeInt32,
         /// <summary>
-        ///     An uint32 array.
+        ///     An uint32_t array.
         /// </summary>
         JsArrayTypeUint32,
         /// <summary>

@@ -23,11 +23,11 @@ namespace Js
                     AssertAndFailFast();
                 }
 
-                uint32 length = array->GetLength();
+                uint32_t length = array->GetLength();
                 if (length > 0)
                 {
                     iteratorIndices = RecyclerNew(scriptContext->GetRecycler(), VarList, scriptContext->GetRecycler());
-                    for (uint32 j = 0; j < length; j++)
+                    for (uint32_t j = 0; j < length; j++)
                     {
                         Var element = nullptr;
                         if (array->DirectGetItemAtFull(j, &element))
@@ -48,11 +48,11 @@ namespace Js
                     JavascriptError::ThrowTypeError(scriptContext, JSERR_DetachedTypedArray);
                 }
 
-                uint32 length = typedArray->GetLength();
+                uint32_t length = typedArray->GetLength();
                 if (length > 0)
                 {
                     iteratorIndices = RecyclerNew(scriptContext->GetRecycler(), VarList, scriptContext->GetRecycler());
-                    for (uint32 j = 0; j < length; j++)
+                    for (uint32_t j = 0; j < length; j++)
                     {
                         Var element = typedArray->DirectGetItemNoDetachCheck(j);
                         iteratorIndices->Add(element);

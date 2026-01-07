@@ -53,11 +53,11 @@ public:
     template <bool Saturate>
     static int32 F32ToI32(float src, _In_ Js::ScriptContext* scriptContext);
     template <bool Saturate>
-    static uint32 F32ToU32(float src, _In_ Js::ScriptContext* scriptContext);
+    static uint32_t F32ToU32(float src, _In_ Js::ScriptContext* scriptContext);
     template <bool Saturate>
     static int32 F64ToI32(double src, _In_ Js::ScriptContext* scriptContext);
     template <bool Saturate>
-    static uint32 F64ToU32(double src, _In_ Js::ScriptContext* scriptContext);
+    static uint32_t F64ToU32(double src, _In_ Js::ScriptContext* scriptContext);
 };
 
 } //namespace Wasm

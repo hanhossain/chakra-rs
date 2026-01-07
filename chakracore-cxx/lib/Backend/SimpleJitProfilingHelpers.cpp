@@ -156,7 +156,7 @@ using namespace Js;
         JIT_HELPER_END(SimpleProfiledRemainder);
     }
 
-    void SimpleJitHelpers::StoreArrayHelper(Var arr, uint32 index, Var value)
+    void SimpleJitHelpers::StoreArrayHelper(Var arr, uint32_t index, Var value)
     {
         //Adapted from InterpreterStackFrame::OP_SetArrayItemC_CI4
         JavascriptArray* array = JavascriptArray::FromAnyArray(arr);
@@ -179,7 +179,7 @@ using namespace Js;
         JIT_HELPER_END(SimpleStoreArrayHelper);
     }
 
-    void SimpleJitHelpers::StoreArraySegHelper(Var arr, uint32 index, Var value)
+    void SimpleJitHelpers::StoreArraySegHelper(Var arr, uint32_t index, Var value)
     {
         JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(SimpleStoreArraySegHelper);
         //Adapted from InterpreterStackFrame::OP_SetArraySegmentItem_CI4

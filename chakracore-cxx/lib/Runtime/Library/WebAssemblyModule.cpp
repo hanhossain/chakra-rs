@@ -125,7 +125,7 @@ WebAssemblyModule::EntryImports(RecyclableObject* function, CallInfo callInfo, .
     WebAssemblyModule * module = VarTo<WebAssemblyModule>(args[1]);
 
     Var importArray = JavascriptOperators::NewJavascriptArrayNoArg(scriptContext);
-    for (uint32 i = 0; i < module->GetImportCount(); ++i)
+    for (uint32_t i = 0; i < module->GetImportCount(); ++i)
     {
         Wasm::WasmImport * import = module->GetImport(i);
         Js::JavascriptString * kind = GetExternalKindString(scriptContext, import->kind);
@@ -172,14 +172,14 @@ Var WebAssemblyModule::EntryCustomSections(RecyclableObject* function, CallInfo 
     charcount_t sectionNameLength = sectionName->GetLength();
 
     customSections = JavascriptOperators::NewJavascriptArrayNoArg(scriptContext);
-    for (uint32 i = 0; i < module->GetCustomSectionCount(); ++i)
+    for (uint32_t i = 0; i < module->GetCustomSectionCount(); ++i)
     {
         Wasm::CustomSection customSection = module->GetCustomSection(i);
         if (sectionNameLength == customSection.nameLength &&
             // can't use string compare because null-terminator is a valid character for custom section names
             memcmp(sectionNameBuf, customSection.name, sectionNameLength * sizeof(char16_t)) == 0)
         {
-            const uint32 byteLength = customSection.payloadSize;
+            const uint32_t byteLength = customSection.payloadSize;
             ArrayBuffer* arrayBuffer = scriptContext->GetLibrary()->CreateArrayBuffer(byteLength);
             if (byteLength > 0)
             {
@@ -288,14 +288,14 @@ WebAssemblyModule::ValidateModule(
     return true;
 }
 
-uint32
+uint32_t
 WebAssemblyModule::GetMaxFunctionIndex() const
 {
     return GetWasmFunctionCount();
 }
 
 Wasm::FunctionIndexTypes::Type
-WebAssemblyModule::GetFunctionIndexType(uint32 funcIndex) const
+WebAssemblyModule::GetFunctionIndexType(uint32_t funcIndex) const
 {
     if (funcIndex >= GetMaxFunctionIndex())
     {
@@ -321,8 +321,8 @@ WebAssemblyModule::InitializeMemory(_In_ Wasm::MemorySectionLimits* memoryLimits
         throw Wasm::WasmCompilationException(u"Memory already allocated");
     }
 
-    uint32 minPage = memoryLimits->initial;
-    uint32 maxPage = memoryLimits->maximum;
+    uint32_t minPage = memoryLimits->initial;
+    uint32_t maxPage = memoryLimits->maximum;
 
     if (maxPage < minPage)
     {
@@ -331,7 +331,7 @@ WebAssemblyModule::InitializeMemory(_In_ Wasm::MemorySectionLimits* memoryLimits
     auto minPageTooBig = [minPage] {
         throw Wasm::WasmCompilationException(u"Memory: Unable to allocate minimum pages (%u)", minPage);
     };
-    uint32 minBytes = UInt32Math::Mul<WebAssembly::PageSize>(minPage, minPageTooBig);
+    uint32_t minBytes = UInt32Math::Mul<WebAssembly::PageSize>(minPage, minPageTooBig);
     if (minBytes > ArrayBuffer::MaxArrayBufferLength)
     {
         minPageTooBig();
@@ -361,13 +361,13 @@ WebAssemblyModule::GetSignatures() const
 }
 
 bool
-WebAssemblyModule::IsSignatureIndexValid(uint32 index) const
+WebAssemblyModule::IsSignatureIndexValid(uint32_t index) const
 {
     return index < GetSignatureCount();
 }
 
 Wasm::WasmSignature *
-WebAssemblyModule::GetSignature(uint32 index) const
+WebAssemblyModule::GetSignature(uint32_t index) const
 {
     if (!IsSignatureIndexValid(index))
     {
@@ -377,14 +377,14 @@ WebAssemblyModule::GetSignature(uint32 index) const
     return &m_signatures[index];
 }
 
-uint32
+uint32_t
 WebAssemblyModule::GetSignatureCount() const
 {
     return m_signaturesCount;
 }
 
-uint32
-WebAssemblyModule::GetEquivalentSignatureId(uint32 sigId) const
+uint32_t
+WebAssemblyModule::GetEquivalentSignatureId(uint32_t sigId) const
 {
     if (m_equivalentSignatureMap && sigId < GetSignatureCount())
     {
@@ -407,8 +407,8 @@ WebAssemblyModule::InitializeTable(_In_ Wasm::TableSectionLimits* tableLimits)
         throw Wasm::WasmCompilationException(u"Table already allocated");
     }
 
-    uint32 minEntries = tableLimits->initial;
-    uint32 maxEntries = tableLimits->maximum;
+    uint32_t minEntries = tableLimits->initial;
+    uint32_t maxEntries = tableLimits->maximum;
     if (maxEntries < minEntries)
     {
         throw Wasm::WasmCompilationException(u"Table: max entries (%d) is less than min entries (%d)", maxEntries, minEntries);
@@ -424,16 +424,16 @@ WebAssemblyModule::CreateTable() const
     return WebAssemblyTable::Create(m_tableInitSize, m_tableMaxSize, GetScriptContext());
 }
 
-uint32
+uint32_t
 WebAssemblyModule::GetWasmFunctionCount() const
 {
-    return (uint32)m_functionsInfo->Count();
+    return (uint32_t)m_functionsInfo->Count();
 }
 
 Wasm::WasmFunctionInfo*
 WebAssemblyModule::AddWasmFunctionInfo(Wasm::WasmSignature* sig)
 {
-    uint32 functionId = GetWasmFunctionCount();
+    uint32_t functionId = GetWasmFunctionCount();
     // must be recycler memory, since it holds reference to the function body
     Wasm::WasmFunctionInfo* funcInfo = RecyclerNew(GetRecycler(), Wasm::WasmFunctionInfo, m_alloc, sig, functionId);
     m_functionsInfo->Add(funcInfo);
@@ -562,14 +562,14 @@ SkipReturnPrint:
 #endif
 
 void
-WebAssemblyModule::AllocateFunctionExports(uint32 entries)
+WebAssemblyModule::AllocateFunctionExports(uint32_t entries)
 {
     m_exports = AnewArrayZ(m_alloc, Wasm::WasmExport, entries);
     m_exportCount = entries;
 }
 
 void
-WebAssemblyModule::SetExport(uint32 iExport, uint32 funcIndex, const char16_t* exportName, uint32 nameLength, Wasm::ExternalKinds kind)
+WebAssemblyModule::SetExport(uint32_t iExport, uint32_t funcIndex, const char16_t* exportName, uint32_t nameLength, Wasm::ExternalKinds kind)
 {
     m_exports[iExport].index = funcIndex;
     m_exports[iExport].nameLength = nameLength;
@@ -578,7 +578,7 @@ WebAssemblyModule::SetExport(uint32 iExport, uint32 funcIndex, const char16_t* e
 }
 
 Wasm::WasmExport*
-WebAssemblyModule::GetExport(uint32 iExport) const
+WebAssemblyModule::GetExport(uint32_t iExport) const
 {
     if (iExport >= m_exportCount)
     {
@@ -587,14 +587,14 @@ WebAssemblyModule::GetExport(uint32 iExport) const
     return &m_exports[iExport];
 }
 
-uint32
+uint32_t
 WebAssemblyModule::GetImportCount() const
 {
-    return (uint32)m_imports->Count();
+    return (uint32_t)m_imports->Count();
 }
 
 void
-WebAssemblyModule::AddFunctionImport(uint32 sigId, const char16_t* modName, uint32 modNameLen, const char16_t* fnName, uint32 fnNameLen)
+WebAssemblyModule::AddFunctionImport(uint32_t sigId, const char16_t* modName, uint32_t modNameLen, const char16_t* fnName, uint32_t fnNameLen)
 {
     if (sigId >= GetSignatureCount())
     {
@@ -618,7 +618,7 @@ WebAssemblyModule::AddFunctionImport(uint32 sigId, const char16_t* modName, uint
     Wasm::WasmFunctionInfo* funcInfo = AddWasmFunctionInfo(signature);
     // Create the custom reader to generate the import thunk
     Wasm::WasmCustomReader* customReader = Anew(m_alloc, Wasm::WasmCustomReader, m_alloc);
-    for (uint32 iParam = 0; iParam < (uint32)signature->GetParamCount(); iParam++)
+    for (uint32_t iParam = 0; iParam < (uint32_t)signature->GetParamCount(); iParam++)
     {
         Wasm::WasmNode node;
         node.op = Wasm::wbGetLocal;
@@ -636,13 +636,13 @@ WebAssemblyModule::AddFunctionImport(uint32 sigId, const char16_t* modName, uint
 #endif
 
     // 32 to account for hardcoded part of the name + max uint in decimal representation
-    uint32 bufferLength = 32;
+    uint32_t bufferLength = 32;
     if (!UInt32Math::Add(modNameLen, bufferLength, &bufferLength) &&
         !UInt32Math::Add(fnNameLen, bufferLength, &bufferLength))
     {
         char16_t * autoName = RecyclerNewArrayLeafZ(GetScriptContext()->GetRecycler(), char16_t, bufferLength);
-        uint32 nameLength = swprintf_s(autoName, bufferLength, u"%s.%s.Thunk[%u]", modName, fnName, funcInfo->GetNumber());
-        if (nameLength != (uint32)-1)
+        uint32_t nameLength = swprintf_s(autoName, bufferLength, u"%s.%s.Thunk[%u]", modName, fnName, funcInfo->GetNumber());
+        if (nameLength != (uint32_t)-1)
         {
             funcInfo->SetName(autoName, nameLength);
         }
@@ -654,7 +654,7 @@ WebAssemblyModule::AddFunctionImport(uint32 sigId, const char16_t* modName, uint
 }
 
 Wasm::WasmImport*
-WebAssemblyModule::GetImport(uint32 i) const
+WebAssemblyModule::GetImport(uint32_t i) const
 {
     if (i >= GetImportCount())
     {
@@ -664,7 +664,7 @@ WebAssemblyModule::GetImport(uint32 i) const
 }
 
 void
-WebAssemblyModule::AddGlobalImport(const char16_t* modName, uint32 modNameLen, const char16_t* importName, uint32 importNameLen)
+WebAssemblyModule::AddGlobalImport(const char16_t* modName, uint32_t modNameLen, const char16_t* importName, uint32_t importNameLen)
 {
     Wasm::WasmImport* wi = Anew(m_alloc, Wasm::WasmImport);
     wi->kind = Wasm::ExternalKinds::Global;
@@ -676,7 +676,7 @@ WebAssemblyModule::AddGlobalImport(const char16_t* modName, uint32 modNameLen, c
 }
 
 void
-WebAssemblyModule::AddMemoryImport(const char16_t* modName, uint32 modNameLen, const char16_t* importName, uint32 importNameLen)
+WebAssemblyModule::AddMemoryImport(const char16_t* modName, uint32_t modNameLen, const char16_t* importName, uint32_t importNameLen)
 {
     Wasm::WasmImport* wi = Anew(m_alloc, Wasm::WasmImport);
     wi->kind = Wasm::ExternalKinds::Memory;
@@ -689,7 +689,7 @@ WebAssemblyModule::AddMemoryImport(const char16_t* modName, uint32 modNameLen, c
 }
 
 void
-WebAssemblyModule::AddTableImport(const char16_t* modName, uint32 modNameLen, const char16_t* importName, uint32 importNameLen)
+WebAssemblyModule::AddTableImport(const char16_t* modName, uint32_t modNameLen, const char16_t* importName, uint32_t importNameLen)
 {
     Wasm::WasmImport* wi = Anew(m_alloc, Wasm::WasmImport);
     wi->kind = Wasm::ExternalKinds::Table;
@@ -753,14 +753,14 @@ WebAssemblyModule::AddGlobal(Wasm::GlobalReferenceTypes::Type refType, Wasm::Was
     m_globals->Add(global);
 }
 
-uint32
+uint32_t
 WebAssemblyModule::GetGlobalCount() const
 {
-    return (uint32)m_globals->Count();
+    return (uint32_t)m_globals->Count();
 }
 
 Wasm::WasmGlobal*
-WebAssemblyModule::GetGlobal(uint32 index) const
+WebAssemblyModule::GetGlobal(uint32_t index) const
 {
     if (index >= GetGlobalCount())
     {
@@ -770,7 +770,7 @@ WebAssemblyModule::GetGlobal(uint32 index) const
 }
 
 void
-WebAssemblyModule::AllocateDataSegs(uint32 count)
+WebAssemblyModule::AllocateDataSegs(uint32_t count)
 {
     Assert(count != 0);
     m_datasegCount = count;
@@ -778,14 +778,14 @@ WebAssemblyModule::AllocateDataSegs(uint32 count)
 }
 
 void
-WebAssemblyModule::SetDataSeg(Wasm::WasmDataSegment* seg, uint32 index)
+WebAssemblyModule::SetDataSeg(Wasm::WasmDataSegment* seg, uint32_t index)
 {
     Assert(index < m_datasegCount);
     m_datasegs[index] = seg;
 }
 
 Wasm::WasmDataSegment*
-WebAssemblyModule::GetDataSeg(uint32 index) const
+WebAssemblyModule::GetDataSeg(uint32_t index) const
 {
     if (index >= m_datasegCount)
     {
@@ -795,7 +795,7 @@ WebAssemblyModule::GetDataSeg(uint32 index) const
 }
 
 void
-WebAssemblyModule::AllocateElementSegs(uint32 count)
+WebAssemblyModule::AllocateElementSegs(uint32_t count)
 {
     Assert(count != 0);
     m_elementsegCount = count;
@@ -803,14 +803,14 @@ WebAssemblyModule::AllocateElementSegs(uint32 count)
 }
 
 void
-WebAssemblyModule::SetElementSeg(Wasm::WasmElementSegment* seg, uint32 index)
+WebAssemblyModule::SetElementSeg(Wasm::WasmElementSegment* seg, uint32_t index)
 {
     Assert(index < m_elementsegCount);
     m_elementsegs[index] = seg;
 }
 
 Wasm::WasmElementSegment*
-WebAssemblyModule::GetElementSeg(uint32 index) const
+WebAssemblyModule::GetElementSeg(uint32_t index) const
 {
     if (index >= m_elementsegCount)
     {
@@ -820,7 +820,7 @@ WebAssemblyModule::GetElementSeg(uint32 index) const
 }
 
 void
-WebAssemblyModule::SetStartFunction(uint32 i)
+WebAssemblyModule::SetStartFunction(uint32_t i)
 {
     if (i >= GetWasmFunctionCount())
     {
@@ -829,26 +829,26 @@ WebAssemblyModule::SetStartFunction(uint32 i)
     m_startFuncIndex = i;
 }
 
-uint32
+uint32_t
 WebAssemblyModule::GetStartFunction() const
 {
     return m_startFuncIndex;
 }
 
 void
-WebAssemblyModule::SetSignatureCount(uint32 count)
+WebAssemblyModule::SetSignatureCount(uint32_t count)
 {
     Assert(m_signaturesCount == 0 && m_signatures == nullptr);
     m_signaturesCount = count;
     m_signatures = RecyclerNewArrayZ(GetRecycler(), Wasm::WasmSignature, count);
 }
 
-uint32
+uint32_t
 WebAssemblyModule::GetModuleEnvironmentSize() const
 {
     static const uint DOUBLE_SIZE_IN_INTS = sizeof(double) / sizeof(int);
     // 1 each for memory, table, and signatures
-    uint32 size = 3;
+    uint32_t size = 3;
     size = UInt32Math::Add(size, GetWasmFunctionCount());
     size = UInt32Math::Add(size, GetImportedFunctionCount());
     size = UInt32Math::Add(size, WAsmJs::ConvertOffset<byte, Js::Var>(GetGlobalsByteSize()));
@@ -912,25 +912,25 @@ WebAssemblyModule::GetOffsetForGlobal(Wasm::WasmGlobal* global) const
         throw Wasm::WasmCompilationException(u"Invalid Global type");
     }
 
-    uint32 offset = WAsmJs::ConvertOffset<Js::Var, byte>(GetGlobalOffset());
+    uint32_t offset = WAsmJs::ConvertOffset<Js::Var, byte>(GetGlobalOffset());
 
     for (uint i = 1; i < (uint)type; i++)
     {
         offset = AddGlobalByteSizeToOffset((Wasm::WasmTypes::WasmType)i, offset);
     }
 
-    uint32 typeSize = Wasm::WasmTypes::GetTypeByteSize(type);
-    uint32 sizeUsed = WAsmJs::ConvertOffset<byte>(global->GetOffset(), typeSize);
+    uint32_t typeSize = Wasm::WasmTypes::GetTypeByteSize(type);
+    uint32_t sizeUsed = WAsmJs::ConvertOffset<byte>(global->GetOffset(), typeSize);
     offset = UInt32Math::Add(offset, sizeUsed);
     return WAsmJs::ConvertOffset(offset, sizeof(byte), typeSize);
 }
 
 uint
-WebAssemblyModule::AddGlobalByteSizeToOffset(Wasm::WasmTypes::WasmType type, uint32 offset) const
+WebAssemblyModule::AddGlobalByteSizeToOffset(Wasm::WasmTypes::WasmType type, uint32_t offset) const
 {
-    uint32 typeSize = Wasm::WasmTypes::GetTypeByteSize(type);
+    uint32_t typeSize = Wasm::WasmTypes::GetTypeByteSize(type);
     offset = ::Math::AlignOverflowCheck(offset, typeSize);
-    uint32 sizeUsed = WAsmJs::ConvertOffset<byte>(m_globalCounts[type], typeSize);
+    uint32_t sizeUsed = WAsmJs::ConvertOffset<byte>(m_globalCounts[type], typeSize);
     return UInt32Math::Add(offset, sizeUsed);
 }
 
@@ -957,7 +957,7 @@ WebAssemblyModule::GetExternalKindString(ScriptContext * scriptContext, Wasm::Ex
 uint
 WebAssemblyModule::GetGlobalsByteSize() const
 {
-    uint32 size = 0;
+    uint32_t size = 0;
     for (Wasm::WasmTypes::WasmType type = (Wasm::WasmTypes::WasmType)(Wasm::WasmTypes::Void + 1); type < Wasm::WasmTypes::Limit; type = (Wasm::WasmTypes::WasmType)(type + 1))
     {
         if (!Wasm::WasmTypes::IsLocalType(type))
@@ -979,14 +979,14 @@ WebAssemblyModule::AddCustomSection(Wasm::CustomSection customSection)
     m_customSections->Add(customSection);
 }
 
-uint32
+uint32_t
 WebAssemblyModule::GetCustomSectionCount() const
 {
-    return m_customSections ? (uint32)m_customSections->Count() : 0;
+    return m_customSections ? (uint32_t)m_customSections->Count() : 0;
 }
 
 Wasm::CustomSection
-WebAssemblyModule::GetCustomSection(uint32 index) const
+WebAssemblyModule::GetCustomSection(uint32_t index) const
 {
     if (index >= GetCustomSectionCount())
     {

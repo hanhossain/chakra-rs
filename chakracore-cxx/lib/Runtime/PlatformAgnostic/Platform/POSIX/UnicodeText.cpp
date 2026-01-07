@@ -29,7 +29,7 @@ namespace PlatformAgnostic
             return CharacterClassificationType::Invalid;
         }
 
-        int32 NormalizeString(NormalizationForm normalizationForm, const char16_t* sourceString, uint32 sourceLength, char16_t* destString, int32 destLength, ApiError* pErrorOut)
+        int32 NormalizeString(NormalizationForm normalizationForm, const char16_t* sourceString, uint32_t sourceLength, char16_t* destString, int32 destLength, ApiError* pErrorOut)
         {
             *pErrorOut = ApiError::NoError;
             if (destString == nullptr)

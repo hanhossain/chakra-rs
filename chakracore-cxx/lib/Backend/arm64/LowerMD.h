@@ -204,8 +204,8 @@ public:
             IR::Instr *         LowerEHRegionReturn(IR::Instr * insertBeforeInstr, IR::Opnd * targetOpnd);
             void                FinishArgLowering();
             IR::Opnd *          GetOpndForArgSlot(Js::ArgSlot argSlot, IR::Opnd * argOpnd = nullptr);
-            bool                GenerateStackAllocation(IR::Instr *instr, uint32 allocSize, uint32 probeSize);
-            void                GenerateStackDeallocation(IR::Instr *instr, uint32 allocSize);
+            bool                GenerateStackAllocation(IR::Instr *instr, uint32_t allocSize, uint32_t probeSize);
+            void                GenerateStackDeallocation(IR::Instr *instr, uint32_t allocSize);
             void                GenerateStackProbe(IR::Instr *instr, bool afterProlog);
             IR::Opnd*           GenerateArgOutForStackArgs(IR::Instr* callInstr, IR::Instr* stackArgsInstr);
 
@@ -232,7 +232,7 @@ public:
             }
 
             // -16 is to avoid alignment issues popping up, we are conservative here.
-            static bool         IsSmallStack(uint32 size) { return (size < (PAGESIZE - MachStackAlignment)); }
+            static bool         IsSmallStack(uint32_t size) { return (size < (PAGESIZE - MachStackAlignment)); }
 
             static void GenerateLoadTaggedType(IR::Instr * instrLdSt, IR::RegOpnd * opndType, IR::RegOpnd * opndTaggedType);
             static void GenerateLoadPolymorphicInlineCacheSlot(IR::Instr * instrLdSt, IR::RegOpnd * opndInlineCache, IR::RegOpnd * opndType, uint polymorphicInlineCacheSize);

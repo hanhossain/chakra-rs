@@ -423,9 +423,9 @@ void
 LowererMD::SetMaxArgSlots(Js::ArgSlot actualCount /*including this*/)
 {
     Js::ArgSlot offset = 3;//For function object & callInfo & this
-    if (this->m_func->m_argSlotsForFunctionsCalled < (uint32) (actualCount + offset))
+    if (this->m_func->m_argSlotsForFunctionsCalled < (uint32_t) (actualCount + offset))
     {
-        this->m_func->m_argSlotsForFunctionsCalled = (uint32)(actualCount + offset);
+        this->m_func->m_argSlotsForFunctionsCalled = (uint32_t)(actualCount + offset);
     }
     return;
 }
@@ -433,7 +433,7 @@ LowererMD::SetMaxArgSlots(Js::ArgSlot actualCount /*including this*/)
 void
 LowererMD::GenerateMemInit(IR::RegOpnd * opnd, int32 offset, size_t value, IR::Instr * insertBeforeInstr, bool isZeroed)
 {
-    m_lowerer->GenerateMemInit(opnd, offset, (uint32)value, insertBeforeInstr, isZeroed);
+    m_lowerer->GenerateMemInit(opnd, offset, (uint32_t)value, insertBeforeInstr, isZeroed);
 }
 
 IR::Instr *
@@ -638,7 +638,7 @@ LowererMD::LowerCallArgs(IR::Instr *callInstr, IR::Instr *stackParamInsert, usho
 {
     AssertMsg(this->helperCallArgsCount == 0, "We don't support nested helper calls yet");
 
-    uint32 argCount = 0;
+    uint32_t argCount = 0;
 
     IR::Opnd* opndParam;
     // Now walk the user arguments and remember the arg count.
@@ -769,7 +769,7 @@ LowererMD::GetOpndForArgSlot(Js::ArgSlot argSlot, IR::Opnd * argOpnd)
             IR::RegOpnd * spBase = IR::RegOpnd::New(nullptr, this->GetRegStackPointer(), TyMachReg, this->m_func);
             opndParam = IR::IndirOpnd::New(spBase, int32(offset), type, this->m_func);
 
-            if (this->m_func->m_argSlotsForFunctionsCalled < (uint32)(argSlot + 1))
+            if (this->m_func->m_argSlotsForFunctionsCalled < (uint32_t)(argSlot + 1))
             {
                 this->m_func->m_argSlotsForFunctionsCalled = argSlot + 1;
             }
@@ -839,7 +839,7 @@ LowererMD::GenerateStackProbe(IR::Instr *insertInstr, bool afterProlog)
     //
 
     //m_localStackHeight for ARM contains (m_argSlotsForFunctionsCalled * MachPtr)
-    uint32 frameSize = this->m_func->m_localStackHeight + Js::Constants::MinStackJIT;
+    uint32_t frameSize = this->m_func->m_localStackHeight + Js::Constants::MinStackJIT;
 
     IR::RegOpnd *scratchOpnd = IR::RegOpnd::New(nullptr, SCRATCH_REG, TyMachReg, this->m_func);
     IR::LabelInstr *helperLabel = IR::LabelInstr::New(Js::OpCode::Label, this->m_func, afterProlog);
@@ -925,7 +925,7 @@ LowererMD::GenerateStackProbe(IR::Instr *insertInstr, bool afterProlog)
 // this will just emit sub SP,size otherwise calls _chkstk.
 //
 bool
-LowererMD::GenerateStackAllocation(IR::Instr *instr, uint32 allocSize, uint32 probeSize)
+LowererMD::GenerateStackAllocation(IR::Instr *instr, uint32_t allocSize, uint32_t probeSize)
 {
     IR::RegOpnd* spOpnd = IR::RegOpnd::New(nullptr, GetRegStackPointer(), TyMachReg, this->m_func);
 
@@ -973,7 +973,7 @@ LowererMD::GenerateStackAllocation(IR::Instr *instr, uint32 allocSize, uint32 pr
 }
 
 void
-LowererMD::GenerateStackDeallocation(IR::Instr *instr, uint32 allocSize)
+LowererMD::GenerateStackDeallocation(IR::Instr *instr, uint32_t allocSize)
 {
     IR::RegOpnd * spOpnd = IR::RegOpnd::New(nullptr, this->GetRegStackPointer(), TyMachReg, this->m_func);
 
@@ -1920,7 +1920,7 @@ LowererMD::LoadHeapArgsCached(IR::Instr * instrArgs)
             this->LoadHelperArgument(instrArgs, instr->GetDst());
 
             // s3 = formal argument count (without counting "this").
-        uint32 formalsCount = func->GetJITFunctionBody()->GetInParamsCount() - 1;
+        uint32_t formalsCount = func->GetJITFunctionBody()->GetInParamsCount() - 1;
             this->LoadHelperArgument(instrArgs, IR::IntConstOpnd::New(formalsCount, TyUint32, func));
 
             // s2 = actual argument count (without counting "this").
@@ -1940,7 +1940,7 @@ LowererMD::LoadHeapArgsCached(IR::Instr * instrArgs)
             this->LoadHelperArgument(instrArgs, instr->GetDst());
 
             // s3 = formal argument count (without counting "this")
-            uint32 formalsCount = func->GetInParamsCount() - 1;
+            uint32_t formalsCount = func->GetInParamsCount() - 1;
             this->LoadHelperArgument(instrArgs, IR::IntConstOpnd::New(formalsCount, TyMachReg, func));
 
             // s2 = actual argument count (without counting "this")
@@ -2609,7 +2609,7 @@ LowererMD::GenerateFastDivByPow2(IR::Instr *instrDiv)
     //IR::JnHelperMethod helperMethod;
     //if (instrDiv->dstIsTempNumber)
     //{
-    //    // Var JavascriptMath::FinishOddDivByPow2_InPlace(uint32 value, ScriptContext *scriptContext, JavascriptNumber* result)
+    //    // Var JavascriptMath::FinishOddDivByPow2_InPlace(uint32_t value, ScriptContext *scriptContext, JavascriptNumber* result)
     //    helperMethod = IR::HelperOp_FinishOddDivByPow2InPlace;
     //    Assert(dst->IsRegOpnd());
     //    StackSym * tempNumberSym = this->m_lowerer->GetTempNumberSym(dst, instr->dstIsTempNumberTransferred);
@@ -2621,7 +2621,7 @@ LowererMD::GenerateFastDivByPow2(IR::Instr *instrDiv)
     //}
     //else
     //{
-    //    // Var JavascriptMath::FinishOddDivByPow2(uint32 value, ScriptContext *scriptContext)
+    //    // Var JavascriptMath::FinishOddDivByPow2(uint32_t value, ScriptContext *scriptContext)
     //    helperMethod = IR::HelperOp_FinishOddDivByPow2;
     //}
     //this->m_lowerer->LoadScriptContext(instrDiv);
@@ -4949,8 +4949,8 @@ LowererMD::GenerateFastRecyclerAlloc(size_t allocSize, IR::RegOpnd* newObjDst, I
 {
     ScriptContextInfo* scriptContext = this->m_func->GetScriptContextInfo();
     void* allocatorAddress;
-    uint32 endAddressOffset;
-    uint32 freeListOffset;
+    uint32_t endAddressOffset;
+    uint32_t freeListOffset;
     size_t alignedSize = HeapInfo::GetAlignedSizeNoCheck(allocSize);
 
     bool allowNativeCodeBumpAllocation = scriptContext->GetRecyclerAllowNativeCodeBumpAllocation();
@@ -5643,13 +5643,13 @@ void
 LowererMD::EmitLoadVar(IR::Instr *instrLoad, bool isFromUint32, bool isHelper)
 {
     //    MOV.32 e1, e_src1
-    //    TBNZ e1, #31, $Helper [uint32]  -- overflows?
+    //    TBNZ e1, #31, $Helper [uint32_t]  -- overflows?
     //    ORR r1, 1<<VarTag_Shift
     //    MOV r_dst, r1
-    //    JMP $done             [uint32]
-    // $helper                  [uint32]
+    //    JMP $done             [uint32_t]
+    // $helper                  [uint32_t]
     //    EmitLoadVarNoCheck
-    // $done                    [uint32]
+    // $done                    [uint32_t]
 
 
     Assert(instrLoad->GetSrc1()->IsRegOpnd());
@@ -6871,7 +6871,7 @@ LowererMD::FinalLower()
 
                 if (canExpand)
                 {
-                    uint32 expandedInstrCount = 0;   // The number of instrs the LDIMM expands into.
+                    uint32_t expandedInstrCount = 0;   // The number of instrs the LDIMM expands into.
                     FOREACH_INSTR_IN_RANGE(instrCount, instrPrev->m_next, instrNext)
                     {
                         ++expandedInstrCount;
@@ -6997,7 +6997,7 @@ LowererMD::FinalLowerAssign(IR::Instr * instr)
         // This loads the function's arg out area size into the dst operand. We need a pseudo-op,
         // because we generate the instruction during Lower but don't yet know the value of the constant it needs
         // to load. Change it to the appropriate LDIMM here.
-        uint32 argOutSize = UInt32Math::Mul(this->m_func->m_argSlotsForFunctionsCalled, MachRegInt, Js::Throw::OutOfMemory);
+        uint32_t argOutSize = UInt32Math::Mul(this->m_func->m_argSlotsForFunctionsCalled, MachRegInt, Js::Throw::OutOfMemory);
         instr->SetSrc1(IR::IntConstOpnd::New(argOutSize, TyMachReg, this->m_func));
         instr->m_opcode = Js::OpCode::LDIMM;
         LegalizeMD::LegalizeInstr(instr);

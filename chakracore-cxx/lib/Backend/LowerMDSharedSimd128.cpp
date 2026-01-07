@@ -20,9 +20,9 @@ static IR::Instr* removeInstr(IR::Instr* instr)
 #define GET_SIMDOPCODE(irOpcode) m_simd128OpCodesMap[(uint32_t)(irOpcode - Js::OpCode::Simd128_Start)]
 
 #define SET_SIMDOPCODE(irOpcode, mdOpcode) \
-    Assert((uint32)m_simd128OpCodesMap[(uint32)(Js::OpCode::irOpcode - Js::OpCode::Simd128_Start)] == 0);\
+    Assert((uint32_t)m_simd128OpCodesMap[(uint32_t)(Js::OpCode::irOpcode - Js::OpCode::Simd128_Start)] == 0);\
     Assert(Js::OpCode::mdOpcode > Js::OpCode::MDStart);\
-    m_simd128OpCodesMap[(uint32)(Js::OpCode::irOpcode - Js::OpCode::Simd128_Start)] = Js::OpCode::mdOpcode;
+    m_simd128OpCodesMap[(uint32_t)(Js::OpCode::irOpcode - Js::OpCode::Simd128_Start)] = Js::OpCode::mdOpcode;
 
 IR::Instr* LowererMD::Simd128Instruction(IR::Instr *instr)
 {
@@ -50,7 +50,7 @@ bool LowererMD::Simd128TryLowerMappedInstruction(IR::Instr *instr)
     bool legalize = true;
     Js::OpCode opcode = GET_SIMDOPCODE(instr->m_opcode);
 
-    if ((uint32)opcode == 0)
+    if ((uint32_t)opcode == 0)
         return false;
 
     Assert(instr->GetDst() && instr->GetDst()->IsRegOpnd() && instr->GetDst()->IsSimd128() || instr->GetDst()->GetType() == TyInt32);
@@ -2615,9 +2615,9 @@ IR::Instr* LowererMD::Simd128AsmJsLowerLoadElem(IR::Instr *instr)
     Assert(dst->IsSimd128() && src1->IsSimd128() && src2->GetType() == TyUint32);
 
     IR::Instr * done;
-    if (indexOpnd ||  (((uint32)src1->AsIndirOpnd()->GetOffset() + dataWidth) > 0x1000000 /* 16 MB */))
+    if (indexOpnd ||  (((uint32_t)src1->AsIndirOpnd()->GetOffset() + dataWidth) > 0x1000000 /* 16 MB */))
     {
-        uint32 bpe = Simd128GetTypedArrBytesPerElem(arrType);
+        uint32_t bpe = Simd128GetTypedArrBytesPerElem(arrType);
         // bound check and helper
         done = this->lowererMDArch.LowerAsmJsLdElemHelper(instr, true, bpe != dataWidth);
     }
@@ -2629,7 +2629,7 @@ IR::Instr* LowererMD::Simd128AsmJsLowerLoadElem(IR::Instr *instr)
         // Case (1) requires static bound check. Case (2) means we are always in bound.
 
         // this can happen in cases where globopt props a constant access which was not known at bytecodegen time or when heap is non-constant
-        if (src2->IsIntConstOpnd() && ((uint32)src1->AsIndirOpnd()->GetOffset() + dataWidth > src2->AsIntConstOpnd()->AsUint32()))
+        if (src2->IsIntConstOpnd() && ((uint32_t)src1->AsIndirOpnd()->GetOffset() + dataWidth > src2->AsIntConstOpnd()->AsUint32()))
         {
             m_lowerer->GenerateRuntimeError(instr, JSERR_ArgumentOutOfRange, IR::HelperOp_RuntimeRangeError);
             instr->Remove();
@@ -2773,7 +2773,7 @@ LowererMD::Simd128AsmJsLowerStoreElem(IR::Instr *instr)
 
     IR::Instr * done;
 
-    if (indexOpnd || ((uint32)dst->AsIndirOpnd()->GetOffset() + dataWidth > 0x1000000))
+    if (indexOpnd || ((uint32_t)dst->AsIndirOpnd()->GetOffset() + dataWidth > 0x1000000))
     {
         // CMP indexOpnd, src2(arrSize)
         // JA $helper
@@ -2784,13 +2784,13 @@ LowererMD::Simd128AsmJsLowerStoreElem(IR::Instr *instr)
         // $store:
         // MOV dst([arrayBuffer + indexOpnd]), src1
         // $done:
-        uint32 bpe = Simd128GetTypedArrBytesPerElem(arrType);
+        uint32_t bpe = Simd128GetTypedArrBytesPerElem(arrType);
         done = this->lowererMDArch.LowerAsmJsStElemHelper(instr, true, bpe != dataWidth);
     }
     else
     {
         // we might have a constant index if globopt propped a constant store. we can ahead of time check if it is in-bounds
-        if (src2->IsIntConstOpnd() && ((uint32)dst->AsIndirOpnd()->GetOffset() + dataWidth > src2->AsIntConstOpnd()->AsUint32()))
+        if (src2->IsIntConstOpnd() && ((uint32_t)dst->AsIndirOpnd()->GetOffset() + dataWidth > src2->AsIntConstOpnd()->AsUint32()))
         {
             m_lowerer->GenerateRuntimeError(instr, JSERR_ArgumentOutOfRange, IR::HelperOp_RuntimeRangeError);
             instr->Remove();

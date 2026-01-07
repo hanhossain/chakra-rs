@@ -501,7 +501,7 @@ Security::BuildCookieOpnd(IRType type, Func * func)
         cookie = (int32)Math::Rand();
         break;
     case TyUint32:
-        cookie = (uint32)Math::Rand();
+        cookie = (uint32_t)Math::Rand();
         break;
 #if TARGET_64
     case TyVar:
@@ -564,11 +564,11 @@ Security::EncodeValue(IR::Instr * instr, IR::Opnd *opnd, IntConstType constValue
         Assert(!stackSym->m_isSingleDef);
         Assert(stackSym->m_instrDef == nullptr);
         stackSym->m_isEncodedConstant = true;
-        stackSym->constantValue = (uint32)constValue;
+        stackSym->constantValue = (uint32_t)constValue;
 
         *pNewOpnd = regOpnd;
 
-        uint32 value = (uint32)constValue;
+        uint32_t value = (uint32_t)constValue;
         value = value ^ cookieOpnd->AsUint32();
         return (IntConstType)value;
     }

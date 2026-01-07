@@ -356,7 +356,7 @@ void
 LinearScan::CheckInvariants() const
 {
     BitVector bv = this->nonAllocatableRegs;
-    uint32 lastend = 0;
+    uint32_t lastend = 0;
     FOREACH_SLIST_ENTRY(Lifetime *, lifetime, this->activeLiveranges)
     {
         // Make sure there are only one lifetime per reg
@@ -584,7 +584,7 @@ LinearScan::CheckOpHelper(IR::Instr *instr)
              * We can't emit a PUSH/POP sequence around the block like IA32 because
              * the stack pointer can't move outside the prolog.
              */
-            uint32 helperSpilledLiverangeCount = 0;
+            uint32_t helperSpilledLiverangeCount = 0;
 
             // Exiting a helper block.  We are going to insert
             // the restore here after linear scan.  So put all the restored
@@ -861,7 +861,7 @@ LinearScan::SetDstReg(IR::Instr *instr)
         }
 
         Lifetime * lifetime = stackSym->scratch.linearScan.lifetime;
-        uint32 useCountCost = LinearScan::GetUseSpillCost(this->loopNest, (this->currentOpHelperBlock != nullptr));
+        uint32_t useCountCost = LinearScan::GetUseSpillCost(this->loopNest, (this->currentOpHelperBlock != nullptr));
         // Optimistically decrease the useCount.  We'll undo this if we put it on the defList.
         lifetime->SubFromUseCount(useCountCost, this->curLoop);
 
@@ -1292,9 +1292,9 @@ FuncBailOutData::FinalizeLocalOffsets(JitArenaAllocator *allocator, GlobalBailOu
         *lastUpdatedRowIndices = JitAnewArrayZ(allocator, uint, localsCount);
         memset(*lastUpdatedRowIndices, -1, sizeof(uint)*localsCount);
     }
-    uint32 bailOutRecordId = bailOutRecord->m_bailOutRecordId;
+    uint32_t bailOutRecordId = bailOutRecord->m_bailOutRecordId;
     bailOutRecord->localOffsetsCount = 0;
-    for (uint32 i = 0; i < localsCount; i++)
+    for (uint32_t i = 0; i < localsCount; i++)
     {
         // if the sym is live
         if (localOffsets[i] != 0)
@@ -1323,7 +1323,7 @@ LinearScan::EnsureGlobalBailOutRecordTable(Func *func)
     Assert(globalBailOutRecordTables != nullptr);
     Func *topFunc = func->GetTopFunc();
     bool isTopFunc = (func == topFunc);
-    uint32 inlineeID = isTopFunc ? 0 : func->m_inlineeId;
+    uint32_t inlineeID = isTopFunc ? 0 : func->m_inlineeId;
 
     GlobalBailOutRecordDataTable *globalBailOutRecordDataTable = globalBailOutRecordTables[inlineeID];
     if (globalBailOutRecordDataTable == nullptr)
@@ -1589,8 +1589,8 @@ LinearScan::FillBailOutRecord(IR::Instr * instr)
         if (func->GetJITFunctionBody()->HasPropIdToFormalsMap())
         {
             Assert(func->GetJITFunctionBody()->GetInParamsCount() > 0);
-            uint32 endIndex = min(func->GetJITFunctionBody()->GetFirstNonTempLocalIndex() + func->GetJITFunctionBody()->GetInParamsCount() - 1, func->GetJITFunctionBody()->GetEndNonTempLocalIndex());
-            for (uint32 index = func->GetJITFunctionBody()->GetFirstNonTempLocalIndex(); index < endIndex; index++)
+            uint32_t endIndex = min(func->GetJITFunctionBody()->GetFirstNonTempLocalIndex() + func->GetJITFunctionBody()->GetInParamsCount() - 1, func->GetJITFunctionBody()->GetEndNonTempLocalIndex());
+            for (uint32_t index = func->GetJITFunctionBody()->GetFirstNonTempLocalIndex(); index < endIndex; index++)
             {
                 StackSym * stackSym = this->func->m_symTable->FindStackSym(index);
                 if (stackSym != nullptr)
@@ -1989,7 +1989,7 @@ LinearScan::FillBailOutRecord(IR::Instr * instr)
         funcBailOutData[i].bailOutRecord->inlineDepth = funcBailOutData[i].func->inlineDepth;
         funcBailOutData[i].bailOutRecord->constantCount = constantCount;
 #endif
-        uint32 tableIndex = funcBailOutData[i].func->IsTopFunc() ? 0 : funcBailOutData[i].func->m_inlineeId;
+        uint32_t tableIndex = funcBailOutData[i].func->IsTopFunc() ? 0 : funcBailOutData[i].func->m_inlineeId;
         funcBailOutData[i].FinalizeLocalOffsets(tempAlloc, this->globalBailOutRecordTables[tableIndex], &(this->lastUpdatedRowIndices[tableIndex]));
 #if DBG_DUMP
         if(PHASE_DUMP(Js::BailOutPhase, this->func))
@@ -2098,7 +2098,7 @@ LinearScan::PrepareForUse(Lifetime * lifetime)
 void
 LinearScan::RecordUse(Lifetime * lifetime, IR::Instr * instr, IR::RegOpnd * regOpnd, bool isFromBailout)
 {
-    uint32 useCountCost = LinearScan::GetUseSpillCost(this->loopNest, (this->currentOpHelperBlock != nullptr || isFromBailout));
+    uint32_t useCountCost = LinearScan::GetUseSpillCost(this->loopNest, (this->currentOpHelperBlock != nullptr || isFromBailout));
 
     // We only spill at the use for constants (i.e. reload) or for function with try blocks. We don't
     // have real accurate flow info for the later.
@@ -2176,7 +2176,7 @@ void LinearScan::RecordLoopUse(Lifetime *lifetime, RegNum reg)
 }
 
 void
-LinearScan::RecordDef(Lifetime *const lifetime, IR::Instr *const instr, const uint32 useCountCost)
+LinearScan::RecordDef(Lifetime *const lifetime, IR::Instr *const instr, const uint32_t useCountCost)
 {
     Assert(lifetime);
     Assert(instr);
@@ -3004,7 +3004,7 @@ LinearScan::AllocateStackSpace(Lifetime *spilledRange)
         return;
     }
 
-    uint32 size = TySize[spilledRange->sym->GetType()];
+    uint32_t size = TySize[spilledRange->sym->GetType()];
 
     // For the bytecodereg syms instead of spilling to the any other location lets re-use the already created slot.
     if (IsSymNonTempLocalVar(spilledRange->sym))
@@ -5347,7 +5347,7 @@ IR::SymOpnd* LinearScan::GeneratorBailIn::CreateGeneratorObjectOpnd() const
     return IR::SymOpnd::New(sym, TyMachPtr, this->func);
 }
 
-uint32 LinearScan::GeneratorBailIn::GetOffsetFromInterpreterStackFrame(Js::RegSlot regSlot) const
+uint32_t LinearScan::GeneratorBailIn::GetOffsetFromInterpreterStackFrame(Js::RegSlot regSlot) const
 {
     // Some objects aren't stored in the local space in interpreter frame, but instead
     // in their own fields. Use their offsets in such cases.

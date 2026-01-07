@@ -25,11 +25,11 @@ namespace Wasm
 
     struct SectionInfo
     {
-        SectionInfo(SectionFlag, SectionCode, const char16_t*, const uint32);
+        SectionInfo(SectionFlag, SectionCode, const char16_t*, const uint32_t);
         SectionFlag flag;
         SectionCode precedent;
         const char16_t* name;
-        const uint32 nameLength;
+        const uint32_t nameLength;
         static SectionInfo All[bSectLimit];
     };
 }

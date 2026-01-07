@@ -7,7 +7,7 @@
 #include "ARM64NeonEncoder.h"
 #include "Language/JavascriptFunctionArgIndex.h"
 
-static const uint32 Opdope[] =
+static const uint32_t Opdope[] =
 {
 #define MACRO(name, jnLayout, attrib, byte2, form, opbyte, dope, ...) dope,
 #include "MdOpCodes.h"
@@ -73,13 +73,13 @@ EncoderMD::GetFloatRegEncode(IR::RegOpnd *regOpnd)
 ///
 ///----------------------------------------------------------------------------
 
-uint32
+uint32_t
 EncoderMD::GetOpdope(IR::Instr *instr)
 {
     return GetOpdope(instr->m_opcode);
 }
 
-uint32
+uint32_t
 EncoderMD::GetOpdope(Js::OpCode op)
 {
     return Opdope[op - (Js::OpCode::MDStart+1)];
@@ -536,7 +536,7 @@ int EncoderMD::EmitMovConstant(Arm64CodeEmitter &Emitter, IR::Instr *instr, _Emi
     int size = dst->GetSize();
     Assert(size == 4 || size == 8);
 
-    uint32 shift = src2->AsIntConstOpnd()->AsUint32();
+    uint32_t shift = src2->AsIntConstOpnd()->AsUint32();
     Assert(shift < 32 || size == 8);
     Assert(shift == 0 || shift == 16 || (size == 8 && (shift == 32 || shift == 48)));
 
@@ -1585,7 +1585,7 @@ EncoderMD::ApplyRelocs(size_t codeBufferAddress, size_t codeSize, uint* bufferCR
         case RelocTypeLabelImmed:
         {
             // read the shift from the encoded instruction.
-            uint32 shift = ((*relocAddress & (0x3 << 21)) >> 21) * 16;
+            uint32_t shift = ((*relocAddress & (0x3 << 21)) >> 21) * 16;
             uintptr_t fullvalue = size_t(targetAddress) - size_t(m_encoder->m_encodeBuffer) + size_t(codeBufferAddress);
             immediate = (fullvalue >> shift) & 0xffff;
 
@@ -1606,7 +1606,7 @@ EncoderMD::ApplyRelocs(size_t codeBufferAddress, size_t codeSize, uint* bufferCR
 }
 
 void
-EncoderMD::EncodeInlineeCallInfo(IR::Instr *instr, uint32 codeOffset)
+EncoderMD::EncodeInlineeCallInfo(IR::Instr *instr, uint32_t codeOffset)
 {
      DebugOnly(IR::LabelInstr* inlineeStart = instr->AsLabelInstr());
      Assert((inlineeStart->GetOffset() & 0x0F) == inlineeStart->GetOffset());

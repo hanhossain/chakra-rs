@@ -280,13 +280,13 @@ namespace Js {
         // which will emit an error.
         static Var DefaultEntryPoint(RecyclableObject* function, CallInfo callInfo, ...);
 
-        BOOL HasItem(uint32 index);
+        BOOL HasItem(uint32_t index);
         BOOL HasProperty(PropertyId propertyId);
         BOOL GetProperty(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext);
         BOOL GetProperty(Var originalInstance, JavascriptString* propertyNameString, Var* value, PropertyValueInfo* info, ScriptContext* requestContext);
         BOOL GetPropertyReference(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext);
-        BOOL GetItem(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext);
-        BOOL GetItemReference(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext);
+        BOOL GetItem(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext);
+        BOOL GetItemReference(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext);
 
         virtual PropertyId GetPropertyId(PropertyIndex index) { return Constants::NoProperty; }
         virtual PropertyId GetPropertyId(BigPropertyIndex index) { return Constants::NoProperty; }
@@ -319,13 +319,13 @@ namespace Js {
 #if ENABLE_FIXED_FIELDS
         virtual BOOL IsFixedProperty(PropertyId propertyId);
 #endif
-        virtual PropertyQueryFlags HasItemQuery(uint32 index);
-        virtual BOOL HasOwnItem(uint32 index);
-        virtual PropertyQueryFlags GetItemQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext);
-        virtual PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext);
-        virtual DescriptorFlags GetItemSetter(uint32 index, Var* setterValue, ScriptContext* requestContext) { return None; }
-        virtual BOOL SetItem(uint32 index, Var value, PropertyOperationFlags flags);
-        virtual BOOL DeleteItem(uint32 index, PropertyOperationFlags flags);
+        virtual PropertyQueryFlags HasItemQuery(uint32_t index);
+        virtual BOOL HasOwnItem(uint32_t index);
+        virtual PropertyQueryFlags GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext);
+        virtual PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext);
+        virtual DescriptorFlags GetItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext) { return None; }
+        virtual BOOL SetItem(uint32_t index, Var value, PropertyOperationFlags flags);
+        virtual BOOL DeleteItem(uint32_t index, PropertyOperationFlags flags);
         virtual BOOL GetEnumerator(JavascriptStaticEnumerator * enumerator, EnumeratorFlags flags, ScriptContext* requestContext, EnumeratorCache * enumeratorCache = nullptr);
         virtual BOOL ToPrimitive(JavascriptHint hint, Var* value, ScriptContext * requestContext);
         virtual BOOL SetAccessors(PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags = PropertyOperation_None);
@@ -347,7 +347,7 @@ namespace Js {
         virtual BOOL SetEnumerable(PropertyId propertyId, BOOL value) { return false; }
         virtual BOOL SetAttributes(PropertyId propertyId, PropertyAttributes attributes) { return false; }
 
-        virtual BOOL GetSpecialPropertyName(uint32 index, JavascriptString ** propertyName, ScriptContext * requestContext) { return false; }
+        virtual BOOL GetSpecialPropertyName(uint32_t index, JavascriptString ** propertyName, ScriptContext * requestContext) { return false; }
         virtual uint GetSpecialPropertyCount() const { return 0; }
         virtual PropertyId const * GetSpecialPropertyIds() const { return nullptr; }
         RecyclableObject * GetUnwrappedObject();
@@ -413,7 +413,7 @@ namespace Js {
         }
         virtual void Mark(Recycler *recycler) override { AssertMsg(false, "Mark called on object that isn't TrackableObject"); }
 
-        static uint32 GetOffsetOfType() { return offsetof(RecyclableObject, type); }
+        static uint32_t GetOffsetOfType() { return offsetof(RecyclableObject, type); }
 
         virtual void InvalidateCachedScope() { return; }
         virtual BOOL HasDeferredTypeHandler() const { return false; }

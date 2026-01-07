@@ -13,7 +13,7 @@ class LinearScanMD : public LinearScanMDShared
 private:
     StackSym ** helperSpillSlots;
     Func      * func;
-    uint32      maxOpHelperSpilledLiveranges;
+    uint32_t      maxOpHelperSpilledLiveranges;
     StackSym   *vfpSymTable[VFP_REGCOUNT];
 
 public:
@@ -25,7 +25,7 @@ public:
     bool        FitRegIntSizeConstraints(RegNum reg, BitVector sizeUsageBv) const;
     bool        FitRegIntSizeConstraints(RegNum reg, IRType type) const;
     void        InsertOpHelperSpillAndRestores(SList<OpHelperBlock> *opHelperBlockList);
-    void        EndOfHelperBlock(uint32 helperSpilledLiveranges);
+    void        EndOfHelperBlock(uint32_t helperSpilledLiveranges);
 
     uint        UnAllocatableRegCount(Func *func) const
     { 

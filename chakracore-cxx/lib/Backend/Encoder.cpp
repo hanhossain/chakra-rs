@@ -44,7 +44,7 @@ Encoder::Encode()
     } localAlloc(m_func);
 #endif
 
-    uint32 instrCount = m_func->GetInstrCount();
+    uint32_t instrCount = m_func->GetInstrCount();
     size_t totalJmpTableSizeInBytes = 0;
 
     JmpTableList * jumpTableListForSwitchStatement = nullptr;
@@ -81,7 +81,7 @@ Encoder::Encode()
     m_sortedLazyBailoutRecordList = Anew(m_tempAlloc, ArenaLazyBailoutRecordList, m_tempAlloc);
 
     IR::PragmaInstr* pragmaInstr = nullptr;
-    uint32 pragmaOffsetInBuffer = 0;
+    uint32_t pragmaOffsetInBuffer = 0;
 
 #ifdef _M_X64
     bool inProlog = false;
@@ -993,13 +993,13 @@ void Encoder::TryCopyAndAddRelocRecordsForSwitchJumpTableEntries(uint8_t *codeSt
     Assert(jmpTableStartAddress == codeStart + codeSize);
 }
 
-uint32 Encoder::GetCurrentOffset() const
+uint32_t Encoder::GetCurrentOffset() const
 {
-    Assert(m_pc - m_encodeBuffer <= UINT_MAX);      // encode buffer size is uint32
-    return static_cast<uint32>(m_pc - m_encodeBuffer);
+    Assert(m_pc - m_encodeBuffer <= UINT_MAX);      // encode buffer size is uint32_t
+    return static_cast<uint32_t>(m_pc - m_encodeBuffer);
 }
 
-void Encoder::RecordInlineeFrame(Func* inlinee, uint32 currentOffset)
+void Encoder::RecordInlineeFrame(Func* inlinee, uint32_t currentOffset)
 {
     // The only restriction for not supporting loop bodies is that inlinee frame map is created on FunctionEntryPointInfo & not
     // the base class EntryPointInfo.
@@ -1162,11 +1162,11 @@ BOOL
 Encoder::ShortenBranchesAndLabelAlign(uint8_t **codeStart, ptrdiff_t *codeSize, uint * pShortenedBufferCRC, uint bufferCrcToValidate, size_t jumpTableSize)
 {
 #ifdef  ENABLE_DEBUG_CONFIG_OPTIONS
-    static uint32 globalTotalBytesSaved = 0, globalTotalBytesWithoutShortening = 0;
-    static uint32 globalTotalBytesInserted = 0; // loop alignment nops
+    static uint32_t globalTotalBytesSaved = 0, globalTotalBytesWithoutShortening = 0;
+    static uint32_t globalTotalBytesInserted = 0; // loop alignment nops
 #endif
 
-    uint32 brShortenedCount = 0;
+    uint32_t brShortenedCount = 0;
     bool   codeChange       = false; // any overall BR shortened or label aligned ?
 
     uint8_t* buffStart = *codeStart;
@@ -1208,7 +1208,7 @@ Encoder::ShortenBranchesAndLabelAlign(uint8_t **codeStart, ptrdiff_t *codeSize, 
     {
         IR::LabelInstr *targetLabel;
         int32 relOffset;
-        uint32 bytesSaved = 0;
+        uint32_t bytesSaved = 0;
         uint8_t* labelPc, *opcodeByte;
         uint8_t* shortBrPtr, *fixedBrPtr; // without shortening
 
@@ -1224,7 +1224,7 @@ Encoder::ShortenBranchesAndLabelAlign(uint8_t **codeStart, ptrdiff_t *codeSize, 
             {
                 AssertMsg(reloc.isAlignedLabel(), "Expecting aligned label.");
                 // we aligned a loop, fix maps
-                m_encoderMD.FixMaps((uint32)(reloc.getLabelOrigPC() - buffStart), totalBytesSaved, &mapIndices);
+                m_encoderMD.FixMaps((uint32_t)(reloc.getLabelOrigPC() - buffStart), totalBytesSaved, &mapIndices);
                 codeChange = true;
             }
             totalBytesSaved = newTotalBytesSaved;
@@ -1277,14 +1277,14 @@ Encoder::ShortenBranchesAndLabelAlign(uint8_t **codeStart, ptrdiff_t *codeSize, 
         // can we shorten ?
         if (relOffset >= -128 && relOffset <= 127)
         {
-            uint32 brOffset;
+            uint32_t brOffset;
 
             brShortenedCount++;
             // update with shortened br offset
             reloc.m_ptr = shortBrPtr;
 
             // fix all maps entries from last shortened br to this one, before updating total bytes saved.
-            brOffset = (uint32) ((uint8_t*)reloc.m_origPtr - buffStart);
+            brOffset = (uint32_t) ((uint8_t*)reloc.m_origPtr - buffStart);
             m_encoderMD.FixMaps(brOffset, totalBytesSaved, &mapIndices);
             codeChange = true;
             totalBytesSaved += bytesSaved;
@@ -1301,7 +1301,7 @@ Encoder::ShortenBranchesAndLabelAlign(uint8_t **codeStart, ptrdiff_t *codeSize, 
     // Fix the rest of the maps, if needed.
     if (totalBytesSaved != 0)
     {
-        m_encoderMD.FixMaps((uint32)-1, totalBytesSaved, &mapIndices);
+        m_encoderMD.FixMaps((uint32_t)-1, totalBytesSaved, &mapIndices);
         codeChange = true;
         newCodeSize -= totalBytesSaved;
         this->FixLazyBailOutThunkOffset(totalBytesSaved);
@@ -1312,8 +1312,8 @@ Encoder::ShortenBranchesAndLabelAlign(uint8_t **codeStart, ptrdiff_t *codeSize, 
         return codeChange;
 
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
-    globalTotalBytesWithoutShortening += (uint32)(*codeSize);
-    globalTotalBytesSaved += (uint32)(*codeSize - newCodeSize);
+    globalTotalBytesWithoutShortening += (uint32_t)(*codeSize);
+    globalTotalBytesSaved += (uint32_t)(*codeSize - newCodeSize);
 
     if (PHASE_TRACE(Js::BrShortenPhase, this->m_func))
     {
@@ -1429,7 +1429,7 @@ Encoder::ShortenBranchesAndLabelAlign(uint8_t **codeStart, ptrdiff_t *codeSize, 
             uint8_t nop_count = reloc.getLabelNopCount();
 
             AssertMsg((uint8_t*)label < buffStart || (uint8_t*)label >= buffEnd, "Invalid label pointer.");
-            AssertMsg((((uint32)(label->GetPC() - buffStart)) & 0xf) == 0, "Misaligned Label");
+            AssertMsg((((uint32_t)(label->GetPC() - buffStart)) & 0xf) == 0, "Misaligned Label");
 
             to = reloc.getLabelOrigPC() - 1;
 
@@ -1554,7 +1554,7 @@ void Encoder::CopyMaps(OffsetList **m_origInlineeFrameRecords
 
 #if DBG_DUMP
         Assert(m_origOffsetBuffer);
-        Assert((uint32)(*m_origOffsetBuffer)->Count() == m_instrNumber);
+        Assert((uint32_t)(*m_origOffsetBuffer)->Count() == m_instrNumber);
 #endif
     }
 
@@ -1649,7 +1649,7 @@ void Encoder::DumpInlineeFrameMap(size_t baseAddress)
 #endif
 
 void
-Encoder::SaveToLazyBailOutRecordList(IR::Instr* instr, uint32 currentOffset)
+Encoder::SaveToLazyBailOutRecordList(IR::Instr* instr, uint32_t currentOffset)
 {
     BailOutInfo* bailOutInfo = instr->GetBailOutInfo();
 
@@ -1670,7 +1670,7 @@ Encoder::SaveToLazyBailOutRecordList(IR::Instr* instr, uint32 currentOffset)
 }
 
 void
-Encoder::SaveLazyBailOutThunkOffset(uint32 currentOffset)
+Encoder::SaveLazyBailOutThunkOffset(uint32_t currentOffset)
 {
     AssertMsg(
         this->m_lazyBailOutThunkOffset == 0,
@@ -1708,7 +1708,7 @@ Encoder::SaveLazyBailOutJitTransferData()
 }
 
 void
-Encoder::FixLazyBailOutThunkOffset(uint32 bytesSaved)
+Encoder::FixLazyBailOutThunkOffset(uint32_t bytesSaved)
 {
     // Lazy bailout thunk is inserted at the end of the function,
     // so just decrease the offset by the number of bytes saved

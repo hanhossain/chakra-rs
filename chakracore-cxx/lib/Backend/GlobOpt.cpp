@@ -3852,7 +3852,7 @@ GlobOpt::CopyProp(IR::Opnd *opnd, IR::Instr *instr, Value *val, IR::IndirOpnd *p
             if (opnd->IsUInt32())
             {
                 // avoid sign extension
-                constVal = (uint32)intConstantValue;
+                constVal = (uint32_t)intConstantValue;
                 opndType = TyUint32;
             }
             else
@@ -5447,7 +5447,7 @@ GlobOpt::ValueNumberLdElemDst(IR::Instr **pInstr, Value *srcVal)
     case ObjectType::Int32Array:
     case ObjectType::Int32VirtualArray:
     case ObjectType::Int32MixedArray:
-    case ObjectType::Uint32Array: // int-specialized loads from uint32 arrays will bail out on values that don't fit in an int32
+    case ObjectType::Uint32Array: // int-specialized loads from uint32_t arrays will bail out on values that don't fit in an int32
     case ObjectType::Uint32VirtualArray:
     case ObjectType::Uint32MixedArray:
     Int32Array:
@@ -5994,10 +5994,10 @@ GlobOpt::PropagateIntRangeBinary(IR::Instr *instr, int32 min1, int32 max1,
     case Js::OpCode::Xor_A:
     case Js::OpCode::Or_A:
         // Find range with highest high order bit
-        tmp = ::max((uint32)min1, (uint32)max1);
-        tmp2 = ::max((uint32)min2, (uint32)max2);
+        tmp = ::max((uint32_t)min1, (uint32_t)max1);
+        tmp2 = ::max((uint32_t)min2, (uint32_t)max2);
 
-        if ((uint32)tmp > (uint32)tmp2)
+        if ((uint32_t)tmp > (uint32_t)tmp2)
         {
             max = tmp;
         }
@@ -6015,7 +6015,7 @@ GlobOpt::PropagateIntRangeBinary(IR::Instr *instr, int32 min1, int32 max1,
         {
             // Turn values like 0x1010 into 0x1111
             max = 1 << Math::Log2(max);
-            max = (uint32)(max << 1) - 1;
+            max = (uint32_t)(max << 1) - 1;
             min = 0;
         }
 
@@ -6030,10 +6030,10 @@ GlobOpt::PropagateIntRangeBinary(IR::Instr *instr, int32 min1, int32 max1,
         }
 
         // Find range with lowest higher bit
-        tmp = ::max((uint32)min1, (uint32)max1);
-        tmp2 = ::max((uint32)min2, (uint32)max2);
+        tmp = ::max((uint32_t)min1, (uint32_t)max1);
+        tmp2 = ::max((uint32_t)min2, (uint32_t)max2);
 
-        if ((uint32)tmp < (uint32)tmp2)
+        if ((uint32_t)tmp < (uint32_t)tmp2)
         {
             min = min1;
             max = max1;
@@ -6045,7 +6045,7 @@ GlobOpt::PropagateIntRangeBinary(IR::Instr *instr, int32 min1, int32 max1,
         }
 
         // To compute max, look if min has higher high bit
-        if ((uint32)min > (uint32)max)
+        if ((uint32_t)min > (uint32_t)max)
         {
             max = min;
         }
@@ -6070,7 +6070,7 @@ GlobOpt::PropagateIntRangeBinary(IR::Instr *instr, int32 min1, int32 max1,
     case Js::OpCode::Shl_A:
         {
             // Shift count
-            if (min2 != max2 && ((uint32)min2 > 0x1F || (uint32)max2 > 0x1F))
+            if (min2 != max2 && ((uint32_t)min2 > 0x1F || (uint32_t)max2 > 0x1F))
             {
                 min2 = 0;
                 max2 = 0x1F;
@@ -6101,7 +6101,7 @@ GlobOpt::PropagateIntRangeBinary(IR::Instr *instr, int32 min1, int32 max1,
                 if (max1)
                 {
                     max1 = 1 << Math::Log2(max1);
-                    max1 = (uint32)(max1 << 1) - 1;
+                    max1 = (uint32_t)(max1 << 1) - 1;
                 }
 
                 if (max1 > 0)
@@ -6137,7 +6137,7 @@ GlobOpt::PropagateIntRangeBinary(IR::Instr *instr, int32 min1, int32 max1,
 
     case Js::OpCode::Shr_A:
         // Shift count
-        if (min2 != max2 && ((uint32)min2 > 0x1F || (uint32)max2 > 0x1F))
+        if (min2 != max2 && ((uint32_t)min2 > 0x1F || (uint32_t)max2 > 0x1F))
         {
             min2 = 0;
             max2 = 0x1F;
@@ -6176,7 +6176,7 @@ GlobOpt::PropagateIntRangeBinary(IR::Instr *instr, int32 min1, int32 max1,
         // shift count is constant zero
         if ((min2 == max2) && (max2 & 0x1f) == 0)
         {
-            // We can't encode uint32 result, so it has to be used as int32 only or the original value is positive.
+            // We can't encode uint32_t result, so it has to be used as int32 only or the original value is positive.
             Assert(instr->ignoreIntOverflow || min1 >= 0);
             // We can transfer the signed int32 range.
             min = min1;
@@ -6194,12 +6194,12 @@ GlobOpt::PropagateIntRangeBinary(IR::Instr *instr, int32 min1, int32 max1,
         // zero shift count is only allowed if result is used as int32 and/or value is positive
         Assert(min2 > 0 || instr->ignoreIntOverflow || min1 >= 0);
 
-        uint32 umin1 = (uint32)min1;
-        uint32 umax1 = (uint32)max1;
+        uint32_t umin1 = (uint32_t)min1;
+        uint32_t umax1 = (uint32_t)max1;
 
         if (umin1 > umax1)
         {
-            uint32 temp = umax1;
+            uint32_t temp = umax1;
             umax1 = umin1;
             umin1 = temp;
         }
@@ -6225,7 +6225,7 @@ GlobOpt::PropagateIntRangeBinary(IR::Instr *instr, int32 min1, int32 max1,
             min = umin1 >> max2;
         }
 
-        // We should be able to fit uint32 range as int32
+        // We should be able to fit uint32_t range as int32
         Assert(instr->ignoreIntOverflow || (min >= 0 && max >= 0) );
         if (min > max)
         {
@@ -6262,7 +6262,7 @@ GlobOpt::TypeSpecialization(
     // - Int32 values that can't be tagged are created as float constant values instead because a JavascriptNumber var is needed
     //   for that value at runtime. For the purposes of type specialization, recover the int32 values so that they will be
     //   treated as ints.
-    // - If int overflow does not matter for the instruction, we can additionally treat uint32 values as int32 values because
+    // - If int overflow does not matter for the instruction, we can additionally treat uint32_t values as int32 values because
     //   the value resulting from the operation will eventually be converted to int32 anyway
     Value *const src1OriginalVal = src1Val;
     Value *const src2OriginalVal = src2Val;
@@ -8497,7 +8497,7 @@ GlobOpt::TypeSpecializeIntUnary(
     if(lossy)
     {
         // Lossy conversions to int32 must be done based on the original source values. For instance, if one of the values is a
-        // float constant with a value that fits in a uint32 but not an int32, and the instruction can ignore int overflow, the
+        // float constant with a value that fits in a uint32_t but not an int32, and the instruction can ignore int overflow, the
         // source value for the purposes of int specialization would have been changed to an int constant value by ignoring
         // overflow. If we were to specialize the sym using the int constant value, it would be treated as a lossless
         // conversion, but since there may be subsequent uses of the same float constant value that may not ignore overflow,
@@ -9244,7 +9244,7 @@ GlobOpt::TypeSpecializeBinary(IR::Instr **pInstr, Value **pSrc1Val, Value **pSrc
 
             // Try to type specialize to int32
 
-            // If one of the values is a float constant with a value that fits in a uint32 but not an int32,
+            // If one of the values is a float constant with a value that fits in a uint32_t but not an int32,
             // and the instruction can ignore int overflow, the source value for the purposes of int specialization
             // would have been changed to an int constant value by ignoring overflow. But, the conversion is still lossy.
             if (!(src1OriginalVal && src1OriginalVal->GetValueInfo()->IsFloatConstant() && src1Val && src1Val->GetValueInfo()->HasIntConstantValue()))
@@ -10038,7 +10038,7 @@ LOutsideSwitch:
 
     Value *src1ValueToSpecialize = src1Val, *src2ValueToSpecialize = src2Val;
     // Lossy conversions to int32 must be done based on the original source values. For instance, if one of the values is a
-    // float constant with a value that fits in a uint32 but not an int32, and the instruction can ignore int overflow, the
+    // float constant with a value that fits in a uint32_t but not an int32, and the instruction can ignore int overflow, the
     // source value for the purposes of int specialization would have been changed to an int constant value by ignoring
     // overflow. If we were to specialize the sym using the int constant value, it would be treated as a lossless
     // conversion, but since there may be subsequent uses of the same float constant value that may not ignore overflow,
@@ -12435,7 +12435,7 @@ static IR::Opnd* CreateIntConstOpnd(IR::Instr* instr, int value)
     if (instr->GetDst()->IsUnsigned())
     {
         // we should zero extend in case of uint
-        constVal = (uint32)value;
+        constVal = (uint32_t)value;
     }
     else
     {

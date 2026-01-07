@@ -72,7 +72,7 @@ LowererMD::GenerateMemInit(IR::RegOpnd * opnd, int32 offset, size_t value, IR::I
 #if _M_X64
     lowererMDArch.GenerateMemInit(opnd, offset, value, insertBeforeInstr, isZeroed);
 #else
-    m_lowerer->GenerateMemInit(opnd, offset, (uint32)value, insertBeforeInstr, isZeroed);
+    m_lowerer->GenerateMemInit(opnd, offset, (uint32_t)value, insertBeforeInstr, isZeroed);
 #endif
 }
 
@@ -1615,7 +1615,7 @@ LowererMD::Legalize(IR::Instr *const instr, bool fPostRegAlloc)
                     case TyUint32:
                         if(intConstantSrc)
                         {
-                            UpdateIntConstantSrc(static_cast<uint32>(intConstantSrc->GetValue())); // zero-extend
+                            UpdateIntConstantSrc(static_cast<uint32_t>(intConstantSrc->GetValue())); // zero-extend
                             break;
                         }
                         switch(dst->GetKind())
@@ -1759,18 +1759,18 @@ LowererMD::Legalize(IR::Instr *const instr, bool fPostRegAlloc)
                     Assert(opnd->IsRegOpnd());
                     return 1 << opnd->AsRegOpnd()->GetReg();
                 },
-                [](int i, uint32 regmask, uint32 allReg)
+                [](int i, uint32_t regmask, uint32_t allReg)
                 {
                     AssertMsg((allReg & regmask) == 0, "Should not have the same register twice");
                     return allReg | regmask;
                 }, 0);
             };
 #if _M_IX86
-            const uint32 dstMask = (1 << RegEAX | 1 << RegEDX);
-            const uint32 srcMask = (1 << RegEAX | 1 << RegEBX | 1 << RegECX | 1 << RegEDX);
+            const uint32_t dstMask = (1 << RegEAX | 1 << RegEDX);
+            const uint32_t srcMask = (1 << RegEAX | 1 << RegEBX | 1 << RegECX | 1 << RegEDX);
 #else
-            const uint32 dstMask = (1 << RegRAX | 1 << RegRDX);
-            const uint32 srcMask = (1 << RegRAX | 1 << RegRBX | 1 << RegRCX | 1 << RegRDX);
+            const uint32_t dstMask = (1 << RegRAX | 1 << RegRDX);
+            const uint32_t srcMask = (1 << RegRAX | 1 << RegRBX | 1 << RegRCX | 1 << RegRDX);
 #endif
 
             AssertMsg(!instr->m_func->isPostFinalLower || !instr->GetDst(), "After FinalLower, there should not be a dst");
@@ -5227,8 +5227,8 @@ LowererMD::GenerateFastRecyclerAlloc(size_t allocSize, IR::RegOpnd* newObjDst, I
 
     ScriptContextInfo* scriptContext = this->m_func->GetScriptContextInfo();
     void* allocatorAddress;
-    uint32 endAddressOffset;
-    uint32 freeListOffset;
+    uint32_t endAddressOffset;
+    uint32_t freeListOffset;
     size_t alignedSize = HeapInfo::GetAlignedSizeNoCheck(allocSize);
 
     bool allowNativeCodeBumpAllocation = scriptContext->GetRecyclerAllowNativeCodeBumpAllocation();
@@ -5324,8 +5324,8 @@ LowererMD::SaveDoubleToVar(IR::RegOpnd * dstOpnd, IR::RegOpnd *opndFloat, IR::In
         instrInsert->InsertBefore(loadTempNumberInstr);
 
         symVTableDst = IR::SymOpnd::New(tempNumberSym, TyMachPtr, this->m_func);
-        symDblDst = IR::SymOpnd::New(tempNumberSym, (uint32)Js::JavascriptNumber::GetValueOffset(), TyFloat64, this->m_func);
-        symTypeDst = IR::SymOpnd::New(tempNumberSym, (uint32)Js::JavascriptNumber::GetOffsetOfType(), TyMachPtr, this->m_func);
+        symDblDst = IR::SymOpnd::New(tempNumberSym, (uint32_t)Js::JavascriptNumber::GetValueOffset(), TyFloat64, this->m_func);
+        symTypeDst = IR::SymOpnd::New(tempNumberSym, (uint32_t)Js::JavascriptNumber::GetOffsetOfType(), TyMachPtr, this->m_func);
         if (this->m_lowerer->outerMostLoopLabel == nullptr)
         {
             // If we are not in loop, just insert in place
@@ -5342,8 +5342,8 @@ LowererMD::SaveDoubleToVar(IR::RegOpnd * dstOpnd, IR::RegOpnd *opndFloat, IR::In
     {
         this->GenerateNumberAllocation(dstOpnd, instrInsert, isHelper);
         symVTableDst = IR::IndirOpnd::New(dstOpnd, 0, TyMachPtr, this->m_func);
-        symDblDst = IR::IndirOpnd::New(dstOpnd, (uint32)Js::JavascriptNumber::GetValueOffset(), TyFloat64, this->m_func);
-        symTypeDst = IR::IndirOpnd::New(dstOpnd, (uint32)Js::JavascriptNumber::GetOffsetOfType(), TyMachPtr, this->m_func);
+        symDblDst = IR::IndirOpnd::New(dstOpnd, (uint32_t)Js::JavascriptNumber::GetValueOffset(), TyFloat64, this->m_func);
+        symTypeDst = IR::IndirOpnd::New(dstOpnd, (uint32_t)Js::JavascriptNumber::GetOffsetOfType(), TyMachPtr, this->m_func);
         numberInitInsertInstr = instrInsert;
     }
 
@@ -6104,7 +6104,7 @@ LowererMD::GenerateSimplifiedInt4Mul(
         // -2^i
         if (Math::IsPow2(constSrcValue) || Math::IsPow2(-constSrcValue))
         {
-            uint32 shamt = constSrcValue > 0 ? Math::Log2(constSrcValue) : Math::Log2(-constSrcValue);
+            uint32_t shamt = constSrcValue > 0 ? Math::Log2(constSrcValue) : Math::Log2(-constSrcValue);
             instr->UnlinkSrc1();
             instr->UnlinkSrc2();
             // SHL
@@ -6128,7 +6128,7 @@ LowererMD::GenerateSimplifiedInt4Mul(
         if (Math::IsPow2(constSrcValue - 1) || Math::IsPow2(constSrcValue + 1))
         {
             bool plusOne = Math::IsPow2(constSrcValue - 1);
-            uint32 shamt = plusOne ? Math::Log2(constSrcValue - 1) : Math::Log2(constSrcValue + 1);
+            uint32_t shamt = plusOne ? Math::Log2(constSrcValue - 1) : Math::Log2(constSrcValue + 1);
 
             if (dst->IsEqual(nonConstSrc))
             {
@@ -8552,8 +8552,8 @@ LowererMD::NegZeroBranching(IR::Opnd* opnd, IR::Instr* instr, IR::LabelInstr* is
         // BREQ isNeg0Label
         // JMP isNotNeg0Label
         Int64RegPair dstPair = m_func->FindOrCreateInt64Pair(intOpnd);
-        const uint32 high64NegZero = Js::NumberConstants::k_NegZero >> 32;
-        const uint32 low64NegZero = Js::NumberConstants::k_NegZero & UINT32_MAX;
+        const uint32_t high64NegZero = Js::NumberConstants::k_NegZero >> 32;
+        const uint32_t low64NegZero = Js::NumberConstants::k_NegZero & UINT32_MAX;
         IR::IntConstOpnd *negZeroHighOpnd = IR::IntConstOpnd::New(high64NegZero, TyUint32, m_func);
         IR::IntConstOpnd *negZeroLowOpnd = IR::IntConstOpnd::New(low64NegZero, TyUint32, m_func);
         m_lowerer->InsertCompareBranch(dstPair.high, negZeroHighOpnd, Js::OpCode::BrNeq_A, isNotNeg0Label, instr);

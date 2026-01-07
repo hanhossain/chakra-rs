@@ -14,7 +14,7 @@ class LinearScanMD : public LinearScanMDShared
 private:
     StackSym ** helperSpillSlots;
     Func      * func;
-    uint32      maxOpHelperSpilledLiveranges;
+    uint32_t      maxOpHelperSpilledLiveranges;
     BitVector   byteableRegsBv;
     StackSym   *xmmSymTable128[XMM_REGCOUNT];
     StackSym   *xmmSymTable64[XMM_REGCOUNT];
@@ -33,7 +33,7 @@ public:
     void        LegalizeUse(IR::Instr * instr, IR::Opnd * opnd) { /* A nop for amd64 */ }
     void        LegalizeConstantUse(IR::Instr * instr, IR::Opnd * opnd);
     void        InsertOpHelperSpillAndRestores(SList<OpHelperBlock> *opHelperBlockList);
-    void        EndOfHelperBlock(uint32 helperSpilledLiveranges);
+    void        EndOfHelperBlock(uint32_t helperSpilledLiveranges);
     void        GenerateBailOut(IR::Instr * instr,
                                 __in_ecount(registerSaveSymsCount) StackSym ** registerSaveSyms,
                                 uint registerSaveSymsCount);

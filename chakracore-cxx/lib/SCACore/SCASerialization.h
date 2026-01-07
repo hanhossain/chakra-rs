@@ -27,16 +27,16 @@ namespace Js
     private:
         void WriteTypeId(SCATypeId typeId) const
         {
-            Write(static_cast<uint32>(typeId));
+            Write(static_cast<uint32_t>(typeId));
         }
 
-        void Write(uint32 data) const
+        void Write(uint32_t data) const
         {
             m_writer->Write(data);
         }
 
         void Write(const char16_t* str, charcount_t len) const;
-        void Write(const uint8_t* bytes, uint32 len) const;
+        void Write(const uint8_t* bytes, uint32_t len) const;
 
         //
         // Write a TypedArray or a DataView layout: [SCATypeId] [ArrayBuffer] [byteOffset] [length]
@@ -70,9 +70,9 @@ namespace Js
         void WriteArrayIndexProperties(JavascriptArray* arr)
         {
             ScriptContext* scriptContext = this->GetScriptContext();
-            uint32 length = arr->GetLength();
+            uint32_t length = arr->GetLength();
 
-            for (uint32 i = 0; i < length; i++)
+            for (uint32_t i = 0; i < length; i++)
             {
                 Var value = nullptr;
                 if (ArrayItemAccessor::GetItem(arr, i, &value, scriptContext))
@@ -98,7 +98,7 @@ namespace Js
 
             while (e.MoveNext())
             {
-                uint32 i = e.GetIndex();
+                uint32_t i = e.GetIndex();
                 if (ArrayItemAccessor::GetItem(arr, i, &value, scriptContext))
                 {
                     Write(i);
@@ -106,7 +106,7 @@ namespace Js
                 }
             }
 
-            Write(static_cast<uint32>(SCA_PROPERTY_TERMINATOR));
+            Write(static_cast<uint32_t>(SCA_PROPERTY_TERMINATOR));
         }
 
         //
@@ -125,14 +125,14 @@ namespace Js
             }
 
             // Write property terminator
-            m_writer->Write(static_cast<uint32>(SCA_PROPERTY_TERMINATOR));
+            m_writer->Write(static_cast<uint32_t>(SCA_PROPERTY_TERMINATOR));
         }
 
         // Direct item accessor used on non-crosssite JavascriptArray for WriteArrayIndexProperties.
         class JavascriptArrayDirectItemAccessor
         {
         public:
-            static BOOL GetItem(JavascriptArray* arr, uint32 index, Var* value, ScriptContext* scriptContext)
+            static BOOL GetItem(JavascriptArray* arr, uint32_t index, Var* value, ScriptContext* scriptContext)
             {
                 return arr->GetItem(arr, index, value, scriptContext);
             }
@@ -142,7 +142,7 @@ namespace Js
         class JavascriptArrayItemAccessor
         {
         public:
-            static BOOL GetItem(JavascriptArray* arr, uint32 index, Var* value, ScriptContext* scriptContext)
+            static BOOL GetItem(JavascriptArray* arr, uint32_t index, Var* value, ScriptContext* scriptContext)
             {
                 return JavascriptOperators::GetOwnItem(arr, index, value, scriptContext);
             }
@@ -152,7 +152,7 @@ namespace Js
         class JavascriptArrayEnumerableItemAccessor
         {
         public:
-            static BOOL GetItem(JavascriptArray* arr, uint32 index, Var* value, ScriptContext* scriptContext)
+            static BOOL GetItem(JavascriptArray* arr, uint32_t index, Var* value, ScriptContext* scriptContext)
             {
                 return arr->IsItemEnumerable(index)
                     && JavascriptOperators::GetOwnItem(arr, index, value, scriptContext);
@@ -237,7 +237,7 @@ namespace Js
     template <class T, bool clamped = false, bool isVirtual = false> struct TypedArrayTraceBase
     {
         typedef TypedArray<T,clamped, isVirtual> TypedArrayType;
-        static Var CreateTypedArray(ArrayBufferBase* arrayBuffer, uint32 byteOffset, uint32 length,
+        static Var CreateTypedArray(ArrayBufferBase* arrayBuffer, uint32_t byteOffset, uint32_t length,
             ScriptContext* scriptContext)
         {
             JavascriptLibrary* lib = scriptContext->GetLibrary();
@@ -268,7 +268,7 @@ namespace Js
     {
         static SCATypeId GetSCATypeId() { return SCA_Int32Array; }
     };
-    template<> struct TypedArrayTrace<uint32>: TypedArrayTraceBase<uint32>
+    template<> struct TypedArrayTrace<uint32_t>: TypedArrayTraceBase<uint32_t>
     {
         static SCATypeId GetSCATypeId() { return SCA_Uint32Array; }
     };
@@ -304,7 +304,7 @@ namespace Js
     {
         static SCATypeId GetSCATypeId() { return SCA_Int32Array; }
     };
-    template<> struct TypedArrayTrace<uint32,false,true>: TypedArrayTraceBase<uint32,false,true>
+    template<> struct TypedArrayTrace<uint32_t,false,true>: TypedArrayTraceBase<uint32_t,false,true>
     {
         static SCATypeId GetSCATypeId() { return SCA_Uint32Array; }
     };
@@ -319,7 +319,7 @@ namespace Js
     template<> struct TypedArrayTrace<DataView>
     {
         typedef DataView TypedArrayType;
-        static Var CreateTypedArray(ArrayBufferBase* arrayBuffer, uint32 byteOffset, uint32 length,
+        static Var CreateTypedArray(ArrayBufferBase* arrayBuffer, uint32_t byteOffset, uint32_t length,
             ScriptContext* scriptContext)
         {
             JavascriptLibrary* lib = scriptContext->GetLibrary();

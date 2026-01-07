@@ -10,11 +10,11 @@
  */
 struct SwitchAdapter {
 
-    virtual void AddBranchInstr(IR::BranchInstr * instr, uint32 offset, uint32 targetOffset, bool clearBackEdge = false) = 0;
+    virtual void AddBranchInstr(IR::BranchInstr * instr, uint32_t offset, uint32_t targetOffset, bool clearBackEdge = false) = 0;
 
-    virtual void AddInstr(IR::Instr * instr, uint32 offset) = 0;
+    virtual void AddInstr(IR::Instr * instr, uint32_t offset) = 0;
 
-    virtual void CreateRelocRecord(IR::BranchInstr * branchInstr, uint32 offset, uint32 targetOffset, bool clearBackEdge = false) = 0;
+    virtual void CreateRelocRecord(IR::BranchInstr * branchInstr, uint32_t offset, uint32_t targetOffset, bool clearBackEdge = false) = 0;
 
     virtual void ConvertToBailOut(IR::Instr * instr, IR::BailOutKind kind) = 0;
 };
@@ -29,11 +29,11 @@ public:
     IRBuilderSwitchAdapter(IRBuilder * builder)
         : m_builder(builder) {}
 
-    virtual void AddBranchInstr(IR::BranchInstr * instr, uint32 offset, uint32 targetOffset, bool clearBackEdge = false);
+    virtual void AddBranchInstr(IR::BranchInstr * instr, uint32_t offset, uint32_t targetOffset, bool clearBackEdge = false);
 
-    virtual void AddInstr(IR::Instr * instr, uint32 offset);
+    virtual void AddInstr(IR::Instr * instr, uint32_t offset);
 
-    virtual void CreateRelocRecord(IR::BranchInstr * branchInstr, uint32 offset, uint32 targetOffset, bool clearBackEdge = false);
+    virtual void CreateRelocRecord(IR::BranchInstr * branchInstr, uint32_t offset, uint32_t targetOffset, bool clearBackEdge = false);
 
     virtual void ConvertToBailOut(IR::Instr * instr, IR::BailOutKind kind);
 };
@@ -49,11 +49,11 @@ public:
     IRBuilderAsmJsSwitchAdapter(IRBuilderAsmJs * builder)
         : m_builder(builder) {}
 
-    virtual void AddBranchInstr(IR::BranchInstr * instr, uint32 offset, uint32 targetOffset, bool clearBackEdge = false);
+    virtual void AddBranchInstr(IR::BranchInstr * instr, uint32_t offset, uint32_t targetOffset, bool clearBackEdge = false);
 
-    virtual void AddInstr(IR::Instr * instr, uint32 offset);
+    virtual void AddInstr(IR::Instr * instr, uint32_t offset);
 
-    virtual void CreateRelocRecord(IR::BranchInstr * branchInstr, uint32 offset, uint32 targetOffset, bool clearBackEdge = false);
+    virtual void CreateRelocRecord(IR::BranchInstr * branchInstr, uint32_t offset, uint32_t targetOffset, bool clearBackEdge = false);
 
     virtual void ConvertToBailOut(IR::Instr * instr, IR::BailOutKind kind);
 };
@@ -102,24 +102,24 @@ public:
 
     void                Init(Func * func, JitArenaAllocator * tempAlloc, bool isAsmJs);
     void                BeginSwitch();
-    void                EndSwitch(uint32 offset, uint32 targetOffset);
+    void                EndSwitch(uint32_t offset, uint32_t targetOffset);
     void                SetProfiledInstruction(IR::Instr * instr, Js::ProfileId profileId);
-    void                OnCase(IR::RegOpnd * src1Opnd, IR::Opnd * src2Opnd, uint32 offset, uint32 targetOffset);
-    void                FlushCases(uint32 targetOffset);
+    void                OnCase(IR::RegOpnd * src1Opnd, IR::Opnd * src2Opnd, uint32_t offset, uint32_t targetOffset);
+    void                FlushCases(uint32_t targetOffset);
 
     void                RefineCaseNodes();
     void                ResetCaseNodes();
-    void                BuildCaseBrInstr(uint32 targetOffset);
-    void                BuildBinaryTraverseInstr(int start, int end, uint32 defaultLeafBranch);
-    void                BuildLinearTraverseInstr(int start, int end, uint32 defaultLeafBranch);
-    void                BuildEmptyCasesInstr(CaseNode* currCaseNode, uint32 defaultLeafBranch);
-    void                BuildOptimizedIntegerCaseInstrs(uint32 targetOffset);
-    void                BuildMultiBrCaseInstrForStrings(uint32 targetOffset);
-    void                FixUpMultiBrJumpTable(IR::MultiBranchInstr * multiBranchInstr, uint32 targetOffset);
-    void                TryBuildBinaryTreeOrMultiBrForSwitchInts(IR::MultiBranchInstr * &multiBranchInstr, uint32 fallthrOffset,
-        int startjmpTableIndex, int endjmpTableIndex, int startBinaryTravIndex, uint32 targetOffset);
+    void                BuildCaseBrInstr(uint32_t targetOffset);
+    void                BuildBinaryTraverseInstr(int start, int end, uint32_t defaultLeafBranch);
+    void                BuildLinearTraverseInstr(int start, int end, uint32_t defaultLeafBranch);
+    void                BuildEmptyCasesInstr(CaseNode* currCaseNode, uint32_t defaultLeafBranch);
+    void                BuildOptimizedIntegerCaseInstrs(uint32_t targetOffset);
+    void                BuildMultiBrCaseInstrForStrings(uint32_t targetOffset);
+    void                FixUpMultiBrJumpTable(IR::MultiBranchInstr * multiBranchInstr, uint32_t targetOffset);
+    void                TryBuildBinaryTreeOrMultiBrForSwitchInts(IR::MultiBranchInstr * &multiBranchInstr, uint32_t fallthrOffset,
+        int startjmpTableIndex, int endjmpTableIndex, int startBinaryTravIndex, uint32_t targetOffset);
     bool                TestAndAddStringCaseConst(JITJavascriptString * str);
     void                BuildBailOnNotInteger();
     void                BuildBailOnNotString();
-    IR::MultiBranchInstr * BuildMultiBrCaseInstrForInts(uint32 start, uint32 end, uint32 targetOffset);
+    IR::MultiBranchInstr * BuildMultiBrCaseInstrForInts(uint32_t start, uint32_t end, uint32_t targetOffset);
 };

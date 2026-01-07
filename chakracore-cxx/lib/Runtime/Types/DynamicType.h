@@ -65,9 +65,9 @@ namespace Js
         static bool Is(const Type *type) { return DynamicType::Is(type->GetTypeId()); }
         static DynamicType * New(ScriptContext* scriptContext, TypeId typeId, RecyclableObject* prototype, JavascriptMethod entryPoint, DynamicTypeHandler * typeHandler, bool isLocked = false, bool isShared = false);
 
-        static uint32 GetOffsetOfTypeHandler() { return offsetof(DynamicType, typeHandler); }
-        static uint32 GetOffsetOfIsShared() { return offsetof(DynamicType, isShared); }
-        static uint32 GetOffsetOfHasNoEnumerableProperties() { return offsetof(DynamicType, hasNoEnumerableProperties); }
+        static uint32_t GetOffsetOfTypeHandler() { return offsetof(DynamicType, typeHandler); }
+        static uint32_t GetOffsetOfIsShared() { return offsetof(DynamicType, isShared); }
+        static uint32_t GetOffsetOfHasNoEnumerableProperties() { return offsetof(DynamicType, hasNoEnumerableProperties); }
     private:
         void SetIsLocked() { Assert(this->GetTypeHandler()->GetIsLocked()); this->isLocked = true; }
         void SetIsShared() { Assert(this->GetIsLocked() && this->GetTypeHandler()->GetIsShared()); this->isShared = true; }

@@ -737,7 +737,7 @@ void GlobOpt::ArraySrcOpt::DoHeadSegmentLengthLoad()
     loadHeadSegmentLength->GetDst()->SetIsJITOptimizedReg(true);
     loadHeadSegmentLength->GetSrc1()->AsIndirOpnd()->GetBaseOpnd()->SetIsJITOptimizedReg(true);
 
-    // We don't check the head segment length for negative (very large uint32) values. For JS arrays, the bound checks
+    // We don't check the head segment length for negative (very large uint32_t) values. For JS arrays, the bound checks
     // cover that. For typed arrays, we currently don't allocate array buffers with more than 1 GB elements.
     if (hoistHeadSegmentLengthLoadOutOfLoop)
     {

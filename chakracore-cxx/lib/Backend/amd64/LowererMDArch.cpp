@@ -223,7 +223,7 @@ LowererMDArch::LoadHeapArgsCached(IR::Instr *instrArgs)
             this->LoadHelperArgument(instrArgs, instr->GetDst());
 
             // s3 = formal argument count (without counting "this").
-            uint32 formalsCount = func->GetJITFunctionBody()->GetInParamsCount() - 1;
+            uint32_t formalsCount = func->GetJITFunctionBody()->GetInParamsCount() - 1;
             this->LoadHelperArgument(instrArgs, IR::IntConstOpnd::New(formalsCount, TyUint32, func));
 
             // s2 = actual argument count (without counting "this").
@@ -253,7 +253,7 @@ LowererMDArch::LoadHeapArgsCached(IR::Instr *instrArgs)
             this->LoadHelperArgument(instrArgs, instr->GetDst());
 
             // s3 = formal argument count (without counting "this")
-            uint32 formalsCount = func->GetInParamsCount() - 1;
+            uint32_t formalsCount = func->GetInParamsCount() - 1;
             this->LoadHelperArgument(instrArgs, IR::IntConstOpnd::New(formalsCount, TyInt32, func));
 
             // s2 = actual argument count (without counting "this")
@@ -459,7 +459,7 @@ LowererMDArch::LowerCallArgs(IR::Instr *callInstr, ushort callFlags, Js::ArgSlot
     AssertMsg(this->helperCallArgsCount == 0, "We don't support nested helper calls yet");
 
     const Js::ArgSlot       argOffset       = 1;
-    uint32                  argCount        = 0;
+    uint32_t                  argCount        = 0;
 
     // Lower args and look for StartCall
 
@@ -551,7 +551,7 @@ LowererMDArch::LowerCallArgs(IR::Instr *callInstr, ushort callFlags, Js::ArgSlot
     }
     startCallInstr = this->LowerStartCall(startCallInstr);
 
-    const uint32 argSlots = argCount + 1 + extraParams; // + 1 for call flags
+    const uint32_t argSlots = argCount + 1 + extraParams; // + 1 for call flags
     this->m_func->m_argSlotsForFunctionsCalled = max(this->m_func->m_argSlotsForFunctionsCalled, argSlots);
 
     if (m_func->GetJITFunctionBody()->IsAsmJsMode())
@@ -567,9 +567,9 @@ void
 LowererMDArch::SetMaxArgSlots(Js::ArgSlot actualCount /*including this*/)
 {
     Js::ArgSlot offset = 3;//For function object & callInfo & this
-    if (this->m_func->m_argSlotsForFunctionsCalled < (uint32) (actualCount + offset))
+    if (this->m_func->m_argSlotsForFunctionsCalled < (uint32_t) (actualCount + offset))
     {
-        this->m_func->m_argSlotsForFunctionsCalled = (uint32)(actualCount + offset);
+        this->m_func->m_argSlotsForFunctionsCalled = (uint32_t)(actualCount + offset);
     }
     return;
 }
@@ -622,7 +622,7 @@ LowererMDArch::LowerCallIDynamic(IR::Instr *callInstr, IR::Instr*saveThisArgOutI
     // args onto stack (Windows convention, and unchanged on xplat). We need to
     // manully home 4 args. inlinees lower differently and follow platform ABI.
     // So we need to manually home actualArgsCount + 2 args (function, callInfo).
-    const uint32 homeArgs = callInstr->m_func->IsInlinee() ?
+    const uint32_t homeArgs = callInstr->m_func->IsInlinee() ?
                                 callInstr->m_func->actualCount + 2 : 4;
     LowerCall(callInstr, homeArgs);
 
@@ -689,7 +689,7 @@ LowererMDArch::GeneratePreCall(IR::Instr * callInstr, IR::Opnd  *functionObjOpnd
         instr = IR::Instr::New(Js::OpCode::MOV, functionTypeRegOpnd, functionInfoIndirOpnd, m_func);
         insertBeforeInstrForCFGCheck->InsertBefore(instr);
 
-        uint32 entryPointOffset = Js::ProxyEntryPointInfo::GetAddressOffset();
+        uint32_t entryPointOffset = Js::ProxyEntryPointInfo::GetAddressOffset();
 
         entryPointIndirOpnd = IR::IndirOpnd::New(functionTypeRegOpnd, entryPointOffset, TyMachReg, m_func);
     }
@@ -822,7 +822,7 @@ static inline IRType ExtendHelperArg(IRType type)
 }
 
 IR::Instr *
-LowererMDArch::LowerCall(IR::Instr * callInstr, uint32 argCount)
+LowererMDArch::LowerCall(IR::Instr * callInstr, uint32_t argCount)
 {
     UNREFERENCED_PARAMETER(argCount);
     IR::Instr *retInstr = callInstr;
@@ -1002,7 +1002,7 @@ LowererMDArch::LowerCall(IR::Instr * callInstr, uint32 argCount)
     // Reset the call
     //
 
-    this->m_func->m_argSlotsForFunctionsCalled  = max(this->m_func->m_argSlotsForFunctionsCalled , (uint32)this->helperCallArgsCount);
+    this->m_func->m_argSlotsForFunctionsCalled  = max(this->m_func->m_argSlotsForFunctionsCalled , (uint32_t)this->helperCallArgsCount);
     this->helperCallArgsCount = 0;
 
     return retInstr;
@@ -1089,7 +1089,7 @@ LowererMDArch::LowerWasmArrayBoundsCheck(IR::Instr * instr, IR::Opnd *addrOpnd)
     IR::RegOpnd * indexOpnd = indirOpnd->GetIndexOpnd();
     if (indexOpnd && !indexOpnd->IsIntegral32())
     {
-        // We don't expect the index to be anything other than an int32 or uint32
+        // We don't expect the index to be anything other than an int32 or uint32_t
         // Having an int32 index guaranties that long index add doesn't overflow
         // If we're wrong, just throw index out of range
         Assert(UNREACHED);
@@ -1107,7 +1107,7 @@ LowererMDArch::LowerWasmArrayBoundsCheck(IR::Instr * instr, IR::Opnd *addrOpnd)
     IR::LabelInstr * doneLabel = Lowerer::InsertLabel(false, instr);
 
     // Find array buffer length
-    uint32 offset = indirOpnd->GetOffset();
+    uint32_t offset = indirOpnd->GetOffset();
     IR::Opnd *arrayLenOpnd = instr->GetSrc2();
     IR::Int64ConstOpnd * constOffsetOpnd = IR::Int64ConstOpnd::New((long)addrOpnd->GetSize() + (long)offset, TyInt64, m_func);
     IR::Opnd *cmpOpnd;
@@ -1208,7 +1208,7 @@ LowererMDArch::LowerAsmJsLdElemHelper(IR::Instr * instr, bool isSimdLoad /*= fal
             // MOV tmp, cmpOnd
             Lowerer::InsertMove(tmp, cmpOpnd, helperLabel);
             // ADD tmp, dataWidth
-            Lowerer::InsertAdd(true, tmp, tmp, IR::IntConstOpnd::New((uint32)dataWidth, tmp->GetType(), m_func, true), helperLabel);
+            Lowerer::InsertAdd(true, tmp, tmp, IR::IntConstOpnd::New((uint32_t)dataWidth, tmp->GetType(), m_func, true), helperLabel);
             // JB helper
             Lowerer::InsertBranch(Js::OpCode::JB, helperLabel, helperLabel);
             // CMP tmp, size
@@ -1224,7 +1224,7 @@ LowererMDArch::LowerAsmJsLdElemHelper(IR::Instr * instr, bool isSimdLoad /*= fal
                 // MOV tmp, cmpOnd
                 Lowerer::InsertMove(tmp, cmpOpnd, helperLabel);
                 // ADD tmp, offset
-                Lowerer::InsertAdd(true, tmp, tmp, IR::IntConstOpnd::New((uint32)src1->AsIndirOpnd()->GetOffset(), tmp->GetType(), m_func), helperLabel);
+                Lowerer::InsertAdd(true, tmp, tmp, IR::IntConstOpnd::New((uint32_t)src1->AsIndirOpnd()->GetOffset(), tmp->GetType(), m_func), helperLabel);
                 // JB helper
                 Lowerer::InsertBranch(Js::OpCode::JB, helperLabel, helperLabel);
                 lowererMD->m_lowerer->InsertCompareBranch(tmp, instr->UnlinkSrc2(), Js::OpCode::BrGe_A, true, helperLabel, helperLabel);
@@ -1298,7 +1298,7 @@ LowererMDArch::LowerAsmJsStElemHelper(IR::Instr * instr, bool isSimdStore /*= fa
             // MOV tmp, cmpOnd
             Lowerer::InsertMove(tmp, cmpOpnd, helperLabel);
             // ADD tmp, dataWidth
-            Lowerer::InsertAdd(true, tmp, tmp, IR::IntConstOpnd::New((uint32)dataWidth, tmp->GetType(), m_func, true), helperLabel);
+            Lowerer::InsertAdd(true, tmp, tmp, IR::IntConstOpnd::New((uint32_t)dataWidth, tmp->GetType(), m_func, true), helperLabel);
             // JB helper
             Lowerer::InsertBranch(Js::OpCode::JB, helperLabel, helperLabel);
             // CMP tmp, size
@@ -1314,7 +1314,7 @@ LowererMDArch::LowerAsmJsStElemHelper(IR::Instr * instr, bool isSimdStore /*= fa
                 // MOV tmp, cmpOnd
                 Lowerer::InsertMove(tmp, cmpOpnd, helperLabel);
                 // ADD tmp, offset
-                Lowerer::InsertAdd(true, tmp, tmp, IR::IntConstOpnd::New((uint32)dst->AsIndirOpnd()->GetOffset(), tmp->GetType(), m_func), helperLabel);
+                Lowerer::InsertAdd(true, tmp, tmp, IR::IntConstOpnd::New((uint32_t)dst->AsIndirOpnd()->GetOffset(), tmp->GetType(), m_func), helperLabel);
                 // JB helper
                 Lowerer::InsertBranch(Js::OpCode::JB, helperLabel, helperLabel);
                 lowererMD->m_lowerer->InsertCompareBranch(tmp, instr->UnlinkSrc2(), Js::OpCode::BrGe_A, true, helperLabel, helperLabel);
@@ -1468,7 +1468,7 @@ LowererMDArch::LoadFloatHelperArgument(IR::Instr * instrInsert, IR::Opnd * opndA
 // this will just emit sub rsp,size otherwise calls _chkstk.
 //
 void
-LowererMDArch::GenerateStackAllocation(IR::Instr *instr, uint32 size)
+LowererMDArch::GenerateStackAllocation(IR::Instr *instr, uint32_t size)
 {
     Assert(size > 0);
 
@@ -1611,7 +1611,7 @@ LowererMDArch::LowerEntryInstr(IR::EntryInstr * entryInstr)
     // The stack on entry would be aligned. VC++ recommends that the stack
     // should always be 16 byte aligned.
     //
-    uint32 argSlotsForFunctionsCalled = this->m_func->m_argSlotsForFunctionsCalled;
+    uint32_t argSlotsForFunctionsCalled = this->m_func->m_argSlotsForFunctionsCalled;
 
     if (Lowerer::IsArgSaveRequired(this->m_func))
     {
@@ -1623,7 +1623,7 @@ LowererMDArch::LowerEntryInstr(IR::EntryInstr * entryInstr)
         argSlotsForFunctionsCalled = 0;
     }
 
-    uint32 stackArgsSize    = MachPtr * (argSlotsForFunctionsCalled + 1);
+    uint32_t stackArgsSize    = MachPtr * (argSlotsForFunctionsCalled + 1);
 
     this->m_func->m_localStackHeight = Math::Align<int32>(this->m_func->m_localStackHeight, 8);
 
@@ -1631,25 +1631,25 @@ LowererMDArch::LowerEntryInstr(IR::EntryInstr * entryInstr)
     // we can unconditionally clear the first slot past the current frame.
     this->m_func->m_localStackHeight += m_func->GetMaxInlineeArgOutSize() + MachPtr;
 
-    uint32 stackLocalsSize  = this->m_func->m_localStackHeight;
+    uint32_t stackLocalsSize  = this->m_func->m_localStackHeight;
     if(xmmOffset != 0)
     {
         // Xmm registers need to be saved to 16-byte-aligned addresses. The stack locals size is aligned here and the total
         // size will be aligned below, which guarantees that the offset from rsp will be 16-byte-aligned.
-        stackLocalsSize = ::Math::Align(stackLocalsSize + xmmOffset, static_cast<uint32>(MachDouble * 2));
+        stackLocalsSize = ::Math::Align(stackLocalsSize + xmmOffset, static_cast<uint32_t>(MachDouble * 2));
     }
 
-    uint32 totalStackSize   = stackLocalsSize +
+    uint32_t totalStackSize   = stackLocalsSize +
                               stackArgsSize   +
                               savedRegSize;
 
     AssertMsg(0 == (totalStackSize % 8), "Stack should always be 8 byte aligned");
-    uint32 alignmentPadding = (totalStackSize % 16) ? MachPtr : 0;
+    uint32_t alignmentPadding = (totalStackSize % 16) ? MachPtr : 0;
 
     stackArgsSize += alignmentPadding;
     Assert(
         xmmOffset == 0 ||
-        ::Math::Align(stackArgsSize + savedRegSize, static_cast<uint32>(MachDouble * 2)) == stackArgsSize + savedRegSize);
+        ::Math::Align(stackArgsSize + savedRegSize, static_cast<uint32_t>(MachDouble * 2)) == stackArgsSize + savedRegSize);
 
     totalStackSize += alignmentPadding;
     if(totalStackSize > (1u << 20)) // 1 MB
@@ -1933,7 +1933,7 @@ LowererMDArch::GeneratePrologueStackProbe(IR::Instr *entryInstr, IntConstType fr
 IR::Instr *
 LowererMDArch::LowerExitInstr(IR::ExitInstr * exitInstr)
 {
-    uint32 savedRegSize = 0;
+    uint32_t savedRegSize = 0;
 
     // POP used callee-saved registers
 
@@ -1979,7 +1979,7 @@ LowererMDArch::LowerExitInstr(IR::ExitInstr * exitInstr)
 
 
     // Generate ADD RSP, argsStackSize before the register restore (if there are any)
-    uint32 stackArgsSize = this->m_func->GetArgsSize();
+    uint32_t stackArgsSize = this->m_func->GetArgsSize();
     Assert(stackArgsSize);
     if (savedRegSize || xmmOffset)
     {
@@ -2384,14 +2384,14 @@ void
 LowererMDArch::EmitLoadVar(IR::Instr *instrLoad, bool isFromUint32, bool isHelper)
 {
     //    MOV_TRUNC e1, e_src1
-    //    CMP e1, 0             [uint32]
-    //    JLT $Helper           [uint32]  -- overflows?
+    //    CMP e1, 0             [uint32_t]
+    //    JLT $Helper           [uint32_t]  -- overflows?
     //    BTS r1, VarTag_Shift
     //    MOV r_dst, r1
-    //    JMP $done             [uint32]
-    // $helper                  [uint32]
+    //    JMP $done             [uint32_t]
+    // $helper                  [uint32_t]
     //    EmitLoadVarNoCheck
-    // $done                    [uint32]
+    // $done                    [uint32_t]
 
 
     Assert(instrLoad->GetSrc1()->IsRegOpnd());
@@ -2814,7 +2814,7 @@ bool LowererMDArch::GenerateFastDivAndRem_Signed(IR::Instr* instrDiv)
 
     bool isNegDevisor   = false;
 
-    Assert(divisor->GetType() == TyInt32); // constopnd->AsInt32() currently does silent casts between int32 and uint32
+    Assert(divisor->GetType() == TyInt32); // constopnd->AsInt32() currently does silent casts between int32 and uint32_t
 
     if (constDivisor < 0)
     {

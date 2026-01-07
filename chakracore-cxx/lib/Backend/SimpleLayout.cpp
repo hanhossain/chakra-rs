@@ -5,7 +5,7 @@
 #include "Backend.h"
 
 IR::Instr *
-SimpleLayout::MoveHelperBlock(IR::Instr * lastOpHelperLabel, uint32 lastOpHelperStatementIndex, Func* lastOpHelperFunc, IR::LabelInstr * nextLabel,
+SimpleLayout::MoveHelperBlock(IR::Instr * lastOpHelperLabel, uint32_t lastOpHelperStatementIndex, Func* lastOpHelperFunc, IR::LabelInstr * nextLabel,
                               IR::Instr * instrAfter)
 {
     // Add pragma instructions around the moved code to track source mapping
@@ -61,7 +61,7 @@ SimpleLayout::Layout()
 
     IR::Instr * lastInstr = func->m_tailInstr;
     IR::LabelInstr * lastOpHelperLabel = NULL;
-    uint32 lastOpHelperStatementIndex = Js::Constants::NoStatementIndex;
+    uint32_t lastOpHelperStatementIndex = Js::Constants::NoStatementIndex;
     Func* lastOpHelperFunc = nullptr;
     FOREACH_INSTR_EDITING_IN_RANGE(instr, instrNext, func->m_headInstr, func->m_tailInstr->m_prev)
     {

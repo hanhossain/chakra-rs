@@ -9,7 +9,7 @@ class Lifetime
 {
 public:
 
-    Lifetime(JitArenaAllocator * alloc, StackSym *sym, RegNum reg, uint32 start, uint32 end)
+    Lifetime(JitArenaAllocator * alloc, StackSym *sym, RegNum reg, uint32_t start, uint32_t end)
         :
         sym(sym),
         regionUseCount(nullptr),
@@ -50,8 +50,8 @@ public:
 
 public:
     StackSym *          sym;
-    uint32 *            regionUseCount;
-    uint32 *            regionUseCountAdjust;
+    uint32_t *            regionUseCount;
+    uint32_t *            regionUseCountAdjust;
     SList<IR::Instr *>  defList;
     SList<IR::Instr *>  useList;
     IR::LabelInstr *    lastUseLabel;
@@ -60,13 +60,13 @@ public:
     JitArenaAllocator * alloc;
     BitVector           intUsageBv;
     BitVector           regPreference;
-    uint32              start;
-    uint32              end;
-    uint32              previousDefBlockNumber;
-    uint32              useCount;
-    uint32              useCountAdjust;
-    uint32              allDefsCost;
-    uint32              lastAllocationStart;
+    uint32_t              start;
+    uint32_t              end;
+    uint32_t              previousDefBlockNumber;
+    uint32_t              useCount;
+    uint32_t              useCountAdjust;
+    uint32_t              allDefsCost;
+    uint32_t              lastAllocationStart;
     RegNum              reg;
     uint                totalOpHelperLengthByEnd;
     uint8_t               isSpilled:1;
@@ -89,7 +89,7 @@ public:
         return !isFloat;
     }
 
-    void AddToUseCount(uint32 newUseValue, Loop *loop, Func *func)
+    void AddToUseCount(uint32_t newUseValue, Loop *loop, Func *func)
     {
         Assert((this->useCount + newUseValue) >= this->useCount);
         this->useCount += newUseValue;
@@ -98,8 +98,8 @@ public:
         {
             if (!this->regionUseCount)
             {
-                this->regionUseCount = AnewArrayZ(this->alloc, uint32, func->loopCount+1);
-                this->regionUseCountAdjust = AnewArrayZ(this->alloc, uint32, func->loopCount+1);
+                this->regionUseCount = AnewArrayZ(this->alloc, uint32_t, func->loopCount+1);
+                this->regionUseCountAdjust = AnewArrayZ(this->alloc, uint32_t, func->loopCount+1);
             }
             while (loop)
             {
@@ -108,7 +108,7 @@ public:
             }
         }
     }
-    void SubFromUseCount(uint32 newUseValue, Loop *loop)
+    void SubFromUseCount(uint32_t newUseValue, Loop *loop)
     {
         Assert((this->useCount - newUseValue) <= this->useCount);
         this->useCount -= newUseValue;
@@ -122,7 +122,7 @@ public:
             loop = loop->parent;
         }
     }
-    uint32 GetRegionUseCount(Loop *loop)
+    uint32_t GetRegionUseCount(Loop *loop)
     {
         if (loop && !PHASE_OFF1(Js::RegionUseCountPhase))
         {
@@ -140,7 +140,7 @@ public:
             return this->useCount;
         }
     }
-    void AddToUseCountAdjust(uint32 newUseValue, Loop *loop, Func *func)
+    void AddToUseCountAdjust(uint32_t newUseValue, Loop *loop, Func *func)
     {
         Assert((this->useCountAdjust + newUseValue) >= this->useCountAdjust);
         this->useCountAdjust += newUseValue;
@@ -149,8 +149,8 @@ public:
         {
             if (!this->regionUseCount)
             {
-                this->regionUseCount = AnewArrayZ(this->alloc, uint32, func->loopCount+1);
-                this->regionUseCountAdjust = AnewArrayZ(this->alloc, uint32, func->loopCount+1);
+                this->regionUseCount = AnewArrayZ(this->alloc, uint32_t, func->loopCount+1);
+                this->regionUseCountAdjust = AnewArrayZ(this->alloc, uint32_t, func->loopCount+1);
             }
             do
             {

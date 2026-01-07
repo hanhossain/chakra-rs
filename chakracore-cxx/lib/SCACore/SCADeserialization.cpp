@@ -199,7 +199,7 @@ namespace Js
         case SCA_DenseArray:
         case SCA_SparseArray:
             {
-                uint32 length;
+                uint32_t length;
                 Read(&length);
                 *dst = lib->CreateArray(length);
                 *deepClone = SCADeepCloneType::Object;
@@ -208,7 +208,7 @@ namespace Js
 
         case SCA_ArrayBuffer:
             {
-                uint32 len;
+                uint32_t len;
                 m_reader->Read(&len);
                 ArrayBuffer* arrayBuffer = lib->CreateArrayBuffer(len);
                 Read(arrayBuffer->GetBuffer(), arrayBuffer->GetByteLength());
@@ -230,7 +230,7 @@ namespace Js
 //#ifdef ENABLE_WASM
 //        case SCA_WebAssemblyModule:
 //        {
-//            uint32 len;
+//            uint32_t len;
 //            m_reader->Read(&len);
 //            byte* buffer = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), byte, len);
 //            Read(buffer, len);
@@ -240,9 +240,9 @@ namespace Js
 //        }
 //        case SCA_WebAssemblyMemory:
 //        {
-//            uint32 initialLength = 0;
-//            uint32 maximumLength = 0;
-//            uint32 isShared = 0;
+//            uint32_t initialLength = 0;
+//            uint32_t maximumLength = 0;
+//            uint32_t isShared = 0;
 //            m_reader->Read(&initialLength);
 //            m_reader->Read(&maximumLength);
 //
@@ -257,7 +257,7 @@ namespace Js
 //            else
 //#endif
 //            {
-//                uint32 len;
+//                uint32_t len;
 //                m_reader->Read(&len);
 //                WebAssemblyMemory* mem = WebAssemblyMemory::CreateForExistingBuffer(initialLength, maximumLength, len, scriptContext);
 //                Read(mem->GetBuffer()->GetBuffer(), len);
@@ -317,8 +317,8 @@ namespace Js
             if (typeId == SCA_DenseArray)
             {
                 JavascriptArray* arr = JavascriptArray::FromAnyArray(obj); // (might be ES5Array if -ForceES5Array)
-                uint32 length = arr->GetLength();
-                for (uint32 i = 0; i < length; i++)
+                uint32_t length = arr->GetLength();
+                for (uint32_t i = 0; i < length; i++)
                 {
                     Dst value = NULL;
                     this->GetEngine()->Clone(m_reader->GetPosition(), &value);
@@ -333,7 +333,7 @@ namespace Js
                 JavascriptArray* arr = JavascriptArray::FromAnyArray(obj); // (might be ES5Array if -ForceES5Array)
                 while (true)
                 {
-                    uint32 i;
+                    uint32_t i;
                     Read(&i);
                     if (i == SCA_PROPERTY_TERMINATOR)
                     {
@@ -427,7 +427,7 @@ namespace Js
         // that is ok since 'this' is always a stack instance.
         Assert(ThreadContext::IsOnStack(this));
 
-        uint32 byteLen;
+        uint32_t byteLen;
         m_reader->Read(&byteLen);
 
         if (byteLen == SCA_PROPERTY_TERMINATOR)
@@ -465,11 +465,11 @@ namespace Js
             buf[newLen] = NULL;
             *len = newLen;
 
-            uint32 unalignedLen = byteLen % sizeof(uint32);
+            uint32_t unalignedLen = byteLen % sizeof(uint32_t);
             if (unalignedLen)
             {
-                uint32 padding;
-                m_reader->Read(&padding, sizeof(uint32) - unalignedLen);
+                uint32_t padding;
+                m_reader->Read(&padding, sizeof(uint32_t) - unalignedLen);
             }
 
             return buf;
@@ -497,15 +497,15 @@ namespace Js
     // Read bytes data: [bytes] [padding]
     //
     template <class Reader>
-    void DeserializationCloner<Reader>::Read(uint8_t* buf, uint32 len) const
+    void DeserializationCloner<Reader>::Read(uint8_t* buf, uint32_t len) const
     {
         m_reader->Read(buf, len);
 
-        uint32 unalignedLen = len % sizeof(uint32);
+        uint32_t unalignedLen = len % sizeof(uint32_t);
         if (unalignedLen)
         {
-            uint32 padding;
-            m_reader->Read(&padding, sizeof(uint32) - unalignedLen);
+            uint32_t padding;
+            m_reader->Read(&padding, sizeof(uint32_t) - unalignedLen);
         }
     }
 
@@ -542,7 +542,7 @@ namespace Js
             break;
 
         case SCA_Uint32Array:
-            ReadTypedArray<uint32, false>(dst);
+            ReadTypedArray<uint32_t, false>(dst);
             break;
 
         case SCA_Float32Array:
@@ -571,7 +571,7 @@ namespace Js
         StreamDeserializationCloner cloner(scriptContext, reader);
 
         // Read version
-        uint32 version;
+        uint32_t version;
         reader->Read(&version);
         if (GetSCAMajor(version) > SCA_FORMAT_MAJOR)
         {

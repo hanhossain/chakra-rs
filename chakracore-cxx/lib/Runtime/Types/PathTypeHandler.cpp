@@ -655,7 +655,7 @@ namespace Js
 
     BOOL PathTypeHandlerBase::HasProperty(DynamicObject* instance, PropertyId propertyId, __out_opt bool *noRedecl, _Inout_opt_ PropertyValueInfo* info)
     {
-        uint32 indexVal;
+        uint32_t indexVal;
         if (noRedecl != nullptr)
         {
             *noRedecl = false;
@@ -700,7 +700,7 @@ namespace Js
         }
 
         // Check numeric propertyId only if objectArray available
-        uint32 indexVal;
+        uint32_t indexVal;
         if (instance->HasObjectArray() && requestContext->IsNumericPropertyId(propertyId, &indexVal))
         {
             return PathTypeHandlerBase::GetItem(instance, originalInstance, indexVal, value, requestContext);
@@ -840,7 +840,7 @@ namespace Js
 
         // Always check numeric propertyId. This may create an objectArray.
         ScriptContext* scriptContext = instance->GetScriptContext();
-        uint32 indexVal;
+        uint32_t indexVal;
         if (scriptContext->IsNumericPropertyId(propertyId, &indexVal))
         {
             if (setAttributes)
@@ -963,7 +963,7 @@ namespace Js
     {
         // Check numeric propertyId only if objectArray available
         ScriptContext* scriptContext = instance->GetScriptContext();
-        uint32 indexVal;
+        uint32_t indexVal;
         if (instance->HasObjectArray() && scriptContext->IsNumericPropertyId(propertyId, &indexVal))
         {
             return PathTypeHandlerBase::DeleteItem(instance, indexVal, flags);
@@ -2410,7 +2410,7 @@ namespace Js
         ScriptContext* scriptContext = instance->GetScriptContext();
 
 #if DBG
-        uint32 indexVal;
+        uint32_t indexVal;
         Assert(GetPropertyIndex(propertyId) == Constants::NoSlot);
         Assert(!scriptContext->IsNumericPropertyId(propertyId, &indexVal));
 #endif
@@ -3463,10 +3463,10 @@ namespace Js
 #if ENABLE_TTD
     void PathTypeHandlerBase::MarkObjectSlots_TTD(TTD::SnapshotExtractor* extractor, DynamicObject* obj) const
     {
-        uint32 plength = this->GetPathLength();
+        uint32_t plength = this->GetPathLength();
         ObjectSlotAttributes * attributes = this->GetAttributeArray();
 
-        for(uint32 index = 0; index < plength; ++index)
+        for(uint32_t index = 0; index < plength; ++index)
         {
             Js::PropertyId pid = GetTypePath()->GetPropertyIdUnchecked(index)->GetPropertyId();
             ObjectSlotAttributes attr = attributes ? attributes[index] : ObjectSlotAttr_Default;
@@ -3481,12 +3481,12 @@ namespace Js
         }
     }
 
-    uint32 PathTypeHandlerBase::ExtractSlotInfo_TTD(TTD::NSSnapType::SnapHandlerPropertyEntry* entryInfo, ThreadContext* threadContext, TTD::SlabAllocator& alloc) const
+    uint32_t PathTypeHandlerBase::ExtractSlotInfo_TTD(TTD::NSSnapType::SnapHandlerPropertyEntry* entryInfo, ThreadContext* threadContext, TTD::SlabAllocator& alloc) const
     {
-        uint32 plength = this->GetPathLength();
+        uint32_t plength = this->GetPathLength();
         ObjectSlotAttributes * attributes = this->GetAttributeArray();
 
-        for(uint32 index = 0; index < plength; ++index)
+        for(uint32_t index = 0; index < plength; ++index)
         {
             ObjectSlotAttributes attr = attributes ? attributes[index] : ObjectSlotAttr_Default;
             PropertyId propertyId = GetTypePath()->GetPropertyIdUnchecked(index)->GetPropertyId();
@@ -3516,7 +3516,7 @@ namespace Js
         return (Js::BigPropertyIndex)this->GetTypePath()->LookupInline(pRecord->GetPropertyId(), GetPathLength());
     }
 
-    bool PathTypeHandlerBase::IsResetableForTTD(uint32 snapMaxIndex) const
+    bool PathTypeHandlerBase::IsResetableForTTD(uint32_t snapMaxIndex) const
     {
         return snapMaxIndex == this->GetPathLength();
     }

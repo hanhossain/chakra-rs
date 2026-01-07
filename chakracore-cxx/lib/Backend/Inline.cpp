@@ -5884,7 +5884,7 @@ Inline::InlineSpread(IR::Instr *spreadCall)
     IR::Opnd *spreadIndicesOpnd = spreadIndicesInstr->GetSrc1();
     Assert(spreadIndicesOpnd->AsAddrOpnd()->GetAddrOpndKind() == IR::AddrOpndKindDynamicAuxBufferRef);
 
-    Js::AuxArray<uint32>* spreadIndices = static_cast<Js::AuxArray<uint32>*>(spreadIndicesOpnd->AsAddrOpnd()->m_metadata);
+    Js::AuxArray<uint32_t>* spreadIndices = static_cast<Js::AuxArray<uint32_t>*>(spreadIndicesOpnd->AsAddrOpnd()->m_metadata);
     Assert(spreadIndices->count > 0);
 
     IR::Instr *argInstr = spreadIndicesInstr;

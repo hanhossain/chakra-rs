@@ -666,7 +666,7 @@ SymOpnd::New(Sym *sym, IRType type, Func *func)
 }
 
 SymOpnd *
-SymOpnd::New(Sym *sym, uint32 offset, IRType type, Func *func)
+SymOpnd::New(Sym *sym, uint32_t offset, IRType type, Func *func)
 {
     SymOpnd * symOpnd;
 
@@ -1544,8 +1544,8 @@ int32
 IntConstOpnd::AsInt32()
 {
     // TODO: Currently, there are cases where we construct IntConstOpnd with TyInt32
-    // and retrieve value out as uint32 (or vice versa). Because of these, we allow
-    // AsInt32/AsUint32 to cast between int32/uint32 in a lossy manner for now.
+    // and retrieve value out as uint32_t (or vice versa). Because of these, we allow
+    // AsInt32/AsUint32 to cast between int32/uint32_t in a lossy manner for now.
     // In the future, we should tighten up usage of IntConstOpnd to avoid these casts
 
     if (sizeof(IntConstType) == sizeof(int32))
@@ -1556,7 +1556,7 @@ IntConstOpnd::AsInt32()
     if (m_type == TyUint32)
     {
         Assert(m_value >= 0 && m_value <= UINT32_MAX);
-        return (int32)(uint32)m_value;
+        return (int32)(uint32_t)m_value;
     }
 
     Assert(Math::FitsInDWord(m_value));
@@ -1571,19 +1571,19 @@ IntConstOpnd::AsInt32()
 ///
 ///----------------------------------------------------------------------------
 
-uint32
+uint32_t
 IntConstOpnd::AsUint32()
 {
-    // TODO: See comment in AsInt32() regarding casts from int32 to uint32
+    // TODO: See comment in AsInt32() regarding casts from int32 to uint32_t
 
-    if (sizeof(uint32) == sizeof(IntConstType))
+    if (sizeof(uint32_t) == sizeof(IntConstType))
     {
-        return (uint32)m_value;
+        return (uint32_t)m_value;
     }
 
-    Assert(sizeof(uint32) < sizeof(IntConstType));
+    Assert(sizeof(uint32_t) < sizeof(IntConstType));
     Assert(m_value >= 0 && m_value <= UINT32_MAX);
-    return (uint32)m_value;
+    return (uint32_t)m_value;
 }
 
 ///----------------------------------------------------------------------------

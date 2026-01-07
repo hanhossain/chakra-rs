@@ -39,28 +39,28 @@ namespace Js
 
         FieldNoBarrier(Recycler*) recycler;
         Field(InnerMap*) indexPropertyMap; // The internal real index property map
-        Field(uint32*) indexList;          // The index list that's created on demand
+        Field(uint32_t*) indexList;          // The index list that's created on demand
         Field(int) lastIndexAt;            // Last used index list entry
 
     private:
         void EnsureIndexList();
-        uint32 * CopyIndexList() const;
+        uint32_t * CopyIndexList() const;
 
     public:
         IndexPropertyDescriptorMap(Recycler* recycler);
         IndexPropertyDescriptorMap(Recycler* recycler, const IndexPropertyDescriptorMap * const indexPropertyDescriptorMap);
 
-        void Add(uint32 key, const IndexPropertyDescriptor& descriptor);
-        bool TryGetLastIndex(uint32* lastIndex);
+        void Add(uint32_t key, const IndexPropertyDescriptor& descriptor);
+        bool TryGetLastIndex(uint32_t* lastIndex);
         BOOL IsValidDescriptorToken(void * descriptorValidationToken) const;
-        uint32 GetNextDescriptor(uint32 key, IndexPropertyDescriptor** descriptor, void ** descriptorValidationToken);
-        uint32 DeleteDownTo(uint32 firstKey);
+        uint32_t GetNextDescriptor(uint32_t key, IndexPropertyDescriptor** descriptor, void ** descriptorValidationToken);
+        uint32_t DeleteDownTo(uint32_t firstKey);
 
         int Count() const
         {
             return indexPropertyMap->Count();
         }
-        uint32 GetKeyAt(int i) const
+        uint32_t GetKeyAt(int i) const
         {
             return indexPropertyMap->GetKeyAt(i);
         }
@@ -68,11 +68,11 @@ namespace Js
         {
             return indexPropertyMap->GetReferenceAt(i);
         }
-        bool ContainsKey(uint32 key) const
+        bool ContainsKey(uint32_t key) const
         {
             return indexPropertyMap->ContainsKey(key);
         }
-        bool TryGetReference(uint32 key, IndexPropertyDescriptor** value) const
+        bool TryGetReference(uint32_t key, IndexPropertyDescriptor** value) const
         {
             return indexPropertyMap->TryGetReference(key, value);
         }
@@ -81,7 +81,7 @@ namespace Js
     private:
         static int CompareIndex(const void* left, const void* right)
         {
-            return *static_cast<const uint32*>(left) - *static_cast<const uint32*>(right);
+            return *static_cast<const uint32_t*>(left) - *static_cast<const uint32_t*>(right);
         }
     };
 
@@ -129,7 +129,7 @@ namespace Js
         }
 
         void SetInstanceTypeHandler(DynamicObject * instance, bool hasChanged = true);
-        BOOL HasDataItem(ES5Array* arr, uint32 index);
+        BOOL HasDataItem(ES5Array* arr, uint32_t index);
         bool HasAnyDataItemNotInMap(ES5Array* arr);
         PropertyAttributes GetDataItemAttributes() const;
         void SetDataItemSealed();
@@ -138,13 +138,13 @@ namespace Js
         static BOOL CantAssign(PropertyOperationFlags flags, ScriptContext* scriptContext);
         static BOOL CantExtend(PropertyOperationFlags flags, ScriptContext* scriptContext);
 
-        BOOL IsAttributeSet(uint32 index, PropertyAttributes attr);
+        BOOL IsAttributeSet(uint32_t index, PropertyAttributes attr);
         BOOL IsAttributeSet(DynamicObject* instance, PropertyId propertyId, PropertyAttributes attr, BOOL& isNumericPropertyId);
         BOOL UpdateAttribute(DynamicObject* instance, PropertyId propertyId, PropertyAttributes attr, BOOL value, BOOL& isNumericPropertyId);
 
-        uint32 DeleteDownTo(ES5Array* arr, uint32 first, PropertyOperationFlags propertyOperationFlags);
-        bool TryGetLastDataItemIndex(ES5Array* arr, uint32 first, uint32* lastIndex);
-        bool CanSetItemAt(ES5Array* arr, uint32 index) const;
+        uint32_t DeleteDownTo(ES5Array* arr, uint32_t first, PropertyOperationFlags propertyOperationFlags);
+        bool TryGetLastDataItemIndex(ES5Array* arr, uint32_t first, uint32_t* lastIndex);
+        bool CanSetItemAt(ES5Array* arr, uint32_t index) const;
 
     public:
         // Create a new type handler for a future DynamicObject. This is for public usage. "initialCapacity" indicates desired slotCapacity, subject to alignment round up.
@@ -152,15 +152,15 @@ namespace Js
 
         void SetLengthWritable(bool writable);
 
-        BOOL HasItem(ES5Array* arr, uint32 index);
-        BOOL SetItem(ES5Array* arr, DynamicObject* instance, uint32 index, Var value, PropertyOperationFlags flags);
-        BOOL SetItemWithAttributes(ES5Array* arr, DynamicObject* instance, uint32 index, Var value, PropertyAttributes attributes);
-        BOOL SetItemAttributes(ES5Array* arr, DynamicObject* instance, uint32 index, PropertyAttributes attributes);
-        BOOL SetItemAccessors(ES5Array* arr, DynamicObject* instance, uint32 index, Var getter, Var setter);
-        BOOL DeleteItem(ES5Array* arr, DynamicObject* instance, uint32 index, PropertyOperationFlags propertyOperationFlags);
-        BOOL GetItem(ES5Array* arr, DynamicObject* instance, Var originalInstance, uint32 index, Var* value, ScriptContext* requestContext);
-        DescriptorFlags GetItemSetter(ES5Array* arr, DynamicObject* instance, uint32 index, Var* setterValue, ScriptContext* requestContext);
-        BOOL GetItemAccessors(ES5Array* arr, DynamicObject* instance, uint32 index, Var* getter, Var* setter);
+        BOOL HasItem(ES5Array* arr, uint32_t index);
+        BOOL SetItem(ES5Array* arr, DynamicObject* instance, uint32_t index, Var value, PropertyOperationFlags flags);
+        BOOL SetItemWithAttributes(ES5Array* arr, DynamicObject* instance, uint32_t index, Var value, PropertyAttributes attributes);
+        BOOL SetItemAttributes(ES5Array* arr, DynamicObject* instance, uint32_t index, PropertyAttributes attributes);
+        BOOL SetItemAccessors(ES5Array* arr, DynamicObject* instance, uint32_t index, Var getter, Var setter);
+        BOOL DeleteItem(ES5Array* arr, DynamicObject* instance, uint32_t index, PropertyOperationFlags propertyOperationFlags);
+        BOOL GetItem(ES5Array* arr, DynamicObject* instance, Var originalInstance, uint32_t index, Var* value, ScriptContext* requestContext);
+        DescriptorFlags GetItemSetter(ES5Array* arr, DynamicObject* instance, uint32_t index, Var* setterValue, ScriptContext* requestContext);
+        BOOL GetItemAccessors(ES5Array* arr, DynamicObject* instance, uint32_t index, Var* getter, Var* setter);
 
     public:
         virtual DynamicTypeHandler * Clone(Recycler * recyler);
@@ -172,14 +172,14 @@ namespace Js
         virtual DescriptorFlags GetSetter(DynamicObject* instance, JavascriptString* propertyNameString, Var* setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
         virtual BOOL DeleteProperty(DynamicObject* instance, PropertyId propertyId, PropertyOperationFlags flags) override;
 
-        virtual BOOL HasItem(DynamicObject* instance, uint32 index) override;
-        virtual BOOL SetItem(DynamicObject* instance, uint32 index, Var value, PropertyOperationFlags flags) override;
-        virtual BOOL SetItemWithAttributes(DynamicObject* instance, uint32 index, Var value, PropertyAttributes attributes) override;
-        virtual BOOL SetItemAttributes(DynamicObject* instance, uint32 index, PropertyAttributes attributes) override;
-        virtual BOOL SetItemAccessors(DynamicObject* instance, uint32 index, Var getter, Var setter) override;
-        virtual BOOL DeleteItem(DynamicObject* instance, uint32 index, PropertyOperationFlags flags) override;
-        virtual BOOL GetItem(DynamicObject* instance, Var originalInstance, uint32 index, Var* value, ScriptContext* requestContext) override;
-        virtual DescriptorFlags GetItemSetter(DynamicObject* instance, uint32 index, Var* setterValue, ScriptContext* requestContext) override;
+        virtual BOOL HasItem(DynamicObject* instance, uint32_t index) override;
+        virtual BOOL SetItem(DynamicObject* instance, uint32_t index, Var value, PropertyOperationFlags flags) override;
+        virtual BOOL SetItemWithAttributes(DynamicObject* instance, uint32_t index, Var value, PropertyAttributes attributes) override;
+        virtual BOOL SetItemAttributes(DynamicObject* instance, uint32_t index, PropertyAttributes attributes) override;
+        virtual BOOL SetItemAccessors(DynamicObject* instance, uint32_t index, Var getter, Var setter) override;
+        virtual BOOL DeleteItem(DynamicObject* instance, uint32_t index, PropertyOperationFlags flags) override;
+        virtual BOOL GetItem(DynamicObject* instance, Var originalInstance, uint32_t index, Var* value, ScriptContext* requestContext) override;
+        virtual DescriptorFlags GetItemSetter(DynamicObject* instance, uint32_t index, Var* setterValue, ScriptContext* requestContext) override;
         virtual BOOL IsEnumerable(DynamicObject* instance, PropertyId propertyId) override;
         virtual BOOL IsWritable(DynamicObject* instance, PropertyId propertyId) override;
         virtual BOOL IsConfigurable(DynamicObject* instance, PropertyId propertyId) override;
@@ -193,12 +193,12 @@ namespace Js
         virtual BOOL SetAttributes(DynamicObject* instance, PropertyId propertyId, PropertyAttributes attributes) override;
 
         virtual bool IsLengthWritable() const override;
-        virtual uint32 SetLength(ES5Array* arr, uint32 newLen, PropertyOperationFlags propertyOperationFlags) override;
+        virtual uint32_t SetLength(ES5Array* arr, uint32_t newLen, PropertyOperationFlags propertyOperationFlags) override;
         virtual BOOL IsObjectArrayFrozen(ES5Array* arr) override;
-        virtual BOOL IsItemEnumerable(ES5Array* arr, uint32 index) override;
+        virtual BOOL IsItemEnumerable(ES5Array* arr, uint32_t index) override;
         virtual BOOL IsValidDescriptorToken(void * descriptorValidationToken) const override;
-        virtual uint32 GetNextDescriptor(uint32 key, IndexPropertyDescriptor** descriptor, void ** descriptorValidationToken) override;
-        virtual BOOL GetDescriptor(uint32 index, Js::IndexPropertyDescriptor **ppDescriptor) override;
+        virtual uint32_t GetNextDescriptor(uint32_t key, IndexPropertyDescriptor** descriptor, void ** descriptorValidationToken) override;
+        virtual BOOL GetDescriptor(uint32_t index, Js::IndexPropertyDescriptor **ppDescriptor) override;
 
         virtual void SetIsPrototype(DynamicObject* instance) override;
     private:

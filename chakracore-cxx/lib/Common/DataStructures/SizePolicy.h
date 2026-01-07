@@ -51,7 +51,7 @@ struct PowerOf2Policy
     /// greater than specified capacity.
     inline static uint GetSize(size_t minCapacity_t, int *modFunctionIndex)
     {
-        AssertMsg(minCapacity_t <= MAXINT32, "the next higher power of 2  must fit in uint32");
+        AssertMsg(minCapacity_t <= MAXINT32, "the next higher power of 2  must fit in uint32_t");
         uint minCapacity = static_cast<uint>(minCapacity_t);
         *modFunctionIndex = UNKNOWN_MOD_INDEX;
 

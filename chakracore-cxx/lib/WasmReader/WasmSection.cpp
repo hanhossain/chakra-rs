@@ -12,7 +12,7 @@ namespace Wasm
         SectionFlag flag,
         SectionCode precedent,
         const char16_t* name,
-        const uint32 nameLength
+        const uint32_t nameLength
     ): flag(flag), precedent(precedent), name(name), nameLength(nameLength) {}
 
     SectionInfo SectionInfo::All[bSectLimit] = {

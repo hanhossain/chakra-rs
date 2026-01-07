@@ -79,9 +79,9 @@ namespace Js
             return c <= 0x7f && (s_uriProps[c] & flags);
         }
 
-        static const uint32 MaxUTF8Len = 4;
-        static uint32 ToUTF8( uint32 uVal, uint8_t bUTF8[MaxUTF8Len]);
-        static uint32 FromUTF8( uint8_t bUTF8[MaxUTF8Len], uint32 uLen );
+        static const uint32_t MaxUTF8Len = 4;
+        static uint32_t ToUTF8( uint32_t uVal, uint8_t bUTF8[MaxUTF8Len]);
+        static uint32_t FromUTF8( uint8_t bUTF8[MaxUTF8Len], uint32_t uLen );
         static Var Encode(JavascriptString* strURI, unsigned char unescapedFlags, ScriptContext* scriptContext );
 
     private:

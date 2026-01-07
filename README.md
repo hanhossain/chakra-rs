@@ -54,7 +54,6 @@ Files to remove:
 typedefs/defines to remove:
 - __int32
   - int32
-  - uint32
 - __int16
   - int16
   - uint16

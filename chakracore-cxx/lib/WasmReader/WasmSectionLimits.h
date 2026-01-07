@@ -9,20 +9,20 @@ namespace Wasm
 {
 struct SectionLimits
 {
-    enum Flags : uint32
+    enum Flags : uint32_t
     {
         HAS_MAXIMUM = 1 << 0,
     };
     bool HasMaximum() const { return (flags & HAS_MAXIMUM) != 0; }
 
     Flags flags;
-    uint32 initial;
-    uint32 maximum;
+    uint32_t initial;
+    uint32_t maximum;
 };
 
 struct MemorySectionLimits : public SectionLimits
 {
-    enum Flags : uint32
+    enum Flags : uint32_t
     {
         IS_SHARED = 1 << 1,
     };

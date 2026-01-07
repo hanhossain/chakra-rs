@@ -29,7 +29,7 @@ public:
     virtual uint GetInterpretedCount() const = 0;
     virtual void Delete() = 0;
 #if DBG_DUMP | defined(VTUNE_PROFILING)
-    virtual void RecordNativeMap(uint32 nativeOffset, uint32 statementIndex) = 0;
+    virtual void RecordNativeMap(uint32_t nativeOffset, uint32_t statementIndex) = 0;
 #endif
 #if DBG_DUMP
     virtual void DumpNativeOffsetMaps() = 0;
@@ -182,7 +182,7 @@ public:
 
     void OnWorkItemProcessFail(NativeCodeGenerator *codeGen);
 
-    void RecordNativeThrowMap(Js::SmallSpanSequenceIter& iter, uint32 nativeOffset, uint32 statementIndex)
+    void RecordNativeThrowMap(Js::SmallSpanSequenceIter& iter, uint32_t nativeOffset, uint32_t statementIndex)
     {
         this->functionBody->RecordNativeThrowMap(iter, nativeOffset, statementIndex, this->GetEntryPoint(), GetLoopNumber());
     }
@@ -239,7 +239,7 @@ public:
     }
 
 #if DBG_DUMP | defined(VTUNE_PROFILING)
-    void RecordNativeMap(uint32 nativeOffset, uint32 statementIndex) override
+    void RecordNativeMap(uint32_t nativeOffset, uint32_t statementIndex) override
     {
         Js::FunctionEntryPointInfo* info = (Js::FunctionEntryPointInfo*) this->GetEntryPoint();
 
@@ -306,7 +306,7 @@ struct JsLoopBodyCodeGen : public CodeGenWorkItem
     }
 
 #if DBG_DUMP | defined(VTUNE_PROFILING)
-    void RecordNativeMap(uint32 nativeOffset, uint32 statementIndex) override
+    void RecordNativeMap(uint32_t nativeOffset, uint32_t statementIndex) override
     {
         this->GetEntryPoint()->RecordNativeMap(nativeOffset, statementIndex);
     }

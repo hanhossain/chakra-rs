@@ -2182,7 +2182,7 @@ NativeCodeGenerator::GatherCodeGenData(
     Js::FunctionCodeGenRuntimeData *const runtimeData,
     Js::JavascriptFunction* function,
     bool isJitTimeDataComputed,
-    uint32 recursiveInlineDepth)
+    uint32_t recursiveInlineDepth)
 {
     ASSERT_THREAD();
     Assert(recycler);
@@ -2242,7 +2242,7 @@ NativeCodeGenerator::GatherCodeGenData(
         //TryAggressiveInlining adjusts inlining heuristics and walks the call tree. If it can inlining everything it will set the InliningThreshold to be aggressive.
         if (!inliningDecider.GetIsLoopBody())
         {
-            uint32 inlineeCount = 0;
+            uint32_t inlineeCount = 0;
             if (!PHASE_OFF(Js::TryAggressiveInliningPhase, topFunctionBody))
             {
                 Assert(topFunctionBody == functionBody);
@@ -3541,14 +3541,14 @@ bool NativeCodeGenerator::TryAggressiveInlining(Js::FunctionBody *const topFunct
 
         Js::FunctionBody *const topFunc;
         Js::FunctionBody *const inlineeFunc;
-        uint32& inlineeCount;
+        uint32_t& inlineeCount;
         bool done;
 
         char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
         char16_t debugStringBuffer2[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
     public:
-        AutoTrace(Js::FunctionBody *const topFunctionBody, Js::FunctionBody *const inlineeFunctionBody, uint32& inlineeCount) : topFunc(topFunctionBody),
+        AutoTrace(Js::FunctionBody *const topFunctionBody, Js::FunctionBody *const inlineeFunctionBody, uint32_t& inlineeCount) : topFunc(topFunctionBody),
             inlineeFunc(inlineeFunctionBody), done(false), inlineeCount(inlineeCount)
         {
             if (topFunc == inlineeFunc)

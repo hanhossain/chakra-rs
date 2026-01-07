@@ -316,7 +316,7 @@ private:
     IR::Instr *     LowerEqualityBranch(IR::Instr* instr, IR::JnHelperMethod helper);
     IR::Instr *     LowerEqualityCompare(IR::Instr* instr, IR::JnHelperMethod helper);
     template <typename ArrayType>
-    BOOL            IsSmallObject(uint32 length);
+    BOOL            IsSmallObject(uint32_t length);
     void            GenerateProfiledNewScIntArrayFastPath(IR::Instr *instr, Js::ArrayCallSiteInfo * arrayInfo, intptr_t arrayInfoAddr, intptr_t weakFuncRef);
     void            GenerateArrayInfoIsNativeIntArrayTest(IR::Instr * instr,  Js::ArrayCallSiteInfo * arrayInfo, intptr_t arrayInfoAddr, IR::LabelInstr * helperLabel);
     void            GenerateProfiledNewScFloatArrayFastPath(IR::Instr *instr, Js::ArrayCallSiteInfo * arrayInfo, intptr_t arrayInfoAddr, intptr_t weakFuncRef);
@@ -359,8 +359,8 @@ private:
 // Static tables that will be used by the GetArray* methods below
 private:
     static const VTableValue VtableAddresses[static_cast<ValueType::TSize>(ObjectType::Count)];
-    static const uint32 OffsetsOfHeadSegment[static_cast<ValueType::TSize>(ObjectType::Count)];
-    static const uint32 OffsetsOfLength[static_cast<ValueType::TSize>(ObjectType::Count)];
+    static const uint32_t OffsetsOfHeadSegment[static_cast<ValueType::TSize>(ObjectType::Count)];
+    static const uint32_t OffsetsOfLength[static_cast<ValueType::TSize>(ObjectType::Count)];
     static const IRType IndirTypes[static_cast<ValueType::TSize>(ObjectType::Count)];
     static const uint8_t IndirScales[static_cast<ValueType::TSize>(ObjectType::Count)];
 
@@ -368,8 +368,8 @@ private:
     static VTableValue GetArrayVtableAddress(const ValueType valueType, bool getVirtual = false);
 
 public:
-    static uint32   GetArrayOffsetOfHeadSegment(const ValueType valueType);
-    static uint32   GetArrayOffsetOfLength(const ValueType valueType);
+    static uint32_t   GetArrayOffsetOfHeadSegment(const ValueType valueType);
+    static uint32_t   GetArrayOffsetOfLength(const ValueType valueType);
     static IRType   GetArrayIndirType(const ValueType valueType);
     static uint8_t     GetArrayIndirScale(const ValueType valueType);
     static int      SimdGetElementCountFromBytes(ValueType arrValueType, uint8_t dataWidth);
@@ -402,7 +402,7 @@ public:
     static IR::Instr *HoistIndirOffset(IR::Instr* instr, IR::IndirOpnd *indirOpnd, RegNum regNum);
     static IR::Instr *HoistIndirOffsetAsAdd(IR::Instr* instr, IR::IndirOpnd *orgOpnd, IR::Opnd *baseOpnd, int offset, RegNum regNum);
     static IR::Instr *HoistIndirIndexOpndAsAdd(IR::Instr* instr, IR::IndirOpnd *orgOpnd, IR::Opnd *baseOpnd, IR::Opnd *indexOpnd, RegNum regNum);
-    static IR::Instr *HoistSymOffset(IR::Instr *instr, IR::SymOpnd *symOpnd, RegNum baseReg, uint32 offset, RegNum regNum);
+    static IR::Instr *HoistSymOffset(IR::Instr *instr, IR::SymOpnd *symOpnd, RegNum baseReg, uint32_t offset, RegNum regNum);
     static IR::Instr *HoistSymOffsetAsAdd(IR::Instr* instr, IR::SymOpnd *orgOpnd, IR::Opnd *baseOpnd, int offset, RegNum regNum);
 
     static IR::LabelInstr *     InsertLabel(const bool isHelper, IR::Instr *const insertBeforeInstr);
@@ -513,8 +513,8 @@ private:
         _In_ IR::Instr* instrInsert,
         _In_ IR::RegOpnd* indexOpnd,
         _In_ IR::RegOpnd* baseOpnd,
-        _In_ const uint32 inlineCacheOffset,
-        _In_ const uint32 hitRateOffset,
+        _In_ const uint32_t inlineCacheOffset,
+        _In_ const uint32_t hitRateOffset,
         _In_ IR::LabelInstr* labelHelper,
         _In_ Js::FldInfoFlags flags);
 
@@ -524,8 +524,8 @@ private:
         _In_ IR::RegOpnd* baseOpnd,
         _In_opt_ IR::RegOpnd* opndSlotArray,
         _In_opt_ IR::RegOpnd* opndSlotIndex,
-        _In_ const uint32 inlineCacheOffset,
-        _In_ const uint32 hitRateOffset,
+        _In_ const uint32_t inlineCacheOffset,
+        _In_ const uint32_t hitRateOffset,
         _In_ IR::LabelInstr* labelHelper,
         _In_ Js::FldInfoFlags flags = Js::FldInfo_NoInfo);
 
@@ -543,7 +543,7 @@ private:
         _Outptr_ IR::BranchInstr** branchToPatch,
         _Inout_ IR::RegOpnd** taggedTypeOpnd);
 
-    void            GenerateFastIsInSymbolOrStringIndex(IR::Instr * instrInsert, IR::RegOpnd *indexOpnd, IR::RegOpnd *baseOpnd, IR::Opnd *dest, uint32 inlineCacheOffset, const uint32 hitRateOffset, IR::LabelInstr * labelHelper, IR::LabelInstr * labelDone);
+    void            GenerateFastIsInSymbolOrStringIndex(IR::Instr * instrInsert, IR::RegOpnd *indexOpnd, IR::RegOpnd *baseOpnd, IR::Opnd *dest, uint32_t inlineCacheOffset, const uint32_t hitRateOffset, IR::LabelInstr * labelHelper, IR::LabelInstr * labelDone);
     IR::BranchInstr* InsertMissingItemCompareBranch(IR::Opnd* compareSrc, Js::OpCode opcode, IR::LabelInstr* target, IR::Instr* insertBeforeInstr);
     bool            GenerateFastLdElemI(IR::Instr *& ldElem, bool *instrIsInHelperBlockRef);
     bool            GenerateFastStElemI(IR::Instr *& StElem, bool *instrIsInHelperBlockRef);
@@ -703,31 +703,31 @@ private:
     void            GenerateRecyclerAlloc(IR::JnHelperMethod allocHelper, size_t allocSize, IR::RegOpnd* newObjDst, IR::Instr* insertionPointInstr, bool inOpHelper = false);
 
     template <typename ArrayType>
-    IR::RegOpnd *   GenerateArrayAllocHelper(IR::Instr *instr, uint32 * psize, Js::ArrayCallSiteInfo * arrayInfo, bool * pIsHeadSegmentZeroed, bool isArrayObjCtor, bool isNoArgs);
+    IR::RegOpnd *   GenerateArrayAllocHelper(IR::Instr *instr, uint32_t * psize, Js::ArrayCallSiteInfo * arrayInfo, bool * pIsHeadSegmentZeroed, bool isArrayObjCtor, bool isNoArgs);
     template <typename ArrayType>
-    IR::RegOpnd *   GenerateArrayLiteralsAlloc(IR::Instr *instr, uint32 * psize, Js::ArrayCallSiteInfo * arrayInfo, bool * pIsHeadSegmentZeroed);
+    IR::RegOpnd *   GenerateArrayLiteralsAlloc(IR::Instr *instr, uint32_t * psize, Js::ArrayCallSiteInfo * arrayInfo, bool * pIsHeadSegmentZeroed);
     template <typename ArrayType>
-    IR::RegOpnd *   GenerateArrayObjectsAlloc(IR::Instr *instr, uint32 * psize, Js::ArrayCallSiteInfo * arrayInfo, bool * pIsHeadSegmentZeroed, bool isNoArgs);
+    IR::RegOpnd *   GenerateArrayObjectsAlloc(IR::Instr *instr, uint32_t * psize, Js::ArrayCallSiteInfo * arrayInfo, bool * pIsHeadSegmentZeroed, bool isNoArgs);
 
     template <typename ArrayType>
     IR::RegOpnd *   GenerateArrayAlloc(IR::Instr *instr, IR::Opnd * sizeOpnd, Js::ArrayCallSiteInfo * arrayInfo);
 
-    bool            GenerateProfiledNewScObjArrayFastPath(IR::Instr *instr, Js::ArrayCallSiteInfo * arrayInfo, intptr_t arrayInfoAddr, intptr_t weakFuncRef, uint32 length, IR::LabelInstr* labelDone, bool isNoArgs);
+    bool            GenerateProfiledNewScObjArrayFastPath(IR::Instr *instr, Js::ArrayCallSiteInfo * arrayInfo, intptr_t arrayInfoAddr, intptr_t weakFuncRef, uint32_t length, IR::LabelInstr* labelDone, bool isNoArgs);
 
     template <typename ArrayType>
-    bool            GenerateProfiledNewScObjArrayFastPath(IR::Instr *instr, Js::ArrayCallSiteInfo * arrayInfo, intptr_t arrayInfoAddr, intptr_t weakFuncRef, IR::LabelInstr* helperLabel, IR::LabelInstr* labelDone, IR::Opnd* lengthOpnd, uint32 offsetOfCallSiteIndex, uint32 offsetOfWeakFuncRef);
-    bool            GenerateProfiledNewScArrayFastPath(IR::Instr *instr, Js::ArrayCallSiteInfo * arrayInfo, intptr_t arrayInfoAddr, intptr_t weakFuncRef, uint32 length);
+    bool            GenerateProfiledNewScObjArrayFastPath(IR::Instr *instr, Js::ArrayCallSiteInfo * arrayInfo, intptr_t arrayInfoAddr, intptr_t weakFuncRef, IR::LabelInstr* helperLabel, IR::LabelInstr* labelDone, IR::Opnd* lengthOpnd, uint32_t offsetOfCallSiteIndex, uint32_t offsetOfWeakFuncRef);
+    bool            GenerateProfiledNewScArrayFastPath(IR::Instr *instr, Js::ArrayCallSiteInfo * arrayInfo, intptr_t arrayInfoAddr, intptr_t weakFuncRef, uint32_t length);
      
     void            GenerateMemInit(IR::RegOpnd * opnd, int32 offset, int32 value, IR::Instr * insertBeforeInstr, bool isZeroed = false);
-    void            GenerateMemInit(IR::RegOpnd * opnd, int32 offset, uint32 value, IR::Instr * insertBeforeInstr, bool isZeroed = false);
+    void            GenerateMemInit(IR::RegOpnd * opnd, int32 offset, uint32_t value, IR::Instr * insertBeforeInstr, bool isZeroed = false);
     void            GenerateMemInitNull(IR::RegOpnd * opnd, int32 offset, IR::Instr * insertBeforeInstr, bool isZeroed = false);
     void            GenerateMemInit(IR::RegOpnd * opnd, int32 offset, IR::Opnd * value, IR::Instr * insertBeforeInstr, bool isZeroed = false);
     void            GenerateMemInit(IR::RegOpnd * opnd, IR::RegOpnd * offset, IR::Opnd * value, IR::Instr * insertBeforeInstr, bool isZeroed = false);
     void            GenerateRecyclerMemInit(IR::RegOpnd * opnd, int32 offset, int32 value, IR::Instr * insertBeforeInstr);
-    void            GenerateRecyclerMemInit(IR::RegOpnd * opnd, int32 offset, uint32 value, IR::Instr * insertBeforeInstr);
+    void            GenerateRecyclerMemInit(IR::RegOpnd * opnd, int32 offset, uint32_t value, IR::Instr * insertBeforeInstr);
     void            GenerateRecyclerMemInitNull(IR::RegOpnd * opnd, int32 offset, IR::Instr * insertBeforeInstr);
     void            GenerateRecyclerMemInit(IR::RegOpnd * opnd, int32 offset, IR::Opnd * value, IR::Instr * insertBeforeInstr);
-    void            GenerateMemCopy(IR::Opnd * dst, IR::Opnd * src, uint32 size, IR::Instr * insertBeforeInstr);
+    void            GenerateMemCopy(IR::Opnd * dst, IR::Opnd * src, uint32_t size, IR::Instr * insertBeforeInstr);
 
     void            GenerateDynamicObjectAlloc(IR::Instr * newObjInstr, uint inlineSlotCount, uint slotCount, IR::RegOpnd * newObjDst, IR::Opnd * typeSrc);
     bool            GenerateSimplifiedInt4Rem(IR::Instr *const remInstr, IR::LabelInstr *const skipBailOutLabel = nullptr) const;

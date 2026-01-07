@@ -44,7 +44,7 @@ SCCLiveness::Build()
     FOREACH_INSTR_IN_FUNC_EDITING(instr, instrNext, this->func)
     {
         IR::Opnd *dst, *src1, *src2;
-        uint32 instrNum = instr->GetNumber();
+        uint32_t instrNum = instr->GetNumber();
 
         if (instr->HasBailOutInfo())
         {
@@ -201,7 +201,7 @@ SCCLiveness::Build()
             {
                 this->loopNest++;       // used in spill cost calculation.
 
-                uint32 lastBranchNum = 0;
+                uint32_t lastBranchNum = 0;
                 IR::BranchInstr *lastBranchInstr = nullptr;
 
                 FOREACH_SLISTCOUNTED_ENTRY(IR::BranchInstr *, ref, &labelInstr->labelRefs)
@@ -473,11 +473,11 @@ SCCLiveness::ProcessBailOutUses(IR::Instr * instr)
     // *temporarily* incrementing the instruction number by one.
     struct UpdateLastCalInstrNumberForLazyBailOut {
         IR::Instr *lazyBailOutInstr;
-        const uint32 previousInstrNumber;
-        uint32 &lastCall;
-        const uint32 previousLastCallNumber;
+        const uint32_t previousInstrNumber;
+        uint32_t &lastCall;
+        const uint32_t previousLastCallNumber;
 
-        UpdateLastCalInstrNumberForLazyBailOut(IR::Instr *instr, uint32 &lastCall) :
+        UpdateLastCalInstrNumberForLazyBailOut(IR::Instr *instr, uint32_t &lastCall) :
             lazyBailOutInstr(instr), previousInstrNumber(instr->GetNumber()),
             lastCall(lastCall), previousLastCallNumber(lastCall)
         {
@@ -683,8 +683,8 @@ SCCLiveness::ExtendLifetime(Lifetime *lifetime, IR::Instr *instr)
     // Find the loop that we need to extend the lifetime to
     StackSym * sym = lifetime->sym;
     Loop * loop = this->curLoop;
-    uint32 extendedLifetimeStart = lifetime->start;
-    uint32 extendedLifetimeEnd = lifetime->end;
+    uint32_t extendedLifetimeStart = lifetime->start;
+    uint32_t extendedLifetimeEnd = lifetime->end;
     bool isLiveOnBackEdge = false;
     bool loopAddedToList = false;
 

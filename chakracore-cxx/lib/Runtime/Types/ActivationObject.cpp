@@ -91,7 +91,7 @@ namespace Js
         return true;
     }
 
-    BOOL ActivationObject::DeleteItem(uint32 index, PropertyOperationFlags flags)
+    BOOL ActivationObject::DeleteItem(uint32_t index, PropertyOperationFlags flags)
     {
         return false;
     }

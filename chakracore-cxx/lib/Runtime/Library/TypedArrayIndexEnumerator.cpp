@@ -26,9 +26,9 @@ namespace Js
         {
             while (true)
             {
-                uint32 lastIndex = index;
+                uint32_t lastIndex = index;
                 index++;
-                if ((uint32)index >= typedArrayObject->GetLength()) // End of array
+                if ((uint32_t)index >= typedArrayObject->GetLength()) // End of array
                 {
                     index = lastIndex;
                     doneArray = true;

@@ -168,8 +168,8 @@ private:
     void SetWriteThroughSymbolsSetForRegion(BasicBlock * catchBlock, Region * tryRegion);
     bool CheckWriteThroughSymInRegion(Region * region, StackSym * sym);
 #if DBG
-    void VerifyByteCodeUpwardExposed(BasicBlock* block, Func* func, BVSparse<JitArenaAllocator>* trackingByteCodeUpwardExposedUsed, IR::Instr* instr, uint32 bytecodeOffset);
-    void CaptureByteCodeUpwardExposed(BasicBlock* block, Func* func, Js::OpCode opcode, uint32 offset);
+    void VerifyByteCodeUpwardExposed(BasicBlock* block, Func* func, BVSparse<JitArenaAllocator>* trackingByteCodeUpwardExposedUsed, IR::Instr* instr, uint32_t bytecodeOffset);
+    void CaptureByteCodeUpwardExposed(BasicBlock* block, Func* func, Js::OpCode opcode, uint32_t offset);
     BVSparse<JitArenaAllocator>* GetByteCodeRegisterUpwardExposed(BasicBlock* block, Func* func, JitArenaAllocator* alloc);
 #endif
 private:
@@ -261,12 +261,12 @@ private:
     NumberTempRepresentativePropertySymMap * numberTempRepresentativePropertySym;
 
 #if DBG_DUMP
-    uint32 numDeadStore;
-    uint32 numMarkTempNumber;
-    uint32 numMarkTempNumberTransferred;
-    uint32 numMarkTempObject;
+    uint32_t numDeadStore;
+    uint32_t numMarkTempNumber;
+    uint32_t numMarkTempNumberTransferred;
+    uint32_t numMarkTempObject;
 #endif
 
-    uint32 implicitCallBailouts;
-    uint32 fieldOpts;
+    uint32_t implicitCallBailouts;
+    uint32_t fieldOpts;
 };

@@ -30,7 +30,7 @@ namespace Js
         virtual BOOL InitProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags = PropertyOperation_None, PropertyValueInfo* info = NULL) override;
         virtual BOOL InitPropertyScoped(PropertyId propertyId, Var value) override;
         virtual BOOL InitFuncScoped(PropertyId propertyId, Var value) override;
-        virtual BOOL DeleteItem(uint32 index, PropertyOperationFlags flags) override;
+        virtual BOOL DeleteItem(uint32_t index, PropertyOperationFlags flags) override;
         virtual BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
         virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
 
@@ -158,9 +158,9 @@ namespace Js
             return &cache[i];
         }
 
-        static uint32 GetOffsetOfCache() { return offsetof(ActivationObjectEx, cache); }
-        static uint32 GetOffsetOfCommitFlag() { return offsetof(ActivationObjectEx, committed); }
-        static uint32 GetOffsetOfParentFunc() { return offsetof(ActivationObjectEx, parentFunc); }
+        static uint32_t GetOffsetOfCache() { return offsetof(ActivationObjectEx, cache); }
+        static uint32_t GetOffsetOfCommitFlag() { return offsetof(ActivationObjectEx, committed); }
+        static uint32_t GetOffsetOfParentFunc() { return offsetof(ActivationObjectEx, parentFunc); }
 
         static const PropertyId *GetCachedScopeInfo(const PropertyIdArray *propIds);
 

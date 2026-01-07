@@ -48,7 +48,7 @@ namespace Arrays
         }
     }
 
-    bool GetLocaleSeparator(char16_t* szSeparator, uint32* sepOutSize, uint32 sepBufSize)
+    bool GetLocaleSeparator(char16_t* szSeparator, uint32_t* sepOutSize, uint32_t sepBufSize)
     {
         ArrayLocalization arrayLocalization;
         szSeparator[*sepOutSize] = arrayLocalization.GetLocaleSeparator();

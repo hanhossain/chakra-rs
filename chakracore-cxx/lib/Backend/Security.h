@@ -43,7 +43,7 @@ private:
         return byteCount;
     }
 
-    template<typename T> static bool IsByteSet(T value, uint32 index)
+    template<typename T> static bool IsByteSet(T value, uint32_t index)
     {
         const byte byteValue = (byte)(value >> (index * MachBits));
         return byteValue != 0 && byteValue != 0xFF;

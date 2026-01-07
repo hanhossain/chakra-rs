@@ -93,9 +93,9 @@ private:
     static void LegalizeImmed(IR::Instr * instr, IR::Opnd * opnd, uint opndNum, IntConstType immed, LegalForms forms);
     static void LegalizeLabelOpnd(IR::Instr * instr, IR::Opnd * opnd, uint opndNum);
 
-    static inline uint32 ShiftTo16(UIntConstType* immed)
+    static inline uint32_t ShiftTo16(UIntConstType* immed)
     {
-        uint32 shift = 0;
+        uint32_t shift = 0;
         while (((*immed) & 0xffff) != *immed)
         {
             (*immed) >>= 16;

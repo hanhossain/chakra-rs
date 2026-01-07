@@ -7,20 +7,20 @@
 class ExprAttributes
 {
 protected:
-    uint32 attributes;
+    uint32_t attributes;
 
 public:
-    ExprAttributes(const uint32 attributes = 0) : attributes(attributes)
+    ExprAttributes(const uint32_t attributes = 0) : attributes(attributes)
     {
     }
 
-    uint32 Attributes() const
+    uint32_t Attributes() const
     {
         return attributes;
     }
 
 private:
-    static uint32 BitMask(const uint index)
+    static uint32_t BitMask(const uint index)
     {
         return 1u << index;
     }
@@ -49,14 +49,14 @@ public:
     {
         extern uint8_t OpCodeToHash[(int)Js::OpCode::Count];
 
-        uint32 opCodeHash = OpCodeToHash[(int)opcode];
+        uint32_t opCodeHash = OpCodeToHash[(int)opcode];
         this->opcode = opCodeHash;
         this->src1Val = src1Val;
         this->src2Val = src2Val;
         this->attributes = exprAttributes.Attributes();
 
         // Assert too many opcodes...
-        AssertMsg(this->opcode == (uint32)opCodeHash, "Opcode value too large for CSEs");
+        AssertMsg(this->opcode == (uint32_t)opCodeHash, "Opcode value too large for CSEs");
         AssertMsg(this->attributes == exprAttributes.Attributes(), "Not enough bits for expr attributes");
 
         // If value numbers are too large, just give up
@@ -78,10 +78,10 @@ public:
     operator    uint()                  { return *(uint*)this; }
 
 private:
-    uint32  opcode: 8;
-    uint32  src1Val: 11;
-    uint32  src2Val: 11;
-    uint32  attributes: 2;
+    uint32_t  opcode: 8;
+    uint32_t  src1Val: 11;
+    uint32_t  src2Val: 11;
+    uint32_t  attributes: 2;
 };
 
 #include "GlobHashTable.h"

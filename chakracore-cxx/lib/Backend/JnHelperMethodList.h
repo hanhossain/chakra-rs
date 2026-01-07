@@ -133,7 +133,7 @@ HELPERCALL_MATH(Conv_ToInt32_NoObjects, Js::JavascriptMath::ToInt32_NoObjects, A
 HELPERCALL_MATH(Op_FinishOddDivByPow2, Js::JavascriptMath::FinishOddDivByPow2, AttrCanNotBeReentrant)
 HELPERCALL_MATH(Op_FinishOddDivByPow2InPlace, Js::JavascriptMath::FinishOddDivByPow2_InPlace, AttrCanNotBeReentrant)
 HELPERCALL_MATH(Conv_ToInt32Core, (int32 (*)(double))Js::JavascriptMath::ToInt32Core, AttrCanNotBeReentrant)
-HELPERCALL_MATH(Conv_ToUInt32Core, (uint32(*)(double))Js::JavascriptMath::ToUInt32, AttrCanNotBeReentrant)
+HELPERCALL_MATH(Conv_ToUInt32Core, (uint32_t(*)(double))Js::JavascriptMath::ToUInt32, AttrCanNotBeReentrant)
 HELPERCALL_MATH(Op_MaxInAnArray, Js::JavascriptMath::MaxInAnArray, AttrCanThrow)
 HELPERCALL_MATH(Op_MinInAnArray, Js::JavascriptMath::MinInAnArray, AttrCanThrow)
 
@@ -369,7 +369,7 @@ HELPERCALLCHK(OP_CmGt_A, Js::JavascriptOperators::OP_CmGt_A, AttrCanThrow)
 HELPERCALLCHK(OP_CmGe_A, Js::JavascriptOperators::OP_CmGe_A, AttrCanThrow)
 
 HELPERCALLCHK(Conv_ToUInt32_Full, Js::JavascriptConversion::ToUInt32_Full, AttrCanThrow)
-HELPERCALLCHK(Conv_ToUInt32, (uint32 (*)(Js::Var, Js::ScriptContext *))Js::JavascriptConversion::ToUInt32, AttrCanThrow)
+HELPERCALLCHK(Conv_ToUInt32, (uint32_t (*)(Js::Var, Js::ScriptContext *))Js::JavascriptConversion::ToUInt32, AttrCanThrow)
 
 #if DBG && GLOBAL_ENABLE_WRITE_BARRIER
 HELPERCALL(WriteBarrierSetVerifyBit, Memory::Recycler::WBSetBitJIT, AttrCanNotBeReentrant)
@@ -541,7 +541,7 @@ HELPERCALL(RegExp_ReplaceStringResultUsed, Js::RegexHelper::RegexReplaceResultUs
 HELPERCALL(RegExp_ReplaceStringResultNotUsed, Js::RegexHelper::RegexReplaceResultNotUsed, 0)
 HELPERCALL(RegExp_SymbolSearch, Js::JavascriptRegExp::EntrySymbolSearch, 0)
 
-HELPERCALL(Uint8ClampedArraySetItem, (BOOL (*)(Js::Uint8ClampedArray * arr, uint32 index, Js::Var value))&Js::Uint8ClampedArray::DirectSetItem, AttrCanNotBeReentrant)
+HELPERCALL(Uint8ClampedArraySetItem, (BOOL (*)(Js::Uint8ClampedArray * arr, uint32_t index, Js::Var value))&Js::Uint8ClampedArray::DirectSetItem, AttrCanNotBeReentrant)
 HELPERCALL(EnsureFunctionProxyDeferredPrototypeType, &Js::FunctionProxy::EnsureFunctionProxyDeferredPrototypeType, AttrCanNotBeReentrant)
 
 HELPERCALL(SpreadArrayLiteral, Js::JavascriptArray::SpreadArrayArgs, 0)

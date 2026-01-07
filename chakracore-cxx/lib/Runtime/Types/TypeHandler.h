@@ -494,14 +494,14 @@ namespace Js
         virtual BOOL SetWritable(DynamicObject* instance, PropertyId propertyId, BOOL value) = 0;
         virtual BOOL SetConfigurable(DynamicObject* instance, PropertyId propertyId, BOOL value) = 0;
 
-        virtual BOOL HasItem(DynamicObject* instance, uint32 index);
-        virtual BOOL SetItem(DynamicObject* instance, uint32 index, Var value, PropertyOperationFlags flags);
-        virtual BOOL SetItemWithAttributes(DynamicObject* instance, uint32 index, Var value, PropertyAttributes attributes);
-        virtual BOOL SetItemAttributes(DynamicObject* instance, uint32 index, PropertyAttributes attributes);
-        virtual BOOL SetItemAccessors(DynamicObject* instance, uint32 index, Var getter, Var setter);
-        virtual BOOL DeleteItem(DynamicObject* instance, uint32 index, PropertyOperationFlags flags);
-        virtual BOOL GetItem(DynamicObject* instance, Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext);
-        virtual DescriptorFlags GetItemSetter(DynamicObject* instance, uint32 index, Var* setterValue, ScriptContext* requestContext);
+        virtual BOOL HasItem(DynamicObject* instance, uint32_t index);
+        virtual BOOL SetItem(DynamicObject* instance, uint32_t index, Var value, PropertyOperationFlags flags);
+        virtual BOOL SetItemWithAttributes(DynamicObject* instance, uint32_t index, Var value, PropertyAttributes attributes);
+        virtual BOOL SetItemAttributes(DynamicObject* instance, uint32_t index, PropertyAttributes attributes);
+        virtual BOOL SetItemAccessors(DynamicObject* instance, uint32_t index, Var getter, Var setter);
+        virtual BOOL DeleteItem(DynamicObject* instance, uint32_t index, PropertyOperationFlags flags);
+        virtual BOOL GetItem(DynamicObject* instance, Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext);
+        virtual DescriptorFlags GetItemSetter(DynamicObject* instance, uint32_t index, Var* setterValue, ScriptContext* requestContext);
 
         virtual BOOL SetAccessors(DynamicObject* instance, PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags = PropertyOperation_None) = 0;
         _Check_return_ _Success_(return) virtual BOOL GetAccessors(DynamicObject* instance, PropertyId propertyId, _Outptr_result_maybenull_ Var* getter, _Outptr_result_maybenull_ Var* setter) { return FALSE; };
@@ -521,12 +521,12 @@ namespace Js
 
         // ES5Array type handler specific methods. Only implemented by ES5ArrayTypeHandlers.
         virtual bool IsLengthWritable() const { Assert(false); return false; }
-        virtual uint32 SetLength(ES5Array* arr, uint32 newLen, PropertyOperationFlags propertyOperationFlags) { Assert(false); return 0; }
+        virtual uint32_t SetLength(ES5Array* arr, uint32_t newLen, PropertyOperationFlags propertyOperationFlags) { Assert(false); return 0; }
         virtual BOOL IsObjectArrayFrozen(ES5Array* arr) { Assert(false); return FALSE; }
-        virtual BOOL IsItemEnumerable(ES5Array* arr, uint32 index) { Assert(false); return FALSE; }
+        virtual BOOL IsItemEnumerable(ES5Array* arr, uint32_t index) { Assert(false); return FALSE; }
         virtual BOOL IsValidDescriptorToken(void * descriptorValidationToken) const { Assert(false); return FALSE; }
-        virtual uint32 GetNextDescriptor(uint32 key, IndexPropertyDescriptor** descriptor, void ** descriptorValidationToken) { Assert(false); return 0; }
-        virtual BOOL GetDescriptor(uint32 index, IndexPropertyDescriptor **ppDescriptor) { Assert(false); return FALSE; }
+        virtual uint32_t GetNextDescriptor(uint32_t key, IndexPropertyDescriptor** descriptor, void ** descriptorValidationToken) { Assert(false); return 0; }
+        virtual BOOL GetDescriptor(uint32_t index, IndexPropertyDescriptor **ppDescriptor) { Assert(false); return FALSE; }
 
         // Convert instance type/typeHandler to support SetItem with attribute/getter/setter
         virtual DynamicTypeHandler* ConvertToTypeWithItemAttributes(DynamicObject* instance) = 0;
@@ -660,7 +660,7 @@ namespace Js
          }
 
          //Use to extract the handler specific information during snapshot
-         virtual uint32 ExtractSlotInfo_TTD(TTD::NSSnapType::SnapHandlerPropertyEntry* entryInfo, ThreadContext* threadContext, TTD::SlabAllocator& alloc) const = 0;
+         virtual uint32_t ExtractSlotInfo_TTD(TTD::NSSnapType::SnapHandlerPropertyEntry* entryInfo, ThreadContext* threadContext, TTD::SlabAllocator& alloc) const = 0;
 
          //Use to lookup the slotid for a propertyid 
          virtual Js::BigPropertyIndex GetPropertyIndex_EnumerateTTD(const Js::PropertyRecord* pRecord);
@@ -672,7 +672,7 @@ namespace Js
          void SetExtensible_TTD();
 
          //Return true if this type handler is reseattable/false if we don't want to try
-         virtual bool IsResetableForTTD(uint32 snapMaxIndex) const;
+         virtual bool IsResetableForTTD(uint32_t snapMaxIndex) const;
 #endif
 
 #if DBG_DUMP

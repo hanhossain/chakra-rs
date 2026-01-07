@@ -222,15 +222,15 @@ namespace Js
             return ((objectArray != nullptr) && !UsesObjectArrayOrFlagsAsFlags() && !IsObjectHeaderInlinedTypeHandlerUnchecked());
         }
 
-        BOOL HasObjectArrayItem(uint32 index);
-        BOOL DeleteObjectArrayItem(uint32 index, PropertyOperationFlags flags);
-        BOOL GetObjectArrayItem(Var originalInstance, uint32 index, Var* value, ScriptContext* requestContext);
-        DescriptorFlags GetObjectArrayItemSetter(uint32 index, Var* setterValue, ScriptContext* requestContext);
-        BOOL SetObjectArrayItem(uint32 index, Var value, PropertyOperationFlags flags);
-        BOOL SetObjectArrayItemWithAttributes(uint32 index, Var value, PropertyAttributes attributes);
-        BOOL SetObjectArrayItemAttributes(uint32 index, PropertyAttributes attributes);
+        BOOL HasObjectArrayItem(uint32_t index);
+        BOOL DeleteObjectArrayItem(uint32_t index, PropertyOperationFlags flags);
+        BOOL GetObjectArrayItem(Var originalInstance, uint32_t index, Var* value, ScriptContext* requestContext);
+        DescriptorFlags GetObjectArrayItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext);
+        BOOL SetObjectArrayItem(uint32_t index, Var value, PropertyOperationFlags flags);
+        BOOL SetObjectArrayItemWithAttributes(uint32_t index, Var value, PropertyAttributes attributes);
+        BOOL SetObjectArrayItemAttributes(uint32_t index, PropertyAttributes attributes);
         BOOL SetObjectArrayItemWritable(PropertyId propertyId, BOOL writable);
-        BOOL SetObjectArrayItemAccessors(uint32 index, Var getter, Var setter);
+        BOOL SetObjectArrayItemAccessors(uint32_t index, Var getter, Var setter);
         void InvalidateHasOnlyWritableDataPropertiesInPrototypeChainCacheIfPrototype();
         void ResetObject(DynamicType* type, BOOL keepProperties);
 
@@ -272,13 +272,13 @@ namespace Js
 #if ENABLE_FIXED_FIELDS
         virtual BOOL IsFixedProperty(PropertyId propertyId) override;
 #endif
-        virtual PropertyQueryFlags HasItemQuery(uint32 index) override;
-        virtual BOOL HasOwnItem(uint32 index) override;
-        virtual PropertyQueryFlags GetItemQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext) override;
-        virtual PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext) override;
-        virtual DescriptorFlags GetItemSetter(uint32 index, Var* setterValue, ScriptContext* requestContext) override;
-        virtual BOOL SetItem(uint32 index, Var value, PropertyOperationFlags flags) override;
-        virtual BOOL DeleteItem(uint32 index, PropertyOperationFlags flags) override;
+        virtual PropertyQueryFlags HasItemQuery(uint32_t index) override;
+        virtual BOOL HasOwnItem(uint32_t index) override;
+        virtual PropertyQueryFlags GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
+        virtual PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
+        virtual DescriptorFlags GetItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext) override;
+        virtual BOOL SetItem(uint32_t index, Var value, PropertyOperationFlags flags) override;
+        virtual BOOL DeleteItem(uint32_t index, PropertyOperationFlags flags) override;
         virtual BOOL ToPrimitive(JavascriptHint hint, Var* result, ScriptContext * requestContext) override;
         virtual BOOL GetEnumerator(JavascriptStaticEnumerator * enumerator, EnumeratorFlags flags, ScriptContext * scriptContext, EnumeratorCache * enumeratorCache = nullptr) override;
         virtual BOOL SetAccessors(PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags = PropertyOperation_None) override;

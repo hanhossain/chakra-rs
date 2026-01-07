@@ -11,7 +11,7 @@ public:
     void Layout();
 
 private:
-    IR::Instr * MoveHelperBlock(IR::Instr * lastOpHelperLabel, uint32 lastOpHelperStatementIndex, Func* lastOpHelperFunc, IR::LabelInstr * nextLabel,
+    IR::Instr * MoveHelperBlock(IR::Instr * lastOpHelperLabel, uint32_t lastOpHelperStatementIndex, Func* lastOpHelperFunc, IR::LabelInstr * nextLabel,
                               IR::Instr * instrAfter);
 
 private:

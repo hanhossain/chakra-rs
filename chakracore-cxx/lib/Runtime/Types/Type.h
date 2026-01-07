@@ -90,10 +90,10 @@ namespace Js
             return offsetof(Type, flags);
         }
 
-        static uint32 GetOffsetOfTypeId();
-        static uint32 GetOffsetOfFlags();
-        static uint32 GetOffsetOfEntryPoint();
-        static uint32 GetOffsetOfPrototype();
+        static uint32_t GetOffsetOfTypeId();
+        static uint32_t GetOffsetOfFlags();
+        static uint32_t GetOffsetOfEntryPoint();
+        static uint32_t GetOffsetOfPrototype();
 
         static InternalString UndefinedTypeNameString;
         static InternalString ObjectTypeNameString;

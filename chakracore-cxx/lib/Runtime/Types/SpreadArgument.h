@@ -43,13 +43,13 @@ namespace Js
 #if ENABLE_FIXED_FIELDS
         virtual BOOL IsFixedProperty(PropertyId propertyId) override { AssertAndFailFast(); return FALSE; };
 #endif
-        virtual PropertyQueryFlags HasItemQuery(uint32 index) override { AssertAndFailFast(); return PropertyQueryFlags::Property_NotFound; };
-        virtual BOOL HasOwnItem(uint32 index) override { AssertAndFailFast(); return FALSE; };
-        virtual PropertyQueryFlags GetItemQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext) override { AssertAndFailFast(); return PropertyQueryFlags::Property_NotFound; };
-        virtual PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext) override { AssertAndFailFast(); return PropertyQueryFlags::Property_NotFound; };
-        virtual DescriptorFlags GetItemSetter(uint32 index, Var* setterValue, ScriptContext* requestContext) override { AssertAndFailFast(); return None; };
-        virtual BOOL SetItem(uint32 index, Var value, PropertyOperationFlags flags) override { AssertAndFailFast(); return FALSE; };
-        virtual BOOL DeleteItem(uint32 index, PropertyOperationFlags flags) override { AssertAndFailFast(); return FALSE; };
+        virtual PropertyQueryFlags HasItemQuery(uint32_t index) override { AssertAndFailFast(); return PropertyQueryFlags::Property_NotFound; };
+        virtual BOOL HasOwnItem(uint32_t index) override { AssertAndFailFast(); return FALSE; };
+        virtual PropertyQueryFlags GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override { AssertAndFailFast(); return PropertyQueryFlags::Property_NotFound; };
+        virtual PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override { AssertAndFailFast(); return PropertyQueryFlags::Property_NotFound; };
+        virtual DescriptorFlags GetItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext) override { AssertAndFailFast(); return None; };
+        virtual BOOL SetItem(uint32_t index, Var value, PropertyOperationFlags flags) override { AssertAndFailFast(); return FALSE; };
+        virtual BOOL DeleteItem(uint32_t index, PropertyOperationFlags flags) override { AssertAndFailFast(); return FALSE; };
         virtual BOOL ToPrimitive(JavascriptHint hint, Var* result, ScriptContext * requestContext) override { AssertAndFailFast(); return FALSE; };
         virtual BOOL GetEnumerator(JavascriptStaticEnumerator * enumerator, EnumeratorFlags flags, ScriptContext* requestContext, EnumeratorCache * enumeratorCache = nullptr) override { AssertAndFailFast(); return FALSE; };
         virtual BOOL SetAccessors(PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags = PropertyOperation_None) override { AssertAndFailFast(); return FALSE; };

@@ -150,7 +150,7 @@ LinearScanMD::InsertOpHelperSpillAndRestores(SList<OpHelperBlock> *opHelperBlock
 void
 LinearScanMD::InsertOpHelperSpillsAndRestores(const OpHelperBlock& opHelperBlock)
 {
-    uint32 index = 0;
+    uint32_t index = 0;
 
     FOREACH_SLIST_ENTRY(OpHelperSpilledLifetime, opHelperSpilledLifetime, &opHelperBlock.spilledLifetime)
     {
@@ -214,7 +214,7 @@ LinearScanMD::InsertOpHelperSpillsAndRestores(const OpHelperBlock& opHelperBlock
 }
 
 void
-LinearScanMD::EndOfHelperBlock(uint32 helperSpilledLiveranges)
+LinearScanMD::EndOfHelperBlock(uint32_t helperSpilledLiveranges)
 {
     if (helperSpilledLiveranges > maxOpHelperSpilledLiveranges)
     {

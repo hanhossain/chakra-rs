@@ -60,8 +60,8 @@ public:
     void SetNativeThrowSpanSequence(Js::SmallSpanSequence * seq) { this->nativeThrowSpanSequence = seq; }
     uint GetFrameHeight() { return frameHeight; }
     void SetFrameHeight(uint frameHeight) { this->frameHeight = frameHeight; }
-    uint32 GetPendingPolymorphicCacheState() const { return this->pendingPolymorphicCacheState; }
-    void SetPendingPolymorphicCacheState(uint32 state) { this->pendingPolymorphicCacheState = state; }
+    uint32_t GetPendingPolymorphicCacheState() const { return this->pendingPolymorphicCacheState; }
+    void SetPendingPolymorphicCacheState(uint32_t state) { this->pendingPolymorphicCacheState = state; }
     uint8_t GetPendingInlinerVersion() const { return this->pendingInlinerVersion; }
     void SetPendingInlinerVersion(uint8_t version) { this->pendingInlinerVersion = version; }
     Js::ImplicitCallFlags GetPendingImplicitCallFlags() const { return this->pendingImplicitCallFlags; }
@@ -130,14 +130,14 @@ private:
     // TODO: these only applies to FunctionEntryPointInfo
     Field(uint8_t)                pendingInlinerVersion;
     Field(Js::ImplicitCallFlags) pendingImplicitCallFlags;
-    Field(uint32)              pendingPolymorphicCacheState;
+    Field(uint32_t)              pendingPolymorphicCacheState;
 
 #if DBG_DUMP || defined(VTUNE_PROFILING)    
 public:
     // NativeOffsetMap is public for DBG_DUMP, private for VTUNE_PROFILING
     struct NativeOffsetMap
     {
-        uint32 statementIndex;
+        uint32_t statementIndex;
         regex::Interval nativeOffsetSpan;
     };
     typedef JsUtil::List<NativeOffsetMap, HeapAllocator> NativeOffsetMapListType;
@@ -163,8 +163,8 @@ public:
     void SetLazyBailOutRecordSlotOffset(int32 argSlotOffset);
     int32 GetLazyBailOutRecordSlotOffset() const;
 
-    void SetLazyBailOutThunkOffset(uint32 thunkOffset);
-    uint32 GetLazyBailOutThunkOffset() const;
+    void SetLazyBailOutThunkOffset(uint32_t thunkOffset);
+    uint32_t GetLazyBailOutThunkOffset() const;
 
 #if !FLOATVAR
     void SetNumberChunks(CodeGenNumberChunk* chunks)
@@ -179,7 +179,7 @@ private:
     FieldNoBarrier(InlineeFrameMap *) inlineeFrameMap;
     FieldNoBarrier(NativeLazyBailOutRecordList *) sortedLazyBailoutRecordList;
     FieldNoBarrier(int32) lazyBailOutRecordSlotOffset;
-    FieldNoBarrier(uint32) lazyBailOutThunkOffset;
+    FieldNoBarrier(uint32_t) lazyBailOutThunkOffset;
 #if !FLOATVAR
     Field(CodeGenNumberChunk*) numberChunks;
 #endif
@@ -190,7 +190,7 @@ class OOPNativeEntryPointData : public NativeEntryPointData
 public:
     OOPNativeEntryPointData();
 
-    static uint32 GetOffsetOfNativeDataBuffer();
+    static uint32_t GetOffsetOfNativeDataBuffer();
     static void DeleteNativeDataBuffer(char * naitveDataBuffer);
 
     char* GetNativeDataBuffer();

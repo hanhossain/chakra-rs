@@ -76,7 +76,7 @@ Lowerer::Lower()
 #ifdef DBG
             // Pre-fill all local slots with a pattern. This will help identify non-initialized/garbage var values.
             // Note that in the beginning of the function in bytecode we should initialize all locals to undefined.
-            uint32 localSlotCount = m_func->GetJITFunctionBody()->GetEndNonTempLocalIndex() - m_func->GetJITFunctionBody()->GetFirstNonTempLocalIndex();
+            uint32_t localSlotCount = m_func->GetJITFunctionBody()->GetEndNonTempLocalIndex() - m_func->GetJITFunctionBody()->GetFirstNonTempLocalIndex();
             for (uint i = 0; i < localSlotCount; ++i)
             {
                 int offset = m_func->GetLocalVarSlotOffset(i);
@@ -2676,7 +2676,7 @@ Lowerer::LowerRange(IR::Instr *instrStart, IR::Instr *instrEnd, bool defaultDoFa
 #if DBG_DUMP && DBG
             // If we have a JITStatementBreakpoint, then we should break on this statement
         {
-            uint32 statementIndex = instr->AsPragmaInstr()->m_statementIndex;
+            uint32_t statementIndex = instr->AsPragmaInstr()->m_statementIndex;
             if (Js::Configuration::Global.flags.StatementDebugBreak.Contains(instr->m_func->GetSourceContextId(), instr->m_func->GetLocalFunctionId(), statementIndex))
             {
                 IR::Instr* tempinstr = instr;
@@ -3661,17 +3661,17 @@ Lowerer::LowerNewScArray(IR::Instr *arrInstr)
 }
 
 template <typename ArrayType>
-BOOL Lowerer::IsSmallObject(uint32 length)
+BOOL Lowerer::IsSmallObject(uint32_t length)
 {
     if (ArrayType::HasInlineHeadSegment(length))
         return true;
-    uint32 alignedHeadSegmentSize = Js::SparseArraySegment<typename ArrayType::TElement>::GetAlignedSize(length);
+    uint32_t alignedHeadSegmentSize = Js::SparseArraySegment<typename ArrayType::TElement>::GetAlignedSize(length);
     size_t allocSize =  sizeof(Js::SparseArraySegment<typename ArrayType::TElement>) + alignedHeadSegmentSize * sizeof(typename ArrayType::TElement);
     return HeapInfo::IsSmallObject(HeapInfo::GetAlignedSizeNoCheck(allocSize));
 }
 
 bool
-Lowerer::GenerateProfiledNewScArrayFastPath(IR::Instr *instr, Js::ArrayCallSiteInfo * arrayInfo, intptr_t arrayInfoAddr, intptr_t weakFuncRef, uint32 length)
+Lowerer::GenerateProfiledNewScArrayFastPath(IR::Instr *instr, Js::ArrayCallSiteInfo * arrayInfo, intptr_t arrayInfoAddr, intptr_t weakFuncRef, uint32_t length)
 {
     if (PHASE_OFF(Js::ArrayCtorFastPathPhase, m_func) || CONFIG_FLAG(ForceES5Array))
     {
@@ -3680,11 +3680,11 @@ Lowerer::GenerateProfiledNewScArrayFastPath(IR::Instr *instr, Js::ArrayCallSiteI
 
     Func * func = this->m_func;
     IR::LabelInstr * helperLabel = IR::LabelInstr::New(Js::OpCode::Label, func, true);
-    uint32 size = length;
+    uint32_t size = length;
     bool isZeroed;
     IR::RegOpnd *dstOpnd = instr->GetDst()->AsRegOpnd();
     IR::RegOpnd *headOpnd;
-    uint32 i = length;
+    uint32_t i = length;
 
     if (instr->GetDst() && instr->GetDst()->GetValueType().IsLikelyNativeIntArray())
     {
@@ -3789,14 +3789,14 @@ IR::JnHelperMethod GetArrayAllocMemHelper<Js::JavascriptNativeFloatArray>()
 
 template <typename ArrayType>
 IR::RegOpnd *
-Lowerer::GenerateArrayLiteralsAlloc(IR::Instr *instr, uint32 * psize, Js::ArrayCallSiteInfo * arrayInfo, bool * pIsHeadSegmentZeroed)
+Lowerer::GenerateArrayLiteralsAlloc(IR::Instr *instr, uint32_t * psize, Js::ArrayCallSiteInfo * arrayInfo, bool * pIsHeadSegmentZeroed)
 {
     return GenerateArrayAllocHelper<ArrayType>(instr, psize, arrayInfo, pIsHeadSegmentZeroed, false /* isArrayObjCtor */, false /* isNoArgs */);
 }
 
 template <typename ArrayType>
 IR::RegOpnd *
-Lowerer::GenerateArrayObjectsAlloc(IR::Instr *instr, uint32 * psize, Js::ArrayCallSiteInfo * arrayInfo, bool * pIsHeadSegmentZeroed, bool isNoArgs)
+Lowerer::GenerateArrayObjectsAlloc(IR::Instr *instr, uint32_t * psize, Js::ArrayCallSiteInfo * arrayInfo, bool * pIsHeadSegmentZeroed, bool isNoArgs)
 {
     return GenerateArrayAllocHelper<ArrayType>(instr, psize, arrayInfo, pIsHeadSegmentZeroed, true /* isArrayObjCtor */, isNoArgs);
 }
@@ -3804,13 +3804,13 @@ Lowerer::GenerateArrayObjectsAlloc(IR::Instr *instr, uint32 * psize, Js::ArrayCa
 
 template <typename ArrayType>
 IR::RegOpnd *
-Lowerer::GenerateArrayAllocHelper(IR::Instr *instr, uint32 * psize, Js::ArrayCallSiteInfo * arrayInfo, bool * pIsHeadSegmentZeroed, bool isArrayObjCtor, bool isNoArgs)
+Lowerer::GenerateArrayAllocHelper(IR::Instr *instr, uint32_t * psize, Js::ArrayCallSiteInfo * arrayInfo, bool * pIsHeadSegmentZeroed, bool isArrayObjCtor, bool isNoArgs)
 {
     Func * func = this->m_func;
     IR::RegOpnd * dstOpnd = instr->GetDst()->AsRegOpnd();
 
     // Generate code as in JavascriptArray::NewLiteral
-    uint32 count = *psize;
+    uint32_t count = *psize;
     uint alignedHeadSegmentSize;
     size_t arrayAllocSize;
 
@@ -3823,12 +3823,12 @@ Lowerer::GenerateArrayAllocHelper(IR::Instr *instr, uint32 * psize, Js::ArrayCal
     {
         if (isArrayObjCtor)
         {
-            uint32 allocCount = isNoArgs ? Js::SparseArraySegmentBase::SMALL_CHUNK_SIZE : count;
+            uint32_t allocCount = isNoArgs ? Js::SparseArraySegmentBase::SMALL_CHUNK_SIZE : count;
             arrayAllocSize = Js::JavascriptArray::DetermineAllocationSizeForArrayObjects<ArrayType, 0>(allocCount, nullptr, &alignedHeadSegmentSize);
         }
         else
         {
-            uint32 allocCount = count == 0 ? Js::SparseArraySegmentBase::SMALL_CHUNK_SIZE : count;
+            uint32_t allocCount = count == 0 ? Js::SparseArraySegmentBase::SMALL_CHUNK_SIZE : count;
             arrayAllocSize = Js::JavascriptArray::DetermineAllocationSize<ArrayType, 0>(allocCount, nullptr, &alignedHeadSegmentSize);
         }
 
@@ -3889,7 +3889,7 @@ Lowerer::GenerateArrayAllocHelper(IR::Instr *instr, uint32 * psize, Js::ArrayCal
 #if DBG
     if (instr->AsProfiledInstr()->u.profileId < Js::Constants::NoProfileId)
     {
-        Assert((uint32)(arrayInfo - instr->m_func->GetReadOnlyProfileInfo()->GetArrayCallSiteInfo(0)) == arrayCallSiteIndex);
+        Assert((uint32_t)(arrayInfo - instr->m_func->GetReadOnlyProfileInfo()->GetArrayCallSiteInfo(0)) == arrayCallSiteIndex);
     }
     else
     {
@@ -3993,7 +3993,7 @@ Lowerer::GenerateArrayAlloc(IR::Instr *instr, IR::Opnd * arrayLenOpnd, Js::Array
 #if DBG
     if (instr->AsProfiledInstr()->u.profileId < Js::Constants::NoProfileId)
     {
-        Assert((uint32)(arrayInfo - instr->m_func->GetReadOnlyProfileInfo()->GetArrayCallSiteInfo(0)) == arrayCallSiteIndex);
+        Assert((uint32_t)(arrayInfo - instr->m_func->GetReadOnlyProfileInfo()->GetArrayCallSiteInfo(0)) == arrayCallSiteIndex);
     }
     else
     {
@@ -4023,7 +4023,7 @@ Lowerer::GenerateArrayAlloc(IR::Instr *instr, IR::Opnd * arrayLenOpnd, Js::Array
 
 
 bool
-Lowerer::GenerateProfiledNewScObjArrayFastPath(IR::Instr *instr, Js::ArrayCallSiteInfo * arrayInfo, intptr_t arrayInfoAddr, intptr_t weakFuncRef, uint32 length, IR::LabelInstr* labelDone, bool isNoArgs)
+Lowerer::GenerateProfiledNewScObjArrayFastPath(IR::Instr *instr, Js::ArrayCallSiteInfo * arrayInfo, intptr_t arrayInfoAddr, intptr_t weakFuncRef, uint32_t length, IR::LabelInstr* labelDone, bool isNoArgs)
 {
     if (PHASE_OFF(Js::ArrayCtorFastPathPhase, m_func))
     {
@@ -4032,7 +4032,7 @@ Lowerer::GenerateProfiledNewScObjArrayFastPath(IR::Instr *instr, Js::ArrayCallSi
 
     Func * func = this->m_func;
     IR::LabelInstr * helperLabel = IR::LabelInstr::New(Js::OpCode::Label, func, true);
-    uint32 size = length;
+    uint32_t size = length;
     bool isZeroed = false;
     IR::RegOpnd *dstOpnd = instr->GetDst()->AsRegOpnd();
     IR::RegOpnd *headOpnd;
@@ -4093,7 +4093,7 @@ Lowerer::GenerateProfiledNewScObjArrayFastPath(IR::Instr *instr, Js::ArrayCallSi
 template <typename ArrayType>
 bool
 Lowerer::GenerateProfiledNewScObjArrayFastPath(IR::Instr *instr, Js::ArrayCallSiteInfo * arrayInfo, intptr_t arrayInfoAddr, intptr_t weakFuncRef, IR::LabelInstr* helperLabel,
-                   IR::LabelInstr* labelDone, IR::Opnd* lengthOpnd, uint32 offsetOfCallSiteIndex, uint32 offsetOfWeakFuncRef)
+                   IR::LabelInstr* labelDone, IR::Opnd* lengthOpnd, uint32_t offsetOfCallSiteIndex, uint32_t offsetOfWeakFuncRef)
 {
     if (PHASE_OFF(Js::ArrayCtorFastPathPhase, m_func))
     {
@@ -4218,7 +4218,7 @@ Lowerer::GenerateProfiledNewScIntArrayFastPath(IR::Instr *instr, Js::ArrayCallSi
 
     IR::AddrOpnd * elementsOpnd = instr->GetSrc1()->AsAddrOpnd();
     Js::AuxArray<int32> * ints = (Js::AuxArray<int32> *)elementsOpnd->m_metadata;
-    uint32 size = ints->count;
+    uint32_t size = ints->count;
 
     // Generate code as in JavascriptArray::NewLiteral
     bool isHeadSegmentZeroed;
@@ -4290,7 +4290,7 @@ Lowerer::GenerateProfiledNewScFloatArrayFastPath(IR::Instr *instr, Js::ArrayCall
 
     IR::AddrOpnd * elementsOpnd = instr->GetSrc1()->AsAddrOpnd();
     Js::AuxArray<double> * doubles = (Js::AuxArray<double> *)elementsOpnd->m_metadata;
-    uint32 size = doubles->count;
+    uint32_t size = doubles->count;
 
     // Generate code as in JavascriptArray::NewLiteral
     bool isHeadSegmentZeroed;
@@ -5315,7 +5315,7 @@ Lowerer::LowerNewScObjArray(IR::Instr *newObjInstr)
                 int32 length = linkSym->GetIntConstValue();
                 if (length >= 0 && length <= upperBoundValue)
                 {
-                    emittedFastPath = GenerateProfiledNewScObjArrayFastPath(newObjInstr, arrayInfo, arrayInfoAddr, weakFuncRef, (uint32)length, labelDone, false);
+                    emittedFastPath = GenerateProfiledNewScObjArrayFastPath(newObjInstr, arrayInfo, arrayInfoAddr, weakFuncRef, (uint32_t)length, labelDone, false);
                 }
             }
             // Since we emitted fast path above, move the startCall/argOut instruction right before helper
@@ -9424,7 +9424,7 @@ void Lowerer::LowerLdLen(IR::Instr *const instr, const bool isHelper)
     if (instr->GetSrc1()->IsRegOpnd())
     {
         IR::RegOpnd * baseOpnd = instr->GetSrc1()->AsRegOpnd();
-        PropertySym* fieldSym = PropertySym::FindOrCreate(baseOpnd->m_sym->m_id, Js::PropertyIds::length, (uint32)-1, (uint)-1, PropertyKindData, m_func);
+        PropertySym* fieldSym = PropertySym::FindOrCreate(baseOpnd->m_sym->m_id, Js::PropertyIds::length, (uint32_t)-1, (uint)-1, PropertyKindData, m_func);
         instr->ReplaceSrc1(IR::SymOpnd::New(fieldSym, TyVar, m_func));
     }
     LowerLdFld(instr, IR::HelperOp_GetProperty, IR::HelperOp_GetProperty, false, nullptr, isHelper);
@@ -9446,7 +9446,7 @@ IR::Instr* InsertMaskableMove(bool isStore, bool generateWriteBarrier, IR::Opnd*
             // indices in asmjs fit in 32 bits, but we need a mask
             IR::RegOpnd* temp = IR::RegOpnd::New(indexOpnd->GetType(), insertBeforeInstr->m_func);
             lowerer->InsertMove(temp, indexOpnd, insertBeforeInstr, false);
-            lowerer->InsertAdd(false, temp, temp, IR::IntConstOpnd::New((uint32)src1->GetSize() - 1, temp->GetType(), insertBeforeInstr->m_func, true), insertBeforeInstr);
+            lowerer->InsertAdd(false, temp, temp, IR::IntConstOpnd::New((uint32_t)src1->GetSize() - 1, temp->GetType(), insertBeforeInstr->m_func, true), insertBeforeInstr);
 
             // For native ints and vars, we do the masking after the load; we don't do this for
             // floats and doubles because the conversion to and from fp regs is slow.
@@ -9526,7 +9526,7 @@ Lowerer::LowerLdArrViewElem(IR::Instr * instr)
         }
         return m_lowererMD.ChangeToAssign(instr);
     }
-    if (indexOpnd || m_func->GetJITFunctionBody()->GetAsmJsInfo()->AccessNeedsBoundCheck((uint32)offset))
+    if (indexOpnd || m_func->GetJITFunctionBody()->GetAsmJsInfo()->AccessNeedsBoundCheck((uint32_t)offset))
     {
         // CMP indexOpnd, src2(arrSize)
         // JA $helper
@@ -9567,7 +9567,7 @@ Lowerer::LowerLdArrViewElem(IR::Instr * instr)
 IR::Instr *
 Lowerer::LowerWasmArrayBoundsCheck(IR::Instr * instr, IR::Opnd *addrOpnd)
 {
-    uint32 offset = addrOpnd->AsIndirOpnd()->GetOffset();
+    uint32_t offset = addrOpnd->AsIndirOpnd()->GetOffset();
 
     // don't encode offset for wasm memory reads/writes
     addrOpnd->AsIndirOpnd()->m_dontEncode = true;
@@ -9857,7 +9857,7 @@ Lowerer::LowerStArrViewElem(IR::Instr * instr)
         instr->Remove();
         return instrPrev;
     }
-    else if (indexOpnd || m_func->GetJITFunctionBody()->GetAsmJsInfo()->AccessNeedsBoundCheck((uint32)offset))
+    else if (indexOpnd || m_func->GetJITFunctionBody()->GetAsmJsInfo()->AccessNeedsBoundCheck((uint32_t)offset))
     {
         // CMP indexOpnd, src2(arrSize)
         // JA $helper
@@ -11034,7 +11034,7 @@ IR::Instr* Lowerer::AddSlotArrayCheck(PropertySym *propertySym, IR::Instr* instr
 
     bool doDynamicCheck = this->m_func->IsLoopBody();
     bool insertSlotArrayCheck = false;
-    uint32 slotId = (uint32)propertySym->m_propertyId;
+    uint32_t slotId = (uint32_t)propertySym->m_propertyId;
 
     if (instrDef)
     {
@@ -11045,7 +11045,7 @@ IR::Instr* Lowerer::AddSlotArrayCheck(PropertySym *propertySym, IR::Instr* instr
         case Js::OpCode::NewScopeSlotsWithoutPropIds:
         {
             IR::Opnd *allocOpnd = allocOpnd = instrDef->GetSrc1();
-            uint32 allocCount = allocOpnd->AsIntConstOpnd()->AsUint32();
+            uint32_t allocCount = allocOpnd->AsIntConstOpnd()->AsUint32();
 
             if (slotId >= allocCount)
             {
@@ -11066,7 +11066,7 @@ IR::Instr* Lowerer::AddSlotArrayCheck(PropertySym *propertySym, IR::Instr* instr
         }
         case Js::OpCode::SlotArrayCheck:
         {
-            uint32 currentSlotId = instrDef->GetSrc2()->AsIntConstOpnd()->AsInt32();
+            uint32_t currentSlotId = instrDef->GetSrc2()->AsIntConstOpnd()->AsInt32();
             if (slotId > currentSlotId)
             {
                 instrDef->ReplaceSrc2(IR::IntConstOpnd::New(slotId, TyUint32, m_func));
@@ -11399,7 +11399,7 @@ void Lowerer::LowerLdArrHead(IR::Instr *const instr)
 
 // Creates the rest parameter array.
 // Var JavascriptArray::OP_NewScArrayWithElements(
-//        uint32 elementCount,
+//        uint32_t elementCount,
 //        Var *elements,
 //        ScriptContext* scriptContext)
 IR::Instr *Lowerer::LowerRestParameter(IR::Opnd *formalsOpnd, IR::Opnd *dstOpnd, IR::Opnd *excessOpnd, IR::Instr *instr, IR::RegOpnd *generatorArgsPtrOpnd)
@@ -13556,7 +13556,7 @@ void Lowerer::LowerBailOnCreatedMissingValue(IR::Instr *const instr, const bool 
 
     IR::Opnd *arrayFlagsBeforeHelperCallOpnd = nullptr;
     IR::AutoReuseOpnd autoReuseArrayFlagsBeforeHelperCallOpnd;
-    const IRType arrayFlagsType = sizeof(uintptr_t) == sizeof(uint32) ? TyUint32 : TyUint64;
+    const IRType arrayFlagsType = sizeof(uintptr_t) == sizeof(uint32_t) ? TyUint32 : TyUint64;
     if(!(baseValueType.IsArrayOrObjectWithArray() && baseValueType.HasNoMissingValues()))
     {
         // Record whether the array has missing values before the helper call
@@ -14326,8 +14326,8 @@ Lowerer::GenerateBailOut(IR::Instr * instr, IR::BranchInstr * branchInstr, IR::L
         IR::LabelInstr * targetLabel = branchInstr->GetTarget();
         Assert(targetLabel->GetByteCodeOffset() != Js::Constants::NoByteCodeOffset);
 
-        uint32 trueOffset;
-        uint32 falseOffset;
+        uint32_t trueOffset;
+        uint32_t falseOffset;
         IR::Opnd *condOpnd = branchInstr->GetSrc1();
         bool invertTarget = (branchInstr->m_opcode == Js::OpCode::BrFalse_A);
 
@@ -14712,7 +14712,7 @@ Lowerer::LoadFloatFromNonReg(IR::Opnd * opndSrc, IR::Opnd * opndDst, IR::Instr *
     {
         if (opndSrc->IsUInt32())
         {
-            value = (double)(uint32)opndSrc->AsIntConstOpnd()->GetValue();
+            value = (double)(uint32_t)opndSrc->AsIntConstOpnd()->GetValue();
         }
         else
         {
@@ -14982,11 +14982,11 @@ const VTableValue Lowerer::VtableAddresses[static_cast<ValueType::TSize>(ObjectT
 
 };
 
-const uint32 Lowerer::OffsetsOfHeadSegment[static_cast<ValueType::TSize>(ObjectType::Count)] =
+const uint32_t Lowerer::OffsetsOfHeadSegment[static_cast<ValueType::TSize>(ObjectType::Count)] =
 {
-    /* ObjectType::UninitializedObject        */ static_cast<uint32>(-1),
-    /* ObjectType::Object                     */ static_cast<uint32>(-1),
-    /* ObjectType::RegExp                     */ static_cast<uint32>(-1),
+    /* ObjectType::UninitializedObject        */ static_cast<uint32_t>(-1),
+    /* ObjectType::Object                     */ static_cast<uint32_t>(-1),
+    /* ObjectType::RegExp                     */ static_cast<uint32_t>(-1),
     /* ObjectType::ObjectWithArray            */ Js::JavascriptArray::GetOffsetOfHead(),
     /* ObjectType::Array                      */ Js::JavascriptArray::GetOffsetOfHead(),
     /* ObjectType::Int8Array                  */ Js::Int8Array::GetOffsetOfBuffer(),
@@ -15022,11 +15022,11 @@ const uint32 Lowerer::OffsetsOfHeadSegment[static_cast<ValueType::TSize>(ObjectT
     /* ObjectType::CharArray                  */ Js::CharArray::GetOffsetOfBuffer()
 };
 
-const uint32 Lowerer::OffsetsOfLength[static_cast<ValueType::TSize>(ObjectType::Count)] =
+const uint32_t Lowerer::OffsetsOfLength[static_cast<ValueType::TSize>(ObjectType::Count)] =
 {
-    /* ObjectType::UninitializedObject      */ static_cast<uint32>(-1),
-    /* ObjectType::Object                   */ static_cast<uint32>(-1),
-    /* ObjectType::RegExp                   */ static_cast<uint32>(-1),
+    /* ObjectType::UninitializedObject      */ static_cast<uint32_t>(-1),
+    /* ObjectType::Object                   */ static_cast<uint32_t>(-1),
+    /* ObjectType::RegExp                   */ static_cast<uint32_t>(-1),
     /* ObjectType::ObjectWithArray          */ Js::JavascriptArray::GetOffsetOfLength(),
     /* ObjectType::Array                    */ Js::JavascriptArray::GetOffsetOfLength(),
     /* ObjectType::Int8Array                */ Js::Int8Array::GetOffsetOfLength(),
@@ -15115,7 +15115,7 @@ const uint8_t Lowerer::IndirScales[static_cast<ValueType::TSize>(ObjectType::Cou
     /* ObjectType::Int16Array               */ 1, // log2(sizeof(int16))
     /* ObjectType::Uint16Array              */ 1, // log2(sizeof(uint16))
     /* ObjectType::Int32Array               */ 2, // log2(sizeof(int32))
-    /* ObjectType::Uint32Array              */ 2, // log2(sizeof(uint32))
+    /* ObjectType::Uint32Array              */ 2, // log2(sizeof(uint32_t))
     /* ObjectType::Float32Array             */ 2, // log2(sizeof(float))
     /* ObjectType::Float64Array             */ 3, // log2(sizeof(double))
     /* ObjectType::Int8VirtualArray         */ 0, // log2(sizeof(int8_t))
@@ -15124,7 +15124,7 @@ const uint8_t Lowerer::IndirScales[static_cast<ValueType::TSize>(ObjectType::Cou
     /* ObjectType::Int16VirtualArray        */ 1, // log2(sizeof(int16))
     /* ObjectType::Uint16VirtualArray       */ 1, // log2(sizeof(uint16))
     /* ObjectType::Int32VirtualArray        */ 2, // log2(sizeof(int32))
-    /* ObjectType::Uint32VirtualArray       */ 2, // log2(sizeof(uint32))
+    /* ObjectType::Uint32VirtualArray       */ 2, // log2(sizeof(uint32_t))
     /* ObjectType::Float32VirtualArray      */ 2, // log2(sizeof(float))
     /* ObjectType::Float64VirtualArray      */ 3, // log2(sizeof(double))
     /* ObjectType::Int8MixedArray           */ 0, // log2(sizeof(int8_t))
@@ -15133,7 +15133,7 @@ const uint8_t Lowerer::IndirScales[static_cast<ValueType::TSize>(ObjectType::Cou
     /* ObjectType::Int16MixedArray          */ 1, // log2(sizeof(int16))
     /* ObjectType::Uint16MixedArray         */ 1, // log2(sizeof(uint16))
     /* ObjectType::Int32MixedArray          */ 2, // log2(sizeof(int32))
-    /* ObjectType::Uint32MixedArray         */ 2, // log2(sizeof(uint32))
+    /* ObjectType::Uint32MixedArray         */ 2, // log2(sizeof(uint32_t))
     /* ObjectType::Float32MixedArray        */ 2, // log2(sizeof(float))
     /* ObjectType::Float64MixedArray        */ 3, // log2(sizeof(double))
     /* ObjectType::Int64Array               */ 3, // log2(sizeof(long))
@@ -15163,13 +15163,13 @@ VTableValue Lowerer::GetArrayVtableAddress(const ValueType valueType, bool getVi
     return VtableAddresses[static_cast<ValueType::TSize>(valueType.GetObjectType())];
 }
 
-uint32 Lowerer::GetArrayOffsetOfHeadSegment(const ValueType valueType)
+uint32_t Lowerer::GetArrayOffsetOfHeadSegment(const ValueType valueType)
 {
     Assert(valueType.IsLikelyAnyOptimizedArray());
     return OffsetsOfHeadSegment[static_cast<ValueType::TSize>(valueType.GetObjectType())];
 }
 
-uint32 Lowerer::GetArrayOffsetOfLength(const ValueType valueType)
+uint32_t Lowerer::GetArrayOffsetOfLength(const ValueType valueType)
 {
     Assert(valueType.IsLikelyAnyOptimizedArray());
     return OffsetsOfLength[static_cast<ValueType::TSize>(valueType.GetObjectType())];
@@ -15608,7 +15608,7 @@ IR::Instr *Lowerer::HoistIndirIndexOpndAsAdd(IR::Instr* instr, IR::IndirOpnd *or
 ///
 ///----------------------------------------------------------------------------
 
-IR::Instr *Lowerer::HoistSymOffset(IR::Instr *instr, IR::SymOpnd *symOpnd, RegNum baseReg, uint32 offset, RegNum regNum)
+IR::Instr *Lowerer::HoistSymOffset(IR::Instr *instr, IR::SymOpnd *symOpnd, RegNum baseReg, uint32_t offset, RegNum regNum)
 {
     IR::RegOpnd *baseOpnd = IR::RegOpnd::New(nullptr, baseReg, TyMachPtr, instr->m_func);
     IR::IndirOpnd *indirOpnd = IR::IndirOpnd::New(baseOpnd, offset, symOpnd->GetType(), instr->m_func);
@@ -16524,8 +16524,8 @@ Lowerer::GenerateFastElemIStringIndexCommon(
 
     GeneratePropertyStringTest(indexOpnd, elemInstr, labelHelper, isStore);
 
-    const uint32 inlineCacheOffset = isStore ? Js::PropertyString::GetOffsetOfStElemInlineCache() : Js::PropertyString::GetOffsetOfLdElemInlineCache();
-    const uint32 hitRateOffset = Js::PropertyString::GetOffsetOfHitRate();
+    const uint32_t inlineCacheOffset = isStore ? Js::PropertyString::GetOffsetOfStElemInlineCache() : Js::PropertyString::GetOffsetOfLdElemInlineCache();
+    const uint32_t hitRateOffset = Js::PropertyString::GetOffsetOfHitRate();
 
     return GenerateFastElemISymbolOrStringIndexCommon(elemInstr, indexOpnd, baseOpnd, inlineCacheOffset, hitRateOffset, labelHelper, flags);
 }
@@ -16549,14 +16549,14 @@ Lowerer::GenerateFastElemISymbolIndexCommon(
 
     GenerateSymbolTest(indexOpnd, elemInstr, labelHelper);
 
-    const uint32 inlineCacheOffset = isStore ? Js::JavascriptSymbol::GetOffsetOfStElemInlineCache() : Js::JavascriptSymbol::GetOffsetOfLdElemInlineCache();
-    const uint32 hitRateOffset = Js::JavascriptSymbol::GetOffsetOfHitRate();
+    const uint32_t inlineCacheOffset = isStore ? Js::JavascriptSymbol::GetOffsetOfStElemInlineCache() : Js::JavascriptSymbol::GetOffsetOfLdElemInlineCache();
+    const uint32_t hitRateOffset = Js::JavascriptSymbol::GetOffsetOfHitRate();
 
     return GenerateFastElemISymbolOrStringIndexCommon(elemInstr, indexOpnd, baseOpnd, inlineCacheOffset, hitRateOffset, labelHelper, flags);
 }
 
 void
-Lowerer::GenerateFastIsInSymbolOrStringIndex(IR::Instr * instrInsert, IR::RegOpnd *indexOpnd, IR::RegOpnd *baseOpnd, IR::Opnd *dest, uint32 inlineCacheOffset, const uint32 hitRateOffset, IR::LabelInstr * labelHelper, IR::LabelInstr * labelDone)
+Lowerer::GenerateFastIsInSymbolOrStringIndex(IR::Instr * instrInsert, IR::RegOpnd *indexOpnd, IR::RegOpnd *baseOpnd, IR::Opnd *dest, uint32_t inlineCacheOffset, const uint32_t hitRateOffset, IR::LabelInstr * labelHelper, IR::LabelInstr * labelDone)
 {
     // Try to look up the property in the cache, or bail to helper
     GenerateLookUpInIndexCache(instrInsert, indexOpnd, baseOpnd, nullptr /*opndSlotArray*/, nullptr /*opndSlotIndex*/, inlineCacheOffset, hitRateOffset, labelHelper);
@@ -16573,8 +16573,8 @@ Lowerer::GenerateFastElemISymbolOrStringIndexCommon(
     _In_ IR::Instr* instrInsert,
     _In_ IR::RegOpnd* indexOpnd,
     _In_ IR::RegOpnd* baseOpnd,
-    _In_ const uint32 inlineCacheOffset,
-    _In_ const uint32 hitRateOffset,
+    _In_ const uint32_t inlineCacheOffset,
+    _In_ const uint32_t hitRateOffset,
     _In_ IR::LabelInstr* labelHelper,
     _In_ Js::FldInfoFlags flags)
 {
@@ -16598,8 +16598,8 @@ Lowerer::GenerateLookUpInIndexCache(
     _In_ IR::RegOpnd* baseOpnd,
     _In_opt_ IR::RegOpnd* opndSlotArray,
     _In_opt_ IR::RegOpnd* opndSlotIndex,
-    _In_ const uint32 inlineCacheOffset,
-    _In_ const uint32 hitRateOffset,
+    _In_ const uint32_t inlineCacheOffset,
+    _In_ const uint32_t hitRateOffset,
     _In_ IR::LabelInstr* labelHelper,
     _In_ Js::FldInfoFlags flags) // = Js::FldInfo_NoInfo
 {
@@ -18083,7 +18083,7 @@ Lowerer::GenerateFastStringLdElem(IR::Instr * ldElem, IR::LabelInstr * labelHelp
     {
         // Just use the offset to indirect into the string buffer
         charIndirOpnd = IR::IndirOpnd::New(bufferOpnd, indirOpnd->GetOffset() * sizeof(char16_t), TyUint16, this->m_func);
-        index32CmpOpnd = IR::IntConstOpnd::New((uint32)indirOpnd->GetOffset(), TyUint32, this->m_func);
+        index32CmpOpnd = IR::IntConstOpnd::New((uint32_t)indirOpnd->GetOffset(), TyUint32, this->m_func);
     }
 
     // Check if the index is in range of the string length
@@ -19368,7 +19368,7 @@ Lowerer::GenerateFastStElemI(IR::Instr *& stElem, bool *instrIsInHelperBlockRef)
                     stElem->InsertBefore(instr);
 
                     // Convert reg to int32
-                    // Note: ToUint32 is implemented as (uint32)ToInt32()
+                    // Note: ToUint32 is implemented as (uint32_t)ToInt32()
                     IR::BailOutKind bailOutKind = stElem->HasBailOutInfo() ? stElem->GetBailOutKind() : IR::BailOutInvalid;
                     if (BailOutInfo::IsBailOutOnImplicitCalls(bailOutKind))
                     {
@@ -19773,7 +19773,7 @@ Lowerer::GenerateFastInlineStringCodePointAt(IR::Instr* lastInstr, Func* func, I
 
     if (srcIndex->IsAddrOpnd())
     {
-        uint32 length = Js::TaggedInt::ToUInt32(srcIndex->AsAddrOpnd()->m_address) + 1U;
+        uint32_t length = Js::TaggedInt::ToUInt32(srcIndex->AsAddrOpnd()->m_address) + 1U;
         InsertCompareBranch(strLength, IR::IntConstOpnd::New(length, TyUint32, func), Js::OpCode::BrLe_A, true, labelCharCodeAt, lastInstr);
         tempIndirOpnd = IR::IndirOpnd::New(strPtr, (length) * sizeof(char16_t), TyUint16, func);
     }
@@ -20954,8 +20954,8 @@ void Lowerer::GenerateFastObjectIsIn(IR::Instr * instr)
     {
         GeneratePropertyStringTest(indexOpnd, instr, helperLabel, false /*isStore*/);
 
-        const uint32 inlineCacheOffset = Js::PropertyString::GetOffsetOfLdElemInlineCache();
-        const uint32 hitRateOffset = Js::PropertyString::GetOffsetOfHitRate();
+        const uint32_t inlineCacheOffset = Js::PropertyString::GetOffsetOfLdElemInlineCache();
+        const uint32_t hitRateOffset = Js::PropertyString::GetOffsetOfHitRate();
 
         GenerateFastIsInSymbolOrStringIndex(instr, indexOpnd, baseOpnd, instr->GetDst(), inlineCacheOffset, hitRateOffset, helperLabel, doneLabel);
     }
@@ -20965,8 +20965,8 @@ void Lowerer::GenerateFastObjectIsIn(IR::Instr * instr)
 
         GenerateSymbolTest(indexOpnd, instr, helperLabel);
 
-        const uint32 inlineCacheOffset = Js::JavascriptSymbol::GetOffsetOfLdElemInlineCache();
-        const uint32 hitRateOffset = Js::JavascriptSymbol::GetOffsetOfHitRate();
+        const uint32_t inlineCacheOffset = Js::JavascriptSymbol::GetOffsetOfLdElemInlineCache();
+        const uint32_t hitRateOffset = Js::JavascriptSymbol::GetOffsetOfHitRate();
 
         GenerateFastIsInSymbolOrStringIndex(instr, indexOpnd, baseOpnd, instr->GetDst(), inlineCacheOffset, hitRateOffset, helperLabel, doneLabel);
     }
@@ -21530,7 +21530,7 @@ Lowerer::GenerateFastCharAt(Js::BuiltinFunction index, IR::Opnd *dst, IR::Opnd *
     IR::Opnd* indexOpnd = nullptr;
     if (srcIndex->IsAddrOpnd())
     {
-        uint32 indexValue = Js::TaggedInt::ToUInt32(srcIndex->AsAddrOpnd()->m_address);
+        uint32_t indexValue = Js::TaggedInt::ToUInt32(srcIndex->AsAddrOpnd()->m_address);
         // CMP [regSrcStr + offsetof(length)], index
         // Use unsigned compare, this should handle negative indexes as well (they become > INT_MAX)
         // JBE $helper
@@ -21538,9 +21538,9 @@ Lowerer::GenerateFastCharAt(Js::BuiltinFunction index, IR::Opnd *dst, IR::Opnd *
 
         // Mask off the sign so that poisoning will work for negative indices
 #if TARGET_32
-        uint32 maskedIndex = CONFIG_FLAG_RELEASE(PoisonStringLoad) ? (indexValue & INT32_MAX) : indexValue;
+        uint32_t maskedIndex = CONFIG_FLAG_RELEASE(PoisonStringLoad) ? (indexValue & INT32_MAX) : indexValue;
 #else
-        uint32 maskedIndex = indexValue;
+        uint32_t maskedIndex = indexValue;
 #endif
         indirOpnd = IR::IndirOpnd::New(r1, maskedIndex * sizeof(char16_t), TyUint16, this->m_func);
         indexOpnd = IR::IntConstOpnd::New(maskedIndex, TyMachPtr, m_func);
@@ -21636,7 +21636,7 @@ Lowerer::GenerateArgOutForInlineeStackArgs(IR::Instr* callInstr, IR::Instr* stac
 {
     Assert(callInstr->m_func->IsInlinee());
     Func *func = callInstr->m_func;
-    uint32 actualCount = func->actualCount - 1; // don't count this pointer
+    uint32_t actualCount = func->actualCount - 1; // don't count this pointer
     Assert(actualCount < Js::InlineeCallInfo::MaxInlineeArgoutCount);
 
     const auto firstRealArgStackSym = func->GetInlineeArgvSlotOpnd()->m_sym->AsStackSym();
@@ -25651,7 +25651,7 @@ Lowerer::GenerateLdHomeObj(IR::Instr* instr)
         // Is this a generator function with home obj?
         if (func->GetJITFunctionBody()->IsCoroutine())
         {
-            uint32 homeObjectOffset = Js::FunctionWithHomeObj<Js::GeneratorVirtualScriptFunction>::GetOffsetOfHomeObj();
+            uint32_t homeObjectOffset = Js::FunctionWithHomeObj<Js::GeneratorVirtualScriptFunction>::GetOffsetOfHomeObj();
 
             // Is this a generator function with home obj and computed name?
             if (func->GetJITFunctionBody()->HasComputedName())
@@ -26369,7 +26369,7 @@ Lowerer::GenerateMemInit(IR::RegOpnd * opnd, int32 offset, int32 value, IR::Inst
 }
 
 void
-Lowerer::GenerateMemInit(IR::RegOpnd * opnd, int32 offset, uint32 value, IR::Instr * insertBeforeInstr, bool isZeroed)
+Lowerer::GenerateMemInit(IR::RegOpnd * opnd, int32 offset, uint32_t value, IR::Instr * insertBeforeInstr, bool isZeroed)
 {
     IRType type = TyUint32;
     if (isZeroed)
@@ -26426,7 +26426,7 @@ Lowerer::GenerateRecyclerMemInit(IR::RegOpnd * opnd, int32 offset, int32 value, 
 }
 
 void
-Lowerer::GenerateRecyclerMemInit(IR::RegOpnd * opnd, int32 offset, uint32 value, IR::Instr * insertBeforeInstr)
+Lowerer::GenerateRecyclerMemInit(IR::RegOpnd * opnd, int32 offset, uint32_t value, IR::Instr * insertBeforeInstr)
 {
     GenerateMemInit(opnd, offset, value, insertBeforeInstr, true);
 }
@@ -26444,7 +26444,7 @@ Lowerer::GenerateRecyclerMemInit(IR::RegOpnd * opnd, int32 offset, IR::Opnd * va
 }
 
 void
-Lowerer::GenerateMemCopy(IR::Opnd * dst, IR::Opnd * src, uint32 size, IR::Instr * insertBeforeInstr)
+Lowerer::GenerateMemCopy(IR::Opnd * dst, IR::Opnd * src, uint32_t size, IR::Instr * insertBeforeInstr)
 {
     Func * func = this->m_func;
     this->m_lowererMD.LoadHelperArgument(insertBeforeInstr, IR::IntConstOpnd::New(size, TyUint32, func));
@@ -27212,8 +27212,8 @@ Lowerer::LowerTrapIfUnalignedAccess(IR::Instr * const instr)
     Assert(src2 && src2->IsImmediateOpnd());
     Assert(src2->GetSize() > 1);
 
-    uint32 mask = src2->GetSize() - 1;
-    uint32 cmpValue = (uint32)src2->GetImmediateValue(m_func);
+    uint32_t mask = src2->GetSize() - 1;
+    uint32_t cmpValue = (uint32_t)src2->GetImmediateValue(m_func);
 
     InsertMove(dst, src1, instr);
     IR::IntConstOpnd* maskOpnd = IR::IntConstOpnd::New(mask, src1->GetType(), m_func);
@@ -28534,9 +28534,9 @@ Lowerer::LowerFrameDisplayCheck(IR::Instr * instr)
     IR::LabelInstr *errorLabel = nullptr;
     IR::LabelInstr *continueLabel = nullptr;
     IR::RegOpnd *envOpnd = instr->GetDst()->AsRegOpnd();
-    uint32 frameDisplayOffset = Js::FrameDisplay::GetOffsetOfScopes()/sizeof(Js::Var);
+    uint32_t frameDisplayOffset = Js::FrameDisplay::GetOffsetOfScopes()/sizeof(Js::Var);
 
-    if (record->slotId != (uint32)-1 && record->slotId > frameDisplayOffset)
+    if (record->slotId != (uint32_t)-1 && record->slotId > frameDisplayOffset)
     {
         // Check that the frame display has enough scopes in it to satisfy the code.
         errorLabel = IR::LabelInstr::New(Js::OpCode::Label, m_func, true);
@@ -28553,10 +28553,10 @@ Lowerer::LowerFrameDisplayCheck(IR::Instr * instr)
     if (record->table)
     {
         // Check the size of each of the slot arrays in the scope chain.
-        FOREACH_HASHTABLE_ENTRY(uint32, bucket, record->table)
+        FOREACH_HASHTABLE_ENTRY(uint32_t, bucket, record->table)
         {
-            uint32 slotId = bucket.element;
-            if (slotId != (uint32)-1 && slotId > Js::ScopeSlots::FirstSlotIndex)
+            uint32_t slotId = bucket.element;
+            if (slotId != (uint32_t)-1 && slotId > Js::ScopeSlots::FirstSlotIndex)
             {
                 if (errorLabel == nullptr)
                 {
@@ -28608,8 +28608,8 @@ Lowerer::LowerSlotArrayCheck(IR::Instr * instr)
     StackSym *stackSym = slotArrayOpnd->m_sym;
 
     IR::IntConstOpnd *slotIdOpnd = instr->UnlinkSrc2()->AsIntConstOpnd();
-    uint32 slotId = (uint32)slotIdOpnd->GetValue();
-    Assert(slotId != (uint32)-1 && slotId >= Js::ScopeSlots::FirstSlotIndex);
+    uint32_t slotId = (uint32_t)slotIdOpnd->GetValue();
+    Assert(slotId != (uint32_t)-1 && slotId >= Js::ScopeSlots::FirstSlotIndex);
 
     if (slotId > Js::ScopeSlots::FirstSlotIndex)
     {
@@ -28720,11 +28720,11 @@ Lowerer::LoadIndexFromLikelyFloat(
     // main path
     insertBeforeInstr->InsertBefore(doneConvUint32);
 
-    //Convert uint32 to back to float for comparison that conversion was indeed successful
+    //Convert uint32_t to back to float for comparison that conversion was indeed successful
     IR::RegOpnd *floatOpndFromUint32 = IR::RegOpnd::New(TyFloat64, func);
     m_lowererMD.EmitUIntToFloat(floatOpndFromUint32, int32IndexOpnd->UseWithNewType(TyUint32, this->m_func), insertBeforeInstr);
 
-    // compare with float from the original indexOpnd, we need floatIndex == (float64)(uint32)floatIndex
+    // compare with float from the original indexOpnd, we need floatIndex == (float64)(uint32_t)floatIndex
     InsertCompareBranch(floatOpndFromUint32, floatIndexOpnd, Js::OpCode::BrNeq_A, notIntLabel, insertBeforeInstr, false);
 
     insertBeforeInstr->InsertBefore(fallThrough);
@@ -28785,7 +28785,7 @@ Lowerer::GenerateHasObjectArrayCheck(IR::RegOpnd * objectOpnd, IR::RegOpnd * typ
     IR::LabelInstr * noObjectArrayLabel = IR::LabelInstr::New(Js::OpCode::Label, func);
     IR::IndirOpnd * objectArrayOpnd = IR::IndirOpnd::New(objectOpnd, Js::DynamicObject::GetOffsetOfObjectArray(), TyMachPtr, func);
     InsertCompareBranch(objectArrayOpnd, IR::AddrOpnd::NewNull(func), Js::OpCode::BrEq_A, noObjectArrayLabel, insertBeforeInstr);
-    InsertTestBranch(objectArrayOpnd, IR::IntConstOpnd::New((uint32)Js::DynamicObjectFlags::ObjectArrayFlagsTag, TyUint8, func),
+    InsertTestBranch(objectArrayOpnd, IR::IntConstOpnd::New((uint32_t)Js::DynamicObjectFlags::ObjectArrayFlagsTag, TyUint8, func),
         Js::OpCode::BrNeq_A, noObjectArrayLabel, insertBeforeInstr);
 
     IR::RegOpnd * typeHandlerOpnd = IR::RegOpnd::New(TyMachPtr, func);
@@ -29258,7 +29258,7 @@ Lowerer::LowerGeneratorHelper::LowerGeneratorResumeJumpTable(IR::Instr* jumpTabl
 
     this->func->MapYieldOffsetResumeLabels([this, &srcOpnd, &jumpTableInstr, &bailOutForElidedYield](int i, const YieldOffsetResumeLabel& yorl)
     {
-        uint32 offset = yorl.First();
+        uint32_t offset = yorl.First();
         IR::LabelInstr* resumeLabel = yorl.Second();
 
         if (resumeLabel != nullptr)

@@ -21,8 +21,8 @@ namespace Js
         Var ProfiledDivide(FunctionBody* functionBody, ProfileId profileId, Var aLeft, Var aRight);
         Var ProfiledRemainder(FunctionBody* functionBody, ProfileId profileId, Var aLeft, Var aRight);
 
-        void StoreArrayHelper(Var arr, uint32 index, Var value);
-        void StoreArraySegHelper(Var arr, uint32 index, Var value);
+        void StoreArrayHelper(Var arr, uint32_t index, Var value);
+        void StoreArraySegHelper(Var arr, uint32_t index, Var value);
 
         LoopEntryPointInfo* GetScheduledEntryPoint(void* framePtr, uint loopnum);
         bool IsLoopCodeGenDone(LoopEntryPointInfo* info);

@@ -23,8 +23,8 @@ struct GlobalBailOutRecordDataRow;
 struct StackSlot
 {
     int32 offset;
-    uint32 size;
-    uint32 lastUse;
+    uint32_t size;
+    uint32_t lastUse;
 };
 
 class LoweredBasicBlock
@@ -56,12 +56,12 @@ private:
     Func *              func;
     JitArenaAllocator *    tempAlloc;
     IR::Instr *         currentInstr;
-    uint32              currentBlockNumber;
+    uint32_t              currentBlockNumber;
     BitVector           activeRegs;
     BitVector           int32Regs;
-    uint32              numInt32Regs;
+    uint32_t              numInt32Regs;
     BitVector           floatRegs;
-    uint32              numFloatRegs;
+    uint32_t              numFloatRegs;
     BitVector           callerSavedRegs;
     BitVector           calleeSavedRegs;
     BitVector           tempRegs;
@@ -73,7 +73,7 @@ private:
     uint                intRegUsedCount;
     uint                floatRegUsedCount;
     int                 loopNest;
-    uint32              m_bailOutRecordCount;
+    uint32_t              m_bailOutRecordCount;
     Loop *              curLoop;
     Region *            currentRegion;
     BVSparse<JitArenaAllocator> *liveOnBackEdgeSyms;
@@ -142,7 +142,7 @@ private:
     void                PrepareForUse(Lifetime * lifetime);
     void                RecordUse(Lifetime * lifetime, IR::Instr * instr, IR::RegOpnd * regOpnd, bool isFromBailout = false);
     void                RecordLoopUse(Lifetime *lifetime, RegNum reg);
-    void                RecordDef(Lifetime *const lifetime, IR::Instr *const instr, const uint32 useCountCost);
+    void                RecordDef(Lifetime *const lifetime, IR::Instr *const instr, const uint32_t useCountCost);
     void                SetReg(IR::RegOpnd *regOpnd);
     void                KillImplicitRegs(IR::Instr *instr);
     bool                CheckIfInLoop(IR::Instr *instr);
@@ -292,7 +292,7 @@ private:
 
         bool NeedsReloadingBackendSymWhenBailingIn(StackSym* sym) const;
         bool NeedsReloadingSymWhenBailingIn(StackSym* sym) const;
-        uint32 GetOffsetFromInterpreterStackFrame(Js::RegSlot regSlot) const;
+        uint32_t GetOffsetFromInterpreterStackFrame(Js::RegSlot regSlot) const;
         IR::SymOpnd* CreateGeneratorObjectOpnd() const;
 
         // Insert instructions to restore symbols in the `bailInSymbols` list

@@ -30,19 +30,19 @@ namespace Js
     private:
         SCATypeId ReadTypeId() const
         {
-            uint32 typeId;
+            uint32_t typeId;
             m_reader->Read(&typeId);
             return static_cast<SCATypeId>(typeId);
         }
 
-        void Read(uint32* value) const
+        void Read(uint32_t* value) const
         {
             m_reader->Read(value);
         }
 
         const char16_t* TryReadString(charcount_t* len, bool reuseBuffer) const;
         const char16_t* ReadString(charcount_t* len) const;
-        void Read(uint8_t* buf, uint32 len) const;
+        void Read(uint8_t* buf, uint32_t len) const;
 
         //
         // Read a TypedArray or DataView.
@@ -59,7 +59,7 @@ namespace Js
                 this->ThrowSCADataCorrupt();
             }
 
-            uint32 byteOffset, length;
+            uint32_t byteOffset, length;
             Read(&byteOffset);
             Read(&length);
             *dst = trace_type::CreateTypedArray(

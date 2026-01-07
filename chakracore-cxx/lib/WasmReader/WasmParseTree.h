@@ -106,7 +106,7 @@ namespace Wasm
         extern const char16_t* const strIds[Limit];
 
         bool IsLocalType(WasmTypes::WasmType type);
-        uint32 GetTypeByteSize(WasmType type);
+        uint32_t GetTypeByteSize(WasmType type);
         const char16_t* GetTypeName(WasmType type);
     }
     typedef WasmTypes::WasmType Local;
@@ -178,30 +178,30 @@ namespace Wasm
 
     struct WasmVarNode
     {
-        uint32 num;
+        uint32_t num;
     };
 
     struct WasmMemOpNode
     {
-        uint32 offset;
+        uint32_t offset;
         uint8_t alignment;
     };
 
     struct WasmBrNode
     {
-        uint32 depth;
+        uint32_t depth;
     };
 
     struct WasmBrTableNode
     {
-        uint32 numTargets;
-        uint32* targetTable;
-        uint32 defaultTarget;
+        uint32_t numTargets;
+        uint32_t* targetTable;
+        uint32_t defaultTarget;
     };
 
     struct WasmCallNode
     {
-        uint32 num; // function id
+        uint32_t num; // function id
         FunctionIndexTypes::Type funcType;
     };
 
@@ -212,16 +212,16 @@ namespace Wasm
         union
         {
             WasmTypes::WasmType singleResult;
-            uint32 signatureId;
+            uint32_t signatureId;
         };
     public:
         bool IsSingleResult() const { return isSingleResult; }
-        void SetSignatureId(uint32 id)
+        void SetSignatureId(uint32_t id)
         {
             isSingleResult = false;
             signatureId = id;
         }
-        uint32 GetSignatureId() const 
+        uint32_t GetSignatureId() const 
         {
             Assert(!isSingleResult);
             return signatureId;
@@ -257,8 +257,8 @@ namespace Wasm
 
     struct WasmExport
     {
-        uint32 index;
-        uint32 nameLength;
+        uint32_t index;
+        uint32_t nameLength;
         const char16_t* name;
         ExternalKinds kind;
     };
@@ -266,9 +266,9 @@ namespace Wasm
     struct WasmImport
     {
         ExternalKinds kind;
-        uint32 modNameLen;
+        uint32_t modNameLen;
         const char16_t* modName;
-        uint32 importNameLen;
+        uint32_t importNameLen;
         const char16_t* importName;
     };
 
@@ -277,6 +277,6 @@ namespace Wasm
         const char16_t* name;
         charcount_t nameLength;
         const byte* payload;
-        uint32 payloadSize;
+        uint32_t payloadSize;
     };
 }

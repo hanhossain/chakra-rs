@@ -27,7 +27,7 @@ namespace Wasm
     struct PolymorphicEmitInfo
     {
     private:
-        uint32 count = 0;
+        uint32_t count = 0;
         union
         {
             EmitInfo singleInfo;
@@ -39,11 +39,11 @@ namespace Wasm
         {
             Init(info);
         }
-        uint32 Count() const { return count; }
+        uint32_t Count() const { return count; }
         void Init(EmitInfo info);
-        void Init(uint32 count, ArenaAllocator* alloc);
-        void SetInfo(EmitInfo info, uint32 index);
-        EmitInfo GetInfo(uint32 index) const;
+        void Init(uint32_t count, ArenaAllocator* alloc);
+        void SetInfo(EmitInfo info, uint32_t index);
+        EmitInfo GetInfo(uint32_t index) const;
         bool IsUnreachable() const;
         bool IsEquivalent(PolymorphicEmitInfo other) const;
     };
@@ -157,7 +157,7 @@ namespace Wasm
     public:
         WasmModuleGenerator(Js::ScriptContext* scriptContext, Js::WebAssemblySource* src);
         Js::WebAssemblyModule* GenerateModule();
-        void GenerateFunctionHeader(uint32 index);
+        void GenerateFunctionHeader(uint32_t index);
     private:
         WasmBinaryReader* GetReader() const;
 
@@ -205,10 +205,10 @@ namespace Wasm
         EmitInfo EmitSelect();
         template<typename WriteFn>
         void WriteTypeStack(WriteFn fn) const;
-        uint32 WriteTypeStackToString(_Out_writes_(maxlen) char16_t* out, uint32 maxlen) const;
+        uint32_t WriteTypeStackToString(_Out_writes_(maxlen) char16_t* out, uint32_t maxlen) const;
 #if DBG_DUMP
-        uint32 opId = 0;
-        uint32 lastOpId = 1;
+        uint32_t opId = 0;
+        uint32_t lastOpId = 1;
         void PrintOpBegin(WasmOp op);
         void PrintTypeStack() const;
         void PrintOpEnd();
@@ -240,7 +240,7 @@ namespace Wasm
         PolymorphicEmitInfo PopLabel(Js::ByteCodeLabel labelValidation);
         BlockInfo* PushLabel(WasmBlock blockData, Js::ByteCodeLabel label, bool addBlockYieldInfo = true, bool checkInParams = true);
         void YieldToBlock(BlockInfo* blockInfo, PolymorphicEmitInfo expr);
-        BlockInfo* GetBlockInfo(uint32 relativeDepth) const;
+        BlockInfo* GetBlockInfo(uint32_t relativeDepth) const;
 
         Js::OpCodeAsmJs GetLoadOp(WasmTypes::WasmType type);
         Js::OpCodeAsmJs GetReturnOp(WasmTypes::WasmType type);
@@ -257,7 +257,7 @@ namespace Wasm
         void ExitEvalStackScope(const BlockInfo*);
         void SetUnreachableState(bool isUnreachable);
         bool IsUnreachable() const { return this->isUnreachable; }
-        void SetUsesMemory(uint32 memoryIndex);
+        void SetUsesMemory(uint32_t memoryIndex);
 
         Js::FunctionBody* GetFunctionBody() const { return m_funcInfo->GetBody(); }
         WasmReaderBase* GetReader() const;
@@ -274,7 +274,7 @@ namespace Wasm
         BlockInfo* m_funcBlock;
         Js::WebAssemblyModule* m_module;
 
-        uint32 m_maxArgOutDepth;
+        uint32_t m_maxArgOutDepth;
 
         Js::IWasmByteCodeWriter* m_writer;
         Js::IWasmByteCodeWriter* m_emptyWriter;

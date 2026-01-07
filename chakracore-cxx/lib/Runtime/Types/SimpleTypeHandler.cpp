@@ -470,7 +470,7 @@ namespace Js
         }
 
         // Check numeric propertyId only if objectArray available
-        uint32 indexVal;
+        uint32_t indexVal;
         ScriptContext* scriptContext = instance->GetScriptContext();
         if (instance->HasObjectArray() && scriptContext->IsNumericPropertyId(propertyId, &indexVal))
         {
@@ -517,7 +517,7 @@ namespace Js
         }
 
         // Check numeric propertyId only if objectArray available
-        uint32 indexVal;
+        uint32_t indexVal;
         ScriptContext* scriptContext = instance->GetScriptContext();
         if (instance->HasObjectArray() && scriptContext->IsNumericPropertyId(propertyId, &indexVal))
         {
@@ -586,7 +586,7 @@ namespace Js
         }
 
         // Always check numeric propertyId. This may create objectArray.
-        uint32 indexVal;
+        uint32_t indexVal;
         if (scriptContext->IsNumericPropertyId(propertyId, &indexVal))
         {
             return SimpleTypeHandler<size>::SetItem(instance, indexVal, value, flags);
@@ -620,7 +620,7 @@ namespace Js
             return (descriptors[index].Attributes & PropertyWritable) ? WritableData : Data;
         }
 
-        uint32 indexVal;
+        uint32_t indexVal;
         if (instance->GetScriptContext()->IsNumericPropertyId(propertyId, &indexVal))
         {
             return SimpleTypeHandler<size>::GetItemSetter(instance, indexVal, setterValue, requestContext);
@@ -714,7 +714,7 @@ namespace Js
         }
 
         // Check numeric propertyId only if objectArray available
-        uint32 indexVal;
+        uint32_t indexVal;
         if (instance->HasObjectArray() && scriptContext->IsNumericPropertyId(propertyId, &indexVal))
         {
             return SimpleTypeHandler<size>::DeleteItem(instance, indexVal, propertyOperationFlags);
@@ -765,7 +765,7 @@ namespace Js
             // Upgrade type handler if set objectArray item attribute.
             // Only check numeric propertyId if objectArray available.
             ScriptContext* scriptContext = instance->GetScriptContext();
-            uint32 indexVal;
+            uint32_t indexVal;
             if (instance->HasObjectArray() && scriptContext->IsNumericPropertyId(propertyId, &indexVal))
             {
                 return SimpleTypeHandler<size>::ConvertToTypeWithItemAttributes(instance)
@@ -797,7 +797,7 @@ namespace Js
             // Upgrade type handler if set objectArray item attribute.
             // Only check numeric propertyId if objectArray available.
             ScriptContext* scriptContext = instance->GetScriptContext();
-            uint32 indexVal;
+            uint32_t indexVal;
             if (instance->HasObjectArray() && scriptContext->IsNumericPropertyId(propertyId, &indexVal))
             {
                 return SimpleTypeHandler<size>::ConvertToTypeWithItemAttributes(instance)
@@ -839,7 +839,7 @@ namespace Js
             // Upgrade type handler if set objectArray item attribute.
             // Only check numeric propertyId if objectArray available.
             ScriptContext* scriptContext = instance->GetScriptContext();
-            uint32 indexVal;
+            uint32_t indexVal;
             if (instance->HasObjectArray() && scriptContext->IsNumericPropertyId(propertyId, &indexVal))
             {
                 return SimpleTypeHandler<size>::ConvertToTypeWithItemAttributes(instance)
@@ -1038,7 +1038,7 @@ namespace Js
 
         // Always check numeric propertyId. May create objectArray.
         ScriptContext* scriptContext = instance->GetScriptContext();
-        uint32 indexVal;
+        uint32_t indexVal;
         if (scriptContext->IsNumericPropertyId(propertyId, &indexVal))
         {
             return SimpleTypeHandler<size>::SetItemWithAttributes(instance, indexVal, value, attributes);
@@ -1072,7 +1072,7 @@ namespace Js
 
         // Check numeric propertyId only if objectArray available
         ScriptContext* scriptContext = instance->GetScriptContext();
-        uint32 indexVal;
+        uint32_t indexVal;
         if (instance->HasObjectArray() && scriptContext->IsNumericPropertyId(propertyId, &indexVal))
         {
             return SimpleTypeHandler<size>::SetItemAttributes(instance, indexVal, attributes);
@@ -1101,7 +1101,7 @@ namespace Js
         JavascriptLibrary* library = scriptContext->GetLibrary();
 #if DBG
         PropertyIndex index;
-        uint32 indexVal;
+        uint32_t indexVal;
         Assert(!GetDescriptor(propertyId, &index));
         Assert(!scriptContext->IsNumericPropertyId(propertyId, &indexVal));
 #endif
@@ -1223,9 +1223,9 @@ namespace Js
     template<size_t size>
     void SimpleTypeHandler<size>::MarkObjectSlots_TTD(TTD::SnapshotExtractor* extractor, DynamicObject* obj) const
     {
-        uint32 plength = this->propertyCount;
+        uint32_t plength = this->propertyCount;
 
-        for(uint32 index = 0; index < plength; ++index)
+        for(uint32_t index = 0; index < plength; ++index)
         {
             Js::PropertyId pid = this->descriptors[index].Id->GetPropertyId();
 
@@ -1238,11 +1238,11 @@ namespace Js
     }
 
     template<size_t size>
-    uint32 SimpleTypeHandler<size>::ExtractSlotInfo_TTD(TTD::NSSnapType::SnapHandlerPropertyEntry* entryInfo, ThreadContext* threadContext, TTD::SlabAllocator& alloc) const
+    uint32_t SimpleTypeHandler<size>::ExtractSlotInfo_TTD(TTD::NSSnapType::SnapHandlerPropertyEntry* entryInfo, ThreadContext* threadContext, TTD::SlabAllocator& alloc) const
     {
-        uint32 plength = this->propertyCount;
+        uint32_t plength = this->propertyCount;
 
-        for(uint32 index = 0; index < plength; ++index)
+        for(uint32_t index = 0; index < plength; ++index)
         {
             TTD::NSSnapType::ExtractSnapPropertyEntryInfo(entryInfo + index, this->descriptors[index].Id->GetPropertyId(), this->descriptors[index].Attributes, TTD::NSSnapType::SnapEntryDataKindTag::Data);
         }

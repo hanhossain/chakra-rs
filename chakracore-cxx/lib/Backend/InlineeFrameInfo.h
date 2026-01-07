@@ -133,15 +133,15 @@ private:
 
 struct NativeOffsetInlineeFramePair
 {
-    uint32 offset;
+    uint32_t offset;
     InlineeFrameRecord* record;
 };
 
 struct NativeOffsetInlineeFrameRecordOffset
 {
-    uint32 offset;
-    uint32 recordOffset;
-    static uint32 InvalidRecordOffset;
+    uint32_t offset;
+    uint32_t recordOffset;
+    static uint32_t InvalidRecordOffset;
 };
 
 struct InlineeFrameInfo

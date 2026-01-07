@@ -18,12 +18,12 @@ namespace Js
     class ArrayObject : public DynamicObject
     {
     protected:
-        Field(uint32) length;
+        Field(uint32_t) length;
 
     protected:
         DEFINE_VTABLE_CTOR_ABSTRACT(ArrayObject, DynamicObject);
 
-        ArrayObject(DynamicType * type, bool initSlots = true, uint32 length = 0)
+        ArrayObject(DynamicType * type, bool initSlots = true, uint32_t length = 0)
             : DynamicObject(type, initSlots), length(length)
         {
         }
@@ -40,13 +40,13 @@ namespace Js
         void VerifySetItemAttributes(PropertyId propId, PropertyAttributes attributes);
 
     public:
-        uint32 GetLength() const { return length; }
-        static uint32 GetOffsetOfLength() { return offsetof(ArrayObject, length); }
+        uint32_t GetLength() const { return length; }
+        static uint32_t GetOffsetOfLength() { return offsetof(ArrayObject, length); }
 
         // objectArray support
-        virtual BOOL SetItemWithAttributes(uint32 index, Var value, PropertyAttributes attributes) = 0;
-        virtual BOOL SetItemAttributes(uint32 index, PropertyAttributes attributes);
-        virtual BOOL SetItemAccessors(uint32 index, Var getter, Var setter);
+        virtual BOOL SetItemWithAttributes(uint32_t index, Var value, PropertyAttributes attributes) = 0;
+        virtual BOOL SetItemAttributes(uint32_t index, PropertyAttributes attributes);
+        virtual BOOL SetItemAccessors(uint32_t index, Var getter, Var setter);
         virtual BOOL IsObjectArrayFrozen();
         virtual JavascriptEnumerator * GetIndexEnumerator(EnumeratorFlags flags, ScriptContext* requestContext) = 0;
     };

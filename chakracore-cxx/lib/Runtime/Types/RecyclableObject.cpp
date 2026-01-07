@@ -451,32 +451,32 @@ namespace Js
     }
 #endif
 
-    PropertyQueryFlags RecyclableObject::HasItemQuery(uint32 index)
+    PropertyQueryFlags RecyclableObject::HasItemQuery(uint32_t index)
     {
         return PropertyQueryFlags::Property_NotFound;
     }
 
-    BOOL RecyclableObject::HasOwnItem(uint32 index)
+    BOOL RecyclableObject::HasOwnItem(uint32_t index)
     {
         return false;
     }
 
-    PropertyQueryFlags RecyclableObject::GetItemQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext)
+    PropertyQueryFlags RecyclableObject::GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext)
     {
         return PropertyQueryFlags::Property_NotFound;
     }
 
-    PropertyQueryFlags RecyclableObject::GetItemReferenceQuery(Var originalInstance, uint32 index, Var* value, ScriptContext * requestContext)
+    PropertyQueryFlags RecyclableObject::GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext)
     {
         return PropertyQueryFlags::Property_NotFound;
     }
 
-    BOOL RecyclableObject::SetItem(uint32 index, Var value, PropertyOperationFlags flags)
+    BOOL RecyclableObject::SetItem(uint32_t index, Var value, PropertyOperationFlags flags)
     {
         return false;
     }
 
-    BOOL RecyclableObject::DeleteItem(uint32 index, PropertyOperationFlags flags)
+    BOOL RecyclableObject::DeleteItem(uint32_t index, PropertyOperationFlags flags)
     {
         return true;
     }

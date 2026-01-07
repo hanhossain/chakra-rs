@@ -26,7 +26,7 @@ namespace Wasm
         SectionCode code;
         const byte* start;
         const byte* end;
-        uint32 nameLength;
+        uint32_t nameLength;
         const char16_t* name;
     };
 
@@ -36,7 +36,7 @@ namespace Wasm
         intptr_t size;
     };
 
-    static const uint32 binaryVersion = 0x1;
+    static const uint32_t binaryVersion = 0x1;
 
     class WasmBinaryReader : public WasmReaderBase
     {
@@ -54,7 +54,7 @@ namespace Wasm
         WasmOp ReadOpCode();
         virtual WasmOp ReadExpr() override;
         virtual void FunctionEnd() override;
-        virtual uint32 EstimateCurrentFunctionBytecodeSize() const override;
+        virtual uint32_t EstimateCurrentFunctionBytecodeSize() const override;
 #if DBG_DUMP
         void PrintOps();
 #endif
@@ -65,8 +65,8 @@ namespace Wasm
 #if ENABLE_DEBUG_CONFIG_OPTIONS
             Js::FunctionBody* body = nullptr;
 #endif
-            uint32 count; // current entry
-            uint32 size;  // binary size of the function
+            uint32_t count; // current entry
+            uint32_t size;  // binary size of the function
         };
 
         void BlockNode();
@@ -101,24 +101,24 @@ namespace Wasm
         template <typename T> T ReadConst();
         ExternalKinds ReadExternalKind() { return (ExternalKinds)ReadConst<uint8_t>(); }
         bool ReadMutableValue();
-        const char16_t* ReadInlineName(uint32& length, uint32& nameLength);
-        template<typename LEBType = uint32, uint32 bits = sizeof(LEBType) * 8>
-        LEBType LEB128(uint32 &length);
-        template<typename LEBType = int32, uint32 bits = sizeof(LEBType) * 8>
-        LEBType SLEB128(uint32 &length)
+        const char16_t* ReadInlineName(uint32_t& length, uint32_t& nameLength);
+        template<typename LEBType = uint32_t, uint32_t bits = sizeof(LEBType) * 8>
+        LEBType LEB128(uint32_t &length);
+        template<typename LEBType = int32, uint32_t bits = sizeof(LEBType) * 8>
+        LEBType SLEB128(uint32_t &length)
         {
             CompileAssert(LEBType(-1) < LEBType(0));
             return LEB128<LEBType, bits>(length);
         }
         WasmNode ReadInitExpr(bool isOffset = false);
         template<typename SectionLimitType>
-        SectionLimitType ReadSectionLimitsBase(uint32 maxInitial, uint32 maxMaximum, const char16_t* errorMsg);
+        SectionLimitType ReadSectionLimitsBase(uint32_t maxInitial, uint32_t maxMaximum, const char16_t* errorMsg);
 
-        void CheckBytesLeft(uint32 bytesNeeded);
+        void CheckBytesLeft(uint32_t bytesNeeded);
         bool EndOfFunc();
         bool EndOfModule();
         __attribute__((noreturn)) void ThrowDecodingError(const char16_t* msg, ...) const;
-        Wasm::WasmTypes::WasmType ReadWasmType(uint32& length);
+        Wasm::WasmTypes::WasmType ReadWasmType(uint32_t& length);
 
         ArenaAllocator* m_alloc;
         const byte* m_start, *m_end, *m_pc, *m_curFuncEnd;

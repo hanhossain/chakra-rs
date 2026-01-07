@@ -24,7 +24,7 @@ public:
             init[0] = init[1] = init[2] = init[3] =0xffffffff;
         }
 
-        uint32 ReduceKeyToIndex(PropertyId key)
+        uint32_t ReduceKeyToIndex(PropertyId key)
         {
             // we use 4-bit bucket index, but we often have keys that are larger. 
             // use Fibonacci hash to reduce the possibility of collisions
@@ -40,7 +40,7 @@ public:
             Assert(value < 128);
 
             byte* buckets = reinterpret_cast<byte*>(bucketsData);
-            uint32 bucketIndex = ReduceKeyToIndex(key);
+            uint32_t bucketIndex = ReduceKeyToIndex(key);
 
             byte i = buckets[bucketIndex];
 
@@ -65,7 +65,7 @@ public:
         inline bool TryGetValue(PropertyId key, PropertyIndex* index, const Data& data)
         {
             byte* buckets = reinterpret_cast<byte*>(bucketsData);
-            uint32 bucketIndex = ReduceKeyToIndex(key);
+            uint32_t bucketIndex = ReduceKeyToIndex(key);
 
             byte i = buckets[bucketIndex];
             if (i != NIL)

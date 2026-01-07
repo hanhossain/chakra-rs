@@ -745,7 +745,7 @@ Func::EnsureLocalVarSlots()
 
     if (!this->HasLocalVarSlotCreated())
     {
-        uint32 localSlotCount = GetJITFunctionBody()->GetNonTempLocalVarCount();
+        uint32_t localSlotCount = GetJITFunctionBody()->GetNonTempLocalVarCount();
         if (localSlotCount && m_localVarSlotsOffset == Js::Constants::InvalidOffset)
         {
             // Allocate the slots.
@@ -833,7 +833,7 @@ Func::IsJitInDebugMode() const
 }
 
 bool
-Func::IsNonTempLocalVar(uint32 slotIndex)
+Func::IsNonTempLocalVar(uint32_t slotIndex)
 {
     return GetJITFunctionBody()->IsNonTempLocalVar(slotIndex);
 }
@@ -1028,7 +1028,7 @@ Func::GetLocalsPointer() const
 
 #endif
 
-void Func::AddFrameDisplayCheck(IR::SymOpnd *fieldOpnd, uint32 slotId)
+void Func::AddFrameDisplayCheck(IR::SymOpnd *fieldOpnd, uint32_t slotId)
 {
     if (PHASE_OFF(Js::ClosureRangeCheckPhase, this))
     {
@@ -1048,19 +1048,19 @@ void Func::AddFrameDisplayCheck(IR::SymOpnd *fieldOpnd, uint32 slotId)
         *record = JitAnew(m_alloc, FrameDisplayCheckRecord);
     }
 
-    uint32 frameDisplaySlot = propertySym->m_propertyId;
+    uint32_t frameDisplaySlot = propertySym->m_propertyId;
     if ((*record)->table == nullptr || (*record)->slotId < frameDisplaySlot)
     {
         (*record)->slotId = frameDisplaySlot;
     }
 
-    if (slotId != (uint32)-1)
+    if (slotId != (uint32_t)-1)
     {
         if ((*record)->table == nullptr)
         {
             (*record)->table = SlotArrayCheckTable::New(m_alloc, 4);
         }
-        uint32 *pSlotId = (*record)->table->FindOrInsert(slotId, frameDisplaySlot);
+        uint32_t *pSlotId = (*record)->table->FindOrInsert(slotId, frameDisplaySlot);
         if (pSlotId && *pSlotId < slotId)
         {
             *pSlotId = slotId;
@@ -1153,7 +1153,7 @@ bool Func::CanAllocInPreReservedHeapPageSegment ()
 ///     Note: It counts all instrs for now, including labels, etc.
 ///
 ///----------------------------------------------------------------------------
-uint32
+uint32_t
 Func::GetInstrCount()
 {
     uint instrCount = 0;
@@ -1580,7 +1580,7 @@ Func::EnsureEquivalentTypeGuards()
 }
 
 Js::JitEquivalentTypeGuard*
-Func::CreateEquivalentTypeGuard(JITTypeHolder type, uint32 objTypeSpecFldId)
+Func::CreateEquivalentTypeGuard(JITTypeHolder type, uint32_t objTypeSpecFldId)
 {
     EnsureEquivalentTypeGuards();
 
@@ -1592,7 +1592,7 @@ Func::CreateEquivalentTypeGuard(JITTypeHolder type, uint32 objTypeSpecFldId)
 }
 
 Js::JitPolyEquivalentTypeGuard*
-Func::CreatePolyEquivalentTypeGuard(uint32 objTypeSpecFldId)
+Func::CreatePolyEquivalentTypeGuard(uint32_t objTypeSpecFldId)
 {
     EnsureEquivalentTypeGuards();
 

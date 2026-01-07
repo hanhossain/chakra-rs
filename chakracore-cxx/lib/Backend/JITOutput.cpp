@@ -132,7 +132,7 @@ JITOutput::GetXdataSize() const
 }
 
 EmitBufferAllocation<VirtualAllocWrapper, PreReservedVirtualAllocWrapper> *
-JITOutput::RecordInProcNativeCodeSize(Func *func, uint32 bytes, ushort pdataCount, ushort xdataSize)
+JITOutput::RecordInProcNativeCodeSize(Func *func, uint32_t bytes, ushort pdataCount, ushort xdataSize)
 {
     m_func = func;
 
@@ -159,7 +159,7 @@ JITOutput::RecordInProcNativeCodeSize(Func *func, uint32 bytes, ushort pdataCoun
 
 #if ENABLE_OOP_NATIVE_CODEGEN
 EmitBufferAllocation<SectionAllocWrapper, PreReservedSectionAllocWrapper> *
-JITOutput::RecordOOPNativeCodeSize(Func *func, uint32 bytes, ushort pdataCount, ushort xdataSize)
+JITOutput::RecordOOPNativeCodeSize(Func *func, uint32_t bytes, ushort pdataCount, ushort xdataSize)
 {
     m_func = func;
 

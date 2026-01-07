@@ -34,7 +34,7 @@ static const struct OpbyteTemplate Opbyte[] =
 #undef MACRO
 };
 
-static const uint32 Opdope[] =
+static const uint32_t Opdope[] =
 {
 #define MACRO(name, jnLayout, attrib, byte2, form, opbyte, dope, ...) dope,
 #include "MdOpCodes.h"
@@ -48,7 +48,7 @@ static const uint8_t OpEncoding[] =
 #undef MACRO
 };
 
-static const uint32 OpcodeLeadIn[] =
+static const uint32_t OpcodeLeadIn[] =
 {
 #define MACRO(name, jnLayout, attrib, byte2, form, opByte, dope, leadIn, ...) leadIn,
 #include "MdOpCodes.h"
@@ -189,7 +189,7 @@ EncoderMD::GetRegEncode(RegNum reg)
 ///
 ///----------------------------------------------------------------------------
 
-uint32
+uint32_t
 EncoderMD::GetOpdope(IR::Instr *instr)
 {
     return Opdope[instr->m_opcode - (Js::OpCode::MDStart+1)];
@@ -203,7 +203,7 @@ EncoderMD::GetOpdope(IR::Instr *instr)
 ///
 ///----------------------------------------------------------------------------
 
-uint32
+uint32_t
 EncoderMD::GetLeadIn(IR::Instr * instr)
 {
     return OpcodeLeadIn[instr->m_opcode - (Js::OpCode::MDStart+1)];
@@ -453,7 +453,7 @@ EncoderMD::EmitConst(size_t val, int size, bool allowImm64 /* = false */)
         break;
 
     case 4:
-        *(uint32*)m_pc = (uint32)val;
+        *(uint32_t*)m_pc = (uint32_t)val;
         break;
 
     case 8:
@@ -610,8 +610,8 @@ EncoderMD::Encode(IR::Instr *instr, uint8_t *pc, uint8_t* beginCodeAddress)
 
     const uint8_t *form = EncoderMD::GetFormTemplate(instr);
     const uint8_t *opcodeTemplate = EncoderMD::GetOpbyte(instr);
-    const uint32 leadIn = EncoderMD::GetLeadIn(instr);
-    uint32 opdope = EncoderMD::GetOpdope(instr);
+    const uint32_t leadIn = EncoderMD::GetLeadIn(instr);
+    uint32_t opdope = EncoderMD::GetOpdope(instr);
 
     //
     // Canonicalize operands.
@@ -1472,7 +1472,7 @@ EncoderMD::AppendRelocEntry(RelocType type, void *ptr, IR::LabelInstr *label)
 }
 
 int
-EncoderMD::FixRelocListEntry(uint32 index, int totalBytesSaved, uint8_t *buffStart, uint8_t* buffEnd)
+EncoderMD::FixRelocListEntry(uint32_t index, int totalBytesSaved, uint8_t *buffStart, uint8_t* buffEnd)
 {
     uint8_t* currentPc;
     EncodeRelocAndLabels &relocRecord = m_relocList->Item(index);
@@ -1492,7 +1492,7 @@ EncoderMD::FixRelocListEntry(uint32 index, int totalBytesSaved, uint8_t *buffSta
         {
             ptrdiff_t diff = newPC - buffStart;
             Assert(diff >= 0 && diff <= UINT_MAX);
-            uint32 offset = (uint32)diff;
+            uint32_t offset = (uint32_t)diff;
             // Since the final code buffer is page aligned, it is enough to align the offset of the label.
             uint8_t nopCount = (16 - (uint8_t)(offset & 0xf)) % 16;
             if (nopCount <= Js::Configuration::Global.flags.LoopAlignNopLimit)
@@ -1518,7 +1518,7 @@ EncoderMD::FixRelocListEntry(uint32 index, int totalBytesSaved, uint8_t *buffSta
                 // offset is in top 28-bits, arg count in bottom 4
                 size_t field = *((size_t*) relocRecord.m_origPtr);
                 size_t offset = field >> Js::InlineeCallInfo::inlineeStartOffsetShiftCount;
-                uint32 count = field & 0xf;
+                uint32_t count = field & 0xf;
 
                 AssertMsg(offset < (size_t)(buffEnd - buffStart), "Inlinee entry offset out of range");
                 relocRecord.SetInlineOffset(((offset - totalBytesSaved) << Js::InlineeCallInfo::inlineeStartOffsetShiftCount) | count);
@@ -1542,7 +1542,7 @@ void EncoderMD::AddLabelReloc(uint8_t* relocAddress)
 ///
 ///----------------------------------------------------------------------------
 void
-EncoderMD::FixMaps(uint32 brOffset, uint32 bytesSaved, FixUpMapIndex *mapIndices)
+EncoderMD::FixMaps(uint32_t brOffset, uint32_t bytesSaved, FixUpMapIndex *mapIndices)
 
 {
     int32 i;
@@ -1619,7 +1619,7 @@ EncoderMD::ApplyRelocs(size_t codeBufferAddress_, size_t codeSize, uint * buffer
     {
         EncodeRelocAndLabels *reloc = &m_relocList->Item(i);
         uint8_t * relocAddress = (uint8_t*)reloc->m_ptr;
-        uint32 pcrel;
+        uint32_t pcrel;
 
         switch (reloc->m_type)
         {
@@ -1627,8 +1627,8 @@ EncoderMD::ApplyRelocs(size_t codeBufferAddress_, size_t codeSize, uint * buffer
             AssertMsg(UNREACHED, "PC relative calls not yet supported on amd64");
 #if 0
             {
-                pcrel = (uint32)(codeBufferAddress + (uint8_t*)reloc->m_ptr - m_encoder->m_encodeBuffer + 4);
-                 *(uint32 *)relocAddress -= pcrel;
+                pcrel = (uint32_t)(codeBufferAddress + (uint8_t*)reloc->m_ptr - m_encoder->m_encodeBuffer + 4);
+                 *(uint32_t *)relocAddress -= pcrel;
                 break;
             }
 #endif
@@ -1640,7 +1640,7 @@ EncoderMD::ApplyRelocs(size_t codeBufferAddress_, size_t codeSize, uint * buffer
                 if (reloc->isShortBr() )
                 {
                     // short branch
-                    pcrel = (uint32)(labelInstr->GetPC() - ((uint8_t*)reloc->m_ptr + 1));
+                    pcrel = (uint32_t)(labelInstr->GetPC() - ((uint8_t*)reloc->m_ptr + 1));
                     AssertMsg((int32)pcrel >= -128 && (int32)pcrel <= 127, "Offset doesn't fit in imm8.");
                     if (!isFinalBufferValidation)
                     {
@@ -1654,15 +1654,15 @@ EncoderMD::ApplyRelocs(size_t codeBufferAddress_, size_t codeSize, uint * buffer
                 }
                 else
                 {
-                    pcrel = (uint32)(labelInstr->GetPC() - ((uint8_t*)reloc->m_ptr + 4));
+                    pcrel = (uint32_t)(labelInstr->GetPC() - ((uint8_t*)reloc->m_ptr + 4));
                     if (!isFinalBufferValidation)
                     {
-                        Assert(*(uint32*)relocAddress == 0);
-                        *(uint32 *)relocAddress = pcrel;
+                        Assert(*(uint32_t*)relocAddress == 0);
+                        *(uint32_t *)relocAddress = pcrel;
                     }
                     else
                     {
-                        Encoder::EnsureRelocEntryIntegrity(codeBufferAddress_, codeSize, (size_t)m_encoder->m_encodeBuffer, (size_t)relocAddress, sizeof(uint32), (ptrdiff_t)labelInstr->GetPC() - ((ptrdiff_t)reloc->m_ptr + 4));
+                        Encoder::EnsureRelocEntryIntegrity(codeBufferAddress_, codeSize, (size_t)m_encoder->m_encodeBuffer, (size_t)relocAddress, sizeof(uint32_t), (ptrdiff_t)labelInstr->GetPC() - ((ptrdiff_t)reloc->m_ptr + 4));
                     }
                 }
 
@@ -1794,7 +1794,7 @@ EncoderMD::GetRexByte(uint8_t rexCode, RegNum reg)
 }
 
 void
-EncoderMD::EncodeInlineeCallInfo(IR::Instr *instr, uint32 codeOffset)
+EncoderMD::EncodeInlineeCallInfo(IR::Instr *instr, uint32_t codeOffset)
 {
     Assert(instr->GetSrc1() &&
         instr->GetSrc1()->IsIntConstOpnd() &&
