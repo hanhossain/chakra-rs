@@ -232,13 +232,13 @@ Security::InsertSmallNOP(IR::Instr * instr, uint32_t nopSize)
         case 3:
             // lea ecx, [ecx+00]    ; 3 bytes
             regOpnd = IR::RegOpnd::New(nullptr, RegECX, TyInt32, instr->m_func);
-            indirOpnd = IR::IndirOpnd::New(regOpnd, (int32)0, TyInt32, instr->m_func);
+            indirOpnd = IR::IndirOpnd::New(regOpnd, (int32_t)0, TyInt32, instr->m_func);
             nopInstr = IR::Instr::New(Js::OpCode::LEA, regOpnd, indirOpnd, instr->m_func);
             break;
         case 4:
             // lea esp, [esp+00]    ; 4 bytes
             regOpnd = IR::RegOpnd::New(nullptr, RegESP, TyInt32, instr->m_func);
-            indirOpnd = IR::IndirOpnd::New(regOpnd, (int32)0, TyInt32, instr->m_func);
+            indirOpnd = IR::IndirOpnd::New(regOpnd, (int32_t)0, TyInt32, instr->m_func);
             nopInstr = IR::Instr::New(Js::OpCode::LEA, regOpnd, indirOpnd, instr->m_func);
             break;
         default:
@@ -412,8 +412,8 @@ Security::EncodeOpnd(IR::Instr * instr, IR::Opnd *opnd)
                 IR::IndirOpnd * indir = IR::IndirOpnd::New(this->baseOpnd, this->cookieOpnd->AsInt32(), TyMachReg, instr->m_func);
                 Lowerer::InsertLea(this->basePlusCookieOpnd, indir, instr);
             }
-            int32 diff = indirOpnd->GetOffset() - this->cookieOpnd->AsInt32();
-            indirOpnd->SetOffset((int32)diff);
+            int32_t diff = indirOpnd->GetOffset() - this->cookieOpnd->AsInt32();
+            indirOpnd->SetOffset((int32_t)diff);
             indirOpnd->SetBaseOpnd(this->basePlusCookieOpnd);
             return true;
         }
@@ -498,7 +498,7 @@ Security::BuildCookieOpnd(IRType type, Func * func)
     case TyVar:
 #endif
     case TyInt32:
-        cookie = (int32)Math::Rand();
+        cookie = (int32_t)Math::Rand();
         break;
     case TyUint32:
         cookie = (uint32_t)Math::Rand();
@@ -541,11 +541,11 @@ Security::EncodeValue(IR::Instr * instr, IR::Opnd *opnd, IntConstType constValue
         Assert(!stackSym->m_isSingleDef);
         Assert(stackSym->m_instrDef == nullptr);
         stackSym->m_isEncodedConstant = true;
-        stackSym->constantValue = (int32)constValue;
+        stackSym->constantValue = (int32_t)constValue;
 
         *pNewOpnd = regOpnd;
 
-        int32 value = (int32)constValue;
+        int32_t value = (int32_t)constValue;
         value = value ^ cookieOpnd->AsInt32();
         return value;
     }

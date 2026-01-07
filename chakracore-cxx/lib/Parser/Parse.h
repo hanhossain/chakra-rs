@@ -290,7 +290,7 @@ private:
     Core members.
     ***********************************************************************/
     ParseNodeAllocator m_nodeAllocator;
-    int32        m_cactIdentToNodeLookup;
+    int32_t        m_cactIdentToNodeLookup;
     uint32_t       m_grfscr;
     size_t      m_length;             // source length in characters excluding comments and literals
     size_t      m_originalLength;             // source length in characters excluding comments and literals
@@ -388,7 +388,7 @@ private:
     ParseNodeBlock * CreateBlockNode(charcount_t ichMin, charcount_t ichLim, PnodeBlockType blockType = PnodeBlockType::Regular);
     ParseNodeVar * CreateDeclNode(OpCode nop, IdentPtr pid, SymbolType symbolType, bool errorOnRedecl = true);
 
-    ParseNodeInt * CreateIntNode(int32 lw);
+    ParseNodeInt * CreateIntNode(int32_t lw);
     ParseNodeStr * CreateStrNode(IdentPtr pid);
     ParseNodeBigInt * CreateBigIntNode(IdentPtr pid);
     ParseNodeName * CreateNameNode(IdentPtr pid);
@@ -463,7 +463,7 @@ private:
     ParseNodeProg * m_currentNodeProg; // current program
     DeferredFunctionStub *m_currDeferredStub;
     uint m_currDeferredStubCount;
-    int32 * m_pCurrentAstSize;
+    int32_t * m_pCurrentAstSize;
     ParseNodePtr * m_ppnodeScope;  // function list tail
     ParseNodePtr * m_ppnodeExprScope; // function expression list tail
     ParseNodePtr * m_ppnodeVar;  // variable list tail
@@ -596,7 +596,7 @@ private:
         ParseNodePtr *m_ppnodeScopeSave;
         ParseNodePtr *m_ppnodeExprScopeSave;
         charcount_t m_funcInArraySave;
-        int32 *m_pCurrentAstSizeSave;
+        int32_t *m_pCurrentAstSizeSave;
         uint m_funcInArrayDepthSave;
         uint m_nestedCountSave;
         int m_nextBlockId;

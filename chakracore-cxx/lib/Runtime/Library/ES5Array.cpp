@@ -117,7 +117,7 @@ namespace Js
     {
         if (TaggedInt::Is(value))
         {
-            int32 newLen = TaggedInt::ToInt32(value);
+            int32_t newLen = TaggedInt::ToInt32(value);
             if (newLen < 0)
             {
                 JavascriptError::ThrowRangeError(scriptContext, JSERR_ArrayLengthAssignIncorrect);

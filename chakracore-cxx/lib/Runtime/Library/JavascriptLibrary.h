@@ -120,16 +120,16 @@ namespace Js
     struct CacheForCopyOnAccessArraySegments
     {
         static const uint32_t MAX_SIZE = 31;
-        Field(SparseArraySegment<int32> *) cache[MAX_SIZE];
+        Field(SparseArraySegment<int32_t> *) cache[MAX_SIZE];
         Field(uint32_t) count;
 
-        uint32_t AddSegment(SparseArraySegment<int32> *segment)
+        uint32_t AddSegment(SparseArraySegment<int32_t> *segment)
         {
             cache[count++] = segment;
             return count;
         }
 
-        SparseArraySegment<int32> *GetSegmentByIndex(byte index)
+        SparseArraySegment<int32_t> *GetSegmentByIndex(byte index)
         {
             Assert(index <= MAX_SIZE);
             return cache[index - 1];
@@ -875,7 +875,7 @@ namespace Js
         template<> inline DynamicType* GetTypedArrayType<uint8_t,true>(uint8_t) { return uint8ClampedArrayType; };
         template<> inline DynamicType* GetTypedArrayType<int16,false>(int16) { return int16ArrayType; };
         template<> inline DynamicType* GetTypedArrayType<uint16,false>(uint16) { return uint16ArrayType; };
-        template<> inline DynamicType* GetTypedArrayType<int32,false>(int32) { return int32ArrayType; };
+        template<> inline DynamicType* GetTypedArrayType<int32_t,false>(int32_t) { return int32ArrayType; };
         template<> inline DynamicType* GetTypedArrayType<uint32_t,false>(uint32_t) { return uint32ArrayType; };
         template<> inline DynamicType* GetTypedArrayType<float,false>(float) { return float32ArrayType; };
         template<> inline DynamicType* GetTypedArrayType<double,false>(double) { return float64ArrayType; };
@@ -893,7 +893,7 @@ namespace Js
         JavascriptNativeIntArray*   CreateNativeIntArrayLiteral(uint32_t length);
 
 #if ENABLE_PROFILE_INFO
-        JavascriptNativeIntArray*   CreateCopyOnAccessNativeIntArrayLiteral(ArrayCallSiteInfo *arrayInfo, FunctionBody *functionBody, const Js::AuxArray<int32> *ints);
+        JavascriptNativeIntArray*   CreateCopyOnAccessNativeIntArrayLiteral(ArrayCallSiteInfo *arrayInfo, FunctionBody *functionBody, const Js::AuxArray<int32_t> *ints);
 #endif
 
         JavascriptNativeFloatArray* CreateNativeFloatArrayLiteral(uint32_t length);

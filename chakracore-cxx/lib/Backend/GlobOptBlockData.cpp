@@ -499,26 +499,26 @@ GlobOptBlockData::MergeBlockData(
         // - Keep the var sym live if any of the following is true:
         //     - The var sym is live on both sides
         //     - The var sym is the only live sym that contains the lossless value of the sym on a side (that is, the lossless
-        //       int32 sym is not live, and the float64 sym is not live on that side), and the sym of any type is live on the
+        //       int32_t sym is not live, and the float64 sym is not live on that side), and the sym of any type is live on the
         //       other side
-        //     - On a side, the var and float64 syms are live, the lossless int32 sym is not live, the sym's merged value is
+        //     - On a side, the var and float64 syms are live, the lossless int32_t sym is not live, the sym's merged value is
         //       likely int, and the sym of any type is live on the other side. Since the value is likely int, it may be
         //       int-specialized (with lossless conversion) later. Keeping only the float64 sym live requires doing a lossless
-        //       conversion from float64 to int32, with bailout if the value of the float is not a true 32-bit integer. Checking
+        //       conversion from float64 to int32_t, with bailout if the value of the float is not a true 32-bit integer. Checking
         //       that is costly, and if the float64 sym is converted back to var, it does not become a tagged int, causing a
         //       guaranteed bailout if a lossless conversion to int happens later. Keep the var sym live to preserve its
         //       tagged-ness so that it can be int-specialized while avoiding unnecessary bailouts.
-        // - Keep the int32 sym live if it's live on both sides
+        // - Keep the int32_t sym live if it's live on both sides
         //     - Mark the sym as lossy if it's lossy on any side
         // - Keep the float64 sym live if it's live on a side and the sym of a specialized lossless type is live on the other
         //   side
         //
         // fromData.temp =
-        //     (fromData.var - (fromData.int32 - fromData.lossyInt32)) &
-        //     (this.var | this.int32 | this.float64)
+        //     (fromData.var - (fromData.int32_t - fromData.lossyInt32)) &
+        //     (this.var | this.int32_t | this.float64)
         // this.temp =
-        //     (this.var - (this.int32 - this.lossyInt32)) &
-        //     (fromData.var | fromData.int32 | fromData.float64)
+        //     (this.var - (this.int32_t - this.lossyInt32)) &
+        //     (fromData.var | fromData.int32_t | fromData.float64)
         // this.var =
         //     (fromData.var & this.var) |
         //     (fromData.temp - fromData.float64) |
@@ -526,10 +526,10 @@ GlobOptBlockData::MergeBlockData(
         //     (fromData.temp & fromData.float64 | this.temp & this.float64) & (value ~ int)
         //
         // this.float64 =
-        //     fromData.float64 & ((this.int32 - this.lossyInt32) | this.float64) |
-        //     this.float64 & ((fromData.int32 - fromData.lossyInt32) | fromData.float64)
-        // this.int32 &= fromData.int32
-        // this.lossyInt32 = (fromData.lossyInt32 | this.lossyInt32) & this.int32
+        //     fromData.float64 & ((this.int32_t - this.lossyInt32) | this.float64) |
+        //     this.float64 & ((fromData.int32_t - fromData.lossyInt32) | fromData.float64)
+        // this.int32_t &= fromData.int32_t
+        // this.lossyInt32 = (fromData.lossyInt32 | this.lossyInt32) & this.int32_t
 
         BVSparse<JitArenaAllocator> tempBv1(this->globOpt->tempAlloc);
         BVSparse<JitArenaAllocator> tempBv2(this->globOpt->tempAlloc);
@@ -538,9 +538,9 @@ GlobOptBlockData::MergeBlockData(
         {
             Loop *const loop = toBlock->loop;
 
-            // Force to lossless int32:
+            // Force to lossless int32_t:
             // forceLosslessInt32 =
-            //     ((fromData.int32 - fromData.lossyInt32) - (this.int32 - this.lossyInt32)) &
+            //     ((fromData.int32_t - fromData.lossyInt32) - (this.int32_t - this.lossyInt32)) &
             //     loop.likelyIntSymsUsedBeforeDefined &
             //     this.var
             tempBv1.Minus(fromData->liveInt32Syms, fromData->liveLossyInt32Syms);
@@ -553,8 +553,8 @@ GlobOptBlockData::MergeBlockData(
 
             if(this->globOpt->DoLossyIntTypeSpec())
             {
-                // Force to lossy int32:
-                // forceLossyInt32 = (fromData.int32 - this.int32) & loop.symsUsedBeforeDefined & this.var
+                // Force to lossy int32_t:
+                // forceLossyInt32 = (fromData.int32_t - this.int32_t) & loop.symsUsedBeforeDefined & this.var
                 tempBv1.Minus(fromData->liveInt32Syms, this->liveInt32Syms);
                 tempBv1.And(loop->symsUsedBeforeDefined);
                 tempBv1.And(this->liveVarSyms);
@@ -577,8 +577,8 @@ GlobOptBlockData::MergeBlockData(
             BVSparse<JitArenaAllocator> tempBv3(this->globOpt->tempAlloc);
 
             // fromData.temp =
-            //     (fromData.var - (fromData.int32 - fromData.lossyInt32)) &
-            //     (this.var | this.int32 | this.float64)
+            //     (fromData.var - (fromData.int32_t - fromData.lossyInt32)) &
+            //     (this.var | this.int32_t | this.float64)
             tempBv2.Minus(fromData->liveInt32Syms, fromData->liveLossyInt32Syms);
             tempBv1.Minus(fromData->liveVarSyms, &tempBv2);
             tempBv2.Or(this->liveVarSyms, this->liveInt32Syms);
@@ -586,8 +586,8 @@ GlobOptBlockData::MergeBlockData(
             tempBv1.And(&tempBv2);
 
             // this.temp =
-            //     (this.var - (this.int32 - this.lossyInt32)) &
-            //     (fromData.var | fromData.int32 | fromData.float64)
+            //     (this.var - (this.int32_t - this.lossyInt32)) &
+            //     (fromData.var | fromData.int32_t | fromData.float64)
             tempBv3.Minus(this->liveInt32Syms, this->liveLossyInt32Syms);
             tempBv2.Minus(this->liveVarSyms, &tempBv3);
             tempBv3.Or(fromData->liveVarSyms, fromData->liveInt32Syms);
@@ -634,23 +634,23 @@ GlobOptBlockData::MergeBlockData(
             } NEXT_BITSET_IN_SPARSEBV;
         }
 
-        //     fromData.float64 & ((this.int32 - this.lossyInt32) | this.float64)
+        //     fromData.float64 & ((this.int32_t - this.lossyInt32) | this.float64)
         tempBv1.Minus(this->liveInt32Syms, this->liveLossyInt32Syms);
         tempBv1.Or(this->liveFloat64Syms);
         tempBv1.And(fromData->liveFloat64Syms);
 
-        //     this.float64 & ((fromData.int32 - fromData.lossyInt32) | fromData.float64)
+        //     this.float64 & ((fromData.int32_t - fromData.lossyInt32) | fromData.float64)
         tempBv2.Minus(fromData->liveInt32Syms, fromData->liveLossyInt32Syms);
         tempBv2.Or(fromData->liveFloat64Syms);
         tempBv2.And(this->liveFloat64Syms);
 
         // this.float64 =
-        //     fromData.float64 & ((this.int32 - this.lossyInt32) | this.float64) |
-        //     this.float64 & ((fromData.int32 - fromData.lossyInt32) | fromData.float64)
+        //     fromData.float64 & ((this.int32_t - this.lossyInt32) | this.float64) |
+        //     this.float64 & ((fromData.int32_t - fromData.lossyInt32) | fromData.float64)
         this->liveFloat64Syms->Or(&tempBv1, &tempBv2);
 
-        // this.int32 &= fromData.int32
-        // this.lossyInt32 = (fromData.lossyInt32 | this.lossyInt32) & this.int32
+        // this.int32_t &= fromData.int32_t
+        // this.lossyInt32 = (fromData.lossyInt32 | this.lossyInt32) & this.int32_t
         this->liveInt32Syms->And(fromData->liveInt32Syms);
         this->liveLossyInt32Syms->Or(fromData->liveLossyInt32Syms);
         this->liveLossyInt32Syms->And(this->liveInt32Syms);

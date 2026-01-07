@@ -2554,7 +2554,7 @@ case_2:
         {
             if (TaggedInt::Is(args[1]))
             {
-                int32 signedCount = TaggedInt::ToInt32(args[1]);
+                int32_t signedCount = TaggedInt::ToInt32(args[1]);
                 if (signedCount < 0)
                 {
                     JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgumentOutOfRange, u"String.prototype.repeat");
@@ -3013,7 +3013,7 @@ case_2:
                 // negative zero can only be represented by doubles
                 if(value <= INT_MAX && value != 0)
                 {
-                    int32 result = -((int32)value);
+                    int32_t result = -((int32_t)value);
                     return JavascriptNumber::ToVar(result, this->GetScriptContext());
                 }
                 double result = -((double)(value));
@@ -3064,7 +3064,7 @@ case_2:
     bool JavascriptString::ToDouble(double * result)
     {
         const char16_t* pch;
-        int32 len = this->m_charLength;
+        int32_t len = this->m_charLength;
         if (0 == len)
         {
             *result = 0;
@@ -3744,7 +3744,7 @@ case_2:
 
         //Get the first size estimate
         UnicodeText::ApiError error;
-        int32 sizeEstimate = UnicodeText::NormalizeString(form, this->GetSz(), this->GetLength() + 1, nullptr, 0, &error);
+        int32_t sizeEstimate = UnicodeText::NormalizeString(form, this->GetSz(), this->GetLength() + 1, nullptr, 0, &error);
         char16_t *tmpBuffer = nullptr;
         //Loop while the size estimate is bigger than 0
         while (error == UnicodeText::ApiError::InsufficientBuffer)

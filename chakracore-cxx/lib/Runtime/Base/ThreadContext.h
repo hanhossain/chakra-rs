@@ -985,7 +985,7 @@ public:
     TTD::EventLog* TTDLog;
 
     //Keep track of the number of re-entrant calls currently pending (i.e., if we make an external call it may call back into Chakra)
-    int32 TTDRootNestingCount;
+    int32_t TTDRootNestingCount;
 
     bool IsRuntimeInTTDMode() const
     {

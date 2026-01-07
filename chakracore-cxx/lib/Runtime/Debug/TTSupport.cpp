@@ -92,7 +92,7 @@ namespace TTD
             size_t clen = wcslen(str) + 1;
 
             this->m_contents = TT_HEAP_ALLOC_ARRAY_ZERO(char16_t, clen);
-            this->m_allocSize = (int32)clen;
+            this->m_allocSize = (int32_t)clen;
 
             js_memcpy_s(this->m_contents, clen * sizeof(char16_t), str, clen * sizeof(char16_t));
         }
@@ -207,11 +207,11 @@ namespace TTD
 
         void TTAutoString::Append(LPCUTF8 strBegin, LPCUTF8 strEnd)
         {
-            int32 strCount = (int32)((strEnd - strBegin) + 1);
+            int32_t strCount = (int32_t)((strEnd - strBegin) + 1);
             char16_t* buff = TT_HEAP_ALLOC_ARRAY_ZERO(char16_t, (size_t)strCount);
 
             LPCUTF8 curr = strBegin;
-            int32 i = 0;
+            int32_t i = 0;
             while(curr != strEnd)
             {
                 buff[i] = (char16_t)*curr;
@@ -226,14 +226,14 @@ namespace TTD
             TT_HEAP_FREE_ARRAY(char16_t, buff, (size_t)strCount);
         }
 
-        int32 TTAutoString::GetLength() const
+        int32_t TTAutoString::GetLength() const
         {
             TTDAssert(!this->IsNullString(), "That doesn't make sense.");
 
-            return (int32)wcslen(this->m_contents);
+            return (int32_t)wcslen(this->m_contents);
         }
 
-        char16_t TTAutoString::GetCharAt(int32 pos) const
+        char16_t TTAutoString::GetCharAt(int32_t pos) const
         {
             TTDAssert(!this->IsNullString(), "That doesn't make sense.");
             TTDAssert(0 <= pos && pos < this->GetLength(), "Not in valid range.");

@@ -293,19 +293,19 @@ namespace TTD
 
         //now sort the list so the traversal order is stable
         //Rock a custom shell sort!!!!
-        const int32 gaps[8] = { 701, 301, 132, 57, 23, 10, 4, 1 };
+        const int32_t gaps[8] = { 701, 301, 132, 57, 23, 10, 4, 1 };
 
-        int32 llen = sortedObjList.Count();
+        int32_t llen = sortedObjList.Count();
         for(uint32_t gapi = 0; gapi < 8; ++gapi)
         {
-            int32 gap = gaps[gapi];
+            int32_t gap = gaps[gapi];
 
-            for(int32 i = gap; i < llen; i++)
+            for(int32_t i = gap; i < llen; i++)
             {
                 T temp = sortedObjList.Item(i);
                 const UtilSupport::TTAutoString* tempStr = objToNameMap.Item(temp);
 
-                int32 j = 0;
+                int32_t j = 0;
                 for(j = i; j >= gap && (wcscmp(objToNameMap.Item(sortedObjList.Item(j - gap))->GetStrValue(), tempStr->GetStrValue()) > 0); j -= gap)
                 {
                     T shiftElem = sortedObjList.Item(j - gap);
@@ -318,12 +318,12 @@ namespace TTD
     }
 
     template <typename T, bool mustFind>
-    int32 LookupPositionInDictNameList(const char16_t* key, const JsUtil::BaseDictionary<T, UtilSupport::TTAutoString*, HeapAllocator>& objToNameMap, const JsUtil::List<T, HeapAllocator>& sortedObjList, const UtilSupport::TTAutoString& nullString)
+    int32_t LookupPositionInDictNameList(const char16_t* key, const JsUtil::BaseDictionary<T, UtilSupport::TTAutoString*, HeapAllocator>& objToNameMap, const JsUtil::List<T, HeapAllocator>& sortedObjList, const UtilSupport::TTAutoString& nullString)
     {
         AssertMsg(sortedObjList.Count() != 0, "We are using this for matching so obviously no match and there is a problem.");
 
-        int32 imin = 0;
-        int32 imax = sortedObjList.Count() - 1;
+        int32_t imin = 0;
+        int32_t imax = sortedObjList.Count() - 1;
 
         while(imin < imax)
         {
@@ -331,7 +331,7 @@ namespace TTD
             const UtilSupport::TTAutoString* imidStr = objToNameMap.Item(sortedObjList.Item(imid));
             AssertMsg(imid < imax, "Something went wrong with our indexing.");
 
-            int32 scmpval = wcscmp(imidStr->GetStrValue(), key);
+            int32_t scmpval = wcscmp(imidStr->GetStrValue(), key);
             if(scmpval < 0)
             {
                 imin = imid + 1;

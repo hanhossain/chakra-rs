@@ -169,7 +169,7 @@ Js::DynamicObject * IRtoJSObjectBuilder::CreateIndirOpnd(Js::ScriptContext *scri
         SetProperty(opObject, u"index", indexVar);
     }
 
-    int32 offset = op->GetOffset();
+    int32_t offset = op->GetOffset();
     if (offset)
     {
         Js::Var offsetVar = Js::JavascriptNumber::ToVar(offset, scriptContext);
@@ -479,7 +479,7 @@ void IRtoJSObjectBuilder::CreatePragmaInstruction(Js::ScriptContext *scriptConte
                                                   IR::PragmaInstr *inst, Js::DynamicObject *currObject,
                                                   Func *func)
 {
-    int32 statementIndex = (int32)inst->m_statementIndex;
+    int32_t statementIndex = (int32_t)inst->m_statementIndex;
     LPCUTF8 sourceBegin = NULL;
     LPCUTF8 sourceEnd = NULL;
     uint32_t line = 0;

@@ -197,7 +197,7 @@ void WebAssemblyEnvironment::CalculateOffsets(WebAssemblyTable* table, WebAssemb
         JavascriptError::ThrowTypeError(scriptContext, JSERR_NeedObject);
     }
 
-    int32 hCode = WASMERR_ElementSegOutOfRange;
+    int32_t hCode = WASMERR_ElementSegOutOfRange;
     auto outOfRangeError = [scriptContext, &hCode] { JavascriptError::ThrowWebAssemblyLinkError(scriptContext, hCode); };
 
     for (uint elementsIndex = 0; elementsIndex < module->GetElementSegCount(); ++elementsIndex)

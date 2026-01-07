@@ -12,8 +12,8 @@ public:
 
     void SetHasJITStackClosure();
 
-    void SetVarSlotsOffset(int32 offset);
-    void SetVarChangedOffset(int32 offset);
+    void SetVarSlotsOffset(int32_t offset);
+    void SetVarChangedOffset(int32_t offset);
     void SetHasBailoutInstr(bool val);
     void SetArgUsedForBranch(uint8_t param);
     void SetFrameHeight(uint val);

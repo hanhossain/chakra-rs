@@ -604,7 +604,7 @@ CHAKRA_API JsDiagGetFunctionPosition(
                             JsrtDebugUtils::AddPropertyToObject(funcPositionObject, JsrtDebugPropertyId::line, (uint32_t)lineNumber, scriptContext);
                             JsrtDebugUtils::AddPropertyToObject(funcPositionObject, JsrtDebugPropertyId::column, (uint32_t)columnNumber, scriptContext);
                             JsrtDebugUtils::AddPropertyToObject(funcPositionObject, JsrtDebugPropertyId::firstStatementLine, (uint32_t)firstStatementLine, scriptContext);
-                            JsrtDebugUtils::AddPropertyToObject(funcPositionObject, JsrtDebugPropertyId::firstStatementColumn, (int32)firstStatementColumn, scriptContext);
+                            JsrtDebugUtils::AddPropertyToObject(funcPositionObject, JsrtDebugPropertyId::firstStatementColumn, (int32_t)firstStatementColumn, scriptContext);
 
                             *functionPosition = funcPositionObject;
 

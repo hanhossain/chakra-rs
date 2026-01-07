@@ -87,7 +87,7 @@ public:
 
             void            Init(Lowerer *lowerer);
             IR::Opnd *      GenerateMemRef(intptr_t addr, IRType type, IR::Instr *instr, bool dontEncode = false);
-            void            GenerateMemInit(IR::RegOpnd * opnd, int32 offset, size_t value, IR::Instr * insertBeforeInstr, bool isZeroed = false);
+            void            GenerateMemInit(IR::RegOpnd * opnd, int32_t offset, size_t value, IR::Instr * insertBeforeInstr, bool isZeroed = false);
             IR::Instr *     ChangeToHelperCall(IR::Instr * instr, IR::JnHelperMethod helperMethod, IR::LabelInstr *labelBailOut = nullptr,
                                                IR::Opnd *opndInstance = nullptr, IR::PropertySymOpnd * propSymOpnd = nullptr, bool isHelperContinuation = false);
             void            FinalLower();
@@ -272,8 +272,8 @@ public:
      static Js::OpCode          GetLoadOp(IRType type) { return LowererMDArch::GetAssignOp(type); }
      static Js::OpCode          GetStoreOp(IRType type) { return LowererMDArch::GetAssignOp(type); }
      static RegNum              GetRegStackPointer() { return LowererMDArch::GetRegStackPointer(); }
-     static RegNum              GetRegArgI4(int32 argNum) { return LowererMDArch::GetRegArgI4(argNum); }
-     static RegNum              GetRegArgR8(int32 argNum) { return LowererMDArch::GetRegArgR8(argNum); }
+     static RegNum              GetRegArgI4(int32_t argNum) { return LowererMDArch::GetRegArgI4(argNum); }
+     static RegNum              GetRegArgR8(int32_t argNum) { return LowererMDArch::GetRegArgR8(argNum); }
      static RegNum              GetRegReturn(IRType type) { return LowererMDArch::GetRegReturn(type); }
 
             //All the following functions delegate to lowererMDArch
@@ -288,7 +288,7 @@ public:
      static uint8_t                GetDefaultIndirScale() { return LowererMDArch::GetDefaultIndirScale(); }
             IR::Instr *         LoadDynamicArgumentUsingLength(IR::Instr *instr) { return this->lowererMDArch.LoadDynamicArgumentUsingLength(instr); }
             void                GenerateFunctionObjectTest(IR::Instr * callInstr, IR::RegOpnd  *functionObjOpnd, bool isHelper, IR::LabelInstr* afterCallLabel = nullptr) { this->lowererMDArch.GenerateFunctionObjectTest(callInstr, functionObjOpnd, isHelper, afterCallLabel); }
-            int32               LowerCallArgs(IR::Instr *callInstr, ushort callFlags, ushort extraArgsCount = 1 /* for function object */) { return this->lowererMDArch.LowerCallArgs(callInstr, callFlags, extraArgsCount); }
+            int32_t               LowerCallArgs(IR::Instr *callInstr, ushort callFlags, ushort extraArgsCount = 1 /* for function object */) { return this->lowererMDArch.LowerCallArgs(callInstr, callFlags, extraArgsCount); }
 
             static void GenerateLoadTaggedType(IR::Instr * instrLdSt, IR::RegOpnd * opndType, IR::RegOpnd * opndTaggedType);
             static void GenerateLoadPolymorphicInlineCacheSlot(IR::Instr * instrLdSt, IR::RegOpnd * opndInlineCache, IR::RegOpnd * opndType, uint polymorphicInlineCacheSize);

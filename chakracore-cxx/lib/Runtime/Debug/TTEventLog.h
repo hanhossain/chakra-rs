@@ -69,7 +69,7 @@ namespace TTD
             }
         }
 
-        void CompleteWithStatusCode(int32 exitStatus)
+        void CompleteWithStatusCode(int32_t exitStatus)
         {
             if(this->m_actionEvent != nullptr)
             {
@@ -437,7 +437,7 @@ namespace TTD
         bool ReplayWeakCollectionContainsEvent();
 
         //Log a value event for return from an external call
-        NSLogEvents::EventLogEntry* RecordExternalCallEvent(Js::JavascriptFunction* func, int32 rootDepth, const Js::Arguments& args, bool checkExceptions);
+        NSLogEvents::EventLogEntry* RecordExternalCallEvent(Js::JavascriptFunction* func, int32_t rootDepth, const Js::Arguments& args, bool checkExceptions);
         void RecordExternalCallEvent_Complete(Js::JavascriptFunction* efunction, NSLogEvents::EventLogEntry* evt, Js::Var result);
 
         //replay an external return event (which should be the current event)
@@ -557,7 +557,7 @@ namespace TTD
         void RecordJsRTAllocateFunction(TTDJsRTActionResultAutoRecorder& actionPopper, Js::Var optMetadata);
 
         //Record GetAndClearException
-        void RecordJsRTHostExitProcess(TTDJsRTActionResultAutoRecorder& actionPopper, int32 exitCode);
+        void RecordJsRTHostExitProcess(TTDJsRTActionResultAutoRecorder& actionPopper, int32_t exitCode);
         void RecordJsRTGetAndClearExceptionWithMetadata(TTDJsRTActionResultAutoRecorder& actionPopper);
         void RecordJsRTGetAndClearException(TTDJsRTActionResultAutoRecorder& actionPopper);
         void RecordJsRTSetException(TTDJsRTActionResultAutoRecorder& actionPopper, Js::Var var, bool propagateToDebugger);
@@ -604,7 +604,7 @@ namespace TTD
         NSLogEvents::EventLogEntry* RecordJsRTCodeParse(TTDJsRTActionResultAutoRecorder& actionPopper, LoadScriptFlag loadFlag, bool isUft8, const byte* script, uint32_t scriptByteLength, unsigned long sourceContextId, const char16_t* sourceUri);
 
         //Record callback of an existing function
-        NSLogEvents::EventLogEntry* RecordJsRTCallFunction(TTDJsRTActionResultAutoRecorder& actionPopper, int32 rootDepth, Js::Var funcVar, uint32_t argCount, Js::Var* args);
+        NSLogEvents::EventLogEntry* RecordJsRTCallFunction(TTDJsRTActionResultAutoRecorder& actionPopper, int32_t rootDepth, Js::Var funcVar, uint32_t argCount, Js::Var* args);
 
         ////////////////////////////////
         //Emit code and support

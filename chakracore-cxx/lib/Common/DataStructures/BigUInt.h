@@ -16,13 +16,13 @@ namespace Js
         // Make this big enough that we rarely have to call malloc.
         enum { kcluMaxInit = 30 };// initilize 30 digits
 
-        int32 m_cluMax; // current maximum length (or number of digits) it can contains
-        int32 m_clu; // current length (or number of digits)
+        int32_t m_cluMax; // current maximum length (or number of digits) it can contains
+        int32_t m_clu; // current length (or number of digits)
         uint32_t *m_prglu; // pointer to array of digits
         uint32_t m_rgluInit[kcluMaxInit]; // pre-defined space to store array
 
         inline BigUInt & operator= (BigUInt &bi);
-        bool FResize(int32 clu);// allocate more space if length go over maximum
+        bool FResize(int32_t clu);// allocate more space if length go over maximum
 
 #if DBG
         #define AssertBi(pbi) Assert(pbi); (pbi)->AssertValid(true);
@@ -37,22 +37,22 @@ namespace Js
         BigUInt(void);
         ~BigUInt(void);
 
-        bool FInitFromRglu(uint32_t *prglu, int32 clu); // init from array and length
+        bool FInitFromRglu(uint32_t *prglu, int32_t clu); // init from array and length
         bool FInitFromBigint(BigUInt *pbiSrc); 
         template <typename EncodedChar>
-        bool FInitFromDigits(const EncodedChar *prgch, int32 cch, int32 *pcchDec); // init from char of digits
+        bool FInitFromDigits(const EncodedChar *prgch, int32_t cch, int32_t *pcchDec); // init from char of digits
         bool FMulAdd(uint32_t luMul, uint32_t luAdd);
-        bool FMulPow5(int32 c5);
-        bool FShiftLeft(int32 cbit);
-        void ShiftLusRight(int32 clu);
-        void ShiftRight(int32 cbit);
+        bool FMulPow5(int32_t c5);
+        bool FShiftLeft(int32_t cbit);
+        void ShiftLusRight(int32_t clu);
+        void ShiftRight(int32_t cbit);
         int Compare(BigUInt *pbi);
         bool FAdd(BigUInt *pbi);
         void Subtract(BigUInt *pbi);
         int DivRem(BigUInt *pbi);
 
-        int32 Clu(void); // return current length
-        uint32_t Lu(int32 ilu); // return digit at position ilu start from 0
+        int32_t Clu(void); // return current length
+        uint32_t Lu(int32_t ilu); // return digit at position ilu start from 0
         double GetDbl(void);
     };
 }

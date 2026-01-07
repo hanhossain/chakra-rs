@@ -1035,7 +1035,7 @@ ParseNodeVar * Parser::CreateDeclNode(OpCode nop, IdentPtr pid, SymbolType symbo
     return pnode;
 }
 
-ParseNodeInt * Parser::CreateIntNode(int32 lw)
+ParseNodeInt * Parser::CreateIntNode(int32_t lw)
 {
     Assert(!this->m_deferringAST);
     ParseNodeInt * pnode = Anew(&m_nodeAllocator, ParseNodeInt, this->GetScanner()->IchMinTok(), this->GetScanner()->IchLimTok(), lw);
@@ -4128,7 +4128,7 @@ ParseNodePtr Parser::ParsePostfixOperators(
                     !Js::TaggedInt::IsOverflow(uintValue)) // the optimization is not very useful if the number can't be represented as a TaggedInt
                 {
                     // No need to verify that uintValue != JavascriptArray::InvalidIndex since all nonnegative TaggedInts are valid indexes
-                    auto intNode = CreateIntNode(uintValue); // implicit conversion from uint32_t to int32
+                    auto intNode = CreateIntNode(uintValue); // implicit conversion from uint32_t to int32_t
                     pnode->AsParseNodeBin()->pnode2 = intNode;
                 }
                 // Field optimization (see GlobOpt::KillLiveElems) checks for value being a Number,
@@ -4492,7 +4492,7 @@ ParseNodePtr Parser::ParseArrayList(bool *pArrayOfTaggedInts, bool *pArrayOfInts
                     }
                     else if (arrayOfInts && Js::JavascriptNumber::IsInt32OrUInt32(pnodeArg->AsParseNodeFloat()->dbl) && (!Js::JavascriptNumber::IsInt32(pnodeArg->AsParseNodeFloat()->dbl) || pnodeArg->AsParseNodeFloat()->dbl == -2147483648.0))
                     {
-                        // We've seen nothing but ints, and this is a uint32_t but not an int32.
+                        // We've seen nothing but ints, and this is a uint32_t but not an int32_t.
                         // Unless we see an actual float at some point, we want an array of vars
                         // so we can work with tagged ints.
                         arrayOfVarInts = true;
@@ -4505,7 +4505,7 @@ ParseNodePtr Parser::ParseArrayList(bool *pArrayOfTaggedInts, bool *pArrayOfInts
                 }
                 else
                 {
-                    if (Js::SparseArraySegment<int32>::IsMissingItem((int32*)&pnodeArg->AsParseNodeInt()->lw))
+                    if (Js::SparseArraySegment<int32_t>::IsMissingItem((int32_t*)&pnodeArg->AsParseNodeInt()->lw))
                     {
                         arrayOfInts = false;
                     }
@@ -5587,7 +5587,7 @@ void Parser::ParseFncDeclHelper(ParseNodeFnc * pnodeFnc, LPCOLESTR pNameHint, us
     // is the following correct? When buildAST is false, m_currentNodeDeferredFunc can be nullptr on transition to deferred parse from non-deferred
     ParseNodeFnc * pnodeFncSave = buildAST ? m_currentNodeFunc : m_currentNodeDeferredFunc;
     ParseNodeFnc * pnodeFncSaveNonLambda = buildAST ? m_currentNodeNonLambdaFunc : m_currentNodeNonLambdaDeferredFunc;
-    int32* pAstSizeSave = m_pCurrentAstSize;
+    int32_t* pAstSizeSave = m_pCurrentAstSize;
 
     bool fDeclaration = (flags & fFncDeclaration) != 0;
     bool fLambda = (flags & fFncLambda) != 0;
@@ -6538,7 +6538,7 @@ bool Parser::FastScanFormalsAndBody()
             if (tempCurlyDepth != (uint)-1)
             {
                 ParseNodeFnc * pnodeFncSave = m_currentNodeFunc;
-                int32 *pastSizeSave = m_pCurrentAstSize;
+                int32_t *pastSizeSave = m_pCurrentAstSize;
                 uint *pnestedCountSave = m_pnestedCount;
                 ParseNodePtr *ppnodeScopeSave = m_ppnodeScope;
                 ParseNodePtr *ppnodeExprScopeSave = m_ppnodeExprScope;
@@ -7199,7 +7199,7 @@ ParseNodeFnc * Parser::GenerateEmptyConstructor(bool extends)
         pnodeFnc->columnNumber = 0;
     }
 
-    int32 * pAstSizeSave = m_pCurrentAstSize;
+    int32_t * pAstSizeSave = m_pCurrentAstSize;
     m_pCurrentAstSize = &(pnodeFnc->astSize);
 
     // Make this the current function.
@@ -7400,7 +7400,7 @@ void Parser::FinishFncNode(ParseNodeFnc * pnodeFnc, bool fAllowIn)
 
     ParseNodeFnc * pnodeFncSave = m_currentNodeFunc;
     uint *pnestedCountSave = m_pnestedCount;
-    int32* pAstSizeSave = m_pCurrentAstSize;
+    int32_t* pAstSizeSave = m_pCurrentAstSize;
 
     m_currentNodeFunc = pnodeFnc;
     m_pCurrentAstSize = &(pnodeFnc->astSize);
@@ -11290,7 +11290,7 @@ LNeedTerminator:
 
             // create a fake name for the catch var.
             const char16_t *uniqueNameStr = u"__ehobj";
-            IdentPtr uniqueName = this->GetHashTbl()->PidHashNameLen(uniqueNameStr, static_cast<int32>(wcslen(uniqueNameStr)));
+            IdentPtr uniqueName = this->GetHashTbl()->PidHashNameLen(uniqueNameStr, static_cast<int32_t>(wcslen(uniqueNameStr)));
 
             pCatch->SetParam(CreateNameNode(uniqueName));
 
@@ -11882,7 +11882,7 @@ ParseNodeProg * Parser::Parse(LPCUTF8 pszSrc, size_t offset, size_t length, char
     this->GetScanner()->Scan();
 
     // Make the main 'knopProg' node
-    int32 initSize = 0;
+    int32_t initSize = 0;
     m_pCurrentAstSize = &initSize;
     pnodeProg = CreateProgNode(isModuleSource, lineNumber);
 
@@ -13103,7 +13103,7 @@ void Parser::ParseDestructuredLiteralWithScopeSave(tokens declarationType,
     {
         m_currentNodeDeferredFunc = m_currentNodeFunc;
     }
-    int32 *pAstSizeSave = m_pCurrentAstSize;
+    int32_t *pAstSizeSave = m_pCurrentAstSize;
     uint *pNestedCountSave = m_pnestedCount;
     ParseNodePtr *ppnodeScopeSave = m_ppnodeScope;
     ParseNodePtr *ppnodeExprScopeSave = m_ppnodeExprScope;
@@ -13111,7 +13111,7 @@ void Parser::ParseDestructuredLiteralWithScopeSave(tokens declarationType,
     ParseNodePtr newTempScope = nullptr;
     m_ppnodeScope = &newTempScope;
 
-    int32 newTempAstSize = 0;
+    int32_t newTempAstSize = 0;
     m_pCurrentAstSize = &newTempAstSize;
 
     uint newTempNestedCount = 0;

@@ -136,7 +136,7 @@ namespace PlatformAgnostic
         //   length of the normalized string in the destination buffer
         //   If the return value is less than or equal to 0, then see the value of pErrorOut to understand the error
         //
-        int32 NormalizeString(NormalizationForm normalizationForm, const char16_t* sourceString, uint32_t sourceLength, char16_t* destString, int32 destLength, ApiError* pErrorOut);
+        int32_t NormalizeString(NormalizationForm normalizationForm, const char16_t* sourceString, uint32_t sourceLength, char16_t* destString, int32_t destLength, ApiError* pErrorOut);
 
         //
         // This method verifies that a given UTF16 string is normalized according to the rules of Unicode 4.0 TR#15.
@@ -150,7 +150,7 @@ namespace PlatformAgnostic
         //   true if the input string is already normalized, false if it isn't
         //   No error codes are returned since they're not used by the caller.
         //
-        bool IsNormalizedString(NormalizationForm normalizatingForm, const char16_t* testString, int32 testStringLength);
+        bool IsNormalizedString(NormalizationForm normalizatingForm, const char16_t* testString, int32_t testStringLength);
 
         //
         // This method lets the caller know if an external Unicode helper library is being used by the PAL

@@ -54,7 +54,7 @@ namespace Js
 
         case SCA_Int32Value:
             {
-                int32 n;
+                int32_t n;
                 m_reader->Read(&n);
                 *dst = JavascriptNumber::ToVar(n, scriptContext);
             }
@@ -361,7 +361,7 @@ namespace Js
     {
         JavascriptMap* map = VarTo<JavascriptMap>(dst);
 
-        int32 size;
+        int32_t size;
         m_reader->Read(&size);
 
         for (int i = 0; i < size; i++)
@@ -390,7 +390,7 @@ namespace Js
     {
         JavascriptSet* set = VarTo<JavascriptSet>(dst);
 
-        int32 size;
+        int32_t size;
         m_reader->Read(&size);
 
         for (int i = 0; i < size; i++)
@@ -538,7 +538,7 @@ namespace Js
             break;
 
         case SCA_Int32Array:
-            ReadTypedArray<int32, false>(dst);
+            ReadTypedArray<int32_t, false>(dst);
             break;
 
         case SCA_Uint32Array:

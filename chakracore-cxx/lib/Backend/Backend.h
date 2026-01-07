@@ -113,18 +113,18 @@ class Loop;
 // Typedefs
 //
 
-const int32     IntConstMax = INT_MAX;
-const int32     IntConstMin = INT_MIN;
-const int32     Int8ConstMax = SCHAR_MAX;
-const int32     Int8ConstMin = SCHAR_MIN;
-const int32     Int16ConstMax = SHRT_MAX;
-const int32     Int16ConstMin = SHRT_MIN;
-const int32     Int32ConstMax = INT_MAX;
-const int32     Int32ConstMin = INT_MIN;
-const int32     Uint8ConstMax = UCHAR_MAX;
-const int32     Uint8ConstMin = 0;
-const int32     Uint16ConstMax = USHRT_MAX;
-const int32     Uint16ConstMin = 0;
+const int32_t     IntConstMax = INT_MAX;
+const int32_t     IntConstMin = INT_MIN;
+const int32_t     Int8ConstMax = SCHAR_MAX;
+const int32_t     Int8ConstMin = SCHAR_MIN;
+const int32_t     Int16ConstMax = SHRT_MAX;
+const int32_t     Int16ConstMin = SHRT_MIN;
+const int32_t     Int32ConstMax = INT_MAX;
+const int32_t     Int32ConstMin = INT_MIN;
+const int32_t     Uint8ConstMax = UCHAR_MAX;
+const int32_t     Uint8ConstMin = 0;
+const int32_t     Uint16ConstMax = USHRT_MAX;
+const int32_t     Uint16ConstMin = 0;
 
 #if defined(_M_X64) || defined(_M_ARM32_OR_ARM64)
 // Arm VFPv3-D32 has 32 double registers and 16 int registers total 48.

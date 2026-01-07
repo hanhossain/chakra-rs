@@ -21,7 +21,7 @@ namespace Js
                 uint16 u16Fields[static_cast<size_t>(CountT::Max)];
                 int16 i16Fields[static_cast<size_t>(CountT::Max)];
                 uint32_t u32Fields[static_cast<size_t>(CountT::Max)];
-                int32 i32Fields[static_cast<size_t>(CountT::Max)];
+                int32_t i32Fields[static_cast<size_t>(CountT::Max)];
             };
             Fields() {}
         };

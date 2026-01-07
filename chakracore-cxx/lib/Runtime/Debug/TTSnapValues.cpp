@@ -215,7 +215,7 @@ namespace TTD
             }
             else if(tag == TTDVarEmitTag::TTDVarInt)
             {
-                int32 intVal = reader->ReadInt32(NSTokens::Key::i32Val, true);
+                int32_t intVal = reader->ReadInt32(NSTokens::Key::i32Val, true);
                 res = Js::TaggedInt::ToVarUnchecked(intVal);
             }
 #if FLOATVAR
@@ -601,7 +601,7 @@ namespace TTD
                 else
                 {
                     Js::FunctionBody* scopeBody = nullptr;
-                    int32 scopeIndex = -1;
+                    int32_t scopeIndex = -1;
                     inflator->LookupInfoForDebugScope(slotInfo->OptDebugScopeId, &scopeBody, &scopeIndex);
 
                     dbgScope = scopeBody->GetScopeObjectChain()->pScopeChain->Item(scopeIndex);
@@ -995,7 +995,7 @@ namespace TTD
                 {
                     scopeChain.ScopeArray = alloc.SlabAllocateArray<TTD_PTR_ID>(scopeChain.ScopeCount);
 
-                    for(int32 i = 0; i < scChain->pScopeChain->Count(); ++i)
+                    for(int32_t i = 0; i < scChain->pScopeChain->Count(); ++i)
                     {
                         Js::DebuggerScope* dbgScope = scChain->pScopeChain->Item(i);
                         scopeChain.ScopeArray[i] = TTD_CONVERT_DEBUGSCOPE_TO_PTR_ID(dbgScope);
@@ -1284,7 +1284,7 @@ namespace TTD
             BOOL strictMode = FALSE;
 
             char16_t* source = (char16_t*)fbInfo->TopLevelBase.SourceBuffer;
-            int32 length = (int32)(fbInfo->TopLevelBase.ByteLength / sizeof(char16_t));
+            int32_t length = (int32_t)(fbInfo->TopLevelBase.ByteLength / sizeof(char16_t));
 
             Js::JavascriptFunction* pfuncScript = ctx->GetGlobalObject()->EvalHelper(ctx, source, length, moduleID, fscrNil, Js::Constants::FunctionCode, TRUE, TRUE, strictMode);
             TTDAssert(pfuncScript != nullptr, "Something went wrong!!!");
@@ -1343,7 +1343,7 @@ namespace TTD
             uint32_t grfscr = ((uint32_t)fbInfo->EvalFlags) | fscrReturnExpression | fscrEval | fscrEvalCode | fscrGlobalCode;
 
             char16_t* source = (char16_t*)fbInfo->TopLevelBase.SourceBuffer;
-            int32 sourceLen = (int32)(fbInfo->TopLevelBase.ByteLength / sizeof(char16_t));
+            int32_t sourceLen = (int32_t)(fbInfo->TopLevelBase.ByteLength / sizeof(char16_t));
             Js::ScriptFunction* pfuncScript = ctx->GetLibrary()->GetGlobalObject()->EvalHelper(ctx, source, sourceLen, fbInfo->TopLevelBase.ModuleId, grfscr, Js::Constants::EvalCode, fbInfo->RegisterDocument, fbInfo->IsIndirect, fbInfo->IsStrictMode);
             Assert(!pfuncScript->GetFunctionInfo()->IsGenerator());
 
@@ -1605,7 +1605,7 @@ namespace TTD
             else
             {
                 snapCtx->LoadedTopLevelScriptArray = alloc.SlabAllocateArray<TopLevelFunctionInContextRelation>(snapCtx->LoadedTopLevelScriptCount);
-                for(int32 i = 0; i < topLevelScriptLoad.Count(); ++i)
+                for(int32_t i = 0; i < topLevelScriptLoad.Count(); ++i)
                 {
                     snapCtx->LoadedTopLevelScriptArray[i] = topLevelScriptLoad.Item(i);
                 }
@@ -1619,7 +1619,7 @@ namespace TTD
             else
             {
                 snapCtx->NewFunctionTopLevelScriptArray = alloc.SlabAllocateArray<TopLevelFunctionInContextRelation>(snapCtx->NewFunctionTopLevelScriptCount);
-                for(int32 i = 0; i < topLevelNewFunction.Count(); ++i)
+                for(int32_t i = 0; i < topLevelNewFunction.Count(); ++i)
                 {
                     snapCtx->NewFunctionTopLevelScriptArray[i] = topLevelNewFunction.Item(i);
                 }
@@ -1633,7 +1633,7 @@ namespace TTD
             else
             {
                 snapCtx->EvalTopLevelScriptArray = alloc.SlabAllocateArray<TopLevelFunctionInContextRelation>(snapCtx->EvalTopLevelScriptCount);
-                for(int32 i = 0; i < topLevelEval.Count(); ++i)
+                for(int32_t i = 0; i < topLevelEval.Count(); ++i)
                 {
                     snapCtx->EvalTopLevelScriptArray[i] = topLevelEval.Item(i);
                 }
@@ -1650,7 +1650,7 @@ namespace TTD
             {
                 snapCtx->PendingAsyncModArray = alloc.SlabAllocateArray<SnapPendingAsyncBufferModification>(snapCtx->PendingAsyncModCount);
 
-                for(int32 k = 0; k < pendingAsyncList.Count(); ++k)
+                for(int32_t k = 0; k < pendingAsyncList.Count(); ++k)
                 {
                     const TTDPendingAsyncBufferModification& pk = pendingAsyncList.Item(k);
                     snapCtx->PendingAsyncModArray[k].LogId = objToLogIdMap.Item(Js::VarTo<Js::RecyclableObject>(pk.ArrayBufferVar));

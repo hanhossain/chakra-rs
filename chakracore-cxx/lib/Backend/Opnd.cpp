@@ -467,12 +467,12 @@ Opnd::GetImmediateValue(Func* func)
 }
 
 #if defined(_M_ARM)
-int32
+int32_t
 Opnd::GetImmediateValueAsInt32(Func * func)
 {
     Assert(!IRType_IsInt64(this->GetType()));
     Assert(this->GetKind() != OpndKindInt64Const);
-    return (int32)this->GetImmediateValue(func);
+    return (int32_t)this->GetImmediateValue(func);
 }
 #endif
 
@@ -1515,7 +1515,7 @@ IntConstOpnd::FreeInternal(Func *func)
 void
 IntConstOpnd::SetValue(IntConstType value)
 {
-    if (sizeof(IntConstType) > sizeof(int32))
+    if (sizeof(IntConstType) > sizeof(int32_t))
     {
         Assert(m_type != TyInt32  || (value >= INT32_MIN && value <= INT32_MAX));
         Assert(m_type != TyUint32 || (value >= 0 && value <= UINT32_MAX));
@@ -1540,27 +1540,27 @@ IntConstOpnd::SetValue(IntConstType value)
 ///
 ///----------------------------------------------------------------------------
 
-int32
+int32_t
 IntConstOpnd::AsInt32()
 {
     // TODO: Currently, there are cases where we construct IntConstOpnd with TyInt32
     // and retrieve value out as uint32_t (or vice versa). Because of these, we allow
-    // AsInt32/AsUint32 to cast between int32/uint32_t in a lossy manner for now.
+    // AsInt32/AsUint32 to cast between int32_t/uint32_t in a lossy manner for now.
     // In the future, we should tighten up usage of IntConstOpnd to avoid these casts
 
-    if (sizeof(IntConstType) == sizeof(int32))
+    if (sizeof(IntConstType) == sizeof(int32_t))
     {
-        return (int32)m_value;
+        return (int32_t)m_value;
     }
 
     if (m_type == TyUint32)
     {
         Assert(m_value >= 0 && m_value <= UINT32_MAX);
-        return (int32)(uint32_t)m_value;
+        return (int32_t)(uint32_t)m_value;
     }
 
     Assert(Math::FitsInDWord(m_value));
-    return (int32)m_value;
+    return (int32_t)m_value;
 }
 
 ///----------------------------------------------------------------------------
@@ -1574,7 +1574,7 @@ IntConstOpnd::AsInt32()
 uint32_t
 IntConstOpnd::AsUint32()
 {
-    // TODO: See comment in AsInt32() regarding casts from int32 to uint32_t
+    // TODO: See comment in AsInt32() regarding casts from int32_t to uint32_t
 
     if (sizeof(uint32_t) == sizeof(IntConstType))
     {
@@ -2158,7 +2158,7 @@ AddrOpnd::New(Js::Var address, AddrOpndKind addrOpndKind, Func *func, bool dontE
 }
 
 AddrOpnd *
-AddrOpnd::NewFromNumber(int32 value, Func *func, bool dontEncode /* = false */)
+AddrOpnd::NewFromNumber(int32_t value, Func *func, bool dontEncode /* = false */)
 {
     if (!Js::TaggedInt::IsOverflow(value))
     {
@@ -2486,7 +2486,7 @@ IndirOpnd::New(RegOpnd *baseOpnd, RegOpnd *indexOpnd, byte scale, IRType type, F
 ///----------------------------------------------------------------------------
 
 IndirOpnd *
-IndirOpnd::New(RegOpnd *indexOpnd, int32 offset, byte scale, IRType type, Func *func)
+IndirOpnd::New(RegOpnd *indexOpnd, int32_t offset, byte scale, IRType type, Func *func)
 {
     IndirOpnd * indirOpnd;
 
@@ -2515,7 +2515,7 @@ IndirOpnd::New(RegOpnd *indexOpnd, int32 offset, byte scale, IRType type, Func *
 ///----------------------------------------------------------------------------
 
 IndirOpnd *
-IndirOpnd::New(RegOpnd *baseOpnd, int32 offset, IRType type, Func *func, bool dontEncode /* = false */)
+IndirOpnd::New(RegOpnd *baseOpnd, int32_t offset, IRType type, Func *func, bool dontEncode /* = false */)
 {
     IndirOpnd * indirOpnd;
 
@@ -2545,7 +2545,7 @@ IndirOpnd::New(RegOpnd *baseOpnd, int32 offset, IRType type, Func *func, bool do
 ///----------------------------------------------------------------------------
 
 IndirOpnd *
-IndirOpnd::New(RegOpnd *baseOpnd, int32 offset, IRType type, const char16_t *desc, Func *func, bool dontEncode /* = false */)
+IndirOpnd::New(RegOpnd *baseOpnd, int32_t offset, IRType type, const char16_t *desc, Func *func, bool dontEncode /* = false */)
 {
     IndirOpnd * indirOpnd = IndirOpnd::New(baseOpnd, offset, type, func);
     indirOpnd->m_desc = desc;
@@ -3085,7 +3085,7 @@ Opnd::DumpFunctionInfo(_Outptr_result_buffer_(*count) char16_t ** buffer, size_t
 }
 
 template<>
-void EncodableOpnd<int32>::DumpEncodable() const
+void EncodableOpnd<int32_t>::DumpEncodable() const
 {
     if (name != nullptr)
     {
@@ -3401,7 +3401,7 @@ Opnd::Dump(IRDumpFlags flags, Func *func)
         IndirOpnd * indirOpnd = this->AsIndirOpnd();
         RegOpnd * baseOpnd = indirOpnd->GetBaseOpnd();
         RegOpnd * indexOpnd = indirOpnd->GetIndexOpnd();
-        const int32 offset = indirOpnd->GetOffset();
+        const int32_t offset = indirOpnd->GetOffset();
 
         Output::Print(u"[");
         if (baseOpnd != nullptr)

@@ -34,7 +34,7 @@ namespace Js {
         const char16_t *psz;      // string
         short cch;              // length of string
         short szst;             // type of entry
-        int32 lwVal;             // value
+        int32_t lwVal;             // value
     };
 
     BEGIN_ENUM_BYTE(ParseStringTokenType)
@@ -109,7 +109,7 @@ namespace Js {
 #undef szst
 #undef Szs
     };
-    const int32 kcszs = sizeof(g_rgszs) / sizeof(SZS);
+    const int32_t kcszs = sizeof(g_rgszs) / sizeof(SZS);
 
     ///----------------------------------------------------------------------------
     ///----------------------------------------------------------------------------
@@ -369,7 +369,7 @@ namespace Js {
             const charcount_t cchWritten = NumberUtilities::UInt16ToString(value, buffer, charCapacity, 2);
             Assert(cchWritten != 0);
         };
-        const auto ConvertLongToString = [](const int32 value, char16_t *const buffer, const CharCount charCapacity)
+        const auto ConvertLongToString = [](const int32_t value, char16_t *const buffer, const CharCount charCapacity)
         {
             const errno_t err = _ltow_s(value, buffer, charCapacity, 10);
             Assert(err == 0);
@@ -1028,19 +1028,19 @@ Error:
         char16_t ch;
         char16_t *pszSrc = nullptr;
 
-        const int32 lwNil = 0x80000000;
-        int32 cch;
-        int32 depth;
-        int32 lwT;
-        int32 lwYear = lwNil;
-        int32 lwMonth = lwNil;
-        int32 lwDate = lwNil;
-        int32 lwTime = lwNil;
-        int32 lwMillisecond = lwNil;
-        int32 lwZone = lwNil;
-        int32 lwOffset = lwNil;
+        const int32_t lwNil = 0x80000000;
+        int32_t cch;
+        int32_t depth;
+        int32_t lwT;
+        int32_t lwYear = lwNil;
+        int32_t lwMonth = lwNil;
+        int32_t lwDate = lwNil;
+        int32_t lwTime = lwNil;
+        int32_t lwMillisecond = lwNil;
+        int32_t lwZone = lwNil;
+        int32_t lwOffset = lwNil;
 
-        int32 ss = ssNil;
+        int32_t ss = ssNil;
         const SZS *pszs;
 
         bool fUtc;
@@ -1118,7 +1118,7 @@ Error:
                 for ( ; !FBig(*pch) && (isalpha(*pch) || '.' == *pch); pch++)
                     ;
 
-                cch = (int32)(pch - pchBase);
+                cch = (int32_t)(pch - pchBase);
 
                 if ('.' == pchBase[cch - 1])
                 {
@@ -1152,11 +1152,11 @@ Error:
                         {
                             goto LError;
                         }
-                        lwZone = (int32)(ch - 'a' + (ch < 'j')) * 60;
+                        lwZone = (int32_t)(ch - 'a' + (ch < 'j')) * 60;
                     }
                     else if (ch <= 'y')
                     {
-                        lwZone = -(int32)(ch - 'm') * 60;
+                        lwZone = -(int32_t)(ch - 'm') * 60;
                     }
                     else if (ch == 'z')
                     {

@@ -26,7 +26,7 @@ namespace TTD
 
         //The maps for resolving debug scopes
         TTDIdentifierDictionary<TTD_PTR_ID, Js::FunctionBody*> m_debuggerScopeHomeBodyMap;
-        TTDIdentifierDictionary<TTD_PTR_ID, int32> m_debuggerScopeChainIndexMap;
+        TTDIdentifierDictionary<TTD_PTR_ID, int32_t> m_debuggerScopeChainIndexMap;
 
         //A dictionary for the Promise related bits (not typesafe and a bit ugly but I prefer it to creating multiple additional collections)
         JsUtil::BaseDictionary<TTD_PTR_ID, void*, HeapAllocator> m_promiseDataMap;
@@ -74,7 +74,7 @@ namespace TTD
         Js::FrameDisplay* LookupEnvironment(TTD_PTR_ID envid) const;
         Field(Js::Var)* LookupSlotArray(TTD_PTR_ID slotid) const;
 
-        void LookupInfoForDebugScope(TTD_PTR_ID dbgScopeId, Js::FunctionBody** homeBody, int32* chainIndex) const;
+        void LookupInfoForDebugScope(TTD_PTR_ID dbgScopeId, Js::FunctionBody** homeBody, int32_t* chainIndex) const;
 
         ////
 

@@ -23,21 +23,21 @@ namespace Js
     template<> float AsmJsMath::Mul<float>(float aLeft, float aRight) { return aLeft * aRight; }
 
     // Int32
-    template<> int32 AsmJsMath::Mul<int32>(int32 aLeft, int32 aRight) { return aLeft * aRight; }
-    template<> int32 AsmJsMath::DivUnsafe<int32>(int32 aLeft, int32 aRight) { return aLeft / aRight; }
+    template<> int32_t AsmJsMath::Mul<int32_t>(int32_t aLeft, int32_t aRight) { return aLeft * aRight; }
+    template<> int32_t AsmJsMath::DivUnsafe<int32_t>(int32_t aLeft, int32_t aRight) { return aLeft / aRight; }
     template<>
-    int32 AsmJsMath::DivChecked<int32>(int32 aLeft, int32 aRight)
+    int32_t AsmJsMath::DivChecked<int32_t>(int32_t aLeft, int32_t aRight)
     {
         return aRight == 0 ? 0 : (aLeft == INT_MIN && aRight == -1) ? INT_MIN : aLeft / aRight;
     }
-    template<> bool AsmJsMath::DivWouldTrap(int32 aLeft, int32 aRight) { return aRight == 0 || (aLeft == INT_MIN && aRight == -1); }
-    template<> int32 AsmJsMath::RemUnsafe<int32>(int32 aLeft, int32 aRight) { return aLeft % aRight; }
+    template<> bool AsmJsMath::DivWouldTrap(int32_t aLeft, int32_t aRight) { return aRight == 0 || (aLeft == INT_MIN && aRight == -1); }
+    template<> int32_t AsmJsMath::RemUnsafe<int32_t>(int32_t aLeft, int32_t aRight) { return aLeft % aRight; }
     template<>
-    int32 AsmJsMath::RemChecked<int32>(int32 aLeft, int32 aRight)
+    int32_t AsmJsMath::RemChecked<int32_t>(int32_t aLeft, int32_t aRight)
     {
         return ((aRight == 0) || (aLeft == INT_MIN && aRight == -1)) ? 0 : aLeft % aRight;
     }
-    template<> bool AsmJsMath::RemWouldTrap(int32 aLeft, int32 aRight) { return aRight == 0 || (aLeft == INT_MIN && aRight == -1); }
+    template<> bool AsmJsMath::RemWouldTrap(int32_t aLeft, int32_t aRight) { return aRight == 0 || (aLeft == INT_MIN && aRight == -1); }
 
     // Unsigned Int32
     template<> uint32_t AsmJsMath::Mul<uint32_t>(uint32_t aLeft, uint32_t aRight) { return aLeft * aRight; }

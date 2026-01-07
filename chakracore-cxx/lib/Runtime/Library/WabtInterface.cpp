@@ -73,7 +73,7 @@ void Push(Js::Var arr, Js::Var obj, void* user_data)
     Context* ctx = (Context*)user_data;
     JavascriptArray::Push(ctx->scriptContext, arr, obj);
 }
-Js::Var Int32ToVar(int32 value, void* user_data)
+Js::Var Int32ToVar(int32_t value, void* user_data)
 {
     Context* ctx = (Context*)user_data;
     return JavascriptNumber::ToVar(value, ctx->scriptContext);

@@ -288,7 +288,7 @@ namespace Js {
     {
         JumpOffset  RelativeJumpOffset;
         PropertyIdIndexType  PropertyIdIndex;
-        int32 SlotIndex;
+        int32_t SlotIndex;
     };
 
 #ifdef BYTECODE_BRANCH_ISLAND
@@ -497,7 +497,7 @@ namespace Js {
     template <typename SizePolicy>
     struct OpLayoutT_Reg2Int1        // R0 <- func(R1, C1)
     {
-        int32                                C1;
+        int32_t                                C1;
         typename SizePolicy::RegSlotType     R0;
         typename SizePolicy::RegSlotType     R1;
     };
@@ -505,7 +505,7 @@ namespace Js {
     struct OpLayoutAuxNoReg
     {
         uint32_t      Offset;
-        int32       C1;
+        int32_t       C1;
     };
 
     struct OpLayoutAuxiliary : public OpLayoutAuxNoReg   // R0 <- Load(Offset, C1)

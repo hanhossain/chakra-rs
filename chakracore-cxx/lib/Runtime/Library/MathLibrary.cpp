@@ -582,10 +582,10 @@ namespace Js
 
         if (hasOnlyIntegerArgs)
         {
-            int32 current = TaggedInt::ToInt32(args[1]);
+            int32_t current = TaggedInt::ToInt32(args[1]);
             for (uint idxArg = 2; idxArg < args.Info.Count; idxArg++)
             {
-                int32 compare = TaggedInt::ToInt32(args[idxArg]);
+                int32_t compare = TaggedInt::ToInt32(args[idxArg]);
                 if (current < compare)
                 {
                     current = compare;
@@ -669,10 +669,10 @@ namespace Js
 
         if (hasOnlyIntegerArgs)
         {
-            int32 current = TaggedInt::ToInt32(args[1]);
+            int32_t current = TaggedInt::ToInt32(args[1]);
             for (uint idxArg = 2; idxArg < args.Info.Count; idxArg++)
             {
-                int32 compare = TaggedInt::ToInt32(args[idxArg]);
+                int32_t compare = TaggedInt::ToInt32(args[idxArg]);
                 if (current > compare)
                 {
                     current = compare;
@@ -1461,11 +1461,11 @@ namespace Js
 
         if (args.Info.Count >= 3)
         {
-            int32 x = JavascriptConversion::ToInt32(args[1], scriptContext);
-            int32 y = JavascriptConversion::ToInt32(args[2], scriptContext);
+            int32_t x = JavascriptConversion::ToInt32(args[1], scriptContext);
+            int32_t y = JavascriptConversion::ToInt32(args[2], scriptContext);
 
             long int64Result = (long)x * (long)y;
-            int32 result = (int32)int64Result;
+            int32_t result = (int32_t)int64Result;
 
             return JavascriptNumber::ToVar(result, scriptContext);
         }

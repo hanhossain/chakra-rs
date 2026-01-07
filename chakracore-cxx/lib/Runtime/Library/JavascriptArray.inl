@@ -298,7 +298,7 @@ namespace Js
     //
     /*static*/
     template<typename unitType, typename className, uint inlineSlots>
-    className* JavascriptArray::NewCopyOnAccessLiteral(DynamicType* arrayType, ArrayCallSiteInfo *arrayInfo, FunctionBody *functionBody, const Js::AuxArray<int32> *ints, Recycler* recycler)
+    className* JavascriptArray::NewCopyOnAccessLiteral(DynamicType* arrayType, ArrayCallSiteInfo *arrayInfo, FunctionBody *functionBody, const Js::AuxArray<int32_t> *ints, Recycler* recycler)
     {
         CompileAssert(static_cast<PropertyIndex>(inlineSlots) == inlineSlots);
         Assert(DynamicTypeHandler::RoundUpInlineSlotCapacity(static_cast<PropertyIndex>(inlineSlots)) == inlineSlots);
@@ -415,13 +415,13 @@ namespace Js
     }
 
     template <>
-    inline void JavascriptArray::DirectSetItemAt<int32>(uint32_t itemIndex, int32 newValue)
+    inline void JavascriptArray::DirectSetItemAt<int32_t>(uint32_t itemIndex, int32_t newValue)
     {
         Assert_FailFast(this->GetTypeId() == TypeIds_NativeIntArray);
 
         Assert(itemIndex < InvalidIndex); // Otherwise the code below could overflow and set length = 0
 
-        SparseArraySegment<int32> *seg = (SparseArraySegment<int32>*)this->GetLastUsedSegment();
+        SparseArraySegment<int32_t> *seg = (SparseArraySegment<int32_t>*)this->GetLastUsedSegment();
         uint32_t offset = itemIndex - seg->left;
         if(itemIndex >= seg->left && offset < seg->size)
         {
@@ -1709,7 +1709,7 @@ SECOND_PASS:
             return arr->DirectDeleteItemAt<Var>(index);
 
         case TypeIds_NativeIntArray:
-            return arr->DirectDeleteItemAt<int32>(index);
+            return arr->DirectDeleteItemAt<int32_t>(index);
 
         case TypeIds_NativeFloatArray:
             return arr->DirectDeleteItemAt<double>(index);

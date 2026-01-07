@@ -82,14 +82,14 @@ LowererMDArch::GetRegIMulHighDestLower()
     return RegRDX;
 }
 RegNum
-LowererMDArch::GetRegArgI4(int32 argNum)
+LowererMDArch::GetRegArgI4(int32_t argNum)
 {
     // TODO: decide on registers to use for int
     return RegNOREG;
 }
 
 RegNum
-LowererMDArch::GetRegArgR8(int32 argNum)
+LowererMDArch::GetRegArgR8(int32_t argNum)
 {
     // TODO: decide on registers to use for double
     return RegNOREG;
@@ -453,7 +453,7 @@ break;
     return reg;
 }
 
-int32
+int32_t
 LowererMDArch::LowerCallArgs(IR::Instr *callInstr, ushort callFlags, Js::ArgSlot extraParams, IR::IntConstOpnd **callInfoOpndRef /* = nullptr */)
 {
     AssertMsg(this->helperCallArgsCount == 0, "We don't support nested helper calls yet");
@@ -575,7 +575,7 @@ LowererMDArch::SetMaxArgSlots(Js::ArgSlot actualCount /*including this*/)
 }
 
 void
-LowererMDArch::GenerateMemInit(IR::RegOpnd * opnd, int32 offset, size_t value, IR::Instr * insertBeforeInstr, bool isZeroed)
+LowererMDArch::GenerateMemInit(IR::RegOpnd * opnd, int32_t offset, size_t value, IR::Instr * insertBeforeInstr, bool isZeroed)
 {
     IRType type = TyVar;
     if (isZeroed)
@@ -764,7 +764,7 @@ LowererMDArch::LowerCallI(IR::Instr * callInstr, ushort callFlags, bool isHelper
 
     // We need to get the calculated CallInfo in SimpleJit because that doesn't include any changes for stack alignment
     IR::IntConstOpnd *callInfo = nullptr;
-    int32 argCount = LowerCallArgs(callInstr, callFlags, 1, &callInfo);
+    int32_t argCount = LowerCallArgs(callInstr, callFlags, 1, &callInfo);
 
 
     IR::Opnd *const finalDst = callInstr->GetDst();
@@ -1065,7 +1065,7 @@ IR::Instr *
 LowererMDArch::LowerAsmJsCallE(IR::Instr *callInstr)
 {
     IR::IntConstOpnd *callInfo = nullptr;
-    int32 argCount = this->LowerCallArgs(callInstr, Js::CallFlags_Value, 1, &callInfo);
+    int32_t argCount = this->LowerCallArgs(callInstr, Js::CallFlags_Value, 1, &callInfo);
 
     IR::Instr* ret = this->LowerCall(callInstr, argCount);
 
@@ -1075,7 +1075,7 @@ LowererMDArch::LowerAsmJsCallE(IR::Instr *callInstr)
 IR::Instr *
 LowererMDArch::LowerAsmJsCallI(IR::Instr * callInstr)
 {
-    int32 argCount = this->LowerCallArgs(callInstr, Js::CallFlags_Value, 0);
+    int32_t argCount = this->LowerCallArgs(callInstr, Js::CallFlags_Value, 0);
 
     IR::Instr* ret = this->LowerCall(callInstr, argCount);
 
@@ -1089,8 +1089,8 @@ LowererMDArch::LowerWasmArrayBoundsCheck(IR::Instr * instr, IR::Opnd *addrOpnd)
     IR::RegOpnd * indexOpnd = indirOpnd->GetIndexOpnd();
     if (indexOpnd && !indexOpnd->IsIntegral32())
     {
-        // We don't expect the index to be anything other than an int32 or uint32_t
-        // Having an int32 index guaranties that long index add doesn't overflow
+        // We don't expect the index to be anything other than an int32_t or uint32_t
+        // Having an int32_t index guaranties that long index add doesn't overflow
         // If we're wrong, just throw index out of range
         Assert(UNREACHED);
         lowererMD->m_lowerer->GenerateThrow(IR::IntConstOpnd::New(WASMERR_ArrayIndexOutOfRange, TyInt32, m_func), instr);
@@ -1625,7 +1625,7 @@ LowererMDArch::LowerEntryInstr(IR::EntryInstr * entryInstr)
 
     uint32_t stackArgsSize    = MachPtr * (argSlotsForFunctionsCalled + 1);
 
-    this->m_func->m_localStackHeight = Math::Align<int32>(this->m_func->m_localStackHeight, 8);
+    this->m_func->m_localStackHeight = Math::Align<int32_t>(this->m_func->m_localStackHeight, 8);
 
     // Allocate the inlined arg out stack in the locals. Allocate an additional slot so that
     // we can unconditionally clear the first slot past the current frame.
@@ -2814,7 +2814,7 @@ bool LowererMDArch::GenerateFastDivAndRem_Signed(IR::Instr* instrDiv)
 
     bool isNegDevisor   = false;
 
-    Assert(divisor->GetType() == TyInt32); // constopnd->AsInt32() currently does silent casts between int32 and uint32_t
+    Assert(divisor->GetType() == TyInt32); // constopnd->AsInt32() currently does silent casts between int32_t and uint32_t
 
     if (constDivisor < 0)
     {
@@ -2860,7 +2860,7 @@ bool LowererMDArch::GenerateFastDivAndRem_Signed(IR::Instr* instrDiv)
         // Calculate magic_number (multiplier) and shift amounts (shiftAmt) and replace  div with mul and shift
 
         Js::NumberUtilities::DivMagicNumber magic_number(Js::NumberUtilities::GenerateDivMagicNumber(constDivisor));
-        int32 multiplier = magic_number.multiplier;
+        int32_t multiplier = magic_number.multiplier;
 
         // Compute mulhs divident, multiplier
         IR::Opnd* quotient64reg = IR::RegOpnd::New(TyInt64, this->m_func);

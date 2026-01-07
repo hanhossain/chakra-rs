@@ -181,10 +181,10 @@ namespace Js {
        SideEffects_Any      = SideEffects_MathFunc | SideEffects_ValueOf | SideEffects_ToString | SideEffects_Accessor
     };
 
-    // int32 is used in JIT code to pass the flag
+    // int32_t is used in JIT code to pass the flag
     // Used to tweak type system methods behavior.
     // Normally, use: PropertyOperation_None.
-    enum PropertyOperationFlags : int32
+    enum PropertyOperationFlags : int32_t
     {
         PropertyOperation_None                          = 0x00,
         PropertyOperation_StrictMode                    = 0x01,

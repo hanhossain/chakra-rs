@@ -155,7 +155,7 @@ namespace TTD
 
     void ThreadContextTTD::ClearContextsForSnapRestore(JsUtil::List<FinalizableObject*, HeapAllocator>& deadCtxs)
     {
-        for(int32 i = 0; i < this->m_contextList.Count(); ++i)
+        for(int32_t i = 0; i < this->m_contextList.Count(); ++i)
         {
             Js::ScriptContext* ctx = this->m_contextList.Item(i);
             FinalizableObject* externalCtx = this->m_ttdContextToExternalRefMap.Item(ctx);
@@ -247,7 +247,7 @@ namespace TTD
             lctxSet.AddNew(liveContextIdArray[i]);
         }
 
-        int32 ctxpos = 0;
+        int32_t ctxpos = 0;
         while(ctxpos < this->m_contextList.Count())
         {
             Js::ScriptContext* ctx = this->m_contextList.Item(ctxpos);
@@ -344,8 +344,8 @@ namespace TTD
         pendingInfo->Index = 0;
 
         const byte* currentBegin = nullptr;
-        int32 pos = -1;
-        for(int32 i = 0; i < this->m_ttdPendingAsyncModList.Count(); ++i)
+        int32_t pos = -1;
+        for(int32_t i = 0; i < this->m_ttdPendingAsyncModList.Count(); ++i)
         {
             const TTDPendingAsyncBufferModification& pi = this->m_ttdPendingAsyncModList.Item(i);
             const Js::ArrayBuffer* pbuff = Js::VarTo<Js::ArrayBuffer>(pi.ArrayBufferVar);
@@ -363,7 +363,7 @@ namespace TTD
             if(currentBegin == nullptr || finalModPos < currentBegin)
             {
                 currentBegin = pbuffBegin;
-                pos = (int32)i;
+                pos = (int32_t)i;
             }
         }
         TTDAssert(pos != -1, "Missing matching register!!!");
@@ -638,18 +638,18 @@ namespace TTD
 
         //now sort the list so the traversal order is stable
         //Rock a custom shell sort!!!!
-        const int32 gaps[6] = { 132, 57, 23, 10, 4, 1 };
+        const int32_t gaps[6] = { 132, 57, 23, 10, 4, 1 };
 
-        int32 llen = propertyList.Count();
+        int32_t llen = propertyList.Count();
         for(uint32_t gapi = 0; gapi < 6; ++gapi)
         {
-            int32 gap = gaps[gapi];
+            int32_t gap = gaps[gapi];
 
-            for(int32 i = gap; i < llen; i++)
+            for(int32_t i = gap; i < llen; i++)
             {
                 const Js::PropertyRecord* temp = propertyList.Item(i);
 
-                int32 j = 0;
+                int32_t j = 0;
                 for(j = i; j >= gap && PropertyNameCmp(propertyList.Item(j - gap), temp); j -= gap)
                 {
                     const Js::PropertyRecord* shiftElem = propertyList.Item(j - gap);
@@ -702,13 +702,13 @@ namespace TTD
     //Mark all the well-known objects/values/types from this script context
     void RuntimeContextInfo::MarkWellKnownObjects_TTD(MarkTable& marks) const
     {
-        for(int32 i = 0; i < this->m_sortedObjectList.Count(); ++i)
+        for(int32_t i = 0; i < this->m_sortedObjectList.Count(); ++i)
         {
             Js::RecyclableObject* obj = this->m_sortedObjectList.Item(i);
             marks.MarkAddrWithSpecialInfo<MarkTableTag::JsWellKnownObj>(obj);
         }
 
-        for(int32 i = 0; i < this->m_sortedFunctionBodyList.Count(); ++i)
+        for(int32_t i = 0; i < this->m_sortedFunctionBodyList.Count(); ++i)
         {
             Js::FunctionBody* body = this->m_sortedFunctionBodyList.Item(i);
             marks.MarkAddrWithSpecialInfo<MarkTableTag::JsWellKnownObj>(body);
@@ -743,7 +743,7 @@ namespace TTD
 
     Js::RecyclableObject* RuntimeContextInfo::LookupKnownObjectFromPath(TTD_WELLKNOWN_TOKEN pathIdString) const
     {
-        int32 pos = LookupPositionInDictNameList<Js::RecyclableObject*, true>(pathIdString, this->m_coreObjToPathMap, this->m_sortedObjectList, this->m_nullString);
+        int32_t pos = LookupPositionInDictNameList<Js::RecyclableObject*, true>(pathIdString, this->m_coreObjToPathMap, this->m_sortedObjectList, this->m_nullString);
         TTDAssert(pos != -1, "This isn't a well known object!");
 
         return this->m_sortedObjectList.Item(pos);
@@ -751,7 +751,7 @@ namespace TTD
 
     Js::FunctionBody* RuntimeContextInfo::LookupKnownFunctionBodyFromPath(TTD_WELLKNOWN_TOKEN pathIdString) const
     {
-        int32 pos = LookupPositionInDictNameList<Js::FunctionBody*, true>(pathIdString, this->m_coreBodyToPathMap, this->m_sortedFunctionBodyList, this->m_nullString);
+        int32_t pos = LookupPositionInDictNameList<Js::FunctionBody*, true>(pathIdString, this->m_coreBodyToPathMap, this->m_sortedFunctionBodyList, this->m_nullString);
         TTDAssert(pos != -1, "Missing function.");
 
         return (pos != -1) ? this->m_sortedFunctionBodyList.Item(pos) : nullptr;
@@ -759,7 +759,7 @@ namespace TTD
 
     Js::DebuggerScope* RuntimeContextInfo::LookupKnownDebuggerScopeFromPath(TTD_WELLKNOWN_TOKEN pathIdString) const
     {
-        int32 pos = LookupPositionInDictNameList<Js::DebuggerScope*, true>(pathIdString, this->m_coreDbgScopeToPathMap, this->m_sortedDbgScopeList, this->m_nullString);
+        int32_t pos = LookupPositionInDictNameList<Js::DebuggerScope*, true>(pathIdString, this->m_coreDbgScopeToPathMap, this->m_sortedDbgScopeList, this->m_nullString);
         TTDAssert(pos != -1, "Missing debug scope.");
 
         return (pos != -1) ? this->m_sortedDbgScopeList.Item(pos) : nullptr;
@@ -818,7 +818,7 @@ namespace TTD
             LoadAndOrderPropertyNames(curr, propertyRecordList);
 
             //access each property and process the target objects as needed
-            for(int32 i = 0; i < propertyRecordList.Count(); ++i)
+            for(int32_t i = 0; i < propertyRecordList.Count(); ++i)
             {
                 const Js::PropertyRecord* precord = propertyRecordList.Item(i);
 

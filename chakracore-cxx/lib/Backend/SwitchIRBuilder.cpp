@@ -229,7 +229,7 @@ SwitchIRBuilder::OnCase(IR::RegOpnd * src1Opnd, IR::Opnd * src2Opnd, uint32_t of
     IR::BranchInstr * branchInstr;
 
     Assert(src2Opnd->IsIntConstOpnd() || src2Opnd->IsRegOpnd());
-    // Support only int32 const opnd
+    // Support only int32_t const opnd
     Assert(!src2Opnd->IsIntConstOpnd() || src2Opnd->GetType() == TyInt32);
     StackSym* sym = src2Opnd->GetStackSym();
     const bool isIntConst = src2Opnd->IsIntConstOpnd() || (sym && sym->IsIntConst());
@@ -915,8 +915,8 @@ SwitchIRBuilder::BuildMultiBrCaseInstrForInts(uint32_t start, uint32_t end, uint
 
     uint32_t lastCaseOffset = m_caseNodes->Item(end)->GetOffset();
 
-    int32 baseCaseValue = m_caseNodes->Item(start)->GetLowerBoundIntConst();
-    int32 lastCaseValue = m_caseNodes->Item(end)->GetUpperBoundIntConst();
+    int32_t baseCaseValue = m_caseNodes->Item(start)->GetLowerBoundIntConst();
+    int32_t lastCaseValue = m_caseNodes->Item(end)->GetUpperBoundIntConst();
 
     multiBranchInstr->m_baseCaseValue = baseCaseValue;
     multiBranchInstr->m_lastCaseValue = lastCaseValue;

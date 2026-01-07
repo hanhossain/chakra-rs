@@ -137,7 +137,7 @@ public:
     StackLiteralBailOutInfo * stackLiteralBailOutInfo;
 
     BVSparse<JitArenaAllocator> * liveVarSyms;
-    BVSparse<JitArenaAllocator> * liveLosslessInt32Syms;                // These are only the live int32 syms that fully represent the var-equivalent sym's value (see GlobOpt::FillBailOutInfo)
+    BVSparse<JitArenaAllocator> * liveLosslessInt32Syms;                // These are only the live int32_t syms that fully represent the var-equivalent sym's value (see GlobOpt::FillBailOutInfo)
     BVSparse<JitArenaAllocator> * liveFloat64Syms;
     int * outParamOffsets;
 
@@ -149,7 +149,7 @@ public:
 
 #ifdef MD_GROW_LOCALS_AREA_UP
     // Use a bias to guarantee that all sym offsets are non-zero.
-    static const int32 StackSymBias = MachStackAlignment;
+    static const int32_t StackSymBias = MachStackAlignment;
 #endif
 
     // The actual bailout instr, this is normally the instr that has the bailout info.
@@ -449,7 +449,7 @@ inline void BailOutRecord::MapArgOutOffsets(Fn fn)
 
 struct GlobalBailOutRecordDataRow
 {
-    int32 offset;
+    int32_t offset;
     uint32_t start;           // start bailOutId
     uint32_t end;             // end bailOutId
     unsigned regSlot : 30;
@@ -465,7 +465,7 @@ struct GlobalBailOutRecordDataTable
     Js::EntryPointInfo *entryPointInfo;
     uint32_t length;
     uint32_t size;
-    int32  firstActualStackOffset;
+    int32_t  firstActualStackOffset;
     int forInEnumeratorArrayRestoreOffset;
     Js::RegSlot returnValueRegSlot;
 
@@ -477,7 +477,7 @@ struct GlobalBailOutRecordDataTable
     bool isScopeObjRestored     : 1;
 
     void Finalize(NativeCodeData::Allocator *allocator, JitArenaAllocator *tempAlloc);
-    void AddOrUpdateRow(JitArenaAllocator *allocator, uint32_t bailOutRecordId, uint32_t regSlot, bool isFloat, bool isInt, int32 offset, uint *lastUpdatedRowIndex);
+    void AddOrUpdateRow(JitArenaAllocator *allocator, uint32_t bailOutRecordId, uint32_t regSlot, bool isFloat, bool isInt, int32_t offset, uint *lastUpdatedRowIndex);
 
     template<class Fn>
     void IterateGlobalBailOutRecordTableRows(uint32_t bailOutRecordId, Fn callback)

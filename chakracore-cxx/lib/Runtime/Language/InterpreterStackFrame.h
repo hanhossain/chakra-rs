@@ -89,14 +89,14 @@ namespace Js
         struct AsmJsReturnStruct
         {
 #ifdef ASMJS_PLAT
-            int32 i;
+            int32_t i;
             long l;
             float f;
             double d;
             AsmJsSIMDValue simd;
 
             template<typename T> T GetRetVal();
-            template<> int32 GetRetVal<int32>() { return i; }
+            template<> int32_t GetRetVal<int32_t>() { return i; }
             template<> long GetRetVal<long>() { return l; }
             template<> float GetRetVal<float>() { return f; }
             template<> double GetRetVal<double>() { return d; }
@@ -228,7 +228,7 @@ namespace Js
 
         void ValidateRegValue(Var value, bool allowStackVar = false, bool allowStackVarOnDisabledStackNestedFunc = true) const;
         int OP_GetMemorySize();
-        int32 OP_GrowMemory(int32 delta);
+        int32_t OP_GrowMemory(int32_t delta);
         void OP_Unreachable();
         template <typename T> using AsmJsMathPtr = T(*)(T a, T b);
         template <typename T, AsmJsMathPtr<T> func> static T OP_DivOverflow(T a, T b, ScriptContext* scriptContext);
@@ -477,7 +477,7 @@ namespace Js
         BOOL OP_BrNotUndecl_A(Var aValue);
         BOOL OP_BrOnHasProperty(Var argInstance, uint propertyIdIndex, ScriptContext* scriptContext);
         BOOL OP_BrOnNoProperty(Var argInstance, uint propertyIdIndex, ScriptContext* scriptContext);
-        BOOL OP_BrOnHasEnvProperty(Var envInstance, int32 slotIndex, uint propertyIdIndex, ScriptContext* scriptContext);
+        BOOL OP_BrOnHasEnvProperty(Var envInstance, int32_t slotIndex, uint propertyIdIndex, ScriptContext* scriptContext);
         BOOL OP_BrOnClassConstructor(Var aValue);
         BOOL OP_BrOnBaseConstructorKind(Var aValue);
         bool OP_BrOnConstructor(Var aValue);
@@ -673,7 +673,7 @@ namespace Js
         void OP_EnsureCanDeclGloFunc(uint propertyIdIndex);
         void OP_ScopedEnsureNoRedeclProperty(Var aValue, uint propertyIdIndex, Var aValue2);
         Var OP_InitUndecl();
-        void OP_InitUndeclSlot(Var aValue, int32 slot);
+        void OP_InitUndeclSlot(Var aValue, int32_t slot);
         template <class T> inline void OP_InitInnerFld(const unaligned T * playout);
         template <class T> inline void OP_InitLetFld(const unaligned T * playout);
         template <class T> inline void OP_InitLocalLetFld(const unaligned T* playout);
@@ -708,9 +708,9 @@ namespace Js
         template <class T> inline void OP_StArrAtomic    ( const unaligned T* playout );
         template<typename MemType> void WasmArrayBoundsCheck(unsigned long index, uint32_t byteLength);
         template<typename MemType> MemType* WasmAtomicsArrayBoundsCheck(byte* buffer, unsigned long index, uint32_t byteLength);
-        inline Var OP_LdSlot(Var instance, int32 slotIndex);
-        inline Var OP_LdObjSlot(Var instance, int32 slotIndex);
-        inline Var OP_LdFrameDisplaySlot(Var instance, int32 slotIndex);
+        inline Var OP_LdSlot(Var instance, int32_t slotIndex);
+        inline Var OP_LdObjSlot(Var instance, int32_t slotIndex);
+        inline Var OP_LdFrameDisplaySlot(Var instance, int32_t slotIndex);
         template <class T> inline Var OP_LdSlot(Var instance, const unaligned T* playout);
         template <class T> inline Var OP_ProfiledLdSlot(Var instance, const unaligned T* playout);
         template <class T> inline Var OP_LdInnerSlot(Var instance, const unaligned T* playout);
@@ -726,14 +726,14 @@ namespace Js
         template <class T> inline Var OP_ProfiledLdEnvObjSlot(Var instance, const unaligned T* playout);
         template <class T> inline Var OP_LdModuleSlot(Var instance, const unaligned T* playout);
         inline void OP_StModuleSlot(Var instance, uint32_t slotIndex1, uint32_t slotIndex2, Var value);
-        inline void OP_StSlot(Var instance, int32 slotIndex, Var value);
-        inline void OP_StSlotChkUndecl(Var instance, int32 slotIndex, Var value);
-        inline void OP_StEnvSlot(Var instance, int32 slotIndex1, int32 slotIndex2, Var value);
-        inline void OP_StEnvSlotChkUndecl(Var instance, int32 slotIndex1, int32 slotIndex2, Var value);
-        inline void OP_StObjSlot(Var instance, int32 slotIndex, Var value);
-        inline void OP_StObjSlotChkUndecl(Var instance, int32 slotIndex, Var value);
-        inline void OP_StEnvObjSlot(Var instance, int32 slotIndex1, int32 slotIndex2, Var value);
-        inline void OP_StEnvObjSlotChkUndecl(Var instance, int32 slotIndex1, int32 slotIndex2, Var value);
+        inline void OP_StSlot(Var instance, int32_t slotIndex, Var value);
+        inline void OP_StSlotChkUndecl(Var instance, int32_t slotIndex, Var value);
+        inline void OP_StEnvSlot(Var instance, int32_t slotIndex1, int32_t slotIndex2, Var value);
+        inline void OP_StEnvSlotChkUndecl(Var instance, int32_t slotIndex1, int32_t slotIndex2, Var value);
+        inline void OP_StObjSlot(Var instance, int32_t slotIndex, Var value);
+        inline void OP_StObjSlotChkUndecl(Var instance, int32_t slotIndex, Var value);
+        inline void OP_StEnvObjSlot(Var instance, int32_t slotIndex1, int32_t slotIndex2, Var value);
+        inline void OP_StEnvObjSlotChkUndecl(Var instance, int32_t slotIndex1, int32_t slotIndex2, Var value);
         inline void* OP_LdArgCnt();
         template <bool letArgs> Var LdHeapArgumentsImpl(Var argsArray, ScriptContext* scriptContext);
         Var OP_LdHeapArguments(ScriptContext* scriptContext);
@@ -772,7 +772,7 @@ namespace Js
         void OP_NewScObject_A_Impl(const unaligned OpLayoutAuxiliary * playout, RegSlot *target = nullptr);
         void OP_NewScObject_A(const unaligned OpLayoutAuxiliary * playout) { return OP_NewScObject_A_Impl(playout); }
         void OP_InitCachedFuncs(const unaligned OpLayoutAuxNoReg * playout);
-        Var OP_GetCachedFunc(Var instance, int32 index);
+        Var OP_GetCachedFunc(Var instance, int32_t index);
         void OP_CommitScope();
         void OP_CommitScopeHelper(const PropertyIdArray *propIds);
         void OP_TryCatch(const unaligned OpLayoutBr* playout);

@@ -276,7 +276,7 @@ private:
     intptr_t polyValues[EQUIVALENT_TYPE_CACHE_SIZE];
 
 public:
-    static int32 GetOffsetOfPolyValues() { return offsetof(JitPolyEquivalentTypeGuard, polyValues); }
+    static int32_t GetOffsetOfPolyValues() { return offsetof(JitPolyEquivalentTypeGuard, polyValues); }
 
     // TODO: Revisit optimal size. Make it vary according to the number of caches? Is this worth a variable-size allocation?
     uintptr_t GetSize() const { return EQUIVALENT_TYPE_CACHE_SIZE; }

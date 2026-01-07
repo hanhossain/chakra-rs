@@ -199,7 +199,7 @@ namespace Js
 
         virtual ArrayBufferContentForDelayedFreeBase* CopyBufferContentForDelayedFree(RefCountedBuffer * content, uint32_t bufferLength);
 
-        static uint32_t ToIndex(Var value, int32 errorCode, ScriptContext *scriptContext, uint32_t MaxAllowedLength, bool checkSameValueZero = true);
+        static uint32_t ToIndex(Var value, int32_t errorCode, ScriptContext *scriptContext, uint32_t MaxAllowedLength, bool checkSameValueZero = true);
 
     protected:
         virtual void ReportExternalMemoryFree();

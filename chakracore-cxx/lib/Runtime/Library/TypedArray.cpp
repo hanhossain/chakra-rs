@@ -258,8 +258,8 @@ namespace Js
     Var TypedArrayBase::CreateNewInstance(Arguments& args, ScriptContext* scriptContext, uint32_t elementSize, PFNCreateTypedArray pfnCreateTypedArray)
     {
         uint32_t byteLength = 0;
-        int32 offset = 0;
-        int32 mappedLength = -1;
+        int32_t offset = 0;
+        int32_t mappedLength = -1;
         uint32_t elementCount = 0;
         ArrayBufferBase* arrayBuffer = nullptr;
         TypedArrayBase* typedArraySource = nullptr;
@@ -1314,7 +1314,7 @@ namespace Js
         TypedArrayBase* typedArrayBase = VarTo<TypedArrayBase>(args[0]);
         uint32_t length = typedArrayBase->GetLength();
         ScriptContext* scriptContext = typedArrayBase->GetScriptContext();
-        int32 begin = 0;
+        int32_t begin = 0;
         int end = length;
         if (args.Info.Count > 1)
         {
@@ -2384,7 +2384,7 @@ namespace Js
 
         if (TaggedInt::Is(index))
         {
-            int32 indexInt = TaggedInt::ToInt32(index);
+            int32_t indexInt = TaggedInt::ToInt32(index);
             *skipOperation = (indexInt < 0 || (uint32_t)indexInt >= length);
             return (uint32_t)indexInt;
         }
@@ -2484,7 +2484,7 @@ namespace Js
             return this->FindMinOrMax<uint16, false>(scriptContext, findMax);
 
         case TypeIds_Int32Array:
-            return this->FindMinOrMax<int32, false>(scriptContext, findMax);
+            return this->FindMinOrMax<int32_t, false>(scriptContext, findMax);
 
         case TypeIds_Uint32Array:
             return this->FindMinOrMax<uint32_t, false>(scriptContext, findMax);

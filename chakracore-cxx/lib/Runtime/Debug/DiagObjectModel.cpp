@@ -1264,7 +1264,7 @@ namespace Js
         }
 
         // In the case of not making groups, all variables will be arranged
-        // as one int32 list in the locals window.
+        // as one int32_t list in the locals window.
         if (!ShouldMakeGroups())
         {
             for (int j = 0; j < pVarWalkers->Count(); j++)
@@ -2026,7 +2026,7 @@ namespace Js
             }
 
             // For fractional values, radix is ignored.
-            int32 l = (int32)value;
+            int32_t l = (int32_t)value;
             bool isZero = JavascriptNumber::IsZero(value - (double)l);
 
             if (radix == 10 || !isZero)
@@ -2048,7 +2048,7 @@ namespace Js
                     if (value < 0)
                     {
                         // On the tools side we show unsigned value.
-                        uint32_t ul = static_cast<uint32_t>(static_cast<int32>(value)); // ARM: casting negative value to uint32_t gives 0
+                        uint32_t ul = static_cast<uint32_t>(static_cast<int32_t>(value)); // ARM: casting negative value to uint32_t gives 0
                         value = (double)ul;
                     }
                     valueStr = Js::JavascriptString::Concat(scriptContext->GetLibrary()->CreateStringFromCppLiteral(u"0x"),

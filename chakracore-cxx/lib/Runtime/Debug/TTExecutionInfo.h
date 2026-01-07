@@ -55,10 +55,10 @@ namespace TTD
         unsigned long FunctionTime; //The function time when the function was called
         unsigned long LoopTime; //The current loop taken time for the function
 
-        int32 LastStatementIndex; //The previously executed statement
+        int32_t LastStatementIndex; //The previously executed statement
         unsigned long LastStatementLoopTime; //The previously executed statement
 
-        int32 CurrentStatementIndex; //The currently executing statement
+        int32_t CurrentStatementIndex; //The currently executing statement
         unsigned long CurrentStatementLoopTime; //The currently executing statement
 
         //bytecode range of the current stmt

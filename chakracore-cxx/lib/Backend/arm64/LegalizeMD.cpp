@@ -356,7 +356,7 @@ void LegalizeMD::LegalizeIndirOffset(IR::Instr * instr, IR::IndirOpnd * indirOpn
         }
     };
 
-    int32 offset = indirOpnd->GetOffset();
+    int32_t offset = indirOpnd->GetOffset();
 
     if (indirOpnd->IsFloat())
     {
@@ -399,7 +399,7 @@ void LegalizeMD::LegalizeIndirOffset(IR::Instr * instr, IR::IndirOpnd * indirOpn
 
     // Determine scale factor for scaled offsets
     int size = indirOpnd->GetSize();
-    int32 scaledOffset = offset / size;
+    int32_t scaledOffset = offset / size;
 
     // Either scaled unsigned 12-bit offset, or unscaled signed 9-bit offset
     if (forms & L_IndirSU12I9)
@@ -458,7 +458,7 @@ void LegalizeMD::LegalizeSymOffset(IR::Instr * instr, IR::SymOpnd * symOpnd, Leg
     AssertMsg(fPostRegAlloc, "LegalizeMD::LegalizeSymOffset can (and will) be called as part of register allocation. Can't call it as part of lowerer, as final argument area is not available yet.");
 
     RegNum baseReg;
-    int32 offset;
+    int32_t offset;
 
     if (!symOpnd->m_sym->IsStackSym())
     {
@@ -486,7 +486,7 @@ void LegalizeMD::LegalizeSymOffset(IR::Instr * instr, IR::SymOpnd * symOpnd, Leg
         scale = 0;
     }
 
-    int32 scaledOffset = offset >> scale;
+    int32_t scaledOffset = offset >> scale;
     
     // Either scaled unsigned 12-bit offset, or unscaled signed 9-bit offset
     if (forms & L_SymSU12I9)
@@ -618,10 +618,10 @@ void LegalizeMD::LegalizeLDIMM(IR::Instr * instr, IntConstType immed)
     if (!instr->isInlineeEntryInstr)
     {
 
-        // If the source is a tagged int, and the dest is int32 or uint32_t, untag the value so that it fits in 32 bits.
+        // If the source is a tagged int, and the dest is int32_t or uint32_t, untag the value so that it fits in 32 bits.
         if (instr->GetDst()->IsIntegral32() && instr->GetSrc1()->IsTaggedInt())
         {
-            immed = (int32)immed;
+            immed = (int32_t)immed;
             instr->ReplaceSrc1(IR::IntConstOpnd::New(immed, instr->GetDst()->GetType(), instr->m_func));
         }
 

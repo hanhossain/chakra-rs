@@ -203,8 +203,8 @@ public:
 
     static bool     CanEncodeLogicalConst(IntConstType constant, int size);
     // ToDo (SaAgarwa) Copied from ARM32 to compile. Validate is this correct
-    static bool     CanEncodeLoadStoreOffset(int32 offset) { return IS_CONST_UINT12(offset); }
-    static void     BaseAndOffsetFromSym(IR::SymOpnd *symOpnd, RegNum *pBaseReg, int32 *pOffset, Func * func);
+    static bool     CanEncodeLoadStoreOffset(int32_t offset) { return IS_CONST_UINT12(offset); }
+    static void     BaseAndOffsetFromSym(IR::SymOpnd *symOpnd, RegNum *pBaseReg, int32_t *pOffset, Func * func);
     void            EncodeInlineeCallInfo(IR::Instr *instr, uint32_t offset);
 private:
     Func *          m_func;
@@ -215,7 +215,7 @@ private:
     uint32_t           GenerateEncoding(IR::Instr* instr, uint8_t *pc);
     bool            CanonicalizeInstr(IR::Instr *instr);
     void            CanonicalizeLea(IR::Instr * instr);
-    bool            DecodeMemoryOpnd(IR::Opnd* opnd, ARM64_REGISTER &baseRegResult, ARM64_REGISTER &indexRegResult, uint8_t &indexScale, int32 &offset);
+    bool            DecodeMemoryOpnd(IR::Opnd* opnd, ARM64_REGISTER &baseRegResult, ARM64_REGISTER &indexRegResult, uint8_t &indexScale, int32_t &offset);
     static bool     EncodeLogicalConst(IntConstType constant, uint32_t * result, int size);
 
     // General 1-operand instructions (BR, RET)

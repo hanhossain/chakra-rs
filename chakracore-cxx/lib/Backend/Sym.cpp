@@ -575,7 +575,7 @@ StackSym::CopySymAttrs(StackSym *symSrc)
 }
 
 // StackSym::GetIntConstValue
-int32
+int32_t
 StackSym::GetIntConstValue() const
 {
     Assert(this->IsIntConst());
@@ -598,7 +598,7 @@ StackSym::GetIntConstValue() const
         {
             return Js::TaggedInt::ToInt32(var);
         }
-        int32 value = 0xCCCCCCCC;
+        int32_t value = 0xCCCCCCCC;
         const bool isInt32 = Js::JavascriptNumber::TryGetInt32Value(Js::JavascriptNumber::GetValue(var), &value);
         Assert(isInt32);
         return value;
@@ -950,7 +950,7 @@ StackSym *StackSym::EnsureAuxSlotPtrSym(Func * func)
 ///----------------------------------------------------------------------------
 
 PropertySym *
-PropertySym::New(SymID stackSymID, int32 propertyId, uint32_t propertyIdIndex, uint inlineCacheIndex, PropertyKind fieldKind, Func *func)
+PropertySym::New(SymID stackSymID, int32_t propertyId, uint32_t propertyIdIndex, uint inlineCacheIndex, PropertyKind fieldKind, Func *func)
 {
     StackSym *  stackSym;
 
@@ -961,7 +961,7 @@ PropertySym::New(SymID stackSymID, int32 propertyId, uint32_t propertyIdIndex, u
 }
 
 PropertySym *
-PropertySym::New(StackSym *stackSym, int32 propertyId, uint32_t propertyIdIndex, uint inlineCacheIndex, PropertyKind fieldKind, Func *func)
+PropertySym::New(StackSym *stackSym, int32_t propertyId, uint32_t propertyIdIndex, uint inlineCacheIndex, PropertyKind fieldKind, Func *func)
 {
     PropertySym *  propertySym;
 
@@ -1008,7 +1008,7 @@ PropertySym::New(StackSym *stackSym, int32 propertyId, uint32_t propertyIdIndex,
 ///----------------------------------------------------------------------------
 
 PropertySym *
-PropertySym::Find(SymID stackSymID, int32 propertyId, Func *func)
+PropertySym::Find(SymID stackSymID, int32_t propertyId, Func *func)
 {
     return func->m_symTable->FindPropertySym(stackSymID, propertyId);
 }
@@ -1023,7 +1023,7 @@ PropertySym::Find(SymID stackSymID, int32 propertyId, Func *func)
 ///----------------------------------------------------------------------------
 
 PropertySym *
-PropertySym::FindOrCreate(SymID stackSymID, int32 propertyId, uint32_t propertyIdIndex, uint inlineCacheIndex, PropertyKind fieldKind, Func *func)
+PropertySym::FindOrCreate(SymID stackSymID, int32_t propertyId, uint32_t propertyIdIndex, uint inlineCacheIndex, PropertyKind fieldKind, Func *func)
 {
     PropertySym *  propertySym;
 

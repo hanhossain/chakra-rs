@@ -620,9 +620,9 @@ namespace Js
         Field(FunctionEntryPointInfo*) nextEntryPoint;
 
         // The offset on the native stack, from which the locals are located (Populated at RegAlloc phase). Used for debug purpose.
-        Field(int32) localVarSlotsOffset;
+        Field(int32_t) localVarSlotsOffset;
         // The offset which stores that any of the locals are changed from the debugger.
-        Field(int32) localVarChangedOffset;
+        Field(int32_t) localVarChangedOffset;
         Field(uint) entryPointIndex;
 
         Field(uint32_t) callsCount;
@@ -2067,7 +2067,7 @@ namespace Js
                 FieldWithBarrier(RegSlot)         objectRegister;         // this register slot cannot be 0 so we use that sentinel value to indicate invalid
                 FieldWithBarrier(ScopeObjectChain*) pScopeObjectChain;
                 FieldWithBarrier(ByteBlock*) m_probeBackingBlock;  // NULL if no Probes, otherwise a copy of the unmodified the byte-codeblock //Delay
-                FieldWithBarrier(int32) m_probeCount;             // The number of installed probes (such as breakpoints).
+                FieldWithBarrier(int32_t) m_probeCount;             // The number of installed probes (such as breakpoints).
 
                 // List of bytecode offset for the Branch bytecode.
                 FieldWithBarrier(AuxStatementData*) m_auxStatementData;
@@ -2993,7 +2993,7 @@ namespace Js
         uint32_t GetFirstNonTempLocalIndex();
         uint32_t GetEndNonTempLocalIndex();
         bool IsNonTempLocalVar(uint32_t varIndex);
-        bool GetSlotOffset(RegSlot slotId, int32 * slotOffset, bool allowTemp = false);
+        bool GetSlotOffset(RegSlot slotId, int32_t * slotOffset, bool allowTemp = false);
 
         RegSlot GetOutParamMaxDepth();
         void SetOutParamMaxDepth(RegSlot cOutParamsDepth);
@@ -3181,7 +3181,7 @@ namespace Js
         void ResetByteCodeGenState();
         void ResetByteCodeGenVisitState();
 
-        void FindClosestStatements(int32 characterOffset, StatementLocation *firstStatementLocation, StatementLocation *secondStatementLocation);
+        void FindClosestStatements(int32_t characterOffset, StatementLocation *firstStatementLocation, StatementLocation *secondStatementLocation);
 #if ENABLE_NATIVE_CODEGEN
         template<AuxPointerType T>
         FunctionCodeGenRuntimeData *EnsureCodeGenRuntimeDataCommon(

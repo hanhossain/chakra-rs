@@ -163,9 +163,9 @@ public:
     // equivalent var sym. The set (liveInt32Syms - liveLossyInt32Syms) includes only syms that contain an int value that fully
     // represents the value of the equivalent var sym, such as when (a + 1) is type-specialized. Among other things, this
     // bit-vector is used, based on the type of conversion that is needed, to determine whether conversion is necessary, and if
-    // so, whether a bailout is needed. For instance, after type-specializing (a | 0), the int32 sym of 'a' cannot be reused in
+    // so, whether a bailout is needed. For instance, after type-specializing (a | 0), the int32_t sym of 'a' cannot be reused in
     // (a + 1) during type-specialization. It needs to be converted again using a lossless conversion with a bailout.
-    // Conversely, a lossless int32 sym can be reused to avoid a lossy conversion.
+    // Conversely, a lossless int32_t sym can be reused to avoid a lossy conversion.
     BVSparse<JitArenaAllocator> *           liveLossyInt32Syms;
     BVSparse<JitArenaAllocator> *           liveFloat64Syms;
     BVSparse<JitArenaAllocator> *           argObjSyms;

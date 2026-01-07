@@ -27,7 +27,7 @@ void GlobOpt::AddSubConstantInfo::Set(
     StackSym *const srcSym,
     Value *const srcValue,
     const bool srcValueIsLikelyConstant,
-    const int32 offset)
+    const int32_t offset)
 {
     Assert(srcSym);
     Assert(!srcSym->IsTypeSpec());
@@ -162,7 +162,7 @@ void GlobOpt::ArrayUpperBoundCheckHoistInfo::SetLoop(
 void GlobOpt::UpdateIntBoundsForEqualBranch(
     Value *const src1Value,
     Value *const src2Value,
-    const int32 src2ConstantValue)
+    const int32_t src2ConstantValue)
 {
     Assert(src1Value);
 
@@ -215,7 +215,7 @@ void GlobOpt::UpdateIntBoundsForEqualBranch(
 void GlobOpt::UpdateIntBoundsForNotEqualBranch(
     Value *const src1Value,
     Value *const src2Value,
-    const int32 src2ConstantValue)
+    const int32_t src2ConstantValue)
 {
     Assert(src1Value);
 
@@ -450,8 +450,8 @@ ValueInfo *GlobOpt::UpdateIntBoundsForEqual(
         return nullptr;
     }
 
-    const int32 newMin = max(constantBounds.LowerBound(), boundConstantBounds.LowerBound());
-    const int32 newMax = min(constantBounds.UpperBound(), boundConstantBounds.UpperBound());
+    const int32_t newMin = max(constantBounds.LowerBound(), boundConstantBounds.LowerBound());
+    const int32_t newMax = min(constantBounds.UpperBound(), boundConstantBounds.UpperBound());
     return newMin <= newMax ? NewIntRangeValueInfo(valueInfo, newMin, newMax) : nullptr;
 }
 
@@ -502,10 +502,10 @@ ValueInfo *GlobOpt::UpdateIntBoundsForNotEqual(
     {
         return nullptr;
     }
-    const int32 constantBound = boundConstantBounds.LowerBound();
+    const int32_t constantBound = boundConstantBounds.LowerBound();
 
     // The value is not equal to a constant, so narrow the range if the constant is equal to the value's lower or upper bound
-    int32 newMin = constantBounds.LowerBound(), newMax = constantBounds.UpperBound();
+    int32_t newMin = constantBounds.LowerBound(), newMax = constantBounds.UpperBound();
     if(constantBound == newMin)
     {
         Assert(newMin <= newMax);
@@ -582,7 +582,7 @@ ValueInfo *GlobOpt::UpdateIntBoundsForGreaterThanOrEqual(
         return nullptr;
     }
 
-    int32 adjustedBoundMin;
+    int32_t adjustedBoundMin;
     if(boundOffset == 0)
     {
         adjustedBoundMin = boundConstantBounds.LowerBound();
@@ -599,7 +599,7 @@ ValueInfo *GlobOpt::UpdateIntBoundsForGreaterThanOrEqual(
     {
         return nullptr;
     }
-    const int32 newMin = max(constantBounds.LowerBound(), adjustedBoundMin);
+    const int32_t newMin = max(constantBounds.LowerBound(), adjustedBoundMin);
     return
         newMin <= constantBounds.UpperBound()
             ? NewIntRangeValueInfo(valueInfo, newMin, constantBounds.UpperBound())
@@ -667,7 +667,7 @@ ValueInfo *GlobOpt::UpdateIntBoundsForLessThanOrEqual(
         return nullptr;
     }
 
-    int32 adjustedBoundMax;
+    int32_t adjustedBoundMax;
     if(boundOffset == 0)
     {
         adjustedBoundMax = boundConstantBounds.UpperBound();
@@ -684,7 +684,7 @@ ValueInfo *GlobOpt::UpdateIntBoundsForLessThanOrEqual(
     {
         return nullptr;
     }
-    const int32 newMax = min(constantBounds.UpperBound(), adjustedBoundMax);
+    const int32_t newMax = min(constantBounds.UpperBound(), adjustedBoundMax);
     return
         newMax >= constantBounds.LowerBound()
             ? NewIntRangeValueInfo(valueInfo, constantBounds.LowerBound(), newMax)
@@ -864,7 +864,7 @@ void GlobOpt::TrackIntSpecializedAddSubConstant(
             if(bounds)
             {
                 const ValueNumber valueNumber = value->GetValueNumber();
-                const int32 dstOffset = -addSubConstantInfo->Offset();
+                const int32_t dstOffset = -addSubConstantInfo->Offset();
                 bounds->SetLowerBound(valueNumber, dstValue, dstOffset, true);
                 bounds->SetUpperBound(valueNumber, dstValue, dstOffset, true);
                 ChangeValueInfo(nullptr, value, NewIntBoundedValueInfo(valueInfo, bounds));
@@ -1543,7 +1543,7 @@ void GlobOpt::DetermineLoopCount(Loop *const loop)
             {
                 // No useful relative bound found; look for a constant bound. Exclude large constant bounds established implicitly by
                 // <, <=, >, and >=. For example, for a loop condition (i < n), if 'n' is not invariant and hence can't be used,
-                // 'i' will still have a constant upper bound of (int32 max - 1) that should be excluded as it's too large. Any
+                // 'i' will still have a constant upper bound of (int32_t max - 1) that should be excluded as it's too large. Any
                 // other constant bounds must have been established explicitly by the loop condition, and are safe to use.
                 boundBaseVarSym = nullptr;
                 if(minMagnitudeChange >= 0)
@@ -2055,7 +2055,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
 
         if(isJsArray)
         {
-            // index >= headSegmentLength is currently not possible for JS arrays (except when index == int32 max, which is
+            // index >= headSegmentLength is currently not possible for JS arrays (except when index == int32_t max, which is
             // covered above).
             Assert(
                 !ValueInfo::IsGreaterThanOrEqualTo(
@@ -2711,7 +2711,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
             // bounds of non-induction variables because those bounds may have been established through means other than a loop
             // exit condition, such as math or bitwise operations. Exclude constant bounds established implicitly by <,
             // <=, >, and >=. For example, for a loop condition (i < n - 1), if 'n' is not invariant and hence can't be used,
-            // 'i' will still have a constant upper bound of (int32 max - 2) that should be excluded.
+            // 'i' will still have a constant upper bound of (int32_t max - 2) that should be excluded.
             TRACE_PHASE_VERBOSE(Js::Phase::BoundCheckHoistPhase, 4, u"Relative upper bound was not found\n");
             const InductionVariable *indexInductionVariable;
             if(!upperHoistInfo.Loop() &&
@@ -3027,7 +3027,7 @@ void GlobOpt::DetermineArrayBoundCheckHoistability(
             }
 
             // loopCountBasedConstantBound >= headSegmentLength is currently not possible, except when
-            // loopCountBasedConstantBound == int32 max
+            // loopCountBasedConstantBound == int32_t max
             Assert(
                 loopCountBasedConstantBound == IntConstMax ||
                 !ValueInfo::IsGreaterThanOrEqualTo(
@@ -3238,8 +3238,8 @@ GlobOpt::EmitIntRangeChecks(IR::Instr* instr, IR::Opnd* opnd)
         return;
     }
 
-    int32 lowerBound = INT_MIN;
-    int32 upperBound = INT_MAX;
+    int32_t lowerBound = INT_MIN;
+    int32_t upperBound = INT_MAX;
     
     if (value->GetValueInfo()->IsIntBounded())
     {
@@ -3256,7 +3256,7 @@ GlobOpt::EmitIntRangeChecks(IR::Instr* instr, IR::Opnd* opnd)
         return;
     }
 
-    const auto EmitBoundCheck = [&](Js::OpCode opcode, int32 bound)
+    const auto EmitBoundCheck = [&](Js::OpCode opcode, int32_t bound)
     {
         IR::Opnd * boundOpnd = IR::IntConstOpnd::New(bound, TyInt32, instr->m_func, true /*dontEncode*/);
         IR::Instr * boundCheckInstr = IR::Instr::New(opcode, instr->m_func);

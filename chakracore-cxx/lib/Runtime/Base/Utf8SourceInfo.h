@@ -282,13 +282,13 @@ namespace Js
         virtual void Mark(Recycler *recycler) override { AssertMsg(false, "Mark called on object that isn't TrackableObject"); }
 
         static Utf8SourceInfo* NewWithHolder(ScriptContext* scriptContext,
-            ISourceHolder* sourceHolder, int32 length, SRCINFO const* srcInfo,
+            ISourceHolder* sourceHolder, int32_t length, SRCINFO const* srcInfo,
             bool isLibraryCode, Js::Var scriptSource = nullptr);
         static Utf8SourceInfo* New(ScriptContext* scriptContext, LPCUTF8 utf8String,
-            int32 length, size_t numBytes, SRCINFO const* srcInfo,
+            int32_t length, size_t numBytes, SRCINFO const* srcInfo,
             bool isLibraryCode);
         static Utf8SourceInfo* NewWithNoCopy(ScriptContext* scriptContext,
-            LPCUTF8 utf8String, int32 length, size_t numBytes,
+            LPCUTF8 utf8String, int32_t length, size_t numBytes,
             SRCINFO const* srcInfo, bool isLibraryCode, Js::Var scriptSource = nullptr);
 
         ScriptContext * GetScriptContext() const
@@ -404,7 +404,7 @@ namespace Js
         Field(uint32_t) parseFlags;
         Field(uint32_t) byteCodeGenerationFlags;
 
-        Utf8SourceInfo(ISourceHolder *sourceHolder, int32 cchLength, SRCINFO const* srcInfo,
+        Utf8SourceInfo(ISourceHolder *sourceHolder, int32_t cchLength, SRCINFO const* srcInfo,
             unsigned long secondaryHostSourceContext, ScriptContext* scriptContext,
             bool isLibraryCode, Js::Var scriptSource = nullptr);
 

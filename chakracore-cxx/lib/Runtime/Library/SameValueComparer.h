@@ -56,7 +56,7 @@ namespace Js
             switch (JavascriptOperators::GetTypeId(i))
             {
             case TypeIds_Integer:
-                // int32 can be fully represented in a double, so hash it as a double
+                // int32_t can be fully represented in a double, so hash it as a double
                 // to ensure that tagged ints hash to the same value as JavascriptNumbers.
                 return HashDouble((double)TaggedInt::ToInt32(i));
 

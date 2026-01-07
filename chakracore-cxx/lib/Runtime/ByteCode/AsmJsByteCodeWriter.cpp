@@ -44,7 +44,7 @@ namespace Js
         return offset;
     }
 
-    void AsmJsByteCodeWriter::InitData(ArenaAllocator* alloc, int32 initCodeBufferSize)
+    void AsmJsByteCodeWriter::InitData(ArenaAllocator* alloc, int32_t initCodeBufferSize)
     {
         ByteCodeWriter::InitData(alloc, initCodeBufferSize);
 #ifdef BYTECODE_BRANCH_ISLAND

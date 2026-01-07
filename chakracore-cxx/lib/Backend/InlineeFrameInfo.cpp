@@ -44,9 +44,9 @@ Js::Var BailoutConstantValue::ToVar(Func* func) const
     {
         varValue = func->AllocateNumber((double)this->u.floatConst.value);
     }
-    else if (IRType_IsSignedInt(this->type) && TySize[this->type] <= 4 && !Js::TaggedInt::IsOverflow((int32)this->u.intConst.value))
+    else if (IRType_IsSignedInt(this->type) && TySize[this->type] <= 4 && !Js::TaggedInt::IsOverflow((int32_t)this->u.intConst.value))
     {
-        varValue = Js::TaggedInt::ToVarUnchecked((int32)this->u.intConst.value);
+        varValue = Js::TaggedInt::ToVarUnchecked((int32_t)this->u.intConst.value);
     }
     else
     {
@@ -184,7 +184,7 @@ void InlineeFrameRecord::Finalize(Func* inlinee, uint32_t currentOffset)
 
 #ifdef MD_GROW_LOCALS_AREA_UP
     Func* topFunc = inlinee->GetTopFunc();
-    int32 inlineeArgStackSize = topFunc->GetInlineeArgumentStackSize();
+    int32_t inlineeArgStackSize = topFunc->GetInlineeArgumentStackSize();
     int localsSize = topFunc->m_localStackHeight + topFunc->m_ArgumentsOffset;
 
     this->MapOffsets([=](int& offset)
@@ -352,7 +352,7 @@ Js::Var InlineeFrameRecord::Restore(int offset, bool isFloat64, bool isInt32, Js
 
     if (isInt32)
     {
-        int32 int32Value = ::Math::PointerCastToIntegralTruncate<int32>(value);
+        int32_t int32Value = ::Math::PointerCastToIntegralTruncate<int32_t>(value);
         value = Js::JavascriptNumber::ToVar(int32Value, functionBody->GetScriptContext());
         BAILOUT_VERBOSE_TRACE(functionBody, u", value: %10d (ToVar: 0x%p)", int32Value, value);
     }

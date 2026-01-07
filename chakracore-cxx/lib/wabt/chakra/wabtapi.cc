@@ -100,7 +100,7 @@ void set_property(Context* ctx, Js::Var obj, PropertyId id, Js::Var value, const
     }
 }
 
-void write_int32(Context* ctx, Js::Var obj, PropertyId id, int32 value)
+void write_int32(Context* ctx, Js::Var obj, PropertyId id, int32_t value)
 {
     Js::Var line = ctx->chakra->spec->int32ToVar(value, ctx->chakra->user_data);
     set_property(ctx, obj, id, line, "Unable to write number");

@@ -677,12 +677,12 @@ Func::TryCodegen()
 /// Func::StackAllocate
 ///     Allocate stack space of given size.
 ///----------------------------------------------------------------------------
-int32
+int32_t
 Func::StackAllocate(int size)
 {
     Assert(this->IsTopFunc());
 
-    int32 offset;
+    int32_t offset;
 
 #ifdef MD_GROW_LOCALS_AREA_UP
     // Locals have positive offsets and are allocated from bottom to top.
@@ -709,7 +709,7 @@ Func::StackAllocate(int size)
 ///
 ///----------------------------------------------------------------------------
 
-int32
+int32_t
 Func::StackAllocate(StackSym *stackSym, int size)
 {
     Assert(size > 0);
@@ -725,7 +725,7 @@ Func::StackAllocate(StackSym *stackSym, int size)
 }
 
 void
-Func::SetArgOffset(StackSym *stackSym, int32 offset)
+Func::SetArgOffset(StackSym *stackSym, int32_t offset)
 {
     AssertMsg(offset >= 0, "Why is the offset, negative?");
     stackSym->m_offset = offset;
@@ -749,7 +749,7 @@ Func::EnsureLocalVarSlots()
         if (localSlotCount && m_localVarSlotsOffset == Js::Constants::InvalidOffset)
         {
             // Allocate the slots.
-            int32 size = localSlotCount * GetDiagLocalSlotSize();
+            int32_t size = localSlotCount * GetDiagLocalSlotSize();
             m_localVarSlotsOffset = StackAllocate(size);
             m_hasLocalVarChangedOffset = StackAllocate(max(1, MachStackAlignment)); // Can't alloc less than StackAlignment bytes.
 
@@ -765,7 +765,7 @@ void Func::SetFirstArgOffset(IR::Instr* inlineeStart)
 {
     Assert(inlineeStart->m_func == this);
     Assert(!IsTopFunc());
-    int32 lastOffset;
+    int32_t lastOffset;
 
     IR::Instr* arg = inlineeStart->GetNextArg();
     if (arg)
@@ -789,18 +789,18 @@ void Func::SetFirstArgOffset(IR::Instr* inlineeStart)
         Assert(this->GetTopFunc()->GetJITFunctionBody()->IsAsmJsMode());
         lastOffset = MachPtr;
     }
-    int32 firstActualStackOffset = lastOffset - ((this->actualCount + Js::Constants::InlineeMetaArgCount) * MachPtr);
+    int32_t firstActualStackOffset = lastOffset - ((this->actualCount + Js::Constants::InlineeMetaArgCount) * MachPtr);
     Assert((this->firstActualStackOffset == -1) || (this->firstActualStackOffset == firstActualStackOffset));
     this->firstActualStackOffset = firstActualStackOffset;
 }
 
-int32
-Func::GetLocalVarSlotOffset(int32 slotId)
+int32_t
+Func::GetLocalVarSlotOffset(int32_t slotId)
 {
     this->EnsureLocalVarSlots();
     Assert(m_localVarSlotsOffset != Js::Constants::InvalidOffset);
 
-    int32 slotOffset = slotId * GetDiagLocalSlotSize();
+    int32_t slotOffset = slotId * GetDiagLocalSlotSize();
 
     return m_localVarSlotsOffset + slotOffset;
 }
@@ -819,7 +819,7 @@ void Func::OnAddSym(Sym* sym)
 /// Returns offset of the flag (1 byte) whether any local was changed (in debugger).
 /// If the function does not have any locals, returns -1.
 ///
-int32
+int32_t
 Func::GetHasLocalVarChangedOffset()
 {
     this->EnsureLocalVarSlots();
@@ -838,8 +838,8 @@ Func::IsNonTempLocalVar(uint32_t slotIndex)
     return GetJITFunctionBody()->IsNonTempLocalVar(slotIndex);
 }
 
-int32
-Func::AdjustOffsetValue(int32 offset)
+int32_t
+Func::AdjustOffsetValue(int32_t offset)
 {
 #ifdef MD_GROW_LOCALS_AREA_UP
         return -(offset + BailOutInfo::StackSymBias);
@@ -923,8 +923,8 @@ Int64RegPair Func::FindOrCreateInt64Pair(IR::Opnd* opnd)
     if (opnd->IsImmediateOpnd())
     {
         long value = opnd->GetImmediateValue(this);
-        pair.low = IR::IntConstOpnd::New((int32)value, pairType, this);
-        pair.high = IR::IntConstOpnd::New((int32)(value >> 32), pairType, this);
+        pair.low = IR::IntConstOpnd::New((int32_t)value, pairType, this);
+        pair.high = IR::IntConstOpnd::New((int32_t)(value >> 32), pairType, this);
         return pair;
     }
 
@@ -1412,7 +1412,7 @@ Func::EndClone()
 }
 
 IR::SymOpnd *
-Func::GetInlineeOpndAtOffset(int32 offset)
+Func::GetInlineeOpndAtOffset(int32_t offset)
 {
     Assert(IsInlinee());
 

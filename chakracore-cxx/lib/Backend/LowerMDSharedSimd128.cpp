@@ -2909,7 +2909,7 @@ LowererMD::Simd128GenerateUpperBoundCheck(IR::RegOpnd *indexOpnd, IR::IndirOpnd 
     }
 
     IR::LabelInstr * skipLabel = Lowerer::InsertLabel(false, instr);
-    int32 elemCount = Lowerer::SimdGetElementCountFromBytes(arrayRegOpnd->GetValueType(), instr->dataWidth);
+    int32_t elemCount = Lowerer::SimdGetElementCountFromBytes(arrayRegOpnd->GetValueType(), instr->dataWidth);
     if (indexOpnd)
     {
         //  MOV tmp, elemCount
@@ -2928,8 +2928,8 @@ LowererMD::Simd128GenerateUpperBoundCheck(IR::RegOpnd *indexOpnd, IR::IndirOpnd 
     {
         // CMP Length, (offset + elemCount)
         // JA $storeLabel
-        int32 offset = indirOpnd->GetOffset();
-        int32 index = offset + elemCount;
+        int32_t offset = indirOpnd->GetOffset();
+        int32_t index = offset + elemCount;
         m_lowerer->InsertCompareBranch(headSegmentLengthOpnd, IR::IntConstOpnd::New(index, TyInt32, m_func, true), Js::OpCode::BrLe_A, true, skipLabel, skipLabel);
     }
     m_lowerer->GenerateRuntimeError(skipLabel, JSERR_ArgumentOutOfRange, IR::HelperOp_RuntimeRangeError);
@@ -2951,7 +2951,7 @@ LowererMD::Simd128LoadHeadSegment(IR::IndirOpnd *indirOpnd, ValueType arrType, I
     else
     {
         //  MOV headSegment, [base + offset(head)]
-        int32 headOffset = m_lowerer->GetArrayOffsetOfHeadSegment(arrType);
+        int32_t headOffset = m_lowerer->GetArrayOffsetOfHeadSegment(arrType);
         IR::IndirOpnd * newIndirOpnd = IR::IndirOpnd::New(arrayRegOpnd, headOffset, TyMachPtr, this->m_func);
         headSegmentOpnd = IR::RegOpnd::New(TyMachPtr, this->m_func);
         m_lowerer->InsertMove(headSegmentOpnd, newIndirOpnd, instr);

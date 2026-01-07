@@ -15,7 +15,7 @@ namespace Js
         virtual void End() override {}
         virtual void Reset() override {}
         virtual ByteCodeLabel DefineLabel() override {return 0;}
-        virtual void InitData(ArenaAllocator* alloc, int32 initCodeBufferSize) override {}
+        virtual void InitData(ArenaAllocator* alloc, int32_t initCodeBufferSize) override {}
         virtual void MarkAsmJsLabel(ByteCodeLabel labelID) override {}
         virtual void EmptyAsm(OpCodeAsmJs op) override {}
         virtual void Conv(OpCodeAsmJs op, RegSlot R0, RegSlot R1) override {}

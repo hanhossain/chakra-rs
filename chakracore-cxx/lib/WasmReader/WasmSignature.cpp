@@ -132,12 +132,12 @@ Js::ArgSlot WasmSignature::GetParamSize(Js::ArgSlot index) const
     {
     case WasmTypes::F32:
     case WasmTypes::I32:
-        CompileAssert(sizeof(float) == sizeof(int32));
+        CompileAssert(sizeof(float) == sizeof(int32_t));
 #ifdef _M_X64
         // on x64, we always alloc (at least) 8 bytes per arguments
         return sizeof(void*);
 #elif _M_IX86
-        return sizeof(int32);
+        return sizeof(int32_t);
 #else
         Assert(UNREACHED);
 #endif

@@ -43,12 +43,12 @@ namespace Js
     }
 
     template bool SIMDBool32x4Operation::OpAllTrue<long>(const SIMDValue& simd);
-    template bool SIMDBool32x4Operation::OpAllTrue<int32>(const SIMDValue& simd);
+    template bool SIMDBool32x4Operation::OpAllTrue<int32_t>(const SIMDValue& simd);
     template bool SIMDBool32x4Operation::OpAllTrue<int16>(const SIMDValue& simd);
     template bool SIMDBool32x4Operation::OpAllTrue<int8_t>(const SIMDValue& simd);
     //
     template bool SIMDBool32x4Operation::OpAnyTrue<long>(const SIMDValue& simd);
-    template bool SIMDBool32x4Operation::OpAnyTrue<int32>(const SIMDValue& simd);
+    template bool SIMDBool32x4Operation::OpAnyTrue<int32_t>(const SIMDValue& simd);
     template bool SIMDBool32x4Operation::OpAnyTrue<int16>(const SIMDValue& simd);
     template bool SIMDBool32x4Operation::OpAnyTrue<int8_t>(const SIMDValue& simd);
 }

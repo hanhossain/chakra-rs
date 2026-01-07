@@ -54,7 +54,7 @@ namespace Js
         return ToVarNoCheck(value, scriptContext);
     }
 
-    Var JavascriptNumber::ToVarInPlace(int32 nValue, ScriptContext* scriptContext, Js::JavascriptNumber *result)
+    Var JavascriptNumber::ToVarInPlace(int32_t nValue, ScriptContext* scriptContext, Js::JavascriptNumber *result)
     {
         if (!TaggedInt::IsOverflow(nValue))
         {
@@ -109,7 +109,7 @@ namespace Js
         return JavascriptNumber::NewInlined(value,scriptContext);
     }
 
-    bool JavascriptNumber::TryGetInt32OrUInt32Value(const double value, int32 *const int32Value, bool *const isInt32)
+    bool JavascriptNumber::TryGetInt32OrUInt32Value(const double value, int32_t *const int32Value, bool *const isInt32)
     {
         Assert(int32Value);
         Assert(isInt32);
@@ -126,19 +126,19 @@ namespace Js
         }
 
         *int32Value = i;
-        *isInt32 = static_cast<int32>(i) >= 0;
+        *isInt32 = static_cast<int32_t>(i) >= 0;
         return true;
     }
 
     bool JavascriptNumber::IsInt32(const double value)
     {
-        int32 i;
+        int32_t i;
         return TryGetInt32Value(value, &i);
     }
 
     bool JavascriptNumber::IsInt32OrUInt32(const double value)
     {
-        int32 i;
+        int32_t i;
         bool isInt32;
         return TryGetInt32OrUInt32Value(value, &i, &isInt32);
     }
@@ -159,16 +159,16 @@ namespace Js
         return IsInt32OrUInt32(GetValue(number));
     }
 
-    int32 JavascriptNumber::GetNonzeroInt32Value_NoTaggedIntCheck(const Var object)
+    int32_t JavascriptNumber::GetNonzeroInt32Value_NoTaggedIntCheck(const Var object)
     {
         Assert(object);
         Assert(!TaggedInt::Is(object));
 
-        int32 i;
+        int32_t i;
         return Is_NoTaggedIntCheck(object) && TryGetInt32Value(GetValue(object), &i) ? i : 0;
     }
 
-    int32 JavascriptNumber::DirectPowIntInt(bool* isOverflow, int32 x, int32 y)
+    int32_t JavascriptNumber::DirectPowIntInt(bool* isOverflow, int32_t x, int32_t y)
     {
         if (y < 0)
         {
@@ -177,7 +177,7 @@ namespace Js
         }
 
         uint32_t uexp = static_cast<uint32_t>(y);
-        int32 result = 1;
+        int32_t result = 1;
 
         while (true)
         {
@@ -204,7 +204,7 @@ namespace Js
         return *isOverflow ? 0 : result;
     }
 
-    double JavascriptNumber::DirectPowDoubleInt(double x, int32 y)
+    double JavascriptNumber::DirectPowDoubleInt(double x, int32_t y)
     {
         // For exponent in [-8, 8], aggregate the product according to binary representation
         // of exponent. This acceleration may lead to significant deviation for larger exponent
@@ -327,7 +327,7 @@ namespace Js
         // For AMD64/ARM calling convention already uses SSE2/VFP registers so we don't have to use assembler.
         // We can't just use "if (0 == y)" because NaN compares
         // equal to 0 according to our compilers.
-        int32 intY;
+        int32_t intY;
         if (0 == NumberUtilities::LuLoDbl(y) && 0 == (NumberUtilities::LuHiDbl(y) & 0x7FFFFFFF))
         {
             // pow(x, 0) = 1 even if x is NaN.

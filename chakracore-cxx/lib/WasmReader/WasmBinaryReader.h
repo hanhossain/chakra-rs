@@ -104,7 +104,7 @@ namespace Wasm
         const char16_t* ReadInlineName(uint32_t& length, uint32_t& nameLength);
         template<typename LEBType = uint32_t, uint32_t bits = sizeof(LEBType) * 8>
         LEBType LEB128(uint32_t &length);
-        template<typename LEBType = int32, uint32_t bits = sizeof(LEBType) * 8>
+        template<typename LEBType = int32_t, uint32_t bits = sizeof(LEBType) * 8>
         LEBType SLEB128(uint32_t &length)
         {
             CompileAssert(LEBType(-1) < LEBType(0));

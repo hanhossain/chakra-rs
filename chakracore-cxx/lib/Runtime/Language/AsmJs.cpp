@@ -736,7 +736,7 @@ varDeclEnd:
         AsmJSParser& list = m.GetCurrentParserNode();
         Assert(list->nop == knopList);
 
-        int32 funcPtrTableCount = 0;
+        int32_t funcPtrTableCount = 0;
         while (list->nop != knopEndCode)
         {
             ParseNode * varStmt = ParserWrapper::GetBinaryLeft(list);

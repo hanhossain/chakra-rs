@@ -86,19 +86,19 @@ namespace Js
             static Var ShiftRightU(Var aLeft, Var aRight,ScriptContext* scriptContext);
             static Var ShiftRightU_Full(Var aLeft, Var aRight,ScriptContext* scriptContext);
 
-            static Var FinishOddDivByPow2(int32 value, ScriptContext *scriptContext);
-            static Var FinishOddDivByPow2_InPlace(int32 value, ScriptContext *scriptContext, JavascriptNumber* result);
+            static Var FinishOddDivByPow2(int32_t value, ScriptContext *scriptContext);
+            static Var FinishOddDivByPow2_InPlace(int32_t value, ScriptContext *scriptContext, JavascriptNumber* result);
             static Var MaxInAnArray(RecyclableObject * function, CallInfo callInfo, ...);
             static Var MinInAnArray(RecyclableObject * function, CallInfo callInfo, ...);
 
             static double Random(ScriptContext *scriptContext);
-            static int32 ToInt32Core(double T1);
+            static int32_t ToInt32Core(double T1);
             static uint32_t ToUInt32(double value);
             static long TryToInt64(double T1);
-            static int32 ToInt32_NoObjects(Var aValue, ScriptContext* scriptContext, bool& isObject);
-            static int32 ToInt32(Var aValue, ScriptContext* scriptContext);
-            static int32 ToInt32(double value);
-            static int32 ToInt32_Full(Var aValue, ScriptContext* scriptContext);
+            static int32_t ToInt32_NoObjects(Var aValue, ScriptContext* scriptContext, bool& isObject);
+            static int32_t ToInt32(Var aValue, ScriptContext* scriptContext);
+            static int32_t ToInt32(double value);
+            static int32_t ToInt32_Full(Var aValue, ScriptContext* scriptContext);
 
             // different CRT versions define these with different calling conventions, so use our own method to prevent these inconsistencies
             static float FloorF(float val) { return floorf(val); }
@@ -121,11 +121,11 @@ namespace Js
             static Var Subtract_DoubleHelper(Var subLeft, double dblRight, ScriptContext* scriptContext, JavascriptNumber* result);
 
 
-            static int32 And_Helper(Var aLeft, Var aRight,ScriptContext* scriptContext);
+            static int32_t And_Helper(Var aLeft, Var aRight,ScriptContext* scriptContext);
             static double Decrement_Helper(Var aLeft, ScriptContext* scriptContext);
             static double Increment_Helper(Var aLeft, ScriptContext* scriptContext);
             static double Negate_Helper(Var aRight,ScriptContext* scriptContext);
-            static int32 Or_Helper(Var aLeft, Var aRight,ScriptContext* scriptContext);
+            static int32_t Or_Helper(Var aLeft, Var aRight,ScriptContext* scriptContext);
 
             static BOOL IsNanInfZero(double v);
             static long ToInt32ES5OverflowHelper(double d);

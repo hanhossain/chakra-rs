@@ -246,9 +246,9 @@ namespace Js
 
         static bool IsInSupplementaryPlane(codepoint_t codePointValue);
 
-        static int32 LwFromDblNearest(double dbl);
+        static int32_t LwFromDblNearest(double dbl);
         static uint32_t LuFromDblNearest(double dbl);
-        static BOOL FDblIsInt32(double dbl, int32 *plw);
+        static BOOL FDblIsInt32(double dbl, int32_t *plw);
 
         template<typename EncodedChar>
         static double DblFromHex(const EncodedChar *psz, const EncodedChar **ppchLim, bool isNumericSeparatorEnabled = false);

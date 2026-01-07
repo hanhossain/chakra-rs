@@ -19,7 +19,7 @@ char16_t DynamicProfileStorage::catalogFilename[_MAX_PATH];
 CriticalSection DynamicProfileStorage::cs;
 DynamicProfileStorage::InfoMap DynamicProfileStorage::infoMap(&NoCheckHeapAllocator::Instance);
 DynamicProfileStorage::TimeType DynamicProfileStorage::creationTime = DynamicProfileStorage::TimeType();
-int32 DynamicProfileStorage::lastOffset = 0;
+int32_t DynamicProfileStorage::lastOffset = 0;
 uint32_t const DynamicProfileStorage::MagicNumber = 20100526;
 uint32_t const DynamicProfileStorage::FileFormatVersion = 2;
 uint32_t DynamicProfileStorage::nextFileId = 0;
@@ -46,9 +46,9 @@ public:
 
     bool WriteUtf8String(char16_t const * str);
 
-    bool Seek(int32 offset);
+    bool Seek(int32_t offset);
     bool SeekToEnd();
-    int32 Size();
+    int32_t Size();
     void Close(bool deleteFile = false);
 
 private:
@@ -92,7 +92,7 @@ template <typename T>
 bool DynamicProfileStorageReaderWriter::ReadArray(T * t, size_t len)
 {
     AssertOrFailFast(file);
-    int32 pos = ftell(file);
+    int32_t pos = ftell(file);
     if (fread(t, sizeof(T), len, file) != len)
     {
         Output::Print(u"ERROR: DynamicProfileStorage: '%s': File corrupted at %d\n", filename, pos);
@@ -176,7 +176,7 @@ bool DynamicProfileStorageReaderWriter::WriteUtf8String(char16_t const * str)
     return success;
 }
 
-bool DynamicProfileStorageReaderWriter::Seek(int32 offset)
+bool DynamicProfileStorageReaderWriter::Seek(int32_t offset)
 {
     AssertOrFailFast(file);
     return fseek(file, offset, SEEK_SET) == 0;
@@ -188,12 +188,12 @@ bool DynamicProfileStorageReaderWriter::SeekToEnd()
     return fseek(file, 0, SEEK_END) == 0;
 }
 
-int32 DynamicProfileStorageReaderWriter::Size()
+int32_t DynamicProfileStorageReaderWriter::Size()
 {
     AssertOrFailFast(file);
-    int32 current = ftell(file);
+    int32_t current = ftell(file);
     SeekToEnd();
-    int32 end = ftell(file);
+    int32_t end = ftell(file);
     fseek(file, current, SEEK_SET);
     return end;
 }
@@ -236,7 +236,7 @@ char const * DynamicProfileStorage::StorageInfo::ReadRecord() const
         return nullptr;
     }
 
-    int32 size = reader.Size();
+    int32_t size = reader.Size();
     char * record = AllocRecord(size);
     if (record == nullptr)
     {

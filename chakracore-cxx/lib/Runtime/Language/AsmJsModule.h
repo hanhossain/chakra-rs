@@ -81,9 +81,9 @@ namespace Js {
 
     struct AsmJsModuleMemory
     {
-        static const int32   MemoryTableBeginOffset = 0;
+        static const int32_t   MemoryTableBeginOffset = 0;
         // Memory is allocated in this order
-        Field(int32) mArrayBufferOffset
+        Field(int32_t) mArrayBufferOffset
             , mStdLibOffset
             , mDoubleOffset
             , mFuncOffset
@@ -92,7 +92,7 @@ namespace Js {
             , mIntOffset
             , mFloatOffset
             ;
-        Field(int32)   mMemorySize;
+        Field(int32_t)   mMemorySize;
     };
 
     struct AsmJsFunctionMemory
@@ -164,11 +164,11 @@ namespace Js {
         ModuleFunctionTableArray        mFunctionTableArray;
         int                             mVarImportCount;
         int                             mVarCount;
-        int32                           mFuncPtrTableCount;
+        int32_t                           mFuncPtrTableCount;
         AsmJsModuleMemory               mModuleMemory;
         AsmJsCompileTime                mCompileTime;
         AsmJsCompileTime                mCompileTimeLastTick;
-        int32                            mMaxAstSize;
+        int32_t                            mMaxAstSize;
         BVStatic<ASMMATH_BUILTIN_SIZE>  mAsmMathBuiltinUsedBV;
         BVStatic<ASMARRAY_BUILTIN_SIZE> mAsmArrayBuiltinUsedBV;
         AsmJsCompileTime                mPhaseCompileTime[AsmJsCompilation::Phases_COUNT];
@@ -197,8 +197,8 @@ namespace Js {
         inline ParseNodeFnc *GetModuleFunctionNode() const{return mModuleFunctionNode;}
 
         inline ArenaAllocator* GetAllocator() {return &mAllocator;}
-        inline int32 GetMaxAstSize() const{return mMaxAstSize;}
-        inline void UpdateMaxAstSize( int32 val ){mMaxAstSize = val>mMaxAstSize?val:mMaxAstSize;}
+        inline int32_t GetMaxAstSize() const{return mMaxAstSize;}
+        inline void UpdateMaxAstSize( int32_t val ){mMaxAstSize = val>mMaxAstSize?val:mMaxAstSize;}
 
         //Mutable interface
         inline void InitModuleName( PropertyName name ){mModuleFunctionName = name;}
@@ -260,15 +260,15 @@ namespace Js {
 
 
         void InitMemoryOffsets           ();
-        inline int32 GetIntOffset        () const{return mModuleMemory.mIntOffset;}
-        inline int32 GetFloatOffset        () const{return mModuleMemory.mFloatOffset;}
-        inline int32 GetFuncPtrOffset    () const{return mModuleMemory.mFuncPtrOffset;}
-        inline int32 GetFFIOffset        () const{return mModuleMemory.mFFIOffset;}
-        inline int32 GetFuncOffset       () const{return mModuleMemory.mFuncOffset;}
-        inline int32 GetDoubleOffset     () const{return mModuleMemory.mDoubleOffset; }
+        inline int32_t GetIntOffset        () const{return mModuleMemory.mIntOffset;}
+        inline int32_t GetFloatOffset        () const{return mModuleMemory.mFloatOffset;}
+        inline int32_t GetFuncPtrOffset    () const{return mModuleMemory.mFuncPtrOffset;}
+        inline int32_t GetFFIOffset        () const{return mModuleMemory.mFFIOffset;}
+        inline int32_t GetFuncOffset       () const{return mModuleMemory.mFuncOffset;}
+        inline int32_t GetDoubleOffset     () const{return mModuleMemory.mDoubleOffset; }
 
-        inline int32 GetFuncPtrTableCount() const{return mFuncPtrTableCount;}
-        inline void SetFuncPtrTableCount ( int32 val ){mFuncPtrTableCount = val;}
+        inline int32_t GetFuncPtrTableCount() const{return mFuncPtrTableCount;}
+        inline void SetFuncPtrTableCount ( int32_t val ){mFuncPtrTableCount = val;}
 
     private:
         void RevertFunction(int funcIndex);

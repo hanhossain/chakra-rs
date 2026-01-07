@@ -1164,7 +1164,7 @@ FuncInfo * ByteCodeGenerator::StartBindGlobalStatements(ParseNodeProg *pnode)
     FuncInfo *funcInfo = Anew(alloc, FuncInfo, Js::Constants::GlobalFunction,
         alloc, this, nullptr, globalScope, pnode, byteCodeFunction);
 
-    int32 currentAstSize = pnode->astSize;
+    int32_t currentAstSize = pnode->astSize;
     if (currentAstSize > this->maxAstSize)
     {
         this->maxAstSize = currentAstSize;
@@ -1552,7 +1552,7 @@ FuncInfo * ByteCodeGenerator::StartBindFunction(const char16_t *name, uint nameL
         funcInfo->funcExprScope = funcExprScope;
     }
 
-    int32 currentAstSize = pnodeFnc->astSize;
+    int32_t currentAstSize = pnodeFnc->astSize;
     if (currentAstSize > this->maxAstSize)
     {
         this->maxAstSize = currentAstSize;

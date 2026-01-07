@@ -15,7 +15,7 @@ namespace Js
     // if m_cchLength < 0 it came from an external source.
     // If m_cbLength > abs(m_cchLength) then m_utf8Source contains non-ASCII (multi-byte encoded) characters.
 
-    Utf8SourceInfo::Utf8SourceInfo(ISourceHolder* mappableSource, int32 cchLength,
+    Utf8SourceInfo::Utf8SourceInfo(ISourceHolder* mappableSource, int32_t cchLength,
         SRCINFO const* srcInfo, unsigned long secondaryHostSourceContext,
         ScriptContext* scriptContext, bool isLibraryCode, Js::Var scriptSource):
         sourceHolder(mappableSource),
@@ -186,7 +186,7 @@ namespace Js
 
     Utf8SourceInfo*
     Utf8SourceInfo::NewWithHolder(ScriptContext* scriptContext, ISourceHolder* sourceHolder,
-        int32 length, SRCINFO const* srcInfo, bool isLibraryCode, Js::Var scriptSource)
+        int32_t length, SRCINFO const* srcInfo, bool isLibraryCode, Js::Var scriptSource)
     {
         // TODO: make this finalizable? Or have a finalizable version which would HeapDelete the string? Is this needed?
         unsigned long secondaryHostSourceContext = Js::Constants::NoHostSourceContext;
@@ -216,7 +216,7 @@ namespace Js
     }
 
     Utf8SourceInfo*
-    Utf8SourceInfo::New(ScriptContext* scriptContext, LPCUTF8 utf8String, int32 length,
+    Utf8SourceInfo::New(ScriptContext* scriptContext, LPCUTF8 utf8String, int32_t length,
         size_t numBytes, SRCINFO const* srcInfo, bool isLibraryCode)
     {
         utf8char_t * newUtf8String = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), utf8char_t, numBytes + 1);
@@ -227,7 +227,7 @@ namespace Js
 
     Utf8SourceInfo*
     Utf8SourceInfo::NewWithNoCopy(ScriptContext* scriptContext, LPCUTF8 utf8String,
-        int32 length, size_t numBytes, SRCINFO const * srcInfo, bool isLibraryCode, Js::Var scriptSource)
+        int32_t length, size_t numBytes, SRCINFO const * srcInfo, bool isLibraryCode, Js::Var scriptSource)
     {
         ISourceHolder* sourceHolder = RecyclerNew(scriptContext->GetRecycler(), SimpleSourceHolder, utf8String, numBytes);
 

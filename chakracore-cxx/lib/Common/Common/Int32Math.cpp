@@ -5,25 +5,25 @@
 #include "CommonCommonPch.h"
 
 bool
-Int32Math::Add(int32 left, int32 right, int32 *pResult)
+Int32Math::Add(int32_t left, int32_t right, int32_t *pResult)
 {
 #if __has_builtin(__builtin_add_overflow) || TARGET_32
-    return IntMathCommon<int32>::Add(left, right, pResult);
+    return IntMathCommon<int32_t>::Add(left, right, pResult);
 #else
 
     Assert(sizeof(void *) == 8);
     long result64 = (long)left + (long)right;
-    *pResult = (int32)result64;
+    *pResult = (int32_t)result64;
     return result64 != (long)(*pResult);
 
 #endif
 }
 
 bool
-Int32Math::Mul(int32 left, int32 right, int32 *pResult)
+Int32Math::Mul(int32_t left, int32_t right, int32_t *pResult)
 {
 #if __has_builtin(__builtin_mul_overflow) && !(defined(_ARM_) && defined(__clang__))
-    return IntMathCommon<int32>::Mul(left, right, pResult);
+    return IntMathCommon<int32_t>::Mul(left, right, pResult);
 #else
 
     bool fOverflow;
@@ -39,7 +39,7 @@ Int32Math::Mul(int32 left, int32 right, int32 *pResult)
 #else
     long result64 = (long)left * (long)right;
 
-    *pResult = (int32)result64;
+    *pResult = (int32_t)result64;
 
     fOverflow = (result64 != (long)(*pResult));
 #endif
@@ -50,7 +50,7 @@ Int32Math::Mul(int32 left, int32 right, int32 *pResult)
 }
 
 bool
-Int32Math::Mul(int32 left, int32 right, int32 *pResult, int32* pOverflowValue)
+Int32Math::Mul(int32_t left, int32_t right, int32_t *pResult, int32_t* pOverflowValue)
 {
     bool fOverflow;
 #if _M_IX86
@@ -67,8 +67,8 @@ Int32Math::Mul(int32 left, int32 right, int32 *pResult, int32* pOverflowValue)
 #else
     long result64 = (long)left * (long)right;
 
-    *pResult = (int32)result64;
-    *pOverflowValue = (int32)(result64 >> 32);
+    *pResult = (int32_t)result64;
+    *pOverflowValue = (int32_t)(result64 >> 32);
 
     fOverflow = (result64 != (long)(*pResult));
 #endif
@@ -77,21 +77,21 @@ Int32Math::Mul(int32 left, int32 right, int32 *pResult, int32* pOverflowValue)
 }
 
 bool
-Int32Math::Shl(int32 left, int32 right, int32 *pResult)
+Int32Math::Shl(int32_t left, int32_t right, int32_t *pResult)
 {
     *pResult = left << (right & 0x1F);
-    return (left != (int32)((uint32_t)*pResult >> right));
+    return (left != (int32_t)((uint32_t)*pResult >> right));
 }
 
 bool
-Int32Math::Shr(int32 left, int32 right, int32 *pResult)
+Int32Math::Shr(int32_t left, int32_t right, int32_t *pResult)
 {
     *pResult = left >> (right & 0x1F);
     return false;
 }
 
 bool
-Int32Math::ShrU(int32 left, int32 right, int32 *pResult)
+Int32Math::ShrU(int32_t left, int32_t right, int32_t *pResult)
 {
     uint32_t uResult = ((uint32_t)left) >> (right & 0x1F);
     *pResult = uResult;

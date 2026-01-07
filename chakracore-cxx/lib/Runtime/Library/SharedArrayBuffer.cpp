@@ -656,7 +656,7 @@ namespace Js
         // TODO for xplat
     }
 
-    uint32_t WaiterList::RemoveAndWakeWaiters(int32 count)
+    uint32_t WaiterList::RemoveAndWakeWaiters(int32_t count)
     {
         Assert(m_waiters != nullptr);
         Assert(count >= 0);

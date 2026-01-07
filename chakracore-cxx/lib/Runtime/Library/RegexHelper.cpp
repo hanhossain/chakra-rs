@@ -2080,7 +2080,7 @@ namespace Js
         {
             CharCount lastIndex = lastActualMatch.EndOffset();
             Assert(lastIndex <= MaxCharCount);
-            regularExpression->SetLastIndex((int32)lastIndex);
+            regularExpression->SetLastIndex((int32_t)lastIndex);
         }
     }
 

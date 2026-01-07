@@ -159,7 +159,7 @@ SymTable::FindPropertySym(SymID id) const
 ///----------------------------------------------------------------------------
 
 PropertySym *
-SymTable::FindPropertySym(SymID stackSymID, int32 propertyId) const
+SymTable::FindPropertySym(SymID stackSymID, int32_t propertyId) const
 {
     PropertySym *  propertySym = nullptr;
 

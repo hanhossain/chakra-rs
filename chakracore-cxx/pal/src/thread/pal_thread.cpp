@@ -494,7 +494,7 @@ CorUnix::InternalCreateThread(
         // Some systems require the stack size to be aligned to the page size
         if (sizeof(alignedStackSize) <= sizeof(dwStackSize) && alignedStackSize + (VIRTUAL_PAGE_SIZE - 1) < alignedStackSize)
         {
-            // When coming here from the public API surface, the incoming value is originally a nonnegative signed int32, so
+            // When coming here from the public API surface, the incoming value is originally a nonnegative signed int32_t, so
             // this shouldn't happen
             ASSERT(
                 "Couldn't align the requested stack size (%zu) to the page size because the stack size was too large\n",

@@ -1472,7 +1472,7 @@ namespace Js
             }
             case OpCode::NewScIntArray:
             {
-                const Js::AuxArray<int32> *intArray = reader.ReadAuxArray<int32>(playout->Offset, dumpFunction);
+                const Js::AuxArray<int32_t> *intArray = reader.ReadAuxArray<int32_t>(playout->Offset, dumpFunction);
                 Output::Print(u" R%d = %d [", playout->R0, intArray->count);
                 uint i;
                 for (i = 0; i<intArray->count && i < 3; i++)

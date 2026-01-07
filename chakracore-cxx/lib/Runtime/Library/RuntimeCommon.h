@@ -163,28 +163,28 @@ namespace Js
 
 #if INT32VAR
     // The 49th bit is set in this representation
-    const int32 VarTag_Shift          = 48;
+    const int32_t VarTag_Shift          = 48;
     const uintptr_t AtomTag_IntPtr    = (((uintptr_t)0x1i64) << VarTag_Shift);
-    const int32 AtomTag_Int32         = 0x0;     // lower 32-bits of a tagged integer
+    const int32_t AtomTag_Int32         = 0x0;     // lower 32-bits of a tagged integer
     const uintptr_t AtomTag           = 0x1;
-    const int32 AtomTag_Multiply      = 1;
-    const int32 AtomTag_Pair          = 0x00010001;  // Pair of tags
+    const int32_t AtomTag_Multiply      = 1;
+    const int32_t AtomTag_Pair          = 0x00010001;  // Pair of tags
 #else
     const uintptr_t AtomTag_IntPtr    = 0x1;
-    const int32 AtomTag_Int32         = 0x1;    // lower 32-bits of a tagged integer
+    const int32_t AtomTag_Int32         = 0x1;    // lower 32-bits of a tagged integer
     const uintptr_t AtomTag           = 0x1;
-    const int32 VarTag_Shift          = 1;
-    const int32 AtomTag_Multiply      = 1 << VarTag_Shift;
+    const int32_t VarTag_Shift          = 1;
+    const int32_t AtomTag_Multiply      = 1 << VarTag_Shift;
 #endif
 
 #if FLOATVAR
     const unsigned long FloatTag_Value       = 0xFFFCull << 48;
     const unsigned long VarMissingItemPattern = 0x00040002FFF80002; // Float-tagged representation of FloatMissingItemPattern
 #else
-    const int32 VarMissingItemPattern = 0xFFF80002;
+    const int32_t VarMissingItemPattern = 0xFFF80002;
 #endif
     const unsigned long FloatMissingItemPattern = 0xFFF80002FFF80002;
-    const int32 IntMissingItemPattern = 0xFFF80002;
+    const int32_t IntMissingItemPattern = 0xFFF80002;
     template <bool IsPrototypeTemplate> class NullTypeHandler;
 
     template <typename TPropertyIndex, typename TMapKey, bool IsNotExtensibleSupported> class SimpleDictionaryTypeHandlerBase;

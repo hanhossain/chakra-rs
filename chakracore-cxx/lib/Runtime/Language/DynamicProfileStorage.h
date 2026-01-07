@@ -54,7 +54,7 @@ private:
     typedef time_t TimeType;
     static inline TimeType GetCreationTime() { return time(NULL); }
     static TimeType creationTime;
-    static int32 lastOffset;
+    static int32_t lastOffset;
     static std::mutex mutex;
     static CriticalSection cs;
     static uint32_t nextFileId;

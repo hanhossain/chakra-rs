@@ -7,7 +7,7 @@
 #include "ImmutableList.h"
 
 template<int chunkSize>
-void regex::ImmutableStringBuilder<chunkSize>::AppendInt32(int32 value)
+void regex::ImmutableStringBuilder<chunkSize>::AppendInt32(int32_t value)
 {
     char16_t buffer[11]; // -2,147,483,648 w.o ',' + \0
     int32_t hr = S_OK;
@@ -66,5 +66,5 @@ void regex::ImmutableStringBuilder<chunkSize>::AppendWithCopy(_In_z_ const char1
 }
 
 // template instantiation
-template void regex::ImmutableStringBuilder<8>::AppendInt32(int32 value);
+template void regex::ImmutableStringBuilder<8>::AppendInt32(int32_t value);
 template void regex::ImmutableStringBuilder<8>::AppendUInt64(unsigned long value);

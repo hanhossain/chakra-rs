@@ -357,15 +357,15 @@ using namespace Js;
         JIT_HELPER_END(Op_Rem_Double);
     }
 
-    int32 NumberUtilities::LwFromDblNearest(double dbl)
+    int32_t NumberUtilities::LwFromDblNearest(double dbl)
     {
         if (Js::NumberUtilities::IsNan(dbl))
             return 0;
         if (dbl > 0x7FFFFFFFL)
             return 0x7FFFFFFFL;
-        if (dbl < (int32)0x80000000L)
-            return (int32)0x80000000L;
-        return (int32)dbl;
+        if (dbl < (int32_t)0x80000000L)
+            return (int32_t)0x80000000L;
+        return (int32_t)dbl;
     }
 
     uint32_t NumberUtilities::LuFromDblNearest(double dbl)
@@ -379,12 +379,12 @@ using namespace Js;
         return (uint32_t)dbl;
     }
 
-    BOOL NumberUtilities::FDblIsInt32(double dbl, int32 *plw)
+    BOOL NumberUtilities::FDblIsInt32(double dbl, int32_t *plw)
     {
         Assert(plw);
         double dblT;
 
-        *plw = (int32)dbl;
+        *plw = (int32_t)dbl;
         dblT = (double)*plw;
         return Js::NumberUtilities::LuHiDbl(dblT) == Js::NumberUtilities::LuHiDbl(dbl) && Js::NumberUtilities::LuLoDbl(dblT) == Js::NumberUtilities::LuLoDbl(dbl);
     }

@@ -177,7 +177,7 @@ GlobOpt::CaptureValuesIncremental(BasicBlock * block,
 
                 if (valueInfo->GetSymStore() != nullptr)
                 {
-                    int32 intConstValue;
+                    int32_t intConstValue;
                     BailoutConstantValue constValue;
 
                     if (valueInfo->TryGetIntConstantValue(&intConstValue))
@@ -860,13 +860,13 @@ void GlobOpt::RecordInlineeFrameInfo(IR::Instr* inlineeEnd)
 
                 if (frameInfo->intSyms->TestEmpty() && frameInfo->intSyms->Test(argSym->m_id))
                 {
-                    // Var version of the sym is not live, use the int32 version
+                    // Var version of the sym is not live, use the int32_t version
                     argSym = argSym->GetInt32EquivSym(nullptr);
                     Assert(argSym);
                 }
                 else if (frameInfo->floatSyms->TestEmpty() && frameInfo->floatSyms->Test(argSym->m_id))
                 {
-                    // Var/int32 version of the sym is not live, use the float64 version
+                    // Var/int32_t version of the sym is not live, use the float64 version
                     argSym = argSym->GetFloat64EquivSym(nullptr);
                     Assert(argSym);
                 }
@@ -970,9 +970,9 @@ GlobOpt::FillBailOutInfo(BasicBlock *block, BailOutInfo * bailOutInfo)
 
     bailOutInfo->liveVarSyms = block->globOptData.liveVarSyms->CopyNew(this->func->m_alloc);
     bailOutInfo->liveFloat64Syms = block->globOptData.liveFloat64Syms->CopyNew(this->func->m_alloc);
-    // The live int32 syms in the bailout info are only the syms resulting from lossless conversion to int. If the int32 value
-    // was created from a lossy conversion to int, the original var value cannot be re-materialized from the int32 value. So, the
-    // int32 version is considered to be not live for the purposes of bailout, which forces the var or float versions to be used
+    // The live int32_t syms in the bailout info are only the syms resulting from lossless conversion to int. If the int32_t value
+    // was created from a lossy conversion to int, the original var value cannot be re-materialized from the int32_t value. So, the
+    // int32_t version is considered to be not live for the purposes of bailout, which forces the var or float versions to be used
     // directly for restoring the value during bailout. Otherwise, bailout may try to re-materialize the var value by converting
     // the lossily-converted int value back into a var, restoring the wrong value.
     bailOutInfo->liveLosslessInt32Syms =

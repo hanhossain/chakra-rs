@@ -14,7 +14,7 @@ bool IntConstMath::IsValid(IntConstType val, IRType type)
 #if TARGET_32
     case TyInt32:
     case TyUint32:
-        CompileAssert(sizeof(IntConstType) == sizeof(int32));
+        CompileAssert(sizeof(IntConstType) == sizeof(int32_t));
         return true;
 #elif TARGET_64
     case TyInt32:
@@ -47,7 +47,7 @@ bool IntConstMath::Mul(IntConstType left, IntConstType right, IRType type, IntCo
 {
 #if TARGET_32
     bool overflowed = Int32Math::Mul(left, right, result);
-    CompileAssert(sizeof(IntConstType) == sizeof(int32));
+    CompileAssert(sizeof(IntConstType) == sizeof(int32_t));
 #elif TARGET_64
     bool overflowed = Int64Math::Mul(left, right, result);
     CompileAssert(sizeof(IntConstType) == sizeof(long));

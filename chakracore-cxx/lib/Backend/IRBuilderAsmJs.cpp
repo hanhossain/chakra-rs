@@ -21,7 +21,7 @@ IRBuilderAsmJs::Build()
 
     m_argStack = JitAnew(m_tempAlloc, SListCounted<IR::Instr *>, m_tempAlloc);
     m_tempList = JitAnew(m_tempAlloc, SList<IR::Instr *>, m_tempAlloc);
-    m_argOffsetStack = JitAnew(m_tempAlloc, SList<int32>, m_tempAlloc);
+    m_argOffsetStack = JitAnew(m_tempAlloc, SList<int32_t>, m_tempAlloc);
 
     m_branchRelocList = JitAnew(m_tempAlloc, SList<BranchReloc *>, m_tempAlloc);
 
@@ -352,7 +352,7 @@ IRBuilderAsmJs::BuildIntConstOpnd(Js::RegSlot regSlot)
     int* intConstTable = reinterpret_cast<int*>(((byte*)constTable) + info.constSrcByteOffset);
     uint32_t srcReg = GetTypedRegFromRegSlot(regSlot, WAsmJs::INT32);
     AssertOrFailFast(srcReg >= Js::FunctionBody::FirstRegSlot && srcReg < info.constCount);
-    const int32 value = intConstTable[srcReg];
+    const int32_t value = intConstTable[srcReg];
     IR::IntConstOpnd *opnd = IR::IntConstOpnd::New(value, TyInt32, m_func);
 
     return (IR::RegOpnd*)opnd;
@@ -707,7 +707,7 @@ IRBuilderAsmJs::BuildHeapBufferReload(uint32_t offset, bool isFirstLoad)
         DoReload,
         DontReload
     };
-    const auto AddLoadField = [&](AsmJsRegSlots::ConstSlots dst, AsmJsRegSlots::ConstSlots src, int32 fieldOffset, IRType type, ShouldReload shouldReload)
+    const auto AddLoadField = [&](AsmJsRegSlots::ConstSlots dst, AsmJsRegSlots::ConstSlots src, int32_t fieldOffset, IRType type, ShouldReload shouldReload)
     {
         if (isFirstLoad || shouldReload == DoReload)
         {
@@ -725,7 +725,7 @@ IRBuilderAsmJs::BuildHeapBufferReload(uint32_t offset, bool isFirstLoad)
     if(isWasm)
     {
         // WebAssembly.Memory only needs to be loaded once as it can't change over the course of the function
-        AddLoadField(AsmJsRegSlots::WasmMemoryReg, AsmJsRegSlots::ModuleMemReg, (int32)Js::WebAssemblyModule::GetMemoryOffset(), TyVar, DontReload);
+        AddLoadField(AsmJsRegSlots::WasmMemoryReg, AsmJsRegSlots::ModuleMemReg, (int32_t)Js::WebAssemblyModule::GetMemoryOffset(), TyVar, DontReload);
 
         if (!isSharedMem)
         {
@@ -762,7 +762,7 @@ IRBuilderAsmJs::BuildHeapBufferReload(uint32_t offset, bool isFirstLoad)
     {
         // ArrayBuffer
         // The ArrayBuffer can be changed on the environment, if it is detached, we'll throw
-        AddLoadField(AsmJsRegSlots::ArrayReg, AsmJsRegSlots::ModuleMemReg, (int32)Js::AsmJsModuleMemory::MemoryTableBeginOffset, TyVar, DontReload);
+        AddLoadField(AsmJsRegSlots::ArrayReg, AsmJsRegSlots::ModuleMemReg, (int32_t)Js::AsmJsModuleMemory::MemoryTableBeginOffset, TyVar, DontReload);
         // ArrayBuffer.bufferContent
         AddLoadField(AsmJsRegSlots::RefCountedBuffer, AsmJsRegSlots::ArrayReg, Js::ArrayBuffer::GetBufferContentsOffset(), TyVar, DontReload);
         // RefCountedBuffer.buffer
@@ -840,7 +840,7 @@ IRBuilderAsmJs::BuildConstantLoads()
         switch(type)
         {
         case WAsmJs::INT32:
-            CreateLoadConstInstrForType<int32, IR::IntConstOpnd>(
+            CreateLoadConstInstrForType<int32_t, IR::IntConstOpnd>(
                 table,
                 regAllocated,
                 info.constCount,
@@ -848,7 +848,7 @@ IRBuilderAsmJs::BuildConstantLoads()
                 TyInt32,
                 ValueType::GetInt(false),
                 Js::OpCode::Ld_I4,
-                [isOOPJIT](IR::Instr* instr, int32 val)
+                [isOOPJIT](IR::Instr* instr, int32_t val)
                 {
                     IR::RegOpnd* dstOpnd = instr->GetDst()->AsRegOpnd();
                     if (!isOOPJIT && dstOpnd->m_sym->IsSingleDef())
@@ -945,14 +945,14 @@ IRBuilderAsmJs::BuildConstantLoads()
 void
 IRBuilderAsmJs::BuildImplicitArgIns()
 {
-    int32 intArgInCount = 0;
-    int32 int64ArgInCount = 0;
-    int32 floatArgInCount = 0;
-    int32 doubleArgInCount = 0;
-    int32 simd128ArgInCount = 0;
+    int32_t intArgInCount = 0;
+    int32_t int64ArgInCount = 0;
+    int32_t floatArgInCount = 0;
+    int32_t doubleArgInCount = 0;
+    int32_t simd128ArgInCount = 0;
 
     // formal params are offset from EBP by the EBP chain, return address, and function object
-    int32 offset = 3 * MachPtr;
+    int32_t offset = 3 * MachPtr;
     for (Js::ArgSlot i = 1; i < m_func->GetJITFunctionBody()->GetInParamsCount(); ++i)
     {
         StackSym * symSrc = nullptr;
@@ -1220,7 +1220,7 @@ IRBuilderAsmJs::BuildWasmLoopStart(Js::OpCodeAsmJs newOpcode, uint offset)
 }
 
 void
-IRBuilderAsmJs::BuildElementSlot(Js::OpCodeAsmJs newOpcode, uint32_t offset, int32 slotIndex, Js::RegSlot value, Js::RegSlot instance)
+IRBuilderAsmJs::BuildElementSlot(Js::OpCodeAsmJs newOpcode, uint32_t offset, int32_t slotIndex, Js::RegSlot value, Js::RegSlot instance)
 {
     Assert(OpCodeAttrAsmJs::HasMultiSizeLayout(newOpcode));
 
@@ -1697,7 +1697,7 @@ IRBuilderAsmJs::BuildAsmCall(Js::OpCodeAsmJs newOpcode, uint32_t offset, Js::Arg
     IR::Opnd * srcOpnd = nullptr;
     Js::RegSlot dstRegSlot;
     Js::RegSlot srcRegSlot;
-    int32 argOffset = 0;
+    int32_t argOffset = 0;
     switch (newOpcode)
     {
     case Js::OpCodeAsmJs::I_Call:
@@ -2959,7 +2959,7 @@ IRBuilderAsmJs::BuildBrInt1(Js::OpCodeAsmJs newOpcode, uint32_t offset)
 }
 
 void
-IRBuilderAsmJs::BuildBrInt1(Js::OpCodeAsmJs newOpcode, uint32_t offset, int32 relativeOffset, Js::RegSlot src)
+IRBuilderAsmJs::BuildBrInt1(Js::OpCodeAsmJs newOpcode, uint32_t offset, int32_t relativeOffset, Js::RegSlot src)
 {
     Js::OpCode op = Js::OpCode::Nop;
     switch (newOpcode)
@@ -3002,7 +3002,7 @@ IRBuilderAsmJs::BuildBrInt1Const1(Js::OpCodeAsmJs newOpcode, uint32_t offset)
 }
 
 void
-IRBuilderAsmJs::BuildBrInt2(Js::OpCodeAsmJs newOpcode, uint32_t offset, int32 relativeOffset, Js::RegSlot src1, Js::RegSlot src2)
+IRBuilderAsmJs::BuildBrInt2(Js::OpCodeAsmJs newOpcode, uint32_t offset, int32_t relativeOffset, Js::RegSlot src1, Js::RegSlot src2)
 {
     Js::RegSlot src1RegSlot = GetRegSlotFromIntReg(src1);
     Js::RegSlot src2RegSlot = GetRegSlotFromIntReg(src2);
@@ -3017,7 +3017,7 @@ IRBuilderAsmJs::BuildBrInt2(Js::OpCodeAsmJs newOpcode, uint32_t offset, int32 re
 }
 
 void
-IRBuilderAsmJs::BuildBrInt1Const1(Js::OpCodeAsmJs newOpcode, uint32_t offset, int32 relativeOffset, Js::RegSlot src1, int32 src2)
+IRBuilderAsmJs::BuildBrInt1Const1(Js::OpCodeAsmJs newOpcode, uint32_t offset, int32_t relativeOffset, Js::RegSlot src1, int32_t src2)
 {
     Js::RegSlot src1RegSlot = GetRegSlotFromIntReg(src1);
 
@@ -3031,7 +3031,7 @@ IRBuilderAsmJs::BuildBrInt1Const1(Js::OpCodeAsmJs newOpcode, uint32_t offset, in
 }
 
 void
-IRBuilderAsmJs::BuildBrCmp(Js::OpCodeAsmJs newOpcode, uint32_t offset, int32 relativeOffset, IR::RegOpnd* src1Opnd, IR::Opnd* src2Opnd)
+IRBuilderAsmJs::BuildBrCmp(Js::OpCodeAsmJs newOpcode, uint32_t offset, int32_t relativeOffset, IR::RegOpnd* src1Opnd, IR::Opnd* src2Opnd)
 {
     uint targetOffset = m_jnReader.GetCurrentOffset() + relativeOffset;
 

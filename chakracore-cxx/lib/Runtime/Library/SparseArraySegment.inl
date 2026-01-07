@@ -226,7 +226,7 @@ namespace Js
     }
 
     template<>
-    inline Var SparseArraySegment<int32>::GetMissingItemVar()
+    inline Var SparseArraySegment<int32_t>::GetMissingItemVar()
     {
         return JavascriptArray::IntMissingItemVar;
     }
@@ -246,13 +246,13 @@ namespace Js
 
         if (sizeof(Var) > sizeof(T))
         {
-            // Pointer size is greater than the element (int32 buffer on x64).
-            // Fill as much as we can and do one int32-sized store at the end if necessary.
+            // Pointer size is greater than the element (int32_t buffer on x64).
+            // Fill as much as we can and do one int32_t-sized store at the end if necessary.
             uint32_t i, step = sizeof(Var) / sizeof(T);
             if (start & 1)
             {
-                Assert(sizeof(T) == sizeof(int32));
-                ((int32*)(this->elements))[start] = JavascriptNativeIntArray::MissingItem;
+                Assert(sizeof(T) == sizeof(int32_t));
+                ((int32_t*)(this->elements))[start] = JavascriptNativeIntArray::MissingItem;
             }
             for (i = (start + step-1)/step; i < (size/step); i++)
             {
@@ -260,8 +260,8 @@ namespace Js
             }
             if ((i *= step) < size)
             {
-                Assert(sizeof(T) == sizeof(int32));
-                ((int32*)(this->elements))[i] = JavascriptNativeIntArray::MissingItem;
+                Assert(sizeof(T) == sizeof(int32_t));
+                ((int32_t*)(this->elements))[i] = JavascriptNativeIntArray::MissingItem;
             }
         }
         else

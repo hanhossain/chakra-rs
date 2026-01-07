@@ -335,7 +335,7 @@ static const byte * ReadVariableInt(const byte * buffer, size_t remainingBytes, 
 #endif
 
 // Compile-time-check some invariants that the file format depends on
-C_ASSERT(sizeof(PropertyId)==sizeof(int32));
+C_ASSERT(sizeof(PropertyId)==sizeof(int32_t));
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -369,13 +369,13 @@ C_ASSERT(sizeof(PropertyId)==sizeof(int32));
 class ByteCodeBufferBuilder
 {
     // Begin File Layout -------------------------------
-    ConstantSizedBufferBuilderOf<int32> magic;
-    ConstantSizedBufferBuilderOf<int32> totalSize;  // The size is unknown when the offsets are calculated so just reserve 4 bytes for this for now to avoid doing two passes to calculate the offsets
+    ConstantSizedBufferBuilderOf<int32_t> magic;
+    ConstantSizedBufferBuilderOf<int32_t> totalSize;  // The size is unknown when the offsets are calculated so just reserve 4 bytes for this for now to avoid doing two passes to calculate the offsets
     BufferBuilderByte fileVersionKind; // Engineering or Release
-    ConstantSizedBufferBuilderOf<int32> V1; // V1-V4 are the parts of the version. It is a fixed version GUID or a per-build version.
-    ConstantSizedBufferBuilderOf<int32> V2;
-    ConstantSizedBufferBuilderOf<int32> V3;
-    ConstantSizedBufferBuilderOf<int32> V4;
+    ConstantSizedBufferBuilderOf<int32_t> V1; // V1-V4 are the parts of the version. It is a fixed version GUID or a per-build version.
+    ConstantSizedBufferBuilderOf<int32_t> V2;
+    ConstantSizedBufferBuilderOf<int32_t> V3;
+    ConstantSizedBufferBuilderOf<int32_t> V4;
     BufferBuilderInt32 architecture;
     BufferBuilderInt32 expectedFunctionBodySize;
     BufferBuilderInt32 expectedBuildInPropertyCount;
@@ -713,7 +713,7 @@ public:
     {
         auto entry = Anew(alloc, BufferBuilderRelativeOffset, clue, pointedTo, 0);
         builder.list = builder.list->Prepend(entry, alloc);
-        return sizeof(int32);
+        return sizeof(int32_t);
     }
 
     uint32_t PrependInt16(BufferBuilderList & builder, const char16_t* clue, int16 value, BufferBuilderInt16 ** entryOut = nullptr)
@@ -735,7 +735,7 @@ public:
         {
             *entryOut = entry;
         }
-        return sizeof(int32);
+        return sizeof(int32_t);
     }
 
     uint32_t PrependConstantInt16(BufferBuilderList & builder, const char16_t* clue, int16 value, ConstantSizedBufferBuilderOf<int16> ** entryOut = nullptr)
@@ -757,7 +757,7 @@ public:
         {
             *entryOut = entry;
         }
-        return sizeof(int32);
+        return sizeof(int32_t);
     }
 
     uint32_t PrependConstantInt64(BufferBuilderList & builder, const char16_t* clue, long value, ConstantSizedBufferBuilderOf<long> ** entryOut = nullptr)
@@ -1335,9 +1335,9 @@ public:
             writeAuxVarArray(offset, true, count, elements);
         };
         auto writeAuxIntArray = [&](uint offset) -> BufferBuilder* {
-            const AuxArray<int32> *ints = reader.ReadAuxArray<int32>(offset, functionBody);
+            const AuxArray<int32_t> *ints = reader.ReadAuxArray<int32_t>(offset, functionBody);
             int count = ints->count;
-            const int32 * elements = ints->elements;
+            const int32_t * elements = ints->elements;
 
             typedef serialization_alignment SerializedIntArray T;
             T header(offset, count);
@@ -1538,7 +1538,7 @@ public:
 
         case TypeIds_Integer:
         {
-            int32 value = TaggedInt::ToInt32(var);
+            int32_t value = TaggedInt::ToInt32(var);
             if ((int8_t)value == value)
             {
                 auto size = PrependByte(builder, u"Integer Constant", ctInt8);
@@ -2508,7 +2508,7 @@ public:
 
         if (hasParent)
         {
-            // Prepend an int32 here as a placeholder in case we need to add more bytes into builder for the parent
+            // Prepend an int32_t here as a placeholder in case we need to add more bytes into builder for the parent
             auto entry = Anew(alloc, BufferBuilderInt32, u"ScopeInfo parent LocalId", InvalidLocalScopeInfoId);
             builder.list = builder.list->Prepend(entry, alloc);
 
@@ -3821,7 +3821,7 @@ public:
         funcInfo->SetArgsSizesArray(argArray);
         for (int i = 0; i < argSizeArrayLength; i++)
         {
-            int32 size;
+            int32_t size;
             current = ReadConstantSizedInt32(current, &size);
             argArray[i] = (uint32_t)size;
         }
@@ -3905,7 +3905,7 @@ public:
             RegSlot* exportLocations = moduleInfo->GetExportsFunctionLocation();
             for (int i = 0; i < exportsCount; i++)
             {
-                int32 loc;
+                int32_t loc;
                 current = ReadConstantSizedInt32(current, &loc);
                 exportLocations[i] = (uint32_t)loc;
             }
@@ -3975,7 +3975,7 @@ public:
             }
             for (uint j = 0; j < funcTable.size; j++)
             {
-                current = ReadConstantSizedInt32(current, (int32*)&funcTable.moduleFunctionIndex[j]);
+                current = ReadConstantSizedInt32(current, (int32_t*)&funcTable.moduleFunctionIndex[j]);
             }
             moduleInfo->SetFunctionTable(i, funcTable);
         }
@@ -4063,7 +4063,7 @@ public:
         int functionId;
         current = ReadInt32(current, &functionId);
 
-        int32 attributes = 0;
+        int32_t attributes = 0;
         if (definedFields->has_attributes)
         {
             current = ReadInt32(current, &attributes);
@@ -4773,7 +4773,7 @@ public:
         auto current = content;
         for (uint index = 0; index < count; index++)
         {
-            int32 value;
+            int32_t value;
             current = ReadConstantSizedInt32(current, &value);
             result->elements[index] = value;
         }
@@ -4961,7 +4961,7 @@ int32_t ByteCodeSerializer::SerializeToBuffer(ScriptContext * scriptContext, Are
         cache = Anew(codeAllocator, ByteCodeCache, scriptContext, builtInPropertyCount);
     }
 
-    int32 sourceCharLength = utf8SourceInfo->GetCchLength();
+    int32_t sourceCharLength = utf8SourceInfo->GetCchLength();
     ByteCodeBufferBuilder builder(sourceByteLength, sourceCharLength, utf8Source, utf8SourceInfo, scriptContext, alloc, dwFlags, builtInPropertyCount);
 
     hr = builder.AddTopFunctionBody(function, srcInfo, cache);

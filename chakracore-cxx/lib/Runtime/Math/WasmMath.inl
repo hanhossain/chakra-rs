@@ -43,11 +43,11 @@ inline long WasmMath::Ctz(long value)
         return index;
     }
 #else
-    if (_BitScanForward(&index, (int32)value))
+    if (_BitScanForward(&index, (int32_t)value))
     {
         return index;
     }
-    if (_BitScanForward(&index, (int32)(value >> 32)))
+    if (_BitScanForward(&index, (int32_t)(value >> 32)))
     {
         return index + 32;
     }
@@ -65,11 +65,11 @@ inline long WasmMath::Clz(long value)
         return 63 - index;
     }
 #else
-    if (_BitScanReverse(&index, (int32)(value >> 32)))
+    if (_BitScanReverse(&index, (int32_t)(value >> 32)))
     {
         return 31 - index;
     }
-    if (_BitScanReverse(&index, (int32)value))
+    if (_BitScanReverse(&index, (int32_t)value))
     {
         return 63 - index;
     }
@@ -255,11 +255,11 @@ To WasmMath::SignExtend(To value)
 }
 
 template <bool Saturate>
-int32 WasmMath::F32ToI32(float src, _In_ Js::ScriptContext* scriptContext)
+int32_t WasmMath::F32ToI32(float src, _In_ Js::ScriptContext* scriptContext)
 {
     return WasmMath::ConvertFloatToInt<
         float, // SrcType
-        int32, // DstType
+        int32_t, // DstType
         uint32_t, // ReinterpretType
         Js::NumberConstants::k_Float32TwoTo31,
         Js::NumberConstants::k_Float32NegZero,
@@ -293,11 +293,11 @@ uint32_t WasmMath::F32ToU32(float src, _In_ Js::ScriptContext* scriptContext)
 }
 
 template <bool Saturate>
-int32 WasmMath::F64ToI32(double src, _In_ Js::ScriptContext* scriptContext)
+int32_t WasmMath::F64ToI32(double src, _In_ Js::ScriptContext* scriptContext)
 {
     return WasmMath::ConvertFloatToInt<
         double, // SrcType
-        int32, // DstType
+        int32_t, // DstType
         unsigned long, // ReinterpretType
         Js::NumberConstants::k_TwoTo31,
         Js::NumberConstants::k_NegZero,

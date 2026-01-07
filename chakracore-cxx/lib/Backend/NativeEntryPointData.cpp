@@ -452,7 +452,7 @@ InProcNativeEntryPointData::SetSortedLazyBailOutRecordList(JsUtil::List<LazyBail
     this->sortedLazyBailoutRecordList->Copy(sortedLazyBailOutRecordList);
 }
 
-int32
+int32_t
 InProcNativeEntryPointData::GetLazyBailOutRecordSlotOffset() const
 {
     Assert(this->lazyBailOutRecordSlotOffset != 0);
@@ -460,7 +460,7 @@ InProcNativeEntryPointData::GetLazyBailOutRecordSlotOffset() const
 }
 
 void
-InProcNativeEntryPointData::SetLazyBailOutRecordSlotOffset(int32 argSlotOffset)
+InProcNativeEntryPointData::SetLazyBailOutRecordSlotOffset(int32_t argSlotOffset)
 {
     Assert(this->lazyBailOutRecordSlotOffset == 0 && argSlotOffset != 0);
     this->lazyBailOutRecordSlotOffset = argSlotOffset;

@@ -134,7 +134,7 @@ namespace TTD
             propertyReset.Clear();
 
             ////
-            for(int32 i = 0; i < dynObj->GetPropertyCount(); i++)
+            for(int32_t i = 0; i < dynObj->GetPropertyCount(); i++)
             {
                 Js::PropertyId pid = dynObj->GetPropertyId((Js::PropertyIndex)i);
                 if(pid != Js::Constants::NoProperty)
@@ -193,7 +193,7 @@ namespace TTD
             propertyReset.Clear();
 
             ////
-            for(int32 i = 0; i < dynObj->GetPropertyCount(); i++)
+            for(int32_t i = 0; i < dynObj->GetPropertyCount(); i++)
             {
                 Js::PropertyId pid = dynObj->GetPropertyId((Js::PropertyIndex)i);
                 if(pid != Js::Constants::NoProperty)
@@ -636,14 +636,14 @@ namespace TTD
                 compareMap.CheckConsistentAndAddPtrIdMapping_Special(sobj1->OptIndexedObjectArray, sobj2->OptIndexedObjectArray, u"indexedObjectArray");
 
                 const NSSnapType::SnapHandler* handler1 = sobj1->SnapType->TypeHandlerInfo;
-                JsUtil::BaseDictionary<long, int32, HeapAllocator> sobj1PidMap(&HeapAllocator::Instance);
+                JsUtil::BaseDictionary<long, int32_t, HeapAllocator> sobj1PidMap(&HeapAllocator::Instance);
                 for(uint32_t i = 0; i < handler1->MaxPropertyIndex; ++i)
                 {
                     const NSSnapType::SnapHandlerPropertyEntry spe = handler1->PropertyInfoArray[i];
                     if(spe.DataKind != NSSnapType::SnapEntryDataKindTag::Clear)
                     {
                         long locationTag = ComputeLocationTagForAssertCompare(spe);
-                        sobj1PidMap.AddNew(locationTag, (int32)i);
+                        sobj1PidMap.AddNew(locationTag, (int32_t)i);
                     }
                 }
 
@@ -655,7 +655,7 @@ namespace TTD
                     {
                         long locationTag = ComputeLocationTagForAssertCompare(spe);
 
-                        int32 idx1 = sobj1PidMap.LookupWithKey(locationTag, -1);
+                        int32_t idx1 = sobj1PidMap.LookupWithKey(locationTag, -1);
                         compareMap.DiagnosticAssert(idx1 != -1);
 
                         TTDVar var1 = sobj1->VarArray[idx1];
@@ -679,7 +679,7 @@ namespace TTD
                 }
             }
 
-            fPtr_AssertSnapEquivAddtlInfo equivCheck = compareMap.SnapObjCmpVTable[(int32)sobj1->SnapObjectTag];
+            fPtr_AssertSnapEquivAddtlInfo equivCheck = compareMap.SnapObjCmpVTable[(int32_t)sobj1->SnapObjectTag];
             if(equivCheck != nullptr)
             {
                 equivCheck(sobj1, sobj2, compareMap);
@@ -1631,9 +1631,9 @@ namespace TTD
 
         //////////////////
 
-        int32 SnapArrayInfo_InflateValue(int32 value, InflateMap* inflator) { return value; }
-        void SnapArrayInfo_EmitValue(int32 value, FileWriter* writer) { writer->WriteInt32(NSTokens::Key::i32Val, value, NSTokens::Separator::CommaSeparator); }
-        void SnapArrayInfo_ParseValue(int32* into, FileReader* reader, SlabAllocator& alloc) { *into = reader->ReadInt32(NSTokens::Key::i32Val, true); }
+        int32_t SnapArrayInfo_InflateValue(int32_t value, InflateMap* inflator) { return value; }
+        void SnapArrayInfo_EmitValue(int32_t value, FileWriter* writer) { writer->WriteInt32(NSTokens::Key::i32Val, value, NSTokens::Separator::CommaSeparator); }
+        void SnapArrayInfo_ParseValue(int32_t* into, FileReader* reader, SlabAllocator& alloc) { *into = reader->ReadInt32(NSTokens::Key::i32Val, true); }
 
         double SnapArrayInfo_InflateValue(double value, InflateMap* inflator) { return value; }
         void SnapArrayInfo_EmitValue(double value, FileWriter* writer) { writer->WriteDouble(NSTokens::Key::doubleVal, value, NSTokens::Separator::CommaSeparator); }
@@ -1657,17 +1657,17 @@ namespace TTD
         }
 
 #if ENABLE_SNAPSHOT_COMPARE
-        void SnapArrayInfo_EquivValue(int32 val1, int32 val2, TTDCompareMap& compareMap, int32 i)
+        void SnapArrayInfo_EquivValue(int32_t val1, int32_t val2, TTDCompareMap& compareMap, int32_t i)
         {
             compareMap.DiagnosticAssert(val1 == val2);
         }
 
-        void SnapArrayInfo_EquivValue(double val1, double val2, TTDCompareMap& compareMap, int32 i)
+        void SnapArrayInfo_EquivValue(double val1, double val2, TTDCompareMap& compareMap, int32_t i)
         {
             compareMap.DiagnosticAssert(val1 == val2);
         }
 
-        void SnapArrayInfo_EquivValue(TTDVar val1, TTDVar val2, TTDCompareMap& compareMap, int32 i)
+        void SnapArrayInfo_EquivValue(TTDVar val1, TTDVar val2, TTDCompareMap& compareMap, int32_t i)
         {
             NSSnapValues::AssertSnapEquivTTDVar_Array(val1, val2, compareMap, i);
         }

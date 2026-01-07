@@ -41,8 +41,8 @@ namespace Js
         bool IsSharedMemory() const;
 #endif
 
-        int32 GrowInternal(uint32_t deltaPages);
-        static int32 GrowHelper(Js::WebAssemblyMemory * memory, uint32_t deltaPages);
+        int32_t GrowInternal(uint32_t deltaPages);
+        static int32_t GrowHelper(Js::WebAssemblyMemory * memory, uint32_t deltaPages);
 
         static int GetOffsetOfArrayBuffer() { return offsetof(WebAssemblyMemory, m_buffer); }
 #if DBG

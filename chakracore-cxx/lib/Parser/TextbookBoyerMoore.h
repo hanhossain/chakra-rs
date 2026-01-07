@@ -31,7 +31,7 @@ namespace UnifiedRegex
 
         Scheme GetScheme() const { return scheme; }
 
-        static int32 * GetGoodSuffix(ArenaAllocator* allocator, const Char * pat, CharCount patLen, int skip = 1);
+        static int32_t * GetGoodSuffix(ArenaAllocator* allocator, const Char * pat, CharCount patLen, int skip = 1);
     private:
         void Init();
 
@@ -41,7 +41,7 @@ namespace UnifiedRegex
         CharCount const patLen;
         uint numLinearChars;
         Char linearChar[MaxCharMapLinearChars];
-        int32 lastOcc[MaxCharMapLinearChars];
+        int32_t lastOcc[MaxCharMapLinearChars];
     };
 
     template <typename C>
@@ -57,7 +57,7 @@ namespace UnifiedRegex
         //       constructing the scanner and running it.
 
         LastOccMap lastOccurrence;
-        int32 *goodSuffix;
+        int32_t *goodSuffix;
 
     public:
 
@@ -107,7 +107,7 @@ namespace UnifiedRegex
         //       constructing the scanner and running it.
 
         Field(LastOccMap) lastOccurrence;
-        Field(int32 *) goodSuffix;
+        Field(int32_t *) goodSuffix;
 
     public:
 

@@ -46,13 +46,13 @@ namespace Js
         return *dblPtr;
     }
 
-    int32 JavascriptCallStackLayout::GetInt32AtOffset(int offset) const
+    int32_t JavascriptCallStackLayout::GetInt32AtOffset(int offset) const
     {
-        int32 *intPtr = (int32 *)(((char *)this) + offset);
+        int32_t *intPtr = (int32_t *)(((char *)this) + offset);
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.IsEnabled(Js::CheckAlignmentFlag))
         {
-            Assert(FAligned(intPtr, int32));
+            Assert(FAligned(intPtr, int32_t));
         }
 #endif
         return *intPtr;
@@ -1312,7 +1312,7 @@ namespace Js
                 {
                     return inlinedFramesFound;
                 }
-                int32 frameCount = 0;
+                int32_t frameCount = 0;
                 InlinedFrameWalker::InlinedFrame *frameIterator = outerMostFrame;
                 while (frameIterator->callInfo.Count)
                 {
@@ -1506,7 +1506,7 @@ namespace Js
         currentIndex++;
     }
 
-    void InlinedFrameWalker::Initialize(int32 frameCount, __in_ecount(frameCount) InlinedFrame **frames, Js::ScriptFunction *parent)
+    void InlinedFrameWalker::Initialize(int32_t frameCount, __in_ecount(frameCount) InlinedFrame **frames, Js::ScriptFunction *parent)
     {
         Assert(!parentFunction);
         Assert(!this->frames);

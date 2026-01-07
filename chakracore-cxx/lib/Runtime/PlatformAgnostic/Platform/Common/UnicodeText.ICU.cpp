@@ -120,7 +120,7 @@ namespace PlatformAgnostic
             case U_TRUNCATED_CHAR_FOUND:
             case U_ILLEGAL_CHAR_FOUND:
                 return ApiError::InvalidUnicodeText;
-            case U_INDEX_OUTOFBOUNDS_ERROR: // this is int32 overflow for u_strToCase
+            case U_INDEX_OUTOFBOUNDS_ERROR: // this is int32_t overflow for u_strToCase
             case U_MEMORY_ALLOCATION_ERROR:
                 return ApiError::OutOfMemory;
             default:
@@ -159,7 +159,7 @@ namespace PlatformAgnostic
         }
 
         // ICU implementation of platform-agnostic Unicode interface
-        int32 NormalizeString(NormalizationForm normalizationForm, const char16_t* sourceString, uint32_t sourceLength, char16_t* destString, int32 destLength, ApiError* pErrorOut)
+        int32_t NormalizeString(NormalizationForm normalizationForm, const char16_t* sourceString, uint32_t sourceLength, char16_t* destString, int32_t destLength, ApiError* pErrorOut)
         {
             // Assert pointers
             Assert(sourceString != nullptr);
@@ -181,7 +181,7 @@ namespace PlatformAgnostic
             if (destString != nullptr && !IsUtf16StringValid((const UChar*) sourceString, sourceLength, &invalidIndex))
             {
                 *pErrorOut = InvalidUnicodeText;
-                return -1 * static_cast<int32>(invalidIndex); // mimicking the behavior of Win32 NormalizeString
+                return -1 * static_cast<int32_t>(invalidIndex); // mimicking the behavior of Win32 NormalizeString
             }
 
             const UNormalizer2 *normalizer = StaticUNormalizerFactory(normalizationForm);
@@ -194,7 +194,7 @@ namespace PlatformAgnostic
             return required;
         }
 
-        bool IsNormalizedString(NormalizationForm normalizationForm, const char16_t* testString, int32 testStringLength)
+        bool IsNormalizedString(NormalizationForm normalizationForm, const char16_t* testString, int32_t testStringLength)
         {
             Assert(testString != nullptr);
             if (testStringLength < 0)

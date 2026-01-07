@@ -2568,7 +2568,7 @@ void ByteCodeGenerator::EmitProgram(ParseNodeProg *pnodeProg)
     this->trackEnvDepth = true;
     AssignPropertyIds(pnodeProg->funcInfo->byteCodeFunction);
 
-    int32 initSize = this->maxAstSize / AstBytecodeRatioEstimate;
+    int32_t initSize = this->maxAstSize / AstBytecodeRatioEstimate;
 
     // Use the temp allocator in bytecode write temp buffer.
     m_writer.InitData(this->alloc, initSize);
@@ -7750,7 +7750,7 @@ void EmitConstantArgsToVarArray(ByteCodeGenerator *byteCodeGenerator, __out_ecou
     }
 }
 
-void EmitConstantArgsToIntArray(ByteCodeGenerator *byteCodeGenerator, __out_ecount(argCount) int32 *vars, ParseNode *args, uint argCount)
+void EmitConstantArgsToIntArray(ByteCodeGenerator *byteCodeGenerator, __out_ecount(argCount) int32_t *vars, ParseNode *args, uint argCount)
 {
     uint index = 0;
     while (args->nop == knopList && index < argCount)
@@ -9116,12 +9116,12 @@ void SetNewArrayElements(ParseNode *pnode, Js::RegSlot arrayLocation, ByteCodeGe
     if (arrayIntOpt)
     {
         int extraAlloc = 0, auxSize = 0;
-        if (Int32Math::Mul(argCount, sizeof(int32), &extraAlloc)
+        if (Int32Math::Mul(argCount, sizeof(int32_t), &extraAlloc)
             || Int32Math::Add(sizeof(Js::AuxArray<int>), extraAlloc, &auxSize))
         {
             ::Math::DefaultOverflowPolicy();
         }
-        Js::AuxArray<int> *ints = AnewPlus(byteCodeGenerator->GetAllocator(), extraAlloc, Js::AuxArray<int32>, argCount);
+        Js::AuxArray<int> *ints = AnewPlus(byteCodeGenerator->GetAllocator(), extraAlloc, Js::AuxArray<int32_t>, argCount);
         EmitConstantArgsToIntArray(byteCodeGenerator, ints->elements, args, argCount);
         Assert(!pnode->AsParseNodeArrLit()->hasMissingValues);
         byteCodeGenerator->Writer()->Auxiliary(
@@ -11215,7 +11215,7 @@ void Emit(ParseNode* pnode, ByteCodeGenerator* byteCodeGenerator, FuncInfo* func
         funcInfo->AcquireLoc(pnode);
         if (pnode->AsParseNodeUni()->pnode1->nop == knopInt)
         {
-            int32 value = pnode->AsParseNodeUni()->pnode1->AsParseNodeInt()->lw;
+            int32_t value = pnode->AsParseNodeUni()->pnode1->AsParseNodeInt()->lw;
             Js::OpCode op = value ? Js::OpCode::LdFalse : Js::OpCode::LdTrue;
             byteCodeGenerator->Writer()->Reg1(op, pnode->location);
         }

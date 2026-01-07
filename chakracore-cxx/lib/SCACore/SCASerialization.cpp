@@ -324,7 +324,7 @@ namespace Js
     {
         JavascriptMap* map = VarTo<JavascriptMap>(src);
 
-        Write((int32)(map->Size()));
+        Write((int32_t)(map->Size()));
 
         JavascriptMap::MapDataList::Iterator iter = map->GetIterator();
         while (iter.Next())
@@ -340,7 +340,7 @@ namespace Js
     {
         JavascriptSet* set = VarTo<JavascriptSet>(src);
 
-        Write((int32)(set->Size()));
+        Write((int32_t)(set->Size()));
 
         JavascriptSet::SetDataList::Iterator iter = set->GetIterator();
         while (iter.Next())
@@ -465,11 +465,11 @@ namespace Js
         case TypeIds_Int32Array:
             if (Int32VirtualArray::HasVirtualTableInfo(src))
             {
-                WriteTypedArray<int32, false, true>(src);
+                WriteTypedArray<int32_t, false, true>(src);
             }
             else
             {
-                WriteTypedArray<int32, false>(src);
+                WriteTypedArray<int32_t, false>(src);
             }
             break;
 

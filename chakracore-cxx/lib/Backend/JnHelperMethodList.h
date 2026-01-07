@@ -127,12 +127,12 @@ HELPERCALL_MATH(Op_ShiftRightU, Js::JavascriptMath::ShiftRightU, AttrCanThrow)
 HELPERCALL_MATH(Op_ShiftRightU_Full, Js::JavascriptMath::ShiftRightU_Full, AttrCanThrow)
 
 HELPERCALL_MATH(Conv_ToInt32_Full, Js::JavascriptMath::ToInt32_Full, AttrCanThrow)
-HELPERCALL_MATH(Conv_ToInt32, (int32 (*)(Js::Var, Js::ScriptContext *))Js::JavascriptMath::ToInt32, AttrCanThrow)
+HELPERCALL_MATH(Conv_ToInt32, (int32_t (*)(Js::Var, Js::ScriptContext *))Js::JavascriptMath::ToInt32, AttrCanThrow)
 HELPERCALL_MATH(Conv_ToInt32_NoObjects, Js::JavascriptMath::ToInt32_NoObjects, AttrCanThrow | AttrCanNotBeReentrant)
 
 HELPERCALL_MATH(Op_FinishOddDivByPow2, Js::JavascriptMath::FinishOddDivByPow2, AttrCanNotBeReentrant)
 HELPERCALL_MATH(Op_FinishOddDivByPow2InPlace, Js::JavascriptMath::FinishOddDivByPow2_InPlace, AttrCanNotBeReentrant)
-HELPERCALL_MATH(Conv_ToInt32Core, (int32 (*)(double))Js::JavascriptMath::ToInt32Core, AttrCanNotBeReentrant)
+HELPERCALL_MATH(Conv_ToInt32Core, (int32_t (*)(double))Js::JavascriptMath::ToInt32Core, AttrCanNotBeReentrant)
 HELPERCALL_MATH(Conv_ToUInt32Core, (uint32_t(*)(double))Js::JavascriptMath::ToUInt32, AttrCanNotBeReentrant)
 HELPERCALL_MATH(Op_MaxInAnArray, Js::JavascriptMath::MaxInAnArray, AttrCanThrow)
 HELPERCALL_MATH(Op_MinInAnArray, Js::JavascriptMath::MinInAnArray, AttrCanThrow)
@@ -582,8 +582,8 @@ HELPERCALL(BoxStackNumber, Js::JavascriptNumber::BoxStackNumber, AttrCanNotBeRee
 HELPERCALL(GetNonzeroInt32Value_NoTaggedIntCheck, Js::JavascriptNumber::GetNonzeroInt32Value_NoTaggedIntCheck, AttrCanNotBeReentrant)
 HELPERCALL(IsNegZero, Js::JavascriptNumber::IsNegZero, AttrCanNotBeReentrant)
 
-HELPERCALL(DirectMath_PowIntInt, (double(*)(double, int32))Js::JavascriptNumber::DirectPowIntInt, AttrCanNotBeReentrant)
-HELPERCALL(DirectMath_PowDoubleInt, (double(*)(double, int32))Js::JavascriptNumber::DirectPowDoubleInt, AttrCanNotBeReentrant)
+HELPERCALL(DirectMath_PowIntInt, (double(*)(double, int32_t))Js::JavascriptNumber::DirectPowIntInt, AttrCanNotBeReentrant)
+HELPERCALL(DirectMath_PowDoubleInt, (double(*)(double, int32_t))Js::JavascriptNumber::DirectPowDoubleInt, AttrCanNotBeReentrant)
 HELPERCALL(DirectMath_Pow, (double(*)(double, double))Js::JavascriptNumber::DirectPow, AttrCanNotBeReentrant)
 HELPERCALL_MATH(DirectMath_Random,  (double(*)(Js::ScriptContext*))Js::JavascriptMath::Random, AttrCanNotBeReentrant)
 

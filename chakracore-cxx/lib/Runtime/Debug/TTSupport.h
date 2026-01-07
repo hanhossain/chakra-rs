@@ -350,8 +350,8 @@ namespace TTD
 
             void Append(LPCUTF8 strBegin, LPCUTF8 strEnd);
 
-            int32 GetLength() const;
-            char16_t GetCharAt(int32 pos) const;
+            int32_t GetLength() const;
+            char16_t GetCharAt(int32_t pos) const;
             const char16_t* GetStrValue() const;
         };
     }
@@ -381,7 +381,7 @@ namespace TTD
 #endif
 
     //A class that implements a simple slab memory allocator
-    template <int32 canUnlink>
+    template <int32_t canUnlink>
     class SlabAllocatorBase
     {
     private:
@@ -396,7 +396,7 @@ namespace TTD
             SlabBlock* Next;
 
             //The reference counter for this -- invalid if canUnlink == 0
-            int32 RefCounter;
+            int32_t RefCounter;
         };
 
         //A "large" block allocation list
@@ -1356,7 +1356,7 @@ namespace TTD
         //Counts of how many handlers/types/... we have marked
         uint32_t m_handlerCounts[(uint32_t)MarkTableTag::KindTagCount];
 
-        int32 FindIndexForKey(unsigned long addr) const
+        int32_t FindIndexForKey(unsigned long addr) const
         {
             TTDAssert(this->m_addrArray != nullptr, "Not valid!!");
 
@@ -1366,7 +1366,7 @@ namespace TTD
             unsigned long primaryAddr = this->m_addrArray[primaryIndex];
             if ((primaryAddr == addr) | (primaryAddr == 0))
             {
-                return (int32)primaryIndex;
+                return (int32_t)primaryIndex;
             }
 
             //do a hash for the second offset to avoid clustering and then do linear probing
@@ -1377,7 +1377,7 @@ namespace TTD
                 unsigned long currAddr = this->m_addrArray[probeIndex];
                 if ((currAddr == addr) | (currAddr == 0))
                 {
-                    return (int32)probeIndex;
+                    return (int32_t)probeIndex;
                 }
                 probeIndex = TTD_MARK_TABLE_INDEX(probeIndex + 1, this->m_capcity);
 
@@ -1402,7 +1402,7 @@ namespace TTD
 
             for (uint32_t i = 0; i < oldCapacity; ++i)
             {
-                int32 idx = this->FindIndexForKey(oldAddrArray[i]);
+                int32_t idx = this->FindIndexForKey(oldAddrArray[i]);
                 this->m_addrArray[idx] = oldAddrArray[i];
                 this->m_markArray[idx] = oldMarkArray[i];
             }
@@ -1411,7 +1411,7 @@ namespace TTD
             TT_HEAP_FREE_ARRAY(MarkTableTag, oldMarkArray, oldCapacity);
         }
 
-        int32 FindIndexForKeyWGrow(const void* addr)
+        int32_t FindIndexForKeyWGrow(const void* addr)
         {
             //keep the load factor < 25%
             if ((this->m_capcity >> 2) < this->m_count)
@@ -1432,7 +1432,7 @@ namespace TTD
         template <MarkTableTag kindtag>
         bool MarkAndTestAddr(const void* vaddr)
         {
-            int32 idx = this->FindIndexForKeyWGrow(vaddr);
+            int32_t idx = this->FindIndexForKeyWGrow(vaddr);
 
             //we really want to do the check on m_markArray but since we know nothing has been cleared we can check the addrArray for better cache behavior
             bool notMarked = this->m_addrArray[idx] == 0;
@@ -1454,7 +1454,7 @@ namespace TTD
         template <MarkTableTag specialtag>
         void MarkAddrWithSpecialInfo(const void* vaddr)
         {
-            int32 idx = this->FindIndexForKey(reinterpret_cast<unsigned long>(vaddr));
+            int32_t idx = this->FindIndexForKey(reinterpret_cast<unsigned long>(vaddr));
 
             if (this->m_markArray[idx] != MarkTableTag::Clear)
             {
@@ -1465,7 +1465,7 @@ namespace TTD
         //Return true if the location is marked
         bool IsMarked(const void* vaddr) const
         {
-            int32 idx = this->FindIndexForKey(reinterpret_cast<unsigned long>(vaddr));
+            int32_t idx = this->FindIndexForKey(reinterpret_cast<unsigned long>(vaddr));
 
             return this->m_markArray[idx] != MarkTableTag::Clear;
         }
@@ -1473,7 +1473,7 @@ namespace TTD
         //Return true if the location is tagged as well-known
         bool IsTaggedAsWellKnown(const void* vaddr) const
         {
-            int32 idx = this->FindIndexForKey(reinterpret_cast<unsigned long>(vaddr));
+            int32_t idx = this->FindIndexForKey(reinterpret_cast<unsigned long>(vaddr));
 
             return (this->m_markArray[idx] & MarkTableTag::JsWellKnownObj) != MarkTableTag::Clear;
         }
@@ -1505,7 +1505,7 @@ namespace TTD
         //Clear the mark at the given address
         void ClearMark(const void* vaddr)
         {
-            int32 idx = this->FindIndexForKey(reinterpret_cast<unsigned long>(vaddr));
+            int32_t idx = this->FindIndexForKey(reinterpret_cast<unsigned long>(vaddr));
 
             //DON'T CLEAR THE ADDR JUST CLEAR THE MARK
             this->m_markArray[idx] = MarkTableTag::Clear;

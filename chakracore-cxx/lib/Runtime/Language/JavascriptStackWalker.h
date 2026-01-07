@@ -49,7 +49,7 @@ namespace Js
         Js::Var* GetArgv() const;
         Js::Var GetOffset(int offset) const;
         double GetDoubleAtOffset(int offset) const;
-        int32 GetInt32AtOffset(int offset) const;
+        int32_t GetInt32AtOffset(int offset) const;
         SIMDValue GetSimdValueAtOffset(int offset) const;
         char * GetValueChangeOffset(int offset) const;
         ForInObjectEnumerator * GetForInObjectEnumeratorArrayAtOffset(int offset) const;
@@ -107,12 +107,12 @@ namespace Js
         Js::Var                 GetThisObject() const;
         bool                    IsCallerPhysicalFrame() const;
         bool                    IsTopMostFrame() const;
-        int32                   GetFrameIndex() const { Assert(currentIndex != -1); return currentIndex; }
+        int32_t                   GetFrameIndex() const { Assert(currentIndex != -1); return currentIndex; }
         uint32_t                  GetCurrentInlineeOffset() const;
         uint32_t                  GetBottomMostInlineeOffset() const;
         Js::JavascriptFunction *GetBottomMostFunctionObject() const;
         void                    FinalizeStackValues(__in_ecount(argCount) Js::Var args[], size_t argCount, bool deepCopy) const;
-        int32                   GetFrameCount() { return frameCount; }
+        int32_t                   GetFrameCount() { return frameCount; }
 
     private:
         enum {
@@ -138,14 +138,14 @@ namespace Js
         InlinedFrame *GetFrameAtIndex(signed index) const;
 
     private:
-        void Initialize(int32 frameCount, __in_ecount(frameCount) InlinedFrame **frames, Js::ScriptFunction *parent);
+        void Initialize(int32_t frameCount, __in_ecount(frameCount) InlinedFrame **frames, Js::ScriptFunction *parent);
         void MoveNext();
         InlinedFrame *GetCurrentFrame() const;
 
         Js::ScriptFunction *parentFunction;
         InlinedFrame          **frames;
-        int32                   currentIndex;
-        int32                   frameCount;
+        int32_t                   currentIndex;
+        int32_t                   frameCount;
     };
 
     class InternalFrameInfo

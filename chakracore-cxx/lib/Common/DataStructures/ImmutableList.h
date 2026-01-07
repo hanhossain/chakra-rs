@@ -966,7 +966,7 @@ namespace regex
             }
         }
 
-        void AppendInt32(int32 value);
+        void AppendInt32(int32_t value);
 
         void AppendUInt64(unsigned long value);
 

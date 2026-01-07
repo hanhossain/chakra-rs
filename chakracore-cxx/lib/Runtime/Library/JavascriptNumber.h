@@ -36,25 +36,25 @@ namespace Js
         static Var ToVarInPlace(double value, ScriptContext* scriptContext, JavascriptNumber *result);
         static Var ToVarMaybeInPlace(double value, ScriptContext* scriptContext, JavascriptNumber *result);
         static Var ToVarIntCheck(double value, ScriptContext* scriptContext);
-        static Var ToVar(int32 nValue, ScriptContext* scriptContext);
+        static Var ToVar(int32_t nValue, ScriptContext* scriptContext);
 #ifdef ENABLE_TEST_HOOKS
-        static Var ToVarFor32BitBytecode(int32 nValue, ScriptContext* scriptContext);
+        static Var ToVarFor32BitBytecode(int32_t nValue, ScriptContext* scriptContext);
 #endif
 #if defined(__clang__) && defined(_M_IX86)
         static Var ToVar(intptr_t nValue, ScriptContext* scriptContext);
 #endif
-        static Var ToVarInPlace(int32 nValue, ScriptContext* scriptContext, JavascriptNumber *result);
+        static Var ToVarInPlace(int32_t nValue, ScriptContext* scriptContext, JavascriptNumber *result);
         static Var ToVarInPlace(long value, ScriptContext* scriptContext, JavascriptNumber *result);
         static Var ToVarInPlace(uint32_t nValue, ScriptContext* scriptContext, JavascriptNumber *result);
         static Var ToVar(uint32_t nValue, ScriptContext* scriptContext);
         static Var ToVar(long nValue, ScriptContext* scriptContext);
         static Var ToVar(unsigned long nValue, ScriptContext* scriptContext);
         static double GetValue(Var aValue);
-        static int32 DirectPowIntInt(bool*, int32, int32);
-        static double DirectPowDoubleInt(double, int32);
+        static int32_t DirectPowIntInt(bool*, int32_t, int32_t);
+        static double DirectPowDoubleInt(double, int32_t);
         static double DirectPow(double, double);
 
-        static bool TryToVarFast(int32 nValue, Var* result);
+        static bool TryToVarFast(int32_t nValue, Var* result);
         static bool TryToVarFastWithCheck(double value, Var* result);
 
         inline static BOOL IsNan(double value) { return NumberUtilities::IsNan(value); }
@@ -65,11 +65,11 @@ namespace Js
         static bool IsNegInf(double value);
 
         template<bool acceptNegZero = false>
-        static bool TryGetInt32Value(const double value, int32 *const int32Value)
+        static bool TryGetInt32Value(const double value, int32_t *const int32Value)
         {
             Assert(int32Value);
 
-            const int32 i = static_cast<int32>(value);
+            const int32_t i = static_cast<int32_t>(value);
             if (static_cast<double>(i) != value || (!acceptNegZero && IsNegZero(value)))
             {
                 return false;
@@ -79,12 +79,12 @@ namespace Js
             return true;
         }
 
-        static bool TryGetInt32OrUInt32Value(const double value, int32 *const int32Value, bool *const isInt32);
+        static bool TryGetInt32OrUInt32Value(const double value, int32_t *const int32Value, bool *const isInt32);
         static bool IsInt32(const double value);
         static bool IsInt32OrUInt32(const double value);
         static bool IsInt32_NoChecks(const Var number);
         static bool IsInt32OrUInt32_NoChecks(const Var number);
-        static int32 GetNonzeroInt32Value_NoTaggedIntCheck(const Var object);
+        static int32_t GetNonzeroInt32Value_NoTaggedIntCheck(const Var object);
 
         static JavascriptString* ToString(double value, ScriptContext* scriptContext);
 

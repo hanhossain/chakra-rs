@@ -339,7 +339,7 @@ namespace Js
         return this;
     }
 
-    uint32_t ArrayBuffer::ToIndex(Var value, int32 errorCode, ScriptContext *scriptContext, uint32_t MaxAllowedLength, bool checkSameValueZero)
+    uint32_t ArrayBuffer::ToIndex(Var value, int32_t errorCode, ScriptContext *scriptContext, uint32_t MaxAllowedLength, bool checkSameValueZero)
     {
         if (JavascriptOperators::IsUndefined(value))
         {

@@ -4,5 +4,5 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-BOOL FGetResourceString(int32 isz, __out_ecount(cchMax) OLECHAR *psz, int cchMax);
-BSTR BstrGetResourceString(int32 isz);
+BOOL FGetResourceString(int32_t isz, __out_ecount(cchMax) OLECHAR *psz, int cchMax);
+BSTR BstrGetResourceString(int32_t isz);

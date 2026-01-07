@@ -444,7 +444,7 @@ namespace TTD
             return callEvt->LastNestedEventTime;
         }
 
-        void ExternalCallEventLogEntry_ProcessArgs(EventLogEntry* evt, int32 rootDepth, Js::JavascriptFunction* function, const Js::Arguments& args, bool checkExceptions, UnlinkableSlabAllocator& alloc)
+        void ExternalCallEventLogEntry_ProcessArgs(EventLogEntry* evt, int32_t rootDepth, Js::JavascriptFunction* function, const Js::Arguments& args, bool checkExceptions, UnlinkableSlabAllocator& alloc)
         {
             ExternalCallEventLogEntry* callEvt = GetInlineEventDataAs<ExternalCallEventLogEntry, EventKind::ExternalCallTag>(evt);
 

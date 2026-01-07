@@ -165,22 +165,22 @@ private:
     void                BuildReg5(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot dstRegSlot, Js::RegSlot src1RegSlot,
                             Js::RegSlot src2RegSlot, Js::RegSlot src3RegSlot, Js::RegSlot src4RegSlot);
     void                BuildUnsigned1(Js::OpCode newOpcode, uint32_t offset, uint32_t C1);
-    void                BuildReg1Unsigned1(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot R0, int32 C1);
-    void                BuildProfiledReg1Unsigned1(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot R0, int32 C1, Js::ProfileId profileId);
-    void                BuildReg2Int1(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot dstRegSlot, Js::RegSlot srcRegSlot, int32 value);
+    void                BuildReg1Unsigned1(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot R0, int32_t C1);
+    void                BuildProfiledReg1Unsigned1(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot R0, int32_t C1, Js::ProfileId profileId);
+    void                BuildReg2Int1(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot dstRegSlot, Js::RegSlot srcRegSlot, int32_t value);
     void                BuildReg2U(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot R0, Js::RegSlot R1, uint index);
     void                BuildElementC(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot fieldRegSlot, Js::RegSlot regSlot,
                             Js::PropertyIdIndexType propertyIdIndex);
     void                BuildElementScopedC(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot regSlot,
                             Js::PropertyIdIndexType propertyIdIndex);
     void                BuildElementSlot(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot fieldRegSlot, Js::RegSlot regSlot,
-                            int32 slotId, Js::ProfileId profileId);
+                            int32_t slotId, Js::ProfileId profileId);
     void                BuildElementSlotI1(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot regSlot,
-                            int32 slotId, Js::ProfileId profileId);
+                            int32_t slotId, Js::ProfileId profileId);
     void                BuildElementSlotI2(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot regSlot,
-                            int32 slotId1, int32 slotId2, Js::ProfileId profileId);
+                            int32_t slotId1, int32_t slotId2, Js::ProfileId profileId);
     void                BuildElementSlotI3(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot fieldRegSlot, Js::RegSlot regSlot,
-                            int32 slotId, Js::RegSlot homeObjLocation, Js::ProfileId profileId);
+                            int32_t slotId, Js::RegSlot homeObjLocation, Js::ProfileId profileId);
     void                BuildArgIn0(uint32_t offset, Js::RegSlot R0);
     void                BuildArg(Js::OpCode newOpcode, uint32_t offset, Js::ArgSlot argument, Js::RegSlot srcRegSlot);
     void                BuildArgIn(uint32_t offset, Js::RegSlot dstRegSlot, uint16 argument);

@@ -304,7 +304,7 @@ namespace JsUtil
         Assert(!IsClosed());
 
         if (job->Manager()->numJobsAddedToProcessor + 1 == 0)
-            Js::Throw::OutOfMemory();  // Overflow: job counts we use are int32's.
+            Js::Throw::OutOfMemory();  // Overflow: job counts we use are int32_t's.
         ++job->Manager()->numJobsAddedToProcessor;
 
         if (prioritize)
@@ -985,7 +985,7 @@ namespace JsUtil
         Assert(!IsClosed());
 
         if(numJobs + 1 == 0)
-            Js::Throw::OutOfMemory(); // Overflow: job counts we use are int32's.
+            Js::Throw::OutOfMemory(); // Overflow: job counts we use are int32_t's.
         ++numJobs;
 
         __super::AddJob(job, prioritize);

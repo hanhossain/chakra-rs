@@ -499,7 +499,7 @@ namespace Js
         Field(bool) ignoreForEquivalentObjTypeSpec;
         Field(bool) cloneForJitTimeUse;
 
-        Field(int32) inlineCachesFillInfo;
+        Field(int32_t) inlineCachesFillInfo;
 
         PolymorphicInlineCache(InlineCache * inlineCaches, uint16 size)
             : inlineCaches(inlineCaches), size(size), ignoreForEquivalentObjTypeSpec(false), cloneForJitTimeUse(true), inlineCachesFillInfo(0)

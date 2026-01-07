@@ -5,26 +5,26 @@
 #pragma once
 #include "IntMathCommon.h"
 
-class Int32Math: public IntMathCommon<int32>
+class Int32Math: public IntMathCommon<int32_t>
 {
 public:
-    static bool Add(int32 left, int32 right, int32 *pResult);
-    static bool Mul(int32 left, int32 right, int32 *pResult);
-    static bool Mul(int32 left, int32 right, int32 *pResult, int32* pOverflowValue);
+    static bool Add(int32_t left, int32_t right, int32_t *pResult);
+    static bool Mul(int32_t left, int32_t right, int32_t *pResult);
+    static bool Mul(int32_t left, int32_t right, int32_t *pResult, int32_t* pOverflowValue);
 
-    static bool Shl(int32 left, int32 right, int32 *pResult);
-    static bool Shr(int32 left, int32 right, int32 *pResult);
-    static bool ShrU(int32 left, int32 right, int32 *pResult);
+    static bool Shl(int32_t left, int32_t right, int32_t *pResult);
+    static bool Shr(int32_t left, int32_t right, int32_t *pResult);
+    static bool ShrU(int32_t left, int32_t right, int32_t *pResult);
 };
 
 template <>
-inline bool Math::IncImpl<int32>(int32 val, int32 *pResult)
+inline bool Math::IncImpl<int32_t>(int32_t val, int32_t *pResult)
 {
     return Int32Math::Inc(val, pResult);
 }
 
 template <>
-inline bool Math::AddImpl<int32>(int32 left, int32 right, int32 *pResult)
+inline bool Math::AddImpl<int32_t>(int32_t left, int32_t right, int32_t *pResult)
 {
     return Int32Math::Add(left, right, pResult);
 }

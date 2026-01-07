@@ -1565,8 +1565,8 @@ namespace Js
         mModuleMemory.mFFIOffset = mModuleMemory.mFuncOffset + mFunctionArray.Count();
         mModuleMemory.mFuncPtrOffset = mModuleMemory.mFFIOffset + mImportFunctions.GetTotalVarCount();
         mModuleMemory.mFloatOffset = mModuleMemory.mFuncPtrOffset + GetFuncPtrTableCount();
-        mModuleMemory.mIntOffset = mModuleMemory.mFloatOffset + (int32)(mFloatVarSpace.GetTotalVarCount() * WAsmJs::FLOAT_SLOTS_SPACE + 0.5);
-        mModuleMemory.mMemorySize = mModuleMemory.mIntOffset + (int32)(mIntVarSpace.GetTotalVarCount() * WAsmJs::INT_SLOTS_SPACE + 0.5);
+        mModuleMemory.mIntOffset = mModuleMemory.mFloatOffset + (int32_t)(mFloatVarSpace.GetTotalVarCount() * WAsmJs::FLOAT_SLOTS_SPACE + 0.5);
+        mModuleMemory.mMemorySize = mModuleMemory.mIntOffset + (int32_t)(mIntVarSpace.GetTotalVarCount() * WAsmJs::INT_SLOTS_SPACE + 0.5);
     }
 
     void AsmJsModuleCompiler::AccumulateCompileTime()
@@ -1863,7 +1863,7 @@ namespace Js
                     value = TypedArray<int16, false, isOptimizedBuffer>::Create(asmBuffer, 0, asmBuffer->GetByteLength() >> 1, scriptContext->GetLibrary());
                     break;
                 case ArrayBufferView::TYPE_INT32:
-                    value = TypedArray<int32, false, isOptimizedBuffer>::Create(asmBuffer, 0, asmBuffer->GetByteLength() >> 2, scriptContext->GetLibrary());
+                    value = TypedArray<int32_t, false, isOptimizedBuffer>::Create(asmBuffer, 0, asmBuffer->GetByteLength() >> 2, scriptContext->GetLibrary());
                     break;
                 case ArrayBufferView::TYPE_UINT8:
                     value = TypedArray<uint8_t, false, isOptimizedBuffer>::Create(asmBuffer, 0, asmBuffer->GetByteLength(), scriptContext->GetLibrary());

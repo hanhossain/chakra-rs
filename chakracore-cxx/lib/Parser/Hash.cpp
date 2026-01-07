@@ -31,7 +31,7 @@ BOOL HashTbl::Init(uint cidHash)
     // cidHash must be a power of two
     Assert(cidHash > 0 && 0 == (cidHash & (cidHash - 1)));
 
-    int32 cb;
+    int32_t cb;
 
     /* Allocate and clear the hash bucket table */
     m_luMask = cidHash - 1;
@@ -39,7 +39,7 @@ BOOL HashTbl::Init(uint cidHash)
 
     // (Bug 1117873 - Windows OS Bugs)
     // Prefast: Verify that cidHash * sizeof(Ident *) does not cause an integer overflow
-    // NoReleaseAllocator( ) takes int32 - so check for LONG_MAX
+    // NoReleaseAllocator( ) takes int32_t - so check for LONG_MAX
     // Win8 730594 - Use intsafe function to check for overflow.
     uint cbTemp;
     if (FAILED(UIntMult(cidHash, sizeof(Ident *), &cbTemp)) || cbTemp > INT_MAX)
@@ -70,7 +70,7 @@ void HashTbl::Grow()
     if (FAILED(UIntMult(n_cidHash, sizeof(Ident *), &cbTemp)) || cbTemp > INT_MAX)
         // It is fine to exit early here, we will just have a potentially densely populated hash table
         return;
-    int32 cb = cbTemp;
+    int32_t cb = cbTemp;
     uint n_luMask = n_cidHash - 1;
 
     IdentPtr *n_prgpidName = (IdentPtr *)m_noReleaseAllocator.Alloc(cb);
@@ -254,7 +254,7 @@ template IdentPtr HashTbl::PidHashNameLen<char>(char const * prgch, uint32_t cch
 template IdentPtr HashTbl::PidHashNameLen<char16_t>(char16_t const * prgch, uint32_t cch);
 
 template <typename CharType>
-IdentPtr HashTbl::PidHashNameLenWithHash(_In_reads_(cch) CharType const * prgch, CharType const * end, int32 cch, uint32_t luHash)
+IdentPtr HashTbl::PidHashNameLenWithHash(_In_reads_(cch) CharType const * prgch, CharType const * end, int32_t cch, uint32_t luHash)
 {
     Assert(cch >= 0);
     Assert(cch == 0 || prgch != nullptr);
@@ -263,7 +263,7 @@ IdentPtr HashTbl::PidHashNameLenWithHash(_In_reads_(cch) CharType const * prgch,
     IdentPtr * ppid = nullptr;
     IdentPtr pid;
     int32_t cb;
-    int32 bucketCount;
+    int32_t bucketCount;
 
 
 #if PROFILE_DICTIONARY
@@ -348,16 +348,16 @@ template <typename CharType>
 IdentPtr HashTbl::FindExistingPid(
     CharType const * prgch,
     CharType const * end,
-    int32 cch,
+    int32_t cch,
     uint32_t luHash,
     IdentPtr **pppInsert,
-    int32 *pBucketCount
+    int32_t *pBucketCount
 #if PROFILE_DICTIONARY
     , int& depth
 #endif
     )
 {
-    int32 bucketCount;
+    int32_t bucketCount;
     IdentPtr pid;
 
     /* Search the hash table for an existing match */
@@ -387,25 +387,25 @@ IdentPtr HashTbl::FindExistingPid(
 }
 
 template IdentPtr HashTbl::FindExistingPid<utf8char_t>(
-    utf8char_t const * prgch, utf8char_t const * end, int32 cch, uint32_t luHash, IdentPtr **pppInsert, int32 *pBucketCount
+    utf8char_t const * prgch, utf8char_t const * end, int32_t cch, uint32_t luHash, IdentPtr **pppInsert, int32_t *pBucketCount
 #if PROFILE_DICTIONARY
     , int& depth
 #endif
     );
 template IdentPtr HashTbl::FindExistingPid<char>(
-    char const * prgch, char const * end, int32 cch, uint32_t luHash, IdentPtr **pppInsert, int32 *pBucketCount
+    char const * prgch, char const * end, int32_t cch, uint32_t luHash, IdentPtr **pppInsert, int32_t *pBucketCount
 #if PROFILE_DICTIONARY
     , int& depth
 #endif
     );
 template IdentPtr HashTbl::FindExistingPid<char16_t>(
-    char16_t const * prgch, char16_t const * end, int32 cch, uint32_t luHash, IdentPtr **pppInsert, int32 *pBucketCount
+    char16_t const * prgch, char16_t const * end, int32_t cch, uint32_t luHash, IdentPtr **pppInsert, int32_t *pBucketCount
 #if PROFILE_DICTIONARY
     , int& depth
 #endif
     );
 
-bool HashTbl::Contains(_In_reads_(cch) LPCOLESTR prgch, int32 cch)
+bool HashTbl::Contains(_In_reads_(cch) LPCOLESTR prgch, int32_t cch)
 {
     uint32_t luHash = CaseSensitiveComputeHash(prgch, prgch + cch);
 

@@ -2312,7 +2312,7 @@ CHAKRA_API JsGetTypedArrayStorage(_In_ JsValueRef instance, _Outptr_result_byteb
                     *elementSize = sizeof(uint16);
                     break;
                 case Js::TypeIds_Int32Array:
-                    *elementSize = sizeof(int32);
+                    *elementSize = sizeof(int32_t);
                     break;
                 case Js::TypeIds_Uint32Array:
                     *elementSize = sizeof(uint32_t);
@@ -2451,7 +2451,7 @@ template<> struct TypedArrayTypeTraits<uint8_t, false> { static const JsTypedArr
 template<> struct TypedArrayTypeTraits<uint8_t, true> { static const JsTypedArrayType cTypedArrayType = JsTypedArrayType::JsArrayTypeUint8Clamped; };
 template<> struct TypedArrayTypeTraits<int16> { static const JsTypedArrayType cTypedArrayType = JsTypedArrayType::JsArrayTypeInt16; };
 template<> struct TypedArrayTypeTraits<uint16> { static const JsTypedArrayType cTypedArrayType = JsTypedArrayType::JsArrayTypeUint16; };
-template<> struct TypedArrayTypeTraits<int32> { static const JsTypedArrayType cTypedArrayType = JsTypedArrayType::JsArrayTypeInt32; };
+template<> struct TypedArrayTypeTraits<int32_t> { static const JsTypedArrayType cTypedArrayType = JsTypedArrayType::JsArrayTypeInt32; };
 template<> struct TypedArrayTypeTraits<uint32_t> { static const JsTypedArrayType cTypedArrayType = JsTypedArrayType::JsArrayTypeUint32; };
 template<> struct TypedArrayTypeTraits<float> { static const JsTypedArrayType cTypedArrayType = JsTypedArrayType::JsArrayTypeFloat32; };
 template<> struct TypedArrayTypeTraits<double> { static const JsTypedArrayType cTypedArrayType = JsTypedArrayType::JsArrayTypeFloat64; };
@@ -2528,7 +2528,7 @@ CHAKRA_API JsSetIndexedPropertiesToExternalData(
             newTypedArray = CreateTypedArray<uint16>(scriptContext, data, elementLength);
             break;
         case JsArrayTypeInt32:
-            newTypedArray = CreateTypedArray<int32>(scriptContext, data, elementLength);
+            newTypedArray = CreateTypedArray<int32_t>(scriptContext, data, elementLength);
             break;
         case JsArrayTypeUint32:
             newTypedArray = CreateTypedArray<uint32_t>(scriptContext, data, elementLength);
@@ -2616,7 +2616,7 @@ CHAKRA_API JsGetIndexedPropertiesExternalData(
             GetObjectArrayData<uint16>(objectArray, buffer, arrayType, elementLength);
             break;
         case Js::TypeIds_Int32Array:
-            GetObjectArrayData<int32>(objectArray, buffer, arrayType, elementLength);
+            GetObjectArrayData<int32_t>(objectArray, buffer, arrayType, elementLength);
             break;
         case Js::TypeIds_Uint32Array:
             GetObjectArrayData<uint32_t>(objectArray, buffer, arrayType, elementLength);
