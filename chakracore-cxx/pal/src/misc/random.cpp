@@ -3,7 +3,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/stat.h>
@@ -81,7 +81,7 @@ static void GetRandom(unsigned int *result) noexcept
 LEAVE:
     if (failed) // fallback to weak rnd
     {
-        WEAK_RANDOM_SEED += rand();
+        WEAK_RANDOM_SEED += std::rand() % 0x8000;
         *result = rand_r(&WEAK_RANDOM_SEED);
     }
     else
