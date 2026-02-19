@@ -2782,9 +2782,6 @@ PAL_FILE * PAL_get_stderr(int caller);
 #define PAL_stdin  (PAL_get_stdin(PAL_get_caller))
 #define PAL_stderr (PAL_get_stderr(PAL_get_caller))
 
-// TODO (hanhossain): public
-char * PAL_getenv(const char *);
-
 #define ERANGE          34
 
 /******************* PAL side-by-side support  ************************/

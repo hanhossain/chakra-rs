@@ -47,30 +47,6 @@ CRITICAL_SECTION gcsEnvironment;
 using namespace CorUnix;
 
 /*++
-
-Function : PAL_getenv
-
-See MSDN for more details.
---*/
-char * PAL_getenv(const char *varname)
-{
-    char *retval;
-
-    ENTRY("getenv (%p (%s))\n", varname ? varname : "NULL", varname ? varname : "NULL");
-
-    if (strcmp(varname, "") == 0)
-    {
-        ERROR("getenv called with a empty variable name\n");
-        LOGEXIT("getenv returning NULL\n");
-        return(NULL);
-    }
-    retval = MiscGetenv(varname);
-
-    LOGEXIT("getenv returning %p\n", retval);
-    return(retval);
-}
-
-/*++
 Function:
 
    rand
