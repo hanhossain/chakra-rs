@@ -199,9 +199,9 @@ static int loadiJIT_Funcs()
         }
     }
 #else  /* ITT_PLATFORM==ITT_PLATFORM_WIN */
-    dllName = PAL_getenv(NEW_DLL_ENVIRONMENT_VAR);
+    dllName = getenv(NEW_DLL_ENVIRONMENT_VAR);
     if (!dllName)
-        dllName = PAL_getenv(DLL_ENVIRONMENT_VAR);
+        dllName = getenv(DLL_ENVIRONMENT_VAR);
     if (dllName)
     {
         /* Try to load the dll from the PATH... */
