@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "CommonMemoryPch.h"
+#include <cstdlib>
 
 #if DBG
 #include "Common/Int32Math.h"
@@ -58,7 +59,7 @@ void TestObject::SetRandom(TestObject *val)
 {
     if (pointerCount != 0)
     {
-        Set(rand() % pointerCount, val);
+        Set(std::rand() % pointerCount, val);
     }
 }
 
@@ -171,14 +172,15 @@ StressTester::StressTester(Recycler *_recycler) : recycler(_recycler)
 
 size_t StressTester::GetRandomSize()
 {
-    int i = rand() % 5;
+    int i = std::rand() % 5;
     switch (i)
     {
     case 0: return 0;
-    case 1: return rand() % 16;
-    case 2: return rand() % 4096;
-    case 3: return rand() % 16384;
-    case 4: return rand();
+    case 1: return std::rand() % 16;
+    case 2: return std::rand() % 4096;
+    case 3: return std::rand() % 16384;
+    // windows RAND_MAX is 0x7fff
+    case 4: return std::rand() % 0x8000;
     default:
         Assert(false);
         return 0;
@@ -189,7 +191,7 @@ TestObject* StressTester::CreateLinkedList()
 {
     TestObject *root = TestObject::Create(recycler, 1, GetRandomSize());
     TestObject *curr = root;
-    int length = rand() % MaxLinkedListLength;
+    int length = std::rand() % MaxLinkedListLength;
     for (int i = 0; i < length; ++i)
     {
         CreateOptions options = (i == length - 1) ? LeafObj : NormalObj;
@@ -206,7 +208,7 @@ void StressTester::CreateTreeHelper(TestObject *root, int depth) {
     {
         if (depth == 0 || treeTotal > MaxNodesInTree)
         {
-            root->Add(TestObject::Create(recycler, 0, rand(), LeafObj));
+            root->Add(TestObject::Create(recycler, 0, std::rand() % 0x8000, LeafObj));
         }
         else
         {
@@ -221,13 +223,13 @@ TestObject* StressTester::CreateTree()
 {
     TestObject *root = TestObject::Create(recycler, 4, GetRandomSize());
     treeTotal = 0;
-    CreateTreeHelper(root, rand() % MaxTreeDepth);
+    CreateTreeHelper(root, std::rand() % MaxTreeDepth);
     return root;
 }
 
 TestObject *StressTester::CreateRandom()
 {
-    int numObjects = rand() % 5000 + 1;
+    int numObjects = std::rand() % 5000 + 1;
 
     void *memory = _alloca(numObjects * sizeof(TestObject*)+OBJALIGN);
     TestObject **objs = reinterpret_cast<TestObject**>(AlignPtr(memory, OBJALIGN));
@@ -235,7 +237,7 @@ TestObject *StressTester::CreateRandom()
     // Create the objects
     for (int i = 0; i < numObjects; ++i)
     {
-        objs[i] = TestObject::Create(recycler, 10, rand());
+        objs[i] = TestObject::Create(recycler, 10, std::rand() % 0x8000);
     }
 
     // Create links between objects
@@ -243,7 +245,7 @@ TestObject *StressTester::CreateRandom()
     {
         for (int j = 0; j < 5; ++j)
         {
-            objs[i]->SetRandom(objs[rand() % numObjects]);
+            objs[i]->SetRandom(objs[std::rand() % numObjects]);
         }
     }
 
@@ -263,21 +265,21 @@ void StressTester::Run()
 
     auto ObjectVisitor = [&](TestObject *object) {
         // Clear out one of the pointers.
-        if (rand() % 5 == 0)
+        if (std::rand() % 5 == 0)
         {
             object->ClearOne();
         }
 
         // Maybe store a pointer on the stack.
-        if (rand() % 25 == 0)
+        if (std::rand() % 25 == 0)
         {
             stack->SetRandom(object);
         }
 
         // Maybe add a stack reference to the current object
-        if (rand() % 25 == 0)
+        if (std::rand() % 25 == 0)
         {
-            object->SetRandom(stack->Get(rand() % stack->pointerCount));
+            object->SetRandom(stack->Get(std::rand() % stack->pointerCount));
         }
 
     };
@@ -296,13 +298,13 @@ void StressTester::Run()
         TestObject::Visit(recycler, root);
 
         TestObject::Visit(recycler, stack, [&](TestObject *object) {
-            if (rand() % 10 == 0)
+            if (std::rand() % 10 == 0)
             {
                 object->ClearOne();
             }
         });
 
-        if (rand() % 3 == 0)
+        if (std::rand() % 3 == 0)
         {
             for (int i = 0; i < stack->pointerCount; ++i)
             {

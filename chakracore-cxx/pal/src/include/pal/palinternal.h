@@ -283,7 +283,6 @@ function_name() to call the system's implementation
 #undef getc
 #undef fgetc
 #undef ungetc
-#undef _flushall
 #undef setvbuf
 #undef mkstemp
 #undef rename
@@ -302,9 +301,7 @@ function_name() to call the system's implementation
 #undef exp
 #undef log
 #undef log10
-#undef rand
 #undef errno
-#undef getenv
 #undef wcsspn
 #undef open
 #undef glob
