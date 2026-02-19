@@ -2,6 +2,7 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
+#include <random>
 using namespace Js;
 
         Var JavascriptMath::Negate_Full(Var aRight, ScriptContext* scriptContext)
@@ -1259,32 +1260,11 @@ StringCommon:
             else
 #endif
             {
-                LARGE_INTEGER s0;
-                LARGE_INTEGER s1;
-
-                if (!rand_s(reinterpret_cast<unsigned int*>(&s0.LowPart)) &&
-                    !rand_s(reinterpret_cast<unsigned int*>(&s0.HighPart)) &&
-                    !rand_s(reinterpret_cast<unsigned int*>(&s1.LowPart)) &&
-                    !rand_s(reinterpret_cast<unsigned int*>(&s1.HighPart)))
-                {
-                    *seed0 = s0.QuadPart;
-                    *seed1 = s1.QuadPart;
-                }
-                else
-                {
-                    AssertMsg(false, "Unable to initialize PRNG seeds with rand_s. Revert to using entropy.");
-#ifdef ENABLE_CUSTOM_ENTROPY
-                    ThreadContext *threadContext = scriptContext->GetThreadContext();
-
-                    threadContext->GetEntropy().AddThreadCycleTime();
-                    threadContext->GetEntropy().AddIoCounters();
-                    *seed0 = threadContext->GetEntropy().GetRand();
-
-                    threadContext->GetEntropy().AddThreadCycleTime();
-                    threadContext->GetEntropy().AddIoCounters();
-                    *seed1 = threadContext->GetEntropy().GetRand();
-#endif
-                }
+                std::random_device rd;
+                std::mt19937_64 gen(rd());
+                std::uniform_int_distribution<unsigned long> dist;
+                *seed0 = dist(gen);
+                *seed1 = dist(gen);
             }
         }
 
