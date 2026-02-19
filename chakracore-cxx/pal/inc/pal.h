@@ -2517,7 +2517,6 @@ GetSystemInfo(
 #define vfwprintf     PAL_vfwprintf
 #define ctime         PAL_ctime
 #define rand          PAL_rand
-#define getenv        PAL_getenv
 #define fgets         PAL_fgets
 #define fgetws        PAL_fgetws
 #define fputc         PAL_fputc
@@ -2924,9 +2923,6 @@ int * PAL_errno(int caller);
 #define stderr (PAL_get_stderr(PAL_get_caller))
 #define errno  (*PAL_errno(PAL_get_caller))
 #endif // PAL_STDCPP_COMPAT
-
-// TODO (hanhossain): public
-char * getenv(const char *);
 
 #define ERANGE          34
 

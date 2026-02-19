@@ -303,7 +303,6 @@ function_name() to call the system's implementation
 #undef log10
 #undef rand
 #undef errno
-#undef getenv
 #undef wcsspn
 #undef open
 #undef glob
