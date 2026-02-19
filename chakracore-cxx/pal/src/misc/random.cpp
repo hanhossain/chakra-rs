@@ -89,12 +89,3 @@ LEAVE:
         cache_index = 1; // enable cache only when len == rand_byte_len
     }
 }
-
-extern "C"
-errno_t rand_s(unsigned int* randomValue) noexcept
-{
-    if (randomValue == nullptr) return 1;
-
-    GetRandom(randomValue);
-    return 0;
-}

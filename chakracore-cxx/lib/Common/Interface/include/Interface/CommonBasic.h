@@ -5,8 +5,6 @@
 #pragma once
 
 #include "Interface/CommonDefines.h"
-#define _CRT_RAND_S         // Enable rand_s in the CRT
-
 #ifndef __has_feature
 #define __has_feature(f) 0
 #endif

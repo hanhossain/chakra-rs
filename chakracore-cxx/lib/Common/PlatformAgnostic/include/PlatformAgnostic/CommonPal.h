@@ -341,8 +341,6 @@ inline long _abs64(long n)
 int GetCurrentThreadStackLimits(size_t* lowLimit, size_t* highLimit);
 bool IsAddressOnStack(size_t address);
 
-errno_t rand_s(unsigned int* randomValue);
-
 inline char16_t* wmemset(char16_t* wcs, char16_t wc, size_t n)
 {
     while (n)
