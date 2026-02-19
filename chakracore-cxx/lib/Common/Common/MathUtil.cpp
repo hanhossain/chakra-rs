@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "CommonCommonPch.h"
+#include <random>
 #include "MathUtil.h"
 
 uint32_t
@@ -21,16 +22,11 @@ Math::NextPowerOf2(uint32_t n)
 unsigned long
 Math::Rand()
 {
-    unsigned int rand;
-    rand_s(&rand);
-    unsigned long newRand = static_cast<unsigned long>(rand);
+    std::random_device rd;
+    std::mt19937_64 gen(rd());
+    std::uniform_int_distribution<unsigned long> dist;
 
-#if TARGET_64
-    rand_s(&rand);
-    newRand |= static_cast<unsigned long>(rand) << 32;
-#endif
-
-    return newRand;
+    return dist(gen);
 }
 
 __declspec(noreturn) void Math::DefaultOverflowPolicy()

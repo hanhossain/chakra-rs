@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "Backend.h"
+#include <random>
 #include "Core/CRC.h"
 #include "NativeEntryPointData.h"
 #include "JitTransferData.h"
@@ -89,14 +90,11 @@ Encoder::Encode()
     bool isCallInstr = false;
 
     // CRC Check to ensure the integrity of the encoded bytes.
-    uint initialCRCSeed = 0;
-    errno_t err = rand_s(&initialCRCSeed);
-
-    if (err != 0)
-    {
-        Fatal();
-    }
-
+    std::random_device rd;
+    std::mt19937_64 gen(rd());
+    std::uniform_int_distribution<unsigned long> dist;
+    
+    uint initialCRCSeed = dist(gen);
     uint bufferCRC = initialCRCSeed;
 
     FOREACH_INSTR_IN_FUNC(instr, m_func)
