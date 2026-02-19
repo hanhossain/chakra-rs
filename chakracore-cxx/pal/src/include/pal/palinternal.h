@@ -283,7 +283,6 @@ function_name() to call the system's implementation
 #undef getc
 #undef fgetc
 #undef ungetc
-#undef _flushall
 #undef setvbuf
 #undef mkstemp
 #undef rename

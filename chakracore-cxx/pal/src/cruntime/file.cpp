@@ -383,11 +383,6 @@ PAL_FILE * PAL_get_stderr(int caller)
     return &PAL_Stderr;
 }
 
- int PAL__flushall()
- {
-    return fflush(NULL);
- }
-
 char16_t *
 PAL_fgetws(char16_t *s, int n, PAL_FILE *f)
 {

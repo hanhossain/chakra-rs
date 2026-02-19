@@ -2544,7 +2544,6 @@ GetSystemInfo(
 #define rename        PAL_rename
 #define unlink        PAL_unlink
 #define _wcstoui64    PAL__wcstoui64
-#define _flushall     PAL__flushall
 
 #endif // !PAL_STDCPP_COMPAT
 
@@ -2806,9 +2805,6 @@ struct tm {
 
 char * ctime(const time_t *);
 #endif // !PAL_STDCPP_COMPAT
-
-// TODO (hanhossain): public
-int _flushall();
 
 #ifdef PAL_STDCPP_COMPAT
 
