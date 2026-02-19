@@ -39,16 +39,6 @@ extern char **palEnvironment;
 extern CRITICAL_SECTION gcsEnvironment;
 
 /*++
-Function :
-
-    PAL_rand
-    
-    Calls rand and mitigates the difference between RAND_MAX 
-    on Windows and FreeBSD.
---*/
-int PAL_rand(void);
-
-/*++
 Function:
 TIMEInitialize
 

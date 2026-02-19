@@ -2516,7 +2516,6 @@ GetSystemInfo(
 #define vfprintf      PAL_vfprintf
 #define vfwprintf     PAL_vfwprintf
 #define ctime         PAL_ctime
-#define rand          PAL_rand
 #define fgets         PAL_fgets
 #define fgetws        PAL_fgetws
 #define fputc         PAL_fputc
@@ -2896,8 +2895,6 @@ PAL_FILE * _wfsopen(const char16_t *, const char16_t *, int);
 #define RAND_MAX 0x7fff
 #endif // !PAL_STDCPP_COMPAT
 
-// TODO (hanhossain): public
-int rand(void);
 // TODO (hanhossain): public
 errno_t rand_s(unsigned int*);
 

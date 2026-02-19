@@ -4632,7 +4632,7 @@ void JsReentLock::MutateArrayObject(Js::Var arrayObject)
     if (arrayObject)
     {
         Js::JavascriptArray *arr = Js::JavascriptArray::FromAnyArray(arrayObject);
-        uint32_t random = static_cast<unsigned int>(rand());
+        uint32_t random = static_cast<unsigned int>(std::rand());
 
         if (random % 20 == 0)
         {
