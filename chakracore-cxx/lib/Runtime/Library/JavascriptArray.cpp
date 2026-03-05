@@ -10823,12 +10823,12 @@ Case0:
     {
         // Type transition
 
-        uint32_t random1 = static_cast<uint32_t>(rand());
+        uint32_t random1 = static_cast<uint32_t>(std::rand());
         if (random1 % 2 == 0)
         {
             if (VarIs<JavascriptNativeIntArray>(this))
             {
-                uint32_t random2 = static_cast<uint32_t>(rand());
+                uint32_t random2 = static_cast<uint32_t>(std::rand());
                 if (random2 % 2 == 0)
                 {
                     JavascriptNativeIntArray::ToNativeFloatArray(static_cast<JavascriptNativeIntArray*>(this));

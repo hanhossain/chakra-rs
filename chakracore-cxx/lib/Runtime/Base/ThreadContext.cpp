@@ -2,8 +2,8 @@
 // Copyright (C) Microsoft Corporation and contributors. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-
 #include "RuntimeBasePch.h"
+#include <random>
 #include "ThreadServiceWrapper.h"
 #include "Types/TypePropertyCache.h"
 #include "Util/Pinned.h"
@@ -4318,8 +4318,10 @@ uint ThreadContext::GetRandomNumber()
     return (uint)GetEntropy().GetRand();
 #else
     uint randomNumber = 0;
-    errno_t e = rand_s(&randomNumber);
-    Assert(e == 0);
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<unsigned int> dist;
+    randomNumber = dist(gen);
     return randomNumber;
 #endif
 }
@@ -4632,7 +4634,7 @@ void JsReentLock::MutateArrayObject(Js::Var arrayObject)
     if (arrayObject)
     {
         Js::JavascriptArray *arr = Js::JavascriptArray::FromAnyArray(arrayObject);
-        uint32_t random = static_cast<unsigned int>(rand());
+        uint32_t random = static_cast<unsigned int>(std::rand());
 
         if (random % 20 == 0)
         {

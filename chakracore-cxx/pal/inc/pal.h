@@ -2516,8 +2516,6 @@ GetSystemInfo(
 #define vfprintf      PAL_vfprintf
 #define vfwprintf     PAL_vfwprintf
 #define ctime         PAL_ctime
-#define rand          PAL_rand
-#define getenv        PAL_getenv
 #define fgets         PAL_fgets
 #define fgetws        PAL_fgetws
 #define fputc         PAL_fputc
@@ -2544,7 +2542,6 @@ GetSystemInfo(
 #define rename        PAL_rename
 #define unlink        PAL_unlink
 #define _wcstoui64    PAL__wcstoui64
-#define _flushall     PAL__flushall
 
 #endif // !PAL_STDCPP_COMPAT
 
@@ -2807,9 +2804,6 @@ struct tm {
 char * ctime(const time_t *);
 #endif // !PAL_STDCPP_COMPAT
 
-// TODO (hanhossain): public
-int _flushall();
-
 #ifdef PAL_STDCPP_COMPAT
 
 struct _PAL_FILE;
@@ -2901,11 +2895,6 @@ PAL_FILE * _wfsopen(const char16_t *, const char16_t *, int);
 #define RAND_MAX 0x7fff
 #endif // !PAL_STDCPP_COMPAT
 
-// TODO (hanhossain): public
-int rand(void);
-// TODO (hanhossain): public
-errno_t rand_s(unsigned int*);
-
 #define PAL_get_caller 0
 
 // TODO (hanhossain): internal
@@ -2928,9 +2917,6 @@ int * PAL_errno(int caller);
 #define stderr (PAL_get_stderr(PAL_get_caller))
 #define errno  (*PAL_errno(PAL_get_caller))
 #endif // PAL_STDCPP_COMPAT
-
-// TODO (hanhossain): public
-char * getenv(const char *);
 
 #define ERANGE          34
 

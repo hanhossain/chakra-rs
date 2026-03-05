@@ -66,53 +66,6 @@ int * PAL_errno( int caller )
     return retval;
 }
 
-/*++
-
-Function : PAL_getenv
-
-See MSDN for more details.
---*/
-char * PAL_getenv(const char *varname)
-{
-    char *retval;
-
-    ENTRY("getenv (%p (%s))\n", varname ? varname : "NULL", varname ? varname : "NULL");
-
-    if (strcmp(varname, "") == 0)
-    {
-        ERROR("getenv called with a empty variable name\n");
-        LOGEXIT("getenv returning NULL\n");
-        return(NULL);
-    }
-    retval = MiscGetenv(varname);
-
-    LOGEXIT("getenv returning %p\n", retval);
-    return(retval);
-}
-
-/*++
-Function:
-
-   rand
-
-   The difference between the FreeBSD and Windows implementations is the max
-   of the return value. in FreeBSD, RAND_MAX is 0x7fffffff and in Windows
-   it's 0x7fff.
-
-See MSDN for more details.
---*/
-int
-PAL_rand(void)
-{
-    int ret;
-    ENTRY("rand(void)\n");
-
-    ret = (rand() % (PAL_RAND_MAX + 1));
-
-    LOGEXIT("rand() returning %d\n", ret);
-    return ret;
-}
-
 void * PAL_bsearch(const void *key, const void *base, size_t nmemb, size_t size,
             int (*compar)(const void *, const void *))
 {

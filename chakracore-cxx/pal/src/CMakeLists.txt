@@ -126,7 +126,6 @@ set(SOURCES
   misc/dbgmsg.cpp
   misc/error.cpp
   misc/environ.cpp
-  misc/random.cpp
   misc/strutil.cpp
   misc/time.cpp
   misc/sysinfo.cpp
