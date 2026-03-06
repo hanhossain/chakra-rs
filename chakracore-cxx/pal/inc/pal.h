@@ -2534,7 +2534,6 @@ GetSystemInfo(
 #define getc          PAL_getc
 #define fgetc         PAL_getc // not a typo
 #define ungetc        PAL_ungetc
-#define setvbuf       PAL_setvbuf
 #define memmove       memmove_xplat
 #define mkstemp       PAL_mkstemp
 #define rename        PAL_rename
