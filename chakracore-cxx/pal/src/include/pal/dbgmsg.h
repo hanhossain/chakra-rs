@@ -254,7 +254,7 @@ extern Volatile<BOOL> dbg_master_switch ;
 
 #if defined(__cplusplus) && defined(FEATURE_PAL_SXS)
 #define __ASSERT_ENTER()                                                \
-    /* DBG_printf_gcc() and DebugBreak() need a PAL thread */           \
+    /* DebugBreak() need a PAL thread */           \
     PAL_EnterHolder __holder(PALIsThreadDataInitialized() && \
         (CorUnix::InternalGetCurrentThread() == NULL || \
         !CorUnix::InternalGetCurrentThread()->IsInPal()));
@@ -387,68 +387,6 @@ Notes :
 --*/
 BOOL DBG_preprintf(DBG_CHANNEL_ID channel, DBG_LEVEL_ID level, BOOL bHeader,
                    char* file, int32_t line);
-
-/*++
-Function :
-    DBG_printf_gcc
-
-    Internal function for debug channels; don't use.
-    This function outputs a complete debug message, including the function name.
-
-Parameters :
-    DBG_CHANNEL_ID channel : debug channel to use
-    DBG_LEVEL_ID level : debug message level
-    BOOL bHeader : whether or not to output message header (thread id, etc)
-    char* function : current function
-    char* file : current file
-    INT line : line number
-    char* format, ... : standard printf parameter list.
-
-Return Value :
-    always 1.
-
-Notes :
-    This version is for gnu compilers that support variable-argument macros
-    and the __FUNCTION__ pseudo-macro.
-
---*/
-#if __GNUC__ && CHECK_TRACE_SPECIFIERS
-/* if requested, use an __attribute__ feature to ask gcc to check that format
-   specifiers match their parameters */
-int DBG_printf_gcc(DBG_CHANNEL_ID channel, DBG_LEVEL_ID level, BOOL bHeader,
-                   const char * function, const char * file, int32_t line, const char * format, ...)
-                   __attribute__ ((format (printf,7, 8)));
-#else
-int DBG_printf_gcc(DBG_CHANNEL_ID channel, DBG_LEVEL_ID level, BOOL bHeader,
-                   const char * function, const char * file, int32_t line, const char * format, ...);
-#endif
-
-/*++
-Function :
-    DBG_printf_c99
-
-    Internal function for debug channels; don't use.
-    This function outputs a complete debug message, without function name.
-
-Parameters :
-    DBG_CHANNEL_ID channel : debug channel to use
-    DBG_LEVEL_ID level : debug message level
-    BOOL bHeader : whether or not to output message header (thread id, etc)
-    char* file : current file
-    INT line : line number
-    char* format, ... : standard printf parameter list.
-
-Return Value :
-    always 1.
-
-Notes :
-    This version is for compilers that support the C99 flavor of
-    variable-argument macros but not the gnu flavor, and do not support the
-    __FUNCTION__ pseudo-macro.
-
---*/
-int DBG_printf_c99(DBG_CHANNEL_ID channel, DBG_LEVEL_ID level, BOOL bHeader,
-                   char* file, int32_t line, char* format, ...);
 
 /*++
 Function :
