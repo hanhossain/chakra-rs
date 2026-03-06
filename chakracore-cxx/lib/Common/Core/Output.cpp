@@ -406,7 +406,7 @@ void Output::Flush()
     {
         PAL_fflush(s_outputFile);
     }
-    _flushall();
+    PAL__flushall();
 }
 
 void Output::DirectPrint(char16_t const * string)
