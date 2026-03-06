@@ -289,7 +289,7 @@ namespace Js {
 #endif
         if (AssertsToConsole)
         {
-            fprintf(stderr, "ASSERTION %u: (%s, line %u) %s\n Failure: %s\n", GetCurrentProcessId(), fileName, lineNumber, message, error);
+            PAL_fprintf(stderr, "ASSERTION %u: (%s, line %u) %s\n Failure: %s\n", GetCurrentProcessId(), fileName, lineNumber, message, error);
             PAL_fflush(stderr);
 #ifdef GENERATE_DUMP
             // force dump if we have assert in jc.exe. check build only.

@@ -480,7 +480,7 @@ CHAKRA_API JsDiagSetStepType(
             if(!threadContext->IsRuntimeInTTDMode())
             {
                 //Don't want to fail hard when user accidentally clicks this so pring message and step forward
-                fprintf(stderr, "Must be in replay mode to use reverse-step - launch with \"--replay-debug\" flag in Node.");
+                PAL_fprintf(stderr, "Must be in replay mode to use reverse-step - launch with \"--replay-debug\" flag in Node.");
                 jsrtDebugManager->SetResumeType(BREAKRESUMEACTION_STEP_OVER);
             }
             else
@@ -501,7 +501,7 @@ CHAKRA_API JsDiagSetStepType(
             if(!threadContext->IsRuntimeInTTDMode())
             {
                 //Don't want to fail hard when user accidentally clicks this so pring message and step forward
-                fprintf(stderr, "Must be in replay mode to use reverse-continue - launch with \"--replay-debug\" flag in Node.");
+                PAL_fprintf(stderr, "Must be in replay mode to use reverse-continue - launch with \"--replay-debug\" flag in Node.");
                 jsrtDebugManager->SetResumeType(BREAKRESUMEACTION_CONTINUE);
             }
             else
