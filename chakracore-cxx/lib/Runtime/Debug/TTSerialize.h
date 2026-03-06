@@ -738,7 +738,7 @@ namespace TTD
             if(this->m_currLength + length >= TRACE_LOGGER_BUFFER_SIZE)
             {
                 fwrite(this->m_buffer, sizeof(char), this->m_currLength, this->m_outfile);
-                fflush(this->m_outfile);
+                PAL_fflush(this->m_outfile);
 
                 this->m_currLength = 0;
             }

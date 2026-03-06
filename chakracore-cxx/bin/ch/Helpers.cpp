@@ -367,7 +367,7 @@ void Helpers::LogError(__nullterminated const char16_t *msg, ...)
     wprintf(u"ERROR: ");
     vfwprintf(stderr, msg, args);
     wprintf(u"\n");
-    fflush(stdout);
+    PAL_fflush(stdout);
     va_end(args);
 }
 
@@ -572,7 +572,7 @@ bool CALLBACK Helpers::TTWriteBytesToStreamCallback(JsTTDStreamHandle handle, co
 
 void CALLBACK Helpers::TTFlushAndCloseStreamCallback(JsTTDStreamHandle handle, bool read, bool write)
 {
-    fflush((FILE*)handle);
+    PAL_fflush((FILE*)handle);
     fclose((FILE*)handle);
 }
 

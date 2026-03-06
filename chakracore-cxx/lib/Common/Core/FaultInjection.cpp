@@ -306,13 +306,13 @@ namespace Js
         if (hDbgHelp == NULL)
         {
             fwprintf(stderr, u"Failed to load dbghelp.dll for stack walking, gle=0x%08x\n", GetLastError());
-            fflush(stderr);
+            PAL_fflush(stderr);
             return false;
         }
 #define FIDELAYLOAD(fn) pfn##fn = (decltype(fn)*)GetProcAddress(hDbgHelp, #fn); \
         if (pfn##fn == nullptr){\
             fwprintf(stderr, u"Failed to load sigs:%s\n", _u(#fn)); \
-            fflush(stderr); \
+            PAL_fflush(stderr); \
             return false; \
         }
         FIDELAYLOAD(SymInitialize);
@@ -333,7 +333,7 @@ namespace Js
         if (!pfnSymInitialize(GetCurrentProcess(), NULL, TRUE))
         {
             fwprintf(stderr, u"SymInitialize failed, gle=0x%08x\n", GetLastError());
-            fflush(stderr);
+            PAL_fflush(stderr);
             return false;
         }
         symInitialized = true;
@@ -435,14 +435,14 @@ namespace Js
             || globalFlags.FaultInjection == FaultMode::StackMatchCountOnly)
         {
             fprintf(stderr, "FaultInjection - Total Allocation Count:%u\n", countOfInjectionPoints);
-            fflush(stderr);
+            PAL_fflush(stderr);
             FILE *fp;
             char countFileName[64];
             sprintf_s(countFileName, "ChakraFaultInjectionCount_%u.txt", GetCurrentProcessId());
             if (fopen_s(&fp, countFileName, "w") == 0)
             {
                 fprintf(fp, "FaultInjection - Total Allocation Count:%u\n", countOfInjectionPoints);
-                fflush(fp);
+                PAL_fflush(fp);
                 fclose(fp);
             }
             for (int i = 0; i < MAX_FRAME_COUNT; i++)
@@ -453,7 +453,7 @@ namespace Js
                 }
                 fwprintf(stderr, u"FaultInjection stack matching rank %d: %u\n", i + 1, stackMatchRank[i]);
             }
-            fflush(stderr);
+            PAL_fflush(stderr);
 
         }
 
@@ -466,7 +466,7 @@ namespace Js
                 {
                     fprintf(fp, "%p\n", (void*)stackHashOfAllInjectionPoints[i]);
                 }
-                fflush(fp);
+                PAL_fflush(fp);
                 fclose(fp);
             }
         }
@@ -664,7 +664,7 @@ namespace Js
             if (err != 0 || fp == nullptr)
             {
                 fwprintf(stderr, u"Failed to load %s, gle=0x%08x\n", stackFile, GetLastError());
-                fflush(stderr);
+                PAL_fflush(stderr);
                 return false;
             }
 
@@ -992,7 +992,7 @@ namespace Js
         // hash
         record->hash = CalculateStackHash(record->StackFrames, record->FrameCount, 2);
         fwprintf(stderr, u"***FI: Fault Injected, StackHash:%p\n", (void*)record->hash);
-        fflush(stderr);
+        PAL_fflush(stderr);
 
         *InjectionLastRecordRef = record;
         InjectionLastRecordRef = &record->next;
@@ -1270,7 +1270,7 @@ namespace Js
                 {
                     fwprintf(stderr, u"This is not a new Exception\n");
                 }
-                fflush(fp);
+                PAL_fflush(fp);
 
                 // save the hit count to a file, for bug prioritizing
                 _snwprintf_s(filename, _TRUNCATE, u"%s.HitCount_%llx.txt", mainModule, (long long)offset);
@@ -1292,7 +1292,7 @@ namespace Js
                 fclose(fp);
                 UnlockFileEx(hFile, 0, lockSize, 0, &overlapped);
             }
-            fflush(stderr);
+            PAL_fflush(stderr);
         }
 
         if (globalFlags.FaultInjection == InstallExceptionHandlerOnly)
@@ -1420,7 +1420,7 @@ namespace Js
             }
         }
 
-        fflush(stderr);
+        PAL_fflush(stderr);
 
 #endif  //_M_ARM and _M_ARM64
     }

@@ -198,7 +198,7 @@ void  PerfTrace::WritePerfMap()
         threadContext = threadContext->Next();
     }
 
-    fflush(perfMapFile);
+    PAL_fflush(perfMapFile);
     fclose(perfMapFile);
 #endif
     PerfTrace::mapsRequested = 0;

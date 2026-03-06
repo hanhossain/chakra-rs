@@ -269,7 +269,6 @@ function_name() to call the system's implementation
 #undef feof
 #undef ferror
 #undef ftell
-#undef fflush
 #undef fwrite
 #undef fgets
 #undef fgetws

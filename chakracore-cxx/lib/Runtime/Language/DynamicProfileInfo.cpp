@@ -2631,7 +2631,7 @@ namespace Js
         NEXT_SLISTBASE_ENTRY;
 
         WriteData((byte)0, file);
-        fflush(file);
+        PAL_fflush(file);
         fclose(file);
     }
 #endif

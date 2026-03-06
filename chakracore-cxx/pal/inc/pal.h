@@ -2530,7 +2530,6 @@ GetSystemInfo(
 #define ftell         PAL_ftell
 #define fclose        PAL_fclose
 #define setbuf        PAL_setbuf
-#define fflush        PAL_fflush
 #define fputs         PAL_fputs
 #define fseek         PAL_fseek
 #define fgetpos       PAL_fgetpos
