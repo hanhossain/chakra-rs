@@ -2511,7 +2511,6 @@ GetSystemInfo(
 #define wcscspn       PAL_wcscspn
 #define vswprintf     PAL_vswprintf
 #define fwprintf      PAL_fwprintf
-#define vfprintf      PAL_vfprintf
 #define vfwprintf     PAL_vfwprintf
 #define ctime         PAL_ctime
 #define rand          PAL_rand
