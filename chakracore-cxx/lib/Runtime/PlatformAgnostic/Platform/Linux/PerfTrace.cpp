@@ -109,7 +109,7 @@ void  PerfTrace::WritePerfMap()
         pid_t processId = getpid();
         snprintf(perfMapFilename, PERFMAP_FILENAME_MAX_LENGTH, "/tmp/perf-%d.map", processId);
 
-        perfMapFile = fopen(perfMapFilename, "w");
+        perfMapFile = PAL_fopen(perfMapFilename, "w");
         if (perfMapFile == NULL) {
             return;
         }

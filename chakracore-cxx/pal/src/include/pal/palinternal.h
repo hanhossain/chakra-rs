@@ -264,7 +264,6 @@ function_name() to call the system's implementation
 #undef FILE
 #undef fclose
 #undef setbuf
-#undef fopen
 #undef fread
 #undef feof
 #undef ferror

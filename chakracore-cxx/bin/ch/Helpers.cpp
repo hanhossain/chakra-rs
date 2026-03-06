@@ -43,7 +43,7 @@ int TTDHostMKDir(const char* path, size_t pathLength)
 
 JsTTDStreamHandle TTDHostOpen(size_t pathLength, const char* path, bool isWrite)
 {
-    return (JsTTDStreamHandle)fopen(path, isWrite ? "w+b" : "r+b");
+    return (JsTTDStreamHandle)PAL_fopen(path, isWrite ? "w+b" : "r+b");
 }
 
 #define TTDHostRead(buff, size, handle) fread(buff, 1, size, (FILE*)handle)
