@@ -177,7 +177,7 @@ JsValueRef WScriptJsrt::EchoCallback(JsValueRef callee, bool isConstructCall, Js
     }
 
     wprintf(u"\n");
-    fflush(stdout);
+    PAL_fflush(stdout);
 
     JsValueRef undefinedValue;
     if (ChakraRTInterface::JsGetUndefinedValue(&undefinedValue) == JsNoError)
@@ -1567,7 +1567,7 @@ JsValueRef WScriptJsrt::BroadcastCallback(JsValueRef callee, bool isConstructCal
             else
             {
                 fwprintf(stderr, u"Couldn't create semaphore.\n");
-                fflush(stderr);
+                PAL_fflush(stderr);
             }
 
             ChakraRTInterface::JsReleaseSharedArrayBufferContentHandle(threadData->sharedContent);
@@ -2241,6 +2241,6 @@ void WScriptJsrt::PromiseRejectionTrackerCallback(JsValueRef promise, JsValueRef
         }
     }
 
-    fflush(stdout);
+    PAL_fflush(stdout);
 }
 

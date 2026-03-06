@@ -63,7 +63,7 @@ do { \
 if (!(exp)) \
 { \
     fprintf(stderr, "ASSERTION (%s, line %d) %s %s\n", __FILE__, __LINE__, CHAKRACORE_STRINGIZE(exp), comment); \
-    fflush(stderr); \
+    PAL_fflush(stderr); \
     DebugBreak(); \
 } \
 } while (0)
@@ -94,7 +94,7 @@ do { \
     JsErrorCode jsErrorCode = expr; \
     if ((jsErrorCode) != JsNoError) { \
         fwprintf(stderr, u"ERROR: " _u(#expr) u" failed. JsErrorCode=0x%x (%s)\n", jsErrorCode, Helpers::JsErrorCodeToString(jsErrorCode)); \
-        fflush(stderr); \
+        PAL_fflush(stderr); \
         goto Error; \
     } \
 } while (0)
@@ -105,7 +105,7 @@ do { \
     if ((jsErrorCode) != JsNoError) { \
         hr = E_FAIL; \
         fwprintf(stderr, u"ERROR: " _u(#expr) u" failed. JsErrorCode=0x%x (%s)\n", jsErrorCode, Helpers::JsErrorCodeToString(jsErrorCode)); \
-        fflush(stderr); \
+        PAL_fflush(stderr); \
         goto Error; \
     } \
 } while (0)
@@ -115,7 +115,7 @@ do { \
     JsErrorCode jsErrorCode = expr; \
     if ((jsErrorCode) != JsNoError) { \
         fwprintf(stderr, u"ERROR: " _u(#expr) u" failed. JsErrorCode=0x%x (%s)\n", jsErrorCode, Helpers::JsErrorCodeToString(jsErrorCode)); \
-        fflush(stderr); \
+        PAL_fflush(stderr); \
         goto label; \
     } \
 } while (0)
@@ -125,7 +125,7 @@ do { \
     JsErrorCode jsErrorCode = expr; \
     if ((jsErrorCode) != JsNoError) { \
         fwprintf(stderr, u"ERROR: " _u(#expr) u" failed. JsErrorCode=0x%x (%s)\n", jsErrorCode, Helpers::JsErrorCodeToString(jsErrorCode)); \
-        fflush(stderr); \
+        PAL_fflush(stderr); \
         return JS_INVALID_REFERENCE; \
     } \
 } while (0)
@@ -135,7 +135,7 @@ do { \
     JsErrorCode jsErrorCode = expr; \
     if ((jsErrorCode) != JsNoError) { \
         fwprintf(stderr, u"ERROR: " _u(#expr) u" failed. JsErrorCode=0x%x (%s)\n", jsErrorCode, Helpers::JsErrorCodeToString(jsErrorCode)); \
-        fflush(stderr); \
+        PAL_fflush(stderr); \
         return false; \
     } \
 } while (0)
@@ -145,7 +145,7 @@ do { \
     JsErrorCode jsErrorCode = expr; \
     if ((jsErrorCode) != JsNoError) { \
         fwprintf(stderr, u"ERROR: " _u(#expr) u" failed. JsErrorCode=0x%x (%s)\n", jsErrorCode, Helpers::JsErrorCodeToString(jsErrorCode)); \
-        fflush(stderr); \
+        PAL_fflush(stderr); \
         return (jsErrorCode); \
     } \
 } while (0)

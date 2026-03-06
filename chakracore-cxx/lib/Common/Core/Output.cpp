@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "CommonCorePch.h"
+#include "pal.h"
 #include "Output.h"
 
 // Initialization order
@@ -54,7 +55,7 @@ Output::VerboseNote(const char16_t * format, ...)
         va_list argptr;
         va_start(argptr, format);
         size_t size = vfwprintf(stdout, format, argptr);
-        fflush(stdout);
+        PAL_fflush(stdout);
         va_end(argptr);
         return size;
     }
@@ -403,7 +404,7 @@ void Output::Flush()
     }
     if(s_outputFile != nullptr)
     {
-        fflush(s_outputFile);
+        PAL_fflush(s_outputFile);
     }
     _flushall();
 }
