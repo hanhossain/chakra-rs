@@ -434,14 +434,14 @@ namespace Js
         if (globalFlags.FaultInjection == FaultMode::CountOnly
             || globalFlags.FaultInjection == FaultMode::StackMatchCountOnly)
         {
-            fprintf(stderr, "FaultInjection - Total Allocation Count:%u\n", countOfInjectionPoints);
+            PAL_fprintf(stderr, "FaultInjection - Total Allocation Count:%u\n", countOfInjectionPoints);
             PAL_fflush(stderr);
             FILE *fp;
             char countFileName[64];
             sprintf_s(countFileName, "ChakraFaultInjectionCount_%u.txt", GetCurrentProcessId());
             if (fopen_s(&fp, countFileName, "w") == 0)
             {
-                fprintf(fp, "FaultInjection - Total Allocation Count:%u\n", countOfInjectionPoints);
+                PAL_fprintf(fp, "FaultInjection - Total Allocation Count:%u\n", countOfInjectionPoints);
                 PAL_fflush(fp);
                 fclose(fp);
             }
@@ -464,7 +464,7 @@ namespace Js
             {
                 for (uint i = 0; i < countOfInjectionPoints; i++)
                 {
-                    fprintf(fp, "%p\n", (void*)stackHashOfAllInjectionPoints[i]);
+                    PAL_fprintf(fp, "%p\n", (void*)stackHashOfAllInjectionPoints[i]);
                 }
                 PAL_fflush(fp);
                 fclose(fp);

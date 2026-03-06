@@ -330,7 +330,6 @@ function_name() to call the system's implementation
 #undef fpos_t
 
 
-#undef fprintf
 #undef fwprintf
 #undef vfprintf
 #undef vfwprintf

@@ -96,8 +96,8 @@ uint ConcatPath(const char * filenameLeft, uint posPathSep, const char * filenam
 
     if (bufferLength < totalLength)
     {
-        fprintf(stderr, "Error: file path is too long.\n");
-        return (uint)-1;
+      PAL_fprintf(stderr, "Error: file path is too long.\n");
+      return (uint)-1;
     }
 
     pathcpy(buffer, filenameLeft, posPathSep);
@@ -173,7 +173,7 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
             {
 // TODO (hanhossain): may want to include <unistd.h> to import _POSIX_VERSION
 #if defined(_POSIX_VERSION)
-                fprintf(stderr, "Error in opening file: ");
+                PAL_fprintf(stderr, "Error in opening file: ");
                 perror(filename);
 #endif
             }
@@ -387,8 +387,8 @@ int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, u
     {
         if (printFileOpenError)
         {
-            fprintf(stderr, "Error in opening file '%s' ", filename);
-            fprintf(stderr, "\n");
+            PAL_fprintf(stderr, "Error in opening file '%s' ", filename);
+            PAL_fprintf(stderr, "\n");
         }
         return E_FAIL;
     }
@@ -431,8 +431,8 @@ void Helpers::TTReportLastIOErrorAsNeeded(BOOL ok, const char* msg)
 {
     if(!ok)
     {
-        fprintf(stderr, "Error is: %i %s\n", errno, strerror(errno));
-        fprintf(stderr, "Message is: %s\n", msg);
+        PAL_fprintf(stderr, "Error is: %i %s\n", errno, strerror(errno));
+        PAL_fprintf(stderr, "Message is: %s\n", msg);
 
         AssertMsg(false, "IO Error!!!");
         exit(1);
@@ -525,7 +525,7 @@ JsTTDStreamHandle CALLBACK Helpers::TTCreateStreamCallback(size_t uriLength, con
     JsTTDStreamHandle res = TTDHostOpen(uriLength + asciiNameLength, path, write);
     if(res == nullptr)
     {
-        fprintf(stderr, "Failed to open file: %s\n", path);
+        PAL_fprintf(stderr, "Failed to open file: %s\n", path);
     }
 
     Helpers::TTReportLastIOErrorAsNeeded(res != nullptr, "Failed File Open");

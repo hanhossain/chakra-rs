@@ -62,7 +62,7 @@
 do { \
 if (!(exp)) \
 { \
-    fprintf(stderr, "ASSERTION (%s, line %d) %s %s\n", __FILE__, __LINE__, CHAKRACORE_STRINGIZE(exp), comment); \
+    PAL_fprintf(stderr, "ASSERTION (%s, line %d) %s %s\n", __FILE__, __LINE__, CHAKRACORE_STRINGIZE(exp), comment); \
     PAL_fflush(stderr); \
     DebugBreak(); \
 } \
