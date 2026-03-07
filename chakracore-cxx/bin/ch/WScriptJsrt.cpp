@@ -5,12 +5,6 @@
 //-------------------------------------------------------------------------------------------------------
 #include "stdafx.h"
 #include "PlatformAgnostic/ChakraICU.h"
-#if defined(__APPLE__)
-#ifdef ctime
-#undef ctime
-#define CTIME_UNDEFED
-#endif
-#endif
 #include <vector>
 #include <ctime>
 #include <ratio>
@@ -847,10 +841,6 @@ JsValueRef WScriptJsrt::MonotonicNowCallback(JsValueRef callee, bool isConstruct
     
     IfJsrtErrorSetGo(ChakraRTInterface::JsDoubleToNumber(static_cast<double>(std::chrono::steady_clock::now().time_since_epoch().count()) / 1e6 /* ns in ms */, &result));
 
-#ifdef CTIME_UNDEFED
-#define ctime PAL_ctime
-#undef CTIME_UNDEFED
-#endif
     return result;
 
 Error:
