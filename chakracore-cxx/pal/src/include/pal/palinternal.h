@@ -303,8 +303,7 @@ function_name() to call the system's implementation
 
 
 #undef fwprintf
-#undef vfwprintf
-#undef wprintf
+#undef wprintf 
 #undef _snprintf
 #if HAVE__SNWPRINTF
 #undef _snwprintf

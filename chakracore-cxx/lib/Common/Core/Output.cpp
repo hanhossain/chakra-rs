@@ -54,7 +54,7 @@ Output::VerboseNote(const char16_t * format, ...)
         AutoCriticalSection autocs(&s_critsect);
         va_list argptr;
         va_start(argptr, format);
-        size_t size = vfwprintf(stdout, format, argptr);
+        size_t size = PAL_vfwprintf(stdout, format, argptr);
         PAL_fflush(stdout);
         va_end(argptr);
         return size;
