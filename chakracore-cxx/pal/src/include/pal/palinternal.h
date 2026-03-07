@@ -262,9 +262,7 @@ function_name() to call the system's implementation
 #undef localtime
 #undef FILE
 #undef fread
-#undef feof
 #undef ferror
-#undef ftell
 #undef fwrite
 #undef fgets
 #undef fgetws
