@@ -508,50 +508,6 @@ PAL_fclose(PAL_FILE * f)
     return nRetVal;
 }
 
-/*++
-Function :
-
-    setbuf
-
-    See MSDN for more details.
---*/
-void
-PAL_setbuf(PAL_FILE * f, char * buffer)
-{
-    ENTRY( "setbuf( %p, %p )\n", f, buffer );
-
-    _ASSERTE(f != NULL);
-
-    setbuf( f->bsdFilePtr, buffer );
-
-    LOGEXIT( "setbuf\n" );
-}
-
-/*++
-Function :
-
-    fputs
-
-    See MSDN for more details.
---*/
-int
-PAL_fputs(const char * str,  PAL_FILE * f)
-{
-    int32_t nRetVal = 0;
-
-    ENTRY( "fputs( %p (%s), %p )\n", str, str, f);
-
-    _ASSERTE(str != NULL);
-    _ASSERTE(f != NULL);
-
-    CLEARERR(f);
-
-    nRetVal = fputs( str, f->bsdFilePtr );
-
-    LOGEXIT( "fputs returning %d\n", nRetVal );
-    return nRetVal;
-}
-
 /*--
 Function :
 
