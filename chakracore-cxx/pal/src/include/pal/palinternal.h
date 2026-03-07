@@ -260,9 +260,6 @@ function_name() to call the system's implementation
 #undef tm
 #undef localtime
 #undef FILE
-#undef fgets
-#undef fgetws
-#undef fputc
 #undef getcwd
 #undef size_t
 #undef time_t
@@ -280,7 +277,6 @@ function_name() to call the system's implementation
 #undef log10
 #undef rand
 #undef errno
-#undef getenv
 #undef wcsspn
 #undef open
 #undef glob
