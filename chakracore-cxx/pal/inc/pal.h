@@ -2561,8 +2561,6 @@ int PAL_wcsncmp(const char16_t *, const char16_t *, size_t);
 // TODO (hanhossain): internal
 char16_t * PAL_wcscat(char16_t *, const char16_t *);
 // TODO (hanhossain): internal
-char16_t * PAL_wcsncat(char16_t *, const char16_t *, size_t);
-// TODO (hanhossain): internal
 char16_t * PAL_wcscpy(char16_t *, const char16_t *);
 // TODO (hanhossain): internal
 const char16_t * PAL_wcschr(const char16_t *, char16_t);
