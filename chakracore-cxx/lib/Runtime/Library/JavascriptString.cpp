@@ -1289,7 +1289,7 @@ case_2:
             if (*currentPos == *searchStr)
             {
                 // Quick start char chec
-                if (wmemcmp(currentPos, searchStr, searchLen) == 0)
+                if (PAL_wmemcmp(currentPos, searchStr, searchLen) == 0)
                 {
                     return JavascriptNumber::ToVar(currentPos - searchLowerBound, scriptContext);
                 }
@@ -2671,7 +2671,7 @@ case_2:
         if (startPosition <= thisStrLen - searchStrLen)
         {
             Assert(searchStrLen <= thisStrLen - startPosition);
-            if (wmemcmp(thisStr + startPosition, searchStr, searchStrLen) == 0)
+            if (PAL_wmemcmp(thisStr + startPosition, searchStr, searchStrLen) == 0)
             {
                 return scriptContext->GetLibrary()->GetTrue();
             }
@@ -2725,7 +2725,7 @@ case_2:
         {
             Assert(startPosition <= thisStrLen);
             Assert(searchStrLen <= thisStrLen - startPosition);
-            if (wmemcmp(thisStr + startPosition, searchStr, searchStrLen) == 0)
+            if (PAL_wmemcmp(thisStr + startPosition, searchStr, searchStrLen) == 0)
             {
                 return scriptContext->GetLibrary()->GetTrue();
             }
@@ -2850,7 +2850,7 @@ case_2:
 
     bool JavascriptString::IsNegZero(JavascriptString *string)
     {
-        return string->GetLength() == 2 && wmemcmp(string->GetString(), u"-0", 2) == 0;
+        return string->GetLength() == 2 && PAL_wmemcmp(string->GetString(), u"-0", 2) == 0;
     }
 
     void JavascriptString::FinishCopy(__inout_xcount(m_charLength) char16_t *const buffer, StringCopyInfoStack &nestedStringTreeCopyInfos)
@@ -3437,7 +3437,7 @@ case_2:
             // first character match, keep checking
             if (*p == searchLast)
             {
-                if ( wmemcmp(p-searchLen+1, searchStr, searchLen) == 0 )
+                if ( PAL_wmemcmp(p-searchLen+1, searchStr, searchLen) == 0 )
                 {
                     break;
                 }
@@ -3484,7 +3484,7 @@ case_2:
             // first character match, keep checking
             if (*p == searchFirst)
             {
-                if (wmemcmp(p, searchStr, searchLen) == 0)
+                if (PAL_wmemcmp(p, searchStr, searchLen) == 0)
                 {
                     return (int)remaining;
                 }
@@ -3612,7 +3612,7 @@ case_2:
                 // Quick check for first character.
                 if (stringSz[i] == substringSz[0])
                 {
-                    if (substringLen == 1 || wmemcmp(stringSz + i + 1, substringSz + 1, (substringLen - 1)) == 0)
+                    if (substringLen == 1 || PAL_wmemcmp(stringSz + i + 1, substringSz + 1, (substringLen - 1)) == 0)
                     {
                         return i + start;
                     }
@@ -3637,7 +3637,7 @@ case_2:
             UNREFERENCED_PARAMETER(keepAliveString1);
             UNREFERENCED_PARAMETER(keepAliveString2);
         };
-        int result = wmemcmp(string1->GetString(), string2->GetString(), min(string1Len, string2Len));
+        int result = PAL_wmemcmp(string1->GetString(), string2->GetString(), min(string1Len, string2Len));
 
         return (result == 0) ? (int)(string1Len - string2Len) : result;
     }

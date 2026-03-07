@@ -163,7 +163,7 @@ intptr_t GetNonTableMethodAddress(ThreadContextInfo * context, JnHelperMethod he
         // These are statically initialized to an import thunk, but let's keep them out of the table in case a new CRT changes this
         //
     case HelperWMemCmp:
-        return ShiftCdeclAddr(context, wmemcmp);
+        return ShiftCdeclAddr(context, PAL_wmemcmp);
 
     case HelperMemCpy:
         return ShiftCdeclAddr(context, static_cast<void *(*)(void*, void const*, size_t)>(memcpy));

@@ -81,7 +81,7 @@ namespace JsUtil
     inline bool
     CharacterBuffer<char16_t>::StaticEquals(__in_z char16_t const * s1, __in_z char16_t const * s2, charcount_t length)
     {
-        return (s1 == s2) || wmemcmp(s1, s2, length) == 0;
+        return (s1 == s2) || PAL_wmemcmp(s1, s2, length) == 0;
     }
 
     template<>
