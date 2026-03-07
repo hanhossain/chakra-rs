@@ -93,7 +93,7 @@ using utf8::WideStringToNarrowDynamic;
 do { \
     JsErrorCode jsErrorCode = expr; \
     if ((jsErrorCode) != JsNoError) { \
-        fwprintf(stderr, u"ERROR: " _u(#expr) u" failed. JsErrorCode=0x%x (%s)\n", jsErrorCode, Helpers::JsErrorCodeToString(jsErrorCode)); \
+        PAL_fwprintf(stderr, u"ERROR: " _u(#expr) u" failed. JsErrorCode=0x%x (%s)\n", jsErrorCode, Helpers::JsErrorCodeToString(jsErrorCode)); \
         PAL_fflush(stderr); \
         goto Error; \
     } \
@@ -104,7 +104,7 @@ do { \
     JsErrorCode jsErrorCode = expr; \
     if ((jsErrorCode) != JsNoError) { \
         hr = E_FAIL; \
-        fwprintf(stderr, u"ERROR: " _u(#expr) u" failed. JsErrorCode=0x%x (%s)\n", jsErrorCode, Helpers::JsErrorCodeToString(jsErrorCode)); \
+        PAL_fwprintf(stderr, u"ERROR: " _u(#expr) u" failed. JsErrorCode=0x%x (%s)\n", jsErrorCode, Helpers::JsErrorCodeToString(jsErrorCode)); \
         PAL_fflush(stderr); \
         goto Error; \
     } \
@@ -114,7 +114,7 @@ do { \
 do { \
     JsErrorCode jsErrorCode = expr; \
     if ((jsErrorCode) != JsNoError) { \
-        fwprintf(stderr, u"ERROR: " _u(#expr) u" failed. JsErrorCode=0x%x (%s)\n", jsErrorCode, Helpers::JsErrorCodeToString(jsErrorCode)); \
+        PAL_fwprintf(stderr, u"ERROR: " _u(#expr) u" failed. JsErrorCode=0x%x (%s)\n", jsErrorCode, Helpers::JsErrorCodeToString(jsErrorCode)); \
         PAL_fflush(stderr); \
         goto label; \
     } \
@@ -124,7 +124,7 @@ do { \
 do { \
     JsErrorCode jsErrorCode = expr; \
     if ((jsErrorCode) != JsNoError) { \
-        fwprintf(stderr, u"ERROR: " _u(#expr) u" failed. JsErrorCode=0x%x (%s)\n", jsErrorCode, Helpers::JsErrorCodeToString(jsErrorCode)); \
+        PAL_fwprintf(stderr, u"ERROR: " _u(#expr) u" failed. JsErrorCode=0x%x (%s)\n", jsErrorCode, Helpers::JsErrorCodeToString(jsErrorCode)); \
         PAL_fflush(stderr); \
         return JS_INVALID_REFERENCE; \
     } \
@@ -134,7 +134,7 @@ do { \
 do { \
     JsErrorCode jsErrorCode = expr; \
     if ((jsErrorCode) != JsNoError) { \
-        fwprintf(stderr, u"ERROR: " _u(#expr) u" failed. JsErrorCode=0x%x (%s)\n", jsErrorCode, Helpers::JsErrorCodeToString(jsErrorCode)); \
+        PAL_fwprintf(stderr, u"ERROR: " _u(#expr) u" failed. JsErrorCode=0x%x (%s)\n", jsErrorCode, Helpers::JsErrorCodeToString(jsErrorCode)); \
         PAL_fflush(stderr); \
         return false; \
     } \
@@ -144,7 +144,7 @@ do { \
 do { \
     JsErrorCode jsErrorCode = expr; \
     if ((jsErrorCode) != JsNoError) { \
-        fwprintf(stderr, u"ERROR: " _u(#expr) u" failed. JsErrorCode=0x%x (%s)\n", jsErrorCode, Helpers::JsErrorCodeToString(jsErrorCode)); \
+        PAL_fwprintf(stderr, u"ERROR: " _u(#expr) u" failed. JsErrorCode=0x%x (%s)\n", jsErrorCode, Helpers::JsErrorCodeToString(jsErrorCode)); \
         PAL_fflush(stderr); \
         return (jsErrorCode); \
     } \

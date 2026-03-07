@@ -2847,7 +2847,7 @@ ThreadContext::DisposeScriptContextByFaultInjectionCallBack()
             }
             else
             {
-                fwprintf(stderr, u"***FI: FaultInjectionScriptContextToTerminateCount Failed, Value should be > 0. \n");
+                PAL_fwprintf(stderr, u"***FI: FaultInjectionScriptContextToTerminateCount Failed, Value should be > 0. \n");
             }
         }
     }

@@ -67,9 +67,6 @@ inline void DebugBreak()
 
 #define DbgRaiseAssertionFailure() __builtin_trap()
 
-// These are not available in pal
-#define fwprintf_s      fwprintf
-
 // PAL LoadLibraryExW not supported
 #define LOAD_LIBRARY_SEARCH_SYSTEM32     0
 // winnt.h

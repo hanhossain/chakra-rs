@@ -1491,7 +1491,7 @@ JsValueRef WScriptJsrt::LoadBinaryFileCallback(JsValueRef callee,
             IfJsrtErrorSetGoLabel(ChakraRTInterface::JsGetArrayBufferStorage(arrayBuffer, &buffer, &bufferLength), ErrorStillFree);
             if (bufferLength < lengthBytes)
             {
-                fwprintf(stderr, u"Array buffer size is insufficient to store the binary file.\n");
+                PAL_fwprintf(stderr, u"Array buffer size is insufficient to store the binary file.\n");
             }
             else
             {
@@ -1566,7 +1566,7 @@ JsValueRef WScriptJsrt::BroadcastCallback(JsValueRef callee, bool isConstructCal
             }
             else
             {
-                fwprintf(stderr, u"Couldn't create semaphore.\n");
+                PAL_fwprintf(stderr, u"Couldn't create semaphore.\n");
                 PAL_fflush(stderr);
             }
 
@@ -1790,7 +1790,7 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
 
             if (errorMessage.Initialize(exception) != JsNoError)
             {
-                fwprintf(stderr, u"ERROR attempting to coerce error to string, using alternate handler\n");
+                PAL_fwprintf(stderr, u"ERROR attempting to coerce error to string, using alternate handler\n");
                 bool hasException = false;
                 ChakraRTInterface::JsHasException(&hasException);
                 if (hasException)
@@ -1828,12 +1828,12 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
                         IfJsrtErrorFail(CreatePropertyIdFromString("column", &columnPropertyId), false);
                         IfJsrtErrorFail(ChakraRTInterface::JsGetProperty(metaData, columnPropertyId, &columnProperty), false);
                         IfJsrtErrorFail(ChakraRTInterface::JsNumberToInt(columnProperty, &column), false);
-                        fwprintf(stderr, u"%ls\n        at code (%S%S:%d:%d)\n",
+                        PAL_fwprintf(stderr, u"%ls\n        at code (%S%S:%d:%d)\n",
                             errorMessage.GetWideString(), shortFileName, ext, line + 1, column + 1);
                     }
                     else
                     {
-                        fwprintf(stderr, u"%ls\n\tat code (%S%S:\?\?:\?\?)\n", errorMessage.GetWideString(), shortFileName, ext);
+                        PAL_fwprintf(stderr, u"%ls\n\tat code (%S%S:\?\?:\?\?)\n", errorMessage.GetWideString(), shortFileName, ext);
                     }
                     return true;
                 }
@@ -1861,7 +1861,7 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
                 char shortFileName[_MAX_PATH];
                 char ext[_MAX_EXT];
                 _splitpath_s(fileName, nullptr, 0, nullptr, 0, shortFileName, _countof(shortFileName), ext, _countof(ext));
-                fwprintf(stderr, u"%ls\n\tat code (%S%S:%d:%d)\n",
+                PAL_fwprintf(stderr, u"%ls\n\tat code (%S%S:%d:%d)\n",
                     errorMessage.GetWideString(), shortFileName, ext, (int)line + 1,
                     (int)column + 1);
             }
@@ -1893,24 +1893,24 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
 
                     // do not mix char/wchar. print them separately
                     PAL_fprintf(stderr, "thrown at %s%s:\n^\n", shortFileName, ext);
-                    fwprintf(stderr, u"%ls\n", errorMessage.GetWideString());
+                    PAL_fwprintf(stderr, u"%ls\n", errorMessage.GetWideString());
                 }
                 else
                 {
                     IfJsrtErrorFail(errorStack.Initialize(stackProperty), false);
-                    fwprintf(stderr, u"%ls\n", errorStack.GetWideString());
+                    PAL_fwprintf(stderr, u"%ls\n", errorStack.GetWideString());
                 }
             }
         }
         else
         {
-            fwprintf(stderr, u"Error : %ls\n", errorTypeString);
+            PAL_fwprintf(stderr, u"Error : %ls\n", errorTypeString);
         }
         return true;
     }
     else
     {
-        fwprintf(stderr, u"Error : %ls\n", errorTypeString);
+        PAL_fwprintf(stderr, u"Error : %ls\n", errorTypeString);
     }
     return false;
 }

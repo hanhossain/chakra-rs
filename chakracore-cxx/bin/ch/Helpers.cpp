@@ -23,12 +23,12 @@ void TTDHostBuildCurrentExeDirectory(char* path, size_t* pathLength, size_t buff
     }
     if (i == 0)
     {
-        fwprintf(stderr, u"Can't get current exe directory");
+        PAL_fwprintf(stderr, u"Can't get current exe directory");
         exit(1);
     }
     if (i + 2 > bufferLength)
     {
-        fwprintf(stderr, u"Don't overflow path buffer during copy");
+        PAL_fwprintf(stderr, u"Don't overflow path buffer during copy");
         exit(1);
     }
     memcpy_s(path, bufferLength, exePath, i + 1);
@@ -203,7 +203,7 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
 
     if (nullptr == pRawBytes)
     {
-        fwprintf(stderr, u"out of memory");
+        PAL_fwprintf(stderr, u"out of memory");
         IfFailGo(E_OUTOFMEMORY);
     }
 
@@ -261,7 +261,7 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
 
             {
                 // unicode unsupported
-                fwprintf(stderr, u"unsupported file encoding. Only ANSI and UTF8 supported");
+                PAL_fwprintf(stderr, u"unsupported file encoding. Only ANSI and UTF8 supported");
                 IfFailGo(E_UNEXPECTED);
             }
 #pragma prefast(pop)
@@ -403,7 +403,7 @@ int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, u
     contents = (const char *)HeapAlloc(GetProcessHeap(), 0, lengthBytes);
     if (nullptr == contents)
     {
-        fwprintf(stderr, u"out of memory");
+        PAL_fwprintf(stderr, u"out of memory");
         IfFailGo(E_OUTOFMEMORY);
     }
     //
@@ -412,7 +412,7 @@ int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, u
     result = PAL_fread((void*)contents, sizeof(char), lengthBytes, file);
     if (result != lengthBytes)
     {
-        fwprintf(stderr, u"Read error");
+        PAL_fwprintf(stderr, u"Read error");
         IfFailGo(E_FAIL);
     }
 
