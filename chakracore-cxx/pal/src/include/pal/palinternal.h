@@ -321,8 +321,6 @@ function_name() to call the system's implementation
 #undef wcspbrk
 #undef wcsstr
 #undef wcscmp
-#undef wcsncat
-#undef wcsncpy
 #undef _vsnprintf
 #undef _vsnwprintf
 #undef vsnprintf

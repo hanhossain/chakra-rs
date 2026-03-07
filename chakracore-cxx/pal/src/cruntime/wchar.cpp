@@ -1314,28 +1314,6 @@ PAL_wcsstr(
 /*++
 Function :
 
-    PAL_wcsncpy
-
-see msdn doc.
---*/
-char16_t *
-PAL_wcsncpy( char16_t * strDest, const char16_t *strSource, size_t count )
-{
-    uint32_t length = sizeof( char16_t ) * count;
-    ENTRY("wcsncpy( strDest:%p, strSource:%p (%S), count:%lu)\n",
-          strDest, strSource, strSource, (unsigned long) count);
-
-    memset( strDest, 0, length );
-    length = min( count, PAL_wcslen( strSource ) ) * sizeof( char16_t );
-    memcpy( strDest, strSource, length );
-
-    LOGEXIT("wcsncpy returning (char16_t*): %p\n", strDest);
-    return strDest;
-}
-
-/*++
-Function :
-
     wcsncat
 
 see msdn doc.
