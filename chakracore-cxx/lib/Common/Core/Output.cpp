@@ -273,7 +273,7 @@ Output::PrintBuffer(const char16_t * buf, size_t size)
     bool internallyAllocatedBuffer = false;
     if (usingCustomAlignAndPrefix)
     {
-        if (hasDoneAlignPrefixForThisLine && wcschr(buf, '\n') == nullptr)
+        if (hasDoneAlignPrefixForThisLine && PAL_wcschr(buf, '\n') == nullptr)
         {
             // no newlines, and we've already prefixed this line, so nothing to do
         }
@@ -324,7 +324,7 @@ Output::PrintBuffer(const char16_t * buf, size_t size)
                     oldS_Column = align + prefixlength;
                     hasDoneAlignPrefixForThisLine = true;
                 }
-                const char16_t* endOfLine = wcschr(currentReadIndex, '\n');
+                const char16_t* endOfLine = PAL_wcschr(currentReadIndex, '\n');
                 size_t charsToCopy = 0;
                 if (endOfLine != nullptr)
                 {
@@ -350,11 +350,11 @@ Output::PrintBuffer(const char16_t * buf, size_t size)
         }
     }
     Output::s_Column += size;
-    const char16_t * endbuf = wcschr(buf, '\n');
+    const char16_t * endbuf = PAL_wcschr(buf, '\n');
     while (endbuf != nullptr)
     {
         Output::s_Column = size - (endbuf - buf) - 1;
-        endbuf = wcschr(endbuf + 1, '\n');
+        endbuf = PAL_wcschr(endbuf + 1, '\n');
     }
 
     bool useConsoleOrFile = true;

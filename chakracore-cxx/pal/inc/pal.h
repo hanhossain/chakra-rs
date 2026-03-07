@@ -2499,7 +2499,6 @@ GetSystemInfo(
 #define wcslen        PAL_wcslen
 #define wmemcmp       PAL_wmemcmp
 #define wcsncmp       PAL_wcsncmp
-#define wcschr        PAL_wcschr
 #define ctime         PAL_ctime
 #define _wcstoui64    PAL__wcstoui64
 
