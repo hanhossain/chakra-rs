@@ -1284,7 +1284,7 @@ namespace Js
                     auto count = 0;
                     fscanf_s(hcfp, "%d", &count);
                     count++;
-                    PAL_fseek(hcfp, -ftell(hcfp), SEEK_CUR);
+                    PAL_fseek(hcfp, -PAL_ftell(hcfp), SEEK_CUR);
                     fwprintf(hcfp, u"%d", count);
                     PAL_fclose(hcfp);
                 }

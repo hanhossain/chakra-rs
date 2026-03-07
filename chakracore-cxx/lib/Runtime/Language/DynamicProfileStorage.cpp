@@ -92,7 +92,7 @@ template <typename T>
 bool DynamicProfileStorageReaderWriter::ReadArray(T * t, size_t len)
 {
     AssertOrFailFast(file);
-    int32_t pos = ftell(file);
+    int32_t pos = PAL_ftell(file);
     if (fread(t, sizeof(T), len, file) != len)
     {
         Output::Print(u"ERROR: DynamicProfileStorage: '%s': File corrupted at %d\n", filename, pos);
@@ -191,9 +191,9 @@ bool DynamicProfileStorageReaderWriter::SeekToEnd()
 int32_t DynamicProfileStorageReaderWriter::Size()
 {
     AssertOrFailFast(file);
-    int32_t current = ftell(file);
+    int32_t current = PAL_ftell(file);
     SeekToEnd();
-    int32_t end = ftell(file);
+    int32_t end = PAL_ftell(file);
     PAL_fseek(file, current, SEEK_SET);
     return end;
 }

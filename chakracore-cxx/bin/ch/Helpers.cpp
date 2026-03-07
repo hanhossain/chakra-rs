@@ -186,7 +186,7 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
     {
         // Determine the file length, in bytes.
         PAL_fseek(file, 0, SEEK_END);
-        lengthBytes = ftell(file);
+        lengthBytes = PAL_ftell(file);
         PAL_fseek(file, 0, SEEK_SET);
     }
 
@@ -398,7 +398,7 @@ int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, u
     // Determine the file length, in bytes.
     //
     PAL_fseek(file, 0, SEEK_END);
-    lengthBytes = ftell(file);
+    lengthBytes = PAL_ftell(file);
     PAL_fseek(file, 0, SEEK_SET);
     contents = (const char *)HeapAlloc(GetProcessHeap(), 0, lengthBytes);
     if (nullptr == contents)

@@ -1424,7 +1424,7 @@ JsValueRef WScriptJsrt::ReadLineStdinCallback(JsValueRef callee, bool isConstruc
     //Treat the empty string specially.
     if (buflength == 0) 
     {
-        if (feof(from)) 
+        if (PAL_feof(from)) 
         {
             goto Error;
         }
