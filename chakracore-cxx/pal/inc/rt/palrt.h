@@ -1031,7 +1031,7 @@ errno_t getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, const ch
     /* validation section */
     _SAFECRT__VALIDATE_STRING(_Dst, _SizeInWords);
 
-    szFound = getenv(_Name);
+    szFound = PAL_getenv(_Name);
     if (szFound == nullptr)
     {
         *_ReturnValue = 0;

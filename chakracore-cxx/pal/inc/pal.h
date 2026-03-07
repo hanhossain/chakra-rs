@@ -2514,10 +2514,6 @@ GetSystemInfo(
 #define vfwprintf     PAL_vfwprintf
 #define ctime         PAL_ctime
 #define rand          PAL_rand
-#define getenv        PAL_getenv
-#define fgets         PAL_fgets
-#define fgetws        PAL_fgetws
-#define fputc         PAL_fputc
 #define _wcstoui64    PAL__wcstoui64
 
 #endif // !PAL_STDCPP_COMPAT
@@ -2824,8 +2820,6 @@ size_t PAL_fread(void *, size_t, size_t, PAL_FILE *);
 // TODO (hanhossain): internal
 char * PAL_fgets(char *, int, PAL_FILE *);
 // TODO (hanhossain): internal
-int PAL_fputc(int c, PAL_FILE *stream);
-// TODO (hanhossain): internal
 int PAL_fprintf(PAL_FILE *, const char *, ...);
 // TODO (hanhossain): internal
 int PAL_vfprintf(PAL_FILE *, const char *, va_list);
@@ -2892,7 +2886,7 @@ int * PAL_errno(int caller);
 #endif // PAL_STDCPP_COMPAT
 
 // TODO (hanhossain): public
-char * getenv(const char *);
+char * PAL_getenv(const char *);
 
 #define ERANGE          34
 

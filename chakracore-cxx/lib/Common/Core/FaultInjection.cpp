@@ -675,7 +675,7 @@ namespace Js
                 || globalFlags.FaultInjection == FaultMode::StackMatchCountOnly)
                 ? MAX_FRAME_COUNT : globalFlags.FaultInjectionStackLineCount;
 
-            while (fgetws(buffer, MAX_SYM_NAME, fp))
+            while (PAL_fgetws(buffer, MAX_SYM_NAME, fp))
             {
                 if (wcscmp(buffer, injectionStackStart) == 0)
                 {
@@ -1251,7 +1251,7 @@ namespace Js
             else
             { // file locked
                 char16_t content[32] = { 0 };
-                while (fgetws(content, 31, fp))
+                while (PAL_fgetws(content, 31, fp))
                 {
                     savedOffset = HexStrToAddress(content);
                     if (offset == savedOffset)

@@ -479,30 +479,6 @@ PAL_fclose(PAL_FILE * f)
     return nRetVal;
 }
 
-/*--
-Function :
-
-    fputc
-
-    See MSDN for more details.
---*/
-int
-PAL_fputc(int c,  PAL_FILE * f)
-{
-    int32_t nRetVal = 0;
-
-    ENTRY( "fputc( 0x%x (%c), %p )\n", c, c, f);
-
-    _ASSERTE(f != NULL);
-
-    CLEARERR(f);
-
-    nRetVal = fputc( c, f->bsdFilePtr );
-
-    LOGEXIT( "fputc returning %d\n", nRetVal );
-    return nRetVal;
-}
-
 /*++
 Function :
 
