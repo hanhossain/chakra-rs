@@ -199,21 +199,6 @@ Return value:
 int PAL_mkstemp(char *szNameTemplate);
 
 /*++
-PAL_rename
-
-Calls rename
-
-Input parameters:
-
-szOldName = pointer to the pathname of the file to be renamed
-szNewName = pointer to the new pathname of the file
-
-Return value:
-    Returns 0 on success and -1 on failure
---*/
-int PAL_rename(const char *szOldName, const char *szNewName);
-
-/*++
 PAL_fgets
 
 Wrapper function for InternalFgets.
