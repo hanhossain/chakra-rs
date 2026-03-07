@@ -58,7 +58,7 @@ void TestObject::SetRandom(TestObject *val)
 {
     if (pointerCount != 0)
     {
-        Set(rand() % pointerCount, val);
+        Set(PAL_rand() % pointerCount, val);
     }
 }
 
@@ -171,14 +171,14 @@ StressTester::StressTester(Recycler *_recycler) : recycler(_recycler)
 
 size_t StressTester::GetRandomSize()
 {
-    int i = rand() % 5;
+    int i = PAL_rand() % 5;
     switch (i)
     {
     case 0: return 0;
-    case 1: return rand() % 16;
-    case 2: return rand() % 4096;
-    case 3: return rand() % 16384;
-    case 4: return rand();
+    case 1: return PAL_rand() % 16;
+    case 2: return PAL_rand() % 4096;
+    case 3: return PAL_rand() % 16384;
+    case 4: return PAL_rand();
     default:
         Assert(false);
         return 0;
@@ -189,7 +189,7 @@ TestObject* StressTester::CreateLinkedList()
 {
     TestObject *root = TestObject::Create(recycler, 1, GetRandomSize());
     TestObject *curr = root;
-    int length = rand() % MaxLinkedListLength;
+    int length = PAL_rand() % MaxLinkedListLength;
     for (int i = 0; i < length; ++i)
     {
         CreateOptions options = (i == length - 1) ? LeafObj : NormalObj;
@@ -206,7 +206,7 @@ void StressTester::CreateTreeHelper(TestObject *root, int depth) {
     {
         if (depth == 0 || treeTotal > MaxNodesInTree)
         {
-            root->Add(TestObject::Create(recycler, 0, rand(), LeafObj));
+            root->Add(TestObject::Create(recycler, 0, PAL_rand(), LeafObj));
         }
         else
         {
@@ -221,13 +221,13 @@ TestObject* StressTester::CreateTree()
 {
     TestObject *root = TestObject::Create(recycler, 4, GetRandomSize());
     treeTotal = 0;
-    CreateTreeHelper(root, rand() % MaxTreeDepth);
+    CreateTreeHelper(root, PAL_rand() % MaxTreeDepth);
     return root;
 }
 
 TestObject *StressTester::CreateRandom()
 {
-    int numObjects = rand() % 5000 + 1;
+    int numObjects = PAL_rand() % 5000 + 1;
 
     void *memory = _alloca(numObjects * sizeof(TestObject*)+OBJALIGN);
     TestObject **objs = reinterpret_cast<TestObject**>(AlignPtr(memory, OBJALIGN));
@@ -235,7 +235,7 @@ TestObject *StressTester::CreateRandom()
     // Create the objects
     for (int i = 0; i < numObjects; ++i)
     {
-        objs[i] = TestObject::Create(recycler, 10, rand());
+        objs[i] = TestObject::Create(recycler, 10, PAL_rand());
     }
 
     // Create links between objects
@@ -243,7 +243,7 @@ TestObject *StressTester::CreateRandom()
     {
         for (int j = 0; j < 5; ++j)
         {
-            objs[i]->SetRandom(objs[rand() % numObjects]);
+            objs[i]->SetRandom(objs[PAL_rand() % numObjects]);
         }
     }
 
@@ -263,21 +263,21 @@ void StressTester::Run()
 
     auto ObjectVisitor = [&](TestObject *object) {
         // Clear out one of the pointers.
-        if (rand() % 5 == 0)
+        if (PAL_rand() % 5 == 0)
         {
             object->ClearOne();
         }
 
         // Maybe store a pointer on the stack.
-        if (rand() % 25 == 0)
+        if (PAL_rand() % 25 == 0)
         {
             stack->SetRandom(object);
         }
 
         // Maybe add a stack reference to the current object
-        if (rand() % 25 == 0)
+        if (PAL_rand() % 25 == 0)
         {
-            object->SetRandom(stack->Get(rand() % stack->pointerCount));
+            object->SetRandom(stack->Get(PAL_rand() % stack->pointerCount));
         }
 
     };
@@ -296,13 +296,13 @@ void StressTester::Run()
         TestObject::Visit(recycler, root);
 
         TestObject::Visit(recycler, stack, [&](TestObject *object) {
-            if (rand() % 10 == 0)
+            if (PAL_rand() % 10 == 0)
             {
                 object->ClearOne();
             }
         });
 
-        if (rand() % 3 == 0)
+        if (PAL_rand() % 3 == 0)
         {
             for (int i = 0; i < stack->pointerCount; ++i)
             {
