@@ -1399,7 +1399,7 @@ namespace TTD
             fbInfo->ScriptContextLogId = fb->GetScriptContext()->ScriptContextLogTag;
 
             alloc.CopyStringIntoWLength(fb->GetDisplayName(), fb->GetDisplayNameLength(), fbInfo->FunctionName);
-            TTDAssert(wcscmp(fbInfo->FunctionName.Contents, Js::Constants::GlobalCode) != 0, "Why are we snapshotting global code??");
+            TTDAssert(PAL_wcscmp(fbInfo->FunctionName.Contents, Js::Constants::GlobalCode) != 0, "Why are we snapshotting global code??");
 
             if(isWellKnown)
             {
@@ -1470,7 +1470,7 @@ namespace TTD
                     }
 
                     TTDAssert(resfb != nullptr && fbInfo->OptLine == resfb->GetLineNumber() && fbInfo->OptColumn == resfb->GetColumnNumber(), "We are missing something");
-                    TTDAssert(resfb != nullptr && (wcscmp(fbInfo->FunctionName.Contents, resfb->GetDisplayName()) == 0 || wcscmp(u"get", resfb->GetDisplayName()) == 0 || wcscmp(u"set", resfb->GetDisplayName()) == 0), "We are missing something");
+                    TTDAssert(resfb != nullptr && (PAL_wcscmp(fbInfo->FunctionName.Contents, resfb->GetDisplayName()) == 0 || PAL_wcscmp(u"get", resfb->GetDisplayName()) == 0 || PAL_wcscmp(u"set", resfb->GetDisplayName()) == 0), "We are missing something");
                 }
 
                 //Make sure to register any scopes the found function body has (but *not* for well known functions)
@@ -1664,7 +1664,7 @@ namespace TTD
             const TTDIdentifierDictionary<unsigned long, TopLevelNewFunctionBodyResolveInfo*>& topLevelNewScriptMap,
             const TTDIdentifierDictionary<unsigned long, TopLevelEvalFunctionBodyResolveInfo*>& topLevelEvalScriptMap)
         {
-            TTDAssert(wcscmp(snpCtx->ContextSRC.Contents, intoCtx->GetUrl()) == 0, "Make sure the src uri values are the same.");
+            TTDAssert(PAL_wcscmp(snpCtx->ContextSRC.Contents, intoCtx->GetUrl()) == 0, "Make sure the src uri values are the same.");
 
             intoCtx->GetLibrary()->SetIsPRNGSeeded(snpCtx->IsPNRGSeeded);
             intoCtx->GetLibrary()->SetRandSeed0(snpCtx->RandomSeed0);

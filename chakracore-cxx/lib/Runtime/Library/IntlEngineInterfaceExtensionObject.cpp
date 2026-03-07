@@ -2414,13 +2414,13 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
             JavascriptString *type = AssertStringProperty(stateObject, PropertyIds::type);
 
             UPluralType prType = UPLURAL_TYPE_CARDINAL;
-            if (wcscmp(type->GetSz(), u"ordinal") == 0)
+            if (PAL_wcscmp(type->GetSz(), u"ordinal") == 0)
             {
                 prType = UPLURAL_TYPE_ORDINAL;
             }
             else
             {
-                AssertOrFailFast(wcscmp(type->GetSz(), u"cardinal") == 0);
+                AssertOrFailFast(PAL_wcscmp(type->GetSz(), u"cardinal") == 0);
             }
 
             char localeID[ULOC_FULLNAME_CAPACITY] = { 0 };

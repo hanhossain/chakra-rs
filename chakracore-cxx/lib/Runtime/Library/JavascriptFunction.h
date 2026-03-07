@@ -285,7 +285,7 @@ namespace Js
     String JavascriptFunction::GetLibraryCodeDisplayStringCommon(ScriptContext* scriptContext, const char16_t * displayName)
     {
         String sourceString;
-        if(wcscmp(displayName, Js::Constants::AnonymousFunction) == 0)
+        if(PAL_wcscmp(displayName, Js::Constants::AnonymousFunction) == 0)
         {
             sourceString = scriptContext->GetLibrary()->GetFunctionDisplayString();
         }

@@ -2504,7 +2504,6 @@ GetSystemInfo(
 #define wcsstr        PAL_wcsstr
 #define swscanf       PAL_swscanf
 #define wcspbrk       PAL_wcspbrk
-#define wcscmp        PAL_wcscmp
 #define ctime         PAL_ctime
 #define _wcstoui64    PAL__wcstoui64
 

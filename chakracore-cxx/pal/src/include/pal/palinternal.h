@@ -320,7 +320,6 @@ function_name() to call the system's implementation
 #undef swscanf
 #undef wcspbrk
 #undef wcsstr
-#undef wcscmp
 #undef _vsnprintf
 #undef _vsnwprintf
 #undef vsnprintf

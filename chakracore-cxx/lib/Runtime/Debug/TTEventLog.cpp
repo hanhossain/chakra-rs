@@ -2812,13 +2812,13 @@ namespace TTD
         reader.ReadString(NSTokens::Key::arch, this->m_miscSlabAllocator, archString);
 
 #if defined(_M_IX86)
-        TTDAssert(wcscmp(u"x86", archString.Contents) == 0, "Mismatch in arch between record and replay!!!");
+        TTDAssert(PAL_wcscmp(u"x86", archString.Contents) == 0, "Mismatch in arch between record and replay!!!");
 #elif defined(_M_X64)
-        TTDAssert(wcscmp(u"x64", archString.Contents) == 0, "Mismatch in arch between record and replay!!!");
+        TTDAssert(PAL_wcscmp(u"x64", archString.Contents) == 0, "Mismatch in arch between record and replay!!!");
 #elif defined(_M_ARM) // #TODO investigate why this is checking for "arm64" instead of "arm"
-        TTDAssert(wcscmp(u"arm64", archString.Contents) == 0, "Mismatch in arch between record and replay!!!");
+        TTDAssert(PAL_wcscmp(u"arm64", archString.Contents) == 0, "Mismatch in arch between record and replay!!!");
 #elif defined(_M_ARM64)
-        TTDAssert(wcscmp(u"arm64", archString.Contents) == 0, "Mismatch in arch between record and replay!!!");
+        TTDAssert(PAL_wcscmp(u"arm64", archString.Contents) == 0, "Mismatch in arch between record and replay!!!");
 #else
         TTDAssert(false, "Unknown arch!!!");
 #endif

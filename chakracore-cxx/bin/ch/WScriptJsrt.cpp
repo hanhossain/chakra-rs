@@ -269,7 +269,7 @@ void WScriptJsrt::SetExceptionIf(JsErrorCode errorCode, const char16_t* errorMes
             JsValueRef errorObject;
             JsValueRef errorMessageString;
 
-            if (wcscmp(errorMessage, u"") == 0)
+            if (PAL_wcscmp(errorMessage, u"") == 0)
             {
                 errorMessage = ConvertErrorCodeToMessage(errorCode);
             }

@@ -274,7 +274,7 @@ namespace Js
                 JavascriptString* StringObject = VarTo<JavascriptString>(args[1]);
                 const char16_t * str = StringObject->GetString();
 
-                if (wcscmp(str, u"default") == 0 || wcscmp(str, u"string") == 0)
+                if (PAL_wcscmp(str, u"default") == 0 || PAL_wcscmp(str, u"string") == 0)
                 {
                     // Date objects, are unique among built-in ECMAScript object in that they treat "default" as being equivalent to "string"
                     // If hint is the string value "string" or the string value "default", then
@@ -283,7 +283,7 @@ namespace Js
                 }
                 // Else if hint is the string value "number", then
                 // Let tryFirst be "number".
-                else if(wcscmp(str, u"number") == 0)
+                else if(PAL_wcscmp(str, u"number") == 0)
                 {
                     return JavascriptConversion::OrdinaryToPrimitive<JavascriptHint::HintNumber>(UnsafeVarTo<RecyclableObject>(args[0]), scriptContext);
                 }

@@ -306,7 +306,7 @@ namespace TTD
                 const UtilSupport::TTAutoString* tempStr = objToNameMap.Item(temp);
 
                 int32_t j = 0;
-                for(j = i; j >= gap && (wcscmp(objToNameMap.Item(sortedObjList.Item(j - gap))->GetStrValue(), tempStr->GetStrValue()) > 0); j -= gap)
+                for(j = i; j >= gap && (PAL_wcscmp(objToNameMap.Item(sortedObjList.Item(j - gap))->GetStrValue(), tempStr->GetStrValue()) > 0); j -= gap)
                 {
                     T shiftElem = sortedObjList.Item(j - gap);
                     sortedObjList.SetItem(j, shiftElem);
@@ -331,7 +331,7 @@ namespace TTD
             const UtilSupport::TTAutoString* imidStr = objToNameMap.Item(sortedObjList.Item(imid));
             AssertMsg(imid < imax, "Something went wrong with our indexing.");
 
-            int32_t scmpval = wcscmp(imidStr->GetStrValue(), key);
+            int32_t scmpval = PAL_wcscmp(imidStr->GetStrValue(), key);
             if(scmpval < 0)
             {
                 imin = imid + 1;
@@ -347,12 +347,12 @@ namespace TTD
         const UtilSupport::TTAutoString* resStr = objToNameMap.Item(sortedObjList.Item(imin));
         if(mustFind)
         {
-            TTDAssert(wcscmp(resStr->GetStrValue(), key) == 0, "We are missing something");
+            TTDAssert(PAL_wcscmp(resStr->GetStrValue(), key) == 0, "We are missing something");
             return imin;
         }
         else
         {
-            return (wcscmp(resStr->GetStrValue(), key) == 0) ? imin : -1;
+            return (PAL_wcscmp(resStr->GetStrValue(), key) == 0) ? imin : -1;
         }
     }
 }
