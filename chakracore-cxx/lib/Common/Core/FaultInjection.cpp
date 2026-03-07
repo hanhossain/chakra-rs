@@ -443,7 +443,7 @@ namespace Js
             {
                 PAL_fprintf(fp, "FaultInjection - Total Allocation Count:%u\n", countOfInjectionPoints);
                 PAL_fflush(fp);
-                fclose(fp);
+                PAL_fclose(fp);
             }
             for (int i = 0; i < MAX_FRAME_COUNT; i++)
             {
@@ -467,7 +467,7 @@ namespace Js
                     PAL_fprintf(fp, "%p\n", (void*)stackHashOfAllInjectionPoints[i]);
                 }
                 PAL_fflush(fp);
-                fclose(fp);
+                PAL_fclose(fp);
             }
         }
 
@@ -730,7 +730,7 @@ namespace Js
                 wcscpy_s(baselineStack[baselineFrameCount], len + 1, symbolStart);
                 baselineFrameCount++;
             }
-            fclose(fp);
+            PAL_fclose(fp);
 
             OutputDebugString(u"Fault will be injected when hit following stack:\n");
             for (uint i = 0; i<baselineFrameCount; i++)
@@ -1246,7 +1246,7 @@ namespace Js
             if (!LockFileEx(hFile, LOCKFILE_EXCLUSIVE_LOCK, 0, lockSize, 0, &overlapped))
             {
                 fwprintf(stderr, u"LockFileEx(%ls) Failed when saving offset to file, gle=%8x\n", filename, GetLastError());
-                fclose(fp);
+                PAL_fclose(fp);
             }
             else
             { // file locked
@@ -1286,10 +1286,10 @@ namespace Js
                     count++;
                     PAL_fseek(hcfp, -ftell(hcfp), SEEK_CUR);
                     fwprintf(hcfp, u"%d", count);
-                    fclose(hcfp);
+                    PAL_fclose(hcfp);
                 }
 
-                fclose(fp);
+                PAL_fclose(fp);
                 UnlockFileEx(hFile, 0, lockSize, 0, &overlapped);
             }
             PAL_fflush(stderr);

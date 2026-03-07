@@ -23,7 +23,7 @@ public:
     {
         if (ptr != nullptr)
         {
-            fclose(ptr);
+            PAL_fclose(ptr);
             ptr = nullptr;
         }
     }

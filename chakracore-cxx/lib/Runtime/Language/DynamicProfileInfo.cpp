@@ -2632,7 +2632,7 @@ namespace Js
 
         WriteData((byte)0, file);
         PAL_fflush(file);
-        fclose(file);
+        PAL_fclose(file);
     }
 #endif
 

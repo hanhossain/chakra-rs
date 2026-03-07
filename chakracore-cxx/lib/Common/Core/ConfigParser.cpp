@@ -178,7 +178,7 @@ void ConfigParser::ParseConfig(HANDLE hmod, CmdLineArgsParser &parser, const cha
 #undef CharType
 #undef EndChar
 
-    fclose(configFile);
+    PAL_fclose(configFile);
 
     if (err !=0)
     {

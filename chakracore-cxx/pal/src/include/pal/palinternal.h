@@ -261,7 +261,6 @@ function_name() to call the system's implementation
 #undef tm
 #undef localtime
 #undef FILE
-#undef fclose
 #undef fread
 #undef feof
 #undef ferror
