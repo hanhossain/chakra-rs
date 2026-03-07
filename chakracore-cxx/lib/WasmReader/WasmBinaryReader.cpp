@@ -841,7 +841,7 @@ void WasmBinaryReader::ReadExportSection()
         if (exportsNameDict.TryGetValue(nameLength, &list))
         {
             const char16_t** found = list->Find([exportName, nameLength](const char16_t* existing) { 
-                return wcsncmp(exportName, existing, nameLength) == 0;
+                return PAL_wcsncmp(exportName, existing, nameLength) == 0;
             });
             if (found)
             {

@@ -4750,7 +4750,7 @@ ExitTempAllocator:
         {
             // The spec names functions whose property is a well known symbol as the description from the symbol
             // wrapped in square brackets, so verify by skipping past first bracket
-            Assert(!wcsncmp(pwszFunctionName + 1, pwszObjectNameFromProperty, wcslen(pwszObjectNameFromProperty)));
+            Assert(!PAL_wcsncmp(pwszFunctionName + 1, pwszObjectNameFromProperty, wcslen(pwszObjectNameFromProperty)));
             Assert(wcslen(pwszFunctionName) == wcslen(pwszObjectNameFromProperty) + 2);
         }
         else

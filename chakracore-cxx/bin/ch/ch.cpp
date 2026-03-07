@@ -890,8 +890,8 @@ int main(int argc, char** c_argv)
         }
 
         arglen = wcslen(arg); // get length of flag after prefix
-        if ((arglen == 1 && wcsncmp(arg, u"v",       arglen) == 0) ||
-            (arglen == 7 && wcsncmp(arg, u"version", arglen) == 0))
+        if ((arglen == 1 && PAL_wcsncmp(arg, u"v",       arglen) == 0) ||
+            (arglen == 7 && PAL_wcsncmp(arg, u"version", arglen) == 0))
         {
             PrintVersion();
             PAL_Shutdown();
@@ -900,10 +900,10 @@ int main(int argc, char** c_argv)
         }
         else if (
 #if !defined(ENABLE_DEBUG_CONFIG_OPTIONS) // release builds can display some kind of help message
-            (arglen == 1 && wcsncmp(arg, u"?",    arglen) == 0) ||
+            (arglen == 1 && PAL_wcsncmp(arg, u"?",    arglen) == 0) ||
 #endif
-            (arglen == 1 && wcsncmp(arg, u"h",    arglen) == 0) ||
-            (arglen == 4 && wcsncmp(arg, u"help", arglen) == 0)
+            (arglen == 1 && PAL_wcsncmp(arg, u"h",    arglen) == 0) ||
+            (arglen == 4 && PAL_wcsncmp(arg, u"help", arglen) == 0)
             )
         {
             PrintUsage();
