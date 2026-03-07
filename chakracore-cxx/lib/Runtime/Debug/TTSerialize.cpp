@@ -1830,7 +1830,7 @@ namespace TTD
         }
     }
 
-    TraceLogger::TraceLogger(FILE* outfile)
+    TraceLogger::TraceLogger(PAL_FILE* outfile)
         : m_currLength(0), m_indentSize(0), m_outfile(outfile)
     {
         this->m_buffer = (char*)malloc(TRACE_LOGGER_BUFFER_SIZE);

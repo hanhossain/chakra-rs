@@ -91,7 +91,7 @@ void ConfigParser::ParseConfig(HANDLE hmod, CmdLineArgsParser &parser, const cha
     _wsplitpath_s(modulename, drive, _MAX_DRIVE, dir, _MAX_DIR, nullptr, 0, nullptr, 0);
     _wmakepath_s(filename, drive, dir, configFileName, configFileExt);
 
-    FILE* configFile;
+    PAL_FILE* configFile;
     // Two-pathed for a couple reasons
     // 1. PAL doesn't like the ccs option passed in.
     // 2. _wfullpath is not implemented in the PAL.
@@ -322,7 +322,7 @@ int32_t ConfigParser::SetOutputFile(const char16_t* outputFile, const char16_t* 
         outputFile = fileName;
     }
 
-    FILE *fp;
+    PAL_FILE *fp;
     if ((fp = _wfsopen(outputFile, openMode, _SH_DENYWR)) != nullptr)
     {
         Output::SetOutputFile(fp);

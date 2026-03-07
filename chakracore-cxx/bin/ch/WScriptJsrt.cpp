@@ -1324,7 +1324,7 @@ Error:
     return returnValue;
 }
 
-int JsFgets(char* buf, int size, FILE* file)
+int JsFgets(char* buf, int size, PAL_FILE* file)
 {
     int n = size - 1;
     if (n < 0)
@@ -1357,7 +1357,7 @@ JsValueRef WScriptJsrt::ReadLineStdinCallback(JsValueRef callee, bool isConstruc
     JsErrorCode errorCode = JsNoError;
 
     const int BUFSIZE = 256;
-    FILE* from = stdin;
+    PAL_FILE* from = stdin;
     int buflength = 0;
     int bufsize = BUFSIZE;
     char* buf = static_cast<char*>(malloc(bufsize));

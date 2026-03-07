@@ -639,11 +639,11 @@ namespace Js
 #ifdef RUNTIME_DATA_COLLECTION
         static CriticalSection s_csOutput;
         template <typename T>
-        static void WriteData(const T& data, FILE * file);
+        static void WriteData(const T& data, PAL_FILE * file);
         template <typename T>
-        static void WriteArray(uint count, T * arr, FILE * file);
+        static void WriteArray(uint count, T * arr, PAL_FILE * file);
         template <typename T>
-        static void WriteArray(uint count, WriteBarrierPtr<T> arr, FILE * file);
+        static void WriteArray(uint count, WriteBarrierPtr<T> arr, PAL_FILE * file);
 #endif
 #if DBG_DUMP || defined(DYNAMIC_PROFILE_STORAGE) || defined(RUNTIME_DATA_COLLECTION)
         Field(FunctionBody *) functionBody; // This will only be populated if NeedProfileInfoList is true

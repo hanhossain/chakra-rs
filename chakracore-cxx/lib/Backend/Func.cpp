@@ -570,8 +570,8 @@ Func::TryCodegen()
 #if DBG_DUMP
     if (Js::Configuration::Global.flags.IsEnabled(Js::AsmDumpModeFlag))
     {
-        FILE * oldFile = 0;
-        FILE * asmFile = GetScriptContext()->GetNativeCodeGenerator()->asmFile;
+        PAL_FILE * oldFile = 0;
+        PAL_FILE * asmFile = GetScriptContext()->GetNativeCodeGenerator()->asmFile;
         if (asmFile)
         {
             oldFile = Output::SetFile(asmFile);
@@ -583,7 +583,7 @@ Func::TryCodegen()
 
         if (asmFile)
         {
-            FILE *openedFile = Output::SetFile(oldFile);
+            PAL_FILE *openedFile = Output::SetFile(oldFile);
             Assert(openedFile == asmFile);
         }
     }

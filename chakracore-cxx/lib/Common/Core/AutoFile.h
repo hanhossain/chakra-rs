@@ -5,15 +5,15 @@
 #pragma once
 #include "Core/BasePtr.h"
 
-class AutoFILE : public BasePtr<FILE>
+class AutoFILE : public BasePtr<PAL_FILE>
 {
 public:
-    AutoFILE(FILE * file = nullptr) : BasePtr<FILE>(file) {};
+    AutoFILE(PAL_FILE * file = nullptr) : BasePtr<PAL_FILE>(file) {};
     ~AutoFILE()
     {
         Close();
     }
-    AutoFILE& operator=(FILE * file)
+    AutoFILE& operator=(PAL_FILE * file)
     {
         Close();
         this->ptr = file;

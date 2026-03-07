@@ -194,7 +194,7 @@ void HeapInfo::ValidPointersMap<TBlockAttributes>::GenerateValidPointersMap(Vali
 
 #ifdef ENABLE_TEST_HOOKS
 template <>
-int32_t HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::GenerateValidPointersMapForBlockType(FILE* file)
+int32_t HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::GenerateValidPointersMapForBlockType(PAL_FILE* file)
 {
 #define IfErrorGotoCleanup(result) if ((result) < 0) { hr = E_FAIL; goto cleanup; }
 
@@ -297,7 +297,7 @@ cleanup:
 }
 
 template <>
-int32_t HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::GenerateValidPointersMapForBlockType(FILE* file)
+int32_t HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::GenerateValidPointersMapForBlockType(PAL_FILE* file)
 {
 #define IfErrorGotoCleanup(result) if ((result) < 0) { hr = E_FAIL; goto cleanup; }
 
@@ -400,7 +400,7 @@ int32_t HeapInfo::ValidPointersMap<TBlockAttributes>::GenerateValidPointersMapHe
 {
     Assert(vpmFullPath != nullptr);
     int32_t hr = E_FAIL;
-    FILE * file = nullptr;
+    PAL_FILE * file = nullptr;
 
     if (_wfopen_s(&file, vpmFullPath, u"w") == 0 && file != nullptr)
     {

@@ -101,7 +101,7 @@ void  PerfTrace::WritePerfMap()
 
     ThreadContext * threadContext = ThreadContext::GetThreadContextList();
 
-    FILE * perfMapFile;
+    PAL_FILE * perfMapFile;
 
     {
         const size_t PERFMAP_FILENAME_MAX_LENGTH = 30;

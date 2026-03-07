@@ -106,10 +106,10 @@ public:
     static size_t PrintBuffer(const char16_t * buffer, size_t size);
     static size_t VPrint(const char16_t *form, va_list argptr);
     static void     SkipToColumn(size_t column);
-    static FILE*    SetFile(FILE *);
-    static FILE*    GetFile();
-    static void     SetOutputFile(FILE *);
-    static FILE*    GetOutputFile();
+    static PAL_FILE*    SetFile(PAL_FILE *);
+    static PAL_FILE*    GetFile();
+    static void     SetOutputFile(PAL_FILE *);
+    static PAL_FILE*    GetOutputFile();
     static void     UseDebuggerWindow() { s_useDebuggerWindow = true; }
     static void     Flush();
 
@@ -142,7 +142,7 @@ private:
     thread_local static size_t align;
 
     thread_local static bool s_capture;
-    thread_local static FILE * s_file;
+    thread_local static PAL_FILE * s_file;
     thread_local static size_t s_Column;
     thread_local static uint16_t s_color;
     thread_local static bool s_hasColor;

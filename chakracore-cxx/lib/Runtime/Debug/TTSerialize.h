@@ -731,7 +731,7 @@ namespace TTD
 
         int32_t m_currLength;
         int32_t m_indentSize;
-        FILE* m_outfile;
+        PAL_FILE* m_outfile;
 
         void EnsureSpace(uint32_t length)
         {
@@ -803,7 +803,7 @@ namespace TTD
         void AppendDouble(double dval);
 
     public:
-        TraceLogger(FILE* outfile = stderr);
+        TraceLogger(PAL_FILE* outfile = stderr);
         ~TraceLogger();
 
         void ForceFlush();

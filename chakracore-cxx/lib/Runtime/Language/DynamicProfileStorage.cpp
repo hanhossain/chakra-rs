@@ -53,7 +53,7 @@ public:
 
 private:
     char16_t const * filename;
-    FILE * file;
+    PAL_FILE * file;
     bool deleteNonClosed;
 };
 
