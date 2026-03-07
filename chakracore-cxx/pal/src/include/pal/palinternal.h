@@ -312,7 +312,6 @@ function_name() to call the system's implementation
 #undef wcstoul
 #undef _wcstoui64
 #undef wcscat
-#undef wcscpy
 #undef _vsnprintf
 #undef _vsnwprintf
 #undef vsnprintf
