@@ -939,30 +939,6 @@ exit:
 
 /*++
 Function:
-  PAL_wcscat
-
-See MSDN or the man page for mcscat.
-
---*/
-char16_t *
-PAL_wcscat(
-        char16_t *strDestination,
-        const char16_t *strSource)
-{
-    char16_t *ret;
-    ENTRY("wcscat (strDestination=%p (%S), strSource=%p (%S))\n",
-          strDestination?strDestination:W16_NULLSTRING,
-          strDestination?strDestination:W16_NULLSTRING, strSource?strSource:W16_NULLSTRING, strSource?strSource:W16_NULLSTRING);
-
-    ret = PAL_wcsncat( strDestination, strSource, PAL_wcslen( strSource ) );
-
-    LOGEXIT("wcscat returning char16_t %p (%S)\n", ret, ret);
-    return ret;
-}
-
-
-/*++
-Function:
   PAL_wcscpy
 
 See MSDN or the man page for mcscpy.
