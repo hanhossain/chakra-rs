@@ -77,7 +77,7 @@ namespace Js
 
         Assert(traceLevel <= CausalityTraceLevel::CausalityTraceLevel_Verbose && traceLevel >= CausalityTraceLevel_Required);
         Assert(source <= CausalitySource::CausalitySource_System && source >= CausalitySource_Application);
-        size_t operationNameLen = wcslen(operationName);
+        size_t operationNameLen = PAL_wcslen(operationName);
         if (operationNameLen > UINT_MAX)
         {
             return E_OUTOFMEMORY;

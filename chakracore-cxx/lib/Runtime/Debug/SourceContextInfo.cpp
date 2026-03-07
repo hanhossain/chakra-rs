@@ -58,10 +58,10 @@ SourceContextInfo* SourceContextInfo::Clone(Js::ScriptContext* scriptContext) co
         newSourceContextInfo = scriptContext->CreateSourceContextInfo(
             dwHostSourceContext,
             oldUrl,
-            oldUrl? wcslen(oldUrl) : 0,
+            oldUrl? PAL_wcslen(oldUrl) : 0,
             NULL,
             oldSourceMapUrl,
-            oldSourceMapUrl ? wcslen(oldSourceMapUrl) : 0);
+            oldSourceMapUrl ? PAL_wcslen(oldSourceMapUrl) : 0);
         newSourceContextInfo->nextLocalFunctionId = this->nextLocalFunctionId;
         newSourceContextInfo->sourceContextId = this->sourceContextId;
         newSourceContextInfo->EnsureInitialized();

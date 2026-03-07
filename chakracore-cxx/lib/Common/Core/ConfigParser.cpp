@@ -286,8 +286,8 @@ int32_t ConfigParser::SetOutputFile(const char16_t* outputFile, const char16_t* 
         // Copy the PID
         _itow_s(GetCurrentProcessId(), pDest, /*bufferSize=*/_MAX_PATH - pidStartPosition, /*radix=*/10);
 #pragma prefast(suppress: 26014, "ultow string length is smaller than 256")
-        pDest += wcslen(pDest);
-        bufferLen = bufferLen - wcslen(pDest);
+        pDest += PAL_wcslen(pDest);
+        bufferLen = bufferLen - PAL_wcslen(pDest);
 
         // Copy the rest of the string.
 #pragma prefast(suppress: 26014, "Overwriting pDset's null terminator is intentional since the string being copied is null terminated")
@@ -304,7 +304,7 @@ int32_t ConfigParser::SetOutputFile(const char16_t* outputFile, const char16_t* 
         _wcsicmp(fileName, u"ByteCodeGenerator") == 0 ||
         _wcsicmp(fileName, u"spartan") == 0 ||
         _wcsicmp(fileName, u"spartan_edge") == 0 ||
-        _wcsnicmp(fileName, u"MicrosoftEdge", wcslen(u"MicrosoftEdge")) == 0)
+        _wcsnicmp(fileName, u"MicrosoftEdge", PAL_wcslen(u"MicrosoftEdge")) == 0)
     {
 
         // we need to output to %temp% directory in wwa. we don't have permission otherwise.

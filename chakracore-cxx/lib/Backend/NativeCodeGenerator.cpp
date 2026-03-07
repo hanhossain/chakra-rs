@@ -49,7 +49,7 @@ NativeCodeGenerator::NativeCodeGenerator(Js::ScriptContext * scriptContext)
         fileOpened = (0 == _wfopen_s(&this->asmFile, Js::Configuration::Global.flags.AsmDumpMode, u"wt"));
         if (!fileOpened)
         {
-            size_t len = wcslen(Js::Configuration::Global.flags.AsmDumpMode);
+            size_t len = PAL_wcslen(Js::Configuration::Global.flags.AsmDumpMode);
             if (len < _MAX_PATH - 5)
             {
                 char16_t filename[_MAX_PATH];

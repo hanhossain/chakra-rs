@@ -3329,7 +3329,7 @@ namespace Js
         Assert((index + 1)* sizeof(char16_t) + GetByteOffset() <= GetArrayBuffer()->GetByteLength());
         char16_t* typedBuffer = (char16_t*)buffer;
 
-        if (asString != NULL && ::wcslen(asString) == 1)
+        if (asString != NULL && ::PAL_wcslen(asString) == 1)
         {
             typedBuffer[index] = asString[0];
         }

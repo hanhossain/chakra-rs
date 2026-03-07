@@ -2367,7 +2367,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
             {
                 ucal_getCanonicalTimeZoneID(cur, curLen, match, _countof(match), nullptr, &status);
                 ICU_ASSERT(status, true);
-                size_t len = wcslen(reinterpret_cast<const char16_t *>(match));
+                size_t len = PAL_wcslen(reinterpret_cast<const char16_t *>(match));
                 AssertMsg(len < MaxCharCount, "Returned canonicalized timezone is far too long");
                 matchLen = static_cast<charcount_t>(len);
                 break;

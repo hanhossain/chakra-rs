@@ -245,7 +245,7 @@ namespace Js
     charcount_t
     JavascriptString::GetBufferLength(const char16_t * content)
     {
-        size_t cchActual = wcslen(content);
+        size_t cchActual = PAL_wcslen(content);
 
 #if defined(TARGET_64)
         if (!IsValidCharCount(cchActual))

@@ -256,7 +256,7 @@ int32_t  CompileScriptException::ProcessError(IScanner * pScan, int32_t hr, Pars
         if (nullptr == (ei.bstrDescription = SysAllocString(szT)))
             ei.scode = E_OUTOFMEMORY;
     }
-    else if (wcslen(stringOne) > 0)
+    else if (PAL_wcslen(stringOne) > 0)
     {
         OLECHAR szT[128];
         _snwprintf_s(szT, ARRAYSIZE(szT), ARRAYSIZE(szT)-1, ei.bstrDescription, stringOne, stringTwo);

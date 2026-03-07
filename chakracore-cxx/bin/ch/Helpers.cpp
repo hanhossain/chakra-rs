@@ -444,7 +444,7 @@ void Helpers::TTReportLastIOErrorAsNeeded(BOOL ok, const char* msg)
 
 void Helpers::CreateTTDDirectoryAsNeeded(size_t* uriLength, char* uri, const char* asciiDir1, const wchar* asciiDir2)
 {
-    if(*uriLength + strlen(asciiDir1) + wcslen(asciiDir2) + 2 > MAX_URI_LENGTH || strlen(asciiDir1) >= MAX_TTD_ASCII_PATH_EXT_LENGTH || wcslen(asciiDir2) >= MAX_TTD_ASCII_PATH_EXT_LENGTH)
+    if(*uriLength + strlen(asciiDir1) + PAL_wcslen(asciiDir2) + 2 > MAX_URI_LENGTH || strlen(asciiDir1) >= MAX_TTD_ASCII_PATH_EXT_LENGTH || PAL_wcslen(asciiDir2) >= MAX_TTD_ASCII_PATH_EXT_LENGTH)
     {
         wprintf(u"We assume bounded MAX_URI_LENGTH for simplicity.\n");
         wprintf(u"%S, %S, %ls\n", uri, asciiDir1, asciiDir2);
@@ -471,7 +471,7 @@ void Helpers::CreateTTDDirectoryAsNeeded(size_t* uriLength, char* uri, const cha
     }
 
     char realAsciiDir2[MAX_TTD_ASCII_PATH_EXT_LENGTH];
-    size_t asciiDir2Length = wcslen(asciiDir2) + 1;
+    size_t asciiDir2Length = PAL_wcslen(asciiDir2) + 1;
     for(size_t i = 0; i < asciiDir2Length; ++i)
     {
         if(asciiDir2[i] > CHAR_MAX)

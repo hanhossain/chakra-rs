@@ -505,7 +505,7 @@ void BGParseWorkItem::ParseUTF8Core(Js::ScriptContext* scriptContext)
     SourceContextInfo* sourceContextInfo = scriptContext->GetSourceContextInfo(this->cookie, nullptr);
     if (sourceContextInfo == nullptr)
     {
-        sourceContextInfo = scriptContext->CreateSourceContextInfo(this->cookie, this->path, wcslen(this->path), nullptr);
+        sourceContextInfo = scriptContext->CreateSourceContextInfo(this->cookie, this->path, PAL_wcslen(this->path), nullptr);
     }
 
     SRCINFO si = {

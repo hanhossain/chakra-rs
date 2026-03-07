@@ -3888,7 +3888,7 @@ Opnd::GetAddrDescription(__out_ecount(count) char16_t *const description, const 
             }
             break;
         case AddrOpndKindSz:
-            WriteToBuffer(&buffer, &n, wcslen((char16_t const *)address) > 30 ? u"\"%.30s...\"" : u"\"%.30s\"", address);
+            WriteToBuffer(&buffer, &n, PAL_wcslen((char16_t const *)address) > 30 ? u"\"%.30s...\"" : u"\"%.30s\"", address);
             break;
         case AddrOpndKindDynamicFloatRef:
             DumpAddress(address, printToConsole, skipMaskedAddress);

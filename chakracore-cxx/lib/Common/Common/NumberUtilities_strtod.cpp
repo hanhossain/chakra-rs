@@ -2351,13 +2351,13 @@ int Js::NumberUtilities::FDblToStr(double dbl, Js::NumberUtilities::FormatType f
     {
         if (Js::NumberUtilities::IsNan(dbl))
         {
-            n = 4; //(int)wcslen(OLESTR("NaN")) + 1;
+            n = 4; //(int)PAL_wcslen(OLESTR("NaN")) + 1;
             if( cchDst >= n )
                 wcscpy_s(pchDst, cchDst, u"NaN");
         }
         else
         {
-            n = 9; //(int)wcslen(OLESTR("Infinity")) + 1;
+            n = 9; //(int)PAL_wcslen(OLESTR("Infinity")) + 1;
             int neg = 0;
             if (dbl < 0 )
             {

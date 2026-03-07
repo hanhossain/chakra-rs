@@ -3362,7 +3362,7 @@ inline JsErrorCode JsGetPropertyIdFromNameInternal(_In_z_ const char16_t *name, 
 
 CHAKRA_API JsGetPropertyIdFromName(_In_z_ const char16_t *name, _Out_ JsPropertyIdRef *propertyId)
 {
-    return JsGetPropertyIdFromNameInternal(name, wcslen(name), propertyId);
+    return JsGetPropertyIdFromNameInternal(name, PAL_wcslen(name), propertyId);
 }
 
 CHAKRA_API JsGetPropertyIdFromSymbol(_In_ JsValueRef symbol, _Out_ JsPropertyIdRef *propertyId)
@@ -3519,7 +3519,7 @@ JsErrorCode RunScriptCore(JsValueRef scriptSource, const byte *script, size_t cb
 
         if (sourceContextInfo == nullptr)
         {
-            sourceContextInfo = scriptContext->CreateSourceContextInfo(sourceContext, sourceUrl, wcslen(sourceUrl), nullptr);
+            sourceContextInfo = scriptContext->CreateSourceContextInfo(sourceContext, sourceUrl, PAL_wcslen(sourceUrl), nullptr);
         }
 
         const int chsize = (loadScriptFlag & LoadScriptFlag_Utf8Source) ?
@@ -3698,7 +3698,7 @@ JsErrorCode RunScriptCore(const char16_t *script, JsSourceContext sourceContext,
     bool isSourceModule, JsValueRef *result)
 {
     return RunScriptCore(nullptr, reinterpret_cast<const byte*>(script),
-        wcslen(script) * sizeof(char16_t),
+        PAL_wcslen(script) * sizeof(char16_t),
         LoadScriptFlag_None, sourceContext, sourceUrl, parseOnly,
         parseAttributes, isSourceModule, result);
 }
@@ -3864,7 +3864,7 @@ CHAKRA_API JsSerializeScript(_In_z_ const char16_t *script, _Out_writes_to_opt_(
     *bufferSize) unsigned char *buffer,
     _Inout_ unsigned int *bufferSize)
 {
-    return JsSerializeScriptCore((const byte*)script, wcslen(script) * sizeof(char16_t),
+    return JsSerializeScriptCore((const byte*)script, PAL_wcslen(script) * sizeof(char16_t),
         LoadScriptFlag_None, nullptr, 0, buffer, bufferSize, nullptr);
 }
 
@@ -3916,7 +3916,7 @@ JsErrorCode RunSerializedScriptCore(
             if (sourceContextInfo == nullptr)
             {
                 sourceContextInfo = scriptContext->CreateSourceContextInfo(sourceContext, sourceUrl,
-                    wcslen(sourceUrl), nullptr);
+                    PAL_wcslen(sourceUrl), nullptr);
             }
 
             SRCINFO si = {
@@ -5284,7 +5284,7 @@ CHAKRA_API RunScriptWithParserStateCore(
 
         if (sourceContextInfo == nullptr)
         {
-            sourceContextInfo = scriptContext->CreateSourceContextInfo(sourceContext, url, wcslen(url), nullptr);
+            sourceContextInfo = scriptContext->CreateSourceContextInfo(sourceContext, url, PAL_wcslen(url), nullptr);
         }
 
         const int chsize = (loadScriptFlag & LoadScriptFlag_Utf8Source) ?

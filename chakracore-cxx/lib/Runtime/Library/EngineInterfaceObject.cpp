@@ -55,7 +55,7 @@
     Js::JavascriptOperators::GetProperty(obj, propertyID, &propertyValue, scriptContext) \
 
 #define GetPropertyLFrom(obj, propertyName) \
-    GetPropertyFrom(obj, scriptContext->GetOrAddPropertyIdTracked(propertyName, wcslen(propertyName)))
+    GetPropertyFrom(obj, scriptContext->GetOrAddPropertyIdTracked(propertyName, PAL_wcslen(propertyName)))
 
 #define GetPropertyBuiltInFrom(obj, builtInPropID) \
     GetPropertyFrom(obj, Js::PropertyIds::builtInPropID) \
@@ -70,7 +70,7 @@
     HasPropertyOn(obj, Js::PropertyIds::builtInPropID) \
 
 #define HasPropertyLOn(obj, propertyName) \
-    HasPropertyOn(obj, scriptContext->GetOrAddPropertyIdTracked(propertyName, wcslen(propertyName)))
+    HasPropertyOn(obj, scriptContext->GetOrAddPropertyIdTracked(propertyName, PAL_wcslen(propertyName)))
 
 namespace Js
 {

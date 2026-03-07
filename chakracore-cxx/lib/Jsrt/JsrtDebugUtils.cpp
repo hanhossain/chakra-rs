@@ -31,13 +31,13 @@ void JsrtDebugUtils::AddFileNameOrScriptTypeToObject(Js::DynamicObject* object, 
 
         const char16_t* sourceName = (anyFunctionBody != nullptr) ? anyFunctionBody->GetSourceName() : Js::Constants::UnknownScriptCode;
 
-        JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::scriptType, sourceName, wcslen(sourceName), utf8SourceInfo->GetScriptContext());
+        JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::scriptType, sourceName, PAL_wcslen(sourceName), utf8SourceInfo->GetScriptContext());
     }
     else
     {
         // url can be nullptr if JsParseScript/JsRunScript didn't passed any
         const char16_t* url = utf8SourceInfo->GetSourceContextInfo()->url == nullptr ? u"" : utf8SourceInfo->GetSourceContextInfo()->url;
-        JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::fileName, url, wcslen(url), utf8SourceInfo->GetScriptContext());
+        JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::fileName, url, PAL_wcslen(url), utf8SourceInfo->GetScriptContext());
     }
 }
 
@@ -127,7 +127,7 @@ void JsrtDebugUtils::AddVarPropertyToObject(Js::DynamicObject * object, const ch
     const Js::PropertyRecord* propertyRecord;
 
     // propertyName is the DEBUGOBJECTPROPERTY from JsrtDebugPropertiesEnum so it can't have embedded null, ok to use wcslen
-    scriptContext->GetOrAddPropertyRecord(propertyName, static_cast<int>(wcslen(propertyName)), &propertyRecord);
+    scriptContext->GetOrAddPropertyRecord(propertyName, static_cast<int>(PAL_wcslen(propertyName)), &propertyRecord);
 
     Js::Var marshaledObj = Js::CrossSite::MarshalVar(scriptContext, value);
 
@@ -292,7 +292,7 @@ void JsrtDebugUtils::AddPropertyType(Js::DynamicObject * object, Js::IDiagObject
             JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::type, scriptContext->GetLibrary()->GetObjectTypeDisplayString(), scriptContext);
             addDisplay = true;
             const char16_t* className = JsrtDebugUtils::GetClassName(typeId);
-            JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::className, className, wcslen(className), scriptContext);
+            JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::className, className, PAL_wcslen(className), scriptContext);
             break;
         }
 
@@ -308,7 +308,7 @@ void JsrtDebugUtils::AddPropertyType(Js::DynamicObject * object, Js::IDiagObject
             JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::type, scriptContext->GetLibrary()->GetObjectTypeDisplayString(), scriptContext);
             addDisplay = true;
             const char16_t* className = JsrtDebugUtils::GetClassName(Js::TypeIds_Object);
-            JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::className, className, wcslen(className), scriptContext);
+            JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::className, className, PAL_wcslen(className), scriptContext);
         }
         else
         {
@@ -332,7 +332,7 @@ void JsrtDebugUtils::AddPropertyType(Js::DynamicObject * object, Js::IDiagObject
             value = u"";
         }
 
-        JsrtDebugUtils::AddPropertyToObject(object, addDisplay ? JsrtDebugPropertyId::display : JsrtDebugPropertyId::value, value, wcslen(value), scriptContext);
+        JsrtDebugUtils::AddPropertyToObject(object, addDisplay ? JsrtDebugPropertyId::display : JsrtDebugPropertyId::value, value, PAL_wcslen(value), scriptContext);
     }
 
     if (forceSetValueProp && varValue != nullptr && !JsrtDebugUtils::HasProperty(object, JsrtDebugPropertyId::value, scriptContext))
@@ -414,7 +414,7 @@ bool JsrtDebugUtils::HasProperty(Js::DynamicObject * object, JsrtDebugPropertyId
     const char16_t* propertyName = GetDebugPropertyName(propertyId);
 
     const Js::PropertyRecord* propertyRecord;
-    scriptContext->FindPropertyRecord(propertyName, static_cast<int>(wcslen(propertyName)), &propertyRecord);
+    scriptContext->FindPropertyRecord(propertyName, static_cast<int>(PAL_wcslen(propertyName)), &propertyRecord);
 
     if (propertyRecord == nullptr)
     {

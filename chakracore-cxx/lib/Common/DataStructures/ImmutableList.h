@@ -983,7 +983,7 @@ namespace regex
             if (str == nullptr)
                 return;
 
-            size_t newStrSize = stringSize + wcslen(str);
+            size_t newStrSize = stringSize + PAL_wcslen(str);
             if (newStrSize < stringSize)
             {
                 // Overflow

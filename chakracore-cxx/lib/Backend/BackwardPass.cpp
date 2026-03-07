@@ -4287,7 +4287,7 @@ struct BvToDump
     BvToDump(const BVSparse<JitArenaAllocator>* bv, const char16_t* tag) :
         bv(bv),
         tag(tag),
-        tagLen(bv ? wcslen(tag) : 0)
+        tagLen(bv ? PAL_wcslen(tag) : 0)
     {}
 };
 

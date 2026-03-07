@@ -2087,7 +2087,7 @@ char16_t * JavascriptObject::ConstructName(const PropertyRecord * propertyRecord
             wcscpy_s(finalName, totalChars, propertyName);
 
             Assert(getOrSetStr != nullptr);
-            Assert(wcslen(getOrSetStr) == 4);
+            Assert(PAL_wcslen(getOrSetStr) == 4);
 
             wcscpy_s(finalName + propertyLength, ConstructNameGetSetLength, getOrSetStr);
         }

@@ -161,7 +161,7 @@ bool DynamicProfileStorageReaderWriter::WriteArray(T * t, size_t len)
 
 bool DynamicProfileStorageReaderWriter::WriteUtf8String(char16_t const * str)
 {
-    charcount_t len = static_cast<charcount_t>(wcslen(str));
+    charcount_t len = static_cast<charcount_t>(PAL_wcslen(str));
     const size_t cbTempBuffer = UInt32Math::Mul<3>(len);
     utf8char_t * tempBuffer = NoCheckHeapNewArray(utf8char_t, cbTempBuffer);
     if (tempBuffer == nullptr)
@@ -465,7 +465,7 @@ void DynamicProfileStorage::ClearInfoMap(bool deleteFileStorage)
         {
             continue;
         }
-        NoCheckHeapDeleteArray(wcslen(name) + 1, name);
+        NoCheckHeapDeleteArray(PAL_wcslen(name) + 1, name);
 
         StorageInfo const& info = infoMap.GetValueAt(i);
         if (info.isFileStorage)
@@ -1074,7 +1074,7 @@ void DynamicProfileStorage::SaveRecord(__in_z char16_t const * filename, __in_ec
         ReleaseLock();
     }
 
-    size_t len = wcslen(filename) + 1;
+    size_t len = PAL_wcslen(filename) + 1;
     char16_t * newFilename = NoCheckHeapNewArray(char16_t, len);
     if (newFilename == nullptr)
     {

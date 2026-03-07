@@ -556,7 +556,7 @@ namespace Js
     void ScriptContext::SetUrl(BSTR bstrUrl)
     {
         // Assumption: this method is never called multiple times
-        Assert(this->url != nullptr && wcslen(this->url) == 0);
+        Assert(this->url != nullptr && PAL_wcslen(this->url) == 0);
 
         charcount_t length = SysStringLen(bstrUrl) + 1; // Add 1 for the NULL.
 
@@ -904,7 +904,7 @@ namespace Js
                 // WOOB 1137798: JavascriptArray::GetIndex does not handle embedded NULLs. So if we have a property
                 // name "1234\0", JavascriptArray::GetIndex would incorrectly accepts it as an array index property
                 // name.
-                Assert((size_t)(name->GetLength()) != wcslen(name->GetBuffer()));
+                Assert((size_t)(name->GetLength()) != PAL_wcslen(name->GetBuffer()));
             }
             else if (isNumericPropertyId)
             {
@@ -4750,8 +4750,8 @@ ExitTempAllocator:
         {
             // The spec names functions whose property is a well known symbol as the description from the symbol
             // wrapped in square brackets, so verify by skipping past first bracket
-            Assert(!PAL_wcsncmp(pwszFunctionName + 1, pwszObjectNameFromProperty, wcslen(pwszObjectNameFromProperty)));
-            Assert(wcslen(pwszFunctionName) == wcslen(pwszObjectNameFromProperty) + 2);
+            Assert(!PAL_wcsncmp(pwszFunctionName + 1, pwszObjectNameFromProperty, PAL_wcslen(pwszObjectNameFromProperty)));
+            Assert(PAL_wcslen(pwszFunctionName) == PAL_wcslen(pwszObjectNameFromProperty) + 2);
         }
         else
         {
@@ -4768,7 +4768,7 @@ ExitTempAllocator:
         {
             // Create name as "object.function"
             swprintf_s(szTempName, 70, u"%s.%s", pwszObjectName, pwszFunctionName);
-            functionPropertyId = GetOrAddPropertyIdTracked(szTempName, (uint)wcslen(szTempName));
+            functionPropertyId = GetOrAddPropertyIdTracked(szTempName, (uint)PAL_wcslen(szTempName));
         }
 
         Js::PropertyId cachedFunctionId;

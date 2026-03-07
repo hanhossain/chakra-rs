@@ -580,7 +580,7 @@ MemoryLeakCheck::~MemoryLeakCheck()
         {
             if (enableOutput)
             {
-                Output::PrintBuffer(current->dump, wcslen(current->dump));
+                Output::PrintBuffer(current->dump, PAL_wcslen(current->dump));
             }
             LeakRecord * prev = current;
             current = current->next;

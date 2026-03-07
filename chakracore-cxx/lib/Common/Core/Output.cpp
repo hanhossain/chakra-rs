@@ -264,7 +264,7 @@ Output::VPrint(const char16_t *form, va_list argptr)
 
 //
 // buf: a null terminated string
-// size: characters in buf, excluding the terminating null ==> wcslen(buf)
+// size: characters in buf, excluding the terminating null ==> PAL_wcslen(buf)
 //
 size_t
 Output::PrintBuffer(const char16_t * buf, size_t size)
@@ -298,7 +298,7 @@ Output::PrintBuffer(const char16_t * buf, size_t size)
                     currentWriteIndex = newbuf + charsWritten;
                 }
             };
-            const size_t prefixlength = wcslen(prefix);
+            const size_t prefixlength = PAL_wcslen(prefix);
             size_t oldS_Column = Output::s_Column;
             while (currentReadIndex < buf + size)
             {
@@ -431,7 +431,7 @@ Output::SkipToColumn(size_t column)
     if (usingCustomAlignAndPrefix)
     {
         // If we've already added the alignment and prefix, we need to add the alignment to our column number here
-        columnbias = align + wcslen(prefix);
+        columnbias = align + PAL_wcslen(prefix);
     }
     size_t reference = 0;
     if (Output::s_Column > columnbias)

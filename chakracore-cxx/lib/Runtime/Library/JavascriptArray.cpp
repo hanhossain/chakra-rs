@@ -8249,7 +8249,7 @@ Case0:
     {
         uint32_t lu, luDig;
 
-        int32_t cch = (int32_t)wcslen(propName);
+        int32_t cch = (int32_t)PAL_wcslen(propName);
         char16_t* pch = const_cast<char16_t *>(propName);
 
         lu = *pch - '0';

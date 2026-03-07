@@ -220,7 +220,7 @@ namespace utf8
     {
         size_t unused;
         return WideStringToNarrow<malloc_allocator>(
-            sourceString, wcslen(sourceString), destStringPtr, &unused);
+            sourceString, PAL_wcslen(sourceString), destStringPtr, &unused);
     }
 
     inline int32_t NarrowStringToWideDynamic(_In_ const char * sourceString, _Out_ char16_t** destStringPtr)
@@ -283,7 +283,7 @@ namespace utf8
         // is used as fallback.
         static size_t Length(const char16_t* src)
         {
-            return wcslen(src);
+            return PAL_wcslen(src);
         }
 
         static int32_t Convert(

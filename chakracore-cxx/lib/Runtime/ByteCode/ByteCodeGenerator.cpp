@@ -2478,7 +2478,7 @@ FuncInfo* PreVisitFunction(ParseNodeFnc* pnodeFnc, ByteCodeGenerator* byteCodeGe
         funcName = reinterpret_cast<const char16_t*>(pnodeFnc->hint);
         funcNameLength = pnodeFnc->hintLength;
         functionNameOffset = pnodeFnc->hintOffset;
-        Assert(funcNameLength != 0 || funcNameLength == (int)wcslen(funcName));
+        Assert(funcNameLength != 0 || funcNameLength == (int)PAL_wcslen(funcName));
     }
     if (pnodeFnc->IsDeclaration() || pnodeFnc->IsMethod())
     {
