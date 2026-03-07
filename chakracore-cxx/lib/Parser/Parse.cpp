@@ -3867,7 +3867,7 @@ BOOL Parser::NodeEqualsName(ParseNodePtr pnode, LPCOLESTR sz, uint32_t cch)
 {
     return pnode->nop == knopName &&
         pnode->AsParseNodeName()->pid->Cch() == cch &&
-        !wmemcmp(pnode->AsParseNodeName()->pid->Psz(), sz, cch);
+        !PAL_wmemcmp(pnode->AsParseNodeName()->pid->Psz(), sz, cch);
 }
 
 BOOL Parser::NodeIsIdent(ParseNodePtr pnode, IdentPtr pid)

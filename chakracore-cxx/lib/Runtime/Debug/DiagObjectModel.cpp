@@ -257,7 +257,7 @@ namespace Js
         const charcount_t funcStringLength = _countof(JS_DISPLAY_STRING_FUNCTION_HEADER) - 1; // discount the ending null character in string literal
         const charcount_t templateStringLength = funcStringLength + _countof(JS_DISPLAY_STRING_FUNCTION_BODY) - 1; // discount the ending null character in string literal
         // If the string doesn't meet our expected format; return the original string.
-        if (displayNameBufferLength <= templateStringLength || (wmemcmp(displayNameBuffer, JS_DISPLAY_STRING_FUNCTION_HEADER, funcStringLength) != 0))
+        if (displayNameBufferLength <= templateStringLength || (PAL_wmemcmp(displayNameBuffer, JS_DISPLAY_STRING_FUNCTION_HEADER, funcStringLength) != 0))
         {
             return displayNameBuffer;
         }
