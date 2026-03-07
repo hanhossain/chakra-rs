@@ -1614,45 +1614,6 @@ PAL_iswdigit( char16_t c )
     return nRetVal;
 }
 
-/*++
-Function:
-   PAL_wcscspn
-
-Finds the number of consecutive characters from the start of the string
-that are not in the set.
-
-Return value:
-
-The number of characters from the start of the string that are not in
-the set.
-
-Parameters:
-string          String
-strCharSet      Set of delimiter characters
-
---*/
-size_t
-PAL_wcscspn(const char16_t *string, const char16_t *strCharSet)
-{
-    const char16_t *temp;
-    size_t count = 0;
-
-
-    while(*string != 0)
-    {
-        for(temp = strCharSet; *temp != 0; temp++)
-        {
-            if (*string == *temp)
-            {
-                return count;
-            }
-        }
-        count++;
-        string++;
-    }
-    return count;
-}
-
 #if HAVE_COREFOUNDATION
 /*--
 Function:
