@@ -1849,7 +1849,7 @@ namespace TTD
 
         if(this->m_outfile != stdout && this->m_outfile != stderr)
         {
-            fclose(this->m_outfile);
+            PAL_fclose(this->m_outfile);
         }
 
         free(this->m_buffer);

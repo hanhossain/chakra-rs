@@ -199,7 +199,7 @@ void  PerfTrace::WritePerfMap()
     }
 
     PAL_fflush(perfMapFile);
-    fclose(perfMapFile);
+    PAL_fclose(perfMapFile);
 #endif
     PerfTrace::mapsRequested = 0;
 }

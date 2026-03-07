@@ -282,7 +282,7 @@ Error:
 
     if (file != NULL)
     {
-        fclose(file);
+        PAL_fclose(file);
     }
 
     if (pRawBytes && reinterpret_cast<const char *>(pRawBytes) != contents)
@@ -417,7 +417,7 @@ int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, u
     }
 
 Error:
-    fclose(file);
+    PAL_fclose(file);
     if (contents && FAILED(hr))
     {
         HeapFree(GetProcessHeap(), 0, (void*)contents);
@@ -573,7 +573,7 @@ bool CALLBACK Helpers::TTWriteBytesToStreamCallback(JsTTDStreamHandle handle, co
 void CALLBACK Helpers::TTFlushAndCloseStreamCallback(JsTTDStreamHandle handle, bool read, bool write)
 {
     PAL_fflush((FILE*)handle);
-    fclose((FILE*)handle);
+    PAL_fclose((FILE*)handle);
 }
 
 void GetBinaryPathWithFileNameA(char *path, const size_t buffer_size, const char* filename)
