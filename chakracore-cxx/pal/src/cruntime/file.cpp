@@ -503,26 +503,6 @@ PAL_fputc(int c,  PAL_FILE * f)
     return nRetVal;
 }
 
-/*--
-Function :
-
-    putchar
-
-    See MSDN for more details.
---*/
-int
-PAL_putchar( int c )
-{
-    int32_t nRetVal = 0;
-
-    ENTRY( "putchar( 0x%x (%c) )\n", c, c);
-
-    nRetVal = putchar( c );
-
-    LOGEXIT( "putchar returning %d\n", nRetVal );
-    return nRetVal;
-}
-
 /*++
 Function :
 
