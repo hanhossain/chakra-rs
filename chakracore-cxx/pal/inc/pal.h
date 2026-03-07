@@ -2529,8 +2529,6 @@ GetSystemInfo(
 #define setbuf        PAL_setbuf
 #define fputs         PAL_fputs
 #define fseek         PAL_fseek
-#define fgetpos       PAL_fgetpos
-#define fsetpos       PAL_fsetpos
 #define _wcstoui64    PAL__wcstoui64
 
 #endif // !PAL_STDCPP_COMPAT
@@ -2850,10 +2848,6 @@ int PAL_fprintf(PAL_FILE *, const char *, ...);
 int PAL_vfprintf(PAL_FILE *, const char *, va_list);
 // TODO (hanhossain): internal
 int PAL_fseek(PAL_FILE *, int32_t, int);
-// TODO (hanhossain): internal
-int PAL_fgetpos(PAL_FILE *, fpos_t *);
-// TODO (hanhossain): internal
-int PAL_fsetpos(PAL_FILE *, const fpos_t *);
 // TODO (hanhossain): internal
 int32_t PAL_ftell(PAL_FILE *);
 // TODO (hanhossain): internal
