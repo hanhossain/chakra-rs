@@ -369,7 +369,7 @@ void _invalid_parameter(const char16_t *_Message, const char16_t *_FunctionName,
 #define _sntprintf_s    _snwprintf_s
 #define _vsntprintf_s   _vsnwprintf_s
 #define _tscanf_s       wscanf_s
-#define _tsscanf_s      swscanf_s
+#define _tsscanf_s      PAL_swscanf
 #define _tsnscanf_s     _swnscanf_s
 
 #endif /* _SAFECRT_DEFINE_TCS_MACROS */
@@ -3252,7 +3252,7 @@ int sscanf_s(const char *_String, const char *_Format, ...);
 
 /* swscanf_s */
 _SAFECRT__EXTERN_C
-int swscanf_s(const char16_t *_String, const char16_t *_Format, ...);
+int PAL_swscanf(const char16_t *_String, const char16_t *_Format, ...);
 
 /* no C++ overload for swscanf_s */
 

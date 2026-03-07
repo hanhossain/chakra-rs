@@ -614,7 +614,7 @@ namespace Js
                 uint simpleJitLimit;
                 uint profilingInterpreter1Limit;
                 const int scannedCount =
-                    swscanf_s(
+                    PAL_swscanf(
                         static_cast<const char16_t*>(ExecutionModeLimits),
                         u"%u.%u.%u.%u.%u",
                         &autoProfilingInterpreter0Limit,
