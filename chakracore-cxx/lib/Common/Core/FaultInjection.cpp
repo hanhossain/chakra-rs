@@ -619,7 +619,7 @@ namespace Js
         auto temp = str;
         while (temp != nullptr)
         {
-            auto lambdaStart = wcsstr(temp, lambdaSig);
+            auto lambdaStart = PAL_wcsstr(temp, lambdaSig);
             temp = nullptr;
             if (lambdaStart != nullptr)
             {
@@ -700,7 +700,7 @@ namespace Js
                     continue;// no "jscript9test!", skip this line
                 }
 
-                if (wcsstr(symbolStart, u"Js::FaultInjection") != NULL)
+                if (PAL_wcsstr(symbolStart, u"Js::FaultInjection") != NULL)
                 { // skip faultinjection infra frames.
                     continue;
                 }

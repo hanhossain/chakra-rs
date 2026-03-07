@@ -4448,8 +4448,8 @@ ExitTempAllocator:
                         // it is string because user had called in toString extract name from it
                         Assert(VarIs<JavascriptString>(sourceString));
                         const char16_t *pwszToString = ((JavascriptString *)sourceString)->GetSz();
-                        const char16_t *pwszNameStart = wcsstr(pwszToString, u" ");
-                        const char16_t *pwszNameEnd = wcsstr(pwszToString, u"(");
+                        const char16_t *pwszNameStart = PAL_wcsstr(pwszToString, u" ");
+                        const char16_t *pwszNameEnd = PAL_wcsstr(pwszToString, u"(");
                         if (pwszNameStart == nullptr || pwszNameEnd == nullptr || ((int)(pwszNameEnd - pwszNameStart) <= 0))
                         {
                             functionNameLen = ((JavascriptString *)sourceString)->GetLength() + 1;

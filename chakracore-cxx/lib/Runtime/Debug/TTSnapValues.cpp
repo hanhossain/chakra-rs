@@ -1496,7 +1496,7 @@ namespace TTD
                 uint32_t suffixWDotPos = (fbInfo->FunctionName.Length - 4);
                 uint32_t suffixPos = (fbInfo->FunctionName.Length - 3);
 
-                TTDAssert(wcsstr(fbInfo->FunctionName.Contents, u".get") == (fbInfo->FunctionName.Contents + suffixWDotPos) || wcsstr(fbInfo->FunctionName.Contents, u".set") == (fbInfo->FunctionName.Contents + suffixWDotPos), "Does not start with get or set");
+                TTDAssert(PAL_wcsstr(fbInfo->FunctionName.Contents, u".get") == (fbInfo->FunctionName.Contents + suffixWDotPos) || PAL_wcsstr(fbInfo->FunctionName.Contents, u".set") == (fbInfo->FunctionName.Contents + suffixWDotPos), "Does not start with get or set");
 
                 resfb->SetDisplayName(fbInfo->FunctionName.Contents, fbInfo->FunctionName.Length, suffixPos, Js::FunctionProxy::SetDisplayNameFlagsRecyclerAllocated);
             }

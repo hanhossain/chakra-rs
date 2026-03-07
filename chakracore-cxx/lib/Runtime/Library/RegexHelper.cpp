@@ -1619,7 +1619,7 @@ namespace Js
         JavascriptString* flags = JavascriptConversion::ToString(
             JavascriptOperators::GetProperty(thisObj, PropertyIds::flags, scriptContext),
             scriptContext);
-        bool unicode = wcsstr(flags->GetString(), u"u") != nullptr;
+        bool unicode = PAL_wcsstr(flags->GetString(), u"u") != nullptr;
         flags = AppendStickyToFlagsIfNeeded(flags, scriptContext);
 
         bool isDefaultConstructor = speciesConstructor == defaultConstructor;
@@ -1713,7 +1713,7 @@ namespace Js
     JavascriptString* RegexHelper::AppendStickyToFlagsIfNeeded(JavascriptString* flags, ScriptContext* scriptContext)
     {
         const char16_t* flagsString = flags->GetString();
-        if (wcsstr(flagsString, u"y") == nullptr)
+        if (PAL_wcsstr(flagsString, u"y") == nullptr)
         {
             BEGIN_TEMP_ALLOCATOR(tempAlloc, scriptContext, u"RegexHelper")
             {
