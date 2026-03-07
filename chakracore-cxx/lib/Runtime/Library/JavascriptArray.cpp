@@ -9338,7 +9338,7 @@ Case0:
             Assert(fromByteIndex <= typedArrayBase->GetByteLength() - byteCount);
             Assert(toByteIndex <= typedArrayBase->GetByteLength() - byteCount);
 
-            memmove(&buffer[toByteIndex], &buffer[fromByteIndex], byteCount);
+            memmove_xplat(&buffer[toByteIndex], &buffer[fromByteIndex], byteCount);
 
             return obj;
         }

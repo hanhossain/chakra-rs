@@ -239,7 +239,7 @@ void MoveArray(T* dst, const T* src, size_t count)
 {
     ArrayWriteBarrierVerifyBits<T, PolicyType, Allocator>(dst, count);
 
-    memmove(reinterpret_cast<void*>(dst),
+    memmove_xplat(reinterpret_cast<void*>(dst),
             reinterpret_cast<const void*>(src),
             sizeof(T) * count);
 
@@ -580,7 +580,7 @@ void qsort_s(WriteBarrierPtr<T>* _Base, size_t _NumOfElements, size_t _SizeOfEle
 
 // Disallow memcpy, memmove of WriteBarrierPtr
 template <typename T>
-void *  memmove(_Out_writes_bytes_all_opt_(_Size) WriteBarrierPtr<T> * _Dst, _In_reads_bytes_opt_(_Size) const void * _Src, _In_ size_t _Size)
+void *  memmove_xplat(_Out_writes_bytes_all_opt_(_Size) WriteBarrierPtr<T> * _Dst, _In_reads_bytes_opt_(_Size) const void * _Src, _In_ size_t _Size)
 {
     CompileAssert(false);
 }

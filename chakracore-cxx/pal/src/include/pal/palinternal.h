@@ -249,7 +249,6 @@ function_name() to call the system's implementation
    native OS */
 #undef exit
 #undef alloca
-#undef memmove
 #undef strlen
 #undef strnlen
 #undef stricmp
