@@ -118,7 +118,7 @@ void ConfigParser::ParseConfig(HANDLE hmod, CmdLineArgsParser &parser, const cha
     char16_t configBuffer[MaxTokenSize];
     int index = 0;
 
-#define ReadChar(file) fgetc(file)
+#define ReadChar(file) PAL_getc(file)
 #define UnreadChar(c, file) PAL_ungetc(c, file)
 #define CharType int
 #define EndChar EOF
