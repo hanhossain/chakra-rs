@@ -830,7 +830,7 @@ int32_t ExecuteTestWithMemoryCheck(char* fileName)
     int32_t hr = E_FAIL;
     // REVIEW: Do we need a SEH handler here?
     hr = ExecuteTest(fileName);
-    if (FAILED(hr)) exit(0);
+    if (FAILED(hr)) PAL_exit(0);
 
     PAL__flushall();
 #ifdef CHECK_MEMORY_LEAK
