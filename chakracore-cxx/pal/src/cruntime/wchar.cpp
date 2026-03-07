@@ -39,6 +39,8 @@ Abstract:
 
 SET_DEFAULT_DEBUG_CHANNEL(CRT);
 
+char16_t *PAL_wcsncat( char16_t * strDest, const char16_t *strSource, size_t count );
+
 
 /*--
 Function:
