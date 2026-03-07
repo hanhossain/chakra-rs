@@ -301,7 +301,6 @@ function_name() to call the system's implementation
 #undef fpos_t
 
 
-#undef wprintf 
 #undef _snprintf
 #if HAVE__SNWPRINTF
 #undef _snwprintf

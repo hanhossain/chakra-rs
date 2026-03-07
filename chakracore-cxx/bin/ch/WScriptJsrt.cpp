@@ -151,7 +151,7 @@ JsValueRef WScriptJsrt::EchoCallback(JsValueRef callee, bool isConstructCall, Js
             {
                 if (i > 1)
                 {
-                    wprintf(u" ");
+                    PAL_wprintf(u" ");
                 }
                 charcount_t len;
                 char16_t* ws = str.GetWideString(&len);
@@ -165,7 +165,7 @@ JsValueRef WScriptJsrt::EchoCallback(JsValueRef callee, bool isConstructCall, Js
                     }
                 }
                 wsNoNull[newIndex] = u'\0';
-                wprintf(u"%s", wsNoNull);
+                PAL_wprintf(u"%s", wsNoNull);
                 delete[] wsNoNull;
             }
         }
@@ -176,7 +176,7 @@ JsValueRef WScriptJsrt::EchoCallback(JsValueRef callee, bool isConstructCall, Js
         }
     }
 
-    wprintf(u"\n");
+    PAL_wprintf(u"\n");
     PAL_fflush(stdout);
 
     JsValueRef undefinedValue;
@@ -1929,7 +1929,7 @@ WScriptJsrt::CallbackMessage::CallbackMessage(unsigned int time, JsValueRef func
     {
         // Simply report a fatal error and exit because continuing from this point would result in inconsistent state
         // and FailFast telemetry would not be useful.
-        wprintf(u"FATAL ERROR: ChakraRTInterface::JsAddRef failed in WScriptJsrt::CallbackMessage::`ctor`. error=0x%x\n", error);
+        PAL_wprintf(u"FATAL ERROR: ChakraRTInterface::JsAddRef failed in WScriptJsrt::CallbackMessage::`ctor`. error=0x%x\n", error);
         exit(1);
     }
 }
@@ -2154,7 +2154,7 @@ JsErrorCode WScriptJsrt::NotifyModuleReadyCallback(_In_opt_ JsModuleRecord refer
         {
             fileName.Initialize(specifier);
         }
-        wprintf(u"NotifyModuleReadyCallback(exception) %S\n", fileName.GetString());
+        PAL_wprintf(u"NotifyModuleReadyCallback(exception) %S\n", fileName.GetString());
     }
     
     if (moduleErrMap[referencingModule] != ErroredModule)
@@ -2204,11 +2204,11 @@ void WScriptJsrt::PromiseRejectionTrackerCallback(JsValueRef promise, JsValueRef
 
     if (!handled)
     {
-        wprintf(u"Uncaught promise rejection\n");
+        PAL_wprintf(u"Uncaught promise rejection\n");
     }
     else
     {
-        wprintf(u"Promise rejection handled\n");
+        PAL_wprintf(u"Promise rejection handled\n");
     }
 
     JsPropertyIdRef stackPropertyID; 
@@ -2224,7 +2224,7 @@ void WScriptJsrt::PromiseRejectionTrackerCallback(JsValueRef promise, JsValueRef
             if (error == JsNoError)
             {
                 AutoString str(stackStrValue);
-                wprintf(u"%ls\n", str.GetWideString());
+                PAL_wprintf(u"%ls\n", str.GetWideString());
             }
         }
     }
@@ -2237,7 +2237,7 @@ void WScriptJsrt::PromiseRejectionTrackerCallback(JsValueRef promise, JsValueRef
         if (error == JsNoError)
         {
             AutoString str(strValue);
-            wprintf(u"%ls\n", str.GetWideString());
+            PAL_wprintf(u"%ls\n", str.GetWideString());
         }
     }
 

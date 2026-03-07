@@ -63,19 +63,19 @@ int HostExceptionFilter(int exceptionCode, _EXCEPTION_POINTERS *ep)
 
 void PrintUsageFormat()
 {
-    wprintf(u"\nUsage: %s [-v|-version] [-h|-help] [-?] [flaglist] <source file>\n", hostName);
-    wprintf(u"\t-v|-version\t\tDisplays version info\n");
-    wprintf(u"\t-h|-help\t\tDisplays this help message\n");
-    wprintf(u"\t-?\t\t\tDisplays this help message with complete [flaglist] info\n");
+    PAL_wprintf(u"\nUsage: %s [-v|-version] [-h|-help] [-?] [flaglist] <source file>\n", hostName);
+    PAL_wprintf(u"\t-v|-version\t\tDisplays version info\n");
+    PAL_wprintf(u"\t-h|-help\t\tDisplays this help message\n");
+    PAL_wprintf(u"\t-?\t\t\tDisplays this help message with complete [flaglist] info\n");
 }
 
 #if !defined(ENABLE_DEBUG_CONFIG_OPTIONS)
 void PrintReleaseUsage()
 {
-    wprintf(u"\nUsage: %s [-v|-version] [-h|-help|-?] <source file> %s", hostName,
+    PAL_wprintf(u"\nUsage: %s [-v|-version] [-h|-help|-?] <source file> %s", hostName,
         u"\nNote: [flaglist] is not supported in Release builds; try a Debug or Test build to enable these flags.\n");
-    wprintf(u"\t-v|-version\t\tDisplays version info\n");
-    wprintf(u"\t-h|-help|-?\t\tDisplays this help message\n");
+    PAL_wprintf(u"\t-v|-version\t\tDisplays version info\n");
+    PAL_wprintf(u"\t-h|-help|-?\t\tDisplays this help message\n");
 }
 #endif
 
@@ -91,9 +91,9 @@ void PrintUsage()
 void PrintChVersion()
 {
 #if CHAKRA_CORE_VERSION_RELEASE
-    wprintf(u"%s version %d.%d.%d.0\n",
+    PAL_wprintf(u"%s version %d.%d.%d.0\n",
 #else
-    wprintf(u"%s version %d.%d.%d.0-beta\n",
+    PAL_wprintf(u"%s version %d.%d.%d.0-beta\n",
 #endif
         hostName, CHAKRA_CORE_MAJOR_VERSION, CHAKRA_CORE_MINOR_VERSION, CHAKRA_CORE_PATCH_VERSION);
 }
@@ -209,12 +209,12 @@ int32_t RunScript(const char* fileName, const char * fileContents, size_t fileLe
             fileContentsFinalizeCallback((void*)fileContents);
         }
 #if !ENABLE_TTD
-        wprintf(u"Sential js file is only ok when in TTDebug mode!!!\n");
+        PAL_wprintf(u"Sential js file is only ok when in TTDebug mode!!!\n");
         return E_FAIL;
 #else
         if(!doTTReplay)
         {
-            wprintf(u"Sential js file is only ok when in TTReplay mode!!!\n");
+            PAL_wprintf(u"Sential js file is only ok when in TTReplay mode!!!\n");
             return E_FAIL;
         }
 
@@ -234,7 +234,7 @@ int32_t RunScript(const char* fileName, const char * fileContents, size_t fileLe
                 {
                     if(error == JsErrorCategoryUsage)
                     {
-                        wprintf(u"Start time not in log range.\n");
+                        PAL_wprintf(u"Start time not in log range.\n");
                     }
 
                     return error;
@@ -247,21 +247,21 @@ int32_t RunScript(const char* fileName, const char * fileContents, size_t fileLe
                 //handle any uncaught exception by immediately time-traveling to the throwing line in the debugger -- in replay just report and exit
                 if(res == JsErrorCategoryScript)
                 {
-                    wprintf(u"An unhandled script exception occurred!!!\n");
+                    PAL_wprintf(u"An unhandled script exception occurred!!!\n");
 
                     ExitProcess(0);
                 }
 
                 if(nextEventTime == -1)
                 {
-                    wprintf(u"\nReached end of Execution -- Exiting.\n");
+                    PAL_wprintf(u"\nReached end of Execution -- Exiting.\n");
                     break;
                 }
             }
         }
         catch(...)
         {
-            wprintf(u"Terminal exception in Replay -- exiting.\n");
+            PAL_wprintf(u"Terminal exception in Replay -- exiting.\n");
             ExitProcess(0);
         }
 #endif
@@ -364,7 +364,7 @@ int32_t RunScript(const char* fileName, const char * fileContents, size_t fileLe
                 JsParseScriptAttributeNone, nullptr /*result*/);
             if (runScript == JsErrorCategoryUsage)
             {
-                wprintf(u"FATAL ERROR: Core was compiled without ENABLE_TTD is defined. CH is trying to use TTD interface\n");
+                PAL_wprintf(u"FATAL ERROR: Core was compiled without ENABLE_TTD is defined. CH is trying to use TTD interface\n");
                 abort();
             }
 #else
@@ -687,12 +687,12 @@ int32_t ExecuteTest(const char* fileName)
     if(strlen(fileName) >= 14 && strcmp(fileName + strlen(fileName) - 14, "ttdSentinal.js") == 0)
     {
 #if !ENABLE_TTD
-        wprintf(u"Sentinel js file is only ok when in TTDebug mode!!!\n");
+        PAL_wprintf(u"Sentinel js file is only ok when in TTDebug mode!!!\n");
         return E_FAIL;
 #else
         if(!doTTReplay)
         {
-            wprintf(u"Sentinel js file is only ok when in TTReplay mode!!!\n");
+            PAL_wprintf(u"Sentinel js file is only ok when in TTReplay mode!!!\n");
             return E_FAIL;
         }
 

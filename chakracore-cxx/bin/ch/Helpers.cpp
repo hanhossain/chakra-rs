@@ -364,9 +364,9 @@ void Helpers::LogError(__nullterminated const char16_t *msg, ...)
 {
     va_list args;
     va_start(args, msg);
-    wprintf(u"ERROR: ");
+    PAL_wprintf(u"ERROR: ");
     PAL_vfwprintf(stderr, msg, args);
-    wprintf(u"\n");
+    PAL_wprintf(u"\n");
     PAL_fflush(stdout);
     va_end(args);
 }
@@ -446,8 +446,8 @@ void Helpers::CreateTTDDirectoryAsNeeded(size_t* uriLength, char* uri, const cha
 {
     if(*uriLength + strlen(asciiDir1) + PAL_wcslen(asciiDir2) + 2 > MAX_URI_LENGTH || strlen(asciiDir1) >= MAX_TTD_ASCII_PATH_EXT_LENGTH || PAL_wcslen(asciiDir2) >= MAX_TTD_ASCII_PATH_EXT_LENGTH)
     {
-        wprintf(u"We assume bounded MAX_URI_LENGTH for simplicity.\n");
-        wprintf(u"%S, %S, %ls\n", uri, asciiDir1, asciiDir2);
+        PAL_wprintf(u"We assume bounded MAX_URI_LENGTH for simplicity.\n");
+        PAL_wprintf(u"%S, %S, %ls\n", uri, asciiDir1, asciiDir2);
         exit(1);
     }
 
@@ -457,8 +457,8 @@ void Helpers::CreateTTDDirectoryAsNeeded(size_t* uriLength, char* uri, const cha
     extLength = sprintf_s(uri + *uriLength, MAX_TTD_ASCII_PATH_EXT_LENGTH, "%s%s", asciiDir1, TTD_HOST_PATH_SEP);
     if(extLength == -1 || MAX_URI_LENGTH < (*uriLength) + extLength)
     {
-        wprintf(u"Failed directory extension 1.\n");
-        wprintf(u"%S, %S, %ls\n", uri, asciiDir1, asciiDir2);
+        PAL_wprintf(u"Failed directory extension 1.\n");
+        PAL_wprintf(u"%S, %S, %ls\n", uri, asciiDir1, asciiDir2);
         exit(1);
     }
     *uriLength += extLength;
@@ -476,7 +476,7 @@ void Helpers::CreateTTDDirectoryAsNeeded(size_t* uriLength, char* uri, const cha
     {
         if(asciiDir2[i] > CHAR_MAX)
         {
-            wprintf(u"Test directory names can only include ascii chars.\n");
+            PAL_wprintf(u"Test directory names can only include ascii chars.\n");
             exit(1);
         }
         realAsciiDir2[i] = (char)asciiDir2[i];
@@ -485,8 +485,8 @@ void Helpers::CreateTTDDirectoryAsNeeded(size_t* uriLength, char* uri, const cha
     extLength = sprintf_s(uri + *uriLength, MAX_TTD_ASCII_PATH_EXT_LENGTH, "%s%s", realAsciiDir2, TTD_HOST_PATH_SEP);
     if(extLength == -1 || MAX_URI_LENGTH < *uriLength + extLength)
     {
-        wprintf(u"Failed directory create 2.\n");
-        wprintf(u"%S, %S, %ls\n", uri, asciiDir1, asciiDir2);
+        PAL_wprintf(u"Failed directory create 2.\n");
+        PAL_wprintf(u"%S, %S, %ls\n", uri, asciiDir1, asciiDir2);
         exit(1);
     }
     *uriLength += extLength;
@@ -512,7 +512,7 @@ JsTTDStreamHandle CALLBACK Helpers::TTCreateStreamCallback(size_t uriLength, con
 
     if(uriLength + asciiNameLength + 1 > MAX_URI_LENGTH)
     {
-        wprintf(u"We assume bounded MAX_URI_LENGTH for simplicity.");
+        PAL_wprintf(u"We assume bounded MAX_URI_LENGTH for simplicity.");
         exit(1);
     }
 
