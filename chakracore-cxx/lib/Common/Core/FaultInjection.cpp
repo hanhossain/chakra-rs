@@ -436,7 +436,7 @@ namespace Js
         {
             PAL_fprintf(stderr, "FaultInjection - Total Allocation Count:%u\n", countOfInjectionPoints);
             PAL_fflush(stderr);
-            FILE *fp;
+            PAL_FILE *fp;
             char countFileName[64];
             sprintf_s(countFileName, "ChakraFaultInjectionCount_%u.txt", GetCurrentProcessId());
             if (fopen_s(&fp, countFileName, "w") == 0)
@@ -459,7 +459,7 @@ namespace Js
 
         if (globalFlags.FaultInjection == StackHashCountOnly)
         {
-            FILE *fp;
+            PAL_FILE *fp;
             if (fopen_s(&fp, "ChakraFaultInjectionHashes.txt", "w") == 0)
             {
                 for (uint i = 0; i < countOfInjectionPoints; i++)
@@ -658,7 +658,7 @@ namespace Js
             }
 
             // read baseline stack file
-            FILE *fp = nullptr;
+            PAL_FILE *fp = nullptr;
             const char16_t *stackFile = globalFlags.FaultInjectionStackFile;//default: u"stack.txt";
             auto err = _wfopen_s(&fp, stackFile, u"r");
             if (err != 0 || fp == nullptr)

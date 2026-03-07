@@ -406,7 +406,7 @@ private:
 
 #ifdef ENABLE_TEST_HOOKS
         static int32_t GenerateValidPointersMapHeader(const char16_t* vpmFullPath);
-        static int32_t GenerateValidPointersMapForBlockType(FILE* file);
+        static int32_t GenerateValidPointersMapForBlockType(PAL_FILE* file);
 #endif
     };
 
@@ -732,9 +732,9 @@ HeapInfo::SmallAllocatorAlloc(Recycler * recycler, SmallHeapBlockAllocatorType *
 #ifdef ENABLE_TEST_HOOKS
 // Forward declaration of explicit specialization before instantiation
 template <>
-int32_t HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::GenerateValidPointersMapForBlockType(FILE* file);
+int32_t HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::GenerateValidPointersMapForBlockType(PAL_FILE* file);
 template <>
-int32_t HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::GenerateValidPointersMapForBlockType(FILE* file);
+int32_t HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::GenerateValidPointersMapForBlockType(PAL_FILE* file);
 #endif
 
 // Template instantiation

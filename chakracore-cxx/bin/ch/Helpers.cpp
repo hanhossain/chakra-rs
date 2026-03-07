@@ -46,8 +46,8 @@ JsTTDStreamHandle TTDHostOpen(size_t pathLength, const char* path, bool isWrite)
     return (JsTTDStreamHandle)PAL_fopen(path, isWrite ? "w+b" : "r+b");
 }
 
-#define TTDHostRead(buff, size, handle) PAL_fread(buff, 1, size, (FILE*)handle)
-#define TTDHostWrite(buff, size, handle) PAL_fwrite(buff, 1, size, (FILE*)handle)
+#define TTDHostRead(buff, size, handle) PAL_fread(buff, 1, size, (PAL_FILE*)handle)
+#define TTDHostWrite(buff, size, handle) PAL_fwrite(buff, 1, size, (PAL_FILE*)handle)
 
 int GetPathNameLocation(const char * filename)
 {
@@ -119,7 +119,7 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
     uint8_t * pRawBytesFromMap = nullptr;
     uint32_t lengthBytes = 0;
     contents = nullptr;
-    FILE * file = NULL;
+    PAL_FILE * file = NULL;
     size_t bufferLength = 0;
 
     const char * filename = fullPath == nullptr ? filenameToLoad : (const char *)(fullPath->c_str());
@@ -377,7 +377,7 @@ int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, u
     contents = nullptr;
     lengthBytes = 0;
     size_t result;
-    FILE * file;
+    PAL_FILE * file;
 
     //
     // Open the file as a binary file to prevent CRT from handling encoding, line-break conversions,
@@ -543,7 +543,7 @@ bool CALLBACK Helpers::TTReadBytesFromStreamCallback(JsTTDStreamHandle handle, b
     }
 
     BOOL ok = FALSE;
-    *readCount = TTDHostRead(buff, size, (FILE*)handle);
+    *readCount = TTDHostRead(buff, size, (PAL_FILE*)handle);
     ok = (*readCount != 0);
 
     Helpers::TTReportLastIOErrorAsNeeded(ok, "Failed Read!!!");
@@ -562,7 +562,7 @@ bool CALLBACK Helpers::TTWriteBytesToStreamCallback(JsTTDStreamHandle handle, co
     }
 
     BOOL ok = FALSE;
-    *writtenCount = TTDHostWrite(buff, size, (FILE*)handle);
+    *writtenCount = TTDHostWrite(buff, size, (PAL_FILE*)handle);
     ok = (*writtenCount == size);
 
     Helpers::TTReportLastIOErrorAsNeeded(ok, "Failed Read!!!");
@@ -572,8 +572,8 @@ bool CALLBACK Helpers::TTWriteBytesToStreamCallback(JsTTDStreamHandle handle, co
 
 void CALLBACK Helpers::TTFlushAndCloseStreamCallback(JsTTDStreamHandle handle, bool read, bool write)
 {
-    PAL_fflush((FILE*)handle);
-    PAL_fclose((FILE*)handle);
+    PAL_fflush((PAL_FILE*)handle);
+    PAL_fclose((PAL_FILE*)handle);
 }
 
 void GetBinaryPathWithFileNameA(char *path, const size_t buffer_size, const char* filename)

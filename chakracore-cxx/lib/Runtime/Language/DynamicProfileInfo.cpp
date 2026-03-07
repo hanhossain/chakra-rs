@@ -2526,13 +2526,13 @@ namespace Js
     CriticalSection DynamicProfileInfo::s_csOutput;
 
     template <typename T>
-    void DynamicProfileInfo::WriteData(const T& data, FILE * file)
+    void DynamicProfileInfo::WriteData(const T& data, PAL_FILE * file)
     {
         PAL_fwrite(&data, sizeof(T), 1, file);
     }
 
     template <>
-    void DynamicProfileInfo::WriteData<char16_t const *>(char16_t const * const& sz, FILE * file)
+    void DynamicProfileInfo::WriteData<char16_t const *>(char16_t const * const& sz, PAL_FILE * file)
     {
         if (sz)
         {
@@ -2552,7 +2552,7 @@ namespace Js
     }
 
     template <typename T>
-    void DynamicProfileInfo::WriteArray(uint count, T * arr, FILE * file)
+    void DynamicProfileInfo::WriteArray(uint count, T * arr, PAL_FILE * file)
     {
         WriteData(count, file);
         for (uint i = 0; i < count; i++)
@@ -2562,13 +2562,13 @@ namespace Js
     }
 
     template <typename T>
-    void DynamicProfileInfo::WriteArray(uint count, WriteBarrierPtr<T> arr, FILE * file)
+    void DynamicProfileInfo::WriteArray(uint count, WriteBarrierPtr<T> arr, PAL_FILE * file)
     {
         WriteArray(count, static_cast<T*>(arr), file);
     }
 
     template <>
-    void DynamicProfileInfo::WriteData<FunctionBody *>(FunctionBody * const& functionBody, FILE * file)
+    void DynamicProfileInfo::WriteData<FunctionBody *>(FunctionBody * const& functionBody, PAL_FILE * file)
     {
         WriteData(functionBody->GetSourceContextInfo()->sourceContextId, file);
         WriteData(functionBody->GetLocalFunctionId(), file);
@@ -2582,7 +2582,7 @@ namespace Js
         }
 
         AutoCriticalSection autocs(&s_csOutput);
-        FILE * file;
+        PAL_FILE * file;
         if (_wfopen_s(&file, Configuration::Global.flags.RuntimeDataOutputFile, u"ab+") != 0 || file == nullptr)
         {
             return;

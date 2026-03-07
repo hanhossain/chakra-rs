@@ -27,10 +27,6 @@
 typedef GUID UUID;
 #define INIT_PRIORITY(x) __attribute__((init_priority(x)))
 
-#ifdef PAL_STDCPP_COMPAT
-#define FILE PAL_FILE
-#endif
-
 #if defined(_AMD64_)
 // xplat-todo: verify below is correct
 #include <cpuid.h>
