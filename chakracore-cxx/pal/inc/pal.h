@@ -2489,7 +2489,6 @@ GetSystemInfo(
    defines */
 #if !defined(PAL_STDCPP_COMPAT) || defined(USING_PAL_STDLIB)
 #define exit          PAL_exit
-#define wprintf       PAL_wprintf
 #define ctime         PAL_ctime
 #define _wcstoui64    PAL__wcstoui64
 

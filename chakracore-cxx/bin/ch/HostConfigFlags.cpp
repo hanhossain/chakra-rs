@@ -67,7 +67,7 @@ bool HostConfigFlags::ParseFlag(const char16_t* flagsString, ICmdLineArgsParser 
 void HostConfigFlags::PrintUsageString()
 {
 #define FLAG(Type, Name, Desc, Default) \
-    wprintf(u"%20ls          \t%ls\n", _u(#Name), _u(#Desc));
+    PAL_wprintf(u"%20ls          \t%ls\n", _u(#Name), _u(#Desc));
 #include "HostConfigFlagsList.h"
 }
 
@@ -78,7 +78,7 @@ void HostConfigFlags::PrintUsage()
         pfnPrintUsage();
     }
 
-    wprintf(u"\nHost Config Flags: \n\n");
+    PAL_wprintf(u"\nHost Config Flags: \n\n");
     HostConfigFlags::PrintUsageString();
     ChakraRTInterface::PrintConfigFlagsUsageString();
 }

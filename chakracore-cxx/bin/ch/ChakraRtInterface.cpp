@@ -81,7 +81,7 @@ int32_t ChakraRTInterface::ParseConfigFlags()
 
         if (hr != S_OK)
         {
-            wprintf(u"Error: no script file specified.");
+            PAL_wprintf(u"Error: no script file specified.");
             m_argInfo->hostPrintUsage();
             m_usageStringPrinted = true;
         }
@@ -92,7 +92,7 @@ int32_t ChakraRTInterface::ParseConfigFlags()
             if (FAILED(hr))
             {
                 Assert(hr == E_OUTOFMEMORY);
-                wprintf(u"Error: Ran out of memory");
+                PAL_wprintf(u"Error: Ran out of memory");
                 return hr;
             }
         }
