@@ -256,7 +256,6 @@ function_name() to call the system's implementation
 #undef malloc
 #undef realloc
 #undef free
-#undef bsearch
 #undef time
 #undef tm
 #undef localtime
