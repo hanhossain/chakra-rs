@@ -179,13 +179,13 @@ bool DynamicProfileStorageReaderWriter::WriteUtf8String(char16_t const * str)
 bool DynamicProfileStorageReaderWriter::Seek(int32_t offset)
 {
     AssertOrFailFast(file);
-    return fseek(file, offset, SEEK_SET) == 0;
+    return PAL_fseek(file, offset, SEEK_SET) == 0;
 }
 
 bool DynamicProfileStorageReaderWriter::SeekToEnd()
 {
     AssertOrFailFast(file);
-    return fseek(file, 0, SEEK_END) == 0;
+    return PAL_fseek(file, 0, SEEK_END) == 0;
 }
 
 int32_t DynamicProfileStorageReaderWriter::Size()
@@ -194,7 +194,7 @@ int32_t DynamicProfileStorageReaderWriter::Size()
     int32_t current = ftell(file);
     SeekToEnd();
     int32_t end = ftell(file);
-    fseek(file, current, SEEK_SET);
+    PAL_fseek(file, current, SEEK_SET);
     return end;
 }
 

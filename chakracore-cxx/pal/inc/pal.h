@@ -2526,9 +2526,6 @@ GetSystemInfo(
 #define feof          PAL_feof
 #define ftell         PAL_ftell
 #define fclose        PAL_fclose
-#define setbuf        PAL_setbuf
-#define fputs         PAL_fputs
-#define fseek         PAL_fseek
 #define _wcstoui64    PAL__wcstoui64
 
 #endif // !PAL_STDCPP_COMPAT
@@ -2827,8 +2824,6 @@ typedef struct _FILE PAL_FILE;
 // TODO (hanhossain): internal
 int PAL_fclose(PAL_FILE *);
 // TODO (hanhossain): internal
-void PAL_setbuf(PAL_FILE *, char*);
-// TODO (hanhossain): internal
 int PAL_fflush(PAL_FILE *);
 // TODO (hanhossain): internal
 size_t PAL_fwrite(const void *, size_t, size_t, PAL_FILE *);
@@ -2836,8 +2831,6 @@ size_t PAL_fwrite(const void *, size_t, size_t, PAL_FILE *);
 size_t PAL_fread(void *, size_t, size_t, PAL_FILE *);
 // TODO (hanhossain): internal
 char * PAL_fgets(char *, int, PAL_FILE *);
-// TODO (hanhossain): internal
-int PAL_fputs(const char *, PAL_FILE *);
 // TODO (hanhossain): internal
 int PAL_fputc(int c, PAL_FILE *stream);
 // TODO (hanhossain): internal

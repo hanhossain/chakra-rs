@@ -262,7 +262,6 @@ function_name() to call the system's implementation
 #undef localtime
 #undef FILE
 #undef fclose
-#undef setbuf
 #undef fread
 #undef feof
 #undef ferror
@@ -272,8 +271,6 @@ function_name() to call the system's implementation
 #undef fgetws
 #undef fputc
 #undef putchar
-#undef fputs
-#undef fseek
 #undef getcwd
 #undef size_t
 #undef time_t
