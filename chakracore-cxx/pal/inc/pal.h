@@ -2489,7 +2489,6 @@ GetSystemInfo(
    defines */
 #if !defined(PAL_STDCPP_COMPAT) || defined(USING_PAL_STDLIB)
 #define ctime         PAL_ctime
-#define _wcstoui64    PAL__wcstoui64
 
 #endif // !PAL_STDCPP_COMPAT
 
@@ -2569,7 +2568,7 @@ char16_t PAL_towupper(char16_t);
 // TODO (hanhossain): internal
 char16_t * _wcslwr(char16_t *);
 // TODO (hanhossain): public
-unsigned long _wcstoui64(const char16_t *, char16_t **, int);
+unsigned long PAL__wcstoui64(const char16_t *, char16_t **, int);
 // TODO (hanhossain): internal
 char16_t * _i64tow(long, char16_t *, int);
 // TODO (hanhossain): internal

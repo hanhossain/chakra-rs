@@ -163,7 +163,7 @@ namespace Js
         {
             radix = 16;
         }
-        return (long)_wcstoui64(buf, nullptr, radix);
+        return (long)PAL__wcstoui64(buf, nullptr, radix);
     }
 
     Var CreateI64ReturnObject(long val, ScriptContext* scriptContext)
