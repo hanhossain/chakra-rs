@@ -309,8 +309,6 @@ function_name() to call the system's implementation
 #undef vsnprintf
 #undef wvsnprintf
 
-#undef ctime
-
 #undef RAND_MAX
 #undef __record_type_class
 #undef __real_type_class

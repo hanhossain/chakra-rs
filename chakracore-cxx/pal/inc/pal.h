@@ -2482,16 +2482,6 @@ void
 GetSystemInfo(
            LPSYSTEM_INFO lpSystemInfo);
 
-/******************* C Runtime Entrypoints *******************************/
-
-/* Some C runtime functions needs to be reimplemented by the PAL.
-   To avoid name collisions, those functions have been renamed using
-   defines */
-#if !defined(PAL_STDCPP_COMPAT) || defined(USING_PAL_STDLIB)
-#define ctime         PAL_ctime
-
-#endif // !PAL_STDCPP_COMPAT
-
 #ifndef _CONST_RETURN
 #ifdef  __cplusplus
 #define _CONST_RETURN  const
@@ -2728,7 +2718,7 @@ struct tm {
         int tm_isdst;   /* daylight savings time flag */
         };
 
-char * ctime(const time_t *);
+char * PAL_ctime(const time_t *);
 #endif // !PAL_STDCPP_COMPAT
 
 // TODO (hanhossain): public
