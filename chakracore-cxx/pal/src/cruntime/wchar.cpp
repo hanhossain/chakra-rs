@@ -932,21 +932,6 @@ PAL_wcsrchr(
     return (char16_t *)last;
 }
 
-
-/*++
-Function:
-  PAL_wcsspn
-
-See MSDN or man page for wcspbrk.
---*/
-size_t
-PAL_wcsspn (const char16_t *string, const char16_t *stringCharSet)
-{
-    ASSERT(0);
-    return 0;
-}
-
-
 /*++
 Function:
   PAL_wcspbrk
