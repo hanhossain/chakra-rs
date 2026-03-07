@@ -263,7 +263,7 @@ namespace Js
         }
 
         // Look for the left parenthesis, if we don't find one; return the original string.
-        const char16_t* parenChar = wcschr(displayNameBuffer, '(');
+        const char16_t* parenChar = PAL_wcschr(displayNameBuffer, '(');
         if (parenChar == nullptr)
         {
             return displayNameBuffer;

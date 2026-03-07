@@ -580,7 +580,7 @@ namespace Js
                     auto tok1 = tok + 1;
                     if (wcslen(tok1)>0 && PAL_iswdigit(tok1[0]))
                     {
-                        char16_t* pDash = wcschr(tok1, u'-');
+                        char16_t* pDash = PAL_wcschr(tok1, u'-');
                         if (pDash)
                         {
                             for (int i = _wtoi(tok1); i <= _wtoi(pDash + 1); i++)
@@ -623,7 +623,7 @@ namespace Js
             temp = nullptr;
             if (lambdaStart != nullptr)
             {
-                auto lambdaEnd = wcschr(lambdaStart, u'>');
+                auto lambdaEnd = PAL_wcschr(lambdaStart, u'>');
                 temp = lambdaEnd;
                 if (lambdaEnd != nullptr && lambdaEnd - lambdaStart == lambdaSigLen + 32)
                 {
@@ -705,7 +705,7 @@ namespace Js
                     continue;
                 }
 
-                auto plus = wcschr(symbolStart, u'+');
+                auto plus = PAL_wcschr(symbolStart, u'+');
                 if (plus)
                 {
                     *plus = u'\0';
@@ -737,7 +737,7 @@ namespace Js
             {
                 OutputDebugString(baselineStack[i]);
                 OutputDebugString(u"\n");
-                if (wcschr(baselineStack[i], '*') != nullptr || wcschr(baselineStack[i], '?') != nullptr)
+                if (PAL_wcschr(baselineStack[i], '*') != nullptr || PAL_wcschr(baselineStack[i], '?') != nullptr)
                 {
                     continue; // there's wildcard in this line, don't use address matching
                 }
