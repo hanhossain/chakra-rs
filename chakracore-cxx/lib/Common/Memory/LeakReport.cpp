@@ -87,7 +87,7 @@ LeakReport::StartSection(char16_t const * msg, va_list argptr)
 
 
     Print(u"--------------------------------------------------------------------------------\n");
-    vfwprintf(file, msg, argptr);
+    PAL_vfwprintf(file, msg, argptr);
     Print(u"\n");
     Print(u"--------------------------------------------------------------------------------\n");
 }
@@ -114,7 +114,7 @@ LeakReport::Print(char16_t const * msg, ...)
 
     va_list argptr;
     va_start(argptr, msg);
-    vfwprintf(file, msg, argptr);
+    PAL_vfwprintf(file, msg, argptr);
     va_end(argptr);
 }
 

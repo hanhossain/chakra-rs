@@ -365,7 +365,7 @@ void Helpers::LogError(__nullterminated const char16_t *msg, ...)
     va_list args;
     va_start(args, msg);
     wprintf(u"ERROR: ");
-    vfwprintf(stderr, msg, args);
+    PAL_vfwprintf(stderr, msg, args);
     wprintf(u"\n");
     PAL_fflush(stdout);
     va_end(args);
