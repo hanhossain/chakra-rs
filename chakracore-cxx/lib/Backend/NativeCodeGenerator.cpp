@@ -524,7 +524,7 @@ NativeCodeGenerator::GenerateFunction(Js::FunctionBody *fn, Js::ScriptFunction *
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     if (Js::Configuration::Global.flags.Interpret &&
         fn->GetDisplayName() &&
-        ::wcsstr(Js::Configuration::Global.flags.Interpret, fn->GetDisplayName()))
+        ::PAL_wcsstr(Js::Configuration::Global.flags.Interpret, fn->GetDisplayName()))
     {
         return false;
     }

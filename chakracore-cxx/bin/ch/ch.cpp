@@ -911,29 +911,29 @@ int main(int argc, char** c_argv)
             retval = EXIT_SUCCESS;
             goto return_cleanup;
         }
-        else if(wcsstr(argv[i], u"-TTRecord=") == argv[i])
+        else if(PAL_wcsstr(argv[i], u"-TTRecord=") == argv[i])
         {
             doTTRecord = true;
             wchar* ruri = argv[i] + wcslen(u"-TTRecord=");
             Helpers::GetTTDDirectory(ruri, &ttUriLength, ttUri, ttUriBufferLength);
         }
-        else if(wcsstr(argv[i], u"-TTReplay=") == argv[i])
+        else if(PAL_wcsstr(argv[i], u"-TTReplay=") == argv[i])
         {
             doTTReplay = true;
             wchar* ruri = argv[i] + wcslen(u"-TTReplay=");
             Helpers::GetTTDDirectory(ruri, &ttUriLength, ttUri, ttUriBufferLength);
         }
-        else if(wcsstr(argv[i], u"-TTSnapInterval=") == argv[i])
+        else if(PAL_wcsstr(argv[i], u"-TTSnapInterval=") == argv[i])
         {
             const char16_t* intervalStr = argv[i] + wcslen(u"-TTSnapInterval=");
             snapInterval = (uint32_t)_wtoi(intervalStr);
         }
-        else if(wcsstr(argv[i], u"-TTHistoryLength=") == argv[i])
+        else if(PAL_wcsstr(argv[i], u"-TTHistoryLength=") == argv[i])
         {
             const char16_t* historyStr = argv[i] + wcslen(u"-TTHistoryLength=");
             snapHistoryLength = (uint32_t)_wtoi(historyStr);
         }
-        else if(wcsstr(argv[i], u"-TTDStartEvent=") == argv[i])
+        else if(PAL_wcsstr(argv[i], u"-TTDStartEvent=") == argv[i])
         {
             const char16_t* startEventStr = argv[i] + wcslen(u"-TTDStartEvent=");
             startEventCount = (uint32_t)_wtoi(startEventStr);

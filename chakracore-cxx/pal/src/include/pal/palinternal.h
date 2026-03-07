@@ -317,7 +317,6 @@ function_name() to call the system's implementation
 #undef wcsncmp
 #undef wcschr
 #undef wcsrchr
-#undef wcsstr
 #undef _vsnprintf
 #undef _vsnwprintf
 #undef vsnprintf

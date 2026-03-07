@@ -271,7 +271,7 @@ int32_t ConfigParser::SetOutputFile(const char16_t* outputFile, const char16_t* 
     // If present, replace the {PID} token with the process ID
     const char16_t* pidStr = nullptr;
     char16_t buffer[_MAX_PATH];
-    if ((pidStr = wcsstr(outputFile, u"{PID}")) != nullptr)
+    if ((pidStr = PAL_wcsstr(outputFile, u"{PID}")) != nullptr)
     {
         size_t pidStartPosition = pidStr - outputFile;
 
