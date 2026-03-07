@@ -77,7 +77,6 @@ set(SOURCES
   cruntime/string.cpp
   cruntime/thread.cpp
   cruntime/wchar.cpp
-  cruntime/wchartls.cpp
   cruntime/runtime_proxy.cpp
   safecrt/makepath_s.cpp
   safecrt/mbusafecrt.cpp
