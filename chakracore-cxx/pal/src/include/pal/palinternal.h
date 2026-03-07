@@ -274,8 +274,6 @@ function_name() to call the system's implementation
 #undef putchar
 #undef fputs
 #undef fseek
-#undef fgetpos
-#undef fsetpos
 #undef getcwd
 #undef size_t
 #undef time_t
