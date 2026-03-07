@@ -185,20 +185,6 @@ Return value:
 int PAL_fflush( PAL_FILE *stream );
 
 /*++
-PAL_mkstemp
-
-Calls InternalMkstemp to call mkstemp
-
-Input parameters:
-
-char *szNameTemplate = the pattern to follow when creating a new file.
-
-Return value:
-    file descriptor of opened file on success, -1 on failure.
---*/
-int PAL_mkstemp(char *szNameTemplate);
-
-/*++
 PAL_fgets
 
 Wrapper function for InternalFgets.

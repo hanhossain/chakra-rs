@@ -186,15 +186,6 @@ namespace CorUnix
         );
 
     /*++
-    InternalMkstemp
-    Wraps mkstemp
-    --*/
-    int 
-    InternalMkstemp(
-        char *szNameTemplate
-        );
-
-    /*++
     InternalFgets
     Wraps fgets
     --*/
