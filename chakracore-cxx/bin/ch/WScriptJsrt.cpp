@@ -827,7 +827,7 @@ Error:
         ChakraRTInterface::JsDoubleToNumber(errorCode, &value);
     }
 
-    PAL__flushall();
+    fflush(NULL);
 
     return value;
 }

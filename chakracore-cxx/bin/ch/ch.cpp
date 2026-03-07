@@ -52,7 +52,7 @@ int HostExceptionFilter(int exceptionCode, _EXCEPTION_POINTERS *ep)
 
     PAL_fwprintf(stderr, u"FATAL ERROR: %ls failed due to exception code %x\n", hostName, exceptionCode);
 
-    PAL__flushall();
+    fflush(NULL);
 
     // Exception happened, so we probably didn't clean up properly,
     // Don't exit normally, just terminate
@@ -820,7 +820,7 @@ Error:
         ChakraRTInterface::JsDisposeRuntime(runtime);
     }
 
-    PAL__flushall();
+    fflush(NULL);
 
     return hr;
 }
@@ -832,7 +832,7 @@ int32_t ExecuteTestWithMemoryCheck(char* fileName)
     hr = ExecuteTest(fileName);
     if (FAILED(hr)) PAL_exit(0);
 
-    PAL__flushall();
+    fflush(NULL);
 #ifdef CHECK_MEMORY_LEAK
     ChakraRTInterface::SetEnableCheckMemoryLeakOutput(true);
 #endif

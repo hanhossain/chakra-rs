@@ -2721,9 +2721,6 @@ struct tm {
 char * PAL_ctime(const time_t *);
 #endif // !PAL_STDCPP_COMPAT
 
-// TODO (hanhossain): public
-int PAL__flushall();
-
 #ifdef PAL_STDCPP_COMPAT
 
 struct _PAL_FILE;
