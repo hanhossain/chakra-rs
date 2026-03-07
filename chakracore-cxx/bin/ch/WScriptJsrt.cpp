@@ -1343,7 +1343,7 @@ int JsFgets(char* buf, int size, FILE* file)
     bool crflag = false;
     int c, i = 0;
 
-    for (i = 0; i < n && (c = getc(file)) != EOF; i++) {
+    for (i = 0; i < n && (c = PAL_getc(file)) != EOF; i++) {
         buf[i] = (char)c;
         if (c == '\n') {        // any \n ends a line
             i++;                // keep the \n; we know there is room for \0
