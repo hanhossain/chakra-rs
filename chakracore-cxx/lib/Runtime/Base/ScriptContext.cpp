@@ -4755,7 +4755,7 @@ ExitTempAllocator:
         }
         else
         {
-            Assert(!wcscmp(pwszFunctionName, pwszObjectNameFromProperty));
+            Assert(!PAL_wcscmp(pwszFunctionName, pwszObjectNameFromProperty));
         }
         Assert(m_pBuiltinFunctionIdMap != NULL);
 #endif

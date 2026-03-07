@@ -61,7 +61,7 @@ DbgHelpSymbolManager::Initialize()
         goto end;
     }
 
-    if (wcscmp(wszModule, u"") == 0)
+    if (PAL_wcscmp(wszModule, u"") == 0)
     {
         if (PlatformAgnostic::SystemInfo::GetBinaryLocation(wszModuleName, static_cast<uint32_t>(ceModuleName)))
         {

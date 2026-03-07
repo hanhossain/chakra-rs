@@ -12876,11 +12876,11 @@ ParseNode* Parser::CopyPnode(ParseNode *pnode) {
 template<bool CheckForNegativeInfinity>
 inline bool Parser::IsNaNOrInfinityLiteral(LPCOLESTR str)
 {
-    // Note: wcscmp crashes when one of the parameters is NULL.
+    // Note: PAL_wcscmp crashes when one of the parameters is NULL.
     return str &&
-        (wcscmp(u"NaN", str) == 0 ||
-            wcscmp(u"Infinity", str) == 0 ||
-            (CheckForNegativeInfinity && wcscmp(u"-Infinity", str) == 0));
+        (PAL_wcscmp(u"NaN", str) == 0 ||
+            PAL_wcscmp(u"Infinity", str) == 0 ||
+            (CheckForNegativeInfinity && PAL_wcscmp(u"-Infinity", str) == 0));
 }
 
 template <bool buildAST>
@@ -14460,7 +14460,7 @@ void DumpCapturedNames(ParseNodeFnc* pnodeFnc, IdentPtrSet* capturedNames, Arena
     sortedNames->Sort([](void* context, const void* left, const void* right) -> int {
         const IdentPtr leftIdentPtr = *(const IdentPtr*)(left);
         const IdentPtr rightIdentPtr = *(const IdentPtr*)(right);
-        return ::wcscmp(leftIdentPtr->Psz(), rightIdentPtr->Psz());
+        return ::PAL_wcscmp(leftIdentPtr->Psz(), rightIdentPtr->Psz());
     }, nullptr);
 
     sortedNames->Map([=](int index, const IdentPtr pid) -> void {

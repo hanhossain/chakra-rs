@@ -123,7 +123,7 @@ typedef unsigned long TTD_LOG_PTR_ID;
 //The representation of an identifier (currently access path) for a well known object/primitive/function body/etc. in the JS engine or HOST
 typedef const char16_t* TTD_WELLKNOWN_TOKEN;
 #define TTD_INVALID_WELLKNOWN_TOKEN nullptr
-#define TTD_DIAGNOSTIC_COMPARE_WELLKNOWN_TOKENS(T1, T2) ((T1 == T2) || ((T1 != TTD_INVALID_WELLKNOWN_TOKEN) && (T2 != TTD_INVALID_WELLKNOWN_TOKEN) && wcscmp(T1, T2) == 0))
+#define TTD_DIAGNOSTIC_COMPARE_WELLKNOWN_TOKENS(T1, T2) ((T1 == T2) || ((T1 != TTD_INVALID_WELLKNOWN_TOKEN) && (T2 != TTD_INVALID_WELLKNOWN_TOKEN) && PAL_wcscmp(T1, T2) == 0))
 
 ////////
 

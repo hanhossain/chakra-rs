@@ -93,7 +93,7 @@ MemoryProfiler::Begin(const char16_t* name)
         return nullptr;
     }
     Assert(name != nullptr);
-    if (wcscmp(name, u"MemoryProfiler") == 0)
+    if (PAL_wcscmp(name, u"MemoryProfiler") == 0)
     {
         // Don't profile memory profiler itself
         return nullptr;

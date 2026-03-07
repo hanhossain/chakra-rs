@@ -1199,7 +1199,7 @@ namespace TTD
         TTDAssert(1 <= (uint32_t)keyCheck && (uint32_t)keyCheck < (uint32_t)NSTokens::Key::Count, "Error in parse.");
         const char16_t* kname = this->m_keyNameArray[(uint32_t)keyCheck];
         TTDAssert(kname != nullptr, "Error in parse.");
-        TTDAssert(wcscmp(keystr, kname) == 0, "Error in parse.");
+        TTDAssert(PAL_wcscmp(keystr, kname) == 0, "Error in parse.");
 
         NSTokens::ParseTokenKind toksep = this->Scan(this->m_charListDiscard);
         TTDAssert(toksep == NSTokens::ParseTokenKind::Colon, "Error in parse.");

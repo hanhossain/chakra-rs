@@ -396,7 +396,7 @@ namespace Js
     {
         for (int type = 0; type < FaultType::FaultTypeCount; type++)
         {
-            if (wcscmp(FaultTypeNames[type], name) == 0)
+            if (PAL_wcscmp(FaultTypeNames[type], name) == 0)
                 return getBit(type) == 0x1;
         }
         AssertMsg(false, "Unknown fault type name");
@@ -677,7 +677,7 @@ namespace Js
 
             while (PAL_fgetws(buffer, MAX_SYM_NAME, fp))
             {
-                if (wcscmp(buffer, injectionStackStart) == 0)
+                if (PAL_wcscmp(buffer, injectionStackStart) == 0)
                 {
                     baselineFrameCount = 0;
                     continue;

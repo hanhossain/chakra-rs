@@ -669,7 +669,7 @@ namespace TTD
         }
         else
         {
-            return wcscmp(p1->GetBuffer(), p2->GetBuffer()) > 0;
+            return PAL_wcscmp(p1->GetBuffer(), p2->GetBuffer()) > 0;
         }
     }
 

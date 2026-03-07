@@ -148,7 +148,7 @@ struct StringComparer
 {
     inline static bool Equals(T str1, T str2)
     {
-        return ::wcscmp(str1, str2) == 0;
+        return ::PAL_wcscmp(str1, str2) == 0;
     }
 
     inline static hash_t GetHashCode(T str)
@@ -164,7 +164,7 @@ struct StringComparer
 
     inline static int Compare(T str1, T str2)
     {
-        return ::wcscmp(str1, str2);
+        return ::PAL_wcscmp(str1, str2);
     }
 };
 
