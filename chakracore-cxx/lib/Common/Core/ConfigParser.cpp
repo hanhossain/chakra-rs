@@ -119,7 +119,7 @@ void ConfigParser::ParseConfig(HANDLE hmod, CmdLineArgsParser &parser, const cha
     int index = 0;
 
 #define ReadChar(file) fgetc(file)
-#define UnreadChar(c, file) ungetc(c, file)
+#define UnreadChar(c, file) PAL_ungetc(c, file)
 #define CharType int
 #define EndChar EOF
 

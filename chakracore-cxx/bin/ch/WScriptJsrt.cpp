@@ -1350,7 +1350,7 @@ int JsFgets(char* buf, int size, FILE* file)
             break;
         }
         if (crflag) {           // \r not followed by \n ends line at the \r
-            ungetc(c, file);
+            PAL_ungetc(c, file);
             break;              // and overwrite c in buf with \0
         }
         crflag = (c == '\r');
