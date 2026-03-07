@@ -1410,33 +1410,6 @@ _vsnprintf(char *buffer,
     return Length;
 }
 
-
-
-/*++
-Function:
-  PAL_vswprintf
-
-See MSDN doc.
---*/
-__attribute__((no_instrument_function))
-int
-PAL_vswprintf(char16_t *buffer,
-              const char16_t *format,
-              va_list argptr)
-{
-    int32_t Length;
-
-    ENTRY("PAL_vswprintf (buffer=%p, format=%p (%S), argptr=%p)\n",
-          buffer, format, format, argptr);
-
-    Length = PAL__wvsnprintf(buffer, 0x7fffffff, format, argptr);
-
-    LOGEXIT("PAL_vswprintf returns int %d\n", Length);
-
-    return Length;
-}
-
-
 /*++
 Function:
   _vsnwprintf

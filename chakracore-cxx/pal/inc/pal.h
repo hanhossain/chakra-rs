@@ -2509,7 +2509,6 @@ GetSystemInfo(
 #define wcsncpy       PAL_wcsncpy
 #define wcstok        PAL_wcstok
 #define wcscspn       PAL_wcscspn
-#define vswprintf     PAL_vswprintf
 #define ctime         PAL_ctime
 #define _wcstoui64    PAL__wcstoui64
 
@@ -2583,8 +2582,6 @@ char16_t _WConst_return * PAL_wcsstr(const char16_t *, const char16_t *);
 char16_t * PAL_wcstok(char16_t *, const char16_t *);
 // TODO (hanhossain): internal
 size_t PAL_wcscspn(const char16_t *, const char16_t *);
-// TODO (hanhossain): internal
-int PAL_vswprintf(char16_t *, const char16_t *, va_list);
 // TODO (hanhossain): public
 int _snwprintf(char16_t *, size_t, const char16_t *, ...);
 // TODO (hanhossain): internal
