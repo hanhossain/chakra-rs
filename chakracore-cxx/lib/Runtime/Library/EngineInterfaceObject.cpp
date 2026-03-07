@@ -292,7 +292,7 @@ namespace Js
             // latter do we extract a shortName.
             const char16_t *methodNameBuf = displayName->GetSz();
             charcount_t methodNameLength = displayName->GetLength();
-            const char16_t *shortName = wcsrchr(methodNameBuf, u'.');
+            const char16_t *shortName = PAL_wcsrchr(methodNameBuf, u'.');
             charcount_t shortNameOffset = 0;
             if (shortName != nullptr)
             {

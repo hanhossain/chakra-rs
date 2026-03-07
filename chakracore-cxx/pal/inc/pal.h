@@ -2500,7 +2500,6 @@ GetSystemInfo(
 #define wmemcmp       PAL_wmemcmp
 #define wcsncmp       PAL_wcsncmp
 #define wcschr        PAL_wcschr
-#define wcsrchr       PAL_wcsrchr
 #define ctime         PAL_ctime
 #define _wcstoui64    PAL__wcstoui64
 
