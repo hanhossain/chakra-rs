@@ -1860,7 +1860,7 @@ namespace TTD
     {
         if(this->m_currLength != 0)
         {
-            fwrite(this->m_buffer, sizeof(char), this->m_currLength, this->m_outfile);
+            PAL_fwrite(this->m_buffer, sizeof(char), this->m_currLength, this->m_outfile);
 
             this->m_currLength = 0;
         }

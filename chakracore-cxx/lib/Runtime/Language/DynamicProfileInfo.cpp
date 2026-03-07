@@ -2528,7 +2528,7 @@ namespace Js
     template <typename T>
     void DynamicProfileInfo::WriteData(const T& data, FILE * file)
     {
-        fwrite(&data, sizeof(T), 1, file);
+        PAL_fwrite(&data, sizeof(T), 1, file);
     }
 
     template <>
@@ -2540,14 +2540,14 @@ namespace Js
             const size_t cbTempBuffer = UInt32Math::Mul<3>(len);
             utf8char_t * tempBuffer = HeapNewArray(utf8char_t, cbTempBuffer);
             const size_t cbNeeded = utf8::EncodeInto<utf8::Utf8EncodingKind::Cesu8>(tempBuffer, cbTempBuffer, sz, len);
-            fwrite(&cbNeeded, sizeof(cbNeeded), 1, file);
-            fwrite(tempBuffer, sizeof(utf8char_t), cbNeeded, file);
+            PAL_fwrite(&cbNeeded, sizeof(cbNeeded), 1, file);
+            PAL_fwrite(tempBuffer, sizeof(utf8char_t), cbNeeded, file);
             HeapDeleteArray(len * 3, tempBuffer);
         }
         else
         {
             charcount_t len = 0;
-            fwrite(&len, sizeof(len), 1, file);
+            PAL_fwrite(&len, sizeof(len), 1, file);
         }
     }
 

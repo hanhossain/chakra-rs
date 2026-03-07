@@ -93,7 +93,7 @@ bool DynamicProfileStorageReaderWriter::ReadArray(T * t, size_t len)
 {
     AssertOrFailFast(file);
     int32_t pos = PAL_ftell(file);
-    if (fread(t, sizeof(T), len, file) != len)
+    if (PAL_fread(t, sizeof(T), len, file) != len)
     {
         Output::Print(u"ERROR: DynamicProfileStorage: '%s': File corrupted at %d\n", filename, pos);
         Output::Flush();
@@ -150,7 +150,7 @@ template <typename T>
 bool DynamicProfileStorageReaderWriter::WriteArray(T * t, size_t len)
 {
     AssertOrFailFast(file);
-    if (fwrite(t, sizeof(T), len, file) != len)
+    if (PAL_fwrite(t, sizeof(T), len, file) != len)
     {
         Output::Print(u"ERROR: DynamicProfileStorage: Unable to write to file '%s'\n", filename);
         Output::Flush();

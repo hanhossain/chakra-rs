@@ -454,35 +454,6 @@ done:
     return nReadBytes;
 }
 
-
-/*++
-Function :
-
-    ferror
-
-    See MSDN for more details.
---*/
-int
-PAL_ferror(PAL_FILE * f)
-{
-    int32_t nErrorCode = PAL_FILE_NOERROR;
-
-    ENTRY( "ferror( f=%p )\n", f );
-
-    _ASSERTE(f != NULL);
-
-    nErrorCode = ferror( f->bsdFilePtr );
-    if ( 0 == nErrorCode )
-    {
-        /* See if the PAL file error code is set. */
-        nErrorCode = f->PALferrorCode;
-    }
-
-    LOGEXIT( "ferror returns %d\n", nErrorCode );
-    return nErrorCode;
-}
-
-
 /*++
 Function :
 

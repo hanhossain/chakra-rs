@@ -46,8 +46,8 @@ JsTTDStreamHandle TTDHostOpen(size_t pathLength, const char* path, bool isWrite)
     return (JsTTDStreamHandle)PAL_fopen(path, isWrite ? "w+b" : "r+b");
 }
 
-#define TTDHostRead(buff, size, handle) fread(buff, 1, size, (FILE*)handle)
-#define TTDHostWrite(buff, size, handle) fwrite(buff, 1, size, (FILE*)handle)
+#define TTDHostRead(buff, size, handle) PAL_fread(buff, 1, size, (FILE*)handle)
+#define TTDHostWrite(buff, size, handle) PAL_fwrite(buff, 1, size, (FILE*)handle)
 
 int GetPathNameLocation(const char * filename)
 {
@@ -214,7 +214,7 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
             //
             // Read the entire content as a binary block.
             //
-            size_t readBytes = fread(pRawBytes, sizeof(uint8_t), lengthBytes, file);
+            size_t readBytes = PAL_fread(pRawBytes, sizeof(uint8_t), lengthBytes, file);
             if (readBytes < lengthBytes * sizeof(uint8_t))
             {
                 IfFailGo(E_FAIL);
@@ -409,7 +409,7 @@ int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, u
     //
     // Read the entire content as a binary block.
     //
-    result = fread((void*)contents, sizeof(char), lengthBytes, file);
+    result = PAL_fread((void*)contents, sizeof(char), lengthBytes, file);
     if (result != lengthBytes)
     {
         fwprintf(stderr, u"Read error");
