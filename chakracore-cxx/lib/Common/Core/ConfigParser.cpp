@@ -311,7 +311,7 @@ int32_t ConfigParser::SetOutputFile(const char16_t* outputFile, const char16_t* 
         if (GetEnvironmentVariable(u"temp", fileName, _MAX_PATH) != 0)
         {
             wcscat_s(fileName, _MAX_PATH, u"\\");
-            const char16_t * fileNameOnly = wcsrchr(outputFile, u'\\');
+            const char16_t * fileNameOnly = PAL_wcsrchr(outputFile, u'\\');
             // if outputFile is full path we just need filename, discard the path
             wcscat_s(fileName, _MAX_PATH, fileNameOnly == nullptr ? outputFile : fileNameOnly);
         }

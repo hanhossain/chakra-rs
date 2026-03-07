@@ -7947,10 +7947,10 @@ namespace Js
     /*static*/
     void FunctionBody::GetShortNameFromUrl(const char16_t* pchUrl, _Out_writes_z_(cchBuffer) char16_t* pchShortName, size_t cchBuffer)
     {
-        const char16_t* pchFile = wcsrchr(pchUrl, u'/');
+        const char16_t* pchFile = PAL_wcsrchr(pchUrl, u'/');
         if (pchFile == nullptr)
         {
-            pchFile = wcsrchr(pchUrl, u'\\');
+            pchFile = PAL_wcsrchr(pchUrl, u'\\');
         }
 
         const char16_t* pchToCopy = pchUrl;
