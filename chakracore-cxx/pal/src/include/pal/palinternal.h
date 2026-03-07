@@ -263,7 +263,6 @@ function_name() to call the system's implementation
 #undef fgets
 #undef fgetws
 #undef fputc
-#undef putchar
 #undef getcwd
 #undef size_t
 #undef time_t
