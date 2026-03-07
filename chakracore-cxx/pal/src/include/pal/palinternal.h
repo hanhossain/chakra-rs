@@ -247,7 +247,6 @@ function_name() to call the system's implementation
 /* Undef all functions and types previously defined so those functions and
    types could be mapped to the C runtime and socket implementation of the
    native OS */
-#undef exit
 #undef alloca
 #undef strlen
 #undef strnlen

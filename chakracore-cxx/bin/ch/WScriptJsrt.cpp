@@ -1930,7 +1930,7 @@ WScriptJsrt::CallbackMessage::CallbackMessage(unsigned int time, JsValueRef func
         // Simply report a fatal error and exit because continuing from this point would result in inconsistent state
         // and FailFast telemetry would not be useful.
         PAL_wprintf(u"FATAL ERROR: ChakraRTInterface::JsAddRef failed in WScriptJsrt::CallbackMessage::`ctor`. error=0x%x\n", error);
-        exit(1);
+        PAL_exit(1);
     }
 }
 

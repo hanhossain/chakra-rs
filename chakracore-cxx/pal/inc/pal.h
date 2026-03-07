@@ -2488,7 +2488,6 @@ GetSystemInfo(
    To avoid name collisions, those functions have been renamed using
    defines */
 #if !defined(PAL_STDCPP_COMPAT) || defined(USING_PAL_STDLIB)
-#define exit          PAL_exit
 #define ctime         PAL_ctime
 #define _wcstoui64    PAL__wcstoui64
 
@@ -2707,7 +2706,7 @@ inline long abs(long _X) {
 #endif // !PAL_STDCPP_COMPAT
 
 // TODO (hanhossain): public
-__attribute__((noreturn)) void exit(int);
+__attribute__((noreturn)) void PAL_exit(int);
 
 // TODO (hanhossain): public
 void * PAL_bsearch(const void *, const void *, size_t, size_t, int (*)(const void *, const void *));
