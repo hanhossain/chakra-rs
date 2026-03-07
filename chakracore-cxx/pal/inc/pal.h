@@ -2534,7 +2534,6 @@ GetSystemInfo(
 #define getc          PAL_getc
 #define fgetc         PAL_getc // not a typo
 #define ungetc        PAL_ungetc
-#define memmove       memmove_xplat
 #define _wcstoui64    PAL__wcstoui64
 
 #endif // !PAL_STDCPP_COMPAT

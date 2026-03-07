@@ -2315,7 +2315,7 @@ static int RoundTo(byte *pbSrc, byte *pbLim, int nDigits, __out_bcount(nDigits+1
             {
                 // An extra leading '1' is required. Move the number in pbDst to the right
                 // and tack it on.
-                memmove(pbDst + 1, pbDst, nDigits);
+                memmove_xplat(pbDst + 1, pbDst, nDigits);
                 pbDst[0] = 1;
                 retVal = 1;
             }

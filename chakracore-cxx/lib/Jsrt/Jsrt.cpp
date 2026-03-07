@@ -4786,7 +4786,7 @@ CHAKRA_API JsCopyStringUtf16(
         {
             if (buffer)
             {
-                memmove(buffer, src, sizeof(char16_t) * count);
+                memmove_xplat(buffer, src, sizeof(char16_t) * count);
             }
             return JsNoError;
         });
@@ -4959,7 +4959,7 @@ CHAKRA_API JsCopyPropertyId(
         count = utf8::CharacterIndexToByteIndex(
             (LPCUTF8)(const char*)utf8Str, utf8Str.Length(), maxFitChars);
 
-        memmove(buffer, utf8Str, sizeof(char) * count);
+        memmove_xplat(buffer, utf8Str, sizeof(char) * count);
         if (length)
         {
             *length = count;

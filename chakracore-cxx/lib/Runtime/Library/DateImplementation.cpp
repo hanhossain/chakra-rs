@@ -1745,7 +1745,7 @@ LError:
             tv = TvFromDate(rgdbl[0], rgdbl[1], rgdbl[2] - 1, pymd->time);
             break;
         case DateData::Month:
-            memmove(rgdbl + 1, rgdbl, count * sizeof(double));
+            memmove_xplat(rgdbl + 1, rgdbl, count * sizeof(double));
             count++;
             rgdbl[0] = pymd->year;
             goto LFullYear;

@@ -244,7 +244,7 @@ LDone:
             if (clu > 0)
             {
                 // Shift the uint32s.
-                memmove(m_prglu + clu, m_prglu, m_clu * sizeof(uint32_t));
+                memmove_xplat(m_prglu + clu, m_prglu, m_clu * sizeof(uint32_t));
                 memset(m_prglu, 0, clu * sizeof(uint32_t));
                 m_clu += clu;
             }
@@ -271,7 +271,7 @@ LDone:
         }
         if (clu > 0)
         {
-            memmove(m_prglu, m_prglu + clu, (m_clu - clu) * sizeof(uint32_t));
+            memmove_xplat(m_prglu, m_prglu + clu, (m_clu - clu) * sizeof(uint32_t));
             m_clu -= clu;
         }
 
