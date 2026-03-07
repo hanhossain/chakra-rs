@@ -2490,7 +2490,6 @@ GetSystemInfo(
 #if !defined(PAL_STDCPP_COMPAT) || defined(USING_PAL_STDLIB)
 #define exit          PAL_exit
 #define wprintf       PAL_wprintf
-#define wcsspn        PAL_wcsspn
 #define ctime         PAL_ctime
 #define _wcstoui64    PAL__wcstoui64
 
@@ -2558,8 +2557,6 @@ char16_t _WConst_return * PAL_wcsstr(const char16_t *, const char16_t *);
 int _snwprintf(char16_t *, size_t, const char16_t *, ...);
 // TODO (hanhossain): internal
 int PAL_swscanf(const char16_t *, const char16_t *, ...);
-// TODO (hanhossain): internal
-size_t PAL_wcsspn (const char16_t *, const char16_t *);
 // TODO (hanhossain): internal
 int PAL_iswupper(char16_t);
 // TODO (hanhossain): internal
