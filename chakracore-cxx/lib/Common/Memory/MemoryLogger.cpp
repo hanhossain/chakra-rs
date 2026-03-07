@@ -27,7 +27,7 @@ namespace Js
         AutoCriticalSection autocs(&m_criticalSection); // TODO: with circular buffer now we can use much granular lock.
 
         // Create a copy of the message.
-        size_t len = wcslen(msg);
+        size_t len = PAL_wcslen(msg);
         char16_t* buf = AnewArray(m_alloc, char16_t, len + 1);
         js_wmemcpy_s(buf, len + 1, msg, len + 1);   // Copy with the NULL-terminator.
 

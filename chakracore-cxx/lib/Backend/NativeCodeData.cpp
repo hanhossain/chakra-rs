@@ -147,7 +147,7 @@ NativeCodeData::GetDataDescription(void* data, JitArenaAllocator * alloc)
 #else
     swprintf_s(buf, u"NativeCodeData: index: %x, len: %x, offset: +%x", chunk->allocIndex, chunk->len, chunk->offset);
 #endif
-    auto len = wcslen(buf) + 1;
+    auto len = PAL_wcslen(buf) + 1;
     auto desc = JitAnewArray(alloc, char16_t, len);
     wcscpy_s(desc, len, buf);
     return desc;

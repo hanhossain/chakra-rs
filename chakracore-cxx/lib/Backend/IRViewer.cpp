@@ -57,7 +57,7 @@ Js::DynamicObject * IRtoJSObjectBuilder::CreateHelperCallOpnd(Js::ScriptContext 
 
     const char16_t *helperText = IR::GetMethodName(op->m_fnHelper);
     Js::JavascriptString *helperString = NULL;
-    helperString = Js::JavascriptString::NewCopyBuffer(helperText, wcslen(helperText), scriptContext);
+    helperString = Js::JavascriptString::NewCopyBuffer(helperText, PAL_wcslen(helperText), scriptContext);
 
     Js::DynamicObject *opObject = scriptContext->GetLibrary()->CreateObject();
     SetProperty(opObject, u"methodName", helperString);
@@ -132,7 +132,7 @@ Js::DynamicObject * IRtoJSObjectBuilder::CreateAddrOpnd(Js::ScriptContext *scrip
     op->GetAddrDescription(detail, count, false, false, func);
 
     Js::JavascriptString *detailString = NULL;
-    detailString = Js::JavascriptString::NewCopyBuffer(detail, wcslen(detail), scriptContext);
+    detailString = Js::JavascriptString::NewCopyBuffer(detail, PAL_wcslen(detail), scriptContext);
     SetProperty(opObject, u"detail", detailString);
 
     return opObject;
@@ -284,7 +284,7 @@ Js::DynamicObject * IRtoJSObjectBuilder::CreateOpnd(Js::ScriptContext *scriptCon
 Js::PropertyId IRtoJSObjectBuilder::CreateProperty(Js::ScriptContext *scriptContext, const char16_t *propertyName)
 {
     Js::PropertyRecord const *propertyRecord;
-    scriptContext->GetOrAddPropertyRecord(propertyName, (int) wcslen(propertyName), &propertyRecord);
+    scriptContext->GetOrAddPropertyRecord(propertyName, (int) PAL_wcslen(propertyName), &propertyRecord);
     Js::PropertyId propertyId = propertyRecord->GetPropertyId();
 
     return propertyId;
@@ -292,7 +292,7 @@ Js::PropertyId IRtoJSObjectBuilder::CreateProperty(Js::ScriptContext *scriptCont
 
 void IRtoJSObjectBuilder::SetProperty(Js::DynamicObject *obj, const char16_t *propertyName, Js::Var value)
 {
-    const size_t len = wcslen(propertyName);
+    const size_t len = PAL_wcslen(propertyName);
     if (!(len > 0))
     {
         return;
@@ -504,7 +504,7 @@ void IRtoJSObjectBuilder::CreatePragmaInstruction(Js::ScriptContext *scriptConte
     //
 
     Js::JavascriptString *sourceString = NULL;
-    sourceString = Js::JavascriptString::NewCopyBuffer(buffer, wcslen(buffer), scriptContext);
+    sourceString = Js::JavascriptString::NewCopyBuffer(buffer, PAL_wcslen(buffer), scriptContext);
 
     SetProperty(currObject, u"source", sourceString);
 
@@ -547,7 +547,7 @@ Js::DynamicObject * IRtoJSObjectBuilder::GetMetadata(Js::ScriptContext *scriptCo
     {
         const char16_t *regName = RegNamesW[i];
         Js::Var detailString;
-        detailString = Js::JavascriptString::NewCopyBuffer(regName, wcslen(regName), scriptContext);
+        detailString = Js::JavascriptString::NewCopyBuffer(regName, PAL_wcslen(regName), scriptContext);
         // regNameArray->SetArrayLiteralItem(i, detailString);
         regNameArray->SetItem(i, detailString, Js::PropertyOperationFlags::PropertyOperation_None);
     }
@@ -605,7 +605,7 @@ Js::DynamicObject * IRtoJSObjectBuilder::DumpIRtoJSObject(Func *func, Js::Phase 
         char16_t const *const opcodeName = Js::OpCodeUtil::GetOpCodeName(opcode);
 
         Js::JavascriptString *opcodeString = NULL;
-        opcodeString = Js::JavascriptString::NewCopyBuffer(opcodeName, wcslen(opcodeName), scriptContext);
+        opcodeString = Js::JavascriptString::NewCopyBuffer(opcodeName, PAL_wcslen(opcodeName), scriptContext);
 
         SetProperty(currObject, id_opcode, opcodeString);
 

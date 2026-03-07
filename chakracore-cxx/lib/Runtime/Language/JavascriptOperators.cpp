@@ -10130,7 +10130,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         if (FAILED(hr))
         {
             // We cannot just use the buffer in the specifier string - need to make a copy here.
-            size_t length = wcslen(moduleName);
+            size_t length = PAL_wcslen(moduleName);
             char16_t* allocatedString = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, length + 1);
             wmemcpy_s(allocatedString, length + 1, moduleName, length);
             allocatedString[length] = u'\0';

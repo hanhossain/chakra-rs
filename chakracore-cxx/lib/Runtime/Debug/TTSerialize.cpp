@@ -15,7 +15,7 @@ namespace TTD
             const char16_t** nameArray = TT_HEAP_ALLOC_ARRAY(const char16_t*, (uint32_t)Key::Count);
             size_t* lengthArray = TT_HEAP_ALLOC_ARRAY(size_t, (uint32_t)Key::Count);
 
-#define ENTRY_SERIALIZE_ENUM(K) { nameArray[(uint32_t)Key::##K] = _u(#K); lengthArray[(uint32_t)Key::##K] = wcslen(_u(#K)); }
+#define ENTRY_SERIALIZE_ENUM(K) { nameArray[(uint32_t)Key::##K] = _u(#K); lengthArray[(uint32_t)Key::##K] = PAL_wcslen(_u(#K)); }
 #include "TTSerializeEnum.h"
 
             *names = nameArray;
@@ -398,7 +398,7 @@ namespace TTD
         this->WriteSeparator(separator);
 
         this->WriteRawChar(u'~');
-        this->WriteRawCharBuff(val, wcslen(val));
+        this->WriteRawCharBuff(val, PAL_wcslen(val));
         this->WriteRawChar(u'~');
     }
 
@@ -568,7 +568,7 @@ namespace TTD
     {
         this->WriteSeparator(separator);
 
-        uint32_t charLen = (uint32_t)wcslen(val);
+        uint32_t charLen = (uint32_t)PAL_wcslen(val);
         this->WriteRawByteBuff_Fixed<uint32_t>(charLen);
         this->WriteRawByteBuff((const byte*)val, charLen * sizeof(char16_t));
     }
@@ -1119,7 +1119,7 @@ namespace TTD
             lastIdx = 1;
         }
 
-        int32_t digitCount = (int32_t)wcslen(buff);
+        int32_t digitCount = (int32_t)PAL_wcslen(buff);
         for(int32_t i = digitCount - 1; i >= lastIdx; --i)
         {
             char16_t digit = buff[i];
@@ -1137,7 +1137,7 @@ namespace TTD
         unsigned long value = 0;
         unsigned long multiplier = 1;
 
-        int32_t digitCount = (int32_t)wcslen(buff);
+        int32_t digitCount = (int32_t)PAL_wcslen(buff);
         for(int32_t i = digitCount - 1; i >= 0; --i)
         {
             char16_t digit = buff[i];

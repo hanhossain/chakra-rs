@@ -212,7 +212,7 @@ public:
     size_t GetDisplayName(_Out_writes_opt_z_(sizeInChars) char16_t* displayName, _In_ size_t sizeInChars) override
     {
         const char16_t* name = functionBody->GetExternalDisplayName();
-        size_t nameSizeInChars = wcslen(name) + 1;
+        size_t nameSizeInChars = PAL_wcslen(name) + 1;
         if (displayName == NULL || sizeInChars < nameSizeInChars)
         {
             return nameSizeInChars;

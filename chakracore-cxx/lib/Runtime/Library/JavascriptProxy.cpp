@@ -2038,7 +2038,7 @@ namespace Js
             }
 
             threadContext->handlerPropertyId = threadContext->GetOrAddPropertyRecordBind(
-                JsUtil::CharacterBuffer<char16_t>(autoProxyName, static_cast<charcount_t>(wcslen(autoProxyName))))->GetPropertyId();
+                JsUtil::CharacterBuffer<char16_t>(autoProxyName, static_cast<charcount_t>(PAL_wcslen(autoProxyName))))->GetPropertyId();
         }
         return threadContext->handlerPropertyId;
     }

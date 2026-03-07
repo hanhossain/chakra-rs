@@ -1271,7 +1271,7 @@ namespace Js
         char16_t *const convertBuffer = convertInPlace ? &toString->LastBlockChars()[blockCharLength] : localConvertBuffer;
         ConvertToString(value, convertBuffer, maximumAppendCharLength);
 
-        const CharCount appendCharLength = static_cast<CharCount>(wcslen(convertBuffer));
+        const CharCount appendCharLength = static_cast<CharCount>(PAL_wcslen(convertBuffer));
         if(PHASE_TRACE_StringConcat)
         {
             Output::Print(

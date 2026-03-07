@@ -873,7 +873,7 @@ int main(int argc, char** c_argv)
     for(int i = 1; i < argc; ++i)
     {
         const wchar *arg = argv[i];
-        size_t arglen = wcslen(arg);
+        size_t arglen = PAL_wcslen(arg);
 
         // support - or / prefix for flags
         if (arglen >= 1 && arg[0] == u'-')
@@ -889,7 +889,7 @@ int main(int argc, char** c_argv)
             }
         }
 
-        arglen = wcslen(arg); // get length of flag after prefix
+        arglen = PAL_wcslen(arg); // get length of flag after prefix
         if ((arglen == 1 && PAL_wcsncmp(arg, u"v",       arglen) == 0) ||
             (arglen == 7 && PAL_wcsncmp(arg, u"version", arglen) == 0))
         {
@@ -914,28 +914,28 @@ int main(int argc, char** c_argv)
         else if(PAL_wcsstr(argv[i], u"-TTRecord=") == argv[i])
         {
             doTTRecord = true;
-            wchar* ruri = argv[i] + wcslen(u"-TTRecord=");
+            wchar* ruri = argv[i] + PAL_wcslen(u"-TTRecord=");
             Helpers::GetTTDDirectory(ruri, &ttUriLength, ttUri, ttUriBufferLength);
         }
         else if(PAL_wcsstr(argv[i], u"-TTReplay=") == argv[i])
         {
             doTTReplay = true;
-            wchar* ruri = argv[i] + wcslen(u"-TTReplay=");
+            wchar* ruri = argv[i] + PAL_wcslen(u"-TTReplay=");
             Helpers::GetTTDDirectory(ruri, &ttUriLength, ttUri, ttUriBufferLength);
         }
         else if(PAL_wcsstr(argv[i], u"-TTSnapInterval=") == argv[i])
         {
-            const char16_t* intervalStr = argv[i] + wcslen(u"-TTSnapInterval=");
+            const char16_t* intervalStr = argv[i] + PAL_wcslen(u"-TTSnapInterval=");
             snapInterval = (uint32_t)_wtoi(intervalStr);
         }
         else if(PAL_wcsstr(argv[i], u"-TTHistoryLength=") == argv[i])
         {
-            const char16_t* historyStr = argv[i] + wcslen(u"-TTHistoryLength=");
+            const char16_t* historyStr = argv[i] + PAL_wcslen(u"-TTHistoryLength=");
             snapHistoryLength = (uint32_t)_wtoi(historyStr);
         }
         else if(PAL_wcsstr(argv[i], u"-TTDStartEvent=") == argv[i])
         {
-            const char16_t* startEventStr = argv[i] + wcslen(u"-TTDStartEvent=");
+            const char16_t* startEventStr = argv[i] + PAL_wcslen(u"-TTDStartEvent=");
             startEventCount = (uint32_t)_wtoi(startEventStr);
         }
         else

@@ -158,7 +158,7 @@ LeakReport::LogUrl(char16_t const * url, void * globalObject)
 {
     UrlRecord * record = NoCheckHeapNewStruct(UrlRecord);
 
-    size_t length = wcslen(url) + 1; // Add 1 for the NULL.
+    size_t length = PAL_wcslen(url) + 1; // Add 1 for the NULL.
     char16_t* urlCopy = NoCheckHeapNewArray(char16_t, length);
     js_memcpy_s(urlCopy, (length - 1) * sizeof(char16_t), url, (length - 1) * sizeof(char16_t));
     urlCopy[length - 1] = u'\0';
@@ -205,10 +205,10 @@ LeakReport::DumpUrl(uint32_t tid)
             char16_t timeStr[26] = u"00:00";
 
             // xplat-todo: Need to implement _wasctime_s in the PAL
-            timeStr[wcslen(timeStr) - 1] = 0;
+            timeStr[PAL_wcslen(timeStr) - 1] = 0;
             Print(u"%s - (%p, %p) %s\n", timeStr, curr->scriptEngine, curr->globalObject, curr->url);
             *pprev = curr->next;
-            NoCheckHeapDeleteArray(wcslen(curr->url) + 1, curr->url);
+            NoCheckHeapDeleteArray(PAL_wcslen(curr->url) + 1, curr->url);
             NoCheckHeapDelete(curr);
         }
         else

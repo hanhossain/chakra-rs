@@ -84,7 +84,7 @@ namespace Js
     {
         if(NULL != this->pszValue)
         {
-            NoCheckHeapDeleteArray(wcslen(this->pszValue) + 1, this->pszValue);
+            NoCheckHeapDeleteArray(PAL_wcslen(this->pszValue) + 1, this->pszValue);
         }
     }
 
@@ -102,12 +102,12 @@ namespace Js
     {
         if(NULL != this->pszValue)
         {
-            NoCheckHeapDeleteArray(wcslen(this->pszValue) + 1, this->pszValue);
+            NoCheckHeapDeleteArray(PAL_wcslen(this->pszValue) + 1, this->pszValue);
         }
 
         if(NULL != pszValue)
         {
-            size_t size    = 1 + wcslen(pszValue);
+            size_t size    = 1 + PAL_wcslen(pszValue);
             this->pszValue  = NoCheckHeapNewArray(char16_t, size);
             wcscpy_s(this->pszValue, size, pszValue);
         }

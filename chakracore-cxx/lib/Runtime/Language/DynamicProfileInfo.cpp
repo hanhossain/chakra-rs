@@ -2536,7 +2536,7 @@ namespace Js
     {
         if (sz)
         {
-            charcount_t len = static_cast<charcount_t>(wcslen(sz));
+            charcount_t len = static_cast<charcount_t>(PAL_wcslen(sz));
             const size_t cbTempBuffer = UInt32Math::Mul<3>(len);
             utf8char_t * tempBuffer = HeapNewArray(utf8char_t, cbTempBuffer);
             const size_t cbNeeded = utf8::EncodeInto<utf8::Utf8EncodingKind::Cesu8>(tempBuffer, cbTempBuffer, sz, len);

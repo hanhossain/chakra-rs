@@ -75,7 +75,7 @@ namespace Js
 
     static char16_t* trimRight(_Inout_z_ char16_t* str)
     {
-        auto tmp = str + wcslen(str);
+        auto tmp = str + PAL_wcslen(str);
         while (!isprint(*--tmp));
         *(tmp + 1) = u'\0';
         return str;
@@ -552,7 +552,7 @@ namespace Js
 
     void FaultInjection::ParseFaultTypes(const char16_t* szFaultTypes)
     {
-        auto charCount = wcslen(szFaultTypes) + 1;
+        auto charCount = PAL_wcslen(szFaultTypes) + 1;
         char16_t* szTypes = (char16_t*)malloc(charCount*sizeof(char16_t));
         AssertMsg(szTypes, "OOM in FaultInjection Infra");
         wcscpy_s(szTypes, charCount, szFaultTypes);
@@ -561,7 +561,7 @@ namespace Js
         char16_t* tok = wcstok_s(szTypes, delims, &nextTok);
         while (tok != NULL)
         {
-            if (wcslen(tok) > 0)
+            if (PAL_wcslen(tok) > 0)
             {
                 if (PAL_iswdigit(tok[0]))
                 {
@@ -578,7 +578,7 @@ namespace Js
                 {
                     // FaultInjectionType:#1-4,#6 format, not flags
                     auto tok1 = tok + 1;
-                    if (wcslen(tok1)>0 && PAL_iswdigit(tok1[0]))
+                    if (PAL_wcslen(tok1)>0 && PAL_iswdigit(tok1[0]))
                     {
                         char16_t* pDash = PAL_wcschr(tok1, u'-');
                         if (pDash)
@@ -615,7 +615,7 @@ namespace Js
     {
         //jscript9test!<lambda_dc7f9e8c591f1832700d6567e43faa6c>::operator()
         const char16_t lambdaSig[] = u"<lambda_";
-        const int lambdaSigLen = (int)wcslen(lambdaSig);
+        const int lambdaSigLen = (int)PAL_wcslen(lambdaSig);
         auto temp = str;
         while (temp != nullptr)
         {
@@ -715,7 +715,7 @@ namespace Js
                     trimRight(symbolStart);
                 }
                 SmashLambda(symbolStart);
-                size_t len = wcslen(symbolStart);
+                size_t len = PAL_wcslen(symbolStart);
                 if (baselineStack[baselineFrameCount] == nullptr)
                 {
                     baselineStack[baselineFrameCount] = (char16_t*)malloc((len + 1)*sizeof(char16_t));
@@ -1368,8 +1368,8 @@ namespace Js
                 // removing extension for windbg module name style
                 auto& jscript9Path = modulePath;
                 wcsncpy_s(jscript9Path, AutoSystemInfo::Data.GetJscriptDllFileName(),
-                    wcslen(AutoSystemInfo::Data.GetJscriptDllFileName()) - 4);
-                char16_t* jscript9Name = jscript9Path + wcslen(jscript9Path);
+                    PAL_wcslen(AutoSystemInfo::Data.GetJscriptDllFileName()) - 4);
+                char16_t* jscript9Name = jscript9Path + PAL_wcslen(jscript9Path);
                 while (*(jscript9Name - 1) != u'\\' && jscript9Name > jscript9Path)
                 {
                     jscript9Name--;
@@ -1402,7 +1402,7 @@ namespace Js
                 MINIDUMP_USER_STREAM UserStreams[1];
                 UserStreams[0].Type = CommentStreamW;
                 UserStreams[0].Buffer = dbgTip;
-                UserStreams[0].BufferSize = (uint32_t)wcslen(dbgTip)*sizeof(char16_t);
+                UserStreams[0].BufferSize = (uint32_t)PAL_wcslen(dbgTip)*sizeof(char16_t);
                 MINIDUMP_USER_STREAM_INFORMATION musi;
                 musi.UserStreamCount = 1;
                 musi.UserStreamArray = UserStreams;

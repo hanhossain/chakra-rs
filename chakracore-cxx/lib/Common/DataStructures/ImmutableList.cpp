@@ -42,7 +42,7 @@ template<int chunkSize>
 void regex::ImmutableStringBuilder<chunkSize>::AppendWithCopy(_In_z_ const char16_t* str)
 {
     AssertMsg(str != nullptr, "str != nullptr");
-    size_t strLength = wcslen(str) + 1; // include null-terminated
+    size_t strLength = PAL_wcslen(str) + 1; // include null-terminated
 
     char16_t* buffer = HeapNewNoThrowArray(char16_t, strLength);
     IfNullThrowOutOfMemory(buffer);

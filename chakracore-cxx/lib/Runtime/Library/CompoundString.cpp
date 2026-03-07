@@ -930,7 +930,7 @@ using namespace Js;
 
     void CompoundString::AppendCharsSz(__in_z const char16_t *const s)
     {
-        size_t len = wcslen(s);
+        size_t len = PAL_wcslen(s);
         // We limit the length of the string to MaxCharCount,
         // so just OOM if we are appending a string that exceed this limit already
         if (!IsValidCharCount(len))

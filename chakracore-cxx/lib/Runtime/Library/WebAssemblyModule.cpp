@@ -860,7 +860,7 @@ char16_t* WebAssemblyModule::FormatExceptionMessage(Wasm::WasmCompilationExcepti
     char16_t* originalExceptionMessage = ex->GetTempErrorMessageRef();
     if (!wasmModule || !body)
     {
-        size_t len = wcslen(originalExceptionMessage) + 1;
+        size_t len = PAL_wcslen(originalExceptionMessage) + 1;
         char16_t* buf = HeapNewArray(char16_t, len);
         autoFree->Set(buf, len);
         js_memcpy_s(buf, len * sizeof(char16_t), originalExceptionMessage, len * sizeof(char16_t));

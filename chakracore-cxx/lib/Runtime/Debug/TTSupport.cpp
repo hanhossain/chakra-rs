@@ -89,7 +89,7 @@ namespace TTD
         TTAutoString::TTAutoString(const char16_t* str)
             : m_allocSize(-1), m_contents(nullptr), m_optFormatBuff(nullptr)
         {
-            size_t clen = wcslen(str) + 1;
+            size_t clen = PAL_wcslen(str) + 1;
 
             this->m_contents = TT_HEAP_ALLOC_ARRAY_ZERO(char16_t, clen);
             this->m_allocSize = (int32_t)clen;
@@ -150,11 +150,11 @@ namespace TTD
                 return;
             }
 
-            size_t origsize = (this->m_contents != nullptr ? wcslen(this->m_contents) : 0);
+            size_t origsize = (this->m_contents != nullptr ? PAL_wcslen(this->m_contents) : 0);
             size_t strsize = 0;
             if(start == 0 && end == std::numeric_limits<size_t>::max())
             {
-                strsize = (str != nullptr ? wcslen(str) : 0);
+                strsize = (str != nullptr ? PAL_wcslen(str) : 0);
             }
             else
             {
@@ -230,7 +230,7 @@ namespace TTD
         {
             TTDAssert(!this->IsNullString(), "That doesn't make sense.");
 
-            return (int32_t)wcslen(this->m_contents);
+            return (int32_t)PAL_wcslen(this->m_contents);
         }
 
         char16_t TTAutoString::GetCharAt(int32_t pos) const

@@ -677,7 +677,7 @@ namespace TTD
             }
             else
             {
-                size_t length = wcslen(str) + 1;
+                size_t length = PAL_wcslen(str) + 1;
                 size_t byteLength = length * sizeof(char16_t);
 
                 char16_t* res = this->SlabAllocateArray<char16_t>(length);
@@ -718,7 +718,7 @@ namespace TTD
             }
             else
             {
-                this->CopyStringIntoWLength(str, (uint32_t)wcslen(str), into);
+                this->CopyStringIntoWLength(str, (uint32_t)PAL_wcslen(str), into);
             }
         }
 

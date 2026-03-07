@@ -4165,7 +4165,7 @@ Js::SourceDynamicProfileManager* ThreadContext::GetSourceDynamicProfileManager(_
       if (newCache)
       {
           // Let's make a copy of the URL because there is no guarantee this URL will remain alive in the future.
-          size_t lengthInChars = wcslen(url) + 1;
+          size_t lengthInChars = PAL_wcslen(url) + 1;
           char16_t* urlCopy = RecyclerNewArrayLeaf(GetRecycler(), char16_t, lengthInChars);
           js_memcpy_s(urlCopy, lengthInChars * sizeof(char16_t), url, lengthInChars * sizeof(char16_t));
           this->recyclableData->sourceProfileManagersByUrl->Add(urlCopy, managerCache);

@@ -183,7 +183,7 @@ using namespace Js;
     Js::PropertyId GlobalObject::CreateProperty(Js::ScriptContext *scriptContext, const char16_t *propertyName)
     {
         Js::PropertyRecord const *propertyRecord;
-        scriptContext->GetOrAddPropertyRecord(propertyName, (int) wcslen(propertyName), &propertyRecord);
+        scriptContext->GetOrAddPropertyRecord(propertyName, (int) PAL_wcslen(propertyName), &propertyRecord);
         Js::PropertyId propertyId = propertyRecord->GetPropertyId();
 
         return propertyId;
@@ -192,7 +192,7 @@ using namespace Js;
     // TODO remove when refactor
     void GlobalObject::SetProperty(Js::DynamicObject *obj, const char16_t *propertyName, Js::Var value)
     {
-        const size_t len = wcslen(propertyName);
+        const size_t len = PAL_wcslen(propertyName);
         if (!(len > 0))
         {
             return;
@@ -220,8 +220,8 @@ using namespace Js;
         Js::DynamicObject *fnInfoObj = scriptContext->GetLibrary()->CreateObject();
 
         // create javascript objects for properties
-        Js::Var filenameString = Js::JavascriptString::NewCopyBuffer(file, wcslen(file), scriptContext);
-        Js::Var funcnameString = Js::JavascriptString::NewCopyBuffer(function, wcslen(function), scriptContext);
+        Js::Var filenameString = Js::JavascriptString::NewCopyBuffer(file, PAL_wcslen(file), scriptContext);
+        Js::Var funcnameString = Js::JavascriptString::NewCopyBuffer(function, PAL_wcslen(function), scriptContext);
         Js::Var lineNumber = Js::JavascriptNumber::ToVar((long) lineNum, scriptContext);
         Js::Var colNumber = Js::JavascriptNumber::ToVar((long) colNum, scriptContext);
         Js::Var functionIdNumberVar = Js::JavascriptNumber::ToVar(functionId, scriptContext);

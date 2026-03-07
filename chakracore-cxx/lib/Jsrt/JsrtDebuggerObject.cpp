@@ -579,7 +579,7 @@ Js::DynamicObject * JsrtDebuggerObjectProperty::GetJSONObject(Js::ScriptContext*
 
         const char16_t* name = objectDisplayRef->Name();
 
-        JsrtDebugUtils::AddPropertyToObject(propertyObject, JsrtDebugPropertyId::name, name, wcslen(name), scriptContext);
+        JsrtDebugUtils::AddPropertyToObject(propertyObject, JsrtDebugPropertyId::name, name, PAL_wcslen(name), scriptContext);
 
         JsrtDebugUtils::AddPropertyType(propertyObject, objectDisplayRef, scriptContext, forceSetValueProp); // Will add type, value, display, className, propertyAttributes
 

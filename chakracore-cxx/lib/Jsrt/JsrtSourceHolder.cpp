@@ -114,7 +114,7 @@ namespace Js
                     *utf8AllocLength = 0;
                 }
 
-                size_t script_length = wcslen(script);
+                size_t script_length = PAL_wcslen(script);
                 if (script_length > UINT_MAX)
                 {
                     Js::JavascriptError::ThrowOutOfMemoryError(nullptr);

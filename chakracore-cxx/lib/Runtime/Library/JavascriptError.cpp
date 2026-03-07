@@ -455,7 +455,7 @@ namespace Js
                 if (message != nullptr)
                 {
                     uint32_t msglen = SysStringLen(message);
-                    size_t varlen = wcslen(varName);
+                    size_t varlen = PAL_wcslen(varName);
                     size_t len = AllocSizeMath::Add(msglen, varlen);
                     allocatedString = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, len);
                     size_t outputIndex = 0;

@@ -42,7 +42,7 @@ JSONStringBuilder::AppendEscapeSequence(_In_ const char16_t character)
         _ltow_s(character, buf, _countof(buf), 16);
 
         // Append leading zeros if necessary before the hex value
-        charcount_t count = static_cast<charcount_t>(wcslen(buf));
+        charcount_t count = static_cast<charcount_t>(PAL_wcslen(buf));
         switch (count)
         {
         case 1:
