@@ -12256,7 +12256,7 @@ bool Parser::CheckStrictModeStrPid(IdentPtr pid)
     return pid != nullptr &&
         pid->Cch() == 10 &&
         !this->GetScanner()->IsEscapeOnLastTkStrCon() &&
-        wcsncmp(pid->Psz(), u"use strict", 10) == 0;
+        PAL_wcsncmp(pid->Psz(), u"use strict", 10) == 0;
 }
 
 bool Parser::CheckAsmjsModeStrPid(IdentPtr pid)
@@ -12271,7 +12271,7 @@ bool Parser::CheckAsmjsModeStrPid(IdentPtr pid)
         AutoSystemInfo::Data.SSE2Available() &&
         pid->Cch() == 7 &&
         !this->GetScanner()->IsEscapeOnLastTkStrCon() &&
-        wcsncmp(pid->Psz(), u"use asm", 10) == 0);
+        PAL_wcsncmp(pid->Psz(), u"use asm", 10) == 0);
 
 #ifdef ENABLE_SCRIPT_DEBUGGING
     if (isAsmCandidate && m_scriptContext->IsScriptContextInDebugMode())

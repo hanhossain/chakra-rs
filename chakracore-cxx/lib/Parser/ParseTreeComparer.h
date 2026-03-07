@@ -459,7 +459,7 @@ namespace Js
                 // Optimize: If we can have both trees (scanner/parser) share Ident dictionary, this can become pid1 == pid2.
                 return pid1->Hash() == pid2->Hash()
                     && pid1->Cch() == pid2->Cch()
-                    && wcsncmp(pid1->Psz(), pid2->Psz(), pid1->Cch()) == 0;
+                    && PAL_wcsncmp(pid1->Psz(), pid2->Psz(), pid1->Cch()) == 0;
             }
 
             // PIDs may be null, e.g. anonymous function declarations
