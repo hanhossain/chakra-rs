@@ -47,25 +47,6 @@ CRITICAL_SECTION gcsEnvironment;
 
 using namespace CorUnix;
 
-
-/*++
-
-Function :
-
-    PAL_errno
-
-    Returns the address of the errno.
-
---*/
-int * PAL_errno( int caller )
-{
-    int *retval;
-    ENTRY( "PAL_errno( void )\n" );
-    retval = (int32_t*)(&errno);
-    LOGEXIT("PAL_errno returns %p\n",retval);
-    return retval;
-}
-
 /*++
 
 Function : PAL_getenv

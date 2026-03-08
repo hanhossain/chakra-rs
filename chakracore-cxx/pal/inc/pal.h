@@ -2805,18 +2805,10 @@ PAL_FILE * PAL_get_stdout(int caller);
 PAL_FILE * PAL_get_stdin(int caller);
 // TODO (hanhossain): internal
 PAL_FILE * PAL_get_stderr(int caller);
-// TODO (hanhossain): internal
-int * PAL_errno(int caller);
 
 #define PAL_stdout (PAL_get_stdout(PAL_get_caller))
 #define PAL_stdin  (PAL_get_stdin(PAL_get_caller))
 #define PAL_stderr (PAL_get_stderr(PAL_get_caller))
-
-#if defined(PAL_STDCPP_COMPAT) && !defined(USING_PAL_STDLIB)
-#define PAL_errno   (*PAL_errno(PAL_get_caller))
-#else // PAL_STDCPP_COMPAT
-#define errno  (*PAL_errno(PAL_get_caller))
-#endif // PAL_STDCPP_COMPAT
 
 // TODO (hanhossain): public
 char * PAL_getenv(const char *);
