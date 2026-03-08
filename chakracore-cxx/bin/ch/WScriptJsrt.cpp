@@ -1357,7 +1357,6 @@ JsValueRef WScriptJsrt::ReadLineStdinCallback(JsValueRef callee, bool isConstruc
     JsErrorCode errorCode = JsNoError;
 
     const int BUFSIZE = 256;
-    PAL_FILE* from = stdin;
     int buflength = 0;
     int bufsize = BUFSIZE;
     char* buf = static_cast<char*>(malloc(bufsize));
@@ -1369,7 +1368,7 @@ JsValueRef WScriptJsrt::ReadLineStdinCallback(JsValueRef callee, bool isConstruc
         goto Error;
     }
 
-    while ((gotlength = JsFgets(buf + buflength, bufsize - buflength, from)) > 0) 
+    while ((gotlength = JsFgets(buf + buflength, bufsize - buflength, PAL_stdin)) > 0) 
     {
         buflength += gotlength;
 
@@ -1414,7 +1413,7 @@ JsValueRef WScriptJsrt::ReadLineStdinCallback(JsValueRef callee, bool isConstruc
     //Treat the empty string specially.
     if (buflength == 0) 
     {
-        if (PAL_feof(from)) 
+        if (PAL_feof(PAL_stdin)) 
         {
             goto Error;
         }
