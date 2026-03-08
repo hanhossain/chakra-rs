@@ -259,7 +259,6 @@ function_name() to call the system's implementation
 #undef exp
 #undef log
 #undef log10
-#undef errno
 #undef open
 #undef glob
 #undef atan
