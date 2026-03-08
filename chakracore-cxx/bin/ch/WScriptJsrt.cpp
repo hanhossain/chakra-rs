@@ -171,7 +171,7 @@ JsValueRef WScriptJsrt::EchoCallback(JsValueRef callee, bool isConstructCall, Js
     }
 
     PAL_wprintf(u"\n");
-    PAL_fflush(stdout);
+    PAL_fflush(PAL_stdout);
 
     JsValueRef undefinedValue;
     if (ChakraRTInterface::JsGetUndefinedValue(&undefinedValue) == JsNoError)
@@ -2231,6 +2231,6 @@ void WScriptJsrt::PromiseRejectionTrackerCallback(JsValueRef promise, JsValueRef
         }
     }
 
-    PAL_fflush(stdout);
+    PAL_fflush(PAL_stdout);
 }
 

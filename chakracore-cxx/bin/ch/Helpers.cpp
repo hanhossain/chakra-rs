@@ -367,7 +367,7 @@ void Helpers::LogError(__nullterminated const char16_t *msg, ...)
     PAL_wprintf(u"ERROR: ");
     PAL_vfwprintf(stderr, msg, args);
     PAL_wprintf(u"\n");
-    PAL_fflush(stdout);
+    PAL_fflush(PAL_stdout);
     va_end(args);
 }
 
