@@ -237,7 +237,7 @@ JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *argu
             hr = Helpers::LoadScriptFromFile(*fileName, fileContent);
             if (FAILED(hr))
             {
-                PAL_fprintf(stderr, "Couldn't load file '%s'\n", fileName.GetString());
+                PAL_fprintf(PAL_stderr, "Couldn't load file '%s'\n", fileName.GetString());
                 IfJsrtErrorSetGo(ChakraRTInterface::JsGetUndefinedValue(&returnValue));
                 return returnValue;
             }
@@ -1306,7 +1306,7 @@ JsValueRef WScriptJsrt::LoadTextFileCallback(JsValueRef callee, bool isConstruct
 
             if (FAILED(hr))
             {
-                PAL_fprintf(stderr, "Couldn't load file '%s'\n", fileName.GetString());
+                PAL_fprintf(PAL_stderr, "Couldn't load file '%s'\n", fileName.GetString());
                 IfJsrtErrorSetGo(ChakraRTInterface::JsGetUndefinedValue(&returnValue));
                 return returnValue;
             }
@@ -1468,7 +1468,7 @@ JsValueRef WScriptJsrt::LoadBinaryFileCallback(JsValueRef callee,
 
             if (FAILED(hr))
             {
-                PAL_fprintf(stderr, "Couldn't load file '%s'\n", fileName.GetString());
+                PAL_fprintf(PAL_stderr, "Couldn't load file '%s'\n", fileName.GetString());
                 IfJsrtErrorSetGoLabel(ChakraRTInterface::JsGetUndefinedValue(&returnValue), Error);
                 return returnValue;
             }
@@ -1480,7 +1480,7 @@ JsValueRef WScriptJsrt::LoadBinaryFileCallback(JsValueRef callee,
             IfJsrtErrorSetGoLabel(ChakraRTInterface::JsGetArrayBufferStorage(arrayBuffer, &buffer, &bufferLength), ErrorStillFree);
             if (bufferLength < lengthBytes)
             {
-                PAL_fwprintf(stderr, u"Array buffer size is insufficient to store the binary file.\n");
+                PAL_fwprintf(PAL_stderr, u"Array buffer size is insufficient to store the binary file.\n");
             }
             else
             {
@@ -1555,8 +1555,8 @@ JsValueRef WScriptJsrt::BroadcastCallback(JsValueRef callee, bool isConstructCal
             }
             else
             {
-                PAL_fwprintf(stderr, u"Couldn't create semaphore.\n");
-                PAL_fflush(stderr);
+                PAL_fwprintf(PAL_stderr, u"Couldn't create semaphore.\n");
+                PAL_fflush(PAL_stderr);
             }
 
             ChakraRTInterface::JsReleaseSharedArrayBufferContentHandle(threadData->sharedContent);
@@ -1779,7 +1779,7 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
 
             if (errorMessage.Initialize(exception) != JsNoError)
             {
-                PAL_fwprintf(stderr, u"ERROR attempting to coerce error to string, using alternate handler\n");
+                PAL_fwprintf(PAL_stderr, u"ERROR attempting to coerce error to string, using alternate handler\n");
                 bool hasException = false;
                 ChakraRTInterface::JsHasException(&hasException);
                 if (hasException)
@@ -1817,12 +1817,12 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
                         IfJsrtErrorFail(CreatePropertyIdFromString("column", &columnPropertyId), false);
                         IfJsrtErrorFail(ChakraRTInterface::JsGetProperty(metaData, columnPropertyId, &columnProperty), false);
                         IfJsrtErrorFail(ChakraRTInterface::JsNumberToInt(columnProperty, &column), false);
-                        PAL_fwprintf(stderr, u"%ls\n        at code (%S%S:%d:%d)\n",
+                        PAL_fwprintf(PAL_stderr, u"%ls\n        at code (%S%S:%d:%d)\n",
                             errorMessage.GetWideString(), shortFileName, ext, line + 1, column + 1);
                     }
                     else
                     {
-                        PAL_fwprintf(stderr, u"%ls\n\tat code (%S%S:\?\?:\?\?)\n", errorMessage.GetWideString(), shortFileName, ext);
+                        PAL_fwprintf(PAL_stderr, u"%ls\n\tat code (%S%S:\?\?:\?\?)\n", errorMessage.GetWideString(), shortFileName, ext);
                     }
                     return true;
                 }
@@ -1850,7 +1850,7 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
                 char shortFileName[_MAX_PATH];
                 char ext[_MAX_EXT];
                 _splitpath_s(fileName, nullptr, 0, nullptr, 0, shortFileName, _countof(shortFileName), ext, _countof(ext));
-                PAL_fwprintf(stderr, u"%ls\n\tat code (%S%S:%d:%d)\n",
+                PAL_fwprintf(PAL_stderr, u"%ls\n\tat code (%S%S:%d:%d)\n",
                     errorMessage.GetWideString(), shortFileName, ext, (int)line + 1,
                     (int)column + 1);
             }
@@ -1881,25 +1881,25 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
                     _splitpath_s(fName, nullptr, 0, nullptr, 0, shortFileName, _countof(shortFileName), ext, _countof(ext));
 
                     // do not mix char/wchar. print them separately
-                    PAL_fprintf(stderr, "thrown at %s%s:\n^\n", shortFileName, ext);
-                    PAL_fwprintf(stderr, u"%ls\n", errorMessage.GetWideString());
+                    PAL_fprintf(PAL_stderr, "thrown at %s%s:\n^\n", shortFileName, ext);
+                    PAL_fwprintf(PAL_stderr, u"%ls\n", errorMessage.GetWideString());
                 }
                 else
                 {
                     IfJsrtErrorFail(errorStack.Initialize(stackProperty), false);
-                    PAL_fwprintf(stderr, u"%ls\n", errorStack.GetWideString());
+                    PAL_fwprintf(PAL_stderr, u"%ls\n", errorStack.GetWideString());
                 }
             }
         }
         else
         {
-            PAL_fwprintf(stderr, u"Error : %ls\n", errorTypeString);
+            PAL_fwprintf(PAL_stderr, u"Error : %ls\n", errorTypeString);
         }
         return true;
     }
     else
     {
-        PAL_fwprintf(stderr, u"Error : %ls\n", errorTypeString);
+        PAL_fwprintf(PAL_stderr, u"Error : %ls\n", errorTypeString);
     }
     return false;
 }
@@ -2035,7 +2035,7 @@ int32_t WScriptJsrt::ModuleMessage::Call(const char * fileName)
                     auto actualModuleRecord = moduleRecordMap.find(*fullPath);
                     if (actualModuleRecord == moduleRecordMap.end() || moduleErrMap[actualModuleRecord->second] == RootModule)
                     {
-                        PAL_fprintf(stderr, "Couldn't load file '%s'\n", specifierStr.GetString());
+                        PAL_fprintf(PAL_stderr, "Couldn't load file '%s'\n", specifierStr.GetString());
                     }
                 }
                 LoadScript(nullptr, fullPath == nullptr ? *specifierStr : fullPath->c_str(), nullptr, "module", true, WScriptJsrt::FinalizeFree, false);

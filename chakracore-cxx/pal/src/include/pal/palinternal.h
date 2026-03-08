@@ -200,10 +200,6 @@ function_name() to call the system's implementation
    defined in pal.h  */
 #define PAL_RAND_MAX 0x7fff
 
-#ifdef stderr
-#undef stderr
-#endif
-
 #ifdef RAND_MAX
 #undef RAND_MAX
 #endif
@@ -254,7 +250,6 @@ function_name() to call the system's implementation
 #undef getcwd
 #undef size_t
 #undef time_t
-#undef stderr
 #undef abs
 #undef labs
 #undef llabs

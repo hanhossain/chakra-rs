@@ -7443,7 +7443,7 @@ void Recycler::VerifyCheck(BOOL cond, char16_t const * msg, void * address, void
 {
     if (!(cond))
     {
-        PAL_fwprintf(stderr, u"RECYCLER CORRUPTION: StartAddress=%p CorruptedAddress=%p: %s", address, corruptedAddress, msg);
+        PAL_fwprintf(PAL_stderr, u"RECYCLER CORRUPTION: StartAddress=%p CorruptedAddress=%p: %s", address, corruptedAddress, msg);
         Js::Throw::FatalInternalError();
     }
 }

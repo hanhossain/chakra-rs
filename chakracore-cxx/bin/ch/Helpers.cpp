@@ -23,12 +23,12 @@ void TTDHostBuildCurrentExeDirectory(char* path, size_t* pathLength, size_t buff
     }
     if (i == 0)
     {
-        PAL_fwprintf(stderr, u"Can't get current exe directory");
+        PAL_fwprintf(PAL_stderr, u"Can't get current exe directory");
         PAL_exit(1);
     }
     if (i + 2 > bufferLength)
     {
-        PAL_fwprintf(stderr, u"Don't overflow path buffer during copy");
+        PAL_fwprintf(PAL_stderr, u"Don't overflow path buffer during copy");
         PAL_exit(1);
     }
     memcpy_s(path, bufferLength, exePath, i + 1);
@@ -96,7 +96,7 @@ uint ConcatPath(const char * filenameLeft, uint posPathSep, const char * filenam
 
     if (bufferLength < totalLength)
     {
-      PAL_fprintf(stderr, "Error: file path is too long.\n");
+      PAL_fprintf(PAL_stderr, "Error: file path is too long.\n");
       return (uint)-1;
     }
 
@@ -173,7 +173,7 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
             {
 // TODO (hanhossain): may want to include <unistd.h> to import _POSIX_VERSION
 #if defined(_POSIX_VERSION)
-                PAL_fprintf(stderr, "Error in opening file: ");
+                PAL_fprintf(PAL_stderr, "Error in opening file: ");
                 perror(filename);
 #endif
             }
@@ -203,7 +203,7 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
 
     if (nullptr == pRawBytes)
     {
-        PAL_fwprintf(stderr, u"out of memory");
+        PAL_fwprintf(PAL_stderr, u"out of memory");
         IfFailGo(E_OUTOFMEMORY);
     }
 
@@ -261,7 +261,7 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
 
             {
                 // unicode unsupported
-                PAL_fwprintf(stderr, u"unsupported file encoding. Only ANSI and UTF8 supported");
+                PAL_fwprintf(PAL_stderr, u"unsupported file encoding. Only ANSI and UTF8 supported");
                 IfFailGo(E_UNEXPECTED);
             }
 #pragma prefast(pop)
@@ -365,7 +365,7 @@ void Helpers::LogError(__nullterminated const char16_t *msg, ...)
     va_list args;
     va_start(args, msg);
     PAL_wprintf(u"ERROR: ");
-    PAL_vfwprintf(stderr, msg, args);
+    PAL_vfwprintf(PAL_stderr, msg, args);
     PAL_wprintf(u"\n");
     PAL_fflush(PAL_stdout);
     va_end(args);
@@ -387,8 +387,8 @@ int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, u
     {
         if (printFileOpenError)
         {
-            PAL_fprintf(stderr, "Error in opening file '%s' ", filename);
-            PAL_fprintf(stderr, "\n");
+            PAL_fprintf(PAL_stderr, "Error in opening file '%s' ", filename);
+            PAL_fprintf(PAL_stderr, "\n");
         }
         return E_FAIL;
     }
@@ -403,7 +403,7 @@ int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, u
     contents = (const char *)HeapAlloc(GetProcessHeap(), 0, lengthBytes);
     if (nullptr == contents)
     {
-        PAL_fwprintf(stderr, u"out of memory");
+        PAL_fwprintf(PAL_stderr, u"out of memory");
         IfFailGo(E_OUTOFMEMORY);
     }
     //
@@ -412,7 +412,7 @@ int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, u
     result = PAL_fread((void*)contents, sizeof(char), lengthBytes, file);
     if (result != lengthBytes)
     {
-        PAL_fwprintf(stderr, u"Read error");
+        PAL_fwprintf(PAL_stderr, u"Read error");
         IfFailGo(E_FAIL);
     }
 
@@ -431,8 +431,8 @@ void Helpers::TTReportLastIOErrorAsNeeded(BOOL ok, const char* msg)
 {
     if(!ok)
     {
-        PAL_fprintf(stderr, "Error is: %i %s\n", errno, strerror(errno));
-        PAL_fprintf(stderr, "Message is: %s\n", msg);
+        PAL_fprintf(PAL_stderr, "Error is: %i %s\n", errno, strerror(errno));
+        PAL_fprintf(PAL_stderr, "Message is: %s\n", msg);
 
         AssertMsg(false, "IO Error!!!");
         PAL_exit(1);
@@ -525,7 +525,7 @@ JsTTDStreamHandle CALLBACK Helpers::TTCreateStreamCallback(size_t uriLength, con
     JsTTDStreamHandle res = TTDHostOpen(uriLength + asciiNameLength, path, write);
     if(res == nullptr)
     {
-        PAL_fprintf(stderr, "Failed to open file: %s\n", path);
+        PAL_fprintf(PAL_stderr, "Failed to open file: %s\n", path);
     }
 
     Helpers::TTReportLastIOErrorAsNeeded(res != nullptr, "Failed File Open");
