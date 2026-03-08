@@ -50,7 +50,7 @@ int HostExceptionFilter(int exceptionCode, _EXCEPTION_POINTERS *ep)
         return EXCEPTION_CONTINUE_SEARCH;
     }
 
-    PAL_fwprintf(stderr, u"FATAL ERROR: %ls failed due to exception code %x\n", hostName, exceptionCode);
+    PAL_fwprintf(PAL_stderr, u"FATAL ERROR: %ls failed due to exception code %x\n", hostName, exceptionCode);
 
     fflush(NULL);
 
@@ -950,7 +950,7 @@ int main(int argc, char** c_argv)
 
     if(doTTRecord & doTTReplay)
     {
-        PAL_fwprintf(stderr, u"Cannot run in record and replay at same time!!!");
+        PAL_fwprintf(PAL_stderr, u"Cannot run in record and replay at same time!!!");
         ExitProcess(0);
     }
 

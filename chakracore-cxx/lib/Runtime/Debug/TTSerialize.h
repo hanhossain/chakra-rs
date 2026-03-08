@@ -803,7 +803,7 @@ namespace TTD
         void AppendDouble(double dval);
 
     public:
-        TraceLogger(PAL_FILE* outfile = stderr);
+        TraceLogger(PAL_FILE* outfile = PAL_stderr);
         ~TraceLogger();
 
         void ForceFlush();

@@ -1847,7 +1847,7 @@ namespace TTD
     {
         this->ForceFlush();
 
-        if(this->m_outfile != PAL_stdout && this->m_outfile != stderr)
+        if(this->m_outfile != PAL_stdout && this->m_outfile != PAL_stderr)
         {
             PAL_fclose(this->m_outfile);
         }
