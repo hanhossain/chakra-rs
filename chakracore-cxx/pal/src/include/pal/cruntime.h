@@ -192,7 +192,7 @@ Used to mimic the behavior of windows.
 fwrite under windows can set the ferror flag,
 under BSD fwrite doesn't.
 --*/
-struct _FILE
+typedef struct _FILE
 {
    FILE *   bsdFilePtr;     /* The BSD file to be passed to the
                             functions needing it. */
@@ -206,7 +206,7 @@ struct _FILE
    BOOL     bWriteOnlyMode;/* Boolean variable to denote that the
                               fle is opened in write-only mode*/ 
 #endif //UNGETC_NOT_RETURN_EOF
-};
+} PAL_FILE;
 
 enum CRT_ERROR_CODES
 {
