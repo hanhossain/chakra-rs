@@ -225,7 +225,6 @@ function_name() to call the system's implementation
 
 #define uintptr_t PAL_uintptr_t
 #define timeval PAL_timeval
-#define FILE PAL_FILE
 #define fpos_t PAL_fpos_t
 
 #define INCLUDE_PAL_INTERNAL_
@@ -258,7 +257,6 @@ function_name() to call the system's implementation
 #undef time
 #undef tm
 #undef localtime
-#undef FILE
 #undef getcwd
 #undef size_t
 #undef time_t

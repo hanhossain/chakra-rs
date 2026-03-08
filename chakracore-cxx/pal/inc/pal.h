@@ -2721,16 +2721,10 @@ struct tm {
 char * PAL_ctime(const time_t *);
 #endif // !PAL_STDCPP_COMPAT
 
-#ifdef PAL_STDCPP_COMPAT
-
-struct _PAL_FILE;
-typedef struct _PAL_FILE PAL_FILE;
-
-#else // PAL_STDCPP_COMPAT
-
 struct _FILE;
-typedef struct _FILE FILE;
 typedef struct _FILE PAL_FILE;
+
+#ifndef PAL_STDCPP_COMPAT
 
 #define SEEK_SET    0
 #define SEEK_CUR    1
