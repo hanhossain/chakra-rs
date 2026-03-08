@@ -1610,7 +1610,7 @@ LHexError:
             //TODO: the host should give us a print callback which we can use here
             //
             Output::Print(u"%ls\n", jsString->GetSz());
-            PAL_fflush(stdout);
+            PAL_fflush(PAL_stdout);
         }
 
         return function->GetScriptContext()->GetLibrary()->GetUndefined();

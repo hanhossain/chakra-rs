@@ -203,9 +203,6 @@ function_name() to call the system's implementation
 #ifdef stdin
 #undef stdin
 #endif
-#ifdef stdout
-#undef stdout
-#endif
 #ifdef stderr
 #undef stderr
 #endif
@@ -261,7 +258,6 @@ function_name() to call the system's implementation
 #undef size_t
 #undef time_t
 #undef stdin
-#undef stdout
 #undef stderr
 #undef abs
 #undef labs

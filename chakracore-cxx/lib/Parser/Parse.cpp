@@ -518,7 +518,7 @@ int32_t Parser::ParseSourceInternal(
         if (Js::Configuration::Global.flags.Trace.IsEnabled(Js::ParsePhase))
         {
             PrintPnodeWIndent(pnodeBase, 4);
-            PAL_fflush(stdout);
+            PAL_fflush(PAL_stdout);
         }
 #endif
 
@@ -14511,7 +14511,7 @@ void Parser::ProcessCapturedNames(ParseNodeFnc* pnodeFnc)
         if (Js::Configuration::Global.flags.Trace.IsEnabled(Js::CreateParserStatePhase))
         {
             DumpCapturedNames(pnodeFnc, capturedNames, &this->m_nodeAllocator);
-            PAL_fflush(stdout);
+            PAL_fflush(PAL_stdout);
         }
 #endif
     }
