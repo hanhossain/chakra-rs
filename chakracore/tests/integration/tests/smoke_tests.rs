@@ -1,16 +1,13 @@
+use crate::common::CH_PATH;
 use std::path::PathBuf;
 
 // TODO (hanhossain): use common module
 #[test]
 fn hello() {
-    let out_dir = env!("OUT_DIR");
-
-    let ch = PathBuf::from(out_dir).join("build/bin/ch/ch");
-
     let source =
         PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../chakracore-cxx/test/Basics/hello.js");
 
-    let mut ch_exe = std::process::Command::new(ch);
+    let mut ch_exe = std::process::Command::new(CH_PATH);
     ch_exe.arg(source);
     let output = ch_exe.output().unwrap();
 

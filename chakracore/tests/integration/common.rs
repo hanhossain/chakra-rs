@@ -5,6 +5,7 @@ use std::path::PathBuf;
 use std::process::Command;
 use std::time::Duration;
 
+pub const CH_PATH: &'static str = concat!(env!("OUT_DIR"), "/build/chakracore-cxx/bin/ch/ch");
 pub const SLOW_TEST_TIMEOUT: Duration = Duration::from_secs(180);
 pub const DEFAULT_TAGS: [&str; 0] = [];
 
@@ -170,10 +171,8 @@ pub fn run_test_variant<const N: usize>(
 
     assert!(source.exists());
 
-    let out_dir = PathBuf::from(env!("OUT_DIR"));
-
     if cfg!(feature = "compile-cpp") {
-        let mut ch = Command::new(out_dir.join("build/bin/ch/ch"));
+        let mut ch = Command::new(CH_PATH);
         ch.current_dir(test_dir)
             .arg(source)
             .arg("-ExtendedErrorStackForTestHost")
