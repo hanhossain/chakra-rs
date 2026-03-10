@@ -27,7 +27,7 @@ fn build_cmake(optimized: bool, debug: bool) {
         (_, false) => "Release",
     };
 
-    let mut config = cmake::Config::new("../chakracore-cxx");
+    let mut config = cmake::Config::new("..");
     config
         .init_c_cfg(cc_config)
         .generator("Ninja")
