@@ -67,9 +67,9 @@ fn build_cmake(optimized: bool, debug: bool) {
         println!("cargo::rustc-link-lib=icuuc");
         println!("cargo::rustc-link-lib=icui18n");
         println!("cargo::rustc-link-lib=icudata");
-    }
 
-    println!("cargo::rustc-link-lib=framework=CoreFoundation");
+        println!("cargo::rustc-link-lib=framework=CoreFoundation");
+    }
 
     println!("cargo::rerun-if-changed=../chakracore-cxx/");
     println!("cargo::rerun-if-changed=../CMakeLists.txt");
