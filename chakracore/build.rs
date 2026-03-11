@@ -37,8 +37,7 @@ fn build_cmake(optimized: bool, debug: bool) {
         .generator("Ninja")
         .define("CMAKE_CXX_COMPILER", "clang++")
         .define("CMAKE_C_COMPILER", "clang")
-        .profile(build_type)
-        .build_target("ch");
+        .profile(build_type);
 
     let target = std::env::var("TARGET").unwrap();
     if target.contains("darwin") {
@@ -50,16 +49,8 @@ fn build_cmake(optimized: bool, debug: bool) {
     config.always_configure(false);
     let dst = config.build();
 
-    println!(
-        "cargo::rustc-link-search=native={}/build/chakracore-cxx/bin/ch",
-        dst.display()
-    );
+    println!("cargo::rustc-link-search=native={}/lib", dst.display());
     println!("cargo::rustc-link-lib=chhelper");
-
-    println!(
-        "cargo::rustc-link-search=native={}/build/chakracore-cxx/lib",
-        dst.display()
-    );
     println!("cargo::rustc-link-lib=ChakraCoreStatic");
 
     if cfg!(target_os = "macos") {
