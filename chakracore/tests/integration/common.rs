@@ -5,7 +5,7 @@ use std::path::PathBuf;
 use std::process::Command;
 use std::time::Duration;
 
-pub const CH_PATH: &'static str = concat!(env!("OUT_DIR"), "/build/chakracore-cxx/bin/ch/ch");
+pub const CH_PATH: &'static str = env!("CARGO_BIN_EXE_chakracore");
 pub const SLOW_TEST_TIMEOUT: Duration = Duration::from_secs(180);
 pub const DEFAULT_TAGS: [&str; 0] = [];
 
