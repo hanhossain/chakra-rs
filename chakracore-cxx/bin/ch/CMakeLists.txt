@@ -5,7 +5,6 @@ set(ch_source_files
   HostConfigFlags.cpp
   WScriptJsrt.cpp
   RuntimeThreadData.cpp
-  simple.cpp
   ../ChakraCore/TestHooks.cpp
   )
 
