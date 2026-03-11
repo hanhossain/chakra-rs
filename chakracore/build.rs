@@ -64,12 +64,13 @@ fn build_cmake(optimized: bool, debug: bool) {
 
     if cfg!(target_os = "macos") {
         println!("cargo::rustc-link-search=native=/opt/homebrew/opt/icu4c@77/lib");
-        println!("cargo::rustc-link-lib=icuuc");
-        println!("cargo::rustc-link-lib=icui18n");
         println!("cargo::rustc-link-lib=icudata");
 
         println!("cargo::rustc-link-lib=framework=CoreFoundation");
     }
+
+    println!("cargo::rustc-link-lib=icuuc");
+    println!("cargo::rustc-link-lib=icui18n");
 
     println!("cargo::rerun-if-changed=../chakracore-cxx/");
     println!("cargo::rerun-if-changed=../CMakeLists.txt");
