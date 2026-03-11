@@ -14,20 +14,20 @@ fn main() {
     //     println!("cargo::rustc-cfg=disable_jit");
     // }
     cxx_build::bridge("src/main.rs")
-        .include("../simple-cxx")
+        .include("../chakracore-cxx/bin/ch")
         .compile("binding");
 
-    let dst = cmake::Config::new("..")
-        .generator("Ninja")
-        .build_target("simple-cxx")
-        .build();
+    // let dst = cmake::Config::new("..")
+    //     .generator("Ninja")
+    //     .build_target("ch")
+    //     .build();
     println!(
-        "cargo::rustc-link-search=native={}/build/simple-cxx",
-        dst.display()
+        "cargo::rustc-link-search=native={}/../build/chakracore-cxx/bin/ch",
+        env!("CARGO_MANIFEST_DIR")
     );
-    println!("cargo::rustc-link-lib=simple-cxx");
+    println!("cargo::rustc-link-lib=chhelper");
 
-    println!("cargo::rerun-if-changed=../simple-cxx/");
+    println!("cargo::rerun-if-changed=../chakracore-cxx/");
     println!("cargo::rerun-if-changed=../CMakeLists.txt");
 }
 

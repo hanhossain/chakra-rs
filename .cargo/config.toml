@@ -2,6 +2,7 @@
 b = "build --features compile-cpp"
 bt = "build --features compile-cpp,optimized-tests"
 ct = "check --features optimized-tests"
+r = "run --features compile-cpp"
 t = "test --features compile-cpp"
 tt = "test --features compile-cpp,optimized-tests"
 nt = "nextest run --features compile-cpp"

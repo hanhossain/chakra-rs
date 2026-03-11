@@ -3,5 +3,4 @@ project(chakra_rs)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# add_subdirectory(chakracore-cxx)
-add_subdirectory(simple-cxx)
+add_subdirectory(chakracore-cxx)
