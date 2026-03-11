@@ -1,0 +1,1 @@
+int main_internal(int argc, char** c_argv);

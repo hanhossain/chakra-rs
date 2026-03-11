@@ -1,4 +1,5 @@
 set(ch_source_files
+  chhelper.cpp
   ChakraRtInterface.cpp
   Helpers.cpp
   HostConfigFlags.cpp
