@@ -13,6 +13,15 @@ fn main() {
     // if !cfg!(target_arch = "x86_64") && cfg!(unix) {
     //     println!("cargo::rustc-cfg=disable_jit");
     // }
+    cxx_build::bridge("src/main.rs")
+        .include("../simple-cxx")
+        .compile("binding");
+    let manifest_dir = env!("CARGO_MANIFEST_DIR");
+
+    println!("cargo::rustc-link-search=native={manifest_dir}/../build/simple-cxx");
+    println!("cargo::rustc-link-lib=simple-cxx");
+    println!("cargo::rerun-if-changed=../simple-cxx/");
+    println!("cargo::rerun-if-changed=../CMakeLists.txt");
 }
 
 // fn build_cmake(optimized: bool, debug: bool) {
