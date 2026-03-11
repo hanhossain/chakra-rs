@@ -16,10 +16,17 @@ fn main() {
     cxx_build::bridge("src/main.rs")
         .include("../simple-cxx")
         .compile("binding");
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
 
-    println!("cargo::rustc-link-search=native={manifest_dir}/../build/simple-cxx");
+    let dst = cmake::Config::new("..")
+        .generator("Ninja")
+        .build_target("simple-cxx")
+        .build();
+    println!(
+        "cargo::rustc-link-search=native={}/build/simple-cxx",
+        dst.display()
+    );
     println!("cargo::rustc-link-lib=simple-cxx");
+
     println!("cargo::rerun-if-changed=../simple-cxx/");
     println!("cargo::rerun-if-changed=../CMakeLists.txt");
 }
