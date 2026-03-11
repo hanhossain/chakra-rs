@@ -4,10 +4,12 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+cxx = "1.0.194"
 
 [build-dependencies]
 cc = { version = "1.2.56", features = ["parallel"] }
 cmake = "0.1.57"
+cxx-build = "1.0.194"
 
 [dev-dependencies]
 pretty_assertions = "1.4.1"
