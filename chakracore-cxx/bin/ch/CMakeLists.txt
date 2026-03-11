@@ -1,14 +1,15 @@
 set(ch_source_files
-  ch.cpp
   ChakraRtInterface.cpp
   Helpers.cpp
   HostConfigFlags.cpp
   WScriptJsrt.cpp
   RuntimeThreadData.cpp
+  simple.cpp
   ../ChakraCore/TestHooks.cpp
   )
 
-add_executable (ch ${ch_source_files})
+add_executable (ch ch.cpp)
+add_library(chhelper ${ch_source_files})
 
 set_target_properties(ch
   PROPERTIES
@@ -20,7 +21,7 @@ if(CC_TARGETS_AMD64)
 endif()
 
 # TODO (hanhossain): cleanup includes
-target_include_directories (ch PUBLIC
+target_include_directories (chhelper PUBLIC
   ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlaceHolder
   ${CHAKRACORE_SOURCE_DIR}/pal/inc
   ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
@@ -71,11 +72,12 @@ else()
 endif()
 
 target_link_libraries (ch
+  chhelper
   ${lib_target}
   )
 
-target_compile_definitions(ch PUBLIC
+target_compile_definitions(chhelper PUBLIC
     PAL_STDCPP_COMPAT
 )
 
-target_precompile_headers(ch PRIVATE stdafx.h)
+target_precompile_headers(chhelper PUBLIC stdafx.h)
