@@ -1,8 +1,9 @@
 use std::ffi::{CString, c_char};
 use std::os::unix::ffi::OsStrExt;
+use std::process::ExitCode;
 use std::ptr;
 
-fn main() {
+fn main() -> ExitCode {
     let args: Vec<CString> = std::env::args_os()
         .map(|os_str| {
             let bytes = os_str.as_bytes();
@@ -16,6 +17,11 @@ fn main() {
         .collect();
 
     let argc = args.len();
+
+    if argc < 2 {
+        return ExitCode::FAILURE;
+    }
+
     let mut argv: Vec<*mut c_char> = Vec::with_capacity(argc + 1);
     for arg in &args {
         argv.push(arg.as_ptr() as *mut c_char);
@@ -23,6 +29,7 @@ fn main() {
     argv.push(ptr::null_mut());
 
     unsafe {
-        chakracore::ffi::main_internal(argc as i32, argv.as_mut_ptr());
+        let exit_code = chakracore::ffi::main_internal(argc as i32, argv.as_mut_ptr());
+        ExitCode::from(exit_code as u8)
     }
 }
