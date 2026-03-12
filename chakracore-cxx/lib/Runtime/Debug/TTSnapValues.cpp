@@ -1181,7 +1181,7 @@ namespace TTD
 
             SourceContextInfo * sourceContextInfo = ctx->CreateSourceContextInfo((unsigned long)sourceContext, srcUri, srcUriLength, nullptr);
 
-            TTDAssert(fbInfo->TopLevelBase.IsUtf8 || sizeof(wchar) == sizeof(char16_t), "Non-utf8 code only allowed on windows!!!");
+            TTDAssert(fbInfo->TopLevelBase.IsUtf8 || sizeof(char16_t) == sizeof(char16_t), "Non-utf8 code only allowed on windows!!!");
             const int chsize = (fbInfo->LoadFlag & LoadScriptFlag_Utf8Source) ? sizeof(char) : sizeof(char16_t);
             SRCINFO si = {
                 /* sourceContextInfo   */ sourceContextInfo,

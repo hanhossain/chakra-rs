@@ -165,7 +165,7 @@ utf8char_t* VTuneChakraProfile::GetUrl(Js::FunctionBody* body, size_t* urlBuffer
     utf8char_t* utf8Url = NULL;
     if (!body->GetSourceContextInfo()->IsDynamic())
     {
-        const wchar* url = body->GetSourceContextInfo()->url;
+        const char16_t* url = body->GetSourceContextInfo()->url;
         if (url)
         {
             size_t urlCharLength = PAL_wcslen(url);

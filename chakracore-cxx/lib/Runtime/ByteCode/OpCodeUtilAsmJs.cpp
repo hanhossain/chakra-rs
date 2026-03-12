@@ -39,7 +39,7 @@ namespace Js
     }
 
 #else
-    wchar const * OpCodeUtilAsmJs::GetOpCodeName(OpCodeAsmJs op)
+    char16_t const * OpCodeUtilAsmJs::GetOpCodeName(OpCodeAsmJs op)
     {
         return u"<NotAvail>";
     }

@@ -1864,9 +1864,9 @@ GlobOpt::IsAllowedForMemOpt(IR::Instr* instr, bool isMemset, IR::RegOpnd *baseOp
         )
     {
 #if DBG_DUMP
-        wchar indexValueTypeStr[VALUE_TYPE_MAX_STRING_SIZE];
+        char16_t indexValueTypeStr[VALUE_TYPE_MAX_STRING_SIZE];
         indexValueType.ToString(indexValueTypeStr);
-        wchar baseValueTypeStr[VALUE_TYPE_MAX_STRING_SIZE];
+        char16_t baseValueTypeStr[VALUE_TYPE_MAX_STRING_SIZE];
         baseValueType.ToString(baseValueTypeStr);
         TRACE_MEMOP_VERBOSE(loop, instr, u"Index[%s] or Array[%s] value type is invalid", indexValueTypeStr, baseValueTypeStr);
 #endif

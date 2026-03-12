@@ -865,7 +865,7 @@ int main_internal(int argc, char** c_argv)
 
     for(int i = 1; i < argc; ++i)
     {
-        const wchar *arg = argv[i];
+        const char16_t *arg = argv[i];
         size_t arglen = PAL_wcslen(arg);
 
         // support - or / prefix for flags
@@ -907,13 +907,13 @@ int main_internal(int argc, char** c_argv)
         else if(PAL_wcsstr(argv[i], u"-TTRecord=") == argv[i])
         {
             doTTRecord = true;
-            wchar* ruri = argv[i] + PAL_wcslen(u"-TTRecord=");
+            char16_t* ruri = argv[i] + PAL_wcslen(u"-TTRecord=");
             Helpers::GetTTDDirectory(ruri, &ttUriLength, ttUri, ttUriBufferLength);
         }
         else if(PAL_wcsstr(argv[i], u"-TTReplay=") == argv[i])
         {
             doTTReplay = true;
-            wchar* ruri = argv[i] + PAL_wcslen(u"-TTReplay=");
+            char16_t* ruri = argv[i] + PAL_wcslen(u"-TTReplay=");
             Helpers::GetTTDDirectory(ruri, &ttUriLength, ttUri, ttUriBufferLength);
         }
         else if(PAL_wcsstr(argv[i], u"-TTSnapInterval=") == argv[i])
@@ -933,7 +933,7 @@ int main_internal(int argc, char** c_argv)
         }
         else
         {
-            wchar *temp = argv[cpos];
+            char16_t *temp = argv[cpos];
             argv[cpos] = argv[i];
             argv[i] = temp;
             cpos++;

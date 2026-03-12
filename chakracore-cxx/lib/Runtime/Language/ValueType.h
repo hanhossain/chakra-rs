@@ -308,10 +308,10 @@ private:
     static size_t GetLowestBitIndex(const Bits b);
     void ToVerboseString(char (&str)[VALUE_TYPE_MAX_STRING_SIZE]) const;
 public:
-    void ToString(wchar (&str)[VALUE_TYPE_MAX_STRING_SIZE]) const;
+    void ToString(char16_t (&str)[VALUE_TYPE_MAX_STRING_SIZE]) const;
     void ToString(char (&str)[VALUE_TYPE_MAX_STRING_SIZE]) const;
     void ToStringDebug(__out_ecount(strSize) char *const str, const size_t strSize) const;
-    static bool FromString(const wchar *const str, ValueType *valueType);
+    static bool FromString(const char16_t *const str, ValueType *valueType);
     static bool FromString(const char *const str, ValueType *valueType);
 
 public:

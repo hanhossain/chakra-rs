@@ -142,7 +142,7 @@ namespace Js
         return this->GetUtf8SourceInfo()->GetSrcInfo()->sourceContextInfo->sourceContextId;
     }
 
-    char16_t* FunctionProxy::GetDebugNumberSet(wchar(&bufferToWriteTo)[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE]) const
+    char16_t* FunctionProxy::GetDebugNumberSet(char16_t(&bufferToWriteTo)[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE]) const
     {
         // (#%u.%u), #%u --> (source file Id . function Id) , function Number
         int len = swprintf_s(bufferToWriteTo, MAX_FUNCTION_BODY_DEBUG_STRING_SIZE, u" (#%d.%u), #%u",
