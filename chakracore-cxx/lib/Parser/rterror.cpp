@@ -92,7 +92,7 @@ const char16_t* LoadResourceStr(uint32_t id)
     }
 
     _ResourceStr key = { id, nullptr };
-    const void* p = PAL_bsearch(&key,
+    const void* p = bsearch(&key,
         s_resourceStrs, _countof(s_resourceStrs), sizeof(s_resourceStrs[0]),
         compare_ResourceStr);
 

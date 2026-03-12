@@ -94,34 +94,6 @@ PAL_rand(void)
     return ret;
 }
 
-void * PAL_bsearch(const void *key, const void *base, size_t nmemb, size_t size,
-            int (*compar)(const void *, const void *))
-{
-    void *retval;
-
-    ENTRY("bsearch(key=%p, base=%p, nmemb=%lu, size=%lu, compar=%p\n",
-          key, base, (unsigned long) nmemb, (unsigned long) size, compar);
-
-/* reset ENTRY nesting level back to zero, bsearch will invoke app-defined
-   callbacks and we want their entry traces... */
-#if _ENABLE_DEBUG_MESSAGES_
-{
-    int old_level;
-    old_level = DBG_change_entrylevel(0);
-#endif /* _ENABLE_DEBUG_MESSAGES_ */
-
-    retval = bsearch(key,base,nmemb,size,compar);
-
-/* ...and set nesting level back to what it was */
-#if _ENABLE_DEBUG_MESSAGES_
-    DBG_change_entrylevel(old_level);
-}
-#endif /* _ENABLE_DEBUG_MESSAGES_ */
-
-    LOGEXIT("bsearch returns %p\n",retval);
-    return retval;
-}
-
 /*++
 Function:
   MiscGetEnvArray
