@@ -250,7 +250,7 @@ int32_t RunScript(const char* fileName, const char * fileContents, size_t fileLe
                 {
                     PAL_wprintf(u"An unhandled script exception occurred!!!\n");
 
-                    ExitProcess(0);
+                    exit(0);
                 }
 
                 if(nextEventTime == -1)
@@ -263,7 +263,7 @@ int32_t RunScript(const char* fileName, const char * fileContents, size_t fileLe
         catch(...)
         {
             PAL_wprintf(u"Terminal exception in Replay -- exiting.\n");
-            ExitProcess(0);
+            exit(0);
         }
 #endif
     }
@@ -944,7 +944,7 @@ int main_internal(int argc, char** c_argv)
     if(doTTRecord & doTTReplay)
     {
         PAL_fwprintf(PAL_stderr, u"Cannot run in record and replay at same time!!!");
-        ExitProcess(0);
+        exit(0);
     }
 
     HostConfigFlags::pfnPrintUsage = PrintUsageFormat;

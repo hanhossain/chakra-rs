@@ -1044,65 +1044,7 @@ void
 ExitProcess(
      uint32_t uExitCode)
 {
-    uint32_t old_terminator;
-
-    ENTRY("ExitProcess(uExitCode=0x%x)\n", uExitCode );
-
-    old_terminator = InterlockedCompareExchange(&terminator, GetCurrentThreadId(), 0);
-
-    if (GetCurrentThreadId() == old_terminator)
-    {
-        // This thread has already initiated termination. This can happen
-        // in two ways:
-        // 1) DllMain(DLL_PROCESS_DETACH) triggers a call to ExitProcess.
-        // 2) PAL_exit() is called after the last PALTerminate().
-        // If the PAL is still initialized, we go straight through to
-        // PROCEndProcess. If it isn't, we simply exit.
-        if (!PALIsInitialized())
-        {
-            exit(uExitCode);
-            ASSERT("exit has returned\n");
-        }
-        else
-        {
-            WARN("thread re-called ExitProcess\n");
-            PROCEndProcess(GetCurrentProcess(), uExitCode, FALSE);
-        }
-    }
-    else if (0 != old_terminator)
-    {
-        /* another thread has already initiated the termination process. we
-           could just block on the PALInitLock critical section, but then
-           PROCSuspendOtherThreads would hang... so sleep forever here, we're
-           terminating anyway
-
-           Update: [TODO] PROCSuspendOtherThreads has been removed. Can this
-           code be changed? */
-        WARN("termination already started from another thread; blocking.\n");
-        poll(NULL, 0, INFTIM);
-    }
-
-    /* ExitProcess may be called even if PAL is not initialized.
-       Verify if process structure exist
-    */
-    if (PALInitLock() && PALIsInitialized())
-    {
-        PROCEndProcess(GetCurrentProcess(), uExitCode, FALSE);
-
-        /* Should not get here, because we terminate the current process */
-        ASSERT("PROCEndProcess has returned\n");
-    }
-    else
-    {
-        exit(uExitCode);
-
-        /* Should not get here, because we terminate the current process */
-        ASSERT("exit has returned\n");
-    }
-
-    /* this should never get executed */
-    ASSERT("ExitProcess should not return!\n");
-    while (true);
+    exit(uExitCode);
 }
 
 /*++
