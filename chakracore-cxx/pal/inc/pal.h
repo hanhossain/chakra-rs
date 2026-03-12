@@ -577,12 +577,6 @@ typedef struct _PROCESS_INFORMATION {
 } *LPPROCESS_INFORMATION;
 
 // TODO (hanhossain): public
-__attribute__((noreturn))
-void
-ExitProcess(
-         uint32_t uExitCode);
-
-// TODO (hanhossain): public
 BOOL
 TerminateProcess(
           HANDLE hProcess,

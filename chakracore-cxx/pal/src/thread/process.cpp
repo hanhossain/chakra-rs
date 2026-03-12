@@ -1035,20 +1035,6 @@ InternalCreateProcessExit:
 
 /*++
 Function:
-  ExitProcess
-
-See MSDN doc.
---*/
-__attribute__((noreturn))
-void
-ExitProcess(
-     uint32_t uExitCode)
-{
-    exit(uExitCode);
-}
-
-/*++
-Function:
   TerminateProcess
 
 Note:
