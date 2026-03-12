@@ -32,7 +32,7 @@ PAL_exit(int status)
     ENTRY ("exit(status=%d)\n", status);
 
     /* should also clean up any resources allocated by pal/cruntime, if any */
-    ExitProcess(status);
+    exit(status);
 
     LOGEXIT ("exit returns void");
 }

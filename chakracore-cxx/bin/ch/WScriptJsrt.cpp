@@ -195,7 +195,7 @@ JsValueRef WScriptJsrt::QuitCallback(JsValueRef callee, bool isConstructCall, Js
         exitCode = (int)exitCodeDouble;
     }
 
-    ExitProcess(exitCode);
+    exit(exitCode);
 }
 
 JsValueRef WScriptJsrt::LoadScriptFileCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
