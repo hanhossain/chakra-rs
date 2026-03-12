@@ -2,15 +2,6 @@ use std::ffi::{CString, c_char};
 use std::os::unix::ffi::OsStrExt;
 use std::ptr;
 
-#[cxx::bridge]
-mod ffi {
-    extern "C++" {
-        include!("chhelper.h");
-
-        unsafe fn main_internal(argc: i32, argv: *mut *mut c_char) -> i32;
-    }
-}
-
 fn main() {
     let args: Vec<CString> = std::env::args_os()
         .map(|os_str| {
@@ -32,6 +23,6 @@ fn main() {
     argv.push(ptr::null_mut());
 
     unsafe {
-        ffi::main_internal(argc as i32, argv.as_mut_ptr());
+        chakracore::ffi::main_internal(argc as i32, argv.as_mut_ptr());
     }
 }

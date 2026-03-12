@@ -1,5 +1,5 @@
 fn main() {
-    cxx_build::bridge("src/main.rs")
+    cxx_build::bridge("src/lib.rs")
         .include("../chakracore-cxx/bin/ch")
         .compile("binding");
 
