@@ -2689,9 +2689,6 @@ inline long abs(long _X) {
 #endif // !PAL_STDCPP_COMPAT
 
 // TODO (hanhossain): public
-__attribute__((noreturn)) void PAL_exit(int);
-
-// TODO (hanhossain): public
 void * PAL_bsearch(const void *, const void *, size_t, size_t, int (*)(const void *, const void *));
 
 // TODO (hanhossain): public

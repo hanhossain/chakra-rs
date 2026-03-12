@@ -75,7 +75,6 @@ set(SOURCES
   cruntime/printfcpp.cpp
   cruntime/silent_printf.cpp
   cruntime/string.cpp
-  cruntime/thread.cpp
   cruntime/wchar.cpp
   cruntime/runtime_proxy.cpp
   safecrt/makepath_s.cpp

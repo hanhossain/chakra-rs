@@ -24,12 +24,12 @@ void TTDHostBuildCurrentExeDirectory(char* path, size_t* pathLength, size_t buff
     if (i == 0)
     {
         PAL_fwprintf(PAL_stderr, u"Can't get current exe directory");
-        PAL_exit(1);
+        exit(1);
     }
     if (i + 2 > bufferLength)
     {
         PAL_fwprintf(PAL_stderr, u"Don't overflow path buffer during copy");
-        PAL_exit(1);
+        exit(1);
     }
     memcpy_s(path, bufferLength, exePath, i + 1);
     *pathLength = i + 1;
@@ -435,7 +435,7 @@ void Helpers::TTReportLastIOErrorAsNeeded(BOOL ok, const char* msg)
         PAL_fprintf(PAL_stderr, "Message is: %s\n", msg);
 
         AssertMsg(false, "IO Error!!!");
-        PAL_exit(1);
+        exit(1);
     }
 }
 
@@ -448,7 +448,7 @@ void Helpers::CreateTTDDirectoryAsNeeded(size_t* uriLength, char* uri, const cha
     {
         PAL_wprintf(u"We assume bounded MAX_URI_LENGTH for simplicity.\n");
         PAL_wprintf(u"%S, %S, %ls\n", uri, asciiDir1, asciiDir2);
-        PAL_exit(1);
+        exit(1);
     }
 
     int success = 0;
@@ -459,7 +459,7 @@ void Helpers::CreateTTDDirectoryAsNeeded(size_t* uriLength, char* uri, const cha
     {
         PAL_wprintf(u"Failed directory extension 1.\n");
         PAL_wprintf(u"%S, %S, %ls\n", uri, asciiDir1, asciiDir2);
-        PAL_exit(1);
+        exit(1);
     }
     *uriLength += extLength;
 
@@ -477,7 +477,7 @@ void Helpers::CreateTTDDirectoryAsNeeded(size_t* uriLength, char* uri, const cha
         if(asciiDir2[i] > CHAR_MAX)
         {
             PAL_wprintf(u"Test directory names can only include ascii chars.\n");
-            PAL_exit(1);
+            exit(1);
         }
         realAsciiDir2[i] = (char)asciiDir2[i];
     }
@@ -487,7 +487,7 @@ void Helpers::CreateTTDDirectoryAsNeeded(size_t* uriLength, char* uri, const cha
     {
         PAL_wprintf(u"Failed directory create 2.\n");
         PAL_wprintf(u"%S, %S, %ls\n", uri, asciiDir1, asciiDir2);
-        PAL_exit(1);
+        exit(1);
     }
     *uriLength += extLength;
 
@@ -513,7 +513,7 @@ JsTTDStreamHandle CALLBACK Helpers::TTCreateStreamCallback(size_t uriLength, con
     if(uriLength + asciiNameLength + 1 > MAX_URI_LENGTH)
     {
         PAL_wprintf(u"We assume bounded MAX_URI_LENGTH for simplicity.");
-        PAL_exit(1);
+        exit(1);
     }
 
     char path[MAX_URI_LENGTH];

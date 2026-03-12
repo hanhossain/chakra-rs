@@ -3398,7 +3398,7 @@ void ByteCodeGenerator::EmitScopeList(ParseNode *pnode, ParseNode *breakOnBodySc
                 }
                 else if (CONFIG_FLAG(AsmJsStopOnError))
                 {
-                    PAL_exit(JSERR_AsmJsCompileError);
+                    exit(JSERR_AsmJsCompileError);
                 }
                 else
                 {
