@@ -1002,13 +1002,13 @@ namespace Js
         return nullptr;
     }
 
-    bool AsmJsModuleCompiler::Fail(ParseNode* usepn, const wchar *error)
+    bool AsmJsModuleCompiler::Fail(ParseNode* usepn, const char16_t *error)
     {
         AsmJSCompiler::OutputError(GetScriptContext(), error);
         return false;
     }
 
-    bool AsmJsModuleCompiler::FailName(ParseNode *usepn, const wchar *fmt, PropertyName name)
+    bool AsmJsModuleCompiler::FailName(ParseNode *usepn, const char16_t *fmt, PropertyName name)
     {
         AsmJSCompiler::OutputError(GetScriptContext(), fmt, name->Psz());
         return false;

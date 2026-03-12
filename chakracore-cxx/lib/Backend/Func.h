@@ -288,7 +288,7 @@ public:
         return m_entryPointInfo;
     }
 
-    char16_t* GetDebugNumberSet(wchar(&bufferToWriteTo)[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE]) const
+    char16_t* GetDebugNumberSet(char16_t(&bufferToWriteTo)[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE]) const
     {
         return m_workItem->GetJITTimeInfo()->GetDebugNumberSet(bufferToWriteTo);
     }

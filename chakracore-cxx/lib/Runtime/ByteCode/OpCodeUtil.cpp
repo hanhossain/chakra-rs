@@ -220,7 +220,7 @@ namespace Js
     }
 
 #else
-    wchar const * OpCodeUtil::GetOpCodeName(OpCode op)
+    char16_t const * OpCodeUtil::GetOpCodeName(OpCode op)
     {
         return u"<NotAvail>";
     }

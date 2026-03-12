@@ -8,7 +8,6 @@
 
 #define _u(s) u##s
 
-typedef char16_t wchar;
 typedef unsigned int uint;
 typedef unsigned short ushort;
 

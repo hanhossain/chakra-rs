@@ -955,7 +955,7 @@ namespace TTD
                 sourceContextInfo = ctx->CreateSourceContextInfo((unsigned long)cpAction->SourceContextId, srcUri, srcUriLength, nullptr);
             }
 
-            TTDAssert(cpAction->IsUtf8 || sizeof(wchar) == sizeof(char16_t), "Non-utf8 code only allowed on windows!!!");
+            TTDAssert(cpAction->IsUtf8 || sizeof(char16_t) == sizeof(char16_t), "Non-utf8 code only allowed on windows!!!");
             const int chsize = (cpAction->LoadFlag & LoadScriptFlag_Utf8Source) ? sizeof(char) : sizeof(char16_t);
             SRCINFO si = {
                 /* sourceContextInfo   */ sourceContextInfo,

@@ -442,7 +442,7 @@ void Helpers::TTReportLastIOErrorAsNeeded(BOOL ok, const char* msg)
 //We assume bounded ascii path length for simplicity
 #define MAX_TTD_ASCII_PATH_EXT_LENGTH 64
 
-void Helpers::CreateTTDDirectoryAsNeeded(size_t* uriLength, char* uri, const char* asciiDir1, const wchar* asciiDir2)
+void Helpers::CreateTTDDirectoryAsNeeded(size_t* uriLength, char* uri, const char* asciiDir1, const char16_t* asciiDir2)
 {
     if(*uriLength + strlen(asciiDir1) + PAL_wcslen(asciiDir2) + 2 > MAX_URI_LENGTH || strlen(asciiDir1) >= MAX_TTD_ASCII_PATH_EXT_LENGTH || PAL_wcslen(asciiDir2) >= MAX_TTD_ASCII_PATH_EXT_LENGTH)
     {
@@ -499,7 +499,7 @@ void Helpers::CreateTTDDirectoryAsNeeded(size_t* uriLength, char* uri, const cha
     }
 }
 
-void Helpers::GetTTDDirectory(const wchar* curi, size_t* uriLength, char* uri, size_t bufferLength)
+void Helpers::GetTTDDirectory(const char16_t* curi, size_t* uriLength, char* uri, size_t bufferLength)
 {
     TTDHostBuildCurrentExeDirectory(uri, uriLength, bufferLength);
 

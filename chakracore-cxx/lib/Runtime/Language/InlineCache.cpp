@@ -1109,7 +1109,7 @@ namespace Js
     void FunctionBodyPolymorphicInlineCache::PrintStats(InlineCacheData *data) const
     {
         char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-        wchar funcName[1024];
+        char16_t funcName[1024];
         uint total = data->hits + data->misses;
         char16_t const *propName = this->functionBody->GetScriptContext()->GetThreadContext()->GetPropertyName(data->propertyId)->GetBuffer();
         swprintf_s(funcName, u"%s (%s)", this->functionBody->GetExternalDisplayName(), this->functionBody->GetDebugNumberSet(debugStringBuffer));

@@ -12,8 +12,6 @@
 // Utf8Codex.h needs to be self contained, so these type defs are duplicated from CommonTypeDefs.h
 #define _u(s) u##s
 
-typedef char16_t wchar;
-
 #ifndef Unused
 #define Unused(var) var
 #endif
