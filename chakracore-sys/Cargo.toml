@@ -8,6 +8,7 @@ links = "chakracore-sys"
 cxx = "1.0.194"
 
 [build-dependencies]
+cc = { version = "1.2.56", features = ["parallel"] }
 cmake = "0.1.57"
 cxx-build = "1.0.194"
 
