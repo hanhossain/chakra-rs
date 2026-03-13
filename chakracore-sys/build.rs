@@ -38,8 +38,8 @@ fn main() {
         println!("cargo::rustc-link-lib=framework=CoreFoundation");
     }
 
-    println!("cargo::rustc-link-lib=static=icuuc");
-    println!("cargo::rustc-link-lib=static=icui18n");
+    println!("cargo::rustc-link-lib=icuuc");
+    println!("cargo::rustc-link-lib=icui18n");
 
     println!("cargo::rerun-if-changed=../chakracore-cxx/");
     println!("cargo::rerun-if-changed=../CMakeLists.txt");
