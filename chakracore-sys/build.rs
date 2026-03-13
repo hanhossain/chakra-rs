@@ -11,8 +11,14 @@ fn main() {
         (_, false) => "Release",
     };
 
+    let mut cc_config = cc::Build::new();
+    if !cc_config.get_compiler().is_like_clang() {
+        cc_config.compiler("clang");
+    }
+
     let mut config = cmake::Config::new("..");
     config
+        .init_c_cfg(cc_config)
         .generator("Ninja")
         .define("CMAKE_CXX_COMPILER", "clang++")
         .define("CMAKE_C_COMPILER", "clang")
