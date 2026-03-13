@@ -17,11 +17,6 @@ fn main() -> ExitCode {
         .collect();
 
     let argc = args.len();
-
-    if argc < 2 {
-        return ExitCode::FAILURE;
-    }
-
     let mut argv: Vec<*mut c_char> = Vec::with_capacity(argc + 1);
     for arg in &args {
         argv.push(arg.as_ptr() as *mut c_char);
@@ -29,7 +24,7 @@ fn main() -> ExitCode {
     argv.push(ptr::null_mut());
 
     unsafe {
-        let exit_code = chakracore_sys::ffi::main_internal(argc as i32, argv.as_mut_ptr());
-        ExitCode::from(exit_code as u8)
+        let res = chakracore_sys::ffi::main_internal(argc as i32, argv.as_mut_ptr());
+        ExitCode::from(res as u8)
     }
 }

@@ -863,6 +863,14 @@ int main_internal(int argc, char** c_argv)
     bool success = false;
     ChakraRTInterface::ArgInfo argInfo;
 
+    if (argc < 2)
+    {
+        PrintUsage();
+        PAL_Shutdown();
+        retval = EXIT_FAILURE;
+        goto return_cleanup;
+    }
+
     for(int i = 1; i < argc; ++i)
     {
         const char16_t *arg = argv[i];
