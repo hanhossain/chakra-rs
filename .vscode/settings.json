@@ -4,5 +4,6 @@
     },
     "[cpp]": {
         "editor.formatOnSave": false
-    }
+    },
+    "rust-analyzer.cargo.targetDir": true
 }
