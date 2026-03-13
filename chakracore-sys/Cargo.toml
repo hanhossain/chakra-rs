@@ -1,0 +1,15 @@
+[package]
+name = "chakracore-sys"
+version = "0.1.0"
+edition = "2024"
+links = "chakracore-sys"
+
+[dependencies]
+cxx = "1.0.194"
+
+[build-dependencies]
+cmake = "0.1.57"
+cxx-build = "1.0.194"
+
+[features]
+optimized-tests = []

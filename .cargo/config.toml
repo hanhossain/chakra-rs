@@ -1,9 +1,6 @@
 [alias]
-b = "build --features compile-cpp"
-bt = "build --features compile-cpp,optimized-tests"
+bt = "build --features optimized-tests"
 ct = "check --features optimized-tests"
-r = "run --features compile-cpp"
-t = "test --features compile-cpp"
-tt = "test --features compile-cpp,optimized-tests"
-nt = "nextest run --features compile-cpp"
-ntt = "nextest run --features compile-cpp,optimized-tests"
+tt = "test --features optimized-tests"
+nt = "nextest run"
+ntt = "nextest run --features optimized-tests"
