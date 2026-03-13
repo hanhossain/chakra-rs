@@ -40,11 +40,21 @@ name = "chakracore"
 version = "0.1.0"
 dependencies = [
  "cc",
+ "chakracore-sys",
  "cmake",
  "cxx",
  "cxx-build",
  "pretty_assertions",
  "rstest",
+]
+
+[[package]]
+name = "chakracore-sys"
+version = "0.1.0"
+dependencies = [
+ "cmake",
+ "cxx",
+ "cxx-build",
 ]
 
 [[package]]

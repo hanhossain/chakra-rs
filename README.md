@@ -3,8 +3,8 @@
 ## Build and test rust (and c++)
 
 ```sh
-cargo build --features compile-cpp
-cargo test --features compile-cpp
+cargo build
+cargo test
 ```
 
 ## Build C++

@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+chakracore-sys = { path = "../chakracore-sys" }
 cxx = "1.0.194"
 
 [build-dependencies]
@@ -16,5 +17,4 @@ pretty_assertions = "1.4.1"
 rstest = "0.26.1"
 
 [features]
-compile-cpp = []
-optimized-tests = []
+optimized-tests = ["chakracore-sys/optimized-tests"]

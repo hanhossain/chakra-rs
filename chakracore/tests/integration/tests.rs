@@ -80,7 +80,6 @@ mod regex;
 mod rwc;
 #[cfg(feature = "optimized-tests")]
 mod scanner;
-#[cfg(feature = "compile-cpp")]
 mod smoke_tests;
 #[cfg(feature = "optimized-tests")]
 mod stack_trace;

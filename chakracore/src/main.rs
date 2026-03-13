@@ -29,7 +29,7 @@ fn main() -> ExitCode {
     argv.push(ptr::null_mut());
 
     unsafe {
-        let exit_code = chakracore::ffi::main_internal(argc as i32, argv.as_mut_ptr());
+        let exit_code = chakracore_sys::ffi::main_internal(argc as i32, argv.as_mut_ptr());
         ExitCode::from(exit_code as u8)
     }
 }

@@ -32,10 +32,8 @@ jobs:
           - os: ubuntu
             os-image: ubuntu-latest
             deps: sudo apt-get install -y ninja-build libc++-dev libc++abi-dev
-          - build-type: debug
-            features: compile-cpp
           - build-type: test
-            features: compile-cpp,optimized-tests
+            features: "--features optimized-tests"
     env:
       CARGO_TERM_COLOR: always
       RUSTFLAGS: -D warnings
@@ -49,13 +47,13 @@ jobs:
         with:
           tool: cargo-nextest
       - name: Build
-        run: cargo build --features ${{ matrix.features }} --all-targets
+        run: cargo build ${{ matrix.features }} --all-targets
       # TODO: don't fail fast
       - name: Run tests
-        run: cargo nextest run --features ${{ matrix.features }}
+        run: cargo nextest run ${{ matrix.features }}
       # TODO: don't fail fast
       - name: Run slow tests
-        run: cargo nextest run --features ${{ matrix.features }} -- --ignored
+        run: cargo nextest run ${{ matrix.features }} -- --ignored
         env:
           CHAKRA_TEST_SLOW: true
 

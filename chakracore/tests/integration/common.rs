@@ -171,64 +171,62 @@ pub fn run_test_variant<const N: usize>(
 
     assert!(source.exists());
 
-    if cfg!(feature = "compile-cpp") {
-        let mut ch = Command::new(CH_PATH);
-        ch.current_dir(test_dir)
-            .arg(source)
-            .arg("-ExtendedErrorStackForTestHost")
-            .arg("-BaselineMode")
-            .arg("-WERExceptionSupport")
-            .args(&test.compile_flags)
-            .args(&variant_config.compile_flags);
+    let mut ch = Command::new(CH_PATH);
+    ch.current_dir(test_dir)
+        .arg(source)
+        .arg("-ExtendedErrorStackForTestHost")
+        .arg("-BaselineMode")
+        .arg("-WERExceptionSupport")
+        .args(&test.compile_flags)
+        .args(&variant_config.compile_flags);
 
-        if cfg!(unix) {
-            ch.env("TZ", "America/Los_Angeles");
-        }
-
-        println!("Running command: {ch:#?}");
-        let output = ch.output().unwrap();
-
-        let mut out = String::from_utf8(output.stdout).unwrap();
-        let err = std::str::from_utf8(&output.stderr).unwrap();
-        out.push_str(err);
-
-        let actual = out
-            .lines()
-            .map(|s| trim_carriage_return(s))
-            .collect::<Vec<_>>();
-
-        match test.baseline_path {
-            Some(baseline_path) => {
-                if !baseline_path.is_empty() {
-                    let baseline = manifest_dir.join(test.directory).join(baseline_path);
-                    let expected = read_to_string(baseline).unwrap();
-                    let expected = expected
-                        .lines()
-                        .map(|s| trim_carriage_return(s))
-                        .collect::<Vec<_>>();
-
-                    assert_eq!(expected, actual);
-                }
-            }
-            _ => {
-                println!("Actual output: {:#?}", actual);
-                let mut passed = false;
-                for (index, line) in actual.iter().enumerate() {
-                    let lower = line.to_lowercase();
-                    if lower != "pass" && lower != "passed" && !lower.is_empty() {
-                        panic!(
-                            "Test can only print 'pass' or 'passed'. Index: {index}, output: {line}"
-                        );
-                    } else {
-                        passed = true;
-                    }
-                }
-                assert!(passed, "Test did not print 'pass' or 'passed'");
-            }
-        }
-
-        assert!(output.status.success());
+    if cfg!(unix) {
+        ch.env("TZ", "America/Los_Angeles");
     }
+
+    println!("Running command: {ch:#?}");
+    let output = ch.output().unwrap();
+
+    let mut out = String::from_utf8(output.stdout).unwrap();
+    let err = std::str::from_utf8(&output.stderr).unwrap();
+    out.push_str(err);
+
+    let actual = out
+        .lines()
+        .map(|s| trim_carriage_return(s))
+        .collect::<Vec<_>>();
+
+    match test.baseline_path {
+        Some(baseline_path) => {
+            if !baseline_path.is_empty() {
+                let baseline = manifest_dir.join(test.directory).join(baseline_path);
+                let expected = read_to_string(baseline).unwrap();
+                let expected = expected
+                    .lines()
+                    .map(|s| trim_carriage_return(s))
+                    .collect::<Vec<_>>();
+
+                assert_eq!(expected, actual);
+            }
+        }
+        _ => {
+            println!("Actual output: {:#?}", actual);
+            let mut passed = false;
+            for (index, line) in actual.iter().enumerate() {
+                let lower = line.to_lowercase();
+                if lower != "pass" && lower != "passed" && !lower.is_empty() {
+                    panic!(
+                        "Test can only print 'pass' or 'passed'. Index: {index}, output: {line}"
+                    );
+                } else {
+                    passed = true;
+                }
+            }
+            assert!(passed, "Test did not print 'pass' or 'passed'");
+        }
+    }
+
+    assert!(output.status.success());
 }
 
 fn trim_carriage_return(s: &str) -> &str {
