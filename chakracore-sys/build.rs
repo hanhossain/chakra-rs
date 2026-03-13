@@ -31,6 +31,16 @@ fn main() {
     println!("cargo::rustc-link-lib=chhelper");
     println!("cargo::rustc-link-lib=ChakraCoreStatic");
 
+    if cfg!(target_os = "macos") {
+        println!("cargo::rustc-link-search=native=/opt/homebrew/opt/icu4c@77/lib");
+        println!("cargo::rustc-link-lib=static=icudata");
+
+        println!("cargo::rustc-link-lib=framework=CoreFoundation");
+    }
+
+    println!("cargo::rustc-link-lib=static=icuuc");
+    println!("cargo::rustc-link-lib=static=icui18n");
+
     println!("cargo::rerun-if-changed=../chakracore-cxx/");
     println!("cargo::rerun-if-changed=../CMakeLists.txt");
 }
