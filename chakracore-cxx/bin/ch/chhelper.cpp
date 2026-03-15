@@ -63,30 +63,6 @@ int HostExceptionFilter(int exceptionCode, _EXCEPTION_POINTERS *ep)
     return EXCEPTION_CONTINUE_SEARCH;
 }
 
-void PrintUsageFormat()
-{
-    chakra::print_usage();
-}
-
-#if !defined(ENABLE_DEBUG_CONFIG_OPTIONS)
-void PrintReleaseUsage()
-{
-    PAL_wprintf(u"\nUsage: %s [-v|-version] [-h|-help|-?] <source file> %s", hostName,
-        u"\nNote: [flaglist] is not supported in Release builds; try a Debug or Test build to enable these flags.\n");
-    PAL_wprintf(u"\t-v|-version\t\tDisplays version info\n");
-    PAL_wprintf(u"\t-h|-help|-?\t\tDisplays this help message\n");
-}
-#endif
-
-void PrintUsage()
-{
-#if !defined(ENABLE_DEBUG_CONFIG_OPTIONS)
-    PrintReleaseUsage();
-#else
-    PrintUsageFormat();
-#endif
-}
-
 void PrintChVersion()
 {
 #if CHAKRA_CORE_VERSION_RELEASE
@@ -863,7 +839,7 @@ int main_internal(int argc, char** c_argv)
 
     if (argc < 2)
     {
-        PrintUsage();
+        chakra::print_usage();
         PAL_Shutdown();
         retval = EXIT_FAILURE;
         goto return_cleanup;
@@ -905,7 +881,7 @@ int main_internal(int argc, char** c_argv)
             (arglen == 4 && PAL_wcsncmp(arg, u"help", arglen) == 0)
             )
         {
-            PrintUsage();
+            chakra::print_usage();
             PAL_Shutdown();
             retval = EXIT_SUCCESS;
             goto return_cleanup;
@@ -953,11 +929,11 @@ int main_internal(int argc, char** c_argv)
         exit(0);
     }
 
-    HostConfigFlags::pfnPrintUsage = PrintUsageFormat;
+    HostConfigFlags::pfnPrintUsage = chakra::print_usage;
 
     HostConfigFlags::HandleArgsFlag(argc, argv);
 
-    argInfo = { argc, argv, PrintUsage, nullptr };
+    argInfo = { argc, argv, chakra::print_usage, nullptr };
     success = ChakraRTInterface::LoadChakraDll(&argInfo, &chakraLibrary);
 
 #if !defined(NDEBUG)

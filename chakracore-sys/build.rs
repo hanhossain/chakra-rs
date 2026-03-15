@@ -46,7 +46,7 @@ fn main() {
 
         if cfg!(target_os = "macos") {
             println!("cargo::rustc-link-search=native=/opt/homebrew/opt/icu4c@77/lib");
-            println!("cargo::rustc-link-lib=static=icudata");
+            println!("cargo::rustc-link-lib=icudata");
 
             println!("cargo::rustc-link-lib=framework=CoreFoundation");
         }
