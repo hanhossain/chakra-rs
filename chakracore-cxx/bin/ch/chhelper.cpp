@@ -5,6 +5,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "stdafx.h"
 #include "chhelper.h"
+#include "chakra/src/lib.rs.h"
 #include <pthread.h>
 
 #ifdef __linux__
@@ -64,10 +65,7 @@ int HostExceptionFilter(int exceptionCode, _EXCEPTION_POINTERS *ep)
 
 void PrintUsageFormat()
 {
-    PAL_wprintf(u"\nUsage: %s [-v|-version] [-h|-help] [-?] [flaglist] <source file>\n", hostName);
-    PAL_wprintf(u"\t-v|-version\t\tDisplays version info\n");
-    PAL_wprintf(u"\t-h|-help\t\tDisplays this help message\n");
-    PAL_wprintf(u"\t-?\t\t\tDisplays this help message with complete [flaglist] info\n");
+    chakra::print_usage();
 }
 
 #if !defined(ENABLE_DEBUG_CONFIG_OPTIONS)

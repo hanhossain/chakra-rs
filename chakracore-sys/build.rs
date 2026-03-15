@@ -1,6 +1,6 @@
-use std::path::PathBuf;
-
 fn main() {
+    cxx_build::CFG.exported_header_links.push("chakra");
+
     let out_dir = std::env::var("OUT_DIR").unwrap();
     let is_rust_analyzer = out_dir.contains("target/rust-analyzer");
 
@@ -9,6 +9,7 @@ fn main() {
 
     if !is_rust_analyzer {
         cxx_bridge.compile("binding");
+
         let debug: bool = std::env::var("DEBUG").unwrap().parse::<bool>().unwrap();
         let optimized = cfg!(feature = "optimized-tests");
         let build_type = match (optimized, debug) {
@@ -17,21 +18,17 @@ fn main() {
             (_, false) => "Release",
         };
 
-        let mut cc_config = cc::Build::new();
-        if !cc_config.get_compiler().is_like_clang() {
-            cc_config.compiler("clang");
+        if !cxx_bridge.get_compiler().is_like_clang() {
+            cxx_bridge.compiler("clang");
         }
-
-        let out_dir: PathBuf = PathBuf::from(out_dir);
-        let cxxbridge_include = out_dir.join("cxxbridge/include");
 
         let mut config = cmake::Config::new("..");
         config
-            .init_c_cfg(cc_config)
+            .init_c_cfg(cxx_bridge.clone())
+            .init_cxx_cfg(cxx_bridge)
             .generator("Ninja")
             .define("CMAKE_CXX_COMPILER", "clang++")
             .define("CMAKE_C_COMPILER", "clang")
-            .define("CXXBRIDGE_INCLUDE_DIR", cxxbridge_include)
             .profile(build_type);
 
         if cfg!(target_os = "macos") {

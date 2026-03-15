@@ -1,3 +1,5 @@
+use chakra as _;
+
 #[cxx::bridge]
 pub mod ffi {
     extern "C++" {
