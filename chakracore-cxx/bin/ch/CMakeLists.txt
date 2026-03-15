@@ -10,6 +10,7 @@ add_library(chhelper
 
 # TODO (hanhossain): cleanup includes
 target_include_directories(chhelper PUBLIC
+    ${CXXBRIDGE_INCLUDE_DIR}
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlaceHolder
     ${CHAKRACORE_SOURCE_DIR}/pal/inc
     ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
