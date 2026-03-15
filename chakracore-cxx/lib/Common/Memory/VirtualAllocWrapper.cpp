@@ -376,7 +376,7 @@ PreReservedVirtualAllocWrapper::Free(void * lpAddress, size_t dwSize, uint32_t d
 
 typedef
 BOOL
-(WINAPI *PGET_PROCESS_MITIGATION_POLICY_PROC)(
+(*PGET_PROCESS_MITIGATION_POLICY_PROC)(
     _In_  HANDLE                    hProcess,
     _In_  PROCESS_MITIGATION_POLICY MitigationPolicy,
     _Out_ void *                     lpBuffer,

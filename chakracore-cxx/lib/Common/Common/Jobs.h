@@ -537,7 +537,7 @@ namespace JsUtil
         virtual void DissociatePageAllocator(PageAllocator* const pageAllocator) override;
 
     private:
-        static unsigned int WINAPI StaticThreadProc(void *lpParam);
+        static unsigned int StaticThreadProc(void *lpParam);
 #ifndef DISABLE_SEH
         static int ExceptFilter(LPEXCEPTION_POINTERS pEP);
 #endif

@@ -142,12 +142,7 @@ typedef enum tagEFaultRepRetVal
 
 #endif // DEBUG
 
-#define NTAPI
-#define WINAPI
 #define CALLBACK
-#define NTSYSAPI
-
-#define _WINNT_
 
 // C++ standard, 18.1.5 - offsetof requires a POD (plain old data) struct or
 // union. Since offsetof is a macro, gcc doesn't actually check for improper
@@ -1128,7 +1123,7 @@ typedef uint32_t OLE_COLOR;
 
 #define PF_COMPARE_EXCHANGE_DOUBLE          2
 
-typedef void (NTAPI * WAITORTIMERCALLBACKFUNC) (void *, BOOLEAN );
+typedef void (*WAITORTIMERCALLBACKFUNC) (void *, BOOLEAN );
 
 typedef HANDLE HWND;
 
@@ -1283,7 +1278,7 @@ interface ITypeInfo;
 interface ITypeLib;
 interface IMoniker;
 
-typedef void (WINAPI *LPOVERLAPPED_COMPLETION_ROUTINE)(
+typedef void (*LPOVERLAPPED_COMPLETION_ROUTINE)(
     uint32_t dwErrorCode,
     uint32_t dwNumberOfBytesTransfered,
     void * lpOverlapped);
@@ -1512,7 +1507,7 @@ typedef struct _EXCEPTION_RECORD64 {
     ULONG64 ExceptionInformation[EXCEPTION_MAXIMUM_PARAMETERS];
 } EXCEPTION_RECORD64, *PEXCEPTION_RECORD64;
 
-typedef int32_t (WINAPI *PTOP_LEVEL_EXCEPTION_FILTER)(
+typedef int32_t (*PTOP_LEVEL_EXCEPTION_FILTER)(
      struct _EXCEPTION_POINTERS *ExceptionInfo
     );
 typedef PTOP_LEVEL_EXCEPTION_FILTER LPTOP_LEVEL_EXCEPTION_FILTER;
