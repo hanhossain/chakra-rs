@@ -940,8 +940,6 @@ int main_internal(int argc, char** c_argv, rust::Str bin_name, rust::Str version
 
         // On linux, execute on the same thread
         exitCode = ExecuteTestWithMemoryCheck(argInfo.filename);
-
-        ChakraRTInterface::UnloadChakraDll(chakraLibrary);
     }
 
     PAL_Shutdown();

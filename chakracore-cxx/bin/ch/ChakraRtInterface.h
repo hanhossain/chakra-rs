@@ -328,7 +328,6 @@ public:
     static int32_t OnChakraCoreLoaded(TestHooks& testHooks);
 
     static bool LoadChakraDll(ArgInfo* argInfo, HINSTANCE *library);
-    static void UnloadChakraDll(HINSTANCE library);
 
     static int32_t SetAssertToConsoleFlag(bool flag) { return CHECKED_CALL(SetAssertToConsoleFlag, flag); }
     static int32_t SetConfigFlags(int argc, __in_ecount(argc) char16_t * argv[], ICustomConfigFlags* customConfigFlags) { return CHECKED_CALL(SetConfigFlags, argc, argv, customConfigFlags); }
