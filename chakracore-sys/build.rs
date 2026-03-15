@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 fn main() {
     let out_dir = std::env::var("OUT_DIR").unwrap();
     let is_rust_analyzer = out_dir.contains("target/rust-analyzer");
@@ -20,12 +22,16 @@ fn main() {
             cc_config.compiler("clang");
         }
 
+        let out_dir: PathBuf = PathBuf::from(out_dir);
+        let cxxbridge_include = out_dir.join("cxxbridge/include");
+
         let mut config = cmake::Config::new("..");
         config
             .init_c_cfg(cc_config)
             .generator("Ninja")
             .define("CMAKE_CXX_COMPILER", "clang++")
             .define("CMAKE_C_COMPILER", "clang")
+            .define("CXXBRIDGE_INCLUDE_DIR", cxxbridge_include)
             .profile(build_type);
 
         if cfg!(target_os = "macos") {
