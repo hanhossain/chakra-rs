@@ -35,7 +35,6 @@ static const char rcsid[] = "\n@(#) $Revision: 463960 $\n";
 
 #if ITT_PLATFORM==ITT_PLATFORM_WIN
 #define DEFAULT_DLLNAME                 "JitPI.dll"
-HINSTANCE m_libHandle = NULL;
 #elif ITT_PLATFORM==ITT_PLATFORM_MAC
 #define DEFAULT_DLLNAME                 "libJitPI.dylib"
 void* m_libHandle = NULL;

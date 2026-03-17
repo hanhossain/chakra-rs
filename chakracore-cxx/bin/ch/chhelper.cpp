@@ -833,7 +833,6 @@ int main_internal(int argc, char** c_argv)
     int retval = -1;
     int32_t exitCode = E_FAIL;
     int cpos = 1;
-    HINSTANCE chakraLibrary = nullptr;
     bool success = false;
     ChakraRTInterface::ArgInfo argInfo;
 
@@ -934,7 +933,7 @@ int main_internal(int argc, char** c_argv)
     HostConfigFlags::HandleArgsFlag(argc, argv);
 
     argInfo = { argc, argv, chakra::print_usage, nullptr };
-    success = ChakraRTInterface::LoadChakraDll(&argInfo, &chakraLibrary);
+    success = ChakraRTInterface::LoadChakraDll(&argInfo);
 
 #if !defined(NDEBUG)
     // handle command line flags
@@ -955,8 +954,6 @@ int main_internal(int argc, char** c_argv)
 
         // On linux, execute on the same thread
         exitCode = ExecuteTestWithMemoryCheck(argInfo.filename);
-
-        ChakraRTInterface::UnloadChakraDll(chakraLibrary);
     }
 
     PAL_Shutdown();

@@ -26,15 +26,15 @@ extern "C"
 {
 #endif // __cplusplus
 
-typedef BOOL (*PDLLMAIN)(HINSTANCE, uint32_t, void *);   /* entry point of module */
-typedef HINSTANCE (*PREGISTER_MODULE)(const char *);           /* used to create the HINSTANCE for above DLLMain entry point */
-typedef void (*PUNREGISTER_MODULE)(HINSTANCE);           /* used to cleanup the HINSTANCE for above DLLMain entry point */
+typedef BOOL (*PDLLMAIN)(HMODULE, uint32_t, void *);   /* entry point of module */
+typedef HMODULE (*PREGISTER_MODULE)(const char *);           /* used to create the HINSTANCE for above DLLMain entry point */
+typedef void (*PUNREGISTER_MODULE)(HMODULE);           /* used to cleanup the HINSTANCE for above DLLMain entry point */
 
 typedef struct _MODSTRUCT
 {
     HMODULE self;           /* circular reference to this module */
     void *dl_handle;        /* handle returned by dlopen() */
-    HINSTANCE hinstance;    /* handle returned by PAL_RegisterLibrary */
+    HMODULE hinstance;    /* handle returned by PAL_RegisterLibrary */
     char16_t* lib_name;        /* full path of module */
     int32_t refcount;           /* reference count */
                             /* -1 means infinite reference count - module is never released */

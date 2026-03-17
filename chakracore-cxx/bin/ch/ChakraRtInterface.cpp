@@ -6,11 +6,6 @@
 #include "stdafx.h"
 
 #include <dlfcn.h>
-#ifdef __APPLE__
-const char * chakraDllName = "libChakraCore.dylib";
-#else
-const char * chakraDllName = "libChakraCore.so";
-#endif
 
 bool ChakraRTInterface::m_testHooksSetup = false;
 bool ChakraRTInterface::m_testHooksInitialized = false;
@@ -20,35 +15,11 @@ ChakraRTInterface::ArgInfo* ChakraRTInterface::m_argInfo = nullptr;
 TestHooks ChakraRTInterface::m_testHooks = { 0 };
 JsAPIHooks ChakraRTInterface::m_jsApiHooks = { 0 };
 
-// Wrapper functions to abstract out loading ChakraCore
-// and resolving its symbols
-// Currently, these functions resolve to the PAL on Linux
-// but in the future, we can easily switch to a different mechanism
-HINSTANCE LoadChakraCore(const char * libPath)
-{
-    return LoadLibraryExA(libPath, nullptr, 0);
-}
-
-void UnloadChakraCore(HINSTANCE module)
-{
-    FreeLibrary(module);
-}
-
-void* GetChakraCoreSymbol(HINSTANCE module, const char* symbol)
-{
-    return reinterpret_cast<void*>(GetProcAddress(module, symbol));
-}
-
 /*static*/
-bool ChakraRTInterface::LoadChakraDll(ArgInfo* argInfo, HINSTANCE *outLibrary)
+bool ChakraRTInterface::LoadChakraDll(ArgInfo* argInfo)
 {
     m_argInfo = argInfo;
     return true;
-}
-
-/*static*/
-void ChakraRTInterface::UnloadChakraDll(HINSTANCE library)
-{
 }
 
 /*static*/

@@ -5,13 +5,10 @@
 #include "ParserPch.h"
 #include "errstr.h"
 
-// scaffolding - get a g_hInstance from scrbgase.cpp
-HANDLE g_hInstance;
-
 // Used as a prefix to generate the resource dll name.
 const char16_t g_wszPrefix[] = u"js";
 
-static BOOL FGetStringFromLibrary(HMODULE hlib, int istring, __out_ecount(cchMax) char16_t * psz, int cchMax)
+static BOOL FGetStringFromLibrary(int istring, __out_ecount(cchMax) char16_t * psz, int cchMax)
 {
     // NOTE - istring is expected to be int32_t
 
@@ -35,7 +32,7 @@ static BOOL FGetStringFromLibrary(HMODULE hlib, int istring, __out_ecount(cchMax
 
 BOOL FGetResourceString(int32_t isz, __out_ecount(cchMax) OLECHAR *psz, int cchMax)
 {
-    return FGetStringFromLibrary((HINSTANCE)g_hInstance, isz, psz, cchMax);
+    return FGetStringFromLibrary(isz, psz, cchMax);
 }
 
 // Get a bstr version of the error string

@@ -1170,7 +1170,7 @@ static HMODULE LOADRegisterLibraryDirect(void *dl_handle, const char * libraryNa
                 // If the target module doesn't have the PAL_RegisterModule export, then use this PAL's
                 // module handle assuming that the target module is referencing this PAL's exported
                 // functions on said handle.
-                module->hinstance = (HINSTANCE)module;
+                module->hinstance = (HMODULE)module;
             }
         }
 
