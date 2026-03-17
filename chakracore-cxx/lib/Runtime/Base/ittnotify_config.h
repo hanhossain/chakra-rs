@@ -5,11 +5,6 @@
 #ifndef _ITTNOTIFY_CONFIG_H_
 #define _ITTNOTIFY_CONFIG_H_
 
-/** @cond exclude_from_documentation */
-#ifndef ITT_OS_WIN
-#  define ITT_OS_WIN   1
-#endif /* ITT_OS_WIN */
-
 #ifndef ITT_OS_LINUX
 #  define ITT_OS_LINUX 2
 #endif /* ITT_OS_LINUX */
@@ -32,10 +27,6 @@
 #  endif
 #endif /* ITT_OS */
 
-#ifndef ITT_PLATFORM_WIN
-#  define ITT_PLATFORM_WIN 1
-#endif /* ITT_PLATFORM_WIN */
-
 #ifndef ITT_PLATFORM_POSIX
 #  define ITT_PLATFORM_POSIX 2
 #endif /* ITT_PLATFORM_POSIX */
@@ -49,9 +40,7 @@
 #endif /* ITT_PLATFORM_FREEBSD */
 
 #ifndef ITT_PLATFORM
-#  if ITT_OS==ITT_OS_WIN
-#    define ITT_PLATFORM ITT_PLATFORM_WIN
-#  elif ITT_OS==ITT_OS_MAC
+#  if ITT_OS==ITT_OS_MAC
 #    define ITT_PLATFORM ITT_PLATFORM_MAC
 #  elif ITT_OS==ITT_OS_FREEBSD
 #    define ITT_PLATFORM ITT_PLATFORM_FREEBSD
@@ -61,20 +50,9 @@
 #endif /* ITT_PLATFORM */
 
 #include <stddef.h>
-#if ITT_PLATFORM==ITT_PLATFORM_WIN
-// 4/29/2016 disable warning 4995 on deprecated _tccpy, wcsncpy, wcsncat, wcstok funcs in tchar.h
-#pragma warning( disable : 4995 )
-#include <tchar.h>
-#else  /* ITT_PLATFORM==ITT_PLATFORM_WIN */
 #include <stdint.h>
 #include <wchar.h>
-#endif /* ITT_PLATFORM==ITT_PLATFORM_WIN */
 
-#if ITT_PLATFORM==ITT_PLATFORM_WIN
-/* use __forceinline (VC++ specific) */
-#define ITT_INLINE           __forceinline
-#define ITT_INLINE_ATTRIBUTE /* nothing */
-#else  /* ITT_PLATFORM==ITT_PLATFORM_WIN */
 /*
  * Generally, functions are not inlined unless optimization is specified.
  * For functions declared inline, this attribute inlines the function even
@@ -87,8 +65,6 @@
 #define ITT_INLINE           static inline
 #define ITT_INLINE_ATTRIBUTE __attribute__((always_inline, unused))
 #endif /* __STRICT_ANSI__ */
-#endif /* ITT_PLATFORM==ITT_PLATFORM_WIN */
-/** @endcond */
 
 #ifndef ITT_ARCH_IA32
 #  define ITT_ARCH_IA32  1
@@ -153,14 +129,6 @@
                                 " (" ITT_TO_STR(API_VERSION_BUILD) ")"
 
 /* OS communication functions */
-#if ITT_PLATFORM==ITT_PLATFORM_WIN
-#include <windows.h>
-typedef HMODULE           lib_t;
-typedef uint32_t             TIDT;
-typedef CRITICAL_SECTION  mutex_t;
-#define MUTEX_INITIALIZER { 0 }
-#define strong_alias(name, aliasname) /* empty for Windows */
-#else  /* ITT_PLATFORM==ITT_PLATFORM_WIN */
 #include <dlfcn.h>
 #include <wchar.h>
 #ifndef _GNU_SOURCE
@@ -177,30 +145,7 @@ typedef pthread_mutex_t   mutex_t;
 #define _strong_alias(name, aliasname) \
             extern __typeof (name) aliasname __attribute__ ((alias (#name)));
 #define strong_alias(name, aliasname) _strong_alias(name, aliasname)
-#endif /* ITT_PLATFORM==ITT_PLATFORM_WIN */
 
-#if ITT_PLATFORM==ITT_PLATFORM_WIN
-#define __itt_get_proc(lib, name) GetProcAddress(lib, name)
-#define __itt_mutex_init(mutex)   InitializeCriticalSection(mutex)
-#define __itt_mutex_lock(mutex)   EnterCriticalSection(mutex)
-#define __itt_mutex_unlock(mutex) LeaveCriticalSection(mutex)
-#define __itt_load_lib(name)      LoadLibraryA(name)
-#define __itt_unload_lib(handle)  FreeLibrary(handle)
-#define __itt_system_error()      (int)GetLastError()
-#define __itt_fstrcmp(s1, s2)     lstrcmpA(s1, s2)
-#define __itt_fstrnlen(s, l)      strnlen_s(s, l)
-#define __itt_fstrcpyn(s1, b, s2, l) strncpy_s(s1, b, s2, l)
-#define __itt_thread_id()         GetCurrentThreadId()
-#define __itt_thread_yield()      SwitchToThread()
-#ifndef ITT_SIMPLE_INIT
-ITT_INLINE long
-__itt_interlocked_increment(volatile long* ptr) ITT_INLINE_ATTRIBUTE;
-ITT_INLINE long __itt_interlocked_increment(volatile long* ptr)
-{
-    return InterlockedIncrement(ptr);
-}
-#endif /* ITT_SIMPLE_INIT */
-#else /* ITT_PLATFORM!=ITT_PLATFORM_WIN */
 #define __itt_get_proc(lib, name) dlsym(lib, name)
 #define __itt_mutex_init(mutex)   {\
     pthread_mutexattr_t mutex_attr;                                         \
@@ -272,7 +217,6 @@ ITT_INLINE long __itt_interlocked_increment(volatile long* ptr)
     return __TBB_machine_fetchadd4(ptr, 1) + 1L;
 }
 #endif /* ITT_SIMPLE_INIT */
-#endif /* ITT_PLATFORM==ITT_PLATFORM_WIN */
 
 typedef enum {
     __itt_collection_normal = 0,

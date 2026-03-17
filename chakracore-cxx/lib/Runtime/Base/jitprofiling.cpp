@@ -10,9 +10,6 @@
 #include "ittnotify_config.h"
 
 #ifdef ITT_PLATFORM
-#if ITT_PLATFORM==ITT_PLATFORM_WIN
-#include <windows.h>
-#endif /* ITT_PLATFORM==ITT_PLATFORM_WIN */
 #if ITT_PLATFORM != ITT_PLATFORM_MAC && ITT_PLATFORM != ITT_PLATFORM_FREEBSD
 #include <malloc.h>
 #endif
@@ -33,15 +30,13 @@ static const char rcsid[] = "\n@(#) $Revision: 463960 $\n";
 #endif
 #endif /* NEW_DLL_ENVIRONMENT_VAR */
 
-#if ITT_PLATFORM==ITT_PLATFORM_WIN
-#define DEFAULT_DLLNAME                 "JitPI.dll"
-#elif ITT_PLATFORM==ITT_PLATFORM_MAC
+#if ITT_PLATFORM==ITT_PLATFORM_MAC
 #define DEFAULT_DLLNAME                 "libJitPI.dylib"
 void* m_libHandle = NULL;
 #else
 #define DEFAULT_DLLNAME                 "libJitPI.so"
 void* m_libHandle = NULL;
-#endif /* ITT_PLATFORM==ITT_PLATFORM_WIN */
+#endif /* ITT_PLATFORM==ITT_PLATFORM_MAC */
 
 /* default location of JIT profiling agent on Android */
 #define ANDROID_JIT_AGENT_PATH  "/data/intel/libittnotify.so"
@@ -134,9 +129,6 @@ static int loadiJIT_Funcs()
 {
     static int bDllWasLoaded = 0;
     char *dllName = (char*)rcsid; /* !! Just to avoid unused code elimination */
-#if ITT_PLATFORM==ITT_PLATFORM_WIN
-    uint32_t dNameLength = 0;
-#endif /* ITT_PLATFORM==ITT_PLATFORM_WIN */
 
     if(bDllWasLoaded)
     {
@@ -150,54 +142,11 @@ static int loadiJIT_Funcs()
 
     if (m_libHandle)
     {
-#if ITT_PLATFORM==ITT_PLATFORM_WIN
-        FreeLibrary(m_libHandle);
-#else  /* ITT_PLATFORM==ITT_PLATFORM_WIN */
         dlclose(m_libHandle);
-#endif /* ITT_PLATFORM==ITT_PLATFORM_WIN */
         m_libHandle = NULL;
     }
 
     /* Try to get the dll name from the environment */
-#if ITT_PLATFORM==ITT_PLATFORM_WIN
-    dNameLength = GetEnvironmentVariableA(NEW_DLL_ENVIRONMENT_VAR, NULL, 0);
-    if (dNameLength)
-    {
-        uint32_t envret = 0;
-        dllName = (char*)malloc(sizeof(char) * (dNameLength + 1));
-        if(dllName != NULL)
-        {
-            envret = GetEnvironmentVariableA(NEW_DLL_ENVIRONMENT_VAR, 
-                                             dllName, dNameLength);
-            if (envret)
-            {
-                /* Try to load the dll from the PATH... */
-                m_libHandle = LoadLibraryExA(dllName, 
-                                             NULL, LOAD_WITH_ALTERED_SEARCH_PATH);
-            }
-            free(dllName);
-        }
-    } else {
-        /* Try to use old VS_PROFILER variable */
-        dNameLength = GetEnvironmentVariableA(DLL_ENVIRONMENT_VAR, NULL, 0);
-        if (dNameLength)
-        {
-            uint32_t envret = 0;
-            dllName = (char*)malloc(sizeof(char) * (dNameLength + 1));
-            if(dllName != NULL)
-            {
-                envret = GetEnvironmentVariableA(DLL_ENVIRONMENT_VAR, 
-                                                 dllName, dNameLength);
-                if (envret)
-                {
-                    /* Try to load the dll from the PATH... */
-                    m_libHandle = LoadLibraryA(dllName);
-                }
-                free(dllName);
-            }
-        }
-    }
-#else  /* ITT_PLATFORM==ITT_PLATFORM_WIN */
     dllName = PAL_getenv(NEW_DLL_ENVIRONMENT_VAR);
     if (!dllName)
         dllName = PAL_getenv(DLL_ENVIRONMENT_VAR);
@@ -206,15 +155,10 @@ static int loadiJIT_Funcs()
         /* Try to load the dll from the PATH... */
         m_libHandle = dlopen(dllName, RTLD_LAZY);
     }
-#endif /* ITT_PLATFORM==ITT_PLATFORM_WIN */
 
     if (!m_libHandle)
     {
-#if ITT_PLATFORM==ITT_PLATFORM_WIN
-        m_libHandle = LoadLibraryA(DEFAULT_DLLNAME);
-#else  /* ITT_PLATFORM==ITT_PLATFORM_WIN */
         m_libHandle = dlopen(DEFAULT_DLLNAME, RTLD_LAZY);
-#endif /* ITT_PLATFORM==ITT_PLATFORM_WIN */
     }
 
     /* if the dll wasn't loaded - exit. */
@@ -226,22 +170,14 @@ static int loadiJIT_Funcs()
         return 0;
     }
 
-#if ITT_PLATFORM==ITT_PLATFORM_WIN
-    FUNC_NotifyEvent = (TPNotify)GetProcAddress(m_libHandle, "NotifyEvent");
-#else  /* ITT_PLATFORM==ITT_PLATFORM_WIN */
     FUNC_NotifyEvent = (TPNotify)dlsym(m_libHandle, "NotifyEvent");
-#endif /* ITT_PLATFORM==ITT_PLATFORM_WIN */
     if (!FUNC_NotifyEvent) 
     {
         FUNC_Initialize = NULL;
         return 0;
     }
 
-#if ITT_PLATFORM==ITT_PLATFORM_WIN
-    FUNC_Initialize = (TPInitialize)GetProcAddress(m_libHandle, "Initialize");
-#else  /* ITT_PLATFORM==ITT_PLATFORM_WIN */
     FUNC_Initialize = (TPInitialize)dlsym(m_libHandle, "Initialize");
-#endif /* ITT_PLATFORM==ITT_PLATFORM_WIN */
     if (!FUNC_Initialize) 
     {
         FUNC_NotifyEvent = NULL;
