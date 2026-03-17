@@ -1264,12 +1264,6 @@ namespace JsUtil
 #endif
 #endif
 
-        HMODULE dllHandle = NULL;
-        if (!GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, (LPCTSTR)&BackgroundJobProcessor::StaticThreadProc, &dllHandle))
-        {
-            dllHandle = NULL;
-        }
-
         ParallelThreadData * threadData = static_cast<ParallelThreadData *>(lpParam);
         BackgroundJobProcessor *const processor = threadData->processor;
 
@@ -1297,14 +1291,7 @@ namespace JsUtil
         // may require the loader lock and if Close was called while holding the loader lock during DLL_THREAD_DETACH, it could
         // end up waiting forever, causing a deadlock.
         threadData->threadStartedOrClosing.Set();
-        if (dllHandle)
-        {
-            FreeLibraryAndExitThread(dllHandle, 0);
-        }
-        else
-        {
-            return 0;
-        }
+        return 0;
     }
 
 #ifndef DISABLE_SEH

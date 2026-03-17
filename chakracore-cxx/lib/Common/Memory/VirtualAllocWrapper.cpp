@@ -410,7 +410,7 @@ AutoEnableDynamicCodeGen::AutoEnableDynamicCodeGen(bool enable) : enabled(false)
         {
             PGET_PROCESS_MITIGATION_POLICY_PROC GetProcessMitigationPolicyProc = nullptr;
 
-            HMODULE module = GetModuleHandleW(u"api-ms-win-core-processthreads-l1-1-3.dll");
+            HMODULE module = nullptr;
 
             if (module != nullptr)
             {

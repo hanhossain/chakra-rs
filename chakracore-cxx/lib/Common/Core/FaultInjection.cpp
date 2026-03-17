@@ -1222,7 +1222,6 @@ namespace Js
         thread_local static char16_t filename[MAX_PATH + 1];
 
         HMODULE mod = nullptr;
-        GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, reinterpret_cast<LPCTSTR>(ip), &mod);
         offset = ip - (uintptr_t)mod;
         auto& faultModule = modulePath;
         GetModuleFileName(mod, faultModule, MAX_PATH);

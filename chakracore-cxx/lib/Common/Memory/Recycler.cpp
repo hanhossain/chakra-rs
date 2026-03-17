@@ -5981,22 +5981,6 @@ Recycler::ThreadProc()
 {
     Assert(this->IsConcurrentEnabled());
 
-    // We do this before we set the concurrentWorkDoneEvent because GetModuleHandleEx requires
-    // getting the loader lock. We could have the following case:
-    //    Thread A => Initialize Concurrent Thread (C)
-    //    C signals Signal Done
-    //    C yields since its lower priority
-    //    Thread A starts running- and is told to shut down.
-    //    Thread A grabs loader lock as part of the shutdown sequence
-    //    Thread A waits for C to be done
-    //    C wakes up now- and tries to grab loader lock.
-    // To prevent this deadlock, we call GetModuleHandleEx first and then set the concurrentWorkDoneEvent
-    HMODULE dllHandle = NULL;
-    if (!GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, (LPCTSTR)&Recycler::StaticThreadProc, &dllHandle))
-    {
-        dllHandle = NULL;
-    }
-
     // Signal that the thread has started
     SetEvent(this->concurrentWorkDoneEvent);
 
@@ -6079,14 +6063,7 @@ Recycler::ThreadProc()
     while (true);
     SetEvent(this->concurrentWorkDoneEvent);
 
-    if (dllHandle)
-    {
-        FreeLibraryAndExitThread(dllHandle, 0);
-    }
-    else
-    {
-        return 0;
-    }
+    return 0;
 }
 
 #endif //ENABLE_CONCURRENT_GC
@@ -6588,11 +6565,6 @@ RecyclerParallelThread::StaticThreadProc(void * lpParameter)
 
         Assert(recycler->IsConcurrentEnabled());
 
-        HMODULE dllHandle = NULL;
-        if (!GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, (LPCTSTR)&RecyclerParallelThread::StaticThreadProc, &dllHandle))
-        {
-            dllHandle = NULL;
-        }
         // If this thread is created on demand we already have work to process and do not need to wait
         bool mustWait = parallelThread->synchronizeOnStartup;
 
@@ -6625,10 +6597,6 @@ RecyclerParallelThread::StaticThreadProc(void * lpParameter)
         // because the main thread may have torn it down already.
         SetEvent(parallelThread->concurrentWorkDoneEvent);
 
-        if (dllHandle)
-        {
-            FreeLibraryAndExitThread(dllHandle, 0);
-        }
         ret = 0;
 #if !DISABLE_SEH
     }

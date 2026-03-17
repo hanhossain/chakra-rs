@@ -70,22 +70,6 @@ BOOL LOADInitializeModules();
 
 /*++
 Function :
-    LOADSetExeName
-
-    Set the exe name path
-
-Parameters :
-    char16_t* man exe path and name
-
-Return value :
-    TRUE  if initialization succeedded
-    FALSE otherwise
-
---*/
-BOOL LOADSetExeName(char16_t* name);
-
-/*++
-Function :
     LOADCallDllMain
 
     Call DllMain for all modules (that have one) with the given "fwReason"
@@ -106,50 +90,11 @@ Notes :
 --*/
 void LOADCallDllMain(uint32_t dwReason, void * lpReserved);
 
-/*++
-Function:
-  LockModuleList
-
-Abstract
-  Enter the critical section associated to the module list
-
-Parameter
-  void
-
-Return
-  void
---*/
+// only used internally
 void LockModuleList();
 
-/*++
-Function:
-  UnlockModuleList
-
-Abstract
-  Leave the critical section associated to the module list
-
-Parameter
-  void
-
-Return
-  void
---*/
+// only used internally
 void UnlockModuleList();
-
-/*++
-Function :
-    LOADGetPalLibrary
-
-    Load and initialize the PAL module.
-
-Parameters :
-    None
-
-Return value :
-    handle to loaded module
-
---*/
-MODSTRUCT *LOADGetPalLibrary();
 
 #ifdef __cplusplus
 }

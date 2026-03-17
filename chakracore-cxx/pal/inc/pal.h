@@ -1255,20 +1255,8 @@ UnmapViewOfFile(
 
 // TODO (hanhossain): public
 HMODULE
-LoadLibraryA(
-         const char * lpLibFileName);
-
-// TODO (hanhossain): public
-HMODULE
 LoadLibraryW(
          const char16_t* lpLibFileName);
-
-// TODO (hanhossain): public
-HMODULE
-LoadLibraryExA(
-         const char * lpLibFileName,
-         /*Reserved*/ HANDLE hFile,
-         uint32_t dwFlags);
 
 // TODO (hanhossain): public
 HMODULE
@@ -1316,15 +1304,6 @@ GetModuleHandleW(
 );
 
 #define GetModuleHandle GetModuleHandleW
-
-// TODO (hanhossain): internal
-BOOL
-GetModuleHandleExW(
-     uint32_t dwFlags,
-      const char16_t* lpModuleName,
-     HMODULE *phModule);
-
-#define GetModuleHandleEx GetModuleHandleExW
 
 // TODO (hanhossain): public
 void *

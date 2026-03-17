@@ -118,19 +118,6 @@ static BOOL LOADCallDllMainSafe(MODSTRUCT *module, uint32_t dwReason, void * lpR
 
 /*++
 Function:
-  LoadLibraryA
-
-See MSDN doc.
---*/
-HMODULE
-LoadLibraryA(
-     const char * lpLibFileName)
-{
-    return LoadLibraryExA(lpLibFileName, nullptr, 0);
-}
-
-/*++
-Function:
   LoadLibraryW
 
 See MSDN doc.
@@ -140,61 +127,6 @@ LoadLibraryW(
      const char16_t* lpLibFileName)
 {
     return LoadLibraryExW(lpLibFileName, nullptr, 0);
-}
-
-/*++
-Function:
-LoadLibraryExA
-
-See MSDN doc.
---*/
-HMODULE
-LoadLibraryExA(
-     const char * lpLibFileName,
-     /*Reserved*/ HANDLE hFile,
-     uint32_t dwFlags)
-{
-    if (dwFlags != 0)
-    {
-        // UNIXTODO: Implement this!
-        ASSERT("Needs Implementation!!!");
-        return nullptr;
-    }
-
-    char* lpstr = nullptr;
-    HMODULE hModule = nullptr;
-
-    ENTRY("LoadLibraryExA (lpLibFileName=%p (%s)) \n",
-          (lpLibFileName) ? lpLibFileName : "NULL",
-          (lpLibFileName) ? lpLibFileName : "NULL");
-
-    if (!LOADVerifyLibraryPath(lpLibFileName))
-    {
-        goto Done;
-    }
-
-    /* do the Dos/Unix conversion on our own copy of the name */
-    lpstr = strdup(lpLibFileName);
-    if (!lpstr)
-    {
-        ERROR("strdup failure!\n");
-        SetLastError(ERROR_NOT_ENOUGH_MEMORY);
-        goto Done;
-    }
-    FILEDosToUnixPathA(lpstr);
-
-    hModule = LOADLoadLibrary(lpstr, TRUE);
-
-    /* let LOADLoadLibrary call SetLastError */
- Done:
-    if (lpstr != nullptr)
-    {
-        free(lpstr);
-    }
-
-    LOGEXIT("LoadLibraryExA returns HMODULE %p\n", hModule);
-    return hModule;
-
 }
 
 /*++
@@ -485,16 +417,6 @@ GetModuleHandleW(
     return (HMODULE)&exe_module;
 }
 
-BOOL
-GetModuleHandleExW(
-     uint32_t dwFlags,
-      const char16_t* lpModuleName,
-     HMODULE *phModule)
-{
-    *phModule = NULL;
-    return FALSE;
-}
-
 /* Internal PAL functions *****************************************************/
 
 /*++
@@ -536,69 +458,6 @@ BOOL LOADInitializeModules()
     exe_module.hinstance = nullptr;
     exe_module.threadLibCalls = TRUE;
     return TRUE;
-}
-
-/*++
-Function :
-    LOADSetExeName
-
-    Set the exe name path
-
-Parameters :
-    char16_t* man exe path and name
-
-Return value :
-    TRUE  if initialization succeedded
-    FALSE otherwise
-
---*/
-extern "C"
-BOOL LOADSetExeName(char16_t* name)
-{
-#if RETURNS_NEW_HANDLES_ON_REPEAT_DLOPEN
-    char* pszExeName = nullptr;
-#endif
-    BOOL result = FALSE;
-
-    LockModuleList();
-
-    // Save the exe path in the exe module struct
-    free(exe_module.lib_name);
-    exe_module.lib_name = name;
-
-    // For platforms where we can't trust the handle to be constant, we need to
-    // store the inode/device pairs for the modules we just initialized.
-#if RETURNS_NEW_HANDLES_ON_REPEAT_DLOPEN
-    {
-        struct stat stat_buf;
-        pszExeName = UTIL_WCToMB_Alloc(name, -1);
-        if (nullptr == pszExeName)
-        {
-            ERROR("WCToMB failure, unable to get full name of exe\n");
-            goto exit;
-        }
-        if (-1 == stat(pszExeName, &stat_buf))
-        {
-            SetLastError(ERROR_MOD_NOT_FOUND);
-            goto exit;
-        }
-        TRACE("Executable has inode %d and device %d\n", stat_buf.st_ino, stat_buf.st_dev);
-
-        exe_module.inode = stat_buf.st_ino;
-        exe_module.device = stat_buf.st_dev;
-    }
-#endif
-    result = TRUE;
-
-#if RETURNS_NEW_HANDLES_ON_REPEAT_DLOPEN
-exit:
-    if (pszExeName)
-    {
-        free(pszExeName);
-    }
-#endif
-    UnlockModuleList();
-    return result;
 }
 
 /*++
