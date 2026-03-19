@@ -4,4 +4,4 @@ project(chakra_rs)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_subdirectory(chakracore-cxx)
-install(TARGETS chhelper ChakraCoreStatic)
+# install(TARGETS chhelper ChakraCoreStatic)

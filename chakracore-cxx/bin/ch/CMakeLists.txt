@@ -28,6 +28,8 @@ target_include_directories(chhelper PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/ByteCode
 )
 
+target_link_libraries(chhelper PUBLIC ChakraCoreStatic)
+
 target_compile_definitions(chhelper PUBLIC
     PAL_STDCPP_COMPAT
 )

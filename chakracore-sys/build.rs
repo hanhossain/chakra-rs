@@ -4,11 +4,19 @@ fn main() {
     let out_dir = std::env::var("OUT_DIR").unwrap();
     let is_rust_analyzer = out_dir.contains("target/rust-analyzer");
 
-    let mut cxx_bridge = cxx_build::bridge("src/lib.rs");
-    cxx_bridge.include("../chakracore-cxx/bin/ch");
+    let mut bridge_config = cxx_build::bridge("src/lib.rs");
+    
+    if !bridge_config.get_compiler().is_like_clang() {
+        bridge_config.compiler("clang");
+    }
+    
+    bridge_config.include("../chakracore-cxx/bin/ch");
+
+    let mut bridge_config_cpp = bridge_config.clone();
+    bridge_config_cpp.std("c++23");
 
     if !is_rust_analyzer {
-        cxx_bridge.compile("binding");
+        bridge_config_cpp.compile("binding");
 
         let debug: bool = std::env::var("DEBUG").unwrap().parse::<bool>().unwrap();
         let optimized = cfg!(feature = "optimized-tests");
@@ -18,18 +26,15 @@ fn main() {
             (_, false) => "Release",
         };
 
-        if !cxx_bridge.get_compiler().is_like_clang() {
-            cxx_bridge.compiler("clang");
-        }
-
         let mut config = cmake::Config::new("..");
         config
-            .init_c_cfg(cxx_bridge.clone())
-            .init_cxx_cfg(cxx_bridge)
+            .init_c_cfg(bridge_config)
+            .init_cxx_cfg(bridge_config_cpp)
             .generator("Ninja")
             .define("CMAKE_CXX_COMPILER", "clang++")
             .define("CMAKE_C_COMPILER", "clang")
-            .profile(build_type);
+            .profile(build_type)
+            .build_target("chhelper");
 
         if cfg!(target_os = "macos") {
             config
@@ -37,7 +42,7 @@ fn main() {
                 .define("ICU_INCLUDE_PATH", "/opt/homebrew/opt/icu4c@77/include");
         }
 
-        config.always_configure(true);
+        config.always_configure(false);
         let dst = config.build();
 
         println!("cargo::rustc-link-search=native={}/lib", dst.display());
