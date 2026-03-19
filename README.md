@@ -18,6 +18,13 @@ cmake --build build
 
 > NOTE: You can also build with ninja i.e. `cd build && ninja`
 
+## Building in docker
+
+```sh
+docker build -t chakra .
+docker run --rm -it -v .:/chakra-rs chakra
+```
+
 ## Dependency Graph
 
 Generate graph
