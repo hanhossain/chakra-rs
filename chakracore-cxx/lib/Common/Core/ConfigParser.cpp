@@ -84,7 +84,6 @@ void ConfigParser::ParseConfig(HANDLE hmod, CmdLineArgsParser &parser, const cha
     char16_t modulename[_MAX_PATH];
     char16_t filename[_MAX_PATH];
 
-    GetModuleFileName((HMODULE)hmod, modulename, _MAX_PATH);
     char16_t drive[_MAX_DRIVE];
     char16_t dir[_MAX_DIR];
 
@@ -192,8 +191,6 @@ void ConfigParser::ProcessConfiguration(HANDLE hmod)
 #if defined(ENABLE_DEBUG_CONFIG_OPTIONS)
     bool hasOutput = false;
     char16_t modulename[_MAX_PATH];
-
-    GetModuleFileName((HMODULE)hmod, modulename, _MAX_PATH);
 
     if (Js::Configuration::Global.flags.IsEnabled(Js::OutputFileFlag)
         && Js::Configuration::Global.flags.OutputFile != nullptr)

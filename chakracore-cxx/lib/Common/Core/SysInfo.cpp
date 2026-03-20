@@ -316,7 +316,7 @@ AutoSystemInfo::IsWin8Point1OrLater()
 
 uint32_t AutoSystemInfo::SaveModuleFileName(HANDLE hMod)
 {
-    return ::GetModuleFileNameW((HMODULE)hMod, Data.binaryName, MAX_PATH);
+    return 0;
 }
 
 const char16_t* AutoSystemInfo::GetJscriptDllFileName()

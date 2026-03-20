@@ -1224,7 +1224,6 @@ namespace Js
         HMODULE mod = nullptr;
         offset = ip - (uintptr_t)mod;
         auto& faultModule = modulePath;
-        GetModuleFileName(mod, faultModule, MAX_PATH);
         PAL_fwprintf(PAL_stderr, u"***FI: Exception: %08x, module: %s, offset: 0x%p\n",
             ep->ExceptionRecord->ExceptionCode, faultModule, (void*)offset);
 
