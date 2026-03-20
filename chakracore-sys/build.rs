@@ -33,8 +33,7 @@ fn main() {
             .generator("Ninja")
             .define("CMAKE_CXX_COMPILER", "clang++")
             .define("CMAKE_C_COMPILER", "clang")
-            .profile(build_type)
-            .build_target("chhelper");
+            .profile(build_type);
 
         if cfg!(target_os = "macos") {
             config
