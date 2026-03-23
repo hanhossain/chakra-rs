@@ -277,10 +277,7 @@ function_name() to call the system's implementation
 #if HAVE__SNWPRINTF
 #undef _snwprintf
 #endif  /* HAVE__SNWPRINTF */
-#undef _vsnprintf
 #undef _vsnwprintf
-#undef vsnprintf
-#undef wvsnprintf
 
 #undef RAND_MAX
 #undef __record_type_class

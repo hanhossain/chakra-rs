@@ -810,7 +810,7 @@ inline int _vscprintf_unsafe(const char *_Format, va_list _ArgList)
         if(buf == nullptr)
             return 0;
 
-        int ret = _vsnprintf(buf, guess, _Format, _ArgList);
+        int ret = vsnprintf(buf, guess, _Format, _ArgList);
         free(buf);
 
         if ((ret != -1) && (ret < guess))
@@ -878,7 +878,7 @@ inline int _snwprintf_unsafe(char16_t *_Dst, size_t _SizeInWords, size_t _Count,
 inline int _vsnprintf_unsafe(char *_Dst, size_t _SizeInWords, size_t _Count, const char *_Format, va_list _ArgList)
 {
     if (_Count == _TRUNCATE) _Count = _SizeInWords;
-    int ret = _vsnprintf(_Dst, _Count, _Format, _ArgList);
+    int ret = vsnprintf(_Dst, _Count, _Format, _ArgList);
     _Dst[_SizeInWords - 1] = L'\0';
     if (ret < 0 && errno == 0)
     {

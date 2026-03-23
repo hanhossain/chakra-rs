@@ -2505,8 +2505,6 @@ unsigned char * _mbsdec(const unsigned char *, const unsigned char *);
 int _wcsicmp(const char16_t *, const char16_t*);
 // TODO (hanhossain): public
 int _wcsnicmp(const char16_t *, const char16_t *, size_t);
-// TODO (hanhossain): public
-int _vsnprintf(char *, size_t, const char *, va_list);
 // TODO (hanhossain): internal
 int _vsnwprintf(char16_t *, size_t, const char16_t *, va_list);
 // TODO (hanhossain): internal
