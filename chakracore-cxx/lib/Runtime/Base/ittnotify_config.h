@@ -188,7 +188,6 @@ typedef pthread_mutex_t   mutex_t;
 #define __itt_unload_lib(handle)  FreeLibrary(handle)
 #define __itt_system_error()      (int)GetLastError()
 #define __itt_fstrcmp(s1, s2)     lstrcmpA(s1, s2)
-#define __itt_fstrnlen(s, l)      strnlen_s(s, l)
 #define __itt_fstrcpyn(s1, b, s2, l) strncpy_s(s1, b, s2, l)
 #define __itt_thread_id()         GetCurrentThreadId()
 #define __itt_thread_yield()      SwitchToThread()
@@ -229,12 +228,7 @@ ITT_INLINE long __itt_interlocked_increment(volatile long* ptr)
 #define __itt_system_error()      errno
 #define __itt_fstrcmp(s1, s2)     strcmp(s1, s2)
 
-/* makes customer code define safe APIs for SDL_STRNLEN_S and SDL_STRNCPY_S */
-#ifdef SDL_STRNLEN_S
-#define __itt_fstrnlen(s, l)      SDL_STRNLEN_S(s, l)
-#else
-#define __itt_fstrnlen(s, l)      strlen(s)
-#endif /* SDL_STRNLEN_S */
+/* makes customer code define safe APIs for SDL_STRNCPY_S */
 #ifdef SDL_STRNCPY_S
 #define __itt_fstrcpyn(s1, b, s2, l) SDL_STRNCPY_S(s1, b, s2, l)
 #else

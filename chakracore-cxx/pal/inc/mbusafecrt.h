@@ -62,9 +62,7 @@ extern errno_t wcsncpy_s( char16_t* outDest, size_t inDestBufferSize, const char
 extern char* strtok_s( char* inString, const char* inControl, char** ioContext );
 extern char16_t* wcstok_s( char16_t* inString, const char16_t* inControl, char16_t** ioContext );
 
-// strnlen is not required unless the source string is completely untrusted (e.g. anonymous input on a website)
 #ifndef SUPPRESS_STRNLEN
-    extern size_t strnlen( const char* inString, size_t inMaxSize );
     extern size_t wcsnlen( const char16_t* inString, size_t inMaxSize );
 #endif
 
