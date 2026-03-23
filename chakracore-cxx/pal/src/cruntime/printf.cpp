@@ -30,6 +30,7 @@ Revision History:
 
 /* <stdarg.h> needs to be included after "palinternal.h" to avoid name
    collision for va_start and va_end */
+#include <cstdio>
 #include <stdarg.h>
 #include <errno.h>
 
@@ -1353,31 +1354,6 @@ PAL_swscanf(
     va_end(ap);
 
     LOGEXIT("PAL_swscanf returns int %d\n", Length);
-    return Length;
-}
-
-/*++
-Function:
-  _vsnprintf
-
-See MSDN doc.
---*/
-__attribute__((no_instrument_function))
-int
-_vsnprintf(char *buffer,
-           size_t count,
-           const char *format,
-           va_list argptr)
-{
-    int32_t Length;
-
-    ENTRY("_vsnprintf (buffer=%p, count=%d, format=%p (%s), argptr=%p)\n",
-          buffer, count, format, format, argptr);
-
-    Length = PAL__vsnprintf(buffer, count, format, argptr);
-
-    LOGEXIT("_vsnprintf returns int %d\n", Length);
-
     return Length;
 }
 
