@@ -164,10 +164,6 @@ function_name() to call the system's implementation
 
 /* C runtime functions needed to be renamed to avoid duplicate definition
    of those functions when including standard C header files */
-#define stricmp DUMMY_stricmp
-#if HAVE__SNPRINTF
-#define _snprintf DUMMY__snprintf
-#endif /* HAVE__SNPRINTF */
 #if HAVE__SNWPRINTF
 #define _snwprintf DUMMY__snwprintf
 #endif  /* HAVE__SNWPRINTF */
@@ -235,7 +231,6 @@ function_name() to call the system's implementation
    types could be mapped to the C runtime and socket implementation of the
    native OS */
 #undef alloca
-#undef stricmp
 #undef strdup
 #undef malloc
 #undef realloc
@@ -280,7 +275,6 @@ function_name() to call the system's implementation
 #undef fpos_t
 
 
-#undef _snprintf
 #if HAVE__SNWPRINTF
 #undef _snwprintf
 #endif  /* HAVE__SNWPRINTF */

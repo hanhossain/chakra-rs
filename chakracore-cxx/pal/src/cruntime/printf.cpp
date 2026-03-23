@@ -222,35 +222,6 @@ PAL_wprintf(
 
 /*++
 Function:
-  _snprintf
-
-See MSDN doc.
---*/
-__attribute__((no_instrument_function))
-int
-_snprintf(
-     char *buffer,
-     size_t count,
-     const char *format,
-     ...)
-{
-    int32_t Length;
-    va_list ap;
-
-    ENTRY("_snprintf (buffer=%p, count=%lu, format=%p (%s))\n",
-          buffer, (unsigned long) count, format, format);
-
-    va_start(ap, format);
-    Length = PAL__vsnprintf(buffer, count, format, ap);
-    va_end(ap);
-
-    LOGEXIT("_snprintf returns int %d\n", Length);
-    return Length;
-}
-
-
-/*++
-Function:
   _snwprintf
 
 See MSDN doc.

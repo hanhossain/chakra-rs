@@ -2500,8 +2500,6 @@ void * memmove_xplat(void *, const void *, size_t);
 // TODO (hanhossain): internal
 char * _strlwr(char *);
 // TODO (hanhossain): internal
-int _snprintf(char *, size_t, const char *, ...);
-// TODO (hanhossain): internal
 unsigned char * _mbsdec(const unsigned char *, const unsigned char *);
 // TODO (hanhossain): public
 int _wcsicmp(const char16_t *, const char16_t*);
