@@ -164,8 +164,6 @@ function_name() to call the system's implementation
 
 /* C runtime functions needed to be renamed to avoid duplicate definition
    of those functions when including standard C header files */
-#define strlen DUMMY_strlen
-#define strnlen DUMMY_strnlen
 #define stricmp DUMMY_stricmp
 #if HAVE__SNPRINTF
 #define _snprintf DUMMY__snprintf
@@ -237,8 +235,6 @@ function_name() to call the system's implementation
    types could be mapped to the C runtime and socket implementation of the
    native OS */
 #undef alloca
-#undef strlen
-#undef strnlen
 #undef stricmp
 #undef strdup
 #undef malloc
