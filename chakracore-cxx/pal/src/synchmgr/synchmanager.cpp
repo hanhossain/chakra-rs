@@ -142,11 +142,11 @@ namespace CorUnix
           m_cacheThreadApcInfoNodes(ApcInfoNodeCacheMaxSize),
           m_cacheOwnedObjectsListNodes(OwnedObjectsListCacheMaxSize)
     {
-#if HAVE_KQUEUE && !HAVE_BROKEN_FIFO_KEVENT
+#if defined(__APPLE__) && !HAVE_BROKEN_FIFO_KEVENT
         m_iKQueue = -1;
         // Initialize data to 0 and flags to EV_EOF
         EV_SET(&m_keProcessPipeEvent, 0, 0, EV_EOF, 0, 0, 0);
-#endif // HAVE_KQUEUE
+#endif // defined(__APPLE__)
     }
 
     CPalSynchronizationManager::~CPalSynchronizationManager()
@@ -1867,18 +1867,18 @@ namespace CorUnix
         uint8_t * pRecvBuf,
         int32_t iBytes)
     {
-#if !HAVE_KQUEUE
+#ifndef __APPLE__
         struct pollfd Poll;
-#endif // !HAVE_KQUEUE
+#endif // !__APPLE__
         int iRet = -1;
         int iConsecutiveEintrs = 0;
         int32_t iBytesRead = 0;
         uint8_t * pPos = pRecvBuf;
-#if HAVE_KQUEUE && !HAVE_BROKEN_FIFO_KEVENT
+#if defined(__APPLE__) && !HAVE_BROKEN_FIFO_KEVENT
         struct kevent keChanges;
         struct timespec ts, *pts;
         int iNChanges;
-#endif // HAVE_KQUEUE
+#endif // defined(__APPLE__)
 
         _ASSERTE(0 <= iBytes);
 
@@ -1887,7 +1887,7 @@ namespace CorUnix
             while (TRUE)
             {
                 int iErrno = 0;
-#if HAVE_KQUEUE
+#if defined(__APPLE__)
 #if HAVE_BROKEN_FIFO_KEVENT
 #if HAVE_BROKEN_FIFO_SELECT
 #error Found no way to wait on a FIFO.
@@ -1984,7 +1984,7 @@ namespace CorUnix
                 }
 
 #endif // HAVE_BROKEN_FIFO_KEVENT
-#else // HAVE_KQUEUE
+#else // defined(__APPLE__)
 
                 Poll.fd = m_iProcessPipeRead;
                 Poll.events = POLLIN;
@@ -2014,7 +2014,7 @@ namespace CorUnix
                     iErrno = errno;
                 }
 
-#endif // HAVE_KQUEUE
+#endif // defined(__APPLE__)
 
                 if (0 == iRet || 1 == iRet)
                 {
@@ -2068,14 +2068,14 @@ namespace CorUnix
             }
             else
             {
-#if HAVE_KQUEUE && !HAVE_BROKEN_FIFO_KEVENT
+#if defined(__APPLE__) && !HAVE_BROKEN_FIFO_KEVENT
                 if (0 != (EV_EOF & m_keProcessPipeEvent.flags) && 0 == m_keProcessPipeEvent.data)
                 {
                     // EOF
                     TRACE("Received an EOF on process pipe via kevent\n");
                     goto RBFPP_exit;
                 }
-#endif // HAVE_KQUEUE
+#endif // defined(__APPLE__)
 
                 iRet = read(m_iProcessPipeRead, pPos, iBytes - iBytesRead);
 
@@ -2099,11 +2099,11 @@ namespace CorUnix
                 iBytesRead += iRet;
                 pPos += iRet;
 
-#if HAVE_KQUEUE && !HAVE_BROKEN_FIFO_KEVENT
+#if defined(__APPLE__) && !HAVE_BROKEN_FIFO_KEVENT
                 // Update available data count
                 m_keProcessPipeEvent.data -= iRet;
                 _ASSERTE(0 <= m_keProcessPipeEvent.data);
-#endif // HAVE_KQUEUE
+#endif // defined(__APPLE__)
             }
         } while(iBytesRead < iBytes);
 
@@ -3317,9 +3317,9 @@ namespace CorUnix
     bool CPalSynchronizationManager::CreateProcessPipe()
     {
         bool fRet = true;
-#if HAVE_KQUEUE && !HAVE_BROKEN_FIFO_KEVENT
+#if defined(__APPLE__) && !HAVE_BROKEN_FIFO_KEVENT
         int iKq = -1;
-#endif // HAVE_KQUEUE && !HAVE_BROKEN_FIFO_KEVENT
+#endif // defined(__APPLE__) && !HAVE_BROKEN_FIFO_KEVENT
 
         int rgiPipe[] = { -1, -1 };
         if (pipe(rgiPipe) == -1)
@@ -3329,7 +3329,7 @@ namespace CorUnix
             goto CPP_exit;
         }
 
-#if HAVE_KQUEUE && !HAVE_BROKEN_FIFO_KEVENT
+#if defined(__APPLE__) && !HAVE_BROKEN_FIFO_KEVENT
         iKq = kqueue();
         if (-1 == iKq)
         {
@@ -3337,7 +3337,7 @@ namespace CorUnix
             fRet = false;
             goto CPP_exit;
         }
-#endif // HAVE_KQUEUE
+#endif // defined(__APPLE__)
 
     CPP_exit:
         if (fRet)
@@ -3345,9 +3345,9 @@ namespace CorUnix
             // Succeeded
             m_iProcessPipeRead = rgiPipe[0];
             m_iProcessPipeWrite = rgiPipe[1];
-#if HAVE_KQUEUE && !HAVE_BROKEN_FIFO_KEVENT
+#if defined(__APPLE__) && !HAVE_BROKEN_FIFO_KEVENT
             m_iKQueue = iKq;
-#endif // HAVE_KQUEUE
+#endif // defined(__APPLE__)
         }
         else
         {
@@ -3356,12 +3356,12 @@ namespace CorUnix
                 close(rgiPipe[0]);
                 close(rgiPipe[1]);
             }
-#if HAVE_KQUEUE && !HAVE_BROKEN_FIFO_KEVENT
+#if defined(__APPLE__) && !HAVE_BROKEN_FIFO_KEVENT
             if (-1 != iKq)
             {
                 close(iKq);
             }
-#endif // HAVE_KQUEUE
+#endif // defined(__APPLE__)
         }
 
         return fRet;
