@@ -10,10 +10,6 @@
 #define _PAL_CONFIG_H_INCLUDED 1
 
 // TODO (hanhossain): check if necessary
-#cmakedefine01 HAVE_SYSCTL
-// TODO (hanhossain): check if necessary
-#cmakedefine01 HAVE_SYSCONF
-// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_LOCALTIME_R
 // TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_GMTIME_R

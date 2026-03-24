@@ -30,13 +30,6 @@ Revision History:
 #include <errno.h>
 #include <unistd.h>
 #include <sys/types.h>
-#if HAVE_SYSCONF
-// <unistd.h> already included
-#elif HAVE_SYSCTL
-#include <sys/sysctl.h>
-#else
-#error Either sysctl or sysconf is required for GetSystemInfo.
-#endif
 
 #include <sys/param.h>
 
@@ -72,9 +65,9 @@ SET_DEFAULT_DEBUG_CHANNEL(MISC);
 #endif
 
 #ifndef __APPLE__
-#if HAVE_SYSCONF && HAVE__SC_AVPHYS_PAGES
+#if HAVE__SC_AVPHYS_PAGES
 #define SYSCONF_PAGES _SC_AVPHYS_PAGES
-#elif HAVE_SYSCONF && HAVE__SC_PHYS_PAGES
+#elif HAVE__SC_PHYS_PAGES
 #define SYSCONF_PAGES _SC_PHYS_PAGES
 #else
 #error Dont know how to get page-size on this architecture!
@@ -138,26 +131,11 @@ GetSystemInfo(
     lpSystemInfo->dwPageSize = pagesize;
     lpSystemInfo->dwActiveProcessorMask_PAL_Undefined = 0;
 
-#if HAVE_SYSCONF
     nrcpus = sysconf(_SC_NPROCESSORS_ONLN);
     if (nrcpus < 1)
     {
         ASSERT("sysconf failed for _SC_NPROCESSORS_ONLN (%d)\n", errno);
     }
-#elif HAVE_SYSCTL
-    int rc;
-    size_t sz;
-    int mib[2];
-
-    sz = sizeof(nrcpus);
-    mib[0] = CTL_HW;
-    mib[1] = HW_NCPU;
-    rc = sysctl(mib, 2, &nrcpus, &sz, NULL, 0);
-    if (rc != 0)
-    {
-        ASSERT("sysctl failed for HW_NCPU (%d)\n", errno);
-    }
-#endif // HAVE_SYSCONF
 
     TRACE("dwNumberOfProcessors=%d\n", nrcpus);
     lpSystemInfo->dwNumberOfProcessors = nrcpus;
@@ -229,37 +207,18 @@ GlobalMemoryStatusEx(
     BOOL fRetVal = FALSE;
 
     // Get the physical memory size
-#if HAVE_SYSCONF && HAVE__SC_PHYS_PAGES
+#if HAVE__SC_PHYS_PAGES
     int64_t physical_memory;
 
     // Get the Physical memory size
     physical_memory = sysconf( _SC_PHYS_PAGES ) * sysconf( _SC_PAGE_SIZE );
     lpBuffer->ullTotalPhys = (unsigned long)physical_memory;
     fRetVal = TRUE;
-#elif HAVE_SYSCTL
-    int mib[2];
-    int64_t physical_memory;
-    size_t length;
-
-    // Get the Physical memory size
-    mib[0] = CTL_HW;
-    mib[1] = HW_MEMSIZE;
-    length = sizeof(int64_t);
-    int rc = sysctl(mib, 2, &physical_memory, &length, NULL, 0);
-    if (rc != 0)
-    {
-        ASSERT("sysctl failed for HW_MEMSIZE (%d)\n", errno);
-    }
-    else
-    {
-        lpBuffer->ullTotalPhys = (unsigned long)physical_memory;
-        fRetVal = TRUE;
-    }
-#else // HAVE_SYSINFO
+#else // HAVE__SC_PHYS_PAGES
     // TODO: implement getting memory details via sysinfo. On Linux, it provides swap file details that
     // we can use to fill in the xxxPageFile members.
 
-#endif // HAVE_SYSCONF
+#endif // HAVE__SC_PHYS_PAGES
 
     // Get the physical memory in use - from it, we can get the physical memory available.
     // We do this only when we have the total physical memory available.
