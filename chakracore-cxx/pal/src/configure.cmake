@@ -22,7 +22,6 @@ list(APPEND CMAKE_REQUIRED_DEFINITIONS -D_FILE_OFFSET_BITS=64)
 
 check_include_files(unicode/uchar.h HAVE_LIBICU_UCHAR_H)
 
-check_function_exists(kqueue HAVE_KQUEUE)
 check_function_exists(getpwuid_r HAVE_GETPWUID_R)
 check_library_exists(pthread pthread_suspend "" HAVE_PTHREAD_SUSPEND)
 check_library_exists(pthread pthread_suspend_np "" HAVE_PTHREAD_SUSPEND_NP)

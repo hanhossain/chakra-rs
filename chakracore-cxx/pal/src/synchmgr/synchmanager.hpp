@@ -32,9 +32,9 @@ Abstract:
 
 #include <sys/types.h>
 #include <unistd.h>
-#if HAVE_KQUEUE
+#ifdef __APPLE__
 #include <sys/event.h>
-#endif // HAVE_KQUEUE
+#endif // __APPLE__
 #include "pal/dbgmsg.h"
 
 SET_DEFAULT_DEBUG_CHANNEL(SYNC);
@@ -566,10 +566,10 @@ namespace CorUnix
         CPalThread *                    m_pthrWorker;
         int                             m_iProcessPipeRead;
         int                             m_iProcessPipeWrite;
-#if HAVE_KQUEUE
+#ifdef __APPLE__
         int                             m_iKQueue;
         struct kevent                   m_keProcessPipeEvent;
-#endif // HAVE_KQUEUE
+#endif // __APPLE__
 
         MonitoredProcessesListNode *    m_pmplnMonitoredProcesses;
         int32_t                            m_lMonitoredProcessesCount;
