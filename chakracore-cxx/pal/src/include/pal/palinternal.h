@@ -295,9 +295,6 @@ function_name() to call the system's implementation
 #undef _SIZE_T_DEFINED
 
 #define _DONT_USE_CTYPE_INLINE_
-#if HAVE_RUNETYPE_H
-#include <runetype.h>
-#endif
 #include <ctype.h>
 
 #define _WITH_GETLINE

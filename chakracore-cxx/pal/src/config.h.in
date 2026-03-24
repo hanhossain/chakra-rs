@@ -10,9 +10,6 @@
 #define _PAL_CONFIG_H_INCLUDED 1
 
 // TODO (hanhossain): check if necessary
-#cmakedefine01 HAVE_RUNETYPE_H
-
-// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_KQUEUE
 // TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_GETPWUID_R
