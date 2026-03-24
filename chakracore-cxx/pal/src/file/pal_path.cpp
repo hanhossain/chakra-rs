@@ -31,9 +31,7 @@ Revision History:
 #include <errno.h>
 
 #include <unistd.h>
-#if HAVE_ALLOCA_H
 #include <alloca.h>
-#endif  // HAVE_ALLOCA_H
 
 SET_DEFAULT_DEBUG_CHANNEL(FILE);
 

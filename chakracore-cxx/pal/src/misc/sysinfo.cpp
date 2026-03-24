@@ -39,17 +39,6 @@ Revision History:
 #endif
 
 #include <sys/param.h>
-#if HAVE_SYS_VMPARAM_H
-#include <sys/vmparam.h>
-#endif  // HAVE_SYS_VMPARAM_H
-
-#if HAVE_MACH_VM_TYPES_H
-#include <mach/vm_types.h>
-#endif // HAVE_MACH_VM_TYPES_H
-
-#if HAVE_MACH_VM_PARAM_H
-#include <mach/vm_param.h>
-#endif  // HAVE_MACH_VM_PARAM_H
 
 #if defined(__APPLE__)
 #include <mach/vm_statistics.h>

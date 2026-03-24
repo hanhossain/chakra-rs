@@ -26,9 +26,7 @@ Revision History:
 #include "pal/file.h"
 #include "pal/stackstring.hpp"
 
-#if HAVE_ALLOCA_H
 #include <alloca.h>
-#endif  // HAVE_ALLOCA_H
 #include <sys/param.h>
 #include <sys/types.h>
 #include <sys/stat.h>
