@@ -45,9 +45,9 @@ Revision History:
 #else // HAVE_TTRACE
 #include <sys/ptrace.h>
 #endif  // HAVE_PROCFS_CTL
-#if HAVE_VM_READ
+#if defined(__APPLE__)
 #include <mach/mach.h>
-#endif  // HAVE_VM_READ
+#endif  // defined(__APPLE__)
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -70,7 +70,7 @@ extern "C" void DBG_DebugBreak_End();
 
 /* ------------------- Constant definitions ----------------------------------*/
 
-#if !HAVE_VM_READ && !HAVE_PROCFS_CTL
+#if !defined(__APPLE__) && !HAVE_PROCFS_CTL
 const BOOL DBG_ATTACH       = TRUE;
 const BOOL DBG_DETACH       = FALSE;
 #endif
@@ -86,15 +86,15 @@ static const char PAL_RUN_ON_DEBUG_BREAK[]   = "PAL_RUN_ON_DEBUG_BREAK";
 
 /* ------------------- Static function prototypes ----------------------------*/
 
-#if !HAVE_VM_READ && !HAVE_PROCFS_CTL && !HAVE_TTRACE
+#if !defined(__APPLE__) && !HAVE_PROCFS_CTL && !HAVE_TTRACE
 static int
 DBGWriteProcMem_Int(uint32_t processId, int *addr, int data);
 static int
 DBGWriteProcMem_IntWithMask(uint32_t processId, int *addr, int data,
                             unsigned int mask);
-#endif  // !HAVE_VM_READ && !HAVE_PROCFS_CTL && !HAVE_TTRACE
+#endif  // !defined(__APPLE__) && !HAVE_PROCFS_CTL && !HAVE_TTRACE
 
-#if !HAVE_VM_READ && !HAVE_PROCFS_CTL
+#if !defined(__APPLE__) && !HAVE_PROCFS_CTL
 
 static BOOL
 DBGAttachProcess(CPalThread *pThread, HANDLE hProcess, uint32_t dwProcessId);
@@ -105,7 +105,7 @@ DBGDetachProcess(CPalThread *pThread, HANDLE hProcess, uint32_t dwProcessId);
 static int
 DBGSetProcessAttached(CPalThread *pThread, HANDLE hProcess, BOOL bAttach);
 
-#endif // !HAVE_VM_READ && !HAVE_PROCFS_CTL
+#endif // !defined(__APPLE__) && !HAVE_PROCFS_CTL
 
 extern "C" {
 
@@ -543,13 +543,13 @@ WriteProcessMemory(
            )
 
 {
-#if !HAVE_VM_READ && !HAVE_PROCFS_CTL
+#if !defined(__APPLE__) && !HAVE_PROCFS_CTL
     CPalThread *pThread;
 #endif
     uint32_t processId;
     Volatile<BOOL> ret = FALSE;
     Volatile<size_t> numberOfBytesWritten = 0;
-#if HAVE_VM_READ
+#if defined(__APPLE__)
     kern_return_t result;
     vm_map_t task;
 #elif HAVE_PROCFS_CTL
@@ -571,7 +571,7 @@ WriteProcessMemory(
            "nSize=%u, lpNumberOfBytesWritten=%p)\n",
            hProcess,lpBaseAddress, lpBuffer, (unsigned int)nSize, lpNumberOfBytesWritten);
 
-#if !HAVE_VM_READ && !HAVE_PROCFS_CTL
+#if !defined(__APPLE__) && !HAVE_PROCFS_CTL
     pThread = InternalGetCurrentThread();
 #endif
 
@@ -623,7 +623,7 @@ WriteProcessMemory(
         goto EXIT;
     }
 
-#if HAVE_VM_READ
+#if defined(__APPLE__)
     result = task_for_pid(mach_task_self(), processId, &task);
     if (result != KERN_SUCCESS)
     {
@@ -649,7 +649,7 @@ WriteProcessMemory(
     }
     numberOfBytesWritten = nSize;
     ret = TRUE;
-#else   // HAVE_VM_READ
+#else   // defined(__APPLE__)
 #if HAVE_PROCFS_CTL
     snprintf(memPath, sizeof(memPath), "/proc/%u/%s", processId, PROCFS_MEM_NAME);
     fd = InternalOpen(memPath, O_WRONLY);
@@ -808,7 +808,7 @@ CLEANUP1:
         ret = FALSE;
     }
 #endif  // !HAVE_PROCFS_CTL
-#endif  // HAVE_VM_READ
+#endif  // defined(__APPLE__)
 
 EXIT:
     if (lpNumberOfBytesWritten)
@@ -820,7 +820,7 @@ EXIT:
     return ret;
 }
 
-#if !HAVE_VM_READ && !HAVE_PROCFS_CTL && !HAVE_TTRACE
+#if !defined(__APPLE__) && !HAVE_PROCFS_CTL && !HAVE_TTRACE
 /*++
 Function:
   DBGWriteProcMem_Int
@@ -912,9 +912,9 @@ DBGWriteProcMem_IntWithMask( uint32_t processId,
     }
     return DBGWriteProcMem_Int(processId, addr, data);
 }
-#endif  // !HAVE_VM_READ && !HAVE_PROCFS_CTL && !HAVE_TTRACE
+#endif  // !defined(__APPLE__) && !HAVE_PROCFS_CTL && !HAVE_TTRACE
 
-#if !HAVE_VM_READ && !HAVE_PROCFS_CTL
+#if !defined(__APPLE__) && !HAVE_PROCFS_CTL
 
 /*++
 Function:
@@ -1269,6 +1269,6 @@ DBGSetProcessAttachedExit:
     return ret;
 }
 
-#endif // !HAVE_VM_READ && !HAVE_PROCFS_CTL
+#endif // !defined(__APPLE__) && !HAVE_PROCFS_CTL
 
 } // extern "C"
