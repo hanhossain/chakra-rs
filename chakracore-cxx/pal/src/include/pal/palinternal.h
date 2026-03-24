@@ -164,9 +164,6 @@ function_name() to call the system's implementation
 
 /* C runtime functions needed to be renamed to avoid duplicate definition
    of those functions when including standard C header files */
-#if HAVE__SNWPRINTF
-#define _snwprintf DUMMY__snwprintf
-#endif  /* HAVE__SNWPRINTF */
 #define time DUMMY_time
 #define tm PAL_tm
 #define time_t PAL_time_t
@@ -274,9 +271,6 @@ function_name() to call the system's implementation
 #undef fpos_t
 
 
-#if HAVE__SNWPRINTF
-#undef _snwprintf
-#endif  /* HAVE__SNWPRINTF */
 #undef _vsnwprintf
 
 #undef RAND_MAX
