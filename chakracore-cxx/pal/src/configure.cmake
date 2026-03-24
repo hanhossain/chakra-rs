@@ -22,9 +22,6 @@ list(APPEND CMAKE_REQUIRED_DEFINITIONS -D_FILE_OFFSET_BITS=64)
 
 check_include_files(unicode/uchar.h HAVE_LIBICU_UCHAR_H)
 
-check_function_exists(sigreturn HAVE_SIGRETURN)
-check_function_exists(_thread_sys_sigreturn HAVE__THREAD_SYS_SIGRETURN)
-check_function_exists(copysign HAVE_COPYSIGN)
 check_function_exists(fsync HAVE_FSYNC)
 check_function_exists(futimes HAVE_FUTIMES)
 check_function_exists(utimes HAVE_UTIMES)
