@@ -91,9 +91,7 @@ GetSystemTime(
            LPSYSTEMTIME lpSystemTime)
 {
     time_t tt;
-#if HAVE_GMTIME_R
     struct tm ut;
-#endif  /* HAVE_GMTIME_R */
     struct tm *utPtr;
     struct timeval timeval;
     int timeofday_retval;
@@ -106,12 +104,8 @@ GetSystemTime(
        gettimeofday() */
     timeofday_retval = gettimeofday(&timeval,NULL);
 
-#if HAVE_GMTIME_R
     utPtr = &ut;
     if (gmtime_r(&tt, utPtr) == NULL)
-#else   /* HAVE_GMTIME_R */
-    if ((utPtr = gmtime(&tt)) == NULL)
-#endif  /* HAVE_GMTIME_R */
     {
         ASSERT("gmtime() failed; errno is %d (%s)\n", errno, strerror(errno));
         goto EXIT;
