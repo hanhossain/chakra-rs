@@ -22,7 +22,6 @@ list(APPEND CMAKE_REQUIRED_DEFINITIONS -D_FILE_OFFSET_BITS=64)
 
 check_include_files(unicode/uchar.h HAVE_LIBICU_UCHAR_H)
 
-check_library_exists(pthread pthread_getcpuclockid "" HAVE_PTHREAD_GETCPUCLOCKID)
 check_function_exists(sigreturn HAVE_SIGRETURN)
 check_function_exists(_thread_sys_sigreturn HAVE__THREAD_SYS_SIGRETURN)
 check_function_exists(copysign HAVE_COPYSIGN)

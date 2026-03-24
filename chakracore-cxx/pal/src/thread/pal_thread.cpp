@@ -38,7 +38,7 @@ SET_DEFAULT_DEBUG_CHANNEL(THREAD); // some headers have code with asserts, so do
 #include "pal/utils.h"
 #include "pal/virtual.h"
 
-#if defined(__NetBSD__) && !HAVE_PTHREAD_GETCPUCLOCKID
+#if defined(__NetBSD__) && !defined(__linux__)
 #include <sys/cdefs.h>
 #include <sys/param.h>
 #include <sys/sysctl.h>
@@ -1211,7 +1211,7 @@ CorUnix::GetThreadTimesInternal(
 
     goto GetThreadTimesInternalExit;
 
-#elif defined(__NetBSD__) && !HAVE_PTHREAD_GETCPUCLOCKID /* Currently unimplemented */
+#elif defined(__NetBSD__) && !defined(__linux__) /* Currently unimplemented */
 
     PAL_ERROR palError;
     CPalThread *pThread;
@@ -1325,7 +1325,7 @@ CorUnix::GetThreadTimesInternal(
 
     pTargetThread->Lock(pThread);
 
-#if HAVE_PTHREAD_GETCPUCLOCKID
+#if defined(__linux__)
     if (pthread_getcpuclockid(pTargetThread->GetPThreadSelf(), &cid) != 0)
     {
         ASSERT("Unable to get clock from thread\n", hThread);
@@ -1366,9 +1366,9 @@ CorUnix::GetThreadTimesInternal(
     close(fd);
 
     ts = status.pr_utime;
-#else // HAVE_PTHREAD_GETCPUCLOCKID
+#else // defined(__linux__)
 #error "Don't know how to obtain user cpu time on this platform."
-#endif // HAVE_PTHREAD_GETCPUCLOCKID
+#endif // defined(__linux__)
 
     pTargetThread->Unlock(pThread);
 
