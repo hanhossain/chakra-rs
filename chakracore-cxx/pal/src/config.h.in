@@ -10,10 +10,6 @@
 #define _PAL_CONFIG_H_INCLUDED 1
 
 // TODO (hanhossain): check if necessary
-#cmakedefine01 HAVE_VM_READ
-// TODO (hanhossain): check if necessary
-#cmakedefine01 HAS_SYSV_SEMAPHORES
-// TODO (hanhossain): check if necessary
 #cmakedefine01 HAS_PTHREAD_MUTEXES
 // TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_TTRACE

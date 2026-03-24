@@ -64,7 +64,7 @@ Abstract:
 
 #include <pthread.h>
 
-#elif HAS_SYSV_SEMAPHORES
+#else
 
 // SYSV semaphores are our last choice since they're shared across processes so it's possible to leak them
 // on abnormal process termination.
@@ -72,9 +72,6 @@ Abstract:
 
 #include <sys/sem.h>
 #include <sys/types.h>
-
-#else
-#error "Don't know how to synchronize thread suspends and resumes on this platform"
 #endif // HAS_POSIX_SEMAPHORES
 
 #include <stdarg.h>
