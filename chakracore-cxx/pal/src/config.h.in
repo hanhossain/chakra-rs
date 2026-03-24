@@ -10,8 +10,6 @@
 #define _PAL_CONFIG_H_INCLUDED 1
 
 // TODO (hanhossain): check if necessary
-#cmakedefine01 HAVE_CRT_EXTERNS_H
-// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_SYS_TIME_H
 // TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_PTHREAD_NP_H
@@ -197,8 +195,6 @@
 
 // TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_COREFOUNDATION
-// TODO (hanhossain): check if necessary
-#cmakedefine01 HAVE__NSGETENVIRON
 // TODO (hanhossain): check if necessary
 #cmakedefine01 DEADLOCK_WHEN_THREAD_IS_SUSPENDED_WHILE_BLOCKED_ON_MUTEX
 // TODO (hanhossain): check if necessary

@@ -32,9 +32,6 @@ Abstract:
 #include <stdarg.h>
 #include <time.h>
 #include <limits.h>
-#if HAVE_CRT_EXTERNS_H
-#include <crt_externs.h>
-#endif  // HAVE_CRT_EXTERNS_H
 #if defined(_AMD64_) || defined(_x86_)
 #include <xmmintrin.h>
 #endif // defined(_AMD64_) || defined(_x86_)
@@ -42,6 +39,8 @@ Abstract:
 SET_DEFAULT_DEBUG_CHANNEL(CRT);
 
 char **palEnvironment = NULL;
+extern char **environ;
+
 
 CRITICAL_SECTION gcsEnvironment;
 
@@ -107,12 +106,7 @@ NOTE: This function MUST be called while holding the gcsEnvironment
 void
 MiscGetEnvArray(void)
 {
-#if HAVE__NSGETENVIRON
-    palEnvironment = *(_NSGetEnviron());
-#else   // HAVE__NSGETENVIRON
-    extern char **environ;
     palEnvironment = environ;
-#endif  // HAVE__NSGETENVIRON
 }
 
 /*++
@@ -128,12 +122,7 @@ NOTE: This function MUST be called while holding the gcsEnvironment
 void
 MiscSetEnvArray(void)
 {
-#if HAVE__NSGETENVIRON
-    *(_NSGetEnviron()) = palEnvironment;
-#else   // HAVE__NSGETENVIRON
-    extern char **environ;
     environ = palEnvironment;
-#endif  // HAVE__NSGETENVIRON
 }
 
 /*++
