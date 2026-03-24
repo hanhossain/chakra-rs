@@ -31,28 +31,19 @@ extern "C"
 
 /* Provide consistent access to nanosecond fields, if they exist. */
 
-#if HAVE_STAT_TIMESPEC
+#if defined(__APPLE__)
 
 #define ST_ATIME_NSEC(statstruct) ((statstruct)->st_atimespec.tv_nsec)
 #define ST_MTIME_NSEC(statstruct) ((statstruct)->st_mtimespec.tv_nsec)
 #define ST_CTIME_NSEC(statstruct) ((statstruct)->st_ctimespec.tv_nsec)
 
-#else /* HAVE_STAT_TIMESPEC */
-
-#if HAVE_STAT_NSEC
-
-#define ST_ATIME_NSEC(statstruct) ((statstruct)->st_atimensec)
-#define ST_MTIME_NSEC(statstruct) ((statstruct)->st_mtimensec)
-#define ST_CTIME_NSEC(statstruct) ((statstruct)->st_ctimensec)
-
-#else /* HAVE_STAT_NSEC */
+#else /* defined(__APPLE__) */
 
 #define ST_ATIME_NSEC(statstruct) 0
 #define ST_MTIME_NSEC(statstruct) 0
 #define ST_CTIME_NSEC(statstruct) 0
 
-#endif /* HAVE_STAT_NSEC */
-#endif /* HAVE_STAT_TIMESPEC */
+#endif /* defined(__APPLE__) */
 
 FILETIME FILEUnixTimeToFileTime( time_t sec, long nsec );
 time_t FILEFileTimeToUnixTime( FILETIME FileTime, long *nsec );
