@@ -2794,7 +2794,6 @@ CorUnix::InternalFlushFileBuffers(
         goto InternalFlushFileBuffersExit;
     }
 
-#if HAVE_FSYNC || defined(__APPLE__)
     do
     {
 
@@ -2818,13 +2817,7 @@ CorUnix::InternalFlushFileBuffers(
             WARN("fsync(%d) failed with error %d\n", pLocalData->unix_fd, errno);
             break;
         }
-    } while (NO_ERROR == palError);    
-#else // HAVE_FSYNC
-    /* flush all buffers out to disk - there is no way to flush
-       an individual file descriptor's buffers out. */
-    sync();
-#endif // HAVE_FSYNC else
-    
+    } while (NO_ERROR == palError);
 
 InternalFlushFileBuffersExit:
 
