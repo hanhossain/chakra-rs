@@ -22,7 +22,6 @@ list(APPEND CMAKE_REQUIRED_DEFINITIONS -D_FILE_OFFSET_BITS=64)
 
 check_include_files(unicode/uchar.h HAVE_LIBICU_UCHAR_H)
 
-check_function_exists(poll HAVE_POLL)
 check_function_exists(statvfs HAVE_STATVFS)
 check_function_exists(thread_self HAVE_THREAD_SELF)
 check_function_exists(_lwp_self HAVE__LWP_SELF)

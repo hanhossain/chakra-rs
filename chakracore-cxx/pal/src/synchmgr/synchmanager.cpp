@@ -30,11 +30,7 @@ Abstract:
 #include <sched.h>
 #include <signal.h>
 #include <errno.h>
-#if HAVE_POLL
 #include <poll.h>
-#else
-#include "pal/fakepoll.h"
-#endif // HAVE_POLL
 
 namespace CorUnix
 {
