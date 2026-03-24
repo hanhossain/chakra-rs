@@ -61,9 +61,9 @@ SET_DEFAULT_DEBUG_CHANNEL(THREAD); // some headers have code with asserts, so do
 #include <stddef.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
-#if HAVE_MACH_THREADS
+#if defined(__APPLE__)
 #include <mach/mach.h>
-#endif // HAVE_MACH_THREADS
+#endif // defined(__APPLE__)
 #include <limits.h>
 #if HAVE_LWP_H
 #include <lwp.h>
@@ -1131,7 +1131,7 @@ CorUnix::GetThreadTimesInternal(
     long calcTime;
     BOOL retval = FALSE;
 
-#if HAVE_MACH_THREADS
+#if defined(__APPLE__)
     thread_basic_info resUsage;
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pthrCurrent = NULL;
@@ -1279,7 +1279,7 @@ CorUnix::GetThreadTimesInternal(
     retval = TRUE;
     goto GetThreadTimesInternalExit;
 
-#else //HAVE_MACH_THREADS
+#else //defined(__APPLE__)
 
     PAL_ERROR palError;
     CPalThread *pThread;
@@ -1370,7 +1370,7 @@ CorUnix::GetThreadTimesInternal(
     retval = TRUE;
     goto GetThreadTimesInternalExit;
 
-#endif //HAVE_MACH_THREADS
+#endif //defined(__APPLE__)
 
 SetTimesToZero:
 
@@ -1413,7 +1413,7 @@ CPalThread::ThreadEntry(
 
     pThread->m_threadId = THREADSilentGetCurrentThreadId();
     pThread->m_pthreadSelf = pthread_self();
-#if HAVE_MACH_THREADS
+#if defined(__APPLE__)
     pThread->m_machPortSelf = pthread_mach_thread_np(pThread->m_pthreadSelf);
 #endif
     pThread->m_dwLwpId = 0;
@@ -1537,7 +1537,7 @@ CorUnix::CreateThreadData(
 
     pThread->m_threadId = THREADSilentGetCurrentThreadId();
     pThread->m_pthreadSelf = pthread_self();
-#if HAVE_MACH_THREADS
+#if defined(__APPLE__)
     pThread->m_machPortSelf = pthread_mach_thread_np(pThread->m_pthreadSelf);
 #endif
     pThread->m_dwLwpId = 0;
