@@ -40,9 +40,7 @@ Revision History:
 #include <unistd.h>
 #if HAVE_PROCFS_CTL
 #include <unistd.h>
-#elif HAVE_TTRACE // HAVE_PROCFS_CTL
-#include <sys/ttrace.h>
-#else // HAVE_TTRACE
+#else
 #include <sys/ptrace.h>
 #endif  // HAVE_PROCFS_CTL
 #if defined(__APPLE__)
@@ -86,13 +84,13 @@ static const char PAL_RUN_ON_DEBUG_BREAK[]   = "PAL_RUN_ON_DEBUG_BREAK";
 
 /* ------------------- Static function prototypes ----------------------------*/
 
-#if !defined(__APPLE__) && !HAVE_PROCFS_CTL && !HAVE_TTRACE
+#if !defined(__APPLE__) && !HAVE_PROCFS_CTL
 static int
 DBGWriteProcMem_Int(uint32_t processId, int *addr, int data);
 static int
 DBGWriteProcMem_IntWithMask(uint32_t processId, int *addr, int data,
                             unsigned int mask);
-#endif  // !defined(__APPLE__) && !HAVE_PROCFS_CTL && !HAVE_TTRACE
+#endif  // !defined(__APPLE__) && !HAVE_PROCFS_CTL
 
 #if !defined(__APPLE__) && !HAVE_PROCFS_CTL
 
@@ -557,7 +555,7 @@ WriteProcessMemory(
     char memPath[64];
     ptrdiff_t bytesWritten;
     off_t offset;
-#elif !HAVE_TTRACE
+#else
     size_t FirstIntOffset;
     size_t LastIntOffset;
     unsigned int FirstIntMask;
@@ -689,33 +687,6 @@ WriteProcessMemory(
     /* Attach the process before calling ptrace otherwise it fails */
     if (DBGAttachProcess(pThread, hProcess, processId))
     {
-#if HAVE_TTRACE
-        if (ttrace(TT_PROC_WRDATA, processId, 0, (__uint64_t)lpBaseAddress, (__uint64_t)nSize, (__uint64_t)lpBuffer) == -1)
-        {
-            if (errno == EFAULT)
-            {
-                ERROR("ttrace(TT_PROC_WRDATA, pid:%d, addr:%p, data:%d, addr2:%d) failed"
-                      " errno=%d (%s)\n", processId, lpBaseAddress, nSize, lpBuffer,
-                      errno, strerror(errno));
-
-                SetLastError(ERROR_ACCESS_DENIED);
-            }
-            else
-            {
-                ASSERT("ttrace(TT_PROC_WRDATA, pid:%d, addr:%p, data:%d, addr2:%d) failed"
-                      " errno=%d (%s)\n", processId, lpBaseAddress, nSize, lpBuffer,
-                      errno, strerror(errno));
-                SetLastError(ERROR_INTERNAL_ERROR);
-            }
-
-            goto CLEANUP1;
-        }
-
-        numberOfBytesWritten = nSize;
-        ret = TRUE;
-
-#else   // HAVE_TTRACE
-
         FirstIntOffset = (size_t)lpBaseAddress % sizeof(int);
         FirstIntMask = -1;
         FirstIntMask <<= (FirstIntOffset * 8);
@@ -777,7 +748,6 @@ WriteProcessMemory(
 
         numberOfBytesWritten = nSize;
         ret = TRUE;
-#endif  // HAVE_TTRACE
     }
     else
     {
@@ -792,13 +762,13 @@ PROCFSCLEANUP:
     {
         close(fd);
     }
-#elif !HAVE_TTRACE
+#else
 CLEANUP2:
     if (lpTmpBuffer)
     {
         free(lpTmpBuffer);
     }
-#endif  // !HAVE_TTRACE
+#endif
 
 #if !HAVE_PROCFS_CTL
 CLEANUP1:
@@ -820,7 +790,7 @@ EXIT:
     return ret;
 }
 
-#if !defined(__APPLE__) && !HAVE_PROCFS_CTL && !HAVE_TTRACE
+#if !defined(__APPLE__) && !HAVE_PROCFS_CTL
 /*++
 Function:
   DBGWriteProcMem_Int
@@ -912,7 +882,7 @@ DBGWriteProcMem_IntWithMask( uint32_t processId,
     }
     return DBGWriteProcMem_Int(processId, addr, data);
 }
-#endif  // !defined(__APPLE__) && !HAVE_PROCFS_CTL && !HAVE_TTRACE
+#endif  // !defined(__APPLE__) && !HAVE_PROCFS_CTL
 
 #if !defined(__APPLE__) && !HAVE_PROCFS_CTL
 
@@ -998,17 +968,7 @@ DBGAttachProcess(
         }
 
         close(fd);
-#elif HAVE_TTRACE
-        if (ttrace(TT_PROC_ATTACH, processId, 0, TT_DETACH_ON_EXIT, TT_VERSION, 0) == -1)
-        {
-            if (errno != ESRCH)
-            {
-                ASSERT("ttrace(TT_PROC_ATTACH, pid:%d) failed errno:%d (%s)\n",
-                     processId, errno, strerror(errno));
-            }
-            goto DETACH1;
-        }
-#else   // HAVE_TTRACE
+#else
         if (PAL_PTRACE( PAL_PT_ATTACH, processId, 0, 0 ) == -1)
         {
             if (errno != ESRCH)
@@ -1041,7 +1001,7 @@ DETACH2:
                errno, strerror(errno));
     }
     close(fd);
-#elif !HAVE_TTRACE
+#else
 DETACH2:
     if (PAL_PTRACE(PAL_PT_DETACH, processId, 0, 0) == -1)
     {
@@ -1138,23 +1098,7 @@ DBGDetachProcess(
         }
         close(fd);
 
-#elif HAVE_TTRACE
-        if (ttrace(TT_PROC_DETACH, processId, 0, 0, 0, 0) == -1)
-        {
-            if (errno == ESRCH)
-            {
-                ERROR("Invalid process ID: %d\n", processId);
-                SetLastError(ERROR_INVALID_PARAMETER);
-            }
-            else
-            {
-                ASSERT("ttrace(TT_PROC_DETACH, pid:%d) failed. errno:%d (%s)\n",
-                      processId, errno, strerror(errno));
-                SetLastError(ERROR_INTERNAL_ERROR);
-            }
-            return FALSE;
-        }
-#else   // HAVE_TTRACE
+#else
         if (PAL_PTRACE(PAL_PT_DETACH, processId, 1, 0) == -1)
         {
             if (errno == ESRCH)
@@ -1172,14 +1116,12 @@ DBGDetachProcess(
         }
 #endif  // HAVE_PROCFS_CTL
 
-#if !HAVE_TTRACE
         if (kill(processId, SIGCONT) == -1)
         {
             ERROR("Failed to continue the detached process:%d errno:%d (%s)\n",
                   processId, errno, strerror(errno));
             return FALSE;
         }
-#endif  // !HAVE_TTRACE
     }
     return TRUE;
 }
