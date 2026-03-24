@@ -125,7 +125,7 @@ Return Value :
 --*/
 char16_t* UTIL_MBToWC_Alloc(const char * lpMultiByteStr, int cbMultiByte);
 
-#if HAVE_VM_ALLOCATE
+#if defined(__APPLE__)
 #include <mach/kern_return.h>
 
 /*++
@@ -146,7 +146,7 @@ Function:
 --*/
 void UTIL_SetLastErrorFromMach(kern_return_t MachReturn);
 
-#endif //HAVE_VM_ALLOCATE
+#endif //defined(__APPLE__)
 
 #ifdef __cplusplus
 }

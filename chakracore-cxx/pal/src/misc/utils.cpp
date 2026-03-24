@@ -20,9 +20,9 @@ Abstract:
 --*/
 
 #include "pal/palinternal.h"
-#if HAVE_VM_ALLOCATE
+#if defined(__APPLE__)
 #include <mach/message.h>
-#endif //HAVE_VM_ALLOCATE
+#endif //defined(__APPLE__)
 
 #include "pal/utils.h"
 #include "pal/dbgmsg.h"
@@ -265,7 +265,7 @@ char16_t* UTIL_MBToWC_Alloc(const char * lpMultiByteStr, int cbMultiByte)
     return lpWideCharStr;
 }
 
-#if HAVE_VM_ALLOCATE
+#if defined(__APPLE__)
 /*++
 Function:
   UTIL_MachErrorToPalError
@@ -317,4 +317,4 @@ void UTIL_SetLastErrorFromMach(kern_return_t MachReturn)
         SetLastError(palError);
     }
 }
-#endif //HAVE_VM_ALLOCATE
+#endif //defined(__APPLE__)
