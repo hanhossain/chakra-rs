@@ -41,7 +41,7 @@ Abstract:
 #include "pal/locale.h"
 #include "pal/init.h"
 
-#if HAVE_MACH_EXCEPTIONS
+#if defined(__APPLE__)
 #include "../exception/machexception.h"
 #else
 #include "../exception/signal.hpp"
@@ -221,7 +221,7 @@ Initialize()
             goto CLEANUP1;
         }
 
-#if HAVE_MACH_EXCEPTIONS
+#if defined(__APPLE__)
         // Mach exception port needs to be set up before the thread
         // data or threads are set up.
         if (!SEHInitializeMachExceptions())
@@ -230,7 +230,7 @@ Initialize()
             palError = ERROR_GEN_FAILURE;
             goto CLEANUP1;
         }
-#endif // HAVE_MACH_EXCEPTIONS
+#endif // defined(__APPLE__)
 
         //
         // Allocate the initial thread data
@@ -312,7 +312,7 @@ Initialize()
             goto CLEANUP5;
         }
 
-#if !HAVE_MACH_EXCEPTIONS
+#if !defined(__APPLE__)
         if(!SEHInitializeSignals())
         {
             goto CLEANUP5;

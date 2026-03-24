@@ -30,9 +30,9 @@ Abstract:
 
 #include <pthread.h>
 #include <sys/syscall.h>
-#if HAVE_MACH_EXCEPTIONS
+#if defined(__APPLE__)
 #include <mach/mach.h>
-#endif // HAVE_MACH_EXCEPTIONS
+#endif // defined(__APPLE__)
 
 #include "threadsusp.hpp"
 #include "synchobjects.hpp"
@@ -117,7 +117,7 @@ namespace CorUnix
          LPFILETIME lpUserTime);
 
 #ifdef FEATURE_PAL_SXS
-#if HAVE_MACH_EXCEPTIONS
+#if defined(__APPLE__)
     // Structure used to record all Mach exception handlers registered on a given thread at a specific point
     // in time.
     struct CThreadMachExceptionHandlerNode
@@ -176,13 +176,13 @@ namespace CorUnix
         // successful or -1 otherwise.
         int GetIndexOfHandler(exception_mask_t bmExceptionMask);
     };
-#endif // HAVE_MACH_EXCEPTIONS
+#endif // defined(__APPLE__)
 #endif // FEATURE_PAL_SXS
 
     class CThreadSEHInfo : public CThreadInfoInitializer
     {
     public:
-#if !HAVE_MACH_EXCEPTIONS
+#if !defined(__APPLE__)
         BOOL safe_state;
         int signal_code;
 #endif // !HAVE_MACH_EXCEPTIONSG
@@ -367,11 +367,11 @@ namespace CorUnix
         // in the process.
         bool m_fInPal;
 
-#if HAVE_MACH_EXCEPTIONS
+#if defined(__APPLE__)
         // Record of Mach exception handlers that were already registered when we register our own CoreCLR
         // specific handlers.
         CThreadMachExceptionHandlers m_sMachExceptionHandlers;
-#endif // HAVE_MACH_EXCEPTIONS
+#endif // defined(__APPLE__)
 #endif // FEATURE_PAL_SXS
 
     public:
@@ -692,7 +692,7 @@ namespace CorUnix
             return m_fInPal;
         };
 
-#if HAVE_MACH_EXCEPTIONS
+#if defined(__APPLE__)
         // Hook Mach exceptions, i.e., call thread_swap_exception_ports
         // to replace the thread's current exception ports with our own.
         // The previously active exception ports are saved.  Called when
@@ -714,7 +714,7 @@ namespace CorUnix
         {
             return &m_sMachExceptionHandlers;
         }
-#endif // HAVE_MACH_EXCEPTIONS
+#endif // defined(__APPLE__)
 #endif // FEATURE_PAL_SXS
     };
 

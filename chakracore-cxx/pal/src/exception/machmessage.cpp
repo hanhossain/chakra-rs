@@ -24,7 +24,7 @@ Abstract:
 #include "pal/thread.hpp"
 #include "machmessage.h"
 
-#if HAVE_MACH_EXCEPTIONS
+#if defined(__APPLE__)
 
 // Construct an empty message. Use Receive() to form a message that can be inspected or SendSetThread(),
 // ForwardNotification(), ReplyToNotification() or ForwardReply() to construct a message and sent it.
@@ -1078,4 +1078,4 @@ void MachMessage::SetThreadState(thread_state_flavor_t eFlavor, thread_state_t p
     }
 }
 
-#endif // HAVE_MACH_EXCEPTIONS
+#endif // defined(__APPLE__)

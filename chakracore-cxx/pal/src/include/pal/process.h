@@ -133,7 +133,7 @@ Function:
 --*/
 void PROCCleanupProcess(BOOL bTerminateUnconditionally);
 
-#if HAVE_MACH_EXCEPTIONS
+#if defined(__APPLE__)
 /*++
 Function:
   PROCThreadFromMachPort
@@ -144,7 +144,7 @@ Return
     CPalThread*
 --*/
 CorUnix::CPalThread *PROCThreadFromMachPort(mach_port_t hThread);
-#endif // HAVE_MACH_EXCEPTIONS
+#endif // defined(__APPLE__)
 
 #ifdef __cplusplus
 }

@@ -52,9 +52,9 @@ Revision History:
 #include <sys/types.h>
 #include <sys/wait.h>
 
-#if HAVE_MACH_EXCEPTIONS
+#if defined(__APPLE__)
 #include "../exception/machexception.h"
-#endif // HAVE_MACH_EXCEPTIONS
+#endif // defined(__APPLE__)
 
 using namespace CorUnix;
 

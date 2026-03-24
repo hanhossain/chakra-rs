@@ -39,7 +39,7 @@ SET_DEFAULT_DEBUG_CHANNEL(THREAD); // some headers have code with asserts, so do
 #define CONTEXT_ALL_FLOATING CONTEXT_FLOATING_POINT
 #endif
 
-#if !HAVE_MACH_EXCEPTIONS
+#if !defined(__APPLE__)
 #include <sys/ptrace.h>
 
 #ifndef __GLIBC__
@@ -57,7 +57,7 @@ typedef int __ptrace_request;
 #include <asm/ptrace.h>
 #endif  // HAVE_PT_REGS
 
-#endif // !HAVE_MACH_EXCEPTIONS
+#endif // !defined(__APPLE__)
 
 #ifdef _AMD64_
 #define ASSIGN_CONTROL_REGS \
@@ -317,7 +317,7 @@ typedef int __ptrace_request;
         ASSIGN_CONTROL_REGS \
         ASSIGN_INTEGER_REGS \
 
-#if !HAVE_MACH_EXCEPTIONS
+#if !defined(__APPLE__)
 
 /*++
 Function:
@@ -1105,7 +1105,7 @@ uint32_t CONTEXTGetExceptionCodeForSignal(const siginfo_t *siginfo,
 }
 #endif  // ILL_ILLOPC
 
-#else // !HAVE_MACH_EXCEPTIONS
+#else // !defined(__APPLE__)
 
 #include <mach/message.h>
 #include <mach/thread_act.h>
@@ -1613,7 +1613,7 @@ EXIT:
     return ret;
 }
 
-#endif // !HAVE_MACH_EXCEPTIONS
+#endif // !defined(__APPLE__)
 
 /*++
 Function:
