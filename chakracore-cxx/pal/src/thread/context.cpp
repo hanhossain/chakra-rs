@@ -334,9 +334,6 @@ Return
 --*/
 BOOL CONTEXT_GetRegisters(uint32_t processId, LPCONTEXT lpContext)
 {
-#if HAVE_BSD_REGS_T
-    int regFd = -1;
-#endif  // HAVE_BSD_REGS_T
     BOOL bRet = FALSE;
 
     if (processId == GetCurrentProcessId())
@@ -349,9 +346,6 @@ BOOL CONTEXT_GetRegisters(uint32_t processId, LPCONTEXT lpContext)
 #if HAVE_PT_REGS
         struct pt_regs ptrace_registers;
         if (ptrace((__ptrace_request)PTRACE_GETREGS, processId, (caddr_t) &ptrace_registers, 0) == -1)
-#elif HAVE_BSD_REGS_T
-        struct reg ptrace_registers;
-        if (PAL_PTRACE(PT_GETREGS, processId, &ptrace_registers, 0) == -1)
 #endif
         {
             ASSERT("Failed ptrace(PT_GETREGS, processId:%d) errno:%d (%s)\n",
@@ -360,8 +354,6 @@ BOOL CONTEXT_GetRegisters(uint32_t processId, LPCONTEXT lpContext)
 
 #if HAVE_PT_REGS
 #define ASSIGN_REG(reg) MCREG_##reg(registers.uc_mcontext) = PTREG_##reg(ptrace_registers);
-#elif HAVE_BSD_REGS_T
-#define ASSIGN_REG(reg) MCREG_##reg(registers.uc_mcontext) = BSDREG_##reg(ptrace_registers);
 #else
 #define ASSIGN_REG(reg)
 	ASSERT("Don't know how to get the context of another process on this platform!");
@@ -374,12 +366,6 @@ BOOL CONTEXT_GetRegisters(uint32_t processId, LPCONTEXT lpContext)
     }
 
     bRet = TRUE;
-#if HAVE_BSD_REGS_T
-    if (regFd != -1)
-    {
-        close(regFd);
-    }
-#endif  // HAVE_BSD_REGS_T
     return bRet;
 }
 
@@ -466,8 +452,6 @@ CONTEXT_SetThreadContext(
 
 #if HAVE_PT_REGS
     struct pt_regs ptrace_registers;
-#elif HAVE_BSD_REGS_T
-    struct reg ptrace_registers;
 #endif
 
     if (lpContext == NULL)
@@ -498,8 +482,6 @@ CONTEXT_SetThreadContext(
     {
 #if HAVE_PT_REGS
         if (ptrace((__ptrace_request)PTRACE_GETREGS, dwProcessId, (caddr_t)&ptrace_registers, 0) == -1)
-#elif HAVE_BSD_REGS_T
-        if (PAL_PTRACE(PT_GETREGS, dwProcessId, &ptrace_registers, 0) == -1)
 #endif
         {
             ASSERT("Failed ptrace(PT_GETREGS, processId:%d) errno:%d (%s)\n",
@@ -510,8 +492,6 @@ CONTEXT_SetThreadContext(
 
 #if HAVE_PT_REGS
 #define ASSIGN_REG(reg) PTREG_##reg(ptrace_registers) = lpContext->reg;
-#elif HAVE_BSD_REGS_T
-#define ASSIGN_REG(reg) BSDREG_##reg(ptrace_registers) = lpContext->reg;
 #else
 #define ASSIGN_REG(reg)
 	ASSERT("Don't know how to set the context of another process on this platform!");
@@ -529,8 +509,6 @@ CONTEXT_SetThreadContext(
 
 #if HAVE_PT_REGS
         if (ptrace((__ptrace_request)PTRACE_SETREGS, dwProcessId, (caddr_t)&ptrace_registers, 0) == -1)
-#elif HAVE_BSD_REGS_T
-        if (PAL_PTRACE(PT_SETREGS, dwProcessId, &ptrace_registers, 0) == -1)
 #endif
         {
             ASSERT("Failed ptrace(PT_SETREGS, processId:%d) errno:%d (%s)\n",

@@ -224,36 +224,6 @@ typedef ucontext_t native_context_t;
 
 
 
-#if HAVE_BSD_REGS_T
-
-#ifndef BSD_REGS_STYLE
-#error "struct reg" has unrecognized format
-#endif
-
-#define BSDREG_Rbx(reg)     BSD_REGS_STYLE(reg,RBX,rbx)
-#define BSDREG_Rcx(reg)     BSD_REGS_STYLE(reg,RCX,rcx)
-#define BSDREG_Rdx(reg)     BSD_REGS_STYLE(reg,RDX,rdx)
-#define BSDREG_Rsi(reg)     BSD_REGS_STYLE(reg,RSI,rsi)
-#define BSDREG_Rdi(reg)     BSD_REGS_STYLE(reg,RDI,rdi)
-#define BSDREG_Rbp(reg)     BSD_REGS_STYLE(reg,RBP,rbp)
-#define BSDREG_Rax(reg)     BSD_REGS_STYLE(reg,RAX,rax)
-#define BSDREG_Rip(reg)     BSD_REGS_STYLE(reg,RIP,rip)
-#define BSDREG_SegCs(reg)   BSD_REGS_STYLE(reg,CS,cs)
-#define BSDREG_SegSs(reg)   BSD_REGS_STYLE(reg,SS,ss)
-#define BSDREG_Rsp(reg)     BSD_REGS_STYLE(reg,RSP,rsp)
-#define BSDREG_R8(reg)      BSD_REGS_STYLE(reg,R8,r8)
-#define BSDREG_R9(reg)      BSD_REGS_STYLE(reg,R9,r9)
-#define BSDREG_R10(reg)     BSD_REGS_STYLE(reg,R10,r10)
-#define BSDREG_R11(reg)     BSD_REGS_STYLE(reg,R11,r11)
-#define BSDREG_R12(reg)     BSD_REGS_STYLE(reg,R12,r12)
-#define BSDREG_R13(reg)     BSD_REGS_STYLE(reg,R13,r13)
-#define BSDREG_R14(reg)     BSD_REGS_STYLE(reg,R14,r14)
-#define BSDREG_R15(reg)     BSD_REGS_STYLE(reg,R15,r15)
-#define BSDREG_EFlags(reg)  BSD_REGS_STYLE(reg,RFLAGS,rflags)
-
-
-#endif // HAVE_BSD_REGS_T
-
 inline static unsigned long CONTEXTGetPC(LPCONTEXT pContext)
 {
 #if defined(_AMD64_)
