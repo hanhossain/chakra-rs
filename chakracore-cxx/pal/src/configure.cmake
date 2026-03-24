@@ -20,7 +20,6 @@ endif()
 
 list(APPEND CMAKE_REQUIRED_DEFINITIONS -D_FILE_OFFSET_BITS=64)
 
-check_include_files(crt_externs.h HAVE_CRT_EXTERNS_H)
 check_include_files(sys/time.h HAVE_SYS_TIME_H)
 check_include_files(pthread_np.h HAVE_PTHREAD_NP_H)
 check_include_files(sys/lwp.h HAVE_SYS_LWP_H)
@@ -802,7 +801,6 @@ set(ERROR_FUNC_FOR_GLOB_HAS_FIXED_PARAMS 1)
 
 if(CMAKE_SYSTEM_NAME STREQUAL Darwin)
   set(HAVE_COREFOUNDATION 1)
-  set(HAVE__NSGETENVIRON 1)
   set(DEADLOCK_WHEN_THREAD_IS_SUSPENDED_WHILE_BLOCKED_ON_MUTEX 1)
   set(PAL_PTRACE "ptrace((cmd), (pid), (caddr_t)(addr), (data))")
   set(PAL_PT_ATTACH PT_ATTACH)

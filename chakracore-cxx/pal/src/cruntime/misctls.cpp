@@ -34,9 +34,6 @@ extern "C"
    collision for va_start and va_end */
 #include <stdarg.h>
 #include <time.h>
-#if HAVE_CRT_EXTERNS_H
-#include <crt_externs.h>
-#endif  // HAVE_CRT_EXTERNS_H
 
 using namespace CorUnix;
 
