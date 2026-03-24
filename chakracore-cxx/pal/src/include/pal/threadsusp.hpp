@@ -57,7 +57,7 @@ Abstract:
 #include <sys/semaphore.h>
 #endif // HAVE_SYS_SEMAPHORE_H
 
-#elif HAS_PTHREAD_MUTEXES && defined(__APPLE__)
+#elif defined(__APPLE__)
 
 // Can only use the pthread solution if we're not using signals since pthread mutexes are not signal safe.
 #define USE_PTHREAD_CONDVARS 1
