@@ -16,8 +16,6 @@
 #cmakedefine01 HAVE_STAT_TIMESPEC
 // TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_STAT_NSEC
-// TODO (hanhossain): check if necessary
-#cmakedefine01 HAVE_TM_GMTOFF
 
 // TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_BSD_REGS_T
