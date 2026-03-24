@@ -53,9 +53,7 @@ typedef int __ptrace_request;
 #include <machine/npx.h>
 #endif  // HAVE_MACHINE_NPX_H
 
-#if HAVE_PT_REGS
 #include <asm/ptrace.h>
-#endif  // HAVE_PT_REGS
 
 #endif // !defined(__APPLE__)
 
@@ -343,22 +341,14 @@ BOOL CONTEXT_GetRegisters(uint32_t processId, LPCONTEXT lpContext)
     else
     {
         ucontext_t registers;
-#if HAVE_PT_REGS
         struct pt_regs ptrace_registers;
         if (ptrace((__ptrace_request)PTRACE_GETREGS, processId, (caddr_t) &ptrace_registers, 0) == -1)
-#endif
         {
             ASSERT("Failed ptrace(PT_GETREGS, processId:%d) errno:%d (%s)\n",
                    processId, errno, strerror(errno));
         }
 
-#if HAVE_PT_REGS
 #define ASSIGN_REG(reg) MCREG_##reg(registers.uc_mcontext) = PTREG_##reg(ptrace_registers);
-#else
-#define ASSIGN_REG(reg)
-	ASSERT("Don't know how to get the context of another process on this platform!");
-	return bRet;
-#endif
         ASSIGN_ALL_REGS
 #undef ASSIGN_REG
 
@@ -450,9 +440,7 @@ CONTEXT_SetThreadContext(
 {
     BOOL ret = FALSE;
 
-#if HAVE_PT_REGS
     struct pt_regs ptrace_registers;
-#endif
 
     if (lpContext == NULL)
     {
@@ -480,9 +468,7 @@ CONTEXT_SetThreadContext(
     if (lpContext->ContextFlags  &
         (CONTEXT_CONTROL | CONTEXT_INTEGER) & CONTEXT_AREA_MASK)
     {
-#if HAVE_PT_REGS
         if (ptrace((__ptrace_request)PTRACE_GETREGS, dwProcessId, (caddr_t)&ptrace_registers, 0) == -1)
-#endif
         {
             ASSERT("Failed ptrace(PT_GETREGS, processId:%d) errno:%d (%s)\n",
                    dwProcessId, errno, strerror(errno));
@@ -490,13 +476,7 @@ CONTEXT_SetThreadContext(
              goto EXIT;
         }
 
-#if HAVE_PT_REGS
 #define ASSIGN_REG(reg) PTREG_##reg(ptrace_registers) = lpContext->reg;
-#else
-#define ASSIGN_REG(reg)
-	ASSERT("Don't know how to set the context of another process on this platform!");
-	return FALSE;
-#endif
         if (lpContext->ContextFlags & CONTEXT_CONTROL & CONTEXT_AREA_MASK)
         {
             ASSIGN_CONTROL_REGS
@@ -507,9 +487,7 @@ CONTEXT_SetThreadContext(
         }
 #undef ASSIGN_REG
 
-#if HAVE_PT_REGS
         if (ptrace((__ptrace_request)PTRACE_SETREGS, dwProcessId, (caddr_t)&ptrace_registers, 0) == -1)
-#endif
         {
             ASSERT("Failed ptrace(PT_SETREGS, processId:%d) errno:%d (%s)\n",
                    dwProcessId, errno, strerror(errno));

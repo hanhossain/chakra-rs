@@ -194,7 +194,7 @@ typedef ucontext_t native_context_t;
 #endif // HAVE_GREGSET_T
 
 
-#if HAVE_PT_REGS
+#if defined(__linux__)
 
 #define PTREG_Rbx(ptreg)    ((ptreg).rbx)
 #define PTREG_Rcx(ptreg)    ((ptreg).rcx)
@@ -220,7 +220,7 @@ typedef ucontext_t native_context_t;
 
 #define PTREG_EFlags(ptreg) ((ptreg).eflags)
 
-#endif // HAVE_PT_REGS
+#endif // defined(__linux__)
 
 
 
