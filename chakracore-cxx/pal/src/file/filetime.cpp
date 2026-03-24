@@ -249,13 +249,7 @@ CorUnix::InternalSetFileTime(
           Times[0].tv_sec, Times[0].tv_usec,
           Times[1].tv_sec, Times[1].tv_usec);
 
-#if HAVE_FUTIMES
     if ( futimes(pLocalData->unix_fd, Times) != 0 )
-#elif HAVE_UTIMES
-    if ( utimes(pLocalData->unix_filename, Times) != 0 )
-#else
-  #error Operating system not supported
-#endif
     {
         palError = FILEGetLastErrorFromErrno();
     }
