@@ -52,10 +52,6 @@ Revision History:
 #include <sys/types.h>
 #include <sys/wait.h>
 
-#if HAVE_PROCFS_H
-#include <procfs.h>
-#endif // HAVE_PROCFS_H
-
 #if HAVE_MACH_EXCEPTIONS
 #include "../exception/machexception.h"
 #endif // HAVE_MACH_EXCEPTIONS
