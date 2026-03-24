@@ -10,8 +10,6 @@
 #define _PAL_CONFIG_H_INCLUDED 1
 
 // TODO (hanhossain): check if necessary
-#cmakedefine01 HAVE_SYS_TIME_H
-// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_PTHREAD_NP_H
 // TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_SYS_LWP_H
