@@ -20,7 +20,7 @@ extern "C"
 #include <signal.h>
 #include <pthread.h>
 
-#if !HAVE_MACH_EXCEPTIONS
+#if !defined(__APPLE__)
 /* A type to wrap the native context type, which is ucontext_t on some
  * platforms and another type elsewhere. */
 #if HAVE_UCONTEXT_T
@@ -30,10 +30,10 @@ typedef ucontext_t native_context_t;
 #else   // HAVE_UCONTEXT_T
 #error Native context type is not known on this platform!
 #endif  // HAVE_UCONTEXT_T
-#else // !HAVE_MACH_EXCEPTIONS
+#else // !defined(__APPLE__)
 #include <mach/kern_return.h>
 #include <mach/mach_port.h>
-#endif // !HAVE_MACH_EXCEPTIONS else
+#endif // !defined(__APPLE__) else
 
 #if HAVE___GREGSET_T
 
@@ -323,7 +323,7 @@ CONTEXT_GetThreadContext(
          pthread_t self,
          LPCONTEXT lpContext);
 
-#if HAVE_MACH_EXCEPTIONS
+#if defined(__APPLE__)
 /*++
 Function:
   CONTEXT_GetThreadContextFromPort
@@ -355,7 +355,7 @@ CONTEXT_GetThreadContextFromThreadState(
     thread_state_t threadState,
     LPCONTEXT lpContext);
 
-#else // HAVE_MACH_EXCEPTIONS
+#else // defined(__APPLE__)
 /*++
 Function :
     CONTEXTToNativeContext
@@ -414,7 +414,7 @@ Return value :
 uint32_t CONTEXTGetExceptionCodeForSignal(const siginfo_t *siginfo,
                                        const native_context_t *context);
 
-#endif  // HAVE_MACH_EXCEPTIONS else
+#endif  // defined(__APPLE__) else
 
 #ifdef __cplusplus
 }

@@ -36,9 +36,9 @@ Abstract:
 #include "pal/thread.hpp"
 #include "pal/printfcpp.hpp"
 #include "pal/init.h"
-#if !HAVE_MACH_EXCEPTIONS
+#if !defined(__APPLE__)
 #include <signal.h>
-#endif // !HAVE_MACH_EXCEPTIONS
+#endif // !defined(__APPLE__)
 #include <semaphore.h>
 #include <sched.h>
 
@@ -57,7 +57,7 @@ Abstract:
 #include <sys/semaphore.h>
 #endif // HAVE_SYS_SEMAPHORE_H
 
-#elif HAS_PTHREAD_MUTEXES && HAVE_MACH_EXCEPTIONS
+#elif HAS_PTHREAD_MUTEXES && defined(__APPLE__)
 
 // Can only use the pthread solution if we're not using signals since pthread mutexes are not signal safe.
 #define USE_PTHREAD_CONDVARS 1

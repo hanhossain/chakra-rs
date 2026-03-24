@@ -23,7 +23,7 @@ SET_DEFAULT_DEBUG_CHANNEL(EXCEPT); // some headers have code with asserts, so do
 
 #include "pal/thread.hpp"
 #include "pal/palinternal.h"
-#if HAVE_MACH_EXCEPTIONS
+#if defined(__APPLE__)
 #include "machexception.h"
 #include "pal/critsect.h"
 #include "pal/debug.h"
@@ -1360,4 +1360,4 @@ SEHInitializeMachExceptions()
     return TRUE;
 }
 
-#endif // HAVE_MACH_EXCEPTIONS
+#endif // defined(__APPLE__)

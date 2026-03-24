@@ -21,7 +21,7 @@ Abstract:
 #ifndef _PAL_SIGNAL_HPP_
 #define _PAL_SIGNAL_HPP_
 
-#if !HAVE_MACH_EXCEPTIONS
+#if !defined(__APPLE__)
 
 /*++
 Function :
@@ -54,7 +54,7 @@ void SEHCleanupSignals();
 #define HIJACK_ON_SIGNAL 1
 #endif
 
-#endif // !HAVE_MACH_EXCEPTIONS
+#endif // !defined(__APPLE__)
 
 #endif /* _PAL_SIGNAL_HPP_ */
 

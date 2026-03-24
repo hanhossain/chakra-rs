@@ -64,7 +64,7 @@ typedef void *siginfo_t;
 #endif  /* !HAVE_SIGINFO_T */
 typedef void (*SIGFUNC)(int, siginfo_t *, void *);
 
-#if !HAVE_MACH_EXCEPTIONS
+#if !defined(__APPLE__)
 
 /* internal function declarations *********************************************/
 
@@ -601,4 +601,4 @@ void restore_signal(int signal_id, struct sigaction *previousAction)
     }
 }
 
-#endif // !HAVE_MACH_EXCEPTIONS
+#endif // !defined(__APPLE__)

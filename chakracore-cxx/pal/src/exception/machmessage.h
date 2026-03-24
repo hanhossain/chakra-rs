@@ -24,7 +24,7 @@ Abstract:
 
 using namespace CorUnix;
 
-#if HAVE_MACH_EXCEPTIONS
+#if defined(__APPLE__)
 
 // The vast majority of Mach calls we make in this module are critical: we cannot recover from failures of
 // these methods (principally because we're handling hardware exceptions in the context of a single dedicated
@@ -362,4 +362,4 @@ private:
     bool m_fPortsOwned;
 };
 
-#endif // HAVE_MACH_EXCEPTIONS
+#endif // defined(__APPLE__)

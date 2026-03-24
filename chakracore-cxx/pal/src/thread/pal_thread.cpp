@@ -2255,7 +2255,7 @@ CPalThread::GetStackLimit()
     return stackLimit;
 }
 
-#if HAVE_MACH_EXCEPTIONS
+#if defined(__APPLE__)
 
 extern mach_port_t s_ExceptionPort;
 
@@ -2305,7 +2305,7 @@ int CorUnix::CThreadMachExceptionHandlers::GetIndexOfHandler(exception_mask_t bm
     return -1;
 }
 
-#endif // HAVE_MACH_EXCEPTIONS
+#endif // defined(__APPLE__)
 
 #ifdef __APPLE__
 #define EXPECTED_ALIGNMENT 16 * 1024
