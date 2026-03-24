@@ -20,7 +20,6 @@ endif()
 
 list(APPEND CMAKE_REQUIRED_DEFINITIONS -D_FILE_OFFSET_BITS=64)
 
-check_include_files(pthread_np.h HAVE_PTHREAD_NP_H)
 check_include_files(sys/lwp.h HAVE_SYS_LWP_H)
 check_include_files(runetype.h HAVE_RUNETYPE_H)
 check_include_files(unicode/uchar.h HAVE_LIBICU_UCHAR_H)
