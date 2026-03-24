@@ -306,7 +306,7 @@ namespace CorUnix
         uint32_t m_dwLwpId;
         pthread_t m_pthreadSelf;
 
-#if HAVE_MACH_THREADS
+#if defined(__APPLE__)
         mach_port_t m_machPortSelf;
 #endif
 
@@ -398,7 +398,7 @@ namespace CorUnix
             m_threadId(0),
             m_dwLwpId(0),
             m_pthreadSelf(0),
-#if HAVE_MACH_THREADS
+#if defined(__APPLE__)
             m_machPortSelf(0),
 #endif
             m_hardwareExceptionHolderCount(0),
@@ -558,7 +558,7 @@ namespace CorUnix
             return m_pthreadSelf;
         };
 
-#if HAVE_MACH_THREADS
+#if defined(__APPLE__)
         mach_port_t
         GetMachPortSelf(
             void
