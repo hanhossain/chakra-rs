@@ -59,12 +59,6 @@ Abstract:
 #include <string.h>
 #include <fcntl.h>
 
-#if HAVE_POLL
-#include <poll.h>
-#else
-#include "pal/fakepoll.h"
-#endif  // HAVE_POLL
-
 #if defined(__APPLE__)
 #include <sys/sysctl.h>
 int CacheLineSize;

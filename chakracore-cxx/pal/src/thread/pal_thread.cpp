@@ -64,11 +64,6 @@ SET_DEFAULT_DEBUG_CHANNEL(THREAD); // some headers have code with asserts, so do
 #if HAVE_MACH_THREADS
 #include <mach/mach.h>
 #endif // HAVE_MACH_THREADS
-#if HAVE_POLL
-#include <poll.h>
-#else
-#include "pal/fakepoll.h"
-#endif  // HAVE_POLL
 #include <limits.h>
 #if HAVE_LWP_H
 #include <lwp.h>
