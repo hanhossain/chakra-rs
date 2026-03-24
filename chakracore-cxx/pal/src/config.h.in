@@ -10,10 +10,6 @@
 #define _PAL_CONFIG_H_INCLUDED 1
 
 // TODO (hanhossain): check if necessary
-#cmakedefine01 HAVE_PTHREAD_ATTR_GET_NP
-// TODO (hanhossain): check if necessary
-#cmakedefine01 HAVE_PTHREAD_GETATTR_NP
-// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_PTHREAD_GETCPUCLOCKID
 // TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_SIGRETURN

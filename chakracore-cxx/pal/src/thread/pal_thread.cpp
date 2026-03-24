@@ -2227,9 +2227,7 @@ CPalThread::GetStackBase()
     status = pthread_attr_init(&attr);
     _ASSERT_MSG(status == 0, "pthread_attr_init call failed");
 
-#if HAVE_PTHREAD_ATTR_GET_NP
-    status = pthread_attr_get_np(thread, &attr);
-#elif HAVE_PTHREAD_GETATTR_NP
+#if defined(__linux__)
     status = pthread_getattr_np(thread, &attr);
 #else
 #error Dont know how to get thread attributes on this platform!
@@ -2267,9 +2265,7 @@ CPalThread::GetStackLimit()
     status = pthread_attr_init(&attr);
     _ASSERT_MSG(status == 0, "pthread_attr_init call failed");
 
-#if HAVE_PTHREAD_ATTR_GET_NP
-    status = pthread_attr_get_np(thread, &attr);
-#elif HAVE_PTHREAD_GETATTR_NP
+#if defined(__linux__)
     status = pthread_getattr_np(thread, &attr);
 #else
 #error Dont know how to get thread attributes on this platform!
@@ -2380,10 +2376,7 @@ void GetCurrentThreadStackLimits(size_t* lowLimit, size_t* highLimit)
     void* stackend;
     [[maybe_unused]] int status;
 
-#if HAVE_PTHREAD_ATTR_GET_NP
-    status = pthread_attr_get_np(currentThreadHandle, &attr);
-    _ASSERT_MSG(status != 0, "pthread_attr_get_np call failed");
-#elif HAVE_PTHREAD_GETATTR_NP
+#if defined(__linux__)
     status = pthread_getattr_np(currentThreadHandle, &attr);
     _ASSERT_MSG(status == 0, "pthread_getattr_np call failed");
 #else
