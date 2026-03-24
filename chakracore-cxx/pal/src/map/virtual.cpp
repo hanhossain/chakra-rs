@@ -36,10 +36,10 @@ Abstract:
 #include <unistd.h>
 #include <limits.h>
 
-#if HAVE_VM_ALLOCATE
+#if defined(__APPLE__)
 #include <mach/vm_map.h>
 #include <mach/mach_init.h>
-#endif // HAVE_VM_ALLOCATE
+#endif // defined(__APPLE__)
 
 using namespace CorUnix;
 
@@ -1050,9 +1050,9 @@ static void * ReserveVirtualMemory(
 #endif
     vm_address_t StartBoundary = (vm_address_t)lpAddress;
     size_t MemSize = dwSize;
-#if HAVE_VM_ALLOCATE
+#if defined(__APPLE__)
     int result;
-#endif  // HAVE_VM_ALLOCATE
+#endif  // defined(__APPLE__)
 
     TRACE( "Reserving the memory now..\n");
 
@@ -1065,7 +1065,7 @@ static void * ReserveVirtualMemory(
     int mmapFile = -1;
     off_t mmapOffset = 0;
 
-#if HAVE_VM_ALLOCATE
+#if defined(__APPLE__)
     // Allocate with vm_allocate first, then map at the fixed address.
     result = vm_allocate(mach_task_self(), &StartBoundary, MemSize,
                           ((void *) StartBoundary != NULL) ? FALSE : TRUE);
@@ -1076,7 +1076,7 @@ static void * ReserveVirtualMemory(
         goto done;
     }
     mmapFlags |= MAP_FIXED;
-#endif // HAVE_VM_ALLOCATE
+#endif // defined(__APPLE__)
 
 #if RESERVE_FROM_BACKING_FILE
     mmapFile = gBackingFile;
@@ -1117,9 +1117,9 @@ static void * ReserveVirtualMemory(
     else
     {
         ERROR( "Failed due to insufficient memory.\n" );
-#if HAVE_VM_ALLOCATE
+#if defined(__APPLE__)
         vm_deallocate(mach_task_self(), StartBoundary, MemSize);
-#endif  // HAVE_VM_ALLOCATE
+#endif  // defined(__APPLE__)
         pthrCurrent->SetLastError( ERROR_NOT_ENOUGH_MEMORY );
         pRetVal = NULL;
         goto done;
@@ -2326,7 +2326,7 @@ ExitVirtualProtect:
     return bRetVal;
 }
 
-#if HAVE_VM_ALLOCATE
+#if defined(__APPLE__)
 //---------------------------------------------------------------------------------------
 //
 // Convert a vm_prot_t flag on the Mach kernel to the corresponding memory protection on Windows.
@@ -2455,7 +2455,7 @@ static void VM_ALLOCATE_VirtualQuery(const void * lpAddress, PMEMORY_BASIC_INFOR
         lpBuffer->Type = MEM_MAPPED;
     }
 }
-#endif // HAVE_VM_ALLOCATE
+#endif // defined(__APPLE__)
 
 size_t
 VirtualQueryEx(
@@ -2547,7 +2547,7 @@ VirtualQuery(
             lpBuffer->BaseAddress = (void *)StartBoundary;
             lpBuffer->RegionSize = 0;
             lpBuffer->State = MEM_FREE;
-#if HAVE_VM_ALLOCATE
+#if defined(__APPLE__)
             VM_ALLOCATE_VirtualQuery(lpAddress, lpBuffer);
 #endif
         }
