@@ -68,10 +68,6 @@ SET_DEFAULT_DEBUG_CHANNEL(THREAD); // some headers have code with asserts, so do
 #if HAVE_LWP_H
 #include <lwp.h>
 #endif
-// If we don't have sys/lwp.h but do expect to use _lwp_self, declare it to silence compiler warnings
-#if HAVE__LWP_SELF && !HAVE_LWP_H
-extern "C" int _lwp_self ();
-#endif
 
 #if HAVE_CPUSET_T
 typedef cpuset_t cpu_set_t;
@@ -572,12 +568,6 @@ CorUnix::InternalCreateThread(
     {
         TRACE("using the system default thread stack size\n");
     }
-
-#if HAVE_THREAD_SELF || HAVE__LWP_SELF
-    /* Create new threads as "bound", so each pthread is permanently bound
-       to an LWP.  Get/SetThreadContext() depend on this 1:1 mapping. */
-    pthread_attr_setscope(&pthreadAttr, PTHREAD_SCOPE_SYSTEM);
-#endif // HAVE_THREAD_SELF || HAVE__LWP_SELF
 
     //
     // We never call pthread_join, so create the new thread as detached
@@ -1426,13 +1416,7 @@ CPalThread::ThreadEntry(
 #if HAVE_MACH_THREADS
     pThread->m_machPortSelf = pthread_mach_thread_np(pThread->m_pthreadSelf);
 #endif
-#if HAVE_THREAD_SELF
-    pThread->m_dwLwpId = (uint32_t) thread_self();
-#elif HAVE__LWP_SELF
-    pThread->m_dwLwpId = (uint32_t) _lwp_self();
-#else
     pThread->m_dwLwpId = 0;
-#endif
 
     palError = pThread->RunPostCreateInitializers();
     if (NO_ERROR != palError)
@@ -1556,13 +1540,7 @@ CorUnix::CreateThreadData(
 #if HAVE_MACH_THREADS
     pThread->m_machPortSelf = pthread_mach_thread_np(pThread->m_pthreadSelf);
 #endif
-#if HAVE_THREAD_SELF
-    pThread->m_dwLwpId = (uint32_t) thread_self();
-#elif HAVE__LWP_SELF
-    pThread->m_dwLwpId = (uint32_t) _lwp_self();
-#else
     pThread->m_dwLwpId = 0;
-#endif
 
     palError = pThread->RunPostCreateInitializers();
     if (NO_ERROR != palError)
