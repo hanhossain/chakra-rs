@@ -20,11 +20,6 @@ endif()
 
 list(APPEND CMAKE_REQUIRED_DEFINITIONS -D_FILE_OFFSET_BITS=64)
 
-check_include_files(ieeefp.h HAVE_IEEEFP_H)
-check_include_files(alloca.h HAVE_ALLOCA_H)
-check_include_files(sys/vmparam.h HAVE_SYS_VMPARAM_H)
-check_include_files(mach/vm_types.h HAVE_MACH_VM_TYPES_H)
-check_include_files(mach/vm_param.h HAVE_MACH_VM_PARAM_H)
 check_include_files(procfs.h HAVE_PROCFS_H)
 check_include_files(crt_externs.h HAVE_CRT_EXTERNS_H)
 check_include_files(sys/time.h HAVE_SYS_TIME_H)
@@ -801,69 +796,6 @@ int main() {
   exit(0);
 }" HAS_POSIX_SEMAPHORES)
 set(CMAKE_REQUIRED_LIBRARIES)
-check_cxx_source_runs("
-#include <sys/types.h>
-#include <pwd.h>
-#include <errno.h>
-#include <unistd.h>
-#include <stdlib.h>
-
-int main(void)
-{
-  struct passwd sPasswd;
-  struct passwd *pPasswd;
-  char buf[1];
-  int bufLen = sizeof(buf)/sizeof(buf[0]);
-  int euid = geteuid();
-  int ret = 0;
-
-  errno = 0; // clear errno
-  ret = getpwuid_r(euid, &sPasswd, buf, bufLen, &pPasswd);
-  if (0 != ret)
-  {
-    if (ERANGE == errno)
-    {
-      return 0;
-    }
-  }
-
-  return 1; // assume errno is NOT set for all other cases
-}" GETPWUID_R_SETS_ERRNO)
-check_cxx_source_runs("
-#include <stdio.h>
-#include <stdlib.h>
-
-int main()
-{
-  FILE *fp = NULL;
-  char *fileName = \"/dev/zero\";
-  char buf[10];
-
-  /*
-   * Open the file in append mode and try to read some text.
-   * And, make sure ferror() is set.
-   */
-  fp = fopen (fileName, \"a\");
-  if ( (NULL == fp) ||
-       (fread (buf, sizeof(buf), 1, fp) > 0) ||
-       (!ferror(fp))
-     )
-  {
-    return 0;
-  }
-
-  /*
-   * Now that ferror() is set, try to close the file.
-   * If we get an error, we can conclude that this
-   * fgets() depended on the previous ferror().
-   */
-  if ( fclose(fp) != 0 )
-  {
-    return 0;
-  }
-
-  return 1;
-}" FILE_OPS_CHECK_FERROR_OF_PREVIOUS_CALL)
 set(CMAKE_REQUIRED_DEFINITIONS)
 
 set(SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING 1)

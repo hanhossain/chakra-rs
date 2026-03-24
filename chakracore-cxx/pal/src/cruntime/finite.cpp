@@ -42,9 +42,6 @@ Abstract:
 #undef TEMP_MAX
 #endif
 
-#if HAVE_IEEEFP_H
-#include <ieeefp.h>
-#endif  // HAVE_IEEEFP_H
 #include <errno.h>
 
 #define PAL_NAN sqrt(-1.0)

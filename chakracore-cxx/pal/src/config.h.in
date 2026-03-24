@@ -9,126 +9,224 @@
 #ifndef _PAL_CONFIG_H_INCLUDED
 #define _PAL_CONFIG_H_INCLUDED 1
 
-#cmakedefine01 HAVE_IEEEFP_H
-#cmakedefine01 HAVE_ALLOCA_H
-#cmakedefine01 HAVE_SYS_VMPARAM_H
-#cmakedefine01 HAVE_MACH_VM_TYPES_H
-#cmakedefine01 HAVE_MACH_VM_PARAM_H
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_PROCFS_H
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_CRT_EXTERNS_H
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_SYS_TIME_H
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_PTHREAD_NP_H
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_SYS_LWP_H
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_RUNETYPE_H
 
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_KQUEUE
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_GETPWUID_R
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_PTHREAD_SUSPEND
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_PTHREAD_SUSPEND_NP
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_PTHREAD_CONTINUE
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_PTHREAD_RESUME_NP
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_PTHREAD_CONTINUE_NP
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_PTHREAD_ATTR_GET_NP
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_PTHREAD_GETATTR_NP
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_PTHREAD_GETCPUCLOCKID
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_PTHREAD_SIGQUEUE
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_SIGRETURN
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE__THREAD_SYS_SIGRETURN
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_COPYSIGN
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_FSYNC
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_FUTIMES
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_UTIMES
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_SYSCTL
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_SYSCONF
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_LOCALTIME_R
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_GMTIME_R
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_TIMEGM
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE__SNWPRINTF
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_POLL
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_STATVFS
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_THREAD_SELF
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE__LWP_SELF
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_MACH_THREADS
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_MACH_EXCEPTIONS
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_VM_ALLOCATE
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_VM_READ
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAS_SYSV_SEMAPHORES
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAS_PTHREAD_MUTEXES
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_TTRACE
 
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_STAT_TIMESPEC
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_STAT_NSEC
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_TM_GMTOFF
 
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_BSD_REGS_T
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_PT_REGS
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_GREGSET_T
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_SIGINFO_T
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_UCONTEXT_T
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_PTHREAD_RWLOCK_T
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_PRWATCH_T
+// TODO (hanhossain): check if necessary
 #cmakedefine SIZEOF_OFF_T @SIZEOF_OFF_T@
 
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_YIELD_SYSCALL
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_INFTIM
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_CHAR_BIT
+// TODO (hanhossain): check if necessary
 #cmakedefine01 USER_H_DEFINES_DEBUG
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE__SC_PHYS_PAGES
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE__SC_AVPHYS_PAGES
 
+// TODO (hanhossain): check if necessary
 #cmakedefine01 REALPATH_SUPPORTS_NONEXISTENT_FILES
+// TODO (hanhossain): check if necessary
 #cmakedefine01 SSCANF_CANNOT_HANDLE_MISSING_EXPONENT
+// TODO (hanhossain): check if necessary
 #cmakedefine01 SSCANF_SUPPORT_ll
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_LARGE_SNPRINTF_SUPPORT
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_BROKEN_FIFO_SELECT
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_BROKEN_FIFO_KEVENT
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAS_FTRUNCATE_LENGTH_ISSUE
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_SCHED_GET_PRIORITY
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_SCHED_GETCPU
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_WORKING_GETTIMEOFDAY
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_WORKING_CLOCK_GETTIME
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_CLOCK_MONOTONIC
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_CLOCK_MONOTONIC_COARSE
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_MACH_ABSOLUTE_TIME
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_CLOCK_THREAD_CPUTIME
+// TODO (hanhossain): check if necessary
 #cmakedefine01 STATVFS64_PROTOTYPE_BROKEN
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_MMAP_DEV_ZERO
+// TODO (hanhossain): check if necessary
 #cmakedefine01 MMAP_IGNORES_HINT
+// TODO (hanhossain): check if necessary
 #cmakedefine01 MMAP_ANON_IGNORES_PROTECTION
+// TODO (hanhossain): check if necessary
 #cmakedefine01 MMAP_DOESNOT_ALLOW_REMAP
+// TODO (hanhossain): check if necessary
 #cmakedefine01 ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
+// TODO (hanhossain): check if necessary
 #cmakedefine01 PTHREAD_CREATE_MODIFIES_ERRNO
+// TODO (hanhossain): check if necessary
 #cmakedefine01 SEM_INIT_MODIFIES_ERRNO
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_PROCFS_CTL
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_COMPATIBLE_ACOS
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_COMPATIBLE_ASIN
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_COMPATIBLE_ATAN2
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_COMPATIBLE_EXP
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_COMPATIBLE_LOG
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_COMPATIBLE_LOG10
+// TODO (hanhossain): check if necessary
 #cmakedefine01 UNGETC_NOT_RETURN_EOF
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAS_POSIX_SEMAPHORES
-#cmakedefine01 GETPWUID_R_SETS_ERRNO
-#cmakedefine01 FILE_OPS_CHECK_FERROR_OF_PREVIOUS_CALL
+#define FILE_OPS_CHECK_FERROR_OF_PREVIOUS_CALL 0
 
 #define PAL_THREAD_PRIORITY_MIN 0
 #define PAL_THREAD_PRIORITY_MAX 0
 
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_COREFOUNDATION
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE__NSGETENVIRON
+// TODO (hanhossain): check if necessary
 #cmakedefine01 DEADLOCK_WHEN_THREAD_IS_SUSPENDED_WHILE_BLOCKED_ON_MUTEX
+// TODO (hanhossain): check if necessary
 #cmakedefine PAL_PTRACE(cmd, pid, addr, data) @PAL_PTRACE@
+// TODO (hanhossain): check if necessary
 #cmakedefine PAL_PT_ATTACH @PAL_PT_ATTACH@
+// TODO (hanhossain): check if necessary
 #cmakedefine PAL_PT_DETACH @PAL_PT_DETACH@
+// TODO (hanhossain): check if necessary
 #cmakedefine PAL_PT_READ_D @PAL_PT_READ_D@
+// TODO (hanhossain): check if necessary
 #cmakedefine PAL_PT_WRITE_D @PAL_PT_WRITE_D@
+// TODO (hanhossain): check if necessary
 #cmakedefine01 SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING
+// TODO (hanhossain): check if necessary
 #cmakedefine01 ERROR_FUNC_FOR_GLOB_HAS_FIXED_PARAMS
+// TODO (hanhossain): check if necessary
 #cmakedefine01 HAS_FTRUNCATE_LENGTH_ISSUE
+// TODO (hanhossain): check if necessary
 #cmakedefine FREEBSD_LIBC "@FREEBSD_LIBC@"
 
+// TODO (hanhossain): check if necessary
 #cmakedefine JA_JP_LOCALE_NAME "@JA_JP_LOCALE_NAME@"
+// TODO (hanhossain): check if necessary
 #cmakedefine KO_KR_LOCALE_NAME "@KO_KR_LOCALE_NAME@"
+// TODO (hanhossain): check if necessary
 #cmakedefine ZH_TW_LOCALE_NAME "@ZH_TW_LOCALE_NAME@"
 
 #define CHECK_TRACE_SPECIFIERS 0
