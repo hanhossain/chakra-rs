@@ -1794,11 +1794,7 @@ GetFileAttributesExW(
     /* Get the file size. GetFileSize is not used because it gets the
        size of an already-open file */
     attr_data->nFileSizeLow = (uint32_t) stat_data.st_size;
-#if SIZEOF_OFF_T > 4
     attr_data->nFileSizeHigh = (uint32_t)(stat_data.st_size >> 32);
-#else
-    attr_data->nFileSizeHigh = 0;
-#endif
 
     bRet = TRUE;
 
@@ -2349,7 +2345,6 @@ CorUnix::InternalSetEndOfFile(
         goto InternalSetEndOfFileExit;
     }
 
-#if SIZEOF_OFF_T > 4
 #if !HAVE_FTRUNCATE_LARGE_LENGTH_SUPPORT
     // ftruncate will return the wrong value for some large lengths.
     // We'll short-circuit the process and simply return failure for
@@ -2362,7 +2357,6 @@ CorUnix::InternalSetEndOfFile(
         goto InternalSetEndOfFileExit;
     }
 #endif  // !HAVE_FTRUNCATE_LARGE_LENGTH_SUPPORT
-#endif  // SIZEOF_OFF_T
 
 #if HAS_FTRUNCATE_LENGTH_ISSUE
     // Perform an additional check to make sure that there's likely to be enough free space to satisfy the
@@ -2722,11 +2716,7 @@ CorUnix::InternalGetFileSize(
     
     if (NULL != pdwFileSizeHigh)
     {
-#if SIZEOF_OFF_T > 4
         *pdwFileSizeHigh = (uint32_t)(stat_data.st_size >> 32);
-#else
-        *pdwFileSizeHigh = 0;
-#endif
     }
 
 InternalGetFileSizeExit:

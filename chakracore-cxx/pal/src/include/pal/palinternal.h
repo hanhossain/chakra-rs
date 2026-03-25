@@ -312,9 +312,7 @@ function_name() to call the system's implementation
    we'll catch any definition conflicts */
 #include <sys/socket.h>
 
-#if !HAVE_INFTIM
 #define INFTIM  -1
-#endif // !HAVE_INFTIM
 
 #if (__GNUC__ >= 4)
 #define OffsetOf(TYPE, MEMBER) __builtin_offsetof(TYPE, MEMBER)
