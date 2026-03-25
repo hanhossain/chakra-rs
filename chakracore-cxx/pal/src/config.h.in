@@ -10,11 +10,6 @@
 #define _PAL_CONFIG_H_INCLUDED 1
 
 // TODO (hanhossain): check if necessary
-#cmakedefine01 HAVE__SC_PHYS_PAGES
-// TODO (hanhossain): check if necessary
-#cmakedefine01 HAVE__SC_AVPHYS_PAGES
-
-// TODO (hanhossain): check if necessary
 #cmakedefine01 REALPATH_SUPPORTS_NONEXISTENT_FILES
 // TODO (hanhossain): check if necessary
 #cmakedefine01 SSCANF_CANNOT_HANDLE_MISSING_EXPONENT

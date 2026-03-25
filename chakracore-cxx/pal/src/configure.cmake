@@ -41,9 +41,6 @@ set(CMAKE_EXTRA_INCLUDE_FILE procfs.h)
 check_type_size(prwatch_t PRWATCH_T)
 set(CMAKE_EXTRA_INCLUDE_FILE)
 
-check_cxx_symbol_exists(_SC_PHYS_PAGES unistd.h HAVE__SC_PHYS_PAGES)
-check_cxx_symbol_exists(_SC_AVPHYS_PAGES unistd.h HAVE__SC_AVPHYS_PAGES)
-
 check_cxx_source_runs("
 #include <stdlib.h>
 #include <stdio.h>
