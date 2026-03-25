@@ -23,13 +23,9 @@ extern "C"
 #if !defined(__APPLE__)
 /* A type to wrap the native context type, which is ucontext_t on some
  * platforms and another type elsewhere. */
-#if HAVE_UCONTEXT_T
 #include <ucontext.h>
 
 typedef ucontext_t native_context_t;
-#else   // HAVE_UCONTEXT_T
-#error Native context type is not known on this platform!
-#endif  // HAVE_UCONTEXT_T
 #else // !defined(__APPLE__)
 #include <mach/kern_return.h>
 #include <mach/mach_port.h>

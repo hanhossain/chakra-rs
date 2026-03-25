@@ -56,12 +56,6 @@ SET_DEFAULT_DEBUG_CHANNEL(EXCEPT);
 
 /* local type definitions *****************************************************/
 
-#if !HAVE_SIGINFO_T
-/* This allows us to compile on platforms that don't have siginfo_t.
- * Exceptions will work poorly on those platforms. */
-#warning Exceptions will work poorly on this platform
-typedef void *siginfo_t;
-#endif  /* !HAVE_SIGINFO_T */
 typedef void (*SIGFUNC)(int, siginfo_t *, void *);
 
 #if !defined(__APPLE__)
@@ -564,13 +558,9 @@ void handle_signal(int signal_id, SIGFUNC sigfunc, struct sigaction *previousAct
     struct sigaction newAction;
 
     newAction.sa_flags = SA_RESTART | additionalFlags;
-#if HAVE_SIGINFO_T
     newAction.sa_handler = NULL;
     newAction.sa_sigaction = sigfunc;
     newAction.sa_flags |= SA_SIGINFO;
-#else   /* HAVE_SIGINFO_T */
-    newAction.sa_handler = SIG_DFL;
-#endif  /* HAVE_SIGINFO_T */
     sigemptyset(&newAction.sa_mask);
 
     if (-1 == sigaction(signal_id, &newAction, previousAction))
