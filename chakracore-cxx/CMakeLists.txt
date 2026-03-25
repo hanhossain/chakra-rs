@@ -297,15 +297,8 @@ include_directories(
     ${ICU_INCLUDE_PATH}
     )
 
-if(ICU_INCLUDE_PATH)
-    if(NOT HAVE_LIBICU_UCHAR_H)
-        set(HAVE_LIBICU_UCHAR_H 1)
-    endif()
-endif()
-
 # detect features
 include_directories(SYSTEM /usr/local/include)
-include(pal/src/configure.cmake)
 
 add_subdirectory (pal)
 
