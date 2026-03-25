@@ -45,10 +45,6 @@ typedef struct _CMI {
 
     uint8_t * pProtectionState;    /* Individual allocation type tracking for each */
                                 /* page in the region. */
-#if MMAP_DOESNOT_ALLOW_REMAP
-    uint8_t * pDirtyPages;         /* Pages that need to be cleared if re-committed */
-#endif // MMAP_DOESNOT_ALLOW_REMAP
-
 }CMI, * PCMI;
 
 enum VIRTUAL_CONSTANTS

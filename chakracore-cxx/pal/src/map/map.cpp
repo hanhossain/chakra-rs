@@ -97,7 +97,7 @@ MAPmmapAndRecord(
     void * *ppvBaseAddress
     );
 
-#if !HAVE_MMAP_DEV_ZERO
+#if !defined(__linux__)
 /* We need MAP_ANON. However on some platforms like HP-UX, it is defined as MAP_ANONYMOUS */
 #if !defined(MAP_ANON) && defined(MAP_ANONYMOUS)
 #define MAP_ANON MAP_ANONYMOUS
@@ -424,7 +424,7 @@ CorUnix::InternalCreateFileMapping(
             goto ExitInternalCreateFileMapping;
         }
 
-#if HAVE_MMAP_DEV_ZERO
+#if defined(__linux__)
 
         UnixFd = InternalOpen(pImmutableData->szFileName, O_RDWR);
         if ( -1 == UnixFd )
@@ -434,11 +434,11 @@ CorUnix::InternalCreateFileMapping(
             goto ExitInternalCreateFileMapping;
         }
 
-#else //!HAVE_MMAP_DEV_ZERO
+#else //!defined(__linux__)
 
         UnixFd = -1;  /* will pass MAP_ANON to mmap() instead */
 
-#endif //!HAVE_MMAP_DEV_ZERO
+#endif //!defined(__linux__)
 
     }
     else
@@ -987,7 +987,7 @@ CorUnix::InternalMapViewOfFile(
     {
         int flags = MAP_PRIVATE;
 
-#if !HAVE_MMAP_DEV_ZERO
+#if !defined(__linux__)
         if (pProcessLocalData->UnixFd == -1)
         {
             flags |= MAP_ANON;
@@ -1009,7 +1009,7 @@ CorUnix::InternalMapViewOfFile(
         {
             int flags = MAP_SHARED;
 
-#if !HAVE_MMAP_DEV_ZERO
+#if !defined(__linux__)
             if (pProcessLocalData->UnixFd == -1)
             {
                 flags |= MAP_ANON;
