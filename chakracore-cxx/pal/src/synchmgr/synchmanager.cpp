@@ -2105,7 +2105,6 @@ namespace CorUnix
         ptnwdNativeWaitData->twrWakeupReason = twrWakeupReason;
         ptnwdNativeWaitData->dwObjectIndex   = dwObjectIndex;
 
-#if SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING
         if (0 < GetLocalSynchLockCount(pthrCurrent))
         {
             // Defer the actual thread signaling to right after
@@ -2118,15 +2117,10 @@ namespace CorUnix
             // Signal the target thread's condition
             palErr = SignalThreadCondition(ptnwdNativeWaitData);
         }
-#else // SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING
-        // Signal the target thread's condition
-        palErr = SignalThreadCondition(ptnwdNativeWaitData);
-#endif // SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING
 
         return palErr;
     }
 
-#if SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING
     /*++
     Method:
       CPalSynchronizationManager::DeferThreadConditionSignaling
@@ -2190,7 +2184,6 @@ namespace CorUnix
         }
         return palErr;
     }
-#endif // SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING
 
     /*++
     Method:
@@ -3706,10 +3699,8 @@ namespace CorUnix
     {
         InitializeListHead(&m_leOwnedObjsList);
 
-#ifdef SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING
         m_lPendingSignalingCount = 0;
         InitializeListHead(&m_lePendingSignalingsOverflowList);
-#endif // SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING
     }
 
     CThreadSynchronizationInfo::~CThreadSynchronizationInfo()
@@ -3722,34 +3713,15 @@ namespace CorUnix
 
     void CThreadSynchronizationInfo::AcquireNativeWaitLock()
     {
-#if !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING && !SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING
-        int iRet;
-        iRet = pthread_mutex_lock(&m_tnwdNativeData.mutex);
-        _ASSERT_MSG(0 == iRet, "pthread_mutex_lock failed with error=%d\n",
-                    iRet);
-#endif // !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING && !SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING
     }
 
     void CThreadSynchronizationInfo::ReleaseNativeWaitLock()
     {
-#if !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING && !SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING
-        int iRet;
-        iRet = pthread_mutex_unlock(&m_tnwdNativeData.mutex);
-        _ASSERT_MSG(0 == iRet, "pthread_mutex_unlock failed with error=%d\n",
-                    iRet);
-#endif // !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING && !SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING
     }
 
     bool CThreadSynchronizationInfo::TryAcquireNativeWaitLock()
     {
         bool fRet = true;
-#if !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING && !SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING
-        int iRet;
-        iRet = pthread_mutex_trylock(&m_tnwdNativeData.mutex);
-        _ASSERT_MSG(0 == iRet || EBUSY == iRet,
-                    "pthread_mutex_trylock failed with error=%d\n", iRet);
-        fRet = (0 == iRet);
-#endif // !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING && !SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING
         return fRet;
     }
 
@@ -3963,7 +3935,7 @@ namespace CorUnix
         return poolnItem;
     }
 
-#if SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING && !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
+#if !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
 
     /*++
     Method:
@@ -4042,7 +4014,7 @@ namespace CorUnix
         return palErr;
     }
 
-#endif // SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING && !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
+#endif // !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
 
     /*++
     Method:
