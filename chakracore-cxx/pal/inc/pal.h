@@ -2659,18 +2659,6 @@ unsigned long long _rotr64(unsigned long long value, int shift)
 
 #if !defined(PAL_STDCPP_COMPAT) || defined(USING_PAL_STDLIB)
 
-#ifdef PLATFORM_ACCEPTS_ABS_OVERLOAD
-#ifdef __cplusplus
-extern "C++" {
-
-inline long abs(long _X) {
-    return llabs(_X);
-}
-
-}
-#endif
-#endif
-
 #define _alloca alloca
 
 #if defined(__GNUC__)
