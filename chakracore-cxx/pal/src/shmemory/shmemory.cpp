@@ -155,7 +155,6 @@ is still alive).
 
 --*/
 
-#include "config.h"
 #include "pal/palinternal.h"
 #include "pal/dbgmsg.h"
 #include "pal/shmemory.h"

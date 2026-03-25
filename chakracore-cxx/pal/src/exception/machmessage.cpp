@@ -18,7 +18,6 @@ Abstract:
 
 --*/
 
-#include "config.h"
 #include "pal/dbgmsg.h"
 #include <new>
 #include "pal/thread.hpp"

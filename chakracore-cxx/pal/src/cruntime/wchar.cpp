@@ -29,10 +29,6 @@ Abstract:
 #include "pal/threadsusp.hpp"
 
 
-#if HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "runtime_proxy.h"
 #include <errno.h>
 #include <limits.h>
