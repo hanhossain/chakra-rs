@@ -30,13 +30,7 @@ extern "C"
 {
 #endif // __cplusplus
 
-#if HAVE_LOWERCASE_ISO_NAME
-#define ISO_NAME(region, encoding, part)  region ".iso" encoding part
-#elif HAVE_UNDERSCORE_ISO_NAME
-#define ISO_NAME(region, encoding, part)  region ".ISO_" encoding "-" part
-#else
 #define ISO_NAME(region, encoding, part)  region ".ISO" encoding "-" part
-#endif
 
 #if defined(__APPLE__)
 #define CF_EXCLUDE_CSTD_HEADERS
