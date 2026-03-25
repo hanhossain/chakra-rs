@@ -58,18 +58,6 @@ int main(int argc, char **argv) {
 }" PLATFORM_ACCEPTS_ABS_OVERLOAD)
 set(CMAKE_REQUIRED_LIBRARIES)
 set(CMAKE_REQUIRED_LIBRARIES pthread)
-check_cxx_source_runs("
-#include <stdlib.h>
-#include <errno.h>
-#include <semaphore.h>
-
-int main() {
-  sem_t sema;
-  if (sem_init(&sema, 0, 0) == -1){
-    exit(1);
-  }
-  exit(0);
-}" HAS_POSIX_SEMAPHORES)
 set(CMAKE_REQUIRED_LIBRARIES)
 set(CMAKE_REQUIRED_DEFINITIONS)
 
