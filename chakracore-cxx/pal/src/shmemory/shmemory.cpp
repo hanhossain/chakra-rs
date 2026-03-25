@@ -175,10 +175,6 @@ is still alive).
 #include <sched.h>
 #include <pthread.h>
 
-#if HAVE_YIELD_SYSCALL
-#include <sys/syscall.h>
-#endif  /* HAVE_YIELD_SYSCALL */
-
 SET_DEFAULT_DEBUG_CHANNEL(SHMEM);
 
 /* Macro-definitions **********************************************************/

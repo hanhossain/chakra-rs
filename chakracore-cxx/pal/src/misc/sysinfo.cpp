@@ -40,19 +40,7 @@ Revision History:
 #include <mach/mach_host.h>
 #endif // defined(__APPLE__)
 
-// On some platforms sys/user.h ends up defining _DEBUG; if so
-// remove the definition before including the header and put
-// back our definition afterwards
-#if USER_H_DEFINES_DEBUG
-#define OLD_DEBUG _DEBUG
-#undef _DEBUG
-#endif
 #include <sys/user.h>
-#if USER_H_DEFINES_DEBUG
-#undef _DEBUG
-#define _DEBUG OLD_DEBUG
-#undef OLD_DEBUG
-#endif
 
 #include "pal/dbgmsg.h"
 
