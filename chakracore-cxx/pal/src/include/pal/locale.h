@@ -55,7 +55,7 @@ struct _CP_MAPPING
     uint32_t                nMaxByteSize;   /* The max byte size of any character. */
     uint8_t                LeadByte[ MAX_LEADBYTES ];  /* The lead byte array. */
 } CP_MAPPING;
-#elif HAVE_PTHREAD_RWLOCK_T
+#else
 typedef 
 struct _CP_MAPPING
 {
@@ -64,8 +64,6 @@ struct _CP_MAPPING
     uint32_t    nMaxByteSize;               // The max byte size of any character.
     uint8_t    LeadByte[ MAX_LEADBYTES ];  // The lead byte array.
 } CP_MAPPING;
-#else
-#error Insufficient platform support for text encodings
 #endif
 #ifdef __cplusplus
 }

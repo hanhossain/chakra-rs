@@ -32,10 +32,6 @@ Revision History:
 #include "pal/cruntime.h"
 #include "pal/stackstring.hpp"
 
-#if !(HAVE_PTHREAD_RWLOCK_T || HAVE_COREFOUNDATION)
-#error Either pthread rwlocks or Core Foundation are required for Unicode support
-#endif /* !(HAVE_PTHREAD_RWLOCK_T || HAVE_COREFOUNDATION) */
-
 #include <pthread.h>
 #include <locale.h>
 #if !defined(__APPLE__)
