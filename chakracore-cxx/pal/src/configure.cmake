@@ -57,32 +57,6 @@ int main(int argc, char **argv) {
   exit(0);
 }" PLATFORM_ACCEPTS_ABS_OVERLOAD)
 set(CMAKE_REQUIRED_LIBRARIES)
-check_cxx_source_runs("
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-
-int main(void)
-{
-  char* szFileName;
-  FILE* pFile = NULL;
-  int ret = 1;
-
-  szFileName = tempnam(\".\", \"tmp\");
-
-  /* open the file write-only */
-  pFile = fopen(szFileName, \"a\");
-  if (pFile == NULL)
-  {
-    exit(0);
-  }
-  if (ungetc('A', pFile) != EOF)
-  {
-    ret = 0;
-  }
-  unlink(szFileName);
-  exit(ret);
-}" UNGETC_NOT_RETURN_EOF)
 set(CMAKE_REQUIRED_LIBRARIES pthread)
 check_cxx_source_runs("
 #include <stdlib.h>

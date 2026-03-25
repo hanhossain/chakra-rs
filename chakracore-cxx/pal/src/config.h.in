@@ -10,8 +10,6 @@
 #define _PAL_CONFIG_H_INCLUDED 1
 
 // TODO (hanhossain): check if necessary
-#cmakedefine01 UNGETC_NOT_RETURN_EOF
-// TODO (hanhossain): check if necessary
 #cmakedefine01 HAS_POSIX_SEMAPHORES
 #define FILE_OPS_CHECK_FERROR_OF_PREVIOUS_CALL 0
 

@@ -164,7 +164,7 @@ static char* MapFileOpenModes(char* str , BOOL * bTextMode)
     return retval;
 }
 
-#if UNGETC_NOT_RETURN_EOF
+#if defined(__linux__)
 /*++
 Function :
 
@@ -191,7 +191,7 @@ static BOOL WriteOnlyMode(FILE* pFile)
     }
     return FALSE;
 }
-#endif //UNGETC_NOT_RETURN_EOF
+#endif //defined(__linux__)
 
 
 /*++
@@ -256,12 +256,12 @@ PAL_fopen(const char * fileName, const char * mode)
                 free( f );
                 f = NULL;
             }
-#if UNGETC_NOT_RETURN_EOF
+#if defined(__linux__)
             else
             {
                 f->bWriteOnlyMode = WriteOnlyMode(f->bsdFilePtr);
             }
-#endif //UNGETC_NOT_RETURN_EOF
+#endif //defined(__linux__)
         }
         else
         {
@@ -578,7 +578,7 @@ PAL_ungetc(int c, PAL_FILE * f)
 
     _ASSERTE(f != NULL);
 
-#if UNGETC_NOT_RETURN_EOF
+#if defined(__linux__)
     /* On some Unix platform such as Solaris, ungetc does not return EOF
        on write-only file. */
     if (f->bWriteOnlyMode)
@@ -586,7 +586,7 @@ PAL_ungetc(int c, PAL_FILE * f)
         nRetVal = EOF;
     }
     else
-#endif //UNGETC_NOT_RETURN_EOF
+#endif //defined(__linux__)
     {
         CLEARERR(f);
 
