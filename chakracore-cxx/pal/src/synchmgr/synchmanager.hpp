@@ -632,9 +632,7 @@ namespace CorUnix
             {
                 InternalLeaveCriticalSection(pthrCurrent, &s_csSynchProcessLock);
                 
-#if !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
                 pthrCurrent->synchronizationInfo.RunDeferredThreadConditionSignalings();
-#endif // !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
             }
         }
         static int32_t ResetLocalSynchLock(CPalThread * pthrCurrent)
@@ -647,10 +645,8 @@ namespace CorUnix
                 pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount = 0;
                 InternalLeaveCriticalSection(pthrCurrent, &s_csSynchProcessLock);
 
-#if !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
                 pthrCurrent->synchronizationInfo.RunDeferredThreadConditionSignalings();
-#endif // !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
-            }            
+            }
             return lRet;
         }
         static int32_t GetLocalSynchLockCount(CPalThread * pthrCurrent)
@@ -886,14 +882,12 @@ namespace CorUnix
             ThreadWakeupReason twrWakeupReason,
             uint32_t dwObjectIndex);
 
-#if !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
         static PAL_ERROR SignalThreadCondition(
             ThreadNativeWaitData * ptnwdNativeWaitData);
 
         static PAL_ERROR DeferThreadConditionSignaling(
             CPalThread * pthrCurrent,
             CPalThread * pthrTarget);
-#endif // SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
 
         static PAL_ERROR WakeUpRemoteThread(
             SharedID shridWLNode);
@@ -1008,12 +1002,6 @@ namespace CorUnix
         static PAL_ERROR GetAbsoluteTimeout(
             uint32_t dwTimeout,
             struct timespec * ptsAbsTmo);
-
-#if SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
-        static void UpdateTimeout(
-            uint32_t * pdwOldTime,
-            uint32_t * pdwTimeout);
-#endif
 
     };
 }

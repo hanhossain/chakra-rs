@@ -406,8 +406,6 @@ namespace CorUnix
         return palErr;
     }
 
-#if !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
-
     PAL_ERROR CPalSynchronizationManager::ThreadNativeWait(
         ThreadNativeWaitData * ptnwdNativeWaitData,
         uint32_t dwTimeout,
@@ -522,111 +520,6 @@ namespace CorUnix
         return palErr;
     }
 
-#else // SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
-
-    PAL_ERROR CPalSynchronizationManager::ThreadNativeWait(
-        ThreadNativeWaitData * ptnwdNativeWaitData,
-        uint32_t dwTimeout,
-        ThreadWakeupReason * ptwrWakeupReason,
-        uint32_t * pdwSignaledObject)
-    {
-        PAL_ERROR palErr = NO_ERROR;
-        uint32_t dwTmo = dwTimeout;
-        uint32_t dwOldTime = GetTickCount();
-        int iRet;
-        int iPollTmo;
-        int iWaitRet = 0;
-        struct pollfd pllfd;
-        bool fAgain;
-
-        TRACE("ThreadNativeWait(ptnwdNativeWaitData=%p, dwTimeout=%u, ...)\n",
-              ptnwdNativeWaitData, dwTimeout);
-
-        do
-        {
-            fAgain = false;
-
-            pllfd.fd = ptnwdNativeWaitData->iPipeRd;
-            pllfd.events = POLLIN;
-            pllfd.revents = 0;
-            iPollTmo = (INFINITE == dwTmo) ? INFTIM : (int)min(INT_MAX,dwTmo);
-
-            iRet = poll(&pllfd, 1, iPollTmo);
-
-            if (1 == iRet &&
-                ((POLLERR | POLLHUP | POLLNVAL) & pllfd.revents))
-            {
-                ERROR("Unexpected revents=%x while polling pipe %d\n",
-                      pllfd.revents, ptnwdNativeWaitData->iPipeRd);
-                palErr = ERROR_INTERNAL_ERROR;
-                break;
-            }
-
-            switch(iRet)
-            {
-                case -1:
-                    // poll failed
-                    if(EINTR != errno)
-                    {
-                        // Error
-                        ERROR("Unexpected errno=%d (%s) while polling pipe %d\n",
-                              errno, strerror(errno), ptnwdNativeWaitData->iPipeRd);
-                        palErr = ERROR_INTERNAL_ERROR;
-                        break;
-                    }
-                    // fall through
-                case 0:
-                    // Timeout
-                    if (INFINITE != dwTmo)
-                    {
-                        UpdateTimeout(&dwOldTime, &dwTmo);
-                        TRACE("Timeout updated: %u\n", dwTmo);
-                    }
-
-                    if (0 != dwTmo)
-                    {
-                        fAgain = true;
-                    }
-                    else
-                    {
-                        _ASSERTE(INFINITE != dwTimeout);
-                        *ptwrWakeupReason = WaitTimeout;
-                    }
-                    break;
-                case 1:
-                {
-                    // Signaled
-                    char c;
-                    int iRt;
-                    iRt = read(ptnwdNativeWaitData->iPipeRd, &c, sizeof(c));
-
-                    _ASSERTE(sizeof(c) == iRt);
-                    _ASSERTE(c == (char)ptnwdNativeWaitData->twrWakeupReason);
-
-                    *ptwrWakeupReason  = ptnwdNativeWaitData->twrWakeupReason;
-                    *pdwSignaledObject = ptnwdNativeWaitData->dwObjectIndex;
-                    break;
-                }
-                default:
-                    // Error
-                    ERROR("Unexpected return code %d while polling pipe %d\n",
-                          iRet, ptnwdNativeWaitData->iPipeRd);
-
-                    palErr = ERROR_INTERNAL_ERROR;
-                    break;
-            }
-
-        } while (fAgain);
-
-    TNW_exit:
-
-        TRACE("ThreadNativeWait: returning %u [WakeupReason=%u]\n",
-              palErr, *ptwrWakeupReason);
-
-        return palErr;
-    }
-
-#endif // SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
 
     /*++
     Method:
@@ -1552,16 +1445,7 @@ namespace CorUnix
         CPalThread * pthrCurrent = InternalGetCurrentThread();
         int iRet;
         ThreadNativeWaitData * ptnwdWorkerThreadNativeData;
-#if !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
         struct timespec tsAbsTmo = { 0, 0 };
-#else // SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
-        uint32_t dwOldTime = GetTickCount();
-        uint32_t dwTmo;
-        int iPollTmo;
-        int iEagains= 0;
-        bool fAgain;
-        struct pollfd pllfd;
-#endif // SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
 
         lInit = InterlockedCompareExchange(&s_lInitStatus,
             (int32_t)SynchMgrStatusShuttingDown, (int32_t)SynchMgrStatusRunning);
@@ -1601,7 +1485,6 @@ namespace CorUnix
         ptnwdWorkerThreadNativeData =
             &pSynchManager->m_pthrWorker->synchronizationInfo.m_tnwdNativeData;
 
-#if !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
         palErr = GetAbsoluteTimeout(WorkerThreadTerminationTimeout, &tsAbsTmo);
         if (NO_ERROR != palErr)
         {
@@ -1656,66 +1539,6 @@ namespace CorUnix
             s_lInitStatus = SynchMgrStatusError;
             goto PFS_exit;
         }
-
-#else // SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
-
-        dwTmo = min(WorkerThreadTerminationTimeout, INT_MAX);
-
-        do
-        {
-            fAgain = false;
-
-            pllfd.fd = ptnwdWorkerThreadNativeData->iPipeRd;
-            pllfd.events = POLLIN;
-            pllfd.revents = 0;
-            iPollTmo = dwTmo;
-
-            iRet = poll(&pllfd, 1, iPollTmo);
-
-            switch(iRet)
-            {
-                case 0:
-                    // Timeout
-                    WARN("Timed out waiting for worker thread to exit "
-                         "(tmo=%u ms)\n", WorkerThreadTerminationTimeout);
-                    break;
-                case 1:
-                    // Signal
-                    break;
-                case -1:
-                    if(EINTR == errno)
-                    {
-                        if (MaxWorkerConsecutiveEintrs >= ++iEagains)
-                        {
-                            fAgain = true;
-                            UpdateTimeout(&dwOldTime, &dwTmo);
-                        }
-                        else
-                        {
-                            ERROR("Too many (%d) consecutive EAGAINs while polling "
-                                  "pipe %d, waiting for worker thread to exit\n",
-                                  iEagains, ptnwdWorkerThreadNativeData->iPipeRd);
-                            palErr = ERROR_INTERNAL_ERROR;
-                        }
-                    }
-                    else
-                    {
-                        ERROR("Unexpected errno=%d (%s) while polling pipe %d\n",
-                              errno, strerror(errno),
-                              ptnwdWorkerThreadNativeData->iPipeRd);
-                        palErr = ERROR_INTERNAL_ERROR;
-                    }
-                    break;
-                default:
-                    // Error
-                    ERROR("Unexpected return code %d while polling pipe %d\n",
-                          iRet, ptnwdWorkerThreadNativeData->iPipeRd);
-                    palErr = ERROR_INTERNAL_ERROR;
-                    break;
-            }
-        } while (fAgain);
-
-#endif // SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
 
     PFS_exit:
         if (NO_ERROR == palErr)
@@ -2079,8 +1902,6 @@ namespace CorUnix
         return (iRet < 0) ? iRet : iBytesRead;
     }
 
-#if !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
-
     /*++
     Method:
       CPalSynchronizationManager::WakeUpLocalThread
@@ -2233,90 +2054,6 @@ namespace CorUnix
         return palErr;
     }
 
-#else // SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
-
-    /*++
-    Method:
-      CPalSynchronizationManager::WakeUpLocalThread
-
-    Wakes up a local thead currently sleeping for a wait or a sleep
-    --*/
-    PAL_ERROR CPalSynchronizationManager::WakeUpLocalThread(
-        CPalThread * pthrCurrent,
-        CPalThread * pthrTarget,
-        ThreadWakeupReason twrWakeupReason,
-        uint32_t dwObjectIndex)
-    {
-        PAL_ERROR palErr = NO_ERROR;
-        int iRet = 0;
-        int iEagains = 0;
-        bool fAgain;
-        char cCode = (char)twrWakeupReason;
-        ThreadNativeWaitData * ptnwdNativeWaitData =
-            pthrTarget->synchronizationInfo.GetNativeData();
-
-        TRACE("Waking up a local thread [WakeUpReason=%u ObjectIndex=%u "
-              "ptnwdNativeWaitData=%p]\n", twrWakeupReason, dwObjectIndex,
-              ptnwdNativeWaitData);
-
-        // Set wakeup reason and signaled object index
-        ptnwdNativeWaitData->twrWakeupReason = twrWakeupReason;
-        ptnwdNativeWaitData->dwObjectIndex   = dwObjectIndex;
-
-        _ASSERTE(-1 != ptnwdNativeWaitData->iPipeWr);
-
-        do
-        {
-            fAgain = false;
-
-            iRet = write(ptnwdNativeWaitData->iPipeWr,
-                         (void *)&cCode,
-                         sizeof(cCode));
-            switch (iRet)
-            {
-                case (int)sizeof(cCode):
-                    // write succeeded
-                    break;
-                case -1:
-                    // error
-                    switch (errno)
-                    {
-                        case EINTR:
-                        case EAGAIN:
-                            if (MaxConsecutiveEagains >= ++iEagains)
-                            {
-                                fAgain = true;
-                                sched_yield();
-                            }
-                            else
-                            {
-                                ERROR("Too many consecutive EAGAINs/EINTRs (%d) while writing "
-                                      "to pipe %d\n", iEagains, ptnwdNativeWaitData->iPipeWr);
-                                palErr = ERROR_INTERNAL_ERROR;
-                            }
-                            break;
-                        case EBADF:
-                        case EFAULT:
-                        case EINVAL:
-                        case EPIPE:
-                            palErr = ERROR_INVALID_DATA;
-                            break;
-                        default:
-                            palErr = ERROR_INTERNAL_ERROR;
-                            break;
-                    }
-                    break;
-                default:
-                    // unexpected error condition
-                    palErr = ERROR_INTERNAL_ERROR;
-                    break;
-            }
-        } while (fAgain);
-
-    WUT_exit:
-        return palErr;
-    }
-#endif // SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
 
     /*++
     Method:
@@ -3674,13 +3411,8 @@ namespace CorUnix
         if (fInitialized)
         {
             fInitialized = false;
-#if !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
             pthread_cond_destroy(&cond);
             pthread_mutex_destroy(&mutex);
-#else // SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
-            close(iPipeRd);
-            close(iPipeWr);
-#endif // SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
         }
     }
 
@@ -3738,12 +3470,8 @@ namespace CorUnix
         PAL_ERROR palErr = NO_ERROR;
         uint32_t * pdwWaitState = NULL;
         int iRet;
-#if !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
         const int MaxUnavailableResourceRetries = 10;
         int iEagains;
-#else // SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
-        int iPipes[2] = { -1, -1};
-#endif // SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
 
         m_shridWaitAwakened = RawSharedObjectAlloc(sizeof(uint32_t),
                                                    DefaultSharedPool);
@@ -3763,8 +3491,6 @@ namespace CorUnix
 
         VolatileStore<uint32_t>(pdwWaitState, TWS_ACTIVE);
         m_tsThreadState = TS_STARTING;
-
-#if !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
 
         iEagains = 0;
     Mutex_retry:
@@ -3812,46 +3538,6 @@ namespace CorUnix
             pthread_mutex_destroy(&m_tnwdNativeData.mutex);
             goto IPrC_exit;
         }
-
-#else // SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
-
-        iRet = pipe(iPipes);
-        if (0 != iRet)
-        {
-            ERROR("Failed to create pipes to support native wait [errno=%d (%s)]\n",
-                  errno, strerror(errno));
-            switch(errno)
-            {
-                case EMFILE:
-                case ENFILE:
-                    palErr = ERROR_NO_SYSTEM_RESOURCES;
-                    break;
-                case EFAULT:
-                    palErr = ERROR_INVALID_DATA;
-                    break;
-                default:
-                    palErr = ERROR_INTERNAL_ERROR;
-                    break;
-            }
-
-            goto IPrC_exit;
-        }
-
-        if (0 != fcntl(iPipes[0], F_SETFL, O_NONBLOCK) ||
-            0 != fcntl(iPipes[1], F_SETFL, O_NONBLOCK))
-        {
-            ERROR("Failed to set thread-blocking pipes to non-blocking mode "
-                  "[errno=%d (%s)]\n", errno, strerror(errno));
-            close(iPipes[0]);
-            close(iPipes[1]);
-            palErr = ERROR_INTERNAL_ERROR;
-            goto IPrC_exit;
-        }
-
-        m_tnwdNativeData.iPipeRd = iPipes[0];
-        m_tnwdNativeData.iPipeWr = iPipes[1];
-
-#endif // SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
 
         m_tnwdNativeData.fInitialized = true;
 
@@ -3935,8 +3621,6 @@ namespace CorUnix
         return poolnItem;
     }
 
-#if !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
-
     /*++
     Method:
       CThreadSynchronizationInfo::RunDeferredThreadConditionSignalings
@@ -4013,8 +3697,6 @@ namespace CorUnix
 
         return palErr;
     }
-
-#endif // !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
 
     /*++
     Method:
@@ -4193,33 +3875,5 @@ namespace CorUnix
 
         return palErr;
     }
-
-#if SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
-    void CPalSynchronizationManager::UpdateTimeout(uint32_t * pdwOldTime, uint32_t * pdwTimeout)
-    {
-        uint32_t dwNewTime;
-        uint32_t dwDeltaTime;
-        dwNewTime = GetTickCount();
-
-        // check for wrap around
-        if(dwNewTime < *pdwOldTime)
-        {
-            dwDeltaTime = dwNewTime + (UINT_MAX - *pdwOldTime) + 1;
-        }
-        else
-        {
-            dwDeltaTime = dwNewTime - *pdwOldTime;
-        }
-        *pdwOldTime = dwNewTime;
-        if(*pdwTimeout > dwDeltaTime)
-        {
-            *pdwTimeout -= dwDeltaTime;
-        }
-        else
-        {
-            *pdwTimeout = 0;
-        }
-    }
-#endif // SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
 
 }
