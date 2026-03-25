@@ -1068,16 +1068,6 @@ CorUnix::InternalSetThreadPriority(
     st = pthread_setschedparam(pTargetThread->GetPThreadSelf(), policy, &schedParam);
     if (st != 0)
     {
-#if SET_SCHEDPARAM_NEEDS_PRIVS
-        if (EPERM == st)
-        {
-            // UNIXTODO: Should log a warning to the event log
-            TRACE("Caller does not have OS privileges to call pthread_setschedparam\n");
-            pTargetThread->m_iThreadPriority = iNewPriority;
-            goto InternalSetThreadPriorityExit;
-        }
-#endif
-
         ASSERT("Unable to set thread priority to %d (error %d)\n", (int)posix_priority, st);
         palError = ERROR_INTERNAL_ERROR;
         goto InternalSetThreadPriorityExit;

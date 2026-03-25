@@ -40,11 +40,7 @@ Abstract:
 #include <errno.h>
 #include <string.h>
 #include <limits.h>
-#if NEED_DLCOMPAT
-#include "dlcompat.h"
-#else   // NEED_DLCOMPAT
 #include <dlfcn.h>
-#endif  // NEED_DLCOMPAT
 #include <alloca.h>
 
 #ifdef __APPLE__
@@ -1033,18 +1029,7 @@ static MODSTRUCT *LOADAllocModule(void *dl_handle, const char * name)
     }
 
     module->dl_handle = dl_handle;
-#if NEED_DLCOMPAT
-    if (isdylib(module))
-    {
-        module->refcount = -1;
-    }
-    else
-    {
-        module->refcount = 1;
-    }
-#else   // NEED_DLCOMPAT
     module->refcount = 1;
-#endif  // NEED_DLCOMPAT
     module->self = module;
     module->hinstance = nullptr;
     module->threadLibCalls = TRUE;
