@@ -56,10 +56,6 @@ static int Internal_Convertfwrite(CPalThread *pthrCurrent, const void *buffer, s
     int ret;
     int iError = 0;
 
-#if FILE_OPS_CHECK_FERROR_OF_PREVIOUS_CALL
-    clearerr (stream);
-#endif
-
     if(convert)
     {
         int nsize;
@@ -924,10 +920,6 @@ int32_t Internal_AddPaddingVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, c
         Out += LengthInStr;
         iLength -= LengthInStr;
     }
-
-#if FILE_OPS_CHECK_FERROR_OF_PREVIOUS_CALL
-    clearerr (stream->bsdFilePtr);
-#endif
 
     Written = InternalFwrite(OutOriginal, 1, Length, stream->bsdFilePtr, &stream->PALferrorCode);
     if (stream->PALferrorCode == PAL_FILE_ERROR)
@@ -2472,10 +2464,6 @@ int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, 
         }
         else
         {
-
-#if FILE_OPS_CHECK_FERROR_OF_PREVIOUS_CALL
-            clearerr (stream->bsdFilePtr);
-#endif
 
             InternalFwrite(Fmt++, 1, 1, stream->bsdFilePtr, &stream->PALferrorCode); /* copy regular chars into buffer */
             if (stream->PALferrorCode == PAL_FILE_ERROR)

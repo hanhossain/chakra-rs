@@ -31,11 +31,7 @@ Abstract:
 #include <pthread.h>
 #include <limits.h>
 
-#if FILE_OPS_CHECK_FERROR_OF_PREVIOUS_CALL
-    #define CLEARERR(f) clearerr((f)->bsdFilePtr)
-#else
     #define CLEARERR(f)
-#endif
 
 SET_DEFAULT_DEBUG_CHANNEL(CRT);
 

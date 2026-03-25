@@ -540,10 +540,6 @@ int Silent_PAL_vfprintf(PAL_FILE *stream, const char *format, va_list aparg)
         }
         else
         {
-#if FILE_OPS_CHECK_FERROR_OF_PREVIOUS_CALL
-            clearerr((FILE*)stream);
-#endif
-
             PAL_fwrite(Fmt++, 1, 1, stream); /* copy regular chars into buffer */
             if (stream->PALferrorCode == PAL_FILE_ERROR)
             {
@@ -946,10 +942,6 @@ int32_t Silent_AddPaddingVfprintf(PAL_FILE *stream, char* In, int32_t Padding, i
         Out += LengthInStr;
         iLen -= LengthInStr;
     }
-
-#if FILE_OPS_CHECK_FERROR_OF_PREVIOUS_CALL
-    clearerr((FILE*)stream);
-#endif
 
     Written = PAL_fwrite(OutOriginal, 1, Length, stream);
     if (stream->PALferrorCode == PAL_FILE_ERROR)
