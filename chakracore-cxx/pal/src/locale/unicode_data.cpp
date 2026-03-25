@@ -21,7 +21,7 @@ Abstract:
 
 #include "pal/unicode_data.h"
 
-#if !HAVE_COREFOUNDATION
+#if !defined(__APPLE__)
 
 const UnicodeDataRec UnicodeData[] = {
 
@@ -1850,4 +1850,4 @@ const UnicodeDataRec UnicodeData[] = {
 const uint32_t UNICODE_DATA_SIZE = sizeof(UnicodeData)/sizeof(UnicodeDataRec);
 const uint32_t UNICODE_DATA_DIRECT_ACCESS = 256;
 
-#endif // !HAVE_COREFOUNDATION
+#endif // !defined(__APPLE__)

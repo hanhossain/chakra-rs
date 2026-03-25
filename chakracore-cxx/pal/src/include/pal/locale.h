@@ -38,12 +38,12 @@ extern "C"
 #define ISO_NAME(region, encoding, part)  region ".ISO" encoding "-" part
 #endif
 
-#if HAVE_COREFOUNDATION
+#if defined(__APPLE__)
 #define CF_EXCLUDE_CSTD_HEADERS
 #include <CoreFoundation/CoreFoundation.h>
-#endif  // HAVE_COREFOUNDATION
+#endif  // defined(__APPLE__)
 
-#if HAVE_COREFOUNDATION
+#if defined(__APPLE__)
 BOOL LocaleInitialize( void );
 void LocaleCleanup( void );
 

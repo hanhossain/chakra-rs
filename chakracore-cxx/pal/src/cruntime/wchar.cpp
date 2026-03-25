@@ -517,7 +517,7 @@ PAL_towlower( char16_t c )
     }
     else
     {
-    #if HAVE_COREFOUNDATION
+    #if defined(__APPLE__)
         if (!PAL_iswlower(c))
         {
             CFMutableStringRef cfString = CFStringCreateMutable(
@@ -532,7 +532,7 @@ PAL_towlower( char16_t c )
         }
         LOGEXIT("towlower returns int %d\n", c );
         return c;
-    #else   /* HAVE_COREFOUNDATION */
+    #else   /* defined(__APPLE__) */
         UnicodeDataRec dataRec;
 
         if (!GetUnicodeData(c, &dataRec))
@@ -552,7 +552,7 @@ PAL_towlower( char16_t c )
             LOGEXIT("towlower returns int %d\n", dataRec.nOpposingCase );
             return dataRec.nOpposingCase;
         }
-    #endif  /* HAVE_COREFOUNDATION */
+    #endif  /* defined(__APPLE__) */
     }
 }
 
@@ -567,7 +567,7 @@ See MSDN
 char16_t
 PAL_towupper( char16_t c )
 {
-#if HAVE_COREFOUNDATION
+#if defined(__APPLE__)
     ENTRY("towupper (c=%d)\n", c);
     if (!PAL_iswupper(c))
     {
@@ -583,7 +583,7 @@ PAL_towupper( char16_t c )
     }
     LOGEXIT("towupper returns int %d\n", c );
     return c;
-#else   /* HAVE_COREFOUNDATION */
+#else   /* defined(__APPLE__) */
     UnicodeDataRec dataRec;
 
     ENTRY("towupper (c=%d)\n", c);
@@ -605,7 +605,7 @@ PAL_towupper( char16_t c )
         LOGEXIT("towupper returns int %d\n", dataRec.nOpposingCase );
         return dataRec.nOpposingCase;
     }
-#endif  /* HAVE_COREFOUNDATION */
+#endif  /* defined(__APPLE__) */
 }
 
 /*++
@@ -619,7 +619,7 @@ int
 PAL_iswupper( char16_t c )
 {
     BOOL bRetVal = FALSE;
-#if HAVE_COREFOUNDATION
+#if defined(__APPLE__)
     static CFCharacterSetRef sUppercaseSet;
 
     if (sUppercaseSet == NULL)
@@ -629,7 +629,7 @@ PAL_iswupper( char16_t c )
     }
     ENTRY( "iswupper (c=%d)\n", c );
     bRetVal = CFCharacterSetIsCharacterMember(sUppercaseSet, c);
-#else   /* HAVE_COREFOUNDATION */
+#else   /* defined(__APPLE__) */
     UnicodeDataRec dataRec;
 
     ENTRY( "iswupper (c=%d)\n", c );
@@ -645,7 +645,7 @@ PAL_iswupper( char16_t c )
         bRetVal = TRUE;
     }
 exit:
-#endif  /* HAVE_COREFOUNDATION */
+#endif  /* defined(__APPLE__) */
     LOGEXIT( "iswupper returns %s.\n", bRetVal == TRUE ? "TRUE" : "FALSE" );
     return bRetVal;
 }
@@ -661,7 +661,7 @@ int
 PAL_iswlower( char16_t c )
 {
     BOOL bRetVal = FALSE;
-#if HAVE_COREFOUNDATION
+#if defined(__APPLE__)
     static CFCharacterSetRef sLowercaseSet;
 
     if (sLowercaseSet == NULL)
@@ -671,7 +671,7 @@ PAL_iswlower( char16_t c )
     }
     ENTRY("PAL_iswlower (c=%d)\n", c);
     bRetVal = CFCharacterSetIsCharacterMember(sLowercaseSet, c);
-#else   /* HAVE_COREFOUNDATION */
+#else   /* defined(__APPLE__) */
     UnicodeDataRec dataRec;
 
     ENTRY("PAL_iswlower (c=%d)\n", c);
@@ -687,7 +687,7 @@ PAL_iswlower( char16_t c )
         bRetVal = TRUE;
     }
 exit:
-#endif  /* HAVE_COREFOUNDATION */
+#endif  /* defined(__APPLE__) */
     LOGEXIT("PAL_iswlower returns %s.\n", bRetVal == TRUE ? "TRUE" : "FALSE");
     return bRetVal;
 }
@@ -1166,7 +1166,7 @@ int
 PAL_iswdigit( char16_t c )
 {
     uint32_t nRetVal = 0;
-#if HAVE_COREFOUNDATION
+#if defined(__APPLE__)
     static CFCharacterSetRef sDigitSet;
 
     if (sDigitSet == NULL)
@@ -1176,7 +1176,7 @@ PAL_iswdigit( char16_t c )
     }
     ENTRY("PAL_iswdigit (c=%d)\n", c);
     nRetVal = CFCharacterSetIsCharacterMember(sDigitSet, c);
-#else   /* HAVE_COREFOUNDATION */
+#else   /* defined(__APPLE__) */
     UnicodeDataRec dataRec;
 
     ENTRY("PAL_iswdigit (c=%d)\n", c);
@@ -1196,12 +1196,12 @@ PAL_iswdigit( char16_t c )
     {
         TRACE( "No corresponding unicode record for character %d.\n", c );
     }
-#endif  /* HAVE_COREFOUNDATION */
+#endif  /* defined(__APPLE__) */
     LOGEXIT("PAL_iswdigit returning %d\n", nRetVal);
     return nRetVal;
 }
 
-#if HAVE_COREFOUNDATION
+#if defined(__APPLE__)
 /*--
 Function:
   PAL_iswblank
@@ -1287,4 +1287,4 @@ PAL_iswpunct(char16_t c)
           CFCharacterSetIsCharacterMember(sSymbolSet, c);
     return ret;
 }
-#endif  // HAVE_COREFOUNDATION
+#endif  // defined(__APPLE__)

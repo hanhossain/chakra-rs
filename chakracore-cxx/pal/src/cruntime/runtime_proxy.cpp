@@ -6,13 +6,7 @@
 // do not use other PAL headers here.
 // combining wctype.h with PAL headers creates type mismatches under latest NDK
 
-#if HAVE_COREFOUNDATION
-#define CF_EXCLUDE_CSTD_HEADERS
-#include <CoreFoundation/CoreFoundation.h>
 #include <wctype.h>
-#else
-#include <wctype.h>
-#endif
 
 int proxy_iswspace(char16_t c)
 {

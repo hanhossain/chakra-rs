@@ -38,9 +38,9 @@ Revision History:
 #include <libintl.h>
 #endif // __APPLE__
 #include <errno.h>
-#if HAVE_COREFOUNDATION
+#if defined(__APPLE__)
 #include <CoreFoundation/CoreFoundation.h>
-#endif // HAVE_COREFOUNDATION
+#endif // defined(__APPLE__)
 
 #include <debugmacrosext.h>
 
@@ -48,7 +48,7 @@ using namespace CorUnix;
 
 SET_DEFAULT_DEBUG_CHANNEL(UNICODE);
 
-#if HAVE_COREFOUNDATION
+#if defined(__APPLE__)
 
 static CP_MAPPING CP_TO_NATIVE_TABLE[] = {
     { 65001, kCFStringEncodingUTF8, 4, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
@@ -62,13 +62,13 @@ static CP_MAPPING CP_TO_NATIVE_TABLE[] = {
     { 950, kCFStringEncodingDOSChineseTrad, 2, { 129, 254, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }
 };
 
-#else // HAVE_COREFOUNDATION
+#else // defined(__APPLE__)
 
 static const CP_MAPPING CP_TO_NATIVE_TABLE[] = {
     { 65001, "utf8", 4, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }
 };
 
-#endif // HAVE_COREFOUNDATION
+#endif // defined(__APPLE__)
 
 // We hardcode the system's default codepage to be UTF-8.
 // There are several reasons for this:
@@ -77,7 +77,7 @@ static const CP_MAPPING CP_TO_NATIVE_TABLE[] = {
 // - We want Ansi marshalling to mean marshal to UTF-8 on Mac and Linux
 static const uint32_t PAL_ACP = 65001;
 
-#if !HAVE_COREFOUNDATION
+#if !defined(__APPLE__)
 /*++
 Function:
 UnicodeDataComp
@@ -158,7 +158,7 @@ BOOL GetUnicodeData(int32_t nUnicodeValue, UnicodeDataRec *pDataRec)
     }
     return bRet;
 }
-#endif /* !HAVE_COREFOUNDATION */
+#endif /* !defined(__APPLE__) */
 
 /*++
 Function:
@@ -192,7 +192,7 @@ CODEPAGEGetData(  uint32_t CodePage )
     return NULL;
 }
 
-#if HAVE_COREFOUNDATION
+#if defined(__APPLE__)
 /*++
 Function :
 
@@ -213,7 +213,7 @@ CFStringEncoding CODEPAGECPToCFStringEncoding(uint32_t codepage)
         return cp_mapping->nCFEncoding;
     }
 }
-#endif // HAVE_COREFOUNDATION
+#endif // defined(__APPLE__)
 
 /*++
 Function:
@@ -390,11 +390,11 @@ MultiByteToWideChar(
          int cchWideChar)
 {
     int32_t retval =0;
-#if HAVE_COREFOUNDATION
+#if defined(__APPLE__)
     CFStringRef cfString = NULL;
     CFStringEncoding cfEncoding;
     int bytesToConvert;
-#endif /* HAVE_COREFOUNDATION */
+#endif /* defined(__APPLE__) */
 
     ENTRY("MultiByteToWideChar(CodePage=%u, dwFlags=%#x, lpMultiByteStr=%p (%s),"
     " cbMultiByte=%d, lpWideCharStr=%p, cchWideChar=%d)\n",
@@ -432,11 +432,11 @@ MultiByteToWideChar(
         goto EXIT;
     }
 
-#if !HAVE_COREFOUNDATION
+#if !defined(__APPLE__)
     ERROR( "This code page is not in the system.\n" );
     SetLastError( ERROR_INVALID_PARAMETER );
     goto EXIT;
-#else /* !HAVE_COREFOUNDATION */
+#else /* !defined(__APPLE__) */
     bytesToConvert = cbMultiByte;
     if (bytesToConvert == -1)
     {
@@ -488,7 +488,7 @@ ReleaseString:
     {
         CFRelease(cfString);
     }
-#endif /* !HAVE_COREFOUNDATION */
+#endif /* !defined(__APPLE__) */
 
 EXIT:
 
@@ -517,13 +517,13 @@ WideCharToMultiByte(
 {
     int32_t retval =0;
     BOOL usedDefaultChar = FALSE;
-#if HAVE_COREFOUNDATION
+#if defined(__APPLE__)
     CFStringRef cfString = NULL;
     CFStringEncoding cfEncoding;
     int charsToConvert;
     CFIndex charsConverted;
     CFIndex bytesConverted;
-#endif /* !HAVE_COREFOUNDATION */
+#endif /* !defined(__APPLE__) */
 
     ENTRY("WideCharToMultiByte(CodePage=%u, dwFlags=%#x, lpWideCharStr=%p (%S), "
           "cchWideChar=%d, lpMultiByteStr=%p, cbMultiByte=%d, "
@@ -568,7 +568,7 @@ WideCharToMultiByte(
         goto EXIT;
     }
 
-#if HAVE_COREFOUNDATION
+#if defined(__APPLE__)
     charsToConvert = cchWideChar;
     if (charsToConvert == -1)
     {
@@ -635,7 +635,7 @@ ReleaseString:
     {
         CFRelease(cfString);
     }
-#endif /* HAVE_COREFOUNDATION */
+#endif /* defined(__APPLE__) */
 
 EXIT:
 
