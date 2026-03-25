@@ -36,16 +36,7 @@ Revision History:
 
 SET_DEFAULT_DEBUG_CHANNEL(CRT);
 
-#if SSCANF_SUPPORT_ll
 const static char *scanf_longlongfmt = "ll";
-#else
-const static char *scanf_longlongfmt = "q";
-#endif
-
-#if SSCANF_CANNOT_HANDLE_MISSING_EXPONENT
-static int SscanfFloatCheckExponent(const char * buff, const char * floatFmt,
-                                      void * voidPtr, int * pn);
-#endif // SSCANF_CANNOT_HANDLE_MISSING_EXPONENT
 
 /*******************************************************************************
 Function:
@@ -1054,13 +1045,6 @@ int PAL_vsscanf(const char * Buffer, const char * Format, va_list ap)
                     ret = sscanf_s(Buff, TempBuff, &n);
                 }
 
-#if SSCANF_CANNOT_HANDLE_MISSING_EXPONENT
-                if ((ret == 0) && (Type == SCANF_TYPE_FLOAT))
-                {
-                    ret = SscanfFloatCheckExponent(Buff, TempBuff, voidPtr, &n);
-                }
-#endif // SSCANF_CANNOT_HANDLE_MISSING_EXPONENT
-
                 if (ret > 0)
                 {
                     Length += ret;
@@ -1292,13 +1276,6 @@ int PAL_wvsscanf(const char16_t* Buffer, const char16_t* Format, va_list ap)
                     ret = sscanf_s(newBuff, TempBuff, &n);
                 }
 
-#if SSCANF_CANNOT_HANDLE_MISSING_EXPONENT
-                if ((ret == 0) && (Type == SCANF_TYPE_FLOAT))
-                {
-                    ret = SscanfFloatCheckExponent(newBuff, TempBuff, voidPtr, &n);
-                }
-#endif // SSCANF_CANNOT_HANDLE_MISSING_EXPONENT
-
                 free(newBuff);
                 if (ret > 0)
                 {
@@ -1381,85 +1358,3 @@ _vsnwprintf(char16_t *buffer,
 
     return Length;
 }
-
-#if SSCANF_CANNOT_HANDLE_MISSING_EXPONENT
-/*++
-Function:
-  SscanfFloatCheckExponent
-
-  Parameters:
-  buff:     pointer to the buffer to be parsed; the target float must be at
-            the beginning of the buffer, except for any number of leading
-            spaces
-  floatFmt: must be "%e%n" (or "%f%n" or "%g%n")
-  voidptr:  optional pointer to output variable (which should be a float)
-  pn:       pointer to an int to receive the number of bytes parsed.
-
-  Notes:
-  On some platforms (specifically AIX) sscanf fails to parse a float from
-  a string such as 12.34e (while it succeeds for e.g. 12.34a). Sscanf
-  initially interprets the 'e' as the keyword for the beginning of a
-  10-exponent of a floating point in scientific notation (as in 12.34e5),
-  but then it fails to parse the actual exponent. At this point sscanf should
-  be able to fall back on the narrower pattern, and parse the floating point
-  in common decimal notation (i.e. 12.34). However AIX's sscanf fails to do
-  so and it does not parse any number.
-  This function checks the given string for a such case and removes
-  the 'e' before parsing the float.
-
---*/
-
-__attribute__((no_instrument_function))
-static int SscanfFloatCheckExponent(const char * buff, const char * floatFmt,
-                                      void * voidPtr, int * pn)
-{
-    int ret = 0;
-    int digits = 0;
-    int points = 0;
-    const char * pos = buff;
-
-    /* skip initial spaces */
-    while (*pos && isspace(*pos))
-        pos++;
-
-    /* go to the end of a float, if there is one */
-    while (*pos)
-    {
-        if (isdigit(*pos))
-            digits++;
-        else if (*pos == '.')
-        {
-            if (++points > 1)
-                break;
-        }
-        else
-            break;
-
-        pos++;
-    }
-
-    /* check if it is something like 12.34e and the trailing 'e' is not
-       the suffix of a valid exponent of 10, such as 12.34e+5 */
-    if ( digits > 0 && *pos && tolower(*pos) == 'e' &&
-         !( *(pos+1) &&
-            ( isdigit(*(pos+1)) ||
-              ( (*(pos+1) == '+' || *(pos+1) == '-') && isdigit(*(pos+2)) )
-                )
-             )
-        )
-    {
-        char * pLocBuf = (char *)malloc((pos-buff+1)*sizeof(char));
-        if (pLocBuf)
-        {
-            memcpy(pLocBuf, buff, (pos-buff)*sizeof(char));
-            pLocBuf[pos-buff] = 0;
-            if (voidPtr)
-                ret = sscanf_s(pLocBuf, floatFmt, voidPtr, pn);
-            else
-                ret = sscanf_s(pLocBuf, floatFmt, pn);
-            free (pLocBuf);
-        }
-    }
-    return ret;
-}
-#endif // SSCANF_CANNOT_HANDLE_MISSING_EXPONENT
