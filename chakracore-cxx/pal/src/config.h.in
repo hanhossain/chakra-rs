@@ -9,9 +9,6 @@
 #ifndef _PAL_CONFIG_H_INCLUDED
 #define _PAL_CONFIG_H_INCLUDED 1
 
-#define PAL_THREAD_PRIORITY_MIN 0
-#define PAL_THREAD_PRIORITY_MAX 0
-
 // TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_COREFOUNDATION
 // TODO (hanhossain): check if necessary
