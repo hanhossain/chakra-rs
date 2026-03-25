@@ -159,7 +159,7 @@ See MSDN
 --*/
 int PAL_iswlower( char16_t c );
 
-#if HAVE_COREFOUNDATION
+#if defined(__APPLE__)
 /*--
 Function:
   PAL_iswblank
@@ -183,7 +183,7 @@ Function:
 Returns TRUE if c is a control character.
 --*/
 int PAL_iswpunct(char16_t c);
-#endif  // HAVE_COREFOUNDATION
+#endif  // defined(__APPLE__)
 
 /*++
 

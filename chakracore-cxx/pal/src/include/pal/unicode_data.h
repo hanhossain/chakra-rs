@@ -29,7 +29,7 @@ extern "C"
 {
 #endif // __cplusplus
 
-#if !HAVE_COREFOUNDATION
+#if !defined(__APPLE__)
 
 typedef struct
 {
@@ -61,7 +61,7 @@ Return value:
 --*/
 BOOL GetUnicodeData(int32_t nUnicodeValue, UnicodeDataRec *pDataRec);
 
-#endif  /* !HAVE_COREFOUNDATION */
+#endif  /* !defined(__APPLE__) */
 
 #ifdef __cplusplus
 }
