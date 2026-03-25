@@ -59,66 +59,6 @@ int main(int argc, char **argv) {
 set(CMAKE_REQUIRED_LIBRARIES)
 check_cxx_source_runs("
 #include <stdlib.h>
-#include <time.h>
-#include <sys/time.h>
-
-int main()
-{
-  int ret;
-#ifndef __APPLE__
-  struct timespec ts;
-  ret = clock_gettime(CLOCK_MONOTONIC, &ts);
-#else
-  ret = 1; // do not use clock_gettime on osx/ios (backward compatibility)
-#endif
-  exit(ret);
-}" HAVE_CLOCK_MONOTONIC)
-check_cxx_source_runs("
-#include <stdlib.h>
-#include <time.h>
-#include <sys/time.h>
-
-int main()
-{
-  int ret;
-#ifndef __APPLE__
-  struct timespec ts;
-  ret = clock_gettime(CLOCK_MONOTONIC_COARSE, &ts);
-#else
-  ret = 1; // do not use clock_gettime on osx/ios (backward compatibility)
-#endif
-  exit(ret);
-}" HAVE_CLOCK_MONOTONIC_COARSE)
-check_cxx_source_runs("
-#include <stdlib.h>
-#include <mach/mach_time.h>
-
-int main()
-{
-  int ret;
-  mach_timebase_info_data_t timebaseInfo;
-  ret = mach_timebase_info(&timebaseInfo);
-  mach_absolute_time();
-  exit(ret);
-}" HAVE_MACH_ABSOLUTE_TIME)
-check_cxx_source_runs("
-#include <stdlib.h>
-#include <time.h>
-#include <sys/time.h>
-
-int main()
-{
-  int ret;
-#ifndef __APPLE__
-  struct timespec ts;
-  ret = clock_gettime(CLOCK_THREAD_CPUTIME_ID, &ts);
-#else
-  ret = 1; // do not use clock_gettime on osx/ios (backward compatibility)
-#endif
-  exit(ret);
-}" HAVE_CLOCK_THREAD_CPUTIME)
-check_cxx_source_runs("
-#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/mman.h>
 #include <fcntl.h>
