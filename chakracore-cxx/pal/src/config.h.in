@@ -9,13 +9,6 @@
 #ifndef _PAL_CONFIG_H_INCLUDED
 #define _PAL_CONFIG_H_INCLUDED 1
 
-// TODO (hanhossain): check if necessary
-#cmakedefine JA_JP_LOCALE_NAME "@JA_JP_LOCALE_NAME@"
-// TODO (hanhossain): check if necessary
-#cmakedefine KO_KR_LOCALE_NAME "@KO_KR_LOCALE_NAME@"
-// TODO (hanhossain): check if necessary
-#cmakedefine ZH_TW_LOCALE_NAME "@ZH_TW_LOCALE_NAME@"
-
 #define CHECK_TRACE_SPECIFIERS 0
 #define PROCFS_MEM_NAME ""
 #define HAVE_GETHRTIME 0
