@@ -176,10 +176,6 @@ CorUnix::InternalFgets(
     _ASSERTE(sz != NULL);
     _ASSERTE(f != NULL);
 
-#if FILE_OPS_CHECK_FERROR_OF_PREVIOUS_CALL
-    clearerr(f);
-#endif
-
     do
     {
         retval =  fgets(sz, nSize, f);
@@ -279,10 +275,6 @@ CorUnix::InternalFwrite(
 {
     size_t nWrittenBytes = 0;
     _ASSERTE(f != NULL);
-
-#if FILE_OPS_CHECK_FERROR_OF_PREVIOUS_CALL
-    clearerr(f);
-#endif
 
     nWrittenBytes = fwrite(pvBuffer, nSize, nCount, f);
 
