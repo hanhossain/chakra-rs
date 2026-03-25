@@ -18,16 +18,6 @@ namespace DateTime
     // This method is expected to return UTC time (See MSDN GetSystemTime)
     inline static double GetSystemTimeREAL()
     {
-#ifdef HAVE_WORKING_CLOCK_GETTIME
-        struct timespec fast_time;
-        // method below returns UTC time. So, nothing else is needed
-        // we use clock_gettime first due to expectation of better accuracy
-        if (clock_gettime(CLOCK_REALTIME, &fast_time) == 0)
-        {
-            return (fast_time.tv_sec * DateTimeTicks_PerSecond)
-            + (int32_t) (fast_time.tv_nsec / 1e6);
-        }
-#endif
         // in case of clock_gettime fails we use the implementation below
         struct tm utc_tm;
         struct timeval timeval;

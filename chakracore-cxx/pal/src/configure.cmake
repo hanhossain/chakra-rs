@@ -56,73 +56,7 @@ int main(int argc, char **argv) {
   printf(\"%lld\", abs(X));
   exit(0);
 }" PLATFORM_ACCEPTS_ABS_OVERLOAD)
-set(CMAKE_REQUIRED_LIBRARIES pthread)
-check_cxx_source_runs("
-#include <stdio.h>
-#include <stdlib.h>
-#include <pthread.h>
-#include <sched.h>
-
-int main(void)
-{
-  int policy;
-  struct sched_param schedParam;
-  int max_priority;
-  int min_priority;
-
-  if (0 != pthread_getschedparam(pthread_self(), &policy, &schedParam))
-  {
-    exit(1);
-  }
-
-  max_priority = sched_get_priority_max(policy);
-  min_priority = sched_get_priority_min(policy);
-
-  exit(-1 == max_priority || -1 == min_priority);
-}" HAVE_SCHED_GET_PRIORITY)
-set(CMAKE_REQUIRED_LIBRARIES pthread)
-check_cxx_source_runs("
-#include <stdlib.h>
-#include <sched.h>
-
-int main(void)
-{
-  if (sched_getcpu() >= 0)
-  {
-    exit(0);
-  }
-  exit(1);
-}" HAVE_SCHED_GETCPU)
 set(CMAKE_REQUIRED_LIBRARIES)
-check_cxx_source_runs("
-#include <stdlib.h>
-#include <time.h>
-#include <sys/time.h>
-
-int main()
-{
-  int ret;
-  struct timeval tv;
-  ret = gettimeofday(&tv, NULL);
-
-  exit(ret);
-}" HAVE_WORKING_GETTIMEOFDAY)
-check_cxx_source_runs("
-#include <stdlib.h>
-#include <time.h>
-#include <sys/time.h>
-
-int main()
-{
-  int ret;
-#ifndef __APPLE__
-  struct timespec ts;
-  ret = clock_gettime(CLOCK_REALTIME, &ts);
-#else
-  ret = 1; // do not use clock_gettime on osx/ios (backward compatibility)
-#endif
-  exit(ret);
-}" HAVE_WORKING_CLOCK_GETTIME)
 check_cxx_source_runs("
 #include <stdlib.h>
 #include <time.h>
@@ -591,7 +525,6 @@ if(CMAKE_SYSTEM_NAME STREQUAL Darwin)
   set(JA_JP_LOCALE_NAME ja_JP.SJIS)
   set(KO_KR_LOCALE_NAME ko_KR.eucKR)
   set(ZH_TW_LOCALE_NAME zh_TG.BIG5)
-  set(HAS_FTRUNCATE_LENGTH_ISSUE 1)
 elseif(CMAKE_SYSTEM_NAME STREQUAL FreeBSD)
   set(DEADLOCK_WHEN_THREAD_IS_SUSPENDED_WHILE_BLOCKED_ON_MUTEX 0)
   set(PAL_PTRACE "ptrace((cmd), (pid), (caddr_t)(addr), (data))")
@@ -602,7 +535,6 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL FreeBSD)
   set(JA_JP_LOCALE_NAME ja_JP_LOCALE_NOT_FOUND)
   set(KO_KR_LOCALE_NAME ko_KR_LOCALE_NOT_FOUND)
   set(ZH_TW_LOCALE_NAME zh_TW_LOCALE_NOT_FOUND)
-  set(HAS_FTRUNCATE_LENGTH_ISSUE 0)
 
   if(EXISTS "/lib/libc.so.7")
     set(FREEBSD_LIBC "/lib/libc.so.7")
@@ -619,7 +551,6 @@ else() # Anything else is Linux
   set(JA_JP_LOCALE_NAME ja_JP_LOCALE_NOT_FOUND)
   set(KO_KR_LOCALE_NAME ko_KR_LOCALE_NOT_FOUND)
   set(ZH_TW_LOCALE_NAME zh_TW_LOCALE_NOT_FOUND)
-  set(HAS_FTRUNCATE_LENGTH_ISSUE 0)
 endif(CMAKE_SYSTEM_NAME STREQUAL Darwin)
 
 if(NOT NO_ICU)

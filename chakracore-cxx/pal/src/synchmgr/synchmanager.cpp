@@ -4190,10 +4190,10 @@ namespace CorUnix
         PAL_ERROR palErr = NO_ERROR;
         int iRet;
 
-#if HAVE_WORKING_CLOCK_GETTIME
+#if defined(__linux__)
         // Not every platform implements a (working) clock_gettime
         iRet = clock_gettime(CLOCK_REALTIME, ptsAbsTmo);
-#elif HAVE_WORKING_GETTIMEOFDAY
+#else
         // Not every platform implements a (working) gettimeofday
         struct timeval tv;
         iRet = gettimeofday(&tv, NULL);
@@ -4202,9 +4202,7 @@ namespace CorUnix
             ptsAbsTmo->tv_sec  = tv.tv_sec;
             ptsAbsTmo->tv_nsec = tv.tv_usec * tccMicroSecondsToNanoSeconds;
         }
-#else
-        #error "Don't know how to get hi-res current time on this platform"
-#endif // HAVE_WORKING_CLOCK_GETTIME, HAVE_WORKING_GETTIMEOFDAY
+#endif // defined(__linux__)
 
         if (0 == iRet)
         {

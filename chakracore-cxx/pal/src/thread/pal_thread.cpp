@@ -1030,7 +1030,6 @@ CorUnix::InternalSetThreadPriority(
     }
 #endif
 
-#if HAVE_SCHED_GET_PRIORITY
     max_priority = sched_get_priority_max(policy);
     min_priority = sched_get_priority_min(policy);
     if( -1 == max_priority || -1 == min_priority)
@@ -1040,10 +1039,6 @@ CorUnix::InternalSetThreadPriority(
         palError = ERROR_INTERNAL_ERROR;
         goto InternalSetThreadPriorityExit;
     }
-#else
-    max_priority = PAL_THREAD_PRIORITY_MAX;
-    min_priority = PAL_THREAD_PRIORITY_MIN;
-#endif
 
     TRACE("Pthread priorities for policy %d must be in the range %d to %d\n",
           policy, min_priority, max_priority);

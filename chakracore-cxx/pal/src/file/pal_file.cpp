@@ -2351,7 +2351,7 @@ CorUnix::InternalSetEndOfFile(
     }
 #endif  // !HAVE_FTRUNCATE_LARGE_LENGTH_SUPPORT
 
-#if HAS_FTRUNCATE_LENGTH_ISSUE
+#if defined(__APPLE__)
     // Perform an additional check to make sure that there's likely to be enough free space to satisfy the
     // request. Do this because it's been observed on Mac OSX that ftruncate can return failure but still
     // extend the file to consume the remainder of free space.
@@ -2374,7 +2374,7 @@ CorUnix::InternalSetEndOfFile(
         palError = ERROR_DISK_FULL;
         goto InternalSetEndOfFileExit;
     }
-#endif // HAS_FTRUNCATE_LENGTH_ISSUE
+#endif // defined(__APPLE__)
 
     if ( ftruncate(pLocalData->unix_fd, curr) != 0 )
     {
