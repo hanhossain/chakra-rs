@@ -1930,16 +1930,7 @@ CorUnix::InternalWriteFile(
     pLocalDataLock = NULL;
     pLocalData = NULL;
 
-#if WRITE_0_BYTES_HANGS_TTY
-    if( nNumberOfBytesToWrite == 0 && isatty(ifd) )
-    {
-        res = 0;
-        *lpNumberOfBytesWritten = 0;
-        goto done;
-    }
-#endif
-
-    res = write( ifd, lpBuffer, nNumberOfBytesToWrite );  
+    res = write( ifd, lpBuffer, nNumberOfBytesToWrite );
     TRACE("write() returns %d\n", res);
 
     if ( res >= 0 )
@@ -2337,19 +2328,6 @@ CorUnix::InternalSetEndOfFile(
         palError = FILEGetLastErrorFromErrno();
         goto InternalSetEndOfFileExit;
     }
-
-#if !HAVE_FTRUNCATE_LARGE_LENGTH_SUPPORT
-    // ftruncate will return the wrong value for some large lengths.
-    // We'll short-circuit the process and simply return failure for
-    // the set of values that covers those cases, all of which would
-    // have failed anyway on any standard-sized hard drive.
-    if (curr >= 0xFFFFFFFF000ULL)
-    {
-        ERROR("Skipping ftruncate because the offset is too large\n");
-        palError = ERROR_INVALID_PARAMETER;
-        goto InternalSetEndOfFileExit;
-    }
-#endif  // !HAVE_FTRUNCATE_LARGE_LENGTH_SUPPORT
 
 #if defined(__APPLE__)
     // Perform an additional check to make sure that there's likely to be enough free space to satisfy the
