@@ -202,10 +202,10 @@ typedef struct _FILE
 
    BOOL     bTextMode;     /* Boolean variable to denote that the
                               fle is opened in text/binary mode*/
-#if UNGETC_NOT_RETURN_EOF
+#if defined(__linux__)
    BOOL     bWriteOnlyMode;/* Boolean variable to denote that the
                               fle is opened in write-only mode*/ 
-#endif //UNGETC_NOT_RETURN_EOF
+#endif //defined(__linux__)
 } PAL_FILE;
 
 enum CRT_ERROR_CODES
