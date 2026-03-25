@@ -53,13 +53,7 @@ SET_DEFAULT_DEBUG_CHANNEL(MISC);
 #endif
 
 #ifndef __APPLE__
-#if HAVE__SC_AVPHYS_PAGES
 #define SYSCONF_PAGES _SC_AVPHYS_PAGES
-#elif HAVE__SC_PHYS_PAGES
-#define SYSCONF_PAGES _SC_PHYS_PAGES
-#else
-#error Dont know how to get page-size on this architecture!
-#endif
 #endif // __APPLE__
 
 #ifdef __LINUX__
@@ -195,18 +189,12 @@ GlobalMemoryStatusEx(
     BOOL fRetVal = FALSE;
 
     // Get the physical memory size
-#if HAVE__SC_PHYS_PAGES
     int64_t physical_memory;
 
     // Get the Physical memory size
     physical_memory = sysconf( _SC_PHYS_PAGES ) * sysconf( _SC_PAGE_SIZE );
     lpBuffer->ullTotalPhys = (unsigned long)physical_memory;
     fRetVal = TRUE;
-#else // HAVE__SC_PHYS_PAGES
-    // TODO: implement getting memory details via sysinfo. On Linux, it provides swap file details that
-    // we can use to fill in the xxxPageFile members.
-
-#endif // HAVE__SC_PHYS_PAGES
 
     // Get the physical memory in use - from it, we can get the physical memory available.
     // We do this only when we have the total physical memory available.
