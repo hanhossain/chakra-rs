@@ -10,14 +10,6 @@
 #define _PAL_CONFIG_H_INCLUDED 1
 
 // TODO (hanhossain): check if necessary
-#cmakedefine01 HAVE_CLOCK_MONOTONIC
-// TODO (hanhossain): check if necessary
-#cmakedefine01 HAVE_CLOCK_MONOTONIC_COARSE
-// TODO (hanhossain): check if necessary
-#cmakedefine01 HAVE_MACH_ABSOLUTE_TIME
-// TODO (hanhossain): check if necessary
-#cmakedefine01 HAVE_CLOCK_THREAD_CPUTIME
-// TODO (hanhossain): check if necessary
 #cmakedefine01 STATVFS64_PROTOTYPE_BROKEN
 // TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_MMAP_DEV_ZERO

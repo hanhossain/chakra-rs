@@ -32,7 +32,7 @@ Abstract:
 #include <string.h>
 #include <sched.h>
 
-#if HAVE_MACH_ABSOLUTE_TIME
+#if defined(__APPLE__)
 #include <mach/mach_time.h>
 static mach_timebase_info_data_t s_TimebaseInfo;
 #endif
@@ -55,7 +55,7 @@ FALSE otherwise
 --*/
 BOOL TIMEInitialize(void)
 {
-#if HAVE_MACH_ABSOLUTE_TIME
+#if defined(__APPLE__)
     kern_return_t machRet;
     if ((machRet = mach_timebase_info(&s_TimebaseInfo)) != KERN_SUCCESS)
     {
@@ -192,7 +192,7 @@ QueryPerformanceCounter(
 
     ENTRY("QueryPerformanceCounter()\n");
     do
-#if HAVE_CLOCK_MONOTONIC
+#if defined(__linux__)
     {
         struct timespec ts;
         if (clock_gettime(CLOCK_MONOTONIC, &ts) != 0)
@@ -204,40 +204,11 @@ QueryPerformanceCounter(
         lpPerformanceCount->QuadPart =
             (long)ts.tv_sec * (long)tccSecondsToNanoSeconds + (long)ts.tv_nsec;
     }
-#elif HAVE_MACH_ABSOLUTE_TIME
+#else
     {
         lpPerformanceCount->QuadPart = (long)mach_absolute_time();
     }
-#elif HAVE_GETHRTIME
-    {
-        lpPerformanceCount->QuadPart = (long)gethrtime();
-    }
-#elif HAVE_READ_REAL_TIME
-    {
-        timebasestruct_t tb;
-        read_real_time(&tb, TIMEBASE_SZ);
-        if (time_base_to_time(&tb, TIMEBASE_SZ) != 0)
-        {
-            ASSERT("time_base_to_time() failed; errno is %d (%s)\n", errno, strerror(errno));
-            retval = FALSE;
-            break;
-        }
-        lpPerformanceCount->QuadPart =
-            (long)tb.tb_high * (long)tccSecondsToNanoSeconds + (long)tb.tb_low;
-    }
-#else
-    {
-        struct timeval tv;
-        if (gettimeofday(&tv, NULL) == -1)
-        {
-            ASSERT("gettimeofday() failed; errno is %d (%s)\n", errno, strerror(errno));
-            retval = FALSE;
-            break;
-        }
-        lpPerformanceCount->QuadPart =
-            (long)tv.tv_sec * (long)tccSecondsToMicroSeconds + (long)tv.tv_usec;
-    }
-#endif // HAVE_CLOCK_MONOTONIC
+#endif // defined(__linux__)
     while (false);
 
     LOGEXIT("QueryPerformanceCounter\n");
@@ -303,14 +274,10 @@ GetTickCount64Fallback()
     // The `__APPLE__` below is unlikely. However, if osx future version
     // supports one of the clock types below, we may miss that and
     // break backward compatibility.
-#if !defined(__APPLE__) && (HAVE_CLOCK_MONOTONIC_COARSE || HAVE_CLOCK_MONOTONIC)
+#if !defined(__APPLE__)
     {
         clockid_t clockType =
-#if HAVE_CLOCK_MONOTONIC_COARSE
             CLOCK_MONOTONIC_COARSE; // good enough resolution, fastest speed
-#else
-            CLOCK_MONOTONIC;
-#endif
         struct timespec ts;
         if (clock_gettime(clockType, &ts) != 0)
         {
@@ -319,7 +286,7 @@ GetTickCount64Fallback()
         }
         retval = (ts.tv_sec * tccSecondsToMillieSeconds)+(ts.tv_nsec / tccMillieSecondsToNanoSeconds);
     }
-#elif HAVE_MACH_ABSOLUTE_TIME
+#else
     {
         // use denom == 0 to indicate that s_TimebaseInfo is uninitialised.
         if (s_TimebaseInfo.denom == 0)
@@ -329,32 +296,7 @@ GetTickCount64Fallback()
         }
         retval = (mach_absolute_time() * s_TimebaseInfo.numer / s_TimebaseInfo.denom) / tccMillieSecondsToNanoSeconds;
     }
-#elif HAVE_GETHRTIME
-    {
-        retval = (unsigned long)(gethrtime() / tccMillieSecondsToNanoSeconds);
-    }
-#elif HAVE_READ_REAL_TIME
-    {
-        timebasestruct_t tb;
-        read_real_time(&tb, TIMEBASE_SZ);
-        if (time_base_to_time(&tb, TIMEBASE_SZ) != 0)
-        {
-            ASSERT("time_base_to_time() failed; errno is %d (%s)\n", errno, strerror(errno));
-            goto EXIT;
-        }
-        retval = (tb.tb_high * tccSecondsToMillieSeconds)+(tb.tb_low / tccMillieSecondsToNanoSeconds);
-    }
-#else
-    {
-        struct timeval tv;
-        if (gettimeofday(&tv, NULL) == -1)
-        {
-            ASSERT("gettimeofday() failed; errno is %d (%s)\n", errno, strerror(errno));
-            goto EXIT;
-        }
-        retval = (tv.tv_sec * tccSecondsToMillieSeconds) + (tv.tv_usec / tccMillieSecondsToMicroSeconds);
-    }
-#endif // HAVE_CLOCK_MONOTONIC
+#endif
 EXIT:
     return retval;
 }
