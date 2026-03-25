@@ -3,6 +3,7 @@ FROM --platform=linux/amd64 ubuntu:24.04
 
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install \
+    build-essential \
     curl \
     git \
     cmake \
