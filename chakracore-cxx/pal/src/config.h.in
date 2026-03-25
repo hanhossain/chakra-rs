@@ -12,8 +12,6 @@
 // TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_COREFOUNDATION
 // TODO (hanhossain): check if necessary
-#cmakedefine PAL_PTRACE(cmd, pid, addr, data) @PAL_PTRACE@
-// TODO (hanhossain): check if necessary
 #cmakedefine PAL_PT_ATTACH @PAL_PT_ATTACH@
 // TODO (hanhossain): check if necessary
 #cmakedefine PAL_PT_DETACH @PAL_PT_DETACH@
