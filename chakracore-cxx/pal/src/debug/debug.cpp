@@ -38,11 +38,7 @@ Revision History:
 
 #include <signal.h>
 #include <unistd.h>
-#if HAVE_PROCFS_CTL
-#include <unistd.h>
-#else
 #include <sys/ptrace.h>
-#endif  // HAVE_PROCFS_CTL
 #if defined(__APPLE__)
 #include <mach/mach.h>
 #endif  // defined(__APPLE__)
@@ -60,15 +56,9 @@ SET_DEFAULT_DEBUG_CHANNEL(DEBUG);
 
 extern "C" void DBG_DebugBreak_End();
 
-#if HAVE_PROCFS_CTL
-#define CTL_ATTACH      "attach"
-#define CTL_DETACH      "detach"
-#define CTL_WAIT        "wait"
-#endif   // HAVE_PROCFS_CTL
-
 /* ------------------- Constant definitions ----------------------------------*/
 
-#if !defined(__APPLE__) && !HAVE_PROCFS_CTL
+#if !defined(__APPLE__)
 const BOOL DBG_ATTACH       = TRUE;
 const BOOL DBG_DETACH       = FALSE;
 #endif
@@ -84,15 +74,15 @@ static const char PAL_RUN_ON_DEBUG_BREAK[]   = "PAL_RUN_ON_DEBUG_BREAK";
 
 /* ------------------- Static function prototypes ----------------------------*/
 
-#if !defined(__APPLE__) && !HAVE_PROCFS_CTL
+#if !defined(__APPLE__)
 static int
 DBGWriteProcMem_Int(uint32_t processId, int *addr, int data);
 static int
 DBGWriteProcMem_IntWithMask(uint32_t processId, int *addr, int data,
                             unsigned int mask);
-#endif  // !defined(__APPLE__) && !HAVE_PROCFS_CTL
+#endif  // !defined(__APPLE__)
 
-#if !defined(__APPLE__) && !HAVE_PROCFS_CTL
+#if !defined(__APPLE__)
 
 static BOOL
 DBGAttachProcess(CPalThread *pThread, HANDLE hProcess, uint32_t dwProcessId);
@@ -103,7 +93,7 @@ DBGDetachProcess(CPalThread *pThread, HANDLE hProcess, uint32_t dwProcessId);
 static int
 DBGSetProcessAttached(CPalThread *pThread, HANDLE hProcess, BOOL bAttach);
 
-#endif // !defined(__APPLE__) && !HAVE_PROCFS_CTL
+#endif // !defined(__APPLE__)
 
 extern "C" {
 
@@ -541,7 +531,7 @@ WriteProcessMemory(
            )
 
 {
-#if !defined(__APPLE__) && !HAVE_PROCFS_CTL
+#if !defined(__APPLE__)
     CPalThread *pThread;
 #endif
     uint32_t processId;
@@ -550,11 +540,6 @@ WriteProcessMemory(
 #if defined(__APPLE__)
     kern_return_t result;
     vm_map_t task;
-#elif HAVE_PROCFS_CTL
-    int fd;
-    char memPath[64];
-    ptrdiff_t bytesWritten;
-    off_t offset;
 #else
     size_t FirstIntOffset;
     size_t LastIntOffset;
@@ -569,7 +554,7 @@ WriteProcessMemory(
            "nSize=%u, lpNumberOfBytesWritten=%p)\n",
            hProcess,lpBaseAddress, lpBuffer, (unsigned int)nSize, lpNumberOfBytesWritten);
 
-#if !defined(__APPLE__) && !HAVE_PROCFS_CTL
+#if !defined(__APPLE__)
     pThread = InternalGetCurrentThread();
 #endif
 
@@ -648,42 +633,6 @@ WriteProcessMemory(
     numberOfBytesWritten = nSize;
     ret = TRUE;
 #else   // defined(__APPLE__)
-#if HAVE_PROCFS_CTL
-    snprintf(memPath, sizeof(memPath), "/proc/%u/%s", processId, PROCFS_MEM_NAME);
-    fd = InternalOpen(memPath, O_WRONLY);
-    if (fd == -1)
-    {
-        ERROR("Failed to open %s\n", memPath);
-        SetLastError(ERROR_INVALID_ACCESS);
-        goto PROCFSCLEANUP;
-    }
-
-    //
-    // off_t may be greater in size than void*, so first cast to
-    // an unsigned type to ensure that no sign extension takes place
-    //
-
-    offset = (off_t) (unsigned long) lpBaseAddress;
-
-    if (lseek(fd, offset, SEEK_SET) == -1)
-    {
-        ERROR("Failed to seek to base address\n");
-        SetLastError(ERROR_INVALID_ACCESS);
-        goto PROCFSCLEANUP;
-    }
-
-    bytesWritten = write(fd, lpBuffer, nSize);
-    if (bytesWritten < 0)
-    {
-        ERROR("Failed to write to %s\n", memPath);
-        SetLastError(ERROR_INVALID_ACCESS);
-        goto PROCFSCLEANUP;
-    }
-
-    numberOfBytesWritten = bytesWritten;
-    ret = TRUE;
-
-#else   // HAVE_PROCFS_CTL
     /* Attach the process before calling ptrace otherwise it fails */
     if (DBGAttachProcess(pThread, hProcess, processId))
     {
@@ -754,30 +703,19 @@ WriteProcessMemory(
         /* Failed to attach processId */
         goto EXIT;
     }
-#endif // HAVE_PROCFS_CTL
 
-#if HAVE_PROCFS_CTL
-PROCFSCLEANUP:
-    if (fd != -1)
-    {
-        close(fd);
-    }
-#else
 CLEANUP2:
     if (lpTmpBuffer)
     {
         free(lpTmpBuffer);
     }
-#endif
 
-#if !HAVE_PROCFS_CTL
 CLEANUP1:
     if (!DBGDetachProcess(pThread, hProcess, processId))
     {
         /* Failed to detach processId */
         ret = FALSE;
     }
-#endif  // !HAVE_PROCFS_CTL
 #endif  // defined(__APPLE__)
 
 EXIT:
@@ -790,7 +728,7 @@ EXIT:
     return ret;
 }
 
-#if !defined(__APPLE__) && !HAVE_PROCFS_CTL
+#if !defined(__APPLE__)
 /*++
 Function:
   DBGWriteProcMem_Int
@@ -882,9 +820,9 @@ DBGWriteProcMem_IntWithMask( uint32_t processId,
     }
     return DBGWriteProcMem_Int(processId, addr, data);
 }
-#endif  // !defined(__APPLE__) && !HAVE_PROCFS_CTL
+#endif  // !defined(__APPLE__)
 
-#if !defined(__APPLE__) && !HAVE_PROCFS_CTL
+#if !defined(__APPLE__)
 
 /*++
 Function:
@@ -912,14 +850,9 @@ DBGAttachProcess(
     uint32_t processId
     )
 {
-    int attachmentCount;
     int savedErrno;
-#if HAVE_PROCFS_CTL
-    int fd;
-    char ctlPath[1024];
-#endif  // HAVE_PROCFS_CTL
 
-    attachmentCount =
+    int attachmentCount =
         DBGSetProcessAttached(pThread, hProcess, DBG_ATTACH);
 
     if (attachmentCount == -1)
@@ -930,45 +863,6 @@ DBGAttachProcess(
 
     if (attachmentCount == 1)
     {
-#if HAVE_PROCFS_CTL
-        struct timespec waitTime;
-
-        // FreeBSD has some trouble when a series of attach/detach sequences
-        // occurs too close together.  When this happens, we'll be able to
-        // attach to the process, but waiting for the process to stop
-        // (either via writing "wait" to /proc/<pid>/ctl or via waitpid)
-        // will hang.  If we pause for a very short amount of time before
-        // trying to attach, we don't run into this situation.
-        waitTime.tv_sec = 0;
-        waitTime.tv_nsec = 50000000;
-        nanosleep(&waitTime, NULL);
-
-        sprintf_s(ctlPath, sizeof(ctlPath), "/proc/%d/ctl", processId);
-        fd = InternalOpen(ctlPath, O_WRONLY);
-        if (fd == -1)
-        {
-            ERROR("Failed to open %s: errno is %d (%s)\n", ctlPath,
-                  errno, strerror(errno));
-            goto DETACH1;
-        }
-
-        if (write(fd, CTL_ATTACH, sizeof(CTL_ATTACH)) < (int)sizeof(CTL_ATTACH))
-        {
-            ERROR("Failed to attach to %s: errno is %d (%s)\n", ctlPath,
-                  errno, strerror(errno));
-            close(fd);
-            goto DETACH1;
-        }
-
-        if (write(fd, CTL_WAIT, sizeof(CTL_WAIT)) < (int)sizeof(CTL_WAIT))
-        {
-            ERROR("Failed to wait for %s: errno is %d (%s)\n", ctlPath,
-                  errno, strerror(errno));
-            goto DETACH2;
-        }
-
-        close(fd);
-#else
         if (PAL_PTRACE( PAL_PT_ATTACH, processId, 0, 0 ) == -1)
         {
             if (errno != ESRCH)
@@ -988,27 +882,16 @@ DBGAttachProcess(
             }
             goto DETACH2;
         }
-#endif  // HAVE_PROCFS_CTL
     }
 
     return TRUE;
 
-#if HAVE_PROCFS_CTL
-DETACH2:
-    if (write(fd, CTL_DETACH, sizeof(CTL_DETACH)) < (int)sizeof(CTL_DETACH))
-    {
-        ASSERT("Failed to detach from %s: errno is %d (%s)\n", ctlPath,
-               errno, strerror(errno));
-    }
-    close(fd);
-#else
 DETACH2:
     if (PAL_PTRACE(PAL_PT_DETACH, processId, 0, 0) == -1)
     {
         ASSERT("ptrace(PT_DETACH, pid:%d) failed. errno:%d (%s)\n", processId,
               errno, strerror(errno));
     }
-#endif  // HAVE_PROCFS_CTL
 
 DETACH1:
     savedErrno = errno;
@@ -1053,13 +936,7 @@ DBGDetachProcess(
     uint32_t processId
     )
 {
-    int nbAttachLeft;
-#if HAVE_PROCFS_CTL
-    int fd;
-    char ctlPath[1024];
-#endif  // HAVE_PROCFS_CTL
-
-    nbAttachLeft = DBGSetProcessAttached(pThread, hProcess, DBG_DETACH);
+    int nbAttachLeft = DBGSetProcessAttached(pThread, hProcess, DBG_DETACH);
 
     if (nbAttachLeft == -1)
     {
@@ -1070,35 +947,6 @@ DBGDetachProcess(
     /* check if there's no more attachment left on processId */
     if (nbAttachLeft == 0)
     {
-#if HAVE_PROCFS_CTL
-        sprintf(ctlPath, sizeof(ctlPath), "/proc/%d/ctl", processId);
-        fd = InternalOpen(pThread, ctlPath, O_WRONLY);
-        if (fd == -1)
-        {
-            if (errno == ENOENT)
-            {
-                ERROR("Invalid process ID: %d\n", processId);
-                SetLastError(ERROR_INVALID_PARAMETER);
-            }
-            else
-            {
-                ERROR("Failed to open %s: errno is %d (%s)\n", ctlPath,
-                      errno, strerror(errno));
-                SetLastError(ERROR_INTERNAL_ERROR);
-            }
-            return FALSE;
-        }
-
-        if (write(fd, CTL_DETACH, sizeof(CTL_DETACH)) < (int)sizeof(CTL_DETACH))
-        {
-            ERROR("Failed to detach from %s: errno is %d (%s)\n", ctlPath,
-                  errno, strerror(errno));
-            close(fd);
-            return FALSE;
-        }
-        close(fd);
-
-#else
         if (PAL_PTRACE(PAL_PT_DETACH, processId, 1, 0) == -1)
         {
             if (errno == ESRCH)
@@ -1114,7 +962,6 @@ DBGDetachProcess(
             }
             return FALSE;
         }
-#endif  // HAVE_PROCFS_CTL
 
         if (kill(processId, SIGCONT) == -1)
         {
@@ -1211,6 +1058,6 @@ DBGSetProcessAttachedExit:
     return ret;
 }
 
-#endif // !defined(__APPLE__) && !HAVE_PROCFS_CTL
+#endif // !defined(__APPLE__)
 
 } // extern "C"

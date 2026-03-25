@@ -66,14 +66,6 @@ static BOOL MAPContainsInvalidFlags( uint32_t );
 static uint32_t MAPConvertProtectToAccess( uint32_t );
 static int32_t MAPFileMapToMmapFlags( uint32_t );
 static uint32_t MAPMmapProtToAccessFlags( int prot );
-#if ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
-static NativeMapHolder * NewNativeMapHolder(CPalThread *pThread, void * address, size_t size,
-                                     size_t offset, long init_ref_count);
-static int32_t NativeMapHolderAddRef(NativeMapHolder * thisPMH);
-static int32_t NativeMapHolderRelease(CPalThread *pThread, NativeMapHolder * thisPMH);
-static PMAPPED_VIEW_LIST FindSharedMappingReplacement(CPalThread *pThread, dev_t deviceNum, ino_t inodeNum,
-                                                      size_t size, size_t offset);
-#endif
 
 static PAL_ERROR
 MAPRecordMapping(
@@ -245,21 +237,7 @@ FileMappingInitializationRoutine(
         goto ExitFileMappingInitializationRoutine;
     }
 
-#if ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
-    struct stat st;
-
-    if (0 == fstat(pProcessLocalData->UnixFd, &st))
-    {
-        pProcessLocalData->MappedFileDevNum = st.st_dev;
-        pProcessLocalData->MappedFileInodeNum = st.st_ino;
-    }
-    else
-    {
-        ERROR("Couldn't get inode info for fd=%d to be stored in mapping object\n", pProcessLocalData->UnixFd);
-    }
-#endif
-
-ExitFileMappingInitializationRoutine:    
+ExitFileMappingInitializationRoutine:
 
     return palError;
 }
@@ -608,30 +586,6 @@ CorUnix::InternalCreateFileMapping(
 
     pLocalData->UnixFd = UnixFd;
 
-#if ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
-    if (-1 == UnixFd)
-    {
-        pLocalData->MappedFileDevNum = (dev_t)-1; /* there is no standard NO_DEV */
-        pLocalData->MappedFileInodeNum = NO_INO;
-    }
-    else
-    {
-        struct stat st;
-
-        if (0 == fstat(UnixFd, &st))
-        {
-            pLocalData->MappedFileDevNum = st.st_dev;
-            pLocalData->MappedFileInodeNum = st.st_ino;
-        }
-        else
-        {
-            ERROR("Couldn't get inode info for fd=%d to be stored in mapping object\n", UnixFd);
-            palError = ERROR_INTERNAL_ERROR;
-            goto ExitInternalCreateFileMapping;
-        }
-    }
-#endif
-
     pLocalDataLock->ReleaseLock(pThread, TRUE);
     pLocalDataLock = NULL;
 
@@ -904,9 +858,6 @@ CorUnix::InternalMapViewOfFile(
     CFileMappingImmutableData *pImmutableData = NULL;
     CFileMappingProcessLocalData *pProcessLocalData = NULL;
     IDataLock *pProcessLocalDataLock = NULL;
-#if ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
-    PMAPPED_VIEW_LIST pReusedMapping = NULL;
-#endif
     void * pvBaseAddress = NULL;
 
     /* Sanity checks */
@@ -1025,64 +976,6 @@ CorUnix::InternalMapViewOfFile(
                 0
                 );
 
-#if ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
-            if ((MAP_FAILED == pvBaseAddress) && (ENOMEM == errno))
-            {
-                /* Search in list of MAPPED_MEMORY_INFO for a shared mapping 
-                   with the same inode number
-                */
-                TRACE("Mmap() failed with errno=ENOMEM probably for multiple mapping "
-                      "limitation. Searching for a replacement among existing mappings\n");
-
-                pReusedMapping = FindSharedMappingReplacement(
-                    pThread,
-                    pProcessLocalData->MappedFileDevNum,
-                    pProcessLocalData->MappedFileInodeNum,
-                    dwNumberOfBytesToMap,
-                    0
-                    );
-                
-                if (pReusedMapping)
-                {
-                    int ret;
-
-                    TRACE("Mapping @ %p {sz=%d offs=%d} fully "
-                          "contains the requested one {sz=%d offs=%d}: reusing it\n",
-                          pReusedMapping->pNMHolder->address,
-                          (int)pReusedMapping->pNMHolder->size,
-                          (int)pReusedMapping->pNMHolder->offset,
-                          dwNumberOfBytesToMap, 0);
-
-                    /* Let's check the mapping's current protection */
-                    ret = mprotect(pReusedMapping->pNMHolder->address,
-                                   pReusedMapping->pNMHolder->size,
-                                   prot | PROT_CHECK);
-                    if (0 != ret)
-                    {               
-                        /* We need to raise the protection to the desired 
-                           one. That will give write access to any read-only
-                           mapping sharing this native mapping, but there is 
-                           no way around this problem on systems that do not
-                           allow more than one mapping per file region, per
-                           process */
-                        TRACE("Raising protections on mapping @ %p to 0x%x\n",
-                              pReusedMapping->pNMHolder->address, prot);
-                        ret = mprotect(pReusedMapping->pNMHolder->address,
-                                   pReusedMapping->pNMHolder->size,
-                                   prot);
-                    }
-
-                    if (ret != 0) 
-                    {
-                        ERROR( "Failed setting protections on reused mapping\n");
-
-                        NativeMapHolderRelease(pThread, pReusedMapping->pNMHolder);
-                        free(pReusedMapping);
-                        pReusedMapping = NULL;
-                    }
-                }
-            }
-#endif // ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
         }
         else
         {
@@ -1093,9 +986,6 @@ CorUnix::InternalMapViewOfFile(
     }
 
     if (MAP_FAILED == pvBaseAddress
-#if ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
-         &&  (pReusedMapping == NULL)
-#endif // ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
         )
     {
         ERROR( "mmap failed with code %s.\n", strerror( errno ) );
@@ -1104,23 +994,6 @@ CorUnix::InternalMapViewOfFile(
 
     }
 
-#if ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
-    if (pReusedMapping != NULL)
-    {
-        //
-        // Add a reference to the file mapping object the reused mapping
-        // points to (note that it may be different than the object this
-        // call was actually made against) and add the view to the global
-        // list. All other initialization took place in
-        // FindSharedMappingReplacement
-        //
-        
-        pvBaseAddress = pReusedMapping->lpAddress;
-        pReusedMapping->pFileMapping->AddReference();
-        InsertTailList(&MappedViewList, &pReusedMapping->Link);
-    }
-    else 
-#endif // ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
     {
         //
         // Allocate and fill out a new view structure, and add it to
@@ -1138,26 +1011,6 @@ CorUnix::InternalMapViewOfFile(
             pNewView->lpPEBaseAddress = 0;
             InsertTailList(&MappedViewList, &pNewView->Link);
 
-#if ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
-            pNewView->MappedFileDevNum = pProcessLocalData->MappedFileDevNum;
-            pNewView->MappedFileInodeNum = pProcessLocalData->MappedFileInodeNum;
-            
-            pNewView->pNMHolder = NewNativeMapHolder(
-                pThread,
-                pvBaseAddress, 
-                dwNumberOfBytesToMap,
-                0,
-                1
-                );
-
-            if (NULL == pNewView->pNMHolder)
-            {
-                pNewView->pFileMapping->ReleaseReference(pThread);
-                RemoveEntryList(&pNewView->Link);
-                free(pNewView);
-                palError = ERROR_INTERNAL_ERROR;
-            }
-#endif // ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
         }
         else
         {
@@ -1217,10 +1070,6 @@ CorUnix::InternalUnmapViewOfFile(
         goto InternalUnmapViewOfFileExit;
     }
     
-#if ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
-    NativeMapHolderRelease(pThread, pView->pNMHolder);
-    pView->pNMHolder = NULL;
-#else
     if (-1 == munmap((void *)lpBaseAddress, pView->NumberOfBytesToMap))
     {
         ASSERT( "Unable to unmap the memory. Error=%s.\n",
@@ -1232,7 +1081,6 @@ CorUnix::InternalUnmapViewOfFile(
         // info for this view
         //
     }
-#endif
 
     RemoveEntryList(&pView->Link);
     pMappingObject = pView->pFileMapping;
@@ -1733,13 +1581,8 @@ BOOL MAPGetRegionInfo(void * lpAddress,
         size_t real_map_sz;
         PMAPPED_VIEW_LIST pView = CONTAINING_RECORD(pLink, MAPPED_VIEW_LIST, Link);
 
-#if ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
-        real_map_addr = pView->pNMHolder->address;
-        real_map_sz = pView->pNMHolder->size;
-#else
         real_map_addr = pView->lpAddress;
         real_map_sz = pView->NumberOfBytesToMap;
-#endif
 
         MappedSize = ((real_map_sz-1) & ~VIRTUAL_PAGE_MASK) + VIRTUAL_PAGE_SIZE; 
         if ( real_map_addr <= lpAddress && 
@@ -1767,149 +1610,6 @@ BOOL MAPGetRegionInfo(void * lpAddress,
     
     return fFound;
 }
-
-#if ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
-
-//
-// Callers of FindSharedMappingReplacement must hold mapping_critsec
-//
-
-static PMAPPED_VIEW_LIST FindSharedMappingReplacement(
-    CPalThread *pThread,
-    dev_t deviceNum,
-    ino_t inodeNum,
-    size_t size, 
-    size_t offset)
-{
-    PMAPPED_VIEW_LIST pNewView = NULL;
-    
-    if (size == 0)
-    {
-        ERROR("Mapping size cannot be NULL\n");
-        return NULL;
-    }
-
-    for (LIST_ENTRY *pLink = MappedViewList.Flink;
-         pLink != &MappedViewList;
-         pLink = pLink->Flink)
-    {
-        PMAPPED_VIEW_LIST pView = CONTAINING_RECORD(pLink, MAPPED_VIEW_LIST, Link);
-
-        if (pView->MappedFileDevNum != deviceNum
-            || pView->MappedFileInodeNum != inodeNum
-            || pView->dwDesiredAccess == FILE_MAP_COPY)
-        {
-            continue;
-        }
-
-        //
-        // This is a shared mapping for the same indoe / device. Now, check
-        // to see if it overlaps with the range for the new view
-        //
-
-        size_t real_map_offs = pView->pNMHolder->offset;
-        size_t real_map_sz = pView->pNMHolder->size;
-
-        if (real_map_offs <= offset
-            && real_map_offs+real_map_sz >= offset)
-        {
-            //
-            // The views overlap. Even if this view is not reusable for the
-            // new once the search is over, as on
-            // ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS systems there
-            // cannot be shared mappings of two overlapping regions of the
-            // same file, in the same process. Therefore, whether this view
-            // is reusable or not we cannot mmap the requested region of
-            // the specified file.
-            //
-
-            if (real_map_offs+real_map_sz >= offset+size)
-            {
-                /* The new desired mapping is fully contained in the 
-                   one just found: we can reuse this one */
-
-                pNewView = (PMAPPED_VIEW_LIST)malloc(sizeof(MAPPED_VIEW_LIST));
-                if (pNewView)
-                {
-                    memcpy(pNewView, pView, sizeof(*pNewView));
-                    NativeMapHolderAddRef(pNewView->pNMHolder);
-                    pNewView->lpAddress = (void*)((char*)pNewView->pNMHolder->address +
-                        offset - pNewView->pNMHolder->offset);
-                    pNewView->NumberOfBytesToMap = size; 
-                }
-                else
-                {
-                    ERROR("No memory for new MAPPED_VIEW_LIST node\n");
-                }
-            }
-
-            break;
-        }
-    }
-
-    TRACE ("FindSharedMappingReplacement returning %p\n", pNewView);
-    return pNewView;
-}
-
-static NativeMapHolder * NewNativeMapHolder(CPalThread *pThread, void * address, size_t size,
-                                     size_t offset, long init_ref_count)
-{
-    NativeMapHolder * pThisMapHolder;
-    
-    if (init_ref_count < 0)
-    {
-        ASSERT("Negative initial reference count for new map holder\n");
-        return NULL;
-    }
-	
-    pThisMapHolder = 
-        (NativeMapHolder *)malloc(sizeof(NativeMapHolder));
-        
-    if (pThisMapHolder)
-    {
-        pThisMapHolder->ref_count = init_ref_count;
-        pThisMapHolder->address = address;
-        pThisMapHolder->size = size;
-        pThisMapHolder->offset = offset;
-    }
-    
-    return pThisMapHolder;
-}
-
-static int32_t NativeMapHolderAddRef(NativeMapHolder * thisNMH)
-{
-    int32_t ret = InterlockedIncrement(&thisNMH->ref_count);
-    return ret;
-}
-
-static int32_t NativeMapHolderRelease(CPalThread *pThread, NativeMapHolder * thisNMH)
-{
-    int32_t ret = InterlockedDecrement(&thisNMH->ref_count);
-    if (ret == 0)
-    {
-        if (-1 == munmap(thisNMH->address, thisNMH->size))
-        {
-            ASSERT( "Unable to unmap memory. Error=%s.\n",
-                    strerror( errno ) );
-        }
-        else
-        {
-            TRACE( "Successfully unmapped %p (size=%lu)\n", 
-                   thisNMH->address, (unsigned long)thisNMH->size);
-        }
-        free (thisNMH);
-    }
-    else if (ret < 0)
-    {
-        ASSERT( "Negative reference count for map holder %p"
-                " {address=%p, size=%lu}\n", thisNMH->address, 
-                (unsigned long)thisNMH->size);
-    }
-
-    return ret;
-}
-
-#endif // ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
 
 // Record a mapping in the MappedViewList list.
 // This call assumes the mapping_critsec has already been taken.
