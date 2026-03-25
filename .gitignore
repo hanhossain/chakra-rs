@@ -8,6 +8,7 @@ cmake-build*
 
 # clangd
 .cache/
+compile_commands.json
 
 # cmake
 CMakeUserPresets.json

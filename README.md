@@ -13,10 +13,15 @@ Configure and build
 
 ```sh
 cmake --preset linux-debug
-cmake --build build
+cmake --build build-linux-debug
 ```
 
-> NOTE: You can also build with ninja i.e. `cd build && ninja`
+> NOTE: You can also build with ninja i.e. `cd build-linux-debug && ninja`
+
+For compile_commands.json
+```sh
+ln -s build-linux-debug/compile_commands.json .
+```
 
 ## Building in docker
 
