@@ -48,7 +48,7 @@ Abstract:
 //  USE_POSIX_SEMAPHORES
 //  USE_SYSV_SEMAPHORES
 //  USE_PTHREAD_CONDVARS
-#if HAS_POSIX_SEMAPHORES
+#if defined(__linux__)
 
 // Favor posix semaphores.
 #define USE_POSIX_SEMAPHORES 1
@@ -72,7 +72,7 @@ Abstract:
 
 #include <sys/sem.h>
 #include <sys/types.h>
-#endif // HAS_POSIX_SEMAPHORES
+#endif // defined(__linux__)
 
 #include <stdarg.h>
 
