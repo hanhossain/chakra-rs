@@ -69,12 +69,6 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL FreeBSD)
   set(JA_JP_LOCALE_NAME ja_JP_LOCALE_NOT_FOUND)
   set(KO_KR_LOCALE_NAME ko_KR_LOCALE_NOT_FOUND)
   set(ZH_TW_LOCALE_NAME zh_TW_LOCALE_NOT_FOUND)
-
-  if(EXISTS "/lib/libc.so.7")
-    set(FREEBSD_LIBC "/lib/libc.so.7")
-  else()
-    message(FATAL_ERROR "Cannot find libc on this system.")
-  endif()
 else() # Anything else is Linux
   set(JA_JP_LOCALE_NAME ja_JP_LOCALE_NOT_FOUND)
   set(KO_KR_LOCALE_NAME ko_KR_LOCALE_NOT_FOUND)
