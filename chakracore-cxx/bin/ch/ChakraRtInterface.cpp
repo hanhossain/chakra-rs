@@ -47,11 +47,6 @@ bool ChakraRTInterface::LoadChakraDll(ArgInfo* argInfo, HINSTANCE *outLibrary)
 }
 
 /*static*/
-void ChakraRTInterface::UnloadChakraDll(HINSTANCE library)
-{
-}
-
-/*static*/
 int32_t ChakraRTInterface::ParseConfigFlags()
 {
     int32_t hr = S_OK;

@@ -1426,7 +1426,7 @@ namespace Js
     }
 
     static volatile bool inExceptionHandler = false;
-    int32_t WINAPI FaultInjection::FaultInjectionExceptionFilter(_In_  struct _EXCEPTION_POINTERS *ExceptionInfo)
+    int32_t FaultInjection::FaultInjectionExceptionFilter(_In_  struct _EXCEPTION_POINTERS *ExceptionInfo)
     {
         if (inExceptionHandler)
         {

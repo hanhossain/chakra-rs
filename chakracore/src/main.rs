@@ -24,7 +24,12 @@ fn main() -> ExitCode {
     argv.push(ptr::null_mut());
 
     unsafe {
-        let res = chakracore_sys::ffi::main_internal(argc as i32, argv.as_mut_ptr());
+        let res = chakracore_sys::ffi::main_internal(
+            argc as i32,
+            argv.as_mut_ptr(),
+            env!("CARGO_BIN_NAME"),
+            env!("CARGO_PKG_VERSION"),
+        );
         ExitCode::from(res as u8)
     }
 }

@@ -3,9 +3,9 @@
 // Copyright (c) 2021 ChakraCore Project Contributors. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
+#include "chakra/src/lib.rs.h"
 #include "stdafx.h"
 #include "chhelper.h"
-#include "chakra/src/lib.rs.h"
 #include <pthread.h>
 
 #ifdef __linux__
@@ -61,21 +61,6 @@ int HostExceptionFilter(int exceptionCode, _EXCEPTION_POINTERS *ep)
     TerminateProcess(::GetCurrentProcess(), exceptionCode);
 
     return EXCEPTION_CONTINUE_SEARCH;
-}
-
-void PrintChVersion()
-{
-#if CHAKRA_CORE_VERSION_RELEASE
-    PAL_wprintf(u"%s version %d.%d.%d.0\n",
-#else
-    PAL_wprintf(u"%s version %d.%d.%d.0-beta\n",
-#endif
-        hostName, CHAKRA_CORE_MAJOR_VERSION, CHAKRA_CORE_MINOR_VERSION, CHAKRA_CORE_PATCH_VERSION);
-}
-
-void PrintVersion()
-{
-    PrintChVersion();
 }
 
 // On success the param byteCodeBuffer will be allocated in the function.
@@ -814,14 +799,14 @@ int32_t ExecuteTestWithMemoryCheck(char* fileName)
     return hr;
 }
 
-unsigned int WINAPI StaticThreadProc(void *lpParam)
+unsigned int StaticThreadProc(void *lpParam)
 {
     ChakraRTInterface::ArgInfo* argInfo = static_cast<ChakraRTInterface::ArgInfo* >(lpParam);
     return ExecuteTestWithMemoryCheck(argInfo->filename);
 }
 
 static char16_t** argv = nullptr;
-int main_internal(int argc, char** c_argv)
+int main_internal(int argc, char** c_argv, rust::Str bin_name, rust::Str version)
 {
     int origargc = argc; // store for clean-up later
     argv = new char16_t*[argc];
@@ -868,7 +853,7 @@ int main_internal(int argc, char** c_argv)
         if ((arglen == 1 && PAL_wcsncmp(arg, u"v",       arglen) == 0) ||
             (arglen == 7 && PAL_wcsncmp(arg, u"version", arglen) == 0))
         {
-            PrintVersion();
+            chakra::print_version(bin_name, version);
             PAL_Shutdown();
             retval = EXIT_SUCCESS;
             goto return_cleanup;
@@ -955,8 +940,6 @@ int main_internal(int argc, char** c_argv)
 
         // On linux, execute on the same thread
         exitCode = ExecuteTestWithMemoryCheck(argInfo.filename);
-
-        ChakraRTInterface::UnloadChakraDll(chakraLibrary);
     }
 
     PAL_Shutdown();

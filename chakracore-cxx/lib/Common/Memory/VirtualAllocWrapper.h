@@ -99,7 +99,7 @@ private:
 
     typedef
     BOOL
-    (WINAPI *PSET_THREAD_INFORMATION_PROC)(
+    (*PSET_THREAD_INFORMATION_PROC)(
         _In_ HANDLE                   hThread,
         _In_ THREAD_INFORMATION_CLASS ThreadInformationClass,
         _In_reads_bytes_(ThreadInformationSize) void * ThreadInformation,
@@ -108,7 +108,7 @@ private:
 
     typedef
     BOOL
-    (WINAPI *PGET_THREAD_INFORMATION_PROC)(
+    (*PGET_THREAD_INFORMATION_PROC)(
         _In_ HANDLE                   hThread,
         _In_ THREAD_INFORMATION_CLASS ThreadInformationClass,
         _Out_writes_bytes_(ThreadInformationSize) void * ThreadInformation,

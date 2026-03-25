@@ -2,6 +2,7 @@
 mod ffi {
     extern "Rust" {
         fn print_usage();
+        fn print_version(bin_name: &str, version: &str);
     }
 }
 
@@ -23,4 +24,8 @@ fn print_usage() {
         println!("\t-v|-version\t\tDisplays version info");
         println!("\t-h|-help|-?\t\tDisplays this help message");
     }
+}
+
+fn print_version(bin_name: &str, version: &str) {
+    println!("{bin_name} version {version}");
 }

@@ -145,7 +145,7 @@ namespace Js
         static void InstallExceptionFilters();
         static void RemoveExceptionFilters();
         static unsigned long CalculateStackHash(void* frames[], uint16_t frameCount, uint16_t framesToSkip);
-        static int32_t WINAPI FaultInjectionExceptionFilter(_In_  struct _EXCEPTION_POINTERS *ExceptionInfo);
+        static int32_t FaultInjectionExceptionFilter(_In_  struct _EXCEPTION_POINTERS *ExceptionInfo);
         void FaultInjectionAnalyzeException(_EXCEPTION_POINTERS *ep);
     };
 #endif
