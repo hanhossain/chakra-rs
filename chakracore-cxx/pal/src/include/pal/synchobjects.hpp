@@ -129,12 +129,10 @@ namespace CorUnix
         ThreadNativeWaitData  m_tnwdNativeData;
         ThreadWaitInfo        m_twiWaitInfo;
 
-#ifdef SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING
         static const int      PendingSignalingsArraySize = 10;
         int32_t                  m_lPendingSignalingCount;
         CPalThread *          m_rgpthrPendingSignalings[PendingSignalingsArraySize];
         LIST_ENTRY            m_lePendingSignalingsOverflowList;
-#endif // SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING
 
     public:
 
@@ -167,9 +165,9 @@ namespace CorUnix
             return &m_tnwdNativeData;
         }
 
-#if SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING && !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
+#if !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
         PAL_ERROR RunDeferredThreadConditionSignalings();
-#endif // SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING && !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
+#endif // !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
     
         // NOTE: the following methods provide non-synchronized access to 
         //       the list of owned objects for this thread. Any thread 

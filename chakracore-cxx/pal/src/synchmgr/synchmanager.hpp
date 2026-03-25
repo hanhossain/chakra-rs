@@ -632,9 +632,9 @@ namespace CorUnix
             {
                 InternalLeaveCriticalSection(pthrCurrent, &s_csSynchProcessLock);
                 
-#if SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING && !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
+#if !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
                 pthrCurrent->synchronizationInfo.RunDeferredThreadConditionSignalings();
-#endif // SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING && !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
+#endif // !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
             }
         }
         static int32_t ResetLocalSynchLock(CPalThread * pthrCurrent)
@@ -647,9 +647,9 @@ namespace CorUnix
                 pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount = 0;
                 InternalLeaveCriticalSection(pthrCurrent, &s_csSynchProcessLock);
 
-#if SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING && !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
+#if !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
                 pthrCurrent->synchronizationInfo.RunDeferredThreadConditionSignalings();
-#endif // SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING && !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
+#endif // !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
             }            
             return lRet;
         }
