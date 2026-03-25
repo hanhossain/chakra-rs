@@ -138,7 +138,7 @@ namespace CorUnix
           m_cacheThreadApcInfoNodes(ApcInfoNodeCacheMaxSize),
           m_cacheOwnedObjectsListNodes(OwnedObjectsListCacheMaxSize)
     {
-#if defined(__APPLE__) && !HAVE_BROKEN_FIFO_KEVENT
+#if defined(__APPLE__)
         m_iKQueue = -1;
         // Initialize data to 0 and flags to EV_EOF
         EV_SET(&m_keProcessPipeEvent, 0, 0, EV_EOF, 0, 0, 0);
@@ -1870,7 +1870,7 @@ namespace CorUnix
         int iConsecutiveEintrs = 0;
         int32_t iBytesRead = 0;
         uint8_t * pPos = pRecvBuf;
-#if defined(__APPLE__) && !HAVE_BROKEN_FIFO_KEVENT
+#if defined(__APPLE__)
         struct kevent keChanges;
         struct timespec ts, *pts;
         int iNChanges;
@@ -1884,33 +1884,6 @@ namespace CorUnix
             {
                 int iErrno = 0;
 #if defined(__APPLE__)
-#if HAVE_BROKEN_FIFO_KEVENT
-#if HAVE_BROKEN_FIFO_SELECT
-#error Found no way to wait on a FIFO.
-#endif
-
-                timeval *ptv;
-                timeval tv;
-
-                if (INFTIM == iTimeout)
-                {
-                    ptv = NULL;
-                }
-                else
-                {
-                    tv.tv_usec = (iTimeout % tccSecondsToMillieSeconds) *
-                        tccMillieSecondsToMicroSeconds;
-                    tv.tv_sec = iTimeout / tccSecondsToMillieSeconds;
-                    ptv = &tv;
-                }
-
-                fd_set readfds;
-                FD_ZERO(&readfds);
-                FD_SET(m_iProcessPipeRead, &readfds);
-                iRet = select(m_iProcessPipeRead + 1, &readfds, NULL, NULL, ptv);
-
-#else // HAVE_BROKEN_FIFO_KEVENT
-
                 // Note: FreeBSD needs to use kqueue/kevent support here, since on this
                 // platform the EOF notification on FIFOs is not surfaced through poll,
                 // and process pipe shutdown relies on this feature.
@@ -1979,7 +1952,6 @@ namespace CorUnix
                     iRet = 1;
                 }
 
-#endif // HAVE_BROKEN_FIFO_KEVENT
 #else // defined(__APPLE__)
 
                 Poll.fd = m_iProcessPipeRead;
@@ -2064,7 +2036,7 @@ namespace CorUnix
             }
             else
             {
-#if defined(__APPLE__) && !HAVE_BROKEN_FIFO_KEVENT
+#if defined(__APPLE__)
                 if (0 != (EV_EOF & m_keProcessPipeEvent.flags) && 0 == m_keProcessPipeEvent.data)
                 {
                     // EOF
@@ -2095,7 +2067,7 @@ namespace CorUnix
                 iBytesRead += iRet;
                 pPos += iRet;
 
-#if defined(__APPLE__) && !HAVE_BROKEN_FIFO_KEVENT
+#if defined(__APPLE__)
                 // Update available data count
                 m_keProcessPipeEvent.data -= iRet;
                 _ASSERTE(0 <= m_keProcessPipeEvent.data);
@@ -3313,9 +3285,9 @@ namespace CorUnix
     bool CPalSynchronizationManager::CreateProcessPipe()
     {
         bool fRet = true;
-#if defined(__APPLE__) && !HAVE_BROKEN_FIFO_KEVENT
+#if defined(__APPLE__)
         int iKq = -1;
-#endif // defined(__APPLE__) && !HAVE_BROKEN_FIFO_KEVENT
+#endif // defined(__APPLE__)
 
         int rgiPipe[] = { -1, -1 };
         if (pipe(rgiPipe) == -1)
@@ -3325,7 +3297,7 @@ namespace CorUnix
             goto CPP_exit;
         }
 
-#if defined(__APPLE__) && !HAVE_BROKEN_FIFO_KEVENT
+#if defined(__APPLE__)
         iKq = kqueue();
         if (-1 == iKq)
         {
@@ -3341,7 +3313,7 @@ namespace CorUnix
             // Succeeded
             m_iProcessPipeRead = rgiPipe[0];
             m_iProcessPipeWrite = rgiPipe[1];
-#if defined(__APPLE__) && !HAVE_BROKEN_FIFO_KEVENT
+#if defined(__APPLE__)
             m_iKQueue = iKq;
 #endif // defined(__APPLE__)
         }
@@ -3352,7 +3324,7 @@ namespace CorUnix
                 close(rgiPipe[0]);
                 close(rgiPipe[1]);
             }
-#if defined(__APPLE__) && !HAVE_BROKEN_FIFO_KEVENT
+#if defined(__APPLE__)
             if (-1 != iKq)
             {
                 close(iKq);
