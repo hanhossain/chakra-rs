@@ -95,12 +95,12 @@ namespace CorUnix
 #ifdef _DEBUG
             Volatile<int32_t> m_lNumThreadsSuspendedByThisThread; // number of threads that this thread has suspended; used for suspension diagnostics
 #endif
-#if DEADLOCK_WHEN_THREAD_IS_SUSPENDED_WHILE_BLOCKED_ON_MUTEX
+#if defined(__APPLE__)
             CCLock m_nSpinlock; // thread's suspension spinlock, which is used to synchronize suspension and resumption attempts
-#else // DEADLOCK_WHEN_THREAD_IS_SUSPENDED_WHILE_BLOCKED_ON_MUTEX
+#else // defined(__APPLE__)
             pthread_mutex_t m_ptmSuspmutex; // thread's suspension mutex, which is used to synchronize suspension and resumption attempts
             BOOL m_fSuspmutexInitialized;
-#endif // DEADLOCK_WHEN_THREAD_IS_SUSPENDED_WHILE_BLOCKED_ON_MUTEX
+#endif // defined(__APPLE__)
 #if USE_POSIX_SEMAPHORES
             sem_t m_semSusp; // suspension semaphore
             sem_t m_semResume; // resumption semaphore
@@ -201,7 +201,7 @@ namespace CorUnix
             };
 #endif // USE_POSIX_SEMAPHORES
 
-#if DEADLOCK_WHEN_THREAD_IS_SUSPENDED_WHILE_BLOCKED_ON_MUTEX
+#if defined(__APPLE__)
             CCLock*
             GetSuspensionSpinlock(
                 void
@@ -209,7 +209,7 @@ namespace CorUnix
             {
                 return &m_nSpinlock;
             }
-#else // DEADLOCK_WHEN_THREAD_IS_SUSPENDED_WHILE_BLOCKED_ON_MUTEX
+#else // defined(__APPLE__)
             pthread_mutex_t*
             GetSuspensionMutex(
                 void
@@ -217,7 +217,7 @@ namespace CorUnix
             {
                 return &m_ptmSuspmutex;
             }
-#endif // DEADLOCK_WHEN_THREAD_IS_SUSPENDED_WHILE_BLOCKED_ON_MUTEX
+#endif // defined(__APPLE__)
 
             void
             SetSuspPending(
@@ -287,7 +287,7 @@ namespace CorUnix
 #ifdef _DEBUG
                 , m_lNumThreadsSuspendedByThisThread(0)
 #endif // _DEBUG
-#if !DEADLOCK_WHEN_THREAD_IS_SUSPENDED_WHILE_BLOCKED_ON_MUTEX
+#if !defined(__APPLE__)
                 , m_fSuspmutexInitialized(FALSE)
 #endif
 #if USE_POSIX_SEMAPHORES || USE_PTHREAD_CONDVARS

@@ -344,18 +344,18 @@ CThreadSuspensionInfo::TryAcquireSuspensionLock(
     CPalThread* pthrTarget
     )
 {
-#if DEADLOCK_WHEN_THREAD_IS_SUSPENDED_WHILE_BLOCKED_ON_MUTEX
+#if defined(__APPLE__)
 {
     return pthrTarget->suspensionInfo.GetSuspensionSpinlock()->TryEnter();
 }
-#else // DEADLOCK_WHEN_THREAD_IS_SUSPENDED_WHILE_BLOCKED_ON_MUTEX
+#else // defined(__APPLE__)
 {
     int iPthreadRet = pthread_mutex_trylock(pthrTarget->suspensionInfo.GetSuspensionMutex());
     _ASSERT_MSG(iPthreadRet == 0 || iPthreadRet == EBUSY, "pthread_mutex_trylock returned %d\n", iPthreadRet);
     // If iPthreadRet is 0, lock acquisition was successful. Otherwise, it failed.
     return (iPthreadRet == 0);
 }
-#endif // DEADLOCK_WHEN_THREAD_IS_SUSPENDED_WHILE_BLOCKED_ON_MUTEX
+#endif // defined(__APPLE__)
 }
 
 /*++
@@ -378,17 +378,17 @@ CThreadSuspensionInfo::AcquireSuspensionLock(
 }
 #else // USE_GLOBAL_LOCK_FOR_SUSPENSION
 {
-    #if DEADLOCK_WHEN_THREAD_IS_SUSPENDED_WHILE_BLOCKED_ON_MUTEX
+    #if defined(__APPLE__)
     {
         pthrCurrent->suspensionInfo.m_nSpinlock.Enter();
     }
-    #else // DEADLOCK_WHEN_THREAD_IS_SUSPENDED_WHILE_BLOCKED_ON_MUTEX
+    #else // defined(__APPLE__)
     {
         INDEBUG(int iPthreadError = )
         pthread_mutex_lock(&pthrCurrent->suspensionInfo.m_ptmSuspmutex);
         _ASSERT_MSG(iPthreadError == 0, "pthread_mutex_lock returned %d\n", iPthreadError);
     }
-    #endif // DEADLOCK_WHEN_THREAD_IS_SUSPENDED_WHILE_BLOCKED_ON_MUTEX
+    #endif // defined(__APPLE__)
 }
 #endif // USE_GLOBAL_LOCK_FOR_SUSPENSION
 }
@@ -412,17 +412,17 @@ CThreadSuspensionInfo::ReleaseSuspensionLock(
 }
 #else // USE_GLOBAL_LOCK_FOR_SUSPENSION
 {
-    #if DEADLOCK_WHEN_THREAD_IS_SUSPENDED_WHILE_BLOCKED_ON_MUTEX
+    #if defined(__APPLE__)
     {
         pthrCurrent->suspensionInfo.m_nSpinlock.Leave();
     }
-    #else // DEADLOCK_WHEN_THREAD_IS_SUSPENDED_WHILE_BLOCKED_ON_MUTEX
+    #else // defined(__APPLE__)
     {
         INDEBUG(int iPthreadError = )
         pthread_mutex_unlock(&pthrCurrent->suspensionInfo.m_ptmSuspmutex);
         _ASSERT_MSG(iPthreadError == 0, "pthread_mutex_unlock returned %d\n", iPthreadError);
     }
-    #endif // DEADLOCK_WHEN_THREAD_IS_SUSPENDED_WHILE_BLOCKED_ON_MUTEX
+    #endif // defined(__APPLE__)
 }
 #endif // USE_GLOBAL_LOCK_FOR_SUSPENSION
 }
@@ -770,7 +770,7 @@ constructor.
 void
 CThreadSuspensionInfo::InitializeSuspensionLock()
 {
-#if !DEADLOCK_WHEN_THREAD_IS_SUSPENDED_WHILE_BLOCKED_ON_MUTEX
+#if !defined(__APPLE__)
     int iError = pthread_mutex_init(&m_ptmSuspmutex, NULL);
     if (0 != iError )
     {
@@ -778,7 +778,7 @@ CThreadSuspensionInfo::InitializeSuspensionLock()
         return;
     }
     m_fSuspmutexInitialized = TRUE;
-#endif // DEADLOCK_WHEN_THREAD_IS_SUSPENDED_WHILE_BLOCKED_ON_MUTEX
+#endif // defined(__APPLE__)
 }
 
 /*++
@@ -926,7 +926,7 @@ InitializePreCreateExit:
 
 CThreadSuspensionInfo::~CThreadSuspensionInfo()
 {
-#if !DEADLOCK_WHEN_THREAD_IS_SUSPENDED_WHILE_BLOCKED_ON_MUTEX
+#if !defined(__APPLE__)
     if (m_fSuspmutexInitialized)
     {
         INDEBUG(int iError = )
