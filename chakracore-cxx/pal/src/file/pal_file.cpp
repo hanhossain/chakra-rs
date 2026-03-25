@@ -251,24 +251,18 @@ CorUnix::InternalCanonicalizeRealPath(const char * lpUnixPath, char* lpBuffer, u
     PAL_ERROR palError = NO_ERROR;
     char* lpRealPath = NULL;
 
-#if !REALPATH_SUPPORTS_NONEXISTENT_FILES
     char* lpExistingPath = NULL;
     char* pchSeparator = NULL;
     char* lpFilename = NULL;
     uint32_t cchBuffer = 0;
     uint32_t cchFilename = 0;
-#endif // !REALPATH_SUPPORTS_NONEXISTENT_FILES
- 
+
     if ( (lpUnixPath == NULL) || (lpBuffer == NULL) || (cch < PATH_MAX) )
     {
         ERROR ("Invalid argument to InternalCanonicalizeRealPath\n");
         palError = ERROR_INVALID_PARAMETER;
         goto LExitDontFree;
     }
-
-#if REALPATH_SUPPORTS_NONEXISTENT_FILES
-    lpRealPath = realpath(lpUnixPath, lpBuffer);
-#else   // !REALPATH_SUPPORTS_NONEXISTENT_FILES
 
     lpExistingPath = strdup(lpUnixPath);
     if (lpExistingPath == NULL)
@@ -437,7 +431,6 @@ LExit:
     {
         free(lpExistingPath);
     }
-#endif // REALPATH_SUPPORTS_NONEXISTENT_FILES
 
 LExitDontFree:
     if ((palError == NO_ERROR) && (lpRealPath == NULL))

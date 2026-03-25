@@ -1758,16 +1758,6 @@ int CoreVsnprintf(CPalThread *pthrCurrent, char* Buffer, size_t Count, const cha
                 // Types that sprintf can handle
                 size_t TempCount = Count - (BufferPtr - Buffer);
 
-#if !HAVE_LARGE_SNPRINTF_SUPPORT
-                // Limit TempCount to 0x40000000, which is sufficient
-                // for platforms on which snprintf fails for very large
-                // sizes.
-                if (TempCount > 0x40000000)
-                {
-                    TempCount = 0x40000000;
-                }
-#endif  // HAVE_LARGE_SNPRINTF_SUPPORT
-
                 TempInt = 0;
                 // %h (short) doesn't seem to be handled properly by local sprintf,
                 // so we do the truncation ourselves for some cases.
@@ -2063,16 +2053,6 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
                    and place them in the buffer (BufferPtr) */
                 size_t TempCount = Count - (BufferPtr - Buffer);
                 TempInt = 0;
-
-#if !HAVE_LARGE_SNPRINTF_SUPPORT
-                // Limit TempCount to 0x40000000, which is sufficient
-                // for platforms on which snprintf fails for very large
-                // sizes.
-                if (TempCount > 0x40000000)
-                {
-                    TempCount = 0x40000000;
-                }
-#endif  // HAVE_LARGE_SNPRINTF_SUPPORT
 
                 // %h (short) doesn't seem to be handled properly by local sprintf,
                 // so we do the truncation ourselves for some cases.

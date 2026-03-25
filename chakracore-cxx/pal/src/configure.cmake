@@ -57,61 +57,6 @@ int main(int argc, char **argv) {
   exit(0);
 }" PLATFORM_ACCEPTS_ABS_OVERLOAD)
 check_cxx_source_runs("
-#include <sys/param.h>
-#include <stdlib.h>
-
-int main(void) {
-  char *path;
-#ifdef PATH_MAX
-  char resolvedPath[PATH_MAX];
-#elif defined(MAXPATHLEN)
-  char resolvedPath[MAXPATHLEN];
-#else
-  char resolvedPath[1024];
-#endif
-  path = realpath(\"a_nonexistent_file\", resolvedPath);
-  if (path == NULL) {
-    exit(1);
-  }
-  exit(0);
-}" REALPATH_SUPPORTS_NONEXISTENT_FILES)
-check_cxx_source_runs("
-#include <stdio.h>
-#include <stdlib.h>
-int main(void)
-{
-  long long n = 0;
-  sscanf(\"5000000000\", \"%qu\", &n);
-  exit (n != 5000000000);
-  }" SSCANF_SUPPORT_ll)
-check_cxx_source_runs("
-#include <stdio.h>
-#include <stdlib.h>
-
-int main()
-{
-  int ret;
-  float f = 0;
-  char * strin = \"12.34e\";
-
-  ret = sscanf (strin, \"%e\", &f);
-  if (ret <= 0)
-    exit (0);
-  exit(1);
-}" SSCANF_CANNOT_HANDLE_MISSING_EXPONENT)
-check_cxx_source_runs("
-#include <stdio.h>
-#include <stdlib.h>
-
-int main(void) {
-  char buf[256] = { 0 };
-  snprintf(buf, 0x7fffffff, \"%#x\", 0x12345678);
-  if (buf[0] == 0x0) {
-    exit(1);
-  }
-  exit(0);
-}" HAVE_LARGE_SNPRINTF_SUPPORT)
-check_cxx_source_runs("
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>

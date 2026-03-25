@@ -10,14 +10,6 @@
 #define _PAL_CONFIG_H_INCLUDED 1
 
 // TODO (hanhossain): check if necessary
-#cmakedefine01 REALPATH_SUPPORTS_NONEXISTENT_FILES
-// TODO (hanhossain): check if necessary
-#cmakedefine01 SSCANF_CANNOT_HANDLE_MISSING_EXPONENT
-// TODO (hanhossain): check if necessary
-#cmakedefine01 SSCANF_SUPPORT_ll
-// TODO (hanhossain): check if necessary
-#cmakedefine01 HAVE_LARGE_SNPRINTF_SUPPORT
-// TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_BROKEN_FIFO_SELECT
 // TODO (hanhossain): check if necessary
 #cmakedefine01 HAVE_BROKEN_FIFO_KEVENT
