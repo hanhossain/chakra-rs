@@ -794,26 +794,11 @@ CThreadSuspensionInfo::InitializePreCreate()
 {
     PAL_ERROR palError = ERROR_INTERNAL_ERROR;
     int iError = 0;
-#if SEM_INIT_MODIFIES_ERRNO
-    int nStoredErrno;
-#endif  // SEM_INIT_MODIFIES_ERRNO
 
 #if USE_POSIX_SEMAPHORES
 
-#if SEM_INIT_MODIFIES_ERRNO
-    nStoredErrno = errno;
-#endif  // SEM_INIT_MODIFIES_ERRNO
-
     // initialize suspension semaphore
     iError = sem_init(&m_semSusp, 0, 0);
-
-#if SEM_INIT_MODIFIES_ERRNO
-    if (iError == 0)
-    {
-        // Restore errno if sem_init succeeded.
-        errno = nStoredErrno;
-    }
-#endif  // SEM_INIT_MODIFIES_ERRNO
 
     if (0 != iError )
     {
@@ -821,20 +806,8 @@ CThreadSuspensionInfo::InitializePreCreate()
         goto InitializePreCreateExit;
     }
 
-#if SEM_INIT_MODIFIES_ERRNO
-    nStoredErrno = errno;
-#endif  // SEM_INIT_MODIFIES_ERRNO
-
     // initialize resume semaphore
     iError = sem_init(&m_semResume, 0, 0);
-
-#if SEM_INIT_MODIFIES_ERRNO
-    if (iError == 0)
-    {
-        // Restore errno if sem_init succeeded.
-        errno = nStoredErrno;
-    }
-#endif  // SEM_INIT_MODIFIES_ERRNO
 
     if (0 != iError )
     {

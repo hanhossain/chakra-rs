@@ -101,17 +101,7 @@ namespace CorUnix
 {
     extern CObjectType otFileMapping;
 
-#if ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
-    typedef struct _NativeMapHolder
-    {
-        Volatile<int32_t> ref_count;
-        void * address;
-        size_t size;
-        size_t offset; /* for future use */
-    } NativeMapHolder;
-#endif
-
-    /* Process specific information. This 
+    /* Process specific information. This
     structure is not stored in shared memory.*/
     typedef struct _MVL
     {
@@ -123,16 +113,6 @@ namespace CorUnix
         //
         
         IPalObject *pFileMapping;
-        
-#if ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
-        NativeMapHolder * pNMHolder; /* Ref-counted holder for memory mapping */
-        dev_t   MappedFileDevNum;           /* ID of device containing the file to be mapped */
-        ino_t   MappedFileInodeNum;         /* Inode number of file to be mapped.
-                                               These two fields are used used to uniquely 
-                                               identify files on systems that do not allow 
-                                               more than one shared mmapping per region of 
-                                               physical file, per process */
-#endif
         void * lpAddress;           /* The pointer to the mapped memory. */
         size_t NumberOfBytesToMap;  /* Number of bytes to map. */
         uint32_t dwDesiredAccess;      /* Desired access. */
@@ -156,15 +136,6 @@ namespace CorUnix
     {
     public:
         int32_t     UnixFd;                     /* File descriptor. */
-        
-#if ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
-        dev_t   MappedFileDevNum;           /* ID of device containing the file to be mapped */
-        ino_t   MappedFileInodeNum;         /* Inode number of file to be mapped.
-                                               These two fields are used used to uniquely 
-                                               identify files on systems that do not allow 
-                                               more than one shared mmapping per region of 
-                                               physical file, per process */
-#endif
     };
 
     PAL_ERROR
