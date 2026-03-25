@@ -52,38 +52,9 @@ Volatile<int> attempt1 = 0;
 Volatile<int> attempt2 = 0;
 #endif
 
-#if MMAP_IGNORES_HINT
-typedef struct FREE_BLOCK {
-    char *startBoundary;
-    size_t memSize;
-    struct FREE_BLOCK *next;
-} FREE_BLOCK;
-#endif  // MMAP_IGNORES_HINT
-
 // The first node in our list of allocated blocks.
 static PCMI pVirtualMemoryLastFound;
 static PCMI pVirtualMemory;
-
-#if MMAP_IGNORES_HINT
-// The first node in our list of freed blocks.
-static FREE_BLOCK *pFreeMemory __attribute__((init_priority(200)));
-
-// The amount of memory that we'll try to reserve on our file.
-// Currently 1GB.
-static const int BACKING_FILE_SIZE = 1024 * 1024 * 1024;
-
-static void *VIRTUALReserveFromBackingFile(unsigned long addr, size_t length);
-static BOOL VIRTUALAddToFreeList(const PCMI pMemoryToBeReleased);
-
-// The base address of the pages mapped onto our backing file.
-static void *gBackingBaseAddress = MAP_FAILED;
-
-// Separate the subset of the feature for experiments
-#define RESERVE_FROM_BACKING_FILE 1
-#else
-// static const void *gBackingBaseAddress = MAP_FAILED;
-// #define RESERVE_FROM_BACKING_FILE 1
-#endif
 
 #if RESERVE_FROM_BACKING_FILE
 static BOOL VIRTUALGetBackingFile(CPalThread * pthrCurrent);
@@ -146,10 +117,6 @@ void VIRTUALCleanup()
 {
     PCMI pEntry;
     PCMI pTempEntry;
-#if MMAP_IGNORES_HINT
-    FREE_BLOCK *pFreeBlock;
-    FREE_BLOCK *pTempFreeBlock;
-#endif  // MMAP_IGNORES_HINT
     CPalThread * pthrCurrent = InternalGetCurrentThread();
 
     InternalEnterCriticalSection(pthrCurrent, &virtual_critsec);
@@ -162,31 +129,12 @@ void VIRTUALCleanup()
               pEntry->startBoundary );
         free(pEntry->pAllocState);
         free(pEntry->pProtectionState );
-#if MMAP_DOESNOT_ALLOW_REMAP
-        free(pEntry->pDirtyPages );
-#endif
         pTempEntry = pEntry;
         pEntry = pEntry->pNext;
         free(pTempEntry );
     }
     pVirtualMemory = NULL;
     pVirtualMemoryLastFound = NULL;
-
-#if MMAP_IGNORES_HINT
-    // Clean up the free list.
-    pFreeBlock = pFreeMemory;
-    while (pFreeBlock != NULL)
-    {
-        // Ignore errors from munmap. There's nothing we'd really want to
-        // do about them.
-        munmap(pFreeBlock->startBoundary, pFreeBlock->memSize);
-        pTempFreeBlock = pFreeBlock;
-        pFreeBlock = pFreeBlock->next;
-        free(pTempFreeBlock);
-    }
-    pFreeMemory = NULL;
-    gBackingBaseAddress = MAP_FAILED;
-#endif  // MMAP_IGNORES_HINT
 
 #if RESERVE_FROM_BACKING_FILE
     if (gBackingFile != -1)
@@ -257,45 +205,6 @@ static BOOL VIRTUALIsPageCommitted( size_t nBitToRetrieve, const PCMI pInformati
         return FALSE;
     }
 }
-
-#if MMAP_DOESNOT_ALLOW_REMAP
-/****
- *
- * VIRTUALIsPageDirty
- *
- *  size_t nBitToRetrieve - Which page to check.
- *
- *  Returns TRUE if the page needs to be cleared if re-committed,
- *  FALSE otherwise.
- *
- */
-static BOOL VIRTUALIsPageDirty( size_t nBitToRetrieve, const PCMI pInformation )
-{
-    size_t nByteOffset = 0;
-    uint32_t nBitOffset = 0;
-    uint32_t byteMask = 0;
-
-    if ( !pInformation )
-    {
-        ERROR( "pInformation was NULL!\n" );
-        return FALSE;
-    }
-
-    nByteOffset = nBitToRetrieve / CHAR_BIT;
-    nBitOffset = nBitToRetrieve % CHAR_BIT;
-
-    byteMask = 1 << nBitOffset;
-
-    if ( pInformation->pDirtyPages[ nByteOffset ] & byteMask )
-    {
-        return TRUE;
-    }
-    else
-    {
-        return FALSE;
-    }
-}
-#endif // MMAP_DOESNOT_ALLOW_REMAP
 
 /*********
  *
@@ -490,40 +399,6 @@ static BOOL VIRTUALSetAllocState( uint32_t nAction, size_t nStartingBit,
                               nNumberOfBits, pInformation->pAllocState);
 }
 
-#if MMAP_DOESNOT_ALLOW_REMAP
-/****
- *
- * VIRTUALSetDirtyPages
- *
- *  IN uint32_t nStatus - 0: memory clean, any other value: memory is dirty
- *  IN size_t nStartingBit - The bit to set.
- *
- *  IN size_t nNumberOfBits - The range of bits to set.
- *  IN PCMI pStateArray - A pointer the array to be manipulated.
- *
- *  Returns TRUE on success, FALSE otherwise.
- *  Turns bit(s) on/off bit to indicate dirty page(s)
- *
- */
-static BOOL VIRTUALSetDirtyPages( uint32_t nStatus, size_t nStartingBit,
-                           size_t nNumberOfBits, const PCMI pInformation )
-{
-    TRACE( "VIRTUALSetDirtyPages( nStatus = %d, nStartingBit = %d, "
-           "nNumberOfBits = %d, pStateArray = 0x%p )\n",
-           nStatus, nStartingBit, nNumberOfBits, pInformation );
-
-    if ( !pInformation )
-    {
-        ERROR( "pInformation was invalid!\n" );
-        return FALSE;
-    }
-
-    return VIRTUALSetPageBits(nStatus, nStartingBit,
-                              nNumberOfBits, pInformation->pDirtyPages);
-}
-#endif // MMAP_DOESNOT_ALLOW_REMAP
-
-
 /****
  *
  * VIRTUALFindRegionInformation( )
@@ -639,22 +514,11 @@ static BOOL VIRTUALReleaseMemory( PCMI pMemoryToBeReleased )
         pVirtualMemoryLastFound = NULL;
     }
 
-#if MMAP_IGNORES_HINT
-    // We've removed the block from our allocated list. Add it to the
-    // free list.
-    bRetVal = VIRTUALAddToFreeList(pMemoryToBeReleased);
-#endif  // MMAP_IGNORES_HINT
-
     free( pMemoryToBeReleased->pAllocState );
     pMemoryToBeReleased->pAllocState = NULL;
 
     free( pMemoryToBeReleased->pProtectionState );
     pMemoryToBeReleased->pProtectionState = NULL;
-
-#if MMAP_DOESNOT_ALLOW_REMAP
-    free( pMemoryToBeReleased->pDirtyPages );
-    pMemoryToBeReleased->pDirtyPages = NULL;
-#endif // MMAP_DOESNOT_ALLOW_REMAP
 
     free( pMemoryToBeReleased );
     pMemoryToBeReleased = NULL;
@@ -786,20 +650,11 @@ static BOOL VIRTUALStoreAllocationInfo(
 
     pNewEntry->pAllocState      = (uint8_t*)malloc( nBufferSize  );
     pNewEntry->pProtectionState = (uint8_t*)malloc( (memSize / VIRTUAL_PAGE_SIZE)  );
-#if MMAP_DOESNOT_ALLOW_REMAP
-    pNewEntry->pDirtyPages  = (uint8_t*)malloc( nBufferSize );
-#endif //
 
     if ( pNewEntry->pAllocState && pNewEntry->pProtectionState
-#if MMAP_DOESNOT_ALLOW_REMAP
-        && pNewEntry->pDirtyPages
-#endif // MMAP_DOESNOT_ALLOW_REMAP
       )
     {
         /* Set the intial allocation state, and initial allocation protection. */
-#if MMAP_DOESNOT_ALLOW_REMAP
-        memset (pNewEntry->pDirtyPages, 0, nBufferSize);
-#endif // MMAP_DOESNOT_ALLOW_REMAP
         VIRTUALSetAllocState( MEM_RESERVE, 0, nBufferSize * CHAR_BIT, pNewEntry );
         memset( pNewEntry->pProtectionState,
             VIRTUALConvertWinFlags( flProtection ),
@@ -809,11 +664,6 @@ static BOOL VIRTUALStoreAllocationInfo(
     {
         ERROR( "Unable to allocate memory for the structure.\n");
         bRetVal =  FALSE;
-
-#if MMAP_DOESNOT_ALLOW_REMAP
-        if (pNewEntry->pDirtyPages) free( pNewEntry->pDirtyPages );
-        pNewEntry->pDirtyPages = NULL;
-#endif //
 
         if (pNewEntry->pProtectionState) free( pNewEntry->pProtectionState );
         pNewEntry->pProtectionState = NULL;
@@ -906,11 +756,6 @@ static BOOL VIRTUALUpdateAllocationInfo(
 
     // Cleaup previous structures as we will need to reinitialize these using the new size of the region.
     {
-#if MMAP_DOESNOT_ALLOW_REMAP
-        if (pExistingEntry->pDirtyPages) free(pExistingEntry->pDirtyPages);
-        pExistingEntry->pDirtyPages = NULL;
-#endif //  MMAP_DOESNOT_ALLOW_REMAP
-
         if (pExistingEntry->pProtectionState) free(pExistingEntry->pProtectionState);
         pExistingEntry->pProtectionState = NULL;
 
@@ -920,20 +765,11 @@ static BOOL VIRTUALUpdateAllocationInfo(
 
     pExistingEntry->pAllocState = (uint8_t*)malloc(nBufferSize);
     pExistingEntry->pProtectionState = (uint8_t*)malloc((memSize / VIRTUAL_PAGE_SIZE));
-#if MMAP_DOESNOT_ALLOW_REMAP
-    pExistingEntry->pDirtyPages = (uint8_t*)malloc(nBufferSize);
-#endif //  MMAP_DOESNOT_ALLOW_REMAP
 
     if (pExistingEntry->pAllocState && pExistingEntry->pProtectionState
-#if MMAP_DOESNOT_ALLOW_REMAP
-        && pExistingEntry->pDirtyPages
-#endif // MMAP_DOESNOT_ALLOW_REMAP
         )
     {
         /* Set the intial allocation state, and initial allocation protection. */
-#if MMAP_DOESNOT_ALLOW_REMAP
-        memset(pExistingEntry->pDirtyPages, 0, nBufferSize);
-#endif // pExistingEntry
         VIRTUALSetAllocState(MEM_RESERVE, 0, nBufferSize * CHAR_BIT, pExistingEntry);
         memset(pExistingEntry->pProtectionState,
             VIRTUALConvertWinFlags(pExistingEntry->accessProtection),
@@ -943,11 +779,6 @@ static BOOL VIRTUALUpdateAllocationInfo(
     {
         ERROR("Unable to allocate memory for the structure.\n");
         bRetVal = FALSE;
-
-#if MMAP_DOESNOT_ALLOW_REMAP
-        if (pExistingEntry->pDirtyPages) free(pExistingEntry->pDirtyPages);
-        pExistingEntry->pDirtyPages = NULL;
-#endif //
 
         if (pExistingEntry->pProtectionState) free(pExistingEntry->pProtectionState);
         pExistingEntry->pProtectionState = NULL;
@@ -1007,18 +838,14 @@ static void * VIRTUALReserveMemory(
 
     if (pRetVal != NULL)
     {
-#if !MMAP_IGNORES_HINT
         if ( !lpAddress )
         {
-#endif  // MMAP_IGNORES_HINT
             /* Compute the real values instead of the null values. */
             StartBoundary = (unsigned long)pRetVal & ~VIRTUAL_PAGE_MASK;
 
             MemSize = ( ((unsigned long)pRetVal + dwSize + VIRTUAL_PAGE_MASK) & ~VIRTUAL_PAGE_MASK ) -
                       StartBoundary;
-#if !MMAP_IGNORES_HINT
         }
-#endif  // MMAP_IGNORES_HINT
         if ( !VIRTUALStoreAllocationInfo( StartBoundary, MemSize,
                                    flAllocationType, flProtect ) )
         {
@@ -1056,9 +883,6 @@ static void * ReserveVirtualMemory(
 
     TRACE( "Reserving the memory now..\n");
 
-#if MMAP_IGNORES_HINT
-    pRetVal = VIRTUALReserveFromBackingFile(StartBoundary, MemSize);
-#else   // MMAP_IGNORES_HINT
     // Most platforms will only commit the memory if it is dirtied,
     // so this should not consume too much swap space.
     int mmapFlags = 0;
@@ -1099,20 +923,9 @@ static void * ReserveVirtualMemory(
         pRetVal = NULL;
         goto done;
     }
-#endif  // MMAP_IGNORES_HINT
 
     if ( pRetVal != MAP_FAILED)
     {
-#if MMAP_ANON_IGNORES_PROTECTION
-        if (mprotect(pRetVal, MemSize, PROT_NONE) != 0)
-        {
-            ERROR("mprotect failed to protect the region!\n");
-            pthrCurrent->SetLastError(ERROR_INVALID_ADDRESS);
-            munmap(pRetVal, MemSize);
-            pRetVal = NULL;
-            goto done;
-        }
-#endif  // MMAP_ANON_IGNORES_PROTECTION
     }
     else
     {
@@ -1264,31 +1077,10 @@ static void * VIRTUALCommitMemory(
         {
             // Commit the pages
             void * pRet = MAP_FAILED;
-#if MMAP_DOESNOT_ALLOW_REMAP
-            if (mprotect((void *) StartBoundary, MemSize, PROT_WRITE | PROT_READ) == 0)
-                pRet = (void *)StartBoundary;
-#else // MMAP_DOESNOT_ALLOW_REMAP
             pRet = mmap((void *) StartBoundary, MemSize, PROT_WRITE | PROT_READ,
                      MAP_ANON | MAP_FIXED | MAP_PRIVATE, -1, 0);
-#endif // MMAP_DOESNOT_ALLOW_REMAP
             if (pRet != MAP_FAILED)
             {
-#if MMAP_DOESNOT_ALLOW_REMAP
-                size_t i;
-                char *temp = (char *) StartBoundary;
-                for(i = 0; i < runLength; i++)
-                {
-
-                    if (VIRTUALIsPageDirty(runStart + i, pInformation))
-                    {
-                        // This page is being recommitted after being decommitted,
-                        // therefore the memory needs to be cleared
-                        memset (temp, 0, VIRTUAL_PAGE_SIZE);
-                    }
-
-                    temp += VIRTUAL_PAGE_SIZE;
-                }
-#endif // MMAP_DOESNOT_ALLOW_REMAP
             }
             else
             {
@@ -1296,9 +1088,6 @@ static void * VIRTUALCommitMemory(
                 goto error;
             }
             VIRTUALSetAllocState(MEM_COMMIT, runStart, runLength, pInformation);
-#if MMAP_DOESNOT_ALLOW_REMAP
-            VIRTUALSetDirtyPages (0, runStart, runLength, pInformation);
-#endif // MMAP_DOESNOT_ALLOW_REMAP
 
             if (nProtect == (PROT_WRITE | PROT_READ))
             {
@@ -1337,12 +1126,7 @@ static void * VIRTUALCommitMemory(
 error:
     if ( flAllocationType & MEM_RESERVE || IsLocallyReserved )
     {
-#if (MMAP_IGNORES_HINT && !MMAP_DOESNOT_ALLOW_REMAP)
-        mmap(pRetVal, MemSize, PROT_NONE, MAP_FIXED | MAP_PRIVATE,
-             gBackingFile, (char *) pRetVal - (char *) gBackingBaseAddress);
-#else   // MMAP_IGNORES_HINT && !MMAP_DOESNOT_ALLOW_REMAP
         munmap( pRetVal, MemSize );
-#endif  // MMAP_IGNORES_HINT && !MMAP_DOESNOT_ALLOW_REMAP
         if ( VIRTUALReleaseMemory( pInformation ) == FALSE )
         {
             ASSERT( "Unable to remove the PCMI entry from the list.\n" );
@@ -1358,232 +1142,6 @@ done:
 
     return pRetVal;
 }
-
-#if MMAP_IGNORES_HINT
-/*++
-Function:
-    VIRTUALReserveFromBackingFile
-
-    Locates a reserved but unallocated block of memory in the free list.
-
-    If addr is not zero, this will only find a block that starts at addr
-    and is at least large enough to hold the requested size.
-
-    If addr is zero, this finds the first block of memory in the free list
-    of the right size.
-
-    Once the block is located, it is split if necessary to allocate only
-    the requested size. The function then calls mmap() with MAP_FIXED to
-    map the located block at its address on an anonymous fd.
-
-    This function requires that length be a multiple of the page size. If
-    length is not a multiple of the page size, subsequently allocated blocks
-    may be allocated on addresses that are not page-size-aligned, which is
-    invalid.
-
-    Returns the base address of the mapped block, or MAP_FAILED if no
-    suitable block exists or mapping fails.
---*/
-static void *VIRTUALReserveFromBackingFile(unsigned long addr, size_t length)
-{
-    FREE_BLOCK *block;
-    FREE_BLOCK *prev;
-    FREE_BLOCK *temp;
-    char *returnAddress;
-
-    block = NULL;
-    prev = NULL;
-    for(temp = pFreeMemory; temp != NULL; temp = temp->next)
-    {
-        if (addr != 0)
-        {
-            if (addr < (unsigned long) temp->startBoundary)
-            {
-                // Not up to a block containing addr yet.
-                prev = temp;
-                continue;
-            }
-        }
-        if ((addr == 0 && temp->memSize >= length) ||
-            (addr >= (unsigned long) temp->startBoundary &&
-             addr + length <= (unsigned long) temp->startBoundary + temp->memSize))
-        {
-            block = temp;
-            break;
-        }
-        prev = temp;
-    }
-    if (block == NULL)
-    {
-        // No acceptable page exists.
-        return MAP_FAILED;
-    }
-
-    // Grab the return address before we adjust the free list.
-    if (addr == 0)
-    {
-        returnAddress = block->startBoundary;
-    }
-    else
-    {
-        returnAddress = (char *) addr;
-    }
-
-    // Adjust the free list to account for the block we're returning.
-    if (block->memSize == length && returnAddress == block->startBoundary)
-    {
-        // We're going to remove this free block altogether.
-        if (prev == NULL)
-        {
-            // block is the first in our free list.
-            pFreeMemory = block->next;
-        }
-        else
-        {
-            prev->next = block->next;
-        }
-        free(block);
-    }
-    else
-    {
-        // We have to divide this block. Map in the new block.
-        if (returnAddress == block->startBoundary)
-        {
-            // The address is right at the beginning of the block.
-            // We can make the block smaller.
-            block->memSize -= length;
-            block->startBoundary += length;
-        }
-        else if (returnAddress + length ==
-                 block->startBoundary + block->memSize)
-        {
-            // The allocation is at the end of the block. Make the
-            // block smaller from the end.
-            block->memSize -= length;
-        }
-        else
-        {
-            // Splitting the block. We'll need a new block for the free list.
-            temp = (FREE_BLOCK *) malloc(sizeof(FREE_BLOCK));
-            if (temp == NULL)
-            {
-                ERROR("Failed to allocate memory for a new free block!");
-                return MAP_FAILED;
-            }
-            temp->startBoundary = returnAddress + length;
-            temp->memSize = (block->startBoundary + block->memSize) -
-                            (returnAddress + length);
-            temp->next = block->next;
-            block->memSize -= (length + temp->memSize);
-            block->next = temp;
-        }
-    }
-    return returnAddress;
-}
-
-/*++
-Function:
-    VIRTUALAddToFreeList
-
-    Adds the given block to our free list. Coalesces the list if necessary.
-    The block should already have been mapped back onto the backing file.
-
-    Returns TRUE if the block was added to the free list.
---*/
-static BOOL VIRTUALAddToFreeList(const PCMI pMemoryToBeReleased)
-{
-    FREE_BLOCK *temp;
-    FREE_BLOCK *lastBlock;
-    FREE_BLOCK *newBlock;
-    BOOL coalesced;
-
-    lastBlock = NULL;
-    for(temp = pFreeMemory; temp != NULL; temp = temp->next)
-    {
-        if ((unsigned long) temp->startBoundary > pMemoryToBeReleased->startBoundary)
-        {
-            // This check isn't necessary unless the PAL is fundamentally
-            // broken elsewhere.
-            if (pMemoryToBeReleased->startBoundary +
-                pMemoryToBeReleased->memSize > (unsigned long) temp->startBoundary)
-            {
-                ASSERT("Free and allocated memory blocks overlap!");
-                return FALSE;
-            }
-            break;
-        }
-        lastBlock = temp;
-    }
-
-    // Check to see if we're going to coalesce blocks before we
-    // allocate anything.
-    coalesced = FALSE;
-
-    // First, are we coalescing with the next block?
-    if (temp != NULL)
-    {
-        if ((unsigned long) temp->startBoundary == pMemoryToBeReleased->startBoundary +
-            pMemoryToBeReleased->memSize)
-        {
-            temp->startBoundary = (char *) pMemoryToBeReleased->startBoundary;
-            temp->memSize += pMemoryToBeReleased->memSize;
-            coalesced = TRUE;
-        }
-    }
-
-    // Are we coalescing with the previous block? If so, check to see
-    // if we can free one of the blocks.
-    if (lastBlock != NULL)
-    {
-        if ((unsigned long) lastBlock->startBoundary + lastBlock->memSize ==
-            pMemoryToBeReleased->startBoundary)
-        {
-            if (lastBlock->next != NULL &&
-                lastBlock->startBoundary + lastBlock->memSize ==
-                lastBlock->next->startBoundary)
-            {
-                lastBlock->memSize += lastBlock->next->memSize;
-                temp = lastBlock->next;
-                lastBlock->next = lastBlock->next->next;
-                free(temp);
-            }
-            else
-            {
-                lastBlock->memSize += pMemoryToBeReleased->memSize;
-            }
-            coalesced = TRUE;
-        }
-    }
-
-    // If we coalesced anything, we're done.
-    if (coalesced)
-    {
-        return TRUE;
-    }
-
-    // At this point we know we're not coalescing anything and we need
-    // a new block.
-    newBlock = (FREE_BLOCK *) malloc(sizeof(FREE_BLOCK));
-    if (newBlock == NULL)
-    {
-        ERROR("Failed to allocate memory for a new free block!");
-        return FALSE;
-    }
-    newBlock->startBoundary = (char *) pMemoryToBeReleased->startBoundary;
-    newBlock->memSize = pMemoryToBeReleased->memSize;
-    if (lastBlock == NULL)
-    {
-        newBlock->next = temp;
-        pFreeMemory = newBlock;
-    }
-    else
-    {
-        newBlock->next = lastBlock->next;
-        lastBlock->next = newBlock;
-    }
-    return TRUE;
-}
-#endif  // MMAP_IGNORES_HINT
 
 #if RESERVE_FROM_BACKING_FILE
 /*++
@@ -1614,16 +1172,6 @@ static BOOL VIRTUALGetBackingFile(CPalThread *pthrCurrent)
         goto done;
     }
 
-#if MMAP_IGNORES_HINT
-    if (pFreeMemory != NULL)
-    {
-        // Sanity check. Our free list should always be NULL if we
-        // haven't allocated our pages.
-        ASSERT("Free list is unexpectedly non-NULL without a backing file!");
-        goto done;
-    }
-#endif
-
     if (!(PALGetLibRotorPalName(palName, MAX_PATH_FNAME)))
     {
         ASSERT("Surprisingly, LibRotorPal can't be found!");
@@ -1636,36 +1184,6 @@ static BOOL VIRTUALGetBackingFile(CPalThread *pthrCurrent)
                 palName, errno);
         goto done;
     }
-
-#if MMAP_IGNORES_HINT
-    gBackingBaseAddress = mmap(0, BACKING_FILE_SIZE, PROT_NONE,
-                                MAP_PRIVATE, gBackingFile, 0);
-    if (gBackingBaseAddress == MAP_FAILED)
-    {
-        ERROR("Failed to map onto the backing file: errno=%d\n", errno);
-        // Hmph. This is bad.
-        close(gBackingFile);
-        gBackingFile = -1;
-        goto done;
-    }
-
-    // Create our free list.
-    pFreeMemory = (FREE_BLOCK *) malloc(sizeof(FREE_BLOCK));
-    if (pFreeMemory == NULL)
-    {
-        // Not good.
-        ERROR("Failed to allocate memory for the free list!");
-        munmap(gBackingBaseAddress, BACKING_FILE_SIZE);
-        close(gBackingFile);
-        gBackingBaseAddress = (void *) -1;
-        gBackingFile = -1;
-        goto done;
-    }
-    pFreeMemory->startBoundary = (char*)gBackingBaseAddress;
-    pFreeMemory->memSize = BACKING_FILE_SIZE;
-    pFreeMemory->next = NULL;
-    result = TRUE;
-#endif // MMAP_IGNORES_HINT
 
 done:
     InternalLeaveCriticalSection(pthrCurrent, &virtual_critsec);
@@ -1854,24 +1372,14 @@ VirtualFreeEnclosing_(
 
     TRACE("Releasing the following memory %d to %d.\n", beforeRegionStart, beforeRegionSize);
 
-#if (MMAP_IGNORES_HINT && !MMAP_DOESNOT_ALLOW_REMAP)
-    if (mmap((void *)beforeRegionStart, beforeRegionSize, PROT_NONE, MAP_FIXED | MAP_PRIVATE, gBackingFile,
-        (char *)beforeRegionStart - (char *)gBackingBaseAddress) != MAP_FAILED)
-#else   // MMAP_IGNORES_HINT && !MMAP_DOESNOT_ALLOW_REMAP
     if (munmap((void *)beforeRegionStart, beforeRegionSize) == 0)
-#endif  // MMAP_IGNORES_HINT && !MMAP_DOESNOT_ALLOW_REMAP
     {
         beforeRegionFreed = true;
     }
     else
     {
-#if MMAP_IGNORES_HINT
-        ASSERT("Unable to remap the memory onto the backing file; "
-            "error is %d.\n", errno);
-#else   // MMAP_IGNORES_HINT
         ASSERT("Unable to unmap the memory, munmap() returned "
             "an abnormal value.\n");
-#endif  // MMAP_IGNORES_HINT
         pthrCurrent->SetLastError(ERROR_INTERNAL_ERROR);
         bRetVal = FALSE;
         goto VirtualFreeEnclosingExit;
@@ -1880,24 +1388,14 @@ VirtualFreeEnclosing_(
     if (!afterRegionFreed)
     {
         TRACE("Releasing the following memory %d to %d.\n", afterRegionStart, afterRegionSize);
-#if (MMAP_IGNORES_HINT && !MMAP_DOESNOT_ALLOW_REMAP)
-        if (mmap((void *)afterRegionStart, afterRegionSize, PROT_NONE, MAP_FIXED | MAP_PRIVATE, gBackingFile,
-            (char *)afterRegionStart - (char *)gBackingBaseAddress) != MAP_FAILED)
-#else   // MMAP_IGNORES_HINT && !MMAP_DOESNOT_ALLOW_REMAP
         if (munmap((void *)afterRegionStart, afterRegionSize) == 0)
-#endif  // MMAP_IGNORES_HINT && !MMAP_DOESNOT_ALLOW_REMAP
         {
             afterRegionFreed = true;
         }
         else
         {
-#if MMAP_IGNORES_HINT
-            ASSERT("Unable to remap the memory onto the backing file; "
-                "error is %d.\n", errno);
-#else   // MMAP_IGNORES_HINT
             ASSERT("Unable to unmap the memory, munmap() returned "
                 "an abnormal value.\n");
-#endif  // MMAP_IGNORES_HINT
             pthrCurrent->SetLastError(ERROR_INTERNAL_ERROR);
             bRetVal = FALSE;
             goto VirtualFreeEnclosingExit;
@@ -2088,11 +1586,6 @@ VirtualFree(
         TRACE( "Un-committing the following page(s) %d to %d.\n",
                StartBoundary, MemSize );
 
-#if MMAP_DOESNOT_ALLOW_REMAP
-        // if no double mapping is supported,
-        // just mprotect the memory with no access
-        if (mprotect((void *)StartBoundary, MemSize, PROT_NONE) == 0)
-#else // MMAP_DOESNOT_ALLOW_REMAP
         // Explicitly calling mmap instead of mprotect here makes it
         // that much more clear to the operating system that we no
         // longer need these pages.
@@ -2105,19 +1598,7 @@ VirtualFree(
         if ( mmap( (void *)StartBoundary, MemSize, PROT_NONE,
                    MAP_FIXED | MAP_ANON | MAP_PRIVATE, -1, 0 ) != MAP_FAILED )
 #endif  // RESERVE_FROM_BACKING_FILE
-#endif // MMAP_DOESNOT_ALLOW_REMAP
         {
-#if (MMAP_ANON_IGNORES_PROTECTION && !MMAP_DOESNOT_ALLOW_REMAP)
-            if (mprotect((void *) StartBoundary, MemSize, PROT_NONE) != 0)
-            {
-                ASSERT("mprotect failed to protect the region!\n");
-                pthrCurrent->SetLastError(ERROR_INTERNAL_ERROR);
-                munmap((void *) StartBoundary, MemSize);
-                bRetVal = FALSE;
-                goto VirtualFreeExit;
-            }
-#endif  // MMAP_ANON_IGNORES_PROTECTION && !MMAP_DOESNOT_ALLOW_REMAP
-
             size_t index = 0;
             size_t nNumOfPagesToChange = 0;
 
@@ -2127,11 +1608,6 @@ VirtualFree(
             nNumOfPagesToChange = MemSize / VIRTUAL_PAGE_SIZE;
             VIRTUALSetAllocState( MEM_RESERVE, index,
                                   nNumOfPagesToChange, pUnCommittedMem );
-#if MMAP_DOESNOT_ALLOW_REMAP
-            VIRTUALSetDirtyPages( 1, index,
-                                  nNumOfPagesToChange, pUnCommittedMem );
-#endif // MMAP_DOESNOT_ALLOW_REMAP
-
             goto VirtualFreeExit;
         }
         else
@@ -2166,16 +1642,8 @@ VirtualFree(
         TRACE( "Releasing the following memory %d to %d.\n",
                pMemoryToBeReleased->startBoundary, pMemoryToBeReleased->memSize );
 
-#if (MMAP_IGNORES_HINT && !MMAP_DOESNOT_ALLOW_REMAP)
-        if (mmap((void *) pMemoryToBeReleased->startBoundary,
-                 pMemoryToBeReleased->memSize, PROT_NONE,
-                 MAP_FIXED | MAP_PRIVATE, gBackingFile,
-                 (char *) pMemoryToBeReleased->startBoundary -
-                 (char *) gBackingBaseAddress) != MAP_FAILED)
-#else   // MMAP_IGNORES_HINT && !MMAP_DOESNOT_ALLOW_REMAP
         if ( munmap( (void *)pMemoryToBeReleased->startBoundary,
                      pMemoryToBeReleased->memSize ) == 0 )
-#endif  // MMAP_IGNORES_HINT && !MMAP_DOESNOT_ALLOW_REMAP
         {
             if ( VIRTUALReleaseMemory( pMemoryToBeReleased ) == FALSE )
             {
@@ -2188,13 +1656,8 @@ VirtualFree(
         }
         else
         {
-#if MMAP_IGNORES_HINT
-            ASSERT("Unable to remap the memory onto the backing file; "
-                   "error is %d.\n", errno);
-#else   // MMAP_IGNORES_HINT
             ASSERT( "Unable to unmap the memory, munmap() returned "
                    "an abnormal value.\n" );
-#endif  // MMAP_IGNORES_HINT
             pthrCurrent->SetLastError( ERROR_INTERNAL_ERROR );
             bRetVal = FALSE;
             goto VirtualFreeExit;
@@ -2503,33 +1966,6 @@ VirtualQuery(
     }
 
     StartBoundary = (unsigned long)lpAddress & ~VIRTUAL_PAGE_MASK;
-
-#if MMAP_IGNORES_HINT
-    // Make sure we have memory to map before we try to query it.
-    VIRTUALGetBackingFile(pthrCurrent);
-
-    // If we're suballocating, claim that any memory that isn't in our
-    // suballocated block is already allocated. This keeps callers from
-    // using these results to try to allocate those blocks and failing.
-    if (StartBoundary < (unsigned long) gBackingBaseAddress ||
-        StartBoundary >= (unsigned long) gBackingBaseAddress + BACKING_FILE_SIZE)
-    {
-        if (StartBoundary < (unsigned long) gBackingBaseAddress)
-        {
-            lpBuffer->RegionSize = (unsigned long) gBackingBaseAddress - StartBoundary;
-        }
-        else
-        {
-            lpBuffer->RegionSize = -StartBoundary;
-        }
-        lpBuffer->BaseAddress = (void *) StartBoundary;
-        lpBuffer->State = MEM_COMMIT;
-        lpBuffer->Type = MEM_MAPPED;
-        lpBuffer->AllocationProtect = 0;
-        lpBuffer->Protect = 0;
-        goto ExitVirtualQuery;
-    }
-#endif  // MMAP_IGNORES_HINT
 
     /* Find the entry. */
     pEntry = VIRTUALFindRegionInformation( StartBoundary );
