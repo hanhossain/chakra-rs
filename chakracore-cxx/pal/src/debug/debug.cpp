@@ -750,7 +750,7 @@ DBGWriteProcMem_Int( uint32_t processId,
                      int *addr,
                      int data)
 {
-    if (PAL_PTRACE( PAL_PT_WRITE_D, processId, addr, data ) == -1)
+    if (ptrace((PTRACE_POKEDATA), (processId), (void*)(addr), (data)) == -1)
     {
         if (errno == EFAULT)
         {
@@ -798,7 +798,7 @@ DBGWriteProcMem_IntWithMask( uint32_t processId,
     if (mask != ~0)
     {
         errno = 0;
-        if (((readInt = PAL_PTRACE( PAL_PT_READ_D, processId, addr, 0 )) == -1)
+        if (((readInt = ptrace((PTRACE_PEEKDATA), (processId), (void*)(addr), (0))) == -1)
              && errno)
         {
             if (errno == EFAULT)
@@ -863,7 +863,7 @@ DBGAttachProcess(
 
     if (attachmentCount == 1)
     {
-        if (PAL_PTRACE( PAL_PT_ATTACH, processId, 0, 0 ) == -1)
+        if (ptrace((PTRACE_ATTACH), (processId), (void*)(0), (0)) == -1)
         {
             if (errno != ESRCH)
             {
@@ -887,7 +887,7 @@ DBGAttachProcess(
     return TRUE;
 
 DETACH2:
-    if (PAL_PTRACE(PAL_PT_DETACH, processId, 0, 0) == -1)
+    if (ptrace((PTRACE_DETACH), (processId), (void*)(0), (0)) == -1)
     {
         ASSERT("ptrace(PT_DETACH, pid:%d) failed. errno:%d (%s)\n", processId,
               errno, strerror(errno));
@@ -947,7 +947,7 @@ DBGDetachProcess(
     /* check if there's no more attachment left on processId */
     if (nbAttachLeft == 0)
     {
-        if (PAL_PTRACE(PAL_PT_DETACH, processId, 1, 0) == -1)
+        if (ptrace((PTRACE_DETACH), (processId), (void*)(1), (0)) == -1)
         {
             if (errno == ESRCH)
             {
