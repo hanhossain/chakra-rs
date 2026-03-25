@@ -10,9 +10,6 @@
 #define _PAL_CONFIG_H_INCLUDED 1
 
 // TODO (hanhossain): check if necessary
-#cmakedefine FREEBSD_LIBC "@FREEBSD_LIBC@"
-
-// TODO (hanhossain): check if necessary
 #cmakedefine JA_JP_LOCALE_NAME "@JA_JP_LOCALE_NAME@"
 // TODO (hanhossain): check if necessary
 #cmakedefine KO_KR_LOCALE_NAME "@KO_KR_LOCALE_NAME@"
