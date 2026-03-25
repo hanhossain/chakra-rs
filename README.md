@@ -23,6 +23,14 @@ For compile_commands.json
 ln -s build-linux-debug/compile_commands.json .
 ```
 
+## Build separately
+```sh
+cargo build -p chakra
+cmake --preset linux-debug
+cmake --build build-linux-debug
+CHAKRA_BUILD=build-linux-debug cargo build
+```
+
 ## Building in docker
 
 ```sh
