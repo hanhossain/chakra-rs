@@ -10,8 +10,6 @@
 #define _PAL_CONFIG_H_INCLUDED 1
 
 // TODO (hanhossain): check if necessary
-#cmakedefine01 ERROR_FUNC_FOR_GLOB_HAS_FIXED_PARAMS
-// TODO (hanhossain): check if necessary
 #cmakedefine FREEBSD_LIBC "@FREEBSD_LIBC@"
 
 // TODO (hanhossain): check if necessary
