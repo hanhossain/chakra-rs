@@ -1118,12 +1118,6 @@ static BOOL PROCEndProcess(HANDLE hProcess, uint32_t uExitCode, BOOL bTerminateU
 
         LOGEXIT("PROCEndProcess will not return\n");
 
-        // exit() runs atexit handlers possibly registered by foreign code.
-        // The right thing to do here is to leave the PAL.  If our client
-        // registered our own PAL_Terminate with atexit(), the latter will
-        // explicitly re-enter us.
-        PAL_Leave(PAL_BoundaryBottom);
-
         if (bTerminateUnconditionally)
         {
             // abort() has the semantics that
