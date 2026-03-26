@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g")
 set(CMAKE_COLOR_DIAGNOSTICS ON)
+set(CMAKE_COMPILE_WARNING_AS_ERROR ON)
 
 option(DISABLE_JIT "Disable JIT compilation" OFF)
 option(INTL_ICU "Enable Intl" ON)
@@ -209,7 +210,8 @@ if(CLR_CMAKE_PLATFORM_XPLAT)
         -Wno-deprecated-enum-compare-conditional\
         -Wno-deprecated-enum-enum-conversion\
         -Wno-deprecated-declarations\
-        -Wno-ambiguous-reversed-operator")
+        -Wno-ambiguous-reversed-operator\
+        -Wno-nonportable-include-path")
 
         # notes..
         # -Wno-address-of-temporary  # vtinfo.h, VirtualTableInfo<T>::RegisterVirtualTable
