@@ -90,37 +90,6 @@ exit:
     return palError;
 }
 
-
-/*++
-Function:
-  PAL_Reenter
-
-Abstract:
-  This function needs to be called on a thread when it enters
-  a region of code that depends on this instance of the PAL
-  in the process, and the current thread is already known to
-  the PAL.
-
-  NOTE: This function must not modify LastError.
---*/
-void
-PAL_Reenter(PAL_Boundary boundary)
-{
-    ENTRY_EXTERNAL("PAL_Reenter(boundary=%u)\n", boundary);
-
-    CPalThread *pThread = InternalGetCurrentThread();
-    if (pThread == NULL)
-    {
-        ASSERT("PAL_Reenter called on a thread unknown to this PAL\n");
-    }
-
-    // We ignore the return code.  This call should only fail on internal
-    // error, and we assert at the actual failure.
-    pThread->Enter(boundary);
-
-    LOGEXIT("PAL_Reenter returns\n");
-}
-
 PAL_ERROR CPalThread::Enter(PAL_Boundary /* boundary */)
 {
     if (m_fInPal)
