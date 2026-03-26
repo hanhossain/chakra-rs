@@ -372,7 +372,7 @@ Function
 
     Returns the stderr stream.
 --*/
-PAL_FILE * PAL_get_stderr(int caller)
+PAL_FILE * PAL_get_stderr()
 {
     ENTRY("PAL_get_stderr\n");
     LOGEXIT("PAL_get_stderr returns PAL_FILE * %p\n", &PAL_Stderr );

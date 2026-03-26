@@ -2771,9 +2771,7 @@ PAL_FILE * PAL_get_stdout();
 // TODO (hanhossain): internal
 PAL_FILE * PAL_get_stdin();
 // TODO (hanhossain): internal
-PAL_FILE * PAL_get_stderr(int caller);
-
-#define PAL_stderr (PAL_get_stderr(PAL_get_caller))
+PAL_FILE * PAL_get_stderr();
 
 #define ERANGE          34
 

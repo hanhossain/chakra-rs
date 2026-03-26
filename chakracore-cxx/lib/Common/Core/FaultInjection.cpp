@@ -305,14 +305,14 @@ namespace Js
         }
         if (hDbgHelp == NULL)
         {
-            PAL_fwprintf(PAL_stderr, u"Failed to load dbghelp.dll for stack walking, gle=0x%08x\n", GetLastError());
-            PAL_fflush(PAL_stderr);
+            PAL_fwprintf(PAL_get_stderr(), u"Failed to load dbghelp.dll for stack walking, gle=0x%08x\n", GetLastError());
+            PAL_fflush(PAL_get_stderr());
             return false;
         }
 #define FIDELAYLOAD(fn) pfn##fn = (decltype(fn)*)GetProcAddress(hDbgHelp, #fn); \
         if (pfn##fn == nullptr){\
-            PAL_fwprintf(PAL_stderr, u"Failed to load sigs:%s\n", _u(#fn)); \
-            PAL_fflush(PAL_stderr); \
+            PAL_fwprintf(PAL_get_stderr(), u"Failed to load sigs:%s\n", _u(#fn)); \
+            PAL_fflush(PAL_get_stderr()); \
             return false; \
         }
         FIDELAYLOAD(SymInitialize);
@@ -332,8 +332,8 @@ namespace Js
         // TODO: StackBackTrace.cpp also call SymInitialize, but this can only be called once before cleanup
         if (!pfnSymInitialize(GetCurrentProcess(), NULL, TRUE))
         {
-            PAL_fwprintf(PAL_stderr, u"SymInitialize failed, gle=0x%08x\n", GetLastError());
-            PAL_fflush(PAL_stderr);
+            PAL_fwprintf(PAL_get_stderr(), u"SymInitialize failed, gle=0x%08x\n", GetLastError());
+            PAL_fflush(PAL_get_stderr());
             return false;
         }
         symInitialized = true;
@@ -434,8 +434,8 @@ namespace Js
         if (globalFlags.FaultInjection == FaultMode::CountOnly
             || globalFlags.FaultInjection == FaultMode::StackMatchCountOnly)
         {
-            PAL_fprintf(PAL_stderr, "FaultInjection - Total Allocation Count:%u\n", countOfInjectionPoints);
-            PAL_fflush(PAL_stderr);
+            PAL_fprintf(PAL_get_stderr(), "FaultInjection - Total Allocation Count:%u\n", countOfInjectionPoints);
+            PAL_fflush(PAL_get_stderr());
             PAL_FILE *fp;
             char countFileName[64];
             sprintf_s(countFileName, "ChakraFaultInjectionCount_%u.txt", GetCurrentProcessId());
@@ -451,9 +451,9 @@ namespace Js
                 {
                     break;
                 }
-                PAL_fwprintf(PAL_stderr, u"FaultInjection stack matching rank %d: %u\n", i + 1, stackMatchRank[i]);
+                PAL_fwprintf(PAL_get_stderr(), u"FaultInjection stack matching rank %d: %u\n", i + 1, stackMatchRank[i]);
             }
-            PAL_fflush(PAL_stderr);
+            PAL_fflush(PAL_get_stderr());
 
         }
 
@@ -663,8 +663,8 @@ namespace Js
             auto err = _wfopen_s(&fp, stackFile, u"r");
             if (err != 0 || fp == nullptr)
             {
-                PAL_fwprintf(PAL_stderr, u"Failed to load %s, gle=0x%08x\n", stackFile, GetLastError());
-                PAL_fflush(PAL_stderr);
+                PAL_fwprintf(PAL_get_stderr(), u"Failed to load %s, gle=0x%08x\n", stackFile, GetLastError());
+                PAL_fflush(PAL_get_stderr());
                 return false;
             }
 
@@ -991,8 +991,8 @@ namespace Js
 
         // hash
         record->hash = CalculateStackHash(record->StackFrames, record->FrameCount, 2);
-        PAL_fwprintf(PAL_stderr, u"***FI: Fault Injected, StackHash:%p\n", (void*)record->hash);
-        PAL_fflush(PAL_stderr);
+        PAL_fwprintf(PAL_get_stderr(), u"***FI: Fault Injected, StackHash:%p\n", (void*)record->hash);
+        PAL_fflush(PAL_get_stderr());
 
         *InjectionLastRecordRef = record;
         InjectionLastRecordRef = &record->next;
@@ -1138,11 +1138,11 @@ namespace Js
             {
                 mi.Init();
                 pfnSymGetModuleInfoW64(hProcess, (unsigned long)addr, &mi);
-                PAL_fwprintf(PAL_stderr, u"%s!%s+0x%llx\n", mi.ModuleName, sip.si.Name, (unsigned long)dwSymDisplacement);
+                PAL_fwprintf(PAL_get_stderr(), u"%s!%s+0x%llx\n", mi.ModuleName, sip.si.Name, (unsigned long)dwSymDisplacement);
             }
             else
             {
-                PAL_fwprintf(PAL_stderr, u"0x%p\n", addr);
+                PAL_fwprintf(PAL_get_stderr(), u"0x%p\n", addr);
             }
         };
 
@@ -1157,7 +1157,7 @@ namespace Js
 #endif
 
         // Print current crash stacks
-        PAL_fwprintf(PAL_stderr, crashStackStart);
+        PAL_fwprintf(PAL_get_stderr(), crashStackStart);
 
         for (int i = 0; i < nStackCount; i++)
         {
@@ -1189,7 +1189,7 @@ namespace Js
             }
         }
 
-        PAL_fwprintf(PAL_stderr, crashStackEnd);
+        PAL_fwprintf(PAL_get_stderr(), crashStackEnd);
 
         // Print fault injecting point stacks
         auto record = InjectionFirstRecord;
@@ -1197,12 +1197,12 @@ namespace Js
         {
             if (record->StackFrames)
             {
-                PAL_fwprintf(PAL_stderr, injectionStackStart);
+                PAL_fwprintf(PAL_get_stderr(), injectionStackStart);
                 for (int i = 0; i < record->FrameCount; i++)
                 {
                     printFrame(backTrace[i]);
                 }
-                PAL_fwprintf(PAL_stderr, injectionStackEnd);
+                PAL_fwprintf(PAL_get_stderr(), injectionStackEnd);
             }
             record = record->next;
         }
@@ -1226,7 +1226,7 @@ namespace Js
         offset = ip - (uintptr_t)mod;
         auto& faultModule = modulePath;
         GetModuleFileName(mod, faultModule, MAX_PATH);
-        PAL_fwprintf(PAL_stderr, u"***FI: Exception: %08x, module: %s, offset: 0x%p\n",
+        PAL_fwprintf(PAL_get_stderr(), u"***FI: Exception: %08x, module: %s, offset: 0x%p\n",
             ep->ExceptionRecord->ExceptionCode, faultModule, (void*)offset);
 
         //analyze duplication
@@ -1245,7 +1245,7 @@ namespace Js
             const int lockSize = 1024 * 64;
             if (!LockFileEx(hFile, LOCKFILE_EXCLUSIVE_LOCK, 0, lockSize, 0, &overlapped))
             {
-                PAL_fwprintf(PAL_stderr, u"LockFileEx(%ls) Failed when saving offset to file, gle=%8x\n", filename, GetLastError());
+                PAL_fwprintf(PAL_get_stderr(), u"LockFileEx(%ls) Failed when saving offset to file, gle=%8x\n", filename, GetLastError());
                 PAL_fclose(fp);
             }
             else
@@ -1263,12 +1263,12 @@ namespace Js
 
                 if (needDump)
                 {
-                    PAL_fwprintf(PAL_stderr, u"This is new Exception\n");
+                    PAL_fwprintf(PAL_get_stderr(), u"This is new Exception\n");
                     PAL_fwprintf(fp, u"0x%p\n", (void*)offset);
                 }
                 else
                 {
-                    PAL_fwprintf(PAL_stderr, u"This is not a new Exception\n");
+                    PAL_fwprintf(PAL_get_stderr(), u"This is not a new Exception\n");
                 }
                 PAL_fflush(fp);
 
@@ -1292,7 +1292,7 @@ namespace Js
                 PAL_fclose(fp);
                 UnlockFileEx(hFile, 0, lockSize, 0, &overlapped);
             }
-            PAL_fflush(PAL_stderr);
+            PAL_fflush(PAL_get_stderr());
         }
 
         if (globalFlags.FaultInjection == InstallExceptionHandlerOnly)
@@ -1350,7 +1350,7 @@ namespace Js
             HANDLE hFile = CreateFile(dumpName, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
             if ((hFile == NULL) || (hFile == INVALID_HANDLE_VALUE))
             {
-                PAL_fwprintf(PAL_stderr, u"CreateFile <%s> failed. gle=0x%08x\n", dumpName, GetLastError());
+                PAL_fwprintf(PAL_get_stderr(), u"CreateFile <%s> failed. gle=0x%08x\n", dumpName, GetLastError());
             }
             else
             {
@@ -1410,17 +1410,17 @@ namespace Js
                 BOOL rv = pfnMiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), hFile, mdt, (ep != 0) ? &mdei : 0, &musi, 0);
                 if (rv)
                 {
-                    PAL_fwprintf(PAL_stderr, u"Minidump created: %s\n", dumpName);
+                    PAL_fwprintf(PAL_get_stderr(), u"Minidump created: %s\n", dumpName);
                 }
                 else
                 {
-                    PAL_fwprintf(PAL_stderr, u"MiniDumpWriteDump failed. gle=0x%08x\n", GetLastError());
+                    PAL_fwprintf(PAL_get_stderr(), u"MiniDumpWriteDump failed. gle=0x%08x\n", GetLastError());
                 }
                 CloseHandle(hFile);
             }
         }
 
-        PAL_fflush(PAL_stderr);
+        PAL_fflush(PAL_get_stderr());
 
 #endif  //_M_ARM and _M_ARM64
     }
