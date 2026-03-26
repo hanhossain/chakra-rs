@@ -2774,23 +2774,6 @@ PAL_FILE * PAL_get_stderr();
 /******************* PAL side-by-side support  ************************/
 
 #ifdef FEATURE_PAL_SXS
-//
-// Some versions of the PAL support several PALs side-by-side
-// in the process.  To avoid those PALs interfering with one
-// another, they need to be told by clients when they are active
-// and when they are not.
-//
-
-// To avoid performance problems incurred by swapping thread
-// exception ports every time we leave the PAL, there's also
-// the concept of entering/leaving the PAL at its top boundary
-// (entering down/leaving up) or at the bottom boundary
-// (leaving down/entering up).
-
-typedef enum _PAL_Boundary {
-    PAL_BoundaryTop,            // closer to main()
-    PAL_BoundaryBottom,         // closer to execution
-} PAL_Boundary;
 
 #ifdef  __cplusplus
 //

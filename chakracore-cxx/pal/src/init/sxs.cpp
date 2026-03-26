@@ -89,35 +89,4 @@ exit:
     *ppThread = pThread;
     return palError;
 }
-
-PAL_ERROR CPalThread::Enter(PAL_Boundary /* boundary */)
-{
-    if (m_fInPal)
-    {
-        WARN("Enter called on a thread that already runs in this PAL\n");
-        return NO_ERROR;
-    }
-    m_fInPal = TRUE;
-
-    return ERROR_SUCCESS;
-}
-
-
-/************************* Leave *************************/
-
-PAL_ERROR CPalThread::Leave(PAL_Boundary /* boundary */)
-{
-    if (!m_fInPal)
-    {
-        WARN("Leave called on a thread that is not running in this PAL\n");
-        return ERROR_NOT_SUPPORTED;
-    }
-
-    PAL_ERROR palError = ERROR_SUCCESS;
-
-    m_fInPal = FALSE;
-
-    return palError;
-}
-
 #endif // FEATURE_PAL_SXS

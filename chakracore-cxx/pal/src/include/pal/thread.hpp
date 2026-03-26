@@ -338,11 +338,6 @@ namespace CorUnix
         bool m_fStartStatus;
         bool m_fStartStatusSet;
 
-        // Base address of the stack of this thread
-        void* m_stackBase;
-        // Limit address of the stack of this thread
-        void* m_stackLimit;
-
         // The default stack size of a newly created thread (currently 256KB)
         // when the dwStackSize parameter of PAL_CreateThread()
         // is zero. This value can be set by setting the
@@ -409,9 +404,7 @@ namespace CorUnix
             m_eThreadType(UserCreatedThread),
             m_fStartItemsInitialized(FALSE),
             m_fStartStatus(FALSE),
-            m_fStartStatusSet(FALSE),
-            m_stackBase(NULL),
-            m_stackLimit(NULL)
+            m_fStartStatusSet(FALSE)
 #ifdef FEATURE_PAL_SXS
           , m_fInPal(TRUE)
 #endif // FEATURE_PAL_SXS
@@ -674,16 +667,6 @@ namespace CorUnix
         //
         // Functions for PAL side-by-side support
         //
-
-        // This function needs to be called on a thread when it enters
-        // a region of code that depends on this instance of the PAL
-        // in the process.
-        PAL_ERROR Enter(PAL_Boundary boundary);
-
-        // This function needs to be called on a thread when it leaves
-        // a region of code that depends on this instance of the PAL
-        // in the process.
-        PAL_ERROR Leave(PAL_Boundary boundary);
 
         // Returns TRUE whenever this thread is executing in a region
         // of code that depends on this instance of the PAL in the process.
