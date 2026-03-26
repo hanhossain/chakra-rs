@@ -2767,13 +2767,12 @@ PAL_FILE * _wfsopen(const char16_t *, const char16_t *, int);
 #define PAL_get_caller 0
 
 // TODO (hanhossain): internal
-PAL_FILE * PAL_get_stdout(int caller);
+PAL_FILE * PAL_get_stdout();
 // TODO (hanhossain): internal
 PAL_FILE * PAL_get_stdin(int caller);
 // TODO (hanhossain): internal
 PAL_FILE * PAL_get_stderr(int caller);
 
-#define PAL_stdout (PAL_get_stdout(PAL_get_caller))
 #define PAL_stdin  (PAL_get_stdin(PAL_get_caller))
 #define PAL_stderr (PAL_get_stderr(PAL_get_caller))
 
