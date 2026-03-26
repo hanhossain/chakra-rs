@@ -3924,11 +3924,6 @@ namespace Js
         VTuneChakraProfile::LogMethodNativeLoadEvent(this, entryPointInfo);
 #endif
 
-#ifdef _M_ARM
-        // For ARM we need to make sure that pipeline is synchronized with memory/cache for newly jitted code.
-        _InstructionSynchronizationBarrier();
-#endif
-
         entryPointInfo->SetNativeEntryPointProcessed();
     }
 

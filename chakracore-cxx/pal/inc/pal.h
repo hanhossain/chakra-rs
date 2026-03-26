@@ -2938,19 +2938,6 @@ public:
 
 size_t GetCurrentSP();
 
-#if defined(_ARM_)
-#define _ARM_BARRIER_SY 0xF
-#define _InstructionSynchronizationBarrier() __isb(_ARM_BARRIER_SY)
-#endif
-
-#ifndef MAXUINT16
-#define MAXUINT16 ((unsigned short)-1)
-#endif
-
-#ifndef MAXUINT8
-#define MAXUINT8 ((unsigned char)-1)
-#endif
-
 #ifdef  __cplusplus
 }
 

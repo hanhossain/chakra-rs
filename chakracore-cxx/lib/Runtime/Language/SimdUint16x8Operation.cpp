@@ -104,7 +104,7 @@ namespace Js
             uint32_t a = (uint32_t)aValue.u16[idx];
             uint32_t b = (uint32_t)bValue.u16[idx];
 
-            result.u16[idx] = ((a + b) > MAXUINT16) ? MAXUINT16 : (uint16)(a + b);
+            result.u16[idx] = ((a + b) > std::numeric_limits<uint16_t>::max()) ? std::numeric_limits<uint16_t>::max() : (uint16)(a + b);
         }
         return result;
     }
