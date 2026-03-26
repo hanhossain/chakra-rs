@@ -2771,8 +2771,6 @@ PAL_FILE * PAL_get_stdin();
 // TODO (hanhossain): internal
 PAL_FILE * PAL_get_stderr();
 
-#define ERANGE          34
-
 /******************* PAL side-by-side support  ************************/
 
 #ifdef FEATURE_PAL_SXS
