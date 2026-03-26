@@ -2764,8 +2764,6 @@ PAL_FILE * _wfsopen(const char16_t *, const char16_t *, int);
 #define RAND_MAX 0x7fff
 #endif // !PAL_STDCPP_COMPAT
 
-#define PAL_get_caller 0
-
 // TODO (hanhossain): internal
 PAL_FILE * PAL_get_stdout();
 // TODO (hanhossain): internal
