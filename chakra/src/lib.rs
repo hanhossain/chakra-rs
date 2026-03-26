@@ -2,6 +2,7 @@
 mod ffi {
     extern "Rust" {
         fn print_usage();
+        fn print_version();
     }
 }
 
@@ -23,4 +24,12 @@ fn print_usage() {
         println!("\t-v|-version\t\tDisplays version info");
         println!("\t-h|-help|-?\t\tDisplays this help message");
     }
+}
+
+fn print_version() {
+    println!(
+        "{} version {}",
+        env!("CARGO_PKG_NAME"),
+        env!("CARGO_PKG_VERSION")
+    );
 }
