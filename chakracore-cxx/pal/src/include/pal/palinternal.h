@@ -182,14 +182,6 @@ function_name() to call the system's implementation
 #define floor DUMMY_floor
 #define modff DUMMY_modff
 
-/* RAND_MAX needed to be renamed to avoid duplicate definition when including
-   stdlib.h header files. PAL_RAND_MAX should have the same value as RAND_MAX
-   defined in pal.h  */
-#define PAL_RAND_MAX 0x7fff
-
-#ifdef RAND_MAX
-#undef RAND_MAX
-#endif
 #ifdef __record_type_class
 #undef __record_type_class
 #endif
@@ -269,7 +261,6 @@ function_name() to call the system's implementation
 
 #undef _vsnwprintf
 
-#undef RAND_MAX
 #undef __record_type_class
 #undef __real_type_class
 

@@ -48,29 +48,6 @@ using namespace CorUnix;
 
 /*++
 Function:
-
-   rand
-
-   The difference between the FreeBSD and Windows implementations is the max
-   of the return value. in FreeBSD, RAND_MAX is 0x7fffffff and in Windows
-   it's 0x7fff.
-
-See MSDN for more details.
---*/
-int
-PAL_rand(void)
-{
-    int ret;
-    ENTRY("rand(void)\n");
-
-    ret = (rand() % (PAL_RAND_MAX + 1));
-
-    LOGEXIT("rand() returning %d\n", ret);
-    return ret;
-}
-
-/*++
-Function:
   MiscGetEnvArray
 
 Get a reference to the process's environ array into palEnvironment

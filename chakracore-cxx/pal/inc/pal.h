@@ -2760,10 +2760,6 @@ PAL_FILE * _wfsopen(const char16_t *, const char16_t *, int);
 
 /* Maximum value that can be returned by the rand function. */
 
-#ifndef PAL_STDCPP_COMPAT
-#define RAND_MAX 0x7fff
-#endif // !PAL_STDCPP_COMPAT
-
 // TODO (hanhossain): internal
 PAL_FILE * PAL_get_stdout();
 // TODO (hanhossain): internal
