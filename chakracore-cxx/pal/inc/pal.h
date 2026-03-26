@@ -2794,29 +2794,11 @@ typedef enum _PAL_Boundary {
 
 // This function needs to be called on a thread when it enters
 // a region of code that depends on this instance of the PAL
-// in the process, and the current thread may or may not be
-// known to the PAL.  This function can fail (for something else
-// than an internal error) if this is the first time that the
-// current thread entered this PAL.  Note that PAL_Initialize
-// implies a call to this function.  Does not modify LastError.
-// TODO (hanhossain): internal
-uint32_t
-PAL_Enter(PAL_Boundary boundary);
-
-// This function needs to be called on a thread when it enters
-// a region of code that depends on this instance of the PAL
 // in the process, and the current thread is already known to
 // the PAL.  Does not modify LastError.
 // TODO (hanhossain): internal
 void
 PAL_Reenter(PAL_Boundary boundary);
-
-// This function needs to be called on a thread when it leaves
-// a region of code that depends on this instance of the PAL
-// in the process.  Does not modify LastError.
-// TODO (hanhossain): internal
-void
-PAL_Leave(PAL_Boundary boundary);
 
 #ifdef  __cplusplus
 //
@@ -2834,7 +2816,6 @@ public:
     {
         if (fEnter)
         {
-            m_palError = PAL_Enter(PAL_BoundaryTop);
             m_fEntered = m_palError == ERROR_SUCCESS;
         }
         else
@@ -2847,7 +2828,6 @@ public:
     {
         if (m_fEntered)
         {
-            PAL_Leave(PAL_BoundaryTop);
         }
     }
 
@@ -2862,7 +2842,6 @@ class PAL_LeaveHolder
 public:
     PAL_LeaveHolder()
     {
-        PAL_Leave(PAL_BoundaryBottom);
     }
 
     ~PAL_LeaveHolder()
@@ -2874,9 +2853,7 @@ public:
 
 #else // FEATURE_PAL_SXS
 
-#define PAL_Enter(boundary) ERROR_SUCCESS
 #define PAL_Reenter(boundary)
-#define PAL_Leave(boundary)
 
 #ifdef __cplusplus
 class PAL_EnterHolder {

@@ -710,12 +710,6 @@ ExitThread(
     /* store the exit code */
     pThread->SetExitCode(dwExitCode);
 
-    /* pthread_exit runs TLS destructors and cleanup routines,
-       possibly registered by foreign code.  The right thing
-       to do here is to leave the PAL.  Our own TLS destructor
-       re-enters us explicitly. */
-    PAL_Leave(PAL_BoundaryTop);
-
     /* kill the thread (itself), resulting in a call to InternalEndCurrentThread */
     pthread_exit(NULL);
 

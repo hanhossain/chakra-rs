@@ -31,51 +31,6 @@ PAL_ERROR AllocatePalThread(CPalThread **ppThread);
 
 /*++
 Function:
-  PAL_Enter
-
-Abstract:
-  This function needs to be called on a thread when it enters
-  a region of code that depends on this instance of the PAL
-  in the process, and the current thread may or may not be
-  known to the PAL.  This function can fail (for something else
-  than an internal error) if this is the first time that the
-  current thread entered this PAL.  Note that PAL_Initialize
-  implies a call to this function.
-
-  NOTE: This function must not modify LastError.
---*/
-PAL_ERROR
-PAL_Enter(PAL_Boundary boundary)
-{
-    ENTRY_EXTERNAL("PAL_Enter(boundary=%u)\n", boundary);
-
-    PAL_ERROR palError = ERROR_SUCCESS;
-    CPalThread *pThread = InternalGetCurrentThread();
-    if (pThread != NULL)
-    {
-        palError = pThread->Enter(boundary);
-    }
-    else
-    {
-        // If this assert fires, we'll have to pipe this information so that
-        // CPalThread's RunPostCreateInitializers call to SEHEnable
-        // can know what direction.
-        _ASSERT_MSG(PAL_BoundaryTop == boundary, "How are we entering a PAL "
-            "thread for the first time not from the top? (boundary=%u)", boundary);
-
-        palError = AllocatePalThread(&pThread);
-        if (NO_ERROR != palError)
-        {
-            ERROR("Unable to allocate pal thread: error %d\n", palError);
-        }
-    }
-
-    LOGEXIT("PAL_Enter returns %d\n", palError);
-    return palError;
-}
-
-/*++
-Function:
   CreateCurrentThreadData
 
 Abstract:
@@ -180,30 +135,6 @@ PAL_ERROR CPalThread::Enter(PAL_Boundary /* boundary */)
 
 
 /************************* Leave *************************/
-
-/*++
-Function:
-  PAL_Leave
-
-Abstract:
-  This function needs to be called on a thread when it leaves a region
-  of code that depends on this instance of the PAL in the process.
-
-  NOTE: This function must not modify LastError.
---*/
-void
-PAL_Leave(PAL_Boundary boundary)
-{
-    ENTRY("PAL_Leave(boundary=%u)\n", boundary);
-
-    CPalThread *pThread = InternalGetCurrentThread();
-    // We ignore the return code.  This call should only fail on internal
-    // error, and we assert at the actual failure.
-    pThread->Leave(boundary);
-
-    LOGEXIT("PAL_Leave returns\n");
-}
-
 
 PAL_ERROR CPalThread::Leave(PAL_Boundary /* boundary */)
 {

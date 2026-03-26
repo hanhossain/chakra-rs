@@ -359,12 +359,6 @@ Initialize()
     {
         init_count++;
 
-        // Behave the same wrt entering the PAL independent of whether this
-        // is the first call to PAL_Initialize or not.  The first call implied
-        // PAL_Enter by virtue of creating the CPalThread for the current
-        // thread, and its starting state is to be in the PAL.
-        (void)PAL_Enter(PAL_BoundaryTop);
-
         TRACE("Initialization count increases to %d\n", init_count.Load());
 
         SetLastError(NO_ERROR);
@@ -455,7 +449,6 @@ PAL_InitializeChakraCore()
     // Check for a repeated call (this is a no-op).
     if (InterlockedIncrement(&g_chakraCoreInitialized) > 1)
     {
-        PAL_Enter(PAL_BoundaryTop);
         return ERROR_SUCCESS;
     }
 
