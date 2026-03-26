@@ -2769,11 +2769,10 @@ PAL_FILE * _wfsopen(const char16_t *, const char16_t *, int);
 // TODO (hanhossain): internal
 PAL_FILE * PAL_get_stdout();
 // TODO (hanhossain): internal
-PAL_FILE * PAL_get_stdin(int caller);
+PAL_FILE * PAL_get_stdin();
 // TODO (hanhossain): internal
 PAL_FILE * PAL_get_stderr(int caller);
 
-#define PAL_stdin  (PAL_get_stdin(PAL_get_caller))
 #define PAL_stderr (PAL_get_stderr(PAL_get_caller))
 
 #define ERANGE          34

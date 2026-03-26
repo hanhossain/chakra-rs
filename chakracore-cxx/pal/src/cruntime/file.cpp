@@ -359,7 +359,7 @@ Function
 
     Returns the stdin stream.
 --*/
-PAL_FILE * PAL_get_stdin(int caller)
+PAL_FILE * PAL_get_stdin()
 {
     ENTRY("PAL_get_stdin\n");
     LOGEXIT("PAL_get_stdin returns PAL_FILE * %p\n", &PAL_Stdin );

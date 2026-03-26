@@ -1368,7 +1368,7 @@ JsValueRef WScriptJsrt::ReadLineStdinCallback(JsValueRef callee, bool isConstruc
         goto Error;
     }
 
-    while ((gotlength = JsFgets(buf + buflength, bufsize - buflength, PAL_stdin)) > 0) 
+    while ((gotlength = JsFgets(buf + buflength, bufsize - buflength, PAL_get_stdin())) > 0) 
     {
         buflength += gotlength;
 
@@ -1413,7 +1413,7 @@ JsValueRef WScriptJsrt::ReadLineStdinCallback(JsValueRef callee, bool isConstruc
     //Treat the empty string specially.
     if (buflength == 0) 
     {
-        if (PAL_feof(PAL_stdin)) 
+        if (PAL_feof(PAL_get_stdin())) 
         {
             goto Error;
         }
