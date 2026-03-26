@@ -346,7 +346,7 @@ Function
 
     Returns the stdout stream.
 --*/
-PAL_FILE * PAL_get_stdout(int caller)
+PAL_FILE * PAL_get_stdout()
 {
     ENTRY("PAL_get_stdout\n");
     LOGEXIT("PAL_get_stdout returns PAL_FILE * %p\n", &PAL_Stdout );

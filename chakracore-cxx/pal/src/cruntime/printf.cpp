@@ -205,7 +205,7 @@ PAL_wprintf(
     ENTRY("PAL_wprintf (format=%p (%S))\n", format, format);
 
     va_start(ap, format);
-    Length = PAL_vfwprintf( PAL_get_stdout(PAL_get_caller), format, ap);
+    Length = PAL_vfwprintf( PAL_get_stdout(), format, ap);
     va_end(ap);
 
     LOGEXIT("PAL_wprintf returns int %d\n", Length);
