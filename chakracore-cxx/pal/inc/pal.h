@@ -2725,8 +2725,6 @@ size_t PAL_fwrite(const void *, size_t, size_t, PAL_FILE *);
 // TODO (hanhossain): internal
 size_t PAL_fread(void *, size_t, size_t, PAL_FILE *);
 // TODO (hanhossain): internal
-char * PAL_fgets(char *, int, PAL_FILE *);
-// TODO (hanhossain): internal
 int PAL_fprintf(PAL_FILE *, const char *, ...);
 // TODO (hanhossain): internal
 int PAL_vfprintf(PAL_FILE *, const char *, va_list);
