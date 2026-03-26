@@ -621,24 +621,3 @@ BOOL PALInitLock(void)
     InternalEnterCriticalSection(pThread, init_critsec);
     return TRUE;
 }
-
-/*++
-Function:
-  PALInitUnlock
-
-Release the initialization critical section (init_critsec).
-
-(no parameters, no return value)
---*/
-void PALInitUnlock(void)
-{
-    if(!init_critsec)
-    {
-        return;
-    }
-
-    CPalThread * pThread =
-        (PALIsThreadDataInitialized() ? InternalGetCurrentThread() : NULL);
-
-    InternalLeaveCriticalSection(pThread, init_critsec);
-}
