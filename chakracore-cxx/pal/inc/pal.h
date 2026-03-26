@@ -2792,14 +2792,6 @@ typedef enum _PAL_Boundary {
     PAL_BoundaryBottom,         // closer to execution
 } PAL_Boundary;
 
-// This function needs to be called on a thread when it enters
-// a region of code that depends on this instance of the PAL
-// in the process, and the current thread is already known to
-// the PAL.  Does not modify LastError.
-// TODO (hanhossain): internal
-void
-PAL_Reenter(PAL_Boundary boundary);
-
 #ifdef  __cplusplus
 //
 // A holder to enter the PAL for a specific region of code.
@@ -2846,14 +2838,11 @@ public:
 
     ~PAL_LeaveHolder()
     {
-        PAL_Reenter(PAL_BoundaryBottom);
     }
 };
 #endif // __cplusplus
 
 #else // FEATURE_PAL_SXS
-
-#define PAL_Reenter(boundary)
 
 #ifdef __cplusplus
 class PAL_EnterHolder {
