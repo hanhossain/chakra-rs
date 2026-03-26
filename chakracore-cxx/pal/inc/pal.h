@@ -2733,8 +2733,6 @@ int PAL_fseek(PAL_FILE *, int32_t, int);
 // TODO (hanhossain): internal
 int32_t PAL_ftell(PAL_FILE *);
 // TODO (hanhossain): internal
-int PAL_feof(PAL_FILE *);
-// TODO (hanhossain): internal
 PAL_FILE * PAL_fopen(const char *, const char *);
 // TODO (hanhossain): internal
 int PAL_getc(PAL_FILE *stream);

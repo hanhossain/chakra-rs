@@ -503,27 +503,6 @@ PAL_ftell(PAL_FILE * f)
 /*++
 Function :
 
-    feof
-
-    See MSDN for more details.
---*/
-int
-PAL_feof(PAL_FILE * f)
-{
-    int32_t nRetVal = 0;
-
-    ENTRY( "feof( %p )\n", f );
-
-    _ASSERTE(f != NULL);
-    nRetVal = feof( f->bsdFilePtr );
-
-    LOGEXIT( "feof returning %d\n", nRetVal );
-    return nRetVal;
-}
-
-/*++
-Function :
-
     getc
 
     See MSDN for more details.
