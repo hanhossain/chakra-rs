@@ -185,23 +185,6 @@ Return value:
 int PAL_fflush( PAL_FILE *stream );
 
 /*++
-PAL_fgets
-
-Wrapper function for InternalFgets.
-
-Input parameters:
-
-sz = stores characters read from the given file stream
-nSize = number of characters to be read
-pf = stream to read characters from
-
-Return value:
-    Returns a pointer to the string storing the characters on success
-    and NULL on failure.
---*/
-char * PAL_fgets(char *sz, int nSize, PAL_FILE *pf);
-
-/*++
 PAL_fwrite
 
 Wrapper function for InternalFwrite

@@ -99,46 +99,6 @@ CorUnix::InternalOpen(
 }
 
 /*++
-PAL_fgets
-
-Wrapper function for InternalFgets.
-
-Input parameters:
-
-sz = stores characters read from the given file stream
-nSize = number of characters to be read
-pf = stream to read characters from
-
-Return value:
-    Returns a pointer to the string storing the characters on success
-    and NULL on failure.
---*/
-char *
-PAL_fgets(
-    char *sz,
-    int nSize,
-    PAL_FILE *pf
-    )
-{
-    char * szBuf;
-
-    ENTRY( "fgets(sz=%p (%s) nSize=%d pf=%p)\n", sz, sz, nSize, pf);
-
-    if (pf != NULL)
-    {
-        szBuf = InternalFgets(sz, nSize, pf->bsdFilePtr, pf->bTextMode);
-    }
-    else
-    {
-        szBuf = NULL;
-    }
-
-    LOGEXIT("fgets() returns %p\n", szBuf);
-
-    return szBuf;
-}
-
-/*++
 InternalFgets
 
 Wrapper for fgets.
