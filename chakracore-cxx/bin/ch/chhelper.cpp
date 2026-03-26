@@ -63,21 +63,6 @@ int HostExceptionFilter(int exceptionCode, _EXCEPTION_POINTERS *ep)
     return EXCEPTION_CONTINUE_SEARCH;
 }
 
-void PrintChVersion()
-{
-#if CHAKRA_CORE_VERSION_RELEASE
-    PAL_wprintf(u"%s version %d.%d.%d.0\n",
-#else
-    PAL_wprintf(u"%s version %d.%d.%d.0-beta\n",
-#endif
-        hostName, CHAKRA_CORE_MAJOR_VERSION, CHAKRA_CORE_MINOR_VERSION, CHAKRA_CORE_PATCH_VERSION);
-}
-
-void PrintVersion()
-{
-    PrintChVersion();
-}
-
 // On success the param byteCodeBuffer will be allocated in the function.
 int32_t GetSerializedBuffer(const char * fileContents, JsFinalizeCallback fileContentFinalizeCallback, JsValueRef *byteCodeBuffer)
 {
@@ -868,7 +853,7 @@ int main_internal(int argc, char** c_argv)
         if ((arglen == 1 && PAL_wcsncmp(arg, u"v",       arglen) == 0) ||
             (arglen == 7 && PAL_wcsncmp(arg, u"version", arglen) == 0))
         {
-            PrintVersion();
+            chakra::print_version();
             PAL_Shutdown();
             retval = EXIT_SUCCESS;
             goto return_cleanup;
