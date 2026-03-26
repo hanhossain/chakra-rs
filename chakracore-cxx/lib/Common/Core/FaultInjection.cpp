@@ -306,13 +306,13 @@ namespace Js
         if (hDbgHelp == NULL)
         {
             PAL_fwprintf(PAL_get_stderr(), u"Failed to load dbghelp.dll for stack walking, gle=0x%08x\n", GetLastError());
-            PAL_fflush(PAL_get_stderr());
+            fflush(stderr);
             return false;
         }
 #define FIDELAYLOAD(fn) pfn##fn = (decltype(fn)*)GetProcAddress(hDbgHelp, #fn); \
         if (pfn##fn == nullptr){\
             PAL_fwprintf(PAL_get_stderr(), u"Failed to load sigs:%s\n", _u(#fn)); \
-            PAL_fflush(PAL_get_stderr()); \
+            fflush(stderr); \
             return false; \
         }
         FIDELAYLOAD(SymInitialize);
@@ -333,7 +333,7 @@ namespace Js
         if (!pfnSymInitialize(GetCurrentProcess(), NULL, TRUE))
         {
             PAL_fwprintf(PAL_get_stderr(), u"SymInitialize failed, gle=0x%08x\n", GetLastError());
-            PAL_fflush(PAL_get_stderr());
+            fflush(stderr);
             return false;
         }
         symInitialized = true;
@@ -435,7 +435,7 @@ namespace Js
             || globalFlags.FaultInjection == FaultMode::StackMatchCountOnly)
         {
             PAL_fprintf(PAL_get_stderr(), "FaultInjection - Total Allocation Count:%u\n", countOfInjectionPoints);
-            PAL_fflush(PAL_get_stderr());
+            fflush(stderr);
             PAL_FILE *fp;
             char countFileName[64];
             sprintf_s(countFileName, "ChakraFaultInjectionCount_%u.txt", GetCurrentProcessId());
@@ -453,7 +453,7 @@ namespace Js
                 }
                 PAL_fwprintf(PAL_get_stderr(), u"FaultInjection stack matching rank %d: %u\n", i + 1, stackMatchRank[i]);
             }
-            PAL_fflush(PAL_get_stderr());
+            fflush(stderr);
 
         }
 
@@ -664,7 +664,7 @@ namespace Js
             if (err != 0 || fp == nullptr)
             {
                 PAL_fwprintf(PAL_get_stderr(), u"Failed to load %s, gle=0x%08x\n", stackFile, GetLastError());
-                PAL_fflush(PAL_get_stderr());
+                fflush(stderr);
                 return false;
             }
 
@@ -992,7 +992,7 @@ namespace Js
         // hash
         record->hash = CalculateStackHash(record->StackFrames, record->FrameCount, 2);
         PAL_fwprintf(PAL_get_stderr(), u"***FI: Fault Injected, StackHash:%p\n", (void*)record->hash);
-        PAL_fflush(PAL_get_stderr());
+        fflush(stderr);
 
         *InjectionLastRecordRef = record;
         InjectionLastRecordRef = &record->next;
@@ -1292,7 +1292,7 @@ namespace Js
                 PAL_fclose(fp);
                 UnlockFileEx(hFile, 0, lockSize, 0, &overlapped);
             }
-            PAL_fflush(PAL_get_stderr());
+            fflush(stderr);
         }
 
         if (globalFlags.FaultInjection == InstallExceptionHandlerOnly)
@@ -1420,7 +1420,7 @@ namespace Js
             }
         }
 
-        PAL_fflush(PAL_get_stderr());
+        fflush(stderr);
 
 #endif  //_M_ARM and _M_ARM64
     }
