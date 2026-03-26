@@ -55,7 +55,7 @@ Output::VerboseNote(const char16_t * format, ...)
         va_list argptr;
         va_start(argptr, format);
         size_t size = PAL_vfwprintf(PAL_get_stdout(), format, argptr);
-        PAL_fflush(PAL_get_stdout());
+        fflush(stdout);
         va_end(argptr);
         return size;
     }
