@@ -815,9 +815,6 @@ static BOOL LOADCallDllMainSafe(MODSTRUCT *module, uint32_t dwReason, void * lpR
               param.module->lib_name ? param.module->lib_name : W16_NULLSTRING);
 
         {
-            // This module may be foreign to our PAL, so leave our PAL.
-            // If it depends on us, it will re-enter.
-            PAL_LeaveHolder holder;
             param.ret = param.module->pDllMain(param.module->hinstance, param.dwReason, param.lpReserved);
         }
     }
