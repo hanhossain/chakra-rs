@@ -103,7 +103,7 @@ namespace Js
             uint16 a = (uint16)aValue.u8[idx];
             uint16 b = (uint16)bValue.u8[idx];
 
-            result.u8[idx] = ((a + b) > MAXUINT8) ? MAXUINT8 : (uint8_t)(a + b);
+            result.u8[idx] = ((a + b) > std::numeric_limits<uint8_t>::max()) ? std::numeric_limits<uint8_t>::max() : (uint8_t)(a + b);
         }
         return result;
     }
