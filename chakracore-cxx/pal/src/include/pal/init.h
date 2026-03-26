@@ -107,16 +107,6 @@ Return value :
 --*/
 BOOL PALInitLock(void);
 
-/*++
-Function:
-  PALInitUnlock
-
-Release the initialization critical section (init_critsec).
-
-(no parameters, no return value)
---*/
-void PALInitUnlock(void);
-
 #ifdef __cplusplus
 }
 #endif // __cplusplus
