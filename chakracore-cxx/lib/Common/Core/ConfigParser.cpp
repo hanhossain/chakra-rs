@@ -322,13 +322,6 @@ int32_t ConfigParser::SetOutputFile(const char16_t* outputFile, const char16_t* 
         outputFile = fileName;
     }
 
-    PAL_FILE *fp;
-    if ((fp = _wfsopen(outputFile, openMode, _SH_DENYWR)) != nullptr)
-    {
-        Output::SetOutputFile(fp);
-        return S_OK;
-    }
-
     AssertMsg(false, "Could not open file for logging output.");
     return E_FAIL;
 }
