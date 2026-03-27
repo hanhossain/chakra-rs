@@ -2751,8 +2751,6 @@ int PAL_wprintf(const char16_t*, ...);
 
 // TODO (hanhossain): internal
 PAL_FILE * _wfopen(const char16_t *, const char16_t *);
-// TODO (hanhossain): public
-PAL_FILE * _wfsopen(const char16_t *, const char16_t *, int);
 
 /* Maximum value that can be returned by the rand function. */
 

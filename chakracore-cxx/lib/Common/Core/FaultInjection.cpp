@@ -1236,65 +1236,6 @@ namespace Js
         // multiple session of Fault Injection run shares the single crash offset recording file
         _snwprintf_s(filename, _TRUNCATE, u"%s.FICrashes.txt", mainModule);
 
-        auto fp = _wfsopen(filename, u"a+t", _SH_DENYNO);
-        if (fp != nullptr)
-        {
-            HANDLE hFile = (HANDLE)_get_osfhandle(_fileno(fp));
-            OVERLAPPED overlapped;
-            memset(&overlapped, 0, sizeof(overlapped));
-            const int lockSize = 1024 * 64;
-            if (!LockFileEx(hFile, LOCKFILE_EXCLUSIVE_LOCK, 0, lockSize, 0, &overlapped))
-            {
-                PAL_fwprintf(PAL_get_stderr(), u"LockFileEx(%ls) Failed when saving offset to file, gle=%8x\n", filename, GetLastError());
-                PAL_fclose(fp);
-            }
-            else
-            { // file locked
-                char16_t content[32] = { 0 };
-                while (PAL_fgetws(content, 31, fp))
-                {
-                    savedOffset = HexStrToAddress(content);
-                    if (offset == savedOffset)
-                    {
-                        // found duplicate so not creating dump
-                        needDump = false;
-                    }
-                }
-
-                if (needDump)
-                {
-                    PAL_fwprintf(PAL_get_stderr(), u"This is new Exception\n");
-                    PAL_fwprintf(fp, u"0x%p\n", (void*)offset);
-                }
-                else
-                {
-                    PAL_fwprintf(PAL_get_stderr(), u"This is not a new Exception\n");
-                }
-                PAL_fflush(fp);
-
-                // save the hit count to a file, for bug prioritizing
-                _snwprintf_s(filename, _TRUNCATE, u"%s.HitCount_%llx.txt", mainModule, (long long)offset);
-                auto hcfp = _wfsopen(filename, u"r+", _SH_DENYNO);
-                if (!hcfp)
-                {
-                    hcfp = _wfsopen(filename, u"w+", _SH_DENYNO);
-                }
-                if (hcfp)
-                {
-                    auto count = 0;
-                    fscanf_s(hcfp, "%d", &count);
-                    count++;
-                    PAL_fseek(hcfp, -PAL_ftell(hcfp), SEEK_CUR);
-                    PAL_fwprintf(hcfp, u"%d", count);
-                    PAL_fclose(hcfp);
-                }
-
-                PAL_fclose(fp);
-                UnlockFileEx(hFile, 0, lockSize, 0, &overlapped);
-            }
-            fflush(stderr);
-        }
-
         if (globalFlags.FaultInjection == InstallExceptionHandlerOnly)
         {
             needDump = true;

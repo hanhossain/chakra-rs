@@ -323,24 +323,6 @@ _wfopen(
 }
 
 /*++
-Function:
-_wfsopen
-
-see MSDN doc.
-
---*/
-PAL_FILE *
-_wfsopen(
-    const char16_t *fileName,
-    const char16_t *mode,
-    int shflag)
-{
-    // UNIXTODO: Implement this.
-    ERROR("Needs Implementation!!!");
-    return NULL;
-}
-
-/*++
 Function
     PAL_get_stdout.
 
