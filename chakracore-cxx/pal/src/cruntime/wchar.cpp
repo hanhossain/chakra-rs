@@ -28,8 +28,6 @@ Abstract:
 #include "pal/thread.hpp"
 #include "pal/threadsusp.hpp"
 
-
-#include "runtime_proxy.h"
 #include <errno.h>
 #include <limits.h>
 
@@ -267,26 +265,6 @@ _wtoi(
 
     free(tempStr);
     LOGEXIT("_wtoi returns int %d\n", ret);
-    return ret;
-}
-
-
-/*--
-Function:
-  PAL_iswspace
-
-See MSDN doc
---*/
-int
-PAL_iswspace(char16_t c)
-{
-    int ret;
-
-    ENTRY("PAL_iswspace (c=%C)\n", c);
-
-    ret = proxy_iswspace(c);
-
-    LOGEXIT("PAL_iswspace returns int %d\n", ret);
     return ret;
 }
 

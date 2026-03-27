@@ -2537,8 +2537,6 @@ int PAL_swscanf(const char16_t *, const char16_t *, ...);
 // TODO (hanhossain): internal
 int PAL_iswupper(char16_t);
 // TODO (hanhossain): internal
-int PAL_iswspace(char16_t);
-// TODO (hanhossain): internal
 int PAL_iswdigit(char16_t);
 // TODO (hanhossain): public
 char16_t PAL_towlower(char16_t);
