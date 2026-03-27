@@ -15,6 +15,11 @@ fn main() -> ExitCode {
         return ExitCode::SUCCESS;
     }
 
+    if chakra_args.help {
+        chakra::print_usage();
+        return ExitCode::SUCCESS;
+    }
+
     let args: Vec<CString> = std::env::args_os()
         .map(|os_str| {
             let bytes = os_str.as_bytes();

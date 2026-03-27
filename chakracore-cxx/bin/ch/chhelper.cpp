@@ -842,20 +842,7 @@ int main_internal(int argc, char** c_argv)
         }
 
         arglen = PAL_wcslen(arg); // get length of flag after prefix
-        if (
-#if !defined(ENABLE_DEBUG_CONFIG_OPTIONS) // release builds can display some kind of help message
-            (arglen == 1 && PAL_wcsncmp(arg, u"?",    arglen) == 0) ||
-#endif
-            (arglen == 1 && PAL_wcsncmp(arg, u"h",    arglen) == 0) ||
-            (arglen == 4 && PAL_wcsncmp(arg, u"help", arglen) == 0)
-            )
-        {
-            chakra::print_usage();
-            PAL_Shutdown();
-            retval = EXIT_SUCCESS;
-            goto return_cleanup;
-        }
-        else if(PAL_wcsstr(argv[i], u"-TTRecord=") == argv[i])
+        if(PAL_wcsstr(argv[i], u"-TTRecord=") == argv[i])
         {
             doTTRecord = true;
             char16_t* ruri = argv[i] + PAL_wcslen(u"-TTRecord=");
