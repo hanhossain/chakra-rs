@@ -47,6 +47,7 @@ dependencies = [
 name = "chakracore"
 version = "0.1.0"
 dependencies = [
+ "chakra",
  "chakracore-sys",
  "pretty_assertions",
  "rstest",

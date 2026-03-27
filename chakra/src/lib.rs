@@ -2,14 +2,13 @@
 mod ffi {
     extern "Rust" {
         fn print_usage();
-        fn print_version();
     }
 }
 
-fn print_usage() {
+pub fn print_usage() {
     #[cfg(debug_assertions)]
     {
-        println!("\nUsage: ch [-v|-version] [-h|-help] [-?] [flaglist] <source file>");
+        println!("\nUsage: ch [-v|--version] [-h|-help] [-?] [flaglist] <source file>");
         println!("\t-v|-version\t\tDisplays version info");
         println!("\t-h|-help\t\tDisplays this help message");
         println!("\t-?\t\t\tDisplays this help message with complete [flaglist] info");
@@ -26,10 +25,22 @@ fn print_usage() {
     }
 }
 
-fn print_version() {
-    println!(
-        "{} version {}",
-        env!("CARGO_PKG_NAME"),
-        env!("CARGO_PKG_VERSION")
-    );
+pub struct ChakraArgs {
+    pub version: bool,
+}
+
+impl ChakraArgs {
+    pub fn new(args: Vec<String>) -> Option<Self> {
+        if args.len() < 2 {
+            return None;
+        }
+
+        for arg in &args {
+            if arg == "-v" || arg == "--version" {
+                return Some(ChakraArgs { version: true });
+            }
+        }
+
+        Some(ChakraArgs { version: false })
+    }
 }
