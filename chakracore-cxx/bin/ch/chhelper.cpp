@@ -841,7 +841,6 @@ int main_internal(int argc, char** c_argv)
             }
         }
 
-        arglen = PAL_wcslen(arg); // get length of flag after prefix
         if(PAL_wcsstr(argv[i], u"-TTRecord=") == argv[i])
         {
             doTTRecord = true;
@@ -918,7 +917,6 @@ int main_internal(int argc, char** c_argv)
     PAL_Shutdown();
     retval = (int)exitCode;
 
-return_cleanup:
     if(argv != nullptr)
     {
         for(int i=0;i<origargc;i++)
