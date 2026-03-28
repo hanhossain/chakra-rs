@@ -4,15 +4,22 @@ fn main() {
     let out_dir = std::env::var("OUT_DIR").unwrap();
     let is_rust_analyzer = out_dir.contains("target/rust-analyzer");
 
-    let mut cxx_bridge = cxx_build::bridge("src/lib.rs");
+    let bridges = ["src/chhelper.rs"];
+    let mut cxx_bridge = cxx_build::bridges(bridges);
     cxx_bridge.include("../chakracore-cxx/bin/ch");
 
     if !is_rust_analyzer {
         cxx_bridge.compile("binding");
 
         if let Ok(chakra_build) = std::env::var("CHAKRA_BUILD") {
-            println!("cargo::rustc-link-search=native={}/chakracore-cxx/bin/ch", chakra_build);
-            println!("cargo::rustc-link-search=native={}/chakracore-cxx/lib", chakra_build);
+            println!(
+                "cargo::rustc-link-search=native={}/chakracore-cxx/bin/ch",
+                chakra_build
+            );
+            println!(
+                "cargo::rustc-link-search=native={}/chakracore-cxx/lib",
+                chakra_build
+            );
         } else {
             let debug: bool = std::env::var("DEBUG").unwrap().parse::<bool>().unwrap();
             let optimized = cfg!(feature = "optimized-tests");
