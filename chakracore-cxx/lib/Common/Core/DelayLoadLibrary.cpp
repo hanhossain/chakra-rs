@@ -35,16 +35,6 @@ void DelayLoadLibrary::EnsureFromSystemDirOnly()
 }
 
 
-FARPROC DelayLoadLibrary::GetFunction(const char * lpFunctionName)
-{
-    if (m_hModule)
-    {
-        return GetProcAddress(m_hModule, lpFunctionName);
-    }
-
-    return nullptr;
-}
-
 bool DelayLoadLibrary::IsAvailable()
 {
     return m_hModule != nullptr;
