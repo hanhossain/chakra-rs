@@ -40,15 +40,10 @@ void* GetChakraCoreSymbol(HINSTANCE module, const char* symbol)
 }
 
 /*static*/
-bool ChakraRTInterface::LoadChakraDll(ArgInfo* argInfo, HINSTANCE *outLibrary)
+bool ChakraRTInterface::LoadChakraDll(ArgInfo* argInfo)
 {
     m_argInfo = argInfo;
     return true;
-}
-
-/*static*/
-void ChakraRTInterface::UnloadChakraDll(HINSTANCE library)
-{
 }
 
 /*static*/
