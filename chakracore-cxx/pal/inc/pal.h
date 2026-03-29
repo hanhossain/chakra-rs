@@ -1275,8 +1275,6 @@ GetModuleFileNameW(
      char16_t* lpFileName,
      uint32_t nSize);
 
-#define GetModuleFileName GetModuleFileNameW
-
 // TODO (hanhossain): public
 HMODULE
 GetModuleHandleW(
