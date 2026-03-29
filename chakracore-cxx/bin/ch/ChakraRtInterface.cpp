@@ -29,11 +29,6 @@ HINSTANCE LoadChakraCore(const char * libPath)
     return LoadLibraryExA(libPath, nullptr, 0);
 }
 
-void UnloadChakraCore(HINSTANCE module)
-{
-    FreeLibrary(module);
-}
-
 void* GetChakraCoreSymbol(HINSTANCE module, const char* symbol)
 {
     return reinterpret_cast<void*>(GetProcAddress(module, symbol));
