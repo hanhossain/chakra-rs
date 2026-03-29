@@ -8,7 +8,6 @@ add_library (Chakra.Common.Core OBJECT
     ConfigParser.cpp
     CRC.cpp
     DelayLoadLibrary.cpp
-    FaultInjection.cpp
     GlobalSecurityPolicy.cpp
     Output.cpp
     PerfCounter.cpp

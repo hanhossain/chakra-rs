@@ -3,7 +3,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
-#include "Core/FaultInjection.h"
 #include "Memory/HeapBlock.h"
 
 namespace Memory
@@ -122,11 +121,6 @@ SmallHeapBlockAllocator<TBlockType>::InlinedAllocImpl(Recycler * recycler, size_
 #endif
 
     AUTO_NO_EXCEPTION_REGION;
-    if (canFaultInject)
-    {
-        FAULTINJECT_MEMORY_NOTHROW(u"InlinedAllocImpl", sizeCat);
-    }
-
     char * memBlock = (char *)freeObjectList;
     char * nextCurrentAddress = memBlock + sizeCat;
     char * endAddress = this->endAddress;

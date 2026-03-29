@@ -367,7 +367,6 @@
 #ifdef DEBUG
 #define BYTECODE_TESTING
 
-// xplat-todo: revive FaultInjection on non-Win32 platforms
 // currently depends on io.h
 #define RECYCLER_NO_PAGE_REUSE
 #endif
@@ -637,7 +636,6 @@
 #endif
 
 #if defined(USED_IN_STATIC_LIB)
-#undef FAULT_INJECTION
 #undef RECYCLER_DUMP_OBJECT_GRAPH
 #undef HEAP_TRACK_ALLOC
 #undef RECYCLER_STATS
@@ -653,7 +651,6 @@
 #undef PROFILE_RECYCLER_ALLOC
 #undef PROFILE_EXEC
 #undef PROFILE_EVALMAP
-#undef FAULT_INJECTION
 #undef RECYCLER_STRESS
 #undef RECYCLER_SLOW_VERIFY
 #undef RECYCLER_VERIFY_MARK

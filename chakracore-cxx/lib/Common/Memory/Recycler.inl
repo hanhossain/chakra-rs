@@ -4,7 +4,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
-#include "Core/FaultInjection.h"
 #include "Core/PerfCounterSet.h"
 #include "Core/ProfileMemory.h"
 
@@ -361,15 +360,6 @@ Recycler::RealAlloc(HeapInfo* heap, size_t size)
 #ifdef RECYCLER_STRESS
     this->StressCollectNow();
 #endif
-
-    if (nothrow)
-    {
-        FAULTINJECT_MEMORY_NOTHROW(u"Recycler", size);
-    }
-    else
-    {
-        FAULTINJECT_MEMORY_THROW(u"Recycler", size);
-    }
 
     if (HeapInfo::IsSmallObject(size))
     {

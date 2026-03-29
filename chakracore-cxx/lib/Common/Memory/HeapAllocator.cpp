@@ -51,15 +51,6 @@ char * HeapAllocator::AllocT(size_t byteSize)
     byteSize = AllocSizeMath::Add(requestedBytes, ::Math::Align<size_t>(sizeof(size_t), MEMORY_ALLOCATION_ALIGNMENT));
 #endif
 
-    if (noThrow)
-    {
-        FAULTINJECT_MEMORY_NOTHROW(u"Heap", byteSize);
-    }
-    else
-    {
-        FAULTINJECT_MEMORY_THROW(u"Heap", byteSize);
-    }
-
     char * buffer;
 #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
     if (DoUseMemProtectHeap())

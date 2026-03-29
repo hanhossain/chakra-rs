@@ -112,14 +112,6 @@ SegmentBase<T>::Initialize(uint32_t allocFlags, bool excludeGuardPages)
     size_t totalPages = Math::Align<size_t>(this->segmentPageCount + leadingGuardPageCount + trailingGuardPageCount, AutoSystemInfo::Data.GetAllocationGranularityPageCount());
     this->segmentPageCount = totalPages - (leadingGuardPageCount + trailingGuardPageCount);
 
-#ifdef FAULT_INJECTION
-    if (Js::FaultInjection::Global.ShouldInjectFault(Js::FaultInjection::Global.NoThrow))
-    {
-        this->address = nullptr;
-        return false;
-    }
-#endif
-
     if (!this->GetAllocator()->RequestAlloc(totalPages * AutoSystemInfo::PageSize))
     {
         return false;
@@ -883,8 +875,6 @@ char *
 PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::TryAllocFromZeroPagesList(
     uint pageCount, TPageSegment ** pageSegment, BackgroundPageQueue* bgPageQueue, bool isPendingZeroList)
 {
-    FAULTINJECT_MEMORY_NOTHROW(this->debugName, pageCount*AutoSystemInfo::PageSize);
-
     char * pages = nullptr;
     FreePageEntry* localList = nullptr;
 
@@ -997,7 +987,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::TryAllocFreePages(uint
 
     if (this->freePageCount >= pageCount)
     {
-        FAULTINJECT_MEMORY_NOTHROW(this->debugName, pageCount*AutoSystemInfo::PageSize);
         typename DListBase<TPageSegment>::EditingIterator i(&this->segments);
 
         while (i.Next())

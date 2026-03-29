@@ -1259,17 +1259,6 @@ FLAGNR(Number,  ByteCodeBranchLimit,    "Short branch limit before we use the br
 FLAGNR(Boolean, MediumByteCodeLayout  , "Always use medium layout for bytecodes", false)
 FLAGNR(Boolean, LargeByteCodeLayout   , "Always use large layout for bytecodes", false)
 #endif
-#ifdef FAULT_INJECTION
-FLAGNR(Number,  FaultInjection        , "FaultInjectMode - 0 (count only), 1 (count equal), 2 (count at or above), 3 (stackhashing)",-1)
-FLAGNR(Number,  FaultInjectionCount   , "Injects an out of memory at the specified allocation", -1)
-FLAGNR(String,  FaultInjectionType    , "FaultType (flag values) -  1 (Throw), 2 (NoThrow), 4 (MarkThrow), 8 (MarkNoThrow), FFFFFFFF (All)", nullptr)
-FLAGNR(String,  FaultInjectionFilter  , "A string to restrict the fault injection, the string can be like ArenaAllocator name", nullptr)
-FLAGNR(Number,  FaultInjectionAllocSize, "Do fault injection only this size", -1)
-FLAGNR(String,  FaultInjectionStackFile   , "Stacks to match, default: stack.txt in current directory", u"stack.txt")
-FLAGNR(Number,  FaultInjectionStackLineCount   , "Count of lines in the stack file used for matching", -1)
-FLAGNR(String,  FaultInjectionStackHash, "Match stacks hash on Chakra frames to inject the fault, hex string", u"0")
-FLAGNR(Number,  FaultInjectionScriptContextToTerminateCount, "Script context# COUNT % (Number of script contexts) to terminate", 1)
-#endif
 FLAGNR(Number, InduceCodeGenFailure, "Probability of a codegen job failing.", DEFAULT_CONFIG_InduceCodeGenFailure)
 FLAGNR(Number, InduceCodeGenFailureSeed, "Seed used while calculating codegen failure probability", 0)
 FLAGNR(Number, InjectPartiallyInitializedInterpreterFrameError, "The number of interpreter stack frame (with 1 being bottom-most) to inject error before the frame is initialized.", DEFAULT_CONFIG_InjectPartiallyInitializedInterpreterFrameError)

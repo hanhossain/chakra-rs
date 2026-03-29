@@ -4,7 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 #include "Entropy.h"
-#include "Core/FaultInjection.h"
 #include "DataStructures/Stack.h"
 #include "DataStructures/Dictionary.h"
 #include "Library/DelayFreeArrayBufferHelper.h"
@@ -376,8 +375,6 @@ public:
 
     void * GetAddressOfStackLimitForCurrentThread() const
     {
-        FAULTINJECT_SCRIPT_TERMINATION
-
         return &this->stackLimitForCurrentThread;
     }
     void InitAvailableCommit();
@@ -1635,9 +1632,6 @@ public:
     virtual void WaitCollectionCallBack() override;
     virtual void PostCollectionCallBack() override;
     virtual BOOL ExecuteRecyclerCollectionFunction(Recycler * recycler, CollectionFunction function, CollectionFlags flags) override;
-#ifdef FAULT_INJECTION
-    virtual void DisposeScriptContextByFaultInjectionCallBack() override;
-#endif
     virtual void DisposeObjects(Recycler * recycler) override;
     virtual void PreDisposeObjectsCallBack() override;
 

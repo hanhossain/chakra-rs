@@ -1514,7 +1514,6 @@ ThreadContext::IsOnStack(void const *ptr)
  size_t
  ThreadContext::GetStackLimitForCurrentThread() const
 {
-    FAULTINJECT_SCRIPT_TERMINATION;
     size_t limit = this->stackLimitForCurrentThread;
     Assert(limit == Js::Constants::StackLimitForScriptInterrupt
         || !this->GetStackProber()
@@ -1542,7 +1541,6 @@ ThreadContext::IsStackAvailable(size_t size, bool* isInterrupt)
     this->GetStackProber()->AdjustKnownStackLimit(sp, size);
 #endif
 
-    FAULTINJECT_STACK_PROBE
     if (stackAvailable)
     {
         return true;
@@ -1575,8 +1573,6 @@ ThreadContext::IsStackAvailableNoThrow(size_t size)
     size_t sp = (size_t)_AddressOfReturnAddress();
     size_t stackLimit = this->GetStackLimitForCurrentThread();
     bool stackAvailable = (sp > stackLimit) && (sp > size) && ((sp - size) > stackLimit);
-
-    FAULTINJECT_STACK_PROBE
 
     return stackAvailable;
 }
@@ -2822,37 +2818,6 @@ ThreadContext::PreDisposeObjectsCallBack()
 {
     this->expirableObjectDisposeList->Clear();
 }
-
-#ifdef FAULT_INJECTION
-void
-ThreadContext::DisposeScriptContextByFaultInjectionCallBack()
-{
-    if (FAULTINJECT_SCRIPT_TERMINATION_ON_DISPOSE) {
-        int scriptContextToClose = -1;
-
-        /* inject only if we have more than 1 script context*/
-        uint totalScriptCount = GetScriptContextCount();
-        if (totalScriptCount > 1) {
-            if (Js::Configuration::Global.flags.FaultInjectionScriptContextToTerminateCount > 0)
-            {
-                scriptContextToClose = Js::Configuration::Global.flags.FaultInjectionScriptContextToTerminateCount % totalScriptCount;
-                for (Js::ScriptContext *scriptContext = GetScriptContextList(); scriptContext; scriptContext = scriptContext->next)
-                {
-                    if (scriptContextToClose-- == 0)
-                    {
-                        scriptContext->DisposeScriptContextByFaultInjection();
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                PAL_fwprintf(PAL_get_stderr(), u"***FI: FaultInjectionScriptContextToTerminateCount Failed, Value should be > 0. \n");
-            }
-        }
-    }
-}
-#endif
 
 #pragma region "Expirable Object Methods"
 void

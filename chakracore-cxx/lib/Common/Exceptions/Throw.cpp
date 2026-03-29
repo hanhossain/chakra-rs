@@ -17,7 +17,6 @@
 #include "Interface/EnumHelp.h"
 #include "Common/MathUtil.h"
 #include "Core/AllocSizeMath.h"
-#include "Core/FaultInjection.h"
 
 #include "Core/BasePtr.h"
 #include "Core/AutoFile.h"

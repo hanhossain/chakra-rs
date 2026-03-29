@@ -878,19 +878,17 @@ LowererMD::GenerateStackProbe(IR::Instr *insertInstr, bool afterProlog)
     }
 
     IR::LabelInstr *doneLabelInstr = IR::LabelInstr::New(Js::OpCode::Label, this->m_func, false);
-    if (!IS_FAULTINJECT_STACK_PROBE_ON) // Do stack check fastpath only if not doing StackProbe fault injection
-    {
-        // CMP sp, r17
-        instr = IR::Instr::New(Js::OpCode::CMP, this->m_func);
-        instr->SetSrc1(IR::RegOpnd::New(nullptr, GetRegStackPointer(), TyMachReg, this->m_func));
-        instr->SetSrc2(scratchOpnd);
-        insertInstr->InsertBefore(instr);
-        LegalizeMD::LegalizeInstr(instr);
 
-        // BHI done
-        instr = IR::BranchInstr::New(Js::OpCode::BHI, doneLabelInstr, this->m_func);
-        insertInstr->InsertBefore(instr);
-    }
+    // CMP sp, r17
+    instr = IR::Instr::New(Js::OpCode::CMP, this->m_func);
+    instr->SetSrc1(IR::RegOpnd::New(nullptr, GetRegStackPointer(), TyMachReg, this->m_func));
+    instr->SetSrc2(scratchOpnd);
+    insertInstr->InsertBefore(instr);
+    LegalizeMD::LegalizeInstr(instr);
+
+    // BHI done
+    instr = IR::BranchInstr::New(Js::OpCode::BHI, doneLabelInstr, this->m_func);
+    insertInstr->InsertBefore(instr);
 
     insertInstr->InsertBefore(helperLabel);
 

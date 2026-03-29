@@ -787,9 +787,6 @@ private:
         HaltCallback* scriptEngineHaltCallback;
         EventHandler scriptStartEventHandler;
         EventHandler scriptEndEventHandler;
-#ifdef FAULT_INJECTION
-        EventHandler disposeScriptByFaultInjectionEventHandler;
-#endif
 
 #ifndef CC_LOW_MEMORY_TARGET
         uint integerStringMapCacheMissCount;
@@ -1341,10 +1338,6 @@ private:
 
         void SetScriptStartEventHandler(EventHandler eventHandler);
         void SetScriptEndEventHandler(EventHandler eventHandler);
-#ifdef FAULT_INJECTION
-        void DisposeScriptContextByFaultInjection();
-        void SetDisposeDisposeByFaultInjectionEventHandler(EventHandler eventHandler);
-#endif
         EnumeratedObjectCache* GetEnumeratedObjectCache() { return &(this->Cache()->enumObjCache); }
         PropertyString* GetPropertyString(PropertyId propertyId);
         PropertyString* GetPropertyString(const PropertyRecord* propertyRecord);

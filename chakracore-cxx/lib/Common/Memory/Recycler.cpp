@@ -3229,9 +3229,6 @@ Recycler::DisposeObjects()
     // Disable dispose within this method, restore it when we're done
     AutoRestoreValue<bool> disableDispose(&this->allowDispose, false);
 
-#ifdef FAULT_INJECTION
-    this->collectionWrapper->DisposeScriptContextByFaultInjectionCallBack();
-#endif
     this->collectionWrapper->PreDisposeObjectsCallBack();
 
     // Scope timestamp to just dispose

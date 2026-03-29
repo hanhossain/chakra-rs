@@ -142,8 +142,6 @@ template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
 EmitBufferAllocation<TAlloc, TPreReservedAlloc> *
 EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::NewAllocation(size_t bytes, ushort pdataCount, ushort xdataSize, bool canAllocInPreReservedHeapPageSegment, bool isAnyJittedCode)
 {
-    FAULTINJECT_MEMORY_THROW(u"JIT", bytes);
-
     Assert(this->criticalSection.IsLocked());
 
     bool isAllJITCodeInPreReservedRegion = true;

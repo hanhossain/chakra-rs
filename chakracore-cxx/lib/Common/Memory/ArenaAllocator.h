@@ -389,17 +389,6 @@ public:
     static void Release(void * policy);
 };
 
-#define ARENA_FAULTINJECT_MEMORY(name, size) { \
-    if (outOfMemoryFunc) \
-    { \
-        FAULTINJECT_MEMORY_THROW(name, size); \
-    } \
-    else \
-    { \
-        FAULTINJECT_MEMORY_NOTHROW(name, size); \
-    } \
-}
-
 // This allocator by default on OOM makes an attempt to recover memory from Recycler and further throws if that doesn't help the allocation.
 class ArenaAllocator : public ArenaAllocatorBase<InPlaceFreeListPolicy>
 {
