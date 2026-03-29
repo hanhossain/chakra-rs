@@ -20,11 +20,6 @@ ChakraRTInterface::ArgInfo* ChakraRTInterface::m_argInfo = nullptr;
 TestHooks ChakraRTInterface::m_testHooks = { 0 };
 JsAPIHooks ChakraRTInterface::m_jsApiHooks = { 0 };
 
-void* GetChakraCoreSymbol(HINSTANCE module, const char* symbol)
-{
-    return reinterpret_cast<void*>(GetProcAddress(module, symbol));
-}
-
 /*static*/
 bool ChakraRTInterface::LoadChakraDll(ArgInfo* argInfo)
 {
