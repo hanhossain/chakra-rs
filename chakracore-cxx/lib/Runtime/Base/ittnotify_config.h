@@ -180,7 +180,6 @@ typedef pthread_mutex_t   mutex_t;
 #endif /* ITT_PLATFORM==ITT_PLATFORM_WIN */
 
 #if ITT_PLATFORM==ITT_PLATFORM_WIN
-#define __itt_get_proc(lib, name) GetProcAddress(lib, name)
 #define __itt_mutex_init(mutex)   InitializeCriticalSection(mutex)
 #define __itt_mutex_lock(mutex)   EnterCriticalSection(mutex)
 #define __itt_mutex_unlock(mutex) LeaveCriticalSection(mutex)

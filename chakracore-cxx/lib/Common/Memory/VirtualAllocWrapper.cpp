@@ -22,21 +22,6 @@ void * VirtualAllocWrapper::AllocPages(void * lpAddress, size_t pageCount, uint3
 
     void * address = nullptr;
 
-#if defined(ENABLE_JIT_CLAMP)
-    bool makeExecutable;
-
-    if ((isCustomHeapAllocation) ||
-        (protectFlags & (PAGE_EXECUTE | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE)))
-    {
-        makeExecutable = true;
-    }
-    else
-    {
-        makeExecutable = false;
-    }
-
-    AutoEnableDynamicCodeGen enableCodeGen(makeExecutable);
-#endif
     {
         address = VirtualAlloc(lpAddress, dwSize, allocationType, protectFlags);
         if (address == nullptr)
@@ -278,10 +263,6 @@ void * PreReservedVirtualAllocWrapper::AllocPages(void * lpAddress, size_t pageC
 
         if ((allocationType & MEM_COMMIT) != 0)
         {
-#if defined(ENABLE_JIT_CLAMP)
-            AutoEnableDynamicCodeGen enableCodeGen;
-#endif
-
             {
                 allocatedAddress = (char *)VirtualAlloc(addressToReserve, dwSize, MEM_COMMIT, protectFlags);
                 if (allocatedAddress == nullptr)
@@ -368,118 +349,3 @@ PreReservedVirtualAllocWrapper::Free(void * lpAddress, size_t dwSize, uint32_t d
 }
 
 #endif // ENABLE_NATIVE_CODEGEN
-
-#if defined(ENABLE_JIT_CLAMP)
-/*
-* class AutoEnableDynamicCodeGen
-*/
-
-typedef
-BOOL
-(WINAPI *PGET_PROCESS_MITIGATION_POLICY_PROC)(
-    _In_  HANDLE                    hProcess,
-    _In_  PROCESS_MITIGATION_POLICY MitigationPolicy,
-    _Out_ void *                     lpBuffer,
-    _In_  size_t                    dwLength
-);
-
-AutoEnableDynamicCodeGen::PSET_THREAD_INFORMATION_PROC AutoEnableDynamicCodeGen::SetThreadInformationProc = nullptr;
-AutoEnableDynamicCodeGen::PGET_THREAD_INFORMATION_PROC AutoEnableDynamicCodeGen::GetThreadInformationProc = nullptr;
-PROCESS_MITIGATION_DYNAMIC_CODE_POLICY AutoEnableDynamicCodeGen::processPolicy;
-CriticalSection AutoEnableDynamicCodeGen::processPolicyCS;
-volatile bool AutoEnableDynamicCodeGen::processPolicyObtained = false;
-
-AutoEnableDynamicCodeGen::AutoEnableDynamicCodeGen(bool enable) : enabled(false)
-{
-    if (enable == false)
-    {
-        return;
-    }
-
-    //
-    // Snap the dynamic code generation policy for this process so that we
-    // don't need to resolve APIs and query it each time. We expect the policy
-    // to have been established upfront.
-    //
-
-    if (processPolicyObtained == false)
-    {
-        AutoCriticalSection autocs(&processPolicyCS);
-
-        if (processPolicyObtained == false)
-        {
-            PGET_PROCESS_MITIGATION_POLICY_PROC GetProcessMitigationPolicyProc = nullptr;
-
-            HMODULE module = GetModuleHandleW(u"api-ms-win-core-processthreads-l1-1-3.dll");
-
-            if (module != nullptr)
-            {
-                GetProcessMitigationPolicyProc = (PGET_PROCESS_MITIGATION_POLICY_PROC) GetProcAddress(module, "GetProcessMitigationPolicy");
-                SetThreadInformationProc = (PSET_THREAD_INFORMATION_PROC) GetProcAddress(module, "SetThreadInformation");
-                GetThreadInformationProc = (PGET_THREAD_INFORMATION_PROC) GetProcAddress(module, "GetThreadInformation");
-            }
-
-            if ((GetProcessMitigationPolicyProc == nullptr) ||
-                (!GetProcessMitigationPolicyProc(GetCurrentProcess(), ProcessDynamicCodePolicy, (PPROCESS_MITIGATION_DYNAMIC_CODE_POLICY) &processPolicy, sizeof(processPolicy))))
-            {
-                processPolicy.ProhibitDynamicCode = 0;
-            }
-
-            processPolicyObtained = true;
-        }
-    }
-
-    //
-    // The process is not prohibiting dynamic code or does not allow threads
-    // to opt out.  In either case, return to the caller.
-    //
-    // N.B. It is OK that this policy is mutable at runtime. If a process
-    //      really does not allow thread opt-out, then the call below will fail
-    //      benignly.
-    //
-
-    if ((processPolicy.ProhibitDynamicCode == 0) || (processPolicy.AllowThreadOptOut == 0))
-    {
-        return;
-    }
-
-    if (SetThreadInformationProc == nullptr || GetThreadInformationProc == nullptr)
-    {
-        return;
-    }
-
-    //
-    // If dynamic code is already allowed for this thread, then don't attempt to allow it again.
-    //
-
-    uint32_t threadPolicy;
-
-    if ((GetThreadInformationProc(GetCurrentThread(), ThreadDynamicCodePolicy, &threadPolicy, sizeof(uint32_t))) &&
-        (threadPolicy == THREAD_DYNAMIC_CODE_ALLOW))
-    {
-        return;
-    }
-
-    threadPolicy = THREAD_DYNAMIC_CODE_ALLOW;
-
-    BOOL result = SetThreadInformationProc(GetCurrentThread(), ThreadDynamicCodePolicy, &threadPolicy, sizeof(uint32_t));
-    Assert(result);
-
-    enabled = true;
-}
-
-AutoEnableDynamicCodeGen::~AutoEnableDynamicCodeGen()
-{
-    if (enabled)
-    {
-        uint32_t threadPolicy = 0;
-
-        BOOL result = SetThreadInformationProc(GetCurrentThread(), ThreadDynamicCodePolicy, &threadPolicy, sizeof(uint32_t));
-        Assert(result);
-
-        enabled = false;
-    }
-}
-
-#endif // defined(ENABLE_JIT_CLAMP)
-

@@ -227,23 +227,15 @@ static int loadiJIT_Funcs()
         return 0;
     }
 
-#if ITT_PLATFORM==ITT_PLATFORM_WIN
-    FUNC_NotifyEvent = (TPNotify)GetProcAddress(m_libHandle, "NotifyEvent");
-#else  /* ITT_PLATFORM==ITT_PLATFORM_WIN */
     FUNC_NotifyEvent = (TPNotify)dlsym(m_libHandle, "NotifyEvent");
-#endif /* ITT_PLATFORM==ITT_PLATFORM_WIN */
-    if (!FUNC_NotifyEvent) 
+    if (!FUNC_NotifyEvent)
     {
         FUNC_Initialize = NULL;
         return 0;
     }
 
-#if ITT_PLATFORM==ITT_PLATFORM_WIN
-    FUNC_Initialize = (TPInitialize)GetProcAddress(m_libHandle, "Initialize");
-#else  /* ITT_PLATFORM==ITT_PLATFORM_WIN */
     FUNC_Initialize = (TPInitialize)dlsym(m_libHandle, "Initialize");
-#endif /* ITT_PLATFORM==ITT_PLATFORM_WIN */
-    if (!FUNC_Initialize) 
+    if (!FUNC_Initialize)
     {
         FUNC_NotifyEvent = NULL;
         return 0;

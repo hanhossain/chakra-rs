@@ -2621,12 +2621,6 @@ HeapPageAllocator<T>::ProtectPages(char* address, size_t pageCount, void* segmen
         return FALSE;
     }
 
-#if defined(ENABLE_JIT_CLAMP)
-    bool makeExecutable = (dwVirtualProtectFlags & (PAGE_EXECUTE | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE)) ? true : false;
-
-    AutoEnableDynamicCodeGen enableCodeGen(makeExecutable);
-#endif
-
 #if DBG_DUMP || defined(RECYCLER_TRACE)
     if (this->pageAllocatorFlagTable.IsEnabled(Js::TraceProtectPagesFlag))
     {
