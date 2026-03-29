@@ -20,15 +20,6 @@ ChakraRTInterface::ArgInfo* ChakraRTInterface::m_argInfo = nullptr;
 TestHooks ChakraRTInterface::m_testHooks = { 0 };
 JsAPIHooks ChakraRTInterface::m_jsApiHooks = { 0 };
 
-// Wrapper functions to abstract out loading ChakraCore
-// and resolving its symbols
-// Currently, these functions resolve to the PAL on Linux
-// but in the future, we can easily switch to a different mechanism
-HINSTANCE LoadChakraCore(const char * libPath)
-{
-    return LoadLibraryExA(libPath, nullptr, 0);
-}
-
 void* GetChakraCoreSymbol(HINSTANCE module, const char* symbol)
 {
     return reinterpret_cast<void*>(GetProcAddress(module, symbol));
