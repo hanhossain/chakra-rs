@@ -31,7 +31,6 @@ class HostScriptContext;
 class ScriptSite;
 class ThreadServiceWrapper;
 struct IActiveScriptProfilerHeapEnum;
-class DynamicProfileMutator;
 class StackProber;
 
 enum DisableImplicitFlags : uint8_t
@@ -1683,9 +1682,6 @@ public:
 
 #ifdef BAILOUT_INJECTION
     uint bailOutByteCodeLocationCount;
-#endif
-#ifdef DYNAMIC_PROFILE_MUTATOR
-    DynamicProfileMutator * dynamicProfileMutator;
 #endif
     //
     // Regex helpers

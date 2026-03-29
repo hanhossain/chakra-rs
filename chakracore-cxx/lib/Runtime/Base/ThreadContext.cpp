@@ -30,11 +30,6 @@
 #include "Memory/StressTest.h"
 #endif
 
-#ifdef DYNAMIC_PROFILE_MUTATOR
-#include "Language/DynamicProfileMutator.h"
-#endif
-
-
 const int TotalNumberOfBuiltInProperties = Js::PropertyIds::_countJSOnlyProperty;
 
 /*
@@ -226,9 +221,6 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
 #if DBG_DUMP
     scriptSiteCount = 0;
     pageAllocator.debugName = u"Thread";
-#endif
-#ifdef DYNAMIC_PROFILE_MUTATOR
-    this->dynamicProfileMutator = DynamicProfileMutator::GetMutator();
 #endif
 
     PERF_COUNTER_INC(Basic, ThreadContext);
@@ -547,12 +539,6 @@ ThreadContext::~ThreadContext()
 
     PERF_COUNTER_DEC(Basic, ThreadContext);
 
-#ifdef DYNAMIC_PROFILE_MUTATOR
-    if (this->dynamicProfileMutator != nullptr)
-    {
-        this->dynamicProfileMutator->Delete();
-    }
-#endif
 }
 
 void

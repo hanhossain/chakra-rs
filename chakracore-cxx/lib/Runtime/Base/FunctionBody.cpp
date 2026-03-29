@@ -18,9 +18,6 @@
 #include "Base/VTuneChakraProfile.h"
 #endif
 
-#ifdef DYNAMIC_PROFILE_MUTATOR
-#include "Language/DynamicProfileMutator.h"
-#endif
 #include "Language/SourceDynamicProfileManager.h"
 
 #ifdef ENABLE_SCRIPT_DEBUGGING
@@ -3520,10 +3517,6 @@ namespace Js
             }
 #endif
         }
-
-#ifdef DYNAMIC_PROFILE_MUTATOR
-        DynamicProfileMutator::Mutate(this);
-#endif
     }
 
     bool FunctionBody::NeedEnsureDynamicProfileInfo() const

@@ -1073,10 +1073,6 @@ FLAGNR(Boolean, WininetProfileCache, "Use the WININET cache to save the profile 
 FLAGNR(Boolean, NoDynamicProfileInMemoryCache, "Enable in-memory cache for dynamic sources", false)
 FLAGNR(Boolean, ProfileBasedSpeculativeJit, "Enable dynamic profile based speculative JIT", DEFAULT_CONFIG_ProfileBasedSpeculativeJit)
 FLAGNR(Number,  ProfileBasedSpeculationCap, "In the presence of dynamic profile speculative JIT is capped to this many bytecode instructions", DEFAULT_CONFIG_ProfileBasedSpeculationCap)
-#ifdef DYNAMIC_PROFILE_MUTATOR
-FLAGNR(String,  DynamicProfileMutatorDll , "Path of the mutator DLL", u"DynamicProfileMutatorImpl.dll")
-FLAGNR(String,  DynamicProfileMutator , "Type of local, temp, return, param, loop implicit flag and implicit flag. \n\t\t\t\t\ti.e local=LikelyArray_NoMissingValues_NonInts_NonFloats;temp=Int8Array;param=LikelyNumber;return=LikelyString;loopimplicitflag=ImplicitCall_ToPrimitive;implicitflag=ImplicitCall_None\n\t\t\t\t\tor pass DynamicProfileMutator:random\n\t\t\t\t\tSee DynamicProfileInfo.h for enum values", nullptr)
-#endif
 FLAGNR(Boolean, ExecuteByteCodeBufferReturnsInvalidByteCode, "Serialized byte code execution always returns SCRIPT_E_INVALID_BYTECODE", false)
 FLAGR(Number, ExpirableCollectionGCCount, "Number of GCs during which Expirable object profiling occurs", DEFAULT_CONFIG_ExpirableCollectionGCCount)
 FLAGR (Number,  ExpirableCollectionTriggerThreshold, "Threshold at which Expirable Object Collection is triggered (In Percentage)", DEFAULT_CONFIG_ExpirableCollectionTriggerThreshold)
