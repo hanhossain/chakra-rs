@@ -112,19 +112,6 @@ static BOOL LOADCallDllMainSafe(MODSTRUCT *module, uint32_t dwReason, void * lpR
 
 /*++
 Function:
-  LoadLibraryA
-
-See MSDN doc.
---*/
-HMODULE
-LoadLibraryA(
-     const char * lpLibFileName)
-{
-    return LoadLibraryExA(lpLibFileName, nullptr, 0);
-}
-
-/*++
-Function:
   LoadLibraryW
 
 See MSDN doc.
@@ -134,61 +121,6 @@ LoadLibraryW(
      const char16_t* lpLibFileName)
 {
     return LoadLibraryExW(lpLibFileName, nullptr, 0);
-}
-
-/*++
-Function:
-LoadLibraryExA
-
-See MSDN doc.
---*/
-HMODULE
-LoadLibraryExA(
-     const char * lpLibFileName,
-     /*Reserved*/ HANDLE hFile,
-     uint32_t dwFlags)
-{
-    if (dwFlags != 0)
-    {
-        // UNIXTODO: Implement this!
-        ASSERT("Needs Implementation!!!");
-        return nullptr;
-    }
-
-    char* lpstr = nullptr;
-    HMODULE hModule = nullptr;
-
-    ENTRY("LoadLibraryExA (lpLibFileName=%p (%s)) \n",
-          (lpLibFileName) ? lpLibFileName : "NULL",
-          (lpLibFileName) ? lpLibFileName : "NULL");
-
-    if (!LOADVerifyLibraryPath(lpLibFileName))
-    {
-        goto Done;
-    }
-
-    /* do the Dos/Unix conversion on our own copy of the name */
-    lpstr = strdup(lpLibFileName);
-    if (!lpstr)
-    {
-        ERROR("strdup failure!\n");
-        SetLastError(ERROR_NOT_ENOUGH_MEMORY);
-        goto Done;
-    }
-    FILEDosToUnixPathA(lpstr);
-
-    hModule = LOADLoadLibrary(lpstr, TRUE);
-
-    /* let LOADLoadLibrary call SetLastError */
- Done:
-    if (lpstr != nullptr)
-    {
-        free(lpstr);
-    }
-
-    LOGEXIT("LoadLibraryExA returns HMODULE %p\n", hModule);
-    return hModule;
-
 }
 
 /*++

@@ -1255,20 +1255,8 @@ UnmapViewOfFile(
 
 // TODO (hanhossain): public
 HMODULE
-LoadLibraryA(
-         const char * lpLibFileName);
-
-// TODO (hanhossain): public
-HMODULE
 LoadLibraryW(
          const char16_t* lpLibFileName);
-
-// TODO (hanhossain): public
-HMODULE
-LoadLibraryExA(
-         const char * lpLibFileName,
-         /*Reserved*/ HANDLE hFile,
-         uint32_t dwFlags);
 
 // TODO (hanhossain): public
 HMODULE
