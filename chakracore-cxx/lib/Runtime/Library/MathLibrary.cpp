@@ -9,44 +9,6 @@
 
 #include <math.h>
 
-const char16_t* UCrtC99MathApis::LibraryName = u"api-ms-win-crt-math-l1-1-0.dll";
-
-void UCrtC99MathApis::Ensure()
-{
-    if (m_isInit)
-    {
-        return;
-    }
-
-    DelayLoadLibrary::EnsureFromSystemDirOnly();
-
-    if (IsAvailable())
-    {
-        m_pfnlog2  = (PFNMathFn)GetFunction("log2");
-        m_pfnlog1p = (PFNMathFn)GetFunction("log1p");
-        m_pfnexpm1 = (PFNMathFn)GetFunction("expm1");
-        m_pfnacosh = (PFNMathFn)GetFunction("acosh");
-        m_pfnasinh = (PFNMathFn)GetFunction("asinh");
-        m_pfnatanh = (PFNMathFn)GetFunction("atanh");
-        m_pfntrunc = (PFNMathFn)GetFunction("trunc");
-        m_pfncbrt  = (PFNMathFn)GetFunction("cbrt");
-
-        if (m_pfnlog2 == nullptr ||
-            m_pfnlog1p == nullptr ||
-            m_pfnexpm1 == nullptr ||
-            m_pfnacosh == nullptr ||
-            m_pfnasinh == nullptr ||
-            m_pfnatanh == nullptr ||
-            m_pfntrunc == nullptr ||
-            m_pfncbrt == nullptr)
-        {
-            // If any of the APIs fail to load then presume the entire module is bogus and free it
-            FreeLibrary(m_hModule);
-            m_hModule = nullptr;
-        }
-    }
-}
-
 namespace Js
 {
     const double Math::PI = 3.1415926535897931;
