@@ -12,7 +12,6 @@ CompileAssert(false)
 #endif
 
 #include "XDataAllocator.h"
-#include "Core/DelayLoadLibrary.h"
 
 #include "PlatformAgnostic/AssemblyCommon.h" // __REGISTER_FRAME / __DEREGISTER_FRAME
 

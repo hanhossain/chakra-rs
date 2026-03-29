@@ -372,9 +372,6 @@ enum tagDEBUG_EVENT_INFO_TYPE
 #include "Base/LineOffsetCache.h"
 #include "Base/Utf8SourceInfo.h"
 #include "Base/PropertyRecord.h"
-#ifdef ENABLE_GLOBALIZATION
-#include "Base/DelayLoadLibrary.h"
-#endif
 #include "Base/CallInfo.h"
 #include "Language/ExecutionMode.h"
 #include "Types/TypeId.h"

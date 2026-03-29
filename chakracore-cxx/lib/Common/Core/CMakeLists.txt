@@ -7,7 +7,6 @@ add_library (Chakra.Common.Core OBJECT
     ConfigFlagsTable.cpp
     ConfigParser.cpp
     CRC.cpp
-    DelayLoadLibrary.cpp
     Output.cpp
     PerfCounter.cpp
     PerfCounterImpl.cpp
