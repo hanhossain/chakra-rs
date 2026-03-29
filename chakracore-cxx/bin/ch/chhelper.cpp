@@ -32,12 +32,6 @@ uint32_t startEventCount = 1;
 
 int32_t RunBgParseSync(const char * fileContents, uint32_t lengthBytes, const char* fileName);
 
-extern "C"
-int32_t OnChakraCoreLoadedEntry(TestHooks& testHooks)
-{
-    return ChakraRTInterface::OnChakraCoreLoaded(testHooks);
-}
-
 JsRuntimeAttributes jsrtAttributes = JsRuntimeAttributeNone;
 
 int HostExceptionFilter(int exceptionCode, _EXCEPTION_POINTERS *ep)
@@ -892,7 +886,7 @@ int main_internal(int argc, char** c_argv)
 
 #if !defined(NDEBUG)
     // handle command line flags
-    OnChakraCoreLoaded(OnChakraCoreLoadedEntry);
+    OnChakraCoreLoaded();
 #endif
 
     if (argInfo.filename == nullptr)

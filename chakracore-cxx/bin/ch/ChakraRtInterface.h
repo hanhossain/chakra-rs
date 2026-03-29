@@ -325,7 +325,7 @@ private:
     static int32_t ParseConfigFlags();
 
 public:
-    static int32_t OnChakraCoreLoaded(TestHooks& testHooks);
+    static int32_t InitializeTestHooks(TestHooks& testHooks);
 
     static bool LoadChakraDll(ArgInfo* argInfo);
 

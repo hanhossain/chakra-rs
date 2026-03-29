@@ -83,7 +83,7 @@ int32_t ChakraRTInterface::ParseConfigFlags()
 }
 
 /*static*/
-int32_t ChakraRTInterface::OnChakraCoreLoaded(TestHooks& testHooks)
+int32_t ChakraRTInterface::InitializeTestHooks(TestHooks& testHooks)
 {
     if (!m_testHooksInitialized)
     {
