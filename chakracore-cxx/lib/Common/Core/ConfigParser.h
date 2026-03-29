@@ -37,8 +37,6 @@ private:
     Js::ConfigFlagsTable& _flags;
     const char16_t* _configFileName;
 
-    void ParseRegistryKey(HKEY hk, CmdLineArgsParser &parser);
-
 public:
     static ConfigParser s_moduleConfigParser;
 
@@ -59,7 +57,6 @@ public:
 #endif
 
     void ParseConfig(HANDLE hmod, CmdLineArgsParser &parser, const char16_t* strCustomConfigFile = nullptr);
-    void ParseRegistry(CmdLineArgsParser &parser);
     void ProcessConfiguration(HANDLE mod);
     int32_t SetOutputFile(const char16_t* outputFile, const char16_t* openMode);
     bool HasReadConfig() { return _hasReadConfig; }

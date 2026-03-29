@@ -116,7 +116,6 @@ void JsrtCallbackState::ObjectBeforeCallectCallbackWrapper(JsObjectBeforeCollect
         PAL_InitializeChakraCore();
 
         HMODULE mod = GetModuleHandleW(NULL);
-        AutoSystemInfo::SaveModuleFileName(mod);
 
     #if defined(_M_IX86) && !defined(__clang__)
         // Enable SSE2 math functions in CRT if SSE2 is available

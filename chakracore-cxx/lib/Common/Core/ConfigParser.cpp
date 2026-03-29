@@ -47,20 +47,9 @@ void ConfigParser::ParseOnModuleLoad(CmdLineArgsParser& parser, HANDLE hmod)
 {
     Assert(!s_moduleConfigParser.HasReadConfig());
 
-    s_moduleConfigParser.ParseRegistry(parser);
     s_moduleConfigParser.ParseConfig(hmod, parser);
     s_moduleConfigParser.ProcessConfiguration(hmod);
     // 'parser' destructor post-processes some configuration
-}
-
-// TODO (hanhossain): remove
-void ConfigParser::ParseRegistry(CmdLineArgsParser &parser)
-{
-}
-
-// TODO (hanhossain): remove
-void ConfigParser::ParseRegistryKey(HKEY hk, CmdLineArgsParser &parser)
-{
 }
 
 void ConfigParser::ParseConfig(HANDLE hmod, CmdLineArgsParser &parser, const char16_t* strCustomConfigFile)
