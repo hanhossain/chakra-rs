@@ -44,7 +44,7 @@ DynamicProfileMutator::GetMutator()
         Js::Throw::FatalInternalError();
     }
 
-    CreateMutatorFunc procAddress = (CreateMutatorFunc)::GetProcAddress(hModule, CreateMutatorProcName);
+    CreateMutatorFunc procAddress = nullptr;
 
     if (procAddress == nullptr)
     {

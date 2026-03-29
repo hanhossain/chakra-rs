@@ -1282,12 +1282,6 @@ LoadLibraryExW(
 typedef long (*FARPROC)();
 
 // TODO (hanhossain): public
-FARPROC
-GetProcAddress(
-     HMODULE hModule,
-     const char * lpProcName);
-
-// TODO (hanhossain): public
 BOOL
 FreeLibrary(
       HMODULE hLibModule);
