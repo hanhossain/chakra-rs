@@ -1253,20 +1253,6 @@ BOOL
 UnmapViewOfFile(
          const void * lpBaseAddress);
 
-// TODO (hanhossain): public
-HMODULE
-LoadLibraryW(
-         const char16_t* lpLibFileName);
-
-// TODO (hanhossain): public
-HMODULE
-LoadLibraryExW(
-         const char16_t* lpLibFileName,
-         /*Reserved*/ HANDLE hFile,
-         uint32_t dwFlags);
-
-#define LoadLibraryEx LoadLibraryExW
-
 typedef long (*FARPROC)();
 
 // TODO (hanhossain): public

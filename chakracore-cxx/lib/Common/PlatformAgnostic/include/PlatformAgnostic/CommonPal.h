@@ -63,8 +63,6 @@ inline void DebugBreak()
 
 #define DbgRaiseAssertionFailure() __builtin_trap()
 
-// PAL LoadLibraryExW not supported
-#define LOAD_LIBRARY_SEARCH_SYSTEM32     0
 // winnt.h
 #define FAST_FAIL_INVALID_ARG            5
 // winerror.h

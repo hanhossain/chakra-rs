@@ -94,11 +94,6 @@ int MaxWCharToAcpLength = 3;
 
 /* static function declarations ***********************************************/
 
-template<class TChar> static bool LOADVerifyLibraryPath(const TChar *libraryPath);
-static bool LOADConvertLibraryPathWideStringToMultibyteString(
-    const char16_t* wideLibraryPath,
-    char* multibyteLibraryPath,
-    int32_t *multibyteLibraryPathLengthRef);
 static BOOL LOADValidateModule(MODSTRUCT *module);
 static char16_t* LOADGetModuleFileName(MODSTRUCT *module);
 static MODSTRUCT *LOADAddModule(void *dl_handle, const char * libraryNameOrPath);
@@ -109,74 +104,6 @@ static HMODULE LOADLoadLibrary(const char * shortAsciiName, BOOL fDynamic);
 static BOOL LOADCallDllMainSafe(MODSTRUCT *module, uint32_t dwReason, void * lpReserved);
 
 /* API function definitions ***************************************************/
-
-/*++
-Function:
-  LoadLibraryW
-
-See MSDN doc.
---*/
-HMODULE
-LoadLibraryW(
-     const char16_t* lpLibFileName)
-{
-    return LoadLibraryExW(lpLibFileName, nullptr, 0);
-}
-
-/*++
-Function:
-LoadLibraryExW
-
-See MSDN doc.
---*/
-HMODULE
-LoadLibraryExW(
-     const char16_t* lpLibFileName,
-     /*Reserved*/ HANDLE hFile,
-     uint32_t dwFlags)
-{
-    if (dwFlags != 0)
-    {
-        // UNIXTODO: Implement this!
-        ASSERT("Needs Implementation!!!");
-        return nullptr;
-    }
-
-    char * lpstr;
-    int32_t name_length;
-    PathCharString pathstr;
-    HMODULE hModule = nullptr;
-
-    ENTRY("LoadLibraryExW (lpLibFileName=%p (%S)) \n",
-          lpLibFileName ? lpLibFileName : W16_NULLSTRING,
-          lpLibFileName ? lpLibFileName : W16_NULLSTRING);
-
-    if (!LOADVerifyLibraryPath(lpLibFileName))
-    {
-        goto done;
-    }
-
-    lpstr = pathstr.OpenStringBuffer((PAL_wcslen(lpLibFileName)+1) * MaxWCharToAcpLength);
-    if (nullptr == lpstr)
-    {
-        goto done;
-    }
-    if (!LOADConvertLibraryPathWideStringToMultibyteString(lpLibFileName, lpstr, &name_length))
-    {
-        goto done;
-    }
-
-    /* do the Dos/Unix conversion on our own copy of the name */
-    FILEDosToUnixPathA(lpstr);
-    pathstr.CloseBuffer(name_length);
-
-    /* let LOADLoadLibrary call SetLastError in case of failure */
-    hModule = LOADLoadLibrary(lpstr, TRUE);
-
-done:
-    LOGEXIT("LoadLibraryExW returns HMODULE %p\n", hModule);
-    return hModule;
-}
 
 /*++
 Function:
@@ -640,55 +567,6 @@ static BOOL LOADCallDllMainSafe(MODSTRUCT *module, uint32_t dwReason, void * lpR
 #endif /* _ENABLE_DEBUG_MESSAGES_ */
 
     return param.ret;
-}
-
-// Checks the library path for null or empty string. On error, calls SetLastError() and returns false.
-template<class TChar>
-static bool LOADVerifyLibraryPath(const TChar *libraryPath)
-{
-    if (libraryPath == nullptr)
-    {
-        ERROR("libraryPath is null\n");
-        SetLastError(ERROR_MOD_NOT_FOUND);
-        return false;
-    }
-    if (libraryPath[0] == '\0')
-    {
-        ERROR("libraryPath is empty\n");
-        SetLastError(ERROR_INVALID_PARAMETER);
-        return false;
-    }
-    return true;
-}
-
-// Converts the wide char library path string into a multibyte-char string. On error, calls SetLastError() and returns false.
-static bool LOADConvertLibraryPathWideStringToMultibyteString(
-    const char16_t* wideLibraryPath,
-    char* multibyteLibraryPath,
-    int32_t *multibyteLibraryPathLengthRef)
-{
-    _ASSERTE(multibyteLibraryPathLengthRef != nullptr);
-    _ASSERTE(wideLibraryPath != nullptr);
-
-    size_t length = (PAL_wcslen(wideLibraryPath)+1) * MaxWCharToAcpLength;
-    *multibyteLibraryPathLengthRef = WideCharToMultiByte(CP_ACP, 0, wideLibraryPath, -1, multibyteLibraryPath,
-                                                        length, nullptr, nullptr);
-
-    if (*multibyteLibraryPathLengthRef == 0)
-    {
-        uint32_t dwLastError = GetLastError();
-        if (dwLastError == ERROR_INSUFFICIENT_BUFFER)
-        {
-            ERROR("wideLibraryPath converted to a multibyte string is longer than MAX_LONGPATH (%d)!\n", MAX_LONGPATH);
-        }
-        else
-        {
-            ASSERT("WideCharToMultiByte failure! error is %d\n", dwLastError);
-        }
-        SetLastError(ERROR_INVALID_PARAMETER);
-        return false;
-    }
-    return true;
 }
 
 /*++
