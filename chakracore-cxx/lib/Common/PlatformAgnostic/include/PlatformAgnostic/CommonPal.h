@@ -360,8 +360,6 @@ inline errno_t _wcserror_s(char16_t (&buffer)[size], int errnum)
     return MultiByteToWideChar(CP_ACP, 0, str, -1, buffer, size) ? 0 : -1;
 }
 
-#define midl_user_allocate(size) \
-    HeapAlloc(0, (size))
 #define midl_user_free(ptr) \
     if (ptr != NULL) { free(ptr); }
 

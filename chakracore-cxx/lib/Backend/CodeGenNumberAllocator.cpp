@@ -381,8 +381,12 @@ Js::JavascriptNumber* XProcNumberPageSegmentImpl::AllocateNumber(Func* func, dou
     }
     else
     {
-        XProcNumberPageSegmentImpl* seg = (XProcNumberPageSegmentImpl*)midl_user_allocate(sizeof(XProcNumberPageSegment));
-        if (seg == nullptr)
+        XProcNumberPageSegmentImpl* seg = (XProcNumberPageSegmentImpl*)malloc(sizeof(XProcNumberPageSegment));
+        if (seg != nullptr)
+        {
+            memset(seg, 0, sizeof(XProcNumberPageSegment));
+        }
+        else
         {
             Js::Throw::OutOfMemory();
         }

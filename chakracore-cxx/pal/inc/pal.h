@@ -1247,12 +1247,6 @@ HeapCreate(
 	        size_t dwInitialSize,
 	        size_t dwMaximumSize);
 
-// TODO (hanhossain): public
-void *
-HeapAlloc(
-    uint32_t dwFlags,
-    size_t dwBytes);
-
 typedef enum _HEAP_INFORMATION_CLASS {
     HeapCompatibilityInformation,
     HeapEnableTerminationOnCorruption

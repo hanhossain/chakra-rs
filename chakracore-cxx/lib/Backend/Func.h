@@ -157,10 +157,14 @@ public:
     {
         if (this->GetJITOutput()->GetOutputData()->numberPageSegments == nullptr)
         {
-            XProcNumberPageSegmentImpl* seg = (XProcNumberPageSegmentImpl*)midl_user_allocate(sizeof(XProcNumberPageSegment));
+            XProcNumberPageSegmentImpl* seg = (XProcNumberPageSegmentImpl*)malloc(sizeof(XProcNumberPageSegment));
             if (seg == nullptr)
             {
                 Js::Throw::OutOfMemory();
+            }
+            else
+            {
+                memset(seg, 0, sizeof(XProcNumberPageSegment));
             }
             this->GetJITOutput()->GetOutputData()->numberPageSegments = new (seg) XProcNumberPageSegmentImpl();
         }

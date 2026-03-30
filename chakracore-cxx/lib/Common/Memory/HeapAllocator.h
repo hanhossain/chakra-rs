@@ -294,8 +294,12 @@ public:
         {
             processHeap = GetProcessHeap();
         }
-        char * buffer = (char*)HeapAlloc(0, byteSize);
-        if (buffer == nullptr)
+        char *buffer = (char *)malloc(byteSize);
+        if (buffer != nullptr)
+        {
+            memset(buffer, 0, byteSize);
+        }
+        else
         {
             // NoCheck heap allocator is only used by debug only code, and if we fail to allocate
             // memory, we will just raise an exception and kill the process
@@ -305,18 +309,7 @@ public:
     }
     char * AllocZero(size_t byteSize)
     {
-        if (processHeap == NULL)
-        {
-            processHeap = GetProcessHeap();
-        }
-        char * buffer = (char*)HeapAlloc(HEAP_ZERO_MEMORY, byteSize);
-        if (buffer == nullptr)
-        {
-            // NoCheck heap allocator is only used by debug only code, and if we fail to allocate
-            // memory, we will just raise an exception and kill the process
-            DebugHeap_OOM_fatal_error();
-        }
-        return buffer;
+        return Alloc(byteSize);
     }
     void Free(void * buffer, size_t byteSize)
     {

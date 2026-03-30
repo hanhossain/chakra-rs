@@ -29,7 +29,12 @@ SET_DEFAULT_DEBUG_CHANNEL(MEM);
 
 extern "C" void * CoTaskMemAlloc( size_t cb)
 {
-    return HeapAlloc(0, cb);
+    void *ptr = malloc(cb);
+    if (ptr != nullptr)
+    {
+        memset(ptr, 0, cb);
+    }
+    return ptr;
 }
 
 extern "C" void CoTaskMemFree( void * pv)
