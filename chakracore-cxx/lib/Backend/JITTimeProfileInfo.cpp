@@ -43,25 +43,22 @@ JITTimeProfileInfo::InitializeJITProfileData(
     {
         // for in-proc background JIT we need to explicitly copy LdLen, LdElem, and StElem info
         data->ldLenData = AnewArray(alloc, LdLenIDL, data->profiledLdLenCount);
-        memcpy_s(
+        memcpy(
             data->ldLenData,
-            data->profiledLdLenCount * sizeof(LdLenIDL),
             profileInfo->GetLdLenInfo(),
             functionBody->GetProfiledLdLenCount() * sizeof(Js::LdLenInfo)
         );
 
         data->ldElemData = AnewArray(alloc, LdElemIDL, data->profiledLdElemCount);
-        memcpy_s(
+        memcpy(
             data->ldElemData,
-            data->profiledLdElemCount * sizeof(LdElemIDL),
             profileInfo->GetLdElemInfo(),
             functionBody->GetProfiledLdElemCount() * sizeof(Js::LdElemInfo)
         );
 
         data->stElemData = AnewArray(alloc, StElemIDL, data->profiledStElemCount);
-        memcpy_s(
+        memcpy(
             data->stElemData,
-            data->profiledStElemCount * sizeof(StElemIDL),
             profileInfo->GetStElemInfo(),
             functionBody->GetProfiledStElemCount() * sizeof(Js::StElemInfo)
         );
@@ -101,9 +98,8 @@ JITTimeProfileInfo::InitializeJITProfileData(
             {
                 iter.Next();
                 Js::CallbackInfo * info = iter.Data();
-                memcpy_s(
+                memcpy(
                     &data->callbackData[callbackInfoIndex],
-                    sizeof(CallbackInfoIDL),
                     info,
                     sizeof(Js::CallbackInfo)
                 );

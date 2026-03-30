@@ -95,7 +95,6 @@ extern int _vsprintf_s( char* string, size_t sizeInBytes, const char* format, va
 extern int _vswprintf_s( char16_t* string, size_t sizeInWords, const char16_t* format, va_list arglist );
 extern int _vsnwprintf_s( char16_t* string, size_t sizeInWords, size_t count, const char16_t* format, va_list arglist );
 
-extern errno_t memcpy_s( void * dst, size_t sizeInBytes, const void * src, size_t count );
 extern errno_t memmove_s( void * dst, size_t sizeInBytes, const void * src, size_t count );
     }
 

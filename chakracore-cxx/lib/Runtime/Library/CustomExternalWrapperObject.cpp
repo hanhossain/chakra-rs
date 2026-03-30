@@ -34,7 +34,7 @@ CustomExternalWrapperObject::CustomExternalWrapperObject(CustomExternalWrapperTy
         this->u.inlineSlotSize = inlineSlotSize;
         if (data)
         {
-            memcpy_s(this->GetInlineSlots(), inlineSlotSize, data, inlineSlotSize);
+            memcpy(this->GetInlineSlots(), data, inlineSlotSize);
         }
     }
     else
@@ -54,7 +54,7 @@ CustomExternalWrapperObject::CustomExternalWrapperObject(CustomExternalWrapperOb
         this->u.inlineSlotSize = instance->GetInlineSlotSize();
         if (instance->GetInlineSlots())
         {
-            memcpy_s(this->GetInlineSlots(), this->GetInlineSlotSize(), instance->GetInlineSlots(), instance->GetInlineSlotSize());
+            memcpy(this->GetInlineSlots(), instance->GetInlineSlots(), instance->GetInlineSlotSize());
         }
     }
     else

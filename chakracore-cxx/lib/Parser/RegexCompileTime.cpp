@@ -4561,7 +4561,7 @@ namespace UnifiedRegex
         program->rep.insts.insts = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), uint8_t, instNext);
 
         program->rep.insts.instsLen = instNext;
-        memcpy_s(program->rep.insts.insts, instNext, instBuf, instNext);
+        memcpy(program->rep.insts.insts, instBuf, instNext);
         program->numLoops = nextLoopId;
     }
 

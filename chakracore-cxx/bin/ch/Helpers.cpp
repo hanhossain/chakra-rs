@@ -31,7 +31,7 @@ void TTDHostBuildCurrentExeDirectory(char* path, size_t* pathLength, size_t buff
         PAL_fwprintf(PAL_get_stderr(), u"Don't overflow path buffer during copy");
         exit(1);
     }
-    memcpy_s(path, bufferLength, exePath, i + 1);
+    memcpy(path, exePath, i + 1);
     *pathLength = i + 1;
     path[*pathLength] = '\0';
 }
@@ -226,7 +226,7 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
             // A: if we use the same memory twice, ch doesn't know that during FinalizeCallback free.
             // the copy memory will be freed by the finalizer
             Assert(pRawBytesFromMap);
-            memcpy_s(pRawBytes, bufferLength, pRawBytesFromMap, lengthBytes);
+            memcpy(pRawBytes, pRawBytesFromMap, lengthBytes);
         }
     }
 
@@ -523,8 +523,8 @@ JsTTDStreamHandle CALLBACK Helpers::TTCreateStreamCallback(size_t uriLength, con
     char path[MAX_URI_LENGTH];
     memset(path, 0, MAX_URI_LENGTH);
 
-    memcpy_s(path, MAX_URI_LENGTH, uri, uriLength);
-    memcpy_s(path + uriLength, MAX_URI_LENGTH - uriLength, asciiName, asciiNameLength);
+    memcpy(path, uri, uriLength);
+    memcpy(path + uriLength, asciiName, asciiNameLength);
 
     JsTTDStreamHandle res = TTDHostOpen(uriLength + asciiNameLength, path, write);
     if(res == nullptr)

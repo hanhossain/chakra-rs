@@ -1484,10 +1484,8 @@ JsValueRef WScriptJsrt::LoadBinaryFileCallback(JsValueRef callee,
             }
             else
             {
-                if (memcpy_s(buffer, bufferLength, (uint8_t*)fileContent, lengthBytes) == 0)
-                {
-                    returnValue = arrayBuffer;
-                }
+                memcpy(buffer, (uint8_t*)fileContent, lengthBytes);
+                returnValue = arrayBuffer;
             }
 ErrorStillFree:
             if (isHeapAlloc)
