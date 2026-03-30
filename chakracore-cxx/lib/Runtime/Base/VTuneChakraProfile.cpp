@@ -135,7 +135,7 @@ void VTuneChakraProfile::LogLoopBodyLoadEvent(Js::FunctionBody* body, Js::LoopEn
         {
             methodInfo.method_id = iJIT_GetNewMethodID();
             size_t len = utf8::EncodeInto<utf8::Utf8EncodingKind::Cesu8>(utf8MethodName, cbUtf8MethodName, methodName, ccMethodLength);
-            sprintf_s((char*)(utf8MethodName + len), cbUtf8MethodName - len," %s %d", LoopStr, loopNumber + 1);
+            snprintf((char*)(utf8MethodName + len), cbUtf8MethodName - len," %s %d", LoopStr, loopNumber + 1);
             methodInfo.method_name = (char*)utf8MethodName;
             methodInfo.method_load_address = (void*)entryPoint->GetNativeAddress();
             methodInfo.method_size = (uint)entryPoint->GetCodeSize();        // Size in memory - Must be exact

@@ -1801,19 +1801,19 @@ namespace TTD
     void TraceLogger::AppendInteger(long ival)
     {
         this->EnsureSpace(64);
-        this->m_currLength += sprintf_s(this->m_buffer + this->m_currLength, 64, "%I64i", ival);
+        this->m_currLength += snprintf(this->m_buffer + this->m_currLength, 64, "%I64i", ival);
     }
 
     void TraceLogger::AppendUnsignedInteger(unsigned long ival)
     {
         this->EnsureSpace(64);
-        this->m_currLength += sprintf_s(this->m_buffer + this->m_currLength, 64, "%I64u", ival);
+        this->m_currLength += snprintf(this->m_buffer + this->m_currLength, 64, "%I64u", ival);
     }
 
     void TraceLogger::AppendIntegerHex(long ival)
     {
         this->EnsureSpace(64);
-        this->m_currLength += sprintf_s(this->m_buffer + this->m_currLength, 64, "0x%I64x", ival);
+        this->m_currLength += snprintf(this->m_buffer + this->m_currLength, 64, "0x%I64x", ival);
     }
 
     void TraceLogger::AppendDouble(double dval)
@@ -1822,11 +1822,11 @@ namespace TTD
 
         if(INT32_MIN <= dval && dval <= INT32_MAX &&  floor(dval) == dval)
         {
-            this->m_currLength += sprintf_s(this->m_buffer + this->m_currLength, 64, "%I64i", (long)dval);
+            this->m_currLength += snprintf(this->m_buffer + this->m_currLength, 64, "%I64i", (long)dval);
         }
         else
         {
-            this->m_currLength += sprintf_s(this->m_buffer + this->m_currLength, 64, "%.32f", dval);
+            this->m_currLength += snprintf(this->m_buffer + this->m_currLength, 64, "%.32f", dval);
         }
     }
 
@@ -2056,7 +2056,7 @@ namespace TTD
         this->AppendIndent();
 
         this->EnsureSpace(128);
-        this->m_currLength += sprintf_s(this->m_buffer + this->m_currLength, 128, "(l:%I32u, c:%I32u)\n", line + 1, column);
+        this->m_currLength += snprintf(this->m_buffer + this->m_currLength, 128, "(l:%I32u, c:%I32u)\n", line + 1, column);
 
         ////
         //Temp debugging help if needed

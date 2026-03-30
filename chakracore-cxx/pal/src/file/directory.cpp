@@ -377,7 +377,7 @@ CreateDirectoryA(
         // Copy cwd, '/', path
         int iLen = strlen(cwd) + 1 + pathLength + 1;
         realPath = static_cast<char *>(alloca(iLen));
-        sprintf_s(realPath, iLen, "%s/%s", cwd, UnixPathName);
+        snprintf(realPath, iLen, "%s/%s", cwd, UnixPathName);
 
         free((char *)cwd);
     }

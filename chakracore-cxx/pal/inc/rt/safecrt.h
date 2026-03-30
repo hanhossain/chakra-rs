@@ -3071,36 +3071,10 @@ error_erange:
 }
 #endif
 
-/* sprintf_s, vsprintf_s */
-/*
- * sprintf_s, swprintf_s, vsprintf_s, vswprintf_s format a string and copy it into _Dst;
- * need safecrt.lib and msvcrt.dll;
- * will call _SAFECRT_INVALID_PARAMETER if there is not enough space in _Dst;
- * will call _SAFECRT_INVALID_PARAMETER if the format string is malformed;
- * the %n format type is not allowed;
- * return the length of string _Dst;
- * return a negative number if something goes wrong with mbcs conversions (we will not call _SAFECRT_INVALID_PARAMETER);
- * _SizeInBytes/_SizeInWords must be <= (INT_MAX / sizeof(char/char16_t));
- * cannot be used without safecrt.lib
- */
-EXTERN_C
-int sprintf_s(char *_Dst, size_t _SizeInBytes, const char *_Format, ...);
 EXTERN_C
 int vsprintf_s(char *_Dst, size_t _SizeInBytes, const char *_Format, va_list _ArgList);
 
 #if defined(__cplusplus) && _SAFECRT_USE_CPP_OVERLOADS
-template <size_t _SizeInBytes>
-inline
-int sprintf_s(char (&_Dst)[_SizeInBytes], const char *_Format, ...)
-{
-    int ret;
-    va_list _ArgList;
-    va_start(_ArgList, _Format);
-    ret = vsprintf_s(_Dst, _SizeInBytes, _Format, _ArgList);
-    va_end(_ArgList);
-    return ret;
-}
-
 template <size_t _SizeInBytes>
 inline
 int vsprintf_s(char (&_Dst)[_SizeInBytes], const char *_Format, va_list _ArgList)
@@ -3108,8 +3082,6 @@ int vsprintf_s(char (&_Dst)[_SizeInBytes], const char *_Format, va_list _ArgList
     return vsprintf_s(_Dst, _SizeInBytes, _Format, _ArgList);
 }
 #endif
-
-/* no inline version of sprintf_s, vsprintf_s */
 
 /* swprintf_s, vswprintf_s */
 EXTERN_C

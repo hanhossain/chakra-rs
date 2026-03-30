@@ -582,7 +582,7 @@ JsValueRef WScriptJsrt::LoadScriptHelper(JsValueRef callee, bool isConstructCall
             isFile = false;
             if (isSourceModule)
             {
-                sprintf_s(fileNameBuffer, MAX_PATH, "moduleScript%i.js", (int)sourceContext);
+                snprintf(fileNameBuffer, MAX_PATH, "moduleScript%i.js", (int)sourceContext);
                 fileNameNarrow = fileNameBuffer;
             }
         }
