@@ -1253,12 +1253,6 @@ HeapAlloc(
     uint32_t dwFlags,
     size_t dwBytes);
 
-// TODO (hanhossain): public
-BOOL
-HeapFree(
-    uint32_t dwFlags,
-    void * lpMem);
-
 typedef enum _HEAP_INFORMATION_CLASS {
     HeapCompatibilityInformation,
     HeapEnableTerminationOnCorruption

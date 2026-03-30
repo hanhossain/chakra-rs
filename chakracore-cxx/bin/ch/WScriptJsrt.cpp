@@ -1492,7 +1492,10 @@ JsValueRef WScriptJsrt::LoadBinaryFileCallback(JsValueRef callee,
 ErrorStillFree:
             if (isHeapAlloc)
             {
-                HeapFree(0, (void*)fileContent);
+                if (fileContent)
+                {
+                    free((void *)fileContent);
+                }
             }
         }
     }

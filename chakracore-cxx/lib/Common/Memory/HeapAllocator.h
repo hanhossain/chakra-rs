@@ -321,7 +321,7 @@ public:
     void Free(void * buffer, size_t byteSize)
     {
         Assert(processHeap != NULL);
-        HeapFree(0, buffer);
+        if (buffer != nullptr) { free(buffer); }
     }
 
 #ifdef TRACK_ALLOC

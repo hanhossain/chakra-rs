@@ -475,7 +475,7 @@ BGParseWorkItem::~BGParseWorkItem()
     {
         // When this workitem has been discarded, this is the last reference
         // to the script source, so free it now during destruction.
-        ::HeapFree(0, (void*)this->script);
+        if (this->script) { free((void*)this->script); }
     }
 }
 
