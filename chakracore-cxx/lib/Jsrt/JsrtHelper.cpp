@@ -111,8 +111,6 @@ void JsrtCallbackState::ObjectBeforeCallectCallbackWrapper(JsObjectBeforeCollect
 
         PAL_InitializeChakraCore();
 
-        HMODULE mod = GetModuleHandleW(NULL);
-
     #if defined(_M_IX86) && !defined(__clang__)
         // Enable SSE2 math functions in CRT if SSE2 is available
     #pragma prefast(suppress:6031, "We don't require SSE2, but will use it if available")
@@ -121,7 +119,7 @@ void JsrtCallbackState::ObjectBeforeCallectCallbackWrapper(JsObjectBeforeCollect
 
         {
             CmdLineArgsParser parser;
-            ConfigParser::ParseOnModuleLoad(parser, mod);
+            ConfigParser::ParseOnModuleLoad(parser);
         }
 
     #ifdef VTUNE_PROFILING

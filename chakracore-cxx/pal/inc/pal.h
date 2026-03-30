@@ -1257,12 +1257,6 @@ typedef long (*FARPROC)();
 
 
 // TODO (hanhossain): public
-HMODULE
-GetModuleHandleW(
-      const char16_t* lpModuleName
-);
-
-// TODO (hanhossain): public
 void *
 VirtualAlloc(
           void * lpAddress,

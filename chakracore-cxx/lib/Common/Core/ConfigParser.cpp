@@ -43,16 +43,16 @@ ArenaAllocator* GetOutputAllocator2()
 }
 #endif
 
-void ConfigParser::ParseOnModuleLoad(CmdLineArgsParser& parser, HANDLE hmod)
+void ConfigParser::ParseOnModuleLoad(CmdLineArgsParser& parser)
 {
     Assert(!s_moduleConfigParser.HasReadConfig());
 
-    s_moduleConfigParser.ParseConfig(hmod, parser);
+    s_moduleConfigParser.ParseConfig(parser);
     s_moduleConfigParser.ProcessConfiguration();
     // 'parser' destructor post-processes some configuration
 }
 
-void ConfigParser::ParseConfig(HANDLE hmod, CmdLineArgsParser &parser, const char16_t* strCustomConfigFile)
+void ConfigParser::ParseConfig(CmdLineArgsParser &parser, const char16_t* strCustomConfigFile)
 {
 #if defined(ENABLE_DEBUG_CONFIG_OPTIONS) && CONFIG_PARSE_CONFIG_FILE
     Assert(!_hasReadConfig || strCustomConfigFile != nullptr);

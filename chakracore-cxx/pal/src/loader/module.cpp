@@ -90,23 +90,7 @@ int MaxWCharToAcpLength = 3;
 
 /* static function declarations ***********************************************/
 
-static BOOL LOADCallDllMainSafe(MODSTRUCT *module, uint32_t dwReason, void * lpReserved);
-
 /* API function definitions ***************************************************/
-
-HMODULE
-GetModuleHandleW(
-      const char16_t* lpModuleName)
-{
-    if (lpModuleName)
-    {
-        // UNIXTODO: Implement this!
-        ASSERT("Needs Implementation!!!");
-        return nullptr;
-    }
-
-    return (HMODULE)&exe_module;
-}
 
 /* Internal PAL functions *****************************************************/
 
@@ -141,10 +125,8 @@ BOOL LOADInitializeModules()
         ERROR("Executable module will be broken : dlopen(nullptr) failed dlerror message is \"%s\" \n", dlerror());
         return FALSE;
     }
-    exe_module.refcount = -1;
     exe_module.next = &exe_module;
     exe_module.prev = &exe_module;
-    exe_module.pDllMain = nullptr;
     exe_module.hinstance = nullptr;
     exe_module.threadLibCalls = TRUE;
     return TRUE;
@@ -212,73 +194,8 @@ void LOADCallDllMain(uint32_t dwReason, void * lpReserved)
         if (!InLoadOrder)
             module = module->prev;
 
-        if (module->threadLibCalls)
-        {
-            if (module->pDllMain)
-            {
-                LOADCallDllMainSafe(module, dwReason, lpReserved);
-            }
-        }
-
         if (InLoadOrder)
             module = module->next;
 
     } while (module != &exe_module);
-}
-
-/*++
-Function :
-    LOADCallDllMainSafe
-
-    Exception-safe call to DllMain.
-
-Parameters :
-    MODSTRUCT *module : module whose DllMain must be called
-
-    uint32_t dwReason : parameter to pass down to DllMain, one of DLL_PROCESS_ATTACH, DLL_PROCESS_DETACH,
-        DLL_THREAD_ATTACH, DLL_THREAD_DETACH
-
-    void * lpvReserved : parameter to pass down to DllMain,
-        If dwReason is DLL_PROCESS_ATTACH, lpvReserved is NULL for dynamic loads and non-NULL for static loads.
-        If dwReason is DLL_PROCESS_DETACH, lpvReserved is NULL if DllMain has been called by using FreeLibrary
-            and non-NULL if DllMain has been called during process termination.
-
-Returns:
-    BOOL : DllMain's return value
-*/
-static BOOL LOADCallDllMainSafe(MODSTRUCT *module, uint32_t dwReason, void * lpReserved)
-{
-#if _ENABLE_DEBUG_MESSAGES_
-    /* reset ENTRY nesting level back to zero while inside the callback... */
-    int old_level = DBG_change_entrylevel(0);
-#endif /* _ENABLE_DEBUG_MESSAGES_ */
-
-    struct Param
-    {
-        MODSTRUCT *module;
-        uint32_t dwReason;
-        void * lpReserved;
-        BOOL ret;
-    } param;
-    param.module = module;
-    param.dwReason = dwReason;
-    param.lpReserved = lpReserved;
-    param.ret = FALSE;
-
-    {
-        TRACE("Calling DllMain (%p) for module %S\n",
-              param.module->pDllMain,
-              param.module->lib_name ? param.module->lib_name : W16_NULLSTRING);
-
-        {
-            param.ret = param.module->pDllMain(param.module->hinstance, param.dwReason, param.lpReserved);
-        }
-    }
-
-#if _ENABLE_DEBUG_MESSAGES_
-    /* ...and set nesting level back to what it was */
-    DBG_change_entrylevel(old_level);
-#endif /* _ENABLE_DEBUG_MESSAGES_ */
-
-    return param.ret;
 }

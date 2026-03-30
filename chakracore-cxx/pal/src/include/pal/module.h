@@ -35,7 +35,6 @@ typedef struct _MODSTRUCT
     HMODULE self;           /* circular reference to this module */
     void *dl_handle;        /* handle returned by dlopen() */
     HINSTANCE hinstance;    /* handle returned by PAL_RegisterLibrary */
-    int32_t refcount;           /* reference count */
                             /* -1 means infinite reference count - module is never released */
     BOOL threadLibCalls;    /* TRUE for DLL_THREAD_ATTACH/DETACH notifications enabled, FALSE if they are disabled */
 
@@ -43,8 +42,6 @@ typedef struct _MODSTRUCT
     ino_t inode;
     dev_t device;
 #endif
-
-    PDLLMAIN pDllMain;    /* entry point of module */
 
     /* reference to next and previous modules in list (in load order) */
     struct _MODSTRUCT *next;

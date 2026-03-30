@@ -38,16 +38,16 @@ public:
     {
     }
 
-    static void ParseOnModuleLoad(CmdLineArgsParser& parser, HANDLE hMod);
+    static void ParseOnModuleLoad(CmdLineArgsParser& parser);
 
 #ifdef ENABLE_TEST_HOOKS
     static void ParseCustomConfigFile(CmdLineArgsParser& parser, const char16_t* strConfigFile)
     {
-        s_moduleConfigParser.ParseConfig(NULL /* hMod */, parser, strConfigFile);
+        s_moduleConfigParser.ParseConfig(parser, strConfigFile);
     }
 #endif
 
-    void ParseConfig(HANDLE hmod, CmdLineArgsParser &parser, const char16_t* strCustomConfigFile = nullptr);
+    void ParseConfig(CmdLineArgsParser &parser, const char16_t* strCustomConfigFile = nullptr);
     void ProcessConfiguration();
     int32_t SetOutputFile(const char16_t* outputFile, const char16_t* openMode);
     bool HasReadConfig() { return _hasReadConfig; }
