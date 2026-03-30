@@ -402,13 +402,7 @@ using namespace Js;
         if (JavascriptOperators::IsNumberFromNativeArray(instance, index, scriptContext))
             return scriptContext->GetLibrary()->GetNumberTypeDisplayString();
 
-#if FLOATVAR
         return TypeofElem(instance, Js::JavascriptNumber::ToVar(index, scriptContext), scriptContext);
-#else
-        char buffer[sizeof(Js::JavascriptNumber)];
-        return TypeofElem(instance, Js::JavascriptNumber::ToVarInPlace(index, scriptContext,
-            (Js::JavascriptNumber *)buffer), scriptContext);
-#endif
         JIT_HELPER_END(Op_TypeofElem_UInt32);
     }
 
@@ -418,13 +412,7 @@ using namespace Js;
         if (JavascriptOperators::IsNumberFromNativeArray(instance, index, scriptContext))
             return scriptContext->GetLibrary()->GetNumberTypeDisplayString();
 
-#if FLOATVAR
         return TypeofElem(instance, Js::JavascriptNumber::ToVar(index, scriptContext), scriptContext);
-#else
-        char buffer[sizeof(Js::JavascriptNumber)];
-        return TypeofElem(instance, Js::JavascriptNumber::ToVarInPlace(index, scriptContext,
-            (Js::JavascriptNumber *)buffer), scriptContext);
-#endif
         JIT_HELPER_END(Op_TypeofElem_Int32);
     }
 
@@ -3460,26 +3448,14 @@ using namespace Js;
     Var JavascriptOperators::OP_GetElementI_UInt32(Var instance, uint32_t index, ScriptContext* scriptContext)
     {
         JIT_HELPER_REENTRANT_HEADER(Op_GetElementI_UInt32);
-#if FLOATVAR
         return OP_GetElementI_JIT(instance, Js::JavascriptNumber::ToVar(index, scriptContext), scriptContext);
-#else
-        char buffer[sizeof(Js::JavascriptNumber)];
-        return OP_GetElementI_JIT(instance, Js::JavascriptNumber::ToVarInPlace(index, scriptContext,
-            (Js::JavascriptNumber *)buffer), scriptContext);
-#endif
         JIT_HELPER_END(Op_GetElementI_UInt32);
     }
 
     Var JavascriptOperators::OP_GetElementI_Int32(Var instance, int32_t index, ScriptContext* scriptContext)
     {
         JIT_HELPER_REENTRANT_HEADER(Op_GetElementI_Int32);
-#if FLOATVAR
         return OP_GetElementI_JIT(instance, Js::JavascriptNumber::ToVar(index, scriptContext), scriptContext);
-#else
-        char buffer[sizeof(Js::JavascriptNumber)];
-        return OP_GetElementI_JIT(instance, Js::JavascriptNumber::ToVarInPlace(index, scriptContext,
-            (Js::JavascriptNumber *)buffer), scriptContext);
-#endif
         JIT_HELPER_END(Op_GetElementI_Int32);
     }
 
@@ -4113,13 +4089,7 @@ using namespace Js;
     {
         JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Op_GetNativeIntElementI_UInt32);
         JIT_HELPER_SAME_ATTRIBUTES(Op_GetNativeIntElementI_UInt32, Op_GetNativeIntElementI);
-#if FLOATVAR
         return OP_GetNativeIntElementI(instance, Js::JavascriptNumber::ToVar(index, scriptContext));
-#else
-        char buffer[sizeof(Js::JavascriptNumber)];
-        return OP_GetNativeIntElementI(instance, Js::JavascriptNumber::ToVarInPlace(index, scriptContext,
-            (Js::JavascriptNumber *)buffer));
-#endif
         JIT_HELPER_END(Op_GetNativeIntElementI_UInt32);
     }
 
@@ -4127,13 +4097,7 @@ using namespace Js;
     {
         JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Op_GetNativeIntElementI_Int32);
         JIT_HELPER_SAME_ATTRIBUTES(Op_GetNativeIntElementI_Int32, Op_GetNativeIntElementI);
-#if FLOATVAR
         return OP_GetNativeIntElementI(instance, Js::JavascriptNumber::ToVar(index, scriptContext));
-#else
-        char buffer[sizeof(Js::JavascriptNumber)];
-        return OP_GetNativeIntElementI(instance, Js::JavascriptNumber::ToVarInPlace(index, scriptContext,
-            (Js::JavascriptNumber *)buffer));
-#endif
         JIT_HELPER_END(Op_GetNativeIntElementI_Int32);
     }
 
@@ -4192,13 +4156,7 @@ using namespace Js;
     {
         JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Op_GetNativeFloatElementI_UInt32);
         JIT_HELPER_SAME_ATTRIBUTES(Op_GetNativeFloatElementI_UInt32, Op_GetNativeFloatElementI);
-#if FLOATVAR
         return OP_GetNativeFloatElementI(instance, Js::JavascriptNumber::ToVar(index, scriptContext));
-#else
-        char buffer[sizeof(Js::JavascriptNumber)];
-        return OP_GetNativeFloatElementI(instance, Js::JavascriptNumber::ToVarInPlace(index, scriptContext,
-            (Js::JavascriptNumber *)buffer));
-#endif
         JIT_HELPER_END(Op_GetNativeFloatElementI_UInt32);
     }
 
@@ -4206,13 +4164,7 @@ using namespace Js;
     {
         JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Op_GetNativeFloatElementI_Int32);
         JIT_HELPER_SAME_ATTRIBUTES(Op_GetNativeFloatElementI_Int32, Op_GetNativeFloatElementI);
-#if FLOATVAR
         return OP_GetNativeFloatElementI(instance, Js::JavascriptNumber::ToVar(index, scriptContext));
-#else
-        char buffer[sizeof(Js::JavascriptNumber)];
-        return OP_GetNativeFloatElementI(instance, Js::JavascriptNumber::ToVarInPlace(index, scriptContext,
-            (Js::JavascriptNumber *)buffer));
-#endif
         JIT_HELPER_END(Op_GetNativeFloatElementI_Int32);
     }
 
@@ -4220,13 +4172,7 @@ using namespace Js;
     {
         JIT_HELPER_REENTRANT_HEADER(Op_GetMethodElement_UInt32);
         JIT_HELPER_SAME_ATTRIBUTES(Op_GetMethodElement_UInt32, Op_GetMethodElement);
-#if FLOATVAR
         return OP_GetMethodElement(instance, Js::JavascriptNumber::ToVar(index, scriptContext), scriptContext);
-#else
-        char buffer[sizeof(Js::JavascriptNumber)];
-        return OP_GetMethodElement(instance, Js::JavascriptNumber::ToVarInPlace(index, scriptContext,
-            (Js::JavascriptNumber *)buffer), scriptContext);
-#endif
         JIT_HELPER_END(Op_GetMethodElement_UInt32);
     }
 
@@ -4234,13 +4180,7 @@ using namespace Js;
     {
         JIT_HELPER_REENTRANT_HEADER(Op_GetMethodElement_Int32);
         JIT_HELPER_SAME_ATTRIBUTES(Op_GetMethodElement_Int32, Op_GetMethodElement);
-#if FLOATVAR
         return OP_GetElementI(instance, Js::JavascriptNumber::ToVar(index, scriptContext), scriptContext);
-#else
-        char buffer[sizeof(Js::JavascriptNumber)];
-        return OP_GetMethodElement(instance, Js::JavascriptNumber::ToVarInPlace(index, scriptContext,
-            (Js::JavascriptNumber *)buffer), scriptContext);
-#endif
         JIT_HELPER_END(Op_GetMethodElement_Int32);
     }
 
@@ -4328,13 +4268,7 @@ using namespace Js;
     {
         JIT_HELPER_REENTRANT_HEADER(Op_SetElementI_UInt32);
         JIT_HELPER_SAME_ATTRIBUTES(Op_SetElementI_UInt32, Op_SetElementI);
-#if FLOATVAR
         return OP_SetElementI_JIT(instance, Js::JavascriptNumber::ToVar(index, scriptContext), value, scriptContext, flags);
-#else
-        char buffer[sizeof(Js::JavascriptNumber)];
-        return OP_SetElementI_JIT(instance, Js::JavascriptNumber::ToVarInPlace(index, scriptContext,
-            (Js::JavascriptNumber *)buffer), value, scriptContext, flags);
-#endif
         JIT_HELPER_END(Op_SetElementI_UInt32);
     }
 
@@ -4342,13 +4276,7 @@ using namespace Js;
     {
         JIT_HELPER_REENTRANT_HEADER(Op_SetElementI_Int32);
         JIT_HELPER_SAME_ATTRIBUTES(Op_SetElementI_Int32, Op_SetElementI);
-#if FLOATVAR
         return OP_SetElementI_JIT(instance, Js::JavascriptNumber::ToVar(index, scriptContext), value, scriptContext, flags);
-#else
-        char buffer[sizeof(Js::JavascriptNumber)];
-        return OP_SetElementI_JIT(instance, Js::JavascriptNumber::ToVarInPlace(index, scriptContext,
-            (Js::JavascriptNumber *)buffer), value, scriptContext, flags);
-#endif
         JIT_HELPER_END(Op_SetElementI_Int32);
     }
 
@@ -4795,13 +4723,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     {
         JIT_HELPER_REENTRANT_HEADER(Op_SetNativeIntElementI_UInt32);
         JIT_HELPER_SAME_ATTRIBUTES(Op_SetNativeIntElementI_UInt32, Op_SetNativeIntElementI);
-#if FLOATVAR
         return OP_SetNativeIntElementI(instance, Js::JavascriptNumber::ToVar(aElementIndex, scriptContext), iValue, scriptContext, flags);
-#else
-        char buffer[sizeof(Js::JavascriptNumber)];
-        return OP_SetNativeIntElementI(instance, Js::JavascriptNumber::ToVarInPlace(aElementIndex, scriptContext,
-            (Js::JavascriptNumber *)buffer), iValue, scriptContext, flags);
-#endif
         JIT_HELPER_END(Op_SetNativeIntElementI_UInt32);
     }
 
@@ -4814,13 +4736,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     {
         JIT_HELPER_REENTRANT_HEADER(Op_SetNativeIntElementI_Int32);
         JIT_HELPER_SAME_ATTRIBUTES(Op_SetNativeIntElementI_Int32, Op_SetNativeIntElementI);
-#if FLOATVAR
         return OP_SetNativeIntElementI(instance, Js::JavascriptNumber::ToVar(aElementIndex, scriptContext), iValue, scriptContext, flags);
-#else
-        char buffer[sizeof(Js::JavascriptNumber)];
-        return OP_SetNativeIntElementI(instance, Js::JavascriptNumber::ToVarInPlace(aElementIndex, scriptContext,
-            (Js::JavascriptNumber *)buffer), iValue, scriptContext, flags);
-#endif
         JIT_HELPER_END(Op_SetNativeIntElementI_Int32);
     }
 
@@ -4864,13 +4780,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     {
         JIT_HELPER_REENTRANT_HEADER(Op_SetNativeFloatElementI_UInt32);
         JIT_HELPER_SAME_ATTRIBUTES(Op_SetNativeFloatElementI_UInt32, Op_SetNativeFloatElementI);
-#if FLOATVAR
         return OP_SetNativeFloatElementI(instance, JavascriptNumber::ToVar(aElementIndex, scriptContext), scriptContext, flags, dValue);
-#else
-        char buffer[sizeof(Js::JavascriptNumber)];
-        return OP_SetNativeFloatElementI(instance, JavascriptNumber::ToVarInPlace(aElementIndex, scriptContext,
-            (Js::JavascriptNumber *)buffer), scriptContext, flags, dValue);
-#endif
         JIT_HELPER_END(Op_SetNativeFloatElementI_UInt32);
     }
 
@@ -4883,13 +4793,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     {
         JIT_HELPER_REENTRANT_HEADER(Op_SetNativeFloatElementI_Int32);
         JIT_HELPER_SAME_ATTRIBUTES(Op_SetNativeFloatElementI_Int32, Op_SetNativeFloatElementI);
-#if FLOATVAR
         return OP_SetNativeFloatElementI(instance, JavascriptNumber::ToVar(aElementIndex, scriptContext), scriptContext, flags, dValue);
-#else
-        char buffer[sizeof(Js::JavascriptNumber)];
-        return OP_SetNativeFloatElementI(instance, JavascriptNumber::ToVarInPlace(aElementIndex, scriptContext,
-            (Js::JavascriptNumber *)buffer), scriptContext, flags, dValue);
-#endif
         JIT_HELPER_END(Op_SetNativeFloatElementI_Int32);
     }
     BOOL JavascriptOperators::OP_Memcopy(Var dstInstance, int32_t dstStart, Var srcInstance, int32_t srcStart, int32_t length, ScriptContext* scriptContext)
@@ -5119,13 +5023,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     {
         JIT_HELPER_REENTRANT_HEADER(Op_DeleteElementI_UInt32);
         JIT_HELPER_SAME_ATTRIBUTES(Op_DeleteElementI_UInt32, Op_DeleteElementI);
-#if FLOATVAR
         return OP_DeleteElementI(instance, Js::JavascriptNumber::ToVar(index, scriptContext), scriptContext, propertyOperationFlags);
-#else
-        char buffer[sizeof(Js::JavascriptNumber)];
-        return OP_DeleteElementI(instance, Js::JavascriptNumber::ToVarInPlace(index, scriptContext,
-            (Js::JavascriptNumber *)buffer), scriptContext, propertyOperationFlags);
-#endif
         JIT_HELPER_END(Op_DeleteElementI_UInt32);
     }
 
@@ -5133,13 +5031,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     {
         JIT_HELPER_REENTRANT_HEADER(Op_DeleteElementI_Int32);
         JIT_HELPER_SAME_ATTRIBUTES(Op_DeleteElementI_Int32, Op_DeleteElementI);
-#if FLOATVAR
         return OP_DeleteElementI(instance, Js::JavascriptNumber::ToVar(index, scriptContext), scriptContext, propertyOperationFlags);
-#else
-        char buffer[sizeof(Js::JavascriptNumber)];
-        return OP_DeleteElementI(instance, Js::JavascriptNumber::ToVarInPlace(index, scriptContext,
-            (Js::JavascriptNumber *)buffer), scriptContext, propertyOperationFlags);
-#endif
         JIT_HELPER_END(Op_DeleteElementI_Int32);
     }
 
@@ -5321,15 +5213,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 #if ENABLE_NATIVE_CODEGEN
             Assert(!JITManager::GetJITManager()->IsJITServer());
 #endif
-#if !FLOATVAR
-            // We allowed stack number to be used as the "this" for getter and setter activation of
-            // n.x and n[prop], where n is the Javascript Number
-            return JavascriptOperators::ToObject(
-                JavascriptNumber::BoxStackNumber(thisVar, (ScriptContext*)scriptContext), (ScriptContext*)scriptContext);
-#else
             return JavascriptOperators::ToObject(thisVar, (ScriptContext*)scriptContext);
-#endif
-
         }
         else
         {
@@ -9901,16 +9785,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         return recycler->AllocZero(size);
     }
 
-#if !FLOATVAR
-    void * JavascriptOperators::AllocUninitializedNumber(Js::RecyclerJavascriptNumberAllocator * allocator)
-    {
-        JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(AllocUninitializedNumber);
-        TRACK_ALLOC_INFO(allocator->GetRecycler(), Js::JavascriptNumber, Recycler, 0, (size_t)-1);
-        return allocator->Alloc(sizeof(Js::JavascriptNumber));
-        JIT_HELPER_END(AllocUninitializedNumber);
-    }
-#endif
-
     void JavascriptOperators::ScriptAbort()
     {
         JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(ScriptAbort);
@@ -10184,9 +10058,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         switch (typeId)
         {
         case Js::TypeIds_Number:
-#if !FLOATVAR
-            return JavascriptNumber::BoxStackInstance(instance, scriptContext);
-#endif
             // fall-through
         case Js::TypeIds_Integer:
             return instance;

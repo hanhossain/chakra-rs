@@ -7,16 +7,10 @@
 namespace Js
 {
     class JavascriptNumber :
-#if !FLOATVAR
-        public RecyclableObject,
-#endif
         public NumberConstants
     {
     private:
         double m_value;
-#if !FLOATVAR
-        DEFINE_VTABLE_CTOR(JavascriptNumber, RecyclableObject);
-#endif
     public:
         JavascriptNumber(double value, StaticType*
 #if DBG
@@ -126,11 +120,7 @@ namespace Js
         static JavascriptNumber* InPlaceNew(double value, ScriptContext* scriptContext, JavascriptNumber* result);
 
 #if ENABLE_NATIVE_CODEGEN
-#if FLOATVAR
         static Var NewCodeGenInstance(double value, ScriptContext* scriptContext);
-#else
-        static Var NewCodeGenInstance(CodeGenNumberAllocator *alloc, double value, ScriptContext* scriptContext);
-#endif
 #endif
 
         inline static bool IsSpecial(double value, unsigned long nSpecial) { return NumberUtilities::IsSpecial(value, nSpecial); }
@@ -146,26 +136,7 @@ namespace Js
         static JavascriptString* ToLocaleStringIntl(Var* values, CallInfo callInfo, ScriptContext* scriptContext);
         static Var CloneToScriptContext(Var aValue, ScriptContext* requestContext);
 
-#if !FLOATVAR
-        static JavascriptNumber* NewUninitialized(Recycler * recycler);
-        static Var BoxStackInstance(Var instance, ScriptContext* scriptContext);
-        static Var BoxStackNumber(Var instance, ScriptContext* scriptContext);
-
-        // This is needed to ensure JavascriptNumber has a VTABLE and JavascriptNumber::Is (which checks for the VTABLE value) works correctly.
-        // This also prevents the vtable from being folded with other classes unexpectedly.
-        virtual VTableValue DummyVirtualFunctionToHinderLinkerICF()
-        {
-            return VTableValue::VtableJavascriptNumber;
-        }
-#endif
-
-
-#if FLOATVAR
         static Var ToVar(double value);
-#else
-        static JavascriptNumber* FromVar(Var aValue);
-        static JavascriptNumber* UnsafeFromVar(Var aValue);
-#endif
 
     private:
         void SetValue(double value)
@@ -196,7 +167,7 @@ namespace Js
     //
     // Implementations shared with diagnostics
     //
-#if FLOATVAR
+
     // Since RecyclableObject and Int32 in their Var representation have top 14 bits 0
     // and tagged float now has top 14 XOR'd with 1s - the value with 14 bits non zero is
     // a float.
@@ -214,7 +185,6 @@ namespace Js
         (*(unsigned long*)(&result)) = (((unsigned long)aValue) ^ FloatTag_Value);
          return result;
      }
-#endif
 
     inline bool JavascriptNumber::IsZero(double value)
     {

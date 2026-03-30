@@ -1435,28 +1435,6 @@ Inline::BuildInlinee(JITTimeFunctionBody* funcBody, const FunctionJITTimeInfo * 
     JITTimeWorkItem * jitWorkItem = JitAnew(this->topFunc->m_alloc, JITTimeWorkItem, workItemData);
 
     JITTimePolymorphicInlineCacheInfo * entryPointPolymorphicInlineCacheInfo = this->topFunc->GetWorkItem()->GetInlineePolymorphicInlineCacheInfo(funcBody->GetAddr());
-#if !FLOATVAR
-    Func * inlinee = JitAnew(this->topFunc->m_alloc,
-                            Func,
-                            this->topFunc->m_alloc,
-                            jitWorkItem,
-                            this->topFunc->GetThreadContextInfo(),
-                            this->topFunc->GetScriptContextInfo(),
-                            this->topFunc->GetJITOutput()->GetOutputData(),
-                            nullptr,
-                            inlineeRuntimeData,
-                            entryPointPolymorphicInlineCacheInfo,
-                            this->topFunc->GetCodeGenAllocators(),
-                            this->topFunc->GetNumberAllocator(),
-                            this->topFunc->GetCodeGenProfiler(),
-                            this->topFunc->IsBackgroundJIT(),
-                            callInstr->m_func,
-                            callInstr->m_next->GetByteCodeOffset(),
-                            returnRegSlot,
-                            false,
-                            callSiteId,
-                            false);
-#else
         Func * inlinee = JitAnew(this->topFunc->m_alloc,
                             Func,
                             this->topFunc->m_alloc,
@@ -1476,7 +1454,6 @@ Inline::BuildInlinee(JITTimeFunctionBody* funcBody, const FunctionJITTimeInfo * 
                             false,
                             callSiteId,
                             false);
-#endif
 
     BuildIRForInlinee(inlinee, funcBody, callInstr, false, recursiveInlineDepth);
     return inlinee;
@@ -3187,28 +3164,6 @@ Inline::InlineCallApplyTarget_Shared(
     }
 
     JITTimePolymorphicInlineCacheInfo * entryPointPolymorphicInlineCacheInfo = inlineeData->HasBody() ? this->topFunc->GetWorkItem()->GetInlineePolymorphicInlineCacheInfo(inlineeData->GetBody()->GetAddr()) : nullptr;
-#if !FLOATVAR
-    Func * inlinee = JitAnew(this->topFunc->m_alloc,
-        Func,
-        this->topFunc->m_alloc,
-        jitWorkItem,
-        this->topFunc->GetThreadContextInfo(),
-        this->topFunc->GetScriptContextInfo(),
-        this->topFunc->GetJITOutput()->GetOutputData(),
-        nullptr,
-        runtimeInfo,
-        entryPointPolymorphicInlineCacheInfo,
-        this->topFunc->GetCodeGenAllocators(),
-        this->topFunc->GetNumberAllocator(),
-        this->topFunc->GetCodeGenProfiler(),
-        this->topFunc->IsBackgroundJIT(),
-        callInstr->m_func,
-        callInstr->m_next->GetByteCodeOffset(),
-        returnRegSlot,
-        false,
-        callSiteId,
-        false);
-#else
     Func * inlinee = JitAnew(this->topFunc->m_alloc,
         Func,
         this->topFunc->m_alloc,
@@ -3228,7 +3183,6 @@ Inline::InlineCallApplyTarget_Shared(
         false,
         callSiteId,
         false);
-#endif
 
     // instrNext
     IR::Instr* instrNext = callInstr->m_next;
@@ -4010,28 +3964,6 @@ Inline::InlineGetterSetterFunction(IR::Instr *accessorInstr, const FunctionJITTi
     JITTimeWorkItem * jitWorkItem = JitAnew(this->topFunc->m_alloc, JITTimeWorkItem, workItemData);
 
     JITTimePolymorphicInlineCacheInfo * entryPointPolymorphicInlineCacheInfo = this->topFunc->GetWorkItem()->GetInlineePolymorphicInlineCacheInfo(funcBody->GetAddr());
-#if !FLOATVAR
-    Func * inlinee = JitAnew(this->topFunc->m_alloc,
-        Func,
-        this->topFunc->m_alloc,
-        jitWorkItem,
-        this->topFunc->GetThreadContextInfo(),
-        this->topFunc->GetScriptContextInfo(),
-        this->topFunc->GetJITOutput()->GetOutputData(),
-        nullptr,
-        accessorInstr->m_func->GetWorkItem()->GetJITTimeInfo()->GetLdFldInlineeRuntimeData(inlineCacheIndex),
-        entryPointPolymorphicInlineCacheInfo,
-        this->topFunc->GetCodeGenAllocators(),
-        this->topFunc->GetNumberAllocator(),
-        this->topFunc->GetCodeGenProfiler(),
-        this->topFunc->IsBackgroundJIT(),
-        accessorInstr->m_func,
-        accessorInstr->m_next->GetByteCodeOffset(),
-        returnRegSlot,
-        false,
-        UINT16_MAX,
-        true);
-#else
     Func * inlinee = JitAnew(this->topFunc->m_alloc,
         Func,
         this->topFunc->m_alloc,
@@ -4051,7 +3983,6 @@ Inline::InlineGetterSetterFunction(IR::Instr *accessorInstr, const FunctionJITTi
         false,
         UINT16_MAX,
         true);
-#endif
 
     // funcBody->GetInParamsCount() can be greater than one even if it is all undefined. Example defineProperty(a,"foo", {get:function(a,b,c){}});
 
@@ -4296,28 +4227,6 @@ Inline::InlineScriptFunction(IR::Instr *callInstr, const FunctionJITTimeInfo *co
         ? funcCaller->GetWorkItem()->GetJITTimeInfo()->GetInlineeForTargetInlineeRuntimeData(profileId, funcBody->GetAddr())
         : inlineeDefInstr->m_func->GetWorkItem()->GetJITTimeInfo()->GetInlineeForCallbackInlineeRuntimeData(static_cast<Js::ProfileId>(inlineeDefInstr->AsProfiledInstr()->u.profileId), funcBody->GetAddr());
 
-#if !FLOATVAR
-    Func * inlinee = JitAnew(this->topFunc->m_alloc,
-        Func,
-        this->topFunc->m_alloc,
-        jitWorkItem,
-        this->topFunc->GetThreadContextInfo(),
-        this->topFunc->GetScriptContextInfo(),
-        this->topFunc->GetJITOutput()->GetOutputData(),
-        nullptr,
-        runtimeInfo,
-        entryPointPolymorphicInlineCacheInfo,
-        this->topFunc->GetCodeGenAllocators(),
-        this->topFunc->GetNumberAllocator(),
-        this->topFunc->GetCodeGenProfiler(),
-        this->topFunc->IsBackgroundJIT(),
-        callInstr->m_func,
-        callInstr->GetNextRealInstr()->GetByteCodeOffset(),
-        returnRegSlot,
-        isCtor,
-        callSiteId,
-        false);
-#else
     Func * inlinee = JitAnew(this->topFunc->m_alloc,
         Func,
         this->topFunc->m_alloc,
@@ -4337,7 +4246,6 @@ Inline::InlineScriptFunction(IR::Instr *callInstr, const FunctionJITTimeInfo *co
         isCtor,
         callSiteId,
         false);
-#endif
 
     return InlineFunctionCommon(callInstr, originalCallTargetOpndIsJITOpt, originalCallTargetStackSym, inlineeData, inlinee, instrNext, returnValueOpnd, inlineBailoutChecksBeforeInstr, symCallerThis, recursiveInlineDepth, safeThis);
 }

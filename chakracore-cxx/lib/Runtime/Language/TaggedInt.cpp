@@ -924,12 +924,8 @@ LblDone:
     bool TaggedNumber::Is(const Var aValue)
     {
         bool isTaggedNumber;
-#if FLOATVAR
         // If we add another tagged representation that is not numerical - this will not work.
         isTaggedNumber = !VarIs<RecyclableObject>(aValue);
-#else
-        isTaggedNumber = TaggedInt::Is(aValue);
-#endif
         return isTaggedNumber;
     }
 }

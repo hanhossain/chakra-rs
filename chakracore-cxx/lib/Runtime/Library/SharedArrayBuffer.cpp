@@ -312,7 +312,7 @@ namespace Js
             }
 
             Assert(buffer != nullptr);
-            ZeroMemory(buffer, length);
+            memset((buffer),0,(length));
         }
         localSharedContents->buffer = buffer;
 #if DBG
@@ -559,7 +559,7 @@ namespace Js
         {
             // We have already allocated maxLength in the heap if we're not using virtual alloc
         }
-        ZeroMemory(buffer + bufferLength, growSize);
+        memset((buffer + bufferLength),0,(growSize));
         sharedContents->bufferLength = newBufferLength;
         ValidateBuffer();
         return true;

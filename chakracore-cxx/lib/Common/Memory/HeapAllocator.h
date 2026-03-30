@@ -196,10 +196,6 @@ struct HeapAllocator
 private:
     HANDLE m_privateHeap;
 
-    void InitPrivateHeap();
-    void DestroyPrivateHeap();
-    HANDLE GetPrivateHeap();
-
 public:
 
 #ifdef TRACK_ALLOC
@@ -294,12 +290,12 @@ public:
     static const bool FakeZeroLengthArray = false;
     char * Alloc(size_t byteSize)
     {
-        if (processHeap == NULL)
+        char *buffer = (char *)malloc(byteSize);
+        if (buffer != nullptr)
         {
-            processHeap = GetProcessHeap();
+            memset(buffer, 0, byteSize);
         }
-        char * buffer = (char*)HeapAlloc(processHeap, 0, byteSize);
-        if (buffer == nullptr)
+        else
         {
             // NoCheck heap allocator is only used by debug only code, and if we fail to allocate
             // memory, we will just raise an exception and kill the process
@@ -309,23 +305,11 @@ public:
     }
     char * AllocZero(size_t byteSize)
     {
-        if (processHeap == NULL)
-        {
-            processHeap = GetProcessHeap();
-        }
-        char * buffer = (char*)HeapAlloc(processHeap, HEAP_ZERO_MEMORY, byteSize);
-        if (buffer == nullptr)
-        {
-            // NoCheck heap allocator is only used by debug only code, and if we fail to allocate
-            // memory, we will just raise an exception and kill the process
-            DebugHeap_OOM_fatal_error();
-        }
-        return buffer;
+        return Alloc(byteSize);
     }
     void Free(void * buffer, size_t byteSize)
     {
-        Assert(processHeap != NULL);
-        HeapFree(processHeap, 0, buffer);
+        if (buffer != nullptr) { free(buffer); }
     }
 
 #ifdef TRACK_ALLOC
@@ -334,7 +318,6 @@ public:
     void ClearTrackAllocInfo(TrackAllocData* data = NULL) {}
 #endif
     static NoCheckHeapAllocator Instance;
-    static HANDLE processHeap;
 };
 
 #ifdef CHECK_MEMORY_LEAK

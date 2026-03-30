@@ -682,24 +682,6 @@ using namespace Js;
     {
         Var ret = nullptr;
 
-#ifdef FAULT_INJECTION
-        if (Js::Configuration::Global.flags.FaultInjection >= 0)
-        {
-            Js::FaultInjection::pfnHandleAV = JavascriptFunction::CallRootEventFilter;
-            __try
-            {
-                ret = JavascriptFunction::CallRootFunctionInternal(obj, args, scriptContext, inScript);
-            }
-            __finally
-            {
-                Js::FaultInjection::pfnHandleAV = nullptr;
-            }
-            //ret should never be null here
-            Assert(ret);
-            return ret;
-        }
-#endif
-
 #ifdef DISABLE_SEH
         // xplat: JavascriptArrayBuffer::AllocWrapper is disabled on cross-platform
         // (IsValidVirtualBufferLength always returns false).
@@ -1129,13 +1111,13 @@ using namespace Js;
             PROBE_STACK(scriptContext, actualLength * sizeof(Var) + Js::Constants::MinStackDefault); // args + function call
             outArgsSize = actualLength * sizeof(Var);
             outArgs.Values = (Var*)_alloca(outArgsSize);
-            ZeroMemory(outArgs.Values, outArgsSize);
+            memset((outArgs.Values),0,(outArgsSize));
         }
         else
         {
             outArgs.Values = stackArgs;
             outArgsSize = STACK_ARGS_ALLOCA_THRESHOLD * sizeof(Var);
-            ZeroMemory(outArgs.Values, outArgsSize); // We may not use all of the elements
+            memset((outArgs.Values),0,(outArgsSize)); // We may not use all of the elements
         }
 
         SpreadArgs(args, outArgs, spreadIndices, scriptContext);

@@ -18,9 +18,6 @@ Func::Func(JitArenaAllocator *alloc, JITTimeWorkItem * workItem,
     Js::EntryPointInfo* epInfo,
     const FunctionJITRuntimeInfo *const runtimeInfo,
     JITTimePolymorphicInlineCacheInfo * const polymorphicInlineCacheInfo, void * const codeGenAllocators,
-#if !FLOATVAR
-    CodeGenNumberAllocator * numberAllocator,
-#endif
     Js::ScriptContextProfiler *const codeGenProfiler, const bool isBackgroundJIT, Func * parentFunc,
     uint postCallByteCodeOffset, Js::RegSlot returnValueRegSlot, const bool isInlinedConstructor,
     Js::ProfileId callSiteIdInParentFunc, bool isGetterSetter) :
@@ -104,9 +101,6 @@ Func::Func(JitArenaAllocator *alloc, JITTimeWorkItem * workItem,
     hasImplicitCalls(false),
     hasTempObjectProducingInstr(false),
     isInlinedConstructor(isInlinedConstructor),
-#if !FLOATVAR
-    numberAllocator(numberAllocator),
-#endif
     loopCount(0),
     callSiteIdInParentFunc(callSiteIdInParentFunc),
     isGetterSetter(isGetterSetter),
@@ -302,9 +296,6 @@ Func::Codegen(JitArenaAllocator *alloc, JITTimeWorkItem * workItem,
     Js::EntryPointInfo* epInfo, // for in-proc jit only
     const FunctionJITRuntimeInfo *const runtimeInfo,
     JITTimePolymorphicInlineCacheInfo * const polymorphicInlineCacheInfo, void * const codeGenAllocators,
-#if !FLOATVAR
-    CodeGenNumberAllocator * numberAllocator,
-#endif
     Js::ScriptContextProfiler *const codeGenProfiler, const bool isBackgroundJIT)
 {
     bool rejit;
@@ -315,9 +306,6 @@ Func::Codegen(JitArenaAllocator *alloc, JITTimeWorkItem * workItem,
         Func func(alloc, workItem, threadContextInfo,
             scriptContextInfo, outputData, epInfo, runtimeInfo,
             polymorphicInlineCacheInfo, codeGenAllocators, 
-#if !FLOATVAR
-            numberAllocator,
-#endif
             codeGenProfiler, isBackgroundJIT);
         try
         {
@@ -628,17 +616,25 @@ Func::TryCodegen()
 
             JITOutputIDL* jitOutputData = m_output.GetOutputData();
             size_t allocSize = offsetof(NativeDataFixupTable, fixupRecords) + sizeof(NativeDataFixupRecord)* (dataAllocator->allocCount);
-            jitOutputData->nativeDataFixupTable = (NativeDataFixupTable*)midl_user_allocate(allocSize);
+            jitOutputData->nativeDataFixupTable = (NativeDataFixupTable*)malloc(allocSize);
             if (!jitOutputData->nativeDataFixupTable)
             {
                 Js::Throw::OutOfMemory();
             }
+            else
+            {
+                memset(jitOutputData->nativeDataFixupTable, 0, allocSize);
+            }
             jitOutputData->nativeDataFixupTable->count = dataAllocator->allocCount;
 
-            jitOutputData->buffer = (NativeDataBuffer*)midl_user_allocate(offsetof(NativeDataBuffer, data) + dataAllocator->totalSize);
+            jitOutputData->buffer = (NativeDataBuffer*)malloc(offsetof(NativeDataBuffer, data) + dataAllocator->totalSize);
             if (!jitOutputData->buffer)
             {
                 Js::Throw::OutOfMemory();
+            }
+            else
+            {
+                memset(jitOutputData->buffer, 0, offsetof(NativeDataBuffer, data) + dataAllocator->totalSize);
             }
 
             jitOutputData->buffer->len = dataAllocator->totalSize;
@@ -2022,18 +2018,7 @@ Js::Var
 Func::AllocateNumber(double value)
 {
     Js::Var number = nullptr;
-#if FLOATVAR
     number = Js::JavascriptNumber::NewCodeGenInstance((double)value, nullptr);
-#else
-    if (!IsOOPJIT()) // in-proc jit
-    {
-        number = Js::JavascriptNumber::NewCodeGenInstance(GetNumberAllocator(), (double)value, GetScriptContext());
-    }
-    else // OOP JIT
-    {
-        number = GetXProcNumberAllocator()->AllocateNumber(this, value);
-    }
-#endif
 
     return number;
 }

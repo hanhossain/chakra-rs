@@ -2280,106 +2280,6 @@ br2_Common:
     LowererMD::Legalize(instr);
 }
 
-#if !FLOATVAR
-void
-LowererMDArch::EmitLoadVar(IR::Instr *instrLoad, bool isFromUint32, bool isHelper)
-{
-    //    e1  = MOV e_src1
-    //    e1  = SHL e1, Js::VarTag_Shift
-    //          JO $ToVar
-    //          JB  $ToVar     [isFromUint32]
-    //    e1  = INC e1
-    //  r_dst = MOVSXD e1
-    //          JMP $done
-    //  $ToVar:
-    //          EmitLoadVarNoCheck
-    //  $Done:
-
-    Assert(instrLoad->GetSrc1()->IsRegOpnd());
-    Assert(instrLoad->GetDst()->GetType() == TyVar);
-
-    bool isInt            = false;
-    bool isNotInt         = false;
-    IR::Opnd *dst         = instrLoad->GetDst();
-    IR::RegOpnd *src1     = instrLoad->GetSrc1()->AsRegOpnd();
-    IR::LabelInstr *toVar = nullptr;
-    IR::LabelInstr *done  = nullptr;
-
-    // TODO: Fix bad lowering. We shouldn't get TyVars here.
-    // Assert(instrLoad->GetSrc1()->GetType() == TyInt32);
-    src1->SetType(TyInt32);
-
-    if (src1->IsTaggedInt())
-    {
-        isInt = true;
-    }
-    else if (src1->IsNotInt())
-    {
-        isNotInt = true;
-    }
-
-    if (!isNotInt)
-    {
-        // e1 = MOV e_src1
-        IR::RegOpnd *e1 = IR::RegOpnd::New(TyInt32, m_func);
-        instrLoad->InsertBefore(IR::Instr::New(Js::OpCode::MOV, e1, instrLoad->GetSrc1(), m_func));
-
-        // e1 = SHL e1, Js::VarTag_Shift
-        instrLoad->InsertBefore(IR::Instr::New(Js::OpCode::SHL,
-            e1,
-            e1,
-            IR::IntConstOpnd::New(Js::VarTag_Shift, TyInt8, m_func), m_func));
-
-
-        if (!isInt)
-        {
-            // JO $ToVar
-            toVar = IR::LabelInstr::New(Js::OpCode::Label, m_func, true);
-            instrLoad->InsertBefore(IR::BranchInstr::New(Js::OpCode::JO, toVar, m_func));
-
-            if (isFromUint32)
-            {
-                //       JB  $ToVar     [isFromUint32]
-                instrLoad->InsertBefore(IR::BranchInstr::New(Js::OpCode::JB, toVar, this->m_func));
-            }
-        }
-
-        // e1 = INC e1
-        instrLoad->InsertBefore(IR::Instr::New(Js::OpCode::INC, e1, e1, m_func));
-
-        // dst = MOVSXD e1
-        instrLoad->InsertBefore(IR::Instr::New(Js::OpCode::MOVSXD, dst, e1, m_func));
-
-        if (!isInt)
-        {
-            // JMP $done
-            done = IR::LabelInstr::New(Js::OpCode::Label, m_func, isHelper);
-            instrLoad->InsertBefore(IR::BranchInstr::New(Js::OpCode::JMP, done, m_func));
-        }
-    }
-
-    IR::Instr *insertInstr = instrLoad;
-    if (!isInt)
-    {
-        // $toVar:
-        if (toVar)
-        {
-            instrLoad->InsertBefore(toVar);
-        }
-
-        // ToVar()
-        this->lowererMD->EmitLoadVarNoCheck(dst->AsRegOpnd(), src1, instrLoad, isFromUint32, isHelper || toVar != nullptr);
-    }
-
-    if (done)
-    {
-        instrLoad->InsertAfter(done);
-    }
-
-    instrLoad->Remove();
-}
-#else
-
 void
 LowererMDArch::EmitLoadVar(IR::Instr *instrLoad, bool isFromUint32, bool isHelper)
 {
@@ -2475,7 +2375,6 @@ LowererMDArch::EmitLoadVar(IR::Instr *instrLoad, bool isFromUint32, bool isHelpe
     }
     instrLoad->Remove();
 }
-#endif
 
 void
 LowererMDArch::EmitIntToFloat(IR::Opnd *dst, IR::Opnd *src, IR::Instr *instrInsert)
@@ -2680,12 +2579,7 @@ LowererMDArch::EmitLoadInt32(IR::Instr *instrLoad, bool conversionFromObjectAllo
             {
                 done = instrLoad->GetOrCreateContinueLabel();
             }
-#if FLOATVAR
             IR::RegOpnd* floatOpnd = this->lowererMD->CheckFloatAndUntag(src1, instrLoad, helper);
-#else
-            this->lowererMD->GenerateFloatTest(src1, instrLoad, helper, instrLoad->HasBailOutInfo());
-            IR::IndirOpnd* floatOpnd = IR::IndirOpnd::New(src1, Js::JavascriptNumber::GetValueOffset(), TyMachDouble, this->m_func);
-#endif
             this->lowererMD->ConvertFloatToInt32(instrLoad->GetDst(), floatOpnd, helper, done, instrLoad);
         }
 

@@ -434,7 +434,7 @@ HeapBucketT<TBlockType>::TryAllocFromNewHeapBlock(Recycler * recycler, TBlockAll
     allocator->SetNew(heapBlock);
     // We just created a block we can allocate on
     char * memBlock = allocator->template SlowAlloc<false /* disallow fault injection */>(recycler, sizeCat, attributes);
-    Assert(memBlock != nullptr || IS_FAULTINJECT_NO_THROW_ON);
+    Assert(memBlock != nullptr);
     return memBlock;
 }
 
@@ -619,8 +619,6 @@ template <typename TBlockType>
 TBlockType *
 HeapBucketT<TBlockType>::CreateHeapBlock(Recycler * recycler)
 {
-    FAULTINJECT_MEMORY_NOTHROW(u"HeapBlock", sizeof(TBlockType));
-
     // Add a new heap block
     TBlockType * heapBlock = GetUnusedHeapBlock();
     if (heapBlock == nullptr)

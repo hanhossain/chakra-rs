@@ -730,12 +730,10 @@ NativeCodeGenerator::IsValidVar(const Js::Var var, Recycler *const recycler)
         return true;
     }
 
-#if FLOATVAR
     if(JavascriptNumber::Is_NoTaggedIntCheck(var))
     {
         return true;
     }
-#endif
 
     RecyclableObject *const recyclableObject = UnsafeVarTo<RecyclableObject>(var);
     if(!recycler->IsValidObject(recyclableObject, sizeof(*recyclableObject)))
@@ -755,13 +753,6 @@ NativeCodeGenerator::IsValidVar(const Js::Var var, Recycler *const recycler)
     {
         return false;
     }
-
-#if !FLOATVAR
-    if(JavascriptNumber::Is_NoTaggedIntCheck(var))
-    {
-        return true;
-    }
-#endif
 
     const TypeId typeId = type->GetTypeId();
     if(typeId < static_cast<TypeId>(0))
@@ -871,16 +862,6 @@ void NativeCodeGenerator::CodeGen(PageAllocator* pageAllocator, CodeGenWorkItemI
 #endif
         JITTimeWorkItem * jitWorkItem = Anew(&jitArena, JITTimeWorkItem, workItemData);
 
-#if !FLOATVAR
-        CodeGenNumberAllocator* pNumberAllocator = nullptr;
-
-        // the number allocator needs to be on the stack so that if we are doing foreground JIT
-        // the chunk allocated from the recycler will be stacked pinned
-        CodeGenNumberAllocator numberAllocator(
-            foreground ? nullptr : scriptContext->GetThreadContext()->GetCodeGenNumberThreadAllocator(),
-            scriptContext->GetRecycler());
-        pNumberAllocator = &numberAllocator;
-#endif
         Js::ScriptContextProfiler *const codeGenProfiler =
 #ifdef PROFILE_EXEC
             foreground ? EnsureForegroundCodeGenProfiler() : GetBackgroundCodeGenProfiler(pageAllocator); // okay to do outside lock since the respective function is called only from one thread
@@ -890,9 +871,6 @@ void NativeCodeGenerator::CodeGen(PageAllocator* pageAllocator, CodeGenWorkItemI
 
         Func::Codegen(&jitArena, jitWorkItem, scriptContext->GetThreadContext(),
             scriptContext, &jitWriteData, epInfo, nullptr, jitWorkItem->GetPolymorphicInlineCacheInfo(), allocators,
-#if !FLOATVAR
-            pNumberAllocator,
-#endif
             codeGenProfiler, !foreground);
 
         if (!this->scriptContext->GetThreadContext()->GetPreReservedVirtualAllocator()->IsInRange((void*)jitWriteData.codeAddress))
@@ -997,9 +975,6 @@ NativeCodeGenerator::CodeGen(PageAllocator * pageAllocator, CodeGenWorkItem* wor
 
     JITOutputIDL jitWriteData = {0};
 
-#if !FLOATVAR
-    workItem->GetJITData()->xProcNumberPageSegment = scriptContext->GetThreadContext()->GetXProcNumberPageSegmentManager()->GetFreeSegment(&alloc);
-#endif
     workItem->GetJITData()->globalThisAddr = (intptr_t)workItem->RecyclableData()->JitTimeData()->GetGlobalThisObject();
 
     LARGE_INTEGER start_time = { {0} };
@@ -1034,24 +1009,6 @@ NativeCodeGenerator::CodeGen(PageAllocator * pageAllocator, CodeGenWorkItem* wor
     {
         workItem->GetEntryPoint()->SetHasJittedStackClosure();
     }
-
-#if ENABLE_OOP_NATIVE_CODEGEN
-#if !FLOATVAR
-    if (jitWriteData.numberPageSegments)
-    {
-        if (jitWriteData.numberPageSegments->pageAddress == 0)
-        {
-            midl_user_free(jitWriteData.numberPageSegments);
-            jitWriteData.numberPageSegments = nullptr;
-        }
-        else
-        {
-            // TODO: when codegen fail, need to return the segment as well
-            epInfo->GetOOPNativeEntryPointData()->SetNumberPageSegment(jitWriteData.numberPageSegments);
-        }
-    }
-#endif
-#endif
 
 #if ENABLE_OOP_NATIVE_CODEGEN
     if (JITManager::GetJITManager()->IsOOPJITEnabled())

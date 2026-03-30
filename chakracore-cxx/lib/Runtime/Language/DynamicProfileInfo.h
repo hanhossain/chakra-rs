@@ -7,10 +7,6 @@
 // DisableJit-TODO
 #if ENABLE_PROFILE_INFO
 
-#ifdef DYNAMIC_PROFILE_MUTATOR
-class DynamicProfileMutatorImpl;
-#endif
-
 #define PolymorphicInlineCacheUtilizationMinValue 0
 #define PolymorphicInlineCacheUtilizationMaxValue 0xFF
 #define PolymorphicInlineCacheUtilizationThreshold 0x80
@@ -523,9 +519,6 @@ namespace Js
 #endif
 #if DBG_DUMP || defined(DYNAMIC_PROFILE_STORAGE) || defined(RUNTIME_DATA_COLLECTION)
         static bool NeedProfileInfoList();
-#endif
-#ifdef DYNAMIC_PROFILE_MUTATOR
-        friend class DynamicProfileMutatorImpl;
 #endif
 #if JS_PROFILE_DATA_INTERFACE
         friend class ProfileDataObject;

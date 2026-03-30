@@ -1202,15 +1202,6 @@ VirtualAllocEx(
     return VirtualAlloc(lpAddress, dwSize, flAllocationType, flProtect);
 }
 
-#ifdef DEBUG
-__attribute__((no_instrument_function, noinline))
-static bool PAL_Initialize_Check_Once()
-{
-    int error = PAL_InitializeChakraCore();
-    return error == ERROR_SUCCESS;
-}
-#endif
-
 /*++
 Function:
   VirtualAlloc
@@ -1230,11 +1221,6 @@ VirtualAlloc_(
           uint32_t flAllocationType, /* Type of allocation */
           uint32_t flProtect)        /* Type of access protection */
 {
-#ifdef DEBUG
-    static bool was_pal_initialized = PAL_Initialize_Check_Once();
-    _ASSERTE(was_pal_initialized);
-#endif
-
     void *  pRetVal       = NULL;
     CPalThread *pthrCurrent;
 
@@ -1493,16 +1479,6 @@ VirtualAlloc(
 
 #undef KB64
 #undef MB64
-
-BOOL
-VirtualFreeEx(
-         HANDLE hProcess,
-         void * lpAddress,    /* Address of region. */
-         size_t dwSize,       /* Size of region. */
-         uint32_t dwFreeType )   /* Operation type. */
-{
-    return VirtualFree(lpAddress, dwSize, dwFreeType);
-}
 
 /*++
 Function:

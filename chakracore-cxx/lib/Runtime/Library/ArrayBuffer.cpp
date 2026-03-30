@@ -688,7 +688,7 @@ namespace Js
             else
             {
                 bufferLength = length;
-                ZeroMemory(buffer, bufferLength);
+                memset((buffer),0,(bufferLength));
                 RefCountedBuffer* localContent = HeapNew(RefCountedBuffer, buffer);
                 this->bufferContent = localContent;
             }
@@ -971,7 +971,7 @@ namespace Js
         uint8_t* ptrNew = (uint8_t*)realloc(ptr, newSize);
         if (ptrNew && newSize > oldSize)
         {
-            ZeroMemory(ptrNew + oldSize, newSize - oldSize);
+            memset((ptrNew + oldSize),0,(newSize - oldSize));
         }
         return ptrNew;
     }

@@ -68,10 +68,14 @@ NativeCodeData::AddFixupEntry(void* targetAddr, void* targetStartAddr, void* add
 
     DataChunk* chunk = NativeCodeData::GetDataChunk(startAddress);
 
-    NativeDataFixupEntry* entry = (NativeDataFixupEntry*)midl_user_allocate(sizeof(NativeDataFixupEntry));
+    NativeDataFixupEntry* entry = (NativeDataFixupEntry*)malloc(sizeof(NativeDataFixupEntry));
     if (!entry)
     {
         Js::Throw::OutOfMemory();
+    }
+    else
+    {
+        memset(entry, 0, sizeof(NativeDataFixupEntry));
     }
     entry->addrOffset = (unsigned int)((long)addrToFixup - (long)startAddress);
     Assert(entry->addrOffset <= chunk->len - sizeof(void*));
@@ -117,10 +121,14 @@ NativeCodeData::AddFixupEntryForPointerArray(void* startAddress, DataChunk * chu
         AssertMsg(foundTargetChunk, "current pointer is not allocated with NativeCodeData allocator?"); // change to valid check instead of assertion?
 #endif
 
-        NativeDataFixupEntry* entry = (NativeDataFixupEntry*)midl_user_allocate(sizeof(NativeDataFixupEntry));
+        NativeDataFixupEntry* entry = (NativeDataFixupEntry*)malloc(sizeof(NativeDataFixupEntry));
         if (!entry)
         {
             Js::Throw::OutOfMemory();
+        }
+        else
+        {
+            memset(entry, 0, sizeof(NativeDataFixupEntry));
         }
         entry->addrOffset = (unsigned int)offset;
         entry->targetTotalOffset = targetChunk->offset;

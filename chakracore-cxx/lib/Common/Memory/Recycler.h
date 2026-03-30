@@ -337,9 +337,6 @@ public:
     virtual void OnScanStackCallback(void ** stackTop, size_t byteCount, void ** registers, size_t registersByteCount) = 0;
     virtual void PostSweepRedeferralCallBack() = 0;
 
-#ifdef FAULT_INJECTION
-    virtual void DisposeScriptContextByFaultInjectionCallBack() = 0;
-#endif
     virtual void DisposeObjects(Recycler * recycler) = 0;
     virtual void PreDisposeObjectsCallBack() = 0;
 #if DBG || defined(PROFILE_EXEC)
@@ -436,9 +433,6 @@ public:
     virtual bool DoSpecialMarkOnScanStack() override { return false; }
     virtual void OnScanStackCallback(void ** stackTop, size_t byteCount, void ** registers, size_t registersByteCount) override {};
     virtual void PostSweepRedeferralCallBack() override {}
-#ifdef FAULT_INJECTION
-    virtual void DisposeScriptContextByFaultInjectionCallBack() override {};
-#endif
     virtual void DisposeObjects(Recycler * recycler) override;
     virtual void PreDisposeObjectsCallBack() override {};
 #if DBG || defined(PROFILE_EXEC)
@@ -672,10 +666,6 @@ class Recycler
     friend class ActiveScriptProfilerHeapEnum;
 #endif
     friend class ScriptEngineBase;  // This is for disabling GC for certain Host operations.
-#if !FLOATVAR
-    friend class ::CodeGenNumberThreadAllocator;
-    friend struct ::XProcNumberPageSegmentManager;
-#endif
 public:
     static const uint ConcurrentThreadStackSize = 300000;
     static const bool FakeZeroLengthArray = true;

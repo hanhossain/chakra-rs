@@ -3763,7 +3763,7 @@ JsErrorCode JsSerializeScriptCore(const byte *script, size_t cb,
         if (*bufferSize > 0)
         {
             PARAM_NOT_NULL(buffer);
-            ZeroMemory(buffer, *bufferSize);
+            memset((buffer),0,(*bufferSize));
         }
 
         if (scriptContext->IsScriptContextInDebugMode())
@@ -5127,7 +5127,7 @@ CHAKRA_API JsSerializeParserStateCore(
         if (*bufferSize > 0)
         {
             PARAM_NOT_NULL(buffer);
-            ZeroMemory(buffer, *bufferSize);
+            memset((buffer),0,(*bufferSize));
         }
 
         if (scriptContext->IsScriptContextInDebugMode())

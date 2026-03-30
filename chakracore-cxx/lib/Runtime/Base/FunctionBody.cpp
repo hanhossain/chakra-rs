@@ -18,9 +18,6 @@
 #include "Base/VTuneChakraProfile.h"
 #endif
 
-#ifdef DYNAMIC_PROFILE_MUTATOR
-#include "Language/DynamicProfileMutator.h"
-#endif
 #include "Language/SourceDynamicProfileManager.h"
 
 #ifdef ENABLE_SCRIPT_DEBUGGING
@@ -3520,10 +3517,6 @@ namespace Js
             }
 #endif
         }
-
-#ifdef DYNAMIC_PROFILE_MUTATOR
-        DynamicProfileMutator::Mutate(this);
-#endif
     }
 
     bool FunctionBody::NeedEnsureDynamicProfileInfo() const
@@ -8236,15 +8229,6 @@ namespace Js
     void EntryPointInfo::EnsureIsReadyToCall()
     {
         ProcessJitTransferData();
-
-#if ENABLE_OOP_NATIVE_CODEGEN
-#if !FLOATVAR
-        if (JITManager::GetJITManager()->IsOOPJITEnabled())
-        {
-            this->GetOOPNativeEntryPointData()->ProcessNumberPageSegments(GetScriptContext());
-        }
-#endif
-#endif
     }
 
     void EntryPointInfo::SetCodeGenRecorded(Js::JavascriptMethod thunkAddress, Js::JavascriptMethod nativeAddress, ptrdiff_t codeSize, void * validationCookie)

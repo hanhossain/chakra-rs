@@ -4,7 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 #include "Core/Output.h"
-#include "Core/FaultInjection.h"
 
 inline
 bool MarkContext::AddMarkedObject(void * objectAddress, size_t objectSize)
@@ -12,8 +11,6 @@ bool MarkContext::AddMarkedObject(void * objectAddress, size_t objectSize)
     Assert(objectAddress != nullptr);
     Assert(objectSize > 0);
     Assert(objectSize % sizeof(void *) == 0);
-
-    FAULTINJECT_MEMORY_MARK_NOTHROW(u"AddMarkedObject", objectSize);
 
 #if DBG_DUMP
     if (recycler->forceTraceMark || recycler->GetRecyclerFlagsTable().Trace.IsEnabled(Js::MarkPhase))
@@ -34,8 +31,6 @@ bool MarkContext::AddMarkedObject(void * objectAddress, size_t objectSize)
 #ifdef RECYCLER_VISITED_HOST
 inline bool MarkContext::AddPreciselyTracedObject(IRecyclerVisitedObject* obj)
 {
-    FAULTINJECT_MEMORY_MARK_NOTHROW(u"AddPreciselyTracedObject", 0);
-
     return preciseStack.Push(obj);
 }
 #endif
@@ -51,8 +46,6 @@ bool MarkContext::AddTrackedObject(FinalizableObject * obj)
 #if ENABLE_PARTIAL_GC
     Assert(!recycler->inPartialCollectMode);
 #endif
-
-    FAULTINJECT_MEMORY_MARK_NOTHROW(u"AddTrackedObject", 0);
 
     return trackStack.Push(obj);
 }

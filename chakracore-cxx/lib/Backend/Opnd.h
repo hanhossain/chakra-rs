@@ -436,10 +436,6 @@ public:
 public:
     FloatConstType          m_value;
 protected:
-#if !FLOATVAR
-    Js::Var                 m_number;
-    Js::JavascriptNumber    *m_numberCopy;
-#endif
 };
 
 ///---------------------------------------------------------------------------

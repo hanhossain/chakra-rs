@@ -4,6 +4,22 @@ use std::process::ExitCode;
 use std::ptr;
 
 fn main() -> ExitCode {
+    let args: Vec<_> = std::env::args().collect();
+    let Some(chakra_args) = chakra::ChakraArgs::new(args) else {
+        chakra::print_usage();
+        return ExitCode::FAILURE;
+    };
+
+    if chakra_args.version {
+        print_version();
+        return ExitCode::SUCCESS;
+    }
+
+    if chakra_args.help {
+        chakra::print_usage();
+        return ExitCode::SUCCESS;
+    }
+
     let args: Vec<CString> = std::env::args_os()
         .map(|os_str| {
             let bytes = os_str.as_bytes();
@@ -24,7 +40,15 @@ fn main() -> ExitCode {
     argv.push(ptr::null_mut());
 
     unsafe {
-        let res = chakracore_sys::ffi::main_internal(argc as i32, argv.as_mut_ptr());
+        let res = chakracore_sys::chhelper::ffi::main_internal(argc as i32, argv.as_mut_ptr());
         ExitCode::from(res as u8)
     }
+}
+
+fn print_version() {
+    println!(
+        "{} version {}",
+        env!("CARGO_PKG_NAME"),
+        env!("CARGO_PKG_VERSION")
+    );
 }

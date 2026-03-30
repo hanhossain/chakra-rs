@@ -33,7 +33,6 @@ SET_DEFAULT_DEBUG_CHANNEL(THREAD); // some headers have code with asserts, so do
 
 #include "procprivate.hpp"
 #include "pal/process.h"
-#include "pal/module.h"
 #include "pal/init.h"
 #include "pal/utils.h"
 #include "pal/virtual.h"
@@ -168,12 +167,6 @@ static void InternalEndCurrentThreadWrapper(void *arg)
     // that the current thread is known to this PAL, and that pThread
     // actually is the current PAL thread, put it back in TLS temporarily.
     pthread_setspecific(thObjKey, pThread);
-
-    /* Call entry point functions of every attached modules to
-       indicate the thread is exiting */
-    /* note : no need to enter a critical section for serialization, the loader
-       will lock its own critical section */
-    LOADCallDllMain(DLL_THREAD_DETACH, NULL);
 
     // PAL_Leave will be called just before we release the thread reference
     // in InternalEndCurrentThread.
@@ -1418,14 +1411,6 @@ CPalThread::ThreadEntry(
     }
 
     pThread->synchronizationInfo.SetThreadState(TS_RUNNING);
-
-    if (UserCreatedThread == pThread->GetThreadType())
-    {
-        /* Inform all loaded modules that a thread has been created */
-        /* note : no need to take a critical section to serialize here; the loader
-           will take the module critical section */
-        LOADCallDllMain(DLL_THREAD_ATTACH, NULL);
-    }
 
     /* call the startup routine */
     pfnStartRoutine = pThread->GetStartAddress();

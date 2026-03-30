@@ -320,7 +320,6 @@ typedef union _ULARGE_INTEGER {
 /******************* OLE, BSTR, VARIANT *************************/
 
 STDAPI_(void *) CoTaskMemAlloc(size_t cb);
-STDAPI_(void *) CoTaskMemRealloc(void * pv, size_t cb);
 STDAPI_(void) CoTaskMemFree(void * pv);
 
 typedef short VARIANT_BOOL;
@@ -667,10 +666,6 @@ enum tagMIMECONTF {
 
 #define LOCALE_SDATE              0x0000001D
 #define LOCALE_STIME              0x0000001E
-
-#define CSTR_LESS_THAN            1
-#define CSTR_EQUAL                2
-#define CSTR_GREATER_THAN         3
 
 #define NORM_IGNORENONSPACE       0x00000002
 
@@ -1487,10 +1482,6 @@ typedef struct _DISPATCHER_CONTEXT {
 // #endif // !defined(__APPLE__)
 
 typedef DISPATCHER_CONTEXT *PDISPATCHER_CONTEXT;
-
-#define ExceptionContinueSearch     EXCEPTION_CONTINUE_SEARCH
-#define ExceptionStackUnwind        EXCEPTION_EXECUTE_HANDLER
-#define ExceptionContinueExecution  EXCEPTION_CONTINUE_EXECUTION
 
 #endif // FEATURE_PAL_SXS
 

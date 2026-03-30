@@ -98,9 +98,7 @@
 #endif
 
 // Language features
-#if !defined(CHAKRACORE_LITE) && defined(INTL_ICU)
 #define ENABLE_INTL_OBJECT                          // Intl support
-#endif
 
 #define ENABLE_JS_BUILTINS                          // Built In functions support
 
@@ -127,9 +125,7 @@
 #define BUCKETIZE_MEDIUM_ALLOCATIONS 1              // *** TODO: Won't build if disabled currently
 #define SMALLBLOCK_MEDIUM_ALLOC 1                   // *** TODO: Won't build if disabled currently
 #define LARGEHEAPBLOCK_ENCODING 1                   // Large heap block metadata encoding
-#ifndef CHAKRACORE_LITE
 #define IDLE_DECOMMIT_ENABLED 1                     // Idle Decommit
-#endif
 
 #if defined(ENABLE_DEBUG_CONFIG_OPTIONS)
 #define RECYCLER_PAGE_HEAP                          // PageHeap support
@@ -142,11 +138,7 @@
 
 #define SYSINFO_IMAGE_BASE_AVAILABLE 0
 
-#ifdef CHAKRACORE_LITE
-#define USE_VPM_TABLE 0
-#else
 #define USE_VPM_TABLE 1
-#endif
 
 
 // templatized code
@@ -257,7 +249,6 @@
 #define BAILOUT_INJECTION
 #if ENABLE_PROFILE_INFO
 #define DYNAMIC_PROFILE_STORAGE
-#define DYNAMIC_PROFILE_MUTATOR
 #endif
 #define RUNTIME_DATA_COLLECTION
 #define SECURITY_TESTING
@@ -367,7 +358,6 @@
 #ifdef DEBUG
 #define BYTECODE_TESTING
 
-// xplat-todo: revive FaultInjection on non-Win32 platforms
 // currently depends on io.h
 #define RECYCLER_NO_PAGE_REUSE
 #endif
@@ -531,15 +521,6 @@
 #endif
 #endif
 
-#ifndef FLOATVAR
-#if defined(TARGET_64)
-#define FLOATVAR 1
-#else
-#define FLOATVAR 0
-#endif
-#endif
-
-
 #ifdef _M_IX86
 #define LOWER_SPLIT_INT64 1
 #else
@@ -637,7 +618,6 @@
 #endif
 
 #if defined(USED_IN_STATIC_LIB)
-#undef FAULT_INJECTION
 #undef RECYCLER_DUMP_OBJECT_GRAPH
 #undef HEAP_TRACK_ALLOC
 #undef RECYCLER_STATS
@@ -653,7 +633,6 @@
 #undef PROFILE_RECYCLER_ALLOC
 #undef PROFILE_EXEC
 #undef PROFILE_EVALMAP
-#undef FAULT_INJECTION
 #undef RECYCLER_STRESS
 #undef RECYCLER_SLOW_VERIFY
 #undef RECYCLER_VERIFY_MARK

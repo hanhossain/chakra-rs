@@ -15,7 +15,6 @@
 #include "ByteCode/ByteCodeDumper.h"
 #include "Codex/Utf8Helper.h"
 
-#ifdef INTL_ICU
 #include "PlatformAgnostic/CommonPal.h"
 #include "PlatformAgnostic/ChakraICU.h"
 using namespace PlatformAgnostic::ICUHelpers;
@@ -43,7 +42,6 @@ using namespace PlatformAgnostic::ICUHelpers;
         }                                                                     \
     } while (false)
 
-#endif // INTL_ICU
 
 // The following macros allow the key-value pairs to be C++ enums as well as JS objects
 // in Intl.js. When adding a new macro, follow the same format as the _VALUES macros below,
@@ -137,7 +135,6 @@ namespace Js
 #ifdef ENABLE_INTL_OBJECT
 
 // Defining Finalizable wrappers for Intl data
-#if defined(INTL_ICU)
 
     template<typename TResource, void(* CloseFunction)(TResource)>
     class FinalizableICUObject : public FinalizableObject
@@ -321,7 +318,6 @@ namespace Js
             callback(index, reinterpret_cast<const char16_t *>(value), static_cast<charcount_t>(valueLength));
         }
     }
-#endif
 
     IntlEngineInterfaceExtensionObject::IntlEngineInterfaceExtensionObject(Js::ScriptContext* scriptContext) :
         EngineExtensionObjectBase(EngineInterfaceExtensionKind_Intl, scriptContext),
@@ -664,29 +660,14 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
 
     Var IntlEngineInterfaceExtensionObject::EntryIntl_IsWellFormedLanguageTag(RecyclableObject* function, CallInfo callInfo, ...)
     {
-#if defined(INTL_ICU)
         AssertOrFailFastMsg(false, "IsWellFormedLanguageTag is not implemented using ICU");
         return nullptr;
-#else
-        EngineInterfaceObject_CommonFunctionProlog(function, callInfo);
-
-        if (args.Info.Count < 2 || !VarIs<JavascriptString>(args.Values[1]))
-        {
-            // IsWellFormedLanguageTag of undefined or non-string is false
-            return scriptContext->GetLibrary()->GetFalse();
-        }
-
-        JavascriptString *argString = VarTo<JavascriptString>(args.Values[1]);
-
-        return TO_JSBOOL(scriptContext, GetWindowsGlobalizationAdapter(scriptContext)->IsWellFormedLanguageTag(scriptContext, argString->GetSz()));
-#endif
     }
 
     Var IntlEngineInterfaceExtensionObject::EntryIntl_NormalizeLanguageTag(RecyclableObject* function, CallInfo callInfo, ...)
     {
         EngineInterfaceObject_CommonFunctionProlog(function, callInfo);
 
-#if defined(INTL_ICU)
         INTL_CHECK_ARGS(args.Info.Count == 2 && VarIs<JavascriptString>(args[1]));
 
         UErrorCode status = U_ZERO_ERROR;
@@ -736,33 +717,8 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
         AssertOrFailFast(hr == S_OK && ((int) canonicalized16Len) == toLangTagResultLength);
 
         return JavascriptString::NewWithBuffer(canonicalized16, toLangTagResultLength, scriptContext);
-#else
-        if (args.Info.Count < 2 || !VarIs<JavascriptString>(args.Values[1]))
-        {
-            // NormalizeLanguageTag of undefined or non-string is undefined
-            return scriptContext->GetLibrary()->GetUndefined();
-        }
-
-        JavascriptString *argString = VarTo<JavascriptString>(args.Values[1]);
-        JavascriptString *retVal;
-        int32_t hr;
-        AutoHSTRING str;
-        hr = GetWindowsGlobalizationAdapter(scriptContext)->NormalizeLanguageTag(scriptContext, argString->GetSz(), &str);
-        DelayLoadWindowsGlobalization *wsl = scriptContext->GetThreadContext()->GetWindowsGlobalizationLibrary();
-        const char16_t * strBuf = wsl->WindowsGetStringRawBuffer(*str, NULL);
-        retVal = Js::JavascriptString::NewCopySz(strBuf, scriptContext);
-        if (FAILED(hr))
-        {
-            HandleOOMSOEHR(hr);
-            //If we can't normalize the tag; return undefined.
-            return scriptContext->GetLibrary()->GetUndefined();
-        }
-
-        return retVal;
-#endif
     }
 
-#ifdef INTL_ICU
     template <const char *(*GetAvailableLocalesFunc)(int), int(*CountAvailableLocalesFunc)(void)>
     static bool BinarySearchForLocale(const char *localeID)
     {
@@ -839,9 +795,7 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
 
         return true;
     }
-#endif
 
-#ifdef INTL_ICU
 #define DEFINE_ISXLOCALEAVAILABLE(ctorShortName, icuNamespace) \
     Var IntlEngineInterfaceExtensionObject::EntryIntl_Is##ctorShortName##LocaleAvailable(RecyclableObject* function, CallInfo callInfo, ...) \
     { \
@@ -851,14 +805,6 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
             IsLocaleAvailable<##icuNamespace##_getAvailable, ##icuNamespace##_countAvailable>(UnsafeVarTo<JavascriptString>(args.Values[1])) \
         ); \
     }
-#else
-#define DEFINE_ISXLOCALEAVAILABLE(ctorShortName, icuNamespace) \
-    Var IntlEngineInterfaceExtensionObject::EntryIntl_Is##ctorShortName##LocaleAvailable(RecyclableObject* function, CallInfo callInfo, ...) \
-    { \
-        AssertOrFailFastMsg(false, "Intl with Windows Globalization should never call Is" #ctorShortName "LocaleAvailable"); \
-        return nullptr; \
-    }
-#endif
 
 DEFINE_ISXLOCALEAVAILABLE(Collator, ucol)
 DEFINE_ISXLOCALEAVAILABLE(NF, unum)
@@ -867,14 +813,8 @@ DEFINE_ISXLOCALEAVAILABLE(DTF, udat)
 // assume it supports whatever is supported in the base data
 DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
 
-#ifdef INTL_ICU
-
-
-#endif
-
     Var IntlEngineInterfaceExtensionObject::EntryIntl_GetLocaleData(RecyclableObject* function, CallInfo callInfo, ...)
     {
-#ifdef INTL_ICU
         EngineInterfaceObject_CommonFunctionProlog(function, callInfo);
         INTL_CHECK_ARGS(
             args.Info.Count == 3 &&
@@ -1095,10 +1035,6 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         }
 
         return ret;
-#else
-        AssertOrFailFastMsg(false, "Intl with Windows Globalization should never call GetLocaleData");
-        return nullptr;
-#endif
     }
 
     Var IntlEngineInterfaceExtensionObject::EntryIntl_ResolveLocaleLookup(RecyclableObject* function, CallInfo callInfo, ...)
@@ -1111,26 +1047,10 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
             return scriptContext->GetLibrary()->GetUndefined();
         }
 
-#if defined(INTL_ICU)
 #if defined(INTL_ICU_DEBUG)
         Output::Print(u"Intl::ResolveLocaleLookup returned false: EntryIntl_ResolveLocaleLookup returning null to fallback to JS\n");
 #endif
         return scriptContext->GetLibrary()->GetNull();
-#else
-        JavascriptString *argString = VarTo<JavascriptString>(args.Values[1]);
-        const char16_t * passedLocale = argString->GetSz();
-        // REVIEW should we zero the whole array for safety?
-        char16_t resolvedLocaleName[LOCALE_NAME_MAX_LENGTH];
-        resolvedLocaleName[0] = '\0';
-
-        ResolveLocaleName(passedLocale, resolvedLocaleName, _countof(resolvedLocaleName));
-        if (resolvedLocaleName[0] == '\0')
-        {
-            return scriptContext->GetLibrary()->GetUndefined();
-        }
-
-        return JavascriptString::NewCopySz(resolvedLocaleName, scriptContext);
-#endif
     }
 
     Var IntlEngineInterfaceExtensionObject::EntryIntl_ResolveLocaleBestFit(RecyclableObject* function, CallInfo callInfo, ...)
@@ -1143,33 +1063,8 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
             return scriptContext->GetLibrary()->GetUndefined();
         }
 
-#if defined(INTL_ICU)
         AssertOrFailFastMsg(false, "Intl-ICU does not implement ResolveLocaleBestFit");
         return nullptr;
-#else // !INTL_ICU
-        JavascriptString *localeStrings = VarTo<JavascriptString>(args.Values[1]);
-        const char16_t * passedLocale = localeStrings->GetSz();
-        DelayLoadWindowsGlobalization* wgl = scriptContext->GetThreadContext()->GetWindowsGlobalizationLibrary();
-        WindowsGlobalizationAdapter* wga = GetWindowsGlobalizationAdapter(scriptContext);
-
-        AutoCOMPtr<DateTimeFormatting::IDateTimeFormatter> formatter;
-        int32_t hr;
-        if (FAILED(hr = wga->CreateDateTimeFormatter(scriptContext, u"longdate", &passedLocale, 1, nullptr, nullptr, &formatter)))
-        {
-            HandleOOMSOEHR(hr);
-            return scriptContext->GetLibrary()->GetUndefined();
-        }
-
-        AutoHSTRING locale;
-        if (FAILED(hr = wga->GetResolvedLanguage(formatter, &locale)))
-        {
-            HandleOOMSOEHR(hr);
-            return scriptContext->GetLibrary()->GetUndefined();
-        }
-
-        return JavascriptString::NewCopySz(wgl->WindowsGetStringRawBuffer(*locale, NULL), scriptContext);
-
-#endif
     }
 
     Var IntlEngineInterfaceExtensionObject::EntryIntl_GetDefaultLocale(RecyclableObject* function, CallInfo callInfo, ...)
@@ -1207,7 +1102,6 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         return nullptr;
     }
 
-#ifdef INTL_ICU
     // This is used by both NumberFormat and PluralRules
     static void SetUNumberFormatDigitOptions(UNumberFormat *fmt, DynamicObject *state)
     {
@@ -1224,14 +1118,12 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
             unum_setAttribute(fmt, UNUM_MAX_FRACTION_DIGITS, AssertIntegerProperty(state, PropertyIds::maximumFractionDigits));
         }
     }
-#endif
 
     Var IntlEngineInterfaceExtensionObject::EntryIntl_CacheNumberFormat(RecyclableObject * function, CallInfo callInfo, ...)
     {
         EngineInterfaceObject_CommonFunctionProlog(function, callInfo);
         INTL_CHECK_ARGS(args.Info.Count == 2 && DynamicObject::IsBaseDynamicObject(args.Values[1]));
 
-#if defined(INTL_ICU)
         DynamicObject *state = UnsafeVarTo<DynamicObject>(args.Values[1]);
 
         // always AssertOrFailFast that the properties we need are there, because if they aren't, Intl.js isn't functioning correctly
@@ -1300,136 +1192,6 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         );
 
         return scriptContext->GetLibrary()->GetUndefined();
-#else
-        int32_t hr = S_OK;
-        JavascriptString *localeJSstr = nullptr;
-        DynamicObject *options = VarTo<DynamicObject>(args.Values[1]);
-        DelayLoadWindowsGlobalization* wgl = scriptContext->GetThreadContext()->GetWindowsGlobalizationLibrary();
-        WindowsGlobalizationAdapter* wga = GetWindowsGlobalizationAdapter(scriptContext);
-        Var propertyValue;
-
-        // Verify locale is present
-        // REVIEW (doilij): Fix comparison of the unsigned value <= 0
-        if (!GetTypedPropertyBuiltInFrom(options, __locale, JavascriptString) || (localeJSstr = VarTo<JavascriptString>(propertyValue))->GetLength() <= 0)
-        {
-            // REVIEW (doilij): Should we throw? Or otherwise, from Intl.js, should detect something didn't work right here...
-            return scriptContext->GetLibrary()->GetUndefined();
-        }
-
-        //First we have to determine which formatter(number, percent, or currency) we will be using.
-        //Note some options might not be present.
-        AutoCOMPtr<NumberFormatting::INumberFormatter> numberFormatter(nullptr);
-        const char16_t * locale = localeJSstr->GetSz();
-
-        uint16 formatterToUseVal = 0; // 0 (default) is number, 1 is percent, 2 is currency
-        if (GetTypedPropertyBuiltInFrom(options, __formatterToUse, TaggedInt) && (formatterToUseVal = TaggedInt::ToUInt16(propertyValue)) == 1)
-        {
-            //Use the percent formatter
-            IfFailThrowHr(wga->CreatePercentFormatter(scriptContext, &locale, 1, &numberFormatter));
-        }
-        else if (formatterToUseVal == 2)
-        {
-            //Use the currency formatter
-            AutoCOMPtr<NumberFormatting::ICurrencyFormatter> currencyFormatter(nullptr);
-            if (!GetTypedPropertyBuiltInFrom(options, __currency, JavascriptString))
-            {
-                return scriptContext->GetLibrary()->GetUndefined();
-            }
-            //API call retrieves a currency formatter, have to query its interface for numberFormatter
-            IfFailThrowHr(GetWindowsGlobalizationAdapter(scriptContext)->CreateCurrencyFormatter(scriptContext, &locale, 1, VarTo<JavascriptString>(propertyValue)->GetSz(), &currencyFormatter));
-
-            if (GetTypedPropertyBuiltInFrom(options, __currencyDisplayToUse, TaggedInt)) // 0 is for symbol, 1 is for code, 2 is for name.
-                                                                                         //Currently name isn't supported; so it will default to code in that case.
-            {
-                AutoCOMPtr<NumberFormatting::ICurrencyFormatter2> currencyFormatter2(nullptr);
-                IfFailThrowHr(currencyFormatter->QueryInterface(__uuidof(NumberFormatting::ICurrencyFormatter2), reinterpret_cast<void**>(&currencyFormatter2)));
-
-                if (TaggedInt::ToUInt16(propertyValue) == 0)
-                {
-                    IfFailThrowHr(currencyFormatter2->put_Mode(NumberFormatting::CurrencyFormatterMode::CurrencyFormatterMode_UseSymbol));
-                }
-                else
-                {
-                    IfFailThrowHr(currencyFormatter2->put_Mode(NumberFormatting::CurrencyFormatterMode::CurrencyFormatterMode_UseCurrencyCode));
-                }
-            }
-
-            IfFailThrowHr(currencyFormatter->QueryInterface(__uuidof(NumberFormatting::INumberFormatter), reinterpret_cast<void**>(&numberFormatter)));
-        }
-        else
-        {
-            //Use the number formatter (default)
-            IfFailThrowHr(wga->CreateNumberFormatter(scriptContext, &locale, 1, &numberFormatter));
-        }
-        Assert(numberFormatter);
-
-        AutoCOMPtr<NumberFormatting::ISignedZeroOption> signedZeroOption(nullptr);
-        IfFailThrowHr(numberFormatter->QueryInterface(__uuidof(NumberFormatting::ISignedZeroOption), reinterpret_cast<void**>(&signedZeroOption)));
-        IfFailThrowHr(signedZeroOption->put_IsZeroSigned(true));
-
-        //Configure non-digit related options
-        AutoCOMPtr<NumberFormatting::INumberFormatterOptions> numberFormatterOptions(nullptr);
-        IfFailThrowHr(numberFormatter->QueryInterface(__uuidof(NumberFormatting::INumberFormatterOptions), reinterpret_cast<void**>(&numberFormatterOptions)));
-        Assert(numberFormatterOptions);
-
-        if (GetTypedPropertyBuiltInFrom(options, __useGrouping, JavascriptBoolean))
-        {
-            IfFailThrowHr(numberFormatterOptions->put_IsGrouped((boolean)(VarTo<JavascriptBoolean>(propertyValue)->GetValue())));
-        }
-
-        //Get the numeral system and add it to the object since it will be located in the locale
-        AutoHSTRING hNumeralSystem;
-        AutoHSTRING hResolvedLanguage;
-        uint32_t length;
-        IfFailThrowHr(wga->GetNumeralSystem(numberFormatterOptions, &hNumeralSystem));
-        SetHSTRINGPropertyBuiltInOn(options, __numberingSystem, *hNumeralSystem);
-
-        IfFailThrowHr(wga->GetResolvedLanguage(numberFormatterOptions, &hResolvedLanguage));
-        SetHSTRINGPropertyBuiltInOn(options, __locale, *hResolvedLanguage);
-
-        AutoCOMPtr<NumberFormatting::INumberRounderOption> rounderOptions(nullptr);
-        IfFailThrowHr(numberFormatter->QueryInterface(__uuidof(NumberFormatting::INumberRounderOption), reinterpret_cast<void**>(&rounderOptions)));
-        Assert(rounderOptions);
-
-        if (HasPropertyBuiltInOn(options, __minimumSignificantDigits) || HasPropertyBuiltInOn(options, __maximumSignificantDigits))
-        {
-            uint16 minSignificantDigits = 1, maxSignificantDigits = 21;
-            //Do significant digit rounding
-            if (GetTypedPropertyBuiltInFrom(options, __minimumSignificantDigits, TaggedInt))
-            {
-                minSignificantDigits = max<uint16>(min<uint16>(TaggedInt::ToUInt16(propertyValue), 21), 1);
-            }
-            if (GetTypedPropertyBuiltInFrom(options, __maximumSignificantDigits, TaggedInt))
-            {
-                maxSignificantDigits = max<uint16>(min<uint16>(TaggedInt::ToUInt16(propertyValue), 21), minSignificantDigits);
-            }
-            prepareWithSignificantDigits(scriptContext, rounderOptions, numberFormatter, numberFormatterOptions, minSignificantDigits, maxSignificantDigits);
-        }
-        else
-        {
-            uint16 minFractionDigits = 0, maxFractionDigits = 3, minIntegerDigits = 1;
-            //Do fraction/integer digit rounding
-            if (GetTypedPropertyBuiltInFrom(options, __minimumIntegerDigits, TaggedInt))
-            {
-                minIntegerDigits = max<uint16>(min<uint16>(TaggedInt::ToUInt16(propertyValue), 21), 1);
-            }
-            if (GetTypedPropertyBuiltInFrom(options, __minimumFractionDigits, TaggedInt))
-            {
-                minFractionDigits = min<uint16>(TaggedInt::ToUInt16(propertyValue), 20);//ToUInt16 will get rid of negatives by making them high
-            }
-            if (GetTypedPropertyBuiltInFrom(options, __maximumFractionDigits, TaggedInt))
-            {
-                maxFractionDigits = max(min<uint16>(TaggedInt::ToUInt16(propertyValue), 20), minFractionDigits);//ToUInt16 will get rid of negatives by making them high
-            }
-            prepareWithFractionIntegerDigits(scriptContext, rounderOptions, numberFormatterOptions, minFractionDigits, maxFractionDigits + (formatterToUseVal == 1 ? 2 : 0), minIntegerDigits);//extend max fractions for percent
-        }
-
-        //Set the object as a cache
-        numberFormatter->AddRef();
-        options->SetInternalProperty(Js::InternalPropertyIds::HiddenObject, AutoCOMJSObject::New(scriptContext->GetRecycler(), numberFormatter), Js::PropertyOperationFlags::PropertyOperation_None, NULL);
-
-        return scriptContext->GetLibrary()->GetUndefined();
-#endif
     }
 
     // Unlike CacheNumberFormat; this call takes an additional parameter to specify whether we are going to cache it.
@@ -1613,121 +1375,8 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
 
     Var IntlEngineInterfaceExtensionObject::EntryIntl_CompareString(RecyclableObject* function, CallInfo callInfo, ...)
     {
-#ifdef INTL_ICU
         AssertOrFailFastMsg(false, "EntryIntl_CompareString should not be called in Intl-ICU");
         return nullptr;
-#else
-        EngineInterfaceObject_CommonFunctionProlog(function, callInfo);
-        INTL_CHECK_ARGS(args.Info.Count >= 3 && VarIs<JavascriptString>(args[1]) && VarIs<JavascriptString>(args[2]));
-
-        const char16_t *locale = nullptr; // args[3]
-        char16_t defaultLocale[LOCALE_NAME_MAX_LENGTH] = { 0 };
-
-        CollatorSensitivity sensitivity = CollatorSensitivity::Default; // args[4]
-        bool ignorePunctuation = false; // args[5]
-        bool numeric = false; // args[6]
-
-        JavascriptString *str1 = VarTo<JavascriptString>(args.Values[1]);
-        JavascriptString *str2 = VarTo<JavascriptString>(args.Values[2]);
-        CollatorCaseFirst caseFirst = CollatorCaseFirst::Default; // args[7]
-
-        // we only need to parse arguments 3 through 7 if locale and options are provided
-        // see fast path in JavascriptString::EntryLocaleCompare
-        if (args.Info.Count > 3)
-        {
-            if (args.Info.Count < 8)
-            {
-                JavascriptError::MapAndThrowError(scriptContext, E_INVALIDARG);
-            }
-
-            if (!JavascriptOperators::IsUndefinedObject(args.Values[3]) && VarIs<JavascriptString>(args.Values[3]))
-            {
-                locale = VarTo<JavascriptString>(args.Values[3])->GetSz();
-            }
-            else
-            {
-                JavascriptError::MapAndThrowError(scriptContext, E_INVALIDARG);
-            }
-
-            if (!JavascriptOperators::IsUndefinedObject(args.Values[4]) && TaggedInt::Is(args.Values[4]))
-            {
-                sensitivity = static_cast<CollatorSensitivity>(TaggedInt::ToUInt16(args.Values[4]));
-            }
-
-            if (!JavascriptOperators::IsUndefinedObject(args.Values[5]) && VarIs<JavascriptBoolean>(args.Values[5]))
-            {
-                ignorePunctuation = (VarTo<JavascriptBoolean>(args.Values[5])->GetValue() != 0);
-            }
-
-            if (!JavascriptOperators::IsUndefinedObject(args.Values[6]) && VarIs<JavascriptBoolean>(args.Values[6]))
-            {
-                numeric = (VarTo<JavascriptBoolean>(args.Values[6])->GetValue() != 0);
-            }
-
-            if (!JavascriptOperators::IsUndefinedObject(args.Values[7]) && TaggedInt::Is(args.Values[7]))
-            {
-                caseFirst = static_cast<CollatorCaseFirst>(TaggedInt::ToUInt16(args.Values[7]));
-            }
-        }
-        else
-        {
-            if (GetUserDefaultLocaleName(defaultLocale, _countof(defaultLocale)) != 0)
-            {
-                locale = defaultLocale;
-            }
-            else
-            {
-                JavascriptError::MapAndThrowError(scriptContext, HRESULT_FROM_WIN32(GetLastError()));
-            }
-        }
-
-        Assert(locale != nullptr);
-        Assert((int)sensitivity >= 0 && sensitivity < CollatorSensitivity::Max);
-        Assert((int)caseFirst >= 0 && caseFirst < CollatorCaseFirst::Max);
-
-        BEGIN_TEMP_ALLOCATOR(tempAllocator, scriptContext, u"EntryIntl_CompareString");
-
-        const char16_t *left = nullptr;
-        charcount_t leftLen = 0;
-        if (UnicodeText::IsNormalizedString(UnicodeText::NormalizationForm::C, str1->GetSz(), str1->GetLength()))
-        {
-            left = str1->GetSz();
-            leftLen = str1->GetLength();
-        }
-        else
-        {
-            left = str1->GetNormalizedString(UnicodeText::NormalizationForm::C, tempAllocator, leftLen);
-        }
-
-        const char16_t *right = nullptr;
-        charcount_t rightLen = 0;
-        if (UnicodeText::IsNormalizedString(UnicodeText::NormalizationForm::C, str2->GetSz(), str2->GetLength()))
-        {
-            right = str2->GetSz();
-            rightLen = str2->GetLength();
-        }
-        else
-        {
-            right = str2->GetNormalizedString(UnicodeText::NormalizationForm::C, tempAllocator, rightLen);
-        }
-
-        // CompareStringEx on Windows returns 0 for error, 1 if less, 2 if equal, 3 if greater
-        // Default to the strings being equal, because sorting with == causes no change in the order but converges, whereas < would cause an infinite loop.
-        int compareResult = 2;
-        int32_t error = S_OK;
-        uint32_t comparisonFlags = GetCompareStringComparisonFlags(sensitivity, ignorePunctuation, numeric);
-        compareResult = CompareStringEx(locale, comparisonFlags, left, leftLen, right, rightLen, NULL, NULL, 0);
-        error = HRESULT_FROM_WIN32(GetLastError());
-
-        END_TEMP_ALLOCATOR(tempAllocator, scriptContext);
-
-        if (compareResult == 0)
-        {
-            JavascriptError::MapAndThrowError(scriptContext, error);
-        }
-
-        return JavascriptNumber::ToVar(compareResult - 2, scriptContext);
-#endif
     }
 
     Var IntlEngineInterfaceExtensionObject::EntryIntl_CurrencyDigits(RecyclableObject* function, CallInfo callInfo, ...)
@@ -1741,7 +1390,6 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
 
         const char16_t *currencyCode = UnsafeVarTo<JavascriptString>(args.Values[1])->GetSz();
 
-#if defined(INTL_ICU)
         UErrorCode status = U_ZERO_ERROR;
         ScopedUNumberFormat fmt(unum_open(UNUM_CURRENCY, nullptr, 0, nullptr, nullptr, &status));
         unum_setTextAttribute(fmt, UNUM_CURRENCY_CODE, reinterpret_cast<const UChar *>(currencyCode), -1, &status);
@@ -1749,20 +1397,8 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
 
         int currencyDigits = unum_getAttribute(fmt, UNUM_FRACTION_DIGITS);
         return JavascriptNumber::ToVar(currencyDigits, scriptContext);
-#else
-        int32_t hr;
-        AutoCOMPtr<NumberFormatting::ICurrencyFormatter> currencyFormatter(nullptr);
-        IfFailThrowHr(GetWindowsGlobalizationAdapter(scriptContext)->CreateCurrencyFormatterCode(scriptContext, currencyCode, &currencyFormatter));
-        AutoCOMPtr<NumberFormatting::INumberFormatterOptions> numberFormatterOptions;
-        IfFailThrowHr(currencyFormatter->QueryInterface(__uuidof(NumberFormatting::INumberFormatterOptions), reinterpret_cast<void**>(&numberFormatterOptions)));
-        Assert(numberFormatterOptions);
-        int32_t fractionDigits;
-        IfFailThrowHr(numberFormatterOptions->get_FractionDigits(&fractionDigits));
-        return JavascriptNumber::ToVar(fractionDigits, scriptContext);
-#endif
     }
 
-#ifdef INTL_ICU
     // Rationale for this data structure: ICU reports back a tree of parts where each node in the tree
     // has a type and a width, and there must be at least one node corresponding to each character in the tree
     // (nodes can be wider than one character). Nodes can have children, and the parent-child relationship is
@@ -1920,13 +1556,11 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
             return ret;
         }
     };
-#endif
 
     Var IntlEngineInterfaceExtensionObject::EntryIntl_FormatNumber(RecyclableObject* function, CallInfo callInfo, ...)
     {
         EngineInterfaceObject_CommonFunctionProlog(function, callInfo);
 
-#if defined(INTL_ICU)
         INTL_CHECK_ARGS(
             args.Info.Count == 5 &&
             (TaggedInt::Is(args[1]) || JavascriptNumber::Is(args[1])) &&
@@ -2003,48 +1637,8 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         ret->SetItem(0, part, PropertyOperationFlags::PropertyOperation_None);
         return ret;
 #endif // #if ICU_VERSION >= 61 ... #else
-#else
-        INTL_CHECK_ARGS(
-            args.Info.Count == 3 &&
-            (TaggedInt::Is(args.Values[1]) || JavascriptNumber::Is(args.Values[1])) &&
-            DynamicObject::IsBaseDynamicObject(args.Values[2])
-        );
-
-        DynamicObject *options = VarTo<DynamicObject>(args.Values[2]);
-        Var hiddenObject = nullptr;
-        AssertOrFailFastMsg(options->GetInternalProperty(options, Js::InternalPropertyIds::HiddenObject, &hiddenObject, NULL, scriptContext),
-            "EntryIntl_FormatNumber: Could not retrieve hiddenObject.");
-        DelayLoadWindowsGlobalization* wsl = scriptContext->GetThreadContext()->GetWindowsGlobalizationLibrary();
-
-        NumberFormatting::INumberFormatter *numberFormatter;
-        numberFormatter = static_cast<NumberFormatting::INumberFormatter *>(((AutoCOMJSObject *)hiddenObject)->GetInstance());
-
-        AutoHSTRING result;
-        int32_t hr;
-        if (TaggedInt::Is(args.Values[1]))
-        {
-            IfFailThrowHr(numberFormatter->FormatInt(TaggedInt::ToInt32(args.Values[1]), &result));
-        }
-        else
-        {
-            IfFailThrowHr(numberFormatter->FormatDouble(JavascriptNumber::GetValue(args.Values[1]), &result));
-        }
-
-        const char16_t * strBuf = wsl->WindowsGetStringRawBuffer(*result, NULL);
-
-        if (strBuf == nullptr)
-        {
-            return scriptContext->GetLibrary()->GetUndefined();
-        }
-        else
-        {
-            JavascriptStringObject *retVal = scriptContext->GetLibrary()->CreateStringObject(Js::JavascriptString::NewCopySz(strBuf, scriptContext));
-            return retVal;
-        }
-#endif
     }
 
-#ifdef INTL_ICU
     static void AddPartToPartsArray(ScriptContext *scriptContext, JavascriptArray *arr, int arrIndex, const char16_t *src, int start, int end, JavascriptString *partType)
     {
         JavascriptString *partValue = JavascriptString::NewCopyBuffer(
@@ -2059,7 +1653,6 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
 
         arr->SetItem(arrIndex, part, PropertyOperationFlags::PropertyOperation_None);
     }
-#endif
 
     // For Windows Globalization, this function takes a number (date) and a state object and returns a string
     // For ICU, this function takes a state object, number, and boolean for whether or not to format to parts.
@@ -2270,7 +1863,6 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
 
     Var IntlEngineInterfaceExtensionObject::EntryIntl_GetPatternForSkeleton(RecyclableObject *function, CallInfo callInfo, ...)
     {
-#ifdef INTL_ICU
         EngineInterfaceObject_CommonFunctionProlog(function, callInfo);
         INTL_CHECK_ARGS(args.Info.Count == 3 && VarIs<JavascriptString>(args.Values[1]) && VarIs<JavascriptString>(args.Values[2]));
 
@@ -2325,10 +1917,6 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         INTL_TRACE("Best pattern '%s' will be used for skeleton '%s' and langtag '%s'", formatted, skeleton->GetSz(), langtag->GetSz());
 
         return JavascriptString::NewWithBuffer(formatted, formattedLen, scriptContext);
-#else
-        AssertOrFailFastMsg(false, "GetPatternForSkeleton is not implemented outside of ICU");
-        return nullptr;
-#endif
     }
 
     // given a timezone name as an argument, this will return a canonicalized version of that name, or undefined if the timezone is invalid
@@ -2396,7 +1984,6 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         return JavascriptString::NewWithBuffer(timeZone, timeZoneLen, scriptContext);
     }
 
-#ifdef INTL_ICU
     static FinalizableUPluralRules *GetOrCreateCachedUPluralRules(DynamicObject *stateObject, ScriptContext *scriptContext)
     {
         Var cachedUPluralRules = nullptr;
@@ -2436,12 +2023,10 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
 
         return pr;
     }
-#endif
 
     // This method implements Step 13 and 14 of ECMA 402 #sec-initializepluralrules
     Var IntlEngineInterfaceExtensionObject::EntryIntl_PluralRulesKeywords(RecyclableObject *function, CallInfo callInfo, ...)
     {
-#ifdef INTL_ICU
         EngineInterfaceObject_CommonFunctionProlog(function, callInfo);
         INTL_CHECK_ARGS(args.Info.Count == 2 && DynamicObject::IsBaseDynamicObject(args[1]));
 
@@ -2468,16 +2053,11 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
 #endif
 
         return ret;
-#else
-        AssertOrFailFastMsg(false, "Intl-WinGlob should not be using PluralRulesKeywords");
-        return nullptr;
-#endif
     }
 
     // This method roughly implements ECMA 402 #sec-pluralruleselect, except ICU takes care of handling the operand logic for us
     Var IntlEngineInterfaceExtensionObject::EntryIntl_PluralRulesSelect(RecyclableObject *function, CallInfo callInfo, ...)
     {
-#ifdef INTL_ICU
         EngineInterfaceObject_CommonFunctionProlog(function, callInfo);
         INTL_CHECK_ARGS(args.Info.Count == 3 && DynamicObject::IsBaseDynamicObject(args[1]));
 
@@ -2546,10 +2126,6 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         }, scriptContext->GetRecycler(), &selected, &selectedLength);
 
         return JavascriptString::NewWithBuffer(selected, static_cast<charcount_t>(selectedLength), scriptContext);
-#else
-        AssertOrFailFastMsg(false, "Intl-WinGlob should not be using PluralRulesSelect");
-        return nullptr;
-#endif
     }
 
     /*

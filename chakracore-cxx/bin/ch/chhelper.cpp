@@ -32,12 +32,6 @@ uint32_t startEventCount = 1;
 
 int32_t RunBgParseSync(const char * fileContents, uint32_t lengthBytes, const char* fileName);
 
-extern "C"
-int32_t OnChakraCoreLoadedEntry(TestHooks& testHooks)
-{
-    return ChakraRTInterface::OnChakraCoreLoaded(testHooks);
-}
-
 JsRuntimeAttributes jsrtAttributes = JsRuntimeAttributeNone;
 
 int HostExceptionFilter(int exceptionCode, _EXCEPTION_POINTERS *ep)
@@ -818,24 +812,15 @@ int main_internal(int argc, char** c_argv)
     int retval = -1;
     int32_t exitCode = E_FAIL;
     int cpos = 1;
-    HINSTANCE chakraLibrary = nullptr;
     bool success = false;
     ChakraRTInterface::ArgInfo argInfo;
-
-    if (argc < 2)
-    {
-        chakra::print_usage();
-        PAL_Shutdown();
-        retval = EXIT_FAILURE;
-        goto return_cleanup;
-    }
 
     for(int i = 1; i < argc; ++i)
     {
         const char16_t *arg = argv[i];
         size_t arglen = PAL_wcslen(arg);
 
-        // support - or / prefix for flags
+        // support - prefix for flags
         if (arglen >= 1 && arg[0] == u'-')
         {
             // support -- prefix for flags
@@ -845,33 +830,11 @@ int main_internal(int argc, char** c_argv)
             }
             else
             {
-                arg += 1; // advance past - or / prefix
+                arg += 1; // advance past - prefix
             }
         }
 
-        arglen = PAL_wcslen(arg); // get length of flag after prefix
-        if ((arglen == 1 && PAL_wcsncmp(arg, u"v",       arglen) == 0) ||
-            (arglen == 7 && PAL_wcsncmp(arg, u"version", arglen) == 0))
-        {
-            chakra::print_version();
-            PAL_Shutdown();
-            retval = EXIT_SUCCESS;
-            goto return_cleanup;
-        }
-        else if (
-#if !defined(ENABLE_DEBUG_CONFIG_OPTIONS) // release builds can display some kind of help message
-            (arglen == 1 && PAL_wcsncmp(arg, u"?",    arglen) == 0) ||
-#endif
-            (arglen == 1 && PAL_wcsncmp(arg, u"h",    arglen) == 0) ||
-            (arglen == 4 && PAL_wcsncmp(arg, u"help", arglen) == 0)
-            )
-        {
-            chakra::print_usage();
-            PAL_Shutdown();
-            retval = EXIT_SUCCESS;
-            goto return_cleanup;
-        }
-        else if(PAL_wcsstr(argv[i], u"-TTRecord=") == argv[i])
+        if(PAL_wcsstr(argv[i], u"-TTRecord=") == argv[i])
         {
             doTTRecord = true;
             char16_t* ruri = argv[i] + PAL_wcslen(u"-TTRecord=");
@@ -919,11 +882,11 @@ int main_internal(int argc, char** c_argv)
     HostConfigFlags::HandleArgsFlag(argc, argv);
 
     argInfo = { argc, argv, chakra::print_usage, nullptr };
-    success = ChakraRTInterface::LoadChakraDll(&argInfo, &chakraLibrary);
+    success = ChakraRTInterface::LoadChakraDll(&argInfo);
 
 #if !defined(NDEBUG)
     // handle command line flags
-    OnChakraCoreLoaded(OnChakraCoreLoadedEntry);
+    OnChakraCoreLoaded();
 #endif
 
     if (argInfo.filename == nullptr)
@@ -940,14 +903,11 @@ int main_internal(int argc, char** c_argv)
 
         // On linux, execute on the same thread
         exitCode = ExecuteTestWithMemoryCheck(argInfo.filename);
-
-        ChakraRTInterface::UnloadChakraDll(chakraLibrary);
     }
 
     PAL_Shutdown();
     retval = (int)exitCode;
 
-return_cleanup:
     if(argv != nullptr)
     {
         for(int i=0;i<origargc;i++)

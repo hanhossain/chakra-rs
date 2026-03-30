@@ -4,7 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 #include "CommonMemoryPch.h"
 #include "Memory/PageAllocator.h"
-#include "Core/GlobalSecurityPolicy.h"
 
 #define UpdateMinimum(dst, src) if (dst > src) { dst = src; }
 
@@ -111,14 +110,6 @@ SegmentBase<T>::Initialize(uint32_t allocFlags, bool excludeGuardPages)
     // We can only allocate with this granularity using VirtualAlloc
     size_t totalPages = Math::Align<size_t>(this->segmentPageCount + leadingGuardPageCount + trailingGuardPageCount, AutoSystemInfo::Data.GetAllocationGranularityPageCount());
     this->segmentPageCount = totalPages - (leadingGuardPageCount + trailingGuardPageCount);
-
-#ifdef FAULT_INJECTION
-    if (Js::FaultInjection::Global.ShouldInjectFault(Js::FaultInjection::Global.NoThrow))
-    {
-        this->address = nullptr;
-        return false;
-    }
-#endif
 
     if (!this->GetAllocator()->RequestAlloc(totalPages * AutoSystemInfo::PageSize))
     {
@@ -883,8 +874,6 @@ char *
 PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::TryAllocFromZeroPagesList(
     uint pageCount, TPageSegment ** pageSegment, BackgroundPageQueue* bgPageQueue, bool isPendingZeroList)
 {
-    FAULTINJECT_MEMORY_NOTHROW(this->debugName, pageCount*AutoSystemInfo::PageSize);
-
     char * pages = nullptr;
     FreePageEntry* localList = nullptr;
 
@@ -997,7 +986,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::TryAllocFreePages(uint
 
     if (this->freePageCount >= pageCount)
     {
-        FAULTINJECT_MEMORY_NOTHROW(this->debugName, pageCount*AutoSystemInfo::PageSize);
         typename DListBase<TPageSegment>::EditingIterator i(&this->segments);
 
         while (i.Next())
@@ -2631,12 +2619,6 @@ HeapPageAllocator<T>::ProtectPages(char* address, size_t pageCount, void* segmen
         CustomHeap_BadPageState_unrecoverable_error((size_t)this);
         return FALSE;
     }
-
-#if defined(ENABLE_JIT_CLAMP)
-    bool makeExecutable = (dwVirtualProtectFlags & (PAGE_EXECUTE | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE)) ? true : false;
-
-    AutoEnableDynamicCodeGen enableCodeGen(makeExecutable);
-#endif
 
 #if DBG_DUMP || defined(RECYCLER_TRACE)
     if (this->pageAllocatorFlagTable.IsEnabled(Js::TraceProtectPagesFlag))

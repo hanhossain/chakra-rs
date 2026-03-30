@@ -414,7 +414,7 @@ CSharedMemoryObjectManager::RegisterObject(
             
             if (NULL != pvSharedImmutableData)
             {
-                CopyMemory(
+                memcpy(
                     pvSharedImmutableData,
                     pvImmutableData,
                     potObj->GetImmutableDataSize()

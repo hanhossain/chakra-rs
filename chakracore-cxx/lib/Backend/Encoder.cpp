@@ -640,7 +640,12 @@ Encoder::Encode()
 
         if (this->m_func->IsOOPJIT())
         {
-            pinnedTypeRefs = (PinnedTypeRefsIDL*)midl_user_allocate(offsetof(PinnedTypeRefsIDL, typeRefs) + sizeof(void*)*pinnedTypeRefCount);
+            size_t size = offsetof(PinnedTypeRefsIDL, typeRefs) + sizeof(void*)*pinnedTypeRefCount;
+            pinnedTypeRefs = (PinnedTypeRefsIDL*)malloc(size);
+            if (pinnedTypeRefs != nullptr)
+            {
+                memset(pinnedTypeRefs, 0, size);
+            }
             if (!pinnedTypeRefs)
             {
                 Js::Throw::OutOfMemory();
@@ -684,10 +689,14 @@ Encoder::Encode()
         {
             auto& equivalentTypeGuardOffsets = this->m_func->GetJITOutput()->GetOutputData()->equivalentTypeGuardOffsets;
             size_t allocSize = offsetof(EquivalentTypeGuardOffsets, guards) + equivalentTypeGuardsCount * sizeof(EquivalentTypeGuardIDL);
-            equivalentTypeGuardOffsets = (EquivalentTypeGuardOffsets*)midl_user_allocate(allocSize);
+            equivalentTypeGuardOffsets = (EquivalentTypeGuardOffsets*)malloc(allocSize);
             if (equivalentTypeGuardOffsets == nullptr)
             {
                 Js::Throw::OutOfMemory();
+            }
+            else
+            {
+                memset(equivalentTypeGuardOffsets, 0, allocSize);
             }
 
             equivalentTypeGuardOffsets->count = equivalentTypeGuardsCount;
@@ -793,10 +802,15 @@ Encoder::Encode()
             this->m_func->propertyGuardsByPropertyId->Map([func, &entry](Js::PropertyId propertyId, Func::IndexedPropertyGuardSet* srcSet) -> void
             {
                 auto count = srcSet->Count();
-                (*entry) = (TypeGuardTransferEntryIDL*)midl_user_allocate(offsetof(TypeGuardTransferEntryIDL, guardOffsets) + count*sizeof(int));
+                size_t size = offsetof(TypeGuardTransferEntryIDL, guardOffsets) + count*sizeof(int);
+                (*entry) = (TypeGuardTransferEntryIDL*)malloc(size);
                 if (!*entry)
                 {
                     Js::Throw::OutOfMemory();
+                }
+                else
+                {
+                    memset(*entry, 0, size);
                 }
                 (*entry)->propId = propertyId;
                 (*entry)->guardsCount = count;
@@ -837,7 +851,11 @@ Encoder::Encode()
         {
             Func* func = this->m_func;
             m_func->GetJITOutput()->GetOutputData()->ctorCachesCount = propertyCount;
-            m_func->GetJITOutput()->GetOutputData()->ctorCacheEntries = (CtorCacheTransferEntryIDL**)midl_user_allocate(propertyCount * sizeof(CtorCacheTransferEntryIDL*));
+            m_func->GetJITOutput()->GetOutputData()->ctorCacheEntries = (CtorCacheTransferEntryIDL**)malloc(propertyCount * sizeof(CtorCacheTransferEntryIDL*));
+            if (m_func->GetJITOutput()->GetOutputData()->ctorCacheEntries)
+            {
+                memset(m_func->GetJITOutput()->GetOutputData()->ctorCacheEntries, 0, propertyCount * sizeof(CtorCacheTransferEntryIDL*));
+            }
             CtorCacheTransferEntryIDL** entries = m_func->GetJITOutput()->GetOutputData()->ctorCacheEntries;
             if (!entries)
             {
@@ -847,8 +865,12 @@ Encoder::Encode()
             uint propIndex = 0;
             m_func->ctorCachesByPropertyId->Map([func, entries, &propIndex](Js::PropertyId propertyId, Func::CtorCacheSet* srcCacheSet) -> void
             {
-                entries[propIndex] = (CtorCacheTransferEntryIDL*)midl_user_allocate(srcCacheSet->Count() * sizeof(intptr_t) + sizeof(CtorCacheTransferEntryIDL));
-                if (!entries[propIndex])
+                entries[propIndex] = (CtorCacheTransferEntryIDL*)malloc(srcCacheSet->Count() * sizeof(intptr_t) + sizeof(CtorCacheTransferEntryIDL));
+                if (entries[propIndex])
+                {
+                    memset(entries[propIndex], 0, srcCacheSet->Count() * sizeof(intptr_t) + sizeof(CtorCacheTransferEntryIDL));
+                }
+                else
                 {
                     Js::Throw::OutOfMemory();
                 }

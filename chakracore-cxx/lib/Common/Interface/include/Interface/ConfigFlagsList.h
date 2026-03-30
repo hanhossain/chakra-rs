@@ -776,8 +776,6 @@ PHASE(All)
 #define DEFAULT_CONFIG_TypeSnapshotEnumeration (true)
 #define DEFAULT_CONFIG_ConcurrentRuntime (false)
 #define DEFAULT_CONFIG_PrimeRecycler     (false)
-// Don't use PrivateHeap on xplat where we statically link and override new/delete
-#define DEFAULT_CONFIG_PrivateHeap       (false)
 #define DEFAULT_CONFIG_DisableRentalThreading (false)
 #define DEFAULT_CONFIG_DisableDebugObject (false)
 #define DEFAULT_CONFIG_DumpHeap (false)
@@ -1073,10 +1071,6 @@ FLAGNR(Boolean, WininetProfileCache, "Use the WININET cache to save the profile 
 FLAGNR(Boolean, NoDynamicProfileInMemoryCache, "Enable in-memory cache for dynamic sources", false)
 FLAGNR(Boolean, ProfileBasedSpeculativeJit, "Enable dynamic profile based speculative JIT", DEFAULT_CONFIG_ProfileBasedSpeculativeJit)
 FLAGNR(Number,  ProfileBasedSpeculationCap, "In the presence of dynamic profile speculative JIT is capped to this many bytecode instructions", DEFAULT_CONFIG_ProfileBasedSpeculationCap)
-#ifdef DYNAMIC_PROFILE_MUTATOR
-FLAGNR(String,  DynamicProfileMutatorDll , "Path of the mutator DLL", u"DynamicProfileMutatorImpl.dll")
-FLAGNR(String,  DynamicProfileMutator , "Type of local, temp, return, param, loop implicit flag and implicit flag. \n\t\t\t\t\ti.e local=LikelyArray_NoMissingValues_NonInts_NonFloats;temp=Int8Array;param=LikelyNumber;return=LikelyString;loopimplicitflag=ImplicitCall_ToPrimitive;implicitflag=ImplicitCall_None\n\t\t\t\t\tor pass DynamicProfileMutator:random\n\t\t\t\t\tSee DynamicProfileInfo.h for enum values", nullptr)
-#endif
 FLAGNR(Boolean, ExecuteByteCodeBufferReturnsInvalidByteCode, "Serialized byte code execution always returns SCRIPT_E_INVALID_BYTECODE", false)
 FLAGR(Number, ExpirableCollectionGCCount, "Number of GCs during which Expirable object profiling occurs", DEFAULT_CONFIG_ExpirableCollectionGCCount)
 FLAGR (Number,  ExpirableCollectionTriggerThreshold, "Threshold at which Expirable Object Collection is triggered (In Percentage)", DEFAULT_CONFIG_ExpirableCollectionTriggerThreshold)
@@ -1259,17 +1253,6 @@ FLAGNR(Number,  ByteCodeBranchLimit,    "Short branch limit before we use the br
 FLAGNR(Boolean, MediumByteCodeLayout  , "Always use medium layout for bytecodes", false)
 FLAGNR(Boolean, LargeByteCodeLayout   , "Always use large layout for bytecodes", false)
 #endif
-#ifdef FAULT_INJECTION
-FLAGNR(Number,  FaultInjection        , "FaultInjectMode - 0 (count only), 1 (count equal), 2 (count at or above), 3 (stackhashing)",-1)
-FLAGNR(Number,  FaultInjectionCount   , "Injects an out of memory at the specified allocation", -1)
-FLAGNR(String,  FaultInjectionType    , "FaultType (flag values) -  1 (Throw), 2 (NoThrow), 4 (MarkThrow), 8 (MarkNoThrow), FFFFFFFF (All)", nullptr)
-FLAGNR(String,  FaultInjectionFilter  , "A string to restrict the fault injection, the string can be like ArenaAllocator name", nullptr)
-FLAGNR(Number,  FaultInjectionAllocSize, "Do fault injection only this size", -1)
-FLAGNR(String,  FaultInjectionStackFile   , "Stacks to match, default: stack.txt in current directory", u"stack.txt")
-FLAGNR(Number,  FaultInjectionStackLineCount   , "Count of lines in the stack file used for matching", -1)
-FLAGNR(String,  FaultInjectionStackHash, "Match stacks hash on Chakra frames to inject the fault, hex string", u"0")
-FLAGNR(Number,  FaultInjectionScriptContextToTerminateCount, "Script context# COUNT % (Number of script contexts) to terminate", 1)
-#endif
 FLAGNR(Number, InduceCodeGenFailure, "Probability of a codegen job failing.", DEFAULT_CONFIG_InduceCodeGenFailure)
 FLAGNR(Number, InduceCodeGenFailureSeed, "Seed used while calculating codegen failure probability", 0)
 FLAGNR(Number, InjectPartiallyInitializedInterpreterFrameError, "The number of interpreter stack frame (with 1 being bottom-most) to inject error before the frame is initialized.", DEFAULT_CONFIG_InjectPartiallyInitializedInterpreterFrameError)
@@ -1312,7 +1295,6 @@ FLAGNR(Phases,  Memspect,              "Enables memspect tracking to perform mem
 #endif
 FLAGNR(Number,  PolymorphicInlineThreshold     , "Maximum size in bytecodes of a polymorphic inline candidate", DEFAULT_CONFIG_PolymorphicInlineThreshold)
 FLAGNR(Boolean, PrimeRecycler         , "Prime the recycler first", DEFAULT_CONFIG_PrimeRecycler)
-FLAGNR(Boolean, PrivateHeap           , "Use HeapAlloc with a private heap", DEFAULT_CONFIG_PrivateHeap)
 FLAGNR(Boolean, TraceEngineRefcount   , "Output traces for ScriptEngine AddRef/Release to debug lifetime management", false)
 #if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
 FLAGNR(Boolean, LeakStackTrace ,        "Include stack trace on leaked pinned object and heap objects", false)

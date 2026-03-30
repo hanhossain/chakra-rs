@@ -18,10 +18,6 @@
 struct CodeGenWorkItem;
 class SourceContextInfo;
 struct DeferredFunctionStub;
-#ifdef DYNAMIC_PROFILE_MUTATOR
-class DynamicProfileMutator;
-class DynamicProfileMutatorImpl;
-#endif
 #define MAX_FUNCTION_BODY_DEBUG_STRING_SIZE 42 //11*3+8+1
 
 typedef BVSparse<ArenaAllocator> ActiveFunctionSet;
@@ -1911,10 +1907,6 @@ namespace Js
 
         friend class ByteCodeBufferBuilder;
         friend class ByteCodeBufferReader;
-#ifdef DYNAMIC_PROFILE_MUTATOR
-        friend class ::DynamicProfileMutator;
-        friend class ::DynamicProfileMutatorImpl;
-#endif
         friend class RemoteFunctionBody;
 
         public:

@@ -32,7 +32,6 @@ Revision History:
 #include "pal/debug.h"
 #include "pal/misc.h"
 #include <new>
-#include "pal/module.h"
 #include "pal/stackstring.hpp"
 #include "pal/virtual.h"
 
@@ -310,16 +309,11 @@ int
 DebugBreakCommand()
 {
 #ifdef ENABLE_RUN_ON_DEBUG_BREAK
-    extern MODSTRUCT exe_module;
     const char *command_string = getenv (PAL_RUN_ON_DEBUG_BREAK);
     if (command_string) {
         char pid_buf[sizeof (PID_TEXT) + 32];
         PathCharString exe_bufString;
         int libNameLength = 10;
-        if (exe_module.lib_name != NULL)
-        {
-            libNameLength = PAL_wcslen(exe_module.lib_name);
-        }
 
         size_t dwexe_buf = strlen(EXE_TEXT) + libNameLength + 1;
         char * exe_buf = exe_bufString.OpenStringBuffer(dwexe_buf);
@@ -330,9 +324,6 @@ DebugBreakCommand()
         }
 
         if (snprintf (pid_buf, sizeof (pid_buf), PID_TEXT "%d", getpid()) <= 0) {
-            goto FAILED;
-        }
-        if (snprintf (exe_buf, sizeof (char) * (dwexe_buf + 1), EXE_TEXT "%ls", (char16_t *)exe_module.lib_name) <= 0) {
             goto FAILED;
         }
 

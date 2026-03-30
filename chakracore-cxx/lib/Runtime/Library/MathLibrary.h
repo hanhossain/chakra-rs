@@ -3,46 +3,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
-#include "Core/DelayLoadLibrary.h"
-
-class UCrtC99MathApis : protected DelayLoadLibrary
-{
-private:
-    typedef double (FNMathFn)(double);
-    typedef FNMathFn* PFNMathFn;
-    PFNMathFn m_pfnlog2;
-    PFNMathFn m_pfnlog1p;
-    PFNMathFn m_pfnexpm1;
-    PFNMathFn m_pfnacosh;
-    PFNMathFn m_pfnasinh;
-    PFNMathFn m_pfnatanh;
-    PFNMathFn m_pfntrunc;
-    PFNMathFn m_pfncbrt;
-
-
-public:
-    static const char16_t* LibraryName;
-
-    UCrtC99MathApis() : m_pfnlog2(nullptr), m_pfnlog1p(nullptr), m_pfnexpm1(nullptr), m_pfnacosh(nullptr), m_pfnasinh(nullptr), m_pfnatanh(nullptr), m_pfntrunc(nullptr), m_pfncbrt(nullptr) { }
-    virtual ~UCrtC99MathApis() { }
-
-    virtual const char16_t* GetLibraryName() const override { return LibraryName; }
-
-    bool IsAvailable() { Ensure(); return DelayLoadLibrary::IsAvailable(); }
-
-    void Ensure();
-
-    HMODULE GetHandle() const { return m_hModule; }
-
-    double log2 (_In_ double x) { Assert(IsAvailable()); return m_pfnlog2 (x); }
-    double log1p(_In_ double x) { Assert(IsAvailable()); return m_pfnlog1p(x); }
-    double expm1(_In_ double x) { Assert(IsAvailable()); return m_pfnexpm1(x); }
-    double acosh(_In_ double x) { Assert(IsAvailable()); return m_pfnacosh(x); }
-    double asinh(_In_ double x) { Assert(IsAvailable()); return m_pfnasinh(x); }
-    double atanh(_In_ double x) { Assert(IsAvailable()); return m_pfnatanh(x); }
-    double trunc(_In_ double x) { Assert(IsAvailable()); return m_pfntrunc(x); }
-    double cbrt (_In_ double x) { Assert(IsAvailable()); return m_pfncbrt (x); }
-};
 
 namespace Js {
 

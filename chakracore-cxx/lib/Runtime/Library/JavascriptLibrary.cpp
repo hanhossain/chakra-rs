@@ -6679,23 +6679,6 @@ namespace Js
         return function;
     }
 
-#if !FLOATVAR
-    JavascriptNumber * JavascriptLibrary::CreateNumber(double value, RecyclerJavascriptNumberAllocator * numberAllocator)
-    {
-        AssertMsg(numberTypeStatic, "Where's numberTypeStatic?");
-        return AllocatorNew(RecyclerJavascriptNumberAllocator, numberAllocator, JavascriptNumber, value, numberTypeStatic);
-    }
-
-#if ENABLE_NATIVE_CODEGEN
-    JavascriptNumber* JavascriptLibrary::CreateCodeGenNumber(CodeGenNumberAllocator * alloc, double value)
-    {
-        AssertMsg(numberTypeStatic, "Where's numberTypeStatic?");
-        return new (alloc->Alloc()) JavascriptNumber(value, numberTypeStatic);
-    }
-#endif
-
-#endif
-
     DynamicObject* JavascriptLibrary::CreateGeneratorConstructorPrototypeObject()
     {
         AssertMsg(generatorConstructorPrototypeObjectType, "Where's generatorConstructorPrototypeObjectType?");

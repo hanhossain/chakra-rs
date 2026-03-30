@@ -380,9 +380,6 @@ HELPERCALLCHK(Op_Int32ToAtomInPlace, Js::JavascriptOperators::Int32ToVarInPlace,
 HELPERCALLCHK(Op_UInt32ToAtom, Js::JavascriptOperators::UInt32ToVar, AttrCanNotBeReentrant)
 HELPERCALLCHK(Op_UInt32ToAtomInPlace, Js::JavascriptOperators::UInt32ToVarInPlace, AttrCanNotBeReentrant)
 #endif
-#if !FLOATVAR
-HELPERCALLCHK(AllocUninitializedNumber, Js::JavascriptOperators::AllocUninitializedNumber, AttrCanNotBeReentrant)
-#endif
 
 #ifdef ENABLE_WASM_SIMD
 HELPERCALL(Simd128ShRtByScalarU2, Js::SIMDInt64x2Operation::OpShiftRightByScalarU, AttrCanNotBeReentrant)
@@ -575,9 +572,6 @@ HELPERCALL(IntRangeCheckFailure, Js::JavascriptNativeOperators::IntRangeCheckFai
 #endif
 #include "ExternalHelperMethodList.h"
 
-#if !FLOATVAR
-HELPERCALL(BoxStackNumber, Js::JavascriptNumber::BoxStackNumber, AttrCanNotBeReentrant)
-#endif
 
 HELPERCALL(GetNonzeroInt32Value_NoTaggedIntCheck, Js::JavascriptNumber::GetNonzeroInt32Value_NoTaggedIntCheck, AttrCanNotBeReentrant)
 HELPERCALL(IsNegZero, Js::JavascriptNumber::IsNegZero, AttrCanNotBeReentrant)

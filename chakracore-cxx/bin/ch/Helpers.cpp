@@ -400,8 +400,12 @@ int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, u
     PAL_fseek(file, 0, SEEK_END);
     lengthBytes = PAL_ftell(file);
     PAL_fseek(file, 0, SEEK_SET);
-    contents = (const char *)HeapAlloc(GetProcessHeap(), 0, lengthBytes);
-    if (nullptr == contents)
+    contents = (const char *)malloc(lengthBytes);
+    if (contents != nullptr)
+    {
+        memset((void *)contents, 0, lengthBytes);
+    }
+    else
     {
         PAL_fwprintf(PAL_get_stderr(), u"out of memory");
         IfFailGo(E_OUTOFMEMORY);
@@ -420,7 +424,7 @@ Error:
     PAL_fclose(file);
     if (contents && FAILED(hr))
     {
-        HeapFree(GetProcessHeap(), 0, (void*)contents);
+        free((void*)contents);
         contents = nullptr;
     }
 

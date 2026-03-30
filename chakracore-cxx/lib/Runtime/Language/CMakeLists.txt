@@ -17,7 +17,6 @@ set(CRL_SOURCE_FILES ${CRL_SOURCE_FILES}
     ConstructorCache.cpp
     CodeGenRecyclableData.cpp
     DynamicProfileInfo.cpp
-    DynamicProfileMutator.cpp
     DynamicProfileStorage.cpp
     ExecutionMode.cpp
     FunctionCodeGenRuntimeData.cpp

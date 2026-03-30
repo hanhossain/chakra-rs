@@ -5161,64 +5161,6 @@ LowererMD::GenerateClz(IR::Instr * instr)
     }
 }
 
-#if !FLOATVAR
-void
-LowererMD::GenerateNumberAllocation(IR::RegOpnd * opndDst, IR::Instr * instrInsert, bool isHelper)
-{
-    size_t alignedAllocSize = Js::RecyclerJavascriptNumberAllocator::GetAlignedAllocSize(
-        m_func->GetScriptContextInfo()->IsRecyclerVerifyEnabled(),
-        m_func->GetScriptContextInfo()->GetRecyclerVerifyPad());
-
-    IR::Opnd * endAddressOpnd = m_lowerer->LoadNumberAllocatorValueOpnd(instrInsert, NumberAllocatorValue::NumberAllocatorEndAddress);
-    IR::Opnd * freeObjectListOpnd = m_lowerer->LoadNumberAllocatorValueOpnd(instrInsert, NumberAllocatorValue::NumberAllocatorFreeObjectList);
-
-    // MOV dst, allocator->freeObjectList
-    IR::Instr * loadMemBlockInstr = IR::Instr::New(Js::OpCode::MOV, opndDst, freeObjectListOpnd, this->m_func);
-    instrInsert->InsertBefore(loadMemBlockInstr);
-
-    // LEA nextMemBlock, [dst + allocSize]
-    IR::RegOpnd * nextMemBlockOpnd = IR::RegOpnd::New(TyMachPtr, this->m_func);
-    IR::Instr * loadNextMemBlockInstr = IR::Instr::New(Js::OpCode::LEA, nextMemBlockOpnd,
-        IR::IndirOpnd::New(opndDst, alignedAllocSize, TyMachPtr, this->m_func), this->m_func);
-    instrInsert->InsertBefore(loadNextMemBlockInstr);
-
-    // CMP nextMemBlock, allocator->endAddress
-    IR::Instr * checkInstr = IR::Instr::New(Js::OpCode::CMP, this->m_func);
-    checkInstr->SetSrc1(nextMemBlockOpnd);
-    checkInstr->SetSrc2(endAddressOpnd);
-    instrInsert->InsertBefore(checkInstr);
-
-    // JA $helper
-    IR::LabelInstr * helperLabel = IR::LabelInstr::New(Js::OpCode::Label, this->m_func, true);
-    IR::BranchInstr * branchInstr = IR::BranchInstr::New(Js::OpCode::JA, helperLabel, this->m_func);
-    instrInsert->InsertBefore(branchInstr);
-
-    // MOV allocator->freeObjectList, nextMemBlock
-    IR::Instr * setFreeObjectListInstr = IR::Instr::New(Js::OpCode::MOV, freeObjectListOpnd, nextMemBlockOpnd, this->m_func);
-    instrInsert->InsertBefore(setFreeObjectListInstr);
-
-    // JMP $done
-    IR::LabelInstr * doneLabel = IR::LabelInstr::New(Js::OpCode::Label, this->m_func, isHelper);
-    IR::BranchInstr * branchToDoneInstr = IR::BranchInstr::New(Js::OpCode::JMP, doneLabel, this->m_func);
-    instrInsert->InsertBefore(branchToDoneInstr);
-
-    // $helper:
-    instrInsert->InsertBefore(helperLabel);
-
-    // PUSH allocator
-    this->LoadHelperArgument(instrInsert, m_lowerer->LoadScriptContextValueOpnd(instrInsert,  ScriptContextValue::ScriptContextNumberAllocator));
-
-    // dst = Call AllocUninitializedNumber
-    IR::Instr * instrCall = IR::Instr::New(Js::OpCode::CALL, opndDst,
-        IR::HelperCallOpnd::New(IR::HelperAllocUninitializedNumber, this->m_func), this->m_func);
-    instrInsert->InsertBefore(instrCall);
-    this->lowererMDArch.LowerCall(instrCall, 0);
-
-    // $done:
-    instrInsert->InsertBefore(doneLabel);
-}
-#endif
-
 void
 LowererMD::GenerateFastRecyclerAlloc(size_t allocSize, IR::RegOpnd* newObjDst, IR::Instr* insertionPointInstr, IR::LabelInstr* allocHelperLabel, IR::LabelInstr* allocDoneLabel)
 {
@@ -5303,71 +5245,6 @@ LowererMD::SaveDoubleToVar(IR::RegOpnd * dstOpnd, IR::RegOpnd *opndFloat, IR::In
     Assert(opndFloat->GetType() == TyFloat64);
 
     // Call JSNumber::ToVar to save the float operand to the result of the original (var) instruction
-#if !FLOATVAR
-
-    // We should only generate this if sse2 is available
-    Assert(AutoSystemInfo::Data.SSE2Available());
-
-    IR::Opnd * symVTableDst;
-    IR::Opnd * symDblDst;
-    IR::Opnd * symTypeDst;
-    IR::Instr * newInstr;
-    IR::Instr * numberInitInsertInstr = nullptr;
-    if (instrOrig->dstIsTempNumber)
-    {
-        // Use the original dst to get the temp number sym
-        StackSym * tempNumberSym = this->m_lowerer->GetTempNumberSym(instrOrig->GetDst(), instrOrig->dstIsTempNumberTransferred);
-
-        // LEA dst, &tempSym
-        IR::SymOpnd * symTempSrc = IR::SymOpnd::New(tempNumberSym, TyMachPtr, this->m_func);
-        IR::Instr * loadTempNumberInstr = IR::Instr::New(Js::OpCode::LEA, dstOpnd, symTempSrc, this->m_func);
-        instrInsert->InsertBefore(loadTempNumberInstr);
-
-        symVTableDst = IR::SymOpnd::New(tempNumberSym, TyMachPtr, this->m_func);
-        symDblDst = IR::SymOpnd::New(tempNumberSym, (uint32_t)Js::JavascriptNumber::GetValueOffset(), TyFloat64, this->m_func);
-        symTypeDst = IR::SymOpnd::New(tempNumberSym, (uint32_t)Js::JavascriptNumber::GetOffsetOfType(), TyMachPtr, this->m_func);
-        if (this->m_lowerer->outerMostLoopLabel == nullptr)
-        {
-            // If we are not in loop, just insert in place
-            numberInitInsertInstr = instrInsert;
-        }
-        else
-        {
-            // Otherwise, initialize in the outer most loop top if we haven't initialized it yet.
-            numberInitInsertInstr = this->m_lowerer->initializedTempSym->TestAndSet(tempNumberSym->m_id) ?
-                nullptr : this->m_lowerer->outerMostLoopLabel;
-        }
-    }
-    else
-    {
-        this->GenerateNumberAllocation(dstOpnd, instrInsert, isHelper);
-        symVTableDst = IR::IndirOpnd::New(dstOpnd, 0, TyMachPtr, this->m_func);
-        symDblDst = IR::IndirOpnd::New(dstOpnd, (uint32_t)Js::JavascriptNumber::GetValueOffset(), TyFloat64, this->m_func);
-        symTypeDst = IR::IndirOpnd::New(dstOpnd, (uint32_t)Js::JavascriptNumber::GetOffsetOfType(), TyMachPtr, this->m_func);
-        numberInitInsertInstr = instrInsert;
-    }
-
-    if (numberInitInsertInstr)
-    {
-        // Inline the case where the dst is marked as temp.
-        IR::Opnd *jsNumberVTable = m_lowerer->LoadVTableValueOpnd(numberInitInsertInstr, VTableValue::VtableJavascriptNumber);
-
-        // MOV dst->vtable, JavascriptNumber::vtable
-        newInstr = IR::Instr::New(Js::OpCode::MOV, symVTableDst, jsNumberVTable, this->m_func);
-        numberInitInsertInstr->InsertBefore(newInstr);
-
-        // MOV dst->type, JavascriptNumber_type
-        IR::Opnd *typeOpnd = m_lowerer->LoadLibraryValueOpnd(numberInitInsertInstr, LibraryValue::ValueNumberTypeStatic);
-        newInstr = IR::Instr::New(Js::OpCode::MOV, symTypeDst, typeOpnd, this->m_func);
-        numberInitInsertInstr->InsertBefore(newInstr);
-    }
-
-    // MOVSD dst->value, opndFloat   ; copy the float result to the temp JavascriptNumber
-    newInstr = IR::Instr::New(Js::OpCode::MOVSD, symDblDst, opndFloat, this->m_func);
-    instrInsert->InsertBefore(newInstr);
-
-#else
-
     // s1 = MOVD opndFloat
     IR::RegOpnd *s1 = IR::RegOpnd::New(TyMachReg, m_func);
     IR::Instr *movd = IR::Instr::New(Js::OpCode::MOVD, s1, opndFloat, m_func);
@@ -5433,7 +5310,6 @@ LowererMD::SaveDoubleToVar(IR::RegOpnd * dstOpnd, IR::RegOpnd *opndFloat, IR::In
     instrInsert->InsertBefore(setTag);
     instrInsert->InsertBefore(movDst);
     LowererMD::Legalize(setTag);
-#endif
 }
 
 void
@@ -5549,7 +5425,6 @@ LowererMD::EmitLoadFloatCommon(IR::Opnd *dst, IR::Opnd *src, IR::Instr *insertIn
         IR::RegOpnd *regOpnd = src->AsRegOpnd();
         Assert(regOpnd->m_sym->m_isSingleDef);
         Js::Var value = regOpnd->m_sym->GetFloatConstValueAsVar_PostGlobOpt();
-#if FLOATVAR
         void *pDouble = (double*)NativeCodeDataNewNoFixup(this->m_func->GetNativeCodeDataAllocator(), DoubleType<DataDesc_LowererMD_EmitLoadFloatCommon_Double>, Js::JavascriptNumber::GetValue(value));
         IR::Opnd * doubleRef;
         if (!m_func->IsOOPJIT())
@@ -5567,10 +5442,6 @@ LowererMD::EmitLoadFloatCommon(IR::Opnd *dst, IR::Opnd *src, IR::Instr *insertIn
 
             GetLowerer()->addToLiveOnBackEdgeSyms->Set(m_func->GetTopFunc()->GetNativeCodeDataSym()->m_id);
         }
-#else
-        IR::MemRefOpnd *doubleRef = IR::MemRefOpnd::New((uint8_t*)value + Js::JavascriptNumber::GetValueOffset(), TyFloat64, this->m_func,
-            IR::AddrOpndKindDynamicDoubleRef);
-#endif
         regFloatOpnd = IR::RegOpnd::New(TyFloat64, this->m_func);
         instr = IR::Instr::New(Js::OpCode::MOVSD, regFloatOpnd, doubleRef, this->m_func);
         insertInstr->InsertBefore(instr);
@@ -6701,7 +6572,6 @@ bool LowererMD::GenerateObjectTest(IR::Opnd * opndSrc, IR::Instr * insertInstr, 
 
 #endif
 
-#if FLOATVAR
 //
 // If any of the top 14 bits are not set, then the var is not a float value and hence, jump to $labelHelper.
 //
@@ -6760,41 +6630,6 @@ IR::RegOpnd* LowererMD::CheckFloatAndUntag(IR::RegOpnd * opndSrc, IR::Instr * in
     insertInstr->InsertBefore(instr);
     return floatReg;
 }
-#else
-void LowererMD::GenerateFloatTest(IR::RegOpnd * opndSrc, IR::Instr * insertInstr, IR::LabelInstr* labelHelper, const bool checkForNullInLoopBody)
-{
-    if (opndSrc->GetValueType().IsFloat())
-    {
-        return;
-    }
-
-    AssertMsg(opndSrc->GetSize() == MachPtr, "64-bit register required");
-
-    if(checkForNullInLoopBody && m_func->IsLoopBody())
-    {
-        // It's possible that the value was determined dead by the jitted function and was not restored. The jitted loop
-        // body may not realize that it's dead and may try to use it. Check for null in loop bodies.
-        //     test src1, src1
-        //     jz $helper (bail out)
-        m_lowerer->InsertCompareBranch(
-            opndSrc,
-            IR::AddrOpnd::NewNull(m_func),
-            Js::OpCode::BrEq_A,
-            labelHelper,
-            insertInstr);
-    }
-
-    IR::Instr* instr = IR::Instr::New(Js::OpCode::CMP, insertInstr->m_func);
-    instr->SetSrc1(IR::IndirOpnd::New(opndSrc, 0, TyMachPtr, insertInstr->m_func));
-    instr->SetSrc2(m_lowerer->LoadVTableValueOpnd(insertInstr, VTableValue::VtableJavascriptNumber));
-    insertInstr->InsertBefore(instr);
-
-    // JNZ $helper
-    instr = IR::BranchInstr::New(Js::OpCode::JNE /* JZ */, labelHelper, this->m_func);
-    insertInstr->InsertBefore(instr);
-}
-
-#endif
 
 #if DBG
 //

@@ -43,27 +43,16 @@ ArenaAllocator* GetOutputAllocator2()
 }
 #endif
 
-void ConfigParser::ParseOnModuleLoad(CmdLineArgsParser& parser, HANDLE hmod)
+void ConfigParser::ParseOnModuleLoad(CmdLineArgsParser& parser)
 {
     Assert(!s_moduleConfigParser.HasReadConfig());
 
-    s_moduleConfigParser.ParseRegistry(parser);
-    s_moduleConfigParser.ParseConfig(hmod, parser);
-    s_moduleConfigParser.ProcessConfiguration(hmod);
+    s_moduleConfigParser.ParseConfig(parser);
+    s_moduleConfigParser.ProcessConfiguration();
     // 'parser' destructor post-processes some configuration
 }
 
-// TODO (hanhossain): remove
-void ConfigParser::ParseRegistry(CmdLineArgsParser &parser)
-{
-}
-
-// TODO (hanhossain): remove
-void ConfigParser::ParseRegistryKey(HKEY hk, CmdLineArgsParser &parser)
-{
-}
-
-void ConfigParser::ParseConfig(HANDLE hmod, CmdLineArgsParser &parser, const char16_t* strCustomConfigFile)
+void ConfigParser::ParseConfig(CmdLineArgsParser &parser, const char16_t* strCustomConfigFile)
 {
 #if defined(ENABLE_DEBUG_CONFIG_OPTIONS) && CONFIG_PARSE_CONFIG_FILE
     Assert(!_hasReadConfig || strCustomConfigFile != nullptr);
@@ -81,15 +70,10 @@ void ConfigParser::ParseConfig(HANDLE hmod, CmdLineArgsParser &parser, const cha
     }
 
     int err = 0;
-    char16_t modulename[_MAX_PATH];
+
     char16_t filename[_MAX_PATH];
 
-    GetModuleFileName((HMODULE)hmod, modulename, _MAX_PATH);
-    char16_t drive[_MAX_DRIVE];
-    char16_t dir[_MAX_DIR];
-
-    _wsplitpath_s(modulename, drive, _MAX_DRIVE, dir, _MAX_DIR, nullptr, 0, nullptr, 0);
-    _wmakepath_s(filename, drive, dir, configFileName, configFileExt);
+    _wmakepath_s(filename, u"", u"", configFileName, configFileExt);
 
     PAL_FILE* configFile;
     // Two-pathed for a couple reasons
@@ -187,14 +171,10 @@ void ConfigParser::ParseConfig(HANDLE hmod, CmdLineArgsParser &parser, const cha
 #endif
 }
 
-void ConfigParser::ProcessConfiguration(HANDLE hmod)
+void ConfigParser::ProcessConfiguration()
 {
 #if defined(ENABLE_DEBUG_CONFIG_OPTIONS)
     bool hasOutput = false;
-    char16_t modulename[_MAX_PATH];
-
-    GetModuleFileName((HMODULE)hmod, modulename, _MAX_PATH);
-
     if (Js::Configuration::Global.flags.IsEnabled(Js::OutputFileFlag)
         && Js::Configuration::Global.flags.OutputFile != nullptr)
     {
@@ -227,8 +207,6 @@ void ConfigParser::ProcessConfiguration(HANDLE hmod)
 
     if (hasOutput)
     {
-        ConfigParserAPI::DisplayInitialOutput(modulename);
-
         Output::Print(u"\n");
 
         Js::Configuration::Global.flags.VerboseDump();

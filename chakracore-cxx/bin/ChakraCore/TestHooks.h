@@ -66,7 +66,6 @@ struct TestHooks
     NotifyUnhandledExceptionPtr pfnNotifyUnhandledException;
 };
 
-typedef int32_t(*OnChakraCoreLoadedPtr)(TestHooks &testHooks);
-int32_t OnChakraCoreLoaded(OnChakraCoreLoadedPtr pfChakraCoreLoaded = NULL);
+int32_t OnChakraCoreLoaded();
 
 #endif

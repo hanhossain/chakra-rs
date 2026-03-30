@@ -23,7 +23,6 @@ if(CC_TARGET_OS_LINUX)
   add_definitions(-D__LINUX__=1)
 endif()
 
-add_definitions(-DPLATFORM_UNIX=1)
 add_definitions(-DLP64COMPATIBLE=1)
 add_definitions(-DFEATURE_PAL=1)
 add_definitions(-DPIC=1)
@@ -76,8 +75,7 @@ set(SOURCES
   cruntime/silent_printf.cpp
   cruntime/string.cpp
   cruntime/wchar.cpp
-  cruntime/runtime_proxy.cpp
-  safecrt/makepath_s.cpp
+    safecrt/makepath_s.cpp
   safecrt/mbusafecrt.cpp
   safecrt/safecrt_input_s.cpp
   safecrt/safecrt_output_s.cpp
@@ -110,7 +108,6 @@ set(SOURCES
   handlemgr/handlemgr.cpp
   init/pal.cpp
   init/sxs.cpp
-  loader/module.cpp
   loader/modulename.cpp
   locale/unicode.cpp
   locale/unicode_data.cpp
@@ -118,8 +115,7 @@ set(SOURCES
   map/common.cpp
   map/map.cpp
   map/virtual.cpp
-  memory/heap.cpp
-  memory/local.cpp
+    memory/local.cpp
   misc/bstr.cpp
   misc/dbgmsg.cpp
   misc/error.cpp

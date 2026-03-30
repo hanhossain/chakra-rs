@@ -79,10 +79,6 @@ namespace Js
         threadContext(threadContext),
         scriptStartEventHandler(nullptr),
         scriptEndEventHandler(nullptr),
-#ifdef FAULT_INJECTION
-        disposeScriptByFaultInjectionEventHandler(nullptr),
-#endif
-
 #ifndef CC_LOW_MEMORY_TARGET
         integerStringMapCacheMissCount(0),
         integerStringMapCacheUseCount(0),
@@ -2644,15 +2640,6 @@ ExitTempAllocator:
         }
     }
 
-#ifdef FAULT_INJECTION
-    void ScriptContext::DisposeScriptContextByFaultInjection() {
-        if (this->disposeScriptByFaultInjectionEventHandler != nullptr)
-        {
-            this->disposeScriptByFaultInjectionEventHandler(this);
-        }
-    }
-#endif
-
     template <bool stackProbe, bool leaveForHost>
     bool ScriptContext::LeaveScriptStart(void * frameAddress)
     {
@@ -2723,14 +2710,6 @@ ExitTempAllocator:
         AssertMsg(this->scriptEndEventHandler == nullptr, "Do not support multi-cast yet");
         this->scriptEndEventHandler = eventHandler;
     }
-
-#ifdef FAULT_INJECTION
-    void ScriptContext::SetDisposeDisposeByFaultInjectionEventHandler(ScriptContext::EventHandler eventHandler)
-    {
-        AssertMsg(this->disposeScriptByFaultInjectionEventHandler == nullptr, "Do not support multi-cast yet");
-        this->disposeScriptByFaultInjectionEventHandler = eventHandler;
-    }
-#endif
 
     uint ScriptContext::SaveSourceNoCopy(Utf8SourceInfo* sourceInfo, int cchLength, bool isCesu8)
     {

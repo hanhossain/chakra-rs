@@ -30,11 +30,6 @@
 #include "Memory/StressTest.h"
 #endif
 
-#ifdef DYNAMIC_PROFILE_MUTATOR
-#include "Language/DynamicProfileMutator.h"
-#endif
-
-
 const int TotalNumberOfBuiltInProperties = Js::PropertyIds::_countJSOnlyProperty;
 
 /*
@@ -159,10 +154,6 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
     entryPointToBuiltInOperationIdCache(&threadAlloc, 0),
 #if ENABLE_NATIVE_CODEGEN
     preReservedVirtualAllocator(),
-#if !FLOATVAR
-    codeGenNumberThreadAllocator(nullptr),
-    xProcNumberPageSegmentManager(nullptr),
-#endif
     m_jitNumericProperties(nullptr),
     m_jitNeedsPropertyUpdate(false),
 #if DYNAMIC_INTERPRETER_THUNK || defined(ASMJS_PLAT)
@@ -226,9 +217,6 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
 #if DBG_DUMP
     scriptSiteCount = 0;
     pageAllocator.debugName = u"Thread";
-#endif
-#ifdef DYNAMIC_PROFILE_MUTATOR
-    this->dynamicProfileMutator = DynamicProfileMutator::GetMutator();
 #endif
 
     PERF_COUNTER_INC(Basic, ThreadContext);
@@ -478,20 +466,6 @@ ThreadContext::~ThreadContext()
         }
 #endif
 #endif
-#if ENABLE_NATIVE_CODEGEN
-#if !FLOATVAR
-        if (this->codeGenNumberThreadAllocator)
-        {
-            HeapDelete(this->codeGenNumberThreadAllocator);
-            this->codeGenNumberThreadAllocator = nullptr;
-        }
-        if (this->xProcNumberPageSegmentManager)
-        {
-            HeapDelete(this->xProcNumberPageSegmentManager);
-            this->xProcNumberPageSegmentManager = nullptr;
-        }
-#endif
-#endif
 #ifdef ENABLE_SCRIPT_DEBUGGING
         Assert(this->debugManager == nullptr);
 #endif
@@ -547,12 +521,6 @@ ThreadContext::~ThreadContext()
 
     PERF_COUNTER_DEC(Basic, ThreadContext);
 
-#ifdef DYNAMIC_PROFILE_MUTATOR
-    if (this->dynamicProfileMutator != nullptr)
-    {
-        this->dynamicProfileMutator->Delete();
-    }
-#endif
 }
 
 void
@@ -665,18 +633,6 @@ Recycler* ThreadContext::EnsureRecycler()
         newRecycler->Initialize(isOptimizedForManyInstances, &threadService); // use in-thread GC when optimizing for many instances
         newRecycler->SetCollectionWrapper(this);
 
-#if ENABLE_NATIVE_CODEGEN
-        // This may throw, so it needs to be after the recycler is initialized,
-        // otherwise, the recycler dtor may encounter problems
-#if !FLOATVAR
-        // TODO: we only need one of the following, one for OOP jit and one for in-proc BG JIT
-        AutoPtr<CodeGenNumberThreadAllocator> localCodeGenNumberThreadAllocator(
-            HeapNew(CodeGenNumberThreadAllocator, newRecycler));
-        AutoPtr<XProcNumberPageSegmentManager> localXProcNumberPageSegmentManager(
-            HeapNew(XProcNumberPageSegmentManager, newRecycler));
-#endif
-#endif
-
         this->recyclableData.Root(RecyclerNewZ(newRecycler, RecyclableData, newRecycler), newRecycler);
 
         if (this->IsThreadBound())
@@ -704,12 +660,6 @@ Recycler* ThreadContext::EnsureRecycler()
             this->expirableObjectDisposeList = Anew(&this->threadAlloc, ExpirableObjectList, &this->threadAlloc);
 
             InitializePropertyMaps(); // has many dependencies on the recycler and other members of the thread context
-#if ENABLE_NATIVE_CODEGEN
-#if !FLOATVAR
-            this->codeGenNumberThreadAllocator = localCodeGenNumberThreadAllocator.Detach();
-            this->xProcNumberPageSegmentManager = localXProcNumberPageSegmentManager.Detach();
-#endif
-#endif
         }
         catch(...)
         {
@@ -1514,7 +1464,6 @@ ThreadContext::IsOnStack(void const *ptr)
  size_t
  ThreadContext::GetStackLimitForCurrentThread() const
 {
-    FAULTINJECT_SCRIPT_TERMINATION;
     size_t limit = this->stackLimitForCurrentThread;
     Assert(limit == Js::Constants::StackLimitForScriptInterrupt
         || !this->GetStackProber()
@@ -1542,7 +1491,6 @@ ThreadContext::IsStackAvailable(size_t size, bool* isInterrupt)
     this->GetStackProber()->AdjustKnownStackLimit(sp, size);
 #endif
 
-    FAULTINJECT_STACK_PROBE
     if (stackAvailable)
     {
         return true;
@@ -1575,8 +1523,6 @@ ThreadContext::IsStackAvailableNoThrow(size_t size)
     size_t sp = (size_t)_AddressOfReturnAddress();
     size_t stackLimit = this->GetStackLimitForCurrentThread();
     bool stackAvailable = (sp > stackLimit) && (sp > size) && ((sp - size) > stackLimit);
-
-    FAULTINJECT_STACK_PROBE
 
     return stackAvailable;
 }
@@ -2452,23 +2398,6 @@ ThreadContext::PreCollectionCallBack(CollectionFlags flags)
     const BOOL concurrent = flags & CollectMode_Concurrent;
     const BOOL partial = flags & CollectMode_Partial;
 
-    if (!partial)
-    {
-        // Integrate allocated pages from background JIT threads
-#if ENABLE_NATIVE_CODEGEN
-#if !FLOATVAR
-        if (codeGenNumberThreadAllocator)
-        {
-            codeGenNumberThreadAllocator->Integrate();
-        }
-        if (this->xProcNumberPageSegmentManager)
-        {
-            this->xProcNumberPageSegmentManager->Integrate();
-        }
-#endif
-#endif
-    }
-
     RecyclerCollectCallBackFlags callBackFlags = (RecyclerCollectCallBackFlags)
         ((concurrent ? Collect_Begin_Concurrent : Collect_Begin) | (partial? Collect_Begin_Partial : Collect_Begin));
     CollectionCallBack(callBackFlags);
@@ -2822,37 +2751,6 @@ ThreadContext::PreDisposeObjectsCallBack()
 {
     this->expirableObjectDisposeList->Clear();
 }
-
-#ifdef FAULT_INJECTION
-void
-ThreadContext::DisposeScriptContextByFaultInjectionCallBack()
-{
-    if (FAULTINJECT_SCRIPT_TERMINATION_ON_DISPOSE) {
-        int scriptContextToClose = -1;
-
-        /* inject only if we have more than 1 script context*/
-        uint totalScriptCount = GetScriptContextCount();
-        if (totalScriptCount > 1) {
-            if (Js::Configuration::Global.flags.FaultInjectionScriptContextToTerminateCount > 0)
-            {
-                scriptContextToClose = Js::Configuration::Global.flags.FaultInjectionScriptContextToTerminateCount % totalScriptCount;
-                for (Js::ScriptContext *scriptContext = GetScriptContextList(); scriptContext; scriptContext = scriptContext->next)
-                {
-                    if (scriptContextToClose-- == 0)
-                    {
-                        scriptContext->DisposeScriptContextByFaultInjection();
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                PAL_fwprintf(PAL_get_stderr(), u"***FI: FaultInjectionScriptContextToTerminateCount Failed, Value should be > 0. \n");
-            }
-        }
-    }
-}
-#endif
 
 #pragma region "Expirable Object Methods"
 void
@@ -4482,29 +4380,6 @@ void ThreadContext::ClearThreadContextFlag(ThreadContextFlags contextFlag)
 {
     this->threadContextFlags = (ThreadContextFlags)(this->threadContextFlags & ~contextFlag);
 }
-
-#ifdef ENABLE_GLOBALIZATION
-Js::DelayLoadWinRtString * ThreadContext::GetWinRTStringLibrary()
-{
-    delayLoadWinRtString.EnsureFromSystemDirOnly();
-
-    return &delayLoadWinRtString;
-}
-
-#ifdef ENABLE_FOUNDATION_OBJECT
-Js::WindowsFoundationAdapter* ThreadContext::GetWindowsFoundationAdapter()
-{
-    return &windowsFoundationAdapter;
-}
-
-Js::DelayLoadWinRtFoundation* ThreadContext::GetWinRtFoundationLibrary()
-{
-    delayLoadWinRtFoundationLibrary.EnsureFromSystemDirOnly();
-
-    return &delayLoadWinRtFoundationLibrary;
-}
-#endif
-#endif // ENABLE_GLOBALIZATION
 
 // Despite the name, callers expect this to return the highest propid + 1.
 

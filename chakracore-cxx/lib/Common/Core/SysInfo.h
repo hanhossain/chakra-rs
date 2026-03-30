@@ -45,7 +45,6 @@ public:
 #if defined(_M_ARM32_OR_ARM64)
     bool ArmDivAvailable() const { return this->armDivAvailable; }
 #endif
-    static uint32_t SaveModuleFileName(HANDLE hMod);
     static const char16_t* GetJscriptDllFileName();
     static int32_t GetJscriptFileVersion(uint32_t* majorVersion, uint32_t* minorVersion, uint32_t *buildDateHash = nullptr, uint32_t *buildTimeHash = nullptr);
 #if DBG

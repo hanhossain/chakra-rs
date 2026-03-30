@@ -382,9 +382,6 @@ NativeEntryPointData::Cleanup(ScriptContext * scriptContext, bool isShutdown, bo
 InProcNativeEntryPointData::InProcNativeEntryPointData() :
     nativeCodeData(nullptr), inlineeFrameMap(nullptr), sortedLazyBailoutRecordList(nullptr),
     lazyBailOutRecordSlotOffset{0}, lazyBailOutThunkOffset{0}
-#if !FLOATVAR
-    , numberChunks(nullptr)
-#endif
 {
     Assert(!JITManager::GetJITManager()->IsOOPJITEnabled());
 }
@@ -502,16 +499,10 @@ InProcNativeEntryPointData::OnCleanup()
         this->sortedLazyBailoutRecordList = nullptr;
     }
 
-#if !FLOATVAR
-    this->numberChunks = nullptr;
-#endif
 }
 
 OOPNativeEntryPointData::OOPNativeEntryPointData() :
     nativeDataBuffer(nullptr)
-#if !FLOATVAR
-    , numberArray(nullptr), numberPageSegments(nullptr)
-#endif
 {
     Assert(JITManager::GetJITManager()->IsOOPJITEnabled());
 }
@@ -567,18 +558,6 @@ OOPNativeEntryPointData::RecordInlineeFrameOffsetsInfo(unsigned int offsetsArray
     this->inlineeFrameOffsetArrayCount = offsetsArrayCount;
 }
 
-#if !FLOATVAR
-void
-OOPNativeEntryPointData::ProcessNumberPageSegments(ScriptContext * scriptContext)
-{
-    if (this->numberPageSegments)
-    {
-        this->numberArray = scriptContext->GetThreadContext()
-            ->GetXProcNumberPageSegmentManager()->RegisterSegments(this->numberPageSegments);
-        this->numberPageSegments = nullptr;
-    }
-}
-#endif
 
 void
 OOPNativeEntryPointData::OnCleanup()
@@ -589,10 +568,6 @@ OOPNativeEntryPointData::OnCleanup()
         DeleteNativeDataBuffer(this->nativeDataBuffer);
         this->nativeDataBuffer = nullptr;
     }
-
-#if !FLOATVAR
-    this->numberArray = nullptr;
-#endif
 }
 
 void

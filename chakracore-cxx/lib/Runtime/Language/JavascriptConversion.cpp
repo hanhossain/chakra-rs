@@ -759,14 +759,6 @@ CommonNumber:
         case TypeIds_Symbol:
             return true;
 
-#if !FLOATVAR
-        case TypeIds_Number:
-            {
-                double value = JavascriptNumber::GetValue(aValue);
-                return (!JavascriptNumber::IsNan(value)) && (!JavascriptNumber::IsZero(value));
-            }
-#endif
-
         case TypeIds_Int64Number:
             {
                 long value = UnsafeVarTo<JavascriptInt64Number>(aValue)->GetValue();

@@ -8,8 +8,6 @@ namespace PlatformAgnostic
 {
 namespace Arrays
 {
-#ifndef ENABLE_GLOBALIZATION
-
     class ArrayLocalization
     {
         char16_t localeSeparator;
@@ -22,8 +20,6 @@ namespace Arrays
 
         inline char16_t GetLocaleSeparator() { return localeSeparator; }
     };
-
-#endif   
 
     static const uint32_t SeparatorBufferSize = 6;
 

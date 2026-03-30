@@ -6,7 +6,6 @@
 
 #ifdef STACK_BACK_TRACE
 #include "Core/StackBackTrace.h"
-#include "Core/DbgHelpSymbolManager.h"
 
 StackBackTrace::StackBackTrace(uint32_t framesToSkip, uint32_t framesToCapture) : requestedFramesToCapture(framesToCapture)
 {

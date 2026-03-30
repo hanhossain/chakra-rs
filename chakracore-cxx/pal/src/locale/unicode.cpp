@@ -70,13 +70,6 @@ static const CP_MAPPING CP_TO_NATIVE_TABLE[] = {
 
 #endif // defined(__APPLE__)
 
-// We hardcode the system's default codepage to be UTF-8.
-// There are several reasons for this:
-// - On OSX, HFS+ file names are encoded as UTF-8.
-// - On OSX, When writing strings to the console, the Terminal.app will interpret them as UTF-8.
-// - We want Ansi marshalling to mean marshal to UTF-8 on Mac and Linux
-static const uint32_t PAL_ACP = 65001;
-
 #if !defined(__APPLE__)
 /*++
 Function:
@@ -177,7 +170,7 @@ CODEPAGEGetData(  uint32_t CodePage )
 
     if ( CP_ACP == CodePage )
     {
-        CodePage = PAL_ACP;
+        CodePage = CP_UTF8;
     }
 
     /* checking if the CodePage is ACP and returning true if so */
@@ -311,24 +304,6 @@ done:
     return bRet;
 }
 
-
-/*++
-Function:
-GetACP
-
-See MSDN doc.
---*/
-uint32_t
-GetACP(void)
-{
-    ENTRY("GetACP(VOID)\n");
-
-    LOGEXIT("GetACP returning UINT %d\n", PAL_ACP );
-
-    return PAL_ACP;
-}
-
-
 /*++
 Function:
 IsDBCSLeadByteEx
@@ -421,7 +396,7 @@ MultiByteToWideChar(
 
     // Use UTF8ToUnicode on all systems, since it replaces
     // invalid characters and Core Foundation doesn't do that.
-    if (CodePage == CP_UTF8 || (CodePage == CP_ACP && GetACP() == CP_UTF8))
+    if (CodePage == CP_UTF8 || (CodePage == CP_ACP))
     {
         if (cbMultiByte <= -1)
         {
@@ -558,7 +533,7 @@ WideCharToMultiByte(
 
     // Use UnicodeToUTF8 on all systems because we use
     // UTF8ToUnicode in MultiByteToWideChar() on all systems.
-    if (CodePage == CP_UTF8 || (CodePage == CP_ACP && GetACP() == CP_UTF8))
+    if (CodePage == CP_UTF8 || (CodePage == CP_ACP))
     {
         if (cchWideChar == -1)
         {

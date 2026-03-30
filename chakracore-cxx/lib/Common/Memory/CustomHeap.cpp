@@ -4,7 +4,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "CommonMemoryPch.h"
-#include "Core/GlobalSecurityPolicy.h"
 
 #if ENABLE_NATIVE_CODEGEN || DYNAMIC_INTERPRETER_THUNK
 
@@ -285,18 +284,11 @@ BOOL Heap<TAlloc, TPreReservedAlloc>::ProtectAllocationWithExecuteReadWrite(Allo
 {
     uint32_t protectFlags = 0;
 
-    if (GlobalSecurityPolicy::IsCFGEnabled())
-    {
-        protectFlags = PAGE_EXECUTE_RW_TARGETS_NO_UPDATE;
-    }
-    else
-    {
-        #if defined(__APPLE__) && defined(_M_ARM64)
-        protectFlags = PAGE_READWRITE; // PAGE_EXECUTE_READWRITE banned on Apple Silicon
-        #else
-        protectFlags = PAGE_EXECUTE_READWRITE;
-        #endif
-    }
+    #if defined(__APPLE__) && defined(_M_ARM64)
+    protectFlags = PAGE_READWRITE; // PAGE_EXECUTE_READWRITE banned on Apple Silicon
+    #else
+    protectFlags = PAGE_EXECUTE_READWRITE;
+    #endif
     return this->ProtectAllocation(allocation, protectFlags, PAGE_EXECUTE_READ, addressInPage);
 }
 
@@ -304,14 +296,7 @@ template<typename TAlloc, typename TPreReservedAlloc>
 BOOL Heap<TAlloc, TPreReservedAlloc>::ProtectAllocationWithExecuteReadOnly(Allocation *allocation, __in_opt char* addressInPage)
 {
     uint32_t protectFlags = 0;
-    if (GlobalSecurityPolicy::IsCFGEnabled())
-    {
-        protectFlags = PAGE_EXECUTE_RO_TARGETS_NO_UPDATE;
-    }
-    else
-    {
-        protectFlags = PAGE_EXECUTE_READ;
-    }
+    protectFlags = PAGE_EXECUTE_READ;
     #if defined(__APPLE__) && defined(_M_ARM64)
     return this->ProtectAllocation(allocation, protectFlags, PAGE_READWRITE, addressInPage); // PAGE_EXECUTE_READWRITE banned on Apple Silicon
     #else
@@ -422,14 +407,7 @@ Allocation* Heap<TAlloc, TPreReservedAlloc>::AllocLargeObject(size_t bytes, usho
         if (this->processHandle == GetCurrentProcess())
         {
             uint32_t protectFlags = 0;
-            if (GlobalSecurityPolicy::IsCFGEnabled())
-            {
-                protectFlags = PAGE_EXECUTE_RO_TARGETS_NO_UPDATE;
-            }
-            else
-            {
-                protectFlags = PAGE_EXECUTE_READ;
-            }
+            protectFlags = PAGE_EXECUTE_READ;
             this->codePageAllocators->ProtectPages(address, pages, segment, protectFlags /*dwVirtualProtectFlags*/, PAGE_READWRITE /*desiredOldProtectFlags*/);
         }
 #if PDATA_ENABLED
@@ -518,14 +496,7 @@ uint32_t Heap<TAlloc, TPreReservedAlloc>::EnsureAllocationWriteable(Allocation* 
 template<typename TAlloc, typename TPreReservedAlloc>
 uint32_t Heap<TAlloc, TPreReservedAlloc>::EnsureAllocationExecuteWriteable(Allocation* allocation)
 {
-    if (GlobalSecurityPolicy::IsCFGEnabled())
-    {
-        return EnsureAllocationReadWrite<PAGE_EXECUTE_RW_TARGETS_NO_UPDATE>(allocation);
-    }
-    else
-    {
-        return EnsureAllocationReadWrite<PAGE_EXECUTE_READWRITE>(allocation);
-    }
+    return EnsureAllocationReadWrite<PAGE_EXECUTE_READWRITE>(allocation);
 }
 
 template<typename TAlloc, typename TPreReservedAlloc>
@@ -689,15 +660,7 @@ Page* Heap<TAlloc, TPreReservedAlloc>::AllocNewPage(BucketId bucket, bool canAll
     this->codePageAllocators->FreeLocal(localAddr, pageSegment);
 
     uint32_t protectFlags = 0;
-
-    if (GlobalSecurityPolicy::IsCFGEnabled())
-    {
-        protectFlags = PAGE_EXECUTE_RO_TARGETS_NO_UPDATE;
-    }
-    else
-    {
-        protectFlags = PAGE_EXECUTE_READ;
-    }
+    protectFlags = PAGE_EXECUTE_READ;
 
     //Change the protection of the page to Read-Only Execute, before adding it to the bucket list.
     this->codePageAllocators->ProtectPages(address, 1, pageSegment, protectFlags, PAGE_READWRITE);
@@ -889,16 +852,7 @@ bool Heap<TAlloc, TPreReservedAlloc>::FreeAllocation(Allocation* object)
         // after freeing part of the page, the page should be in PAGE_EXECUTE_READWRITE protection, and turning to PAGE_EXECUTE_READ (always with TARGETS_NO_UPDATE state)
 
         uint32_t protectFlags = 0;
-
-        if (GlobalSecurityPolicy::IsCFGEnabled())
-        {
-            protectFlags = PAGE_EXECUTE_RO_TARGETS_NO_UPDATE;
-        }
-        else
-        {
-            protectFlags = PAGE_EXECUTE_READ;
-        }
-
+        protectFlags = PAGE_EXECUTE_READ;
         this->codePageAllocators->ProtectPages(page->address, 1, segment, protectFlags, PAGE_EXECUTE_READWRITE);
 
         return true;

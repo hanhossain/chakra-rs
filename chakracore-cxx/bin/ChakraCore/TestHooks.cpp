@@ -185,17 +185,8 @@ void NotifyUnhandledException(PEXCEPTION_POINTERS exceptionInfo)
 #undef FLAG_NumberTrioSet
 #undef FLAG_NumberRange
 
-int32_t OnChakraCoreLoaded(OnChakraCoreLoadedPtr pfChakraCoreLoaded)
+int32_t OnChakraCoreLoaded()
 {
-    if (pfChakraCoreLoaded == nullptr)
-    {
-        pfChakraCoreLoaded = (OnChakraCoreLoadedPtr)GetProcAddress(GetModuleHandle(NULL), "OnChakraCoreLoadedEntry");
-        if (pfChakraCoreLoaded == nullptr)
-        {
-            return S_OK;
-        }
-    }
-
     TestHooks testHooks =
     {
         SetConfigFlags,
@@ -235,7 +226,7 @@ int32_t OnChakraCoreLoaded(OnChakraCoreLoadedPtr pfChakraCoreLoaded)
 #undef FLAG_NumberRange
         NotifyUnhandledException
     };
-    return pfChakraCoreLoaded(testHooks);
+    return ChakraRTInterface::InitializeTestHooks(testHooks);
 }
 
 #endif // ENABLE_TEST_HOOKS

@@ -140,9 +140,7 @@ public:
             bool            GenerateObjectTest(IR::Opnd * opndSrc, IR::Instr * insertInstr, IR::LabelInstr * labelInstr, bool fContinueLabel = false);
             void            GenerateInt32ToVarConversion( IR::Opnd * opndSrc, IR::Instr * insertInstr );
             void            GenerateFloatTest( IR::RegOpnd * opndSrc, IR::Instr * insertInstr, IR::LabelInstr* labelHelper, const bool checkForNullInLoopBody = false);
-#if FLOATVAR
             IR::RegOpnd*    CheckFloatAndUntag(IR::RegOpnd * opndSrc, IR::Instr * insertInstr, IR::LabelInstr* labelHelper);
-#endif
             bool            GenerateFastCmSrXxConst(IR::Instr *instr);
             bool            GenerateFastCmXxTaggedInt(IR::Instr *instr, bool isInHelper = false);
             void            GenerateFastCmXxI4(IR::Instr *instr);
@@ -191,9 +189,6 @@ public:
             void            GenerateFastInlineBuiltInMathPow(IR::Instr* instr);
             IR::Instr *     EnsureAdjacentArgs(IR::Instr * instrArg);
             void            SaveDoubleToVar(IR::RegOpnd * dstOpnd, IR::RegOpnd *opndFloat, IR::Instr *instrOrig, IR::Instr *instrInsert, bool isHelper = false);
-#if !FLOATVAR
-            void            GenerateNumberAllocation(IR::RegOpnd * opndDst, IR::Instr * instrInsert, bool isHelper);
-#endif
             void            GenerateFastRecyclerAlloc(size_t allocSize, IR::RegOpnd* newObjDst, IR::Instr* insertionPointInstr, IR::LabelInstr* allocHelperLabel, IR::LabelInstr* allocDoneLabel);
 
             void            GenerateCopysign(IR::Instr * instr);

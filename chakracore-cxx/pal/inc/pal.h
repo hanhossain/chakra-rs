@@ -677,14 +677,7 @@ QueueUserAPC(
 
 #define CONTEXT_FULL (CONTEXT_CONTROL | CONTEXT_INTEGER | CONTEXT_FLOATING_POINT)
 
-#define CONTEXT_ALL (CONTEXT_CONTROL | CONTEXT_INTEGER | CONTEXT_SEGMENTS | CONTEXT_FLOATING_POINT | CONTEXT_DEBUG_REGISTERS)
-
 #define CONTEXT_XSTATE (CONTEXT_AMD64 | 0x40L)
-
-#define CONTEXT_EXCEPTION_ACTIVE 0x8000000
-#define CONTEXT_SERVICE_ACTIVE 0x10000000
-#define CONTEXT_EXCEPTION_REQUEST 0x40000000
-#define CONTEXT_EXCEPTION_REPORTING 0x80000000
 
 typedef struct _M128U {
     unsigned long Low;
@@ -712,9 +705,7 @@ typedef struct _XMM_SAVE_AREA32 {
     M128A FloatRegisters[8];
     M128A XmmRegisters[16];
     uint8_t  Reserved4[96];
-} XMM_SAVE_AREA32, *PXMM_SAVE_AREA32;
-
-#define LEGACY_SAVE_AREA_LENGTH sizeof(XMM_SAVE_AREA32)
+} XMM_SAVE_AREA32;
 
 //
 // Context Frame
@@ -868,57 +859,6 @@ typedef struct __declspec(align(16)) _CONTEXT {
     unsigned long LastExceptionFromRip;
 } CONTEXT, *PCONTEXT, *LPCONTEXT;
 
-//
-// Nonvolatile context pointer record.
-//
-
-typedef struct _KNONVOLATILE_CONTEXT_POINTERS {
-    union {
-        PM128A FloatingContext[16];
-        struct {
-            PM128A Xmm0;
-            PM128A Xmm1;
-            PM128A Xmm2;
-            PM128A Xmm3;
-            PM128A Xmm4;
-            PM128A Xmm5;
-            PM128A Xmm6;
-            PM128A Xmm7;
-            PM128A Xmm8;
-            PM128A Xmm9;
-            PM128A Xmm10;
-            PM128A Xmm11;
-            PM128A Xmm12;
-            PM128A Xmm13;
-            PM128A Xmm14;
-            PM128A Xmm15;
-        } ;
-    } ;
-
-    union {
-        unsigned long * IntegerContext[16];
-        struct {
-            unsigned long * Rax;
-            unsigned long * Rcx;
-            unsigned long * Rdx;
-            unsigned long * Rbx;
-            unsigned long * Rsp;
-            unsigned long * Rbp;
-            unsigned long * Rsi;
-            unsigned long * Rdi;
-            unsigned long * R8;
-            unsigned long * R9;
-            unsigned long * R10;
-            unsigned long * R11;
-            unsigned long * R12;
-            unsigned long * R13;
-            unsigned long * R14;
-            unsigned long * R15;
-        } ;
-    } ;
-
-} KNONVOLATILE_CONTEXT_POINTERS, *PKNONVOLATILE_CONTEXT_POINTERS;
-
 #elif defined(_ARM64_)
 
 #define CONTEXT_ARM64   0x00400000L
@@ -930,13 +870,6 @@ typedef struct _KNONVOLATILE_CONTEXT_POINTERS {
 #define CONTEXT_DEBUG_REGISTERS (CONTEXT_ARM64 | 0x8L)
 
 #define CONTEXT_FULL (CONTEXT_CONTROL | CONTEXT_INTEGER | CONTEXT_FLOATING_POINT)
-
-#define CONTEXT_ALL (CONTEXT_CONTROL | CONTEXT_INTEGER | CONTEXT_FLOATING_POINT | CONTEXT_DEBUG_REGISTERS)
-
-#define CONTEXT_EXCEPTION_ACTIVE 0x8000000L
-#define CONTEXT_SERVICE_ACTIVE 0x10000000L
-#define CONTEXT_EXCEPTION_REQUEST 0x40000000L
-#define CONTEXT_EXCEPTION_REPORTING 0x80000000L
 
 // begin_ntoshvp
 
@@ -1056,36 +989,6 @@ typedef struct __declspec(align(16)) _CONTEXT {
     /* +0x390 */
 
 } CONTEXT, *PCONTEXT, *LPCONTEXT;
-
-//
-// Nonvolatile context pointer record.
-//
-
-typedef struct _KNONVOLATILE_CONTEXT_POINTERS {
-
-    unsigned long * X19;
-    unsigned long * X20;
-    unsigned long * X21;
-    unsigned long * X22;
-    unsigned long * X23;
-    unsigned long * X24;
-    unsigned long * X25;
-    unsigned long * X26;
-    unsigned long * X27;
-    unsigned long * X28;
-    unsigned long * Fp;
-    unsigned long * Lr;
-
-    unsigned long * D8;
-    unsigned long * D9;
-    unsigned long * D10;
-    unsigned long * D11;
-    unsigned long * D12;
-    unsigned long * D13;
-    unsigned long * D14;
-    unsigned long * D15;
-
-} KNONVOLATILE_CONTEXT_POINTERS, *PKNONVOLATILE_CONTEXT_POINTERS;
 
 #else
 #error Unknown architecture for defining CONTEXT.
@@ -1253,78 +1156,8 @@ BOOL
 UnmapViewOfFile(
          const void * lpBaseAddress);
 
-// TODO (hanhossain): public
-HMODULE
-LoadLibraryA(
-         const char * lpLibFileName);
-
-// TODO (hanhossain): public
-HMODULE
-LoadLibraryW(
-         const char16_t* lpLibFileName);
-
-// TODO (hanhossain): public
-HMODULE
-LoadLibraryExA(
-         const char * lpLibFileName,
-         /*Reserved*/ HANDLE hFile,
-         uint32_t dwFlags);
-
-// TODO (hanhossain): public
-HMODULE
-LoadLibraryExW(
-         const char16_t* lpLibFileName,
-         /*Reserved*/ HANDLE hFile,
-         uint32_t dwFlags);
-
-#define LoadLibraryEx LoadLibraryExW
-
 typedef long (*FARPROC)();
 
-// TODO (hanhossain): public
-FARPROC
-GetProcAddress(
-     HMODULE hModule,
-     const char * lpProcName);
-
-// TODO (hanhossain): public
-BOOL
-FreeLibrary(
-      HMODULE hLibModule);
-
-// TODO (hanhossain): public
-__attribute__((noreturn))
-void
-FreeLibraryAndExitThread(
-     HMODULE hLibModule,
-     uint32_t dwExitCode);
-
-
-// TODO (hanhossain): public
-uint32_t
-GetModuleFileNameW(
-     HMODULE hModule,
-     char16_t* lpFileName,
-     uint32_t nSize);
-
-#define GetModuleFileName GetModuleFileNameW
-
-// TODO (hanhossain): public
-HMODULE
-GetModuleHandleW(
-      const char16_t* lpModuleName
-);
-
-#define GetModuleHandle GetModuleHandleW
-
-// TODO (hanhossain): internal
-BOOL
-GetModuleHandleExW(
-     uint32_t dwFlags,
-      const char16_t* lpModuleName,
-     HMODULE *phModule);
-
-#define GetModuleHandleEx GetModuleHandleExW
 
 // TODO (hanhossain): public
 void *
@@ -1346,14 +1179,6 @@ VirtualAllocEx(
 // TODO (hanhossain): public
 BOOL
 VirtualFree(
-         void * lpAddress,
-         size_t dwSize,
-         uint32_t dwFreeType);
-
-// TODO (hanhossain): public
-BOOL
-VirtualFreeEx(
-         HANDLE hProcess,
          void * lpAddress,
          size_t dwSize,
          uint32_t dwFreeType);
@@ -1409,117 +1234,14 @@ VirtualQueryEx(
           size_t dwLength);
 
 // TODO (hanhossain): public
-void
-RtlZeroMemory(
-     void * Destination,
-     size_t Length);
-
-#define CopyMemory memcpy
-#define ZeroMemory(Destination,Length) memset((Destination),0,(Length))
-
-// TODO (hanhossain): public
-HANDLE
-GetProcessHeap(
-           void);
-
-#define HEAP_ZERO_MEMORY 0x00000008
-
-// TODO (hanhossain): public
-HANDLE
-HeapCreate(
-	        uint32_t flOptions,
-	        size_t dwInitialSize,
-	        size_t dwMaximumSize);
-
-// TODO (hanhossain): public
-void *
-HeapAlloc(
-       HANDLE hHeap,
-       uint32_t dwFlags,
-       size_t dwBytes);
-
-// TODO (hanhossain): internal
-void *
-HeapReAlloc(
-     HANDLE hHeap,
-     uint32_t dwFlags,
-     void * lpMem,
-     size_t dwBytes
-    );
-
-// TODO (hanhossain): public
-BOOL
-HeapFree(
-      HANDLE hHeap,
-      uint32_t dwFlags,
-      void * lpMem);
-
-typedef enum _HEAP_INFORMATION_CLASS {
-    HeapCompatibilityInformation,
-    HeapEnableTerminationOnCorruption
-} HEAP_INFORMATION_CLASS;
-
-// TODO (hanhossain): public
-HLOCAL
-LocalFree(
-       HLOCAL hMem);
-
-// TODO (hanhossain): public
 BOOL
 FlushInstructionCache(
                HANDLE hProcess,
                const void * lpBaseAddress,
                size_t dwSize);
 
-#define NORM_IGNORECASE           0x00000001  // ignore case
-
-#ifdef __APPLE__
-#define NORM_IGNORENONSPACE       0x00000002  // ignore nonspacing chars
-#define NORM_IGNORESYMBOLS        0x00000004  // ignore symbols
-#define NORM_IGNOREKANATYPE       0x00010000  // ignore kanatype
-#define SORT_STRINGSORT           0x00001000  // use string sort method
-#else // LINUX
-// Flags with no value on a given platform are given 0 so that program logic can be unaltered (a|0==a)
-#define NORM_IGNORENONSPACE       0x00000000  // ignore nonspacing chars
-#define NORM_IGNORESYMBOLS        0x00000000  // ignore symbols
-#define NORM_IGNOREKANATYPE       0x00000000  // ignore kanatype
-#define SORT_STRINGSORT           0x00000000  // use string sort method
-#endif // __APPLE__
-// __APPLE__ and LINUX
-// Flags with no value on a given platform are given 0 so that program logic can be unaltered (a|0==a)
-#define SORT_DIGITSASNUMBERS      0x00000000  // Sort digits as numbers (ie: 2 comes before 10)
-
-
-typedef struct nlsversioninfo {
-  uint32_t     dwNLSVersionInfoSize;
-  uint32_t     dwNLSVersion;
-  uint32_t     dwDefinedVersion;
-} NLSVERSIONINFO, *LPNLSVERSIONINFO;
-
-#define CSTR_EQUAL         2
-
-// TODO (hanhossain): public
-int
-CompareStringEx(
-     const char16_t* lpLocaleName,
-     uint32_t    dwCmpFlags,
-     const char16_t*  lpString1,
-     int      cchCount1,
-     const char16_t*  lpString2,
-     int      cchCount2,
-     LPNLSVERSIONINFO lpVersionInformation,
-     void * lpReserved,
-     ptrdiff_t lParam);
-
-
-#define CompareString  CompareStringW
-
 #define MAX_LEADBYTES         12
 #define MAX_DEFAULTCHAR       2
-
-// TODO (hanhossain): internal
-uint32_t
-GetACP(void);
 
 typedef struct _cpinfo {
     uint32_t MaxCharSize;
@@ -1572,70 +1294,7 @@ WideCharToMultiByte(
              const char * lpDefaultChar,
              LPBOOL lpUsedDefaultChar);
 
-//
-//  Locale Types.
-//
-//  These types are used for the GetLocaleInfo NLS API routine.
-//
-
-
-// TODO (hanhossain): public
-int
-GetLocaleInfoEx(
-     const char16_t*  lpLocaleName,
-     uint32_t   LCType,
-     char16_t*  lpLCData,
-     int      cchData);
-
-typedef struct _nlsversioninfoex {
-  uint32_t  dwNLSVersionInfoSize;
-  uint32_t  dwNLSVersion;
-  uint32_t  dwDefinedVersion;
-  uint32_t  dwEffectiveId;
-  GUID  guidCustomVersion;
-  } NLSVERSIONINFOEX, *LPNLSVERSIONINFOEX;
-
-typedef enum {
-    COMPARE_STRING = 0x0001,
-} NLS_FUNCTION;
-
-// TODO (hanhossain): public
-int
-ResolveLocaleName(
-     const char16_t* lpNameToResolve,
-         char16_t* lpLocaleName,
-         int cchLocaleName );
-
-// TODO (hanhossain): public
-int
-GetUserDefaultLocaleName(
-            char16_t* lpLocaleName,
-            int cchLocaleName);
-
-typedef uint32_t CALID;
-
 #define DATE_LONGDATE             0x00000002  // use long date picture
-
-typedef BOOL (CALLBACK* CALINFO_ENUMPROCEXW)(char16_t*,CALID);
-typedef BOOL (CALLBACK* CALINFO_ENUMPROCEXEXW)(char16_t*, CALID, char16_t*, ptrdiff_t);
-
-// TODO (hanhossain): public
-int
-LCMapStringEx(
-     const char16_t*    lpLocaleName,
-     uint32_t   dwMapFlags,
-     const char16_t* lpSrcStr,
-     int     cchSrc,
-     char16_t* lpDestStr,
-     int     cchDest,
-     LPNLSVERSIONINFO lpVersionInformation,
-     void * lpReserved,
-     ptrdiff_t lParam );
-
-// "a number", might represent different types
-typedef struct PALNUMBER__* PALNUMBER;
-
-#define GetDateFormat GetDateFormatW
 
 #define EXCEPTION_NONCONTINUABLE 0x1
 
@@ -1660,13 +1319,6 @@ typedef struct _EXCEPTION_POINTERS {
 #ifdef FEATURE_PAL_SXS
 
 typedef int32_t EXCEPTION_DISPOSITION;
-
-enum {
-    ExceptionContinueExecution,
-    ExceptionContinueSearch,
-    ExceptionNestedException,
-    ExceptionCollidedUnwind,
-};
 
 #endif // FEATURE_PAL_SXS
 
@@ -2536,8 +2188,6 @@ int _snwprintf(char16_t *, size_t, const char16_t *, ...);
 int PAL_swscanf(const char16_t *, const char16_t *, ...);
 // TODO (hanhossain): internal
 int PAL_iswupper(char16_t);
-// TODO (hanhossain): internal
-int PAL_iswspace(char16_t);
 // TODO (hanhossain): internal
 int PAL_iswdigit(char16_t);
 // TODO (hanhossain): public

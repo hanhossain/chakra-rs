@@ -215,9 +215,9 @@ namespace CorUnix
             strtokContext(NULL),
             wcstokContext(NULL)
         {
-            ZeroMemory(&localtimeBuffer, sizeof(localtimeBuffer));
-            ZeroMemory(ctimeBuffer, sizeof(ctimeBuffer));
-            ZeroMemory(ECVTBuffer, sizeof(ECVTBuffer));
+            memset((&localtimeBuffer),0,(sizeof(localtimeBuffer)));
+            memset((ctimeBuffer),0,(sizeof(ctimeBuffer)));
+            memset((ECVTBuffer),0,(sizeof(ECVTBuffer)));
         };
     };
 

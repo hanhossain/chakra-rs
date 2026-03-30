@@ -4,7 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 #include "Entropy.h"
-#include "Core/FaultInjection.h"
 #include "DataStructures/Stack.h"
 #include "DataStructures/Dictionary.h"
 #include "Library/DelayFreeArrayBufferHelper.h"
@@ -32,7 +31,6 @@ class HostScriptContext;
 class ScriptSite;
 class ThreadServiceWrapper;
 struct IActiveScriptProfilerHeapEnum;
-class DynamicProfileMutator;
 class StackProber;
 
 enum DisableImplicitFlags : uint8_t
@@ -376,8 +374,6 @@ public:
 
     void * GetAddressOfStackLimitForCurrentThread() const
     {
-        FAULTINJECT_SCRIPT_TERMINATION
-
         return &this->stackLimitForCurrentThread;
     }
     void InitAvailableCommit();
@@ -688,10 +684,6 @@ private:
 #if ENABLE_NATIVE_CODEGEN
     JsUtil::JobProcessor *jobProcessor;
     Js::Var * bailOutRegisterSaveSpace;
-#if !FLOATVAR
-    CodeGenNumberThreadAllocator * codeGenNumberThreadAllocator;
-    XProcNumberPageSegmentManager * xProcNumberPageSegmentManager;
-#endif
 #if DYNAMIC_INTERPRETER_THUNK || defined(ASMJS_PLAT)
     CustomHeap::InProcCodePageAllocators thunkPageAllocators;
 #endif
@@ -764,14 +756,6 @@ private:
     // If all try/catch blocks in the current stack marked as non-user code then this member will remain false.
     bool hasCatchHandlerToUserCode;
 
-#ifdef ENABLE_GLOBALIZATION
-    Js::DelayLoadWinRtString delayLoadWinRtString;
-#ifdef ENABLE_FOUNDATION_OBJECT
-    Js::DelayLoadWinRtFoundation delayLoadWinRtFoundationLibrary;
-    Js::WindowsFoundationAdapter windowsFoundationAdapter;
-#endif
-#endif
-
     // Number of script context attached with probe manager.
     // This counter will be used as addref when the script context is created, this way we maintain the life of diagnostic object.
     // Once no script context available , diagnostic will go away.
@@ -807,8 +791,6 @@ private:
     DynamicObjectEnumeratorCacheMap dynamicObjectEnumeratorCacheMap;
 
     NativeLibraryEntryRecord nativeLibraryEntry;
-
-    UCrtC99MathApis ucrtC99MathApis;
 
     // Indicates the current loop depth as observed by the interpreter. The interpreter causes this value to be updated upon
     // entering and leaving a loop.
@@ -859,17 +841,7 @@ public:
 
     CriticalSection* GetFunctionBodyLock() { return &csFunctionBody; }
 
-    UCrtC99MathApis* GetUCrtC99MathApis() { return &ucrtC99MathApis; }
-
     Js::IsConcatSpreadableCache* GetIsConcatSpreadableCache() { return &isConcatSpreadableCache; }
-
-#ifdef ENABLE_GLOBALIZATION
-    Js::DelayLoadWinRtString *GetWinRTStringLibrary();
-#ifdef ENABLE_FOUNDATION_OBJECT
-    Js::DelayLoadWinRtFoundation *GetWinRtFoundationLibrary();
-    Js::WindowsFoundationAdapter *GetWindowsFoundationAdapter();
-#endif
-#endif
 
     void SetAbnormalExceptionRecord(EXCEPTION_POINTERS *exceptionInfo) { this->exceptionInfo = *exceptionInfo; }
     void SetAbnormalExceptionCode(uint32_t exceptionInfo) { this->exceptionCode = exceptionInfo; }
@@ -1185,16 +1157,6 @@ public:
     JsUtil::JobProcessor *GetJobProcessor();
     Js::Var * GetBailOutRegisterSaveSpace() const { return bailOutRegisterSaveSpace; }
     virtual intptr_t GetBailOutRegisterSaveSpaceAddr() const override { return (intptr_t)bailOutRegisterSaveSpace; }
-#if !FLOATVAR
-    CodeGenNumberThreadAllocator * GetCodeGenNumberThreadAllocator() const
-    {
-        return codeGenNumberThreadAllocator;
-    }
-    XProcNumberPageSegmentManager * GetXProcNumberPageSegmentManager() const
-    {
-        return this->xProcNumberPageSegmentManager;
-    }
-#endif
 #endif
     void ResetFunctionCount() { Assert(this->GetScriptSiteHolderCount() == 0); this->functionCount = 0; }
     void PushEntryExitRecord(Js::ScriptEntryExitRecord *);
@@ -1635,9 +1597,6 @@ public:
     virtual void WaitCollectionCallBack() override;
     virtual void PostCollectionCallBack() override;
     virtual BOOL ExecuteRecyclerCollectionFunction(Recycler * recycler, CollectionFunction function, CollectionFlags flags) override;
-#ifdef FAULT_INJECTION
-    virtual void DisposeScriptContextByFaultInjectionCallBack() override;
-#endif
     virtual void DisposeObjects(Recycler * recycler) override;
     virtual void PreDisposeObjectsCallBack() override;
 
@@ -1693,9 +1652,6 @@ public:
 
 #ifdef BAILOUT_INJECTION
     uint bailOutByteCodeLocationCount;
-#endif
-#ifdef DYNAMIC_PROFILE_MUTATOR
-    DynamicProfileMutator * dynamicProfileMutator;
 #endif
     //
     // Regex helpers

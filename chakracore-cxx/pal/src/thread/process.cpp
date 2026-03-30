@@ -25,7 +25,6 @@ SET_DEFAULT_DEBUG_CHANNEL(PROCESS); // some headers have code with asserts, so d
 #include "pal/thread.hpp"
 #include "pal/file.hpp"
 #include "pal/handlemgr.hpp"
-#include "pal/module.h"
 #include "procprivate.hpp"
 #include "pal/palinternal.h"
 #include "pal/process.h"

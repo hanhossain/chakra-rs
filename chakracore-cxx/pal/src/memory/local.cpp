@@ -27,43 +27,17 @@ Revision History:
 
 SET_DEFAULT_DEBUG_CHANNEL(MEM);
 
-/*++
-Function:
-  LocalFree
-
-See MSDN doc.
---*/
-HLOCAL
-LocalFree(
-	   HLOCAL hMem)
-{
-    BOOL bRetVal = FALSE;
-    ENTRY("LocalFree (hmem=%p)\n", hMem);
-
-    if ( hMem )
-    {
-        bRetVal = HeapFree( GetProcessHeap(), 0, hMem );
-    }
-    else
-    {
-        bRetVal = TRUE;
-    }
-    
-    LOGEXIT( "LocalFree returning %p.\n", bRetVal == TRUE ? (HLOCAL)NULL : hMem );
-    return bRetVal == TRUE ? (HLOCAL)NULL : hMem;
-}
-
 extern "C" void * CoTaskMemAlloc( size_t cb)
 {
-    return HeapAlloc(GetProcessHeap(), 0, cb);
-}
-
-extern "C" void * CoTaskMemRealloc( void * pv,  size_t cb)
-{
-    return HeapReAlloc(GetProcessHeap(), 0, pv, cb);
+    void *ptr = malloc(cb);
+    if (ptr != nullptr)
+    {
+        memset(ptr, 0, cb);
+    }
+    return ptr;
 }
 
 extern "C" void CoTaskMemFree( void * pv)
 {
-    HeapFree(GetProcessHeap(), 0, pv);
+    if (pv) { free(pv); }
 }

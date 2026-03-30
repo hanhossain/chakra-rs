@@ -130,7 +130,7 @@ CSharedMemoryObject::Initialize(
             }
         }
 
-        ZeroMemory(m_pvSharedData, m_pot->GetSharedDataSize());
+        memset((m_pvSharedData),0,(m_pot->GetSharedDataSize()));
     }
 
 
@@ -333,7 +333,7 @@ CSharedMemoryObject::AllocateSharedDataItems(
     psmod = SHMPTR_TO_TYPED_PTR(SHMObjData, shmod);
     _ASSERTE(NULL != psmod);
 
-    ZeroMemory(psmod, sizeof(*psmod));
+    memset((psmod),0,(sizeof(*psmod)));
 
     psmod->eTypeId = m_pot->GetId();
     psmod->lProcessRefCount = 1;
@@ -489,7 +489,7 @@ CSharedMemoryObject::PromoteSharedData(
         pvImmutableData = SHMPTR_TO_TYPED_PTR(void, psmod->shmObjImmutableData);
         _ASSERTE(NULL != pvImmutableData);
 
-        CopyMemory(
+        memcpy(
             pvImmutableData,
             m_pvImmutableData,
             m_pot->GetImmutableDataSize()
@@ -503,7 +503,7 @@ CSharedMemoryObject::PromoteSharedData(
         pvSharedData = SHMPTR_TO_TYPED_PTR(void, psmod->shmObjSharedData);
         _ASSERTE(NULL != pvSharedData);
 
-        CopyMemory(
+        memcpy(
             pvSharedData,
             m_pvSharedData,
             m_pot->GetSharedDataSize()

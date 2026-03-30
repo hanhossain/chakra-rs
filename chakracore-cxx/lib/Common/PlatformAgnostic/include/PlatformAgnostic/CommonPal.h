@@ -63,8 +63,6 @@ inline void DebugBreak()
 
 #define DbgRaiseAssertionFailure() __builtin_trap()
 
-// PAL LoadLibraryExW not supported
-#define LOAD_LIBRARY_SEARCH_SYSTEM32     0
 // winnt.h
 #define FAST_FAIL_INVALID_ARG            5
 // winerror.h
@@ -362,10 +360,8 @@ inline errno_t _wcserror_s(char16_t (&buffer)[size], int errnum)
     return MultiByteToWideChar(CP_ACP, 0, str, -1, buffer, size) ? 0 : -1;
 }
 
-#define midl_user_allocate(size) \
-    HeapAlloc(GetProcessHeap(), 0, (size))
 #define midl_user_free(ptr) \
-    if (ptr != NULL) { HeapFree(GetProcessHeap(), NULL, ptr); }
+    if (ptr != NULL) { free(ptr); }
 
 uint32_t CharLowerBuffW(const char16_t* lpsz, uint32_t  cchLength);
 uint32_t CharUpperBuffW(const char16_t* lpsz, uint32_t  cchLength);

@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+chakra = { path = "../chakra" }
 chakracore-sys = { path = "../chakracore-sys" }
 
 [dev-dependencies]

@@ -4,7 +4,6 @@ add_library (Chakra.Runtime.Base OBJECT
     Constants.cpp
     CrossSite.cpp
     Debug.cpp
-    # DelayLoadLibrary.cpp
     # Entropy.cpp
     Exception.cpp
     ExpirableObject.cpp

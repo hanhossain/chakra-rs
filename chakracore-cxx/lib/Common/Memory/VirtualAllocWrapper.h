@@ -86,43 +86,6 @@ private:
 
 #endif
 
-#if defined(ENABLE_JIT_CLAMP)
-
-class AutoEnableDynamicCodeGen
-{
-public:
-    AutoEnableDynamicCodeGen(bool enable = true);
-    ~AutoEnableDynamicCodeGen();
-
-private:
-    bool enabled;
-
-    typedef
-    BOOL
-    (WINAPI *PSET_THREAD_INFORMATION_PROC)(
-        _In_ HANDLE                   hThread,
-        _In_ THREAD_INFORMATION_CLASS ThreadInformationClass,
-        _In_reads_bytes_(ThreadInformationSize) void * ThreadInformation,
-        _In_ uint32_t                    ThreadInformationSize
-    );
-
-    typedef
-    BOOL
-    (WINAPI *PGET_THREAD_INFORMATION_PROC)(
-        _In_ HANDLE                   hThread,
-        _In_ THREAD_INFORMATION_CLASS ThreadInformationClass,
-        _Out_writes_bytes_(ThreadInformationSize) void * ThreadInformation,
-        _In_ uint32_t                    ThreadInformationSize
-    );
-
-    static PSET_THREAD_INFORMATION_PROC SetThreadInformationProc;
-    static PGET_THREAD_INFORMATION_PROC GetThreadInformationProc;
-    static PROCESS_MITIGATION_DYNAMIC_CODE_POLICY processPolicy;
-    static CriticalSection processPolicyCS;
-    static volatile bool processPolicyObtained;
-};
-#endif
-
 template<typename TVirtualAlloc = VirtualAllocWrapper>
 class PageSegmentBase;
 

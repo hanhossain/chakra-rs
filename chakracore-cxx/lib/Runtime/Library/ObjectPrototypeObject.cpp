@@ -24,13 +24,7 @@ namespace Js
         Assert(!(callInfo.Flags & CallFlags_New));
         ScriptContext* scriptContext = function->GetScriptContext();
 
-#if !FLOATVAR
-        // Mark temp number will stack allocate number that is used as the object ptr.
-        // So we should box it before call ToObject on it.
-        Var arg0 = JavascriptNumber::BoxStackNumber(args[0], scriptContext);
-#else
         Var arg0 = args[0];
-#endif
         // B.2.2.1.1
         // get Object.prototype.__proto__
         // The value of the [[Get]] attribute is a built-in function that requires no arguments. It performs the following steps:
@@ -59,13 +53,7 @@ namespace Js
         // set Object.prototype.__proto__ ( proto )
         // The value of the [[Set]] attribute is a built-in function that takes an argument proto. It performs the following steps:
 
-#if !FLOATVAR
-        // Mark temp number will stack allocate number that is used as the object ptr.
-        // So we should box it before call ToObject on it.
-        Var arg0 = JavascriptNumber::BoxStackNumber(args[0], scriptContext);
-#else
         Var arg0 = args[0];
-#endif
 
         // 1. Let O be RequireObjectCoercible(this value).
         // 2. ReturnIfAbrupt(O).

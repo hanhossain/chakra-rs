@@ -90,10 +90,10 @@ extern "C" BSTR SysAllocStringLen(const OLECHAR *psz, uint32_t len)
     if (FAILED(CbSysStringSize(len, FALSE, &cbTotal)))
         return NULL;
 
-    bstr = (OLECHAR *)HeapAlloc(GetProcessHeap(), 0, cbTotal);
+    bstr = (OLECHAR *)malloc(cbTotal);
 
     if(bstr != NULL) {
-
+        memset(bstr, 0, cbTotal);
         // NOTE: There are some apps which peek back 4 bytes to look at
         // the size of the BSTR. So, in case of 64-bit code,
         // we need to ensure that the BSTR length can be found by
@@ -132,7 +132,7 @@ extern "C" void SysFreeString(BSTR bstr)
     {
         bstr = (BSTR) ((char*) bstr - sizeof(uint32_t));
         bstr = (BSTR) ((char*) bstr - sizeof(uint32_t));
-        HeapFree(GetProcessHeap(), 0, (void *) bstr);
+        free(bstr);
     }
 }
 

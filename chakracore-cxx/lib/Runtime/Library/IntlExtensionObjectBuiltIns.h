@@ -9,10 +9,6 @@
 #error INTL_ENTRY must be defiend before including __FILE__
 #endif
 
-#ifdef CompareString
-#undef CompareString
-#endif
-
 INTL_ENTRY(raiseAssert, RaiseAssert)
 INTL_ENTRY(isWellFormedLanguageTag, IsWellFormedLanguageTag)
 INTL_ENTRY(normalizeLanguageTag, NormalizeLanguageTag)

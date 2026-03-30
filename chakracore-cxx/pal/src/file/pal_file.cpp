@@ -526,7 +526,7 @@ CorUnix::InternalCreateFile(
     }
 
     // Initialize the path to zeroes...
-    ZeroMemory(lpFullUnixPath, cchFullUnixPath);
+    memset((lpFullUnixPath),0,(cchFullUnixPath));
     
     FILEDosToUnixPathA( lpUnixPath );
 
@@ -1083,7 +1083,7 @@ DeleteFileA(
     }
 
     // Initialize the path to zeroes...
-    ZeroMemory(lpFullUnixFileName, cchFullUnixFileName);
+    memset((lpFullUnixFileName),0,(cchFullUnixFileName));
     
     // Compute the absolute pathname to the file.  This pathname is used
     // to determine if two file names represent the same file.

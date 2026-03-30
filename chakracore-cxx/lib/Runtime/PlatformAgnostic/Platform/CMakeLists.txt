@@ -10,17 +10,10 @@ set(PL_SOURCE_FILES
   Common/SystemInfo.Common.cpp
   )
 
-if(NO_ICU)
-  set(PL_SOURCE_FILES
-    ${PL_SOURCE_FILES}
-    POSIX/UnicodeText.cpp
-  )
-else()
-  set(PL_SOURCE_FILES
+set(PL_SOURCE_FILES
     ${PL_SOURCE_FILES}
     Common/UnicodeText.ICU.cpp
-  )
-endif()
+)
 
 if(CC_TARGET_OS_LINUX)
   set(PL_SOURCE_FILES ${PL_SOURCE_FILES}

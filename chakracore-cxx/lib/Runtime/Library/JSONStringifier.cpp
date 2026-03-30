@@ -749,12 +749,6 @@ JSONStringifier::ReadData(_In_ RecyclableObject* valueObj, _Out_ JSONProperty* p
         this->SetNumericProperty(static_cast<double>(UnsafeVarTo<JavascriptUInt64Number>(valueObj)->GetValue()), valueObj, prop);
         return;
 
-#if !FLOATVAR
-    case TypeIds_Number:
-        this->SetNumericProperty(JavascriptNumber::GetValue(valueObj), valueObj, prop);
-        return;
-#endif
-
     case TypeIds_String:
         prop->stringValue = UnsafeVarTo<JavascriptString>(valueObj);
         prop->type = JSONContentType::String;
@@ -799,11 +793,9 @@ JSONStringifier::ReadData(_In_ Var value, _Out_ JSONProperty* prop)
         this->totalStringLength = UInt32Math::Add(this->totalStringLength, prop->numericValue.string->GetLength());
         return;
     }
-#if FLOATVAR
     case TypeIds_Number:
         this->SetNumericProperty(JavascriptNumber::GetValue(value), value, prop);
         return;
-#endif
     default:
         Assume(UNREACHED);
         prop->type = JSONContentType::Undefined;

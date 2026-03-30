@@ -255,9 +255,6 @@ private:
     IR::Instr *     LowerStSlot(IR::Instr *instr);
     IR::Instr *     LowerStSlotChkUndecl(IR::Instr *instr);
     void            LowerStLoopBodyCount(IR::Instr* instr);
-#if !FLOATVAR
-    IR::Instr *     LowerStSlotBoxTemp(IR::Instr *instr);
-#endif
     void            LowerLdSlot(IR::Instr *instr);
     IR::Instr *     LowerChkUndecl(IR::Instr *instr);
     void            GenUndeclChk(IR::Instr *insertInsert, IR::Opnd *opnd);

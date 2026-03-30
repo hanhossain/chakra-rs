@@ -20,12 +20,10 @@ namespace Js
 
     Var JavascriptNumber::ToVarWithCheck(double value, ScriptContext* scriptContext)
     {
-#if FLOATVAR
         if (IsNan(value))
         {
             value = IsNegative(value) ? JavascriptNumber::NegativeNaN : JavascriptNumber::NaN;
         }
-#endif
         return JavascriptNumber::NewInlined(value, scriptContext);
     }
 
@@ -1134,30 +1132,4 @@ namespace Js
     {
         return JavascriptNumber::New(JavascriptNumber::GetValue(aValue), requestContext);
     }
-
-#if !FLOATVAR
-    Var JavascriptNumber::BoxStackNumber(Var instance, ScriptContext* scriptContext)
-    {
-        if (ThreadContext::IsOnStack(instance) && JavascriptNumber::Is(instance))
-        {
-            return BoxStackInstance(JavascriptNumber::FromVar(instance), scriptContext);
-        }
-        else
-        {
-            return instance;
-        }
-    }
-
-    Var JavascriptNumber::BoxStackInstance(Var instance, ScriptContext* scriptContext)
-    {
-        Assert(ThreadContext::IsOnStack(instance));
-        double value = JavascriptNumber::FromVar(instance)->GetValue();
-        return JavascriptNumber::New(value, scriptContext);
-    }
-
-    JavascriptNumber * JavascriptNumber::NewUninitialized(Recycler * recycler)
-    {
-        return RecyclerNew(recycler, JavascriptNumber, VirtualTableInfoCtorValue);
-    }
-#endif
 }

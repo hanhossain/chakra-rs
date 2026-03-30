@@ -3788,9 +3788,6 @@ IR::Instr* IR::Instr::NewConstantLoad(IR::RegOpnd* dstOpnd, intptr_t varConst, V
                 else
                 {
                     srcOpnd = IR::FloatConstOpnd::New((Js::Var)varConst, TyFloat64, func
-#if !FLOATVAR
-                        ,varLocal
-#endif
                     );
 
                 }
@@ -3799,16 +3796,7 @@ IR::Instr* IR::Instr::NewConstantLoad(IR::RegOpnd* dstOpnd, intptr_t varConst, V
                 if (dstOpnd->m_sym->IsSingleDef())
                 {
                     dstOpnd->m_sym->SetIsFloatConst();
-
-#if FLOATVAR
                     dstOpnd->m_sym->m_isNotNumber = FALSE;
-#else
-                    // Don't set m_isNotNumber to true if the float constant value is an int32_t or uint32_t. Uint32s may sometimes be
-                    // treated as int32s for the purposes of int specialization.
-                    dstOpnd->m_sym->m_isNotNumber = !Js::JavascriptNumber::IsInt32OrUInt32(((IR::FloatConstOpnd*)srcOpnd)->m_value);
-
-
-#endif
                 }
             }
             else

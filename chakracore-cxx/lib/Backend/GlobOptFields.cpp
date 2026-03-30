@@ -430,9 +430,6 @@ GlobOpt::ProcessFieldKills(IR::Instr *instr, BVSparse<JitArenaAllocator> *bv, bo
     case Js::OpCode::InitRootFld:
     case Js::OpCode::InitRootConstFld:
     case Js::OpCode::InitRootLetFld:
-#if !FLOATVAR
-    case Js::OpCode::StSlotBoxTemp:
-#endif
     case Js::OpCode::StFld:
     case Js::OpCode::StRootFld:
     case Js::OpCode::StFldStrict:

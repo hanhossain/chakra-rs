@@ -28,13 +28,11 @@ namespace Js {
         {
             return aValue != reinterpret_cast<Var>(AtomTag_IntPtr);
         }
-#if FLOATVAR
         else if (JavascriptNumber::Is_NoTaggedIntCheck(aValue))
         {
             double value = JavascriptNumber::GetValue(aValue);
             return (!JavascriptNumber::IsNan(value)) && (!JavascriptNumber::IsZero(value));
         }
-#endif
         else
         {
             return ToBoolean_Full(aValue, scriptContext);
@@ -303,7 +301,6 @@ namespace Js {
            {
                return taggedInt;
            }
-#if FLOATVAR
            if (typeId == TypeIds_Number)
            {
                double numberValue = JavascriptNumber::GetValue(value);
@@ -314,9 +311,6 @@ namespace Js {
                         : JavascriptNumber::ToVar(JavascriptNumber::NaN)
                    : value;
            }
-#else
-           return nullptr;
-#endif
        }
        case TypeIds_String:
            return nullptr;

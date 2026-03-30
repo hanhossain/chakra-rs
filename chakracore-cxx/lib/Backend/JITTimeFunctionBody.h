@@ -137,21 +137,9 @@ public:
         Assert(location < GetConstCount());
         Assert(location != 0);
 
-#if !FLOATVAR
-        auto obj = m_bodyData.constTableContent->content[location - Js::FunctionBody::FirstRegSlot];
-        if (!obj)
-        {
-#endif
             Js::JavascriptNumber* num = (Js::JavascriptNumber*)GetConstantVar(location);
             Assert(Js::TaggedNumber::Is(num));
             return num;
-#if !FLOATVAR
-        }
-        Assert(obj);
-        obj->vtbl = VirtualTableInfo<Js::JavascriptNumber>::Address;
-        Assert(Js::JavascriptNumber::Is(obj));
-        return (Js::JavascriptNumber*)obj;
-#endif
     }
 
     intptr_t GetInlineCache(uint index) const;
