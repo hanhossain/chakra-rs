@@ -103,7 +103,7 @@ namespace TTD
         void WriteCodeToFile(ThreadContext* threadContext, bool fromEvent, uint32_t bodyId, bool isUtf8Source, byte* sourceBuffer, uint32_t length)
         {
             char asciiResourceName[64];
-            sprintf_s(asciiResourceName, 64, "src%s_%I32u.js", (fromEvent ? "_ld" : ""), bodyId);
+            snprintf(asciiResourceName, 64, "src%s_%I32u.js", (fromEvent ? "_ld" : ""), bodyId);
 
             TTDataIOInfo& iofp = threadContext->TTDContext->TTDataIOInfo;
             JsTTDStreamHandle srcStream = iofp.pfOpenResourceStream(iofp.ActiveTTUriLength, iofp.ActiveTTUri, strlen(asciiResourceName), asciiResourceName, false, true);
@@ -134,7 +134,7 @@ namespace TTD
         void ReadCodeFromFile(ThreadContext* threadContext, bool fromEvent, uint32_t bodyId, bool isUtf8Source, byte* sourceBuffer, uint32_t length)
         {
             char asciiResourceName[64];
-            sprintf_s(asciiResourceName, 64, "src%s_%I32u.js", (fromEvent ? "_ld" : ""), bodyId);
+            snprintf(asciiResourceName, 64, "src%s_%I32u.js", (fromEvent ? "_ld" : ""), bodyId);
 
             TTDataIOInfo& iofp = threadContext->TTDContext->TTDataIOInfo;
             JsTTDStreamHandle srcStream = iofp.pfOpenResourceStream(iofp.ActiveTTUriLength, iofp.ActiveTTUri, strlen(asciiResourceName), asciiResourceName, true, false);

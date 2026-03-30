@@ -1639,7 +1639,7 @@ void ValueType::ToStringDebug(__out_ecount(strSize) char *const str, const size_
         str[0] = '\0';
         return;
     }
-    sprintf_s(str, strSize, "%s (%s)", generalizedStr, verboseStr);
+    snprintf(str, strSize, "%s (%s)", generalizedStr, verboseStr);
 }
 
 #endif

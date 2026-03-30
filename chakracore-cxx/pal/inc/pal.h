@@ -202,8 +202,6 @@ PAL_Shutdown(
 
 /******************* winuser.h Entrypoints *******************************/
 
-extern int sprintf_s(char *_Dst, size_t _SizeInBytes, const char *_Format, ...);
-
 typedef int errno_t;
 extern errno_t _ultow_s(unsigned long inValue, char16_t* outBuffer, size_t inDestBufferSize, int inRadix );
 extern errno_t _ui64tow_s(unsigned long long inValue, char16_t* outBuffer, size_t inDestBufferSize, int inRadix );

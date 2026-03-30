@@ -220,7 +220,7 @@ namespace TTD
             if(inflateFPtr == nullptr)
             {
                 char buff[1024];
-                sprintf_s(buff, "We probably forgot to update the vtable with a tag we added.  Tag is [%i].  SnapRuntimeFunctionObject is [%i]", (uint32_t)snpObject->SnapObjectTag, TTD::NSSnapObjects::SnapObjectType::SnapRuntimeFunctionObject);
+                sprintf(buff, "We probably forgot to update the vtable with a tag we added.  Tag is [%i].  SnapRuntimeFunctionObject is [%i]", (uint32_t)snpObject->SnapObjectTag, TTD::NSSnapObjects::SnapObjectType::SnapRuntimeFunctionObject);
                 TTDAssert(inflateFPtr != nullptr, buff);
             }
             res = inflateFPtr(snpObject, inflator);
@@ -635,7 +635,7 @@ namespace TTD
     void SnapShot::EmitSnapshot(long snapId, ThreadContext* threadContext) const
     {
         char asciiResourceName[64];
-        sprintf_s(asciiResourceName, 64, "snap_%I64i.snp", snapId);
+        snprintf(asciiResourceName, 64, "snap_%I64i.snp", snapId);
 
         TTDataIOInfo& iofp = threadContext->TTDContext->TTDataIOInfo;
         JsTTDStreamHandle snapHandle = iofp.pfOpenResourceStream(iofp.ActiveTTUriLength, iofp.ActiveTTUri, strlen(asciiResourceName), asciiResourceName, false, true);
@@ -650,7 +650,7 @@ namespace TTD
     SnapShot* SnapShot::Parse(long snapId, ThreadContext* threadContext)
     {
         char asciiResourceName[64];
-        sprintf_s(asciiResourceName, 64, "snap_%I64i.snp", snapId);
+        snprintf(asciiResourceName, 64, "snap_%I64i.snp", snapId);
 
         TTDataIOInfo& iofp = threadContext->TTDContext->TTDataIOInfo;
         JsTTDStreamHandle snapHandle = iofp.pfOpenResourceStream(iofp.ActiveTTUriLength, iofp.ActiveTTUri, strlen(asciiResourceName), asciiResourceName, true, false);

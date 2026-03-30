@@ -2730,7 +2730,7 @@ size_t ConcatBailOutKindBits(_Out_writes_bytes_(dstSizeBytes) char* dst, _In_ si
 {
     const char* kindName = BailOutKindNames[IR::BailOutKindBitsStart + static_cast<IR::BailOutKind>(enumEntryOffsetFromBitsStart)];
     int printedBytes =
-        sprintf_s(
+        snprintf(
             &dst[position],
             dstSizeBytes - position * sizeof(dst[0]),
             position == 0 ? "%s" : " | %s",
@@ -2754,7 +2754,7 @@ const char* GetBailOutKindName(IR::BailOutKind kind)
     {
         kind -= normalKind;
         position +=
-            sprintf_s(
+            snprintf(
                 &name[position],
                 sizeof(name) / sizeof(name[0]) - position * sizeof(name[0]),
                 position == 0 ? "%s" : " | %s",
