@@ -3069,18 +3069,6 @@ error_erange:
 }
 #endif
 
-EXTERN_C
-int vsprintf_s(char *_Dst, size_t _SizeInBytes, const char *_Format, va_list _ArgList);
-
-#if defined(__cplusplus) && _SAFECRT_USE_CPP_OVERLOADS
-template <size_t _SizeInBytes>
-inline
-int vsprintf_s(char (&_Dst)[_SizeInBytes], const char *_Format, va_list _ArgList)
-{
-    return vsprintf_s(_Dst, _SizeInBytes, _Format, _ArgList);
-}
-#endif
-
 /* swprintf_s, vswprintf_s */
 EXTERN_C
 int swprintf_s(char16_t *_Dst, size_t _SizeInWords, const char16_t *_Format, ...);
