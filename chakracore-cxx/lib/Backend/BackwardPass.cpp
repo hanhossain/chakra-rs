@@ -78,13 +78,7 @@ bool BackwardPass::DoCaptureByteCodeUpwardExposedUsed() const
 bool
 BackwardPass::DoMarkTempNumbers() const
 {
-#if FLOATVAR
     return false;
-#else
-    // only mark temp number on the dead store phase
-    return (tag == Js::DeadStorePhase) && !PHASE_OFF(Js::MarkTempPhase, this->func) &&
-        !PHASE_OFF(Js::MarkTempNumberPhase, this->func) && func->DoFastPaths() && (!this->func->HasTry());
-#endif
 }
 
 bool

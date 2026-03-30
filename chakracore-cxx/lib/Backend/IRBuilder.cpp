@@ -1427,9 +1427,6 @@ IRBuilder::BuildConstantLoads()
         case Js::TypeIds_Number:
             valueType = ValueType::Number;
             instr = IR::Instr::NewConstantLoad(dstOpnd, varConst, valueType, m_func
-#if !FLOATVAR
-                , m_func->IsOOPJIT() ? m_func->GetJITFunctionBody()->GetConstAsT<Js::JavascriptNumber>(reg) : nullptr
-#endif
             );
             break;
         case Js::TypeIds_String:
@@ -7678,11 +7675,7 @@ IRBuilder::GenerateLoopBodyStSlot(Js::RegSlot regSlot, uint offset)
     IR::SymOpnd * fieldSymOpnd = IR::SymOpnd::New(fieldSym, TyVar, m_func);
 
     IR::RegOpnd * regOpnd = this->BuildSrcOpnd((Js::RegSlot)regSlot);
-#if !FLOATVAR
-    Js::OpCode opcode = Js::OpCode::StSlotBoxTemp;
-#else
     Js::OpCode opcode = Js::OpCode::StSlot;
-#endif
     IR::Instr * stSlotInstr = IR::Instr::New(opcode, fieldSymOpnd, regOpnd, m_func);
     if (offset != Js::Constants::NoByteCodeOffset)
     {

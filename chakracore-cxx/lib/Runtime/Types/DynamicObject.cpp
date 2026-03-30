@@ -68,19 +68,11 @@ namespace Js
         int inlineSlotCount = min(inlineSlotCapacity, propertyCount);
         Field(Var)* srcSlots = instance->GetInlineSlots();
         Field(Var)* dstSlots = this->GetInlineSlots();
-#if !FLOATVAR
-        ScriptContext * scriptContext = this->GetScriptContext();
-#endif
         // Copy the inline slot data from the source instance. Deep copy is implicit because
         // the inline slot allocation is already accounted for with the allocation of the object.
         for (int i = 0; i < inlineSlotCount; i++)
         {
-#if !FLOATVAR
-            // Currently we only support temp numbers assigned to stack objects
-            dstSlots[i] = JavascriptNumber::BoxStackNumber(srcSlots[i], scriptContext);
-#else
             dstSlots[i] = srcSlots[i];
-#endif
             Assert(!ThreadContext::IsOnStack(dstSlots[i]) || TaggedInt::Is(dstSlots[i]));
         }
 
@@ -106,14 +98,9 @@ namespace Js
 
             for (uint i = 0; i < auxSlotCount; i++)
             {
-#if !FLOATVAR
-                // Currently we only support temp numbers assigned to stack objects
-                auxSlots[i] = JavascriptNumber::BoxStackNumber(instance->auxSlots[i], scriptContext);
-#else
                 // Copy the slot values from that instance to this
                 Assert(!ThreadContext::IsOnStack(instance->auxSlots[i]));
                 auxSlots[i] = instance->auxSlots[i];
-#endif
                 Assert(!ThreadContext::IsOnStack(auxSlots[i]) || TaggedInt::Is(dstSlots[i]));
             }
         }

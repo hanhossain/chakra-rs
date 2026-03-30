@@ -18,9 +18,6 @@ Func::Func(JitArenaAllocator *alloc, JITTimeWorkItem * workItem,
     Js::EntryPointInfo* epInfo,
     const FunctionJITRuntimeInfo *const runtimeInfo,
     JITTimePolymorphicInlineCacheInfo * const polymorphicInlineCacheInfo, void * const codeGenAllocators,
-#if !FLOATVAR
-    CodeGenNumberAllocator * numberAllocator,
-#endif
     Js::ScriptContextProfiler *const codeGenProfiler, const bool isBackgroundJIT, Func * parentFunc,
     uint postCallByteCodeOffset, Js::RegSlot returnValueRegSlot, const bool isInlinedConstructor,
     Js::ProfileId callSiteIdInParentFunc, bool isGetterSetter) :
@@ -104,9 +101,6 @@ Func::Func(JitArenaAllocator *alloc, JITTimeWorkItem * workItem,
     hasImplicitCalls(false),
     hasTempObjectProducingInstr(false),
     isInlinedConstructor(isInlinedConstructor),
-#if !FLOATVAR
-    numberAllocator(numberAllocator),
-#endif
     loopCount(0),
     callSiteIdInParentFunc(callSiteIdInParentFunc),
     isGetterSetter(isGetterSetter),
@@ -302,9 +296,6 @@ Func::Codegen(JitArenaAllocator *alloc, JITTimeWorkItem * workItem,
     Js::EntryPointInfo* epInfo, // for in-proc jit only
     const FunctionJITRuntimeInfo *const runtimeInfo,
     JITTimePolymorphicInlineCacheInfo * const polymorphicInlineCacheInfo, void * const codeGenAllocators,
-#if !FLOATVAR
-    CodeGenNumberAllocator * numberAllocator,
-#endif
     Js::ScriptContextProfiler *const codeGenProfiler, const bool isBackgroundJIT)
 {
     bool rejit;
@@ -315,9 +306,6 @@ Func::Codegen(JitArenaAllocator *alloc, JITTimeWorkItem * workItem,
         Func func(alloc, workItem, threadContextInfo,
             scriptContextInfo, outputData, epInfo, runtimeInfo,
             polymorphicInlineCacheInfo, codeGenAllocators, 
-#if !FLOATVAR
-            numberAllocator,
-#endif
             codeGenProfiler, isBackgroundJIT);
         try
         {
@@ -2030,18 +2018,7 @@ Js::Var
 Func::AllocateNumber(double value)
 {
     Js::Var number = nullptr;
-#if FLOATVAR
     number = Js::JavascriptNumber::NewCodeGenInstance((double)value, nullptr);
-#else
-    if (!IsOOPJIT()) // in-proc jit
-    {
-        number = Js::JavascriptNumber::NewCodeGenInstance(GetNumberAllocator(), (double)value, GetScriptContext());
-    }
-    else // OOP JIT
-    {
-        number = GetXProcNumberAllocator()->AllocateNumber(this, value);
-    }
-#endif
 
     return number;
 }

@@ -8229,15 +8229,6 @@ namespace Js
     void EntryPointInfo::EnsureIsReadyToCall()
     {
         ProcessJitTransferData();
-
-#if ENABLE_OOP_NATIVE_CODEGEN
-#if !FLOATVAR
-        if (JITManager::GetJITManager()->IsOOPJITEnabled())
-        {
-            this->GetOOPNativeEntryPointData()->ProcessNumberPageSegments(GetScriptContext());
-        }
-#endif
-#endif
     }
 
     void EntryPointInfo::SetCodeGenRecorded(Js::JavascriptMethod thunkAddress, Js::JavascriptMethod nativeAddress, ptrdiff_t codeSize, void * validationCookie)

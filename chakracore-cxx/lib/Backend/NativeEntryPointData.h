@@ -166,13 +166,6 @@ public:
     void SetLazyBailOutThunkOffset(uint32_t thunkOffset);
     uint32_t GetLazyBailOutThunkOffset() const;
 
-#if !FLOATVAR
-    void SetNumberChunks(CodeGenNumberChunk* chunks)
-    {
-        numberChunks = chunks;
-    }
-#endif
-
     void OnCleanup();
 private:
     FieldNoBarrier(NativeCodeData *) nativeCodeData;
@@ -180,9 +173,6 @@ private:
     FieldNoBarrier(NativeLazyBailOutRecordList *) sortedLazyBailoutRecordList;
     FieldNoBarrier(int32_t) lazyBailOutRecordSlotOffset;
     FieldNoBarrier(uint32_t) lazyBailOutThunkOffset;
-#if !FLOATVAR
-    Field(CodeGenNumberChunk*) numberChunks;
-#endif
 };
 
 class OOPNativeEntryPointData : public NativeEntryPointData
@@ -201,14 +191,6 @@ public:
     uint GetInlineeFrameOffsetArrayCount();
     void RecordInlineeFrameOffsetsInfo(unsigned int offsetsArrayOffset, unsigned int offsetsArrayCount);
 
-#if !FLOATVAR
-    void ProcessNumberPageSegments(Js::ScriptContext * scriptContext);
-    void SetNumberPageSegment(XProcNumberPageSegment * segments)
-    {
-        Assert(numberPageSegments == nullptr);
-        numberPageSegments = segments;
-    }
-#endif
 
     void OnCleanup();
 private:
@@ -216,10 +198,6 @@ private:
     Field(uint) inlineeFrameOffsetArrayCount;
     FieldNoBarrier(char *) nativeDataBuffer;
 
-#if !FLOATVAR
-    Field(Field(Js::JavascriptNumber*)*) numberArray;
-    Field(XProcNumberPageSegment*) numberPageSegments;
-#endif
 };
 
 #endif

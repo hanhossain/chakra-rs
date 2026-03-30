@@ -176,13 +176,10 @@ namespace TTD
             }
             else if(Js::TaggedNumber::Is(var))
             {
-#if FLOATVAR
                 if(Js::TaggedInt::Is(var))
                 {
-#endif
                     writer->WriteTag<TTDVarEmitTag>(NSTokens::Key::ttdVarTag, TTDVarEmitTag::TTDVarInt);
                     writer->WriteInt32(NSTokens::Key::i32Val, Js::TaggedInt::ToInt32(var), NSTokens::Separator::CommaSeparator);
-#if FLOATVAR
                 }
                 else
                 {
@@ -191,7 +188,6 @@ namespace TTD
                     writer->WriteTag<TTDVarEmitTag>(NSTokens::Key::ttdVarTag, TTDVarEmitTag::TTDVarDouble);
                     writer->WriteDouble(NSTokens::Key::doubleVal, Js::JavascriptNumber::GetValue(var), NSTokens::Separator::CommaSeparator);
                 }
-#endif
             }
             else
             {
@@ -218,13 +214,11 @@ namespace TTD
                 int32_t intVal = reader->ReadInt32(NSTokens::Key::i32Val, true);
                 res = Js::TaggedInt::ToVarUnchecked(intVal);
             }
-#if FLOATVAR
             else if(tag == TTDVarEmitTag::TTDVarDouble)
             {
                 double doubleVal = reader->ReadDouble(NSTokens::Key::doubleVal, true);
                 res = Js::JavascriptNumber::NewInlined(doubleVal, nullptr);
             }
-#endif
             else
             {
                 TTDAssert(tag == TTDVarEmitTag::TTDVarAddr, "Is there something else?");

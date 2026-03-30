@@ -40,7 +40,6 @@ add_library (Chakra.Backend OBJECT
     BailOut.cpp
     CaseNode.cpp
     CodeGenAllocators.cpp
-    CodeGenNumberAllocator.cpp
     CodeGenWorkItem.cpp
     DbCheckPostLower.cpp
     Debug.cpp

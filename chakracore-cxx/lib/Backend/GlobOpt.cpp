@@ -6657,12 +6657,10 @@ GlobOpt::GetConstantVar(IR::Opnd *opnd, Value *val)
             return Js::TaggedInt::ToVarUnchecked(opnd->AsIntConstOpnd()->AsInt32());
         }
     }
-#if FLOATVAR
     else if (opnd->IsFloatConstOpnd())
     {
         return Js::JavascriptNumber::ToVar(opnd->AsFloatConstOpnd()->m_value);
     }
-#endif
     else if (opnd->IsRegOpnd() && opnd->AsRegOpnd()->m_sym->IsSingleDef())
     {
         if (valueInfo->IsBoolean())
@@ -6684,7 +6682,6 @@ GlobOpt::GetConstantVar(IR::Opnd *opnd, Value *val)
         {
             return (Js::Var)this->func->GetScriptContextInfo()->GetNullAddr();
         }
-#if FLOATVAR
         else if (valueInfo->IsFloat())
         {
             IR::Instr * defInstr = opnd->AsRegOpnd()->m_sym->GetInstrDef();
@@ -6693,7 +6690,6 @@ GlobOpt::GetConstantVar(IR::Opnd *opnd, Value *val)
                 return Js::JavascriptNumber::ToVar(defInstr->GetSrc1()->AsFloatConstOpnd()->m_value);
             }
         }
-#endif
     }
 
     return nullptr;
@@ -6737,13 +6733,11 @@ namespace
                 return true;
             }
 
-#if FLOATVAR
             if (Js::JavascriptNumber::Is_NoTaggedIntCheck(src1Var))
             {
                 *result = !Js::JavascriptNumber::IsNan(Js::JavascriptNumber::GetValue(src1Var));
                 return true;
             }
-#endif
 
             if (src1Var == reinterpret_cast<Js::Var>(func->GetScriptContextInfo()->GetTrueAddr()) ||
                 src1Var == reinterpret_cast<Js::Var>(func->GetScriptContextInfo()->GetFalseAddr()) ||
@@ -6758,13 +6752,10 @@ namespace
             return false;
         }
 
-#if FLOATVAR
         if (TryCompIntAndFloat(result, src1Var, src2Var) || TryCompIntAndFloat(result, src2Var, src1Var))
         {
             return true;
         }
-
-#endif
 
         return false;
     }
@@ -7066,13 +7057,11 @@ GlobOpt::CanProveConditionalBranch(IR::Instr *instr, Value *src1Val, Value *src2
         {
             *result = (src1Var != reinterpret_cast<Js::Var>(Js::AtomTag_IntPtr));
         }
-#if FLOATVAR
         else if (Js::JavascriptNumber::Is_NoTaggedIntCheck(src1Var))
         {
             double value = Js::JavascriptNumber::GetValue(src1Var);
             *result = (!Js::JavascriptNumber::IsNan(value)) && (!Js::JavascriptNumber::IsZero(value));
         }
-#endif
         else
         {
             return false;
@@ -8411,9 +8400,6 @@ GlobOpt::TypeSpecializeIntUnary(
     case Js::OpCode::InitRootFld:
     case Js::OpCode::StSlot:
     case Js::OpCode::StSlotChkUndecl:
-#if !FLOATVAR
-    case Js::OpCode::StSlotBoxTemp:
-#endif
     case Js::OpCode::StFld:
     case Js::OpCode::StRootFld:
     case Js::OpCode::StFldStrict:

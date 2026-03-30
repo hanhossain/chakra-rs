@@ -1024,12 +1024,6 @@ namespace Js
         JavascriptPromiseThunkFinallyFunction* CreatePromiseThunkFinallyFunction(JavascriptMethod entryPoint, Var value, bool shouldThrow);
         JavascriptExternalFunction* CreateWrappedExternalFunction(JavascriptExternalFunction* wrappedFunction);
 
-#if ENABLE_NATIVE_CODEGEN
-#if !FLOATVAR
-        JavascriptNumber* CreateCodeGenNumber(CodeGenNumberAllocator *alloc, double value);
-#endif
-#endif
-
         DynamicObject* CreateGeneratorConstructorPrototypeObject();
         DynamicObject* CreateAsyncGeneratorConstructorPrototypeObject();
         DynamicObject* CreateConstructorPrototypeObject(JavascriptFunction * constructor);

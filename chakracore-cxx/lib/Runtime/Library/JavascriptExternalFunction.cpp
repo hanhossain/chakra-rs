@@ -135,9 +135,7 @@ namespace Js
         switch(typeId)
         {
         case TypeIds_Integer:
-#if FLOATVAR
         case TypeIds_Number:
-#endif // FLOATVAR
             Assert(!Js::VarIs<Js::RecyclableObject>(thisVar));
             break;
         default:

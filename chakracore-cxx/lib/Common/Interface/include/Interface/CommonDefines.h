@@ -521,15 +521,6 @@
 #endif
 #endif
 
-#ifndef FLOATVAR
-#if defined(TARGET_64)
-#define FLOATVAR 1
-#else
-#define FLOATVAR 0
-#endif
-#endif
-
-
 #ifdef _M_IX86
 #define LOWER_SPLIT_INT64 1
 #else

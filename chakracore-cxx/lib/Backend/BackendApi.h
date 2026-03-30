@@ -40,7 +40,6 @@ typedef double  FloatConstType;
 #include "InterpreterThunkEmitter.h"
 #include "BackendOpCodeAttr.h"
 #include "BackendOpCodeAttrAsmJs.h"
-#include "CodeGenNumberAllocator.h"
 #include "NativeCodeData.h"
 #include "JnHelperMethod.h"
 #include "IRType.h"

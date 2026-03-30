@@ -154,10 +154,6 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
     entryPointToBuiltInOperationIdCache(&threadAlloc, 0),
 #if ENABLE_NATIVE_CODEGEN
     preReservedVirtualAllocator(),
-#if !FLOATVAR
-    codeGenNumberThreadAllocator(nullptr),
-    xProcNumberPageSegmentManager(nullptr),
-#endif
     m_jitNumericProperties(nullptr),
     m_jitNeedsPropertyUpdate(false),
 #if DYNAMIC_INTERPRETER_THUNK || defined(ASMJS_PLAT)
@@ -470,20 +466,6 @@ ThreadContext::~ThreadContext()
         }
 #endif
 #endif
-#if ENABLE_NATIVE_CODEGEN
-#if !FLOATVAR
-        if (this->codeGenNumberThreadAllocator)
-        {
-            HeapDelete(this->codeGenNumberThreadAllocator);
-            this->codeGenNumberThreadAllocator = nullptr;
-        }
-        if (this->xProcNumberPageSegmentManager)
-        {
-            HeapDelete(this->xProcNumberPageSegmentManager);
-            this->xProcNumberPageSegmentManager = nullptr;
-        }
-#endif
-#endif
 #ifdef ENABLE_SCRIPT_DEBUGGING
         Assert(this->debugManager == nullptr);
 #endif
@@ -651,18 +633,6 @@ Recycler* ThreadContext::EnsureRecycler()
         newRecycler->Initialize(isOptimizedForManyInstances, &threadService); // use in-thread GC when optimizing for many instances
         newRecycler->SetCollectionWrapper(this);
 
-#if ENABLE_NATIVE_CODEGEN
-        // This may throw, so it needs to be after the recycler is initialized,
-        // otherwise, the recycler dtor may encounter problems
-#if !FLOATVAR
-        // TODO: we only need one of the following, one for OOP jit and one for in-proc BG JIT
-        AutoPtr<CodeGenNumberThreadAllocator> localCodeGenNumberThreadAllocator(
-            HeapNew(CodeGenNumberThreadAllocator, newRecycler));
-        AutoPtr<XProcNumberPageSegmentManager> localXProcNumberPageSegmentManager(
-            HeapNew(XProcNumberPageSegmentManager, newRecycler));
-#endif
-#endif
-
         this->recyclableData.Root(RecyclerNewZ(newRecycler, RecyclableData, newRecycler), newRecycler);
 
         if (this->IsThreadBound())
@@ -690,12 +660,6 @@ Recycler* ThreadContext::EnsureRecycler()
             this->expirableObjectDisposeList = Anew(&this->threadAlloc, ExpirableObjectList, &this->threadAlloc);
 
             InitializePropertyMaps(); // has many dependencies on the recycler and other members of the thread context
-#if ENABLE_NATIVE_CODEGEN
-#if !FLOATVAR
-            this->codeGenNumberThreadAllocator = localCodeGenNumberThreadAllocator.Detach();
-            this->xProcNumberPageSegmentManager = localXProcNumberPageSegmentManager.Detach();
-#endif
-#endif
         }
         catch(...)
         {
@@ -2433,23 +2397,6 @@ ThreadContext::PreCollectionCallBack(CollectionFlags flags)
 
     const BOOL concurrent = flags & CollectMode_Concurrent;
     const BOOL partial = flags & CollectMode_Partial;
-
-    if (!partial)
-    {
-        // Integrate allocated pages from background JIT threads
-#if ENABLE_NATIVE_CODEGEN
-#if !FLOATVAR
-        if (codeGenNumberThreadAllocator)
-        {
-            codeGenNumberThreadAllocator->Integrate();
-        }
-        if (this->xProcNumberPageSegmentManager)
-        {
-            this->xProcNumberPageSegmentManager->Integrate();
-        }
-#endif
-#endif
-    }
 
     RecyclerCollectCallBackFlags callBackFlags = (RecyclerCollectCallBackFlags)
         ((concurrent ? Collect_Begin_Concurrent : Collect_Begin) | (partial? Collect_Begin_Partial : Collect_Begin));

@@ -7712,9 +7712,6 @@ void EmitConstantArgsToVarArray(ByteCodeGenerator *byteCodeGenerator, __out_ecou
         else if (args->AsParseNodeBin()->pnode1->nop == knopFlt)
         {
             Js::Var number = Js::JavascriptNumber::New(args->AsParseNodeBin()->pnode1->AsParseNodeFloat()->dbl, byteCodeGenerator->GetScriptContext());
-#if ! FLOATVAR
-            byteCodeGenerator->GetScriptContext()->BindReference(number);
-#endif
             vars[index++] = number;
         }
         else
@@ -7739,9 +7736,6 @@ void EmitConstantArgsToVarArray(ByteCodeGenerator *byteCodeGenerator, __out_ecou
     else if (args->nop == knopFlt)
     {
         Js::Var number = Js::JavascriptNumber::New(args->AsParseNodeFloat()->dbl, byteCodeGenerator->GetScriptContext());
-#if ! FLOATVAR
-        byteCodeGenerator->GetScriptContext()->BindReference(number);
-#endif
         vars[index++] = number;
     }
     else

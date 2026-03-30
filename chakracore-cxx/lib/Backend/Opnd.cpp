@@ -43,12 +43,8 @@ Opnd::IsTaggedInt() const
 bool
 Opnd::IsTaggedValue() const
 {
-    CompileAssert(!FLOATVAR || INT32VAR);
-#if FLOATVAR
+    CompileAssert(INT32VAR);
     return GetValueType().IsNumber();
-#else
-    return IsTaggedInt();
-#endif
 }
 
 bool
@@ -601,9 +597,6 @@ void Opnd::DumpValueType()
                 // Tagged int might be encoded here, so check the type
                 if (addrOpnd->GetAddrOpndKind() == AddrOpndKindConstantVar
                     || Js::TaggedInt::Is(address) || (
-#if !FLOATVAR
-                    !JITManager::GetJITManager()->IsOOPJITEnabled() &&
-#endif
                     Js::JavascriptNumber::Is_NoTaggedIntCheck(address)))
                 {
                     return;
@@ -1720,9 +1713,6 @@ FloatConstOpnd::New(FloatConstType value, IRType type, Func *func)
 
     floatConstOpnd->m_value = value;
     floatConstOpnd->m_type = type;
-#if !FLOATVAR
-    floatConstOpnd->m_number = nullptr;
-#endif
 
     floatConstOpnd->m_kind = OpndKindFloatConst;
 
@@ -1738,10 +1728,6 @@ FloatConstOpnd::New(Js::Var floatVar, IRType type, Func *func, Js::Var varLocal 
     FloatConstType value = Js::JavascriptNumber::GetValue(varLocal ? varLocal : floatVar);
     FloatConstOpnd * floatConstOpnd = FloatConstOpnd::New(value, type, func);
 
-#if !FLOATVAR
-    floatConstOpnd->m_number = floatVar;
-    floatConstOpnd->m_numberCopy = (Js::JavascriptNumber*)varLocal;
-#endif
 
     return floatConstOpnd;
 }
@@ -1749,18 +1735,7 @@ FloatConstOpnd::New(Js::Var floatVar, IRType type, Func *func, Js::Var varLocal 
 AddrOpnd *
 FloatConstOpnd::GetAddrOpnd(Func *func, bool dontEncode)
 {
-#if !FLOATVAR
-    if (this->m_number)
-    {
-        return AddrOpnd::New(this->m_number, (Js::TaggedNumber::Is(this->m_number) ? AddrOpndKindConstantVar : AddrOpndKindDynamicVar), func, dontEncode, this->m_numberCopy);
-    }
-#endif
-
     IR::AddrOpnd *opnd = AddrOpnd::NewFromNumber(this->m_value, func, dontEncode);
-
-#if !FLOATVAR
-    this->m_number = opnd->m_address;
-#endif
 
     return opnd;
 }
@@ -2084,9 +2059,6 @@ AddrOpnd::New(intptr_t address, AddrOpndKind addrOpndKind, Func *func, bool dont
             addrOpnd->SetValueTypeFixed();
         }
         else if (
-#if !FLOATVAR
-            !func->IsOOPJIT() && CONFIG_FLAG(OOPJITMissingOpts) &&
-#endif
             Js::JavascriptNumber::Is_NoTaggedIntCheck(addrOpnd->m_address))
         {
             addrOpnd->m_valueType =
@@ -2133,9 +2105,6 @@ AddrOpnd::New(Js::Var address, AddrOpndKind addrOpndKind, Func *func, bool dontE
         {
             Js::Var var = varLocal ? varLocal : address;
             if (
-#if !FLOATVAR
-                varLocal || (!func->IsOOPJIT() && CONFIG_FLAG(OOPJITMissingOpts)) &&
-#endif
                 Js::JavascriptNumber::Is_NoTaggedIntCheck(var))
             {
                 addrOpnd->m_valueType =
@@ -3604,11 +3573,7 @@ Opnd::GetAddrDescription(__out_ecount(count) char16_t *const description, const 
 #endif
                 WriteToBuffer(&buffer, &n, format, address, Js::TaggedInt::ToInt32(address));
             }
-#if FLOATVAR
             else if (Js::JavascriptNumber::Is_NoTaggedIntCheck(address))
-#else
-            else if (!func->IsOOPJIT() && Js::JavascriptNumber::Is_NoTaggedIntCheck(address))
-#endif
             {
                 WriteToBuffer(&buffer, &n, u" (value: %f)", Js::JavascriptNumber::GetValue(address));
             }
@@ -3668,12 +3633,10 @@ Opnd::GetAddrDescription(__out_ecount(count) char16_t *const description, const 
             {
                 addressName = u" (MissingItem)";
             }
-#if FLOATVAR
             else if (address == (Js::Var)Js::FloatTag_Value)
             {
                 addressName = u" (FloatTag)";
             }
-#endif
             WriteToBuffer(&buffer, &n, format, address, addressName);
             break;
         }

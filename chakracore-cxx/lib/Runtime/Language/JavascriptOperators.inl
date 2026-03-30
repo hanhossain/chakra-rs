@@ -23,12 +23,10 @@ namespace Js
         {
             return TypeIds_Integer;
         }
-#if FLOATVAR
         else if (JavascriptNumber::Is_NoTaggedIntCheck(aValue))
         {
             return TypeIds_Number;
         }
-#endif
         else
         {
             return JavascriptOperators::GetTypeId(UnsafeVarTo<RecyclableObject>(aValue));
@@ -43,12 +41,10 @@ namespace Js
         {
             return TypeIds_Integer;
         }
-#if FLOATVAR
         else if (JavascriptNumber::Is_NoTaggedIntCheck(aValue))
         {
             return TypeIds_Number;
         }
-#endif
         else
         {
             auto typeId = VarTo<RecyclableObject>(aValue)->GetTypeId();

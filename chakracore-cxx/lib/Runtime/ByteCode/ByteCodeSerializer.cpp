@@ -4736,9 +4736,6 @@ public:
                         double value;
                         current = ReadDouble(current, &value);
                         const auto number = Js::JavascriptNumber::New(value, scriptContext);
-#if !FLOATVAR
-                        scriptContext->BindReference(number);
-#endif
                         result->elements[index] = number;
                         break;
                     }

@@ -255,7 +255,6 @@ using namespace Js;
             JIT_HELPER_END(Op_ShiftRightU_Full);
         }
 
-#if FLOATVAR
         Var JavascriptMath::Add_Full(Var aLeft, Var aRight, ScriptContext* scriptContext)
         {
             JIT_HELPER_REENTRANT_HEADER(Op_Add_Full);
@@ -298,82 +297,6 @@ using namespace Js;
             return Add_FullHelper_Wrapper(aLeft, aRight, scriptContext, nullptr, false);
             JIT_HELPER_END(Op_Add_Full);
          }
-#else
-        Var JavascriptMath::Add_Full(Var aLeft, Var aRight, ScriptContext* scriptContext)
-        {
-            JIT_HELPER_REENTRANT_HEADER(Op_Add_Full);
-            Assert(aLeft != nullptr);
-            Assert(aRight != nullptr);
-            Assert(scriptContext != nullptr);
-
-            Js::TypeId typeLeft = JavascriptOperators::GetTypeId(aLeft);
-            Js::TypeId typeRight = JavascriptOperators::GetTypeId(aRight);
-
-            // Handle combinations of TaggedInt and Number or String pairs directly,
-            // otherwise call the helper.
-            switch( typeLeft )
-            {
-                case TypeIds_Integer:
-                {
-                    switch( typeRight )
-                    {
-                        case TypeIds_Integer:
-                        {
-
-                            // Compute the sum using integer addition, then convert to double.
-                            // That way there's only one int->float conversion.
-#if INT32VAR
-                            long sum = TaggedInt::ToInt64(aLeft) + TaggedInt::ToInt64(aRight);
-#else
-                            int32_t sum = TaggedInt::ToInt32(aLeft) + TaggedInt::ToInt32(aRight);
-#endif
-                            return JavascriptNumber::ToVar(sum, scriptContext );
-                        }
-
-                        case TypeIds_Number:
-                        {
-                            double sum = TaggedInt::ToDouble(aLeft) + JavascriptNumber::GetValue(aRight);
-                            return JavascriptNumber::NewInlined( sum, scriptContext );
-                        }
-                    }
-                    break;
-                }
-
-                case TypeIds_Number:
-                {
-                    switch( typeRight )
-                    {
-                        case TypeIds_Integer:
-                        {
-                            double sum = JavascriptNumber::GetValue(aLeft) + TaggedInt::ToDouble(aRight);
-                            return JavascriptNumber::NewInlined( sum, scriptContext );
-                        }
-
-                        case TypeIds_Number:
-                        {
-                            double sum = JavascriptNumber::GetValue(aLeft) + JavascriptNumber::GetValue(aRight);
-                            return JavascriptNumber::NewInlined( sum, scriptContext );
-                        }
-                    }
-                    break;
-                }
-
-                case TypeIds_String:
-                {
-                    if( typeRight == TypeIds_String )
-                    {
-                        JavascriptString* leftString = UnsafeVarTo<JavascriptString>(aLeft);
-                        JavascriptString* rightString = UnsafeVarTo<JavascriptString>(aRight);
-                        return JavascriptString::Concat(leftString, rightString);
-                    }
-                    break;
-                }
-            }
-
-            return Add_FullHelper_Wrapper(aLeft, aRight, scriptContext, nullptr, false);
-            JIT_HELPER_END(Op_Add_Full);
-        }
-#endif
         JIT_HELPER_TEMPLATE(Op_Add_Full, Op_Add)
 
         Var JavascriptMath::Add_InPlace(Var aLeft, Var aRight, ScriptContext* scriptContext, JavascriptNumber* result)

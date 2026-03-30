@@ -50,20 +50,10 @@ namespace Js
         inline Var JavascriptMath::And(Var aLeft, Var aRight, ScriptContext* scriptContext)
         {
             JIT_HELPER_REENTRANT_HEADER(Op_And);
-#if FLOATVAR
             return
                 TaggedInt::IsPair(aLeft,aRight) ?
                 TaggedInt::And(aLeft,aRight) :
                 And_Full(aLeft,aRight,scriptContext);
-#else
-            Var varSpeculative = TaggedInt::Speculative_And(aLeft, aRight);
-            if (TaggedInt::Is(varSpeculative))
-            {
-                return varSpeculative;
-            }
-
-            return And_Full(aLeft, aRight, scriptContext);
-#endif
         }
 
         inline Var JavascriptMath::ShiftLeft(Var aLeft,Var aRight,ScriptContext* scriptContext)

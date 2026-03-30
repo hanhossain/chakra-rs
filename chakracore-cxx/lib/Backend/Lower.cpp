@@ -2424,11 +2424,6 @@ Lowerer::LowerRange(IR::Instr *instrStart, IR::Instr *instrEnd, bool defaultDoFa
 
             break;
         }
-#if !FLOATVAR
-        case Js::OpCode::StSlotBoxTemp:
-            this->LowerStSlotBoxTemp(instr);
-            break;
-#endif
 
         case Js::OpCode::LdSlot:
         {
@@ -9118,28 +9113,6 @@ Lowerer::LowerStElemI(IR::Instr * instr, Js::PropertyOperationFlags flags, bool 
 
     bool allowConvert = dst->AsIndirOpnd()->ConversionAllowed();
 
-#if !FLOATVAR
-    if (dst->AsIndirOpnd()->GetBaseOpnd()->GetValueType().IsLikelyOptimizedTypedArray() && src1->IsRegOpnd())
-    {
-        // We allow the source of typedArray StElem to be marked as temp, since we just need the value,
-        // however if the array turns out to be a non-typed array, or the index isn't valid (the value is then stored as a property)
-        // the temp needs to be boxed if it is a float.  The BoxStackNumber helper will box JavascriptNumbers
-        // which are on the stack.
-
-        // regVar = BoxStackNumber(src1, scriptContext)
-        IR::Instr *newInstr = IR::Instr::New(Js::OpCode::Call, this->m_func);
-        IR::RegOpnd *regVar = IR::RegOpnd::New(TyVar, this->m_func);
-        newInstr->SetDst(regVar);
-        newInstr->SetSrc1(src1);
-        instr->InsertBefore(newInstr);
-        LowerUnaryHelperMem(newInstr, IR::HelperBoxStackNumber);
-
-        // MOV src1, regVar
-        newInstr = IR::Instr::New(Js::OpCode::Ld_A, src1, regVar, this->m_func);
-        instr->InsertBefore(m_lowererMD.ChangeToAssign(newInstr));
-    }
-#endif
-
     if(instr->HasBailOutInfo())
     {
         IR::BailOutKind bailOutKind = instr->GetBailOutKind();
@@ -10601,22 +10574,7 @@ Lowerer::LowerStrictBrOrCm(IR::Instr * instr, IR::JnHelperMethod helperMethod, b
                 instr->Remove();
                 return instrPrev;
             }
-#if !FLOATVAR
             m_lowererMD.GenerateObjectTest(src1->AsRegOpnd(), instr, labelHelper);
-            IR::RegOpnd *src1TypeReg = IR::RegOpnd::New(TyMachReg, this->m_func);
-            Lowerer::InsertMove(src1TypeReg, IR::IndirOpnd::New(src1->AsRegOpnd(), Js::RecyclableObject::GetOffsetOfType(), TyMachReg, this->m_func), instr);
-
-            // MOV src1TypeIdReg, [src1TypeReg + offset(typeId)]
-            IR::RegOpnd *src1TypeIdReg = IR::RegOpnd::New(TyInt32, this->m_func);
-            Lowerer::InsertMove(src1TypeIdReg, IR::IndirOpnd::New(src1TypeReg, Js::Type::GetOffsetOfTypeId(), TyInt32, this->m_func), instr);
-
-            // CMP src1TypeIdReg, TypeIds_Number
-            // JEQ $helper
-            IR::IntConstOpnd *numberTypeId = IR::IntConstOpnd::New(Js::TypeIds_Number, TyInt32, this->m_func, true);
-            InsertCompareBranch(src1TypeIdReg, numberTypeId, Js::OpCode::BrEq_A, labelHelper, instr);
-#else
-            m_lowererMD.GenerateObjectTest(src1->AsRegOpnd(), instr, labelHelper);
-#endif
             IR::BranchInstr * branch = IR::BranchInstr::New(LowererMD::MDUncondBranchOpcode, labelBranchSuccess, this->m_func);
             instr->InsertBefore(branch);
         }
@@ -10624,31 +10582,16 @@ Lowerer::LowerStrictBrOrCm(IR::Instr * instr, IR::JnHelperMethod helperMethod, b
         {
             m_lowererMD.GenerateObjectTest(src1->AsRegOpnd(), instr, labelHelper);
 
-#if !FLOATVAR
-            IR::RegOpnd *src1TypeReg = IR::RegOpnd::New(TyMachReg, this->m_func);
-            Lowerer::InsertMove(src1TypeReg, IR::IndirOpnd::New(src1->AsRegOpnd(), Js::RecyclableObject::GetOffsetOfType(), TyMachReg, this->m_func), instr);
-
-            // MOV src1TypeIdReg, [src1TypeReg + offset(typeId)]
-            IR::RegOpnd *src1TypeIdReg = IR::RegOpnd::New(TyInt32, this->m_func);
-            Lowerer::InsertMove(src1TypeIdReg, IR::IndirOpnd::New(src1TypeReg, Js::Type::GetOffsetOfTypeId(), TyInt32, this->m_func), instr);
-
-            // CMP src1TypeIdReg, TypeIds_Number
-            // JEQ $helper
-            IR::IntConstOpnd *numberTypeId = IR::IntConstOpnd::New(Js::TypeIds_Number, TyInt32, this->m_func, true);
-            InsertCompareBranch(src1TypeIdReg, numberTypeId, Js::OpCode::BrEq_A, labelHelper, instr);
-#endif
             //      CMP src1, src2                       - Ptr comparison
             //      JEQ $branchSuccess
             InsertCompareBranch(src1, src2, Js::OpCode::BrEq_A, labelBranchSuccess, instr);
 
-#if FLOATVAR
             IR::RegOpnd *src1TypeReg = IR::RegOpnd::New(TyMachReg, this->m_func);
             Lowerer::InsertMove(src1TypeReg, IR::IndirOpnd::New(src1->AsRegOpnd(), Js::RecyclableObject::GetOffsetOfType(), TyMachReg, this->m_func), instr);
 
             // MOV src1TypeIdReg, [src1TypeReg + offset(typeId)]
             IR::RegOpnd *src1TypeIdReg = IR::RegOpnd::New(TyInt32, this->m_func);
             Lowerer::InsertMove(src1TypeIdReg, IR::IndirOpnd::New(src1TypeReg, Js::Type::GetOffsetOfTypeId(), TyInt32, this->m_func), instr);
-#endif
             // CMP src1TypeIdReg, TypeIds_HostDispatch
             // JLE $helper (le condition covers string, long, unsigned long, hostdispatch, as well as undefined, null, boolean)
             IR::IntConstOpnd *hostDispatchTypeId = IR::IntConstOpnd::New(Js::TypeIds_HostDispatch, TyInt32, this->m_func, true);
@@ -10970,23 +10913,6 @@ Lowerer::LowerStLoopBodyCount(IR::Instr* instr)
     m_lowererMD.ChangeToAssign(instr);
     return;
 }
-
-#if !FLOATVAR
-IR::Instr *
-Lowerer::LowerStSlotBoxTemp(IR::Instr *stSlot)
-{
-    // regVar = BoxStackNumber(src, scriptContext)
-    IR::RegOpnd * regSrc = stSlot->UnlinkSrc1()->AsRegOpnd();
-    IR::Instr * instr = IR::Instr::New(Js::OpCode::Call, this->m_func);
-    IR::RegOpnd *regVar = IR::RegOpnd::New(TyVar, this->m_func);
-    instr->SetDst(regVar);
-    instr->SetSrc1(regSrc);
-    stSlot->InsertBefore(instr);
-    this->LowerUnaryHelperMem(instr, IR::HelperBoxStackNumber);
-    stSlot->SetSrc1(regVar);
-    return this->LowerStSlot(stSlot);
-}
-#endif
 
 IR::Opnd *
 Lowerer::CreateOpndForSlotAccess(IR::Opnd * opnd)
@@ -18428,7 +18354,6 @@ Lowerer::GenerateFastLdElemI(IR::Instr *& ldElem, bool *instrIsInHelperBlockRef)
                     m_lowererMD.SaveDoubleToVar(dst->AsRegOpnd(), reg, ldElem, ldElem);
                 }
 
-#if FLOATVAR
                 // For NaNs, go to the helper to guarantee we don't have an illegal NaN
                 // TODO(magardn): move this to MD code.
 #if _M_X64
@@ -18459,7 +18384,6 @@ Lowerer::GenerateFastLdElemI(IR::Instr *& ldElem, bool *instrIsInHelperBlockRef)
                     IR::Instr *const instr = IR::BranchInstr::New(Js::OpCode::BVS, labelHelper, this->m_func);
                     ldElem->InsertBefore(instr);
                 }
-#endif
 #endif
 
                 if(dstType == TyFloat64)
@@ -24661,11 +24585,7 @@ bool Lowerer::GenerateFastBrBool(IR::BranchInstr *const instr)
     }
 #endif
     bool checkedForTaggedFloat =
-#if FLOATVAR
-        srcValueType.IsNotNumber();
-#else
-        true; // there are no tagged floats, indicate that it has been checked
-#endif
+    srcValueType.IsNotNumber();
     if (generateFloatTest)
     {
         // if(srcValueType.IsFloat()) // skip tagged int check?
@@ -24683,13 +24603,8 @@ bool Lowerer::GenerateFastBrBool(IR::BranchInstr *const instr)
 
         //     cmp [src], JavascriptNumber::vtable
         //     jne $notFloat
-    #if FLOATVAR
         checkedForTaggedFloat = true;
         IR::RegOpnd *const floatOpnd = m_lowererMD.CheckFloatAndUntag(src, instr, notFloatLabel);
-    #else
-        m_lowererMD.GenerateFloatTest(src, instr, notFloatLabel);
-        IR::IndirOpnd *const floatOpnd = IR::IndirOpnd::New(src, Js::JavascriptNumber::GetValueOffset(), TyMachDouble, func);
-    #endif
 
         //     cmp src, 0.0
         //     jp $false
@@ -28690,12 +28605,7 @@ Lowerer::LoadIndexFromLikelyFloat(
     }
 
     // try to convert float to int in a fast path
-#if FLOATVAR
     IR::RegOpnd* floatIndexOpnd = m_lowererMD.CheckFloatAndUntag(indexOpnd, insertBeforeInstr, notIntLabel);
-#else
-    m_lowererMD.GenerateFloatTest(indexOpnd, insertBeforeInstr, notIntLabel);
-    IR::IndirOpnd * floatIndexOpnd = IR::IndirOpnd::New(indexOpnd, Js::JavascriptNumber::GetValueOffset(), TyMachDouble, this->m_func);
-#endif
 
     IR::LabelInstr * doneConvUint32 = IR::LabelInstr::New(Js::OpCode::Label, func);
     IR::LabelInstr * helperConvUint32 = IR::LabelInstr::New(Js::OpCode::Label, func, true /*helper*/);

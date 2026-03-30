@@ -271,10 +271,6 @@ JITOutput::FinalizeNativeCode()
         m_func->GetInProcCodeGenAllocators()->emitBufferManager.CompletePreviousAllocation(m_inProcAlloc);
         m_func->GetInProcJITEntryPointInfo()->GetInProcNativeEntryPointData()->SetNativeCodeData(m_func->GetNativeCodeDataAllocator()->Finalize());
         m_func->GetInProcJITEntryPointInfo()->GetJitTransferData()->SetRawData(m_func->GetTransferDataAllocator()->Finalize());
-#if !FLOATVAR
-        CodeGenNumberChunk * numberChunks = m_func->GetNumberAllocator()->Finalize();
-        m_func->GetInProcJITEntryPointInfo()->GetInProcNativeEntryPointData()->SetNumberChunks(numberChunks);
-#endif
 
     }
     m_outputData->thunkAddress = allocation->thunkAddress;
