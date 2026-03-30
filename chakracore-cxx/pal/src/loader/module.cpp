@@ -217,16 +217,6 @@ GetModuleHandleW(
     return (HMODULE)&exe_module;
 }
 
-BOOL
-GetModuleHandleExW(
-     uint32_t dwFlags,
-      const char16_t* lpModuleName,
-     HMODULE *phModule)
-{
-    *phModule = NULL;
-    return FALSE;
-}
-
 /* Internal PAL functions *****************************************************/
 
 /*++

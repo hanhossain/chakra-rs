@@ -1281,17 +1281,6 @@ GetModuleHandleW(
       const char16_t* lpModuleName
 );
 
-#define GetModuleHandle GetModuleHandleW
-
-// TODO (hanhossain): internal
-BOOL
-GetModuleHandleExW(
-     uint32_t dwFlags,
-      const char16_t* lpModuleName,
-     HMODULE *phModule);
-
-#define GetModuleHandleEx GetModuleHandleExW
-
 // TODO (hanhossain): public
 void *
 VirtualAlloc(
