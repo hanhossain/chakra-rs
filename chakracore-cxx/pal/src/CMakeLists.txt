@@ -116,8 +116,7 @@ set(SOURCES
   map/common.cpp
   map/map.cpp
   map/virtual.cpp
-  memory/heap.cpp
-  memory/local.cpp
+    memory/local.cpp
   misc/bstr.cpp
   misc/dbgmsg.cpp
   misc/error.cpp
