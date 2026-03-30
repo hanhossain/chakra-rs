@@ -361,7 +361,7 @@ inline errno_t _wcserror_s(char16_t (&buffer)[size], int errnum)
 }
 
 #define midl_user_allocate(size) \
-    HeapAlloc(GetProcessHeap(), 0, (size))
+    HeapAlloc(0, (size))
 #define midl_user_free(ptr) \
     if (ptr != NULL) { HeapFree(GetProcessHeap(), NULL, ptr); }
 

@@ -400,7 +400,7 @@ int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, u
     PAL_fseek(file, 0, SEEK_END);
     lengthBytes = PAL_ftell(file);
     PAL_fseek(file, 0, SEEK_SET);
-    contents = (const char *)HeapAlloc(GetProcessHeap(), 0, lengthBytes);
+    contents = (const char *)HeapAlloc(0, lengthBytes);
     if (nullptr == contents)
     {
         PAL_fwprintf(PAL_get_stderr(), u"out of memory");

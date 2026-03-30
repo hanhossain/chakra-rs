@@ -1250,9 +1250,8 @@ HeapCreate(
 // TODO (hanhossain): public
 void *
 HeapAlloc(
-       HANDLE hHeap,
-       uint32_t dwFlags,
-       size_t dwBytes);
+    uint32_t dwFlags,
+    size_t dwBytes);
 
 // TODO (hanhossain): public
 BOOL

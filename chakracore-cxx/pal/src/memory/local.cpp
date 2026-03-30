@@ -29,7 +29,7 @@ SET_DEFAULT_DEBUG_CHANNEL(MEM);
 
 extern "C" void * CoTaskMemAlloc( size_t cb)
 {
-    return HeapAlloc(GetProcessHeap(), 0, cb);
+    return HeapAlloc(0, cb);
 }
 
 extern "C" void CoTaskMemFree( void * pv)

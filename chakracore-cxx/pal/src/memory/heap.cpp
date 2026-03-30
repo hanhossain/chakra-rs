@@ -161,26 +161,13 @@ See MSDN doc.
 --*/
 void *
 HeapAlloc(
-     HANDLE hHeap,
-     uint32_t dwFlags,
-     size_t numberOfBytes)
+    uint32_t dwFlags,
+    size_t numberOfBytes)
 {
     uint8_t *pMem;
 
     ENTRY("HeapAlloc (hHeap=%p, dwFlags=%#x, numberOfBytes=%u)\n",
           hHeap, dwFlags, numberOfBytes);
-
-#ifdef __APPLE__
-    if (hHeap == NULL)
-#else // __APPLE__
-    if (hHeap != (HANDLE) DUMMY_HEAP)
-#endif // __APPLE__ else
-    {
-        ERROR("Invalid heap handle\n");
-        SetLastError(ERROR_INVALID_PARAMETER);
-        LOGEXIT("HeapAlloc returning NULL\n");
-        return NULL;
-    }
 
     if ((dwFlags != 0) && (dwFlags != HEAP_ZERO_MEMORY))
     {
@@ -190,14 +177,7 @@ HeapAlloc(
         return NULL;
     }
 
-#ifdef __APPLE__
-    // This is patterned off of malloc in malloc.cpp.
-    {
-        pMem = (uint8_t *)malloc_zone_malloc((malloc_zone_t *)hHeap, numberOfBytes);
-    }
-#else // __APPLE__
     pMem = (uint8_t *) malloc(numberOfBytes);
-#endif // __APPLE__ else
 
     if (pMem == NULL)
     {

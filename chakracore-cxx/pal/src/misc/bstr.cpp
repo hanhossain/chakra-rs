@@ -90,7 +90,7 @@ extern "C" BSTR SysAllocStringLen(const OLECHAR *psz, uint32_t len)
     if (FAILED(CbSysStringSize(len, FALSE, &cbTotal)))
         return NULL;
 
-    bstr = (OLECHAR *)HeapAlloc(GetProcessHeap(), 0, cbTotal);
+    bstr = (OLECHAR *)HeapAlloc(0, cbTotal);
 
     if(bstr != NULL) {
 

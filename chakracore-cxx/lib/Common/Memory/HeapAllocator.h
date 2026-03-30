@@ -294,7 +294,7 @@ public:
         {
             processHeap = GetProcessHeap();
         }
-        char * buffer = (char*)HeapAlloc(processHeap, 0, byteSize);
+        char * buffer = (char*)HeapAlloc(0, byteSize);
         if (buffer == nullptr)
         {
             // NoCheck heap allocator is only used by debug only code, and if we fail to allocate
@@ -309,7 +309,7 @@ public:
         {
             processHeap = GetProcessHeap();
         }
-        char * buffer = (char*)HeapAlloc(processHeap, HEAP_ZERO_MEMORY, byteSize);
+        char * buffer = (char*)HeapAlloc(HEAP_ZERO_MEMORY, byteSize);
         if (buffer == nullptr)
         {
             // NoCheck heap allocator is only used by debug only code, and if we fail to allocate
