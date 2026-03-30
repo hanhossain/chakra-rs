@@ -4434,29 +4434,6 @@ void ThreadContext::ClearThreadContextFlag(ThreadContextFlags contextFlag)
     this->threadContextFlags = (ThreadContextFlags)(this->threadContextFlags & ~contextFlag);
 }
 
-#ifdef ENABLE_GLOBALIZATION
-Js::DelayLoadWinRtString * ThreadContext::GetWinRTStringLibrary()
-{
-    delayLoadWinRtString.EnsureFromSystemDirOnly();
-
-    return &delayLoadWinRtString;
-}
-
-#ifdef ENABLE_FOUNDATION_OBJECT
-Js::WindowsFoundationAdapter* ThreadContext::GetWindowsFoundationAdapter()
-{
-    return &windowsFoundationAdapter;
-}
-
-Js::DelayLoadWinRtFoundation* ThreadContext::GetWinRtFoundationLibrary()
-{
-    delayLoadWinRtFoundationLibrary.EnsureFromSystemDirOnly();
-
-    return &delayLoadWinRtFoundationLibrary;
-}
-#endif
-#endif // ENABLE_GLOBALIZATION
-
 // Despite the name, callers expect this to return the highest propid + 1.
 
 uint ThreadContext::GetHighestPropertyNameIndex() const

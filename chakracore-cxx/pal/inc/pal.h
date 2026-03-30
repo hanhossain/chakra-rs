@@ -1294,57 +1294,7 @@ WideCharToMultiByte(
              const char * lpDefaultChar,
              LPBOOL lpUsedDefaultChar);
 
-//
-//  Locale Types.
-//
-//  These types are used for the GetLocaleInfo NLS API routine.
-//
-
-
-// TODO (hanhossain): public
-int
-GetLocaleInfoEx(
-     const char16_t*  lpLocaleName,
-     uint32_t   LCType,
-     char16_t*  lpLCData,
-     int      cchData);
-
-typedef struct _nlsversioninfoex {
-  uint32_t  dwNLSVersionInfoSize;
-  uint32_t  dwNLSVersion;
-  uint32_t  dwDefinedVersion;
-  uint32_t  dwEffectiveId;
-  GUID  guidCustomVersion;
-  } NLSVERSIONINFOEX, *LPNLSVERSIONINFOEX;
-
-typedef enum {
-    COMPARE_STRING = 0x0001,
-} NLS_FUNCTION;
-
-// TODO (hanhossain): public
-int
-ResolveLocaleName(
-     const char16_t* lpNameToResolve,
-         char16_t* lpLocaleName,
-         int cchLocaleName );
-
-// TODO (hanhossain): public
-int
-GetUserDefaultLocaleName(
-            char16_t* lpLocaleName,
-            int cchLocaleName);
-
-typedef uint32_t CALID;
-
 #define DATE_LONGDATE             0x00000002  // use long date picture
-
-typedef BOOL (CALLBACK* CALINFO_ENUMPROCEXW)(char16_t*,CALID);
-typedef BOOL (CALLBACK* CALINFO_ENUMPROCEXEXW)(char16_t*, CALID, char16_t*, ptrdiff_t);
-
-// "a number", might represent different types
-typedef struct PALNUMBER__* PALNUMBER;
-
-#define GetDateFormat GetDateFormatW
 
 #define EXCEPTION_NONCONTINUABLE 0x1
 

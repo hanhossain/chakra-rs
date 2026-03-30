@@ -134,9 +134,6 @@ namespace Js {
 
         static JavascriptString* GetDateDefaultString(DateTime::YMD *pymd, TZD *ptzd,DateTimeFlag noDateTime,ScriptContext* scriptContext);
         static JavascriptString* GetDateGmtString(DateTime::YMD *pymd,ScriptContext* scriptContext);
-#ifdef ENABLE_GLOBALIZATION // todo-xplat: Implement this ICU?
-        static JavascriptString* GetDateLocaleString(DateTime::YMD *pymd, TZD *ptzd, DateTimeFlag noDateTime,ScriptContext* scriptContext);
-#endif
 
         static double DateFncUTC(ScriptContext* scriptContext, Arguments args);
         static bool FBig(char16_t ch);

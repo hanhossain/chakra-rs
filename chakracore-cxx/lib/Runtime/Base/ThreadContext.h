@@ -760,14 +760,6 @@ private:
     // If all try/catch blocks in the current stack marked as non-user code then this member will remain false.
     bool hasCatchHandlerToUserCode;
 
-#ifdef ENABLE_GLOBALIZATION
-    Js::DelayLoadWinRtString delayLoadWinRtString;
-#ifdef ENABLE_FOUNDATION_OBJECT
-    Js::DelayLoadWinRtFoundation delayLoadWinRtFoundationLibrary;
-    Js::WindowsFoundationAdapter windowsFoundationAdapter;
-#endif
-#endif
-
     // Number of script context attached with probe manager.
     // This counter will be used as addref when the script context is created, this way we maintain the life of diagnostic object.
     // Once no script context available , diagnostic will go away.
@@ -854,14 +846,6 @@ public:
     CriticalSection* GetFunctionBodyLock() { return &csFunctionBody; }
 
     Js::IsConcatSpreadableCache* GetIsConcatSpreadableCache() { return &isConcatSpreadableCache; }
-
-#ifdef ENABLE_GLOBALIZATION
-    Js::DelayLoadWinRtString *GetWinRTStringLibrary();
-#ifdef ENABLE_FOUNDATION_OBJECT
-    Js::DelayLoadWinRtFoundation *GetWinRtFoundationLibrary();
-    Js::WindowsFoundationAdapter *GetWindowsFoundationAdapter();
-#endif
-#endif
 
     void SetAbnormalExceptionRecord(EXCEPTION_POINTERS *exceptionInfo) { this->exceptionInfo = *exceptionInfo; }
     void SetAbnormalExceptionCode(uint32_t exceptionInfo) { this->exceptionCode = exceptionInfo; }

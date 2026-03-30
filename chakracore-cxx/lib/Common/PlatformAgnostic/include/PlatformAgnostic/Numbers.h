@@ -10,7 +10,6 @@ namespace Numbers
 {
     class Utility
     {
-#ifndef ENABLE_GLOBALIZATION
         class NumbersLocale
         {
             char16_t localeThousands;
@@ -39,7 +38,6 @@ namespace Numbers
         // non-ICU implementation keeps user locale intact process wide
         // xplat-todo: While implementing ICU option, make both per context.
         static NumbersLocale numbersLocale;
-#endif
     public:
 
         static size_t NumberToDefaultLocaleString(const char16_t *number_string,
