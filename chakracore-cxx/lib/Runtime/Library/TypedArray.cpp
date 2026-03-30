@@ -873,8 +873,7 @@ namespace Js
              && !VarIs<Float64VirtualArray>(this) && !VarIs<Float64VirtualArray>(source)))
         {
             const size_t offsetInBytes = offset * BYTES_PER_ELEMENT;
-            memmove_s(buffer + offsetInBytes,
-                      GetByteLength() - offsetInBytes,
+            memmove(buffer + offsetInBytes,
                       source->GetByteBuffer(),
                       source->GetByteLength());
         }
