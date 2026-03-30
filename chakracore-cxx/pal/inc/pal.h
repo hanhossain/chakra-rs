@@ -1255,18 +1255,6 @@ UnmapViewOfFile(
 
 typedef long (*FARPROC)();
 
-// TODO (hanhossain): public
-BOOL
-FreeLibrary(
-      HMODULE hLibModule);
-
-// TODO (hanhossain): public
-__attribute__((noreturn))
-void
-FreeLibraryAndExitThread(
-     HMODULE hLibModule,
-     uint32_t dwExitCode);
-
 
 // TODO (hanhossain): public
 uint32_t

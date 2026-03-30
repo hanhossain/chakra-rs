@@ -96,47 +96,9 @@ int MaxWCharToAcpLength = 3;
 
 static BOOL LOADValidateModule(MODSTRUCT *module);
 static char16_t* LOADGetModuleFileName(MODSTRUCT *module);
-static BOOL LOADFreeLibrary(MODSTRUCT *module, BOOL fCallDllMain);
 static BOOL LOADCallDllMainSafe(MODSTRUCT *module, uint32_t dwReason, void * lpReserved);
 
 /* API function definitions ***************************************************/
-
-/*++
-Function:
-  FreeLibrary
-
-See MSDN doc.
---*/
-BOOL
-FreeLibrary(
-      HMODULE hLibModule)
-{
-    BOOL retval = FALSE;
-
-    ENTRY("FreeLibrary (hLibModule=%p)\n", hLibModule);
-    retval = LOADFreeLibrary((MODSTRUCT *)hLibModule, TRUE /* fCallDllMain */);
-
-    LOGEXIT("FreeLibrary returns BOOL %d\n", retval);
-    return retval;
-}
-
-/*++
-Function:
-  FreeLibraryAndExitThread
-
-See MSDN doc.
-
---*/
-void
-FreeLibraryAndExitThread(
-     HMODULE hLibModule,
-     uint32_t dwExitCode)
-{
-    ENTRY("FreeLibraryAndExitThread()\n");
-    FreeLibrary(hLibModule);
-    ExitThread(dwExitCode);
-    LOGEXIT("FreeLibraryAndExitThread\n");
-}
 
 /*++
 Function:
@@ -401,101 +363,6 @@ void LOADCallDllMain(uint32_t dwReason, void * lpReserved)
     } while (module != &exe_module);
 
     UnlockModuleList();
-}
-
-/*++
-Function:
-  LOADFreeLibrary
-
-Parameters:
-  MODSTRUCT * module - module to free
-  BOOL fCallDllMain - if TRUE, call the DllMain function
-
-Returns:
-  TRUE if successful
-
---*/
-static BOOL LOADFreeLibrary(MODSTRUCT *module, BOOL fCallDllMain)
-{
-    BOOL retval = FALSE;
-
-    LockModuleList();
-
-    if (terminator)
-    {
-        /* PAL shutdown is in progress - ignore FreeLibrary calls */
-        retval = TRUE;
-        goto done;
-    }
-
-    if (!LOADValidateModule(module))
-    {
-        TRACE("Can't free invalid module %p\n", module);
-        SetLastError(ERROR_INVALID_HANDLE);
-        goto done;
-    }
-
-    if (module->refcount == -1)
-    {
-        /* special module - never released */
-        retval = TRUE;
-        goto done;
-    }
-
-    module->refcount--;
-    TRACE("Reference count for module %p (named %S) decreases to %d\n",
-            module, MODNAME(module), module->refcount);
-
-    if (module->refcount != 0)
-    {
-        retval = TRUE;
-        goto done;
-    }
-
-    /* Releasing the last reference : call dlclose(), remove module from the
-       process-wide module list */
-
-    TRACE("Reference count for module %p (named %S) now 0; destroying module structure\n",
-        module, MODNAME(module));
-
-    /* unlink the module structure from the list */
-    module->prev->next = module->next;
-    module->next->prev = module->prev;
-
-    /* remove the circular reference so that LOADValidateModule will fail */
-    module->self = nullptr;
-
-    /* Call DllMain if the module contains one */
-    if (fCallDllMain && module->pDllMain)
-    {
-        LOADCallDllMainSafe(module, DLL_PROCESS_DETACH, nullptr);
-    }
-
-    if (module->hinstance)
-    {
-        PUNREGISTER_MODULE unregisterModule = (PUNREGISTER_MODULE)dlsym(module->dl_handle, "PAL_UnregisterModule");
-        if (unregisterModule != nullptr)
-        {
-             unregisterModule(module->hinstance);
-        }
-        module->hinstance = nullptr;
-    }
-
-    if (module->dl_handle && 0 != dlclose(module->dl_handle))
-    {
-        /* report dlclose() failure, but proceed anyway. */
-        WARN("dlclose() call failed! error message is \"%s\"\n", dlerror());
-    }
-
-    /* release all memory */
-    free(module->lib_name);
-    free(module);
-
-    retval = TRUE;
-
-done:
-    UnlockModuleList();
-    return retval;
 }
 
 /*++
