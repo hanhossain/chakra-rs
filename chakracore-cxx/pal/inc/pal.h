@@ -1254,15 +1254,6 @@ HeapAlloc(
        uint32_t dwFlags,
        size_t dwBytes);
 
-// TODO (hanhossain): internal
-void *
-HeapReAlloc(
-     HANDLE hHeap,
-     uint32_t dwFlags,
-     void * lpMem,
-     size_t dwBytes
-    );
-
 // TODO (hanhossain): public
 BOOL
 HeapFree(
@@ -1274,11 +1265,6 @@ typedef enum _HEAP_INFORMATION_CLASS {
     HeapCompatibilityInformation,
     HeapEnableTerminationOnCorruption
 } HEAP_INFORMATION_CLASS;
-
-// TODO (hanhossain): public
-HLOCAL
-LocalFree(
-       HLOCAL hMem);
 
 // TODO (hanhossain): public
 BOOL
