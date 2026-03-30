@@ -705,9 +705,7 @@ typedef struct _XMM_SAVE_AREA32 {
     M128A FloatRegisters[8];
     M128A XmmRegisters[16];
     uint8_t  Reserved4[96];
-} XMM_SAVE_AREA32, *PXMM_SAVE_AREA32;
-
-#define LEGACY_SAVE_AREA_LENGTH sizeof(XMM_SAVE_AREA32)
+} XMM_SAVE_AREA32;
 
 //
 // Context Frame
@@ -861,57 +859,6 @@ typedef struct __declspec(align(16)) _CONTEXT {
     unsigned long LastExceptionFromRip;
 } CONTEXT, *PCONTEXT, *LPCONTEXT;
 
-//
-// Nonvolatile context pointer record.
-//
-
-typedef struct _KNONVOLATILE_CONTEXT_POINTERS {
-    union {
-        PM128A FloatingContext[16];
-        struct {
-            PM128A Xmm0;
-            PM128A Xmm1;
-            PM128A Xmm2;
-            PM128A Xmm3;
-            PM128A Xmm4;
-            PM128A Xmm5;
-            PM128A Xmm6;
-            PM128A Xmm7;
-            PM128A Xmm8;
-            PM128A Xmm9;
-            PM128A Xmm10;
-            PM128A Xmm11;
-            PM128A Xmm12;
-            PM128A Xmm13;
-            PM128A Xmm14;
-            PM128A Xmm15;
-        } ;
-    } ;
-
-    union {
-        unsigned long * IntegerContext[16];
-        struct {
-            unsigned long * Rax;
-            unsigned long * Rcx;
-            unsigned long * Rdx;
-            unsigned long * Rbx;
-            unsigned long * Rsp;
-            unsigned long * Rbp;
-            unsigned long * Rsi;
-            unsigned long * Rdi;
-            unsigned long * R8;
-            unsigned long * R9;
-            unsigned long * R10;
-            unsigned long * R11;
-            unsigned long * R12;
-            unsigned long * R13;
-            unsigned long * R14;
-            unsigned long * R15;
-        } ;
-    } ;
-
-} KNONVOLATILE_CONTEXT_POINTERS, *PKNONVOLATILE_CONTEXT_POINTERS;
-
 #elif defined(_ARM64_)
 
 #define CONTEXT_ARM64   0x00400000L
@@ -1042,36 +989,6 @@ typedef struct __declspec(align(16)) _CONTEXT {
     /* +0x390 */
 
 } CONTEXT, *PCONTEXT, *LPCONTEXT;
-
-//
-// Nonvolatile context pointer record.
-//
-
-typedef struct _KNONVOLATILE_CONTEXT_POINTERS {
-
-    unsigned long * X19;
-    unsigned long * X20;
-    unsigned long * X21;
-    unsigned long * X22;
-    unsigned long * X23;
-    unsigned long * X24;
-    unsigned long * X25;
-    unsigned long * X26;
-    unsigned long * X27;
-    unsigned long * X28;
-    unsigned long * Fp;
-    unsigned long * Lr;
-
-    unsigned long * D8;
-    unsigned long * D9;
-    unsigned long * D10;
-    unsigned long * D11;
-    unsigned long * D12;
-    unsigned long * D13;
-    unsigned long * D14;
-    unsigned long * D15;
-
-} KNONVOLATILE_CONTEXT_POINTERS, *PKNONVOLATILE_CONTEXT_POINTERS;
 
 #else
 #error Unknown architecture for defining CONTEXT.
@@ -1262,14 +1179,6 @@ VirtualAllocEx(
 // TODO (hanhossain): public
 BOOL
 VirtualFree(
-         void * lpAddress,
-         size_t dwSize,
-         uint32_t dwFreeType);
-
-// TODO (hanhossain): public
-BOOL
-VirtualFreeEx(
-         HANDLE hProcess,
          void * lpAddress,
          size_t dwSize,
          uint32_t dwFreeType);

@@ -1494,16 +1494,6 @@ VirtualAlloc(
 #undef KB64
 #undef MB64
 
-BOOL
-VirtualFreeEx(
-         HANDLE hProcess,
-         void * lpAddress,    /* Address of region. */
-         size_t dwSize,       /* Size of region. */
-         uint32_t dwFreeType )   /* Operation type. */
-{
-    return VirtualFree(lpAddress, dwSize, dwFreeType);
-}
-
 /*++
 Function:
   VirtualFree
