@@ -347,20 +347,6 @@ typedef struct _WIN32_FIND_DATAW {
 } WIN32_FIND_DATAW, *LPWIN32_FIND_DATAW;
 
 // TODO (hanhossain): internal
-HANDLE
-FindFirstFileW(
-            const char16_t* lpFileName,
-            LPWIN32_FIND_DATAW lpFindFileData);
-
-// TODO (hanhossain): public
-#define FindFirstFile FindFirstFileW
-
-// TODO (hanhossain): public
-BOOL
-FindClose(
-        HANDLE hFindFile);
-
-// TODO (hanhossain): internal
 uint32_t
 GetFileAttributesA(
             const char * lpFileName);

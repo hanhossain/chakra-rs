@@ -27,12 +27,6 @@ tSafeCRT_AssertFuncPtr sMBUSafeCRTAssertFunc = NULL;
 *   MBUSafeCRTSetAssertFunc - Set the function called when an assert fails.
 ****/
 
-void MBUSafeCRTSetAssertFunc( tSafeCRT_AssertFuncPtr inAssertFuncPtr )
-{
-    /* set it */
-    sMBUSafeCRTAssertFunc = inAssertFuncPtr;
-}
-
 /***
 *   _putc_nolock - putc for the miniFILE stream.
 ****/
