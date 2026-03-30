@@ -368,9 +368,7 @@ void _invalid_parameter(const char16_t *_Message, const char16_t *_FunctionName,
 #define _vstprintf_s    vswprintf_s
 #define _sntprintf_s    _snwprintf_s
 #define _vsntprintf_s   _vsnwprintf_s
-#define _tscanf_s       wscanf_s
 #define _tsscanf_s      PAL_swscanf
-#define _tsnscanf_s     _swnscanf_s
 
 #endif /* _SAFECRT_DEFINE_TCS_MACROS */
 
@@ -3173,16 +3171,8 @@ int _vsnwprintf_s(char (&_Dst)[_SizeInWords], size_t _Count, const char *_Format
 _SAFECRT__EXTERN_C
 int scanf_s(const char *_Format, ...);
 
-/* wscanf_s */
-_SAFECRT__EXTERN_C
-int wscanf_s(const char16_t *_Format, ...);
-
 /* swscanf_s */
 _SAFECRT__EXTERN_C
 int PAL_swscanf(const char16_t *_String, const char16_t *_Format, ...);
-
-/* _swnscanf_s */
-_SAFECRT__EXTERN_C
-int _swnscanf_s(const char16_t *_String, size_t _Count, const char16_t *_Format, ...);
 
 #endif  /* _INC_SAFECRT */
