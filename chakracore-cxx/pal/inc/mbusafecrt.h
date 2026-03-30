@@ -98,7 +98,6 @@ extern int _vsnwprintf_s( char16_t* string, size_t sizeInWords, size_t count, co
 extern int sscanf_s( const char *string, const char *format, ... );
 extern int swscanf_s( const char16_t *string, const char16_t *format, ... );
 
-extern int _snscanf_s( const char *string, size_t count, const char *format, ... );
 extern int _snwscanf_s( const char16_t *string, size_t count, const char16_t *format, ... );
 
 extern errno_t memcpy_s( void * dst, size_t sizeInBytes, const void * src, size_t count );

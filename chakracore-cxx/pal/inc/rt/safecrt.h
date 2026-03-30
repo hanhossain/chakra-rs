@@ -3156,8 +3156,6 @@ int _vsnwprintf_s(char (&_Dst)[_SizeInWords], size_t _Count, const char *_Format
 }
 #endif
 
-/* no inline version of _snwprintf_s, _vsnwprintf_s */
-
 /* scanf_s */
 /*
  * read formatted data from the standard input stream;
@@ -3175,50 +3173,20 @@ int _vsnwprintf_s(char (&_Dst)[_SizeInWords], size_t _Count, const char *_Format
 _SAFECRT__EXTERN_C
 int scanf_s(const char *_Format, ...);
 
-/* no C++ overload for scanf_s */
-
-/* no inline version of scanf_s */
-
 /* wscanf_s */
 _SAFECRT__EXTERN_C
 int wscanf_s(const char16_t *_Format, ...);
-
-/* no C++ overload for wscanf_s */
-
-/* no inline version of wscanf_s */
 
 /* sscanf_s */
 _SAFECRT__EXTERN_C
 int sscanf_s(const char *_String, const char *_Format, ...);
 
-/* no C++ overload for sscanf_s */
-
-/* no inline version of sscanf_s */
-
 /* swscanf_s */
 _SAFECRT__EXTERN_C
 int PAL_swscanf(const char16_t *_String, const char16_t *_Format, ...);
 
-/* no C++ overload for swscanf_s */
-
-/* no inline version of swscanf_s */
-
-/* _snscanf_s */
-_SAFECRT__EXTERN_C
-int _snscanf_s(const char *_String, size_t _Count, const char *_Format, ...);
-
-/* no C++ overload for snscanf_s */
-
-/* no inline version of snscanf_s */
-
 /* _swnscanf_s */
 _SAFECRT__EXTERN_C
 int _swnscanf_s(const char16_t *_String, size_t _Count, const char16_t *_Format, ...);
-
-/* no C++ overload for _swnscanf_s */
-
-/* no inline version of _swnscanf_s */
-
-//#endif /* ndef _SAFECRT_IMPL */
 
 #endif  /* _INC_SAFECRT */
