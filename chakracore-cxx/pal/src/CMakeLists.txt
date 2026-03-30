@@ -23,7 +23,6 @@ if(CC_TARGET_OS_LINUX)
   add_definitions(-D__LINUX__=1)
 endif()
 
-add_definitions(-DPLATFORM_UNIX=1)
 add_definitions(-DLP64COMPATIBLE=1)
 add_definitions(-DFEATURE_PAL=1)
 add_definitions(-DPIC=1)
