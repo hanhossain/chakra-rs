@@ -1235,13 +1235,6 @@ VirtualQueryEx(
 
 #define HEAP_ZERO_MEMORY 0x00000008
 
-// TODO (hanhossain): public
-HANDLE
-HeapCreate(
-	        uint32_t flOptions,
-	        size_t dwInitialSize,
-	        size_t dwMaximumSize);
-
 typedef enum _HEAP_INFORMATION_CLASS {
     HeapCompatibilityInformation,
     HeapEnableTerminationOnCorruption
