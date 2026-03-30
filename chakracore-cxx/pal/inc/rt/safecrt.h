@@ -3154,23 +3154,6 @@ int _vsnwprintf_s(char (&_Dst)[_SizeInWords], size_t _Count, const char *_Format
 }
 #endif
 
-/* scanf_s */
-/*
- * read formatted data from the standard input stream;
- * need safecrt.lib and msvcrt.dll;
- * will call _SAFECRT_INVALID_PARAMETER if the format string is malformed;
- * for format types %s, %S, %[, %c and %C, in the argument list the buffer pointer
- *      need to be followed by the size of the buffer, e.g.:
- *          #define BUFFSIZE 100
- *          char buff[BUFFSIZE];
- *          scanf_s("%s", buff, BUFFSIZE);
- * as scanf, returns the number of fields successfully converted and assigned;
- * if a buffer field is too small, scanf set the buffer to the empty string and returns.
- * do not support floating-point, for now
- */
-_SAFECRT__EXTERN_C
-int scanf_s(const char *_Format, ...);
-
 /* swscanf_s */
 _SAFECRT__EXTERN_C
 int PAL_swscanf(const char16_t *_String, const char16_t *_Format, ...);
