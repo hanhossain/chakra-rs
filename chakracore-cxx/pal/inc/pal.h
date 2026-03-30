@@ -2128,8 +2128,6 @@ GetSystemInfo(
 typedef int errno_t;
 
 // TODO (hanhossain): internal
-char * _strlwr(char *);
-// TODO (hanhossain): internal
 unsigned char * _mbsdec(const unsigned char *, const unsigned char *);
 // TODO (hanhossain): public
 int _wcsicmp(const char16_t *, const char16_t*);

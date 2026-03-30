@@ -743,8 +743,6 @@ Remember to fix the errcode defintion in safecrt.h.
 #define _wfopen_s _wfopen_unsafe
 #define fopen_s _fopen_unsafe
 
-#define _strlwr_s _strlwr_unsafe
-
 #define _vscprintf _vscprintf_unsafe
 #define _vscwprintf _vscwprintf_unsafe
 #define _scwprintf _scwprintf_unsafe
@@ -771,24 +769,6 @@ inline errno_t _wcslwr_unsafe(char16_t *str, size_t sz)
 
     _wcslwr(copy);
     wcscpy_s(str, sz, copy);
-    free(copy);
-
-    return 0;
-}
-inline errno_t _strlwr_unsafe(char *str, size_t sz)
-{
-    char *copy = (char *)malloc(sz);
-    if(copy == nullptr)
-        return 1;
-
-    errno_t retCode = strcpy_s(copy, sz, str);
-    if(retCode) {
-        free(copy);
-        return 1;
-    }
-
-    _strlwr(copy);
-    strcpy_s(str, sz, copy);
     free(copy);
 
     return 0;
