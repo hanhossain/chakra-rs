@@ -2127,8 +2127,6 @@ GetSystemInfo(
 
 typedef int errno_t;
 
-// TODO (hanhossain): public
-errno_t memmove_s(void *, size_t, const void *, size_t);
 // TODO (hanhossain): internal
 char * _strlwr(char *);
 // TODO (hanhossain): internal
