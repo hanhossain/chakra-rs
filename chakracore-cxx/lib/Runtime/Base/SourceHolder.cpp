@@ -20,7 +20,7 @@ namespace Js
         {
             // REVIEW: Where is the inc for this guy?
             //PERF_COUNTER_DEC(Basic, ScriptCodeBufferCount);
-            HeapFree(GetProcessHeap(), 0, (void*)this->originalSourceBuffer);
+            HeapFree(0, (void*)this->originalSourceBuffer);
 
             this->source = nullptr;
             this->originalSourceBuffer = nullptr;

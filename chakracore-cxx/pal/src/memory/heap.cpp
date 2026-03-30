@@ -209,25 +209,10 @@ See MSDN doc.
 --*/
 BOOL
 HeapFree(
-     HANDLE hHeap,
-     uint32_t dwFlags,
-     void * lpMem)
+    uint32_t dwFlags,
+    void * lpMem)
 {
     BOOL bRetVal = FALSE;
-
-    ENTRY("HeapFree (hHeap=%p, dwFlags = %#x, lpMem=%p)\n",
-          hHeap, dwFlags, lpMem);
-
-#ifdef __APPLE__
-    if (hHeap == NULL)
-#else // __APPLE__
-    if (hHeap != (HANDLE) DUMMY_HEAP)
-#endif // __APPLE__ else
-    {
-        ERROR("Invalid heap handle\n");
-        SetLastError(ERROR_INVALID_PARAMETER);
-        goto done;
-    }
 
     if (dwFlags != 0)
     {
@@ -243,14 +228,7 @@ HeapFree(
     }
 
     bRetVal = TRUE;
-#ifdef __APPLE__
-    // This is patterned off of free in malloc.cpp.
-    {
-        malloc_zone_free((malloc_zone_t *)hHeap, lpMem);
-    }
-#else // __APPLE__
     free (lpMem);
-#endif // __APPLE__ else
 
 done:
     LOGEXIT( "HeapFree returning BOOL %d\n", bRetVal );

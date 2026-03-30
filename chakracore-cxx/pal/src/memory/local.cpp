@@ -34,5 +34,5 @@ extern "C" void * CoTaskMemAlloc( size_t cb)
 
 extern "C" void CoTaskMemFree( void * pv)
 {
-    HeapFree(GetProcessHeap(), 0, pv);
+    HeapFree(0, pv);
 }

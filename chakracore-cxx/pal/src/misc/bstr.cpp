@@ -132,7 +132,7 @@ extern "C" void SysFreeString(BSTR bstr)
     {
         bstr = (BSTR) ((char*) bstr - sizeof(uint32_t));
         bstr = (BSTR) ((char*) bstr - sizeof(uint32_t));
-        HeapFree(GetProcessHeap(), 0, (void *) bstr);
+        HeapFree(0, (void *) bstr);
     }
 }
 

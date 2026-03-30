@@ -1256,9 +1256,8 @@ HeapAlloc(
 // TODO (hanhossain): public
 BOOL
 HeapFree(
-      HANDLE hHeap,
-      uint32_t dwFlags,
-      void * lpMem);
+    uint32_t dwFlags,
+    void * lpMem);
 
 typedef enum _HEAP_INFORMATION_CLASS {
     HeapCompatibilityInformation,

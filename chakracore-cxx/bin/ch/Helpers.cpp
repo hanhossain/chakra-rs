@@ -420,7 +420,7 @@ Error:
     PAL_fclose(file);
     if (contents && FAILED(hr))
     {
-        HeapFree(GetProcessHeap(), 0, (void*)contents);
+        HeapFree(0, (void*)contents);
         contents = nullptr;
     }
 

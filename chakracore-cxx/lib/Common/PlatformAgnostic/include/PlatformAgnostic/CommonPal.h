@@ -363,7 +363,7 @@ inline errno_t _wcserror_s(char16_t (&buffer)[size], int errnum)
 #define midl_user_allocate(size) \
     HeapAlloc(0, (size))
 #define midl_user_free(ptr) \
-    if (ptr != NULL) { HeapFree(GetProcessHeap(), NULL, ptr); }
+    if (ptr != NULL) { HeapFree(NULL, ptr); }
 
 uint32_t CharLowerBuffW(const char16_t* lpsz, uint32_t  cchLength);
 uint32_t CharUpperBuffW(const char16_t* lpsz, uint32_t  cchLength);
