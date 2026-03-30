@@ -276,13 +276,8 @@ enum CHARTYPE {
 };
 
 /* static data (read only, since we are re-entrant) */
-//#if defined (_UNICODE) || defined (CPRFLAG) || defined (FORMAT_VALIDATIONS)
-//extern const char __nullstring[];  /* string to print on null ptr */
-//extern const char16_t __wnullstring[];  /* string to print on null ptr */
-//#else  /* defined (_UNICODE) || defined (CPRFLAG) || defined (FORMAT_VALIDATIONS) */
 static const char __nullstring[] = "(null)";  /* string to print on null ptr */
 static const char16_t __wnullstring[] = {'(', 'n', 'u', 'l', 'l', ')', '\0'};/* string to print on null ptr */
-//#endif  /* defined (_UNICODE) || defined (CPRFLAG) || defined (FORMAT_VALIDATIONS) */
 
 /* The state table.  This table is actually two tables combined into one. */
 /* The lower nybble of each byte gives the character class of any         */
@@ -294,9 +289,6 @@ static const char16_t __wnullstring[] = {'(', 'n', 'u', 'l', 'l', ')', '\0'};/* 
 
 #ifndef FORMAT_VALIDATIONS
 
-//#if defined (_UNICODE) || defined (CPRFLAG)
-//extern const char __lookuptable[];
-//#else  /* defined (_UNICODE) || defined (CPRFLAG) */
 extern const char __lookuptable[] = {
  /* ' ' */  0x06,
  /* '!' */  0x00,
@@ -389,13 +381,8 @@ extern const char __lookuptable[] = {
  /* 'x' */  0x08
 };
 
-//#endif  /* defined (_UNICODE) || defined (CPRFLAG) */
-
 #else  /* FORMAT_VALIDATIONS */
 
-//#if defined (_UNICODE) || defined (CPRFLAG)
-//extern const unsigned char __lookuptable_s[];
-//#else  /* defined (_UNICODE) || defined (CPRFLAG) */
 static const unsigned char __lookuptable_s[] = {
  /* ' ' */  0x06,
  /* '!' */  0x80,
@@ -487,7 +474,6 @@ static const unsigned char __lookuptable_s[] = {
  /* 'w' */  0x07,
  /* 'x' */  0x08
 };
-//#endif  /* defined (_UNICODE) || defined (CPRFLAG) */
 
 #endif  /* FORMAT_VALIDATIONS */
 
@@ -506,18 +492,6 @@ static const unsigned char __lookuptable_s[] = {
 
 /* prototypes */
 
-#ifdef CPRFLAG
-
-#define WRITE_CHAR(ch, pnw)         write_char(ch, pnw)
-#define WRITE_MULTI_CHAR(ch, num, pnw)  write_multi_char(ch, num, pnw)
-#define WRITE_STRING(s, len, pnw)   write_string(s, len, pnw)
-
-static void write_char(_TCHAR ch, int *pnumwritten);
-static void write_multi_char(_TCHAR ch, int num, int *pnumwritten);
-static void write_string(const _TCHAR *string, int len, int *numwritten);
-
-#else  /* CPRFLAG */
-
 #define WRITE_CHAR(ch, pnw)         write_char(ch, stream, pnw)
 #define WRITE_MULTI_CHAR(ch, num, pnw)  write_multi_char(ch, num, stream, pnw)
 #define WRITE_STRING(s, len, pnw)   write_string(s, len, stream, pnw)
@@ -525,8 +499,6 @@ static void write_string(const _TCHAR *string, int len, int *numwritten);
 static void write_char(_TCHAR ch, miniFILE *f, int *pnumwritten);
 static void write_multi_char(_TCHAR ch, int num, miniFILE *f, int *pnumwritten);
 static void write_string(const _TCHAR *string, int len, miniFILE *f, int *numwritten);
-
-#endif  /* CPRFLAG */
 
 #ifdef __GNUC_VA_LIST
 
@@ -554,93 +526,6 @@ __inline long get_int64_arg(va_list *pargptr);
 #endif  /* _INTEGRAL_MAX_BITS >= 64    */
 
 #endif // __GNUC_VA_LIST
-
-#ifdef CPRFLAG
-static int output(const _TCHAR *, _locale_t , va_list);
-_CRTIMP int _vtcprintf_l (const _TCHAR *, _locale_t, va_list);
-_CRTIMP int _vtcprintf_s_l (const _TCHAR *, _locale_t, va_list);
-_CRTIMP int _vtcprintf_p_l (const _TCHAR *, _locale_t, va_list);
-
-
-/***
-*int _cprintf(format, arglist) - write formatted output directly to console
-*
-*Purpose:
-*   Writes formatted data like printf, but uses console I/O functions.
-*
-*Entry:
-*   char *format - format string to determine data formats
-*   arglist - list of POINTERS to where to put data
-*
-*Exit:
-*   returns number of characters written
-*
-*Exceptions:
-*
-*******************************************************************************/
-#ifndef FORMAT_VALIDATIONS
-_CRTIMP int _tcprintf_l (
-        const _TCHAR * format,
-        _locale_t plocinfo,
-        ...
-        )
-#else  /* FORMAT_VALIDATIONS */
-_CRTIMP int _tcprintf_s_l (
-        const _TCHAR * format,
-        _locale_t plocinfo,
-        ...
-        )
-#endif  /* FORMAT_VALIDATIONS */
-
-{
-        int ret;
-        va_list arglist;
-        va_start(arglist, plocinfo);
-
-#ifndef FORMAT_VALIDATIONS
-        ret = _vtcprintf_l(format, plocinfo, arglist);
-#else  /* FORMAT_VALIDATIONS */
-        ret = _vtcprintf_s_l(format, plocinfo, arglist);
-
-#endif  /* FORMAT_VALIDATIONS */
-
-        va_end(arglist);
-
-        return ret;
-}
-
-#ifndef FORMAT_VALIDATIONS
-_CRTIMP int _tcprintf (
-        const _TCHAR * format,
-        ...
-        )
-#else  /* FORMAT_VALIDATIONS */
-_CRTIMP int _tcprintf_s (
-        const _TCHAR * format,
-        ...
-        )
-#endif  /* FORMAT_VALIDATIONS */
-
-{
-        int ret;
-        va_list arglist;
-
-        va_start(arglist, format);
-
-#ifndef FORMAT_VALIDATIONS
-        ret = _vtcprintf_l(format, NULL, arglist);
-#else  /* FORMAT_VALIDATIONS */
-        ret = _vtcprintf_s_l(format, NULL, arglist);
-
-#endif  /* FORMAT_VALIDATIONS */
-
-        va_end(arglist);
-
-        return ret;
-}
-
-#endif  /* CPRFLAG */
-
 
 /***
 *int _output(stream, format, argptr), static int output(format, argptr)
@@ -673,36 +558,6 @@ _CRTIMP int _tcprintf_s (
 *Exceptions:
 *
 *******************************************************************************/
-#ifdef CPRFLAG
-#ifndef FORMAT_VALIDATIONS
-_CRTIMP int _vtcprintf (
-    const _TCHAR *format,
-    va_list argptr
-    )
-{
-    return _vtcprintf_l(format, NULL, argptr);
-}
-
-#else  /* FORMAT_VALIDATIONS */
-_CRTIMP int _vtcprintf_s (
-    const _TCHAR *format,
-    va_list argptr
-    )
-{
-    return _vtcprintf_s_l(format, NULL, argptr);
-}
-
-#endif  /* FORMAT_VALIDATIONS */
-#endif  /* CPRFLAG */
-
-#ifdef CPRFLAG
-#ifndef FORMAT_VALIDATIONS
-_CRTIMP int _vtcprintf_l (
-#else  /* FORMAT_VALIDATIONS */
-_CRTIMP int _vtcprintf_s_l (
-#endif  /* FORMAT_VALIDATIONS */
-#else  /* CPRFLAG */
-
 #ifdef _UNICODE
 #ifndef FORMAT_VALIDATIONS
 int _woutput (
@@ -722,7 +577,6 @@ int _output (
 #endif  /* FORMAT_VALIDATIONS */
 #endif  /* _UNICODE */
 
-#endif  /* CPRFLAG */
     const _TCHAR *format,
     va_list argptr
     )
@@ -757,9 +611,7 @@ int _output (
     int buffersize;                     /* size of text.sz (used only for the call to _cfltcvt) */
     int bufferiswide=0;         /* non-zero = buffer contains wide chars already */
 
-#ifndef CPRFLAG
     _VALIDATE_RETURN( (stream != NULL), EINVAL, -1);
-#endif  /* CPRFLAG */
     _VALIDATE_RETURN( (format != NULL), EINVAL, -1);
 
     charsout = 0;       /* no characters written yet */
@@ -1475,25 +1327,6 @@ int _output (
 *
 *******************************************************************************/
 
-#ifdef CPRFLAG
-
-static void write_char (
-    _TCHAR ch,
-    int *pnumwritten
-    )
-{
-#ifdef _UNICODE
-    if (_putwch_nolock(ch) == WEOF)
-#else  /* _UNICODE */
-    if (_putch_nolock(ch) == EOF)
-#endif  /* _UNICODE */
-        *pnumwritten = -1;
-    else
-        ++(*pnumwritten);
-}
-
-#else  /* CPRFLAG */
-
 static void write_char (
     _TCHAR ch,
     miniFILE *f,
@@ -1514,8 +1347,6 @@ static void write_char (
     else
         ++(*pnumwritten);
 }
-
-#endif  /* CPRFLAG */
 
 /***
 *void write_multi_char(char ch, int num, int *pnumwritten)
@@ -1542,22 +1373,6 @@ static void write_char (
 *
 *******************************************************************************/
 
-#ifdef CPRFLAG
-static void write_multi_char (
-    _TCHAR ch,
-    int num,
-    int *pnumwritten
-    )
-{
-    while (num-- > 0) {
-        write_char(ch, pnumwritten);
-        if (*pnumwritten == -1)
-            break;
-    }
-}
-
-#else  /* CPRFLAG */
-
 static void write_multi_char (
     _TCHAR ch,
     int num,
@@ -1571,8 +1386,6 @@ static void write_multi_char (
             break;
     }
 }
-
-#endif  /* CPRFLAG */
 
 /***
 *void write_string(const char *string, int len, int *pnumwritten)
@@ -1599,28 +1412,6 @@ static void write_multi_char (
 *
 *******************************************************************************/
 
-#ifdef CPRFLAG
-
-static void write_string (
-    const _TCHAR *string,
-    int len,
-    int *pnumwritten
-    )
-{
-    while (len-- > 0) {
-        write_char(*string++, pnumwritten);
-        if (*pnumwritten == -1)
-        {
-            if (errno == EILSEQ)
-                write_char(_T('?'), pnumwritten);
-            else
-                break;
-        }
-    }
-}
-
-#else  /* CPRFLAG */
-
 static void write_string (
     const _TCHAR *string,
     int len,
@@ -1644,7 +1435,6 @@ static void write_string (
         }
     }
 }
-#endif  /* CPRFLAG */
 
 // For GCC 64 bit, we can't cast to va_list *, so we need to make these functions defines.
 #ifndef __GNUC_VA_LIST

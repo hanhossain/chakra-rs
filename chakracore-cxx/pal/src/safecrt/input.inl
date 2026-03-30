@@ -85,21 +85,8 @@
 
 #define LEFT_BRACKET    ('[' | ('a' - 'A')) /* 'lowercase' version */
 
-#ifdef CPRFLAG
-
-#define INC()           (++charcount, _inc())
-#define EAT_WHITE()     _whiteout(&charcount)
-
-static int _inc(void);
-static void _un_inc(int);
-static int _whiteout(int *);
-
-#else  /* CPRFLAG */
-
 #define INC()           (++charcount, _inc(stream))
 #define EAT_WHITE()     _whiteout(&charcount, stream)
-
-#endif  /* CPRFLAG */
 
 #ifndef _UNICODE
 #define _ISDIGIT(chr)   isdigit((unsigned char)chr)
@@ -174,46 +161,3 @@ static int _whiteout(int *);
 *Exceptions:
 *
 *******************************************************************************/
-
-    #define _INTRN_LOCALE_CONV( x ) localeconv()
-
-/* _hextodec() returns a value of 0-15 and expects a char 0-9, a-f, A-F */
-/* _inc() is the one place where we put the actual getc code. */
-/* _whiteout() returns the first non-blank character, as defined by isspace() */
-
-#ifdef CPRFLAG
-
-static int _inc(void)
-{
-    return (_gettche_nolock());
-}
-
-static void _un_inc(int chr)
-{
-    if (_TEOF != chr) {
-        _ungettch_nolock(chr);
-    }
-}
-
-static int _whiteout(REG1 int* counter)
-{
-    REG2 int ch;
-
-    do
-    {
-        ++*counter;
-        ch = _inc();
-
-        if (ch == _TEOF)
-        {
-            break;
-        }
-    }
-    while(_istspace((_TUCHAR)ch));
-    return ch;
-}
-
-#else  /* CPRFLAG */
-
-#endif  /* CPRFLAG */
-
