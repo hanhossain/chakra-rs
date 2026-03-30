@@ -290,10 +290,6 @@ public:
     static const bool FakeZeroLengthArray = false;
     char * Alloc(size_t byteSize)
     {
-        if (processHeap == NULL)
-        {
-            processHeap = GetProcessHeap();
-        }
         char *buffer = (char *)malloc(byteSize);
         if (buffer != nullptr)
         {
@@ -313,7 +309,6 @@ public:
     }
     void Free(void * buffer, size_t byteSize)
     {
-        Assert(processHeap != NULL);
         if (buffer != nullptr) { free(buffer); }
     }
 
@@ -323,7 +318,6 @@ public:
     void ClearTrackAllocInfo(TrackAllocData* data = NULL) {}
 #endif
     static NoCheckHeapAllocator Instance;
-    static HANDLE processHeap;
 };
 
 #ifdef CHECK_MEMORY_LEAK

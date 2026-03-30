@@ -36,7 +36,6 @@ MemoryLeakCheck MemoryLeakCheck::leakCheck;
 HeapAllocator HeapAllocator::Instance;
 NoThrowHeapAllocator NoThrowHeapAllocator::Instance;
 NoCheckHeapAllocator NoCheckHeapAllocator::Instance;
-HANDLE NoCheckHeapAllocator::processHeap = nullptr;
 
 template <bool noThrow>
 char * HeapAllocator::AllocT(size_t byteSize)

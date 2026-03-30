@@ -1233,11 +1233,6 @@ VirtualQueryEx(
           PMEMORY_BASIC_INFORMATION lpBuffer,
           size_t dwLength);
 
-// TODO (hanhossain): public
-HANDLE
-GetProcessHeap(
-           void);
-
 #define HEAP_ZERO_MEMORY 0x00000008
 
 // TODO (hanhossain): public
