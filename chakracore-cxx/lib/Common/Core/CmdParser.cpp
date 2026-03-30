@@ -354,7 +354,7 @@ void
 CmdLineArgsParser::ParsePhase(Js::Phases *pPhaseList, Js::Phases *oppositePhase)
 {
     char16_t buffer[MaxTokenSize];
-    ZeroMemory(buffer, sizeof(buffer));
+    memset((buffer),0,(sizeof(buffer)));
 
     Phase phase = ConfigFlagsTable::GetPhase(ParseString(buffer));
     if(InvalidPhase == phase)
@@ -485,7 +485,7 @@ BSTR
 CmdLineArgsParser::GetCurrentString()
 {
     char16_t buffer[MaxTokenSize];
-    ZeroMemory(buffer, sizeof(buffer));
+    memset((buffer),0,(sizeof(buffer)));
 
     switch (CurChar())
     {
@@ -523,7 +523,7 @@ void
 CmdLineArgsParser::ParseFlag()
 {
     char16_t buffer[MaxTokenSize];
-    ZeroMemory(buffer, sizeof(buffer));
+    memset((buffer),0,(sizeof(buffer)));
 
     char16_t* flagString = ParseString(buffer);
     Flag flag = ConfigFlagsTable::GetFlag(flagString);
@@ -642,7 +642,7 @@ int CmdLineArgsParser::Parse(char16_t* oneArg) throw()
 {
     int err = 0;
     char16_t buffer[MaxTokenSize];
-    ZeroMemory(buffer, sizeof(buffer));
+    memset((buffer),0,(sizeof(buffer)));
 
     this->pszCurrentArg = oneArg;
     AssertMsg(NULL != this->pszCurrentArg, "How can command line give NULL argv's");

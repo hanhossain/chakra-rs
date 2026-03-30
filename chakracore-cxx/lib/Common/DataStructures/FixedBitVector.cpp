@@ -146,7 +146,7 @@ BVFixed::SetAll()
 void
 BVFixed::ClearAll()
 {
-    ZeroMemory(&this->data[0], WordCount() * sizeof(BVUnit));
+    memset((&this->data[0]),0,(WordCount() * sizeof(BVUnit)));
 }
 
 BOOLEAN

@@ -329,7 +329,7 @@ namespace Js
         for(int i=0; i < FlagCount; flagPresent[i++] = false);
 
         // set mark for parent flags
-        ZeroMemory(this->flagIsParent, sizeof(this->flagIsParent));
+        memset((this->flagIsParent),0,(sizeof(this->flagIsParent)));
 #define FLAG(type, name, description, defaultValue, parentName, ...) \
         if ((int)parentName##Flag < FlagCount) this->flagIsParent[(int) parentName##Flag] = true;
 #include "Interface/ConfigFlagsList.h"

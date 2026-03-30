@@ -63,7 +63,7 @@ CPalObjectBase::Initialize(
         m_pvImmutableData = malloc(m_pot->GetImmutableDataSize());
         if (NULL != m_pvImmutableData)
         {
-            ZeroMemory(m_pvImmutableData, m_pot->GetImmutableDataSize());
+            memset((m_pvImmutableData),0,(m_pot->GetImmutableDataSize()));
         }
         else
         {
@@ -85,7 +85,7 @@ CPalObjectBase::Initialize(
         m_pvLocalData = malloc(m_pot->GetProcessLocalDataSize());
         if (NULL != m_pvLocalData)
         {
-            ZeroMemory(m_pvLocalData, m_pot->GetProcessLocalDataSize());
+            memset((m_pvLocalData),0,(m_pot->GetProcessLocalDataSize()));
         }
         else
         {

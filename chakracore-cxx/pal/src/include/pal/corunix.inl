@@ -33,7 +33,7 @@ namespace CorUnix
         uint32_t dwAllowedTypeCount
     )
     {
-        ZeroMemory(m_rgfAllowedTypes, sizeof(m_rgfAllowedTypes));
+        memset((m_rgfAllowedTypes),0,(sizeof(m_rgfAllowedTypes)));
         for (uint32_t dw = 0; dw < dwAllowedTypeCount; dw += 1)
         {
             _ASSERTE(rgAllowedTypes[dw] != ObjectTypeIdCount);
@@ -45,7 +45,7 @@ namespace CorUnix
        PalObjectTypeId eAllowedType
        )
     {
-        ZeroMemory(m_rgfAllowedTypes, sizeof(m_rgfAllowedTypes));
+        memset((m_rgfAllowedTypes),0,(sizeof(m_rgfAllowedTypes)));
 
         _ASSERTE(eAllowedType != ObjectTypeIdCount);
         m_rgfAllowedTypes[eAllowedType] = TRUE;

@@ -62,7 +62,7 @@ CPalString::CopyString(
         {
             _ASSERTE(NULL != psSource->GetString());
 
-            CopyMemory(
+            memcpy(
                 pwsz,
                 psSource->GetString(),
                 psSource->GetMaxLength() * sizeof(char16_t)

@@ -1234,15 +1234,6 @@ VirtualQueryEx(
           size_t dwLength);
 
 // TODO (hanhossain): public
-void
-RtlZeroMemory(
-     void * Destination,
-     size_t Length);
-
-#define CopyMemory memcpy
-#define ZeroMemory(Destination,Length) memset((Destination),0,(Length))
-
-// TODO (hanhossain): public
 HANDLE
 GetProcessHeap(
            void);

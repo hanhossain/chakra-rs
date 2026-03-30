@@ -59,25 +59,6 @@ malloc_zone_t *s_pExecutableHeap = NULL;
 
 /*++
 Function:
-  RtlZeroMemory
-
-See MSDN doc.
---*/
-void
-RtlZeroMemory(
-    void * Destination,
-    size_t Length
-)
-{
-    ENTRY("RtlZeroMemory(Destination:%p, Length:%x)\n", Destination, Length);
-
-    memset(Destination, 0, Length);
-
-    LOGEXIT("RtlZeroMemory returning.\n");
-}
-
-/*++
-Function:
   HeapCreate
 
 See MSDN doc.

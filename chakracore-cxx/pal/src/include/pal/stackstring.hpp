@@ -103,7 +103,7 @@ public:
         if (NULL == m_buffer)
             return FALSE;
 
-        CopyMemory(m_buffer, buffer, (count + 1) * sizeof(T));
+        memcpy(m_buffer, buffer, (count + 1) * sizeof(T));
         NullTerminate();
         return TRUE;
     }

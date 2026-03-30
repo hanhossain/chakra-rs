@@ -1111,13 +1111,13 @@ using namespace Js;
             PROBE_STACK(scriptContext, actualLength * sizeof(Var) + Js::Constants::MinStackDefault); // args + function call
             outArgsSize = actualLength * sizeof(Var);
             outArgs.Values = (Var*)_alloca(outArgsSize);
-            ZeroMemory(outArgs.Values, outArgsSize);
+            memset((outArgs.Values),0,(outArgsSize));
         }
         else
         {
             outArgs.Values = stackArgs;
             outArgsSize = STACK_ARGS_ALLOCA_THRESHOLD * sizeof(Var);
-            ZeroMemory(outArgs.Values, outArgsSize); // We may not use all of the elements
+            memset((outArgs.Values),0,(outArgsSize)); // We may not use all of the elements
         }
 
         SpreadArgs(args, outArgs, spreadIndices, scriptContext);
