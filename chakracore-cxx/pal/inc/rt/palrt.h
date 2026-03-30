@@ -667,10 +667,6 @@ enum tagMIMECONTF {
 #define LOCALE_SDATE              0x0000001D
 #define LOCALE_STIME              0x0000001E
 
-#define CSTR_LESS_THAN            1
-#define CSTR_EQUAL                2
-#define CSTR_GREATER_THAN         3
-
 #define NORM_IGNORENONSPACE       0x00000002
 
 #define WC_COMPOSITECHECK         0x00000000 // NOTE: diff from winnls.h

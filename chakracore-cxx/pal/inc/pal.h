@@ -1240,41 +1240,8 @@ FlushInstructionCache(
                const void * lpBaseAddress,
                size_t dwSize);
 
-#define NORM_IGNORECASE           0x00000001  // ignore case
-
-#ifdef __APPLE__
-#define NORM_IGNORENONSPACE       0x00000002  // ignore nonspacing chars
-#define NORM_IGNORESYMBOLS        0x00000004  // ignore symbols
-#define NORM_IGNOREKANATYPE       0x00010000  // ignore kanatype
-#define SORT_STRINGSORT           0x00001000  // use string sort method
-#else // LINUX
-// Flags with no value on a given platform are given 0 so that program logic can be unaltered (a|0==a)
-#define NORM_IGNORENONSPACE       0x00000000  // ignore nonspacing chars
-#define NORM_IGNORESYMBOLS        0x00000000  // ignore symbols
-#define NORM_IGNOREKANATYPE       0x00000000  // ignore kanatype
-#define SORT_STRINGSORT           0x00000000  // use string sort method
-#endif // __APPLE__
-// __APPLE__ and LINUX
-// Flags with no value on a given platform are given 0 so that program logic can be unaltered (a|0==a)
-#define SORT_DIGITSASNUMBERS      0x00000000  // Sort digits as numbers (ie: 2 comes before 10)
-
-
-typedef struct nlsversioninfo {
-  uint32_t     dwNLSVersionInfoSize;
-  uint32_t     dwNLSVersion;
-  uint32_t     dwDefinedVersion;
-} NLSVERSIONINFO, *LPNLSVERSIONINFO;
-
-#define CSTR_EQUAL         2
-
-#define CompareString  CompareStringW
-
 #define MAX_LEADBYTES         12
 #define MAX_DEFAULTCHAR       2
-
-// TODO (hanhossain): internal
-uint32_t
-GetACP(void);
 
 typedef struct _cpinfo {
     uint32_t MaxCharSize;
@@ -1373,19 +1340,6 @@ typedef uint32_t CALID;
 
 typedef BOOL (CALLBACK* CALINFO_ENUMPROCEXW)(char16_t*,CALID);
 typedef BOOL (CALLBACK* CALINFO_ENUMPROCEXEXW)(char16_t*, CALID, char16_t*, ptrdiff_t);
-
-// TODO (hanhossain): public
-int
-LCMapStringEx(
-     const char16_t*    lpLocaleName,
-     uint32_t   dwMapFlags,
-     const char16_t* lpSrcStr,
-     int     cchSrc,
-     char16_t* lpDestStr,
-     int     cchDest,
-     LPNLSVERSIONINFO lpVersionInformation,
-     void * lpReserved,
-     ptrdiff_t lParam );
 
 // "a number", might represent different types
 typedef struct PALNUMBER__* PALNUMBER;
