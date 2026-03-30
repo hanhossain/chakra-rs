@@ -776,8 +776,6 @@ PHASE(All)
 #define DEFAULT_CONFIG_TypeSnapshotEnumeration (true)
 #define DEFAULT_CONFIG_ConcurrentRuntime (false)
 #define DEFAULT_CONFIG_PrimeRecycler     (false)
-// Don't use PrivateHeap on xplat where we statically link and override new/delete
-#define DEFAULT_CONFIG_PrivateHeap       (false)
 #define DEFAULT_CONFIG_DisableRentalThreading (false)
 #define DEFAULT_CONFIG_DisableDebugObject (false)
 #define DEFAULT_CONFIG_DumpHeap (false)
@@ -1297,7 +1295,6 @@ FLAGNR(Phases,  Memspect,              "Enables memspect tracking to perform mem
 #endif
 FLAGNR(Number,  PolymorphicInlineThreshold     , "Maximum size in bytecodes of a polymorphic inline candidate", DEFAULT_CONFIG_PolymorphicInlineThreshold)
 FLAGNR(Boolean, PrimeRecycler         , "Prime the recycler first", DEFAULT_CONFIG_PrimeRecycler)
-FLAGNR(Boolean, PrivateHeap           , "Use HeapAlloc with a private heap", DEFAULT_CONFIG_PrivateHeap)
 FLAGNR(Boolean, TraceEngineRefcount   , "Output traces for ScriptEngine AddRef/Release to debug lifetime management", false)
 #if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
 FLAGNR(Boolean, LeakStackTrace ,        "Include stack trace on leaked pinned object and heap objects", false)

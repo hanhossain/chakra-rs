@@ -196,10 +196,6 @@ struct HeapAllocator
 private:
     HANDLE m_privateHeap;
 
-    void InitPrivateHeap();
-    void DestroyPrivateHeap();
-    HANDLE GetPrivateHeap();
-
 public:
 
 #ifdef TRACK_ALLOC
