@@ -1267,20 +1267,6 @@ typedef struct nlsversioninfo {
 
 #define CSTR_EQUAL         2
 
-// TODO (hanhossain): public
-int
-CompareStringEx(
-     const char16_t* lpLocaleName,
-     uint32_t    dwCmpFlags,
-     const char16_t*  lpString1,
-     int      cchCount1,
-     const char16_t*  lpString2,
-     int      cchCount2,
-     LPNLSVERSIONINFO lpVersionInformation,
-     void * lpReserved,
-     ptrdiff_t lParam);
-
-
 #define CompareString  CompareStringW
 
 #define MAX_LEADBYTES         12
