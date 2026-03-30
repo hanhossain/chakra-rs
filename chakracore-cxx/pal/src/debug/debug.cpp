@@ -316,10 +316,6 @@ DebugBreakCommand()
         char pid_buf[sizeof (PID_TEXT) + 32];
         PathCharString exe_bufString;
         int libNameLength = 10;
-        if (exe_module.lib_name != NULL)
-        {
-            libNameLength = PAL_wcslen(exe_module.lib_name);
-        }
 
         size_t dwexe_buf = strlen(EXE_TEXT) + libNameLength + 1;
         char * exe_buf = exe_bufString.OpenStringBuffer(dwexe_buf);
@@ -330,9 +326,6 @@ DebugBreakCommand()
         }
 
         if (snprintf (pid_buf, sizeof (pid_buf), PID_TEXT "%d", getpid()) <= 0) {
-            goto FAILED;
-        }
-        if (snprintf (exe_buf, sizeof (char) * (dwexe_buf + 1), EXE_TEXT "%ls", (char16_t *)exe_module.lib_name) <= 0) {
             goto FAILED;
         }
 

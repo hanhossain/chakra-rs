@@ -66,9 +66,6 @@ SET_DEFAULT_DEBUG_CHANNEL(LOADER);
 
 /* macro definitions **********************************************************/
 
-/* get the full name of a module if available, and the short name otherwise*/
-#define MODNAME(x) ((x)->lib_name)
-
 /* Which path should FindLibrary search? */
 #if defined(__APPLE__)
 #define LIBSEARCHPATH "DYLD_LIBRARY_PATH"
@@ -85,7 +82,6 @@ CRITICAL_SECTION module_critsec;
 
 /* always the first, in the in-load-order list */
 MODSTRUCT exe_module;
-MODSTRUCT *pal_module = nullptr;
 
 char * g_szCoreCLRPath = nullptr;
 size_t g_cbszCoreCLRPath = MAX_LONGPATH * sizeof(char);
@@ -94,8 +90,6 @@ int MaxWCharToAcpLength = 3;
 
 /* static function declarations ***********************************************/
 
-static BOOL LOADValidateModule(MODSTRUCT *module);
-static char16_t* LOADGetModuleFileName(MODSTRUCT *module);
 static BOOL LOADCallDllMainSafe(MODSTRUCT *module, uint32_t dwReason, void * lpReserved);
 
 /* API function definitions ***************************************************/
@@ -119,48 +113,15 @@ GetModuleFileNameW(
      char16_t* lpFileName,
      uint32_t nSize)
 {
-    int32_t name_length;
     uint32_t retval = 0;
-    char16_t* wide_name = nullptr;
 
     ENTRY("GetModuleFileNameW (hModule=%p, lpFileName=%p, nSize=%u)\n",
           hModule, lpFileName, nSize);
 
-    LockModuleList();
-
     wcscpy_s(lpFileName, nSize, W(""));
 
-    if (hModule && !LOADValidateModule((MODSTRUCT *)hModule))
-    {
-        TRACE("Can't find name for invalid module handle %p\n", hModule);
-        SetLastError(ERROR_INVALID_HANDLE);
-        goto done;
-    }
-    wide_name = LOADGetModuleFileName((MODSTRUCT *)hModule);
+    SetLastError(ERROR_INTERNAL_ERROR);
 
-    if (!wide_name)
-    {
-        TRACE("Can't find name for valid module handle %p\n", hModule);
-        SetLastError(ERROR_INTERNAL_ERROR);
-        goto done;
-    }
-
-    /* Copy module name into supplied buffer */
-
-    name_length = lstrlenW(wide_name);
-    if (name_length >= (int32_t)nSize)
-    {
-        TRACE("Buffer too small (%u) to copy module's file name (%u).\n", nSize, name_length);
-        SetLastError(ERROR_INSUFFICIENT_BUFFER);
-        goto done;
-    }
-
-    wcscpy_s(lpFileName, nSize, wide_name);
-
-    TRACE("file name of module %p is %S\n", hModule, lpFileName);
-    retval = name_length;
-done:
-    UnlockModuleList();
     LOGEXIT("GetModuleFileNameW returns DWORD %u\n", retval);
     return retval;
 }
@@ -212,7 +173,6 @@ BOOL LOADInitializeModules()
         ERROR("Executable module will be broken : dlopen(nullptr) failed dlerror message is \"%s\" \n", dlerror());
         return FALSE;
     }
-    exe_module.lib_name = nullptr;
     exe_module.refcount = -1;
     exe_module.next = &exe_module;
     exe_module.prev = &exe_module;
@@ -220,69 +180,6 @@ BOOL LOADInitializeModules()
     exe_module.hinstance = nullptr;
     exe_module.threadLibCalls = TRUE;
     return TRUE;
-}
-
-/*++
-Function :
-    LOADSetExeName
-
-    Set the exe name path
-
-Parameters :
-    char16_t* man exe path and name
-
-Return value :
-    TRUE  if initialization succeedded
-    FALSE otherwise
-
---*/
-extern "C"
-BOOL LOADSetExeName(char16_t* name)
-{
-#if RETURNS_NEW_HANDLES_ON_REPEAT_DLOPEN
-    char* pszExeName = nullptr;
-#endif
-    BOOL result = FALSE;
-
-    LockModuleList();
-
-    // Save the exe path in the exe module struct
-    free(exe_module.lib_name);
-    exe_module.lib_name = name;
-
-    // For platforms where we can't trust the handle to be constant, we need to
-    // store the inode/device pairs for the modules we just initialized.
-#if RETURNS_NEW_HANDLES_ON_REPEAT_DLOPEN
-    {
-        struct stat stat_buf;
-        pszExeName = UTIL_WCToMB_Alloc(name, -1);
-        if (nullptr == pszExeName)
-        {
-            ERROR("WCToMB failure, unable to get full name of exe\n");
-            goto exit;
-        }
-        if (-1 == stat(pszExeName, &stat_buf))
-        {
-            SetLastError(ERROR_MOD_NOT_FOUND);
-            goto exit;
-        }
-        TRACE("Executable has inode %d and device %d\n", stat_buf.st_ino, stat_buf.st_dev);
-
-        exe_module.inode = stat_buf.st_ino;
-        exe_module.device = stat_buf.st_dev;
-    }
-#endif
-    result = TRUE;
-
-#if RETURNS_NEW_HANDLES_ON_REPEAT_DLOPEN
-exit:
-    if (pszExeName)
-    {
-        free(pszExeName);
-    }
-#endif
-    UnlockModuleList();
-    return result;
 }
 
 /*++
@@ -420,84 +317,6 @@ static BOOL LOADCallDllMainSafe(MODSTRUCT *module, uint32_t dwReason, void * lpR
 #endif /* _ENABLE_DEBUG_MESSAGES_ */
 
     return param.ret;
-}
-
-/*++
-Function :
-    LOADValidateModule
-
-    Check whether the given MODSTRUCT pointer is valid
-
-Parameters :
-    MODSTRUCT *module : module to check
-
-Return value :
-    TRUE if module is valid, FALSE otherwise
-
-NOTE :
-    The module lock MUST be owned.
-
---*/
-static BOOL LOADValidateModule(MODSTRUCT *module)
-{
-    MODSTRUCT *modlist_enum = &exe_module;
-
-    /* enumerate through the list of modules to make sure the given handle is
-       really a module (HMODULEs are actually MODSTRUCT pointers) */
-    do
-    {
-        if (module == modlist_enum)
-        {
-            /* found it; check its integrity to be on the safe side */
-            if (module->self != module)
-            {
-                ERROR("Found corrupt module %p!\n",module);
-                return FALSE;
-            }
-            TRACE("Module %p is valid (name : %S)\n", module, MODNAME(module));
-            return TRUE;
-        }
-        modlist_enum = modlist_enum->next;
-    }
-    while (modlist_enum != &exe_module);
-
-    TRACE("Module %p is NOT valid.\n", module);
-    return FALSE;
-}
-
-/*++
-Function :
-    LOADGetModuleFileName [internal]
-
-    Retrieve the module's full path if it is known, the short name given to
-    LoadLibrary otherwise.
-
-Parameters :
-    MODSTRUCT *module : module to check
-
-Return value :
-    pointer to internal buffer with name of module (Unicode)
-
-Notes :
-    this function assumes that the module critical section is held, and that
-    the module has already been validated.
---*/
-static char16_t* LOADGetModuleFileName(MODSTRUCT *module)
-{
-    char16_t* module_name;
-    /* special case : if module is NULL, we want the name of the executable */
-    if (!module)
-    {
-        module_name = exe_module.lib_name;
-        TRACE("Returning name of main executable\n");
-        return module_name;
-    }
-
-    /* return "real" name of module if it is known. we have this if LoadLibrary
-       was given an absolute or relative path; we can also determine it at the
-       first GetProcAddress call. */
-    TRACE("Returning full path name of module\n");
-    return module->lib_name;
 }
 
 /*++
