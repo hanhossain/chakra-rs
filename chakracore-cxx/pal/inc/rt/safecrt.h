@@ -3098,9 +3098,8 @@ int vswprintf_s(char16_t (&_Dst)[_SizeInWords], const char16_t *_Format, va_list
 
 /* no inline version of swprintf_s, vswprintf_s */
 
-/* _snprintf_s, _vsnprintf_s */
 /*
- * _snprintf_s, _snwprintf_s, _vsnprintf_s, _vsnwprintf_s format a string and copy at max _Count characters into _Dst;
+ * _snwprintf_s, _vsnwprintf_s format a string and copy at max _Count characters into _Dst;
  * need safecrt.lib and msvcrt.dll;
  * string _Dst will always be null-terminated;
  * will call _SAFECRT_INVALID_PARAMETER if there is not enough space in _Dst;
