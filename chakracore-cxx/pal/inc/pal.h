@@ -2130,8 +2130,6 @@ typedef int errno_t;
 // TODO (hanhossain): public
 errno_t memmove_s(void *, size_t, const void *, size_t);
 // TODO (hanhossain): internal
-void * memmove_xplat(void *, const void *, size_t);
-// TODO (hanhossain): internal
 char * _strlwr(char *);
 // TODO (hanhossain): internal
 unsigned char * _mbsdec(const unsigned char *, const unsigned char *);

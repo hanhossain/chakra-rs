@@ -40,45 +40,6 @@
 #endif
 
 /*
-usage: see https://msdn.microsoft.com/en-us/library/8k35d1fx.aspx
-
-notes: uses extra buffer in case the src/dst overlaps (osx/bsd)
-
-dest
-    Destination object.
-
-src
-    Source object.
-
-count
-    Number of bytes (memmove) to copy.
-*/
-extern "C" void* memmove_xplat(
-    void * dst,
-    const void * src,
-    size_t count
-)
-{
-#if defined(__APPLE__) || defined(__FreeBSD__)
-    if (static_cast<const char*>(src) <= static_cast<char*>(dst) && 
-        static_cast<const char*>(src) + count > static_cast<char*>(dst))
-    {
-        char *temp = static_cast<char*>(malloc(count));
-        _VALIDATE_RETURN_ERRCODE(temp != NULL, NULL);
-
-        memcpy(temp, src, count);
-        memcpy(dst, temp, count);
-
-        free(temp);
-        return dst;
-    }
-#endif
-
-    return memmove(dst, src, count);
-}
-
-
-/*
 usage: see https://msdn.microsoft.com/en-us/library/e2851we8.aspx
 
 dest
@@ -111,6 +72,6 @@ extern "C" int memmove_s(
     _VALIDATE_RETURN_ERRCODE(src != NULL, EINVAL);
     _VALIDATE_RETURN_ERRCODE(sizeInBytes >= count, ERANGE);
 
-    void *ret_val = memmove_xplat(dst, src, count);
+    void *ret_val = memmove(dst, src, count);
     return ret_val != NULL ? 0 : ENOMEM; // memmove_xplat returns `NULL` only if ENOMEM
 }
