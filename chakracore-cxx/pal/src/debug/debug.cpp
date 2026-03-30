@@ -32,7 +32,6 @@ Revision History:
 #include "pal/debug.h"
 #include "pal/misc.h"
 #include <new>
-#include "pal/module.h"
 #include "pal/stackstring.hpp"
 #include "pal/virtual.h"
 
@@ -310,7 +309,6 @@ int
 DebugBreakCommand()
 {
 #ifdef ENABLE_RUN_ON_DEBUG_BREAK
-    extern MODSTRUCT exe_module;
     const char *command_string = getenv (PAL_RUN_ON_DEBUG_BREAK);
     if (command_string) {
         char pid_buf[sizeof (PID_TEXT) + 32];

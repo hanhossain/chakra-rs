@@ -33,7 +33,6 @@ Abstract:
 #include "pal/shmemory.h"
 #include "pal/process.h"
 #include "../thread/procprivate.hpp"
-#include "pal/module.h"
 #include "pal/virtual.h"
 #include "pal/misc.h"
 #include "pal/utils.h"
@@ -248,16 +247,6 @@ Initialize()
         // It's now safe to access our thread data
         //
         g_fThreadDataAvailable = TRUE;
-
-        //
-        // Initialize module manager
-        //
-        if (FALSE == LOADInitializeModules())
-        {
-            ERROR("Unable to initialize module manager\n");
-            palError = ERROR_INTERNAL_ERROR;
-            goto CLEANUP1b;
-        }
 
         //
         // Initialize the object manager

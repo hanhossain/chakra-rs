@@ -17,7 +17,6 @@
 #include "pal/dbgmsg.h"
 #include "pal/thread.hpp"
 #include "../thread/procprivate.hpp"
-#include "pal/module.h"
 
 using namespace CorUnix;
 
