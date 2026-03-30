@@ -8,7 +8,6 @@ set(CMAKE_COLOR_DIAGNOSTICS ON)
 set(CMAKE_COMPILE_WARNING_AS_ERROR ON)
 
 option(DISABLE_JIT "Disable JIT compilation" OFF)
-option(INTL_ICU "Enable Intl" ON)
 
 if(CC_USES_SYSTEM_ARCH OR NOT CHAKRACORE_BUILD)
     if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
@@ -39,17 +38,14 @@ if(ICU_INCLUDE_PATH)
     set(ICU_LIBRARY_PATH "${ICU_INCLUDE_PATH}/../lib/")
     find_library(ICUUC icuuc PATHS ${ICU_LIBRARY_PATH} NO_DEFAULT_PATH)
 
-    if(INTL_ICU)
-        add_definitions(-DINTL_ICU=1)
-        find_library(ICUIN icui18n PATHS ${ICU_LIBRARY_PATH} NO_DEFAULT_PATH)
-        # In a default install, ICU header files are all in ICU_ROOT/include
-        # However, for Node, the include/ folder is never generated, so we have to look
-        # in NODE/deps/icu/source/{common|i18n} for headers
-        set(ICU_INCLUDE_PATH
-            "${ICU_INCLUDE_PATH}"
-            "${ICU_INCLUDE_PATH}/../i18n/"
-        )
-    endif()
+    find_library(ICUIN icui18n PATHS ${ICU_LIBRARY_PATH} NO_DEFAULT_PATH)
+    # In a default install, ICU header files are all in ICU_ROOT/include
+    # However, for Node, the include/ folder is never generated, so we have to look
+    # in NODE/deps/icu/source/{common|i18n} for headers
+    set(ICU_INCLUDE_PATH
+        "${ICU_INCLUDE_PATH}"
+        "${ICU_INCLUDE_PATH}/../i18n/"
+    )
 
     if(ICUUC)
         message("-- found ICU libs: ${ICU_LIBRARY_PATH}")
@@ -65,26 +61,14 @@ if(ICU_INCLUDE_PATH)
     endif()
 endif()
 
-if(CC_TARGET_OS_LINUX)
-    if(SYSTEM_ICU OR (NOT ICU_INCLUDE_PATH AND NOT NO_ICU))
-        set(ICU_LIBRARIES "icuuc")
-        if(INTL_ICU)
-            add_definitions(-DINTL_ICU=1)
-            set(ICU_LIBRARIES
-                ${ICU_LIBRARIES}
-                icui18n
-            )
-        endif()
-        add_definitions(-DHAS_REAL_ICU=1)
-        add_definitions(-DHAS_ICU)
-    endif()
-elseif(CC_TARGET_OS_OSX)
-    # in case ICU path was given but it doesn't exist, build script will fail.
-    # so, fallback only if ICU path wasn't given
-    if(NOT ICU_INCLUDE_PATH)
-        set(NO_ICU 1)
-        message("-- Couldn't find ICU. Falling back to NO_ICU build")
-    endif()
+if(SYSTEM_ICU OR (NOT ICU_INCLUDE_PATH))
+    set(ICU_LIBRARIES "icuuc")
+    set(ICU_LIBRARIES
+        ${ICU_LIBRARIES}
+        icui18n
+    )
+    add_definitions(-DHAS_REAL_ICU=1)
+    add_definitions(-DHAS_ICU)
 endif()
 
 set(CLR_CMAKE_PLATFORM_XPLAT 1)

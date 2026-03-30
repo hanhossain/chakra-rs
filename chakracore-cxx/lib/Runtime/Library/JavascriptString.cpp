@@ -2351,13 +2351,8 @@ case_2:
         // TODO(jahorto): A truly PlatformAgnostic API wouldn't require cases like this. Once PlatformAgnostic is allowed to use
         // Chakra's memory subsystems, this API should be converted to one that only takes a source string and returns a Recycler-allocated
         // string in the correct case, performed using whatever operation is the fastest available on that platform.
-#ifdef INTL_ICU
         charcount_t guessBufferLength = UInt32Math::Add(pThisLength, 1);
         char16_t *guessBuffer = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, guessBufferLength);
-#else
-        charcount_t guessBufferLength = 0;
-        char16_t *guessBuffer = nullptr;
-#endif
 
         charcount_t requiredStringLength = ChangeStringLinguisticCase<toUpper, useInvariant>(pThis->GetSz(), pThis->GetLength(), guessBuffer, guessBufferLength, &error);
         if (error == ApiError::OutOfMemory)
@@ -2369,7 +2364,6 @@ case_2:
         // never result in a zero-length string.
         AssertOrFailFast(requiredStringLength > 0 && IsValidCharCount(requiredStringLength));
 
-#ifdef INTL_ICU
         if (error == ApiError::NoError)
         {
             if (requiredStringLength == 1)
@@ -2384,18 +2378,6 @@ case_2:
             }
         }
         AssertOrFailFast(error == ApiError::InsufficientBuffer);
-#else
-        AssertOrFailFast(error == ApiError::NoError);
-        if (requiredStringLength == 1)
-        {
-            // this one-char string special case is only for non-ICU because there should never be a case where the error
-            // was InsufficientBufer but the required length was 1
-            char16_t buffer[2] = { pThis->GetSz()[0], 0 };
-            charcount_t actualStringLength = ChangeStringLinguisticCase<toUpper, useInvariant>(pThis->GetSz(), pThis->GetLength(), buffer, 2, &error);
-            AssertOrFailFast(actualStringLength == 1 && error == ApiError::NoError);
-            return scriptContext->GetLibrary()->GetCharStringCache().GetStringForChar(buffer[0]);
-        }
-#endif
 
         AssertOrFailFast(requiredStringLength > 1);
 

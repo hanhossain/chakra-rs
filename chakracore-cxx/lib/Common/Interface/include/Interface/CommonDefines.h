@@ -98,9 +98,7 @@
 #endif
 
 // Language features
-#if !defined(CHAKRACORE_LITE) && defined(INTL_ICU)
 #define ENABLE_INTL_OBJECT                          // Intl support
-#endif
 
 #define ENABLE_JS_BUILTINS                          // Built In functions support
 
@@ -127,9 +125,7 @@
 #define BUCKETIZE_MEDIUM_ALLOCATIONS 1              // *** TODO: Won't build if disabled currently
 #define SMALLBLOCK_MEDIUM_ALLOC 1                   // *** TODO: Won't build if disabled currently
 #define LARGEHEAPBLOCK_ENCODING 1                   // Large heap block metadata encoding
-#ifndef CHAKRACORE_LITE
 #define IDLE_DECOMMIT_ENABLED 1                     // Idle Decommit
-#endif
 
 #if defined(ENABLE_DEBUG_CONFIG_OPTIONS)
 #define RECYCLER_PAGE_HEAP                          // PageHeap support
@@ -142,11 +138,7 @@
 
 #define SYSINFO_IMAGE_BASE_AVAILABLE 0
 
-#ifdef CHAKRACORE_LITE
-#define USE_VPM_TABLE 0
-#else
 #define USE_VPM_TABLE 1
-#endif
 
 
 // templatized code
