@@ -343,7 +343,8 @@ inline char16_t* wmemset(char16_t* wcs, char16_t wc, size_t n)
 
 inline errno_t wmemcpy_s(char16_t* dest, size_t destSize, const char16_t* src, size_t count)
 {
-    return memcpy_s(dest, sizeof(char16_t) * destSize, src, sizeof(char16_t) * count);
+    memcpy(dest, src, sizeof(char16_t) * count);
+    return 0;
 }
 
 inline int _wunlink(const char16_t* filename)

@@ -872,7 +872,7 @@ namespace regex
             if (currentIndex == arraySize)
             {
                 T * newChunk = AllocatorNewArray(TAllocator, allocator, T, arraySize + chunkSize);
-                memcpy_s(newChunk, (arraySize + chunkSize) * sizeof(T), arrayData, arraySize * sizeof(T));
+                memcpy(newChunk, arrayData, arraySize * sizeof(T));
 
                 if (arrayData)
                 {

@@ -258,7 +258,7 @@ namespace Js
         OpLayoutT_AsmShuffle<SizePolicy> layout;
         if (SizePolicy::Assign(layout.R0, R0) && SizePolicy::Assign(layout.R1, R1) && SizePolicy::Assign(layout.R2, R2))
         {
-            memcpy_s(layout.INDICES, Wasm::Simd::MAX_LANES, indices, Wasm::Simd::MAX_LANES);
+            memcpy(layout.INDICES, indices, Wasm::Simd::MAX_LANES);
             m_byteCodeData.EncodeT<SizePolicy::LayoutEnum>(op, &layout, sizeof(layout), this);
             return true;
         }
