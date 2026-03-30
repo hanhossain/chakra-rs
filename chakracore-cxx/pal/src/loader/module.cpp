@@ -94,38 +94,6 @@ static BOOL LOADCallDllMainSafe(MODSTRUCT *module, uint32_t dwReason, void * lpR
 
 /* API function definitions ***************************************************/
 
-/*++
-Function:
-  GetModuleFileNameW
-
-See MSDN doc.
-
-Notes :
-    because of limitations in the dlopen() mechanism, this will only return the
-    full path name if a relative or absolute path was given to LoadLibrary, or
-    if the module was used in a GetProcAddress call. otherwise, this will return
-    the short name as given to LoadLibrary. The exception is if hModule is
-    NULL : in this case, the full path of the executable is always returned.
---*/
-uint32_t
-GetModuleFileNameW(
-     HMODULE hModule,
-     char16_t* lpFileName,
-     uint32_t nSize)
-{
-    uint32_t retval = 0;
-
-    ENTRY("GetModuleFileNameW (hModule=%p, lpFileName=%p, nSize=%u)\n",
-          hModule, lpFileName, nSize);
-
-    wcscpy_s(lpFileName, nSize, W(""));
-
-    SetLastError(ERROR_INTERNAL_ERROR);
-
-    LOGEXIT("GetModuleFileNameW returns DWORD %u\n", retval);
-    return retval;
-}
-
 HMODULE
 GetModuleHandleW(
       const char16_t* lpModuleName)

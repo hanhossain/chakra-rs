@@ -1257,13 +1257,6 @@ typedef long (*FARPROC)();
 
 
 // TODO (hanhossain): public
-uint32_t
-GetModuleFileNameW(
-     HMODULE hModule,
-     char16_t* lpFileName,
-     uint32_t nSize);
-
-// TODO (hanhossain): public
 HMODULE
 GetModuleHandleW(
       const char16_t* lpModuleName

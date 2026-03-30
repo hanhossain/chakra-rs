@@ -25,10 +25,6 @@ bool ConfigParserAPI::FillConsoleTitle(__ecount(cchBufferSize) char16_t* buffer,
     return false;
 }
 
-void ConfigParserAPI::DisplayInitialOutput(char16_t* moduleName)
-{
-}
-
 const char16_t* JsUtil::ExternalApi::GetFeatureKeyName()
 {
     return u"";
