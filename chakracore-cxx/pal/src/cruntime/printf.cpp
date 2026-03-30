@@ -1011,7 +1011,7 @@ int PAL_vsscanf(const char * Buffer, const char * Format, va_list ap)
 
                 if (Store)
                 {
-                    // sscanf_s requires that if we are trying to read "%s" or "%c" or "%[", then
+                    // sscanf requires that if we are trying to read "%s" or "%c" or "%[", then
                     // the size of the buffer must follow the buffer we are trying to read into.
                     voidPtr = va_arg(ap, void *);
                     unsigned typeLen = 0;
@@ -1033,16 +1033,16 @@ int PAL_vsscanf(const char * Buffer, const char * Format, va_list ap)
 
                     if (typeLen > 0)
                     {
-                        ret = sscanf_s(Buff, TempBuff, voidPtr, typeLen, &n);
+                        ret = sscanf(Buff, TempBuff, voidPtr, typeLen, &n);
                     }
                     else
                     {
-                        ret = sscanf_s(Buff, TempBuff, voidPtr, &n);
+                        ret = sscanf(Buff, TempBuff, voidPtr, &n);
                     }
                 }
                 else
                 {
-                    ret = sscanf_s(Buff, TempBuff, &n);
+                    ret = sscanf(Buff, TempBuff, &n);
                 }
 
                 if (ret > 0)
@@ -1223,7 +1223,7 @@ int PAL_wvsscanf(const char16_t* Buffer, const char16_t* Format, va_list ap)
                            to determine success. Set n to 0 before the call; if
                            it's still 0 afterwards, we know the call failed */
                         n = 0;
-                        sscanf_s(newBuff, TempBuff, &n);
+                        sscanf(newBuff, TempBuff, &n);
                         if(0 == n)
                         {
                             /* sscanf failed, nothing matched. set ret to 0,
@@ -1244,7 +1244,7 @@ int PAL_wvsscanf(const char16_t* Buffer, const char16_t* Format, va_list ap)
                     else
                     {
                         voidPtr = va_arg(ap, void *);
-                        // sscanf_s requires that if we are trying to read "%s" or "%c", then
+                        // sscanf requires that if we are trying to read "%s" or "%c", then
                         // the size of the buffer must follow the buffer we are trying to read into.
                         unsigned typeLen = 0;
                         if (Type == SCANF_TYPE_STRING)
@@ -1265,15 +1265,15 @@ int PAL_wvsscanf(const char16_t* Buffer, const char16_t* Format, va_list ap)
 
                         if (typeLen > 0)
                         {
-                            ret = sscanf_s(newBuff, TempBuff, voidPtr, typeLen, &n);
+                            ret = sscanf(newBuff, TempBuff, voidPtr, typeLen, &n);
                         }
                         else
-                            ret = sscanf_s(newBuff, TempBuff, voidPtr, &n);
+                            ret = sscanf(newBuff, TempBuff, voidPtr, &n);
                     }
                 }
                 else
                 {
-                    ret = sscanf_s(newBuff, TempBuff, &n);
+                    ret = sscanf(newBuff, TempBuff, &n);
                 }
 
                 free(newBuff);

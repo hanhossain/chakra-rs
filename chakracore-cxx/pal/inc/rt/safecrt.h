@@ -3177,10 +3177,6 @@ int scanf_s(const char *_Format, ...);
 _SAFECRT__EXTERN_C
 int wscanf_s(const char16_t *_Format, ...);
 
-/* sscanf_s */
-_SAFECRT__EXTERN_C
-int sscanf_s(const char *_String, const char *_Format, ...);
-
 /* swscanf_s */
 _SAFECRT__EXTERN_C
 int PAL_swscanf(const char16_t *_String, const char16_t *_Format, ...);

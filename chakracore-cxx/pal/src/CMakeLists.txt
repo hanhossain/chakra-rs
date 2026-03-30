@@ -83,8 +83,7 @@ set(SOURCES
   safecrt/safecrt_woutput_s.cpp
   safecrt/memcpy_s.cpp
   safecrt/memmove_s.cpp
-    safecrt/sscanf.cpp
-  safecrt/strcat_s.cpp
+    safecrt/strcat_s.cpp
   safecrt/strcpy_s.cpp
   safecrt/strncat_s.cpp
   safecrt/strncpy_s.cpp
