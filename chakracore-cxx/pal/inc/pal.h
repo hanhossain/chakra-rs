@@ -1320,13 +1320,6 @@ typedef struct _EXCEPTION_POINTERS {
 
 typedef int32_t EXCEPTION_DISPOSITION;
 
-enum {
-    ExceptionContinueExecution,
-    ExceptionContinueSearch,
-    ExceptionNestedException,
-    ExceptionCollidedUnwind,
-};
-
 #endif // FEATURE_PAL_SXS
 
 //
