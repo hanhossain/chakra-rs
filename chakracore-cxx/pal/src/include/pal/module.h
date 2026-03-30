@@ -89,36 +89,6 @@ Notes :
 --*/
 void LOADCallDllMain(uint32_t dwReason, void * lpReserved);
 
-/*++
-Function:
-  LockModuleList
-
-Abstract
-  Enter the critical section associated to the module list
-
-Parameter
-  void
-
-Return
-  void
---*/
-void LockModuleList();
-
-/*++
-Function:
-  UnlockModuleList
-
-Abstract
-  Leave the critical section associated to the module list
-
-Parameter
-  void
-
-Return
-  void
---*/
-void UnlockModuleList();
-
 #ifdef __cplusplus
 }
 #endif // __cplusplus

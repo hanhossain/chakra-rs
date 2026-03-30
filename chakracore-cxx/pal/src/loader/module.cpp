@@ -237,8 +237,6 @@ void LOADCallDllMain(uint32_t dwReason, void * lpReserved)
         return;
     }
 
-    LockModuleList();
-
     module = &exe_module;
 
     do
@@ -258,8 +256,6 @@ void LOADCallDllMain(uint32_t dwReason, void * lpReserved)
             module = module->next;
 
     } while (module != &exe_module);
-
-    UnlockModuleList();
 }
 
 /*++
@@ -317,48 +313,4 @@ static BOOL LOADCallDllMainSafe(MODSTRUCT *module, uint32_t dwReason, void * lpR
 #endif /* _ENABLE_DEBUG_MESSAGES_ */
 
     return param.ret;
-}
-
-/*++
-Function:
-  LockModuleList
-
-Abstract
-  Enter the critical section associated to the module list
-
-Parameter
-  void
-
-Return
-  void
---*/
-extern "C"
-void LockModuleList()
-{
-    CPalThread * pThread =
-        (PALIsThreadDataInitialized() ? InternalGetCurrentThread() : nullptr);
-
-    InternalEnterCriticalSection(pThread, &module_critsec);
-}
-
-/*++
-Function:
-  UnlockModuleList
-
-Abstract
-  Leave the critical section associated to the module list
-
-Parameter
-  void
-
-Return
-  void
---*/
-extern "C"
-void UnlockModuleList()
-{
-    CPalThread * pThread =
-        (PALIsThreadDataInitialized() ? InternalGetCurrentThread() : nullptr);
-
-    InternalLeaveCriticalSection(pThread, &module_critsec);
 }
