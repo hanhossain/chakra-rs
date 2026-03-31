@@ -146,10 +146,6 @@ function_name() to call the system's implementation
 
 #define PAL_IMPLEMENTATION
 
-#if defined(__APPLE__)
-#include "TargetConditionals.h"
-#endif // __APPLE__ ?
-
 // The standard headers define va_start and va_end as macros,
 // To avoid redefinition problems, undefine those macros.
 
@@ -182,7 +178,6 @@ function_name() to call the system's implementation
 
 #ifdef __APPLE__
 
-#undef GetCurrentThread
 #include <CoreServices/CoreServices.h>
 
 #include <malloc/malloc.h>

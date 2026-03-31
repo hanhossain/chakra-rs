@@ -355,7 +355,7 @@ GetCurrentThreadId(
 
 /*++
 Function:
-  GetCurrentThread
+PAL_GetCurrentThread
 
 See MSDN doc.
 --*/

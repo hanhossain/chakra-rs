@@ -516,7 +516,7 @@ void
 Recycler::SetIsThreadBound()
 {
     Assert(mainThreadHandle == nullptr);
-    ::DuplicateHandle(::GetCurrentProcess(), ::GetCurrentThread(), ::GetCurrentProcess(),  &mainThreadHandle,
+    ::DuplicateHandle(::GetCurrentProcess(), ::PAL_GetCurrentThread(), ::GetCurrentProcess(),  &mainThreadHandle,
         0, FALSE, DUPLICATE_SAME_ACCESS);
 
     stackBase = GetStackBase();
@@ -5992,7 +5992,7 @@ Recycler::ThreadProc()
     // Signal that the thread has started
     SetEvent(this->concurrentWorkDoneEvent);
 
-    SetThreadPriority(::GetCurrentThread(), THREAD_PRIORITY_BELOW_NORMAL);
+    SetThreadPriority(::PAL_GetCurrentThread(), THREAD_PRIORITY_BELOW_NORMAL);
 
 #if defined(DBG) && defined(PROFILE_EXEC)
     this->backgroundProfilerPageAllocator.SetConcurrentThreadId(::GetCurrentThreadId());
