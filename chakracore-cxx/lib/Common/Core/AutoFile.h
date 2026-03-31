@@ -23,7 +23,8 @@ public:
     {
         if (ptr != nullptr)
         {
-            PAL_fclose(ptr);
+            fclose(ptr->bsdFilePtr);
+            free(ptr);
             ptr = nullptr;
         }
     }

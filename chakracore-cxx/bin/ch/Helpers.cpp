@@ -282,7 +282,8 @@ Error:
 
     if (file != NULL)
     {
-        PAL_fclose(file);
+        fclose(file->bsdFilePtr);
+        free(file);
     }
 
     if (pRawBytes && reinterpret_cast<const char *>(pRawBytes) != contents)
@@ -421,7 +422,8 @@ int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, u
     }
 
 Error:
-    PAL_fclose(file);
+    fclose(file->bsdFilePtr);
+    free(file);
     if (contents && FAILED(hr))
     {
         free((void*)contents);

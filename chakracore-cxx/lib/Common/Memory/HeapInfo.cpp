@@ -430,7 +430,8 @@ int32_t HeapInfo::ValidPointersMap<TBlockAttributes>::GenerateValidPointersMapHe
             PAL_fwprintf(file, u"#endif // USE_STATIC_VPM\n");
         }
 
-        PAL_fclose(file);
+        fclose(file->bsdFilePtr);
+        free(file);
     }
 
     return hr;

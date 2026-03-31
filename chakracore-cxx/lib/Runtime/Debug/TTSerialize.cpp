@@ -1849,7 +1849,8 @@ namespace TTD
 
         if(this->m_outfile != PAL_get_stdout() && this->m_outfile != PAL_get_stderr())
         {
-            PAL_fclose(this->m_outfile);
+            fclose(this->m_outfile->bsdFilePtr);
+            free(this->m_outfile);
         }
 
         free(this->m_buffer);

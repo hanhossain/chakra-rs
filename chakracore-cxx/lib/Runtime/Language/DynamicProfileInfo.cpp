@@ -2632,7 +2632,8 @@ namespace Js
 
         WriteData((byte)0, file);
         fflush(file->bsdFilePtr);
-        PAL_fclose(file);
+        fclose(file->bsdFilePtr);
+        free(file);
     }
 #endif
 

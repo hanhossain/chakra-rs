@@ -202,7 +202,8 @@ void DynamicProfileStorageReaderWriter::Close(bool deleteFile)
 {
     AssertOrFailFast(file);
     fflush(file->bsdFilePtr);
-    PAL_fclose(file);
+    fclose(file->bsdFilePtr);
+    free(file);
     file = nullptr;
     if (deleteFile)
     {
