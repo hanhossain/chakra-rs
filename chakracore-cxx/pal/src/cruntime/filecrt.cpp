@@ -224,35 +224,3 @@ CorUnix::InternalFwrite(
 
     return nWrittenBytes;
 }
-
-
-/*++
-PAL_fseek
-
-Wrapper function for fseek.
-
-Input parameters:
-
-pf = a given file stream
-lOffset = distance from position to set file-position indicator
-nWhence = method used to determine the file_position indicator location relative to lOffset
-
-Return value:
-    0 on success, -1 on failure.
---*/
-int
-PAL_fseek(
-    PAL_FILE * pf,
-    int32_t lOffset,
-    int nWhence
-    )
-{
-    int nRet = 0;
-
-    ENTRY( "fseek( %p, %ld, %d )\n", pf, lOffset, nWhence );
-
-    nRet = fseek(pf ? pf->bsdFilePtr : NULL, lOffset, nWhence);
-
-    LOGEXIT("fseek returning %d\n", nRet);
-    return nRet;
-}
