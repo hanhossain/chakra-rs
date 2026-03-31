@@ -2131,24 +2131,6 @@ unsigned long long _rotr64(unsigned long long value, int shift)
 char * _fullpath(char *, const char *, size_t);
 
 #ifndef PAL_STDCPP_COMPAT
-time_t time(time_t *);
-
-struct tm {
-        int tm_sec;     /* seconds after the minute - [0,59] */
-        int tm_min;     /* minutes after the hour - [0,59] */
-        int tm_hour;    /* hours since midnight - [0,23] */
-        int tm_mday;    /* day of the month - [1,31] */
-        int tm_mon;     /* months since January - [0,11] */
-        int tm_year;    /* years since 1900 */
-        int tm_wday;    /* days since Sunday - [0,6] */
-        int tm_yday;    /* days since January 1 - [0,365] */
-        int tm_isdst;   /* daylight savings time flag */
-        };
-
-char * PAL_ctime(const time_t *);
-#endif // !PAL_STDCPP_COMPAT
-
-#ifndef PAL_STDCPP_COMPAT
 
 #define SEEK_SET    0
 #define SEEK_CUR    1

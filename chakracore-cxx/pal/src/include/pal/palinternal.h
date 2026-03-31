@@ -158,9 +158,6 @@ function_name() to call the system's implementation
 
 /* C runtime functions needed to be renamed to avoid duplicate definition
    of those functions when including standard C header files */
-#define time DUMMY_time
-#define tm PAL_tm
-#define time_t PAL_time_t
 #define abs DUMMY_abs
 #define llabs DUMMY_llabs
 #define atan DUMMY_atan
@@ -217,12 +214,9 @@ function_name() to call the system's implementation
 #undef malloc
 #undef realloc
 #undef free
-#undef time
-#undef tm
 #undef localtime
 #undef getcwd
 #undef size_t
-#undef time_t
 #undef abs
 #undef labs
 #undef llabs
