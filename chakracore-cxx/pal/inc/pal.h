@@ -2115,8 +2115,6 @@ unsigned long long _rotr64(unsigned long long value, int shift)
 
 #if !defined(PAL_STDCPP_COMPAT) || defined(USING_PAL_STDLIB)
 
-#define _alloca alloca
-
 #if defined(__GNUC__)
 // we set -fno-builtin on the command line. This requires that if
 // we use alloca, with either have to call __builtin_alloca, or

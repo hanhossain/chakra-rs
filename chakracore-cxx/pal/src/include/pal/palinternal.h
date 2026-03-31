@@ -181,14 +181,9 @@ function_name() to call the system's implementation
 
 #undef _BitScanForward64
 
-/* pal.h does "#define alloca _alloca", but we need access to the "real"
-   alloca */
-#undef alloca
-
 /* Undef all functions and types previously defined so those functions and
    types could be mapped to the C runtime and socket implementation of the
    native OS */
-#undef alloca
 #undef strdup
 #undef malloc
 #undef realloc

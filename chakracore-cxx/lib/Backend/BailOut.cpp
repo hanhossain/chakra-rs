@@ -1574,14 +1574,14 @@ BailOutRecord::BailOutHelper(Js::JavascriptCallStackLayout * layout, Js::ScriptF
             {
                 size_t stackVarSizeInBytes = stackVarAllocCount * sizeof(Js::Var);
                 PROBE_STACK_PARTIAL_INITIALIZED_BAILOUT_FRAME(functionScriptContext, Js::Constants::MinStackInterpreter + stackVarSizeInBytes, returnAddress);
-                stackAllocation = (Js::Var*)_alloca(stackVarSizeInBytes);
+                stackAllocation = (Js::Var*)alloca(stackVarSizeInBytes);
             }
         }
         else
         {
             varSizeInBytes = (varAllocCount + stackVarAllocCount) * sizeof(Js::Var);
             PROBE_STACK_PARTIAL_INITIALIZED_BAILOUT_FRAME(functionScriptContext, Js::Constants::MinStackInterpreter + varSizeInBytes, returnAddress);
-            allocation = (Js::Var*)_alloca(varSizeInBytes);
+            allocation = (Js::Var*)alloca(varSizeInBytes);
         }
 
         Js::LoopHeader* loopHeaderArray = nullptr;
@@ -1602,7 +1602,7 @@ BailOutRecord::BailOutHelper(Js::JavascriptCallStackLayout * layout, Js::ScriptF
 
         // Initialize the interpreter stack frame (constants) but not the param, the bailout record will restore the value
 #if DBG
-        Js::Var invalidStackVar = (Js::RecyclableObject*)_alloca(sizeof(Js::RecyclableObject));
+        Js::Var invalidStackVar = (Js::RecyclableObject*)alloca(sizeof(Js::RecyclableObject));
         memset(invalidStackVar, 0xFE, sizeof(Js::RecyclableObject));
 #endif
 

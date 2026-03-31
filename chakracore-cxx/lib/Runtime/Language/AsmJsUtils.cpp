@@ -433,7 +433,7 @@ namespace Js
         // Allocate stack space for args
         PROBE_STACK_CALL(func->GetScriptContext(), func, argSize + Js::Constants::MinStackDefault);
 
-        dst = _alloca(argSize);
+        dst = alloca(argSize);
         const void * asmJSEntryPoint = UnboxAsmJsArguments(func, args.Values + 1, ((char*)dst) - MachPtr, callInfo);
 
         // make call and convert primitive type back to Var
