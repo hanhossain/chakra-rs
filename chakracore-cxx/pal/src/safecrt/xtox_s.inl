@@ -70,7 +70,6 @@
 *******************************************************************************/
 
 /* helper routine that does the main job. */
-#ifdef _SECURE_ITOA
 errno_t xtox_s
         (
         unsigned long val,
@@ -79,21 +78,11 @@ errno_t xtox_s
         unsigned radix,
         int is_neg
         )
-#else  /* _SECURE_ITOA */
-void xtox
-        (
-        unsigned long val,
-        TCHAR *buf,
-        unsigned radix,
-        int is_neg
-        )
-#endif  /* _SECURE_ITOA */
 {
         TCHAR *p;                /* pointer to traverse string */
         TCHAR *firstdig;         /* pointer to first digit */
         TCHAR temp;              /* temp char */
         unsigned digval;         /* value of digit */
-#ifdef _SECURE_ITOA
         size_t length;           /* current length of the string */
 
         /* validation section */
@@ -103,16 +92,12 @@ void xtox
         _VALIDATE_RETURN_ERRCODE(sizeInTChars > (size_t)(is_neg ? 2 : 1), ERANGE);
         _VALIDATE_RETURN_ERRCODE(2 <= radix && radix <= 36, EINVAL);
         length = 0;
-
-#endif  /* _SECURE_ITOA */
         p = buf;
 
         if (is_neg) {
             /* negative, so output '-' and negate */
             *p++ = _T('-');
-#ifdef _SECURE_ITOA
             length++;
-#endif  /* _SECURE_ITOA */
             val = (unsigned long)(-(long)val);
         }
 
@@ -127,9 +112,6 @@ void xtox
                 *p++ = (TCHAR) (digval - 10 + _T('a'));  /* a letter */
             else
                 *p++ = (TCHAR) (digval + _T('0'));       /* a digit */
-#ifndef _SECURE_ITOA
-        } while (val > 0);
-#else  /* _SECURE_ITOA */
             length++;
         } while (val > 0 && length < sizeInTChars);
 
@@ -139,7 +121,6 @@ void xtox
             buf[0] = '\0';
             _VALIDATE_RETURN_ERRCODE(length < sizeInTChars, ERANGE);
         }
-#endif  /* _SECURE_ITOA */
         /* We now have the digit of the number in the buffer, but in reverse
            order.  Thus we reverse them now. */
 
@@ -152,15 +133,12 @@ void xtox
             --p;
             ++firstdig;         /* advance to next two digits */
         } while (firstdig < p); /* repeat until halfway */
-#ifdef _SECURE_ITOA
         return 0;
-#endif  /* _SECURE_ITOA */
 }
 
 /* Actual functions just call conversion helper with neg flag set correctly,
    and return pointer to buffer. */
 
-#ifdef _SECURE_ITOA
 errno_t _itox_s (
         int val,
         TCHAR *buf,
@@ -198,70 +176,6 @@ errno_t _ultox_s (
         return xtox_s(val, buf, sizeInTChars, radix, 0);
 }
 
-#else  /* _SECURE_ITOA */
-
-/***
-*char *_itoa, *_ltoa, *_ultoa(val, buf, radix) - convert binary int to ASCII
-*       string
-*
-*Purpose:
-*       Converts an int to a character string.
-*
-*Entry:
-*       val - number to be converted (int, long or unsigned long)
-*       int radix - base to convert into
-*       char *buf - ptr to buffer to place result
-*
-*Exit:
-*       fills in space pointed to by buf with string result
-*       returns a pointer to this buffer
-*
-*Exceptions:
-*           Input parameters are validated. The buffer is assumed to be big enough to
-*       contain the string. Refer to the validation section of the function.
-*
-*******************************************************************************/
-
-/* Actual functions just call conversion helper with neg flag set correctly,
-   and return pointer to buffer. */
-
-TCHAR * _itox (
-        int val,
-        TCHAR *buf,
-        int radix
-        )
-{
-        if (radix == 10 && val < 0)
-            xtox((unsigned long)val, buf, radix, 1);
-        else
-            xtox((unsigned long)(unsigned int)val, buf, radix, 0);
-        return buf;
-}
-
-TCHAR * _ltox (
-        long val,
-        TCHAR *buf,
-        int radix
-        )
-{
-        xtox((unsigned long)val, buf, radix, (radix == 10 && val < 0));
-        return buf;
-}
-
-TCHAR * _ultox (
-        unsigned long val,
-        TCHAR *buf,
-        int radix
-        )
-{
-        xtox(val, buf, radix, 0);
-        return buf;
-}
-
-#endif  /* _SECURE_ITOA */
-
-#ifndef _NO_INT64
-
 /***
 *char *_i64toa_s(val, buf, sizeInTChars, radix) - convert binary int to ASCII
 *       string
@@ -286,7 +200,6 @@ TCHAR * _ultox (
 *
 *******************************************************************************/
 
-#ifdef _SECURE_ITOA
 errno_t x64tox_s
         (/* stdcall is faster and smaller... Might as well use it for the helper. */
         unsigned long val,
@@ -295,21 +208,11 @@ errno_t x64tox_s
         unsigned radix,
         int is_neg
         )
-#else  /* _SECURE_ITOA */
-void x64tox
-        (/* stdcall is faster and smaller... Might as well use it for the helper. */
-        unsigned long val,
-        TCHAR *buf,
-        unsigned radix,
-        int is_neg
-        )
-#endif  /* _SECURE_ITOA */
 {
         TCHAR *p;                /* pointer to traverse string */
         TCHAR *firstdig;         /* pointer to first digit */
         TCHAR temp;              /* temp char */
         unsigned digval;         /* value of digit */
-#ifdef _SECURE_ITOA
         size_t length;           /* current length of the string */
 
         /* validation section */
@@ -319,15 +222,12 @@ void x64tox
         _VALIDATE_RETURN_ERRCODE(sizeInTChars > (size_t)(is_neg ? 2 : 1), ERANGE);
         _VALIDATE_RETURN_ERRCODE(2 <= radix && radix <= 36, EINVAL);
         length = 0;
-#endif  /* _SECURE_ITOA */
         p = buf;
 
         if ( is_neg )
         {
             *p++ = _T('-');         /* negative, so output '-' and negate */
-#ifdef _SECURE_ITOA
             length++;
-#endif  /* _SECURE_ITOA */
             val = (unsigned long)(-(long)val);
         }
 
@@ -343,9 +243,6 @@ void x64tox
             else
                 *p++ = (TCHAR) (digval + _T('0'));       /* a digit */
 
-#ifndef _SECURE_ITOA
-        } while (val > 0);
-#else  /* _SECURE_ITOA */
             length++;
         } while (val > 0 && length < sizeInTChars);
 
@@ -355,7 +252,6 @@ void x64tox
             buf[0] = '\0';
             _VALIDATE_RETURN_ERRCODE(length < sizeInTChars, ERANGE);
         }
-#endif  /* _SECURE_ITOA */
         /* We now have the digit of the number in the buffer, but in reverse
            order.  Thus we reverse them now. */
 
@@ -369,12 +265,8 @@ void x64tox
             ++firstdig;         /* advance to next two digits */
         } while (firstdig < p); /* repeat until halfway */
 
-#ifdef _SECURE_ITOA
         return 0;
-#endif  /* _SECURE_ITOA */
 }
-
-#ifdef _SECURE_ITOA
 
 /* Actual functions just call conversion helper with neg flag set correctly,
    and return pointer to buffer. */
@@ -398,54 +290,3 @@ errno_t _ui64tox_s (
 {
         return x64tox_s(val, buf, sizeInTChars, radix, 0);
 }
-
-#else  /* _SECURE_ITOA */
-
-/***
-*char *_i64toa(val, buf, radix) - convert binary int to ASCII
-*       string
-*
-*Purpose:
-*       Converts an int64 to a character string.
-*
-*Entry:
-*       val - number to be converted
-*       int radix - base to convert into
-*       char *buf - ptr to buffer to place result
-*
-*Exit:
-*       fills in space pointed to by buf with string result
-*       returns a pointer to this buffer
-*
-*Exceptions:
-*           Input parameters are validated. The buffer is assumed to be big enough to
-*       contain the string. Refer to the validation section of the function.
-*
-*******************************************************************************/
-
-/* Actual functions just call conversion helper with neg flag set correctly,
-   and return pointer to buffer. */
-
-TCHAR * _i64tox (
-        long val,
-        TCHAR *buf,
-        int radix
-        )
-{
-        x64tox((unsigned long)val, buf, radix, (radix == 10 && val < 0));
-        return buf;
-}
-
-TCHAR * _ui64tox (
-        unsigned long val,
-        TCHAR *buf,
-        int radix
-        )
-{
-        x64tox(val, buf, radix, 0);
-        return buf;
-}
-
-#endif  /* _SECURE_ITOA */
-
-#endif  /* _NO_INT64 */
