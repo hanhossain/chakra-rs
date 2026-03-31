@@ -22,6 +22,7 @@ Abstract:
 #ifndef _PAL_CRUNTIME_H_
 #define _PAL_CRUNTIME_H_
 
+#include "pal_file.h"
 #include <string.h>
 #include <stdarg.h>
 #include <pthread.h>
@@ -184,29 +185,6 @@ Returns TRUE if c is a control character.
 --*/
 int PAL_iswpunct(char16_t c);
 #endif  // defined(__APPLE__)
-
-/*++
-
-struct PAL_FILE.
-Used to mimic the behavior of windows.
-fwrite under windows can set the ferror flag,
-under BSD fwrite doesn't.
---*/
-typedef struct _FILE
-{
-   FILE *   bsdFilePtr;     /* The BSD file to be passed to the
-                            functions needing it. */
-
-   int32_t      PALferrorCode;  /* The ferror code that fwrite sets,
-                            incase of error */
-
-   BOOL     bTextMode;     /* Boolean variable to denote that the
-                              fle is opened in text/binary mode*/
-#if defined(__linux__)
-   BOOL     bWriteOnlyMode;/* Boolean variable to denote that the
-                              fle is opened in write-only mode*/ 
-#endif //defined(__linux__)
-} PAL_FILE;
 
 enum CRT_ERROR_CODES
 {

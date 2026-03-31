@@ -201,7 +201,7 @@ int32_t DynamicProfileStorageReaderWriter::Size()
 void DynamicProfileStorageReaderWriter::Close(bool deleteFile)
 {
     AssertOrFailFast(file);
-    PAL_fflush(file);
+    fflush(file->bsdFilePtr);
     PAL_fclose(file);
     file = nullptr;
     if (deleteFile)

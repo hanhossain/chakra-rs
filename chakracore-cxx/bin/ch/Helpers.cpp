@@ -576,8 +576,8 @@ bool CALLBACK Helpers::TTWriteBytesToStreamCallback(JsTTDStreamHandle handle, co
 
 void CALLBACK Helpers::TTFlushAndCloseStreamCallback(JsTTDStreamHandle handle, bool read, bool write)
 {
-    PAL_fflush((PAL_FILE*)handle);
-    PAL_fclose((PAL_FILE*)handle);
+    fflush(((PAL_FILE*)handle)->bsdFilePtr);
+    fclose(((PAL_FILE*)handle)->bsdFilePtr);
 }
 
 void GetBinaryPathWithFileNameA(char *path, const size_t buffer_size, const char* filename)
