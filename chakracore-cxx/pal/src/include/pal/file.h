@@ -187,22 +187,6 @@ Return value:
 --*/
 size_t PAL_fwrite(const void *pvBuffer, size_t nSize, size_t nCount, PAL_FILE *pf);
 
-/*++
-PAL_fseek
-
-Wrapper function for fseek
-
-Input parameters:
-
-pf = a given file stream
-lOffset = distance from position to set file-position indicator
-nWhence = method used to determine the file_position indicator location relative to lOffset
-
-Return value:
-    0 on success, -1 on failure.
---*/
-int PAL_fseek(PAL_FILE *pf, int32_t lOffset, int nWhence);
-
 #ifdef __cplusplus
 }
 #endif // __cplusplus
