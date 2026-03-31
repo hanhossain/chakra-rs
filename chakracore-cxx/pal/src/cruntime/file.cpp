@@ -361,13 +361,6 @@ PAL_FILE * PAL_get_stderr()
     return &PAL_Stderr;
 }
 
-char16_t *
-PAL_fgetws(char16_t *s, int n, PAL_FILE *f)
-{
-    ASSERT (0);
-    return NULL;
-}
-
 
 /*++
 Function :
@@ -496,29 +489,5 @@ PAL_ungetc(int c, PAL_FILE * f)
     }
 
     LOGEXIT( "ungetc returning %d\n", nRetVal );
-    return nRetVal;
-}
-
-
-
-/*++
-Function :
-
-    setvbuf
-
-    See MSDN for more details.
---*/
-int
-PAL_setvbuf(PAL_FILE *f, char *buf, int type, size_t size)
-{
-    int32_t nRetVal = 0;
-
-    ENTRY( "setvbuf( %p, %p, %d, %ul )\n", f, buf, type, size);
-
-    _ASSERTE(f != NULL);
-
-    nRetVal = setvbuf(f->bsdFilePtr, buf, type, size);
-
-    LOGEXIT( "setvbuf returning %d\n", nRetVal );
     return nRetVal;
 }
