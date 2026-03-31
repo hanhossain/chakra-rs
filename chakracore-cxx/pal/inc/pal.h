@@ -169,11 +169,6 @@ extern "C" {
 #define nullptr NULL
 #endif // defined(PAL_STDCPP_COMPAT) && !defined(__cplusplus)
 
-#ifndef PAL_STDCPP_COMPAT
-typedef long time_t;
-#define _TIME_T_DEFINED
-#endif // !PAL_STDCPP_COMPAT
-
 #define C1_UPPER                  0x0001      /* upper case */
 #define C1_LOWER                  0x0002      /* lower case */
 #define C1_DIGIT                  0x0004      /* decimal digits */
