@@ -167,15 +167,6 @@ function_name() to call the system's implementation
    types could be mapped to the C runtime and socket implementation of the
    native OS */
 
-// We need a sigsetjmp prototype in pal.h for the SEH macros, but we
-// can't use the "real" prototype (because we don't want to define sigjmp_buf).
-// So we must rename the "real" sigsetjmp to avoid redefinition errors.
-#define sigsetjmp REAL_sigsetjmp
-#define siglongjmp REAL_siglongjmp
-#include <setjmp.h>
-#undef sigsetjmp
-#undef siglongjmp
-
 #undef _SIZE_T_DEFINED
 
 #define _DONT_USE_CTYPE_INLINE_
