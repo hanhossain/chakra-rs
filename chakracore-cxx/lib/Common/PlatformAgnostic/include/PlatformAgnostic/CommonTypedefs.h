@@ -12,7 +12,6 @@ typedef unsigned int uint;
 typedef unsigned short ushort;
 
 typedef signed char sbyte;
-// TODO (hanhossain): remove (u)int typedefs
 typedef int16_t int16;
 
 typedef unsigned char byte;

@@ -153,8 +153,6 @@ extern "C" {
 
 /******************* PAL-Specific Entrypoints *****************************/
 
-// TODO (hanhossain): remove all the defines
-
 #ifdef PAL_STDCPP_COMPAT
 #undef NULL
 #endif
@@ -256,7 +254,6 @@ typedef struct _SECURITY_ATTRIBUTES {
 
 #define STILL_ACTIVE (0x00000103L)
 
-// TODO (hanhossain): internal
 HANDLE
 CreateFileA(
          const char * lpFileName,
@@ -267,7 +264,6 @@ CreateFileA(
          uint32_t dwFlagsAndAttributes,
          HANDLE hTemplateFile);
 
-// TODO (hanhossain): internal
 HANDLE
 CreateFileW(
          const char16_t* lpFileName,
@@ -278,59 +274,49 @@ CreateFileW(
          uint32_t dwFlagsAndAttributes,
          HANDLE hTemplateFile);
 
-// TODO (hanhossain): public
 #define CreateFile CreateFileW
 
-// TODO (hanhossain): internal
 BOOL
 CopyFileA(
        const char * lpExistingFileName,
        const char * lpNewFileName,
        BOOL bFailIfExists);
 
-// TODO (hanhossain): internal
 BOOL
 DeleteFileA(
          const char * lpFileName);
 
-// TODO (hanhossain): internal
 BOOL
 DeleteFileW(
          const char16_t* lpFileName);
 
-// TODO (hanhossain): public
 #define DeleteFile DeleteFileW
 
 #define MOVEFILE_REPLACE_EXISTING      0x00000001
 #define MOVEFILE_COPY_ALLOWED          0x00000002
 
-// TODO (hanhossain): internal
 BOOL
 MoveFileExA(
          const char * lpExistingFileName,
          const char * lpNewFileName,
          uint32_t dwFlags);
 
-// TODO (hanhossain): internal
 BOOL
 MoveFileExW(
          const char16_t* lpExistingFileName,
          const char16_t* lpNewFileName,
          uint32_t dwFlags);
 
-// TODO (hanhossain): internal
 BOOL
 CreateDirectoryA(
           const char * lpPathName,
           LPSECURITY_ATTRIBUTES lpSecurityAttributes);
 
-// TODO (hanhossain): internal
 BOOL
 CreateDirectoryW(
           const char16_t* lpPathName,
           LPSECURITY_ATTRIBUTES lpSecurityAttributes);
 
-// TODO (hanhossain): public
 #define CreateDirectory CreateDirectoryW
 
 typedef struct _WIN32_FIND_DATAW {
@@ -346,12 +332,10 @@ typedef struct _WIN32_FIND_DATAW {
     char16_t cAlternateFileName[ 14 ];
 } WIN32_FIND_DATAW, *LPWIN32_FIND_DATAW;
 
-// TODO (hanhossain): internal
 uint32_t
 GetFileAttributesA(
             const char * lpFileName);
 
-// TODO (hanhossain): internal
 uint32_t
 GetFileAttributesW(
             const char16_t* lpFileName);
@@ -371,7 +355,6 @@ typedef struct _WIN32_FILE_ATTRIBUTE_DATA {
 
 typedef void * LPOVERLAPPED;  // diff from winbase.h
 
-// TODO (hanhossain): public
 BOOL
 WriteFile(
        HANDLE hFile,
@@ -380,7 +363,6 @@ WriteFile(
        uint32_t * lpNumberOfBytesWritten,
        LPOVERLAPPED lpOverlapped);
 
-// TODO (hanhossain): internal
 BOOL
 ReadFile(
       HANDLE hFile,
@@ -393,12 +375,10 @@ ReadFile(
 #define STD_OUTPUT_HANDLE        ((uint32_t)-11)
 #define STD_ERROR_HANDLE         ((uint32_t)-12)
 
-// TODO (hanhossain): public
 HANDLE
 GetStdHandle(
           uint32_t nStdHandle);
 
-// TODO (hanhossain): internal
 int32_t
 CompareFileTime(
          const FILETIME *lpFileTime1,
@@ -415,7 +395,6 @@ typedef struct _SYSTEMTIME {
     uint16_t wMilliseconds;
 } SYSTEMTIME, *LPSYSTEMTIME;
 
-// TODO (hanhossain): public
 BOOL
 FlushFileBuffers(
           HANDLE hFile);
@@ -425,7 +404,6 @@ FlushFileBuffers(
 #define FILE_TYPE_CHAR            0x0002
 #define FILE_TYPE_PIPE            0x0003
 
-// TODO (hanhossain): internal
 uint32_t
 GetFullPathNameA(
           const char * lpFileName,
@@ -433,38 +411,31 @@ GetFullPathNameA(
           char* lpBuffer,
           char* *lpFilePart);
 
-// TODO (hanhossain): internal
 uint32_t
 GetTempPathA(
           uint32_t nBufferLength,
           char* lpBuffer);
 
-// TODO (hanhossain): internal
 uint32_t
 GetTempPathW(
           uint32_t nBufferLength,
           char16_t* lpBuffer);
 
-// TODO (hanhossain): public
 #define GetTempPath GetTempPathW
 
-// TODO (hanhossain): internal
 uint32_t
 GetCurrentDirectoryA(
               uint32_t nBufferLength,
               char* lpBuffer);
 
-// TODO (hanhossain): internal
 BOOL
 SetCurrentDirectoryA(
              const char * lpPathName);
 
-// TODO (hanhossain): internal
 BOOL
 SetCurrentDirectoryW(
              const char16_t* lpPathName);
 
-// TODO (hanhossain): internal
 HANDLE
 CreateSemaphoreW(
           LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
@@ -472,17 +443,14 @@ CreateSemaphoreW(
           int32_t lMaximumCount,
           const char16_t* lpName);
 
-// TODO (hanhossain): public
 #define CreateSemaphore CreateSemaphoreW
 
-// TODO (hanhossain): public
 BOOL
 ReleaseSemaphore(
           HANDLE hSemaphore,
           int32_t lReleaseCount,
           int32_t * lpPreviousCount);
 
-// TODO (hanhossain): public
 HANDLE
 CreateEventW(
           LPSECURITY_ATTRIBUTES lpEventAttributes,
@@ -490,35 +458,28 @@ CreateEventW(
           BOOL bInitialState,
           const char16_t* lpName);
 
-// TODO (hanhossain): public
 #define CreateEvent CreateEventW
 
-// TODO (hanhossain): public
 BOOL
 SetEvent(
       HANDLE hEvent);
 
-// TODO (hanhossain): public
 BOOL
 ResetEvent(
         HANDLE hEvent);
 
-// TODO (hanhossain): public
 uint32_t
 GetCurrentProcessId(
             void);
 
-// TODO (hanhossain): public
 HANDLE
 GetCurrentProcess(
           void);
 
-// TODO (hanhossain): public
 uint32_t
 GetCurrentThreadId(
            void);
 
-// TODO (hanhossain): public
 uint32_t
 GetThreadId(
     HANDLE hThread);
@@ -562,7 +523,6 @@ typedef struct _PROCESS_INFORMATION {
     uint32_t dwThreadId_PAL_Undefined;
 } *LPPROCESS_INFORMATION;
 
-// TODO (hanhossain): public
 BOOL
 TerminateProcess(
           HANDLE hProcess,
@@ -576,13 +536,11 @@ TerminateProcess(
 
 #define INFINITE 0xFFFFFFFF // Infinite timeout
 
-// TODO (hanhossain): public
 uint32_t
 WaitForSingleObject(
              HANDLE hHandle,
              uint32_t dwMilliseconds);
 
-// TODO (hanhossain): public
 uint32_t
 WaitForMultipleObjects(
                 uint32_t nCount,
@@ -590,7 +548,6 @@ WaitForMultipleObjects(
                 BOOL bWaitAll,
                 uint32_t dwMilliseconds);
 
-// TODO (hanhossain): public
 uint32_t
 WaitForMultipleObjectsEx(
               uint32_t nCount,
@@ -602,7 +559,6 @@ WaitForMultipleObjectsEx(
 #define DUPLICATE_CLOSE_SOURCE      0x00000001
 #define DUPLICATE_SAME_ACCESS       0x00000002
 
-// TODO (hanhossain): public
 BOOL
 DuplicateHandle(
          HANDLE hSourceProcessHandle,
@@ -613,7 +569,6 @@ DuplicateHandle(
          BOOL bInheritHandle,
          uint32_t dwOptions);
 
-// TODO (hanhossain): public
 void
 Sleep(
        uint32_t dwMilliseconds);
@@ -621,7 +576,6 @@ Sleep(
 #define CREATE_SUSPENDED                  0x00000004
 #define STACK_SIZE_PARAM_IS_A_RESERVATION 0x00010000
 
-// TODO (hanhossain): public
 HANDLE
 CreateThread(
           LPSECURITY_ATTRIBUTES lpThreadAttributes,
@@ -631,20 +585,17 @@ CreateThread(
           uint32_t dwCreationFlags,
           uint32_t * lpThreadId);
 
-// TODO (hanhossain): internal
 __attribute__((noreturn))
 void
 ExitThread(
         uint32_t dwExitCode);
 
-// TODO (hanhossain): public
 uint32_t
 ResumeThread(
           HANDLE hThread);
 
 typedef void (*PAPCFUNC)(size_t dwParam);
 
-// TODO (hanhossain): internal
 uint32_t
 QueueUserAPC(
           PAPCFUNC pfnAPC,
@@ -1005,12 +956,10 @@ SetThreadContext(
 #define THREAD_PRIORITY_TIME_CRITICAL THREAD_BASE_PRIORITY_LOWRT
 #define THREAD_PRIORITY_IDLE          THREAD_BASE_PRIORITY_IDLE
 
-// TODO (hanhossain): public
 int
 GetThreadPriority(
            HANDLE hThread);
 
-// TODO (hanhossain): public
 BOOL
 SetThreadPriority(
            HANDLE hThread,
@@ -1065,15 +1014,10 @@ typedef struct _CRITICAL_SECTION {
     } csnds;
 } CRITICAL_SECTION, *PCRITICAL_SECTION, *LPCRITICAL_SECTION;
 
-// TODO (hanhossain): public
 void EnterCriticalSection(  LPCRITICAL_SECTION lpCriticalSection);
-// TODO (hanhossain): public
 void LeaveCriticalSection(  LPCRITICAL_SECTION lpCriticalSection);
-// TODO (hanhossain): public
 void InitializeCriticalSection( LPCRITICAL_SECTION lpCriticalSection);
-// TODO (hanhossain): public
 BOOL InitializeCriticalSectionAndSpinCount(LPCRITICAL_SECTION lpCriticalSection, uint32_t dwSpinCount);
-// TODO (hanhossain): public
 void DeleteCriticalSection(  LPCRITICAL_SECTION lpCriticalSection);
 
 #define PAGE_NOACCESS                   0x01
@@ -1095,7 +1039,6 @@ void DeleteCriticalSection(  LPCRITICAL_SECTION lpCriticalSection);
 #define MEM_WRITE_WATCH                 0x200000
 #define MEM_RESERVE_EXECUTABLE          0x40000000 // reserve memory using executable memory allocator
 
-// TODO (hanhossain): internal
 HANDLE
 CreateFileMappingW(
             HANDLE hFile,
@@ -1105,7 +1048,6 @@ CreateFileMappingW(
             uint32_t dwMaximumSizeLow,
             const char16_t* lpName);
 
-// TODO (hanhossain): public
 #define CreateFileMapping CreateFileMappingW
 
 #define SECTION_QUERY       0x0001
@@ -1118,17 +1060,14 @@ CreateFileMappingW(
 #define FILE_MAP_ALL_ACCESS SECTION_ALL_ACCESS
 #define FILE_MAP_COPY       SECTION_QUERY
 
-// TODO (hanhossain): internal
 HANDLE
 OpenFileMappingW(
           uint32_t dwDesiredAccess,
           BOOL bInheritHandle,
           const char16_t* lpName);
 
-// TODO (hanhossain): public
 #define OpenFileMapping OpenFileMappingW
 
-// TODO (hanhossain): public
 void *
 MapViewOfFile(
            HANDLE hFileMappingObject,
@@ -1137,7 +1076,6 @@ MapViewOfFile(
            uint32_t dwFileOffsetLow,
            size_t dwNumberOfBytesToMap);
 
-// TODO (hanhossain): public
 BOOL
 UnmapViewOfFile(
          const void * lpBaseAddress);
@@ -1145,7 +1083,6 @@ UnmapViewOfFile(
 typedef long (*FARPROC)();
 
 
-// TODO (hanhossain): public
 void *
 VirtualAlloc(
           void * lpAddress,
@@ -1153,7 +1090,6 @@ VirtualAlloc(
           uint32_t flAllocationType,
           uint32_t flProtect);
 
-// TODO (hanhossain): public
 void *
 VirtualAllocEx(
           HANDLE hProcess,
@@ -1162,14 +1098,12 @@ VirtualAllocEx(
           uint32_t flAllocationType,
           uint32_t flProtect);
 
-// TODO (hanhossain): public
 BOOL
 VirtualFree(
          void * lpAddress,
          size_t dwSize,
          uint32_t dwFreeType);
 
-// TODO (hanhossain): public
 BOOL
 VirtualProtect(
             void * lpAddress,
@@ -1189,7 +1123,6 @@ typedef struct _MEMORYSTATUSEX {
   unsigned long ullAvailExtendedVirtual;
 } MEMORYSTATUSEX, *LPMEMORYSTATUSEX;
 
-// TODO (hanhossain): public
 BOOL
 GlobalMemoryStatusEx(
               LPMEMORYSTATUSEX lpBuffer);
@@ -1204,14 +1137,12 @@ typedef struct _MEMORY_BASIC_INFORMATION {
     uint32_t Type;
 } MEMORY_BASIC_INFORMATION, *PMEMORY_BASIC_INFORMATION;
 
-// TODO (hanhossain): public
 size_t
 VirtualQuery(
           const void * lpAddress,
           PMEMORY_BASIC_INFORMATION lpBuffer,
           size_t dwLength);
 
-// TODO (hanhossain): public
 size_t
 VirtualQueryEx(
           HANDLE hProcess,
@@ -1219,7 +1150,6 @@ VirtualQueryEx(
           PMEMORY_BASIC_INFORMATION lpBuffer,
           size_t dwLength);
 
-// TODO (hanhossain): public
 BOOL
 FlushInstructionCache(
                HANDLE hProcess,
@@ -1235,19 +1165,16 @@ typedef struct _cpinfo {
     uint8_t LeadByte[MAX_LEADBYTES];
 } CPINFO, *LPCPINFO;
 
-// TODO (hanhossain): internal
 BOOL
 GetCPInfo(
        uint32_t CodePage,
        LPCPINFO lpCPInfo);
 
-// TODO (hanhossain): internal
 BOOL
 IsDBCSLeadByteEx(
           uint32_t CodePage,
           uint8_t TestChar);
 
-// TODO (hanhossain): internal
 BOOL
 IsValidCodePage(
          uint32_t CodePage);
@@ -1256,7 +1183,6 @@ IsValidCodePage(
 #define MB_PRECOMPOSED            0x00000001
 #define MB_ERR_INVALID_CHARS      0x00000008
 
-// TODO (hanhossain): public
 int
 MultiByteToWideChar(
              uint32_t CodePage,
@@ -1268,7 +1194,6 @@ MultiByteToWideChar(
 
 #define WC_NO_BEST_FIT_CHARS      0x00000400
 
-// TODO (hanhossain): internal
 int
 WideCharToMultiByte(
              uint32_t CodePage,
@@ -1335,7 +1260,6 @@ typedef struct _RUNTIME_FUNCTION {
 } RUNTIME_FUNCTION, *PRUNTIME_FUNCTION;
 #endif
 
-// TODO (hanhossain): public
 BOOL
 WriteProcessMemory( HANDLE hProcess,
                     void * lpBaseAddress,
@@ -1352,75 +1276,62 @@ WriteProcessMemory( HANDLE hProcess,
 #define PROCESS_ALL_ACCESS        (STANDARD_RIGHTS_REQUIRED | SYNCHRONIZE | \
                                    0xFFF)
 
-// TODO (hanhossain): internal
 void
 OutputDebugStringA(
      const char * lpOutputString);
 
-// TODO (hanhossain): public
 void
 OutputDebugStringW(
      const char16_t* lpOutputStrig);
 
 #define OutputDebugString OutputDebugStringW
 
-// TODO (hanhossain): public
 void
 DebugBreak(
        void);
 
-// TODO (hanhossain): internal
 char16_t*
 lstrcatW(
        char16_t* lpString1,
       const char16_t* lpString2);
 
-// TODO (hanhossain): internal
 char16_t*
 lstrcpyW(
       char16_t* lpString1,
       const char16_t* lpString2);
 
-// TODO (hanhossain): internal
 int
 lstrlenA(
       const char * lpString);
 
-// TODO (hanhossain): internal
 int
 lstrlenW(
       const char16_t* lpString);
 
-// TODO (hanhossain): internal
 char16_t*
 lstrcpynW(
        char16_t* lpString1,
        const char16_t* lpString2,
        int iMaxLength);
 
-// TODO (hanhossain): public
 uint32_t
 GetEnvironmentVariableA(
              const char * lpName,
              char* lpBuffer,
              uint32_t nSize);
 
-// TODO (hanhossain): internal
 uint32_t
 GetEnvironmentVariableW(
              const char16_t* lpName,
              char16_t* lpBuffer,
              uint32_t nSize);
 
-// TODO (hanhossain): public
 #define GetEnvironmentVariable GetEnvironmentVariableW
 
-// TODO (hanhossain): public
 BOOL
 CloseHandle(
           HANDLE hObject);
 
-// TODO (hanhossain): public
 void
 RaiseException(
             uint32_t dwExceptionCode,
@@ -1428,28 +1339,23 @@ RaiseException(
             uint32_t nNumberOfArguments,
             const size_t *lpArguments);
 
-// TODO (hanhossain): public
 uint32_t
 GetTickCount(
          void);
 
-// TODO (hanhossain): public
 unsigned long
 GetTickCount64();
 
-// TODO (hanhossain): public
 BOOL
 QueryPerformanceCounter(
      LARGE_INTEGER *lpPerformanceCount
     );
 
-// TODO (hanhossain): public
 BOOL
 QueryPerformanceFrequency(
      LARGE_INTEGER *lpFrequency
     );
 
-// TODO (hanhossain): public
 BOOL
 QueryThreadCycleTime(
      HANDLE ThreadHandle,
@@ -1461,17 +1367,14 @@ typedef int32_t (*PTOP_LEVEL_EXCEPTION_FILTER)(
                            struct _EXCEPTION_POINTERS *ExceptionInfo);
 typedef PTOP_LEVEL_EXCEPTION_FILTER LPTOP_LEVEL_EXCEPTION_FILTER;
 
-// TODO (hanhossain): public
 LPTOP_LEVEL_EXCEPTION_FILTER
 SetUnhandledExceptionFilter(
                  LPTOP_LEVEL_EXCEPTION_FILTER lpTopLevelExceptionFilter);
 
-// TODO (hanhossain): public
 int32_t
 UnhandledExceptionFilter(
                  struct _EXCEPTION_POINTERS *ExceptionInfo);
 
-// TODO (hanhossain): public
 LPEXCEPTION_POINTERS
 GetExceptionInformation();
 
@@ -1486,7 +1389,6 @@ GetExceptionInformation();
 // significant set bit, or 0 if if mask is zero.
 //
 // The same is true for BitScanForward, except that the GCC function is __builtin_ffs.
-// TODO (hanhossain): public
 EXTERN_C
 inline
 unsigned char
@@ -1508,7 +1410,6 @@ BitScanForward(
     return bRet;
 }
 
-// TODO (hanhossain): public
 EXTERN_C
 inline
 unsigned char
@@ -1530,7 +1431,6 @@ BitScanForward64(
     return bRet;
 }
 
-// TODO (hanhossain): public
 // xplat-todo: review this implementation
 EXTERN_C
 inline
@@ -1552,7 +1452,6 @@ BitScanReverse(
     return bRet;
 }
 
-// TODO (hanhossain): public
 // xplat-todo: review this implementation
 EXTERN_C
 inline
@@ -1593,7 +1492,6 @@ Return Values
 The return value is the resulting incremented value.
 
 --*/
-// TODO (hanhossain): public
 EXTERN_C
 inline
 int32_t
@@ -1603,7 +1501,6 @@ InterlockedIncrement(
     return __sync_add_and_fetch(lpAddend, (int32_t)1);
 }
 
-// TODO (hanhossain): public
 EXTERN_C
 inline
 long
@@ -1632,7 +1529,6 @@ Return Values
 The return value is the resulting decremented value.
 
 --*/
-// TODO (hanhossain): public
 EXTERN_C
 inline
 int32_t
@@ -1663,7 +1559,6 @@ Return Values
 The function returns the initial value pointed to by Target.
 
 --*/
-// TODO (hanhossain): public
 EXTERN_C
 inline
 char
@@ -1674,7 +1569,6 @@ InterlockedExchange8(
     return __sync_swap(Target, Value);
 }
 
-// TODO (hanhossain): public
 EXTERN_C
 inline
 short
@@ -1685,7 +1579,6 @@ InterlockedExchange16(
     return __sync_swap(Target, Value);
 }
 
-// TODO (hanhossain): public
 EXTERN_C
 inline
 int32_t
@@ -1696,7 +1589,6 @@ InterlockedExchange(
     return __sync_swap(Target, Value);
 }
 
-// TODO (hanhossain): public
 EXTERN_C
 inline
 long
@@ -1730,7 +1622,6 @@ Return Values
 The return value is the initial value of the destination.
 
 --*/
-// TODO (hanhossain): public
 EXTERN_C
 inline
 char
@@ -1745,7 +1636,6 @@ InterlockedCompareExchange8(
         Exchange /* The value to be stored */);
 }
 
-// TODO (hanhossain): public
 EXTERN_C
 inline
 short
@@ -1760,7 +1650,6 @@ InterlockedCompareExchange16(
         Exchange /* The value to be stored */);
 }
 
-// TODO (hanhossain): public
 EXTERN_C
 inline
 int32_t
@@ -1775,7 +1664,6 @@ InterlockedCompareExchange(
         Exchange /* The value to be stored */);
 }
 
-// TODO (hanhossain): public
 // See the 32-bit variant in interlock2.s
 EXTERN_C
 inline
@@ -1808,7 +1696,6 @@ Return Values
 The return value is the original value that 'Addend' pointed to.
 
 --*/
-// TODO (hanhossain): public
 EXTERN_C
 inline
 char
@@ -1819,7 +1706,6 @@ InterlockedExchangeAdd8(
     return __sync_fetch_and_add(Addend, Value);
 }
 
-// TODO (hanhossain): public
 EXTERN_C
 inline
 short
@@ -1830,7 +1716,6 @@ InterlockedExchangeAdd16(
     return __sync_fetch_and_add(Addend, Value);
 }
 
-// TODO (hanhossain): public
 EXTERN_C
 inline
 int32_t
@@ -1841,7 +1726,6 @@ InterlockedExchangeAdd(
     return __sync_fetch_and_add(Addend, Value);
 }
 
-// TODO (hanhossain): public
 EXTERN_C
 inline
 int32_t
@@ -1852,7 +1736,6 @@ InterlockedAdd(
     return InterlockedExchangeAdd(Addend, Value) + Value;
 }
 
-// TODO (hanhossain): public
 EXTERN_C
 inline
 long
@@ -1863,7 +1746,6 @@ InterlockedExchangeAdd64(
     return __sync_fetch_and_add(Addend, Value);
 }
 
-// TODO (hanhossain): public
 EXTERN_C
 inline
 char
@@ -1874,7 +1756,6 @@ InterlockedAnd8(
     return __sync_fetch_and_and(Destination, Value);
 }
 
-// TODO (hanhossain): public
 EXTERN_C
 inline
 short
@@ -1885,7 +1766,6 @@ InterlockedAnd16(
     return __sync_fetch_and_and(Destination, Value);
 }
 
-// TODO (hanhossain): public
 EXTERN_C
 inline
 int32_t
@@ -1896,7 +1776,6 @@ InterlockedAnd(
     return __sync_fetch_and_and(Destination, Value);
 }
 
-// TODO (hanhossain): public
 EXTERN_C
 inline
 long
@@ -1907,7 +1786,6 @@ InterlockedAnd64(
     return __sync_fetch_and_and(Destination, Value);
 }
 
-// TODO (hanhossain): public
 EXTERN_C
 inline
 char
@@ -1918,7 +1796,6 @@ InterlockedOr8(
     return __sync_fetch_and_or(Destination, Value);
 }
 
-// TODO (hanhossain): public
 EXTERN_C
 inline
 short
@@ -1929,7 +1806,6 @@ InterlockedOr16(
     return __sync_fetch_and_or(Destination, Value);
 }
 
-// TODO (hanhossain): public
 EXTERN_C
 inline
 int32_t
@@ -1940,7 +1816,6 @@ InterlockedOr(
     return __sync_fetch_and_or(Destination, Value);
 }
 
-// TODO (hanhossain): public
 EXTERN_C
 inline
 long
@@ -1951,7 +1826,6 @@ InterlockedOr64(
     return __sync_fetch_and_or(Destination, Value);
 }
 
-// TODO (hanhossain): public
 EXTERN_C
 inline
 char
@@ -1962,7 +1836,6 @@ InterlockedXor8(
     return __sync_fetch_and_xor(Destination, Value);
 }
 
-// TODO (hanhossain): public
 EXTERN_C
 inline
 short
@@ -1973,7 +1846,6 @@ InterlockedXor16(
     return __sync_fetch_and_xor(Destination, Value);
 }
 
-// TODO (hanhossain): public
 EXTERN_C
 inline
 int32_t
@@ -1984,7 +1856,6 @@ InterlockedXor(
     return __sync_fetch_and_xor(Destination, Value);
 }
 
-// TODO (hanhossain): public
 EXTERN_C
 inline
 long
@@ -1998,7 +1869,6 @@ InterlockedXor64(
 #define BITS_IN_BYTE 8
 #define BITS_IN_LONG (sizeof(int32_t) * BITS_IN_BYTE)
 
-// TODO (hanhossain): public
 EXTERN_C
 inline
 unsigned char
@@ -2011,7 +1881,6 @@ InterlockedBitTestAndSet(
     return (InterlockedOr(longToTest, (1 << bitToTest)) & (1 << bitToTest)) != 0;
 }
 
-// TODO (hanhossain): public
 EXTERN_C
 inline
 unsigned char
@@ -2024,7 +1893,6 @@ BitTest(
     return ((*longToTest) & (1 << bitToTest)) != 0;
 }
 
-// TODO (hanhossain): public
 EXTERN_C
 inline
 unsigned char
@@ -2057,7 +1925,6 @@ MemoryBarrier
 The MemoryBarrier function creates a full memory barrier.
 
 --*/
-// TODO (hanhossain): public
 EXTERN_C
 inline
 void
@@ -2067,24 +1934,20 @@ MemoryBarrier(
     __sync_synchronize();
 }
 
-// TODO (hanhossain): public
 uint32_t
 GetLastError(
          void);
 
-// TODO (hanhossain): public
 void
 SetLastError(
           uint32_t dwErrCode);
 
-// TODO (hanhossain): internal
 void
 RtlRestoreContext(
    PCONTEXT ContextRecord,
    PEXCEPTION_RECORD ExceptionRecord
 );
 
-// TODO (hanhossain): internal
 void
 RtlCaptureContext(
    PCONTEXT ContextRecord
@@ -2109,7 +1972,6 @@ typedef struct _SYSTEM_INFO {
     uint16_t wProcessorRevision_PAL_Undefined;
 } SYSTEM_INFO, *LPSYSTEM_INFO;
 
-// TODO (hanhossain): public
 void
 GetSystemInfo(
            LPSYSTEM_INFO lpSystemInfo);
@@ -2129,73 +1991,43 @@ GetSystemInfo(
 
 typedef int errno_t;
 
-// TODO (hanhossain): internal
 unsigned char * _mbsdec(const unsigned char *, const unsigned char *);
-// TODO (hanhossain): public
 int _wcsicmp(const char16_t *, const char16_t*);
-// TODO (hanhossain): public
 int _wcsnicmp(const char16_t *, const char16_t *, size_t);
-// TODO (hanhossain): internal
 int _vsnwprintf(char16_t *, size_t, const char16_t *, va_list);
-// TODO (hanhossain): internal
 char16_t * _itow(int, char16_t *, int);
-// TODO (hanhossain): internal
 char16_t * _ltow(long, char16_t *, int);
 
-// TODO (hanhossain): internal
 size_t PAL_wcslen(const char16_t *);
-// TODO (hanhossain): internal
 int PAL_wcscmp(const char16_t*, const char16_t*);
-// TODO (hanhossain): internal
 int PAL_wmemcmp(const char16_t *, const char16_t *, size_t);
-// TODO (hanhossain): internal
 int PAL_wcsncmp(const char16_t *, const char16_t *, size_t);
-// TODO (hanhossain): internal
 char16_t * PAL_wcscpy(char16_t *, const char16_t *);
-// TODO (hanhossain): internal
 const char16_t * PAL_wcschr(const char16_t *, char16_t);
-// TODO (hanhossain): internal
 const char16_t * PAL_wcsrchr(const char16_t *, char16_t);
-// TODO (hanhossain): internal
 char16_t _WConst_return * PAL_wcspbrk(const char16_t *, const char16_t *);
-// TODO (hanhossain): internal
 char16_t _WConst_return * PAL_wcsstr(const char16_t *, const char16_t *);
-// TODO (hanhossain): public
 int _snwprintf(char16_t *, size_t, const char16_t *, ...);
-// TODO (hanhossain): internal
 int PAL_swscanf(const char16_t *, const char16_t *, ...);
-// TODO (hanhossain): internal
 int PAL_iswupper(char16_t);
-// TODO (hanhossain): internal
 int PAL_iswdigit(char16_t);
-// TODO (hanhossain): public
 char16_t PAL_towlower(char16_t);
-// TODO (hanhossain): public
 char16_t PAL_towupper(char16_t);
 
-// TODO (hanhossain): internal
 char16_t * _wcslwr(char16_t *);
-// TODO (hanhossain): public
 unsigned long PAL__wcstoui64(const char16_t *, char16_t **, int);
-// TODO (hanhossain): internal
 char16_t * _i64tow(long, char16_t *, int);
-// TODO (hanhossain): internal
 char16_t * _ui64tow(unsigned long, char16_t *, int);
-// TODO (hanhossain): public
 int _wtoi(const char16_t *);
 
 #ifdef __cplusplus
 extern "C++" {
-// TODO (hanhossain): internal
 inline char16_t *PAL_wcschr(char16_t *_S, char16_t _C)
         {return ((char16_t *)PAL_wcschr((const char16_t *)_S, _C)); }
-// TODO (hanhossain): internal
 inline char16_t *PAL_wcsrchr(char16_t *_S, char16_t _C)
         {return ((char16_t *)PAL_wcsrchr((const char16_t *)_S, _C)); }
-// TODO (hanhossain): internal
 inline char16_t *PAL_wcspbrk(char16_t *_S, const char16_t *_P)
         {return ((char16_t *)PAL_wcspbrk((const char16_t *)_S, _P)); }
-// TODO (hanhossain): internal
 inline char16_t *PAL_wcsstr(char16_t *_S, const char16_t *_P)
         {return ((char16_t *)PAL_wcsstr((const char16_t *)_S, _P)); }
 }
@@ -2212,7 +2044,6 @@ _rotl
 
 See MSDN doc.
 --*/
-// TODO (hanhossain): public
 EXTERN_C
 inline
 unsigned int _rotl(unsigned int value, int shift)
@@ -2232,7 +2063,6 @@ _rotl64
 
 See MSDN doc.
 --*/
-// TODO (hanhossain): public
 EXTERN_C
 inline
 unsigned long long _rotl64(unsigned long long value, int shift)
@@ -2252,7 +2082,6 @@ _rotr
 
 See MSDN doc.
 --*/
-// TODO (hanhossain): public
 EXTERN_C
 inline
 unsigned int _rotr(unsigned int value, int shift)
@@ -2272,7 +2101,6 @@ _rotr64
 
 See MSDN doc.
 --*/
-// TODO (hanhossain): public
 EXTERN_C
 inline
 unsigned long long _rotr64(unsigned long long value, int shift)
@@ -2300,7 +2128,6 @@ unsigned long long _rotr64(unsigned long long value, int shift)
 
 #endif // !PAL_STDCPP_COMPAT
 
-// TODO (hanhossain): public
 char * _fullpath(char *, const char *, size_t);
 
 #ifndef PAL_STDCPP_COMPAT
@@ -2341,33 +2168,21 @@ char * PAL_ctime(const time_t *);
 
 #endif // PAL_STDCPP_COMPAT
 
-// TODO (hanhossain): internal
 size_t PAL_fwrite(const void *, size_t, size_t, PAL_FILE *);
-// TODO (hanhossain): internal
 size_t PAL_fread(void *, size_t, size_t, PAL_FILE *);
-// TODO (hanhossain): internal
 PAL_FILE * PAL_fopen(const char *, const char *);
-// TODO (hanhossain): internal
 int PAL_getc(PAL_FILE *stream);
-// TODO (hanhossain): internal
 int PAL_ungetc(int c, PAL_FILE *stream);
-// TODO (hanhossain): internal
 int PAL_fwprintf(PAL_FILE *, const char16_t *, ...);
-// TODO (hanhossain): internal
 int PAL_vfwprintf(FILE *, const char16_t *, va_list);
-// TODO (hanhossain): internal
 int PAL_wprintf(const char16_t*, ...);
 
-// TODO (hanhossain): internal
 PAL_FILE * _wfopen(const char16_t *, const char16_t *);
 
 /* Maximum value that can be returned by the rand function. */
 
-// TODO (hanhossain): internal
 PAL_FILE * PAL_get_stdout();
-// TODO (hanhossain): internal
 PAL_FILE * PAL_get_stdin();
-// TODO (hanhossain): internal
 PAL_FILE * PAL_get_stderr();
 
 #define EXCEPTION_CONTINUE_SEARCH   0

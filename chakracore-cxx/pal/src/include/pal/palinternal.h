@@ -156,8 +156,6 @@ function_name() to call the system's implementation
 #include "TargetConditionals.h"
 #endif // __APPLE__ ?
 
-// TODO (hanhossain): remove all defines and undefs
-
 /* C runtime functions needed to be renamed to avoid duplicate definition
    of those functions when including standard C header files */
 #define time DUMMY_time

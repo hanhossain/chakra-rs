@@ -3,14 +3,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
-/*++
-
-// TODO (hanhossain): reduce usage of mstypes
-
-
-
---*/
-
 ////////////////////////////////////////////////////////////////////////
 // Extensions to the usual posix header files
 ////////////////////////////////////////////////////////////////////////
@@ -84,9 +76,7 @@ typedef unsigned long ULONG64;
 typedef unsigned short char16_t;
 #endif // __cplusplus
 
-// TODO (hanhossain): can probably remove this
 #define _INTPTR_T_DEFINED
-// TODO (hanhossain): can probably remove this
 #define _UINTPTR_T_DEFINED
 
 typedef char16_t TCHAR;

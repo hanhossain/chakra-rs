@@ -52,7 +52,6 @@
 typedef uintptr_t ChakraCookie;
 typedef unsigned char* ChakraBytePtr;
 
-// TODO (hanhossain): reduce usage of mstypes
 // xplat-todo: try reduce usage of following types
 #if !defined(__MSTYPES_DEFINED)
 typedef void* HANDLE;

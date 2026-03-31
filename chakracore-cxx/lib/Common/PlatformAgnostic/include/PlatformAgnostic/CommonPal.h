@@ -367,7 +367,6 @@ inline errno_t _wcserror_s(char16_t (&buffer)[size], int errnum)
 uint32_t CharLowerBuffW(const char16_t* lpsz, uint32_t  cchLength);
 uint32_t CharUpperBuffW(const char16_t* lpsz, uint32_t  cchLength);
 
-// TODO (hanhossain): replace with std::numeric_limits<uint32_t>::max()
 #define MAXUINT32   ((uint32_t)~((uint32_t)0))
 #define MAXINT32    ((int32_t)(MAXUINT32 >> 1))
 #define BYTE_MAX    0xff

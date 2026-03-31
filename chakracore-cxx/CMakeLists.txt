@@ -98,7 +98,6 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL AppleClang
     OR CMAKE_CXX_COMPILER_ID STREQUAL GNU)
 endif()
 
-# TODO (hanhossain): don't use add_definition for this, just use the CMake variable
 add_definitions(-DCHAKRA_STATIC_LIBRARY=1)
 
 add_definitions(-DFEATURE_PAL)
