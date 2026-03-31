@@ -25,6 +25,7 @@ Abstract:
 #include "threadinfo.hpp"
 #include "shm.hpp"
 #include "list.h"
+#include "volatile.h"
 
 #include <pthread.h>
 

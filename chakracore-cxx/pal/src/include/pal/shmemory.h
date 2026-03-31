@@ -74,6 +74,8 @@ SHMRelease
 #ifndef _PAL_SHMEMORY_H_
 #define _PAL_SHMEMORY_H_
 
+#include "volatile.h"
+
 #ifdef __cplusplus
 extern "C"
 {
