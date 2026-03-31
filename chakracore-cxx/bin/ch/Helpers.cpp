@@ -186,7 +186,7 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
     {
         // Determine the file length, in bytes.
         fseek(file->bsdFilePtr, 0, SEEK_END);
-        lengthBytes = PAL_ftell(file);
+        lengthBytes = ftell(file->bsdFilePtr);
         fseek(file->bsdFilePtr, 0, SEEK_SET);
     }
 
@@ -399,7 +399,7 @@ int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, u
     // Determine the file length, in bytes.
     //
     fseek(file->bsdFilePtr, 0, SEEK_END);
-    lengthBytes = PAL_ftell(file);
+    lengthBytes = ftell(file->bsdFilePtr);
     fseek(file->bsdFilePtr, 0, SEEK_SET);
     contents = (const char *)malloc(lengthBytes);
     if (contents != nullptr)

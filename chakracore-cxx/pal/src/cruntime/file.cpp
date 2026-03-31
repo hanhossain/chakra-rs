@@ -430,36 +430,6 @@ done:
 /*++
 Function :
 
-    ftell
-
-    See MSDN for more details.
---*/
-int32_t
-PAL_ftell(PAL_FILE * f)
-{
-    long lRetVal = 0;
-
-    ENTRY( "ftell( %p )\n", f );
-
-    _ASSERTE(f != NULL);
-    lRetVal = ftell( f->bsdFilePtr );
-
-    /* Windows does not set an error if the file pointer's position
-    is greater than _I32_MAX. It just returns -1. */
-    if (lRetVal > INT_MAX)
-    {
-        lRetVal = -1;
-    }
-
-    LOGEXIT( "ftell returning %ld\n", lRetVal );
-    /* This explicit cast to int32_t is used to silence any potential warnings
-    due to implicitly casting the native long lRetVal to int32_t when returning. */
-    return (int32_t)lRetVal;
-}
-
-/*++
-Function :
-
     getc
 
     See MSDN for more details.
