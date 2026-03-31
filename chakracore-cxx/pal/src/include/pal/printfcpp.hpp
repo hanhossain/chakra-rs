@@ -33,14 +33,7 @@ typedef __builtin_va_list va_list;
 
 extern "C"
 {
-    int
-    PAL__vsnprintf(
-        char* Buffer,
-        size_t Count,
-        const char * Format,
-        va_list ap);
-
-    int
+int
     PAL__wvsnprintf(
         char16_t* Buffer,
         size_t Count,
@@ -56,45 +49,8 @@ extern "C"
 
 namespace CorUnix
 {
-    int
-    InternalVfprintf(
-        CPalThread *pthrCurrent,
-        PAL_FILE *stream,
-        const char *format,
-        va_list ap);
-
-    int
-    InternalWvsnprintf(
-        CPalThread *pthrCurrent,
-        char16_t* Buffer,
-        size_t Count,
-        const char16_t* Format,
-        va_list ap);
-
-    int
-    InternalVsnprintf(
-        CPalThread *pthrCurrent,
-        char* Buffer,
-        size_t Count,
-        const char * Format,
-        va_list ap);
-
-    int
-    InternalVfwprintf(
-        CPalThread *pthrCurrent,
-        FILE *stream,
-        const char16_t *format,
-        va_list ap);
-
 }
 #else // __cplusplus
-
-    int
-    PAL__vsnprintf(
-        char* Buffer,
-        size_t Count,
-        const char * Format,
-        va_list ap);
 
     int
     PAL__wvsnprintf(
