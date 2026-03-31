@@ -166,7 +166,6 @@ function_name() to call the system's implementation
 // The standard headers define va_start and va_end as macros,
 // To avoid redefinition problems, undefine those macros.
 
-#define timeval PAL_timeval
 #define fpos_t PAL_fpos_t
 
 #define INCLUDE_PAL_INTERNAL_
@@ -184,7 +183,6 @@ function_name() to call the system's implementation
 /* Undef all functions and types previously defined so those functions and
    types could be mapped to the C runtime and socket implementation of the
    native OS */
-#undef timeval
 #undef fpos_t
 
 
