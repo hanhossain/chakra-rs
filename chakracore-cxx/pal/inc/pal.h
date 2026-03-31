@@ -477,10 +477,8 @@ uint32_t
 GetThreadId(
     HANDLE hThread);
 
-// To work around multiply-defined symbols in the Carbon framework.
-#define GetCurrentThread PAL_GetCurrentThread
 HANDLE
-GetCurrentThread(
+PAL_GetCurrentThread(
          void);
 
 
