@@ -48,12 +48,6 @@ extern "C"
         va_list ap);
 
     int
-    PAL_vfprintf(
-        PAL_FILE *stream,
-        const char *format,
-        va_list ap);
-
-    int
     PAL_vfwprintf(
         PAL_FILE *stream,
         const char16_t *format,
@@ -107,12 +101,6 @@ namespace CorUnix
         char16_t* Buffer,
         size_t Count,
         const char16_t* Format,
-        va_list ap);
-
-    int
-    PAL_vfprintf(
-        PAL_FILE *stream,
-        const char *format,
         va_list ap);
 
     int
