@@ -96,7 +96,7 @@ uint ConcatPath(const char * filenameLeft, uint posPathSep, const char * filenam
 
     if (bufferLength < totalLength)
     {
-      PAL_fprintf(PAL_get_stderr(), "Error: file path is too long.\n");
+      fprintf(stderr, "Error: file path is too long.\n");
       return (uint)-1;
     }
 
@@ -173,7 +173,7 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
             {
 // TODO (hanhossain): may want to include <unistd.h> to import _POSIX_VERSION
 #if defined(_POSIX_VERSION)
-                PAL_fprintf(PAL_get_stderr(), "Error in opening file: ");
+                fprintf(stderr, "Error in opening file: ");
                 perror(filename);
 #endif
             }
@@ -388,8 +388,8 @@ int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, u
     {
         if (printFileOpenError)
         {
-            PAL_fprintf(PAL_get_stderr(), "Error in opening file '%s' ", filename);
-            PAL_fprintf(PAL_get_stderr(), "\n");
+            fprintf(stderr, "Error in opening file '%s' ", filename);
+            fprintf(stderr, "\n");
         }
         return E_FAIL;
     }
@@ -437,8 +437,8 @@ void Helpers::TTReportLastIOErrorAsNeeded(BOOL ok, const char* msg)
 {
     if(!ok)
     {
-        PAL_fprintf(PAL_get_stderr(), "Error is: %i %s\n", errno, strerror(errno));
-        PAL_fprintf(PAL_get_stderr(), "Message is: %s\n", msg);
+        fprintf(stderr, "Error is: %i %s\n", errno, strerror(errno));
+        fprintf(stderr, "Message is: %s\n", msg);
 
         AssertMsg(false, "IO Error!!!");
         exit(1);
@@ -531,7 +531,7 @@ JsTTDStreamHandle CALLBACK Helpers::TTCreateStreamCallback(size_t uriLength, con
     JsTTDStreamHandle res = TTDHostOpen(uriLength + asciiNameLength, path, write);
     if(res == nullptr)
     {
-        PAL_fprintf(PAL_get_stderr(), "Failed to open file: %s\n", path);
+        fprintf(stderr, "Failed to open file: %s\n", path);
     }
 
     Helpers::TTReportLastIOErrorAsNeeded(res != nullptr, "Failed File Open");

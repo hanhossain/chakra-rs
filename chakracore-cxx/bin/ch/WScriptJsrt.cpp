@@ -237,7 +237,7 @@ JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *argu
             hr = Helpers::LoadScriptFromFile(*fileName, fileContent);
             if (FAILED(hr))
             {
-                PAL_fprintf(PAL_get_stderr(), "Couldn't load file '%s'\n", fileName.GetString());
+                fprintf(stderr, "Couldn't load file '%s'\n", fileName.GetString());
                 IfJsrtErrorSetGo(ChakraRTInterface::JsGetUndefinedValue(&returnValue));
                 return returnValue;
             }
@@ -1306,7 +1306,7 @@ JsValueRef WScriptJsrt::LoadTextFileCallback(JsValueRef callee, bool isConstruct
 
             if (FAILED(hr))
             {
-                PAL_fprintf(PAL_get_stderr(), "Couldn't load file '%s'\n", fileName.GetString());
+                fprintf(stderr, "Couldn't load file '%s'\n", fileName.GetString());
                 IfJsrtErrorSetGo(ChakraRTInterface::JsGetUndefinedValue(&returnValue));
                 return returnValue;
             }
@@ -1468,7 +1468,7 @@ JsValueRef WScriptJsrt::LoadBinaryFileCallback(JsValueRef callee,
 
             if (FAILED(hr))
             {
-                PAL_fprintf(PAL_get_stderr(), "Couldn't load file '%s'\n", fileName.GetString());
+                fprintf(stderr, "Couldn't load file '%s'\n", fileName.GetString());
                 IfJsrtErrorSetGoLabel(ChakraRTInterface::JsGetUndefinedValue(&returnValue), Error);
                 return returnValue;
             }
@@ -1882,7 +1882,7 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
                     _splitpath_s(fName, nullptr, 0, nullptr, 0, shortFileName, _countof(shortFileName), ext, _countof(ext));
 
                     // do not mix char/wchar. print them separately
-                    PAL_fprintf(PAL_get_stderr(), "thrown at %s%s:\n^\n", shortFileName, ext);
+                    fprintf(stderr, "thrown at %s%s:\n^\n", shortFileName, ext);
                     PAL_fwprintf(PAL_get_stderr(), u"%ls\n", errorMessage.GetWideString());
                 }
                 else
@@ -2036,7 +2036,7 @@ int32_t WScriptJsrt::ModuleMessage::Call(const char * fileName)
                     auto actualModuleRecord = moduleRecordMap.find(*fullPath);
                     if (actualModuleRecord == moduleRecordMap.end() || moduleErrMap[actualModuleRecord->second] == RootModule)
                     {
-                        PAL_fprintf(PAL_get_stderr(), "Couldn't load file '%s'\n", specifierStr.GetString());
+                        fprintf(stderr, "Couldn't load file '%s'\n", specifierStr.GetString());
                     }
                 }
                 LoadScript(nullptr, fullPath == nullptr ? *specifierStr : fullPath->c_str(), nullptr, "module", true, WScriptJsrt::FinalizeFree, false);
