@@ -1066,24 +1066,6 @@ int PAL__wvsnprintf(char16_t* Buffer, size_t Count, const char16_t* Format, va_l
 
 /*******************************************************************************
 Function:
-  PAL_vfprintf
-
-Parameters:
-  stream
-    - out stream
-  Format
-    - format string
-  ap
-    - stdarg parameter list
-*******************************************************************************/
-
-int PAL_vfprintf(PAL_FILE *stream, const char *format, va_list ap)
-{
-    return CoreVfprintf(InternalGetCurrentThread(), stream, format, ap);
-}
-
-/*******************************************************************************
-Function:
   PAL_vfwprintf
 
 Parameters:

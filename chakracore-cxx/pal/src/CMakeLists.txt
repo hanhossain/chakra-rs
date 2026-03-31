@@ -72,8 +72,7 @@ set(SOURCES
   cruntime/path.cpp
   cruntime/printf.cpp
   cruntime/printfcpp.cpp
-  cruntime/silent_printf.cpp
-  cruntime/wchar.cpp
+    cruntime/wchar.cpp
     safecrt/makepath_s.cpp
   safecrt/mbusafecrt.cpp
   safecrt/safecrt_input_s.cpp

@@ -133,23 +133,6 @@ Parameters:
 *******************************************************************************/
 void PAL_printf_arg_remover(va_list *ap, int32_t Width, int32_t Precision, int32_t Type, int32_t Prefix);
 
-/*++
-Function:
-  Silent_PAL_vsnprintf
-
-See MSDN doc.
---*/
-int32_t Silent_PAL_vsnprintf(char* Buffer, int32_t Count, const char * Format, va_list ap);
-
-/*++
-Function:
-  Silent_PAL_vfprintf
-
-See MSDN doc.
---*/
-int Silent_PAL_vfprintf(PAL_FILE *stream, const char *format, va_list ap);
-
-
 
 /*++
 Function:
