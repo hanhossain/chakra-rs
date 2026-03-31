@@ -262,7 +262,7 @@ X64WriteBarrierCardTableManager::Initialize()
         void * cardTableSpace = ::VirtualAlloc(NULL, _cardTableNumEntries, MEM_RESERVE, PAGE_READWRITE);
         if (!cardTableSpace) // Crash Early with a meaningful message. Otherwise the behavior is undefined.
         {
-            PAL_fprintf(PAL_get_stderr(), "Out of Memory\n"); fflush(stderr);
+            fprintf(stderr, "Out of Memory\n"); fflush(stderr);
             abort();
         }
 
