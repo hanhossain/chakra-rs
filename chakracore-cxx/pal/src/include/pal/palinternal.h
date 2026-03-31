@@ -184,25 +184,6 @@ function_name() to call the system's implementation
 /* Undef all functions and types previously defined so those functions and
    types could be mapped to the C runtime and socket implementation of the
    native OS */
-#undef strdup
-#undef malloc
-#undef realloc
-#undef free
-#undef localtime
-#undef getcwd
-#undef size_t
-#undef labs
-#undef acos
-#undef asin
-#undef atan2
-#undef exp
-#undef log
-#undef log10
-#undef open
-#undef glob
-
-#undef ptrdiff_t
-#undef uintptr_t
 #undef timeval
 #undef fpos_t
 
