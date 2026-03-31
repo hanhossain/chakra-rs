@@ -32,7 +32,6 @@ add_library (Chakra.Runtime.PlatformAgnostic OBJECT
   ${PL_SOURCE_FILES}
   )
 
-# TODO (hanhossain): cleanup includes
 target_include_directories (Chakra.Runtime.PlatformAgnostic PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/pal/inc
     ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt

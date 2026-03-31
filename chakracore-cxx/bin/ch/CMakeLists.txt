@@ -8,7 +8,6 @@ add_library(chhelper
     ../ChakraCore/TestHooks.cpp
 )
 
-# TODO (hanhossain): cleanup includes
 target_include_directories(chhelper PUBLIC
     ${CXXBRIDGE_INCLUDE_DIR}
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlaceHolder

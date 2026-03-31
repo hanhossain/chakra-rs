@@ -21,7 +21,6 @@ add_library (Chakra.Runtime.ByteCode OBJECT
     Symbol.cpp
     )
 
-# TODO (hanhossain): cleanup includes
 target_include_directories (Chakra.Runtime.ByteCode PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CHAKRACORE_SOURCE_DIR}/pal/inc

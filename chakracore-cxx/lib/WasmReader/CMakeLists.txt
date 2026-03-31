@@ -12,7 +12,6 @@ add_library (Chakra.WasmReader OBJECT
     WasmSignature.cpp
     )
 
-# TODO (hanhossain): cleanup includes
 target_include_directories (Chakra.WasmReader PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/pal/inc
     ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt

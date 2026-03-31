@@ -3,7 +3,6 @@ add_library (Chakra.Runtime.Math OBJECT
     RuntimeMathPch.cpp
     )
 
-# TODO (hanhossain): cleanup includes
 target_include_directories (Chakra.Runtime.Math PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/pal/inc
     ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt

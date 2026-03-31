@@ -6,7 +6,6 @@ add_library (Chakra.Common.Exceptions OBJECT
     Throw.cpp
 )
 
-# TODO (hanhossain): cleanup includes
 target_include_directories (Chakra.Common.Exceptions PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/pal/inc
     ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt

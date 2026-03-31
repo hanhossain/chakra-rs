@@ -28,7 +28,6 @@ add_library (Chakra.Runtime.Types OBJECT
     UnscopablesWrapperObject.cpp
     )
 
-# TODO (hanhossain): cleanup includes
 target_include_directories (Chakra.Runtime.Types PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/pal/inc
     ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
