@@ -23,6 +23,7 @@ Revision History:
 
 #ifndef _PAL_INIT_H_
 #define _PAL_INIT_H_
+#include "volatile.h"
 
 #ifdef __cplusplus
 extern "C"

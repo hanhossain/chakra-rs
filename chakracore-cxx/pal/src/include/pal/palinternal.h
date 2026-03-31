@@ -221,8 +221,6 @@ typedef enum _TimeConversionConstants
 #ifdef __cplusplus
 }
 
-#include "volatile.h"
-
 #endif // __cplusplus
 
 #define StackOverflowMessage "Process is terminated due to StackOverflowException.\n"
