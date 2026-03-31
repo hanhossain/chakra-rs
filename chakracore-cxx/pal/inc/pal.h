@@ -2354,7 +2354,7 @@ int PAL_ungetc(int c, PAL_FILE *stream);
 // TODO (hanhossain): internal
 int PAL_fwprintf(PAL_FILE *, const char16_t *, ...);
 // TODO (hanhossain): internal
-int PAL_vfwprintf(PAL_FILE *, const char16_t *, va_list);
+int PAL_vfwprintf(FILE *, const char16_t *, va_list);
 // TODO (hanhossain): internal
 int PAL_wprintf(const char16_t*, ...);
 

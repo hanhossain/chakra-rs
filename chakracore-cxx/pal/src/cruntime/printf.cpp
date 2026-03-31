@@ -182,7 +182,7 @@ PAL_wprintf(
     ENTRY("PAL_wprintf (format=%p (%S))\n", format, format);
 
     va_start(ap, format);
-    Length = PAL_vfwprintf( PAL_get_stdout(), format, ap);
+    Length = PAL_vfwprintf(stdout, format, ap);
     va_end(ap);
 
     LOGEXIT("PAL_wprintf returns int %d\n", Length);
@@ -236,7 +236,7 @@ PAL_fwprintf(
     ENTRY("PAL_fwprintf (stream=%p, format=%p (%S))\n", stream, format, format);
 
     va_start(ap, format);
-    Length = PAL_vfwprintf( stream, format, ap);
+    Length = PAL_vfwprintf( stream->bsdFilePtr, format, ap);
     va_end(ap);
 
     LOGEXIT("PAL_fwprintf returns int %d\n", Length);
