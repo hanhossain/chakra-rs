@@ -146,22 +146,9 @@ function_name() to call the system's implementation
 
 #define PAL_IMPLEMENTATION
 
-#ifdef DEBUG
-#define _ENABLE_DEBUG_MESSAGES_ 1
-#else
-#define _ENABLE_DEBUG_MESSAGES_ 0
-#endif
-
 #if defined(__APPLE__)
 #include "TargetConditionals.h"
 #endif // __APPLE__ ?
-
-#ifdef __record_type_class
-#undef __record_type_class
-#endif
-#ifdef __real_type_class
-#undef __real_type_class
-#endif
 
 // The standard headers define va_start and va_end as macros,
 // To avoid redefinition problems, undefine those macros.
@@ -176,16 +163,9 @@ function_name() to call the system's implementation
 #undef va_arg
 #endif
 
-#undef _BitScanForward64
-
 /* Undef all functions and types previously defined so those functions and
    types could be mapped to the C runtime and socket implementation of the
    native OS */
-
-#undef _vsnwprintf
-
-#undef __record_type_class
-#undef __real_type_class
 
 // We need a sigsetjmp prototype in pal.h for the SEH macros, but we
 // can't use the "real" prototype (because we don't want to define sigjmp_buf).
