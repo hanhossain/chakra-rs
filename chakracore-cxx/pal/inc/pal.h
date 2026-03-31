@@ -2352,10 +2352,6 @@ int PAL_getc(PAL_FILE *stream);
 // TODO (hanhossain): internal
 int PAL_ungetc(int c, PAL_FILE *stream);
 // TODO (hanhossain): internal
-int PAL_setvbuf(PAL_FILE *stream, char *, int, size_t);
-// TODO (hanhossain): internal
-char16_t * PAL_fgetws(char16_t *, int, PAL_FILE *);
-// TODO (hanhossain): internal
 int PAL_fwprintf(PAL_FILE *, const char16_t *, ...);
 // TODO (hanhossain): internal
 int PAL_vfwprintf(PAL_FILE *, const char16_t *, va_list);
