@@ -171,20 +171,6 @@ Windows behavoir.
 void FILEGetProperNotFoundError( char* lpPath, uint32_t * lpErrorCode );
 
 /*++
-PAL_fflush
-
-Calls fflush
-
-Input parameters:
-
-PAL_FILE *stream = stream to be flushed.
-
-Return value:
-    0 is returned on success, otherwise EOF is returned.
---*/
-int PAL_fflush( PAL_FILE *stream );
-
-/*++
 PAL_fwrite
 
 Wrapper function for InternalFwrite

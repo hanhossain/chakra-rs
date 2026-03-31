@@ -404,7 +404,7 @@ void Output::Flush()
     }
     if(s_outputFile != nullptr)
     {
-        PAL_fflush(s_outputFile);
+        fflush(s_outputFile->bsdFilePtr);
     }
     fflush(NULL);
 }

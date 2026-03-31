@@ -58,7 +58,7 @@ LeakReport::EndRedirectOutput()
 
     if (nestedRedirectOutputCount == 0)
     {
-        PAL_fflush(file);
+        fflush(file->bsdFilePtr);
         PAL_FILE * tmpFile = Output::SetFile(oldFile);
         Assert(tmpFile == file);
         oldFile = nullptr;

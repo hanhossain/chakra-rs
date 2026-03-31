@@ -1865,7 +1865,7 @@ namespace TTD
             this->m_currLength = 0;
         }
 
-        PAL_fflush(this->m_outfile);
+        fflush(this->m_outfile->bsdFilePtr);
     }
 
     void TraceLogger::WriteEnumAction(long eTime, BOOL returnCode, Js::PropertyId pid, Js::PropertyAttributes attrib, Js::JavascriptString* pname)

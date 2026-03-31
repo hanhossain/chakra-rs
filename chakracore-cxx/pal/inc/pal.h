@@ -36,6 +36,8 @@ Abstract:
 #ifndef __PAL_H__
 #define __PAL_H__
 
+#include "pal_file.h"
+
 #ifdef PAL_STDCPP_COMPAT
 #include <stddef.h>
 #include <stdio.h>
@@ -2319,9 +2321,6 @@ struct tm {
 char * PAL_ctime(const time_t *);
 #endif // !PAL_STDCPP_COMPAT
 
-struct _FILE;
-typedef struct _FILE PAL_FILE;
-
 #ifndef PAL_STDCPP_COMPAT
 
 #define SEEK_SET    0
@@ -2344,8 +2343,6 @@ typedef struct _FILE PAL_FILE;
 
 // TODO (hanhossain): internal
 int PAL_fclose(PAL_FILE *);
-// TODO (hanhossain): internal
-int PAL_fflush(PAL_FILE *);
 // TODO (hanhossain): internal
 size_t PAL_fwrite(const void *, size_t, size_t, PAL_FILE *);
 // TODO (hanhossain): internal

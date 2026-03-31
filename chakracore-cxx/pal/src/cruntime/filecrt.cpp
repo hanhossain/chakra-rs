@@ -43,25 +43,6 @@ SET_DEFAULT_DEBUG_CHANNEL(CRT);
 
 
 /*++
-Function:
-    PAL_fflush
-
-See MSDN for more details.
---*/
-int
-PAL_fflush( PAL_FILE *stream )
-{
-    int nRetVal = 0;
-
-    ENTRY( "fflush( %p )\n", stream );
-
-    nRetVal = fflush(stream ? stream->bsdFilePtr : NULL);
-
-    LOGEXIT( "fflush returning %d\n", nRetVal );
-    return nRetVal;
-}
-
-/*++
 InternalOpen
 
 Wrapper for open.
