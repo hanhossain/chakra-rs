@@ -68,8 +68,7 @@ set(SOURCES
   cruntime/lstr.cpp
   cruntime/mbstring.cpp
   cruntime/misc.cpp
-  cruntime/misctls.cpp
-  cruntime/path.cpp
+    cruntime/path.cpp
   cruntime/printf.cpp
   cruntime/printfcpp.cpp
     cruntime/wchar.cpp
