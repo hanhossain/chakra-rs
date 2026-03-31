@@ -156,27 +156,6 @@ function_name() to call the system's implementation
 #include "TargetConditionals.h"
 #endif // __APPLE__ ?
 
-/* C runtime functions needed to be renamed to avoid duplicate definition
-   of those functions when including standard C header files */
-#define abs DUMMY_abs
-#define llabs DUMMY_llabs
-#define atan DUMMY_atan
-#define tan DUMMY_tan
-#define cos DUMMY_cos
-#define sin DUMMY_sin
-#define cosh DUMMY_cosh
-#define sinh DUMMY_sinh
-#define tanh DUMMY_tanh
-#define modf DUMMY_modf
-#define fmod DUMMY_fmod
-#define fmodf DUMMY_fmodf
-#define sqrt DUMMY_sqrt
-#define ceil DUMMY_ceil
-#define fabs DUMMY_fabs
-#define fabsf DUMMY_fabsf
-#define floor DUMMY_floor
-#define modff DUMMY_modff
-
 #ifdef __record_type_class
 #undef __record_type_class
 #endif
@@ -217,9 +196,7 @@ function_name() to call the system's implementation
 #undef localtime
 #undef getcwd
 #undef size_t
-#undef abs
 #undef labs
-#undef llabs
 #undef acos
 #undef asin
 #undef atan2
@@ -228,22 +205,6 @@ function_name() to call the system's implementation
 #undef log10
 #undef open
 #undef glob
-#undef atan
-#undef tan
-#undef cos
-#undef sin
-#undef cosh
-#undef sinh
-#undef tanh
-#undef modf
-#undef fmod
-#undef fmodf
-#undef sqrt
-#undef ceil
-#undef fabs
-#undef fabsf
-#undef floor
-#undef modff
 
 #undef ptrdiff_t
 #undef uintptr_t
