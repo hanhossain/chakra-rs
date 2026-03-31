@@ -3612,7 +3612,7 @@ using namespace Js;
         JavascriptArray * pDestArray = NULL;
 
         PROBE_STACK_NO_DISPOSE(function->GetScriptContext(), Js::Constants::MinStackDefault + (args.Info.Count * sizeof(TypeId*)));
-        TypeId* remoteTypeIds = (TypeId*)_alloca(args.Info.Count * sizeof(TypeId*));
+        TypeId* remoteTypeIds = (TypeId*)alloca(args.Info.Count * sizeof(TypeId*));
 
         bool isInt = true;
         bool isFloat = true;

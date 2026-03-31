@@ -2195,12 +2195,12 @@ namespace Js
             AnalysisAssert(newCount >= (ushort)args.Info.Count);
 
             Var* newValues;
-            const unsigned STACK_ARGS_ALLOCA_THRESHOLD = 8; // Number of stack args we allow before using _alloca
+            const unsigned STACK_ARGS_ALLOCA_THRESHOLD = 8; // Number of stack args we allow before using alloca
             Var stackArgs[STACK_ARGS_ALLOCA_THRESHOLD];
             if (newCount > STACK_ARGS_ALLOCA_THRESHOLD)
             {
                 PROBE_STACK(scriptContext, newCount * sizeof(Var) + Js::Constants::MinStackDefault); // args + function call
-                newValues = (Var*)_alloca(newCount * sizeof(Var));
+                newValues = (Var*)alloca(newCount * sizeof(Var));
             }
             else
             {

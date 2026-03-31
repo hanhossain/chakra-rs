@@ -384,7 +384,7 @@ using namespace Js;
         return library->GetUndefined();
     }
 
-    enum : unsigned { STACK_ARGS_ALLOCA_THRESHOLD = 8 }; // Number of stack args we allow before using _alloca
+    enum : unsigned { STACK_ARGS_ALLOCA_THRESHOLD = 8 }; // Number of stack args we allow before using alloca
 
     // ES5 15.3.4.3
     //When the apply method is called on an object func with arguments thisArg and argArray the following steps are taken:
@@ -524,7 +524,7 @@ using namespace Js;
                 if (outArgs.Info.Count > STACK_ARGS_ALLOCA_THRESHOLD)
                 {
                     PROBE_STACK(scriptContext, outArgs.Info.Count * sizeof(Var)+Js::Constants::MinStackDefault); // args + function call
-                    outArgs.Values = (Var*)_alloca(outArgs.Info.Count * sizeof(Var));
+                    outArgs.Values = (Var*)alloca(outArgs.Info.Count * sizeof(Var));
                 }
                 else
                 {
@@ -870,7 +870,7 @@ using namespace Js;
         // JavascriptOperators::NewScObjectNoCtor should have thrown if 'v' is not a constructor
         RecyclableObject* functionObj = UnsafeVarTo<RecyclableObject>(v);
 
-        const unsigned STACK_ARGS_ALLOCA_THRESHOLD = 8; // Number of stack args we allow before using _alloca
+        const unsigned STACK_ARGS_ALLOCA_THRESHOLD = 8; // Number of stack args we allow before using alloca
         Var stackArgs[STACK_ARGS_ALLOCA_THRESHOLD];
         Var* newValues = args.Values;
         CallFlags newFlags = args.Info.Flags;
@@ -893,7 +893,7 @@ using namespace Js;
                 if (newCount > STACK_ARGS_ALLOCA_THRESHOLD)
                 {
                     PROBE_STACK(scriptContext, newCount * sizeof(Var) + Js::Constants::MinStackDefault); // args + function call
-                    newValues = (Var*)_alloca(newCount * sizeof(Var));
+                    newValues = (Var*)alloca(newCount * sizeof(Var));
                 }
                 else
                 {
@@ -1110,7 +1110,7 @@ using namespace Js;
         {
             PROBE_STACK(scriptContext, actualLength * sizeof(Var) + Js::Constants::MinStackDefault); // args + function call
             outArgsSize = actualLength * sizeof(Var);
-            outArgs.Values = (Var*)_alloca(outArgsSize);
+            outArgs.Values = (Var*)alloca(outArgsSize);
             memset((outArgs.Values),0,(outArgsSize));
         }
         else

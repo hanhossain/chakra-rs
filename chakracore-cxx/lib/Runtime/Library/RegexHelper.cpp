@@ -982,7 +982,7 @@ namespace Js
 
             ThreadContext* threadContext = scriptContext->GetThreadContext();
 
-            Var* args = (Var*) _alloca(argCount * sizeof(Var));
+            Var* args = (Var*) alloca(argCount * sizeof(Var));
 
             args[0] = scriptContext->GetLibrary()->GetUndefined();
 #pragma prefast(suppress:6386, "The write is within the bounds")
@@ -1314,7 +1314,7 @@ namespace Js
         // The garbage collector must know about this array since it is being passed back into script land
         Var* replaceArgs;
         PROBE_STACK_NO_DISPOSE(scriptContext, (numGroups + 3) * sizeof(Var));
-        replaceArgs = (Var*)_alloca((numGroups + 3) * sizeof(Var));
+        replaceArgs = (Var*)alloca((numGroups + 3) * sizeof(Var));
         replaceArgs[0] = scriptContext->GetLibrary()->GetUndefined();
         replaceArgs[numGroups + 2] = input;
 

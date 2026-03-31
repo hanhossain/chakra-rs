@@ -2047,14 +2047,14 @@ skipThunk:
                 {
                     size_t stackVarSizeInBytes = stackVarAllocCount * sizeof(Var);
                     PROBE_STACK_PARTIAL_INITIALIZED_INTERPRETER_FRAME(functionScriptContext, Js::Constants::MinStackInterpreter + stackVarSizeInBytes);
-                    stackAllocation = (Var*)_alloca(stackVarSizeInBytes);
+                    stackAllocation = (Var*)alloca(stackVarSizeInBytes);
                 }
             }
             else
             {
                 varSizeInBytes = (varAllocCount + stackVarAllocCount) * sizeof(Var);
                 PROBE_STACK_PARTIAL_INITIALIZED_INTERPRETER_FRAME(functionScriptContext, Js::Constants::MinStackInterpreter + varSizeInBytes);
-                allocation = (Var*)_alloca(varSizeInBytes);
+                allocation = (Var*)alloca(varSizeInBytes);
 #if DBG
                 memset(allocation, 0xFE, varSizeInBytes);
 #endif
@@ -2083,7 +2083,7 @@ skipThunk:
             }
 
 #if DBG
-            Js::RecyclableObject * invalidStackVar = (Js::RecyclableObject*)_alloca(sizeof(Js::RecyclableObject));
+            Js::RecyclableObject * invalidStackVar = (Js::RecyclableObject*)alloca(sizeof(Js::RecyclableObject));
             memset(reinterpret_cast<void*>(invalidStackVar), 0xFE, sizeof(Js::RecyclableObject));
 #endif
 
@@ -2920,7 +2920,7 @@ skipThunk:
             {
                 size_t stackVarSizeInBytes = stackVarAllocCount * sizeof(Var);
                 PROBE_STACK_PARTIAL_INITIALIZED_INTERPRETER_FRAME(GetScriptContext(), Js::Constants::MinStackInterpreter + stackVarSizeInBytes);
-                stackAllocation = (Var*)_alloca(stackVarSizeInBytes);
+                stackAllocation = (Var*)alloca(stackVarSizeInBytes);
             }
             // use a stack address so the debugger stepping logic works (step-out, for example, compares stack depths to determine when to complete the step)
             // debugger stepping does not matter here, but it's worth being consistent with normal stack frame
@@ -2930,12 +2930,12 @@ skipThunk:
         {
             varSizeInBytes = (varAllocCount + stackVarAllocCount) * sizeof(Var);
             PROBE_STACK_PARTIAL_INITIALIZED_INTERPRETER_FRAME(GetScriptContext(), Js::Constants::MinStackInterpreter + varSizeInBytes);
-            allocation = (Var*)_alloca(varSizeInBytes);
+            allocation = (Var*)alloca(varSizeInBytes);
             stackAddr = reinterpret_cast<unsigned long>(allocation);
         }
 
 #if DBG
-        Var invalidStackVar = (Js::RecyclableObject*)_alloca(sizeof(Js::RecyclableObject));
+        Var invalidStackVar = (Js::RecyclableObject*)alloca(sizeof(Js::RecyclableObject));
         memset(invalidStackVar, 0xFE, sizeof(Js::RecyclableObject));
 #endif
 
@@ -6333,14 +6333,14 @@ skipThunk:
             // Allocate room on the stack for the spread args.
             Arguments outArgs(CallInfo(CallFlags_New, 0), nullptr);
             outArgs.Info.Count = spreadSize;
-            const unsigned STACK_ARGS_ALLOCA_THRESHOLD = 8; // Number of stack args we allow before using _alloca
+            const unsigned STACK_ARGS_ALLOCA_THRESHOLD = 8; // Number of stack args we allow before using alloca
             Var stackArgs[STACK_ARGS_ALLOCA_THRESHOLD];
             size_t outArgsSize = 0;
             if (outArgs.Info.Count > STACK_ARGS_ALLOCA_THRESHOLD)
             {
                 PROBE_STACK(scriptContext, outArgs.Info.Count * sizeof(Var) + Js::Constants::MinStackDefault); // args + function call
                 outArgsSize = outArgs.Info.Count * sizeof(Var);
-                outArgs.Values = (Var*)_alloca(outArgsSize);
+                outArgs.Values = (Var*)alloca(outArgsSize);
                 memset((outArgs.Values),0,(outArgsSize));
             }
             else

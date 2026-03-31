@@ -231,7 +231,7 @@ TestObject *StressTester::CreateRandom()
 {
     int numObjects = std::rand() % 5000 + 1;
 
-    void *memory = _alloca(numObjects * sizeof(TestObject*)+OBJALIGN);
+    void *memory = alloca(numObjects * sizeof(TestObject*)+OBJALIGN);
     TestObject **objs = reinterpret_cast<TestObject**>(AlignPtr(memory, OBJALIGN));
 
     // Create the objects

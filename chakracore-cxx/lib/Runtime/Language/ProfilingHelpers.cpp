@@ -562,14 +562,14 @@ using namespace Js;
             Assert(spreadSize == (((1 << 24) - 1) & spreadSize));
             // Allocate room on the stack for the spread args.
             outArgs.Info.Count = spreadSize;
-            const unsigned STACK_ARGS_ALLOCA_THRESHOLD = 8; // Number of stack args we allow before using _alloca
+            const unsigned STACK_ARGS_ALLOCA_THRESHOLD = 8; // Number of stack args we allow before using alloca
             Var stackArgs[STACK_ARGS_ALLOCA_THRESHOLD];
             size_t outArgsSize = 0;
             if (outArgs.Info.Count > STACK_ARGS_ALLOCA_THRESHOLD)
             {
                 PROBE_STACK(scriptContext, outArgs.Info.Count * sizeof(Var) + Js::Constants::MinStackDefault); // args + function call
                 outArgsSize = outArgs.Info.Count * sizeof(Var);
-                outArgs.Values = (Var*)_alloca(outArgsSize);
+                outArgs.Values = (Var*)alloca(outArgsSize);
                 memset((outArgs.Values),0,(outArgsSize));
             }
             else
