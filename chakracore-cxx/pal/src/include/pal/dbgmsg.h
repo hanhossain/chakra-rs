@@ -136,9 +136,9 @@ Using Debug channels at Run Time
     set to nonzero, channels will be open or closed based on PAL_DBG_CHANNELS
 
     Notes :
-    If _ENABLE_DEBUG_MESSAGES_ was not defined at build-time, no debug messages
+    If DEBUG was not defined at build-time, no debug messages
     will be generated.
-    If _ENABLE_DEBUG_MESSAGES_ was defined, all debug levels will be enabled,
+    If DEBUG was defined, all debug levels will be enabled,
     but all channels will be closed by default
 
     Another configure option is --enable-appendtraces
