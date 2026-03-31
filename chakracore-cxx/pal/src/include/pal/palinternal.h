@@ -221,65 +221,6 @@ typedef enum _TimeConversionConstants
 #ifdef __cplusplus
 }
 
-/* This is duplicated in utilcode.h for CLR, with cooler type-traits */
-template <typename T>
-inline
-T* InterlockedExchangePointerT(
-    T* volatile *Target,
-    T* Value)
-{
-    return (T*)(InterlockedExchangePointer(
-        (void * volatile*)Target,
-        (void *)Value));
-}
-
-template <typename T>
-inline
-T* InterlockedCompareExchangePointerT(
-    T* volatile *destination,
-    T* exchange,
-    T* comparand)
-{
-    return (T*)(InterlockedCompareExchangePointer(
-        (void * volatile*)destination,
-        (void *)exchange,
-        (void *)comparand));
-}
-
-template <typename T>
-inline T* InterlockedExchangePointerT(
-    T* volatile * target,
-    int           value) // When NULL is provided as argument.
-{
-    //STATIC_ASSERT(value == 0);
-    return InterlockedExchangePointerT(target, reinterpret_cast<T*>(value));
-}
-
-template <typename T>
-inline T* InterlockedCompareExchangePointerT(
-    T* volatile * destination,
-    int           exchange,  // When NULL is provided as argument.
-    T*            comparand)
-{
-    //STATIC_ASSERT(exchange == 0);
-    return InterlockedCompareExchangePointerT(destination, reinterpret_cast<T*>(exchange), comparand);
-}
-
-template <typename T>
-inline T* InterlockedCompareExchangePointerT(
-    T* volatile * destination,
-    T*            exchange,
-    int           comparand) // When NULL is provided as argument.
-{
-    //STATIC_ASSERT(comparand == 0);
-    return InterlockedCompareExchangePointerT(destination, exchange, reinterpret_cast<T*>(comparand));
-}
-
-#undef InterlockedExchangePointer
-#define InterlockedExchangePointer InterlockedExchangePointerT
-#undef InterlockedCompareExchangePointer
-#define InterlockedCompareExchangePointer InterlockedCompareExchangePointerT
-
 #include "volatile.h"
 
 #endif // __cplusplus
