@@ -2342,8 +2342,6 @@ char * PAL_ctime(const time_t *);
 #endif // PAL_STDCPP_COMPAT
 
 // TODO (hanhossain): internal
-int PAL_fclose(PAL_FILE *);
-// TODO (hanhossain): internal
 size_t PAL_fwrite(const void *, size_t, size_t, PAL_FILE *);
 // TODO (hanhossain): internal
 size_t PAL_fread(void *, size_t, size_t, PAL_FILE *);

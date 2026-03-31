@@ -187,10 +187,8 @@ void NativeCodeGenerator::Close()
 #if DBG_DUMP
     if (this->asmFile != nullptr)
     {
-        if(0 != PAL_fclose(this->asmFile))
-        {
-            AssertMsg(0, "Could not close file for AsmDump. You may ignore this warning.");
-        }
+        fclose(this->asmFile->bsdFilePtr);
+        free(this->asmFile);
     }
 #endif
 }

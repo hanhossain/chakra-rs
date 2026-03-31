@@ -430,31 +430,6 @@ done:
 /*++
 Function :
 
-    fclose
-
-    See MSDN for more details.
---*/
-int
-PAL_fclose(PAL_FILE * f)
-{
-    int32_t nRetVal = 0;
-
-    ENTRY( "fclose( f=%p )\n", f );
-
-    _ASSERTE(f != NULL);
-
-    CLEARERR(f);
-
-    nRetVal = fclose( f->bsdFilePtr );
-    free( f );
-
-    LOGEXIT( "fclose returning %d\n", nRetVal );
-    return nRetVal;
-}
-
-/*++
-Function :
-
     ftell
 
     See MSDN for more details.

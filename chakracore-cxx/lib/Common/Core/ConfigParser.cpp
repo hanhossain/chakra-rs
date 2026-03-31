@@ -162,7 +162,8 @@ void ConfigParser::ParseConfig(CmdLineArgsParser &parser, const char16_t* strCus
 #undef CharType
 #undef EndChar
 
-    PAL_fclose(configFile);
+    fclose(configFile->bsdFilePtr);
+    free(configFile);
 
     if (err !=0)
     {
