@@ -49,7 +49,7 @@ extern "C"
 
     int
     PAL_vfwprintf(
-        PAL_FILE *stream,
+        FILE *stream,
         const char16_t *format,
         va_list ap);
 }
@@ -82,7 +82,7 @@ namespace CorUnix
     int
     InternalVfwprintf(
         CPalThread *pthrCurrent,
-        PAL_FILE *stream,
+        FILE *stream,
         const char16_t *format,
         va_list ap);
 

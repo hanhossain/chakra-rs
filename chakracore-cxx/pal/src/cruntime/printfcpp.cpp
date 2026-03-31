@@ -39,7 +39,7 @@ using namespace CorUnix;
 int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, const char16_t* Format, va_list ap);
 int CoreVsnprintf(CPalThread *pthrCurrent, char* Buffer, size_t Count, const char * Format, va_list ap);
 int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, va_list ap);
-int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *format, va_list ap);
+int CoreVfwprintf(CPalThread *pthrCurrent, FILE *stream, const char16_t *format, va_list ap);
 
 extern "C"
 {
@@ -947,7 +947,7 @@ Parameters:
   Flags
     - padding style flags (PRINTF_FORMAT_FLAGS)
 *******************************************************************************/
-static int32_t Internal_AddPaddingVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, char16_t* In,
+static int32_t Internal_AddPaddingVfwprintf(CPalThread *pthrCurrent, FILE *stream, char16_t* In,
                                        int32_t Padding, int32_t Flags,BOOL convert)
 {
     char16_t* Out;
@@ -1020,7 +1020,7 @@ static int32_t Internal_AddPaddingVfwprintf(CPalThread *pthrCurrent, PAL_FILE *s
 
     if (Length > 0) {
         Written = Internal_Convertfwrite(pthrCurrent, OutOriginal, sizeof(char16_t), Length,
-            (FILE*)(stream->bsdFilePtr), convert);
+            stream, convert);
 
         if (-1 == Written)
         {
@@ -1077,7 +1077,7 @@ Parameters:
     - stdarg parameter list
 *******************************************************************************/
 
-int PAL_vfwprintf(PAL_FILE *stream, const char16_t *format, va_list ap)
+int PAL_vfwprintf(FILE *stream, const char16_t *format, va_list ap)
 {
     return CoreVfwprintf(InternalGetCurrentThread(), stream, format, ap);
 }
@@ -1099,12 +1099,12 @@ int CorUnix::InternalVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const c
     return CoreVfprintf(pthrCurrent, stream, format, ap);
 }
 
-int CorUnix::InternalVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *format, va_list ap)
+int CorUnix::InternalVfwprintf(CPalThread *pthrCurrent, FILE *stream, const char16_t *format, va_list ap)
 {
     return CoreVfwprintf(pthrCurrent, stream, format, ap);
 }
 
-int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *format, va_list aparg)
+int CoreVfwprintf(CPalThread *pthrCurrent, FILE *stream, const char16_t *format, va_list aparg)
 {
     char TempBuff[1024]; /* used to hold a single %<foo> format string */
     const char16_t* Fmt = format;
@@ -1470,7 +1470,7 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
                                     TempWideBuffer,
                                     sizeof(char16_t),
                                     mbtowcResult-1,
-                                    (FILE*)stream->bsdFilePtr,
+                                    stream,
                                     textMode);
 
                 if (-1 == ret)
@@ -1499,7 +1499,7 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
                                     Fmt++,
                                     sizeof(char16_t),
                                     1,
-                                    (FILE*)stream->bsdFilePtr,
+                                    stream,
                                     textMode); /* copy regular chars into buffer */
 
             if (-1 == ret)
