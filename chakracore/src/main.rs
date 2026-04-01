@@ -40,7 +40,13 @@ fn main() -> ExitCode {
     argv.push(ptr::null_mut());
 
     unsafe {
-        let res = chakracore_sys::chhelper::ffi::main_internal(argc as i32, argv.as_mut_ptr());
+        let res = chakracore_sys::chhelper::ffi::main_internal(
+            argc as i32,
+            argv.as_mut_ptr(),
+            chakra_args.tt_snap_interval,
+            chakra_args.tt_snap_history_length,
+            chakra_args.ttd_start_event_count,
+        );
         ExitCode::from(res as u8)
     }
 }
