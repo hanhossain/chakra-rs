@@ -783,13 +783,13 @@ int main_internal(int argc, char** c_argv, uint32_t snapInterval, uint32_t snapH
     {
         std::string_view arg = c_argv[i];
 
-        if(PAL_wcsstr(argv[i], u"-TTRecord=") == argv[i])
+        if(arg.starts_with("-TTRecord="))
         {
             doTTRecord = true;
             char16_t* ruri = argv[i] + PAL_wcslen(u"-TTRecord=");
             Helpers::GetTTDDirectory(ruri, &ttUriLength, ttUri, ttUriBufferLength);
         }
-        else if(PAL_wcsstr(argv[i], u"-TTReplay=") == argv[i])
+        else if(arg.starts_with("-TTReplay="))
         {
             doTTReplay = true;
             char16_t* ruri = argv[i] + PAL_wcslen(u"-TTReplay=");
