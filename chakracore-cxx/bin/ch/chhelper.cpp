@@ -16,8 +16,6 @@
 
 unsigned int MessageBase::s_messageCount = 0;
 
-const char16_t* hostName = u"ch";
-
 const size_t ttUriBufferLength = MAX_PATH * 3;
 
 int32_t RunBgParseSync(const char * fileContents, uint32_t lengthBytes, const char* fileName);
