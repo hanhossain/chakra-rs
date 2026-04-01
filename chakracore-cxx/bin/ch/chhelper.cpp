@@ -18,21 +18,9 @@ unsigned int MessageBase::s_messageCount = 0;
 
 const char16_t* hostName = u"ch";
 
-JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
-
-bool doTTRecord = false;
-bool doTTReplay = false;
 const size_t ttUriBufferLength = MAX_PATH * 3;
-char ttUri[ttUriBufferLength];
-size_t ttUriLength = 0;
-uint32_t snapInterval = MAXUINT32;
-uint32_t snapHistoryLength = MAXUINT32;
-const char16_t* connectionUuidString = NULL;
-uint32_t startEventCount = 1;
 
 int32_t RunBgParseSync(const char * fileContents, uint32_t lengthBytes, const char* fileName);
-
-JsRuntimeAttributes jsrtAttributes = JsRuntimeAttributeNone;
 
 int HostExceptionFilter(int exceptionCode, _EXCEPTION_POINTERS *ep)
 {
@@ -148,7 +136,7 @@ static bool DummyJsSerializedScriptLoadUtf8Source(
     return true;
 }
 
-int32_t RunScript(const char* fileName, const char * fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback, JsValueRef bufferValue, char *fullPath, JsValueRef parserStateCache)
+int32_t RunScript(const char* fileName, const char * fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback, JsValueRef bufferValue, char *fullPath, JsValueRef parserStateCache, const bool doTTRecord, const bool doTTReplay, const JsRuntimeHandle chRuntime, const char *ttUri, const size_t ttUriLength, const uint32_t startEventCount)
 {
     int32_t hr = S_OK;
     MessageQueue * messageQueue = new MessageQueue();
@@ -388,7 +376,7 @@ Error:
     return hr;
 }
 
-static int32_t CreateRuntime(JsRuntimeHandle *runtime)
+static int32_t CreateRuntime(JsRuntimeHandle *runtime, const JsRuntimeAttributes jsrtAttributes)
 {
     int32_t hr = E_FAIL;
 
@@ -491,7 +479,7 @@ Error:
     return hr;
 }
 
-int32_t CreateParserStateAndRunScript(const char* fileName, const char * fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback, char *fullPath)
+int32_t CreateParserStateAndRunScript(const char* fileName, const char * fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback, char *fullPath, const bool doTTRecord, const bool doTTReplay, JsRuntimeHandle* chRuntime, const char *ttUri, const size_t ttUriLength, const uint32_t startEventCount, const JsRuntimeAttributes jsrtAttributes)
 {
     int32_t hr = S_OK;
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
@@ -502,8 +490,8 @@ int32_t CreateParserStateAndRunScript(const char* fileName, const char * fileCon
     IfFailedGoLabel(GetParserStateBuffer(fileContents, nullptr, &bufferVal), ErrorRunFinalize);
 
     // Bytecode buffer is created in one runtime and will be executed on different runtime.
-    IfFailedGoLabel(CreateRuntime(&runtime), ErrorRunFinalize);
-    chRuntime = runtime;
+    IfFailedGoLabel(CreateRuntime(&runtime, jsrtAttributes), ErrorRunFinalize);
+    *chRuntime = runtime;
 
     IfJsErrorFailLogLabel(ChakraRTInterface::JsCreateContext(runtime, &context), ErrorRunFinalize);
     IfJsErrorFailLogLabel(ChakraRTInterface::JsGetCurrentContext(&current), ErrorRunFinalize);
@@ -516,7 +504,7 @@ int32_t CreateParserStateAndRunScript(const char* fileName, const char * fileCon
     }
 
     // This is our last call to use fileContents, so pass in the finalizeCallback
-    IfFailGo(RunScript(fileName, fileContents, fileLength, fileContentsFinalizeCallback, nullptr, fullPath, bufferVal));
+    IfFailGo(RunScript(fileName, fileContents, fileLength, fileContentsFinalizeCallback, nullptr, fullPath, bufferVal, doTTRecord, doTTReplay, *chRuntime, ttUri, ttUriLength, startEventCount));
 
     if (false)
     {
@@ -540,7 +528,7 @@ Error:
     return hr;
 }
 
-int32_t CreateAndRunSerializedScript(const char* fileName, const char * fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback, char *fullPath)
+int32_t CreateAndRunSerializedScript(const char* fileName, const char * fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback, char *fullPath, const bool doTTRecord, const bool doTTReplay, JsRuntimeHandle *chRuntime, const char *ttUri, const size_t ttUriLength, const uint32_t startEventCount, const JsRuntimeAttributes jsrtAttributes)
 {
     int32_t hr = S_OK;
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
@@ -552,8 +540,8 @@ int32_t CreateAndRunSerializedScript(const char* fileName, const char * fileCont
 
     // Bytecode buffer is created in one runtime and will be executed on different runtime.
 
-    IfFailedGoLabel(CreateRuntime(&runtime), ErrorRunFinalize);
-    chRuntime = runtime;
+    IfFailedGoLabel(CreateRuntime(&runtime, jsrtAttributes), ErrorRunFinalize);
+    *chRuntime = runtime;
 
     IfJsErrorFailLogLabel(ChakraRTInterface::JsCreateContext(runtime, &context), ErrorRunFinalize);
     IfJsErrorFailLogLabel(ChakraRTInterface::JsGetCurrentContext(&current), ErrorRunFinalize);
@@ -566,7 +554,7 @@ int32_t CreateAndRunSerializedScript(const char* fileName, const char * fileCont
     }
 
     // This is our last call to use fileContents, so pass in the finalizeCallback
-    IfFailGo(RunScript(fileName, fileContents, fileLength, fileContentsFinalizeCallback, bufferVal, fullPath, nullptr));
+    IfFailGo(RunScript(fileName, fileContents, fileLength, fileContentsFinalizeCallback, bufferVal, fullPath, nullptr, doTTRecord, doTTReplay, *chRuntime, ttUri, ttUriLength, startEventCount));
 
     if(false)
     {
@@ -631,7 +619,7 @@ int32_t RunBgParseSync(const char * fileContents, uint32_t lengthBytes, const ch
     return e;
 }
 
-int32_t ExecuteTest(const char* fileName)
+int32_t ExecuteTest(const char* fileName, const bool doTTRecord, const bool doTTReplay, JsRuntimeHandle* chRuntime, const char *ttUri, const size_t ttUriLength, const uint32_t snapInterval, const uint32_t snapHistoryLength, const uint32_t startEventCount, JsRuntimeAttributes* jsrtAttributes)
 {
     int32_t hr = S_OK;
     const char * fileContents = nullptr;
@@ -650,16 +638,16 @@ int32_t ExecuteTest(const char* fileName)
             return E_FAIL;
         }
 
-        jsrtAttributes = static_cast<JsRuntimeAttributes>(jsrtAttributes | JsRuntimeAttributeEnableExperimentalFeatures);
+        *jsrtAttributes = static_cast<JsRuntimeAttributes>(*jsrtAttributes | JsRuntimeAttributeEnableExperimentalFeatures);
 
-        IfJsErrorFailLog(ChakraRTInterface::JsTTDCreateReplayRuntime(jsrtAttributes, ttUri, ttUriLength, Helpers::TTCreateStreamCallback, Helpers::TTReadBytesFromStreamCallback, Helpers::TTFlushAndCloseStreamCallback, nullptr, &runtime));
-        chRuntime = runtime;
+        IfJsErrorFailLog(ChakraRTInterface::JsTTDCreateReplayRuntime(*jsrtAttributes, ttUri, ttUriLength, Helpers::TTCreateStreamCallback, Helpers::TTReadBytesFromStreamCallback, Helpers::TTFlushAndCloseStreamCallback, nullptr, &runtime));
+        *chRuntime = runtime;
 
         JsContextRef context = JS_INVALID_REFERENCE;
         IfJsErrorFailLog(ChakraRTInterface::JsTTDCreateContext(runtime, true, &context));
         IfJsErrorFailLog(ChakraRTInterface::JsSetCurrentContext(context));
 
-        IfFailGo(RunScript(fileName, fileContents, lengthBytes, WScriptJsrt::FinalizeFree, nullptr, nullptr, nullptr));
+        IfFailGo(RunScript(fileName, fileContents, lengthBytes, WScriptJsrt::FinalizeFree, nullptr, nullptr, nullptr, doTTRecord, doTTReplay, *chRuntime, ttUri, ttUriLength, startEventCount));
 
         unsigned int rcount = 0;
         IfJsErrorFailLog(ChakraRTInterface::JsSetCurrentContext(nullptr));
@@ -680,17 +668,17 @@ int32_t ExecuteTest(const char* fileName)
         IfFailGo(hr);
         if (HostConfigFlags::flags.GenerateLibraryByteCodeHeaderIsEnabled)
         {
-            jsrtAttributes = (JsRuntimeAttributes)(jsrtAttributes | JsRuntimeAttributeSerializeLibraryByteCode);
+            *jsrtAttributes = (JsRuntimeAttributes)(*jsrtAttributes | JsRuntimeAttributeSerializeLibraryByteCode);
         }
 
 #if ENABLE_TTD
         if (doTTRecord)
         {
             //Ensure we run with experimental features (as that is what Node does right now).
-            jsrtAttributes = static_cast<JsRuntimeAttributes>(jsrtAttributes | JsRuntimeAttributeEnableExperimentalFeatures);
+            *jsrtAttributes = static_cast<JsRuntimeAttributes>(*jsrtAttributes | JsRuntimeAttributeEnableExperimentalFeatures);
 
-            IfJsErrorFailLog(ChakraRTInterface::JsTTDCreateRecordRuntime(jsrtAttributes, snapInterval, snapHistoryLength, Helpers::TTCreateStreamCallback, Helpers::TTWriteBytesToStreamCallback, Helpers::TTFlushAndCloseStreamCallback, nullptr, &runtime));
-            chRuntime = runtime;
+            IfJsErrorFailLog(ChakraRTInterface::JsTTDCreateRecordRuntime(*jsrtAttributes, snapInterval, snapHistoryLength, Helpers::TTCreateStreamCallback, Helpers::TTWriteBytesToStreamCallback, Helpers::TTFlushAndCloseStreamCallback, nullptr, &runtime));
+            *chRuntime = runtime;
 
             JsContextRef context = JS_INVALID_REFERENCE;
             IfJsErrorFailLog(ChakraRTInterface::JsTTDCreateContext(runtime, true, &context));
@@ -706,8 +694,8 @@ int32_t ExecuteTest(const char* fileName)
         {
             AssertMsg(!doTTReplay, "Should be handled in the else case above!!!");
 
-            IfJsErrorFailLog(ChakraRTInterface::JsCreateRuntime(jsrtAttributes, nullptr, &runtime));
-            chRuntime = runtime;
+            IfJsErrorFailLog(ChakraRTInterface::JsCreateRuntime(*jsrtAttributes, nullptr, &runtime));
+            *chRuntime = runtime;
 
             JsContextRef context = JS_INVALID_REFERENCE;
             IfJsErrorFailLog(ChakraRTInterface::JsCreateContext(runtime, &context));
@@ -751,7 +739,7 @@ int32_t ExecuteTest(const char* fileName)
         }
         else if (HostConfigFlags::flags.SerializedIsEnabled)
         {
-            CreateAndRunSerializedScript(fileName, fileContents, lengthBytes, WScriptJsrt::FinalizeFree, fullPath);
+            CreateAndRunSerializedScript(fileName, fileContents, lengthBytes, WScriptJsrt::FinalizeFree, fullPath, doTTRecord, doTTReplay, chRuntime, ttUri, ttUriLength, startEventCount, *jsrtAttributes);
         }
         else if (HostConfigFlags::flags.GenerateParserStateCacheIsEnabled)
         {
@@ -759,11 +747,11 @@ int32_t ExecuteTest(const char* fileName)
         }
         else if (HostConfigFlags::flags.UseParserStateCacheIsEnabled)
         {
-            CreateParserStateAndRunScript(fileName, fileContents, lengthBytes, WScriptJsrt::FinalizeFree, fullPath);
+            CreateParserStateAndRunScript(fileName, fileContents, lengthBytes, WScriptJsrt::FinalizeFree, fullPath, doTTRecord, doTTReplay, chRuntime, ttUri, ttUriLength, startEventCount, *jsrtAttributes);
         }
         else
         {
-            IfFailGo(RunScript(fileName, fileContents, lengthBytes, WScriptJsrt::FinalizeFree, nullptr, fullPath, nullptr));
+            IfFailGo(RunScript(fileName, fileContents, lengthBytes, WScriptJsrt::FinalizeFree, nullptr, fullPath, nullptr, doTTRecord, doTTReplay, chRuntime, ttUri, ttUriLength, startEventCount));
         }
     }
 Error:
@@ -779,11 +767,11 @@ Error:
     return hr;
 }
 
-int32_t ExecuteTestWithMemoryCheck(char* fileName)
+int32_t ExecuteTestWithMemoryCheck(char* fileName, const bool doTTRecord, const bool doTTReplay, JsRuntimeHandle *chRuntime, const char *ttUri, const size_t ttUriLength, const uint32_t snapInterval, const uint32_t snapHistoryLength, const uint32_t startEventCount, JsRuntimeAttributes *jsrtAttributes)
 {
     int32_t hr = E_FAIL;
     // REVIEW: Do we need a SEH handler here?
-    hr = ExecuteTest(fileName);
+    hr = ExecuteTest(fileName, doTTRecord, doTTReplay, chRuntime, ttUri, ttUriLength, snapInterval, snapHistoryLength, startEventCount, jsrtAttributes);
     if (FAILED(hr)) exit(0);
 
     fflush(NULL);
@@ -808,6 +796,16 @@ int main_internal(int argc, char** c_argv)
     int cpos = 1;
     bool success = false;
     ChakraRTInterface::ArgInfo argInfo;
+
+    JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
+    bool doTTRecord = false;
+    bool doTTReplay = false;
+    char ttUri[ttUriBufferLength];
+    size_t ttUriLength = 0;
+    uint32_t snapInterval = MAXUINT32;
+    uint32_t snapHistoryLength = MAXUINT32;
+    uint32_t startEventCount = 1;
+    JsRuntimeAttributes jsrtAttributes = JsRuntimeAttributeNone;
 
     for(int i = 1; i < argc; ++i)
     {
@@ -879,7 +877,7 @@ int main_internal(int argc, char** c_argv)
         }
 
         // On linux, execute on the same thread
-        exitCode = ExecuteTestWithMemoryCheck(argInfo.filename);
+        exitCode = ExecuteTestWithMemoryCheck(argInfo.filename, doTTRecord, doTTReplay, &chRuntime, ttUri, ttUriLength, snapInterval, snapHistoryLength, startEventCount, &jsrtAttributes);
     }
 
     PAL_Shutdown();
