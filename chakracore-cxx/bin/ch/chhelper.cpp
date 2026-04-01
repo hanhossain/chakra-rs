@@ -793,12 +793,6 @@ int32_t ExecuteTestWithMemoryCheck(char* fileName)
     return hr;
 }
 
-unsigned int WINAPI StaticThreadProc(void *lpParam)
-{
-    ChakraRTInterface::ArgInfo* argInfo = static_cast<ChakraRTInterface::ArgInfo* >(lpParam);
-    return ExecuteTestWithMemoryCheck(argInfo->filename);
-}
-
 static char16_t** argv = nullptr;
 int main_internal(int argc, char** c_argv)
 {
