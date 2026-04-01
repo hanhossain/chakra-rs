@@ -25,10 +25,13 @@ pub fn print_usage() {
     }
 }
 
-#[derive(Debug, Clone, Copy, Default)]
+#[derive(Debug, Clone, Default)]
 pub struct ChakraArgs {
     pub version: bool,
     pub help: bool,
+    pub tt_snap_interval: u32,
+    pub tt_snap_history_length: u32,
+    pub ttd_start_event_count: u32,
 }
 
 impl ChakraArgs {
@@ -36,6 +39,8 @@ impl ChakraArgs {
         if args.len() < 2 {
             return None;
         }
+
+        let mut chakra_args = ChakraArgs::default();
 
         for arg in &args {
             if arg == "-v" || arg == "--version" {
@@ -51,8 +56,19 @@ impl ChakraArgs {
                     ..ChakraArgs::default()
                 });
             }
+
+            if arg.starts_with("-TTSnapInterval=") {
+                let raw_value = arg.split('=').next().unwrap_or_default();
+                chakra_args.tt_snap_interval = raw_value.parse::<u32>().unwrap_or(u32::MAX);
+            } else if arg.starts_with("-TTHistoryLength=") {
+                let raw_value = arg.split('=').next().unwrap_or_default();
+                chakra_args.tt_snap_history_length = raw_value.parse::<u32>().unwrap_or(u32::MAX);
+            } else if arg.starts_with("-TTDStartEvent=") {
+                let raw_value = arg.split('=').next().unwrap_or_default();
+                chakra_args.ttd_start_event_count = raw_value.parse::<u32>().unwrap_or(1);
+            }
         }
 
-        Some(ChakraArgs::default())
+        Some(chakra_args)
     }
 }

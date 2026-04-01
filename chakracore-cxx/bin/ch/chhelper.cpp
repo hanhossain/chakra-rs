@@ -759,7 +759,7 @@ int32_t ExecuteTestWithMemoryCheck(char* fileName, const bool doTTRecord, const 
 }
 
 static char16_t** argv = nullptr;
-int main_internal(int argc, char** c_argv)
+int main_internal(int argc, char** c_argv, uint32_t snapInterval, uint32_t snapHistoryLength, uint32_t startEventCount)
 {
     int origargc = argc; // store for clean-up later
     argv = new char16_t*[argc];
@@ -779,13 +779,12 @@ int main_internal(int argc, char** c_argv)
     bool doTTReplay = false;
     char ttUri[ttUriBufferLength];
     size_t ttUriLength = 0;
-    uint32_t snapInterval = MAXUINT32;
-    uint32_t snapHistoryLength = MAXUINT32;
-    uint32_t startEventCount = 1;
     JsRuntimeAttributes jsrtAttributes = JsRuntimeAttributeNone;
 
     for(int i = 1; i < argc; ++i)
     {
+        std::string_view arg = c_argv[i];
+
         if(PAL_wcsstr(argv[i], u"-TTRecord=") == argv[i])
         {
             doTTRecord = true;
@@ -798,20 +797,11 @@ int main_internal(int argc, char** c_argv)
             char16_t* ruri = argv[i] + PAL_wcslen(u"-TTReplay=");
             Helpers::GetTTDDirectory(ruri, &ttUriLength, ttUri, ttUriBufferLength);
         }
-        else if(PAL_wcsstr(argv[i], u"-TTSnapInterval=") == argv[i])
+        else if (arg.starts_with("-TTSnapInterval=")
+            || arg.starts_with("-TTHistoryLength=")
+            || arg.starts_with("-TTDStartEvent="))
         {
-            const char16_t* intervalStr = argv[i] + PAL_wcslen(u"-TTSnapInterval=");
-            snapInterval = (uint32_t)_wtoi(intervalStr);
-        }
-        else if(PAL_wcsstr(argv[i], u"-TTHistoryLength=") == argv[i])
-        {
-            const char16_t* historyStr = argv[i] + PAL_wcslen(u"-TTHistoryLength=");
-            snapHistoryLength = (uint32_t)_wtoi(historyStr);
-        }
-        else if(PAL_wcsstr(argv[i], u"-TTDStartEvent=") == argv[i])
-        {
-            const char16_t* startEventStr = argv[i] + PAL_wcslen(u"-TTDStartEvent=");
-            startEventCount = (uint32_t)_wtoi(startEventStr);
+            // parsed by rust
         }
         else
         {
