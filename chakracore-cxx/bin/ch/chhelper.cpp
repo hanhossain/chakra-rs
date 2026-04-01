@@ -22,29 +22,6 @@ const size_t ttUriBufferLength = MAX_PATH * 3;
 
 int32_t RunBgParseSync(const char * fileContents, uint32_t lengthBytes, const char* fileName);
 
-int HostExceptionFilter(int exceptionCode, _EXCEPTION_POINTERS *ep)
-{
-    ChakraRTInterface::NotifyUnhandledException(ep);
-
-    bool crashOnException = false;
-    ChakraRTInterface::GetCrashOnExceptionFlag(&crashOnException);
-
-    if (exceptionCode == EXCEPTION_BREAKPOINT || (crashOnException && exceptionCode != 0xE06D7363))
-    {
-        return EXCEPTION_CONTINUE_SEARCH;
-    }
-
-    PAL_fwprintf(PAL_get_stderr(), u"FATAL ERROR: %ls failed due to exception code %x\n", hostName, exceptionCode);
-
-    fflush(NULL);
-
-    // Exception happened, so we probably didn't clean up properly,
-    // Don't exit normally, just terminate
-    TerminateProcess(::GetCurrentProcess(), exceptionCode);
-
-    return EXCEPTION_CONTINUE_SEARCH;
-}
-
 // On success the param byteCodeBuffer will be allocated in the function.
 int32_t GetSerializedBuffer(const char * fileContents, JsFinalizeCallback fileContentFinalizeCallback, JsValueRef *byteCodeBuffer)
 {
