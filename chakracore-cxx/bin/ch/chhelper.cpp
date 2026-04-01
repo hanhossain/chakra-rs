@@ -811,23 +811,6 @@ int main_internal(int argc, char** c_argv)
 
     for(int i = 1; i < argc; ++i)
     {
-        const char16_t *arg = argv[i];
-        size_t arglen = PAL_wcslen(arg);
-
-        // support - prefix for flags
-        if (arglen >= 1 && arg[0] == u'-')
-        {
-            // support -- prefix for flags
-            if (arglen >= 2 && arg[0] == u'-' && arg[1] == u'-')
-            {
-                arg += 2; // advance past -- prefix
-            }
-            else
-            {
-                arg += 1; // advance past - prefix
-            }
-        }
-
         if(PAL_wcsstr(argv[i], u"-TTRecord=") == argv[i])
         {
             doTTRecord = true;
