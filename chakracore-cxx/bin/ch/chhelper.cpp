@@ -5,6 +5,9 @@
 //-------------------------------------------------------------------------------------------------------
 #include "stdafx.h"
 #include "chhelper.h"
+
+#include <print>
+
 #include "chakra/src/lib.rs.h"
 #include <pthread.h>
 
@@ -126,12 +129,12 @@ int32_t RunScript(const char* fileName, const char * fileContents, size_t fileLe
             fileContentsFinalizeCallback((void*)fileContents);
         }
 #if !ENABLE_TTD
-        PAL_wprintf(u"Sential js file is only ok when in TTDebug mode!!!\n");
+        std::println("Sential js file is only ok when in TTDebug mode!!!");
         return E_FAIL;
 #else
         if(!doTTReplay)
         {
-            PAL_wprintf(u"Sential js file is only ok when in TTReplay mode!!!\n");
+            std::println("Sential js file is only ok when in TTReplay mode!!!");
             return E_FAIL;
         }
 
@@ -151,7 +154,7 @@ int32_t RunScript(const char* fileName, const char * fileContents, size_t fileLe
                 {
                     if(error == JsErrorCategoryUsage)
                     {
-                        PAL_wprintf(u"Start time not in log range.\n");
+                        std::println("Start time not in log range.");
                     }
 
                     return error;
@@ -164,21 +167,22 @@ int32_t RunScript(const char* fileName, const char * fileContents, size_t fileLe
                 //handle any uncaught exception by immediately time-traveling to the throwing line in the debugger -- in replay just report and exit
                 if(res == JsErrorCategoryScript)
                 {
-                    PAL_wprintf(u"An unhandled script exception occurred!!!\n");
+                    std::println("An unhandled script exception occurred!!!");
 
                     exit(0);
                 }
 
                 if(nextEventTime == -1)
                 {
-                    PAL_wprintf(u"\nReached end of Execution -- Exiting.\n");
+                    std::println();
+                    std::println("Reached end of Execution -- Exiting.");
                     break;
                 }
             }
         }
         catch(...)
         {
-            PAL_wprintf(u"Terminal exception in Replay -- exiting.\n");
+            std::println("Terminal exception in Replay -- exiting.");
             exit(0);
         }
 #endif
@@ -281,7 +285,7 @@ int32_t RunScript(const char* fileName, const char * fileContents, size_t fileLe
                 JsParseScriptAttributeNone, nullptr /*result*/);
             if (runScript == JsErrorCategoryUsage)
             {
-                PAL_wprintf(u"FATAL ERROR: Core was compiled without ENABLE_TTD is defined. CH is trying to use TTD interface\n");
+                std::println("FATAL ERROR: Core was compiled without ENABLE_TTD is defined. CH is trying to use TTD interface");
                 abort();
             }
 #else
@@ -604,12 +608,12 @@ int32_t ExecuteTest(const char* fileName, const bool doTTRecord, const bool doTT
     if(strlen(fileName) >= 14 && strcmp(fileName + strlen(fileName) - 14, "ttdSentinal.js") == 0)
     {
 #if !ENABLE_TTD
-        PAL_wprintf(u"Sentinel js file is only ok when in TTDebug mode!!!\n");
+        std::println("Sentinel js file is only ok when in TTDebug mode!!!");
         return E_FAIL;
 #else
         if(!doTTReplay)
         {
-            PAL_wprintf(u"Sentinel js file is only ok when in TTReplay mode!!!\n");
+            std::println("Sentinel js file is only ok when in TTReplay mode!!!");
             return E_FAIL;
         }
 
