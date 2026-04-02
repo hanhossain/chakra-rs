@@ -32,8 +32,10 @@ jobs:
           - os: ubuntu
             os-image: ubuntu-latest
             deps: sudo apt-get install -y ninja-build libc++-dev libc++abi-dev
+          - build-type: debug
+            features: "--features compile-cpp"
           - build-type: test
-            features: "--features optimized-tests"
+            features: "--features compile-cpp,optimized-tests"
     env:
       CARGO_TERM_COLOR: always
       RUSTFLAGS: -D warnings

@@ -1,16 +1,13 @@
 fn main() {
     cxx_build::CFG.exported_header_links.push("chakra");
 
-    let out_dir = std::env::var("OUT_DIR").unwrap();
-    let is_rust_analyzer = out_dir.contains("target/rust-analyzer");
-
     let bridges = ["src/chhelper.rs"];
     let mut cxx_bridge = cxx_build::bridges(bridges);
-    cxx_bridge.include("../chakracore-cxx/bin/ch");
+    cxx_bridge
+        .include("../chakracore-cxx/bin/ch")
+        .compile("binding");
 
-    if !is_rust_analyzer {
-        cxx_bridge.compile("binding");
-
+    if cfg!(feature = "compile-cpp") {
         if let Ok(chakra_build) = std::env::var("CHAKRA_BUILD") {
             println!(
                 "cargo::rustc-link-search=native={}/chakracore-cxx/bin/ch",
