@@ -1,3 +1,3 @@
 pub mod chhelper;
 
-use chakra as _;
+extern crate chakra as _;
