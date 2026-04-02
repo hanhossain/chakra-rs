@@ -152,7 +152,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
     -Wno-tautological-constant-compare\
     -Wno-enum-compare-switch\
     -Wno-delayed-template-parsing-in-cxx20\
-    -Wno-unknown-warning-option"
+    -Wno-unknown-warning-option\
+    -Wno-nontrivial-memcall"
 )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \

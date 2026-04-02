@@ -55,8 +55,8 @@ extern "C" {
 
 #define __xcount(size)                                          __notnull __inexpressible_writableTo(size)
 #define __in_xcount(size)                                       _Pre_ __inexpressible_readableTo(size)
-#define __out_xcount(size)                                      __xcount(size) _Post_ __valid __refparam
-#define __inout_xcount(size)                                    __out_xcount(size) _Pre_ __valid
+#define __out_xcount(size)                                      __xcount(size) _Post_ __refparam
+#define __inout_xcount(size)                                    __out_xcount(size) _Pre_
 
 #endif  //__SAL_H_FULL_VER <= 140050727
 
