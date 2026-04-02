@@ -9,6 +9,9 @@ pub mod ffi {
             snap_interval: u32,
             snap_history_length: u32,
             start_event_count: u32,
+            do_tt_record: bool,
+            do_tt_replay: bool,
+            tt_uri: String,
         ) -> i32;
     }
 }
