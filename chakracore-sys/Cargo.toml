@@ -9,7 +9,7 @@ chakra = { path = "../chakra" }
 cxx = "1.0.194"
 
 [build-dependencies]
-cmake = "0.1.57"
+cmake = "0.1.58"
 cxx-build = { version = "1.0.194", features = ["parallel"] }
 
 [features]
