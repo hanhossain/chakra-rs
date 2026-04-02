@@ -786,13 +786,13 @@ int main_internal(int argc, char** c_argv, uint32_t snapInterval, uint32_t snapH
         if(arg.starts_with("-TTRecord="))
         {
             doTTRecord = true;
-            char16_t* ruri = argv[i] + PAL_wcslen(u"-TTRecord=");
+            char* ruri = c_argv[i] + strlen("-TTRecord=");
             Helpers::GetTTDDirectory(ruri, &ttUriLength, ttUri, ttUriBufferLength);
         }
         else if(arg.starts_with("-TTReplay="))
         {
             doTTReplay = true;
-            char16_t* ruri = argv[i] + PAL_wcslen(u"-TTReplay=");
+            char* ruri = c_argv[i] + strlen("-TTReplay=");
             Helpers::GetTTDDirectory(ruri, &ttUriLength, ttUri, ttUriBufferLength);
         }
         else if (arg.starts_with("-TTSnapInterval=")
