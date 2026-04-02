@@ -4,7 +4,6 @@ use std::env::current_exe;
 mod ffi {
     extern "Rust" {
         fn print_usage();
-        fn get_ttd_directory(record_uri: String) -> String;
     }
 }
 
@@ -44,6 +43,9 @@ pub struct ChakraArgs {
     pub tt_snap_interval: u32,
     pub tt_snap_history_length: u32,
     pub ttd_start_event_count: u32,
+    pub do_tt_record: bool,
+    pub do_tt_replay: bool,
+    pub tt_uri: String,
 }
 
 impl ChakraArgs {
@@ -69,7 +71,15 @@ impl ChakraArgs {
                 });
             }
 
-            if arg.starts_with("-TTSnapInterval=") {
+            if arg.starts_with("-TTRecord=") {
+                chakra_args.do_tt_record = true;
+                let record_uri = arg.split('=').next().unwrap_or_default().to_owned();
+                chakra_args.tt_uri = get_ttd_directory(record_uri);
+            } else if arg.starts_with("-TTReplay=") {
+                chakra_args.do_tt_replay = true;
+                let record_uri = arg.split('=').next().unwrap_or_default().to_owned();
+                chakra_args.tt_uri = get_ttd_directory(record_uri);
+            } else if arg.starts_with("-TTSnapInterval=") {
                 let raw_value = arg.split('=').next().unwrap_or_default();
                 chakra_args.tt_snap_interval = raw_value.parse::<u32>().unwrap_or(u32::MAX);
             } else if arg.starts_with("-TTHistoryLength=") {

@@ -761,7 +761,8 @@ int32_t ExecuteTestWithMemoryCheck(char* fileName, const bool doTTRecord, const 
 }
 
 static char16_t** argv = nullptr;
-int main_internal(int argc, char** c_argv, uint32_t snapInterval, uint32_t snapHistoryLength, uint32_t startEventCount)
+int main_internal(int argc, char** c_argv, uint32_t snapInterval, uint32_t snapHistoryLength, uint32_t startEventCount,
+    const bool doTTRecord, const bool doTTReplay, rust::String ttUri)
 {
     int origargc = argc; // store for clean-up later
     argv = new char16_t*[argc];
@@ -777,35 +778,17 @@ int main_internal(int argc, char** c_argv, uint32_t snapInterval, uint32_t snapH
     ChakraRTInterface::ArgInfo argInfo;
 
     JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
-    bool doTTRecord = false;
-    bool doTTReplay = false;
     JsRuntimeAttributes jsrtAttributes = JsRuntimeAttributeNone;
-
-    rust::String ttUri;
 
     for(int i = 1; i < argc; ++i)
     {
         std::string_view arg = c_argv[i];
 
-        if(arg.starts_with("-TTRecord="))
-        {
-            doTTRecord = true;
-            char* ruri = c_argv[i] + strlen("-TTRecord=");
-            ttUri = chakra::get_ttd_directory(ruri);
-        }
-        else if(arg.starts_with("-TTReplay="))
-        {
-            doTTReplay = true;
-            char* ruri = c_argv[i] + strlen("-TTReplay=");
-            ttUri = chakra::get_ttd_directory(ruri);
-        }
-        else if (arg.starts_with("-TTSnapInterval=")
+        if (!(arg.starts_with("-TTSnapInterval=")
             || arg.starts_with("-TTHistoryLength=")
-            || arg.starts_with("-TTDStartEvent="))
-        {
-            // parsed by rust
-        }
-        else
+            || arg.starts_with("-TTDStartEvent=")
+            || arg.starts_with("-TTReplay=")
+            || arg.starts_with("-TTRecord=")))
         {
             char16_t *temp = argv[cpos];
             argv[cpos] = argv[i];
@@ -814,12 +797,6 @@ int main_internal(int argc, char** c_argv, uint32_t snapInterval, uint32_t snapH
         }
     }
     argc = cpos;
-
-    if(doTTRecord & doTTReplay)
-    {
-        PAL_fwprintf(PAL_get_stderr(), u"Cannot run in record and replay at same time!!!");
-        exit(0);
-    }
 
     HostConfigFlags::pfnPrintUsage = chakra::print_usage;
 

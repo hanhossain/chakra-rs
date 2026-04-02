@@ -20,6 +20,11 @@ fn main() -> ExitCode {
         return ExitCode::SUCCESS;
     }
 
+    if chakra_args.do_tt_record && chakra_args.do_tt_replay {
+        eprintln!("Cannot run in record and replay at same time!!!");
+        return ExitCode::SUCCESS;
+    }
+
     let args: Vec<CString> = std::env::args_os()
         .map(|os_str| {
             let bytes = os_str.as_bytes();
@@ -46,6 +51,9 @@ fn main() -> ExitCode {
             chakra_args.tt_snap_interval,
             chakra_args.tt_snap_history_length,
             chakra_args.ttd_start_event_count,
+            chakra_args.do_tt_record,
+            chakra_args.do_tt_replay,
+            chakra_args.tt_uri,
         );
         ExitCode::from(res as u8)
     }
