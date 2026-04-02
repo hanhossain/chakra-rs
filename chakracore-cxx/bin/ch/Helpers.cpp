@@ -2,10 +2,13 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
+#include <filesystem>
+
 #include "stdafx.h"
 #include <iostream>
 #include <limits>
 #include <sys/stat.h>
+#include <__filesystem/filesystem_error.h>
 
 #define MAX_URI_LENGTH 512
 
@@ -449,56 +452,33 @@ void Helpers::TTReportLastIOErrorAsNeeded(BOOL ok, const char* msg)
 //We assume bounded ascii path length for simplicity
 #define MAX_TTD_ASCII_PATH_EXT_LENGTH 64
 
-void Helpers::CreateTTDDirectoryAsNeeded(size_t* uriLength, char* uri, const std::string& asciiDir1, const std::string& asciiDir2)
+std::string Helpers::CreateTTDDirectoryAsNeeded(const std::string& exeDir, const std::string& asciiDir1, const std::string& asciiDir2)
 {
-    if(*uriLength + asciiDir1.length() + asciiDir2.length() + 2 > MAX_URI_LENGTH || asciiDir1.length() >= MAX_TTD_ASCII_PATH_EXT_LENGTH || asciiDir2.length() >= MAX_TTD_ASCII_PATH_EXT_LENGTH)
-    {
-        std::cout << "We assume bounded MAX_URI_LENGTH for simplicity." << std::endl;
-        std::cout << uri << ", " << asciiDir1 << ", " << asciiDir2 << std::endl;
-        exit(1);
-    }
-
-    int success = 0;
-    int extLength = 0;
-
-    extLength = snprintf(uri + *uriLength, MAX_TTD_ASCII_PATH_EXT_LENGTH, "%s%s", asciiDir1.data(), TTD_HOST_PATH_SEP);
-    if(extLength == -1 || MAX_URI_LENGTH < (*uriLength) + extLength)
-    {
-        std::cout << "Failed directory extension 1." << std::endl;
-        std::cout << uri << ", " << asciiDir1 << ", " << asciiDir2 << std::endl;
-        exit(1);
-    }
-    *uriLength += extLength;
-
-    success = TTDHostMKDir(uri, *uriLength);
-    if(success != 0)
+    std::string out1 = exeDir + asciiDir1 + TTD_HOST_PATH_SEP;
+    if(!std::filesystem::create_directory(out1))
     {
         //we may fail because someone else created the directory -- that is ok
         Helpers::TTReportLastIOErrorAsNeeded(errno == EEXIST, "Failed to create directory");
     }
 
-    extLength = snprintf(uri + *uriLength, MAX_TTD_ASCII_PATH_EXT_LENGTH, "%s%s", asciiDir2.data(), TTD_HOST_PATH_SEP);
-    if(extLength == -1 || MAX_URI_LENGTH < *uriLength + extLength)
-    {
-        std::cout << "Failed directory create 2." << std::endl;
-        std::cout << uri << ", " << asciiDir1 << ", " << asciiDir2 << std::endl;
-        exit(1);
-    }
-    *uriLength += extLength;
-
-    success = TTDHostMKDir(uri, *uriLength);
-    if(success != 0)
+    std::string out2 = out1 + asciiDir2 + TTD_HOST_PATH_SEP;
+    if(!std::filesystem::create_directory(out2))
     {
         //we may fail because someone else created the directory -- that is ok
         Helpers::TTReportLastIOErrorAsNeeded(errno == EEXIST, "Failed to create directory");
     }
+    return out2;
 }
 
-void Helpers::GetTTDDirectory(const std::string_view curi, size_t* uriLength, char* uri, size_t bufferLength)
+std::string Helpers::GetTTDDirectory(const std::string_view curi)
 {
-    TTDHostBuildCurrentExeDirectory(uri, uriLength, bufferLength);
+    char ttUri[PATH_MAX];
+    size_t ttUriLength = 0;
+    TTDHostBuildCurrentExeDirectory(ttUri, &ttUriLength, PATH_MAX);
 
-    Helpers::CreateTTDDirectoryAsNeeded(uriLength, uri, "_ttdlog", curi);
+    std::string exeDir(ttUri, ttUriLength);
+
+    return Helpers::CreateTTDDirectoryAsNeeded(exeDir, "_ttdlog", std::string(curi));
 }
 
 JsTTDStreamHandle CALLBACK Helpers::TTCreateStreamCallback(size_t uriLength, const char* uri, size_t asciiNameLength, const char* asciiName, bool read, bool write)
