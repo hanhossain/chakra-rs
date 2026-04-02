@@ -32,7 +32,7 @@ jobs:
           - os: ubuntu
             os-image: ubuntu-latest
             deps: |
-              sudo apt-get install -y ninja-build libc++-dev libc++abi-dev gcc-14 g++-14 clang-20 lldb-20 lld-20 libc++-20-dev libc++abi-20-dev
+              sudo apt-get install -y ninja-build clang-20 lldb-20 lld-20 libc++-20-dev libc++abi-20-dev
               ln -s /usr/bin/clang++-20 /usr/bin/clang++
               ln -s /usr/bin/clang-20 /usr/bin/clang
           - build-type: test
