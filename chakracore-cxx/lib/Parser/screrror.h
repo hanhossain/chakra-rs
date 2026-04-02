@@ -38,7 +38,7 @@ public:
 
 public:
     ScriptException()
-    { memset(this, 0, sizeof(*this)); }
+    { memset((void*)this, 0, sizeof(*this)); }
     ~ScriptException(void);
 
 public:

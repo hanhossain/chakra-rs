@@ -18,7 +18,7 @@ namespace Js
     void JavascriptExceptionObject::ClearError()
     {
         Assert(this->isPendingExceptionObject);
-        memset(this, 0, sizeof(JavascriptExceptionObject));
+        memset((void*)this, 0, sizeof(JavascriptExceptionObject));
         this->isPendingExceptionObject = true;
     }
 

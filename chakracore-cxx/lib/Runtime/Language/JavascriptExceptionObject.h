@@ -33,7 +33,7 @@ namespace Js
             }
             else
             {
-                memset(&exceptionContext, 0, sizeof(exceptionContext));
+                memset((void*)&exceptionContext, 0, sizeof(exceptionContext));
             }
 #if ENABLE_DEBUG_STACK_BACK_TRACE
             this->stackBackTrace = nullptr;
