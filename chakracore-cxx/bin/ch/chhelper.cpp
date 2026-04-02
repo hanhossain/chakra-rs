@@ -775,9 +775,9 @@ int main_internal(int argc, char** c_argv, uint32_t snapInterval, uint32_t snapH
     JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
     bool doTTRecord = false;
     bool doTTReplay = false;
-    char ttUri[ttUriBufferLength];
-    size_t ttUriLength = 0;
     JsRuntimeAttributes jsrtAttributes = JsRuntimeAttributeNone;
+
+    std::string ttUri;
 
     for(int i = 1; i < argc; ++i)
     {
@@ -787,13 +787,13 @@ int main_internal(int argc, char** c_argv, uint32_t snapInterval, uint32_t snapH
         {
             doTTRecord = true;
             char* ruri = c_argv[i] + strlen("-TTRecord=");
-            Helpers::GetTTDDirectory(ruri, &ttUriLength, ttUri, ttUriBufferLength);
+            ttUri = Helpers::GetTTDDirectory(ruri);
         }
         else if(arg.starts_with("-TTReplay="))
         {
             doTTReplay = true;
             char* ruri = c_argv[i] + strlen("-TTReplay=");
-            Helpers::GetTTDDirectory(ruri, &ttUriLength, ttUri, ttUriBufferLength);
+            ttUri = Helpers::GetTTDDirectory(ruri);
         }
         else if (arg.starts_with("-TTSnapInterval=")
             || arg.starts_with("-TTHistoryLength=")
@@ -842,7 +842,7 @@ int main_internal(int argc, char** c_argv, uint32_t snapInterval, uint32_t snapH
         }
 
         // On linux, execute on the same thread
-        exitCode = ExecuteTestWithMemoryCheck(argInfo.filename, doTTRecord, doTTReplay, chRuntime, ttUri, ttUriLength, snapInterval, snapHistoryLength, startEventCount, jsrtAttributes);
+        exitCode = ExecuteTestWithMemoryCheck(argInfo.filename, doTTRecord, doTTReplay, chRuntime, ttUri.c_str(), ttUri.length(), snapInterval, snapHistoryLength, startEventCount, jsrtAttributes);
     }
 
     PAL_Shutdown();
