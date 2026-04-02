@@ -8,4 +8,4 @@ links = "chakra"
 cxx = "1.0.194"
 
 [build-dependencies]
-cxx-build = "1.0.194"
+cxx-build = { version = "1.0.194", features = ["parallel"] }
