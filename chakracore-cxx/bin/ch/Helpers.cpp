@@ -448,12 +448,12 @@ void Helpers::TTReportLastIOErrorAsNeeded(BOOL ok, const char* msg)
 //We assume bounded ascii path length for simplicity
 #define MAX_TTD_ASCII_PATH_EXT_LENGTH 64
 
-void Helpers::CreateTTDDirectoryAsNeeded(size_t* uriLength, char* uri, const char* asciiDir1, const char16_t* asciiDir2)
+void Helpers::CreateTTDDirectoryAsNeeded(size_t* uriLength, char* uri, const char* asciiDir1, const char* asciiDir2)
 {
-    if(*uriLength + strlen(asciiDir1) + PAL_wcslen(asciiDir2) + 2 > MAX_URI_LENGTH || strlen(asciiDir1) >= MAX_TTD_ASCII_PATH_EXT_LENGTH || PAL_wcslen(asciiDir2) >= MAX_TTD_ASCII_PATH_EXT_LENGTH)
+    if(*uriLength + strlen(asciiDir1) + strlen(asciiDir2) + 2 > MAX_URI_LENGTH || strlen(asciiDir1) >= MAX_TTD_ASCII_PATH_EXT_LENGTH || strlen(asciiDir2) >= MAX_TTD_ASCII_PATH_EXT_LENGTH)
     {
         PAL_wprintf(u"We assume bounded MAX_URI_LENGTH for simplicity.\n");
-        PAL_wprintf(u"%S, %S, %ls\n", uri, asciiDir1, asciiDir2);
+        PAL_wprintf(u"%S, %S, %S\n", uri, asciiDir1, asciiDir2);
         exit(1);
     }
 
@@ -476,19 +476,7 @@ void Helpers::CreateTTDDirectoryAsNeeded(size_t* uriLength, char* uri, const cha
         Helpers::TTReportLastIOErrorAsNeeded(errno == EEXIST, "Failed to create directory");
     }
 
-    char realAsciiDir2[MAX_TTD_ASCII_PATH_EXT_LENGTH];
-    size_t asciiDir2Length = PAL_wcslen(asciiDir2) + 1;
-    for(size_t i = 0; i < asciiDir2Length; ++i)
-    {
-        if(asciiDir2[i] > CHAR_MAX)
-        {
-            PAL_wprintf(u"Test directory names can only include ascii chars.\n");
-            exit(1);
-        }
-        realAsciiDir2[i] = (char)asciiDir2[i];
-    }
-
-    extLength = snprintf(uri + *uriLength, MAX_TTD_ASCII_PATH_EXT_LENGTH, "%s%s", realAsciiDir2, TTD_HOST_PATH_SEP);
+    extLength = snprintf(uri + *uriLength, MAX_TTD_ASCII_PATH_EXT_LENGTH, "%s%s", asciiDir2, TTD_HOST_PATH_SEP);
     if(extLength == -1 || MAX_URI_LENGTH < *uriLength + extLength)
     {
         PAL_wprintf(u"Failed directory create 2.\n");
@@ -505,7 +493,7 @@ void Helpers::CreateTTDDirectoryAsNeeded(size_t* uriLength, char* uri, const cha
     }
 }
 
-void Helpers::GetTTDDirectory(const char16_t* curi, size_t* uriLength, char* uri, size_t bufferLength)
+void Helpers::GetTTDDirectory(const char* curi, size_t* uriLength, char* uri, size_t bufferLength)
 {
     TTDHostBuildCurrentExeDirectory(uri, uriLength, bufferLength);
 
