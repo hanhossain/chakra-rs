@@ -33,8 +33,8 @@ jobs:
             os-image: ubuntu-latest
             deps: |
               sudo apt-get install -y ninja-build clang-20 lldb-20 lld-20 libc++-20-dev libc++abi-20-dev
-              ln -s -f /usr/bin/clang++-20 /usr/bin/clang++
-              ln -s -f /usr/bin/clang-20 /usr/bin/clang
+              sudo ln -s -f /usr/bin/clang++-20 /usr/bin/clang++
+              sudo ln -s -f /usr/bin/clang-20 /usr/bin/clang
           - build-type: test
             features: "--features optimized-tests"
     env:
