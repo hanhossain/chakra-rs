@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "stdafx.h"
+#include <iostream>
 #include <limits>
 #include <sys/stat.h>
 
@@ -23,12 +24,12 @@ void TTDHostBuildCurrentExeDirectory(char* path, size_t* pathLength, size_t buff
     }
     if (i == 0)
     {
-        PAL_fwprintf(PAL_get_stderr(), u"Can't get current exe directory");
+        std::cerr << "Can't get current exe directory" << std::endl;
         exit(1);
     }
     if (i + 2 > bufferLength)
     {
-        PAL_fwprintf(PAL_get_stderr(), u"Don't overflow path buffer during copy");
+        std::cerr << "Don't overflow path buffer during copy" << std::endl;
         exit(1);
     }
     memcpy(path, exePath, i + 1);
@@ -448,23 +449,23 @@ void Helpers::TTReportLastIOErrorAsNeeded(BOOL ok, const char* msg)
 //We assume bounded ascii path length for simplicity
 #define MAX_TTD_ASCII_PATH_EXT_LENGTH 64
 
-void Helpers::CreateTTDDirectoryAsNeeded(size_t* uriLength, char* uri, const char* asciiDir1, const char* asciiDir2)
+void Helpers::CreateTTDDirectoryAsNeeded(size_t* uriLength, char* uri, const std::string& asciiDir1, const std::string& asciiDir2)
 {
-    if(*uriLength + strlen(asciiDir1) + strlen(asciiDir2) + 2 > MAX_URI_LENGTH || strlen(asciiDir1) >= MAX_TTD_ASCII_PATH_EXT_LENGTH || strlen(asciiDir2) >= MAX_TTD_ASCII_PATH_EXT_LENGTH)
+    if(*uriLength + asciiDir1.length() + asciiDir2.length() + 2 > MAX_URI_LENGTH || asciiDir1.length() >= MAX_TTD_ASCII_PATH_EXT_LENGTH || asciiDir2.length() >= MAX_TTD_ASCII_PATH_EXT_LENGTH)
     {
-        PAL_wprintf(u"We assume bounded MAX_URI_LENGTH for simplicity.\n");
-        PAL_wprintf(u"%S, %S, %S\n", uri, asciiDir1, asciiDir2);
+        std::cout << "We assume bounded MAX_URI_LENGTH for simplicity." << std::endl;
+        std::cout << uri << ", " << asciiDir1 << ", " << asciiDir2 << std::endl;
         exit(1);
     }
 
     int success = 0;
     int extLength = 0;
 
-    extLength = snprintf(uri + *uriLength, MAX_TTD_ASCII_PATH_EXT_LENGTH, "%s%s", asciiDir1, TTD_HOST_PATH_SEP);
+    extLength = snprintf(uri + *uriLength, MAX_TTD_ASCII_PATH_EXT_LENGTH, "%s%s", asciiDir1.data(), TTD_HOST_PATH_SEP);
     if(extLength == -1 || MAX_URI_LENGTH < (*uriLength) + extLength)
     {
-        PAL_wprintf(u"Failed directory extension 1.\n");
-        PAL_wprintf(u"%S, %S, %ls\n", uri, asciiDir1, asciiDir2);
+        std::cout << "Failed directory extension 1." << std::endl;
+        std::cout << uri << ", " << asciiDir1 << ", " << asciiDir2 << std::endl;
         exit(1);
     }
     *uriLength += extLength;
@@ -476,11 +477,11 @@ void Helpers::CreateTTDDirectoryAsNeeded(size_t* uriLength, char* uri, const cha
         Helpers::TTReportLastIOErrorAsNeeded(errno == EEXIST, "Failed to create directory");
     }
 
-    extLength = snprintf(uri + *uriLength, MAX_TTD_ASCII_PATH_EXT_LENGTH, "%s%s", asciiDir2, TTD_HOST_PATH_SEP);
+    extLength = snprintf(uri + *uriLength, MAX_TTD_ASCII_PATH_EXT_LENGTH, "%s%s", asciiDir2.data(), TTD_HOST_PATH_SEP);
     if(extLength == -1 || MAX_URI_LENGTH < *uriLength + extLength)
     {
-        PAL_wprintf(u"Failed directory create 2.\n");
-        PAL_wprintf(u"%S, %S, %ls\n", uri, asciiDir1, asciiDir2);
+        std::cout << "Failed directory create 2." << std::endl;
+        std::cout << uri << ", " << asciiDir1 << ", " << asciiDir2 << std::endl;
         exit(1);
     }
     *uriLength += extLength;
@@ -493,7 +494,7 @@ void Helpers::CreateTTDDirectoryAsNeeded(size_t* uriLength, char* uri, const cha
     }
 }
 
-void Helpers::GetTTDDirectory(const char* curi, size_t* uriLength, char* uri, size_t bufferLength)
+void Helpers::GetTTDDirectory(const std::string_view curi, size_t* uriLength, char* uri, size_t bufferLength)
 {
     TTDHostBuildCurrentExeDirectory(uri, uriLength, bufferLength);
 
