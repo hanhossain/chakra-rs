@@ -4,6 +4,7 @@ FROM --platform=linux/amd64 ubuntu:24.04
 RUN DEBIAN_FRONTEND=noninteractive apt-get update  \
     && apt-get -y install \
     build-essential \
+    gcc-14 g++-14 \
     curl \
     git \
     cmake \
