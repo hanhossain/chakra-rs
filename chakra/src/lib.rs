@@ -1,7 +1,10 @@
+use std::env::current_exe;
+
 #[cxx::bridge(namespace = "chakra")]
 mod ffi {
     extern "Rust" {
         fn print_usage();
+        fn get_ttd_directory(record_uri: String) -> String;
     }
 }
 
@@ -23,6 +26,15 @@ pub fn print_usage() {
         println!("\t-v|--version\t\tDisplays version info");
         println!("\t-h|--help|-?\t\tDisplays this help message");
     }
+}
+
+fn get_ttd_directory(record_uri: String) -> String {
+    let exe = current_exe().unwrap();
+    let exe_dir = exe.parent().unwrap().to_owned();
+
+    let directory = exe_dir.join("_ttdlog").join(record_uri);
+    std::fs::create_dir_all(&directory).unwrap();
+    directory.to_string_lossy().into_owned()
 }
 
 #[derive(Debug, Clone, Default)]

@@ -2,48 +2,12 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-#include <filesystem>
-
 #include "stdafx.h"
 #include <iostream>
 #include <limits>
 #include <sys/stat.h>
-#include <__filesystem/filesystem_error.h>
 
 #define MAX_URI_LENGTH 512
-
-#define TTD_MAX_FILE_LENGTH MAX_URI_LENGTH
-#define TTD_HOST_PATH_SEP "/"
-
-void TTDHostBuildCurrentExeDirectory(char* path, size_t* pathLength, size_t bufferLength)
-{
-    char exePath[TTD_MAX_FILE_LENGTH];
-    PlatformAgnostic::SystemInfo::GetBinaryLocation(exePath, TTD_MAX_FILE_LENGTH);
-
-    size_t i = strlen(exePath) - 1;
-    while (exePath[i] != TTD_HOST_PATH_SEP[0] && i != 0)
-    {
-        --i;
-    }
-    if (i == 0)
-    {
-        std::cerr << "Can't get current exe directory" << std::endl;
-        exit(1);
-    }
-    if (i + 2 > bufferLength)
-    {
-        std::cerr << "Don't overflow path buffer during copy" << std::endl;
-        exit(1);
-    }
-    memcpy(path, exePath, i + 1);
-    *pathLength = i + 1;
-    path[*pathLength] = '\0';
-}
-
-int TTDHostMKDir(const char* path, size_t pathLength)
-{
-    return mkdir(path, 0700);
-}
 
 JsTTDStreamHandle TTDHostOpen(size_t pathLength, const char* path, bool isWrite)
 {
@@ -449,38 +413,6 @@ void Helpers::TTReportLastIOErrorAsNeeded(BOOL ok, const char* msg)
     }
 }
 
-//We assume bounded ascii path length for simplicity
-#define MAX_TTD_ASCII_PATH_EXT_LENGTH 64
-
-std::string Helpers::CreateTTDDirectoryAsNeeded(const std::string& exeDir, const std::string& asciiDir1, const std::string& asciiDir2)
-{
-    std::string out1 = exeDir + asciiDir1 + TTD_HOST_PATH_SEP;
-    if(!std::filesystem::create_directory(out1))
-    {
-        //we may fail because someone else created the directory -- that is ok
-        Helpers::TTReportLastIOErrorAsNeeded(errno == EEXIST, "Failed to create directory");
-    }
-
-    std::string out2 = out1 + asciiDir2 + TTD_HOST_PATH_SEP;
-    if(!std::filesystem::create_directory(out2))
-    {
-        //we may fail because someone else created the directory -- that is ok
-        Helpers::TTReportLastIOErrorAsNeeded(errno == EEXIST, "Failed to create directory");
-    }
-    return out2;
-}
-
-std::string Helpers::GetTTDDirectory(const std::string_view curi)
-{
-    char ttUri[PATH_MAX];
-    size_t ttUriLength = 0;
-    TTDHostBuildCurrentExeDirectory(ttUri, &ttUriLength, PATH_MAX);
-
-    std::string exeDir(ttUri, ttUriLength);
-
-    return Helpers::CreateTTDDirectoryAsNeeded(exeDir, "_ttdlog", std::string(curi));
-}
-
 JsTTDStreamHandle CALLBACK Helpers::TTCreateStreamCallback(size_t uriLength, const char* uri, size_t asciiNameLength, const char* asciiName, bool read, bool write)
 {
     AssertMsg((read | write) & (!read | !write), "Read/Write streams not supported yet -- defaulting to read only");
@@ -549,27 +481,4 @@ void CALLBACK Helpers::TTFlushAndCloseStreamCallback(JsTTDStreamHandle handle, b
 {
     fflush(((PAL_FILE*)handle)->bsdFilePtr);
     fclose(((PAL_FILE*)handle)->bsdFilePtr);
-}
-
-void GetBinaryPathWithFileNameA(char *path, const size_t buffer_size, const char* filename)
-{
-    char fullpath[_MAX_PATH];
-    char drive[_MAX_DRIVE];
-    char dir[_MAX_DIR];
-
-    char modulename[_MAX_PATH];
-    PlatformAgnostic::SystemInfo::GetBinaryLocation(modulename, _MAX_PATH);
-    _splitpath_s(modulename, drive, _MAX_DRIVE, dir, _MAX_DIR, nullptr, 0, nullptr, 0);
-    _makepath_s(fullpath, drive, dir, filename, nullptr);
-
-    size_t len = strlen(fullpath);
-    if (len < buffer_size)
-    {
-        memcpy(path, fullpath, len * sizeof(char));
-    }
-    else
-    {
-        len = 0;
-    }
-    path[len] = char(0);
 }
