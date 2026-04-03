@@ -798,8 +798,6 @@ int main_internal(int argc, char** c_argv, uint32_t snapInterval, uint32_t snapH
     }
     argc = cpos;
 
-    HostConfigFlags::pfnPrintUsage = chakra::print_usage;
-
     HostConfigFlags::HandleArgsFlag(argc, argv);
 
     argInfo = { argc, argv, chakra::print_usage, nullptr };

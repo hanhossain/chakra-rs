@@ -3,11 +3,11 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "chakra/src/lib.rs.h"
 
 HostConfigFlags HostConfigFlags::flags;
 char16_t** HostConfigFlags::argsVal;
 int HostConfigFlags::argsCount;
-void(*HostConfigFlags::pfnPrintUsage)();
 
 template <>
 void HostConfigFlags::Parse<bool>(ICmdLineArgsParser * parser, bool * value)
@@ -73,10 +73,7 @@ void HostConfigFlags::PrintUsageString()
 
 void HostConfigFlags::PrintUsage()
 {
-    if (pfnPrintUsage)
-    {
-        pfnPrintUsage();
-    }
+    chakra::print_usage();
 
     PAL_wprintf(u"\nHost Config Flags: \n\n");
     HostConfigFlags::PrintUsageString();

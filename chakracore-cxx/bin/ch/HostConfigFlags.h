@@ -17,7 +17,6 @@ public:
     static HostConfigFlags flags;
     static char16_t** argsVal;
     static int argsCount;
-    static void(*pfnPrintUsage)();
 
     static void HandleArgsFlag(int& argc, _Inout_updates_to_(argc, argc) char16_t* argv[]);
     static void RemoveArg(int& argc, _Inout_updates_to_(argc, argc) char16_t* argv[], int index);
