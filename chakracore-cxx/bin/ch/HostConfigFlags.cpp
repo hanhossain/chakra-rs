@@ -101,36 +101,38 @@ void HostConfigFlags::RemoveArg(int& argc, _Inout_updates_to_(argc, argc) char16
 
 void HostConfigFlags::HandleArgsFlag(int& argc, _Inout_updates_to_(argc, argc) char16_t* argv[])
 {
-    const char16_t* argsFlag = u"-args";
-    const char16_t* endArgsFlag = u"-endargs";
-    int argsFlagLen = static_cast<int>(PAL_wcslen(argsFlag));
+    constexpr std::u16string_view argsFlag = u"-args";
+    constexpr std::u16string_view endArgsFlag = u"-endargs";
+
     int i;
+    // find index of "-args"
     for (i = 1; i < argc; i++)
     {
-        if (_wcsnicmp(argv[i], argsFlag, argsFlagLen) == 0)
+        if (argv[i] == argsFlag)
         {
             break;
         }
     }
     int argsStart = ++i;
+    // find index of "-end" (though it should prob be "-endargs")
     for (; i < argc; i++)
     {
-        if (_wcsnicmp(argv[i], endArgsFlag, argsFlagLen) == 0)
+        if (argv[i] == endArgsFlag)
         {
             break;
         }
     }
     int argsEnd = i;
 
-    int argsCount = argsEnd - argsStart;
-    if (argsCount == 0)
+    int count = argsEnd - argsStart;
+    if (count == 0)
     {
         return;
     }
-    HostConfigFlags::argsVal = new char16_t*[argsCount];
-    HostConfigFlags::argsCount = argsCount;
+    HostConfigFlags::argsVal = new char16_t*[count];
+    HostConfigFlags::argsCount = count;
     int argIndex = argsStart;
-    for (i = 0; i < argsCount; i++)
+    for (i = 0; i < count; i++)
     {
         HostConfigFlags::argsVal[i] = argv[argIndex++];
     }
@@ -143,6 +145,6 @@ void HostConfigFlags::HandleArgsFlag(int& argc, _Inout_updates_to_(argc, argc) c
         argv[i] = temp;
         argIndex++;
     }
-    Assert(argIndex == argc - argsCount - 1 - (argsEnd < argc));
+    Assert(argIndex == argc - count - 1 - (argsEnd < argc));
     argc = argIndex;
 }
