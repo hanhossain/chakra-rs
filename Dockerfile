@@ -13,8 +13,11 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update  \
     lld-19 \
     gdb
 
-RUN ln -s /bin/clang++-19 /bin/clang++
-RUN ln -s /bin/clang-19 /bin/clang
+RUN ln -sf /usr/bin/gcc-14 /usr/bin/gcc
+RUN ln -sf /usr/bin/g++-14 /usr/bin/g++
+
+RUN ln -sf /usr/bin/clang++-19 /usr/bin/clang++
+RUN ln -sf /usr/bin/clang-19 /usr/bin/clang
 
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
