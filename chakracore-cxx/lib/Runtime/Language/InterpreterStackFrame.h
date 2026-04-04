@@ -6,8 +6,6 @@
 
 #pragma once
 
-#define _ReturnAddress() __builtin_return_address(0)
-
 class BailOutRecord;
 
 extern "C" void _alloca_probe_16();

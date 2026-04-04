@@ -18,7 +18,7 @@
             Js::ScriptEntryExitRecord __entryExitRecord = {0}; \
             SAVE_FS0(); \
             Js::EnterScriptObject __enterScriptObject = Js::EnterScriptObject(__localScriptContext, &__entryExitRecord, \
-                _ReturnAddress(), _AddressOfReturnAddress(), doCleanup, isCallRoot, hasCaller); \
+                __builtin_return_address(0), _AddressOfReturnAddress(), doCleanup, isCallRoot, hasCaller); \
             __localScriptContext->OnScriptStart(isCallRoot, isScript); \
             __enterScriptObject.VerifyEnterScript();
 

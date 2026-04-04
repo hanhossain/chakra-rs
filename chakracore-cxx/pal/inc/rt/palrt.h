@@ -1039,6 +1039,4 @@ typedef void (*WAITORTIMERCALLBACK)(void *, BOOLEAN);
 
 #define UNREFERENCED_PARAMETER(P)          (void)(P)
 
-#define _ReturnAddress() __builtin_return_address(0)
-
 #endif // __PALRT_H__

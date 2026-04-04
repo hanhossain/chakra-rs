@@ -1103,15 +1103,15 @@ Js::Var BailOutRecord::BailOut(BailOutRecord const * bailOutRecord)
     {
         if (bailOutRecord->globalBailOutRecordTable->isInlinedFunction)
         {
-            return reinterpret_cast<Js::Var>(BailOutFromLoopBodyInlined(layout, bailOutRecord, _ReturnAddress()));
+            return reinterpret_cast<Js::Var>(BailOutFromLoopBodyInlined(layout, bailOutRecord, __builtin_return_address(0)));
         }
         return reinterpret_cast<Js::Var>(BailOutFromLoopBody(layout, bailOutRecord));
     }
     if(bailOutRecord->globalBailOutRecordTable->isInlinedFunction)
     {
-        return BailOutInlined(layout, bailOutRecord, _ReturnAddress(), savedImplicitCallFlags);
+        return BailOutInlined(layout, bailOutRecord, __builtin_return_address(0), savedImplicitCallFlags);
     }
-    return BailOutFromFunction(layout, bailOutRecord, _ReturnAddress(), argoutRestoreAddr, savedImplicitCallFlags);
+    return BailOutFromFunction(layout, bailOutRecord, __builtin_return_address(0), argoutRestoreAddr, savedImplicitCallFlags);
 }
 
 uint32_t
@@ -2835,7 +2835,7 @@ Js::Var BailOutRecord::BailOutForElidedYield(void * framePointer)
 
     {
         // Following _AddressOfReturnAddress <= real address of "returnAddress". Suffices for RemoteStackWalker to test partially initialized interpreter frame.
-        Js::InterpreterStackFrame::PushPopFrameHelper pushPopFrameHelper(frame, _ReturnAddress(), _AddressOfReturnAddress());
+        Js::InterpreterStackFrame::PushPopFrameHelper pushPopFrameHelper(frame, __builtin_return_address(0), _AddressOfReturnAddress());
 #ifdef ENABLE_SCRIPT_DEBUGGING
         aReturn = isInDebugMode ? frame->DebugProcess() : frame->Process();
 #else
@@ -2891,15 +2891,15 @@ Js::Var BranchBailOutRecord::BailOut(BranchBailOutRecord const * bailOutRecord, 
     {
         if (bailOutRecord->globalBailOutRecordTable->isInlinedFunction)
         {
-            return reinterpret_cast<Js::Var>(BailOutFromLoopBodyInlined(layout, bailOutRecord, cond, _ReturnAddress()));
+            return reinterpret_cast<Js::Var>(BailOutFromLoopBodyInlined(layout, bailOutRecord, cond, __builtin_return_address(0)));
         }
         return reinterpret_cast<Js::Var>(BailOutFromLoopBody(layout, bailOutRecord, cond));
     }
     if(bailOutRecord->globalBailOutRecordTable->isInlinedFunction)
     {
-        return BailOutInlined(layout, bailOutRecord, cond, _ReturnAddress(), savedImplicitCallFlags);
+        return BailOutInlined(layout, bailOutRecord, cond, __builtin_return_address(0), savedImplicitCallFlags);
     }
-    return BailOutFromFunction(layout, bailOutRecord, cond, _ReturnAddress(), argoutRestoreAddr, savedImplicitCallFlags);
+    return BailOutFromFunction(layout, bailOutRecord, cond, __builtin_return_address(0), argoutRestoreAddr, savedImplicitCallFlags);
 }
 
 Js::Var

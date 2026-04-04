@@ -690,7 +690,7 @@ namespace Js
         else
         {
             // Just start with the caller
-            this->isInitialFrame = this->currentFrame.InitializeByReturnAddress(_ReturnAddress(), this->scriptContext);
+            this->isInitialFrame = this->currentFrame.InitializeByReturnAddress(__builtin_return_address(0), this->scriptContext);
         }
 
         if (useEERContext)
