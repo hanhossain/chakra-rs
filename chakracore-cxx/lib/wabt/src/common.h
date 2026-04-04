@@ -124,7 +124,7 @@ Dst Bitcast(Src&& value) {
 
 template <typename T>
 void ZeroMemory(T& v) {
-  WABT_STATIC_ASSERT(std::is_pod<T>::value);
+  WABT_STATIC_ASSERT(std::is_standard_layout_v<T>);
   memset(&v, 0, sizeof(v));
 }
 

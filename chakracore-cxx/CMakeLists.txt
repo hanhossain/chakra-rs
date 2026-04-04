@@ -175,8 +175,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
     -Wno-deprecated-this-capture\
     -Wno-deprecated-enum-compare-conditional\
-    -Wno-deprecated-enum-enum-conversion\
-    -Wno-deprecated-declarations")
+    -Wno-deprecated-enum-enum-conversion")
 
 # notes..
 # -Wno-address-of-temporary  # vtinfo.h, VirtualTableInfo<T>::RegisterVirtualTable
