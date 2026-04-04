@@ -324,3 +324,8 @@ private:
     friend void CheckIsExecutable(Js::RecyclableObject * function, Js::JavascriptMethod entrypoint);
 #endif
 };
+
+typedef struct _IMAGE_BASE_RELOCATION {
+    uint32_t   VirtualAddress;
+    uint32_t   SizeOfBlock;
+} IMAGE_BASE_RELOCATION;

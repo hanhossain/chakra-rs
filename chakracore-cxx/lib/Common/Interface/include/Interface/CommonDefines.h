@@ -136,8 +136,6 @@
 #define ENABLE_CONCURRENT_GC 1
 #define ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP 0 // Needs ENABLE_CONCURRENT_GC to be enabled for this to be enabled.
 
-#define SYSINFO_IMAGE_BASE_AVAILABLE 0
-
 #define USE_VPM_TABLE 1
 
 
