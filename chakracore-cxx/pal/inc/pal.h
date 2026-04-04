@@ -132,10 +132,6 @@ extern "C" {
 
 /******************* ABI-specific glue *******************************/
 
-#if defined(_PPC_) || defined(_PPC64_) || defined(_SPARC_) || defined(_PARISC_) || defined(_IA64_)
-#define BIGENDIAN 1
-#endif
-
 #define MAX_PATH 260
 #define _MAX_PATH 260
 #define _MAX_DRIVE  3   /* max. length of drive component */
@@ -1353,14 +1349,6 @@ QueryThreadCycleTime(
      unsigned long * CycleTime);
 
 #ifndef FEATURE_PAL_SXS
-
-typedef int32_t (*PTOP_LEVEL_EXCEPTION_FILTER)(
-                           struct _EXCEPTION_POINTERS *ExceptionInfo);
-typedef PTOP_LEVEL_EXCEPTION_FILTER LPTOP_LEVEL_EXCEPTION_FILTER;
-
-LPTOP_LEVEL_EXCEPTION_FILTER
-SetUnhandledExceptionFilter(
-                 LPTOP_LEVEL_EXCEPTION_FILTER lpTopLevelExceptionFilter);
 
 int32_t
 UnhandledExceptionFilter(

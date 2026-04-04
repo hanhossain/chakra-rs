@@ -37,8 +37,6 @@ Abstract:
 #include <unistd.h>
 #include <errno.h>
 
-#include <pal_endian.h>
-
 using namespace CorUnix;
 
 SET_DEFAULT_DEBUG_CHANNEL(VIRTUAL);
