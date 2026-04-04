@@ -7258,7 +7258,7 @@ namespace Js
     // static
     BuiltInArgSpecializationType JavascriptLibrary::GetBuiltInArgType(BuiltInFlags flags, BuiltInArgShift argKind)
     {
-        Assert(argKind == BuiltInArgShift::BIAS_Dst || BuiltInArgShift::BIAS_Src1 || BuiltInArgShift::BIAS_Src2);
+        Assert(argKind == BuiltInArgShift::BIAS_Dst || argKind == BuiltInArgShift::BIAS_Src1 || argKind == BuiltInArgShift::BIAS_Src2);
 
         BuiltInArgSpecializationType type = static_cast<BuiltInArgSpecializationType>(
             (flags >> argKind) &              // Shift-out everything to the right of start of interesting area.
