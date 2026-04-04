@@ -382,8 +382,6 @@ uint32_t CharUpperBuffW(const char16_t* lpsz, uint32_t  cchLength);
 
 #define _NOEXCEPT_ noexcept
 
-#if defined(__GNUC__) || defined(__clang__)
-#define _ReturnAddress() __builtin_return_address(0)
 #if !__has_builtin(_AddressOfReturnAddress)
 inline void * _AddressOfReturnAddress()
 {
@@ -391,9 +389,6 @@ inline void * _AddressOfReturnAddress()
 }
 #else
 extern "C" void * _AddressOfReturnAddress(void);
-#endif
-#else
-#error _AddressOfReturnAddress and _ReturnAddress not defined for this platform
 #endif
 
 // ----- START: Define strsafe related types and defines for non-VC++ compilers -----

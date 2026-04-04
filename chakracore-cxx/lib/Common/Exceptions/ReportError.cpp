@@ -6,7 +6,7 @@
 #include "Util/Abstractions.h"
 #include "Exceptions/ReportError.h"
 
-// Disable inline so that _ReturnAddress() will get the address of the calling function.
+// Disable inline so that __builtin_return_address(0) will get the address of the calling function.
 void ReportFatalException(
     size_t context,
     int32_t exceptionCode,
@@ -24,7 +24,7 @@ void ReportFatalException(
 #ifdef DISABLE_SEH
     TerminateProcess(GetCurrentProcess(), (uint32_t)DBG_TERMINATE_PROCESS);
 #else
-    void * addressToBlame = _ReturnAddress();
+    void * addressToBlame = __builtin_return_address(0);
     __try
     {
         size_t ExceptionInformation[2];

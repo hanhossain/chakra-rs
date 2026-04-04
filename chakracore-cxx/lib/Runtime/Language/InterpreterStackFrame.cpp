@@ -1807,7 +1807,7 @@ skipThunk:
     {
         Js::ScriptFunction * function = Js::UnsafeVarTo<Js::ScriptFunction>(layout->functionObject);
         Js::ArgumentReader args(&layout->callInfo, layout->args);
-        void* localReturnAddress = _ReturnAddress();
+        void* localReturnAddress = __builtin_return_address(0);
         void* localAddressOfReturnAddress = _AddressOfReturnAddress();
         return InterpreterHelper(function, args, localReturnAddress, localAddressOfReturnAddress);
     }
@@ -1817,7 +1817,7 @@ skipThunk:
     Var InterpreterStackFrame::InterpreterThunk(RecyclableObject* function, CallInfo callInfo, ...)
     {
         ARGUMENTS(args, callInfo);
-        void* localReturnAddress = _ReturnAddress();
+        void* localReturnAddress = __builtin_return_address(0);
         void* localAddressOfReturnAddress = _AddressOfReturnAddress();
         Assert(VarIs<ScriptFunction>(function));
         return InterpreterHelper(VarTo<ScriptFunction>(function), args, localReturnAddress, localAddressOfReturnAddress);
@@ -2121,7 +2121,7 @@ skipThunk:
                 PushPopFrameHelper pushPopFrameHelper(newInstance, returnAddress, addressOfReturnAddress);
                 aReturn = newInstance->DebugProcess();
 #else
-                aReturn = newInstance->DebugProcessThunk(_ReturnAddress(), _AddressOfReturnAddress());
+                aReturn = newInstance->DebugProcessThunk(__builtin_return_address(0), _AddressOfReturnAddress());
 #endif
             }
             else
@@ -2131,7 +2131,7 @@ skipThunk:
                 PushPopFrameHelper pushPopFrameHelper(newInstance, returnAddress, addressOfReturnAddress);
                 aReturn = newInstance->Process();
 #else
-                aReturn = newInstance->ProcessThunk(_ReturnAddress(), _AddressOfReturnAddress());
+                aReturn = newInstance->ProcessThunk(__builtin_return_address(0), _AddressOfReturnAddress());
 #endif
             }
         }
@@ -2183,7 +2183,7 @@ skipThunk:
         ArgSlot nbArgs = ArgSlotMath::Add(function->GetFunctionBody()->GetAsmJsFunctionInfo()->GetArgCount(), 1);
         CallInfo callInfo((CallFlags)flags, nbArgs);
         ArgumentReader args(&callInfo, paramsAddr);
-        void* returnAddress = _ReturnAddress();
+        void* returnAddress = __builtin_return_address(0);
         void* addressOfReturnAddress = _AddressOfReturnAddress();
 #if ENABLE_PROFILE_INFO
         function->GetFunctionBody()->EnsureDynamicProfileInfo();
@@ -2301,7 +2301,7 @@ skipThunk:
 
         CallInfo callInfo((CallFlags)flags, nbArgs);
         ArgumentReader args(&callInfo, (Var*)layout->args);
-        void* returnAddress = _ReturnAddress();
+        void* returnAddress = __builtin_return_address(0);
         void* addressOfReturnAddress = _AddressOfReturnAddress();
         function->GetFunctionBody()->EnsureDynamicProfileInfo();
         AsmJsReturnStruct asmJsReturn = { 0 };
