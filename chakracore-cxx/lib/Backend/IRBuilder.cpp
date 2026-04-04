@@ -695,7 +695,7 @@ IRBuilder::Build()
 #endif
         AssertOrFailFastMsg(Js::OpCodeUtil::IsValidByteCodeOpcode(newOpcode), "Error getting opcode from m_jnReader.Op()");
 
-        uint layoutAndSize = layoutSize * Js::OpLayoutType::Count + Js::OpCodeUtil::GetOpCodeLayout(newOpcode);
+        uint layoutAndSize = static_cast<uint32_t>(layoutSize) * static_cast<uint32_t>(Js::OpLayoutType::Count) + Js::OpCodeUtil::GetOpCodeLayout(newOpcode);
         switch(layoutAndSize)
         {
 #define LAYOUT_TYPE(layout) \
@@ -704,13 +704,13 @@ IRBuilder::Build()
             this->Build##layout(newOpcode, offset); \
             break;
 #define LAYOUT_TYPE_WMS(layout) \
-        case Js::SmallLayout * Js::OpLayoutType::Count + Js::OpLayoutType::layout: \
+        case static_cast<uint32_t>(Js::SmallLayout) * static_cast<uint32_t>(Js::OpLayoutType::Count) + Js::OpLayoutType::layout: \
             this->Build##layout<Js::SmallLayoutSizePolicy>(newOpcode, offset); \
             break; \
-        case Js::MediumLayout * Js::OpLayoutType::Count + Js::OpLayoutType::layout: \
+        case static_cast<uint32_t>(Js::MediumLayout) * static_cast<uint32_t>(Js::OpLayoutType::Count) + Js::OpLayoutType::layout: \
             this->Build##layout<Js::MediumLayoutSizePolicy>(newOpcode, offset); \
             break; \
-        case Js::LargeLayout * Js::OpLayoutType::Count + Js::OpLayoutType::layout: \
+        case static_cast<uint32_t>(Js::LargeLayout) * static_cast<uint32_t>(Js::OpLayoutType::Count) + Js::OpLayoutType::layout: \
             this->Build##layout<Js::LargeLayoutSizePolicy>(newOpcode, offset); \
             break;
 #include "ByteCode/LayoutTypes.h"

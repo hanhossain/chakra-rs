@@ -135,7 +135,7 @@ IRBuilderAsmJs::Build()
 
         AssertOrFailFastMsg(Js::OpCodeUtilAsmJs::IsValidByteCodeOpcode(newOpcode), "Error getting opcode from m_jnReader.Op()");
 
-        uint layoutAndSize = layoutSize * Js::OpLayoutTypeAsmJs::Count + Js::OpCodeUtilAsmJs::GetOpCodeLayout(newOpcode);
+        uint layoutAndSize = static_cast<uint32_t>(layoutSize) * static_cast<uint32_t>(Js::OpLayoutTypeAsmJs::Count) + Js::OpCodeUtilAsmJs::GetOpCodeLayout(newOpcode);
         switch (layoutAndSize)
         {
 #define LAYOUT_TYPE(layout) \
@@ -144,13 +144,13 @@ IRBuilderAsmJs::Build()
             Build##layout(newOpcode, offset); \
             break;
 #define LAYOUT_TYPE_WMS(layout) \
-        case Js::SmallLayout * Js::OpLayoutTypeAsmJs::Count + Js::OpLayoutTypeAsmJs::layout: \
+        case static_cast<uint32_t>(Js::SmallLayout) * static_cast<uint32_t>(Js::OpLayoutTypeAsmJs::Count) + Js::OpLayoutTypeAsmJs::layout: \
             Build##layout<Js::SmallLayoutSizePolicy>(newOpcode, offset); \
             break; \
-        case Js::MediumLayout * Js::OpLayoutTypeAsmJs::Count + Js::OpLayoutTypeAsmJs::layout: \
+        case static_cast<uint32_t>(Js::MediumLayout) * static_cast<uint32_t>(Js::OpLayoutTypeAsmJs::Count) + Js::OpLayoutTypeAsmJs::layout: \
             Build##layout<Js::MediumLayoutSizePolicy>(newOpcode, offset); \
             break; \
-        case Js::LargeLayout * Js::OpLayoutTypeAsmJs::Count + Js::OpLayoutTypeAsmJs::layout: \
+        case static_cast<uint32_t>(Js::LargeLayout) * static_cast<uint32_t>(Js::OpLayoutTypeAsmJs::Count) + Js::OpLayoutTypeAsmJs::layout: \
             Build##layout<Js::LargeLayoutSizePolicy>(newOpcode, offset); \
             break;
 #define EXCLUDE_FRONTEND_LAYOUT

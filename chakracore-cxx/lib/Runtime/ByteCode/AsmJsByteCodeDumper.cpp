@@ -262,7 +262,7 @@ namespace Js
     {
         Output::Print(u"%-20s", OpCodeUtilAsmJs::GetOpCodeName(op));
         OpLayoutTypeAsmJs nType = OpCodeUtilAsmJs::GetOpCodeLayout(op);
-        switch (layoutSize * OpLayoutTypeAsmJs::Count + nType)
+        switch (static_cast<uint32_t>(layoutSize) * static_cast<uint32_t>(OpLayoutTypeAsmJs::Count) + nType)
         {
 #define LAYOUT_TYPE(layout) \
             case OpLayoutTypeAsmJs::layout: \
@@ -270,13 +270,13 @@ namespace Js
                 Dump##layout(op, reader.layout(), dumpFunction, reader); \
                 break;
 #define LAYOUT_TYPE_WMS(layout) \
-            case SmallLayout * OpLayoutTypeAsmJs::Count + OpLayoutTypeAsmJs::layout: \
+            case static_cast<uint32_t>(SmallLayout) * static_cast<uint32_t>(OpLayoutTypeAsmJs::Count) + OpLayoutTypeAsmJs::layout: \
                 Dump##layout(op, reader.layout##_Small(), dumpFunction, reader); \
                 break; \
-            case MediumLayout * OpLayoutTypeAsmJs::Count + OpLayoutTypeAsmJs::layout: \
+            case static_cast<uint32_t>(MediumLayout) * static_cast<uint32_t>(OpLayoutTypeAsmJs::Count) + OpLayoutTypeAsmJs::layout: \
                 Dump##layout(op, reader.layout##_Medium(), dumpFunction, reader); \
                 break; \
-            case LargeLayout * OpLayoutTypeAsmJs::Count + OpLayoutTypeAsmJs::layout: \
+            case static_cast<uint32_t>(LargeLayout) * static_cast<uint32_t>(OpLayoutTypeAsmJs::Count) + OpLayoutTypeAsmJs::layout: \
                 Dump##layout(op, reader.layout##_Large(), dumpFunction, reader); \
                 break;
 #include "LayoutTypesAsmJs.h"

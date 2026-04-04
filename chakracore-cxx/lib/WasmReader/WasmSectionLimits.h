@@ -12,6 +12,7 @@ struct SectionLimits
     enum Flags : uint32_t
     {
         HAS_MAXIMUM = 1 << 0,
+        IS_SHARED = 1 << 1,
     };
     bool HasMaximum() const { return (flags & HAS_MAXIMUM) != 0; }
 
@@ -22,10 +23,6 @@ struct SectionLimits
 
 struct MemorySectionLimits : public SectionLimits
 {
-    enum Flags : uint32_t
-    {
-        IS_SHARED = 1 << 1,
-    };
     bool IsShared() const { return (flags & IS_SHARED) != 0; }
 };
 
