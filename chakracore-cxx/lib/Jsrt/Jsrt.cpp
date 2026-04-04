@@ -2189,19 +2189,19 @@ CHAKRA_API JsCreateDataView(_In_ JsValueRef arrayBuffer, _In_ unsigned int byteO
 }
 
 
-C_ASSERT(JsArrayTypeUint8         - Js::TypeIds_Uint8Array        == JsArrayTypeInt8 - Js::TypeIds_Int8Array);
-C_ASSERT(JsArrayTypeUint8Clamped  - Js::TypeIds_Uint8ClampedArray == JsArrayTypeInt8 - Js::TypeIds_Int8Array);
-C_ASSERT(JsArrayTypeInt16         - Js::TypeIds_Int16Array        == JsArrayTypeInt8 - Js::TypeIds_Int8Array);
-C_ASSERT(JsArrayTypeUint16        - Js::TypeIds_Uint16Array       == JsArrayTypeInt8 - Js::TypeIds_Int8Array);
-C_ASSERT(JsArrayTypeInt32         - Js::TypeIds_Int32Array        == JsArrayTypeInt8 - Js::TypeIds_Int8Array);
-C_ASSERT(JsArrayTypeUint32        - Js::TypeIds_Uint32Array       == JsArrayTypeInt8 - Js::TypeIds_Int8Array);
-C_ASSERT(JsArrayTypeFloat32       - Js::TypeIds_Float32Array      == JsArrayTypeInt8 - Js::TypeIds_Int8Array);
-C_ASSERT(JsArrayTypeFloat64       - Js::TypeIds_Float64Array      == JsArrayTypeInt8 - Js::TypeIds_Int8Array);
+C_ASSERT(static_cast<uint8_t>(JsArrayTypeUint8)         - Js::TypeIds_Uint8Array        == static_cast<uint8_t>(JsArrayTypeInt8) - Js::TypeIds_Int8Array);
+C_ASSERT(static_cast<uint8_t>(JsArrayTypeUint8Clamped)  - Js::TypeIds_Uint8ClampedArray == static_cast<uint8_t>(JsArrayTypeInt8) - Js::TypeIds_Int8Array);
+C_ASSERT(static_cast<uint8_t>(JsArrayTypeInt16)         - Js::TypeIds_Int16Array        == static_cast<uint8_t>(JsArrayTypeInt8) - Js::TypeIds_Int8Array);
+C_ASSERT(static_cast<uint8_t>(JsArrayTypeUint16)        - Js::TypeIds_Uint16Array       == static_cast<uint8_t>(JsArrayTypeInt8) - Js::TypeIds_Int8Array);
+C_ASSERT(static_cast<uint8_t>(JsArrayTypeInt32)         - Js::TypeIds_Int32Array        == static_cast<uint8_t>(JsArrayTypeInt8) - Js::TypeIds_Int8Array);
+C_ASSERT(static_cast<uint8_t>(JsArrayTypeUint32)        - Js::TypeIds_Uint32Array       == static_cast<uint8_t>(JsArrayTypeInt8) - Js::TypeIds_Int8Array);
+C_ASSERT(static_cast<uint8_t>(JsArrayTypeFloat32)       - Js::TypeIds_Float32Array      == static_cast<uint8_t>(JsArrayTypeInt8) - Js::TypeIds_Int8Array);
+C_ASSERT(static_cast<uint8_t>(JsArrayTypeFloat64)       - Js::TypeIds_Float64Array      == static_cast<uint8_t>(JsArrayTypeInt8) - Js::TypeIds_Int8Array);
 
 inline JsTypedArrayType GetTypedArrayType(Js::TypeId typeId)
 {
     Assert(Js::TypedArrayBase::Is(typeId));
-    return static_cast<JsTypedArrayType>(typeId + (JsArrayTypeInt8 - Js::TypeIds_Int8Array));
+    return static_cast<JsTypedArrayType>(typeId + (static_cast<uint8_t>(JsArrayTypeInt8) - Js::TypeIds_Int8Array));
 }
 
 CHAKRA_API JsGetTypedArrayInfo(_In_ JsValueRef typedArray, _Out_opt_ JsTypedArrayType *arrayType, _Out_opt_ JsValueRef *arrayBuffer,

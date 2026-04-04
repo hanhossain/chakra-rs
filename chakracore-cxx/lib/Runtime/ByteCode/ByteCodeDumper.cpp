@@ -1652,7 +1652,7 @@ namespace Js
     {
         Output::Print(u"%-20s", OpCodeUtil::GetOpCodeName(op));
         OpLayoutType nType = OpCodeUtil::GetOpCodeLayout(op);
-        switch (layoutSize * OpLayoutType::Count + nType)
+        switch (static_cast<uint32_t>(layoutSize) * static_cast<uint32_t>(OpLayoutType::Count) + nType)
         {
 #define LAYOUT_TYPE(layout) \
             case OpLayoutType::layout: \
@@ -1661,7 +1661,7 @@ namespace Js
                 break;
 
 #define LAYOUT_SCHEMA(type, layout) \
-            case type##Layout * OpLayoutType::Count + OpLayoutType::layout: \
+            case static_cast<uint32_t>(type##Layout) * static_cast<uint32_t>(OpLayoutType::Count) + OpLayoutType::layout: \
                 Dump##layout(op, reader.layout##_##type(), dumpFunction, reader); \
                 break
 
