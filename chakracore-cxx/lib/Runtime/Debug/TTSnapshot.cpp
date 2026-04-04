@@ -220,7 +220,7 @@ namespace TTD
             if(inflateFPtr == nullptr)
             {
                 char buff[1024];
-                sprintf(buff, "We probably forgot to update the vtable with a tag we added.  Tag is [%i].  SnapRuntimeFunctionObject is [%i]", (uint32_t)snpObject->SnapObjectTag, TTD::NSSnapObjects::SnapObjectType::SnapRuntimeFunctionObject);
+                snprintf(buff, 1024, "We probably forgot to update the vtable with a tag we added.  Tag is [%i].  SnapRuntimeFunctionObject is [%i]", (uint32_t)snpObject->SnapObjectTag, TTD::NSSnapObjects::SnapObjectType::SnapRuntimeFunctionObject);
                 TTDAssert(inflateFPtr != nullptr, buff);
             }
             res = inflateFPtr(snpObject, inflator);
