@@ -24,10 +24,6 @@
 #pragma warning(disable:4075)       // initializers put in unrecognized initialization area on purpose
 #pragma init_seg(".CRT$XCAB")
 
-#if SYSINFO_IMAGE_BASE_AVAILABLE
-EXTERN_C IMAGE_DOS_HEADER __ImageBase;
-#endif
-
 AutoSystemInfo AutoSystemInfo::Data INIT_PRIORITY(300);
 
 #if DBG
@@ -82,12 +78,6 @@ AutoSystemInfo::Initialize()
     isWindows8Point1OrGreater = false;
 
     binaryName[0] = u'\0';
-
-#if SYSINFO_IMAGE_BASE_AVAILABLE
-    dllLoadAddress = (unsigned long)&__ImageBase;
-    dllHighAddress = (unsigned long)&__ImageBase +
-        ((PIMAGE_NT_HEADERS)(((char *)&__ImageBase) + __ImageBase.e_lfanew))->OptionalHeader.SizeOfImage;
-#endif
 
     InitPhysicalProcessorCount();
 #if DBG
@@ -151,20 +141,6 @@ AutoSystemInfo::InitPhysicalProcessorCount()
 
     return true;
 }
-
-#if SYSINFO_IMAGE_BASE_AVAILABLE
-bool
-AutoSystemInfo::IsJscriptModulePointer(void * ptr)
-{
-    return ((unsigned long)ptr >= Data.dllLoadAddress && (unsigned long)ptr < Data.dllHighAddress);
-}
-
-unsigned long
-AutoSystemInfo::GetChakraBaseAddr() const
-{
-    return dllLoadAddress;
-}
-#endif
 
 uint
 AutoSystemInfo::GetAllocationGranularityPageCount() const

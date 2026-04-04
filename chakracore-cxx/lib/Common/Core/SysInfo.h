@@ -38,9 +38,6 @@ public:
     uint32_t GetNumberOfLogicalProcessors() const { return this->dwNumberOfProcessors; }
     uint32_t GetNumberOfPhysicalProcessors() const { return this->dwNumberOfPhysicalProcessors; }
 
-#if SYSINFO_IMAGE_BASE_AVAILABLE
-    unsigned long GetChakraBaseAddr() const;
-#endif
 
 #if defined(_M_ARM32_OR_ARM64)
     bool ArmDivAvailable() const { return this->armDivAvailable; }
@@ -49,9 +46,6 @@ public:
     static int32_t GetJscriptFileVersion(uint32_t* majorVersion, uint32_t* minorVersion, uint32_t *buildDateHash = nullptr, uint32_t *buildTimeHash = nullptr);
 #if DBG
     static bool IsInitialized();
-#endif
-#if SYSINFO_IMAGE_BASE_AVAILABLE
-    static bool IsJscriptModulePointer(void * ptr);
 #endif
 #if defined(__APPLE__) && defined(_M_ARM64)
     static uint32_t const PageSize = 16384;
@@ -73,11 +67,6 @@ public:
 # else
     # error missing_target
 # endif
-#endif
-
-#if SYSINFO_IMAGE_BASE_AVAILABLE
-    unsigned long dllLoadAddress;
-    unsigned long dllHighAddress;
 #endif
 
 private:

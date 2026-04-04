@@ -1947,8 +1947,6 @@ RtlCaptureContext(
 typedef void (*PAL_ActivationFunction)(CONTEXT *context);
 typedef BOOL (*PAL_SafeActivationCheckFunction)(size_t ip, BOOL checkingCurrentThread);
 
-#define IMAGE_FILE_MACHINE_I386              0x014c
-
 typedef struct _SYSTEM_INFO {
     uint16_t wProcessorArchitecture_PAL_Undefined;
     uint16_t wReserved_PAL_Undefined; // NOTE: diff from winbase.h - no obsolete dwOemId union

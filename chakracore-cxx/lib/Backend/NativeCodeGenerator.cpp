@@ -21,6 +21,9 @@ Js::JavascriptMethod checkCodeGenThunk;
 #define ASSERT_THREAD() AssertMsg(mainThreadId == GetCurrentThreadContextId(), \
     "Cannot use this member of native code generator from thread other than the creating context's current thread")
 
+constexpr int IMAGE_REL_BASED_ABSOLUTE = 0;
+constexpr int IMAGE_REL_BASED_DIR64 = 10;
+
 NativeCodeGenerator::NativeCodeGenerator(Js::ScriptContext * scriptContext)
 :   JsUtil::WaitableJobManager(scriptContext->GetThreadContext()->GetJobProcessor()),
     scriptContext(scriptContext),
@@ -288,80 +291,6 @@ void ArmInsertThumbImmediate16(unsigned short * address, unsigned short immediat
     address[1] = opcode1;
 }
 #endif
-
-void DoFunctionRelocations(uint8_t *function, uint32_t functionOffset, uint32_t functionSize, uint8_t *module, size_t imageBase, IMAGE_SECTION_HEADER *textHeader, IMAGE_SECTION_HEADER *relocHeader)
-{
-    PIMAGE_BASE_RELOCATION relocationBlock = (PIMAGE_BASE_RELOCATION)(module + relocHeader->PointerToRawData);
-    for (; relocationBlock->VirtualAddress > 0 && ((uint8_t *)relocationBlock < (module + relocHeader->PointerToRawData + relocHeader->SizeOfRawData)); )
-    {
-        uint32_t blockOffset = relocationBlock->VirtualAddress - textHeader->VirtualAddress;
-
-        // Skip relocation blocks that are before the function
-        if ((blockOffset + 0x1000) > functionOffset)
-        {
-            unsigned short *relocation = (unsigned short *)((unsigned char *)relocationBlock + sizeof(IMAGE_BASE_RELOCATION));
-            for (uint index = 0; index < ((relocationBlock->SizeOfBlock - sizeof(IMAGE_BASE_RELOCATION)) / 2); index++, relocation++)
-            {
-                int type = *relocation >> 12;
-                int offset = *relocation & 0xfff;
-
-                // If we are past the end of the function, we can stop.
-                if ((blockOffset + offset) >= (functionOffset + functionSize))
-                {
-                    break;
-                }
-
-                if ((blockOffset + offset) < functionOffset)
-                {
-                    continue;
-                }
-
-                switch (type)
-                {
-                case IMAGE_REL_BASED_ABSOLUTE:
-                    break;
-
-#if _M_IX86
-                case IMAGE_REL_BASED_HIGHLOW:
-                    {
-                        uint32_t *patchAddrHL = (uint32_t *) (function + blockOffset + offset - functionOffset);
-                        uint32_t patchAddrHLOffset = *patchAddrHL - imageBase - textHeader->VirtualAddress;
-                        Assert((patchAddrHLOffset > functionOffset) && (patchAddrHLOffset < (functionOffset + functionSize)));
-                        *patchAddrHL = patchAddrHLOffset - functionOffset + (uint32_t)function;
-                    }
-                    break;
-
-#elif defined(TARGET_64)
-                case IMAGE_REL_BASED_DIR64:
-                    {
-                        unsigned long *patchAddr64 = (unsigned long *) (function + blockOffset + offset - functionOffset);
-                        unsigned long patchAddr64Offset = *patchAddr64 - imageBase - textHeader->VirtualAddress;
-                        Assert((patchAddr64Offset > functionOffset) && (patchAddr64Offset < (functionOffset + functionSize)));
-                        *patchAddr64 = patchAddr64Offset - functionOffset + (unsigned long)function;
-                    }
-                    break;
-#else
-                case IMAGE_REL_BASED_THUMB_MOV32:
-                    {
-                        unsigned short *patchAddr = (unsigned short *) (function + blockOffset + offset - functionOffset);
-                        uint32_t address = ArmExtractThumbImmediate16(patchAddr) | (ArmExtractThumbImmediate16(patchAddr + 2) << 16);
-                        address = address - imageBase - textHeader->VirtualAddress - functionOffset + (uint32_t)function;
-                        ArmInsertThumbImmediate16(patchAddr, (unsigned short)(address & 0xFFFF));
-                        ArmInsertThumbImmediate16(patchAddr + 2, (unsigned short)(address >> 16));
-                    }
-                    break;
-#endif
-
-                default:
-                    Assert(false);
-                    break;
-                }
-            }
-        }
-
-        relocationBlock = (PIMAGE_BASE_RELOCATION) (((uint8_t *) relocationBlock) + relocationBlock->SizeOfBlock);
-    }
-}
 
 class AutoRestoreDefaultEntryPoint
 {

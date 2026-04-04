@@ -1541,7 +1541,6 @@ typedef struct tagVS_FIXEDFILEINFO
 
 /******************** external includes *************************/
 
-#include "ntimage.h"
 #ifndef PAL_STDCPP_COMPAT
 // #include "cpp/ccombstr.h"
 // #include "cpp/cstring.h"
