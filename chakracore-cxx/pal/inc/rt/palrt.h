@@ -265,13 +265,8 @@ typedef int32_t SCODE;
 
 typedef union _ULARGE_INTEGER {
     struct {
-#if BIGENDIAN
-        uint32_t HighPart;
-        uint32_t LowPart;
-#else
         uint32_t LowPart;
         uint32_t HighPart;
-#endif
     }
 #ifndef PAL_STDCPP_COMPAT
     u
@@ -343,13 +338,8 @@ typedef double DATE;
 
 typedef union tagCY {
     struct {
-#if BIGENDIAN
-        int32_t    Hi;
-        uint32_t   Lo;
-#else
         uint32_t   Lo;
         int32_t    Hi;
-#endif
     } u;
     long int64;
 } CY, *LPCY;
@@ -361,16 +351,6 @@ typedef struct tagDEC {
     // And they seriable the data so we need to little endian
     // seriliazation
     // The wReserved overlaps with Variant's vt member
-#if BIGENDIAN
-    union {
-        struct {
-            uint8_t sign;
-            uint8_t scale;
-        };
-        unsigned short signscale;
-    };
-    unsigned short wReserved;
-#else
     unsigned short wReserved;
     union {
         struct {
@@ -379,7 +359,6 @@ typedef struct tagDEC {
         };
         unsigned short signscale;
     };
-#endif
     uint32_t Hi32;
     union {
         struct {
@@ -461,15 +440,8 @@ struct tagVARIANT
         {
         struct
             {
-#if BIGENDIAN
-            // We need to make sure vt overlaps with DECIMAL's wReserved.
-            // See the DECIMAL type for details.
-            uint16_t wReserved1;
-            VARTYPE vt;
-#else
             VARTYPE vt;
             uint16_t wReserved1;
-#endif
             uint16_t wReserved2;
             uint16_t wReserved3;
             union
@@ -1140,12 +1112,6 @@ typedef void (*WAITORTIMERCALLBACK)(void *, BOOLEAN);
 
 #define UNREFERENCED_PARAMETER(P)          (void)(P)
 
-#define VALPTR(x) VAL64(x)
-#define GET_UNALIGNED_PTR(x) GET_UNALIGNED_64(x)
-#define GET_UNALIGNED_VALPTR(x) GET_UNALIGNED_VAL64(x)
-#define SET_UNALIGNED_PTR(p,x) SET_UNALIGNED_64(p,x)
-#define SET_UNALIGNED_VALPTR(p,x) SET_UNALIGNED_VAL64(p,x)
-
 #ifdef _TARGET_AMD64_
 #define RUNTIME_FUNCTION_INDIRECT 0x1
 #endif
@@ -1439,30 +1405,5 @@ typedef struct _DISPATCHER_CONTEXT {
 typedef DISPATCHER_CONTEXT *PDISPATCHER_CONTEXT;
 
 #endif // FEATURE_PAL_SXS
-
-typedef struct _EXCEPTION_REGISTRATION_RECORD EXCEPTION_REGISTRATION_RECORD;
-typedef EXCEPTION_REGISTRATION_RECORD *PEXCEPTION_REGISTRATION_RECORD;
-
-typedef void * HKEY;
-typedef void * PACL;
-typedef void * LPBC;
-typedef void * PSECURITY_DESCRIPTOR;
-
-typedef struct _EXCEPTION_RECORD64 {
-    uint32_t ExceptionCode;
-    uint32_t ExceptionFlags;
-    ULONG64 ExceptionRecord;
-    ULONG64 ExceptionAddress;
-    uint32_t NumberParameters;
-    uint32_t __unusedAlignment;
-    ULONG64 ExceptionInformation[EXCEPTION_MAXIMUM_PARAMETERS];
-} EXCEPTION_RECORD64, *PEXCEPTION_RECORD64;
-
-typedef int32_t (WINAPI *PTOP_LEVEL_EXCEPTION_FILTER)(
-     struct _EXCEPTION_POINTERS *ExceptionInfo
-    );
-typedef PTOP_LEVEL_EXCEPTION_FILTER LPTOP_LEVEL_EXCEPTION_FILTER;
-
-#include <pal_endian.h>
 
 #endif // __PALRT_H__

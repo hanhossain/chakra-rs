@@ -105,22 +105,12 @@ typedef HANDLE HRSRC;
 
 typedef union _LARGE_INTEGER {
     struct {
-#if BIGENDIAN
-        int32_t HighPart;
-        uint32_t LowPart;
-#else
         uint32_t LowPart;
         int32_t HighPart;
-#endif
     };
     struct {
-#if BIGENDIAN
-        int32_t HighPart;
-        uint32_t LowPart;
-#else
         uint32_t LowPart;
         int32_t HighPart;
-#endif
     } u;
     long QuadPart;
 } LARGE_INTEGER, *PLARGE_INTEGER;
