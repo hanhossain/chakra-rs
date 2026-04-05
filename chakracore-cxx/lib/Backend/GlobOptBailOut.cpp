@@ -803,7 +803,7 @@ void GlobOpt::RecordInlineeFrameInfo(IR::Instr* inlineeEnd)
         // Due to Cmp peeps in flow graph - InlineeEnd can be cloned.
         return;
     }
-    inlineeEnd->IterateArgInstrs([=] (IR::Instr* argInstr)
+    inlineeEnd->IterateArgInstrs([=, this] (IR::Instr* argInstr)
     {
         if (argInstr->m_opcode == Js::OpCode::InlineeStart)
         {

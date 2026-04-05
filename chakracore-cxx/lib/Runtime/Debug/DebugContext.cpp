@@ -375,7 +375,7 @@ namespace Js
         {
             if (shouldPerformSourceRundown && this->scriptContext->HaveCalleeSources() && this->hostDebugContext != nullptr)
             {
-                this->scriptContext->MapCalleeSources([=](Js::Utf8SourceInfo* calleeSourceInfo)
+                this->scriptContext->MapCalleeSources([=, this](Js::Utf8SourceInfo* calleeSourceInfo)
                 {
                     if (!this->IsSelfOrScriptContextClosed())
                     {

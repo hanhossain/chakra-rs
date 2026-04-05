@@ -72,7 +72,7 @@ SCCLiveness::Build()
 
         if (instr->m_opcode == Js::OpCode::InlineeEnd  && instr->m_func->frameInfo)
         {
-            instr->m_func->frameInfo->IterateSyms([=](StackSym* argSym)
+            instr->m_func->frameInfo->IterateSyms([=, this](StackSym* argSym)
             {
                 this->ProcessStackSymUse(argSym, instr);
             });
@@ -514,7 +514,7 @@ SCCLiveness::ProcessBailOutUses(IR::Instr * instr)
     NEXT_SLISTBASE_ENTRY;
 
 
-    bailOutInfo->IterateArgOutSyms([=] (uint, uint, StackSym* sym) {
+    bailOutInfo->IterateArgOutSyms([=, this] (uint, uint, StackSym* sym) {
         if(!sym->IsArgSlotSym() && sym->m_isBailOutReferenced)
         {
             ProcessStackSymUse(sym, instr);
@@ -537,7 +537,7 @@ SCCLiveness::ProcessBailOutUses(IR::Instr * instr)
         {
             if (inlinee->frameInfo && inlinee->frameInfo->isRecorded)
             {
-                inlinee->frameInfo->IterateSyms([=](StackSym* argSym)
+                inlinee->frameInfo->IterateSyms([=, this](StackSym* argSym)
                 {
                     this->ProcessStackSymUse(argSym, instr);
                 });

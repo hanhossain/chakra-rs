@@ -86,7 +86,7 @@ namespace Js
     template <typename T>
     void ByteCodeWriter::PatchJumpOffset(JsUtil::List<JumpInfo, ArenaAllocator> * jumpOffset, byte * byteBuffer, uint byteCount)
     {
-        jumpOffset->Map([=](int index, JumpInfo& jumpInfo)
+        jumpOffset->Map([=, this](int index, JumpInfo& jumpInfo)
         {
             //
             // Read "labelID" stored at the offset within the byte-code.
@@ -2844,7 +2844,7 @@ StoreCommon:
 
         ByteCodeLabel branchAroundLabel = (Js::ByteCodeLabel)-1;
         bool foundUnknown = m_jumpOffsets->MapUntilFrom(firstUnknownJumpInfo,
-            [=, &branchAroundLabel, &currentOffset](int index, JumpInfo& jumpInfo)
+            [=, this, &branchAroundLabel, &currentOffset](int index, JumpInfo& jumpInfo)
         {
             //
             // Read "labelID" stored at the offset within the byte-code.

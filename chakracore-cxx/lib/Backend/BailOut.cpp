@@ -543,7 +543,7 @@ void BailOutRecord::DumpArgOffsets(uint count, int* offsets, int argOutSlotStart
 void BailOutRecord::DumpLocalOffsets(uint count, int argOutSlotStart)
 {
     char16_t const * name = u"Register";
-    globalBailOutRecordTable->IterateGlobalBailOutRecordTableRows(m_bailOutRecordId, [=](GlobalBailOutRecordDataRow *row) {
+    globalBailOutRecordTable->IterateGlobalBailOutRecordTableRows(m_bailOutRecordId, [=, this](GlobalBailOutRecordDataRow *row) {
         Assert(row != nullptr);
 
         // The variables below determine whether we have a Var or native float/int.
@@ -676,7 +676,7 @@ BailOutRecord::RestoreValues(IR::BailOutKind bailOutKind, Js::JavascriptCallStac
     {
         // Null out the field on the stack literal that hasn't fully initialized yet.
 
-        globalBailOutRecordTable->IterateGlobalBailOutRecordTableRows(m_bailOutRecordId, [=](GlobalBailOutRecordDataRow  *row)
+        globalBailOutRecordTable->IterateGlobalBailOutRecordTableRows(m_bailOutRecordId, [=, this](GlobalBailOutRecordDataRow  *row)
         {
             for (uint i = 0; i < this->stackLiteralBailOutRecordCount; i++)
             {
@@ -1039,7 +1039,7 @@ BailOutRecord::RestoreValues(IR::BailOutKind bailOutKind, Js::JavascriptCallStac
 
     if (isLocal == true)
     {
-        globalBailOutRecordTable->IterateGlobalBailOutRecordTableRows(m_bailOutRecordId, [=](GlobalBailOutRecordDataRow *row) {
+        globalBailOutRecordTable->IterateGlobalBailOutRecordTableRows(m_bailOutRecordId, [=, this](GlobalBailOutRecordDataRow *row) {
             Assert(row->offset != 0);
             RestoreValue(bailOutKind, layout, values, scriptContext, fromLoopBody, registerSaves, newInstance, pArgumentsObject,
                 argoutRestoreAddress, row->regSlot, row->offset, true, row->isFloat, row->isInt);

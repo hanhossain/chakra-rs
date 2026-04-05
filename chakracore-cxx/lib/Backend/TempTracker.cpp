@@ -145,7 +145,7 @@ TempTrackerBase::OrHashTableOfBitVector(HashTable<BVSparse<JitArenaAllocator> *>
     Assert(toData != nullptr);
     Assert(fromData != nullptr);
     toData->Or(fromData,
-        [=](BVSparse<JitArenaAllocator> * bv1, BVSparse<JitArenaAllocator> * bv2) -> BVSparse<JitArenaAllocator> *
+        [=, this](BVSparse<JitArenaAllocator> * bv1, BVSparse<JitArenaAllocator> * bv2) -> BVSparse<JitArenaAllocator> *
     {
         if (bv1 == nullptr)
         {

@@ -3447,7 +3447,7 @@ void LinearScan::TrackInlineeArgLifetimes(IR::Instr* instr)
     {
         if (instr->m_func->m_hasInlineArgsOpt)
         {
-            instr->m_func->frameInfo->IterateSyms([=](StackSym* sym){
+            instr->m_func->frameInfo->IterateSyms([=, this](StackSym* sym){
                 Lifetime* lifetime = sym->scratch.linearScan.lifetime;
                 this->currentBlock->inlineeFrameLifetimes.Add(lifetime);
 
@@ -3502,7 +3502,7 @@ void LinearScan::TrackInlineeArgLifetimes(IR::Instr* instr)
 
                 if (instr->m_func->m_hasInlineArgsOpt)
                 {
-                    instr->m_func->frameInfo->IterateSyms([=](StackSym* sym) {
+                    instr->m_func->frameInfo->IterateSyms([=, this](StackSym* sym) {
                         Lifetime* lifetime = this->currentBlock->inlineeFrameLifetimes.RemoveAtEnd();
 
                         uint* value;
@@ -3746,7 +3746,7 @@ LinearScan::ProcessSecondChanceBoundary(IR::BranchInstr *branchInstr)
     {
         IR::MultiBranchInstr * multiBranchInstr = branchInstr->AsMultiBrInstr();
 
-        multiBranchInstr->MapUniqueMultiBrLabels([=](IR::LabelInstr * branchLabel) -> void
+        multiBranchInstr->MapUniqueMultiBrLabels([=, this](IR::LabelInstr * branchLabel) -> void
         {
             this->ProcessSecondChanceBoundaryHelper(branchInstr, branchLabel);
         });

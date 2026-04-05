@@ -108,7 +108,7 @@ SmallFinalizableHeapBucketBaseT<TBlockType>::Sweep(RecyclerSweep& recyclerSweep)
     TBlockType * currentDisposeList = pendingDisposeList;
     this->pendingDisposeList = nullptr;
 
-    BaseT::SweepBucket(recyclerSweep, [=](RecyclerSweep& recyclerSweep)
+    BaseT::SweepBucket(recyclerSweep, [=, this](RecyclerSweep& recyclerSweep)
     {
 #if DBG
         if (TBlockType::HeapBlockAttributes::IsSmallBlock)

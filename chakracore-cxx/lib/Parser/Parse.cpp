@@ -2468,7 +2468,7 @@ void Parser::VerifyModuleLocalExportEntries()
     ModuleImportOrExportEntryList* localExportRecordList = GetModuleLocalExportEntryList();
     if (localExportRecordList != nullptr)
     {
-        localExportRecordList->Map([=](ModuleImportOrExportEntry exportEntry) {
+        localExportRecordList->Map([=, this](ModuleImportOrExportEntry exportEntry) {
             if (exportEntry.pidRefStack!=nullptr)
             {
                 if (exportEntry.pidRefStack->GetSym() == nullptr)
