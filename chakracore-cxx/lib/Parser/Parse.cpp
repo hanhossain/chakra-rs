@@ -8012,7 +8012,7 @@ ParseNodeClass * Parser::ParseClassDecl(BOOL isDeclaration, LPCOLESTR pNameHint,
                 SuperRestrictionState::State state = hasExtends ? SuperRestrictionState::CallAndPropertyAllowed : SuperRestrictionState::PropertyAllowed;
 
                 // Add the class constructor flag and base class constructor flag if pnodeExtends is nullptr
-                fncDeclFlags |= fFncClassConstructor | (hasExtends ? kFunctionNone : fFncBaseClassConstructor);
+                fncDeclFlags |= fFncClassConstructor | (hasExtends ? kFunctionNone : static_cast<ushort>(fFncBaseClassConstructor));
                 pnodeConstructor = ParseFncDeclNoCheckScope<buildAST>(fncDeclFlags, state, pConstructorName, /* needsPIDOnRCurlyScan */ true);
             }
 
