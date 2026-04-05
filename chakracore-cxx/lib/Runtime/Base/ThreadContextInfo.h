@@ -148,22 +148,16 @@ protected:
 #pragma warning(push)
 #pragma warning(error: 4440)
 
-// MSVC will give warning C4440 in case of calling convention redefinition
-template<typename F> void EnsureStdcall(F*) { typedef F * T; }
-template<typename F> void EnsureCdecl(F*) { typedef F * T; }
-
 #pragma warning(pop)
 template<typename T>
 uintptr_t ShiftCdeclAddr(const ThreadContextInfo*const context, T* address)
 {
-    EnsureCdecl(address);
     return ShiftAddr(context, (uintptr_t)address);
 }
 
 template<typename T>
 uintptr_t ShiftStdcallAddr(const ThreadContextInfo*const context, T* address)
 {
-    EnsureStdcall(address);
     return ShiftAddr(context, (uintptr_t)address);
 }
 
