@@ -464,7 +464,7 @@ namespace Js
 #if ENABLE_FIXED_FIELDS
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
             currentTypeHandler->InitializePath(
-                instance, currentSlotIndex, currentTypeHandler->GetPathLength(), scriptContext, [=]() { return typePath->GetIsFixedFieldAt(currentSlotIndex, currentTypeHandler->GetPathLength()); });
+                instance, currentSlotIndex, currentTypeHandler->GetPathLength(), scriptContext, [=, this]() { return typePath->GetIsFixedFieldAt(currentSlotIndex, currentTypeHandler->GetPathLength()); });
 #endif
 #endif
             if (currentAttributes == ObjectSlotAttr_Setter)

@@ -1769,7 +1769,7 @@ MultiBranchInstr::ReplaceTarget(IR::LabelInstr * oldLabelInstr, IR::LabelInstr *
 {
     Assert(this->IsMultiBranch());
     bool remapped = false;
-    this->UpdateMultiBrLabels([=, &remapped](IR::LabelInstr * targetLabel) -> IR::LabelInstr *
+    this->UpdateMultiBrLabels([=, this, &remapped](IR::LabelInstr * targetLabel) -> IR::LabelInstr *
     {
         if (targetLabel == oldLabelInstr)
         {

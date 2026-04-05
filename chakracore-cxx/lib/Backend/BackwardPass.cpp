@@ -2852,7 +2852,7 @@ BackwardPass::ProcessBailOutInfo(IR::Instr * instr, BailOutInfo * bailOutInfo)
     if (instr->m_opcode == Js::OpCode::BailOnNoProfile && instr->m_func->IsInlinee() &&
         instr->m_func->m_hasInlineArgsOpt && instr->m_func->frameInfo->isRecorded)
     {
-        instr->m_func->frameInfo->IterateSyms([=](StackSym* argSym)
+        instr->m_func->frameInfo->IterateSyms([=, this](StackSym* argSym)
         {
             this->currentBlock->upwardExposedUses->Set(argSym->m_id);
         });
@@ -8276,7 +8276,7 @@ BackwardPass::ProcessInlineeEnd(IR::Instr* instr)
 
         // This adds a use for function sym as part of InlineeStart & all the syms referenced by the args.
         // It ensure they do not get cleared from the copy prop sym map.
-        instr->IterateArgInstrs([=](IR::Instr* argInstr){
+        instr->IterateArgInstrs([=, this](IR::Instr* argInstr){
             if (argInstr->GetSrc1()->IsRegOpnd())
             {
                 this->currentBlock->upwardExposedUses->Set(argInstr->GetSrc1()->AsRegOpnd()->m_sym->m_id);
@@ -8294,7 +8294,7 @@ BackwardPass::ProcessInlineeEnd(IR::Instr* instr)
         if (instr->m_func->m_hasInlineArgsOpt)
         {
             Assert(instr->m_func->frameInfo);
-            instr->m_func->frameInfo->IterateSyms([=](StackSym* argSym)
+            instr->m_func->frameInfo->IterateSyms([=, this](StackSym* argSym)
             {
                 this->currentBlock->upwardExposedUses->Set(argSym->m_id);
             });

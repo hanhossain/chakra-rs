@@ -171,10 +171,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
     -Wno-unused-local-typedef\
     -Wno-bitwise-instead-of-logical")
 
-# c++20
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-    -Wno-deprecated-this-capture")
-
 # notes..
 # -Wno-address-of-temporary  # vtinfo.h, VirtualTableInfo<T>::RegisterVirtualTable
 # -Wno-null-conversion # Check shmemory.cpp and cs.cpp here...

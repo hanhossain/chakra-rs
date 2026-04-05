@@ -7974,7 +7974,7 @@ Lowerer::CreateEquivalentTypeGuardAndLinkToGuardedProperties(IR::PropertySymOpnd
 
     if (m_func->GetWorkItem()->GetJITTimeInfo()->HasSharedPropertyGuards())
     {
-        LinkGuardToGuardedProperties(propertySymOpnd->GetGuardedPropOps(), [=](Js::PropertyId propertyId)
+        LinkGuardToGuardedProperties(propertySymOpnd->GetGuardedPropOps(), [=, this](Js::PropertyId propertyId)
         {
             if (PHASE_TRACE(Js::ObjTypeSpecPhase, this->m_func) || PHASE_TRACE(Js::TracePropertyGuardsPhase, this->m_func))
             {
@@ -8121,7 +8121,7 @@ Lowerer::LinkCtorCacheToGuardedProperties(JITTimeConstructorCache* ctorCache)
 
     if (this->m_func->GetWorkItem()->GetJITTimeInfo()->HasSharedPropertyGuards())
     {
-        linked = LinkGuardToGuardedProperties(ctorCache->GetGuardedPropOps(), [=](Js::PropertyId propertyId)
+        linked = LinkGuardToGuardedProperties(ctorCache->GetGuardedPropOps(), [=, this](Js::PropertyId propertyId)
         {
             if (PHASE_TRACE(Js::ObjTypeSpecPhase, this->m_func) || PHASE_TRACE(Js::TracePropertyGuardsPhase, this->m_func))
             {

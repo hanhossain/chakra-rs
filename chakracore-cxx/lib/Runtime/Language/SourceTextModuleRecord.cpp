@@ -236,7 +236,7 @@ namespace Js
         // Notify the parent modules that this child module is either in fault state or finished.
         if (this->parentModuleList != nullptr)
         {
-            parentModuleList->Map([=](uint i, SourceTextModuleRecord* parentModule)
+            parentModuleList->Map([=, this](uint i, SourceTextModuleRecord* parentModule)
             {
                 parentModule->OnChildModuleReady(this, this->errorObject);
             });
@@ -485,7 +485,7 @@ namespace Js
         if (this->localExportRecordList != nullptr)
         {
             tempExportedNames = Anew(allocator, ExportedNames, allocator);
-            this->localExportRecordList->Map([=](ModuleImportOrExportEntry exportEntry) {
+            this->localExportRecordList->Map([=, this](ModuleImportOrExportEntry exportEntry) {
                 PropertyId exportNameId = EnsurePropertyIdForIdentifier(exportEntry.exportName);
                 tempExportedNames->Prepend(exportNameId);
             });
@@ -496,7 +496,7 @@ namespace Js
             {
                 tempExportedNames = Anew(allocator, ExportedNames, allocator);
             }
-            this->indirectExportRecordList->Map([=](ModuleImportOrExportEntry exportEntry) {
+            this->indirectExportRecordList->Map([=, this](ModuleImportOrExportEntry exportEntry) {
                 PropertyId exportedNameId = EnsurePropertyIdForIdentifier(exportEntry.exportName);
                 tempExportedNames->Prepend(exportedNameId);
             });
@@ -507,7 +507,7 @@ namespace Js
             {
                 tempExportedNames = Anew(allocator, ExportedNames, allocator);
             }
-            this->starExportRecordList->Map([=](ModuleImportOrExportEntry exportEntry) {
+            this->starExportRecordList->Map([=, this](ModuleImportOrExportEntry exportEntry) {
                 Assert(exportEntry.moduleRequest != nullptr);
                 SourceTextModuleRecord* moduleRecord = nullptr;
                 if (this->childrenModuleSet->TryGetValue(exportEntry.moduleRequest->Psz(), &moduleRecord))
@@ -1022,7 +1022,7 @@ namespace Js
 
         if (childrenModuleSet != nullptr)
         {
-            childrenModuleSet->EachValue([=](SourceTextModuleRecord* childModuleRecord)
+            childrenModuleSet->EachValue([=, this](SourceTextModuleRecord* childModuleRecord)
             {
                 if (!childModuleRecord->WasEvaluationPrepassed())
                 {

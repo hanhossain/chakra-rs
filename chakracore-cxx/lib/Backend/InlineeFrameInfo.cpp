@@ -222,7 +222,7 @@ void InlineeFrameRecord::Restore(Js::FunctionBody* functionBody, InlinedFrameLay
     inlinedFrame->function = function;
     inlinedFrame->callInfo.InlineeStartOffset = inlineeStartOffset;
     inlinedFrame->callInfo.Count = this->argCount;
-    inlinedFrame->MapArgs([=](uint i, Js::Var* varRef) {
+    inlinedFrame->MapArgs([=, this](uint i, Js::Var* varRef) {
         bool isFloat64 = floatArgs.Test(i) != 0;
         bool isInt32 = losslessInt32Args.Test(i) != 0;
         BAILOUT_VERBOSE_TRACE(functionBody, u"Restore argument %d: ", i);

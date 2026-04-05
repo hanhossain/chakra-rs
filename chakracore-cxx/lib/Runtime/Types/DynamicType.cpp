@@ -457,7 +457,7 @@ namespace Js
             RecyclableObject* toStringFunction = VarTo<RecyclableObject>(toPrimitiveFunction);
 
             ThreadContext * threadContext = requestContext->GetThreadContext();
-            Var aResult = threadContext->ExecuteImplicitCall(toStringFunction, ImplicitCall_ToPrimitive, [=]() -> Js::Var
+            Var aResult = threadContext->ExecuteImplicitCall(toStringFunction, ImplicitCall_ToPrimitive, [=, this]() -> Js::Var
             {
                 // Stack object should have a pre-op bail on implicit call.  We shouldn't see them here.
                 Assert(!ThreadContext::IsOnStack(this) || threadContext->HasNoSideEffect(toStringFunction));
