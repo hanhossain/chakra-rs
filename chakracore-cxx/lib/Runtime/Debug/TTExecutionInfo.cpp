@@ -713,9 +713,9 @@ namespace TTD
         uint32_t startOffset = cfinfo.Function->GetStatementStartOffset(cfinfo.CurrentStatementIndex);
         cfinfo.Function->GetSourceLineFromStartOffset_TTD(startOffset, &srcLine, &srcColumn);
 
-        bool locationOk = ((uint32_t)srcLine == this->m_activeTTDBP.GetSourceLine()) & ((uint32_t)srcColumn == this->m_activeTTDBP.GetSourceColumn());
-        bool ftimeOk = (this->m_activeTTDBP.GetFunctionTime() == -1) | ((unsigned long)this->m_activeTTDBP.GetFunctionTime() == cfinfo.FunctionTime);
-        bool ltimeOk = (this->m_activeTTDBP.GetLoopTime() == -1) | ((unsigned long)this->m_activeTTDBP.GetLoopTime() == cfinfo.CurrentStatementLoopTime);
+        bool locationOk = ((uint32_t)srcLine == this->m_activeTTDBP.GetSourceLine()) && ((uint32_t)srcColumn == this->m_activeTTDBP.GetSourceColumn());
+        bool ftimeOk = (this->m_activeTTDBP.GetFunctionTime() == -1) || ((unsigned long)this->m_activeTTDBP.GetFunctionTime() == cfinfo.FunctionTime);
+        bool ltimeOk = (this->m_activeTTDBP.GetLoopTime() == -1) || ((unsigned long)this->m_activeTTDBP.GetLoopTime() == cfinfo.CurrentStatementLoopTime);
 
         return locationOk & ftimeOk & ltimeOk;
     }

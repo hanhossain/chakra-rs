@@ -2192,7 +2192,7 @@ namespace Js
                 Assert(value != nullptr);
                 // We don't want fixed properties on external objects.  See DynamicObject::ResetObject for more information.
                 Assert(!instance->IsExternal());
-                newDescriptor.SetIsFixed(VarIs<JavascriptFunction>(value) ? ShouldFixMethodProperties() : (ShouldFixDataProperties() & CheckHeuristicsForFixedDataProps(instance, propertyRecord, value)));
+                newDescriptor.SetIsFixed(VarIs<JavascriptFunction>(value) ? ShouldFixMethodProperties() : (ShouldFixDataProperties() && CheckHeuristicsForFixedDataProps(instance, propertyRecord, value)));
             }
         }
 #endif
@@ -2839,7 +2839,7 @@ namespace Js
 
             Js::PropertyId pid = iter.CurrentKey()->GetPropertyId();
 #if ENABLE_FIXED_FIELDS
-            if ((!DynamicTypeHandler::ShouldMarkPropertyId_TTD(pid)) | (!descriptor.GetIsInitialized()) | (descriptor.Attributes & PropertyDeleted))
+            if ((!DynamicTypeHandler::ShouldMarkPropertyId_TTD(pid)) || (!descriptor.GetIsInitialized()) | (descriptor.Attributes & PropertyDeleted))
 #else
             if ((!DynamicTypeHandler::ShouldMarkPropertyId_TTD(pid)) | (descriptor.Attributes & PropertyDeleted))
 #endif

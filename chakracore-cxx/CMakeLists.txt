@@ -168,8 +168,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
     -Wno-tautological-overlap-compare\
     -Wno-unused-const-variable\
     -Wno-char-subscripts\
-    -Wno-unused-local-typedef\
-    -Wno-bitwise-instead-of-logical")
+    -Wno-unused-local-typedef")
 
 # notes..
 # -Wno-address-of-temporary  # vtinfo.h, VirtualTableInfo<T>::RegisterVirtualTable
