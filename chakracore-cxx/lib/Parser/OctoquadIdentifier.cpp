@@ -252,7 +252,7 @@ namespace UnifiedRegex
         }
         for (uint i = 0; i < UnifiedRegex::TrigramAlphabet::AlphaCount; i++) {
             trigramAlphabet->alpha[i] = alpha[i];
-            trigramAlphabet->alphaBits[alpha[i]] = alphaBits[alpha[i]];
+            trigramAlphabet->alphaBits[static_cast<unsigned char>(alpha[i])] = alphaBits[static_cast<unsigned char>(alpha[i])];
         }
         trigramAlphabet->InitTrigramMap();
         scriptContext->SetTrigramAlphabet(trigramAlphabet);

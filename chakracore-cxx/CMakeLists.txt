@@ -166,11 +166,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
     -Wno-unused-lambda-capture\
     -Wno-sometimes-uninitialized\
     -Wno-tautological-overlap-compare\
-    -Wno-unused-const-variable\
-    -Wno-char-subscripts")
+    -Wno-unused-const-variable")
 
 # this keeps causing issues with the docker build even if paths are correct
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnonportable-include-path")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-nonportable-include-path")
 
 # notes..
 # -Wno-address-of-temporary  # vtinfo.h, VirtualTableInfo<T>::RegisterVirtualTable
