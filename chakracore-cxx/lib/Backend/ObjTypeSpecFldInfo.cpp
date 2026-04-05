@@ -472,7 +472,7 @@ ObjTypeSpecFldInfo* ObjTypeSpecFldInfo::CreateFrom(uint id, Js::InlineCache* cac
     entryPoint->GetJitTransferData()->AddJitTimeTypeRef(type, recycler);
 
 #if ENABLE_FIXED_FIELDS
-    bool allFixedPhaseOFF = PHASE_OFF(Js::FixedMethodsPhase, topFunctionBody) & PHASE_OFF(Js::UseFixedDataPropsPhase, topFunctionBody);
+    bool allFixedPhaseOFF = PHASE_OFF(Js::FixedMethodsPhase, topFunctionBody) && PHASE_OFF(Js::UseFixedDataPropsPhase, topFunctionBody);
 
     if (!allFixedPhaseOFF)
     {
