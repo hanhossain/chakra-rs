@@ -172,7 +172,7 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
 
     if (nullptr == pRawBytes)
     {
-        PAL_fwprintf(PAL_get_stderr(), u"out of memory");
+        std::print(stderr, "out of memory");
         IfFailGo(E_OUTOFMEMORY);
     }
 
@@ -230,7 +230,7 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
 
             {
                 // unicode unsupported
-                PAL_fwprintf(PAL_get_stderr(), u"unsupported file encoding. Only ANSI and UTF8 supported");
+                std::print(stderr, "unsupported file encoding. Only ANSI and UTF8 supported");
                 IfFailGo(E_UNEXPECTED);
             }
 #pragma prefast(pop)
@@ -377,7 +377,7 @@ int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, u
     }
     else
     {
-        PAL_fwprintf(PAL_get_stderr(), u"out of memory");
+        std::print(stderr, "out of memory");
         IfFailGo(E_OUTOFMEMORY);
     }
     //
@@ -386,7 +386,7 @@ int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, u
     result = PAL_fread((void*)contents, sizeof(char), lengthBytes, file);
     if (result != lengthBytes)
     {
-        PAL_fwprintf(PAL_get_stderr(), u"Read error");
+        std::print(stderr, "Read error");
         IfFailGo(E_FAIL);
     }
 
