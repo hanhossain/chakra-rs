@@ -595,17 +595,10 @@ Error:
 
 void WScriptJsrt::GetDir(const char * fullPathNarrow, std::string *fullDirNarrow)
 {
-    char fileDrive[_MAX_DRIVE];
-    char fileDir[_MAX_DIR];
+    const std::filesystem::path path = fullPathNarrow;
+    const auto parent = path.parent_path().concat("/");
 
-    std::string result;
-    if (_splitpath_s(fullPathNarrow, fileDrive, _countof(fileDrive), fileDir, _countof(fileDir), nullptr, 0, nullptr, 0) == 0)
-    {
-        result += fileDrive;
-        result += fileDir;
-    }
-
-    *fullDirNarrow = result;
+    *fullDirNarrow = parent;
 }
 
 JsErrorCode WScriptJsrt::ModuleEntryPoint(const char * fileName, const char * fileContent, const char * fullName)
@@ -1864,12 +1857,10 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
                 {
                     const char *fName = fileName != nullptr ? fileName : "(unknown)";
 
-                    char shortFileName[_MAX_PATH];
-                    char ext[_MAX_EXT];
-                    _splitpath_s(fName, nullptr, 0, nullptr, 0, shortFileName, _countof(shortFileName), ext, _countof(ext));
+                    std::filesystem::path filepath(fName);
 
                     // do not mix char/wchar. print them separately
-                    fprintf(stderr, "thrown at %s%s:\n^\n", shortFileName, ext);
+                    std::println(stderr, "thrown at {}:\n^", filepath.filename().string());
                     std::println(stderr, "{}", errorMessage.GetString());
                 }
                 else
