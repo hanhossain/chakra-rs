@@ -2132,7 +2132,6 @@ int PAL_getc(PAL_FILE *stream);
 int PAL_ungetc(int c, PAL_FILE *stream);
 int PAL_fwprintf(PAL_FILE *, const char16_t *, ...);
 int PAL_vfwprintf(FILE *, const char16_t *, va_list);
-int PAL_wprintf(const char16_t*, ...);
 
 PAL_FILE * _wfopen(const char16_t *, const char16_t *);
 

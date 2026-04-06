@@ -166,31 +166,6 @@ void PAL_printf_arg_remover(va_list *ap, int32_t Width, int32_t Precision, int32
 
 /*++
 Function:
-  PAL_wprintf
-
-See MSDN doc.
---*/
-__attribute__((no_instrument_function))
-int
-PAL_wprintf(
-      const char16_t *format,
-      ...)
-{
-    int32_t Length;
-    va_list ap;
-
-    ENTRY("PAL_wprintf (format=%p (%S))\n", format, format);
-
-    va_start(ap, format);
-    Length = PAL_vfwprintf(stdout, format, ap);
-    va_end(ap);
-
-    LOGEXIT("PAL_wprintf returns int %d\n", Length);
-    return Length;
-}
-
-/*++
-Function:
   _snwprintf
 
 See MSDN doc.
