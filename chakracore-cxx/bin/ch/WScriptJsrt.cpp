@@ -8,6 +8,7 @@
 #include <vector>
 #include <ctime>
 #include <ratio>
+#include <print>
 
 #include <chrono>
 
@@ -137,22 +138,17 @@ JsValueRef WScriptJsrt::EchoCallback(JsValueRef callee, bool isConstructCall, Js
             {
                 if (i > 1)
                 {
-                    PAL_wprintf(u" ");
+                    std::print(" ");
                 }
-                charcount_t len;
-                char16_t* ws = str.GetWideString(&len);
-                char16_t* wsNoNull = new char16_t[((size_t)len) + 1];
-                charcount_t newIndex = 0;
-                for (charcount_t j = 0; j < len; j++)
+                // HACK: Manually filter out null chars since the underlying strings have embedded null chars
+                const char *s = str.GetString();
+                for (int j = 0; j < str.GetLength(); j++)
                 {
-                    if (ws[j] != u'\0')
+                    if (s[j] != '\0')
                     {
-                        wsNoNull[newIndex++] = ws[j];
+                        std::print("{}", s[j]);
                     }
                 }
-                wsNoNull[newIndex] = u'\0';
-                PAL_wprintf(u"%s", wsNoNull);
-                delete[] wsNoNull;
             }
         }
 
@@ -162,7 +158,7 @@ JsValueRef WScriptJsrt::EchoCallback(JsValueRef callee, bool isConstructCall, Js
         }
     }
 
-    PAL_wprintf(u"\n");
+    std::println();
     fflush(stdout);
 
     JsValueRef undefinedValue;
@@ -1911,7 +1907,7 @@ WScriptJsrt::CallbackMessage::CallbackMessage(unsigned int time, JsValueRef func
     {
         // Simply report a fatal error and exit because continuing from this point would result in inconsistent state
         // and FailFast telemetry would not be useful.
-        PAL_wprintf(u"FATAL ERROR: ChakraRTInterface::JsAddRef failed in WScriptJsrt::CallbackMessage::`ctor`. error=0x%x\n", error);
+        std::println("FATAL ERROR: ChakraRTInterface::JsAddRef failed in WScriptJsrt::CallbackMessage::`ctor`. error=0x{:x}", static_cast<int>(error));
         exit(1);
     }
 }
@@ -2136,7 +2132,7 @@ JsErrorCode WScriptJsrt::NotifyModuleReadyCallback(_In_opt_ JsModuleRecord refer
         {
             fileName.Initialize(specifier);
         }
-        PAL_wprintf(u"NotifyModuleReadyCallback(exception) %S\n", fileName.GetString());
+        std::println("NotifyModuleReadyCallback(exception) {}", fileName.GetString());
     }
     
     if (moduleErrMap[referencingModule] != ErroredModule)
@@ -2186,11 +2182,11 @@ void WScriptJsrt::PromiseRejectionTrackerCallback(JsValueRef promise, JsValueRef
 
     if (!handled)
     {
-        PAL_wprintf(u"Uncaught promise rejection\n");
+        std::println("Uncaught promise rejection");
     }
     else
     {
-        PAL_wprintf(u"Promise rejection handled\n");
+        std::println("Promise rejection handled");
     }
 
     JsPropertyIdRef stackPropertyID; 
@@ -2206,7 +2202,7 @@ void WScriptJsrt::PromiseRejectionTrackerCallback(JsValueRef promise, JsValueRef
             if (error == JsNoError)
             {
                 AutoString str(stackStrValue);
-                PAL_wprintf(u"%ls\n", str.GetWideString());
+                std::println("{}", str.GetString());
             }
         }
     }
@@ -2219,7 +2215,7 @@ void WScriptJsrt::PromiseRejectionTrackerCallback(JsValueRef promise, JsValueRef
         if (error == JsNoError)
         {
             AutoString str(strValue);
-            PAL_wprintf(u"%ls\n", str.GetWideString());
+            std::println("{}", str.GetString());
         }
     }
 
