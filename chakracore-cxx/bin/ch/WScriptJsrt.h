@@ -71,28 +71,28 @@ public:
     static void CALLBACK PromiseContinuationCallback(JsValueRef task, void *callbackState);
     static void CALLBACK PromiseRejectionTrackerCallback(JsValueRef promise, JsValueRef reason, bool handled, void *callbackState);
 
-    static const char16_t* ConvertErrorCodeToMessage(JsErrorCode errorCode)
+    static const char * ConvertErrorCodeToMessage(JsErrorCode errorCode)
     {
         switch (errorCode)
         {
         case (JsErrorCode::JsErrorInvalidArgument) :
-            return u"TypeError: InvalidArgument";
+            return "TypeError: InvalidArgument";
         case (JsErrorCode::JsErrorNullArgument) :
-            return u"TypeError: NullArgument";
+            return "TypeError: NullArgument";
         case (JsErrorCode::JsErrorArgumentNotObject) :
-            return u"TypeError: ArgumentNotAnObject";
+            return "TypeError: ArgumentNotAnObject";
         case (JsErrorCode::JsErrorOutOfMemory) :
-            return u"OutOfMemory";
+            return "OutOfMemory";
         case (JsErrorCode::JsErrorScriptException) :
-            return u"ScriptError";
+            return "ScriptError";
         case (JsErrorCode::JsErrorScriptCompile) :
-            return u"SyntaxError";
+            return "SyntaxError";
         case (JsErrorCode::JsErrorFatal) :
-            return u"FatalError";
+            return "FatalError";
         case (JsErrorCode::JsErrorInExceptionState) :
-            return u"ErrorInExceptionState";
+            return "ErrorInExceptionState";
         case (JsErrorCode::JsErrorBadSerializedScript):
-            return u"ErrorBadSerializedScript ";
+            return "ErrorBadSerializedScript ";
         default:
             AssertMsg(false, "Unexpected JsErrorCode");
             return nullptr;

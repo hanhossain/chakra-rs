@@ -11,6 +11,7 @@
 #include <print>
 
 #include <chrono>
+#include <filesystem>
 
 #if defined(_X86_) || defined(_M_IX86)
 #define CPU_ARCH_TEXT "x86"
@@ -253,10 +254,14 @@ void WScriptJsrt::SetExceptionIf(JsErrorCode errorCode, const char16_t* errorMes
 
             if (PAL_wcscmp(errorMessage, u"") == 0)
             {
-                errorMessage = ConvertErrorCodeToMessage(errorCode);
+                const char * errorMessageStr = ConvertErrorCodeToMessage(errorCode);
+                errorCode = ChakraRTInterface::JsCreateString(errorMessageStr, strlen(errorMessageStr),
+                    &errorMessageString);
             }
-
-            ERROR_MESSAGE_TO_STRING(errCode, errorMessage, errorMessageString);
+            else
+            {
+                ERROR_MESSAGE_TO_STRING(errCode, errorMessage, errorMessageString);
+            }
 
             ChakraRTInterface::JsCreateError(errorMessageString, &errorObject);
             ChakraRTInterface::JsSetException(errorObject);
@@ -1468,7 +1473,7 @@ JsValueRef WScriptJsrt::LoadBinaryFileCallback(JsValueRef callee,
             IfJsrtErrorSetGoLabel(ChakraRTInterface::JsGetArrayBufferStorage(arrayBuffer, &buffer, &bufferLength), ErrorStillFree);
             if (bufferLength < lengthBytes)
             {
-                PAL_fwprintf(PAL_get_stderr(), u"Array buffer size is insufficient to store the binary file.\n");
+                std::println(stderr, "Array buffer size is insufficient to store the binary file.");
             }
             else
             {
@@ -1544,7 +1549,7 @@ JsValueRef WScriptJsrt::BroadcastCallback(JsValueRef callee, bool isConstructCal
             }
             else
             {
-                PAL_fwprintf(PAL_get_stderr(), u"Couldn't create semaphore.\n");
+                std::println(stderr, "Couldn't create semaphore.");
                 fflush(stderr);
             }
 
@@ -1737,7 +1742,7 @@ Error:
 
 bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode, JsValueRef exception)
 {
-    const char16_t* errorTypeString = ConvertErrorCodeToMessage(jsErrorCode);
+    const char* errorTypeString = ConvertErrorCodeToMessage(jsErrorCode);
     JsValueRef metaData = JS_INVALID_REFERENCE;
 
     if (exception == nullptr)
@@ -1765,10 +1770,11 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
         if (jsErrorCode == JsErrorCode::JsErrorScriptCompile || jsErrorCode == JsErrorCode::JsErrorScriptException)
         {
             AutoString errorMessage;
+            const std::filesystem::path path(fileName);
 
             if (errorMessage.Initialize(exception) != JsNoError)
             {
-                PAL_fwprintf(PAL_get_stderr(), u"ERROR attempting to coerce error to string, using alternate handler\n");
+                std::println(stderr, "ERROR attempting to coerce error to string, using alternate handler");
                 bool hasException = false;
                 ChakraRTInterface::JsHasException(&hasException);
                 if (hasException)
@@ -1784,10 +1790,6 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
 
                 if (jsErrorCode != JsErrorCode::JsErrorScriptCompile)
                 {
-                    char shortFileName[_MAX_PATH];
-                    char ext[_MAX_EXT];
-                    _splitpath_s(fileName, nullptr, 0, nullptr, 0, shortFileName, _countof(shortFileName), ext, _countof(ext));
-
                     if (metaData != JS_INVALID_REFERENCE)
                     {
                         JsPropertyIdRef linePropertyId = JS_INVALID_REFERENCE;
@@ -1806,12 +1808,12 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
                         IfJsrtErrorFail(CreatePropertyIdFromString("column", &columnPropertyId), false);
                         IfJsrtErrorFail(ChakraRTInterface::JsGetProperty(metaData, columnPropertyId, &columnProperty), false);
                         IfJsrtErrorFail(ChakraRTInterface::JsNumberToInt(columnProperty, &column), false);
-                        PAL_fwprintf(PAL_get_stderr(), u"%ls\n        at code (%S%S:%d:%d)\n",
-                            errorMessage.GetWideString(), shortFileName, ext, line + 1, column + 1);
+                        std::println(stderr, "{}\n        at code ({}:{}:{})",
+                            errorMessage.GetString(), path.filename().string(), line + 1, column + 1);
                     }
                     else
                     {
-                        PAL_fwprintf(PAL_get_stderr(), u"%ls\n\tat code (%S%S:\?\?:\?\?)\n", errorMessage.GetWideString(), shortFileName, ext);
+                        std::println(stderr, "{}\n\tat code ({}:\?\?:\?\?)", errorMessage.GetString(), path.filename().string());
                     }
                     return true;
                 }
@@ -1836,11 +1838,8 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
                 IfJsrtErrorFail(ChakraRTInterface::JsGetProperty(exception, columnPropertyId, &columnProperty), false);
                 IfJsrtErrorFail(ChakraRTInterface::JsNumberToInt(columnProperty, &column), false);
 
-                char shortFileName[_MAX_PATH];
-                char ext[_MAX_EXT];
-                _splitpath_s(fileName, nullptr, 0, nullptr, 0, shortFileName, _countof(shortFileName), ext, _countof(ext));
-                PAL_fwprintf(PAL_get_stderr(), u"%ls\n\tat code (%S%S:%d:%d)\n",
-                    errorMessage.GetWideString(), shortFileName, ext, (int)line + 1,
+                std::println(stderr, "{}\n\tat code ({}:{}:{})",
+                    errorMessage.GetString(), path.filename().string(), (int)line + 1,
                     (int)column + 1);
             }
             else
@@ -1871,24 +1870,24 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
 
                     // do not mix char/wchar. print them separately
                     fprintf(stderr, "thrown at %s%s:\n^\n", shortFileName, ext);
-                    PAL_fwprintf(PAL_get_stderr(), u"%ls\n", errorMessage.GetWideString());
+                    std::println(stderr, "{}", errorMessage.GetString());
                 }
                 else
                 {
                     IfJsrtErrorFail(errorStack.Initialize(stackProperty), false);
-                    PAL_fwprintf(PAL_get_stderr(), u"%ls\n", errorStack.GetWideString());
+                    std::println(stderr, "{}", errorStack.GetString());
                 }
             }
         }
         else
         {
-            PAL_fwprintf(PAL_get_stderr(), u"Error : %ls\n", errorTypeString);
+            std::println(stderr, "Error : %{}", errorTypeString);
         }
         return true;
     }
     else
     {
-        PAL_fwprintf(PAL_get_stderr(), u"Error : %ls\n", errorTypeString);
+        std::println(stderr, "Error : %{}", errorTypeString);
     }
     return false;
 }
