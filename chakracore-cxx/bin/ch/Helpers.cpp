@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "stdafx.h"
 #include <iostream>
+#include <print>
 #include <limits>
 #include <sys/stat.h>
 
@@ -333,9 +334,9 @@ void Helpers::LogError(__nullterminated const char16_t *msg, ...)
 {
     va_list args;
     va_start(args, msg);
-    PAL_wprintf(u"ERROR: ");
+    std::print("ERROR: ");
     PAL_vfwprintf(stderr, msg, args);
-    PAL_wprintf(u"\n");
+    std::println();
     fflush(stdout);
     va_end(args);
 }
@@ -419,7 +420,7 @@ JsTTDStreamHandle CALLBACK Helpers::TTCreateStreamCallback(size_t uriLength, con
 
     if(uriLength + asciiNameLength + 1 > MAX_URI_LENGTH)
     {
-        PAL_wprintf(u"We assume bounded MAX_URI_LENGTH for simplicity.");
+        std::print("We assume bounded MAX_URI_LENGTH for simplicity.");
         exit(1);
     }
 

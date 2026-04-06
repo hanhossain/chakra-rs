@@ -6,6 +6,7 @@
 #include "stdafx.h"
 
 #include <dlfcn.h>
+#include <print>
 #ifdef __APPLE__
 const char * chakraDllName = "libChakraCore.dylib";
 #else
@@ -57,7 +58,7 @@ int32_t ChakraRTInterface::ParseConfigFlags()
 
         if (hr != S_OK)
         {
-            PAL_wprintf(u"Error: no script file specified.");
+            std::print("Error: no script file specified.");
             m_argInfo->hostPrintUsage();
             m_usageStringPrinted = true;
         }
@@ -68,7 +69,7 @@ int32_t ChakraRTInterface::ParseConfigFlags()
             if (FAILED(hr))
             {
                 Assert(hr == E_OUTOFMEMORY);
-                PAL_wprintf(u"Error: Ran out of memory");
+                std::print("Error: Ran out of memory");
                 return hr;
             }
         }

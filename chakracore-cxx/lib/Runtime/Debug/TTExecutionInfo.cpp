@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "RuntimeDebugPch.h"
+#include <print>
 
 #if ENABLE_TTD
 
@@ -124,14 +125,14 @@ namespace TTD
     {
         if(!this->HasValue())
         {
-            PAL_wprintf(u"undef");
+            std::print("undef");
         }
         else
         {
-            PAL_wprintf(u"BP: { bpId: %I64i, ctx: %I64u, topId: %I32u, fline: %I32u, fcolumn: %I32u, line: %I32u, column: %I32u }", this->m_bpId, this->m_sourceScriptLogId, this->m_topLevelBodyId, this->m_functionLine, this->m_functionColumn, this->m_line, this->m_column);
+            std::print("BP: {{ bpId: {}, ctx: {}, topId: {}, fline: {}, fcolumn: {}, line: {}, column: {} }}", this->m_bpId, this->m_sourceScriptLogId, this->m_topLevelBodyId, this->m_functionLine, this->m_functionColumn, this->m_line, this->m_column);
             if(this->m_etime != -1)
             {
-                PAL_wprintf(u" TTDTime: { etime: %I64i, ftime: %I64i, ltime: %I64i }", this->m_etime, this->m_ftime, this->m_ltime);
+                std::print(" TTDTime: {{ etime: {}, ftime: {}, ltime: {} }}", this->m_etime, this->m_ftime, this->m_ltime);
             }
         }
     }

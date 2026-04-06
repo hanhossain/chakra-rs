@@ -64,7 +64,7 @@ impl ChakraArgs {
                 });
             }
 
-            if arg == "-h" || arg == "--help" || (cfg!(debug_assertions) && arg == "-?") {
+            if arg == "-h" || arg == "--help" {
                 return Some(ChakraArgs {
                     help: true,
                     ..ChakraArgs::default()

@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "stdafx.h"
+#include <print>
 
 HostConfigFlags HostConfigFlags::flags;
 char16_t** HostConfigFlags::argsVal;
@@ -67,7 +68,7 @@ bool HostConfigFlags::ParseFlag(const char16_t* flagsString, ICmdLineArgsParser 
 void HostConfigFlags::PrintUsageString()
 {
 #define FLAG(Type, Name, Desc, Default) \
-    PAL_wprintf(u"%20ls          \t%ls\n", _u(#Name), _u(#Desc));
+    std::println("{:>20}          \t{}", #Name, #Desc);
 #include "HostConfigFlagsList.h"
 }
 
@@ -78,7 +79,9 @@ void HostConfigFlags::PrintUsage()
         pfnPrintUsage();
     }
 
-    PAL_wprintf(u"\nHost Config Flags: \n\n");
+    std::println();
+    std::println("Host Config Flags: ");
+    std::println();
     HostConfigFlags::PrintUsageString();
     ChakraRTInterface::PrintConfigFlagsUsageString();
 }
