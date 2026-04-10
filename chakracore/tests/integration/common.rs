@@ -187,9 +187,9 @@ pub fn run_test_variant<const N: usize>(
     println!("Running command: {ch:#?}");
     let output = ch.output().unwrap();
 
-    let mut out = String::from_utf8(output.stdout).unwrap();
-    let err = std::str::from_utf8(&output.stderr).unwrap();
-    out.push_str(err);
+    let mut out = String::from_utf8_lossy(&output.stdout).to_string();
+    let err = String::from_utf8_lossy(&output.stderr);
+    out.push_str(&err);
 
     let actual = out
         .lines()

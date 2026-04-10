@@ -2263,8 +2263,8 @@ LargeHeapBlock::Verify(Recycler * recycler)
                 if (current->headerIndex == i)
                 {
                     uint8_t* objectAddress = (uint8_t *)current + sizeof(LargeObjectHeader);
-                    Recycler::VerifyCheck(current->heapBlock == this, u"Invalid heap block", this, current->heapBlock);
-                    Recycler::VerifyCheck((char *)current >= lastAddress, u"LargeHeapBlock invalid object header order", this->address, current);
+                    Recycler::VerifyCheck(current->heapBlock == this, "Invalid heap block", this, current->heapBlock);
+                    Recycler::VerifyCheck((char *)current >= lastAddress, "LargeHeapBlock invalid object header order", this->address, current);
                     Recycler::VerifyCheckFill(lastAddress, (char *)current - lastAddress);
                     recycler->VerifyCheckPad(objectAddress, current->objectSize);
                     lastAddress = (char *) objectAddress + current->objectSize;
@@ -2277,16 +2277,16 @@ LargeHeapBlock::Verify(Recycler * recycler)
             continue;
         }
 
-        Recycler::VerifyCheck((char *)header >= lastAddress, u"LargeHeapBlock invalid object header order", this->address, header);
+        Recycler::VerifyCheck((char *)header >= lastAddress, "LargeHeapBlock invalid object header order", this->address, header);
         Recycler::VerifyCheckFill(lastAddress, (char *)header - lastAddress);
-        Recycler::VerifyCheck(header->objectIndex == i, u"LargeHeapBlock object index mismatch", this->address, &header->objectIndex);
+        Recycler::VerifyCheck(header->objectIndex == i, "LargeHeapBlock object index mismatch", this->address, &header->objectIndex);
         recycler->VerifyCheckPad((uint8_t *)header->GetAddress(), header->objectSize);
 
         verifyFinalizeCount += ((header->GetAttributes(this->heapInfo->recycler->Cookie) & FinalizeBit) != 0);
         lastAddress = (char *)header->GetAddress() + header->objectSize;
     }
 
-    Recycler::VerifyCheck(verifyFinalizeCount == this->finalizeCount, u"LargeHeapBlock finalize object count mismatch", this->address, &this->finalizeCount);
+    Recycler::VerifyCheck(verifyFinalizeCount == this->finalizeCount, "LargeHeapBlock finalize object count mismatch", this->address, &this->finalizeCount);
 }
 #endif
 

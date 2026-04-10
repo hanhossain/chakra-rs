@@ -28,6 +28,7 @@
 #include "Interface/CommonDefines.h"
 #include <map>
 #include <string>
+#include <print>
 
 #include "PlatformAgnostic/CommonPal.h"
 
@@ -89,11 +90,12 @@ using utf8::WideStringToNarrowDynamic;
 #include "PlatformAgnostic/ChakraICU.h"
 #endif
 
+// TODO (hanhossain): do we still need this to fflush(stderr)?
 #define IfJsErrorFailLog(expr) \
 do { \
     JsErrorCode jsErrorCode = expr; \
     if ((jsErrorCode) != JsNoError) { \
-        PAL_fwprintf(PAL_get_stderr(), u"ERROR: " _u(#expr) u" failed. JsErrorCode=0x%x (%s)\n", jsErrorCode, Helpers::JsErrorCodeToString(jsErrorCode)); \
+        std::println(stderr, "ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode)); \
         fflush(stderr); \
         goto Error; \
     } \
@@ -104,7 +106,7 @@ do { \
     JsErrorCode jsErrorCode = expr; \
     if ((jsErrorCode) != JsNoError) { \
         hr = E_FAIL; \
-        PAL_fwprintf(PAL_get_stderr(), u"ERROR: " _u(#expr) u" failed. JsErrorCode=0x%x (%s)\n", jsErrorCode, Helpers::JsErrorCodeToString(jsErrorCode)); \
+        std::println(stderr, "ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode)); \
         fflush(stderr); \
         goto Error; \
     } \
@@ -114,7 +116,7 @@ do { \
 do { \
     JsErrorCode jsErrorCode = expr; \
     if ((jsErrorCode) != JsNoError) { \
-        PAL_fwprintf(PAL_get_stderr(), u"ERROR: " _u(#expr) u" failed. JsErrorCode=0x%x (%s)\n", jsErrorCode, Helpers::JsErrorCodeToString(jsErrorCode)); \
+        std::println(stderr, "ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode)); \
         fflush(stderr); \
         goto label; \
     } \
@@ -124,7 +126,7 @@ do { \
 do { \
     JsErrorCode jsErrorCode = expr; \
     if ((jsErrorCode) != JsNoError) { \
-        PAL_fwprintf(PAL_get_stderr(), u"ERROR: " _u(#expr) u" failed. JsErrorCode=0x%x (%s)\n", jsErrorCode, Helpers::JsErrorCodeToString(jsErrorCode)); \
+        std::println(stderr, "ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode)); \
         fflush(stderr); \
         return JS_INVALID_REFERENCE; \
     } \
@@ -134,7 +136,7 @@ do { \
 do { \
     JsErrorCode jsErrorCode = expr; \
     if ((jsErrorCode) != JsNoError) { \
-        PAL_fwprintf(PAL_get_stderr(), u"ERROR: " _u(#expr) u" failed. JsErrorCode=0x%x (%s)\n", jsErrorCode, Helpers::JsErrorCodeToString(jsErrorCode)); \
+        std::println(stderr, "ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode)); \
         fflush(stderr); \
         return false; \
     } \
@@ -144,7 +146,7 @@ do { \
 do { \
     JsErrorCode jsErrorCode = expr; \
     if ((jsErrorCode) != JsNoError) { \
-        PAL_fwprintf(PAL_get_stderr(), u"ERROR: " _u(#expr) u" failed. JsErrorCode=0x%x (%s)\n", jsErrorCode, Helpers::JsErrorCodeToString(jsErrorCode)); \
+        std::println(stderr, "ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode)); \
         fflush(stderr); \
         return (jsErrorCode); \
     } \

@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include <string_view>
+
 #include "CollectionState.h"
 #include "RecyclerTelemetryInfo.h"
 #include "RecyclerWaitReason.h"
@@ -1464,7 +1466,7 @@ public:
     uint GetVerifyPad() const { return verifyPad; }
     void Verify(Js::Phase phase);
 
-    static void VerifyCheck(BOOL cond, char16_t const * msg, void * address, void * corruptedAddress);
+    static void VerifyCheck(bool cond, std::string_view msg, void * address, void * corruptedAddress);
     static void VerifyCheckFill(void * address, size_t size);
     void FillCheckPad(void * address, size_t size, size_t alignedAllocSize, bool objectAlreadyInitialized);
     void FillCheckPad(void * address, size_t size, size_t alignedAllocSize)

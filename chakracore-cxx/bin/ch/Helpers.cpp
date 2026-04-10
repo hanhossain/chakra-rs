@@ -172,7 +172,7 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
 
     if (nullptr == pRawBytes)
     {
-        PAL_fwprintf(PAL_get_stderr(), u"out of memory");
+        std::print(stderr, "out of memory");
         IfFailGo(E_OUTOFMEMORY);
     }
 
@@ -230,7 +230,7 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
 
             {
                 // unicode unsupported
-                PAL_fwprintf(PAL_get_stderr(), u"unsupported file encoding. Only ANSI and UTF8 supported");
+                std::print(stderr, "unsupported file encoding. Only ANSI and UTF8 supported");
                 IfFailGo(E_UNEXPECTED);
             }
 #pragma prefast(pop)
@@ -263,7 +263,7 @@ Error:
     return hr;
 }
 
-const char16_t* Helpers::JsErrorCodeToString(JsErrorCode jsErrorCode)
+const char* Helpers::JsErrorCodeToString(JsErrorCode jsErrorCode)
 {
     bool hasException = false;
     ChakraRTInterface::JsHasException(&hasException);
@@ -274,58 +274,58 @@ const char16_t* Helpers::JsErrorCodeToString(JsErrorCode jsErrorCode)
 
     switch (jsErrorCode)
     {
-    case JsNoError:                            return u"JsNoError";
+    case JsNoError:                            return "JsNoError";
     // JsErrorCategoryUsage
-    case JsErrorCategoryUsage:                 return u"JsErrorCategoryUsage";
-    case JsErrorInvalidArgument:               return u"JsErrorInvalidArgument";
-    case JsErrorNullArgument:                  return u"JsErrorNullArgument";
-    case JsErrorNoCurrentContext:              return u"JsErrorNoCurrentContext";
-    case JsErrorInExceptionState:              return u"JsErrorInExceptionState";
-    case JsErrorNotImplemented:                return u"JsErrorNotImplemented";
-    case JsErrorWrongThread:                   return u"JsErrorWrongThread";
-    case JsErrorRuntimeInUse:                  return u"JsErrorRuntimeInUse";
-    case JsErrorBadSerializedScript:           return u"JsErrorBadSerializedScript";
-    case JsErrorInDisabledState:               return u"JsErrorInDisabledState";
-    case JsErrorCannotDisableExecution:        return u"JsErrorCannotDisableExecution";
-    case JsErrorHeapEnumInProgress:            return u"JsErrorHeapEnumInProgress";
-    case JsErrorArgumentNotObject:             return u"JsErrorArgumentNotObject";
-    case JsErrorInProfileCallback:             return u"JsErrorInProfileCallback";
-    case JsErrorInThreadServiceCallback:       return u"JsErrorInThreadServiceCallback";
-    case JsErrorCannotSerializeDebugScript:    return u"JsErrorCannotSerializeDebugScript";
-    case JsErrorAlreadyDebuggingContext:       return u"JsErrorAlreadyDebuggingContext";
-    case JsErrorAlreadyProfilingContext:       return u"JsErrorAlreadyProfilingContext";
-    case JsErrorIdleNotEnabled:                return u"JsErrorIdleNotEnabled";
-    case JsErrorInObjectBeforeCollectCallback: return u"JsErrorInObjectBeforeCollectCallback";
-    case JsErrorObjectNotInspectable:          return u"JsErrorObjectNotInspectable";
-    case JsErrorPropertyNotSymbol:             return u"JsErrorPropertyNotSymbol";
-    case JsErrorPropertyNotString:             return u"JsErrorPropertyNotString";
-    case JsErrorInvalidContext:                return u"JsErrorInvalidContext";
-    case JsInvalidModuleHostInfoKind:          return u"JsInvalidModuleHostInfoKind";
-    case JsErrorModuleParsed:                  return u"JsErrorModuleParsed";
+    case JsErrorCategoryUsage:                 return "JsErrorCategoryUsage";
+    case JsErrorInvalidArgument:               return "JsErrorInvalidArgument";
+    case JsErrorNullArgument:                  return "JsErrorNullArgument";
+    case JsErrorNoCurrentContext:              return "JsErrorNoCurrentContext";
+    case JsErrorInExceptionState:              return "JsErrorInExceptionState";
+    case JsErrorNotImplemented:                return "JsErrorNotImplemented";
+    case JsErrorWrongThread:                   return "JsErrorWrongThread";
+    case JsErrorRuntimeInUse:                  return "JsErrorRuntimeInUse";
+    case JsErrorBadSerializedScript:           return "JsErrorBadSerializedScript";
+    case JsErrorInDisabledState:               return "JsErrorInDisabledState";
+    case JsErrorCannotDisableExecution:        return "JsErrorCannotDisableExecution";
+    case JsErrorHeapEnumInProgress:            return "JsErrorHeapEnumInProgress";
+    case JsErrorArgumentNotObject:             return "JsErrorArgumentNotObject";
+    case JsErrorInProfileCallback:             return "JsErrorInProfileCallback";
+    case JsErrorInThreadServiceCallback:       return "JsErrorInThreadServiceCallback";
+    case JsErrorCannotSerializeDebugScript:    return "JsErrorCannotSerializeDebugScript";
+    case JsErrorAlreadyDebuggingContext:       return "JsErrorAlreadyDebuggingContext";
+    case JsErrorAlreadyProfilingContext:       return "JsErrorAlreadyProfilingContext";
+    case JsErrorIdleNotEnabled:                return "JsErrorIdleNotEnabled";
+    case JsErrorInObjectBeforeCollectCallback: return "JsErrorInObjectBeforeCollectCallback";
+    case JsErrorObjectNotInspectable:          return "JsErrorObjectNotInspectable";
+    case JsErrorPropertyNotSymbol:             return "JsErrorPropertyNotSymbol";
+    case JsErrorPropertyNotString:             return "JsErrorPropertyNotString";
+    case JsErrorInvalidContext:                return "JsErrorInvalidContext";
+    case JsInvalidModuleHostInfoKind:          return "JsInvalidModuleHostInfoKind";
+    case JsErrorModuleParsed:                  return "JsErrorModuleParsed";
     // JsErrorCategoryEngine
-    case JsErrorCategoryEngine:                return u"JsErrorCategoryEngine";
-    case JsErrorOutOfMemory:                   return u"JsErrorOutOfMemory";
-    case JsErrorBadFPUState:                   return u"JsErrorBadFPUState";
+    case JsErrorCategoryEngine:                return "JsErrorCategoryEngine";
+    case JsErrorOutOfMemory:                   return "JsErrorOutOfMemory";
+    case JsErrorBadFPUState:                   return "JsErrorBadFPUState";
     // JsErrorCategoryScript
-    case JsErrorCategoryScript:                return u"JsErrorCategoryScript";
-    case JsErrorScriptException:               return u"JsErrorScriptException";
-    case JsErrorScriptCompile:                 return u"JsErrorScriptCompile";
-    case JsErrorScriptTerminated:              return u"JsErrorScriptTerminated";
-    case JsErrorScriptEvalDisabled:            return u"JsErrorScriptEvalDisabled";
+    case JsErrorCategoryScript:                return "JsErrorCategoryScript";
+    case JsErrorScriptException:               return "JsErrorScriptException";
+    case JsErrorScriptCompile:                 return "JsErrorScriptCompile";
+    case JsErrorScriptTerminated:              return "JsErrorScriptTerminated";
+    case JsErrorScriptEvalDisabled:            return "JsErrorScriptEvalDisabled";
     // JsErrorCategoryFatal
-    case JsErrorCategoryFatal:                 return u"JsErrorCategoryFatal";
-    case JsErrorFatal:                         return u"JsErrorFatal";
-    case JsErrorWrongRuntime:                  return u"JsErrorWrongRuntime";
+    case JsErrorCategoryFatal:                 return "JsErrorCategoryFatal";
+    case JsErrorFatal:                         return "JsErrorFatal";
+    case JsErrorWrongRuntime:                  return "JsErrorWrongRuntime";
     // JsErrorCategoryDiagError
-    case JsErrorCategoryDiagError:             return u"JsErrorCategoryDiagError";
-    case JsErrorDiagAlreadyInDebugMode:        return u"JsErrorDiagAlreadyInDebugMode";
-    case JsErrorDiagNotInDebugMode:            return u"JsErrorDiagNotInDebugMode";
-    case JsErrorDiagNotAtBreak:                return u"JsErrorDiagNotAtBreak";
-    case JsErrorDiagInvalidHandle:             return u"JsErrorDiagInvalidHandle";
-    case JsErrorDiagObjectNotFound:            return u"JsErrorDiagObjectNotFound";
-    case JsErrorDiagUnableToPerformAction:     return u"JsErrorDiagUnableToPerformAction";
+    case JsErrorCategoryDiagError:             return "JsErrorCategoryDiagError";
+    case JsErrorDiagAlreadyInDebugMode:        return "JsErrorDiagAlreadyInDebugMode";
+    case JsErrorDiagNotInDebugMode:            return "JsErrorDiagNotInDebugMode";
+    case JsErrorDiagNotAtBreak:                return "JsErrorDiagNotAtBreak";
+    case JsErrorDiagInvalidHandle:             return "JsErrorDiagInvalidHandle";
+    case JsErrorDiagObjectNotFound:            return "JsErrorDiagObjectNotFound";
+    case JsErrorDiagUnableToPerformAction:     return "JsErrorDiagUnableToPerformAction";
     default:
-        return u"<unknown>";
+        return "<unknown>";
         break;
     }
 }
@@ -377,7 +377,7 @@ int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, u
     }
     else
     {
-        PAL_fwprintf(PAL_get_stderr(), u"out of memory");
+        std::print(stderr, "out of memory");
         IfFailGo(E_OUTOFMEMORY);
     }
     //
@@ -386,7 +386,7 @@ int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, u
     result = PAL_fread((void*)contents, sizeof(char), lengthBytes, file);
     if (result != lengthBytes)
     {
-        PAL_fwprintf(PAL_get_stderr(), u"Read error");
+        std::print(stderr, "Read error");
         IfFailGo(E_FAIL);
     }
 
