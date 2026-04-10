@@ -5,6 +5,9 @@
 
 #include "CommonMemoryPch.h"
 #include "Recycler.h"
+
+#include <print>
+
 #include "Memory/RecyclerWatsonTelemetry.h"
 #include "Memory/RecyclerObjectDumper.h"
 
@@ -7415,11 +7418,11 @@ void Recycler::Verify(Js::Phase phase)
     }
 }
 
-void Recycler::VerifyCheck(BOOL cond, char16_t const * msg, void * address, void * corruptedAddress)
+void Recycler::VerifyCheck(bool cond, std::string_view msg, void * address, void * corruptedAddress)
 {
-    if (!(cond))
+    if (!cond)
     {
-        PAL_fwprintf(PAL_get_stderr(), u"RECYCLER CORRUPTION: StartAddress=%p CorruptedAddress=%p: %s", address, corruptedAddress, msg);
+        std::print(stderr, "RECYCLER CORRUPTION: StartAddress={} CorruptedAddress={}: {}", address, corruptedAddress, msg);
         Js::Throw::FatalInternalError();
     }
 }
@@ -7437,10 +7440,10 @@ void Recycler::VerifyCheckPadExplicitFreeList(void * address, size_t size)
 #pragma warning(suppress:4310)
     Assert(padding != (size_t)0xCACACACACACACACA);  // Explicit free objects have to have been initialized at some point before they were freed
 
-    Recycler::VerifyCheck(padding >= verifyPad + sizeof(size_t) &&  padding < size, u"Invalid padding size", address, paddingAddress);
+    Recycler::VerifyCheck(padding >= verifyPad + sizeof(size_t) &&  padding < size, "Invalid padding size", address, paddingAddress);
     for (byte * i = (byte *)address + size - padding; i < (byte *)paddingAddress; i++)
     {
-        Recycler::VerifyCheck(*i == Recycler::VerifyMemFill, u"buffer overflow", address, i);
+        Recycler::VerifyCheck(*i == Recycler::VerifyMemFill, "buffer overflow", address, i);
     }
 }
 void Recycler::VerifyCheckPad(void * address, size_t size)
@@ -7455,10 +7458,10 @@ void Recycler::VerifyCheckPad(void * address, size_t size)
         Recycler::VerifyCheckFill(address, size);
         return;
     }
-    Recycler::VerifyCheck(padding >= verifyPad + sizeof(size_t) &&  padding < size, u"Invalid padding size", address, paddingAddress);
+    Recycler::VerifyCheck(padding >= verifyPad + sizeof(size_t) &&  padding < size, "Invalid padding size", address, paddingAddress);
     for (byte * i = (byte *)address + size - padding; i < (byte *)paddingAddress; i++)
     {
-        Recycler::VerifyCheck(*i == Recycler::VerifyMemFill, u"buffer overflow", address, i);
+        Recycler::VerifyCheck(*i == Recycler::VerifyMemFill, "buffer overflow", address, i);
     }
 }
 #endif
