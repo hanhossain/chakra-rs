@@ -240,16 +240,7 @@ int32_t HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::GenerateVali
 
         for (unsigned j = 0; j < (*invalid)[i].wordCount; ++j)
         {
-            const char16_t *format = (j < (*invalid)[i].wordCount - 1) ?
-#if defined(TARGET_32)
-                u"0x%08X, " : u"0x%08X"
-#elif defined(TARGET_64)
-                u"0x%016I64X, " : u"0x%016I64X"
-#else
-#error "Platform is not handled"
-#endif
-                ;
-            IfErrorGotoCleanup(PAL_fwprintf(file, format, (*invalid)[i].GetRawData()[j]));
+            std::print(file->bsdFilePtr, "0x{:p}{}", static_cast<const void *>(&(*invalid)[i].GetRawData()[j]), j < (*invalid)[i].wordCount - 1 ? ", " : "");
         }
         std::println(file->bsdFilePtr, "\n    }}{}", i < HeapConstants::BucketCount - 1 ? "," : "");
     }
@@ -332,16 +323,7 @@ int32_t HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::GenerateVal
 
         for (unsigned j = 0; j < (*invalid)[i].wordCount; ++j)
         {
-            const char16_t *format = (j < (*invalid)[i].wordCount - 1) ?
-#if defined(TARGET_32)
-                u"0x%08X, " : u"0x%08X"
-#elif defined(TARGET_64)
-                u"0x%016I64X, " : u"0x%016I64X"
-#else
-#error "Platform is not handled"
-#endif
-                ;
-            IfErrorGotoCleanup(PAL_fwprintf(file, format, (*invalid)[i].GetRawData()[j]));
+            std::print(file->bsdFilePtr, "0x{:p}{}", static_cast<const void *>(&(*invalid)[i].GetRawData()[j]), j < (*invalid)[i].wordCount - 1 ? ", " : "");
         }
         std::println(file->bsdFilePtr, "\n    }}{}", (i < HeapConstants::MediumBucketCount - 1 ? "," : ""));
     }
