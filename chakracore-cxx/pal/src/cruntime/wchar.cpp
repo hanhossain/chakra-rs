@@ -30,6 +30,7 @@ Abstract:
 
 #include <errno.h>
 #include <limits.h>
+#include <string>
 
 SET_DEFAULT_DEBUG_CHANNEL(CRT);
 
@@ -723,21 +724,8 @@ size_t
 PAL_wcslen(
         const char16_t *string)
 {
-    size_t nChar = 0;
-
-    // no logging here. PAL's internal output also uses this method
-
-    if ( !string )
-    {
-        return 0;
-    }
-
-    while (*string++)
-    {
-        nChar++;
-    }
-
-    return nChar;
+    const std::u16string s16(string);
+    return s16.length();
 }
 
 /*++
