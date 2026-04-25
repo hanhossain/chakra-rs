@@ -19,7 +19,7 @@ Abstract:
 
 --*/
 
-
+#include <string>
 #include "pal/palinternal.h"
 #include "pal/cruntime.h"
 #include "pal/dbgmsg.h"
@@ -30,7 +30,6 @@ Abstract:
 
 #include <errno.h>
 #include <limits.h>
-#include <string>
 
 SET_DEFAULT_DEBUG_CHANNEL(CRT);
 
