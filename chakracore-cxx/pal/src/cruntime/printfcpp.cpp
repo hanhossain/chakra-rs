@@ -38,7 +38,7 @@ SET_DEFAULT_DEBUG_CHANNEL(CRT);
 using namespace CorUnix;
 
 int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, const char16_t* Format, va_list ap);
-int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, va_list ap);
+int CoreVfprintf(CPalThread *pthrCurrent, FILE *stream, const char *format, va_list ap);
 int CoreVfwprintf(CPalThread *pthrCurrent, FILE *stream, const char16_t *format, va_list ap);
 
 extern "C"
@@ -849,7 +849,7 @@ Parameters:
     - padding style flags (PRINTF_FORMAT_FLAGS)
 *******************************************************************************/
 
-int32_t Internal_AddPaddingVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, char* In,
+int32_t Internal_AddPaddingVfprintf(CPalThread *pthrCurrent, FILE *stream, char* In,
                                        int32_t Padding, int32_t Flags)
 {
     char* Out;
@@ -920,7 +920,7 @@ int32_t Internal_AddPaddingVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, c
         iLength -= LengthInStr;
     }
 
-    Written = std::fwrite(OutOriginal, 1, Length, stream->bsdFilePtr);
+    Written = std::fwrite(OutOriginal, 1, Length, stream);
     if (Written < Length)
     {
         ERROR("fwrite() failed with errno == %d\n", errno);
@@ -1852,7 +1852,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
     }
 }
 
-int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, va_list aparg)
+int CoreVfprintf(CPalThread *pthrCurrent, FILE *stream, const char *format, va_list aparg)
 {
     char TempBuff[1024]; /* used to hold a single %<foo> format string */
     const char * Fmt = format;
@@ -2100,7 +2100,7 @@ int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, 
                     trunc2 = (short)trunc1;
                     trunc1 = trunc2;
 
-                    TempInt = fprintf(stream->bsdFilePtr, TempBuff, trunc1);
+                    TempInt = fprintf(stream, TempBuff, trunc1);
                 }
                 else if (Type == PFF_TYPE_INT && Prefix == PFF_PREFIX_SHORT)
                 {
@@ -2112,13 +2112,13 @@ int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, 
                     n = va_arg(ap, int);
                     s = (short) n;
 
-                    TempInt = fprintf( stream->bsdFilePtr, TempBuff, s);
+                    TempInt = fprintf( stream, TempBuff, s);
                 }
                 else
                 {
                     va_list apcopy;
                     va_copy(apcopy, ap);
-                    TempInt = vfprintf(stream->bsdFilePtr, TempBuff, apcopy);
+                    TempInt = vfprintf(stream, TempBuff, apcopy);
                     va_end(apcopy);
                     PAL_printf_arg_remover(&ap, Width, Precision, Type, Prefix);
                 }
@@ -2136,7 +2136,7 @@ int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, 
         else
         {
 
-            int res = std::fwrite(Fmt++, 1, 1, stream->bsdFilePtr); /* copy regular chars into buffer */
+            int res = std::fwrite(Fmt++, 1, 1, stream); /* copy regular chars into buffer */
             if (res < 1)
             {
                 ERROR("fwrite() failed with errno == %d\n", errno);
