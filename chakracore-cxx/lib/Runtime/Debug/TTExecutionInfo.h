@@ -238,10 +238,6 @@ namespace TTD
         //Info for innerloop last line in replay mode
         TTInnerLoopLastStatementInfo m_innerloopLastLocation;
 
-#if ENABLE_BASIC_TRACE || ENABLE_FULL_BC_TRACE
-        TraceLogger m_diagnosticLogger;
-#endif
-
         //A special check to see if we are in the process of a time-travel move and do not want to stop at any breakpoints
         static bool ShouldSuppressBreakpointsForTimeTravelMove(TTDMode mode);
 
@@ -251,11 +247,6 @@ namespace TTD
     public:
         ExecutionInfoManager(const TTInnerLoopLastStatementInfo& lsi);
         ~ExecutionInfoManager();
-
-#if ENABLE_BASIC_TRACE || ENABLE_FULL_BC_TRACE
-        //Get the trace logger for this 
-        TraceLogger* GetTraceLogger();
-#endif
 
         //get the top call counter from the stack
         const SingleCallCounter& GetTopCallCounter() const;

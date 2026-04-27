@@ -463,10 +463,6 @@ namespace TTD
             TTDAssert(false, "OOM in snapshot replay...");
         }
 
-#if ENABLE_BASIC_TRACE || ENABLE_FULL_BC_TRACE
-        this->m_threadContext->TTDExecutionInfo->GetTraceLogger()->WriteLiteralMsg("---SNAPSHOT EVENT---\n");
-#endif
-
         this->AdvanceTimeAndPositionForReplay(); //move along
     }
 
@@ -817,10 +813,6 @@ namespace TTD
         NSLogEvents::TelemetryEventLogEntry* tEvent = this->RecordGetInitializedEvent_DataOnly<NSLogEvents::TelemetryEventLogEntry, NSLogEvents::EventKind::TelemetryLogTag>();
         this->m_eventSlabAllocator.CopyStringIntoWLength(infoStringJs->GetString(), infoStringJs->GetLength(), tEvent->InfoString);
         tEvent->DoPrint = doPrint;
-
-#if ENABLE_BASIC_TRACE || ENABLE_FULL_BC_TRACE
-        this->m_threadContext->TTDExecutionInfo->GetTraceLogger()->ForceFlush();
-#endif
     }
 
     void EventLog::ReplayTelemetryLogEvent(Js::JavascriptString* infoStringJs)
@@ -853,10 +845,6 @@ namespace TTD
                 }
             }
         }
-#endif
-
-#if ENABLE_BASIC_TRACE || ENABLE_FULL_BC_TRACE
-        this->m_threadContext->TTDExecutionInfo->GetTraceLogger()->ForceFlush();
 #endif
     }
 
@@ -959,10 +947,6 @@ namespace TTD
             this->m_eventSlabAllocator.CopyStringIntoWLength(propertyName->GetString(), propertyName->GetLength(), peEvent->PropertyString);
         }
 #endif
-
-#if ENABLE_BASIC_TRACE || ENABLE_FULL_BC_TRACE
-        this->m_threadContext->TTDExecutionInfo->GetTraceLogger()->WriteEnumAction(this->m_eventTimeCtr - 1, returnCode, pid, attributes, propertyName);
-#endif
     }
 
     void EventLog::ReplayPropertyEnumEvent(Js::ScriptContext* requestContext, BOOL* returnCode, Js::BigPropertyIndex* newIndex, const Js::DynamicObject* obj, Js::PropertyId* pid, Js::PropertyAttributes* attributes, Js::JavascriptString** propertyName)
@@ -992,10 +976,6 @@ namespace TTD
 
             *newIndex = obj->GetDynamicType()->GetTypeHandler()->GetPropertyCount();
         }
-
-#if ENABLE_BASIC_TRACE || ENABLE_FULL_BC_TRACE
-        this->m_threadContext->TTDExecutionInfo->GetTraceLogger()->WriteEnumAction(this->m_eventTimeCtr - 1, *returnCode, *pid, *attributes, *propertyName);
-#endif
     }
 
     void EventLog::RecordSymbolCreationEvent(Js::PropertyId pid)
@@ -1035,21 +1015,12 @@ namespace TTD
 #if ENABLE_TTD_INTERNAL_DIAGNOSTICS
         NSLogEvents::ExternalCallEventLogEntry_ProcessDiagInfoPre(evt, func, this->m_eventSlabAllocator);
 #endif
-
-#if ENABLE_BASIC_TRACE || ENABLE_FULL_BC_TRACE
-        this->m_threadContext->TTDExecutionInfo->GetTraceLogger()->WriteCall(func, true, args.Info.Count, args.Values, this->GetLastEventTime());
-#endif
-
         return evt;
     }
 
     void EventLog::RecordExternalCallEvent_Complete(Js::JavascriptFunction* efunction, NSLogEvents::EventLogEntry* evt, Js::Var result)
     {
         NSLogEvents::ExternalCallEventLogEntry_ProcessReturn(evt, result, this->GetLastEventTime());
-
-#if ENABLE_BASIC_TRACE || ENABLE_FULL_BC_TRACE
-        this->m_threadContext->TTDExecutionInfo->GetTraceLogger()->WriteReturn(efunction, result, this->GetLastEventTime());
-#endif
     }
 
     void EventLog::ReplayExternalCallEvent(Js::JavascriptFunction* function, const Js::Arguments& args, Js::Var* result)
@@ -1063,10 +1034,6 @@ namespace TTD
         TTDAssert(ctx != nullptr, "Not sure how this would be possible but check just in case.");
 
         ThreadContextTTD* executeContext = ctx->GetThreadContext()->TTDContext;
-
-#if ENABLE_BASIC_TRACE || ENABLE_FULL_BC_TRACE
-        this->m_threadContext->TTDExecutionInfo->GetTraceLogger()->WriteCall(function, true, args.Info.Count, args.Values, this->GetLastEventTime());
-#endif
 
         //make sure we log all of the passed arguments in the replay host
         TTDAssert(args.Info.Count + 1 == ecEvent->ArgCount, "Mismatch in args!!!");
@@ -1105,10 +1072,6 @@ namespace TTD
 #endif
 
         *result = NSLogEvents::InflateVarInReplay(executeContext, ecEvent->ReturnValue);
-
-#if ENABLE_BASIC_TRACE || ENABLE_FULL_BC_TRACE
-        this->m_threadContext->TTDExecutionInfo->GetTraceLogger()->WriteReturn(function, *result, this->GetLastEventTime());
-#endif
 
         //if we had exception info then we need to patch it up and do what the external call did
         if(ecEvent->CheckExceptionStatus)
@@ -1150,10 +1113,6 @@ namespace TTD
         ecEvent->CallbackFunction = static_cast<TTDVar>(taskVar);
         ecEvent->LastNestedEventTime = TTD_EVENT_MAXTIME;
 
-#if ENABLE_BASIC_TRACE || ENABLE_FULL_BC_TRACE
-        this->m_threadContext->TTDExecutionInfo->GetTraceLogger()->WriteLiteralMsg("Enqueue Task: ");
-        this->m_threadContext->TTDExecutionInfo->GetTraceLogger()->WriteVar(taskVar);
-#endif
 
         return evt;
     }
@@ -1354,10 +1313,6 @@ namespace TTD
         }
 
         this->m_elapsedExecutionTimeSinceSnapshot = 0.0;
-
-#if ENABLE_BASIC_TRACE || ENABLE_FULL_BC_TRACE
-        this->m_threadContext->TTDExecutionInfo->GetTraceLogger()->WriteLiteralMsg("---SNAPSHOT EVENT---\n");
-#endif
 
         this->PopMode(TTDMode::ExcludedExecutionTTAction);
         this->SetSnapshotOrInflateInProgress(false);
@@ -1690,10 +1645,6 @@ namespace TTD
         }
 
         this->PopMode(TTDMode::ExcludedExecutionTTAction);
-
-#if ENABLE_BASIC_TRACE || ENABLE_FULL_BC_TRACE
-        this->m_threadContext->TTDExecutionInfo->GetTraceLogger()->WriteLiteralMsg("---INFLATED SNAPSHOT---\n");
-#endif
     }
 
     void EventLog::ReplayRootEventsToTime(long eventTime)
@@ -2585,10 +2536,6 @@ namespace TTD
 
     void EventLog::EmitLog(const char* emitUri, size_t emitUriLength, NSLogEvents::EventLogEntry* optInnerLoopEvent)
     {
-#if ENABLE_BASIC_TRACE || ENABLE_FULL_BC_TRACE
-        this->m_threadContext->TTDExecutionInfo->GetTraceLogger()->ForceFlush();
-#endif
-
         TTDataIOInfo& iofp = this->m_threadContext->TTDContext->TTDataIOInfo;
         iofp.ActiveTTUriLength = emitUriLength;
         iofp.ActiveTTUri = emitUri;
