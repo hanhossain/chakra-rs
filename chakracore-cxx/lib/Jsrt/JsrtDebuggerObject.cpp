@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
+#include <string>
 #include "JsrtPch.h"
 #ifdef ENABLE_SCRIPT_DEBUGGING
 #include "JsrtDebuggerObject.h"
@@ -579,7 +580,7 @@ Js::DynamicObject * JsrtDebuggerObjectProperty::GetJSONObject(Js::ScriptContext*
 
         const char16_t* name = objectDisplayRef->Name();
 
-        JsrtDebugUtils::AddPropertyToObject(propertyObject, JsrtDebugPropertyId::name, name, PAL_wcslen(name), scriptContext);
+        JsrtDebugUtils::AddPropertyToObject(propertyObject, JsrtDebugPropertyId::name, name, std::u16string(name).length(), scriptContext);
 
         JsrtDebugUtils::AddPropertyType(propertyObject, objectDisplayRef, scriptContext, forceSetValueProp); // Will add type, value, display, className, propertyAttributes
 
