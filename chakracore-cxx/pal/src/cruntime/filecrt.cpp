@@ -149,38 +149,3 @@ CorUnix::InternalFgets(
 
     return retval;
 }
-
-/*++
-PAL_fwrite
-
-Wrapper function for InternalFwrite.
-
-Input parameters:
-
-pvBuffer = array of objects to write to the given file stream
-nSize = size of a object in bytes
-nCount = number of objects to write
-pf = stream to write characters to
-
-Return value:
-    Returns the number of objects written.
---*/
-size_t
-PAL_fwrite(
-    const void *pvBuffer,
-    size_t nSize,
-    size_t nCount,
-    PAL_FILE *pf
-    )
-{
-    size_t nWrittenBytes = 0;
-
-    ENTRY( "fwrite( pvBuffer=%p, nSize=%d, nCount=%d, pf=%p )\n",
-           pvBuffer, nSize, nCount, pf);
-    _ASSERTE(pf != NULL);
-
-    nWrittenBytes = std::fwrite(pvBuffer, nSize, nCount, pf->bsdFilePtr);
-
-    LOGEXIT( "fwrite returning size_t %d\n", nWrittenBytes );
-    return nWrittenBytes;
-}

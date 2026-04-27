@@ -150,7 +150,7 @@ template <typename T>
 bool DynamicProfileStorageReaderWriter::WriteArray(T * t, size_t len)
 {
     AssertOrFailFast(file);
-    if (PAL_fwrite(t, sizeof(T), len, file) != len)
+    if (std::fwrite(t, sizeof(T), len, file->bsdFilePtr) != len)
     {
         Output::Print(u"ERROR: DynamicProfileStorage: Unable to write to file '%s'\n", filename);
         Output::Flush();

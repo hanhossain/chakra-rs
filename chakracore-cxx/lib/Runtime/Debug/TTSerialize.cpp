@@ -1861,7 +1861,7 @@ namespace TTD
     {
         if(this->m_currLength != 0)
         {
-            PAL_fwrite(this->m_buffer, sizeof(char), this->m_currLength, this->m_outfile);
+            std::fwrite(this->m_buffer, sizeof(char), this->m_currLength, this->m_outfile->bsdFilePtr);
 
             this->m_currLength = 0;
         }

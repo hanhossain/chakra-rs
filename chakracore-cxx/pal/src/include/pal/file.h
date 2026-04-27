@@ -170,23 +170,6 @@ Windows behavoir.
 */
 void FILEGetProperNotFoundError( char* lpPath, uint32_t * lpErrorCode );
 
-/*++
-PAL_fwrite
-
-Wrapper function for InternalFwrite
-
-Input parameters:
-
-pvBuffer = array of objects to write to the given file stream
-nSize = size of a object in bytes
-nCount = number of objects to write
-pf = stream to write characters to
-
-Return value:
-    Returns the number of objects written.
---*/
-size_t PAL_fwrite(const void *pvBuffer, size_t nSize, size_t nCount, PAL_FILE *pf);
-
 #ifdef __cplusplus
 }
 #endif // __cplusplus

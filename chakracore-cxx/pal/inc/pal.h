@@ -2124,7 +2124,6 @@ char * _fullpath(char *, const char *, size_t);
 
 #endif // PAL_STDCPP_COMPAT
 
-size_t PAL_fwrite(const void *, size_t, size_t, PAL_FILE *);
 size_t PAL_fread(void *, size_t, size_t, PAL_FILE *);
 PAL_FILE * PAL_fopen(const char *, const char *);
 int PAL_getc(PAL_FILE *stream);

@@ -737,7 +737,7 @@ namespace TTD
         {
             if(this->m_currLength + length >= TRACE_LOGGER_BUFFER_SIZE)
             {
-                PAL_fwrite(this->m_buffer, sizeof(char), this->m_currLength, this->m_outfile);
+                std::fwrite(this->m_buffer, sizeof(char), this->m_currLength, this->m_outfile->bsdFilePtr);
                 fflush(this->m_outfile->bsdFilePtr);
 
                 this->m_currLength = 0;
@@ -749,7 +749,7 @@ namespace TTD
             if(length >= TRACE_LOGGER_BUFFER_SIZE)
             {
                 const char* msg = "Oversize string ... omitting from output";
-                PAL_fwrite(msg, sizeof(char), strlen(msg), this->m_outfile);
+                std::fwrite(msg, sizeof(char), strlen(msg), this->m_outfile->bsdFilePtr);
             }
             else
             {
@@ -765,7 +765,7 @@ namespace TTD
             if(length >= TRACE_LOGGER_BUFFER_SIZE)
             {
                 const char* msg = "Oversize string ... omitting from output";
-                PAL_fwrite(msg, sizeof(char), strlen(msg), this->m_outfile);
+                std::fwrite(msg, sizeof(char), strlen(msg), this->m_outfile->bsdFilePtr);
             }
             else
             {

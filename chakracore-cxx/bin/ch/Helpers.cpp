@@ -16,7 +16,7 @@ JsTTDStreamHandle TTDHostOpen(size_t pathLength, const char* path, bool isWrite)
 }
 
 #define TTDHostRead(buff, size, handle) PAL_fread(buff, 1, size, (PAL_FILE*)handle)
-#define TTDHostWrite(buff, size, handle) PAL_fwrite(buff, 1, size, (PAL_FILE*)handle)
+#define TTDHostWrite(buff, size, handle) std::fwrite(buff, 1, size, ((PAL_FILE*)handle)->bsdFilePtr)
 
 int GetPathNameLocation(const char * filename)
 {
