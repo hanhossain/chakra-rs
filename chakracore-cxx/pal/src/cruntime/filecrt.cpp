@@ -180,10 +180,6 @@ PAL_fwrite(
     _ASSERTE(pf != NULL);
 
     nWrittenBytes = InternalFwrite(pvBuffer, nSize, nCount, pf->bsdFilePtr);
-    if (nWrittenBytes < nCount)
-    {
-        nWrittenBytes = PAL_FILE_ERROR;
-    }
 
     LOGEXIT( "fwrite returning size_t %d\n", nWrittenBytes );
     return nWrittenBytes;

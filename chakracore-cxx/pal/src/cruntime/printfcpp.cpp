@@ -54,7 +54,6 @@ Function:
 static int Internal_Convertfwrite(CPalThread *pthrCurrent, const void *buffer, size_t size, size_t count, FILE *stream, BOOL convert)
 {
     int ret;
-    int iError = 0;
 
     if(convert)
     {
@@ -83,10 +82,6 @@ static int Internal_Convertfwrite(CPalThread *pthrCurrent, const void *buffer, s
         ret = InternalFwrite(newBuff, 1, nsize, stream);
         if (ret < nsize)
         {
-            iError = PAL_FILE_ERROR;
-        }
-        if (iError != 0)
-        {
             ERROR("InternalFwrite did not write the whole buffer. Error is %d\n", iError);
             free(newBuff);
             return -1;
@@ -97,10 +92,6 @@ static int Internal_Convertfwrite(CPalThread *pthrCurrent, const void *buffer, s
    {
         ret = InternalFwrite(buffer, size, count, stream);
         if (ret < count)
-        {
-            iError = PAL_FILE_ERROR;
-        }
-        if (iError != 0)
         {
             ERROR("InternalFwrite did not write the whole buffer. Error is %d\n", iError);
             return -1;
@@ -933,7 +924,6 @@ int32_t Internal_AddPaddingVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, c
     if (Written < Length)
     {
         ERROR("fwrite() failed with errno == %d\n", errno);
-        Written = PAL_FILE_ERROR;
     }
 
 Done:
@@ -2148,10 +2138,6 @@ int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, 
 
             int res = InternalFwrite(Fmt++, 1, 1, stream->bsdFilePtr); /* copy regular chars into buffer */
             if (res < 1)
-            {
-                res = PAL_FILE_ERROR;
-            }
-            if (res == PAL_FILE_ERROR)
             {
                 ERROR("fwrite() failed with errno == %d\n", errno);
                 va_end(ap);
