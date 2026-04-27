@@ -17,6 +17,14 @@ fn main() {
                 "cargo::rustc-link-search=native={}/chakracore-cxx/lib",
                 chakra_build
             );
+            println!(
+                "cargo::rerun-if-changed={}/chakracore-cxx/bin/ch",
+                chakra_build
+            );
+            println!(
+                "cargo::rerun-if-changed={}/chakracore-cxx/lib",
+                chakra_build
+            );
         } else {
             let debug: bool = std::env::var("DEBUG").unwrap().parse::<bool>().unwrap();
             let optimized = cfg!(feature = "optimized-tests");
