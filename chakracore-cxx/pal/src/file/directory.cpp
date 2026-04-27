@@ -21,6 +21,7 @@ Revision History:
 
 --*/
 
+#include <string>
 #include "pal/palinternal.h"
 #include "pal/dbgmsg.h"
 #include "pal/file.h"
@@ -249,7 +250,7 @@ SetCurrentDirectoryW(
         goto done;
     }
 
-    length = (PAL_wcslen(lpPathName)+1) * 3;
+    length = (std::u16string(lpPathName).length()+1) * 3;
     dir = dirPathString.OpenStringBuffer(length);
     if (NULL == dir)
     {
