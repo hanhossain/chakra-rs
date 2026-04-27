@@ -21,6 +21,7 @@ Revision History:
 
 --*/
 
+#include <string>
 #include "pal/corunix.hpp"
 #include "pal/thread.hpp"
 #include <new>
@@ -464,7 +465,7 @@ BOOL Internal_ExtractFormatW(CPalThread *pthrCurrent, const char16_t* *Fmt, char
     }
 
     /* we'll never need a temp string longer than the original */
-    TempStrPtr = TempStr = (char*) malloc(PAL_wcslen(*Fmt)+1);
+    TempStrPtr = TempStr = (char*) malloc(std::u16string(*Fmt).length()+1);
     if (!TempStr)
     {
         ERROR("malloc failed\n");
@@ -779,7 +780,7 @@ BOOL Internal_AddPaddingW(char16_t* *Out, int32_t Count, char16_t* In, int32_t P
     char16_t* OutOriginal = *Out;
     int32_t PaddingOriginal = Padding;
     int32_t LengthInStr;
-    LengthInStr = PAL_wcslen(In);
+    LengthInStr = std::u16string(In).length();
 
 
     if (Padding < 0)
@@ -789,12 +790,12 @@ BOOL Internal_AddPaddingW(char16_t* *Out, int32_t Count, char16_t* In, int32_t P
     }
     if (Flags & PFF_MINUS) /* pad on right */
     {
-        if (wcsncpy_s(*Out, Count, In, min(LengthInStr + 1, Count - 1)) != SAFECRT_SUCCESS)
+        if (wcsncpy_s(*Out, Count, In, std::min(LengthInStr + 1, Count - 1)) != SAFECRT_SUCCESS)
         {
             return FALSE;
         }
 
-        *Out += min(LengthInStr, Count - 1);
+        *Out += std::min(LengthInStr, Count - 1);
     }
     if (Padding > 0)
     {
@@ -816,12 +817,12 @@ BOOL Internal_AddPaddingW(char16_t* *Out, int32_t Count, char16_t* In, int32_t P
     if (!(Flags & PFF_MINUS)) /* put 'In' after padding */
     {
         if (wcsncpy_s(*Out, Count - (*Out - OutOriginal), In,
-            min(LengthInStr, Count - (*Out - OutOriginal) - 1)) != SAFECRT_SUCCESS)
+            std::min(static_cast<long>(LengthInStr), Count - (*Out - OutOriginal) - 1)) != SAFECRT_SUCCESS)
         {
             return FALSE;
         }
 
-        *Out += min(LengthInStr, Count - (*Out - OutOriginal) - 1);
+        *Out += std::min(static_cast<long>(LengthInStr), Count - (*Out - OutOriginal) - 1);
     }
 
     if (LengthInStr + PaddingOriginal > Count - 1)
@@ -955,7 +956,7 @@ static int32_t Internal_AddPaddingVfwprintf(CPalThread *pthrCurrent, FILE *strea
     int32_t Length;
     int32_t Written = 0;
 
-    LengthInStr = PAL_wcslen(In);
+    LengthInStr = std::u16string(In).length();
     Length = LengthInStr;
 
     if (Padding > 0)
@@ -1178,7 +1179,7 @@ int CoreVfwprintf(CPalThread *pthrCurrent, FILE *stream, const char16_t *format,
                     }
                 }
 
-                int32_t Length = PAL_wcslen(TempWStr);
+                int32_t Length = std::u16string(TempWStr).length();
                 WorkingWStr = (char16_t*) malloc((sizeof(char16_t) * (Length + 1)));
                 if (!WorkingWStr)
                 {
@@ -1601,7 +1602,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
                 }
                 else
                 {
-                    Length = PAL_wcslen(TempWStr);
+                    Length = std::u16string(TempWStr).length();
                 }
 
                 WorkingWStr = (char16_t*) malloc(sizeof(char16_t) * (Length + 1));

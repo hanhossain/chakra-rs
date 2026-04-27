@@ -3,6 +3,7 @@
 // Copyright (c) ChakraCore Project Contributors. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
+#include <string>
 #include "ParserPch.h"
 #include "FormalsUtil.h"
 #include "SourceDynamicProfileManager.h"
@@ -7774,7 +7775,7 @@ LPCOLESTR Parser::ConstructFinalHintNode(IdentPtr pClassName, IdentPtr pMemberNa
     }
 
     LPCOLESTR pFinalName = isComputedName ? pMemberNameHint : pMemberName->Psz();
-    uint32_t fullNameHintLength = (uint32_t)PAL_wcslen(pFinalName);
+    uint32_t fullNameHintLength = (uint32_t)std::u16string(pFinalName).length();
     uint32_t shortNameOffset = 0;
     if (!isStatic)
     {
@@ -8586,7 +8587,7 @@ LPCOLESTR Parser::AppendNameHints(IdentPtr left, IdentPtr right, uint32_t *pName
 
 LPCOLESTR Parser::AppendNameHints(IdentPtr left, LPCOLESTR right, uint32_t *pNameLength, uint32_t *pShortNameOffset, bool ignoreAddDotWithSpace, bool wrapInBrackets)
 {
-    uint32_t rightLen = (right == nullptr) ? 0 : (uint32_t)PAL_wcslen(right);
+    uint32_t rightLen = (right == nullptr) ? 0 : (uint32_t)std::u16string(right).length();
 
     if (pShortNameOffset != nullptr)
     {
@@ -8621,7 +8622,7 @@ LPCOLESTR Parser::AppendNameHints(IdentPtr left, LPCOLESTR right, uint32_t *pNam
 
 LPCOLESTR Parser::AppendNameHints(LPCOLESTR left, IdentPtr right, uint32_t *pNameLength, uint32_t *pShortNameOffset, bool ignoreAddDotWithSpace, bool wrapInBrackets)
 {
-    uint32_t leftLen = (left == nullptr) ? 0 : (uint32_t)PAL_wcslen(left);
+    uint32_t leftLen = (left == nullptr) ? 0 : (uint32_t)std::u16string(left).length();
 
     if (pShortNameOffset != nullptr)
     {
@@ -8653,8 +8654,8 @@ LPCOLESTR Parser::AppendNameHints(LPCOLESTR left, IdentPtr right, uint32_t *pNam
 
 LPCOLESTR Parser::AppendNameHints(LPCOLESTR left, LPCOLESTR right, uint32_t *pNameLength, uint32_t *pShortNameOffset, bool ignoreAddDotWithSpace, bool wrapInBrackets)
 {
-    uint32_t leftLen = (left == nullptr) ? 0 : (uint32_t)PAL_wcslen(left);
-    uint32_t rightLen = (right == nullptr) ? 0 : (uint32_t)PAL_wcslen(right);
+    uint32_t leftLen = (left == nullptr) ? 0 : (uint32_t)std::u16string(left).length();
+    uint32_t rightLen = (right == nullptr) ? 0 : (uint32_t)std::u16string(right).length();
     if (pShortNameOffset != nullptr)
     {
         *pShortNameOffset = 0;
@@ -11290,7 +11291,7 @@ LNeedTerminator:
 
             // create a fake name for the catch var.
             const char16_t *uniqueNameStr = u"__ehobj";
-            IdentPtr uniqueName = this->GetHashTbl()->PidHashNameLen(uniqueNameStr, static_cast<int32_t>(PAL_wcslen(uniqueNameStr)));
+            IdentPtr uniqueName = this->GetHashTbl()->PidHashNameLen(uniqueNameStr, static_cast<int32_t>(std::u16string(uniqueNameStr).length()));
 
             pCatch->SetParam(CreateNameNode(uniqueName));
 

@@ -2,6 +2,7 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
+#include <string>
 #include "JsrtPch.h"
 #include "JsrtSourceHolder.h"
 
@@ -114,7 +115,7 @@ namespace Js
                     *utf8AllocLength = 0;
                 }
 
-                size_t script_length = PAL_wcslen(script);
+                size_t script_length = std::u16string(script).length();
                 if (script_length > UINT_MAX)
                 {
                     Js::JavascriptError::ThrowOutOfMemoryError(nullptr);

@@ -2,6 +2,7 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
+#include <string>
 #include "CommonCorePch.h"
 #include "pal.h"
 #include "Output.h"
@@ -264,7 +265,7 @@ Output::VPrint(const char16_t *form, va_list argptr)
 
 //
 // buf: a null terminated string
-// size: characters in buf, excluding the terminating null ==> PAL_wcslen(buf)
+// size: characters in buf, excluding the terminating null ==> std::u16string(buf).length()
 //
 size_t
 Output::PrintBuffer(const char16_t * buf, size_t size)
@@ -298,7 +299,7 @@ Output::PrintBuffer(const char16_t * buf, size_t size)
                     currentWriteIndex = newbuf + charsWritten;
                 }
             };
-            const size_t prefixlength = PAL_wcslen(prefix);
+            const size_t prefixlength = std::u16string(prefix).length();
             size_t oldS_Column = Output::s_Column;
             while (currentReadIndex < buf + size)
             {
@@ -431,7 +432,7 @@ Output::SkipToColumn(size_t column)
     if (usingCustomAlignAndPrefix)
     {
         // If we've already added the alignment and prefix, we need to add the alignment to our column number here
-        columnbias = align + PAL_wcslen(prefix);
+        columnbias = align + std::u16string(prefix).length();
     }
     size_t reference = 0;
     if (Output::s_Column > columnbias)

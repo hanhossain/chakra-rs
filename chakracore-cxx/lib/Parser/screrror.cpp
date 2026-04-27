@@ -2,6 +2,7 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
+#include <string>
 #include "ParserPch.h"
 #pragma hdrstop
 #include "errstr.h"
@@ -256,7 +257,7 @@ int32_t  CompileScriptException::ProcessError(IScanner * pScan, int32_t hr, Pars
         if (nullptr == (ei.bstrDescription = SysAllocString(szT)))
             ei.scode = E_OUTOFMEMORY;
     }
-    else if (PAL_wcslen(stringOne) > 0)
+    else if (std::u16string(stringOne).length() > 0)
     {
         OLECHAR szT[128];
         _snwprintf_s(szT, ARRAYSIZE(szT), ARRAYSIZE(szT)-1, ei.bstrDescription, stringOne, stringTwo);

@@ -2,6 +2,7 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
+#include <string>
 #include "CommonMemoryPch.h"
 #include "HeapAllocator.h"
 
@@ -524,7 +525,7 @@ MemoryLeakCheck::~MemoryLeakCheck()
         {
             if (enableOutput)
             {
-                Output::PrintBuffer(current->dump, PAL_wcslen(current->dump));
+                Output::PrintBuffer(current->dump, std::u16string(current->dump).length());
             }
             LeakRecord * prev = current;
             current = current->next;

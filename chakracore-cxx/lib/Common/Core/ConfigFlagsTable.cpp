@@ -2,6 +2,7 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
+#include <string>
 #include "CommonCorePch.h"
 #include "Memory/PageHeapBlockTypeFilter.h"
 #include "Core/ConfigFlagsTable.h"
@@ -84,7 +85,7 @@ namespace Js
     {
         if(NULL != this->pszValue)
         {
-            NoCheckHeapDeleteArray(PAL_wcslen(this->pszValue) + 1, this->pszValue);
+            NoCheckHeapDeleteArray(std::u16string(this->pszValue).length() + 1, this->pszValue);
         }
     }
 
@@ -102,12 +103,12 @@ namespace Js
     {
         if(NULL != this->pszValue)
         {
-            NoCheckHeapDeleteArray(PAL_wcslen(this->pszValue) + 1, this->pszValue);
+            NoCheckHeapDeleteArray(std::u16string(this->pszValue).length() + 1, this->pszValue);
         }
 
         if(NULL != pszValue)
         {
-            size_t size    = 1 + PAL_wcslen(pszValue);
+            size_t size    = 1 + std::u16string(pszValue).length();
             this->pszValue  = NoCheckHeapNewArray(char16_t, size);
             wcscpy_s(this->pszValue, size, pszValue);
         }

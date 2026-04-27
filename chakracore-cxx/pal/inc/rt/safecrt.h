@@ -2340,31 +2340,6 @@ unsigned char * _mbstok_s(unsigned char *_String, const unsigned char *_Control,
 
 #endif /* _SAFECRT_DEFINE_MBS_FUNCTIONS */
 
-#ifndef PAL_STDCPP_COMPAT
-/* wcsnlen */
-_SAFECRT__EXTERN_C
-size_t wcsnlen(const char16_t *inString, size_t inMaxSize);
-
-#if _SAFECRT_USE_INLINES || _SAFECRT_IMPL
-
-_SAFECRT__INLINE
-size_t wcsnlen(const char16_t *inString, size_t inMaxSize)
-{
-    size_t n;
-
-    /* Note that we do not check if s == nullptr, because we do not
-     * return errno_t...
-     */
-
-    for (n = 0; n < inMaxSize && *inString; n++, inString++)
-        ;
-
-    return n;
-}
-
-#endif
-#endif // PAL_STDCPP_COMPAT
-
 /* _makepath_s */
 /*
  * _makepath_s, _wmakepath_s build up a path starting from the specified components;

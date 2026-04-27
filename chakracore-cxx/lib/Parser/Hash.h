@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include <string>
 #include "Memory/ArenaAllocator.h"
 #include "Codex/Utf8Codex.h"
 
@@ -349,7 +350,7 @@ public:
     IdentPtr PidFromTk(tokens tk);
     IdentPtr PidHashName(LPCOLESTR psz)
     {
-        size_t csz = PAL_wcslen(psz);
+        size_t csz = std::u16string(psz).length();
         Assert(csz <= UINT_MAX);
         return PidHashNameLen(psz, static_cast<uint32_t>(csz));
     }

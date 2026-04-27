@@ -21,6 +21,7 @@ Revision History:
 
 --*/
 
+#include <string>
 #include "pal/palinternal.h"
 #include "pal/dbgmsg.h"
 #include "pal/cruntime.h"
@@ -71,12 +72,12 @@ BOOL Internal_AddPaddingA(char* *Out, int32_t Count, char* In,
     }
     if (Flags & PFF_MINUS) /* pad on right */
     {
-        if (strncpy_s(*Out, Count, In, min(LengthInStr + 1, Count)) != SAFECRT_SUCCESS)
+        if (strncpy_s(*Out, Count, In, std::min(LengthInStr + 1, Count)) != SAFECRT_SUCCESS)
         {
             return FALSE;
         }
 
-        *Out += min(LengthInStr, Count);
+        *Out += std::min(LengthInStr, Count);
     }
     if (Padding > 0)
     {
@@ -98,12 +99,12 @@ BOOL Internal_AddPaddingA(char* *Out, int32_t Count, char* In,
     if (!(Flags & PFF_MINUS)) /* put 'In' after padding */
     {
         if (strncpy_s(*Out, Count, In,
-                min(LengthInStr + 1, Count - (*Out - OutOriginal))) != SAFECRT_SUCCESS)
+                std::min(static_cast<long>(LengthInStr + 1), Count - (*Out - OutOriginal))) != SAFECRT_SUCCESS)
         {
             return FALSE;
         }
 
-        *Out += min(LengthInStr, Count - (*Out - OutOriginal));
+        *Out += std::min(static_cast<long>(LengthInStr), Count - (*Out - OutOriginal));
     }
 
     if (LengthInStr + PaddingOriginal > Count)
@@ -595,7 +596,7 @@ static BOOL Internal_ScanfExtractFormatW(const char16_t* *Fmt, char* Out, int iO
     }
 
     /* we'll never need a temp string longer than the original */
-    TempStrPtr = TempStr = (char*) malloc(PAL_wcslen(*Fmt)+1);
+    TempStrPtr = TempStr = (char*) malloc(std::u16string(*Fmt).length()+1);
     if (!TempStr)
     {
         ERROR("malloc failed\n");
@@ -1205,7 +1206,7 @@ int PAL_wvsscanf(const char16_t* Buffer, const char16_t* Format, va_list ap)
                             // caller. So we have to assume that the caller has allocated enough space
                             // to hold either the width specified in the format or the entire input
                             // string plus '\0'.
-                            typeLen = ((Width > 0) ? Width : PAL_wcslen(Buffer)) + 1;
+                            typeLen = ((Width > 0) ? Width : std::u16string(Buffer).length()) + 1;
                         }
                         else if (Type == SCANF_TYPE_CHAR)
                         {

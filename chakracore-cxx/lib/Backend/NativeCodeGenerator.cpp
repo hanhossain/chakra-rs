@@ -3,6 +3,7 @@
 // Copyright (c) ChakraCore Project Contributors. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
+#include <string>
 #include "Backend.h"
 #include "Base/ScriptContextProfiler.h"
 #include "NativeEntryPointData.h"
@@ -52,7 +53,7 @@ NativeCodeGenerator::NativeCodeGenerator(Js::ScriptContext * scriptContext)
         fileOpened = (0 == _wfopen_s(&this->asmFile, Js::Configuration::Global.flags.AsmDumpMode, u"wt"));
         if (!fileOpened)
         {
-            size_t len = PAL_wcslen(Js::Configuration::Global.flags.AsmDumpMode);
+            size_t len = std::u16string(Js::Configuration::Global.flags.AsmDumpMode).length();
             if (len < _MAX_PATH - 5)
             {
                 char16_t filename[_MAX_PATH];

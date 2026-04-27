@@ -2170,7 +2170,7 @@ namespace Js
 
     void DeferDeserializeFunctionInfo::SetDisplayName(const char16_t* displayName)
     {
-        size_t len = PAL_wcslen(displayName);
+        size_t len = std::u16string(displayName).length();
         if (len > UINT_MAX)
         {
             // Can't support display name that big
@@ -2820,7 +2820,7 @@ namespace Js
     }
     void ParseableFunctionInfo::SetDisplayName(const char16_t* pszDisplayName)
     {
-        size_t len = PAL_wcslen(pszDisplayName);
+        size_t len = std::u16string(pszDisplayName).length();
         if (len > UINT_MAX)
         {
             // Can't support display name that big
@@ -9547,7 +9547,7 @@ namespace Js
     size_t FunctionBody::GetLoopBodyName(uint loopNumber, _Out_writes_opt_z_(sizeInChars) char16_t* displayName, _In_ size_t sizeInChars)
     {
         const char16_t* functionName = this->GetExternalDisplayName();
-        size_t length = PAL_wcslen(functionName) + /*length of largest int32_t*/ 10 + _countof(LoopWStr) + /*null*/ 1;
+        size_t length = std::u16string(functionName).length() + /*length of largest int32_t*/ 10 + _countof(LoopWStr) + /*null*/ 1;
         if (sizeInChars < length || displayName == nullptr)
         {
             return length;

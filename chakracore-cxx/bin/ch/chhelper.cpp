@@ -38,16 +38,6 @@ Error:
     return hr;
 }
 
-HANDLE GetFileHandle(const char16_t* filename)
-{
-    if (filename != nullptr)
-    {
-        return CreateFile(filename, GENERIC_WRITE, FILE_SHARE_DELETE,
-            nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
-    }
-    return GetStdHandle(STD_OUTPUT_HANDLE);
-}
-
 int32_t CreateLibraryByteCode(const char* contentsRaw)
 {
     JsValueRef bufferVal;
@@ -419,7 +409,7 @@ Error:
     return hr;
 }
 
-int32_t CreateParserState(const char * fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback, const char16_t* fullPath)
+int32_t CreateParserState(const char * fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback)
 {
     int32_t hr = S_OK;
     HANDLE fileHandle = nullptr;
@@ -430,7 +420,7 @@ int32_t CreateParserState(const char * fileContents, size_t fileLength, JsFinali
     IfFailedGoLabel(GetParserStateBuffer(fileContents, fileContentsFinalizeCallback, &parserStateBuffer), Error);
     IfJsErrorFailLog(ChakraRTInterface::JsGetArrayBufferStorage(parserStateBuffer, &buffer, &bufferSize));
 
-    fileHandle = GetFileHandle(fullPath);
+    fileHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     IfFalseGo(fileHandle != INVALID_HANDLE_VALUE && fileHandle != nullptr);
 
     for (unsigned int i = 0; i < bufferSize; i++)
@@ -722,7 +712,7 @@ int32_t ExecuteTest(const char* fileName, const bool doTTRecord, const bool doTT
         }
         else if (HostConfigFlags::flags.GenerateParserStateCacheIsEnabled)
         {
-            CreateParserState(fileContents, lengthBytes, WScriptJsrt::FinalizeFree, nullptr);
+            CreateParserState(fileContents, lengthBytes, WScriptJsrt::FinalizeFree);
         }
         else if (HostConfigFlags::flags.UseParserStateCacheIsEnabled)
         {

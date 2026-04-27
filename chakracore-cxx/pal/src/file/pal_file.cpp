@@ -19,6 +19,7 @@ Abstract:
 
 --*/
 
+#include <string>
 #include "pal/thread.hpp"
 #include "pal/file.hpp"
 #include "shmfilelockmgr.hpp"
@@ -981,7 +982,7 @@ CreateFileW(
 
     if (lpFileName != NULL)
     {
-        length = (PAL_wcslen(lpFileName)+1) * MaxWCharToAcpLengthFactor;
+        length = (std::u16string(lpFileName).length()+1) * MaxWCharToAcpLengthFactor;
     }
     
     name = namePathString.OpenStringBuffer(length);
@@ -1150,7 +1151,7 @@ DeleteFileW(
     
     if (lpFileName != NULL)
     {
-        length = (PAL_wcslen(lpFileName)+1) * MaxWCharToAcpLengthFactor;
+        length = (std::u16string(lpFileName).length()+1) * MaxWCharToAcpLengthFactor;
     }
     
     name = namePS.OpenStringBuffer(length);
@@ -1446,7 +1447,7 @@ MoveFileExW(
     
     if (lpExistingFileName != NULL)
     {
-        length = (PAL_wcslen(lpExistingFileName)+1) * MaxWCharToAcpLengthFactor;
+        length = (std::u16string(lpExistingFileName).length()+1) * MaxWCharToAcpLengthFactor;
     }
     
     source = sourcePS.OpenStringBuffer(length);
@@ -1477,7 +1478,7 @@ MoveFileExW(
     length = 0;
     if (lpNewFileName != NULL)
     {
-        length = (PAL_wcslen(lpNewFileName)+1) * MaxWCharToAcpLengthFactor;
+        length = (std::u16string(lpNewFileName).length()+1) * MaxWCharToAcpLengthFactor;
     }
     
     dest = destPS.OpenStringBuffer(length);
@@ -1646,7 +1647,7 @@ GetFileAttributesW(
         goto done;
     }
     
-    length = (PAL_wcslen(lpFileName)+1) * MaxWCharToAcpLengthFactor;
+    length = (std::u16string(lpFileName).length()+1) * MaxWCharToAcpLengthFactor;
     filename = filenamePS.OpenStringBuffer(length);
     if (NULL == filename)
     {
@@ -1728,7 +1729,7 @@ GetFileAttributesExW(
         goto done;
     }
     
-    length = (PAL_wcslen(lpFileName)+1) * MaxWCharToAcpLengthFactor;
+    length = (std::u16string(lpFileName).length()+1) * MaxWCharToAcpLengthFactor;
     name = namePS.OpenStringBuffer(length);
     if (NULL == name)
     {

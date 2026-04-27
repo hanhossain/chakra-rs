@@ -155,6 +155,7 @@ is still alive).
 
 --*/
 
+#include <string>
 #include "pal/palinternal.h"
 #include "pal/dbgmsg.h"
 #include "pal/shmemory.h"
@@ -1313,7 +1314,7 @@ SHMPTR SHMWStrDup( const char16_t* string )
 
     if ( string )
     {
-        length = ( PAL_wcslen( string ) + 1 ) * sizeof( char16_t );
+        length = ( std::u16string( string ).length() + 1 ) * sizeof( char16_t );
 
         retVal = SHMalloc( length );
 

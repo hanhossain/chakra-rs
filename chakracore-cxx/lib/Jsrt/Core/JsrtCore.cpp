@@ -915,7 +915,7 @@ CHAKRA_API JsCreateStringUtf16(
 
     if (length == static_cast<size_t>(-1))
     {
-        length = PAL_wcslen((const char16_t *)content);
+        length = std::u16string((const char16_t *)content).length();
     }
 
     if (length > static_cast<CharCount>(-1))

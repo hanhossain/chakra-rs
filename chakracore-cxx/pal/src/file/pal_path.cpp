@@ -21,6 +21,7 @@ Revision History:
 
 --*/
 
+#include <string>
 #include "pal/thread.hpp"
 #include "pal/palinternal.h"
 #include "pal/dbgmsg.h"
@@ -496,7 +497,7 @@ FILEDosToUnixPathW(
                    pattern and will be truncated */
                 if (charBeforeFirstDot != '.' && charBeforeFirstDot != '/')
                 {
-                    memmove(pPointAtDot,p,((PAL_wcslen(p)+1)*sizeof(char16_t)));
+                    memmove(pPointAtDot,p,((std::u16string(p).length()+1)*sizeof(char16_t)));
                     p = pPointAtDot;
                 }
                 pPointAtDot = NULL; /* Need to reset this */
@@ -517,7 +518,7 @@ FILEDosToUnixPathW(
                         p[-1] == '.' &&
                         p[0] == '*')
                     {
-                        memmove(&(p[-2]),p,(PAL_wcslen(p)*sizeof(char16_t)));
+                        memmove(&(p[-2]),p,(std::u16string(p).length()*sizeof(char16_t)));
                     }
 
                     pPointAtDot  = NULL;

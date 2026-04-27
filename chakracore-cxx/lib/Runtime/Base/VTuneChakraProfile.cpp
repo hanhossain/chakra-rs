@@ -62,7 +62,7 @@ void VTuneChakraProfile::LogMethodNativeLoadEvent(Js::FunctionBody* body, Js::Fu
         wcscat_s(methodNameBuffer, numberBuffer);
         wcscat_s(methodNameBuffer, u"}");
 
-        size_t methodLength = PAL_wcslen(methodNameBuffer);
+        size_t methodLength = std::u16string(methodNameBuffer).length();
         Assert(methodLength < _MAX_PATH);
         charcount_t ccMethodLength = static_cast<charcount_t>(methodLength);
         size_t cbUtf8MethodName = UInt32Math::MulAdd<3, 1>(ccMethodLength);
@@ -125,7 +125,7 @@ void VTuneChakraProfile::LogLoopBodyLoadEvent(Js::FunctionBody* body, Js::LoopEn
         iJIT_Method_Load methodInfo;
         memset(&methodInfo, 0, sizeof(iJIT_Method_Load));
         const char16_t* methodName = body->GetExternalDisplayName();
-        size_t methodLength = PAL_wcslen(methodName);
+        size_t methodLength = std::u16string(methodName).length();
         charcount_t ccMethodLength = static_cast<charcount_t>(methodLength);
         ccMethodLength = min(ccMethodLength, UINT_MAX); // Just truncate if it is too big
         constexpr size_t sizeToAdd = /* spaces */ 2 + _countof(LoopStr) + /* size of loop number */ 10 + /*NULL*/ 1;
@@ -168,7 +168,7 @@ utf8char_t* VTuneChakraProfile::GetUrl(Js::FunctionBody* body, size_t* urlBuffer
         const char16_t* url = body->GetSourceContextInfo()->url;
         if (url)
         {
-            size_t urlCharLength = PAL_wcslen(url);
+            size_t urlCharLength = std::u16string(url).length();
             charcount_t ccUrlCharLength = static_cast<charcount_t>(urlCharLength);
             ccUrlCharLength = min(ccUrlCharLength, UINT_MAX);       // Just truncate if it is too big
 

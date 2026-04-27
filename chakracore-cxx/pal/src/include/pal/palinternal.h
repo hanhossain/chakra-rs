@@ -229,13 +229,4 @@ typedef enum _TimeConversionConstants
 
 BOOL PAL_IsDebuggerPresent();
 
-// do not change the location of the definitions below.
-// these defs should be always at the end
-#ifndef max
-#define max(a,b)            (((a) > (b)) ? (a) : (b))
-#endif
-#ifndef min
-#define min(a,b)            (((a) < (b)) ? (a) : (b))
-#endif
-
 #endif /* _PAL_INTERNAL_H_ */

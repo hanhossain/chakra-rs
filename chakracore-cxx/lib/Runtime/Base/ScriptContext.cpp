@@ -552,7 +552,7 @@ namespace Js
     void ScriptContext::SetUrl(BSTR bstrUrl)
     {
         // Assumption: this method is never called multiple times
-        Assert(this->url != nullptr && PAL_wcslen(this->url) == 0);
+        Assert(this->url != nullptr && std::u16string(this->url).length() == 0);
 
         charcount_t length = SysStringLen(bstrUrl) + 1; // Add 1 for the NULL.
 
@@ -900,7 +900,7 @@ namespace Js
                 // WOOB 1137798: JavascriptArray::GetIndex does not handle embedded NULLs. So if we have a property
                 // name "1234\0", JavascriptArray::GetIndex would incorrectly accepts it as an array index property
                 // name.
-                Assert((size_t)(name->GetLength()) != PAL_wcslen(name->GetBuffer()));
+                Assert((size_t)(name->GetLength()) != std::u16string(name->GetBuffer()).length());
             }
             else if (isNumericPropertyId)
             {
@@ -4729,8 +4729,8 @@ ExitTempAllocator:
         {
             // The spec names functions whose property is a well known symbol as the description from the symbol
             // wrapped in square brackets, so verify by skipping past first bracket
-            Assert(!PAL_wcsncmp(pwszFunctionName + 1, pwszObjectNameFromProperty, PAL_wcslen(pwszObjectNameFromProperty)));
-            Assert(PAL_wcslen(pwszFunctionName) == PAL_wcslen(pwszObjectNameFromProperty) + 2);
+            Assert(!PAL_wcsncmp(pwszFunctionName + 1, pwszObjectNameFromProperty, std::u16string(pwszObjectNameFromProperty).length()));
+            Assert(std::u16string(pwszFunctionName).length() == std::u16string(pwszObjectNameFromProperty).length() + 2);
         }
         else
         {
@@ -4747,7 +4747,7 @@ ExitTempAllocator:
         {
             // Create name as "object.function"
             swprintf_s(szTempName, 70, u"%s.%s", pwszObjectName, pwszFunctionName);
-            functionPropertyId = GetOrAddPropertyIdTracked(szTempName, (uint)PAL_wcslen(szTempName));
+            functionPropertyId = GetOrAddPropertyIdTracked(szTempName, (uint)std::u16string(szTempName).length());
         }
 
         Js::PropertyId cachedFunctionId;

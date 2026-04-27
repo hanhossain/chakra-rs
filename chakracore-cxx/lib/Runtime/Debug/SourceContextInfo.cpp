@@ -2,6 +2,7 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
+#include <string>
 #include "RuntimeDebugPch.h"
 #include "Language/SourceDynamicProfileManager.h"
 
@@ -58,10 +59,10 @@ SourceContextInfo* SourceContextInfo::Clone(Js::ScriptContext* scriptContext) co
         newSourceContextInfo = scriptContext->CreateSourceContextInfo(
             dwHostSourceContext,
             oldUrl,
-            oldUrl? PAL_wcslen(oldUrl) : 0,
+            oldUrl? std::u16string(oldUrl).length() : 0,
             NULL,
             oldSourceMapUrl,
-            oldSourceMapUrl ? PAL_wcslen(oldSourceMapUrl) : 0);
+            oldSourceMapUrl ? std::u16string(oldSourceMapUrl).length() : 0);
         newSourceContextInfo->nextLocalFunctionId = this->nextLocalFunctionId;
         newSourceContextInfo->sourceContextId = this->sourceContextId;
         newSourceContextInfo->EnsureInitialized();

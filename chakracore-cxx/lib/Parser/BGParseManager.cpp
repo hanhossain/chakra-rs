@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
+#include <string>
 #include "ParserPch.h"
 
 #include "Memory/AutoPtr.h"
@@ -505,7 +506,7 @@ void BGParseWorkItem::ParseUTF8Core(Js::ScriptContext* scriptContext)
     SourceContextInfo* sourceContextInfo = scriptContext->GetSourceContextInfo(this->cookie, nullptr);
     if (sourceContextInfo == nullptr)
     {
-        sourceContextInfo = scriptContext->CreateSourceContextInfo(this->cookie, this->path, PAL_wcslen(this->path), nullptr);
+        sourceContextInfo = scriptContext->CreateSourceContextInfo(this->cookie, this->path, std::u16string(this->path).length(), nullptr);
     }
 
     SRCINFO si = {

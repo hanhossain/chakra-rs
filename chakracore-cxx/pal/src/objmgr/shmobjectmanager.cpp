@@ -18,6 +18,7 @@ Abstract:
 
 --*/
 
+#include <string>
 #include "shmobjectmanager.hpp"
 #include "shmobject.hpp"
 #include "pal/cs.hpp"
@@ -514,7 +515,7 @@ CSharedMemoryObjectManager::LocateObject(
     _ASSERTE(NULL != pthr);
     _ASSERTE(NULL != psObjectToLocate);
     _ASSERTE(NULL != psObjectToLocate->GetString());
-    _ASSERTE(PAL_wcslen(psObjectToLocate->GetString()) == psObjectToLocate->GetStringLength());
+    _ASSERTE(std::u16string(psObjectToLocate->GetString()).length() == psObjectToLocate->GetStringLength());
     _ASSERTE(NULL != ppobj);
 
     ENTRY("CSharedMemoryObjectManager::LocateObject "

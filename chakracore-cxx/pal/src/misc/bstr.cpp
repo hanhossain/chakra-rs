@@ -17,6 +17,7 @@ Abstract:
 
 --*/
 
+#include <string>
 #include "pal/palinternal.h"
 
 // Redefining here to not have to pull in all of palrt.h in order to get intsafe
@@ -30,8 +31,6 @@ Abstract:
 #include "rt/intsafe.h"
 
 #define WIN32_ALLOC_ALIGN (16 - 1)
-
-size_t PAL_wcslen(const char16_t *);
 
 typedef char16_t OLECHAR;
 typedef char16_t *BSTR;
@@ -177,5 +176,5 @@ extern "C" BSTR SysAllocString(const OLECHAR* psz)
         return NULL;
     }
 
-    return SysAllocStringLen(psz, (uint32_t)PAL_wcslen(psz));
+    return SysAllocStringLen(psz, (uint32_t)std::u16string(psz).length());
 }

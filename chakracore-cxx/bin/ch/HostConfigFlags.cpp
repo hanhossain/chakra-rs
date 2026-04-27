@@ -109,7 +109,7 @@ void HostConfigFlags::HandleArgsFlag(int& argc, _Inout_updates_to_(argc, argc) c
 {
     const char16_t* argsFlag = u"-args";
     const char16_t* endArgsFlag = u"-endargs";
-    int argsFlagLen = static_cast<int>(PAL_wcslen(argsFlag));
+    int argsFlagLen = static_cast<int>(std::u16string(argsFlag).length());
     int i;
     for (i = 1; i < argc; i++)
     {

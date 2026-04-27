@@ -1975,7 +1975,6 @@ int _vsnwprintf(char16_t *, size_t, const char16_t *, va_list);
 char16_t * _itow(int, char16_t *, int);
 char16_t * _ltow(long, char16_t *, int);
 
-size_t PAL_wcslen(const char16_t *);
 int PAL_wcscmp(const char16_t*, const char16_t*);
 int PAL_wmemcmp(const char16_t *, const char16_t *, size_t);
 int PAL_wcsncmp(const char16_t *, const char16_t *, size_t);

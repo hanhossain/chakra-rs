@@ -2,6 +2,7 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
+#include <string>
 #include "Backend.h"
 
 namespace IR
@@ -3851,7 +3852,7 @@ Opnd::GetAddrDescription(__out_ecount(count) char16_t *const description, const 
             }
             break;
         case AddrOpndKindSz:
-            WriteToBuffer(&buffer, &n, PAL_wcslen((char16_t const *)address) > 30 ? u"\"%.30s...\"" : u"\"%.30s\"", address);
+            WriteToBuffer(&buffer, &n, std::u16string((char16_t const *)address).length() > 30 ? u"\"%.30s...\"" : u"\"%.30s\"", address);
             break;
         case AddrOpndKindDynamicFloatRef:
             DumpAddress(address, printToConsole, skipMaskedAddress);
