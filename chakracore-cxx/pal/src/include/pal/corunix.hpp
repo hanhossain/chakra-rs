@@ -22,6 +22,7 @@ Abstract:
 #ifndef _CORUNIX_H
 #define _CORUNIX_H
 
+#include <string>
 #include "palinternal.h"
 #include "cclock.hpp"
 
@@ -87,8 +88,7 @@ namespace CorUnix
             const char16_t *pwsz
             )
         {
-            // TODO (hanhossain): can't remove PAL_wcslen until we remove min/max in palinternal.h due to include order
-            SetStringWithLength(pwsz, PAL_wcslen(pwsz));
+            SetStringWithLength(pwsz, std::u16string(pwsz).length());
         };
 
         void

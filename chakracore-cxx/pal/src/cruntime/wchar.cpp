@@ -710,23 +710,6 @@ PAL_wcscpy(
     return start;
 }
 
-
-/*++
-Function:
-  PAL_wcslen
-
-See MSDN or the man page for wcslen.
-
---*/
-__attribute__((no_instrument_function))
-size_t
-PAL_wcslen(
-        const char16_t *string)
-{
-    const std::u16string s16(string);
-    return s16.length();
-}
-
 /*++
 Function:
   PAL_wmemcmp
@@ -1030,7 +1013,7 @@ PAL_wcsncat( char16_t * strDest, const char16_t *strSource, size_t count )
         strDest++;
     }
 
-    StrSourceLength = PAL_wcslen( strSource );
+    StrSourceLength = std::u16string( strSource ).length();
     if ( StrSourceLength < count )
     {
         count = StrSourceLength;
