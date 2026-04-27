@@ -79,7 +79,7 @@ static int Internal_Convertfwrite(CPalThread *pthrCurrent, const void *buffer, s
             free(newBuff);
             return -1;
         }
-        ret = InternalFwrite(newBuff, 1, nsize, stream);
+        ret = std::fwrite(newBuff, 1, nsize, stream);
         if (ret < nsize)
         {
             ERROR("InternalFwrite did not write the whole buffer. Error is %d\n", iError);
@@ -90,7 +90,7 @@ static int Internal_Convertfwrite(CPalThread *pthrCurrent, const void *buffer, s
    }
    else
    {
-        ret = InternalFwrite(buffer, size, count, stream);
+        ret = std::fwrite(buffer, size, count, stream);
         if (ret < count)
         {
             ERROR("InternalFwrite did not write the whole buffer. Error is %d\n", iError);
@@ -920,7 +920,7 @@ int32_t Internal_AddPaddingVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, c
         iLength -= LengthInStr;
     }
 
-    Written = InternalFwrite(OutOriginal, 1, Length, stream->bsdFilePtr);
+    Written = std::fwrite(OutOriginal, 1, Length, stream->bsdFilePtr);
     if (Written < Length)
     {
         ERROR("fwrite() failed with errno == %d\n", errno);
@@ -2136,7 +2136,7 @@ int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, 
         else
         {
 
-            int res = InternalFwrite(Fmt++, 1, 1, stream->bsdFilePtr); /* copy regular chars into buffer */
+            int res = std::fwrite(Fmt++, 1, 1, stream->bsdFilePtr); /* copy regular chars into buffer */
             if (res < 1)
             {
                 ERROR("fwrite() failed with errno == %d\n", errno);

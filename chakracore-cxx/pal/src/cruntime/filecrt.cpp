@@ -179,39 +179,8 @@ PAL_fwrite(
            pvBuffer, nSize, nCount, pf);
     _ASSERTE(pf != NULL);
 
-    nWrittenBytes = InternalFwrite(pvBuffer, nSize, nCount, pf->bsdFilePtr);
+    nWrittenBytes = std::fwrite(pvBuffer, nSize, nCount, pf->bsdFilePtr);
 
     LOGEXIT( "fwrite returning size_t %d\n", nWrittenBytes );
-    return nWrittenBytes;
-}
-
-/*++
-InternalFwrite
-
-Wrapper for fwrite.
-
-Input parameters:
-
-pvBuffer = array of objects to write to the given file stream
-nSize = size of a object in bytes
-nCount = number of objects to write
-f = stream to write characters to
-pnErrorCode = reference to a PAL_FILE's fwrite error code field
-
-Return value:
-    Returns the number of objects written.
---*/
-size_t
-CorUnix::InternalFwrite(
-    const void *pvBuffer,
-    size_t nSize,
-    size_t nCount,
-    FILE *f
-    )
-{
-    size_t nWrittenBytes = 0;
-    _ASSERTE(f != NULL);
-
-    nWrittenBytes = fwrite(pvBuffer, nSize, nCount, f);
     return nWrittenBytes;
 }
