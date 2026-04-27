@@ -87,6 +87,7 @@ namespace CorUnix
             const char16_t *pwsz
             )
         {
+            // TODO (hanhossain): can't remove PAL_wcslen until we remove min/max in palinternal.h due to include order
             SetStringWithLength(pwsz, PAL_wcslen(pwsz));
         };
 
