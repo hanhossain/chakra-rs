@@ -103,7 +103,7 @@ void ConfigParser::ParseConfig(CmdLineArgsParser &parser, const char16_t* strCus
     char16_t configBuffer[MaxTokenSize];
     int index = 0;
 
-#define ReadChar(file) PAL_getc(file)
+#define ReadChar(file) std::getc(file->bsdFilePtr)
 #define UnreadChar(c, file) PAL_ungetc(c, file)
 #define CharType int
 #define EndChar EOF

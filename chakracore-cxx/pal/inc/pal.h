@@ -2126,7 +2126,6 @@ char * _fullpath(char *, const char *, size_t);
 
 size_t PAL_fread(void *, size_t, size_t, PAL_FILE *);
 PAL_FILE * PAL_fopen(const char *, const char *);
-int PAL_getc(PAL_FILE *stream);
 int PAL_ungetc(int c, PAL_FILE *stream);
 int PAL_fwprintf(PAL_FILE *, const char16_t *, ...);
 int PAL_vfwprintf(FILE *, const char16_t *, va_list);

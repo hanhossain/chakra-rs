@@ -396,7 +396,7 @@ PAL_fread(void * buffer, size_t size, size_t count, PAL_FILE * f)
             {
                 for(j=0; j< size; j++)
                 {
-                    if((nChar = PAL_getc(f)) == EOF)
+                    if((nChar = std::getc(f->bsdFilePtr)) == EOF)
                     {
                         nReadBytes = i;
                         goto done;
@@ -414,43 +414,6 @@ PAL_fread(void * buffer, size_t size, size_t count, PAL_FILE * f)
 done:
     LOGEXIT( "fread returning size_t %d\n", nReadBytes );
     return nReadBytes;
-}
-
-/*++
-Function :
-
-    getc
-
-    See MSDN for more details.
---*/
-int
-PAL_getc(PAL_FILE * f)
-{
-    int32_t nRetVal = 0;
-    int32_t temp =0;
-
-    ENTRY( "getc( %p )\n", f );
-
-    _ASSERTE(f != NULL);
-
-    CLEARERR(f);
-
-    nRetVal = getc( f->bsdFilePtr );
-
-    if ( (f->bTextMode) && (nRetVal == '\r') )
-    {
-        if ((temp = getc( f->bsdFilePtr ))== '\n')
-        {
-            nRetVal ='\n';
-        }
-        else if (EOF == ungetc( temp, f->bsdFilePtr ))
-        {
-            ERROR("ungetc operation failed\n");
-        }
-    }
-
-    LOGEXIT( "getc returning %d\n", nRetVal );
-    return nRetVal;
 }
 
 /*++
