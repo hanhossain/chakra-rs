@@ -53,7 +53,7 @@ public:
 
 private:
     char16_t const * filename;
-    PAL_FILE * file;
+    FILE * file;
     bool deleteNonClosed;
 };
 
@@ -92,8 +92,8 @@ template <typename T>
 bool DynamicProfileStorageReaderWriter::ReadArray(T * t, size_t len)
 {
     AssertOrFailFast(file);
-    int32_t pos = ftell(file->bsdFilePtr);
-    if (std::fread(t, sizeof(T), len, file->bsdFilePtr) != len)
+    int32_t pos = ftell(file);
+    if (std::fread(t, sizeof(T), len, file) != len)
     {
         Output::Print(u"ERROR: DynamicProfileStorage: '%s': File corrupted at %d\n", filename, pos);
         Output::Flush();
@@ -150,7 +150,7 @@ template <typename T>
 bool DynamicProfileStorageReaderWriter::WriteArray(T * t, size_t len)
 {
     AssertOrFailFast(file);
-    if (std::fwrite(t, sizeof(T), len, file->bsdFilePtr) != len)
+    if (std::fwrite(t, sizeof(T), len, file) != len)
     {
         Output::Print(u"ERROR: DynamicProfileStorage: Unable to write to file '%s'\n", filename);
         Output::Flush();
@@ -179,31 +179,30 @@ bool DynamicProfileStorageReaderWriter::WriteUtf8String(char16_t const * str)
 bool DynamicProfileStorageReaderWriter::Seek(int32_t offset)
 {
     AssertOrFailFast(file);
-    return fseek(file->bsdFilePtr, offset, SEEK_SET) == 0;
+    return fseek(file, offset, SEEK_SET) == 0;
 }
 
 bool DynamicProfileStorageReaderWriter::SeekToEnd()
 {
     AssertOrFailFast(file);
-    return fseek(file->bsdFilePtr, 0, SEEK_END) == 0;
+    return fseek(file, 0, SEEK_END) == 0;
 }
 
 int32_t DynamicProfileStorageReaderWriter::Size()
 {
     AssertOrFailFast(file);
-    int32_t current = ftell(file->bsdFilePtr);
+    int32_t current = ftell(file);
     SeekToEnd();
-    int32_t end = ftell(file->bsdFilePtr);
-    fseek(file->bsdFilePtr, current, SEEK_SET);
+    int32_t end = ftell(file);
+    fseek(file, current, SEEK_SET);
     return end;
 }
 
 void DynamicProfileStorageReaderWriter::Close(bool deleteFile)
 {
     AssertOrFailFast(file);
-    fflush(file->bsdFilePtr);
-    fclose(file->bsdFilePtr);
-    free(file);
+    fflush(file);
+    fclose(file);
     file = nullptr;
     if (deleteFile)
     {

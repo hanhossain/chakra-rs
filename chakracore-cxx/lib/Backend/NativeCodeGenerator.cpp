@@ -191,8 +191,7 @@ void NativeCodeGenerator::Close()
 #if DBG_DUMP
     if (this->asmFile != nullptr)
     {
-        fclose(this->asmFile->bsdFilePtr);
-        free(this->asmFile);
+        fclose(this->asmFile);
     }
 #endif
 }

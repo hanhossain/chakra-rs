@@ -114,7 +114,7 @@ public:
     InProcCodeGenAllocators* GetCodeGenAllocator(PageAllocator* pageallocator){ return EnsureForegroundAllocators(pageallocator); }
 
 #if DBG_DUMP
-    PAL_FILE * asmFile;
+    FILE * asmFile;
 #endif
 
 #ifdef PROFILE_EXEC
