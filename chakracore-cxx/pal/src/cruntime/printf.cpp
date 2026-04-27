@@ -21,6 +21,7 @@ Revision History:
 
 --*/
 
+#include <string>
 #include "pal/palinternal.h"
 #include "pal/dbgmsg.h"
 #include "pal/cruntime.h"
@@ -595,7 +596,7 @@ static BOOL Internal_ScanfExtractFormatW(const char16_t* *Fmt, char* Out, int iO
     }
 
     /* we'll never need a temp string longer than the original */
-    TempStrPtr = TempStr = (char*) malloc(PAL_wcslen(*Fmt)+1);
+    TempStrPtr = TempStr = (char*) malloc(std::u16string(*Fmt).length()+1);
     if (!TempStr)
     {
         ERROR("malloc failed\n");
@@ -1205,7 +1206,7 @@ int PAL_wvsscanf(const char16_t* Buffer, const char16_t* Format, va_list ap)
                             // caller. So we have to assume that the caller has allocated enough space
                             // to hold either the width specified in the format or the entire input
                             // string plus '\0'.
-                            typeLen = ((Width > 0) ? Width : PAL_wcslen(Buffer)) + 1;
+                            typeLen = ((Width > 0) ? Width : std::u16string(Buffer).length()) + 1;
                         }
                         else if (Type == SCANF_TYPE_CHAR)
                         {
