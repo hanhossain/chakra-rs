@@ -72,12 +72,12 @@ BOOL Internal_AddPaddingA(char* *Out, int32_t Count, char* In,
     }
     if (Flags & PFF_MINUS) /* pad on right */
     {
-        if (strncpy_s(*Out, Count, In, min(LengthInStr + 1, Count)) != SAFECRT_SUCCESS)
+        if (strncpy_s(*Out, Count, In, std::min(LengthInStr + 1, Count)) != SAFECRT_SUCCESS)
         {
             return FALSE;
         }
 
-        *Out += min(LengthInStr, Count);
+        *Out += std::min(LengthInStr, Count);
     }
     if (Padding > 0)
     {
@@ -99,12 +99,12 @@ BOOL Internal_AddPaddingA(char* *Out, int32_t Count, char* In,
     if (!(Flags & PFF_MINUS)) /* put 'In' after padding */
     {
         if (strncpy_s(*Out, Count, In,
-                min(LengthInStr + 1, Count - (*Out - OutOriginal))) != SAFECRT_SUCCESS)
+                std::min(static_cast<long>(LengthInStr + 1), Count - (*Out - OutOriginal))) != SAFECRT_SUCCESS)
         {
             return FALSE;
         }
 
-        *Out += min(LengthInStr, Count - (*Out - OutOriginal));
+        *Out += std::min(static_cast<long>(LengthInStr), Count - (*Out - OutOriginal));
     }
 
     if (LengthInStr + PaddingOriginal > Count)

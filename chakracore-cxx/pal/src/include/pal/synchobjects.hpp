@@ -120,7 +120,7 @@ namespace CorUnix
         ThreadNativeWaitData  m_tnwdNativeData;
         ThreadWaitInfo        m_twiWaitInfo;
 
-        static const int      PendingSignalingsArraySize = 10;
+        static constexpr int      PendingSignalingsArraySize = 10;
         int32_t                  m_lPendingSignalingCount;
         CPalThread *          m_rgpthrPendingSignalings[PendingSignalingsArraySize];
         LIST_ENTRY            m_lePendingSignalingsOverflowList;

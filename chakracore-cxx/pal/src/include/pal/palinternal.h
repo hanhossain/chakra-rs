@@ -234,8 +234,5 @@ BOOL PAL_IsDebuggerPresent();
 #ifndef max
 #define max(a,b)            (((a) > (b)) ? (a) : (b))
 #endif
-#ifndef min
-#define min(a,b)            (((a) < (b)) ? (a) : (b))
-#endif
 
 #endif /* _PAL_INTERNAL_H_ */

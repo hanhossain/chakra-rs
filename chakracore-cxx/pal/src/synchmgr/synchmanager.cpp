@@ -18,6 +18,7 @@ Abstract:
 
 --*/
 
+#include <algorithm>
 #include "synchmanager.hpp"
 #include "pal/file.hpp"
 
@@ -3501,7 +3502,7 @@ namespace CorUnix
                   "[error=%d (%s)]\n", iRet, strerror(iRet));
             if (EAGAIN == iRet && MaxUnavailableResourceRetries >= ++iEagains)
             {
-                poll(NULL, 0, min(100,10*iEagains));
+                poll(NULL, 0, std::min(100,10*iEagains));
                 goto Mutex_retry;
             }
             else if (ENOMEM == iRet)
@@ -3524,7 +3525,7 @@ namespace CorUnix
                   "[error=%d (%s)]\n", iRet, strerror(iRet));
             if (EAGAIN == iRet && MaxUnavailableResourceRetries >= ++iEagains)
             {
-                poll(NULL, 0, min(100,10*iEagains));
+                poll(NULL, 0, std::min(100,10*iEagains));
                 goto Cond_retry;
             }
             else if (ENOMEM == iRet)
@@ -3636,7 +3637,7 @@ namespace CorUnix
         if (0 < m_lPendingSignalingCount)
         {
             int32_t lArrayPendingSignalingCount =
-                min(PendingSignalingsArraySize, m_lPendingSignalingCount);
+                std::min(PendingSignalingsArraySize, m_lPendingSignalingCount);
             int32_t lIdx = 0;
             PAL_ERROR palTempErr;
 
