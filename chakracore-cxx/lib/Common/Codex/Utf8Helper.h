@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include <string>
 #include "Utf8Codex.h"
 
 namespace utf8
@@ -220,7 +221,7 @@ namespace utf8
     {
         size_t unused;
         return WideStringToNarrow<malloc_allocator>(
-            sourceString, PAL_wcslen(sourceString), destStringPtr, &unused);
+            sourceString, std::u16string(sourceString).length(), destStringPtr, &unused);
     }
 
     inline int32_t NarrowStringToWideDynamic(_In_ const char * sourceString, _Out_ char16_t** destStringPtr)
@@ -283,7 +284,7 @@ namespace utf8
         // is used as fallback.
         static size_t Length(const char16_t* src)
         {
-            return PAL_wcslen(src);
+            return std::u16string(src).length();
         }
 
         static int32_t Convert(
