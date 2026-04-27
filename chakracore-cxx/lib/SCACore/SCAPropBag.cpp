@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
+#include <string>
 #include "SCACorePch.h"
 
 
@@ -76,7 +77,7 @@ namespace Js
             BEGIN_JS_RUNTIME_CALL_EX(scriptContext, false)
             {
                 charcount_t len;
-                IfFailGo(ULongLongToUInt(PAL_wcslen(name), &len));
+                IfFailGo(ULongLongToUInt(std::u16string(name).length(), &len));
                 IfFailGo(InternalAdd(name, len, value));
 Error:
                 ; // Fall through
@@ -96,7 +97,7 @@ Error:
         BEGIN_JS_RUNTIME_CALL_EX(scriptContext, false)
         {
             int len;
-            IfFailGo(ULongLongToInt(PAL_wcslen(name), &len));
+            IfFailGo(ULongLongToInt(std::u16string(name).length(), &len));
 
             if (!m_properties->TryGetValue(InternalString(name, len), pValue))
             {
