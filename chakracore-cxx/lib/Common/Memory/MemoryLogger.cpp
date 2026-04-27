@@ -2,6 +2,7 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
+#include <string>
 #include "CommonMemoryPch.h"
 #include "MemoryLogger.h"
 
@@ -27,7 +28,7 @@ namespace Js
         AutoCriticalSection autocs(&m_criticalSection); // TODO: with circular buffer now we can use much granular lock.
 
         // Create a copy of the message.
-        size_t len = PAL_wcslen(msg);
+        size_t len = std::u16string(msg).length();
         char16_t* buf = AnewArray(m_alloc, char16_t, len + 1);
         js_wmemcpy_s(buf, len + 1, msg, len + 1);   // Copy with the NULL-terminator.
 
