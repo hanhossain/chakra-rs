@@ -21,6 +21,7 @@ Revision History:
 
 --*/
 
+#include <string>
 #include "pal/thread.hpp"
 
 #include "pal/palinternal.h"
@@ -537,7 +538,7 @@ WideCharToMultiByte(
     {
         if (cchWideChar == -1)
         {
-            cchWideChar = PAL_wcslen(lpWideCharStr) + 1;
+            cchWideChar = std::u16string(lpWideCharStr).length() + 1;
         }
         retval = UnicodeToUTF8(lpWideCharStr, cchWideChar, lpMultiByteStr, cbMultiByte);
         goto EXIT;
