@@ -53,15 +53,12 @@ BOOL CRTInitStdStreams()
 {
     /* stdout */
     PAL_Stdout.bsdFilePtr = stdout;
-    PAL_Stdout.bTextMode = TRUE;
 
     /* stdin */
     PAL_Stdin.bsdFilePtr = stdin;
-    PAL_Stdin.bTextMode = TRUE;
 
     /* stderr */
     PAL_Stderr.bsdFilePtr = stderr;
-    PAL_Stderr.bTextMode = TRUE;
     return TRUE;
 }
 
@@ -73,18 +70,10 @@ Function :
     Maps Windows file open modes to Unix fopen modes and validates.
 
 --*/
-static char* MapFileOpenModes(char* str , BOOL * bTextMode)
+static char* MapFileOpenModes(char* str)
 {
     char* retval = NULL;
     char* temp = NULL;
-
-    if (NULL == bTextMode)
-    {
-        ASSERT("MapFileOpenModes called with a NULL parameter for bTextMode.\n");
-        return NULL;
-    }
-
-    *bTextMode = TRUE;
 
     if (NULL == str)
     {
@@ -118,13 +107,6 @@ static char* MapFileOpenModes(char* str , BOOL * bTextMode)
     {
         ASSERT("The PAL doesn't support the 'D' flag for _fdopen and fopen.\n");
         return NULL;
-    }
-
-    /* Check if the mode specifies opening in binary.
-    If so, set the bTextMode to false. */
-    if(NULL != strchr(str,'b'))
-    {
-        *bTextMode = FALSE;
     }
 
     retval = (char*)malloc( ( strlen( str ) + 1 ) * sizeof( char ) );
@@ -172,7 +154,6 @@ PAL_fopen(const char * fileName, const char * mode)
     char* supported = NULL;
     char* UnixFileName = NULL;
     struct stat stat_data;
-    BOOL bTextMode = TRUE;
 
     ENTRY("fopen ( fileName=%p (%s) mode=%p (%s))\n", fileName, fileName, mode , mode );
 
@@ -181,7 +162,7 @@ PAL_fopen(const char * fileName, const char * mode)
 
     if ( *mode == 'r' || *mode == 'w' || *mode == 'a' )
     {
-        supported = MapFileOpenModes( (char*)mode,&bTextMode);
+        supported = MapFileOpenModes( (char*)mode);
 
         if ( !supported )
         {
@@ -211,7 +192,6 @@ PAL_fopen(const char * fileName, const char * mode)
         if ( f )
         {
             f->bsdFilePtr =  (FILE*)fopen( UnixFileName, supported );
-            f->bTextMode = bTextMode;
             if ( !f->bsdFilePtr )
             {
                 /* Failed */

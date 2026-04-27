@@ -26,9 +26,6 @@ typedef struct PAL_FILE
 {
     FILE *   bsdFilePtr;     /* The BSD file to be passed to the
                              functions needing it. */
-
-    BOOL     bTextMode;     /* Boolean variable to denote that the
-                               fle is opened in text/binary mode*/
 } PAL_FILE;
 
 #endif //CHAKRA_RS_PAL_FILE_H
