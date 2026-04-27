@@ -93,7 +93,7 @@ bool DynamicProfileStorageReaderWriter::ReadArray(T * t, size_t len)
 {
     AssertOrFailFast(file);
     int32_t pos = ftell(file->bsdFilePtr);
-    if (PAL_fread(t, sizeof(T), len, file) != len)
+    if (std::fread(t, sizeof(T), len, file->bsdFilePtr) != len)
     {
         Output::Print(u"ERROR: DynamicProfileStorage: '%s': File corrupted at %d\n", filename, pos);
         Output::Flush();
