@@ -202,7 +202,7 @@ See MSDN doc.
 __attribute__((no_instrument_function))
 int
 PAL_fwprintf(
-     PAL_FILE *stream,
+     FILE *stream,
      const char16_t *format,
      ...)
 {
@@ -212,7 +212,7 @@ PAL_fwprintf(
     ENTRY("PAL_fwprintf (stream=%p, format=%p (%S))\n", stream, format, format);
 
     va_start(ap, format);
-    Length = PAL_vfwprintf( stream->bsdFilePtr, format, ap);
+    Length = PAL_vfwprintf( stream, format, ap);
     va_end(ap);
 
     LOGEXIT("PAL_fwprintf returns int %d\n", Length);

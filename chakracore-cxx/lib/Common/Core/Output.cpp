@@ -383,12 +383,12 @@ Output::PrintBuffer(const char16_t * buf, size_t size)
         }
         else
         {
-            PAL_fwprintf(Output::s_file, u"%s", buf);
+            PAL_fwprintf(Output::s_file->bsdFilePtr, u"%s", buf);
         }
 
         if(s_outputFile != nullptr && !Output::s_capture)
         {
-            PAL_fwprintf(s_outputFile, u"%s", buf);
+            PAL_fwprintf(s_outputFile->bsdFilePtr, u"%s", buf);
         }
     }
 
@@ -414,7 +414,7 @@ void Output::DirectPrint(char16_t const * string)
 {
     AutoCriticalSection autocs(&s_critsect);
 
-    PAL_fwprintf(PAL_get_stdout(), u"%s", string);
+    PAL_fwprintf(stdout, u"%s", string);
 }
 ///----------------------------------------------------------------------------
 ///

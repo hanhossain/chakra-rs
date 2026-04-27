@@ -2125,7 +2125,7 @@ char * _fullpath(char *, const char *, size_t);
 #endif // PAL_STDCPP_COMPAT
 
 PAL_FILE * PAL_fopen(const char *, const char *);
-int PAL_fwprintf(PAL_FILE *, const char16_t *, ...);
+int PAL_fwprintf(FILE *, const char16_t *, ...);
 int PAL_vfwprintf(FILE *, const char16_t *, va_list);
 
 PAL_FILE * _wfopen(const char16_t *, const char16_t *);
