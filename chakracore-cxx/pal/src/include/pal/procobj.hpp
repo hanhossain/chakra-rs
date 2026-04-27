@@ -98,12 +98,6 @@ namespace CorUnix
         );
 
     PAL_ERROR
-    InitializeProcessCommandLine(
-        char16_t* lpwstrCmdLine,
-        char16_t* lpwstrFullPath
-        );
-
-    PAL_ERROR
     CreateInitialProcessAndThreadObjects(
         CPalThread *pThread
         );
