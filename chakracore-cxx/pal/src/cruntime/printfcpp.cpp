@@ -80,7 +80,11 @@ static int Internal_Convertfwrite(CPalThread *pthrCurrent, const void *buffer, s
             free(newBuff);
             return -1;
         }
-        ret = InternalFwrite(newBuff, 1, nsize, stream, &iError);
+        ret = InternalFwrite(newBuff, 1, nsize, stream);
+        if (ret < nsize)
+        {
+            iError = PAL_FILE_ERROR;
+        }
         if (iError != 0)
         {
             ERROR("InternalFwrite did not write the whole buffer. Error is %d\n", iError);
@@ -91,7 +95,11 @@ static int Internal_Convertfwrite(CPalThread *pthrCurrent, const void *buffer, s
    }
    else
    {
-        ret = InternalFwrite(buffer, size, count, stream, &iError);
+        ret = InternalFwrite(buffer, size, count, stream);
+        if (ret < count)
+        {
+            iError = PAL_FILE_ERROR;
+        }
         if (iError != 0)
         {
             ERROR("InternalFwrite did not write the whole buffer. Error is %d\n", iError);
@@ -921,10 +929,11 @@ int32_t Internal_AddPaddingVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, c
         iLength -= LengthInStr;
     }
 
-    Written = InternalFwrite(OutOriginal, 1, Length, stream->bsdFilePtr, &stream->PALferrorCode);
-    if (stream->PALferrorCode == PAL_FILE_ERROR)
+    Written = InternalFwrite(OutOriginal, 1, Length, stream->bsdFilePtr);
+    if (Written < Length)
     {
         ERROR("fwrite() failed with errno == %d\n", errno);
+        Written = PAL_FILE_ERROR;
     }
 
 Done:
@@ -2137,8 +2146,12 @@ int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, 
         else
         {
 
-            InternalFwrite(Fmt++, 1, 1, stream->bsdFilePtr, &stream->PALferrorCode); /* copy regular chars into buffer */
-            if (stream->PALferrorCode == PAL_FILE_ERROR)
+            int res = InternalFwrite(Fmt++, 1, 1, stream->bsdFilePtr); /* copy regular chars into buffer */
+            if (res < 1)
+            {
+                res = PAL_FILE_ERROR;
+            }
+            if (res == PAL_FILE_ERROR)
             {
                 ERROR("fwrite() failed with errno == %d\n", errno);
                 va_end(ap);

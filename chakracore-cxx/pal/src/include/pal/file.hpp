@@ -206,8 +206,7 @@ namespace CorUnix
         const void *pvBuffer,
         size_t nSize,
         size_t nCount,
-        FILE *f,
-        int32_t *pnErrorCode
+        FILE *f
         );
 
     /*++

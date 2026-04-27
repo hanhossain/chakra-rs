@@ -53,17 +53,14 @@ BOOL CRTInitStdStreams()
 {
     /* stdout */
     PAL_Stdout.bsdFilePtr = stdout;
-    PAL_Stdout.PALferrorCode = PAL_FILE_NOERROR;
     PAL_Stdout.bTextMode = TRUE;
 
     /* stdin */
     PAL_Stdin.bsdFilePtr = stdin;
-    PAL_Stdin.PALferrorCode = PAL_FILE_NOERROR;
     PAL_Stdin.bTextMode = TRUE;
 
     /* stderr */
     PAL_Stderr.bsdFilePtr = stderr;
-    PAL_Stderr.PALferrorCode = PAL_FILE_NOERROR;
     PAL_Stderr.bTextMode = TRUE;
     return TRUE;
 }
@@ -244,7 +241,6 @@ PAL_fopen(const char * fileName, const char * mode)
         if ( f )
         {
             f->bsdFilePtr =  (FILE*)fopen( UnixFileName, supported );
-            f->PALferrorCode = PAL_FILE_NOERROR;
             f->bTextMode = bTextMode;
             if ( !f->bsdFilePtr )
             {

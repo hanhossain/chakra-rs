@@ -27,9 +27,6 @@ typedef struct PAL_FILE
     FILE *   bsdFilePtr;     /* The BSD file to be passed to the
                              functions needing it. */
 
-    int32_t      PALferrorCode;  /* The ferror code that fwrite sets,
-                             incase of error */
-
     BOOL     bTextMode;     /* Boolean variable to denote that the
                                fle is opened in text/binary mode*/
 #if defined(__linux__)

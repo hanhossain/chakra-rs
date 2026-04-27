@@ -179,7 +179,11 @@ PAL_fwrite(
            pvBuffer, nSize, nCount, pf);
     _ASSERTE(pf != NULL);
 
-    nWrittenBytes = InternalFwrite(pvBuffer, nSize, nCount, pf->bsdFilePtr, &pf->PALferrorCode);
+    nWrittenBytes = InternalFwrite(pvBuffer, nSize, nCount, pf->bsdFilePtr);
+    if (nWrittenBytes < nCount)
+    {
+        nWrittenBytes = PAL_FILE_ERROR;
+    }
 
     LOGEXIT( "fwrite returning size_t %d\n", nWrittenBytes );
     return nWrittenBytes;
@@ -206,21 +210,12 @@ CorUnix::InternalFwrite(
     const void *pvBuffer,
     size_t nSize,
     size_t nCount,
-    FILE *f,
-    int32_t *pnErrorCode
+    FILE *f
     )
 {
     size_t nWrittenBytes = 0;
     _ASSERTE(f != NULL);
 
     nWrittenBytes = fwrite(pvBuffer, nSize, nCount, f);
-
-    // Make sure no error occurred.
-    if ( nWrittenBytes < nCount )
-    {
-        // Set the FILE* error code
-        *pnErrorCode = PAL_FILE_ERROR;
-    }
-
     return nWrittenBytes;
 }
