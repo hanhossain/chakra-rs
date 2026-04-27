@@ -2,6 +2,7 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
+#include <string>
 #include "Backend.h"
 
 NativeCodeData::NativeCodeData(DataChunk * chunkList)
@@ -155,7 +156,7 @@ NativeCodeData::GetDataDescription(void* data, JitArenaAllocator * alloc)
 #else
     swprintf_s(buf, u"NativeCodeData: index: %x, len: %x, offset: +%x", chunk->allocIndex, chunk->len, chunk->offset);
 #endif
-    auto len = PAL_wcslen(buf) + 1;
+    auto len = std::u16string(buf).length() + 1;
     auto desc = JitAnewArray(alloc, char16_t, len);
     wcscpy_s(desc, len, buf);
     return desc;

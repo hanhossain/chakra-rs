@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
+#include <string>
 #include "Backend.h"
 
 #define INLINEEMETAARG_COUNT 3
@@ -4281,7 +4282,7 @@ struct BvToDump
     BvToDump(const BVSparse<JitArenaAllocator>* bv, const char16_t* tag) :
         bv(bv),
         tag(tag),
-        tagLen(bv ? PAL_wcslen(tag) : 0)
+        tagLen(bv ? std::u16string(tag).length() : 0)
     {}
 };
 
