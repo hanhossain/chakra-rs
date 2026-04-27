@@ -1326,7 +1326,7 @@ int JsFgets(char* buf, int size, PAL_FILE* file)
             break;
         }
         if (crflag) {           // \r not followed by \n ends line at the \r
-            PAL_ungetc(c, file);
+            std::ungetc(c, file->bsdFilePtr);
             break;              // and overwrite c in buf with \0
         }
         crflag = (c == '\r');

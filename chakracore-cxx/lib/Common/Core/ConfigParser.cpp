@@ -104,7 +104,7 @@ void ConfigParser::ParseConfig(CmdLineArgsParser &parser, const char16_t* strCus
     int index = 0;
 
 #define ReadChar(file) std::getc(file->bsdFilePtr)
-#define UnreadChar(c, file) PAL_ungetc(c, file)
+#define UnreadChar(c, file) std::ungetc(c, file->bsdFilePtr)
 #define CharType int
 #define EndChar EOF
 

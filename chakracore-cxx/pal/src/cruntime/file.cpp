@@ -379,27 +379,3 @@ done:
     LOGEXIT( "fread returning size_t %d\n", nReadBytes );
     return nReadBytes;
 }
-
-/*++
-Function :
-
-    ungetc
-
-    See MSDN for more details.
---*/
-int
-PAL_ungetc(int c, PAL_FILE * f)
-{
-    int32_t nRetVal = 0;
-
-    ENTRY( "ungetc( %c, %p )\n", c, f );
-
-    _ASSERTE(f != NULL);
-
-    CLEARERR(f);
-
-    nRetVal = ungetc( c, f->bsdFilePtr );
-
-    LOGEXIT( "ungetc returning %d\n", nRetVal );
-    return nRetVal;
-}
