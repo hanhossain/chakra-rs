@@ -2,6 +2,7 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
+#include <string>
 #include "CommonDataStructuresPch.h"
 #include "Option.h"
 #include "ImmutableList.h"
@@ -42,7 +43,7 @@ template<int chunkSize>
 void regex::ImmutableStringBuilder<chunkSize>::AppendWithCopy(_In_z_ const char16_t* str)
 {
     AssertMsg(str != nullptr, "str != nullptr");
-    size_t strLength = PAL_wcslen(str) + 1; // include null-terminated
+    size_t strLength = std::u16string(str).length() + 1; // include null-terminated
 
     char16_t* buffer = HeapNewNoThrowArray(char16_t, strLength);
     IfNullThrowOutOfMemory(buffer);
