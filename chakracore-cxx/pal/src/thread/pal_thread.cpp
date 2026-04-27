@@ -22,6 +22,7 @@ Abstract:
 
 --*/
 
+#include <algorithm>
 #include "pal/dbgmsg.h"
 SET_DEFAULT_DEBUG_CHANNEL(THREAD); // some headers have code with asserts, so do this first
 
@@ -2267,7 +2268,7 @@ static void GetInternalStackLimit(pthread_t thread, size_t *highLimit, size_t *l
     if (pthread_main_np())
     {
         // https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/Multithreading/CreatingThreads/CreatingThreads.html
-        stack = max(8 * 1024 * 1024, stack);
+        stack = std::max(static_cast<size_t>(8 * 1024 * 1024), stack);
     }
 
     *highLimit = (size_t)pthread_get_stackaddr_np(thread);
