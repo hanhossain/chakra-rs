@@ -35,11 +35,6 @@ Abstract:
 
 SET_DEFAULT_DEBUG_CHANNEL(CRT);
 
-/* Global variables storing the std streams.*/
-PAL_FILE PAL_Stdout __attribute__((init_priority(200)));
-PAL_FILE PAL_Stdin __attribute__((init_priority(200)));
-PAL_FILE PAL_Stderr __attribute__((init_priority(200)));
-
 /*++
 
 Function:
@@ -51,14 +46,6 @@ Function:
 --*/
 BOOL CRTInitStdStreams()
 {
-    /* stdout */
-    PAL_Stdout.bsdFilePtr = stdout;
-
-    /* stdin */
-    PAL_Stdin.bsdFilePtr = stdin;
-
-    /* stderr */
-    PAL_Stderr.bsdFilePtr = stderr;
     return TRUE;
 }
 
@@ -147,10 +134,10 @@ Function :
 see MSDN doc.
 
 --*/
-PAL_FILE *
+FILE *
 PAL_fopen(const char * fileName, const char * mode)
 {
-    PAL_FILE *f = NULL;
+    FILE *f = nullptr;
     char* supported = NULL;
     char* UnixFileName = NULL;
     struct stat stat_data;
@@ -188,21 +175,7 @@ PAL_fopen(const char * fileName, const char * mode)
             goto done;
         }
 
-        f = (PAL_FILE*)malloc( sizeof( PAL_FILE ) );
-        if ( f )
-        {
-            f->bsdFilePtr =  (FILE*)fopen( UnixFileName, supported );
-            if ( !f->bsdFilePtr )
-            {
-                /* Failed */
-                free( f );
-                f = NULL;
-            }
-        }
-        else
-        {
-            ERROR( "Unable to allocate memory to the PAL_FILE wrapper\n" );
-        }
+        f = (FILE*)fopen( UnixFileName, supported );
     }
     else
     {
@@ -225,14 +198,14 @@ Function:
 see MSDN doc.
 
 --*/
-PAL_FILE *
+FILE *
 _wfopen(
     const char16_t *fileName,
     const char16_t *mode)
 {
     char mbFileName[ _MAX_PATH ];
     char mbMode[ 10 ];
-    PAL_FILE * filePtr = NULL;
+    FILE * filePtr = NULL;
 
     ENTRY("_wfopen(fileName:%p (%S), mode:%p (%S))\n", fileName, fileName, mode, mode);
 
@@ -268,11 +241,9 @@ Function
 
     Returns the stdout stream.
 --*/
-PAL_FILE * PAL_get_stdout()
+FILE * PAL_get_stdout()
 {
-    ENTRY("PAL_get_stdout\n");
-    LOGEXIT("PAL_get_stdout returns PAL_FILE * %p\n", &PAL_Stdout );
-    return &PAL_Stdout;
+    return stdout;
 }
 
 /*++
@@ -281,11 +252,9 @@ Function
 
     Returns the stdin stream.
 --*/
-PAL_FILE * PAL_get_stdin()
+FILE * PAL_get_stdin()
 {
-    ENTRY("PAL_get_stdin\n");
-    LOGEXIT("PAL_get_stdin returns PAL_FILE * %p\n", &PAL_Stdin );
-    return &PAL_Stdin;
+    return stdin;
 }
 
 /*++
@@ -294,9 +263,7 @@ Function
 
     Returns the stderr stream.
 --*/
-PAL_FILE * PAL_get_stderr()
+FILE * PAL_get_stderr()
 {
-    ENTRY("PAL_get_stderr\n");
-    LOGEXIT("PAL_get_stderr returns PAL_FILE * %p\n", &PAL_Stderr );
-    return &PAL_Stderr;
+    return stderr;
 }

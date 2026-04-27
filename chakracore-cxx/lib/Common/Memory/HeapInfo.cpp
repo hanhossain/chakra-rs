@@ -195,7 +195,7 @@ void HeapInfo::ValidPointersMap<TBlockAttributes>::GenerateValidPointersMap(Vali
 
 #ifdef ENABLE_TEST_HOOKS
 template <>
-int32_t HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::GenerateValidPointersMapForBlockType(PAL_FILE* file)
+int32_t HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::GenerateValidPointersMapForBlockType(FILE* file)
 {
 #define IfErrorGotoCleanup(result) if ((result) < 0) { hr = E_FAIL; goto cleanup; }
 
@@ -215,60 +215,60 @@ int32_t HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::GenerateVali
     }
     GenerateValidPointersMap(valid, *invalid, *blockMap);
 
-    std::println(file->bsdFilePtr, "#if USE_VPM_TABLE");
-    std::println(file->bsdFilePtr, "const ushort HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::validPointersBuffer[HeapConstants::BucketCount][HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::rowSize] = \n{{");
+    std::println(file, "#if USE_VPM_TABLE");
+    std::println(file, "const ushort HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::validPointersBuffer[HeapConstants::BucketCount][HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::rowSize] = \n{{");
     // Generate the full buffer.
     for (unsigned i = 0; i < HeapConstants::BucketCount; ++i)
     {
-        std::print(file->bsdFilePtr, "    {{\n        ");
+        std::print(file, "    {{\n        ");
         for (unsigned j = 0; j < rowSize; ++j)
         {
-            std::print(file->bsdFilePtr, "0x{:4X}{}", (*valid)[i][j], j < rowSize - 1 ? ", " : "");
+            std::print(file, "0x{:4X}{}", (*valid)[i][j], j < rowSize - 1 ? ", " : "");
         }
-        std::println(file->bsdFilePtr, "\n    }}{}", i < HeapConstants::BucketCount - 1 ? "," : "");
+        std::println(file, "\n    }}{}", i < HeapConstants::BucketCount - 1 ? "," : "");
     }
-    std::println(file->bsdFilePtr, "}};");
-    std::println(file->bsdFilePtr, "#endif // USE_VPM_TABLE\n");
+    std::println(file, "}};");
+    std::println(file, "#endif // USE_VPM_TABLE\n");
 
     // Generate the invalid bitvectors.
     std::println(
-        file->bsdFilePtr,
+        file,
         "const BVUnit HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::invalidBitsData[HeapConstants::BucketCount][SmallHeapBlockT<SmallAllocationBlockAttributes>::SmallHeapBlockBitVector::wordCount] = {{");
     for (unsigned i = 0; i < HeapConstants::BucketCount; ++i)
     {
-        std::print(file->bsdFilePtr, "    {{\n        ");
+        std::print(file, "    {{\n        ");
 
         for (unsigned j = 0; j < (*invalid)[i].wordCount; ++j)
         {
-            std::print(file->bsdFilePtr, "0x{:p}{}", static_cast<const void *>(&(*invalid)[i].GetRawData()[j]), j < (*invalid)[i].wordCount - 1 ? ", " : "");
+            std::print(file, "0x{:p}{}", static_cast<const void *>(&(*invalid)[i].GetRawData()[j]), j < (*invalid)[i].wordCount - 1 ? ", " : "");
         }
-        std::println(file->bsdFilePtr, "\n    }}{}", i < HeapConstants::BucketCount - 1 ? "," : "");
+        std::println(file, "\n    }}{}", i < HeapConstants::BucketCount - 1 ? "," : "");
     }
-        std::println(file->bsdFilePtr, "}};");
-        std::println(file->bsdFilePtr, "// The following is used to construct the InvalidBitsTable statically without forcing BVStatic to be an aggregate");
-        std::println(file->bsdFilePtr, "const HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::InvalidBitsTable * const HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::invalidBitsBuffers =");
-        std::println(file->bsdFilePtr, "    reinterpret_cast<const HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::InvalidBitsTable *>(&HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::invalidBitsData);");
+        std::println(file, "}};");
+        std::println(file, "// The following is used to construct the InvalidBitsTable statically without forcing BVStatic to be an aggregate");
+        std::println(file, "const HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::InvalidBitsTable * const HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::invalidBitsBuffers =");
+        std::println(file, "    reinterpret_cast<const HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::InvalidBitsTable *>(&HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::invalidBitsData);");
 
     // Generate the block map table
     std::println(
-        file->bsdFilePtr,
+        file,
         "const SmallHeapBlockT<SmallAllocationBlockAttributes>::BlockInfo  HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::blockInfoBuffer[SmallAllocationBlockAttributes::BucketCount][SmallAllocationBlockAttributes::PageCount] = {{");
     for (unsigned i = 0; i < HeapConstants::BucketCount; ++i)
     {
-        std::println(file->bsdFilePtr, "    // Bucket: {}, Size: {}", i, (int) (HeapConstants::ObjectGranularity + (i * SmallAllocationBlockAttributes::BucketGranularity)));
-        std::println(file->bsdFilePtr, "    {{");
+        std::println(file, "    // Bucket: {}, Size: {}", i, (int) (HeapConstants::ObjectGranularity + (i * SmallAllocationBlockAttributes::BucketGranularity)));
+        std::println(file, "    {{");
 
         for (unsigned j = 0; j < SmallAllocationBlockAttributes::PageCount; ++j)
         {
-            std::print(file->bsdFilePtr, "        {{ ");
+            std::print(file, "        {{ ");
 
-            std::print(file->bsdFilePtr, "0x{:4X}, 0x{:4X}", (*blockMap)[i][j].lastObjectIndexOnPage, (*blockMap)[i][j].pageObjectCount);
-            std::println(file->bsdFilePtr, " }}");
+            std::print(file, "0x{:4X}, 0x{:4X}", (*blockMap)[i][j].lastObjectIndexOnPage, (*blockMap)[i][j].pageObjectCount);
+            std::println(file, " }}");
         }
-        std::println(file->bsdFilePtr, "    }}{}", (i < HeapConstants::BucketCount - 1 ? "," : ""));
+        std::println(file, "    }}{}", (i < HeapConstants::BucketCount - 1 ? "," : ""));
     }
 
-    std::println(file->bsdFilePtr, "}};");
+    std::println(file, "}};");
 
 cleanup:
 #undef IfErrorGotoCleanup
@@ -278,7 +278,7 @@ cleanup:
 }
 
 template <>
-int32_t HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::GenerateValidPointersMapForBlockType(PAL_FILE* file)
+int32_t HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::GenerateValidPointersMapForBlockType(FILE* file)
 {
 #define IfErrorGotoCleanup(result) if ((result) < 0) { hr = E_FAIL; goto cleanup; }
 
@@ -298,61 +298,61 @@ int32_t HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::GenerateVal
     }
     GenerateValidPointersMap(valid, *invalid, *blockMap);
 
-    std::println(file->bsdFilePtr, "#if USE_VPM_TABLE");
-    std::println(file->bsdFilePtr, "const ushort HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::validPointersBuffer[MediumAllocationBlockAttributes::BucketCount][HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::rowSize] = \n{{");
+    std::println(file, "#if USE_VPM_TABLE");
+    std::println(file, "const ushort HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::validPointersBuffer[MediumAllocationBlockAttributes::BucketCount][HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::rowSize] = \n{{");
     // Generate the full buffer.
     for (unsigned i = 0; i < HeapConstants::MediumBucketCount; ++i)
     {
-        std::print(file->bsdFilePtr, "    {{\n        ");
+        std::print(file, "    {{\n        ");
         for (unsigned j = 0; j < rowSize; ++j)
         {
-            std::print(file->bsdFilePtr, "0x{:4X}{}", (*valid)[i][j], (j < rowSize - 1) ? ", " : "");
+            std::print(file, "0x{:4X}{}", (*valid)[i][j], (j < rowSize - 1) ? ", " : "");
         }
-        std::println(file->bsdFilePtr, "\n    }}{}", (i < HeapConstants::MediumBucketCount - 1 ? "," : ""));
+        std::println(file, "\n    }}{}", (i < HeapConstants::MediumBucketCount - 1 ? "," : ""));
     }
-    std::println(file->bsdFilePtr, "}};");
-    std::println(file->bsdFilePtr, "#endif // USE_VPM_TABLE\n");
+    std::println(file, "}};");
+    std::println(file, "#endif // USE_VPM_TABLE\n");
 
     // Generate the invalid bitvectors.
     std::println(
-        file->bsdFilePtr,
+        file,
         "const BVUnit HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::invalidBitsData[MediumAllocationBlockAttributes::BucketCount][SmallHeapBlockT<MediumAllocationBlockAttributes>::SmallHeapBlockBitVector::wordCount] = {{");
     for (unsigned i = 0; i < HeapConstants::MediumBucketCount; ++i)
     {
-        std::print(file->bsdFilePtr, "    {{\n        ");
+        std::print(file, "    {{\n        ");
 
         for (unsigned j = 0; j < (*invalid)[i].wordCount; ++j)
         {
-            std::print(file->bsdFilePtr, "0x{:p}{}", static_cast<const void *>(&(*invalid)[i].GetRawData()[j]), j < (*invalid)[i].wordCount - 1 ? ", " : "");
+            std::print(file, "0x{:p}{}", static_cast<const void *>(&(*invalid)[i].GetRawData()[j]), j < (*invalid)[i].wordCount - 1 ? ", " : "");
         }
-        std::println(file->bsdFilePtr, "\n    }}{}", (i < HeapConstants::MediumBucketCount - 1 ? "," : ""));
+        std::println(file, "\n    }}{}", (i < HeapConstants::MediumBucketCount - 1 ? "," : ""));
     }
-        std::println(file->bsdFilePtr, "}};");
-        std::println(file->bsdFilePtr, "// The following is used to construct the InvalidBitsTable statically without forcing BVStatic to be an aggregate");
-        std::println(file->bsdFilePtr, "const HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::InvalidBitsTable * const HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::invalidBitsBuffers =");
-        std::println(file->bsdFilePtr, "    reinterpret_cast<const HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::InvalidBitsTable *>(&HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::invalidBitsData);");
+        std::println(file, "}};");
+        std::println(file, "// The following is used to construct the InvalidBitsTable statically without forcing BVStatic to be an aggregate");
+        std::println(file, "const HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::InvalidBitsTable * const HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::invalidBitsBuffers =");
+        std::println(file, "    reinterpret_cast<const HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::InvalidBitsTable *>(&HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::invalidBitsData);");
 
     // Generate the block map table
     std::println(
-        file->bsdFilePtr,
+        file,
         "const SmallHeapBlockT<MediumAllocationBlockAttributes>::BlockInfo  HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::blockInfoBuffer[MediumAllocationBlockAttributes::BucketCount][MediumAllocationBlockAttributes::PageCount] = {{");
 
     for (unsigned i = 0; i < HeapConstants::MediumBucketCount; ++i)
     {
-        std::println(file->bsdFilePtr, "    // Bucket: {}, Size: {}", i, (int)(HeapConstants::MaxSmallObjectSize + ((i + 1) * MediumAllocationBlockAttributes::BucketGranularity)));
-        std::println(file->bsdFilePtr, "    {{");
+        std::println(file, "    // Bucket: {}, Size: {}", i, (int)(HeapConstants::MaxSmallObjectSize + ((i + 1) * MediumAllocationBlockAttributes::BucketGranularity)));
+        std::println(file, "    {{");
 
         for (unsigned j = 0; j < MediumAllocationBlockAttributes::PageCount; ++j)
         {
-            std::print(file->bsdFilePtr, "        {{ ");
+            std::print(file, "        {{ ");
 
-            std::print(file->bsdFilePtr, "0x{:4X}, 0x{:4X}", (*blockMap)[i][j].lastObjectIndexOnPage, (*blockMap)[i][j].pageObjectCount);
-            std::println(file->bsdFilePtr, " }}{}", (j < MediumAllocationBlockAttributes::PageCount - 1 ? "," : ""));
+            std::print(file, "0x{:4X}, 0x{:4X}", (*blockMap)[i][j].lastObjectIndexOnPage, (*blockMap)[i][j].pageObjectCount);
+            std::println(file, " }}{}", (j < MediumAllocationBlockAttributes::PageCount - 1 ? "," : ""));
         }
-        std::println(file->bsdFilePtr, "    }}{}", (i < HeapConstants::MediumBucketCount - 1 ? "," : ""));
+        std::println(file, "    }}{}", (i < HeapConstants::MediumBucketCount - 1 ? "," : ""));
     }
 
-    std::println(file->bsdFilePtr, "}};");
+    std::println(file, "}};");
 
 cleanup:
 #undef IfErrorGotoCleanup
@@ -366,7 +366,7 @@ int32_t HeapInfo::ValidPointersMap<TBlockAttributes>::GenerateValidPointersMapHe
 {
     Assert(vpmFullPath != nullptr);
     int32_t hr = E_FAIL;
-    PAL_FILE * file = nullptr;
+    FILE * file = nullptr;
 
     if (_wfopen_s(&file, vpmFullPath, u"w") == 0 && file != nullptr)
     {
@@ -378,17 +378,16 @@ int32_t HeapInfo::ValidPointersMap<TBlockAttributes>::GenerateValidPointersMapHe
             "// Generated via jshost -GenerateValidPointersMapHeader\n"
             "// Target platform: 64bit - amd64 & arm64\n"
             "#if USE_STATIC_VPM\n";
-        std::println(file->bsdFilePtr, "{}", header);
+        std::println(file, "{}", header);
         hr = ValidPointersMap<SmallAllocationBlockAttributes>::GenerateValidPointersMapForBlockType(file);
         if (SUCCEEDED(hr))
         {
             hr = ValidPointersMap<MediumAllocationBlockAttributes>::GenerateValidPointersMapForBlockType(file);
         }
 
-        std::println(file->bsdFilePtr, "#endif // USE_STATIC_VPM");
+        std::println(file, "#endif // USE_STATIC_VPM");
 
-        fclose(file->bsdFilePtr);
-        free(file);
+        fclose(file);
     }
 
     return hr;

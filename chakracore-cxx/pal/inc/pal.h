@@ -2124,17 +2124,17 @@ char * _fullpath(char *, const char *, size_t);
 
 #endif // PAL_STDCPP_COMPAT
 
-PAL_FILE * PAL_fopen(const char *, const char *);
+FILE * PAL_fopen(const char *, const char *);
 int PAL_fwprintf(FILE *, const char16_t *, ...);
 int PAL_vfwprintf(FILE *, const char16_t *, va_list);
 
-PAL_FILE * _wfopen(const char16_t *, const char16_t *);
+FILE * _wfopen(const char16_t *, const char16_t *);
 
 /* Maximum value that can be returned by the rand function. */
 
-PAL_FILE * PAL_get_stdout();
-PAL_FILE * PAL_get_stdin();
-PAL_FILE * PAL_get_stderr();
+FILE * PAL_get_stdout();
+FILE * PAL_get_stdin();
+FILE * PAL_get_stderr();
 
 #define EXCEPTION_CONTINUE_SEARCH   0
 #define EXCEPTION_EXECUTE_HANDLER   1

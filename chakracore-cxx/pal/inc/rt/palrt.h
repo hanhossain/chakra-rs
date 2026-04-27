@@ -746,9 +746,9 @@ inline int _snwprintf_unsafe(char16_t *_Dst, size_t _SizeInWords, size_t _Count,
     return ret;
 }
 
-inline errno_t _wfopen_unsafe(PAL_FILE * *ff, const char16_t *fileName, const char16_t *mode)
+inline errno_t _wfopen_unsafe(FILE * *ff, const char16_t *fileName, const char16_t *mode)
 {
-    PAL_FILE *result = _wfopen(fileName, mode);
+    FILE *result = _wfopen(fileName, mode);
     if(result == 0) {
         return 1;
     } else {
@@ -757,9 +757,9 @@ inline errno_t _wfopen_unsafe(PAL_FILE * *ff, const char16_t *fileName, const ch
     }
 }
 
-inline errno_t _fopen_unsafe(PAL_FILE * *ff, const char *fileName, const char *mode)
+inline errno_t _fopen_unsafe(FILE * *ff, const char *fileName, const char *mode)
 {
-  PAL_FILE *result = PAL_fopen(fileName, mode);
+  FILE *result = PAL_fopen(fileName, mode);
   if(result == 0) {
     return 1;
   } else {

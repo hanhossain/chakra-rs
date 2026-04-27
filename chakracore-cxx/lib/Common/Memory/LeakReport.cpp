@@ -26,7 +26,7 @@ CriticalSection LeakReport::s_cs;
 uint32_t LeakReport::nestedSectionCount = 0;
 uint32_t LeakReport::nestedRedirectOutputCount = 0;
 AutoFILE LeakReport::file;
-PAL_FILE * oldFile = nullptr;
+FILE * oldFile = nullptr;
 bool LeakReport::openReportFileFailed = false;
 LeakReport::UrlRecord * LeakReport::urlRecordHead = nullptr;
 LeakReport::UrlRecord * LeakReport::urlRecordTail = nullptr;
@@ -59,8 +59,8 @@ LeakReport::EndRedirectOutput()
 
     if (nestedRedirectOutputCount == 0)
     {
-        fflush(file->bsdFilePtr);
-        PAL_FILE * tmpFile = Output::SetFile(oldFile);
+        fflush(file);
+        FILE * tmpFile = Output::SetFile(oldFile);
         Assert(tmpFile == file);
         oldFile = nullptr;
     }
@@ -88,7 +88,7 @@ LeakReport::StartSection(char16_t const * msg, va_list argptr)
 
 
     Print(u"--------------------------------------------------------------------------------\n");
-    PAL_vfwprintf(file->bsdFilePtr, msg, argptr);
+    PAL_vfwprintf(file, msg, argptr);
     Print(u"\n");
     Print(u"--------------------------------------------------------------------------------\n");
 }
@@ -115,7 +115,7 @@ LeakReport::Print(char16_t const * msg, ...)
 
     va_list argptr;
     va_start(argptr, msg);
-    PAL_vfwprintf(file->bsdFilePtr, msg, argptr);
+    PAL_vfwprintf(file, msg, argptr);
     va_end(argptr);
 }
 

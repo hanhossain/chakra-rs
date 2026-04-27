@@ -15,17 +15,4 @@ typedef struct __sFILE FILE;
 typedef struct _IO_FILE FILE;
 #endif
 
-/*++
-
-struct PAL_FILE.
-Used to mimic the behavior of windows.
-fwrite under windows can set the ferror flag,
-under BSD fwrite doesn't.
---*/
-typedef struct PAL_FILE
-{
-    FILE *   bsdFilePtr;     /* The BSD file to be passed to the
-                             functions needing it. */
-} PAL_FILE;
-
 #endif //CHAKRA_RS_PAL_FILE_H

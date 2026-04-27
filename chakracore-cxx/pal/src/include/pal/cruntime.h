@@ -169,11 +169,6 @@ Returns TRUE if c is a control character.
 int PAL_iswpunct(char16_t c);
 #endif  // defined(__APPLE__)
 
-/* Global variables storing the std streams. Defined in cruntime/file.c. */
-extern PAL_FILE PAL_Stdout;
-extern PAL_FILE PAL_Stdin; 
-extern PAL_FILE PAL_Stderr;
-
 /*++
 
 Functio:
