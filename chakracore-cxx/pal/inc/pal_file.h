@@ -29,10 +29,6 @@ typedef struct PAL_FILE
 
     BOOL     bTextMode;     /* Boolean variable to denote that the
                                fle is opened in text/binary mode*/
-#if defined(__linux__)
-    BOOL     bWriteOnlyMode;/* Boolean variable to denote that the
-                               fle is opened in write-only mode*/
-#endif //defined(__linux__)
 } PAL_FILE;
 
 #endif //CHAKRA_RS_PAL_FILE_H

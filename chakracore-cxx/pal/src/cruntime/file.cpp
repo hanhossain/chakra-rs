@@ -157,36 +157,6 @@ static char* MapFileOpenModes(char* str , BOOL * bTextMode)
     return retval;
 }
 
-#if defined(__linux__)
-/*++
-Function :
-
-    WriteOnlyMode
-
-    Returns TRUE to if a file is opened in write-only mode,
-    Otherwise FALSE.
-
---*/
-static BOOL WriteOnlyMode(FILE* pFile)
-{
-    int32_t fd, flags;
-
-    if (pFile != NULL)
-    {
-        fd = fileno(pFile);
-        if ((flags = fcntl(fd, F_GETFL)) >= 0)
-        {
-            if ((flags & O_ACCMODE) == O_WRONLY)
-            {
-                return TRUE;
-            }
-        }
-    }
-    return FALSE;
-}
-#endif //defined(__linux__)
-
-
 /*++
 
 Function :
@@ -248,12 +218,6 @@ PAL_fopen(const char * fileName, const char * mode)
                 free( f );
                 f = NULL;
             }
-#if defined(__linux__)
-            else
-            {
-                f->bWriteOnlyMode = WriteOnlyMode(f->bsdFilePtr);
-            }
-#endif //defined(__linux__)
         }
         else
         {
@@ -432,20 +396,9 @@ PAL_ungetc(int c, PAL_FILE * f)
 
     _ASSERTE(f != NULL);
 
-#if defined(__linux__)
-    /* On some Unix platform such as Solaris, ungetc does not return EOF
-       on write-only file. */
-    if (f->bWriteOnlyMode)
-    {
-        nRetVal = EOF;
-    }
-    else
-#endif //defined(__linux__)
-    {
-        CLEARERR(f);
+    CLEARERR(f);
 
-        nRetVal = ungetc( c, f->bsdFilePtr );
-    }
+    nRetVal = ungetc( c, f->bsdFilePtr );
 
     LOGEXIT( "ungetc returning %d\n", nRetVal );
     return nRetVal;
