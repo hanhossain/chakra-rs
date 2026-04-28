@@ -2130,12 +2130,6 @@ int PAL_vfwprintf(FILE *, const char16_t *, va_list);
 
 FILE * _wfopen(const char16_t *, const char16_t *);
 
-/* Maximum value that can be returned by the rand function. */
-
-FILE * PAL_get_stdout();
-FILE * PAL_get_stdin();
-FILE * PAL_get_stderr();
-
 #define EXCEPTION_CONTINUE_SEARCH   0
 #define EXCEPTION_EXECUTE_HANDLER   1
 #define EXCEPTION_CONTINUE_EXECUTION -1

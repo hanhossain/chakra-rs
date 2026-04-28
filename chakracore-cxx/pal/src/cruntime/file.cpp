@@ -234,36 +234,3 @@ _wfopen(
     LOGEXIT("_wfopen returning FILE* %p\n", filePtr);
     return filePtr;
 }
-
-/*++
-Function
-    PAL_get_stdout.
-
-    Returns the stdout stream.
---*/
-FILE * PAL_get_stdout()
-{
-    return stdout;
-}
-
-/*++
-Function
-    PAL_get_stdin.
-
-    Returns the stdin stream.
---*/
-FILE * PAL_get_stdin()
-{
-    return stdin;
-}
-
-/*++
-Function
-    PAL_get_stderr.
-
-    Returns the stderr stream.
---*/
-FILE * PAL_get_stderr()
-{
-    return stderr;
-}
