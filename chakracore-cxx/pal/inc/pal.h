@@ -36,7 +36,7 @@ Abstract:
 #ifndef __PAL_H__
 #define __PAL_H__
 
-#include "pal_file.h"
+#include <cstdio>
 
 #ifdef PAL_STDCPP_COMPAT
 #include <stddef.h>

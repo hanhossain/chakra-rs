@@ -22,7 +22,6 @@ Abstract:
 #ifndef _PAL_CRUNTIME_H_
 #define _PAL_CRUNTIME_H_
 
-#include "pal_file.h"
 #include <string.h>
 #include <stdarg.h>
 #include <pthread.h>
