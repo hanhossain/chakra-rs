@@ -22,7 +22,6 @@ Abstract:
 #ifndef _PAL_CRUNTIME_H_
 #define _PAL_CRUNTIME_H_
 
-#include "pal_file.h"
 #include <string.h>
 #include <stdarg.h>
 #include <pthread.h>
@@ -168,17 +167,6 @@ Returns TRUE if c is a control character.
 --*/
 int PAL_iswpunct(char16_t c);
 #endif  // defined(__APPLE__)
-
-enum CRT_ERROR_CODES
-{
-    PAL_FILE_NOERROR = 0,
-    PAL_FILE_ERROR
-};
-
-/* Global variables storing the std streams. Defined in cruntime/file.c. */
-extern PAL_FILE PAL_Stdout;
-extern PAL_FILE PAL_Stdin; 
-extern PAL_FILE PAL_Stderr;
 
 /*++
 

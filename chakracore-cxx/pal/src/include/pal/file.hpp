@@ -198,19 +198,6 @@ namespace CorUnix
         );
 
     /*++
-    InternalFwrite
-    Wraps fwrite
-    --*/
-    size_t
-    InternalFwrite(
-        const void *pvBuffer,
-        size_t nSize,
-        size_t nCount,
-        FILE *f,
-        int32_t *pnErrorCode
-        );
-
-    /*++
     InternalOpen
     Wraps open
     --*/

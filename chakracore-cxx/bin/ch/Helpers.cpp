@@ -15,8 +15,8 @@ JsTTDStreamHandle TTDHostOpen(size_t pathLength, const char* path, bool isWrite)
     return (JsTTDStreamHandle)PAL_fopen(path, isWrite ? "w+b" : "r+b");
 }
 
-#define TTDHostRead(buff, size, handle) PAL_fread(buff, 1, size, (PAL_FILE*)handle)
-#define TTDHostWrite(buff, size, handle) PAL_fwrite(buff, 1, size, (PAL_FILE*)handle)
+#define TTDHostRead(buff, size, handle) std::fread(buff, 1, size, (FILE*)handle)
+#define TTDHostWrite(buff, size, handle) std::fwrite(buff, 1, size, (FILE*)handle)
 
 int GetPathNameLocation(const char * filename)
 {
@@ -88,7 +88,7 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
     uint8_t * pRawBytesFromMap = nullptr;
     uint32_t lengthBytes = 0;
     contents = nullptr;
-    PAL_FILE * file = NULL;
+    FILE * file = NULL;
     size_t bufferLength = 0;
 
     const char * filename = fullPath == nullptr ? filenameToLoad : (const char *)(fullPath->c_str());
@@ -154,9 +154,9 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
     if (file != NULL)
     {
         // Determine the file length, in bytes.
-        fseek(file->bsdFilePtr, 0, SEEK_END);
-        lengthBytes = ftell(file->bsdFilePtr);
-        fseek(file->bsdFilePtr, 0, SEEK_SET);
+        fseek(file, 0, SEEK_END);
+        lengthBytes = ftell(file);
+        fseek(file, 0, SEEK_SET);
     }
 
     if (lengthBytes != 0)
@@ -183,7 +183,7 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
             //
             // Read the entire content as a binary block.
             //
-            size_t readBytes = PAL_fread(pRawBytes, sizeof(uint8_t), lengthBytes, file);
+            size_t readBytes = std::fread(pRawBytes, sizeof(uint8_t), lengthBytes, file);
             if (readBytes < lengthBytes * sizeof(uint8_t))
             {
                 IfFailGo(E_FAIL);
@@ -251,8 +251,7 @@ Error:
 
     if (file != NULL)
     {
-        fclose(file->bsdFilePtr);
-        free(file);
+        fclose(file);
     }
 
     if (pRawBytes && reinterpret_cast<const char *>(pRawBytes) != contents)
@@ -347,7 +346,7 @@ int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, u
     contents = nullptr;
     lengthBytes = 0;
     size_t result;
-    PAL_FILE * file;
+    FILE * file;
 
     //
     // Open the file as a binary file to prevent CRT from handling encoding, line-break conversions,
@@ -367,9 +366,9 @@ int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, u
     //
     // Determine the file length, in bytes.
     //
-    fseek(file->bsdFilePtr, 0, SEEK_END);
-    lengthBytes = ftell(file->bsdFilePtr);
-    fseek(file->bsdFilePtr, 0, SEEK_SET);
+    fseek(file, 0, SEEK_END);
+    lengthBytes = ftell(file);
+    fseek(file, 0, SEEK_SET);
     contents = (const char *)malloc(lengthBytes);
     if (contents != nullptr)
     {
@@ -383,7 +382,7 @@ int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, u
     //
     // Read the entire content as a binary block.
     //
-    result = PAL_fread((void*)contents, sizeof(char), lengthBytes, file);
+    result = std::fread((void*)contents, sizeof(char), lengthBytes, file);
     if (result != lengthBytes)
     {
         std::print(stderr, "Read error");
@@ -391,8 +390,7 @@ int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, u
     }
 
 Error:
-    fclose(file->bsdFilePtr);
-    free(file);
+    fclose(file);
     if (contents && FAILED(hr))
     {
         free((void*)contents);
@@ -451,7 +449,7 @@ bool CALLBACK Helpers::TTReadBytesFromStreamCallback(JsTTDStreamHandle handle, b
     }
 
     BOOL ok = FALSE;
-    *readCount = TTDHostRead(buff, size, (PAL_FILE*)handle);
+    *readCount = TTDHostRead(buff, size, (FILE*)handle);
     ok = (*readCount != 0);
 
     Helpers::TTReportLastIOErrorAsNeeded(ok, "Failed Read!!!");
@@ -470,7 +468,7 @@ bool CALLBACK Helpers::TTWriteBytesToStreamCallback(JsTTDStreamHandle handle, co
     }
 
     BOOL ok = FALSE;
-    *writtenCount = TTDHostWrite(buff, size, (PAL_FILE*)handle);
+    *writtenCount = TTDHostWrite(buff, size, (FILE*)handle);
     ok = (*writtenCount == size);
 
     Helpers::TTReportLastIOErrorAsNeeded(ok, "Failed Read!!!");
@@ -480,6 +478,6 @@ bool CALLBACK Helpers::TTWriteBytesToStreamCallback(JsTTDStreamHandle handle, co
 
 void CALLBACK Helpers::TTFlushAndCloseStreamCallback(JsTTDStreamHandle handle, bool read, bool write)
 {
-    fflush(((PAL_FILE*)handle)->bsdFilePtr);
-    fclose(((PAL_FILE*)handle)->bsdFilePtr);
+    fflush((FILE*)handle);
+    fclose((FILE*)handle);
 }

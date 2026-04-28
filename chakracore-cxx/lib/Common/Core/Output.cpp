@@ -33,7 +33,7 @@ Js::IStackTraceHelper* Output::s_stackTraceHelper = nullptr;
 unsigned int Output::s_traceEntryId = 0;
 #endif
 
-thread_local PAL_FILE*    Output::s_file = nullptr;
+thread_local FILE*    Output::s_file = nullptr;
 thread_local size_t   Output::s_Column  = 0;
 thread_local uint16_t     Output::s_color = 0;
 thread_local bool     Output::s_hasColor = false;
@@ -405,7 +405,7 @@ void Output::Flush()
     }
     if(s_outputFile != nullptr)
     {
-        fflush(s_outputFile->bsdFilePtr);
+        fflush(s_outputFile);
     }
     fflush(NULL);
 }
@@ -414,7 +414,7 @@ void Output::DirectPrint(char16_t const * string)
 {
     AutoCriticalSection autocs(&s_critsect);
 
-    PAL_fwprintf(PAL_get_stdout(), u"%s", string);
+    PAL_fwprintf(stdout, u"%s", string);
 }
 ///----------------------------------------------------------------------------
 ///
@@ -457,23 +457,23 @@ Output::SkipToColumn(size_t column)
     }
 }
 
-PAL_FILE*
+FILE*
 Output::GetFile()
 {
     return Output::s_file;
 }
 
-PAL_FILE*
-Output::SetFile(PAL_FILE *file)
+FILE*
+Output::SetFile(FILE *file)
 {
     Output::Flush();
-    PAL_FILE *oldfile = Output::s_file;
+    FILE *oldfile = Output::s_file;
     Output::s_file = file;
     return oldfile;
 }
 
 void
-Output::SetOutputFile(PAL_FILE* file)
+Output::SetOutputFile(FILE* file)
 {
     if(s_outputFile != nullptr)
     {
@@ -485,7 +485,7 @@ Output::SetOutputFile(PAL_FILE* file)
     }
 }
 
-PAL_FILE*
+FILE*
 Output::GetOutputFile()
 {
     return s_outputFile;

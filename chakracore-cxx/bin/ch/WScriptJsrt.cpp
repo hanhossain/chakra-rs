@@ -1310,7 +1310,7 @@ Error:
     return returnValue;
 }
 
-int JsFgets(char* buf, int size, PAL_FILE* file)
+int JsFgets(char* buf, int size, FILE* file)
 {
     int n = size - 1;
     if (n < 0)
@@ -1319,14 +1319,14 @@ int JsFgets(char* buf, int size, PAL_FILE* file)
     bool crflag = false;
     int c, i = 0;
 
-    for (i = 0; i < n && (c = PAL_getc(file)) != EOF; i++) {
+    for (i = 0; i < n && (c = std::getc(file)) != EOF; i++) {
         buf[i] = (char)c;
         if (c == '\n') {        // any \n ends a line
             i++;                // keep the \n; we know there is room for \0
             break;
         }
         if (crflag) {           // \r not followed by \n ends line at the \r
-            PAL_ungetc(c, file);
+            std::ungetc(c, file);
             break;              // and overwrite c in buf with \0
         }
         crflag = (c == '\r');
@@ -1354,7 +1354,7 @@ JsValueRef WScriptJsrt::ReadLineStdinCallback(JsValueRef callee, bool isConstruc
         goto Error;
     }
 
-    while ((gotlength = JsFgets(buf + buflength, bufsize - buflength, PAL_get_stdin())) > 0) 
+    while ((gotlength = JsFgets(buf + buflength, bufsize - buflength, stdin)) > 0)
     {
         buflength += gotlength;
 

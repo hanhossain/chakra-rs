@@ -504,13 +504,6 @@ namespace TTD
         }
     }
 
-#if ENABLE_BASIC_TRACE || ENABLE_FULL_BC_TRACE
-    TraceLogger* ExecutionInfoManager::GetTraceLogger()
-    {
-        return &(this->m_diagnosticLogger);
-    }
-#endif
-
     const SingleCallCounter& ExecutionInfoManager::GetTopCallCounter() const
     {
         TTDAssert(this->m_callStack.Count() != 0, "Empty stack!");
@@ -577,9 +570,6 @@ namespace TTD
         }
         ////
 
-#if ENABLE_BASIC_TRACE || ENABLE_FULL_BC_TRACE
-        this->m_diagnosticLogger.WriteCall(function, false, argc, argv, function->GetFunctionBody()->GetScriptContext()->GetThreadContext()->TTDLog->GetLastEventTime());
-#endif
     }
 
     void ExecutionInfoManager::PopCallEvent(Js::JavascriptFunction* function, Js::Var result)
@@ -589,9 +579,6 @@ namespace TTD
         this->m_runningFunctionTimeCtr++;
         this->m_callStack.RemoveAtEnd();
 
-#if ENABLE_BASIC_TRACE || ENABLE_FULL_BC_TRACE
-        this->m_diagnosticLogger.WriteReturn(function, result, function->GetFunctionBody()->GetScriptContext()->GetThreadContext()->TTDLog->GetLastEventTime());
-#endif
     }
 
     void ExecutionInfoManager::PopCallEventException(Js::JavascriptFunction* function)
@@ -613,9 +600,6 @@ namespace TTD
         this->m_runningFunctionTimeCtr++;
         this->m_callStack.RemoveAtEnd();
 
-#if ENABLE_BASIC_TRACE || ENABLE_FULL_BC_TRACE
-        this->m_diagnosticLogger.WriteReturnException(function, function->GetFunctionBody()->GetScriptContext()->GetThreadContext()->TTDLog->GetLastEventTime());
-#endif
     }
 
     void ExecutionInfoManager::ProcessCatchInfoForLastExecutedStatements()
@@ -913,14 +897,6 @@ namespace TTD
                     cfinfo.CurrentStatementBytecodeMin = (uint32_t)pstmt->byteCodeSpan.begin;
                     cfinfo.CurrentStatementBytecodeMax = (uint32_t)pstmt->byteCodeSpan.end;
 
-#if ENABLE_FULL_BC_TRACE
-                    uint32_t srcLine = 0;
-                    int32_t srcColumn = -1;
-                    uint32_t startOffset = cfinfo.Function->GetFunctionBody()->GetStatementStartOffset(cfinfo.CurrentStatementIndex);
-                    cfinfo.Function->GetFunctionBody()->GetSourceLineFromStartOffset_TTD(startOffset, &srcLine, &srcColumn);
-
-                    this->m_diagnosticLogger.WriteStmtIndex((uint32_t)srcLine, (uint32_t)srcColumn);
-#endif
                 }
             }
         }

@@ -35,11 +35,6 @@ Abstract:
 
 SET_DEFAULT_DEBUG_CHANNEL(CRT);
 
-/* Global variables storing the std streams.*/
-PAL_FILE PAL_Stdout __attribute__((init_priority(200)));
-PAL_FILE PAL_Stdin __attribute__((init_priority(200)));
-PAL_FILE PAL_Stderr __attribute__((init_priority(200)));
-
 /*++
 
 Function:
@@ -51,20 +46,6 @@ Function:
 --*/
 BOOL CRTInitStdStreams()
 {
-    /* stdout */
-    PAL_Stdout.bsdFilePtr = stdout;
-    PAL_Stdout.PALferrorCode = PAL_FILE_NOERROR;
-    PAL_Stdout.bTextMode = TRUE;
-
-    /* stdin */
-    PAL_Stdin.bsdFilePtr = stdin;
-    PAL_Stdin.PALferrorCode = PAL_FILE_NOERROR;
-    PAL_Stdin.bTextMode = TRUE;
-
-    /* stderr */
-    PAL_Stderr.bsdFilePtr = stderr;
-    PAL_Stderr.PALferrorCode = PAL_FILE_NOERROR;
-    PAL_Stderr.bTextMode = TRUE;
     return TRUE;
 }
 
@@ -76,18 +57,10 @@ Function :
     Maps Windows file open modes to Unix fopen modes and validates.
 
 --*/
-static char* MapFileOpenModes(char* str , BOOL * bTextMode)
+static char* MapFileOpenModes(char* str)
 {
     char* retval = NULL;
     char* temp = NULL;
-
-    if (NULL == bTextMode)
-    {
-        ASSERT("MapFileOpenModes called with a NULL parameter for bTextMode.\n");
-        return NULL;
-    }
-
-    *bTextMode = TRUE;
 
     if (NULL == str)
     {
@@ -123,13 +96,6 @@ static char* MapFileOpenModes(char* str , BOOL * bTextMode)
         return NULL;
     }
 
-    /* Check if the mode specifies opening in binary.
-    If so, set the bTextMode to false. */
-    if(NULL != strchr(str,'b'))
-    {
-        *bTextMode = FALSE;
-    }
-
     retval = (char*)malloc( ( strlen( str ) + 1 ) * sizeof( char ) );
     if (NULL == retval)
     {
@@ -160,36 +126,6 @@ static char* MapFileOpenModes(char* str , BOOL * bTextMode)
     return retval;
 }
 
-#if defined(__linux__)
-/*++
-Function :
-
-    WriteOnlyMode
-
-    Returns TRUE to if a file is opened in write-only mode,
-    Otherwise FALSE.
-
---*/
-static BOOL WriteOnlyMode(FILE* pFile)
-{
-    int32_t fd, flags;
-
-    if (pFile != NULL)
-    {
-        fd = fileno(pFile);
-        if ((flags = fcntl(fd, F_GETFL)) >= 0)
-        {
-            if ((flags & O_ACCMODE) == O_WRONLY)
-            {
-                return TRUE;
-            }
-        }
-    }
-    return FALSE;
-}
-#endif //defined(__linux__)
-
-
 /*++
 
 Function :
@@ -198,14 +134,13 @@ Function :
 see MSDN doc.
 
 --*/
-PAL_FILE *
+FILE *
 PAL_fopen(const char * fileName, const char * mode)
 {
-    PAL_FILE *f = NULL;
+    FILE *f = nullptr;
     char* supported = NULL;
     char* UnixFileName = NULL;
     struct stat stat_data;
-    BOOL bTextMode = TRUE;
 
     ENTRY("fopen ( fileName=%p (%s) mode=%p (%s))\n", fileName, fileName, mode , mode );
 
@@ -214,7 +149,7 @@ PAL_fopen(const char * fileName, const char * mode)
 
     if ( *mode == 'r' || *mode == 'w' || *mode == 'a' )
     {
-        supported = MapFileOpenModes( (char*)mode,&bTextMode);
+        supported = MapFileOpenModes( (char*)mode);
 
         if ( !supported )
         {
@@ -240,29 +175,7 @@ PAL_fopen(const char * fileName, const char * mode)
             goto done;
         }
 
-        f = (PAL_FILE*)malloc( sizeof( PAL_FILE ) );
-        if ( f )
-        {
-            f->bsdFilePtr =  (FILE*)fopen( UnixFileName, supported );
-            f->PALferrorCode = PAL_FILE_NOERROR;
-            f->bTextMode = bTextMode;
-            if ( !f->bsdFilePtr )
-            {
-                /* Failed */
-                free( f );
-                f = NULL;
-            }
-#if defined(__linux__)
-            else
-            {
-                f->bWriteOnlyMode = WriteOnlyMode(f->bsdFilePtr);
-            }
-#endif //defined(__linux__)
-        }
-        else
-        {
-            ERROR( "Unable to allocate memory to the PAL_FILE wrapper\n" );
-        }
+        f = (FILE*)fopen( UnixFileName, supported );
     }
     else
     {
@@ -285,14 +198,14 @@ Function:
 see MSDN doc.
 
 --*/
-PAL_FILE *
+FILE *
 _wfopen(
     const char16_t *fileName,
     const char16_t *mode)
 {
     char mbFileName[ _MAX_PATH ];
     char mbMode[ 10 ];
-    PAL_FILE * filePtr = NULL;
+    FILE * filePtr = NULL;
 
     ENTRY("_wfopen(fileName:%p (%S), mode:%p (%S))\n", fileName, fileName, mode, mode);
 
@@ -320,174 +233,4 @@ _wfopen(
     }
     LOGEXIT("_wfopen returning FILE* %p\n", filePtr);
     return filePtr;
-}
-
-/*++
-Function
-    PAL_get_stdout.
-
-    Returns the stdout stream.
---*/
-PAL_FILE * PAL_get_stdout()
-{
-    ENTRY("PAL_get_stdout\n");
-    LOGEXIT("PAL_get_stdout returns PAL_FILE * %p\n", &PAL_Stdout );
-    return &PAL_Stdout;
-}
-
-/*++
-Function
-    PAL_get_stdin.
-
-    Returns the stdin stream.
---*/
-PAL_FILE * PAL_get_stdin()
-{
-    ENTRY("PAL_get_stdin\n");
-    LOGEXIT("PAL_get_stdin returns PAL_FILE * %p\n", &PAL_Stdin );
-    return &PAL_Stdin;
-}
-
-/*++
-Function
-    PAL_get_stderr.
-
-    Returns the stderr stream.
---*/
-PAL_FILE * PAL_get_stderr()
-{
-    ENTRY("PAL_get_stderr\n");
-    LOGEXIT("PAL_get_stderr returns PAL_FILE * %p\n", &PAL_Stderr );
-    return &PAL_Stderr;
-}
-
-
-/*++
-Function :
-
-    fread
-
-    See MSDN for more details.
---*/
-
-size_t
-PAL_fread(void * buffer, size_t size, size_t count, PAL_FILE * f)
-{
-    size_t nReadBytes = 0;
-
-    ENTRY( "fread( buffer=%p, size=%d, count=%d, f=%p )\n",
-           buffer, size, count, f );
-
-    _ASSERTE(f != NULL);
-
-    CLEARERR(f);
-
-    if(f->bTextMode != TRUE)
-    {
-        nReadBytes = fread( buffer, size, count, f->bsdFilePtr );
-    }
-    else
-    {
-        size_t i=0;
-        if(size > 0)
-        {
-            size_t j=0;
-            char* temp = (char*)buffer;
-            int nChar = 0;
-            int nCount =0;
-
-            for(i=0; i< count; i++)
-            {
-                for(j=0; j< size; j++)
-                {
-                    if((nChar = PAL_getc(f)) == EOF)
-                    {
-                        nReadBytes = i;
-                        goto done;
-                    }
-                    else
-                    {
-                        temp[nCount++]=nChar;
-                    }
-                }
-            }
-        }
-        nReadBytes = i;
-    }
-
-done:
-    LOGEXIT( "fread returning size_t %d\n", nReadBytes );
-    return nReadBytes;
-}
-
-/*++
-Function :
-
-    getc
-
-    See MSDN for more details.
---*/
-int
-PAL_getc(PAL_FILE * f)
-{
-    int32_t nRetVal = 0;
-    int32_t temp =0;
-
-    ENTRY( "getc( %p )\n", f );
-
-    _ASSERTE(f != NULL);
-
-    CLEARERR(f);
-
-    nRetVal = getc( f->bsdFilePtr );
-
-    if ( (f->bTextMode) && (nRetVal == '\r') )
-    {
-        if ((temp = getc( f->bsdFilePtr ))== '\n')
-        {
-            nRetVal ='\n';
-        }
-        else if (EOF == ungetc( temp, f->bsdFilePtr ))
-        {
-            ERROR("ungetc operation failed\n");
-        }
-    }
-
-    LOGEXIT( "getc returning %d\n", nRetVal );
-    return nRetVal;
-}
-
-/*++
-Function :
-
-    ungetc
-
-    See MSDN for more details.
---*/
-int
-PAL_ungetc(int c, PAL_FILE * f)
-{
-    int32_t nRetVal = 0;
-
-    ENTRY( "ungetc( %c, %p )\n", c, f );
-
-    _ASSERTE(f != NULL);
-
-#if defined(__linux__)
-    /* On some Unix platform such as Solaris, ungetc does not return EOF
-       on write-only file. */
-    if (f->bWriteOnlyMode)
-    {
-        nRetVal = EOF;
-    }
-    else
-#endif //defined(__linux__)
-    {
-        CLEARERR(f);
-
-        nRetVal = ungetc( c, f->bsdFilePtr );
-    }
-
-    LOGEXIT( "ungetc returning %d\n", nRetVal );
-    return nRetVal;
 }

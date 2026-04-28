@@ -76,7 +76,7 @@ void ConfigParser::ParseConfig(CmdLineArgsParser &parser, const char16_t* strCus
 
     _wmakepath_s(filename, u"", u"", configFileName, configFileExt);
 
-    PAL_FILE* configFile;
+    FILE* configFile;
     // Two-pathed for a couple reasons
     // 1. PAL doesn't like the ccs option passed in.
     // 2. _wfullpath is not implemented in the PAL.
@@ -103,8 +103,8 @@ void ConfigParser::ParseConfig(CmdLineArgsParser &parser, const char16_t* strCus
     char16_t configBuffer[MaxTokenSize];
     int index = 0;
 
-#define ReadChar(file) PAL_getc(file)
-#define UnreadChar(c, file) PAL_ungetc(c, file)
+#define ReadChar(file) std::getc(file)
+#define UnreadChar(c, file) std::ungetc(c, file)
 #define CharType int
 #define EndChar EOF
 
@@ -163,8 +163,7 @@ void ConfigParser::ParseConfig(CmdLineArgsParser &parser, const char16_t* strCus
 #undef CharType
 #undef EndChar
 
-    fclose(configFile->bsdFilePtr);
-    free(configFile);
+    fclose(configFile);
 
     if (err !=0)
     {

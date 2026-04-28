@@ -1,13 +1,17 @@
-# Migrates chakracore to rust
+# chakra-rs
 
-## Build and test rust (and c++)
+Migrates chakracore to rust
+
+## Building
+
+### Build and test rust (and c++)
 
 ```sh
 cargo build
 cargo test
 ```
 
-## Build C++
+### Build C++
 
 Configure and build
 
@@ -23,7 +27,7 @@ For compile_commands.json
 ln -s build-linux-debug/compile_commands.json .
 ```
 
-## Build separately
+### Build separately
 ```sh
 cargo build -p chakra
 cmake --preset linux-debug
@@ -31,11 +35,31 @@ cmake --build build-linux-debug
 CHAKRA_BUILD=build-linux-debug cargo build
 ```
 
-## Building in docker
+### Building in docker
 
 ```sh
-docker build -t chakra .
-docker run --rm -it -v .:/chakra-rs chakra
+docker build -t chakra-ubuntu-clang19-gcc14 .
+docker run --rm -it -v .:/chakra-rs chakra-ubuntu-clang19-gcc14
+
+CMake linux profile should use
+    Name: mlinux-docker
+    Build type: Debug
+    Toolchain: Docker-clang19-gcc14
+    Generator: Use default
+    CMake options: -DIN_DOCKER=ON
+    Build options: -j 12
+```
+
+### Using a pre-built static lib
+```sh
+CHAKRA_BUILD=cmake-build-mlinux-docker cargo nt
+```
+
+or
+
+```sh
+export CHAKRA_BUILD=cmake-build-mlinux-docker
+cargo nt
 ```
 
 ## Dependency Graph

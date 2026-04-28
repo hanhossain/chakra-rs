@@ -36,7 +36,7 @@ Abstract:
 #ifndef __PAL_H__
 #define __PAL_H__
 
-#include "pal_file.h"
+#include <cstdio>
 
 #ifdef PAL_STDCPP_COMPAT
 #include <stddef.h>
@@ -2124,21 +2124,11 @@ char * _fullpath(char *, const char *, size_t);
 
 #endif // PAL_STDCPP_COMPAT
 
-size_t PAL_fwrite(const void *, size_t, size_t, PAL_FILE *);
-size_t PAL_fread(void *, size_t, size_t, PAL_FILE *);
-PAL_FILE * PAL_fopen(const char *, const char *);
-int PAL_getc(PAL_FILE *stream);
-int PAL_ungetc(int c, PAL_FILE *stream);
-int PAL_fwprintf(PAL_FILE *, const char16_t *, ...);
+FILE * PAL_fopen(const char *, const char *);
+int PAL_fwprintf(FILE *, const char16_t *, ...);
 int PAL_vfwprintf(FILE *, const char16_t *, va_list);
 
-PAL_FILE * _wfopen(const char16_t *, const char16_t *);
-
-/* Maximum value that can be returned by the rand function. */
-
-PAL_FILE * PAL_get_stdout();
-PAL_FILE * PAL_get_stdin();
-PAL_FILE * PAL_get_stderr();
+FILE * _wfopen(const char16_t *, const char16_t *);
 
 #define EXCEPTION_CONTINUE_SEARCH   0
 #define EXCEPTION_EXECUTE_HANDLER   1
