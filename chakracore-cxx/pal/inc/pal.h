@@ -1985,7 +1985,6 @@ char16_t _WConst_return * PAL_wcspbrk(const char16_t *, const char16_t *);
 char16_t _WConst_return * PAL_wcsstr(const char16_t *, const char16_t *);
 int _snwprintf(char16_t *, size_t, const char16_t *, ...);
 int PAL_swscanf(const char16_t *, const char16_t *, ...);
-int PAL_iswdigit(char16_t);
 char16_t PAL_towlower(char16_t);
 
 char16_t * _wcslwr(char16_t *);
