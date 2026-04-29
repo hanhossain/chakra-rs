@@ -1981,7 +1981,6 @@ int PAL_wcsncmp(const char16_t *, const char16_t *, size_t);
 char16_t * PAL_wcscpy(char16_t *, const char16_t *);
 const char16_t * PAL_wcschr(const char16_t *, char16_t);
 const char16_t * PAL_wcsrchr(const char16_t *, char16_t);
-char16_t _WConst_return * PAL_wcspbrk(const char16_t *, const char16_t *);
 char16_t _WConst_return * PAL_wcsstr(const char16_t *, const char16_t *);
 int _snwprintf(char16_t *, size_t, const char16_t *, ...);
 int PAL_swscanf(const char16_t *, const char16_t *, ...);
@@ -1999,8 +1998,6 @@ inline char16_t *PAL_wcschr(char16_t *_S, char16_t _C)
         {return ((char16_t *)PAL_wcschr((const char16_t *)_S, _C)); }
 inline char16_t *PAL_wcsrchr(char16_t *_S, char16_t _C)
         {return ((char16_t *)PAL_wcsrchr((const char16_t *)_S, _C)); }
-inline char16_t *PAL_wcspbrk(char16_t *_S, const char16_t *_P)
-        {return ((char16_t *)PAL_wcspbrk((const char16_t *)_S, _P)); }
 inline char16_t *PAL_wcsstr(char16_t *_S, const char16_t *_P)
         {return ((char16_t *)PAL_wcsstr((const char16_t *)_S, _P)); }
 }
