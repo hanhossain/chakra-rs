@@ -1004,53 +1004,6 @@ _ui64tow( unsigned long value , char16_t * string , int radix )
     return lpString;
 }
 
-
-/*++
-Function:
-
-    iswdigit
-
-See MSDN for more details.
---*/
-int
-PAL_iswdigit( char16_t c )
-{
-    uint32_t nRetVal = 0;
-#if defined(__APPLE__)
-    static CFCharacterSetRef sDigitSet;
-
-    if (sDigitSet == NULL)
-    {
-        sDigitSet = CFCharacterSetGetPredefined(
-                                        kCFCharacterSetDecimalDigit);
-    }
-    ENTRY("PAL_iswdigit (c=%d)\n", c);
-    nRetVal = CFCharacterSetIsCharacterMember(sDigitSet, c);
-#else   /* defined(__APPLE__) */
-    UnicodeDataRec dataRec;
-
-    ENTRY("PAL_iswdigit (c=%d)\n", c);
-
-    if (GetUnicodeData(c, &dataRec))
-    {
-        if (dataRec.C1_TYPE_FLAGS & C1_DIGIT)
-        {
-            nRetVal = 1;
-        }
-        else
-        {
-            nRetVal = 0;
-        }
-    }
-    else
-    {
-        TRACE( "No corresponding unicode record for character %d.\n", c );
-    }
-#endif  /* defined(__APPLE__) */
-    LOGEXIT("PAL_iswdigit returning %d\n", nRetVal);
-    return nRetVal;
-}
-
 #if defined(__APPLE__)
 /*--
 Function:
