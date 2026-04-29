@@ -784,37 +784,6 @@ PAL_wcsrchr(
 
 /*++
 Function:
-  PAL_wcspbrk
-
-See MSDN or man page for wcspbrk.
---*/
-const char16_t *
-PAL_wcspbrk(
-        const char16_t *string,
-        const char16_t *strCharSet)
-{
-    ENTRY("wcspbrk (string=%p (%S), strCharSet=%p (%S))\n",
-          string?string:W16_NULLSTRING,
-          string?string:W16_NULLSTRING, strCharSet?strCharSet:W16_NULLSTRING, strCharSet?strCharSet:W16_NULLSTRING);
-
-    while (*string)
-    {
-        if (PAL_wcschr(strCharSet, *string) != NULL)
-        {
-            LOGEXIT("wcspbrk returning char16_t %p (%S)\n", string?string:W16_NULLSTRING, string?string:W16_NULLSTRING);
-            return (char16_t *) string;
-        }
-
-        string++;
-    }
-
-    LOGEXIT("wcspbrk returning char16_t NULL\n");
-    return NULL;
-}
-
-
-/*++
-Function:
   PAL_wcsstr
 
 See MSDN or man page for wcsstr.
