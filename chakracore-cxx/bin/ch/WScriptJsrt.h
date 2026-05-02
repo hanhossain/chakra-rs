@@ -115,7 +115,7 @@ private:
     static void SetExceptionIf(JsErrorCode errorCode, std::u16string_view errorMessage);
     static bool CreateArgumentsObject(JsValueRef *argsObject);
     static bool CreateNamedFunction(const char*, JsNativeFunction callback, JsValueRef* functionVar);
-    static void GetDir(const char * fullPathNarrow, std::string *fullDirNarrow);
+    static std::string GetDir(std::string_view fullPathNarrow);
     static JsValueRef CALLBACK EchoCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
     static JsValueRef CALLBACK QuitCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
     static JsValueRef CALLBACK LoadScriptFileCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);

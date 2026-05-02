@@ -88,7 +88,7 @@ unsigned long WScriptJsrt::GetNextSourceContext()
 
 void WScriptJsrt::RegisterScriptDir(unsigned long sourceContext, const char * fullDirNarrow)
 {
-    GetDir(fullDirNarrow, &scriptDirMap[sourceContext]);
+    scriptDirMap[sourceContext] = GetDir(fullDirNarrow);
 }
 
 bool WScriptJsrt::CreateArgumentsObject(JsValueRef *argsObject)
@@ -593,12 +593,12 @@ Error:
     return returnValue;
 }
 
-void WScriptJsrt::GetDir(const char * fullPathNarrow, std::string *fullDirNarrow)
+std::string WScriptJsrt::GetDir(const std::string_view fullPathNarrow)
 {
     const std::filesystem::path path = fullPathNarrow;
     const auto parent = path.parent_path().concat("/");
 
-    *fullDirNarrow = parent;
+    return parent;
 }
 
 JsErrorCode WScriptJsrt::ModuleEntryPoint(const char * fileName, const char * fileContent, const char * fullName)
@@ -633,7 +633,7 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(const char * fileName, const char 
         {
             if (fullName)
             {
-                GetDir(fullName, &moduleDirMap[requestModule]);
+                moduleDirMap[requestModule] = GetDir(fullName);
             }
 
             moduleRecordMap[std::string(moduleRecordKey)] = requestModule;
@@ -2068,7 +2068,7 @@ JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingMod
     JsErrorCode errorCode = ChakraRTInterface::JsInitializeModuleRecord(referencingModule, specifier, &moduleRecord);
     if (errorCode == JsNoError)
     {
-        GetDir(fullPath, &moduleDirMap[moduleRecord]);
+        moduleDirMap[moduleRecord] = GetDir(fullPath);
         std::string pathKey = std::string(fullPath);
         moduleRecordMap[pathKey] = moduleRecord;
         moduleErrMap[moduleRecord] = ImportedModule;
