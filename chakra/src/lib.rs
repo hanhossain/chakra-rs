@@ -49,14 +49,14 @@ pub struct ChakraArgs {
 }
 
 impl ChakraArgs {
-    pub fn new(args: Vec<String>) -> Option<Self> {
+    pub fn new(args: &[String]) -> Option<Self> {
         if args.len() < 2 {
             return None;
         }
 
         let mut chakra_args = ChakraArgs::default();
 
-        for arg in &args {
+        for arg in args {
             if arg == "-v" || arg == "--version" {
                 return Some(ChakraArgs {
                     version: true,
