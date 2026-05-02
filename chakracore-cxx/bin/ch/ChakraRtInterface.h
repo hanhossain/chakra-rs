@@ -363,144 +363,143 @@ public:
             m_testHooks.pfnNotifyUnhandledException(exceptionInfo);
         }
     }
-#define HOOK_JS_API(x) ::Js##x
 
-    static JsErrorCode WINAPI JsCreateRuntime(JsRuntimeAttributes attributes, JsThreadServiceCallback threadService, JsRuntimeHandle *runtime) { return HOOK_JS_API(CreateRuntime(attributes, threadService, runtime)); }
-    static JsErrorCode WINAPI JsCreateContext(JsRuntimeHandle runtime, JsContextRef *newContext) { return HOOK_JS_API(CreateContext(runtime, newContext)); }
-    static JsErrorCode WINAPI JsSetObjectBeforeCollectCallback(JsRef ref, void* callbackState, JsObjectBeforeCollectCallback objectBeforeCollectCallback) { return HOOK_JS_API(SetObjectBeforeCollectCallback(ref, callbackState, objectBeforeCollectCallback)); }
-    static JsErrorCode WINAPI JsSetRuntimeDomWrapperTracingCallbacks(JsRuntimeHandle runtime, JsRef wrapperTracingState, JsDOMWrapperTracingCallback wrapperTracingCallback, JsDOMWrapperTracingDoneCallback wrapperTracingDoneCallback, JsDOMWrapperTracingEnterFinalPauseCallback enterFinalPauseCallback) { return HOOK_JS_API(SetRuntimeDomWrapperTracingCallbacks(runtime, wrapperTracingState, wrapperTracingCallback, wrapperTracingDoneCallback, enterFinalPauseCallback)); }
-    static JsErrorCode WINAPI JsSetRuntimeMemoryLimit(JsRuntimeHandle runtime, size_t memory) { return HOOK_JS_API(SetRuntimeMemoryLimit(runtime, memory)); }
-    static JsErrorCode WINAPI JsSetCurrentContext(JsContextRef context) { return HOOK_JS_API(SetCurrentContext(context)); }
-    static JsErrorCode WINAPI JsGetCurrentContext(JsContextRef* context) { return HOOK_JS_API(GetCurrentContext(context)); }
-    static JsErrorCode WINAPI JsDisposeRuntime(JsRuntimeHandle runtime) { return HOOK_JS_API(DisposeRuntime(runtime)); }
-    static JsErrorCode WINAPI JsCreateObject(JsValueRef *object) { return HOOK_JS_API(CreateObject(object)); }
-    static JsErrorCode WINAPI JsCreateExternalObject(void *data, JsFinalizeCallback callback, JsValueRef *object) { return HOOK_JS_API(CreateExternalObject(data, callback, object)); }
-    static JsErrorCode WINAPI JsGetArrayForEachFunction(JsValueRef * result) { return HOOK_JS_API(GetArrayForEachFunction(result)); }
-    static JsErrorCode WINAPI JsGetArrayKeysFunction(JsValueRef * result) { return HOOK_JS_API(GetArrayKeysFunction(result)); }
-    static JsErrorCode WINAPI JsGetArrayValuesFunction(JsValueRef * result) { return HOOK_JS_API(GetArrayValuesFunction(result)); }
-    static JsErrorCode WINAPI JsGetArrayEntriesFunction(JsValueRef * result) { return HOOK_JS_API(GetArrayEntriesFunction(result)); }
-    static JsErrorCode WINAPI JsGetPropertyIdSymbolIterator(JsPropertyIdRef * propertyId) { return HOOK_JS_API(GetPropertyIdSymbolIterator(propertyId)); }
-    static JsErrorCode WINAPI JsGetErrorPrototype(JsValueRef * result) { return HOOK_JS_API(GetErrorPrototype(result)); }
-    static JsErrorCode WINAPI JsGetIteratorPrototype(JsValueRef * result) { return HOOK_JS_API(GetIteratorPrototype(result)); }
-    static JsErrorCode WINAPI JsCreateFunction(JsNativeFunction nativeFunction, void *callbackState, JsValueRef *function) { return HOOK_JS_API(CreateFunction(nativeFunction, callbackState, function)); }
-    static JsErrorCode WINAPI JsCreateEnhancedFunction(JsEnhancedNativeFunction nativeFunction, JsValueRef metadata, void *callbackState, JsValueRef *function) { return HOOK_JS_API(CreateEnhancedFunction(nativeFunction, metadata, callbackState, function)); }
-    static JsErrorCode WINAPI JsCreateNamedFunction(JsValueRef name, JsNativeFunction nativeFunction, void *callbackState, JsValueRef *function) { return HOOK_JS_API(CreateNamedFunction(name, nativeFunction, callbackState, function)); }
-    static JsErrorCode WINAPI JsSetProperty(JsValueRef object, JsPropertyIdRef property, JsValueRef value, bool useStrictRules) { return HOOK_JS_API(SetProperty(object, property, value, useStrictRules)); }
-    static JsErrorCode WINAPI JsGetGlobalObject(JsValueRef *globalObject) { return HOOK_JS_API(GetGlobalObject(globalObject)); }
-    static JsErrorCode WINAPI JsGetUndefinedValue(JsValueRef *globalObject) { return HOOK_JS_API(GetUndefinedValue(globalObject)); }
-    static JsErrorCode WINAPI JsGetNullValue(JsValueRef *globalObject) { return HOOK_JS_API(GetNullValue(globalObject)); }
-    static JsErrorCode WINAPI JsGetTrueValue(JsValueRef *globalObject) { return HOOK_JS_API(GetTrueValue(globalObject)); }
-    static JsErrorCode WINAPI JsGetFalseValue(JsValueRef *globalObject) { return HOOK_JS_API(GetFalseValue(globalObject)); }
-    static JsErrorCode WINAPI JsConvertValueToString(JsValueRef value, JsValueRef *stringValue) { return HOOK_JS_API(ConvertValueToString(value, stringValue)); }
-    static JsErrorCode WINAPI JsConvertValueToNumber(JsValueRef value, JsValueRef *numberValue) { return HOOK_JS_API(ConvertValueToNumber(value, numberValue)); }
-    static JsErrorCode WINAPI JsConvertValueToBoolean(JsValueRef value, JsValueRef *booleanValue) { return HOOK_JS_API(ConvertValueToBoolean(value, booleanValue)); }
-    static JsErrorCode WINAPI JsBooleanToBool(JsValueRef value, bool* boolValue) { return HOOK_JS_API(BooleanToBool(value, boolValue)); }
-    static JsErrorCode WINAPI JsGetProperty(JsValueRef object, JsPropertyIdRef property, JsValueRef* value) { return HOOK_JS_API(GetProperty(object, property, value)); }
-    static JsErrorCode WINAPI JsHasProperty(JsValueRef object, JsPropertyIdRef property, bool *hasProperty) { return HOOK_JS_API(HasProperty(object, property, hasProperty)); }
-    static JsErrorCode WINAPI JsCallFunction(JsValueRef function, JsValueRef* arguments, unsigned short argumentCount, JsValueRef *result) { return HOOK_JS_API(CallFunction(function, arguments, argumentCount, result)); }
-    static JsErrorCode WINAPI JsNumberToDouble(JsValueRef value, double* doubleValue) { return HOOK_JS_API(NumberToDouble(value, doubleValue)); }
-    static JsErrorCode WINAPI JsNumberToInt(JsValueRef value, int* intValue) { return HOOK_JS_API(NumberToInt(value, intValue)); }
-    static JsErrorCode WINAPI JsIntToNumber(int intValue, JsValueRef *value) { return HOOK_JS_API(IntToNumber(intValue, value)); }
-    static JsErrorCode WINAPI JsDoubleToNumber(double doubleValue, JsValueRef* value) { return HOOK_JS_API(DoubleToNumber(doubleValue, value)); }
-    static JsErrorCode WINAPI JsGetExternalData(JsValueRef object, void **data) { return HOOK_JS_API(GetExternalData(object, data)); }
-    static JsErrorCode WINAPI JsSetExternalData(JsValueRef object, void *data)  { return HOOK_JS_API(SetExternalData(object, data)); }
-    static JsErrorCode WINAPI JsCloneObject(JsValueRef object, JsValueRef *data) { return HOOK_JS_API(CloneObject(object, data)); }
-    static JsErrorCode WINAPI JsCreateArray(unsigned int length, JsValueRef *result) { return HOOK_JS_API(CreateArray(length, result)); }
-    static JsErrorCode WINAPI JsCreateArrayBuffer(unsigned int byteLength, JsValueRef *result) { return HOOK_JS_API(CreateArrayBuffer(byteLength, result)); }
-    static JsErrorCode WINAPI JsCreateSharedArrayBufferWithSharedContent(JsSharedArrayBufferContentHandle sharedContent, JsValueRef *result) { return HOOK_JS_API(CreateSharedArrayBufferWithSharedContent(sharedContent, result)); }
-    static JsErrorCode WINAPI JsGetSharedArrayBufferContent(JsValueRef sharedArrayBuffer, JsSharedArrayBufferContentHandle *sharedContents) { return HOOK_JS_API(GetSharedArrayBufferContent(sharedArrayBuffer, sharedContents)); }
-    static JsErrorCode WINAPI JsReleaseSharedArrayBufferContentHandle(JsSharedArrayBufferContentHandle sharedContent) { return HOOK_JS_API(ReleaseSharedArrayBufferContentHandle(sharedContent)); }
-    static JsErrorCode WINAPI JsGetArrayBufferStorage(JsValueRef instance, uint8_t **buffer, unsigned int *bufferLength) { return HOOK_JS_API(GetArrayBufferStorage(instance, buffer, bufferLength)); }
-    static JsErrorCode WINAPI JsCreateError(JsValueRef message, JsValueRef *error) { return HOOK_JS_API(CreateError(message, error)); }
-    static JsErrorCode WINAPI JsHasException(bool *hasException) { return HOOK_JS_API(HasException(hasException)); }
-    static JsErrorCode WINAPI JsSetException(JsValueRef exception) { return HOOK_JS_API(SetException(exception)); }
-    static JsErrorCode WINAPI JsGetAndClearException(JsValueRef *exception) { return HOOK_JS_API(GetAndClearException(exception)); }
-    static JsErrorCode WINAPI JsGetAndClearExceptionWithMetadata(JsValueRef * metadata) { return HOOK_JS_API(GetAndClearExceptionWithMetadata(metadata)); }
-    static JsErrorCode WINAPI JsGetRuntime(JsContextRef context, JsRuntimeHandle *runtime) { return HOOK_JS_API(GetRuntime(context, runtime)); }
-    static JsErrorCode WINAPI JsRelease(JsRef ref, unsigned int* count) { return HOOK_JS_API(Release(ref, count)); }
-    static JsErrorCode WINAPI JsAddRef(JsRef ref, unsigned int* count) { return HOOK_JS_API(AddRef(ref, count)); }
-    static JsErrorCode WINAPI JsGetValueType(JsValueRef value, JsValueType *type) { return HOOK_JS_API(GetValueType(value, type)); }
-    static JsErrorCode WINAPI JsGetIndexedProperty(JsValueRef object, JsValueRef index, JsValueRef *value) { return HOOK_JS_API(GetIndexedProperty(object, index, value)); }
-    static JsErrorCode WINAPI JsSetIndexedProperty(JsValueRef object, JsValueRef index, JsValueRef value) { return HOOK_JS_API(SetIndexedProperty(object, index, value)); }
-    static JsErrorCode WINAPI JsSetPromiseContinuationCallback(JsPromiseContinuationCallback callback, void *callbackState) { return HOOK_JS_API(SetPromiseContinuationCallback(callback, callbackState)); }
-    static JsErrorCode WINAPI JsSetHostPromiseRejectionTracker(JsHostPromiseRejectionTrackerCallback callback, void *callbackState) { return HOOK_JS_API(SetHostPromiseRejectionTracker(callback, callbackState)); }
-    static JsErrorCode WINAPI JsGetContextOfObject(JsValueRef object, JsContextRef* context) { return HOOK_JS_API(GetContextOfObject(object, context)); }
-    static JsErrorCode WINAPI JsDiagStartDebugging(JsRuntimeHandle runtimeHandle, JsDiagDebugEventCallback debugEventCallback, void* callbackState) { return HOOK_JS_API(DiagStartDebugging(runtimeHandle, debugEventCallback, callbackState)); }
-    static JsErrorCode WINAPI JsDiagStopDebugging(JsRuntimeHandle runtimeHandle, void** callbackState) { return HOOK_JS_API(DiagStopDebugging(runtimeHandle, callbackState)); }
-    static JsErrorCode WINAPI JsDiagGetSource(unsigned int scriptId, JsValueRef *source) { return HOOK_JS_API(DiagGetSource(scriptId, source)); }
-    static JsErrorCode WINAPI JsDiagSetBreakpoint(unsigned int scriptId, unsigned int lineNumber, unsigned int columnNumber, JsValueRef *breakpoint) { return HOOK_JS_API(DiagSetBreakpoint(scriptId, lineNumber, columnNumber, breakpoint)); }
-    static JsErrorCode WINAPI JsDiagGetStackTrace(JsValueRef *stackTrace) { return HOOK_JS_API(DiagGetStackTrace(stackTrace)); }
-    static JsErrorCode WINAPI JsDiagRequestAsyncBreak(JsRuntimeHandle runtimeHandle) { return HOOK_JS_API(DiagRequestAsyncBreak(runtimeHandle)); }
-    static JsErrorCode WINAPI JsDiagGetBreakpoints(JsValueRef * breakpoints) { return HOOK_JS_API(DiagGetBreakpoints(breakpoints)); }
-    static JsErrorCode WINAPI JsDiagRemoveBreakpoint(unsigned int breakpointId) { return HOOK_JS_API(DiagRemoveBreakpoint(breakpointId)); }
-    static JsErrorCode WINAPI JsDiagSetBreakOnException(JsRuntimeHandle runtimeHandle, JsDiagBreakOnExceptionAttributes exceptionAttributes) { return HOOK_JS_API(DiagSetBreakOnException(runtimeHandle, exceptionAttributes)); }
-    static JsErrorCode WINAPI JsDiagGetBreakOnException(JsRuntimeHandle runtimeHandle, JsDiagBreakOnExceptionAttributes * exceptionAttributes) { return HOOK_JS_API(DiagGetBreakOnException(runtimeHandle, exceptionAttributes)); }
-    static JsErrorCode WINAPI JsDiagSetStepType(JsDiagStepType stepType) { return HOOK_JS_API(DiagSetStepType(stepType)); }
-    static JsErrorCode WINAPI JsDiagGetScripts(JsValueRef * scriptsArray) { return HOOK_JS_API(DiagGetScripts(scriptsArray)); }
-    static JsErrorCode WINAPI JsDiagGetFunctionPosition(JsValueRef value, JsValueRef * functionPosition) { return HOOK_JS_API(DiagGetFunctionPosition(value, functionPosition)); }
-    static JsErrorCode WINAPI JsDiagGetStackProperties(unsigned int stackFrameIndex, JsValueRef * properties) { return HOOK_JS_API(DiagGetStackProperties(stackFrameIndex, properties)); }
-    static JsErrorCode WINAPI JsDiagGetProperties(unsigned int objectHandle, unsigned int fromCount, unsigned int totalCount, JsValueRef * propertiesObject) { return HOOK_JS_API(DiagGetProperties(objectHandle, fromCount, totalCount, propertiesObject)); }
-    static JsErrorCode WINAPI JsDiagGetObjectFromHandle(unsigned int handle, JsValueRef * handleObject) { return HOOK_JS_API(DiagGetObjectFromHandle(handle, handleObject)); }
-    static JsErrorCode WINAPI JsDiagEvaluate(JsValueRef expression, unsigned int stackFrameIndex, JsParseScriptAttributes parseAttributes, bool forceSetValueProp, JsValueRef * evalResult) { return HOOK_JS_API(DiagEvaluate(expression, stackFrameIndex, parseAttributes, forceSetValueProp, evalResult)); }
+    static JsErrorCode WINAPI JsCreateRuntime(JsRuntimeAttributes attributes, JsThreadServiceCallback threadService, JsRuntimeHandle *runtime) { return ::JsCreateRuntime(attributes, threadService, runtime); }
+    static JsErrorCode WINAPI JsCreateContext(JsRuntimeHandle runtime, JsContextRef *newContext) { return ::JsCreateContext(runtime, newContext); }
+    static JsErrorCode WINAPI JsSetObjectBeforeCollectCallback(JsRef ref, void* callbackState, JsObjectBeforeCollectCallback objectBeforeCollectCallback) { return ::JsSetObjectBeforeCollectCallback(ref, callbackState, objectBeforeCollectCallback); }
+    static JsErrorCode WINAPI JsSetRuntimeDomWrapperTracingCallbacks(JsRuntimeHandle runtime, JsRef wrapperTracingState, JsDOMWrapperTracingCallback wrapperTracingCallback, JsDOMWrapperTracingDoneCallback wrapperTracingDoneCallback, JsDOMWrapperTracingEnterFinalPauseCallback enterFinalPauseCallback) { return ::JsSetRuntimeDomWrapperTracingCallbacks(runtime, wrapperTracingState, wrapperTracingCallback, wrapperTracingDoneCallback, enterFinalPauseCallback); }
+    static JsErrorCode WINAPI JsSetRuntimeMemoryLimit(JsRuntimeHandle runtime, size_t memory) { return ::JsSetRuntimeMemoryLimit(runtime, memory); }
+    static JsErrorCode WINAPI JsSetCurrentContext(JsContextRef context) { return ::JsSetCurrentContext(context); }
+    static JsErrorCode WINAPI JsGetCurrentContext(JsContextRef* context) { return ::JsGetCurrentContext(context); }
+    static JsErrorCode WINAPI JsDisposeRuntime(JsRuntimeHandle runtime) { return ::JsDisposeRuntime(runtime); }
+    static JsErrorCode WINAPI JsCreateObject(JsValueRef *object) { return ::JsCreateObject(object); }
+    static JsErrorCode WINAPI JsCreateExternalObject(void *data, JsFinalizeCallback callback, JsValueRef *object) { return ::JsCreateExternalObject(data, callback, object); }
+    static JsErrorCode WINAPI JsGetArrayForEachFunction(JsValueRef * result) { return ::JsGetArrayForEachFunction(result); }
+    static JsErrorCode WINAPI JsGetArrayKeysFunction(JsValueRef * result) { return ::JsGetArrayKeysFunction(result); }
+    static JsErrorCode WINAPI JsGetArrayValuesFunction(JsValueRef * result) { return ::JsGetArrayValuesFunction(result); }
+    static JsErrorCode WINAPI JsGetArrayEntriesFunction(JsValueRef * result) { return ::JsGetArrayEntriesFunction(result); }
+    static JsErrorCode WINAPI JsGetPropertyIdSymbolIterator(JsPropertyIdRef * propertyId) { return ::JsGetPropertyIdSymbolIterator(propertyId); }
+    static JsErrorCode WINAPI JsGetErrorPrototype(JsValueRef * result) { return ::JsGetErrorPrototype(result); }
+    static JsErrorCode WINAPI JsGetIteratorPrototype(JsValueRef * result) { return ::JsGetIteratorPrototype(result); }
+    static JsErrorCode WINAPI JsCreateFunction(JsNativeFunction nativeFunction, void *callbackState, JsValueRef *function) { return ::JsCreateFunction(nativeFunction, callbackState, function); }
+    static JsErrorCode WINAPI JsCreateEnhancedFunction(JsEnhancedNativeFunction nativeFunction, JsValueRef metadata, void *callbackState, JsValueRef *function) { return ::JsCreateEnhancedFunction(nativeFunction, metadata, callbackState, function); }
+    static JsErrorCode WINAPI JsCreateNamedFunction(JsValueRef name, JsNativeFunction nativeFunction, void *callbackState, JsValueRef *function) { return ::JsCreateNamedFunction(name, nativeFunction, callbackState, function); }
+    static JsErrorCode WINAPI JsSetProperty(JsValueRef object, JsPropertyIdRef property, JsValueRef value, bool useStrictRules) { return ::JsSetProperty(object, property, value, useStrictRules); }
+    static JsErrorCode WINAPI JsGetGlobalObject(JsValueRef *globalObject) { return ::JsGetGlobalObject(globalObject); }
+    static JsErrorCode WINAPI JsGetUndefinedValue(JsValueRef *globalObject) { return ::JsGetUndefinedValue(globalObject); }
+    static JsErrorCode WINAPI JsGetNullValue(JsValueRef *globalObject) { return ::JsGetNullValue(globalObject); }
+    static JsErrorCode WINAPI JsGetTrueValue(JsValueRef *globalObject) { return ::JsGetTrueValue(globalObject); }
+    static JsErrorCode WINAPI JsGetFalseValue(JsValueRef *globalObject) { return ::JsGetFalseValue(globalObject); }
+    static JsErrorCode WINAPI JsConvertValueToString(JsValueRef value, JsValueRef *stringValue) { return ::JsConvertValueToString(value, stringValue); }
+    static JsErrorCode WINAPI JsConvertValueToNumber(JsValueRef value, JsValueRef *numberValue) { return ::JsConvertValueToNumber(value, numberValue); }
+    static JsErrorCode WINAPI JsConvertValueToBoolean(JsValueRef value, JsValueRef *booleanValue) { return ::JsConvertValueToBoolean(value, booleanValue); }
+    static JsErrorCode WINAPI JsBooleanToBool(JsValueRef value, bool* boolValue) { return ::JsBooleanToBool(value, boolValue); }
+    static JsErrorCode WINAPI JsGetProperty(JsValueRef object, JsPropertyIdRef property, JsValueRef* value) { return ::JsGetProperty(object, property, value); }
+    static JsErrorCode WINAPI JsHasProperty(JsValueRef object, JsPropertyIdRef property, bool *hasProperty) { return ::JsHasProperty(object, property, hasProperty); }
+    static JsErrorCode WINAPI JsCallFunction(JsValueRef function, JsValueRef* arguments, unsigned short argumentCount, JsValueRef *result) { return ::JsCallFunction(function, arguments, argumentCount, result); }
+    static JsErrorCode WINAPI JsNumberToDouble(JsValueRef value, double* doubleValue) { return ::JsNumberToDouble(value, doubleValue); }
+    static JsErrorCode WINAPI JsNumberToInt(JsValueRef value, int* intValue) { return ::JsNumberToInt(value, intValue); }
+    static JsErrorCode WINAPI JsIntToNumber(int intValue, JsValueRef *value) { return ::JsIntToNumber(intValue, value); }
+    static JsErrorCode WINAPI JsDoubleToNumber(double doubleValue, JsValueRef* value) { return ::JsDoubleToNumber(doubleValue, value); }
+    static JsErrorCode WINAPI JsGetExternalData(JsValueRef object, void **data) { return ::JsGetExternalData(object, data); }
+    static JsErrorCode WINAPI JsSetExternalData(JsValueRef object, void *data)  { return ::JsSetExternalData(object, data); }
+    static JsErrorCode WINAPI JsCloneObject(JsValueRef object, JsValueRef *data) { return ::JsCloneObject(object, data); }
+    static JsErrorCode WINAPI JsCreateArray(unsigned int length, JsValueRef *result) { return ::JsCreateArray(length, result); }
+    static JsErrorCode WINAPI JsCreateArrayBuffer(unsigned int byteLength, JsValueRef *result) { return ::JsCreateArrayBuffer(byteLength, result); }
+    static JsErrorCode WINAPI JsCreateSharedArrayBufferWithSharedContent(JsSharedArrayBufferContentHandle sharedContent, JsValueRef *result) { return ::JsCreateSharedArrayBufferWithSharedContent(sharedContent, result); }
+    static JsErrorCode WINAPI JsGetSharedArrayBufferContent(JsValueRef sharedArrayBuffer, JsSharedArrayBufferContentHandle *sharedContents) { return ::JsGetSharedArrayBufferContent(sharedArrayBuffer, sharedContents); }
+    static JsErrorCode WINAPI JsReleaseSharedArrayBufferContentHandle(JsSharedArrayBufferContentHandle sharedContent) { return ::JsReleaseSharedArrayBufferContentHandle(sharedContent); }
+    static JsErrorCode WINAPI JsGetArrayBufferStorage(JsValueRef instance, uint8_t **buffer, unsigned int *bufferLength) { return ::JsGetArrayBufferStorage(instance, buffer, bufferLength); }
+    static JsErrorCode WINAPI JsCreateError(JsValueRef message, JsValueRef *error) { return ::JsCreateError(message, error); }
+    static JsErrorCode WINAPI JsHasException(bool *hasException) { return ::JsHasException(hasException); }
+    static JsErrorCode WINAPI JsSetException(JsValueRef exception) { return ::JsSetException(exception); }
+    static JsErrorCode WINAPI JsGetAndClearException(JsValueRef *exception) { return ::JsGetAndClearException(exception); }
+    static JsErrorCode WINAPI JsGetAndClearExceptionWithMetadata(JsValueRef * metadata) { return ::JsGetAndClearExceptionWithMetadata(metadata); }
+    static JsErrorCode WINAPI JsGetRuntime(JsContextRef context, JsRuntimeHandle *runtime) { return ::JsGetRuntime(context, runtime); }
+    static JsErrorCode WINAPI JsRelease(JsRef ref, unsigned int* count) { return ::JsRelease(ref, count); }
+    static JsErrorCode WINAPI JsAddRef(JsRef ref, unsigned int* count) { return ::JsAddRef(ref, count); }
+    static JsErrorCode WINAPI JsGetValueType(JsValueRef value, JsValueType *type) { return ::JsGetValueType(value, type); }
+    static JsErrorCode WINAPI JsGetIndexedProperty(JsValueRef object, JsValueRef index, JsValueRef *value) { return ::JsGetIndexedProperty(object, index, value); }
+    static JsErrorCode WINAPI JsSetIndexedProperty(JsValueRef object, JsValueRef index, JsValueRef value) { return ::JsSetIndexedProperty(object, index, value); }
+    static JsErrorCode WINAPI JsSetPromiseContinuationCallback(JsPromiseContinuationCallback callback, void *callbackState) { return ::JsSetPromiseContinuationCallback(callback, callbackState); }
+    static JsErrorCode WINAPI JsSetHostPromiseRejectionTracker(JsHostPromiseRejectionTrackerCallback callback, void *callbackState) { return ::JsSetHostPromiseRejectionTracker(callback, callbackState); }
+    static JsErrorCode WINAPI JsGetContextOfObject(JsValueRef object, JsContextRef* context) { return ::JsGetContextOfObject(object, context); }
+    static JsErrorCode WINAPI JsDiagStartDebugging(JsRuntimeHandle runtimeHandle, JsDiagDebugEventCallback debugEventCallback, void* callbackState) { return ::JsDiagStartDebugging(runtimeHandle, debugEventCallback, callbackState); }
+    static JsErrorCode WINAPI JsDiagStopDebugging(JsRuntimeHandle runtimeHandle, void** callbackState) { return ::JsDiagStopDebugging(runtimeHandle, callbackState); }
+    static JsErrorCode WINAPI JsDiagGetSource(unsigned int scriptId, JsValueRef *source) { return ::JsDiagGetSource(scriptId, source); }
+    static JsErrorCode WINAPI JsDiagSetBreakpoint(unsigned int scriptId, unsigned int lineNumber, unsigned int columnNumber, JsValueRef *breakpoint) { return ::JsDiagSetBreakpoint(scriptId, lineNumber, columnNumber, breakpoint); }
+    static JsErrorCode WINAPI JsDiagGetStackTrace(JsValueRef *stackTrace) { return ::JsDiagGetStackTrace(stackTrace); }
+    static JsErrorCode WINAPI JsDiagRequestAsyncBreak(JsRuntimeHandle runtimeHandle) { return ::JsDiagRequestAsyncBreak(runtimeHandle); }
+    static JsErrorCode WINAPI JsDiagGetBreakpoints(JsValueRef * breakpoints) { return ::JsDiagGetBreakpoints(breakpoints); }
+    static JsErrorCode WINAPI JsDiagRemoveBreakpoint(unsigned int breakpointId) { return ::JsDiagRemoveBreakpoint(breakpointId); }
+    static JsErrorCode WINAPI JsDiagSetBreakOnException(JsRuntimeHandle runtimeHandle, JsDiagBreakOnExceptionAttributes exceptionAttributes) { return ::JsDiagSetBreakOnException(runtimeHandle, exceptionAttributes); }
+    static JsErrorCode WINAPI JsDiagGetBreakOnException(JsRuntimeHandle runtimeHandle, JsDiagBreakOnExceptionAttributes * exceptionAttributes) { return ::JsDiagGetBreakOnException(runtimeHandle, exceptionAttributes); }
+    static JsErrorCode WINAPI JsDiagSetStepType(JsDiagStepType stepType) { return ::JsDiagSetStepType(stepType); }
+    static JsErrorCode WINAPI JsDiagGetScripts(JsValueRef * scriptsArray) { return ::JsDiagGetScripts(scriptsArray); }
+    static JsErrorCode WINAPI JsDiagGetFunctionPosition(JsValueRef value, JsValueRef * functionPosition) { return ::JsDiagGetFunctionPosition(value, functionPosition); }
+    static JsErrorCode WINAPI JsDiagGetStackProperties(unsigned int stackFrameIndex, JsValueRef * properties) { return ::JsDiagGetStackProperties(stackFrameIndex, properties); }
+    static JsErrorCode WINAPI JsDiagGetProperties(unsigned int objectHandle, unsigned int fromCount, unsigned int totalCount, JsValueRef * propertiesObject) { return ::JsDiagGetProperties(objectHandle, fromCount, totalCount, propertiesObject); }
+    static JsErrorCode WINAPI JsDiagGetObjectFromHandle(unsigned int handle, JsValueRef * handleObject) { return ::JsDiagGetObjectFromHandle(handle, handleObject); }
+    static JsErrorCode WINAPI JsDiagEvaluate(JsValueRef expression, unsigned int stackFrameIndex, JsParseScriptAttributes parseAttributes, bool forceSetValueProp, JsValueRef * evalResult) { return ::JsDiagEvaluate(expression, stackFrameIndex, parseAttributes, forceSetValueProp, evalResult); }
     static JsErrorCode WINAPI JsParseModuleSource(JsModuleRecord requestModule, JsSourceContext sourceContext, byte* sourceText, unsigned int sourceLength, JsParseModuleSourceFlags sourceFlag, JsValueRef* exceptionValueRef) {
-        return HOOK_JS_API(ParseModuleSource(requestModule, sourceContext, sourceText, sourceLength, sourceFlag, exceptionValueRef));
+        return ::JsParseModuleSource(requestModule, sourceContext, sourceText, sourceLength, sourceFlag, exceptionValueRef);
     }
-    static JsErrorCode WINAPI JsModuleEvaluation(JsModuleRecord requestModule, JsValueRef* result) { return HOOK_JS_API(ModuleEvaluation(requestModule, result)); }
-    static JsErrorCode WINAPI JsGetModuleNamespace(JsModuleRecord requestModule, JsValueRef *moduleNamespace) { return HOOK_JS_API(GetModuleNamespace(requestModule, moduleNamespace)); }
+    static JsErrorCode WINAPI JsModuleEvaluation(JsModuleRecord requestModule, JsValueRef* result) { return ::JsModuleEvaluation(requestModule, result); }
+    static JsErrorCode WINAPI JsGetModuleNamespace(JsModuleRecord requestModule, JsValueRef *moduleNamespace) { return ::JsGetModuleNamespace(requestModule, moduleNamespace); }
     static JsErrorCode WINAPI JsInitializeModuleRecord(JsModuleRecord referencingModule, JsValueRef normalizedSpecifier, JsModuleRecord* moduleRecord) {
-        return HOOK_JS_API(InitializeModuleRecord(referencingModule, normalizedSpecifier, moduleRecord));
+        return ::JsInitializeModuleRecord(referencingModule, normalizedSpecifier, moduleRecord);
     }
-    static JsErrorCode WINAPI JsSetModuleHostInfo(JsModuleRecord requestModule, JsModuleHostInfoKind moduleHostInfo, void* hostInfo) { return HOOK_JS_API(SetModuleHostInfo(requestModule, moduleHostInfo, hostInfo)); }
-    static JsErrorCode WINAPI JsGetModuleHostInfo(JsModuleRecord requestModule, JsModuleHostInfoKind moduleHostInfo, void** hostInfo) { return HOOK_JS_API(GetModuleHostInfo(requestModule, moduleHostInfo, hostInfo)); }
+    static JsErrorCode WINAPI JsSetModuleHostInfo(JsModuleRecord requestModule, JsModuleHostInfoKind moduleHostInfo, void* hostInfo) { return ::JsSetModuleHostInfo(requestModule, moduleHostInfo, hostInfo); }
+    static JsErrorCode WINAPI JsGetModuleHostInfo(JsModuleRecord requestModule, JsModuleHostInfoKind moduleHostInfo, void** hostInfo) { return ::JsGetModuleHostInfo(requestModule, moduleHostInfo, hostInfo); }
 
-    static JsErrorCode WINAPI JsTTDCreateRecordRuntime(JsRuntimeAttributes attributes, size_t snapInterval, size_t snapHistoryLength, TTDOpenResourceStreamCallback openResourceStream, JsTTDWriteBytesToStreamCallback writeBytesToStream, JsTTDFlushAndCloseStreamCallback flushAndCloseStream, JsThreadServiceCallback threadService, JsRuntimeHandle *runtime) {  return HOOK_JS_API(TTDCreateRecordRuntime(attributes, false, snapInterval, snapHistoryLength, openResourceStream, writeBytesToStream, flushAndCloseStream, threadService, runtime)); }
-    static JsErrorCode WINAPI JsTTDCreateReplayRuntime(JsRuntimeAttributes attributes, const char* infoUri, size_t infoUriCount, TTDOpenResourceStreamCallback openResourceStream, JsTTDReadBytesFromStreamCallback readBytesFromStream, JsTTDFlushAndCloseStreamCallback flushAndCloseStream, JsThreadServiceCallback threadService, JsRuntimeHandle *runtime) { return HOOK_JS_API(TTDCreateReplayRuntime(attributes, infoUri, infoUriCount, false, openResourceStream, readBytesFromStream, flushAndCloseStream, threadService, runtime)); }
-    static JsErrorCode WINAPI JsTTDCreateContext(JsRuntimeHandle runtime, bool useRuntimeTTDMode, JsContextRef *newContext) { return HOOK_JS_API(TTDCreateContext(runtime, useRuntimeTTDMode, newContext)); }
-    static JsErrorCode WINAPI JsTTDNotifyContextDestroy(JsContextRef context) { return HOOK_JS_API(TTDNotifyContextDestroy(context)); }
+    static JsErrorCode WINAPI JsTTDCreateRecordRuntime(JsRuntimeAttributes attributes, size_t snapInterval, size_t snapHistoryLength, TTDOpenResourceStreamCallback openResourceStream, JsTTDWriteBytesToStreamCallback writeBytesToStream, JsTTDFlushAndCloseStreamCallback flushAndCloseStream, JsThreadServiceCallback threadService, JsRuntimeHandle *runtime) {  return ::JsTTDCreateRecordRuntime(attributes, false, snapInterval, snapHistoryLength, openResourceStream, writeBytesToStream, flushAndCloseStream, threadService, runtime); }
+    static JsErrorCode WINAPI JsTTDCreateReplayRuntime(JsRuntimeAttributes attributes, const char* infoUri, size_t infoUriCount, TTDOpenResourceStreamCallback openResourceStream, JsTTDReadBytesFromStreamCallback readBytesFromStream, JsTTDFlushAndCloseStreamCallback flushAndCloseStream, JsThreadServiceCallback threadService, JsRuntimeHandle *runtime) { return ::JsTTDCreateReplayRuntime(attributes, infoUri, infoUriCount, false, openResourceStream, readBytesFromStream, flushAndCloseStream, threadService, runtime); }
+    static JsErrorCode WINAPI JsTTDCreateContext(JsRuntimeHandle runtime, bool useRuntimeTTDMode, JsContextRef *newContext) { return ::JsTTDCreateContext(runtime, useRuntimeTTDMode, newContext); }
+    static JsErrorCode WINAPI JsTTDNotifyContextDestroy(JsContextRef context) { return ::JsTTDNotifyContextDestroy(context); }
 
-    static JsErrorCode WINAPI JsTTDStart() { return HOOK_JS_API(TTDStart()); }
-    static JsErrorCode WINAPI JsTTDStop() { return HOOK_JS_API(TTDStop()); }
+    static JsErrorCode WINAPI JsTTDStart() { return ::JsTTDStart(); }
+    static JsErrorCode WINAPI JsTTDStop() { return ::JsTTDStop(); }
 
-    static JsErrorCode WINAPI JsTTDNotifyYield() { return HOOK_JS_API(TTDNotifyYield()); }
-    static JsErrorCode WINAPI JsTTDHostExit(int statusCode) { return HOOK_JS_API(TTDHostExit(statusCode)); }
+    static JsErrorCode WINAPI JsTTDNotifyYield() { return ::JsTTDNotifyYield(); }
+    static JsErrorCode WINAPI JsTTDHostExit(int statusCode) { return ::JsTTDHostExit(statusCode); }
 
-    static JsErrorCode WINAPI JsTTDGetSnapTimeTopLevelEventMove(JsRuntimeHandle runtimeHandle, JsTTDMoveMode moveMode, uint32_t kthEvent, int64_t* targetEventTime, int64_t* targetStartSnapTime, int64_t* targetEndSnapTime) { return HOOK_JS_API(TTDGetSnapTimeTopLevelEventMove(runtimeHandle, moveMode, kthEvent, targetEventTime, targetStartSnapTime, targetEndSnapTime)); }
-    static JsErrorCode WINAPI JsTTDMoveToTopLevelEvent(JsRuntimeHandle runtimeHandle, JsTTDMoveMode moveMode, int64_t snapshotStartTime, int64_t eventTime) { return HOOK_JS_API(TTDMoveToTopLevelEvent(runtimeHandle, moveMode, snapshotStartTime, eventTime)); }
-    static JsErrorCode WINAPI JsTTDReplayExecution(JsTTDMoveMode* moveMode, int64_t* rootEventTime) { return HOOK_JS_API(TTDReplayExecution(moveMode, rootEventTime)); }
+    static JsErrorCode WINAPI JsTTDGetSnapTimeTopLevelEventMove(JsRuntimeHandle runtimeHandle, JsTTDMoveMode moveMode, uint32_t kthEvent, int64_t* targetEventTime, int64_t* targetStartSnapTime, int64_t* targetEndSnapTime) { return ::JsTTDGetSnapTimeTopLevelEventMove(runtimeHandle, moveMode, kthEvent, targetEventTime, targetStartSnapTime, targetEndSnapTime); }
+    static JsErrorCode WINAPI JsTTDMoveToTopLevelEvent(JsRuntimeHandle runtimeHandle, JsTTDMoveMode moveMode, int64_t snapshotStartTime, int64_t eventTime) { return ::JsTTDMoveToTopLevelEvent(runtimeHandle, moveMode, snapshotStartTime, eventTime); }
+    static JsErrorCode WINAPI JsTTDReplayExecution(JsTTDMoveMode* moveMode, int64_t* rootEventTime) { return ::JsTTDReplayExecution(moveMode, rootEventTime); }
 
-    static JsErrorCode WINAPI JsRun(JsValueRef script, JsSourceContext sourceContext, JsValueRef sourceUrl, JsParseScriptAttributes parseAttributes, JsValueRef *result) { return HOOK_JS_API(Run(script, sourceContext, sourceUrl, parseAttributes, result)); }
-    static JsErrorCode WINAPI JsParse(JsValueRef script, JsSourceContext sourceContext, JsValueRef sourceUrl, JsParseScriptAttributes parseAttributes, JsValueRef *result) { return HOOK_JS_API(Parse(script, sourceContext, sourceUrl, parseAttributes, result)); }
-    static JsErrorCode WINAPI JsSerialize(JsValueRef script, JsValueRef *buffer, JsParseScriptAttributes parseAttributes) { return HOOK_JS_API(Serialize(script, buffer, parseAttributes)); }
-    static JsErrorCode WINAPI JsRunSerialized(JsValueRef buffer, JsSerializedLoadScriptCallback scriptLoadCallback, JsSourceContext sourceContext, JsValueRef sourceUrl, JsValueRef * result) { return HOOK_JS_API(RunSerialized(buffer, scriptLoadCallback, sourceContext, sourceUrl, result)); }
-    static JsErrorCode WINAPI JsGetStringLength(JsValueRef value, int *stringLength) { return HOOK_JS_API(GetStringLength(value, stringLength)); }
-    static JsErrorCode WINAPI JsCopyString(JsValueRef value, char* buffer, size_t bufferSize, size_t* length) { return HOOK_JS_API(CopyString(value, buffer, bufferSize, length)); }
-    static JsErrorCode WINAPI JsCreateString(const char *content, size_t length, JsValueRef *value) { return HOOK_JS_API(CreateString(content, length, value)); }
-    static JsErrorCode WINAPI JsCreateStringUtf16(const uint16_t *content, size_t length, JsValueRef *value) { return HOOK_JS_API(CreateStringUtf16(content, length, value)); }
-    static JsErrorCode WINAPI JsCreatePropertyId(const char *name, size_t length, JsPropertyIdRef *propertyId) { return HOOK_JS_API(CreatePropertyId(name, length, propertyId)); }
-    static JsErrorCode WINAPI JsCreateExternalArrayBuffer(void *data, unsigned int byteLength, JsFinalizeCallback finalizeCallback, void *callbackState, JsValueRef *result)  { return HOOK_JS_API(CreateExternalArrayBuffer(data, byteLength, finalizeCallback, callbackState, result)); }
-    static JsErrorCode WINAPI JsGetProxyProperties(JsValueRef object, bool* isProxy, JsValueRef* target, JsValueRef* handler)  { return HOOK_JS_API(GetProxyProperties(object, isProxy, target, handler)); }
+    static JsErrorCode WINAPI JsRun(JsValueRef script, JsSourceContext sourceContext, JsValueRef sourceUrl, JsParseScriptAttributes parseAttributes, JsValueRef *result) { return ::JsRun(script, sourceContext, sourceUrl, parseAttributes, result); }
+    static JsErrorCode WINAPI JsParse(JsValueRef script, JsSourceContext sourceContext, JsValueRef sourceUrl, JsParseScriptAttributes parseAttributes, JsValueRef *result) { return ::JsParse(script, sourceContext, sourceUrl, parseAttributes, result); }
+    static JsErrorCode WINAPI JsSerialize(JsValueRef script, JsValueRef *buffer, JsParseScriptAttributes parseAttributes) { return ::JsSerialize(script, buffer, parseAttributes); }
+    static JsErrorCode WINAPI JsRunSerialized(JsValueRef buffer, JsSerializedLoadScriptCallback scriptLoadCallback, JsSourceContext sourceContext, JsValueRef sourceUrl, JsValueRef * result) { return ::JsRunSerialized(buffer, scriptLoadCallback, sourceContext, sourceUrl, result); }
+    static JsErrorCode WINAPI JsGetStringLength(JsValueRef value, int *stringLength) { return ::JsGetStringLength(value, stringLength); }
+    static JsErrorCode WINAPI JsCopyString(JsValueRef value, char* buffer, size_t bufferSize, size_t* length) { return ::JsCopyString(value, buffer, bufferSize, length); }
+    static JsErrorCode WINAPI JsCreateString(const char *content, size_t length, JsValueRef *value) { return ::JsCreateString(content, length, value); }
+    static JsErrorCode WINAPI JsCreateStringUtf16(const uint16_t *content, size_t length, JsValueRef *value) { return ::JsCreateStringUtf16(content, length, value); }
+    static JsErrorCode WINAPI JsCreatePropertyId(const char *name, size_t length, JsPropertyIdRef *propertyId) { return ::JsCreatePropertyId(name, length, propertyId); }
+    static JsErrorCode WINAPI JsCreateExternalArrayBuffer(void *data, unsigned int byteLength, JsFinalizeCallback finalizeCallback, void *callbackState, JsValueRef *result)  { return ::JsCreateExternalArrayBuffer(data, byteLength, finalizeCallback, callbackState, result); }
+    static JsErrorCode WINAPI JsGetProxyProperties(JsValueRef object, bool* isProxy, JsValueRef* target, JsValueRef* handler)  { return ::JsGetProxyProperties(object, isProxy, target, handler); }
 
-    static JsErrorCode WINAPI JsSerializeParserState(JsValueRef script, JsValueRef *buffer, JsParseScriptAttributes parseAttributes) { return HOOK_JS_API(SerializeParserState(script, buffer, parseAttributes)); }
-    static JsErrorCode WINAPI JsRunScriptWithParserState(JsValueRef script, JsSourceContext sourceContext, JsValueRef sourceUrl, JsParseScriptAttributes parseAttributes, JsValueRef parserState, JsValueRef * result) { return HOOK_JS_API(RunScriptWithParserState(script, sourceContext, sourceUrl, parseAttributes, parserState, result)); }
+    static JsErrorCode WINAPI JsSerializeParserState(JsValueRef script, JsValueRef *buffer, JsParseScriptAttributes parseAttributes) { return ::JsSerializeParserState(script, buffer, parseAttributes); }
+    static JsErrorCode WINAPI JsRunScriptWithParserState(JsValueRef script, JsSourceContext sourceContext, JsValueRef sourceUrl, JsParseScriptAttributes parseAttributes, JsValueRef parserState, JsValueRef * result) { return ::JsRunScriptWithParserState(script, sourceContext, sourceUrl, parseAttributes, parserState, result); }
 
-    static JsErrorCode WINAPI JsVarSerializer(ReallocateBufferMemoryFunc reallocateBufferMemory, WriteHostObjectFunc writeHostObject, void * callbackState, JsVarSerializerHandle *serializerHandle) { return HOOK_JS_API(VarSerializer(reallocateBufferMemory, writeHostObject, callbackState, serializerHandle)); }
-    static JsErrorCode WINAPI JsVarSerializerSetTransferableVars(JsVarSerializerHandle serializerHandle, JsValueRef *transferableVars, size_t transferableVarsCount) { return HOOK_JS_API(VarSerializerSetTransferableVars(serializerHandle, transferableVars, transferableVarsCount)); }
-    static JsErrorCode WINAPI JsVarSerializerWriteValue(JsVarSerializerHandle serializerHandle, JsValueRef rootObject) { return HOOK_JS_API(VarSerializerWriteValue(serializerHandle, rootObject)); }
-    static JsErrorCode WINAPI JsVarSerializerReleaseData(JsVarSerializerHandle serializerHandle, byte** data, size_t *dataLength) { return HOOK_JS_API(VarSerializerReleaseData(serializerHandle, data, dataLength)); }
-    static JsErrorCode WINAPI JsVarSerializerFree(JsVarSerializerHandle serializerHandle) { return HOOK_JS_API(VarSerializerFree(serializerHandle)); }
+    static JsErrorCode WINAPI JsVarSerializer(ReallocateBufferMemoryFunc reallocateBufferMemory, WriteHostObjectFunc writeHostObject, void * callbackState, JsVarSerializerHandle *serializerHandle) { return ::JsVarSerializer(reallocateBufferMemory, writeHostObject, callbackState, serializerHandle); }
+    static JsErrorCode WINAPI JsVarSerializerSetTransferableVars(JsVarSerializerHandle serializerHandle, JsValueRef *transferableVars, size_t transferableVarsCount) { return ::JsVarSerializerSetTransferableVars(serializerHandle, transferableVars, transferableVarsCount); }
+    static JsErrorCode WINAPI JsVarSerializerWriteValue(JsVarSerializerHandle serializerHandle, JsValueRef rootObject) { return ::JsVarSerializerWriteValue(serializerHandle, rootObject); }
+    static JsErrorCode WINAPI JsVarSerializerReleaseData(JsVarSerializerHandle serializerHandle, byte** data, size_t *dataLength) { return ::JsVarSerializerReleaseData(serializerHandle, data, dataLength); }
+    static JsErrorCode WINAPI JsVarSerializerFree(JsVarSerializerHandle serializerHandle) { return ::JsVarSerializerFree(serializerHandle); }
 
-    static JsErrorCode WINAPI JsVarDeserializer(void *data, size_t dataLength, ReadHostObjectFunc readHostObject, GetSharedArrayBufferFromIdFunc getSharedArrayBufferFromId, void* callbackState, JsVarDeserializerHandle *deserializerHandle) { return HOOK_JS_API(VarDeserializer(data, dataLength, readHostObject, getSharedArrayBufferFromId, callbackState, deserializerHandle)); }
-    static JsErrorCode WINAPI JsVarDeserializerSetTransferableVars(JsVarDeserializerHandle deserializerHandle, JsValueRef* transferableVars, size_t transferableVarsCount) { return HOOK_JS_API(VarDeserializerSetTransferableVars(deserializerHandle, transferableVars, transferableVarsCount)); }
-    static JsErrorCode WINAPI JsVarDeserializerReadValue(JsVarDeserializerHandle deserializerHandle, JsValueRef* value) { return HOOK_JS_API(VarDeserializerReadValue(deserializerHandle, value)); }
-    static JsErrorCode WINAPI JsVarDeserializerFree(JsVarDeserializerHandle deserializerHandle) { return HOOK_JS_API(VarDeserializerFree(deserializerHandle)); }
+    static JsErrorCode WINAPI JsVarDeserializer(void *data, size_t dataLength, ReadHostObjectFunc readHostObject, GetSharedArrayBufferFromIdFunc getSharedArrayBufferFromId, void* callbackState, JsVarDeserializerHandle *deserializerHandle) { return ::JsVarDeserializer(data, dataLength, readHostObject, getSharedArrayBufferFromId, callbackState, deserializerHandle); }
+    static JsErrorCode WINAPI JsVarDeserializerSetTransferableVars(JsVarDeserializerHandle deserializerHandle, JsValueRef* transferableVars, size_t transferableVarsCount) { return ::JsVarDeserializerSetTransferableVars(deserializerHandle, transferableVars, transferableVarsCount); }
+    static JsErrorCode WINAPI JsVarDeserializerReadValue(JsVarDeserializerHandle deserializerHandle, JsValueRef* value) { return ::JsVarDeserializerReadValue(deserializerHandle, value); }
+    static JsErrorCode WINAPI JsVarDeserializerFree(JsVarDeserializerHandle deserializerHandle) { return ::JsVarDeserializerFree(deserializerHandle); }
 
-    static JsErrorCode WINAPI JsDetachArrayBuffer(JsValueRef buffer) { return HOOK_JS_API(DetachArrayBuffer(buffer)); }
-    static JsErrorCode WINAPI JsQueueBackgroundParse_Experimental(JsScriptContents* contents, uint32_t* dwBgParseCookie) { return HOOK_JS_API(QueueBackgroundParse_Experimental)(contents, dwBgParseCookie);  }
-    static JsErrorCode WINAPI JsDiscardBackgroundParse_Experimental(uint32_t dwBgParseCookie, void* buffer, bool* callerOwnsBuffer) { return HOOK_JS_API(DiscardBackgroundParse_Experimental(dwBgParseCookie, buffer, callerOwnsBuffer)); }
-    static JsErrorCode WINAPI JsExecuteBackgroundParse_Experimental(uint32_t dwBgParseCookie, JsValueRef script, JsSourceContext sourceContext, char16_t *url, JsParseScriptAttributes parseAttributes, JsValueRef parserState, JsValueRef *result) { return HOOK_JS_API(ExecuteBackgroundParse_Experimental(dwBgParseCookie, script, sourceContext, url, parseAttributes, parserState, result)); }
+    static JsErrorCode WINAPI JsDetachArrayBuffer(JsValueRef buffer) { return ::JsDetachArrayBuffer(buffer); }
+    static JsErrorCode WINAPI JsQueueBackgroundParse_Experimental(JsScriptContents* contents, uint32_t* dwBgParseCookie) { return ::JsQueueBackgroundParse_Experimental(contents, dwBgParseCookie);  }
+    static JsErrorCode WINAPI JsDiscardBackgroundParse_Experimental(uint32_t dwBgParseCookie, void* buffer, bool* callerOwnsBuffer) { return ::JsDiscardBackgroundParse_Experimental(dwBgParseCookie, buffer, callerOwnsBuffer); }
+    static JsErrorCode WINAPI JsExecuteBackgroundParse_Experimental(uint32_t dwBgParseCookie, JsValueRef script, JsSourceContext sourceContext, char16_t *url, JsParseScriptAttributes parseAttributes, JsValueRef parserState, JsValueRef *result) { return ::JsExecuteBackgroundParse_Experimental(dwBgParseCookie, script, sourceContext, url, parseAttributes, parserState, result); }
 
-    static JsErrorCode WINAPI JsGetArrayBufferFreeFunction(JsValueRef buffer, ArrayBufferFreeFn* freeFn) { return HOOK_JS_API(GetArrayBufferFreeFunction(buffer, freeFn)); }
-    static JsErrorCode WINAPI JsExternalizeArrayBuffer(JsValueRef buffer) { return HOOK_JS_API(ExternalizeArrayBuffer(buffer)); }
+    static JsErrorCode WINAPI JsGetArrayBufferFreeFunction(JsValueRef buffer, ArrayBufferFreeFn* freeFn) { return ::JsGetArrayBufferFreeFunction(buffer, freeFn); }
+    static JsErrorCode WINAPI JsExternalizeArrayBuffer(JsValueRef buffer) { return ::JsExternalizeArrayBuffer(buffer); }
 };
 
 class AutoRestoreContext
