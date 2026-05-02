@@ -112,7 +112,7 @@ public:
     static void FinalizeFree(void * addr);
     static void RegisterScriptDir(unsigned long sourceContext, const char * fullDirNarrow);
 private:
-    static void SetExceptionIf(JsErrorCode errorCode, const char16_t* errorMessage);
+    static void SetExceptionIf(JsErrorCode errorCode, std::u16string_view errorMessage);
     static bool CreateArgumentsObject(JsValueRef *argsObject);
     static bool CreateNamedFunction(const char*, JsNativeFunction callback, JsValueRef* functionVar);
     static void GetDir(const char * fullPathNarrow, std::string *fullDirNarrow);

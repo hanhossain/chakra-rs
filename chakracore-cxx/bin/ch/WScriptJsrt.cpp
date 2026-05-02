@@ -202,7 +202,7 @@ JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *argu
     int32_t hr = E_FAIL;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     JsErrorCode errorCode = JsNoError;
-    const char16_t* errorMessage = u"";
+    std::u16string errorMessage;
 
     if (argumentCount < 2 || argumentCount > 4)
     {
@@ -241,7 +241,7 @@ Error:
     return returnValue;
 }
 
-void WScriptJsrt::SetExceptionIf(JsErrorCode errorCode, const char16_t* errorMessage)
+void WScriptJsrt::SetExceptionIf(JsErrorCode errorCode, const std::u16string_view errorMessage)
 {
     if (errorCode != JsNoError)
     {
@@ -252,7 +252,7 @@ void WScriptJsrt::SetExceptionIf(JsErrorCode errorCode, const char16_t* errorMes
             JsValueRef errorObject;
             JsValueRef errorMessageString;
 
-            if (PAL_wcscmp(errorMessage, u"") == 0)
+            if (errorMessage.empty())
             {
                 const char * errorMessageStr = ConvertErrorCodeToMessage(errorCode);
                 errorCode = ChakraRTInterface::JsCreateString(errorMessageStr, strlen(errorMessageStr),
@@ -260,7 +260,7 @@ void WScriptJsrt::SetExceptionIf(JsErrorCode errorCode, const char16_t* errorMes
             }
             else
             {
-                ERROR_MESSAGE_TO_STRING(errCode, errorMessage, errorMessageString);
+                ERROR_MESSAGE_TO_STRING(errCode, errorMessage.data(), errorMessageString);
             }
 
             ChakraRTInterface::JsCreateError(errorMessageString, &errorObject);
@@ -288,7 +288,7 @@ bool WriteHostObject(void * state, JsValueRef data)
 JsValueRef WScriptJsrt::SerializeObject(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
     JsErrorCode errorCode = JsNoError;
-    const char16_t* errorMessage = u"";
+    std::u16string errorMessage;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     int32_t hr = S_OK;
     JsValueRef *transferVarsArray = nullptr;
@@ -423,7 +423,7 @@ void BufferFreeFunction(void * state)
 JsValueRef WScriptJsrt::Deserialize(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
     JsErrorCode errorCode = JsNoError;
-    const char16_t* errorMessage = u"";
+    std::u16string errorMessage;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     JsValueRef * transferables = nullptr;
     int32_t hr = S_OK;
@@ -480,7 +480,7 @@ JsValueRef WScriptJsrt::GetModuleNamespace(JsValueRef callee, bool isConstructCa
 {
     JsErrorCode errorCode = JsNoError;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
-    const char16_t* errorMessage = u"";
+    std::u16string errorMessage;
     char fullPath[_MAX_PATH];
 
     if (argumentCount < 2)
@@ -537,7 +537,7 @@ JsValueRef WScriptJsrt::LoadScriptHelper(JsValueRef callee, bool isConstructCall
 {
     int32_t hr = E_FAIL;
     JsErrorCode errorCode = JsNoError;
-    const char16_t* errorMessage = u"";
+    std::u16string errorMessage;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
 
     if (argumentCount < 2 || argumentCount > 4)
@@ -667,7 +667,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, const char * fileName,
 {
     int32_t hr = E_FAIL;
     JsErrorCode errorCode = JsNoError;
-    const char16_t* errorMessage = u"Internal error.";
+    std::u16string errorMessage = u"Internal error.";
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     JsContextRef currentContext = JS_INVALID_REFERENCE;
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
@@ -820,7 +820,7 @@ Error:
 
 JsValueRef WScriptJsrt::MonotonicNowCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    const char16_t* errorMessage = u"invalid call to WScript.monotonicNow";
+    const std::u16string errorMessage = u"invalid call to WScript.monotonicNow";
     JsErrorCode errorCode = JsNoError;
     int32_t hr = S_OK;
     JsValueRef result;
@@ -836,7 +836,7 @@ Error:
 
 JsValueRef WScriptJsrt::SetTimeoutCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    const char16_t* errorMessage = u"invalid call to WScript.SetTimeout";
+    const std::u16string errorMessage = u"invalid call to WScript.SetTimeout";
     JsErrorCode errorCode = JsNoError;
     int32_t hr = S_OK;
 
@@ -870,7 +870,7 @@ Error:
 
 JsValueRef WScriptJsrt::ClearTimeoutCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    const char16_t* errorMessage = u"invalid call to WScript.ClearTimeout";
+    const std::u16string errorMessage = u"invalid call to WScript.ClearTimeout";
     JsErrorCode errorCode = JsNoError;
     int32_t hr = S_OK;
 
@@ -906,7 +906,7 @@ void QueueDebugOperation(JsValueRef function, const DebugOperationFunc& operatio
 
 JsValueRef WScriptJsrt::AttachCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    const char16_t* errorMessage = u"WScript.Attach requires a function, like WScript.Attach(foo);";
+    const std::u16string errorMessage = u"WScript.Attach requires a function, like WScript.Attach(foo);";
     JsErrorCode errorCode = JsNoError;
     int32_t hr = S_OK;
     JsValueType argumentType = JsUndefined;
@@ -937,7 +937,7 @@ Error:
 
 JsValueRef WScriptJsrt::DetachCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    const char16_t* errorMessage = u"WScript.Detach requires a function, like WScript.Detach(foo);";
+    const std::u16string errorMessage = u"WScript.Detach requires a function, like WScript.Detach(foo);";
     JsErrorCode errorCode = JsNoError;
     int32_t hr = S_OK;
     JsValueType argumentType = JsUndefined;
