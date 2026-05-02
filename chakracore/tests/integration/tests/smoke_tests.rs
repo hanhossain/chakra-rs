@@ -1,21 +1,19 @@
-use crate::common::CH_PATH;
 use std::path::PathBuf;
+use std::process::ExitCode;
 
-// TODO (hanhossain): use common module
 #[test]
 fn hello() {
-    let source =
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../chakracore-cxx/test/Basics/hello.js");
+    let source = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../chakracore-cxx/test/Basics/hello.js")
+        .to_string_lossy()
+        .to_string();
 
-    let mut ch_exe = std::process::Command::new(CH_PATH);
-    ch_exe.arg(source);
-    let output = ch_exe.output().unwrap();
+    let args = ["characore".to_owned(), source];
+    let exit_code = chakracore::main_internal(&args);
 
-    let out = String::from_utf8_lossy(&output.stdout);
-
-    let actual = out.lines().collect::<Vec<_>>();
+    let actual = chakra::CONSOLE_LOGS.lock().unwrap().clone();
     let expected = vec!["hello world", "PASS"];
     assert_eq!(actual, expected);
-    assert_eq!(output.stderr, b"");
-    assert!(output.status.success());
+
+    assert_eq!(exit_code, ExitCode::SUCCESS);
 }

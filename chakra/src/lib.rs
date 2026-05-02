@@ -1,11 +1,15 @@
 use std::env::current_exe;
+use std::sync::Mutex;
 
 #[cxx::bridge(namespace = "chakra")]
 mod ffi {
     extern "Rust" {
         fn print_usage();
+        fn print_std_out(s: String);
     }
 }
+
+pub static CONSOLE_LOGS: Mutex<Vec<String>> = Mutex::new(Vec::new());
 
 pub fn print_usage() {
     #[cfg(debug_assertions)]
@@ -25,6 +29,10 @@ pub fn print_usage() {
         println!("\t-v|--version\t\tDisplays version info");
         println!("\t-h|--help|-?\t\tDisplays this help message");
     }
+}
+
+fn print_std_out(s: String) {
+    CONSOLE_LOGS.lock().unwrap().push(s);
 }
 
 fn get_ttd_directory(record_uri: String) -> String {

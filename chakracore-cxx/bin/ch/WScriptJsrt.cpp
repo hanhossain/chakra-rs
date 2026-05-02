@@ -12,6 +12,7 @@
 
 #include <chrono>
 #include <filesystem>
+#include "chakra/src/lib.rs.h"
 
 #if defined(_X86_) || defined(_M_IX86)
 #define CPU_ARCH_TEXT "x86"
@@ -128,6 +129,8 @@ bool WScriptJsrt::CreateArgumentsObject(JsValueRef *argsObject)
 
 JsValueRef WScriptJsrt::EchoCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
+    std::string stdoutString;
+
     for (unsigned int i = 1; i < argumentCount; i++)
     {
         JsValueRef strValue;
@@ -139,6 +142,7 @@ JsValueRef WScriptJsrt::EchoCallback(JsValueRef callee, bool isConstructCall, Js
             {
                 if (i > 1)
                 {
+                    stdoutString += " ";
                     std::print(" ");
                 }
                 // HACK: Manually filter out null chars since the underlying strings have embedded null chars
@@ -147,7 +151,9 @@ JsValueRef WScriptJsrt::EchoCallback(JsValueRef callee, bool isConstructCall, Js
                 {
                     if (s[j] != '\0')
                     {
-                        std::print("{}", s[j]);
+                        auto f = std::format("{}", s[j]);
+                        stdoutString += f;
+                        std::print("{}", f);
                     }
                 }
             }
@@ -159,6 +165,7 @@ JsValueRef WScriptJsrt::EchoCallback(JsValueRef callee, bool isConstructCall, Js
         }
     }
 
+    chakra::print_std_out(stdoutString);
     std::println();
     fflush(stdout);
 
