@@ -9,9 +9,9 @@ fn hello() {
         .to_string();
 
     let args = ["characore".to_owned(), source];
-    let exit_code = chakracore::main_internal(&args);
+    let (exit_code, host_context) = chakracore::main_internal(&args);
 
-    let actual = chakra::CONSOLE_LOGS.lock().unwrap().clone();
+    let actual = host_context.unwrap().out.lock().unwrap().clone();
     let expected = vec!["hello world", "PASS"];
     assert_eq!(actual, expected);
 

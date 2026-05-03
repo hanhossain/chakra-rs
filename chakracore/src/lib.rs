@@ -1,3 +1,4 @@
+use chakra::HostContext;
 use std::ffi::{CString, c_char};
 use std::process::ExitCode;
 use std::ptr;
@@ -10,25 +11,25 @@ fn print_version() {
     );
 }
 
-pub fn main_internal(args: &[String]) -> ExitCode {
+pub fn main_internal(args: &[String]) -> (ExitCode, Option<Box<HostContext>>) {
     let Some(chakra_args) = chakra::ChakraArgs::new(&args) else {
         chakra::print_usage();
-        return ExitCode::FAILURE;
+        return (ExitCode::FAILURE, None);
     };
 
     if chakra_args.version {
         print_version();
-        return ExitCode::SUCCESS;
+        return (ExitCode::SUCCESS, None);
     }
 
     if chakra_args.help {
         chakra::print_usage();
-        return ExitCode::SUCCESS;
+        return (ExitCode::SUCCESS, None);
     }
 
     if chakra_args.do_tt_record && chakra_args.do_tt_replay {
         eprintln!("Cannot run in record and replay at same time!!!");
-        return ExitCode::SUCCESS;
+        return (ExitCode::SUCCESS, None);
     }
 
     let args: Vec<CString> = args
@@ -51,6 +52,8 @@ pub fn main_internal(args: &[String]) -> ExitCode {
     }
     argv.push(ptr::null_mut());
 
+    let host_context = Box::into_raw(Box::new(HostContext::new()));
+
     unsafe {
         let res = chakracore_sys::chhelper::ffi::main_internal(
             argc as i32,
@@ -61,7 +64,10 @@ pub fn main_internal(args: &[String]) -> ExitCode {
             chakra_args.do_tt_record,
             chakra_args.do_tt_replay,
             chakra_args.tt_uri,
+            host_context,
         );
-        ExitCode::from(res as u8)
+        let host_context = Box::from_raw(host_context);
+
+        (ExitCode::from(res as u8), Some(host_context))
     }
 }

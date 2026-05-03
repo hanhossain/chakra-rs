@@ -2,6 +2,10 @@
 pub mod ffi {
     extern "C++" {
         include!("chhelper.h");
+        include!("chakra/src/lib.rs.h");
+
+        #[namespace = "chakra"]
+        type HostContext = chakra::HostContext;
 
         unsafe fn main_internal(
             argc: i32,
@@ -12,6 +16,7 @@ pub mod ffi {
             do_tt_record: bool,
             do_tt_replay: bool,
             tt_uri: String,
+            rust_context: *const HostContext,
         ) -> i32;
     }
 }

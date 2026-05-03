@@ -23,7 +23,7 @@ public:
     unsigned int GetTime() { return m_time; };
     unsigned int GetId() { return m_id; };
 
-    virtual int32_t Call(const char * fileName) = 0;
+    virtual int32_t Call(const char* fileName, void* callbackState) = 0;
 };
 
 template <typename T>
@@ -246,14 +246,14 @@ public:
         });
     }
 
-    int32_t ProcessAll(const char * fileName)
+    int32_t ProcessAll(const char * fileName, void *callbackState)
     {
         while(!IsEmpty())
         {
             MessageBase *msg = PopAndWait();
 
             // Omit checking return value for async function, since it shouldn't affect others.
-            msg->Call(fileName);
+            msg->Call(fileName, callbackState);
             delete msg;
 
             ChakraRTInterface::JsTTDNotifyYield();
@@ -276,7 +276,7 @@ public:
         CustomBase(time, customArg), m_func(func)
     {}
 
-    virtual int32_t Call(const char * fileName) override
+    virtual int32_t Call(const char * fileName, void *callbackState) override
     {
         return m_func(*this);
     }

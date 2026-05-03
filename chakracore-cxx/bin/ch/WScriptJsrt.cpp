@@ -165,7 +165,8 @@ JsValueRef WScriptJsrt::EchoCallback(JsValueRef callee, bool isConstructCall, Js
         }
     }
 
-    chakra::print_std_out(stdoutString);
+    auto a = (const chakra::HostContext*)callbackState;
+    a->println(stdoutString);
     std::println();
     fflush(stdout);
 
@@ -196,7 +197,7 @@ JsValueRef WScriptJsrt::QuitCallback(JsValueRef callee, bool isConstructCall, Js
 
 JsValueRef WScriptJsrt::LoadScriptFileCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    return LoadScriptFileHelper(callee, arguments, argumentCount, false);
+    return LoadScriptFileHelper(callee, arguments, argumentCount, false, callbackState);
 }
 
 void WScriptJsrt::FinalizeFree(void* addr)
@@ -204,7 +205,8 @@ void WScriptJsrt::FinalizeFree(void* addr)
     free(addr);
 }
 
-JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *arguments, unsigned short argumentCount, bool isSourceModule)
+JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef* arguments, unsigned short argumentCount,
+                                             bool isSourceModule, void *callbackState)
 {
     int32_t hr = E_FAIL;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
@@ -238,7 +240,7 @@ JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *argu
                 return returnValue;
             }
 
-            returnValue = LoadScript(callee, *fileName, fileContent, *scriptInjectType ? *scriptInjectType : "self", isSourceModule, WScriptJsrt::FinalizeFree, true);
+            returnValue = LoadScript(callee, *fileName, fileContent, *scriptInjectType ? *scriptInjectType : "self", isSourceModule, WScriptJsrt::FinalizeFree, true, callbackState);
         }
     }
 
@@ -591,7 +593,7 @@ JsValueRef WScriptJsrt::LoadScriptHelper(JsValueRef callee, bool isConstructCall
         {
             // TODO: This is CESU-8. How to tell the engine?
             // TODO: How to handle this source (script) life time?
-            returnValue = LoadScript(callee, fileNameNarrow, *fileContent, *scriptInjectType ? *scriptInjectType : "self", isSourceModule, WScriptJsrt::FinalizeFree, isFile);
+            returnValue = LoadScript(callee, fileNameNarrow, *fileContent, *scriptInjectType ? *scriptInjectType : "self", isSourceModule, WScriptJsrt::FinalizeFree, isFile, callbackState);
         }
     }
 
@@ -669,8 +671,9 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(const char * fileName, const char 
 }
 
 
-JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, const char * fileName,
-    const char * fileContent, const char * scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile)
+JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, const char* fileName, const char* fileContent,
+                                   const char* scriptInjectType, bool isSourceModule,
+                                   JsFinalizeCallback finalizeCallback, bool isFile, void *callbackState)
 {
     int32_t hr = E_FAIL;
     JsErrorCode errorCode = JsNoError;
@@ -752,7 +755,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, const char * fileName,
         IfJsErrorFailLog(ChakraRTInterface::JsSetPromiseContinuationCallback(PromiseContinuationCallback, (void*)messageQueue));
 
         // Initialize the host objects
-        Initialize();
+        Initialize(callbackState);
 
         JsValueRef scriptSource;
         IfJsrtErrorSetGo(ChakraRTInterface::JsCreateExternalArrayBuffer((void*)fileContent,
@@ -794,6 +797,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, const char * fileName,
         child->initialSource = fileContent;
         threadData->children.push_back(child);
         child->parent = threadData;
+        child->callbackState = callbackState;
 
         // TODO: need to add a switch in case we don't need to wait for
         // child initial script completion
@@ -998,23 +1002,23 @@ JsValueRef WScriptJsrt::RequestAsyncBreakCallback(JsValueRef callee, bool isCons
 }
 
 bool WScriptJsrt::CreateNamedFunction(const char* nameString, JsNativeFunction callback,
-    JsValueRef* functionVar)
+    JsValueRef* functionVar, void *callbackState)
 {
     JsValueRef nameVar;
     IfJsrtErrorFail(ChakraRTInterface::JsCreateString(
         nameString, strlen(nameString), &nameVar), false);
     IfJsrtErrorFail(ChakraRTInterface::JsCreateNamedFunction(nameVar, callback,
-        nullptr, functionVar), false);
+        callbackState, functionVar), false);
     return true;
 }
 
 bool WScriptJsrt::InstallObjectsOnObject(JsValueRef object, const char* name,
-    JsNativeFunction nativeFunction)
+    JsNativeFunction nativeFunction, void *callbackState)
 {
     JsValueRef propertyValueRef;
     JsPropertyIdRef propertyId;
     IfJsrtErrorFail(CreatePropertyIdFromString(name, &propertyId), false);
-    if (!CreateNamedFunction(name, nativeFunction, &propertyValueRef))
+    if (!CreateNamedFunction(name, nativeFunction, &propertyValueRef, callbackState))
     {
         return false;
     }
@@ -1023,7 +1027,7 @@ bool WScriptJsrt::InstallObjectsOnObject(JsValueRef object, const char* name,
     return true;
 }
 
-bool WScriptJsrt::Initialize()
+bool WScriptJsrt::Initialize(void *callbackState)
 {
     int32_t hr = S_OK;
     char CH_BINARY_LOCATION[2048];
@@ -1037,27 +1041,27 @@ bool WScriptJsrt::Initialize()
     JsValueRef wscript;
     IfJsrtErrorFail(ChakraRTInterface::JsCreateObject(&wscript), false);
 
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "monotonicNow", MonotonicNowCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Echo", EchoCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Quit", QuitCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "LoadScriptFile", LoadScriptFileCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "LoadScript", LoadScriptCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "LoadModule", LoadModuleCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "SetTimeout", SetTimeoutCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "ClearTimeout", ClearTimeoutCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Attach", AttachCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Detach", DetachCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "DumpFunctionPosition", DumpFunctionPositionCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "RequestAsyncBreak", RequestAsyncBreakCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "LoadBinaryFile", LoadBinaryFileCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "LoadTextFile", LoadTextFileCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Flag", FlagCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "RegisterModuleSource", RegisterModuleSourceCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "GetModuleNamespace", GetModuleNamespace));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "GetProxyProperties", GetProxyPropertiesCallback));
+    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "monotonicNow", MonotonicNowCallback, nullptr));
+    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Echo", EchoCallback, callbackState));
+    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Quit", QuitCallback, nullptr));
+    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "LoadScriptFile", LoadScriptFileCallback, nullptr));
+    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "LoadScript", LoadScriptCallback, nullptr));
+    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "LoadModule", LoadModuleCallback, nullptr));
+    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "SetTimeout", SetTimeoutCallback, nullptr));
+    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "ClearTimeout", ClearTimeoutCallback, nullptr));
+    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Attach", AttachCallback, nullptr));
+    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Detach", DetachCallback, nullptr));
+    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "DumpFunctionPosition", DumpFunctionPositionCallback, nullptr));
+    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "RequestAsyncBreak", RequestAsyncBreakCallback, nullptr));
+    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "LoadBinaryFile", LoadBinaryFileCallback, nullptr));
+    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "LoadTextFile", LoadTextFileCallback, nullptr));
+    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Flag", FlagCallback, nullptr));
+    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "RegisterModuleSource", RegisterModuleSourceCallback, nullptr));
+    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "GetModuleNamespace", GetModuleNamespace, nullptr));
+    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "GetProxyProperties", GetProxyPropertiesCallback, nullptr));
 
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "SerializeObject", SerializeObject));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Deserialize", Deserialize));
+    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "SerializeObject", SerializeObject, nullptr));
+    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Deserialize", Deserialize, nullptr));
 
     // Platform
     JsValueRef platformObject;
@@ -1155,15 +1159,15 @@ bool WScriptJsrt::Initialize()
     IfJsrtErrorFail(ChakraRTInterface::JsGetGlobalObject(&global), false);
     IfJsrtErrorFail(ChakraRTInterface::JsSetProperty(global, wscriptName, wscript, true), false);
 
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(global, "print", EchoCallback));
+    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(global, "print", EchoCallback, callbackState));
 
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(global, "read", LoadTextFileCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(global, "readbuffer", LoadBinaryFileCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(global, "readline", ReadLineStdinCallback));
+    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(global, "read", LoadTextFileCallback, nullptr));
+    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(global, "readbuffer", LoadBinaryFileCallback, nullptr));
+    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(global, "readline", ReadLineStdinCallback, nullptr));
 
     JsValueRef console;
     IfJsrtErrorFail(ChakraRTInterface::JsCreateObject(&console), false);
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(console, "log", EchoCallback));
+    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(console, "log", EchoCallback, callbackState));
 
     JsPropertyIdRef consoleName;
     IfJsrtErrorFail(CreatePropertyIdFromString("console", &consoleName), false);
@@ -1180,12 +1184,12 @@ bool WScriptJsrt::Initialize()
     // added to global scope
     if (HostConfigFlags::flags.Test262)
     {
-        IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Broadcast", BroadcastCallback));
-        IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "ReceiveBroadcast", ReceiveBroadcastCallback));
-        IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Report", ReportCallback));
-        IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "GetReport", GetReportCallback));
-        IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Leaving", LeavingCallback));
-        IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Sleep", SleepCallback));
+        IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Broadcast", BroadcastCallback, nullptr));
+        IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "ReceiveBroadcast", ReceiveBroadcastCallback, nullptr));
+        IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Report", ReportCallback, nullptr));
+        IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "GetReport", GetReportCallback, nullptr));
+        IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Leaving", LeavingCallback, nullptr));
+        IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Sleep", SleepCallback, nullptr));
 
         // $262
         const char Test262[] =
@@ -1922,7 +1926,7 @@ WScriptJsrt::CallbackMessage::~CallbackMessage()
     m_function = JS_INVALID_REFERENCE;
 }
 
-int32_t WScriptJsrt::CallbackMessage::Call(const char * fileName)
+int32_t WScriptJsrt::CallbackMessage::Call(const char* fileName, void* callbackState)
 {
     return CallFunction(fileName);
 }
@@ -1989,7 +1993,7 @@ WScriptJsrt::ModuleMessage::~ModuleMessage()
     }
 }
 
-int32_t WScriptJsrt::ModuleMessage::Call(const char * fileName)
+int32_t WScriptJsrt::ModuleMessage::Call(const char * fileName, void *callbackState)
 {
     JsErrorCode errorCode = JsNoError;
     JsValueRef result = JS_INVALID_REFERENCE;
@@ -2024,10 +2028,10 @@ int32_t WScriptJsrt::ModuleMessage::Call(const char * fileName)
                         fprintf(stderr, "Couldn't load file '%s'\n", specifierStr.GetString());
                     }
                 }
-                LoadScript(nullptr, fullPath == nullptr ? *specifierStr : fullPath->c_str(), nullptr, "module", true, WScriptJsrt::FinalizeFree, false);
+                LoadScript(nullptr, fullPath == nullptr ? *specifierStr : fullPath->c_str(), nullptr, "module", true, WScriptJsrt::FinalizeFree, false, callbackState);
                 goto Error;
             }
-            LoadScript(nullptr, fullPath == nullptr ? *specifierStr : fullPath->c_str(), fileContent, "module", true, WScriptJsrt::FinalizeFree, true);
+            LoadScript(nullptr, fullPath == nullptr ? *specifierStr : fullPath->c_str(), fileContent, "module", true, WScriptJsrt::FinalizeFree, true, callbackState);
         }
     }
 Error:

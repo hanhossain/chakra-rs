@@ -34,6 +34,7 @@ public:
     std::list<std::string> reportQ;
 
     bool leaving;
+    void *callbackState;
 
 
     uint32_t ThreadProc();

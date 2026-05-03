@@ -60,7 +60,7 @@ uint32_t RuntimeThreadData::ThreadProc()
     IfJsErrorFailLog(ChakraRTInterface::JsSetCurrentContext(context));
 
 
-    if (!WScriptJsrt::Initialize())
+    if (!WScriptJsrt::Initialize(callbackState))
     {
         IfFailGo(E_FAIL);
     }

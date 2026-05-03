@@ -16,7 +16,7 @@ enum ModuleState
 class WScriptJsrt
 {
 public:
-    static bool Initialize();
+    static bool Initialize(void* callbackState);
     static bool Uninitialize();
     static JsErrorCode ModuleEntryPoint(const char * fileName, const char * fileContent, const char * fullName);
 
@@ -30,7 +30,7 @@ public:
         CallbackMessage(unsigned int time, JsValueRef function);
         ~CallbackMessage();
 
-        int32_t Call(const char * fileName);
+        int32_t Call(const char* fileName, void* callbackState);
         int32_t CallFunction(const char * fileName);
         template <class Func>
         static CallbackMessage* Create(JsValueRef function, const Func& func, unsigned int time = 0)
@@ -51,7 +51,7 @@ public:
     public:
         ~ModuleMessage();
 
-        virtual int32_t Call(const char * fileName) override;
+        virtual int32_t Call(const char* fileName, void* callbackState) override;
 
         static ModuleMessage* Create(JsModuleRecord module, JsValueRef specifier, std::string* fullPath = nullptr)
         {
@@ -104,17 +104,18 @@ public:
 #endif
 
     static bool PrintException(const char * fileName, JsErrorCode jsErrorCode, JsValueRef exception = nullptr);
-    static JsValueRef LoadScript(JsValueRef callee, const char * fileName, const char * fileContent, const char * scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile);
+    static JsValueRef LoadScript(JsValueRef callee, const char* fileName, const char* fileContent, const char* scriptInjectType, bool isSourceModule, JsFinalizeCallback
+                                 finalizeCallback, bool isFile, void* callbackState);
     static unsigned long GetNextSourceContext();
-    static JsValueRef LoadScriptFileHelper(JsValueRef callee, JsValueRef *arguments, unsigned short argumentCount, bool isSourceModule);
+    static JsValueRef LoadScriptFileHelper(JsValueRef callee, JsValueRef* arguments, unsigned short argumentCount, bool isSourceModule, void* callbackState);
     static JsValueRef LoadScriptHelper(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState, bool isSourceModule);
-    static bool InstallObjectsOnObject(JsValueRef object, const char* name, JsNativeFunction nativeFunction);
+    static bool InstallObjectsOnObject(JsValueRef object, const char* name, JsNativeFunction nativeFunction, void *callbackState);
     static void FinalizeFree(void * addr);
     static void RegisterScriptDir(unsigned long sourceContext, const char * fullDirNarrow);
 private:
     static void SetExceptionIf(JsErrorCode errorCode, std::u16string_view errorMessage);
     static bool CreateArgumentsObject(JsValueRef *argsObject);
-    static bool CreateNamedFunction(const char*, JsNativeFunction callback, JsValueRef* functionVar);
+    static bool CreateNamedFunction(const char*, JsNativeFunction callback, JsValueRef* functionVar, void* callbackState);
     static std::string GetDir(std::string_view fullPathNarrow);
     static JsValueRef CALLBACK EchoCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
     static JsValueRef CALLBACK QuitCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);

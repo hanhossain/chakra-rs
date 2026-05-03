@@ -1,15 +1,23 @@
+use cxx::{ExternType, type_id};
 use std::env::current_exe;
 use std::sync::Mutex;
+
+unsafe impl ExternType for HostContext {
+    type Id = type_id!("chakra::HostContext");
+    type Kind = cxx::kind::Opaque;
+}
 
 #[cxx::bridge(namespace = "chakra")]
 mod ffi {
     extern "Rust" {
         fn print_usage();
-        fn print_std_out(s: String);
-    }
-}
 
-pub static CONSOLE_LOGS: Mutex<Vec<String>> = Mutex::new(Vec::new());
+        type HostContext;
+        fn println(&self, s: String);
+    }
+
+    impl Box<HostContext> {}
+}
 
 pub fn print_usage() {
     #[cfg(debug_assertions)]
@@ -29,10 +37,6 @@ pub fn print_usage() {
         println!("\t-v|--version\t\tDisplays version info");
         println!("\t-h|--help|-?\t\tDisplays this help message");
     }
-}
-
-fn print_std_out(s: String) {
-    CONSOLE_LOGS.lock().unwrap().push(s);
 }
 
 fn get_ttd_directory(record_uri: String) -> String {
@@ -100,5 +104,21 @@ impl ChakraArgs {
         }
 
         Some(chakra_args)
+    }
+}
+
+pub struct HostContext {
+    pub out: Mutex<Vec<String>>,
+}
+
+impl HostContext {
+    pub fn new() -> Self {
+        Self {
+            out: Mutex::new(Vec::new()),
+        }
+    }
+
+    fn println(&self, s: String) {
+        self.out.lock().unwrap().push(s);
     }
 }
