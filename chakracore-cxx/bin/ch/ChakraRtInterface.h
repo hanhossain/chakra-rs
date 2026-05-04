@@ -1,3 +1,5 @@
+#include <utility>
+
 //-------------------------------------------------------------------------------------------------------
 // Copyright (C) Microsoft. All rights reserved.
 // Copyright (c) 2021 ChakraCore Project Contributors. All rights reserved.
@@ -283,30 +285,21 @@ public:
         int argc;
         char16_t ** argv;
         HostPrintUsageFuncPtr hostPrintUsage;
-        char* filename;
+        std::string filename;
 
         ArgInfo() :
             argc(0),
             argv(nullptr),
-            hostPrintUsage(nullptr),
-            filename(nullptr)
+            hostPrintUsage(nullptr)
         {
         }
 
-        ArgInfo(int argc, char16_t ** argv, HostPrintUsageFuncPtr hostPrintUsage, char* filename) :
+        ArgInfo(int argc, char16_t ** argv, HostPrintUsageFuncPtr hostPrintUsage, std::string filename) :
             argc(argc),
             argv(argv),
             hostPrintUsage(hostPrintUsage),
-            filename(filename)
+            filename(std::move(filename))
         {
-        }
-
-        ~ArgInfo()
-        {
-            if (filename != nullptr)
-            {
-                free(filename);
-            }
         }
     };
 

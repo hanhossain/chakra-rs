@@ -82,7 +82,6 @@ typedef void * Var;
 
 #include "Codex/Utf8Helper.h"
 using utf8::NarrowStringToWideDynamic;
-using utf8::WideStringToNarrowDynamic;
 #include "Helpers.h"
 
 #include "PlatformAgnostic/SystemInfo.h"

@@ -217,17 +217,11 @@ namespace utf8
         static void free(void* ptr, size_t count) { ::free(ptr); }
     };
 
-    inline int32_t WideStringToNarrowDynamic(_In_ const char16_t* sourceString, _Out_ char** destStringPtr)
-    {
-        size_t unused;
-        return WideStringToNarrow<malloc_allocator>(
-            sourceString, std::u16string(sourceString).length(), destStringPtr, &unused);
-    }
-
     inline std::string U16StringToString(const std::u16string& sourceString)
     {
+        size_t unused;
         char *dest;
-        WideStringToNarrowDynamic(sourceString.c_str(), &dest);
+        WideStringToNarrow<malloc_allocator>(sourceString.c_str(), sourceString.length(), &dest, &unused);
         std::string destString(dest);
         free(dest);
         return destString;

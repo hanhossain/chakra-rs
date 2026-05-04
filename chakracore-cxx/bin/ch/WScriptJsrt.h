@@ -18,7 +18,7 @@ class WScriptJsrt
 public:
     static bool Initialize();
     static bool Uninitialize();
-    static JsErrorCode ModuleEntryPoint(const char * fileName, const char * fileContent, const char * fullName);
+    static JsErrorCode ModuleEntryPoint(const std::string& fileName, const char * fileContent, const char * fullName);
 
     class CallbackMessage : public MessageBase
     {
@@ -103,7 +103,7 @@ public:
     static void CALLBACK JsContextBeforeCollectCallback(JsRef contextRef, void *data);
 #endif
 
-    static bool PrintException(const char * fileName, JsErrorCode jsErrorCode, JsValueRef exception = nullptr);
+    static bool PrintException(const std::string& fileName, JsErrorCode jsErrorCode, JsValueRef exception = nullptr);
     static JsValueRef LoadScript(JsValueRef callee, const char * fileName, const char * fileContent, const char * scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile);
     static unsigned long GetNextSourceContext();
     static JsValueRef LoadScriptFileHelper(JsValueRef callee, JsValueRef *arguments, unsigned short argumentCount, bool isSourceModule);
@@ -130,7 +130,7 @@ private:
     static JsValueRef CALLBACK DumpFunctionPositionCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
     static JsValueRef CALLBACK RequestAsyncBreakCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
 
-    static JsErrorCode CALLBACK LoadModuleFromString(const char * fileName, const char * fileContent, const char * fullName = nullptr, bool isFile = false);
+    static JsErrorCode CALLBACK LoadModuleFromString(const std::string& fileName, const char * fileContent, const char * fullName = nullptr, bool isFile = false);
 
     static JsValueRef CALLBACK LoadBinaryFileCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
     static JsValueRef CALLBACK LoadTextFileCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
