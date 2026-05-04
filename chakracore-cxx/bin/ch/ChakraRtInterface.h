@@ -467,6 +467,7 @@ public:
     static JsErrorCode WINAPI JsGetStringLength(JsValueRef value, int *stringLength) { return ::JsGetStringLength(value, stringLength); }
     static JsErrorCode WINAPI JsCopyString(JsValueRef value, char* buffer, size_t bufferSize, size_t* length) { return ::JsCopyString(value, buffer, bufferSize, length); }
     static JsErrorCode WINAPI JsCreateString(const char *content, size_t length, JsValueRef *value) { return ::JsCreateString(content, length, value); }
+    static JsErrorCode WINAPI JsCreateString(const std::string& content, JsValueRef *value) { return ::JsCreateString(content.c_str(), content.length(), value); }
     static JsErrorCode WINAPI JsCreateStringUtf16(const uint16_t *content, size_t length, JsValueRef *value) { return ::JsCreateStringUtf16(content, length, value); }
     static JsErrorCode WINAPI JsCreatePropertyId(const char *name, size_t length, JsPropertyIdRef *propertyId) { return ::JsCreatePropertyId(name, length, propertyId); }
     static JsErrorCode WINAPI JsCreateExternalArrayBuffer(void *data, unsigned int byteLength, JsFinalizeCallback finalizeCallback, void *callbackState, JsValueRef *result)  { return ::JsCreateExternalArrayBuffer(data, byteLength, finalizeCallback, callbackState, result); }

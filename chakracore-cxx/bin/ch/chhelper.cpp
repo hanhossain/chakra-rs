@@ -6,6 +6,7 @@
 #include "stdafx.h"
 #include "chhelper.h"
 
+#include <filesystem>
 #include <print>
 
 #include "chakra/src/lib.rs.h"
@@ -16,6 +17,8 @@
 #elif defined(__APPLE__)
 #include <sys/sysctl.h>
 #endif
+
+namespace fs = std::filesystem;
 
 unsigned int MessageBase::s_messageCount = 0;
 
@@ -104,7 +107,7 @@ static bool DummyJsSerializedScriptLoadUtf8Source(
     return true;
 }
 
-int32_t RunScript(const std::string& fileName, const char * fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback, JsValueRef bufferValue, char *fullPath, JsValueRef parserStateCache, const bool doTTRecord, const bool doTTReplay, const JsRuntimeHandle chRuntime, const std::string& ttUri, const uint32_t startEventCount)
+int32_t RunScript(const std::string& fileName, const char * fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback, JsValueRef bufferValue, const fs::path& fullPath, JsValueRef parserStateCache, const bool doTTRecord, const bool doTTReplay, const JsRuntimeHandle chRuntime, const std::string& ttUri, const uint32_t startEventCount)
 {
     int32_t hr = S_OK;
     MessageQueue * messageQueue = new MessageQueue();
@@ -183,8 +186,7 @@ int32_t RunScript(const std::string& fileName, const char * fileContents, size_t
 
         JsErrorCode runScript;
         JsValueRef fname;
-        IfJsErrorFailLogLabel(ChakraRTInterface::JsCreateString(fullPath,
-            strlen(fullPath), &fname), ErrorRunFinalize);
+        IfJsErrorFailLogLabel(ChakraRTInterface::JsCreateString(fullPath, &fname), ErrorRunFinalize);
 
         // memory management for serialized script case - need to define these here
         SerializedCallbackInfo serializedCallbackInfo;
@@ -238,7 +240,7 @@ int32_t RunScript(const std::string& fileName, const char * fileContents, size_t
         }
         else if (HostConfigFlags::flags.Module)
         {
-            runScript = WScriptJsrt::ModuleEntryPoint(fileName, fileContents, fullPath);
+            runScript = WScriptJsrt::ModuleEntryPoint(fileName, fileContents, fullPath.c_str());
         }
         else if (HostConfigFlags::flags.ExecuteWithBgParse)
         {
@@ -269,7 +271,7 @@ int32_t RunScript(const std::string& fileName, const char * fileContents, size_t
             }
 
             auto sourceContext = WScriptJsrt::GetNextSourceContext();
-            WScriptJsrt::RegisterScriptDir(sourceContext, fullPath);
+            WScriptJsrt::RegisterScriptDir(sourceContext, fullPath.c_str());
             runScript = ChakraRTInterface::JsRun(scriptSource,
                 sourceContext, fname,
                 JsParseScriptAttributeNone, nullptr /*result*/);
@@ -448,7 +450,7 @@ Error:
     return hr;
 }
 
-int32_t CreateParserStateAndRunScript(const char* fileName, const char * fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback, char *fullPath, const bool doTTRecord, const bool doTTReplay, JsRuntimeHandle &chRuntime, const std::string& ttUri, const uint32_t startEventCount, const JsRuntimeAttributes jsrtAttributes)
+int32_t CreateParserStateAndRunScript(const char* fileName, const char * fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback, const fs::path& fullPath, const bool doTTRecord, const bool doTTReplay, JsRuntimeHandle &chRuntime, const std::string& ttUri, const uint32_t startEventCount, const JsRuntimeAttributes jsrtAttributes)
 {
     int32_t hr = S_OK;
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
@@ -497,7 +499,7 @@ Error:
     return hr;
 }
 
-int32_t CreateAndRunSerializedScript(const char* fileName, const char * fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback, char *fullPath, const bool doTTRecord, const bool doTTReplay, JsRuntimeHandle &chRuntime, const std::string& ttUri, const uint32_t startEventCount, const JsRuntimeAttributes jsrtAttributes)
+int32_t CreateAndRunSerializedScript(const char* fileName, const char * fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback, const fs::path& fullPath, const bool doTTRecord, const bool doTTReplay, JsRuntimeHandle &chRuntime, const std::string& ttUri, const uint32_t startEventCount, const JsRuntimeAttributes jsrtAttributes)
 {
     int32_t hr = S_OK;
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
@@ -616,7 +618,7 @@ int32_t ExecuteTest(const std::string& fileName, const bool doTTRecord, const bo
         IfJsErrorFailLog(ChakraRTInterface::JsTTDCreateContext(runtime, true, &context));
         IfJsErrorFailLog(ChakraRTInterface::JsSetCurrentContext(context));
 
-        IfFailGo(RunScript(fileName, fileContents, lengthBytes, WScriptJsrt::FinalizeFree, nullptr, nullptr, nullptr, doTTRecord, doTTReplay, chRuntime, ttUri, startEventCount));
+        IfFailGo(RunScript(fileName, fileContents, lengthBytes, WScriptJsrt::FinalizeFree, nullptr, fs::path {}, nullptr, doTTRecord, doTTReplay, chRuntime, ttUri, startEventCount));
 
         unsigned int rcount = 0;
         IfJsErrorFailLog(ChakraRTInterface::JsSetCurrentContext(nullptr));
@@ -628,7 +630,6 @@ int32_t ExecuteTest(const std::string& fileName, const bool doTTRecord, const bo
     {
         LPCOLESTR contentsRaw = nullptr;
 
-        char fullPath[_MAX_PATH];
         size_t len = 0;
 
         hr = Helpers::LoadScriptFromFile(fileName.c_str(), fileContents, &lengthBytes);
@@ -691,17 +692,13 @@ int32_t ExecuteTest(const std::string& fileName, const bool doTTRecord, const bo
             IfFailGo(E_FAIL);
         }
 
-        if (_fullpath(fullPath, fileName.c_str(), _MAX_PATH) == nullptr)
-        {
-            IfFailGo(E_FAIL);
-        }
+        std::filesystem::path fullPath(fileName);
 
         if (HostConfigFlags::flags.TrackRejectedPromises)
         {
             ChakraRTInterface::JsSetHostPromiseRejectionTracker(WScriptJsrt::PromiseRejectionTrackerCallback, nullptr);
         }
         
-        len = strlen(fullPath);
         if (HostConfigFlags::flags.GenerateLibraryByteCodeHeaderIsEnabled)
         {
             IfFailGo(CreateLibraryByteCode(fileContents));
