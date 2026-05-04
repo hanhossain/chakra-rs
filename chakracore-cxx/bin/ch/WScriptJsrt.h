@@ -4,6 +4,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include <filesystem>
 #include <list>
 
 enum ModuleState
@@ -110,12 +111,12 @@ public:
     static JsValueRef LoadScriptHelper(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState, bool isSourceModule);
     static bool InstallObjectsOnObject(JsValueRef object, const char* name, JsNativeFunction nativeFunction);
     static void FinalizeFree(void * addr);
-    static void RegisterScriptDir(unsigned long sourceContext, const char * fullDirNarrow);
+    static void RegisterScriptDir(unsigned long sourceContext, const std::filesystem::path& fullDir);
 private:
     static void SetExceptionIf(JsErrorCode errorCode, std::u16string_view errorMessage);
     static bool CreateArgumentsObject(JsValueRef *argsObject);
     static bool CreateNamedFunction(const char*, JsNativeFunction callback, JsValueRef* functionVar);
-    static std::string GetDir(std::string_view fullPathNarrow);
+    static std::string GetDir(const std::filesystem::path& fullPath);
     static JsValueRef CALLBACK EchoCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
     static JsValueRef CALLBACK QuitCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
     static JsValueRef CALLBACK LoadScriptFileCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);

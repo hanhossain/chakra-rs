@@ -71,9 +71,9 @@ unsigned long WScriptJsrt::GetNextSourceContext()
     return sourceContext++;
 }
 
-void WScriptJsrt::RegisterScriptDir(unsigned long sourceContext, const char * fullDirNarrow)
+void WScriptJsrt::RegisterScriptDir(unsigned long sourceContext, const std::filesystem::path& fullDir)
 {
-    scriptDirMap[sourceContext] = GetDir(fullDirNarrow);
+    scriptDirMap[sourceContext] = GetDir(fullDir);
 }
 
 bool WScriptJsrt::CreateArgumentsObject(JsValueRef *argsObject)
@@ -573,10 +573,9 @@ Error:
     return returnValue;
 }
 
-std::string WScriptJsrt::GetDir(const std::string_view fullPathNarrow)
+std::string WScriptJsrt::GetDir(const std::filesystem::path& fullPath)
 {
-    const std::filesystem::path path = fullPathNarrow;
-    const auto parent = path.parent_path().concat("/");
+    const auto parent = fullPath.parent_path().concat("/");
 
     return parent;
 }
