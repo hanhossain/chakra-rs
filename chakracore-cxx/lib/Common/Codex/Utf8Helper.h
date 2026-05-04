@@ -224,6 +224,15 @@ namespace utf8
             sourceString, std::u16string(sourceString).length(), destStringPtr, &unused);
     }
 
+    inline std::string U16StringToString(const std::u16string& sourceString)
+    {
+        char *dest;
+        WideStringToNarrowDynamic(sourceString.c_str(), &dest);
+        std::string destString(dest);
+        free(dest);
+        return destString;
+    }
+
     inline int32_t NarrowStringToWideDynamic(_In_ const char * sourceString, _Out_ char16_t** destStringPtr)
     {
         charcount_t unused;
@@ -231,10 +240,13 @@ namespace utf8
             sourceString, strlen(sourceString), destStringPtr, &unused);
     }
 
-    inline int32_t NarrowStringToWideDynamicGetLength(_In_ const char * sourceString, _Out_ char16_t** destStringPtr, _Out_ charcount_t* destLength)
+    inline std::u16string StringToU16String(const std::string& sourceString)
     {
-        return NarrowStringToWide<malloc_allocator>(
-            sourceString, strlen(sourceString), destStringPtr, destLength);
+        char16_t* dest;
+        NarrowStringToWideDynamic(sourceString.c_str(), &dest);
+        std::u16string destString(dest);
+        free(dest);
+        return destString;
     }
 
     template <class Allocator, class SrcType, class DstType, class CountType>
