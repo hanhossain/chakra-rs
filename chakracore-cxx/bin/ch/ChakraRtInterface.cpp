@@ -50,7 +50,6 @@ int32_t ChakraRTInterface::ParseConfigFlags()
 
     if (hr == S_OK)
     {
-        m_argInfo->filename = nullptr;
         Assert(m_testHooks.pfGetFilenameFlag != nullptr);
 
         char16_t* fileNameWide = nullptr;
@@ -64,14 +63,8 @@ int32_t ChakraRTInterface::ParseConfigFlags()
         }
         else
         {
-            hr = WideStringToNarrowDynamic(fileNameWide, &m_argInfo->filename);
+            m_argInfo->filename = utf8::U16StringToString(fileNameWide);
             SysFreeString(fileNameWide);
-            if (FAILED(hr))
-            {
-                Assert(hr == E_OUTOFMEMORY);
-                std::print("Error: Ran out of memory");
-                return hr;
-            }
         }
     }
 

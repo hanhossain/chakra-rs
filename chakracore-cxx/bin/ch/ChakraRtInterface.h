@@ -1,3 +1,5 @@
+#include <utility>
+
 //-------------------------------------------------------------------------------------------------------
 // Copyright (C) Microsoft. All rights reserved.
 // Copyright (c) 2021 ChakraCore Project Contributors. All rights reserved.
@@ -283,30 +285,21 @@ public:
         int argc;
         char16_t ** argv;
         HostPrintUsageFuncPtr hostPrintUsage;
-        char* filename;
+        std::string filename;
 
         ArgInfo() :
             argc(0),
             argv(nullptr),
-            hostPrintUsage(nullptr),
-            filename(nullptr)
+            hostPrintUsage(nullptr)
         {
         }
 
-        ArgInfo(int argc, char16_t ** argv, HostPrintUsageFuncPtr hostPrintUsage, char* filename) :
+        ArgInfo(int argc, char16_t ** argv, HostPrintUsageFuncPtr hostPrintUsage, std::string filename) :
             argc(argc),
             argv(argv),
             hostPrintUsage(hostPrintUsage),
-            filename(filename)
+            filename(std::move(filename))
         {
-        }
-
-        ~ArgInfo()
-        {
-            if (filename != nullptr)
-            {
-                free(filename);
-            }
         }
     };
 
@@ -474,6 +467,7 @@ public:
     static JsErrorCode WINAPI JsGetStringLength(JsValueRef value, int *stringLength) { return ::JsGetStringLength(value, stringLength); }
     static JsErrorCode WINAPI JsCopyString(JsValueRef value, char* buffer, size_t bufferSize, size_t* length) { return ::JsCopyString(value, buffer, bufferSize, length); }
     static JsErrorCode WINAPI JsCreateString(const char *content, size_t length, JsValueRef *value) { return ::JsCreateString(content, length, value); }
+    static JsErrorCode WINAPI JsCreateString(const std::string& content, JsValueRef *value) { return ::JsCreateString(content.c_str(), content.length(), value); }
     static JsErrorCode WINAPI JsCreateStringUtf16(const uint16_t *content, size_t length, JsValueRef *value) { return ::JsCreateStringUtf16(content, length, value); }
     static JsErrorCode WINAPI JsCreatePropertyId(const char *name, size_t length, JsPropertyIdRef *propertyId) { return ::JsCreatePropertyId(name, length, propertyId); }
     static JsErrorCode WINAPI JsCreateExternalArrayBuffer(void *data, unsigned int byteLength, JsFinalizeCallback finalizeCallback, void *callbackState, JsValueRef *result)  { return ::JsCreateExternalArrayBuffer(data, byteLength, finalizeCallback, callbackState, result); }

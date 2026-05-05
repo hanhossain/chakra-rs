@@ -2096,8 +2096,6 @@ unsigned long long _rotr64(unsigned long long value, int shift)
 
 #endif // !PAL_STDCPP_COMPAT
 
-char * _fullpath(char *, const char *, size_t);
-
 #ifndef PAL_STDCPP_COMPAT
 
 #define SEEK_SET    0

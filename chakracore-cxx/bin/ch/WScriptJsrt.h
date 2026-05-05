@@ -4,6 +4,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include <filesystem>
 #include <list>
 
 enum ModuleState
@@ -18,7 +19,7 @@ class WScriptJsrt
 public:
     static bool Initialize();
     static bool Uninitialize();
-    static JsErrorCode ModuleEntryPoint(const char * fileName, const char * fileContent, const char * fullName);
+    static JsErrorCode ModuleEntryPoint(const std::string& fileName, const char * fileContent, const char * fullName);
 
     class CallbackMessage : public MessageBase
     {
@@ -103,19 +104,19 @@ public:
     static void CALLBACK JsContextBeforeCollectCallback(JsRef contextRef, void *data);
 #endif
 
-    static bool PrintException(const char * fileName, JsErrorCode jsErrorCode, JsValueRef exception = nullptr);
+    static bool PrintException(const std::string& fileName, JsErrorCode jsErrorCode, JsValueRef exception = nullptr);
     static JsValueRef LoadScript(JsValueRef callee, const char * fileName, const char * fileContent, const char * scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile);
     static unsigned long GetNextSourceContext();
     static JsValueRef LoadScriptFileHelper(JsValueRef callee, JsValueRef *arguments, unsigned short argumentCount, bool isSourceModule);
     static JsValueRef LoadScriptHelper(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState, bool isSourceModule);
     static bool InstallObjectsOnObject(JsValueRef object, const char* name, JsNativeFunction nativeFunction);
     static void FinalizeFree(void * addr);
-    static void RegisterScriptDir(unsigned long sourceContext, const char * fullDirNarrow);
+    static void RegisterScriptDir(unsigned long sourceContext, const std::filesystem::path& fullDir);
 private:
     static void SetExceptionIf(JsErrorCode errorCode, std::u16string_view errorMessage);
     static bool CreateArgumentsObject(JsValueRef *argsObject);
     static bool CreateNamedFunction(const char*, JsNativeFunction callback, JsValueRef* functionVar);
-    static std::string GetDir(std::string_view fullPathNarrow);
+    static std::string GetDir(const std::filesystem::path& fullPath);
     static JsValueRef CALLBACK EchoCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
     static JsValueRef CALLBACK QuitCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
     static JsValueRef CALLBACK LoadScriptFileCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
@@ -130,7 +131,7 @@ private:
     static JsValueRef CALLBACK DumpFunctionPositionCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
     static JsValueRef CALLBACK RequestAsyncBreakCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
 
-    static JsErrorCode CALLBACK LoadModuleFromString(const char * fileName, const char * fileContent, const char * fullName = nullptr, bool isFile = false);
+    static JsErrorCode CALLBACK LoadModuleFromString(const std::string& fileName, const char * fileContent, const char * fullName = nullptr, bool isFile = false);
 
     static JsValueRef CALLBACK LoadBinaryFileCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
     static JsValueRef CALLBACK LoadTextFileCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);

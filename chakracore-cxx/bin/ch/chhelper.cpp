@@ -6,6 +6,7 @@
 #include "stdafx.h"
 #include "chhelper.h"
 
+#include <filesystem>
 #include <print>
 
 #include "chakra/src/lib.rs.h"
@@ -17,11 +18,13 @@
 #include <sys/sysctl.h>
 #endif
 
+namespace fs = std::filesystem;
+
 unsigned int MessageBase::s_messageCount = 0;
 
 const size_t ttUriBufferLength = MAX_PATH * 3;
 
-int32_t RunBgParseSync(const char * fileContents, uint32_t lengthBytes, const char* fileName);
+int32_t RunBgParseSync(const char * fileContents, uint32_t lengthBytes, const std::string& fileName);
 
 // On success the param byteCodeBuffer will be allocated in the function.
 int32_t GetSerializedBuffer(const char * fileContents, JsFinalizeCallback fileContentFinalizeCallback, JsValueRef *byteCodeBuffer)
@@ -104,7 +107,7 @@ static bool DummyJsSerializedScriptLoadUtf8Source(
     return true;
 }
 
-int32_t RunScript(const char* fileName, const char * fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback, JsValueRef bufferValue, char *fullPath, JsValueRef parserStateCache, const bool doTTRecord, const bool doTTReplay, const JsRuntimeHandle chRuntime, const std::string& ttUri, const uint32_t startEventCount)
+int32_t RunScript(const std::string& fileName, const char * fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback, JsValueRef bufferValue, const fs::path& fullPath, JsValueRef parserStateCache, const bool doTTRecord, const bool doTTReplay, const JsRuntimeHandle chRuntime, const std::string& ttUri, const uint32_t startEventCount)
 {
     int32_t hr = S_OK;
     MessageQueue * messageQueue = new MessageQueue();
@@ -112,7 +115,7 @@ int32_t RunScript(const char* fileName, const char * fileContents, size_t fileLe
 
     IfJsErrorFailLogLabel(ChakraRTInterface::JsSetPromiseContinuationCallback(WScriptJsrt::PromiseContinuationCallback, (void*)messageQueue), ErrorRunFinalize);
 
-    if(strlen(fileName) >= 14 && strcmp(fileName + strlen(fileName) - 14, "ttdSentinal.js") == 0)
+    if(fileName.length() >= 14 && fileName.ends_with("ttdSentinal.js"))
     {
         if(fileContentsFinalizeCallback != nullptr)
         {
@@ -183,8 +186,7 @@ int32_t RunScript(const char* fileName, const char * fileContents, size_t fileLe
 
         JsErrorCode runScript;
         JsValueRef fname;
-        IfJsErrorFailLogLabel(ChakraRTInterface::JsCreateString(fullPath,
-            strlen(fullPath), &fname), ErrorRunFinalize);
+        IfJsErrorFailLogLabel(ChakraRTInterface::JsCreateString(fullPath, &fname), ErrorRunFinalize);
 
         // memory management for serialized script case - need to define these here
         SerializedCallbackInfo serializedCallbackInfo;
@@ -238,7 +240,7 @@ int32_t RunScript(const char* fileName, const char * fileContents, size_t fileLe
         }
         else if (HostConfigFlags::flags.Module)
         {
-            runScript = WScriptJsrt::ModuleEntryPoint(fileName, fileContents, fullPath);
+            runScript = WScriptJsrt::ModuleEntryPoint(fileName, fileContents, fullPath.c_str());
         }
         else if (HostConfigFlags::flags.ExecuteWithBgParse)
         {
@@ -299,7 +301,7 @@ int32_t RunScript(const char* fileName, const char * fileContents, size_t fileLe
             // because setTimeout can add scripts to execute.
             do
             {
-                IfFailGo(messageQueue->ProcessAll(fileName));
+                IfFailGo(messageQueue->ProcessAll(fileName.c_str()));
             } while(!messageQueue->IsEmpty());
         }
 
@@ -448,7 +450,7 @@ Error:
     return hr;
 }
 
-int32_t CreateParserStateAndRunScript(const char* fileName, const char * fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback, char *fullPath, const bool doTTRecord, const bool doTTReplay, JsRuntimeHandle &chRuntime, const std::string& ttUri, const uint32_t startEventCount, const JsRuntimeAttributes jsrtAttributes)
+int32_t CreateParserStateAndRunScript(const char* fileName, const char * fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback, const fs::path& fullPath, const bool doTTRecord, const bool doTTReplay, JsRuntimeHandle &chRuntime, const std::string& ttUri, const uint32_t startEventCount, const JsRuntimeAttributes jsrtAttributes)
 {
     int32_t hr = S_OK;
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
@@ -497,7 +499,7 @@ Error:
     return hr;
 }
 
-int32_t CreateAndRunSerializedScript(const char* fileName, const char * fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback, char *fullPath, const bool doTTRecord, const bool doTTReplay, JsRuntimeHandle &chRuntime, const std::string& ttUri, const uint32_t startEventCount, const JsRuntimeAttributes jsrtAttributes)
+int32_t CreateAndRunSerializedScript(const char* fileName, const char * fileContents, size_t fileLength, JsFinalizeCallback fileContentsFinalizeCallback, const fs::path& fullPath, const bool doTTRecord, const bool doTTReplay, JsRuntimeHandle &chRuntime, const std::string& ttUri, const uint32_t startEventCount, const JsRuntimeAttributes jsrtAttributes)
 {
     int32_t hr = S_OK;
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
@@ -548,7 +550,7 @@ Error:
 }
 
 // Use the asynchronous BGParse JSRT APIs in a synchronous call
-int32_t RunBgParseSync(const char * fileContents, uint32_t lengthBytes, const char* fileName)
+int32_t RunBgParseSync(const char * fileContents, uint32_t lengthBytes, const std::string& fileName)
 {
     JsValueRef scriptSource;
     JsErrorCode e = (ChakraRTInterface::JsCreateExternalArrayBuffer((void*)fileContents,
@@ -557,7 +559,7 @@ int32_t RunBgParseSync(const char * fileContents, uint32_t lengthBytes, const ch
 
     // What's the preferred way of doing this?
     char16_t fileNameWide[MAX_PATH] = { 0 };
-    size_t fileNameLength = strlen(fileName);
+    size_t fileNameLength = fileName.length();
     for (size_t i = 0; i < fileNameLength; i++)
     {
         fileNameWide[i] = fileName[i];
@@ -588,14 +590,14 @@ int32_t RunBgParseSync(const char * fileContents, uint32_t lengthBytes, const ch
     return e;
 }
 
-int32_t ExecuteTest(const char* fileName, const bool doTTRecord, const bool doTTReplay, JsRuntimeHandle &chRuntime, const std::string& ttUri, const uint32_t snapInterval, const uint32_t snapHistoryLength, const uint32_t startEventCount, JsRuntimeAttributes &jsrtAttributes)
+int32_t ExecuteTest(const std::string& fileName, const bool doTTRecord, const bool doTTReplay, JsRuntimeHandle &chRuntime, const std::string& ttUri, const uint32_t snapInterval, const uint32_t snapHistoryLength, const uint32_t startEventCount, JsRuntimeAttributes &jsrtAttributes)
 {
     int32_t hr = S_OK;
     const char * fileContents = nullptr;
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
     uint32_t lengthBytes = 0;
 
-    if(strlen(fileName) >= 14 && strcmp(fileName + strlen(fileName) - 14, "ttdSentinal.js") == 0)
+    if(fileName.length() >= 14 && fileName.ends_with("ttdSentinal.js"))
     {
 #if !ENABLE_TTD
         std::println("Sentinel js file is only ok when in TTDebug mode!!!");
@@ -616,7 +618,7 @@ int32_t ExecuteTest(const char* fileName, const bool doTTRecord, const bool doTT
         IfJsErrorFailLog(ChakraRTInterface::JsTTDCreateContext(runtime, true, &context));
         IfJsErrorFailLog(ChakraRTInterface::JsSetCurrentContext(context));
 
-        IfFailGo(RunScript(fileName, fileContents, lengthBytes, WScriptJsrt::FinalizeFree, nullptr, nullptr, nullptr, doTTRecord, doTTReplay, chRuntime, ttUri, startEventCount));
+        IfFailGo(RunScript(fileName, fileContents, lengthBytes, WScriptJsrt::FinalizeFree, nullptr, fs::path {}, nullptr, doTTRecord, doTTReplay, chRuntime, ttUri, startEventCount));
 
         unsigned int rcount = 0;
         IfJsErrorFailLog(ChakraRTInterface::JsSetCurrentContext(nullptr));
@@ -628,10 +630,9 @@ int32_t ExecuteTest(const char* fileName, const bool doTTRecord, const bool doTT
     {
         LPCOLESTR contentsRaw = nullptr;
 
-        char fullPath[_MAX_PATH];
         size_t len = 0;
 
-        hr = Helpers::LoadScriptFromFile(fileName, fileContents, &lengthBytes);
+        hr = Helpers::LoadScriptFromFile(fileName.c_str(), fileContents, &lengthBytes);
         contentsRaw; lengthBytes; // Unused for now.
 
         IfFailGo(hr);
@@ -691,24 +692,20 @@ int32_t ExecuteTest(const char* fileName, const bool doTTRecord, const bool doTT
             IfFailGo(E_FAIL);
         }
 
-        if (_fullpath(fullPath, fileName, _MAX_PATH) == nullptr)
-        {
-            IfFailGo(E_FAIL);
-        }
+        std::filesystem::path fullPath(fileName);
 
         if (HostConfigFlags::flags.TrackRejectedPromises)
         {
             ChakraRTInterface::JsSetHostPromiseRejectionTracker(WScriptJsrt::PromiseRejectionTrackerCallback, nullptr);
         }
         
-        len = strlen(fullPath);
         if (HostConfigFlags::flags.GenerateLibraryByteCodeHeaderIsEnabled)
         {
             IfFailGo(CreateLibraryByteCode(fileContents));
         }
         else if (HostConfigFlags::flags.SerializedIsEnabled)
         {
-            CreateAndRunSerializedScript(fileName, fileContents, lengthBytes, WScriptJsrt::FinalizeFree, fullPath, doTTRecord, doTTReplay, chRuntime, ttUri, startEventCount, jsrtAttributes);
+            CreateAndRunSerializedScript(fileName.c_str(), fileContents, lengthBytes, WScriptJsrt::FinalizeFree, fullPath, doTTRecord, doTTReplay, chRuntime, ttUri, startEventCount, jsrtAttributes);
         }
         else if (HostConfigFlags::flags.GenerateParserStateCacheIsEnabled)
         {
@@ -716,7 +713,7 @@ int32_t ExecuteTest(const char* fileName, const bool doTTRecord, const bool doTT
         }
         else if (HostConfigFlags::flags.UseParserStateCacheIsEnabled)
         {
-            CreateParserStateAndRunScript(fileName, fileContents, lengthBytes, WScriptJsrt::FinalizeFree, fullPath, doTTRecord, doTTReplay, chRuntime, ttUri, startEventCount, jsrtAttributes);
+            CreateParserStateAndRunScript(fileName.c_str(), fileContents, lengthBytes, WScriptJsrt::FinalizeFree, fullPath, doTTRecord, doTTReplay, chRuntime, ttUri, startEventCount, jsrtAttributes);
         }
         else
         {
@@ -736,7 +733,7 @@ Error:
     return hr;
 }
 
-int32_t ExecuteTestWithMemoryCheck(char* fileName, const bool doTTRecord, const bool doTTReplay, JsRuntimeHandle &chRuntime, const std::string& ttUri, const uint32_t snapInterval, const uint32_t snapHistoryLength, const uint32_t startEventCount, JsRuntimeAttributes &jsrtAttributes)
+int32_t ExecuteTestWithMemoryCheck(const std::string& fileName, const bool doTTRecord, const bool doTTReplay, JsRuntimeHandle &chRuntime, const std::string& ttUri, const uint32_t snapInterval, const uint32_t snapHistoryLength, const uint32_t startEventCount, JsRuntimeAttributes &jsrtAttributes)
 {
     int32_t hr = E_FAIL;
     // REVIEW: Do we need a SEH handler here?
@@ -792,7 +789,7 @@ int main_internal(int argc, char** c_argv, uint32_t snapInterval, uint32_t snapH
 
     HostConfigFlags::HandleArgsFlag(argc, argv);
 
-    argInfo = { argc, argv, chakra::print_usage, nullptr };
+    argInfo = { argc, argv, chakra::print_usage, "" };
     success = ChakraRTInterface::LoadChakraDll(&argInfo);
 
 #if !defined(NDEBUG)
@@ -800,9 +797,9 @@ int main_internal(int argc, char** c_argv, uint32_t snapInterval, uint32_t snapH
     OnChakraCoreLoaded();
 #endif
 
-    if (argInfo.filename == nullptr)
+    if (argInfo.filename.empty())
     {
-        WideStringToNarrowDynamic(argv[1], &argInfo.filename);
+        argInfo.filename = utf8::U16StringToString(argv[1]);
     }
 
     if (success)

@@ -59,36 +59,21 @@ std::map<JsModuleRecord, ModuleState>  WScriptJsrt::moduleErrMap;
 std::map<unsigned long, std::string> WScriptJsrt::scriptDirMap;
 unsigned long WScriptJsrt::sourceContext = 0;
 
-#define ERROR_MESSAGE_TO_STRING(errorCode, errorMessage, errorMessageString)        \
-    JsErrorCode errorCode = JsNoError;                                              \
-    do                                                                              \
-    {                                                                               \
-        const char *outOfMemoryString =                                             \
-                                    "Failed to convert wide string. Out of memory?";\
-                                                                                    \
-        char *errorMessageNarrow;                                                   \
-        if (FAILED(WideStringToNarrowDynamic(errorMessage, &errorMessageNarrow)))   \
-        {                                                                           \
-            errorCode = ChakraRTInterface::JsCreateString(outOfMemoryString,        \
-                strlen(outOfMemoryString), &errorMessageString);                    \
-        }                                                                           \
-        else                                                                        \
-        {                                                                           \
-            errorCode = ChakraRTInterface::JsCreateString(errorMessageNarrow,       \
-                strlen(errorMessageNarrow), &errorMessageString);                   \
-            free(errorMessageNarrow);                                               \
-        }                                                                           \
-    }                                                                               \
-    while(0)
+void ErrorMessageToString(const char16_t *errorMessage, JsValueRef &errorMessageString)
+{
+    const std::string errorMessageNarrow = utf8::U16StringToString(errorMessage);
+    ChakraRTInterface::JsCreateString(errorMessageNarrow.c_str(),
+        errorMessageNarrow.length(), &errorMessageString);
+}
 
 unsigned long WScriptJsrt::GetNextSourceContext()
 {
     return sourceContext++;
 }
 
-void WScriptJsrt::RegisterScriptDir(unsigned long sourceContext, const char * fullDirNarrow)
+void WScriptJsrt::RegisterScriptDir(unsigned long sourceContext, const std::filesystem::path& fullDir)
 {
-    scriptDirMap[sourceContext] = GetDir(fullDirNarrow);
+    scriptDirMap[sourceContext] = GetDir(fullDir);
 }
 
 bool WScriptJsrt::CreateArgumentsObject(JsValueRef *argsObject)
@@ -106,15 +91,10 @@ bool WScriptJsrt::CreateArgumentsObject(JsValueRef *argsObject)
         JsValueRef value;
         JsValueRef index;
 
-        char *argNarrow;
-        if (FAILED(WideStringToNarrowDynamic(argv[i], &argNarrow)))
-        {
-            return false;
-        }
-        JsErrorCode errCode  = ChakraRTInterface::JsCreateString(
-            argNarrow,
-            strlen(argNarrow), &value);
-        free(argNarrow);
+        std::string argNarrow = utf8::U16StringToString(argv[i]);
+        const JsErrorCode errCode  = ChakraRTInterface::JsCreateString(
+            argNarrow.c_str(),
+            argNarrow.length(), &value);
         IfJsrtErrorFail(errCode, false);
 
         IfJsrtErrorFail(ChakraRTInterface::JsDoubleToNumber(i, &index), false);
@@ -260,7 +240,7 @@ void WScriptJsrt::SetExceptionIf(JsErrorCode errorCode, const std::u16string_vie
             }
             else
             {
-                ERROR_MESSAGE_TO_STRING(errCode, errorMessage.data(), errorMessageString);
+                ErrorMessageToString(errorMessage.data(), errorMessageString);
             }
 
             ChakraRTInterface::JsCreateError(errorMessageString, &errorObject);
@@ -481,7 +461,6 @@ JsValueRef WScriptJsrt::GetModuleNamespace(JsValueRef callee, bool isConstructCa
     JsErrorCode errorCode = JsNoError;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     std::u16string errorMessage;
-    char fullPath[_MAX_PATH];
 
     if (argumentCount < 2)
     {
@@ -495,7 +474,8 @@ JsValueRef WScriptJsrt::GetModuleNamespace(JsValueRef callee, bool isConstructCa
 
         if (errorCode == JsNoError)
         {
-            if (_fullpath(fullPath, specifierStr.GetString(), _MAX_PATH) == nullptr)
+            std::filesystem::path fullPath(specifierStr.GetString());
+            if (fullPath.empty())
             {
                 errorCode = JsErrorInvalidArgument;
             }
@@ -593,25 +573,24 @@ Error:
     return returnValue;
 }
 
-std::string WScriptJsrt::GetDir(const std::string_view fullPathNarrow)
+std::string WScriptJsrt::GetDir(const std::filesystem::path& fullPath)
 {
-    const std::filesystem::path path = fullPathNarrow;
-    const auto parent = path.parent_path().concat("/");
+    const auto parent = fullPath.parent_path().concat("/");
 
     return parent;
 }
 
-JsErrorCode WScriptJsrt::ModuleEntryPoint(const char * fileName, const char * fileContent, const char * fullName)
+JsErrorCode WScriptJsrt::ModuleEntryPoint(const std::string& fileName, const char * fileContent, const char * fullName)
 {
     return LoadModuleFromString(fileName, fileContent, fullName, true);
 }
 
-JsErrorCode WScriptJsrt::LoadModuleFromString(const char * fileName, const char * fileContent, const char * fullName, bool isFile)
+JsErrorCode WScriptJsrt::LoadModuleFromString(const std::string& fileName, const char * fileContent, const char * fullName, bool isFile)
 {
     unsigned long dwSourceCookie = WScriptJsrt::GetNextSourceContext();
     JsModuleRecord requestModule = JS_INVALID_REFERENCE;
-    const char * moduleRecordKey = fullName ? fullName : fileName;
-    auto moduleRecordEntry = moduleRecordMap.find(std::string(moduleRecordKey));
+    const std::string& moduleRecordKey = fullName ? fullName : fileName;
+    auto moduleRecordEntry = moduleRecordMap.find(moduleRecordKey);
     JsErrorCode errorCode = JsNoError;
 
     // we need to create a new moduleRecord if the specifier (fileName) is not found;
@@ -673,26 +652,21 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, const char * fileName,
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
     void *callbackArg = (finalizeCallback != nullptr ? (void*)fileContent : nullptr);
 
-    char fullPath[_MAX_PATH];
-
-    IfJsrtErrorSetGo(ChakraRTInterface::JsGetCurrentContext(&currentContext));
-    IfJsrtErrorSetGo(ChakraRTInterface::JsGetRuntime(currentContext, &runtime));
-
     if (fileName == nullptr)
     {
         fileName = "script.js";
     }
 
-    if (_fullpath(fullPath, fileName, _MAX_PATH) == nullptr)
-    {
-        goto Error;
-    }
+    std::filesystem::path fullPath = fileName;
+
+    IfJsrtErrorSetGo(ChakraRTInterface::JsGetCurrentContext(&currentContext));
+    IfJsrtErrorSetGo(ChakraRTInterface::JsGetRuntime(currentContext, &runtime));
 
     // this is called with LoadModuleCallback method as well where caller pass in a string that should be
     // treated as a module source text instead of opening a new file.
     if (isSourceModule || (strcmp(scriptInjectType, "module") == 0))
     {
-        errorCode = LoadModuleFromString(fileName, fileContent, fullPath, isFile);
+        errorCode = LoadModuleFromString(fileName, fileContent, fullPath.c_str(), isFile);
     }
     else if (strcmp(scriptInjectType, "self") == 0)
     {
@@ -705,8 +679,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, const char * fileName,
         IfJsrtErrorSetGo(ChakraRTInterface::JsCreateExternalArrayBuffer((void*)fileContent,
             (unsigned int)strlen(fileContent), finalizeCallback, callbackArg, &scriptSource));
         JsValueRef fname;
-        IfJsrtErrorSetGo(ChakraRTInterface::JsCreateString(fullPath,
-            strlen(fullPath), &fname));
+        IfJsrtErrorSetGo(ChakraRTInterface::JsCreateString(fullPath, &fname));
         JsSourceContext sourceContext = GetNextSourceContext();
         RegisterScriptDir(sourceContext, fullPath);
 
@@ -751,8 +724,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, const char * fileName,
         IfJsrtErrorSetGo(ChakraRTInterface::JsCreateExternalArrayBuffer((void*)fileContent,
             (unsigned int)strlen(fileContent), finalizeCallback, callbackArg, &scriptSource));
         JsValueRef fname;
-        IfJsrtErrorSetGo(ChakraRTInterface::JsCreateString(fullPath,
-            strlen(fullPath), &fname));
+        IfJsrtErrorSetGo(ChakraRTInterface::JsCreateString(fullPath, &fname));
         JsSourceContext sourceContext = GetNextSourceContext();
         RegisterScriptDir(sourceContext, fullPath);
 
@@ -1733,7 +1705,7 @@ Error:
     return returnValue;
 }
 
-bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode, JsValueRef exception)
+bool WScriptJsrt::PrintException(const std::string& fileName, JsErrorCode jsErrorCode, JsValueRef exception)
 {
     const char* errorTypeString = ConvertErrorCodeToMessage(jsErrorCode);
     JsValueRef metaData = JS_INVALID_REFERENCE;
@@ -1855,7 +1827,7 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
 
                 if (errorCode != JsErrorCode::JsNoError || propertyType == JsUndefined)
                 {
-                    const char *fName = fileName != nullptr ? fileName : "(unknown)";
+                    const std::string& fName = !fileName.empty() ? fileName : "(unknown)";
 
                     std::filesystem::path filepath(fName);
 
@@ -2050,15 +2022,11 @@ JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingMod
         return specifierStr.GetError();
     }
 
-    char fullPath[_MAX_PATH];
     std::string specifierFullPath = refdir ? refdir : "";
     specifierFullPath += *specifierStr;
-    if (_fullpath(fullPath, specifierFullPath.c_str(), _MAX_PATH) == nullptr)
-    {
-        return JsErrorInvalidArgument;
-    }
+    const std::filesystem::path fullPath = specifierFullPath;
 
-    auto moduleEntry = moduleRecordMap.find(std::string(fullPath));
+    auto moduleEntry = moduleRecordMap.find(fullPath);
     if (moduleEntry != moduleRecordMap.end())
     {
         *dependentModuleRecord = moduleEntry->second;
@@ -2069,7 +2037,7 @@ JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingMod
     if (errorCode == JsNoError)
     {
         moduleDirMap[moduleRecord] = GetDir(fullPath);
-        std::string pathKey = std::string(fullPath);
+        std::string pathKey = fullPath;
         moduleRecordMap[pathKey] = moduleRecord;
         moduleErrMap[moduleRecord] = ImportedModule;
         ModuleMessage* moduleMessage = WScriptJsrt::ModuleMessage::Create(referencingModule, specifier, &pathKey);

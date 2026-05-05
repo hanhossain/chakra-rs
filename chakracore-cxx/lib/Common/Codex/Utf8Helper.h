@@ -217,11 +217,14 @@ namespace utf8
         static void free(void* ptr, size_t count) { ::free(ptr); }
     };
 
-    inline int32_t WideStringToNarrowDynamic(_In_ const char16_t* sourceString, _Out_ char** destStringPtr)
+    inline std::string U16StringToString(const std::u16string& sourceString)
     {
         size_t unused;
-        return WideStringToNarrow<malloc_allocator>(
-            sourceString, std::u16string(sourceString).length(), destStringPtr, &unused);
+        char *dest;
+        WideStringToNarrow<malloc_allocator>(sourceString.c_str(), sourceString.length(), &dest, &unused);
+        std::string destString(dest);
+        free(dest);
+        return destString;
     }
 
     inline int32_t NarrowStringToWideDynamic(_In_ const char * sourceString, _Out_ char16_t** destStringPtr)
@@ -231,10 +234,13 @@ namespace utf8
             sourceString, strlen(sourceString), destStringPtr, &unused);
     }
 
-    inline int32_t NarrowStringToWideDynamicGetLength(_In_ const char * sourceString, _Out_ char16_t** destStringPtr, _Out_ charcount_t* destLength)
+    inline std::u16string StringToU16String(const std::string& sourceString)
     {
-        return NarrowStringToWide<malloc_allocator>(
-            sourceString, strlen(sourceString), destStringPtr, destLength);
+        char16_t* dest;
+        NarrowStringToWideDynamic(sourceString.c_str(), &dest);
+        std::u16string destString(dest);
+        free(dest);
+        return destString;
     }
 
     template <class Allocator, class SrcType, class DstType, class CountType>
