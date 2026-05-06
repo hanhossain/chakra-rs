@@ -1,0 +1,6 @@
+---
+Checks: '-*,
+cppcoreguidelines-*'
+UseColor: true
+SystemHeaders: false
+ExcludeHeaderFilterRegex: .*homebrew.*
