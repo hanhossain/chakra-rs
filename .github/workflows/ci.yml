@@ -58,3 +58,28 @@ jobs:
         run: cargo nextest run ${{ matrix.features }} -- --ignored
         env:
           CHAKRA_TEST_SLOW: true
+  lint:
+    name: clang-tidy / ${{ matrix.os }}
+    runs-on: ${{ matrix.os-image }}
+    strategy:
+      # TODO: don't fail fast
+      fail-fast: true
+      matrix:
+        os:
+          - macos
+          - ubuntu
+        include:
+          - os: macos
+            os-image: macos-latest
+            deps: brew install ninja icu4c@77 --quiet
+          - os: ubuntu
+            os-image: ubuntu-latest
+            deps: sudo apt-get install -y ninja-build libc++-dev libc++abi-dev
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install dependencies
+        run: ${{ matrix.deps }}
+      - run: cargo check
+      - run: cmake --preset ${{ matrix.os }}-debug
+      - run: run-clang-tidy -p build-${{ matrix.os }}-debug
