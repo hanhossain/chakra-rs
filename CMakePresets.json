@@ -10,8 +10,7 @@
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_CXX_COMPILER": "clang++",
-                "CMAKE_C_COMPILER": "clang",
-                "CXXBRIDGE_INCLUDE_DIR": "${sourceDir}/target/cxxbridge"
+                "CMAKE_C_COMPILER": "clang"
             }
         },
         {
