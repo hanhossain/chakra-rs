@@ -3,6 +3,8 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include <mutex>
+
 #include "Core/AutoFile.h"
 
 // xplat-todo: error: ISO C++ forbids forward references to 'enum' types
@@ -125,7 +127,7 @@ private:
 
     static AutoFILE s_outputFile;
     static bool     s_useDebuggerWindow;
-    static CriticalSection s_critsect;
+    static std::recursive_mutex s_mutex;
 
 #ifdef ENABLE_TRACE
     static Js::ILogger* s_inMemoryLogger;       // Used to trace into memory so that when process crashes, you can see tracing in crash dump file.

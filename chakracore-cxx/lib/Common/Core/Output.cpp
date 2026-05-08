@@ -23,7 +23,7 @@
 #pragma init_seg(".CRT$XCAM")
 
 bool                Output::s_useDebuggerWindow = false;
-CriticalSection     Output::s_critsect;
+std::recursive_mutex Output::s_mutex;
 AutoFILE            Output::s_outputFile; // Create a separate output file that is not thread-local.
 #ifdef ENABLE_TRACE
 Js::ILogger*        Output::s_inMemoryLogger = nullptr;
@@ -52,7 +52,7 @@ Output::VerboseNote(const char16_t * format, ...)
 #ifdef ENABLE_TRACE
     if (Js::Configuration::Global.flags.Verbose)
     {
-        AutoCriticalSection autocs(&s_critsect);
+        std::unique_lock lock(s_mutex);
         va_list argptr;
         va_start(argptr, format);
         size_t size = PAL_vfwprintf(stdout, format, argptr);
@@ -412,8 +412,7 @@ void Output::Flush()
 
 void Output::DirectPrint(char16_t const * string)
 {
-    AutoCriticalSection autocs(&s_critsect);
-
+    std::unique_lock lock(s_mutex);
     PAL_fwprintf(stdout, u"%s", string);
 }
 ///----------------------------------------------------------------------------
@@ -517,7 +516,7 @@ Output::SetStackTraceHelper(Js::IStackTraceHelper* helper)
 uint16_t
 Output::SetConsoleForeground(uint16_t color)
 {
-    AutoCriticalSection autocs(&s_critsect);
+    std::unique_lock lock(s_mutex);
     return 0;
 }
 
