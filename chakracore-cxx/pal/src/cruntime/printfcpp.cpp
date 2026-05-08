@@ -1102,9 +1102,6 @@ int CoreVfwprintf(CPalThread *pthrCurrent, FILE *stream, const char16_t *format,
        in text mode. In those case the output should be ANSI not Unicode */
     BOOL textMode = TRUE;
 
-    ENTRY("vfwprintf (stream=%p, format=%p (%S))\n",
-          stream, format, format);
-
     va_copy(ap, aparg);
 
     while (*Fmt)
@@ -1510,9 +1507,6 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
     char* TempNumberBuffer;
     int mbtowcResult;
     va_list(ap);
-
-    ENTRY("wvsnprintf (buffer=%p, count=%u, format=%p (%S))\n",
-          Buffer, Count, Format, Format);
 
     va_copy(ap, aparg);
     BOOL precisionSet = false;

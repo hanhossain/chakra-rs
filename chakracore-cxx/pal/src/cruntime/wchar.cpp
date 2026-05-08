@@ -163,9 +163,6 @@ _itow(
 {
     char16_t *ret;
 
-    ENTRY("_itow (value=%d, string=%p, radix=%d)\n",
-          value, string, radix);
-
     ret = Internal_i64tow(value, string, radix, FALSE);
 
     LOGEXIT("_itow returns char16_t* %p\n", ret);
@@ -188,9 +185,6 @@ _ltow(
 {
     char16_t *ret;
 
-    ENTRY("_ltow (value=%d, string=%p, radix=%d)\n",
-          value, string, radix);
-
     ret = Internal_i64tow(value, string, radix, FALSE);
 
     LOGEXIT("_ltow returns char16_t* %p\n", ret);
@@ -211,9 +205,6 @@ char16_t *
     int radix)
 {
     char16_t *ret;
-
-    ENTRY("_i64tow (value=%ld, string=%p, radix=%d)\n",
-          value, string, radix);
 
     ret = Internal_i64tow(value, string, radix, TRUE);
 
@@ -236,8 +227,6 @@ _wtoi(
     int len;
     int ret;
     char *tempStr;
-
-    ENTRY("_wtoi (string=%p)\n", string);
 
     len = WideCharToMultiByte(CP_ACP, 0, string, -1, 0, 0, 0, 0);
     if (!len)
@@ -312,11 +301,6 @@ _wcsnicmp(
     size_t i;
     int diff = 0;
 
-    ENTRY("_wcsnicmp (string1=%p (%S), string2=%p (%S), count=%lu)\n",
-          string1?string1:W16_NULLSTRING,
-          string1?string1:W16_NULLSTRING, string2?string2:W16_NULLSTRING, string2?string2:W16_NULLSTRING,
-         (unsigned long) count);
-
     for (i = 0; i < count; i++)
     {
         diff = wtolower(string1[i]) - wtolower(string2[i]);
@@ -359,10 +343,6 @@ _wcsicmp(
 {
     int ret;
 
-    ENTRY("_wcsicmp (string1=%p (%S), string2=%p (%S))\n",
-          string1?string1:W16_NULLSTRING,
-          string1?string1:W16_NULLSTRING, string2?string2:W16_NULLSTRING, string2?string2:W16_NULLSTRING);
-
     ret = _wcsnicmp(string1, string2, 0x7fffffff);
 
     LOGEXIT("_wcsnicmp returns int %d\n", ret);
@@ -396,8 +376,6 @@ _wcslwr(
 {
     int i;
 
-    ENTRY("_wcslwr (string=%p (%S))\n", string?string:W16_NULLSTRING, string?string:W16_NULLSTRING);
-
     for (i=0 ; string[i] != 0; i++)
     {
         string[i] = wtolower(string[i]);
@@ -417,9 +395,6 @@ PAL__wcstoui64(
     char *s_endptr = 0;
     unsigned long long res;
     int size;
-
-    ENTRY("_wcstoui64 (nptr=%p (%S), endptr=%p, base=%d)\n", nptr?nptr:W16_NULLSTRING, nptr?nptr:W16_NULLSTRING,
-          endptr, base);
 
     size = WideCharToMultiByte(CP_ACP, 0, nptr, -1, NULL, 0, NULL, NULL);
     if (!size)
@@ -474,7 +449,6 @@ See MSDN
 char16_t
 PAL_towlower( char16_t c )
 {
-    ENTRY("towlower (c=%d)\n", c);
     if(c < 128)
     {//fast path for ascii characters
         if(c >= 'A' && c <= 'Z')
@@ -549,12 +523,9 @@ PAL_iswlower( char16_t c )
         sLowercaseSet = CFCharacterSetGetPredefined(
                                         kCFCharacterSetLowercaseLetter);
     }
-    ENTRY("PAL_iswlower (c=%d)\n", c);
     bRetVal = CFCharacterSetIsCharacterMember(sLowercaseSet, c);
 #else   /* defined(__APPLE__) */
     UnicodeDataRec dataRec;
-
-    ENTRY("PAL_iswlower (c=%d)\n", c);
 
     if (!GetUnicodeData(c, &dataRec))
     {
@@ -585,9 +556,6 @@ PAL_wcscpy(
         const char16_t *strSource)
 {
     char16_t *start = strDestination;
-
-    ENTRY("wcscpy (strDestination=%p, strSource=%p (%S))\n",
-          strDestination, strSource ? strSource:W16_NULLSTRING, strSource ? strSource:W16_NULLSTRING);
 
     if (strDestination == NULL)
     {
@@ -631,11 +599,6 @@ PAL_wmemcmp(
     size_t i, wi = 0;
     int diff = 0;
 
-    ENTRY("wmemcmp (string1=%p (%S), string2=%p (%S) count=%lu)\n",
-          string1?string1:W16_NULLSTRING,
-          string1?string1:W16_NULLSTRING, string2?string2:W16_NULLSTRING, string2?string2:W16_NULLSTRING,
-          (unsigned long) count);
-
     if (string1 == string2) return diff;
 
     constexpr size_t blockSize = sizeof(size_t) / sizeof(char16_t);
@@ -672,11 +635,6 @@ PAL_wcsncmp(
     size_t i;
     int diff = 0;
 
-    ENTRY("wcsncmp (string1=%p (%S), string2=%p (%S) count=%lu)\n",
-          string1?string1:W16_NULLSTRING,
-          string1?string1:W16_NULLSTRING, string2?string2:W16_NULLSTRING, string2?string2:W16_NULLSTRING,
-          (unsigned long) count);
-
     if (string1 == string2) return diff;
 
     for (i = 0; i < count; i++)
@@ -710,10 +668,6 @@ PAL_wcscmp(
 {
     int ret;
 
-    ENTRY("wcscmp (string1=%p (%S), string2=%p (%S))\n",
-          string1?string1:W16_NULLSTRING,
-          string1?string1:W16_NULLSTRING, string2?string2:W16_NULLSTRING, string2?string2:W16_NULLSTRING);
-
     ret = PAL_wcsncmp(string1, string2, 0x7fffffff);
 
     LOGEXIT("wcscmp returns int %d\n", ret);
@@ -732,8 +686,6 @@ PAL_wcschr(
         const char16_t * string,
         char16_t c)
 {
-    ENTRY("wcschr (string=%p (%S), c=%C)\n", string?string:W16_NULLSTRING, string?string:W16_NULLSTRING, c);
-
     while (*string)
     {
         if (*string == c)
@@ -767,8 +719,6 @@ PAL_wcsrchr(
 {
     char16_t *last = NULL;
 
-    ENTRY("wcsrchr (string=%p (%S), c=%C)\n", string?string:W16_NULLSTRING, string?string:W16_NULLSTRING, c);
-
     while (*string)
     {
         if (*string == c)
@@ -795,10 +745,6 @@ PAL_wcsstr(
 {
     char16_t *ret = NULL;
     int i;
-
-    ENTRY("wcsstr (string=%p (%S), strCharSet=%p (%S))\n",
-      string?string:W16_NULLSTRING,
-      string?string:W16_NULLSTRING, strCharSet?strCharSet:W16_NULLSTRING, strCharSet?strCharSet:W16_NULLSTRING);
 
     if (string == NULL)
     {
@@ -862,12 +808,6 @@ PAL_wcsncat( char16_t * strDest, const char16_t *strSource, size_t count )
     uint32_t LoopCount = 0;
     uint32_t StrSourceLength = 0;
 
-    ENTRY( "wcsncat (strDestination=%p (%S), strSource=%p (%S), count=%lu )\n",
-            strDest ? strDest : W16_NULLSTRING,
-            strDest ? strDest : W16_NULLSTRING,
-            strSource ? strSource : W16_NULLSTRING,
-            strSource ? strSource : W16_NULLSTRING, (unsigned long) count);
-
     if ( strDest == NULL )
     {
         ERROR("invalid strDest argument\n");
@@ -922,9 +862,6 @@ _ui64tow( unsigned long value , char16_t * string , int radix )
     char16_t ReversedString[ 65 ];
     char16_t* lpString = string;
     uint32_t Index = 0;
-
-    ENTRY( "_ui64tow( value=%I64d, string=%p (%S), radix=%d )\n",
-           value, string, string, radix );
 
     if ( !string )
     {

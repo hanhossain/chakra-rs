@@ -56,10 +56,6 @@ CreateDirectoryW(
     int   mb_size;
     char  *mb_dir = NULL;
 
-    ENTRY("CreateDirectoryW(lpPathName=%p (%S), lpSecurityAttr=%p)\n",
-          lpPathName?lpPathName:W16_NULLSTRING,
-          lpPathName?lpPathName:W16_NULLSTRING, lpSecurityAttributes);
-
     if ( lpSecurityAttributes )
     {
         ASSERT("lpSecurityAttributes is not NULL as it should be\n");
@@ -116,8 +112,6 @@ GetCurrentDirectoryA(
 
     char  *current_dir;
 
-    ENTRY("GetCurrentDirectoryA(nBufferLength=%u, lpBuffer=%p)\n", nBufferLength, lpBuffer);
-
     /* NULL first arg means getcwd will allocate the string */
     current_dir = getcwd( NULL, MAX_LONGPATH + 1 );
 
@@ -171,9 +165,6 @@ GetCurrentDirectoryW(
 
     char  *current_dir;
     int   dir_len;
-
-    ENTRY("GetCurrentDirectoryW(nBufferLength=%u, lpBuffer=%p)\n",
-          nBufferLength, lpBuffer);
 
     current_dir = getcwd( NULL, MAX_LONGPATH + 1 );
 
@@ -236,10 +227,6 @@ SetCurrentDirectoryW(
     size_t length;
     char * dir;
     
-    ENTRY("SetCurrentDirectoryW(lpPathName=%p (%S))\n",
-          lpPathName?lpPathName:W16_NULLSTRING,
-          lpPathName?lpPathName:W16_NULLSTRING);
-
    /*check if the given path is null. If so
      return FALSE*/
     if (lpPathName == NULL )
@@ -312,10 +299,6 @@ CreateDirectoryA(
     int pathLength;
     int i;
     const int mode = S_IRWXU | S_IRWXG | S_IRWXO;
-
-    ENTRY("CreateDirectoryA(lpPathName=%p (%s), lpSecurityAttr=%p)\n",
-          lpPathName?lpPathName:"NULL",
-          lpPathName?lpPathName:"NULL", lpSecurityAttributes);
 
     if ( lpSecurityAttributes )
     {
@@ -442,10 +425,6 @@ SetCurrentDirectoryA(
     uint32_t dwLastError = 0;
     int result;
     char* UnixPathName = NULL;
-
-    ENTRY("SetCurrentDirectoryA(lpPathName=%p (%s))\n",
-          lpPathName?lpPathName:"NULL",
-          lpPathName?lpPathName:"NULL");
 
    /*check if the given path is null. If so
      return FALSE*/

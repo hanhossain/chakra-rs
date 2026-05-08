@@ -182,9 +182,6 @@ _snwprintf(
     int32_t Length;
     va_list ap;
 
-    ENTRY("_snwprintf (buffer=%p, count=%lu, format=%p (%S))\n",
-          buffer, (unsigned long) count, format, format);
-
     va_start(ap, format);
     Length = PAL__wvsnprintf(buffer, count, format, ap);
     va_end(ap);
@@ -208,8 +205,6 @@ PAL_fwprintf(
 {
     int32_t Length;
     va_list ap;
-
-    ENTRY("PAL_fwprintf (stream=%p, format=%p (%S))\n", stream, format, format);
 
     va_start(ap, format);
     Length = PAL_vfwprintf( stream, format, ap);
@@ -1277,8 +1272,6 @@ PAL_swscanf(
     int Length;
     va_list ap;
 
-    ENTRY("PAL_swscanf (buffer=%p (%S), format=%p (%S))\n", buffer, buffer, format, format);
-
     va_start(ap, format);
     Length = PAL_wvsscanf(buffer, format, ap);
     va_end(ap);
@@ -1301,9 +1294,6 @@ _vsnwprintf(char16_t *buffer,
             va_list argptr)
 {
     int32_t Length;
-
-    ENTRY("_vsnwprintf (buffer=%p, count=%lu, format=%p (%S), argptr=%p)\n",
-          buffer, (unsigned long) count, format, format, argptr);
 
     Length = PAL__wvsnprintf(buffer, count, format, argptr);
 

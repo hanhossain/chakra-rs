@@ -65,12 +65,6 @@ DuplicateHandle(
     PAL_ERROR palError;
     CPalThread *pThread;
     
-    ENTRY("DuplicateHandle( hSrcProcHandle=%p, hSrcHandle=%p, "
-          "hTargetProcHandle=%p, lpTargetHandle=%p, dwAccess=%#x, "
-          "bInheritHandle=%d, dwOptions=%#x) \n", hSourceProcessHandle,
-          hSourceHandle, hTargetProcessHandle, lpTargetHandle,
-          dwDesiredAccess, bInheritHandle, dwOptions);
-
     pThread = InternalGetCurrentThread();
 
     palError = InternalDuplicateHandle(
@@ -275,8 +269,6 @@ CloseHandle(
 {
     CPalThread *pThread;
     PAL_ERROR palError;
-
-    ENTRY("CloseHandle (hObject=%p) \n", hObject);
 
     pThread = InternalGetCurrentThread();
 

@@ -142,8 +142,6 @@ PAL_fopen(const char * fileName, const char * mode)
     char* UnixFileName = NULL;
     struct stat stat_data;
 
-    ENTRY("fopen ( fileName=%p (%s) mode=%p (%s))\n", fileName, fileName, mode , mode );
-
     _ASSERTE(fileName != NULL);
     _ASSERTE(mode != NULL);
 
@@ -206,8 +204,6 @@ _wfopen(
     char mbFileName[ _MAX_PATH ];
     char mbMode[ 10 ];
     FILE * filePtr = NULL;
-
-    ENTRY("_wfopen(fileName:%p (%S), mode:%p (%S))\n", fileName, fileName, mode, mode);
 
     _ASSERTE(fileName != NULL);
     _ASSERTE(mode != NULL);

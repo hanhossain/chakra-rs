@@ -908,12 +908,6 @@ CreateFileA(
     PAL_ERROR palError = NO_ERROR;
     HANDLE  hRet = INVALID_HANDLE_VALUE;
 
-    ENTRY("CreateFileA(lpFileName=%p (%s), dwAccess=%#x, dwShareMode=%#x, "
-          "lpSecurityAttr=%p, dwDisposition=%#x, dwFlags=%#x, " 
-          "hTemplateFile=%p )\n",lpFileName?lpFileName:"NULL",lpFileName?lpFileName:"NULL", dwDesiredAccess, 
-          dwShareMode, lpSecurityAttributes, dwCreationDisposition, 
-          dwFlagsAndAttributes, hTemplateFile);
-
     pThread = InternalGetCurrentThread();
 
     palError = InternalCreateFile(
@@ -970,13 +964,6 @@ CreateFileW(
     int size;
     int length = 0;
     HANDLE  hRet = INVALID_HANDLE_VALUE;
-
-    ENTRY("CreateFileW(lpFileName=%p (%S), dwAccess=%#x, dwShareMode=%#x, "
-          "lpSecurityAttr=%p, dwDisposition=%#x, dwFlags=%#x, hTemplateFile=%p )\n",
-          lpFileName?lpFileName:W16_NULLSTRING,
-          lpFileName?lpFileName:W16_NULLSTRING, dwDesiredAccess, dwShareMode,
-          lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes,
-          hTemplateFile);
 
     pThread = InternalGetCurrentThread();
 
@@ -1058,8 +1045,6 @@ DeleteFileA(
     PathCharString lpUnixFileNamePS;
     char* lpFullUnixFileName = NULL;
     uint32_t cchFullUnixFileName = MAX_LONGPATH+1;// InternalCanonicalizeRealPath requires this to be at least PATH_MAX
-
-    ENTRY("DeleteFileA(lpFileName=%p (%s))\n", lpFileName?lpFileName:"NULL", lpFileName?lpFileName:"NULL");
 
     pThread = InternalGetCurrentThread();
     length = strlen(lpFileName);
@@ -1143,10 +1128,6 @@ DeleteFileW(
     int length = 0;
     BOOL bRet = FALSE;
 
-    ENTRY("DeleteFileW(lpFileName=%p (%S))\n",
-      lpFileName?lpFileName:W16_NULLSTRING,
-      lpFileName?lpFileName:W16_NULLSTRING);
-
     pThread = InternalGetCurrentThread();
     
     if (lpFileName != NULL)
@@ -1203,12 +1184,6 @@ MoveFileA(
 {
     BOOL bRet;
 
-    ENTRY("MoveFileA(lpExistingFileName=%p (%s), lpNewFileName=%p (%s))\n",
-          lpExistingFileName?lpExistingFileName:"NULL",
-          lpExistingFileName?lpExistingFileName:"NULL",
-          lpNewFileName?lpNewFileName:"NULL",
-          lpNewFileName?lpNewFileName:"NULL");
-
     bRet = MoveFileExA( lpExistingFileName,
             lpNewFileName,
             MOVEFILE_COPY_ALLOWED );
@@ -1230,12 +1205,6 @@ MoveFileW(
       const char16_t* lpNewFileName)
 {
     BOOL bRet;
-
-    ENTRY("MoveFileW(lpExistingFileName=%p (%S), lpNewFileName=%p (%S))\n",
-          lpExistingFileName?lpExistingFileName:W16_NULLSTRING,
-          lpExistingFileName?lpExistingFileName:W16_NULLSTRING,
-          lpNewFileName?lpNewFileName:W16_NULLSTRING,
-          lpNewFileName?lpNewFileName:W16_NULLSTRING);
 
     bRet = MoveFileExW( lpExistingFileName,
             lpNewFileName,
@@ -1266,13 +1235,6 @@ MoveFileExA(
     char * dest;
     BOOL  bRet = TRUE;
     uint32_t dwLastError = 0;
-
-    ENTRY("MoveFileExA(lpExistingFileName=%p (%S), lpNewFileName=%p (%S), "
-          "dwFlags=%#x)\n",
-          lpExistingFileName?lpExistingFileName:"NULL",
-          lpExistingFileName?lpExistingFileName:"NULL",
-          lpNewFileName?lpNewFileName:"NULL",
-          lpNewFileName?lpNewFileName:"NULL", dwFlags);
 
     pThread = InternalGetCurrentThread();
     /* only two flags are accepted */
@@ -1437,12 +1399,6 @@ MoveFileExW(
     int     src_size,dest_size;
     BOOL        bRet = FALSE;
 
-    ENTRY("MoveFileExW(lpExistingFileName=%p (%S), lpNewFileName=%p (%S), dwFlags=%#x)\n",
-          lpExistingFileName?lpExistingFileName:W16_NULLSTRING,
-          lpExistingFileName?lpExistingFileName:W16_NULLSTRING,
-          lpNewFileName?lpNewFileName:W16_NULLSTRING,
-          lpNewFileName?lpNewFileName:W16_NULLSTRING, dwFlags);
-
     pThread = InternalGetCurrentThread();
     
     if (lpExistingFileName != NULL)
@@ -1551,8 +1507,6 @@ GetFileAttributesA(
     int length = 0;
     PathCharString UnixFileNamePS;
 
-    ENTRY("GetFileAttributesA(lpFileName=%p (%s))\n", lpFileName?lpFileName:"NULL", lpFileName?lpFileName:"NULL");
-
     pThread = InternalGetCurrentThread();
     if (lpFileName == NULL)
     {
@@ -1636,10 +1590,6 @@ GetFileAttributesW(
     char * filename;
     uint32_t dwRet = (uint32_t) -1;
 
-    ENTRY("GetFileAttributesW(lpFileName=%p (%S))\n",
-          lpFileName?lpFileName:W16_NULLSTRING,
-          lpFileName?lpFileName:W16_NULLSTRING);
-
     pThread = InternalGetCurrentThread();
     if (lpFileName == NULL) 
     {
@@ -1703,10 +1653,6 @@ GetFileAttributesExW(
     PathCharString namePS;
     int length = 0;
     int  size;
-
-    ENTRY("GetFileAttributesExW(lpFileName=%p (%S), fInfoLevelId=%d, "
-          "lpFileInformation=%p)\n", lpFileName?lpFileName:W16_NULLSTRING, lpFileName?lpFileName:W16_NULLSTRING,
-          fInfoLevelId, lpFileInformation);
 
     pThread = InternalGetCurrentThread();
     if ( fInfoLevelId != GetFileExInfoStandard )
@@ -1984,10 +1930,6 @@ WriteFile(
     PAL_ERROR palError;
     CPalThread *pThread;
     
-    ENTRY("WriteFile(hFile=%p, lpBuffer=%p, nToWrite=%u, lpWritten=%p, "
-          "lpOverlapped=%p)\n", hFile, lpBuffer, nNumberOfBytesToWrite, 
-          lpNumberOfBytesWritten, lpOverlapped);
-
     pThread = InternalGetCurrentThread();
 
     palError = InternalWriteFile(
@@ -2205,11 +2147,6 @@ ReadFile(
     PAL_ERROR palError;
     CPalThread *pThread;
     
-    ENTRY("ReadFile(hFile=%p, lpBuffer=%p, nToRead=%u, "
-          "lpRead=%p, lpOverlapped=%p)\n",
-          hFile, lpBuffer, nNumberOfBytesToRead, 
-          lpNumberOfBytesRead, lpOverlapped);
-
     pThread = InternalGetCurrentThread();
 
     palError = InternalReadFile(
@@ -2243,8 +2180,6 @@ GetStdHandle(
 {
     CPalThread *pThread;
     HANDLE hRet = INVALID_HANDLE_VALUE;
-
-    ENTRY("GetStdHandle(nStdHandle=%#x)\n", nStdHandle);
 
     pThread = InternalGetCurrentThread();
     switch( nStdHandle )
@@ -2405,8 +2340,6 @@ SetEndOfFile(
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread;;
-
-    ENTRY("SetEndOfFile(hFile=%p)\n", hFile);
 
     pThread = InternalGetCurrentThread();
 
@@ -2810,8 +2743,6 @@ FlushFileBuffers(
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread;
 
-    ENTRY("FlushFileBuffers(hFile=%p)\n", hFile);
-
     pThread = InternalGetCurrentThread();
 
     palError = InternalFlushFileBuffers(
@@ -3047,13 +2978,6 @@ CopyFileA(
     uint32_t        bytes_read;
     uint32_t        bytes_written;
     int          permissions;
-
-
-    ENTRY("CopyFileA(lpExistingFileName=%p (%s), lpNewFileName=%p (%s), bFailIfExists=%d)\n",
-          lpExistingFileName?lpExistingFileName:"NULL",
-          lpExistingFileName?lpExistingFileName:"NULL",
-          lpNewFileName?lpNewFileName:"NULL",
-          lpNewFileName?lpNewFileName:"NULL", bFailIfExists);
 
     pThread = InternalGetCurrentThread();
     if ( bFailIfExists )
