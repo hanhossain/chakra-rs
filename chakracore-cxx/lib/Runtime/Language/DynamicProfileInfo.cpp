@@ -54,7 +54,7 @@ namespace Js
         bits = NotNativeIntBit | NotNativeFloatBit;
     }
 
-    CriticalSection DynamicProfileInfo::callSiteInfoCS;
+    std::recursive_mutex DynamicProfileInfo::callSiteInfoCS;
 
     DynamicProfileInfo* DynamicProfileInfo::New(Recycler* recycler, FunctionBody* functionBody, bool persistsAcrossScriptContexts)
     {
@@ -544,7 +544,7 @@ namespace Js
 #ifdef ASMJS_PLAT
     void DynamicProfileInfo::RecordAsmJsCallSiteInfo(FunctionBody* callerBody, ProfileId callSiteId, FunctionBody* calleeBody)
     {
-        AutoCriticalSection cs(&this->callSiteInfoCS);
+        std::unique_lock cs(callSiteInfoCS);
 
         if (!callerBody || !callerBody->GetIsAsmjsMode() || !calleeBody || !calleeBody->GetIsAsmjsMode())
         {
@@ -693,7 +693,7 @@ namespace Js
 
     void DynamicProfileInfo::RecordCallSiteInfo(FunctionBody* functionBody, ProfileId callSiteId, FunctionInfo* calleeFunctionInfo, JavascriptFunction* calleeFunction, uint actualArgCount, bool isConstructorCall, InlineCacheIndex ldFldInlineCacheId)
     {
-        AutoCriticalSection cs(&this->callSiteInfoCS);
+        std::unique_lock cs(callSiteInfoCS);
 
 #if DBG_DUMP || defined(DYNAMIC_PROFILE_STORAGE) || defined(RUNTIME_DATA_COLLECTION)
         // If we persistsAcrossScriptContext, the dynamic profile info may be referred to by multiple function body from
@@ -742,7 +742,7 @@ namespace Js
 
                 if (doInline && IsPolymorphicCallSite(functionId, sourceId, oldFunctionId, oldSourceId))
                 {
-                    CreatePolymorphicDynamicProfileCallSiteInfo(functionBody, callSiteId, functionId, oldFunctionId, sourceId, oldSourceId);
+                    CreatePolymorphicDynamicProfileCallSiteInfo(functionBody, callSiteId, functionId, oldFunctionId, sourceId, oldSourceId, cs);
                 }
                 else
                 {
@@ -757,14 +757,14 @@ namespace Js
         {
             Assert(doInline);
             Assert(callSiteInfo[callSiteId].isConstructorCall == isConstructorCall);
-            RecordPolymorphicCallSiteInfo(functionBody, callSiteId, calleeFunctionInfo);
+            RecordPolymorphicCallSiteInfo(functionBody, callSiteId, calleeFunctionInfo, cs);
         }
 
         return;
     }
     void DynamicProfileInfo::RecordCallApplyTargetInfo(FunctionBody* functionBody, ProfileId callApplyCallSiteNum, FunctionInfo * targetFunctionInfo, JavascriptFunction* targetFunction)
     {
-        AutoCriticalSection cs(&this->callSiteInfoCS);
+        std::unique_lock cs(callSiteInfoCS);
 
 #if DBG_DUMP || defined(DYNAMIC_PROFILE_STORAGE) || defined(RUNTIME_DATA_COLLECTION)
         // If we persistsAcrossScriptContext, the dynamic profile info may be referred to by multiple function body from
@@ -811,7 +811,7 @@ namespace Js
         return true;
     }
 
-    void DynamicProfileInfo::CreatePolymorphicDynamicProfileCallSiteInfo(FunctionBody *funcBody, ProfileId callSiteId, Js::LocalFunctionId functionId, Js::LocalFunctionId oldFunctionId, Js::SourceId sourceId, Js::SourceId oldSourceId)
+    void DynamicProfileInfo::CreatePolymorphicDynamicProfileCallSiteInfo(FunctionBody *funcBody, ProfileId callSiteId, Js::LocalFunctionId functionId, Js::LocalFunctionId oldFunctionId, Js::SourceId sourceId, Js::SourceId oldSourceId, const std::unique_lock<std::recursive_mutex> &lock)
     {
         PolymorphicCallSiteInfo *localPolyCallSiteInfo = RecyclerNewStructZ(funcBody->GetScriptContext()->GetRecycler(), PolymorphicCallSiteInfo);
 
@@ -827,7 +827,7 @@ namespace Js
             localPolyCallSiteInfo->functionIds[i] = CallSiteNoInfo;
         }
 
-        Assert(this->callSiteInfoCS.IsLocked());
+        Assert(lock.owns_lock());
         callSiteInfo[callSiteId].isPolymorphic = true;
         callSiteInfo[callSiteId].u.polymorphicCallSiteInfo = localPolyCallSiteInfo;
         funcBody->SetPolymorphicCallSiteInfoHead(localPolyCallSiteInfo);
@@ -837,21 +837,21 @@ namespace Js
     {
         if (dynamicProfileFunctionInfo)
         {
-            AutoCriticalSection cs(&this->callSiteInfoCS);
+            std::unique_lock cs(callSiteInfoCS);
 
             for (ProfileId i = 0; i < dynamicProfileFunctionInfo->callSiteInfoCount; i++)
             {
                 if (callSiteInfo[i].isPolymorphic)
                 {
-                    ResetPolymorphicCallSiteInfo(i, CallSiteMixed);
+                    ResetPolymorphicCallSiteInfo(i, CallSiteMixed, cs);
                 }
             }
         }
     }
 
-    void DynamicProfileInfo::ResetPolymorphicCallSiteInfo(ProfileId callSiteId, Js::LocalFunctionId functionId)
+    void DynamicProfileInfo::ResetPolymorphicCallSiteInfo(ProfileId callSiteId, Js::LocalFunctionId functionId, const std::unique_lock<std::recursive_mutex> &lock)
     {
-        Assert(this->callSiteInfoCS.IsLocked());
+        Assert(lock.owns_lock());
 
         callSiteInfo[callSiteId].isPolymorphic = false;
         callSiteInfo[callSiteId].u.functionData.sourceId = CurrentSourceId;
@@ -859,7 +859,7 @@ namespace Js
         this->currentInlinerVersion++;
     }
 
-    void DynamicProfileInfo::SetFunctionIdSlotForNewPolymorphicCall(ProfileId callSiteId, Js::LocalFunctionId curFunctionId, Js::SourceId curSourceId, Js::FunctionBody *inliner)
+    void DynamicProfileInfo::SetFunctionIdSlotForNewPolymorphicCall(ProfileId callSiteId, Js::LocalFunctionId curFunctionId, Js::SourceId curSourceId, Js::FunctionBody *inliner, const std::unique_lock<std::recursive_mutex> &lock)
     {
         for (int i = 0; i < maxPolymorphicInliningSize; i++)
         {
@@ -901,15 +901,15 @@ namespace Js
 #endif
 
         // We reached the max allowed to inline, no point in continuing collecting the information. Reset and move on.
-        ResetPolymorphicCallSiteInfo(callSiteId, CallSiteMixed);
+        ResetPolymorphicCallSiteInfo(callSiteId, CallSiteMixed, lock);
     }
 
-    void DynamicProfileInfo::RecordPolymorphicCallSiteInfo(FunctionBody* functionBody, ProfileId callSiteId, FunctionInfo * calleeFunctionInfo)
+    void DynamicProfileInfo::RecordPolymorphicCallSiteInfo(FunctionBody* functionBody, ProfileId callSiteId, FunctionInfo * calleeFunctionInfo, const std::unique_lock<std::recursive_mutex> &lock)
     {
         Js::LocalFunctionId functionId;
         if (calleeFunctionInfo == nullptr || !calleeFunctionInfo->HasBody())
         {
-            return ResetPolymorphicCallSiteInfo(callSiteId, CallSiteMixed);
+            return ResetPolymorphicCallSiteInfo(callSiteId, CallSiteMixed, lock);
         }
 
         // We can only inline function that are from the same script context. So only record that data
@@ -926,13 +926,13 @@ namespace Js
                     sourceId = CurrentSourceId;
                 }
                 functionId = calleeFunctionProxy->GetLocalFunctionId();
-                SetFunctionIdSlotForNewPolymorphicCall(callSiteId, functionId, sourceId, functionBody);
+                SetFunctionIdSlotForNewPolymorphicCall(callSiteId, functionId, sourceId, functionBody, lock);
                 return;
             }
         }
 
         // Pretend that we are cross context when call is crossing script file.
-        ResetPolymorphicCallSiteInfo(callSiteId, CallSiteCrossContext);
+        ResetPolymorphicCallSiteInfo(callSiteId, CallSiteCrossContext, lock);
     }
 
     /* static */
@@ -1095,7 +1095,7 @@ namespace Js
 
     bool DynamicProfileInfo::MayHaveNonBuiltinCallee(ProfileId callSiteId)
     {
-        AutoCriticalSection cs(&this->callSiteInfoCS);
+        std::unique_lock cs(callSiteInfoCS);
 
         if (this->callSiteInfo[callSiteId].dontInline)
         {
@@ -2523,7 +2523,7 @@ namespace Js
 #endif
 
 #ifdef RUNTIME_DATA_COLLECTION
-    CriticalSection DynamicProfileInfo::s_csOutput;
+    std::recursive_mutex DynamicProfileInfo::s_csOutput;
 
     template <typename T>
     void DynamicProfileInfo::WriteData(const T& data, FILE * file)
@@ -2581,7 +2581,7 @@ namespace Js
             return;
         }
 
-        AutoCriticalSection autocs(&s_csOutput);
+        std::unique_lock autocs(s_csOutput);
         FILE * file;
         if (_wfopen_s(&file, Configuration::Global.flags.RuntimeDataOutputFile, u"ab+") != 0 || file == nullptr)
         {
