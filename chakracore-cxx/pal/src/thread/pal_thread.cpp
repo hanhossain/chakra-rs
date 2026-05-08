@@ -305,9 +305,6 @@ GetThreadId(
     PAL_ERROR palError = NO_ERROR;
     IPalObject *pobjThread = 0;
 
-    // TODO: not sure if this could be done in a more efficient way.
-    ENTRY("GetThreadId()\n");
-
     pThread = InternalGetCurrentThread();
 
     palError = InternalGetThreadDataFromHandle(
@@ -345,8 +342,6 @@ GetCurrentThreadId(
 {
     uint32_t dwThreadId;
 
-    ENTRY("GetCurrentThreadId()\n");
-
     dwThreadId = (uint32_t)THREADSilentGetCurrentThreadId();
 
     LOGEXIT("GetCurrentThreadId returns DWORD %#x\n", dwThreadId);
@@ -364,8 +359,6 @@ HANDLE
 PAL_GetCurrentThread(
           void)
 {
-    ENTRY("GetCurrentThread()\n");
-
     LOGEXIT("GetCurrentThread returns HANDLE %p\n", hPseudoCurrentThread);
 
     /* return a pseudo handle */
@@ -394,11 +387,6 @@ CreateThread(
     PAL_ERROR palError;
     CPalThread *pThread;
     HANDLE hNewThread = NULL;
-
-    ENTRY("CreateThread(lpThreadAttr=%p, dwStackSize=%u, lpStartAddress=%p, "
-          "lpParameter=%p, dwFlags=%#x, lpThreadId=%#x)\n",
-          lpThreadAttributes, dwStackSize, lpStartAddress, lpParameter,
-          dwCreationFlags, lpThreadId);
 
     pThread = InternalGetCurrentThread();
 
@@ -698,7 +686,6 @@ ExitThread(
 {
     CPalThread *pThread;
 
-    ENTRY("ExitThread(dwExitCode=%u)\n", dwExitCode);
     pThread = InternalGetCurrentThread();
 
     /* store the exit code */
@@ -816,8 +803,6 @@ GetThreadPriority(
     PAL_ERROR palError;
     int iPriority = INT_MAX;
 
-    ENTRY("GetThreadPriority(hThread=%p)\n", hThread);
-
     pThread = InternalGetCurrentThread();
 
     palError = InternalGetThreadPriority(
@@ -890,8 +875,6 @@ SetThreadPriority(
 {
     CPalThread *pThread;
     PAL_ERROR palError = NO_ERROR;
-
-    ENTRY("SetThreadPriority(hThread=%p, nPriority=%#x)\n", hThread, nPriority);
 
     pThread = InternalGetCurrentThread();
 
