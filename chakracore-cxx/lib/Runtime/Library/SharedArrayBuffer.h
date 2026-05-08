@@ -190,8 +190,7 @@ namespace Js
         bool _Requires_lock_held_(csForAccess.cs) AddAndSuspendWaiter(unsigned long waiter, uint32_t timeout);
         void RemoveWaiter(unsigned long waiter);
         uint32_t RemoveAndWakeWaiters(int32_t count);
-
-        CriticalSection * GetCriticalSectionForAccess() { return &csForAccess; }
+        std::recursive_mutex &GetMutexForAccess() { return mutexForAccess; }
 
     private:
         void InitWaiterList();
@@ -200,7 +199,7 @@ namespace Js
         Waiters * m_waiters;
 
         // Below CS is used for synchronizing access in wait/wake API
-        CriticalSection csForAccess;
+        std::recursive_mutex mutexForAccess;
     };
 }
 
