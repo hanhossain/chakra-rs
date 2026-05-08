@@ -213,13 +213,6 @@ typedef enum
 // Change W16_NULLSTRING to external variable to avoid multiple warnings showing up in prefast
 extern const char16_t* W16_NULLSTRING;
 
-extern uint32_t dbg_channel_flags[DCI_LAST];
-extern BOOL g_Dbg_asserts_enabled;
-
-/* master switch for debug channel enablement, to be modified by debugger */
-extern Volatile<BOOL> dbg_master_switch ;
-
-
 /* compile out these trace levels; see the definition of NOTRACE */
 #if !defined(DEBUG)
 #define TRACE     NOTRACE
