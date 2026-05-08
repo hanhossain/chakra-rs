@@ -94,10 +94,6 @@ CreateEventW(
     PAL_ERROR palError;
     CPalThread *pthr = NULL;
 
-    ENTRY("CreateEventW(lpEventAttr=%p, bManualReset=%d, "
-          "bInitialState=%d, lpName=%p (%S)\n", lpEventAttributes, bManualReset, 
-           bInitialState, lpName, lpName?lpName:W16_NULLSTRING);
-
     pthr = InternalGetCurrentThread();
 
     palError = InternalCreateEvent(
@@ -155,16 +151,6 @@ CorUnix::InternalCreateEvent(
 
     _ASSERTE(NULL != pthr);
     _ASSERTE(NULL != phEvent);
-
-    ENTRY("InternalCreateEvent(pthr=%p, lpEventAttributes=%p, bManualReset=%i, "
-        "bInitialState=%i, lpName=%p, phEvent=%p)\n",
-        pthr,
-        lpEventAttributes,
-        bManualReset,
-        bInitialState,
-        lpName,
-        phEvent
-        );
 
     if (lpName != nullptr)
     {
@@ -256,8 +242,6 @@ SetEvent(
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pthr = NULL;
 
-    ENTRY("SetEvent(hEvent=%p)\n", hEvent);
-
     pthr = InternalGetCurrentThread();
     
     palError = InternalSetEvent(pthr, hEvent, TRUE);
@@ -285,8 +269,6 @@ ResetEvent(
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pthr = NULL;
-
-    ENTRY("ResetEvent(hEvent=%p)\n", hEvent);
 
     pthr = InternalGetCurrentThread();
 
@@ -323,12 +305,6 @@ CorUnix::InternalSetEvent(
     ISynchStateController *pssc = NULL;
 
     _ASSERTE(NULL != pthr);
-
-    ENTRY("InternalSetEvent(pthr=%p, hEvent=%p, fSetEvent=%i\n",
-        pthr,
-        hEvent,
-        fSetEvent
-        );
 
     palError = g_pObjectManager->ReferenceObjectByHandle(
         pthr,
@@ -413,15 +389,6 @@ CorUnix::InternalOpenEvent(
     _ASSERTE(NULL != pthr);
     _ASSERTE(NULL != lpName);
     _ASSERTE(NULL != phEvent);
-
-    ENTRY("InternalOpenEvent(pthr=%p, dwDesiredAccess=%#x, bInheritHandle=%d, "
-        "lpName=%p, phEvent=%p)\n",
-        pthr,
-        dwDesiredAccess,
-        bInheritHandle,
-        lpName,
-        phEvent
-        );
 
     palError = g_pObjectManager->LocateObject(
         pthr,

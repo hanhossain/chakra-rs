@@ -82,11 +82,6 @@ CreateSemaphoreW(
     PAL_ERROR palError;
     CPalThread *pthr = NULL;
 
-    ENTRY("CreateSemaphoreW(lpSemaphoreAttributes=%p, lInitialCount=%d, "
-          "lMaximumCount=%d, lpName=%p (%S))\n",
-          lpSemaphoreAttributes, lInitialCount, lMaximumCount,
-          lpName, lpName?lpName:W16_NULLSTRING);
-
     pthr = InternalGetCurrentThread();
 
     palError = InternalCreateSemaphore(
@@ -145,16 +140,6 @@ CorUnix::InternalCreateSemaphore(
 
     _ASSERTE(NULL != pthr);
     _ASSERTE(NULL != phSemaphore);
-
-    ENTRY("InternalCreateSemaphore(pthr=%p, lpSemaphoreAttributes=%p, "
-        "lInitialCount=%d, lMaximumCount=%d, lpName=%p, phSemaphore=%p)\n",
-        pthr,
-        lpSemaphoreAttributes,
-        lInitialCount,
-        lMaximumCount,
-        lpName,
-        phSemaphore
-        );
 
     if (lpName != nullptr)
     {
@@ -273,10 +258,6 @@ ReleaseSemaphore(
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pthr = NULL;
 
-    ENTRY("ReleaseSemaphore(hSemaphore=%p, lReleaseCount=%d, "
-          "lpPreviousCount=%p)\n",
-          hSemaphore, lReleaseCount, lpPreviousCount);
-
     pthr = InternalGetCurrentThread();
 
     palError = InternalReleaseSemaphore(
@@ -320,14 +301,6 @@ CorUnix::InternalReleaseSemaphore(
     int32_t lOldCount;
 
     _ASSERTE(NULL != pthr);
-
-    ENTRY("InternalReleaseSempahore(pthr=%p, hSemaphore=%p, lReleaseCount=%d, "
-        "lpPreviousCount=%p)\n",
-        pthr,
-        hSemaphore,
-        lReleaseCount,
-        lpPreviousCount
-        );
 
     if (0 >= lReleaseCount)
     {
