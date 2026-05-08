@@ -1796,57 +1796,6 @@ ThreadContext::SetJITConnectionInfo(HANDLE processHandle, void* serverSecurityDe
 bool
 ThreadContext::EnsureJITThreadContext(bool allowPrereserveAlloc)
 {
-#if ENABLE_OOP_NATIVE_CODEGEN
-    Assert(JITManager::GetJITManager()->IsOOPJITEnabled());
-    if (!JITManager::GetJITManager()->IsConnected())
-    {
-        return false;
-    }
-
-    if (m_remoteThreadContextInfo)
-    {
-        return true;
-    }
-
-    ThreadContextDataIDL contextData;
-    contextData.threadStackLimitAddr = reinterpret_cast<intptr_t>(GetAddressOfStackLimitForCurrentThread());
-    contextData.bailOutRegisterSaveSpaceAddr = (intptr_t)bailOutRegisterSaveSpace;
-    contextData.disableImplicitFlagsAddr = (intptr_t)GetAddressOfDisableImplicitFlags();
-    contextData.implicitCallFlagsAddr = (intptr_t)GetAddressOfImplicitCallFlags();
-    contextData.scriptStackLimit = GetScriptStackLimit();
-    contextData.isThreadBound = IsThreadBound();
-    contextData.allowPrereserveAlloc = allowPrereserveAlloc;
-#if defined(ENABLE_WASM_SIMD) && (_M_IX86 || _M_AMD64)
-    contextData.simdTempAreaBaseAddr = (intptr_t)GetSimdTempArea();
-#endif
-
-    m_jitNumericProperties = HeapNew(BVSparse<HeapAllocator>, &HeapAllocator::Instance);
-
-    for (auto iter = propertyMap->GetIterator(); iter.IsValid(); iter.MoveNext())
-    {
-        if (iter.CurrentKey()->IsNumeric())
-        {
-            m_jitNumericProperties->Set(iter.CurrentKey()->GetPropertyId());
-            m_jitNeedsPropertyUpdate = true;
-        }
-    }
-
-    int32_t hr = JITManager::GetJITManager()->InitializeThreadContext(
-        &contextData,
-        &m_remoteThreadContextInfo,
-        &m_prereservedRegionAddr,
-        &m_jitThunkStartAddr);
-    JITManager::HandleServerCallResult(hr, RemoteCallType::StateUpdate);
-
-    // Initialize mutable ThreadContext state if needed
-    Js::TypeId wellKnownType = this->wellKnownHostTypeIds[WellKnownHostType_HTMLAllCollection];
-    if (m_remoteThreadContextInfo && wellKnownType != Js::TypeIds_Undefined)
-    {
-        hr = JITManager::GetJITManager()->SetWellKnownHostTypeId(m_remoteThreadContextInfo, wellKnownType);
-        JITManager::HandleServerCallResult(hr, RemoteCallType::StateUpdate);
-    }
-    return m_remoteThreadContextInfo != nullptr;
-#endif
 }
 #endif
 
@@ -3943,34 +3892,6 @@ bool ThreadContext::IsNativeAddressHelper(void * pCodeAddr, Js::ScriptContext* c
 
 BOOL ThreadContext::IsNativeAddress(void * pCodeAddr, Js::ScriptContext* currentScriptContext)
 {
-#if ENABLE_OOP_NATIVE_CODEGEN
-    if (JITManager::GetJITManager()->IsOOPJITEnabled())
-    {
-        if (PreReservedVirtualAllocWrapper::IsInRange((void*)m_prereservedRegionAddr, pCodeAddr))
-        {
-            return true;
-        }
-        if (IsAllJITCodeInPreReservedRegion())
-        {
-            return false;
-        }
-        if (AutoSystemInfo::IsJscriptModulePointer(pCodeAddr))
-        {
-            return false;
-        }
-
-#if DBG
-        boolean result;
-        int32_t hr = JITManager::GetJITManager()->IsNativeAddr(this->m_remoteThreadContextInfo, (intptr_t)pCodeAddr, &result);
-#endif
-        bool isNativeAddr = IsNativeAddressHelper(pCodeAddr, currentScriptContext);
-#if DBG
-        Assert(FAILED(hr) || result == (isNativeAddr? TRUE:FALSE));
-#endif
-        return isNativeAddr;
-    }
-    else
-#endif
     {
         PreReservedVirtualAllocWrapper *preReservedVirtualAllocWrapper = this->GetPreReservedVirtualAllocator();
         if (preReservedVirtualAllocWrapper->IsInRange(pCodeAddr))

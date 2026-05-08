@@ -86,10 +86,6 @@ private:
     /* ------private helpers -----------*/
     bool NewThunkBlock();
 
-#ifdef ENABLE_OOP_NATIVE_CODEGEN
-    bool NewOOPJITThunkBlock();
-#endif
-
     static void EncodeInterpreterThunk(
         __in_bcount(InterpreterThunkSize) uint8_t* thunkBuffer,
         const intptr_t thunkBufferStartAddress,

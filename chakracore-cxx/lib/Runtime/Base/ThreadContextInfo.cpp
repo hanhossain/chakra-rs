@@ -13,7 +13,6 @@
 
 #if ENABLE_NATIVE_CODEGEN
 #include "CodeGenAllocators.h"
-#include "ServerThreadContext.h"
 #endif
 
 ThreadContextInfo::ThreadContextInfo() :
@@ -426,24 +425,5 @@ ThreadContextInfo::IsClosed()
 
 uintptr_t ShiftAddr(const ThreadContextInfo * const context, uintptr_t address)
 {
-#if ENABLE_OOP_NATIVE_CODEGEN
-    ptrdiff_t diff = 0;
-    if (AutoSystemInfo::Data.IsJscriptModulePointer((void*)address))
-    {
-        diff = context->GetChakraBaseAddressDifference();
-    }
-    else if(AutoSystemInfo::Data.IsCRTModulePointer(address))
-    {
-        diff = context->GetCRTBaseAddressDifference();
-    }
-    else
-    {
-        AssertOrFailFast(UNREACHED);
-    }
-
-    return (intptr_t)address + diff;
-#else
     return address;
-#endif
-
 }

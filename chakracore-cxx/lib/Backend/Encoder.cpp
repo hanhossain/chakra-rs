@@ -23,28 +23,6 @@ Encoder::Encode()
     NoRecoverMemoryArenaAllocator localArena(u"BE-Encoder", m_func->m_alloc->GetPageAllocator(), Js::Throw::OutOfMemory);
     m_tempAlloc = &localArena;
 
-#if ENABLE_OOP_NATIVE_CODEGEN
-    class AutoLocalAlloc {
-    public:
-        AutoLocalAlloc(Func * func) : localXdataAddr(nullptr), localAddress(nullptr), segment(nullptr), func(func) { }
-        ~AutoLocalAlloc()
-        {
-            if (localAddress)
-            {
-                this->func->GetOOPThreadContext()->GetCodePageAllocators()->FreeLocal(this->localAddress, this->segment);
-            }
-            if (localXdataAddr)
-            {
-                this->func->GetOOPThreadContext()->GetCodePageAllocators()->FreeLocal(this->localXdataAddr, this->segment);
-            }
-        }
-        Func * func;
-        char * localXdataAddr;
-        char * localAddress;
-        void * segment;
-    } localAlloc(m_func);
-#endif
-
     uint32_t instrCount = m_func->GetInstrCount();
     size_t totalJmpTableSizeInBytes = 0;
 
@@ -513,22 +491,6 @@ Encoder::Encode()
     CustomHeap::Allocation * allocation = nullptr;
     bool inPrereservedRegion = false;
     char * localAddress = nullptr;
-#if ENABLE_OOP_NATIVE_CODEGEN
-    if (JITManager::GetJITManager()->IsJITServer())
-    {
-        EmitBufferAllocation<SectionAllocWrapper, PreReservedSectionAllocWrapper> * alloc = m_func->GetJITOutput()->RecordOOPNativeCodeSize(m_func, (uint32_t)codeSize, pdataCount, xdataSize);
-        allocation = alloc->allocation;
-        inPrereservedRegion = alloc->inPrereservedRegion;
-        localAlloc.segment = (alloc->bytesCommitted > CustomHeap::Page::MaxAllocationSize) ? allocation->largeObjectAllocation.segment : allocation->page->segment;
-        localAddress = m_func->GetOOPThreadContext()->GetCodePageAllocators()->AllocLocal(allocation->address, alloc->bytesCommitted, localAlloc.segment);
-        localAlloc.localAddress = localAddress;
-        if (localAddress == nullptr)
-        {
-            Js::Throw::OutOfMemory();
-        }
-    }
-    else
-#endif
     {
         EmitBufferAllocation<VirtualAllocWrapper, PreReservedVirtualAllocWrapper> * alloc = m_func->GetJITOutput()->RecordInProcNativeCodeSize(m_func, (uint32_t)codeSize, pdataCount, xdataSize);
         allocation = alloc->allocation;
@@ -563,18 +525,6 @@ Encoder::Encode()
 #endif
 
     char * localXdataAddr = nullptr;
-#if ENABLE_OOP_NATIVE_CODEGEN
-    if (JITManager::GetJITManager()->IsJITServer())
-    {
-        localXdataAddr = m_func->GetOOPThreadContext()->GetCodePageAllocators()->AllocLocal((char*)allocation->xdata.address, XDATA_SIZE, localAlloc.segment);
-        localAlloc.localXdataAddr = localXdataAddr;
-        if (localXdataAddr == nullptr)
-        {
-            Js::Throw::OutOfMemory();
-        }
-    }
-    else
-#endif
     {
         localXdataAddr = (char*)allocation->xdata.address;
     }

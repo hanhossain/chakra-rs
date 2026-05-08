@@ -101,7 +101,3 @@ public:
 
 typedef EmitBufferManager<VirtualAllocWrapper, PreReservedVirtualAllocWrapper, CriticalSection> InProcEmitBufferManagerWithlock;
 typedef EmitBufferManager<VirtualAllocWrapper, PreReservedVirtualAllocWrapper, FakeCriticalSection> InProcEmitBufferManager;
-#if ENABLE_OOP_NATIVE_CODEGEN
-typedef EmitBufferManager<SectionAllocWrapper, PreReservedSectionAllocWrapper, CriticalSection> OOPEmitBufferManagerWithLock;
-typedef EmitBufferManager<SectionAllocWrapper, PreReservedSectionAllocWrapper, FakeCriticalSection> OOPEmitBufferManager;
-#endif

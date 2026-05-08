@@ -98,12 +98,6 @@ namespace WAsmJs
         {
             return false;
         }
-#if ENABLE_OOP_NATIVE_CODEGEN
-        if (JITManager::GetJITManager()->IsOOPJITEnabled() && !JITManager::GetJITManager()->IsConnected())
-        {
-            return false;
-        }
-#endif
         const bool forceNative = CONFIG_ISENABLED(Js::ForceNativeFlag);
         const uint minAsmJsInterpretRunCount = (uint)CONFIG_FLAG(MinAsmJsInterpreterRunCount);
         const uint maxAsmJsInterpretRunCount = (uint)CONFIG_FLAG(MaxAsmJsInterpreterRunCount);

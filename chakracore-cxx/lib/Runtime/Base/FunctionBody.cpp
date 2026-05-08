@@ -8188,13 +8188,6 @@ namespace Js
         NativeEntryPointData * data = this->nativeEntryPointData;
         if (data == nullptr)
         {
-#if ENABLE_OOP_NATIVE_CODEGEN
-            if (JITManager::GetJITManager()->IsOOPJITEnabled())
-            {
-                data = RecyclerNew(this->GetScriptContext()->GetRecycler(), OOPNativeEntryPointData);
-            }
-            else
-#endif
             {
                 data = RecyclerNew(this->GetScriptContext()->GetRecycler(), InProcNativeEntryPointData);
             }
@@ -8218,13 +8211,6 @@ namespace Js
     {
         return static_cast<InProcNativeEntryPointData *>(this->GetNativeEntryPointData());
     }
-
-#if ENABLE_OOP_NATIVE_CODEGEN
-    OOPNativeEntryPointData * EntryPointInfo::GetOOPNativeEntryPointData()
-    {
-        return static_cast<OOPNativeEntryPointData *>(this->GetNativeEntryPointData());
-    }
-#endif
 
     void EntryPointInfo::EnsureIsReadyToCall()
     {
@@ -8405,82 +8391,6 @@ namespace Js
             }
         }
 
-#if ENABLE_OOP_NATIVE_CODEGEN
-        if (jitTransferData->equivalentTypeGuardOffsets)
-        {
-            // InstallGuards
-            int guardCount = jitTransferData->equivalentTypeGuardOffsets->count;
-            EquivalentTypeCache* cache = this->nativeEntryPointData->EnsureEquivalentTypeCache(guardCount, scriptContext, this);
-            char * nativeDataBuffer = this->GetOOPNativeEntryPointData()->GetNativeDataBuffer();
-            for (int i = 0; i < guardCount; i++)
-            {
-                auto& cacheIDL = jitTransferData->equivalentTypeGuardOffsets->guards[i].cache;
-                auto guardOffset = jitTransferData->equivalentTypeGuardOffsets->guards[i].offset;
-                JitEquivalentTypeGuard* guard = (JitEquivalentTypeGuard*)(nativeDataBuffer + guardOffset);
-                cache[i].guard = guard;
-                cache[i].hasFixedValue = cacheIDL.hasFixedValue != 0;
-                cache[i].isLoadedFromProto = cacheIDL.isLoadedFromProto != 0;
-                cache[i].nextEvictionVictim = cacheIDL.nextEvictionVictim;
-                cache[i].record.propertyCount = cacheIDL.record.propertyCount;
-                cache[i].record.properties = (EquivalentPropertyEntry*)(nativeDataBuffer + cacheIDL.record.propertyOffset);
-                for (int j = 0; j < EQUIVALENT_TYPE_CACHE_SIZE; j++)
-                {
-                    cache[i].types[j] = (Js::Type*)cacheIDL.types[j];
-                }
-                guard->SetCache(&cache[i]);
-            }
-        }
-
-        // OOP JIT
-        if (jitTransferData->typeGuardTransferData.entries != nullptr)
-        {
-            int propertyGuardCount = jitTransferData->typeGuardTransferData.propertyGuardCount;
-            Field(FakePropertyGuardWeakReference*) * propertyGuardWeakRefs = this->nativeEntryPointData->EnsurePropertyGuardWeakRefs(propertyGuardCount, scriptContext->GetRecycler());
-            ThreadContext* threadContext = scriptContext->GetThreadContext();
-            auto next = &jitTransferData->typeGuardTransferData.entries;
-            while (*next)
-            {
-                Js::PropertyId propertyId = (*next)->propId;
-                Js::PropertyGuard* sharedPropertyGuard = nullptr;
-
-                // We use the shared guard created during work item creation to ensure that the condition we assumed didn't change while
-                // we were JIT-ing. If we don't have a shared property guard for this property then we must not need to protect it,
-                // because it exists on the instance.  Unfortunately, this means that if we have a bug and fail to create a shared
-                // guard for some property during work item creation, we won't find out about it here.
-                bool isNeeded = nativeEntryPointData->TryGetSharedPropertyGuard(propertyId, sharedPropertyGuard);
-                bool isValid = isNeeded ? sharedPropertyGuard->IsValid() : false;
-                if (isNeeded)
-                {
-                    char * nativeDataBuffer = this->GetOOPNativeEntryPointData()->GetNativeDataBuffer();
-                    for (unsigned int i = 0; i < (*next)->guardsCount; i++)
-                    {
-                        Js::JitIndexedPropertyGuard* guard = (Js::JitIndexedPropertyGuard*)(nativeDataBuffer + (*next)->guardOffsets[i]);
-                        int guardIndex = guard->GetIndex();
-                        Assert(guardIndex >= 0 && guardIndex < propertyGuardCount);
-                        // We use the shared guard here to make sure the conditions we assumed didn't change while we were JIT-ing.
-                        // If they did, we proactively invalidate the guard here, so that we bail out if we try to call this code.
-                        if (isValid)
-                        {
-                            auto propertyGuardWeakRef = propertyGuardWeakRefs[guardIndex];
-                            if (propertyGuardWeakRef == nullptr)
-                            {
-                                propertyGuardWeakRef = Js::FakePropertyGuardWeakReference::New(scriptContext->GetRecycler(), guard);
-                                propertyGuardWeakRefs[guardIndex] = propertyGuardWeakRef;
-                            }
-                            Assert(propertyGuardWeakRef->Get() == guard);
-                            threadContext->RegisterUniquePropertyGuard(propertyId, propertyGuardWeakRef);
-                        }
-                        else
-                        {
-                            guard->Invalidate();
-                        }
-                    }
-                }
-                *next = (*next)->next;
-            }
-        }
-#endif
-
         // in-proc JIT
         // The propertyGuardsByPropertyId structure is temporary and serves only to register the type guards for the correct
         // properties.  If we've done code gen for this EntryPointInfo, typePropertyGuardsByPropertyId will have been used and nulled out.
@@ -8626,54 +8536,6 @@ namespace Js
 
     InlineeFrameRecord* EntryPointInfo::FindInlineeFrame(void* returnAddress)
     {
-#if ENABLE_OOP_NATIVE_CODEGEN
-        if (JITManager::GetJITManager()->IsOOPJITEnabled())  // OOP JIT
-        {
-            OOPNativeEntryPointData * oopNativeEntryPointData = this->GetOOPNativeEntryPointData();
-            char * nativeDataBuffer = oopNativeEntryPointData->GetNativeDataBuffer();
-            NativeOffsetInlineeFrameRecordOffset* offsets = (NativeOffsetInlineeFrameRecordOffset*)(nativeDataBuffer + oopNativeEntryPointData->GetInlineeFrameOffsetArrayOffset());
-            size_t offset = (size_t)((uint8_t*)returnAddress - (uint8_t*)this->GetNativeAddress());
-
-            uint inlineeFrameOffsetArrayCount = oopNativeEntryPointData->GetInlineeFrameOffsetArrayCount();
-            if (inlineeFrameOffsetArrayCount == 0)
-            {
-                return nullptr;
-            }
-
-            uint fromIndex = 0;
-            uint toIndex = inlineeFrameOffsetArrayCount - 1;
-            while (fromIndex <= toIndex)
-            {
-                uint midIndex = fromIndex + (toIndex - fromIndex) / 2;
-                auto item = offsets[midIndex];
-
-                if (item.offset >= offset)
-                {
-                    if (midIndex == 0 || (midIndex > 0 && offsets[midIndex - 1].offset < offset))
-                    {
-                        if (offsets[midIndex].recordOffset == NativeOffsetInlineeFrameRecordOffset::InvalidRecordOffset)
-                        {
-                            return nullptr;
-                        }
-                        else
-                        {
-                            return (InlineeFrameRecord*)(nativeDataBuffer + offsets[midIndex].recordOffset);
-                        }
-                    }
-                    else
-                    {
-                        toIndex = midIndex - 1;
-                    }
-                }
-                else
-                {
-                    fromIndex = midIndex + 1;
-                }
-            }
-            return nullptr;
-        }
-        else
-#endif
         // in-proc JIT
         {
             InlineeFrameMap * inlineeFrameMap = this->GetInProcNativeEntryPointData()->GetInlineeFrameMap();

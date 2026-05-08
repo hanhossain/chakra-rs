@@ -272,18 +272,6 @@ bool InterpreterThunkEmitter::NewThunkBlock()
         return false;
     }
 
-#ifdef ENABLE_OOP_NATIVE_CODEGEN
-    if (CONFIG_FLAG(ForceStaticInterpreterThunk))
-    {
-        return false;
-    }
-
-    if (JITManager::GetJITManager()->IsOOPJITEnabled())
-    {
-        return NewOOPJITThunkBlock();
-    }
-#endif
-
     Assert(this->thunkCount == 0);
     uint8_t* buffer;
 
@@ -342,52 +330,6 @@ bool InterpreterThunkEmitter::NewThunkBlock()
     this->thunkCount = count;
     return true;
 }
-
-#ifdef ENABLE_OOP_NATIVE_CODEGEN
-bool InterpreterThunkEmitter::NewOOPJITThunkBlock()
-{
-    PSCRIPTCONTEXT_HANDLE remoteScriptContext = this->scriptContext->GetRemoteScriptAddr();
-    if (!JITManager::GetJITManager()->IsConnected())
-    {
-        return false;
-    }
-    InterpreterThunkInputIDL thunkInput;
-    thunkInput.asmJsThunk = this->isAsmInterpreterThunk;
-
-    InterpreterThunkOutputIDL thunkOutput;
-    int32_t hr = JITManager::GetJITManager()->NewInterpreterThunkBlock(remoteScriptContext, &thunkInput, &thunkOutput);
-    if (!JITManager::HandleServerCallResult(hr, RemoteCallType::ThunkCreation))
-    {
-        return false;
-    }
-
-    uint8_t* buffer = (uint8_t*)thunkOutput.mappedBaseAddr;
-
-    if (!CONFIG_FLAG(OOPCFGRegistration))
-    {
-        uint8_t* callTarget = buffer;
-#ifdef _M_ARM
-        // Need to register the thumb-tagged call target for CFG
-        callTarget = (uint8_t*)((uintptr_t)callTarget | 0x1);
-#endif
-        this->scriptContext->GetThreadContext()->SetValidCallTargetForCFG(callTarget);
-    }
-
-    // Update object state only at the end when everything has succeeded - and no exceptions can be thrown.
-    auto block = this->thunkBlocks.PrependNode(allocator, buffer, thunkOutput.thunkCount);
-#if PDATA_ENABLED
-    void* pdataTable;
-    PDataManager::RegisterPdata((PRUNTIME_FUNCTION)thunkOutput.pdataTableStart, (size_t)thunkOutput.mappedBaseAddr, (size_t)thunkOutput.epilogEndAddr, &pdataTable);
-    block->SetPdata(pdataTable);
-#else
-    Unused(block);
-#endif
-
-    this->thunkBuffer = (uint8_t*)thunkOutput.mappedBaseAddr;
-    this->thunkCount = thunkOutput.thunkCount;
-    return true;
-}
-#endif
 
 /* static */
 void InterpreterThunkEmitter::FillBuffer(
@@ -722,26 +664,6 @@ uint32_t InterpreterThunkEmitter::CopyWithAlignment(
 bool
 InterpreterThunkEmitter::IsInHeap(void* address)
 {
-#ifdef ENABLE_OOP_NATIVE_CODEGEN
-    if (JITManager::GetJITManager()->IsOOPJITEnabled())
-    {
-        PSCRIPTCONTEXT_HANDLE remoteScript = this->scriptContext->GetRemoteScriptAddr(false);
-        if (!remoteScript || !JITManager::GetJITManager()->IsConnected())
-        {
-            // this method is used in asserts to validate whether an entry point is valid
-            // in case JIT process crashed, let's just say true to keep asserts from firing
-            return true;
-        }
-        boolean result;
-        int32_t hr = JITManager::GetJITManager()->IsInterpreterThunkAddr(remoteScript, (intptr_t)address, this->isAsmInterpreterThunk, &result);
-        if (!JITManager::HandleServerCallResult(hr, RemoteCallType::HeapQuery))
-        {
-            return true;
-        }
-        return result != FALSE;
-    }
-    else
-#endif
     {
         return emitBufferManager.IsInHeap(address);
     }
@@ -765,17 +687,6 @@ void InterpreterThunkEmitter::Close()
     this->thunkBlocks.Clear(allocator);
     this->freeListedThunkBlocks.Clear(allocator);
 
-#ifdef ENABLE_OOP_NATIVE_CODEGEN
-    if (JITManager::GetJITManager()->IsOOPJITEnabled())
-    {
-        PSCRIPTCONTEXT_HANDLE remoteScript = this->scriptContext->GetRemoteScriptAddr(false);
-        if (remoteScript && JITManager::GetJITManager()->IsConnected())
-        {
-            JITManager::GetJITManager()->DecommitInterpreterBufferManager(remoteScript, this->isAsmInterpreterThunk);
-        }
-    }
-    else
-#endif
     {
         emitBufferManager.Decommit();
     }

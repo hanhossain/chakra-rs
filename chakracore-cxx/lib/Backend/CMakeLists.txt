@@ -92,15 +92,12 @@ add_library (Chakra.Backend OBJECT
     ObjTypeSpecFldInfo.cpp
     Opnd.cpp
     PDataManager.cpp
-    PageAllocatorPool.cpp
     Peeps.cpp
     PreLowerPeeps.cpp
     QueuedFullJitWorkItem.cpp
     Region.cpp
     SccLiveness.cpp
     Security.cpp
-    ServerScriptContext.cpp
-    ServerThreadContext.cpp
     SimpleJitProfilingHelpers.cpp
     SimpleLayout.cpp
     SwitchIRBuilder.cpp

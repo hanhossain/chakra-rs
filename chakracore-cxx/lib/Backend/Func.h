@@ -127,13 +127,6 @@ public:
         Assert(!JITManager::GetJITManager()->IsJITServer());
         return reinterpret_cast<InProcCodeGenAllocators*>(this->GetTopFunc()->m_codeGenAllocators);
     }
-#if ENABLE_OOP_NATIVE_CODEGEN
-    OOPCodeGenAllocators * const GetOOPCodeGenAllocators()
-    {
-        Assert(JITManager::GetJITManager()->IsJITServer());
-        return reinterpret_cast<OOPCodeGenAllocators*>(this->GetTopFunc()->m_codeGenAllocators);
-    }
-#endif
     NativeCodeData::Allocator *GetNativeCodeDataAllocator()
     {
         return &this->GetTopFunc()->nativeCodeDataAllocator;
