@@ -3,6 +3,8 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include <mutex>
+
 #include "Memory/Recycler.h"
 
 #ifdef PROFILE_MEM
@@ -128,7 +130,7 @@ private:
 
     static thread_local MemoryProfiler * Instance;
 
-    static CriticalSection s_cs;
+    static std::recursive_mutex s_cs;
     static AutoPtr<MemoryProfiler, NoCheckHeapAllocator> profilers;
 
     PageAllocator pageAllocator;
