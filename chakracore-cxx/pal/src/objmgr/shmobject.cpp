@@ -53,13 +53,6 @@ CSharedMemoryObject::Initialize(
     _ASSERTE(NULL != pthr); 
     _ASSERTE(NULL != poa);
 
-    ENTRY("CSharedMemoryObject::Initialize"
-        "(this = %p, pthr = %p, poa = %p)\n",
-        this,
-        pthr,
-        poa
-        );
-
     palError = CPalObjectBase::Initialize(pthr, poa);
     if (NO_ERROR != palError)
     {
@@ -167,13 +160,6 @@ CSharedMemoryObject::InitializeFromExistingSharedData(
 
     _ASSERTE(NULL != pthr);
     _ASSERTE(NULL != poa);
-
-    ENTRY("CSharedMemoryObject::InitializeFromExistingSharedData"
-        "(this = %p, pthr = %p, poa = %p)\n",
-        this,
-        pthr,
-        poa
-        );
 
     //
     // This object is obviously shared...
@@ -308,13 +294,6 @@ CSharedMemoryObject::AllocateSharedDataItems(
     _ASSERTE(NULL != pshmObjData);
     _ASSERTE(NULL != ppsmod);
 
-    ENTRY("CSharedMemoryObject::AllocateSharedDataItems"
-        "(this = %p, pshmObjData = %p, ppsmod = %p)\n",
-        this,
-        pshmObjData,
-        ppsmod
-        );
-        
     //
     // We're about to make a number of shared memory allocations,
     // so grab the lock for the entirety of the routine.
@@ -415,11 +394,6 @@ CSharedMemoryObject::FreeSharedDataAreas(
 
     _ASSERTE(SHMNULL != shmObjData);
 
-    ENTRY("CSharedMemoryObject::FreeSharedDataAreas"
-        "(shmObjData = %p)\n",
-        shmObjData
-        );
-
     SHMLock();
         
     psmod = SHMPTR_TO_TYPED_PTR(SHMObjData, shmObjData);
@@ -466,12 +440,6 @@ CSharedMemoryObject::PromoteSharedData(
 {
     _ASSERTE(SHMNULL != shmObjData);
     _ASSERTE(NULL != psmod);
-    
-    ENTRY("CSharedMemoryObject::PromoteSharedData"
-        "(this = %p, shmObjData = %p, psmod = %p)\n",
-        this, 
-        shmObjData,
-        psmod);
     
     //
     // psmod has been zero-inited, so we don't need to worry about
@@ -541,12 +509,6 @@ CSharedMemoryObject::EnsureObjectIsShared(
     SHMObjData *psmod;
 
     _ASSERTE(NULL != pthr);
-
-    ENTRY("CSharedMemoryObject::EnsureObjectIsShared"
-        "(this = %p, pthr = %p)\n",
-        this,
-        pthr
-        );
 
     //
     // Grab the shared memory lock and check if the object is already
@@ -619,12 +581,6 @@ CSharedMemoryObject::CleanupForProcessShutdown(
 
     _ASSERTE(NULL != pthr);
     
-    ENTRY("CSharedMemoryObject::CleanupForProcessShutdown"
-        "(this = %p, pthr = %p)\n",
-        this,
-        pthr
-        );
-
     fCleanupSharedState = DereferenceSharedData();
 
     if (NULL != m_pot->GetObjectCleanupRoutine())
@@ -677,12 +633,6 @@ CSharedMemoryObject::AcquireObjectDestructionLock(
 {
     _ASSERTE(NULL != pthr);
     
-    ENTRY("CSharedMemoryObject::AcquireObjectDestructionLock"
-        "(this = %p, pthr = $p)\n",
-        this,
-        pthr
-        );
-    
     InternalEnterCriticalSection(pthr, m_pcsObjListLock);
 
     LOGEXIT("CSharedMemoryObject::AcquireObjectDestructionLock\n");
@@ -711,13 +661,6 @@ CSharedMemoryObject::ReleaseObjectDestructionLock(
 
     _ASSERTE(NULL != pthr);
 
-    ENTRY("CSharedMemoryObject::ReleaseObjectDestructionLock"
-        "(this = %p, pthr = %p, fDestructionPending = %d\n",
-        this,
-        pthr,
-        fDestructionPending
-        );
-    
     if (fDestructionPending)
     {
         RemoveEntryList(&m_le);
@@ -751,8 +694,6 @@ bool
 CSharedMemoryObject::DereferenceSharedData()
 {
     int32_t fSharedDataAlreadDereferenced;
-
-    ENTRY("CSharedMemoryObject::DereferenceSharedData(this = %p)\n", this);
 
     fSharedDataAlreadDereferenced = InterlockedExchange(
         &m_fSharedDataDereferenced,
@@ -860,8 +801,6 @@ Function:
 
 CSharedMemoryObject::~CSharedMemoryObject()
 {
-    ENTRY("CSharedMemoryObject::~CSharedMemoryObject(this = %p)\n", this);
-    
     if (!m_fSharedDataDereferenced)
     {
         ASSERT("DereferenceSharedData not called before object destructor -- delete called directly?\n");
@@ -914,8 +853,6 @@ CSharedMemoryObject::GetObjectFromListLink(PLIST_ENTRY ple)
 
     _ASSERTE(NULL != ple);
 
-    ENTRY("CSharedMemoryObject::GetObjectFromListLink(ple = %p)\n", ple);
-    
     //
     // Ideally we'd use CONTAINING_RECORD here, but it uses offsetof (see above
     // comment
@@ -961,16 +898,6 @@ CSharedMemoryObject::GetSharedData(
     _ASSERTE(ReadLock == eLockRequest || WriteLock == eLockRequest);
     _ASSERTE(NULL != ppDataLock);
     _ASSERTE(NULL != ppvSharedData);
-
-    ENTRY("CSharedMemoryObject::GetSharedData"
-        "(this = %p, pthr = %p, eLockRequest = %d, ppDataLock = %p,"
-        " ppvSharedData = %p)\n",
-        this,
-        pthr,
-        eLockRequest,
-        ppDataLock,
-        ppvSharedData
-        );
 
     _ASSERTE(0 < m_pot->GetSharedDataSize());
     
@@ -1137,13 +1064,6 @@ CSharedMemoryWaitableObject::Initialize(
     _ASSERTE(NULL != pthr);
     _ASSERTE(NULL != poa);
 
-    ENTRY("CSharedMemoryWaitableObject::Initialize"
-        "(this = %p, pthr = %p, poa = %p)\n",
-        this,
-        pthr,
-        poa
-        );
-
     palError = CSharedMemoryObject::Initialize(pthr, poa);
     if (NO_ERROR != palError)
     {
@@ -1202,12 +1122,6 @@ CSharedMemoryWaitableObject::EnsureObjectIsShared(
 
     _ASSERTE(NULL != pthr);
 
-    ENTRY("CSharedMemoryWaitableObject::EnsureObjectIsShared"
-        "(this = %p, pthr = %p)\n",
-        this,
-        pthr
-        );
-    
     //
     // First, grab the process synchronization lock and check
     // if the object is already shared
@@ -1306,11 +1220,6 @@ Function:
 
 CSharedMemoryWaitableObject::~CSharedMemoryWaitableObject()
 {
-    ENTRY("CSharedMemoryWaitableObject::~CSharedMemoryWaitableObject"
-        "(this = %p)\n",
-        this
-        );
-    
     if (!m_fSharedDataDereferenced)
     {
         ASSERT("DereferenceSharedData not called before object destructor -- delete called directly?\n");
@@ -1351,13 +1260,6 @@ CSharedMemoryWaitableObject::GetSynchStateController(
 
     _ASSERTE(NULL != pthr);
     _ASSERTE(NULL != ppStateController);
-
-    ENTRY("CSharedMemoryWaitableObject::GetSynchStateController"
-        "(this = %p, pthr = %p, ppStateController = %p",
-        this,
-        pthr,
-        ppStateController
-        );
 
     //
     // We need to grab the local synch lock before creating the controller
@@ -1406,13 +1308,6 @@ CSharedMemoryWaitableObject::GetSynchWaitController(
     _ASSERTE(NULL != pthr);
     _ASSERTE(NULL != ppWaitController);
 
-    ENTRY("CSharedMemoryWaitableObject::GetSynchWaitController"
-        "(this = %p, pthr = %p, ppWaitController = %p",
-        this,
-        pthr,
-        ppWaitController
-        );
-
     //
     // We need to grab the local synch lock before creating the controller
     // (otherwise we could get promoted after passing in our parameters)
@@ -1454,12 +1349,6 @@ CSharedMemoryWaitableObject::GetObjectSynchData(
     )
 {
     _ASSERTE(NULL != ppvSynchData);
-    
-    ENTRY("CSharedMemoryWaitableObject::GetObjectSynchData"
-        "(this = %p, ppvSynchData = %p)\n",
-        this,
-        ppvSynchData
-        );
     
     *ppvSynchData = m_pvSynchData;
 

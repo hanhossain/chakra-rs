@@ -51,13 +51,6 @@ CPalObjectBase::Initialize(
     _ASSERTE(NULL != pthr);
     _ASSERTE(NULL != poa);
 
-    ENTRY("CPalObjectBase::Initialize"
-        "(this = %p, pthr = %p, poa = %p)\n",
-        this,
-        pthr,
-        poa
-        );
-
     if (0 != m_pot->GetImmutableDataSize())
     {
         m_pvImmutableData = malloc(m_pot->GetImmutableDataSize());
@@ -119,7 +112,6 @@ CPalObjectBase::GetObjectType(
     void
     )
 {
-    ENTRY("CPalObjectBase::GetObjectType(this = %p)\n", this);
     LOGEXIT("CPalObjectBase::GetObjectType returns %p\n", m_pot);
     
     return m_pot;
@@ -137,7 +129,6 @@ CPalObjectBase::GetObjectAttributes(
     void
     )
 {
-    ENTRY("CPalObjectBase::GetObjectAttributes(this = %p)\n", this);
     LOGEXIT("CPalObjectBase::GetObjectAttributes returns %p\n", &m_oa);
     
     return &m_oa;
@@ -160,12 +151,6 @@ CPalObjectBase::GetImmutableData(
     )
 {
     _ASSERTE(NULL != ppvImmutableData);
-    
-    ENTRY("CPalObjectBase::GetImmutableData"
-        "(this = %p, ppvImmutableData = %p)\n",
-        this,
-        ppvImmutableData
-        );
     
     _ASSERTE(0 < m_pot->GetImmutableDataSize());
 
@@ -204,16 +189,6 @@ CPalObjectBase::GetProcessLocalData(
     _ASSERTE(NULL != ppDataLock);
     _ASSERTE(NULL != ppvProcessLocalData);
     
-    ENTRY("CPalObjectBase::GetProcessLocalData"
-        "(this = %p, pthr = %p, eLockRequest = %d, ppDataLock = %p,"
-        " ppvProcessLocalData = %p)\n",
-        this,
-        pthr,
-        eLockRequest,
-        ppDataLock,
-        ppvProcessLocalData
-        );
-    
     _ASSERTE(0 < m_pot->GetProcessLocalDataSize());
 
     m_sdlLocalData.AcquireLock(pthr, ppDataLock);
@@ -238,8 +213,6 @@ CPalObjectBase::AddReference(
     )
 {
     int32_t lRefCount;
-
-    ENTRY("CPalObjectBase::AddReference(this = %p)\n", this);
 
     _ASSERTE(m_lRefCount > 0);
     lRefCount = InterlockedIncrement(&m_lRefCount);
@@ -268,12 +241,6 @@ CPalObjectBase::ReleaseReference(
     int32_t lRefCount;
 
     _ASSERTE(NULL != pthr);
-
-    ENTRY("CPalObjectBase::ReleaseReference"
-        "(this = %p, pthr = %p)\n",
-        this,
-        pthr
-        );
 
     AcquireObjectDestructionLock(pthr);
 
@@ -338,8 +305,6 @@ Function:
 
 CPalObjectBase::~CPalObjectBase()
 {
-    ENTRY("CPalObjectBase::~CPalObjectBase(this = %p)\n", this);
-
     if (NULL != m_pvImmutableData)
     {
         free(m_pvImmutableData);
