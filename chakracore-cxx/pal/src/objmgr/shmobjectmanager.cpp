@@ -60,8 +60,6 @@ CSharedMemoryObjectManager::Initialize(
 {
     PAL_ERROR palError = NO_ERROR;
 
-    ENTRY("CSharedMemoryObjectManager::Initialize (this=%p)\n", this);
-    
     InitializeListHead(&m_leNamedObjects);
     InitializeListHead(&m_leAnonymousObjects);
 
@@ -97,11 +95,6 @@ CSharedMemoryObjectManager::Shutdown(
 
     _ASSERTE(NULL != pthr);
     
-    ENTRY("CSharedMemoryObjectManager::Shutdown (this=%p, pthr=%p)\n",
-        this,
-        pthr
-        );
-
     InternalEnterCriticalSection(pthr, &m_csListLock);
     SHMLock();
 
@@ -155,15 +148,6 @@ CSharedMemoryObjectManager::AllocateObject(
     _ASSERTE(NULL != pot);
     _ASSERTE(NULL != poa);
     _ASSERTE(NULL != ppobjNew);
-
-    ENTRY("CSharedMemoryObjectManager::AllocateObject "
-        "(this=%p, pthr=%p, pot=%p, poa=%p, ppobjNew=%p)\n",
-        this,
-        pthr,
-        pot,
-        poa,
-        ppobjNew
-        );
 
     if (CObjectType::WaitableObject == pot->GetSynchronizationSupport())
     {
@@ -241,18 +225,6 @@ CSharedMemoryObjectManager::RegisterObject(
     _ASSERTE(NULL != paot);
     _ASSERTE(NULL != pHandle);
     _ASSERTE(NULL != ppobjRegistered);
-
-    ENTRY("CSharedMemoryObjectManager::RegisterObject "
-        "(this=%p, pthr=%p, pobjToRegister=%p, paot=%p, "
-        "dwRightsRequested=%d, pHandle=%p, ppobjRegistered=%p)\n",
-        this,
-        pthr,
-        pobjToRegister,
-        paot,
-        dwRightsRequested,
-        pHandle,
-        ppobjRegistered
-        );
 
     poa = pobjToRegister->GetObjectAttributes();
     _ASSERTE(NULL != poa);
@@ -518,16 +490,6 @@ CSharedMemoryObjectManager::LocateObject(
     _ASSERTE(std::u16string(psObjectToLocate->GetString()).length() == psObjectToLocate->GetStringLength());
     _ASSERTE(NULL != ppobj);
 
-    ENTRY("CSharedMemoryObjectManager::LocateObject "
-        "(this=%p, pthr=%p, psObjectToLocate=%p, paot=%p, "
-        "ppobj=%p)\n",
-        this,
-        pthr,
-        psObjectToLocate,
-        paot,
-        ppobj
-        );
-
     TRACE("Searching for object name %S\n", psObjectToLocate->GetString());
 
     InternalEnterCriticalSection(pthr, &m_csListLock);
@@ -745,18 +707,6 @@ CSharedMemoryObjectManager::ObtainHandleForObject(
     _ASSERTE(NULL != pobj);
     _ASSERTE(NULL != pNewHandle);
 
-    ENTRY("CSharedMemoryObjectManager::ObtainHandleForObject "
-        "(this=%p, pthr=%p, pobj=%p, dwRightsRequested=%d, "
-        "fInheritHandle=%p, pProcessForHandle=%p, pNewHandle=%p)\n",
-        this,
-        pthr,
-        pobj,
-        dwRightsRequested,
-        fInheritHandle,
-        pProcessForHandle,
-        pNewHandle
-        );
-
     if (NULL != pProcessForHandle)
     {
         //
@@ -802,13 +752,6 @@ CSharedMemoryObjectManager::RevokeHandle(
 
     _ASSERTE(NULL != pthr);
 
-    ENTRY("CSharedMemoryObjectManager::RevokeHandle "
-        "(this=%p, pthr=%p, hHandleToRevoke=%p)\n",
-        this,
-        pthr,
-        hHandleToRevoke
-        );
-    
     palError = m_HandleManager.FreeHandle(pthr, hHandleToRevoke);
 
     LOGEXIT("CSharedMemoryObjectManager::RevokeHandle returns %d\n", palError);
@@ -838,7 +781,7 @@ CSharedMemoryObjectManager::ReferenceObjectByHandle(
     CAllowedObjectTypes *paot,
     uint32_t dwRightsRequired,
     IPalObject **ppobj               // OUT
-    )
+)
 {
     PAL_ERROR palError;
     uint32_t dwRightsGranted;
@@ -848,23 +791,12 @@ CSharedMemoryObjectManager::ReferenceObjectByHandle(
     _ASSERTE(NULL != paot);
     _ASSERTE(NULL != ppobj);
 
-    ENTRY("CSharedMemoryObjectManager::ReferenceObjectByHandle "
-        "(this=%p, pthr=%p, hHandleToReference=%p, paot=%p, "
-        "dwRightsRequired=%d, ppobj=%p)\n",
-        this,
-        pthr,
-        hHandleToReference,
-        paot,
-        dwRightsRequired,
-        ppobj
-        );
-
     palError = m_HandleManager.GetObjectFromHandle(
         pthr,
         hHandleToReference,
         &dwRightsGranted,
         &pobj
-        );
+    );
 
     if (NO_ERROR == palError)
     {
@@ -873,7 +805,7 @@ CSharedMemoryObjectManager::ReferenceObjectByHandle(
             paot,
             dwRightsGranted,
             dwRightsRequired
-            );
+        );
 
         if (NO_ERROR == palError)
         {
@@ -890,10 +822,10 @@ CSharedMemoryObjectManager::ReferenceObjectByHandle(
     }
 
     LOGEXIT("CSharedMemoryObjectManager::ReferenceObjectByHandle returns %d\n",
-        palError
-        );
+            palError
+    );
 
-    return palError;    
+    return palError;
 }
 
 /*++
@@ -934,18 +866,6 @@ CSharedMemoryObjectManager::ReferenceMultipleObjectsByHandleArray(
     _ASSERTE(0 < dwHandleCount);
     _ASSERTE(NULL != paot);
     _ASSERTE(NULL != rgpobjs);
-
-    ENTRY("CSharedMemoryObjectManager::ReferenceMultipleObjectsByHandleArray "
-        "(this=%p, pthr=%p, rghHandlesToReference=%p, dwHandleCount=%d, "
-        "pAllowedTyped=%d, dwRightsRequired=%d, rgpobjs=%p)\n",
-        this,
-        pthr,
-        rghHandlesToReference,
-        dwHandleCount,
-        paot,
-        dwRightsRequired,
-        rgpobjs
-        );
 
     m_HandleManager.Lock(pthr);
 
@@ -1100,18 +1020,6 @@ CSharedMemoryObjectManager::ImportSharedObjectIntoProcess(
     _ASSERTE(NULL != psmod);
     _ASSERTE(NULL != ppshmobj);
 
-    ENTRY("CSharedMemoryObjectManager::ImportSharedObjectIntoProcess(pthr=%p, "
-        "pot=%p, poa=%p, shmSharedObjectData=%p, psmod=%p, fAddRefSharedData=%d, "
-        "ppshmobj=%p)\n",
-        pthr,
-        pot,
-        poa,
-        shmSharedObjectData,
-        psmod,
-        fAddRefSharedData,
-        ppshmobj
-        );
-    
     if (CObjectType::WaitableObject == pot->GetSynchronizationSupport())
     {
         pshmobj = new CSharedMemoryWaitableObject(pot,
@@ -1202,14 +1110,6 @@ CSharedMemoryObjectManager::ConvertRemoteHandleToLocal(
 
     _ASSERTE(NULL != pthr);
     _ASSERTE(NULL != phLocal);
-
-    ENTRY("CSharedMemoryObjectManager::ConvertRemoteHandleToLocal "
-        "(this=%p, pthr=%p, rhRemote=%p, phLocal=%p)\n",
-        this,
-        pthr,
-        rhRemote,
-        phLocal
-        );
 
     if (rhRemote == NULL || rhRemote == INVALID_HANDLE_VALUE)
     {
@@ -1375,14 +1275,6 @@ CheckObjectTypeAndRights(
 
     _ASSERTE(NULL != pobj);
     _ASSERTE(NULL != paot);
-
-    ENTRY("CheckObjectTypeAndRights (pobj=%p, paot=%p, "
-        "dwRightsGranted=%d, dwRightsRequired=%d)\n",
-        pobj,
-        paot,
-        dwRightsGranted,
-        dwRightsRequired
-        );
 
     if (paot->IsTypeAllowed(pobj->GetObjectType()->GetId()))
     {
