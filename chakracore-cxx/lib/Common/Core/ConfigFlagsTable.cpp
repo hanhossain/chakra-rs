@@ -1250,7 +1250,7 @@ namespace Js
     void
     ConfigFlagsTable::EnableExperimentalFlag()
     {
-        AutoCriticalSection autocs(&csExperimentalFlags);
+        std::unique_lock autocs(csExperimentalFlags);
 #define FLAG_EXPERIMENTAL(type, name, ...) this->SetAsBoolean(Js::Flag::name##Flag, true);
 #include "Interface/ConfigFlagsList.h"
     }

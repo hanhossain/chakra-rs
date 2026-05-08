@@ -270,7 +270,7 @@ public:
 private:
     void CopyGlobalFlags()
     {
-        AutoCriticalSection autocs(&Js::Configuration::Global.flags.csExperimentalFlags);
+        std::unique_lock autocs(Js::Configuration::Global.flags.csExperimentalFlags);
 
 #define FLAG(threadFlag, globalFlag) m_##globalFlag## = CONFIG_FLAG(globalFlag);
 #define FLAG_RELEASE(threadFlag, globalFlag) m_##globalFlag## = CONFIG_FLAG_RELEASE(globalFlag);

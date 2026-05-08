@@ -3,6 +3,8 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include <mutex>
+
 #include "DataStructures/BaseDictionary.h"
 #include "DataStructures/SList.h"
 #include "Memory/HeapAllocator.h"
@@ -544,7 +546,7 @@ namespace Js
         // experimental flags are initialized via the EnableExperimentalFlag()
         // method. It should be manually acquired anywhere else where these
         // flags are accessed.
-        CriticalSection csExperimentalFlags;
+        std::recursive_mutex csExperimentalFlags;
 
     private:
         void TransferAcronymFlagConfiguration();
