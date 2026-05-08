@@ -1224,9 +1224,6 @@ VirtualAlloc_(
     void *  pRetVal       = NULL;
     CPalThread *pthrCurrent;
 
-    ENTRY("VirtualAlloc(lpAddress=%p, dwSize=%u, flAllocationType=%#x, \
-          flProtect=%#x)\n", lpAddress, dwSize, flAllocationType, flProtect);
-
     pthrCurrent = InternalGetCurrentThread();
 
     if ( ( flAllocationType & MEM_WRITE_WATCH )  != 0 )
@@ -1495,9 +1492,6 @@ VirtualFree(
     BOOL bRetVal = TRUE;
     CPalThread *pthrCurrent;
 
-    ENTRY("VirtualFree(lpAddress=%p, dwSize=%u, dwFreeType=%#x)\n",
-          lpAddress, dwSize, dwFreeType);
-
     pthrCurrent = InternalGetCurrentThread();
     InternalEnterCriticalSection(pthrCurrent, &virtual_critsec);
 
@@ -1667,10 +1661,6 @@ VirtualProtect(
     size_t   NumberOfPagesToChange = 0;
     size_t   OffSet = 0;
     CPalThread * pthrCurrent;
-
-    ENTRY("VirtualProtect(lpAddress=%p, dwSize=%u, flNewProtect=%#x, "
-          "flOldProtect=%p)\n",
-          lpAddress, dwSize, flNewProtect, lpflOldProtect);
 
     pthrCurrent = InternalGetCurrentThread();
     InternalEnterCriticalSection(pthrCurrent, &virtual_critsec);
@@ -1921,9 +1911,6 @@ VirtualQuery(
     PCMI     pEntry = NULL;
     unsigned long StartBoundary = 0;
     CPalThread * pthrCurrent;
-
-    ENTRY("VirtualQuery(lpAddress=%p, lpBuffer=%p, dwLength=%u)\n",
-          lpAddress, lpBuffer, dwLength);
 
     pthrCurrent = InternalGetCurrentThread();
     InternalEnterCriticalSection(pthrCurrent, &virtual_critsec);

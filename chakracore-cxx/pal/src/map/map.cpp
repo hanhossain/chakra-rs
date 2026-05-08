@@ -238,11 +238,6 @@ CreateFileMappingW(
     CPalThread *pThread = NULL;
     PAL_ERROR palError = NO_ERROR;
     
-    ENTRY("CreateFileMappingW(hFile=%p, lpAttributes=%p, flProtect=%#x, "
-          "dwMaxSizeH=%u, dwMaxSizeL=%u, lpName=%p (%S))\n",
-          hFile, lpFileMappingAttributes, flProtect, dwMaximumSizeHigh, 
-          dwMaximumSizeLow, lpName?lpName:W16_NULLSTRING, lpName?lpName:W16_NULLSTRING);
-
     pThread = InternalGetCurrentThread();
 
     palError = InternalCreateFileMapping(
@@ -639,9 +634,6 @@ OpenFileMappingW(
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread = NULL;
     
-    ENTRY("OpenFileMappingW(dwDesiredAccess=%#x, bInheritHandle=%d, lpName=%p (%S)\n",
-          dwDesiredAccess, bInheritHandle, lpName?lpName:W16_NULLSTRING, lpName?lpName:W16_NULLSTRING);
-
     pThread = InternalGetCurrentThread();
 
     /* validate parameters */
@@ -762,11 +754,6 @@ MapViewOfFile(
     CPalThread *pThread = NULL;
     void * pvMappedBaseAddress = NULL;
 
-    ENTRY("MapViewOfFile(hFileMapping=%p, dwDesiredAccess=%u, "
-          "dwFileOffsetH=%u, dwFileOffsetL=%u, dwNumberOfBytes=%u)\n",
-          hFileMappingObject, dwDesiredAccess, dwFileOffsetHigh,
-          dwFileOffsetLow, dwNumberOfBytesToMap);
-
     pThread = InternalGetCurrentThread();
 
     palError = InternalMapViewOfFile(
@@ -801,8 +788,6 @@ UnmapViewOfFile(
     PAL_ERROR palError;
     CPalThread *pThread;
     
-    ENTRY("UnmapViewOfFile(lpBaseAddress=%p)\n", lpBaseAddress);
-
     pThread = InternalGetCurrentThread();
 
     palError = InternalUnmapViewOfFile(pThread, lpBaseAddress);
