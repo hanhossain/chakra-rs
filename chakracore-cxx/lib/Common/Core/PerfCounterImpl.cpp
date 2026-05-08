@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #ifdef PERF_COUNTERS
+#include <unistd.h>
 // Initialization order
 //  AB AutoSystemInfo
 //  AD PerfCounter
@@ -143,7 +144,7 @@ InstanceBase::InitializeSharedMemory(uint32_t numCounter, HANDLE& handle)
 
     uint32_t size = numCounter * sizeof(uint32_t);
     char16_t wszObjectName[OBJECT_NAME_LEN];
-    GetSharedMemoryObjectName(wszObjectName, GetCurrentProcessId(), guid);
+    GetSharedMemoryObjectName(wszObjectName, getpid(), guid);
     handle = ::CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, size, wszObjectName);
     if (handle == NULL)
     {

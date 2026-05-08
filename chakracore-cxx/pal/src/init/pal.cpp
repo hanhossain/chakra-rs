@@ -163,9 +163,6 @@ Initialize()
 
     if (init_count == 0)
     {
-        // Set our pid.
-        gPID = getpid();
-
         fFirstTimeInit = true;
 
         // Initialize the TLS lookaside cache

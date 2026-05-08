@@ -334,7 +334,7 @@ BOOL CONTEXT_GetRegisters(uint32_t processId, LPCONTEXT lpContext)
 {
     BOOL bRet = FALSE;
 
-    if (processId == GetCurrentProcessId())
+    if (processId == getpid())
     {
         CONTEXT_CaptureContext(lpContext);
     }
@@ -386,7 +386,7 @@ CONTEXT_GetThreadContext(
        Unfortunately, these two methods only depend on process ID, not on
        thread ID. */
 
-    if (dwProcessId == GetCurrentProcessId())
+    if (dwProcessId == getpid())
     {
         if (self != pthread_self())
         {
@@ -455,7 +455,7 @@ CONTEXT_SetThreadContext(
        Unfortunately, these two methods only depend on process ID, not on
        thread ID. */
 
-    if (dwProcessId == GetCurrentProcessId())
+    if (dwProcessId == getpid())
     {
         // Need to implement SetThreadContext(current thread) for the IX architecture; look at common_signal_handler.
         _ASSERT(FALSE);
@@ -1321,7 +1321,7 @@ CONTEXT_GetThreadContext(
         goto EXIT;
     }
 
-    if (GetCurrentProcessId() == dwProcessId)
+    if (getpid() == dwProcessId)
     {
         if (self != pthread_self())
         {
@@ -1536,7 +1536,7 @@ CONTEXT_SetThreadContext(
         goto EXIT;
     }
 
-    if (dwProcessId != GetCurrentProcessId())
+    if (dwProcessId != getpid())
     {
         // GetThreadContext() of a thread in another process
         ASSERT("Cross-process GetThreadContext() is not supported\n");

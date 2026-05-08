@@ -335,7 +335,7 @@ namespace CorUnix
         pwtlnNewNode->shridSHRThis       = NULLSharedID;
         pwtlnNewNode->ptwiWaitInfo       = ptwiWaitInfo;
         pwtlnNewNode->dwObjIndex         = dwIndex;
-        pwtlnNewNode->dwProcessId        = gPID;
+        pwtlnNewNode->dwProcessId        = getpid();
         pwtlnNewNode->dwThreadId         = m_pthrOwner->GetThreadId();
         pwtlnNewNode->dwFlags            = (MultipleObjectsWaitAll == wtWaitType) ? 
                                             WTLN_FLAG_WAIT_ALL : 0;
@@ -682,7 +682,7 @@ namespace CorUnix
                     lOwnershipCount);
         
         if ( (1 > lOwnershipCount) || 
-             (m_psdSynchData->GetOwnerProcessID() != gPID) ||
+             (m_psdSynchData->GetOwnerProcessID() != getpid()) ||
              (m_psdSynchData->GetOwnerThread() != m_pthrOwner) )
         {
             palErr = ERROR_NOT_OWNER;
@@ -967,7 +967,7 @@ namespace CorUnix
                         "Objects with ownership must be either signaled or "
                         "owned by a thread\n");
                         
-            if ((GetOwnerProcessID() == gPID) && 
+            if ((GetOwnerProcessID() == getpid()) &&
                 (GetOwnerThread() == pWaiterThread) )
             {
                 fRetVal = true;
@@ -1074,7 +1074,7 @@ namespace CorUnix
         uint32_t dwObjIdx;
         SharedID shridItem = NULLSharedID, shridNextItem = NULLSharedID;
         WaitingThreadsListNode * pwtlnItem, * pwtlnNextItem;
-        uint32_t dwPid = gPID;
+        uint32_t dwPid = getpid();
         CPalSynchronizationManager * pSynchManager = 
             CPalSynchronizationManager::GetInstance();
 
@@ -1138,7 +1138,7 @@ namespace CorUnix
                 // it can only be a wait performed by a thread in the current 
                 // process, therefore pwtlnItem->ptwiWaitInfo is valid.
 
-                _ASSERTE(fSharedObject || pwtlnItem->dwProcessId == gPID); 
+                _ASSERTE(fSharedObject || pwtlnItem->dwProcessId == getpid());
                 
                 if (!fSharedSynchLock && !fSharedObject && 
                     LocalWait != pwtlnItem->ptwiWaitInfo->wdWaitDomain)
@@ -1392,7 +1392,7 @@ namespace CorUnix
         uint32_t dwObjIdx;
         SharedID shridItem = NULLSharedID, shridNextItem = NULLSharedID;
         WaitingThreadsListNode * pwtlnItem, * pwtlnNextItem;
-        uint32_t dwPid = gPID;
+        uint32_t dwPid = getpid();
         CPalSynchronizationManager * pSynchManager = 
             CPalSynchronizationManager::GetInstance();
 
@@ -1429,7 +1429,7 @@ namespace CorUnix
 
             // See note in similar spot in ReleaseFirstWaiter
             
-            _ASSERTE(fSharedObject || pwtlnItem->dwProcessId == gPID); 
+            _ASSERTE(fSharedObject || pwtlnItem->dwProcessId == getpid());
 
             if (!fSharedSynchLock && !fSharedObject && 
                 LocalWait != pwtlnItem->ptwiWaitInfo->wdWaitDomain)
@@ -1575,7 +1575,7 @@ namespace CorUnix
                     "WTLN_FLAG_OWNER_OBJECT_IS_SHARED in WaitingThreadsListNode "
                     "not consistent with target object's domain\n");
 
-        if(gPID != pwtlnNode->dwProcessId)
+        if(getpid() != pwtlnNode->dwProcessId)
         {
             ////////////////////////////
             //
@@ -1678,7 +1678,7 @@ namespace CorUnix
     {
         VALIDATEOBJECT(this);
         
-        m_dwOwnerPid   = gPID;
+        m_dwOwnerPid   = getpid();
         m_dwOwnerTid   = pOwnerThread->GetThreadId();
         m_pOwnerThread = pOwnerThread;
     }
@@ -1745,11 +1745,11 @@ namespace CorUnix
             _ASSERT_MSG(0 == GetSignalCount(),
                         "Conflicting OwnershipCount and SignalCount values\n");
             
-            _ASSERT_MSG(pthrTarget == m_pOwnerThread && gPID == m_dwOwnerPid,
+            _ASSERT_MSG(pthrTarget == m_pOwnerThread && getpid() == m_dwOwnerPid,
                         "Attempting to assign ownership of CSynchData %p to "
                         "thread {pid=%#x tid=%#x} while it is currently owned "
                         "by thread {pid=%#x tid=%#x}\n", this,
-                        gPID, pthrTarget->GetThreadId(),
+                        getpid(), pthrTarget->GetThreadId(),
                         m_dwOwnerPid, m_pOwnerThread->GetThreadId());
 
             m_lOwnershipCount++;

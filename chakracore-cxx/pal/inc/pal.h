@@ -457,10 +457,6 @@ BOOL
 ResetEvent(
         HANDLE hEvent);
 
-uint32_t
-GetCurrentProcessId(
-            void);
-
 HANDLE
 GetCurrentProcess(
           void);

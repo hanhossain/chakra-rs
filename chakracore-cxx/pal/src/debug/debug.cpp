@@ -408,7 +408,7 @@ GetThreadContext(
         if (!pTargetThread->IsDummy())
         {
             ret = CONTEXT_GetThreadContext(
-                GetCurrentProcessId(),
+                getpid(),
                 pTargetThread->GetPThreadSelf(),
                 lpContext
                 );
@@ -465,7 +465,7 @@ SetThreadContext(
         if (!pTargetThread->IsDummy())
         {
             ret = CONTEXT_SetThreadContext(
-                GetCurrentProcessId(),
+                getpid(),
                 pTargetThread->GetPThreadSelf(),
                 lpContext
                 );
@@ -538,7 +538,7 @@ WriteProcessMemory(
 
     // Check if the write request is for the current process.
     // In that case we don't need ptrace.
-    if (GetCurrentProcessId() == processId)
+    if (getpid() == processId)
     {
         TRACE("We are in the same process so we don't need ptrace\n");
 

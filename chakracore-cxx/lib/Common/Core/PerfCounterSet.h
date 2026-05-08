@@ -5,6 +5,7 @@
 #pragma once
 
 #ifdef PERF_COUNTERS
+#include <unistd.h>
 
 namespace PerfCounter
 {
@@ -62,7 +63,7 @@ namespace PerfCounter
                 char16_t wszFilename[_MAX_FNAME];
                 _wsplitpath_s(wszModuleName, NULL, 0, NULL, 0, wszFilename, _MAX_FNAME, NULL, 0);
 
-                return __super::Initialize(wszFilename, GetCurrentProcessId());
+                return __super::Initialize(wszFilename, getpid());
             }
             return false;
         }

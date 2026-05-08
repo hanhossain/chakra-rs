@@ -14,6 +14,8 @@
 
 // Header files required before including ConfigFlagsTable.h
 
+#include <unistd.h>
+
 #include "Interface/EnumHelp.h"
 #include "Common/MathUtil.h"
 #include "Core/AllocSizeMath.h"
@@ -194,7 +196,7 @@ namespace Js {
             filePath = tempFilePath;
         }
 
-        StringCchPrintf(tempFileName, _countof(tempFileName), u"%s\\CH_%u_%u.dmp", filePath, GetCurrentProcessId(), GetCurrentThreadId());
+        StringCchPrintf(tempFileName, _countof(tempFileName), u"%s\\CH_%u_%u.dmp", filePath, getpid(), GetCurrentThreadId());
         Output::Print(u"dump filename %s \n", tempFileName);
         Output::Flush();
 
@@ -227,7 +229,7 @@ namespace Js {
                 AutoCriticalSection autocs(&csGenerateDump);
 
                 dumpGenerated = MiniDumpWriteDump(GetCurrentProcess(),
-                    GetCurrentProcessId(),
+                    getpid(),
                     hTempFile,
                     dumpType,
                     &dumpExceptInfo,
@@ -237,7 +239,7 @@ namespace Js {
             else
             {
                 dumpGenerated = MiniDumpWriteDump(GetCurrentProcess(),
-                    GetCurrentProcessId(),
+                    getpid(),
                     hTempFile,
                     dumpType,
                     &dumpExceptInfo,
@@ -288,7 +290,7 @@ namespace Js {
 #endif
         if (AssertsToConsole)
         {
-            fprintf(stderr, "ASSERTION %u: (%s, line %u) %s\n Failure: %s\n", GetCurrentProcessId(), fileName, lineNumber, message, error);
+            fprintf(stderr, "ASSERTION %u: (%s, line %u) %s\n Failure: %s\n", getpid(), fileName, lineNumber, message, error);
             fflush(stderr);
 #ifdef GENERATE_DUMP
             // force dump if we have assert in jc.exe. check build only.

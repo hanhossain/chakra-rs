@@ -183,10 +183,6 @@ char16_t* g_lpwstrAppDir = NULL;
 // Thread ID of thread that has started the ExitProcess process
 Volatile<int32_t> terminator __attribute__((init_priority(200))) = 0;
 
-// Process and session ID of this process.
-uint32_t gPID = (uint32_t) -1;
-uint32_t gSID = (uint32_t) -1;
-
 // Application group ID for this process
 #ifdef __APPLE__
 const char * gApplicationGroupId = nullptr;
@@ -224,36 +220,6 @@ PROCGetProcessStatus(
     uint32_t *pdwExitCode);
 
 static BOOL PROCEndProcess(HANDLE hProcess, uint32_t uExitCode, BOOL bTerminateUnconditionally);
-
-/*++
-Function:
-  GetCurrentProcessId
-
-See MSDN doc.
---*/
-uint32_t
-GetCurrentProcessId(
-            void)
-{
-    LOGEXIT("GetCurrentProcessId returns DWORD %#x\n", gPID);
-    return gPID;
-}
-
-
-/*++
-Function:
-  GetCurrentSessionId
-
-See MSDN doc.
---*/
-uint32_t
-GetCurrentSessionId(
-            void)
-{
-    LOGEXIT("GetCurrentSessionId returns DWORD %#x\n", gSID);
-    return gSID;
-}
-
 
 /*++
 Function:
@@ -400,7 +366,7 @@ static BOOL PROCEndProcess(HANDLE hProcess, uint32_t uExitCode, BOOL bTerminateU
     {
         SetLastError(ERROR_INVALID_HANDLE);
     }
-    else if(dwProcessId != GetCurrentProcessId())
+    else if(dwProcessId != getpid())
     {
         if (uExitCode != 0)
             WARN("exit code 0x%x ignored for external process.\n", uExitCode);
@@ -525,7 +491,7 @@ PROCGetProcessIDFromHandle(
 
     if (hPseudoCurrentProcess == hProcess)
     {
-        dwProcessId = gPID;
+        dwProcessId = getpid();
         goto PROCGetProcessIDFromHandleExit;
     }
 
@@ -663,7 +629,7 @@ CorUnix::CreateInitialProcessAndThreadObjects(
         goto CreateInitialProcessAndThreadObjectsExit;
     }
 
-    pLocalData->dwProcessId = gPID;
+    pLocalData->dwProcessId = getpid();
     pLocalData->ps = PS_RUNNING;
     pDataLock->ReleaseLock(pThread, TRUE);
 

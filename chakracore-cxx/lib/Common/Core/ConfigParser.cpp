@@ -11,6 +11,8 @@
 #include "Core/CmdParser.h"
 #include "Core/ConfigParser.h"
 
+#include <unistd.h>
+
 ConfigParser ConfigParser::s_moduleConfigParser(Js::Configuration::Global.flags);
 
 #ifdef ENABLE_TRACE
@@ -263,7 +265,7 @@ int32_t ConfigParser::SetOutputFile(const char16_t* outputFile, const char16_t* 
         bufferLen = bufferLen - pidStartPosition;
 
         // Copy the PID
-        _itow_s(GetCurrentProcessId(), pDest, /*bufferSize=*/_MAX_PATH - pidStartPosition, /*radix=*/10);
+        _itow_s(getpid(), pDest, /*bufferSize=*/_MAX_PATH - pidStartPosition, /*radix=*/10);
 #pragma prefast(suppress: 26014, "ultow string length is smaller than 256")
         pDest += std::u16string(pDest).length();
         bufferLen = bufferLen - std::u16string(pDest).length();
