@@ -10,7 +10,7 @@
 
 thread_local MemoryProfiler * MemoryProfiler::Instance = nullptr;
 
-CriticalSection MemoryProfiler::s_cs;
+std::recursive_mutex MemoryProfiler::s_cs;
 AutoPtr<MemoryProfiler, NoCheckHeapAllocator> MemoryProfiler::profilers(nullptr);
 
 MemoryProfiler::MemoryProfiler() :
@@ -49,7 +49,7 @@ MemoryProfiler::EnsureMemoryProfiler()
         memoryProfiler = NoCheckHeapNew(MemoryProfiler);
 
         {
-            AutoCriticalSection autocs(&s_cs);
+            std::unique_lock autocs(s_cs);
             memoryProfiler->next = MemoryProfiler::profilers.Detach();
             MemoryProfiler::profilers = memoryProfiler;
         }
