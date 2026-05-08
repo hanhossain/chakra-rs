@@ -16,7 +16,7 @@ std::mutex DynamicProfileStorage::mutex;
 char16_t DynamicProfileStorage::cacheDrive[_MAX_DRIVE];
 char16_t DynamicProfileStorage::cacheDir[_MAX_DIR];
 char16_t DynamicProfileStorage::catalogFilename[_MAX_PATH];
-CriticalSection DynamicProfileStorage::cs;
+std::recursive_mutex DynamicProfileStorage::cs;
 DynamicProfileStorage::InfoMap DynamicProfileStorage::infoMap(&NoCheckHeapAllocator::Instance);
 DynamicProfileStorage::TimeType DynamicProfileStorage::creationTime = DynamicProfileStorage::TimeType();
 int32_t DynamicProfileStorage::lastOffset = 0;
@@ -1012,7 +1012,7 @@ void DynamicProfileStorage::ClearCacheCatalog()
 void DynamicProfileStorage::SaveRecord(__in_z char16_t const * filename, __in_ecount(sizeof(uint32_t) + *record) char const * record)
 {
     AssertOrFailFast(enabled);
-    AutoCriticalSection autocs(&cs);
+    const std::lock_guard autocs(cs);
 
     StorageInfo * info;
 
