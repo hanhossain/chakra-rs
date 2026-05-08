@@ -210,7 +210,7 @@ namespace Js
         bool awoken = false;
 
         {
-            AutoCriticalSection autoCS(waiterList->GetCriticalSectionForAccess());
+            const std::lock_guard lock(waiterList->GetMutexForAccess());
 
             int32_t w = JavascriptConversion::ToInt32(typedArrayBase->DirectGetItem(accessIndex), scriptContext);
             if (value != w)
@@ -220,7 +220,6 @@ namespace Js
 
             unsigned long agent = (unsigned long)scriptContext;
             Assert(sharedArrayBuffer->GetSharedContents()->IsValidAgent(agent));
-#pragma prefast(suppress:__WARNING_CALLER_FAILING_TO_HOLD, "This is a prefast false-positive caused by it being unable to identify that the critical section used here is the same as the one held by the AutoCriticalSection")
             awoken = waiterList->AddAndSuspendWaiter(agent, timeout);
             if (!awoken)
             {
@@ -257,7 +256,7 @@ namespace Js
 
         uint32_t removed = 0;
         {
-            AutoCriticalSection autoCS(waiterList->GetCriticalSectionForAccess());
+            const std::lock_guard lock(waiterList->GetMutexForAccess());
             removed = waiterList->RemoveAndWakeWaiters(count);
         }
 
