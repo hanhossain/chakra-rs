@@ -166,7 +166,6 @@ enum IRDumpFlags
 #include "EquivalentTypeSet.h"
 #include "ObjTypeSpecFldInfo.h"
 #include "FunctionCodeGenJitTimeData.h"
-#include "ServerScriptContext.h"
 #include "JITOutput.h"
 #include "AsmJsJITInfo.h"
 #include "FunctionJITRuntimeInfo.h"
@@ -208,7 +207,6 @@ enum IRDumpFlags
 
 #include "PDataManager.h"
 
-#include "ServerThreadContext.h"
 #include "CaseNode.h"
 #include "SwitchIRBuilder.h"
 #include "IRBuilder.h"

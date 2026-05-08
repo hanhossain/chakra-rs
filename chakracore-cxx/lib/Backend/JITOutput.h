@@ -37,9 +37,6 @@ public:
     void SetCodeAddress(intptr_t addr);
 
     EmitBufferAllocation<VirtualAllocWrapper, PreReservedVirtualAllocWrapper> * RecordInProcNativeCodeSize(Func *func, uint32_t bytes, ushort pdataCount, ushort xdataSize);
-#if ENABLE_OOP_NATIVE_CODEGEN
-    EmitBufferAllocation<SectionAllocWrapper, PreReservedSectionAllocWrapper> * RecordOOPNativeCodeSize(Func *func, uint32_t bytes, ushort pdataCount, ushort xdataSize);
-#endif
     void RecordNativeCode(const uint8_t* sourceBuffer, uint8_t* localCodeAddress);
     void RecordInlineeFrameOffsetsInfo(unsigned int offsetsArrayOffset, unsigned int offsetsArrayCount);
 
@@ -59,9 +56,6 @@ private:
     union
     {
         EmitBufferAllocation<VirtualAllocWrapper, PreReservedVirtualAllocWrapper> * m_inProcAlloc;
-#if ENABLE_OOP_NATIVE_CODEGEN
-        EmitBufferAllocation<SectionAllocWrapper, PreReservedSectionAllocWrapper> * m_oopAlloc;
-#endif
     };
     Func * m_func;
     JITOutputIDL * m_outputData;

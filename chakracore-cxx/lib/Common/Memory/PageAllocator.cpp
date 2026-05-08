@@ -7,10 +7,6 @@
 
 #define UpdateMinimum(dst, src) if (dst > src) { dst = src; }
 
-#if ENABLE_OOP_NATIVE_CODEGEN
-thread_local int32_t MemoryOperationLastError::MemOpLastError = 0;
-#endif
-
 //=============================================================================================================
 // Segment
 //=============================================================================================================
@@ -24,9 +20,6 @@ bool SegmentBaseCommon::IsInPreReservedHeapPageAllocator() const
 {
 #if ENABLE_NATIVE_CODEGEN
     return allocator->GetAllocatorType() == PageAllocatorBaseCommon::AllocatorType::PreReservedVirtualAlloc
-#if ENABLE_OOP_NATIVE_CODEGEN
-        || allocator->GetAllocatorType() == PageAllocatorBaseCommon::AllocatorType::PreReservedSectionAlloc
-#endif
 #else
     return false
 #endif
@@ -1668,40 +1661,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::MemSetLocal(_In_ void 
     memset(dst, val, sizeInBytes);
 }
 
-#if ENABLE_OOP_NATIVE_CODEGEN
-template<>
-void
-PageAllocatorBase<SectionAllocWrapper>::MemSetLocal(_In_ void *dst, int val, size_t sizeInBytes)
-{
-    void * localAddr = this->GetVirtualAllocator()->AllocLocal(dst, sizeInBytes);
-    if (localAddr == nullptr)
-    {
-        MemoryOperationLastError::RecordError(JSERR_FatalMemoryExhaustion);
-    }
-    else
-    {
-        memset(localAddr, val, sizeInBytes);
-        this->GetVirtualAllocator()->FreeLocal(localAddr);
-    }
-}
-
-template<>
-void
-PageAllocatorBase<PreReservedSectionAllocWrapper>::MemSetLocal(_In_ void *dst, int val, size_t sizeInBytes)
-{
-    void * localAddr = this->GetVirtualAllocator()->AllocLocal(dst, sizeInBytes);
-    if (localAddr == nullptr)
-    {
-        MemoryOperationLastError::RecordError(JSERR_FatalMemoryExhaustion);
-    }
-    else
-    {
-        memset(localAddr, val, sizeInBytes);
-        this->GetVirtualAllocator()->FreeLocal(localAddr);
-    }
-}
-#endif
-
 #if ENABLE_BACKGROUND_PAGE_ZEROING
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
 typename PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::FreePageEntry *
@@ -1877,21 +1836,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::SuspendIdleDecommit()
 #endif
 }
 
-#if ENABLE_OOP_NATIVE_CODEGEN
-template<>
-void
-PageAllocatorBase<SectionAllocWrapper>::SuspendIdleDecommit()
-{
-    Assert(!this->IsIdleDecommitPageAllocator());
-}
-template<>
-void
-PageAllocatorBase<PreReservedSectionAllocWrapper>::SuspendIdleDecommit()
-{
-    Assert(!this->IsIdleDecommitPageAllocator());
-}
-#endif
-
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
 void
 PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::ResumeIdleDecommit()
@@ -1906,21 +1850,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::ResumeIdleDecommit()
     ((IdleDecommitPageAllocator *)this)->cs.Leave();
 #endif
 }
-
-#if ENABLE_OOP_NATIVE_CODEGEN
-template<>
-void
-PageAllocatorBase<SectionAllocWrapper>::ResumeIdleDecommit()
-{
-    Assert(!this->IsIdleDecommitPageAllocator());
-}
-template<>
-void
-PageAllocatorBase<PreReservedSectionAllocWrapper>::ResumeIdleDecommit()
-{
-    Assert(!this->IsIdleDecommitPageAllocator());
-}
-#endif
 
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
 void
@@ -2954,16 +2883,5 @@ namespace Memory
     template class HeapPageAllocator < PreReservedVirtualAllocWrapper >;
     template class SegmentBase       < PreReservedVirtualAllocWrapper >;
     template class PageSegmentBase   < PreReservedVirtualAllocWrapper >;
-#endif
-    
-#if ENABLE_OOP_NATIVE_CODEGEN
-    template class PageAllocatorBase < SectionAllocWrapper >;
-    template class PageAllocatorBase < PreReservedSectionAllocWrapper >;
-    template class HeapPageAllocator < SectionAllocWrapper >;
-    template class HeapPageAllocator < PreReservedSectionAllocWrapper >;
-    template class SegmentBase       < SectionAllocWrapper >;
-    template class SegmentBase       < PreReservedSectionAllocWrapper >;
-    template class PageSegmentBase   < SectionAllocWrapper >;
-    template class PageSegmentBase   < PreReservedSectionAllocWrapper >;
 #endif
 }

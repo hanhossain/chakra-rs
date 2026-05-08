@@ -26,9 +26,6 @@ typedef BVSparse<ArenaAllocator> ActiveFunctionSet;
 class JitTransferData;
 class NativeEntryPointData;
 class InProcNativeEntryPointData;
-#if ENABLE_OOP_NATIVE_CODEGEN
-class OOPNativeEntryPointData;
-#endif
 #endif
 
 namespace Js
@@ -303,9 +300,6 @@ namespace Js
         bool HasNativeEntryPointData() const;
         NativeEntryPointData * GetNativeEntryPointData() const;
         InProcNativeEntryPointData * GetInProcNativeEntryPointData();
-#if ENABLE_OOP_NATIVE_CODEGEN
-        OOPNativeEntryPointData * GetOOPNativeEntryPointData();
-#endif
 #endif
 
     protected:

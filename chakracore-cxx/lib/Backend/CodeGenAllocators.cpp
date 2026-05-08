@@ -27,6 +27,3 @@ CodeGenAllocators<TAlloc, TPreReservedAlloc>::ClearConcurrentThreadId()
 #endif
 
 template class CodeGenAllocators<VirtualAllocWrapper, PreReservedVirtualAllocWrapper>;
-#if ENABLE_OOP_NATIVE_CODEGEN
-template class CodeGenAllocators<SectionAllocWrapper, PreReservedSectionAllocWrapper>;
-#endif

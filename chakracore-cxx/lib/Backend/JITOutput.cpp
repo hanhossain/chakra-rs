@@ -157,45 +157,10 @@ JITOutput::RecordInProcNativeCodeSize(Func *func, uint32_t bytes, ushort pdataCo
     return m_inProcAlloc;
 }
 
-#if ENABLE_OOP_NATIVE_CODEGEN
-EmitBufferAllocation<SectionAllocWrapper, PreReservedSectionAllocWrapper> *
-JITOutput::RecordOOPNativeCodeSize(Func *func, uint32_t bytes, ushort pdataCount, ushort xdataSize)
-{
-    m_func = func;
-
-#if defined(_M_ARM32_OR_ARM64)
-    bool canAllocInPreReservedHeapPageSegment = false;
-#else
-    bool canAllocInPreReservedHeapPageSegment = m_func->CanAllocInPreReservedHeapPageSegment();
-#endif
-
-    uint8_t *buffer = nullptr;
-    m_oopAlloc = m_func->GetOOPCodeGenAllocators()->emitBufferManager.AllocateBuffer(bytes, &buffer, pdataCount, xdataSize, canAllocInPreReservedHeapPageSegment, true);
-
-    if (buffer == nullptr)
-    {
-        Js::Throw::OutOfMemory();
-    }
-
-    m_outputData->codeAddress = (intptr_t)buffer;
-    m_outputData->codeSize = bytes;
-    m_outputData->pdataCount = pdataCount;
-    m_outputData->xdataSize = xdataSize;
-    m_outputData->isInPrereservedRegion = m_oopAlloc->inPrereservedRegion;
-    return m_oopAlloc;
-}
-#endif
 
 void
 JITOutput::RecordNativeCode(const uint8_t* sourceBuffer, uint8_t* localCodeAddress)
 {
-#if ENABLE_OOP_NATIVE_CODEGEN
-    if (JITManager::GetJITManager()->IsJITServer())
-    {
-        RecordNativeCode(sourceBuffer, localCodeAddress, m_oopAlloc, m_func->GetOOPCodeGenAllocators());
-    }
-    else
-#endif
     {
         RecordNativeCode(sourceBuffer, localCodeAddress, m_inProcAlloc, m_func->GetInProcCodeGenAllocators());
     }
@@ -259,14 +224,6 @@ void
 JITOutput::FinalizeNativeCode()
 {
     CustomHeap::Allocation * allocation = GetAllocation();
-#if ENABLE_OOP_NATIVE_CODEGEN
-    if (JITManager::GetJITManager()->IsJITServer())
-    {
-        m_func->GetOOPCodeGenAllocators()->emitBufferManager.CompletePreviousAllocation(m_oopAlloc);
-
-    }
-    else
-#endif
     {
         m_func->GetInProcCodeGenAllocators()->emitBufferManager.CompletePreviousAllocation(m_inProcAlloc);
         m_func->GetInProcJITEntryPointInfo()->GetInProcNativeEntryPointData()->SetNativeCodeData(m_func->GetNativeCodeDataAllocator()->Finalize());
@@ -277,13 +234,6 @@ JITOutput::FinalizeNativeCode()
     if (!allocation->thunkAddress && CONFIG_FLAG(OOPCFGRegistration))
     {
         void * callTarget = (void *)m_outputData->codeAddress;
-#if ENABLE_OOP_NATIVE_CODEGEN
-        if (JITManager::GetJITManager()->IsJITServer())
-        {
-            m_func->GetOOPCodeGenAllocators()->emitBufferManager.SetValidCallTarget(m_oopAlloc, callTarget, true);
-        }
-        else
-#endif
         {
             m_func->GetInProcCodeGenAllocators()->emitBufferManager.SetValidCallTarget(m_inProcAlloc, callTarget, true);
         }
@@ -293,12 +243,6 @@ JITOutput::FinalizeNativeCode()
 CustomHeap::Allocation *
 JITOutput::GetAllocation() const
 {
-#if ENABLE_OOP_NATIVE_CODEGEN
-    if (JITManager::GetJITManager()->IsJITServer())
-    {
-        return m_oopAlloc->allocation;
-    }
-#endif
     return m_inProcAlloc->allocation;
 }
 

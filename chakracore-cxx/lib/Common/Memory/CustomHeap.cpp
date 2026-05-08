@@ -1108,10 +1108,6 @@ void FillDebugBreak(_Out_writes_bytes_all_(byteCount) uint8_t* buffer, _In_ size
 }
 
 template class Heap<VirtualAllocWrapper, PreReservedVirtualAllocWrapper>;
-#if ENABLE_OOP_NATIVE_CODEGEN
-template class Heap<SectionAllocWrapper, PreReservedSectionAllocWrapper>;
-#endif
-
 #pragma endregion
 
 template<>
@@ -1127,44 +1123,6 @@ CodePageAllocators<VirtualAllocWrapper, PreReservedVirtualAllocWrapper>::FreeLoc
 {
     // do nothing in case we are in proc
 }
-
-#if ENABLE_OOP_NATIVE_CODEGEN
-template<>
-char *
-CodePageAllocators<SectionAllocWrapper, PreReservedSectionAllocWrapper>::AllocLocal(char * remoteAddr, size_t size, void * segment)
-{
-    AutoCriticalSection autoLock(&this->cs);
-    Assert(segment);
-    void * address = nullptr;
-    if (IsPreReservedSegment(segment))
-    {
-        address = ((SegmentBase<PreReservedSectionAllocWrapper>*)segment)->GetAllocator()->GetVirtualAllocator()->AllocLocal(remoteAddr, size);
-    }
-    else
-    {
-        address = ((SegmentBase<SectionAllocWrapper>*)segment)->GetAllocator()->GetVirtualAllocator()->AllocLocal(remoteAddr, size);
-    }
-    return (char*)address;
-}
-
-template<>
-void
-CodePageAllocators<SectionAllocWrapper, PreReservedSectionAllocWrapper>::FreeLocal(char * localAddr, void * segment)
-{
-    AutoCriticalSection autoLock(&this->cs);
-    Assert(segment);
-    if (IsPreReservedSegment(segment))
-    {
-        ((SegmentBase<PreReservedSectionAllocWrapper>*)segment)->GetAllocator()->GetVirtualAllocator()->FreeLocal(localAddr);
-    }
-    else
-    {
-        ((SegmentBase<SectionAllocWrapper>*)segment)->GetAllocator()->GetVirtualAllocator()->FreeLocal(localAddr);
-    }
-}
-#endif
-
-
 
 } // namespace CustomHeap
 

@@ -933,12 +933,6 @@ private:
 #if ENABLE_NATIVE_CODEGEN
         PSCRIPTCONTEXT_HANDLE GetRemoteScriptAddr(bool allowInitialize = true)
         {
-#if ENABLE_OOP_NATIVE_CODEGEN
-            if (!m_remoteScriptContextAddr && allowInitialize)
-            {
-                InitializeRemoteScriptContext();
-            }
-#endif
             return m_remoteScriptContextAddr;
         }
 #endif

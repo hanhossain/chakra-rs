@@ -4,6 +4,4 @@
 //-------------------------------------------------------------------------------------------------------
 #include "Backend.h"
 
-#if !ENABLE_OOP_NATIVE_CODEGEN
 JITManager JITManager::s_jitManager; // dummy object when OOP JIT disabled
-#endif

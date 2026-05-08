@@ -871,13 +871,6 @@ NativeCodeGenerator::CodeGen(PageAllocator * pageAllocator, CodeGenWorkItem* wor
         throw Js::OperationAbortedException();
     }
 
-#if ENABLE_OOP_NATIVE_CODEGEN
-    if (JITManager::GetJITManager()->IsOOPJITEnabled())
-    {
-        workItem->GetJITData()->nativeDataAddr = (long)workItem->GetEntryPoint()->GetOOPNativeEntryPointData()->GetNativeDataBufferRef();
-    }
-#endif
-
     // TODO: oop jit can we be more efficient here?
     ArenaAllocator alloc(u"JitData", pageAllocator, Js::Throw::OutOfMemory);
 
@@ -936,66 +929,6 @@ NativeCodeGenerator::CodeGen(PageAllocator * pageAllocator, CodeGenWorkItem* wor
     {
         workItem->GetEntryPoint()->SetHasJittedStackClosure();
     }
-
-#if ENABLE_OOP_NATIVE_CODEGEN
-    if (JITManager::GetJITManager()->IsOOPJITEnabled())
-    {
-        if (jitWriteData.nativeDataFixupTable)
-        {
-            for (unsigned int i = 0; i < jitWriteData.nativeDataFixupTable->count; i++)
-            {
-                auto& record = jitWriteData.nativeDataFixupTable->fixupRecords[i];
-                auto updateList = record.updateList;
-
-                if (PHASE_TRACE1(Js::NativeCodeDataPhase))
-                {
-                    Output::Print(u"NativeCodeData Fixup: allocIndex:%d, len:%x, totalOffset:%x, startAddress:%p\n",
-                        record.index, record.length, record.startOffset, jitWriteData.buffer->data + record.startOffset);
-                }
-
-                while (updateList)
-                {
-                    void* addrToFixup = jitWriteData.buffer->data + record.startOffset + updateList->addrOffset;
-                    void* targetAddr = jitWriteData.buffer->data + updateList->targetTotalOffset;
-
-                    if (PHASE_TRACE1(Js::NativeCodeDataPhase))
-                    {
-                        Output::Print(u"\tEntry: +%x %p(%p) ==> %p\n", updateList->addrOffset, addrToFixup, *(void**)(addrToFixup), targetAddr);
-                    }
-
-                    *(void**)(addrToFixup) = targetAddr;
-                    auto current = updateList;
-                    updateList = updateList->next;
-                    midl_user_free(current);
-                }
-            }
-            midl_user_free(jitWriteData.nativeDataFixupTable);
-            jitWriteData.nativeDataFixupTable = nullptr;
-
-            // change the address with the fixup information
-            epInfo->GetOOPNativeEntryPointData()->SetNativeDataBuffer((char*)jitWriteData.buffer->data);
-
-#if DBG
-            if (PHASE_TRACE1(Js::NativeCodeDataPhase))
-            {
-                Output::Print(u"NativeCodeData Client Buffer: %p, len: %x\n", jitWriteData.buffer->data, jitWriteData.buffer->len);
-            }
-#endif
-        }
-
-        if (jitWriteData.throwMapCount > 0)
-        {
-            Js::ThrowMapEntry * throwMap = (Js::ThrowMapEntry *)(jitWriteData.buffer->data + jitWriteData.throwMapOffset);
-            Js::SmallSpanSequenceIter iter;
-            for (uint i = 0; i < jitWriteData.throwMapCount; ++i)
-            {
-                workItem->RecordNativeThrowMap(iter, throwMap[i].nativeBufferOffset, throwMap[i].statementIndex);
-            }
-        }
-
-        epInfo->GetOOPNativeEntryPointData()->RecordInlineeFrameOffsetsInfo(jitWriteData.inlineeFrameOffsetArrayOffset, jitWriteData.inlineeFrameOffsetArrayCount);
-    }
-#endif
 
     if (workItem->GetJitMode() != ExecutionMode::SimpleJit)
     {
@@ -1767,13 +1700,6 @@ NativeCodeGenerator::Prioritize(JsUtil::Job *const job, const bool forceAddJobTo
             {
                 return;
             }
-#if ENABLE_OOP_NATIVE_CODEGEN
-            // If for some reason OOP JIT isn't connected (e.g. it crashed), don't attempt to JIT
-            if (JITManager::GetJITManager()->IsOOPJITEnabled() && !JITManager::GetJITManager()->IsConnected())
-            {
-                return;
-            }
-#endif
         }
 
         jitMode = functionBody->GetExecutionMode();

@@ -23,6 +23,3 @@ public:
 };
 
 typedef CodeGenAllocators<VirtualAllocWrapper, PreReservedVirtualAllocWrapper> InProcCodeGenAllocators;
-#if ENABLE_OOP_NATIVE_CODEGEN
-typedef CodeGenAllocators<SectionAllocWrapper, PreReservedSectionAllocWrapper> OOPCodeGenAllocators;
-#endif

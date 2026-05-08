@@ -388,10 +388,6 @@ private:
 #if ENABLE_NATIVE_CODEGEN
     friend class PageAllocatorBase<PreReservedVirtualAllocWrapper>;
 #endif
-#if ENABLE_OOP_NATIVE_CODEGEN
-    friend class PageAllocatorBase<SectionAllocWrapper>;
-    friend class PageAllocatorBase<PreReservedSectionAllocWrapper>;
-#endif
     friend class HeapPageAllocator<>;
 };
 
@@ -400,42 +396,19 @@ class MemoryOperationLastError
 public:
     static void RecordLastError()
     {
-#if ENABLE_OOP_NATIVE_CODEGEN
-        if (MemOpLastError == S_OK)
-        {
-            MemOpLastError = HRESULT_FROM_WIN32(::GetLastError());
-        }
-#endif
     }
 
     static void RecordError(int32_t error)
     {
-#if ENABLE_OOP_NATIVE_CODEGEN
-        if (MemOpLastError == S_OK)
-        {
-            MemOpLastError = error;
-        }
-#endif
     }
 
     static void ClearLastError()
     {
-#if ENABLE_OOP_NATIVE_CODEGEN
-        MemOpLastError = S_OK;
-#endif
     }
     static int32_t GetLastError()
     {
-#if ENABLE_OOP_NATIVE_CODEGEN
-        return MemOpLastError;
-#else
         return S_OK;
-#endif
     }
-#if ENABLE_OOP_NATIVE_CODEGEN
-private:
-    thread_local static int32_t MemOpLastError;
-#endif
 };
 
 class PageAllocatorBaseCommon
@@ -454,10 +427,6 @@ public:
 #if ENABLE_NATIVE_CODEGEN
         PreReservedVirtualAlloc,
 #endif
-#if ENABLE_OOP_NATIVE_CODEGEN
-        SectionAlloc,
-        PreReservedSectionAlloc
-#endif
     };
 
     template<typename TVirtualAlloc>
@@ -473,10 +442,6 @@ protected:
 template<> inline PageAllocatorBaseCommon::AllocatorType PageAllocatorBaseCommon::GetAllocatorType<VirtualAllocWrapper>() { return AllocatorType::VirtualAlloc; };
 #if ENABLE_NATIVE_CODEGEN
 template<> inline PageAllocatorBaseCommon::AllocatorType PageAllocatorBaseCommon::GetAllocatorType<PreReservedVirtualAllocWrapper>() { return AllocatorType::PreReservedVirtualAlloc; };
-#endif
-#if ENABLE_OOP_NATIVE_CODEGEN
-template<> inline PageAllocatorBaseCommon::AllocatorType PageAllocatorBaseCommon::GetAllocatorType<SectionAllocWrapper>() { return AllocatorType::SectionAlloc; };
-template<> inline PageAllocatorBaseCommon::AllocatorType PageAllocatorBaseCommon::GetAllocatorType<PreReservedSectionAllocWrapper>() { return AllocatorType::PreReservedSectionAlloc; };
 #endif
 
 /*

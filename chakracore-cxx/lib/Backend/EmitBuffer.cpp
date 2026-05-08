@@ -198,27 +198,6 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::SetValidCallTarget(TEm
     {
         this->threadContext->SetValidCallTargetForCFG(callTarget, isValid);
     }
-#if ENABLE_OOP_NATIVE_CODEGEN
-    else if (CONFIG_FLAG(OOPCFGRegistration))
-    {
-        void* segment = allocation->allocation->IsLargeAllocation()
-            ? allocation->allocation->largeObjectAllocation.segment
-            : allocation->allocation->page->segment;
-        HANDLE fileHandle = nullptr;
-        void * baseAddress = nullptr;
-        bool found = false;
-        if (this->allocationHeap.IsPreReservedSegment(segment))
-        {
-            found = ((SegmentBase<TPreReservedAlloc>*)segment)->GetAllocator()->GetVirtualAllocator()->GetFileInfo(callTarget, &fileHandle, &baseAddress);
-        }
-        else
-        {
-            found = ((SegmentBase<TAlloc>*)segment)->GetAllocator()->GetVirtualAllocator()->GetFileInfo(callTarget, &fileHandle, &baseAddress);
-        }
-        AssertOrFailFast(found);
-        this->threadContext->SetValidCallTargetFile(callTarget, fileHandle, baseAddress, isValid);
-    }
-#endif
 }
 
 template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
@@ -629,7 +608,3 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::DumpAndResetStats(char
 
 template class EmitBufferManager<VirtualAllocWrapper, PreReservedVirtualAllocWrapper, FakeCriticalSection>;
 template class EmitBufferManager<VirtualAllocWrapper, PreReservedVirtualAllocWrapper, CriticalSection>;
-#if ENABLE_OOP_NATIVE_CODEGEN
-template class EmitBufferManager<SectionAllocWrapper, PreReservedSectionAllocWrapper, FakeCriticalSection>;
-template class EmitBufferManager<SectionAllocWrapper, PreReservedSectionAllocWrapper, CriticalSection>;
-#endif
