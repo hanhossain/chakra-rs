@@ -41,8 +41,6 @@ extern "C"
 */
 extern Volatile<int32_t> terminator;
 
-// The process ID of this process, so we can avoid excessive calls to getpid().
-extern uint32_t gPID;
 extern char16_t* pAppDir;
 
 /*++

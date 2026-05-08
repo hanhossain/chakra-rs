@@ -497,7 +497,7 @@ FILELockFileRegion(
         lockRgn.lockRgnStart = lockRgnStart;
         lockRgn.nbBytesLocked = nbBytesToLock;
         lockRgn.pvControllerInstance = pvControllerInstance;
-        lockRgn.processId = GetCurrentProcessId();
+        lockRgn.processId = getpid();
         lockRgn.lockType = lockAction;
 
         while((curLock != NULL) && IS_LOCK_BEFORE(curLock, &lockRgn))
@@ -635,7 +635,7 @@ FILEUnlockFileRegion(
         goto EXIT;
     }
     
-    unlockRgn.processId = GetCurrentProcessId();
+    unlockRgn.processId = getpid();
     unlockRgn.pvControllerInstance = pvControllerInstance;
     unlockRgn.lockRgnStart = unlockRgnStart;
     unlockRgn.nbBytesLocked = nbBytesToUnlock;
@@ -837,7 +837,7 @@ FILEAddNewLockedRgn(
         goto EXIT;
     }
     
-    newLockRgn->processId = GetCurrentProcessId();
+    newLockRgn->processId = getpid();
     newLockRgn->pvControllerInstance = pvControllerInstance;
     newLockRgn->lockRgnStart = lockRgnStart;
     newLockRgn->nbBytesLocked = nbBytesToLock;
@@ -941,7 +941,7 @@ FILECleanUpLockedRgn(
             while(curLockRgn != NULL)
             {
                 if ((curLockRgn->pvControllerInstance == pvControllerInstance) && 
-                    (curLockRgn->processId == GetCurrentProcessId()))
+                    (curLockRgn->processId == getpid()))
                 {
                     /* found the locked rgn to remove from SHM */
                     TRACE("Removing the locked region (%I64u, %I64u) from SMH\n", 

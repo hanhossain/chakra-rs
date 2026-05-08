@@ -3,6 +3,8 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include <string>
+#include <unistd.h>
+
 #include "CommonMemoryPch.h"
 
 #ifdef LEAK_REPORT
@@ -138,7 +140,7 @@ LeakReport::EnsureLeakReportFile()
     if (filename == nullptr)
     {
         // xplat-todo: Implement swprintf_s in the PAL
-        _snwprintf(defaultFilename, _countof(defaultFilename), u"jsleakreport-%u.txt", ::GetCurrentProcessId());
+        _snwprintf(defaultFilename, _countof(defaultFilename), u"jsleakreport-%u.txt", ::getpid());
 
         filename = defaultFilename;
         openMode = u"a+";   // append mode
@@ -149,7 +151,7 @@ LeakReport::EnsureLeakReportFile()
         return false;
     }
     Print(u"================================================================================\n");
-    Print(u"Chakra Leak Report - PID: %d\n", ::GetCurrentProcessId());
+    Print(u"Chakra Leak Report - PID: %d\n", ::getpid());
 
     return true;
 }

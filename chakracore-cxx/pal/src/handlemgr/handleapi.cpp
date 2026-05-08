@@ -106,7 +106,7 @@ CorUnix::InternalDuplicateHandle(
     uint32_t target_process_id;
     uint32_t cur_process_id;
 
-    cur_process_id = GetCurrentProcessId();
+    cur_process_id = getpid();
     source_process_id = PROCGetProcessIDFromHandle(hSourceProcess);
     target_process_id = PROCGetProcessIDFromHandle(hTargetProcess);
 

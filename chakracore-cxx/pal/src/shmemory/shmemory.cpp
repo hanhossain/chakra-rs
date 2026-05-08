@@ -505,7 +505,7 @@ void SHMCleanup(void)
 
     /* We should not be holding the spinlock at this point. If we are, release
        the spinlock. by setting it to 0 */
-    my_pid = gPID;
+    my_pid = getpid();
     header = (SHM_FIRST_HEADER *)shm_segment_bases[0].Load();
 
     _ASSERT_MSG(header->spinlock != my_pid,

@@ -2065,7 +2065,7 @@ namespace CorUnix
         WaitingThreadsListNode * pWLNode =
             SharedIDToTypePointer(WaitingThreadsListNode, shridWLNode);
 
-        _ASSERT_MSG(gPID != pWLNode->dwProcessId,
+        _ASSERT_MSG(getpid() != pWLNode->dwProcessId,
                     "WakeUpRemoteThread called on local thread\n");
         _ASSERT_MSG(NULLSharedID != shridWLNode, "NULL shared identifier\n");
         _ASSERT_MSG(NULL != pWLNode,
@@ -2131,7 +2131,7 @@ namespace CorUnix
         CSynchData * psdSynchData =
             SharedIDToTypePointer(CSynchData, shridSynchData);
 
-        _ASSERT_MSG(gPID != dwTargetProcessId,
+        _ASSERT_MSG(getpid() != dwTargetProcessId,
                     " called on local thread\n");
         _ASSERT_MSG(NULLSharedID != shridSynchData, "NULL shared identifier\n");
         _ASSERT_MSG(NULL != psdSynchData,
@@ -2429,7 +2429,7 @@ namespace CorUnix
                     "UnsignalRestOfLocalAwakeningWaitAll() called on a normal "
                     "(non wait all) wait");
 
-        _ASSERT_MSG(gPID == pwtlnNode->dwProcessId,
+        _ASSERT_MSG(getpid() == pwtlnNode->dwProcessId,
                     "UnsignalRestOfLocalAwakeningWaitAll() called on a wait all "
                     "with remote awakening");
 
@@ -2509,7 +2509,7 @@ namespace CorUnix
 
         VALIDATEOBJECT(pwtlnNode);
 
-        _ASSERT_MSG(gPID == pwtlnNode->dwProcessId,
+        _ASSERT_MSG(getpid() == pwtlnNode->dwProcessId,
                     "MarkWaitForDelegatedObjectSignalingInProgress() called "
                     "from the wrong process");
 
