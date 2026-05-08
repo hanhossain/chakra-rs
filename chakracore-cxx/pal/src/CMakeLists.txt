@@ -100,7 +100,6 @@ set(SOURCES
   handlemgr/handlemgr.cpp
   init/pal.cpp
   init/sxs.cpp
-  loader/modulename.cpp
   locale/unicode.cpp
   locale/unicode_data.cpp
   locale/utf8.cpp
