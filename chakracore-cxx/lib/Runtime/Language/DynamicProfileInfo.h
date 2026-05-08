@@ -604,7 +604,7 @@ namespace Js
         Field(bool) persistsAcrossScriptContexts;
 #endif
 
-        static CriticalSection callSiteInfoCS;
+        static std::recursive_mutex callSiteInfoCS;
 
         static JavascriptMethod EnsureDynamicProfileInfo(Js::ScriptFunction * function);
 #if DBG_DUMP
@@ -624,13 +624,15 @@ namespace Js
         CallbackInfo * EnsureCallbackInfo(FunctionBody * funcBody, ProfileId callSiteId);
 
         bool IsPolymorphicCallSite(Js::LocalFunctionId curFunctionId, Js::SourceId curSourceId, Js::LocalFunctionId oldFunctionId, Js::SourceId oldSourceId);
-        void CreatePolymorphicDynamicProfileCallSiteInfo(FunctionBody * funcBody, ProfileId callSiteId, Js::LocalFunctionId functionId, Js::LocalFunctionId oldFunctionId, Js::SourceId sourceId, Js::SourceId oldSourceId);
-        void ResetPolymorphicCallSiteInfo(ProfileId callSiteId, Js::LocalFunctionId functionId);
-        void SetFunctionIdSlotForNewPolymorphicCall(ProfileId callSiteId, Js::LocalFunctionId curFunctionId, Js::SourceId curSourceId, Js::FunctionBody *inliner);
-        void RecordPolymorphicCallSiteInfo(FunctionBody* functionBody, ProfileId callSiteId, FunctionInfo * calleeFunctionInfo);
+        void CreatePolymorphicDynamicProfileCallSiteInfo(FunctionBody * funcBody, ProfileId callSiteId, Js::LocalFunctionId functionId, Js::LocalFunctionId oldFunctionId, Js::SourceId sourceId, Js::SourceId oldSourceId, const std::unique_lock<std::recursive_mutex> &lock);
+        void ResetPolymorphicCallSiteInfo(ProfileId callSiteId, LocalFunctionId functionId, const std::unique_lock<std::recursive_mutex>& lock);
+        void SetFunctionIdSlotForNewPolymorphicCall(ProfileId callSiteId, LocalFunctionId curFunctionId, SourceId curSourceId, FunctionBody* inliner, const std::
+                                                    unique_lock<std::recursive_mutex>& lock);
+        void RecordPolymorphicCallSiteInfo(FunctionBody* functionBody, ProfileId callSiteId, FunctionInfo* calleeFunctionInfo, const std::unique_lock<std::
+                                           recursive_mutex>& lock);
 
 #ifdef RUNTIME_DATA_COLLECTION
-        static CriticalSection s_csOutput;
+        static std::recursive_mutex s_csOutput;
         template <typename T>
         static void WriteData(const T& data, FILE * file);
         template <typename T>
