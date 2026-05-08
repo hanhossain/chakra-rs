@@ -240,16 +240,6 @@ extern const char16_t* W16_NULLSTRING;
    in tracing macros */
 #define NOTRACE(args...)
 
-#if defined(__cplusplus) && defined(FEATURE_PAL_SXS)
-#define __ASSERT_ENTER()                                                \
-    /* DebugBreak() need a PAL thread */           \
-    PAL_EnterHolder __holder(PALIsThreadDataInitialized() && \
-        (CorUnix::InternalGetCurrentThread() == NULL || \
-        !CorUnix::InternalGetCurrentThread()->IsInPal()));
-#else /* __cplusplus && FEATURE_PAL_SXS */
-#define __ASSERT_ENTER()
-#endif /* __cplusplus && FEATURE_PAL_SXS */
-
 #if !defined(_DEBUG)
 
 #define ASSERT(args...)
