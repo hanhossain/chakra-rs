@@ -1362,14 +1362,6 @@ CPalThread::ThreadEntry(
         goto fail;
     }
 
-#if defined(FEATURE_PAL_SXS) && defined(_DEBUG)
-     // We cannot assert yet, as we haven't set in this thread into the TLS, and so __ASSERT_ENTER
-     // will fail if the assert fails and we'll crash.
-     //_ASSERT_MSG(pThread->m_fInPal == 1, "New threads should always be in the PAL upon ThreadEntry.\n");
-     if (g_Dbg_asserts_enabled && pThread->m_fInPal != 1)
-         DebugBreak();
- #endif // FEATURE_PAL_SXS && _DEBUG
-
     pThread->m_threadId = THREADSilentGetCurrentThreadId();
     pThread->m_pthreadSelf = pthread_self();
 #if defined(__APPLE__)

@@ -65,15 +65,9 @@ static const char FOPEN_FLAGS[] = "wt";
 
 const char16_t* W16_NULLSTRING = (const char16_t*) "N\0U\0L\0L\0\0";
 
-uint32_t dbg_channel_flags[DCI_LAST];
-BOOL g_Dbg_asserts_enabled;
-
 /* we must use stdio functions directly rather that rely on PAL functions for
   output, because those functions do tracing and we need to avoid recursion */
 FILE *output_file = NULL;
-
-/* master switch for debug channel enablement, to be modified by debugger */
-Volatile<BOOL> dbg_master_switch __attribute__((init_priority(200))) = TRUE;
 
 
 /* Function definitions */
