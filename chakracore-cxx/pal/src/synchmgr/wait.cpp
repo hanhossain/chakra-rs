@@ -57,9 +57,6 @@ WaitForSingleObject( HANDLE hHandle,
 {
     uint32_t dwRet;
 
-    ENTRY("WaitForSingleObject(hHandle=%p, dwMilliseconds=%u)\n",
-          hHandle, dwMilliseconds);
-
     CPalThread * pThread = InternalGetCurrentThread();
 
     dwRet = InternalWaitForMultipleObjectsEx(pThread, 1, &hHandle, FALSE,
@@ -83,10 +80,6 @@ WaitForMultipleObjects( uint32_t nCount,
                         uint32_t dwMilliseconds)
 {
     uint32_t dwRet;
-
-    ENTRY("WaitForMultipleObjects(nCount=%d, lpHandles=%p,"
-          " bWaitAll=%d, dwMilliseconds=%u)\n",
-          nCount, lpHandles, bWaitAll, dwMilliseconds);
 
     CPalThread * pThread = InternalGetCurrentThread();
 
@@ -112,10 +105,6 @@ WaitForMultipleObjectsEx( uint32_t nCount,
 {
     uint32_t dwRet;
 
-    ENTRY("WaitForMultipleObjectsEx(nCount=%d, lpHandles=%p,"
-          " bWaitAll=%d, dwMilliseconds=%u, bAlertable=d)\n",
-          nCount, lpHandles, bWaitAll, dwMilliseconds, bAlertable);
-
     CPalThread * pThread = InternalGetCurrentThread();
 
     dwRet = InternalWaitForMultipleObjectsEx(pThread, nCount, lpHandles, bWaitAll,
@@ -134,8 +123,6 @@ See MSDN doc.
 void
 Sleep( uint32_t dwMilliseconds)
 {
-    ENTRY("Sleep(dwMilliseconds=%u)\n", dwMilliseconds);
-
     CPalThread * pThread = InternalGetCurrentThread();
 
     PAL_ERROR palErr = InternalSleepEx(pThread, dwMilliseconds, FALSE);
@@ -168,9 +155,6 @@ QueueUserAPC(
     IPalObject * pTargetThreadObject = NULL;
     PAL_ERROR palErr;
     uint32_t dwRet;
-
-    ENTRY("QueueUserAPC(pfnAPC=%p, hThread=%p, dwData=%#x)\n",
-          pfnAPC, hThread, dwData);
 
     /* NOTE: Windows does not check the validity of pfnAPC, even if it is
        NULL.  It just does an access violation later on when the APC call
