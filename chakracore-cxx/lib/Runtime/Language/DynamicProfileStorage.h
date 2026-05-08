@@ -56,7 +56,7 @@ private:
     static TimeType creationTime;
     static int32_t lastOffset;
     static std::mutex mutex;
-    static CriticalSection cs;
+    static std::recursive_mutex cs;
     static uint32_t nextFileId;
     static bool locked;
 #if DBG_DUMP
@@ -84,7 +84,7 @@ Js::SourceDynamicProfileManager *
 DynamicProfileStorage::Load(char16_t const * filename, Fn loadFn)
 {
     Assert(DynamicProfileStorage::IsEnabled());
-    AutoCriticalSection autocs(&cs);
+    std::lock_guard autocs(cs);
     if (useCacheDir && AcquireLock())
     {
         LoadCacheCatalog(); // refresh the cache catalog
