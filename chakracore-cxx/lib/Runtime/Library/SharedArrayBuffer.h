@@ -6,6 +6,8 @@
 //----------------------------------------------------------------------------
 
 #pragma once
+#include <mutex>
+
 namespace Js
 {
 
@@ -36,7 +38,7 @@ namespace Js
 #if DBG
         // This is mainly used for validation purpose as the wait/wake APIs should be used on the agents (Workers) among which this buffer is shared.
         SharableAgents *allowedAgents;
-        CriticalSection csAgent;
+        std::recursive_mutex mutex_;
         void AddAgent(unsigned long agent);
         bool IsValidAgent(unsigned long agent);
 #endif
@@ -108,7 +110,7 @@ namespace Js
 
         FieldNoBarrier(SharedContents *) sharedContents;
 
-        static CriticalSection csSharedArrayBuffer;
+        static std::recursive_mutex mutexSharedArrayBuffer;
     };
 
     template <> inline bool VarIsImpl<SharedArrayBuffer>(RecyclableObject* obj)
