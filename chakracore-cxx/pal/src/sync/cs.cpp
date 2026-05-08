@@ -202,9 +202,6 @@ See MSDN doc.
 --*/
 void InitializeCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
 {
-    ENTRY("InitializeCriticalSection(lpCriticalSection=%p)\n",
-          lpCriticalSection);
-
     InternalInitializeCriticalSectionAndSpinCount(lpCriticalSection,
                                                   0, false);
 
@@ -221,9 +218,6 @@ BOOL InitializeCriticalSectionAndSpinCount(LPCRITICAL_SECTION lpCriticalSection,
                                            uint32_t dwSpinCount)
 {
     BOOL bRet = TRUE;
-    ENTRY("InitializeCriticalSectionAndSpinCount(lpCriticalSection=%p, "
-          "dwSpinCount=%u)\n", lpCriticalSection, dwSpinCount);
-
     InternalInitializeCriticalSectionAndSpinCount(lpCriticalSection,
                                                   dwSpinCount, false);
 
@@ -240,8 +234,6 @@ See MSDN doc.
 --*/
 void DeleteCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
 {
-    ENTRY("DeleteCriticalSection(lpCriticalSection=%p)\n", lpCriticalSection);
-
     InternalDeleteCriticalSection(lpCriticalSection);
 
     LOGEXIT("DeleteCriticalSection returns void\n");
@@ -255,8 +247,6 @@ See MSDN doc.
 --*/
 void EnterCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
 {
-    ENTRY("EnterCriticalSection(lpCriticalSection=%p)\n", lpCriticalSection);
-
     CPalThread * pThread = InternalGetCurrentThread();
 
     InternalEnterCriticalSection(pThread, lpCriticalSection);
@@ -272,8 +262,6 @@ See MSDN doc.
 --*/
 void LeaveCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
 {
-    ENTRY("LeaveCriticalSection(lpCriticalSection=%p)\n", lpCriticalSection);
-
     CPalThread * pThread = InternalGetCurrentThread();
 
     InternalLeaveCriticalSection(pThread, lpCriticalSection);
