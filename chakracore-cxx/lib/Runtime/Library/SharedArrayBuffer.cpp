@@ -9,7 +9,7 @@ namespace Js
 #if DBG
     void SharedContents::AddAgent(unsigned long agent)
     {
-        AutoCriticalSection autoCS(&csAgent);
+        const std::lock_guard lock(mutex_);
         if (allowedAgents == nullptr)
         {
             allowedAgents = HeapNew(SharableAgents, &HeapAllocator::Instance);
@@ -20,7 +20,7 @@ namespace Js
 
     bool SharedContents::IsValidAgent(unsigned long agent)
     {
-        AutoCriticalSection autoCS(&csAgent);
+        const std::lock_guard lock(mutex_);
         return allowedAgents != nullptr && allowedAgents->Contains(agent);
     }
 #endif
@@ -43,7 +43,7 @@ namespace Js
         bufferLength = 0;
 #if DBG
         {
-            AutoCriticalSection autoCS(&csAgent);
+            const std::lock_guard lock(mutex_);
             if (allowedAgents != nullptr)
             {
                 HeapDelete(allowedAgents);
@@ -354,7 +354,7 @@ namespace Js
         return this;
     }
 
-    CriticalSection SharedArrayBuffer::csSharedArrayBuffer;
+    std::recursive_mutex SharedArrayBuffer::mutexSharedArrayBuffer;
 
     WaiterList *SharedArrayBuffer::GetWaiterList(uint index)
     {
@@ -362,7 +362,7 @@ namespace Js
         {
             // REVIEW: only lock creating the map and pass the lock to the map?
             //         use one lock per instance?
-            AutoCriticalSection autoCS(&csSharedArrayBuffer);
+            const std::lock_guard lock(mutexSharedArrayBuffer);
 
             if (sharedContents->indexToWaiterList == nullptr)
             {
