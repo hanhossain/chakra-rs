@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include <mutex>
+
 #include "Common/Jobs.h"
 #include "Common/Event.h"
 
@@ -91,7 +93,7 @@ private:
     static uint32_t s_completed;
     static uint32_t s_failed;
     static BGParseManager* s_BGParseManager;
-    static CriticalSection s_staticMemberLock;
+    static std::recursive_mutex s_staticMemberLock;
 };
 
 // BGParseWorkItem is a helper class to BGParseManager that caches the input data from the calling thread

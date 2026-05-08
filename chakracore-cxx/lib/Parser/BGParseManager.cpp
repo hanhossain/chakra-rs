@@ -23,12 +23,12 @@ BGParseManager* BGParseManager::s_BGParseManager = nullptr;
 uint32_t           BGParseManager::s_lastCookie = 0;
 uint32_t           BGParseManager::s_completed = 0;
 uint32_t           BGParseManager::s_failed = 0;
-CriticalSection BGParseManager::s_staticMemberLock;
+std::recursive_mutex BGParseManager::s_staticMemberLock;
 
 // Static member management
 BGParseManager* BGParseManager::GetBGParseManager()
 {
-    AutoCriticalSection lock(&s_staticMemberLock);
+    std::unique_lock lock(s_staticMemberLock);
     if (s_BGParseManager == nullptr)
     {        
         AUTO_NESTED_HANDLED_EXCEPTION_TYPE(ExceptionType_DisableCheck);
@@ -40,7 +40,7 @@ BGParseManager* BGParseManager::GetBGParseManager()
 
 void BGParseManager::DeleteBGParseManager()
 {
-    AutoCriticalSection lock(&s_staticMemberLock);
+    std::unique_lock lock(s_staticMemberLock);
     if (s_BGParseManager != nullptr)
     {
         BGParseManager* manager = s_BGParseManager;
@@ -51,18 +51,18 @@ void BGParseManager::DeleteBGParseManager()
 
 uint32_t BGParseManager::GetNextCookie()
 {
-    AutoCriticalSection lock(&s_staticMemberLock);
+    std::unique_lock lock(s_staticMemberLock);
     return ++s_lastCookie;
 }
 
 uint32_t BGParseManager::IncCompleted()
 {
-    AutoCriticalSection lock(&s_staticMemberLock);
+    std::unique_lock lock(s_staticMemberLock);
     return ++s_completed;
 }
 uint32_t BGParseManager::IncFailed()
 {
-    AutoCriticalSection lock(&s_staticMemberLock);
+    std::unique_lock lock(s_staticMemberLock);
     return ++s_failed;
 }
 
