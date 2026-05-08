@@ -143,8 +143,6 @@ ResumeThread(
     CPalThread *pthrResumer;
     uint32_t dwSuspendCount = (uint32_t)-1;
 
-    ENTRY("ResumeThread(hThread=%p)\n", hThread);
-
     pthrResumer = InternalGetCurrentThread();
     palError = InternalResumeThread(
         pthrResumer,

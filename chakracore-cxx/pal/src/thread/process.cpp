@@ -235,8 +235,6 @@ uint32_t
 GetCurrentProcessId(
             void)
 {
-    ENTRY("GetCurrentProcessId()\n" );
-
     LOGEXIT("GetCurrentProcessId returns DWORD %#x\n", gPID);
     return gPID;
 }
@@ -252,8 +250,6 @@ uint32_t
 GetCurrentSessionId(
             void)
 {
-    ENTRY("GetCurrentSessionId()\n" );
-
     LOGEXIT("GetCurrentSessionId returns DWORD %#x\n", gSID);
     return gSID;
 }
@@ -269,8 +265,6 @@ HANDLE
 GetCurrentProcess(
           void)
 {
-    ENTRY("GetCurrentProcess()\n" );
-
     LOGEXIT("GetCurrentProcess returns HANDLE %p\n", hPseudoCurrentProcess);
 
     /* return a pseudo handle */
@@ -378,8 +372,6 @@ TerminateProcess(
      uint32_t uExitCode)
 {
     BOOL ret;
-
-    ENTRY("TerminateProcess(hProcess=%p, uExitCode=%u)\n",hProcess, uExitCode );
 
     ret = PROCEndProcess(hProcess, uExitCode, TRUE);
 
