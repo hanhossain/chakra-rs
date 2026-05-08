@@ -55,9 +55,6 @@ using namespace CorUnix;
 static const char FOPEN_FLAGS[] = "wt";
 #endif
 
-/* number of ENTRY nesting levels to indicate with a '.' */
-#define MAX_NESTING 50
-
 /* size of output buffer (arbitrary) */
 #define DBG_BUFFER_SIZE 20000
 

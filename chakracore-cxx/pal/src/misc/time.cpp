@@ -96,8 +96,6 @@ GetSystemTime(
     struct timeval timeval;
     int timeofday_retval;
 
-    ENTRY("GetSystemTime (lpSystemTime=%p)\n", lpSystemTime);
-
     tt = time(NULL);
 
     /* We can't get millisecond resolution from time(), so we get it from
@@ -174,7 +172,6 @@ GetTickCount(
          void)
 {
     uint32_t retval = 0;
-    ENTRY("GetTickCount ()\n");
 
     // Get the 64-bit count from GetTickCount64 and truncate the results.
     retval = (uint32_t) GetTickCount64();
@@ -190,7 +187,6 @@ QueryPerformanceCounter(
 {
     BOOL retval = TRUE;
 
-    ENTRY("QueryPerformanceCounter()\n");
     do
 #if defined(__linux__)
     {
@@ -221,7 +217,6 @@ QueryPerformanceFrequency(
     )
 {
     BOOL retval = TRUE;
-    ENTRY("QueryPerformanceFrequency()\n");
 
     lpFrequency->QuadPart = (long)(tccSecondsToNanoSeconds);
 

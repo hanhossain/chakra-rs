@@ -104,8 +104,6 @@ GetSystemInfo(
     int nrcpus = 0;
     long pagesize;
 
-    ENTRY("GetSystemInfo (lpSystemInfo=%p)\n", lpSystemInfo);
-
     pagesize = getpagesize();
 
     lpSystemInfo->wProcessorArchitecture_PAL_Undefined = 0;
@@ -174,8 +172,6 @@ BOOL
 GlobalMemoryStatusEx(
               LPMEMORYSTATUSEX lpBuffer)
 {
-
-    ENTRY("GlobalMemoryStatusEx (lpBuffer=%p)\n", lpBuffer);
 
     lpBuffer->dwMemoryLoad = 0;
     lpBuffer->ullTotalPhys = 0;

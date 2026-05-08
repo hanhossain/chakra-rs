@@ -71,10 +71,6 @@ GetEnvironmentVariableA(
     char  *value;
     uint32_t dwRet = 0;
 
-    ENTRY("GetEnvironmentVariableA(lpName=%p (%s), lpBuffer=%p, nSize=%u)\n",
-        lpName?lpName:"NULL",
-        lpName?lpName:"NULL", lpBuffer, nSize);
-    
     if (lpName == NULL)
     {
         ERROR("lpName is NULL\n");
@@ -140,11 +136,7 @@ GetEnvironmentVariableW(
     int32_t inBuffSize;
     uint32_t size = 0;
 
-    ENTRY("GetEnvironmentVariableW(lpName=%p (%S), lpBuffer=%p, nSize=%u)\n",
-          lpName?lpName:W16_NULLSTRING,
-          lpName?lpName:W16_NULLSTRING, lpBuffer, nSize);
-
-    inBuffSize = WideCharToMultiByte( CP_ACP, 0, lpName, -1, 
+    inBuffSize = WideCharToMultiByte( CP_ACP, 0, lpName, -1,
                                       inBuff, 0, NULL, NULL);
     if ( 0 == inBuffSize )
     {
