@@ -64,8 +64,6 @@ _mbsdec(
     unsigned char *strPtr;
     CPINFO cpinfo;
 
-    ENTRY("_mbsdec (start=%p, current=%p)\n", start, current);
-
     if (current <= start)
     {
         ret = NULL;

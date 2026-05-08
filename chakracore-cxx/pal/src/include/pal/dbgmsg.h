@@ -222,8 +222,6 @@ extern const char16_t* W16_NULLSTRING;
 #define TRACE_(x) TRACE
 #define WARN      TRACE
 #define WARN_(x)  TRACE
-#define ENTRY_EXTERNAL TRACE
-#define ENTRY     NOTRACE
 #define ENTRY_(x) TRACE
 #define LOGEXIT   TRACE
 #define LOGEXIT_(x) TRACE

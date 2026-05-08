@@ -76,9 +76,6 @@ _fullpath(
     size_t min_length;
     BOOL fBufAllocated = FALSE;
 
-    ENTRY("_fullpath (absPath=%p, relPath=%p (%s), maxLength = %lu)\n",
-          absPath, relPath ? relPath:"NULL", relPath ? relPath:"NULL", maxLength);
-
     if (strncpy_s(path_copy, sizeof(path_copy), relPath ? relPath : ".", cPathCopy) != SAFECRT_SUCCESS)
     {
         TRACE("_fullpath: strncpy_s failed!\n");

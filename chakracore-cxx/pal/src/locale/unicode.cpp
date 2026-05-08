@@ -227,8 +227,6 @@ IsValidCodePage(
 {
     BOOL retval = FALSE;
 
-    ENTRY("IsValidCodePage(%d)\n", CodePage );
-
     switch(CodePage)
     {
     case CP_ACP       : /* fall through */
@@ -268,8 +266,6 @@ GetCPInfo(
 {
     const CP_MAPPING * lpStruct = NULL;
     BOOL bRet = FALSE;
-
-    ENTRY("GetCPInfo(CodePage=%hu, lpCPInfo=%p)\n", CodePage, lpCPInfo);
 
     /*check if the input code page is valid*/
     if( CP_ACP != CodePage && !IsValidCodePage( CodePage ) )
@@ -320,8 +316,6 @@ IsDBCSLeadByteEx(
     size_t i;
     BOOL bRet = FALSE;
 
-    ENTRY("IsDBCSLeadByteEx(CodePage=%#x, TestChar=%d)\n", CodePage, TestChar);
-
     /* Get the lead byte info with respect to the given codepage*/
     if( !GetCPInfo( CodePage, &cpinfo ) )
     {
@@ -371,11 +365,6 @@ MultiByteToWideChar(
     CFStringEncoding cfEncoding;
     int bytesToConvert;
 #endif /* defined(__APPLE__) */
-
-    ENTRY("MultiByteToWideChar(CodePage=%u, dwFlags=%#x, lpMultiByteStr=%p (%s),"
-    " cbMultiByte=%d, lpWideCharStr=%p, cchWideChar=%d)\n",
-    CodePage, dwFlags, lpMultiByteStr?lpMultiByteStr:"NULL", lpMultiByteStr?lpMultiByteStr:"NULL",
-    cbMultiByte, lpWideCharStr, cchWideChar);
 
     if (dwFlags & ~(MB_ERR_INVALID_CHARS | MB_PRECOMPOSED))
     {
@@ -500,13 +489,6 @@ WideCharToMultiByte(
     CFIndex charsConverted;
     CFIndex bytesConverted;
 #endif /* !defined(__APPLE__) */
-
-    ENTRY("WideCharToMultiByte(CodePage=%u, dwFlags=%#x, lpWideCharStr=%p (%S), "
-          "cchWideChar=%d, lpMultiByteStr=%p, cbMultiByte=%d, "
-          "lpDefaultChar=%p, lpUsedDefaultChar=%p)\n",
-          CodePage, dwFlags, lpWideCharStr?lpWideCharStr:W16_NULLSTRING, lpWideCharStr?lpWideCharStr:W16_NULLSTRING,
-          cchWideChar, lpMultiByteStr, cbMultiByte,
-          lpDefaultChar, lpUsedDefaultChar);
 
     if (dwFlags & ~WC_NO_BEST_FIT_CHARS)
     {

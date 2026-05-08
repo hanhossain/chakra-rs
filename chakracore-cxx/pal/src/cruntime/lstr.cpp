@@ -52,10 +52,6 @@ lstrcatW(
 {
     char16_t* lpStart = lpString1;
 
-    ENTRY("lstrcatW (lpString1=%p (%S), lpString2=%p (%S))\n",
-          lpString1?lpString1:W16_NULLSTRING,
-          lpString1?lpString1:W16_NULLSTRING, lpString2?lpString2:W16_NULLSTRING, lpString2?lpString2:W16_NULLSTRING);
-
     if (lpString1 == NULL)
     {
         ERROR("invalid lpString1 argument\n");
@@ -119,9 +115,6 @@ lstrcpyW(
 {
     char16_t* lpStart = lpString1;
 
-    ENTRY("lstrcpyW (lpString1=%p, lpString2=%p (%S))\n",
-          lpString1?lpString1:W16_NULLSTRING, lpString2?lpString2:W16_NULLSTRING, lpString2?lpString2:W16_NULLSTRING);
-
     if (lpString1 == NULL)
     {
         ERROR("invalid lpString1 argument\n");
@@ -175,7 +168,6 @@ lstrlenA(  const char * lpString)
 {
     int nChar = 0;
 
-    ENTRY("lstrlenA (lpString=%p (%s))\n", lpString?lpString:"NULL", lpString?lpString:"NULL");
     if (lpString)
     {
         while (*lpString++)
@@ -213,7 +205,6 @@ lstrlenW(
 {
     int nChar = 0;
 
-    ENTRY("lstrlenW (lpString=%p (%S))\n", lpString?lpString:W16_NULLSTRING, lpString?lpString:W16_NULLSTRING);
     if (lpString != NULL)
     {
         while (*lpString++)
@@ -257,9 +248,6 @@ lstrcpynW(
 	   int iMaxLength)
 {
     char16_t* lpStart = lpString1;
-
-    ENTRY("lstrcpynW (lpString1=%p, lpString2=%p (%S), iMaxLength=%d)\n",
-              lpString1?lpString1:W16_NULLSTRING, lpString2?lpString2:W16_NULLSTRING, lpString2?lpString2:W16_NULLSTRING, iMaxLength);
 
     if (lpString1 == NULL)
     {

@@ -118,9 +118,6 @@ FlushInstructionCache(
 {
     BOOL Ret;
 
-    ENTRY("FlushInstructionCache (hProcess=%p, lpBaseAddress=%p dwSize=%d)\
-          \n", hProcess, lpBaseAddress, dwSize);
-
     if (lpBaseAddress != NULL)
     {
         Ret = DBG_FlushInstructionCache(lpBaseAddress, dwSize);
@@ -145,10 +142,6 @@ void
 OutputDebugStringA(
          const char * lpOutputString)
 {
-    ENTRY("OutputDebugStringA (lpOutputString=%p (%s))\n",
-          lpOutputString?lpOutputString:"NULL",
-          lpOutputString?lpOutputString:"NULL");
-
     /* as we don't support debug events, we are going to output the debug string
       to stderr instead of generating OUT_DEBUG_STRING_EVENT */
     if ( (lpOutputString != NULL) &&
@@ -172,10 +165,6 @@ OutputDebugStringW(
 {
     char *lpOutputStringA;
     int strLen;
-
-    ENTRY("OutputDebugStringW (lpOutputString=%p (%S))\n",
-          lpOutputString ? lpOutputString: W16_NULLSTRING,
-          lpOutputString ? lpOutputString: W16_NULLSTRING);
 
     if (lpOutputString == NULL)
     {
@@ -359,8 +348,6 @@ void
 DebugBreak(
        void)
 {
-    ENTRY("DebugBreak()\n");
-
     if (DebugBreakCommand() <= 0) {
         // either didn't do anything, or failed
         TRACE("Calling DBG_DebugBreak\n");
@@ -405,8 +392,6 @@ GetThreadContext(
     CPalThread *pTargetThread;
     IPalObject *pobjThread = NULL;
     BOOL ret = FALSE;
-
-    ENTRY("GetThreadContext (hThread=%p, lpContext=%p)\n",hThread,lpContext);
 
     pThread = InternalGetCurrentThread();
 
@@ -464,8 +449,6 @@ SetThreadContext(
     CPalThread *pTargetThread;
     IPalObject *pobjThread = NULL;
     BOOL ret = FALSE;
-
-    ENTRY("SetThreadContext (hThread=%p, lpContext=%p)\n",hThread,lpContext);
 
     pThread = InternalGetCurrentThread();
 
@@ -540,10 +523,6 @@ WriteProcessMemory(
     int *lpTmpBuffer = 0, *lpInt;
     int* lpBaseAddressAligned;
 #endif
-
-    ENTRY("WriteProcessMemory (hProcess=%p,lpBaseAddress=%p, lpBuffer=%p, "
-           "nSize=%u, lpNumberOfBytesWritten=%p)\n",
-           hProcess,lpBaseAddress, lpBuffer, (unsigned int)nSize, lpNumberOfBytesWritten);
 
 #if !defined(__APPLE__)
     pThread = InternalGetCurrentThread();

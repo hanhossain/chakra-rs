@@ -118,9 +118,6 @@ CompareFileTime(
 
     long Ret;
 
-    ENTRY("CompareFileTime(lpFileTime1=%p lpFileTime2=%p)\n", 
-          lpFileTime1, lpFileTime2);
-
     First = ((long)lpFileTime1->dwHighDateTime << 32) +
         lpFileTime1->dwLowDateTime;
     Second = ((long)lpFileTime2->dwHighDateTime << 32) +

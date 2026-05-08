@@ -60,11 +60,6 @@ GetFullPathNameA(
     char* lpUnixPath = NULL;
     BOOL fullPath = FALSE;
 
-    ENTRY("GetFullPathNameA(lpFileName=%p (%s), nBufferLength=%u, lpBuffer=%p, "
-          "lpFilePart=%p)\n",
-          lpFileName?lpFileName:"NULL",
-          lpFileName?lpFileName:"NULL", nBufferLength, lpBuffer, lpFilePart);
-
     if(NULL == lpFileName)
     {
         WARN("lpFileName is NULL\n");
@@ -199,9 +194,6 @@ GetTempPathA(
 {
     uint32_t dwPathLen = 0;
 
-    ENTRY("GetTempPathA(nBufferLength=%u, lpBuffer=%p)\n",
-          nBufferLength, lpBuffer);
-
     if ( !lpBuffer )
     {
         ERROR( "lpBuffer was not a valid pointer.\n" );
@@ -288,9 +280,6 @@ GetTempPathW(
 	      uint32_t nBufferLength,
 	      char16_t* lpBuffer)
 {
-    ENTRY("GetTempPathW(nBufferLength=%u, lpBuffer=%p)\n",
-          nBufferLength, lpBuffer);
-
     if (!lpBuffer)
     {
         ERROR("lpBuffer was not a valid pointer.\n");
@@ -831,12 +820,6 @@ SearchPathA(
     uint32_t length;
     uint32_t dw;
 
-    ENTRY("SearchPathA(lpPath=%p (%s), lpFileName=%p (%s), lpExtension=%p, "
-          "nBufferLength=%u, lpBuffer=%p, lpFilePart=%p)\n",
-      lpPath,
-      lpPath, lpFileName, lpFileName, lpExtension, nBufferLength, lpBuffer,
-          lpFilePart);
-
     /* validate parameters */
 
     if(NULL == lpPath)
@@ -1072,10 +1055,6 @@ PathFindFileNameW(
      const char16_t* pPath
     )
 {
-    ENTRY("PathFindFileNameW(pPath=%p (%S))\n",
-          pPath?pPath:W16_NULLSTRING,
-          pPath?pPath:W16_NULLSTRING);
-
     char16_t* ret = (char16_t*)pPath;
     if (ret != NULL && *ret != W('\0'))
     {

@@ -114,11 +114,6 @@ Initialize()
     int retval = -1;
     bool fFirstTimeInit = false;
 
-    /* the first ENTRY within the first call to PAL_Initialize is a special
-       case, since debug channels are not initialized yet. So in that case the
-       ENTRY will be called after the DBG channels initialization */
-    ENTRY_EXTERNAL("PAL_Initialize()\n");
-
     /*Firstly initiate a lastError */
     SetLastError(ERROR_GEN_FAILURE);
 
