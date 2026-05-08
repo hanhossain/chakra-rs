@@ -185,13 +185,6 @@ Initialize()
             goto done;
         }
 
-        // Initialize debug channel settings before anything else.
-        // This depends on the environment, so it must come after
-        // MiscInitialize.
-        if (FALSE == DBG_init_channels())
-        {
-            goto done;
-        }
 #if _DEBUG
         // Verify that our page size is what we think it is. If it's
         // different, we can't run.
