@@ -74,7 +74,7 @@ public:
     {
         if (supportConcurrency)
         {
-            AutoCriticalSection auto_cs(&cs);
+            std::unique_lock auto_cs(cs.GetMutex());
             return RequestAllocImpl(byteCount, externalAlloc);
         }
         else
@@ -88,7 +88,7 @@ public:
     {
         if (supportConcurrency)
         {
-            AutoCriticalSection auto_cs(&cs);
+            std::unique_lock auto_cs(cs.GetMutex());
             ReportFreeImpl(MemoryAllocateEvent::MemoryFailure, byteCount);
         }
         else
@@ -102,7 +102,7 @@ public:
     {
         if (supportConcurrency)
         {
-            AutoCriticalSection auto_cs(&cs);
+            std::unique_lock auto_cs(cs.GetMutex());
             ReportFreeImpl(MemoryAllocateEvent::MemoryFree, byteCount);
         }
         else

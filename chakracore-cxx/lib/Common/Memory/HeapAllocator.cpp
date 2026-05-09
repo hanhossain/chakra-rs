@@ -551,7 +551,7 @@ MemoryLeakCheck::~MemoryLeakCheck()
 void
 MemoryLeakCheck::AddLeakDump(char16_t const * dump, size_t bytes, size_t count)
 {
-    AutoCriticalSection autocs(&leakCheck.cs);
+    std::unique_lock autocs(leakCheck.cs.GetMutex());
     LeakRecord * record = NoCheckHeapNewStruct(LeakRecord);
     record->dump = dump;
     record->next = nullptr;

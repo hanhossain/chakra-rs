@@ -226,7 +226,7 @@ namespace Js {
             {
                 // the critical section might have been destructed at process shutdown time. At that time we don't need
                 // to lock.
-                AutoCriticalSection autocs(&csGenerateDump);
+                std::unique_lock autocs(csGenerateDump.GetMutex());
 
                 dumpGenerated = MiniDumpWriteDump(GetCurrentProcess(),
                     getpid(),

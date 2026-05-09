@@ -685,7 +685,7 @@ namespace JsUtil
     template<class Fn>
     void BackgroundJobProcessor::ForEachManager(Fn fn)
     {
-        AutoCriticalSection lock(&criticalSection);
+        std::unique_lock lock(criticalSection.GetMutex());
         JobProcessor::ForEachManager(fn);
     }
 
@@ -771,7 +771,7 @@ namespace JsUtil
             return false;
         });
 
-        AutoCriticalSection lock(&criticalSection);
+        std::unique_lock lock(criticalSection.GetMutex());
         Assert(!IsClosed());
 
         JobProcessor::AddManager(manager);
@@ -857,7 +857,7 @@ namespace JsUtil
 
         ParallelThreadData *threadDataProcessingCurrentJob = nullptr;
         {
-            AutoCriticalSection lock(&criticalSection);
+            std::unique_lock lock(criticalSection.GetMutex());
             // Managers must remove themselves. Hence, Close does not remove managers. So, not asserting on !IsClosed().
 
             if (!HasManager(manager))
@@ -1148,7 +1148,7 @@ namespace JsUtil
         uint threadsWaitingForJobs = 0;
 
         {
-            AutoCriticalSection lock(&criticalSection);
+            std::unique_lock lock(criticalSection.GetMutex());
             if(IsClosed())
                 return;
 
@@ -1221,7 +1221,7 @@ namespace JsUtil
 #if DBG
         if (!threadService->HasCallback())
         {
-            AutoCriticalSection lock(&criticalSection);
+            std::unique_lock lock(criticalSection.GetMutex());
             Assert(!NumberOfThreadsWaitingForJobs());
 
             this->IterateBackgroundThreads([](ParallelThreadData *threadData)

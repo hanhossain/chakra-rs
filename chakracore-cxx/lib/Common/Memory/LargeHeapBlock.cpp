@@ -2472,7 +2472,7 @@ void LargeHeapBlock::WBSetBit(char* addr)
     try
     {
         AUTO_NESTED_HANDLED_EXCEPTION_TYPE(static_cast<ExceptionType>(ExceptionType_DisableCheck));
-        AutoCriticalSection autoCs(&wbVerifyBitsLock);
+        std::unique_lock autoCs(wbVerifyBitsLock.GetMutex());
         wbVerifyBits.Set(index);
     }
     catch (Js::OutOfMemoryException&)
@@ -2485,7 +2485,7 @@ void LargeHeapBlock::WBSetBitRange(char* addr, uint count)
     try
     {
         AUTO_NESTED_HANDLED_EXCEPTION_TYPE(static_cast<ExceptionType>(ExceptionType_DisableCheck));
-        AutoCriticalSection autoCs(&wbVerifyBitsLock);
+        std::unique_lock autoCs(wbVerifyBitsLock.GetMutex());
         for (uint i = 0; i < count; i++)
         {
             wbVerifyBits.Set(index + i);
@@ -2498,7 +2498,7 @@ void LargeHeapBlock::WBSetBitRange(char* addr, uint count)
 void LargeHeapBlock::WBClearBit(char* addr)
 {
     uint index = (uint)(addr - this->address) / sizeof(void*);
-    AutoCriticalSection autoCs(&wbVerifyBitsLock);
+    std::unique_lock autoCs(wbVerifyBitsLock.GetMutex());
     wbVerifyBits.Clear(index);
 }
 void LargeHeapBlock::WBVerifyBitIsSet(char* addr)
@@ -2513,7 +2513,7 @@ void LargeHeapBlock::WBClearObject(char* addr)
 {
     uint index = (uint)(addr - this->address) / sizeof(void*);
     size_t objectSize = this->GetHeader(addr)->objectSize;
-    AutoCriticalSection autoCs(&wbVerifyBitsLock);
+    std::unique_lock autoCs(wbVerifyBitsLock.GetMutex());
     for (uint i = 0; i < (uint)objectSize / sizeof(void*); i++)
     {
         wbVerifyBits.Clear(index + i);
