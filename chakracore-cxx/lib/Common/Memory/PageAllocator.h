@@ -495,7 +495,7 @@ public:
 
         FreePageEntry* PopFreePageEntry()
         {
-            AutoCriticalSection autoCS(&backgroundPageQueueCriticalSection);
+            std::unique_lock<std::recursive_mutex> autoCS(backgroundPageQueueCriticalSection.GetMutex());
             FreePageEntry* head = bgFreePageList;
             if (head)
             {
@@ -506,7 +506,7 @@ public:
 
         void PushFreePageEntry(FreePageEntry* entry)
         {
-            AutoCriticalSection autoCS(&backgroundPageQueueCriticalSection);
+            std::unique_lock<std::recursive_mutex> autoCS(backgroundPageQueueCriticalSection.GetMutex());
             entry->Next = bgFreePageList;
             bgFreePageList = entry;
         }
@@ -525,7 +525,7 @@ public:
 
         FreePageEntry* PopZeroPageEntry()
         {
-            AutoCriticalSection autoCS(&this->backgroundPageQueueCriticalSection);
+            std::unique_lock<std::recursive_mutex> autoCS(this->backgroundPageQueueCriticalSection.GetMutex());
             FreePageEntry* head = pendingZeroPageList;
             if (head)
             {
@@ -536,14 +536,14 @@ public:
 
         void PushZeroPageEntry(FreePageEntry* entry)
         {
-            AutoCriticalSection autoCS(&this->backgroundPageQueueCriticalSection);
+            std::unique_lock<std::recursive_mutex> autoCS(this->backgroundPageQueueCriticalSection.GetMutex());
             entry->Next = pendingZeroPageList;
             pendingZeroPageList = entry;
         }
 
         unsigned short QueryDepth()
         {
-            AutoCriticalSection autoCS(&this->backgroundPageQueueCriticalSection);
+            std::unique_lock<std::recursive_mutex> autoCS(this->backgroundPageQueueCriticalSection.GetMutex());
             FreePageEntry* head = pendingZeroPageList;
             size_t count = 0;
             while (head)

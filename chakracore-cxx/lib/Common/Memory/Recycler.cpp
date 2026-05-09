@@ -8661,7 +8661,7 @@ Recycler::UnRegisterPendingWriteBarrierBlock(void* address)
 void
 Recycler::WBVerifyBitIsSet(char* addr, char* target)
 {
-    AutoCriticalSection lock(&recyclerListLock);
+    std::unique_lock<std::recursive_mutex> lock(recyclerListLock.GetMutex());
     Recycler* recycler = Recycler::recyclerList;
     while (recycler)
     {
@@ -8679,7 +8679,7 @@ Recycler::WBSetBit(char* addr)
 {
     if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && CONFIG_FLAG(VerifyBarrierBit))
     {
-        AutoCriticalSection lock(&recyclerListLock);
+        std::unique_lock<std::recursive_mutex> lock(recyclerListLock.GetMutex());
         Recycler* recycler = Recycler::recyclerList;
         while (recycler)
         {
@@ -8698,7 +8698,7 @@ Recycler::WBSetBitRange(char* addr, uint count)
 {
     if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && CONFIG_FLAG(VerifyBarrierBit))
     {
-        AutoCriticalSection lock(&recyclerListLock);
+        std::unique_lock<std::recursive_mutex> lock(recyclerListLock.GetMutex());
         Recycler* recycler = Recycler::recyclerList;
         while (recycler)
         {
@@ -8715,7 +8715,7 @@ Recycler::WBSetBitRange(char* addr, uint count)
 bool
 Recycler::WBCheckIsRecyclerAddress(char* addr)
 {
-    AutoCriticalSection lock(&recyclerListLock);
+    std::unique_lock<std::recursive_mutex> lock(recyclerListLock.GetMutex());
     Recycler* recycler = Recycler::recyclerList;
     while (recycler)
     {
