@@ -23,6 +23,8 @@ Abstract:
 --*/
 
 #include <algorithm>
+#include <mutex>
+
 #include "pal/dbgmsg.h"
 SET_DEFAULT_DEBUG_CHANNEL(THREAD); // some headers have code with asserts, so do this first
 
@@ -97,8 +99,7 @@ uint32_t CPalThread::s_dwDefaultThreadStackSize = 256*1024;
 static Volatile<CPalThread*> free_threads_list __attribute__((init_priority(200))) = NULL;
 
 /* lock to access list of free THREAD structures */
-/* NOTE: can't use a CRITICAL_SECTION here (see comment in FreeTHREAD) */
-static CCLock free_threads_spinlock;
+static std::mutex free_threads_spinlock;
 
 /* lock to access iEndingThreads counter, condition variable to signal shutdown
 thread when any remaining threads have died, and count of exiting threads that
@@ -183,11 +184,6 @@ Function:
 --*/
 BOOL TLSInitialize()
 {
-    // This will be called once and can't be called during/after another lock
-     // in place due to PAL is not yet initialized. The underlying issue here is
-     // related to whole lib/pal initialization on start.
-     free_threads_spinlock.Reset();
-
     /* Create the pthread key for thread objects, which we use
        for fast access to the current thread object. */
     if (pthread_key_create(&thObjKey, InternalEndCurrentThreadWrapper))
@@ -213,7 +209,7 @@ CPalThread* AllocTHREAD()
 {
     CPalThread* pThread = NULL;
 
-    free_threads_spinlock.Enter();
+    free_threads_spinlock.lock();
 
     pThread = free_threads_list;
     if (pThread != NULL)
@@ -221,7 +217,7 @@ CPalThread* AllocTHREAD()
         free_threads_list = pThread->GetNext();
     }
 
-    free_threads_spinlock.Leave();
+    free_threads_spinlock.unlock();
 
     if (pThread == NULL)
     {
@@ -280,12 +276,12 @@ static void FreeTHREAD(CPalThread *pThread)
        Update: [TODO] PROCSuspendOtherThreads has been removed. Can this
        code be changed?*/
 
-    free_threads_spinlock.Enter();
+    free_threads_spinlock.lock();
 
     pThread->SetNext(free_threads_list);
     free_threads_list = pThread;
 
-    free_threads_spinlock.Leave();
+    free_threads_spinlock.unlock();
 }
 
 /*++

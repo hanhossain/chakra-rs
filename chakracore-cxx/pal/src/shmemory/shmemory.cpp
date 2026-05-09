@@ -155,7 +155,9 @@ is still alive).
 
 --*/
 
+#include <mutex>
 #include <string>
+
 #include "pal/palinternal.h"
 #include "pal/dbgmsg.h"
 #include "pal/shmemory.h"
@@ -342,7 +344,7 @@ memory. Rationale :
  between threads of the same process. This could be resolved by using 2
  spinlocks, but this would introduce more busy-wait.
 */
-static CCLock shm_critsec(false);
+static std::mutex shm_critsec;
 
 /* number of segments the current process knows about */
 int shm_numsegments;
@@ -389,8 +391,6 @@ memory if no other process has done it.
 --*/
 BOOL SHMInitialize(void)
 {
-    shm_critsec.Reset();
-
     init_waste();
 
         int size;
@@ -758,7 +758,7 @@ section usage
 --*/
 int SHMLock(void)
 {
-    shm_critsec.Enter();
+    shm_critsec.lock();
 
     lock_count++;
     TRACE("SHM lock level is now %d\n", lock_count.Load());
@@ -779,7 +779,7 @@ Return value :
 int SHMRelease(void)
 {
     lock_count--;
-    shm_critsec.Leave();
+    shm_critsec.unlock();
 
     return lock_count;
 }
