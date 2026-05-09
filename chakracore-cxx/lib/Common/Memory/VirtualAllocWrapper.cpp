@@ -145,7 +145,7 @@ void * PreReservedVirtualAllocWrapper::EnsurePreReservedRegion()
     }
 
     {
-        AutoCriticalSection autocs(&this->cs);
+        std::unique_lock autocs(cs.GetMutex());
         return EnsurePreReservedRegionInternal();
     }
 }
@@ -191,7 +191,7 @@ void * PreReservedVirtualAllocWrapper::AllocPages(void * lpAddress, size_t pageC
     Assert(dwSize != 0);
 
     {
-        AutoCriticalSection autocs(&this->cs);
+        std::unique_lock autocs(cs.GetMutex());
         //Return nullptr, if no space to Reserve
         if (EnsurePreReservedRegionInternal() == nullptr)
         {
@@ -304,7 +304,7 @@ BOOL
 PreReservedVirtualAllocWrapper::Free(void * lpAddress, size_t dwSize, uint32_t dwFreeType)
 {
     {
-        AutoCriticalSection autocs(&this->cs);
+        std::unique_lock autocs(cs.GetMutex());
 
         if (dwSize == 0)
         {

@@ -25,7 +25,7 @@ namespace Js
         // In most cases this will be called at runtime when we have exception check enabled.
         AutoNestedHandledExceptionType autoNestedHandledExceptionType(ExceptionType_DisableCheck);
 #endif
-        AutoCriticalSection autocs(&m_criticalSection); // TODO: with circular buffer now we can use much granular lock.
+        std::unique_lock<std::recursive_mutex> autocs(m_criticalSection.GetMutex()); // TODO: with circular buffer now we can use much granular lock.
 
         // Create a copy of the message.
         size_t len = std::u16string(msg).length();
