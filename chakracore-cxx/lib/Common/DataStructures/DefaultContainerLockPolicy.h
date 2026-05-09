@@ -20,7 +20,7 @@ namespace Js
             }
         };
 
-        typedef AutoCriticalSection DefaultLock;
+        typedef std::unique_lock<std::recursive_mutex> DefaultLock;
 
         typedef NoLock      ReadLock;       // To read/map items. Default to no lock.
         typedef NoLock      WriteLock;      // To write an item. Default to no lock.
