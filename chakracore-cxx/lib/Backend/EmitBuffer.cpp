@@ -142,8 +142,6 @@ template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
 EmitBufferAllocation<TAlloc, TPreReservedAlloc> *
 EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::NewAllocation(size_t bytes, ushort pdataCount, ushort xdataSize, bool canAllocInPreReservedHeapPageSegment, bool isAnyJittedCode)
 {
-    Assert(this->criticalSection.IsLocked());
-
     bool isAllJITCodeInPreReservedRegion = true;
     CustomHeap::Allocation* heapAllocation = this->allocationHeap.Alloc(bytes, pdataCount, xdataSize, canAllocInPreReservedHeapPageSegment, isAnyJittedCode, &isAllJITCodeInPreReservedRegion);
 
@@ -252,8 +250,6 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::FreeAllocation(void* a
 template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
 bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::FinalizeAllocation(TEmitBufferAllocation *allocation, uint8_t * dstBuffer)
 {
-    Assert(this->criticalSection.IsLocked());
-
     uint32_t bytes = allocation->BytesFree();
     if(bytes > 0)
     {
@@ -276,8 +272,6 @@ template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
 EmitBufferAllocation<TAlloc, TPreReservedAlloc>*
 EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::GetBuffer(TEmitBufferAllocation *allocation, size_t bytes, __deref_bcount(bytes) uint8_t** ppBuffer)
 {
-    Assert(this->criticalSection.IsLocked());
-
     Assert(allocation->BytesFree() >= bytes);
 
     // In case of ThunkEmitter the script context would be null and we don't want to track that as code size.
@@ -359,7 +353,6 @@ bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::IsBufferExecuteRe
 template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
 bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::ProtectBufferWithExecuteReadWriteForInterpreter(TEmitBufferAllocation* allocation)
 {
-    Assert(this->criticalSection.IsLocked());
     Assert(allocation != nullptr);
     return (this->allocationHeap.ProtectAllocationWithExecuteReadWrite(allocation->allocation) == TRUE);
 }

@@ -782,8 +782,6 @@ namespace JsUtil
 
     void BackgroundJobProcessor::IndicateNewJob()
     {
-        Assert(criticalSection.IsLocked());
-
         if(NumberOfThreadsWaitingForJobs ())
         {
             if (threadService->HasCallback())
@@ -815,7 +813,6 @@ namespace JsUtil
 
     Job * BackgroundJobProcessor::GetCurrentJobOfManager(JobManager *const manager)
     {
-        Assert(criticalSection.IsLocked());
         Job *currentJob = nullptr;
         this->IterateBackgroundThreads([&](ParallelThreadData* threadData)
         {
@@ -836,7 +833,6 @@ namespace JsUtil
 
     ParallelThreadData * BackgroundJobProcessor::GetThreadDataFromCurrentJob(Job* job)
     {
-        Assert(criticalSection.IsLocked());
         ParallelThreadData *currentThreadData = nullptr;
         this->IterateBackgroundThreads([&](ParallelThreadData* threadData)
         {
@@ -1337,7 +1333,6 @@ namespace JsUtil
 
     bool BackgroundJobProcessor::AreAllThreadsWaitingForJobs()
     {
-        Assert(criticalSection.IsLocked());
 
         bool isAnyThreadNotWaitingForJobs = false;
 
@@ -1357,8 +1352,6 @@ namespace JsUtil
 
     uint BackgroundJobProcessor::NumberOfThreadsWaitingForJobs ()
     {
-        Assert(criticalSection.IsLocked());
-
         uint countOfThreadsWaitingForJobs = 0;
 
         this->IterateBackgroundThreads([&](ParallelThreadData *parallelThreadData)
@@ -1376,8 +1369,6 @@ namespace JsUtil
 
     bool BackgroundJobProcessor::IsBeingProcessed(Job* job)
     {
-        Assert(criticalSection.IsLocked());
-
         bool isBeingProcessed = false;
 
         this->IterateBackgroundThreads([&](ParallelThreadData *parallelThreadData)

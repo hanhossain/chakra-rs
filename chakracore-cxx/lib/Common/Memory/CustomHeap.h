@@ -157,13 +157,11 @@ public:
 
     bool IsInNonPreReservedPageAllocator(void *address)
     {
-        Assert(this->cs.IsLocked());
         return this->pageAllocator.IsAddressFromAllocator(address);
     }
 
     char * Alloc(size_t * pages, void ** segment, bool canAllocInPreReservedHeapPageSegment, bool isAnyJittedCode, bool * isAllJITCodeInPreReservedRegion)
     {
-        Assert(this->cs.IsLocked());
         char* address = nullptr;
         if (canAllocInPreReservedHeapPageSegment)
         {
@@ -186,7 +184,6 @@ public:
 
     char * AllocPages(uint pages, void ** pageSegment, bool canAllocInPreReservedHeapPageSegment, bool isAnyJittedCode, bool * isAllJITCodeInPreReservedRegion)
     {
-        Assert(this->cs.IsLocked());
         char * address = nullptr;
         if (canAllocInPreReservedHeapPageSegment)
         {
@@ -216,7 +213,6 @@ public:
 
     void ReleasePages(void* pageAddress, uint pageCount, void* segment)
     {
-        Assert(this->cs.IsLocked());
         Assert(segment);
         if (IsPreReservedSegment(segment))
         {
@@ -245,7 +241,6 @@ public:
 
     void TrackDecommittedPages(void * address, uint pageCount, void* segment)
     {
-        Assert(this->cs.IsLocked());
         Assert(segment);
         if (IsPreReservedSegment(segment))
         {
@@ -259,7 +254,6 @@ public:
 
     void ReleaseSecondary(const SecondaryAllocation& allocation, void* segment)
     {
-        Assert(this->cs.IsLocked());
         Assert(segment);
         if (IsPreReservedSegment(segment))
         {
@@ -298,7 +292,6 @@ public:
 
     bool AllocSecondary(void* segment, size_t functionStart, size_t functionSize_t, ushort pdataCount, ushort xdataSize, SecondaryAllocation* allocation)
     {
-        Assert(this->cs.IsLocked());
         Assert(functionSize_t <= MAXUINT32);
         uint32_t functionSize = static_cast<uint32_t>(functionSize_t);
         Assert(segment);
@@ -314,7 +307,6 @@ public:
 
     void Release(void * address, size_t pageCount, void * segment)
     {
-        Assert(this->cs.IsLocked());
         Assert(segment);
         if (IsPreReservedSegment(segment))
         {
@@ -328,7 +320,6 @@ public:
 
     void ReleaseDecommitted(void * address, size_t pageCount, void *  segment)
     {
-        Assert(this->cs.IsLocked());
         Assert(segment);
         if (IsPreReservedSegment(segment))
         {

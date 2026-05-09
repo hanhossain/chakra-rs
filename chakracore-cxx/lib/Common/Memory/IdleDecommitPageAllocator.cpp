@@ -263,11 +263,7 @@ IdleDecommitPageAllocator::Prime(uint primePageCount)
 bool
 IdleDecommitPageAllocator::HasMultiThreadAccess() const
 {
-#ifdef IDLE_DECOMMIT_ENABLED
-    return this->hasDecommitTimer && !cs.IsLocked();
-#else
     return false;
-#endif
 }
 
 void

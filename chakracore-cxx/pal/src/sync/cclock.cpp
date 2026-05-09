@@ -71,14 +71,3 @@ bool CCLock::TryEnter()
     }
     return false;
 }
-
-bool CCLock::IsLocked() const
-{
-#ifndef DEBUG
-    fprintf(stderr, "you shouldn't need this for release build, It's expensive!\n");
-    abort();
-#endif
-    return true; // there is no good way to do this, return true for CC Assert stuff.
-                 // if you need to know whether it is locked or not, you may try
-                 // TryEnter -> Leave couple. If it's not locked, TryEnter should succeed
-}

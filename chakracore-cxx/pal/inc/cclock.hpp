@@ -27,7 +27,6 @@ public:
     void Enter();
     bool TryEnter();
     void Leave();
-    bool IsLocked() const;
 };
 
 #endif // CC_PAL_INC_CCLOCK_H

@@ -377,7 +377,6 @@ bool BGParseManager::Process(JsUtil::Job *const job, JsUtil::ParallelThreadData 
 void BGParseManager::JobProcessing(JsUtil::Job* job)
 {
     Assert(job->Manager() == this);
-    Assert(Processor()->GetCriticalSection()->IsLocked());
 
     this->workitemsProcessing.LinkToEnd((BGParseWorkItem*)job);
 }
@@ -388,7 +387,6 @@ void BGParseManager::JobProcessing(JsUtil::Job* job)
 void BGParseManager::JobProcessed(JsUtil::Job *const job, const bool succeeded)
 {
     Assert(job->Manager() == this);
-    Assert(Processor()->GetCriticalSection()->IsLocked());
 
     BGParseWorkItem* workItem = (BGParseWorkItem*)job;
     if (succeeded)
@@ -637,8 +635,6 @@ void BGParseWorkItem::CreateCompletionEvent()
 // Upon notification of job processed, set the event for those waiting for this job to complete
 void BGParseWorkItem::JobProcessed(const bool succeeded)
 {
-    Assert(Manager()->Processor()->GetCriticalSection()->IsLocked());
-
     if (IsDiscarded())
     {
         Js::Tick now = Js::Tick::Now();
