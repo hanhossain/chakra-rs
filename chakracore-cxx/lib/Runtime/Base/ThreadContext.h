@@ -840,6 +840,7 @@ public:
 #endif // ENABLE_NATIVE_CODEGEN
 
     CriticalSection* GetFunctionBodyLock() { return &csFunctionBody; }
+    std::recursive_mutex& GetFunctionBodyMutex() { return csFunctionBody.GetMutex(); }
 
     Js::IsConcatSpreadableCache* GetIsConcatSpreadableCache() { return &isConcatSpreadableCache; }
 

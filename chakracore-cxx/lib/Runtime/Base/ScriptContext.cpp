@@ -397,7 +397,7 @@ namespace Js
     ScriptContext::~ScriptContext()
     {
         // Take etw rundown lock on this thread context. We are going to change/destroy this scriptContext.
-        AutoCriticalSection autocs(GetThreadContext()->GetFunctionBodyLock());
+        std::unique_lock<std::recursive_mutex> lock(GetThreadContext()->GetFunctionBodyMutex());
 
         // TODO: Can we move this on Close()?
         ClearHostScriptContext();
@@ -629,7 +629,7 @@ namespace Js
 #endif
         {
             // Take lock on the function bodies to sync with the etw source rundown if any.
-            AutoCriticalSection autocs(GetThreadContext()->GetFunctionBodyLock());
+            std::unique_lock<std::recursive_mutex> lock(GetThreadContext()->GetFunctionBodyMutex());
             if (this->sourceList)
             {
                 bool hasFunctions = false;
@@ -697,7 +697,7 @@ namespace Js
             }
 
             // Guard the closing DebugContext as in meantime PDM might call OnBreakFlagChange
-            AutoCriticalSection autoDebugContextCloseCS(&debugContextCloseCS);
+            std::unique_lock autoDebugContextCloseCS(debugContextCloseCS.GetMutex());
             this->debugContext->Close();
             // Not deleting debugContext here as Close above will clear all memory debugContext allocated.
             // Actual deletion of debugContext will happen in ScriptContext destructor
@@ -1308,7 +1308,7 @@ namespace Js
 
         if (!sourceList)
         {
-            AutoCriticalSection critSec(threadContext->GetFunctionBodyLock());
+            std::unique_lock<std::recursive_mutex> critSec(threadContext->GetFunctionBodyMutex());
             sourceList.Root(RecyclerNew(this->GetRecycler(), SourceList, this->GetRecycler()), this->GetRecycler());
         }
 
@@ -2727,7 +2727,7 @@ ExitTempAllocator:
         {
             // We can be compiling new source code while rundown thread is reading from the list, causing AV on the reader thread
             // lock the list during write as well.
-            AutoCriticalSection autocs(GetThreadContext()->GetFunctionBodyLock());
+            std::unique_lock<std::recursive_mutex> lock(GetThreadContext()->GetFunctionBodyMutex());
             return sourceList->SetAtFirstFreeSpot(sourceWeakRef);
         }
     }
@@ -2971,7 +2971,7 @@ ExitTempAllocator:
         SimpleDataCacheWrapper* dataCacheWrapper, char16_t const * sourceMapUrl /*= NULL*/, size_t sourceMapUrlLen /*= 0*/)
     {
         // Take etw rundown lock on this thread context. We are going to init/add to sourceContextInfoMap.
-        AutoCriticalSection autocs(GetThreadContext()->GetFunctionBodyLock());
+        std::unique_lock<std::recursive_mutex> lock(GetThreadContext()->GetFunctionBodyMutex());
 
         EnsureSourceContextInfoMap();
         Assert(this->GetSourceContextInfo(sourceContext, dataCacheWrapper) == nullptr);
@@ -6500,7 +6500,7 @@ ScriptContext::GetJitFuncRangeCache()
 
     void JITPageAddrToFuncRangeCache::AddFuncRange(void * address, uint bytes)
     {
-        AutoCriticalSection autocs(GetCriticalSection());
+        std::unique_lock lock(GetMutex());
 
         if (bytes <= AutoSystemInfo::PageSize)
         {
@@ -6542,7 +6542,7 @@ ScriptContext::GetJitFuncRangeCache()
 
     void JITPageAddrToFuncRangeCache::RemoveFuncRange(void * address)
     {
-        AutoCriticalSection autocs(GetCriticalSection());
+        std::unique_lock lock(GetMutex());
 
         void * pageAddr = GetPageAddr(address);
 
@@ -6573,7 +6573,7 @@ ScriptContext::GetJitFuncRangeCache()
 
     bool JITPageAddrToFuncRangeCache::IsNativeAddr(void * address)
     {
-        AutoCriticalSection autocs(GetCriticalSection());
+        std::unique_lock lock(GetMutex());
 
         void * pageAddr = GetPageAddr(address);
         RangeMap * rangeMap = nullptr;

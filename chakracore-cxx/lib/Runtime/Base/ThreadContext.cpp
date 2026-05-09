@@ -1864,7 +1864,7 @@ ThreadContext::ExecuteRecyclerCollectionFunction(Recycler * recycler, Collection
     }
 
     // Take etw rundown lock on this thread context. We can't collect entryPoints if we are in etw rundown.
-    AutoCriticalSection autocs(this->GetFunctionBodyLock());
+    std::unique_lock<std::recursive_mutex> autocs(this->GetFunctionBodyMutex());
 
     // Disable calling dispose from leave script or the stack probe
     // while we're executing the recycler wrapper
@@ -2302,7 +2302,7 @@ ThreadContext::UnregisterScriptContext(Js::ScriptContext *scriptContext)
 ThreadContext::CollectCallBack *
 ThreadContext::AddRecyclerCollectCallBack(RecyclerCollectCallBackFunction callback, void * context)
 {
-    AutoCriticalSection autocs(&csCollectionCallBack);
+    std::unique_lock autocs(csCollectionCallBack.GetMutex());
     CollectCallBack * collectCallBack = this->collectCallBackList.PrependNode(&HeapAllocator::Instance);
     collectCallBack->callback = callback;
     collectCallBack->context = context;
@@ -2313,7 +2313,7 @@ ThreadContext::AddRecyclerCollectCallBack(RecyclerCollectCallBackFunction callba
 void
 ThreadContext::RemoveRecyclerCollectCallBack(ThreadContext::CollectCallBack * collectCallBack)
 {
-    AutoCriticalSection autocs(&csCollectionCallBack);
+    std::unique_lock autocs(csCollectionCallBack.GetMutex());
     this->collectCallBackList.RemoveElement(&HeapAllocator::Instance, collectCallBack);
     this->hasCollectionCallBack = !this->collectCallBackList.Empty();
 }
@@ -2424,7 +2424,7 @@ ThreadContext::WaitCollectionCallBack()
     // Avoid taking the lock if there are no call back
     if (hasCollectionCallBack)
     {
-        AutoCriticalSection autocs(&csCollectionCallBack);
+        std::unique_lock<std::recursive_mutex> autocs(csCollectionCallBack.GetMutex());
         CollectionCallBack(Collect_Wait);
     }
 }
@@ -3902,7 +3902,7 @@ BOOL ThreadContext::IsNativeAddress(void * pCodeAddr, Js::ScriptContext* current
         if (!this->IsAllJITCodeInPreReservedRegion())
         {
 #if DBG
-            AutoCriticalSection autoLock(&this->codePageAllocators.cs);
+            std::unique_lock<std::recursive_mutex> autoLock(this->codePageAllocators.cs.GetMutex());
 #endif
             bool isNativeAddr = IsNativeAddressHelper(pCodeAddr, currentScriptContext);
 #if DBG

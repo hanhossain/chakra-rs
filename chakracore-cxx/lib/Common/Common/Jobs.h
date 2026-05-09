@@ -513,6 +513,7 @@ namespace JsUtil
         bool IsBeingProcessed(Job *job);
 
         CriticalSection * GetCriticalSection() { return &criticalSection; }
+        std::recursive_mutex& GetMutex() { return criticalSection.GetMutex(); }
 
         //Iterates each background thread, callback returns true when it needs to terminate the iteration.
         template<class Fn>

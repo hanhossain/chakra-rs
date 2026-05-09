@@ -193,7 +193,7 @@ namespace Js
             }
             else
             {
-                AutoCriticalSection autoCS(host->GetScriptContext()->GetThreadContext()->GetFunctionBodyLock());
+                std::unique_lock<std::recursive_mutex> autoCS(host->GetScriptContext()->GetThreadContext()->GetFunctionBodyMutex());
                 this->fieldSize = sizeof(FieldT);
                 this->fields = fieldsArray;
             }
