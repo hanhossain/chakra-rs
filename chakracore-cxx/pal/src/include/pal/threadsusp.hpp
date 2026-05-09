@@ -23,6 +23,7 @@ Abstract:
 
 // Need this ifdef since this header is included by .c files so they can use the diagnostic function.
 #ifdef __cplusplus
+#include <mutex>
 
 // Note: do not include malloc.hpp from this header. The template InternalDelete
 // needs to know the layout of class CPalThread, which includes a member of type
@@ -96,7 +97,7 @@ namespace CorUnix
             Volatile<int32_t> m_lNumThreadsSuspendedByThisThread; // number of threads that this thread has suspended; used for suspension diagnostics
 #endif
 #if defined(__APPLE__)
-            CCLock m_nSpinlock; // thread's suspension spinlock, which is used to synchronize suspension and resumption attempts
+            std::mutex m_nSpinlock; // thread's suspension spinlock, which is used to synchronize suspension and resumption attempts
 #else // defined(__APPLE__)
             pthread_mutex_t m_ptmSuspmutex; // thread's suspension mutex, which is used to synchronize suspension and resumption attempts
             BOOL m_fSuspmutexInitialized;
@@ -202,12 +203,12 @@ namespace CorUnix
 #endif // USE_POSIX_SEMAPHORES
 
 #if defined(__APPLE__)
-            CCLock*
+            std::mutex&
             GetSuspensionSpinlock(
                 void
                 )
             {
-                return &m_nSpinlock;
+                return m_nSpinlock;
             }
 #else // defined(__APPLE__)
             pthread_mutex_t*

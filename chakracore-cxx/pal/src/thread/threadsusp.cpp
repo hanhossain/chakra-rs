@@ -336,7 +336,7 @@ CThreadSuspensionInfo::TryAcquireSuspensionLock(
 {
 #if defined(__APPLE__)
 {
-    return pthrTarget->suspensionInfo.GetSuspensionSpinlock()->TryEnter();
+    return pthrTarget->suspensionInfo.GetSuspensionSpinlock().try_lock();
 }
 #else // defined(__APPLE__)
 {
@@ -364,7 +364,7 @@ CThreadSuspensionInfo::AcquireSuspensionLock(
 {
     #if defined(__APPLE__)
     {
-        pthrCurrent->suspensionInfo.m_nSpinlock.Enter();
+        pthrCurrent->suspensionInfo.m_nSpinlock.lock();
     }
     #else // defined(__APPLE__)
     {
@@ -391,7 +391,7 @@ CThreadSuspensionInfo::ReleaseSuspensionLock(
 {
     #if defined(__APPLE__)
     {
-        pthrCurrent->suspensionInfo.m_nSpinlock.Leave();
+        pthrCurrent->suspensionInfo.m_nSpinlock.unlock();
     }
     #else // defined(__APPLE__)
     {
