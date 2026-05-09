@@ -114,7 +114,7 @@ namespace Js
             return nullptr;
         }
 
-        AutoCriticalSection autoCS(this->GetScriptContext()->GetThreadContext()->GetFunctionBodyLock());
+        std::unique_lock<std::recursive_mutex> autoCS(this->GetScriptContext()->GetThreadContext()->GetFunctionBodyMutex());
         return AuxPtrsT::GetAuxPtr(this, e);
     }
 
@@ -126,7 +126,7 @@ namespace Js
         }
 
         // when setting ptr to null we never need to promote
-        AutoCriticalSection autoCS(this->GetScriptContext()->GetThreadContext()->GetFunctionBodyLock());
+        std::unique_lock<std::recursive_mutex> autoCS(this->GetScriptContext()->GetThreadContext()->GetFunctionBodyMutex());
         AuxPtrsT::SetAuxPtr(this, e, ptr);
     }
 
@@ -3835,7 +3835,7 @@ namespace Js
             if (jobProcessor->ProcessesInBackground())
             {
                 JsUtil::BackgroundJobProcessor * backgroundJobProcessor = static_cast<JsUtil::BackgroundJobProcessor *>(jobProcessor);
-                AutoCriticalSection autocs(backgroundJobProcessor->GetCriticalSection());
+                std::unique_lock<std::recursive_mutex> autocs(backgroundJobProcessor->GetMutex());
                 // Check again under lock
                 if (InterpreterStackFrame::IsDelayDynamicInterpreterThunk(this->GetOriginalEntryPoint_Unchecked()))
                 {

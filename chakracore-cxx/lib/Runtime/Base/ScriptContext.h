@@ -378,7 +378,7 @@ namespace Js
         bool IsNativeAddr(void * address);
         JITPageAddrToFuncRangeMap * GetJITPageAddrToFuncRangeMap();
         LargeJITFuncAddrToSizeMap * GetLargeJITFuncAddrToSizeMap();
-        static CriticalSection * GetCriticalSection() { return &cs; }
+        static std::recursive_mutex& GetMutex() { return cs.GetMutex(); }
     };
 #endif
 
