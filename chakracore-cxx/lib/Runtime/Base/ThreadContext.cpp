@@ -226,7 +226,7 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
     this->threadId = ::GetCurrentThreadId();
 #endif
 
-    AutoCriticalSection autocs(ThreadContext::GetCriticalSection());
+    std::unique_lock autocs(ThreadContext::GetMutex());
     ThreadContext::LinkToBeginning(this, &ThreadContext::globalListFirst, &ThreadContext::globalListLast);
 #if DBG
     // Since we created our page allocator while we were constructing this thread context
@@ -344,7 +344,7 @@ void ThreadContext::GlobalInitialize()
 ThreadContext::~ThreadContext()
 {
     {
-        AutoCriticalSection autocs(ThreadContext::GetCriticalSection());
+        std::unique_lock autocs(ThreadContext::GetMutex());
         ThreadContext::Unlink(this, &ThreadContext::globalListFirst, &ThreadContext::globalListLast);
     }
 
@@ -553,7 +553,7 @@ void ThreadContext::ValidateThreadContext()
     // verify the runtime pointer is valid.
         {
             BOOL found = FALSE;
-            AutoCriticalSection autocs(ThreadContext::GetCriticalSection());
+            std::unique_lock autocs(ThreadContext::GetMutex());
             ThreadContext* currentThreadContext = GetThreadContextList();
             while (currentThreadContext)
             {

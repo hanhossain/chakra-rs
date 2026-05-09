@@ -26,6 +26,8 @@ public:
     {
         return mutex_.try_lock();
     }
+
+    std::recursive_mutex& GetMutex() { return mutex_; }
 };
 
 //FakeCriticalSection mimics CriticalSection apis
@@ -34,12 +36,9 @@ class FakeCriticalSection
 public:
     FakeCriticalSection(uint32_t spincount = 0) { /*do nothing*/spincount++; }
     ~FakeCriticalSection() {}
-#pragma prefast(suppress:__WARNING_FAILING_TO_ACQUIRE_MEDIUM_CONFIDENCE)
-    _Success_(return) BOOL _Acquires_lock_(this->cs) TryEnter() { return true; }
-#pragma prefast(suppress:__WARNING_FAILING_TO_ACQUIRE_MEDIUM_CONFIDENCE)
-    _Acquires_lock_(this->cs) void Enter() {}
-#pragma prefast(suppress:__WARNING_FAILING_TO_RELEASE_MEDIUM_CONFIDENCE)
-    _Releases_lock_(this->cs) void Leave() {}
+     BOOL  TryEnter() { return true; }
+     void Enter() {}
+     void Leave() {}
 #if DBG
     bool IsLocked() const { return true; }
 #endif
@@ -51,8 +50,8 @@ private:
 class AutoCriticalSection
 {
 public:
-    _Acquires_lock_(this->cs->cs) AutoCriticalSection(CriticalSection * cs) : cs(cs) { this->cs->Enter(); }
-    _Releases_lock_(this->cs->cs) ~AutoCriticalSection() { cs->Leave(); }
+     AutoCriticalSection(CriticalSection * cs) : cs(cs) { this->cs->Enter(); }
+     ~AutoCriticalSection() { cs->Leave(); }
 private:
     CriticalSection * cs;
 };
@@ -60,7 +59,7 @@ private:
 class AutoOptionalCriticalSection
 {
 public:
-    _When_(this->cs != nullptr, _Acquires_lock_(this->cs->cs)) AutoOptionalCriticalSection(CriticalSection * cs) : cs(cs)
+     AutoOptionalCriticalSection(CriticalSection * cs) : cs(cs)
     {
         if (this->cs)
         {
@@ -68,7 +67,7 @@ public:
         }
     }
 
-    _When_(this->cs != nullptr, _Releases_lock_(this->cs->cs)) ~AutoOptionalCriticalSection()
+     ~AutoOptionalCriticalSection()
     {
         if (this->cs)
         {
@@ -84,8 +83,8 @@ template <class SyncObject>
 class AutoRealOrFakeCriticalSection
 {
 public:
-    _Acquires_lock_(this->cs->cs) AutoRealOrFakeCriticalSection(SyncObject * cs) : cs(cs) { this->cs->Enter(); }
-    _Releases_lock_(this->cs->cs) ~AutoRealOrFakeCriticalSection() { this->cs->Leave(); }
+     AutoRealOrFakeCriticalSection(SyncObject * cs) : cs(cs) { this->cs->Enter(); }
+     ~AutoRealOrFakeCriticalSection() { this->cs->Leave(); }
 private:
     SyncObject * cs;
 };
