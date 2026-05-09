@@ -10,11 +10,11 @@ ThreadBoundThreadContextManager::EntryList ThreadBoundThreadContextManager::entr
 #if ENABLE_BACKGROUND_JOB_PROCESSOR
 JsUtil::BackgroundJobProcessor * ThreadBoundThreadContextManager::s_sharedJobProcessor = NULL;
 #endif
-CriticalSection ThreadBoundThreadContextManager::s_sharedJobProcessorCreationLock;
+std::recursive_mutex ThreadBoundThreadContextManager::s_sharedJobProcessorCreationLock;
 
 ThreadContext * ThreadBoundThreadContextManager::EnsureContextForCurrentThread()
 {
-    AutoCriticalSection lock(ThreadContext::GetCriticalSection());
+    std::unique_lock lock(ThreadContext::GetMutex());
 
     ThreadContextTLSEntry * entry = ThreadContextTLSEntry::GetEntryForCurrentThread();
 
@@ -53,7 +53,7 @@ ThreadContext * ThreadBoundThreadContextManager::EnsureContextForCurrentThread()
 
 void ThreadBoundThreadContextManager::DestroyContextAndEntryForCurrentThread()
 {
-    AutoCriticalSection lock(ThreadContext::GetCriticalSection());
+    std::unique_lock lock(ThreadContext::GetMutex());
 
     ThreadContextTLSEntry * entry = ThreadContextTLSEntry::GetEntryForCurrentThread();
 
@@ -83,7 +83,7 @@ void ThreadBoundThreadContextManager::DestroyAllContexts()
     BGParseManager::DeleteBGParseManager();
 
     {
-        AutoCriticalSection lock(ThreadContext::GetCriticalSection());
+        std::unique_lock lock(ThreadContext::GetMutex());
 
         ThreadContextTLSEntry * currentEntry = ThreadContextTLSEntry::GetEntryForCurrentThread();
 
@@ -170,7 +170,7 @@ void ThreadBoundThreadContextManager::DestroyAllContextsAndEntries(bool shouldDe
     // Since BGParseManager has a dependency on threadcontexts, make sure it shuts down first
     BGParseManager::DeleteBGParseManager();
 
-    AutoCriticalSection lock(ThreadContext::GetCriticalSection());
+    std::unique_lock lock(ThreadContext::GetMutex());
 
     // When shouldDeleteCurrentTlsEntry is true, the comparison in the while loop will always be true, so
     // every entry in the list will be deleted.
@@ -215,7 +215,7 @@ JsUtil::JobProcessor * ThreadBoundThreadContextManager::GetSharedJobProcessor()
         // Don't use ThreadContext::GetCriticalSection() because it's also locked during thread detach while the loader lock is
         // held, and that may prevent the background job processor's thread from being started due to contention on the loader
         // lock, leading to a deadlock
-        AutoCriticalSection lock(&s_sharedJobProcessorCreationLock);
+        std::unique_lock lock(s_sharedJobProcessorCreationLock);
 
         if (s_sharedJobProcessor == NULL)
         {
