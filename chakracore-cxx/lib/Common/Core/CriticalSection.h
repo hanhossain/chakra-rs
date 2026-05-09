@@ -4,11 +4,28 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include <mutex>
+
 class CriticalSection
-: public CCLock
 {
+    std::recursive_mutex mutex_;
 public:
-    CriticalSection(uint32_t spincount = 0): CCLock(true) { }
+    CriticalSection(uint32_t spincount = 0) { }
+
+    void Enter()
+    {
+        mutex_.lock();
+    }
+
+    void Leave()
+    {
+        mutex_.unlock();
+    }
+
+    bool TryEnter()
+    {
+        return mutex_.try_lock();
+    }
 };
 
 //FakeCriticalSection mimics CriticalSection apis

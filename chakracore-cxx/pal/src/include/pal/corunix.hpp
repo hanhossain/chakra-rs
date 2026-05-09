@@ -24,7 +24,6 @@ Abstract:
 
 #include <string>
 #include "palinternal.h"
-#include "cclock.hpp"
 
 namespace CorUnix
 {

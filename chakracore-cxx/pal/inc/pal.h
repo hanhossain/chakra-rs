@@ -2168,7 +2168,6 @@ size_t GetCurrentSP();
 #ifdef  __cplusplus
 }
 
-#include "cclock.hpp"
 #endif
 
 #endif // __PAL_H__
