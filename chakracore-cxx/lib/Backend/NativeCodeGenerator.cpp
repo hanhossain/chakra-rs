@@ -1932,7 +1932,7 @@ NativeCodeGenerator::GetJobToProcessProactively()
             workItem->SetRecyclableData(recyclableData);
 
             {
-                AutoOptionalCriticalSection lock(Processor()->GetCriticalSection());
+                auto lock = Processor()->LockCriticalSection();
                 scriptContext->GetThreadContext()->RegisterCodeGenRecyclableData(recyclableData);
             }
 #ifdef BGJIT_STATS
@@ -3136,7 +3136,7 @@ void NativeCodeGenerator::FreeLoopBodyJobManager::QueueFreeLoopBodyJob(void* cod
         FreeLoopBodyJob stackJob(this, codeAddress, thunkAddress, false /* heapAllocated */);
 
         {
-            AutoOptionalCriticalSection lock(Processor()->GetCriticalSection());
+            auto lock = Processor()->LockCriticalSection();
 #if DBG
             this->waitingForStackJob = true;
 #endif
@@ -3147,7 +3147,7 @@ void NativeCodeGenerator::FreeLoopBodyJobManager::QueueFreeLoopBodyJob(void* cod
     }
     else
     {
-        AutoOptionalCriticalSection lock(Processor()->GetCriticalSection());
+        auto lock = Processor()->LockCriticalSection();
         if (Processor()->HasManager(this))
         {
             Processor()->AddJobAndProcessProactively<FreeLoopBodyJobManager, FreeLoopBodyJob*>(this, job);
@@ -3235,7 +3235,12 @@ void NativeCodeGenerator::AddToJitQueue(CodeGenWorkItem *const codeGenWorkItem, 
     Js::CodeGenRecyclableData* recyclableData = GatherCodeGenData(codeGenWorkItem->GetFunctionBody(), codeGenWorkItem->GetFunctionBody(), codeGenWorkItem->GetEntryPoint(), codeGenWorkItem, function);
     codeGenWorkItem->SetRecyclableData(recyclableData);
 
-    AutoOptionalCriticalSection autoLock(lock ? Processor()->GetCriticalSection() : nullptr);
+    std::optional<std::unique_lock<std::recursive_mutex>> autoLock;
+    if (lock)
+    {
+        autoLock = Processor()->LockCriticalSection();
+    }
+
     scriptContext->GetThreadContext()->RegisterCodeGenRecyclableData(recyclableData);
 
     // If we have added a lot of jobs that are still waiting to be jitted, remove the oldest job

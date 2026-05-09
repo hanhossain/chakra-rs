@@ -199,7 +199,11 @@ void BackgroundParser::AfterWaitForJob(BackgroundParseItem *const item) const
 
 void BackgroundParser::AddToParseQueue(BackgroundParseItem *const item, bool prioritize, bool lock)
 {
-    AutoOptionalCriticalSection autoLock(lock ? Processor()->GetCriticalSection() : nullptr);
+    std::optional<std::unique_lock<std::recursive_mutex>> autoLock;
+    if (lock)
+    {
+        autoLock = Processor()->LockCriticalSection();
+    }
     ++this->pendingBackgroundItems;
     Processor()->AddJob(item, prioritize);   // This one can throw (really unlikely though), OOM specifically.
     this->AddUnprocessedItem(item);

@@ -3,6 +3,9 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+
+#include <optional>
+
 #include "DataStructures/DoublyLinkedListElement.h"
 #include "DataStructures/DoublyLinkedList.h"
 #include "Common/Event.h"
@@ -327,6 +330,7 @@ namespace JsUtil
         // from inside the lock as necessary. The main exception is when adding a job to the job processor; a job manager must
         // call JobProcessor::AddJob inside the lock. Use it sparingly.
         CriticalSection *GetCriticalSection();
+        std::optional<std::unique_lock<std::recursive_mutex>> LockCriticalSection();
 
         // Adds or removes a job manager
         virtual void AddManager(JobManager *const manager);
@@ -551,7 +555,7 @@ namespace JsUtil
     template<class Fn>
     void JobProcessor::ForEachJob(Fn fn)
     {
-        AutoOptionalCriticalSection lock(GetCriticalSection());
+        auto lock = LockCriticalSection();
         bool shouldContinue = true;
         for (Job *curJob = jobs.Head(); curJob != nullptr && shouldContinue; curJob = curJob->Next())
         {

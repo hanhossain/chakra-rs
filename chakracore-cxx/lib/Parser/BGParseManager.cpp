@@ -105,7 +105,7 @@ BGParseWorkItem* BGParseManager::FindJob(uint32_t dwCookie, bool waitForResults,
     Assert(dwCookie != 0);
     Assert(!waitForResults || !removeJob);
 
-    AutoOptionalCriticalSection autoLock(Processor()->GetCriticalSection());
+    auto autoLock = Processor()->LockCriticalSection();
     BGParseWorkItem* matchedWorkitem = nullptr;
 
     // First, look among processed jobs
@@ -188,7 +188,7 @@ int32_t BGParseManager::QueueBackgroundParse(LPCUTF8 pszSrc, size_t cbLength, ch
 
         // Add the job to the processor
         {
-            AutoOptionalCriticalSection autoLock(Processor()->GetCriticalSection());
+            auto autoLock = Processor()->LockCriticalSection();
             Processor()->AddJob(workitem, false /*prioritize*/);
         }
 
