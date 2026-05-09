@@ -104,7 +104,6 @@ namespace Js
         }
 
         // On process detach this can be called from another thread but the ThreadContext should be locked
-        Assert(ThreadContext::GetContextForCurrentThread() || ThreadContext::GetCriticalSection()->IsLocked());
         return AuxPtrsT::GetAuxPtr(this, e);
     }
 
@@ -121,9 +120,6 @@ namespace Js
 
     void FunctionProxy::SetAuxPtr(AuxPointerType e, void* ptr)
     {
-        // On process detach this can be called from another thread but the ThreadContext should be locked
-        Assert(ThreadContext::GetContextForCurrentThread() || ThreadContext::GetCriticalSection()->IsLocked());
-
         if (ptr == nullptr && GetAuxPtr(e) == nullptr)
         {
             return;
@@ -236,11 +232,6 @@ namespace Js
 
     uint32_t FunctionBody::GetCountField(FunctionBody::CounterFields fieldEnum) const
     {
-#if DBG
-        bool isCountersLockedDown = counters.isLockedDown;
-        Assert(ThreadContext::GetContextForCurrentThread() || isCountersLockedDown
-            || (ThreadContext::GetCriticalSection()->IsLocked() && this->m_scriptContext->GetThreadContext()->GetFunctionBodyLock()->IsLocked())); // etw rundown
-#endif
         return counters.Get(fieldEnum);
     }
     uint32_t FunctionBody::SetCountField(FunctionBody::CounterFields fieldEnum, uint32_t val)
