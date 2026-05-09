@@ -677,13 +677,13 @@ namespace Js
 
         void RemoveAt(int index)
         {
-            typename LockPolicy::AddRemoveLock autoLock(syncObj);
+            typename LockPolicy::AddRemoveLock autoLock(syncObj->GetMutex());
             return __super::RemoveAt(index);
         }
 
         int Add(const T& item)
         {
-            typename LockPolicy::AddRemoveLock autoLock(syncObj);
+            typename LockPolicy::AddRemoveLock autoLock(syncObj->GetMutex());
             return __super::Add(item);
         }
 

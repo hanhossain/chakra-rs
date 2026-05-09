@@ -47,15 +47,6 @@ private:
     int cs;
 };
 
-class AutoCriticalSection
-{
-public:
-     AutoCriticalSection(CriticalSection * cs) : cs(cs) { this->cs->Enter(); }
-     ~AutoCriticalSection() { cs->Leave(); }
-private:
-    CriticalSection * cs;
-};
-
 class AutoOptionalCriticalSection
 {
 public:

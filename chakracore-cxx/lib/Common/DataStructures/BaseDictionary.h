@@ -1675,21 +1675,21 @@ namespace JsUtil
 
         int Add(const TKey& key, const TValue& value)
         {
-            typename LockPolicy::AddRemoveLock autoLock(syncObj);
+            typename LockPolicy::AddRemoveLock autoLock(syncObj->GetMutex());
 
             return __super::Add(key, value);
         }
 
         int AddNew(const TKey& key, const TValue& value)
         {
-            typename LockPolicy::AddRemoveLock autoLock(syncObj);
+            typename LockPolicy::AddRemoveLock autoLock(syncObj->GetMutex());
 
             return __super::AddNew(key, value);
         }
 
         int Item(const TKey& key, const TValue& value)
         {
-            typename LockPolicy::AddRemoveLock autoLock(syncObj);
+            typename LockPolicy::AddRemoveLock autoLock(syncObj->GetMutex());
 
             return __super::Item(key, value);
         }
@@ -1703,21 +1703,21 @@ namespace JsUtil
 
         bool Remove(KeyValuePair<TKey, TValue> keyValuePair)
         {
-            typename LockPolicy::AddRemoveLock autoLock(syncObj);
+            typename LockPolicy::AddRemoveLock autoLock(syncObj->GetMutex());
 
             return __super::Remove(keyValuePair);
         }
 
         void Clear()
         {
-            typename LockPolicy::AddRemoveLock autoLock(syncObj);
+            typename LockPolicy::AddRemoveLock autoLock(syncObj->GetMutex());
 
             return __super::Clear();
         }
 
         void Reset()
         {
-            typename LockPolicy::AddRemoveLock autoLock(syncObj);
+            typename LockPolicy::AddRemoveLock autoLock(syncObj->GetMutex());
 
             return __super::Reset();
         }
@@ -1754,7 +1754,7 @@ namespace JsUtil
 
         bool TryGetValueAndRemove(const TKey& key, TValue* value)
         {
-            typename LockPolicy::AddRemoveLock autoLock(syncObj);
+            typename LockPolicy::AddRemoveLock autoLock(syncObj->GetMutex());
 
             return __super::TryGetValueAndRemove(key, value);
         }
@@ -1855,7 +1855,7 @@ namespace JsUtil
         template<class Fn>
         void MapAndRemoveIf(Fn fn)
         {
-            typename LockPolicy::AddRemoveLock autoLock(syncObj);
+            typename LockPolicy::AddRemoveLock autoLock(syncObj->GetMutex());
 
             return __super::MapAndRemoveIf(fn);
         }
