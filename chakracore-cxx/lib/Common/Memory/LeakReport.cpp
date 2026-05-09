@@ -109,7 +109,7 @@ LeakReport::EndSection()
 void
 LeakReport::Print(char16_t const * msg, ...)
 {
-    AutoCriticalSection autocs(&s_cs);
+    std::unique_lock<std::recursive_mutex> autocs(s_cs.GetMutex());
     if (!EnsureLeakReportFile())
     {
         return;
@@ -124,7 +124,7 @@ LeakReport::Print(char16_t const * msg, ...)
 bool
 LeakReport::EnsureLeakReportFile()
 {
-    AutoCriticalSection autocs(&s_cs);
+    std::unique_lock<std::recursive_mutex> autocs(s_cs.GetMutex());
     if (openReportFileFailed)
     {
         return false;
@@ -173,7 +173,7 @@ LeakReport::LogUrl(char16_t const * url, void * globalObject)
     record->scriptEngine = nullptr;
     record->globalObject = globalObject;
 
-    AutoCriticalSection autocs(&s_cs);
+    std::unique_lock<std::recursive_mutex> autocs(s_cs.GetMutex());
     if (LeakReport::urlRecordHead == nullptr)
     {
         Assert(LeakReport::urlRecordTail == nullptr);
@@ -192,7 +192,7 @@ LeakReport::LogUrl(char16_t const * url, void * globalObject)
 void
 LeakReport::DumpUrl(uint32_t tid)
 {
-    AutoCriticalSection autocs(&s_cs);
+    std::unique_lock<std::recursive_mutex> autocs(s_cs.GetMutex());
     if (!EnsureLeakReportFile())
     {
         return;
