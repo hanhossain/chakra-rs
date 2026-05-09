@@ -80,36 +80,12 @@ private:
     CriticalSection * cs;
 };
 
-template <class SyncObject = FakeCriticalSection >
+template <class SyncObject>
 class AutoRealOrFakeCriticalSection
 {
 public:
     _Acquires_lock_(this->cs->cs) AutoRealOrFakeCriticalSection(SyncObject * cs) : cs(cs) { this->cs->Enter(); }
     _Releases_lock_(this->cs->cs) ~AutoRealOrFakeCriticalSection() { this->cs->Leave(); }
-private:
-    SyncObject * cs;
-};
-
-template <class SyncObject = FakeCriticalSection >
-class AutoOptionalRealOrFakeCriticalSection
-{
-public:
-    _When_(this->cs != nullptr, _Acquires_lock_(this->cs->cs)) AutoOptionalRealOrFakeCriticalSection(SyncObject * cs) : cs(cs)
-    {
-        if (this->cs)
-        {
-            this->cs->Enter();
-        }
-    }
-
-    _When_(this->cs != nullptr, _Releases_lock_(this->cs->cs)) ~AutoOptionalRealOrFakeCriticalSection()
-    {
-        if (this->cs)
-        {
-            this->cs->Leave();
-        }
-    }
-
 private:
     SyncObject * cs;
 };
