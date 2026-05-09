@@ -144,7 +144,7 @@ namespace JsUtil
 
     void SingleJobManager::AddJobToProcessor(const bool prioritize)
     {
-        AutoOptionalCriticalSection lock(Processor()->GetCriticalSection());
+        auto lock = Processor()->LockCriticalSection();
         Processor()->AddJob(&job, prioritize);
     }
 
@@ -175,7 +175,7 @@ namespace JsUtil
 
     void WaitableSingleJobManager::AddJobToProcessor(const bool prioritize)
     {
-        AutoOptionalCriticalSection lock(Processor()->GetCriticalSection());
+        auto lock = Processor()->LockCriticalSection();
         Processor()->AddJob(&job, prioritize);
     }
 
@@ -224,6 +224,17 @@ namespace JsUtil
 #else
         return 0;
 #endif
+    }
+
+    std::optional<std::unique_lock<std::recursive_mutex>> JobProcessor::LockCriticalSection()
+    {
+        auto cs = GetCriticalSection();
+        if (cs)
+        {
+            std::unique_lock lock(cs->GetMutex());
+            return lock;
+        }
+        return std::nullopt;
     }
 
     void JobProcessor::AddManager(JobManager *const manager)

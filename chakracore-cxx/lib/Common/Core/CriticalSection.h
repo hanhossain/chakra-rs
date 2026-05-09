@@ -47,29 +47,6 @@ private:
     int cs;
 };
 
-class AutoOptionalCriticalSection
-{
-public:
-     AutoOptionalCriticalSection(CriticalSection * cs) : cs(cs)
-    {
-        if (this->cs)
-        {
-            this->cs->Enter();
-        }
-    }
-
-     ~AutoOptionalCriticalSection()
-    {
-        if (this->cs)
-        {
-            this->cs->Leave();
-        }
-    }
-
-private:
-    CriticalSection * cs;
-};
-
 template <class SyncObject>
 class AutoRealOrFakeCriticalSection
 {
