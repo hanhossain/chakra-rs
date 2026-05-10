@@ -38,11 +38,6 @@ void UpdateNativeCodeGeneratorForDebugMode(NativeCodeGenerator* nativeCodeGen)
     nativeCodeGen->UpdateQueueForDebugMode();
 }
 
-CriticalSection *GetNativeCodeGenCriticalSection(NativeCodeGenerator *pNativeCodeGen)
-{
-    return pNativeCodeGen->Processor()->GetCriticalSection();
-}
-
 ///----------------------------------------------------------------------------
 ///
 /// GenerateFunction

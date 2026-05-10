@@ -53,7 +53,6 @@ bool IsClosedNativeCodeGenerator(NativeCodeGenerator* nativeCodeGen);
 void SetProfileModeNativeCodeGen(NativeCodeGenerator *pNativeCodeGen, BOOL fSet);
 void UpdateNativeCodeGeneratorForDebugMode(NativeCodeGenerator* nativeCodeGen);
 
-CriticalSection *GetNativeCodeGenCriticalSection(NativeCodeGenerator *pNativeCodeGen);
 bool TryReleaseNonHiPriWorkItem(Js::ScriptContext* scriptContext, CodeGenWorkItem* workItem);
 void NativeCodeGenEnterScriptStart(NativeCodeGenerator * nativeCodeGen);
 void FreeNativeCodeGenAllocation(Js::ScriptContext* scriptContext, Js::JavascriptMethod codeAddress, Js::JavascriptMethod thunkAddress);
