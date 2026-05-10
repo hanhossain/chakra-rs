@@ -31,7 +31,7 @@ private:
     size_t memoryLimit;
     size_t currentMemory;
     bool supportConcurrency;
-    CriticalSection cs;
+    std::recursive_mutex cs;
     void * context;
     PageAllocatorMemoryAllocationCallback memoryAllocationCallback;
 
@@ -74,7 +74,7 @@ public:
     {
         if (supportConcurrency)
         {
-            std::unique_lock auto_cs(cs.GetMutex());
+            std::unique_lock auto_cs(cs);
             return RequestAllocImpl(byteCount, externalAlloc);
         }
         else
@@ -88,7 +88,7 @@ public:
     {
         if (supportConcurrency)
         {
-            std::unique_lock auto_cs(cs.GetMutex());
+            std::unique_lock auto_cs(cs);
             ReportFreeImpl(MemoryAllocateEvent::MemoryFailure, byteCount);
         }
         else
@@ -102,7 +102,7 @@ public:
     {
         if (supportConcurrency)
         {
-            std::unique_lock auto_cs(cs.GetMutex());
+            std::unique_lock auto_cs(cs);
             ReportFreeImpl(MemoryAllocateEvent::MemoryFree, byteCount);
         }
         else
