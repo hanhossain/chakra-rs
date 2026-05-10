@@ -600,4 +600,4 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::DumpAndResetStats(char
 #endif
 
 template class EmitBufferManager<VirtualAllocWrapper, PreReservedVirtualAllocWrapper, FakeCriticalSection>;
-template class EmitBufferManager<VirtualAllocWrapper, PreReservedVirtualAllocWrapper, CriticalSection>;
+template class EmitBufferManager<VirtualAllocWrapper, PreReservedVirtualAllocWrapper, std::recursive_mutex>;

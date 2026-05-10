@@ -99,5 +99,4 @@ public:
 #endif
 };
 
-typedef EmitBufferManager<VirtualAllocWrapper, PreReservedVirtualAllocWrapper, CriticalSection> InProcEmitBufferManagerWithlock;
 typedef EmitBufferManager<VirtualAllocWrapper, PreReservedVirtualAllocWrapper, FakeCriticalSection> InProcEmitBufferManager;

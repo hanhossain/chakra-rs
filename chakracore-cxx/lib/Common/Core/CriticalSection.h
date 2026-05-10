@@ -36,9 +36,9 @@ class FakeCriticalSection
 public:
     FakeCriticalSection(uint32_t spincount = 0) { /*do nothing*/spincount++; }
     ~FakeCriticalSection() {}
-     BOOL  TryEnter() { return true; }
-     void Enter() {}
-     void Leave() {}
+     BOOL  try_lock() { return true; }
+     void lock() {}
+     void unlock() {}
 #if DBG
     bool IsLocked() const { return true; }
 #endif
@@ -51,8 +51,8 @@ template <class SyncObject>
 class AutoRealOrFakeCriticalSection
 {
 public:
-     AutoRealOrFakeCriticalSection(SyncObject * cs) : cs(cs) { this->cs->Enter(); }
-     ~AutoRealOrFakeCriticalSection() { this->cs->Leave(); }
+     AutoRealOrFakeCriticalSection(SyncObject * cs) : cs(cs) { this->cs->lock(); }
+     ~AutoRealOrFakeCriticalSection() { this->cs->unlock(); }
 private:
     SyncObject * cs;
 };
