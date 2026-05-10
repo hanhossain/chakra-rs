@@ -36,7 +36,7 @@ public:
     static UrlRecord * LogUrl(char16_t const * url, void * globalObject);
     static void DumpUrl(uint32_t tid);
 private:
-    static CriticalSection s_cs;
+    static std::recursive_mutex s_cs;
     static AutoFILE file;
     static bool openReportFileFailed;
     static uint32_t nestedSectionCount;

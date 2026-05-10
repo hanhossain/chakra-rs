@@ -48,8 +48,7 @@ BOOL VirtualAllocWrapper::Free(void * lpAddress, size_t dwSize, uint32_t dwFreeT
 */
 
 PreReservedVirtualAllocWrapper::PreReservedVirtualAllocWrapper() :
-    preReservedStartAddress(nullptr),
-    cs(4000)
+    preReservedStartAddress(nullptr)
 {
     freeSegments.SetAll();
 }
@@ -145,7 +144,7 @@ void * PreReservedVirtualAllocWrapper::EnsurePreReservedRegion()
     }
 
     {
-        std::unique_lock autocs(cs.GetMutex());
+        std::unique_lock autocs(cs);
         return EnsurePreReservedRegionInternal();
     }
 }
@@ -191,7 +190,7 @@ void * PreReservedVirtualAllocWrapper::AllocPages(void * lpAddress, size_t pageC
     Assert(dwSize != 0);
 
     {
-        std::unique_lock autocs(cs.GetMutex());
+        std::unique_lock autocs(cs);
         //Return nullptr, if no space to Reserve
         if (EnsurePreReservedRegionInternal() == nullptr)
         {
@@ -304,7 +303,7 @@ BOOL
 PreReservedVirtualAllocWrapper::Free(void * lpAddress, size_t dwSize, uint32_t dwFreeType)
 {
     {
-        std::unique_lock autocs(cs.GetMutex());
+        std::unique_lock autocs(cs);
 
         if (dwSize == 0)
         {

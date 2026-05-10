@@ -623,8 +623,8 @@ void Parser::WaitForBackgroundJobs(BackgroundParser *bgp, CompileScriptException
         // - Check for unprocessed jobs;
         // - Remove jobs from the processor queue;
         // - Do JobsProcessed work (such as removing jobs from the BackgroundParser's unprocessed list).
-        CriticalSection *pcs = static_cast<JsUtil::BackgroundJobProcessor*>(bgp->Processor())->GetCriticalSection();
-        pcs->Enter();
+        std::recursive_mutex &pcs = static_cast<JsUtil::BackgroundJobProcessor*>(bgp->Processor())->GetMutex();
+        pcs.lock();
         for (;;)
         {
             // Grab a job (in lock)
@@ -634,15 +634,15 @@ void Parser::WaitForBackgroundJobs(BackgroundParser *bgp, CompileScriptException
                 break;
             }
             bgp->Processor()->RemoveJob(item);
-            pcs->Leave();
+            pcs.unlock();
 
             // Process job (if there is one) (outside lock)
             bool succeeded = bgp->Process(item, this, pse);
 
-            pcs->Enter();
+            pcs.lock();
             bgp->JobProcessed(item, succeeded);
         }
-        pcs->Leave();
+        pcs.unlock();
 
         // Wait for the background threads to finish jobs they're already processing (if any).
         // TODO: Replace with a proper semaphore.

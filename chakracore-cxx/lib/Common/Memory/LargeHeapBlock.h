@@ -331,7 +331,7 @@ public:
 
 #if DBG && GLOBAL_ENABLE_WRITE_BARRIER
 private:
-    static CriticalSection wbVerifyBitsLock;
+    static std::recursive_mutex wbVerifyBitsLock;
     BVSparse<HeapAllocator> wbVerifyBits;
 public:
     virtual void WBSetBit(char* addr) override;

@@ -12,7 +12,7 @@ private:
     PageAllocator pageAllocator;
     NoRecoverMemoryArenaAllocator  allocator;
 public:
-    EmitBufferManager<TAlloc, TPreReservedAlloc, CriticalSection> emitBufferManager;
+    EmitBufferManager<TAlloc, TPreReservedAlloc, std::recursive_mutex> emitBufferManager;
 
     CodeGenAllocators(AllocationPolicyManager * policyManager, Js::ScriptContext * scriptContext, ThreadContextInfo * threadContext, CustomHeap::CodePageAllocators<TAlloc, TPreReservedAlloc> * codePageAllocators, HANDLE processHandle);
     ~CodeGenAllocators();

@@ -23,22 +23,7 @@ MarkContext::MarkContext(Recycler * recycler, PagePool * pagePool) :
 }
 
 
-MarkContext::~MarkContext()
-{
-#ifdef RECYCLER_MARK_TRACK
-    this->markMap = nullptr;
-#endif
-}
-
-#ifdef RECYCLER_MARK_TRACK
-void MarkContext::OnObjectMarked(void* object, void* parent)
-{
-    if (!this->markMap->ContainsKey(object))
-    {
-        this->markMap->AddNew(object, parent);
-    }
-}
-#endif
+MarkContext::~MarkContext() = default;
 
 void MarkContext::Init(uint reservedPageCount)
 {

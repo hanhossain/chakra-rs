@@ -15,7 +15,7 @@
 #define ProfileEntryThunk Js::ScriptContext::DebugProfileProbeThunk
 
 #define DefaultDeferredParsingThunk Js::JavascriptFunction::DeferredParsingThunk
-#if defined(ENABLE_SCRIPT_PROFILING) || defined(ENABLE_SCRIPT_DEBUGGING)
+#if defined(ENABLE_SCRIPT_DEBUGGING)
 
 #define ProfileDeferredParsingThunk Js::ScriptContext::ProfileModeDeferredParsingThunk
 #endif
@@ -53,7 +53,6 @@ bool IsClosedNativeCodeGenerator(NativeCodeGenerator* nativeCodeGen);
 void SetProfileModeNativeCodeGen(NativeCodeGenerator *pNativeCodeGen, BOOL fSet);
 void UpdateNativeCodeGeneratorForDebugMode(NativeCodeGenerator* nativeCodeGen);
 
-CriticalSection *GetNativeCodeGenCriticalSection(NativeCodeGenerator *pNativeCodeGen);
 bool TryReleaseNonHiPriWorkItem(Js::ScriptContext* scriptContext, CodeGenWorkItem* workItem);
 void NativeCodeGenEnterScriptStart(NativeCodeGenerator * nativeCodeGen);
 void FreeNativeCodeGenAllocation(Js::ScriptContext* scriptContext, Js::JavascriptMethod codeAddress, Js::JavascriptMethod thunkAddress);

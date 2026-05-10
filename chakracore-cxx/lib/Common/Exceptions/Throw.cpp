@@ -145,7 +145,7 @@ namespace Js {
     }
 
 #ifdef GENERATE_DUMP
-    CriticalSection Throw::csGenerateDump;
+    std::recursive_mutex Throw::csGenerateDump;
     void Throw::GenerateDump(const char16_t* filePath, bool terminate, bool needLock)
     {
         __try
@@ -226,7 +226,7 @@ namespace Js {
             {
                 // the critical section might have been destructed at process shutdown time. At that time we don't need
                 // to lock.
-                std::unique_lock autocs(csGenerateDump.GetMutex());
+                std::unique_lock autocs(csGenerateDump);
 
                 dumpGenerated = MiniDumpWriteDump(GetCurrentProcess(),
                     getpid(),

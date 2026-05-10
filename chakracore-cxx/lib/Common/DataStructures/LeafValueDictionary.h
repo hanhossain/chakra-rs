@@ -14,7 +14,7 @@ namespace JsUtil
         template <typename ValueOrKey> class Comparer = DefaultComparer,
         template <typename K, typename V> class Entry = SimpleDictionaryEntry,
         class LockPolicy = Js::DefaultContainerLockPolicy,   // Controls lock policy for read/map/write/add/remove items
-        class SyncObject = CriticalSection
+        class SyncObject = std::recursive_mutex
     >
     struct LeafValueDictionary
     {

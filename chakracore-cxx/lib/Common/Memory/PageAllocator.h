@@ -481,7 +481,7 @@ public:
     struct BackgroundPageQueue
     {
         FreePageEntry* bgFreePageList;
-        CriticalSection backgroundPageQueueCriticalSection;
+        std::recursive_mutex backgroundPageQueueCriticalSection;
 
 #if DBG
         bool isZeroPageQueue;
@@ -495,7 +495,7 @@ public:
 
         FreePageEntry* PopFreePageEntry()
         {
-            std::unique_lock<std::recursive_mutex> autoCS(backgroundPageQueueCriticalSection.GetMutex());
+            std::unique_lock<std::recursive_mutex> autoCS(backgroundPageQueueCriticalSection);
             FreePageEntry* head = bgFreePageList;
             if (head)
             {
@@ -506,7 +506,7 @@ public:
 
         void PushFreePageEntry(FreePageEntry* entry)
         {
-            std::unique_lock<std::recursive_mutex> autoCS(backgroundPageQueueCriticalSection.GetMutex());
+            std::unique_lock<std::recursive_mutex> autoCS(backgroundPageQueueCriticalSection);
             entry->Next = bgFreePageList;
             bgFreePageList = entry;
         }
@@ -525,7 +525,7 @@ public:
 
         FreePageEntry* PopZeroPageEntry()
         {
-            std::unique_lock<std::recursive_mutex> autoCS(this->backgroundPageQueueCriticalSection.GetMutex());
+            std::unique_lock<std::recursive_mutex> autoCS(this->backgroundPageQueueCriticalSection);
             FreePageEntry* head = pendingZeroPageList;
             if (head)
             {
@@ -536,14 +536,14 @@ public:
 
         void PushZeroPageEntry(FreePageEntry* entry)
         {
-            std::unique_lock<std::recursive_mutex> autoCS(this->backgroundPageQueueCriticalSection.GetMutex());
+            std::unique_lock<std::recursive_mutex> autoCS(this->backgroundPageQueueCriticalSection);
             entry->Next = pendingZeroPageList;
             pendingZeroPageList = entry;
         }
 
         unsigned short QueryDepth()
         {
-            std::unique_lock<std::recursive_mutex> autoCS(this->backgroundPageQueueCriticalSection.GetMutex());
+            std::unique_lock<std::recursive_mutex> autoCS(this->backgroundPageQueueCriticalSection);
             FreePageEntry* head = pendingZeroPageList;
             size_t count = 0;
             while (head)

@@ -27,7 +27,7 @@
 #pragma init_seg(".CRT$XCAT")
 
 #ifdef HEAP_TRACK_ALLOC
-CriticalSection HeapAllocator::cs;
+std::recursive_mutex HeapAllocator::cs;
 #endif
 
 #ifdef CHECK_MEMORY_LEAK
@@ -81,9 +81,9 @@ char * HeapAllocator::AllocT(size_t byteSize)
     if (!noThrow || buffer != nullptr)
     {
 #ifdef HEAP_TRACK_ALLOC
-        cs.Enter();
+        cs.lock();
         data.LogAlloc((HeapAllocRecord *)buffer, requestedBytes, allocData);
-        cs.Leave();
+        cs.unlock();
         buffer += ::Math::Align<size_t>(sizeof(HeapAllocRecord), MEMORY_ALLOCATION_ALIGNMENT);
 #else
         *(size_t *)buffer = requestedBytes;
@@ -112,9 +112,9 @@ void HeapAllocator::Free(void * buffer, size_t byteSize)
         HEAP_PERF_COUNTER_DEC(LiveObject);
         HEAP_PERF_COUNTER_SUB(LiveObjectSize, record->size);
 
-        cs.Enter();
+        cs.lock();
         data.LogFree(record);
-        cs.Leave();
+        cs.unlock();
 
         buffer = record;
 #if DBG
@@ -551,7 +551,7 @@ MemoryLeakCheck::~MemoryLeakCheck()
 void
 MemoryLeakCheck::AddLeakDump(char16_t const * dump, size_t bytes, size_t count)
 {
-    std::unique_lock autocs(leakCheck.cs.GetMutex());
+    std::unique_lock autocs(leakCheck.cs);
     LeakRecord * record = NoCheckHeapNewStruct(LeakRecord);
     record->dump = dump;
     record->next = nullptr;

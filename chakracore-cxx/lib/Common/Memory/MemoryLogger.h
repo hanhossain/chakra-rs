@@ -19,7 +19,7 @@ namespace Js
         uint32_t m_capacity;   // The number of elements in circular buffer.
         char16_t** m_log;    // Points to a circular buffer of char16_t*.
         TAllocator* m_alloc;
-        CriticalSection m_criticalSection;
+        std::recursive_mutex m_criticalSection;
 
     public:
         static MemoryLogger* Create(TAllocator* alloc, uint32_t elementCount);

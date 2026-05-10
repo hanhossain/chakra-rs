@@ -426,7 +426,7 @@ private:
 
     static uint const MaxTemporaryArenaAllocators = 5;
 
-    static CriticalSection s_csThreadContext;
+    static std::recursive_mutex s_csThreadContext;
 
     StackProber * GetStackProber() const { return this->stackProber; }
     size_t GetStackLimitForCurrentThread() const;
@@ -738,7 +738,7 @@ private:
     Js::OnlyWritablePropertyThreadRegistry onlyWritablePropertyRegistry;
 
     DListBase<CollectCallBack> collectCallBackList;
-    CriticalSection csCollectionCallBack;
+    std::recursive_mutex csCollectionCallBack;
     bool hasCollectionCallBack;
     bool isOptimizedForManyInstances;
     bool bgJit;
@@ -779,7 +779,7 @@ private:
     // When ETW rundown in background thread which needs to walk scriptContext/functionBody/entryPoint lists,
     // or when JIT thread is getting auxPtrs from function body, we should not be modifying the list of 
     // functionBody/entrypoints, or expanding the auxPtrs
-    CriticalSection csFunctionBody;
+    std::recursive_mutex csFunctionBody;
 
 #ifdef _M_X64
     friend class Js::Amd64StackFrame;
@@ -839,8 +839,7 @@ public:
 
 #endif // ENABLE_NATIVE_CODEGEN
 
-    CriticalSection* GetFunctionBodyLock() { return &csFunctionBody; }
-    std::recursive_mutex& GetFunctionBodyMutex() { return csFunctionBody.GetMutex(); }
+    std::recursive_mutex& GetFunctionBodyMutex() { return csFunctionBody; }
 
     Js::IsConcatSpreadableCache* GetIsConcatSpreadableCache() { return &isConcatSpreadableCache; }
 
@@ -1036,8 +1035,7 @@ public:
 
     DateTime::HiResTimer * GetHiResTimer() { return &hTimer; }
     ArenaAllocator* GetThreadAlloc() { return &threadAlloc; }
-    static CriticalSection * GetCriticalSection() { return &s_csThreadContext; }
-    static std::recursive_mutex& GetMutex() { return s_csThreadContext.GetMutex(); }
+    static std::recursive_mutex& GetMutex() { return s_csThreadContext; }
 
     ThreadContext(AllocationPolicyManager * allocationPolicyManager = nullptr, JsUtil::ThreadService::ThreadServiceCallback threadServiceCallback = nullptr, bool enableExperimentalFeatures = false);
     static void Add(ThreadContext *threadContext);

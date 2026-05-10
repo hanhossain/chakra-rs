@@ -172,14 +172,14 @@ namespace Js
             // here does not keep the function alive. However, the functions remove themselves at finalize
             // so if a function actually is in this map, it means that it is alive.
             this->functionBodyDictionary = RecyclerNew(recycler, FunctionBodyDictionary, recycler,
-                initialFunctionCount, threadContext->GetFunctionBodyLock());
+                initialFunctionCount, threadContext->GetFunctionBodyMutex());
         }
 
         if (CONFIG_FLAG(DeferTopLevelTillFirstCall) && !m_deferredFunctionsInitialized)
         {
             Assert(this->m_deferredFunctionsDictionary == nullptr);
             this->m_deferredFunctionsDictionary = RecyclerNew(recycler, DeferredFunctionsDictionary, recycler,
-                initialFunctionCount, threadContext->GetFunctionBodyLock());
+                initialFunctionCount, threadContext->GetFunctionBodyMutex());
             m_deferredFunctionsInitialized = true;
         }
     }

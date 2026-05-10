@@ -132,7 +132,6 @@ public:
     CodePageAllocators(AllocationPolicyManager * policyManager, bool allocXdata, PreReservedVirtualAllocWrapper * virtualAllocator, HANDLE processHandle) :
         pageAllocator(policyManager, allocXdata, true /*excludeGuardPages*/, nullptr, processHandle),
         preReservedHeapAllocator(policyManager, allocXdata, true /*excludeGuardPages*/, virtualAllocator, processHandle),
-        cs(4000),
         secondaryAllocStateChangedCount(0),
         processHandle(processHandle)
     {
@@ -330,7 +329,7 @@ public:
             this->GetPageAllocator(segment)->ReleaseDecommitted(address, pageCount, segment);
         }
     }
-    CriticalSection cs;
+    std::recursive_mutex cs;
 private:
 
     template<typename T>

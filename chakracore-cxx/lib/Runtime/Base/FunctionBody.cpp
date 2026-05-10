@@ -617,7 +617,7 @@ namespace Js
         Assert(!utf8SourceInfo || m_uScriptId == utf8SourceInfo->GetSrcInfo()->sourceContextInfo->sourceContextId);
 
         // Sync entryPoints changes to etw rundown lock
-        CriticalSection* syncObj = scriptContext->GetThreadContext()->GetFunctionBodyLock();
+        std::recursive_mutex& syncObj = scriptContext->GetThreadContext()->GetFunctionBodyMutex();
         this->entryPoints = RecyclerNew(this->m_scriptContext->GetRecycler(), FunctionEntryPointList, this->m_scriptContext->GetRecycler(), syncObj);
 
         this->AddEntryPointToEntryPointList(this->GetDefaultFunctionEntryPointInfo());
@@ -748,7 +748,7 @@ namespace Js
         Assert(!proxy->GetUtf8SourceInfo() || m_uScriptId == proxy->GetUtf8SourceInfo()->GetSrcInfo()->sourceContextInfo->sourceContextId);
 
         // Sync entryPoints changes to etw rundown lock
-        CriticalSection* syncObj = scriptContext->GetThreadContext()->GetFunctionBodyLock();
+        std::recursive_mutex& syncObj = scriptContext->GetThreadContext()->GetFunctionBodyMutex();
         this->entryPoints = RecyclerNew(scriptContext->GetRecycler(), FunctionEntryPointList, scriptContext->GetRecycler(), syncObj);
 
         this->AddEntryPointToEntryPointList(this->GetDefaultFunctionEntryPointInfo());
@@ -1719,7 +1719,7 @@ namespace Js
     ParseableFunctionInfo* ParseableFunctionInfo::New(ScriptContext* scriptContext, int nestedCount,
         LocalFunctionId functionId, Utf8SourceInfo* sourceInfo, const char16_t* displayName, uint displayNameLength, uint displayShortNameOffset, FunctionInfo::Attributes attributes, FunctionBodyFlags flags)
     {
-#if defined(ENABLE_SCRIPT_PROFILING) || defined(ENABLE_SCRIPT_DEBUGGING)
+#if defined(ENABLE_SCRIPT_DEBUGGING)
         Assert(
             scriptContext->DeferredParsingThunk == ProfileDeferredParsingThunk ||
             scriptContext->DeferredParsingThunk == DefaultDeferredParsingThunk);
@@ -3650,7 +3650,7 @@ namespace Js
 #endif
             ;
     }
-#if defined(ENABLE_SCRIPT_PROFILING) || defined(ENABLE_SCRIPT_DEBUGGING)
+#if defined(ENABLE_SCRIPT_DEBUGGING)
     bool FunctionProxy::HasValidProfileEntryPoint() const
     {
         JavascriptMethod directEntryPoint = this->GetDefaultEntryPointInfo()->jsMethod;
@@ -3695,7 +3695,7 @@ namespace Js
         {
             return this->HasValidNonProfileEntryPoint();
         }
-#if defined(ENABLE_SCRIPT_PROFILING) || defined(ENABLE_SCRIPT_DEBUGGING)
+#if defined(ENABLE_SCRIPT_DEBUGGING)
         if (m_scriptContext->IsProfiling())
         {
             return this->HasValidProfileEntryPoint();
@@ -3710,7 +3710,7 @@ namespace Js
 #endif
     void ParseableFunctionInfo::SetDeferredParsingEntryPoint()
     {
-#if defined(ENABLE_SCRIPT_PROFILING) || defined(ENABLE_SCRIPT_DEBUGGING)
+#if defined(ENABLE_SCRIPT_DEBUGGING)
         Assert(m_scriptContext->DeferredParsingThunk == ProfileDeferredParsingThunk
             || m_scriptContext->DeferredParsingThunk == DefaultDeferredParsingThunk);
 #else
@@ -3723,7 +3723,7 @@ namespace Js
 
     void ParseableFunctionInfo::SetInitialDefaultEntryPoint()
     {
-#if defined(ENABLE_SCRIPT_PROFILING) || defined(ENABLE_SCRIPT_DEBUGGING)
+#if defined(ENABLE_SCRIPT_DEBUGGING)
         Assert(m_scriptContext->CurrentThunk == ProfileEntryThunk || m_scriptContext->CurrentThunk == DefaultEntryThunk);
         Assert(this->GetOriginalEntryPoint_Unchecked() == DefaultDeferredParsingThunk ||
                this->GetOriginalEntryPoint_Unchecked() == ProfileDeferredParsingThunk ||
@@ -4890,154 +4890,6 @@ namespace Js
         this->GetPropertyIdOnRegSlotsContainer()->SetFormalArgs(formalArgs);
     }
 
-#ifdef ENABLE_SCRIPT_PROFILING
-    int32_t FunctionBody::RegisterFunction(BOOL fChangeMode, BOOL fOnlyCurrent)
-    {
-        if (!this->IsFunctionParsed())
-        {
-            return S_OK;
-        }
-
-        int32_t hr = this->ReportFunctionCompiled();
-        if (FAILED(hr))
-        {
-            return hr;
-        }
-
-        if (fChangeMode)
-        {
-            this->SetEntryToProfileMode();
-        }
-
-        if (!fOnlyCurrent)
-        {
-            for (uint uIndex = 0; uIndex < this->GetNestedCount(); uIndex++)
-            {
-                Js::ParseableFunctionInfo * pBody = this->GetNestedFunctionForExecution(uIndex);
-                if (pBody == nullptr || !pBody->IsFunctionParsed())
-                {
-                    continue;
-                }
-
-                hr = pBody->GetFunctionBody()->RegisterFunction(fChangeMode);
-                if (FAILED(hr))
-                {
-                    break;
-                }
-            }
-        }
-        return hr;
-    }
-
-    int32_t FunctionBody::ReportScriptCompiled()
-    {
-        AssertMsg(m_scriptContext != nullptr, "Script Context is null when reporting function information");
-
-        PROFILER_SCRIPT_TYPE type = IsDynamicScript() ? PROFILER_SCRIPT_TYPE_DYNAMIC : PROFILER_SCRIPT_TYPE_USER;
-
-        IDebugDocumentContext *pDebugDocumentContext = nullptr;
-        this->m_scriptContext->GetDocumentContext(this, &pDebugDocumentContext);
-
-        int32_t hr = m_scriptContext->OnScriptCompiled((PROFILER_TOKEN) this->GetUtf8SourceInfo()->GetSourceInfoId(), type, pDebugDocumentContext);
-
-        RELEASEPTR(pDebugDocumentContext);
-
-        return hr;
-    }
-
-    int32_t FunctionBody::ReportFunctionCompiled()
-    {
-        // Some assumptions by Logger interface.
-        // to send NULL as a name in case the name is anonymous and hint is anonymous code.
-        const char16_t *pwszName = GetExternalDisplayName();
-
-        IDebugDocumentContext *pDebugDocumentContext = nullptr;
-        this->m_scriptContext->GetDocumentContext(this, &pDebugDocumentContext);
-
-        SetHasFunctionCompiledSent(true);
-
-        int32_t hr = m_scriptContext->OnFunctionCompiled(m_functionNumber, (PROFILER_TOKEN) this->GetUtf8SourceInfo()->GetSourceInfoId(), pwszName, nullptr, pDebugDocumentContext);
-        RELEASEPTR(pDebugDocumentContext);
-
-#if DBG
-        if (m_iProfileSession >= m_scriptContext->GetProfileSession())
-        {
-            OUTPUT_TRACE_DEBUGONLY(Js::ScriptProfilerPhase, u"FunctionBody::ReportFunctionCompiled, Duplicate compile event (%d < %d) for FunctionNumber : %d\n",
-                m_iProfileSession, m_scriptContext->GetProfileSession(), m_functionNumber);
-        }
-
-        AssertMsg(m_iProfileSession < m_scriptContext->GetProfileSession(), "Duplicate compile event sent");
-        m_iProfileSession = m_scriptContext->GetProfileSession();
-#endif
-
-        return hr;
-    }
-
-    void FunctionBody::SetEntryToProfileMode()
-    {
-#if ENABLE_NATIVE_CODEGEN
-        AssertMsg(this->m_scriptContext->CurrentThunk == ProfileEntryThunk, "ScriptContext not in profile mode");
-#if DBG
-        AssertMsg(m_iProfileSession == m_scriptContext->GetProfileSession(), "Changing mode to profile for function that didn't send compile event");
-#endif
-        // This is always done when bg thread is paused hence we don't need any kind of thread-synchronization at this point.
-
-        // Change entry points to Profile Thunk
-        //  If the entrypoint is CodeGenOnDemand or CodeGen - then we don't change the entry points
-        ProxyEntryPointInfo* defaultEntryPointInfo = this->GetDefaultEntryPointInfo();
-
-        if (!IsIntermediateCodeGenThunk(defaultEntryPointInfo->jsMethod)
-            && defaultEntryPointInfo->jsMethod != DynamicProfileInfo::EnsureDynamicProfileInfoThunk)
-        {
-            if (this->GetOriginalEntryPoint_Unchecked() == DefaultDeferredParsingThunk)
-            {
-                defaultEntryPointInfo->jsMethod = ProfileDeferredParsingThunk;
-            }
-            else if (this->GetOriginalEntryPoint_Unchecked() == DefaultDeferredDeserializeThunk)
-            {
-                defaultEntryPointInfo->jsMethod = ProfileDeferredDeserializeThunk;
-            }
-            else
-            {
-                defaultEntryPointInfo->jsMethod = ProfileEntryThunk;
-            }
-        }
-
-        // Update old entry points on the deferred prototype type so that they match current defaultEntryPointInfo.
-        // to make sure that new JavascriptFunction instances use profile thunk.
-        if (this->deferredPrototypeType)
-        {
-            this->deferredPrototypeType->SetEntryPoint(this->GetDefaultEntryPointInfo()->jsMethod);
-            this->deferredPrototypeType->SetEntryPointInfo(this->GetDefaultEntryPointInfo());
-        }
-        if (this->undeferredFunctionType)
-        {
-            this->undeferredFunctionType->SetEntryPoint(this->GetDefaultEntryPointInfo()->jsMethod);
-            this->undeferredFunctionType->SetEntryPointInfo(this->GetDefaultEntryPointInfo());
-        }
-        if (this->crossSiteDeferredFunctionType)
-        {
-            this->crossSiteDeferredFunctionType->SetEntryPointInfo(this->GetDefaultEntryPointInfo());
-        }
-        if (this->crossSiteUndeferredFunctionType)
-        {
-            this->crossSiteUndeferredFunctionType->SetEntryPointInfo(this->GetDefaultEntryPointInfo());
-        }
-
-#if DBG
-        if (!this->HasValidEntryPoint())
-        {
-            OUTPUT_TRACE_DEBUGONLY(Js::ScriptProfilerPhase, u"FunctionBody::SetEntryToProfileMode, Assert due to HasValidEntryPoint(), directEntrypoint : 0x%0IX, originalentrypoint : 0x%0IX\n",
-                this->GetDefaultEntryPointInfo()->jsMethod, this->GetOriginalEntryPoint());
-
-            AssertMsg(false, "Not a valid EntryPoint");
-        }
-#endif
-
-#endif //ENABLE_NATIVE_CODEGEN
-    }
-#endif // ENABLE_SCRIPT_PROFILING
-
 #if DBG
     void FunctionBody::MustBeInDebugMode()
     {
@@ -5243,12 +5095,12 @@ namespace Js
     {
         ProxyEntryPointInfo* defaultEntryPointInfo = this->GetDefaultEntryPointInfo();
         if (defaultEntryPointInfo->jsMethod != DefaultDeferredParsingThunk
-#if defined(ENABLE_SCRIPT_PROFILING) || defined(ENABLE_SCRIPT_DEBUGGING)
+#if defined(ENABLE_SCRIPT_DEBUGGING)
             && defaultEntryPointInfo->jsMethod != ProfileDeferredParsingThunk
 #endif
             )
         {
-#if defined(ENABLE_SCRIPT_PROFILING) || defined(ENABLE_SCRIPT_DEBUGGING)
+#if defined(ENABLE_SCRIPT_DEBUGGING)
             // Just change the thunk, the cleanup will be done once the function gets called.
             if (this->m_scriptContext->CurrentThunk == ProfileEntryThunk)
             {
@@ -9282,7 +9134,7 @@ namespace Js
         Recycler* recycler = functionBody->GetScriptContext()->GetRecycler();
 
         // Sync entryPoints changes to etw rundown lock
-        auto syncObj = functionBody->GetScriptContext()->GetThreadContext()->GetFunctionBodyLock();
+        auto& syncObj = functionBody->GetScriptContext()->GetThreadContext()->GetFunctionBodyMutex();
         this->entryPoints = RecyclerNew(recycler, LoopEntryPointList, recycler, syncObj);
 
         this->CreateEntryPoint();

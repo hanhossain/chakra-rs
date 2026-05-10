@@ -51,7 +51,7 @@ namespace Js
     }
 
 #if ENABLE_NATIVE_CODEGEN
-    CriticalSection JITPageAddrToFuncRangeCache::cs;
+    std::recursive_mutex JITPageAddrToFuncRangeCache::cs;
 #endif
 
     ScriptContext::ScriptContext(ThreadContext* threadContext) :
@@ -188,10 +188,6 @@ namespace Js
         , bindReferenceCount(0)
 #endif
         , nextPendingClose(nullptr)
-#ifdef ENABLE_SCRIPT_PROFILING
-        , heapEnum(nullptr)
-        , m_fTraceDomCall(FALSE)
-#endif
         , intConstPropsOnGlobalObject(nullptr)
         , intConstPropsOnGlobalUserObject(nullptr)
 #ifdef PROFILE_STRINGS
@@ -294,13 +290,6 @@ namespace Js
 
 #ifdef PROFILE_MEM
         profileMemoryDump = true;
-#endif
-
-#ifdef ENABLE_SCRIPT_PROFILING
-        m_pProfileCallback = nullptr;
-        m_pProfileCallback2 = nullptr;
-        m_inProfileCallback = FALSE;
-        CleanupDocumentContext = nullptr;
 #endif
 
         // Do this after all operations that may cause potential exceptions. Note: InitialAllocations may still throw!
@@ -680,11 +669,6 @@ namespace Js
         }
 #endif
 
-#ifdef ENABLE_SCRIPT_PROFILING
-        // Stop profiling if present
-        DeRegisterProfileProbe(S_OK, nullptr);
-#endif
-
 #ifdef ENABLE_SCRIPT_DEBUGGING
         this->EnsureClearDebugDocument();
 
@@ -697,7 +681,7 @@ namespace Js
             }
 
             // Guard the closing DebugContext as in meantime PDM might call OnBreakFlagChange
-            std::unique_lock autoDebugContextCloseCS(debugContextCloseCS.GetMutex());
+            std::unique_lock autoDebugContextCloseCS(debugContextCloseCS);
             this->debugContext->Close();
             // Not deleting debugContext here as Close above will clear all memory debugContext allocated.
             // Actual deletion of debugContext will happen in ScriptContext destructor
@@ -2524,15 +2508,7 @@ ExitTempAllocator:
                 rootDisplayName, loadScriptFlag, scriptSource);
         }
 
-#ifdef ENABLE_SCRIPT_PROFILING
-        if (pFunction != nullptr && this->IsProfiling())
-        {
-            RegisterScript(pFunction->GetFunctionProxy());
-        }
-#else
         Assert(!this->IsProfiling());
-#endif
-
         return pFunction;
     }
 
@@ -3219,244 +3195,6 @@ ExitTempAllocator:
     }
 #endif
 
-#ifdef ENABLE_SCRIPT_PROFILING
-    inline void ScriptContext::CoreSetProfileEventMask(uint32_t dwEventMask)
-    {
-        AssertMsg(m_pProfileCallback != NULL, "Assigning the event mask when there is no callback");
-        m_dwEventMask = dwEventMask;
-        m_fTraceFunctionCall = (dwEventMask & PROFILER_EVENT_MASK_TRACE_SCRIPT_FUNCTION_CALL);
-        m_fTraceNativeFunctionCall = (dwEventMask & PROFILER_EVENT_MASK_TRACE_NATIVE_FUNCTION_CALL);
-
-        m_fTraceDomCall = (dwEventMask & PROFILER_EVENT_MASK_TRACE_DOM_FUNCTION_CALL);
-    }
-
-    int32_t ScriptContext::RegisterProfileProbe(IActiveScriptProfilerCallback *pProfileCallback, uint32_t dwEventMask, uint32_t dwContext, RegisterExternalLibraryType RegisterExternalLibrary, JavascriptMethod dispatchInvoke)
-    {
-        if (m_pProfileCallback != NULL)
-        {
-            return ACTIVPROF_E_PROFILER_PRESENT;
-        }
-
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::RegisterProfileProbe\n");
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"Info\nThunks Address :\n");
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"DefaultEntryThunk : 0x%08X, CrossSite::DefaultThunk : 0x%08X, DefaultDeferredParsingThunk : 0x%08X\n", DefaultEntryThunk, CrossSite::DefaultThunk, DefaultDeferredParsingThunk);
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ProfileEntryThunk : 0x%08X, CrossSite::ProfileThunk : 0x%08X, ProfileDeferredParsingThunk : 0x%08X, ProfileDeferredDeserializeThunk : 0x%08X,\n", ProfileEntryThunk, CrossSite::ProfileThunk, ProfileDeferredParsingThunk, ProfileDeferredDeserializeThunk);
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptType :\n");
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"PROFILER_SCRIPT_TYPE_USER : 0, PROFILER_SCRIPT_TYPE_DYNAMIC : 1, PROFILER_SCRIPT_TYPE_NATIVE : 2, PROFILER_SCRIPT_TYPE_DOM : 3\n");
-
-        int32_t hr = pProfileCallback->Initialize(dwContext);
-        if (SUCCEEDED(hr))
-        {
-            m_pProfileCallback = pProfileCallback;
-            pProfileCallback->AddRef();
-            CoreSetProfileEventMask(dwEventMask);
-            if (m_fTraceDomCall)
-            {
-                if (FAILED(pProfileCallback->QueryInterface(&m_pProfileCallback2)))
-                {
-                    m_fTraceDomCall = FALSE;
-                }
-            }
-
-            if (webWorkerId != Js::Constants::NonWebWorkerContextId)
-            {
-                IActiveScriptProfilerCallback3 * pProfilerCallback3;
-                if (SUCCEEDED(pProfileCallback->QueryInterface(&pProfilerCallback3)))
-                {
-                    pProfilerCallback3->SetWebWorkerId(webWorkerId);
-                    pProfilerCallback3->Release();
-                    // Omitting the int32_t since it is up to the callback to make use of the webWorker information.
-                }
-            }
-
-#if DEBUG
-            StartNewProfileSession();
-#endif
-
-#if ENABLE_NATIVE_CODEGEN
-            NativeCodeGenerator *pNativeCodeGen = this->GetNativeCodeGenerator();
-            AutoOptionalCriticalSection autoAcquireCodeGenQueue(GetNativeCodeGenCriticalSection(pNativeCodeGen));
-#endif
-
-            this->SetProfileMode(TRUE);
-
-#if ENABLE_NATIVE_CODEGEN
-            SetProfileModeNativeCodeGen(pNativeCodeGen, TRUE);
-#endif
-
-            // Register builtin functions
-            if (m_fTraceNativeFunctionCall)
-            {
-                hr = this->RegisterBuiltinFunctions(RegisterExternalLibrary);
-                if (FAILED(hr))
-                {
-                    return hr;
-                }
-            }
-
-            this->RegisterAllScripts();
-
-            // Set the dispatch profiler:
-            this->SetDispatchProfile(TRUE, dispatchInvoke);
-
-            // Update the function objects currently present in there.
-            this->SetFunctionInRecyclerToProfileMode();
-        }
-
-        return hr;
-    }
-
-    int32_t ScriptContext::SetProfileEventMask(uint32_t dwEventMask)
-    {
-        if (m_pProfileCallback == NULL)
-        {
-            return ACTIVPROF_E_PROFILER_ABSENT;
-        }
-
-        return ACTIVPROF_E_UNABLE_TO_APPLY_ACTION;
-    }
-
-    int32_t ScriptContext::DeRegisterProfileProbe(int32_t hrReason, JavascriptMethod dispatchInvoke)
-    {
-        if (m_pProfileCallback == NULL)
-        {
-            return ACTIVPROF_E_PROFILER_ABSENT;
-        }
-
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::DeRegisterProfileProbe\n");
-
-#if ENABLE_NATIVE_CODEGEN
-        // Acquire the code gen working queue - we are going to change the thunks
-        NativeCodeGenerator *pNativeCodeGen = this->GetNativeCodeGenerator();
-        Assert(pNativeCodeGen);
-        {
-            AutoOptionalCriticalSection lock(GetNativeCodeGenCriticalSection(pNativeCodeGen));
-
-            this->SetProfileMode(FALSE);
-            SetProfileModeNativeCodeGen(pNativeCodeGen, FALSE);
-
-            // DisableJIT-TODO: Does need to happen even with JIT disabled?
-            // Unset the dispatch profiler:
-            if (dispatchInvoke != nullptr)
-            {
-                this->SetDispatchProfile(FALSE, dispatchInvoke);
-            }
-        }
-#endif
-
-        m_inProfileCallback = TRUE;
-        int32_t hr = m_pProfileCallback->Shutdown(hrReason);
-        m_inProfileCallback = FALSE;
-        m_pProfileCallback->Release();
-        m_pProfileCallback = NULL;
-
-        if (m_pProfileCallback2 != NULL)
-        {
-            m_pProfileCallback2->Release();
-            m_pProfileCallback2 = NULL;
-        }
-
-#if DEBUG
-        StopProfileSession();
-#endif
-
-        return hr;
-    }
-
-    void ScriptContext::SetProfileMode(BOOL fSet)
-    {
-#ifdef ENABLE_SCRIPT_PROFILING
-        if (fSet)
-        {
-            AssertMsg(m_pProfileCallback != NULL, "In profile mode when there is no call back");
-            this->CurrentThunk = ProfileEntryThunk;
-            this->CurrentCrossSiteThunk = CrossSite::ProfileThunk;
-            this->DeferredParsingThunk = ProfileDeferredParsingThunk;
-            this->DeferredDeserializationThunk = ProfileDeferredDeserializeThunk;
-            this->globalObject->EvalHelper = &Js::GlobalObject::ProfileModeEvalHelper;
-#if DBG
-            this->hadProfiled = true;
-#endif
-        }
-        else
-#endif
-        {
-            Assert(!fSet);
-            this->CurrentThunk = DefaultEntryThunk;
-            this->CurrentCrossSiteThunk = CrossSite::DefaultThunk;
-            this->DeferredParsingThunk = DefaultDeferredParsingThunk;
-            this->globalObject->EvalHelper = &Js::GlobalObject::DefaultEvalHelper;
-
-            // In Debug mode/Fast F12 library is still needed for built-in wrappers.
-            if (!(this->IsScriptContextInDebugMode() && this->IsExceptionWrapperForBuiltInsEnabled()))
-            {
-                this->javascriptLibrary->SetProfileMode(FALSE);
-            }
-        }
-    }
-
-    int32_t ScriptContext::RegisterScript(Js::FunctionProxy * proxy, BOOL fRegisterScript /*default TRUE*/)
-    {
-        if (m_pProfileCallback == nullptr)
-        {
-            return ACTIVPROF_E_PROFILER_ABSENT;
-        }
-
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::RegisterScript, fRegisterScript : %s, IsFunctionDefer : %s\n", IsTrueOrFalse(fRegisterScript), IsTrueOrFalse(proxy->IsDeferred()));
-
-        AssertMsg(proxy != nullptr, "Function body cannot be null when calling reporting");
-        AssertMsg(proxy->GetScriptContext() == this, "wrong script context while reporting the function?");
-
-        if (fRegisterScript)
-        {
-            // Register the script to the callback.
-            // REVIEW: do we really need to undefer everything?
-            int32_t hr = proxy->EnsureDeserialized()->Parse()->ReportScriptCompiled();
-            if (FAILED(hr))
-            {
-                return hr;
-            }
-        }
-
-        return !proxy->IsDeferred() ? proxy->GetFunctionBody()->RegisterFunction(false) : S_OK;
-    }
-
-    int32_t ScriptContext::RegisterAllScripts()
-    {
-        AssertMsg(m_pProfileCallback != nullptr, "Called register scripts when we don't have profile callback");
-
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::RegisterAllScripts started\n");
-
-        // Future Work: Once Utf8SourceInfo can generate the debug document text without requiring a function body,
-        // this code can be considerably simplified to doing the following:
-        // - scriptContext->MapScript() : Fire script compiled for each script
-        // - scriptContext->MapFunction(): Fire function compiled for each function
-        this->MapScript([](Utf8SourceInfo* sourceInfo)
-        {
-            FunctionBody* functionBody = sourceInfo->GetAnyParsedFunction();
-            if (functionBody)
-            {
-                functionBody->ReportScriptCompiled();
-            }
-        });
-
-        // FunctionCompiled events for all functions.
-        this->MapFunction([](Js::FunctionBody* pFuncBody)
-        {
-            if (!pFuncBody->GetIsTopLevel() && pFuncBody->GetIsGlobalFunc())
-            {
-                // This must be the dummy function, generated due to the deferred parsing.
-                return;
-            }
-
-            pFuncBody->RegisterFunction(TRUE, TRUE); // Ignore potential failure (worst case is not profiling).
-        });
-
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::RegisterAllScripts ended\n");
-        return S_OK;
-    }
-#endif // ENABLE_SCRIPT_PROFILING
-
     // Shuts down and recreates the native code generator.  This is used when
     // attaching and detaching the debugger in order to clear the list of work
     // items that are pending in the JIT job queue.
@@ -3801,7 +3539,7 @@ ExitTempAllocator:
     }
 #endif
 
-#if defined(ENABLE_SCRIPT_DEBUGGING) || defined(ENABLE_SCRIPT_PROFILING)
+#if defined(ENABLE_SCRIPT_DEBUGGING)
     // We use ProfileThunk under debugger.
     void ScriptContext::RegisterDebugThunk(bool calledDuringAttach /*= true*/)
     {
@@ -3820,9 +3558,6 @@ ExitTempAllocator:
 
             if (!calledDuringAttach)
             {
-#ifdef ENABLE_SCRIPT_PROFILING
-                m_fTraceDomCall = TRUE; // This flag is always needed in DebugMode to wrap external functions with DebugProfileThunk
-#endif
                 // Update the function objects currently present in there.
                 this->SetFunctionInRecyclerToProfileMode(true/*enumerateNonUserFunctionsOnly*/);
             }
@@ -3846,45 +3581,7 @@ ExitTempAllocator:
             }
         }
     }
-#endif // defined(ENABLE_SCRIPT_DEBUGGING) || defined(ENABLE_SCRIPT_PROFILING)
-
-#ifdef ENABLE_SCRIPT_PROFILING
-    int32_t ScriptContext::RegisterBuiltinFunctions(RegisterExternalLibraryType RegisterExternalLibrary)
-    {
-        Assert(m_pProfileCallback != NULL);
-
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::RegisterBuiltinFunctions\n");
-
-        int32_t hr = S_OK;
-        // Consider creating ProfileArena allocator instead of General allocator
-        if (m_pBuiltinFunctionIdMap == NULL)
-        {
-            // Anew throws if it OOMs, so the caller into this function needs to handle that exception
-            m_pBuiltinFunctionIdMap = Anew(GeneralAllocator(), BuiltinFunctionIdDictionary,
-                GeneralAllocator(), 17);
-        }
-
-        this->javascriptLibrary->SetProfileMode(TRUE);
-
-        if (FAILED(hr = OnScriptCompiled(BuiltInFunctionsScriptId, PROFILER_SCRIPT_TYPE_NATIVE, NULL)))
-        {
-            return hr;
-        }
-
-        if (FAILED(hr = this->javascriptLibrary->ProfilerRegisterBuiltIns()))
-        {
-            return hr;
-        }
-
-        // External Library
-        if (RegisterExternalLibrary != NULL)
-        {
-            (*RegisterExternalLibrary)(this);
-        }
-
-        return hr;
-    }
-#endif // ENABLE_SCRIPT_PROFILING
+#endif // defined(ENABLE_SCRIPT_DEBUGGING)
 
 #ifdef ENABLE_SCRIPT_DEBUGGING
     void ScriptContext::SetFunctionInRecyclerToProfileMode(bool enumerateNonUserFunctionsOnly/* = false*/)
@@ -3983,7 +3680,7 @@ ExitTempAllocator:
             // Not a user defined function, we need to wrap them with try-catch for "continue after exception"
             if (!pFunction->IsScriptFunction() && IsExceptionWrapperForBuiltInsEnabled(scriptContext))
             {
-#if defined(ENABLE_SCRIPT_DEBUGGING) || defined(ENABLE_SCRIPT_PROFILING)
+#if defined(ENABLE_SCRIPT_DEBUGGING)
                 if (scriptContext->IsScriptContextInDebugMode())
                 {
                     // We are attaching.
@@ -4054,7 +3751,7 @@ ExitTempAllocator:
 
 #endif // ENABLE_SCRIPT_DEBUGGING
 
-#if defined(ENABLE_SCRIPT_PROFILING) || defined(ENABLE_SCRIPT_DEBUGGING)
+#if defined(ENABLE_SCRIPT_DEBUGGING)
     void ScriptContext::RecyclerEnumClassEnumeratorCallback(void *address, size_t size)
     {
         // TODO: we are assuming its function because for now we are enumerating only on functions
@@ -4091,20 +3788,6 @@ ExitTempAllocator:
 
         if (proxy != NULL)
         {
-#if defined(ENABLE_SCRIPT_PROFILING)
-#if ENABLE_DEBUG_CONFIG_OPTIONS
-            char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-#endif
-            OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::RecyclerEnumClassEnumeratorCallback\n");
-            OUTPUT_TRACE(Js::ScriptProfilerPhase, u"\tFunctionProxy : 0x%08X, FunctionNumber : %s, DeferredParseAttributes : %d, EntryPoint : 0x%08X",
-                (unsigned long)proxy, proxy->GetDebugNumberSet(debugStringBuffer), proxy->GetAttributes(), (unsigned long)entryPoint);
-#if ENABLE_NATIVE_CODEGEN
-            OUTPUT_TRACE(Js::ScriptProfilerPhase, u" (IsIntermediateCodeGenThunk : %s, isNative : %s)\n",
-                IsTrueOrFalse(IsIntermediateCodeGenThunk(entryPoint)), IsTrueOrFalse(scriptContext->IsNativeAddress(entryPoint)));
-#endif
-            OUTPUT_TRACE(Js::ScriptProfilerPhase, u"\n");
-#endif
-
 #if ENABLE_NATIVE_CODEGEN
             if (!IsIntermediateCodeGenThunk(entryPoint) && entryPoint != DynamicProfileInfo::EnsureDynamicProfileInfoThunk)
 #endif
@@ -4113,10 +3796,6 @@ ExitTempAllocator:
 
                 ScriptFunction * scriptFunction = VarTo<ScriptFunction>(pFunction);
                 scriptFunction->ChangeEntryPoint(proxy->GetDefaultEntryPointInfo(), Js::ScriptContext::GetProfileModeThunk(entryPoint));
-
-#if ENABLE_NATIVE_CODEGEN && defined(ENABLE_SCRIPT_PROFILING)
-                OUTPUT_TRACE(Js::ScriptProfilerPhase, u"\tUpdated entrypoint : 0x%08X (isNative : %s)\n", (unsigned long)pFunction->GetEntryPoint(), IsTrueOrFalse(scriptContext->IsNativeAddress(entryPoint)));
-#endif
             }
         }
         else
@@ -4174,7 +3853,7 @@ ExitTempAllocator:
         }
         return ProfileEntryThunk;
     }
-#endif // defined(ENABLE_SCRIPT_PROFILING) || defiend(ENABLE_SCRIPT_DEBUGGING)
+#endif // defiend(ENABLE_SCRIPT_DEBUGGING)
 
 #if _M_IX86
     __declspec(naked)
@@ -4215,21 +3894,6 @@ ExitTempAllocator:
         BOOL fParsed = FALSE;
         JavascriptMethod entryPoint = Js::JavascriptFunction::DeferredParseCore(functionRef, fParsed);
 
-#ifdef ENABLE_SCRIPT_PROFILING
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"\t\tIsParsed : %s, updatedEntrypoint : 0x%08X\n", IsTrueOrFalse(fParsed), entryPoint);
-
-        //To get the scriptContext we only need the functionProxy
-        FunctionProxy *pRootBody = (*functionRef)->GetFunctionProxy();
-        ScriptContext *pScriptContext = pRootBody->GetScriptContext();
-        if (pScriptContext->IsProfiling() && !pRootBody->GetFunctionBody()->HasFunctionCompiledSent())
-        {
-            pScriptContext->RegisterScript(pRootBody, FALSE /*fRegisterScript*/);
-        }
-
-        // We can come to this function even though we have stopped profiling.
-        Assert(!pScriptContext->IsProfiling() || (*functionRef)->GetFunctionBody()->GetProfileSession() == pScriptContext->GetProfileSession());
-#endif
-
         return entryPoint;
     }
 
@@ -4264,66 +3928,8 @@ ExitTempAllocator:
 
         JavascriptMethod entryPoint = Js::JavascriptFunction::DeferredDeserialize(function);
 
-#ifdef ENABLE_SCRIPT_PROFILING
-        //To get the scriptContext; we only need the FunctionProxy
-        FunctionProxy *pRootBody = function->GetFunctionProxy();
-        ScriptContext *pScriptContext = pRootBody->GetScriptContext();
-        if (pScriptContext->IsProfiling() && !pRootBody->GetFunctionBody()->HasFunctionCompiledSent())
-        {
-            pScriptContext->RegisterScript(pRootBody, FALSE /*fRegisterScript*/);
-        }
-
-        // We can come to this function even though we have stopped profiling.
-        Assert(!pScriptContext->IsProfiling() || function->GetFunctionBody()->GetProfileSession() == pScriptContext->GetProfileSession());
-#endif
-
         return entryPoint;
     }
-
-#ifdef ENABLE_SCRIPT_PROFILING
-    BOOL ScriptContext::GetProfileInfo(
-        JavascriptFunction* function,
-        PROFILER_TOKEN &scriptId,
-        PROFILER_TOKEN &functionId)
-    {
-        BOOL fCanProfile = (m_pProfileCallback != nullptr && m_fTraceFunctionCall);
-        if (!fCanProfile)
-        {
-            return FALSE;
-        }
-
-        Js::FunctionInfo* functionInfo = function->GetFunctionInfo();
-        if (functionInfo->GetAttributes() & FunctionInfo::DoNotProfile)
-        {
-            return FALSE;
-        }
-
-        Js::FunctionBody * functionBody = functionInfo->GetFunctionBody();
-        if (functionBody == nullptr)
-        {
-            functionId = GetFunctionNumber(functionInfo->GetOriginalEntryPoint());
-            if (functionId == -1)
-            {
-                // Dom Call
-                return m_fTraceDomCall && (m_pProfileCallback2 != nullptr);
-            }
-            else
-            {
-                // Builtin function
-                scriptId = BuiltInFunctionsScriptId;
-                return m_fTraceNativeFunctionCall;
-            }
-        }
-        else if (!functionBody->GetUtf8SourceInfo()->GetIsLibraryCode() || functionBody->IsPublicLibraryCode()) // user script or public library code
-        {
-            scriptId = (PROFILER_TOKEN)functionBody->GetUtf8SourceInfo()->GetSourceInfoId();
-            functionId = functionBody->GetFunctionNumber();
-            return TRUE;
-        }
-
-        return FALSE;
-    }
-#endif // ENABLE_SCRIPT_PROFILING
 
     bool ScriptContext::IsForceNoNative()
     {
@@ -4362,102 +3968,12 @@ ExitTempAllocator:
     // - used when we profile and debug
     Var ScriptContext::DebugProfileProbeThunk(RecyclableObject* callable, CallInfo callInfo, ...)
     {
-#if defined(ENABLE_SCRIPT_DEBUGGING) || defined(ENABLE_SCRIPT_PROFILING)
+#if defined(ENABLE_SCRIPT_DEBUGGING)
         RUNTIME_ARGUMENTS(args, callInfo);
 
         Assert(!VarIs<WasmScriptFunction>(callable));
         JavascriptFunction* function = VarTo<JavascriptFunction>(callable);
         ScriptContext* scriptContext = function->GetScriptContext();
-
-        // We can come here when profiling is not on
-        // e.g. User starts profiling, we update all thinks and then stop profiling - we don't update thunk
-        // So we still get this call
-#if defined(ENABLE_SCRIPT_PROFILING)
-        bool functionEnterEventSent = false;
-        char16_t *pwszExtractedFunctionName = NULL;
-        size_t functionNameLen = 0;
-        const char16_t *pwszFunctionName = NULL;
-        int32_t hrOfEnterEvent = S_OK;
-
-        PROFILER_TOKEN scriptId = -1;
-        PROFILER_TOKEN functionId = -1;
-        const bool isProfilingUserCode = scriptContext->GetThreadContext()->IsProfilingUserCode();
-        const bool isUserCode = !function->IsLibraryCode();
-
-        const bool fProfile = (isUserCode || isProfilingUserCode) // Only report user code or entry library code
-            && scriptContext->GetProfileInfo(function, scriptId, functionId);
-
-        if (fProfile)
-        {
-            Js::FunctionBody *pBody = function->GetFunctionBody();
-            if (pBody != nullptr && !pBody->HasFunctionCompiledSent())
-            {
-                pBody->RegisterFunction(false/*changeThunk*/);
-            }
-
-#if DEBUG
-            { // scope
-
-                Assert(scriptContext->IsProfiling());
-
-                if (pBody && pBody->GetProfileSession() != pBody->GetScriptContext()->GetProfileSession())
-                {
-                    char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-                    OUTPUT_TRACE_DEBUGONLY(Js::ScriptProfilerPhase, u"ScriptContext::ProfileProbeThunk, ProfileSession does not match (%d != %d), functionNumber : %s, functionName : %s\n",
-                        pBody->GetProfileSession(), pBody->GetScriptContext()->GetProfileSession(), pBody->GetDebugNumberSet(debugStringBuffer), pBody->GetDisplayName());
-                }
-                AssertMsg(pBody == NULL || pBody->GetProfileSession() == pBody->GetScriptContext()->GetProfileSession(), "Function info wasn't reported for this profile session");
-            }
-#endif // DEBUG
-
-            if (functionId == -1)
-            {
-                Var sourceString = function->GetSourceString();
-
-                // SourceString will be null for the Js::BoundFunction, don't throw Enter/Exit notification in that case.
-                if (sourceString != NULL)
-                {
-                    if (TaggedInt::Is(sourceString))
-                    {
-                        PropertyId nameId = TaggedInt::ToInt32(sourceString);
-                        pwszFunctionName = scriptContext->GetPropertyString(nameId)->GetSz();
-                    }
-                    else
-                    {
-                        // it is string because user had called in toString extract name from it
-                        Assert(VarIs<JavascriptString>(sourceString));
-                        const char16_t *pwszToString = ((JavascriptString *)sourceString)->GetSz();
-                        const char16_t *pwszNameStart = PAL_wcsstr(pwszToString, u" ");
-                        const char16_t *pwszNameEnd = PAL_wcsstr(pwszToString, u"(");
-                        if (pwszNameStart == nullptr || pwszNameEnd == nullptr || ((int)(pwszNameEnd - pwszNameStart) <= 0))
-                        {
-                            functionNameLen = ((JavascriptString *)sourceString)->GetLength() + 1;
-                            pwszExtractedFunctionName = HeapNewArray(char16_t, functionNameLen);
-                            wcsncpy_s(pwszExtractedFunctionName, functionNameLen, pwszToString, _TRUNCATE);
-                        }
-                        else
-                        {
-                            functionNameLen = pwszNameEnd - pwszNameStart;
-                            AssertMsg(functionNameLen < INT_MAX, "Allocating array with zero or negative length?");
-                            pwszExtractedFunctionName = HeapNewArray(char16_t, functionNameLen);
-                            wcsncpy_s(pwszExtractedFunctionName, functionNameLen, pwszNameStart + 1, _TRUNCATE);
-                        }
-                        pwszFunctionName = pwszExtractedFunctionName;
-                    }
-
-                    functionEnterEventSent = true;
-                    Assert(pwszFunctionName != NULL);
-                    hrOfEnterEvent = scriptContext->OnDispatchFunctionEnter(pwszFunctionName);
-                }
-            }
-            else
-            {
-                hrOfEnterEvent = scriptContext->OnFunctionEnter(scriptId, functionId);
-            }
-
-            scriptContext->GetThreadContext()->SetIsProfilingUserCode(isUserCode); // Update IsProfilingUserCode state
-        }
-#endif // ENABLE_SCRIPT_PROFILING
 
         Var aReturn = NULL;
         JavascriptMethod origEntryPoint = function->GetFunctionInfo()->GetOriginalEntryPoint();
@@ -4556,33 +4072,6 @@ ExitTempAllocator:
         }
         __FINALLY
         {
-#if defined(ENABLE_SCRIPT_PROFILING)
-            if (fProfile)
-            {
-                if (hrOfEnterEvent != ACTIVPROF_E_PROFILER_ABSENT)
-                {
-                    if (functionId == -1)
-                    {
-                        // Check whether we have sent the Enter event or not.
-                        if (functionEnterEventSent)
-                        {
-                            scriptContext->OnDispatchFunctionExit(pwszFunctionName);
-                            if (pwszExtractedFunctionName != NULL)
-                            {
-                                HeapDeleteArray(functionNameLen, pwszExtractedFunctionName);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        scriptContext->OnFunctionExit(scriptId, functionId);
-                    }
-                }
-
-                scriptContext->GetThreadContext()->SetIsProfilingUserCode(isProfilingUserCode); // Restore IsProfilingUserCode state
-            }
-#endif
-
             if (scriptContext->IsDebuggerRecording())
             {
                 scriptContext->GetDebugContext()->GetProbeContainer()->EndRecordingCall(aReturn, function);
@@ -4593,10 +4082,10 @@ ExitTempAllocator:
         return aReturn;
 #else
         return nullptr;
-#endif // defined(ENABLE_SCRIPT_DEBUGGING) || defined(ENABLE_SCRIPT_PROFILING)
+#endif // defined(ENABLE_SCRIPT_DEBUGGING)
     }
 
-#if defined(ENABLE_SCRIPT_DEBUGGING) || defined(ENABLE_SCRIPT_PROFILING)
+#if defined(ENABLE_SCRIPT_DEBUGGING)
     // Part of ProfileModeThunk which is called in debug mode (debug or debug & profile).
     Var ScriptContext::ProfileModeThunk_DebugModeWrapper(JavascriptFunction* function, ScriptContext* scriptContext, JavascriptMethod entryPoint, Arguments& args)
     {
@@ -4614,187 +4103,10 @@ ExitTempAllocator:
     }
 #endif
 
-#ifdef ENABLE_SCRIPT_PROFILING
-    int32_t ScriptContext::OnScriptCompiled(PROFILER_TOKEN scriptId, PROFILER_SCRIPT_TYPE type, IUnknown *pIDebugDocumentContext)
-    {
-        // TODO : can we do a delay send of these events or can we send an event before doing all this stuff that could calculate overhead?
-        Assert(m_pProfileCallback != NULL);
-
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::OnScriptCompiled scriptId : %d, ScriptType : %d\n", scriptId, type);
-
-        int32_t hr = S_OK;
-
-        if ((type == PROFILER_SCRIPT_TYPE_NATIVE && m_fTraceNativeFunctionCall) ||
-            (type != PROFILER_SCRIPT_TYPE_NATIVE && m_fTraceFunctionCall))
-        {
-            m_inProfileCallback = TRUE;
-            hr = m_pProfileCallback->ScriptCompiled(scriptId, type, pIDebugDocumentContext);
-            m_inProfileCallback = FALSE;
-        }
-        return hr;
-    }
-
-    int32_t ScriptContext::OnFunctionCompiled(
-        PROFILER_TOKEN functionId,
-        PROFILER_TOKEN scriptId,
-        const char16_t *pwszFunctionName,
-        const char16_t *pwszFunctionNameHint,
-        IUnknown *pIDebugDocumentContext)
-    {
-        Assert(m_pProfileCallback != NULL);
-
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
-        if (scriptId != BuiltInFunctionsScriptId || Js::Configuration::Global.flags.Verbose)
-        {
-            OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::OnFunctionCompiled scriptId : %d, functionId : %d, FunctionName : %s, FunctionNameHint : %s\n", scriptId, functionId, pwszFunctionName, pwszFunctionNameHint);
-        }
-#endif
-
-        int32_t hr = S_OK;
-
-        if ((scriptId == BuiltInFunctionsScriptId && m_fTraceNativeFunctionCall) ||
-            (scriptId != BuiltInFunctionsScriptId && m_fTraceFunctionCall))
-        {
-            m_inProfileCallback = TRUE;
-            hr = m_pProfileCallback->FunctionCompiled(functionId, scriptId, pwszFunctionName, pwszFunctionNameHint, pIDebugDocumentContext);
-            m_inProfileCallback = FALSE;
-        }
-        return hr;
-    }
-
-    int32_t ScriptContext::OnFunctionEnter(PROFILER_TOKEN scriptId, PROFILER_TOKEN functionId)
-    {
-        if (m_pProfileCallback == NULL)
-        {
-            return ACTIVPROF_E_PROFILER_ABSENT;
-        }
-
-        OUTPUT_VERBOSE_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::OnFunctionEnter scriptId : %d, functionId : %d\n", scriptId, functionId);
-
-        int32_t hr = S_OK;
-
-        if ((scriptId == BuiltInFunctionsScriptId && m_fTraceNativeFunctionCall) ||
-            (scriptId != BuiltInFunctionsScriptId && m_fTraceFunctionCall))
-        {
-            m_inProfileCallback = TRUE;
-            hr = m_pProfileCallback->OnFunctionEnter(scriptId, functionId);
-            m_inProfileCallback = FALSE;
-        }
-        return hr;
-    }
-
-    int32_t ScriptContext::OnFunctionExit(PROFILER_TOKEN scriptId, PROFILER_TOKEN functionId)
-    {
-        if (m_pProfileCallback == NULL)
-        {
-            return ACTIVPROF_E_PROFILER_ABSENT;
-        }
-
-        OUTPUT_VERBOSE_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::OnFunctionExit scriptId : %d, functionId : %d\n", scriptId, functionId);
-
-        int32_t hr = S_OK;
-
-        if ((scriptId == BuiltInFunctionsScriptId && m_fTraceNativeFunctionCall) ||
-            (scriptId != BuiltInFunctionsScriptId && m_fTraceFunctionCall))
-        {
-            m_inProfileCallback = TRUE;
-            hr = m_pProfileCallback->OnFunctionExit(scriptId, functionId);
-            m_inProfileCallback = FALSE;
-        }
-        return hr;
-    }
-
-    int32_t ScriptContext::FunctionExitSenderThunk(PROFILER_TOKEN functionId, PROFILER_TOKEN scriptId, ScriptContext *pScriptContext)
-    {
-        return pScriptContext->OnFunctionExit(scriptId, functionId);
-    }
-
-    int32_t ScriptContext::FunctionExitByNameSenderThunk(const char16_t *pwszFunctionName, ScriptContext *pScriptContext)
-    {
-        return pScriptContext->OnDispatchFunctionExit(pwszFunctionName);
-    }
-#endif // ENABLE_SCRIPT_PROFILING
-
     Js::PropertyId ScriptContext::GetFunctionNumber(JavascriptMethod entryPoint)
     {
         return (m_pBuiltinFunctionIdMap == NULL) ? -1 : m_pBuiltinFunctionIdMap->Lookup(entryPoint, -1);
     }
-
-#if defined(ENABLE_SCRIPT_PROFILING)
-    int32_t ScriptContext::RegisterLibraryFunction(const char16_t *pwszObjectName, const char16_t *pwszFunctionName, Js::PropertyId functionPropertyId, JavascriptMethod entryPoint)
-    {
-#if DEBUG
-        const char16_t *pwszObjectNameFromProperty = const_cast<char16_t *>(GetPropertyName(functionPropertyId)->GetBuffer());
-        if (GetPropertyName(functionPropertyId)->IsSymbol())
-        {
-            // The spec names functions whose property is a well known symbol as the description from the symbol
-            // wrapped in square brackets, so verify by skipping past first bracket
-            Assert(!PAL_wcsncmp(pwszFunctionName + 1, pwszObjectNameFromProperty, std::u16string(pwszObjectNameFromProperty).length()));
-            Assert(std::u16string(pwszFunctionName).length() == std::u16string(pwszObjectNameFromProperty).length() + 2);
-        }
-        else
-        {
-            Assert(!PAL_wcscmp(pwszFunctionName, pwszObjectNameFromProperty));
-        }
-        Assert(m_pBuiltinFunctionIdMap != NULL);
-#endif
-
-        // Create the propertyId as object.functionName if it is not global function
-        // the global functions would be recognized by just functionName
-        // e.g. with functionName, toString, depending on objectName, it could be Object.toString, or Date.toString
-        char16_t szTempName[70];
-        if (pwszObjectName != NULL)
-        {
-            // Create name as "object.function"
-            swprintf_s(szTempName, 70, u"%s.%s", pwszObjectName, pwszFunctionName);
-            functionPropertyId = GetOrAddPropertyIdTracked(szTempName, (uint)std::u16string(szTempName).length());
-        }
-
-        Js::PropertyId cachedFunctionId;
-        bool keyFound = m_pBuiltinFunctionIdMap->TryGetValue(entryPoint, &cachedFunctionId);
-
-        if (keyFound)
-        {
-            // Entry point is already in the map
-            if (cachedFunctionId != functionPropertyId)
-            {
-                // This is the scenario where we could be using same function for multiple builtin functions
-                // e.g. Error.toString etc.
-                // We would ignore these extra entrypoints because while profiling, identifying which object's toString is too costly for its worth
-                return S_OK;
-            }
-
-            // else is the scenario where map was created by earlier profiling session and we are yet to send function compiled for this session
-        }
-        else
-        {
-#if DBG
-            m_pBuiltinFunctionIdMap->MapUntil([&](JavascriptMethod, Js::PropertyId propertyId) -> bool
-            {
-                if (functionPropertyId == propertyId)
-                {
-                    Assert(false);
-                    return true;
-                }
-                return false;
-            });
-#endif
-
-            // throws, this must always be in a function that handles OOM
-            m_pBuiltinFunctionIdMap->Add(entryPoint, functionPropertyId);
-        }
-
-        // Use name with "Object." if its not a global function
-        if (pwszObjectName != NULL)
-        {
-            return OnFunctionCompiled(functionPropertyId, BuiltInFunctionsScriptId, szTempName, NULL, NULL);
-        }
-        else
-        {
-            return OnFunctionCompiled(functionPropertyId, BuiltInFunctionsScriptId, pwszFunctionName, NULL, NULL);
-        }
-    }
-#endif // ENABLE_SCRIPT_PROFILING
 
     void ScriptContext::BindReference(void * addr)
     {
@@ -4924,15 +4236,6 @@ ExitTempAllocator:
                 }
             }
         }
-
-#ifdef ENABLE_SCRIPT_PROFILING
-        // If the sourceList got changed, in we need to refresh the nondebug document list in the profiler mode.
-        if (fCleanupDocRequired && m_pProfileCallback != NULL)
-        {
-            Assert(CleanupDocumentContext != NULL);
-            CleanupDocumentContext(this);
-        }
-#endif // ENABLE_SCRIPT_PROFILING
     }
 
     void ScriptContext::ClearScriptContextCaches()
@@ -5097,59 +4400,6 @@ ScriptContext::GetJitFuncRangeCache()
         return this->GetThreadContext()->IsNativeAddress(codeAddr, this);
     }
 #endif
-
-#ifdef ENABLE_SCRIPT_PROFILING
-    bool ScriptContext::SetDispatchProfile(bool fSet, JavascriptMethod dispatchInvoke)
-    {
-        if (!fSet)
-        {
-            this->javascriptLibrary->SetDispatchProfile(false, dispatchInvoke);
-            return true;
-        }
-        else if (m_fTraceDomCall)
-        {
-            this->javascriptLibrary->SetDispatchProfile(true, dispatchInvoke);
-            return true;
-        }
-        return false;
-    }
-
-    int32_t ScriptContext::OnDispatchFunctionEnter(const char16_t *pwszFunctionName)
-    {
-        if (m_pProfileCallback2 == NULL)
-        {
-            return ACTIVPROF_E_PROFILER_ABSENT;
-        }
-
-        int32_t hr = S_OK;
-
-        if (m_fTraceDomCall)
-        {
-            m_inProfileCallback = TRUE;
-            hr = m_pProfileCallback2->OnFunctionEnterByName(pwszFunctionName, PROFILER_SCRIPT_TYPE_DOM);
-            m_inProfileCallback = FALSE;
-        }
-        return hr;
-    }
-
-    int32_t ScriptContext::OnDispatchFunctionExit(const char16_t *pwszFunctionName)
-    {
-        if (m_pProfileCallback2 == NULL)
-        {
-            return ACTIVPROF_E_PROFILER_ABSENT;
-        }
-
-        int32_t hr = S_OK;
-
-        if (m_fTraceDomCall)
-        {
-            m_inProfileCallback = TRUE;
-            hr = m_pProfileCallback2->OnFunctionExitByName(pwszFunctionName, PROFILER_SCRIPT_TYPE_DOM);
-            m_inProfileCallback = FALSE;
-        }
-        return hr;
-    }
-#endif // ENABLE_SCRIPT_PROFILING
 
     void ScriptContext::SetBuiltInLibraryFunction(JavascriptMethod entryPoint, JavascriptFunction* function)
     {

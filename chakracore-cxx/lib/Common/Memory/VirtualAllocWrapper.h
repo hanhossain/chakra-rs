@@ -81,7 +81,7 @@ private:
 
     BVStatic<PreReservedAllocationSegmentCount>     freeSegments;
     void *                                          preReservedStartAddress;
-    CriticalSection                                 cs;
+    std::recursive_mutex                                 cs;
 };
 
 #endif

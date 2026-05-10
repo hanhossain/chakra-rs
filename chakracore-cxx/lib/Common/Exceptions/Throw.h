@@ -4,7 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#include "Core/CriticalSection.h"
 #include "Core/Assertions.h"
 
 #ifdef STACK_BACK_TRACE
@@ -41,7 +40,7 @@ namespace Js {
         static void GenerateDump(const char16_t* filePath, bool terminate = false, bool needLock = false);
         static void GenerateDumpForAssert(const char16_t* filePath);
     private:
-        static CriticalSection csGenerateDump;
+        static std::recursive_mutex csGenerateDump;
 #ifdef STACK_BACK_TRACE
         thread_local static  StackBackTrace * stackBackTrace;
 

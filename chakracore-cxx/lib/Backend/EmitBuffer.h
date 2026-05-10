@@ -30,7 +30,7 @@ typedef void* NativeMethod;
 //----------------------------------------------------------------------------
 // Emit buffer manager - manages allocation chunks from VirtualAlloc
 //----------------------------------------------------------------------------
-template <typename TAlloc, typename TPreReservedAlloc, class SyncObject = FakeCriticalSection>
+template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
 class EmitBufferManager
 {
     typedef EmitBufferAllocation<TAlloc, TPreReservedAlloc> TEmitBufferAllocation;
@@ -99,5 +99,4 @@ public:
 #endif
 };
 
-typedef EmitBufferManager<VirtualAllocWrapper, PreReservedVirtualAllocWrapper, CriticalSection> InProcEmitBufferManagerWithlock;
-typedef EmitBufferManager<VirtualAllocWrapper, PreReservedVirtualAllocWrapper, FakeCriticalSection> InProcEmitBufferManager;
+typedef EmitBufferManager<VirtualAllocWrapper, PreReservedVirtualAllocWrapper, std::recursive_mutex> InProcEmitBufferManager;

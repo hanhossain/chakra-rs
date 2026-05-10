@@ -236,18 +236,7 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
 #if GLOBAL_ENABLE_WRITE_BARRIER
     , pendingWriteBarrierBlockMap(&HeapAllocator::Instance)
 #endif
-#ifdef PROFILE_RECYCLER_ALLOC
-    , trackerCriticalSection(nullptr)
-#endif
 {
-
-#ifdef RECYCLER_MARK_TRACK
-    this->markMap = NoCheckHeapNew(MarkMap, &NoCheckHeapAllocator::Instance, 163, &markMapCriticalSection);
-    markContext.SetMarkMap(markMap);
-    parallelMarkContext1.SetMarkMap(markMap);
-    parallelMarkContext2.SetMarkMap(markMap);
-    parallelMarkContext3.SetMarkMap(markMap);
-#endif
 
 #ifdef RECYCLER_MEMORY_VERIFY
     verifyPad =  GetRecyclerFlagsTable().RecyclerVerifyPadSize;
@@ -392,7 +381,7 @@ Recycler::~Recycler()
     Assert(!this->isAborting);
 #endif
 #if DBG && GLOBAL_ENABLE_WRITE_BARRIER
-    recyclerListLock.Enter();
+    recyclerListLock.lock();
     if (recyclerList == this)
     {
         recyclerList = this->next;
@@ -406,7 +395,7 @@ Recycler::~Recycler()
         }
         list->next = this->next;
     }
-    recyclerListLock.Leave();
+    recyclerListLock.unlock();
 #endif
 
     // Stop any further collection
@@ -496,13 +485,7 @@ Recycler::~Recycler()
         });
         NoCheckHeapDelete(this->trackerDictionary);
         this->trackerDictionary = nullptr;
-        delete(trackerCriticalSection);
     }
-#endif
-
-#ifdef RECYCLER_MARK_TRACK
-    NoCheckHeapDelete(this->markMap);
-    this->markMap = nullptr;
 #endif
 
 #if DBG
@@ -655,7 +638,7 @@ Recycler::RootRelease(void* obj, uint *count)
 }
 #if DBG && GLOBAL_ENABLE_WRITE_BARRIER
 Recycler* Recycler::recyclerList = nullptr;
-CriticalSection Recycler::recyclerListLock;
+std::recursive_mutex Recycler::recyclerListLock;
 #endif
 
 void
@@ -839,10 +822,10 @@ Recycler::Initialize(const bool forceInThread, JsUtil::ThreadService *threadServ
     Assert(!needWriteWatch);
 #endif
 #if DBG && GLOBAL_ENABLE_WRITE_BARRIER
-    recyclerListLock.Enter();
+    recyclerListLock.lock();
     this->next = recyclerList;
     recyclerList = this;
-    recyclerListLock.Leave();
+    recyclerListLock.unlock();
 #endif
 }
 
@@ -2004,26 +1987,7 @@ Recycler::ResetMarks(ResetMarkFlags flags)
     autoHeap.ResetMarks(flags);
 
     RECYCLER_PROFILE_EXEC_END(this, Js::ResetMarksPhase);
-
-#ifdef RECYCLER_MARK_TRACK
-    this->ClearMarkMap();
-#endif
 }
-
-#ifdef RECYCLER_MARK_TRACK
-void Recycler::ClearMarkMap()
-{
-    this->markMap->Clear();
-}
-
-void Recycler::PrintMarkMap()
-{
-    this->markMap->Map([](void* key, void* value)
-    {
-        Output::Print(u"0x%P => 0x%P\n", key, value);
-    });
-}
-#endif
 
 #if DBG
 void
@@ -7708,7 +7672,6 @@ Recycler::InitializeProfileAllocTracker()
     if (DoProfileAllocTracker())
     {
         trackerDictionary = NoCheckHeapNew(TypeInfotoTrackerItemMap, &NoCheckHeapAllocator::Instance, 163);
-        trackerCriticalSection = new CriticalSection(1000);
 #pragma prefast(suppress:6031, "InitializeCriticalSectionAndSpinCount always succeed since Vista. No need to check return value");
     }
 
@@ -7792,9 +7755,8 @@ void* Recycler::TrackAlloc(void* object, size_t size, const TrackAllocData& trac
     if (this->trackerDictionary != nullptr)
     {
         Assert(nextAllocData.IsEmpty()); // should have been cleared
-        trackerCriticalSection->Enter();
+        std::unique_lock lock(trackerCriticalSection);
         TrackAllocCore(object, size, trackAllocData);
-        trackerCriticalSection->Leave();
     }
     return object;
 }
@@ -7805,7 +7767,7 @@ Recycler::TrackIntegrate(__in_ecount(blockSize) char * blockAddress, size_t bloc
     if (this->trackerDictionary != nullptr)
     {
         Assert(nextAllocData.IsEmpty()); // should have been cleared
-        trackerCriticalSection->Enter();
+        std::unique_lock lock(trackerCriticalSection);
 
         char * address = blockAddress;
         char * blockEnd = blockAddress + blockSize;
@@ -7814,8 +7776,6 @@ Recycler::TrackIntegrate(__in_ecount(blockSize) char * blockAddress, size_t bloc
             TrackAllocCore(address, objectSize, trackAllocData);
             address += allocSize;
         }
-
-        trackerCriticalSection->Leave();
     }
 }
 
@@ -7823,7 +7783,7 @@ BOOL Recycler::TrackFree(const char* address, size_t size)
 {
     if (this->trackerDictionary != nullptr)
     {
-        trackerCriticalSection->Enter();
+        std::unique_lock lock(trackerCriticalSection);
         TrackerData * data = GetTrackerData((char *)address);
         if (data != nullptr)
         {
@@ -7855,7 +7815,6 @@ BOOL Recycler::TrackFree(const char* address, size_t size)
                 Assert(false);
             }
         }
-        trackerCriticalSection->Leave();
     }
     return true;
 }
@@ -7884,14 +7843,13 @@ Recycler::TrackUnallocated(char* address, char *endAddress, size_t sizeCat)
     {
         if (this->trackerDictionary != nullptr)
         {
-            trackerCriticalSection->Enter();
+            std::unique_lock lock(trackerCriticalSection);
             while (address + sizeCat <= endAddress)
             {
                 Assert(GetTrackerData(address) == nullptr);
                 SetTrackerData(address, &TrackerData::EmptyData);
                 address += sizeCat;
             }
-            trackerCriticalSection->Leave();
         }
     }
 }
@@ -8661,7 +8619,7 @@ Recycler::UnRegisterPendingWriteBarrierBlock(void* address)
 void
 Recycler::WBVerifyBitIsSet(char* addr, char* target)
 {
-    std::unique_lock<std::recursive_mutex> lock(recyclerListLock.GetMutex());
+    std::unique_lock<std::recursive_mutex> lock(recyclerListLock);
     Recycler* recycler = Recycler::recyclerList;
     while (recycler)
     {
@@ -8679,7 +8637,7 @@ Recycler::WBSetBit(char* addr)
 {
     if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && CONFIG_FLAG(VerifyBarrierBit))
     {
-        std::unique_lock<std::recursive_mutex> lock(recyclerListLock.GetMutex());
+        std::unique_lock<std::recursive_mutex> lock(recyclerListLock);
         Recycler* recycler = Recycler::recyclerList;
         while (recycler)
         {
@@ -8698,7 +8656,7 @@ Recycler::WBSetBitRange(char* addr, uint count)
 {
     if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && CONFIG_FLAG(VerifyBarrierBit))
     {
-        std::unique_lock<std::recursive_mutex> lock(recyclerListLock.GetMutex());
+        std::unique_lock<std::recursive_mutex> lock(recyclerListLock);
         Recycler* recycler = Recycler::recyclerList;
         while (recycler)
         {
@@ -8715,7 +8673,7 @@ Recycler::WBSetBitRange(char* addr, uint count)
 bool
 Recycler::WBCheckIsRecyclerAddress(char* addr)
 {
-    std::unique_lock<std::recursive_mutex> lock(recyclerListLock.GetMutex());
+    std::unique_lock<std::recursive_mutex> lock(recyclerListLock);
     Recycler* recycler = Recycler::recyclerList;
     while (recycler)
     {

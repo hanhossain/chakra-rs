@@ -832,15 +832,6 @@ private:
     inline bool ShouldCapturePageHeapAllocStack() const { return false; }
 #endif
 
-
-#ifdef RECYCLER_MARK_TRACK
-    MarkMap* markMap;
-    CriticalSection markMapCriticalSection;
-
-    void PrintMarkMap();
-    void ClearMarkMap();
-#endif
-
     // Number of pages to reserve for the primary mark stack
     // This is the minimum number of pages to guarantee that a single heap block
     // can be rescanned in the worst possible case where every object in a heap block
@@ -1916,7 +1907,7 @@ private:
     typedef JsUtil::BaseDictionary<void *, TrackerData *, NoCheckHeapAllocator, PrimeSizePolicy, RecyclerPointerComparer, JsUtil::SimpleDictionaryEntry, JsUtil::NoResizeLock> PointerToTrackerDataMap;
 
     TypeInfotoTrackerItemMap * trackerDictionary;
-    CriticalSection * trackerCriticalSection;
+    std::recursive_mutex trackerCriticalSection;
 #endif
     TrackAllocData nextAllocData;
 #endif
@@ -2059,7 +2050,7 @@ public:
 #if DBG && GLOBAL_ENABLE_WRITE_BARRIER
 private:
     static Recycler* recyclerList;
-    static CriticalSection recyclerListLock;
+    static std::recursive_mutex recyclerListLock;
     Recycler* next;
 public:
     static void WBSetBitJIT(char* addr)

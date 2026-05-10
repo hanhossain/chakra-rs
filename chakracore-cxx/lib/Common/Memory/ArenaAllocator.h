@@ -924,7 +924,7 @@ public:
 // Strong references should be short lived
 class ReferencedArenaAdapter : public RefCounted
 {
-    CriticalSection adapterLock;
+    std::recursive_mutex adapterLock;
     uint32_t strongRefCount;
     ArenaAllocator* arena;
     bool deleteFlag;
@@ -948,7 +948,7 @@ public:
     bool AddStrongReference()
     {
         bool retval = false;
-        adapterLock.Enter();
+        adapterLock.lock();
 
         if (deleteFlag)
         {
@@ -967,14 +967,14 @@ public:
             retval = true;
         }
 
-        adapterLock.Leave();
+        adapterLock.unlock();
 
         return retval;
     }
 
     void ReleaseStrongReference()
     {
-        adapterLock.Enter();
+        adapterLock.lock();
         strongRefCount--;
 
         if (deleteFlag && this->arena && 0 == strongRefCount)
@@ -984,13 +984,13 @@ public:
             this->arena = NULL;
         }
 
-        adapterLock.Leave();
+        adapterLock.unlock();
     }
 
     void DeleteArena()
     {
         deleteFlag = true;
-        if (adapterLock.TryEnter())
+        if (adapterLock.try_lock())
         {
             if (0 == strongRefCount)
             {
@@ -998,7 +998,7 @@ public:
                 HeapDelete(this->arena);
                 this->arena = NULL;
             }
-            adapterLock.Leave();
+            adapterLock.unlock();
         }
     }
 

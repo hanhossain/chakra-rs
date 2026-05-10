@@ -75,7 +75,7 @@ private:
     bool hadDecommitTimer;
     uint32_t decommitTime;
     uint idleDecommitTryEnterWaitFactor;
-    CriticalSection cs;
+    std::recursive_mutex cs;
     static const uint IdleDecommitTimeout = 1000;
 #endif
 
