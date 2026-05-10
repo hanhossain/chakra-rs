@@ -779,7 +779,7 @@ private:
     // When ETW rundown in background thread which needs to walk scriptContext/functionBody/entryPoint lists,
     // or when JIT thread is getting auxPtrs from function body, we should not be modifying the list of 
     // functionBody/entrypoints, or expanding the auxPtrs
-    CriticalSection csFunctionBody;
+    std::recursive_mutex csFunctionBody;
 
 #ifdef _M_X64
     friend class Js::Amd64StackFrame;
@@ -839,8 +839,7 @@ public:
 
 #endif // ENABLE_NATIVE_CODEGEN
 
-    CriticalSection* GetFunctionBodyLock() { return &csFunctionBody; }
-    std::recursive_mutex& GetFunctionBodyMutex() { return csFunctionBody.GetMutex(); }
+    std::recursive_mutex& GetFunctionBodyMutex() { return csFunctionBody; }
 
     Js::IsConcatSpreadableCache* GetIsConcatSpreadableCache() { return &isConcatSpreadableCache; }
 

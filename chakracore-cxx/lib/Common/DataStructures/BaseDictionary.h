@@ -1606,12 +1606,12 @@ namespace JsUtil
         template <typename ValueOrKey> class Comparer = DefaultComparer,
         template <typename K, typename V> class Entry = SimpleDictionaryEntry,
         class LockPolicy = Js::DefaultContainerLockPolicy,   // Controls lock policy for read/map/write/add/remove items
-        class SyncObject = CriticalSection
+        class SyncObject = std::recursive_mutex
     >
     class SynchronizedDictionary: protected BaseDictionary<TKey, TValue, TAllocator, SizePolicy, Comparer, Entry>
     {
     private:
-        FieldNoBarrier(SyncObject*) syncObj;
+        FieldNoBarrier(SyncObject)& syncObj;
 
         typedef BaseDictionary<TKey, TValue, TAllocator, SizePolicy, Comparer, Entry> Base;
     public:
@@ -1624,7 +1624,7 @@ namespace JsUtil
         friend class Js::RemoteDictionary<DictionaryType>;
 
     public:
-        SynchronizedDictionary(AllocatorType * allocator, int capacity, SyncObject* syncObject):
+        SynchronizedDictionary(AllocatorType * allocator, int capacity, SyncObject& syncObject):
             Base(allocator, capacity),
             syncObj(syncObject)
         {}
@@ -1675,21 +1675,21 @@ namespace JsUtil
 
         int Add(const TKey& key, const TValue& value)
         {
-            typename LockPolicy::AddRemoveLock autoLock(syncObj->GetMutex());
+            typename LockPolicy::AddRemoveLock autoLock(syncObj);
 
             return __super::Add(key, value);
         }
 
         int AddNew(const TKey& key, const TValue& value)
         {
-            typename LockPolicy::AddRemoveLock autoLock(syncObj->GetMutex());
+            typename LockPolicy::AddRemoveLock autoLock(syncObj);
 
             return __super::AddNew(key, value);
         }
 
         int Item(const TKey& key, const TValue& value)
         {
-            typename LockPolicy::AddRemoveLock autoLock(syncObj->GetMutex());
+            typename LockPolicy::AddRemoveLock autoLock(syncObj);
 
             return __super::Item(key, value);
         }
@@ -1703,21 +1703,21 @@ namespace JsUtil
 
         bool Remove(KeyValuePair<TKey, TValue> keyValuePair)
         {
-            typename LockPolicy::AddRemoveLock autoLock(syncObj->GetMutex());
+            typename LockPolicy::AddRemoveLock autoLock(syncObj);
 
             return __super::Remove(keyValuePair);
         }
 
         void Clear()
         {
-            typename LockPolicy::AddRemoveLock autoLock(syncObj->GetMutex());
+            typename LockPolicy::AddRemoveLock autoLock(syncObj);
 
             return __super::Clear();
         }
 
         void Reset()
         {
-            typename LockPolicy::AddRemoveLock autoLock(syncObj->GetMutex());
+            typename LockPolicy::AddRemoveLock autoLock(syncObj);
 
             return __super::Reset();
         }
@@ -1754,7 +1754,7 @@ namespace JsUtil
 
         bool TryGetValueAndRemove(const TKey& key, TValue* value)
         {
-            typename LockPolicy::AddRemoveLock autoLock(syncObj->GetMutex());
+            typename LockPolicy::AddRemoveLock autoLock(syncObj);
 
             return __super::TryGetValueAndRemove(key, value);
         }
@@ -1855,7 +1855,7 @@ namespace JsUtil
         template<class Fn>
         void MapAndRemoveIf(Fn fn)
         {
-            typename LockPolicy::AddRemoveLock autoLock(syncObj->GetMutex());
+            typename LockPolicy::AddRemoveLock autoLock(syncObj);
 
             return __super::MapAndRemoveIf(fn);
         }
