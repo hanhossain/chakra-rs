@@ -738,7 +738,7 @@ private:
     Js::OnlyWritablePropertyThreadRegistry onlyWritablePropertyRegistry;
 
     DListBase<CollectCallBack> collectCallBackList;
-    CriticalSection csCollectionCallBack;
+    std::recursive_mutex csCollectionCallBack;
     bool hasCollectionCallBack;
     bool isOptimizedForManyInstances;
     bool bgJit;

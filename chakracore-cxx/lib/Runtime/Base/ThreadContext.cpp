@@ -2302,7 +2302,7 @@ ThreadContext::UnregisterScriptContext(Js::ScriptContext *scriptContext)
 ThreadContext::CollectCallBack *
 ThreadContext::AddRecyclerCollectCallBack(RecyclerCollectCallBackFunction callback, void * context)
 {
-    std::unique_lock autocs(csCollectionCallBack.GetMutex());
+    std::unique_lock autocs(csCollectionCallBack);
     CollectCallBack * collectCallBack = this->collectCallBackList.PrependNode(&HeapAllocator::Instance);
     collectCallBack->callback = callback;
     collectCallBack->context = context;
@@ -2313,7 +2313,7 @@ ThreadContext::AddRecyclerCollectCallBack(RecyclerCollectCallBackFunction callba
 void
 ThreadContext::RemoveRecyclerCollectCallBack(ThreadContext::CollectCallBack * collectCallBack)
 {
-    std::unique_lock autocs(csCollectionCallBack.GetMutex());
+    std::unique_lock autocs(csCollectionCallBack);
     this->collectCallBackList.RemoveElement(&HeapAllocator::Instance, collectCallBack);
     this->hasCollectionCallBack = !this->collectCallBackList.Empty();
 }
@@ -2424,7 +2424,7 @@ ThreadContext::WaitCollectionCallBack()
     // Avoid taking the lock if there are no call back
     if (hasCollectionCallBack)
     {
-        std::unique_lock<std::recursive_mutex> autocs(csCollectionCallBack.GetMutex());
+        std::unique_lock<std::recursive_mutex> autocs(csCollectionCallBack);
         CollectionCallBack(Collect_Wait);
     }
 }
