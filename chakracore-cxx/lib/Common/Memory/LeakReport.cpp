@@ -24,7 +24,7 @@
 #pragma init_seg(".CRT$XCAR")
 #pragma prefast(disable:__WARNING_CALLER_FAILING_TO_HOLD, "Not annotating this file for lock semantics due to poor accuracy and complicated conditions for some locks")
 
-CriticalSection LeakReport::s_cs;
+std::recursive_mutex LeakReport::s_cs;
 uint32_t LeakReport::nestedSectionCount = 0;
 uint32_t LeakReport::nestedRedirectOutputCount = 0;
 AutoFILE LeakReport::file;
@@ -40,7 +40,7 @@ LeakReport::StartRedirectOutput()
     {
         return;
     }
-    s_cs.Enter();
+    s_cs.lock();
     if (nestedRedirectOutputCount == 0)
     {
         Assert(oldFile == nullptr);
@@ -66,7 +66,7 @@ LeakReport::EndRedirectOutput()
         Assert(tmpFile == file);
         oldFile = nullptr;
     }
-    s_cs.Leave();
+    s_cs.unlock();
 }
 
 void
@@ -81,7 +81,7 @@ LeakReport::StartSection(char16_t const * msg, ...)
 void
 LeakReport::StartSection(char16_t const * msg, va_list argptr)
 {
-    s_cs.Enter();
+    s_cs.lock();
     if (!EnsureLeakReportFile())
     {
         return;
@@ -98,7 +98,7 @@ LeakReport::StartSection(char16_t const * msg, va_list argptr)
 void
 LeakReport::EndSection()
 {
-    s_cs.Leave();
+    s_cs.unlock();
     if (file == nullptr)
     {
         return;
@@ -109,7 +109,7 @@ LeakReport::EndSection()
 void
 LeakReport::Print(char16_t const * msg, ...)
 {
-    std::unique_lock<std::recursive_mutex> autocs(s_cs.GetMutex());
+    std::unique_lock<std::recursive_mutex> autocs(s_cs);
     if (!EnsureLeakReportFile())
     {
         return;
@@ -124,7 +124,7 @@ LeakReport::Print(char16_t const * msg, ...)
 bool
 LeakReport::EnsureLeakReportFile()
 {
-    std::unique_lock<std::recursive_mutex> autocs(s_cs.GetMutex());
+    std::unique_lock<std::recursive_mutex> autocs(s_cs);
     if (openReportFileFailed)
     {
         return false;
@@ -173,7 +173,7 @@ LeakReport::LogUrl(char16_t const * url, void * globalObject)
     record->scriptEngine = nullptr;
     record->globalObject = globalObject;
 
-    std::unique_lock<std::recursive_mutex> autocs(s_cs.GetMutex());
+    std::unique_lock<std::recursive_mutex> autocs(s_cs);
     if (LeakReport::urlRecordHead == nullptr)
     {
         Assert(LeakReport::urlRecordTail == nullptr);
@@ -192,7 +192,7 @@ LeakReport::LogUrl(char16_t const * url, void * globalObject)
 void
 LeakReport::DumpUrl(uint32_t tid)
 {
-    std::unique_lock<std::recursive_mutex> autocs(s_cs.GetMutex());
+    std::unique_lock<std::recursive_mutex> autocs(s_cs);
     if (!EnsureLeakReportFile())
     {
         return;
