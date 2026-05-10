@@ -330,7 +330,7 @@ public:
             this->GetPageAllocator(segment)->ReleaseDecommitted(address, pageCount, segment);
         }
     }
-    CriticalSection cs;
+    std::recursive_mutex cs;
 private:
 
     template<typename T>

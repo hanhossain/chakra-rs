@@ -57,7 +57,7 @@ Heap<TAlloc, TPreReservedAlloc>::~Heap()
 template<typename TAlloc, typename TPreReservedAlloc>
 void Heap<TAlloc, TPreReservedAlloc>::FreeAll()
 {
-    std::unique_lock autoLock(this->codePageAllocators->cs.GetMutex());
+    std::unique_lock autoLock(this->codePageAllocators->cs);
     FreeBuckets(false);
 
     FreeLargeObjects();
@@ -387,7 +387,7 @@ Allocation* Heap<TAlloc, TPreReservedAlloc>::AllocLargeObject(size_t bytes, usho
 #endif
 
     {
-        std::unique_lock autoLock(this->codePageAllocators->cs.GetMutex());
+        std::unique_lock autoLock(this->codePageAllocators->cs);
         address = this->codePageAllocators->Alloc(&pages, &segment, canAllocInPreReservedHeapPageSegment, isAnyJittedCode, isAllJITCodeInPreReservedRegion);
 
         // Out of memory
@@ -438,7 +438,7 @@ Allocation* Heap<TAlloc, TPreReservedAlloc>::AllocLargeObject(size_t bytes, usho
     Allocation* allocation = this->largeObjectAllocations.PrependNode(this->auxiliaryAllocator);
     if (allocation == nullptr)
     {
-        std::unique_lock autoLock(this->codePageAllocators->cs.GetMutex());
+        std::unique_lock autoLock(this->codePageAllocators->cs);
         this->codePageAllocators->Release(address, pages, segment);
 
 #if PDATA_ENABLED
@@ -502,7 +502,7 @@ uint32_t Heap<TAlloc, TPreReservedAlloc>::EnsureAllocationExecuteWriteable(Alloc
 template<typename TAlloc, typename TPreReservedAlloc>
 void Heap<TAlloc, TPreReservedAlloc>::FreeLargeObjects()
 {
-    std::unique_lock autoLock(this->codePageAllocators->cs.GetMutex());
+    std::unique_lock autoLock(this->codePageAllocators->cs);
     FOREACH_DLISTBASE_ENTRY_EDITING(Allocation, allocation, &this->largeObjectAllocations, largeObjectIter)
     {
         EnsureAllocationWriteable(&allocation);
@@ -519,7 +519,7 @@ void Heap<TAlloc, TPreReservedAlloc>::FreeLargeObjects()
 template<typename TAlloc, typename TPreReservedAlloc>
 void Heap<TAlloc, TPreReservedAlloc>::FreeLargeObject(Allocation* allocation)
 {
-    std::unique_lock autoLock(this->codePageAllocators->cs.GetMutex());
+    std::unique_lock autoLock(this->codePageAllocators->cs);
 
     EnsureAllocationWriteable(allocation);
 #if PDATA_ENABLED
@@ -558,7 +558,7 @@ bool Heap<TAlloc, TPreReservedAlloc>::AllocInPage(Page* page, size_t bytes, usho
     XDataAllocation xdata;
     if(pdataCount > 0)
     {
-        std::unique_lock autoLock(this->codePageAllocators->cs.GetMutex());
+        std::unique_lock autoLock(this->codePageAllocators->cs);
         if (this->ShouldBeInFullList(page))
         {
             Adelete(this->auxiliaryAllocator, allocation);
@@ -642,7 +642,7 @@ Page* Heap<TAlloc, TPreReservedAlloc>::AllocNewPage(BucketId bucket, bool canAll
 
     char* address = nullptr;
     {
-        std::unique_lock autoLock(this->codePageAllocators->cs.GetMutex());
+        std::unique_lock autoLock(this->codePageAllocators->cs);
         address = this->codePageAllocators->AllocPages(1, &pageSegment, canAllocInPreReservedHeapPageSegment, isAnyJittedCode, isAllJITCodeInPreReservedRegion);
 
         if (address == nullptr)
@@ -671,7 +671,7 @@ Page* Heap<TAlloc, TPreReservedAlloc>::AllocNewPage(BucketId bucket, bool canAll
 
     if (page == nullptr)
     {
-        std::unique_lock autoLock(this->codePageAllocators->cs.GetMutex());
+        std::unique_lock autoLock(this->codePageAllocators->cs);
         this->codePageAllocators->ReleasePages(address, 1, pageSegment);
         return nullptr;
     }
@@ -824,7 +824,7 @@ bool Heap<TAlloc, TPreReservedAlloc>::FreeAllocation(Allocation* object)
 #endif
             this->auxiliaryAllocator->Free(object, sizeof(Allocation));
             {
-                std::unique_lock autoLock(this->codePageAllocators->cs.GetMutex());
+                std::unique_lock autoLock(this->codePageAllocators->cs);
                 this->codePageAllocators->ReleasePages(pageAddress, 1, segment);
             }
             VerboseHeapTrace(u"FastPath: freeing page-sized object directly\n");
@@ -969,7 +969,7 @@ bool Heap<TAlloc, TPreReservedAlloc>::UpdateFullPages()
     bool updated = false;
     if (this->codePageAllocators->HasSecondaryAllocStateChanged(&lastSecondaryAllocStateChangedCount))
     {
-        std::unique_lock autoLock(this->codePageAllocators->cs.GetMutex());
+        std::unique_lock autoLock(this->codePageAllocators->cs);
         for (int bucket = 0; bucket < BucketId::NumBuckets; bucket++)
         {
             FOREACH_DLISTBASE_ENTRY_EDITING(Page, page, &(this->fullPages[bucket]), bucketIter)
@@ -995,7 +995,7 @@ void Heap<TAlloc, TPreReservedAlloc>::FreeXdata(XDataAllocation* xdata, void* se
 {
     Assert(!xdata->IsFreed()); 
     {
-        std::unique_lock autoLock(this->codePageAllocators->cs.GetMutex());
+        std::unique_lock autoLock(this->codePageAllocators->cs);
         this->codePageAllocators->ReleaseSecondary(*xdata, segment);
         xdata->Free();
     }
