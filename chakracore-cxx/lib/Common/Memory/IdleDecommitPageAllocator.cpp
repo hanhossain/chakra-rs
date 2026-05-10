@@ -45,11 +45,11 @@ IdleDecommitPageAllocator::EnterIdleDecommit()
         return;
     }
 #ifdef IDLE_DECOMMIT_ENABLED
-    if (!cs.TryEnter())
+    if (!cs.try_lock())
     {
         AutoResetWaitingToEnterIdleDecommitFlag autoResetWaitingToEnterIdleDecommitFlag(this);
 
-        cs.Enter();
+        cs.lock();
 
     }
 
@@ -71,7 +71,7 @@ IdleDecommitPageAllocator::EnterIdleDecommit()
         this->maxFreePageCount = maxIdleDecommitFreePageCount;
     }
 
-    cs.Leave();
+    cs.unlock();
 
     Assert(!hasDecommitTimer);
 #else
@@ -99,11 +99,11 @@ IdleDecommitPageAllocator::LeaveIdleDecommit(bool allowTimer)
 #ifdef IDLE_DECOMMIT_ENABLED
     if (allowTimer)
     {
-        if (!cs.TryEnter())
+        if (!cs.try_lock())
         {
             AutoResetWaitingToEnterIdleDecommitFlag autoResetWaitingToEnterIdleDecommitFlag(this);
 
-            cs.Enter();
+            cs.lock();
         }
 
         PAGE_ALLOC_VERBOSE_TRACE(u"LeaveIdleDecommit");
@@ -144,7 +144,7 @@ IdleDecommitPageAllocator::LeaveIdleDecommit(bool allowTimer)
             }
 
         }
-        cs.Leave();
+        cs.unlock();
         return idleDecommitSignal;
     }
 #endif
@@ -201,7 +201,7 @@ IdleDecommitPageAllocator::IdleDecommit()
     {
         return INFINITE;
     }
-    if (!cs.TryEnter())
+    if (!cs.try_lock())
     {
         // Failed to acquire the lock, wait for a variable time.
         PAGE_ALLOC_TRACE(u"IdleDecommit Retry");
@@ -238,7 +238,7 @@ IdleDecommitPageAllocator::IdleDecommit()
             this->maxFreePageCount = maxNonIdleDecommitFreePageCount;
         }
     }
-    cs.Leave();
+    cs.unlock();
     return waitTime;
 }
 
