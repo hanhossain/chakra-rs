@@ -67,12 +67,12 @@ namespace JsUtil
     class AsymetricResizeLock
     {
     public:
-        void _Acquires_lock_(cs.cs) BeginResize() { cs.Enter(); }
-        void _Releases_lock_(cs.cs) EndResize() { cs.Leave(); }
-        void _Acquires_lock_(cs.cs) LockResize() { cs.Enter(); }
-        void _Releases_lock_(cs.cs) UnlockResize() { cs.Leave(); }
+        void _Acquires_lock_(cs.cs) BeginResize() { cs.lock(); }
+        void _Releases_lock_(cs.cs) EndResize() { cs.unlock(); }
+        void _Acquires_lock_(cs.cs) LockResize() { cs.lock(); }
+        void _Releases_lock_(cs.cs) UnlockResize() { cs.unlock(); }
     private:
-        CriticalSection cs;
+        std::recursive_mutex cs;
     };
 
     template <class TKey, class TValue> class SimpleDictionaryEntry;
