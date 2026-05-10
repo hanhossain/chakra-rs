@@ -217,24 +217,15 @@ namespace JsUtil
         return isClosed;
     }
 
-    CriticalSection *JobProcessor::GetCriticalSection()
-    {
-#if ENABLE_BACKGROUND_JOB_PROCESSOR
-        return processesInBackground ? static_cast<BackgroundJobProcessor *>(this)->GetCriticalSection() : 0;
-#else
-        return 0;
-#endif
-    }
-
     std::optional<std::unique_lock<std::recursive_mutex>> JobProcessor::LockCriticalSection()
     {
-        auto cs = GetCriticalSection();
-        if (cs)
-        {
-            std::unique_lock lock(cs->GetMutex());
-            return lock;
-        }
+#if ENABLE_BACKGROUND_JOB_PROCESSOR
+        return processesInBackground
+            ? std::optional<std::unique_lock<std::recursive_mutex>>(static_cast<BackgroundJobProcessor*>(this)->GetMutex())
+            : std::nullopt;
+#else
         return std::nullopt;
+#endif
     }
 
     void JobProcessor::AddManager(JobManager *const manager)

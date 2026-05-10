@@ -329,7 +329,6 @@ namespace JsUtil
         // A job manager generally should not need to take the lock, as most functions called by the job processor are called
         // from inside the lock as necessary. The main exception is when adding a job to the job processor; a job manager must
         // call JobProcessor::AddJob inside the lock. Use it sparingly.
-        CriticalSection *GetCriticalSection();
         std::optional<std::unique_lock<std::recursive_mutex>> LockCriticalSection();
 
         // Adds or removes a job manager
@@ -516,7 +515,6 @@ namespace JsUtil
         bool Process(Job *const job, ParallelThreadData *threadData);
         bool IsBeingProcessed(Job *job);
 
-        CriticalSection * GetCriticalSection() { return &criticalSection; }
         std::recursive_mutex& GetMutex() { return criticalSection.GetMutex(); }
 
         //Iterates each background thread, callback returns true when it needs to terminate the iteration.

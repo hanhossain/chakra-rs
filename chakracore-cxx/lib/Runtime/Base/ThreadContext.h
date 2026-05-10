@@ -1036,7 +1036,6 @@ public:
 
     DateTime::HiResTimer * GetHiResTimer() { return &hTimer; }
     ArenaAllocator* GetThreadAlloc() { return &threadAlloc; }
-    static CriticalSection * GetCriticalSection() { return &s_csThreadContext; }
     static std::recursive_mutex& GetMutex() { return s_csThreadContext.GetMutex(); }
 
     ThreadContext(AllocationPolicyManager * allocationPolicyManager = nullptr, JsUtil::ThreadService::ThreadServiceCallback threadServiceCallback = nullptr, bool enableExperimentalFeatures = false);
