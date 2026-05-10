@@ -617,7 +617,7 @@ namespace Js
         Assert(!utf8SourceInfo || m_uScriptId == utf8SourceInfo->GetSrcInfo()->sourceContextInfo->sourceContextId);
 
         // Sync entryPoints changes to etw rundown lock
-        CriticalSection* syncObj = scriptContext->GetThreadContext()->GetFunctionBodyLock();
+        std::recursive_mutex& syncObj = scriptContext->GetThreadContext()->GetFunctionBodyMutex();
         this->entryPoints = RecyclerNew(this->m_scriptContext->GetRecycler(), FunctionEntryPointList, this->m_scriptContext->GetRecycler(), syncObj);
 
         this->AddEntryPointToEntryPointList(this->GetDefaultFunctionEntryPointInfo());
@@ -748,7 +748,7 @@ namespace Js
         Assert(!proxy->GetUtf8SourceInfo() || m_uScriptId == proxy->GetUtf8SourceInfo()->GetSrcInfo()->sourceContextInfo->sourceContextId);
 
         // Sync entryPoints changes to etw rundown lock
-        CriticalSection* syncObj = scriptContext->GetThreadContext()->GetFunctionBodyLock();
+        std::recursive_mutex& syncObj = scriptContext->GetThreadContext()->GetFunctionBodyMutex();
         this->entryPoints = RecyclerNew(scriptContext->GetRecycler(), FunctionEntryPointList, scriptContext->GetRecycler(), syncObj);
 
         this->AddEntryPointToEntryPointList(this->GetDefaultFunctionEntryPointInfo());
@@ -9134,7 +9134,7 @@ namespace Js
         Recycler* recycler = functionBody->GetScriptContext()->GetRecycler();
 
         // Sync entryPoints changes to etw rundown lock
-        auto syncObj = functionBody->GetScriptContext()->GetThreadContext()->GetFunctionBodyLock();
+        auto& syncObj = functionBody->GetScriptContext()->GetThreadContext()->GetFunctionBodyMutex();
         this->entryPoints = RecyclerNew(recycler, LoopEntryPointList, recycler, syncObj);
 
         this->CreateEntryPoint();

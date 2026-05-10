@@ -607,28 +607,28 @@ namespace Js
         class T,                                    // Item type in the list
         class ListType,
         class LockPolicy = DefaultContainerLockPolicy,   // Controls lock policy for read/map/write/add/remove items
-        class SyncObject = CriticalSection
+        class SyncObject = std::recursive_mutex
     >
     class SynchronizableList : private ListType // Make base class private to lock down exposed methods
     {
     private:
-        FieldNoBarrier(SyncObject*) syncObj;
+        FieldNoBarrier(SyncObject)& syncObj;
 
     public:
         template <class Arg1>
-        SynchronizableList(Arg1 arg1, SyncObject* syncObj)
+        SynchronizableList(Arg1 arg1, SyncObject& syncObj)
             : ListType(arg1), syncObj(syncObj)
         {
         }
 
         template <class Arg1, class Arg2>
-        SynchronizableList(Arg1 arg1, Arg2 arg2, SyncObject* syncObj)
+        SynchronizableList(Arg1 arg1, Arg2 arg2, SyncObject& syncObj)
             : ListType(arg1, arg2), syncObj(syncObj)
         {
         }
 
         template <class Arg1, class Arg2, class Arg3>
-        SynchronizableList(Arg1 arg1, Arg2 arg2, Arg3 arg3, SyncObject* syncObj)
+        SynchronizableList(Arg1 arg1, Arg2 arg2, Arg3 arg3, SyncObject& syncObj)
             : ListType(arg1, arg2, arg3), syncObj(syncObj)
         {
         }
@@ -677,13 +677,13 @@ namespace Js
 
         void RemoveAt(int index)
         {
-            typename LockPolicy::AddRemoveLock autoLock(syncObj->GetMutex());
+            typename LockPolicy::AddRemoveLock autoLock(syncObj);
             return __super::RemoveAt(index);
         }
 
         int Add(const T& item)
         {
-            typename LockPolicy::AddRemoveLock autoLock(syncObj->GetMutex());
+            typename LockPolicy::AddRemoveLock autoLock(syncObj);
             return __super::Add(item);
         }
 
