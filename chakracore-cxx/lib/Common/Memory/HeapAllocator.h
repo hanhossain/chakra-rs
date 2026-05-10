@@ -215,7 +215,7 @@ public:
 
     thread_local static TrackAllocData nextAllocData;
     HeapAllocatorData data;
-    static CriticalSection cs;
+    static std::recursive_mutex cs;
 #endif // HEAP_TRACK_ALLOC
 #endif // TRACK_ALLOC
 
@@ -338,7 +338,7 @@ private:
         LeakRecord * next;
     };
 
-    CriticalSection cs;
+    std::recursive_mutex cs;
     LeakRecord * head;
     LeakRecord * tail;
     size_t leakedBytes;
