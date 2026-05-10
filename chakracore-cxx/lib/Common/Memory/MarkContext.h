@@ -123,13 +123,6 @@ public:
     }
 #endif
 
-#ifdef RECYCLER_MARK_TRACK
-    void SetMarkMap(MarkMap* markMap)
-    {
-        this->markMap = markMap;
-    }
-#endif
-
 private:
     Recycler * recycler;
     PagePool * pagePool;
@@ -138,12 +131,6 @@ private:
     PageStack<IRecyclerVisitedObject*> preciseStack;
 #endif
     PageStack<FinalizableObject *> trackStack;
-
-#ifdef RECYCLER_MARK_TRACK
-    MarkMap* markMap;
-
-    void OnObjectMarked(void* object, void* parent);
-#endif
 
 #if DBG
 public:

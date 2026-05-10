@@ -175,10 +175,6 @@ void MarkContext::Mark(void * candidate, void * parentReference)
 #endif
 
     recycler->heapBlockMap.Mark<parallel, doSpecialMark>(candidate, this);
-
-#ifdef RECYCLER_MARK_TRACK
-    this->OnObjectMarked(candidate, parentReference);
-#endif
 }
 
 inline
