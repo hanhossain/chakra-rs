@@ -363,7 +363,7 @@ namespace Js
         JITPageAddrToFuncRangeMap * jitPageAddrToFuncRangeMap;
         LargeJITFuncAddrToSizeMap * largeJitFuncToSizeMap;
 
-        static CriticalSection cs;
+        static std::recursive_mutex cs;
 
     public:
         JITPageAddrToFuncRangeCache() :jitPageAddrToFuncRangeMap(nullptr), largeJitFuncToSizeMap(nullptr) {}
@@ -378,7 +378,7 @@ namespace Js
         bool IsNativeAddr(void * address);
         JITPageAddrToFuncRangeMap * GetJITPageAddrToFuncRangeMap();
         LargeJITFuncAddrToSizeMap * GetLargeJITFuncAddrToSizeMap();
-        static std::recursive_mutex& GetMutex() { return cs.GetMutex(); }
+        static std::recursive_mutex& GetMutex() { return cs; }
     };
 #endif
 
@@ -824,7 +824,7 @@ private:
         TransitionToDebugModeIfFirstSourceFn transitionToDebugModeIfFirstSourceFn;
 
         DebugContext* debugContext;
-        CriticalSection debugContextCloseCS;
+        std::recursive_mutex debugContextCloseCS;
 #endif
 
         // List of weak reference dictionaries. We'll walk through them
@@ -926,7 +926,6 @@ private:
 #ifdef ENABLE_SCRIPT_DEBUGGING
         bool IsDebugContextInitialized() const { return this->isDebugContextInitialized; }
         DebugContext* GetDebugContext() const;
-        CriticalSection* GetDebugContextCloseCS() { return &debugContextCloseCS; }
 #endif
 
         uint callCount;

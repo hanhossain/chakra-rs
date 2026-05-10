@@ -51,7 +51,7 @@ namespace Js
     }
 
 #if ENABLE_NATIVE_CODEGEN
-    CriticalSection JITPageAddrToFuncRangeCache::cs;
+    std::recursive_mutex JITPageAddrToFuncRangeCache::cs;
 #endif
 
     ScriptContext::ScriptContext(ThreadContext* threadContext) :
@@ -681,7 +681,7 @@ namespace Js
             }
 
             // Guard the closing DebugContext as in meantime PDM might call OnBreakFlagChange
-            std::unique_lock autoDebugContextCloseCS(debugContextCloseCS.GetMutex());
+            std::unique_lock autoDebugContextCloseCS(debugContextCloseCS);
             this->debugContext->Close();
             // Not deleting debugContext here as Close above will clear all memory debugContext allocated.
             // Actual deletion of debugContext will happen in ScriptContext destructor
