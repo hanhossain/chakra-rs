@@ -426,7 +426,7 @@ private:
 
     static uint const MaxTemporaryArenaAllocators = 5;
 
-    static CriticalSection s_csThreadContext;
+    static std::recursive_mutex s_csThreadContext;
 
     StackProber * GetStackProber() const { return this->stackProber; }
     size_t GetStackLimitForCurrentThread() const;
@@ -1036,7 +1036,7 @@ public:
 
     DateTime::HiResTimer * GetHiResTimer() { return &hTimer; }
     ArenaAllocator* GetThreadAlloc() { return &threadAlloc; }
-    static std::recursive_mutex& GetMutex() { return s_csThreadContext.GetMutex(); }
+    static std::recursive_mutex& GetMutex() { return s_csThreadContext; }
 
     ThreadContext(AllocationPolicyManager * allocationPolicyManager = nullptr, JsUtil::ThreadService::ThreadServiceCallback threadServiceCallback = nullptr, bool enableExperimentalFeatures = false);
     static void Add(ThreadContext *threadContext);

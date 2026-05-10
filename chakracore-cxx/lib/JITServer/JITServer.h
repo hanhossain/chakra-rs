@@ -3,12 +3,14 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
+#include <mutex>
+
 class ProcessContextManager
 {
 private:
 
     static BaseDictionary<uint32_t, ProcessContext*, HeapAllocator> ProcessContexts;
-    static CriticalSection cs;
+    static std::recursive_mutex cs;
 
 public:
     static int32_t RegisterNewProcess(uint32_t pid, HANDLE processHandle, intptr_t chakraBaseAddress, intptr_t crtBaseAddress);
@@ -31,7 +33,7 @@ public:
 private:
     static JsUtil::BaseHashSet<ServerThreadContext*, HeapAllocator> threadContexts;
     static JsUtil::BaseHashSet<ServerScriptContext*, HeapAllocator> scriptContexts;
-    static CriticalSection cs;
+    static std::recursive_mutex cs;
 
 public:
 #ifdef STACK_BACK_TRACE

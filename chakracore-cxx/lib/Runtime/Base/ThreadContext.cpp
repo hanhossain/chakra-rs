@@ -45,7 +45,7 @@ void DefaultInitializeAdditionalProperties(ThreadContext *threadContext)
  */
 void (*InitializeAdditionalProperties)(ThreadContext *threadContext) = DefaultInitializeAdditionalProperties;
 
-CriticalSection ThreadContext::s_csThreadContext;
+std::recursive_mutex ThreadContext::s_csThreadContext;
 size_t ThreadContext::processNativeCodeSize = 0;
 ThreadContext * ThreadContext::globalListFirst = nullptr;
 ThreadContext * ThreadContext::globalListLast = nullptr;
