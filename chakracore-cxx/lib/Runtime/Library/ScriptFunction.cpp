@@ -285,7 +285,7 @@ using namespace Js;
         Assert(!newFunctionInfo->IsDeferred());
 
         JavascriptMethod directEntryPoint = newFunctionInfo->GetDirectEntryPoint(newFunctionInfo->GetDefaultEntryPointInfo());
-#if defined(ENABLE_SCRIPT_PROFILING) || defined(ENABLE_SCRIPT_DEBUGGING)
+#if defined(ENABLE_SCRIPT_DEBUGGING)
         Assert(directEntryPoint != DefaultDeferredParsingThunk
             && directEntryPoint != ProfileDeferredParsingThunk);
 #else

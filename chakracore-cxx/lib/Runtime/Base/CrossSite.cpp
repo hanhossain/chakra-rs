@@ -355,14 +355,14 @@ namespace Js
 
     bool CrossSite::IsThunk(JavascriptMethod thunk)
     {
-#if defined(ENABLE_SCRIPT_PROFILING) || defined(ENABLE_SCRIPT_DEBUGGING)
+#if defined(ENABLE_SCRIPT_DEBUGGING)
         return (thunk == CrossSite::ProfileThunk || thunk == CrossSite::DefaultThunk);
 #else
         return (thunk == CrossSite::DefaultThunk);
 #endif
     }
 
-#if defined(ENABLE_SCRIPT_PROFILING) || defined(ENABLE_SCRIPT_DEBUGGING)
+#if defined(ENABLE_SCRIPT_DEBUGGING)
     Var CrossSite::ProfileThunk(RecyclableObject* callable, CallInfo callInfo, ...)
     {
         JavascriptFunction* function = VarTo<JavascriptFunction>(callable);

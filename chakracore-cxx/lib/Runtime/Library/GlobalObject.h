@@ -112,9 +112,6 @@ namespace Js
         static void ValidateSyntax(ScriptContext* scriptContext, const char16_t *source, int sourceLength, bool isGenerator, bool isAsync, void (Parser::*validateSyntax)());
         static void UpdateThisForEval(Var &varThis, ModuleID moduleID, ScriptContext *scriptContext) ;
         static ScriptFunction* DefaultEvalHelper(ScriptContext* scriptContext, const char16_t *source, int sourceLength, ModuleID moduleID, uint32_t grfscr, LPCOLESTR pszTitle, BOOL registerDocument, BOOL isIndirect, BOOL strictMode);
-#ifdef ENABLE_SCRIPT_PROFILING
-        static ScriptFunction* ProfileModeEvalHelper(ScriptContext* scriptContext, const char16_t *source, int sourceLength, ModuleID moduleID, uint32_t grfscr, LPCOLESTR pszTitle, BOOL registerDocument, BOOL isIndirect, BOOL strictMode);
-#endif        
 #ifdef IR_VIEWER
         static Var IRDumpEvalHelper(ScriptContext* scriptContext, const char16_t *source,
             int sourceLength, ModuleID moduleID, uint32_t grfscr, LPCOLESTR pszTitle,

@@ -1644,10 +1644,10 @@ LABEL1:
         }
 
         DebugOnly(JavascriptMethod directEntryPoint = funcBody->GetDirectEntryPoint(funcBody->GetDefaultEntryPointInfo()));
-#if defined(ENABLE_SCRIPT_PROFILING) || defined(ENABLE_SCRIPT_DEBUGGING)
+#if defined(ENABLE_SCRIPT_DEBUGGING)
         Assert(directEntryPoint != DefaultDeferredParsingThunk
             && directEntryPoint != ProfileDeferredParsingThunk);
-#else // !ENABLE_SCRIPT_PROFILING && !ENABLE_SCRIPT_DEBUGGING
+#else // !ENABLE_SCRIPT_DEBUGGING
         Assert(directEntryPoint != DefaultDeferredParsingThunk);
 #endif
 

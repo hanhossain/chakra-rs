@@ -1129,7 +1129,7 @@ namespace Js
 
 #if DBG
         bool HasValidEntryPoint() const;
-#if defined(ENABLE_SCRIPT_PROFILING) || defined(ENABLE_SCRIPT_DEBUGGING)
+#if defined(ENABLE_SCRIPT_DEBUGGING)
         bool HasValidProfileEntryPoint() const;
 #endif
         bool HasValidNonProfileEntryPoint() const;
@@ -3286,13 +3286,6 @@ namespace Js
 
 #if ENABLE_TTD
         void GetSourceLineFromStartOffset_TTD(const uint startOffset, uint32_t* line, int32_t* col);
-#endif
-
-#ifdef ENABLE_SCRIPT_PROFILING
-        int32_t RegisterFunction(BOOL fChangeMode, BOOL fOnlyCurrent = FALSE);
-        int32_t ReportScriptCompiled();
-        int32_t ReportFunctionCompiled();
-        void SetEntryToProfileMode();
 #endif
 
 #ifdef ENABLE_SCRIPT_DEBUGGING

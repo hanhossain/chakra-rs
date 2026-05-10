@@ -555,14 +555,6 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
 
             Js::ScriptFunction *function = scriptContext->GetLibrary()->CreateScriptFunction(intlByteCode->GetNestedFunctionForExecution(0));
 
-#ifdef ENABLE_SCRIPT_PROFILING
-            // If we are profiling, we need to register the script to the profiler callback, so the script compiled event will be sent.
-            if (scriptContext->IsProfiling())
-            {
-                scriptContext->RegisterScript(function->GetFunctionProxy());
-            }
-#endif
-
 #ifdef ENABLE_SCRIPT_DEBUGGING
             // Mark we are profiling library code already, so that any initialization library code called here won't be reported to profiler.
             // Also tell the debugger not to record events during intialization so that we don't leak information about initialization.

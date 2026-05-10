@@ -724,33 +724,6 @@ using namespace Js;
         return varResult;
     }
 
-#ifdef ENABLE_SCRIPT_PROFILING
-    ScriptFunction* GlobalObject::ProfileModeEvalHelper(ScriptContext* scriptContext, const char16_t *source, int sourceLength, ModuleID moduleID, uint32_t grfscr, LPCOLESTR pszTitle, BOOL registerDocument, BOOL isIndirect, BOOL strictMode)
-    {
-#if ENABLE_DEBUG_CONFIG_OPTIONS
-        char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-#endif
-        ScriptFunction *pEvalFunction = DefaultEvalHelper(scriptContext, source, sourceLength, moduleID, grfscr, pszTitle, registerDocument, isIndirect, strictMode);
-        Assert(pEvalFunction);
-        Js::FunctionProxy *proxy = pEvalFunction->GetFunctionProxy();
-        Assert(proxy);
-
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"GlobalObject::ProfileModeEvalHelper FunctionNumber : %s, Entrypoint : 0x%08X IsFunctionDefer : %d\n",
-                                    proxy->GetDebugNumberSet(debugStringBuffer), pEvalFunction->GetEntryPoint(), proxy->IsDeferred());
-
-        if (proxy->IsDeferred())
-        {
-            // This could happen if the top level function is marked as deferred, we need to parse this to generate the script compile information (RegisterScript depends on that)
-            Js::JavascriptFunction::DeferredParse(&pEvalFunction);
-            proxy = pEvalFunction->GetFunctionProxy();
-        }
-
-        scriptContext->RegisterScript(proxy);
-
-        return pEvalFunction;
-    }
-#endif
-
     void GlobalObject::ValidateSyntax(ScriptContext* scriptContext, const char16_t *source, int sourceLength, bool isGenerator, bool isAsync, void (Parser::*validateSyntax)())
     {
         Assert(sourceLength >= 0);

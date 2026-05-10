@@ -1397,7 +1397,7 @@ NativeCodeGenerator::CheckCodeGen(Js::ScriptFunction * function)
 
     if(!nativeCodeGen->Processor()->PrioritizeJob(nativeCodeGen, entryPoint, function))
     {
-#if defined(ENABLE_SCRIPT_PROFILING) || defined(ENABLE_SCRIPT_DEBUGGING)
+#if defined(ENABLE_SCRIPT_DEBUGGING)
 #define originalEntryPoint_IS_ProfileDeferredParsingThunk \
             (originalEntryPoint == ProfileDeferredParsingThunk)
 #else

@@ -421,11 +421,6 @@ namespace Js
         GetDocumentContextFunction GetDocumentContext;
 #endif // ENABLE_SCRIPT_DEBUGGING
 
-#ifdef ENABLE_SCRIPT_PROFILING
-        typedef int32_t (*CleanupDocumentContextFunction)(ScriptContext *pContext);
-        CleanupDocumentContextFunction CleanupDocumentContext;
-#endif
-
         const ScriptContextBase* GetScriptContextBase() const { return static_cast<const ScriptContextBase*>(this); }
 
         void RedeferFunctionBodies(ActiveFunctionSet *pActive, uint inactiveThreshold);
@@ -500,11 +495,7 @@ namespace Js
         static bool IsExceptionWrapperForBuiltInsEnabled(ScriptContext* scriptContext);
         static bool IsExceptionWrapperForHelpersEnabled(ScriptContext* scriptContext);
         bool IsEnumerateNonUserFunctionsOnly() const { return m_enumerateNonUserFunctionsOnly; }
-#ifdef ENABLE_SCRIPT_PROFILING
-        bool IsTraceDomCall() const { return !!m_fTraceDomCall; }
-#elif defined(ENABLE_SCRIPT_DEBUGGING)
         bool IsTraceDomCall() const { return false; }
-#endif
 
         InlineCache * GetValueOfInlineCache() const { return valueOfInlineCache;}
         InlineCache * GetToStringInlineCache() const { return toStringInlineCache; }
@@ -835,22 +826,6 @@ private:
         DebugContext* debugContext;
         CriticalSection debugContextCloseCS;
 #endif
-
-#ifdef ENABLE_SCRIPT_PROFILING
-        IActiveScriptProfilerHeapEnum* heapEnum;
-
-        // Profiler Probes
-        // In future these can be list of callbacks ?
-        // Profiler Callback information
-        IActiveScriptProfilerCallback *m_pProfileCallback;
-        BOOL m_fTraceFunctionCall;
-        BOOL m_fTraceNativeFunctionCall;
-        uint32_t m_dwEventMask;
-
-        IActiveScriptProfilerCallback2 *m_pProfileCallback2;
-        BOOL m_fTraceDomCall;
-        BOOL m_inProfileCallback;
-#endif // ENABLE_SCRIPT_PROFILING
 
         // List of weak reference dictionaries. We'll walk through them
         // and clean them up post-collection
@@ -1484,20 +1459,12 @@ private:
 
         BOOL IsProfiling()
         {
-#ifdef ENABLE_SCRIPT_PROFILING
-            return (m_pProfileCallback != nullptr);
-#else
             return FALSE;
-#endif
         }
 
         BOOL IsInProfileCallback()
         {
-#ifdef ENABLE_SCRIPT_PROFILING
-            return m_inProfileCallback;
-#else
             return FALSE;
-#endif
         }
 
         SRCINFO *AddHostSrcInfo(SRCINFO const *pSrcInfo);
@@ -1506,40 +1473,6 @@ private:
         SourceContextInfo const * GetNoContextSourceContextInfo() const { return this->Cache()->noContextSourceContextInfo; }
         bool hadProfiled;
         bool HadProfiled() const { return hadProfiled; }
-
-#ifdef ENABLE_SCRIPT_PROFILING
-        int GetProfileSession()
-        {
-            AssertMsg(m_pProfileCallback != nullptr, "Asking for profile session when we aren't in one.");
-            return m_iProfileSession;
-        }
-
-        void StartNewProfileSession()
-        {
-            AssertMsg(m_pProfileCallback != nullptr, "New Session when the profiler isn't set to any callback.");
-            m_iProfileSession++;
-        }
-
-        void StopProfileSession()
-        {
-            AssertMsg(m_pProfileCallback == nullptr, "How to stop when there is still the callback out there");
-        }
-#endif // ENABLE_SCRIPT_PROFILING
-#endif
-
-#ifdef ENABLE_SCRIPT_PROFILING
-        void CoreSetProfileEventMask(uint32_t dwEventMask);
-        typedef int32_t(*RegisterExternalLibraryType)(Js::ScriptContext *pScriptContext);
-        int32_t RegisterProfileProbe(IActiveScriptProfilerCallback *pProfileCallback, uint32_t dwEventMask, uint32_t dwContext, RegisterExternalLibraryType RegisterExternalLibrary, JavascriptMethod dispatchInvoke);
-        int32_t DeRegisterProfileProbe(int32_t hrReason, JavascriptMethod dispatchInvoke);
-        int32_t RegisterLibraryFunction(const char16_t *pwszObjectName, const char16_t *pwszFunctionName, Js::PropertyId functionPropertyId, JavascriptMethod entryPoint);
-        int32_t RegisterBuiltinFunctions(RegisterExternalLibraryType RegisterExternalLibrary);
-        int32_t SetProfileEventMask(uint32_t dwEventMask);
-
-        int32_t RegisterScript(Js::FunctionProxy *pFunctionBody, BOOL fRegisterScript = TRUE);
-
-        // Register static and dynamic scripts
-        int32_t RegisterAllScripts();
 #endif
 
 #ifdef ENABLE_SCRIPT_DEBUGGING
@@ -1556,7 +1489,7 @@ private:
         // To be called directly only when the thread context is shutting down
         void ShutdownClearSourceLists();
 
-#if defined(ENABLE_SCRIPT_PROFILING) || defined(ENABLE_SCRIPT_DEBUGGING)
+#if defined(ENABLE_SCRIPT_DEBUGGING)
         void RegisterDebugThunk(bool calledDuringAttach = true);
         void UnRegisterDebugThunk();
         static void SetEntryPointToProfileThunk(JavascriptFunction* function);
@@ -1648,36 +1581,10 @@ private:
         static JavascriptMethod ProfileModeDeferredDeserialize(ScriptFunction* function);
         static Var ProfileModeDeferredDeserializeThunk(RecyclableObject* function, CallInfo callInfo, ...);
 
-#if defined(ENABLE_SCRIPT_DEBUGGING) || defined(ENABLE_SCRIPT_PROFILING)
+#if defined(ENABLE_SCRIPT_DEBUGGING)
         static Var ProfileModeThunk_DebugModeWrapper(JavascriptFunction* function, ScriptContext* scriptContext, JavascriptMethod entryPoint, Arguments& args);
         static JavascriptMethod GetProfileModeThunk(JavascriptMethod entryPoint);
 #endif
-
-#ifdef ENABLE_SCRIPT_PROFILING
-        void SetProfileMode(BOOL fSet);
-        BOOL GetProfileInfo(
-            JavascriptFunction* function,
-            PROFILER_TOKEN &scriptId,
-            PROFILER_TOKEN &functionId);
-
-        int32_t OnScriptCompiled(PROFILER_TOKEN scriptId, PROFILER_SCRIPT_TYPE type, IUnknown *pIDebugDocumentContext);
-        int32_t OnFunctionCompiled(
-            PROFILER_TOKEN functionId,
-            PROFILER_TOKEN scriptId,
-            const char16_t *pwszFunctionName,
-            const char16_t *pwszFunctionNameHint,
-            IUnknown *pIDebugDocumentContext);
-        int32_t OnFunctionEnter(PROFILER_TOKEN scriptId, PROFILER_TOKEN functionId);
-        int32_t OnFunctionExit(PROFILER_TOKEN scriptId, PROFILER_TOKEN functionId);
-
-        static int32_t FunctionExitSenderThunk(PROFILER_TOKEN functionId, PROFILER_TOKEN scriptId, ScriptContext *pScriptContext);
-        static int32_t FunctionExitByNameSenderThunk(const char16_t *pwszFunctionName, ScriptContext *pScriptContext);
-
-        bool SetDispatchProfile(bool fSet, JavascriptMethod dispatchInvoke);
-        int32_t OnDispatchFunctionEnter(const char16_t *pwszFunctionName);
-        int32_t OnDispatchFunctionExit(const char16_t *pwszFunctionName);
-
-#endif // ENABLE_SCRIPT_PROFILING
 
         void OnStartupComplete();
         void SaveStartupProfileAndRelease(bool isSaveOnClose = false);
