@@ -113,7 +113,7 @@ private:
     typedef BVSparse<HeapAllocator> CommittedSectionBitVector;
     uint8_t* _cardTable;
     size_t _cardTableNumEntries;
-    CriticalSection _cardTableInitCriticalSection;
+    std::recursive_mutex _cardTableInitCriticalSection;
 
 #ifdef X64_WB_DIAG
     enum CommitState

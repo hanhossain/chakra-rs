@@ -89,7 +89,7 @@ X64WriteBarrierCardTableManager::OnSegmentAlloc(_In_ char* segmentAddress, size_
         Js::Throw::FatalInternalError();
     }
 
-    std::unique_lock<std::recursive_mutex> critSec(_cardTableInitCriticalSection.GetMutex());
+    std::unique_lock<std::recursive_mutex> critSec(_cardTableInitCriticalSection);
 
     size_t  pageSize = AutoSystemInfo::PageSize;
 
@@ -228,7 +228,7 @@ X64WriteBarrierCardTableManager::GetSectionIndex(void* address)
 uint8_t *
 X64WriteBarrierCardTableManager::Initialize()
 {
-    std::unique_lock<std::recursive_mutex> critSec(_cardTableInitCriticalSection.GetMutex());
+    std::unique_lock<std::recursive_mutex> critSec(_cardTableInitCriticalSection);
 
 #if ENABLE_DEBUG_CONFIG_OPTIONS
     RecyclerWriteBarrierManager::Initialize();
