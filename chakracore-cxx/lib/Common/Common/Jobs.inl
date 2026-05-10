@@ -237,7 +237,7 @@ namespace JsUtil
 
         bool waitForQueuedJobs;
         {
-            std::unique_lock lock(criticalSection.GetMutex());
+            std::unique_lock lock(criticalSection);
             Assert(!IsClosed());
 
             waitForQueuedJobs = manager->numJobsAddedToProcessor != 0;
@@ -282,7 +282,7 @@ namespace JsUtil
             Job * job = NULL;
             if(!waitForQueuedJobs && manager->numJobsAddedToProcessor != 0)
             {
-                std::unique_lock lock(criticalSection.GetMutex());
+                std::unique_lock lock(criticalSection);
                 // Process only jobs from this manager
                 job = jobs.Head();
                 for(; job && job->Manager() != manager; job = job->Next());
@@ -301,7 +301,7 @@ namespace JsUtil
 
             const bool succeeded = ForegroundJobProcessor::Process(job);
             {
-                std::unique_lock lock(criticalSection.GetMutex());
+                std::unique_lock lock(criticalSection);
                 manager->JobProcessed(job, succeeded); // the job may be deleted during this and should not be used afterwards
                 if (!waitForQueuedJobs && manager->numJobsAddedToProcessor != 0)
                 {
@@ -331,7 +331,7 @@ namespace JsUtil
         }
 
         {
-            std::unique_lock lock(criticalSection.GetMutex());
+            std::unique_lock lock(criticalSection);
             Assert(!IsClosed());
 
             // Get the job again inside the lock to deterministically verify whether the job was already processed, and if not,
@@ -376,7 +376,7 @@ namespace JsUtil
         manager->BeforeWaitForJob(holder);
         const bool succeeded = ForegroundJobProcessor::Process(job);
         {
-            std::unique_lock lock(criticalSection.GetMutex());
+            std::unique_lock lock(criticalSection);
             JobProcessed(manager, job, succeeded); // the job may be deleted during this and should not be used afterwards
             Assert(manager->numJobsAddedToProcessor != 0);
             if(--manager->numJobsAddedToProcessor == 0)
@@ -407,7 +407,7 @@ namespace JsUtil
 
         bool processInForeground = false;
         {
-            std::unique_lock lock(criticalSection.GetMutex());
+            std::unique_lock lock(criticalSection);
             Assert(!IsClosed());
 
             // Get the job again inside the lock to deterministically verify whether the job was already processed, and if not,
@@ -464,7 +464,7 @@ namespace JsUtil
             manager->BeforeWaitForJob(holder);
             const bool succeeded = ForegroundJobProcessor::Process(job);
             {
-                std::unique_lock lock(criticalSection.GetMutex());
+                std::unique_lock lock(criticalSection);
                 JobProcessed(manager, job, succeeded); // the job may be deleted during this and should not be used afterwards
                 Assert(manager->numJobsAddedToProcessor != 0);
                 if(--manager->numJobsAddedToProcessor == 0)

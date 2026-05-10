@@ -687,7 +687,7 @@ namespace JsUtil
     template<class Fn>
     void BackgroundJobProcessor::ForEachManager(Fn fn)
     {
-        std::unique_lock lock(criticalSection.GetMutex());
+        std::unique_lock lock(criticalSection);
         JobProcessor::ForEachManager(fn);
     }
 
@@ -773,7 +773,7 @@ namespace JsUtil
             return false;
         });
 
-        std::unique_lock lock(criticalSection.GetMutex());
+        std::unique_lock lock(criticalSection);
         Assert(!IsClosed());
 
         JobProcessor::AddManager(manager);
@@ -859,7 +859,7 @@ namespace JsUtil
 
         ParallelThreadData *threadDataProcessingCurrentJob = nullptr;
         {
-            std::unique_lock lock(criticalSection.GetMutex());
+            std::unique_lock lock(criticalSection);
             // Managers must remove themselves. Hence, Close does not remove managers. So, not asserting on !IsClosed().
 
             if (!HasManager(manager))
@@ -948,7 +948,7 @@ namespace JsUtil
         }
 
         //Wait for all the on going jobs to complete.
-        criticalSection.Enter();
+        criticalSection.lock();
         while (true)
         {
             Job *job = GetCurrentJobOfManager(manager);
@@ -964,14 +964,14 @@ namespace JsUtil
             waitableManager->jobBeingWaitedUponProcessed.Reset();
 
             threadDataProcessingCurrentJob = GetThreadDataFromCurrentJob(waitableManager->jobBeingWaitedUpon);
-            criticalSection.Leave();
+            criticalSection.unlock();
 
             WaitWithThread(threadDataProcessingCurrentJob, waitableManager->jobBeingWaitedUponProcessed);
 
-            criticalSection.Enter();
+            criticalSection.lock();
             waitableManager->jobBeingWaitedUpon = 0;
         }
-        criticalSection.Leave();
+        criticalSection.unlock();
     }
 
     void BackgroundJobProcessor::AddJob(Job *const job, const bool prioritize)
@@ -1065,7 +1065,7 @@ namespace JsUtil
                 JobProcessor *processor;
             } autoDecommit(this, threadData);
 
-            criticalSection.Enter();
+            criticalSection.lock();
             while (!IsClosed() || (jobs.Head() && jobs.Head()->IsCritical()))
             {
                 Job *job = jobs.UnlinkFromBeginning();
@@ -1077,7 +1077,7 @@ namespace JsUtil
                     Assert(!IsClosed());
                     Assert(!threadData->isWaitingForJobs);
                     threadData->isWaitingForJobs = true;
-                    criticalSection.Leave();
+                    criticalSection.unlock();
 
                     if (threadService->HasCallback())
                     {
@@ -1088,7 +1088,7 @@ namespace JsUtil
 
                     WaitForJobReadyOrShutdown(threadData);
 
-                    criticalSection.Enter();
+                    criticalSection.lock();
                     threadData->isWaitingForJobs = false;
                     continue;
                 }
@@ -1102,11 +1102,11 @@ namespace JsUtil
                     JobManager *const manager = job->Manager();
                     manager->JobProcessing(job);
 
-                    criticalSection.Leave();
+                    criticalSection.unlock();
 
                     const bool succeeded = Process(job, threadData);
 
-                    criticalSection.Enter();
+                    criticalSection.lock();
                     threadData->currentJob = 0;
                     
                     JobProcessed(manager, job, succeeded); // the job may be deleted during this and should not be used afterwards
@@ -1133,7 +1133,7 @@ namespace JsUtil
                     }
                 }
             }
-            criticalSection.Leave();
+            criticalSection.unlock();
         }
     }
 
@@ -1150,7 +1150,7 @@ namespace JsUtil
         uint threadsWaitingForJobs = 0;
 
         {
-            std::unique_lock lock(criticalSection.GetMutex());
+            std::unique_lock lock(criticalSection);
             if(IsClosed())
                 return;
 
@@ -1223,7 +1223,7 @@ namespace JsUtil
 #if DBG
         if (!threadService->HasCallback())
         {
-            std::unique_lock lock(criticalSection.GetMutex());
+            std::unique_lock lock(criticalSection);
             Assert(!NumberOfThreadsWaitingForJobs());
 
             this->IterateBackgroundThreads([](ParallelThreadData *threadData)

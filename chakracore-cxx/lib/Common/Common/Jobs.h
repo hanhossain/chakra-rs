@@ -452,7 +452,7 @@ namespace JsUtil
     class BackgroundJobProcessor : public JobProcessor
     {
     private:
-        CriticalSection criticalSection;
+        std::recursive_mutex criticalSection;
         Event jobReady;                 //This is an auto reset event, only one thread wakes up when the event is signaled.
         Event wakeAllBackgroundThreads; //This is a manual reset event.
         unsigned int numJobs;
@@ -515,7 +515,7 @@ namespace JsUtil
         bool Process(Job *const job, ParallelThreadData *threadData);
         bool IsBeingProcessed(Job *job);
 
-        std::recursive_mutex& GetMutex() { return criticalSection.GetMutex(); }
+        std::recursive_mutex& GetMutex() { return criticalSection; }
 
         //Iterates each background thread, callback returns true when it needs to terminate the iteration.
         template<class Fn>
