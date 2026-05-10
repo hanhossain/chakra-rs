@@ -27,7 +27,7 @@ private:
 
     static DictionaryType* dictionaryTypes;
 
-    static CriticalSection dictionaryTypesCriticalSection;
+    static std::recursive_mutex dictionaryTypesCriticalSection;
 
 public:
     void Resize(uint newSize, uint emptyBucketCount);

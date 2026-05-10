@@ -7,7 +7,7 @@
 #include "Interface/DictionaryStats.h"
 
 DictionaryType* DictionaryStats::dictionaryTypes = NULL;
-CriticalSection DictionaryStats::dictionaryTypesCriticalSection;
+std::recursive_mutex DictionaryStats::dictionaryTypesCriticalSection;
 
 DictionaryStats* DictionaryStats::Create(const char* name, uint bucketCount)
 {
@@ -49,7 +49,7 @@ DictionaryStats::DictionaryStats(const char* name, uint bucketCount)
     pNext(NULL),
     pName(NULL)
 {
-    DictionaryStats::dictionaryTypesCriticalSection.Enter();
+    DictionaryStats::dictionaryTypesCriticalSection.lock();
     DictionaryType* type = NULL;
     // See if we already created instance(s) of this type
     DictionaryType* current = dictionaryTypes;
@@ -73,7 +73,7 @@ DictionaryStats::DictionaryStats(const char* name, uint bucketCount)
         strncpy_s(type->name, name, _countof(type->name)-1);
         type->name[sizeof(type->name)-1]='\0';
     }
-    dictionaryTypesCriticalSection.Leave();
+    dictionaryTypesCriticalSection.unlock();
     // keep a pointer to the name in case we are asked to clone ourselves
     pName = type->name;
 
@@ -124,7 +124,7 @@ void DictionaryStats::OutputStats()
     if (!dictionaryTypes)
         return;
 
-    DictionaryStats::dictionaryTypesCriticalSection.Enter();
+    DictionaryStats::dictionaryTypesCriticalSection.lock();
     DictionaryType* current = dictionaryTypes;
     Output::Print(u"PROFILE DICTIONARY\n");
     Output::Print(u"%8s  %13s  %13s  %13s  %13s  %13s  %13s  %13s  %14s  %14s  %13s  %13s  %13s    %s\n", u"Metric",u"StartSize", u"EndSize", u"Resizes", u"Items", u"MaxDepth", u"EmptyBuckets", u"Lookups", u"Collisions", u"AvgLookupDepth", u"AvgCollDepth", u"MaxLookupDepth", u"Instances", u"Type");
@@ -204,7 +204,7 @@ void DictionaryStats::OutputStats()
     }
     Output::Print(u"====================================================================================\n");
     ClearStats();
-    DictionaryStats::dictionaryTypesCriticalSection.Leave();
+    DictionaryStats::dictionaryTypesCriticalSection.unlock();
 }
 
 void DictionaryStats::ComputeStats(uint input, double &total, double &max)
