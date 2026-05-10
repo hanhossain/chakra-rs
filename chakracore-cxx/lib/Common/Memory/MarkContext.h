@@ -13,8 +13,6 @@ namespace Memory
 {
 class Recycler;
 
-typedef JsUtil::SynchronizedDictionary<void *, void *, NoCheckHeapAllocator, PrimeSizePolicy, RecyclerPointerComparer, JsUtil::SimpleDictionaryEntry, Js::DefaultContainerLockPolicy, CriticalSection> MarkMap;
-
 #if __has_feature(address_sanitizer)
 enum class RecyclerScanMemoryType { General, Stack };
 #endif
