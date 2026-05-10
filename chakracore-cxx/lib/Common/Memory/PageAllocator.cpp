@@ -1715,7 +1715,7 @@ void
 PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::BackgroundZeroQueuedPages()
 {
     Assert(HasZeroPageQueue());
-    std::unique_lock<std::recursive_mutex> autocs(backgroundPageQueue->backgroundPageQueueCriticalSection.GetMutex());
+    std::unique_lock<std::recursive_mutex> autocs(backgroundPageQueue->backgroundPageQueueCriticalSection);
     ZeroQueuedPages();
 }
 
@@ -1929,7 +1929,7 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::DecommitNow(bool all)
             // we drained the queue
             if(zeroPageQueueEmpty)
             {
-                std::unique_lock<std::recursive_mutex> autoCS(backgroundPageQueue->backgroundPageQueueCriticalSection.GetMutex());
+                std::unique_lock<std::recursive_mutex> autoCS(backgroundPageQueue->backgroundPageQueueCriticalSection);
                 this->hasZeroQueuedPages = false;
                 Assert(!this->HasZeroQueuedPages());
             }
