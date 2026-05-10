@@ -55,7 +55,7 @@ template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
 void
 EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::FreeAllocations(bool release)
 {
-    AutoRealOrFakeCriticalSection<SyncObject> autoCs(&this->criticalSection);
+    std::unique_lock<SyncObject> autoCs(this->criticalSection);
 
 #if DBG_DUMP
     if (!release && PHASE_STATS1(Js::EmitterPhase))
@@ -99,7 +99,7 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::FreeAllocations(bool r
 template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
 bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::IsInHeap(void* address)
 {
-    AutoRealOrFakeCriticalSection<SyncObject> autocs(&this->criticalSection);
+    std::unique_lock<SyncObject> autocs(this->criticalSection);
     return this->allocationHeap.IsInHeap(address);
 }
 
@@ -202,7 +202,7 @@ template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
 bool
 EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::FreeAllocation(void* address)
 {
-    AutoRealOrFakeCriticalSection<SyncObject> autoCs(&this->criticalSection);
+    std::unique_lock<SyncObject> autoCs(this->criticalSection);
 
 #if _M_ARM
     address = (void*)((uintptr_t)address & ~0x1); // clear the thumb bit
@@ -297,8 +297,7 @@ EmitBufferAllocation<TAlloc, TPreReservedAlloc>*
 EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::AllocateBuffer(size_t bytes, __deref_bcount(bytes) uint8_t** ppBuffer, ushort pdataCount /*=0*/, ushort xdataSize  /*=0*/, bool canAllocInPreReservedHeapPageSegment /*=false*/,
     bool isAnyJittedCode /* = false*/)
 {
-    AutoRealOrFakeCriticalSection<SyncObject> autoCs(&this->criticalSection);
-
+    std::unique_lock<SyncObject> autoCs(this->criticalSection);
     Assert(ppBuffer != nullptr);
 
     TEmitBufferAllocation * allocation = this->NewAllocation(bytes, pdataCount, xdataSize, canAllocInPreReservedHeapPageSegment, isAnyJittedCode);
@@ -343,7 +342,7 @@ bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CheckCommitFaultI
 template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
 bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::IsBufferExecuteReadOnly(TEmitBufferAllocation * allocation)
 {
-    AutoRealOrFakeCriticalSection<SyncObject> autoCs(&this->criticalSection);
+    std::unique_lock<SyncObject> autoCs(this->criticalSection);
     MEMORY_BASIC_INFORMATION memBasicInfo;
     size_t resultBytes = VirtualQuery(allocation->allocation->address, &memBasicInfo, sizeof(memBasicInfo));
     return resultBytes != 0 && memBasicInfo.Protect == PAGE_EXECUTE_READ;
@@ -362,7 +361,7 @@ bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::ProtectBufferWith
 template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
 bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBufferForInterpreter(TEmitBufferAllocation* allocation, _In_reads_bytes_(bufferSize) uint8_t* pBuffer, _In_ size_t bufferSize)
 {
-    AutoRealOrFakeCriticalSection<SyncObject> autoCs(&this->criticalSection);
+    std::unique_lock<SyncObject> autoCs(this->criticalSection);
 
     Assert(allocation != nullptr);
     allocation->bytesUsed += bufferSize;
@@ -406,7 +405,7 @@ template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
 bool
 EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBuffer(TEmitBufferAllocation* allocation, const size_t destBufferBytes, __out_bcount(destBufferBytes) uint8_t* destBuffer, size_t bytes, __in_bcount(bytes) const uint8_t* sourceBuffer, uint32_t alignPad)
 {
-    AutoRealOrFakeCriticalSection<SyncObject> autoCs(&this->criticalSection);
+    std::unique_lock<SyncObject> autoCs(this->criticalSection);
 
     Assert(destBuffer != nullptr);
     Assert(allocation != nullptr);
@@ -510,7 +509,7 @@ template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
 void
 EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CompletePreviousAllocation(TEmitBufferAllocation* allocation)
 {
-    AutoRealOrFakeCriticalSection<SyncObject> autoCs(&this->criticalSection);
+    std::unique_lock<SyncObject> autoCs(this->criticalSection);
     if (allocation != nullptr)
     {
         allocation->bytesUsed = allocation->bytesCommitted;
@@ -522,7 +521,7 @@ template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
 void
 EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CheckBufferPermissions(TEmitBufferAllocation *allocation)
 {
-    AutoRealOrFakeCriticalSection<SyncObject> autoCs(&this->criticalSection);
+    std::unique_lock<SyncObject> autoCs(this->criticalSection);
 
     if(allocation->bytesCommitted == 0)
         return;
@@ -599,5 +598,4 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::DumpAndResetStats(char
 }
 #endif
 
-template class EmitBufferManager<VirtualAllocWrapper, PreReservedVirtualAllocWrapper, FakeCriticalSection>;
 template class EmitBufferManager<VirtualAllocWrapper, PreReservedVirtualAllocWrapper, std::recursive_mutex>;
