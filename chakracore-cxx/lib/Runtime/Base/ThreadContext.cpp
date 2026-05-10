@@ -3902,7 +3902,7 @@ BOOL ThreadContext::IsNativeAddress(void * pCodeAddr, Js::ScriptContext* current
         if (!this->IsAllJITCodeInPreReservedRegion())
         {
 #if DBG
-            std::unique_lock<std::recursive_mutex> autoLock(this->codePageAllocators.cs.GetMutex());
+            std::unique_lock<std::recursive_mutex> autoLock(this->codePageAllocators.cs);
 #endif
             bool isNativeAddr = IsNativeAddressHelper(pCodeAddr, currentScriptContext);
 #if DBG
