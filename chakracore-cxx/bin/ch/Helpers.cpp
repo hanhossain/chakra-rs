@@ -3,12 +3,15 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "stdafx.h"
+#include <filesystem>
 #include <iostream>
 #include <print>
 #include <limits>
 #include <sys/stat.h>
 
 #define MAX_URI_LENGTH 512
+
+namespace fs = std::filesystem;
 
 JsTTDStreamHandle TTDHostOpen(size_t pathLength, const char* path, bool isWrite)
 {
@@ -18,70 +21,9 @@ JsTTDStreamHandle TTDHostOpen(size_t pathLength, const char* path, bool isWrite)
 #define TTDHostRead(buff, size, handle) std::fread(buff, 1, size, (FILE*)handle)
 #define TTDHostWrite(buff, size, handle) std::fwrite(buff, 1, size, (FILE*)handle)
 
-int GetPathNameLocation(const char * filename)
-{
-    int filenameLength = (int) strlen(filename);
-    int pos;
-
-    if (filenameLength <= 0)
-    {
-        return -1;
-    }
-
-    for (pos = filenameLength - 1; pos >= 0; pos--)
-    {
-        char ch = filename[pos];
-        if (ch == '/' || ch == '\\') break;
-    }
-
-    return pos;
-}
-
-inline void pathcpy(char * target, const char * src, uint length)
-{
-    for (int i = 0; i < length; i++)
-    {
-        if (src[i] == '\\')
-        {
-            target[i] = '/';
-        }
-        else
-        {
-            target[i] = src[i];
-        }
-    }
-}
-
-uint ConcatPath(const char * filenameLeft, uint posPathSep, const char * filenameRight, char* buffer, uint bufferLength)
-{
-    int filenameRightLength = (int) strlen(filenameRight);
-
-    // [ path[/] ] + [filename] + /0
-    uint totalLength = posPathSep + filenameRightLength + 1;
-    if (buffer == nullptr)
-    {
-        return totalLength;
-    }
-
-    if (bufferLength < totalLength)
-    {
-      fprintf(stderr, "Error: file path is too long.\n");
-      return (uint)-1;
-    }
-
-    pathcpy(buffer, filenameLeft, posPathSep);
-    buffer += posPathSep;
-    pathcpy(buffer, filenameRight, filenameRightLength);
-    buffer += filenameRightLength;
-    buffer[0] = char(0);
-    return totalLength;
-}
-
 int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& contents, uint32_t* lengthBytesOut /*= nullptr*/, const std::optional<std::filesystem::path> &fullPath, bool shouldMute /*=false */)
 {
-    static char sHostApplicationPathBuffer[MAX_URI_LENGTH];
-    static uint sHostApplicationPathBufferLength = (uint) -1;
-    char combinedPathBuffer[MAX_URI_LENGTH];
+    static fs::path sHostApplicationPath;
 
     int32_t hr = S_OK;
     uint8_t * pRawBytes = nullptr;
@@ -91,43 +33,22 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
     FILE * file = NULL;
     size_t bufferLength = 0;
 
-    const char * filename = !fullPath ? filenameToLoad : (const char *)(fullPath->c_str());
-    if (sHostApplicationPathBufferLength == (uint)-1)
-    {
-        // consider incoming filename as the host app and base its' path for others
-        sHostApplicationPathBufferLength = GetPathNameLocation(filename);
-        if (sHostApplicationPathBufferLength == -1)
-        {
-            // host app has no path info. (it must be located on current folder!)
-            sHostApplicationPathBufferLength = 0;
-        }
-        else
-        {
-            sHostApplicationPathBufferLength += 1;
-            Assert(sHostApplicationPathBufferLength < MAX_URI_LENGTH);
-            // save host app's path and fix the path separator for platform
-            pathcpy(sHostApplicationPathBuffer, filename, sHostApplicationPathBufferLength);
-        }
-        sHostApplicationPathBuffer[sHostApplicationPathBufferLength] = char(0);
-    }
-    else if (filename[0] != '/' && filename[0] != '\\' && !fullPath) // make sure it's not a full path
-    {
-        // concat host path and filename
-        uint len = ConcatPath(sHostApplicationPathBuffer, sHostApplicationPathBufferLength,
-                   filename, combinedPathBuffer, MAX_URI_LENGTH);
+    const char * filename = !fullPath ? filenameToLoad : fullPath->c_str();
+    fs::path filenamePath(filename);
 
-        if (len == (uint)-1)
-        {
-            hr = E_FAIL;
-            goto Error;
-        }
-        filename = combinedPathBuffer;
+    if (sHostApplicationPath.empty())
+    {
+        sHostApplicationPath = filenamePath.parent_path();
+    }
+    else if (filenamePath.is_relative() && !fullPath) // make sure it's not a full path
+    {
+        filenamePath = sHostApplicationPath / filenamePath;
     }
 
     // check if have it registered
     AutoString *data;
     if (SourceMap::Find(filenameToLoad, strlen(filenameToLoad), &data) ||
-        SourceMap::Find(filename, strlen(filename), &data))
+        SourceMap::Find(filenamePath, &data))
     {
         pRawBytesFromMap = (uint8_t*) data->GetString();
         lengthBytes = (uint32_t) data->GetLength();
@@ -136,7 +57,7 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
     {
         // Open the file as a binary file to prevent CRT from handling encoding, line-break conversions,
         // etc.
-        if (fopen_s(&file, filename, "rb") != 0)
+        if (fopen_s(&file, filenamePath.c_str(), "rb") != 0)
         {
             IfFailGo(E_FAIL);
         }

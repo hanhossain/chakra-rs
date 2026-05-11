@@ -4,6 +4,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include <filesystem>
 
 #if DBG
 #else // DBG
@@ -327,6 +328,21 @@ public:
         while(node != nullptr)
         {
             if (strncmp(node->path.GetString(), path, pathLength) == 0)
+            {
+                *out = &(node->data);
+                return true;
+            }
+            node = node->next;
+        }
+        return false;
+    }
+
+    static bool Find(const std::filesystem::path &path, AutoString **out)
+    {
+        FileNode *node = root;
+        while (node != nullptr)
+        {
+            if (node->path.GetString() == path.native())
             {
                 *out = &(node->data);
                 return true;
