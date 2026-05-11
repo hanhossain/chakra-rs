@@ -138,15 +138,6 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
         // etc.
         if (fopen_s(&file, filename, "rb") != 0)
         {
-            if (!HostConfigFlags::flags.MuteHostErrorMsgIsEnabled && !shouldMute)
-            {
-// TODO (hanhossain): may want to include <unistd.h> to import _POSIX_VERSION
-#if defined(_POSIX_VERSION)
-                fprintf(stderr, "Error in opening file: ");
-                perror(filename);
-#endif
-            }
-
             IfFailGo(E_FAIL);
         }
     }
