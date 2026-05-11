@@ -835,3 +835,8 @@ int main_internal(int argc, char** c_argv, uint32_t snapInterval, uint32_t snapH
     return retval;
 #endif
 }
+
+const char16_t *get_hello_world()
+{
+    return u"hello world from cpp!";
+}

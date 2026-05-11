@@ -4,6 +4,12 @@ use std::process::ExitCode;
 use std::ptr;
 
 fn main() -> ExitCode {
+    unsafe {
+        let v = chakracore_sys::chhelper::ffi::get_hello_world();
+        let s = widestring::U16CString::from_ptr_str(v as *const u16);
+        dbg!(s);
+    }
+
     let args: Vec<_> = std::env::args().collect();
     let Some(chakra_args) = chakra::ChakraArgs::new(args) else {
         chakra::print_usage();

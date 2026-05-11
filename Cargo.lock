@@ -51,6 +51,7 @@ dependencies = [
  "chakracore-sys",
  "pretty_assertions",
  "rstest",
+ "widestring",
 ]
 
 [[package]]
@@ -561,6 +562,12 @@ checksum = "9517f9239f02c069db75e65f174b3da828fe5f5b945c4dd26bd25d89c03ebcf5"
 dependencies = [
  "wit-bindgen",
 ]
+
+[[package]]
+name = "widestring"
+version = "1.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "72069c3113ab32ab29e5584db3c6ec55d416895e60715417b5b883a357c3e471"
 
 [[package]]
 name = "winapi-util"
