@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 #include <list>
+#include <optional>
+#include <semaphore>
 
 class RuntimeThreadData
 {
@@ -13,7 +15,7 @@ public:
     HANDLE hevntInitialScriptCompleted;
     HANDLE hevntReceivedBroadcast;
     HANDLE hevntShutdown;
-    HANDLE hSemaphore;
+    std::optional<std::binary_semaphore> semaphore;
     HANDLE hThread;
 
     JsSharedArrayBufferContentHandle sharedContent;

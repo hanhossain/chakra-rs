@@ -1525,26 +1525,16 @@ JsValueRef WScriptJsrt::BroadcastCallback(JsValueRef callee, bool isConstructCal
         {
             ChakraRTInterface::JsGetSharedArrayBufferContent(arguments[1], &threadData->sharedContent);
 
-            int32_t count = (int32_t)threadData->children.size();
-            threadData->hSemaphore = CreateSemaphore(NULL, 0, count, NULL);
-            if (threadData->hSemaphore)
-            {
-                //Clang does not support "for each" yet
-                for (auto i = threadData->children.begin(); i != threadData->children.end(); i++)
-                {
-                    auto child = *i;
-                    SetEvent(child->hevntReceivedBroadcast);
-                }
+            std::size_t count = threadData->children.size();
+            threadData->semaphore.emplace(count);
 
-                WaitForSingleObject(threadData->hSemaphore, INFINITE);
-                CloseHandle(threadData->hSemaphore);
-                threadData->hSemaphore = INVALID_HANDLE_VALUE;
-            }
-            else
+            for (const auto child : threadData->children)
             {
-                std::println(stderr, "Couldn't create semaphore.");
-                fflush(stderr);
+                SetEvent(child->hevntReceivedBroadcast);
             }
+
+            threadData->semaphore->acquire();
+            threadData->semaphore.reset();
 
             ChakraRTInterface::JsReleaseSharedArrayBufferContentHandle(threadData->sharedContent);
         }
