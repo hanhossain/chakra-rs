@@ -348,7 +348,6 @@ CLEANUP13:
     MAPCleanup();
 CLEANUP6:
 CLEANUP5:
-    PROCCleanupInitialProcess();
 CLEANUP1c:
     // Cleanup object manager
 CLEANUP1b:
