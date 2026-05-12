@@ -97,7 +97,6 @@ GetMethodAddress(ThreadContextInfo * context, IR::HelperCallOpnd* opnd)
 // We need the helper table to be in read-only memory for obvious security reasons.
 // Import function ptr require dynamic initialization, and cause the table to be in read-write memory.
 // Additionally, all function ptrs are automatically marked as safe CFG addresses by the compiler.
-// __declspec(guard(ignore)) can be used on methods to have the compiler not mark these as valid CFG targets.
 intptr_t GetNonTableMethodAddress(ThreadContextInfo * context, JnHelperMethod helperMethod)
 {
     switch (helperMethod)

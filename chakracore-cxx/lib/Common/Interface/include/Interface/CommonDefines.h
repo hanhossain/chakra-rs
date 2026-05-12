@@ -69,14 +69,6 @@
 #define TARGET_64 1
 #endif
 
-#ifndef DECLSPEC_CHPE_GUEST
-// For CHPE build aka Arm64.x86
-// https://osgwiki.com/wiki/ARM64_CHPE
-// On ChakraCore alone we do not support this
-// so we define to nothing to avoid build breaks
-#define DECLSPEC_CHPE_GUEST
-#endif
-
 // Memory Protections
 #define PAGE_EXECUTE_RO_TARGETS_INVALID   (PAGE_EXECUTE_READ)
 
