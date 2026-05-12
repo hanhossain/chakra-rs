@@ -106,9 +106,7 @@ extern "C" {
 #define _M_ARM64 1
 #endif
 
-#if defined(_M_IX86) && !defined(_X86_)
-#define _X86_
-#elif defined(_M_ALPHA) && !defined(_ALPHA_)
+#if defined(_M_ALPHA) && !defined(_ALPHA_)
 #define _ALPHA_
 #elif defined(_M_PPC) && !defined(_PPC_)
 #define _PPC_
@@ -935,9 +933,7 @@ SetThreadPriority(
 
 typedef BOOL (*ReadMemoryWordCallback)(size_t address, size_t *value);
 
-#if defined(__FreeBSD__) && defined(_X86_)
-#define PAL_CS_NATIVE_DATA_SIZE 12
-#elif defined(__FreeBSD__) && defined(__x86_64__)
+#if defined(__FreeBSD__) && defined(__x86_64__)
 #define PAL_CS_NATIVE_DATA_SIZE 24
 #elif defined(__sun__)
 #define PAL_CS_NATIVE_DATA_SIZE 48

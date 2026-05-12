@@ -253,17 +253,6 @@ typedef union __declspec(align(16)) _SLIST_HEADER {
   } HeaderX64;
 } SLIST_HEADER, *PSLIST_HEADER;
 
-#elif defined(_X86_)
-
-typedef union _SLIST_HEADER {
-  unsigned long Alignment;
-  struct {
-    SLIST_ENTRY Next;
-    uint16_t   Depth;
-    uint16_t   CpuId;
-  } DUMMYSTRUCTNAME;
-} SLIST_HEADER, *PSLIST_HEADER;
-
 #elif defined(_ARM_)
 
 typedef union _SLIST_HEADER {

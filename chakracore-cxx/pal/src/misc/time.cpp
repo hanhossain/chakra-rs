@@ -296,16 +296,12 @@ EXIT:
     return retval;
 }
 
-#if defined(_X86_) || defined(__AMD64__) || defined(__x86_64__)
+#if defined(__AMD64__) || defined(__x86_64__)
 inline unsigned long rdtsc()
 {
     unsigned long H, L;
     __asm volatile ("rdtsc":"=a"(L), "=d"(H));
-#ifdef _X86_
-    return L;
-#else
     return (H << 32) | L;
-#endif
 }
 
 static double CPUFreq()
@@ -352,7 +348,7 @@ time).
 unsigned long
 GetTickCount64()
 {
-#if defined(_X86_) || defined(__AMD64__) || defined(__x86_64__)
+#if defined(__AMD64__) || defined(__x86_64__)
     return getTickCount64FallbackCB();
 #else
     return GetTickCount64Fallback();
