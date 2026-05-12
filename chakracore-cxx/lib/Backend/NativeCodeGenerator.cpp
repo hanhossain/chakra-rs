@@ -1245,7 +1245,6 @@ void NativeCodeGenerator::SetProfileMode(BOOL fSet)
 }
 
 #if _M_IX86
-__declspec(naked)
 Js::Var
 NativeCodeGenerator::CheckAsmJsCodeGenThunk(Js::RecyclableObject* function, Js::CallInfo callInfo, ...)
 {
@@ -1267,7 +1266,6 @@ NativeCodeGenerator::CheckAsmJsCodeGenThunk(Js::RecyclableObject* function, Js::
 #endif
 
 #if _M_IX86
-__declspec(naked)
 Js::Var
 NativeCodeGenerator::CheckCodeGenThunk(Js::RecyclableObject* function, Js::CallInfo callInfo, ...)
 {
