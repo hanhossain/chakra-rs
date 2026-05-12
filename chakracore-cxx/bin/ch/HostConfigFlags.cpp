@@ -6,7 +6,7 @@
 #include <print>
 
 HostConfigFlags HostConfigFlags::flags;
-char16_t** HostConfigFlags::argsVal;
+const char16_t** HostConfigFlags::argsVal;
 int HostConfigFlags::argsCount;
 void(*HostConfigFlags::pfnPrintUsage)();
 
@@ -107,21 +107,21 @@ void HostConfigFlags::RemoveArg(int& argc, _Inout_updates_to_(argc, argc) char16
 
 void HostConfigFlags::HandleArgsFlag(int& argc, _Inout_updates_to_(argc, argc) char16_t* argv[])
 {
-    const char16_t* argsFlag = u"-args";
-    const char16_t* endArgsFlag = u"-endargs";
-    int argsFlagLen = static_cast<int>(std::u16string(argsFlag).length());
+    constexpr std::u16string_view argsFlag = u"-args";
+    constexpr std::u16string_view endArgsFlag = u"-endargs";
     int i;
     for (i = 1; i < argc; i++)
     {
-        if (_wcsnicmp(argv[i], argsFlag, argsFlagLen) == 0)
+        if (argv[i] == argsFlag)
         {
             break;
         }
     }
+
     int argsStart = ++i;
     for (; i < argc; i++)
     {
-        if (_wcsnicmp(argv[i], endArgsFlag, argsFlagLen) == 0)
+        if (argv[i] == endArgsFlag)
         {
             break;
         }
@@ -133,7 +133,7 @@ void HostConfigFlags::HandleArgsFlag(int& argc, _Inout_updates_to_(argc, argc) c
     {
         return;
     }
-    HostConfigFlags::argsVal = new char16_t*[argsCount];
+    HostConfigFlags::argsVal = new const char16_t*[argsCount];
     HostConfigFlags::argsCount = argsCount;
     int argIndex = argsStart;
     for (i = 0; i < argsCount; i++)

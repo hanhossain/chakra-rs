@@ -93,7 +93,7 @@ void WScriptJsrt::RegisterScriptDir(unsigned long sourceContext, const char * fu
 
 bool WScriptJsrt::CreateArgumentsObject(JsValueRef *argsObject)
 {
-    char16_t* *argv = HostConfigFlags::argsVal;
+    const char16_t* *argv = HostConfigFlags::argsVal;
     JsValueRef retArr;
 
     Assert(argsObject);

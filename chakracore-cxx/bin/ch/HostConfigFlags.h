@@ -15,7 +15,7 @@ public:
 #include "HostConfigFlagsList.h"
 
     static HostConfigFlags flags;
-    static char16_t** argsVal;
+    static const char16_t** argsVal;
     static int argsCount;
     static void(*pfnPrintUsage)();
 
