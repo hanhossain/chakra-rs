@@ -33,11 +33,7 @@ SET_DEFAULT_DEBUG_CHANNEL(THREAD); // some headers have code with asserts, so do
 #include <unistd.h>
 
 #define CONTEXT_AREA_MASK 0xffff
-#ifdef _X86_
-#define CONTEXT_ALL_FLOATING (CONTEXT_FLOATING_POINT | CONTEXT_EXTENDED_REGISTERS)
-#else
 #define CONTEXT_ALL_FLOATING CONTEXT_FLOATING_POINT
-#endif
 
 #if !defined(__APPLE__)
 #include <sys/ptrace.h>
@@ -80,23 +76,6 @@ typedef int __ptrace_request;
     ASSIGN_REG(R13)     \
     ASSIGN_REG(R14)     \
     ASSIGN_REG(R15)     \
-
-#elif defined(_X86_)
-#define ASSIGN_CONTROL_REGS \
-    ASSIGN_REG(Ebp)     \
-    ASSIGN_REG(Eip)     \
-    ASSIGN_REG(SegCs)   \
-    ASSIGN_REG(EFlags)  \
-    ASSIGN_REG(Esp)     \
-    ASSIGN_REG(SegSs)   \
-
-#define ASSIGN_INTEGER_REGS \
-    ASSIGN_REG(Edi)     \
-    ASSIGN_REG(Esi)     \
-    ASSIGN_REG(Ebx)     \
-    ASSIGN_REG(Edx)     \
-    ASSIGN_REG(Ecx)     \
-    ASSIGN_REG(Eax)     \
 
 #elif defined(_ARM_)
 #define ASSIGN_CONTROL_REGS \
@@ -814,8 +793,6 @@ void * GetNativeContextPC(const native_context_t *context)
 {
 #ifdef _AMD64_
     return (void *)MCREG_Rip(context->uc_mcontext);
-#elif defined(_X86_)
-    return (void *) MCREG_Eip(context->uc_mcontext);
 #elif defined(HOST_S390X)
     return (void *) MCREG_PSWAddr(context->uc_mcontext);
 #elif defined(HOST_POWERPC64)
@@ -842,8 +819,6 @@ void * GetNativeContextSP(const native_context_t *context)
 {
 #ifdef _AMD64_
     return (void *)MCREG_Rsp(context->uc_mcontext);
-#elif defined(_X86_)
-    return (void *) MCREG_Esp(context->uc_mcontext);
 #elif defined(HOST_S390X)
     return (void *) MCREG_R15(context->uc_mcontext);
 #elif defined(HOST_POWERPC64)

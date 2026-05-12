@@ -13,7 +13,7 @@
 #include <chrono>
 #include <filesystem>
 
-#if defined(_X86_) || defined(_M_IX86)
+#if defined(_M_IX86)
 #define CPU_ARCH_TEXT "x86"
 #elif defined(_AMD64_) || defined(_IA64_) || defined(_M_AMD64) || defined(_M_IA64)
 #define CPU_ARCH_TEXT "x86_64"
