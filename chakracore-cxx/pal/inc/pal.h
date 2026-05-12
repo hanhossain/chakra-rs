@@ -426,21 +426,6 @@ SetCurrentDirectoryW(
              const char16_t* lpPathName);
 
 HANDLE
-CreateSemaphoreW(
-          LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
-          int32_t lInitialCount,
-          int32_t lMaximumCount,
-          const char16_t* lpName);
-
-#define CreateSemaphore CreateSemaphoreW
-
-BOOL
-ReleaseSemaphore(
-          HANDLE hSemaphore,
-          int32_t lReleaseCount,
-          int32_t * lpPreviousCount);
-
-HANDLE
 CreateEventW(
           LPSECURITY_ATTRIBUTES lpEventAttributes,
           BOOL bManualReset,

@@ -120,8 +120,7 @@ set(SOURCES
   objmgr/shmobjectmanager.cpp
   shmemory/shmemory.cpp
   synchobj/event.cpp
-  synchobj/semaphore.cpp
-  synchmgr/synchcontrollers.cpp
+    synchmgr/synchcontrollers.cpp
   synchmgr/synchmanager.cpp
   synchmgr/wait.cpp
   sync/cs.cpp
