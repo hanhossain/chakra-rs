@@ -21,7 +21,7 @@ RuntimeThreadLocalData& GetRuntimeThreadLocalData()
 }
 
 RuntimeThreadData::RuntimeThreadData() :
-    hSemaphore(nullptr), 
+    semaphore(std::nullopt),
     hThread(nullptr),
     sharedContent(nullptr),
     receiveBroadcastCallbackFunc(nullptr),
@@ -91,7 +91,7 @@ uint32_t RuntimeThreadData::ThreadProc()
             ChakraRTInterface::JsDoubleToNumber(1, &args[2]);
 
             // notify the parent we received the data
-            ReleaseSemaphore(this->parent->hSemaphore, 1, NULL);
+            parent->semaphore->release();
 
             if (this->receiveBroadcastCallbackFunc)
             {
