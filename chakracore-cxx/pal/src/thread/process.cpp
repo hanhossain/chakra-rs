@@ -174,12 +174,6 @@ CRITICAL_SECTION g_csProcess __attribute__((init_priority(200)));
 CPalThread* CorUnix::pGThreadList;
 uint32_t g_dwThreadCount;
 
-//
-// The command line and app name for the process
-//
-char16_t* g_lpwstrCmdLine = NULL;
-char16_t* g_lpwstrAppDir = NULL;
-
 // Thread ID of thread that has started the ExitProcess process
 Volatile<int32_t> terminator __attribute__((init_priority(200))) = 0;
 
@@ -670,43 +664,6 @@ CreateInitialProcessAndThreadObjectsExit:
     }
 
     return palError;
-}
-
-
-/*++
-Function:
-  PROCCleanupInitialProcess
-
-Abstract
-  Cleanup all the structures for the initial process.
-
-Parameter
-  void
-
-Return
-  void
-
---*/
-void
-PROCCleanupInitialProcess(void)
-{
-    CPalThread *pThread = InternalGetCurrentThread();
-
-    InternalEnterCriticalSection(pThread, &g_csProcess);
-
-    /* Free the application directory */
-    free(g_lpwstrAppDir);
-
-    /* Free the stored command line */
-    free(g_lpwstrCmdLine);
-
-    InternalLeaveCriticalSection(pThread, &g_csProcess);
-
-    //
-    // Object manager shutdown will handle freeing the underlying
-    // thread and process data
-    //
-
 }
 
 /*++

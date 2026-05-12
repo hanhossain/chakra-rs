@@ -72,22 +72,6 @@ Notes :
 --*/
 BOOL  PROCCreateInitialProcess(char16_t* lpwstrCmdLine, char16_t* lpwstrFullPath);
 
-/*++
-Function:
-  PROCCleanupInitialProcess
-
-Abstract
-  Cleanup all the structures for the initial process.
-
-Parameter
-  void
-
-Return
-  void
-
---*/
-void PROCCleanupInitialProcess(void);
-
 #if USE_SYSV_SEMAPHORES
 /*++
 Function:
