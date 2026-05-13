@@ -32,10 +32,6 @@ extern "C" {
 
 #define CALLBACK
 
-#if !defined(_declspec)
-#define _declspec(e)  __declspec(e)
-#endif
-
 #if defined(_VAC_) && defined(__cplusplus)
 #define __inline        inline
 #endif
