@@ -424,7 +424,7 @@ bool HashTbl::Contains(_In_reads_(cch) LPCOLESTR prgch, int32_t cch)
 #include "HashFunc.cpp"
 
 
-__declspec(noreturn) void HashTbl::OutOfMemory()
+void HashTbl::OutOfMemory()
 {
     throw ParseExceptionObject(ERRnoMemory);
 }

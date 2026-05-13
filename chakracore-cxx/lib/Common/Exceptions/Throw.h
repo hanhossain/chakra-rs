@@ -17,20 +17,20 @@ namespace Js {
     class Throw
     {
     public:
-        static void __declspec(noreturn) OutOfMemory();
-        static void __declspec(noreturn) StackOverflow(ScriptContext *scriptContext, void * returnAddress);
-        static void __declspec(noreturn) NotImplemented();
-        static void __declspec(noreturn) InternalError();
-        static void __declspec(noreturn) FatalInternalError(int32_t hr = E_FAIL);
-        static void __declspec(noreturn) FatalInternalErrorEx(int scenario);
-        static void __declspec(noreturn) FatalInternalGlobalizationError();
+        static void OutOfMemory();
+        static void StackOverflow(ScriptContext *scriptContext, void * returnAddress);
+        static void NotImplemented();
+        static void InternalError();
+        static void FatalInternalError(int32_t hr = E_FAIL);
+        static void FatalInternalErrorEx(int scenario);
+        static void FatalInternalGlobalizationError();
 
-        static void __declspec(noreturn) FatalProjectionError();
+        static void FatalProjectionError();
 #if ENABLE_JS_REENTRANCY_CHECK
-        static void __declspec(noreturn) FatalJsReentrancyError();
+        static void FatalJsReentrancyError();
 #endif
 #ifdef ENABLE_JS_BUILTINS
-        static void __declspec(noreturn) FatalJsBuiltInError();
+        static void FatalJsBuiltInError();
 #endif
 
         static bool ReportAssert(const char * fileName, uint lineNumber, const char * error, const char * message);

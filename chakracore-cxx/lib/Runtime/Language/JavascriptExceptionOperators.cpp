@@ -706,7 +706,7 @@ namespace Js
     }
 #endif
 
-    void __declspec(noreturn) JavascriptExceptionOperators::OP_Throw(Var object, ScriptContext* scriptContext)
+    void JavascriptExceptionOperators::OP_Throw(Var object, ScriptContext* scriptContext)
     {
         Throw(object, scriptContext);
     }

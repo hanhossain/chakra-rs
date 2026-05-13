@@ -316,11 +316,11 @@ protected:
     HashTbl * GetHashTbl() { return this->GetScanner()->GetHashTbl(); }
 
     const char16_t* GetTokenString(tokens token);
-    __declspec(noreturn) void Error(int32_t hr, const char16_t* stringOne = u"", const char16_t* stringTwo = u"");
+    void Error(int32_t hr, const char16_t* stringOne = u"", const char16_t* stringTwo = u"");
 private:
-    __declspec(noreturn) void Error(int32_t hr, ParseNodePtr pnode);
-    __declspec(noreturn) void Error(int32_t hr, charcount_t ichMin, charcount_t ichLim, const char16_t* stringOne = u"", const char16_t* stringTwo = u"");
-    __declspec(noreturn) static void OutOfMemory();
+    void Error(int32_t hr, ParseNodePtr pnode);
+    void Error(int32_t hr, charcount_t ichMin, charcount_t ichLim, const char16_t* stringOne = u"", const char16_t* stringTwo = u"");
+    static void OutOfMemory();
 
     void EnsureStackAvailable();
 

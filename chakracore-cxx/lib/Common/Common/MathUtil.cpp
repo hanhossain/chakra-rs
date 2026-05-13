@@ -29,7 +29,7 @@ Math::Rand()
     return dist(gen);
 }
 
-__declspec(noreturn) void Math::DefaultOverflowPolicy()
+void Math::DefaultOverflowPolicy()
 {
     Js::Throw::OutOfMemory();
 }

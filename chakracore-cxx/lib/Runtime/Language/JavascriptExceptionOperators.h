@@ -77,13 +77,13 @@ namespace Js
             ~PendingFinallyExceptionStack();
         };
 
-        static void __declspec(noreturn) OP_Throw(Var object, ScriptContext* scriptContext);
-        static void __declspec(noreturn) Throw(Var object, ScriptContext* scriptContext);
-        static void __declspec(noreturn) ThrowExceptionObject(Js::JavascriptExceptionObject* exceptionObject, ScriptContext* scriptContext, bool considerPassingToDebugger = false, void * returnAddress = NULL, bool resetStack = false);
-        static void __declspec(noreturn) RethrowExceptionObject(Js::JavascriptExceptionObject* exceptionObject, ScriptContext* scriptContext, bool considerPassingToDebugger = false);
+        static void OP_Throw(Var object, ScriptContext* scriptContext);
+        static void Throw(Var object, ScriptContext* scriptContext);
+        static void ThrowExceptionObject(Js::JavascriptExceptionObject* exceptionObject, ScriptContext* scriptContext, bool considerPassingToDebugger = false, void * returnAddress = NULL, bool resetStack = false);
+        static void RethrowExceptionObject(Js::JavascriptExceptionObject* exceptionObject, ScriptContext* scriptContext, bool considerPassingToDebugger = false);
 
-        static void __declspec(noreturn) DoThrow(JavascriptExceptionObject* exceptionObject, ScriptContext* scriptContext);
-        static void __declspec(noreturn) DoThrowCheckClone(JavascriptExceptionObject* exceptionObject, ScriptContext* scriptContext);
+        static void DoThrow(JavascriptExceptionObject* exceptionObject, ScriptContext* scriptContext);
+        static void DoThrowCheckClone(JavascriptExceptionObject* exceptionObject, ScriptContext* scriptContext);
 
 #ifdef _M_X64
         static void *OP_TryCatch(void *try_, void *catch_, void *frame, size_t spillSize, size_t argsSize, int hasBailedOutOffset, ScriptContext *scriptContext);
@@ -104,8 +104,8 @@ namespace Js
         static Var OP_RuntimeRangeError(MessageId messageId, ScriptContext* scriptContext);
         static Var OP_RuntimeReferenceError(MessageId messageId, ScriptContext* scriptContext);
         static Var OP_WebAssemblyRuntimeError(MessageId messageId, ScriptContext* scriptContext);
-        static void __declspec(noreturn) ThrowOutOfMemory(ScriptContext* scriptContext);
-        static void __declspec(noreturn) ThrowStackOverflow(ScriptContext* scriptContext, void * returnAddress);
+        static void ThrowOutOfMemory(ScriptContext* scriptContext);
+        static void ThrowStackOverflow(ScriptContext* scriptContext, void * returnAddress);
 
         static unsigned long GetStackTraceLimit(Var thrownObject, ScriptContext* scriptContext);
         static Var ThrowTypeErrorRestrictedPropertyAccessor(RecyclableObject* function, CallInfo callInfo, ...);
