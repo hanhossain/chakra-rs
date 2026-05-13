@@ -4,7 +4,7 @@ use rstest::rstest;
 use std::collections::HashSet;
 
 const COMMON_TAGS: [&str; 2] = ["exclude_serialized", "require_backend"];
-const DIRECTORY: &str = "../chakracore-cxx/test/stackfunc";
+const DIRECTORY: &str = "../tests/stackfunc";
 
 #[cfg(not(feature = "optimized-tests"))]
 #[rstest]

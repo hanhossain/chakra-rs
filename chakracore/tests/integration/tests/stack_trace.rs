@@ -3,7 +3,7 @@ use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 
-const DIRECTORY: &str = "../chakracore-cxx/test/StackTrace";
+const DIRECTORY: &str = "../tests/StackTrace";
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]

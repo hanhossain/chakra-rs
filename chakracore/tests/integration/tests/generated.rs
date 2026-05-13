@@ -4,7 +4,7 @@ use rstest::rstest;
 use std::collections::HashSet;
 
 const COMMON_TAGS: [&str; 1] = ["Slow"];
-const DIRECTORY: &str = "../chakracore-cxx/test/Generated";
+const DIRECTORY: &str = "../tests/Generated";
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]

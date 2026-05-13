@@ -4,7 +4,7 @@ use rstest::rstest;
 use std::collections::HashSet;
 
 const COMMON_TAGS: [&str; 1] = ["require_backend"];
-const DIRECTORY: &str = "../chakracore-cxx/test/Optimizer";
+const DIRECTORY: &str = "../tests/Optimizer";
 
 #[cfg(feature = "optimized-tests")]
 #[rstest]

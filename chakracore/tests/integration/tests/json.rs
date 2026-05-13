@@ -5,7 +5,7 @@ use std::collections::HashSet;
 #[cfg(feature = "optimized-tests")]
 use std::time::Duration;
 
-const DIRECTORY: &str = "../chakracore-cxx/test/JSON";
+const DIRECTORY: &str = "../tests/JSON";
 
 #[cfg(feature = "optimized-tests")]
 #[rstest]

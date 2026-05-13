@@ -6,7 +6,7 @@ use std::collections::HashSet;
 #[cfg(feature = "optimized-tests")]
 use std::time::Duration;
 
-const DIRECTORY: &str = "../chakracore-cxx/test/typedarray";
+const DIRECTORY: &str = "../tests/typedarray";
 
 #[cfg(feature = "optimized-tests")]
 #[rstest]

@@ -4,7 +4,7 @@ use rstest::rstest;
 use std::collections::HashSet;
 
 const COMMON_TAGS: [&str; 3] = ["exclude_serialized", "require_backend", "require_asmjs"];
-const DIRECTORY: &str = "../chakracore-cxx/test/AsmJSFloat";
+const DIRECTORY: &str = "../tests/AsmJSFloat";
 
 #[cfg(feature = "optimized-tests")]
 #[rstest]

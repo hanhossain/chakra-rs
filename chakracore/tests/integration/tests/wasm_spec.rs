@@ -9,7 +9,7 @@ const COMMON_TAGS: [&str; 4] = [
     "exclude_win7",
     "require_wasm",
 ];
-const DIRECTORY: &str = "../chakracore-cxx/test/WasmSpec";
+const DIRECTORY: &str = "../tests/WasmSpec";
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]

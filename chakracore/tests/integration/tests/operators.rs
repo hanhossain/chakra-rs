@@ -4,7 +4,7 @@ use rstest::rstest;
 use std::collections::HashSet;
 use std::time::Duration;
 
-const DIRECTORY: &str = "../chakracore-cxx/test/Operators";
+const DIRECTORY: &str = "../tests/Operators";
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]

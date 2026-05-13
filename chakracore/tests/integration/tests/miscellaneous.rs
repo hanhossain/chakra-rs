@@ -2,7 +2,7 @@ use crate::common;
 use crate::common::Variant;
 use rstest::rstest;
 
-const DIRECTORY: &str = "../chakracore-cxx/test/Miscellaneous";
+const DIRECTORY: &str = "../tests/Miscellaneous";
 
 #[cfg(feature = "optimized-tests")]
 #[rstest]

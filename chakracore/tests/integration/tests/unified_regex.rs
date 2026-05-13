@@ -3,7 +3,7 @@ use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 
-const DIRECTORY: &str = "../chakracore-cxx/test/UnifiedRegex";
+const DIRECTORY: &str = "../tests/UnifiedRegex";
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]

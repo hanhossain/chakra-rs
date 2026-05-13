@@ -4,8 +4,7 @@ use std::path::PathBuf;
 // TODO (hanhossain): use common module
 #[test]
 fn hello() {
-    let source =
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../chakracore-cxx/test/Basics/hello.js");
+    let source = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../tests/Basics/hello.js");
 
     let mut ch_exe = std::process::Command::new(CH_PATH);
     ch_exe.arg(source);

@@ -4,7 +4,7 @@ use rstest::rstest;
 use std::collections::HashSet;
 
 const COMMON_TAGS: [&str; 1] = ["exclude_noicu"];
-const DIRECTORY: &str = "../chakracore-cxx/test/Intl";
+const DIRECTORY: &str = "../tests/Intl";
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]

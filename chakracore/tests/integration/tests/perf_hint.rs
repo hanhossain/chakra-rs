@@ -4,7 +4,7 @@ use rstest::rstest;
 use std::collections::HashSet;
 
 const COMMON_TAGS: [&str; 3] = ["exclude_serialized", "exclude_snap", "require_backend"];
-const DIRECTORY: &str = "../chakracore-cxx/test/PerfHint";
+const DIRECTORY: &str = "../tests/PerfHint";
 
 #[cfg(feature = "optimized-tests")]
 #[rstest]

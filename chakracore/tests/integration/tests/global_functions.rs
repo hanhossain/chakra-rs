@@ -3,7 +3,7 @@ use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 
-const DIRECTORY: &str = "../chakracore-cxx/test/GlobalFunctions";
+const DIRECTORY: &str = "../tests/GlobalFunctions";
 
 #[cfg(feature = "optimized-tests")]
 #[rstest]

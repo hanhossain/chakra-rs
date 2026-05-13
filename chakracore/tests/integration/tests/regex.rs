@@ -3,7 +3,7 @@ use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 
-const DIRECTORY: &str = "../chakracore-cxx/test/Regex";
+const DIRECTORY: &str = "../tests/Regex";
 
 #[cfg(feature = "optimized-tests")]
 #[rstest]

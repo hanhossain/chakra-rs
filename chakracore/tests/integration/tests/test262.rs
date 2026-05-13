@@ -2,7 +2,7 @@ use crate::common;
 use crate::common::Variant;
 use rstest::rstest;
 
-const DIRECTORY: &str = "../chakracore-cxx/test/262";
+const DIRECTORY: &str = "../tests/262";
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]

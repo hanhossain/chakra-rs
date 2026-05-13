@@ -169,9 +169,10 @@ pub fn run_test_variant<const N: usize>(
 
     dbg!(&test);
 
-    assert!(source.exists());
+    assert!(source.exists(), "Path does not exist {:?}", source);
 
     let mut ch = Command::new(CH_PATH);
+    // TODO (hanhossain): this should be in the test temp dir
     ch.current_dir(test_dir)
         .arg(source)
         .arg("-ExtendedErrorStackForTestHost")

@@ -8,7 +8,7 @@ const COMMON_TAGS: [&str; 4] = [
     "require_backend",
     "exclude_xplat",
 ];
-const DIRECTORY: &str = "../chakracore-cxx/test/wasm.simd";
+const DIRECTORY: &str = "../tests/wasm.simd";
 
 #[cfg(feature = "optimized-tests")]
 #[rstest]
