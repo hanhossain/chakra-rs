@@ -18,7 +18,7 @@ namespace Js
     // at a time, for 16 byte aligned memory. If this table isn't 16 byte aligned, we pay
     // an additional cost to pre-align it, dealing with trailing bytes, and the copy
     // ends up being twice as slow.
-    typedef Boyer_Moore_Jump __declspec(align(16)) JmpTable[0x80];
+    typedef Boyer_Moore_Jump JmpTable[0x80];
 #else
     typedef Boyer_Moore_Jump JmpTable[0x80];
 #endif

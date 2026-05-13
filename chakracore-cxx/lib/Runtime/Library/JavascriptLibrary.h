@@ -277,7 +277,7 @@ namespace Js
         Field(long) vtableAddresses[VTableValue::Count];
         Field(JavascriptString*) typeDisplayStrings[TypeIds_Limit];
         Field(ConstructorCache *) constructorCacheDefaultInstance;
-        __declspec(align(16)) Field(const uint8_t *) absDoubleCst;
+        Field(const uint8_t *) absDoubleCst;
         Field(double const *) uintConvertConst;
 
         // Function Types
