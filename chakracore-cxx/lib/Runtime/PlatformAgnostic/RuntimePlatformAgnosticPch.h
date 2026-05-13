@@ -30,7 +30,7 @@ class Throw
 public:
     static bool ReportAssert(const char* fileName, unsigned int lineNumber, const char* error, const char* message);
     static void LogAssert();
-    static void __declspec(noreturn) FatalInternalError();
+    static void FatalInternalError();
 };
 }
 
