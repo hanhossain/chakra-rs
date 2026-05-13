@@ -279,11 +279,6 @@ MoveFileExW(
          const char16_t* lpNewFileName,
          uint32_t dwFlags);
 
-BOOL
-CreateDirectoryA(
-          const char * lpPathName,
-          LPSECURITY_ATTRIBUTES lpSecurityAttributes);
-
 typedef struct _WIN32_FIND_DATAW {
     uint32_t dwFileAttributes;
     FILETIME ftCreationTime;
