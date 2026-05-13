@@ -143,57 +143,6 @@ GetTempPathA(
     return dwPathLen;
 }
 
-/*++
-Function:
-  GetTempPathW
-
-See MSDN.
-See also the comment for GetTempPathA.
---*/
-uint32_t
-GetTempPathW(
-	      uint32_t nBufferLength,
-	      char16_t* lpBuffer)
-{
-    if (!lpBuffer)
-    {
-        ERROR("lpBuffer was not a valid pointer.\n");
-        SetLastError(ERROR_INVALID_PARAMETER);
-        LOGEXIT("GetTempPathW returns DWORD 0\n");
-        return 0;
-    }
-
-    char TempBuffer[nBufferLength > 0 ? nBufferLength : 1];
-    uint32_t dwRetVal = GetTempPathA( nBufferLength, TempBuffer );
-
-    if ( dwRetVal >= nBufferLength )
-    {
-        ERROR( "lpBuffer was not large enough.\n" );
-        SetLastError( ERROR_INSUFFICIENT_BUFFER );
-        *lpBuffer = '\0';
-    }
-    else if ( dwRetVal != 0 )
-    {
-        /* Convert to wide. */
-        if ( 0 == MultiByteToWideChar( CP_ACP, 0, TempBuffer, -1,
-                                       lpBuffer, dwRetVal + 1 ) )
-        {
-            ASSERT( "An error occurred while converting the string to wide.\n" );
-            SetLastError( ERROR_INTERNAL_ERROR );
-            dwRetVal = 0;
-        }
-    }
-    else
-    {
-        ERROR( "The function failed.\n" );
-        *lpBuffer = '\0';
-    }
-
-    LOGEXIT("GetTempPathW returns DWORD %u\n", dwRetVal );
-    return dwRetVal;
-}
-
-
 
 /*++
 Function:
