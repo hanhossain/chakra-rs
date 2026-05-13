@@ -1295,12 +1295,6 @@ namespace JsUtil
 #ifndef DISABLE_SEH
     int BackgroundJobProcessor::ExceptFilter(LPEXCEPTION_POINTERS pEP)
     {
-#ifdef GENERATE_DUMP
-        if (Js::Configuration::Global.flags.IsEnabled(Js::DumpOnCrashFlag))
-        {
-            Js::Throw::GenerateDump(pEP, Js::Configuration::Global.flags.DumpOnCrash);
-        }
-#endif
         Output::Flush();
         return EXCEPTION_CONTINUE_SEARCH;
     }

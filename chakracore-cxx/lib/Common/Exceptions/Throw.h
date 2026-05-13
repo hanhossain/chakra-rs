@@ -35,19 +35,6 @@ namespace Js {
 
         static bool ReportAssert(const char * fileName, uint lineNumber, const char * error, const char * message);
         static void LogAssert();
-#ifdef GENERATE_DUMP
-        static int GenerateDump(PEXCEPTION_POINTERS exceptInfo, const char16_t* filePath, int ret = EXCEPTION_CONTINUE_SEARCH, bool needLock = false);
-        static void GenerateDump(const char16_t* filePath, bool terminate = false, bool needLock = false);
-        static void GenerateDumpForAssert(const char16_t* filePath);
-    private:
-        static std::recursive_mutex csGenerateDump;
-#ifdef STACK_BACK_TRACE
-        thread_local static  StackBackTrace * stackBackTrace;
-
-        static const int StackToSkip = 2;
-        static const int StackTraceDepth = 40;
-#endif
-#endif
     };
 
     // Info:        Verify the result or throw catastrophic

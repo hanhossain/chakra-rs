@@ -539,12 +539,6 @@ MemoryLeakCheck::~MemoryLeakCheck()
             Output::Print(u"Total leaked: %d bytes (%d objects)\n", leakedBytes, leakedCount);
             Output::Flush();
         }
-#ifdef GENERATE_DUMP
-        if (enableOutput)
-        {
-            Js::Throw::GenerateDump(Js::Configuration::Global.flags.DumpOnCrash, true, true);
-        }
-#endif
     }
 }
 

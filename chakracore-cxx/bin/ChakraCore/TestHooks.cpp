@@ -110,16 +110,6 @@ int32_t SetEnableCheckMemoryLeakOutput(bool flag)
 
 void NotifyUnhandledException(PEXCEPTION_POINTERS exceptionInfo)
 {
-#ifdef GENERATE_DUMP
-    // We already reported assert at the assert point, don't do it here again
-    if (exceptionInfo->ExceptionRecord->ExceptionCode != STATUS_ASSERTION_FAILURE)
-    {
-        if (Js::Configuration::Global.flags.IsEnabled(Js::DumpOnCrashFlag))
-        {
-            Js::Throw::GenerateDump(exceptionInfo, Js::Configuration::Global.flags.DumpOnCrash);
-        }
-    }
-#endif
 }
 
 #define FLAG(type, name, description, defaultValue, ...) FLAG_##type##(name)
