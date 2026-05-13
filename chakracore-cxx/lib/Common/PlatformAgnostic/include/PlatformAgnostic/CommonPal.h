@@ -257,12 +257,6 @@ inline errno_t wmemcpy_s(char16_t* dest, size_t destSize, const char16_t* src, s
     return 0;
 }
 
-inline int _wunlink(const char16_t* filename)
-{
-    // WARN: does not set errno when fail
-    return DeleteFile(filename) ? 0 : -1;
-}
-
 template <size_t size>
 inline errno_t _wcserror_s(char16_t (&buffer)[size], int errnum)
 {

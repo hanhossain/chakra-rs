@@ -207,7 +207,7 @@ void DynamicProfileStorageReaderWriter::Close(bool deleteFile)
     file = nullptr;
     if (deleteFile)
     {
-        _wunlink(filename);
+        std::filesystem::remove(filename);
     }
     filename = nullptr;
 }
@@ -476,7 +476,7 @@ void DynamicProfileStorage::ClearInfoMap(bool deleteFileStorage)
             {
                 char16_t filename[_MAX_PATH];
                 info.GetFilename(filename);
-                _wunlink(filename);
+                std::filesystem::remove(filename);
             }
         }
         else
