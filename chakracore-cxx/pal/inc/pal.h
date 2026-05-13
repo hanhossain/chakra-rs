@@ -573,7 +573,7 @@ typedef struct _M128U {
 } M128U, *PM128U;
 
 // Same as _M128U but aligned to a 16-byte boundary
-typedef __declspec(align(16)) M128U M128A;
+typedef M128U M128A;
 typedef M128A *PM128A;
 
 typedef struct _XMM_SAVE_AREA32 {
@@ -628,7 +628,7 @@ typedef struct _XMM_SAVE_AREA32 {
 //     Mm0/St0-Mm7/St7 and Xmm0-Xmm15).
 //
 
-typedef struct __declspec(align(16)) _CONTEXT {
+typedef struct _CONTEXT {
 
     //
     // Register parameter home addresses.
@@ -806,7 +806,7 @@ typedef struct _NEON128 {
     long High;
 } NEON128, *PNEON128;
 
-typedef struct __declspec(align(16)) _CONTEXT {
+typedef struct _CONTEXT {
 
     //
     // Control flags.
