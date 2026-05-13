@@ -187,7 +187,7 @@ namespace Js
         EHBailoutData * ehBailoutData;
 
         // 16-byte aligned
-        __declspec(align(16)) Var m_localSlots[0];           // Range of locals and temporaries
+        __attribute__((aligned(16))) Var m_localSlots[0];           // Range of locals and temporaries
 
         //This class must have an empty ctor (otherwise it will break the code in InterpreterStackFrame::InterpreterThunk
         inline InterpreterStackFrame() { }
