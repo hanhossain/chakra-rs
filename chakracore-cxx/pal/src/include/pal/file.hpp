@@ -50,19 +50,6 @@ namespace CorUnix
     };
 
     PAL_ERROR
-    InternalCreateFile(
-        CPalThread *pThread,
-        const char * lpFileName,
-        uint32_t dwDesiredAccess,
-        uint32_t dwShareMode,
-        LPSECURITY_ATTRIBUTES lpSecurityAttributes,
-        uint32_t dwCreationDisposition,
-        uint32_t dwFlagsAndAttributes,
-        HANDLE hTemplateFile,
-        HANDLE *pFileHandle
-        );
-
-    PAL_ERROR
     InternalWriteFile(
         CPalThread *pThread,
         HANDLE hFile,
