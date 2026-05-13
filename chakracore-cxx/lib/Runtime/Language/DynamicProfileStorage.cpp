@@ -724,18 +724,16 @@ bool DynamicProfileStorage::SetupCacheDir(__in_z char16_t const * dirname)
         return false;
     }
 
-    char16_t tempPath[_MAX_PATH];
-    if (dirname == nullptr)
+    std::filesystem::path dirPath;
+
+    if (dirname != nullptr)
     {
-        uint32_t len = GetTempPath(_MAX_PATH, tempPath);
-        if (len >= _MAX_PATH || wcscat_s(tempPath, u"jsdpcache") != 0)
-        {
-            DisableCacheDir();
-            Output::Print(u"ERROR: DynamicProfileStorage: Can't setup cache directory: Unable to create directory\n");
-            Output::Flush();
-            ReleaseLock();
-            return false;
-        }
+        dirPath = dirname;
+    }
+    else
+    {
+        std::filesystem::path tempPath = std::filesystem::temp_directory_path();
+        tempPath.append("jsdpcache");
 
         if (std::error_code errorCode; !std::filesystem::create_directories(tempPath, errorCode) && errorCode)
         {
@@ -745,12 +743,12 @@ bool DynamicProfileStorage::SetupCacheDir(__in_z char16_t const * dirname)
             ReleaseLock();
             return false;
         }
-        dirname = tempPath;
+        dirPath = tempPath;
     }
 
     char16_t cacheFile[_MAX_FNAME];
     char16_t cacheExt[_MAX_EXT];
-    _wsplitpath_s(dirname, cacheDrive, cacheDir, cacheFile, cacheExt);
+    _wsplitpath_s(dirPath.u16string().c_str(), cacheDrive, cacheDir, cacheFile, cacheExt);
     wcscat_s(cacheDir, cacheFile);
     wcscat_s(cacheDir, cacheExt);
 
