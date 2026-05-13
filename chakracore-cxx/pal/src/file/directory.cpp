@@ -35,67 +35,6 @@ Revision History:
 
 SET_DEFAULT_DEBUG_CHANNEL(FILE);
 
-
-
-/*++
-Function:
-  CreateDirectoryW
-
-Note:
-  lpSecurityAttributes always NULL.
-
-See MSDN doc.
---*/
-BOOL
-CreateDirectoryW(
-          const char16_t* lpPathName,
-          LPSECURITY_ATTRIBUTES lpSecurityAttributes)
-{
-    BOOL  bRet = FALSE;
-    uint32_t dwLastError = 0;
-    int   mb_size;
-    char  *mb_dir = NULL;
-
-    if ( lpSecurityAttributes )
-    {
-        ASSERT("lpSecurityAttributes is not NULL as it should be\n");
-        dwLastError = ERROR_INVALID_PARAMETER;
-        goto done;
-    }
-
-    /* translate the wide char lpPathName string to multibyte string */
-    if(0 == (mb_size = WideCharToMultiByte( CP_ACP, 0, lpPathName, -1, NULL, 0,
-                                            NULL, NULL )))
-    {
-        ASSERT("WideCharToMultiByte failure! error is %d\n", GetLastError());
-        dwLastError = ERROR_INTERNAL_ERROR;
-        goto done;
-    }
-
-    if (((mb_dir = (char *)malloc(mb_size)) == NULL) ||
-        (WideCharToMultiByte( CP_ACP, 0, lpPathName, -1, mb_dir, mb_size, NULL,
-                              NULL) != mb_size))
-    {
-        ASSERT("WideCharToMultiByte or malloc failure! LastError:%d errno:%d\n",
-              GetLastError(), errno);
-        dwLastError = ERROR_INTERNAL_ERROR;
-        goto done;
-    }
-
-    bRet = CreateDirectoryA(mb_dir,NULL);
-done:
-    if( dwLastError )
-    {
-        SetLastError( dwLastError );
-    }
-    if (mb_dir != NULL)
-    {
-        free(mb_dir);
-    }
-    LOGEXIT("CreateDirectoryW returns BOOL %d\n", bRet);
-    return bRet;
-}
-
 /*++
 Function:
   GetCurrentDirectoryA

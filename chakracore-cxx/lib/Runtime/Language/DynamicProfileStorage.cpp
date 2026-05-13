@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "RuntimeLanguagePch.h"
+#include <filesystem>
 #include <mutex>
 
 #ifdef DYNAMIC_PROFILE_STORAGE
@@ -736,7 +737,7 @@ bool DynamicProfileStorage::SetupCacheDir(__in_z char16_t const * dirname)
             return false;
         }
 
-        if (!CreateDirectory(tempPath, NULL) && GetLastError() != ERROR_ALREADY_EXISTS)
+        if (std::error_code errorCode; !std::filesystem::create_directories(tempPath, errorCode) && errorCode)
         {
             DisableCacheDir();
             Output::Print(u"ERROR: DynamicProfileStorage: Can't setup cache directory: Unable to create directory\n");
