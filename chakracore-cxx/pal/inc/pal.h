@@ -289,14 +289,6 @@ typedef struct _SYSTEMTIME {
 #define FILE_TYPE_CHAR            0x0002
 #define FILE_TYPE_PIPE            0x0003
 
-BOOL
-SetCurrentDirectoryA(
-             const char * lpPathName);
-
-BOOL
-SetCurrentDirectoryW(
-             const char16_t* lpPathName);
-
 HANDLE
 CreateEventW(
           LPSECURITY_ATTRIBUTES lpEventAttributes,
