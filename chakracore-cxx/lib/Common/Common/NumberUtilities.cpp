@@ -64,29 +64,29 @@ using namespace Js;
     const double NumberConstants::DOUBLE_TWO_TO_31 = (double) 0x80000000;
 
     // These are used in 128-bit operations in the JIT and inline asm
-    __declspec(align(16)) const uint8_t NumberConstants::AbsDoubleCst[] =
+    const uint8_t NumberConstants::AbsDoubleCst[] =
     { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x7F,
       0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x7F };
 
-    __declspec(align(16)) const uint8_t NumberConstants::AbsFloatCst[] =
+    const uint8_t NumberConstants::AbsFloatCst[] =
     { 0xFF, 0xFF, 0xFF, 0x7F,
       0xFF, 0xFF, 0xFF, 0x7F,
       0xFF, 0xFF, 0xFF, 0x7F,
       0xFF, 0xFF, 0xFF, 0x7F };
 
-    __declspec(align(16)) const uint8_t NumberConstants::SgnFloatBitCst[] =
+    const uint8_t NumberConstants::SgnFloatBitCst[] =
     { 0x00, 0x00, 0x00, 0x80,
       0x00, 0x00, 0x00, 0x80,
       0x00, 0x00, 0x00, 0x80,
       0x00, 0x00, 0x00, 0x80 };
 
-    __declspec(align(16)) const uint8_t NumberConstants::SgnDoubleBitCst[] =
+    const uint8_t NumberConstants::SgnDoubleBitCst[] =
     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80,
       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80 };
 
-    __declspec(align(16)) double const NumberConstants::UIntConvertConst[2] = { 0, 4294967296.000000 };
-    __declspec(align(16)) float const NumberConstants::MaskNegFloat[] = { -0.0f, -0.0f, -0.0f, -0.0f };
-    __declspec(align(16)) double const NumberConstants::MaskNegDouble[] = { -0.0, -0.0 };
+    double const NumberConstants::UIntConvertConst[2] = { 0, 4294967296.000000 };
+    float const NumberConstants::MaskNegFloat[] = { -0.0f, -0.0f, -0.0f, -0.0f };
+    double const NumberConstants::MaskNegDouble[] = { -0.0, -0.0 };
 
 
     bool NumberUtilities::IsDigit(int ch)
