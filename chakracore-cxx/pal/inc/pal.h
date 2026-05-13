@@ -242,14 +242,6 @@ typedef struct _WIN32_FIND_DATAW {
     char16_t cAlternateFileName[ 14 ];
 } WIN32_FIND_DATAW, *LPWIN32_FIND_DATAW;
 
-uint32_t
-GetFileAttributesA(
-            const char * lpFileName);
-
-uint32_t
-GetFileAttributesW(
-            const char16_t* lpFileName);
-
 typedef enum _GET_FILEEX_INFO_LEVELS {
   GetFileExInfoStandard
 } GET_FILEEX_INFO_LEVELS;
