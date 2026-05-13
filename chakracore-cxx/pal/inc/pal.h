@@ -289,11 +289,6 @@ typedef struct _SYSTEMTIME {
 #define FILE_TYPE_CHAR            0x0002
 #define FILE_TYPE_PIPE            0x0003
 
-uint32_t
-GetCurrentDirectoryA(
-              uint32_t nBufferLength,
-              char* lpBuffer);
-
 BOOL
 SetCurrentDirectoryA(
              const char * lpPathName);
