@@ -227,16 +227,6 @@ typedef struct _SECURITY_ATTRIBUTES {
 #define STILL_ACTIVE (0x00000103L)
 
 HANDLE
-CreateFileA(
-         const char * lpFileName,
-         uint32_t dwDesiredAccess,
-         uint32_t dwShareMode,
-         LPSECURITY_ATTRIBUTES lpSecurityAttributes,
-         uint32_t dwCreationDisposition,
-         uint32_t dwFlagsAndAttributes,
-         HANDLE hTemplateFile);
-
-HANDLE
 CreateFileW(
          const char16_t* lpFileName,
          uint32_t dwDesiredAccess,
@@ -247,12 +237,6 @@ CreateFileW(
          HANDLE hTemplateFile);
 
 #define CreateFile CreateFileW
-
-BOOL
-CopyFileA(
-       const char * lpExistingFileName,
-       const char * lpNewFileName,
-       BOOL bFailIfExists);
 
 BOOL
 DeleteFileA(
@@ -266,18 +250,6 @@ DeleteFileW(
 
 #define MOVEFILE_REPLACE_EXISTING      0x00000001
 #define MOVEFILE_COPY_ALLOWED          0x00000002
-
-BOOL
-MoveFileExA(
-         const char * lpExistingFileName,
-         const char * lpNewFileName,
-         uint32_t dwFlags);
-
-BOOL
-MoveFileExW(
-         const char16_t* lpExistingFileName,
-         const char16_t* lpNewFileName,
-         uint32_t dwFlags);
 
 typedef struct _WIN32_FIND_DATAW {
     uint32_t dwFileAttributes;
