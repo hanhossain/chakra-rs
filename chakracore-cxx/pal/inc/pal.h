@@ -230,10 +230,6 @@ BOOL
 DeleteFileA(
          const char * lpFileName);
 
-BOOL
-DeleteFileW(
-         const char16_t* lpFileName);
-
 #define MOVEFILE_REPLACE_EXISTING      0x00000001
 #define MOVEFILE_COPY_ALLOWED          0x00000002
 

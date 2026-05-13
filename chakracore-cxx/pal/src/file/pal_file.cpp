@@ -971,66 +971,6 @@ done:
 
 /*++
 Function:
-  DeleteFileW
-
-See MSDN doc.
---*/
-BOOL
-DeleteFileW(
-         const char16_t* lpFileName)
-{
-    CPalThread *pThread;
-    int  size;
-    PathCharString namePS;
-    char * name;
-    int length = 0;
-    BOOL bRet = FALSE;
-
-    pThread = InternalGetCurrentThread();
-    
-    if (lpFileName != NULL)
-    {
-        length = (std::u16string(lpFileName).length()+1) * MaxWCharToAcpLengthFactor;
-    }
-    
-    name = namePS.OpenStringBuffer(length);
-    if (NULL == name)
-    {
-        pThread->SetLastError(ERROR_NOT_ENOUGH_MEMORY);
-        goto done;
-    }
-
-    size = WideCharToMultiByte( CP_ACP, 0, lpFileName, -1, name, length,
-                                NULL, NULL );
-    namePS.CloseBuffer(size);
-    
-    if( size == 0 )
-    {
-        uint32_t dwLastError = GetLastError();
-        if( dwLastError == ERROR_INSUFFICIENT_BUFFER )
-        {
-            WARN("lpFilePathName is larger than MAX_LONGPATH (%d)!\n", MAX_LONGPATH);
-            pThread->SetLastError(ERROR_FILENAME_EXCED_RANGE);
-        }
-        else
-        {
-            ASSERT("WideCharToMultiByte failure! error is %d\n", dwLastError);
-            pThread->SetLastError(ERROR_INTERNAL_ERROR);
-        }
-        bRet = FALSE;
-        goto done;
-    }
-
-    bRet = DeleteFileA( name );
-
-done:
-    LOGEXIT("DeleteFileW returns BOOL %d\n", bRet);
-    return bRet;
-}
-
-
-/*++
-Function:
   GetFileAttributesA
 
 Note:
