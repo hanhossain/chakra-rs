@@ -55,7 +55,7 @@ namespace JSON
     Js::Var Parse(Js::JavascriptString* input, Js::RecyclableObject* reviver, Js::ScriptContext* scriptContext)
     {
         // alignment required because of the union in JSONParser::m_token
-        __declspec (align(8)) JSONParser parser(scriptContext, reviver);
+        JSONParser parser(scriptContext, reviver);
         Js::Var result = NULL;
 
         TryFinally([&]()
