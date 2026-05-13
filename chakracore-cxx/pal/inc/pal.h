@@ -226,18 +226,6 @@ typedef struct _SECURITY_ATTRIBUTES {
 
 #define STILL_ACTIVE (0x00000103L)
 
-HANDLE
-CreateFileW(
-         const char16_t* lpFileName,
-         uint32_t dwDesiredAccess,
-         uint32_t dwShareMode,
-         LPSECURITY_ATTRIBUTES lpSecurityAttributes,
-         uint32_t dwCreationDisposition,
-         uint32_t dwFlagsAndAttributes,
-         HANDLE hTemplateFile);
-
-#define CreateFile CreateFileW
-
 BOOL
 DeleteFileA(
          const char * lpFileName);
