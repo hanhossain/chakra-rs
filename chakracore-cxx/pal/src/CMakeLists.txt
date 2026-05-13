@@ -91,8 +91,7 @@ set(SOURCES
   debug/debug.cpp
   exception/seh.cpp
   exception/signal.cpp
-  file/directory.cpp
-  file/pal_file.cpp
+    file/pal_file.cpp
   file/filetime.cpp
   file/pal_path.cpp
   file/shmfilelockmgr.cpp
