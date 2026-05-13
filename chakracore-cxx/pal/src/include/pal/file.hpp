@@ -134,15 +134,6 @@ namespace CorUnix
          const FILETIME *lpLastWriteTime
         );
 
-    PAL_ERROR
-    InternalGetFileTime(
-        CPalThread *pThread,
-         HANDLE hFile,
-         LPFILETIME lpCreationTime,
-         LPFILETIME lpLastAccessTime,
-         LPFILETIME lpLastWriteTime
-        );
-
     /*++
       InternalCanonicalizeRealPath
       Wraps realpath() to hide platform differences. See the man page for

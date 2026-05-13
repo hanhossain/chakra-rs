@@ -273,11 +273,6 @@ HANDLE
 GetStdHandle(
           uint32_t nStdHandle);
 
-int32_t
-CompareFileTime(
-         const FILETIME *lpFileTime1,
-         const FILETIME *lpFileTime2);
-
 typedef struct _SYSTEMTIME {
     uint16_t wYear;
     uint16_t wMonth;
