@@ -102,17 +102,9 @@
 #define _W64
 #endif
 
-#if (defined(__GNUC__) && (__GNUC__ >= 3))
-#define SAFECRT_DEPRECATED __declspec(deprecated)
-#else
-#define SAFECRT_DEPRECATED
-#endif
-
 /* errno_t */
 #if !defined(_ERRCODE_DEFINED)
 #define _ERRCODE_DEFINED
-/* errcode is deprecated in favor or errno_t, which is part of the standard proposal */
-SAFECRT_DEPRECATED typedef int errcode;
 typedef int errno_t; /* standard */
 #endif
 

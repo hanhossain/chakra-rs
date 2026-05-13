@@ -1730,14 +1730,7 @@
 #define __specstrings
 
 #ifdef  __cplusplus // [
-#ifndef __nothrow // [
-# define __nothrow __declspec(nothrow)
-#endif // ]
 extern "C" {
-#else // ][
-#ifndef __nothrow // [
-# define __nothrow
-#endif // ]
 #endif  /* #ifdef __cplusplus */ // ]
 
 
