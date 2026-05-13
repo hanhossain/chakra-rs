@@ -40,7 +40,6 @@ public:
     template<class T>
     struct ClosedContextEntry
     {
-        __declspec(noinline)
         ClosedContextEntry(T* context)
             :context(context)
         {
