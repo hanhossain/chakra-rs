@@ -295,11 +295,6 @@ GetTempPathA(
           char* lpBuffer);
 
 uint32_t
-GetTempPathW(
-          uint32_t nBufferLength,
-          char16_t* lpBuffer);
-
-uint32_t
 GetCurrentDirectoryA(
               uint32_t nBufferLength,
               char* lpBuffer);
