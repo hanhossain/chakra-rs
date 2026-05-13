@@ -60,16 +60,6 @@ namespace CorUnix
         );
 
     PAL_ERROR
-    InternalReadFile(
-        CPalThread *pThread,
-        HANDLE hFile,
-        void * lpBuffer,
-        uint32_t nNumberOfBytesToRead,
-        uint32_t * lpNumberOfBytesRead,
-        LPOVERLAPPED lpOverlapped
-        );
-
-    PAL_ERROR
     InternalSetEndOfFile(
         CPalThread *pThread,
         HANDLE hFile

@@ -265,14 +265,6 @@ WriteFile(
        uint32_t * lpNumberOfBytesWritten,
        LPOVERLAPPED lpOverlapped);
 
-BOOL
-ReadFile(
-      HANDLE hFile,
-      void * lpBuffer,
-      uint32_t nNumberOfBytesToRead,
-      uint32_t * lpNumberOfBytesRead,
-      LPOVERLAPPED lpOverlapped);
-
 #define STD_INPUT_HANDLE         ((uint32_t)-10)
 #define STD_OUTPUT_HANDLE        ((uint32_t)-11)
 #define STD_ERROR_HANDLE         ((uint32_t)-12)
