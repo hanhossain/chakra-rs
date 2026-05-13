@@ -284,13 +284,6 @@ CreateDirectoryA(
           const char * lpPathName,
           LPSECURITY_ATTRIBUTES lpSecurityAttributes);
 
-BOOL
-CreateDirectoryW(
-          const char16_t* lpPathName,
-          LPSECURITY_ATTRIBUTES lpSecurityAttributes);
-
-#define CreateDirectory CreateDirectoryW
-
 typedef struct _WIN32_FIND_DATAW {
     uint32_t dwFileAttributes;
     FILETIME ftCreationTime;
