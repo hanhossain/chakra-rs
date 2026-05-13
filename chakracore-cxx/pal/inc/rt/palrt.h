@@ -193,24 +193,6 @@ typedef enum tagEFaultRepRetVal
 #define STDAPI               EXTERN_C int32_t
 #define STDAPI_(type)        EXTERN_C type
 
-#ifndef _DECLSPEC_DEFINED_
-#define _DECLSPEC_DEFINED_
-
-#if defined(__GNUC__)
-#define DECLSPEC_NOVTABLE
-#define DECLSPEC_IMPORT
-#define DECLSPEC_SELECTANY  __attribute__((weak))
-#else
-#define DECLSPEC_NOVTABLE
-#define DECLSPEC_IMPORT
-#define DECLSPEC_SELECTANY
-#endif
-
-#endif // !_DECLSPEC_DEFINED_
-
-#define DECLARE_INTERFACE(iface)    interface DECLSPEC_NOVTABLE iface
-#define DECLARE_INTERFACE_(iface, baseiface)    interface DECLSPEC_NOVTABLE iface : public baseiface
-
 #ifdef __cplusplus
 #define REFGUID const GUID &
 #else
