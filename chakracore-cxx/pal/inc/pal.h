@@ -290,13 +290,6 @@ typedef struct _SYSTEMTIME {
 #define FILE_TYPE_PIPE            0x0003
 
 uint32_t
-GetFullPathNameA(
-          const char * lpFileName,
-          uint32_t nBufferLength,
-          char* lpBuffer,
-          char* *lpFilePart);
-
-uint32_t
 GetTempPathA(
           uint32_t nBufferLength,
           char* lpBuffer);
