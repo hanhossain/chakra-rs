@@ -194,11 +194,7 @@ Security::InsertNOPBefore(IR::Instr *instr)
 void
 Security::InsertSmallNOP(IR::Instr * instr, uint32_t nopSize)
 {
-#if defined(_M_IX86) || defined(_M_X64)
-#ifdef _M_IX86
-    if (AutoSystemInfo::Data.SSE2Available())
-    {   // on x86 system that has SSE2, encode fast NOPs as x64 does
-#endif
+#if defined(_M_X64)
         Assert(nopSize >= 1 || nopSize <= 4);
         IR::Instr *nop = IR::Instr::New(Js::OpCode::NOP, instr->m_func);
 
@@ -211,43 +207,6 @@ Security::InsertSmallNOP(IR::Instr * instr, uint32_t nopSize)
         }
 
         instr->InsertBefore(nop);
-#ifdef _M_IX86
-    }
-    else
-    {
-        IR::Instr *nopInstr = nullptr;
-        IR::RegOpnd *regOpnd;
-        IR::IndirOpnd *indirOpnd;
-        switch (nopSize)
-        {
-        case 1:
-            // nop
-            nopInstr = IR::Instr::New(Js::OpCode::NOP, instr->m_func);
-            break;
-        case 2:
-            // mov edi, edi         ; 2 bytes
-            regOpnd = IR::RegOpnd::New(nullptr, RegEDI, TyInt32, instr->m_func);
-            nopInstr = IR::Instr::New(Js::OpCode::MOV, regOpnd, regOpnd, instr->m_func);
-            break;
-        case 3:
-            // lea ecx, [ecx+00]    ; 3 bytes
-            regOpnd = IR::RegOpnd::New(nullptr, RegECX, TyInt32, instr->m_func);
-            indirOpnd = IR::IndirOpnd::New(regOpnd, (int32_t)0, TyInt32, instr->m_func);
-            nopInstr = IR::Instr::New(Js::OpCode::LEA, regOpnd, indirOpnd, instr->m_func);
-            break;
-        case 4:
-            // lea esp, [esp+00]    ; 4 bytes
-            regOpnd = IR::RegOpnd::New(nullptr, RegESP, TyInt32, instr->m_func);
-            indirOpnd = IR::IndirOpnd::New(regOpnd, (int32_t)0, TyInt32, instr->m_func);
-            nopInstr = IR::Instr::New(Js::OpCode::LEA, regOpnd, indirOpnd, instr->m_func);
-            break;
-        default:
-            Assert(false);
-            break;
-        }
-        instr->InsertBefore(nopInstr);
-    }
-#endif
 #elif defined(_M_ARM)
     // Can't insert 3 bytes, must choose between 2 and 4.
 

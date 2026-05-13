@@ -17,16 +17,7 @@
 #endif
 
 #ifndef GET_CURRENT_FRAME_ID
-#if defined(_M_IX86)
-#if defined(_M_HYBRID_X86_ARM64)
-__MACHINEARM64(unsigned long __getReg(int))
-#define GET_CURRENT_FRAME_ID(f) \
-    (f = (void*)__getReg(29))
-#else
-#define GET_CURRENT_FRAME_ID(f) \
-    __asm { mov f, ebp }
-#endif
-#elif defined(_M_X64)
+#if defined(_M_X64)
 #define GET_CURRENT_FRAME_ID(f) \
     (f = __builtin_frame_address(0))
 #elif defined(_M_ARM)

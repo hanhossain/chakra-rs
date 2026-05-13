@@ -134,9 +134,6 @@ namespace Js
             Assert(aLeft != nullptr);
             Assert(aRight != nullptr);
             Assert(scriptContext != nullptr);
-#if _M_IX86
-            AssertMsg(!TaggedInt::IsPair(aLeft, aRight), "TaggedInt bitwise and should have been handled already");
-#endif
 
             int32_t nLeft = JavascriptConversion::ToInt32(aLeft, scriptContext);
             int32_t nRight = JavascriptConversion::ToInt32(aRight, scriptContext);
@@ -148,9 +145,6 @@ namespace Js
             Assert(aLeft != nullptr);
             Assert(aRight != nullptr);
             Assert(scriptContext != nullptr);
-#if _M_IX86
-            AssertMsg(!TaggedInt::IsPair(aLeft, aRight), "TaggedInt bitwise or should have been handled already");
-#endif
             int32_t nLeft = JavascriptConversion::ToInt32(aLeft, scriptContext);
             int32_t nRight = JavascriptConversion::ToInt32(aRight, scriptContext);
             return nLeft | nRight;

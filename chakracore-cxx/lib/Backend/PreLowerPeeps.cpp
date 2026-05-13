@@ -13,7 +13,7 @@ IR::Instr *Lowerer::PreLowerPeepInstr(IR::Instr *instr, IR::Instr **pInstrPrev)
 
     switch (instr->m_opcode)
     {
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
         // this sort of addressing mode magic only applies to x86 platforms
     case Js::OpCode::Add_I4:
         instr = this->PeepShiftAdd(instr);

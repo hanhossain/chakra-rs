@@ -217,7 +217,7 @@ Func::Func(JitArenaAllocator *alloc, JITTimeWorkItem * workItem,
         Assert(Js::Constants::NoByteCodeOffset == postCallByteCodeOffset);
         Assert(Js::Constants::NoRegister == returnValueRegSlot);
 
-#if defined(_M_IX86) ||  defined(_M_X64)
+#if defined(_M_X64)
         if (HasArgumentSlot())
         {
             // Pre-allocate the single argument slot we'll reserve for the arguments object.

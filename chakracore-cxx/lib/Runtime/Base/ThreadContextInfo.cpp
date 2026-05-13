@@ -222,7 +222,7 @@ ThreadContextInfo::GetMantissaMaskAddr() const
     return ShiftAddr(this, &Js::Constants::MantissaMask);
 }
 
-#if _M_IX86 || _M_AMD64
+#if _M_AMD64
 
 intptr_t
 ThreadContextInfo::GetX86AbsMaskF4Addr() const

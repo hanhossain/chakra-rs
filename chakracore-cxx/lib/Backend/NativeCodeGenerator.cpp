@@ -1244,42 +1244,14 @@ void NativeCodeGenerator::SetProfileMode(BOOL fSet)
     this->SetNativeEntryPoint = fSet? Js::FunctionBody::ProfileSetNativeEntryPoint : Js::FunctionBody::DefaultSetNativeEntryPoint;
 }
 
-#if _M_IX86
-Js::Var
-NativeCodeGenerator::CheckAsmJsCodeGenThunk(Js::RecyclableObject* function, Js::CallInfo callInfo, ...)
-{
-    __asm
-    {
-            push ebp
-            mov ebp, esp
-            push function
-            call NativeCodeGenerator::CheckAsmJsCodeGen
-            pop ebp
-            jmp  eax
-    }
-}
-#elif _M_X64 || _M_ARM || _M_ARM64
+#if _M_X64 || _M_ARM || _M_ARM64
     // Do nothing: the implementation of NativeCodeGenerator::CheckCodeGenThunk is declared (appropriately decorated) in
     // Backend\amd64\Thunks.asm and Backend\arm\Thunks.asm and Backend\arm64\Thunks.asm respectively.
 #else
     #error Not implemented.
 #endif
 
-#if _M_IX86
-Js::Var
-NativeCodeGenerator::CheckCodeGenThunk(Js::RecyclableObject* function, Js::CallInfo callInfo, ...)
-{
-    __asm
-    {
-        push ebp
-        mov ebp, esp
-        push [esp+8]
-        call NativeCodeGenerator::CheckCodeGen
-        pop ebp
-        jmp  eax
-    }
-}
-#elif _M_X64 || _M_ARM || _M_ARM64
+#if _M_X64 || _M_ARM || _M_ARM64
     // Do nothing: the implementation of NativeCodeGenerator::CheckCodeGenThunk is declared (appropriately decorated) in
     // Backend\amd64\Thunks.asm and Backend\arm\Thunks.asm and Backend\arm64\Thunks.asm respectively.
 #else

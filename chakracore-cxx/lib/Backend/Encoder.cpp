@@ -50,7 +50,7 @@ Encoder::Encode()
         m_pragmaInstrToRecordOffset = m_pragmaInstrToRecordMap;
     }
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
     // for BR shortening
     m_inlineeFrameRecords = Anew(m_tempAlloc, InlineeFrameRecords, m_tempAlloc);
 #endif
@@ -187,7 +187,7 @@ Encoder::Encode()
                     {
                         inlinee->frameInfo->record->Finalize(inlinee, GetCurrentOffset());
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
                         // Store all records to be adjusted for BR shortening
                         m_inlineeFrameRecords->Add(inlinee->frameInfo->record);
 #endif
@@ -197,7 +197,7 @@ Encoder::Encode()
             }
 
             count = m_encoderMD.Encode(instr, m_pc, m_encodeBuffer);
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
             bufferCRC = CalculateCRC(bufferCRC, count, m_pc);
 #endif
 
@@ -220,7 +220,7 @@ Encoder::Encode()
 #endif
             m_pc += count;
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
             // for BR shortening.
             if (instr->isInlineeEntryInstr)
                 m_encoderMD.AppendRelocEntry(RelocType::RelocTypeInlineeEntryOffset, (void*)(m_pc - MachPtr));
@@ -251,7 +251,7 @@ Encoder::Encode()
 
     BOOL isSuccessBrShortAndLoopAlign = false;
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
     // Shorten branches. ON by default
     if (!PHASE_OFF(Js::BrShortenPhase, m_func))
     {
@@ -508,7 +508,7 @@ Encoder::Encode()
 
     m_func->GetJITOutput()->RecordNativeCode(m_encodeBuffer, (uint8_t *)localAddress);
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
     if (!JITManager::GetJITManager()->IsJITServer())
     {
         ValidateCRCOnFinalBuffer((uint8_t *)allocation->address, codeSize, totalJmpTableSizeInBytes, m_encodeBuffer, initialCRCSeed, bufferCRC, isSuccessBrShortAndLoopAlign);
@@ -997,7 +997,7 @@ void Encoder::RecordInlineeFrame(Func* inlinee, uint32_t currentOffset)
     }
 }
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
 /*
 *   ValidateCRCOnFinalBuffer
 *       - Validates the CRC that is last computed (could be either the one after BranchShortening or after encoding itself)
@@ -1120,7 +1120,7 @@ void Encoder::ValidateCRC(uint bufferCRC, uint initialCRCSeed, _In_reads_bytes_(
     }
 }
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
 ///----------------------------------------------------------------------------
 ///
 /// EncoderMD::ShortenBranchesAndLabelAlign
@@ -1260,11 +1260,7 @@ Encoder::ShortenBranchesAndLabelAlign(uint8_t **codeStart, ptrdiff_t *codeSize, 
             totalBytesSaved += bytesSaved;
 
             // mark br reloc entry as shortened
-#ifdef _M_IX86
-            reloc.setAsShortBr(targetLabel);
-#else
             reloc.setAsShortBr();
-#endif
         }
     }
 

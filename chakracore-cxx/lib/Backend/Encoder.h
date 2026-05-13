@@ -62,7 +62,7 @@ private:
 
     PragmaInstrList     *m_pragmaInstrToRecordOffset;
     PragmaInstrList     *m_pragmaInstrToRecordMap;
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
     InlineeFrameRecords *m_inlineeFrameRecords;
 
     BOOL            ShortenBranchesAndLabelAlign(uint8_t **codeStart, ptrdiff_t *codeSize, uint * brShortenedBufferCRC, uint bufferCrcToValidate, size_t jumpTableSize);
@@ -78,7 +78,7 @@ private:
 
     void            ValidateCRC(uint bufferCRC, uint initialCRCSeed, _In_reads_bytes_(count) void* buffer, size_t count);
     static void     EnsureRelocEntryIntegrity(size_t newBufferStartAddress, size_t codeSize, size_t oldBufferAddress, size_t relocAddress, uint offsetBytes, ptrdiff_t opndData, bool isRelativeAddr = true);
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
     void            ValidateCRCOnFinalBuffer(_In_reads_bytes_(finalCodeSize) uint8_t * finalCodeBufferStart, size_t finalCodeSize, size_t jumpTableSize, _In_reads_bytes_(finalCodeSize) uint8_t * oldCodeBufferStart, uint initialCrcSeed, uint bufferCrcToValidate, BOOL isSuccessBrShortAndLoopAlign);
 #endif
     void            FixLazyBailOutThunkOffset(uint32_t bytesSaved);

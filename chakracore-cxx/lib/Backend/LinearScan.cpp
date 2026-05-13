@@ -322,15 +322,6 @@ LinearScan::RegAlloc()
     Assert(this->currentBlock->inlineeStack.Count() == 0);
     this->InsertOpHelperSpillAndRestores();
 
-#if _M_IX86
-# if ENABLE_DEBUG_CONFIG_OPTIONS
-    if (Js::Configuration::Global.flags.Instrument.IsEnabled(Js::LinearScanPhase, this->func->GetSourceContextId(),this->func->GetLocalFunctionId()))
-    {
-        this->DynamicStatsInstrument();
-    }
-# endif
-#endif
-
 #if DBG_DUMP
     if (PHASE_STATS(Js::LinearScanPhase, this->func))
     {
@@ -1215,8 +1206,6 @@ LinearScan::FillBailOutOffset(int * offset, StackSym * stackSym, FillBailOutStat
             // we can always force the bailout to restore that symbol from rax.
 #ifdef _M_X64
             *offset = this->SaveSymbolToReg(RegRAX, state, stackSym);
-#elif _M_IX86
-            *offset = this->SaveSymbolToReg(RegEAX, state, stackSym);
 #else
             AssertMsg(false, "Lazy bailout for ARM is not yet supported");
 #endif
@@ -1638,20 +1627,10 @@ LinearScan::FillBailOutRecord(IR::Instr * instr)
         Assert(startCallCount != 0);
         uint argOutSlot = 0;
         uint * startCallOutParamCounts = (uint*)NativeCodeDataNewArrayNoFixup(allocator, UIntType<DataDesc_ArgOutOffsetInfo_StartCallOutParamCounts>, startCallCount);
-#ifdef _M_IX86
-        uint * startCallArgRestoreAdjustCounts = (uint*)NativeCodeDataNewArrayNoFixup(allocator, UIntType<DataDesc_ArgOutOffsetInfo_StartCallOutParamCounts>, startCallCount);
-#endif
         NativeCodeData::AllocatorNoFixup<BVFixed>* allocatorT = (NativeCodeData::AllocatorNoFixup<BVFixed>*)allocator;
         BVFixed * argOutFloat64Syms = BVFixed::New(bailOutInfo->totalOutParamCount, allocatorT);
         BVFixed * argOutLosslessInt32Syms = BVFixed::New(bailOutInfo->totalOutParamCount, allocatorT);
-#ifdef _M_IX86
-        BVFixed * isOrphanedArgSlot = BVFixed::New(bailOutInfo->totalOutParamCount, allocatorT);
-#endif
         int* outParamOffsets = bailOutInfo->outParamOffsets = (int*)NativeCodeDataNewArrayZNoFixup(allocator, IntType<DataDesc_BailoutInfo_CotalOutParamCount>, bailOutInfo->totalOutParamCount);
-#ifdef _M_IX86
-        int currentStackOffset = 0;
-        bailOutInfo->outParamFrameAdjustArgSlot = JitAnew(this->func->m_alloc, BVSparse<JitArenaAllocator>, this->func->m_alloc);
-#endif
         if (this->func->HasInlinee())
         {
             bailOutInfo->outParamInlinedArgSlot = JitAnew(this->func->m_alloc, BVSparse<JitArenaAllocator>, this->func->m_alloc);
@@ -1666,26 +1645,6 @@ LinearScan::FillBailOutRecord(IR::Instr * instr)
             // Number of out param for the current start call
             uint outParamCount = bailOutInfo->GetStartCallOutParamCount(i);
             startCallOutParamCounts[i] = outParamCount;
-#ifdef _M_IX86
-            if (bailOutInfo->startCallInfo[i].instr->m_opcode == Js::OpCode::StartCall)
-            {
-                // Deadcode might have eliminated the argouts and the call instruction due to a BailOnNoProfile after StartCall
-                // In such cases, StartCall opcode is not changed to LoweredStartCall, mark the StartCall instruction accordingly
-                bailOutInfo->startCallInfo[i].isOrphanedCall = true;
-            }
-            // Only x86 has a progression of pushes of out args, with stack alignment.
-            bool fDoStackAdjust = false;
-            if (!bailOutInfo->inlinedStartCall->Test(i))
-            {
-                // Only do the stack adjustment if the StartCall has not been moved down past the bailout.
-                fDoStackAdjust = bailOutInfo->NeedsStartCallAdjust(i, instr);
-                if (fDoStackAdjust)
-                {
-                    currentStackOffset -= Math::Align<int>(outParamCount * MachPtr, MachStackAlignment);
-                }
-            }
-#endif
-
             Func * currentStartCallFunc = bailOutInfo->startCallFunc[i];
 #if DBG
             Assert(lastFuncIndex <= currentStartCallFunc->inlineDepth);
@@ -1717,10 +1676,6 @@ LinearScan::FillBailOutRecord(IR::Instr * instr)
                 Assert(currentBailOutRecord->argOutOffsetInfo->startCallOutParamCounts == nullptr);
                 currentBailOutRecord->argOutOffsetInfo->startCallIndex = i;
                 currentBailOutRecord->argOutOffsetInfo->startCallOutParamCounts = &startCallOutParamCounts[i];
-#ifdef _M_IX86
-                currentBailOutRecord->argOutOffsetInfo->isOrphanedArgSlot = isOrphanedArgSlot;
-                currentBailOutRecord->startCallArgRestoreAdjustCounts = &startCallArgRestoreAdjustCounts[i];
-#endif
                 currentBailOutRecord->argOutOffsetInfo->outParamOffsets = &outParamOffsets[outParamStart];
                 currentBailOutRecord->argOutOffsetInfo->argOutSymStart = outParamStart;
                 currentBailOutRecord->argOutOffsetInfo->argOutFloat64Syms = argOutFloat64Syms;
@@ -1839,22 +1794,7 @@ LinearScan::FillBailOutRecord(IR::Instr * instr)
                                     // Stack offset are negative, includes the PUSH EBP and return address
                                     outParamOffsets[outParamOffsetIndex] = sym->m_offset - (2 * MachPtr);
 #endif
-#ifdef _M_IX86
-                                    isOrphanedArgSlot->Set(outParamOffsetIndex);
-                                    Assert(bailOutInfo->startCallInfo[i].isOrphanedCall == true);
-#endif
                                 }
-#ifdef _M_IX86
-                                else if (fDoStackAdjust)
-                                {
-                                    // If we've got args on the stack, then we must have seen (and adjusted for) the StartCall.
-                                    // The values is already on the stack
-                                    // On AMD64/ARM, ArgOut should have been moved next to the call, and shouldn't have bailout between them
-                                    // Except for inlined arg outs
-                                    outParamOffsets[outParamOffsetIndex] = currentStackOffset + argSlot * MachPtr;
-                                    bailOutInfo->outParamFrameAdjustArgSlot->Set(outParamOffsetIndex);
-                                }
-#endif
                                 else
                                 {
                                     this->FillBailOutOffset(&outParamOffsets[outParamOffsetIndex], sym, &state, instr);
@@ -1915,34 +1855,6 @@ LinearScan::FillBailOutRecord(IR::Instr * instr)
 #endif
                 }
             }
-        }
-
-        for (int i = startCallCount - 1; i >= 0; i--)
-        {
-#ifdef _M_IX86
-            uint argRestoreAdjustCount = 0;
-            if (this->currentRegion && (this->currentRegion->GetType() == RegionTypeTry || this->currentRegion->GetType() == RegionTypeFinally))
-            {
-                // For a bailout in argument evaluation from an EH region, the esp is offset by the TryCatch helper's frame. So, the argouts are not actually pushed at the
-                // offsets stored in the bailout record, which are relative to ebp. Need to restore the argouts from the actual value of esp before calling the Bailout helper.
-                // For nested calls, argouts for the outer call need to be restored from an offset of stack-adjustment-done-by-the-inner-call from esp.
-                if ((unsigned)(i + 1) == bailOutInfo->startCallCount)
-                {
-                    argRestoreAdjustCount = 0;
-                }
-                else
-                {
-                    uint argCount = bailOutInfo->startCallInfo[i + 1].isOrphanedCall ? 0 : bailOutInfo->startCallInfo[i + 1].argCount;
-                    argRestoreAdjustCount = bailOutInfo->startCallInfo[i + 1].argRestoreAdjustCount + argCount;
-                    if ((Math::Align<int32_t>(argCount * MachPtr, MachStackAlignment) - (argCount * MachPtr)) != 0)
-                    {
-                        argRestoreAdjustCount++;
-                    }
-                }
-                bailOutInfo->startCallInfo[i].argRestoreAdjustCount = argRestoreAdjustCount;
-            }
-            startCallArgRestoreAdjustCounts[i] = bailOutInfo->startCallInfo[i].argRestoreAdjustCount;
-#endif
         }
     }
     else
@@ -2583,9 +2495,6 @@ LinearScan::FindReg(Lifetime *newLifetime, IR::RegOpnd *regOpnd, bool force)
             }
             else
             {
-#ifdef _M_IX86
-                Assert(AutoSystemInfo::Data.SSE2Available());
-#endif
                 regsBv.And(this->floatRegs);
             }
 
@@ -2627,9 +2536,6 @@ LinearScan::FindReg(Lifetime *newLifetime, IR::RegOpnd *regOpnd, bool force)
 
             if (regOpnd->IsFloat() || regOpnd->IsSimd128())
             {
-#ifdef _M_IX86
-                Assert(AutoSystemInfo::Data.SSE2Available());
-#endif
                 regsBv.And(this->floatRegs);
             }
             else
@@ -3246,7 +3152,7 @@ LinearScan::InsertLoad(IR::Instr *instr, StackSym *sym, RegNum reg)
         src = IR::SymOpnd::New(sym, type, this->func);
     }
     IR::Instr * load;
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
     if (isMovSDZero)
     {
         load = IR::Instr::New(Js::OpCode::MOVSD_ZERO,
@@ -3325,7 +3231,7 @@ LinearScan::KillImplicitRegs(IR::Instr *instr)
         this->tempRegs.ClearAll();
     }
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
     if (instr->m_opcode == Js::OpCode::IMUL)
     {
         this->SpillReg(LowererMDArch::GetRegIMulHighDestLower());
@@ -3933,7 +3839,7 @@ LinearScan::InsertSecondChanceCompensation(Lifetime ** branchRegContent, Lifetim
         branchRegContent = tmpRegContent;
         regContent = tmpRegContent;
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
         // Insert XCHG to avoid some conflicts for int regs
         // Note: no XCHG on ARM or SSE2.  We could however use 3 XOR on ARM...
         this->AvoidCompensationConflicts(labelInstr, branchInstr, labelRegContent, branchRegContent,
@@ -4310,7 +4216,7 @@ bool LinearScan::ClearLoopExitIfRegUnused(Lifetime *lifetime, RegNum reg, IR::Br
 
     return false;
 }
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
 
 void LinearScan::AvoidCompensationConflicts(IR::LabelInstr *labelInstr, IR::BranchInstr *branchInstr,
                                             Lifetime *labelRegContent[], Lifetime *branchRegContent[],
@@ -4789,89 +4695,6 @@ void LinearScan::PrintStats() const
 
 #endif
 
-
-#ifdef _M_IX86
-
-# if ENABLE_DEBUG_CONFIG_OPTIONS
-
-IR::Instr * LinearScan::GetIncInsertionPoint(IR::Instr *instr)
-{
-    // Make sure we don't insert an INC between an instr setting the condition code, and one using it.
-    IR::Instr *instrNext = instr;
-    while(!EncoderMD::UsesConditionCode(instrNext) && !EncoderMD::SetsConditionCode(instrNext))
-    {
-        if (instrNext->IsLabelInstr() || instrNext->IsExitInstr() || instrNext->IsBranchInstr())
-        {
-            break;
-        }
-        instrNext = instrNext->GetNextRealInstrOrLabel();
-    }
-
-    if (instrNext->IsLowered() && EncoderMD::UsesConditionCode(instrNext))
-    {
-        IR::Instr *instrPrev = instr->GetPrevRealInstrOrLabel();
-        while(!EncoderMD::SetsConditionCode(instrPrev))
-        {
-            instrPrev = instrPrev->GetPrevRealInstrOrLabel();
-            Assert(!instrPrev->IsLabelInstr());
-        }
-
-        return instrPrev;
-    }
-
-    return instr;
-}
-
-void LinearScan::DynamicStatsInstrument()
-{
-    {
-        IR::Instr *firstInstr = this->func->m_headInstr;
-    IR::MemRefOpnd *memRefOpnd = IR::MemRefOpnd::New(this->func->GetJITFunctionBody()->GetCallCountStatsAddr(), TyUint32, this->func);
-        firstInstr->InsertAfter(IR::Instr::New(Js::OpCode::INC, memRefOpnd, memRefOpnd, this->func));
-    }
-
-    FOREACH_INSTR_IN_FUNC(instr, this->func)
-    {
-        if (!instr->IsRealInstr() || !instr->IsLowered())
-        {
-            continue;
-        }
-
-        if (EncoderMD::UsesConditionCode(instr) && instr->GetPrevRealInstrOrLabel()->IsLabelInstr())
-        {
-            continue;
-        }
-
-        IR::Opnd *dst = instr->GetDst();
-        if (dst && dst->IsSymOpnd() && dst->AsSymOpnd()->m_sym->IsStackSym() && dst->AsSymOpnd()->m_sym->AsStackSym()->IsAllocated())
-        {
-            IR::Instr *insertionInstr = this->GetIncInsertionPoint(instr);
-            IR::MemRefOpnd *memRefOpnd = IR::MemRefOpnd::New(this->func->GetJITFunctionBody()->GetRegAllocStoreCountAddr(), TyUint32, this->func);
-            insertionInstr->InsertBefore(IR::Instr::New(Js::OpCode::INC, memRefOpnd, memRefOpnd, this->func));
-        }
-        IR::Opnd *src1 = instr->GetSrc1();
-        if (src1)
-        {
-            if (src1->IsSymOpnd() && src1->AsSymOpnd()->m_sym->IsStackSym() && src1->AsSymOpnd()->m_sym->AsStackSym()->IsAllocated())
-            {
-                IR::Instr *insertionInstr = this->GetIncInsertionPoint(instr);
-                IR::MemRefOpnd *memRefOpnd = IR::MemRefOpnd::New(this->func->GetJITFunctionBody()->GetRegAllocStoreCountAddr(), TyUint32, this->func);
-                insertionInstr->InsertBefore(IR::Instr::New(Js::OpCode::INC, memRefOpnd, memRefOpnd, this->func));
-            }
-            IR::Opnd *src2 = instr->GetSrc2();
-            if (src2 && src2->IsSymOpnd() && src2->AsSymOpnd()->m_sym->IsStackSym() && src2->AsSymOpnd()->m_sym->AsStackSym()->IsAllocated())
-            {
-                IR::Instr *insertionInstr = this->GetIncInsertionPoint(instr);
-                IR::MemRefOpnd *memRefOpnd = IR::MemRefOpnd::New(this->func->GetJITFunctionBody()->GetRegAllocStoreCountAddr(), TyUint32, this->func);
-                insertionInstr->InsertBefore(IR::Instr::New(Js::OpCode::INC, memRefOpnd, memRefOpnd, this->func));
-            }
-        }
-    } NEXT_INSTR_IN_FUNC;
-}
-
-# endif  //ENABLE_DEBUG_CONFIG_OPTIONS
-#endif  // _M_IX86
-
 IR::Instr* LinearScan::InsertMove(IR::Opnd *dst, IR::Opnd *src, IR::Instr *const insertBeforeInstr)
 {
     IR::Instr *instrPrev = insertBeforeInstr->m_prev;
@@ -4941,8 +4764,6 @@ LinearScan::GeneratorBailIn::GeneratorBailIn(Func* func, LinearScan* linearScan)
     regs {
 #if defined(_M_X64)
     RegRAX, RegRCX
-#elif defined(_M_IX86)
-    RegEAX, RegECX
 #elif defined(_M_ARM64)
     RegR0, RegR1
 #endif

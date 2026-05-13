@@ -29,12 +29,7 @@ unsigned int CalculateCRC32(const char* in)
 uint CalculateCRC(uint bufferCRC, size_t data)
 {
 #if defined(__SSE4_2__)
-#if defined(_M_IX86)
-    if (AutoSystemInfo::Data.SSE4_2Available())
-    {
-        return _mm_crc32_u32(bufferCRC, data);
-    }
-#elif defined(_M_X64)
+#if defined(_M_X64)
     if (AutoSystemInfo::Data.SSE4_2Available())
     {
         //CRC32 always returns a 32-bit result

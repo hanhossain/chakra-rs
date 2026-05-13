@@ -5,7 +5,7 @@
 #include "CommonMemoryPch.h"
 #include "MarkContext.h"
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
 // For prefetch
 #include <mmintrin.h>
 #endif

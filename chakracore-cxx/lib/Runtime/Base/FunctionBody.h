@@ -2885,7 +2885,7 @@ namespace Js
             return scopeSlotArraySize;
         }
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
         template <typename T>
         static bool DoStackClosure(T functionBody)
         {

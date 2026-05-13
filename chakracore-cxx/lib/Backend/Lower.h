@@ -48,7 +48,7 @@ enum HelperCallCheckState : uint8_t {
 };
 
 #endif
-#if defined(_M_IX86) || defined(_M_AMD64)
+#if defined(_M_AMD64)
 #include "LowerMDShared.h"
 #elif defined(_M_ARM32_OR_ARM64)
 #include "LowerMD.h"

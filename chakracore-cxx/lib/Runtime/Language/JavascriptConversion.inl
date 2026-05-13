@@ -11,7 +11,7 @@
 #include "Core/JitHelperUtils.h"
 #include "Library/JavascriptBoolean.h"
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
 #endif
 
 namespace Js {
@@ -156,7 +156,7 @@ namespace Js {
        // We now have a double value which is between 0 and 255 and just need to convert it
        // to an integer following IEEE 754 rounding rules which round ties to the nearest
        // even integer.
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
        if (AutoSystemInfo::Data.SSE2Available())
        {
            // On x86 we have a convenient CVTSD2SI intrinsic function to handle this.

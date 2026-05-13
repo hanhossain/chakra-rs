@@ -5,7 +5,6 @@
 //-------------------------------------------------------------------------------------------------------
 #include "RuntimeLibraryPch.h"
 #include "Language/JavascriptMathOperators.h"
-#include "Math/CrtSSE2Math.h"
 
 #include <math.h>
 
@@ -266,7 +265,7 @@ namespace Js
             }
 #endif
 
-#if (defined(_M_IX86) || defined(_M_X64)) \
+#if defined(_M_X64) \
     && (__SSE4_1__) // _mm_ceil_sd needs this
             if (AutoSystemInfo::Data.SSE4_1Available())
             {

@@ -3036,18 +3036,7 @@ GlobOpt::OptDst(
             const ValueType baseValueType(baseOpnd->GetValueType());
             if ((
                     baseValueType.IsLikelyNativeArray() ||
-                #ifdef _M_IX86
-                    (
-                        !AutoSystemInfo::Data.SSE2Available() &&
-                        baseValueType.IsLikelyObject() &&
-                        (
-                            baseValueType.GetObjectType() == ObjectType::Float32Array ||
-                            baseValueType.GetObjectType() == ObjectType::Float64Array
-                        )
-                    )
-                #else
                     false
-                #endif
                 ) &&
                 instr->GetSrc1()->IsVar())
             {
@@ -5183,18 +5172,7 @@ GlobOpt::ValueNumberDst(IR::Instr **pInstr, Value *src1Val, Value *src2Val)
         const ValueType baseValueType(instr->GetSrc1()->AsIndirOpnd()->GetBaseOpnd()->GetValueType());
         if( (
                 baseValueType.IsLikelyNativeArray() ||
-            #ifdef _M_IX86
-                (
-                    !AutoSystemInfo::Data.SSE2Available() &&
-                    baseValueType.IsLikelyObject() &&
-                    (
-                        baseValueType.GetObjectType() == ObjectType::Float32Array ||
-                        baseValueType.GetObjectType() == ObjectType::Float64Array
-                    )
-                )
-            #else
                 false
-            #endif
             ) &&
             instr->GetDst()->IsVar() &&
             instr->HasBailOutInfo())
@@ -15861,9 +15839,6 @@ GlobOpt::DoTypedArrayTypeSpec(Func const * func)
     return !PHASE_OFF(Js::TypedArrayTypeSpecPhase, func) &&
         !IsTypeSpecPhaseOff(func) &&
         (!func->HasProfileInfo() || !func->GetReadOnlyProfileInfo()->IsTypedArrayTypeSpecDisabled(func->IsLoopBody()))
-#if defined(_M_IX86)
-        && AutoSystemInfo::Data.SSE2Available()
-#endif
         ;
 }
 
@@ -15873,9 +15848,6 @@ GlobOpt::DoNativeArrayTypeSpec(Func const * func)
 {
     return !PHASE_OFF(Js::NativeArrayPhase, func) &&
         !IsTypeSpecPhaseOff(func)
-#if defined(_M_IX86)
-        && AutoSystemInfo::Data.SSE2Available()
-#endif
         ;
 }
 

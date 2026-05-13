@@ -63,7 +63,7 @@ inline int _count_args(const T1&, const T2&, const T3&, const T4&, const T5&, Js
 }
 
 
-#if defined(_M_X64) || defined(_M_IX86)
+#if defined(_M_X64)
 // Call an entryPoint (JavascriptMethod) with custom calling convention.
 //  RDI == function, RSI == callInfo, (RDX/RCX/R8/R9==null/unused),
 //  all parameters on stack.

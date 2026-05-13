@@ -59,19 +59,6 @@ namespace Js
     NUMBER_UTIL_INLINE int64_t NumberUtilities::TryToInt64(double T1)
     {
         int64_t T4_64;
-#if defined(_M_IX86)
-        // If SSE3 is available use FISTPP.  VC (dev10) generates a FISTP, but needs to
-        // first change the FPU rounding, which is very slow...
-        if (AutoSystemInfo::Data.SSE3Available())
-        {
-            // FISTTP will result in 0x8000000000000000 in T4_64 if the value is NaN Inf or Zero, or overflows long
-            _asm {
-                FLD T1
-                FISTTP T4_64
-            }
-        }
-        else
-#endif
 #if defined(_M_ARM32_OR_ARM64)
         // Win8 286065: ARM: casts to long from double for NaNs, infinity, overflow:
         // - non-infinity NaNs -> 0

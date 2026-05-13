@@ -13,7 +13,7 @@ namespace Js
     } Boyer_Moore_Jump;
 
     // Boyer Moore table for only the first character in the search string.
-#if defined(_M_IX86) || defined(_M_IX64)
+#if defined(_M_IX64)
     // This table gets memset to 0. The x86 CRT is optimized for doing copies 128 bytes
     // at a time, for 16 byte aligned memory. If this table isn't 16 byte aligned, we pay
     // an additional cost to pre-align it, dealing with trailing bytes, and the copy

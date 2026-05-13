@@ -267,7 +267,7 @@ PHASE(All)
             PHASE(Assembly)
             PHASE(Emitter)
             PHASE(DebugBreak)
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
             PHASE(BrShorten)
                 PHASE(LoopAlign)
 #endif
@@ -827,11 +827,11 @@ PHASE(All)
 #define DEFAULT_CONFIG_CopyOnAccessArraySegmentCacheSize (16U)
 #endif
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
 #define DEFAULT_CONFIG_LoopAlignNopLimit (6)
 #endif
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
 #define DEFAULT_CONFIG_ZeroMemoryWithNonTemporalStore (true)
 #endif
 
@@ -1496,7 +1496,7 @@ FLAGR (Number,  TempMin                  , "Temp number switch which code can te
 FLAGR (Number,  TempMax                  , "Temp number switch which code can temporarily use for debugging", DEFAULT_CONFIG_TempMax)
 FLAGNR(Phases,  Trace                 , "Trace the given phase", )
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
 FLAGR(Number,   LoopAlignNopLimit       , "Max number of nops for loop alignment", DEFAULT_CONFIG_LoopAlignNopLimit)
 #endif
 
@@ -1591,7 +1591,7 @@ FLAGNR(Number,  MaxBackgroundFinishMarkCount, "Maximum number of background fini
 FLAGNR(Number,  BackgroundFinishMarkWaitTime, "Millisecond to wait for background finish mark", 15)
 FLAGNR(Number,  MinBackgroundRepeatMarkRescanBytes, "Minimum number of bytes rescan to trigger background finish mark",  -1)
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
 FLAGNR(Boolean, ZeroMemoryWithNonTemporalStore, "Zero free memory with non-temporal stores to avoid evicting other content from processor cache", DEFAULT_CONFIG_ZeroMemoryWithNonTemporalStore)
 #endif
 

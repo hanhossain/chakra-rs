@@ -871,9 +871,7 @@ private:
     class SavedRegisterState
     {
     public:
-#if _M_IX86
-        static const int NumRegistersToSave = 8;
-#elif _M_ARM
+#if _M_ARM
         static const int NumRegistersToSave = 13;
 #elif _M_ARM64
         static const int NumRegistersToSave = 27;

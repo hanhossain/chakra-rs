@@ -33,19 +33,11 @@ namespace Js
             static const int ArraySizeOffset  ;
             static const int ScriptContextOffset;
         };
-#ifdef _M_IX86
-#define CreateTemplate(name,...) \
-        struct name\
-        {\
-            static int ApplyTemplate( TemplateContext context, uint8_t*& buffer,##__VA_ARGS__ );\
-        }
-#else
 #define CreateTemplate(name,...)  \
         struct name\
         {\
             static int ApplyTemplate( TemplateContext context, uint8_t*& buffer,##__VA_ARGS__ ) { __debugbreak(); return 0; }\
         }
-#endif
 
         CreateTemplate( FunctionEntry );
         CreateTemplate( FunctionExit );

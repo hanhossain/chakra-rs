@@ -97,20 +97,6 @@ namespace Js
                 AsmJsByteCodeDumper::Dump(functionBody, nullptr, func);
             }
 #endif
-#if _M_IX86
-            if (PHASE_ON1(AsmJsJITTemplatePhase) && !Configuration::Global.flags.NoNative)
-            {
-                AsmJsCodeGenerator* generator = GetScriptContext()->GetAsmJsCodeGenerator();
-                AccumulateCompileTime();
-                if (!generator)
-                {
-                    generator = GetScriptContext()->InitAsmJsCodeGenerator();
-                }
-                Assert(generator);
-                generator->CodeGen(functionBody);
-                AccumulateCompileTime(AsmJsCompilation::TemplateJIT);
-            }
-#endif
         }
 
         return true;
@@ -1841,8 +1827,6 @@ namespace Js
                 AnalysisAssert(asmBuffer);
 #ifdef _M_X64
                 const bool isOptimizedBuffer = true;
-#elif _M_IX86
-                const bool isOptimizedBuffer = false;
 #else
                 Assert(UNREACHED);
                 const bool isOptimizedBuffer = false;

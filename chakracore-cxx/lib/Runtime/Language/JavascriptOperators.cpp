@@ -260,40 +260,6 @@ using namespace Js;
         JIT_HELPER_END(Op_OP_ApplyArgs);
     }
 
-#ifdef _M_IX86
-    // Alias for overloaded JavascriptNumber::ToVar so it can be called unambiguously from native code
-    Var JavascriptOperators::Int32ToVar(int32_t value, ScriptContext* scriptContext)
-    {
-        JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Op_Int32ToAtom);
-        return JavascriptNumber::ToVar(value, scriptContext);
-        JIT_HELPER_END(Op_Int32ToAtom);
-    }
-
-    // Alias for overloaded JavascriptNumber::ToVar so it can be called unambiguously from native code
-    Var JavascriptOperators::Int32ToVarInPlace(int32_t value, ScriptContext* scriptContext, JavascriptNumber* result)
-    {
-        JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Op_Int32ToAtomInPlace);
-        return JavascriptNumber::ToVarInPlace(value, scriptContext, result);
-        JIT_HELPER_END(Op_Int32ToAtomInPlace);
-    }
-
-    // Alias for overloaded JavascriptNumber::ToVar so it can be called unambiguously from native code
-    Var JavascriptOperators::UInt32ToVar(uint32_t value, ScriptContext* scriptContext)
-    {
-        JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Op_UInt32ToAtom);
-        return JavascriptNumber::ToVar(value, scriptContext);
-        JIT_HELPER_END(Op_UInt32ToAtom);
-    }
-
-    // Alias for overloaded JavascriptNumber::ToVar so it can be called unambiguously from native code
-    Var JavascriptOperators::UInt32ToVarInPlace(uint32_t value, ScriptContext* scriptContext, JavascriptNumber* result)
-    {
-        JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Op_UInt32ToAtomInPlace);
-        return JavascriptNumber::ToVarInPlace(value, scriptContext, result);
-        JIT_HELPER_END(Op_UInt32ToAtomInPlace);
-    }
-#endif
-
     Var JavascriptOperators::OP_FinishOddDivBy2(uint32_t value, ScriptContext *scriptContext)
     {
         return JavascriptNumber::New((double)(value + 0.5), scriptContext);

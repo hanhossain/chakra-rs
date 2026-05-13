@@ -374,7 +374,6 @@ FlowGraph::Build(void)
 
                 // For ARM, ARM64 & X64 (non x86) because of their register calling convention
                 // the ArgOuts need to be moved next to the call.
-#if !defined(_M_IX86)
                 IR::Instr* argInsertInstr = instr;
                 instr->IterateArgInstrs([&](IR::Instr* argInstr)
                 {
@@ -401,7 +400,6 @@ FlowGraph::Build(void)
                     }
                     return false;
                 });
-#endif
             }
         }
     }

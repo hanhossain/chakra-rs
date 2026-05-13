@@ -13,7 +13,7 @@ private:
     void        Check(IR::Opnd *opnd);
     void        Check(IR::RegOpnd *regOpnd);
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
     bool        IsCallToHelper(IR::Instr *instr, IR::JnHelperMethod method);
     bool        IsEndBoundary(IR::Instr * instr);
     void        EnsureValidEndBoundary(IR::Instr * instr);
@@ -25,7 +25,7 @@ public:
     DbCheckPostLower(Func *func) : func(func) { }
     void        Check();
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
     void        CheckNestedHelperCalls();
 #endif
 };

@@ -1072,7 +1072,7 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::FillFreePages(void * a
         // Do memset via non-temporal store to avoid evicting existing processor cache.
         // This helps low-end machines with limited cache size.
         //
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
         if (CONFIG_FLAG(ZeroMemoryWithNonTemporalStore))
         {
             js_memset_zero_nontemporal(address, AutoSystemInfo::PageSize * pageCount);
@@ -1740,7 +1740,7 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::ZeroQueuedPages()
         // This helps low-end machines with limited cache size.
         //
         Assert(this->processHandle == GetCurrentProcess());
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
         if (CONFIG_FLAG(ZeroMemoryWithNonTemporalStore))
         {
             js_memset_zero_nontemporal(freePageEntry, AutoSystemInfo::PageSize * pageCount);

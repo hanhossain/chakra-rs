@@ -12,17 +12,7 @@ class BailOutInfo
 {
 public:
 
-#ifdef _M_IX86
-    typedef struct
-    {
-        IR::Instr * instr;
-        uint argCount;
-        uint argRestoreAdjustCount;
-        bool isOrphanedCall;
-    } StartCallInfo;
-#else
     typedef uint StartCallInfo;
-#endif
 
     BailOutInfo(uint32_t bailOutOffset, Func* bailOutFunc) :
         bailOutOffset(bailOutOffset), bailOutFunc(bailOutFunc),
@@ -34,9 +24,6 @@ public:
         clearedDstByteCodeUpwardExposedUseId(SymID_Invalid)
     {
         Assert(bailOutOffset != Js::Constants::NoByteCodeOffset);
-#ifdef _M_IX86
-        outParamFrameAdjustArgSlot = nullptr;
-#endif
 #if DBG
         wasCopied = false;
 #endif
@@ -70,10 +57,6 @@ public:
 
     void RecordStartCallInfo(uint i, IR::Instr *instr);
     uint GetStartCallOutParamCount(uint i) const;
-#ifdef _M_IX86
-    bool NeedsStartCallAdjust(uint i, const IR::Instr * instr) const;
-    void UnlinkStartCall(const IR::Instr * instr);
-#endif
 
     static bool IsBailOutOnImplicitCalls(IR::BailOutKind kind)
     {
@@ -142,10 +125,6 @@ public:
     int * outParamOffsets;
 
     BVSparse<JitArenaAllocator> * outParamInlinedArgSlot;
-#ifdef _M_IX86
-    BVSparse<JitArenaAllocator> * outParamFrameAdjustArgSlot;
-    BVFixed * inlinedStartCall;
-#endif
 
 #ifdef MD_GROW_LOCALS_AREA_UP
     // Use a bias to guarantee that all sym offsets are non-zero.
@@ -216,14 +195,6 @@ public:
         FixupNativeDataPointer(constants, chunkList);
         FixupNativeDataPointer(ehBailoutData, chunkList);
         FixupNativeDataPointer(stackLiteralBailOutRecord, chunkList);
-#ifdef _M_IX86
-        // special handling for startCallOutParamCounts and outParamOffsets, becuase it points to middle of the allocation
-        if (argOutOffsetInfo)
-        {
-            uint* startCallArgRestoreAdjustCountsStart = startCallArgRestoreAdjustCounts - argOutOffsetInfo->startCallIndex;
-            NativeCodeData::AddFixupEntry(startCallArgRestoreAdjustCounts, startCallArgRestoreAdjustCountsStart, &this->startCallArgRestoreAdjustCounts, this, chunkList);
-        }
-#endif
     }
 
 public:
@@ -314,9 +285,6 @@ protected:
     {
         BVFixed * argOutFloat64Syms;        // Used for float-type-specialized ArgOut symbols. Index = [0 .. BailOutInfo::totalOutParamCount].
         BVFixed * argOutLosslessInt32Syms;  // Used for int-type-specialized ArgOut symbols (which are native int and for bailout we need tagged ints).
-#ifdef _M_IX86
-        BVFixed * isOrphanedArgSlot;
-#endif
         uint * startCallOutParamCounts;
         int * outParamOffsets;
         uint startCallCount;
@@ -326,9 +294,6 @@ protected:
         {
             FixupNativeDataPointer(argOutFloat64Syms, chunkList);
             FixupNativeDataPointer(argOutLosslessInt32Syms, chunkList);
-#ifdef _M_IX86
-            FixupNativeDataPointer(isOrphanedArgSlot, chunkList);
-#endif
             // special handling for startCallOutParamCounts and outParamOffsets, becuase it points to middle of the allocation
             uint* startCallOutParamCountsStart = startCallOutParamCounts - startCallIndex;
             NativeCodeData::AddFixupEntry(startCallOutParamCounts, startCallOutParamCountsStart, &this->startCallOutParamCounts, this, chunkList);
@@ -346,9 +311,6 @@ protected:
     Js::Var * constants;
     Js::EHBailoutData * ehBailoutData;
     StackLiteralBailOutRecord * stackLiteralBailOutRecord;
-#ifdef _M_IX86
-    uint * startCallArgRestoreAdjustCounts;
-#endif
 
     // Index of start of section of argOuts for current record/current func, used with argOutFloat64Syms and
     // argOutLosslessInt32Syms when restoring values, as BailOutInfo uses one argOuts array for all funcs.

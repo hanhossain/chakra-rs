@@ -454,7 +454,7 @@ namespace Js
     TimeStamp
     Profiler::GetTime()
     {
-#if !defined HIRES_PROFILER && (defined(_M_IX86) || defined(_M_X64))
+#if !defined HIRES_PROFILER && defined(_M_X64)
         return __rdtsc();
 #else
         LARGE_INTEGER tmp;
@@ -480,7 +480,7 @@ namespace Js
     TimeStamp
     Profiler::GetFrequency()
     {
-#if !defined HIRES_PROFILER && (defined(_M_IX86) || defined(_M_X64))
+#if !defined HIRES_PROFILER && defined(_M_X64)
         long long start, end;
         int CPUInfo[4];
 

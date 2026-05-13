@@ -17,7 +17,7 @@ Peeps::PeepFunc()
         peepsEnabled = false;
     }
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
     // Agen dependency elimination pass
     // Since it can reveal load elimination opportunities for the normal peeps pass, we do it separately.
     this->peepsAgen.PeepFunc();
@@ -93,7 +93,7 @@ Peeps::PeepFunc()
                 instrNext = this->CleanupLabel(instr->AsLabelInstr(), instrNext->AsLabelInstr());
             }
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
             Assert(instrNext->IsLabelInstr() || instrNext->m_prev->IsLabelInstr());
             IR::LabelInstr *const peepCondMoveLabel =
                 instrNext->IsLabelInstr() ? instrNext->AsLabelInstr() : instrNext->m_prev->AsLabelInstr();
@@ -120,7 +120,7 @@ Peeps::PeepFunc()
             }
 
             instrNext = Peeps::PeepBranch(branchInstr);
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
             Assert(instrNext && instrNext->m_prev);
             if (instrNext->m_prev->IsBranchInstr())
             {
@@ -156,7 +156,7 @@ Peeps::PeepFunc()
                 // Just delete these StartCalls
                 instr->Remove();
             }
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
             else if (instr->m_opcode == Js::OpCode::MOVSD_ZERO)
             {
                 this->peepsMD.PeepAssign(instr);
@@ -248,7 +248,7 @@ Peeps::PeepFunc()
                 {
                     break;
                 }
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
                instr = this->PeepRedundant(instr);
 #endif
 
@@ -262,7 +262,7 @@ Peeps::PeepFunc()
                 // Kill callee-saved regs across calls and other implicit regs
                 this->peepsMD.ProcessImplicitRegs(instr);
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
                 if (instr->m_opcode == Js::OpCode::TEST && instr->GetSrc2()->IsIntConstOpnd()
                     && ((instr->GetSrc2()->AsIntConstOpnd()->GetValue() & 0xFFFFFF00) == 0)
                     && instr->GetSrc1()->IsRegOpnd() && (LinearScan::GetRegAttribs(instr->GetSrc1()->AsRegOpnd()->GetReg()) & RA_BYTEABLE))
@@ -287,7 +287,7 @@ Peeps::PeepFunc()
     } NEXT_INSTR_IN_FUNC_EDITING;
 }
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
 // Peeps::IsJccOrShiftInstr()
 // Check if instruction is any of the Shift or conditional jump variant
 bool
@@ -644,7 +644,7 @@ Peeps::PeepBranch(IR::BranchInstr *branchInstr, bool *const peepedRef)
     return branchInstr->m_next;
 }
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
 //
 // For conditional branch JE $LTarget, if both target and fallthrough branch has the same
 // instruction B, hoist it up and tail dup target branch:
@@ -1088,7 +1088,7 @@ IR::Instr *Peeps::RemoveDeadBlock(IR::Instr *instr, bool* wasStmtBoundaryKeptInD
 }
 
 // Shared code for x86 and amd64
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
 IR::Instr *
 Peeps::PeepRedundant(IR::Instr *instr)
 {
@@ -1105,11 +1105,7 @@ Peeps::PeepRedundant(IR::Instr *instr)
             return retInstr;
         }
     }
-#if _M_IX86
-    RegNum edx = RegEDX;
-#else
     RegNum edx = RegRDX;
-#endif
     if (instr->m_opcode == Js::OpCode::NOP && instr->GetDst() != NULL
         && instr->GetDst()->IsRegOpnd() && instr->GetDst()->AsRegOpnd()->GetReg() == edx)
     {

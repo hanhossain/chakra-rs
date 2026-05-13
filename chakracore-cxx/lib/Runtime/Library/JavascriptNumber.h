@@ -34,9 +34,6 @@ namespace Js
 #ifdef ENABLE_TEST_HOOKS
         static Var ToVarFor32BitBytecode(int32_t nValue, ScriptContext* scriptContext);
 #endif
-#if defined(__clang__) && defined(_M_IX86)
-        static Var ToVar(intptr_t nValue, ScriptContext* scriptContext);
-#endif
         static Var ToVarInPlace(int32_t nValue, ScriptContext* scriptContext, JavascriptNumber *result);
         static Var ToVarInPlace(long value, ScriptContext* scriptContext, JavascriptNumber *result);
         static Var ToVarInPlace(uint32_t nValue, ScriptContext* scriptContext, JavascriptNumber *result);
@@ -207,17 +204,3 @@ namespace Js
         return IsSpecial(value, k_NegZero);
     }
 }
-
-#if defined(_M_IX86)
-#ifdef DBG
-#ifdef HEAP_ENUMERATION_VALIDATION
-// Heap enum has an extra field m_heapEnumValidationCookie, but it fills in the alignment
-// So the size is the same
-CompileAssert(sizeof(Js::JavascriptNumber) == 24);
-#else
-CompileAssert(sizeof(Js::JavascriptNumber) == 16);
-#endif
-#else
-CompileAssert(sizeof(Js::JavascriptNumber) == 16);
-#endif
-#endif

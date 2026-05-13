@@ -1301,14 +1301,6 @@ namespace JsUtil
             Js::Throw::GenerateDump(pEP, Js::Configuration::Global.flags.DumpOnCrash);
         }
 #endif
-
-#if DBG && _M_IX86
-        int callerEBP = *((int*)pEP->ContextRecord->Ebp);
-
-        Output::Print(u"BackgroundJobProcessor: Uncaught exception: EIP: 0x%X  ExceptionCode: 0x%X  EBP: 0x%X  ReturnAddress: 0x%X  ReturnAddress2: 0x%X\n",
-            pEP->ExceptionRecord->ExceptionAddress, pEP->ExceptionRecord->ExceptionCode, pEP->ContextRecord->Eip,
-            pEP->ContextRecord->Ebp, *((int*)pEP->ContextRecord->Ebp + 1), *((int*) callerEBP + 1));
-#endif
         Output::Flush();
         return EXCEPTION_CONTINUE_SEARCH;
     }

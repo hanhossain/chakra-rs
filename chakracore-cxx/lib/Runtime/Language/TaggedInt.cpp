@@ -255,40 +255,7 @@ namespace Js
     Var TaggedInt::DbgSubtract(Var aLeft,Var aRight,ScriptContext* scriptContext)
 #endif
     {
-#if _M_IX86
-
-        //
-        // Perform the signed, integer subtraction directly on Atoms without converting to integers:
-        //
-        // T        = AtomTag_Int32
-        // nResult  = A1 - A2
-        //  Step 1: (N1 * S + T) - (N2 * S + T)
-        //  Step 2: ((N1 - N2) * S + T) - T
-        //  Step 3: A3 - T
-        //
-        // NOTE: As demonstrated above, the FromVar() / ToVar() calls in (T) will cancel out,
-        // enabling an optimized operation.
-        //
-
-        __asm
-        {
-            mov     eax, aLeft
-            sub     eax, aRight
-            jno     LblDone         // Check for overflow/underflow
-                                    // The carry flag indicates whether the sum has
-                                    // overflowed (>INT_MAX) or underflowed (< INT_MIN)
-            push    scriptContext
-            cmc                     // For subtraction, CF=1 indicates an overflow, so reverse the flag
-            rcr     eax, 1          // Convert to int32_t and set the sign to the carry bit
-            push    eax
-            call    TaggedInt::OverflowHelper
-            dec     eax             // Adjust for the upcoming inc eax
-LblDone:
-            inc     eax
-            // Difference is in eax
-        }
-
-#elif defined(_M_X64) || defined(_M_ARM32_OR_ARM64)
+#if defined(_M_X64) || defined(_M_ARM32_OR_ARM64)
 
         //
         // Perform the signed, integer subtraction directly on Atoms using 64-bit math for overflow
@@ -544,20 +511,6 @@ LblDone:
 
     Var TaggedInt::Increment(Var aValue, ScriptContext* scriptContext)
     {
-#if _M_IX86
-
-
-        __asm
-        {
-            mov     eax, aValue
-            add     eax, 2
-            jno     LblDone
-            push    scriptContext
-            call    TaggedInt::IncrementOverflowHelper
-        LblDone:
-            ; result is in eax
-        }
-#else
 
 #if INT32VAR
         Var result = aValue;
@@ -577,7 +530,6 @@ LblDone:
 
         AssertMsg( result == ToVarUnchecked( ToInt32(aValue) + 1 ), "Logic error in Int31::Increment" );
         return result;
-#endif
     }
 
     // Explicitly marking noinline and stdcall since this is called from inline asm
@@ -588,19 +540,6 @@ LblDone:
 
     Var TaggedInt::Decrement(Var aValue, ScriptContext* scriptContext)
     {
-#if _M_IX86
-
-        __asm
-        {
-            mov     eax, aValue
-            sub     eax, 2
-            jno     LblDone
-            push    scriptContext
-            call    TaggedInt::DecrementUnderflowHelper
-        LblDone:
-            ; result is in eax
-        }
-#else
 
 #if INT32VAR
         Var result = aValue;
@@ -620,16 +559,8 @@ LblDone:
 
         AssertMsg( result == ToVarUnchecked( ToInt32(aValue) - 1 ), "Logic error in Int31::Decrement" );
         return result;
-#endif
     }
 
-
-#if defined(__clang__) && defined(_M_IX86)
-    bool TaggedInt::IsOverflow(intptr_t nValue)
-    {
-        return (nValue < k_nMinValue) || (nValue > k_nMaxValue);
-    }
-#endif
     bool TaggedInt::IsOverflow(int32_t nValue)
     {
         return (nValue < k_nMinValue) || (nValue > k_nMaxValue);
@@ -851,40 +782,7 @@ LblDone:
     Var TaggedInt::DbgAdd(Var aLeft,Var aRight,ScriptContext* scriptContext)
 #endif
     {
-#if _M_IX86
-        //
-        // Perform the signed, integer addition directly on Atoms without converting to integers:
-        //
-        // T        = AtomTag_Int32
-        // nResult  = A1 + A2
-        //  Step 1: (N1 * S + T) + (N2 * S + T)
-        //  Step 2: ((N1 + N2) * S + T) + T
-        //  Step 3: A3 + T
-        //
-        // NOTE: As demonstrated above, the FromVar() / ToVar() calls in (T) will cancel out,
-        // enabling an optimized operation.
-        //
-
-
-        __asm
-        {
-            mov     eax, aLeft
-            dec     eax             // Get rid of one of the tags, since they'll add up
-            add     eax, aRight     // Perform the addition
-            jno     LblDone         // Check for overflow/underflow
-                                    // The carry flag indicates whether the sum has
-                                    // overflowed (>INT_MAX) or underflowed (< INT_MIN)
-
-            push    scriptContext
-            rcr     eax, 1          // Convert to int32_t and set the sign to the carry bit
-            push    eax
-            call    TaggedInt::OverflowHelper
-
-LblDone:
-            // Sum is in eax
-        }
-
-#elif defined(_M_X64) || defined(_M_ARM32_OR_ARM64)
+#if defined(_M_X64) || defined(_M_ARM32_OR_ARM64)
 
         //
         // Perform the signed, integer addition directly on Atoms using 64-bit math for overflow

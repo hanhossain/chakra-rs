@@ -300,9 +300,6 @@ namespace Js
         case Phase::NativeArrayPhase:
         case Phase::FloatTypeSpecPhase:
             return !PHASE_OFF_PROFILED_BYTE_CODE_OPTFUNC(phase, functionBody)
-#ifdef _M_IX86
-                && AutoSystemInfo::Data.SSE2Available()
-#endif
                 ;
 
         case Phase::InlinePhase:
@@ -315,23 +312,6 @@ namespace Js
     {
         return DynamicProfileInfo::IsEnabled(functionBody);
     }
-
-#ifdef _M_IX86
-    __declspec(naked)
-        Var
-        DynamicProfileInfo::EnsureDynamicProfileInfoThunk(RecyclableObject* function, CallInfo callInfo, ...)
-    {
-        __asm
-        {
-            push ebp
-            mov ebp, esp
-                push[esp + 8]     // push function object
-                call DynamicProfileInfo::EnsureDynamicProfileInfo;
-                pop ebp
-                jmp eax
-        }
-    }
-#endif
 
     JavascriptMethod DynamicProfileInfo::EnsureDynamicProfileInfo(ScriptFunction * function)
     {

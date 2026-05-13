@@ -1458,25 +1458,7 @@ static void* GetStackBase()
     return (void*) highLimit;
 }
 
-#if _M_IX86
-// REVIEW: For x86, do we care about scanning esp/ebp?
-// At GC time, they shouldn't be pointing to GC memory.
-#define SAVE_THREAD_CONTEXT() \
-    void** targetBuffer = this->savedThreadContext.GetRegisters(); \
-    __asm { push eax } \
-    __asm { mov eax, targetBuffer } \
-    __asm { mov [eax], esp} \
-    __asm { mov [eax+0x4], eax} \
-    __asm { mov [eax+0x8], ebx} \
-    __asm { mov [eax+0xc], ecx} \
-    __asm { mov [eax+0x10], edx} \
-    __asm { mov [eax+0x14], ebp} \
-    __asm { mov [eax+0x18], esi} \
-    __asm { mov [eax+0x1c], edi} \
-    __asm { pop eax } \
-    SAVE_THREAD_ASAN_FAKE_STACK()
-
-#elif _M_ARM
+#if _M_ARM
 #define SAVE_THREAD_CONTEXT() \
     arm_SAVE_REGISTERS(this->savedThreadContext.GetRegisters()); \
     SAVE_THREAD_ASAN_FAKE_STACK()
@@ -5710,14 +5692,6 @@ Recycler::ExceptFilter(LPEXCEPTION_POINTERS pEP)
     {
         Js::Throw::GenerateDump(pEP, Js::Configuration::Global.flags.DumpOnCrash);
     }
-#endif
-
-#if DBG && _M_IX86
-    int callerEBP = *((int*)pEP->ContextRecord->Ebp);
-
-    Output::Print(u"Recycler Concurrent Thread: Uncaught exception: EIP: 0x%X  ExceptionCode: 0x%X  EBP: 0x%X  ReturnAddress: 0x%X  ReturnAddress2: 0x%X\n",
-        pEP->ExceptionRecord->ExceptionAddress, pEP->ExceptionRecord->ExceptionCode, pEP->ContextRecord->Eip,
-        pEP->ContextRecord->Ebp, *((int*)pEP->ContextRecord->Ebp + 1), *((int*) callerEBP + 1));
 #endif
 
     Output::Flush();

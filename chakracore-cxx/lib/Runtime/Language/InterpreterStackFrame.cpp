@@ -1588,158 +1588,8 @@ namespace Js
         this->closureInitDone = true;
     }
 
-#ifdef _M_IX86
-#ifdef ASMJS_PLAT
-    int InterpreterStackFrame::GetAsmJsArgSize(AsmJsCallStackLayout* stack)
-    {
-        JavascriptFunction * func = stack->functionObject;
-        AsmJsFunctionInfo* asmInfo = func->GetFunctionBody()->GetAsmJsFunctionInfo();
-        uint argSize = (uint)(asmInfo->GetArgByteSize());
-        argSize = ::Math::Align<int32_t>(argSize, 8);
-        // 2 * sizeof(Var) is for functionObject, and another push that DynamicInterpreterThunk does
-        return argSize + 2 * sizeof(Var);
-    }
-
-    int InterpreterStackFrame::GetDynamicRetType(AsmJsCallStackLayout* stack)
-    {
-        return GetRetType(stack->functionObject);
-    }
-
-    int InterpreterStackFrame::GetRetType(JavascriptFunction* func)
-    {
-        AsmJsFunctionInfo* asmInfo = func->GetFunctionBody()->GetAsmJsFunctionInfo();
-        return asmInfo->GetReturnType().which();
-    }
-
-#ifdef ASMJS_PLAT
-    /*
-                            AsmInterpreterThunk
-                            -------------------
-        This is the entrypoint for all Asm Interpreter calls (external and internal)
-        TODO - Make this a dynamic Interpreter thunk to support ETW
-        Functionality:
-        1) Prolog
-        2) call AsmInterpreter passing the function object
-        3) Get The return type
-        4) Check for Double or Float return type
-        5) If true then retrieve the value stored at a constant offset from the ScriptContext
-        6) Get Argument Size for callee cleanup
-        7) EpiLog
-            a) Retrieve the frame pointer
-            b) Store the return address in register (edx)
-            c) Clean the arguments based on the arguments size
-            d) push the return address back into the stack
-    */
-    __declspec(naked)
-        void InterpreterStackFrame::InterpreterAsmThunk(AsmJsCallStackLayout* layout)
-    {
-        __asm
-        {
-            //Prologue
-            push ebp;
-            mov ebp, esp;
-
-            // Allocate space to put the return value
-            sub esp, 16;
-            and esp, -16;
-
-            push esp;
-            push layout;
-            call InterpreterStackFrame::AsmJsInterpreter;
-
-            // we need to move stack around in order to do callee cleanup
-            // unfortunately, we don't really have enough registers to do this cleanly
-            //
-            // we are rearranging the stack from this:
-            // 0x14 caller push scriptArg1
-            // 0x10 caller push functionObject
-            // 0x0C DynamicInterpreterThunk return address
-            // 0x08 DynamicInterpreterThunk push ebp
-            // 0x04 DynamicInterpreterThunk push functionObject
-            // 0x00 InterpreterAsmThunk return address <- stack pointer
-            // to this:
-            // 0x14 DynamicInterpreterThunk return address
-            // 0x10 DynamicInterpreterThunk push ebp
-            // 0x0C InterpreterAsmThunk return address <- stack pointer
-            // Read return value into possible registers
-            movups xmm0, [esp];
-            mov edx, [esp + 4];
-            mov eax, [esp];
-
-            mov ecx, layout;
-            // Epilog, callee cleanup
-            mov esp, ebp;
-            pop ebp;
-
-            push eax; // save eax
-            push edx; // save edx
-            // we have to do +0x8 on all stack addresses because we saved 2 registers
-            push ecx; // ebp has been restored, we can't use parameters anymore
-            call InterpreterStackFrame::GetAsmJsArgSize;
-            mov ecx, eax;
-
-            lea eax, [esp + ecx * 1 + 0x8 + 0x8]; // eax will be our stack destination
-            mov edx, [esp + 0xC + 0x8];
-            mov[eax], edx; // move the dynamic interpreter thunk return location
-            mov edx, [esp + 0x8 + 0x8];
-            mov[eax - 0x4], edx; // move the dynamic interpreter thunk "push ebp" location
-            // skip "push functionObject"
-            mov edx, [esp + 0x0 + 0x8];
-            mov[eax - 0x8], edx; // move the return location
-
-            pop edx; // restore possible long return value
-            pop eax; // restore return value
-            add esp, ecx; // cleanup arguments
-
-            ret;
-        }
-    }
-#endif
-#endif
-#endif
-
-
 #if DYNAMIC_INTERPRETER_THUNK
-#ifdef _M_IX86
-    __declspec(naked)
-        Var InterpreterStackFrame::AsmJsDelayDynamicInterpreterThunk(RecyclableObject* function, CallInfo callInfo, ...)
-    {
-        __asm
-        {
-            push ebp;
-            mov ebp, esp;
-            push[esp + 8];    // push function object
-            call WasmLibrary::EnsureWasmEntrypoint;
-            test eax, eax;
-            jne skipThunk;
-
-            push[esp + 8];    // push function object
-            call InterpreterStackFrame::EnsureDynamicInterpreterThunk;
-skipThunk:
-
-            pop ebp;
-
-            jmp eax;
-        }
-    }
-
-    __declspec(naked)
-        Var InterpreterStackFrame::DelayDynamicInterpreterThunk(RecyclableObject* function, CallInfo callInfo, ...)
-    {
-        __asm
-        {
-            push ebp;
-            mov ebp, esp;
-            push[esp + 8];    // push function object
-            call InterpreterStackFrame::EnsureDynamicInterpreterThunk;
-
-
-            pop ebp;
-
-            jmp eax;
-        }
-    }
-#elif !defined(_M_AMD64)
+#if !defined(_M_AMD64)
     Var InterpreterStackFrame::AsmJsDelayDynamicInterpreterThunk(RecyclableObject* function, CallInfo callInfo, ...)
     {
         // Asm.js only supported on x64 and x86
@@ -2174,66 +2024,7 @@ skipThunk:
 
 #ifdef ASMJS_PLAT
 
-#if _M_IX86
-    void InterpreterStackFrame::AsmJsInterpreter(AsmJsCallStackLayout* stack, byte* retDst)
-    {
-        ScriptFunction * function = (ScriptFunction*)stack->functionObject;
-        Var* paramsAddr = stack->args;
-        int  flags = CallFlags_Value;
-        ArgSlot nbArgs = ArgSlotMath::Add(function->GetFunctionBody()->GetAsmJsFunctionInfo()->GetArgCount(), 1);
-        CallInfo callInfo((CallFlags)flags, nbArgs);
-        ArgumentReader args(&callInfo, paramsAddr);
-        void* returnAddress = __builtin_return_address(0);
-        void* addressOfReturnAddress = _AddressOfReturnAddress();
-#if ENABLE_PROFILE_INFO
-        function->GetFunctionBody()->EnsureDynamicProfileInfo();
-#endif
-        AsmJsReturnStruct asmJsReturn = { 0 };
-        InterpreterHelper(function, args, returnAddress, addressOfReturnAddress, &asmJsReturn);
-
-        //Handle return value
-        AsmJsRetType::Which retType = (AsmJsRetType::Which) GetRetType(function);
-
-        switch (retType)
-        {
-#ifdef ENABLE_WASM_SIMD
-        case AsmJsRetType::Int32x4:
-        case AsmJsRetType::Bool32x4:
-        case AsmJsRetType::Bool16x8:
-        case AsmJsRetType::Bool8x16:
-        case AsmJsRetType::Float32x4:
-        case AsmJsRetType::Float64x2:
-        case AsmJsRetType::Int16x8:
-        case AsmJsRetType::Int8x16:
-        case AsmJsRetType::Uint32x4:
-        case AsmJsRetType::Uint16x8:
-        case AsmJsRetType::Uint8x16:
-            Assert(Wasm::Simd::IsEnabled());
-            *(AsmJsSIMDValue*)retDst = asmJsReturn.simd;
-            break;
-#endif
-        // double return
-        case AsmJsRetType::Double:
-            *(double*)retDst = asmJsReturn.d;
-            break;
-        // float return
-        case AsmJsRetType::Float:
-            *(float*)retDst = asmJsReturn.f;
-            break;
-        // signed or void return
-        case AsmJsRetType::Signed:
-        case AsmJsRetType::Void:
-            *(int*)retDst = asmJsReturn.i;
-            break;
-        case AsmJsRetType::Int64:
-            *(long*)retDst = asmJsReturn.l;
-            break;
-        default:
-            Assume(false);
-        }
-    }
-
-#elif _M_X64
+#if _M_X64
     typedef double(*AsmJsInterpreterDoubleEP)(AsmJsCallStackLayout*, void *);
     typedef float(*AsmJsInterpreterFloatEP)(AsmJsCallStackLayout*, void *);
     typedef int(*AsmJsInterpreterIntEP)(AsmJsCallStackLayout*, void *);
@@ -6170,20 +5961,6 @@ skipThunk:
     uint
         InterpreterStackFrame::CallLoopBody(JavascriptMethod address)
     {
-#ifdef _M_IX86
-        void *savedEsp = NULL;
-        __asm
-        {
-            // Save ESP
-            mov savedEsp, esp
-
-            // 8-byte align frame to improve floating point perf of our JIT'd code.
-            and esp, -8
-
-            // Add an extra 4-bytes to the stack since we'll be pushing 3 arguments
-            push eax
-        }
-#endif
 
 #if defined(_M_ARM32_OR_ARM64)
         // For ARM we need to make sure that pipeline is synchronized with memory/cache for newly jitted code.
@@ -6194,13 +5971,6 @@ skipThunk:
         uint newOffset = ::Math::PointerCastToIntegral<uint>(
             CALL_ENTRYPOINT_NOASSERT(address, function, CallInfo(CallFlags_InternalFrame, 1), this));
 
-#ifdef _M_IX86
-        _asm
-        {
-            // Restore ESP
-            mov esp, savedEsp
-        }
-#endif
         return newOffset;
     }
 
@@ -6208,16 +5978,6 @@ skipThunk:
     uint
         InterpreterStackFrame::CallAsmJsLoopBody(JavascriptMethod address)
     {
-#ifdef _M_IX86
-        void *savedEsp = NULL;
-        __asm
-        {
-            // Save ESP
-            mov savedEsp, esp
-            // Add an extra 4-bytes to the stack since we'll be pushing 3 arguments
-            push eax
-        }
-#endif
 
 #if defined(_M_ARM32_OR_ARM64)
         // For ARM we need to make sure that pipeline is synchronized with memory/cache for newly jitted code.
@@ -6228,13 +5988,6 @@ skipThunk:
         uint newOffset = ::Math::PointerCastToIntegral<uint>(
             CALL_ENTRYPOINT_NOASSERT(address, function, CallInfo(CallFlags_InternalFrame, 1), this));
 
-#ifdef _M_IX86
-        _asm
-        {
-            // Restore ESP
-            mov esp, savedEsp
-        }
-#endif
         return newOffset;
     }
 

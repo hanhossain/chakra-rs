@@ -7,7 +7,7 @@
 
 namespace Js
 {
-#if _M_IX86 || _M_AMD64
+#if _M_AMD64
     SIMDValue SIMDUtils::FromSimdBits(const SIMDValue value)
     {
         X86SIMDValue x86Result;

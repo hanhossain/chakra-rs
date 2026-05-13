@@ -228,7 +228,7 @@ void MarkContext::ProcessMark()
         // If that is the case, one of the stacks might not be initialized, so we must check !IsEmpty before popping.
         if (!markStack.IsEmpty())
         {
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
             MarkCandidate current, next;
 
             while (markStack.Pop(&current))

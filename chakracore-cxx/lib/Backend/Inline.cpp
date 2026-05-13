@@ -2283,7 +2283,7 @@ Inline::CanInlineBuiltInFunction(IR::Instr *callInstr, const FunctionJITTimeInfo
 
     if (inlineCallOpCode == Js::OpCode::InlineMathFloor || inlineCallOpCode == Js::OpCode::InlineMathCeil || inlineCallOpCode == Js::OpCode::InlineMathRound)
     {
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
         if (!AutoSystemInfo::Data.SSE4_1Available())
         {
             INLINE_TESTTRACE(u"INLINING: Skip Inline: SSE4.1 not available\tInlinee: %s (#%d)\tCaller: %s\n", Js::JavascriptLibrary::GetNameForBuiltIn(builtInId), (int)builtInId, inlinerData->GetBody()->GetDisplayName());

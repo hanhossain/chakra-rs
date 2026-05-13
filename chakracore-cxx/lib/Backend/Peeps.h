@@ -6,7 +6,7 @@
 
 #include "PeepsMD.h"
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
 #include "AgenPeeps.h"
 #endif
 
@@ -15,7 +15,7 @@ class Peeps
     friend class PeepsMD;
 private:
     Func *      func;
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
     AgenPeeps   peepsAgen;
 #endif
     PeepsMD     peepsMD;
@@ -23,7 +23,7 @@ private:
     void        ClearRegMap();
 
 public:
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
     Peeps(Func *func) : func(func), peepsMD(func), peepsAgen(func) {}
 #else
     Peeps(Func *func) : func(func), peepsMD(func) {}
@@ -41,12 +41,10 @@ private:
     void        ClearReg(RegNum reg);
     static IR::Instr * RemoveDeadBlock(IR::Instr *instr, bool* wasStmtBoundaryKeptInDeadBlock = nullptr);
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
     IR::Instr * PeepRedundant(IR::Instr *instr);
     IR::Instr * PeepCondMove(IR::LabelInstr *labelInstr, IR::Instr *nextInstr, const bool isInHelper);
     static bool IsJccOrShiftInstr(IR::Instr *instr);
     IR::Instr * HoistSameInstructionAboveSplit(IR::BranchInstr *branchInstr, IR::Instr *instrNext);
 #endif
-
-
 };

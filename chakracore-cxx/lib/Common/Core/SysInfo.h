@@ -19,11 +19,11 @@ public:
     bool DisableDebugScopeCapture() const { return this->disableDebugScopeCapture; }
     bool IsWin8OrLater();
     bool IsWin8Point1OrLater();
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
     bool VirtualSseAvailable(const int sseLevel) const;
 #endif
     BOOL SSE2Available() const;
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
     BOOL SSE3Available() const;
     BOOL SSE4_1Available() const;
     BOOL SSE4_2Available() const;
@@ -62,8 +62,6 @@ public:
     static uint32_t const StackAlign = 16;
 # elif defined(_M_ARM)
     static uint32_t const StackAlign = 8;
-# elif defined(_M_IX86)
-    static uint32_t const StackAlign = 4;
 # else
     # error missing_target
 # endif
@@ -77,7 +75,7 @@ private:
     uint allocationGranularityPageCount;
     HANDLE processHandle;
     uint32_t crtSize;
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
     int CPUInfo[4];
 #endif
 #if defined(_M_ARM32_OR_ARM64)
@@ -91,7 +89,7 @@ private:
 #endif
 
 private:
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
     bool isAtom;
     bool CheckForAtom() const;
 #endif

@@ -82,13 +82,7 @@ extern "C" {
 
 /******************* Processor-specific glue  *****************************/
 
-#if defined(__i586__) && !defined(_M_IX86)
-#define _M_IX86 500
-#elif defined(__i486__) && !defined(_M_IX86)
-#define _M_IX86 400
-#elif defined(__i386__) && !defined(_M_IX86)
-#define _M_IX86 300
-#elif defined(__ppc__) && !defined(_M_PPC)
+#if defined(__ppc__) && !defined(_M_PPC)
 #define _M_PPC 100
 #elif defined(_AIX) && defined(_POWER) && !defined(_M_PPC)
 #define _M_PPC 100

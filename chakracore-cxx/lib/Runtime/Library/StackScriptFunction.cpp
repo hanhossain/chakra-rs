@@ -329,7 +329,7 @@ namespace Js
                 else
                 {
                     frameDisplay = (Js::FrameDisplay*)walker.GetCurrentArgv()[
-#if _M_IX86 || _M_AMD64
+#if _M_AMD64
                         callerFunctionBody->GetInParamsCount() == 0 ?
                         JavascriptFunctionArgIndex_StackFrameDisplayNoArg :
 #endif
@@ -433,7 +433,7 @@ namespace Js
 
     uintptr_t StackScriptFunction::BoxState::GetNativeFrameDisplayIndex(FunctionBody * functionBody)
     {
-#if _M_IX86 || _M_AMD64
+#if _M_AMD64
         if (functionBody->GetInParamsCount() == 0)
         {
             return (uintptr_t)JavascriptFunctionArgIndex_StackFrameDisplayNoArg;
@@ -447,7 +447,7 @@ namespace Js
 
     uintptr_t StackScriptFunction::BoxState::GetNativeScopeSlotsIndex(FunctionBody * functionBody)
     {
-#if _M_IX86 || _M_AMD64
+#if _M_AMD64
         if (functionBody->GetInParamsCount() == 0)
         {
             return (uintptr_t)JavascriptFunctionArgIndex_StackScopeSlotsNoArg;
@@ -576,7 +576,7 @@ namespace Js
         void **argv = walker.GetCurrentArgv();
         // On arm, we always have an argument slot fo frames that has stack nested func
         Js::Var curr =
-#if _M_IX86 || _M_AMD64
+#if _M_AMD64
             callerFunctionBody->GetInParamsCount() == 0?
             argv[JavascriptFunctionArgIndex_StackNestedFuncListWithNoArg]:
 #endif

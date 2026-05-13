@@ -41,20 +41,6 @@ namespace Js
     }
 #endif
 
-#if defined(__clang__) && defined(_M_IX86)
-    inline Var JavascriptNumber::ToVar(intptr_t nValue, ScriptContext* scriptContext)
-    {
-        if (!TaggedInt::IsOverflow(nValue))
-        {
-            return TaggedInt::ToVarUnchecked(nValue);
-        }
-        else
-        {
-            return JavascriptNumber::NewInlined((double) nValue, scriptContext);
-        }
-    }
-#endif
-
     inline Var JavascriptNumber::ToVar(uint32_t nValue, ScriptContext* scriptContext)
     {
         return !TaggedInt::IsOverflow(nValue) ? TaggedInt::ToVarUnchecked(nValue) :
