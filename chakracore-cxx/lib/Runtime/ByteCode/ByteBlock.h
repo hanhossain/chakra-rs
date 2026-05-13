@@ -13,8 +13,7 @@ namespace Js
     private:
         Field(uint) m_contentSize = 0;     // Length of block, in bytes
 
-        __declspec(align(4))    // Align the buffer to sizeof(uint32_t) to improve GetHashCode() perf.
-            Field(byte*) m_content = nullptr;    // The block's content
+        Field(byte*) m_content = nullptr;    // The block's content
 
         static ByteBlock* New(Recycler* alloc, const byte * initialContent, int initialContentSize, ScriptContext * requestContext);
 
