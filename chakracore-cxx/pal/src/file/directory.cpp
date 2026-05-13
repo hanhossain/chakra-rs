@@ -35,58 +35,6 @@ Revision History:
 
 SET_DEFAULT_DEBUG_CHANNEL(FILE);
 
-/*++
-Function:
-  GetCurrentDirectoryA
-
-See MSDN doc.
---*/
-uint32_t
-GetCurrentDirectoryA(
-              uint32_t nBufferLength,
-              char* lpBuffer)
-{
-    uint32_t dwDirLen = 0;
-    uint32_t dwLastError = 0;
-
-    char  *current_dir;
-
-    /* NULL first arg means getcwd will allocate the string */
-    current_dir = getcwd( NULL, MAX_LONGPATH + 1 );
-
-    if ( !current_dir )
-    {
-        WARN( "PAL__getcwd returned NULL\n" );
-        dwLastError = DIRGetLastErrorFromErrno();
-        goto done;
-    }
-
-    dwDirLen = strlen( current_dir );
-
-    /* if the supplied buffer isn't long enough, return the required
-       length, including room for the NULL terminator */
-    if ( nBufferLength <= dwDirLen )
-    {
-        ++dwDirLen; /* include space for the NULL */
-        goto done;
-    }
-    else
-    {
-        strcpy_s( lpBuffer, nBufferLength, current_dir );
-    }
-
-done:
-    free( current_dir );
-
-    if ( dwLastError )
-    {
-        SetLastError(dwLastError);
-    }
-
-    LOGEXIT("GetCurrentDirectoryA returns DWORD %u\n", dwDirLen);
-    return dwDirLen;
-}
-
 
 /*++
 Function:
