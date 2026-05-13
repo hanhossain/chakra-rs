@@ -99,7 +99,7 @@ bool PageStack<T>::Pop(T * item)
     Assert(nextEntry > chunkStart && nextEntry <= chunkEnd);
 
     nextEntry--;
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
     _mm_prefetch((char*) (nextEntry - 1), _MM_HINT_T0);
 #endif
     *item = *nextEntry;

@@ -178,7 +178,7 @@ constexpr uint8_t Epilog[] = {
 };
 #endif
 
-#if defined(_M_X64) || defined(_M_IX86)
+#if defined(_M_X64)
 constexpr uint8_t JmpOffset = 3;
 
 constexpr uint8_t Call[] = {

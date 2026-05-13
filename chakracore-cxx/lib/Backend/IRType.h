@@ -40,8 +40,6 @@ extern void IRType_Dump(IRType type);
 
 #ifdef _M_AMD64
     #include "amd64/machvalues.h"
-#elif defined(_M_IX86)
-    #include "i386/machvalues.h"
 #elif defined(_M_ARM)
     #include "arm/machvalues.h"
 #elif defined(_M_ARM64)

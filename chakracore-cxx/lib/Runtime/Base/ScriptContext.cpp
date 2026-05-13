@@ -3855,24 +3855,7 @@ ExitTempAllocator:
     }
 #endif // defiend(ENABLE_SCRIPT_DEBUGGING)
 
-#if _M_IX86
-    __declspec(naked)
-        Var ScriptContext::ProfileModeDeferredParsingThunk(RecyclableObject* function, CallInfo callInfo, ...)
-    {
-            // Register functions
-            __asm
-            {
-                push ebp
-                    mov ebp, esp
-                    lea eax, [esp + 8]
-                    push eax
-                    call ScriptContext::ProfileModeDeferredParse
-                    pop ebp
-                    // Although we don't restore ESP here on WinCE, this is fine because script profiler is not shipped for WinCE.
-                    jmp eax
-            }
-    }
-#elif defined(_M_X64) || defined(_M_ARM32_OR_ARM64)
+#if defined(_M_X64) || defined(_M_ARM32_OR_ARM64)
     // Do nothing: the implementation of ScriptContext::ProfileModeDeferredParsingThunk is declared (appropriately decorated) in
     // Language\amd64\amd64_Thunks.asm and Language\arm\arm_Thunks.asm and Language\arm64\arm64_Thunks.asm respectively.
 #else
@@ -3897,23 +3880,7 @@ ExitTempAllocator:
         return entryPoint;
     }
 
-#if _M_IX86
-    __declspec(naked)
-        Var ScriptContext::ProfileModeDeferredDeserializeThunk(RecyclableObject* function, CallInfo callInfo, ...)
-    {
-            // Register functions
-            __asm
-            {
-                    push ebp
-                    mov ebp, esp
-                    push[esp + 8]
-                    call ScriptContext::ProfileModeDeferredDeserialize
-                    pop ebp
-                    // Although we don't restore ESP here on WinCE, this is fine because script profiler is not shipped for WinCE.
-                    jmp eax
-            }
-    }
-#elif defined(_M_X64) || defined(_M_ARM32_OR_ARM64)
+#if defined(_M_X64) || defined(_M_ARM32_OR_ARM64)
     // Do nothing: the implementation of ScriptContext::ProfileModeDeferredDeserializeThunk is declared (appropriately decorated) in
     // Language\amd64\amd64_Thunks.asm and Language\arm\arm_Thunks.asm respectively.
 #endif

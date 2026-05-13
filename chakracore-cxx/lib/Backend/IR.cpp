@@ -1313,29 +1313,6 @@ IR::Instr *Instr::ShareBailOut()
 void
 Instr::UnlinkStartCallFromBailOutInfo(IR::Instr *endInstr) const
 {
-#ifdef _M_IX86
-    // The StartCall instruction is being deleted, or is being moved and may later be deleted,
-    // so remove its references from bailouts in the given range.
-    // This only happens during cloning, which is rare, and only across the range of instructions
-    // that evaluate outgoing arguments, which is long only in synthetic cases.
-
-    Assert(this->m_opcode == Js::OpCode::StartCall);
-
-    if (!this->m_func->hasBailout)
-    {
-        return;
-    }
-
-    FOREACH_INSTR_IN_RANGE(instr, this->m_next, endInstr)
-    {
-        if (instr->HasBailOutInfo())
-        {
-            BailOutInfo *bailOutInfo = instr->GetBailOutInfo();
-            bailOutInfo->UnlinkStartCall(this);
-        }
-    }
-    NEXT_INSTR_IN_RANGE;
-#endif
 }
 
 Opnd *Instr::FindCallArgumentOpnd(const Js::ArgSlot argSlot, IR::Instr * *const ownerInstrRef)
@@ -2613,7 +2590,7 @@ IndirOpnd *
 Instr::HoistMemRefAddress(MemRefOpnd *const memRefOpnd, const Js::OpCode loadOpCode)
 {
     Assert(memRefOpnd);
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
     Assert(!LowererMDArch::IsLegalMemLoc(memRefOpnd));
 #endif
     intptr_t address = memRefOpnd->GetMemLoc();

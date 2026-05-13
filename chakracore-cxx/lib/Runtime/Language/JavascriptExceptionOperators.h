@@ -98,9 +98,6 @@ namespace Js
         static void* OP_TryFinally(void* continuationAddr, void* handlerAddr, void* framePtr, int hasBailedOutOffset, ScriptContext* scriptContext);
         static void* OP_TryFinallyNoOpt(void* continuationAddr, void* handlerAddr, void* framePtr, ScriptContext* scriptContext);
 #endif
-#if defined(DBG) && defined(_M_IX86)
-        static void DbgCheckEHChain();
-#endif
         static JavascriptExceptionObject* GetOutOfMemoryExceptionObject(ScriptContext* scriptContext);
 
         static Var OP_RuntimeTypeError(MessageId messageId, ScriptContext* scriptContext);

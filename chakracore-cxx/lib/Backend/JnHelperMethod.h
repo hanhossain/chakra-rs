@@ -6,11 +6,7 @@
 
 extern "C"
 {
-#ifdef _M_IX86
-    void _chkstk(int);
-#else
     void __chkstk(int);
-#endif
 }
 
 namespace IR

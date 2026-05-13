@@ -71,12 +71,6 @@ void BailOutInfo::PartialDeepCopyTo(BailOutInfo * const other) const
     other->stackLiteralBailOutInfo = this->stackLiteralBailOutInfo;
     other->outParamOffsets = this->outParamOffsets;
 
-
-#ifdef _M_IX86
-    other->outParamFrameAdjustArgSlot = this->outParamFrameAdjustArgSlot;
-    other->inlinedStartCall = this->inlinedStartCall;
-#endif
-
     other->bailOutInstr = this->bailOutInstr;
     other->bailInInstr = this->bailInInstr;
 
@@ -139,12 +133,6 @@ BailOutInfo::Clear(JitArenaAllocator * allocator)
         JitAdelete(allocator, liveLosslessInt32Syms);
         JitAdelete(allocator, liveFloat64Syms);
     }
-#ifdef _M_IX86
-    if (outParamFrameAdjustArgSlot)
-    {
-        JitAdelete(allocator, outParamFrameAdjustArgSlot);
-    }
-#endif
 }
 
 // Refer to comments in the header file
@@ -178,75 +166,6 @@ SymID BailOutInfo::GetClearedUseOfDstId() const
     return this->clearedDstByteCodeUpwardExposedUseId;
 }
 
-#ifdef _M_IX86
-
-uint
-BailOutInfo::GetStartCallOutParamCount(uint i) const
-{
-    Assert(i < this->startCallCount);
-    Assert(this->startCallInfo);
-
-    return this->startCallInfo[i].argCount;
-}
-
-bool
-BailOutInfo::NeedsStartCallAdjust(uint i, const IR::Instr * bailOutInstr) const
-{
-    Assert(i < this->startCallCount);
-    Assert(this->startCallInfo);
-    Assert(bailOutInstr->m_func->HasInstrNumber());
-
-    IR::Instr * instr = this->startCallInfo[i].instr;
-
-    if (instr == nullptr || instr->m_opcode == Js::OpCode::StartCall)
-    {
-        // The StartCall was unlinked (because it was being deleted, or we know it was
-        // moved below the bailout instr).
-        // -------- or --------
-        // StartCall wasn't lowered because the argouts were orphaned, in which case we don't need
-        // the adjustment as the orphaned argouts are not stored with the non-orphaned ones
-        return false;
-    }
-
-    // In scenarios related to partial polymorphic inlining where we move the lowered version of the start call -  LEA esp, esp - argcount * 4
-    // next to the call itself as part of one of the dispatch arms. In this scenario StartCall is marked
-    // as cloned and we do not need to adjust the offsets from where the args need to be restored.
-    return instr->GetNumber() < bailOutInstr->GetNumber() && !instr->IsCloned();
-}
-
-void
-BailOutInfo::RecordStartCallInfo(uint i, IR::Instr *instr)
-{
-    Assert(i < this->startCallCount);
-    Assert(this->startCallInfo);
-    Assert(instr);
-    Assert(instr->m_opcode == Js::OpCode::StartCall);
-
-    this->startCallInfo[i].instr = instr;
-    this->startCallInfo[i].argCount = instr->GetArgOutCount(/*getInterpreterArgOutCount*/ true);
-    this->startCallInfo[i].argRestoreAdjustCount = 0;
-    this->startCallInfo[i].isOrphanedCall = false;
-}
-
-void
-BailOutInfo::UnlinkStartCall(const IR::Instr * instr)
-{
-    Assert(this->startCallCount == 0 || this->startCallInfo != nullptr);
-
-    uint i;
-    for (i = 0; i < this->startCallCount; i++)
-    {
-        StartCallInfo *info = &this->startCallInfo[i];
-        if (info->instr == instr)
-        {
-            info->instr = nullptr;
-            return;
-        }
-    }
-}
-
-#else
-
 uint
 BailOutInfo::GetStartCallOutParamCount(uint i) const
 {
@@ -267,8 +186,6 @@ BailOutInfo::RecordStartCallInfo(uint i, IR::Instr *instr)
 
     this->startCallInfo[i] = instr->GetArgOutCount(/*getInterpreterArgOutCount*/ true);
 }
-
-#endif
 
 #ifdef MD_GROW_LOCALS_AREA_UP
 void
@@ -352,17 +269,6 @@ BailOutInfo::FinalizeBailOutRecord(Func * func)
             }
             NEXT_BITSET_IN_SPARSEBV;
         }
-
-#ifdef _M_IX86
-        int frameSize = func->frameSize;
-        AssertMsg(frameSize != 0, "Frame size not calculated");
-
-        FOREACH_BITSET_IN_SPARSEBV(index, this->outParamFrameAdjustArgSlot)
-        {
-            this->outParamOffsets[index] -= frameSize;
-        }
-        NEXT_BITSET_IN_SPARSEBV;
-#endif
     }
 #else
     if (func->IsJitInDebugMode())
@@ -417,10 +323,6 @@ BailOutInfo::IsBailOutHelper(IR::JnHelperMethod helper)
     {
     case IR::HelperSaveAllRegistersAndBailOut:
     case IR::HelperSaveAllRegistersAndBranchBailOut:
-#ifdef _M_IX86
-    case IR::HelperSaveAllRegistersNoSse2AndBailOut:
-    case IR::HelperSaveAllRegistersNoSse2AndBranchBailOut:
-#endif
         return true;
     };
 
@@ -746,12 +648,6 @@ BailOutRecord::RestoreValues(IR::BailOutKind bailOutKind, Js::JavascriptCallStac
         for (uint i = 0; i < this->argOutOffsetInfo->startCallCount; i++)
         {
             uint startCallOutParamCount = this->argOutOffsetInfo->startCallOutParamCounts[i];
-#ifdef _M_IX86
-            if (argoutRestoreAddress)
-            {
-                argRestoreAddr = (void*)((char*)argoutRestoreAddress + (this->startCallArgRestoreAdjustCounts[i] * MachPtr));
-            }
-#endif
             newInstance->OP_StartCall(startCallOutParamCount);
             this->RestoreValues(bailOutKind, layout, startCallOutParamCount, &this->argOutOffsetInfo->outParamOffsets[outParamSlot],
                 this->argOutOffsetInfo->argOutSymStart + outParamSlot, newInstance->m_outParams,
@@ -1057,14 +953,6 @@ BailOutRecord::RestoreValues(IR::BailOutKind bailOutKind, Js::JavascriptCallStac
 
             offset = offsets[i];
             this->IsOffsetNativeIntOrFloat(i, argOutSlotStart, &isFloat64, &isInt32);
-#ifdef _M_IX86
-            if (this->argOutOffsetInfo->isOrphanedArgSlot->Test(argOutSlotStart + i))
-            {
-                RestoreValue(bailOutKind, layout, values, scriptContext, fromLoopBody, registerSaves, newInstance, pArgumentsObject,
-                    nullptr, i, offset, /* isLocal */ true, isFloat64, isInt32);
-                continue;
-            }
-#endif
             RestoreValue(bailOutKind, layout, values, scriptContext, fromLoopBody, registerSaves, newInstance, pArgumentsObject,
                          argoutRestoreAddress, i, offset, false, isFloat64, isInt32);
         }
@@ -1076,15 +964,6 @@ Js::Var BailOutRecord::BailOut(BailOutRecord const * bailOutRecord)
     Assert(bailOutRecord);
 
     void * argoutRestoreAddr = nullptr;
-#ifdef _M_IX86
-    void * addressOfRetAddress = _AddressOfReturnAddress();
-    if (bailOutRecord->ehBailoutData && (bailOutRecord->ehBailoutData->catchOffset != 0 || bailOutRecord->ehBailoutData->finallyOffset != 0 || bailOutRecord->ehBailoutData->ht == Js::HandlerType::HT_Finally))
-    {
-        // For a bailout in argument evaluation from an EH region, the esp is offset by the TryCatch helper's frame. So, the argouts are not at the offsets
-        // stored in the bailout record, which are relative to ebp. Need to restore the argouts from the actual value of esp before calling the Bailout helper
-        argoutRestoreAddr = (void *)((char*)addressOfRetAddress + ((1 + 1) * MachPtr)); // Account for the parameter and return address of this function
-    }
-#endif
 
     Js::JavascriptCallStackLayout *const layout = bailOutRecord->GetStackLayout();
     Js::ScriptFunction * function = (Js::ScriptFunction *)layout->functionObject;
@@ -1668,7 +1547,7 @@ BailOutRecord::BailOutHelper(Js::JavascriptCallStackLayout * layout, Js::ScriptF
         {
             Js::FrameDisplay *localFrameDisplay;
             uintptr_t frameDisplayIndex = (uintptr_t)(
-#if _M_IX86 || _M_AMD64
+#if _M_AMD64
                 executeFunction->GetInParamsCount() == 0 ?
                 Js::JavascriptFunctionArgIndex_StackFrameDisplayNoArg :
 #endif
@@ -1682,7 +1561,7 @@ BailOutRecord::BailOutHelper(Js::JavascriptCallStackLayout * layout, Js::ScriptF
         {
             Js::Var localClosure;
             uintptr_t scopeSlotsIndex = (uintptr_t)(
-#if _M_IX86 || _M_AMD64
+#if _M_AMD64
                 executeFunction->GetInParamsCount() == 0 ?
                 Js::JavascriptFunctionArgIndex_StackScopeSlotsNoArg :
 #endif
@@ -2869,14 +2748,6 @@ Js::Var BranchBailOutRecord::BailOut(BranchBailOutRecord const * bailOutRecord, 
     Assert(bailOutRecord);
 
     void * argoutRestoreAddr = nullptr;
-#ifdef _M_IX86
-    void * addressOfRetAddress = _AddressOfReturnAddress();
-    if (bailOutRecord->ehBailoutData && (bailOutRecord->ehBailoutData->catchOffset != 0 || bailOutRecord->ehBailoutData->finallyOffset != 0 || bailOutRecord->ehBailoutData->ht == Js::HandlerType::HT_Finally))
-    {
-        argoutRestoreAddr = (void *)((char*)addressOfRetAddress + ((2 + 1) * MachPtr)); // Account for the parameters and return address of this function
-    }
-#endif
-
     Js::JavascriptCallStackLayout *const layout = bailOutRecord->GetStackLayout();
     Js::ScriptFunction * function = (Js::ScriptFunction *)layout->functionObject;
 

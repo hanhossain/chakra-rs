@@ -374,12 +374,6 @@ HELPERCALLCHK(Conv_ToUInt32, (uint32_t (*)(Js::Var, Js::ScriptContext *))Js::Jav
 #if DBG && GLOBAL_ENABLE_WRITE_BARRIER
 HELPERCALL(WriteBarrierSetVerifyBit, Memory::Recycler::WBSetBitJIT, AttrCanNotBeReentrant)
 #endif
-#ifdef _M_IX86
-HELPERCALLCHK(Op_Int32ToAtom, Js::JavascriptOperators::Int32ToVar, AttrCanNotBeReentrant)
-HELPERCALLCHK(Op_Int32ToAtomInPlace, Js::JavascriptOperators::Int32ToVarInPlace, AttrCanNotBeReentrant)
-HELPERCALLCHK(Op_UInt32ToAtom, Js::JavascriptOperators::UInt32ToVar, AttrCanNotBeReentrant)
-HELPERCALLCHK(Op_UInt32ToAtomInPlace, Js::JavascriptOperators::UInt32ToVarInPlace, AttrCanNotBeReentrant)
-#endif
 
 #ifdef ENABLE_WASM_SIMD
 HELPERCALL(Simd128ShRtByScalarU2, Js::SIMDInt64x2Operation::OpShiftRightByScalarU, AttrCanNotBeReentrant)
@@ -467,10 +461,6 @@ HELPERCALLCHK(NoSaveRegistersBailOutForElidedYield, BailOutRecord::BailOutForEli
 //   which CFG cannot defend against. Instead, return these addresses in GetNonTableMethodAddress
 HELPERCALL(SaveAllRegistersAndBailOut, nullptr, AttrCanNotBeReentrant)
 HELPERCALL(SaveAllRegistersAndBranchBailOut, nullptr, AttrCanNotBeReentrant)
-#ifdef _M_IX86
-HELPERCALL(SaveAllRegistersNoSse2AndBailOut, nullptr, AttrCanNotBeReentrant)
-HELPERCALL(SaveAllRegistersNoSse2AndBranchBailOut, nullptr, AttrCanNotBeReentrant)
-#endif
 
 //Helpers for inlining built-ins
 HELPERCALLCHK(Array_At, Js::JavascriptArray::EntryAt, 0)
@@ -627,29 +617,9 @@ HELPERCALLCRT(DirectMath_Exp, AttrCanNotBeReentrant)
 HELPERCALLCRT(DirectMath_Log, AttrCanNotBeReentrant)
 HELPERCALLCRT(DirectMath_Sin, AttrCanNotBeReentrant)
 HELPERCALLCRT(DirectMath_Tan, AttrCanNotBeReentrant)
-#ifdef _M_IX86
-HELPERCALL(DirectMath_Int64DivS, ((long(*)(long, long, Js::ScriptContext*)) Js::InterpreterStackFrame::OP_DivOverflow<long, &Js::AsmJsMath::DivUnsafe<long>>), AttrCanThrow | AttrCanNotBeReentrant)
-HELPERCALL(DirectMath_Int64DivU, ((unsigned long(*)(unsigned long, unsigned long, Js::ScriptContext*)) Js::InterpreterStackFrame::OP_UnsignedDivRemCheck<unsigned long, &Js::AsmJsMath::DivUnsafe<unsigned long>>), AttrCanThrow | AttrCanNotBeReentrant)
-HELPERCALL(DirectMath_Int64RemS, ((long(*)(long, long, Js::ScriptContext*)) Js::InterpreterStackFrame::OP_RemOverflow<long, &Js::AsmJsMath::RemUnsafe<long>>), AttrCanThrow | AttrCanNotBeReentrant)
-HELPERCALL(DirectMath_Int64RemU, ((unsigned long(*)(unsigned long, unsigned long, Js::ScriptContext*)) Js::InterpreterStackFrame::OP_UnsignedDivRemCheck<unsigned long, &Js::AsmJsMath::RemUnsafe<unsigned long>>), AttrCanThrow | AttrCanNotBeReentrant)
-HELPERCALL(DirectMath_Int64Mul , (long(*)(long,long)) Js::AsmJsMath::Mul<long>, AttrCanNotBeReentrant)
-HELPERCALL(DirectMath_Int64Shl , (long(*)(long,long)) Wasm::WasmMath::Shl<long>, AttrCanNotBeReentrant)
-HELPERCALL(DirectMath_Int64Shr , (long(*)(long,long)) Wasm::WasmMath::Shr<long>, AttrCanNotBeReentrant)
-HELPERCALL(DirectMath_Int64ShrU, (long(*)(long,long)) Wasm::WasmMath::ShrU<unsigned long>, AttrCanNotBeReentrant)
-HELPERCALL(DirectMath_Int64Rol , (long(*)(long,long)) Wasm::WasmMath::Rol<long>, AttrCanNotBeReentrant)
-HELPERCALL(DirectMath_Int64Ror , (long(*)(long,long)) Wasm::WasmMath::Ror<long>, AttrCanNotBeReentrant)
-HELPERCALL(DirectMath_Int64Clz , (long(*)(long)) Wasm::WasmMath::Clz<long>, AttrCanNotBeReentrant)
-HELPERCALL(DirectMath_Int64Ctz , (long(*)(long)) Wasm::WasmMath::Ctz<long>, AttrCanNotBeReentrant)
-HELPERCALL(AtomicStore64, nullptr, AttrCanNotBeReentrant)
-HELPERCALL(MemoryBarrier, nullptr, AttrCanNotBeReentrant)
-#endif
 
 // This is statically initialized.
-#ifdef _M_IX86
-HELPERCALL( CRT_chkstk, _chkstk, AttrCanNotBeReentrant)
-#else
 HELPERCALL(CRT_chkstk, __chkstk, AttrCanNotBeReentrant)
-#endif
 
 
 #undef HELPERCALL

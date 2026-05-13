@@ -743,7 +743,7 @@ StackSym::GetConstOpnd() const
     IR::Opnd *src1 = defInstr->GetSrc1();
     if (!src1)
     {
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
         Assert(defInstr->m_opcode == Js::OpCode::MOVSD_ZERO);
 #else
         Assert(UNREACHED);

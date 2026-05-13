@@ -390,7 +390,7 @@ public:
     virtual bool IsNumericProperty(Js::PropertyId propertyId) override;
 
 #ifdef ENABLE_WASM_SIMD
-#if _M_IX86 || _M_AMD64
+#if _M_AMD64
     // auxiliary SIMD values in memory to help JIT'ed code. E.g. used for Int8x16 shuffle.
     _x86_SIMDValue X86_TEMP_SIMD[SIMD_TEMP_SIZE];
     _x86_SIMDValue * GetSimdTempArea() { return X86_TEMP_SIMD; }

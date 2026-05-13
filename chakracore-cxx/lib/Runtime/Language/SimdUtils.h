@@ -76,7 +76,7 @@ struct DefaultComparer<_SIMDValue>
     }
 };
 
-#if _M_IX86 || _M_AMD64
+#if _M_AMD64
 struct _x86_SIMDValue
 {
     union{

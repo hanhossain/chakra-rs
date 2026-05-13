@@ -563,28 +563,13 @@ void LowererMD::EmitInsertInt64(IR::Opnd* src, uint index, IR::Instr *instr)
 
     if (AutoSystemInfo::Data.SSE4_1Available())
     {
-#ifdef _M_IX86
-        index *= 2;
-        Int64RegPair srcPair = m_func->FindOrCreateInt64Pair(src);
-        instr->InsertBefore(IR::Instr::New(Js::OpCode::PINSRD, dst, srcPair.low, IR::IntConstOpnd::New(index, TyInt8, m_func, true), m_func));
-        instr->InsertBefore(IR::Instr::New(Js::OpCode::PINSRD, dst, srcPair.high, IR::IntConstOpnd::New(index + 1, TyInt8, m_func, true), m_func));
-#else
         instr->InsertBefore(IR::Instr::New(Js::OpCode::PINSRQ, dst, src, IR::IntConstOpnd::New(index, TyInt8, m_func, true), m_func));
-#endif
 }
     else
     {
         intptr_t tempSIMD = m_func->GetThreadContextInfo()->GetSimdTempAreaAddr(0);
-#ifdef _M_IX86
-        Int64RegPair src1Pair = m_func->FindOrCreateInt64Pair(src);
-        IR::Opnd* lower = IR::MemRefOpnd::New(tempSIMD, TyMachPtr, m_func);
-        m_lowerer->InsertMove(lower, src1Pair.low, instr);
-        IR::Opnd* higher = IR::MemRefOpnd::New(tempSIMD + 4, TyMachPtr, m_func);
-        m_lowerer->InsertMove(higher, src1Pair.high, instr);
-#else
         IR::Opnd* mem = IR::MemRefOpnd::New(tempSIMD, TyMachPtr, m_func);
         m_lowerer->InsertMove(mem, src, instr);
-#endif
 
         IR::MemRefOpnd* tmp = IR::MemRefOpnd::New(tempSIMD, TyFloat64, m_func);
         Js::OpCode opcode = (index) ? Js::OpCode::MOVHPD : Js::OpCode::MOVLPD;
@@ -601,14 +586,7 @@ void LowererMD::EmitExtractInt64(IR::Opnd* dst, IR::Opnd* src, uint index, IR::I
     Assert(dst->IsInt64() && src->IsSimd128());
     if (AutoSystemInfo::Data.SSE4_1Available())
     {
-#ifdef _M_IX86
-        index *= 2;
-        Int64RegPair dstPair = m_func->FindOrCreateInt64Pair(dst);
-        instr->InsertBefore(IR::Instr::New(Js::OpCode::PEXTRD, dstPair.low, src, IR::IntConstOpnd::New(index, TyInt8, m_func, true), m_func));
-        instr->InsertBefore(IR::Instr::New(Js::OpCode::PEXTRD, dstPair.high, src, IR::IntConstOpnd::New(index + 1, TyInt8, m_func, true), m_func));
-#else
         instr->InsertBefore(IR::Instr::New(Js::OpCode::PEXTRQ, dst, src, IR::IntConstOpnd::New(index, TyInt8, m_func, true), m_func));
-#endif
     }
     else
     {

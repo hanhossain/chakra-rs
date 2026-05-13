@@ -2003,34 +2003,7 @@ void SmallHeapBlockT<TBlockAttributes>::FillFreeMemory(__in_bcount(size) void * 
     }
 
     // REVIEW: Do DbgMemFill on debug build?
-#if defined(_M_IX86)
-    uint qwordCount = size / sizeof(unsigned long) ;
-    switch (qwordCount)
-    {
-    case 2:
-        ((unsigned long*)address)[0] = 0;
-        ((unsigned long*)address)[1] = 0;
-        break;
-    case 4:
-        ((unsigned long*)address)[0] = 0;
-        ((unsigned long*)address)[1] = 0;
-        ((unsigned long*)address)[2] = 0;
-        ((unsigned long*)address)[3] = 0;
-        break;
-    case 6:
-        ((unsigned long*)address)[0] = 0;
-        ((unsigned long*)address)[1] = 0;
-        ((unsigned long*)address)[2] = 0;
-        ((unsigned long*)address)[3] = 0;
-        ((unsigned long*)address)[4] = 0;
-        ((unsigned long*)address)[5] = 0;
-        break;
-    default:
-        memset(address, 0, size);
-    }
-#else
     memset(address, 0, size);
-#endif
 }
 
 

@@ -107,7 +107,7 @@ Lowerer::Lower()
 
 #if DBG && GLOBAL_ENABLE_WRITE_BARRIER
     // TODO: (leish)(swb) implement for arm
-#if defined(_M_IX86) || defined(_M_AMD64)
+#if defined(_M_AMD64)
     if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && CONFIG_FLAG(VerifyBarrierBit))
     {
         // find out all write barrier setting instr, call Recycler::WBSetBit for verification purpose
@@ -694,7 +694,7 @@ Lowerer::LowerRange(IR::Instr *instrStart, IR::Instr *instrEnd, bool defaultDoFa
             break;
 
         case Js::OpCode::InlineMathFloor:
-#if defined(ASMJS_PLAT) && (defined(_M_X64) || defined(_M_IX86))
+#if defined(ASMJS_PLAT) && (defined(_M_X64))
             if (!AutoSystemInfo::Data.SSE4_1Available() && instr->m_func->GetJITFunctionBody()->IsAsmJsMode())
             {
                 m_lowererMD.HelperCallForAsmMathBuiltin(instr, IR::HelperDirectMath_FloorFlt, IR::HelperDirectMath_FloorDb);
@@ -705,7 +705,7 @@ Lowerer::LowerRange(IR::Instr *instrStart, IR::Instr *instrEnd, bool defaultDoFa
             break;
 
         case Js::OpCode::InlineMathCeil:
-#if defined(ASMJS_PLAT) && (defined(_M_X64) || defined(_M_IX86))
+#if defined(ASMJS_PLAT) && (defined(_M_X64))
             if (!AutoSystemInfo::Data.SSE4_1Available() && instr->m_func->GetJITFunctionBody()->IsAsmJsMode())
             {
                 m_lowererMD.HelperCallForAsmMathBuiltin(instr, IR::HelperDirectMath_CeilFlt, IR::HelperDirectMath_CeilDb);
@@ -1095,17 +1095,6 @@ Lowerer::LowerRange(IR::Instr *instrStart, IR::Instr *instrEnd, bool defaultDoFa
         case Js::OpCode::Ror_I4:
         case Js::OpCode::BrTrue_I4:
         case Js::OpCode::BrFalse_I4:
-#ifdef _M_IX86
-            if (
-                instr->GetDst() && instr->GetDst()->IsInt64() ||
-                instr->GetSrc1() && instr->GetSrc1()->IsInt64() ||
-                instr->GetSrc2() && instr->GetSrc2()->IsInt64()
-                )
-            {
-                m_lowererMD.EmitInt64Instr(instr);
-                break;
-            }
-#endif
             if (instr->HasBailOutInfo())
             {
                 const auto bailOutKind = instr->GetBailOutKind();
@@ -1136,7 +1125,7 @@ Lowerer::LowerRange(IR::Instr *instrStart, IR::Instr *instrEnd, bool defaultDoFa
                     // slow path
                     this->LowerRemI4(instr);
                 }
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
                 else if (instr->m_opcode == Js::OpCode::Mul_I4)
                 {
                     if (!LowererMD::GenerateSimplifiedInt4Mul(instr))
@@ -4748,7 +4737,7 @@ Lowerer::GenerateCallProfiling(Js::ProfileId profileId, Js::InlineCacheIndex inl
     Assert(m_func->DoSimpleJitDynamicProfile());
 
     // Make sure they gave us the correct call instruction
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
     Assert(callInstr->m_opcode == Js::OpCode::CALL);
 #elif defined(_M_ARM)
     Assert(callInstr->m_opcode == Js::OpCode::BLX);
@@ -6690,7 +6679,7 @@ Lowerer::EnsureStackFunctionListStackSym()
 {
     Func * func = this->m_func;
     Assert(func->HasAnyStackNestedFunc());
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
     Assert(func->m_localStackHeight == (func->HasArgumentSlot()? MachArgsSlotOffset : 0));
     StackSym * stackFunctionListStackSym = StackSym::New(TyMachPtr, func);
     func->StackAllocate(stackFunctionListStackSym, sizeof(Js::ScriptFunction *));
@@ -7342,7 +7331,7 @@ Lowerer::GenerateDirectFieldStore(IR::Instr* instrStFld, IR::PropertySymOpnd* pr
     uint16 index = propertySymOpnd->GetSlotIndex();
     AssertOrFailFast(index != (uint16)-1);
 
-#if defined(RECYCLER_WRITE_BARRIER_JIT) && (defined(_M_IX86) || defined(_M_AMD64))
+#if defined(RECYCLER_WRITE_BARRIER_JIT) && defined(_M_AMD64)
     if (opndSlotArray->IsRegOpnd())
     {
         IR::IndirOpnd * opndDst = IR::IndirOpnd::New(opndSlotArray->AsRegOpnd(), index * sizeof(Js::Var), TyMachReg, func);
@@ -11781,12 +11770,6 @@ Lowerer::InlineBuiltInLibraryCall(IR::Instr *callInstr)
             }
             break;
         case Js::BuiltinFunction::Math_Abs:
-#ifdef _M_IX86
-            if (!AutoSystemInfo::Data.SSE2Available())
-            {
-                return false;
-            }
-#endif
             if (argCount != 1)
             {
                 return false;
@@ -12077,21 +12060,6 @@ Lowerer::HasSideEffects(IR::Instr *instr)
 {
     if (LowererMD::IsCall(instr))
     {
-#ifdef _M_IX86
-        IR::Opnd *src1 = instr->GetSrc1();
-        if (src1->IsHelperCallOpnd())
-        {
-            IR::HelperCallOpnd * helper = src1->AsHelperCallOpnd();
-
-            switch(helper->m_fnHelper)
-            {
-            case IR::HelperOp_Int32ToAtomInPlace:
-            case IR::HelperOp_Int32ToAtom:
-            case IR::HelperOp_UInt32ToAtom:
-                return false;
-            }
-        }
-#endif
         return true;
     }
     return instr->HasAnySideEffects();
@@ -14285,12 +14253,6 @@ Lowerer::GenerateBailOut(IR::Instr * instr, IR::BranchInstr * branchInstr, IR::L
             BranchBailOutRecord, trueOffset, falseOffset, branchInstr->GetByteCodeReg(), instr->GetBailOutKind(), bailOutInfo->bailOutFunc);
 
         helperMethod = IR::HelperSaveAllRegistersAndBranchBailOut;
-#ifdef _M_IX86
-        if(!AutoSystemInfo::Data.SSE2Available())
-        {
-            helperMethod = IR::HelperSaveAllRegistersNoSse2AndBranchBailOut;
-        }
-#endif
 
         // Save the condition. The register allocator will generate arguments.
         bailOutInfo->branchConditionOpnd = branchInstr->GetSrc1()->Copy(branchInstr->m_func);
@@ -14313,12 +14275,6 @@ Lowerer::GenerateBailOut(IR::Instr * instr, IR::BranchInstr * branchInstr, IR::L
         }
 
         helperMethod = IR::HelperSaveAllRegistersAndBailOut;
-#ifdef _M_IX86
-        if(!AutoSystemInfo::Data.SSE2Available())
-        {
-            helperMethod = IR::HelperSaveAllRegistersNoSse2AndBailOut;
-        }
-#endif
     }
 
     // Save the bailout record. The register allocator will generate arguments.
@@ -14561,7 +14517,7 @@ Lowerer::LowerInlineeStart(IR::Instr * inlineeStartInstr)
         m_lowererMD.ChangeToAssign(metaArg);
         if (i == Js::Constants::InlineeMetaArgIndex_Argc)
         {
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
             Assert(metaArg == prev->m_next);
 #else //defined(_M_ARM)
             Assert(prev->m_next->m_opcode == Js::OpCode::LDIMM);
@@ -15183,18 +15139,6 @@ bool Lowerer::ShouldGenerateArrayFastPath(
         // Don't have info about the object type, better to generate the fast path anyway
         return true;
     }
-#ifdef _M_IX86
-    if(requiresSse2ForFloatArrays &&
-        (
-            arrayValueType.GetObjectType() == ObjectType::Float32Array ||
-            arrayValueType.GetObjectType() == ObjectType::Float64Array
-        ) &&
-        !AutoSystemInfo::Data.SSE2Available())
-    {
-        // Fast paths for float arrays rely on SSE2
-        return false;
-    }
-#endif
     return !arrayValueType.IsLikelyAnyUnOptimizedArray();
 }
 
@@ -15589,15 +15533,6 @@ IR::Instr *Lowerer::InsertMove(IR::Opnd *dst, IR::Opnd *src, IR::Instr *const in
 
     if(TySize[dst->GetType()] < TySize[src->GetType()])
     {
-#if _M_IX86
-        if (IRType_IsInt64(src->GetType()))
-        {
-            // On x86, if we are trying to move an long to a smaller type
-            // Insert a move of the low bits into dst
-            return InsertMove(dst, func->FindOrCreateInt64Pair(src).low, insertBeforeInstr, generateWriteBarrier);
-        }
-        else
-#endif
         {
             src = src->UseWithNewType(dst->GetType(), func);
         }
@@ -15710,16 +15645,6 @@ IR::BranchInstr *Lowerer::InsertCompareBranch(
         insertBeforeInstr->InsertBefore(instr);
         return LowererMD::LowerFloatCondBranch(instr, ignoreNaN);
     }
-#ifdef _M_IX86
-    else if (compareSrc1->IsInt64())
-    {
-        Assert(compareSrc2->IsInt64());
-        IR::BranchInstr *const instr = IR::BranchInstr::New(branchOpCode, target, compareSrc1, compareSrc2, func);
-        insertBeforeInstr->InsertBefore(instr);
-        m_lowererMD.EmitInt64Instr(instr);
-        return instr;
-    }
-#endif
 
     Js::OpCode swapSrcsBranchOpCode;
     switch(branchOpCode)
@@ -18989,10 +18914,6 @@ Lowerer::GenerateFastStElemI(IR::Instr *& stElem, bool *instrIsInHelperBlockRef)
                 }
                 else
                 {
-#ifdef _M_IX86
-                    AssertMsg(AutoSystemInfo::Data.SSE2Available(), "GlobOpt shouldn't have specialized Uint8ClampedArray StElem to float64 if SSE2 is unavailable.");
-#endif
-
                     regOpnd = IR::RegOpnd::New(TyInt32, this->m_func);
                     autoReuseRegOpnd.Initialize(regOpnd, m_func);
 
@@ -19234,9 +19155,6 @@ Lowerer::GenerateFastStElemI(IR::Instr *& stElem, bool *instrIsInHelperBlockRef)
             else if (src->IsFloat64())
             {
                 AssertMsg(indirOpnd->GetType() == TyUint32, "Only StElemI to Uint32Array could be specialized to float64.");
-#ifdef _M_IX86
-                AssertMsg(AutoSystemInfo::Data.SSE2Available(), "GloOpt shouldn't have specialized Uint32Array StElemI to float64 if SSE2 is unavailable.");
-#endif
 
                 bool bailOutOnHelperCall = stElem->HasBailOutInfo() ? !!(stElem->GetBailOutKind() & IR::BailOutOnArrayAccessHelperCall) : false;
                 if (bailOutOnHelperCall)
@@ -21574,16 +21492,6 @@ Lowerer::GenerateArgOutForInlineeStackArgs(IR::Instr* callInstr, IR::Instr* stac
     IR::IndirOpnd *argIndirOpnd = nullptr;
     IR::Instr* argout = nullptr;
 
-#if defined(_M_IX86)
-    // Maintain alignment
-    if ((actualCount & 1) == 0)
-    {
-        IR::Instr *alignPush = IR::Instr::New(Js::OpCode::PUSH, this->m_func);
-        alignPush->SetSrc1(IR::IntConstOpnd::New(1, TyInt32, this->m_func));
-        callInstr->InsertBefore(alignPush);
-    }
-#endif
-
     for(uint i = actualCount; i > 0; i--)
     {
         argIndirOpnd = IR::IndirOpnd::New(argInOpnd, (i - 1) * MachPtr, TyMachReg, func);
@@ -21799,15 +21707,6 @@ Lowerer::GenerateArgOutForStackArgs(IR::Instr* callInstr, IR::Instr* stackArgsIn
 //    end foreach
 //    $L3:
 
-
-#if defined(_M_IX86)
-    // We get a compilation error on x86 due to assigning a negative to a uint
-    // TODO: don't even define this function on x86 - we Assert(false) anyway there.
-    // Alternatively, don't define when INT_ARG_REG_COUNT - 4 < 0
-    AssertOrFailFast(false);
-    return nullptr;
-#else
-
     Assert(stackArgsInstr->m_opcode == Js::OpCode::ArgOut_A_FromStackArgs);
     Assert(callInstr->m_opcode == Js::OpCode::CallIDynamic);
 
@@ -21920,7 +21819,6 @@ Lowerer::GenerateArgOutForStackArgs(IR::Instr* callInstr, IR::Instr* stackArgsIn
 
     /*return the length which will be used for callInfo generations & stack allocation*/
     return saveLenInstr->GetDst()->AsRegOpnd();
-#endif
 }
 
 void
@@ -22303,7 +22201,7 @@ Lowerer::FinalLower()
 void
 Lowerer::InsertLazyBailOutThunk()
 {
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
     if (!this->m_func->IsTopFunc())
     {
         return;
@@ -24578,12 +24476,6 @@ bool Lowerer::GenerateFastBrBool(IR::BranchInstr *const instr)
     // Float fast path
 
     bool generateFloatTest = srcValueType.IsLikelyFloat();
-#ifdef _M_IX86
-    if (!AutoSystemInfo::Data.SSE2Available())
-    {
-        generateFloatTest = false;
-    }
-#endif
     bool checkedForTaggedFloat =
     srcValueType.IsNotNumber();
     if (generateFloatTest)
@@ -26484,9 +26376,6 @@ Lowerer::ValidOpcodeAfterLower(IR::Instr* instr, Func * func)
     case Js::OpCode::PrologStart:
     case Js::OpCode::PrologEnd:
 #endif
-#ifdef _M_IX86
-    case Js::OpCode::BailOutStackRestore:
-#endif
         return true;
 
     case Js::OpCode::RestoreOutParam:
@@ -27215,19 +27104,6 @@ Lowerer::LowerDivI4(IR::Instr * instr)
 {
     Assert(instr);
     Assert(instr->m_opcode == Js::OpCode::Div_I4 || instr->m_opcode == Js::OpCode::DivU_I4);
-
-#ifdef _M_IX86
-    if (
-        instr->GetDst() && instr->GetDst()->IsInt64() ||
-        instr->GetSrc1() && instr->GetSrc1()->IsInt64() ||
-        instr->GetSrc2() && instr->GetSrc2()->IsInt64()
-        )
-    {
-        m_lowererMD.EmitInt64Instr(instr);
-        return;
-    }
-#endif
-
     Assert(instr->GetSrc2());
     if (m_func->GetJITFunctionBody()->IsWasmFunction())
     {
@@ -28062,33 +27938,6 @@ Lowerer::EmitEHBailoutStackRestore(IR::Instr * bailoutInstr)
 {
     Assert(this->m_func->isPostLayout);
 
-#ifdef _M_IX86
-    BailOutInfo * bailoutInfo = bailoutInstr->GetBailOutInfo();
-    uint totalLiveArgCount = 0;
-    if (bailoutInfo->startCallCount != 0)
-    {
-        uint totalStackToBeRestored = 0;
-        uint stackAlignmentAdjustment = 0;
-        for (uint i = 0; i < bailoutInfo->startCallCount; i++)
-        {
-            uint startCallLiveArgCount = bailoutInfo->startCallInfo[i].isOrphanedCall ? 0 : bailoutInfo->GetStartCallOutParamCount(i);
-            if ((Math::Align<int32_t>(startCallLiveArgCount * MachPtr, MachStackAlignment) - (startCallLiveArgCount * MachPtr)) != 0)
-            {
-                stackAlignmentAdjustment++;
-            }
-            totalLiveArgCount += startCallLiveArgCount;
-        }
-        totalStackToBeRestored = (totalLiveArgCount + stackAlignmentAdjustment) * MachPtr;
-
-        IR::RegOpnd * espOpnd = IR::RegOpnd::New(NULL, LowererMD::GetRegStackPointer(), TyMachReg, this->m_func);
-        IR::Opnd * opnd = IR::IndirOpnd::New(espOpnd, totalStackToBeRestored, TyMachReg, this->m_func);
-        IR::Instr * stackRestoreInstr = IR::Instr::New(Js::OpCode::LEA, espOpnd, opnd, this->m_func);
-
-        bailoutInstr->InsertAfter(stackRestoreInstr);
-        return stackRestoreInstr;
-    }
-#endif
-
     return bailoutInstr;
 }
 
@@ -28134,7 +27983,7 @@ Lowerer::EmitRestoreReturnValueFromEHBailout(IR::LabelInstr * restoreLabel, IR::
 void
 Lowerer::InsertBitTestBranch(IR::Opnd * bitMaskOpnd, IR::Opnd * bitIndex, bool jumpIfBitOn, IR::LabelInstr * targetLabel, IR::Instr * insertBeforeInstr)
 {
-#if defined(_M_IX86) || defined(_M_AMD64)
+#if defined(_M_AMD64)
     // Generate bit test and branch
     // BT bitMaskOpnd, bitIndex
     // JB/JAE targetLabel
@@ -28568,11 +28417,6 @@ Lowerer::LoadIndexFromLikelyFloat(
     IR::LabelInstr *const negativeLabel,
     IR::Instr *const insertBeforeInstr)
 {
-#ifdef _M_IX86
-    // We should only generate this if sse2 is available
-    Assert(AutoSystemInfo::Data.SSE2Available());
-#endif
-
     Func *func = insertBeforeInstr->m_func;
 
     IR::LabelInstr * fallThrough = IR::LabelInstr::New(Js::OpCode::Label, func);
@@ -29108,8 +28952,6 @@ void Lowerer::LowerGeneratorHelper::InsertNullOutGeneratorFrameInEpilogue(IR::La
     // registers to store the address to our interpreter frame
 #if defined(_M_X64)
     dstOpnd->SetReg(RegRCX);
-#elif defined(_M_IX86)
-    dstOpnd->SetReg(RegECX);
 #endif
 
     InsertMove(dstOpnd, srcOpnd, insertionPoint);

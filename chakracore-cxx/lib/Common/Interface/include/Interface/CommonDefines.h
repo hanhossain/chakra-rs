@@ -61,7 +61,7 @@
 #define _M_ARM32_OR_ARM64 1
 #endif
 
-#if defined(_M_IX86) || defined(_M_ARM)
+#if defined(_M_ARM)
 #define TARGET_32 1
 #endif
 
@@ -264,7 +264,7 @@
 #endif
 
 // VTUNE profiling requires ETW trace
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
 #define VTUNE_PROFILING
 #endif
 
@@ -367,10 +367,8 @@
 #define MISSING_PROPERTY_STATS
 #define EXCEPTION_RECOVERY 1
 #define EXCEPTION_CHECK                     // Check exception handling.
-#if !(defined(__clang__) && defined(_M_IX86))
 // todo: implement this for clang x86
 #define PROFILE_MEM
-#endif
 #define PROFILE_TYPES
 #define PROFILE_EVALMAP
 #define PROFILE_OBJECT_LITERALS
@@ -506,13 +504,9 @@
 #endif
 #endif
 
-#ifdef _M_IX86
-#define LOWER_SPLIT_INT64 1
-#else
 #define LOWER_SPLIT_INT64 0
-#endif
 
-#if (defined(_M_IX86) || defined(_M_X64)) && !defined(DISABLE_JIT)
+#if defined(_M_X64) && !defined(DISABLE_JIT)
 #define ASMJS_PLAT
 #endif
 
@@ -526,10 +520,6 @@
 #endif
 
 #endif
-
-#if _M_IX86
-#define I386_ASM 1
-#endif //_M_IX86
 
 #ifndef PDATA_ENABLED
 #if defined(_M_ARM32_OR_ARM64) || defined(_M_X64)

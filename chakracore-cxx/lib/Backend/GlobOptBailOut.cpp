@@ -1019,9 +1019,6 @@ GlobOpt::FillBailOutInfo(BasicBlock *block, BailOutInfo * bailOutInfo)
         // Save the start call's func to identify the function (inlined) that the call sequence is for
         // We might not have any arg out yet to get the function from
         bailOutInfo->startCallFunc = JitAnewArray(this->func->m_alloc, Func *, startCallNumber);
-#ifdef _M_IX86
-        bailOutInfo->inlinedStartCall = BVFixed::New(startCallNumber, this->func->m_alloc, false);
-#endif
         uint totalOutParamCount = block->globOptData.totalOutParamCount;
         bailOutInfo->totalOutParamCount = totalOutParamCount;
         bailOutInfo->argOutSyms = JitAnewArrayZ(this->func->m_alloc, StackSym *, totalOutParamCount);
@@ -1076,12 +1073,6 @@ GlobOpt::FillBailOutInfo(BasicBlock *block, BailOutInfo * bailOutInfo)
                 startCallNumber--;
 
                 bailOutInfo->startCallFunc[startCallNumber] = sym->m_instrDef->m_func;
-#ifdef _M_IX86
-                if (sym->m_isInlinedArgSlot)
-                {
-                    bailOutInfo->inlinedStartCall->Set(startCallNumber);
-                }
-#endif
                 uint argOutCount = sym->m_instrDef->GetArgOutCount(/*getInterpreterArgOutCount*/ true);
                 Assert(totalOutParamCount >= argOutCount);
                 Assert(argOutCount >= currentArgOutCount);

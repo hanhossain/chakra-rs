@@ -5,10 +5,7 @@
 #pragma once
 #include "Common/InlinedFrameLayout.h"
 
-#if defined(_M_IX86)
-#include "Language/i386/StackFrame.h"
-typedef Js::X86StackFrame StackFrame;
-#elif defined(_M_X64)
+#if defined(_M_X64)
 #include "Language/amd64/StackFrame.h"
 typedef Js::Amd64StackFrame StackFrame;
 #elif defined(_M_ARM)

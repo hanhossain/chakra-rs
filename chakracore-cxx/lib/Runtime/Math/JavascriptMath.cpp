@@ -47,9 +47,6 @@ using namespace Js;
         Var JavascriptMath::Not_Full(Var aRight, ScriptContext* scriptContext)
         {
             JIT_HELPER_REENTRANT_HEADER(Op_Not_Full);
-#if _M_IX86
-            AssertMsg(!TaggedInt::Is(aRight), "Should be detected");
-#endif
             if (JavascriptOperators::GetTypeId(aRight) == TypeIds_BigInt)
             {
                 return JavascriptBigInt::Not(aRight);

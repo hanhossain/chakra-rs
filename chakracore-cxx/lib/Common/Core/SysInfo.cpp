@@ -65,7 +65,7 @@ AutoSystemInfo::Initialize()
 
     // Make the page size constant so calculation are faster.
     Assert(this->dwPageSize == AutoSystemInfo::PageSize);
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
     get_cpuid(CPUInfo, 1);
     isAtom = CheckForAtom();
 #endif
@@ -156,7 +156,7 @@ AutoSystemInfo::GetAllocationGranularityPageSize() const
     return this->allocationGranularityPageCount * PageSize;
 }
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
 bool
 AutoSystemInfo::VirtualSseAvailable(const int sseLevel) const
 {
@@ -175,14 +175,12 @@ AutoSystemInfo::SSE2Available() const
 
 #if defined(_M_X64) || defined(_M_ARM32_OR_ARM64)
     return true;
-#elif defined(_M_IX86)
-    return false; // TODO: xplat support
 #else
     return false;
 #endif
 }
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
 BOOL
 AutoSystemInfo::SSE3Available() const
 {

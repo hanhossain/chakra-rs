@@ -127,12 +127,6 @@ namespace Js
         static Var ToNumberInPlace(Var aRight,ScriptContext* scriptContext, JavascriptNumber* result);
         static Var ToNumeric(Var aRight, ScriptContext* scriptContext);
         static Var ToNumericInPlace(Var aRight, ScriptContext* scriptContext, JavascriptNumber* result);
-#ifdef _M_IX86
-        static Var Int32ToVar(int32_t value, ScriptContext* scriptContext);
-        static Var Int32ToVarInPlace(int32_t value, ScriptContext* scriptContext, JavascriptNumber *result);
-        static Var UInt32ToVar(uint32_t value, ScriptContext* scriptContext);
-        static Var UInt32ToVarInPlace(uint32_t value, ScriptContext* scriptContext, JavascriptNumber *result);
-#endif
 
         static Var OP_FinishOddDivBy2(uint32_t value, ScriptContext *scriptContext);
         static Var OP_ApplyArgs(Var func,Var instance,__in_xcount(8)void** stackPtr,CallInfo callInfo,ScriptContext* scriptContext);

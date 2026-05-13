@@ -591,30 +591,7 @@ namespace Js
             Assert(inArgCount != Constants::InvalidArgSlot);
             argSize = ArgSlotMath::Mul(inArgCount, (uint16)MachPtr);
         }
-#if _M_IX86
-        else
-        {
-            for (ArgSlot i = 0; i < GetArgCount(); i++)
-            {
-                if( GetArgType(i).isMaybeDouble() )
-                {
-                    argSize = ArgSlotMath::Add(argSize, sizeof(double));
-                }
-                else if (GetArgType(i).isIntish())
-                {
-                    argSize = ArgSlotMath::Add(argSize, sizeof(int));
-                }
-                else if (GetArgType(i).isFloatish())
-                {
-                    argSize = ArgSlotMath::Add(argSize, sizeof(float));
-                }
-                else
-                {
-                    AssertOrFailFast(UNREACHED);
-                }
-            }
-        }
-#elif _M_X64
+#if _M_X64
         else
         {
             argSize = ArgSlotMath::Mul(GetArgCount(), (uint16)MachPtr);

@@ -12,9 +12,7 @@
 
 #pragma once
 
-#if _M_IX86
-#define serialization_alignment
-#elif _M_X64 || defined(_M_ARM32_OR_ARM64)
+#if _M_X64 || defined(_M_ARM32_OR_ARM64)
 #define serialization_alignment __unaligned
 #else
 #error Must define alignment capabilities for processor

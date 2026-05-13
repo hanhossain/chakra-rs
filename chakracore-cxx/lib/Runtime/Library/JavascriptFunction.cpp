@@ -13,10 +13,6 @@
 #include "Language/AsmJsModule.h"
 #endif
 
-#ifdef _M_IX86
-extern "C" void _alloca_probe_16();
-#endif
-
 using namespace Js;
 
     const charcount_t JavascriptFunction::DIAG_MAX_FUNCTION_STRING;
@@ -1134,182 +1130,7 @@ using namespace Js;
     template Var JavascriptFunction::CallFunction<true>(RecyclableObject* function, JavascriptMethod entryPoint, Arguments args, bool useLargeArgCount);
     template Var JavascriptFunction::CallFunction<false>(RecyclableObject* function, JavascriptMethod entryPoint, Arguments args, bool useLargeArgCount);
 
-#if _M_IX86
-    extern "C" Var BreakSpeculation(Var passthrough)
-    {
-        Var result = nullptr;
-        __asm
-        {
-            mov ecx, passthrough;
-            cmp ecx, ecx;
-            cmove eax, ecx;
-            mov result, eax;
-        }
-        return result;
-    }
-#ifdef ASMJS_PLAT
-    template <> int JavascriptFunction::CallAsmJsFunction<int>(RecyclableObject * function, JavascriptMethod entryPoint, Var * argv, uint argsSize, byte* reg)
-    {
-        return CallAsmJsFunctionX86Thunk(function, entryPoint, argv, argsSize, reg).i32;
-    }
-    template <> long JavascriptFunction::CallAsmJsFunction<long>(RecyclableObject * function, JavascriptMethod entryPoint, Var * argv, uint argsSize, byte* reg)
-    {
-        return CallAsmJsFunctionX86Thunk(function, entryPoint, argv, argsSize, reg).i64;
-    }
-    template <> float JavascriptFunction::CallAsmJsFunction<float>(RecyclableObject * function, JavascriptMethod entryPoint, Var * argv, uint argsSize, byte* reg)
-    {
-        return CallAsmJsFunctionX86Thunk(function, entryPoint, argv, argsSize, reg).f32;
-    }
-    template <> double JavascriptFunction::CallAsmJsFunction<double>(RecyclableObject * function, JavascriptMethod entryPoint, Var * argv, uint argsSize, byte* reg)
-    {
-        return CallAsmJsFunctionX86Thunk(function, entryPoint, argv, argsSize, reg).f64;
-    }
-    template <> AsmJsSIMDValue JavascriptFunction::CallAsmJsFunction<AsmJsSIMDValue>(RecyclableObject * function, JavascriptMethod entryPoint, Var * argv, uint argsSize, byte* reg)
-    {
-        return CallAsmJsFunctionX86Thunk(function, entryPoint, argv, argsSize, reg).simd;
-    }
-
-    PossibleAsmJsReturnValues JavascriptFunction::CallAsmJsFunctionX86Thunk(RecyclableObject * function, JavascriptMethod entryPoint, Var * argv, uint argsSize, byte*)
-    {
-        void* savedEsp;
-        _declspec(align(16)) PossibleAsmJsReturnValues retVals;
-        CompileAssert(sizeof(PossibleAsmJsReturnValues) == sizeof(long) + sizeof(AsmJsSIMDValue));
-        CompileAssert(offsetof(PossibleAsmJsReturnValues, low) == offsetof(PossibleAsmJsReturnValues, i32));
-        CompileAssert(offsetof(PossibleAsmJsReturnValues, high) == offsetof(PossibleAsmJsReturnValues, i32) + sizeof(int32_t));
-
-        // call variable argument function provided in entryPoint
-        __asm
-        {
-            mov savedEsp, esp;
-            mov ecx, argsSize;
-            cmp ecx, 0x1000;
-            jl allocate_stack;
-            // Use _chkstk to probe each page when using more then a page size
-            mov eax, ecx;
-            call _chkstk; // _chkstk saves/restores ecx
-        allocate_stack:
-            sub esp, ecx;
-
-            mov edi, esp;
-            mov esi, argv;
-            add esi, 4; // Skip function
-            mov ecx, argsSize;
-            rep movs byte ptr[edi], byte ptr[esi];
-
-            mov  ecx, entryPoint
-            push function;
-            call ecx;
-            mov retVals.low, eax;
-            mov retVals.high, edx;
-            movaps retVals.xmm, xmm0;
-            // Restore ESP
-            mov esp, savedEsp;
-        }
-        return retVals;
-    }
-#endif
-
-#ifdef __clang__
-void _alloca_probe_16()
-{
-    // todo: fix this!!!
-    abort();
-    __asm
-    {
-        push    ecx
-        lea     ecx, [esp + 8]
-        sub     ecx, eax
-        and     ecx, (16 - 1)
-        add     eax, ecx
-        ret
-    }
-}
-#endif
-
-    static Var LocalCallFunction(RecyclableObject* function,
-        JavascriptMethod entryPoint, Arguments args, bool doStackProbe, bool useLargeArgCount = false)
-    {
-        Js::Var varResult;
-
-#if DBG && ENABLE_NATIVE_CODEGEN
-        CheckIsExecutable(function, entryPoint);
-#endif
-        // compute size of stack to reserve
-        CallInfo callInfo = args.Info;
-        uint argCount = useLargeArgCount ? args.GetLargeArgCountWithExtraArgs() : args.GetArgCountWithExtraArgs();
-        uint argsSize = argCount * sizeof(Var);
-
-        ScriptContext * scriptContext = function->GetScriptContext();
-
-        if (doStackProbe)
-        {
-            PROBE_STACK_CALL(scriptContext, function, argsSize);
-        }
-
-        JS_REENTRANCY_CHECK(scriptContext->GetThreadContext());
-
-        void *data;
-        void *savedEsp;
-        __asm {
-            // Save ESP
-            mov savedEsp, esp
-            mov eax, argsSize
-            // Make sure we don't go beyond guard page
-            cmp eax, 0x1000
-            jge alloca_probe
-            sub esp, eax
-            jmp dbl_align
-alloca_probe:
-            // Use alloca to allocate more then a page size
-            // Alloca assumes eax, contains size, and adjust ESP while
-            // probing each page.
-            call _alloca_probe_16
-dbl_align:
-            // 8-byte align frame to improve floating point perf of our JIT'd code.
-            and esp, -8
-
-            mov data, esp
-        }
-
-        {
-
-            Var* dest = (Var*)data;
-            Var* src = args.Values;
-            for(unsigned int i =0; i < argCount; i++)
-            {
-                dest[i] = src[i];
-            }
-        }
-
-        // call variable argument function provided in entryPoint
-        __asm
-        {
-            mov  ecx, entryPoint
-
-            push callInfo
-            push function
-            call ecx
-
-            // Restore ESP
-            mov esp, savedEsp
-
-            // save the return value from realsum.
-            mov varResult, eax;
-        }
-
-        return varResult;
-    }
-
-    // clang fails to create the labels,
-    // when __asm op is under a template function
-    template <bool doStackProbe>
-    Var JavascriptFunction::CallFunction(RecyclableObject* function,
-        JavascriptMethod entryPoint, Arguments args, bool useLargeArgCount)
-    {
-        return LocalCallFunction(function, entryPoint, args, doStackProbe, useLargeArgCount);
-    }
-
-#elif _M_X64
+#if _M_X64
     template <bool doStackProbe>
     Var JavascriptFunction::CallFunction(RecyclableObject *function, JavascriptMethod entryPoint, Arguments args, bool useLargeArgCount)
     {
@@ -1570,37 +1391,12 @@ dbl_align:
         return GetLibraryCodeDisplayStringCommon<JavascriptString, JavascriptString*>(scriptContext, displayName);
     }
 
-#ifdef _M_IX86
-    // This code is enabled by the -checkAlignment switch.
-    // It verifies that all of our JS frames are 8 byte aligned.
-    // Our alignments is based on aligning the return address of the function.
-    // Note that this test can fail when Javascript functions are called directly
-    // from helper functions.  This could be fixed by making these calls through
-    // CallFunction(), or by having the helper 8 byte align the frame itself before
-    // the call.  A lot of these though are not dealing with floats, so the cost
-    // of doing the 8 byte alignment would outweigh the benefit...
-    __declspec (naked)
-    void JavascriptFunction::CheckAlignment()
-    {
-        JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(ScrFunc_CheckAlignment);
-        _asm
-        {
-            test esp, 0x4
-            je   LABEL1
-            ret
-LABEL1:
-            call Throw::InternalError
-        }
-        JIT_HELPER_END(ScrFunc_CheckAlignment);
-    }
-#else
     void JavascriptFunction::CheckAlignment()
     {
         JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(ScrFunc_CheckAlignment);
         // Note: in order to enable this on ARM, uncomment/fix code in LowerMD.cpp (LowerEntryInstr).
         JIT_HELPER_END(ScrFunc_CheckAlignment);
     }
-#endif
 
     BOOL JavascriptFunction::IsNativeAddress(ScriptContext * scriptContext, void * codeAddr)
     {
@@ -1683,22 +1479,7 @@ LABEL1:
 
     // Thunk for handling calls to functions that have not had byte code generated for them.
 
-#if _M_IX86
-    __declspec(naked)
-    Var JavascriptFunction::DeferredParsingThunk(RecyclableObject* function, CallInfo callInfo, ...)
-    {
-        __asm
-        {
-            push ebp
-            mov ebp, esp
-            lea eax, [esp+8]                // load the address of the function os that if we need to box, we can patch it up
-            push eax
-            call JavascriptFunction::DeferredParse
-            pop ebp
-            jmp eax
-        }
-    }
-#elif defined(_M_X64) || defined(_M_ARM32_OR_ARM64)
+#if defined(_M_X64) || defined(_M_ARM32_OR_ARM64)
     //Do nothing: the implementation of JavascriptFunction::DeferredParsingThunk is declared (appropriately decorated) in
     // Library\amd64\javascriptfunctiona.asm
     // Library\arm\arm_DeferredParsingThunk.asm
@@ -1729,25 +1510,6 @@ LABEL1:
     }
 
     // Thunk for handling calls to functions that have not had byte code generated for them.
-
-#if _M_IX86
-    __declspec(naked)
-    Var JavascriptFunction::DeferredDeserializeThunk(RecyclableObject* function, CallInfo callInfo, ...)
-    {
-        __asm
-        {
-            push ebp
-            mov ebp, esp
-            push [esp+8]
-            call JavascriptFunction::DeferredDeserialize
-            pop ebp
-            jmp eax
-        }
-    }
-#else
-    // xplat implement in
-    // Library/amd64/JavascriptFunctionA.S
-#endif
 
     Js::JavascriptMethod JavascriptFunction::DeferredDeserialize(ScriptFunction* function)
     {
@@ -1818,7 +1580,7 @@ LABEL1:
 
     */
 #if ENABLE_NATIVE_CODEGEN
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
     class ExceptionFilterHelper
     {
         Js::ScriptFunction* m_func = nullptr;
@@ -1841,9 +1603,7 @@ LABEL1:
         }
         Var GetIPAddress() const
         {
-#if _M_IX86
-            return (Var)exceptionInfo->ContextRecord->Eip;
-#elif _M_X64
+#if _M_X64
             return (Var)exceptionInfo->ContextRecord->Rip;
 #else
 #error Not yet Implemented
@@ -1851,9 +1611,7 @@ LABEL1:
         }
         Var* GetAddressOfFuncObj() const
         {
-#if _M_IX86
-            return (Var*)(exceptionInfo->ContextRecord->Ebp + 2 * sizeof(Var));
-#elif _M_X64
+#if _M_X64
             return (Var*)(exceptionInfo->ContextRecord->Rbp + 2 * sizeof(Var));
 #else
 #error Not yet Implemented
@@ -2406,7 +2164,7 @@ LABEL1:
     int JavascriptFunction::CallRootEventFilter(int exceptionCode, PEXCEPTION_POINTERS exceptionInfo)
     {
 #if ENABLE_NATIVE_CODEGEN
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
         ExceptionFilterHelper helper(exceptionInfo);
         CheckWasmMathException(exceptionCode, helper);
 #if ENABLE_FAST_ARRAYBUFFER

@@ -196,9 +196,7 @@ bool AgenPeeps::AlwaysDependent(IR::Instr *instr)
 ///----------------------------------------------------------------------------
 bool AgenPeeps::DependentOpnds(IR::Opnd *opnd1, IR::Opnd *opnd2)
 {
-#if defined (_M_IX86)
-    const RegNum baseReg = RegEBP;
-#elif defined (_M_X64)
+#if defined (_M_X64)
     const RegNum baseReg = RegRBP;
 #else
     AssertMsg(false, "Optimization not supported for ARM");

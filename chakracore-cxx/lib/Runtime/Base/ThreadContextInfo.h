@@ -60,7 +60,7 @@ public:
     intptr_t GetMantissaMaskAddr() const;
     intptr_t GetExponentMaskAddr() const;
 
-#if _M_IX86 || _M_AMD64
+#if _M_AMD64
     intptr_t GetX86AbsMaskF4Addr() const;
     intptr_t GetX86AbsMaskD2Addr() const;
     intptr_t GetX86NegMaskF4Addr() const;

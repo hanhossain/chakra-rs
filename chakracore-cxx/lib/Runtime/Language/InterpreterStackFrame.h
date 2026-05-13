@@ -339,12 +339,7 @@ namespace Js
         unsigned long GetStackAddress() const;
         void* GetAddressOfReturnAddress() const;
 
-#if _M_IX86
-        static int GetRetType(JavascriptFunction* func);
-        static int GetAsmJsArgSize(AsmJsCallStackLayout * stack);
-        static int GetDynamicRetType(AsmJsCallStackLayout * stack);
-        static void AsmJsInterpreter(AsmJsCallStackLayout * stack, byte* retDst);
-#elif _M_X64
+#if _M_X64
         template <typename T>
         static T AsmJsInterpreter(AsmJsCallStackLayout* layout);
         static void * GetAsmJsInterpreterEntryPoint(AsmJsCallStackLayout* stack);

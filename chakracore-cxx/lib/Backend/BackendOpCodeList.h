@@ -23,8 +23,6 @@ DEF_OP(MDStart, Empty, None, OpDbgAttr_BackEndOnly)
 
 #ifdef _M_AMD64
     #include "amd64/MdOpCodes.h"
-#elif defined(_M_IX86)
-    #include "i386/MdOpCodes.h"
 #elif defined(_M_ARM)
     #include "arm/MdOpCodes.h"
 #elif defined(_M_ARM64)

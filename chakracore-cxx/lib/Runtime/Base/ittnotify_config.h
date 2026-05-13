@@ -86,7 +86,7 @@
 #endif /* ITT_ARCH_PPC64 */
 
 #ifndef ITT_ARCH
-#  if defined _M_IX86 || defined __i386__
+#  if defined __i386__
 #    define ITT_ARCH ITT_ARCH_IA32
 #  elif defined _M_X64 || defined _M_AMD64 || defined __x86_64__
 #    define ITT_ARCH ITT_ARCH_IA32E

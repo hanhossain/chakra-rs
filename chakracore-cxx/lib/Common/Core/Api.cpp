@@ -30,7 +30,7 @@ void js_wmemcpy_s(__ecount(sizeInWords) char16_t *dst, size_t sizeInWords, __in_
     wmemcpy_s(dst, count, src, count);
 }
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
 
 void js_memset_zero_nontemporal(__bcount(sizeInBytes) void *dst, size_t sizeInBytes)
 {

@@ -181,11 +181,7 @@ public:
 
     bool DoInline() const
     {
-#ifdef _M_IX86
-        return DoGlobOpt() && !GetTopFunc()->HasTry();
-#else
         return DoGlobOpt();
-#endif
     }
 
     bool DoOptimizeTry() const

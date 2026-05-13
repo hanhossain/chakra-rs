@@ -4,11 +4,7 @@
 
 struct StackFrameConstants
 {
-#if defined(_M_IX86)
-    static const size_t StackCheckCodeHeightThreadBound = 35;
-    static const size_t StackCheckCodeHeightNotThreadBound = 47;
-    static const size_t StackCheckCodeHeightWithInterruptProbe = 53;
-#elif defined(_M_X64)
+#if defined(_M_X64)
     static const size_t StackCheckCodeHeightThreadBound = 57;
     static const size_t StackCheckCodeHeightNotThreadBound = 62;
     static const size_t StackCheckCodeHeightWithInterruptProbe = 68;

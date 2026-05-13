@@ -142,7 +142,7 @@ DbCheckPostLower::Check()
             this->Check(instr->GetSrc1());
             this->Check(instr->GetSrc2());
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
             // for op-eq's and assignment operators, make  sure the types match
             // for shift operators make sure the types match and the third is an 8-bit immediate
             // for cmp operators similarly check types are same
@@ -259,7 +259,7 @@ void DbCheckPostLower::Check(IR::RegOpnd *regOpnd)
         else
         {
             Assert(IRType_IsNativeInt(regOpnd->GetType()) || regOpnd->GetType() == TyVar);
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
             if (regOpnd->GetSize() == 1)
             {
                 Assert(LinearScan::GetRegAttribs(reg) & RA_BYTEABLE);
@@ -284,7 +284,7 @@ void DbCheckPostLower::Check(IR::RegOpnd *regOpnd)
     }
 }
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if defined(_M_X64)
 
 bool
 DbCheckPostLower::IsEndBoundary(IR::Instr *instr)

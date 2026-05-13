@@ -133,7 +133,7 @@ namespace Js
         static const int StackNestedFuncList = 2;
         static const int StackFrameDisplay = 3;
         static const int StackScopeSlots = 4;
-#if _M_IX86 || _M_AMD64
+#if _M_AMD64
         static const int StackNestedFuncListWithNoArg = 1;
         static const int StackFrameDisplayWithNoArg = 2;
         static const int StackScopeSlotsWithNoArg = 3;

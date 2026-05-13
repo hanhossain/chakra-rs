@@ -15,12 +15,6 @@ namespace Js
     LiteralString::LiteralString(StaticType * type, const char16_t* content, charcount_t charLength) :
         JavascriptString(type, charLength, content)
     {
-#if defined(DBG) && defined(_M_IX86)
-        // Make sure content isn't on the stack by comparing to stack bounds in TIB
-        AssertMsg(!ThreadContext::IsOnStack((void*)content),
-            "LiteralString object created using stack buffer...");
-#endif
-
 #ifdef PROFILE_STRINGS
         StringProfiler::RecordNewString( type->GetScriptContext(), content, charLength );
 #endif

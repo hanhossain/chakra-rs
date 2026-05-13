@@ -525,45 +525,7 @@ namespace Js
                 {
                     Js::Throw::InternalError();
                 }
-#ifdef _M_IX86
-                void *savedEsp;
-                __asm
-                {
-                    // Save and restore the callee-saved registers around the call.
-                    // TODO: track register kills by region and generate per-region prologs and epilogs
-                    push esi
-                    push edi
-                    push ebx
-
-                    // 8-byte align frame to improve floating point perf of our JIT'd code.
-                    // Save ESP
-                    mov ecx, esp
-                    mov savedEsp, ecx
-                    and esp, -8
-
-                    // Set up the call target, save the current frame ptr, and adjust the frame to access
-                    // locals in native code.
-                    mov eax, tryAddr
-                    push ebp
-                    mov ebp, framePtr
-                    call eax
-                    pop ebp
-
-                    // The native code gives us the address where execution should continue on exit
-                    // from the region.
-                    mov continuationAddr, eax
-
-                    // Restore ESP
-                    mov ecx, savedEsp
-                    mov esp, ecx
-
-                    pop ebx
-                    pop edi
-                    pop esi
-                }
-#else
                 AssertMsg(FALSE, "Unsupported native try-catch handler");
-#endif
             }
             catch (const Js::JavascriptException& err)
             {
@@ -601,48 +563,7 @@ namespace Js
 
             Var catchObject = pExceptionObject->GetThrownObject(scriptContext);
             AssertMsg(catchObject, "Caught object is NULL");
-#ifdef _M_IX86
-            void *savedEsp;
-            __asm
-            {
-                // Save and restore the callee-saved registers around the call.
-                // TODO: track register kills by region and generate per-region prologs and epilogs
-                push esi
-                push edi
-                push ebx
-
-                // 8-byte align frame to improve floating point perf of our JIT'd code.
-                // Save ESP
-                mov ecx, esp
-                mov savedEsp, ecx
-                and esp, -8
-
-                // Set up the call target
-                mov ecx, handlerAddr
-
-                // Set up catch object, save the current frame ptr, and adjust the frame to access
-                // locals in native code.
-                mov eax, catchObject
-                push ebp
-                mov ebp, framePtr
-                call ecx
-                pop ebp
-
-                // The native code gives us the address where execution should continue on exit
-                // from the region.
-                mov continuationAddr, eax
-
-                // Restore ESP
-                mov ecx, savedEsp
-                mov esp, ecx
-
-                pop ebx
-                pop edi
-                pop esi
-            }
-#else
             AssertMsg(FALSE, "Unsupported native try-catch handler");
-#endif
         }
 
         return continuationAddr;
@@ -671,46 +592,7 @@ namespace Js
                     ThrowOutOfMemory(scriptContext);
                 }
 
-#ifdef _M_IX86
-            void *savedEsp;
-            __asm
-            {
-                // Save and restore the callee-saved registers around the call.
-                // TODO: track register kills by region and generate per-region prologs and epilogs
-                push esi
-                push edi
-                push ebx
-
-                // 8-byte align frame to improve floating point perf of our JIT'd code.
-                // Save ESP
-                mov ecx, esp
-                mov savedEsp, ecx
-                and esp, -8
-
-                // Set up the call target, save the current frame ptr, and adjust the frame to access
-                // locals in native code.
-                mov eax, tryAddr
-
-                push ebp
-                mov ebp, framePtr
-                call eax
-                pop ebp
-
-                // The native code gives us the address where execution should continue on exit
-                // from the region.
-                mov continuationAddr, eax
-
-                // Restore ESP
-                mov ecx, savedEsp
-                mov esp, ecx
-
-                pop ebx
-                pop edi
-                pop esi
-            }
-#else
             AssertMsg(FALSE, "Unsupported native try-finally handler");
-#endif
             }
             catch (const Js::JavascriptException& err)
             {
@@ -747,48 +629,7 @@ namespace Js
                     Js::Throw::InternalError();
                 }
                 void* newContinuationAddr = NULL;
-#ifdef _M_IX86
-                void *savedEsp;
-
-                __asm
-                {
-                    // Save and restore the callee-saved registers around the call.
-                    // TODO: track register kills by region and generate per-region prologs and epilogs
-                    push esi
-                    push edi
-                    push ebx
-
-                    // 8-byte align frame to improve floating point perf of our JIT'd code.
-                    // Save ESP
-                    mov ecx, esp
-                    mov savedEsp, ecx
-                    and esp, -8
-
-                    // Set up the call target
-                    mov eax, handlerAddr
-
-                    // save the current frame ptr, and adjust the frame to access
-                    // locals in native code.
-                    push ebp
-                    mov ebp, framePtr
-                    call eax
-                    pop ebp
-
-                    // The native code gives us the address where execution should continue on exit
-                    // from the finally, but only if flow leaves the finally before it completes.
-                    mov newContinuationAddr, eax
-
-                    // Restore ESP
-                    mov ecx, savedEsp
-                    mov esp, ecx
-
-                    pop ebx
-                    pop edi
-                    pop esi
-                }
-#else
                 AssertMsg(FALSE, "Unsupported native try-finally handler");
-#endif
                 return newContinuationAddr;
             }
         }
@@ -819,46 +660,7 @@ namespace Js
                     ThrowOutOfMemory(scriptContext);
                 }
 
-#ifdef _M_IX86
-                void *savedEsp;
-                __asm
-                {
-                    // Save and restore the callee-saved registers around the call.
-                    // TODO: track register kills by region and generate per-region prologs and epilogs
-                    push esi
-                    push edi
-                    push ebx
-
-                    // 8-byte align frame to improve floating point perf of our JIT'd code.
-                    // Save ESP
-                    mov ecx, esp
-                    mov savedEsp, ecx
-                    and esp, -8
-
-                    // Set up the call target, save the current frame ptr, and adjust the frame to access
-                    // locals in native code.
-                    mov eax, tryAddr
-
-                    push ebp
-                    mov ebp, framePtr
-                    call eax
-                    pop ebp
-
-                    // The native code gives us the address where execution should continue on exit
-                    // from the region.
-                    mov continuationAddr, eax
-
-                    // Restore ESP
-                    mov ecx, savedEsp
-                    mov esp, ecx
-
-                    pop ebx
-                    pop edi
-                    pop esi
-                }
-#else
                 AssertMsg(FALSE, "Unsupported native try-finally handler");
-#endif
             }
             catch (const Js::JavascriptException& err)
             {
@@ -880,48 +682,7 @@ namespace Js
         }
 
         void* newContinuationAddr = NULL;
-#ifdef _M_IX86
-        void *savedEsp;
-
-        __asm
-        {
-            // Save and restore the callee-saved registers around the call.
-            // TODO: track register kills by region and generate per-region prologs and epilogs
-            push esi
-            push edi
-            push ebx
-
-            // 8-byte align frame to improve floating point perf of our JIT'd code.
-            // Save ESP
-            mov ecx, esp
-            mov savedEsp, ecx
-            and esp, -8
-
-            // Set up the call target
-            mov eax, handlerAddr
-
-            // save the current frame ptr, and adjust the frame to access
-            // locals in native code.
-            push ebp
-            mov ebp, framePtr
-            call eax
-            pop ebp
-
-            // The native code gives us the address where execution should continue on exit
-            // from the finally, but only if flow leaves the finally before it completes.
-            mov newContinuationAddr, eax
-
-            // Restore ESP
-            mov ecx, savedEsp
-            mov esp, ecx
-
-            pop ebx
-            pop edi
-            pop esi
-        }
-#else
         AssertMsg(FALSE, "Unsupported native try-finally handler");
-#endif
         if (newContinuationAddr != NULL)
         {
             // Non-null return value from the finally indicates that the finally seized the flow
@@ -950,50 +711,8 @@ namespace Js
         Throw(object, scriptContext);
     }
 
-#if defined(DBG) && defined(_M_IX86)
-    extern "C" void * _except_handler4;
-
-    void JavascriptExceptionOperators::DbgCheckEHChain()
-    {
-#if 0
-        // This debug check is disabled until we figure out how to trace a fs:0 chain if we throw from inside
-        // a finally.
-
-        void *currentFS0;
-        ThreadContext * threadContext = ThreadContext::GetContextForCurrentThread();
-
-        if (!threadContext->IsScriptActive())
-        {
-            return;
-        }
-
-        // Walk the FS:0 chain of exception handlers, until the FS:0 handler in CallRootFunction.
-        // We should only see SEH frames on the way.
-        // We do allow C++ EH frames as long as there is no active objects (state = -1).
-        // That's because we may see frames that have calls to new().  This introduces an EH frame
-        // to call delete if the constructor throws.  Our constructors shouldn't throw, so we should be fine.
-        currentFS0 = (void*)__readfsdword(0);
-
-        while (currentFS0 != threadContext->callRootFS0)
-        {
-            // EH struct:
-            //      void *  next;
-            //      void *  handler;
-            //      int     state;
-            AssertMsg(*((void**)currentFS0 + 1) == &_except_handler4
-                || *((int*)currentFS0 + 2) == -1, "Found a non SEH exception frame on stack");
-            currentFS0 = *(void**)currentFS0;
-        }
-#endif
-    }
-#endif
-
     void JavascriptExceptionOperators::Throw(Var object, ScriptContext * scriptContext)
     {
-#if defined(DBG) && defined(_M_IX86)
-        DbgCheckEHChain();
-#endif
-
         Assert(scriptContext != nullptr);
         // TODO: FastDOM Trampolines will throw JS Exceptions but are not isScriptActive
         //AssertMsg(scriptContext->GetThreadContext()->IsScriptActive() ||

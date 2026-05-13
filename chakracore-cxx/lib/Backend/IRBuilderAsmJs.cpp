@@ -881,16 +881,7 @@ IRBuilderAsmJs::BuildConstantLoads()
                 TyFloat32,
                 ValueType::Float,
                 Js::OpCode::LdC_F8_R8,
-                [isOOPJIT](IR::Instr* instr, float val)
-            {
-#if _M_IX86
-                IR::RegOpnd* dstOpnd = instr->GetDst()->AsRegOpnd();
-                if (!isOOPJIT && dstOpnd->m_sym->IsSingleDef())
-                {
-                    dstOpnd->m_sym->SetIsFloatConst();
-                }
-#endif
-            }
+                [](IR::Instr* instr, float val){}
             );
             break;
         case WAsmJs::FLOAT64:
@@ -902,16 +893,7 @@ IRBuilderAsmJs::BuildConstantLoads()
                 TyFloat64,
                 ValueType::Float,
                 Js::OpCode::LdC_F8_R8,
-                [isOOPJIT](IR::Instr* instr, double val)
-                {
-#if _M_IX86
-                    IR::RegOpnd* dstOpnd = instr->GetDst()->AsRegOpnd();
-                    if (!isOOPJIT && dstOpnd->m_sym->IsSingleDef())
-                    {
-                        dstOpnd->m_sym->SetIsFloatConst();
-                    }
-#endif
-                }
+                [](IR::Instr* instr, double val){}
             );
             break;
         case WAsmJs::SIMD:
@@ -923,16 +905,7 @@ IRBuilderAsmJs::BuildConstantLoads()
                 TySimd128F4,
                 ValueType::UninitializedObject,
                 Js::OpCode::Simd128_LdC,
-                [isOOPJIT](IR::Instr* instr, AsmJsSIMDValue val)
-                {
-#if _M_IX86
-                    IR::RegOpnd* dstOpnd = instr->GetDst()->AsRegOpnd();
-                    if (!isOOPJIT && dstOpnd->m_sym->IsSingleDef())
-                    {
-                        dstOpnd->m_sym->SetIsSimd128Const();
-                    }
-#endif
-                }
+                [](IR::Instr* instr, AsmJsSIMDValue val){}
             );
             break;
         default:
@@ -1824,9 +1797,7 @@ IRBuilderAsmJs::BuildAsmCall(Js::OpCodeAsmJs newOpcode, uint32_t offset, Js::Arg
     {
         if (newOpcode == Js::OpCodeAsmJs::I_Call || newOpcode == Js::OpCodeAsmJs::ProfiledI_Call)
         {
-#if _M_IX86
-            argOffset -= argInstr->GetDst()->GetSize();
-#elif _M_X64
+#if _M_X64
             argOffset -= (argInstr->GetDst()->GetSize() <= MachPtr ? MachPtr : argInstr->GetDst()->GetSize());
 #else
             Assert(UNREACHED);

@@ -339,9 +339,6 @@ namespace Js
         ScriptContext * scriptContext;
         struct ScriptEntryExitRecord * next;
 
-#if defined(_M_IX86) && defined(DBG)
-        void * scriptEntryFS0;
-#endif
 #ifdef EXCEPTION_CHECK
         ExceptionType handledExceptionType;
 #endif

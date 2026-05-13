@@ -367,13 +367,7 @@ Function:
 BOOL
 IsInDebugBreak(void *addr)
 {
-#ifdef _M_IX86
-    // TODO: enable this
-    // When enabled, lldb/ch fails prematurely at initialization phase
-    return FALSE;
-#else
     return (addr >= (void *)DBG_DebugBreak) && (addr <= (void *)DBG_DebugBreak_End);
-#endif
 }
 
 /*++

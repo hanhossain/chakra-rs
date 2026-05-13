@@ -2550,9 +2550,7 @@ namespace TTD
         writer.AdjustIndent(1);
 
         TTString archString;
-#if defined(_M_IX86)
-        this->m_miscSlabAllocator.CopyNullTermStringInto(u"x86", archString);
-#elif defined(_M_X64)
+#if defined(_M_X64)
         this->m_miscSlabAllocator.CopyNullTermStringInto(u"x64", archString);
 #elif defined(_M_ARM)
         this->m_miscSlabAllocator.CopyNullTermStringInto(u"arm", archString);
@@ -2758,9 +2756,7 @@ namespace TTD
         TTString archString;
         reader.ReadString(NSTokens::Key::arch, this->m_miscSlabAllocator, archString);
 
-#if defined(_M_IX86)
-        TTDAssert(PAL_wcscmp(u"x86", archString.Contents) == 0, "Mismatch in arch between record and replay!!!");
-#elif defined(_M_X64)
+#if defined(_M_X64)
         TTDAssert(PAL_wcscmp(u"x64", archString.Contents) == 0, "Mismatch in arch between record and replay!!!");
 #elif defined(_M_ARM) // #TODO investigate why this is checking for "arm64" instead of "arm"
         TTDAssert(PAL_wcscmp(u"arm64", archString.Contents) == 0, "Mismatch in arch between record and replay!!!");

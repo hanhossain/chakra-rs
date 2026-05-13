@@ -12,7 +12,6 @@
 #ifdef ENABLE_SCRIPT_DEBUGGING
 #include "Debug/DiagHelperMethodWrapper.h"
 #endif
-#include "Math/CrtSSE2Math.h"
 #include "Library/JavascriptGeneratorFunction.h"
 #include "RuntimeMathPch.h"
 
@@ -104,48 +103,6 @@ intptr_t GetNonTableMethodAddress(ThreadContextInfo * context, JnHelperMethod he
     //
     //  DllImport methods
     //
-#if defined(_M_IX86)
-    // These are internal CRT functions which don't use a standard calling convention
-    case HelperDirectMath_Acos:
-        return ShiftAddr(context, __libm_sse2_acos);
-
-    case HelperDirectMath_Asin:
-        return ShiftAddr(context, __libm_sse2_asin);
-
-    case HelperDirectMath_Atan:
-        return ShiftAddr(context, __libm_sse2_atan);
-
-    case HelperDirectMath_Atan2:
-        return ShiftAddr(context, __libm_sse2_atan2);
-
-    case HelperDirectMath_Cos:
-        return ShiftAddr(context, __libm_sse2_cos);
-
-    case HelperDirectMath_Exp:
-        return ShiftAddr(context, __libm_sse2_exp);
-
-    case HelperDirectMath_Log:
-        return ShiftAddr(context, __libm_sse2_log);
-
-    case HelperDirectMath_Sin:
-        return ShiftAddr(context, __libm_sse2_sin);
-
-    case HelperDirectMath_Tan:
-        return ShiftAddr(context, __libm_sse2_tan);
-
-    case HelperAtomicStore64:
-        return ShiftAddr(context, (double(*)(double))InterlockedExchange64);
-
-    case HelperMemoryBarrier:
-#ifdef _M_HYBRID_X86_ARM64
-        AssertOrFailFastMsg(false, "The usage below fails to build for CHPE, and HelperMemoryBarrier is only required "
-                                   "for WASM threads, which are currently disabled");
-        return 0;
-#else
-        return ShiftAddr(context, (void(*)())MemoryBarrier);
-#endif // !_M_HYBRID_X86_ARM64
-#endif
-
     case HelperDirectMath_FloorDb:
         return ShiftStdcallAddr(context, Js::JavascriptMath::Floor);
 
@@ -217,13 +174,6 @@ intptr_t GetNonTableMethodAddress(ThreadContextInfo * context, JnHelperMethod he
         return ShiftStdcallAddr(context, LinearScanMD::SaveAllRegistersAndBailOut);
     case HelperSaveAllRegistersAndBranchBailOut:
         return ShiftStdcallAddr(context, LinearScanMD::SaveAllRegistersAndBranchBailOut);
-
-#ifdef _M_IX86
-    case HelperSaveAllRegistersNoSse2AndBailOut:
-        return ShiftStdcallAddr(context, LinearScanMD::SaveAllRegistersNoSse2AndBailOut);
-    case HelperSaveAllRegistersNoSse2AndBranchBailOut:
-        return ShiftStdcallAddr(context, LinearScanMD::SaveAllRegistersNoSse2AndBranchBailOut);
-#endif
 
     }
 

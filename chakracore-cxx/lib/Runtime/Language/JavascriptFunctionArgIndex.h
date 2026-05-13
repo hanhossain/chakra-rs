@@ -9,7 +9,7 @@ namespace Js
     enum JavascriptFunctionArgIndex {
         JavascriptFunctionArgIndex_Frame           = -2,
         JavascriptFunctionArgIndex_ArgumentsObject = JavascriptFunctionArgIndex_Frame - Js::Constants::ArgumentLocationOnFrame,
-#if _M_IX86 || _M_AMD64
+#if _M_AMD64
         JavascriptFunctionArgIndex_StackNestedFuncListWithNoArg = JavascriptFunctionArgIndex_Frame - Js::Constants::StackNestedFuncListWithNoArg,
         JavascriptFunctionArgIndex_StackFrameDisplayNoArg = JavascriptFunctionArgIndex_Frame - Js::Constants::StackFrameDisplayWithNoArg,
         JavascriptFunctionArgIndex_StackScopeSlotsNoArg = JavascriptFunctionArgIndex_Frame - Js::Constants::StackScopeSlotsWithNoArg,
