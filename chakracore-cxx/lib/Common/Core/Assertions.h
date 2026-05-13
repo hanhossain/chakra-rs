@@ -13,7 +13,7 @@
 extern int AssertCount;
 extern int AssertsToConsole;
 
-extern __declspec(thread) int IsInAssert;
+extern thread_local int IsInAssert;
 
 #if !defined(USED_IN_STATIC_LIB)
 #define REPORT_ASSERT(f, comment) Js::Throw::ReportAssert(__FILE__, __LINE__, STRINGIZE((f)), comment)
