@@ -226,10 +226,6 @@ typedef struct _SECURITY_ATTRIBUTES {
 
 #define STILL_ACTIVE (0x00000103L)
 
-BOOL
-DeleteFileA(
-         const char * lpFileName);
-
 #define MOVEFILE_REPLACE_EXISTING      0x00000001
 #define MOVEFILE_COPY_ALLOWED          0x00000002
 
