@@ -1211,35 +1211,6 @@ InternalFlushFileBuffersExit:
 }
 
 
-/*++
-Function:
-  FlushFileBuffers
-
-See MSDN doc.
---*/
-BOOL
-FlushFileBuffers(
-          HANDLE hFile)
-{
-    PAL_ERROR palError = NO_ERROR;
-    CPalThread *pThread;
-
-    pThread = InternalGetCurrentThread();
-
-    palError = InternalFlushFileBuffers(
-        pThread,
-        hFile
-        );
-
-    if (NO_ERROR != palError)
-    {
-        pThread->SetLastError(palError);
-    }
-
-    LOGEXIT("FlushFileBuffers returns BOOL %d\n", NO_ERROR == palError);
-    return NO_ERROR == palError;
-}
-
 PAL_ERROR
 CorUnix::InternalGetFileType(
     CPalThread *pThread,

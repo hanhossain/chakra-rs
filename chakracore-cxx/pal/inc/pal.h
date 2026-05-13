@@ -284,10 +284,6 @@ typedef struct _SYSTEMTIME {
     uint16_t wMilliseconds;
 } SYSTEMTIME, *LPSYSTEMTIME;
 
-BOOL
-FlushFileBuffers(
-          HANDLE hFile);
-
 #define FILE_TYPE_UNKNOWN         0x0000
 #define FILE_TYPE_DISK            0x0001
 #define FILE_TYPE_CHAR            0x0002
