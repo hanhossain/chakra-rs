@@ -602,6 +602,7 @@ JsErrorCode WScriptJsrt::ModuleEntryPoint(const char * fileName, const char * fi
     return LoadModuleFromString(fileName, fileContent, fullName, true);
 }
 
+// TODO: use path for fullName
 JsErrorCode WScriptJsrt::LoadModuleFromString(const char * fileName, const char * fileContent, const char * fullName, bool isFile)
 {
     unsigned long dwSourceCookie = WScriptJsrt::GetNextSourceContext();
@@ -668,18 +669,21 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, const char * fileName,
     JsContextRef currentContext = JS_INVALID_REFERENCE;
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
     void *callbackArg = (finalizeCallback != nullptr ? (void*)fileContent : nullptr);
-
-    char fullPath[_MAX_PATH];
-
-    IfJsrtErrorSetGo(ChakraRTInterface::JsGetCurrentContext(&currentContext));
-    IfJsrtErrorSetGo(ChakraRTInterface::JsGetRuntime(currentContext, &runtime));
+    std::error_code ec;
 
     if (fileName == nullptr)
     {
         fileName = "script.js";
     }
 
-    if (_fullpath(fullPath, fileName, _MAX_PATH) == nullptr)
+    std::string fileNameStr = fileName;
+    std::replace(fileNameStr.begin(), fileNameStr.end(), '\\', fs::path::preferred_separator);
+    auto fullPath = fs::absolute(fileNameStr, ec).lexically_normal();
+
+    IfJsrtErrorSetGo(ChakraRTInterface::JsGetCurrentContext(&currentContext));
+    IfJsrtErrorSetGo(ChakraRTInterface::JsGetRuntime(currentContext, &runtime));
+
+    if (ec)
     {
         goto Error;
     }
@@ -688,7 +692,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, const char * fileName,
     // treated as a module source text instead of opening a new file.
     if (isSourceModule || (strcmp(scriptInjectType, "module") == 0))
     {
-        errorCode = LoadModuleFromString(fileName, fileContent, fullPath, isFile);
+        errorCode = LoadModuleFromString(fileName, fileContent, fullPath.c_str(), isFile);
     }
     else if (strcmp(scriptInjectType, "self") == 0)
     {
@@ -701,8 +705,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, const char * fileName,
         IfJsrtErrorSetGo(ChakraRTInterface::JsCreateExternalArrayBuffer((void*)fileContent,
             (unsigned int)strlen(fileContent), finalizeCallback, callbackArg, &scriptSource));
         JsValueRef fname;
-        IfJsrtErrorSetGo(ChakraRTInterface::JsCreateString(fullPath,
-            strlen(fullPath), &fname));
+        IfJsrtErrorSetGo(ChakraRTInterface::JsCreateString(fullPath, &fname));
         JsSourceContext sourceContext = GetNextSourceContext();
 
         if (HostConfigFlags::flags.UseParserStateCacheIsEnabled)
@@ -746,8 +749,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, const char * fileName,
         IfJsrtErrorSetGo(ChakraRTInterface::JsCreateExternalArrayBuffer((void*)fileContent,
             (unsigned int)strlen(fileContent), finalizeCallback, callbackArg, &scriptSource));
         JsValueRef fname;
-        IfJsrtErrorSetGo(ChakraRTInterface::JsCreateString(fullPath,
-            strlen(fullPath), &fname));
+        IfJsrtErrorSetGo(ChakraRTInterface::JsCreateString(fullPath, &fname));
         JsSourceContext sourceContext = GetNextSourceContext();
 
         if (HostConfigFlags::flags.UseParserStateCacheIsEnabled)
