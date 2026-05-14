@@ -160,5 +160,4 @@ private:
     static std::map<std::filesystem::path, JsModuleRecord> moduleRecordMap;
     static std::map<JsModuleRecord, std::filesystem::path> moduleDirMap;
     static std::map<JsModuleRecord, ModuleState> moduleErrMap;
-    static std::map<unsigned long, std::string> scriptDirMap;
 };
