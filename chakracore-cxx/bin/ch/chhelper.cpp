@@ -269,7 +269,6 @@ int32_t RunScript(const char* fileName, const char * fileContents, size_t fileLe
             }
 
             auto sourceContext = WScriptJsrt::GetNextSourceContext();
-            WScriptJsrt::RegisterScriptDir(sourceContext, fullPath.value_or("").c_str());
             runScript = ChakraRTInterface::JsRun(scriptSource,
                 sourceContext, fname,
                 JsParseScriptAttributeNone, nullptr /*result*/);
