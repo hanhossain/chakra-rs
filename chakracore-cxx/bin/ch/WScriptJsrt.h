@@ -151,7 +151,9 @@ private:
     static JsValueRef CALLBACK SerializeObject(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
     static JsValueRef CALLBACK Deserialize(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
 
-    static JsErrorCode FetchImportedModuleHelper(JsModuleRecord referencingModule, JsValueRef specifier, JsModuleRecord* dependentModuleRecord, const char * refdir = nullptr);
+    static JsErrorCode FetchImportedModuleHelper(JsModuleRecord referencingModule, JsValueRef specifier,
+                                                 JsModuleRecord* dependentModuleRecord,
+                                                 const std::optional<std::filesystem::path>& refdir = std::nullopt);
 
     static MessageQueue *messageQueue;
     static unsigned long sourceContext;
