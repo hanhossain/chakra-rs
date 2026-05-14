@@ -77,7 +77,7 @@ uint ConcatPath(const char * filenameLeft, uint posPathSep, const char * filenam
     return totalLength;
 }
 
-int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& contents, uint32_t* lengthBytesOut /*= nullptr*/, std::string* fullPath /*= nullptr*/, bool shouldMute /*=false */)
+int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& contents, uint32_t* lengthBytesOut /*= nullptr*/, const std::optional<std::filesystem::path> &fullPath, bool shouldMute /*=false */)
 {
     static char sHostApplicationPathBuffer[MAX_URI_LENGTH];
     static uint sHostApplicationPathBufferLength = (uint) -1;
@@ -91,7 +91,7 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
     FILE * file = NULL;
     size_t bufferLength = 0;
 
-    const char * filename = fullPath == nullptr ? filenameToLoad : (const char *)(fullPath->c_str());
+    const char * filename = !fullPath ? filenameToLoad : (const char *)(fullPath->c_str());
     if (sHostApplicationPathBufferLength == (uint)-1)
     {
         // consider incoming filename as the host app and base its' path for others
@@ -110,7 +110,7 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
         }
         sHostApplicationPathBuffer[sHostApplicationPathBufferLength] = char(0);
     }
-    else if (filename[0] != '/' && filename[0] != '\\' && fullPath == nullptr) // make sure it's not a full path
+    else if (filename[0] != '/' && filename[0] != '\\' && !fullPath) // make sure it's not a full path
     {
         // concat host path and filename
         uint len = ConcatPath(sHostApplicationPathBuffer, sHostApplicationPathBufferLength,

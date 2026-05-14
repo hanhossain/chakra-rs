@@ -5,6 +5,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 #include <list>
+#include <filesystem>
+#include <optional>
 
 enum ModuleState
 {
@@ -44,16 +46,16 @@ public:
     private:
         JsModuleRecord moduleRecord;
         JsValueRef specifier;
-        std::string* fullPath;
+        std::optional<std::filesystem::path> fullPath_;
 
-        ModuleMessage(JsModuleRecord module, JsValueRef specifier, std::string* fullPathPtr);
+        ModuleMessage(JsModuleRecord module, JsValueRef specifier, const std::optional<std::filesystem::path> &fullpath);
 
     public:
         ~ModuleMessage();
 
         virtual int32_t Call(const char * fileName) override;
 
-        static ModuleMessage* Create(JsModuleRecord module, JsValueRef specifier, std::string* fullPath = nullptr)
+        static ModuleMessage* Create(JsModuleRecord module, JsValueRef specifier, const std::optional<std::filesystem::path> &fullPath = std::nullopt)
         {
             return new ModuleMessage(module, specifier, fullPath);
         }
