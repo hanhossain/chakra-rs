@@ -158,7 +158,7 @@ private:
     static MessageQueue *messageQueue;
     static unsigned long sourceContext;
     static std::map<std::string, JsModuleRecord> moduleRecordMap;
-    static std::map<JsModuleRecord, std::string> moduleDirMap;
+    static std::map<JsModuleRecord, std::filesystem::path> moduleDirMap;
     static std::map<JsModuleRecord, ModuleState> moduleErrMap;
     static std::map<unsigned long, std::string> scriptDirMap;
 };

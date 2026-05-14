@@ -55,7 +55,7 @@ struct SerializerBlob
 
 MessageQueue* WScriptJsrt::messageQueue = nullptr;
 std::map<std::string, JsModuleRecord>  WScriptJsrt::moduleRecordMap;
-std::map<JsModuleRecord, std::string>  WScriptJsrt::moduleDirMap;
+std::map<JsModuleRecord, fs::path> WScriptJsrt::moduleDirMap;
 std::map<JsModuleRecord, ModuleState>  WScriptJsrt::moduleErrMap;
 std::map<unsigned long, std::string> WScriptJsrt::scriptDirMap;
 unsigned long WScriptJsrt::sourceContext = 0;
@@ -635,7 +635,7 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(const char * fileName, const char 
         {
             if (fullName)
             {
-                moduleDirMap[requestModule] = GetDir(fullName);
+                moduleDirMap[requestModule] = fs::path(fullName).parent_path();
             }
 
             moduleRecordMap[std::string(moduleRecordKey)] = requestModule;
@@ -2062,7 +2062,6 @@ JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingMod
     JsErrorCode errorCode = ChakraRTInterface::JsInitializeModuleRecord(referencingModule, specifier, &moduleRecord);
     if (errorCode == JsNoError)
     {
-        // TODO: use path for moduleDirMap::value
         moduleDirMap[moduleRecord] = fullPath.parent_path();
         // TODO: use path for moduleRecordMap::key
         moduleRecordMap[fullPath] = moduleRecord;
@@ -2088,7 +2087,7 @@ JsErrorCode WScriptJsrt::FetchImportedModule(_In_ JsModuleRecord referencingModu
     auto moduleDirEntry = moduleDirMap.find(referencingModule);
     if (moduleDirEntry != moduleDirMap.end())
     {
-        std::string dir = moduleDirEntry->second;
+        auto dir = moduleDirEntry->second;
         return FetchImportedModuleHelper(referencingModule, specifier, dependentModuleRecord, dir);
     }
 
