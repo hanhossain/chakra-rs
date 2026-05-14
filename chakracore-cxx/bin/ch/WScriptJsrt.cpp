@@ -54,9 +54,10 @@ struct SerializerBlob
 };
 
 MessageQueue* WScriptJsrt::messageQueue = nullptr;
-std::map<std::string, JsModuleRecord>  WScriptJsrt::moduleRecordMap;
+std::map<fs::path, JsModuleRecord>  WScriptJsrt::moduleRecordMap;
 std::map<JsModuleRecord, fs::path> WScriptJsrt::moduleDirMap;
 std::map<JsModuleRecord, ModuleState>  WScriptJsrt::moduleErrMap;
+// TODO: use path for scriptDirMap::value
 std::map<unsigned long, std::string> WScriptJsrt::scriptDirMap;
 unsigned long WScriptJsrt::sourceContext = 0;
 
@@ -613,7 +614,7 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(const char * fileName, const char 
     unsigned long dwSourceCookie = WScriptJsrt::GetNextSourceContext();
     JsModuleRecord requestModule = JS_INVALID_REFERENCE;
     const char * moduleRecordKey = fullName ? fullName : fileName;
-    auto moduleRecordEntry = moduleRecordMap.find(std::string(moduleRecordKey));
+    auto moduleRecordEntry = moduleRecordMap.find(moduleRecordKey);
     JsErrorCode errorCode = JsNoError;
 
     // we need to create a new moduleRecord if the specifier (fileName) is not found;
@@ -638,7 +639,7 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(const char * fileName, const char 
                 moduleDirMap[requestModule] = fs::path(fullName).parent_path();
             }
 
-            moduleRecordMap[std::string(moduleRecordKey)] = requestModule;
+            moduleRecordMap[moduleRecordKey] = requestModule;
             moduleErrMap[requestModule] = RootModule;
         }
     }
@@ -2063,7 +2064,6 @@ JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingMod
     if (errorCode == JsNoError)
     {
         moduleDirMap[moduleRecord] = fullPath.parent_path();
-        // TODO: use path for moduleRecordMap::key
         moduleRecordMap[fullPath] = moduleRecord;
         moduleErrMap[moduleRecord] = ImportedModule;
         ModuleMessage* moduleMessage = WScriptJsrt::ModuleMessage::Create(referencingModule, specifier, fullPath);
