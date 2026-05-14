@@ -86,10 +86,6 @@ unsigned long WScriptJsrt::GetNextSourceContext()
     return sourceContext++;
 }
 
-void WScriptJsrt::RegisterScriptDir(unsigned long sourceContext, const char * fullDirNarrow)
-{
-}
-
 bool WScriptJsrt::CreateArgumentsObject(JsValueRef *argsObject)
 {
     const char16_t* *argv = HostConfigFlags::argsVal;
@@ -708,7 +704,6 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, const char * fileName,
         IfJsrtErrorSetGo(ChakraRTInterface::JsCreateString(fullPath,
             strlen(fullPath), &fname));
         JsSourceContext sourceContext = GetNextSourceContext();
-        RegisterScriptDir(sourceContext, fullPath);
 
         if (HostConfigFlags::flags.UseParserStateCacheIsEnabled)
         {
@@ -754,7 +749,6 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, const char * fileName,
         IfJsrtErrorSetGo(ChakraRTInterface::JsCreateString(fullPath,
             strlen(fullPath), &fname));
         JsSourceContext sourceContext = GetNextSourceContext();
-        RegisterScriptDir(sourceContext, fullPath);
 
         if (HostConfigFlags::flags.UseParserStateCacheIsEnabled)
         {
