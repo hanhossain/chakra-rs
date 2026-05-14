@@ -2042,10 +2042,13 @@ JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingMod
         return specifierStr.GetError();
     }
 
-    char fullPath[_MAX_PATH];
     std::string specifierFullPath = refdir ? refdir : "";
     specifierFullPath += *specifierStr;
-    if (_fullpath(fullPath, specifierFullPath.c_str(), _MAX_PATH) == nullptr)
+
+    std::error_code ec;
+    const auto fullPath = fs::absolute(specifierFullPath, ec).lexically_normal();
+
+    if (ec)
     {
         return JsErrorInvalidArgument;
     }
@@ -2060,10 +2063,12 @@ JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingMod
     JsErrorCode errorCode = ChakraRTInterface::JsInitializeModuleRecord(referencingModule, specifier, &moduleRecord);
     if (errorCode == JsNoError)
     {
-        moduleDirMap[moduleRecord] = GetDir(fullPath);
+        // TODO: remove GetDir
+        moduleDirMap[moduleRecord] = GetDir(fullPath.string());
         std::string pathKey = std::string(fullPath);
         moduleRecordMap[pathKey] = moduleRecord;
         moduleErrMap[moduleRecord] = ImportedModule;
+        // TODO: accept a path instead for pathKey
         ModuleMessage* moduleMessage = WScriptJsrt::ModuleMessage::Create(referencingModule, specifier, &pathKey);
         if (moduleMessage == nullptr)
         {
