@@ -201,7 +201,10 @@ pub fn run_test_variant<const N: usize>(
         Some(baseline_path) => {
             if !baseline_path.is_empty() {
                 let baseline = manifest_dir.join(test.directory).join(baseline_path);
-                let expected = read_to_string(baseline).unwrap();
+                let test_script_root = manifest_dir.join("../tests").canonicalize().unwrap();
+                let expected = read_to_string(baseline)
+                    .unwrap()
+                    .replace("${test-script-root}", test_script_root.to_str().unwrap());
                 let expected = expected
                     .lines()
                     .map(|s| trim_carriage_return(s))

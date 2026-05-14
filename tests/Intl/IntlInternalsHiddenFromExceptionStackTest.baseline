@@ -1,6 +1,6 @@
 Error: Throwing...
-   at toString (IntlInternalsHiddenFromExceptionStackTest.js:15:17)
+   at toString (${test-script-root}/Intl/IntlInternalsHiddenFromExceptionStackTest.js:15:17)
    at Intl.Collator.prototype.compare (native code)
    at Array.prototype.sort (native code)
-   at testCallback (IntlInternalsHiddenFromExceptionStackTest.js:22:5)
-   at Global code (IntlInternalsHiddenFromExceptionStackTest.js:26:5)
+   at testCallback (${test-script-root}/Intl/IntlInternalsHiddenFromExceptionStackTest.js:22:5)
+   at Global code (${test-script-root}/Intl/IntlInternalsHiddenFromExceptionStackTest.js:26:5)
