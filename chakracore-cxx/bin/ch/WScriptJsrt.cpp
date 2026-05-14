@@ -598,7 +598,7 @@ Error:
 std::string WScriptJsrt::GetDir(const std::string_view fullPathNarrow)
 {
     const std::filesystem::path path = fullPathNarrow;
-    const auto parent = path.parent_path().concat("/");
+    const auto parent = path.parent_path();
 
     return parent;
 }
@@ -1951,14 +1951,14 @@ Error:
     return hr;
 }
 
-WScriptJsrt::ModuleMessage::ModuleMessage(JsModuleRecord module, JsValueRef specifier, std::string* fullPathPtr)
+WScriptJsrt::ModuleMessage::ModuleMessage(JsModuleRecord module, JsValueRef specifier, const std::optional<fs::path> &fullpath)
     : MessageBase(0), moduleRecord(module), specifier(specifier)
 {
-    fullPath = nullptr;
+    fullPath_ = std::nullopt;
     ChakraRTInterface::JsAddRef(module, nullptr);
     if (specifier != nullptr)
     {
-        fullPath = new std::string (*fullPathPtr);
+        fullPath_ = fullpath;
         // nullptr specifier means a Promise to execute; non-nullptr means a "fetch" operation.
         ChakraRTInterface::JsAddRef(specifier, nullptr);
     }
@@ -1969,7 +1969,6 @@ WScriptJsrt::ModuleMessage::~ModuleMessage()
     ChakraRTInterface::JsRelease(moduleRecord, nullptr);
     if (specifier != nullptr)
     {
-        delete fullPath;
         ChakraRTInterface::JsRelease(specifier, nullptr);
     }
 }
@@ -1997,22 +1996,22 @@ int32_t WScriptJsrt::ModuleMessage::Call(const char * fileName)
         errorCode = specifierStr.GetError();
         if (errorCode == JsNoError)
         {
-            hr = Helpers::LoadScriptFromFile(*specifierStr, fileContent, nullptr, fullPath, true);
+            hr = Helpers::LoadScriptFromFile(*specifierStr, fileContent, nullptr, fullPath_, true);
 
             if (FAILED(hr))
             {
                 if (!HostConfigFlags::flags.MuteHostErrorMsgIsEnabled)
                 {
-                    auto actualModuleRecord = moduleRecordMap.find(*fullPath);
+                    auto actualModuleRecord = moduleRecordMap.find(fullPath_.value());
                     if (actualModuleRecord == moduleRecordMap.end() || moduleErrMap[actualModuleRecord->second] == RootModule)
                     {
                         fprintf(stderr, "Couldn't load file '%s'\n", specifierStr.GetString());
                     }
                 }
-                LoadScript(nullptr, fullPath == nullptr ? *specifierStr : fullPath->c_str(), nullptr, "module", true, WScriptJsrt::FinalizeFree, false);
+                LoadScript(nullptr, !fullPath_ ? *specifierStr : fullPath_->c_str(), nullptr, "module", true, WScriptJsrt::FinalizeFree, false);
                 goto Error;
             }
-            LoadScript(nullptr, fullPath == nullptr ? *specifierStr : fullPath->c_str(), fileContent, "module", true, WScriptJsrt::FinalizeFree, true);
+            LoadScript(nullptr, !fullPath_ ? *specifierStr : fullPath_->c_str(), fileContent, "module", true, WScriptJsrt::FinalizeFree, true);
         }
     }
 Error:
@@ -2030,6 +2029,7 @@ JsErrorCode WScriptJsrt::ReportModuleCompletionCallback(JsModuleRecord module, J
     return JsNoError;
 }
 
+// TODO: use path for refdir
 JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingModule,
     JsValueRef specifier, JsModuleRecord* dependentModuleRecord, const char * refdir)
 {
@@ -2042,8 +2042,8 @@ JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingMod
         return specifierStr.GetError();
     }
 
-    std::string specifierFullPath = refdir ? refdir : "";
-    specifierFullPath += *specifierStr;
+    fs::path specifierFullPath = refdir ? refdir : "";
+    specifierFullPath /= specifierStr.GetString();
 
     std::error_code ec;
     const auto fullPath = fs::absolute(specifierFullPath, ec).lexically_normal();
@@ -2053,7 +2053,7 @@ JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingMod
         return JsErrorInvalidArgument;
     }
 
-    auto moduleEntry = moduleRecordMap.find(std::string(fullPath));
+    auto moduleEntry = moduleRecordMap.find(fullPath);
     if (moduleEntry != moduleRecordMap.end())
     {
         *dependentModuleRecord = moduleEntry->second;
@@ -2063,13 +2063,12 @@ JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingMod
     JsErrorCode errorCode = ChakraRTInterface::JsInitializeModuleRecord(referencingModule, specifier, &moduleRecord);
     if (errorCode == JsNoError)
     {
-        // TODO: remove GetDir
-        moduleDirMap[moduleRecord] = GetDir(fullPath.string());
-        std::string pathKey = std::string(fullPath);
-        moduleRecordMap[pathKey] = moduleRecord;
+        // TODO: use path for moduleDirMap::value
+        moduleDirMap[moduleRecord] = fullPath.parent_path();
+        // TODO: use path for moduleRecordMap::key
+        moduleRecordMap[fullPath] = moduleRecord;
         moduleErrMap[moduleRecord] = ImportedModule;
-        // TODO: accept a path instead for pathKey
-        ModuleMessage* moduleMessage = WScriptJsrt::ModuleMessage::Create(referencingModule, specifier, &pathKey);
+        ModuleMessage* moduleMessage = WScriptJsrt::ModuleMessage::Create(referencingModule, specifier, fullPath);
         if (moduleMessage == nullptr)
         {
             return JsErrorOutOfMemory;
