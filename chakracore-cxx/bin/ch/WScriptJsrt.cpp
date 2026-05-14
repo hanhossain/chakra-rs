@@ -12,6 +12,9 @@
 
 #include <chrono>
 #include <filesystem>
+#include <iostream>
+
+namespace fs = std::filesystem;
 
 #if defined(_AMD64_) || defined(_IA64_) || defined(_M_AMD64) || defined(_M_IA64)
 #define CPU_ARCH_TEXT "x86_64"
@@ -479,7 +482,6 @@ JsValueRef WScriptJsrt::GetModuleNamespace(JsValueRef callee, bool isConstructCa
     JsErrorCode errorCode = JsNoError;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     std::u16string errorMessage;
-    char fullPath[_MAX_PATH];
 
     if (argumentCount < 2)
     {
@@ -493,7 +495,9 @@ JsValueRef WScriptJsrt::GetModuleNamespace(JsValueRef callee, bool isConstructCa
 
         if (errorCode == JsNoError)
         {
-            if (_fullpath(fullPath, specifierStr.GetString(), _MAX_PATH) == nullptr)
+            std::error_code ec;
+            const fs::path fullPath = fs::absolute(specifierStr.GetString(), ec);
+            if (ec)
             {
                 errorCode = JsErrorInvalidArgument;
             }
