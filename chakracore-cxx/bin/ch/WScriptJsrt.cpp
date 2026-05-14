@@ -57,8 +57,6 @@ MessageQueue* WScriptJsrt::messageQueue = nullptr;
 std::map<fs::path, JsModuleRecord>  WScriptJsrt::moduleRecordMap;
 std::map<JsModuleRecord, fs::path> WScriptJsrt::moduleDirMap;
 std::map<JsModuleRecord, ModuleState>  WScriptJsrt::moduleErrMap;
-// TODO: use path for scriptDirMap::value
-std::map<unsigned long, std::string> WScriptJsrt::scriptDirMap;
 unsigned long WScriptJsrt::sourceContext = 0;
 
 #define ERROR_MESSAGE_TO_STRING(errorCode, errorMessage, errorMessageString)        \
@@ -90,7 +88,6 @@ unsigned long WScriptJsrt::GetNextSourceContext()
 
 void WScriptJsrt::RegisterScriptDir(unsigned long sourceContext, const char * fullDirNarrow)
 {
-    scriptDirMap[sourceContext] = GetDir(fullDirNarrow);
 }
 
 bool WScriptJsrt::CreateArgumentsObject(JsValueRef *argsObject)
@@ -1208,7 +1205,6 @@ bool WScriptJsrt::Uninitialize()
     moduleRecordMap.clear();
     moduleDirMap.clear();
     moduleErrMap.clear();
-    scriptDirMap.clear();
 
     auto& threadData = GetRuntimeThreadLocalData().threadData;
     if (threadData && !threadData->children.empty())
