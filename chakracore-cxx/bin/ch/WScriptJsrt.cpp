@@ -2029,9 +2029,8 @@ JsErrorCode WScriptJsrt::ReportModuleCompletionCallback(JsModuleRecord module, J
     return JsNoError;
 }
 
-// TODO: use path for refdir
 JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingModule,
-    JsValueRef specifier, JsModuleRecord* dependentModuleRecord, const char * refdir)
+    JsValueRef specifier, JsModuleRecord* dependentModuleRecord, const std::optional<fs::path> &refdir)
 {
     JsModuleRecord moduleRecord = JS_INVALID_REFERENCE;
     AutoString specifierStr;
@@ -2042,7 +2041,7 @@ JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingMod
         return specifierStr.GetError();
     }
 
-    fs::path specifierFullPath = refdir ? refdir : "";
+    fs::path specifierFullPath = refdir.value_or(fs::path {});
     specifierFullPath /= specifierStr.GetString();
 
     std::error_code ec;
@@ -2090,7 +2089,7 @@ JsErrorCode WScriptJsrt::FetchImportedModule(_In_ JsModuleRecord referencingModu
     if (moduleDirEntry != moduleDirMap.end())
     {
         std::string dir = moduleDirEntry->second;
-        return FetchImportedModuleHelper(referencingModule, specifier, dependentModuleRecord, dir.c_str());
+        return FetchImportedModuleHelper(referencingModule, specifier, dependentModuleRecord, dir);
     }
 
     return FetchImportedModuleHelper(referencingModule, specifier, dependentModuleRecord);
