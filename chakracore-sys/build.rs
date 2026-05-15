@@ -72,7 +72,10 @@ fn main() {
         println!("cargo::rustc-link-lib=icui18n");
     }
 
-    println!("cargo::rerun-if-changed=../chakracore-cxx/");
+    println!("cargo::rerun-if-changed=../chakracore-cxx/bin/");
+    println!("cargo::rerun-if-changed=../chakracore-cxx/lib/");
+    println!("cargo::rerun-if-changed=../chakracore-cxx/pal/");
+    println!("cargo::rerun-if-changed=../chakracore-cxx/CMakeLists.txt");
     println!("cargo::rerun-if-changed=../CMakeLists.txt");
     println!("cargo::rerun-if-env-changed=CHAKRA_BUILD");
 }
