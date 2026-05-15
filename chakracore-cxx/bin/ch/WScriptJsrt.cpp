@@ -602,7 +602,6 @@ JsErrorCode WScriptJsrt::ModuleEntryPoint(const char * fileName, const char * fi
     return LoadModuleFromString(fileName, fileContent, fullName, true);
 }
 
-// TODO: use path for fullName
 JsErrorCode WScriptJsrt::LoadModuleFromString(const char * fileName, const char * fileContent, const char * fullName, bool isFile)
 {
     unsigned long dwSourceCookie = WScriptJsrt::GetNextSourceContext();
@@ -682,11 +681,6 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, const char * fileName,
 
     IfJsrtErrorSetGo(ChakraRTInterface::JsGetCurrentContext(&currentContext));
     IfJsrtErrorSetGo(ChakraRTInterface::JsGetRuntime(currentContext, &runtime));
-
-    if (ec)
-    {
-        goto Error;
-    }
 
     // this is called with LoadModuleCallback method as well where caller pass in a string that should be
     // treated as a module source text instead of opening a new file.
