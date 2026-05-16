@@ -189,10 +189,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-nonportable-include-path")
 # -Wno-unknown-warning-option ... well, some of the new switches are not
 # recognized by older compilers and they fail. So, put this one and not fail
 
-include(Build/CMakeFeatureDetect.cmake)
-
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-    ${CXX_DO_NOT_OPTIMIZE_SIBLING_CALLS} \
     -fno-omit-frame-pointer \
     -fdelayed-template-parsing"
 )
