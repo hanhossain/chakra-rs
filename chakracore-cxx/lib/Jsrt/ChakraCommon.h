@@ -729,6 +729,8 @@ typedef unsigned short char16_t;
     /// <param name="callbackState">The data argument to be passed to the callback.</param>
     typedef void (*JsPromiseContinuationCallback)(_In_ JsValueRef task, _In_opt_ void *callbackState);
 
+namespace chakracore::jsrt
+{
     /// <summary>
     ///     Creates a new runtime.
     /// </summary>
@@ -740,7 +742,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsCreateRuntime(
             _In_ JsRuntimeAttributes attributes,
             _In_opt_ JsThreadServiceCallback threadService,
@@ -753,7 +755,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsCollectGarbage(
             _In_ JsRuntimeHandle runtime);
 
@@ -769,7 +771,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsDisposeRuntime(
             _In_ JsRuntimeHandle runtime);
 
@@ -785,7 +787,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsGetRuntimeMemoryUsage(
             _In_ JsRuntimeHandle runtime,
             _Out_ size_t *memoryUsage);
@@ -804,7 +806,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsGetRuntimeMemoryLimit(
             _In_ JsRuntimeHandle runtime,
             _Out_ size_t *memoryLimit);
@@ -832,7 +834,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsSetRuntimeMemoryLimit(
             _In_ JsRuntimeHandle runtime,
             _In_ size_t memoryLimit);
@@ -867,7 +869,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsSetRuntimeMemoryAllocationCallback(
             _In_ JsRuntimeHandle runtime,
             _In_opt_ void *callbackState,
@@ -894,7 +896,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsSetRuntimeBeforeCollectCallback(
             _In_ JsRuntimeHandle runtime,
             _In_opt_ void *callbackState,
@@ -913,7 +915,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsAddRef(
             _In_ JsRef ref,
             _Out_opt_ unsigned int *count);
@@ -929,7 +931,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsRelease(
             _In_ JsRef ref,
             _Out_opt_ unsigned int *count);
@@ -953,7 +955,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsSetObjectBeforeCollectCallback(
             _In_ JsRef ref,
             _In_opt_ void *callbackState,
@@ -971,7 +973,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsCreateContext(
             _In_ JsRuntimeHandle runtime,
             _Out_ JsContextRef *newContext);
@@ -985,7 +987,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsGetCurrentContext(
             _Out_ JsContextRef *currentContext);
 
@@ -996,7 +998,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsSetCurrentContext(
             _In_opt_ JsContextRef context);
 
@@ -1008,7 +1010,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsGetContextOfObject(
             _In_ JsValueRef object,
             _Out_ JsContextRef *context);
@@ -1021,7 +1023,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsGetContextData(
             _In_ JsContextRef context,
             _Out_ void **data);
@@ -1034,7 +1036,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsSetContextData(
             _In_ JsContextRef context,
             _In_ void *data);
@@ -1047,7 +1049,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsGetRuntime(
             _In_ JsContextRef context,
             _Out_ JsRuntimeHandle *runtime);
@@ -1077,7 +1079,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsIdle(
             _Out_opt_ unsigned int *nextIdleTick);
 
@@ -1094,7 +1096,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsGetSymbolFromPropertyId(
             _In_ JsPropertyIdRef propertyId,
             _Out_ JsValueRef *symbol);
@@ -1112,7 +1114,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsGetPropertyIdType(
             _In_ JsPropertyIdRef propertyId,
             _Out_ JsPropertyIdType* propertyIdType);
@@ -1136,7 +1138,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsGetPropertyIdFromSymbol(
             _In_ JsValueRef symbol,
             _Out_ JsPropertyIdRef *propertyId);
@@ -1152,7 +1154,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsCreateSymbol(
             _In_ JsValueRef description,
             _Out_ JsValueRef *result);
@@ -1168,7 +1170,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsGetOwnPropertySymbols(
             _In_ JsValueRef object,
             _Out_ JsValueRef *propertySymbols);
@@ -1183,7 +1185,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsGetUndefinedValue(
             _Out_ JsValueRef *undefinedValue);
 
@@ -1197,7 +1199,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsGetNullValue(
             _Out_ JsValueRef *nullValue);
 
@@ -1211,7 +1213,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsGetTrueValue(
             _Out_ JsValueRef *trueValue);
 
@@ -1225,7 +1227,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsGetFalseValue(
             _Out_ JsValueRef *falseValue);
 
@@ -1240,7 +1242,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsBoolToBoolean(
             _In_ bool value,
             _Out_ JsValueRef *booleanValue);
@@ -1253,7 +1255,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsBooleanToBool(
             _In_ JsValueRef value,
             _Out_ bool *boolValue);
@@ -1269,7 +1271,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsConvertValueToBoolean(
             _In_ JsValueRef value,
             _Out_ JsValueRef *booleanValue);
@@ -1283,7 +1285,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsGetValueType(
             _In_ JsValueRef value,
             _Out_ JsValueType *type);
@@ -1299,7 +1301,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsDoubleToNumber(
             _In_ double doubleValue,
             _Out_ JsValueRef *value);
@@ -1315,7 +1317,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsIntToNumber(
             _In_ int intValue,
             _Out_ JsValueRef *value);
@@ -1332,7 +1334,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsNumberToDouble(
             _In_ JsValueRef value,
             _Out_ double *doubleValue);
@@ -1349,7 +1351,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsNumberToInt(
             _In_ JsValueRef value,
             _Out_ int *intValue);
@@ -1365,7 +1367,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsConvertValueToNumber(
             _In_ JsValueRef value,
             _Out_ JsValueRef *numberValue);
@@ -1378,7 +1380,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsGetStringLength(
             _In_ JsValueRef stringValue,
             _Out_ int *length);
@@ -1394,7 +1396,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsConvertValueToString(
             _In_ JsValueRef value,
             _Out_ JsValueRef *stringValue);
@@ -1409,7 +1411,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsGetGlobalObject(
             _Out_ JsValueRef *globalObject);
 
@@ -1423,7 +1425,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsCreateObject(
             _Out_ JsValueRef *object);
 
@@ -1441,7 +1443,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsCreateExternalObject(
             _In_opt_ void *data,
             _In_opt_ JsFinalizeCallback finalizeCallback,
@@ -1458,7 +1460,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsConvertValueToObject(
             _In_ JsValueRef value,
             _Out_ JsValueRef *object);
@@ -1474,7 +1476,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsGetPrototype(
             _In_ JsValueRef object,
             _Out_ JsValueRef *prototypeObject);
@@ -1490,7 +1492,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsSetPrototype(
             _In_ JsValueRef object,
             _In_ JsValueRef prototypeObject);
@@ -1507,7 +1509,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode 
         JsInstanceOf(
             _In_ JsValueRef object,
             _In_ JsValueRef constructor,
@@ -1524,7 +1526,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsGetExtensionAllowed(
             _In_ JsValueRef object,
             _Out_ bool *value);
@@ -1539,7 +1541,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsPreventExtension(
             _In_ JsValueRef object);
 
@@ -1555,7 +1557,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsGetProperty(
             _In_ JsValueRef object,
             _In_ JsPropertyIdRef propertyId,
@@ -1573,7 +1575,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsGetOwnPropertyDescriptor(
             _In_ JsValueRef object,
             _In_ JsPropertyIdRef propertyId,
@@ -1590,7 +1592,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsGetOwnPropertyNames(
             _In_ JsValueRef object,
             _Out_ JsValueRef *propertyNames);
@@ -1608,7 +1610,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsSetProperty(
             _In_ JsValueRef object,
             _In_ JsPropertyIdRef propertyId,
@@ -1627,7 +1629,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsHasProperty(
             _In_ JsValueRef object,
             _In_ JsPropertyIdRef propertyId,
@@ -1646,7 +1648,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsDeleteProperty(
             _In_ JsValueRef object,
             _In_ JsPropertyIdRef propertyId,
@@ -1666,7 +1668,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsDefineProperty(
             _In_ JsValueRef object,
             _In_ JsPropertyIdRef propertyId,
@@ -1685,7 +1687,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsHasIndexedProperty(
             _In_ JsValueRef object,
             _In_ JsValueRef index,
@@ -1703,7 +1705,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsGetIndexedProperty(
             _In_ JsValueRef object,
             _In_ JsValueRef index,
@@ -1721,7 +1723,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsSetIndexedProperty(
             _In_ JsValueRef object,
             _In_ JsValueRef index,
@@ -1738,7 +1740,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsDeleteIndexedProperty(
             _In_ JsValueRef object,
             _In_ JsValueRef index);
@@ -1751,7 +1753,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsHasIndexedPropertiesExternalData(
             _In_ JsValueRef object,
             _Out_ bool* value);
@@ -1766,7 +1768,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsGetIndexedPropertiesExternalData(
             _In_ JsValueRef object,
             _Out_ void** data,
@@ -1787,7 +1789,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsSetIndexedPropertiesToExternalData(
             _In_ JsValueRef object,
             _In_ void* data,
@@ -1811,7 +1813,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsEquals(
             _In_ JsValueRef object1,
             _In_ JsValueRef object2,
@@ -1834,7 +1836,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsStrictEquals(
             _In_ JsValueRef object1,
             _In_ JsValueRef object2,
@@ -1848,7 +1850,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsHasExternalData(
             _In_ JsValueRef object,
             _Out_ bool *value);
@@ -1864,7 +1866,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsGetExternalData(
             _In_ JsValueRef object,
             _Out_ void **externalData);
@@ -1880,7 +1882,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsSetExternalData(
             _In_ JsValueRef object,
             _In_opt_ void *externalData);
@@ -1896,7 +1898,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsCreateArray(
             _In_ unsigned int length,
             _Out_ JsValueRef *result);
@@ -1914,7 +1916,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsCreateArrayBuffer(
             _In_ unsigned int byteLength,
             _Out_ JsValueRef *result);
@@ -1931,7 +1933,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsCreateExternalArrayBuffer(
             _Pre_maybenull_ _Pre_writable_byte_size_(byteLength) void *data,
             _In_ unsigned int byteLength,
@@ -1969,7 +1971,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsCreateTypedArray(
             _In_ JsTypedArrayType arrayType,
             _In_ JsValueRef baseArray,
@@ -1996,7 +1998,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsCreateDataView(
             _In_ JsValueRef arrayBuffer,
             _In_ unsigned int byteOffset,
@@ -2014,7 +2016,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsGetTypedArrayInfo(
             _In_ JsValueRef typedArray,
             _Out_opt_ JsTypedArrayType *arrayType,
@@ -2035,7 +2037,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsGetArrayBufferStorage(
             _In_ JsValueRef arrayBuffer,
             _Outptr_result_bytebuffer_(*bufferLength) ChakraBytePtr *buffer,
@@ -2058,7 +2060,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsGetTypedArrayStorage(
             _In_ JsValueRef typedArray,
             _Outptr_result_bytebuffer_(*bufferLength) ChakraBytePtr *buffer,
@@ -2079,7 +2081,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsGetDataViewStorage(
             _In_ JsValueRef dataView,
             _Outptr_result_bytebuffer_(*bufferLength) ChakraBytePtr *buffer,
@@ -2100,7 +2102,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsCallFunction(
             _In_ JsValueRef function,
             _In_reads_(argumentCount) JsValueRef *arguments,
@@ -2120,7 +2122,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsConstructObject(
             _In_ JsValueRef function,
             _In_reads_(argumentCount) JsValueRef *arguments,
@@ -2141,7 +2143,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsCreateFunction(
             _In_ JsNativeFunction nativeFunction,
             _In_opt_ void *callbackState,
@@ -2162,7 +2164,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsCreateNamedFunction(
             _In_ JsValueRef name,
             _In_ JsNativeFunction nativeFunction,
@@ -2180,7 +2182,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsCreateError(
             _In_ JsValueRef message,
             _Out_ JsValueRef *error);
@@ -2196,7 +2198,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsCreateRangeError(
             _In_ JsValueRef message,
             _Out_ JsValueRef *error);
@@ -2212,7 +2214,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsCreateReferenceError(
             _In_ JsValueRef message,
             _Out_ JsValueRef *error);
@@ -2228,7 +2230,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsCreateSyntaxError(
             _In_ JsValueRef message,
             _Out_ JsValueRef *error);
@@ -2244,7 +2246,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsCreateTypeError(
             _In_ JsValueRef message,
             _Out_ JsValueRef *error);
@@ -2260,7 +2262,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsCreateURIError(
             _In_ JsValueRef message,
             _Out_ JsValueRef *error);
@@ -2290,7 +2292,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsHasException(
             _Out_ bool *hasException);
 
@@ -2314,7 +2316,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsGetAndClearException(
             _Out_ JsValueRef *exception);
 
@@ -2336,7 +2338,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     JsNoError if the engine was set into an exception state, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsSetException(
             _In_ JsValueRef exception);
 
@@ -2361,7 +2363,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsDisableRuntimeExecution(
             _In_ JsRuntimeHandle runtime);
 
@@ -2376,7 +2378,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsEnableRuntimeExecution(
             _In_ JsRuntimeHandle runtime);
 
@@ -2388,7 +2390,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsIsRuntimeExecutionDisabled(
             _In_ JsRuntimeHandle runtime,
             _Out_ bool *isDisabled);
@@ -2409,7 +2411,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsSetPromiseContinuationCallback(
             _In_opt_ JsPromiseContinuationCallback promiseContinuationCallback,
             _In_opt_ void *callbackState);
@@ -2423,7 +2425,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsQueueBackgroundParse_Experimental(
             _In_ JsScriptContents* contents,
             _Out_ uint32_t* dwBgParseCookie);
@@ -2438,7 +2440,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsDiscardBackgroundParse_Experimental(
             _In_ uint32_t dwBgParseCookie,
             _In_ void* buffer,
@@ -2458,7 +2460,7 @@ typedef unsigned short char16_t;
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsExecuteBackgroundParse_Experimental(
             _In_ uint32_t dwBgParseCookie,
             _In_ JsValueRef script,
@@ -2467,5 +2469,5 @@ typedef unsigned short char16_t;
             _In_ JsParseScriptAttributes parseAttributes,
             _In_ JsValueRef parserState,
             _Out_ JsValueRef *result);
-
+}
 #endif // _CHAKRACOMMON_H_

@@ -24,6 +24,8 @@
 #include "TestHooksRt.h"
 #endif
 
+using namespace chakracore::jsrt;
+
 CHAKRA_API RunScriptWithParserStateCore(
     _In_ uint32_t dwBgParseCookie,
     _In_ JsValueRef script,
@@ -421,7 +423,7 @@ JsErrorCode CreateRuntimeCore(_In_ JsRuntimeAttributes attributes,
 
 /////////////////////
 
-CHAKRA_API JsCreateRuntime(_In_ JsRuntimeAttributes attributes, _In_opt_ JsThreadServiceCallback threadService, _Out_ JsRuntimeHandle *runtimeHandle)
+JsErrorCode chakracore::jsrt::JsCreateRuntime(_In_ JsRuntimeAttributes attributes, _In_opt_ JsThreadServiceCallback threadService, _Out_ JsRuntimeHandle *runtimeHandle)
 {
     return CreateRuntimeCore(attributes,
         nullptr /*optRecordUri*/, 0 /*optRecordUriCount */, false /*isRecord*/, false /*isReplay*/, false /*isDebug*/,
@@ -470,7 +472,7 @@ JsErrorCode JsCollectGarbageCommon(JsRuntimeHandle runtimeHandle)
     });
 }
 
-CHAKRA_API JsCollectGarbage(_In_ JsRuntimeHandle runtimeHandle)
+JsErrorCode chakracore::jsrt::JsCollectGarbage(_In_ JsRuntimeHandle runtimeHandle)
 {
     return JsCollectGarbageCommon<CollectNowExhaustive>(runtimeHandle);
 }
@@ -502,7 +504,7 @@ CHAKRA_API JsPrivateFreeDetachedArrayBuffer(_In_ void* detachedState)
 }
 #endif
 
-CHAKRA_API JsDisposeRuntime(_In_ JsRuntimeHandle runtimeHandle)
+JsErrorCode chakracore::jsrt::JsDisposeRuntime(_In_ JsRuntimeHandle runtimeHandle)
 {
     return GlobalAPIWrapper_NoRecord([&] () -> JsErrorCode {
         VALIDATE_INCOMING_RUNTIME_HANDLE(runtimeHandle);
@@ -598,7 +600,7 @@ CHAKRA_API JsDisposeRuntime(_In_ JsRuntimeHandle runtimeHandle)
     });
 }
 
-CHAKRA_API JsAddRef(_In_ JsRef ref, _Out_opt_ unsigned int *count)
+JsErrorCode chakracore::jsrt::JsAddRef(_In_ JsRef ref, _Out_opt_ unsigned int *count)
 {
     VALIDATE_JSREF(ref);
     if (count != nullptr)
@@ -671,7 +673,7 @@ CHAKRA_API JsAddRef(_In_ JsRef ref, _Out_opt_ unsigned int *count)
     }
 }
 
-CHAKRA_API JsRelease(_In_ JsRef ref, _Out_opt_ unsigned int *count)
+JsErrorCode chakracore::jsrt::JsRelease(_In_ JsRef ref, _Out_opt_ unsigned int *count)
 {
     VALIDATE_JSREF(ref);
     if (count != nullptr)
@@ -721,7 +723,7 @@ CHAKRA_API JsRelease(_In_ JsRef ref, _Out_opt_ unsigned int *count)
     }
 }
 
-CHAKRA_API JsSetObjectBeforeCollectCallback(_In_ JsRef ref, _In_opt_ void *callbackState, _In_ JsObjectBeforeCollectCallback objectBeforeCollectCallback)
+JsErrorCode chakracore::jsrt::JsSetObjectBeforeCollectCallback(_In_ JsRef ref, _In_opt_ void *callbackState, _In_ JsObjectBeforeCollectCallback objectBeforeCollectCallback)
 {
     VALIDATE_JSREF(ref);
 
@@ -763,7 +765,7 @@ CHAKRA_API JsSetObjectBeforeCollectCallback(_In_ JsRef ref, _In_opt_ void *callb
     }
 }
 
-CHAKRA_API JsCreateContext(_In_ JsRuntimeHandle runtimeHandle, _Out_ JsContextRef *newContext)
+JsErrorCode chakracore::jsrt::JsCreateContext(_In_ JsRuntimeHandle runtimeHandle, _Out_ JsContextRef *newContext)
 {
     return GlobalAPIWrapper([&](TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PARAM_NOT_NULL(newContext);
@@ -789,7 +791,7 @@ CHAKRA_API JsCreateContext(_In_ JsRuntimeHandle runtimeHandle, _Out_ JsContextRe
     });
 }
 
-CHAKRA_API JsGetCurrentContext(_Out_ JsContextRef *currentContext)
+JsErrorCode chakracore::jsrt::JsGetCurrentContext(_Out_ JsContextRef *currentContext)
 {
     PARAM_NOT_NULL(currentContext);
 
@@ -800,7 +802,7 @@ CHAKRA_API JsGetCurrentContext(_Out_ JsContextRef *currentContext)
     END_JSRT_NO_EXCEPTION
 }
 
-CHAKRA_API JsSetCurrentContext(_In_opt_ JsContextRef newContext)
+JsErrorCode chakracore::jsrt::JsSetCurrentContext(_In_opt_ JsContextRef newContext)
 {
     VALIDATE_ENTER_CURRENT_THREAD();
 
@@ -864,7 +866,7 @@ CHAKRA_API JsSetCurrentContext(_In_opt_ JsContextRef newContext)
     });
 }
 
-CHAKRA_API JsGetContextOfObject(_In_ JsValueRef object, _Out_ JsContextRef *context)
+JsErrorCode chakracore::jsrt::JsGetContextOfObject(_In_ JsValueRef object, _Out_ JsContextRef *context)
 {
     VALIDATE_JSREF(object);
     PARAM_NOT_NULL(context);
@@ -881,7 +883,7 @@ CHAKRA_API JsGetContextOfObject(_In_ JsValueRef object, _Out_ JsContextRef *cont
     END_JSRT_NO_EXCEPTION
 }
 
-CHAKRA_API JsGetContextData(_In_ JsContextRef context, _Out_ void **data)
+JsErrorCode chakracore::jsrt::JsGetContextData(_In_ JsContextRef context, _Out_ void **data)
 {
     VALIDATE_JSREF(context);
     PARAM_NOT_NULL(data);
@@ -898,7 +900,7 @@ CHAKRA_API JsGetContextData(_In_ JsContextRef context, _Out_ void **data)
     END_JSRT_NO_EXCEPTION
 }
 
-CHAKRA_API JsSetContextData(_In_ JsContextRef context, _In_ void *data)
+JsErrorCode chakracore::jsrt::JsSetContextData(_In_ JsContextRef context, _In_ void *data)
 {
     VALIDATE_JSREF(context);
 
@@ -934,7 +936,7 @@ void HandleScriptCompileError(Js::ScriptContext * scriptContext, CompileScriptEx
     scriptContext->GetThreadContext()->SetRecordedException(exceptionObject);
 }
 
-CHAKRA_API JsGetUndefinedValue(_Out_ JsValueRef *undefinedValue)
+JsErrorCode chakracore::jsrt::JsGetUndefinedValue(_Out_ JsValueRef *undefinedValue)
 {
     return ContextAPINoScriptWrapper_NoRecord([&] (Js::ScriptContext *scriptContext) -> JsErrorCode {
         PARAM_NOT_NULL(undefinedValue);
@@ -946,7 +948,7 @@ CHAKRA_API JsGetUndefinedValue(_Out_ JsValueRef *undefinedValue)
     /*allowInObjectBeforeCollectCallback*/true);
 }
 
-CHAKRA_API JsGetNullValue(_Out_ JsValueRef *nullValue)
+JsErrorCode chakracore::jsrt::JsGetNullValue(_Out_ JsValueRef *nullValue)
 {
     return ContextAPINoScriptWrapper_NoRecord([&] (Js::ScriptContext *scriptContext) -> JsErrorCode {
         PARAM_NOT_NULL(nullValue);
@@ -958,7 +960,7 @@ CHAKRA_API JsGetNullValue(_Out_ JsValueRef *nullValue)
     /*allowInObjectBeforeCollectCallback*/true);
 }
 
-CHAKRA_API JsGetTrueValue(_Out_ JsValueRef *trueValue)
+JsErrorCode chakracore::jsrt::JsGetTrueValue(_Out_ JsValueRef *trueValue)
 {
     return ContextAPINoScriptWrapper_NoRecord([&] (Js::ScriptContext *scriptContext) -> JsErrorCode {
         PARAM_NOT_NULL(trueValue);
@@ -970,7 +972,7 @@ CHAKRA_API JsGetTrueValue(_Out_ JsValueRef *trueValue)
     /*allowInObjectBeforeCollectCallback*/true);
 }
 
-CHAKRA_API JsGetFalseValue(_Out_ JsValueRef *falseValue)
+JsErrorCode chakracore::jsrt::JsGetFalseValue(_Out_ JsValueRef *falseValue)
 {
     return ContextAPINoScriptWrapper_NoRecord([&] (Js::ScriptContext *scriptContext) -> JsErrorCode {
         PARAM_NOT_NULL(falseValue);
@@ -982,7 +984,7 @@ CHAKRA_API JsGetFalseValue(_Out_ JsValueRef *falseValue)
     /*allowInObjectBeforeCollectCallback*/true);
 }
 
-CHAKRA_API JsBoolToBoolean(_In_ bool value, _Out_ JsValueRef *booleanValue)
+JsErrorCode chakracore::jsrt::JsBoolToBoolean(_In_ bool value, _Out_ JsValueRef *booleanValue)
 {
     return ContextAPINoScriptWrapper([&] (Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTCreateBoolean, value);
@@ -998,7 +1000,7 @@ CHAKRA_API JsBoolToBoolean(_In_ bool value, _Out_ JsValueRef *booleanValue)
     /*allowInObjectBeforeCollectCallback*/true);
 }
 
-CHAKRA_API JsBooleanToBool(_In_ JsValueRef value, _Out_ bool *boolValue)
+JsErrorCode chakracore::jsrt::JsBooleanToBool(_In_ JsValueRef value, _Out_ bool *boolValue)
 {
     VALIDATE_JSREF(value);
     PARAM_NOT_NULL(boolValue);
@@ -1015,7 +1017,7 @@ CHAKRA_API JsBooleanToBool(_In_ JsValueRef value, _Out_ bool *boolValue)
     END_JSRT_NO_EXCEPTION
 }
 
-CHAKRA_API JsConvertValueToBoolean(_In_ JsValueRef value, _Out_ JsValueRef *result)
+JsErrorCode chakracore::jsrt::JsConvertValueToBoolean(_In_ JsValueRef value, _Out_ JsValueRef *result)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTVarToBooleanConversion, (Js::Var)value);
@@ -1038,7 +1040,7 @@ CHAKRA_API JsConvertValueToBoolean(_In_ JsValueRef value, _Out_ JsValueRef *resu
     });
 }
 
-CHAKRA_API JsGetValueType(_In_ JsValueRef value, _Out_ JsValueType *type)
+JsErrorCode chakracore::jsrt::JsGetValueType(_In_ JsValueRef value, _Out_ JsValueType *type)
 {
     VALIDATE_JSREF(value);
     PARAM_NOT_NULL(type);
@@ -1105,7 +1107,7 @@ CHAKRA_API JsGetValueType(_In_ JsValueRef value, _Out_ JsValueType *type)
     END_JSRT_NO_EXCEPTION
 }
 
-CHAKRA_API JsDoubleToNumber(_In_ double dbl, _Out_ JsValueRef *asValue)
+JsErrorCode chakracore::jsrt::JsDoubleToNumber(_In_ double dbl, _Out_ JsValueRef *asValue)
 {
     PARAM_NOT_NULL(asValue);
     //If number is not heap allocated then we don't need to record/track the creation for time-travel
@@ -1125,7 +1127,7 @@ CHAKRA_API JsDoubleToNumber(_In_ double dbl, _Out_ JsValueRef *asValue)
     });
 }
 
-CHAKRA_API JsIntToNumber(_In_ int intValue, _Out_ JsValueRef *asValue)
+JsErrorCode chakracore::jsrt::JsIntToNumber(_In_ int intValue, _Out_ JsValueRef *asValue)
 {
     PARAM_NOT_NULL(asValue);
     //If number is not heap allocated then we don't need to record/track the creation for time-travel
@@ -1149,7 +1151,7 @@ CHAKRA_API JsIntToNumber(_In_ int intValue, _Out_ JsValueRef *asValue)
     });
 }
 
-CHAKRA_API JsNumberToDouble(_In_ JsValueRef value, _Out_ double *asDouble)
+JsErrorCode chakracore::jsrt::JsNumberToDouble(_In_ JsValueRef value, _Out_ double *asDouble)
 {
     VALIDATE_JSREF(value);
     PARAM_NOT_NULL(asDouble);
@@ -1173,7 +1175,7 @@ CHAKRA_API JsNumberToDouble(_In_ JsValueRef value, _Out_ double *asDouble)
     END_JSRT_NO_EXCEPTION
 }
 
-CHAKRA_API JsNumberToInt(_In_ JsValueRef value, _Out_ int *asInt)
+JsErrorCode chakracore::jsrt::JsNumberToInt(_In_ JsValueRef value, _Out_ int *asInt)
 {
     VALIDATE_JSREF(value);
     PARAM_NOT_NULL(asInt);
@@ -1197,7 +1199,7 @@ CHAKRA_API JsNumberToInt(_In_ JsValueRef value, _Out_ int *asInt)
     END_JSRT_NO_EXCEPTION
 }
 
-CHAKRA_API JsConvertValueToNumber(_In_ JsValueRef value, _Out_ JsValueRef *result)
+JsErrorCode chakracore::jsrt::JsConvertValueToNumber(_In_ JsValueRef value, _Out_ JsValueRef *result)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTVarToNumberConversion, (Js::Var)value);
@@ -1213,7 +1215,7 @@ CHAKRA_API JsConvertValueToNumber(_In_ JsValueRef value, _Out_ JsValueRef *resul
     });
 }
 
-CHAKRA_API JsGetStringLength(_In_ JsValueRef value, _Out_ int *length)
+JsErrorCode chakracore::jsrt::JsGetStringLength(_In_ JsValueRef value, _Out_ int *length)
 {
     VALIDATE_JSREF(value);
     PARAM_NOT_NULL(length);
@@ -1276,7 +1278,7 @@ CHAKRA_API JsStringToPointer(_In_ JsValueRef stringValue, _Outptr_result_buffer_
     });
 }
 
-CHAKRA_API JsConvertValueToString(_In_ JsValueRef value, _Out_ JsValueRef *result)
+JsErrorCode chakracore::jsrt::JsConvertValueToString(_In_ JsValueRef value, _Out_ JsValueRef *result)
 {
     PARAM_NOT_NULL(result);
     *result = nullptr;
@@ -1307,7 +1309,7 @@ CHAKRA_API JsConvertValueToString(_In_ JsValueRef value, _Out_ JsValueRef *resul
     });
 }
 
-CHAKRA_API JsGetGlobalObject(_Out_ JsValueRef *globalObject)
+JsErrorCode chakracore::jsrt::JsGetGlobalObject(_Out_ JsValueRef *globalObject)
 {
     return ContextAPINoScriptWrapper_NoRecord([&](Js::ScriptContext *scriptContext) -> JsErrorCode {
         PARAM_NOT_NULL(globalObject);
@@ -1318,7 +1320,7 @@ CHAKRA_API JsGetGlobalObject(_Out_ JsValueRef *globalObject)
     /*allowInObjectBeforeCollectCallback*/true);
 }
 
-CHAKRA_API JsCreateObject(_Out_ JsValueRef *object)
+JsErrorCode chakracore::jsrt::JsCreateObject(_Out_ JsValueRef *object)
 {
     return ContextAPINoScriptWrapper([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTAllocateBasicObject);
@@ -1358,12 +1360,12 @@ CHAKRA_API JsCreateExternalObjectWithPrototype(_In_opt_ void *data,
     });
 }
 
-CHAKRA_API JsCreateExternalObject(_In_opt_ void *data, _In_opt_ JsFinalizeCallback finalizeCallback, _Out_ JsValueRef *object)
+JsErrorCode chakracore::jsrt::JsCreateExternalObject(_In_opt_ void *data, _In_opt_ JsFinalizeCallback finalizeCallback, _Out_ JsValueRef *object)
 {
     return JsCreateExternalObjectWithPrototype(data, finalizeCallback, JS_INVALID_REFERENCE, object);
 }
 
-CHAKRA_API JsConvertValueToObject(_In_ JsValueRef value, _Out_ JsValueRef *result)
+JsErrorCode chakracore::jsrt::JsConvertValueToObject(_In_ JsValueRef value, _Out_ JsValueRef *result)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTVarToObjectConversion, (Js::Var)value);
@@ -1380,7 +1382,7 @@ CHAKRA_API JsConvertValueToObject(_In_ JsValueRef value, _Out_ JsValueRef *resul
     });
 }
 
-CHAKRA_API JsGetPrototype(_In_ JsValueRef object, _Out_ JsValueRef *prototypeObject)
+JsErrorCode chakracore::jsrt::JsGetPrototype(_In_ JsValueRef object, _Out_ JsValueRef *prototypeObject)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTGetPrototype, object);
@@ -1397,7 +1399,7 @@ CHAKRA_API JsGetPrototype(_In_ JsValueRef object, _Out_ JsValueRef *prototypeObj
     });
 }
 
-CHAKRA_API JsSetPrototype(_In_ JsValueRef object, _In_ JsValueRef prototypeObject)
+JsErrorCode chakracore::jsrt::JsSetPrototype(_In_ JsValueRef object, _In_ JsValueRef prototypeObject)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTSetPrototype, object, prototypeObject);
@@ -1417,7 +1419,7 @@ CHAKRA_API JsSetPrototype(_In_ JsValueRef object, _In_ JsValueRef prototypeObjec
     });
 }
 
-CHAKRA_API JsInstanceOf(_In_ JsValueRef object, _In_ JsValueRef constructor, _Out_ bool *result) {
+JsErrorCode chakracore::jsrt::JsInstanceOf(_In_ JsValueRef object, _In_ JsValueRef constructor, _Out_ bool *result) {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTInstanceOf, object, constructor);
 
@@ -1432,7 +1434,7 @@ CHAKRA_API JsInstanceOf(_In_ JsValueRef object, _In_ JsValueRef constructor, _Ou
     });
 }
 
-CHAKRA_API JsGetExtensionAllowed(_In_ JsValueRef object, _Out_ bool *value)
+JsErrorCode chakracore::jsrt::JsGetExtensionAllowed(_In_ JsValueRef object, _Out_ bool *value)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION_NOT_IMPLEMENTED(scriptContext);
@@ -1447,7 +1449,7 @@ CHAKRA_API JsGetExtensionAllowed(_In_ JsValueRef object, _Out_ bool *value)
     });
 }
 
-CHAKRA_API JsPreventExtension(_In_ JsValueRef object)
+JsErrorCode chakracore::jsrt::JsPreventExtension(_In_ JsValueRef object)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION_NOT_IMPLEMENTED(scriptContext);
@@ -1544,7 +1546,7 @@ static JsErrorCode JsGetPropertyCommon(Js::ScriptContext * scriptContext,
     return JsNoError;
 }
 
-CHAKRA_API JsGetProperty(_In_ JsValueRef object, _In_ JsPropertyIdRef propertyId, _Out_ JsValueRef *value)
+JsErrorCode chakracore::jsrt::JsGetProperty(_In_ JsValueRef object, _In_ JsPropertyIdRef propertyId, _Out_ JsValueRef *value)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext *scriptContext,
         TTDRecorder& _actionEntryPopper) -> JsErrorCode {
@@ -1612,7 +1614,7 @@ static JsErrorCode JsGetOwnPropertyDescriptorCommon(Js::ScriptContext * scriptCo
     return JsNoError;
 }
 
-CHAKRA_API JsGetOwnPropertyDescriptor(_In_ JsValueRef object, _In_ JsPropertyIdRef propertyId, _Out_ JsValueRef *propertyDescriptor)
+JsErrorCode chakracore::jsrt::JsGetOwnPropertyDescriptor(_In_ JsValueRef object, _In_ JsPropertyIdRef propertyId, _Out_ JsValueRef *propertyDescriptor)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTGetOwnPropertyInfo, (const Js::PropertyRecord *)propertyId, object);
@@ -1668,7 +1670,7 @@ static JsErrorCode JsSetPropertyCommon(Js::ScriptContext * scriptContext, _In_ J
     return JsNoError;
 }
 
-CHAKRA_API JsSetProperty(_In_ JsValueRef object, _In_ JsPropertyIdRef propertyId, _In_ JsValueRef value, _In_ bool useStrictRules)
+JsErrorCode chakracore::jsrt::JsSetProperty(_In_ JsValueRef object, _In_ JsPropertyIdRef propertyId, _In_ JsValueRef value, _In_ bool useStrictRules)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext *scriptContext,
         TTDRecorder& _actionEntryPopper) -> JsErrorCode {
@@ -1708,7 +1710,7 @@ CHAKRA_API JsObjectSetProperty(_In_ JsValueRef object, _In_ JsValueRef propertyI
     });
 }
 
-CHAKRA_API JsHasProperty(_In_ JsValueRef object, _In_ JsPropertyIdRef propertyId, _Out_ bool *hasProperty)
+JsErrorCode chakracore::jsrt::JsHasProperty(_In_ JsValueRef object, _In_ JsPropertyIdRef propertyId, _Out_ bool *hasProperty)
 {
     VALIDATE_JSREF(object);
     if (!Js::JavascriptOperators::IsObject(object)) return JsErrorArgumentNotObject;
@@ -1818,7 +1820,7 @@ static JsErrorCode JsDeletePropertyCommon(Js::ScriptContext * scriptContext, _In
     return JsNoError;
 }
 
-CHAKRA_API JsDeleteProperty(_In_ JsValueRef object, _In_ JsPropertyIdRef propertyId,
+JsErrorCode chakracore::jsrt::JsDeleteProperty(_In_ JsValueRef object, _In_ JsPropertyIdRef propertyId,
     _In_ bool useStrictRules, _Out_ JsValueRef *result)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext *scriptContext,
@@ -1886,7 +1888,7 @@ static JsErrorCode JsDefinePropertyCommon(Js::ScriptContext * scriptContext, _In
     return JsNoError;
 }
 
-CHAKRA_API JsDefineProperty(_In_ JsValueRef object, _In_ JsPropertyIdRef propertyId,
+JsErrorCode chakracore::jsrt::JsDefineProperty(_In_ JsValueRef object, _In_ JsPropertyIdRef propertyId,
     _In_ JsValueRef propertyDescriptor, _Out_ bool *result)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext *scriptContext,
@@ -1994,7 +1996,7 @@ CHAKRA_API JsObjectDefineProperty(_In_ JsValueRef object, _In_ JsValueRef proper
     });
 }
 
-CHAKRA_API JsGetOwnPropertyNames(_In_ JsValueRef object, _Out_ JsValueRef *propertyNames)
+JsErrorCode chakracore::jsrt::JsGetOwnPropertyNames(_In_ JsValueRef object, _Out_ JsValueRef *propertyNames)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTGetOwnPropertyNamesInfo, object);
@@ -2012,7 +2014,7 @@ CHAKRA_API JsGetOwnPropertyNames(_In_ JsValueRef object, _Out_ JsValueRef *prope
     });
 }
 
-CHAKRA_API JsGetOwnPropertySymbols(_In_ JsValueRef object, _Out_ JsValueRef *propertySymbols)
+JsErrorCode chakracore::jsrt::JsGetOwnPropertySymbols(_In_ JsValueRef object, _Out_ JsValueRef *propertySymbols)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTGetOwnPropertySymbolsInfo, object);
@@ -2029,7 +2031,7 @@ CHAKRA_API JsGetOwnPropertySymbols(_In_ JsValueRef object, _Out_ JsValueRef *pro
     });
 }
 
-CHAKRA_API JsCreateArray(_In_ unsigned int length, _Out_ JsValueRef *result)
+JsErrorCode chakracore::jsrt::JsCreateArray(_In_ unsigned int length, _Out_ JsValueRef *result)
 {
     return ContextAPINoScriptWrapper([&] (Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTAllocateBasicArray, length);
@@ -2045,7 +2047,7 @@ CHAKRA_API JsCreateArray(_In_ unsigned int length, _Out_ JsValueRef *result)
     });
 }
 
-CHAKRA_API JsCreateArrayBuffer(_In_ unsigned int byteLength, _Out_ JsValueRef *result)
+JsErrorCode chakracore::jsrt::JsCreateArrayBuffer(_In_ unsigned int byteLength, _Out_ JsValueRef *result)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTAllocateArrayBuffer, byteLength);
@@ -2060,7 +2062,7 @@ CHAKRA_API JsCreateArrayBuffer(_In_ unsigned int byteLength, _Out_ JsValueRef *r
     });
 }
 
-CHAKRA_API JsCreateExternalArrayBuffer(_Pre_maybenull_ _Pre_writable_byte_size_(byteLength) void *data, _In_ unsigned int byteLength,
+JsErrorCode chakracore::jsrt::JsCreateExternalArrayBuffer(_Pre_maybenull_ _Pre_writable_byte_size_(byteLength) void *data, _In_ unsigned int byteLength,
     _In_opt_ JsFinalizeCallback finalizeCallback, _In_opt_ void *callbackState, _Out_ JsValueRef *result)
 {
     return ContextAPINoScriptWrapper([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
@@ -2086,7 +2088,7 @@ CHAKRA_API JsCreateExternalArrayBuffer(_Pre_maybenull_ _Pre_writable_byte_size_(
     });
 }
 
-CHAKRA_API JsCreateTypedArray(_In_ JsTypedArrayType arrayType, _In_ JsValueRef baseArray, _In_ unsigned int byteOffset,
+JsErrorCode chakracore::jsrt::JsCreateTypedArray(_In_ JsTypedArrayType arrayType, _In_ JsValueRef baseArray, _In_ unsigned int byteOffset,
     _In_ unsigned int elementLength, _Out_ JsValueRef *result)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
@@ -2169,7 +2171,7 @@ CHAKRA_API JsCreateTypedArray(_In_ JsTypedArrayType arrayType, _In_ JsValueRef b
     });
 }
 
-CHAKRA_API JsCreateDataView(_In_ JsValueRef arrayBuffer, _In_ unsigned int byteOffset, _In_ unsigned int byteLength, _Out_ JsValueRef *result)
+JsErrorCode chakracore::jsrt::JsCreateDataView(_In_ JsValueRef arrayBuffer, _In_ unsigned int byteOffset, _In_ unsigned int byteLength, _Out_ JsValueRef *result)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION_NOT_IMPLEMENTED(scriptContext);
@@ -2204,7 +2206,7 @@ inline JsTypedArrayType GetTypedArrayType(Js::TypeId typeId)
     return static_cast<JsTypedArrayType>(typeId + (static_cast<uint8_t>(JsArrayTypeInt8) - Js::TypeIds_Int8Array));
 }
 
-CHAKRA_API JsGetTypedArrayInfo(_In_ JsValueRef typedArray, _Out_opt_ JsTypedArrayType *arrayType, _Out_opt_ JsValueRef *arrayBuffer,
+JsErrorCode chakracore::jsrt::JsGetTypedArrayInfo(_In_ JsValueRef typedArray, _Out_opt_ JsTypedArrayType *arrayType, _Out_opt_ JsValueRef *arrayBuffer,
     _Out_opt_ unsigned int *byteOffset, _Out_opt_ unsigned int *byteLength)
 {
     VALIDATE_JSREF(typedArray);
@@ -2247,7 +2249,7 @@ CHAKRA_API JsGetTypedArrayInfo(_In_ JsValueRef typedArray, _Out_opt_ JsTypedArra
     END_JSRT_NO_EXCEPTION
 }
 
-CHAKRA_API JsGetArrayBufferStorage(_In_ JsValueRef instance, _Outptr_result_bytebuffer_(*bufferLength) uint8_t **buffer,
+JsErrorCode chakracore::jsrt::JsGetArrayBufferStorage(_In_ JsValueRef instance, _Outptr_result_bytebuffer_(*bufferLength) uint8_t **buffer,
     _Out_ unsigned int *bufferLength)
 {
     VALIDATE_JSREF(instance);
@@ -2268,7 +2270,7 @@ CHAKRA_API JsGetArrayBufferStorage(_In_ JsValueRef instance, _Outptr_result_byte
     END_JSRT_NO_EXCEPTION
 }
 
-CHAKRA_API JsGetTypedArrayStorage(_In_ JsValueRef instance, _Outptr_result_bytebuffer_(*bufferLength) uint8_t **buffer,
+JsErrorCode chakracore::jsrt::JsGetTypedArrayStorage(_In_ JsValueRef instance, _Outptr_result_bytebuffer_(*bufferLength) uint8_t **buffer,
     _Out_ unsigned int *bufferLength, _Out_opt_ JsTypedArrayType *typedArrayType, _Out_opt_ int *elementSize)
 {
     VALIDATE_JSREF(instance);
@@ -2333,7 +2335,7 @@ CHAKRA_API JsGetTypedArrayStorage(_In_ JsValueRef instance, _Outptr_result_byteb
     END_JSRT_NO_EXCEPTION
 }
 
-CHAKRA_API JsGetDataViewStorage(_In_ JsValueRef instance, _Outptr_result_bytebuffer_(*bufferLength) uint8_t **buffer, _Out_ unsigned int *bufferLength)
+JsErrorCode chakracore::jsrt::JsGetDataViewStorage(_In_ JsValueRef instance, _Outptr_result_bytebuffer_(*bufferLength) uint8_t **buffer, _Out_ unsigned int *bufferLength)
 {
     VALIDATE_JSREF(instance);
     PARAM_NOT_NULL(buffer);
@@ -2354,7 +2356,7 @@ CHAKRA_API JsGetDataViewStorage(_In_ JsValueRef instance, _Outptr_result_bytebuf
 }
 
 
-CHAKRA_API JsCreateSymbol(_In_ JsValueRef description, _Out_ JsValueRef *result)
+JsErrorCode chakracore::jsrt::JsCreateSymbol(_In_ JsValueRef description, _Out_ JsValueRef *result)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTCreateSymbol, description);
@@ -2382,7 +2384,7 @@ CHAKRA_API JsCreateSymbol(_In_ JsValueRef description, _Out_ JsValueRef *result)
     });
 }
 
-CHAKRA_API JsHasIndexedProperty(_In_ JsValueRef object, _In_ JsValueRef index, _Out_ bool *result)
+JsErrorCode chakracore::jsrt::JsHasIndexedProperty(_In_ JsValueRef object, _In_ JsValueRef index, _Out_ bool *result)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION_NOT_IMPLEMENTED(scriptContext);
@@ -2398,7 +2400,7 @@ CHAKRA_API JsHasIndexedProperty(_In_ JsValueRef object, _In_ JsValueRef index, _
     });
 }
 
-CHAKRA_API JsGetIndexedProperty(_In_ JsValueRef object, _In_ JsValueRef index, _Out_ JsValueRef *result)
+JsErrorCode chakracore::jsrt::JsGetIndexedProperty(_In_ JsValueRef object, _In_ JsValueRef index, _Out_ JsValueRef *result)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTGetIndex, index, object);
@@ -2416,7 +2418,7 @@ CHAKRA_API JsGetIndexedProperty(_In_ JsValueRef object, _In_ JsValueRef index, _
     });
 }
 
-CHAKRA_API JsSetIndexedProperty(_In_ JsValueRef object, _In_ JsValueRef index, _In_ JsValueRef value)
+JsErrorCode chakracore::jsrt::JsSetIndexedProperty(_In_ JsValueRef object, _In_ JsValueRef index, _In_ JsValueRef value)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTSetIndex, object, index, value);
@@ -2431,7 +2433,7 @@ CHAKRA_API JsSetIndexedProperty(_In_ JsValueRef object, _In_ JsValueRef index, _
     });
 }
 
-CHAKRA_API JsDeleteIndexedProperty(_In_ JsValueRef object, _In_ JsValueRef index)
+JsErrorCode chakracore::jsrt::JsDeleteIndexedProperty(_In_ JsValueRef object, _In_ JsValueRef index)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION_NOT_IMPLEMENTED(scriptContext);
@@ -2480,7 +2482,7 @@ void GetObjectArrayData(Js::ArrayObject* objectArray, void** data, JsTypedArrayT
     *length = typedArray->GetLength();
 }
 
-CHAKRA_API JsSetIndexedPropertiesToExternalData(
+JsErrorCode chakracore::jsrt::JsSetIndexedPropertiesToExternalData(
     _In_ JsValueRef object,
     _In_ void* data,
     _In_ JsTypedArrayType arrayType,
@@ -2550,7 +2552,7 @@ CHAKRA_API JsSetIndexedPropertiesToExternalData(
     });
 }
 
-CHAKRA_API JsHasIndexedPropertiesExternalData(_In_ JsValueRef object, _Out_ bool *value)
+JsErrorCode chakracore::jsrt::JsHasIndexedPropertiesExternalData(_In_ JsValueRef object, _Out_ bool *value)
 {
     VALIDATE_JSREF(object);
     PARAM_NOT_NULL(value);
@@ -2569,7 +2571,7 @@ CHAKRA_API JsHasIndexedPropertiesExternalData(_In_ JsValueRef object, _Out_ bool
     END_JSRT_NO_EXCEPTION
 }
 
-CHAKRA_API JsGetIndexedPropertiesExternalData(
+JsErrorCode chakracore::jsrt::JsGetIndexedPropertiesExternalData(
     _In_ JsValueRef object,
     _Out_ void** buffer,
     _Out_ JsTypedArrayType* arrayType,
@@ -2664,7 +2666,7 @@ CHAKRA_API JsLessThanOrEqual(_In_ JsValueRef object1, _In_ JsValueRef object2, _
     });
 }
 
-CHAKRA_API JsEquals(_In_ JsValueRef object1, _In_ JsValueRef object2, _Out_ bool *result)
+JsErrorCode chakracore::jsrt::JsEquals(_In_ JsValueRef object1, _In_ JsValueRef object2, _Out_ bool *result)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTEquals, object1, object2, false);
@@ -2678,7 +2680,7 @@ CHAKRA_API JsEquals(_In_ JsValueRef object1, _In_ JsValueRef object2, _Out_ bool
     });
 }
 
-CHAKRA_API JsStrictEquals(_In_ JsValueRef object1, _In_ JsValueRef object2, _Out_ bool *result)
+JsErrorCode chakracore::jsrt::JsStrictEquals(_In_ JsValueRef object1, _In_ JsValueRef object2, _Out_ bool *result)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTEquals, object1, object2, true);
@@ -2692,7 +2694,7 @@ CHAKRA_API JsStrictEquals(_In_ JsValueRef object1, _In_ JsValueRef object2, _Out
     });
 }
 
-CHAKRA_API JsHasExternalData(_In_ JsValueRef object, _Out_ bool *value)
+JsErrorCode chakracore::jsrt::JsHasExternalData(_In_ JsValueRef object, _Out_ bool *value)
 {
     VALIDATE_JSREF(object);
     PARAM_NOT_NULL(value);
@@ -2710,7 +2712,7 @@ CHAKRA_API JsHasExternalData(_In_ JsValueRef object, _Out_ bool *value)
     END_JSRT_NO_EXCEPTION
 }
 
-CHAKRA_API JsGetExternalData(_In_ JsValueRef object, _Out_ void **data)
+JsErrorCode chakracore::jsrt::JsGetExternalData(_In_ JsValueRef object, _Out_ void **data)
 {
     VALIDATE_JSREF(object);
     PARAM_NOT_NULL(data);
@@ -2738,7 +2740,7 @@ CHAKRA_API JsGetExternalData(_In_ JsValueRef object, _Out_ void **data)
     END_JSRT_NO_EXCEPTION
 }
 
-CHAKRA_API JsSetExternalData(_In_ JsValueRef object, _In_opt_ void *data)
+JsErrorCode chakracore::jsrt::JsSetExternalData(_In_ JsValueRef object, _In_opt_ void *data)
 {
     VALIDATE_JSREF(object);
 
@@ -2764,7 +2766,7 @@ CHAKRA_API JsSetExternalData(_In_ JsValueRef object, _In_opt_ void *data)
     END_JSRT_NO_EXCEPTION
 }
 
-CHAKRA_API JsCallFunction(_In_ JsValueRef function, _In_reads_(cargs) JsValueRef *args, _In_ ushort cargs, _Out_opt_ JsValueRef *result)
+JsErrorCode chakracore::jsrt::JsCallFunction(_In_ JsValueRef function, _In_reads_(cargs) JsValueRef *args, _In_ ushort cargs, _Out_opt_ JsValueRef *result)
 {
     if(result != nullptr)
     {
@@ -2827,7 +2829,7 @@ CHAKRA_API JsCallFunction(_In_ JsValueRef function, _In_reads_(cargs) JsValueRef
     });
 }
 
-CHAKRA_API JsConstructObject(_In_ JsValueRef function, _In_reads_(cargs) JsValueRef *args, _In_ ushort cargs, _Out_ JsValueRef *result)
+JsErrorCode chakracore::jsrt::JsConstructObject(_In_ JsValueRef function, _In_reads_(cargs) JsValueRef *args, _In_ ushort cargs, _Out_ JsValueRef *result)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTConstructCall, function, cargs, args);
@@ -2929,12 +2931,12 @@ CHAKRA_API JsCreateEnhancedFunction(_In_ JsEnhancedNativeFunction nativeFunction
     return JsCreateEnhancedFunctionHelper<false>(nativeFunction, metadata, callbackState, function);
 }
 
-CHAKRA_API JsCreateFunction(_In_ JsNativeFunction nativeFunction, _In_opt_ void *callbackState, _Out_ JsValueRef *function)
+JsErrorCode chakracore::jsrt::JsCreateFunction(_In_ JsNativeFunction nativeFunction, _In_opt_ void *callbackState, _Out_ JsValueRef *function)
 {
     return JsCreateEnhancedFunctionHelper<true>(nativeFunction, JS_INVALID_REFERENCE, callbackState, function);
 }
 
-CHAKRA_API JsCreateNamedFunction(_In_ JsValueRef name, _In_ JsNativeFunction nativeFunction, _In_opt_ void *callbackState, _Out_ JsValueRef *function)
+JsErrorCode chakracore::jsrt::JsCreateNamedFunction(_In_ JsValueRef name, _In_ JsNativeFunction nativeFunction, _In_opt_ void *callbackState, _Out_ JsValueRef *function)
 {
     return JsCreateEnhancedFunctionHelper<true>(nativeFunction, name, callbackState, function);
 }
@@ -2963,7 +2965,7 @@ void SetErrorMessage(Js::ScriptContext *scriptContext, Js::JavascriptError *newE
     }
 }
 
-CHAKRA_API JsCreateError(_In_ JsValueRef message, _Out_ JsValueRef *error)
+JsErrorCode chakracore::jsrt::JsCreateError(_In_ JsValueRef message, _Out_ JsValueRef *error)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext * scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTCreateError, message);
@@ -2982,7 +2984,7 @@ CHAKRA_API JsCreateError(_In_ JsValueRef message, _Out_ JsValueRef *error)
     });
 }
 
-CHAKRA_API JsCreateRangeError(_In_ JsValueRef message, _Out_ JsValueRef *error)
+JsErrorCode chakracore::jsrt::JsCreateRangeError(_In_ JsValueRef message, _Out_ JsValueRef *error)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext * scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTCreateRangeError, message);
@@ -3001,7 +3003,7 @@ CHAKRA_API JsCreateRangeError(_In_ JsValueRef message, _Out_ JsValueRef *error)
     });
 }
 
-CHAKRA_API JsCreateReferenceError(_In_ JsValueRef message, _Out_ JsValueRef *error)
+JsErrorCode chakracore::jsrt::JsCreateReferenceError(_In_ JsValueRef message, _Out_ JsValueRef *error)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext * scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTCreateReferenceError, message);
@@ -3020,7 +3022,7 @@ CHAKRA_API JsCreateReferenceError(_In_ JsValueRef message, _Out_ JsValueRef *err
     });
 }
 
-CHAKRA_API JsCreateSyntaxError(_In_ JsValueRef message, _Out_ JsValueRef *error)
+JsErrorCode chakracore::jsrt::JsCreateSyntaxError(_In_ JsValueRef message, _Out_ JsValueRef *error)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext * scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTCreateSyntaxError, message);
@@ -3039,7 +3041,7 @@ CHAKRA_API JsCreateSyntaxError(_In_ JsValueRef message, _Out_ JsValueRef *error)
     });
 }
 
-CHAKRA_API JsCreateTypeError(_In_ JsValueRef message, _Out_ JsValueRef *error)
+JsErrorCode chakracore::jsrt::JsCreateTypeError(_In_ JsValueRef message, _Out_ JsValueRef *error)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext * scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTCreateTypeError, message);
@@ -3058,7 +3060,7 @@ CHAKRA_API JsCreateTypeError(_In_ JsValueRef message, _Out_ JsValueRef *error)
     });
 }
 
-CHAKRA_API JsCreateURIError(_In_ JsValueRef message, _Out_ JsValueRef *error)
+JsErrorCode chakracore::jsrt::JsCreateURIError(_In_ JsValueRef message, _Out_ JsValueRef *error)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext * scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTCreateURIError, message);
@@ -3077,7 +3079,7 @@ CHAKRA_API JsCreateURIError(_In_ JsValueRef message, _Out_ JsValueRef *error)
     });
 }
 
-CHAKRA_API JsHasException(_Out_ bool *hasException)
+JsErrorCode chakracore::jsrt::JsHasException(_Out_ bool *hasException)
 {
     PARAM_NOT_NULL(hasException);
     *hasException = false;
@@ -3120,7 +3122,7 @@ CHAKRA_API JsHasException(_Out_ bool *hasException)
     return JsNoError;
 }
 
-CHAKRA_API JsGetAndClearException(_Out_ JsValueRef *exception)
+JsErrorCode chakracore::jsrt::JsGetAndClearException(_Out_ JsValueRef *exception)
 {
     PARAM_NOT_NULL(exception);
     *exception = nullptr;
@@ -3188,7 +3190,7 @@ CHAKRA_API JsGetAndClearException(_Out_ JsValueRef *exception)
     return JsNoError;
 }
 
-CHAKRA_API JsSetException(_In_ JsValueRef exception)
+JsErrorCode chakracore::jsrt::JsSetException(_In_ JsValueRef exception)
 {
     return ContextAPINoScriptWrapper([&](Js::ScriptContext* scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         JsrtContext * context = JsrtContext::GetCurrent();
@@ -3207,7 +3209,7 @@ CHAKRA_API JsSetException(_In_ JsValueRef exception)
     });
 }
 
-CHAKRA_API JsGetRuntimeMemoryUsage(_In_ JsRuntimeHandle runtimeHandle, _Out_ size_t * memoryUsage)
+JsErrorCode chakracore::jsrt::JsGetRuntimeMemoryUsage(_In_ JsRuntimeHandle runtimeHandle, _Out_ size_t * memoryUsage)
 {
     VALIDATE_INCOMING_RUNTIME_HANDLE(runtimeHandle);
     PARAM_NOT_NULL(memoryUsage);
@@ -3221,7 +3223,7 @@ CHAKRA_API JsGetRuntimeMemoryUsage(_In_ JsRuntimeHandle runtimeHandle, _Out_ siz
     return JsNoError;
 }
 
-CHAKRA_API JsSetRuntimeMemoryLimit(_In_ JsRuntimeHandle runtimeHandle, _In_ size_t memoryLimit)
+JsErrorCode chakracore::jsrt::JsSetRuntimeMemoryLimit(_In_ JsRuntimeHandle runtimeHandle, _In_ size_t memoryLimit)
 {
     VALIDATE_INCOMING_RUNTIME_HANDLE(runtimeHandle);
 
@@ -3233,7 +3235,7 @@ CHAKRA_API JsSetRuntimeMemoryLimit(_In_ JsRuntimeHandle runtimeHandle, _In_ size
     return JsNoError;
 }
 
-CHAKRA_API JsGetRuntimeMemoryLimit(_In_ JsRuntimeHandle runtimeHandle, _Out_ size_t * memoryLimit)
+JsErrorCode chakracore::jsrt::JsGetRuntimeMemoryLimit(_In_ JsRuntimeHandle runtimeHandle, _Out_ size_t * memoryLimit)
 {
     VALIDATE_INCOMING_RUNTIME_HANDLE(runtimeHandle);
     PARAM_NOT_NULL(memoryLimit);
@@ -3252,7 +3254,7 @@ C_ASSERT(JsMemoryFree == (_JsMemoryEventType) AllocationPolicyManager::MemoryAll
 C_ASSERT(JsMemoryFailure == (_JsMemoryEventType) AllocationPolicyManager::MemoryAllocateEvent::MemoryFailure);
 C_ASSERT(JsMemoryFailure == (_JsMemoryEventType) AllocationPolicyManager::MemoryAllocateEvent::MemoryMax);
 
-CHAKRA_API JsSetRuntimeMemoryAllocationCallback(_In_ JsRuntimeHandle runtime, _In_opt_ void *callbackState, _In_ JsMemoryAllocationCallback allocationCallback)
+JsErrorCode chakracore::jsrt::JsSetRuntimeMemoryAllocationCallback(_In_ JsRuntimeHandle runtime, _In_opt_ void *callbackState, _In_ JsMemoryAllocationCallback allocationCallback)
 {
     VALIDATE_INCOMING_RUNTIME_HANDLE(runtime);
 
@@ -3264,7 +3266,7 @@ CHAKRA_API JsSetRuntimeMemoryAllocationCallback(_In_ JsRuntimeHandle runtime, _I
     return JsNoError;
 }
 
-CHAKRA_API JsSetRuntimeBeforeCollectCallback(_In_ JsRuntimeHandle runtime, _In_opt_ void *callbackState, _In_ JsBeforeCollectCallback beforeCollectCallback)
+JsErrorCode chakracore::jsrt::JsSetRuntimeBeforeCollectCallback(_In_ JsRuntimeHandle runtime, _In_opt_ void *callbackState, _In_ JsBeforeCollectCallback beforeCollectCallback)
 {
     return GlobalAPIWrapper_NoRecord([&]() -> JsErrorCode {
         VALIDATE_INCOMING_RUNTIME_HANDLE(runtime);
@@ -3274,7 +3276,7 @@ CHAKRA_API JsSetRuntimeBeforeCollectCallback(_In_ JsRuntimeHandle runtime, _In_o
     });
 }
 
-CHAKRA_API JsDisableRuntimeExecution(_In_ JsRuntimeHandle runtimeHandle)
+JsErrorCode chakracore::jsrt::JsDisableRuntimeExecution(_In_ JsRuntimeHandle runtimeHandle)
 {
     VALIDATE_INCOMING_RUNTIME_HANDLE(runtimeHandle);
 
@@ -3297,7 +3299,7 @@ CHAKRA_API JsDisableRuntimeExecution(_In_ JsRuntimeHandle runtimeHandle)
     return JsNoError;
 }
 
-CHAKRA_API JsEnableRuntimeExecution(_In_ JsRuntimeHandle runtimeHandle)
+JsErrorCode chakracore::jsrt::JsEnableRuntimeExecution(_In_ JsRuntimeHandle runtimeHandle)
 {
     return GlobalAPIWrapper_NoRecord([&] () -> JsErrorCode {
         VALIDATE_INCOMING_RUNTIME_HANDLE(runtimeHandle);
@@ -3329,7 +3331,7 @@ CHAKRA_API JsEnableRuntimeExecution(_In_ JsRuntimeHandle runtimeHandle)
     });
 }
 
-CHAKRA_API JsIsRuntimeExecutionDisabled(_In_ JsRuntimeHandle runtimeHandle, _Out_ bool *isDisabled)
+JsErrorCode chakracore::jsrt::JsIsRuntimeExecutionDisabled(_In_ JsRuntimeHandle runtimeHandle, _Out_ bool *isDisabled)
 {
     VALIDATE_INCOMING_RUNTIME_HANDLE(runtimeHandle);
     PARAM_NOT_NULL(isDisabled);
@@ -3365,7 +3367,7 @@ CHAKRA_API JsGetPropertyIdFromName(_In_z_ const char16_t *name, _Out_ JsProperty
     return JsGetPropertyIdFromNameInternal(name, std::u16string(name).length(), propertyId);
 }
 
-CHAKRA_API JsGetPropertyIdFromSymbol(_In_ JsValueRef symbol, _Out_ JsPropertyIdRef *propertyId)
+JsErrorCode chakracore::jsrt::JsGetPropertyIdFromSymbol(_In_ JsValueRef symbol, _Out_ JsPropertyIdRef *propertyId)
 {
     return ContextAPINoScriptWrapper([&](Js::ScriptContext * scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTGetPropertyIdFromSymbol, symbol);
@@ -3385,7 +3387,7 @@ CHAKRA_API JsGetPropertyIdFromSymbol(_In_ JsValueRef symbol, _Out_ JsPropertyIdR
     /*allowInObjectBeforeCollectCallback*/true);
 }
 
-CHAKRA_API JsGetSymbolFromPropertyId(_In_ JsPropertyIdRef propertyId, _Out_ JsValueRef *symbol)
+JsErrorCode chakracore::jsrt::JsGetSymbolFromPropertyId(_In_ JsPropertyIdRef propertyId, _Out_ JsValueRef *symbol)
 {
     return ContextAPINoScriptWrapper([&](Js::ScriptContext * scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION_NOT_IMPLEMENTED(scriptContext);
@@ -3425,7 +3427,7 @@ CHAKRA_API JsGetPropertyNameFromId(_In_ JsPropertyIdRef propertyId, _Outptr_resu
     });
 }
 
-CHAKRA_API JsGetPropertyIdType(_In_ JsPropertyIdRef propertyId, _Out_ JsPropertyIdType* propertyIdType)
+JsErrorCode chakracore::jsrt::JsGetPropertyIdType(_In_ JsPropertyIdRef propertyId, _Out_ JsPropertyIdType* propertyIdType)
 {
     return GlobalAPIWrapper_NoRecord([&]() -> JsErrorCode {
         VALIDATE_INCOMING_PROPERTYID(propertyId);
@@ -3445,7 +3447,7 @@ CHAKRA_API JsGetPropertyIdType(_In_ JsPropertyIdRef propertyId, _Out_ JsProperty
 }
 
 
-CHAKRA_API JsGetRuntime(_In_ JsContextRef context, _Out_ JsRuntimeHandle *runtime)
+JsErrorCode chakracore::jsrt::JsGetRuntime(_In_ JsContextRef context, _Out_ JsRuntimeHandle *runtime)
 {
     VALIDATE_JSREF(context);
     PARAM_NOT_NULL(runtime);
@@ -3461,7 +3463,7 @@ CHAKRA_API JsGetRuntime(_In_ JsContextRef context, _Out_ JsRuntimeHandle *runtim
     return JsNoError;
 }
 
-CHAKRA_API JsIdle(_Out_opt_ unsigned int *nextIdleTick)
+JsErrorCode chakracore::jsrt::JsIdle(_Out_opt_ unsigned int *nextIdleTick)
 {
     PARAM_NOT_NULL(nextIdleTick);
 
@@ -3494,7 +3496,7 @@ CHAKRA_API JsIdle(_Out_opt_ unsigned int *nextIdleTick)
     });
 }
 
-CHAKRA_API JsSetPromiseContinuationCallback(_In_opt_ JsPromiseContinuationCallback promiseContinuationCallback, _In_opt_ void *callbackState)
+JsErrorCode chakracore::jsrt::JsSetPromiseContinuationCallback(_In_opt_ JsPromiseContinuationCallback promiseContinuationCallback, _In_opt_ void *callbackState)
 {
     return ContextAPINoScriptWrapper_NoRecord([&](Js::ScriptContext * scriptContext) -> JsErrorCode {
         scriptContext->GetLibrary()->SetNativeHostPromiseContinuationFunction((Js::JavascriptLibrary::PromiseContinuationCallback)promiseContinuationCallback, callbackState);
@@ -4335,7 +4337,7 @@ CHAKRA_API JsTTDRawBufferAsyncModificationRegister(_In_ JsValueRef instance, _In
     }
     else
     {
-        return JsAddRef(addRefObj, nullptr);
+        JsAddRef(addRefObj, nullptr);
     }
 #endif
 }
@@ -5392,8 +5394,7 @@ CHAKRA_API JsDeserializeParserState(
     }
 }
 
-CHAKRA_API
-JsExecuteBackgroundParse_Experimental(
+JsErrorCode chakracore::jsrt::JsExecuteBackgroundParse_Experimental(
     _In_ uint32_t dwBgParseCookie,
     _In_ JsValueRef script,
     _In_ JsSourceContext sourceContext,
