@@ -1482,8 +1482,7 @@ CHAKRA_API JsIsConstructor(_In_ JsValueRef object, _Out_ bool *isConstructor)
     });
 }
 
-CHAKRA_API
-JsQueueBackgroundParse_Experimental(
+JsErrorCode chakracore::jsrt::JsQueueBackgroundParse_Experimental(
     _In_ JsScriptContents* contents,
     _Out_ uint32_t* dwBgParseCookie)
 {
@@ -1507,8 +1506,7 @@ JsQueueBackgroundParse_Experimental(
     return res;
 }
 
-CHAKRA_API
-JsDiscardBackgroundParse_Experimental(
+JsErrorCode chakracore::jsrt::JsDiscardBackgroundParse_Experimental(
     _In_ uint32_t dwBgParseCookie,
     _In_ void* buffer,
     _Out_ bool* callerOwnsBuffer)

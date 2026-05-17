@@ -364,16 +364,16 @@ public:
         }
     }
 
-    static JsErrorCode WINAPI JsCreateRuntime(JsRuntimeAttributes attributes, JsThreadServiceCallback threadService, JsRuntimeHandle *runtime) { return ::JsCreateRuntime(attributes, threadService, runtime); }
-    static JsErrorCode WINAPI JsCreateContext(JsRuntimeHandle runtime, JsContextRef *newContext) { return ::JsCreateContext(runtime, newContext); }
-    static JsErrorCode WINAPI JsSetObjectBeforeCollectCallback(JsRef ref, void* callbackState, JsObjectBeforeCollectCallback objectBeforeCollectCallback) { return ::JsSetObjectBeforeCollectCallback(ref, callbackState, objectBeforeCollectCallback); }
+    static JsErrorCode WINAPI JsCreateRuntime(JsRuntimeAttributes attributes, JsThreadServiceCallback threadService, JsRuntimeHandle *runtime) { return chakracore::jsrt::JsCreateRuntime(attributes, threadService, runtime); }
+    static JsErrorCode WINAPI JsCreateContext(JsRuntimeHandle runtime, JsContextRef *newContext) { return chakracore::jsrt::JsCreateContext(runtime, newContext); }
+    static JsErrorCode WINAPI JsSetObjectBeforeCollectCallback(JsRef ref, void* callbackState, JsObjectBeforeCollectCallback objectBeforeCollectCallback) { return chakracore::jsrt::JsSetObjectBeforeCollectCallback(ref, callbackState, objectBeforeCollectCallback); }
     static JsErrorCode WINAPI JsSetRuntimeDomWrapperTracingCallbacks(JsRuntimeHandle runtime, JsRef wrapperTracingState, JsDOMWrapperTracingCallback wrapperTracingCallback, JsDOMWrapperTracingDoneCallback wrapperTracingDoneCallback, JsDOMWrapperTracingEnterFinalPauseCallback enterFinalPauseCallback) { return ::JsSetRuntimeDomWrapperTracingCallbacks(runtime, wrapperTracingState, wrapperTracingCallback, wrapperTracingDoneCallback, enterFinalPauseCallback); }
-    static JsErrorCode WINAPI JsSetRuntimeMemoryLimit(JsRuntimeHandle runtime, size_t memory) { return ::JsSetRuntimeMemoryLimit(runtime, memory); }
-    static JsErrorCode WINAPI JsSetCurrentContext(JsContextRef context) { return ::JsSetCurrentContext(context); }
-    static JsErrorCode WINAPI JsGetCurrentContext(JsContextRef* context) { return ::JsGetCurrentContext(context); }
-    static JsErrorCode WINAPI JsDisposeRuntime(JsRuntimeHandle runtime) { return ::JsDisposeRuntime(runtime); }
-    static JsErrorCode WINAPI JsCreateObject(JsValueRef *object) { return ::JsCreateObject(object); }
-    static JsErrorCode WINAPI JsCreateExternalObject(void *data, JsFinalizeCallback callback, JsValueRef *object) { return ::JsCreateExternalObject(data, callback, object); }
+    static JsErrorCode WINAPI JsSetRuntimeMemoryLimit(JsRuntimeHandle runtime, size_t memory) { return chakracore::jsrt::JsSetRuntimeMemoryLimit(runtime, memory); }
+    static JsErrorCode WINAPI JsSetCurrentContext(JsContextRef context) { return chakracore::jsrt::JsSetCurrentContext(context); }
+    static JsErrorCode WINAPI JsGetCurrentContext(JsContextRef* context) { return chakracore::jsrt::JsGetCurrentContext(context); }
+    static JsErrorCode WINAPI JsDisposeRuntime(JsRuntimeHandle runtime) { return chakracore::jsrt::JsDisposeRuntime(runtime); }
+    static JsErrorCode WINAPI JsCreateObject(JsValueRef *object) { return chakracore::jsrt::JsCreateObject(object); }
+    static JsErrorCode WINAPI JsCreateExternalObject(void *data, JsFinalizeCallback callback, JsValueRef *object) { return chakracore::jsrt::JsCreateExternalObject(data, callback, object); }
     static JsErrorCode WINAPI JsGetArrayForEachFunction(JsValueRef * result) { return ::JsGetArrayForEachFunction(result); }
     static JsErrorCode WINAPI JsGetArrayKeysFunction(JsValueRef * result) { return ::JsGetArrayKeysFunction(result); }
     static JsErrorCode WINAPI JsGetArrayValuesFunction(JsValueRef * result) { return ::JsGetArrayValuesFunction(result); }
@@ -381,49 +381,49 @@ public:
     static JsErrorCode WINAPI JsGetPropertyIdSymbolIterator(JsPropertyIdRef * propertyId) { return ::JsGetPropertyIdSymbolIterator(propertyId); }
     static JsErrorCode WINAPI JsGetErrorPrototype(JsValueRef * result) { return ::JsGetErrorPrototype(result); }
     static JsErrorCode WINAPI JsGetIteratorPrototype(JsValueRef * result) { return ::JsGetIteratorPrototype(result); }
-    static JsErrorCode WINAPI JsCreateFunction(JsNativeFunction nativeFunction, void *callbackState, JsValueRef *function) { return ::JsCreateFunction(nativeFunction, callbackState, function); }
+    static JsErrorCode WINAPI JsCreateFunction(JsNativeFunction nativeFunction, void *callbackState, JsValueRef *function) { return chakracore::jsrt::JsCreateFunction(nativeFunction, callbackState, function); }
     static JsErrorCode WINAPI JsCreateEnhancedFunction(JsEnhancedNativeFunction nativeFunction, JsValueRef metadata, void *callbackState, JsValueRef *function) { return ::JsCreateEnhancedFunction(nativeFunction, metadata, callbackState, function); }
-    static JsErrorCode WINAPI JsCreateNamedFunction(JsValueRef name, JsNativeFunction nativeFunction, void *callbackState, JsValueRef *function) { return ::JsCreateNamedFunction(name, nativeFunction, callbackState, function); }
-    static JsErrorCode WINAPI JsSetProperty(JsValueRef object, JsPropertyIdRef property, JsValueRef value, bool useStrictRules) { return ::JsSetProperty(object, property, value, useStrictRules); }
-    static JsErrorCode WINAPI JsGetGlobalObject(JsValueRef *globalObject) { return ::JsGetGlobalObject(globalObject); }
-    static JsErrorCode WINAPI JsGetUndefinedValue(JsValueRef *globalObject) { return ::JsGetUndefinedValue(globalObject); }
-    static JsErrorCode WINAPI JsGetNullValue(JsValueRef *globalObject) { return ::JsGetNullValue(globalObject); }
-    static JsErrorCode WINAPI JsGetTrueValue(JsValueRef *globalObject) { return ::JsGetTrueValue(globalObject); }
-    static JsErrorCode WINAPI JsGetFalseValue(JsValueRef *globalObject) { return ::JsGetFalseValue(globalObject); }
-    static JsErrorCode WINAPI JsConvertValueToString(JsValueRef value, JsValueRef *stringValue) { return ::JsConvertValueToString(value, stringValue); }
-    static JsErrorCode WINAPI JsConvertValueToNumber(JsValueRef value, JsValueRef *numberValue) { return ::JsConvertValueToNumber(value, numberValue); }
-    static JsErrorCode WINAPI JsConvertValueToBoolean(JsValueRef value, JsValueRef *booleanValue) { return ::JsConvertValueToBoolean(value, booleanValue); }
-    static JsErrorCode WINAPI JsBooleanToBool(JsValueRef value, bool* boolValue) { return ::JsBooleanToBool(value, boolValue); }
-    static JsErrorCode WINAPI JsGetProperty(JsValueRef object, JsPropertyIdRef property, JsValueRef* value) { return ::JsGetProperty(object, property, value); }
-    static JsErrorCode WINAPI JsHasProperty(JsValueRef object, JsPropertyIdRef property, bool *hasProperty) { return ::JsHasProperty(object, property, hasProperty); }
-    static JsErrorCode WINAPI JsCallFunction(JsValueRef function, JsValueRef* arguments, unsigned short argumentCount, JsValueRef *result) { return ::JsCallFunction(function, arguments, argumentCount, result); }
-    static JsErrorCode WINAPI JsNumberToDouble(JsValueRef value, double* doubleValue) { return ::JsNumberToDouble(value, doubleValue); }
-    static JsErrorCode WINAPI JsNumberToInt(JsValueRef value, int* intValue) { return ::JsNumberToInt(value, intValue); }
-    static JsErrorCode WINAPI JsIntToNumber(int intValue, JsValueRef *value) { return ::JsIntToNumber(intValue, value); }
-    static JsErrorCode WINAPI JsDoubleToNumber(double doubleValue, JsValueRef* value) { return ::JsDoubleToNumber(doubleValue, value); }
-    static JsErrorCode WINAPI JsGetExternalData(JsValueRef object, void **data) { return ::JsGetExternalData(object, data); }
-    static JsErrorCode WINAPI JsSetExternalData(JsValueRef object, void *data)  { return ::JsSetExternalData(object, data); }
+    static JsErrorCode WINAPI JsCreateNamedFunction(JsValueRef name, JsNativeFunction nativeFunction, void *callbackState, JsValueRef *function) { return chakracore::jsrt::JsCreateNamedFunction(name, nativeFunction, callbackState, function); }
+    static JsErrorCode WINAPI JsSetProperty(JsValueRef object, JsPropertyIdRef property, JsValueRef value, bool useStrictRules) { return chakracore::jsrt::JsSetProperty(object, property, value, useStrictRules); }
+    static JsErrorCode WINAPI JsGetGlobalObject(JsValueRef *globalObject) { return chakracore::jsrt::JsGetGlobalObject(globalObject); }
+    static JsErrorCode WINAPI JsGetUndefinedValue(JsValueRef *globalObject) { return chakracore::jsrt::JsGetUndefinedValue(globalObject); }
+    static JsErrorCode WINAPI JsGetNullValue(JsValueRef *globalObject) { return chakracore::jsrt::JsGetNullValue(globalObject); }
+    static JsErrorCode WINAPI JsGetTrueValue(JsValueRef *globalObject) { return chakracore::jsrt::JsGetTrueValue(globalObject); }
+    static JsErrorCode WINAPI JsGetFalseValue(JsValueRef *globalObject) { return chakracore::jsrt::JsGetFalseValue(globalObject); }
+    static JsErrorCode WINAPI JsConvertValueToString(JsValueRef value, JsValueRef *stringValue) { return chakracore::jsrt::JsConvertValueToString(value, stringValue); }
+    static JsErrorCode WINAPI JsConvertValueToNumber(JsValueRef value, JsValueRef *numberValue) { return chakracore::jsrt::JsConvertValueToNumber(value, numberValue); }
+    static JsErrorCode WINAPI JsConvertValueToBoolean(JsValueRef value, JsValueRef *booleanValue) { return chakracore::jsrt::JsConvertValueToBoolean(value, booleanValue); }
+    static JsErrorCode WINAPI JsBooleanToBool(JsValueRef value, bool* boolValue) { return chakracore::jsrt::JsBooleanToBool(value, boolValue); }
+    static JsErrorCode WINAPI JsGetProperty(JsValueRef object, JsPropertyIdRef property, JsValueRef* value) { return chakracore::jsrt::JsGetProperty(object, property, value); }
+    static JsErrorCode WINAPI JsHasProperty(JsValueRef object, JsPropertyIdRef property, bool *hasProperty) { return chakracore::jsrt::JsHasProperty(object, property, hasProperty); }
+    static JsErrorCode WINAPI JsCallFunction(JsValueRef function, JsValueRef* arguments, unsigned short argumentCount, JsValueRef *result) { return chakracore::jsrt::JsCallFunction(function, arguments, argumentCount, result); }
+    static JsErrorCode WINAPI JsNumberToDouble(JsValueRef value, double* doubleValue) { return chakracore::jsrt::JsNumberToDouble(value, doubleValue); }
+    static JsErrorCode WINAPI JsNumberToInt(JsValueRef value, int* intValue) { return chakracore::jsrt::JsNumberToInt(value, intValue); }
+    static JsErrorCode WINAPI JsIntToNumber(int intValue, JsValueRef *value) { return chakracore::jsrt::JsIntToNumber(intValue, value); }
+    static JsErrorCode WINAPI JsDoubleToNumber(double doubleValue, JsValueRef* value) { return chakracore::jsrt::JsDoubleToNumber(doubleValue, value); }
+    static JsErrorCode WINAPI JsGetExternalData(JsValueRef object, void **data) { return chakracore::jsrt::JsGetExternalData(object, data); }
+    static JsErrorCode WINAPI JsSetExternalData(JsValueRef object, void *data)  { return chakracore::jsrt::JsSetExternalData(object, data); }
     static JsErrorCode WINAPI JsCloneObject(JsValueRef object, JsValueRef *data) { return ::JsCloneObject(object, data); }
-    static JsErrorCode WINAPI JsCreateArray(unsigned int length, JsValueRef *result) { return ::JsCreateArray(length, result); }
-    static JsErrorCode WINAPI JsCreateArrayBuffer(unsigned int byteLength, JsValueRef *result) { return ::JsCreateArrayBuffer(byteLength, result); }
+    static JsErrorCode WINAPI JsCreateArray(unsigned int length, JsValueRef *result) { return chakracore::jsrt::JsCreateArray(length, result); }
+    static JsErrorCode WINAPI JsCreateArrayBuffer(unsigned int byteLength, JsValueRef *result) { return chakracore::jsrt::JsCreateArrayBuffer(byteLength, result); }
     static JsErrorCode WINAPI JsCreateSharedArrayBufferWithSharedContent(JsSharedArrayBufferContentHandle sharedContent, JsValueRef *result) { return ::JsCreateSharedArrayBufferWithSharedContent(sharedContent, result); }
     static JsErrorCode WINAPI JsGetSharedArrayBufferContent(JsValueRef sharedArrayBuffer, JsSharedArrayBufferContentHandle *sharedContents) { return ::JsGetSharedArrayBufferContent(sharedArrayBuffer, sharedContents); }
     static JsErrorCode WINAPI JsReleaseSharedArrayBufferContentHandle(JsSharedArrayBufferContentHandle sharedContent) { return ::JsReleaseSharedArrayBufferContentHandle(sharedContent); }
-    static JsErrorCode WINAPI JsGetArrayBufferStorage(JsValueRef instance, uint8_t **buffer, unsigned int *bufferLength) { return ::JsGetArrayBufferStorage(instance, buffer, bufferLength); }
-    static JsErrorCode WINAPI JsCreateError(JsValueRef message, JsValueRef *error) { return ::JsCreateError(message, error); }
-    static JsErrorCode WINAPI JsHasException(bool *hasException) { return ::JsHasException(hasException); }
-    static JsErrorCode WINAPI JsSetException(JsValueRef exception) { return ::JsSetException(exception); }
-    static JsErrorCode WINAPI JsGetAndClearException(JsValueRef *exception) { return ::JsGetAndClearException(exception); }
+    static JsErrorCode WINAPI JsGetArrayBufferStorage(JsValueRef instance, uint8_t **buffer, unsigned int *bufferLength) { return chakracore::jsrt::JsGetArrayBufferStorage(instance, buffer, bufferLength); }
+    static JsErrorCode WINAPI JsCreateError(JsValueRef message, JsValueRef *error) { return chakracore::jsrt::JsCreateError(message, error); }
+    static JsErrorCode WINAPI JsHasException(bool *hasException) { return chakracore::jsrt::JsHasException(hasException); }
+    static JsErrorCode WINAPI JsSetException(JsValueRef exception) { return chakracore::jsrt::JsSetException(exception); }
+    static JsErrorCode WINAPI JsGetAndClearException(JsValueRef *exception) { return chakracore::jsrt::JsGetAndClearException(exception); }
     static JsErrorCode WINAPI JsGetAndClearExceptionWithMetadata(JsValueRef * metadata) { return ::JsGetAndClearExceptionWithMetadata(metadata); }
-    static JsErrorCode WINAPI JsGetRuntime(JsContextRef context, JsRuntimeHandle *runtime) { return ::JsGetRuntime(context, runtime); }
-    static JsErrorCode WINAPI JsRelease(JsRef ref, unsigned int* count) { return ::JsRelease(ref, count); }
-    static JsErrorCode WINAPI JsAddRef(JsRef ref, unsigned int* count) { return ::JsAddRef(ref, count); }
-    static JsErrorCode WINAPI JsGetValueType(JsValueRef value, JsValueType *type) { return ::JsGetValueType(value, type); }
-    static JsErrorCode WINAPI JsGetIndexedProperty(JsValueRef object, JsValueRef index, JsValueRef *value) { return ::JsGetIndexedProperty(object, index, value); }
-    static JsErrorCode WINAPI JsSetIndexedProperty(JsValueRef object, JsValueRef index, JsValueRef value) { return ::JsSetIndexedProperty(object, index, value); }
-    static JsErrorCode WINAPI JsSetPromiseContinuationCallback(JsPromiseContinuationCallback callback, void *callbackState) { return ::JsSetPromiseContinuationCallback(callback, callbackState); }
+    static JsErrorCode WINAPI JsGetRuntime(JsContextRef context, JsRuntimeHandle *runtime) { return chakracore::jsrt::JsGetRuntime(context, runtime); }
+    static JsErrorCode WINAPI JsRelease(JsRef ref, unsigned int* count) { return chakracore::jsrt::JsRelease(ref, count); }
+    static JsErrorCode WINAPI JsAddRef(JsRef ref, unsigned int* count) { return chakracore::jsrt::JsAddRef(ref, count); }
+    static JsErrorCode WINAPI JsGetValueType(JsValueRef value, JsValueType *type) { return chakracore::jsrt::JsGetValueType(value, type); }
+    static JsErrorCode WINAPI JsGetIndexedProperty(JsValueRef object, JsValueRef index, JsValueRef *value) { return chakracore::jsrt::JsGetIndexedProperty(object, index, value); }
+    static JsErrorCode WINAPI JsSetIndexedProperty(JsValueRef object, JsValueRef index, JsValueRef value) { return chakracore::jsrt::JsSetIndexedProperty(object, index, value); }
+    static JsErrorCode WINAPI JsSetPromiseContinuationCallback(JsPromiseContinuationCallback callback, void *callbackState) { return chakracore::jsrt::JsSetPromiseContinuationCallback(callback, callbackState); }
     static JsErrorCode WINAPI JsSetHostPromiseRejectionTracker(JsHostPromiseRejectionTrackerCallback callback, void *callbackState) { return ::JsSetHostPromiseRejectionTracker(callback, callbackState); }
-    static JsErrorCode WINAPI JsGetContextOfObject(JsValueRef object, JsContextRef* context) { return ::JsGetContextOfObject(object, context); }
+    static JsErrorCode WINAPI JsGetContextOfObject(JsValueRef object, JsContextRef* context) { return chakracore::jsrt::JsGetContextOfObject(object, context); }
     static JsErrorCode WINAPI JsDiagStartDebugging(JsRuntimeHandle runtimeHandle, JsDiagDebugEventCallback debugEventCallback, void* callbackState) { return ::JsDiagStartDebugging(runtimeHandle, debugEventCallback, callbackState); }
     static JsErrorCode WINAPI JsDiagStopDebugging(JsRuntimeHandle runtimeHandle, void** callbackState) { return ::JsDiagStopDebugging(runtimeHandle, callbackState); }
     static JsErrorCode WINAPI JsDiagGetSource(unsigned int scriptId, JsValueRef *source) { return ::JsDiagGetSource(scriptId, source); }
@@ -471,13 +471,13 @@ public:
     static JsErrorCode WINAPI JsParse(JsValueRef script, JsSourceContext sourceContext, JsValueRef sourceUrl, JsParseScriptAttributes parseAttributes, JsValueRef *result) { return ::JsParse(script, sourceContext, sourceUrl, parseAttributes, result); }
     static JsErrorCode WINAPI JsSerialize(JsValueRef script, JsValueRef *buffer, JsParseScriptAttributes parseAttributes) { return ::JsSerialize(script, buffer, parseAttributes); }
     static JsErrorCode WINAPI JsRunSerialized(JsValueRef buffer, JsSerializedLoadScriptCallback scriptLoadCallback, JsSourceContext sourceContext, JsValueRef sourceUrl, JsValueRef * result) { return ::JsRunSerialized(buffer, scriptLoadCallback, sourceContext, sourceUrl, result); }
-    static JsErrorCode WINAPI JsGetStringLength(JsValueRef value, int *stringLength) { return ::JsGetStringLength(value, stringLength); }
+    static JsErrorCode WINAPI JsGetStringLength(JsValueRef value, int *stringLength) { return chakracore::jsrt::JsGetStringLength(value, stringLength); }
     static JsErrorCode WINAPI JsCopyString(JsValueRef value, char* buffer, size_t bufferSize, size_t* length) { return ::JsCopyString(value, buffer, bufferSize, length); }
     static JsErrorCode WINAPI JsCreateString(const char *content, size_t length, JsValueRef *value) { return ::JsCreateString(content, length, value); }
     static JsErrorCode WINAPI JsCreateString(const std::string &content, JsValueRef *value) { return ::JsCreateString(content.c_str(), content.length(), value); }
     static JsErrorCode WINAPI JsCreateStringUtf16(const uint16_t *content, size_t length, JsValueRef *value) { return ::JsCreateStringUtf16(content, length, value); }
     static JsErrorCode WINAPI JsCreatePropertyId(const char *name, size_t length, JsPropertyIdRef *propertyId) { return ::JsCreatePropertyId(name, length, propertyId); }
-    static JsErrorCode WINAPI JsCreateExternalArrayBuffer(void *data, unsigned int byteLength, JsFinalizeCallback finalizeCallback, void *callbackState, JsValueRef *result)  { return ::JsCreateExternalArrayBuffer(data, byteLength, finalizeCallback, callbackState, result); }
+    static JsErrorCode WINAPI JsCreateExternalArrayBuffer(void *data, unsigned int byteLength, JsFinalizeCallback finalizeCallback, void *callbackState, JsValueRef *result)  { return chakracore::jsrt::JsCreateExternalArrayBuffer(data, byteLength, finalizeCallback, callbackState, result); }
     static JsErrorCode WINAPI JsGetProxyProperties(JsValueRef object, bool* isProxy, JsValueRef* target, JsValueRef* handler)  { return ::JsGetProxyProperties(object, isProxy, target, handler); }
 
     static JsErrorCode WINAPI JsSerializeParserState(JsValueRef script, JsValueRef *buffer, JsParseScriptAttributes parseAttributes) { return ::JsSerializeParserState(script, buffer, parseAttributes); }
@@ -495,9 +495,9 @@ public:
     static JsErrorCode WINAPI JsVarDeserializerFree(JsVarDeserializerHandle deserializerHandle) { return ::JsVarDeserializerFree(deserializerHandle); }
 
     static JsErrorCode WINAPI JsDetachArrayBuffer(JsValueRef buffer) { return ::JsDetachArrayBuffer(buffer); }
-    static JsErrorCode WINAPI JsQueueBackgroundParse_Experimental(JsScriptContents* contents, uint32_t* dwBgParseCookie) { return ::JsQueueBackgroundParse_Experimental(contents, dwBgParseCookie);  }
-    static JsErrorCode WINAPI JsDiscardBackgroundParse_Experimental(uint32_t dwBgParseCookie, void* buffer, bool* callerOwnsBuffer) { return ::JsDiscardBackgroundParse_Experimental(dwBgParseCookie, buffer, callerOwnsBuffer); }
-    static JsErrorCode WINAPI JsExecuteBackgroundParse_Experimental(uint32_t dwBgParseCookie, JsValueRef script, JsSourceContext sourceContext, char16_t *url, JsParseScriptAttributes parseAttributes, JsValueRef parserState, JsValueRef *result) { return ::JsExecuteBackgroundParse_Experimental(dwBgParseCookie, script, sourceContext, url, parseAttributes, parserState, result); }
+    static JsErrorCode WINAPI JsQueueBackgroundParse_Experimental(JsScriptContents* contents, uint32_t* dwBgParseCookie) { return chakracore::jsrt::JsQueueBackgroundParse_Experimental(contents, dwBgParseCookie);  }
+    static JsErrorCode WINAPI JsDiscardBackgroundParse_Experimental(uint32_t dwBgParseCookie, void* buffer, bool* callerOwnsBuffer) { return chakracore::jsrt::JsDiscardBackgroundParse_Experimental(dwBgParseCookie, buffer, callerOwnsBuffer); }
+    static JsErrorCode WINAPI JsExecuteBackgroundParse_Experimental(uint32_t dwBgParseCookie, JsValueRef script, JsSourceContext sourceContext, char16_t *url, JsParseScriptAttributes parseAttributes, JsValueRef parserState, JsValueRef *result) { return chakracore::jsrt::JsExecuteBackgroundParse_Experimental(dwBgParseCookie, script, sourceContext, url, parseAttributes, parserState, result); }
 
     static JsErrorCode WINAPI JsGetArrayBufferFreeFunction(JsValueRef buffer, ArrayBufferFreeFn* freeFn) { return ::JsGetArrayBufferFreeFunction(buffer, freeFn); }
     static JsErrorCode WINAPI JsExternalizeArrayBuffer(JsValueRef buffer) { return ::JsExternalizeArrayBuffer(buffer); }
