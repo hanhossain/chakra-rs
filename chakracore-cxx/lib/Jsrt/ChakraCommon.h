@@ -40,12 +40,7 @@
 
 #define SET_API_VISIBILITY __attribute__((visibility("default")))
 
-#ifdef __cplusplus
-#define CHAKRA_API extern "C" SET_API_VISIBILITY JsErrorCode
-#else
-#define CHAKRA_API extern     SET_API_VISIBILITY JsErrorCode
-#include <stdbool.h>
-#endif
+#define CHAKRA_API JsErrorCode
 
 #include <stddef.h>  // for size_t
 #include <stdint.h>  // for uintptr_t
