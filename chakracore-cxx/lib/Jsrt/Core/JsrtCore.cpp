@@ -20,8 +20,7 @@
 #include "Codex/Utf8Helper.h"
 #include "Language/SourceTextModuleRecord.h"
 
-CHAKRA_API
-JsInitializeModuleRecord(
+JsErrorCode chakracore::jsrt::JsInitializeModuleRecord(
     _In_opt_ JsModuleRecord referencingModule,
     _In_opt_ JsValueRef normalizedSpecifier,
     _Outptr_result_maybenull_ JsModuleRecord* moduleRecord)
@@ -46,8 +45,7 @@ JsInitializeModuleRecord(
     return errorCode;
 }
 
-CHAKRA_API
-JsParseModuleSource(
+JsErrorCode chakracore::jsrt::JsParseModuleSource(
     _In_ JsModuleRecord requestModule,
     _In_ JsSourceContext sourceContext,
     _In_ byte* sourceText,
@@ -109,8 +107,7 @@ JsParseModuleSource(
     return errorCode;
 }
 
-CHAKRA_API
-JsModuleEvaluation(
+JsErrorCode chakracore::jsrt::JsModuleEvaluation(
     _In_ JsModuleRecord requestModule,
     _Outptr_result_maybenull_ JsValueRef* result)
 {
@@ -141,8 +138,7 @@ JsModuleEvaluation(
     return errorCode;
 }
 
-CHAKRA_API
-JsSetModuleHostInfo(
+JsErrorCode chakracore::jsrt::JsSetModuleHostInfo(
     _In_opt_ JsModuleRecord requestModule,
     _In_ JsModuleHostInfoKind moduleHostInfo,
     _In_ void* hostInfo)
@@ -203,8 +199,7 @@ JsSetModuleHostInfo(
     return errorCode;
 }
 
-CHAKRA_API
-JsGetModuleHostInfo(
+JsErrorCode chakracore::jsrt::JsGetModuleHostInfo(
     _In_  JsModuleRecord requestModule,
     _In_ JsModuleHostInfoKind moduleHostInfo,
     _Outptr_result_maybenull_ void** hostInfo)
@@ -620,7 +615,7 @@ JsDetachArrayBuffer(
     });
 }
 
-CHAKRA_API JsCreateSharedArrayBufferWithSharedContent(_In_ JsSharedArrayBufferContentHandle sharedContents, _Out_ JsValueRef *result)
+JsErrorCode chakracore::jsrt::JsCreateSharedArrayBufferWithSharedContent(_In_ JsSharedArrayBufferContentHandle sharedContents, _Out_ JsValueRef *result)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
 
@@ -634,7 +629,7 @@ CHAKRA_API JsCreateSharedArrayBufferWithSharedContent(_In_ JsSharedArrayBufferCo
     });
 }
 
-CHAKRA_API JsGetSharedArrayBufferContent(_In_ JsValueRef sharedArrayBuffer, _Out_ JsSharedArrayBufferContentHandle *sharedContents)
+JsErrorCode chakracore::jsrt::JsGetSharedArrayBufferContent(_In_ JsValueRef sharedArrayBuffer, _Out_ JsSharedArrayBufferContentHandle *sharedContents)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
 
@@ -659,7 +654,7 @@ CHAKRA_API JsGetSharedArrayBufferContent(_In_ JsValueRef sharedArrayBuffer, _Out
     });
 }
 
-CHAKRA_API JsReleaseSharedArrayBufferContentHandle(_In_ JsSharedArrayBufferContentHandle sharedContents)
+JsErrorCode chakracore::jsrt::JsReleaseSharedArrayBufferContentHandle(_In_ JsSharedArrayBufferContentHandle sharedContents)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         ((Js::SharedContents*)sharedContents)->Release();
@@ -870,7 +865,7 @@ static void CastCopy(const SrcChar* src, DstChar* dst, size_t count)
     }
 }
 
-CHAKRA_API JsCreateString(
+JsErrorCode chakracore::jsrt::JsCreateString(
     _In_ const char *content,
     _In_ size_t length,
     _Out_ JsValueRef *value)
@@ -904,7 +899,7 @@ CHAKRA_API JsCreateString(
     });
 }
 
-CHAKRA_API JsCreateStringUtf16(
+JsErrorCode chakracore::jsrt::JsCreateStringUtf16(
     _In_ const uint16_t *content,
     _In_ size_t length,
     _Out_ JsValueRef *value)
@@ -939,7 +934,7 @@ CHAKRA_API JsCreateStringUtf16(
 }
 
 
-CHAKRA_API JsCreatePropertyString(
+JsErrorCode chakracore::jsrt::JsCreatePropertyString(
     _In_z_ const char *name,
     _In_ size_t length,
     _Out_ JsValueRef *propertyString)
@@ -959,7 +954,7 @@ CHAKRA_API JsCreatePropertyString(
     });
 }
 
-CHAKRA_API JsCreatePromise(_Out_ JsValueRef *promise, _Out_ JsValueRef *resolve, _Out_ JsValueRef *reject)
+JsErrorCode chakracore::jsrt::JsCreatePromise(_Out_ JsValueRef *promise, _Out_ JsValueRef *resolve, _Out_ JsValueRef *reject)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION_NOT_IMPLEMENTED(scriptContext);
@@ -985,7 +980,7 @@ CHAKRA_API JsCreatePromise(_Out_ JsValueRef *promise, _Out_ JsValueRef *resolve,
     });
 }
 
-CHAKRA_API JsGetPromiseState(_In_ JsValueRef promise, _Out_ JsPromiseState *state)
+JsErrorCode chakracore::jsrt::JsGetPromiseState(_In_ JsValueRef promise, _Out_ JsPromiseState *state)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION_NOT_IMPLEMENTED(scriptContext);
@@ -1018,7 +1013,7 @@ CHAKRA_API JsGetPromiseState(_In_ JsValueRef promise, _Out_ JsPromiseState *stat
     });
 }
 
-CHAKRA_API JsGetPromiseResult(_In_ JsValueRef promise, _Out_ JsValueRef *result)
+JsErrorCode chakracore::jsrt::JsGetPromiseResult(_In_ JsValueRef promise, _Out_ JsValueRef *result)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION_NOT_IMPLEMENTED(scriptContext);
@@ -1046,7 +1041,7 @@ CHAKRA_API JsGetPromiseResult(_In_ JsValueRef promise, _Out_ JsValueRef *result)
     });
 }
 
-CHAKRA_API JsCreateWeakReference(
+JsErrorCode chakracore::jsrt::JsCreateWeakReference(
     _In_ JsValueRef value,
     _Out_ JsWeakRef* weakRef)
 {
@@ -1086,7 +1081,7 @@ CHAKRA_API JsCreateWeakReference(
     });
 }
 
-CHAKRA_API JsGetWeakReferenceValue(
+JsErrorCode chakracore::jsrt::JsGetWeakReferenceValue(
     _In_ JsWeakRef weakRef,
     _Out_ JsValueRef* value)
 {
@@ -1102,7 +1097,7 @@ CHAKRA_API JsGetWeakReferenceValue(
     });
 }
 
-CHAKRA_API JsGetAndClearExceptionWithMetadata(_Out_ JsValueRef *metadata)
+JsErrorCode chakracore::jsrt::JsGetAndClearExceptionWithMetadata(_Out_ JsValueRef *metadata)
 {
     PARAM_NOT_NULL(metadata);
     *metadata = nullptr;

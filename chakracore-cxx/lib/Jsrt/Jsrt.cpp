@@ -2926,7 +2926,7 @@ JsErrorCode JsCreateEnhancedFunctionHelper(_In_ T nativeFunction, _In_opt_ JsVal
     });
 }
 
-CHAKRA_API JsCreateEnhancedFunction(_In_ JsEnhancedNativeFunction nativeFunction, _In_opt_ JsValueRef metadata, _In_opt_ void *callbackState, _Out_ JsValueRef *function)
+JsErrorCode chakracore::jsrt::JsCreateEnhancedFunction(_In_ JsEnhancedNativeFunction nativeFunction, _In_opt_ JsValueRef metadata, _In_opt_ void *callbackState, _Out_ JsValueRef *function)
 {
     return JsCreateEnhancedFunctionHelper<false>(nativeFunction, metadata, callbackState, function);
 }
@@ -4773,7 +4773,7 @@ JsErrorCode WriteStringCopy(
     return JsNoError;
 }
 
-CHAKRA_API JsCopyStringUtf16(
+JsErrorCode chakracore::jsrt::JsCopyStringUtf16(
     _In_ JsValueRef value,
     _In_ int start,
     _In_ int length,
@@ -4794,7 +4794,7 @@ CHAKRA_API JsCopyStringUtf16(
         });
 }
 
-CHAKRA_API JsCopyString(
+JsErrorCode chakracore::jsrt::JsCopyString(
     _In_ JsValueRef value,
     _Out_opt_ char* buffer,
     _In_ size_t bufferSize,
@@ -4890,7 +4890,7 @@ inline JsErrorCode CompileRun(
         sourceContext, url, parseOnly, parseAttributes, false, result);
 }
 
-CHAKRA_API JsParse(
+JsErrorCode chakracore::jsrt::JsParse(
     _In_ JsValueRef scriptVal,
     _In_ JsSourceContext sourceContext,
     _In_ JsValueRef sourceUrl,
@@ -4901,7 +4901,7 @@ CHAKRA_API JsParse(
         result, true);
 }
 
-CHAKRA_API JsRun(
+JsErrorCode chakracore::jsrt::JsRun(
     _In_ JsValueRef scriptVal,
     _In_ JsSourceContext sourceContext,
     _In_ JsValueRef sourceUrl,
@@ -4912,7 +4912,7 @@ CHAKRA_API JsRun(
         result, false);
 }
 
-CHAKRA_API JsCreatePropertyId(
+JsErrorCode chakracore::jsrt::JsCreatePropertyId(
     _In_z_ const char *name,
     _In_ size_t length,
     _Out_ JsPropertyIdRef *propertyId)
@@ -4927,7 +4927,7 @@ CHAKRA_API JsCreatePropertyId(
     return JsGetPropertyIdFromNameInternal(wname, wname.Length(), propertyId);
 }
 
-CHAKRA_API JsCopyPropertyId(
+JsErrorCode chakracore::jsrt::JsCopyPropertyId(
     _In_ JsPropertyIdRef propertyId,
     _Out_ char* buffer,
     _In_ size_t bufferSize,
@@ -4971,7 +4971,7 @@ CHAKRA_API JsCopyPropertyId(
     return JsNoError;
 }
 
-CHAKRA_API JsSerialize(
+JsErrorCode chakracore::jsrt::JsSerialize(
     _In_ JsValueRef scriptVal,
     _Out_ JsValueRef *bufferVal,
     _In_ JsParseScriptAttributes parseAttributes)
@@ -5018,7 +5018,7 @@ CHAKRA_API JsSerialize(
     return errorCode;
 }
 
-CHAKRA_API JsParseSerialized(
+JsErrorCode chakracore::jsrt::JsParseSerialized(
     _In_ JsValueRef bufferVal,
     _In_ JsSerializedLoadScriptCallback scriptLoadCallback,
     _In_ JsSourceContext sourceContext,
@@ -5054,7 +5054,7 @@ CHAKRA_API JsParseSerialized(
       buffer, arrayBuffer, sourceContext, url, 0, true, false, result, Js::Constants::InvalidSourceIndex);
 }
 
-CHAKRA_API JsRunSerialized(
+JsErrorCode chakracore::jsrt::JsRunSerialized(
     _In_ JsValueRef bufferVal,
     _In_ JsSerializedLoadScriptCallback scriptLoadCallback,
     _In_ JsSourceContext sourceContext,
