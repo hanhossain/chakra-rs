@@ -19,7 +19,6 @@ bool ChakraRTInterface::m_usageStringPrinted = false;
 
 ChakraRTInterface::ArgInfo* ChakraRTInterface::m_argInfo = nullptr;
 TestHooks ChakraRTInterface::m_testHooks = { 0 };
-JsAPIHooks ChakraRTInterface::m_jsApiHooks = { 0 };
 
 /*static*/
 bool ChakraRTInterface::LoadChakraDll(ArgInfo* argInfo)
