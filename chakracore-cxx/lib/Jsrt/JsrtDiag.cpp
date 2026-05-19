@@ -525,7 +525,7 @@ JsErrorCode chakracore::jsrt::JsDiagSetStepType(
 #endif
 }
 
-CHAKRA_API JsTTDDiagWriteLog(_In_reads_(uriLength) const char* uri, _In_ size_t uriLength)
+JsErrorCode chakracore::jsrt::JsTTDDiagWriteLog(_In_reads_(uriLength) const char* uri, _In_ size_t uriLength)
 {
 #if !ENABLE_TTD
     return JsErrorCategoryUsage;

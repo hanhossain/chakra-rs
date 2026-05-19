@@ -697,6 +697,8 @@ namespace chakracore::jsrt
     /// <param name="write">If the handle was opened for writing.</param>
     typedef void (*JsTTDFlushAndCloseStreamCallback)(_In_ JsTTDStreamHandle handle, _In_ bool read, _In_ bool write);
 
+namespace chakracore::jsrt
+{
     /// <summary>
     ///     TTD API -- may change in future versions:
     ///     Creates a new runtime in Record Mode.
@@ -716,7 +718,7 @@ namespace chakracore::jsrt
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsTTDCreateRecordRuntime(
             _In_ JsRuntimeAttributes attributes,
             _In_ bool enableDebugging,
@@ -746,7 +748,7 @@ namespace chakracore::jsrt
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsTTDCreateReplayRuntime(
             _In_ JsRuntimeAttributes attributes,
             _In_reads_(infoUriCount) const char* infoUri,
@@ -768,7 +770,7 @@ namespace chakracore::jsrt
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API JsTTDCreateContext(
+    JsErrorCode JsTTDCreateContext(
         _In_ JsRuntimeHandle runtimeHandle,
         _In_ bool useRuntimeTTDMode,
         _Out_ JsContextRef *newContext);
@@ -781,7 +783,7 @@ namespace chakracore::jsrt
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    CHAKRA_API JsTTDNotifyContextDestroy(
+    JsErrorCode JsTTDNotifyContextDestroy(
         _In_ JsContextRef context);
 
     /// <summary>
@@ -789,7 +791,7 @@ namespace chakracore::jsrt
     ///     Start Time-Travel record or replay at next turn of event loop.
     /// </summary>
     /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
-    CHAKRA_API
+    JsErrorCode
         JsTTDStart();
 
     /// <summary>
@@ -797,7 +799,7 @@ namespace chakracore::jsrt
     ///     Stop Time-Travel record or replay.
     /// </summary>
     /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
-    CHAKRA_API
+    JsErrorCode
         JsTTDStop();
 
     /// <summary>
@@ -805,7 +807,7 @@ namespace chakracore::jsrt
     ///     Pause Time-Travel recording before executing code on behalf of debugger or other diagnostic/telemetry.
     /// </summary>
     /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
-    CHAKRA_API
+    JsErrorCode
         JsTTDPauseTimeTravelBeforeRuntimeOperation();
 
     /// <summary>
@@ -813,7 +815,7 @@ namespace chakracore::jsrt
     ///     ReStart Time-Travel recording after executing code on behalf of debugger or other diagnostic/telemetry.
     /// </summary>
     /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
-    CHAKRA_API
+    JsErrorCode
         JsTTDReStartTimeTravelAfterRuntimeOperation();
 
     /// <summary>
@@ -821,7 +823,7 @@ namespace chakracore::jsrt
     ///     Notify the Js runtime we are at a safe yield point in the event loop (i.e. no locals on the stack and we can process as desired).
     /// </summary>
     /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
-    CHAKRA_API
+    JsErrorCode
         JsTTDNotifyYield();
 
     /// <summary>
@@ -830,7 +832,7 @@ namespace chakracore::jsrt
     /// </summary>
     /// <param name="value">The value we are adding the ref to.</param>
     /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
-    CHAKRA_API
+    JsErrorCode
         JsTTDNotifyLongLivedReferenceAdd(_In_ JsValueRef value);
 
     /// <summary>
@@ -839,7 +841,7 @@ namespace chakracore::jsrt
     /// </summary>
     /// <param name="statusCode">The exit status code.</param>
     /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
-    CHAKRA_API
+    JsErrorCode
         JsTTDHostExit(_In_ int statusCode);
 
     /// <summary>
@@ -852,7 +854,7 @@ namespace chakracore::jsrt
     /// <param name="srcIndex">The first index copied.</param>
     /// <param name="count">The number of bytes copied.</param>
     /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
-    CHAKRA_API
+    JsErrorCode
         JsTTDRawBufferCopySyncIndirect(
             _In_ JsValueRef dst,
             _In_ size_t dstIndex,
@@ -868,7 +870,7 @@ namespace chakracore::jsrt
     /// <param name="index">The first index modified.</param>
     /// <param name="count">The number of bytes written.</param>
     /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
-    CHAKRA_API
+    JsErrorCode
         JsTTDRawBufferModifySyncIndirect(
             _In_ JsValueRef buffer,
             _In_ size_t index,
@@ -881,7 +883,7 @@ namespace chakracore::jsrt
     /// <param name="instance">The array buffer we want to monitor for contents modification.</param>
     /// <param name="initialModPos">The first position in the buffer that may be modified.</param>
     /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
-    CHAKRA_API
+    JsErrorCode
         JsTTDRawBufferAsyncModificationRegister(
             _In_ JsValueRef instance,
             _In_ byte* initialModPos);
@@ -892,7 +894,7 @@ namespace chakracore::jsrt
     /// </summary>
     /// <param name="finalModPos">One past the last modified position in the buffer.</param>
     /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
-    CHAKRA_API
+    JsErrorCode
         JsTTDRawBufferAsyncModifyComplete(
             _In_ byte* finalModPos);
 
@@ -903,7 +905,7 @@ namespace chakracore::jsrt
     /// </summary>
     /// <param name="msg">The message to print if we should be catching this as a TTD operation.</param>
     /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
-    CHAKRA_API
+    JsErrorCode
         JsTTDCheckAndAssertIfTTDRunning(
             _In_ const char* msg);
 
@@ -919,7 +921,7 @@ namespace chakracore::jsrt
     /// <param name="targetStartSnapTime">Out parameter with the event time of the snapshot that we should inflate from.</param>
     /// <param name="targetEndSnapTime">Optional Out parameter with the snapshot time following the event.</param>
     /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
-    CHAKRA_API JsTTDGetSnapTimeTopLevelEventMove(
+    JsErrorCode JsTTDGetSnapTimeTopLevelEventMove(
         _In_ JsRuntimeHandle runtimeHandle,
         _In_ JsTTDMoveMode moveMode,
         _In_opt_ uint32_t kthEvent,
@@ -936,7 +938,7 @@ namespace chakracore::jsrt
     /// <param name="startSnapTime">The snapshot time that comes before the desired event.</param>
     /// <param name="endSnapTime">The snapshot time that comes after the desired event (-1 if the leg ends before a snapshot appears).</param>
     /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
-    CHAKRA_API JsTTDGetSnapShotBoundInterval(
+    JsErrorCode JsTTDGetSnapShotBoundInterval(
         _In_ JsRuntimeHandle runtimeHandle,
         _In_ int64_t targetEventTime,
         _Out_ int64_t* startSnapTime,
@@ -950,7 +952,7 @@ namespace chakracore::jsrt
     /// <param name="currentSnapStartTime">The current snapshot interval start time.</param>
     /// <param name="previousSnapTime">The resulting previous snapshot interval start time or -1 if no such time.</param>
     /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
-    CHAKRA_API JsTTDGetPreviousSnapshotInterval(
+    JsErrorCode JsTTDGetPreviousSnapshotInterval(
         _In_ JsRuntimeHandle runtimeHandle,
         _In_ int64_t currentSnapStartTime,
         _Out_ int64_t* previousSnapTime);
@@ -966,7 +968,7 @@ namespace chakracore::jsrt
     /// <param name="moveMode">Additional flags for controling how the move is done.</param>
     /// <param name="newTargetEventTime">The updated target event time set according to the moveMode (-1 if not found).</param>
     /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
-    CHAKRA_API JsTTDPreExecuteSnapShotInterval(
+    JsErrorCode JsTTDPreExecuteSnapShotInterval(
         _In_ JsRuntimeHandle runtimeHandle,
         _In_ int64_t startSnapTime,
         _In_ int64_t endSnapTime,
@@ -983,7 +985,7 @@ namespace chakracore::jsrt
     /// <param name="snapshotTime">The event time that we will start executing from to move to the given target time.</param>
     /// <param name="eventTime">The event that we want to move to.</param>
     /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
-    CHAKRA_API
+    JsErrorCode
         JsTTDMoveToTopLevelEvent(
             _In_ JsRuntimeHandle runtimeHandle,
             _In_ JsTTDMoveMode moveMode,
@@ -1001,7 +1003,7 @@ namespace chakracore::jsrt
     ///     If we aborted at the end of the replay log the code is JsNoError -- rootEventTime is -1.
     ///     If there was an unhandled script exception the code is JsErrorCategoryScript.
     /// </returns>
-    CHAKRA_API
+    JsErrorCode
         JsTTDReplayExecution(
             _Inout_ JsTTDMoveMode* moveMode,
             _Out_ int64_t* rootEventTime);
@@ -1012,7 +1014,7 @@ namespace chakracore::jsrt
     /// </summary>
     /// <param name="status">True to enable autotracing false to disable it.</param>
     /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
-    CHAKRA_API
+    JsErrorCode
         JsTTDDiagSetAutoTraceStatus(
             _In_ bool status
         );
@@ -1024,10 +1026,10 @@ namespace chakracore::jsrt
     /// <param name="uri">The URI that the log should be written into.</param>
     /// <param name="uriLength">The length of the uri array that the host passed in for storing log info.</param>
     /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
-    CHAKRA_API
+    JsErrorCode
         JsTTDDiagWriteLog(
             _In_reads_(uriLength) const char* uri,
             _In_ size_t uriLength
         );
-
+}
 #endif // _CHAKRADEBUG_H_
