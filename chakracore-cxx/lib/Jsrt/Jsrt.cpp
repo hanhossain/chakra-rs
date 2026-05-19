@@ -26,7 +26,7 @@
 
 using namespace chakracore::jsrt;
 
-CHAKRA_API RunScriptWithParserStateCore(
+JsErrorCode RunScriptWithParserStateCore(
     _In_ uint32_t dwBgParseCookie,
     _In_ JsValueRef script,
     _In_ JsSourceContext sourceContext,
@@ -478,12 +478,12 @@ JsErrorCode chakracore::jsrt::JsCollectGarbage(_In_ JsRuntimeHandle runtimeHandl
 }
 
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
-CHAKRA_API JsPrivateCollectGarbageSkipStack(_In_ JsRuntimeHandle runtimeHandle)
+JsErrorCode JsPrivateCollectGarbageSkipStack(_In_ JsRuntimeHandle runtimeHandle)
 {
     return JsCollectGarbageCommon<CollectNowExhaustiveSkipStack>(runtimeHandle);
 }
 
-CHAKRA_API JsPrivateDetachArrayBuffer(_In_ JsValueRef ref, _Out_ void** detachedState)
+JsErrorCode JsPrivateDetachArrayBuffer(_In_ JsValueRef ref, _Out_ void** detachedState)
 {
     return GlobalAPIWrapper_NoRecord([&]() -> JsErrorCode
     {
@@ -493,7 +493,7 @@ CHAKRA_API JsPrivateDetachArrayBuffer(_In_ JsValueRef ref, _Out_ void** detached
     });
 }
 
-CHAKRA_API JsPrivateFreeDetachedArrayBuffer(_In_ void* detachedState)
+JsErrorCode JsPrivateFreeDetachedArrayBuffer(_In_ void* detachedState)
 {
     return GlobalAPIWrapper_NoRecord([&]() -> JsErrorCode
     {
@@ -1232,7 +1232,7 @@ JsErrorCode chakracore::jsrt::JsGetStringLength(_In_ JsValueRef value, _Out_ int
     END_JSRT_NO_EXCEPTION
 }
 
-CHAKRA_API JsPointerToString(_In_reads_(stringLength) const char16_t *stringValue, _In_ size_t stringLength, _Out_ JsValueRef *string)
+JsErrorCode JsPointerToString(_In_reads_(stringLength) const char16_t *stringValue, _In_ size_t stringLength, _Out_ JsValueRef *string)
 {
     return ContextAPINoScriptWrapper([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTCreateString, stringValue, stringLength);
@@ -1256,7 +1256,7 @@ CHAKRA_API JsPointerToString(_In_reads_(stringLength) const char16_t *stringValu
 // TODO: The annotation of stringPtr is wrong.  Need to fix definition in chakrart.h
 // The warning is '*stringPtr' could be '0' : this does not adhere to the specification for the function 'JsStringToPointer'.
 #pragma warning(suppress:6387)
-CHAKRA_API JsStringToPointer(_In_ JsValueRef stringValue, _Outptr_result_buffer_(*stringLength) const char16_t **stringPtr, _Out_ size_t *stringLength)
+JsErrorCode JsStringToPointer(_In_ JsValueRef stringValue, _Outptr_result_buffer_(*stringLength) const char16_t **stringPtr, _Out_ size_t *stringLength)
 {
     VALIDATE_JSREF(stringValue);
     PARAM_NOT_NULL(stringPtr);
@@ -1462,7 +1462,7 @@ JsErrorCode chakracore::jsrt::JsPreventExtension(_In_ JsValueRef object)
     });
 }
 
-CHAKRA_API JsHasOwnPropertyCommon(Js::ScriptContext * scriptContext, _In_ JsValueRef object,
+JsErrorCode JsHasOwnPropertyCommon(Js::ScriptContext * scriptContext, _In_ JsValueRef object,
     _In_ const Js::PropertyRecord * propertyRecord, _Out_ bool *hasOwnProperty, _In_opt_ Js::PropertyString * propString)
 {
     *hasOwnProperty = Js::JavascriptOperators::OP_HasOwnProperty(object,
@@ -3361,7 +3361,7 @@ inline JsErrorCode JsGetPropertyIdFromNameInternal(_In_z_ const char16_t *name, 
     });
 }
 
-CHAKRA_API JsGetPropertyIdFromName(_In_z_ const char16_t *name, _Out_ JsPropertyIdRef *propertyId)
+JsErrorCode JsGetPropertyIdFromName(_In_z_ const char16_t *name, _Out_ JsPropertyIdRef *propertyId)
 {
     return JsGetPropertyIdFromNameInternal(name, std::u16string(name).length(), propertyId);
 }
@@ -3407,7 +3407,7 @@ JsErrorCode chakracore::jsrt::JsGetSymbolFromPropertyId(_In_ JsPropertyIdRef pro
 }
 
 #pragma prefast(suppress:6101, "Prefast doesn't see through the lambda")
-CHAKRA_API JsGetPropertyNameFromId(_In_ JsPropertyIdRef propertyId, _Outptr_result_z_ const char16_t **name)
+JsErrorCode JsGetPropertyNameFromId(_In_ JsPropertyIdRef propertyId, _Outptr_result_z_ const char16_t **name)
 {
     return GlobalAPIWrapper_NoRecord([&]() -> JsErrorCode {
         VALIDATE_INCOMING_PROPERTYID(propertyId);
@@ -3861,7 +3861,7 @@ JsErrorCode JsSerializeScriptCore(const byte *script, size_t cb,
     });
 }
 
-CHAKRA_API JsSerializeScript(_In_z_ const char16_t *script, _Out_writes_to_opt_(*bufferSize,
+JsErrorCode JsSerializeScript(_In_z_ const char16_t *script, _Out_writes_to_opt_(*bufferSize,
     *bufferSize) unsigned char *buffer,
     _Inout_ unsigned int *bufferSize)
 {
@@ -5111,7 +5111,7 @@ JsErrorCode chakracore::jsrt::JsCopyStringOneByte(
     });
 }
 
-CHAKRA_API JsSerializeParserStateCore(
+JsErrorCode JsSerializeParserStateCore(
     _In_z_ const byte* script,
     _In_ size_t cb,
     _In_ LoadScriptFlag loadScriptFlag,
@@ -5250,7 +5250,7 @@ static bool DummyScriptLoadSourceCallbackForRunScriptWithParserState(
     return true;
 }
 
-CHAKRA_API RunScriptWithParserStateCore(
+JsErrorCode RunScriptWithParserStateCore(
     _In_ uint32_t dwBgParseCookie,
     _In_ JsValueRef script,
     _In_ JsSourceContext sourceContext,

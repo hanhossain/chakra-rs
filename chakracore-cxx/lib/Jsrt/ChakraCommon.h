@@ -38,15 +38,6 @@
 #define _Out_writes_(size)
 #define _Out_writes_to_opt_(byteLength, byteLength2)
 
-#define SET_API_VISIBILITY __attribute__((visibility("default")))
-
-#ifdef __cplusplus
-#define CHAKRA_API extern "C" SET_API_VISIBILITY JsErrorCode
-#else
-#define CHAKRA_API extern     SET_API_VISIBILITY JsErrorCode
-#include <stdbool.h>
-#endif
-
 #include <stddef.h>  // for size_t
 #include <stdint.h>  // for uintptr_t
 typedef uintptr_t ChakraCookie;
