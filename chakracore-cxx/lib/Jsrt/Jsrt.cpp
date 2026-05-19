@@ -1335,7 +1335,7 @@ JsErrorCode chakracore::jsrt::JsCreateObject(_Out_ JsValueRef *object)
     });
 }
 
-CHAKRA_API JsCreateExternalObjectWithPrototype(_In_opt_ void *data,
+JsErrorCode chakracore::jsrt::JsCreateExternalObjectWithPrototype(_In_opt_ void *data,
     _In_opt_ JsFinalizeCallback finalizeCallback,
     _In_opt_ JsValueRef prototype,
     _Out_ JsValueRef *object)
@@ -1471,7 +1471,7 @@ CHAKRA_API JsHasOwnPropertyCommon(Js::ScriptContext * scriptContext, _In_ JsValu
     return JsNoError;
 }
 
-CHAKRA_API JsHasOwnProperty(_In_ JsValueRef object, _In_ JsPropertyIdRef propertyId,
+JsErrorCode chakracore::jsrt::JsHasOwnProperty(_In_ JsValueRef object, _In_ JsPropertyIdRef propertyId,
     _Out_ bool *hasOwnProperty)
 {
     return ContextAPIWrapper<true>([&](Js::ScriptContext *scriptContext,
@@ -1510,7 +1510,7 @@ static JsErrorCode InternalGetPropertyRecord(Js::ScriptContext * scriptContext,
     return JsNoError;
 }
 
-CHAKRA_API JsObjectHasOwnProperty(_In_ JsValueRef object, _In_ JsValueRef propertyId, _Out_ bool *hasOwnProperty)
+JsErrorCode chakracore::jsrt::JsObjectHasOwnProperty(_In_ JsValueRef object, _In_ JsValueRef propertyId, _Out_ bool *hasOwnProperty)
 {
     return ContextAPIWrapper<true>([&] (Js::ScriptContext *scriptContext,
         TTDRecorder& _actionEntryPopper) -> JsErrorCode {
@@ -1567,7 +1567,7 @@ JsErrorCode chakracore::jsrt::JsGetProperty(_In_ JsValueRef object, _In_ JsPrope
     });
 }
 
-CHAKRA_API JsObjectGetProperty(_In_ JsValueRef object, _In_ JsValueRef propertyId, _Out_ JsValueRef *value)
+JsErrorCode chakracore::jsrt::JsObjectGetProperty(_In_ JsValueRef object, _In_ JsValueRef propertyId, _Out_ JsValueRef *value)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext *scriptContext,
         TTDRecorder& _actionEntryPopper) -> JsErrorCode {
@@ -1633,7 +1633,7 @@ JsErrorCode chakracore::jsrt::JsGetOwnPropertyDescriptor(_In_ JsValueRef object,
     });
 }
 
-CHAKRA_API JsObjectGetOwnPropertyDescriptor(_In_ JsValueRef object, _In_ JsValueRef propertyId, _Out_ JsValueRef *propertyDescriptor)
+JsErrorCode chakracore::jsrt::JsObjectGetOwnPropertyDescriptor(_In_ JsValueRef object, _In_ JsValueRef propertyId, _Out_ JsValueRef *propertyDescriptor)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext *scriptContext,
         TTDRecorder& _actionEntryPopper) -> JsErrorCode {
@@ -1685,7 +1685,7 @@ JsErrorCode chakracore::jsrt::JsSetProperty(_In_ JsValueRef object, _In_ JsPrope
     });
 }
 
-CHAKRA_API JsObjectSetProperty(_In_ JsValueRef object, _In_ JsValueRef propertyId, _In_ JsValueRef value, _In_ bool useStrictRules)
+JsErrorCode chakracore::jsrt::JsObjectSetProperty(_In_ JsValueRef object, _In_ JsValueRef propertyId, _In_ JsValueRef value, _In_ bool useStrictRules)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext *scriptContext,
         TTDRecorder& _actionEntryPopper) -> JsErrorCode {
@@ -1754,7 +1754,7 @@ JsErrorCode chakracore::jsrt::JsHasProperty(_In_ JsValueRef object, _In_ JsPrope
     return ContextAPINoScriptWrapper(internalHasProperty);
 }
 
-CHAKRA_API JsObjectHasProperty(_In_ JsValueRef object, _In_ JsValueRef propertyId, _Out_ bool *hasProperty)
+JsErrorCode chakracore::jsrt::JsObjectHasProperty(_In_ JsValueRef object, _In_ JsValueRef propertyId, _Out_ bool *hasProperty)
 {
     VALIDATE_JSREF(object);
     if (!Js::JavascriptOperators::IsObject(object)) return JsErrorArgumentNotObject;
@@ -1841,7 +1841,7 @@ JsErrorCode chakracore::jsrt::JsDeleteProperty(_In_ JsValueRef object, _In_ JsPr
     });
 }
 
-CHAKRA_API JsObjectDeleteProperty(_In_ JsValueRef object, _In_ JsValueRef propertyId,
+JsErrorCode chakracore::jsrt::JsObjectDeleteProperty(_In_ JsValueRef object, _In_ JsValueRef propertyId,
     _In_ bool useStrictRules, _Out_ JsValueRef *result)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext *scriptContext,
@@ -1906,8 +1906,7 @@ JsErrorCode chakracore::jsrt::JsDefineProperty(_In_ JsValueRef object, _In_ JsPr
     });
 }
 
-CHAKRA_API
-JsObjectDefinePropertyFull(
+JsErrorCode chakracore::jsrt::JsObjectDefinePropertyFull(
     _In_ JsValueRef object,
     _In_ JsValueRef key,
     _In_opt_ JsValueRef value,
@@ -1970,7 +1969,7 @@ JsObjectDefinePropertyFull(
     });
 }
 
-CHAKRA_API JsObjectDefineProperty(_In_ JsValueRef object, _In_ JsValueRef propertyId,
+JsErrorCode chakracore::jsrt::JsObjectDefineProperty(_In_ JsValueRef object, _In_ JsValueRef propertyId,
     _In_ JsValueRef propertyDescriptor, _Out_ bool *result)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext *scriptContext,
@@ -2636,7 +2635,7 @@ JsErrorCode chakracore::jsrt::JsGetIndexedPropertiesExternalData(
     END_JSRT_NO_EXCEPTION
 }
 
-CHAKRA_API JsLessThan(_In_ JsValueRef object1, _In_ JsValueRef object2, _Out_ bool *result)
+JsErrorCode chakracore::jsrt::JsLessThan(_In_ JsValueRef object1, _In_ JsValueRef object2, _Out_ bool *result)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTLessThan, object1, object2, false);
@@ -2651,7 +2650,7 @@ CHAKRA_API JsLessThan(_In_ JsValueRef object1, _In_ JsValueRef object2, _Out_ bo
     });
 }
 
-CHAKRA_API JsLessThanOrEqual(_In_ JsValueRef object1, _In_ JsValueRef object2, _Out_ bool *result)
+JsErrorCode chakracore::jsrt::JsLessThanOrEqual(_In_ JsValueRef object1, _In_ JsValueRef object2, _Out_ bool *result)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTLessThan, object1, object2, true);
@@ -5089,7 +5088,7 @@ JsErrorCode chakracore::jsrt::JsRunSerialized(
 }
 
 
-CHAKRA_API JsCopyStringOneByte(
+JsErrorCode chakracore::jsrt::JsCopyStringOneByte(
     _In_ JsValueRef value,
     _In_ int start,
     _In_ int length,
@@ -5194,7 +5193,7 @@ CHAKRA_API JsSerializeParserStateCore(
     });
 }
 
-CHAKRA_API JsSerializeParserState(
+JsErrorCode chakracore::jsrt::JsSerializeParserState(
     _In_ JsValueRef scriptVal,
     _Out_ JsValueRef *bufferVal,
     _In_ JsParseScriptAttributes parseAttributes)
@@ -5354,7 +5353,7 @@ CHAKRA_API RunScriptWithParserStateCore(
         buffer, arrayBuffer, sourceContext, url, dwBgParseCookie, parseOnly, true, result, sourceIndex);
 }
 
-CHAKRA_API JsRunScriptWithParserState(
+JsErrorCode chakracore::jsrt::JsRunScriptWithParserState(
     _In_ JsValueRef script,
     _In_ JsSourceContext sourceContext,
     _In_ JsValueRef sourceUrl,
@@ -5374,7 +5373,7 @@ CHAKRA_API JsRunScriptWithParserState(
     }
 }
 
-CHAKRA_API JsDeserializeParserState(
+JsErrorCode chakracore::jsrt::JsDeserializeParserState(
     _In_ JsValueRef script,
     _In_ JsSourceContext sourceContext,
     _In_ JsValueRef sourceUrl,
