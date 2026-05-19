@@ -4024,7 +4024,7 @@ static void DummyScriptUnloadCallback(_In_ JsSourceContext sourceContext)
 
 /////////////////////
 
-CHAKRA_API JsTTDCreateRecordRuntime(_In_ JsRuntimeAttributes attributes, _In_ bool enableDebugging, _In_ size_t snapInterval, _In_ size_t snapHistoryLength,
+JsErrorCode chakracore::jsrt::JsTTDCreateRecordRuntime(_In_ JsRuntimeAttributes attributes, _In_ bool enableDebugging, _In_ size_t snapInterval, _In_ size_t snapHistoryLength,
     _In_ TTDOpenResourceStreamCallback openResourceStream, _In_ JsTTDWriteBytesToStreamCallback writeBytesToStream, _In_ JsTTDFlushAndCloseStreamCallback flushAndCloseStream,
     _In_opt_ JsThreadServiceCallback threadService, _Out_ JsRuntimeHandle *runtime)
 {
@@ -4042,7 +4042,7 @@ CHAKRA_API JsTTDCreateRecordRuntime(_In_ JsRuntimeAttributes attributes, _In_ bo
 #endif
 }
 
-CHAKRA_API JsTTDCreateReplayRuntime(_In_ JsRuntimeAttributes attributes, _In_reads_(infoUriCount) const char* infoUri, _In_ size_t infoUriCount, _In_ bool enableDebugging,
+JsErrorCode chakracore::jsrt::JsTTDCreateReplayRuntime(_In_ JsRuntimeAttributes attributes, _In_reads_(infoUriCount) const char* infoUri, _In_ size_t infoUriCount, _In_ bool enableDebugging,
     _In_ TTDOpenResourceStreamCallback openResourceStream, _In_ JsTTDReadBytesFromStreamCallback readBytesFromStream, _In_ JsTTDFlushAndCloseStreamCallback flushAndCloseStream,
     _In_opt_ JsThreadServiceCallback threadService, _Out_ JsRuntimeHandle *runtime)
 {
@@ -4056,7 +4056,7 @@ CHAKRA_API JsTTDCreateReplayRuntime(_In_ JsRuntimeAttributes attributes, _In_rea
 #endif
 }
 
-CHAKRA_API JsTTDCreateContext(_In_ JsRuntimeHandle runtimeHandle, _In_ bool useRuntimeTTDMode, _Out_ JsContextRef *newContext)
+JsErrorCode chakracore::jsrt::JsTTDCreateContext(_In_ JsRuntimeHandle runtimeHandle, _In_ bool useRuntimeTTDMode, _Out_ JsContextRef *newContext)
 {
 #if !ENABLE_TTD
     return JsErrorCategoryUsage;
@@ -4083,7 +4083,7 @@ CHAKRA_API JsTTDCreateContext(_In_ JsRuntimeHandle runtimeHandle, _In_ bool useR
 #endif
 }
 
-CHAKRA_API JsTTDNotifyContextDestroy(_In_ JsContextRef context)
+JsErrorCode chakracore::jsrt::JsTTDNotifyContextDestroy(_In_ JsContextRef context)
 {
 #if !ENABLE_TTD
     return JsErrorCategoryUsage;
@@ -4099,7 +4099,7 @@ CHAKRA_API JsTTDNotifyContextDestroy(_In_ JsContextRef context)
 #endif
 }
 
-CHAKRA_API JsTTDStart()
+JsErrorCode chakracore::jsrt::JsTTDStart()
 {
 #if !ENABLE_TTD
     return JsErrorCategoryUsage;
@@ -4125,7 +4125,7 @@ CHAKRA_API JsTTDStart()
 #endif
 }
 
-CHAKRA_API JsTTDStop()
+JsErrorCode chakracore::jsrt::JsTTDStop()
 {
 #if !ENABLE_TTD
     return JsErrorCategoryUsage;
@@ -4151,7 +4151,7 @@ CHAKRA_API JsTTDStop()
 #endif
 }
 
-CHAKRA_API JsTTDPauseTimeTravelBeforeRuntimeOperation()
+JsErrorCode chakracore::jsrt::JsTTDPauseTimeTravelBeforeRuntimeOperation()
 {
 #if !ENABLE_TTD
     return JsErrorCategoryUsage;
@@ -4172,7 +4172,7 @@ CHAKRA_API JsTTDPauseTimeTravelBeforeRuntimeOperation()
 #endif
 }
 
-CHAKRA_API JsTTDReStartTimeTravelAfterRuntimeOperation()
+JsErrorCode chakracore::jsrt::JsTTDReStartTimeTravelAfterRuntimeOperation()
 {
 #if !ENABLE_TTD
     return JsErrorCategoryUsage;
@@ -4193,7 +4193,7 @@ CHAKRA_API JsTTDReStartTimeTravelAfterRuntimeOperation()
 #endif
 }
 
-CHAKRA_API JsTTDNotifyYield()
+JsErrorCode chakracore::jsrt::JsTTDNotifyYield()
 {
 #if !ENABLE_TTD
     return JsErrorCategoryUsage;
@@ -4218,7 +4218,7 @@ CHAKRA_API JsTTDNotifyYield()
 #endif
 }
 
-CHAKRA_API JsTTDNotifyLongLivedReferenceAdd(_In_ JsValueRef value)
+JsErrorCode chakracore::jsrt::JsTTDNotifyLongLivedReferenceAdd(_In_ JsValueRef value)
 {
 #if !ENABLE_TTD
     return JsErrorCategoryUsage;
@@ -4250,7 +4250,7 @@ CHAKRA_API JsTTDNotifyLongLivedReferenceAdd(_In_ JsValueRef value)
 #endif
 }
 
-CHAKRA_API JsTTDHostExit(_In_ int statusCode)
+JsErrorCode chakracore::jsrt::JsTTDHostExit(_In_ int statusCode)
 {
 #if !ENABLE_TTD
     return JsErrorCategoryUsage;
@@ -4263,7 +4263,7 @@ CHAKRA_API JsTTDHostExit(_In_ int statusCode)
 #endif
 }
 
-CHAKRA_API JsTTDRawBufferCopySyncIndirect(_In_ JsValueRef dst, _In_ size_t dstIndex, _In_ JsValueRef src, _In_ size_t srcIndex, _In_ size_t count)
+JsErrorCode chakracore::jsrt::JsTTDRawBufferCopySyncIndirect(_In_ JsValueRef dst, _In_ size_t dstIndex, _In_ JsValueRef src, _In_ size_t srcIndex, _In_ size_t count)
 {
 #if !ENABLE_TTD
     return JsErrorCategoryUsage;
@@ -4281,7 +4281,7 @@ CHAKRA_API JsTTDRawBufferCopySyncIndirect(_In_ JsValueRef dst, _In_ size_t dstIn
 #endif
 }
 
-CHAKRA_API JsTTDRawBufferModifySyncIndirect(_In_ JsValueRef buffer, _In_ size_t index, _In_ size_t count)
+JsErrorCode chakracore::jsrt::JsTTDRawBufferModifySyncIndirect(_In_ JsValueRef buffer, _In_ size_t index, _In_ size_t count)
 {
 #if !ENABLE_TTD
     return JsErrorCategoryUsage;
@@ -4299,7 +4299,7 @@ CHAKRA_API JsTTDRawBufferModifySyncIndirect(_In_ JsValueRef buffer, _In_ size_t 
 #endif
 }
 
-CHAKRA_API JsTTDRawBufferAsyncModificationRegister(_In_ JsValueRef instance, _In_ byte* initialModPos)
+JsErrorCode chakracore::jsrt::JsTTDRawBufferAsyncModificationRegister(_In_ JsValueRef instance, _In_ byte* initialModPos)
 {
 #if !ENABLE_TTD
     return JsErrorCategoryUsage;
@@ -4341,7 +4341,7 @@ CHAKRA_API JsTTDRawBufferAsyncModificationRegister(_In_ JsValueRef instance, _In
 #endif
 }
 
-CHAKRA_API JsTTDRawBufferAsyncModifyComplete(_In_ byte* finalModPos)
+JsErrorCode chakracore::jsrt::JsTTDRawBufferAsyncModifyComplete(_In_ byte* finalModPos)
 {
 #if !ENABLE_TTD
     return JsErrorCategoryUsage;
@@ -4380,7 +4380,7 @@ CHAKRA_API JsTTDRawBufferAsyncModifyComplete(_In_ byte* finalModPos)
 #endif
 }
 
-CHAKRA_API JsTTDCheckAndAssertIfTTDRunning(_In_ const char* msg)
+JsErrorCode chakracore::jsrt::JsTTDCheckAndAssertIfTTDRunning(_In_ const char* msg)
 {
 #if ENABLE_TTD
     JsrtContext* context = JsrtContext::GetCurrent();
@@ -4389,7 +4389,7 @@ CHAKRA_API JsTTDCheckAndAssertIfTTDRunning(_In_ const char* msg)
     return JsNoError;
 }
 
-CHAKRA_API JsTTDGetSnapTimeTopLevelEventMove(_In_ JsRuntimeHandle runtimeHandle,
+JsErrorCode chakracore::jsrt::JsTTDGetSnapTimeTopLevelEventMove(_In_ JsRuntimeHandle runtimeHandle,
    _In_ JsTTDMoveMode moveMode, _In_opt_ uint32_t kthEvent,
    _Inout_ int64_t* targetEventTime, _Out_ int64_t* targetStartSnapTime,
    _Out_opt_ int64_t* targetEndSnapTime)
@@ -4450,7 +4450,7 @@ CHAKRA_API JsTTDGetSnapTimeTopLevelEventMove(_In_ JsRuntimeHandle runtimeHandle,
 #endif
 }
 
-CHAKRA_API JsTTDGetSnapShotBoundInterval(_In_ JsRuntimeHandle runtimeHandle, _In_ int64_t targetEventTime, _Out_ int64_t* startSnapTime, _Out_ int64_t* endSnapTime)
+JsErrorCode chakracore::jsrt::JsTTDGetSnapShotBoundInterval(_In_ JsRuntimeHandle runtimeHandle, _In_ int64_t targetEventTime, _Out_ int64_t* startSnapTime, _Out_ int64_t* endSnapTime)
 {
 #if !ENABLE_TTD
     return JsErrorCategoryUsage;
@@ -4471,7 +4471,7 @@ CHAKRA_API JsTTDGetSnapShotBoundInterval(_In_ JsRuntimeHandle runtimeHandle, _In
 #endif
 }
 
-CHAKRA_API JsTTDGetPreviousSnapshotInterval(_In_ JsRuntimeHandle runtimeHandle, _In_ int64_t currentSnapStartTime, _Out_ int64_t* previousSnapTime)
+JsErrorCode chakracore::jsrt::JsTTDGetPreviousSnapshotInterval(_In_ JsRuntimeHandle runtimeHandle, _In_ int64_t currentSnapStartTime, _Out_ int64_t* previousSnapTime)
 {
 #if !ENABLE_TTD
     return JsErrorCategoryUsage;
@@ -4510,7 +4510,7 @@ JsErrorCode TTDHandleBreakpointInfoAndInflate(int64_t snapTime, JsrtRuntime* run
 }
 #endif
 
-CHAKRA_API JsTTDPreExecuteSnapShotInterval(_In_ JsRuntimeHandle runtimeHandle, _In_ int64_t startSnapTime, _In_ int64_t endSnapTime, _In_ JsTTDMoveMode moveMode, _Out_ int64_t* newTargetEventTime)
+JsErrorCode chakracore::jsrt::JsTTDPreExecuteSnapShotInterval(_In_ JsRuntimeHandle runtimeHandle, _In_ int64_t startSnapTime, _In_ int64_t endSnapTime, _In_ JsTTDMoveMode moveMode, _Out_ int64_t* newTargetEventTime)
 {
 #if !ENABLE_TTD
     return JsErrorCategoryUsage;
@@ -4596,7 +4596,7 @@ CHAKRA_API JsTTDPreExecuteSnapShotInterval(_In_ JsRuntimeHandle runtimeHandle, _
 #endif
 }
 
-CHAKRA_API JsTTDMoveToTopLevelEvent(_In_ JsRuntimeHandle runtimeHandle, _In_ JsTTDMoveMode moveMode, _In_ int64_t snapshotTime, _In_ int64_t eventTime)
+JsErrorCode chakracore::jsrt::JsTTDMoveToTopLevelEvent(_In_ JsRuntimeHandle runtimeHandle, _In_ JsTTDMoveMode moveMode, _In_ int64_t snapshotTime, _In_ int64_t eventTime)
 {
 #if !ENABLE_TTD
     return JsErrorCategoryUsage;
@@ -4633,7 +4633,7 @@ CHAKRA_API JsTTDMoveToTopLevelEvent(_In_ JsRuntimeHandle runtimeHandle, _In_ JsT
 #endif
 }
 
-CHAKRA_API JsTTDReplayExecution(_Inout_ JsTTDMoveMode* moveMode, _Out_ int64_t* rootEventTime)
+JsErrorCode chakracore::jsrt::JsTTDReplayExecution(_Inout_ JsTTDMoveMode* moveMode, _Out_ int64_t* rootEventTime)
 {
 #if !ENABLE_TTD
     return JsErrorCategoryUsage;
@@ -4705,7 +4705,7 @@ CHAKRA_API JsTTDReplayExecution(_Inout_ JsTTDMoveMode* moveMode, _Out_ int64_t* 
 #endif
 }
 
-CHAKRA_API JsTTDDiagSetAutoTraceStatus(_In_ bool status)
+JsErrorCode chakracore::jsrt::JsTTDDiagSetAutoTraceStatus(_In_ bool status)
 {
 #if !ENABLE_TTD
     return JsErrorCategoryUsage;
