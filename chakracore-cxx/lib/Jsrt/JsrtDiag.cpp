@@ -43,7 +43,7 @@
     }
 #endif
 
-CHAKRA_API JsDiagStartDebugging(
+JsErrorCode chakracore::jsrt::JsDiagStartDebugging(
     _In_ JsRuntimeHandle runtimeHandle,
     _In_ JsDiagDebugEventCallback debugEventCallback,
     _In_opt_ void* callbackState)
@@ -113,7 +113,7 @@ CHAKRA_API JsDiagStartDebugging(
 #endif
 }
 
-CHAKRA_API JsDiagStopDebugging(
+JsErrorCode chakracore::jsrt::JsDiagStopDebugging(
     _In_ JsRuntimeHandle runtimeHandle,
     _Out_opt_ void** callbackState)
 {
@@ -172,7 +172,7 @@ CHAKRA_API JsDiagStopDebugging(
 #endif
 }
 
-CHAKRA_API JsDiagGetScripts(
+JsErrorCode chakracore::jsrt::JsDiagGetScripts(
     _Out_ JsValueRef *scriptsArray)
 {
 #ifndef ENABLE_SCRIPT_DEBUGGING
@@ -203,7 +203,7 @@ CHAKRA_API JsDiagGetScripts(
 #endif
 }
 
-CHAKRA_API JsDiagGetSource(
+JsErrorCode chakracore::jsrt::JsDiagGetSource(
     _In_ unsigned int scriptId,
     _Out_ JsValueRef *source)
 {
@@ -235,7 +235,7 @@ CHAKRA_API JsDiagGetSource(
 #endif
 }
 
-CHAKRA_API JsDiagRequestAsyncBreak(
+JsErrorCode chakracore::jsrt::JsDiagRequestAsyncBreak(
     _In_ JsRuntimeHandle runtimeHandle)
 {
 #ifndef ENABLE_SCRIPT_DEBUGGING
@@ -263,7 +263,7 @@ CHAKRA_API JsDiagRequestAsyncBreak(
 #endif
 }
 
-CHAKRA_API JsDiagGetBreakpoints(
+JsErrorCode chakracore::jsrt::JsDiagGetBreakpoints(
     _Out_ JsValueRef *breakpoints)
 {
 #ifndef ENABLE_SCRIPT_DEBUGGING
@@ -301,7 +301,7 @@ CHAKRA_API JsDiagGetBreakpoints(
 #endif
 }
 
-CHAKRA_API JsDiagSetBreakpoint(
+JsErrorCode chakracore::jsrt::JsDiagSetBreakpoint(
     _In_ unsigned int scriptId,
     _In_ unsigned int lineNumber,
     _In_ unsigned int columnNumber,
@@ -362,7 +362,7 @@ CHAKRA_API JsDiagSetBreakpoint(
 #endif
 }
 
-CHAKRA_API JsDiagRemoveBreakpoint(
+JsErrorCode chakracore::jsrt::JsDiagRemoveBreakpoint(
     _In_ unsigned int breakpointId)
 {
 #ifndef ENABLE_SCRIPT_DEBUGGING
@@ -392,7 +392,7 @@ CHAKRA_API JsDiagRemoveBreakpoint(
 #endif
 }
 
-CHAKRA_API JsDiagSetBreakOnException(
+JsErrorCode chakracore::jsrt::JsDiagSetBreakOnException(
     _In_ JsRuntimeHandle runtimeHandle,
     _In_ JsDiagBreakOnExceptionAttributes exceptionAttributes)
 {
@@ -416,7 +416,7 @@ CHAKRA_API JsDiagSetBreakOnException(
 #endif
 }
 
-CHAKRA_API JsDiagGetBreakOnException(
+JsErrorCode chakracore::jsrt::JsDiagGetBreakOnException(
     _In_ JsRuntimeHandle runtimeHandle,
     _Out_ JsDiagBreakOnExceptionAttributes* exceptionAttributes)
 {
@@ -444,7 +444,7 @@ CHAKRA_API JsDiagGetBreakOnException(
 #endif
 }
 
-CHAKRA_API JsDiagSetStepType(
+JsErrorCode chakracore::jsrt::JsDiagSetStepType(
     _In_ JsDiagStepType stepType)
 {
 #ifndef ENABLE_SCRIPT_DEBUGGING
@@ -552,7 +552,7 @@ CHAKRA_API JsTTDDiagWriteLog(_In_reads_(uriLength) const char* uri, _In_ size_t 
 #endif
 }
 
-CHAKRA_API JsDiagGetFunctionPosition(
+JsErrorCode chakracore::jsrt::JsDiagGetFunctionPosition(
     _In_ JsValueRef function,
     _Out_ JsValueRef *functionPosition)
 {
@@ -620,7 +620,7 @@ CHAKRA_API JsDiagGetFunctionPosition(
 #endif
 }
 
-CHAKRA_API JsDiagGetStackTrace(
+JsErrorCode chakracore::jsrt::JsDiagGetStackTrace(
     _Out_ JsValueRef *stackTrace)
 {
 #ifndef ENABLE_SCRIPT_DEBUGGING
@@ -648,7 +648,7 @@ CHAKRA_API JsDiagGetStackTrace(
 #endif
 }
 
-CHAKRA_API JsDiagGetStackProperties(
+JsErrorCode chakracore::jsrt::JsDiagGetStackProperties(
     _In_ unsigned int stackFrameIndex,
     _Out_ JsValueRef *properties)
 {
@@ -689,7 +689,7 @@ CHAKRA_API JsDiagGetStackProperties(
 #endif
 }
 
-CHAKRA_API JsDiagGetProperties(
+JsErrorCode chakracore::jsrt::JsDiagGetProperties(
     _In_ unsigned int objectHandle,
     _In_ unsigned int fromCount,
     _In_ unsigned int totalCount,
@@ -732,7 +732,7 @@ CHAKRA_API JsDiagGetProperties(
 #endif
 }
 
-CHAKRA_API JsDiagGetObjectFromHandle(
+JsErrorCode chakracore::jsrt::JsDiagGetObjectFromHandle(
     _In_ unsigned int objectHandle,
     _Out_ JsValueRef *handleObject)
 {
@@ -773,7 +773,7 @@ CHAKRA_API JsDiagGetObjectFromHandle(
 #endif
 }
 
-CHAKRA_API JsDiagEvaluate(
+JsErrorCode chakracore::jsrt::JsDiagEvaluate(
     _In_ JsValueRef expressionVal,
     _In_ unsigned int stackFrameIndex,
     _In_ JsParseScriptAttributes parseAttributes,
