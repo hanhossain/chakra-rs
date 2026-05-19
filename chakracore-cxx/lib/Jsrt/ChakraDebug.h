@@ -112,6 +112,8 @@
     /// <param name="callbackState">The state passed to <c>JsDiagStartDebugging</c>.</param>
     typedef void (* JsDiagDebugEventCallback)(_In_ JsDiagDebugEvent debugEvent, _In_ JsValueRef eventData, _In_opt_ void* callbackState);
 
+namespace chakracore::jsrt
+{
     /// <summary>
     ///     Starts debugging in the given runtime.
     /// </summary>
@@ -124,7 +126,7 @@
     /// <remarks>
     ///     The runtime should be active on the current thread and should not be in debug state.
     /// </remarks>
-    CHAKRA_API
+    JsErrorCode
         JsDiagStartDebugging(
             _In_ JsRuntimeHandle runtimeHandle,
             _In_ JsDiagDebugEventCallback debugEventCallback,
@@ -141,7 +143,7 @@
     /// <remarks>
     ///     The runtime should be active on the current thread and in debug state.
     /// </remarks>
-    CHAKRA_API
+    JsErrorCode
         JsDiagStopDebugging(
             _In_ JsRuntimeHandle runtimeHandle,
             _Out_opt_ void** callbackState);
@@ -156,7 +158,7 @@
     /// <remarks>
     ///     The runtime should be in debug state. This API can be called from another runtime.
     /// </remarks>
-    CHAKRA_API
+    JsErrorCode
         JsDiagRequestAsyncBreak(
             _In_ JsRuntimeHandle runtimeHandle);
 
@@ -180,7 +182,7 @@
     /// <remarks>
     ///     The current runtime should be in debug state. This API can be called when runtime is at a break or running.
     /// </remarks>
-    CHAKRA_API
+    JsErrorCode
         JsDiagGetBreakpoints(
             _Out_ JsValueRef *breakpoints);
 
@@ -206,7 +208,7 @@
     /// <remarks>
     ///     The current runtime should be in debug state. This API can be called when runtime is at a break or running.
     /// </remarks>
-    CHAKRA_API
+    JsErrorCode
         JsDiagSetBreakpoint(
             _In_ unsigned int scriptId,
             _In_ unsigned int lineNumber,
@@ -223,7 +225,7 @@
     /// <remarks>
     ///     The current runtime should be in debug state. This API can be called when runtime is at a break or running.
     /// </remarks>
-    CHAKRA_API
+    JsErrorCode
         JsDiagRemoveBreakpoint(
             _In_ unsigned int breakpointId);
 
@@ -243,7 +245,7 @@
     /// <remarks>
     ///     The runtime should be in debug state. This API can be called from another runtime.
     /// </remarks>
-    CHAKRA_API
+    JsErrorCode
         JsDiagSetBreakOnException(
             _In_ JsRuntimeHandle runtimeHandle,
             _In_ JsDiagBreakOnExceptionAttributes exceptionAttributes);
@@ -259,7 +261,7 @@
     /// <remarks>
     ///     The runtime should be in debug state. This API can be called from another runtime.
     /// </remarks>
-    CHAKRA_API
+    JsErrorCode
         JsDiagGetBreakOnException(
             _In_ JsRuntimeHandle runtimeHandle,
             _Out_ JsDiagBreakOnExceptionAttributes* exceptionAttributes);
@@ -277,7 +279,7 @@
     /// <remarks>
     ///     The current runtime should be in debug state. This API can only be called when runtime is at a break.
     /// </remarks>
-    CHAKRA_API
+    JsErrorCode
         JsDiagSetStepType(
             _In_ JsDiagStepType stepType);
 
@@ -307,7 +309,7 @@
     /// <remarks>
     ///     The current runtime should be in debug state. This API can be called when runtime is at a break or running.
     /// </remarks>
-    CHAKRA_API
+    JsErrorCode
         JsDiagGetScripts(
             _Out_ JsValueRef *scriptsArray);
 
@@ -333,7 +335,7 @@
     /// <remarks>
     ///     The current runtime should be in debug state. This API can be called when runtime is at a break or running.
     /// </remarks>
-    CHAKRA_API
+    JsErrorCode
         JsDiagGetSource(
             _In_ unsigned int scriptId,
             _Out_ JsValueRef *source);
@@ -361,7 +363,7 @@
     /// <remarks>
     ///     This API can be called when runtime is at a break or running.
     /// </remarks>
-    CHAKRA_API
+    JsErrorCode
         JsDiagGetFunctionPosition(
             _In_ JsValueRef function,
             _Out_ JsValueRef *functionPosition);
@@ -389,7 +391,7 @@
     /// <remarks>
     ///     The current runtime should be in debug state. This API can only be called when runtime is at a break.
     /// </remarks>
-    CHAKRA_API
+    JsErrorCode
         JsDiagGetStackTrace(
             _Out_ JsValueRef *stackTrace);
 
@@ -464,7 +466,7 @@
     /// <remarks>
     ///     The current runtime should be in debug state. This API can only be called when runtime is at a break.
     /// </remarks>
-    CHAKRA_API
+    JsErrorCode
         JsDiagGetStackProperties(
             _In_ unsigned int stackFrameIndex,
             _Out_ JsValueRef *properties);
@@ -508,7 +510,7 @@
     /// <remarks>
     ///     The current runtime should be in debug state. This API can only be called when runtime is at a break.
     /// </remarks>
-    CHAKRA_API
+    JsErrorCode
         JsDiagGetProperties(
             _In_ unsigned int objectHandle,
             _In_ unsigned int fromCount,
@@ -538,7 +540,7 @@
     /// <remarks>
     ///     The current runtime should be in debug state. This API can only be called when runtime is at a break.
     /// </remarks>
-    CHAKRA_API
+    JsErrorCode
         JsDiagGetObjectFromHandle(
             _In_ unsigned int objectHandle,
             _Out_ JsValueRef *handleObject);
@@ -589,14 +591,14 @@
     /// <remarks>
     ///     The current runtime should be in debug state. This API can only be called when runtime is at a break.
     /// </remarks>
-    CHAKRA_API
+    JsErrorCode
         JsDiagEvaluate(
             _In_ JsValueRef expression,
             _In_ unsigned int stackFrameIndex,
             _In_ JsParseScriptAttributes parseAttributes,
             _In_ bool forceSetValueProp,
             _Out_ JsValueRef *evalResult);
-
+}
     /////////////////////
     /// <summary>
     ///     TimeTravel move options as bit flag enum.

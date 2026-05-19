@@ -426,23 +426,23 @@ public:
     static JsErrorCode WINAPI JsSetPromiseContinuationCallback(JsPromiseContinuationCallback callback, void *callbackState) { return chakracore::jsrt::JsSetPromiseContinuationCallback(callback, callbackState); }
     static JsErrorCode WINAPI JsSetHostPromiseRejectionTracker(JsHostPromiseRejectionTrackerCallback callback, void *callbackState) { return chakracore::jsrt::JsSetHostPromiseRejectionTracker(callback, callbackState); }
     static JsErrorCode WINAPI JsGetContextOfObject(JsValueRef object, JsContextRef* context) { return chakracore::jsrt::JsGetContextOfObject(object, context); }
-    static JsErrorCode WINAPI JsDiagStartDebugging(JsRuntimeHandle runtimeHandle, JsDiagDebugEventCallback debugEventCallback, void* callbackState) { return ::JsDiagStartDebugging(runtimeHandle, debugEventCallback, callbackState); }
-    static JsErrorCode WINAPI JsDiagStopDebugging(JsRuntimeHandle runtimeHandle, void** callbackState) { return ::JsDiagStopDebugging(runtimeHandle, callbackState); }
-    static JsErrorCode WINAPI JsDiagGetSource(unsigned int scriptId, JsValueRef *source) { return ::JsDiagGetSource(scriptId, source); }
-    static JsErrorCode WINAPI JsDiagSetBreakpoint(unsigned int scriptId, unsigned int lineNumber, unsigned int columnNumber, JsValueRef *breakpoint) { return ::JsDiagSetBreakpoint(scriptId, lineNumber, columnNumber, breakpoint); }
-    static JsErrorCode WINAPI JsDiagGetStackTrace(JsValueRef *stackTrace) { return ::JsDiagGetStackTrace(stackTrace); }
-    static JsErrorCode WINAPI JsDiagRequestAsyncBreak(JsRuntimeHandle runtimeHandle) { return ::JsDiagRequestAsyncBreak(runtimeHandle); }
-    static JsErrorCode WINAPI JsDiagGetBreakpoints(JsValueRef * breakpoints) { return ::JsDiagGetBreakpoints(breakpoints); }
-    static JsErrorCode WINAPI JsDiagRemoveBreakpoint(unsigned int breakpointId) { return ::JsDiagRemoveBreakpoint(breakpointId); }
-    static JsErrorCode WINAPI JsDiagSetBreakOnException(JsRuntimeHandle runtimeHandle, JsDiagBreakOnExceptionAttributes exceptionAttributes) { return ::JsDiagSetBreakOnException(runtimeHandle, exceptionAttributes); }
-    static JsErrorCode WINAPI JsDiagGetBreakOnException(JsRuntimeHandle runtimeHandle, JsDiagBreakOnExceptionAttributes * exceptionAttributes) { return ::JsDiagGetBreakOnException(runtimeHandle, exceptionAttributes); }
-    static JsErrorCode WINAPI JsDiagSetStepType(JsDiagStepType stepType) { return ::JsDiagSetStepType(stepType); }
-    static JsErrorCode WINAPI JsDiagGetScripts(JsValueRef * scriptsArray) { return ::JsDiagGetScripts(scriptsArray); }
-    static JsErrorCode WINAPI JsDiagGetFunctionPosition(JsValueRef value, JsValueRef * functionPosition) { return ::JsDiagGetFunctionPosition(value, functionPosition); }
-    static JsErrorCode WINAPI JsDiagGetStackProperties(unsigned int stackFrameIndex, JsValueRef * properties) { return ::JsDiagGetStackProperties(stackFrameIndex, properties); }
-    static JsErrorCode WINAPI JsDiagGetProperties(unsigned int objectHandle, unsigned int fromCount, unsigned int totalCount, JsValueRef * propertiesObject) { return ::JsDiagGetProperties(objectHandle, fromCount, totalCount, propertiesObject); }
-    static JsErrorCode WINAPI JsDiagGetObjectFromHandle(unsigned int handle, JsValueRef * handleObject) { return ::JsDiagGetObjectFromHandle(handle, handleObject); }
-    static JsErrorCode WINAPI JsDiagEvaluate(JsValueRef expression, unsigned int stackFrameIndex, JsParseScriptAttributes parseAttributes, bool forceSetValueProp, JsValueRef * evalResult) { return ::JsDiagEvaluate(expression, stackFrameIndex, parseAttributes, forceSetValueProp, evalResult); }
+    static JsErrorCode WINAPI JsDiagStartDebugging(JsRuntimeHandle runtimeHandle, JsDiagDebugEventCallback debugEventCallback, void* callbackState) { return chakracore::jsrt::JsDiagStartDebugging(runtimeHandle, debugEventCallback, callbackState); }
+    static JsErrorCode WINAPI JsDiagStopDebugging(JsRuntimeHandle runtimeHandle, void** callbackState) { return chakracore::jsrt::JsDiagStopDebugging(runtimeHandle, callbackState); }
+    static JsErrorCode WINAPI JsDiagGetSource(unsigned int scriptId, JsValueRef *source) { return chakracore::jsrt::JsDiagGetSource(scriptId, source); }
+    static JsErrorCode WINAPI JsDiagSetBreakpoint(unsigned int scriptId, unsigned int lineNumber, unsigned int columnNumber, JsValueRef *breakpoint) { return chakracore::jsrt::JsDiagSetBreakpoint(scriptId, lineNumber, columnNumber, breakpoint); }
+    static JsErrorCode WINAPI JsDiagGetStackTrace(JsValueRef *stackTrace) { return chakracore::jsrt::JsDiagGetStackTrace(stackTrace); }
+    static JsErrorCode WINAPI JsDiagRequestAsyncBreak(JsRuntimeHandle runtimeHandle) { return chakracore::jsrt::JsDiagRequestAsyncBreak(runtimeHandle); }
+    static JsErrorCode WINAPI JsDiagGetBreakpoints(JsValueRef * breakpoints) { return chakracore::jsrt::JsDiagGetBreakpoints(breakpoints); }
+    static JsErrorCode WINAPI JsDiagRemoveBreakpoint(unsigned int breakpointId) { return chakracore::jsrt::JsDiagRemoveBreakpoint(breakpointId); }
+    static JsErrorCode WINAPI JsDiagSetBreakOnException(JsRuntimeHandle runtimeHandle, JsDiagBreakOnExceptionAttributes exceptionAttributes) { return chakracore::jsrt::JsDiagSetBreakOnException(runtimeHandle, exceptionAttributes); }
+    static JsErrorCode WINAPI JsDiagGetBreakOnException(JsRuntimeHandle runtimeHandle, JsDiagBreakOnExceptionAttributes * exceptionAttributes) { return chakracore::jsrt::JsDiagGetBreakOnException(runtimeHandle, exceptionAttributes); }
+    static JsErrorCode WINAPI JsDiagSetStepType(JsDiagStepType stepType) { return chakracore::jsrt::JsDiagSetStepType(stepType); }
+    static JsErrorCode WINAPI JsDiagGetScripts(JsValueRef * scriptsArray) { return chakracore::jsrt::JsDiagGetScripts(scriptsArray); }
+    static JsErrorCode WINAPI JsDiagGetFunctionPosition(JsValueRef value, JsValueRef * functionPosition) { return chakracore::jsrt::JsDiagGetFunctionPosition(value, functionPosition); }
+    static JsErrorCode WINAPI JsDiagGetStackProperties(unsigned int stackFrameIndex, JsValueRef * properties) { return chakracore::jsrt::JsDiagGetStackProperties(stackFrameIndex, properties); }
+    static JsErrorCode WINAPI JsDiagGetProperties(unsigned int objectHandle, unsigned int fromCount, unsigned int totalCount, JsValueRef * propertiesObject) { return chakracore::jsrt::JsDiagGetProperties(objectHandle, fromCount, totalCount, propertiesObject); }
+    static JsErrorCode WINAPI JsDiagGetObjectFromHandle(unsigned int handle, JsValueRef * handleObject) { return chakracore::jsrt::JsDiagGetObjectFromHandle(handle, handleObject); }
+    static JsErrorCode WINAPI JsDiagEvaluate(JsValueRef expression, unsigned int stackFrameIndex, JsParseScriptAttributes parseAttributes, bool forceSetValueProp, JsValueRef * evalResult) { return chakracore::jsrt::JsDiagEvaluate(expression, stackFrameIndex, parseAttributes, forceSetValueProp, evalResult); }
     static JsErrorCode WINAPI JsParseModuleSource(JsModuleRecord requestModule, JsSourceContext sourceContext, byte* sourceText, unsigned int sourceLength, JsParseModuleSourceFlags sourceFlag, JsValueRef* exceptionValueRef) {
         return chakracore::jsrt::JsParseModuleSource(requestModule, sourceContext, sourceText, sourceLength, sourceFlag, exceptionValueRef);
     }
