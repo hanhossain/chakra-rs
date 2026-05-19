@@ -7,11 +7,6 @@
 
 #include <dlfcn.h>
 #include <print>
-#ifdef __APPLE__
-const char * chakraDllName = "libChakraCore.dylib";
-#else
-const char * chakraDllName = "libChakraCore.so";
-#endif
 
 bool ChakraRTInterface::m_testHooksSetup = false;
 bool ChakraRTInterface::m_testHooksInitialized = false;
