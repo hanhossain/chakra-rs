@@ -50,7 +50,7 @@ int32_t ChakraRTInterface::ParseConfigFlags()
 
     if (hr == S_OK)
     {
-        m_argInfo->filename = nullptr;
+        m_argInfo->filename_.clear();
         Assert(m_testHooks.pfGetFilenameFlag != nullptr);
 
         char16_t* fileNameWide = nullptr;
@@ -64,7 +64,7 @@ int32_t ChakraRTInterface::ParseConfigFlags()
         }
         else
         {
-            hr = WideStringToNarrowDynamic(fileNameWide, &m_argInfo->filename);
+            hr = WideStringToNarrowDynamic(fileNameWide, m_argInfo->filename_);
             SysFreeString(fileNameWide);
             if (FAILED(hr))
             {

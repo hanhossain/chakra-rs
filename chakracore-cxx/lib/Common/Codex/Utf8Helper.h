@@ -224,6 +224,18 @@ namespace utf8
             sourceString, std::u16string(sourceString).length(), destStringPtr, &unused);
     }
 
+    inline int32_t WideStringToNarrowDynamic(const char16_t *sourceString, std::string &destString)
+    {
+        char *destStringPtr = nullptr;
+        int32_t res = WideStringToNarrowDynamic(sourceString, &destStringPtr);
+        if (destStringPtr != nullptr)
+        {
+            destString = destStringPtr;
+            free(destStringPtr);
+        }
+        return res;
+    }
+
     inline int32_t NarrowStringToWideDynamic(_In_ const char * sourceString, _Out_ char16_t** destStringPtr)
     {
         charcount_t unused;
