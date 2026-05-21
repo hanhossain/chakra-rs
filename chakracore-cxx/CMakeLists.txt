@@ -55,14 +55,9 @@ if (ICU_INCLUDE_PATH)
 
     if (ICUUC)
         message("-- found ICU libs: ${ICU_LIBRARY_PATH}")
-        find_library(ICUDATA icudata PATHS ${ICU_LIBRARY_PATH} NO_DEFAULT_PATH)
-        if (NOT ICUDATA)
-            set(ICUDATA "")
-        endif ()
         set(ICU_LIBRARIES
             ${ICUUC}
             ${ICUIN}
-            ${ICUDATA}
         )
     endif ()
 endif ()
