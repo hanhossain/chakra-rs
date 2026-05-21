@@ -33,9 +33,9 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
     FILE * file = NULL;
     size_t bufferLength = 0;
 
-    const char * filename = !fullPath ? filenameToLoad : fullPath->c_str();
-    fs::path filenamePath(filename);
+    fs::path filenamePath = fullPath.value_or(filenameToLoad);
 
+    // TODO (hanhossain): this just caches the current_dir and converts filenamePath to an absolute path relative to the host
     if (sHostApplicationPath.empty())
     {
         sHostApplicationPath = filenamePath.parent_path();
@@ -63,6 +63,7 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
         }
     }
 
+    // TODO (hanhossain): read file with std::ifstream to std::string
     if (file != NULL)
     {
         // Determine the file length, in bytes.
