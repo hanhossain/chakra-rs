@@ -42,24 +42,6 @@ typedef struct _find_handle
 } find_obj;
 
 /*++
-FILECanonicalizePath
-    Removes all instances of '/./', '/../' and '//' from an absolute path.
-
-Parameters:
-    char* lpUnixPath : absolute path to modify, in Unix format
-
-(no return value)
-
-Notes :
--behavior is undefined if path is not absolute
--the order of steps *is* important: /one/./../two would give /one/two
- instead of /two if step 3 was done before step 2
--reason for this function is that GetFullPathName can't use realpath(), since
- realpath() requires the given path to be valid and GetFullPathName does not.
---*/
-void FILECanonicalizePath(char* lpUnixPath);
-
-/*++
 Function:
   FileDosToUnixPathA
 
