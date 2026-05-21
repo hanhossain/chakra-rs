@@ -556,7 +556,6 @@ enum tagMIMECONTF {
 
 // note: diff in NULL handing and calling convetion
 #define StrCpyW                 PAL_wcscpy
-#define StrCpyNW                lstrcpynW // note: can't be wcsncpy!
 #define StrChrW                 (char16_t*)PAL_wcschr
 #define StrCmpW                 PAL_wcscmp
 #define StrCmpIW                _wcsicmp
@@ -575,7 +574,6 @@ STDAPI_(char16_t*) StrCatBuffW(char16_t* pszDest, const char16_t* pszSrc, int cc
 #define wvnsprintfW             _vsnwprintf // note: not 100% compatible (wsprintf should be subset of sprintf...)
 
 #define StrCpy                  StrCpyW
-#define StrCpyN                 StrCpyNW
 #define StrNCat                 StrNCatW
 #define StrChr                  StrChrW
 #define StrCmp                  StrCmpW

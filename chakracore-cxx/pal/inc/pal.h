@@ -1120,30 +1120,6 @@ void
 DebugBreak(
        void);
 
-char16_t*
-lstrcatW(
-       char16_t* lpString1,
-      const char16_t* lpString2);
-
-char16_t*
-lstrcpyW(
-      char16_t* lpString1,
-      const char16_t* lpString2);
-
-int
-lstrlenA(
-      const char * lpString);
-
-int
-lstrlenW(
-      const char16_t* lpString);
-
-char16_t*
-lstrcpynW(
-       char16_t* lpString1,
-       const char16_t* lpString2,
-       int iMaxLength);
-
 uint32_t
 GetEnvironmentVariableA(
              const char * lpName,
