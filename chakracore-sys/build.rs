@@ -50,7 +50,7 @@ fn main() {
             if cfg!(target_os = "macos") {
                 config
                     .define("DISABLE_JIT", "ON")
-                    .define("ICU_INCLUDE_PATH", "/opt/homebrew/opt/icu4c@77/include");
+                    .define("ICU_INCLUDE_PATH", "/opt/homebrew/opt/icu4c/include");
             }
 
             config.always_configure(false);
@@ -62,7 +62,7 @@ fn main() {
         println!("cargo::rustc-link-lib=ChakraCoreStatic");
 
         if cfg!(target_os = "macos") {
-            println!("cargo::rustc-link-search=native=/opt/homebrew/opt/icu4c@77/lib");
+            println!("cargo::rustc-link-search=native=/opt/homebrew/opt/icu4c/lib");
             println!("cargo::rustc-link-lib=icudata");
 
             println!("cargo::rustc-link-lib=framework=CoreFoundation");
