@@ -877,7 +877,6 @@ errno_t getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, const ch
 
 STDAPI_(BOOL) PathAppendW(char16_t* pszPath, const char16_t* pszMore);
 STDAPI_(int) PathCommonPrefixW(const char16_t* pszFile1, const char16_t* pszFile2, char16_t*  pszPath);
-char16_t* PathFindFileNameW(const char16_t* pPath);
 STDAPI_(int) PathGetDriveNumberW(const char16_t* lpsz);
 STDAPI_(BOOL) PathIsRelativeW(const char16_t* lpszPath);
 STDAPI_(BOOL) PathIsUNCW(const char16_t* pszPath);
@@ -916,7 +915,6 @@ STDAPI UrlGetPartW(const char16_t* pszIn, char16_t* pszOut, uint32_t * pcchOut, 
 
 #define PathAppend          PathAppendW
 #define PathCommonPrefix    PathCommonPrefixW
-#define PathFindFileName    PathFindFileNameW
 #define PathIsRelative      PathIsRelativeW
 #define PathGetDriveNumber  PathGetDriveNumberW
 #define PathIsUNC           PathIsUNCW

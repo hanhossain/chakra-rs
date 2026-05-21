@@ -56,54 +56,6 @@ FILEDosToUnixPathA(char* lpPath);
 
 /*++
 Function:
-  FileDosToUnixPathW
-
-Abstract:
-  Change a DOS path to a Unix path. Replace '\' by '/'.
-
-Parameter:
-  IN/OUT lpPath: path to be modified
-  --*/
-void
-FILEDosToUnixPathW(char16_t* lpPath);
-
-/*++
-Function:
-  FileUnixToDosPathA
-
-Abstract:
-  Change a Unix path to a DOS path. Replace '/' by '\'.
-
-Parameter:
-  IN/OUT lpPath: path to be modified
---*/
-void
-FILEUnixToDosPathA(char* lpPath);
-
-/*++
-Function:
-  FILEGetDirectoryFromFullPathA
-
-Parse the given path. If it contains a directory part and a file part,
-put the directory part into the supplied buffer, and return the number of
-characters written to the buffer. If the buffer is not large enough,
-return the required size of the buffer including the NULL character. If
-there is no directory part in the path, return 0.
---*/
-uint32_t FILEGetDirectoryFromFullPathA( const char * lpFullPath,
-                     uint32_t  nBufferLength,
-                     char*  lpBuffer );
-
-/*++
-Function:
-  FILEGetFileNameFromFullPath
-
-Given a full path, return a pointer to the first char of the filename part.
---*/
-const char * FILEGetFileNameFromFullPathA( const char * lpFullPath );
-
-/*++
-Function:
   FILEGetLastErrorFromErrno
 
 Convert errno into the appropriate win32 error and return it.
