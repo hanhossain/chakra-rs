@@ -4,7 +4,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 // remove non-ascii characters from strings, mostly for stripping Bi-Di markers
 const nonAsciiRegex = /[^\x00-\x7F]/g;

@@ -5,7 +5,7 @@
 
 // ES6 Object.is(x,y) API extension tests -- verifies the API shape and basic functionality
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 var tests = [
     {

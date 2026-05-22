@@ -5,7 +5,7 @@
 
 // Tests for Object.setPrototypeOf and Object#__proto__ ES6 behavior
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 var pd = Object.getOwnPropertyDescriptor(Object.prototype, '__proto__');
 var __proto__set = pd.set;

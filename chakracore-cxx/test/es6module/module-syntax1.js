@@ -5,7 +5,7 @@
 
 // ES6 Module syntax tests -- verifies syntax of import and export statements
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 var tests = [
     {

@@ -3,7 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
-this.WScript.LoadScriptFile(".\\memset_tester.js");
+this.WScript.LoadScriptFile("./memset_tester.js");
 
 const allTypes = [0, 1.5, undefined, null, 9223372036854775807, "string", {a: null, b: "b"}];
 

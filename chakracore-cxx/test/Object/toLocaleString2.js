@@ -6,7 +6,7 @@
 // Object.prototype.toLocaleString tests for ES6 behaviors
 
 if (this.WScript && this.WScript.LoadScriptFile) { // Check for running in ch
-    this.WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+    this.WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 }
 
 var toLocaleString = Object.prototype.toLocaleString;

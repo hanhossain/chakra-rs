@@ -5,7 +5,7 @@
 
 // Functional Map tests -- verifies the APIs work correctly
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 function getNewMapWith12345() {
     var map = new Map();

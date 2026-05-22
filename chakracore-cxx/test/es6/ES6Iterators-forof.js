@@ -5,7 +5,7 @@
 
 // ES6 Iterators for-of loop tests -- verifies the for-of loop behavior
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 var emptyIterator = {
     [Symbol.iterator]: function () {

@@ -5,7 +5,7 @@
 
 // ES6 for/for-in/for-of loops per iteration loop variable bindings tests
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 var tests = [
     {

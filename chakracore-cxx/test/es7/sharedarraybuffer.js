@@ -5,7 +5,7 @@
 
 // ES7 SharedArrayBuffer tests
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 var typedArrayList = [
     Int8Array,

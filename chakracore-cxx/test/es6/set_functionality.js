@@ -5,7 +5,7 @@
 
 // Functional Set tests -- verifies the APIs work correctly
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 function getNewSetWith12345() {
     var set = new Set();

@@ -5,7 +5,7 @@
 
 // ES6 Subclassable async tests -- verifies subclass async behaviors
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 var tests = [
     {

@@ -5,7 +5,7 @@
 
 // ES6 restricted property tests
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 function verifyAttributes(obj, prop, attribs, name) {
     var p = Object.getOwnPropertyDescriptor(obj, prop);

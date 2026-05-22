@@ -6,7 +6,7 @@
 // ES6 Array.prototype.includes(x,y) API extension tests -- verifies the API shape and basic functionality
 
 if (this.WScript && this.WScript.LoadScriptFile) { // Check for running in ch
-    this.WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+    this.WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 }
 
 var tests = [

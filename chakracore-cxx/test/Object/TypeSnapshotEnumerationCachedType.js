@@ -5,7 +5,7 @@
 
 // The following switches are needed to repro the original ExprGen bug.
 // -maxinterpretcount:1 -maxsimplejitruncount:1 -off:ArrayCheckHoist
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 var tests = [
     {

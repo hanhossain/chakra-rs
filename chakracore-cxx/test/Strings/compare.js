@@ -3,7 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js", "self");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js", "self");
 
 var str1 = "abcd1234"
 var str2 = "1234567a"

@@ -5,7 +5,7 @@
 
 // ES6 Generators Syntax tests -- verifies function* and yield syntax spec conformance
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 var tests = [
     {

@@ -183,7 +183,7 @@ WScript.Echo("valueOf : " + d.valueOf())
 WScript.Echo("toISOString method : " + typeof d.toISOString);
 WScript.Echo("toJSON method : " + typeof d.toJSON);
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js", "self");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js", "self");
 
 assert.throws(() => Date.prototype.setYear(5), TypeError);
 assert.throws(() => Date.prototype.getFullYear(), TypeError);

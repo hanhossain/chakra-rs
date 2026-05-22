@@ -186,19 +186,6 @@ extern "C"
 // code).
 //
 
-/*++
-Function:
-  FileDosToUnixPathA
-
-Abstract:
-  Change a DOS path to a Unix path. Replace '\' by '/'.
-
-Parameter:
-  IN/OUT lpPath: path to be modified
---*/
-void 
-FILEDosToUnixPathA(char* lpPath);
-
 
 /*++
 Function:

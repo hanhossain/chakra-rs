@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 
 // JavaScript source code
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 var handler = {
     getOwnPropertyDescriptor: function (target, name) {
