@@ -91,8 +91,7 @@ set(SOURCES
   exception/signal.cpp
     file/pal_file.cpp
   file/filetime.cpp
-  file/pal_path.cpp
-  file/shmfilelockmgr.cpp
+    file/shmfilelockmgr.cpp
   handlemgr/handleapi.cpp
   handlemgr/handlemgr.cpp
   init/pal.cpp
