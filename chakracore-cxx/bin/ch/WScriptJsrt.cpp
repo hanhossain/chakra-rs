@@ -675,9 +675,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, const char * fileName,
         fileName = "script.js";
     }
 
-    std::string fileNameStr = fileName;
-    std::replace(fileNameStr.begin(), fileNameStr.end(), '\\', fs::path::preferred_separator);
-    auto fullPath = fs::absolute(fileNameStr, ec).lexically_normal();
+    auto fullPath = fs::absolute(fileName, ec).lexically_normal();
 
     IfJsrtErrorSetGo(ChakraRTInterface::JsGetCurrentContext(&currentContext));
     IfJsrtErrorSetGo(ChakraRTInterface::JsGetRuntime(currentContext, &runtime));
