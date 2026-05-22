@@ -53,7 +53,7 @@ fn main() {
                     .define("ICU_INCLUDE_PATH", "/opt/homebrew/opt/icu4c/include");
             }
 
-            config.always_configure(false);
+            config.always_configure(true);
             let dst = config.build();
             println!("cargo::rustc-link-search=native={}/lib", dst.display());
         }
