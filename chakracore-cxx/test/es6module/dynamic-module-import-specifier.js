@@ -5,7 +5,7 @@
 
 // ES6 Module functionality tests -- verifies functionality of import and export statements
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 function testScript(source, message, shouldFail = false, explicitAsync = false) {
     message += " (script)";

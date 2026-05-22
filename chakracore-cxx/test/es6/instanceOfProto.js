@@ -6,7 +6,7 @@
 
 // @ts-check
 /// <reference path="..\UnitTestFramework\UnitTestFramework.js" />
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 const tests = [
     {

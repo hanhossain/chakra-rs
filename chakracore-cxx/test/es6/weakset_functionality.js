@@ -6,7 +6,7 @@
 // Functional WeakSet tests -- verifies the APIs work correctly
 // Note however this does not verify the GC semantics of WeakSet
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 var tests = [
     {

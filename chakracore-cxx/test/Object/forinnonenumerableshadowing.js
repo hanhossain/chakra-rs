@@ -7,7 +7,7 @@
 // See OS bug #850013
 
 if (this.WScript && this.WScript.LoadScriptFile) { // Check for running in ch
-    this.WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+    this.WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 }
 
 function forInKeysToArray(obj) {

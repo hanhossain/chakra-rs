@@ -5,7 +5,7 @@
 
 // Tests optional catch binding syntax
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 var tests = [
   {

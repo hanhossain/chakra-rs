@@ -17,7 +17,7 @@ For all built-in functions `func`, `func.hasOwnProperty('arguments')` and `func.
 
 */
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 let isVerbose = WScript.Arguments[0] != "summary";
 

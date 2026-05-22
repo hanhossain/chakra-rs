@@ -12,7 +12,7 @@
 // global scope, eval statements are used. A non eval statement can be found in
 // CanDeclareGlobalFunctionNonEval.js
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 var tests = [
     {

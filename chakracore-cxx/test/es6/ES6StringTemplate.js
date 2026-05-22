@@ -5,7 +5,7 @@
 
 // ES6 String Template tests -- verifies the API shape and basic functionality
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 function ReturnString(str) {
     return str;

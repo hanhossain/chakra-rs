@@ -2,7 +2,7 @@
 // Copyright (C) Microsoft Corporation and contributors. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-this.WScript.LoadScriptFile("..\\UnitTestFramework\\SimdJsHelpers.js");
+this.WScript.LoadScriptFile("../UnitTestFramework/SimdJsHelpers.js");
 var memory = null;
 var ffi = {spectest: {print: print}};
 var mod = new WebAssembly.Module(readbuffer('f32address.wasm'));

@@ -5,7 +5,7 @@
 
 // ES6 Async Await API tests -- verifies built-in API objects and properties
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 var globObj = this;
 

@@ -5,7 +5,7 @@
 
 // ES6 Symbol tests -- verifies the API shape and basic functionality
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 function VerifyToPropertyKey(key) {
     var obj = {};

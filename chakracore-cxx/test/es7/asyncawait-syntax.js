@@ -6,7 +6,7 @@
 
 // ES6 Async Await tests -- verifies syntax of async/await
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 var tests = [
     {

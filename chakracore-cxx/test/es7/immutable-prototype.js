@@ -7,7 +7,7 @@
 // See: 19.1.3 Properties of the Object Prototype Object
 // See: 9.4.7 Immutable Prototype Exotic Objects
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 var tests = [
     {

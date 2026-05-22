@@ -17,7 +17,7 @@
 // their children as well.MayHaveSideEffectOnNode's original implementation was recursive and
 // thus the stack would overflow while recursing through the path of pNodeBins.   
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 var tests = [
     {

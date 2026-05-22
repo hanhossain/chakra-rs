@@ -11,7 +11,7 @@
  *       'PS' refers to Unicode Character 'PARAGRAPH SEPARATOR' (U+2029)
  */
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 /*
  * Line terminator sequences - standard (11.3 LineTerminator)
@@ -22,7 +22,8 @@ WScript.Echo("Code before CRLF--> is reachable");
 --> WScript.Echo("Code after CRLF--> is unreachable");
 
 // CR
-WScript.Echo("Code before CR--> is reachable");--> WScript.Echo("Code after CR--> is unreachable");
+WScript.Echo("Code before CR--> is reachable");
+--> WScript.Echo("Code after CR--> is unreachable");
 
 // LF
 WScript.Echo("Code before LF--> is reachable");
@@ -39,10 +40,12 @@ WScript.Echo("Code before PS--> is reachable"); --> WScript.Echo("Code after P
  */
 
 // CRLS
-WScript.Echo("Code before CRLS--> is reachable"); --> WScript.Echo("Code after CRLS--> is unreachable");
+WScript.Echo("Code before CRLS--> is reachable");
+ --> WScript.Echo("Code after CRLS--> is unreachable");
 
 // CRPS
-WScript.Echo("Code before CRPS--> is reachable"); --> WScript.Echo("Code after CRPS--> is unreachable");
+WScript.Echo("Code before CRPS--> is reachable");
+ --> WScript.Echo("Code after CRPS--> is unreachable");
 
 // HTML open comment comments out the rest of the line
 WScript.Echo("Code before <!-- is reachable"); <!-- WScript.Echo("Code after <!-- is unreachable");

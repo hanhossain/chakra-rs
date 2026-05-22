@@ -21,7 +21,7 @@
 //       add support to WScript to expose getFlagByString() for Js::ConfigFlagsTable flags and check for -native.
 
 if (typeof (WScript) != "undefined") {
-  WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js", "self");
+  WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js", "self");
 }
 
 var Runtime = {

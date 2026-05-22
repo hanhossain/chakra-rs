@@ -43,19 +43,6 @@ typedef struct _find_handle
 
 /*++
 Function:
-  FileDosToUnixPathA
-
-Abstract:
-  Change a DOS path to a Unix path. Replace '\' by '/'.
-
-Parameter:
-  IN/OUT lpPath: path to be modified
---*/
-void
-FILEDosToUnixPathA(char* lpPath);
-
-/*++
-Function:
   FILEGetLastErrorFromErrno
 
 Convert errno into the appropriate win32 error and return it.

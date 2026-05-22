@@ -5,7 +5,7 @@
 
 // Basic WeakSet tests -- verifies the API shape
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 var tests = [
     {

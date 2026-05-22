@@ -5,7 +5,7 @@
 
 // ESNext SharedArrayBuffer tests
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 if (typeof makeSharedArrayBuffer === "undefined") {
     makeSharedArrayBuffer = length => new SharedArrayBuffer(length);

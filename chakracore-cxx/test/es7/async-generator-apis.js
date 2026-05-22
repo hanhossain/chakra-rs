@@ -6,7 +6,7 @@
 
 // ES2018 Async Generator API tests -- verifies built-in API objects and properties
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 const globObj = this;
 

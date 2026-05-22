@@ -5,7 +5,7 @@
 
 // ES6 Array builtins using this['constructor'] property to construct their return values
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 var tests = [
     {

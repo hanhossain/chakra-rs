@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 
 if (this.WScript && this.WScript.LoadScriptFile) {
-    this.WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+    this.WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 }
 
 var tests = [

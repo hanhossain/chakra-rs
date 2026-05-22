@@ -3,14 +3,14 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 var x = WScript.LoadScriptFile("crossContext_remoteContext.js", "samethread");
 
 var tests = {
   test01: {
     name: "Make sure when called with -nonative, marshaling of results is correct (Win8 628808)",
     body: function() {
-      // Ñall this with -nonative
+      // ï¿½all this with -nonative
       // Win8 628808: the following cases used to cause an assertion.
       var str = "this is a sting";
 

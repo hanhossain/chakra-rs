@@ -6,7 +6,7 @@
 // Number tests for issue https://github.com/Microsoft/ChakraCore/issues/5038
 
 if (this.WScript && this.WScript.LoadScriptFile) { // Check for running in ch
-    this.WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+    this.WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 }
 
 let tests =

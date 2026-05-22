@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 
 if (this.WScript && this.WScript.LoadScriptFile) {
-  WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+  WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
   WScript.LoadScriptFile("inline_get_bailout_helper.js");
 }
 

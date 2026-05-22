@@ -5,7 +5,7 @@
 
 // ES6 unicode whitespace tests
 
-WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 
 var whitespace_characters = [
     '\u0009',

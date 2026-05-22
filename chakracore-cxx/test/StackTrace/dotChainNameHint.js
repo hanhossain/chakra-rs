@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 
 if (typeof (WScript) != "undefined") {
-    WScript.LoadScriptFile("..\\UnitTestFramework\\UnitTestFramework.js");
+    WScript.LoadScriptFile("../UnitTestFramework/UnitTestFramework.js");
 }
 
 var tests = [
