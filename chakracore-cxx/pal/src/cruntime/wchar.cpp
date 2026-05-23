@@ -315,43 +315,6 @@ _wcsnicmp(
 
 /*++
 Function:
-  _wcsicmp
-
-Compare characters of two strings without regard to case
-
-Return Value
-
-The return value indicates the relationship between the substrings as follows.
-
-Return Value
-
-Description
-
-< 0        string1 substring less than string2 substring
-  0        string1 substring identical to string2 substring
-> 0        string1 substring greater than string2 substring
-
-Parameters
-
-string1, string2        Null-terminated strings to compare
-
---*/
-int
-_wcsicmp(
-          const char16_t *string1,
-          const char16_t *string2)
-{
-    int ret;
-
-    ret = _wcsnicmp(string1, string2, 0x7fffffff);
-
-    LOGEXIT("_wcsnicmp returns int %d\n", ret);
-    return ret;
-}
-
-
-/*++
-Function:
   _wcslwr
 
 Convert a string to lowercase.

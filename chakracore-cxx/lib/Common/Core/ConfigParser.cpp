@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #include <string>
 #include "CommonCorePch.h"
+#include <chakra/src/lib.rs.h>
+#include <rust/cxx.h>
 
 #include "Memory/MemoryLogger.h"
 #include "Memory/ForcedMemoryConstraints.h"
@@ -281,10 +283,12 @@ int32_t ConfigParser::SetOutputFile(const char16_t* outputFile, const char16_t* 
     char16_t moduleName[_MAX_PATH];
     PlatformAgnostic::SystemInfo::GetBinaryLocation(moduleName, _MAX_PATH);
     _wsplitpath_s(moduleName, nullptr, 0, nullptr, 0, fileName, _MAX_PATH, nullptr, 0);
-    if (_wcsicmp(fileName, u"WWAHost") == 0 ||
-        _wcsicmp(fileName, u"ByteCodeGenerator") == 0 ||
-        _wcsicmp(fileName, u"spartan") == 0 ||
-        _wcsicmp(fileName, u"spartan_edge") == 0 ||
+    const auto rustFileName = rust::String(fileName);
+
+    if (chakra::strings_eq_insensitive(rustFileName, "WWAHost") ||
+        chakra::strings_eq_insensitive(rustFileName, "ByteCodeGenerator") ||
+        chakra::strings_eq_insensitive(rustFileName, "spartan") ||
+        chakra::strings_eq_insensitive(rustFileName, "spartan_edge") ||
         _wcsnicmp(fileName, u"MicrosoftEdge", std::u16string(u"MicrosoftEdge").length()) == 0)
     {
 

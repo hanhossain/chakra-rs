@@ -558,7 +558,6 @@ enum tagMIMECONTF {
 #define StrCpyW                 PAL_wcscpy
 #define StrChrW                 (char16_t*)PAL_wcschr
 #define StrCmpW                 PAL_wcscmp
-#define StrCmpIW                _wcsicmp
 #define StrCmpNW                PAL_wcsncmp
 #define StrCmpNIW               _wcsnicmp
 
@@ -569,7 +568,6 @@ STDAPI_(char16_t*) StrRChrW(const char16_t* lpStart, const char16_t* lpEnd, char
 STDAPI_(char16_t*) StrCatBuffW(char16_t* pszDest, const char16_t* pszSrc, int cchDestBuffSize);
 
 #define lstrcmpW                PAL_wcscmp
-#define lstrcmpiW               _wcsicmp
 #define wnsprintfW              _snwprintf // note: not 100% compatible (wsprintf should be subset of sprintf...)
 #define wvnsprintfW             _vsnwprintf // note: not 100% compatible (wsprintf should be subset of sprintf...)
 
@@ -578,7 +576,6 @@ STDAPI_(char16_t*) StrCatBuffW(char16_t* pszDest, const char16_t* pszSrc, int cc
 #define StrChr                  StrChrW
 #define StrCmp                  StrCmpW
 #define StrCmpN                 StrCmpNW
-#define StrCmpI                 StrCmpIW
 #define StrCmpNI                StrCmpNIW
 
 #define StrToInt                StrToIntW
@@ -587,7 +584,6 @@ STDAPI_(char16_t*) StrCatBuffW(char16_t* pszDest, const char16_t* pszSrc, int cc
 #define StrCatBuff              StrCatBuffW
 
 #define lstrcmp                 lstrcmpW
-#define lstrcmpi                lstrcmpiW
 #define wnsprintf               wnsprintfW
 
 #ifdef __cplusplus
