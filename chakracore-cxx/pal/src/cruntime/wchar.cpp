@@ -259,62 +259,6 @@ _wtoi(
 
 /*++
 Function:
-  _wcsnicmp
-
-Compare characters of two strings without regard to case
-
-Return Value
-
-The return value indicates the relationship between the substrings as follows.
-
-Return Value
-
-Description
-
-< 0        string1 substring less than string2 substring
-  0        string1 substring identical to string2 substring
-> 0        string1 substring greater than string2 substring
-
-Parameters
-
-string1, string2        Null-terminated strings to compare
-count                   Number of characters to compare
-
-Remarks
-
-The _strnicmp function lexicographically compares, at most, the first
-count characters of string1 and string2. The comparison is performed
-without regard to case; _strnicmp is a case-insensitive version of
-strncmp. The comparison ends if a terminating null character is
-reached in either string before count characters are compared. If the
-strings are equal when a terminating null character is reached in
-either string before count characters are compared, the shorter string
-is lesser.
-
---*/
-int
-_wcsnicmp(
-          const char16_t *string1,
-          const char16_t *string2,
-          size_t count)
-{
-    size_t i;
-    int diff = 0;
-
-    for (i = 0; i < count; i++)
-    {
-        diff = wtolower(string1[i]) - wtolower(string2[i]);
-        if (diff != 0 || 0 == string1[i] || 0 == string2[i])
-        {
-            break;
-        }
-    }
-    LOGEXIT("_wcsnicmp returning int %d\n", diff);
-    return diff;
-}
-
-/*++
-Function:
   _wcslwr
 
 Convert a string to lowercase.

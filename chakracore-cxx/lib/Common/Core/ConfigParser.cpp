@@ -289,7 +289,7 @@ int32_t ConfigParser::SetOutputFile(const char16_t* outputFile, const char16_t* 
         chakra::strings_eq_insensitive(rustFileName, "ByteCodeGenerator") ||
         chakra::strings_eq_insensitive(rustFileName, "spartan") ||
         chakra::strings_eq_insensitive(rustFileName, "spartan_edge") ||
-        _wcsnicmp(fileName, u"MicrosoftEdge", std::u16string(u"MicrosoftEdge").length()) == 0)
+        chakra::strings_eq_insensitive(rustFileName, "MicrosoftEdge"))
     {
 
         // we need to output to %temp% directory in wwa. we don't have permission otherwise.
