@@ -559,7 +559,6 @@ enum tagMIMECONTF {
 #define StrChrW                 (char16_t*)PAL_wcschr
 #define StrCmpW                 PAL_wcscmp
 #define StrCmpNW                PAL_wcsncmp
-#define StrCmpNIW               _wcsnicmp
 
 STDAPI_(char16_t*) StrNCatW(char16_t* lpFront, const char16_t* lpBack, int cchMax);
 STDAPI_(int) StrToIntW(const char16_t* lpSrc);
@@ -576,7 +575,6 @@ STDAPI_(char16_t*) StrCatBuffW(char16_t* pszDest, const char16_t* pszSrc, int cc
 #define StrChr                  StrChrW
 #define StrCmp                  StrCmpW
 #define StrCmpN                 StrCmpNW
-#define StrCmpNI                StrCmpNIW
 
 #define StrToInt                StrToIntW
 #define StrStrI                 StrStrIW

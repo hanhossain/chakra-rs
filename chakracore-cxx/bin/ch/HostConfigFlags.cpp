@@ -196,9 +196,10 @@ void HostConfigFlags::PrintUsage()
 
 int HostConfigFlags::FindArg(int argc, _In_reads_(argc) char16_t* argv[], const char16_t * targetArg, size_t targetArgLen)
 {
+    const auto targetStr = rust::String(targetArg, targetArgLen);
     return FindArg(argc, argv, [=](const char16_t * arg) -> bool
     {
-        return _wcsnicmp(arg, targetArg, targetArgLen) == 0;
+        return chakra::strings_eq_insensitive(rust::String(arg), targetStr);
     });
 }
 
