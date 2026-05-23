@@ -1029,9 +1029,6 @@ FLAGNR(Number,  ConstructorCallsRequiredToFinalizeCachedType, "Number of calls t
 FLAGNR(Number,  PropertyCacheMissPenalty, "Number of string or symbol cache hits per miss needed to be worth using cache", DEFAULT_CONFIG_PropertyCacheMissPenalty)
 FLAGNR(Number,  PropertyCacheMissThreshold, "Point at which we disable string or symbol property cache", DEFAULT_CONFIG_PropertyCacheMissThreshold)
 FLAGNR(Number,  PropertyCacheMissReset, "Point at which we try to start using string or symbol cache after giving up", DEFAULT_CONFIG_PropertyCacheMissReset)
-#ifdef SECURITY_TESTING
-FLAGNR(Boolean, CrashOnException      , "Removes the top-level exception handler, allowing jc.exe to crash on an unhandled exception.  No effect on IE. (default: false)", false)
-#endif
 FLAGNR(Boolean, Debug                 , "Disable phases (layout, security code, etc) which makes JIT output harder to debug", false)
 FLAGNR(NumberSet,  DebugBreak         , "Index of the function where you want to break", )
 FLAGNR(NumberTrioSet,  StatementDebugBreak, "Index of the statement where you want to break", )
