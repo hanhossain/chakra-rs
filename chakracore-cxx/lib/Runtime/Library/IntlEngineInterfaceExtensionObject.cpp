@@ -10,6 +10,9 @@
 #include "Base/WindowsGlobalizationAdapter.h"
 
 #ifdef ENABLE_INTL_OBJECT
+#include <chakra/src/lib.rs.h>
+#include <rust/cxx.h>
+
 #include "ByteCode/ByteCodeSerializer.h"
 #include "errstr.h"
 #include "ByteCode/ByteCodeDumper.h"
@@ -1943,7 +1946,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
             }
 
             AssertOrFailFast(curLen > 0);
-            if (_wcsicmp(reinterpret_cast<const char16_t *>(cur), tz->GetSz()) == 0)
+            if (chakra::strings_eq_insensitive(rust::String(reinterpret_cast<const char16_t *>(cur)), rust::String(tz->GetSz())))
             {
                 ucal_getCanonicalTimeZoneID(cur, curLen, match, _countof(match), nullptr, &status);
                 ICU_ASSERT(status, true);

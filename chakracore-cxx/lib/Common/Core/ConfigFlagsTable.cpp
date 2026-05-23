@@ -7,6 +7,9 @@
 #include "Memory/PageHeapBlockTypeFilter.h"
 #include "Core/ConfigFlagsTable.h"
 
+#include <chakra/src/lib.rs.h>
+#include <rust/cxx.h>
+
 #undef DebugBreak
 
 // Initialization order
@@ -1228,9 +1231,10 @@ namespace Js
     Flag
     ConfigFlagsTable::GetFlag(const char16_t* str)
     {
+        const auto flagStr = rust::String(str);
         for(int i=0; i < FlagCount; i++)
         {
-            if(0 == _wcsicmp(str, FlagNames[i]))
+            if (chakra::strings_eq_insensitive(flagStr, rust::String(FlagNames[i])))
             {
                 return Flag(i);
             }
@@ -1250,9 +1254,10 @@ namespace Js
     Phase
     ConfigFlagsTable::GetPhase(const char16_t* str)
     {
+        const auto phaseStr = rust::String(str);
         for(int i=0; i < PhaseCount; i++)
         {
-            if(0 == _wcsicmp(str, PhaseNames[i]))
+            if (chakra::strings_eq_insensitive(phaseStr, rust::String(PhaseNames[i])))
             {
                 return Phase(i);
             }
