@@ -9,10 +9,21 @@
 class HostConfigFlags : public ICustomConfigFlags
 {
 public:
-#define FLAG(Type, Name, Desc, Default) \
-    Type Name; \
-    bool Name##IsEnabled;
-#include "HostConfigFlagsList.h"
+    BSTR GenerateLibraryByteCodeHeader; bool GenerateLibraryByteCodeHeaderIsEnabled;
+    bool GenerateParserStateCache; bool GenerateParserStateCacheIsEnabled;
+    bool UseParserStateCache; bool UseParserStateCacheIsEnabled;
+    int InspectMaxStringLength; bool InspectMaxStringLengthIsEnabled;
+    BSTR Serialized; bool SerializedIsEnabled;
+    bool OOPJIT; bool OOPJITIsEnabled;
+    bool EnsureCloseJITServer; bool EnsureCloseJITServerIsEnabled;
+    bool IgnoreScriptErrorCode; bool IgnoreScriptErrorCodeIsEnabled;
+    bool MuteHostErrorMsg; bool MuteHostErrorMsgIsEnabled;
+    bool TraceHostCallback; bool TraceHostCallbackIsEnabled;
+    bool Test262; bool Test262IsEnabled;
+    bool Module; bool ModuleIsEnabled;
+    bool TrackRejectedPromises; bool TrackRejectedPromisesIsEnabled;
+    BSTR CustomConfigFile; bool CustomConfigFileIsEnabled;
+    bool ExecuteWithBgParse; bool ExecuteWithBgParseIsEnabled;
 
     static HostConfigFlags flags;
     static const char16_t** argsVal;
