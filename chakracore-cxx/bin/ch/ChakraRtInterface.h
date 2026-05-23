@@ -349,15 +349,6 @@ public:
     static int32_t SetOOPCFGRegistrationFlag(bool flag) { return CHECKED_CALL(SetOOPCFGRegistrationFlag, flag); }
 #endif
 
-    static int32_t GetCrashOnExceptionFlag(bool * flag)
-    {
-#ifdef SECURITY_TESTING
-        return CHECKED_CALL(GetCrashOnExceptionFlag, flag);
-#else
-        return E_UNEXPECTED;
-#endif
-    }
-
     static void NotifyUnhandledException(PEXCEPTION_POINTERS exceptionInfo)
     {
         if (m_testHooksSetup && m_testHooks.pfnNotifyUnhandledException != NULL)
