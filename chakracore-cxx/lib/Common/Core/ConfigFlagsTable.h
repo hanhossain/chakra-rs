@@ -1255,16 +1255,79 @@ namespace Js
                                     (Js::PhaseIsEnabled::phase(sourceId, functionId))
 struct PhaseIsEnabled
 {
-#define PHASE_DEFAULT_ON(name) \
-        static bool name##Phase() { return !PHASE_OFF1(Js::name##Phase); } \
-        template<typename FUNC> static bool name##Phase(FUNC func) { return !PHASE_OFF(Js::name##Phase, func); } \
-        static bool name##Phase(uint sourceId, Js::LocalFunctionId functionId) { return !PHASE_OFF_RAW(Js::name##Phase, sourceId, functionId); }
-#define PHASE_DEFAULT_OFF(name) \
-        static bool name##Phase() { return PHASE_ON1(Js::name##Phase); } \
-        template<typename FUNC> static bool name##Phase(FUNC func) { return PHASE_ON(Js::name##Phase, func); } \
-        static bool name##Phase(uint sourceId, Js::LocalFunctionId functionId) { return PHASE_ON_RAW(Js::name##Phase, sourceId, functionId); }
-#include "Interface/ConfigFlagsList.h"
-    };
+    static bool DeferParsePhase() { return !PHASE_OFF1(Js::DeferParsePhase); }
+
+    template <typename FUNC>
+    static bool DeferParsePhase(FUNC func) { return !PHASE_OFF(Js::DeferParsePhase, func); }
+
+    static bool DeferParsePhase(uint sourceId, Js::LocalFunctionId functionId)
+    {
+        return !PHASE_OFF_RAW(Js::DeferParsePhase, sourceId, functionId);
+    }
+    static bool ParallelParsePhase() { return PHASE_ON1(Js::ParallelParsePhase); }
+
+    template <typename FUNC>
+    static bool ParallelParsePhase(FUNC func) { return PHASE_ON(Js::ParallelParsePhase, func); }
+
+    static bool ParallelParsePhase(uint sourceId, Js::LocalFunctionId functionId)
+    {
+        return PHASE_ON_RAW(Js::ParallelParsePhase, sourceId, functionId);
+    }
+    static bool WasmPhase() { return !PHASE_OFF1(Js::WasmPhase); }
+
+    template <typename FUNC>
+    static bool WasmPhase(FUNC func) { return !PHASE_OFF(Js::WasmPhase, func); }
+
+    static bool WasmPhase(uint sourceId, Js::LocalFunctionId functionId)
+    {
+        return !PHASE_OFF_RAW(Js::WasmPhase, sourceId, functionId);
+    }
+    static bool WasmDeferredPhase() { return !PHASE_OFF1(Js::WasmDeferredPhase); }
+
+    template <typename FUNC>
+    static bool WasmDeferredPhase(FUNC func) { return !PHASE_OFF(Js::WasmDeferredPhase, func); }
+
+    static bool WasmDeferredPhase(uint sourceId, Js::LocalFunctionId functionId)
+    {
+        return !PHASE_OFF_RAW(Js::WasmDeferredPhase, sourceId, functionId);
+    }
+    static bool WasmValidatePrejitPhase() { return PHASE_ON1(Js::WasmValidatePrejitPhase); }
+
+    template <typename FUNC>
+    static bool WasmValidatePrejitPhase(FUNC func) { return PHASE_ON(Js::WasmValidatePrejitPhase, func); }
+
+    static bool WasmValidatePrejitPhase(uint sourceId, Js::LocalFunctionId functionId)
+    {
+        return PHASE_ON_RAW(Js::WasmValidatePrejitPhase, sourceId, functionId);
+    }
+    static bool AsmjsFunctionEntryPhase() { return PHASE_ON1(Js::AsmjsFunctionEntryPhase); }
+
+    template <typename FUNC>
+    static bool AsmjsFunctionEntryPhase(FUNC func) { return PHASE_ON(Js::AsmjsFunctionEntryPhase, func); }
+
+    static bool AsmjsFunctionEntryPhase(uint sourceId, Js::LocalFunctionId functionId)
+    {
+        return PHASE_ON_RAW(Js::AsmjsFunctionEntryPhase, sourceId, functionId);
+    }
+    static bool InlineCallbacksPhase() { return !PHASE_OFF1(Js::InlineCallbacksPhase); }
+
+    template <typename FUNC>
+    static bool InlineCallbacksPhase(FUNC func) { return !PHASE_OFF(Js::InlineCallbacksPhase, func); }
+
+    static bool InlineCallbacksPhase(uint sourceId, Js::LocalFunctionId functionId)
+    {
+        return !PHASE_OFF_RAW(Js::InlineCallbacksPhase, sourceId, functionId);
+    }
+    static bool CaptureByteCodeRegUsePhase() { return !PHASE_OFF1(Js::CaptureByteCodeRegUsePhase); }
+
+    template <typename FUNC>
+    static bool CaptureByteCodeRegUsePhase(FUNC func) { return !PHASE_OFF(Js::CaptureByteCodeRegUsePhase, func); }
+
+    static bool CaptureByteCodeRegUsePhase(uint sourceId, Js::LocalFunctionId functionId)
+    {
+        return !PHASE_OFF_RAW(Js::CaptureByteCodeRegUsePhase, sourceId, functionId);
+    }
+};
 
 ///----------------------------------------------------------------------------
 ///----------------------------------------------------------------------------
