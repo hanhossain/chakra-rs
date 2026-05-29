@@ -43,6 +43,7 @@ target_compile_definitions(Chakra.Jsrt PUBLIC
 target_compile_options(Chakra.Jsrt PRIVATE
     -fdelayed-template-parsing
     -Wno-unused-but-set-variable
-    -Wno-overloaded-virtual)
+    -Wno-overloaded-virtual
+    -Wno-unused-variable)
 
 target_precompile_headers(Chakra.Jsrt PUBLIC JsrtPch.h)

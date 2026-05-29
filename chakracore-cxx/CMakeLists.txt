@@ -157,8 +157,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
 )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-    -Wno-reorder-ctor\
-    -Wno-unused-variable")
+    -Wno-reorder-ctor")
 
 # this keeps causing issues with the docker build even if paths are correct
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-nonportable-include-path")

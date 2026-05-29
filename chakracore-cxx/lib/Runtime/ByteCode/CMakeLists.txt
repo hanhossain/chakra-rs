@@ -46,6 +46,7 @@ target_compile_options(Chakra.Runtime.ByteCode PRIVATE
     -Wno-unused-value
     -Wno-tautological-overlap-compare
     -Wno-unused-lambda-capture
-    -Wno-unused-but-set-variable)
+    -Wno-unused-but-set-variable
+    -Wno-unused-variable)
 
 target_precompile_headers(Chakra.Runtime.ByteCode PUBLIC RuntimeByteCodePch.h)

@@ -60,6 +60,7 @@ target_compile_options(Chakra.Runtime.Base PRIVATE
     -Wno-unused-lambda-capture
     -Wno-unused-but-set-variable
     -Wno-unused-private-field
-    -Wno-overloaded-virtual)
+    -Wno-overloaded-virtual
+    -Wno-unused-variable)
 
 target_precompile_headers(Chakra.Runtime.Base PUBLIC RuntimeBasePch.h)

@@ -50,6 +50,7 @@ target_compile_options(Chakra.Runtime.Debug PRIVATE
     -fdelayed-template-parsing
     -Wno-unused-but-set-variable
     -Wno-unused-private-field
-    -Wno-overloaded-virtual)
+    -Wno-overloaded-virtual
+    -Wno-unused-variable)
 
 target_precompile_headers(Chakra.Runtime.Debug PUBLIC RuntimeDebugPch.h)

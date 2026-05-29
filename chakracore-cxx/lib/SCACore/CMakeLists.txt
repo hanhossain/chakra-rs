@@ -33,6 +33,7 @@ target_compile_definitions(Chakra.SCACore PUBLIC
 
 target_compile_options(Chakra.SCACore PRIVATE
     -fdelayed-template-parsing
-    -Wno-unused-but-set-variable)
+    -Wno-unused-but-set-variable
+    -Wno-unused-variable)
 
 target_precompile_headers(Chakra.SCACore PUBLIC SCACorePch.h)

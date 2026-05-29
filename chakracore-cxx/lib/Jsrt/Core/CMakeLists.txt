@@ -31,4 +31,5 @@ target_compile_options(Chakra.Jsrt.Core PRIVATE
     -Wno-unused-value
     -Wno-unused-but-set-variable
     -Wno-unused-private-field
-    -Wno-overloaded-virtual)
+    -Wno-overloaded-virtual
+    -Wno-unused-variable)
