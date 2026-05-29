@@ -49,6 +49,8 @@ target_compile_definitions(Chakra.Parser PUBLIC
     PAL_STDCPP_COMPAT
 )
 
-target_compile_options(Chakra.Parser PRIVATE -fdelayed-template-parsing)
+target_compile_options(Chakra.Parser PRIVATE
+    -fdelayed-template-parsing
+    -Wno-unused-value)
 
 target_precompile_headers(Chakra.Parser PUBLIC ParserPch.h)

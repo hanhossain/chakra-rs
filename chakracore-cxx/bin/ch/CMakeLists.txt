@@ -32,6 +32,8 @@ target_compile_definitions(chhelper PUBLIC
     PAL_STDCPP_COMPAT
 )
 
-target_compile_options(chhelper PRIVATE -fdelayed-template-parsing)
+target_compile_options(chhelper PRIVATE
+    -fdelayed-template-parsing
+    -Wno-unused-value)
 
 target_precompile_headers(chhelper PUBLIC stdafx.h)

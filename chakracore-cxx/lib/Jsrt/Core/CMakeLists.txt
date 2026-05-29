@@ -26,4 +26,6 @@ target_compile_definitions(Chakra.Jsrt.Core PUBLIC
     PAL_STDCPP_COMPAT
 )
 
-target_compile_options(Chakra.Jsrt.Core PRIVATE -fdelayed-template-parsing)
+target_compile_options(Chakra.Jsrt.Core PRIVATE
+    -fdelayed-template-parsing
+    -Wno-unused-value)

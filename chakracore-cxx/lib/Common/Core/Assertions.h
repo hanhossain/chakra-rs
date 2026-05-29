@@ -73,7 +73,7 @@ extern thread_local int IsInAssert;
 #define AnalysisAssertOrFailFastMsg(x, msg) AssertOrFailFast(x)
 #endif
 
-#define Unused(var) var;
+#define Unused(var)
 
 #define UNREACHED   (0)
 
