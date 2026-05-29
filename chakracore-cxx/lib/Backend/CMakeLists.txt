@@ -141,4 +141,5 @@ target_compile_options(Chakra.Backend PRIVATE
     -Wno-unused-private-field
     -Wno-overloaded-virtual
     -Wno-unused-variable
-    -Wno-reorder-ctor)
+    -Wno-reorder-ctor
+    -Wno-enum-compare-switch)

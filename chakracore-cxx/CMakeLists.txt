@@ -150,7 +150,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
     -Wno-switch\
     -Wno-int-to-pointer-cast\
     -Wno-tautological-constant-compare\
-    -Wno-enum-compare-switch\
     -Wno-delayed-template-parsing-in-cxx20"
 )
 
