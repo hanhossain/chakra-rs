@@ -25,6 +25,8 @@ target_compile_definitions(Chakra.Common.DataStructures PUBLIC
     PAL_STDCPP_COMPAT
 )
 
-target_compile_options(Chakra.Common.DataStructures PRIVATE -fdelayed-template-parsing)
+target_compile_options(Chakra.Common.DataStructures PRIVATE
+    -fdelayed-template-parsing
+    -Wno-unused-private-field)
 
 target_precompile_headers(Chakra.Common.DataStructures PUBLIC CommonDataStructuresPch.h)

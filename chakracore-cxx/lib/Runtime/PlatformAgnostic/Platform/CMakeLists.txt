@@ -50,3 +50,6 @@ target_include_directories (Chakra.Runtime.PlatformAgnostic PUBLIC
 target_compile_definitions(Chakra.Runtime.PlatformAgnostic PUBLIC
     PAL_STDCPP_COMPAT
 )
+
+target_compile_options(Chakra.Runtime.PlatformAgnostic PRIVATE
+    -Wno-unused-private-field)

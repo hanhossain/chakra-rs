@@ -163,6 +163,7 @@ target_compile_options(Chakra.Runtime.Library PRIVATE
     -Wno-unused-value
     -Wno-sometimes-uninitialized
     -Wno-unused-lambda-capture
-    -Wno-unused-but-set-variable)
+    -Wno-unused-but-set-variable
+    -Wno-unused-private-field)
 
 target_precompile_headers(Chakra.Runtime.Library PUBLIC RuntimeLibraryPch.h)

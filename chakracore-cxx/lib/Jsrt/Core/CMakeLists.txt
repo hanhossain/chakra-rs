@@ -29,4 +29,5 @@ target_compile_definitions(Chakra.Jsrt.Core PUBLIC
 target_compile_options(Chakra.Jsrt.Core PRIVATE
     -fdelayed-template-parsing
     -Wno-unused-value
-    -Wno-unused-but-set-variable)
+    -Wno-unused-but-set-variable
+    -Wno-unused-private-field)
