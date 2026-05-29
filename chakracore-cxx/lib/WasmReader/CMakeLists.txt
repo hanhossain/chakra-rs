@@ -32,4 +32,6 @@ target_compile_definitions(Chakra.WasmReader PUBLIC
     PAL_STDCPP_COMPAT
 )
 
+target_compile_options(Chakra.WasmReader PRIVATE -fdelayed-template-parsing)
+
 target_precompile_headers(Chakra.WasmReader PUBLIC WasmReaderPch.h)

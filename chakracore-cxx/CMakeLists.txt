@@ -185,8 +185,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-nonportable-include-path")
 # recognized by older compilers and they fail. So, put this one and not fail
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-    -fno-omit-frame-pointer \
-    -fdelayed-template-parsing"
+    -fno-omit-frame-pointer"
 )
 
 # CXX / CC COMPILER FLAGS

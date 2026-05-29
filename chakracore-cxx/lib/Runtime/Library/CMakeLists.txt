@@ -158,4 +158,6 @@ target_compile_definitions(Chakra.Runtime.Library PUBLIC
     PAL_STDCPP_COMPAT
 )
 
+target_compile_options(Chakra.Runtime.Library PRIVATE -fdelayed-template-parsing)
+
 target_precompile_headers(Chakra.Runtime.Library PUBLIC RuntimeLibraryPch.h)

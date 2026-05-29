@@ -18,4 +18,6 @@ target_compile_definitions(Chakra.Common.Exceptions PUBLIC
     PAL_STDCPP_COMPAT
 )
 
+target_compile_options(Chakra.Common.Exceptions PRIVATE -fdelayed-template-parsing)
+
 target_precompile_headers(Chakra.Common.Exceptions PUBLIC CommonExceptionsPch.h)

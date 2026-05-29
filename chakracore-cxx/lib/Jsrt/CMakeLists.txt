@@ -40,4 +40,6 @@ target_compile_definitions(Chakra.Jsrt PUBLIC
     PAL_STDCPP_COMPAT
 )
 
+target_compile_options(Chakra.Jsrt PRIVATE -fdelayed-template-parsing)
+
 target_precompile_headers(Chakra.Jsrt PUBLIC JsrtPch.h)

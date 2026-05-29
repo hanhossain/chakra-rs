@@ -23,4 +23,6 @@ target_compile_definitions(Chakra.Runtime.Math PUBLIC
     PAL_STDCPP_COMPAT
 )
 
+target_compile_options(Chakra.Runtime.Math PRIVATE -fdelayed-template-parsing)
+
 target_precompile_headers(Chakra.Runtime.Math PUBLIC RuntimeMathPch.h)

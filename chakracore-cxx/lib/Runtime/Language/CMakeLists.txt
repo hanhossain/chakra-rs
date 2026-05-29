@@ -104,4 +104,6 @@ target_compile_definitions(Chakra.Runtime.Language PUBLIC
     PAL_STDCPP_COMPAT
 )
 
+target_compile_options(Chakra.Runtime.Language PRIVATE -fdelayed-template-parsing)
+
 target_precompile_headers(Chakra.Runtime.Language PUBLIC RuntimeLanguagePch.h)

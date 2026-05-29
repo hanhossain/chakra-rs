@@ -130,3 +130,5 @@ target_include_directories (Chakra.Backend PUBLIC
 target_compile_definitions(Chakra.Backend PUBLIC
     PAL_STDCPP_COMPAT
 )
+
+target_compile_options(Chakra.Backend PRIVATE -fdelayed-template-parsing)

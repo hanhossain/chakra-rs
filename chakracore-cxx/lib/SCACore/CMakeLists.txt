@@ -31,4 +31,6 @@ target_compile_definitions(Chakra.SCACore PUBLIC
     PAL_STDCPP_COMPAT
 )
 
+target_compile_options(Chakra.SCACore PRIVATE -fdelayed-template-parsing)
+
 target_precompile_headers(Chakra.SCACore PUBLIC SCACorePch.h)
