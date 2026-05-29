@@ -138,4 +138,5 @@ target_compile_options(Chakra.Backend PRIVATE
     -Wno-tautological-overlap-compare
     -Wno-unused-lambda-capture
     -Wno-unused-but-set-variable
-    -Wno-unused-private-field)
+    -Wno-unused-private-field
+    -Wno-overloaded-virtual)

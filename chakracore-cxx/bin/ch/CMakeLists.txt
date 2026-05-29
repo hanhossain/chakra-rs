@@ -36,6 +36,7 @@ target_compile_options(chhelper PRIVATE
     -fdelayed-template-parsing
     -Wno-unused-value
     -Wno-unused-but-set-variable
-    -Wno-unused-private-field)
+    -Wno-unused-private-field
+    -Wno-overloaded-virtual)
 
 target_precompile_headers(chhelper PUBLIC stdafx.h)
