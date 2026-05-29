@@ -54,6 +54,7 @@ target_compile_options(Chakra.Parser PRIVATE
     -Wno-unused-value
     -Wno-unused-lambda-capture
     -Wno-unused-but-set-variable
-    -Wno-unused-variable)
+    -Wno-unused-variable
+    -Wno-reorder-ctor)
 
 target_precompile_headers(Chakra.Parser PUBLIC ParserPch.h)

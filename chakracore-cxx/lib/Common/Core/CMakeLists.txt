@@ -34,6 +34,7 @@ target_compile_options(Chakra.Common.Core PRIVATE
     -fdelayed-template-parsing
     -Wno-unused-lambda-capture
     -Wno-unused-but-set-variable
-    -Wno-unused-variable)
+    -Wno-unused-variable
+    -Wno-reorder-ctor)
 
 target_precompile_headers(Chakra.Common.Core PUBLIC CommonCorePch.h)

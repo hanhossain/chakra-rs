@@ -27,6 +27,7 @@ target_compile_definitions(Chakra.Common.DataStructures PUBLIC
 
 target_compile_options(Chakra.Common.DataStructures PRIVATE
     -fdelayed-template-parsing
-    -Wno-unused-private-field)
+    -Wno-unused-private-field
+    -Wno-reorder-ctor)
 
 target_precompile_headers(Chakra.Common.DataStructures PUBLIC CommonDataStructuresPch.h)

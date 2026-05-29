@@ -38,6 +38,7 @@ target_compile_options(chhelper PRIVATE
     -Wno-unused-but-set-variable
     -Wno-unused-private-field
     -Wno-overloaded-virtual
-    -Wno-unused-variable)
+    -Wno-unused-variable
+    -Wno-reorder-ctor)
 
 target_precompile_headers(chhelper PUBLIC stdafx.h)

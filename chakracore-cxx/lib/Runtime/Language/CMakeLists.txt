@@ -112,6 +112,7 @@ target_compile_options(Chakra.Runtime.Language PRIVATE
     -Wno-unused-but-set-variable
     -Wno-unused-private-field
     -Wno-overloaded-virtual
-    -Wno-unused-variable)
+    -Wno-unused-variable
+    -Wno-reorder-ctor)
 
 target_precompile_headers(Chakra.Runtime.Language PUBLIC RuntimeLanguagePch.h)

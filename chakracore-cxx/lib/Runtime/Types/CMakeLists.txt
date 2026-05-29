@@ -52,6 +52,7 @@ target_compile_options(Chakra.Runtime.Types PRIVATE
     -fdelayed-template-parsing
     -Wno-unused-but-set-variable
     -Wno-overloaded-virtual
-    -Wno-unused-variable)
+    -Wno-unused-variable
+    -Wno-reorder-ctor)
 
 target_precompile_headers(Chakra.Runtime.Types PUBLIC RuntimeTypePch.h)

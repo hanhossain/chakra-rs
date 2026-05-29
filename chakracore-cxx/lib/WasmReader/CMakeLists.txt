@@ -35,6 +35,7 @@ target_compile_definitions(Chakra.WasmReader PUBLIC
 target_compile_options(Chakra.WasmReader PRIVATE
     -fdelayed-template-parsing
     -Wno-unused-private-field
-    -Wno-unused-variable)
+    -Wno-unused-variable
+    -Wno-reorder-ctor)
 
 target_precompile_headers(Chakra.WasmReader PUBLIC WasmReaderPch.h)
