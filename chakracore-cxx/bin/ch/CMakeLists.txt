@@ -34,6 +34,7 @@ target_compile_definitions(chhelper PUBLIC
 
 target_compile_options(chhelper PRIVATE
     -fdelayed-template-parsing
-    -Wno-unused-value)
+    -Wno-unused-value
+    -Wno-unused-but-set-variable)
 
 target_precompile_headers(chhelper PUBLIC stdafx.h)
