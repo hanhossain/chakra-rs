@@ -55,6 +55,8 @@ target_compile_definitions(Chakra.Runtime.Base PUBLIC
     PAL_STDCPP_COMPAT
 )
 
-target_compile_options(Chakra.Runtime.Base PRIVATE -fdelayed-template-parsing)
+target_compile_options(Chakra.Runtime.Base PRIVATE
+    -fdelayed-template-parsing
+    -Wno-unused-lambda-capture)
 
 target_precompile_headers(Chakra.Runtime.Base PUBLIC RuntimeBasePch.h)

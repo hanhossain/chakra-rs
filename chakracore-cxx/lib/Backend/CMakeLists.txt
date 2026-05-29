@@ -135,4 +135,5 @@ target_compile_options(Chakra.Backend PRIVATE
     -fdelayed-template-parsing
     -Wno-unused-value
     -Wno-sometimes-uninitialized
-    -Wno-tautological-overlap-compare)
+    -Wno-tautological-overlap-compare
+    -Wno-unused-lambda-capture)

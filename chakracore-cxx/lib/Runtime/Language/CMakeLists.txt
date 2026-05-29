@@ -107,6 +107,7 @@ target_compile_definitions(Chakra.Runtime.Language PUBLIC
 target_compile_options(Chakra.Runtime.Language PRIVATE
     -fdelayed-template-parsing
     -Wno-unused-value
-    -Wno-sometimes-uninitialized)
+    -Wno-sometimes-uninitialized
+    -Wno-unused-lambda-capture)
 
 target_precompile_headers(Chakra.Runtime.Language PUBLIC RuntimeLanguagePch.h)

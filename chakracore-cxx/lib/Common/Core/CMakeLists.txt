@@ -30,6 +30,8 @@ target_compile_definitions(Chakra.Common.Core PUBLIC
     PAL_STDCPP_COMPAT
 )
 
-target_compile_options(Chakra.Common.Core PRIVATE -fdelayed-template-parsing)
+target_compile_options(Chakra.Common.Core PRIVATE
+    -fdelayed-template-parsing
+    -Wno-unused-lambda-capture)
 
 target_precompile_headers(Chakra.Common.Core PUBLIC CommonCorePch.h)

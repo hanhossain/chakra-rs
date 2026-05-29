@@ -44,6 +44,7 @@ target_compile_definitions(Chakra.Runtime.ByteCode PUBLIC
 target_compile_options(Chakra.Runtime.ByteCode PRIVATE
     -fdelayed-template-parsing
     -Wno-unused-value
-    -Wno-tautological-overlap-compare)
+    -Wno-tautological-overlap-compare
+    -Wno-unused-lambda-capture)
 
 target_precompile_headers(Chakra.Runtime.ByteCode PUBLIC RuntimeByteCodePch.h)

@@ -70,6 +70,7 @@ target_compile_definitions(Chakra.Common.Memory PUBLIC
 
 target_compile_options(Chakra.Common.Memory PRIVATE
     -fdelayed-template-parsing
-    -Wno-unused-value)
+    -Wno-unused-value
+    -Wno-unused-lambda-capture)
 
 target_precompile_headers(Chakra.Common.Memory PUBLIC CommonMemoryPch.h)
