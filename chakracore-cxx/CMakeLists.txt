@@ -151,8 +151,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
     -Wno-int-to-pointer-cast\
     -Wno-tautological-constant-compare\
     -Wno-enum-compare-switch\
-    -Wno-delayed-template-parsing-in-cxx20\
-    -Wno-unknown-warning-option"
+    -Wno-delayed-template-parsing-in-cxx20"
 )
 
 # this keeps causing issues with the docker build even if paths are correct
