@@ -134,4 +134,5 @@ target_compile_definitions(Chakra.Backend PUBLIC
 target_compile_options(Chakra.Backend PRIVATE
     -fdelayed-template-parsing
     -Wno-unused-value
-    -Wno-sometimes-uninitialized)
+    -Wno-sometimes-uninitialized
+    -Wno-tautological-overlap-compare)

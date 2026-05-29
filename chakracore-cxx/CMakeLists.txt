@@ -162,8 +162,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
     -Wno-overloaded-virtual\
     -Wno-unused-private-field\
     -Wno-unused-but-set-variable\
-    -Wno-unused-lambda-capture\
-    -Wno-tautological-overlap-compare")
+    -Wno-unused-lambda-capture")
 
 # this keeps causing issues with the docker build even if paths are correct
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-nonportable-include-path")
