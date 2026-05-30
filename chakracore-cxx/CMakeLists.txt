@@ -148,7 +148,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
     -Wno-null-conversion\
     -Wno-return-type\
     -Wno-switch\
-    -Wno-int-to-pointer-cast\
     -Wno-delayed-template-parsing-in-cxx20"
 )
 

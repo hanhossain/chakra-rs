@@ -142,4 +142,5 @@ target_compile_options(Chakra.Backend PRIVATE
     -Wno-overloaded-virtual
     -Wno-unused-variable
     -Wno-reorder-ctor
-    -Wno-enum-compare-switch)
+    -Wno-enum-compare-switch
+    -Wno-int-to-pointer-cast)
