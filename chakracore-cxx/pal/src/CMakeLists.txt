@@ -136,7 +136,6 @@ add_library(Chakra.Pal
 target_compile_options(Chakra.Pal PRIVATE -Wall
     # -Werror
     -Wno-format
-    -Wno-vla-cxx-extension
 )
 
 target_include_directories(Chakra.Pal
