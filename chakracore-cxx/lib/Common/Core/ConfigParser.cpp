@@ -283,13 +283,13 @@ int32_t ConfigParser::SetOutputFile(const char16_t* outputFile, const char16_t* 
     char16_t moduleName[_MAX_PATH];
     PlatformAgnostic::SystemInfo::GetBinaryLocation(moduleName, _MAX_PATH);
     _wsplitpath_s(moduleName, nullptr, 0, nullptr, 0, fileName, _MAX_PATH, nullptr, 0);
-    const auto rustFileName = chakracore_sys::str_helper::to_lowercase(fileName);
+    const auto rustFileName = chakra_rs::str_helper::to_lowercase(fileName);
 
-    if (rustFileName == chakracore_sys::str_helper::to_lowercase("WWAHost") ||
-        rustFileName == chakracore_sys::str_helper::to_lowercase("ByteCodeGenerator") ||
-        rustFileName == chakracore_sys::str_helper::to_lowercase("spartan") ||
-        rustFileName == chakracore_sys::str_helper::to_lowercase("spartan_edge") ||
-        rustFileName == chakracore_sys::str_helper::to_lowercase("MicrosoftEdge"))
+    if (rustFileName == chakra_rs::str_helper::to_lowercase("WWAHost") ||
+        rustFileName == chakra_rs::str_helper::to_lowercase("ByteCodeGenerator") ||
+        rustFileName == chakra_rs::str_helper::to_lowercase("spartan") ||
+        rustFileName == chakra_rs::str_helper::to_lowercase("spartan_edge") ||
+        rustFileName == chakra_rs::str_helper::to_lowercase("MicrosoftEdge"))
     {
 
         // we need to output to %temp% directory in wwa. we don't have permission otherwise.

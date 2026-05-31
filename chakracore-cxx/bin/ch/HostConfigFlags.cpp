@@ -67,92 +67,92 @@ HostConfigFlags::HostConfigFlags() :
 
 bool HostConfigFlags::ParseFlag(const char16_t* flagsString, ICmdLineArgsParser * parser)
 {
-    const auto flagStringsNormalized = chakracore_sys::str_helper::to_lowercase(flagsString);
-    if (chakracore_sys::str_helper::to_lowercase("GenerateLibraryByteCodeHeader") == flagStringsNormalized)
+    const auto flagStringsNormalized = chakra_rs::str_helper::to_lowercase(flagsString);
+    if (chakra_rs::str_helper::to_lowercase("GenerateLibraryByteCodeHeader") == flagStringsNormalized)
     {
         this->GenerateLibraryByteCodeHeaderIsEnabled = true;
         Parse<BSTR>(parser, &this->GenerateLibraryByteCodeHeader);
         return true;
     }
-    if (chakracore_sys::str_helper::to_lowercase(u"GenerateParserStateCache") == flagStringsNormalized)
+    if (chakra_rs::str_helper::to_lowercase(u"GenerateParserStateCache") == flagStringsNormalized)
     {
         this->GenerateParserStateCacheIsEnabled = true;
         Parse<bool>(parser, &this->GenerateParserStateCache);
         return true;
     }
-    if (chakracore_sys::str_helper::to_lowercase(u"UseParserStateCache") == flagStringsNormalized)
+    if (chakra_rs::str_helper::to_lowercase(u"UseParserStateCache") == flagStringsNormalized)
     {
         this->UseParserStateCacheIsEnabled = true;
         Parse<bool>(parser, &this->UseParserStateCache);
         return true;
     }
-    if (chakracore_sys::str_helper::to_lowercase(u"InspectMaxStringLength") == flagStringsNormalized)
+    if (chakra_rs::str_helper::to_lowercase(u"InspectMaxStringLength") == flagStringsNormalized)
     {
         this->InspectMaxStringLengthIsEnabled = true;
         Parse<int>(parser, &this->InspectMaxStringLength);
         return true;
     }
-    if (chakracore_sys::str_helper::to_lowercase(u"Serialized") == flagStringsNormalized)
+    if (chakra_rs::str_helper::to_lowercase(u"Serialized") == flagStringsNormalized)
     {
         this->SerializedIsEnabled = true;
         Parse<BSTR>(parser, &this->Serialized);
         return true;
     }
-    if (chakracore_sys::str_helper::to_lowercase(u"OOPJIT") == flagStringsNormalized)
+    if (chakra_rs::str_helper::to_lowercase(u"OOPJIT") == flagStringsNormalized)
     {
         this->OOPJITIsEnabled = true;
         Parse<bool>(parser, &this->OOPJIT);
         return true;
     }
-    if (chakracore_sys::str_helper::to_lowercase(u"EnsureCloseJITServer") == flagStringsNormalized)
+    if (chakra_rs::str_helper::to_lowercase(u"EnsureCloseJITServer") == flagStringsNormalized)
     {
         this->EnsureCloseJITServerIsEnabled = true;
         Parse<bool>(parser, &this->EnsureCloseJITServer);
         return true;
     }
-    if (chakracore_sys::str_helper::to_lowercase(u"IgnoreScriptErrorCode") == flagStringsNormalized)
+    if (chakra_rs::str_helper::to_lowercase(u"IgnoreScriptErrorCode") == flagStringsNormalized)
     {
         this->IgnoreScriptErrorCodeIsEnabled = true;
         Parse<bool>(parser, &this->IgnoreScriptErrorCode);
         return true;
     }
-    if (chakracore_sys::str_helper::to_lowercase(u"MuteHostErrorMsg") == flagStringsNormalized)
+    if (chakra_rs::str_helper::to_lowercase(u"MuteHostErrorMsg") == flagStringsNormalized)
     {
         this->MuteHostErrorMsgIsEnabled = true;
         Parse<bool>(parser, &this->MuteHostErrorMsg);
         return true;
     }
-    if (chakracore_sys::str_helper::to_lowercase(u"TraceHostCallback") == flagStringsNormalized)
+    if (chakra_rs::str_helper::to_lowercase(u"TraceHostCallback") == flagStringsNormalized)
     {
         this->TraceHostCallbackIsEnabled = true;
         Parse<bool>(parser, &this->TraceHostCallback);
         return true;
     }
-    if (chakracore_sys::str_helper::to_lowercase(u"Test262") == flagStringsNormalized)
+    if (chakra_rs::str_helper::to_lowercase(u"Test262") == flagStringsNormalized)
     {
         this->Test262IsEnabled = true;
         Parse<bool>(parser, &this->Test262);
         return true;
     }
-    if (chakracore_sys::str_helper::to_lowercase(u"Module") == flagStringsNormalized)
+    if (chakra_rs::str_helper::to_lowercase(u"Module") == flagStringsNormalized)
     {
         this->ModuleIsEnabled = true;
         Parse<bool>(parser, &this->Module);
         return true;
     }
-    if (chakracore_sys::str_helper::to_lowercase(u"TrackRejectedPromises") == flagStringsNormalized)
+    if (chakra_rs::str_helper::to_lowercase(u"TrackRejectedPromises") == flagStringsNormalized)
     {
         this->TrackRejectedPromisesIsEnabled = true;
         Parse<bool>(parser, &this->TrackRejectedPromises);
         return true;
     }
-    if (chakracore_sys::str_helper::to_lowercase(u"CustomConfigFile") == flagStringsNormalized)
+    if (chakra_rs::str_helper::to_lowercase(u"CustomConfigFile") == flagStringsNormalized)
     {
         this->CustomConfigFileIsEnabled = true;
         Parse<BSTR>(parser, &this->CustomConfigFile);
         return true;
     }
-    if (chakracore_sys::str_helper::to_lowercase(u"ExecuteWithBgParse") == flagStringsNormalized)
+    if (chakra_rs::str_helper::to_lowercase(u"ExecuteWithBgParse") == flagStringsNormalized)
     {
         this->ExecuteWithBgParseIsEnabled = true;
         Parse<bool>(parser, &this->ExecuteWithBgParse);
@@ -196,10 +196,10 @@ void HostConfigFlags::PrintUsage()
 
 int HostConfigFlags::FindArg(int argc, _In_reads_(argc) char16_t* argv[], const char16_t * targetArg, size_t targetArgLen)
 {
-    const auto targetStr = chakracore_sys::str_helper::to_lowercase({targetArg, targetArgLen});;
+    const auto targetStr = chakra_rs::str_helper::to_lowercase({targetArg, targetArgLen});;
     return FindArg(argc, argv, [=](const char16_t * arg) -> bool
     {
-        return chakracore_sys::str_helper::to_lowercase(arg) == targetStr;
+        return chakra_rs::str_helper::to_lowercase(arg) == targetStr;
     });
 }
 

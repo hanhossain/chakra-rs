@@ -1231,10 +1231,10 @@ namespace Js
     Flag
     ConfigFlagsTable::GetFlag(const char16_t* str)
     {
-        const auto flagStr = chakracore_sys::str_helper::to_lowercase(str);
+        const auto flagStr = chakra_rs::str_helper::to_lowercase(str);
         for(int i=0; i < FlagCount; i++)
         {
-            if (flagStr == chakracore_sys::str_helper::to_lowercase(FlagNames[i]))
+            if (flagStr == chakra_rs::str_helper::to_lowercase(FlagNames[i]))
             {
                 return Flag(i);
             }
@@ -1254,10 +1254,10 @@ namespace Js
     Phase
     ConfigFlagsTable::GetPhase(const char16_t* str)
     {
-        const auto phaseStr = chakracore_sys::str_helper::to_lowercase(str);
+        const auto phaseStr = chakra_rs::str_helper::to_lowercase(str);
         for(int i=0; i < PhaseCount; i++)
         {
-            if (phaseStr == chakracore_sys::str_helper::to_lowercase(PhaseNames[i]))
+            if (phaseStr == chakra_rs::str_helper::to_lowercase(PhaseNames[i]))
             {
                 return Phase(i);
             }

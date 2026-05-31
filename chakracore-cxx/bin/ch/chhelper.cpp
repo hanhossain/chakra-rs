@@ -782,11 +782,11 @@ int main_internal(int argc, char** c_argv, uint32_t snapInterval, uint32_t snapH
     }
     argc = cpos;
 
-    HostConfigFlags::pfnPrintUsage = chakracore_sys::chhelper::print_usage;
+    HostConfigFlags::pfnPrintUsage = chakra_rs::chhelper::print_usage;
 
     HostConfigFlags::HandleArgsFlag(argc, argv);
 
-    argInfo = { argc, argv, chakracore_sys::chhelper::print_usage, nullptr };
+    argInfo = { argc, argv, chakra_rs::chhelper::print_usage, nullptr };
     success = ChakraRTInterface::LoadChakraDll(&argInfo);
 
 #if !defined(NDEBUG)
