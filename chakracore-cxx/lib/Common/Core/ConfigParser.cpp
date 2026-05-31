@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include <string>
 #include "CommonCorePch.h"
-#include <chakra/src/lib.rs.h>
+#include <chakracore-sys/src/str_helper.rs.h>
 #include <rust/cxx.h>
 
 #include "Memory/MemoryLogger.h"
@@ -283,13 +283,13 @@ int32_t ConfigParser::SetOutputFile(const char16_t* outputFile, const char16_t* 
     char16_t moduleName[_MAX_PATH];
     PlatformAgnostic::SystemInfo::GetBinaryLocation(moduleName, _MAX_PATH);
     _wsplitpath_s(moduleName, nullptr, 0, nullptr, 0, fileName, _MAX_PATH, nullptr, 0);
-    const auto rustFileName = rust::String(fileName);
+    const auto rustFileName = chakracore_sys::str_helper::to_lowercase(fileName);
 
-    if (chakra::strings_eq_insensitive(rustFileName, "WWAHost") ||
-        chakra::strings_eq_insensitive(rustFileName, "ByteCodeGenerator") ||
-        chakra::strings_eq_insensitive(rustFileName, "spartan") ||
-        chakra::strings_eq_insensitive(rustFileName, "spartan_edge") ||
-        chakra::strings_eq_insensitive(rustFileName, "MicrosoftEdge"))
+    if (rustFileName == chakracore_sys::str_helper::to_lowercase("WWAHost") ||
+        rustFileName == chakracore_sys::str_helper::to_lowercase("ByteCodeGenerator") ||
+        rustFileName == chakracore_sys::str_helper::to_lowercase("spartan") ||
+        rustFileName == chakracore_sys::str_helper::to_lowercase("spartan_edge") ||
+        rustFileName == chakracore_sys::str_helper::to_lowercase("MicrosoftEdge"))
     {
 
         // we need to output to %temp% directory in wwa. we don't have permission otherwise.

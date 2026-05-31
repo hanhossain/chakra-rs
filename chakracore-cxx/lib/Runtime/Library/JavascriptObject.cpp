@@ -5,7 +5,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "RuntimeLibraryPch.h"
 
-#include <chakra/src/lib.rs.h>
+#include <chakracore-sys/src/str_helper.rs.h>
 #include <rust/cxx.h>
 
 using namespace Js;
@@ -2109,7 +2109,7 @@ void JavascriptObject::ModifyGetterSetterFuncName(const PropertyRecord * propert
 
         if (descriptor.GetterSpecified()
             && Js::VarIs<Js::ScriptFunction>(descriptor.GetGetter())
-            && chakra::strings_eq_insensitive(rust::String(Js::VarTo<Js::ScriptFunction>(descriptor.GetGetter())->GetFunctionProxy()->GetDisplayName()), "get"))
+            && chakracore_sys::str_helper::to_lowercase(Js::VarTo<Js::ScriptFunction>(descriptor.GetGetter())->GetFunctionProxy()->GetDisplayName()) == "get")
         {
             // modify to name.get
             const char16_t* finalName = ConstructName(propertyRecord, u".get", scriptContext);
@@ -2124,7 +2124,7 @@ void JavascriptObject::ModifyGetterSetterFuncName(const PropertyRecord * propert
 
         if (descriptor.SetterSpecified()
             && Js::VarIs<Js::ScriptFunction>(descriptor.GetSetter())
-            && chakra::strings_eq_insensitive(rust::String(Js::VarTo<Js::ScriptFunction>(descriptor.GetSetter())->GetFunctionProxy()->GetDisplayName()), "set"))
+            && chakracore_sys::str_helper::to_lowercase(Js::VarTo<Js::ScriptFunction>(descriptor.GetSetter())->GetFunctionProxy()->GetDisplayName()) == "set")
         {
             // modify to name.set
             const char16_t* finalName = ConstructName(propertyRecord, u".set", scriptContext);

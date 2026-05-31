@@ -7,7 +7,7 @@
 #include "Memory/PageHeapBlockTypeFilter.h"
 #include "Core/ConfigFlagsTable.h"
 
-#include <chakra/src/lib.rs.h>
+#include <chakracore-sys/src/str_helper.rs.h>
 #include <rust/cxx.h>
 
 #undef DebugBreak
@@ -1231,10 +1231,10 @@ namespace Js
     Flag
     ConfigFlagsTable::GetFlag(const char16_t* str)
     {
-        const auto flagStr = rust::String(str);
+        const auto flagStr = chakracore_sys::str_helper::to_lowercase(str);
         for(int i=0; i < FlagCount; i++)
         {
-            if (chakra::strings_eq_insensitive(flagStr, rust::String(FlagNames[i])))
+            if (flagStr == chakracore_sys::str_helper::to_lowercase(FlagNames[i]))
             {
                 return Flag(i);
             }
@@ -1254,10 +1254,10 @@ namespace Js
     Phase
     ConfigFlagsTable::GetPhase(const char16_t* str)
     {
-        const auto phaseStr = rust::String(str);
+        const auto phaseStr = chakracore_sys::str_helper::to_lowercase(str);
         for(int i=0; i < PhaseCount; i++)
         {
-            if (chakra::strings_eq_insensitive(phaseStr, rust::String(PhaseNames[i])))
+            if (phaseStr == chakracore_sys::str_helper::to_lowercase(PhaseNames[i]))
             {
                 return Phase(i);
             }
