@@ -6,7 +6,7 @@ use std::ptr;
 fn main() -> ExitCode {
     let args: Vec<_> = std::env::args().collect();
     let Some(chakra_args) = chakra::ChakraArgs::new(args) else {
-        chakra::print_usage();
+        chakracore_sys::chhelper::print_usage();
         return ExitCode::FAILURE;
     };
 
@@ -16,7 +16,7 @@ fn main() -> ExitCode {
     }
 
     if chakra_args.help {
-        chakra::print_usage();
+        chakracore_sys::chhelper::print_usage();
         return ExitCode::SUCCESS;
     }
 

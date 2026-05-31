@@ -9,6 +9,7 @@ add_library(chhelper
 )
 
 target_include_directories(chhelper PUBLIC
+    ${CHAKRACORE_SOURCE_DIR}/bin/ch
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlaceHolder
     ${CHAKRACORE_SOURCE_DIR}/pal/inc
     ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
