@@ -9,7 +9,7 @@
 #include <filesystem>
 #include <print>
 
-#include "chakra/src/lib.rs.h"
+#include <chakracore-sys/src/chhelper.rs.h>
 #include <pthread.h>
 
 #ifdef __linux__
@@ -782,11 +782,11 @@ int main_internal(int argc, char** c_argv, uint32_t snapInterval, uint32_t snapH
     }
     argc = cpos;
 
-    HostConfigFlags::pfnPrintUsage = chakra::print_usage;
+    HostConfigFlags::pfnPrintUsage = chakracore_sys::chhelper::print_usage;
 
     HostConfigFlags::HandleArgsFlag(argc, argv);
 
-    argInfo = { argc, argv, chakra::print_usage, nullptr };
+    argInfo = { argc, argv, chakracore_sys::chhelper::print_usage, nullptr };
     success = ChakraRTInterface::LoadChakraDll(&argInfo);
 
 #if !defined(NDEBUG)
