@@ -5,7 +5,6 @@
 #include "stdafx.h"
 #include <print>
 #include <rust/cxx.h>
-#include <chakra/src/lib.rs.h>
 #include <chakracore-sys/src/str_helper.rs.h>
 
 HostConfigFlags HostConfigFlags::flags;

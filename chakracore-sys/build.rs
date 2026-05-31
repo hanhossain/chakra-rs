@@ -1,11 +1,21 @@
-fn main() {
-    cxx_build::CFG.exported_header_links.push("chakra");
+use std::path::PathBuf;
 
+fn main() {
     let bridges = ["src/chhelper.rs", "src/str_helper.rs"];
     let mut cxx_bridge = cxx_build::bridges(bridges);
     cxx_bridge
         .include("../chakracore-cxx/bin/ch")
         .compile("binding");
+
+    let out_dir = std::env::var("OUT_DIR").unwrap();
+    let target = std::env::var("TARGET").unwrap();
+    if !out_dir.contains(&target) {
+        let cxx_header = format!("{out_dir}/cxxbridge/include/rust/cxx.h");
+        let docker_cxx_header = PathBuf::from("../target/docker/rust/cxx.h");
+        dbg!(&cxx_header, &docker_cxx_header);
+        std::fs::create_dir_all(docker_cxx_header.parent().unwrap()).unwrap();
+        std::fs::copy(cxx_header, docker_cxx_header).unwrap();
+    }
 
     if cfg!(feature = "compile-cpp") {
         if let Ok(chakra_build) = std::env::var("CHAKRA_BUILD") {

@@ -2,10 +2,5 @@
 name = "chakra"
 version = "0.1.0"
 edition = "2024"
-links = "chakra"
 
 [dependencies]
-cxx = "1.0.194"
-
-[build-dependencies]
-cxx-build = { version = "1.0.194", features = ["parallel"] }
