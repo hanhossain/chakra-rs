@@ -757,30 +757,11 @@ int main_internal(int argc, char** c_argv, uint32_t snapInterval, uint32_t snapH
 
     int retval = -1;
     int32_t exitCode = E_FAIL;
-    int cpos = 1;
     bool success = false;
     ChakraRTInterface::ArgInfo argInfo;
 
     JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
     JsRuntimeAttributes jsrtAttributes = JsRuntimeAttributeNone;
-
-    for(int i = 1; i < argc; ++i)
-    {
-        std::string_view arg = c_argv[i];
-
-        if (!(arg.starts_with("-TTSnapInterval=")
-            || arg.starts_with("-TTHistoryLength=")
-            || arg.starts_with("-TTDStartEvent=")
-            || arg.starts_with("-TTReplay=")
-            || arg.starts_with("-TTRecord=")))
-        {
-            char16_t *temp = argv[cpos];
-            argv[cpos] = argv[i];
-            argv[i] = temp;
-            cpos++;
-        }
-    }
-    argc = cpos;
 
     HostConfigFlags::pfnPrintUsage = chakra_rs::chhelper::print_usage;
 

@@ -1,11 +1,10 @@
 use std::ffi::{CString, c_char};
-use std::os::unix::ffi::OsStrExt;
 use std::process::ExitCode;
 use std::ptr;
 
 fn main() -> ExitCode {
-    let args: Vec<_> = std::env::args().collect();
-    let Some(chakra_args) = chakra::ChakraArgs::new(args) else {
+    let mut args: Vec<_> = std::env::args().collect();
+    let Some(chakra_args) = chakra::ChakraArgs::new(&mut args) else {
         chakracore_sys::chhelper::print_usage();
         return ExitCode::FAILURE;
     };
@@ -25,7 +24,8 @@ fn main() -> ExitCode {
         return ExitCode::SUCCESS;
     }
 
-    let args: Vec<CString> = std::env::args_os()
+    let args: Vec<CString> = args
+        .into_iter()
         .map(|os_str| {
             let bytes = os_str.as_bytes();
             CString::new(bytes).unwrap_or_else(|nul_error| {
