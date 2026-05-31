@@ -1,6 +1,6 @@
 #[cxx::bridge]
 pub mod ffi {
-    #[namespace = "chakracore_sys::chhelper"]
+    #[namespace = "chakra_rs::chhelper"]
     extern "Rust" {
         fn print_usage();
     }

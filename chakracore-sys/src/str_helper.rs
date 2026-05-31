@@ -1,4 +1,4 @@
-#[cxx::bridge(namespace = "chakracore_sys::str_helper")]
+#[cxx::bridge(namespace = "chakra_rs::str_helper")]
 mod ffi {
     extern "Rust" {
         fn to_lowercase(s: &String) -> String;

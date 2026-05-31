@@ -1946,7 +1946,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
             }
 
             AssertOrFailFast(curLen > 0);
-            if (chakracore_sys::str_helper::to_lowercase(cur) == chakracore_sys::str_helper::to_lowercase(tz->GetSz()))
+            if (chakra_rs::str_helper::to_lowercase(cur) == chakra_rs::str_helper::to_lowercase(tz->GetSz()))
             {
                 ucal_getCanonicalTimeZoneID(cur, curLen, match, _countof(match), nullptr, &status);
                 ICU_ASSERT(status, true);
