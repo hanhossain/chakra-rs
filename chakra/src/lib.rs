@@ -4,7 +4,6 @@ use std::env::current_exe;
 mod ffi {
     extern "Rust" {
         fn print_usage();
-        fn strings_eq_insensitive(s1: &str, s2: &str) -> bool;
     }
 }
 
@@ -26,10 +25,6 @@ pub fn print_usage() {
         println!("\t-v|--version\t\tDisplays version info");
         println!("\t-h|--help|-?\t\tDisplays this help message");
     }
-}
-
-pub fn strings_eq_insensitive(s1: &str, s2: &str) -> bool {
-    s1.to_lowercase() == s2.to_lowercase()
 }
 
 fn get_ttd_directory(record_uri: String) -> String {
