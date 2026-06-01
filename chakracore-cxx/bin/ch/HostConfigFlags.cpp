@@ -193,26 +193,6 @@ void HostConfigFlags::PrintUsage()
     ChakraRTInterface::PrintConfigFlagsUsageString();
 }
 
-int HostConfigFlags::FindArg(int argc, _In_reads_(argc) char16_t* argv[], const char16_t * targetArg, size_t targetArgLen)
-{
-    const auto targetStr = chakra_rs::str_helper::to_lowercase({targetArg, targetArgLen});;
-    return FindArg(argc, argv, [=](const char16_t * arg) -> bool
-    {
-        return chakra_rs::str_helper::to_lowercase(arg) == targetStr;
-    });
-}
-
-void HostConfigFlags::RemoveArg(int& argc, _Inout_updates_to_(argc, argc) char16_t* argv[], int index)
-{
-    Assert(index >= 0 && index < argc);
-    for (int i = index + 1; i < argc; ++i)
-    {
-#pragma prefast(suppress:__WARNING_READ_OVERRUN, "Operation is safe but PREfast is difficult to convince")
-        argv[i - 1] = argv[i];
-    }
-    --argc;
-}
-
 void HostConfigFlags::HandleArgsFlag(std::vector<std::u16string> &vargs)
 {
     const auto start = std::ranges::find(vargs, u"-args");
