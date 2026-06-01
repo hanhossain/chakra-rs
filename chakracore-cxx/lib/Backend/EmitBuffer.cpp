@@ -67,12 +67,10 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::FreeAllocations(bool r
     TEmitBufferAllocation * allocation = this->allocations;
     while (allocation != nullptr)
     {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if(CONFIG_FLAG(CheckEmitBufferPermissions))
         {
             CheckBufferPermissions(allocation);
         }
-#endif
         if (release)
         {
             this->allocationHeap.Free(allocation->allocation);
@@ -313,7 +311,6 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::AllocateBuffer(size_t 
     return allocation;
 }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
 template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
 bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CheckCommitFaultInjection()
 {
@@ -335,8 +332,6 @@ bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CheckCommitFaultI
 
     return false;
 }
-
-#endif
 
 #if DBG
 template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
@@ -371,12 +366,10 @@ bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBufferForIn
 
     VerboseHeapTrace(u"Setting execute permissions on 0x%p, allocation: 0x%p\n", pBuffer, allocation->allocation->address);
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     if (CheckCommitFaultInjection())
     {
         return false;
     }
-#endif
 
     if (!JITManager::GetJITManager()->IsJITServer() && !this->allocationHeap.ProtectAllocationWithExecuteReadOnly(allocation->allocation))
     {
@@ -439,12 +432,10 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBuffer(TEmitBuff
         uint8_t* readWriteBuffer = currentDestBuffer;
         size_t readWriteBytes = bytesToChange;
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (CheckCommitFaultInjection())
         {
             return false;
         }
-#endif
         if (!JITManager::GetJITManager()->IsJITServer() && !this->allocationHeap.ProtectAllocationWithExecuteReadWrite(allocation->allocation, (char*)readWriteBuffer))
         {
             return false;
@@ -516,7 +507,6 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CompletePreviousAlloca
     }
 }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
 template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
 void
 EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CheckBufferPermissions(TEmitBufferAllocation *allocation)
@@ -568,7 +558,6 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CheckBufferPermissions
         }
     }
 }
-#endif
 
 #if DBG_DUMP
 template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>

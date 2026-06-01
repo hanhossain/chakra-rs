@@ -111,7 +111,6 @@ public:
     void DecommitPages() { this->pagePool->Decommit(); }
 
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     void SetMaxPageCount(size_t maxPageCount) {
         markStack.SetMaxPageCount(maxPageCount);
 #ifdef RECYCLER_VISITED_HOST
@@ -119,7 +118,6 @@ public:
 #endif
         trackStack.SetMaxPageCount(maxPageCount);
     }
-#endif
 
 private:
     Recycler * recycler;

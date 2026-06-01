@@ -94,9 +94,7 @@ public:
     Wasm::WasmFunctionInfo* AddWasmFunctionInfo(Wasm::WasmSignature* funsig);
     Wasm::WasmFunctionInfo* GetWasmFunctionInfo(uint index) const;
     void SwapWasmFunctionInfo(uint i1, uint i2);
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     void AttachCustomInOutTracingReader(Wasm::WasmFunctionInfo* func, uint callIndex);
-#endif
 
     void AllocateFunctionExports(uint32_t entries);
     uint GetExportCount() const { return m_exportCount; }

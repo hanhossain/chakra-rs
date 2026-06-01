@@ -187,14 +187,12 @@ namespace Js
         mReader.Create( functionBody );
         ip = mReader.GetIP();
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if( PHASE_TRACE( Js::AsmjsEncoderPhase, mFunctionBody ) )
         {
             Output::Print( u"\n\n" );
             functionBody->DumpFullFunctionName();
             Output::Print( u"\n StackSize = %d , Offsets: Var = %d, Int = %d, Double = %d\n", mFunctionBody->GetAsmJsFunctionInfo()->GetTotalSizeinBytes(), GetOffset<Var>(), GetOffset<int>(), GetOffset<double>() );
         }
-#endif
 
         AsmJsJitTemplate::FunctionEntry::ApplyTemplate( this, mPc );
         while( ReadOp() ){}

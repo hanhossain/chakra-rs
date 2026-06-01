@@ -33,10 +33,8 @@ namespace IR
     BailOutKind EquivalentToMonoTypeCheckBailOutKind(BailOutKind kind);
 }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS || defined(REJIT_STATS)
 const char *GetBailOutKindName(IR::BailOutKind kind);
 bool IsValidBailOutKindAndBits(IR::BailOutKind bailOutKind);
-#endif
 
 namespace Js
 {

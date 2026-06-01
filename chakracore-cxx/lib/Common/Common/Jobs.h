@@ -62,7 +62,6 @@ namespace JsUtil
     public:
         Job(JobManager *const manager, const bool isCritical = false);
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         enum class FailureReason
         {
             NotFailed,
@@ -73,7 +72,6 @@ namespace JsUtil
             Unknown
         };
         FailureReason failureReason;
-#endif
 
     public:
         JobManager *Manager() const;

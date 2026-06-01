@@ -93,11 +93,9 @@ bool InliningHeuristics::BackendInlineIntoInliner(const FunctionJITTimeInfo * in
     // 4. Outside loop (inliner has loops):
     //     4a. Only inline small inlinees. Governed by OutsideLoopInlineThreshold (16)
     // 5. Rest are inlined.
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
     char16_t debugStringBuffer2[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
     char16_t debugStringBuffer3[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-#endif
 
     // TODO: OOP JIT, somehow need to track across functions
     bool doBackEndAggressiveInline = (constantArguments & inlinee->GetBody()->GetArgUsedForBranch()) != 0;

@@ -20,7 +20,6 @@ using namespace Js;
         JIT_HELPER_END(Op_SwitchStringLookUp);
     }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     void JavascriptNativeOperators::TracePropertyEquivalenceCheck(const JitEquivalentTypeGuard* guard, const Type* type, const Type* refType, bool isEquivalent, uint failedPropertyIndex)
     {
         if (PHASE_TRACE1(Js::EquivObjTypeSpecPhase))
@@ -66,7 +65,6 @@ using namespace Js;
             Output::Flush();
         }
     }
-#endif
 
     bool JavascriptNativeOperators::IsStaticTypeObjTypeSpecEquivalent(const Js::TypeEquivalenceRecord& equivalenceRecord, uint& failedIndex)
     {
@@ -298,9 +296,7 @@ using namespace Js;
             isEquivalent = IsStaticTypeObjTypeSpecEquivalent(cache->record, failedPropertyIndex);
         }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         TracePropertyEquivalenceCheck(guard, type, refType, isEquivalent, failedPropertyIndex);
-#endif
 
         if (!isEquivalent)
         {

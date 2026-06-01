@@ -141,9 +141,7 @@ public:
 
     IR::GeneratorBailInInstr * bailInInstr;
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     Js::OpCode bailOutOpcode;
-#endif
     Func * bailOutFunc;
     IR::Opnd * branchConditionOpnd;
 
@@ -205,9 +203,7 @@ public:
 
     void SetBailOutKind(IR::BailOutKind bailOutKind) { this->bailOutKind = bailOutKind; }
     uint32_t GetBailOutOffset() { return bailOutOffset; }
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     Js::OpCode GetBailOutOpCode() { return bailOutOpcode; }
-#endif
     template <typename Fn>
     void MapArgOutOffsets(Fn fn);
 
@@ -340,12 +336,10 @@ protected:
     friend class LinearScan;
     friend class BailOutInfo;
     friend struct FuncBailOutData;
-#if ENABLE_DEBUG_CONFIG_OPTIONS
 public:
     Js::OpCode bailOutOpcode;
 #if DBG
    void Dump();
-#endif
 #endif
 };
 

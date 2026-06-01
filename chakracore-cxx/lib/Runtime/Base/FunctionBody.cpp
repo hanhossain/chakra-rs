@@ -597,11 +597,9 @@ namespace Js
         , m_inlineCacheTypes(nullptr)
         , m_iProfileSession(-1)
 #endif
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         , regAllocLoadCount(0)
         , regAllocStoreCount(0)
         , callCountStats(0)
-#endif
     {
         SetCountField(CounterFields::ConstantCount, 1);
 
@@ -727,11 +725,9 @@ namespace Js
         , m_inlineCacheTypes(nullptr)
         , m_iProfileSession(-1)
 #endif
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         , regAllocLoadCount(0)
         , regAllocStoreCount(0)
         , callCountStats(0)
-#endif
     {
         ScriptContext * scriptContext = proxy->GetScriptContext();
 
@@ -2356,9 +2352,7 @@ namespace Js
 
                 if (isDebugOrAsmJsReparse)
                 {
-#if ENABLE_DEBUG_CONFIG_OPTIONS
                     char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-#endif
 #if DBG
                     Assert(
                         funcBody->IsReparsed()
@@ -3091,9 +3085,7 @@ namespace Js
     void FunctionBody::RestoreState(ParseNodeFnc * pnodeFnc)
     {
         Assert(this->IsReparsed());
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-#endif
         if(!!pnodeFnc->ChildCallsEval() != this->GetChildCallsEval())
         {
             OUTPUT_VERBOSE_TRACE(Js::DebuggerPhase, u"Child calls eval is different on debug reparse: %s(%s)\n", this->GetExternalDisplayName(), this->GetDebugNumberSet(debugStringBuffer));
@@ -6193,14 +6185,12 @@ namespace Js
             )
         {
             PolymorphicInlineCache * polymorphicInlineCache = CreatePolymorphicInlineCache(index, MinPolymorphicInlineCacheSize);
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
             if (PHASE_VERBOSE_TRACE1(Js::PolymorphicInlineCachePhase))
             {
                 this->DumpFullFunctionName();
                 Output::Print(u": New PIC, index = %d, size = %d\n", index, MinPolymorphicInlineCacheSize);
             }
 
-#endif
 #if PHASE_PRINT_INTRUSIVE_TESTTRACE1
             char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 #endif
@@ -6226,13 +6216,11 @@ namespace Js
         Assert(newPolymorphicInlineCacheSize > polymorphicInlineCacheSize);
         PolymorphicInlineCache * newPolymorphicInlineCache = CreatePolymorphicInlineCache(index, newPolymorphicInlineCacheSize);
         polymorphicInlineCache->CopyTo(propertyId, m_scriptContext, newPolymorphicInlineCache);
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (PHASE_VERBOSE_TRACE1(Js::PolymorphicInlineCachePhase))
         {
             this->DumpFullFunctionName();
             Output::Print(u": Bigger PIC, index = %d, oldSize = %d, newSize = %d\n", index, polymorphicInlineCacheSize, newPolymorphicInlineCacheSize);
         }
-#endif
 #if PHASE_PRINT_INTRUSIVE_TESTTRACE1
         char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 #endif
@@ -7162,12 +7150,10 @@ namespace Js
 
     void FunctionBody::Finalize(bool isShutdown)
     {
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.Instrument.IsEnabled(Js::LinearScanPhase, this->GetSourceContextId(), this->GetLocalFunctionId()))
         {
             this->DumpRegStats(this);
         }
-#endif
         this->Cleanup(isShutdown);
         this->CleanupSourceInfo(isShutdown);
         this->CleanupFunctionProxyCounters();
@@ -7416,7 +7402,7 @@ namespace Js
 
         if (this->entryPoints)
         {
-#if defined(ENABLE_DEBUG_CONFIG_OPTIONS) && !(DBG)
+#if !(DBG)
             // On fretest builds, capture the stack only if the FreTestDiagMode switch is on
             doEntryPointCleanupCaptureStack = doEntryPointCleanupCaptureStack && Js::Configuration::Global.flags.FreTestDiagMode;
 #endif
@@ -7728,7 +7714,6 @@ namespace Js
     }
 #endif
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     void
     FunctionBody::DumpFullFunctionName()
     {
@@ -7758,7 +7743,6 @@ namespace Js
         }
     }
 
-#endif
 
     void FunctionBody::EnsureAuxStatementData()
     {
@@ -8651,7 +8635,6 @@ namespace Js
 
             this->state = CleanedUp;
 #if ENABLE_ENTRYPOINT_CLEANUP_TRACE
-#if ENABLE_DEBUG_CONFIG_OPTIONS
 #if !DBG
             captureCleanupStack = captureCleanupStack && Js::Configuration::Global.flags.FreTestDiagMode;
 #endif
@@ -8660,7 +8643,6 @@ namespace Js
             {
                 this->CaptureCleanupStackTrace();
             }
-#endif
 #endif
 #endif
 #if DEBUG
@@ -9164,7 +9146,6 @@ namespace Js
     }
 #endif
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     void FunctionBody::DumpRegStats(FunctionBody *funcBody)
     {
         if (funcBody->callCountStats == 0)
@@ -9184,7 +9165,6 @@ namespace Js
         Output::Print(u"Calls:%6d  Loads:%9d  Stores:%9d  Total refs:%9d\n", this->callCountStats,
             loads, stores, loads + stores);
     }
-#endif
 
     Js::RegSlot FunctionBody::GetRestParamRegSlot()
     {

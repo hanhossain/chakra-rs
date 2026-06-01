@@ -1724,23 +1724,19 @@ namespace Js
         PropertyCacheOperationInfo info;
         if (cache->PretendTryGetProperty(type, &info))
         {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
             if (PHASE_TRACE1(PropertyCachePhase))
             {
                 Output::Print(u"PropertyRecord '%s' : Invalidating LdElem cache for type %p\n", propertyRecordUsageCache->GetString(), type);
             }
-#endif
             cache->GetInlineCaches()[cache->GetInlineCacheIndexForType(type)].RemoveFromInvalidationListAndClear(this->GetThreadContext());
         }
         cache = propertyRecordUsageCache->GetStElemInlineCache();
         if (cache->PretendTrySetProperty(type, type, &info))
         {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
             if (PHASE_TRACE1(PropertyCachePhase))
             {
                 Output::Print(u"PropertyRecord '%s' : Invalidating StElem cache for type %p\n", propertyRecordUsageCache->GetString(), type);
             }
-#endif
             cache->GetInlineCaches()[cache->GetInlineCacheIndexForType(type)].RemoveFromInvalidationListAndClear(this->GetThreadContext());
         }
     }
@@ -2802,14 +2798,12 @@ ExitTempAllocator:
     {
         Assert(!pfuncScript->GetFunctionInfo()->IsGenerator());
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         Js::Utf8SourceInfo* utf8SourceInfo = pfuncScript->GetFunctionBody()->GetUtf8SourceInfo();
         if (this->IsScriptContextInDebugMode() && !utf8SourceInfo->GetIsLibraryCode() && !utf8SourceInfo->IsInDebugMode())
         {
             // Identifying if any non library function escaped for not being in debug mode.
             Throw::FatalInternalError();
         }
-#endif
 
 #if ENABLE_TTD
         if(!this->IsTTDRecordOrReplayModeEnabled())
@@ -3730,7 +3724,6 @@ ExitTempAllocator:
         // We should have force parsed the function, and have a function body
         FunctionBody * pBody = proxy->GetFunctionBody();
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (scriptContext->IsScriptContextInDebugMode() &&
             !proxy->GetUtf8SourceInfo()->GetIsLibraryCode() &&
 #ifdef ENABLE_WASM
@@ -3741,7 +3734,6 @@ ExitTempAllocator:
             // Identifying if any function escaped for not being in debug mode. (This can be removed as a part of TFS : 935011)
             Throw::FatalInternalError();
         }
-#endif
 
 #ifdef ASMJS_PLAT
         ScriptFunction * scriptFunction = VarTo<ScriptFunction>(pFunction);
@@ -3868,9 +3860,7 @@ ExitTempAllocator:
 
     Js::JavascriptMethod ScriptContext::ProfileModeDeferredParse(ScriptFunction ** functionRef)
     {
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-#endif
 
         OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::ProfileModeDeferredParse FunctionNumber : %s, startEntrypoint : 0x%08X\n", (*functionRef)->GetFunctionProxy()->GetDebugNumberSet(debugStringBuffer), (*functionRef)->GetEntryPoint());
 
@@ -3887,9 +3877,7 @@ ExitTempAllocator:
 
     Js::JavascriptMethod ScriptContext::ProfileModeDeferredDeserialize(ScriptFunction *function)
     {
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-#endif
 
         OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::ProfileModeDeferredDeserialize FunctionNumber : %s\n", function->GetFunctionProxy()->GetDebugNumberSet(debugStringBuffer));
 

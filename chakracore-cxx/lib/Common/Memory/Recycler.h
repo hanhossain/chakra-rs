@@ -628,7 +628,6 @@ private:
 };
 #endif
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
 class AutoProtectPages
 {
 public:
@@ -640,7 +639,6 @@ private:
     Recycler* recycler;
     bool isReadOnly;
 };
-#endif
 
 class Recycler
 {
@@ -653,9 +651,7 @@ class Recycler
 #if ENABLE_CONCURRENT_GC
     friend class RecyclerParallelThread;
 #endif
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     friend class AutoProtectPages;
-#endif
 
     template <typename T> friend class RecyclerWeakReference;
     template <typename T> friend class WeakReferenceHashTable;
@@ -939,9 +935,7 @@ private:
     bool enableScanInteriorPointers;
     bool enableScanImplicitRoots;
     bool disableCollectOnAllocationHeuristics;
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     bool disableCollection;
-#endif
 
 #if ENABLE_PARTIAL_GC
     bool enablePartialCollect;
@@ -1245,9 +1239,7 @@ public:
     template <CollectionFlags flags>
     BOOL CollectNow();
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     void DisplayMemStats();
-#endif
 
     void AddExternalMemoryUsage(size_t size);
 

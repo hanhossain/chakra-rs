@@ -34,9 +34,7 @@ namespace Js
             Js::JavascriptMethod method = reinterpret_cast<Js::JavascriptMethod>(address);
             entrypointInfo->jsMethod = method;
             entrypointInfo->SetTJNativeAddress(method, mScriptContext->GetNativeCodeGenerator());
-#if ENABLE_DEBUG_CONFIG_OPTIONS
             funcEntrypointInfo->SetIsTJMode(true);
-#endif
             if (!PreReservedVirtualAllocWrapper::IsInRange((void*)mScriptContext->GetThreadContext()->GetPreReservedRegionAddr(), (void*)address))
             {
                 Assert(entrypointInfo->GetCodeSize() < (unsigned long)((unsigned long)1 << 32));

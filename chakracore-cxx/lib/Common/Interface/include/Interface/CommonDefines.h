@@ -27,21 +27,8 @@
 #define DEBUG 1
 #endif
 
-// if test hook is enabled, debug config options are enabled too
-#ifndef ENABLE_DEBUG_CONFIG_OPTIONS
-#define ENABLE_DEBUG_CONFIG_OPTIONS 1
-#endif
-
-// ENABLE_DEBUG_CONFIG_OPTIONS is enabled in debug build when DBG or DBG_DUMP is defined
-// It is enabled in fretest build (jscript9test.dll and jc.exe) in the build script
 #if DBG || DBG_DUMP
-    #ifndef ENABLE_DEBUG_CONFIG_OPTIONS
-        #define ENABLE_DEBUG_CONFIG_OPTIONS     1
-    #endif
-
-    // Flag to control availability of other flags to control regex debugging, tracing, profiling, etc. This is separate from
-    // ENABLE_DEBUG_CONFIG_OPTIONS because enabling this flag may affect performance significantly, even with default values for
-    // the regex flags this flag would make available.
+    // Flag to control availability of other flags to control regex debugging, tracing, profiling, etc.
     #ifndef ENABLE_REGEX_CONFIG_OPTIONS
         #define ENABLE_REGEX_CONFIG_OPTIONS     1
     #endif
@@ -117,9 +104,7 @@
 #define LARGEHEAPBLOCK_ENCODING 1                   // Large heap block metadata encoding
 #define IDLE_DECOMMIT_ENABLED 1                     // Idle Decommit
 
-#if defined(ENABLE_DEBUG_CONFIG_OPTIONS)
 #define RECYCLER_PAGE_HEAP                          // PageHeap support
-#endif
 
 #define USE_FEWER_PAGES_PER_BLOCK 1
 
@@ -200,9 +185,7 @@
 #define ENABLE_BACKGROUND_PARSING 1
 #endif
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
 #define ALLOW_JIT_REPRO
-#endif
 
 #endif
 
@@ -225,14 +208,11 @@
 // Telemetry features (non-DEBUG related)
 #define TELEMETRY_OPCODE_FILTER(propertyId) false
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
 #define ENABLE_DIRECTCALL_TELEMETRY_STATS
-#endif
 
 //----------------------------------------------------------------------------------------------------
 // Debug and fretest features
 //----------------------------------------------------------------------------------------------------
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
 
 #define BAILOUT_INJECTION
 #if ENABLE_PROFILE_INFO
@@ -266,8 +246,6 @@
 #define VTUNE_PROFILING
 #endif
 
-#endif // ENABLE_DEBUG_CONFIG_OPTIONS
-
 ////////
 //Time Travel flags
 //Include TTD code in the build when building for Chakra (except NT/Edge) or for debug/test builds
@@ -295,11 +273,7 @@
 #define TTD_FORCE_NOJIT_MODE 0
 
 //Enable various sanity checking features and asserts
-#if ENABLE_DEBUG_CONFIG_OPTIONS
 #define ENABLE_TTD_INTERNAL_DIAGNOSTICS 1
-#else
-#define ENABLE_TTD_INTERNAL_DIAGNOSTICS 0
-#endif
 
 #define TTD_LOG_READER TextFormatReader
 #define TTD_LOG_WRITER TextFormatWriter
@@ -541,10 +515,8 @@
 #define ENABLE_PREJIT
 #endif
 
-#if defined(ENABLE_DEBUG_CONFIG_OPTIONS)
 // Enable Output::Trace
 #define ENABLE_TRACE
-#endif
 
 #if !(defined(__clang__) && defined(_M_ARM32_OR_ARM64)) // xplat-todo: ARM
 #if DBG || defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT) || defined(TRACK_DISPATCH) || defined(ENABLE_TRACE) || defined(RECYCLER_PAGE_HEAP)
@@ -554,7 +526,7 @@
 
 // ENABLE_DEBUG_STACK_BACK_TRACE is for capturing stack back trace for debug only.
 // (STACK_BACK_TRACE is enabled on release build, used by RECYCLER_PAGE_HEAP.)
-#if ENABLE_DEBUG_CONFIG_OPTIONS && defined(STACK_BACK_TRACE)
+#if defined(STACK_BACK_TRACE)
 #define ENABLE_DEBUG_STACK_BACK_TRACE 1
 #endif
 
@@ -592,31 +564,6 @@
 #undef HEAP_TRACK_ALLOC
 #undef RECYCLER_STATS
 #undef PERF_COUNTERS
-#endif
-
-// Not having the config options enabled trumps all the above logic for these switches
-#ifndef ENABLE_DEBUG_CONFIG_OPTIONS
-#undef ARENA_MEMORY_VERIFY
-#undef RECYCLER_MEMORY_VERIFY
-#undef PROFILE_MEM
-#undef PROFILE_DICTIONARY
-#undef PROFILE_RECYCLER_ALLOC
-#undef PROFILE_EXEC
-#undef PROFILE_EVALMAP
-#undef RECYCLER_STRESS
-#undef RECYCLER_SLOW_VERIFY
-#undef RECYCLER_VERIFY_MARK
-#undef RECYCLER_STATS
-#undef RECYCLER_FINALIZE_CHECK
-#undef RECYCLER_DUMP_OBJECT_GRAPH
-#undef DBG_DUMP
-#undef BGJIT_STATS
-#undef EXCEPTION_RECOVERY
-#undef PROFILE_STRINGS
-#undef PROFILE_TYPES
-#undef PROFILE_OBJECT_LITERALS
-#undef SECURITY_TESTING
-#undef LEAK_REPORT
 #endif
 
 //----------------------------------------------------------------------------------------------------

@@ -288,7 +288,6 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
     this->inDetachProcess = false;
 #endif
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     // recycler requires at least Recycler::PrimaryMarkStackReservedPageCount to function properly for the main mark context
     this->markContext.SetMaxPageCount(max(static_cast<size_t>(GetRecyclerFlagsTable().MaxMarkStackPageCount), static_cast<size_t>(Recycler::PrimaryMarkStackReservedPageCount)));
     this->parallelMarkContext1.SetMaxPageCount(GetRecyclerFlagsTable().MaxMarkStackPageCount);
@@ -300,7 +299,6 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
         // Note, we can't do this in the constructor for RecyclerHeuristic::Instance because it runs before config is processed
         RecyclerHeuristic::Instance.ConfigureBaseFactor(GetRecyclerFlagsTable().GCMemoryThreshold);
     }
-#endif
 }
 
 #if DBG
@@ -653,19 +651,13 @@ Recycler::Initialize(const bool forceInThread, JsUtil::ThreadService *threadServ
 #ifdef PROFILE_RECYCLER_ALLOC
     this->InitializeProfileAllocTracker();
 #endif
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     this->disableCollection = CUSTOM_PHASE_OFF1(GetRecyclerFlagsTable(), Js::RecyclerPhase);
-#endif
 #if ENABLE_CONCURRENT_GC
     this->skipStack = false;
 #endif
 
 #if ENABLE_PARTIAL_GC
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     this->enablePartialCollect = !CUSTOM_PHASE_OFF1(GetRecyclerFlagsTable(), Js::PartialCollectPhase);
-#else
-    this->enablePartialCollect = true;
-#endif
 #endif
 
 #ifdef PROFILE_MEM
@@ -771,7 +763,6 @@ Recycler::Initialize(const bool forceInThread, JsUtil::ThreadService *threadServ
         // Requested a non-concurrent recycler
         this->disableConcurrent = true;
     }
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     else if (CUSTOM_PHASE_OFF1(GetRecyclerFlagsTable(), Js::ConcurrentCollectPhase))
     {
         // Concurrent collection disabled
@@ -784,7 +775,6 @@ Recycler::Initialize(const bool forceInThread, JsUtil::ThreadService *threadServ
         // All concurrent collection phases disabled
         this->disableConcurrent = true;
     }
-#endif
     else
     {
         this->disableConcurrent = false;
@@ -951,13 +941,11 @@ Recycler::IsValidObject(void* candidate, size_t minimumSize)
 void
 Recycler::Prime()
 {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     if (GetRecyclerFlagsTable().IsEnabled(Js::ForceFragmentAddressSpaceFlag))
     {
         // Never prime the recycler if we are forced to fragment address space
         return;
     }
-#endif
    autoHeap.Prime();
 }
 
@@ -1096,12 +1084,10 @@ bool Recycler::ExplicitFreeInternalWrapper(void* buffer, size_t size)
     Assert(buffer != nullptr);
     Assert(size > 0);
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     if (CUSTOM_PHASE_OFF1(GetRecyclerFlagsTable(), Js::ExplicitFreePhase))
     {
         return false;
     }
-#endif
 
     size_t allocSize = GetAllocSize(size);
 
@@ -1298,17 +1284,12 @@ Recycler::LargeAlloc(HeapInfo* heap, size_t size, ObjectInfoBits attributes)
 {
     Assert((attributes & InternalObjectInfoBitMask) == attributes);
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     size_t limit = (size_t)GetRecyclerFlagsTable().MaxSingleAllocSizeInMB * 1024 * 1024;
-#else
-    size_t limit = (size_t)CONFIG_FLAG(MaxSingleAllocSizeInMB) * 1024 * 1024;
-#endif
 
     if (size >= limit)
     {
         if (nothrow == false)
         {
-#if ENABLE_DEBUG_CONFIG_OPTIONS
             if (GetRecyclerFlagsTable().EnableFatalErrorOnOOM)
             {
                 if (this->IsMemProtectMode())
@@ -1320,7 +1301,6 @@ Recycler::LargeAlloc(HeapInfo* heap, size_t size, ObjectInfoBits attributes)
                     RecyclerSingleAllocationLimit_unrecoverable_error();
                 }
             }
-#endif
             this->OutOfMemory();
         }
         else
@@ -1523,9 +1503,7 @@ Recycler::ScanArena(ArenaData * alloc, bool background)
 #endif
 
     // The arena has been scanned so the full blocks can be rearranged at this point
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     if (background || !GetRecyclerFlagsTable().RecyclerProtectPagesOnRescan)
-#endif
     {
         alloc->SetLockBlockList(false);
     }
@@ -2683,9 +2661,7 @@ Recycler::EndMarkOnLowMemory()
     // Try to release as much memory as possible
     autoHeap.DecommitNow();
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     uint iterations = 0;
-#endif
 
     do
     {
@@ -2750,9 +2726,7 @@ Recycler::EndMarkOnLowMemory()
             this->ProcessMark(false);
         }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         iterations++;
-#endif
     }
     while (this->NeedOOMRescan());
 
@@ -2970,7 +2944,6 @@ Recycler::Sweep(bool concurrent)
     return false;
 }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
 void Recycler::DisplayMemStats()
 {
 #ifdef PERF_COUNTERS
@@ -2982,7 +2955,6 @@ void Recycler::DisplayMemStats()
     Output::Print(u"Recycler Used Page Size %u\n", PerfCounter::PageAllocatorCounterSet::GetUsedSizeCounter(PageAllocatorType::PageAllocatorType_Recycler).GetValue());
 #endif
 }
-#endif
 
 CollectedRecyclerWeakRefHeapBlock CollectedRecyclerWeakRefHeapBlock::Instance;
 
@@ -3168,12 +3140,10 @@ Recycler::DisposeObjects()
     }
 #endif
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     if (GetRecyclerFlagsTable().Trace.IsEnabled(Js::RecyclerPhase))
     {
         Output::Print(u"Disposing objects\n");
     }
-#endif
 
     // Disable dispose within this method, restore it when we're done
     AutoRestoreValue<bool> disableDispose(&this->allowDispose, false);
@@ -3362,9 +3332,7 @@ template BOOL Recycler::CollectNow<CollectNowDefaultLSCleanup>();
 template BOOL Recycler::CollectNow<CollectNowFinalGC>();
 #endif
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
 template BOOL Recycler::CollectNow<CollectNowExhaustiveSkipStack>();
-#endif
 
 template <CollectionFlags flags>
 BOOL
@@ -3379,11 +3347,7 @@ Recycler::CollectNow()
         return false;
     }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     if ((disableCollection && (flags & CollectOverride_Explicit) == 0) || isShuttingDown)
-#else
-    if (isShuttingDown)
-#endif
     {
         Assert(collectionState == CollectionStateNotCollecting
             || collectionState == CollectionStateExit
@@ -3795,12 +3759,10 @@ Recycler::DoCollect(CollectionFlags flags)
 #if ENABLE_CONCURRENT_GC
 
         bool skipConcurrent = false;
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
 
         // If the below flag is passed in, skip doing a non-blocking concurrent collect. Instead,
         // we will do a blocking concurrent collect, which is basically an in-thread GC
         skipConcurrent = GetRecyclerFlagsTable().ForceBlockingConcurrentCollect;
-#endif
 
         // We are about to start a collection. Reset our heuristic counters now, so that
         // any allocations that occur during concurrent collection count toward the next collection's threshold.
@@ -4775,15 +4737,9 @@ Recycler::EnableConcurrent(JsUtil::ThreadService *threadService, bool startAllTh
         return false;
     }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     this->enableConcurrentMark = !CUSTOM_PHASE_OFF1(GetRecyclerFlagsTable(), Js::ConcurrentMarkPhase);
     this->enableParallelMark = !CUSTOM_PHASE_OFF1(GetRecyclerFlagsTable(), Js::ParallelMarkPhase);
     this->enableConcurrentSweep = !CUSTOM_PHASE_OFF1(GetRecyclerFlagsTable(), Js::ConcurrentSweepPhase);
-#else
-    this->enableConcurrentMark = true;
-    this->enableParallelMark = true;
-    this->enableConcurrentSweep = true;
-#endif
 
     if (this->enableParallelMark && this->maxParallelism == 1)
     {
@@ -5457,7 +5413,6 @@ Recycler::WaitForConcurrentThread(uint32_t waitTime, RecyclerWaitReason caller)
     return (ret == WAIT_OBJECT_0);
 }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
 AutoProtectPages::AutoProtectPages(Recycler* recycler, bool protectEnabled) :
     isReadOnly(false),
     recycler(recycler)
@@ -5482,7 +5437,6 @@ void AutoProtectPages::Unprotect()
         isReadOnly = false;
     }
 }
-#endif
 
 BOOL
 Recycler::FinishConcurrentCollect(CollectionFlags flags)
@@ -5535,7 +5489,6 @@ Recycler::FinishConcurrentCollect(CollectionFlags flags)
 #endif
         SetCollectionState(CollectionStateRescanFindRoots);
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         // TODO: Change this behavior
         // ProtectPagesOnRescan is not supported in PageHeap mode because the page protection is changed
         // outside the PageAllocator in PageHeap mode and so pages are not in the state that the
@@ -5544,7 +5497,6 @@ Recycler::FinishConcurrentCollect(CollectionFlags flags)
         // and into the page allocator
         AssertMsg(!(IsPageHeapEnabled() && GetRecyclerFlagsTable().RecyclerProtectPagesOnRescan), "ProtectPagesOnRescan not supported in page heap mode");
         AutoProtectPages protectPages(this, GetRecyclerFlagsTable().RecyclerProtectPagesOnRescan);
-#endif
 
         const bool backgroundFinishMark = !forceInThread && concurrent && ((flags & CollectOverride_BackgroundFinishMark) != 0);
         const uint32_t finishMarkWaitTime = RecyclerHeuristic::BackgroundFinishMarkWaitTime(backgroundFinishMark, GetRecyclerFlagsTable());
@@ -5569,9 +5521,7 @@ Recycler::FinishConcurrentCollect(CollectionFlags flags)
         }
 #endif
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         protectPages.Unprotect();
-#endif
 
 #if ENABLE_PARTIAL_GC
         needConcurrentSweep = this->Sweep(rescanRootBytes, concurrent, true);

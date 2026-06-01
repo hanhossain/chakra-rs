@@ -407,12 +407,10 @@ namespace Js
         {
             JavascriptError::ThrowRangeError(scriptContext, JSERR_FunctionArgument_Invalid);
         }
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
         {
             newArr = Js::JavascriptProxy::AutoProxyWrapper(newArr);
         }
-#endif
         return isCtorSuperCall ?
             JavascriptOperators::OrdinaryCreateFromConstructor(VarTo<RecyclableObject>(newTarget), newArr, nullptr, scriptContext) :
             newArr;
@@ -470,7 +468,6 @@ namespace Js
         return library->GetFalse();
     }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     Var ArrayBuffer::EntryDetach(RecyclableObject* function, CallInfo callInfo, ...)
     {
         ScriptContext* scriptContext = function->GetScriptContext();
@@ -502,7 +499,6 @@ namespace Js
 
         return scriptContext->GetLibrary()->GetUndefined();
     }
-#endif
 
     // ArrayBuffer.prototype.slice as described in ES6 draft #19 section 24.1.4.3.
     Var ArrayBuffer::EntrySlice(RecyclableObject* function, CallInfo callInfo, ...)

@@ -813,13 +813,11 @@ namespace Js
             asyncGeneratorConstructorPrototypeObjectType->SetHasNoEnumerableProperties(true);
         }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         debugDisposableObjectType = DynamicType::New(scriptContext, TypeIds_Object, objectPrototype, nullptr,
             PathTypeHandlerNoAttr::New(scriptContext, this->GetRootPath(), 0, 0, 0, true, true), true, true);
 
         debugFuncExecutorInDisposeObjectType = DynamicType::New(scriptContext, TypeIds_Object, objectPrototype, nullptr,
             PathTypeHandlerNoAttr::New(scriptContext, this->GetRootPath(), 0, 0, 0, true, true), true, true);
-#endif
     }
 
     bool JavascriptLibrary::InitializeGeneratorFunction(DynamicObject *instance, DeferredTypeHandlerBase * typeHandler, DeferredInitializeMode mode)
@@ -1501,9 +1499,7 @@ namespace Js
             AddFunctionToLibraryObjectWithPropertyName(globalObject, u"emitTTDLog", &GlobalObject::EntryInfo::EmitTTDLog, 2);
         }
 #endif
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         AddFunctionToLibraryObjectWithPropertyName(globalObject, u"chWriteTraceEvent", &GlobalObject::EntryInfo::ChWriteTraceEvent, 1);
-#endif
 
 #ifdef IR_VIEWER
         if (Js::Configuration::Global.flags.IsEnabled(Js::IRViewerFlag))
@@ -1867,7 +1863,6 @@ namespace Js
         debugObjectNonUserSetterFunction->SetPropertyWithAttributes(PropertyIds::length, TaggedInt::ToVarUnchecked(1), PropertyConfigurable, nullptr);
     }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     void JavascriptLibrary::SetDebugObjectFaultInjectionCookieGetterAccessor(FunctionInfo *funcGetter, FunctionInfo *funcSetter)
     {
         Assert(funcGetter);
@@ -1879,7 +1874,6 @@ namespace Js
         debugObjectFaultInjectionCookieSetterFunction = CreateNonProfiledFunction(funcSetter);
         debugObjectFaultInjectionCookieSetterFunction->SetPropertyWithAttributes(PropertyIds::length, TaggedInt::ToVarUnchecked(1), PropertyConfigurable, nullptr);
     }
-#endif
 
     void JavascriptLibrary::SetDebugObjectDebugModeAccessor(FunctionInfo *funcGetter)
     {
@@ -2232,9 +2226,7 @@ namespace Js
 
         library->AddFunctionToLibraryObject(arrayBufferConstructor, PropertyIds::isView, &ArrayBuffer::EntryInfo::IsView, 1);
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         library->AddFunctionToLibraryObject(arrayBufferConstructor, PropertyIds::detach, &ArrayBuffer::EntryInfo::Detach, 1);
-#endif
         arrayBufferConstructor->SetHasNoEnumerableProperties(true);
 
         return true;
@@ -3930,14 +3922,12 @@ namespace Js
         0
     };
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     char16_t const * const JavascriptLibrary::LibraryFunctionName[] = {
 #define LIBRARY_FUNCTION(obj, name, argc, flags, entry) _u(#obj) u"." _u(#name),
 #include "LibraryFunction.h"
 #undef LIBRARY_FUNCTION
         0
     };
-#endif
 
     int const JavascriptLibrary::LibraryFunctionFlags[] = {
 #define LIBRARY_FUNCTION(obj, name, argc, flags, entry) flags,
@@ -5915,9 +5905,7 @@ namespace Js
         AssertMsg(arrayType, "Where's arrayType?");
         JavascriptArray* arr = JavascriptArray::New<Var, JavascriptArray, 0>(length, arrayType, this->GetRecycler());
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         arr->CheckForceES5Array();
-#endif
         return arr;
     }
 
@@ -5937,9 +5925,7 @@ namespace Js
         AssertMsg(nativeIntArrayType, "Where's nativeIntArrayType?");
         JavascriptNativeIntArray* arr = JavascriptArray::New<int32_t, JavascriptNativeIntArray, 0>(length, nativeIntArrayType, this->GetRecycler());
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         arr->CheckForceES5Array();
-#endif
         return arr;
     }
 
@@ -5954,9 +5940,7 @@ namespace Js
         AssertMsg(nativeFloatArrayType, "Where's nativeIntArrayType?");
         JavascriptNativeFloatArray* arr = JavascriptArray::New<double, JavascriptNativeFloatArray, 0>(length, nativeFloatArrayType, this->GetRecycler());
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         arr->CheckForceES5Array();
-#endif
         return arr;
     }
 
@@ -5965,9 +5949,7 @@ namespace Js
         AssertMsg(arrayType, "Where's arrayType?");
         JavascriptArray* arr = JavascriptArray::NewLiteral<Var, JavascriptArray, 0>(length, arrayType, this->GetRecycler());
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         arr->CheckForceES5Array();
-#endif
         return arr;
     }
 
@@ -5994,9 +5976,7 @@ namespace Js
         AssertMsg(nativeFloatArrayType, "Where's arrayType?");
         JavascriptNativeFloatArray* arr = JavascriptArray::NewLiteral<double, JavascriptNativeFloatArray, 0>(length, nativeFloatArrayType, this->GetRecycler());
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         arr->CheckForceES5Array();
-#endif
         return arr;
     }
 
@@ -6005,9 +5985,7 @@ namespace Js
         AssertMsg(arrayType, "Where's arrayType?");
         JavascriptArray* arr = RecyclerNew(this->GetRecycler(), JavascriptArray, length, size, arrayType);
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         arr->CheckForceES5Array();
-#endif
         return arr;
     }
 

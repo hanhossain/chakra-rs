@@ -26,9 +26,7 @@ JsrtRuntime::JsrtRuntime(ThreadContext * threadContext, bool useIdle, bool dispa
     }
     threadContext->SetJSRTRuntime(this);
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     serializeByteCodeForLibrary = false;
-#endif
 #ifdef ENABLE_SCRIPT_DEBUGGING
     this->jsrtDebugManager = nullptr;
 #endif

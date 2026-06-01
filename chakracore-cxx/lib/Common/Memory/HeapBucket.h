@@ -188,9 +188,7 @@ public:
     void PrepareSweep();
     void SetupBackgroundSweep(RecyclerSweep& recyclerSweep);
 #endif
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     friend class ::ScriptMemoryDumper;
-#endif
 
     static bool IsAnyFinalizableBucket()
     {

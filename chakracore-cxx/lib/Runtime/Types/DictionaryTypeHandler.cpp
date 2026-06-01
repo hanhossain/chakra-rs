@@ -2064,11 +2064,9 @@ namespace Js
         Assert(newTypeHandler->GetHasOnlyWritableDataProperties());
 
 #if ENABLE_FIXED_FIELDS
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         DynamicType* oldType = instance->GetDynamicType();
         RecyclerWeakReference<DynamicObject>* oldSingletonInstance = GetSingletonInstance();
         TraceFixedFieldsBeforeTypeHandlerChange(u"DictionaryTypeHandler", u"BigDictionaryTypeHandler", instance, this, oldType, oldSingletonInstance);
-#endif
 
         CopySingletonInstance(instance, newTypeHandler);
 #endif
@@ -2108,9 +2106,7 @@ namespace Js
         // Assert(instance->GetType() != oldType);
         Assert(!newTypeHandler->HasSingletonInstance() || !instance->HasSharedType());
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         TraceFixedFieldsAfterTypeHandlerChange(instance, this, newTypeHandler, oldType, oldSingletonInstance);
-#endif
 #endif
 
         return newTypeHandler;
@@ -2416,11 +2412,9 @@ namespace Js
             }
         };
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         DynamicType* oldType = instance->GetDynamicType();
         RecyclerWeakReference<DynamicObject>* oldSingletonInstance = GetSingletonInstance();
         TraceFixedFieldsBeforeSetIsProto(instance, this, oldType, oldSingletonInstance);
-#endif
 #endif
 
         bool hasNewType = false;
@@ -2456,9 +2450,7 @@ namespace Js
         SetFlags(IsPrototypeFlag);
 
 #if ENABLE_FIXED_FIELDS
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         TraceFixedFieldsAfterSetIsProto(instance, this, this, oldType, oldSingletonInstance);
-#endif
 #endif
     }
 
@@ -2695,7 +2687,6 @@ namespace Js
         }
     }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     template <typename T>
     void DictionaryTypeHandlerBase<T>::DumpFixedFields() const {
         for (int i = 0; i < propertyMap->Count(); i++)
@@ -2821,7 +2812,6 @@ namespace Js
             Output::Flush();
         }
     }
-#endif
 #endif // ENABLE_FIXED_FIELDS
 
 #if ENABLE_TTD

@@ -1402,9 +1402,7 @@ BailOutInstrTemplate<InstrType>::New(Js::OpCode opcode, BailOutKind kind, IR::In
 {
     Assert(func == bailOutTarget->m_func);
     BailOutInfo * bailOutInfo = JitAnew(func->m_alloc, BailOutInfo, bailOutTarget->GetByteCodeOffset(), func);
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     bailOutInfo->bailOutOpcode = opcode;
-#endif
     return BailOutInstrTemplate::New(opcode, kind, bailOutInfo, func);
 }
 
@@ -1446,9 +1444,7 @@ BailOutInstrTemplate<InstrType>::New(Js::OpCode opcode, BailOutKind kind, BailOu
     Assert(IsValidBailOutKindAndBits(kind));
     BailOutInstrTemplate * bailOutInstr = JitAnew(func->m_alloc, BailOutInstrTemplate);
     bailOutInstr->Init(opcode, IRKindMap<InstrType>::InstrKind, func);
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     bailOutInfo->bailOutOpcode = opcode;
-#endif
     bailOutInstr->bailOutInfo = bailOutInfo;
     bailOutInstr->bailOutKind = kind;
     bailOutInstr->auxBailOutKind = BailOutInvalid;
@@ -3200,9 +3196,7 @@ Instr::ConvertToBailOutInstr(IR::Instr * bailOutTarget, IR::BailOutKind kind, ui
 {
     Func * func = bailOutTarget->m_func;
     BailOutInfo * bailOutInfo = JitAnew(func->m_alloc, BailOutInfo, bailOutOffset == Js::Constants::NoByteCodeOffset ? bailOutTarget->GetByteCodeOffset() : bailOutOffset , func);
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     bailOutInfo->bailOutOpcode = this->m_opcode;
-#endif
     return this->ConvertToBailOutInstr(bailOutInfo, kind);
 }
 
@@ -4222,7 +4216,6 @@ GeneratorBailInInstr::New(IR::Instr* yieldInstr, Func* func)
     return labelInstr;
 }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
 ///----------------------------------------------------------------------------
 ///
 /// Instr::DumpTestTrace
@@ -4328,9 +4321,6 @@ Instr::DumpFieldCopyPropTestTrace(bool inLandingPad)
         break;
     }
 }
-#endif
-
-#if ENABLE_DEBUG_CONFIG_OPTIONS
 
 const char *
 Instr::GetBailOutKindName() const
@@ -4347,8 +4337,6 @@ Instr::GetBailOutKindName() const
 
     return ::GetBailOutKindName(kind);
 }
-
-#endif
 
 //
 // Debug dumpers

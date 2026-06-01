@@ -731,7 +731,7 @@ namespace Js
         // set all parent flags to their default (setting all child flags to their right values)
         this->SetAllParentFlagsAsDefaultValue();
 
-#if defined(ENABLE_DEBUG_CONFIG_OPTIONS) && CONFIG_PARSE_CONFIG_FILE
+#if CONFIG_PARSE_CONFIG_FILE
         rawInputFromConfigFileIndex = 0;
         memset(rawInputFromConfigFile, 0, sizeof(rawInputFromConfigFile));
 #endif
@@ -762,13 +762,11 @@ namespace Js
     Flag
     ConfigFlagsTable::GetOppositePhaseFlag(Flag flag) const
     {
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         switch (flag)
         {
         case OnFlag: return OffFlag;
         case OffFlag: return OnFlag;
         }
-#endif
         return InvalidFlag;
     }
 
@@ -865,7 +863,6 @@ namespace Js
             Enable(Name##Flag); \
             Name = Acronym; \
         }
-    #if ENABLE_DEBUG_CONFIG_OPTIONS
     #define FLAGPRA(Type, ParentName, Name, Acronym, ...) \
         if(!IsEnabled(Name##Flag) && IsEnabled(Acronym##Flag)) \
         { \
@@ -873,7 +870,6 @@ namespace Js
             Name = Acronym; \
         }
         #define FLAGRA(Type, Name, Acronym, ...) FLAGNRA(Type, Name, Acronym, __VA_ARGS__)
-    #endif
     #include "Interface/ConfigFlagsList.h"
     }
 
@@ -885,7 +881,6 @@ namespace Js
             const Number maxUint8 = static_cast<Number>(static_cast<uint8_t>(-1)); // entry point call count is uint8_t
             const Number maxUint16 = static_cast<Number>(static_cast<uint16>(-1));
 
-        #if ENABLE_DEBUG_CONFIG_OPTIONS
             Assert(MinInterpretCount >= zero);
             Assert(MinInterpretCount <= maxUint16);
             Assert(MaxInterpretCount >= zero);
@@ -899,7 +894,6 @@ namespace Js
             Assert(SimpleJitAfter <= maxUint8);
             Assert(FullJitAfter >= zero);
             Assert(FullJitAfter <= maxUint16);
-        #endif
 
             Assert(AutoProfilingInterpreter0Limit >= zero);
             Assert(AutoProfilingInterpreter0Limit <= maxUint16);
@@ -922,7 +916,6 @@ namespace Js
         };
         VerifyExecutionModeLimits();
 
-    #if ENABLE_DEBUG_CONFIG_OPTIONS
     #if !DISABLE_JIT
         if(ForceDynamicProfile)
         {
@@ -937,9 +930,8 @@ namespace Js
         {
             Off.Enable(DeferParsePhase);
         }
-    #endif
 
-    #if ENABLE_DEBUG_CONFIG_OPTIONS && !DISABLE_JIT
+    #if !DISABLE_JIT
         bool dontEnforceLimitsForSimpleJitAfterOrFullJitAfter = false;
         if((IsEnabled(MinInterpretCountFlag) || IsEnabled(MaxInterpretCountFlag)) &&
             !(IsEnabled(SimpleJitAfterFlag) || IsEnabled(FullJitAfterFlag)))
@@ -1202,7 +1194,6 @@ namespace Js
             AutoProfilingInterpreter0Limit = 0;
             ProfilingInterpreter0Limit = 0;
             AutoProfilingInterpreter1Limit = 0;
-        #if ENABLE_DEBUG_CONFIG_OPTIONS
             if(Off.IsEnabled(SimpleJitPhase))
             {
                 Enable(SimpleJitLimitFlag);
@@ -1211,7 +1202,6 @@ namespace Js
                 SimpleJitLimit = 0;
                 ProfilingInterpreter1Limit = 0;
             }
-        #endif
 
             EnforceExecutionModeLimits = true;
         }
@@ -1516,7 +1506,6 @@ namespace Js
             }
         }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         // in case the flag is marked as 'callback' - to call the method
 #define FLAG(type, name, description, defaultValue, parentName, hasCallback) FLAGCALLBACK##hasCallback(type, name)
 #define FLAGCALLBACKFALSE(type, name)
@@ -1547,7 +1536,6 @@ namespace Js
 #undef FLAGCALLBACKTRUE
 #undef FLAGCALLBACKFALSE
 #undef FLAG
-#endif
     }
 
     ///----------------------------------------------------------------------------
@@ -1602,7 +1590,6 @@ namespace Js
         return InvalidFlag;
     }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     //
     // Special overrides for flags being set
     //
@@ -1639,7 +1626,6 @@ namespace Js
         }
     }
 
-#endif
 
     void
     ConfigFlagsTable::EnableExperimentalFlag()

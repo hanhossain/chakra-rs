@@ -217,7 +217,6 @@ namespace Js
     }
 #endif
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     const char16_t* TMapKey_GetBuffer(const PropertyRecord* key)
     {
         return key->GetBuffer();
@@ -227,7 +226,6 @@ namespace Js
     {
         return key->GetSz();
     }
-#endif
 
     // Round up requested property capacity and cap by max range value.
     template <typename Ranges>
@@ -436,11 +434,9 @@ namespace Js
         Assert(newTypeHandler->GetHasOnlyWritableDataProperties());
 
 #if ENABLE_FIXED_FIELDS
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         DynamicType* oldType = instance->GetDynamicType();
         RecyclerWeakReference<DynamicObject>* oldSingletonInstance = GetSingletonInstance();
         TraceFixedFieldsBeforeTypeHandlerChange(u"SimpleDictionaryTypeHandler", u"[Simple]DictionaryTypeHandler", instance, this, oldType, oldSingletonInstance);
-#endif
 
         bool const canBeSingletonInstance = DynamicTypeHandler::CanBeSingletonInstance(instance);
         // If this type had been installed on a stack instance it shouldn't have a singleton Instance
@@ -518,9 +514,7 @@ namespace Js
         Assert(transferUsedAsFixed || (instance->GetType() != oldType && oldType->GetTypeId() != TypeIds_GlobalObject));
         Assert(!newTypeHandler->HasSingletonInstance() || !instance->HasSharedType());
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         TraceFixedFieldsAfterTypeHandlerChange(instance, this, newTypeHandler, oldType, oldSingletonInstance);
-#endif
 #endif
         return newTypeHandler;
     }
@@ -1560,7 +1554,6 @@ namespace Js
 
         if (!GetIsLocked())
         {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
             if (CONFIG_FLAG(ForceStringKeyedSimpleDictionaryTypeHandler) &&
                 !TMapKey_IsJavascriptString<TMapKey>() &&
                 !isUnordered && !hasNamelessPropertyId)
@@ -1568,7 +1561,6 @@ namespace Js
                 return ConvertToSimpleDictionaryUnorderedTypeHandler<TPropertyIndex, JavascriptString*, IsNotExtensibleSupported>(instance)
                     ->DeleteProperty(instance, propertyNameString, propertyOperationFlags);
             }
-#endif
 
             if (instance->GetDynamicType()->GetIsLocked())
             {
@@ -1692,7 +1684,6 @@ namespace Js
     {
         if(!GetIsLocked())
         {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
             if (CONFIG_FLAG(ForceStringKeyedSimpleDictionaryTypeHandler) &&
                 !TMapKey_IsJavascriptString<TMapKey>() &&
                 !isUnordered && !hasNamelessPropertyId)
@@ -1700,7 +1691,6 @@ namespace Js
                 return ConvertToSimpleDictionaryUnorderedTypeHandler<TPropertyIndex, JavascriptString*, IsNotExtensibleSupported>(instance)
                     ->DeleteProperty(instance, propertyId, propertyOperationFlags);
             }
-#endif
 
             if (instance->GetDynamicType()->GetIsLocked())
             {
@@ -2672,7 +2662,6 @@ namespace Js
         Assert(!TPropertyKey_IsNumeric(propertyKey));
 #endif
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (CONFIG_FLAG(ForceStringKeyedSimpleDictionaryTypeHandler) &&
             !TMapKey_IsJavascriptString<TMapKey>() &&
             !isUnordered && !hasNamelessPropertyId &&
@@ -2682,7 +2671,6 @@ namespace Js
             return ConvertToSimpleDictionaryUnorderedTypeHandler<TPropertyIndex, JavascriptString*, IsNotExtensibleSupported>(instance)
                 ->AddProperty(instance, propertyKey, value, attributes, info, flags, possibleSideEffects);
         }
-#endif
 
         if (IsNotExtensibleSupported)
         {
@@ -2948,11 +2936,9 @@ namespace Js
         {
 
 #if ENABLE_FIXED_FIELDS
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
             DynamicType* oldType = instance->GetDynamicType();
             RecyclerWeakReference<DynamicObject>* oldSingletonInstance = GetSingletonInstance();
             TraceFixedFieldsBeforeSetIsProto(instance, this, oldType, oldSingletonInstance);
-#endif
 #endif
 
             if (!hasNewType && ChangeTypeOnProto())
@@ -2994,9 +2980,7 @@ namespace Js
             SetFlags(IsPrototypeFlag);
 
 #if ENABLE_FIXED_FIELDS
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
             TraceFixedFieldsAfterSetIsProto(instance, this, this, oldType, oldSingletonInstance);
-#endif
 #endif
         }
     }
@@ -3220,7 +3204,6 @@ namespace Js
         }
     }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     template <typename TPropertyIndex, typename TMapKey, bool IsNotExtensibleSupported>
     void SimpleDictionaryTypeHandlerBase<TPropertyIndex, TMapKey, IsNotExtensibleSupported>::DumpFixedFields() const {
         for (int i = 0; i < propertyMap->Count(); i++)
@@ -3343,7 +3326,6 @@ namespace Js
             Output::Flush();
         }
     }
-#endif
 #endif // ENABLE_FIXED_FIELDS
 
     template <typename TPropertyIndex, typename TMapKey, bool IsNotExtensibleSupported>

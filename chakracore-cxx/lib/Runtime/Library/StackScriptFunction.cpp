@@ -12,9 +12,7 @@ namespace Js
     JavascriptFunction *
     StackScriptFunction::EnsureBoxed(BOX_PARAM(JavascriptFunction * function, void * returnAddress, char16_t const * reason))
     {
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-#endif
         if (!ThreadContext::IsOnStack(function))
         {
             return function;
@@ -164,7 +162,6 @@ namespace Js
                 // doesn't contain any stack function
                 InterpreterStackFrame * interpreterFrame = walker.GetCurrentInterpreterFrame();
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
                 if (this->NeedBoxFrame(callerFunctionBody) || (hasInlineeToBox && !walker.IsInlineFrame()))
                 {
                     char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
@@ -193,7 +190,6 @@ namespace Js
                         u"Boxing Frame [%s]: %s %s\n", frameKind,
                         callerFunctionBody->GetDisplayName(), callerFunctionBody->GetDebugNumberSet(debugStringBuffer));
                 }
-#endif
 
                 if (interpreterFrame)
                 {
@@ -740,9 +736,7 @@ namespace Js
     {
         if (stackFunction)
         {
-#if ENABLE_DEBUG_CONFIG_OPTIONS
             char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-#endif
 
             FunctionProxy* functionProxy = (*infoRef)->GetFunctionProxy();
             AssertMsg(functionProxy != nullptr, "BYTE-CODE VERIFY: Must specify a valid function to create");

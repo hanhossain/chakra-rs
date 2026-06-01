@@ -105,13 +105,11 @@ IRBuilder::DoBailOnNoProfile()
         return false;
     }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     if (this->m_func->GetTopFunc() != this->m_func && Js::Configuration::Global.flags.IsEnabled(Js::ForceJITLoopBodyFlag))
     {
         // No profile data for loop bodies with -force...
         return false;
     }
-#endif
 
     if (!this->m_func->HasProfileInfo())
     {
@@ -1893,7 +1891,6 @@ IRBuilder::BuildReg2(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot R0, Js::
 
         yieldInstr->GetBailOutInfo()->bailInInstr = bailInLabel;
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (PHASE_TRACE(Js::Phase::BailInPhase, this->m_func))
         {
             IR::LabelInstr* traceBailInLabel = IR::LabelInstr::New(Js::OpCode::GeneratorOutputBailInTraceLabel, m_func);
@@ -1904,7 +1901,6 @@ IRBuilder::BuildReg2(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot R0, Js::
             IR::Instr* traceBailIn = IR::Instr::New(Js::OpCode::GeneratorOutputBailInTrace, m_func);
             this->AddInstr(traceBailIn, offset);
         }
-#endif
 
         IR::Instr* resumeYield = IR::Instr::New(Js::OpCode::GeneratorResumeYield, dstOpnd, m_func);
         this->AddInstr(resumeYield, offset);
@@ -3381,7 +3377,6 @@ IRBuilder::BuildProfiledSlotLoad(Js::OpCode loadOp, IR::RegOpnd *dstOpnd, IR::Sy
         instr->AsProfiledInstr()->u.FldInfo().valueType =
             this->m_func->GetReadOnlyProfileInfo()->GetSlotLoad(profileId);
         *pUnprofiled = instr->AsProfiledInstr()->u.FldInfo().valueType.IsUninitialized();
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if(Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::DynamicProfilePhase))
         {
             const ValueType valueType(instr->AsProfiledInstr()->u.FldInfo().valueType);
@@ -3391,7 +3386,6 @@ IRBuilder::BuildProfiledSlotLoad(Js::OpCode loadOp, IR::RegOpnd *dstOpnd, IR::Sy
             Output::Print(u"TestTrace function %s (#%s) ValueType = %S ", m_func->GetJITFunctionBody()->GetDisplayName(), m_func->GetDebugNumberSet(debugStringBuffer), valueTypeStr);
             instr->DumpTestTrace();
         }
-#endif
     }
 
     return instr;
@@ -4369,7 +4363,6 @@ IRBuilder::BuildProfiledFieldLoad(Js::OpCode loadOp, IR::RegOpnd *dstOpnd, IR::S
         instr->AsProfiledInstr()->u.FldInfo() = *(m_func->GetReadOnlyProfileInfo()->GetFldInfo(inlineCacheIndex));
         *pUnprofiled = !instr->AsProfiledInstr()->u.FldInfo().WasLdFldProfiled();
         dstOpnd->SetValueType(instr->AsProfiledInstr()->u.FldInfo().valueType);
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if(Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::DynamicProfilePhase))
         {
             const ValueType valueType(instr->AsProfiledInstr()->u.FldInfo().valueType);
@@ -4379,7 +4372,6 @@ IRBuilder::BuildProfiledFieldLoad(Js::OpCode loadOp, IR::RegOpnd *dstOpnd, IR::S
             Output::Print(u"TestTrace function %s (%s) ValueType = %i ", m_func->GetJITFunctionBody()->GetDisplayName(), m_func->GetDebugNumberSet(debugStringBuffer), valueTypeStr);
             instr->DumpTestTrace();
         }
-#endif
     }
 
     return instr;

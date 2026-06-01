@@ -41,18 +41,10 @@ namespace Memory
 
 #define DIRTYBIT 0x01
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
 #define WRITE_BARRIER_PAGE_BIT 0x2
-#else
-#define WRITE_BARRIER_PAGE_BIT 0x0
-#endif
 
 // indicate the barrier has ever been cleared
-#if ENABLE_DEBUG_CONFIG_OPTIONS
 #define WRITE_BARRIER_CLEAR_MARK 0x4
-#else
-#define WRITE_BARRIER_CLEAR_MARK 0x0
-#endif
 
 #endif
 
@@ -86,7 +78,6 @@ public:
     // Get the card table for the 64 bit address space
     uint8_t * GetAddressOfCardTable() { return _cardTable; }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     void AssertWriteToAddress(_In_ void* address)
     {
         Assert(_cardTable);
@@ -100,7 +91,6 @@ public:
     {
         return committedSections.Test(GetSectionIndex(address));
     }
-#endif
 
 private:
     BVIndex GetSectionIndex(void* address);
@@ -157,7 +147,6 @@ class RecyclerWriteBarrierManager
 public:
     static void WriteBarrier(void * address);
     static void WriteBarrier(void * address, size_t bytes);
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     static void ToggleBarrier(void * address, size_t bytes, bool enable);
     static bool IsBarrierAddress(void * address);
     static bool IsBarrierAddress(uintptr_t index);
@@ -165,9 +154,7 @@ public:
     static void VerifyIsNotBarrierAddress(void * address, size_t bytes);
     static void VerifyIsBarrierAddress(void * address);
     static bool Initialize();
-#endif
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     static bool IsCardTableCommited(_In_ uintptr_t index)
     {
 #ifdef TARGET_64
@@ -184,7 +171,6 @@ public:
         return true;
 #endif
     }
-#endif
 
     // For JIT
     static uintptr_t GetCardTableIndex(void * address);

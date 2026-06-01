@@ -7,10 +7,8 @@
 #include "LinearScanMDShared.h"
 #include "LinearScanMD.h"
 
-#if DBG_DUMP || ENABLE_DEBUG_CONFIG_OPTIONS
 extern char const * const RegNames[];
 extern char16_t const * const RegNamesW[];
-#endif
 
 class OpHelperBlock;
 struct FillBailOutState;
@@ -217,10 +215,8 @@ private:
 #if DBG_DUMP
     void                PrintStats() const;
 #endif
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     IR::Instr *         GetIncInsertionPoint(IR::Instr *instr);
     void                DynamicStatsInstrument();
-#endif
 
     void                ProcessLazyBailOut(IR::Instr *instr);
 
@@ -310,9 +306,7 @@ private:
             const CapturedValues& capturedValues
         );
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         void InsertBailInTrace(BVSparse<JitArenaAllocator>* symbols, IR::Instr* insertBeforeInstr);
-#endif
     public:
         GeneratorBailIn(Func* func, LinearScan* linearScan);
         ~GeneratorBailIn();

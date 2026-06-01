@@ -2023,7 +2023,6 @@ Func::AllocateNumber(double value)
     return number;
 }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
 void
 Func::DumpFullFunctionName()
 {
@@ -2031,7 +2030,6 @@ Func::DumpFullFunctionName()
 
     Output::Print(u"Function %s (%s)", GetJITFunctionBody()->GetDisplayName(), GetDebugNumberSet(debugStringBuffer));
 }
-#endif
 
 void
 Func::UpdateForInLoopMaxDepth(uint forInLoopMaxDepth)

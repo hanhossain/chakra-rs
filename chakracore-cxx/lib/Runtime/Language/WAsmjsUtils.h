@@ -14,7 +14,6 @@ namespace WAsmJs
     static const double INT_SLOTS_SPACE = (sizeof(int) / (double)sizeof(Js::Var)); // 1 in x86 and 0.5 in x64
     static const double SIMD_SLOTS_SPACE = (sizeof(SIMDValue) / sizeof(Js::Var)); // 4 in x86 and 2 in x64
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     namespace Tracing
     {
         int GetPrintCol();
@@ -28,7 +27,6 @@ namespace WAsmJs
         float PrintF32(float val);
         double PrintF64(double val);
     }
-#endif
     void JitFunctionIfReady(class Js::ScriptFunction* func, uint interpretedCount = 0);
     bool ShouldJitFunction(class Js::FunctionBody* body, uint interpretedCount = 0);
 

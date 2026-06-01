@@ -5227,9 +5227,7 @@ BOOL Parser::WillDeferParse(Js::LocalFunctionId functionId)
             return false;
         }
         if (PHASE_FORCE_RAW(Js::DeferParsePhase, m_sourceContextInfo->sourceContextId, functionId)
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
             || Js::Configuration::Global.flags.IsEnabled(Js::ForceUndoDeferFlag)
-#endif
             )
         {
             return true;
@@ -11545,7 +11543,6 @@ void Parser::FinishFunctionsInScope(ParseNodePtr pnodeScopeList, Fn fn)
 // function bodies deferred.
 uint32_t Parser::GetDeferralThreshold(bool isProfileLoaded)
 {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     if (CONFIG_FLAG(ForceDeferParse) ||
         PHASE_FORCE1(Js::DeferParsePhase) ||
         Js::Configuration::Global.flags.IsEnabled(Js::ForceUndoDeferFlag))
@@ -11557,7 +11554,6 @@ uint32_t Parser::GetDeferralThreshold(bool isProfileLoaded)
         return Js::Configuration::Global.flags.DeferParse;
     }
     else
-#endif
     {
         if (isProfileLoaded)
         {
@@ -12130,12 +12126,10 @@ ParseNodeProg * Parser::Parse(LPCUTF8 pszSrc, size_t offset, size_t length, char
     Assert(nullptr == *m_ppnodeScope);
     Assert(nullptr == pnodeProg->pnodeNext);
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     if (Js::Configuration::Global.flags.IsEnabled(Js::ForceUndoDeferFlag))
     {
         m_stoppedDeferredParse = true;
     }
-#endif
 
     if (m_stoppedDeferredParse)
     {
@@ -12249,10 +12243,8 @@ bool Parser::CheckForDirective(bool* pIsUseStrict, bool *pIsUseAsm, bool* pIsOct
 
 bool Parser::CheckStrictModeStrPid(IdentPtr pid)
 {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     if (Js::Configuration::Global.flags.NoStrictMode)
         return false;
-#endif
 
     return pid != nullptr &&
         pid->Cch() == 10 &&

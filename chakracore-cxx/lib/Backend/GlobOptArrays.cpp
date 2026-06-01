@@ -4,8 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 #include "Backend.h"
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
-
 #define TESTTRACE_PHASE_INSTR(phase, instr, ...) \
     if(PHASE_TESTTRACE(phase, this->func)) \
     { \
@@ -19,13 +17,7 @@
         Output::Flush(); \
     }
 
-#else
-
-#define TESTTRACE_PHASE_INSTR(phase, instr, ...)
-
-#endif
-
-#if ENABLE_DEBUG_CONFIG_OPTIONS && DBG_DUMP
+#if DBG_DUMP
 
 #define TRACE_TESTTRACE_PHASE_INSTR(phase, instr, ...) \
     TRACE_PHASE_INSTR(phase, instr, __VA_ARGS__); \

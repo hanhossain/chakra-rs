@@ -489,7 +489,7 @@ HeapAllocatorData::CheckLeaks()
 
     Output::Flush();
 
-#if defined(ENABLE_DEBUG_CONFIG_OPTIONS) && !DBG
+#if !DBG
     // REVIEW: Okay to use global flags?
     if (needPause && Js::Configuration::Global.flags.Console)
     {

@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "Backend.h"
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS && DBG_DUMP
+#if DBG_DUMP
 
 #define TRACE_PHASE_VERBOSE(phase, indent, ...) \
     if(PHASE_VERBOSE_TRACE(phase, this->func)) \

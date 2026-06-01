@@ -588,9 +588,7 @@ namespace Js
         virtual bool HasAnyFixedProperties() const { return false; }
 #endif
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         virtual void DumpFixedFields() const {};
-#endif
 
     public:
         virtual RecyclerWeakReference<DynamicObject>* GetSingletonInstance() const { return nullptr; }

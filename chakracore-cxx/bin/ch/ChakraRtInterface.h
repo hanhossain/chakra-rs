@@ -63,9 +63,7 @@ public:
 #ifdef DEBUG
     static int32_t SetCheckOpHelpersFlag(bool flag) { return CHECKED_CALL(SetCheckOpHelpersFlag, flag); }
 #endif
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     static int32_t SetOOPCFGRegistrationFlag(bool flag) { return CHECKED_CALL(SetOOPCFGRegistrationFlag, flag); }
-#endif
 
     static void NotifyUnhandledException(PEXCEPTION_POINTERS exceptionInfo)
     {

@@ -509,9 +509,7 @@ using namespace Js;
             array = scriptContext->GetLibrary()->CreateArrayLiteral(length);
         }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         array->CheckForceES5Array();
-#endif
 
         return array;
         JIT_HELPER_END(ProfiledNewScArray);

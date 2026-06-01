@@ -83,12 +83,10 @@ RecyclerHeuristic::UncollectedAllocBytesCollection()
 uint
 RecyclerHeuristic::MaxBackgroundFinishMarkCount(Js::ConfigFlagsTable& flags)
 {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     if (flags.IsEnabled(Js::MaxBackgroundFinishMarkCountFlag))
     {
         return flags.MaxBackgroundFinishMarkCount;
     }
-#endif
     return DefaultMaxBackgroundFinishMarkCount;
 }
 
@@ -107,12 +105,10 @@ RecyclerHeuristic::BackgroundFinishMarkWaitTime(bool backgroundFinishMarkWaitTim
     {
         return INFINITE;
     }
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     if (flags.IsEnabled(Js::BackgroundFinishMarkWaitTimeFlag))
     {
         return flags.BackgroundFinishMarkWaitTime;
     }
-#endif
     if (CUSTOM_PHASE_FORCE1(flags, Js::BackgroundFinishMarkPhase))
     {
         return INFINITE;
@@ -123,24 +119,20 @@ RecyclerHeuristic::BackgroundFinishMarkWaitTime(bool backgroundFinishMarkWaitTim
 size_t
 RecyclerHeuristic::MinBackgroundRepeatMarkRescanBytes(Js::ConfigFlagsTable& flags)
 {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     if (flags.IsEnabled(Js::MinBackgroundRepeatMarkRescanBytesFlag))
     {
         return flags.MinBackgroundRepeatMarkRescanBytes;
     }
-#endif
     return DefaultMinBackgroundRepeatMarkRescanBytes;
 }
 
 uint32_t
 RecyclerHeuristic::FinishConcurrentCollectWaitTime(Js::ConfigFlagsTable& flags)
 {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     if (flags.IsEnabled(Js::RecyclerThreadCollectTimeoutFlag))
     {
         return flags.RecyclerThreadCollectTimeout;
     }
-#endif
     return DefaultFinishConcurrentCollectWaitTime;
 }
 
@@ -148,12 +140,10 @@ RecyclerHeuristic::FinishConcurrentCollectWaitTime(Js::ConfigFlagsTable& flags)
 uint32_t
 RecyclerHeuristic::PriorityBoostTimeout(Js::ConfigFlagsTable& flags)
 {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     if (flags.IsEnabled(Js::RecyclerPriorityBoostTimeoutFlag))
     {
         return flags.RecyclerPriorityBoostTimeout;
     }
-#endif
     return TickCountConcurrentPriorityBoost;
 }
 #endif

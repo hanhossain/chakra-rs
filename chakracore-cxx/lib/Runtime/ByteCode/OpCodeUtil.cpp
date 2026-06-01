@@ -177,9 +177,6 @@ namespace Js
     CompileAssert(((int)Js::OpCode::CallIExtendedFlags - (int)Js::OpCode::CallI) == ((int)Js::OpCode::ProfiledReturnTypeCallIExtendedFlags - (int)Js::OpCode::ProfiledReturnTypeCallI));
     CompileAssert(((int)Js::OpCode::CallIExtendedFlags - (int)Js::OpCode::CallI) == ((int)Js::OpCode::ProfiledCallIExtendedFlagsWithICIndex - (int)Js::OpCode::ProfiledCallIWithICIndex));
 
-    // Only include the opcode name on debug and test build
-#if DBG_DUMP || ENABLE_DEBUG_CONFIG_OPTIONS
-
     char16_t const * const OpCodeUtil::OpCodeNames[] =
     {
 #define DEF_OP(x, y, ...) u"" STRINGIZEW(x) u"",
@@ -218,13 +215,6 @@ namespace Js
         Assert(opIndex < _countof(BackendOpCodeNames));
         return BackendOpCodeNames[opIndex];
     }
-
-#else
-    char16_t const * OpCodeUtil::GetOpCodeName(OpCode op)
-    {
-        return u"<NotAvail>";
-    }
-#endif
 
     OpLayoutType const OpCodeUtil::OpCodeLayouts[] =
     {

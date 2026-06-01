@@ -44,9 +44,7 @@ namespace Js
 
         this->scriptLoadCallback = nullptr;
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         AssertMsg(reasonString != nullptr, "Reason string for why we are mapping the source was not provided.");
-#endif
     }
 
     template <typename TLoadCallback, typename TUnloadCallback>
@@ -219,9 +217,7 @@ namespace Js
 
         this->scriptLoadCallback = nullptr;
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         AssertMsg(reasonString != nullptr, "Reason string for why we are mapping the source was not provided.");
-#endif
     }
 
     template <>

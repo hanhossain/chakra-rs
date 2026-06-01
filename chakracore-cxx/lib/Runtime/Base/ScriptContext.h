@@ -1716,12 +1716,10 @@ private:
         // TODO: Metric based on allocation size too? So don't clean if there hasn't been much allocated?
 
         cacheType->Clean([this](const typename TCacheType::KeyType& key, typename TCacheType::ValueType value) {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
             if (CONFIG_FLAG(DumpEvalStringOnRemoval))
             {
                 Output::Print(u"EvalMap: Removing Dynamic Function String from dynamic function cache: %s\n", key.str.GetBuffer()); Output::Flush();
             }
-#endif
         });
     }
 

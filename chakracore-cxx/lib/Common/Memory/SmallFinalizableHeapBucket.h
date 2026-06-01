@@ -46,9 +46,7 @@ protected:
 #ifdef RECYCLER_VERIFY_MARK
     void VerifyMark();
 #endif
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     friend class ::ScriptMemoryDumper;
-#endif
     template <typename TBlockType>
     friend class HeapBucketT;
 

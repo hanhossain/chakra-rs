@@ -5,7 +5,6 @@
 #include "Backend.h"
 #include "Common/InlinedFrameLayout.h"
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
 #define BAILOUT_VERBOSE_TRACE(functionBody, ...) \
     if (Js::Configuration::Global.flags.Verbose && Js::Configuration::Global.flags.Trace.IsEnabled(Js::BailOutPhase,functionBody->GetSourceContextId(),functionBody->GetLocalFunctionId())) \
     { \
@@ -18,10 +17,6 @@
     { \
         Output::Flush(); \
     }
-#else
-#define BAILOUT_VERBOSE_TRACE(functionBody, bailOutKind, ...)
-#define BAILOUT_FLUSH(functionBody)
-#endif
 
 
 unsigned int NativeOffsetInlineeFrameRecordOffset::InvalidRecordOffset = (unsigned int)(-1);
@@ -367,12 +362,10 @@ Js::Var InlineeFrameRecord::Restore(int offset, bool isFloat64, bool isInt32, Js
             Js::Var oldValue = value;
             value = Js::JavascriptOperators::BoxStackInstance(oldValue, functionBody->GetScriptContext(), /* allowStackFunction */ true, false /* deepCopy */);
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
             if (oldValue != value)
             {
                 BAILOUT_VERBOSE_TRACE(functionBody, u" (Boxed: 0x%p)", value);
             }
-#endif
         }
     }
     BAILOUT_VERBOSE_TRACE(functionBody, u"\n");

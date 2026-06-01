@@ -1606,7 +1606,6 @@ void ValueType::ToString(char (&str)[VALUE_TYPE_MAX_STRING_SIZE]) const
     generalizedType.SetCanBeTaggedValue(canBeTaggedValue).ToVerboseString(str);
 }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
 
 void ValueType::ToStringDebug(__out_ecount(strSize) char *const str, const size_t strSize) const
 {
@@ -1642,7 +1641,6 @@ void ValueType::ToStringDebug(__out_ecount(strSize) char *const str, const size_
     snprintf(str, strSize, "%s (%s)", generalizedStr, verboseStr);
 }
 
-#endif
 
 bool ValueType::FromString(const char16_t *const str, ValueType *valueType)
 {

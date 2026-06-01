@@ -46,11 +46,9 @@ public:
 
     static OpLayoutType GetOpCodeLayout(OpCode op);
 private:
-#if DBG_DUMP || ENABLE_DEBUG_CONFIG_OPTIONS
     static char16_t const * const OpCodeNames[(int)Js::OpCode::MaxByteSizedOpcodes + 1];
     static char16_t const * const ExtendedOpCodeNames[];
     static char16_t const * const BackendOpCodeNames[];
-#endif
     static OpLayoutType const OpCodeLayouts[];
     static OpLayoutType const ExtendedOpCodeLayouts[];
     static OpLayoutType const BackendOpCodeLayouts[];

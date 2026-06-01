@@ -878,7 +878,6 @@ namespace Js
 
     void JavascriptExceptionOperators::DumpStackTrace(JavascriptExceptionContext& exceptionContext, bool isThrownException)
     {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (! exceptionContext.GetStackTrace()
             || ! Configuration::Global.flags.Dump.IsEnabled(ExceptionStackTracePhase)
             || ! isThrownException)
@@ -900,7 +899,6 @@ namespace Js
             Output::Print(u"    %3d: %s (%d, %d)\n", i, currFrame.GetFunctionName(), lineNumber, characterPosition);
         }
         Output::Flush();
-#endif
     }
 
     /// ---------------------------------------------------------------------------------------------------

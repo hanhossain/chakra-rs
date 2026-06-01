@@ -7,9 +7,7 @@
 
 #ifdef ENABLE_WASM
 #include "WasmLimits.h"
-#if ENABLE_DEBUG_CONFIG_OPTIONS
 #include "Codex/Utf8Helper.h"
-#endif
 
 namespace Wasm
 {
@@ -162,7 +160,6 @@ SectionHeader WasmBinaryReader::ReadSectionHeader()
     return header;
 }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
 Js::FunctionBody* WasmBinaryReader::GetFunctionBody() const
 {
     if (m_readerState == READER_STATE_FUNCTION)
@@ -171,7 +168,6 @@ Js::FunctionBody* WasmBinaryReader::GetFunctionBody() const
     }
     return nullptr;
 }
-#endif
 
 #if DBG_DUMP
 void WasmBinaryReader::PrintOps()
@@ -271,7 +267,6 @@ void WasmBinaryReader::SeekToFunctionBody(class WasmFunctionInfo* funcInfo)
     m_funcState.count = 0;
     CheckBytesLeft(readerInfo.size);
     m_curFuncEnd = m_pc + m_funcState.size;
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     m_funcState.body = funcInfo->GetBody();
     if (DO_WASM_TRACE_DECODER)
     {
@@ -286,7 +281,6 @@ void WasmBinaryReader::SeekToFunctionBody(class WasmFunctionInfo* funcInfo)
             Output::Print(u": start = 0x%x, end = 0x%x, size = 0x%x\n", (intptr_t)m_pc, (intptr_t)m_curFuncEnd, m_funcState.size);
         }
     }
-#endif
 
     uint32_t length = 0;
     uint32_t numLocalsEntries = LEB128(length);
@@ -317,9 +311,7 @@ void WasmBinaryReader::SeekToFunctionBody(class WasmFunctionInfo* funcInfo)
 void WasmBinaryReader::FunctionEnd()
 {
     m_readerState = READER_STATE_UNKNOWN;
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     m_funcState.body = nullptr;
-#endif
 }
 
 bool WasmBinaryReader::IsCurrentFunctionCompleted() const
@@ -781,14 +773,12 @@ void WasmBinaryReader::ReadSignatureTypeSection()
             sig->SetResult(type, iResult);
         }
         sig->FinalizeSignature();
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (DO_WASM_TRACE_DECODER)
         {
             Output::Print(u"Signature #%u: ", i);
             sig->Dump();
             Output::Print(u"\n");
         }
-#endif
     }
 }
 

@@ -159,7 +159,6 @@ namespace Js
         virtual bool HasAnyFixedProperties() const override;
 #endif
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         virtual void DumpFixedFields() const override;
         static void TraceFixedFieldsBeforeTypeHandlerChange(
             const char16_t* oldTypeHandlerName, const char16_t* newTypeHandlerName,
@@ -172,7 +171,6 @@ namespace Js
         static void TraceFixedFieldsAfterSetIsProto(
             DynamicObject* instance, DynamicTypeHandler* oldTypeHandler, DynamicTypeHandler* newTypeHandler,
             DynamicType* oldType, RecyclerWeakReference<DynamicObject>* oldSingletonInstanceBefore);
-#endif
 
     private:
 

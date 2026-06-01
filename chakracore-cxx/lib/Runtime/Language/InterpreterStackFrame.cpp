@@ -1634,9 +1634,7 @@ namespace Js
             ;
     }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     thread_local int InterpreterThunkStackCountTracker::s_count = 0;
-#endif
 
 #if DYNAMIC_INTERPRETER_THUNK
 #pragma optimize("", off)
@@ -1725,14 +1723,12 @@ namespace Js
         // But at that point the function might not have been parsed yet, so we don't have the locals count.
         // We are also allocating more space than we actually need because we shouldn't need to
         // reload all the symbols when bailing in.
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (PHASE_TRACE(Js::Phase::BailInPhase, function->GetFunctionBody()))
         {
             generator->bailInSymbolsTraceArray = (Js::JavascriptGenerator::BailInSymbol*) RecyclerNewArrayLeafZ(
                 functionScriptContext->GetRecycler(), Js::JavascriptGenerator::BailInSymbol, executeFunction->GetFunctionBody()->GetLocalsCount()
             );
         }
-#endif
 
         return newInstance;
     }
@@ -1741,7 +1737,6 @@ namespace Js
     {
         const bool isAsmJs = asmJsReturn != nullptr;
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         // Support for simulating partially initialized interpreter stack frame.
         InterpreterThunkStackCountTracker tracker;
 
@@ -1760,7 +1755,6 @@ namespace Js
                 DebugBreak();
             }
         }
-#endif
         ScriptContext* functionScriptContext = function->GetScriptContext();
         ThreadContext * threadContext = functionScriptContext->GetThreadContext();
         Assert(!threadContext->IsDisableImplicitException());
@@ -1769,7 +1763,6 @@ namespace Js
         Assert(threadContext->IsInScript());
 
         FunctionBody* executeFunction = function->GetFunctionBody();
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (!isAsmJs && executeFunction->IsInDebugMode() != functionScriptContext->IsScriptContextInDebugMode()) // debug mode mismatch
         {
             if (executeFunction->GetUtf8SourceInfo()->GetIsLibraryCode())
@@ -1781,7 +1774,6 @@ namespace Js
                 Throw::FatalInternalError();
             }
         }
-#endif
 
         if (executeFunction->GetInterpretedCount() == 0)
         {
@@ -2414,13 +2406,11 @@ namespace Js
         FunctionBody* asmJsModuleFunctionBody = GetFunctionBody();
         AsmJsModuleInfo* info = asmJsModuleFunctionBody->GetAsmJsModuleInfo();
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (Configuration::Global.flags.ForceAsmJsLinkFail)
         {
             AsmJSCompiler::OutputError(this->scriptContext, u"Asm.js Runtime Error : Forcing link failure");
             return this->ProcessLinkFailedAsmJsModule();
         }
-#endif
         if (m_inSlotsCount != info->GetArgInCount() + 1)
         {
             // Error reparse without asm.js
@@ -2610,7 +2600,6 @@ namespace Js
             localFunctionTables[i] = funcTableArray;
         }
         // Do MTJRC/MAIC:0 check
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if (
             (PHASE_ON1(Js::AsmJsJITTemplatePhase) && CONFIG_FLAG(MaxTemplatizedJitRunCount) == 0) ||
             (!PHASE_ON1(Js::AsmJsJITTemplatePhase) && (CONFIG_FLAG(MaxAsmJsInterpreterRunCount) == 0 || CONFIG_FLAG(ForceNative)))
@@ -2632,7 +2621,6 @@ namespace Js
                 }
             }
         }
-#endif
 
         info->SetIsRuntimeProcessed(true);
 
@@ -2756,9 +2744,7 @@ namespace Js
         return retVal;
     }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     int AsmJsCallDepth = 0;
-#endif
 
     // Function memory allocation should be done the same way as
     // T AsmJsCommunEntryPoint(Js::ScriptFunction* func, ...)  (AsmJSJitTemplate.cpp)
@@ -2858,7 +2844,6 @@ namespace Js
         // Move the arguments to the right location
         ArgSlot argCount = info->GetArgCount();
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         const bool tracingFunc = PHASE_TRACE(AsmjsFunctionEntryPhase, functionBody);
         if (tracingFunc)
         {
@@ -2869,43 +2854,36 @@ namespace Js
             Output::Print(u"Executing function %s(", functionBody->GetDisplayName());
             ++AsmJsCallDepth;
         }
-#endif
         uintptr_t argAddress = (uintptr_t)m_inParams;
         for (ArgSlot i = 0; i < argCount; i++)
         {
                 if (info->GetArgType(i).isInt())
                 {
                     *intArg = *(int*)argAddress;
-#if ENABLE_DEBUG_CONFIG_OPTIONS
                     if (tracingFunc)
                     {
                         Output::Print(u"%d, ", *intArg);
                     }
-#endif
                     ++intArg;
                     argAddress += MachPtr;
                 }
                 else if (info->GetArgType(i).isInt64())
                 {
                     *int64Arg = *(long*)argAddress;
-#if ENABLE_DEBUG_CONFIG_OPTIONS
                     if (tracingFunc)
                     {
                         Output::Print(u"%lld, ", *int64Arg);
                     }
-#endif
                     ++int64Arg;
                     argAddress += sizeof(long);
                 }
                 else if (info->GetArgType(i).isFloat())
                 {
                     *floatArg = *(float*)argAddress;
-#if ENABLE_DEBUG_CONFIG_OPTIONS
                     if (tracingFunc)
                     {
                         Output::Print(u"%.2f, ", *floatArg);
                     }
-#endif
                     ++floatArg;
                     argAddress += MachPtr;
                 }
@@ -2913,12 +2891,10 @@ namespace Js
                 {
                     Assert(info->GetArgType(i).isDouble());
                     *doubleArg = *(double*)argAddress;
-#if ENABLE_DEBUG_CONFIG_OPTIONS
                     if (tracingFunc)
                     {
                         Output::Print(u"%.2f, ", *doubleArg);
                     }
-#endif
                     ++doubleArg;
                     argAddress += sizeof(double);
                 }
@@ -2936,13 +2912,11 @@ namespace Js
                 }
         }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if (tracingFunc)
         {
             Output::Print(u"){\n");
             Output::Flush();
         }
-#endif
     }
 #endif
 
@@ -3073,7 +3047,6 @@ namespace Js
             {
                 AlignMemoryForAsmJs();
                 Var returnVar = ProcessAsmJs();
-#if ENABLE_DEBUG_CONFIG_OPTIONS
                 if (PHASE_TRACE(AsmjsFunctionEntryPhase, functionBody))
                 {
                     --AsmJsCallDepth;
@@ -3107,7 +3080,6 @@ namespace Js
                     Output::Print(u";\n");
                     Output::Flush();
                 }
-#endif
                 return returnVar;
             }
             else
@@ -4982,9 +4954,7 @@ namespace Js
         JavascriptArray *arr;
         arr = scriptContext->GetLibrary()->CreateArrayLiteral(playout->C1);
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         arr->CheckForceES5Array();
-#endif
 
         SetReg(playout->R0, arr);
     }
@@ -5025,9 +4995,7 @@ namespace Js
 
         JavascriptOperators::AddIntsToArraySegment(segment, ints);
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         arr->CheckForceES5Array();
-#endif
 
         SetReg(playout->R0, arr);
     }
@@ -5095,9 +5063,7 @@ namespace Js
             }
         }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         arr->CheckForceES5Array();
-#endif
 
         SetReg(playout->R0, arr);
     }
@@ -5119,9 +5085,7 @@ namespace Js
 
         JavascriptOperators::AddFloatsToArraySegment(segment, doubles);
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         arr->CheckForceES5Array();
-#endif
 
         SetReg(playout->R0, arr);
     }
@@ -5165,9 +5129,7 @@ namespace Js
             }
         }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         arr->CheckForceES5Array();
-#endif
 
         SetReg(playout->R0, arr);
     }
@@ -5338,12 +5300,10 @@ namespace Js
     Var InterpreterStackFrame::OP_NewScObjectSimple()
     {
         Var object = scriptContext->GetLibrary()->CreateObject(true);
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
         {
             object = JavascriptProxy::AutoProxyWrapper(object);
         }
-#endif
         return object;
     }
 
@@ -5929,7 +5889,6 @@ namespace Js
         Js::FunctionBody *fn = this->function->GetFunctionBody();
         if (!fn->GetHasHotLoop() && profiledLoopCounter > (uint)CONFIG_FLAG(JitLoopBodyHotLoopThreshold))
         {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
             if (PHASE_TRACE(Js::JITLoopBodyPhase, fn))
             {
                 char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
@@ -5940,7 +5899,6 @@ namespace Js
                     fn->GetDebugNumberSet(debugStringBuffer));
                 Output::Flush();
             }
-#endif
             fn->SetHasHotLoop();
         }
     }
@@ -6150,14 +6108,12 @@ namespace Js
         END_SAFE_REENTRANT_CALL
 
             PopOut(ArgCount);
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
         {
             newVarInstance = JavascriptProxy::AutoProxyWrapper(newVarInstance);
             // this might come from a different scriptcontext.
             newVarInstance = CrossSite::MarshalVar(GetScriptContext(), newVarInstance);
         }
-#endif
         return newVarInstance;
     }
 
@@ -6180,14 +6136,12 @@ namespace Js
         END_SAFE_REENTRANT_CALL
 
         PopOut(ArgCount);
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
         {
             newVarInstance = JavascriptProxy::AutoProxyWrapper(newVarInstance);
             // this might come from a different scriptcontext.
             newVarInstance = CrossSite::MarshalVar(GetScriptContext(), newVarInstance);
         }
-#endif
 #ifdef TELEMETRY_PROFILED
         {
             this->scriptContext->GetTelemetry().GetOpcodeTelemetry().NewScriptObject(target, args, newVarInstance);
@@ -9157,7 +9111,7 @@ namespace Js
 
     void InterpreterStackFrame::OP_WasmPrintFunc(int regIndex)
     {
-#if defined(ENABLE_DEBUG_CONFIG_OPTIONS) && defined(ENABLE_WASM)
+#if defined(ENABLE_WASM)
         Assert(m_functionBody->IsWasmFunction());
         uint index = GetRegRawInt(regIndex);
         Wasm::WasmFunctionInfo* info = m_functionBody->GetAsmJsFunctionInfo()->GetWebAssemblyModule()->GetWasmFunctionInfo(index);

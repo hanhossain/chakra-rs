@@ -493,12 +493,10 @@ public:
 
         // Library bytecode uses its own scheme
         byte actualFileVersionScheme = GenerateLibraryByteCode() ? LibraryByteCodeVersioningScheme : CurrentFileVersionScheme;
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.ForceSerializedBytecodeVersionSchema)
         {
             actualFileVersionScheme = (byte)Js::Configuration::Global.flags.ForceSerializedBytecodeVersionSchema;
         }
-#endif
 
         fileVersionKind.value = actualFileVersionScheme;
         switch (actualFileVersionScheme)
@@ -543,7 +541,6 @@ public:
             break;
         }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.ForceSerializedBytecodeMajorVersion)
         {
             V1.value = Js::Configuration::Global.flags.ForceSerializedBytecodeMajorVersion;
@@ -551,7 +548,6 @@ public:
             V3.value = 0;
             V4.value = 0;
         }
-#endif
         string16ToId = Anew(alloc, TString16ToId, alloc);
         scopeInfoToScopeInfoIdMap = Anew(alloc, ScopeInfoToScopeInfoIdMap, alloc);
     }
@@ -3050,12 +3046,10 @@ public:
         current = ReadByte(current, &fileVersionScheme);
 
         byte expectedFileVersionScheme = isLibraryCode? LibraryByteCodeVersioningScheme : CurrentFileVersionScheme;
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.ForceSerializedBytecodeVersionSchema)
         {
             expectedFileVersionScheme = (byte)Js::Configuration::Global.flags.ForceSerializedBytecodeVersionSchema;
         }
-#endif
         // Ignore the version scheme check if it is library code
         if (!isLibraryCode && fileVersionScheme != expectedFileVersionScheme)
         {
@@ -3105,7 +3099,6 @@ public:
             break;
         }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.ForceSerializedBytecodeMajorVersion)
         {
             expectedV1 = Js::Configuration::Global.flags.ForceSerializedBytecodeMajorVersion;
@@ -3113,7 +3106,6 @@ public:
             expectedV3 = 0;
             expectedV4 = 0;
         }
-#endif
         current = ReadConstantSizedInt32(current, &V1);
         if ((uint32_t)V1!=expectedV1)
         {

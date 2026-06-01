@@ -337,7 +337,6 @@ bool JavascriptGenerator::IsAsyncModule() const
     return proxy->IsModule() && proxy->IsAsync();
 }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
 void JavascriptGenerator::OutputBailInTrace(JavascriptGenerator* generator)
 {
     char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
@@ -365,7 +364,6 @@ void JavascriptGenerator::OutputBailInTrace(JavascriptGenerator* generator)
         }
     }
 }
-#endif
 
 #if ENABLE_TTD
 

@@ -434,7 +434,6 @@ public:
 
     void RegisterRegexPattern(UnifiedRegex::RegexPattern *const regexPattern);
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     const char16_t* GetParseType() const
     {
         switch(m_parseType)
@@ -449,7 +448,6 @@ public:
     }
 
 
-#endif
 
     void CaptureContext(ParseContext *parseContext) const;
     void RestoreContext(ParseContext *const parseContext);

@@ -7,11 +7,7 @@
 
 namespace Js
 {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
 #define BOX_PARAM(function, returnAddress, reason) function, returnAddress, reason
-#else
-#define BOX_PARAM(function, returnAddress, reason) function, returnAddress
-#endif
     class StackScriptFunction : public ScriptFunction
     {
     public:

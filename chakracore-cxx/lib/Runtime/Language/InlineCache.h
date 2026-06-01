@@ -224,7 +224,6 @@ namespace Js
             return true;
         }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         const char16_t *LayoutString() const
         {
             if (IsEmpty())
@@ -241,7 +240,6 @@ namespace Js
             }
             return u"Proto";
         }
-#endif
 
     public:
         void CacheLocal(

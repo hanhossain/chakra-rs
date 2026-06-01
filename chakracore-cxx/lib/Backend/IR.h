@@ -367,9 +367,7 @@ public:
     // Return whether the instruction transfer value from the src to the dst for copy prop
     bool            TransfersSrcValue();
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     const char *    GetBailOutKindName() const;
-#endif
 
 #if DBG_DUMP
     virtual void    Dump(IRDumpFlags flags);
@@ -381,10 +379,8 @@ public:
     void            DumpRange(Instr *instrEnd);
     void            DumpByteCodeOffset();
 #endif
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     void            DumpTestTrace();
     void            DumpFieldCopyPropTestTrace(bool inLandingPad);
-#endif
     uint32_t          GetByteCodeOffset() const;
     uint32_t          GetNumber() const;
 

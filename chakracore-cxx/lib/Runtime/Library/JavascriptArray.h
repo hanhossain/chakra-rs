@@ -335,9 +335,7 @@ namespace Js
         template<typename T> static void ValidateSegment(SparseArraySegment<T>* seg);
         static void ValidateVarSegment(SparseArraySegment<Var>* seg);
 #endif
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         void CheckForceES5Array();
-#endif
 
 #if DBG
         void DoTypeMutation();

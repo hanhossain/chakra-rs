@@ -210,10 +210,6 @@ if (CMAKE_BUILD_TYPE STREQUAL Debug)
         -D_DEBUG=1 # for PAL
         -DDBG_DUMP=1
     )
-elseif (CMAKE_BUILD_TYPE STREQUAL RelWithDebInfo)
-    add_definitions(
-        -DENABLE_DEBUG_CONFIG_OPTIONS=1
-    )
 endif (CMAKE_BUILD_TYPE STREQUAL Debug)
 
 if (IS_64BIT_BUILD)

@@ -281,7 +281,6 @@ EXDEF2_WMS( D1toL1Ctx        , Conv_Sat_DTUL  , Wasm::WasmMath::F64ToU64<true /*
   DEF2_WMS( IP_TARG_ASM      , AsmJsLoopBodyStart, OP_ProfiledLoopBodyStart                      )
   DEF2_WMS( IP_TARG_ASM      , WasmLoopBodyStart , OP_ProfiledWasmLoopBodyStart                  )
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
 EXDEF3_WMS( CUSTOM_ASMJS, PrintFuncName  , OP_WasmPrintFunc , Int2)
 EXDEF2    ( EMPTYASMJS, PrintArgSeparator, WAsmJs::Tracing::PrintArgSeparator)
 EXDEF2    ( EMPTYASMJS, PrintBeginCall, WAsmJs::Tracing::PrintBeginCall)
@@ -291,7 +290,6 @@ EXDEF2_WMS( I1toI1Mem, PrintI32, WAsmJs::Tracing::PrintI32 )
 EXDEF2_WMS( L1toL1Mem, PrintI64, WAsmJs::Tracing::PrintI64 )
 EXDEF2_WMS( F1toF1Mem, PrintF32, WAsmJs::Tracing::PrintF32 )
 EXDEF2_WMS( D1toD1Mem, PrintF64, WAsmJs::Tracing::PrintF64 )
-#endif
   //unary ops
 
 #ifdef ENABLE_WASM_SIMD

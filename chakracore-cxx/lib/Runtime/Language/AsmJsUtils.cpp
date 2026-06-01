@@ -152,7 +152,6 @@ namespace Js
         vswprintf_s( msg_, _msg, arglist );
     }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     long ConvertStringToInt64(Var string, ScriptContext* scriptContext)
     {
         JavascriptString* str = VarTo<JavascriptString>(string);
@@ -176,7 +175,6 @@ namespace Js
         JavascriptOperators::OP_SetProperty(i64Object, PropertyIds::high, high, scriptContext);
         return i64Object;
     }
-#endif
 
     void * UnboxAsmJsArguments(ScriptFunction* func, Var * origArgs, char * argDst, CallInfo callInfo)
     {
@@ -185,9 +183,7 @@ namespace Js
         AsmJsFunctionInfo* info = func->GetFunctionBody()->GetAsmJsFunctionInfo();
         ScriptContext* scriptContext = func->GetScriptContext();
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         bool allowTestInputs = CONFIG_FLAG(WasmI64);
-#endif
         ArgumentReader reader(&callInfo, origArgs);
         uint actualArgCount = reader.Info.Count - 1; // -1 for ScriptFunction
         argDst = argDst + MachPtr; // add one first so as to skip the ScriptFunction argument
@@ -199,13 +195,11 @@ namespace Js
                 int32_t intVal;
                 if (i < actualArgCount)
                 {
-#if ENABLE_DEBUG_CONFIG_OPTIONS
                     if (allowTestInputs && VarIs<JavascriptString>(*origArgs))
                     {
                         intVal = (int32_t)ConvertStringToInt64(*origArgs, scriptContext);
                     }
                     else
-#endif
                         intVal = JavascriptMath::ToInt32(*origArgs, scriptContext);
                 }
                 else
@@ -221,14 +215,11 @@ namespace Js
             }
             else if (info->GetArgType(i).isInt64())
             {
-#if ENABLE_DEBUG_CONFIG_OPTIONS
                 if (!allowTestInputs)
-#endif
                 {
                     JavascriptError::ThrowTypeError(scriptContext, WASMERR_InvalidTypeConversion);
                 }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
                 long val;
                 if (i < actualArgCount)
                 {
@@ -263,21 +254,18 @@ namespace Js
 
                 *(long*)(argDst) = val;
                 argDst += sizeof(long);
-#endif
             }
             else if (info->GetArgType(i).isFloat())
             {
                 float floatVal;
                 if (i < actualArgCount)
                 {
-#if ENABLE_DEBUG_CONFIG_OPTIONS
                     if (allowTestInputs && VarIs<JavascriptString>(*origArgs))
                     {
                         int32_t val = (int32_t)ConvertStringToInt64(*origArgs, scriptContext);
                         floatVal = *(float*)&val;
                     }
                     else
-#endif
                         floatVal = (float)(JavascriptConversion::ToNumber(*origArgs, scriptContext));
                 }
                 else
@@ -295,14 +283,12 @@ namespace Js
                 double doubleVal;
                 if (i < actualArgCount)
                 {
-#if ENABLE_DEBUG_CONFIG_OPTIONS
                     if (allowTestInputs && VarIs<JavascriptString>(*origArgs))
                     {
                         long val = ConvertStringToInt64(*origArgs, scriptContext);
                         doubleVal = *(double*)&val;
                     }
                     else
-#endif
                         doubleVal = JavascriptConversion::ToNumber(*origArgs, scriptContext);
                 }
                 else
@@ -375,13 +361,11 @@ namespace Js
         }
         case AsmJsRetType::Int64:
         {
-#if ENABLE_DEBUG_CONFIG_OPTIONS
             if (CONFIG_FLAG(WasmI64))
             {
                 returnValue = CreateI64ReturnObject(intRetVal, scriptContext);
                 break;
             }
-#endif
             JavascriptError::ThrowTypeError(scriptContext, WASMERR_InvalidTypeConversion);
         }
         case AsmJsRetType::Double:

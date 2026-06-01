@@ -128,9 +128,7 @@ namespace Js
     public:
         static void * Op_SwitchStringLookUp(JavascriptString* str, Js::BranchDictionaryWrapper<Js::JavascriptString*>* stringDictionary, uintptr_t funcStart, uintptr_t funcEnd);
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         static void TracePropertyEquivalenceCheck(const JitEquivalentTypeGuard* guard, const Type* type, const Type* refType, bool isEquivalent, uint failedPropertyIndex);
-#endif        
         static bool CheckIfTypeIsEquivalent(Type* type, JitEquivalentTypeGuard* guard);
         static bool CheckIfTypeIsEquivalentForFixedField(Type* type, JitEquivalentTypeGuard* guard);
         static bool CheckIfPolyTypeIsEquivalent(Type* type, JitPolyEquivalentTypeGuard* guard, uint8_t index);

@@ -212,11 +212,9 @@ LargeHeapBucket::PageHeapAlloc(Recycler * recycler, size_t sizeCat, size_t size,
     heapBlock->pageHeapData = pageHeapData;
     
     bool decommitGuardPage = true;
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     decommitGuardPage = this->GetRecycler()->GetRecyclerFlagsTable().PageHeapDecommitGuardPage;
 #if defined(RECYCLER_NO_PAGE_REUSE)
     decommitGuardPage |= heapBlock->GetPageAllocator(heapInfo)->IsPageReuseDisabled();
-#endif
 #endif
     if (decommitGuardPage)
     {

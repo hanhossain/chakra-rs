@@ -325,14 +325,12 @@ namespace Js
         }
         array->SetHeadAndLastUsedSegment(reinterpret_cast<SparseArraySegmentBase *>(arrayInfo->copyOnAccessArrayCacheIndex)); // storing index in head on purpose: expect AV if treated as other array objects
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::CopyOnAccessArrayPhase))
         {
             Output::Print(u"Create copy-on-access array: func(#%2d) index(%d) length(%d)\n",
                 functionBody->GetFunctionNumber(), lib->cacheForCopyOnAccessArraySegments->GetCount(), ints->count);
             Output::Flush();
         }
-#endif
 
         return array;
     }
@@ -1063,9 +1061,7 @@ SECOND_PASS:
 
         bool isBtree = false;
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         isBtree = Js::Configuration::Global.flags.ForceArrayBTree;
-#endif
         if (GetSegmentMap() || fromArray->GetSegmentMap() || isBtree)
         {
             for (uint i = 0; i < length; i++)
@@ -1138,9 +1134,7 @@ SECOND_PASS:
     {
         bool isBtree = false;
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         isBtree = Js::Configuration::Global.flags.ForceArrayBTree;
-#endif
         if (GetSegmentMap() || isBtree)
         {
             for (uint i = startIndex; i < startIndex + length; i++)

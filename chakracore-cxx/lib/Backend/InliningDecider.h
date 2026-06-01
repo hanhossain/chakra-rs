@@ -72,10 +72,8 @@ public:
         Js::OpCode *const inlineCandidateOpCode,
         ValueType *const returnType);
 
-#if defined(ENABLE_DEBUG_CONFIG_OPTIONS)
     static void TraceInlining(Js::FunctionBody *const inliner, const char16_t* inlineeName, const char16_t* inlineeFunctionIdandNumberString, uint inlineeByteCodeCount,
         Js::FunctionBody* topFunc, uint inlinedByteCodeCount, Js::FunctionBody *const inlinee, uint callSiteId, bool isLoopBody, bool isCallback, uint builtIn = -1);
-#endif
 
 private:
     static bool GetBuiltInInfoCommon(
@@ -92,7 +90,6 @@ private:
     PREVENT_COPY(InliningDecider)
 };
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
 #define INLINE_VERBOSE_TRACE(...) \
     if (Js::Configuration::Global.flags.Verbose && Js::Configuration::Global.flags.Trace.IsEnabled(Js::InlinePhase, this->topFunc->GetSourceContextId(), this->topFunc->GetLocalFunctionId())) \
     { \
@@ -143,14 +140,3 @@ private:
     Output::Print(__VA_ARGS__); \
     Output::Flush(); \
     }
-#else
-#define INLINE_VERBOSE_TRACE(...)
-#define POLYMORPHIC_INLINE_TESTTRACE(...)
-#define POLYMORPHIC_INLINE_FIXEDMETHODS_TESTTRACE(...)
-#define INLINE_TRACE(...)
-#define INLINE_FLUSH()
-#define INLINE_TESTTRACE(...)
-#define INLINE_TESTTRACE_VERBOSE(...)
-#define INLINE_TRACE_AND_TESTTRACE(...)
-#define INLINE_CALLBACKS_TRACE(...)
-#endif

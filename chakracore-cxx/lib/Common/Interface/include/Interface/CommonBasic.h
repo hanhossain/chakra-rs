@@ -35,11 +35,9 @@ inline bool IsAsanFakeStackAddr(const void * p)
 #define IS_ASAN_FAKE_STACK_ADDR(p) false
 #endif
 
-#if defined(PROFILE_RECYCLER_ALLOC) || defined(HEAP_TRACK_ALLOC) || defined(ENABLE_DEBUG_CONFIG_OPTIONS)
 #ifdef __clang__
 #include <typeinfo>
 using std::type_info;
-#endif
 #endif
 
 #include "PlatformAgnostic/CommonPal.h"

@@ -72,13 +72,11 @@ namespace JSON
                 result = parser.Parse(input);
             }
 
-    #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
             if (CONFIG_FLAG(ForceGCAfterJSONParse))
             {
                 Recycler* recycler = scriptContext->GetRecycler();
                 recycler->CollectNow<CollectNowForceInThread>();
             }
-    #endif
 
             if (reviver)
             {

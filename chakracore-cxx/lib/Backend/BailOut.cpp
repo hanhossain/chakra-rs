@@ -74,9 +74,7 @@ void BailOutInfo::PartialDeepCopyTo(BailOutInfo * const other) const
     other->bailOutInstr = this->bailOutInstr;
     other->bailInInstr = this->bailInInstr;
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     other->bailOutOpcode = this->bailOutOpcode;
-#endif
 
     other->bailOutFunc = this->bailOutFunc;
     other->branchConditionOpnd = this->branchConditionOpnd;
@@ -352,7 +350,6 @@ BailOutRecord::BailOutRecord(uint32_t bailOutOffset, uint bailOutCacheIndex, IR:
 #endif
 }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
 #define REJIT_KIND_TESTTRACE(bailOutKind, ...) \
     if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::ReJITPhase)) \
     { \
@@ -364,11 +361,7 @@ BailOutRecord::BailOutRecord(uint32_t bailOutOffset, uint bailOutCacheIndex, IR:
     }
 const char16_t * const trueString = u"true";
 const char16_t * const falseString = u"false";
-#else
-#define REJIT_KIND_TESTTRACE(...)
-#endif
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
 #define BAILOUT_KIND_TRACE(functionBody, bailOutKind, ...) \
     if (Js::Configuration::Global.flags.Trace.IsEnabled(Js::BailOutPhase, functionBody->GetSourceContextId(),functionBody->GetLocalFunctionId()) && \
         ((bailOutKind) != IR::BailOnSimpleJitToFullJitLoopBody || CONFIG_FLAG(Verbose))) \
@@ -414,12 +407,6 @@ const char16_t * const falseString = u"false";
     { \
         Output::Flush(); \
     }
-#else
-#define BAILOUT_KIND_TRACE(functionBody, bailOutKind, ...)
-#define BAILOUT_TESTTRACE(functionBody, bailOutKind, ...)
-#define BAILOUT_VERBOSE_TRACE(functionBody, bailOutKind, ...)
-#define BAILOUT_FLUSH(functionBody)
-#endif
 
 #if DBG
 void BailOutRecord::DumpArgOffsets(uint count, int* offsets, int argOutSlotStart)
@@ -623,14 +610,12 @@ BailOutRecord::RestoreValues(IR::BailOutKind bailOutKind, Js::JavascriptCallStac
     if (this->localOffsetsCount)
     {
         Js::FunctionBody* functionBody = newInstance->function->GetFunctionBody();
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         BAILOUT_VERBOSE_TRACE(functionBody, bailOutKind, u"BailOut:   Register #%3d: Not live\n", 0);
 
         for (uint i = 1; i < functionBody->GetConstantCount(); i++)
         {
             BAILOUT_VERBOSE_TRACE(functionBody, bailOutKind, u"BailOut:   Register #%3d: Constant table\n", i);
         }
-#endif
 
         if (functionBody->IsInDebugMode())
         {
@@ -755,13 +740,11 @@ BailOutRecord::RestoreValue(IR::BailOutKind bailOutKind, Js::JavascriptCallStack
     double dblValue = 0.0;
     int32_t int32Value = 0;
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     char16_t const * name = u"OutParam";
     if (isLocal)
     {
         name = u"Register";
     }
-#endif
 
     BAILOUT_VERBOSE_TRACE(newInstance->function->GetFunctionBody(), bailOutKind, u"BailOut:   %s #%3d: ", name, regSlot);
 
@@ -895,7 +878,6 @@ BailOutRecord::RestoreValue(IR::BailOutKind bailOutKind, Js::JavascriptCallStack
         // an iterator result object created on the heap. No need to box either.
         Assert(value);
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if (ThreadContext::IsOnStack(value))
         {
             BAILOUT_VERBOSE_TRACE(newInstance->function->GetFunctionBody(), bailOutKind, u", value: 0x%p (Resume Yield Object)", value);
@@ -904,7 +886,6 @@ BailOutRecord::RestoreValue(IR::BailOutKind bailOutKind, Js::JavascriptCallStack
         {
             BAILOUT_VERBOSE_TRACE(newInstance->function->GetFunctionBody(), bailOutKind, u", value: 0x%p (Yield Return Value)", value);
         }
-#endif
     }
     else
     {
@@ -1243,9 +1224,7 @@ BailOutRecord::BailOutFromLoopBodyHelper(Js::JavascriptCallStackLayout * layout,
 
     // The current interpreter frame for the loop body
     Js::InterpreterStackFrame * interpreterFrame = functionScriptContext->GetThreadContext()->GetLeafInterpreterFrame();
-#if defined(DBG_DUMP) || defined(ENABLE_DEBUG_CONFIG_OPTIONS)
     char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-#endif
     BAILOUT_KIND_TRACE(executeFunction, bailOutKind, u"BailOut: function: %s (%s) Loop: %d offset: #%04x Opcode: %s",
         executeFunction->GetDisplayName(), executeFunction->GetDebugNumberSet(debugStringBuffer), interpreterFrame->GetCurrentLoopNum(),
         bailOutOffset, Js::OpCodeUtil::GetOpCodeName(bailOutRecord->bailOutOpcode));
@@ -1345,7 +1324,6 @@ BailOutRecord::BailOutHelper(Js::JavascriptCallStackLayout * layout, Js::ScriptF
                         debugManager->stepController.SetFrameAddr(0);
                     }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
                     if (bailOutOffset != (uint)byteCodeOffsetAfterEx || !(bailOutKind & IR::BailOutIgnoreException))
                     {
                         char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
@@ -1354,7 +1332,6 @@ BailOutRecord::BailOutHelper(Js::JavascriptCallStackLayout * layout, Js::ScriptF
                         BAILOUT_TESTTRACE(executeFunction, bailOutKind, u"BailOut: changing due to ignore exception: function %s, Opcode: %s, Treating as: %S", executeFunction->GetDisplayName(),
                             Js::OpCodeUtil::GetOpCodeName(bailOutRecord->bailOutOpcode), ::GetBailOutKindName(IR::BailOutIgnoreException));
                     }
-#endif
 
                     // Set the byte code offset to continue from next user statement.
                     bailOutOffset = byteCodeOffsetAfterEx;
@@ -1379,9 +1356,7 @@ BailOutRecord::BailOutHelper(Js::JavascriptCallStackLayout * layout, Js::ScriptF
     }
 #endif
 
-#if defined(DBG_DUMP) || defined(ENABLE_DEBUG_CONFIG_OPTIONS)
     char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-#endif
     BAILOUT_KIND_TRACE(executeFunction, bailOutKind, u"BailOut: function: %s (%s) offset: #%04x Opcode: %s", executeFunction->GetDisplayName(),
         executeFunction->GetDebugNumberSet(debugStringBuffer), bailOutOffset, Js::OpCodeUtil::GetOpCodeName(bailOutRecord->bailOutOpcode));
     BAILOUT_TESTTRACE(executeFunction, bailOutKind, u"BailOut: function %s, Opcode: %s", executeFunction->GetDisplayName(), Js::OpCodeUtil::GetOpCodeName(bailOutRecord->bailOutOpcode));
@@ -1688,12 +1663,10 @@ BailOutRecord::BailOutHelper(Js::JavascriptCallStackLayout * layout, Js::ScriptF
 
         Js::Var oldValue = aReturn;
         aReturn = Js::JavascriptOperators::BoxStackInstance(oldValue, functionScriptContext, /* allowStackFunction */ true, /* deepCopy */ false);
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if (oldValue != aReturn)
         {
             BAILOUT_VERBOSE_TRACE(newInstance->function->GetFunctionBody(), bailOutKind, u" (Boxed: 0x%p)", aReturn);
         }
-#endif
     }
     BAILOUT_VERBOSE_TRACE(newInstance->function->GetFunctionBody(), bailOutKind, u"\n");
     return aReturn;
@@ -2109,7 +2082,6 @@ void BailOutRecord::ScheduleFunctionCodeGen(Js::ScriptFunction * function, Js::S
                     uint32_t state;
                     state = profileInfo->GetPolymorphicCacheState();
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
                     if (PHASE_TRACE(Js::ObjTypeSpecPhase, executeFunction))
                     {
                         char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
@@ -2118,7 +2090,6 @@ void BailOutRecord::ScheduleFunctionCodeGen(Js::ScriptFunction * function, Js::S
                             executeFunction->GetDebugNumberSet(debugStringBuffer), executeFunction->GetSavedPolymorphicCacheState(), state);
                         Output::Flush();
                     }
-#endif
                     if (state <= executeFunction->GetSavedPolymorphicCacheState())
                     {
                         reThunk = true;
@@ -2300,7 +2271,6 @@ void BailOutRecord::ScheduleFunctionCodeGen(Js::ScriptFunction * function, Js::S
             executeFunction->TraceExecutionMode("Rejit");
         }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if(PHASE_TRACE(Js::ReJITPhase, executeFunction))
         {
             char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
@@ -2319,7 +2289,6 @@ void BailOutRecord::ScheduleFunctionCodeGen(Js::ScriptFunction * function, Js::S
             Output::Print(u"\n");
             Output::Flush();
         }
-#endif
     }
 }
 
@@ -2620,7 +2589,6 @@ void BailOutRecord::ScheduleLoopBodyCodeGen(Js::ScriptFunction * function, Js::S
         loopHeader->CreateEntryPoint();
         loopHeader->IncRejitCount();
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if(PHASE_TRACE(Js::ReJITPhase, executeFunction))
         {
             char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
@@ -2638,7 +2606,6 @@ void BailOutRecord::ScheduleLoopBodyCodeGen(Js::ScriptFunction * function, Js::S
             Output::Print(u"\n");
             Output::Flush();
         }
-#endif
     }
 }
 

@@ -159,12 +159,7 @@ long const VirtualTableInfo<T>::Address = VirtualTableInfo<T>::RegisterVirtualTa
     enum RegisterVTableEnum { RegisterVTable = 0 };
 
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
 #define DEFINE_GETCPPNAME_ABSTRACT() \
     virtual const char* GetCppName() const = 0;
 #define DEFINE_GETCPPNAME() \
     virtual const char* GetCppName() const { return typeid(this).name(); }
-#else
-#define DEFINE_GETCPPNAME_ABSTRACT()
-#define DEFINE_GETCPPNAME()
-#endif

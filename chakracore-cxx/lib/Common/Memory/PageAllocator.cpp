@@ -64,12 +64,10 @@ SegmentBase<T>::~SegmentBase()
         GetAllocator()->GetVirtualAllocator()->Free(originalAddress, GetPageCount() * AutoSystemInfo::PageSize, MEM_RELEASE);
         GetAllocator()->ReportFree(this->segmentPageCount * AutoSystemInfo::PageSize); //Note: We reported the guard pages free when we decommitted them during segment initialization
 #if defined(TARGET_64) && defined(RECYCLER_WRITE_BARRIER_BYTE)
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if (CONFIG_FLAG(StrictWriteBarrierCheck) && this->isWriteBarrierEnabled)
         {
             RecyclerWriteBarrierManager::ToggleBarrier(this->address, this->segmentPageCount * AutoSystemInfo::PageSize, false);
         }
-#endif
         RecyclerWriteBarrierManager::OnSegmentFree(this->address, this->segmentPageCount);
 #endif
     }
@@ -155,7 +153,6 @@ SegmentBase<T>::Initialize(uint32_t allocFlags, bool excludeGuardPages)
 #ifdef RECYCLER_WRITE_BARRIER
 #if defined(TARGET_64) && defined(RECYCLER_WRITE_BARRIER_BYTE)
     bool registerBarrierResult = true;
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     if (CONFIG_FLAG(StrictWriteBarrierCheck))
     {
         if (this->isWriteBarrierEnabled)
@@ -167,7 +164,6 @@ SegmentBase<T>::Initialize(uint32_t allocFlags, bool excludeGuardPages)
         }
     }
     else
-#endif
     {
         registerBarrierResult = RecyclerWriteBarrierManager::OnSegmentAlloc(this->address, this->segmentPageCount);
     }

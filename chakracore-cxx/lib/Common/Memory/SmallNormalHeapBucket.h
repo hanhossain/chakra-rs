@@ -17,9 +17,7 @@ public:
     SmallNormalHeapBucketBase();
 
     CompileAssert(!BaseT::IsLeafBucket);
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     friend class ::ScriptMemoryDumper;
-#endif
 
 #if ENABLE_MEM_STATS
     void AggregateBucketStats();

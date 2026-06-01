@@ -482,9 +482,6 @@
 #define FLAG_REGOVR_EXP FLAG_EXPERIMENTAL
 #endif
 
-// NON-RELEASE FLAGS
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
-
 // Regular FLAG
 #define FLAGNR(Type, Name, String, Default)                 FLAG(Type, Name, String, Default, NoParent, FALSE)
 
@@ -500,18 +497,6 @@
 
 // Regular FLAG with callback function
 #define FLAGNRC(Type, Name, String, Default)                FLAG(Type, Name, String, Default, NoParent, TRUE)
-
-#else
-#define FLAGNR(Type, Name, String, Default)
-
-#ifdef FLAGNRA
-    #undef FLAGNRA
-#endif
-#define FLAGNRA(Type, Name, Acronym, String, Default)
-
-#define FLAGPNR(Type, ParentName, Name, String, Default)
-#define FLAGNRC(Type, Name, String, Default)
-#endif
 
 // RELEASE FLAGS
 #define FLAGPR(Type, ParentName, Name, String, Default)     FLAG(Type, Name, String, Default, ParentName, FALSE)

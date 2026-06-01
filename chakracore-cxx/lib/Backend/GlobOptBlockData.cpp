@@ -1212,7 +1212,6 @@ GlobOptBlockData::TrackArgumentsSym(IR::RegOpnd const* opnd)
     this->curFunc->argObjSyms->Set(opnd->m_sym->m_id);
     this->argObjSyms->Set(opnd->m_sym->m_id);
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     if (PHASE_TESTTRACE(Js::StackArgOptPhase, this->globOpt->func))
     {
         char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
@@ -1226,7 +1225,6 @@ GlobOptBlockData::TrackArgumentsSym(IR::RegOpnd const* opnd)
             );
         Output::Flush();
     }
-#endif
 }
 
 void

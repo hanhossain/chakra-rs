@@ -107,7 +107,6 @@ public:
         { Assert(false); return E_FAIL; }
 #endif
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     static int32_t DeserializeRPCData(
         _In_reads_(bufferSize) const byte* buffer,
         _In_ uint bufferSize,
@@ -119,7 +118,6 @@ public:
         _Out_ size_t* bufferSize,
         _Outptr_result_buffer_(*bufferSize) const byte** outBuffer
     ) { *bufferSize = 0; *outBuffer = nullptr; return E_NOTIMPL; }
-#endif
 
     int32_t Shutdown()
         { Assert(false); return E_FAIL; }

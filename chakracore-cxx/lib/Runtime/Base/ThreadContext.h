@@ -595,10 +595,8 @@ private:
 
         Field(uint) constructorCacheInvalidationCount;
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         // use for autoProxy called from Debug.setAutoProxyName. we need to keep the buffer from GetSz() alive.
         Field(const char16_t*) autoProxyName;
-#endif
     };
 
     static ThreadContext * globalListLast;
@@ -906,12 +904,10 @@ public:
         return this->TestThreadContextFlag(ThreadContextFlagNoDynamicThunks);
     }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     Js::Var GetMemoryStat(Js::ScriptContext* scriptContext);
     void SetAutoProxyName(const char16_t* objectName);
     const char16_t* GetAutoProxyName() const { return recyclableData->autoProxyName; }
     Js::PropertyId handlerPropertyId = Js::Constants::NoProperty;
-#endif
 
 #ifdef ENABLE_SCRIPT_DEBUGGING
     void SetReturnedValueList(Js::ReturnedValueList *returnedValueList)

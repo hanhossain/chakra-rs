@@ -811,7 +811,6 @@ HeapBlockMap32::GetWriteWatchHelper(Recycler * recycler, uint32_t writeWatchFlag
 {
     uint32_t ret = 0;
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     if (recycler->GetRecyclerFlagsTable().ForceGetWriteWatchOOM)
     {
         if (regionSize != AutoSystemInfo::PageSize)
@@ -820,7 +819,6 @@ HeapBlockMap32::GetWriteWatchHelper(Recycler * recycler, uint32_t writeWatchFlag
         }
     }
     else
-#endif
     {
         ret = ::GetWriteWatch(writeWatchFlags, baseAddress, regionSize, addresses, count, granularity);
     }
