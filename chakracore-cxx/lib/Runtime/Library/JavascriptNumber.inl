@@ -30,7 +30,6 @@ namespace Js
         }
     }
 
-#ifdef ENABLE_TEST_HOOKS
     inline Var JavascriptNumber::ToVarFor32BitBytecode(int32_t nValue, ScriptContext* scriptContext)
     {
         if ((1073741824 > nValue) && (nValue > -1073741824))
@@ -39,7 +38,6 @@ namespace Js
         }
         return JavascriptNumber::NewInlined((double) nValue, scriptContext);
     }
-#endif
 
     inline Var JavascriptNumber::ToVar(uint32_t nValue, ScriptContext* scriptContext)
     {

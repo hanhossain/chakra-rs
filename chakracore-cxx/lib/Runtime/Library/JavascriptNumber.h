@@ -31,9 +31,7 @@ namespace Js
         static Var ToVarMaybeInPlace(double value, ScriptContext* scriptContext, JavascriptNumber *result);
         static Var ToVarIntCheck(double value, ScriptContext* scriptContext);
         static Var ToVar(int32_t nValue, ScriptContext* scriptContext);
-#ifdef ENABLE_TEST_HOOKS
         static Var ToVarFor32BitBytecode(int32_t nValue, ScriptContext* scriptContext);
-#endif
         static Var ToVarInPlace(int32_t nValue, ScriptContext* scriptContext, JavascriptNumber *result);
         static Var ToVarInPlace(long value, ScriptContext* scriptContext, JavascriptNumber *result);
         static Var ToVarInPlace(uint32_t nValue, ScriptContext* scriptContext, JavascriptNumber *result);

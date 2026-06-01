@@ -115,7 +115,6 @@ ushort ValidPointers<TBlockAttributes>::CalculateInteriorAddressIndex(uint index
 }
 #endif
 
-#if defined(ENABLE_TEST_HOOKS) || !USE_STATIC_VPM
 template <class TBlockAttributes>
 void HeapInfo::ValidPointersMap<TBlockAttributes>::GenerateValidPointersMap(ValidPointersMapTable * validTable, InvalidBitsTable& invalidTable, BlockInfoMapTable& blockInfoTable)
 {
@@ -191,9 +190,7 @@ void HeapInfo::ValidPointersMap<TBlockAttributes>::GenerateValidPointersMap(Vali
         }
     }
 }
-#endif
 
-#ifdef ENABLE_TEST_HOOKS
 template <>
 int32_t HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::GenerateValidPointersMapForBlockType(FILE* file)
 {
@@ -392,7 +389,6 @@ int32_t HeapInfo::ValidPointersMap<TBlockAttributes>::GenerateValidPointersMapHe
 
     return hr;
 }
-#endif
 
 HeapInfo::HeapInfo(AllocationPolicyManager * policyManager, Js::ConfigFlagsTable& configFlagsTable, IdleDecommitPageAllocator * leafPageAllocator) :
     recycler(nullptr),

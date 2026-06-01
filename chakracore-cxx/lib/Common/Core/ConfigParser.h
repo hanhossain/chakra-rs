@@ -40,12 +40,10 @@ public:
 
     static void ParseOnModuleLoad(CmdLineArgsParser& parser);
 
-#ifdef ENABLE_TEST_HOOKS
     static void ParseCustomConfigFile(CmdLineArgsParser& parser, const char16_t* strConfigFile)
     {
         s_moduleConfigParser.ParseConfig(parser, strConfigFile);
     }
-#endif
 
     void ParseConfig(CmdLineArgsParser &parser, const char16_t* strCustomConfigFile = nullptr);
     void ProcessConfiguration();

@@ -153,10 +153,6 @@ do { \
     } \
 } while (0)
 
-#ifndef ENABLE_TEST_HOOKS
-#define ENABLE_TEST_HOOKS
-#endif
-
 #include "TestHooks.h"
 #include "ChakraRtInterface.h"
 #include "HostConfigFlags.h"
