@@ -374,9 +374,7 @@ private:
         }
 #endif
 
-#if defined(ENABLE_TEST_HOOKS) || !USE_STATIC_VPM
         static void GenerateValidPointersMap(ValidPointersMapTable * validTable, InvalidBitsTable& invalidTable, BlockInfoMapTable& blockInfoTable);
-#endif
 
         inline const ValidPointers<TBlockAttributes> GetValidPointersForIndex(uint bucketIndex) const
         {
@@ -404,22 +402,18 @@ private:
             return blockInfoBuffer[index];
         }
 
-#ifdef ENABLE_TEST_HOOKS
         static int32_t GenerateValidPointersMapHeader(const char16_t* vpmFullPath);
         static int32_t GenerateValidPointersMapForBlockType(FILE* file);
-#endif
     };
 
     static ValidPointersMap<SmallAllocationBlockAttributes>  smallAllocValidPointersMap;
     static ValidPointersMap<MediumAllocationBlockAttributes> mediumAllocValidPointersMap;
 
 public:
-#ifdef ENABLE_TEST_HOOKS
     static int32_t GenerateValidPointersMapHeader(const char16_t* vpmFullPath)
     {
         return smallAllocValidPointersMap.GenerateValidPointersMapHeader(vpmFullPath);
     }
-#endif
 
     template <typename TBlockAttributes>
     static typename SmallHeapBlockT<TBlockAttributes>::SmallHeapBlockBitVector const * GetInvalidBitVector(uint objectSize);
@@ -729,13 +723,11 @@ HeapInfo::SmallAllocatorAlloc(Recycler * recycler, SmallHeapBlockAllocatorType *
     return bucket.SnailAlloc(recycler, allocator, sizeCat, size, attributes, /* nothrow = */ false);
 }
 
-#ifdef ENABLE_TEST_HOOKS
 // Forward declaration of explicit specialization before instantiation
 template <>
 int32_t HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::GenerateValidPointersMapForBlockType(FILE* file);
 template <>
 int32_t HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::GenerateValidPointersMapForBlockType(FILE* file);
-#endif
 
 // Template instantiation
 extern template class HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>;

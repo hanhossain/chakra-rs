@@ -4,8 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#ifdef ENABLE_TEST_HOOKS
-
 #include <string>
 #include <vector>
 
@@ -72,4 +70,3 @@ struct TestHooks
 
 int32_t OnChakraCoreLoaded();
 
-#endif

@@ -28,10 +28,8 @@
 #endif
 
 // if test hook is enabled, debug config options are enabled too
-#ifdef ENABLE_TEST_HOOKS
 #ifndef ENABLE_DEBUG_CONFIG_OPTIONS
 #define ENABLE_DEBUG_CONFIG_OPTIONS 1
-#endif
 #endif
 
 // ENABLE_DEBUG_CONFIG_OPTIONS is enabled in debug build when DBG or DBG_DUMP is defined
@@ -268,9 +266,6 @@
 #define VTUNE_PROFILING
 #endif
 
-#ifndef ENABLE_TEST_HOOKS
-#define ENABLE_TEST_HOOKS
-#endif
 #endif // ENABLE_DEBUG_CONFIG_OPTIONS
 
 ////////
