@@ -902,7 +902,6 @@ namespace Js
         void TrySetRetOffset();
     };
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     // Used to track how many interpreter stack frames we have on stack.
     class InterpreterThunkStackCountTracker
     {
@@ -913,6 +912,5 @@ namespace Js
     private:
         thread_local static int s_count;
     };
-#endif
 
 } // namespace Js

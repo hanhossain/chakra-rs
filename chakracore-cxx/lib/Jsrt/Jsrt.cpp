@@ -20,9 +20,7 @@
 #include "cmperr.h"     // For ERRnoMemory
 #include "screrror.h"   // For CompileScriptException
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
 #include "TestHooksRt.h"
-#endif
 
 using namespace chakracore::jsrt;
 
@@ -301,9 +299,7 @@ JsErrorCode CreateRuntimeCore(_In_ JsRuntimeAttributes attributes,
             JsRuntimeAttributeEnableExperimentalFeatures |
             JsRuntimeAttributeDispatchSetExceptionsToDebugger |
             JsRuntimeAttributeDisableFatalOnOOM
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
             | JsRuntimeAttributeSerializeLibraryByteCode
-#endif
         );
 
         Assert((attributes & ~JsRuntimeAttributesAll) == 0);
@@ -317,9 +313,7 @@ JsErrorCode CreateRuntimeCore(_In_ JsRuntimeAttributes attributes,
         ThreadContext * threadContext = HeapNew(ThreadContext, policyManager, threadService, enableExperimentalFeatures);
 
         if (((attributes & JsRuntimeAttributeDisableBackgroundWork) != 0)
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
             && !Js::Configuration::Global.flags.ConcurrentRuntime
-#endif
             )
         {
             threadContext->OptimizeForManyInstances(true);
@@ -329,9 +323,7 @@ JsErrorCode CreateRuntimeCore(_In_ JsRuntimeAttributes attributes,
         }
 
         if (!threadContext->IsRentalThreadingEnabledInJSRT()
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
             || Js::Configuration::Global.flags.DisableRentalThreading
-#endif
             )
         {
             threadContext->SetIsThreadBound();
@@ -363,12 +355,10 @@ JsErrorCode CreateRuntimeCore(_In_ JsRuntimeAttributes attributes,
             threadContext->SetThreadContextFlag(ThreadContextFlagDisableFatalOnOOM);
         }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.PrimeRecycler)
         {
             threadContext->EnsureRecycler()->Prime();
         }
-#endif
 
         bool enableIdle = (attributes & JsRuntimeAttributeEnableIdleProcessing) == JsRuntimeAttributeEnableIdleProcessing;
         bool dispatchExceptions = (attributes & JsRuntimeAttributeDispatchSetExceptionsToDebugger) == JsRuntimeAttributeDispatchSetExceptionsToDebugger;
@@ -376,9 +366,7 @@ JsErrorCode CreateRuntimeCore(_In_ JsRuntimeAttributes attributes,
         JsrtRuntime * runtime = HeapNew(JsrtRuntime, threadContext, enableIdle, dispatchExceptions);
         threadContext->SetCurrentThreadId(ThreadContext::NoThread);
         *runtimeHandle = runtime->ToHandle();
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         runtime->SetSerializeByteCodeForLibrary((attributes & JsRuntimeAttributeSerializeLibraryByteCode) != 0);
-#endif
 
         return JsNoError;
     });
@@ -457,14 +445,12 @@ JsErrorCode JsCollectGarbageCommon(JsRuntimeHandle runtimeHandle)
         }
 
         Recycler* recycler = threadContext->EnsureRecycler();
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (flags & CollectOverride_SkipStack)
         {
             Recycler::AutoEnterExternalStackSkippingGCMode autoGC(recycler);
             recycler->CollectNow<flags>();
         }
         else
-#endif
         {
             recycler->CollectNow<flags>();
         }
@@ -477,7 +463,6 @@ JsErrorCode chakracore::jsrt::JsCollectGarbage(_In_ JsRuntimeHandle runtimeHandl
     return JsCollectGarbageCommon<CollectNowExhaustive>(runtimeHandle);
 }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
 JsErrorCode JsPrivateCollectGarbageSkipStack(_In_ JsRuntimeHandle runtimeHandle)
 {
     return JsCollectGarbageCommon<CollectNowExhaustiveSkipStack>(runtimeHandle);
@@ -502,7 +487,6 @@ JsErrorCode JsPrivateFreeDetachedArrayBuffer(_In_ void* detachedState)
         return JsNoError;
     });
 }
-#endif
 
 JsErrorCode chakracore::jsrt::JsDisposeRuntime(_In_ JsRuntimeHandle runtimeHandle)
 {
@@ -3630,7 +3614,6 @@ JsErrorCode RunScriptCore(JsValueRef scriptSource, const byte *script, size_t cb
         else
         {
             Js::Arguments args(0, nullptr);
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
             Js::Var varThis;
             if (PHASE_FORCE1(Js::EvalCompilePhase))
             {
@@ -3639,7 +3622,6 @@ JsErrorCode RunScriptCore(JsValueRef scriptSource, const byte *script, size_t cb
                 args.Info.Count = 1;
                 args.Values = &varThis;
             }
-#endif
 
 #if ENABLE_TTD
             TTD::TTDJsRTFunctionCallActionPopperRecorder callInfoPopper;
@@ -3789,9 +3771,7 @@ JsErrorCode JsSerializeScriptCore(const byte *script, size_t cb,
             /* grfsi               */ 0
         };
         bool isSerializeByteCodeForLibrary = false;
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         isSerializeByteCodeForLibrary = JsrtContext::GetCurrent()->GetRuntime()->IsSerializeByteCodeForLibrary();
-#endif
 
         Js::Utf8SourceInfo* sourceInfo = nullptr;
         loadScriptFlag = (LoadScriptFlag)(loadScriptFlag | LoadScriptFlag_disableDeferredParse);
@@ -3836,9 +3816,7 @@ JsErrorCode JsSerializeScriptCore(const byte *script, size_t cb,
 
         LPCUTF8 utf8Code = sourceInfo->GetSource(u"JsSerializeScript");
         uint32_t dwFlags = 0;
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         dwFlags = JsrtContext::GetCurrent()->GetRuntime()->IsSerializeByteCodeForLibrary() ? GENERATE_BYTE_CODE_BUFFER_LIBRARY : 0;
-#endif
 
         BEGIN_TEMP_ALLOCATOR(tempAllocator, scriptContext, u"ByteCodeSerializer");
         // We cast buffer size to uint32_t* because on Windows, uint32_t = unsigned long = unsigned int

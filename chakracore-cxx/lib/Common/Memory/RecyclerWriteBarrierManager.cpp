@@ -21,12 +21,10 @@
 #pragma init_seg(".CRT$XCAU")
 
 #ifdef RECYCLER_WRITE_BARRIER
-#if ENABLE_DEBUG_CONFIG_OPTIONS
 namespace Memory
 {
     FN_VerifyIsNotBarrierAddress* g_verifyIsNotBarrierAddress = nullptr;
 }
-#endif
 #ifdef RECYCLER_WRITE_BARRIER_BYTE
 #ifdef TARGET_64
 X64WriteBarrierCardTableManager RecyclerWriteBarrierManager::x64CardTableManager;
@@ -36,9 +34,7 @@ uint8_t* RecyclerWriteBarrierManager::cardTable = RecyclerWriteBarrierManager::x
 #else
 // Each byte in the card table covers 4096 bytes so the range covered by the table is 4GB
 uint8_t RecyclerWriteBarrierManager::cardTable[1 * 1024 * 1024];
-#if ENABLE_DEBUG_CONFIG_OPTIONS
 bool dummy = RecyclerWriteBarrierManager::Initialize();
-#endif
 #endif
 
 #else
@@ -69,9 +65,7 @@ X64WriteBarrierCardTableManager::OnThreadInit()
     size_t numPages = (stackBase - stackEnd) / AutoSystemInfo::PageSize;
     // stackEnd is the lower boundary
     bool ret = OnSegmentAlloc((char*) stackEnd, numPages);
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     RecyclerWriteBarrierManager::ToggleBarrier((char*)stackEnd, (stackBase - stackEnd), true);
-#endif
     return ret;
 }
 
@@ -230,9 +224,7 @@ X64WriteBarrierCardTableManager::Initialize()
 {
     std::unique_lock<std::recursive_mutex> critSec(_cardTableInitCriticalSection);
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     RecyclerWriteBarrierManager::Initialize();
-#endif
 
     if (_cardTable == nullptr)
     {
@@ -306,9 +298,7 @@ RecyclerWriteBarrierManager::WriteBarrier(void * address)
     }
 
 #ifdef RECYCLER_WRITE_BARRIER_BYTE
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     VerifyIsBarrierAddress(address);
-#endif
     const uintptr_t index = GetCardTableIndex(address);
     cardTable[index] |= DIRTYBIT;
 #else
@@ -334,9 +324,7 @@ RecyclerWriteBarrierManager::WriteBarrier(void * address, size_t bytes)
         return;
     }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     VerifyIsBarrierAddress(address, bytes);
-#endif
 #ifdef RECYCLER_WRITE_BARRIER_BYTE
     uintptr_t startIndex = GetCardTableIndex(address);
     char * endAddress = (char *)Math::Align<long>((long)((char *)address + bytes), s_WriteBarrierPageSize);
@@ -372,7 +360,6 @@ RecyclerWriteBarrierManager::WriteBarrier(void * address, size_t bytes)
 #endif
 }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
 void
 RecyclerWriteBarrierManager::ToggleBarrier(void * address, size_t bytes, bool enable)
 {
@@ -477,7 +464,6 @@ RecyclerWriteBarrierManager::Initialize()
     g_verifyIsNotBarrierAddress = RecyclerWriteBarrierManager::VerifyIsNotBarrierAddress;
     return true;
 }
-#endif
 
 uintptr_t
 RecyclerWriteBarrierManager::GetCardTableIndex(void *address)

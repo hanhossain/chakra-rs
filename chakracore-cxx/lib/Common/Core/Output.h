@@ -16,7 +16,7 @@ enum Phase: unsigned short;
 };
 #endif
 
-#if defined(ENABLE_DEBUG_CONFIG_OPTIONS) && defined(BGJIT_STATS)
+#if defined(BGJIT_STATS)
 #define OUTPUT_TRACE(Phase, ...) Output::Trace((Phase), __VA_ARGS__)
 #define OUTPUT_TRACE_2(Phase, ...) Output::Trace2((Phase), __VA_ARGS__)
 #define OUTPUT_VERBOSE_TRACE(Phase, ...) \

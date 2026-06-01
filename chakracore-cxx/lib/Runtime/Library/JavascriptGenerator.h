@@ -134,7 +134,6 @@ public:
     // virtual void ProcessCorePaths() override;
 #endif
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
 public:
     struct BailInSymbol {
         uint32_t id;
@@ -157,7 +156,6 @@ public:
     }
 
     static void OutputBailInTrace(JavascriptGenerator* generator);
-#endif
 
 };
 

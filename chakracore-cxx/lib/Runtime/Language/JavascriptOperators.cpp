@@ -3813,12 +3813,10 @@ using namespace Js;
                 *cacheOwner = propertyString;
                 return true;
             }
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
             if (PHASE_TRACE1(PropertyCachePhase))
             {
                 Output::Print(u"PropertyCache: GetElem No property string for '%s'\n", string->GetString());
             }
-#endif
 #if DBG_DUMP
             scriptContext->forinNoCache++;
 #endif
@@ -5922,12 +5920,10 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     {
         JIT_HELPER_NOT_REENTRANT_HEADER(NewJavascriptObjectNoArg, reentrancylock, requestContext->GetThreadContext());
         DynamicObject * newObject = requestContext->GetLibrary()->CreateObject(true);
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
         {
             newObject = VarTo<DynamicObject>(JavascriptProxy::AutoProxyWrapper(newObject));
         }
-#endif
         return newObject;
         JIT_HELPER_END(NewJavascriptObjectNoArg);
     }
@@ -5936,12 +5932,10 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     {
         JIT_HELPER_NOT_REENTRANT_HEADER(NewJavascriptArrayNoArg, reentrancylock, requestContext->GetThreadContext());
         JavascriptArray * newArray = requestContext->GetLibrary()->CreateArray();
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
         {
             newArray = static_cast<JavascriptArray*>(JavascriptProxy::AutoProxyWrapper(newArray));
         }
-#endif
         return newArray;
         JIT_HELPER_END(NewJavascriptArrayNoArg);
     }
@@ -6002,12 +5996,10 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             JavascriptLibrary* library = object->GetLibrary();
 
             DynamicObject * newObject = library->CreateObject(true);
-#if ENABLE_DEBUG_CONFIG_OPTIONS
             if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
             {
                 newObject = VarTo<DynamicObject>(JavascriptProxy::AutoProxyWrapper(newObject));
             }
-#endif
 
 #if DBG
             DynamicType* newObjectType = newObject->GetDynamicType();
@@ -6031,12 +6023,10 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             JavascriptLibrary* library = object->GetLibrary();
 
             JavascriptArray * newArray = library->CreateArray();
-#if ENABLE_DEBUG_CONFIG_OPTIONS
             if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
             {
                 newArray = static_cast<JavascriptArray*>(JavascriptProxy::AutoProxyWrapper(newArray));
             }
-#endif
 
 #if DBG
             DynamicType* newArrayType = newArray->GetDynamicType();
@@ -6080,14 +6070,12 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             JavascriptOperators::UpdateNewScObjectCache(object, newObject, requestContext);
         }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
         {
             DynamicObject* newDynamicObject = VarTo<DynamicObject>(JavascriptProxy::AutoProxyWrapper(newObject));
             // this might come from a different scriptcontext.
             newObject = CrossSite::MarshalVar(requestContext, newDynamicObject, newDynamicObject->GetScriptContext());
         }
-#endif
 
         return newObject;
         JIT_HELPER_END(NewScObjectNoArg);
@@ -6138,12 +6126,10 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         prototype = VarTo<RecyclableObject>(CrossSite::MarshalVar(requestContext, prototype, functionScriptContext));
 
         Var object = requestContext->GetLibrary()->CreateObject(prototype);
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
         {
             object = VarTo<DynamicObject>(JavascriptProxy::AutoProxyWrapper(object));
         }
-#endif
         return object;
     }
 
@@ -6185,12 +6171,10 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             TraceUseConstructorCache(constructorCache, constructor, true);
 #endif
             Var object = DynamicObject::New(requestContext->GetRecycler(), type);
-#if ENABLE_DEBUG_CONFIG_OPTIONS
             if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
             {
                 object = VarTo<DynamicObject>(JavascriptProxy::AutoProxyWrapper(object));
             }
-#endif
             return object;
         }
 
@@ -6269,12 +6253,10 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 
         DynamicObject* newObject = requestContext->GetLibrary()->CreateObject(prototype, 8);
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
         {
             newObject = VarTo<DynamicObject>(JavascriptProxy::AutoProxyWrapper(newObject));
         }
-#endif
 
         Assert(newObject->GetTypeHandler()->GetPropertyCount() == 0);
 

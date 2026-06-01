@@ -1389,9 +1389,7 @@ ThreadContext::EnterScriptEnd(Js::ScriptEntryExitRecord * record, bool doCleanup
 
         delayFreeCallback.ClearAll();
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.FreeRejittedCode)
-#endif
         {
             // Since we're no longer in script, old entry points can now be collected
             Js::FunctionEntryPointInfo* current = this->recyclableData->oldEntryPointInfo;
@@ -2832,7 +2830,6 @@ ThreadContext::ClearScriptContextCaches()
 void
 ThreadContext::ClearInlineCachesWithDeadWeakRefs()
 {
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     size_t allocatedSize = 0;
     size_t preClearFreeListSize = 0;
     size_t freeListSize = 0;
@@ -2840,31 +2837,24 @@ ThreadContext::ClearInlineCachesWithDeadWeakRefs()
     uint scriptContextCount = 0;
 
     // Note: this event is not meaningful for MemGC, only Chakra
-#endif
 
     for (Js::ScriptContext *scriptContext = scriptContextList; scriptContext != nullptr; scriptContext = scriptContext->next)
     {
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         scriptContextCount++;
         allocatedSize += scriptContext->GetInlineCacheAllocator()->AllocatedSize();
         preClearFreeListSize += scriptContext->GetInlineCacheAllocator()->FreeListSize();
-#endif
 
         scriptContext->ClearInlineCachesWithDeadWeakRefs();
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         freeListSize += scriptContext->GetInlineCacheAllocator()->FreeListSize();;
         polyInlineCacheSize += scriptContext->GetInlineCacheAllocator()->GetPolyInlineCacheSize();
-#endif
     }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     if (PHASE_TRACE1(Js::InlineCachePhase))
     {
         Output::Print(u"Inline cache arena: total = %5I64u KB, free list = %5I64u KB, poly caches = %5I64u KB, script contexts = %u\n",
             static_cast<unsigned long>(allocatedSize / 1024), static_cast<unsigned long>(freeListSize / 1024), static_cast<unsigned long>(polyInlineCacheSize / 1024), scriptContextCount);
     }
-#endif
 }
 
 #if ENABLE_NATIVE_CODEGEN
@@ -4138,7 +4128,6 @@ uint ThreadContext::GetRandomNumber()
 #endif
 }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
 Js::Var ThreadContext::GetMemoryStat(Js::ScriptContext* scriptContext)
 {
     ScriptMemoryDumper dumper(scriptContext);
@@ -4149,7 +4138,6 @@ void ThreadContext::SetAutoProxyName(const char16_t* objectName)
 {
     recyclableData->autoProxyName = objectName;
 }
-#endif
 //
 // Regex helpers
 //

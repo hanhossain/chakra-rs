@@ -33,9 +33,7 @@ bool InliningDecider::InlineIntoInliner(Js::FunctionBody *const inliner) const
     Assert(inliner);
     Assert(this->jitMode == ExecutionMode::FullJit);
 
-#if defined(DBG_DUMP) || defined(ENABLE_DEBUG_CONFIG_OPTIONS)
     char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-#endif
 
     if (PHASE_OFF(Js::InlinePhase, inliner) ||
         PHASE_OFF(Js::GlobOptPhase, inliner))
@@ -195,10 +193,8 @@ uint InliningDecider::InlinePolymorphicCallSite(Js::FunctionBody *const inliner,
         // Skip loop bodies for now as we do not handle re-jit scenarios for the bailouts from them
         if (!PHASE_OFF(Js::PartialPolymorphicInlinePhase, inliner) && !this->isLoopBody)
         {
-#if defined(DBG_DUMP) || defined(ENABLE_DEBUG_CONFIG_OPTIONS)
             char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
             char16_t debugStringBuffer2[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-#endif
             INLINE_TESTTRACE(u"Partial inlining of polymorphic call: %s (%s)\tCaller: %s (%s)\n",
                 functionBodyArray[inlineeCount - 1]->GetDisplayName(), functionBodyArray[inlineeCount - 1]->GetDebugNumberSet(debugStringBuffer),
                 inliner->GetDisplayName(),
@@ -222,10 +218,8 @@ Js::FunctionInfo *InliningDecider::Inline(Js::FunctionBody *const inliner,
     uint recursiveInlineDepth, 
     bool allowRecursiveInlining)
 {
-#if defined(DBG_DUMP) || defined(ENABLE_DEBUG_CONFIG_OPTIONS)
     char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
     char16_t debugStringBuffer2[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-#endif
     Js::FunctionProxy * proxy = functionInfo->GetFunctionProxy();
     if (proxy && proxy->IsFunctionBody())
     {
@@ -299,9 +293,7 @@ Js::FunctionInfo *InliningDecider::Inline(Js::FunctionBody *const inliner,
             return nullptr;
         }
 
-#if defined(ENABLE_DEBUG_CONFIG_OPTIONS)
         TraceInlining(inliner, inlinee->GetDisplayName(), inlinee->GetDebugNumberSet(debugStringBuffer), inlinee->GetByteCodeCount(), this->topFunc, this->bytecodeInlinedCount, inlinee, callSiteId, this->isLoopBody, isCallback);
-#endif
 
         this->bytecodeInlinedCount += inlinee->GetByteCodeCount();
         return inlinee->GetFunctionInfo();
@@ -663,11 +655,8 @@ bool InliningDecider::GetBuiltInInfoCommon(
 
 bool InliningDecider::CanRecursivelyInline(Js::FunctionBody * inlinee, Js::FunctionBody *inliner, bool allowRecursiveInlining, uint recursiveInlineDepth)
 {
-#if defined(DBG_DUMP) || defined(ENABLE_DEBUG_CONFIG_OPTIONS)
     char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
     char16_t debugStringBuffer2[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-#endif
-
 
     if (!PHASE_OFF(Js::InlineRecursivePhase, inliner)
         && allowRecursiveInlining
@@ -777,11 +766,9 @@ bool InliningDecider::DeciderInlineIntoInliner(Js::FunctionBody * inlinee, Js::F
         }
     }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
     char16_t debugStringBuffer2[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
     char16_t debugStringBuffer3[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-#endif
 
     if (inlinee->GetHasLoops())
     {
@@ -898,9 +885,7 @@ bool InliningDecider::DeciderInlineIntoInliner(Js::FunctionBody * inlinee, Js::F
 
 bool InliningDecider::ContinueInliningUserDefinedFunctions(uint32_t bytecodeInlinedCount) const
 {
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-#endif
     if (PHASE_FORCE(Js::InlinePhase, this->topFunc) || bytecodeInlinedCount <= (uint)this->threshold.inlineCountMax)
     {
         return true;
@@ -913,7 +898,6 @@ bool InliningDecider::ContinueInliningUserDefinedFunctions(uint32_t bytecodeInli
     return false;
 }
 
-#if defined(ENABLE_DEBUG_CONFIG_OPTIONS)
 // static
 void InliningDecider::TraceInlining(Js::FunctionBody *const inliner, const char16_t* inlineeName, const char16_t* inlineeFunctionIdandNumberString, uint inlineeByteCodeCount,
     Js::FunctionBody* topFunc, uint inlinedByteCodeCount, Js::FunctionBody *const inlinee, uint callSiteId, bool inLoopBody, bool isCallback, uint builtIn)
@@ -956,4 +940,3 @@ void InliningDecider::TraceInlining(Js::FunctionBody *const inliner, const char1
     }
 
 }
-#endif

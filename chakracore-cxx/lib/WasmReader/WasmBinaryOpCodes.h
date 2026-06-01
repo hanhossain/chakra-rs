@@ -66,11 +66,9 @@
 
 WASM_PREFIX(Numeric, WASM_PREFIX_NUMERIC, Wasm::WasmNontrapping::IsEnabled(), "WebAssembly nontrapping float-to-int conversion support is not enabled")
 WASM_PREFIX(Threads, WASM_PREFIX_THREADS, Wasm::Threads::IsEnabled(), "WebAssembly Threads support is not enabled")
-#if ENABLE_DEBUG_CONFIG_OPTIONS
 // We won't even look at that prefix in release builds
 // Mark the prefix as not implemented so we don't allow it in the binary buffer
 WASM_PREFIX(Tracing, WASM_PREFIX_TRACING, false, "Tracing opcodes not allowed")
-#endif
 
 // built-in opcode signatures
 //              id, retType, arg0, arg1, arg2
@@ -414,7 +412,6 @@ WASM_ATOMIC_OPCODE     (I64AtomicRmw32UCmpxchg , __prefix | 0x4e, L_ILL, (false 
 #undef __prefix
 #undef __has_atomics
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
 #define __prefix (WASM_PREFIX_TRACING << 8)
 WASM_UNARY__OPCODE(PrintFuncName    , __prefix | 0x00, V_I , PrintFuncName    , true, "")
 WASM_EMPTY__OPCODE(PrintArgSeparator, __prefix | 0x01,       PrintArgSeparator, true, "")
@@ -426,7 +423,6 @@ WASM_UNARY__OPCODE(PrintI64         , __prefix | 0x0d, L_L , PrintI64         , 
 WASM_UNARY__OPCODE(PrintF32         , __prefix | 0x0e, F_F , PrintF32         , true, "")
 WASM_UNARY__OPCODE(PrintF64         , __prefix | 0x0f, D_D , PrintF64         , true, "")
 #undef __prefix
-#endif
 
 //Simd
 #ifdef ENABLE_WASM_SIMD

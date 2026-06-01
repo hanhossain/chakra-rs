@@ -7,7 +7,6 @@
 #ifdef ASMJS_PLAT
 namespace Js
 {
-#if DBG_DUMP || ENABLE_DEBUG_CONFIG_OPTIONS
     char16_t const * const OpCodeUtilAsmJs::OpCodeAsmJsNames[] =
     {
 #define DEF_OP(x, y, ...) u"" STRINGIZEW(x) u"",
@@ -38,12 +37,6 @@ namespace Js
         return u"<NotAvail>";
     }
 
-#else
-    char16_t const * OpCodeUtilAsmJs::GetOpCodeName(OpCodeAsmJs op)
-    {
-        return u"<NotAvail>";
-    }
-#endif
 
     OpLayoutTypeAsmJs const OpCodeUtilAsmJs::OpCodeAsmJsLayouts[] =
     {

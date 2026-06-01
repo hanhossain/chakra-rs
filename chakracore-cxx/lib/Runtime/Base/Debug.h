@@ -23,7 +23,6 @@ char16_t* DumpCallStack(uint frameCount = -1);
 #define OUTPUT_TRACE_WITH_STACK_COUNT(Phase, frameCount, ...)
 #endif
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
 #define OUTPUT_PRINT(FunctionBody) \
     Output::Print(u"Function %s (#%d.%u, #%u) ", (FunctionBody)->GetDisplayName(), \
             (int)(FunctionBody)->GetSourceContextId(), (FunctionBody)->GetLocalFunctionId(), (FunctionBody)->GetFunctionNumber());
@@ -54,11 +53,4 @@ char16_t* DumpCallStack(uint frameCount = -1);
      { \
         OUTPUT_TRACE_FUNC((Phase), (Func), __VA_ARGS__); \
        }
-#else
-#define OUTPUT_PRINT(FunctionBody)
-#define OUTPUT_TRACE2(Phase, FunctionBody, ...)
-#define OUTPUT_VERBOSE_TRACE2(Phase, FunctionBody, ...)
-#define OUTPUT_TRACE_FUNC(Phase, Func, ...)
-#define OUTPUT_VERBOSE_TRACE_FUNC(Phase, Func, ...)
-#endif
 

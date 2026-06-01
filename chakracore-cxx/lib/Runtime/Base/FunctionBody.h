@@ -2096,11 +2096,9 @@ namespace Js
                                                    // Set by bgjit in OutOfMemory scenario during codegen.
 #endif
 
-//#if ENABLE_DEBUG_CONFIG_OPTIONS //TODO: need this?
         FieldWithBarrier(uint) regAllocStoreCount;
         FieldWithBarrier(uint) regAllocLoadCount;
         FieldWithBarrier(uint) callCountStats;
-//#endif
 
         // >>>>>>WARNING! WARNING!<<<<<<<<<<
         //
@@ -2229,9 +2227,7 @@ namespace Js
         //
 
         FieldNoBarrier(Js::ByteCodeCache*) byteCodeCache;   // Not GC allocated so naked pointer
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         static bool shareInlineCaches;
-#endif
         FieldWithBarrier(FunctionEntryPointInfo*) defaultFunctionEntryPointInfo;
 
 #if ENABLE_PROFILE_INFO
@@ -2262,9 +2258,7 @@ namespace Js
       
         Js::JavascriptMethod GetEntryPoint(ProxyEntryPointInfo* entryPoint) const { return entryPoint->jsMethod; }
         void CaptureDynamicProfileState(FunctionEntryPointInfo* entryPointInfo);
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         void DumpRegStats(FunctionBody *funcBody);
-#endif
 
     public:
         FunctionBody(ByteCodeCache* cache, Utf8SourceInfo* sourceInfo, ScriptContext* scriptContext):
@@ -3107,11 +3101,9 @@ namespace Js
 #if DBG
         void VerifyReferencedPropertyIdMap();
 #endif
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         void DumpFullFunctionName();
         void DumpFunctionId(bool pad);
         uint GetTraceFunctionNumber() const;
-#endif
 
     public:
         uint NewObjectLiteral();

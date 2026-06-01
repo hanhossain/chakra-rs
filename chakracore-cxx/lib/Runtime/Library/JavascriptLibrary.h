@@ -150,12 +150,10 @@ namespace Js
             return count && index && index <= count;
         }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         uint32_t GetCount()
         {
             return count;
         }
-#endif
     };
 #endif
 
@@ -360,10 +358,8 @@ namespace Js
 
         Field(DynamicObject*) chakraLibraryObject;
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         Field(JavascriptFunction*) debugObjectFaultInjectionCookieGetterFunction;
         Field(JavascriptFunction*) debugObjectFaultInjectionCookieSetterFunction;
-#endif
 
         Field(JavascriptFunction*) evalFunctionObject;
         Field(JavascriptFunction*) arrayPrototypeValuesFunction;
@@ -693,10 +689,8 @@ namespace Js
 
 #endif
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         DynamicType * GetDebugDisposableObjectType() { return debugDisposableObjectType; }
         DynamicType * GetDebugFuncExecutorInDisposeObjectType() { return debugFuncExecutorInDisposeObjectType; }
-#endif
 
         DynamicType* GetErrorType(ErrorTypeEnum typeToCreate) const;
         StaticType  * GetBooleanTypeStatic() const { return booleanTypeStatic; }
@@ -816,11 +810,9 @@ namespace Js
         JavascriptFunction* GetDebugObjectDebugModeGetterFunction() const { return debugObjectDebugModeGetterFunction; }
         void SetDebugObjectDebugModeAccessor(FunctionInfo *funcGetter);
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         JavascriptFunction* GetDebugObjectFaultInjectionCookieGetterFunction() const { return debugObjectFaultInjectionCookieGetterFunction; }
         JavascriptFunction* GetDebugObjectFaultInjectionCookieSetterFunction() const { return debugObjectFaultInjectionCookieSetterFunction; }
         void SetDebugObjectFaultInjectionCookieGetterAccessor(FunctionInfo *funcGetter, FunctionInfo *funcSetter);
-#endif
 
         JavascriptFunction* GetArrayPrototypeToStringFunction() const { return arrayPrototypeToStringFunction; }
         JavascriptFunction* GetArrayPrototypeToLocaleStringFunction() const { return arrayPrototypeToLocaleStringFunction; }
@@ -1140,13 +1132,11 @@ namespace Js
         {
             return GetBuiltInArgType(flags, BuiltInArgShift::BIAS_Src1) || GetBuiltInArgType(flags, BuiltInArgShift::BIAS_Src2) || GetBuiltInArgType(flags, BuiltInArgShift::BIAS_Dst);
         }
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         static char16_t const * GetNameForBuiltIn(BuiltinFunction index)
         {
             Assert(index < _countof(JavascriptLibrary::LibraryFunctionName));
             return JavascriptLibrary::LibraryFunctionName[index];
         }
-#endif
 
         PropertyStringCacheMap* EnsurePropertyStringMap();
         SymbolCacheMap* EnsureSymbolMap();
@@ -1182,13 +1172,11 @@ namespace Js
         SourceTextModuleRecord* GetModuleRecord(uint moduleId);
 
     private:
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         // Declare fretest/debug properties here since otherwise it can cause
         // a mismatch between fre mshtml and fretest jscript9 causing undefined behavior
 
         Field(DynamicType *) debugDisposableObjectType;
         Field(DynamicType *) debugFuncExecutorInDisposeObjectType;
-#endif
 
         void InitializePrototypes();
         void InitializeTypes();
@@ -1300,9 +1288,7 @@ namespace Js
 
         static size_t const LibraryFunctionArgC[BuiltinFunction::Count + 1];
         static int const LibraryFunctionFlags[BuiltinFunction::Count + 1];   // returns enum BuiltInFlags.
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         static char16_t const * const LibraryFunctionName[BuiltinFunction::Count + 1];
-#endif
 
     public:
         template<bool addPrototype, bool addName, bool useLengthType, bool addLength>

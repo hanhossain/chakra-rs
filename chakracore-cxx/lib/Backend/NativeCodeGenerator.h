@@ -17,9 +17,7 @@ namespace Js
 
 class NativeCodeGenerator : public JsUtil::WaitableJobManager
 {
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     static volatile unsigned long CodegenFailureSeed;
-#endif
 
     friend JsUtil::ForegroundJobProcessor;
     friend JsUtil::BackgroundJobProcessor;

@@ -1456,11 +1456,9 @@ namespace Js
         Assert(newTypeHandler->GetHasOnlyWritableDataProperties());
 
 #if ENABLE_FIXED_FIELDS
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         DynamicType* oldType = instance->GetDynamicType();
         RecyclerWeakReference<DynamicObject>* oldSingletonInstance = oldTypeHandler->GetSingletonInstance();
         oldTypeHandler->TraceFixedFieldsBeforeTypeHandlerChange(u"converting", u"PathTypeHandler", u"DictionaryTypeHandler", instance, oldTypeHandler, oldType, oldSingletonInstance);
-#endif
 
         bool const canBeSingletonInstance = DynamicTypeHandler::CanBeSingletonInstance(instance);
         // If this type had been installed on a stack instance it shouldn't have a singleton Instance
@@ -1573,9 +1571,7 @@ namespace Js
 #if ENABLE_FIXED_FIELDS
         Assert(!newTypeHandler->HasSingletonInstance() || !instance->HasSharedType());
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         PathTypeHandlerBase::TraceFixedFieldsAfterTypeHandlerChange(instance, oldTypeHandler, newTypeHandler, oldType, instance->GetDynamicType(), oldSingletonInstance);
-#endif
 #endif
 
         return newTypeHandler;
@@ -1710,10 +1706,8 @@ namespace Js
         //
 
 #if ENABLE_FIXED_FIELDS
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         RecyclerWeakReference<DynamicObject>* oldSingletonInstance = oldTypeHandler->GetSingletonInstance();
         oldTypeHandler->TraceFixedFieldsBeforeTypeHandlerChange(u"converting", u"PathTypeHandler", u"SimpleDictionaryTypeHandler", instance, oldTypeHandler, oldType, oldSingletonInstance);
-#endif
 
         bool const canBeSingletonInstance = DynamicTypeHandler::CanBeSingletonInstance(instance);
         // If this type had been installed on a stack instance it shouldn't have a singleton Instance
@@ -1811,9 +1805,7 @@ namespace Js
         // We assumed that we don't need to transfer used as fixed bits unless we are a prototype, which is only valid if we also changed the type.
         Assert(transferUsedAsFixed || (instance->GetType() != oldType && oldType->GetTypeId() != TypeIds_GlobalObject));
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         PathTypeHandlerBase::TraceFixedFieldsAfterTypeHandlerChange(instance, oldTypeHandler, newTypeHandler, oldType, instance->GetDynamicType(), oldSingletonInstance);
-#endif
 #endif
 
 #ifdef PROFILE_TYPES
@@ -2021,11 +2013,9 @@ namespace Js
             bool growing = !branching && GetTypePath()->GetPathLength() == GetTypePath()->GetPathSize();
 
 #if ENABLE_FIXED_FIELDS
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
             DynamicType* oldType = predecessorType;
             RecyclerWeakReference<DynamicObject>* oldSingletonInstance = GetSingletonInstance();
             TraceFixedFieldsBeforeTypeHandlerChange(branching ? u"branching" : u"advancing", u"PathTypeHandler", u"PathTypeHandler", instance, this, oldType, oldSingletonInstance);
-#endif
 #endif
 
             if (branching)
@@ -2216,9 +2206,7 @@ namespace Js
             Assert(nextPath->GetPathLength() == newTypePath->GetPathLength());
 #if ENABLE_FIXED_FIELDS
             Assert(!FixPropsOnPathTypes() || shareType || nextPath->GetPathLength() > newTypePath->GetMaxInitializedLength());
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
             TraceFixedFieldsAfterTypeHandlerChange(instance, this, nextPath, oldType, nextType, oldSingletonInstance);
-#endif
 #endif
 #ifdef PROFILE_TYPES
             scriptContext->promoteCount++;
@@ -2913,10 +2901,8 @@ namespace Js
         }
 
 #if ENABLE_FIXED_FIELDS
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         DynamicType* oldTypeDebug = instance->GetDynamicType();
         RecyclerWeakReference<DynamicObject>* oldSingletonInstance = GetSingletonInstance();
-#endif
 #endif
 
         if ((GetIsOrMayBecomeShared() && IsolatePrototypes()))
@@ -2938,9 +2924,7 @@ namespace Js
         else
         {
 #if ENABLE_FIXED_FIELDS
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
             TraceFixedFieldsBeforeSetIsProto(instance, this, oldTypeDebug, oldSingletonInstance);
-#endif
 #endif
 
             if (ChangeTypeOnProto())
@@ -2972,9 +2956,7 @@ namespace Js
             SetFlags(IsPrototypeFlag);
 
 #if ENABLE_FIXED_FIELDS
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
             TraceFixedFieldsAfterSetIsProto(instance, this, typeHandler, oldTypeDebug, instance->GetDynamicType(), oldSingletonInstance);
-#endif
 #endif
 
         }
@@ -3330,7 +3312,6 @@ namespace Js
         }
     }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     void PathTypeHandlerBase::DumpFixedFields() const {
         if (FixPropsOnPathTypes())
         {
@@ -3457,7 +3438,6 @@ namespace Js
             Output::Flush();
         }
     }
-#endif
 #endif // ENABLE_FIXED_FIELDS
 
 #if ENABLE_TTD

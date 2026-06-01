@@ -196,10 +196,8 @@ namespace Js
         Var ConstructorTrap(Arguments args, ScriptContext* scriptContext, const Js::AuxArray<uint32_t> *spreadIndices);
 
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         static PropertyId EnsureHandlerPropertyId(ScriptContext* scriptContext);
         static RecyclableObject* AutoProxyWrapper(Var obj);
-#endif
 
     private:
         JavascriptFunction* GetMethodHelper(PropertyId methodId, ScriptContext* requestContext);

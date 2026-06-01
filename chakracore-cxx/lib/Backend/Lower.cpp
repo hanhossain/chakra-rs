@@ -2966,13 +2966,11 @@ Lowerer::LowerRange(IR::Instr *instrStart, IR::Instr *instrEnd, bool defaultDoFa
             break;
         }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         case Js::OpCode::GeneratorOutputBailInTrace:
         {
             this->m_lowerGeneratorHelper.LowerGeneratorTraceBailIn(instr);
             break;
         }
-#endif
 
         case Js::OpCode::GeneratorResumeJumpTable:
         {
@@ -3082,9 +3080,7 @@ Lowerer::LowerRange(IR::Instr *instrStart, IR::Instr *instrEnd, bool defaultDoFa
             instrPrev = this->LowerStPropIdArrFromVar(instr);
             break;
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         case Js::OpCode::GeneratorOutputBailInTraceLabel:
-#endif
         case Js::OpCode::GeneratorBailInLabel:
         case Js::OpCode::GeneratorEpilogueFrameNullOutLabel:
         case Js::OpCode::GeneratorEpilogueNoFrameNullOutLabel:
@@ -14280,9 +14276,7 @@ Lowerer::GenerateBailOut(IR::Instr * instr, IR::BranchInstr * branchInstr, IR::L
     // Save the bailout record. The register allocator will generate arguments.
     bailOutInfo->bailOutRecord = bailOutRecord;
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     bailOutRecord->bailOutOpcode = bailOutInfo->bailOutOpcode;
-#endif
 
     if (instr->m_opcode == Js::OpCode::BailOnNotStackArgs && instr->GetSrc1())
     {
@@ -22755,9 +22749,7 @@ Lowerer::GenerateFastStFld(IR::Instr * const instrStFld, IR::JnHelperMethod help
             }
             else
             {
-                #if ENABLE_DEBUG_CONFIG_OPTIONS
                 char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-                #endif
                 PHASE_PRINT_TRACE(Js::AddFldFastPathPhase, this->m_func,
                     u"AddFldFastPath: function: %s(%s) property ID: %u no fast path, because the phase is off.\n",
                     this->m_func->GetJITFunctionBody()->GetDisplayName(), this->m_func->GetDebugNumberSet(debugStringBuffer),
@@ -22796,9 +22788,7 @@ Lowerer::GenerateFastStFld(IR::Instr * const instrStFld, IR::JnHelperMethod help
 
     if (doAdd)
     {
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-#endif
         PHASE_PRINT_TRACE(Js::AddFldFastPathPhase, this->m_func,
             u"AddFldFastPath: function: %s(%s) property ID: %d %s fast path for %s.\n",
             this->m_func->GetJITFunctionBody()->GetDisplayName(), this->m_func->GetDebugNumberSet(debugStringBuffer),
@@ -26403,9 +26393,7 @@ Lowerer::ValidOpcodeAfterLower(IR::Instr* instr, Func * func)
         Assert(func->HasTry() && func->DoOptimizeTry());
         return func && !func->isPostFinalLower; //Lowered in FinalLower phase
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     case Js::OpCode::GeneratorOutputBailInTraceLabel:
-#endif
     case Js::OpCode::GeneratorBailInLabel:
     case Js::OpCode::GeneratorEpilogueFrameNullOutLabel:
     case Js::OpCode::GeneratorEpilogueNoFrameNullOutLabel:
@@ -29092,7 +29080,6 @@ Lowerer::LowerGeneratorHelper::LowerCreateInterpreterStackFrameForGenerator(IR::
     this->lowererMD.ChangeToHelperCall(instr, IR::HelperCreateInterpreterStackFrameForGenerator);
 }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
 void
 Lowerer::LowerGeneratorHelper::LowerGeneratorTraceBailIn(IR::Instr* instr)
 {
@@ -29102,7 +29089,6 @@ Lowerer::LowerGeneratorHelper::LowerGeneratorTraceBailIn(IR::Instr* instr)
     this->lowererMD.LoadHelperArgument(instr, genParamOpnd);
     this->lowererMD.ChangeToHelperCall(instr, IR::HelperOutputGeneratorBailInTrace);
 }
-#endif
 
 IR::SymOpnd*
 Lowerer::LowerGeneratorHelper::CreateResumeYieldOpnd() const

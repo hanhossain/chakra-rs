@@ -37,24 +37,20 @@ namespace Js
     double JavascriptCallStackLayout::GetDoubleAtOffset(int offset) const
     {
         double *dblPtr = (double *)(((char *)this) + offset);
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.IsEnabled(Js::CheckAlignmentFlag))
         {
             Assert(FAligned(dblPtr, double));
         }
-#endif
         return *dblPtr;
     }
 
     int32_t JavascriptCallStackLayout::GetInt32AtOffset(int offset) const
     {
         int32_t *intPtr = (int32_t *)(((char *)this) + offset);
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.IsEnabled(Js::CheckAlignmentFlag))
         {
             Assert(FAligned(intPtr, int32_t));
         }
-#endif
         return *intPtr;
     }
 

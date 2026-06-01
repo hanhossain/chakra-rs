@@ -742,7 +742,6 @@ using namespace Js;
             END_SAFE_REENTRANT_CALL
         }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         Js::Var varThis;
         if (PHASE_FORCE1(Js::EvalCompilePhase) && args.Info.Count == 0)
         {
@@ -751,7 +750,6 @@ using namespace Js;
             args.Info.Count = 1;
             args.Values = &varThis;
         }
-#endif
 
         Var varResult = nullptr;
         ThreadContext *threadContext;

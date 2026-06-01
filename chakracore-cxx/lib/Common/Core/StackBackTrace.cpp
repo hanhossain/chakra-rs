@@ -61,12 +61,10 @@ StackBackTrace::Print()
     return retValue;
 }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
 static uint _s_trace_ring_id = 0;
 uint _trace_ring_next_id()
 {
     return InterlockedIncrement(&_s_trace_ring_id);
 }
-#endif  // ENABLE_DEBUG_CONFIG_OPTIONS
 
 #endif

@@ -1516,7 +1516,6 @@ GlobOpt::OptArguments(IR::Instr *instr)
 
     if (instr->HasAnyLoadHeapArgsOpCode())
     {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (instr->m_func->IsStackArgsEnabled())
         {
             if (instr->GetSrc1()->IsRegOpnd() && instr->m_func->GetJITFunctionBody()->GetInParamsCount() > 1)
@@ -1533,7 +1532,6 @@ GlobOpt::OptArguments(IR::Instr *instr)
                 }
             }
         }
-#endif
 
         if (instr->m_func->GetJITFunctionBody()->GetInParamsCount() != 1 && !instr->m_func->IsStackArgsEnabled())
         {
@@ -3855,13 +3853,11 @@ GlobOpt::CopyProp(IR::Opnd *opnd, IR::Instr *instr, Value *val, IR::IndirOpnd *p
             constOpnd = intOpnd;
         }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         //Need to update DumpFieldCopyPropTestTrace for every new opcode that is added for fieldcopyprop
         if(Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::FieldCopyPropPhase))
         {
             instr->DumpFieldCopyPropTestTrace(this->isRecursiveCallOnLandingPad);
         }
-#endif
 
         this->CaptureByteCodeSymUses(instr);
         opnd = instr->ReplaceSrc(opnd, constOpnd);
@@ -3999,13 +3995,11 @@ GlobOpt::CopyPropReplaceOpnd(IR::Instr * instr, IR::Opnd * opnd, StackSym * copy
     StackSym *newSym = copySym;
 
     GOPT_TRACE_OPND(opnd, u"Copy prop s%d\n", newSym->m_id);
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     //Need to update DumpFieldCopyPropTestTrace for every new opcode that is added for fieldcopyprop
     if(Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::FieldCopyPropPhase))
     {
         instr->DumpFieldCopyPropTestTrace(this->isRecursiveCallOnLandingPad);
     }
-#endif
 
     this->CaptureByteCodeSymUses(instr);
     if (opnd->IsRegOpnd())
@@ -8501,13 +8495,11 @@ GlobOpt::TypeSpecializeIntUnary(
     if(bailOutKind == IR::BailOutInvalid)
     {
         GOPT_TRACE(u"Type specialized to INT\n");
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::AggressiveIntTypeSpecPhase))
         {
             Output::Print(u"Type specialized to INT: ");
             Output::Print(u"%s \n", Js::OpCodeUtil::GetOpCodeName(instr->m_opcode));
         }
-#endif
     }
     else
     {
@@ -8515,24 +8507,20 @@ GlobOpt::TypeSpecializeIntUnary(
         if(bailOutKind & IR::BailOutOnOverflow)
         {
             GOPT_TRACE(u"    Overflow\n");
-#if ENABLE_DEBUG_CONFIG_OPTIONS
             if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::AggressiveIntTypeSpecPhase))
             {
                 Output::Print(u"Type specialized to INT with bailout (%S): ", "Overflow");
                 Output::Print(u"%s \n", Js::OpCodeUtil::GetOpCodeName(instr->m_opcode));
             }
-#endif
         }
         if(bailOutKind & IR::BailOutOnNegativeZero)
         {
             GOPT_TRACE(u"    Zero\n");
-#if ENABLE_DEBUG_CONFIG_OPTIONS
             if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::AggressiveIntTypeSpecPhase))
             {
                 Output::Print(u"Type specialized to INT with bailout (%S): ", "Zero");
                 Output::Print(u"%s \n", Js::OpCodeUtil::GetOpCodeName(instr->m_opcode));
             }
-#endif
         }
     }
 
@@ -10095,13 +10083,11 @@ LOutsideSwitch:
     if(bailOutKind == IR::BailOutInvalid)
     {
         GOPT_TRACE(u"Type specialized to INT\n");
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::AggressiveIntTypeSpecPhase))
         {
             Output::Print(u"Type specialized to INT: ");
             Output::Print(u"%s \n", Js::OpCodeUtil::GetOpCodeName(instr->m_opcode));
         }
-#endif
     }
     else
     {
@@ -10109,24 +10095,20 @@ LOutsideSwitch:
         if(bailOutKind & (IR::BailOutOnOverflow | IR::BailOutOnMulOverflow) )
         {
             GOPT_TRACE(u"    Overflow\n");
-#if ENABLE_DEBUG_CONFIG_OPTIONS
             if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::AggressiveIntTypeSpecPhase))
             {
                 Output::Print(u"Type specialized to INT with bailout (%S): ", "Overflow");
                 Output::Print(u"%s \n", Js::OpCodeUtil::GetOpCodeName(instr->m_opcode));
             }
-#endif
         }
         if(bailOutKind & IR::BailOutOnNegativeZero)
         {
             GOPT_TRACE(u"    Zero\n");
-#if ENABLE_DEBUG_CONFIG_OPTIONS
             if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::AggressiveIntTypeSpecPhase))
             {
                 Output::Print(u"Type specialized to INT with bailout (%S): ", "Zero");
                 Output::Print(u"%s \n", Js::OpCodeUtil::GetOpCodeName(instr->m_opcode));
             }
-#endif
         }
     }
 
@@ -10596,13 +10578,11 @@ GlobOpt::TypeSpecializeFloatUnary(IR::Instr **pInstr, Value *src1Val, Value **pD
 
     GOPT_TRACE_INSTR(instr, u"Type specialized to FLOAT: ");
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::FloatTypeSpecPhase))
     {
         Output::Print(u"Type specialized to FLOAT: ");
         Output::Print(u"%s \n", Js::OpCodeUtil::GetOpCodeName(instr->m_opcode));
     }
-#endif
 
     return true;
 }
@@ -10903,13 +10883,11 @@ GlobOpt::TypeSpecializeFloatBinary(IR::Instr *instr, Value *src1Val, Value *src2
 
     GOPT_TRACE_INSTR(instr, u"Type specialized to FLOAT: ");
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::FloatTypeSpecPhase))
     {
         Output::Print(u"Type specialized to FLOAT: ");
         Output::Print(u"%s \n", Js::OpCodeUtil::GetOpCodeName(instr->m_opcode));
     }
-#endif
 
     return true;
 }
@@ -15529,13 +15507,11 @@ GlobOpt::TryHoistInvariant(
             instr->Dump();
         }
 #endif
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::InvariantsPhase))
         {
             Output::Print(u" **** INVARIANT  ***   ");
             Output::Print(u"%s \n", Js::OpCodeUtil::GetOpCodeName(instr->m_opcode));
         }
-#endif
         Loop *loop = block->loop;
 
         // Try hoisting from to outer most loop
@@ -16091,14 +16067,12 @@ GlobOpt::CannotAllocateArgumentsObjectOnStack(Func * curFunc)
 
     func->SetHasStackArgs(false);
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     if (PHASE_TESTTRACE(Js::StackArgOptPhase, this->func))
     {
         char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
         Output::Print(u"Stack args disabled for function %s(%s)\n", func->GetJITFunctionBody()->GetDisplayName(), func->GetDebugNumberSet(debugStringBuffer));
         Output::Flush();
     }
-#endif
 }
 
 IR::Instr *

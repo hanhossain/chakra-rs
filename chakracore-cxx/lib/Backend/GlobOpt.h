@@ -10,7 +10,7 @@ class BackwardPass;
 class LoopCount;
 class GlobOpt;
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS && DBG_DUMP
+#if DBG_DUMP
 
 #define PRINT_GOPT_TRACE_HEADER \
         Output::Print(u"TRACE "); \
@@ -113,7 +113,7 @@ class GlobOpt;
         TRACE_PHASE_INSTR(phase, instr, __VA_ARGS__); \
     }
 
-#else   // ENABLE_DEBUG_CONFIG_OPTIONS && DBG_DUMP
+#else   // DBG_DUMP
 
 #define GOPT_TRACE(...)
 #define GOPT_TRACE_VALUENUMBER(opnd, ...)
@@ -124,7 +124,7 @@ class GlobOpt;
 #define TRACE_PHASE_INSTR(phase, instr, ...)
 #define TRACE_PHASE_INSTR_VERBOSE(phase, instr, ...)
 
-#endif  // ENABLE_DEBUG_CONFIG_OPTIONS && DBG_DUMP
+#endif  // DBG_DUMP
 
 class IntMathExprAttributes : public ExprAttributes
 {

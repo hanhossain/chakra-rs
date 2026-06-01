@@ -1131,10 +1131,8 @@ void Encoder::ValidateCRC(uint bufferCRC, uint initialCRCSeed, _In_reads_bytes_(
 BOOL
 Encoder::ShortenBranchesAndLabelAlign(uint8_t **codeStart, ptrdiff_t *codeSize, uint * pShortenedBufferCRC, uint bufferCrcToValidate, size_t jumpTableSize)
 {
-#ifdef  ENABLE_DEBUG_CONFIG_OPTIONS
     static uint32_t globalTotalBytesSaved = 0, globalTotalBytesWithoutShortening = 0;
     static uint32_t globalTotalBytesInserted = 0; // loop alignment nops
-#endif
 
     uint32_t brShortenedCount = 0;
     bool   codeChange       = false; // any overall BR shortened or label aligned ?
@@ -1277,7 +1275,6 @@ Encoder::ShortenBranchesAndLabelAlign(uint8_t **codeStart, ptrdiff_t *codeSize, 
     if (!codeChange)
         return codeChange;
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     globalTotalBytesWithoutShortening += (uint32_t)(*codeSize);
     globalTotalBytesSaved += (uint32_t)(*codeSize - newCodeSize);
 
@@ -1288,7 +1285,6 @@ Encoder::ShortenBranchesAndLabelAlign(uint8_t **codeStart, ptrdiff_t *codeSize, 
             globalTotalBytesSaved, ((float)globalTotalBytesSaved) / globalTotalBytesWithoutShortening * 100 , brShortenedCount);
         Output::Flush();
     }
-#endif
 
     // At this point BRs are marked to be shortened, and relocList offsets are adjusted to new instruction length.
     // Next, we re-write the code to shorten the BRs and adjust relocList offsets to point to new buffer.
@@ -1402,7 +1398,6 @@ Encoder::ShortenBranchesAndLabelAlign(uint8_t **codeStart, ptrdiff_t *codeSize, 
             CopyPartialBufferAndCalculateCRC(&dst_p, dst_size, from, to, pShortenedBufferCRC);
             srcBufferCrc = CalculateCRC(srcBufferCrc, to - from + 1, from);
 
-#ifdef  ENABLE_DEBUG_CONFIG_OPTIONS
             if (PHASE_TRACE(Js::LoopAlignPhase, this->m_func))
             {
                 globalTotalBytesInserted += nop_count;
@@ -1411,7 +1406,6 @@ Encoder::ShortenBranchesAndLabelAlign(uint8_t **codeStart, ptrdiff_t *codeSize, 
                     this->m_func->GetJITFunctionBody()->GetDisplayName(), nop_count, (float)nop_count / newCodeSize * 100, globalTotalBytesInserted, (float)globalTotalBytesInserted / (globalTotalBytesWithoutShortening - globalTotalBytesSaved) * 100);
                 Output::Flush();
             }
-#endif
             uint8_t * tmpDst_p = dst_p;
             InsertNopsForLabelAlignment(nop_count, &dst_p);
             *pShortenedBufferCRC = CalculateCRC(*pShortenedBufferCRC, nop_count, tmpDst_p);

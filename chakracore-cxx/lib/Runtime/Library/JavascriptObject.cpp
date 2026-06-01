@@ -1846,12 +1846,10 @@ Var JavascriptObject::EntryCreate(RecyclableObject* function, CallInfo callInfo,
     RecyclableObject* protoObj = VarTo<RecyclableObject>(protoVar);
     DynamicObject* object = function->GetLibrary()->CreateObject(protoObj);
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
     {
         object = VarTo<DynamicObject>(JavascriptProxy::AutoProxyWrapper(object));
     }
-#endif
 
     if (args.Info.Count > 2 && JavascriptOperators::GetTypeId(args[2]) != TypeIds_Undefined)
     {

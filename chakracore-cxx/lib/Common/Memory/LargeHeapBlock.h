@@ -322,9 +322,7 @@ public:
     bool hadTrimmed;
     uint expectedSweepCount;
 #endif
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     friend class ::ScriptMemoryDumper;
-#endif
 #ifdef PROFILE_RECYCLER_ALLOC
     void ** GetTrackerDataArray();
 #endif

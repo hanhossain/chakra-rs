@@ -620,7 +620,6 @@ using namespace Js;
                 scriptContext->AddToEvalMap(key, isIndirect, pfuncScript);
             }
         }
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         else
         {
             Js::Utf8SourceInfo* utf8SourceInfo = pfuncScript->GetFunctionBody()->GetUtf8SourceInfo();
@@ -630,7 +629,6 @@ using namespace Js;
                 Throw::FatalInternalError();
             }
         }
-#endif
 
 #if ENABLE_TTD
         //
@@ -1540,7 +1538,6 @@ LHexError:
         return scriptContext->GetLibrary()->GetUndefined();
     }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     Var GlobalObject::EntryChWriteTraceEvent(RecyclableObject *function, CallInfo callInfo, ...)
     {
         PROBE_STACK(function->GetScriptContext(), Js::Constants::MinStackDefault);
@@ -1553,7 +1550,6 @@ LHexError:
 
         return function->GetScriptContext()->GetLibrary()->GetUndefined();
     }
-#endif
 
 #if ENABLE_TTD
     //Log a string in the telemetry system (and print to the console)

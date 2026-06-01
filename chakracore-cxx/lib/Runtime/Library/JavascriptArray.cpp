@@ -83,7 +83,6 @@ using namespace Js;
 
     uint32_t SegmentBTree::GetLazyCrossOverLimit()
     {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.DisableArrayBTree)
         {
             return Js::JavascriptArray::InvalidIndex;
@@ -92,7 +91,6 @@ using namespace Js;
         {
             return ARRAY_CROSSOVER_FOR_VALIDATE;
         }
-#endif
 #ifdef VALIDATE_ARRAY
         if (Js::Configuration::Global.flags.ArrayValidate)
         {
@@ -824,13 +822,11 @@ using namespace Js;
         SparseArraySegment<int32_t> *seg = this->GetScriptContext()->GetLibrary()->cacheForCopyOnAccessArraySegments->GetSegmentByIndex(::Math::PointerCastToIntegral<byte>(this->GetHead()));
         SparseArraySegment<int32_t> *newSeg = SparseArraySegment<int32_t>::AllocateLiteralHeadSegment(this->GetRecycler(), seg->length);
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::CopyOnAccessArrayPhase))
         {
             Output::Print(u"Convert copy-on-access array: index(%d) length(%d)\n", this->GetHead(), seg->length);
             Output::Flush();
         }
-#endif
 
         newSeg->CopySegment(this->GetRecycler(), newSeg, 0, seg, 0, seg->length);
         this->SetHeadAndLastUsedSegment(newSeg);
@@ -10803,7 +10799,6 @@ Case0:
         }
     }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     void JavascriptArray::CheckForceES5Array()
     {
         if (Configuration::Global.flags.ForceES5Array)
@@ -10816,7 +10811,6 @@ Case0:
             }
         }
     }
-#endif
 
 #if DBG
     void JavascriptArray::DoTypeMutation()

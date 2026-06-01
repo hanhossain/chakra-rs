@@ -307,9 +307,7 @@ namespace Js
             if(node->ChildExistsAt(i))
             {
                 UnitData *data = node->GetChildAt(i)->GetValue();
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
                 if( int(data->incl * 100 / base->incl) >= Configuration::Global.flags.ProfileThreshold) // threshold
-#endif
                 {
 
                     Output::SkipToColumn(column);

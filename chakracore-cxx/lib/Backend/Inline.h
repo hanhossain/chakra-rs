@@ -174,9 +174,7 @@ private:
     bool    GetIsInInlinedApplyCall() const { return this->isInInlinedApplyCall; }
     void    SetIsInInlinedApplyCall(bool inInlinedApplyCall) { this->isInInlinedApplyCall = inInlinedApplyCall; }
 
-#if defined(ENABLE_DEBUG_CONFIG_OPTIONS)
     static void TraceInlining(const FunctionJITTimeInfo *const inliner, const char16_t* inlineeName, const char16_t* inlineeFunctionIdandNumberString, uint inlineeByteCodeCount,
         const FunctionJITTimeInfo* topFunc, uint inlinedByteCodeCount, const FunctionJITTimeInfo *const inlinee, uint callSiteId, bool inLoopBody, uint builtIn = -1);
-#endif
 };
 

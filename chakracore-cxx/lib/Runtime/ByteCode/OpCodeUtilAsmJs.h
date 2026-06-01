@@ -17,10 +17,8 @@ namespace Js
         static bool IsValidOpcode(OpCodeAsmJs op);
         static void ConvertOpToProfiled(OpCodeAsmJs * op);
     private:
-#if DBG_DUMP || ENABLE_DEBUG_CONFIG_OPTIONS
         static char16_t const * const OpCodeAsmJsNames[(int)Js::OpCodeAsmJs::MaxByteSizedOpcodes + 1];
         static char16_t const * const ExtendedOpCodeAsmJsNames[];
-#endif
         static OpLayoutTypeAsmJs const OpCodeAsmJsLayouts[];
         static OpLayoutTypeAsmJs const ExtendedOpCodeAsmJsLayouts[];
     };

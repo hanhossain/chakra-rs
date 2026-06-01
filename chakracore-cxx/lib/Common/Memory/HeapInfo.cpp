@@ -550,18 +550,11 @@ HeapInfo::Initialize(Recycler * recycler
     Js::NumberRange* pBucketNumberRange = &bucketNumberRange;
     if (pageheapmode == PageHeapMode::PageHeapModeOff)
     {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         isPageHeapEnabled = recycler->GetRecyclerFlagsTable().PageHeap != PageHeapMode::PageHeapModeOff;
         pageheapmode = (PageHeapMode)recycler->GetRecyclerFlagsTable().PageHeap;
         blockTypeFilter = (PageHeapBlockTypeFilter)recycler->GetRecyclerFlagsTable().PageHeapBlockType;
         pBucketNumberRange = &recycler->GetRecyclerFlagsTable().PageHeapBucketNumber;
 
-#else
-        // @TODO in free build, use environment var or other way to enable page heap
-        // currently page heap build is enable in free build but has not implemented a way to input the page heap flags.
-        // if we only need page heap in free test build, just move RECYCLER_PAGE_HEAP definition into ENABLE_DEBUG_CONFIG_OPTIONS
-        // in CommonDefines.h it should work
-#endif
     }
     else
     {
@@ -574,10 +567,8 @@ HeapInfo::Initialize(Recycler * recycler
         this->captureAllocCallStack = captureAllocCallStack;
         this->captureFreeCallStack = captureFreeCallStack;
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         this->captureAllocCallStack = captureAllocCallStack || recycler->GetRecyclerFlagsTable().PageHeapAllocStack;
         this->captureFreeCallStack = captureFreeCallStack || recycler->GetRecyclerFlagsTable().PageHeapFreeStack;
-#endif
     }
 #endif
 

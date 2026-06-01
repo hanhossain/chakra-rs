@@ -17,7 +17,6 @@ namespace Memory
 #ifdef RECYCLER_PAGE_HEAP
 enum class PageHeapBlockTypeFilter;
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
 #define PageHeapVerboseTrace(flags, ...) \
 if (flags.Verbose && flags.Trace.IsEnabled(Js::PageHeapPhase)) \
     { \
@@ -28,10 +27,6 @@ if (flags.Trace.IsEnabled(Js::PageHeapPhase)) \
     { \
         Output::Print(__VA_ARGS__); \
     }
-#else
-#define PageHeapVerboseTrace(...)
-#define PageHeapTrace(...)
-#endif
 
 #else
 #define PageHeapVerboseTrace(...)
@@ -499,9 +494,7 @@ private:
 template <class TBlockAttributes>
 class SmallHeapBlockT : public HeapBlock
 {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     friend class ::ScriptMemoryDumper;
-#endif
 
     template <typename TBlockType>
     friend class SmallHeapBlockAllocator;

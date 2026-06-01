@@ -57,9 +57,7 @@ public:
     void DumpAndResetStats(char16_t const * source);
 #endif
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     void CheckBufferPermissions(TEmitBufferAllocation *allocation);
-#endif
 
 #if DBG
     bool IsBufferExecuteReadOnly(TEmitBufferAllocation * allocation);
@@ -70,11 +68,9 @@ public:
 private:
     void FreeAllocations(bool release);
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     bool CheckCommitFaultInjection();
 
     int commitCount;
-#endif
     ArenaAllocator * allocator;
     Js::ScriptContext * scriptContext;
     ThreadContextInfo * threadContext;

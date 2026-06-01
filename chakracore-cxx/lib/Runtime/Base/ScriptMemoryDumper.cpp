@@ -3,7 +3,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "RuntimeBasePch.h"
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
 #include "Base/ScriptMemoryDumper.h"
 
 ScriptMemoryDumper::ScriptMemoryDumper(Js::ScriptContext* scriptContext)
@@ -226,4 +225,3 @@ void ScriptMemoryDumper::FillObjectWithStats(Js::DynamicObject* dynamicObject, H
     dynamicObject->SetProperty(finalizeCountId, Js::JavascriptNumber::New(stats.finalizeCount, scriptContext),  Js::PropertyOperation_None, NULL);
 }
 
-#endif // ENABLE_DEBUG_CONFIG_OPTIONS

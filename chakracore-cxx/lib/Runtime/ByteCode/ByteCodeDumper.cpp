@@ -46,12 +46,10 @@ namespace Js
         }
         Output::Print(u") ");
         Output::Print(u"(size: %d [%d])\n", dumpFunction->GetByteCodeCount(), dumpFunction->GetByteCodeWithoutLDACount());
-#if defined(DBG) || defined(ENABLE_DEBUG_CONFIG_OPTIONS)
         if (dumpFunction->IsInDebugMode())
         {
             Output::Print(u"[Bytecode was generated for debug mode]\n");
         }
-#endif
 #if DBG
         if (dumpFunction->IsReparsed())
         {

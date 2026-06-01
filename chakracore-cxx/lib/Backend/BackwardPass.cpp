@@ -550,10 +550,7 @@ BackwardPass::MergeSuccBlocksInfo(BasicBlock * block)
         bool firstSucc = true;
         FOREACH_SUCCESSOR_BLOCK(blockSucc, block)
         {
-#if defined(DBG_DUMP) || defined(ENABLE_DEBUG_CONFIG_OPTIONS)
-
             char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-#endif
             // save the byteCodeUpwardExposedUsed from deleting for the block right after the memop loop
             if (this->tag == Js::DeadStorePhase && !this->IsPrePass() && globOpt->HasMemOp(block->loop) && blockSucc->loop != block->loop)
             {

@@ -88,20 +88,17 @@ namespace Js
                 if (found)
                 {
                     RegisterCacheHit();
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
                     if (PHASE_TRACE1(PropertyCachePhase))
                     {
                         Output::Print(u"PropertyCache: GetElem cache hit for '%s': type %p\n",
                             GetString(),
                             object->GetType());
                     }
-#endif
                     return true;
                 }
             }
 
             RegisterCacheMiss();
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
             if (PHASE_TRACE1(PropertyCachePhase))
             {
                 Output::Print(u"PropertyCache: GetElem cache miss for '%s': type %p, index %d\n",
@@ -110,11 +107,9 @@ namespace Js
                     GetLdElemInlineCache()->GetInlineCacheIndexForType(object->GetType()));
                 DumpCache(true);
             }
-#endif
             return false;
         }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
 
         const char16_t* GetString()
         {
@@ -132,7 +127,6 @@ namespace Js
             }
             Output::Print(u"\n");
         }
-#endif
     };
 
 
@@ -169,18 +163,15 @@ namespace Js
 
             if (found)
             {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
                 if (PHASE_TRACE1(PropertyCachePhase))
                 {
                     Output::Print(u"PropertyCache: SetElem cache hit for '%s': type %p\n", GetString(), object->GetType());
                 }
-#endif
                 RegisterCacheHit();
                 return true;
             }
         }
         RegisterCacheMiss();
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (PHASE_TRACE1(PropertyCachePhase))
         {
             Output::Print(u"PropertyCache: SetElem cache miss for '%s': type %p, index %d\n",
@@ -189,7 +180,6 @@ namespace Js
                 GetStElemInlineCache()->GetInlineCacheIndexForType(object->GetType()));
             DumpCache(false);
         }
-#endif
         return false;
     }
 

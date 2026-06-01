@@ -6,7 +6,6 @@
 
 namespace Memory
 {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
 class ForcedMemoryConstraint
 {
 public:
@@ -15,5 +14,4 @@ public:
 private:
     static void FragmentAddressSpace(size_t usableSize);
 };
-#endif
 }

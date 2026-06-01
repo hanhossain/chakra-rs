@@ -91,13 +91,11 @@ namespace Js {
 
     void Throw::OutOfMemory()
     {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (CONFIG_FLAG(PrintSystemException))
         {
             Output::Print(u"SystemException: OutOfMemory\n");
             Output::Flush();
         }
-#endif
         if (JsUtil::ExternalApi::RaiseOutOfMemoryIfScriptActive())
         {
             AssertMsg(false, "We shouldn't be here");
@@ -107,13 +105,11 @@ namespace Js {
 
     void Throw::StackOverflow(ScriptContext *scriptContext, void * returnAddress)
     {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (CONFIG_FLAG(PrintSystemException))
         {
             Output::Print(u"SystemException: StackOverflow\n");
             Output::Flush();
         }
-#endif
         if (JsUtil::ExternalApi::RaiseStackOverflowIfScriptActive(scriptContext, returnAddress))
         {
             AssertMsg(false, "We shouldn't be here");
@@ -136,13 +132,10 @@ namespace Js {
         IsInAssert = true;
     }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
 #define CHAKRA_ASSERT_CAPTION u"CHAKRA ASSERT"
-#endif
 
     bool Throw::ReportAssert(const char * fileName, uint lineNumber, const char * error, const char * message)
     {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.IsEnabled(Js::AssertBreakFlag))
         {
             DebugBreak();
@@ -152,7 +145,6 @@ namespace Js {
         {
             return true;
         }
-#endif
         if (AssertsToConsole)
         {
             fprintf(stderr, "ASSERTION %u: (%s, line %u) %s\n Failure: %s\n", getpid(), fileName, lineNumber, message, error);

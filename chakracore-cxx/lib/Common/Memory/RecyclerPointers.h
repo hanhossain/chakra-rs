@@ -110,7 +110,6 @@ struct _ArrayWriteBarrier
     static void WriteBarrier(T * address, size_t count)
     {
 #if defined(RECYCLER_WRITE_BARRIER)
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.StrictWriteBarrierCheck)
         {
             if (g_verifyIsNotBarrierAddress)
@@ -118,7 +117,6 @@ struct _ArrayWriteBarrier
                 g_verifyIsNotBarrierAddress(address, count);
             }
         }
-#endif
 #endif
     }
 
@@ -281,9 +279,7 @@ public:
     // Setters
     NoWriteBarrierField& operator=(T const& value)
     {
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         RecyclerWriteBarrierManager::VerifyIsNotBarrierAddress(this);
-#endif
         this->value = value;
         return *this;
     }
@@ -309,9 +305,7 @@ public:
     // Setters
     NoWriteBarrierPtr& operator=(T * value)
     {
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         RecyclerWriteBarrierManager::VerifyIsNotBarrierAddress(this);
-#endif
         this->value = value;
         return *this;
     }

@@ -11,7 +11,6 @@
 namespace WAsmJs
 {
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     namespace Tracing
     {
         // This can be broken if exception are thrown from wasm frames
@@ -71,7 +70,6 @@ namespace WAsmJs
             return val;
         }
     }
-#endif
     void JitFunctionIfReady(Js::ScriptFunction* func, uint interpretedCount /*= 0*/)
     {
 #if ENABLE_NATIVE_CODEGEN

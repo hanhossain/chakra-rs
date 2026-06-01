@@ -9,7 +9,6 @@
 #include "SccLiveness.h"
 #define IsTrueOrFalse(value)     ((value) ? u"True" : u"False")
 
-#if DBG_DUMP || ENABLE_DEBUG_CONFIG_OPTIONS
 char const * const RegNames[RegNumCount] =
 {
 #define REGDAT(Name, ListName, ...) "" STRINGIZE(ListName) "",
@@ -23,7 +22,6 @@ char16_t const * const RegNamesW[RegNumCount] =
 #include "RegList.h"
 #undef REGDAT
 };
-#endif
 
 static const uint8_t RegAttribs[RegNumCount] =
 {
@@ -157,7 +155,7 @@ LinearScan::RegAlloc()
             continue;
         }
 
-#if DBG_DUMP && defined(ENABLE_DEBUG_CONFIG_OPTIONS)
+#if DBG_DUMP
         if (Js::Configuration::Global.flags.Trace.IsEnabled(Js::LinearScanPhase, this->func->GetSourceContextId(), this->func->GetLocalFunctionId()))
         {
             instr->Dump();
@@ -1426,10 +1424,8 @@ LinearScan::FillBailOutRecord(IR::Instr * instr)
         BailOutRecord * bailOutRecord = NativeCodeDataNewZ(allocator, BailOutRecord, bailOutOffset, (uint)-1, IR::BailOutInvalid, currentFunc);
         bailOutRecord->m_bailOutRecordId = m_bailOutRecordCount++;
         bailOutRecord->globalBailOutRecordTable = EnsureGlobalBailOutRecordTable(currentFunc);
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         // To indicate this is a subsequent bailout from an inlinee
         bailOutRecord->bailOutOpcode = Js::OpCode::InlineeEnd;
-#endif
         if (this->func->HasTry())
         {
             RegionType currentRegionType = this->currentRegion->GetType();
@@ -4876,14 +4872,12 @@ IR::Instr* LinearScan::GeneratorBailIn::GenerateBailIn(IR::GeneratorBailInInstr*
     );
     Assert(!this->func->IsStackArgsEnabled());
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     if (PHASE_TRACE(Js::Phase::BailInPhase, this->func))
     {
         IR::Instr* insertBailInTraceBefore = instrAfter;
         Assert(insertBailInTraceBefore->m_opcode == Js::OpCode::GeneratorOutputBailInTraceLabel);
         this->InsertBailInTrace(bailOutInfo->byteCodeUpwardExposedUsed, insertBailInTraceBefore->m_next);
     }
-#endif
 
     return instrAfter;
 }
@@ -5190,7 +5184,6 @@ uint32_t LinearScan::GeneratorBailIn::GetOffsetFromInterpreterStackFrame(Js::Reg
     }
 }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
 void LinearScan::GeneratorBailIn::InsertBailInTrace(BVSparse<JitArenaAllocator>* symbols, IR::Instr* insertBeforeInstr)
 {
     IR::RegOpnd* traceBailInSymbolsArrayRegOpnd = this->interpreterFrameRegOpnd;
@@ -5252,4 +5245,3 @@ void LinearScan::GeneratorBailIn::InsertBailInTrace(BVSparse<JitArenaAllocator>*
         LinearScan::InsertMove(traceBailInSymbolsArrayCountIndirOpnd, countOpnd, insertBeforeInstr);
     }
 }
-#endif

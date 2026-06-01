@@ -307,7 +307,6 @@ Js::WebAssemblyModule* WasmModuleGenerator::GenerateModule()
         GenerateFunctionHeader(i);
     }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     WasmFunctionInfo* firstThunk = nullptr, *lastThunk = nullptr;
     for (uint32_t i = 0; i < funcCount; ++i)
     {
@@ -345,7 +344,6 @@ Js::WebAssemblyModule* WasmModuleGenerator::GenerateModule()
         CmdLineArgsParser parser(nullptr);
         parser.Parse(argv);
     }
-#endif
 
     // If we see a FunctionSignatures section we need to see a FunctionBodies section
     if (visitedSections.Test(bSectFunction) && !visitedSections.Test(bSectFunctionBodies))
@@ -514,14 +512,12 @@ WasmBytecodeGenerator::WasmBytecodeGenerator(Js::ScriptContext* scriptContext, W
 
 void WasmBytecodeGenerator::GenerateFunction()
 {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     if (DO_WASM_TRACE_BYTECODE)
     {
         Output::Print(u"Generate WebAssembly Bytecode: ");
         GetFunctionBody()->DumpFullFunctionName();
         Output::Print(u"\n");
     }
-#endif
     if (PHASE_OFF(Js::WasmBytecodePhase, GetFunctionBody()))
     {
         throw WasmCompilationException(u"Compilation skipped");

@@ -2020,7 +2020,6 @@ namespace Js
         return name;
     }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     PropertyId JavascriptProxy::EnsureHandlerPropertyId(ScriptContext* scriptContext)
     {
         ThreadContext* threadContext = scriptContext->GetThreadContext();
@@ -2076,7 +2075,6 @@ namespace Js
         varArgs[2] = handler;
         return Create(scriptContext, arguments);
     }
-#endif
 
     Var JavascriptProxy::ConstructorTrap(Arguments args, ScriptContext* scriptContext, const Js::AuxArray<uint32_t> *spreadIndices)
     {

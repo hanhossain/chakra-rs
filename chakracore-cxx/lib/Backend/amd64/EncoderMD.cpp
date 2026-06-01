@@ -593,7 +593,6 @@ EncoderMD::Encode(IR::Instr *instr, uint8_t *pc, uint8_t* beginCodeAddress)
                 }
             }
         }
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if (instr->IsEntryInstr() && (
             Js::Configuration::Global.flags.DebugBreak.Contains(m_func->GetFunctionNumber()) ||
             PHASE_ON(Js::DebugBreakPhase, m_func)
@@ -604,7 +603,6 @@ EncoderMD::Encode(IR::Instr *instr, uint8_t *pc, uint8_t* beginCodeAddress)
 
             return this->Encode(int3, m_pc);
         }
-#endif
         return 0;
     }
 

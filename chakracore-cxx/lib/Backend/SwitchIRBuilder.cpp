@@ -204,9 +204,7 @@ SwitchIRBuilder::SetProfiledInstruction(IR::Instr * instr, Js::ProfileId profile
         {
             char valueTypeStr[VALUE_TYPE_MAX_STRING_SIZE];
             valueType.ToString(valueTypeStr);
-#if ENABLE_DEBUG_CONFIG_OPTIONS
             char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-#endif
             PHASE_PRINT_TESTTRACE1(Js::SwitchOptPhase, u"Func %s, Switch %d: Expression Type : %S\n",
                 m_profiledSwitchInstr->m_func->GetDebugNumberSet(debugStringBuffer),
                 m_profiledSwitchInstr->AsProfiledInstr()->u.profileId, valueTypeStr);
@@ -732,9 +730,7 @@ SwitchIRBuilder::BuildBailOnNotInteger()
     m_adapter->ConvertToBailOut(m_profiledSwitchInstr, IR::BailOutExpectingInteger);
     m_switchOptBuildBail = false; // falsify this to avoid generating extra BailOuts when optimization is done again on the same switch statement
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-#endif
     PHASE_PRINT_TESTTRACE1(Js::SwitchOptPhase, u"Func %s, Switch %d:Optimized for Integers\n",
         m_profiledSwitchInstr->m_func->GetDebugNumberSet(debugStringBuffer),
         m_profiledSwitchInstr->AsProfiledInstr()->u.profileId);
@@ -759,9 +755,7 @@ SwitchIRBuilder::BuildBailOnNotString()
     m_adapter->ConvertToBailOut(m_profiledSwitchInstr, IR::BailOutExpectingString);
     m_switchOptBuildBail = false; // falsify this to avoid generating extra BailOuts when optimization is done again on the same switch statement
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-#endif
     PHASE_PRINT_TESTTRACE1(Js::SwitchOptPhase, u"Func %s, Switch %d:Optimized for Strings\n",
         m_profiledSwitchInstr->m_func->GetDebugNumberSet(debugStringBuffer),
         m_profiledSwitchInstr->AsProfiledInstr()->u.profileId);

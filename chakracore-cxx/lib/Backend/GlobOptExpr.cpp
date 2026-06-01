@@ -162,12 +162,10 @@ GlobOpt::GetHash(IR::Instr *instr, Value *src1Val, Value *src2Val, ExprAttribute
         Output::Print(u" >>>>  CSE: Value numbers too big to be hashed in function %s!\n", this->func->GetJITFunctionBody()->GetDisplayName());
     }
 #endif
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     if (!pHash->IsValid() && Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::CSEPhase, this->func->GetSourceContextId(), this->func->GetLocalFunctionId()))
     {
         Output::Print(u" >>>>  CSE: Value numbers too big to be hashed in function %s!\n", this->func->GetJITFunctionBody()->GetDisplayName());
     }
-#endif
 
     return pHash->IsValid();
 }
@@ -755,12 +753,10 @@ GlobOpt::CSEOptimize(BasicBlock *block, IR::Instr * *const instrRef, Value **pSr
         instr->Dump();
     }
 #endif
-#if ENABLE_DEBUG_CONFIG_OPTIONS
     if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::CSEPhase, this->func->GetSourceContextId(), this->func->GetLocalFunctionId()))
     {
         Output::Print(u" --- CSE (%s): %s\n", this->func->GetJITFunctionBody()->GetDisplayName(), Js::OpCodeUtil::GetOpCodeName(instr->m_opcode));
     }
-#endif
 
     this->CaptureByteCodeSymUses(instr);
 

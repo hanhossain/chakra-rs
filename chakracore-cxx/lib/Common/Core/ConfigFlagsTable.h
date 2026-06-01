@@ -885,7 +885,7 @@ namespace Js
 
                 bool            flagPresent[FlagCount];
 
-#if defined(ENABLE_DEBUG_CONFIG_OPTIONS) && CONFIG_PARSE_CONFIG_FILE
+#if CONFIG_PARSE_CONFIG_FILE
                 // save the jscript.config for easier to get the raw input while analyzing dump file
                 char16_t          rawInputFromConfigFile[512];
                 int             rawInputFromConfigFileIndex;
@@ -906,11 +906,9 @@ namespace Js
 
                 void        SetAllParentFlagsAsDefaultValue();
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
                 // special callback logic
                 void        FlagSetCallback_ES6All(Js::Boolean value);
                 void        FlagSetCallback_ES6Experimental(Js::Boolean value);
-#endif
 
     public:
         void FinalizeConfiguration();
@@ -958,7 +956,6 @@ namespace Js
 
 //Create macros for a useful subset of the config options that either get the value from the configuration (if the option is enabled) or
 //just use the hard coded default value (if not). All the ...IsEnabled(...) default to false.
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
 #define CONFIG_ISENABLED(flag)      (Js::Configuration::Global.flags.IsEnabled(flag))
 #define CUSTOM_CONFIG_ISENABLED(flags, flag)      (flags.IsEnabled(flag))
 #define CONFIG_FLAG(flag)           (Js::Configuration::Global.flags.##flag)
@@ -1149,92 +1146,6 @@ namespace Js
         Output::Print(__VA_ARGS__); \
         Output::Flush(); \
     }
-#else
-#define CONFIG_ISENABLED(flag)      (false)             //All flags.IsEnabled(foo) are false by default.
-#define CUSTOM_CONFIG_ISENABLED(flags, flag)      (false)             //All flags.IsEnabled(foo) are false by default.
-#define CONFIG_FLAG(flag)           (DEFAULT_CONFIG_##flag)
-#define CUSTOM_CONFIG_FLAG(flags, flag)           (DEFAULT_CONFIG_##flag)
-#define CONFIG_FLAG_RELEASE(flag)   (Js::Configuration::Global.flags.##flag)
-#define CONFIG_FLAG_CONTAINS(flag, func)  (false)
-#define PHASE_OFF_PROFILED_BYTE_CODE(phase, func) (false)
-#define PHASE_OFF_PROFILED_BYTE_CODE_ALL(phase) (false)
-#define PHASE_OFF_PROFILED_BYTE_CODE_OPTFUNC(phase, func) (false)
-
-#define PHASE_OFF1(phase)           (false)             //All flags.Off.IsEnabled(foo) are false by default
-#define CUSTOM_PHASE_OFF1(flags, phase)           (false)             //All flags.Off.IsEnabled(foo) are false by default
-#define PHASE_OFF_ALL(phase)        (false)
-#define PHASE_OFF(phase, func)      (false)
-#define PHASE_OFF_RAW(phase, sourceId, functionId) (false)
-#define PHASE_OFF_OPTFUNC(phase, func) (false)
-
-#define PHASE_ON1(phase)            (false)
-#define CUSTOM_PHASE_ON1(flags, phase) (false)
-#define PHASE_ON(phase, func)       (false)
-#define PHASE_ON_RAW(phase, sourceId, functionId) (false)
-
-#define PHASE_FORCE1(phase)         (false)
-#define CUSTOM_PHASE_FORCE1(flags, phase)         (false)
-#define PHASE_FORCE(phase, func)    (false)
-#define PHASE_FORCE_RAW(phase, sourceId, functionId) (false)
-#define PHASE_FORCE_OPTFUNC(phase, func) (false)
-
-#define PHASE_STRESS1(phase)         (false)
-#define PHASE_STRESS(phase, func)    (false)
-#define PHASE_STRESS_RAW(phase, sourceId, functionId) (false)
-
-#define PHASE_TRACE1(phase)         (false)
-#define CUSTOM_PHASE_TRACE1(phase)         (false)
-#define PHASE_TRACE(phase, func)    (false)
-#define PHASE_TRACE_RAW(phase, sourceId, functionId) (false)
-#define PHASE_TRACE_StringConcat    (false)
-
-#define PHASE_VERBOSE_TRACE1(phase) (false)
-#define CUSTOM_PHASE_VERBOSE_TRACE1(flags, phase) (false)
-#define PHASE_VERBOSE_TRACE(phase, func) (false)
-#define PHASE_VERBOSE_TRACE_RAW(phase, sourceId, functionId) (false)
-
-#define PHASE_TESTTRACE1(phase)     (false)
-#define PHASE_TESTTRACE(phase, func) (false)
-#define PHASE_TESTTRACE_RAW(phase, sourceId, functionId) (false)
-#define PHASE_TESTTRACE1_TELEMETRY(phase) (false)
-
-#define PHASE_PRINT_TRACE1(phase, ...)
-#define CUSTOM_PHASE_PRINT_TRACE1(phase, ...)
-#define PHASE_PRINT_TRACE(phase, func, ...)
-#define PHASE_PRINT_TRACE_RAW(phase, sourceId, functionId, ...)
-
-#define PHASE_PRINT_VERBOSE_TRACE1(phase, ...)
-#define CUSTOM_PHASE_PRINT_VERBOSE_TRACE1(phase, ...)
-#define PHASE_PRINT_VERBOSE_TRACE(phase, func, ...)
-#define PHASE_PRINT_VERBOSE_TRACE_RAW(phase, sourceId, functionId, ...)
-
-#define PHASE_VERBOSE_TESTTRACE1(phase) (false)
-#define PHASE_VERBOSE_TESTTRACE(phase, func) (false)
-#define PHASE_VERBOSE_TESTTRACE_RAW(phase, sourceId, functionId) (false)
-
-#define PHASE_VERBOSE_TRACE1(phase) (false)
-#define PHASE_VERBOSE_TRACE(phase, func) (false)
-#define PHASE_VERBOSE_TRACE_RAW(phase, sourceId, functionId) (false)
-
-#define PHASE_PRINT_TESTTRACE1(phase, ...)
-#define PHASE_PRINT_TESTTRACE(phase, func, ...)
-#define PHASE_PRINT_TESTTRACE_RAW(phase, sourceId, functionId, ...)
-
-#define PHASE_PRINT_VERBOSE_TESTTRACE1(phase, ...)
-#define PHASE_PRINT_VERBOSE_TESTTRACE(phase, func, ...)
-#define PHASE_PRINT_VERBOSE_TESTTRACE_RAW(phase, sourceId, functionId, ...)
-
-#define PHASE_DUMP(phase, func)     (false)             //All flags.Dump.IsEnabled(foo) are false by default
-
-#define PHASE_STATS1(phase)         (false)
-#define CUSTOM_PHASE_STATS1(flags, phase)         (false)
-#define PHASE_VERBOSE_STATS1(phase) (false)
-#define PHASE_STATS_ALL(phase)      (false)
-#define PHASE_STATS(phase, func)    (false)
-#define PHASE_STATS_RAW(phase, sourceId, functionId) (false)
-#define PHASE_VERBOSE_STATS(phase, func) (false)
-#define PHASE_VERBOSE_STATS_RAW(phase, sourceId, functionId) (false)
-#endif
 
 #ifdef ENABLE_REGEX_CONFIG_OPTIONS
 #define REGEX_CONFIG_FLAG(flag) (Js::Configuration::Global.flags.##flag)

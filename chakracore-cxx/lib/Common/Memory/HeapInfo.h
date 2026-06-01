@@ -15,9 +15,7 @@ class BucketStatsReporter;
 #endif
 class HeapInfo
 {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     friend class ::ScriptMemoryDumper;
-#endif
 public:
     HeapInfo(AllocationPolicyManager * policyManager, Js::ConfigFlagsTable& configFlagsTable, IdleDecommitPageAllocator * leafPageAllocator);
     ~HeapInfo();

@@ -84,9 +84,7 @@ namespace Memory
 #if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
         CollectNowFinalGC                   = CollectNowExhaustive | CollectOverride_ForceInThread | CollectOverride_SkipStack | CollectOverride_Explicit | CollectOverride_AllowDispose,
 #endif
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         CollectNowExhaustiveSkipStack   = CollectNowExhaustive | CollectOverride_SkipStack, // Used by test
-#endif
     };
 
 // NOTE: There is perf lab test infrastructure that takes a dependency on the events in this enumeration. Any modifications may cause

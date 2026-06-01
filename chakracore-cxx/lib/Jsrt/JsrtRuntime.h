@@ -40,10 +40,8 @@ public:
     void SetBeforeCollectCallback(JsBeforeCollectCallback beforeCollectCallback, void * callbackContext);
     void SetBeforeSweepCallback(JsBeforeSweepCallback beforeCollectCallback, void * callbackContext);
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     void SetSerializeByteCodeForLibrary(bool set) { serializeByteCodeForLibrary = set; }
     bool IsSerializeByteCodeForLibrary() const { return serializeByteCodeForLibrary; }
-#endif
 
 #ifdef ENABLE_SCRIPT_DEBUGGING
     void EnsureJsrtDebugManager();
@@ -72,9 +70,7 @@ private:
     void * beforeCollectCallbackContext;
     bool useIdle;
     bool dispatchExceptions;
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     bool serializeByteCodeForLibrary;
-#endif
 #ifdef ENABLE_SCRIPT_DEBUGGING
     JsrtDebugManager * jsrtDebugManager;
 #endif

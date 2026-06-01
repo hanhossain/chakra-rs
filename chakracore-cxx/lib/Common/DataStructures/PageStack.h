@@ -40,12 +40,10 @@ public:
     }
 #endif
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     void SetMaxPageCount(size_t maxPageCount)
     {
         this->maxPageCount = maxPageCount > 1 ? maxPageCount : 1;
     }
-#endif
 
     static const uint MaxSplitTargets = 3;     // Not counting original stack, so this supports 4-way parallel
 
@@ -64,10 +62,8 @@ private:
 #if DBG
     size_t count;
 #endif
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     size_t pageCount;
     size_t maxPageCount;
-#endif
 };
 
 
@@ -155,10 +151,8 @@ PageStack<T>::PageStack(PagePool * pagePool) :
     chunkEnd(nullptr),
     usesReservedPages(false)
 {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     pageCount = 0;
     maxPageCount = (size_t)-1;  // Default to no limit
-#endif
 
 #if DBG
     count = 0;
@@ -214,12 +208,10 @@ void PageStack<T>::Clear()
 template <typename T>
 typename PageStack<T>::Chunk * PageStack<T>::CreateChunk()
 {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     if (pageCount >= maxPageCount)
     {
         return nullptr;
     }
-#endif
     Chunk * newChunk = (Chunk *)this->pagePool->GetPage(usesReservedPages);
 
     if (newChunk == nullptr)
@@ -227,9 +219,7 @@ typename PageStack<T>::Chunk * PageStack<T>::CreateChunk()
         return nullptr;
     }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     pageCount++;
-#endif
     return newChunk;
 }
 
@@ -237,9 +227,7 @@ typename PageStack<T>::Chunk * PageStack<T>::CreateChunk()
 template <typename T>
 void PageStack<T>::FreeChunk(Chunk * chunk)
 {
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     pageCount--;
-#endif
     this->pagePool->FreePage(chunk);
 }
 
@@ -289,10 +277,8 @@ uint PageStack<T>::Split(uint targetCount, __in_ecount(targetCount) PageStack<T>
         targetStacks[targetIndex]->chunkEnd = &chunk->entries[EntriesPerChunk];
         targetStacks[targetIndex]->nextEntry = targetStacks[targetIndex]->chunkEnd;
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         this->pageCount--;
         targetStacks[targetIndex]->pageCount = 1;
-#endif
 #if DBG
         this->count -= EntriesPerChunk;
         targetStacks[targetIndex]->count = EntriesPerChunk;
@@ -330,10 +316,8 @@ uint PageStack<T>::Split(uint targetCount, __in_ecount(targetCount) PageStack<T>
             targetCurrents[targetIndex]->nextChunk = chunk;
             targetCurrents[targetIndex] = chunk;
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
             this->pageCount--;
             targetStacks[targetIndex]->pageCount++;
-#endif
 #if DBG
             this->count -= EntriesPerChunk;
             targetStacks[targetIndex]->count += EntriesPerChunk;

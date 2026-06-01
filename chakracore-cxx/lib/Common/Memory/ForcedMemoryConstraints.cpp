@@ -4,7 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 #include "CommonMemoryPch.h"
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
 #include "Memory/ForcedMemoryConstraints.h"
 
 void
@@ -56,4 +55,3 @@ void ForcedMemoryConstraint::FragmentAddressSpace(size_t usableSize)
 #endif
 }
 
-#endif

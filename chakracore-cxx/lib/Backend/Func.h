@@ -555,9 +555,7 @@ static const unsigned long c_debugFillPattern8 = 0xcececececececece;
 #endif
 
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     void DumpFullFunctionName();
-#endif
 
 public:
     JitArenaAllocator *    m_alloc;

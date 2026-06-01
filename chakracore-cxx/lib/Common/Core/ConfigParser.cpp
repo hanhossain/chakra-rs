@@ -59,7 +59,7 @@ void ConfigParser::ParseOnModuleLoad(CmdLineArgsParser& parser)
 
 void ConfigParser::ParseConfig(CmdLineArgsParser &parser, const char16_t* strCustomConfigFile)
 {
-#if defined(ENABLE_DEBUG_CONFIG_OPTIONS) && CONFIG_PARSE_CONFIG_FILE
+#if CONFIG_PARSE_CONFIG_FILE
     Assert(!_hasReadConfig || strCustomConfigFile != nullptr);
     _hasReadConfig = true;
 
@@ -178,7 +178,6 @@ void ConfigParser::ParseConfig(CmdLineArgsParser &parser, const char16_t* strCus
 
 void ConfigParser::ProcessConfiguration()
 {
-#if defined(ENABLE_DEBUG_CONFIG_OPTIONS)
     bool hasOutput = false;
     if (Js::Configuration::Global.flags.IsEnabled(Js::OutputFileFlag)
         && Js::Configuration::Global.flags.OutputFile != nullptr)
@@ -226,7 +225,6 @@ void ConfigParser::ProcessConfiguration()
     }
 
     ForcedMemoryConstraint::Apply();
-#endif
 
 #ifdef MEMSPECT_TRACKING
     bool all = false;

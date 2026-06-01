@@ -286,12 +286,10 @@ namespace Js
             return false; // Not a supported object type
         }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
         {
             *dst = JavascriptProxy::AutoProxyWrapper(*dst);
         }
-#endif
         return true;
     }
 

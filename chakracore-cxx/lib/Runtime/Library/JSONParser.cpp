@@ -290,12 +290,10 @@ namespace JSON
 
                 // first, create the object
                 Js::DynamicObject* object = scriptContext->GetLibrary()->CreateObject();
-#if ENABLE_DEBUG_CONFIG_OPTIONS
                 if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
                 {
                     object = VarTo<DynamicObject>(JavascriptProxy::AutoProxyWrapper(object));
                 }
-#endif
 
                 //next token after '{'
                 Scan();

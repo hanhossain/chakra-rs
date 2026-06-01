@@ -160,11 +160,7 @@ AutoSystemInfo::GetAllocationGranularityPageSize() const
 bool
 AutoSystemInfo::VirtualSseAvailable(const int sseLevel) const
 {
-    #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         return CONFIG_FLAG(Sse) < 0 || CONFIG_FLAG(Sse) >= sseLevel;
-    #else
-        return true;
-    #endif
 }
 #endif
 

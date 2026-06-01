@@ -247,11 +247,7 @@ namespace Js
         return
             !PHASE_OFF_OPTFUNC(DynamicProfilePhase, functionBody) &&
             (
-#if ENABLE_DEBUG_CONFIG_OPTIONS
                 PHASE_FORCE_OPTFUNC(DynamicProfilePhase, functionBody) ||
-#else
-                Js::Configuration::Global.flags.ForceDynamicProfile ||
-#endif
                 !scriptContext->GetConfig()->IsNoNative() ||
                 (functionBody && functionBody->IsInDebugMode())
 #ifdef DYNAMIC_PROFILE_STORAGE
@@ -858,7 +854,6 @@ namespace Js
             }
         }
 
-#ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::PolymorphicInlinePhase))
         {
             char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
@@ -871,7 +866,6 @@ namespace Js
                 );
             Output::Flush();
         }
-#endif
 
 #ifdef PERF_HINT
         if (PHASE_TRACE1(Js::PerfHintPhase))
@@ -2675,7 +2669,6 @@ IR::BailOutKind IR::EquivalentToMonoTypeCheckBailOutKind(IR::BailOutKind kind)
     }
 }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS || defined(REJIT_STATS)
 const char *const BailOutKindNames[] =
 {
 #define BAIL_OUT_KIND_LAST(n)               "" STRINGIZE(n) ""
@@ -2893,5 +2886,4 @@ const char* GetBailOutKindName(IR::BailOutKind kind)
     Assert(!kind);
     return name;
 }
-#endif
 #endif

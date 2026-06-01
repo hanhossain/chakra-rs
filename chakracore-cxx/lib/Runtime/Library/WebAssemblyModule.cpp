@@ -261,7 +261,6 @@ WebAssemblyModule::ValidateModule(
             Wasm::WasmReaderInfo * readerInfo = body->GetAsmJsFunctionInfo()->GetWasmReaderInfo();
 
             Wasm::WasmBytecodeGenerator::ValidateFunction(scriptContext, readerInfo);
-#if ENABLE_DEBUG_CONFIG_OPTIONS
             if (PHASE_ENABLED(WasmValidatePrejitPhase, body))
             {
                 CONFIG_FLAG(MaxAsmJsInterpreterRunCount) = 0;
@@ -270,7 +269,6 @@ WebAssemblyModule::ValidateModule(
                 entrypointInfo->SetIsAsmJSFunction(true);
                 GenerateFunction(scriptContext->GetNativeCodeGenerator(), body, funcObj);
             }
-#endif
         }
     }
     catch (Wasm::WasmCompilationException& ex)
@@ -460,7 +458,6 @@ WebAssemblyModule::SwapWasmFunctionInfo(uint i1, uint i2)
     m_functionsInfo->SetItem(i2, f1);
 }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS
 void
 WebAssemblyModule::AttachCustomInOutTracingReader(Wasm::WasmFunctionInfo* func, uint callIndex)
 {
@@ -559,7 +556,6 @@ SkipReturnPrint:
 
     func->SetCustomReader(customReader);
 }
-#endif
 
 void
 WebAssemblyModule::AllocateFunctionExports(uint32_t entries)

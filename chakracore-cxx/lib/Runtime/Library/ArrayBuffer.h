@@ -152,9 +152,7 @@ namespace Js
             static FunctionInfo IsView;
             static FunctionInfo GetterByteLength;
             static FunctionInfo GetterSymbolSpecies;
-#if ENABLE_DEBUG_CONFIG_OPTIONS
             static FunctionInfo Detach;
-#endif
         };
 
         static Var NewInstance(RecyclableObject* function, CallInfo callInfo, ...);
@@ -162,9 +160,7 @@ namespace Js
         static Var EntryIsView(RecyclableObject* function, CallInfo callInfo, ...);
         static Var EntryGetterByteLength(RecyclableObject* function, CallInfo callInfo, ...);
         static Var EntryGetterSymbolSpecies(RecyclableObject* function, CallInfo callInfo, ...);
-#if ENABLE_DEBUG_CONFIG_OPTIONS
         static Var EntryDetach(RecyclableObject* function, CallInfo callInfo, ...);
-#endif
 
         static ArrayBuffer* NewFromDetachedState(DetachedStateBase* state, JavascriptLibrary *library);
 
