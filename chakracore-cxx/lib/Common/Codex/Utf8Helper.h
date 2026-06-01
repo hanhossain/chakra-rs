@@ -243,6 +243,18 @@ namespace utf8
             sourceString, strlen(sourceString), destStringPtr, &unused);
     }
 
+    inline int32_t NarrowStringToWideDynamic(const char * sourceString, std::u16string &destString)
+    {
+        char16_t *destStringPtr = nullptr;
+        const auto res = NarrowStringToWideDynamic(sourceString, &destStringPtr);
+        if (destStringPtr != nullptr)
+        {
+            destString = destStringPtr;
+            free(destStringPtr);
+        }
+        return res;
+    }
+
     inline int32_t NarrowStringToWideDynamicGetLength(_In_ const char * sourceString, _Out_ char16_t** destStringPtr, _Out_ charcount_t* destLength)
     {
         return NarrowStringToWide<malloc_allocator>(

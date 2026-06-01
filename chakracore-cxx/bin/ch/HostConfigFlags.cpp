@@ -8,8 +8,7 @@
 #include <chakracore-sys/src/str_helper.rs.h>
 
 HostConfigFlags HostConfigFlags::flags;
-const char16_t** HostConfigFlags::argsVal;
-int HostConfigFlags::argsCount;
+std::vector<std::u16string> HostConfigFlags::vargsVal;
 void(*HostConfigFlags::pfnPrintUsage)();
 
 template <>
@@ -214,23 +213,23 @@ void HostConfigFlags::RemoveArg(int& argc, _Inout_updates_to_(argc, argc) char16
     --argc;
 }
 
-void HostConfigFlags::HandleArgsFlag(int& argc, _Inout_updates_to_(argc, argc) char16_t* argv[])
+void HostConfigFlags::HandleArgsFlag(std::vector<std::u16string> &vargs)
 {
     constexpr std::u16string_view argsFlag = u"-args";
     constexpr std::u16string_view endArgsFlag = u"-endargs";
     int i;
-    for (i = 1; i < argc; i++)
+    for (i = 1; i < vargs.size(); i++)
     {
-        if (argv[i] == argsFlag)
+        if (vargs[i] == argsFlag)
         {
             break;
         }
     }
 
     int argsStart = ++i;
-    for (; i < argc; i++)
+    for (; i < vargs.size(); i++)
     {
-        if (argv[i] == endArgsFlag)
+        if (vargs[i] == endArgsFlag)
         {
             break;
         }
@@ -242,22 +241,22 @@ void HostConfigFlags::HandleArgsFlag(int& argc, _Inout_updates_to_(argc, argc) c
     {
         return;
     }
-    HostConfigFlags::argsVal = new const char16_t*[argsCount];
-    HostConfigFlags::argsCount = argsCount;
+    HostConfigFlags::vargsVal = std::vector<std::u16string>(argsCount);
     int argIndex = argsStart;
     for (i = 0; i < argsCount; i++)
     {
-        HostConfigFlags::argsVal[i] = argv[argIndex++];
+        HostConfigFlags::vargsVal[i] = vargs[argIndex++];
     }
 
     argIndex = argsStart - 1;
-    for (i = argsEnd + 1; i < argc; i++)
+    for (i = argsEnd + 1; i < vargs.size(); i++)
     {
-        char16_t* temp = argv[argIndex];
-        argv[argIndex] = argv[i];
-        argv[i] = temp;
+        auto temp = std::move(vargs[argIndex]);
+        vargs[argIndex] = std::move(vargs[i]);
+        vargs[i] = std::move(temp);
+
         argIndex++;
     }
-    Assert(argIndex == argc - argsCount - 1 - (argsEnd < argc));
-    argc = argIndex;
+
+    vargs.resize(argIndex);
 }

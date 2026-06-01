@@ -618,13 +618,13 @@ CmdLineArgsParser::ParseFlag()
 ///----------------------------------------------------------------------------
 
 int
-CmdLineArgsParser::Parse(int argc, __in_ecount(argc) char16_t* argv[])
+CmdLineArgsParser::Parse(std::vector<std::u16string> vargs)
 {
     int err = 0;
 
-    for(int i = 1; i < argc; i++)
+    for(int i = 1; i < vargs.size(); i++)
     {
-        if ((err = Parse(argv[i])) != 0)
+        if ((err = Parse(vargs[i].data())) != 0)
         {
             break;
         }

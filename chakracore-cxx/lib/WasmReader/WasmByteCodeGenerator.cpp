@@ -341,9 +341,9 @@ Js::WebAssemblyModule* WasmModuleGenerator::GenerateModule()
         swprintf_s(offSimpleJit, 128, u"-off:simplejit:%s", range);
         char16_t offLoopJit[128];
         swprintf_s(offLoopJit, 128, u"-off:jitloopbody:%s", range);
-        char16_t* argv[] = { nullptr, offFullJit, offSimpleJit, offLoopJit };
+        std::vector<std::u16string> argv = { {}, offFullJit, offSimpleJit, offLoopJit };
         CmdLineArgsParser parser(nullptr);
-        parser.Parse(ARRAYSIZE(argv), argv);
+        parser.Parse(argv);
     }
 #endif
 
