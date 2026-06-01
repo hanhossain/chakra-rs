@@ -215,48 +215,18 @@ void HostConfigFlags::RemoveArg(int& argc, _Inout_updates_to_(argc, argc) char16
 
 void HostConfigFlags::HandleArgsFlag(std::vector<std::u16string> &vargs)
 {
-    constexpr std::u16string_view argsFlag = u"-args";
-    constexpr std::u16string_view endArgsFlag = u"-endargs";
-    int i;
-    for (i = 1; i < vargs.size(); i++)
-    {
-        if (vargs[i] == argsFlag)
-        {
-            break;
-        }
-    }
-
-    int argsStart = ++i;
-    for (; i < vargs.size(); i++)
-    {
-        if (vargs[i] == endArgsFlag)
-        {
-            break;
-        }
-    }
-    int argsEnd = i;
-
-    int argsCount = argsEnd - argsStart;
-    if (argsCount == 0)
+    const auto start = std::ranges::find(vargs, u"-args");
+    if (start == std::ranges::end(vargs))
     {
         return;
     }
-    HostConfigFlags::vargsVal = std::vector<std::u16string>(argsCount);
-    int argIndex = argsStart;
-    for (i = 0; i < argsCount; i++)
+    const auto end = std::ranges::find(vargs, u"-endargs");
+    if (end == std::ranges::end(vargs))
     {
-        HostConfigFlags::vargsVal[i] = vargs[argIndex++];
+        return;
     }
 
-    argIndex = argsStart - 1;
-    for (i = argsEnd + 1; i < vargs.size(); i++)
-    {
-        auto temp = std::move(vargs[argIndex]);
-        vargs[argIndex] = std::move(vargs[i]);
-        vargs[i] = std::move(temp);
-
-        argIndex++;
-    }
-
-    vargs.resize(argIndex);
+    auto subrange = std::ranges::subrange(start + 1, end);
+    HostConfigFlags::vargsVal = std::ranges::to<std::vector>(subrange);
+    vargs.erase(start, end + 1);
 }
