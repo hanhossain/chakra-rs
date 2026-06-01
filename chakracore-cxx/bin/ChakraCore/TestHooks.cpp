@@ -68,10 +68,10 @@ int LogicalStringCompareImpl(const char16_t* p1, int p1size, const char16_t* p2,
 
 #ifdef ENABLE_TEST_HOOKS
 
-int32_t SetConfigFlags(int argc, __in_ecount(argc) char16_t* argv[], ICustomConfigFlags* customConfigFlags)
+int32_t SetConfigFlags(const std::vector<std::u16string> &vargs, ICustomConfigFlags* customConfigFlags)
 {
     CmdLineArgsParser parser(customConfigFlags);
-    if (parser.Parse(argc, argv) != 0)
+    if (parser.Parse(vargs) != 0)
     {
         return E_FAIL;
     }

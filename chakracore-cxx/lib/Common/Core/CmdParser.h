@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include <string>
+#include <vector>
 #include "Core/ICustomConfigFlags.h"
 
 ///----------------------------------------------------------------------------
@@ -34,7 +36,7 @@ private:
 
 // Methods
 public:
-    int                Parse(int argc, __in_ecount(argc) char16_t* argv[]);
+    int                Parse(std::vector<std::u16string> vargs);
     int Parse(char16_t* token) throw();
     CmdLineArgsParser(ICustomConfigFlags * pCustomConfigFlags = nullptr, Js::ConfigFlagsTable& flagTable = Js::Configuration::Global.flags);
     ~CmdLineArgsParser();

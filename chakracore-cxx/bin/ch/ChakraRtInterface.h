@@ -14,21 +14,17 @@ public:
 
     struct ArgInfo
     {
-        int argc;
-        char16_t ** argv;
+        std::vector<std::u16string> vargs_;
         HostPrintUsageFuncPtr hostPrintUsage;
         std::string filename_;
 
         ArgInfo() :
-            argc(0),
-            argv(nullptr),
             hostPrintUsage(nullptr)
         {
         }
 
-        ArgInfo(int argc, char16_t ** argv, HostPrintUsageFuncPtr hostPrintUsage, std::string filename) :
-            argc(argc),
-            argv(argv),
+        ArgInfo(const std::vector<std::u16string> &vargs, HostPrintUsageFuncPtr hostPrintUsage, std::string filename) :
+            vargs_(vargs),
             hostPrintUsage(hostPrintUsage),
             filename_(std::move(filename))
         {
@@ -54,7 +50,7 @@ public:
     static bool LoadChakraDll(ArgInfo* argInfo);
 
     static int32_t SetAssertToConsoleFlag(bool flag) { return CHECKED_CALL(SetAssertToConsoleFlag, flag); }
-    static int32_t SetConfigFlags(int argc, __in_ecount(argc) char16_t * argv[], ICustomConfigFlags* customConfigFlags) { return CHECKED_CALL(SetConfigFlags, argc, argv, customConfigFlags); }
+    static int32_t SetConfigFlags(const std::vector<std::u16string> &vargs, ICustomConfigFlags* customConfigFlags) { return CHECKED_CALL(SetConfigFlags, vargs, customConfigFlags); }
     static int32_t SetConfigFile(char16_t * strConfigFileName) { return CHECKED_CALL(SetConfigFile, strConfigFileName); }
     static int32_t GetFileNameFlag(BSTR * filename) { return CHECKED_CALL(GetFilenameFlag, filename); }
     static int32_t PrintConfigFlagsUsageString() { m_usageStringPrinted = true;  return CHECKED_CALL(PrintConfigFlagsUsageString); }

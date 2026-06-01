@@ -26,11 +26,10 @@ public:
     bool ExecuteWithBgParse; bool ExecuteWithBgParseIsEnabled;
 
     static HostConfigFlags flags;
-    static const char16_t** argsVal;
-    static int argsCount;
+    static std::vector<std::u16string> vargsVal;
     static void(*pfnPrintUsage)();
 
-    static void HandleArgsFlag(int& argc, _Inout_updates_to_(argc, argc) char16_t* argv[]);
+    static void HandleArgsFlag(std::vector<std::u16string> &vargs);
     static void RemoveArg(int& argc, _Inout_updates_to_(argc, argc) char16_t* argv[], int index);
     static int FindArg(int argc, _In_reads_(argc) char16_t* argv[], const char16_t * targetArg, size_t targetArgLen);
 

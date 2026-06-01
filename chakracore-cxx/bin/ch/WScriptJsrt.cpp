@@ -88,21 +88,21 @@ unsigned long WScriptJsrt::GetNextSourceContext()
 
 bool WScriptJsrt::CreateArgumentsObject(JsValueRef *argsObject)
 {
-    const char16_t* *argv = HostConfigFlags::argsVal;
+    // const char16_t* *argv = HostConfigFlags::argsVal;
     JsValueRef retArr;
 
     Assert(argsObject);
     *argsObject = nullptr;
 
-    IfJsrtErrorFail(ChakraRTInterface::JsCreateArray(HostConfigFlags::argsCount, &retArr), false);
+    IfJsrtErrorFail(ChakraRTInterface::JsCreateArray(HostConfigFlags::vargsVal.size(), &retArr), false);
 
-    for (int i = 0; i < HostConfigFlags::argsCount; i++)
+    for (int i = 0; i < HostConfigFlags::vargsVal.size(); i++)
     {
         JsValueRef value;
         JsValueRef index;
 
         char *argNarrow;
-        if (FAILED(WideStringToNarrowDynamic(argv[i], &argNarrow)))
+        if (FAILED(WideStringToNarrowDynamic(HostConfigFlags::vargsVal[i].c_str(), &argNarrow)))
         {
             return false;
         }
@@ -1488,8 +1488,9 @@ JsValueRef WScriptJsrt::FlagCallback(JsValueRef callee, bool isConstructCall, Js
     {
         AutoString cmd;
         IfJsrtErrorSetGo(cmd.Initialize(arguments[1]));
-        char16_t* argv[] = { nullptr, cmd.GetWideString() };
-        ChakraRTInterface::SetConfigFlags(2, argv, nullptr);
+        //char16_t* argv[] = { nullptr, cmd.GetWideString() };
+        const std::vector<std::u16string> argv = { {}, cmd.GetWideString() };
+        ChakraRTInterface::SetConfigFlags(argv, nullptr);
     }
 #endif
 

@@ -744,15 +744,15 @@ int32_t ExecuteTestWithMemoryCheck(const std::string &fileName, const bool doTTR
     return hr;
 }
 
-static char16_t** argv = nullptr;
 int main_internal(int argc, char** c_argv, uint32_t snapInterval, uint32_t snapHistoryLength, uint32_t startEventCount,
     const bool doTTRecord, const bool doTTReplay, rust::String ttUri)
 {
-    int origargc = argc; // store for clean-up later
-    argv = new char16_t*[argc];
+    auto vargs = std::vector<std::u16string>(argc);
     for (int i = 0; i < argc; i++)
     {
-        NarrowStringToWideDynamic(c_argv[i], &argv[i]);
+        std::u16string s;
+        NarrowStringToWideDynamic(c_argv[i], s);
+        vargs[i] = std::move(s);
     }
 
     int retval = -1;
@@ -765,9 +765,9 @@ int main_internal(int argc, char** c_argv, uint32_t snapInterval, uint32_t snapH
 
     HostConfigFlags::pfnPrintUsage = chakra_rs::chhelper::print_usage;
 
-    HostConfigFlags::HandleArgsFlag(argc, argv);
+    HostConfigFlags::HandleArgsFlag(vargs);
 
-    argInfo = { argc, argv, chakra_rs::chhelper::print_usage, {} };
+    argInfo = { vargs, chakra_rs::chhelper::print_usage, {} };
     success = ChakraRTInterface::LoadChakraDll(&argInfo);
 
 #if !defined(NDEBUG)
@@ -777,7 +777,7 @@ int main_internal(int argc, char** c_argv, uint32_t snapInterval, uint32_t snapH
 
     if (argInfo.filename_.empty())
     {
-        WideStringToNarrowDynamic(argv[1], argInfo.filename_);
+        WideStringToNarrowDynamic(vargs[1].c_str(), argInfo.filename_);
     }
 
     if (success)
@@ -794,16 +794,6 @@ int main_internal(int argc, char** c_argv, uint32_t snapInterval, uint32_t snapH
     PAL_Shutdown();
     retval = (int)exitCode;
 
-    if(argv != nullptr)
-    {
-        for(int i=0;i<origargc;i++)
-        {
-            free(argv[i]);
-            argv[i] = nullptr;
-        }
-    }
-    delete[] argv;
-    argv = nullptr;
 #ifdef NO_SANITIZE_ADDRESS_CHECK
     pthread_exit(&retval);
 #else

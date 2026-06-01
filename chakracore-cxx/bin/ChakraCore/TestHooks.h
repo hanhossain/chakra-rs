@@ -5,12 +5,16 @@
 #pragma once
 
 #ifdef ENABLE_TEST_HOOKS
+
+#include <string>
+#include <vector>
+
 #include <oaidl.h>
 interface ICustomConfigFlags;
 
 struct TestHooks
 {
-    typedef int32_t(*SetConfigFlagsPtr)(int argc, char16_t* argv[], ICustomConfigFlags* customConfigFlags);
+    using SetConfigFlagsPtr = int32_t(*)(const std::vector<std::u16string> &vargs, ICustomConfigFlags* customConfigFlags);
     typedef int32_t(*SetConfigFilePtr)(char16_t* strConfigFile);
     typedef int32_t(*PrintConfigFlagsUsageStringPtr)(void);
     typedef int32_t(*SetAssertToConsoleFlagPtr)(bool flag);

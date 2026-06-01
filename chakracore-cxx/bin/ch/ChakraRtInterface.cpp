@@ -34,7 +34,7 @@ int32_t ChakraRTInterface::ParseConfigFlags()
 
     if (m_testHooks.pfSetConfigFlags)
     {
-        hr = SetConfigFlags(m_argInfo->argc, m_argInfo->argv, &HostConfigFlags::flags);
+        hr = SetConfigFlags(m_argInfo->vargs_, &HostConfigFlags::flags);
         if (hr != S_OK && !m_usageStringPrinted)
         {
             m_argInfo->hostPrintUsage();
