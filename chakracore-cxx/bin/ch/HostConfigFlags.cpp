@@ -220,7 +220,11 @@ void HostConfigFlags::HandleArgsFlag(std::vector<std::u16string> &vargs)
     {
         return;
     }
-    const auto end = std::ranges::find(vargs, u"-endargs");
+
+    const auto end = std::ranges::find_if(start, std::ranges::end(vargs), [](const std::u16string &s)
+    {
+        return chakra_rs::str_helper::to_lowercase(s.c_str()) == u"-endargs";
+    });
     if (end == std::ranges::end(vargs))
     {
         return;
