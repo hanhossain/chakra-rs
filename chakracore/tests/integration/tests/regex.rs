@@ -224,7 +224,7 @@ fn regex_deviations_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "regex_deviations.js",
-        compile_flags: vec!["-args", "summary", "endargs"],
+        compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -254,7 +254,7 @@ fn unicode_forbidden_escapes_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "unicode_forbidden_escapes.js",
-        compile_flags: vec!["-args", "summary", "endargs"],
+        compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -534,7 +534,7 @@ fn bug14859460_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "Bug14859460.js",
-        compile_flags: vec!["-args", "summary", "endargs"],
+        compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -549,7 +549,7 @@ fn bug_os14763260_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_OS14763260.js",
-        compile_flags: vec!["-args", "summary", "endargs"],
+        compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -564,7 +564,7 @@ fn bug15992535_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "Bug15992535.js",
-        compile_flags: vec!["-args", "summary", "endargs"],
+        compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -579,7 +579,7 @@ fn characterclass_with_range_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "characterclass_with_range.js",
-        compile_flags: vec!["-args", "summary", "endargs"],
+        compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -594,7 +594,7 @@ fn control_character_escapes_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "control_character_escapes.js",
-        compile_flags: vec!["-args", "summary", "endargs"],
+        compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
