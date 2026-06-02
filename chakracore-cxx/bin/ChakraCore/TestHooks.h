@@ -35,10 +35,6 @@ struct TestHooks
     SubDigit pfSubDigit;
     MulDigit pfMulDigit;
 
-#define FLAG_String(name) \
-    bool (*pfIsEnabled##name##Flag)(); \
-    int32_t (*pfGet##name##Flag)(BSTR *flag); \
-    int32_t (*pfSet##name##Flag)(BSTR flag);
 #define FLAG_Boolean(name) \
     bool (*pfIsEnabled##name##Flag)(); \
     int32_t (*pfGet##name##Flag)(bool *flag); \
@@ -509,7 +505,9 @@ FLAG_Boolean(ArenaUseHeapAlloc)
 #endif
 FLAG_Boolean(ValidateInlineStack)
 FLAG_Boolean(AsmDiff)
-FLAG_String(AsmDumpMode)
+bool (*pfIsEnabledAsmDumpModeFlag)();
+int32_t (*pfGetAsmDumpModeFlag)(BSTR *flag);
+int32_t (*pfSetAsmDumpModeFlag)(BSTR flag);
 FLAG_Boolean(AsmJs)
 FLAG_Boolean(AsmJsStopOnError)
 FLAG_Boolean(AsmJsEdge)
@@ -546,8 +544,12 @@ FLAG_Boolean(AsyncDebugging)
 FLAG_Number(BailOnNoProfileLimit)
 FLAG_Number(BailOnNoProfileRejitLimit)
 FLAG_Boolean(BaselineMode)
-FLAG_String(DumpOnCrash)
-FLAG_String(FullMemoryDump)
+bool (*pfIsEnabledDumpOnCrashFlag)();
+int32_t (*pfGetDumpOnCrashFlag)(BSTR *flag);
+int32_t (*pfSetDumpOnCrashFlag)(BSTR flag);
+bool (*pfIsEnabledFullMemoryDumpFlag)();
+int32_t (*pfGetFullMemoryDumpFlag)(BSTR *flag);
+int32_t (*pfSetFullMemoryDumpFlag)(BSTR flag);
 #ifdef BAILOUT_INJECTION
 FLAG_Boolean(BailOutAtEveryLine)
 FLAG_Boolean(BailOutAtEveryByteCode)
@@ -570,7 +572,9 @@ FLAG_Boolean(CheckAlignment)
 FLAG_Boolean(CheckEmitBufferPermissions)
 #ifdef CHECK_MEMORY_LEAK
 FLAG_Boolean(CheckMemoryLeak)
-FLAG_String(DumpOnLeak)
+bool (*pfIsEnabledDumpOnLeakFlag)();
+int32_t (*pfGetDumpOnLeakFlag)(BSTR *flag);
+int32_t (*pfSetDumpOnLeakFlag)(BSTR flag);
 #endif
 FLAG_Boolean(CheckOpHelpers)
 FLAG_Boolean(CloneInlinedPolymorphicCaches)
@@ -604,11 +608,21 @@ FLAG_Boolean(DumpObjectGraphOnCollect)
 FLAG_Boolean(DumpEvalStringOnRemoval)
 FLAG_Boolean(DumpObjectGraphOnEnum)
 #ifdef DYNAMIC_PROFILE_STORAGE
-FLAG_String(DynamicProfileCache)
-FLAG_String(Dpc)
-FLAG_String(DynamicProfileCacheDir)
-FLAG_String(DynamicProfileInput)
-FLAG_String(Dpi)
+bool (*pfIsEnabledDynamicProfileCacheFlag)();
+int32_t (*pfGetDynamicProfileCacheFlag)(BSTR *flag);
+int32_t (*pfSetDynamicProfileCacheFlag)(BSTR flag);
+bool (*pfIsEnabledDpcFlag)();
+int32_t (*pfGetDpcFlag)(BSTR *flag);
+int32_t (*pfSetDpcFlag)(BSTR flag);
+bool (*pfIsEnabledDynamicProfileCacheDirFlag)();
+int32_t (*pfGetDynamicProfileCacheDirFlag)(BSTR *flag);
+int32_t (*pfSetDynamicProfileCacheDirFlag)(BSTR flag);
+bool (*pfIsEnabledDynamicProfileInputFlag)();
+int32_t (*pfGetDynamicProfileInputFlag)(BSTR *flag);
+int32_t (*pfSetDynamicProfileInputFlag)(BSTR flag);
+bool (*pfIsEnabledDpiFlag)();
+int32_t (*pfGetDpiFlag)(BSTR *flag);
+int32_t (*pfSetDpiFlag)(BSTR flag);
 #endif
 #ifdef EDIT_AND_CONTINUE
 FLAG_Boolean(EditTest)
@@ -744,7 +758,9 @@ FLAG_Boolean(ESGlobalThis)
 FLAG_Boolean(JitES6Generators)
 
 FLAG_Boolean(FastLineColumnCalculation)
-FLAG_String(Filename)
+bool (*pfIsEnabledFilenameFlag)();
+int32_t (*pfGetFilenameFlag)(BSTR *flag);
+int32_t (*pfSetFilenameFlag)(BSTR flag);
 FLAG_Boolean(FreeRejittedCode)
 FLAG_Boolean(ForceGuardPages)
 FLAG_Boolean(PrintGuardPageBounds)
@@ -815,10 +831,14 @@ FLAG_Number(InlineThresholdAdjustCountInLargeFunction)
 FLAG_Number(InlineThresholdAdjustCountInMediumSizedFunction)
 FLAG_Number(InlineThresholdAdjustCountInSmallFunction)
 FLAG_Number(AsmJsInlineAdjust)
-FLAG_String(Interpret)
+bool (*pfIsEnabledInterpretFlag)();
+int32_t (*pfGetInterpretFlag)(BSTR *flag);
+int32_t (*pfSetInterpretFlag)(BSTR flag);
 FLAG_Number(JitQueueThreshold)
 #ifdef LEAK_REPORT
-FLAG_String(LeakReport)
+bool (*pfIsEnabledLeakReportFlag)();
+int32_t (*pfGetLeakReportFlag)(BSTR *flag);
+int32_t (*pfSetLeakReportFlag)(BSTR flag);
 #endif
 FLAG_Number(LoopInlineThreshold)
 FLAG_Number(LeafInlineThreshold)
@@ -900,8 +920,12 @@ FLAG_Number(AutoProfilingInterpreter1Limit)
 FLAG_Number(SimpleJitLimit)
 FLAG_Number(ProfilingInterpreter1Limit)
 
-FLAG_String(ExecutionModeLimits)
-FLAG_String(Eml)
+bool (*pfIsEnabledExecutionModeLimitsFlag)();
+int32_t (*pfGetExecutionModeLimitsFlag)(BSTR *flag);
+int32_t (*pfSetExecutionModeLimitsFlag)(BSTR flag);
+bool (*pfIsEnabledEmlFlag)();
+int32_t (*pfGetEmlFlag)(BSTR *flag);
+int32_t (*pfSetEmlFlag)(BSTR flag);
 FLAG_Boolean(EnforceExecutionModeLimits)
 FLAG_Boolean(Eeml)
 
@@ -936,8 +960,12 @@ FLAG_Boolean(NoNative)
 FLAG_Number(NopFrequency)
 FLAG_Boolean(NoStrictMode)
 FLAG_Boolean(NormalizeStats)
-FLAG_String(OutputFile)
-FLAG_String(OutputFileOpenMode)
+bool (*pfIsEnabledOutputFileFlag)();
+int32_t (*pfGetOutputFileFlag)(BSTR *flag);
+int32_t (*pfSetOutputFileFlag)(BSTR flag);
+bool (*pfIsEnabledOutputFileOpenModeFlag)();
+int32_t (*pfGetOutputFileOpenModeFlag)(BSTR *flag);
+int32_t (*pfSetOutputFileOpenModeFlag)(BSTR flag);
 #ifdef ENABLE_TRACE
 FLAG_Boolean(InMemoryTrace)
 FLAG_Number(InMemoryTraceBufferSize)
@@ -960,7 +988,9 @@ FLAG_Number(ProfileThreshold)
 FLAG_Boolean(ProfileObjectLiteral)
 #endif
 #ifdef PROFILE_MEM
-FLAG_String(ProfileMemory)
+bool (*pfIsEnabledProfileMemoryFlag)();
+int32_t (*pfGetProfileMemoryFlag)(BSTR *flag);
+int32_t (*pfSetProfileMemoryFlag)(BSTR flag);
 #endif
 #ifdef PROFILE_STRINGS
 FLAG_Boolean(ProfileStrings)
@@ -1028,7 +1058,9 @@ FLAG_Number(LowMemoryCap)
 FLAG_Number(NewPagesCapDuringBGSweeping)
 FLAG_Number(AllocPolicyLimit)
 #ifdef RUNTIME_DATA_COLLECTION
-FLAG_String(RuntimeDataOutputFile)
+bool (*pfIsEnabledRuntimeDataOutputFileFlag)();
+int32_t (*pfGetRuntimeDataOutputFileFlag)(BSTR *flag);
+int32_t (*pfSetRuntimeDataOutputFileFlag)(BSTR flag);
 #endif
 FLAG_Number(SpeculationCap)
 #if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
@@ -1107,7 +1139,9 @@ FLAG_Boolean(ChangeTypeOnProto)
 FLAG_Boolean(ShareInlineCaches)
 FLAG_Boolean(DisableDebugObject)
 FLAG_Boolean(DumpHeap)
-FLAG_String(autoProxy)
+bool (*pfIsEnabledautoProxyFlag)();
+int32_t (*pfGetautoProxyFlag)(BSTR *flag);
+int32_t (*pfSetautoProxyFlag)(BSTR flag);
 FLAG_Number(PerfHintLevel)
 #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
 FLAG_Boolean(MemProtectHeap)
@@ -1179,7 +1213,6 @@ FLAG_Boolean(KeepRecyclerTrackData)
 FLAG_Number(MaxSingleAllocSizeInMB)
 
 // TODO (hanhossain): ConfigFlagsList end
-#undef FLAG_String
 #undef FLAG_Boolean
 #undef FLAG_Number
 
