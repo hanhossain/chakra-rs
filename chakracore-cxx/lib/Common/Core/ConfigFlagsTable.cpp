@@ -1631,8 +1631,11 @@ namespace Js
     ConfigFlagsTable::EnableExperimentalFlag()
     {
         std::unique_lock autocs(csExperimentalFlags);
-#define FLAG_EXPERIMENTAL(type, name, ...) this->SetAsBoolean(Js::Flag::name##Flag, true);
-#include "Interface/ConfigFlagsList.h"
+        this->SetAsBoolean(Js::Flag::WasmSimdFlag, true);
+        this->SetAsBoolean(Js::Flag::ESDynamicImportFlag, true);
+        this->SetAsBoolean(Js::Flag::ES6RegExPrototypePropertiesFlag, true);
+        this->SetAsBoolean(Js::Flag::ES6RegExSymbolsFlag, true);
+        this->SetAsBoolean(Js::Flag::ESSharedArrayBufferFlag, true);
     }
 
     //
