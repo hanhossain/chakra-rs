@@ -35,10 +35,6 @@ struct TestHooks
     SubDigit pfSubDigit;
     MulDigit pfMulDigit;
 
-#define FLAG_Number(name) \
-    bool (*pfIsEnabled##name##Flag)(); \
-    int32_t (*pfGet##name##Flag)(int *flag); \
-    int32_t (*pfSet##name##Flag)(int flag);
 // TODO (hanhossain): ConfigFlagsList start
 #ifndef DEFAULT_CONFIG_BgJitDelay
 #if _M_ARM
@@ -559,7 +555,9 @@ int32_t (*pfSetWasmFoldFlag)(bool flag);
 bool (*pfIsEnabledWasmIgnoreResponseFlag)();
 int32_t (*pfGetWasmIgnoreResponseFlag)(bool *flag);
 int32_t (*pfSetWasmIgnoreResponseFlag)(bool flag);
-FLAG_Number(WasmMaxTableSize)
+bool (*pfIsEnabledWasmMaxTableSizeFlag)();
+int32_t (*pfGetWasmMaxTableSizeFlag)(int *flag);
+int32_t (*pfSetWasmMaxTableSizeFlag)(int flag);
 bool (*pfIsEnabledWasmThreadsFlag)();
 int32_t (*pfGetWasmThreadsFlag)(bool *flag);
 int32_t (*pfSetWasmThreadsFlag)(bool flag);
@@ -599,8 +597,12 @@ int32_t (*pfSetAssertIgnoreFlag)(bool flag);
 bool (*pfIsEnabledAsyncDebuggingFlag)();
 int32_t (*pfGetAsyncDebuggingFlag)(bool *flag);
 int32_t (*pfSetAsyncDebuggingFlag)(bool flag);
-FLAG_Number(BailOnNoProfileLimit)
-FLAG_Number(BailOnNoProfileRejitLimit)
+bool (*pfIsEnabledBailOnNoProfileLimitFlag)();
+int32_t (*pfGetBailOnNoProfileLimitFlag)(int *flag);
+int32_t (*pfSetBailOnNoProfileLimitFlag)(int flag);
+bool (*pfIsEnabledBailOnNoProfileRejitLimitFlag)();
+int32_t (*pfGetBailOnNoProfileRejitLimitFlag)(int *flag);
+int32_t (*pfSetBailOnNoProfileRejitLimitFlag)(int flag);
 bool (*pfIsEnabledBaselineModeFlag)();
 int32_t (*pfGetBaselineModeFlag)(bool *flag);
 int32_t (*pfSetBaselineModeFlag)(bool flag);
@@ -630,9 +632,15 @@ int32_t (*pfSetBgJitFlag)(bool flag);
 bool (*pfIsEnabledBgParseFlag)();
 int32_t (*pfGetBgParseFlag)(bool *flag);
 int32_t (*pfSetBgParseFlag)(bool flag);
-FLAG_Number(BgJitDelay)
-FLAG_Number(BgJitDelayFgBuffer)
-FLAG_Number(BgJitPendingFuncCap)
+bool (*pfIsEnabledBgJitDelayFlag)();
+int32_t (*pfGetBgJitDelayFlag)(int *flag);
+int32_t (*pfSetBgJitDelayFlag)(int flag);
+bool (*pfIsEnabledBgJitDelayFgBufferFlag)();
+int32_t (*pfGetBgJitDelayFgBufferFlag)(int *flag);
+int32_t (*pfSetBgJitDelayFgBufferFlag)(int flag);
+bool (*pfIsEnabledBgJitPendingFuncCapFlag)();
+int32_t (*pfGetBgJitPendingFuncCapFlag)(int *flag);
+int32_t (*pfSetBgJitPendingFuncCapFlag)(int flag);
 
 bool (*pfIsEnabledCreateFunctionProxyFlag)();
 int32_t (*pfGetCreateFunctionProxyFlag)(bool *flag);
@@ -640,7 +648,9 @@ int32_t (*pfSetCreateFunctionProxyFlag)(bool flag);
 bool (*pfIsEnabledHybridFgJitFlag)();
 int32_t (*pfGetHybridFgJitFlag)(bool *flag);
 int32_t (*pfSetHybridFgJitFlag)(bool flag);
-FLAG_Number(HybridFgJitBgQueueLengthThreshold)
+bool (*pfIsEnabledHybridFgJitBgQueueLengthThresholdFlag)();
+int32_t (*pfGetHybridFgJitBgQueueLengthThresholdFlag)(int *flag);
+int32_t (*pfSetHybridFgJitBgQueueLengthThresholdFlag)(int flag);
 bool (*pfIsEnabledBytecodeHistFlag)();
 int32_t (*pfGetBytecodeHistFlag)(bool *flag);
 int32_t (*pfSetBytecodeHistFlag)(bool flag);
@@ -673,11 +683,21 @@ int32_t (*pfSetCloneInlinedPolymorphicCachesFlag)(bool flag);
 bool (*pfIsEnabledConcurrentRuntimeFlag)();
 int32_t (*pfGetConcurrentRuntimeFlag)(bool *flag);
 int32_t (*pfSetConcurrentRuntimeFlag)(bool flag);
-FLAG_Number(ConstructorInlineThreshold)
-FLAG_Number(ConstructorCallsRequiredToFinalizeCachedType)
-FLAG_Number(PropertyCacheMissPenalty)
-FLAG_Number(PropertyCacheMissThreshold)
-FLAG_Number(PropertyCacheMissReset)
+bool (*pfIsEnabledConstructorInlineThresholdFlag)();
+int32_t (*pfGetConstructorInlineThresholdFlag)(int *flag);
+int32_t (*pfSetConstructorInlineThresholdFlag)(int flag);
+bool (*pfIsEnabledConstructorCallsRequiredToFinalizeCachedTypeFlag)();
+int32_t (*pfGetConstructorCallsRequiredToFinalizeCachedTypeFlag)(int *flag);
+int32_t (*pfSetConstructorCallsRequiredToFinalizeCachedTypeFlag)(int flag);
+bool (*pfIsEnabledPropertyCacheMissPenaltyFlag)();
+int32_t (*pfGetPropertyCacheMissPenaltyFlag)(int *flag);
+int32_t (*pfSetPropertyCacheMissPenaltyFlag)(int flag);
+bool (*pfIsEnabledPropertyCacheMissThresholdFlag)();
+int32_t (*pfGetPropertyCacheMissThresholdFlag)(int *flag);
+int32_t (*pfSetPropertyCacheMissThresholdFlag)(int flag);
+bool (*pfIsEnabledPropertyCacheMissResetFlag)();
+int32_t (*pfGetPropertyCacheMissResetFlag)(int *flag);
+int32_t (*pfSetPropertyCacheMissResetFlag)(int flag);
 bool (*pfIsEnabledDebugFlag)();
 int32_t (*pfGetDebugFlag)(bool *flag);
 int32_t (*pfSetDebugFlag)(bool flag);
@@ -694,7 +714,9 @@ int32_t (*pfSetCompressParserStateCacheFlag)(bool flag);
 bool (*pfIsEnabledDeferTopLevelTillFirstCallFlag)();
 int32_t (*pfGetDeferTopLevelTillFirstCallFlag)(bool *flag);
 int32_t (*pfSetDeferTopLevelTillFirstCallFlag)(bool flag);
-FLAG_Number(DeferParse)
+bool (*pfIsEnabledDeferParseFlag)();
+int32_t (*pfGetDeferParseFlag)(int *flag);
+int32_t (*pfSetDeferParseFlag)(int flag);
 bool (*pfIsEnabledDirectCallTelemetryStatsFlag)();
 int32_t (*pfGetDirectCallTelemetryStatsFlag)(bool *flag);
 int32_t (*pfSetDirectCallTelemetryStatsFlag)(bool flag);
@@ -766,12 +788,18 @@ int32_t (*pfSetNoDynamicProfileInMemoryCacheFlag)(bool flag);
 bool (*pfIsEnabledProfileBasedSpeculativeJitFlag)();
 int32_t (*pfGetProfileBasedSpeculativeJitFlag)(bool *flag);
 int32_t (*pfSetProfileBasedSpeculativeJitFlag)(bool flag);
-FLAG_Number(ProfileBasedSpeculationCap)
+bool (*pfIsEnabledProfileBasedSpeculationCapFlag)();
+int32_t (*pfGetProfileBasedSpeculationCapFlag)(int *flag);
+int32_t (*pfSetProfileBasedSpeculationCapFlag)(int flag);
 bool (*pfIsEnabledExecuteByteCodeBufferReturnsInvalidByteCodeFlag)();
 int32_t (*pfGetExecuteByteCodeBufferReturnsInvalidByteCodeFlag)(bool *flag);
 int32_t (*pfSetExecuteByteCodeBufferReturnsInvalidByteCodeFlag)(bool flag);
-FLAG_Number(ExpirableCollectionGCCount)
-FLAG_Number(ExpirableCollectionTriggerThreshold)
+bool (*pfIsEnabledExpirableCollectionGCCountFlag)();
+int32_t (*pfGetExpirableCollectionGCCountFlag)(int *flag);
+int32_t (*pfSetExpirableCollectionGCCountFlag)(int flag);
+bool (*pfIsEnabledExpirableCollectionTriggerThresholdFlag)();
+int32_t (*pfGetExpirableCollectionTriggerThresholdFlag)(int *flag);
+int32_t (*pfSetExpirableCollectionTriggerThresholdFlag)(int flag);
 bool (*pfIsEnabledSkipSplitOnNoResultFlag)();
 int32_t (*pfGetSkipSplitOnNoResultFlag)(bool *flag);
 int32_t (*pfSetSkipSplitOnNoResultFlag)(bool flag);
@@ -1080,8 +1108,12 @@ int32_t (*pfSetEnableContinueAfterExceptionWrappersForBuiltInsFlag)(bool flag);
 bool (*pfIsEnabledEnableFunctionSourceReportForHeapEnumFlag)();
 int32_t (*pfGetEnableFunctionSourceReportForHeapEnumFlag)(bool *flag);
 int32_t (*pfSetEnableFunctionSourceReportForHeapEnumFlag)(bool flag);
-FLAG_Number(ForceFragmentAddressSpace)
-FLAG_Number(ForceOOMOnEBCommit)
+bool (*pfIsEnabledForceFragmentAddressSpaceFlag)();
+int32_t (*pfGetForceFragmentAddressSpaceFlag)(int *flag);
+int32_t (*pfSetForceFragmentAddressSpaceFlag)(int flag);
+bool (*pfIsEnabledForceOOMOnEBCommitFlag)();
+int32_t (*pfGetForceOOMOnEBCommitFlag)(int *flag);
+int32_t (*pfSetForceOOMOnEBCommitFlag)(int flag);
 bool (*pfIsEnabledForceDynamicProfileFlag)();
 int32_t (*pfGetForceDynamicProfileFlag)(bool *flag);
 int32_t (*pfSetForceDynamicProfileFlag)(bool flag);
@@ -1109,7 +1141,9 @@ int32_t (*pfSetForceStaticInterpreterThunkFlag)(bool flag);
 bool (*pfIsEnabledDumpCommentsFromReferencedFilesFlag)();
 int32_t (*pfGetDumpCommentsFromReferencedFilesFlag)(bool *flag);
 int32_t (*pfSetDumpCommentsFromReferencedFilesFlag)(bool flag);
-FLAG_Number(DelayFullJITSmallFunc)
+bool (*pfIsEnabledDelayFullJITSmallFuncFlag)();
+int32_t (*pfGetDelayFullJITSmallFuncFlag)(int *flag);
+int32_t (*pfSetDelayFullJITSmallFuncFlag)(int flag);
 bool (*pfIsEnabledEnableFatalErrorOnOOMFlag)();
 int32_t (*pfGetEnableFatalErrorOnOOMFlag)(bool *flag);
 int32_t (*pfSetEnableFatalErrorOnOOMFlag)(bool flag);
@@ -1128,8 +1162,12 @@ int32_t (*pfSetForceNativeFlag)(bool flag);
 bool (*pfIsEnabledForceSerializedFlag)();
 int32_t (*pfGetForceSerializedFlag)(bool *flag);
 int32_t (*pfSetForceSerializedFlag)(bool flag);
-FLAG_Number(ForceSerializedBytecodeMajorVersion)
-FLAG_Number(ForceSerializedBytecodeVersionSchema)
+bool (*pfIsEnabledForceSerializedBytecodeMajorVersionFlag)();
+int32_t (*pfGetForceSerializedBytecodeMajorVersionFlag)(int *flag);
+int32_t (*pfSetForceSerializedBytecodeMajorVersionFlag)(int flag);
+bool (*pfIsEnabledForceSerializedBytecodeVersionSchemaFlag)();
+int32_t (*pfGetForceSerializedBytecodeVersionSchemaFlag)(int *flag);
+int32_t (*pfSetForceSerializedBytecodeVersionSchemaFlag)(int flag);
 bool (*pfIsEnabledForceStrictModeFlag)();
 int32_t (*pfGetForceStrictModeFlag)(bool *flag);
 int32_t (*pfSetForceStrictModeFlag)(bool flag);
@@ -1143,7 +1181,9 @@ bool (*pfIsEnabledFreTestDiagModeFlag)();
 int32_t (*pfGetFreTestDiagModeFlag)(bool *flag);
 int32_t (*pfSetFreTestDiagModeFlag)(bool flag);
 #ifdef BYTECODE_TESTING
-FLAG_Number(ByteCodeBranchLimit)
+bool (*pfIsEnabledByteCodeBranchLimitFlag)();
+int32_t (*pfGetByteCodeBranchLimitFlag)(int *flag);
+int32_t (*pfSetByteCodeBranchLimitFlag)(int flag);
 bool (*pfIsEnabledMediumByteCodeLayoutFlag)();
 int32_t (*pfGetMediumByteCodeLayoutFlag)(bool *flag);
 int32_t (*pfSetMediumByteCodeLayoutFlag)(bool flag);
@@ -1151,56 +1191,124 @@ bool (*pfIsEnabledLargeByteCodeLayoutFlag)();
 int32_t (*pfGetLargeByteCodeLayoutFlag)(bool *flag);
 int32_t (*pfSetLargeByteCodeLayoutFlag)(bool flag);
 #endif
-FLAG_Number(InduceCodeGenFailure)
-FLAG_Number(InduceCodeGenFailureSeed)
-FLAG_Number(InjectPartiallyInitializedInterpreterFrameError)
-FLAG_Number(InjectPartiallyInitializedInterpreterFrameErrorType)
+bool (*pfIsEnabledInduceCodeGenFailureFlag)();
+int32_t (*pfGetInduceCodeGenFailureFlag)(int *flag);
+int32_t (*pfSetInduceCodeGenFailureFlag)(int flag);
+bool (*pfIsEnabledInduceCodeGenFailureSeedFlag)();
+int32_t (*pfGetInduceCodeGenFailureSeedFlag)(int *flag);
+int32_t (*pfSetInduceCodeGenFailureSeedFlag)(int flag);
+bool (*pfIsEnabledInjectPartiallyInitializedInterpreterFrameErrorFlag)();
+int32_t (*pfGetInjectPartiallyInitializedInterpreterFrameErrorFlag)(int *flag);
+int32_t (*pfSetInjectPartiallyInitializedInterpreterFrameErrorFlag)(int flag);
+bool (*pfIsEnabledInjectPartiallyInitializedInterpreterFrameErrorTypeFlag)();
+int32_t (*pfGetInjectPartiallyInitializedInterpreterFrameErrorTypeFlag)(int *flag);
+int32_t (*pfSetInjectPartiallyInitializedInterpreterFrameErrorTypeFlag)(int flag);
 bool (*pfIsEnabledGenerateByteCodeBufferReturnsCantGenerateFlag)();
 int32_t (*pfGetGenerateByteCodeBufferReturnsCantGenerateFlag)(bool *flag);
 int32_t (*pfSetGenerateByteCodeBufferReturnsCantGenerateFlag)(bool flag);
-FLAG_Number(GoptCleanupThreshold)
-FLAG_Number(AsmGoptCleanupThreshold)
+bool (*pfIsEnabledGoptCleanupThresholdFlag)();
+int32_t (*pfGetGoptCleanupThresholdFlag)(int *flag);
+int32_t (*pfSetGoptCleanupThresholdFlag)(int flag);
+bool (*pfIsEnabledAsmGoptCleanupThresholdFlag)();
+int32_t (*pfGetAsmGoptCleanupThresholdFlag)(int *flag);
+int32_t (*pfSetAsmGoptCleanupThresholdFlag)(int flag);
 bool (*pfIsEnabledHighPrecisionDateFlag)();
 int32_t (*pfGetHighPrecisionDateFlag)(bool *flag);
 int32_t (*pfSetHighPrecisionDateFlag)(bool flag);
-FLAG_Number(InlineCountMax)
-FLAG_Number(InlineCountMaxInLoopBodies)
-FLAG_Number(icminlb)
-FLAG_Number(InlineInLoopBodyScaleDownFactor)
-FLAG_Number(iilbsdf)
-FLAG_Number(InlineThreshold)
-FLAG_Number(AggressiveInlineCountMax)
-FLAG_Number(AggressiveInlineThreshold)
-FLAG_Number(InlineThresholdAdjustCountInLargeFunction)
-FLAG_Number(InlineThresholdAdjustCountInMediumSizedFunction)
-FLAG_Number(InlineThresholdAdjustCountInSmallFunction)
-FLAG_Number(AsmJsInlineAdjust)
+bool (*pfIsEnabledInlineCountMaxFlag)();
+int32_t (*pfGetInlineCountMaxFlag)(int *flag);
+int32_t (*pfSetInlineCountMaxFlag)(int flag);
+bool (*pfIsEnabledInlineCountMaxInLoopBodiesFlag)();
+int32_t (*pfGetInlineCountMaxInLoopBodiesFlag)(int *flag);
+int32_t (*pfSetInlineCountMaxInLoopBodiesFlag)(int flag);
+bool (*pfIsEnabledicminlbFlag)();
+int32_t (*pfGeticminlbFlag)(int *flag);
+int32_t (*pfSeticminlbFlag)(int flag);
+bool (*pfIsEnabledInlineInLoopBodyScaleDownFactorFlag)();
+int32_t (*pfGetInlineInLoopBodyScaleDownFactorFlag)(int *flag);
+int32_t (*pfSetInlineInLoopBodyScaleDownFactorFlag)(int flag);
+bool (*pfIsEnablediilbsdfFlag)();
+int32_t (*pfGetiilbsdfFlag)(int *flag);
+int32_t (*pfSetiilbsdfFlag)(int flag);
+bool (*pfIsEnabledInlineThresholdFlag)();
+int32_t (*pfGetInlineThresholdFlag)(int *flag);
+int32_t (*pfSetInlineThresholdFlag)(int flag);
+bool (*pfIsEnabledAggressiveInlineCountMaxFlag)();
+int32_t (*pfGetAggressiveInlineCountMaxFlag)(int *flag);
+int32_t (*pfSetAggressiveInlineCountMaxFlag)(int flag);
+bool (*pfIsEnabledAggressiveInlineThresholdFlag)();
+int32_t (*pfGetAggressiveInlineThresholdFlag)(int *flag);
+int32_t (*pfSetAggressiveInlineThresholdFlag)(int flag);
+bool (*pfIsEnabledInlineThresholdAdjustCountInLargeFunctionFlag)();
+int32_t (*pfGetInlineThresholdAdjustCountInLargeFunctionFlag)(int *flag);
+int32_t (*pfSetInlineThresholdAdjustCountInLargeFunctionFlag)(int flag);
+bool (*pfIsEnabledInlineThresholdAdjustCountInMediumSizedFunctionFlag)();
+int32_t (*pfGetInlineThresholdAdjustCountInMediumSizedFunctionFlag)(int *flag);
+int32_t (*pfSetInlineThresholdAdjustCountInMediumSizedFunctionFlag)(int flag);
+bool (*pfIsEnabledInlineThresholdAdjustCountInSmallFunctionFlag)();
+int32_t (*pfGetInlineThresholdAdjustCountInSmallFunctionFlag)(int *flag);
+int32_t (*pfSetInlineThresholdAdjustCountInSmallFunctionFlag)(int flag);
+bool (*pfIsEnabledAsmJsInlineAdjustFlag)();
+int32_t (*pfGetAsmJsInlineAdjustFlag)(int *flag);
+int32_t (*pfSetAsmJsInlineAdjustFlag)(int flag);
 bool (*pfIsEnabledInterpretFlag)();
 int32_t (*pfGetInterpretFlag)(BSTR *flag);
 int32_t (*pfSetInterpretFlag)(BSTR flag);
-FLAG_Number(JitQueueThreshold)
+bool (*pfIsEnabledJitQueueThresholdFlag)();
+int32_t (*pfGetJitQueueThresholdFlag)(int *flag);
+int32_t (*pfSetJitQueueThresholdFlag)(int flag);
 #ifdef LEAK_REPORT
 bool (*pfIsEnabledLeakReportFlag)();
 int32_t (*pfGetLeakReportFlag)(BSTR *flag);
 int32_t (*pfSetLeakReportFlag)(BSTR flag);
 #endif
-FLAG_Number(LoopInlineThreshold)
-FLAG_Number(LeafInlineThreshold)
-FLAG_Number(ConstantArgumentInlineThreshold)
-FLAG_Number(RecursiveInlineThreshold)
-FLAG_Number(RecursiveInlineDepthMax)
-FLAG_Number(RecursiveInlineDepthMin)
-FLAG_Number(RedeferralCap)
-FLAG_Number(Loop)
-FLAG_Number(LoopInterpretCount)
-FLAG_Number(lic)
-FLAG_Number(LoopProfileIterations)
-FLAG_Number(OutsideLoopInlineThreshold)
-FLAG_Number(MaxFuncInlineDepth)
-FLAG_Number(MaxNumberOfInlineesWithLoop)
+bool (*pfIsEnabledLoopInlineThresholdFlag)();
+int32_t (*pfGetLoopInlineThresholdFlag)(int *flag);
+int32_t (*pfSetLoopInlineThresholdFlag)(int flag);
+bool (*pfIsEnabledLeafInlineThresholdFlag)();
+int32_t (*pfGetLeafInlineThresholdFlag)(int *flag);
+int32_t (*pfSetLeafInlineThresholdFlag)(int flag);
+bool (*pfIsEnabledConstantArgumentInlineThresholdFlag)();
+int32_t (*pfGetConstantArgumentInlineThresholdFlag)(int *flag);
+int32_t (*pfSetConstantArgumentInlineThresholdFlag)(int flag);
+bool (*pfIsEnabledRecursiveInlineThresholdFlag)();
+int32_t (*pfGetRecursiveInlineThresholdFlag)(int *flag);
+int32_t (*pfSetRecursiveInlineThresholdFlag)(int flag);
+bool (*pfIsEnabledRecursiveInlineDepthMaxFlag)();
+int32_t (*pfGetRecursiveInlineDepthMaxFlag)(int *flag);
+int32_t (*pfSetRecursiveInlineDepthMaxFlag)(int flag);
+bool (*pfIsEnabledRecursiveInlineDepthMinFlag)();
+int32_t (*pfGetRecursiveInlineDepthMinFlag)(int *flag);
+int32_t (*pfSetRecursiveInlineDepthMinFlag)(int flag);
+bool (*pfIsEnabledRedeferralCapFlag)();
+int32_t (*pfGetRedeferralCapFlag)(int *flag);
+int32_t (*pfSetRedeferralCapFlag)(int flag);
+bool (*pfIsEnabledLoopFlag)();
+int32_t (*pfGetLoopFlag)(int *flag);
+int32_t (*pfSetLoopFlag)(int flag);
+bool (*pfIsEnabledLoopInterpretCountFlag)();
+int32_t (*pfGetLoopInterpretCountFlag)(int *flag);
+int32_t (*pfSetLoopInterpretCountFlag)(int flag);
+bool (*pfIsEnabledlicFlag)();
+int32_t (*pfGetlicFlag)(int *flag);
+int32_t (*pfSetlicFlag)(int flag);
+bool (*pfIsEnabledLoopProfileIterationsFlag)();
+int32_t (*pfGetLoopProfileIterationsFlag)(int *flag);
+int32_t (*pfSetLoopProfileIterationsFlag)(int flag);
+bool (*pfIsEnabledOutsideLoopInlineThresholdFlag)();
+int32_t (*pfGetOutsideLoopInlineThresholdFlag)(int *flag);
+int32_t (*pfSetOutsideLoopInlineThresholdFlag)(int flag);
+bool (*pfIsEnabledMaxFuncInlineDepthFlag)();
+int32_t (*pfGetMaxFuncInlineDepthFlag)(int *flag);
+int32_t (*pfSetMaxFuncInlineDepthFlag)(int flag);
+bool (*pfIsEnabledMaxNumberOfInlineesWithLoopFlag)();
+int32_t (*pfGetMaxNumberOfInlineesWithLoopFlag)(int *flag);
+int32_t (*pfSetMaxNumberOfInlineesWithLoopFlag)(int flag);
 #ifdef MEMSPECT_TRACKING
 #endif
-FLAG_Number(PolymorphicInlineThreshold)
+bool (*pfIsEnabledPolymorphicInlineThresholdFlag)();
+int32_t (*pfGetPolymorphicInlineThresholdFlag)(int *flag);
+int32_t (*pfSetPolymorphicInlineThresholdFlag)(int flag);
 bool (*pfIsEnabledPrimeRecyclerFlag)();
 int32_t (*pfGetPrimeRecyclerFlag)(bool *flag);
 int32_t (*pfSetPrimeRecyclerFlag)(bool flag);
@@ -1222,10 +1330,16 @@ bool (*pfIsEnabledForceOldDateAPIFlag)();
 int32_t (*pfGetForceOldDateAPIFlag)(bool *flag);
 int32_t (*pfSetForceOldDateAPIFlag)(bool flag);
 
-FLAG_Number(JitLoopBodyHotLoopThreshold)
-FLAG_Number(LoopBodySizeThresholdToDisableOpts)
+bool (*pfIsEnabledJitLoopBodyHotLoopThresholdFlag)();
+int32_t (*pfGetJitLoopBodyHotLoopThresholdFlag)(int *flag);
+int32_t (*pfSetJitLoopBodyHotLoopThresholdFlag)(int flag);
+bool (*pfIsEnabledLoopBodySizeThresholdToDisableOptsFlag)();
+int32_t (*pfGetLoopBodySizeThresholdToDisableOptsFlag)(int *flag);
+int32_t (*pfSetLoopBodySizeThresholdToDisableOptsFlag)(int flag);
 
-FLAG_Number(MaxJitThreadCount)
+bool (*pfIsEnabledMaxJitThreadCountFlag)();
+int32_t (*pfGetMaxJitThreadCountFlag)(int *flag);
+int32_t (*pfSetMaxJitThreadCountFlag)(int flag);
 bool (*pfIsEnabledForceMaxJitThreadCountFlag)();
 int32_t (*pfGetForceMaxJitThreadCountFlag)(bool *flag);
 int32_t (*pfSetForceMaxJitThreadCountFlag)(bool flag);
@@ -1276,35 +1390,81 @@ bool (*pfIsEnabledPoisonObjectsForStoresFlag)();
 int32_t (*pfGetPoisonObjectsForStoresFlag)(bool *flag);
 int32_t (*pfSetPoisonObjectsForStoresFlag)(bool flag);
 
-FLAG_Number(MinInterpretCount)
-FLAG_Number(MinSimpleJitRunCount)
-FLAG_Number(MaxInterpretCount)
-FLAG_Number(Mic)
-FLAG_Number(MaxSimpleJitRunCount)
-FLAG_Number(Msjrc)
-FLAG_Number(MinMemOpCount)
-FLAG_Number(Mmoc)
+bool (*pfIsEnabledMinInterpretCountFlag)();
+int32_t (*pfGetMinInterpretCountFlag)(int *flag);
+int32_t (*pfSetMinInterpretCountFlag)(int flag);
+bool (*pfIsEnabledMinSimpleJitRunCountFlag)();
+int32_t (*pfGetMinSimpleJitRunCountFlag)(int *flag);
+int32_t (*pfSetMinSimpleJitRunCountFlag)(int flag);
+bool (*pfIsEnabledMaxInterpretCountFlag)();
+int32_t (*pfGetMaxInterpretCountFlag)(int *flag);
+int32_t (*pfSetMaxInterpretCountFlag)(int flag);
+bool (*pfIsEnabledMicFlag)();
+int32_t (*pfGetMicFlag)(int *flag);
+int32_t (*pfSetMicFlag)(int flag);
+bool (*pfIsEnabledMaxSimpleJitRunCountFlag)();
+int32_t (*pfGetMaxSimpleJitRunCountFlag)(int *flag);
+int32_t (*pfSetMaxSimpleJitRunCountFlag)(int flag);
+bool (*pfIsEnabledMsjrcFlag)();
+int32_t (*pfGetMsjrcFlag)(int *flag);
+int32_t (*pfSetMsjrcFlag)(int flag);
+bool (*pfIsEnabledMinMemOpCountFlag)();
+int32_t (*pfGetMinMemOpCountFlag)(int *flag);
+int32_t (*pfSetMinMemOpCountFlag)(int flag);
+bool (*pfIsEnabledMmocFlag)();
+int32_t (*pfGetMmocFlag)(int *flag);
+int32_t (*pfSetMmocFlag)(int flag);
 
 #if ENABLE_COPYONACCESS_ARRAY
-FLAG_Number(MaxCopyOnAccessArrayLength)
-FLAG_Number(MinCopyOnAccessArrayLength)
-FLAG_Number(CopyOnAccessArraySegmentCacheSize)
+bool (*pfIsEnabledMaxCopyOnAccessArrayLengthFlag)();
+int32_t (*pfGetMaxCopyOnAccessArrayLengthFlag)(int *flag);
+int32_t (*pfSetMaxCopyOnAccessArrayLengthFlag)(int flag);
+bool (*pfIsEnabledMinCopyOnAccessArrayLengthFlag)();
+int32_t (*pfGetMinCopyOnAccessArrayLengthFlag)(int *flag);
+int32_t (*pfSetMinCopyOnAccessArrayLengthFlag)(int flag);
+bool (*pfIsEnabledCopyOnAccessArraySegmentCacheSizeFlag)();
+int32_t (*pfGetCopyOnAccessArraySegmentCacheSizeFlag)(int *flag);
+int32_t (*pfSetCopyOnAccessArraySegmentCacheSizeFlag)(int flag);
 #endif
 
-FLAG_Number(MinTemplatizedJitRunCount)
-FLAG_Number(MinAsmJsInterpreterRunCount)
+bool (*pfIsEnabledMinTemplatizedJitRunCountFlag)();
+int32_t (*pfGetMinTemplatizedJitRunCountFlag)(int *flag);
+int32_t (*pfSetMinTemplatizedJitRunCountFlag)(int flag);
+bool (*pfIsEnabledMinAsmJsInterpreterRunCountFlag)();
+int32_t (*pfGetMinAsmJsInterpreterRunCountFlag)(int *flag);
+int32_t (*pfSetMinAsmJsInterpreterRunCountFlag)(int flag);
 
-FLAG_Number(MinTemplatizedJitLoopRunCount)
-FLAG_Number(MaxTemplatizedJitRunCount)
-FLAG_Number(Mtjrc)
-FLAG_Number(MaxAsmJsInterpreterRunCount)
-FLAG_Number(Maic)
+bool (*pfIsEnabledMinTemplatizedJitLoopRunCountFlag)();
+int32_t (*pfGetMinTemplatizedJitLoopRunCountFlag)(int *flag);
+int32_t (*pfSetMinTemplatizedJitLoopRunCountFlag)(int flag);
+bool (*pfIsEnabledMaxTemplatizedJitRunCountFlag)();
+int32_t (*pfGetMaxTemplatizedJitRunCountFlag)(int *flag);
+int32_t (*pfSetMaxTemplatizedJitRunCountFlag)(int flag);
+bool (*pfIsEnabledMtjrcFlag)();
+int32_t (*pfGetMtjrcFlag)(int *flag);
+int32_t (*pfSetMtjrcFlag)(int flag);
+bool (*pfIsEnabledMaxAsmJsInterpreterRunCountFlag)();
+int32_t (*pfGetMaxAsmJsInterpreterRunCountFlag)(int *flag);
+int32_t (*pfSetMaxAsmJsInterpreterRunCountFlag)(int flag);
+bool (*pfIsEnabledMaicFlag)();
+int32_t (*pfGetMaicFlag)(int *flag);
+int32_t (*pfSetMaicFlag)(int flag);
 
-FLAG_Number(AutoProfilingInterpreter0Limit)
-FLAG_Number(ProfilingInterpreter0Limit)
-FLAG_Number(AutoProfilingInterpreter1Limit)
-FLAG_Number(SimpleJitLimit)
-FLAG_Number(ProfilingInterpreter1Limit)
+bool (*pfIsEnabledAutoProfilingInterpreter0LimitFlag)();
+int32_t (*pfGetAutoProfilingInterpreter0LimitFlag)(int *flag);
+int32_t (*pfSetAutoProfilingInterpreter0LimitFlag)(int flag);
+bool (*pfIsEnabledProfilingInterpreter0LimitFlag)();
+int32_t (*pfGetProfilingInterpreter0LimitFlag)(int *flag);
+int32_t (*pfSetProfilingInterpreter0LimitFlag)(int flag);
+bool (*pfIsEnabledAutoProfilingInterpreter1LimitFlag)();
+int32_t (*pfGetAutoProfilingInterpreter1LimitFlag)(int *flag);
+int32_t (*pfSetAutoProfilingInterpreter1LimitFlag)(int flag);
+bool (*pfIsEnabledSimpleJitLimitFlag)();
+int32_t (*pfGetSimpleJitLimitFlag)(int *flag);
+int32_t (*pfSetSimpleJitLimitFlag)(int flag);
+bool (*pfIsEnabledProfilingInterpreter1LimitFlag)();
+int32_t (*pfGetProfilingInterpreter1LimitFlag)(int *flag);
+int32_t (*pfSetProfilingInterpreter1LimitFlag)(int flag);
 
 bool (*pfIsEnabledExecutionModeLimitsFlag)();
 int32_t (*pfGetExecutionModeLimitsFlag)(BSTR *flag);
@@ -1319,28 +1479,58 @@ bool (*pfIsEnabledEemlFlag)();
 int32_t (*pfGetEemlFlag)(bool *flag);
 int32_t (*pfSetEemlFlag)(bool flag);
 
-FLAG_Number(SimpleJitAfter)
-FLAG_Number(Sja)
-FLAG_Number(FullJitAfter)
-FLAG_Number(Fja)
+bool (*pfIsEnabledSimpleJitAfterFlag)();
+int32_t (*pfGetSimpleJitAfterFlag)(int *flag);
+int32_t (*pfSetSimpleJitAfterFlag)(int flag);
+bool (*pfIsEnabledSjaFlag)();
+int32_t (*pfGetSjaFlag)(int *flag);
+int32_t (*pfSetSjaFlag)(int flag);
+bool (*pfIsEnabledFullJitAfterFlag)();
+int32_t (*pfGetFullJitAfterFlag)(int *flag);
+int32_t (*pfSetFullJitAfterFlag)(int flag);
+bool (*pfIsEnabledFjaFlag)();
+int32_t (*pfGetFjaFlag)(int *flag);
+int32_t (*pfSetFjaFlag)(int flag);
 
 bool (*pfIsEnabledNewSimpleJitFlag)();
 int32_t (*pfGetNewSimpleJitFlag)(bool *flag);
 int32_t (*pfSetNewSimpleJitFlag)(bool flag);
 
-FLAG_Number(MaxLinearIntCaseCount)
-FLAG_Number(MaxSingleCharStrJumpTableSize)
-FLAG_Number(MaxSingleCharStrJumpTableRatio)
-FLAG_Number(MinSwitchJumpTableSize)
-FLAG_Number(MaxLinearStringCaseCount)
-FLAG_Number(MinDeferredFuncTokenCount)
+bool (*pfIsEnabledMaxLinearIntCaseCountFlag)();
+int32_t (*pfGetMaxLinearIntCaseCountFlag)(int *flag);
+int32_t (*pfSetMaxLinearIntCaseCountFlag)(int flag);
+bool (*pfIsEnabledMaxSingleCharStrJumpTableSizeFlag)();
+int32_t (*pfGetMaxSingleCharStrJumpTableSizeFlag)(int *flag);
+int32_t (*pfSetMaxSingleCharStrJumpTableSizeFlag)(int flag);
+bool (*pfIsEnabledMaxSingleCharStrJumpTableRatioFlag)();
+int32_t (*pfGetMaxSingleCharStrJumpTableRatioFlag)(int *flag);
+int32_t (*pfSetMaxSingleCharStrJumpTableRatioFlag)(int flag);
+bool (*pfIsEnabledMinSwitchJumpTableSizeFlag)();
+int32_t (*pfGetMinSwitchJumpTableSizeFlag)(int *flag);
+int32_t (*pfSetMinSwitchJumpTableSizeFlag)(int flag);
+bool (*pfIsEnabledMaxLinearStringCaseCountFlag)();
+int32_t (*pfGetMaxLinearStringCaseCountFlag)(int *flag);
+int32_t (*pfSetMaxLinearStringCaseCountFlag)(int flag);
+bool (*pfIsEnabledMinDeferredFuncTokenCountFlag)();
+int32_t (*pfGetMinDeferredFuncTokenCountFlag)(int *flag);
+int32_t (*pfSetMinDeferredFuncTokenCountFlag)(int flag);
 #if DBG
-FLAG_Number(SkipFuncCountForBailOnNoProfile)
+bool (*pfIsEnabledSkipFuncCountForBailOnNoProfileFlag)();
+int32_t (*pfGetSkipFuncCountForBailOnNoProfileFlag)(int *flag);
+int32_t (*pfSetSkipFuncCountForBailOnNoProfileFlag)(int flag);
 #endif
-FLAG_Number(MaxJITFunctionBytecodeByteLength)
-FLAG_Number(MaxJITFunctionBytecodeCount)
-FLAG_Number(MaxLoopsPerFunction)
-FLAG_Number(FuncObjectInlineCacheThreshold)
+bool (*pfIsEnabledMaxJITFunctionBytecodeByteLengthFlag)();
+int32_t (*pfGetMaxJITFunctionBytecodeByteLengthFlag)(int *flag);
+int32_t (*pfSetMaxJITFunctionBytecodeByteLengthFlag)(int flag);
+bool (*pfIsEnabledMaxJITFunctionBytecodeCountFlag)();
+int32_t (*pfGetMaxJITFunctionBytecodeCountFlag)(int *flag);
+int32_t (*pfSetMaxJITFunctionBytecodeCountFlag)(int flag);
+bool (*pfIsEnabledMaxLoopsPerFunctionFlag)();
+int32_t (*pfGetMaxLoopsPerFunctionFlag)(int *flag);
+int32_t (*pfSetMaxLoopsPerFunctionFlag)(int flag);
+bool (*pfIsEnabledFuncObjectInlineCacheThresholdFlag)();
+int32_t (*pfGetFuncObjectInlineCacheThresholdFlag)(int *flag);
+int32_t (*pfSetFuncObjectInlineCacheThresholdFlag)(int flag);
 bool (*pfIsEnabledNoDeferParseFlag)();
 int32_t (*pfGetNoDeferParseFlag)(bool *flag);
 int32_t (*pfSetNoDeferParseFlag)(bool flag);
@@ -1365,7 +1555,9 @@ int32_t (*pfSetUseJITTrampolineFlag)(bool flag);
 bool (*pfIsEnabledNoNativeFlag)();
 int32_t (*pfGetNoNativeFlag)(bool *flag);
 int32_t (*pfSetNoNativeFlag)(bool flag);
-FLAG_Number(NopFrequency)
+bool (*pfIsEnabledNopFrequencyFlag)();
+int32_t (*pfGetNopFrequencyFlag)(int *flag);
+int32_t (*pfSetNopFrequencyFlag)(int flag);
 bool (*pfIsEnabledNoStrictModeFlag)();
 int32_t (*pfGetNoStrictModeFlag)(bool *flag);
 int32_t (*pfSetNoStrictModeFlag)(bool flag);
@@ -1382,7 +1574,9 @@ int32_t (*pfSetOutputFileOpenModeFlag)(BSTR flag);
 bool (*pfIsEnabledInMemoryTraceFlag)();
 int32_t (*pfGetInMemoryTraceFlag)(bool *flag);
 int32_t (*pfSetInMemoryTraceFlag)(bool flag);
-FLAG_Number(InMemoryTraceBufferSize)
+bool (*pfIsEnabledInMemoryTraceBufferSizeFlag)();
+int32_t (*pfGetInMemoryTraceBufferSizeFlag)(int *flag);
+int32_t (*pfSetInMemoryTraceBufferSizeFlag)(int flag);
 #ifdef STACK_BACK_TRACE
 bool (*pfIsEnabledTraceWithStackFlag)();
 int32_t (*pfGetTraceWithStackFlag)(bool *flag);
@@ -1401,10 +1595,14 @@ bool (*pfIsEnabledPrintSrcInDumpFlag)();
 int32_t (*pfGetPrintSrcInDumpFlag)(bool *flag);
 int32_t (*pfSetPrintSrcInDumpFlag)(bool flag);
 #if PROFILE_DICTIONARY
-FLAG_Number(ProfileDictionary)
+bool (*pfIsEnabledProfileDictionaryFlag)();
+int32_t (*pfGetProfileDictionaryFlag)(int *flag);
+int32_t (*pfSetProfileDictionaryFlag)(int flag);
 #endif
 #ifdef PROFILE_EXEC
-FLAG_Number(ProfileThreshold)
+bool (*pfIsEnabledProfileThresholdFlag)();
+int32_t (*pfGetProfileThresholdFlag)(int *flag);
+int32_t (*pfSetProfileThresholdFlag)(int flag);
 #endif
 #ifdef PROFILE_OBJECT_LITERALS
 bool (*pfIsEnabledProfileObjectLiteralFlag)();
@@ -1443,11 +1641,21 @@ bool (*pfIsEnabledValidateIntRangesFlag)();
 int32_t (*pfGetValidateIntRangesFlag)(bool *flag);
 int32_t (*pfSetValidateIntRangesFlag)(bool flag);
 #endif
-FLAG_Number(RejitMaxBailOutCount)
-FLAG_Number(CallsToBailoutsRatioForRejit)
-FLAG_Number(LoopIterationsToBailoutsRatioForRejit)
-FLAG_Number(MinBailOutsBeforeRejit)
-FLAG_Number(MinBailOutsBeforeRejitForLoops)
+bool (*pfIsEnabledRejitMaxBailOutCountFlag)();
+int32_t (*pfGetRejitMaxBailOutCountFlag)(int *flag);
+int32_t (*pfSetRejitMaxBailOutCountFlag)(int flag);
+bool (*pfIsEnabledCallsToBailoutsRatioForRejitFlag)();
+int32_t (*pfGetCallsToBailoutsRatioForRejitFlag)(int *flag);
+int32_t (*pfSetCallsToBailoutsRatioForRejitFlag)(int flag);
+bool (*pfIsEnabledLoopIterationsToBailoutsRatioForRejitFlag)();
+int32_t (*pfGetLoopIterationsToBailoutsRatioForRejitFlag)(int *flag);
+int32_t (*pfSetLoopIterationsToBailoutsRatioForRejitFlag)(int flag);
+bool (*pfIsEnabledMinBailOutsBeforeRejitFlag)();
+int32_t (*pfGetMinBailOutsBeforeRejitFlag)(int *flag);
+int32_t (*pfSetMinBailOutsBeforeRejitFlag)(int flag);
+bool (*pfIsEnabledMinBailOutsBeforeRejitForLoopsFlag)();
+int32_t (*pfGetMinBailOutsBeforeRejitForLoopsFlag)(int *flag);
+int32_t (*pfSetMinBailOutsBeforeRejitForLoopsFlag)(int flag);
 bool (*pfIsEnabledLibraryStackFrameFlag)();
 int32_t (*pfGetLibraryStackFrameFlag)(bool *flag);
 int32_t (*pfSetLibraryStackFrameFlag)(bool flag);
@@ -1485,8 +1693,12 @@ bool (*pfIsEnabledRecyclerForceMarkInteriorFlag)();
 int32_t (*pfGetRecyclerForceMarkInteriorFlag)(bool *flag);
 int32_t (*pfSetRecyclerForceMarkInteriorFlag)(bool flag);
 #if ENABLE_CONCURRENT_GC
-FLAG_Number(RecyclerPriorityBoostTimeout)
-FLAG_Number(RecyclerThreadCollectTimeout)
+bool (*pfIsEnabledRecyclerPriorityBoostTimeoutFlag)();
+int32_t (*pfGetRecyclerPriorityBoostTimeoutFlag)(int *flag);
+int32_t (*pfSetRecyclerPriorityBoostTimeoutFlag)(int flag);
+bool (*pfIsEnabledRecyclerThreadCollectTimeoutFlag)();
+int32_t (*pfGetRecyclerThreadCollectTimeoutFlag)(int *flag);
+int32_t (*pfSetRecyclerThreadCollectTimeoutFlag)(int flag);
 bool (*pfIsEnabledEnableConcurrentSweepAllocFlag)();
 int32_t (*pfGetEnableConcurrentSweepAllocFlag)(bool *flag);
 int32_t (*pfSetEnableConcurrentSweepAllocFlag)(bool flag);
@@ -1495,14 +1707,18 @@ int32_t (*pfGetecsaFlag)(bool *flag);
 int32_t (*pfSetecsaFlag)(bool flag);
 #endif
 #ifdef RECYCLER_PAGE_HEAP
-FLAG_Number(PageHeap)
+bool (*pfIsEnabledPageHeapFlag)();
+int32_t (*pfGetPageHeapFlag)(int *flag);
+int32_t (*pfSetPageHeapFlag)(int flag);
 bool (*pfIsEnabledPageHeapAllocStackFlag)();
 int32_t (*pfGetPageHeapAllocStackFlag)(bool *flag);
 int32_t (*pfSetPageHeapAllocStackFlag)(bool flag);
 bool (*pfIsEnabledPageHeapFreeStackFlag)();
 int32_t (*pfGetPageHeapFreeStackFlag)(bool *flag);
 int32_t (*pfSetPageHeapFreeStackFlag)(bool flag);
-FLAG_Number(PageHeapBlockType)
+bool (*pfIsEnabledPageHeapBlockTypeFlag)();
+int32_t (*pfGetPageHeapBlockTypeFlag)(int *flag);
+int32_t (*pfSetPageHeapBlockTypeFlag)(int flag);
 bool (*pfIsEnabledPageHeapDecommitGuardPageFlag)();
 int32_t (*pfGetPageHeapDecommitGuardPageFlag)(bool *flag);
 int32_t (*pfSetPageHeapDecommitGuardPageFlag)(bool flag);
@@ -1513,7 +1729,9 @@ int32_t (*pfGetRecyclerNoPageReuseFlag)(bool *flag);
 int32_t (*pfSetRecyclerNoPageReuseFlag)(bool flag);
 #endif
 #ifdef RECYCLER_MEMORY_VERIFY
-FLAG_Number(RecyclerVerifyPadSize)
+bool (*pfIsEnabledRecyclerVerifyPadSizeFlag)();
+int32_t (*pfGetRecyclerVerifyPadSizeFlag)(int *flag);
+int32_t (*pfSetRecyclerVerifyPadSizeFlag)(int flag);
 #endif
 bool (*pfIsEnabledRecyclerTestFlag)();
 int32_t (*pfGetRecyclerTestFlag)(bool *flag);
@@ -1526,15 +1744,23 @@ bool (*pfIsEnabledRecyclerVerifyMarkFlag)();
 int32_t (*pfGetRecyclerVerifyMarkFlag)(bool *flag);
 int32_t (*pfSetRecyclerVerifyMarkFlag)(bool flag);
 #endif
-FLAG_Number(LowMemoryCap)
-FLAG_Number(NewPagesCapDuringBGSweeping)
-FLAG_Number(AllocPolicyLimit)
+bool (*pfIsEnabledLowMemoryCapFlag)();
+int32_t (*pfGetLowMemoryCapFlag)(int *flag);
+int32_t (*pfSetLowMemoryCapFlag)(int flag);
+bool (*pfIsEnabledNewPagesCapDuringBGSweepingFlag)();
+int32_t (*pfGetNewPagesCapDuringBGSweepingFlag)(int *flag);
+int32_t (*pfSetNewPagesCapDuringBGSweepingFlag)(int flag);
+bool (*pfIsEnabledAllocPolicyLimitFlag)();
+int32_t (*pfGetAllocPolicyLimitFlag)(int *flag);
+int32_t (*pfSetAllocPolicyLimitFlag)(int flag);
 #ifdef RUNTIME_DATA_COLLECTION
 bool (*pfIsEnabledRuntimeDataOutputFileFlag)();
 int32_t (*pfGetRuntimeDataOutputFileFlag)(BSTR *flag);
 int32_t (*pfSetRuntimeDataOutputFileFlag)(BSTR flag);
 #endif
-FLAG_Number(SpeculationCap)
+bool (*pfIsEnabledSpeculationCapFlag)();
+int32_t (*pfGetSpeculationCapFlag)(int *flag);
+int32_t (*pfSetSpeculationCapFlag)(int flag);
 #if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
 #endif
 #if EXCEPTION_RECOVERY
@@ -1545,12 +1771,20 @@ int32_t (*pfSetSwallowExceptionsFlag)(bool flag);
 bool (*pfIsEnabledPrintSystemExceptionFlag)();
 int32_t (*pfGetPrintSystemExceptionFlag)(bool *flag);
 int32_t (*pfSetPrintSystemExceptionFlag)(bool flag);
-FLAG_Number(SwitchOptHolesThreshold)
-FLAG_Number(TempMin)
-FLAG_Number(TempMax)
+bool (*pfIsEnabledSwitchOptHolesThresholdFlag)();
+int32_t (*pfGetSwitchOptHolesThresholdFlag)(int *flag);
+int32_t (*pfSetSwitchOptHolesThresholdFlag)(int flag);
+bool (*pfIsEnabledTempMinFlag)();
+int32_t (*pfGetTempMinFlag)(int *flag);
+int32_t (*pfSetTempMinFlag)(int flag);
+bool (*pfIsEnabledTempMaxFlag)();
+int32_t (*pfGetTempMaxFlag)(int *flag);
+int32_t (*pfSetTempMaxFlag)(int flag);
 
 #if defined(_M_X64)
-FLAG_Number(LoopAlignNopLimit)
+bool (*pfIsEnabledLoopAlignNopLimitFlag)();
+int32_t (*pfGetLoopAlignNopLimitFlag)(int *flag);
+int32_t (*pfSetLoopAlignNopLimitFlag)(int flag);
 #endif
 
 #ifdef PROFILE_MEM
@@ -1562,7 +1796,9 @@ FLAG_Number(LoopAlignNopLimit)
 //    Level 3 = interfaces, methods and parameters
 //    Level 4 = interfaces and properties
 //    Level 5 (default) = ALL
-FLAG_Number(TraceMetaDataParsing)
+bool (*pfIsEnabledTraceMetaDataParsingFlag)();
+int32_t (*pfGetTraceMetaDataParsingFlag)(int *flag);
+int32_t (*pfSetTraceMetaDataParsingFlag)(int flag);
 bool (*pfIsEnabledTraceWin8AllocationsFlag)();
 int32_t (*pfGetTraceWin8AllocationsFlag)(bool *flag);
 int32_t (*pfSetTraceWin8AllocationsFlag)(bool flag);
@@ -1593,7 +1829,9 @@ int32_t (*pfSetUseFullNameFlag)(bool flag);
 bool (*pfIsEnabledUtf8Flag)();
 int32_t (*pfGetUtf8Flag)(bool *flag);
 int32_t (*pfSetUtf8Flag)(bool flag);
-FLAG_Number(Version)
+bool (*pfIsEnabledVersionFlag)();
+int32_t (*pfGetVersionFlag)(int *flag);
+int32_t (*pfSetVersionFlag)(int flag);
 bool (*pfIsEnabledWERExceptionSupportFlag)();
 int32_t (*pfGetWERExceptionSupportFlag)(bool *flag);
 int32_t (*pfSetWERExceptionSupportFlag)(bool flag);
@@ -1637,7 +1875,9 @@ int32_t (*pfSetRegexBytecodeDebugFlag)(bool flag);
 bool (*pfIsEnabledRegexOptimizeFlag)();
 int32_t (*pfGetRegexOptimizeFlag)(bool *flag);
 int32_t (*pfSetRegexOptimizeFlag)(bool flag);
-FLAG_Number(DynamicRegexMruListSize)
+bool (*pfIsEnabledDynamicRegexMruListSizeFlag)();
+int32_t (*pfGetDynamicRegexMruListSizeFlag)(int *flag);
+int32_t (*pfSetDynamicRegexMruListSizeFlag)(int flag);
 #endif
 
 bool (*pfIsEnabledOptimizeForManyInstancesFlag)();
@@ -1646,7 +1886,9 @@ int32_t (*pfSetOptimizeForManyInstancesFlag)(bool flag);
 bool (*pfIsEnabledEnableArrayTypeMutationFlag)();
 int32_t (*pfGetEnableArrayTypeMutationFlag)(bool *flag);
 int32_t (*pfSetEnableArrayTypeMutationFlag)(bool flag);
-FLAG_Number(ArrayMutationTestSeed)
+bool (*pfIsEnabledArrayMutationTestSeedFlag)();
+int32_t (*pfGetArrayMutationTestSeedFlag)(int *flag);
+int32_t (*pfSetArrayMutationTestSeedFlag)(int flag);
 bool (*pfIsEnabledEnableEvalMapCleanupFlag)();
 int32_t (*pfGetEnableEvalMapCleanupFlag)(bool *flag);
 int32_t (*pfSetEnableEvalMapCleanupFlag)(bool flag);
@@ -1655,12 +1897,18 @@ bool (*pfIsEnabledTraceObjectAllocationFlag)();
 int32_t (*pfGetTraceObjectAllocationFlag)(bool *flag);
 int32_t (*pfSetTraceObjectAllocationFlag)(bool flag);
 #endif
-FLAG_Number(Sse)
-FLAG_Number(DeletedPropertyReuseThreshold)
+bool (*pfIsEnabledSseFlag)();
+int32_t (*pfGetSseFlag)(int *flag);
+int32_t (*pfSetSseFlag)(int flag);
+bool (*pfIsEnabledDeletedPropertyReuseThresholdFlag)();
+int32_t (*pfGetDeletedPropertyReuseThresholdFlag)(int *flag);
+int32_t (*pfSetDeletedPropertyReuseThresholdFlag)(int flag);
 bool (*pfIsEnabledForceStringKeyedSimpleDictionaryTypeHandlerFlag)();
 int32_t (*pfGetForceStringKeyedSimpleDictionaryTypeHandlerFlag)(bool *flag);
 int32_t (*pfSetForceStringKeyedSimpleDictionaryTypeHandlerFlag)(bool flag);
-FLAG_Number(BigDictionaryTypeHandlerThreshold)
+bool (*pfIsEnabledBigDictionaryTypeHandlerThresholdFlag)();
+int32_t (*pfGetBigDictionaryTypeHandlerThresholdFlag)(int *flag);
+int32_t (*pfSetBigDictionaryTypeHandlerThresholdFlag)(int flag);
 bool (*pfIsEnabledTypeSnapshotEnumerationFlag)();
 int32_t (*pfGetTypeSnapshotEnumerationFlag)(bool *flag);
 int32_t (*pfSetTypeSnapshotEnumerationFlag)(bool flag);
@@ -1682,7 +1930,9 @@ int32_t (*pfSetDumpHeapFlag)(bool flag);
 bool (*pfIsEnabledautoProxyFlag)();
 int32_t (*pfGetautoProxyFlag)(BSTR *flag);
 int32_t (*pfSetautoProxyFlag)(BSTR flag);
-FLAG_Number(PerfHintLevel)
+bool (*pfIsEnabledPerfHintLevelFlag)();
+int32_t (*pfGetPerfHintLevelFlag)(int *flag);
+int32_t (*pfSetPerfHintLevelFlag)(int flag);
 #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
 bool (*pfIsEnabledMemProtectHeapFlag)();
 int32_t (*pfGetMemProtectHeapFlag)(bool *flag);
@@ -1716,9 +1966,15 @@ int32_t (*pfSetFixPropsOnPathTypesFlag)(bool flag);
 #endif
 
 // recycler heuristic flags
-FLAG_Number(MaxBackgroundFinishMarkCount)
-FLAG_Number(BackgroundFinishMarkWaitTime)
-FLAG_Number(MinBackgroundRepeatMarkRescanBytes)
+bool (*pfIsEnabledMaxBackgroundFinishMarkCountFlag)();
+int32_t (*pfGetMaxBackgroundFinishMarkCountFlag)(int *flag);
+int32_t (*pfSetMaxBackgroundFinishMarkCountFlag)(int flag);
+bool (*pfIsEnabledBackgroundFinishMarkWaitTimeFlag)();
+int32_t (*pfGetBackgroundFinishMarkWaitTimeFlag)(int *flag);
+int32_t (*pfSetBackgroundFinishMarkWaitTimeFlag)(int flag);
+bool (*pfIsEnabledMinBackgroundRepeatMarkRescanBytesFlag)();
+int32_t (*pfGetMinBackgroundRepeatMarkRescanBytesFlag)(int *flag);
+int32_t (*pfSetMinBackgroundRepeatMarkRescanBytesFlag)(int flag);
 
 #if defined(_M_X64)
 bool (*pfIsEnabledZeroMemoryWithNonTemporalStoreFlag)();
@@ -1727,11 +1983,17 @@ int32_t (*pfSetZeroMemoryWithNonTemporalStoreFlag)(bool flag);
 #endif
 
 // recycler memory restrict test flags
-FLAG_Number(MaxMarkStackPageCount)
-FLAG_Number(MaxTrackedObjectListCount)
+bool (*pfIsEnabledMaxMarkStackPageCountFlag)();
+int32_t (*pfGetMaxMarkStackPageCountFlag)(int *flag);
+int32_t (*pfSetMaxMarkStackPageCountFlag)(int flag);
+bool (*pfIsEnabledMaxTrackedObjectListCountFlag)();
+int32_t (*pfGetMaxTrackedObjectListCountFlag)(int *flag);
+int32_t (*pfSetMaxTrackedObjectListCountFlag)(int flag);
 
 // make the recycler page integration path easier to hit
-FLAG_Number(NumberAllocPlusSize)
+bool (*pfIsEnabledNumberAllocPlusSizeFlag)();
+int32_t (*pfGetNumberAllocPlusSizeFlag)(int *flag);
+int32_t (*pfSetNumberAllocPlusSizeFlag)(int flag);
 
 #if DBG
 bool (*pfIsEnabledInitializeInterpreterSlotsWithInvalidStackVarFlag)();
@@ -1740,15 +2002,23 @@ int32_t (*pfSetInitializeInterpreterSlotsWithInvalidStackVarFlag)(bool flag);
 #endif
 
 #if DBG
-FLAG_Number(PRNGSeed0)
-FLAG_Number(PRNGSeed1)
+bool (*pfIsEnabledPRNGSeed0Flag)();
+int32_t (*pfGetPRNGSeed0Flag)(int *flag);
+int32_t (*pfSetPRNGSeed0Flag)(int flag);
+bool (*pfIsEnabledPRNGSeed1Flag)();
+int32_t (*pfGetPRNGSeed1Flag)(int *flag);
+int32_t (*pfSetPRNGSeed1Flag)(int flag);
 #endif
 
 bool (*pfIsEnabledClearInlineCachesOnCollectFlag)();
 int32_t (*pfGetClearInlineCachesOnCollectFlag)(bool *flag);
 int32_t (*pfSetClearInlineCachesOnCollectFlag)(bool flag);
-FLAG_Number(InlineCacheInvalidationListCompactionThreshold)
-FLAG_Number(ConstructorCacheInvalidationThreshold)
+bool (*pfIsEnabledInlineCacheInvalidationListCompactionThresholdFlag)();
+int32_t (*pfGetInlineCacheInvalidationListCompactionThresholdFlag)(int *flag);
+int32_t (*pfSetInlineCacheInvalidationListCompactionThresholdFlag)(int flag);
+bool (*pfIsEnabledConstructorCacheInvalidationThresholdFlag)();
+int32_t (*pfGetConstructorCacheInvalidationThresholdFlag)(int *flag);
+int32_t (*pfSetConstructorCacheInvalidationThresholdFlag)(int flag);
 
 #ifdef IR_VIEWER
 bool (*pfIsEnabledIRViewerFlag)();
@@ -1756,14 +2026,22 @@ int32_t (*pfGetIRViewerFlag)(bool *flag);
 int32_t (*pfSetIRViewerFlag)(bool flag);
 #endif /* IR_VIEWER */
 
-FLAG_Number(GCMemoryThreshold)
+bool (*pfIsEnabledGCMemoryThresholdFlag)();
+int32_t (*pfGetGCMemoryThresholdFlag)(int *flag);
+int32_t (*pfSetGCMemoryThresholdFlag)(int flag);
 
 #if DBG
-    FLAG_Number(SimulatePolyCacheWithOneTypeForInlineCacheIndex)
+    bool (*pfIsEnabledSimulatePolyCacheWithOneTypeForInlineCacheIndexFlag)();
+int32_t (*pfGetSimulatePolyCacheWithOneTypeForInlineCacheIndexFlag)(int *flag);
+int32_t (*pfSetSimulatePolyCacheWithOneTypeForInlineCacheIndexFlag)(int flag);
 #endif
 
-FLAG_Number(JITServerIdleTimeout)
-FLAG_Number(JITServerMaxInactivePageAllocatorCount)
+bool (*pfIsEnabledJITServerIdleTimeoutFlag)();
+int32_t (*pfGetJITServerIdleTimeoutFlag)(int *flag);
+int32_t (*pfSetJITServerIdleTimeoutFlag)(int flag);
+bool (*pfIsEnabledJITServerMaxInactivePageAllocatorCountFlag)();
+int32_t (*pfGetJITServerMaxInactivePageAllocatorCountFlag)(int *flag);
+int32_t (*pfSetJITServerMaxInactivePageAllocatorCountFlag)(int flag);
 
 bool (*pfIsEnabledStrictWriteBarrierCheckFlag)();
 int32_t (*pfGetStrictWriteBarrierCheckFlag)(bool *flag);
@@ -1784,10 +2062,11 @@ bool (*pfIsEnabledKeepRecyclerTrackDataFlag)();
 int32_t (*pfGetKeepRecyclerTrackDataFlag)(bool *flag);
 int32_t (*pfSetKeepRecyclerTrackDataFlag)(bool flag);
 
-FLAG_Number(MaxSingleAllocSizeInMB)
+bool (*pfIsEnabledMaxSingleAllocSizeInMBFlag)();
+int32_t (*pfGetMaxSingleAllocSizeInMBFlag)(int *flag);
+int32_t (*pfSetMaxSingleAllocSizeInMBFlag)(int flag);
 
 // TODO (hanhossain): ConfigFlagsList end
-#undef FLAG_Number
 
     NotifyUnhandledExceptionPtr pfnNotifyUnhandledException;
 };
