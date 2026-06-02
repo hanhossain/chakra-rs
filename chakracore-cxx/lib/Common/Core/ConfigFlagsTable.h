@@ -49,9 +49,678 @@ namespace Js
 
     enum Flag: unsigned short
     {
-#define FLAG(type, name, ...) name##Flag,
+        #if DBG
+        ArrayValidateFlag,
+        MemOpMissingValueValidateFlag,
+        OOPJITFixupValidateFlag,
+        #endif
+        #ifdef ARENA_MEMORY_VERIFY
+        ArenaNoFreeListFlag,
+        ArenaNoPageReuseFlag,
+        ArenaUseHeapAllocFlag,
+        #endif
+        ValidateInlineStackFlag,
+        AsmDiffFlag,
+        AsmDumpModeFlag,
+        AsmJsFlag,
+        AsmJsStopOnErrorFlag,
+        AsmJsEdgeFlag,
+        WasmFlag,
+        WasmI64Flag,
+        WasmFastArrayFlag,
+        WasmSharedArrayVirtualBufferFlag,
+        WasmMathExFilterFlag,
+        WasmCheckVersionFlag,
+        WasmAssignModuleIDFlag,
+        WasmIgnoreLimitsFlag,
+        WasmFoldFlag,
+        WasmIgnoreResponseFlag,
+        WasmMaxTableSizeFlag,
+        WasmThreadsFlag,
+        WasmMultiValueFlag,
+        WasmSignExtendsFlag,
+        WasmNontrappingFlag,
 
-#include "Interface/ConfigFlagsList.h"
+        // WebAssembly Experimental Features
+        // Master WasmExperimental flag to activate WebAssembly experimental features
+        WasmExperimentalFlag,
+
+        // The default value of the experimental features will be off because the parent is off
+        // Turning on the parent causes the child flag to take on their default value (aka on)
+        // In Edge, we manually turn on the individual child flags
+        // Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
+        WasmSimdFlag,
+
+        AssertBreakFlag,
+        AssertPopUpFlag,
+        AssertIgnoreFlag,
+        AsyncDebuggingFlag,
+        BailOnNoProfileLimitFlag,
+        BailOnNoProfileRejitLimitFlag,
+        BaselineModeFlag,
+        DumpOnCrashFlag,
+        FullMemoryDumpFlag,
+        #ifdef BAILOUT_INJECTION
+        BailOutFlag,
+        BailOutAtEveryLineFlag,
+        BailOutAtEveryByteCodeFlag,
+        BailOutAtEveryImplicitCallFlag,
+        BailOutByteCodeFlag,
+        #endif
+        BenchmarkFlag,
+        BgJitFlag,
+        BgParseFlag,
+        BgJitDelayFlag,
+        BgJitDelayFgBufferFlag,
+        BgJitPendingFuncCapFlag,
+
+        CreateFunctionProxyFlag,
+        HybridFgJitFlag,
+        HybridFgJitBgQueueLengthThresholdFlag,
+        BytecodeHistFlag,
+        CurrentSourceInfoFlag,
+        CFGLogFlag,
+        CheckAlignmentFlag,
+        CheckEmitBufferPermissionsFlag,
+        #ifdef CHECK_MEMORY_LEAK
+        CheckMemoryLeakFlag,
+        DumpOnLeakFlag,
+        #endif
+        CheckOpHelpersFlag,
+        CloneInlinedPolymorphicCachesFlag,
+        ConcurrentRuntimeFlag,
+        ConstructorInlineThresholdFlag,
+        ConstructorCallsRequiredToFinalizeCachedTypeFlag,
+        PropertyCacheMissPenaltyFlag,
+        PropertyCacheMissThresholdFlag,
+        PropertyCacheMissResetFlag,
+        DebugFlag,
+        DebugBreakFlag,
+        StatementDebugBreakFlag,
+        DebugBreakOnPhaseBeginFlag,
+
+        DebugWindowFlag,
+        ParserStateCacheFlag,
+        CompressParserStateCacheFlag,
+        DeferTopLevelTillFirstCallFlag,
+        DeferParseFlag,
+        DirectCallTelemetryStatsFlag,
+        DisableArrayBTreeFlag,
+        DisableRentalThreadingFlag,
+        DisableVTuneSourceLineInfoFlag,
+        DisplayMemStatsFlag,
+        DumpFlag,
+        #ifdef DUMP_FRAGMENTATION_STATS
+        DumpFragmentationStatsFlag,
+        #endif
+        DumpIRAddressesFlag,
+        DumpLineNoInColorFlag,
+        #ifdef RECYCLER_DUMP_OBJECT_GRAPH
+        DumpObjectGraphOnExitFlag,
+        DumpObjectGraphOnCollectFlag,
+        #endif
+        DumpEvalStringOnRemovalFlag,
+        DumpObjectGraphOnEnumFlag,
+        #ifdef DYNAMIC_PROFILE_STORAGE
+        DynamicProfileCacheFlag, DpcFlag,
+        DynamicProfileCacheDirFlag,
+        DynamicProfileInputFlag, DpiFlag,
+        #endif
+        #ifdef EDIT_AND_CONTINUE
+        EditTestFlag,
+        #endif
+        WininetProfileCacheFlag,
+        NoDynamicProfileInMemoryCacheFlag,
+        ProfileBasedSpeculativeJitFlag,
+        ProfileBasedSpeculationCapFlag,
+        ExecuteByteCodeBufferReturnsInvalidByteCodeFlag,
+        ExpirableCollectionGCCountFlag,
+        ExpirableCollectionTriggerThresholdFlag,
+        SkipSplitOnNoResultFlag,
+        Force32BitByteCodeFlag,
+
+        CollectGarbageFlag,
+
+        IntlFlag,
+        IntlBuiltInsFlag,
+        IntlPlatformFlag,
+
+        JsBuiltInFlag,
+        JitReproFlag,
+        EntryPointInfoRpcDataFlag,
+
+        LdChakraLibFlag,
+        TestChakraLibFlag,
+
+        // ES6 (BLUE+1) features/flags
+
+        // Master ES6 flag to enable STABLE ES6 features/flags
+        ES6Flag,
+
+        // Master ES6 flag to enable ALL sub ES6 features/flags
+        ES6AllFlag,
+
+        // Master ES6 flag to enable Threshold ES6 features/flags
+        ES6ExperimentalFlag,
+
+        // Per ES6 feature/flag
+
+        ES7AsyncAwaitFlag,
+        ES6DateParseFixFlag,
+        ES6FunctionNameFullFlag,
+        ES6GeneratorsFlag,
+        ES7ExponentiationOperatorFlag,
+
+        ES7ValuesEntriesFlag,
+        ES7TrailingCommaFlag,
+        ES6IsConcatSpreadableFlag,
+        ES6MathFlag,
+        ESDynamicImportFlag,
+
+        ES6ModuleFlag,
+        ES6ObjectFlag,
+        ES6NumberFlag,
+        ES6ObjectLiteralsFlag,
+        ES6ProxyFlag,
+        ES6RestFlag,
+        ES6SpreadFlag,
+        ES6StringFlag,
+        ES6StringPrototypeFixesFlag,
+        ES2018ObjectRestSpreadFlag,
+
+        ES6PrototypeChainFlag,
+        ES6ToPrimitiveFlag,
+        ES6ToLengthFlag,
+        ES6ToStringTagFlag,
+        ES6UnicodeFlag,
+        ES6UnicodeVerboseFlag,
+        ES6UnscopablesFlag,
+        ES6RegExStickyFlag,
+        ES2018RegExDotAllFlag,
+        ESExportNsAsFlag,
+        ES2018AsyncIterationFlag,
+        ESTopLevelAwaitFlag,
+        ES6RegExPrototypePropertiesFlag,
+
+        // When we enable ES6RegExSymbols check all String and Regex built-ins which are inlined in JIT and make sure the helper
+        // sets implicit call flag before calling into script
+        // Also, the corresponding helpers in JnHelperMethodList.h should be marked as being reentrant
+        ES6RegExSymbolsFlag,
+
+        ES6VerboseFlag,
+        ESObjectGetOwnPropertyDescriptorsFlag,
+
+        ESSharedArrayBufferFlag,
+
+        // Newer language feature flags
+
+        // ES BigInt flag
+        ESBigIntFlag,
+
+        // ES Numeric Separator support for numeric constants
+        ESNumericSeparatorFlag,
+
+        // ES Nullish coalescing operator support (??)
+        ESNullishCoalescingOperatorFlag,
+
+        // ES Hashbang support for interpreter directive syntax
+        ESHashbangFlag,
+
+        // ES Symbol.prototype.description flag
+        ESSymbolDescriptionFlag,
+
+        ESArrayFindFromLastFlag,
+
+        // ES Promise.any and AggregateError flag
+        ESPromiseAnyFlag,
+
+        // ES import.meta keyword meta-property
+        ESImportMetaFlag,
+
+        //ES globalThis flag
+        ESGlobalThisFlag,
+
+        // This flag to be removed once JITing generator functions is stable
+        JitES6GeneratorsFlag,
+
+        FastLineColumnCalculationFlag,
+        FilenameFlag,
+        FreeRejittedCodeFlag,
+        ForceGuardPagesFlag,
+        PrintGuardPageBoundsFlag,
+        ForceLegacyEngineFlag,
+        ForceFlag,
+        StressFlag,
+        ForceArrayBTreeFlag,
+        StrongArraySortFlag,
+        ForceCleanPropertyOnCollectFlag,
+        ForceCleanCacheOnCollectFlag,
+        ForceGCAfterJSONParseFlag,
+        ForceDecommitOnCollectFlag,
+        ForceDeferParseFlag,
+        ForceDiagnosticsModeFlag,
+        ForceGetWriteWatchOOMFlag,
+        ForcePostLowerGlobOptInstrStringFlag,
+        ForceSplitScopeFlag,
+        EnumerateSpecialPropertiesInDebuggerFlag,
+        EnableContinueAfterExceptionWrappersForHelpersFlag,
+        EnableContinueAfterExceptionWrappersForBuiltInsFlag,
+        EnableFunctionSourceReportForHeapEnumFlag,
+        ForceFragmentAddressSpaceFlag,
+        ForceOOMOnEBCommitFlag,
+        ForceDynamicProfileFlag,
+        ForceES5ArrayFlag,
+        ForceAsmJsLinkFailFlag,
+        ForceExpireOnNonCacheCollectFlag,
+        ForceFastPathFlag,
+        ForceFloatPrefFlag,
+        ForceJITLoopBodyFlag,
+        ForceStaticInterpreterThunkFlag,
+        DumpCommentsFromReferencedFilesFlag,
+        DelayFullJITSmallFuncFlag,
+        EnableFatalErrorOnOOMFlag,
+
+        #if defined(_M_ARM32_OR_ARM64)
+        ForceLocalsPtrFlag,
+        #endif
+        DeferLoadingAvailableSourceFlag,
+        ForceNativeFlag,
+        ForceSerializedFlag,
+        ForceSerializedBytecodeMajorVersionFlag,
+        ForceSerializedBytecodeVersionSchemaFlag,
+        ForceStrictModeFlag,
+        ForceUndoDeferFlag,
+        ForceBlockingConcurrentCollectFlag,
+        FreTestDiagModeFlag,
+        #ifdef BYTECODE_TESTING
+        ByteCodeBranchLimitFlag,
+        MediumByteCodeLayoutFlag,
+        LargeByteCodeLayoutFlag,
+        #endif
+        InduceCodeGenFailureFlag,
+        InduceCodeGenFailureSeedFlag,
+        InjectPartiallyInitializedInterpreterFrameErrorFlag,
+        InjectPartiallyInitializedInterpreterFrameErrorTypeFlag,
+        GenerateByteCodeBufferReturnsCantGenerateFlag,
+        GoptCleanupThresholdFlag,
+        AsmGoptCleanupThresholdFlag,
+        HighPrecisionDateFlag,
+        InlineCountMaxFlag,
+        InlineCountMaxInLoopBodiesFlag, icminlbFlag,
+        InlineInLoopBodyScaleDownFactorFlag, iilbsdfFlag,
+        InlineThresholdFlag,
+        AggressiveInlineCountMaxFlag,
+        AggressiveInlineThresholdFlag,
+        InlineThresholdAdjustCountInLargeFunctionFlag,
+        InlineThresholdAdjustCountInMediumSizedFunctionFlag,
+        InlineThresholdAdjustCountInSmallFunctionFlag,
+        AsmJsInlineAdjustFlag,
+        InterpretFlag,
+        InstrumentFlag,
+        JitQueueThresholdFlag,
+        #ifdef LEAK_REPORT
+        LeakReportFlag,
+        #endif
+        LoopInlineThresholdFlag,
+        LeafInlineThresholdFlag,
+        ConstantArgumentInlineThresholdFlag,
+        RecursiveInlineThresholdFlag,
+        RecursiveInlineDepthMaxFlag,
+        RecursiveInlineDepthMinFlag,
+        RedeferralCapFlag,
+        LoopFlag,
+        LoopInterpretCountFlag, licFlag,
+        LoopProfileIterationsFlag,
+        OutsideLoopInlineThresholdFlag,
+        MaxFuncInlineDepthFlag,
+        MaxNumberOfInlineesWithLoopFlag,
+        #ifdef MEMSPECT_TRACKING
+        MemspectFlag,
+        #endif
+        PolymorphicInlineThresholdFlag,
+        PrimeRecyclerFlag,
+        TraceEngineRefcountFlag,
+        #if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+        LeakStackTraceFlag,
+        ForceMemoryLeakFlag,
+        #endif
+        DumpAfterFinalGCFlag,
+        ForceOldDateAPIFlag,
+
+        JitLoopBodyHotLoopThresholdFlag,
+        LoopBodySizeThresholdToDisableOptsFlag,
+
+        MaxJitThreadCountFlag,
+        ForceMaxJitThreadCountFlag,
+
+        MitigateSpectreFlag,
+
+        AddMaskingBlocksFlag,
+
+        PoisonVarArrayLoadFlag,
+        PoisonIntArrayLoadFlag,
+        PoisonFloatArrayLoadFlag,
+        PoisonTypedArrayLoadFlag,
+        PoisonStringLoadFlag,
+        PoisonObjectsForLoadsFlag,
+
+        PoisonVarArrayStoreFlag,
+        PoisonIntArrayStoreFlag,
+        PoisonFloatArrayStoreFlag,
+        PoisonTypedArrayStoreFlag,
+        PoisonStringStoreFlag,
+        PoisonObjectsForStoresFlag,
+
+        MinInterpretCountFlag,
+        MinSimpleJitRunCountFlag,
+        MaxInterpretCountFlag, MicFlag,
+        MaxSimpleJitRunCountFlag, MsjrcFlag,
+        MinMemOpCountFlag, MmocFlag,
+
+        #if ENABLE_COPYONACCESS_ARRAY
+        MaxCopyOnAccessArrayLengthFlag,
+        MinCopyOnAccessArrayLengthFlag,
+        CopyOnAccessArraySegmentCacheSizeFlag,
+        #endif
+
+        MinTemplatizedJitRunCountFlag,
+        MinAsmJsInterpreterRunCountFlag,
+
+        MinTemplatizedJitLoopRunCountFlag,
+        MaxTemplatizedJitRunCountFlag, MtjrcFlag,
+        MaxAsmJsInterpreterRunCountFlag, MaicFlag,
+
+        AutoProfilingInterpreter0LimitFlag,
+        ProfilingInterpreter0LimitFlag,
+        AutoProfilingInterpreter1LimitFlag,
+        SimpleJitLimitFlag,
+        ProfilingInterpreter1LimitFlag,
+
+        ExecutionModeLimitsFlag, EmlFlag,
+        EnforceExecutionModeLimitsFlag, EemlFlag,
+
+        SimpleJitAfterFlag, SjaFlag,
+        FullJitAfterFlag, FjaFlag,
+
+        NewSimpleJitFlag,
+
+        MaxLinearIntCaseCountFlag,
+        MaxSingleCharStrJumpTableSizeFlag,
+        MaxSingleCharStrJumpTableRatioFlag,
+        MinSwitchJumpTableSizeFlag,
+        MaxLinearStringCaseCountFlag,
+        MinDeferredFuncTokenCountFlag,
+        #if DBG
+        SkipFuncCountForBailOnNoProfileFlag,
+        #endif
+        MaxJITFunctionBytecodeByteLengthFlag,
+        MaxJITFunctionBytecodeCountFlag,
+        MaxLoopsPerFunctionFlag,
+        FuncObjectInlineCacheThresholdFlag,
+        NoDeferParseFlag,
+        NoLogoFlag,
+        OOPJITMissingOptsFlag,
+        CrashOnOOPJITFailureFlag,
+        OOPCFGRegistrationFlag,
+        ForceJITCFGCheckFlag,
+        UseJITTrampolineFlag,
+        NoNativeFlag,
+        NopFrequencyFlag,
+        NoStrictModeFlag,
+        NormalizeStatsFlag,
+        OffFlag,
+        OffProfiledByteCodeFlag,
+        OnFlag,
+        OutputFileFlag,
+        OutputFileOpenModeFlag,
+        #ifdef ENABLE_TRACE
+        InMemoryTraceFlag,
+        InMemoryTraceBufferSizeFlag,
+        #ifdef STACK_BACK_TRACE
+        TraceWithStackFlag,
+        #endif // STACK_BACK_TRACE
+        #endif // ENABLE_TRACE
+        PrintRunTimeDataCollectionTraceFlag,
+        #ifdef ENABLE_PREJIT
+        PrejitFlag,
+        #endif
+        PrintSrcInDumpFlag,
+        #if PROFILE_DICTIONARY
+        ProfileDictionaryFlag,
+        #endif
+        #ifdef PROFILE_EXEC
+        ProfileFlag,
+        ProfileThresholdFlag,
+        #endif
+        #ifdef PROFILE_OBJECT_LITERALS
+        ProfileObjectLiteralFlag,
+        #endif
+        #ifdef PROFILE_MEM
+        ProfileMemoryFlag,
+        #endif
+        #ifdef PROFILE_STRINGS
+        ProfileStringsFlag,
+        #endif
+        #ifdef PROFILE_TYPES
+        ProfileTypesFlag,
+        #endif
+        #ifdef PROFILE_EVALMAP
+        ProfileEvalMapFlag,
+        #endif
+
+        #ifdef PROFILE_BAILOUT_RECORD_MEMORY
+        ProfileBailOutRecordMemoryFlag,
+        #endif
+
+        #if DBG
+        ValidateIntRangesFlag,
+        #endif
+        RejitMaxBailOutCountFlag,
+        CallsToBailoutsRatioForRejitFlag,
+        LoopIterationsToBailoutsRatioForRejitFlag,
+        MinBailOutsBeforeRejitFlag,
+        MinBailOutsBeforeRejitForLoopsFlag,
+        LibraryStackFrameFlag,
+        LibraryStackFrameDebuggerFlag,
+        #ifdef RECYCLER_STRESS
+        RecyclerStressFlag,
+        #if ENABLE_CONCURRENT_GC
+        RecyclerBackgroundStressFlag,
+        RecyclerConcurrentStressFlag,
+        RecyclerConcurrentRepeatStressFlag,
+        #endif
+        #if ENABLE_PARTIAL_GC
+        RecyclerPartialStressFlag,
+        #endif
+        RecyclerTrackStressFlag,
+        RecyclerInduceFalsePositivesFlag,
+        #endif // RECYCLER_STRESS
+        RecyclerForceMarkInteriorFlag,
+        #if ENABLE_CONCURRENT_GC
+        RecyclerPriorityBoostTimeoutFlag,
+        RecyclerThreadCollectTimeoutFlag,
+        EnableConcurrentSweepAllocFlag, ecsaFlag,
+        #endif
+        #ifdef RECYCLER_PAGE_HEAP
+        PageHeapFlag,
+        PageHeapAllocStackFlag,
+        PageHeapFreeStackFlag,
+        PageHeapBucketNumberFlag,
+        PageHeapBlockTypeFlag,
+        PageHeapDecommitGuardPageFlag,
+        #endif
+        #ifdef RECYCLER_NO_PAGE_REUSE
+        RecyclerNoPageReuseFlag,
+        #endif
+        #ifdef RECYCLER_MEMORY_VERIFY
+        RecyclerVerifyFlag,
+        RecyclerVerifyPadSizeFlag,
+        #endif
+        RecyclerTestFlag,
+        RecyclerProtectPagesOnRescanFlag,
+        #ifdef RECYCLER_VERIFY_MARK
+        RecyclerVerifyMarkFlag,
+        #endif
+        LowMemoryCapFlag,
+        NewPagesCapDuringBGSweepingFlag,
+        AllocPolicyLimitFlag,
+        #ifdef RUNTIME_DATA_COLLECTION
+        RuntimeDataOutputFileFlag,
+        #endif
+        SpeculationCapFlag,
+        #if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
+        StatsFlag,
+        #endif
+        #if EXCEPTION_RECOVERY
+        SwallowExceptionsFlag,
+        #endif
+        PrintSystemExceptionFlag,
+        SwitchOptHolesThresholdFlag,
+        TempMinFlag,
+        TempMaxFlag,
+        TraceFlag,
+
+        #if defined(_M_X64)
+        LoopAlignNopLimitFlag,
+        #endif
+
+        #ifdef PROFILE_MEM
+        TraceMemoryFlag,
+        #endif
+        #if DBG_DUMP || defined(RECYCLER_TRACE)
+        //TraceMetaDataParsing flag with optional levels:
+        //    Level 1 = interfaces only
+        //    Level 2 = interfaces and methods
+        //    Level 3 = interfaces, methods and parameters
+        //    Level 4 = interfaces and properties
+        //    Level 5 (default) = ALL
+        TraceMetaDataParsingFlag,
+        TraceWin8AllocationsFlag,
+        TraceWin8DeallocationsImmediateFlag,
+        PrintWin8StatsDetailedFlag,
+        TraceProtectPagesFlag,
+        #endif
+        TraceAsyncDebugCallsFlag,
+        #ifdef TRACK_DISPATCH
+        TrackDispatchFlag,
+        #endif
+        VerboseFlag,
+        UseFullNameFlag,
+        Utf8Flag,
+        VersionFlag,
+        WERExceptionSupportFlag,
+        ExtendedErrorStackForTestHostFlag,
+        errorStackTraceFlag,
+        DoHeapEnumOnEngineShutdownFlag,
+        #ifdef HEAP_ENUMERATION_VALIDATION
+        ValidateHeapEnumFlag,
+        #endif
+
+        #if ENABLE_REGEX_CONFIG_OPTIONS
+        //
+        // Regex flags
+        //
+        RegexTracingFlag,
+        RegexProfileFlag,
+        RegexDebugFlag,
+        RegexDebugASTFlag,
+        RegexDebugAnnotatedASTFlag,
+        RegexBytecodeDebugFlag,
+        RegexOptimizeFlag,
+        DynamicRegexMruListSizeFlag,
+        #endif
+
+        OptimizeForManyInstancesFlag,
+        EnableArrayTypeMutationFlag,
+        ArrayMutationTestSeedFlag,
+        TestTraceFlag,
+        EnableEvalMapCleanupFlag,
+        #ifdef PROFILE_MEM
+        TraceObjectAllocationFlag,
+        #endif
+        SseFlag,
+        DeletedPropertyReuseThresholdFlag,
+        ForceStringKeyedSimpleDictionaryTypeHandlerFlag,
+        BigDictionaryTypeHandlerThresholdFlag,
+        TypeSnapshotEnumerationFlag,
+        IsolatePrototypesFlag,
+        ChangeTypeOnProtoFlag,
+        ShareInlineCachesFlag,
+        DisableDebugObjectFlag,
+        DumpHeapFlag,
+        autoProxyFlag,
+        PerfHintLevelFlag,
+        #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
+        MemProtectHeapFlag,
+        #endif
+        #ifdef RECYCLER_STRESS
+        MemProtectHeapStressFlag,
+        #if ENABLE_CONCURRENT_GC
+        MemProtectHeapBackgroundStressFlag,
+        MemProtectHeapConcurrentStressFlag,
+        MemProtectHeapConcurrentRepeatStressFlag,
+        #endif
+        #if ENABLE_PARTIAL_GC
+        MemProtectHeapPartialStressFlag,
+        #endif
+        #endif
+        #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
+        FixPropsOnPathTypesFlag,
+        #endif
+        BailoutTraceFilterFlag,
+        RejitTraceFilterFlag,
+
+        // recycler heuristic flags
+        MaxBackgroundFinishMarkCountFlag,
+        BackgroundFinishMarkWaitTimeFlag,
+        MinBackgroundRepeatMarkRescanBytesFlag,
+
+        #if defined(_M_X64)
+        ZeroMemoryWithNonTemporalStoreFlag,
+        #endif
+
+        // recycler memory restrict test flags
+        MaxMarkStackPageCountFlag,
+        MaxTrackedObjectListCountFlag,
+
+        // make the recycler page integration path easier to hit
+        NumberAllocPlusSizeFlag,
+
+        #if DBG
+        InitializeInterpreterSlotsWithInvalidStackVarFlag,
+        #endif
+
+        #if DBG
+        PRNGSeed0Flag,
+        PRNGSeed1Flag,
+        #endif
+
+        ClearInlineCachesOnCollectFlag,
+        InlineCacheInvalidationListCompactionThresholdFlag,
+        ConstructorCacheInvalidationThresholdFlag,
+
+        #ifdef IR_VIEWER
+        IRViewerFlag,
+        #endif /* IR_VIEWER */
+
+        GCMemoryThresholdFlag,
+
+        #if DBG
+            SimulatePolyCacheWithOneTypeForInlineCacheIndexFlag,
+        #endif
+
+        JITServerIdleTimeoutFlag,
+        JITServerMaxInactivePageAllocatorCountFlag,
+
+        StrictWriteBarrierCheckFlag,
+        WriteBarrierTestFlag,
+        ForceSoftwareWriteBarrierFlag,
+        VerifyBarrierBitFlag,
+        EnableBGFreeZeroFlag,
+        KeepRecyclerTrackDataFlag,
+
+        MaxSingleAllocSizeInMBFlag,
+
         FlagCount,
         InvalidFlag,
         NoParentFlag,
