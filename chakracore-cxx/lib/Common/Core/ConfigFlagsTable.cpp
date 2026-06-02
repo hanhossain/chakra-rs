@@ -1506,36 +1506,17 @@ namespace Js
             }
         }
 
-        // in case the flag is marked as 'callback' - to call the method
-#define FLAG(type, name, description, defaultValue, parentName, hasCallback) FLAGCALLBACK##hasCallback(type, name)
-#define FLAGCALLBACKFALSE(type, name)
-#define FLAGCALLBACKTRUE(type, name)    FLAGDOCALLBACK##type(name)
+        // Master ES6 flag to enable ALL sub ES6 features/flags
+        if( flag == ES6AllFlag )
+        {
+            this->FlagSetCallback_ES6All(value);
+        }
 
-        // define an overload for each FlagTypes - type
-            //   * all defaults we don't care about - should assert
-#define FLAGDOCALLBACKNumberRange(name)        Assert(false);
-#define FLAGDOCALLBACKPhases(name)        Assert(false);
-#define FLAGDOCALLBACKString(name)        Assert(false);
-#define FLAGDOCALLBACKNumber(name)        Assert(false);
-#define FLAGDOCALLBACKNumberSet(name)     Assert(false);
-#define FLAGDOCALLBACKNumberPairSet(name) Assert(false);
-#define FLAGDOCALLBACKNumberTrioSet(name) Assert(false);
-            //   * and those we do care about
-#define FLAGDOCALLBACKBoolean(name)       if( flag == name##Flag ) this->FlagSetCallback_##name(value);
-
-#include "Interface/ConfigFlagsList.h"
-
-#undef FLAGDOCALLBACKBoolean
-#undef FLAGDOCALLBACKNumberRange
-#undef FLAGDOCALLBACKNumberPairSet
-#undef FLAGDOCALLBACKNumberTrioSet
-#undef FLAGDOCALLBACKNumberSet
-#undef FLAGDOCALLBACKNumber
-#undef FLAGDOCALLBACKString
-#undef FLAGDOCALLBACKPhases
-#undef FLAGCALLBACKTRUE
-#undef FLAGCALLBACKFALSE
-#undef FLAG
+        // Master ES6 flag to enable Threshold ES6 features/flags
+        if( flag == ES6ExperimentalFlag )
+        {
+            this->FlagSetCallback_ES6Experimental(value);
+        }
     }
 
     ///----------------------------------------------------------------------------
