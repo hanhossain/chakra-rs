@@ -110,21 +110,6 @@ void NotifyUnhandledException(PEXCEPTION_POINTERS exceptionInfo)
 {
 }
 
-#define FLAG_String(name) \
-    bool IsEnabled##name##Flag() \
-    { \
-        return Js::Configuration::Global.flags.IsEnabled(Js::##name##Flag); \
-    } \
-    int32_t Get##name##Flag(BSTR *flag) \
-    { \
-        *flag = SysAllocString(Js::Configuration::Global.flags.##name##); \
-        return (*flag == NULL ? E_OUTOFMEMORY : S_OK); \
-    } \
-    int32_t Set##name##Flag(BSTR flag) \
-    { \
-        Js::Configuration::Global.flags.##name = flag; \
-        return S_OK; \
-    }
 #define FLAG_Boolean(name) \
     bool IsEnabled##name##Flag() \
     { \
@@ -625,7 +610,22 @@ FLAG_Boolean(ArenaUseHeapAlloc)
 #endif
 FLAG_Boolean(ValidateInlineStack)
 FLAG_Boolean(AsmDiff)
-FLAG_String(AsmDumpMode)
+bool IsEnabledAsmDumpModeFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::AsmDumpModeFlag);
+}
+
+int32_t GetAsmDumpModeFlag(BSTR *flag)
+{
+    *flag = SysAllocString(Js::Configuration::Global.flags.AsmDumpMode);
+    return (*flag == NULL ? E_OUTOFMEMORY : S_OK);
+}
+
+int32_t SetAsmDumpModeFlag(BSTR flag)
+{
+    Js::Configuration::Global.flags.AsmDumpMode = flag;
+    return S_OK;
+}
 FLAG_Boolean(AsmJs)
 FLAG_Boolean(AsmJsStopOnError)
 FLAG_Boolean(AsmJsEdge)
@@ -662,8 +662,38 @@ FLAG_Boolean(AsyncDebugging)
 FLAG_Number(BailOnNoProfileLimit)
 FLAG_Number(BailOnNoProfileRejitLimit)
 FLAG_Boolean(BaselineMode)
-FLAG_String(DumpOnCrash)
-FLAG_String(FullMemoryDump)
+bool IsEnabledDumpOnCrashFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::DumpOnCrashFlag);
+}
+
+int32_t GetDumpOnCrashFlag(BSTR *flag)
+{
+    *flag = SysAllocString(Js::Configuration::Global.flags.DumpOnCrash);
+    return (*flag == NULL ? E_OUTOFMEMORY : S_OK);
+}
+
+int32_t SetDumpOnCrashFlag(BSTR flag)
+{
+    Js::Configuration::Global.flags.DumpOnCrash = flag;
+    return S_OK;
+}
+bool IsEnabledFullMemoryDumpFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::FullMemoryDumpFlag);
+}
+
+int32_t GetFullMemoryDumpFlag(BSTR *flag)
+{
+    *flag = SysAllocString(Js::Configuration::Global.flags.FullMemoryDump);
+    return (*flag == NULL ? E_OUTOFMEMORY : S_OK);
+}
+
+int32_t SetFullMemoryDumpFlag(BSTR flag)
+{
+    Js::Configuration::Global.flags.FullMemoryDump = flag;
+    return S_OK;
+}
 #ifdef BAILOUT_INJECTION
 FLAG_NumberPairSet(BailOut)
 FLAG_Boolean(BailOutAtEveryLine)
@@ -688,7 +718,22 @@ FLAG_Boolean(CheckAlignment)
 FLAG_Boolean(CheckEmitBufferPermissions)
 #ifdef CHECK_MEMORY_LEAK
 FLAG_Boolean(CheckMemoryLeak)
-FLAG_String(DumpOnLeak)
+bool IsEnabledDumpOnLeakFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::DumpOnLeakFlag);
+}
+
+int32_t GetDumpOnLeakFlag(BSTR *flag)
+{
+    *flag = SysAllocString(Js::Configuration::Global.flags.DumpOnLeak);
+    return (*flag == NULL ? E_OUTOFMEMORY : S_OK);
+}
+
+int32_t SetDumpOnLeakFlag(BSTR flag)
+{
+    Js::Configuration::Global.flags.DumpOnLeak = flag;
+    return S_OK;
+}
 #endif
 FLAG_Boolean(CheckOpHelpers)
 FLAG_Boolean(CloneInlinedPolymorphicCaches)
@@ -726,11 +771,86 @@ FLAG_Boolean(DumpObjectGraphOnCollect)
 FLAG_Boolean(DumpEvalStringOnRemoval)
 FLAG_Boolean(DumpObjectGraphOnEnum)
 #ifdef DYNAMIC_PROFILE_STORAGE
-FLAG_String(DynamicProfileCache)
-FLAG_String(Dpc)
-FLAG_String(DynamicProfileCacheDir)
-FLAG_String(DynamicProfileInput)
-FLAG_String(Dpi)
+bool IsEnabledDynamicProfileCacheFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::DynamicProfileCacheFlag);
+}
+
+int32_t GetDynamicProfileCacheFlag(BSTR *flag)
+{
+    *flag = SysAllocString(Js::Configuration::Global.flags.DynamicProfileCache);
+    return (*flag == NULL ? E_OUTOFMEMORY : S_OK);
+}
+
+int32_t SetDynamicProfileCacheFlag(BSTR flag)
+{
+    Js::Configuration::Global.flags.DynamicProfileCache = flag;
+    return S_OK;
+}
+bool IsEnabledDpcFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::DpcFlag);
+}
+
+int32_t GetDpcFlag(BSTR *flag)
+{
+    *flag = SysAllocString(Js::Configuration::Global.flags.Dpc);
+    return (*flag == NULL ? E_OUTOFMEMORY : S_OK);
+}
+
+int32_t SetDpcFlag(BSTR flag)
+{
+    Js::Configuration::Global.flags.Dpc = flag;
+    return S_OK;
+}
+bool IsEnabledDynamicProfileCacheDirFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::DynamicProfileCacheDirFlag);
+}
+
+int32_t GetDynamicProfileCacheDirFlag(BSTR *flag)
+{
+    *flag = SysAllocString(Js::Configuration::Global.flags.DynamicProfileCacheDir);
+    return (*flag == NULL ? E_OUTOFMEMORY : S_OK);
+}
+
+int32_t SetDynamicProfileCacheDirFlag(BSTR flag)
+{
+    Js::Configuration::Global.flags.DynamicProfileCacheDir = flag;
+    return S_OK;
+}
+bool IsEnabledDynamicProfileInputFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::DynamicProfileInputFlag);
+}
+
+int32_t GetDynamicProfileInputFlag(BSTR *flag)
+{
+    *flag = SysAllocString(Js::Configuration::Global.flags.DynamicProfileInput);
+    return (*flag == NULL ? E_OUTOFMEMORY : S_OK);
+}
+
+int32_t SetDynamicProfileInputFlag(BSTR flag)
+{
+    Js::Configuration::Global.flags.DynamicProfileInput = flag;
+    return S_OK;
+}
+bool IsEnabledDpiFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::DpiFlag);
+}
+
+int32_t GetDpiFlag(BSTR *flag)
+{
+    *flag = SysAllocString(Js::Configuration::Global.flags.Dpi);
+    return (*flag == NULL ? E_OUTOFMEMORY : S_OK);
+}
+
+int32_t SetDpiFlag(BSTR flag)
+{
+    Js::Configuration::Global.flags.Dpi = flag;
+    return S_OK;
+}
 #endif
 #ifdef EDIT_AND_CONTINUE
 FLAG_Boolean(EditTest)
@@ -866,7 +986,22 @@ FLAG_Boolean(ESGlobalThis)
 FLAG_Boolean(JitES6Generators)
 
 FLAG_Boolean(FastLineColumnCalculation)
-FLAG_String(Filename)
+bool IsEnabledFilenameFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::FilenameFlag);
+}
+
+int32_t GetFilenameFlag(BSTR *flag)
+{
+    *flag = SysAllocString(Js::Configuration::Global.flags.Filename);
+    return (*flag == NULL ? E_OUTOFMEMORY : S_OK);
+}
+
+int32_t SetFilenameFlag(BSTR flag)
+{
+    Js::Configuration::Global.flags.Filename = flag;
+    return S_OK;
+}
 FLAG_Boolean(FreeRejittedCode)
 FLAG_Boolean(ForceGuardPages)
 FLAG_Boolean(PrintGuardPageBounds)
@@ -939,11 +1074,41 @@ FLAG_Number(InlineThresholdAdjustCountInLargeFunction)
 FLAG_Number(InlineThresholdAdjustCountInMediumSizedFunction)
 FLAG_Number(InlineThresholdAdjustCountInSmallFunction)
 FLAG_Number(AsmJsInlineAdjust)
-FLAG_String(Interpret)
+bool IsEnabledInterpretFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::InterpretFlag);
+}
+
+int32_t GetInterpretFlag(BSTR *flag)
+{
+    *flag = SysAllocString(Js::Configuration::Global.flags.Interpret);
+    return (*flag == NULL ? E_OUTOFMEMORY : S_OK);
+}
+
+int32_t SetInterpretFlag(BSTR flag)
+{
+    Js::Configuration::Global.flags.Interpret = flag;
+    return S_OK;
+}
 FLAG_Phases(Instrument)
 FLAG_Number(JitQueueThreshold)
 #ifdef LEAK_REPORT
-FLAG_String(LeakReport)
+bool IsEnabledLeakReportFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::LeakReportFlag);
+}
+
+int32_t GetLeakReportFlag(BSTR *flag)
+{
+    *flag = SysAllocString(Js::Configuration::Global.flags.LeakReport);
+    return (*flag == NULL ? E_OUTOFMEMORY : S_OK);
+}
+
+int32_t SetLeakReportFlag(BSTR flag)
+{
+    Js::Configuration::Global.flags.LeakReport = flag;
+    return S_OK;
+}
 #endif
 FLAG_Number(LoopInlineThreshold)
 FLAG_Number(LeafInlineThreshold)
@@ -1026,8 +1191,38 @@ FLAG_Number(AutoProfilingInterpreter1Limit)
 FLAG_Number(SimpleJitLimit)
 FLAG_Number(ProfilingInterpreter1Limit)
 
-FLAG_String(ExecutionModeLimits)
-FLAG_String(Eml)
+bool IsEnabledExecutionModeLimitsFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ExecutionModeLimitsFlag);
+}
+
+int32_t GetExecutionModeLimitsFlag(BSTR *flag)
+{
+    *flag = SysAllocString(Js::Configuration::Global.flags.ExecutionModeLimits);
+    return (*flag == NULL ? E_OUTOFMEMORY : S_OK);
+}
+
+int32_t SetExecutionModeLimitsFlag(BSTR flag)
+{
+    Js::Configuration::Global.flags.ExecutionModeLimits = flag;
+    return S_OK;
+}
+bool IsEnabledEmlFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::EmlFlag);
+}
+
+int32_t GetEmlFlag(BSTR *flag)
+{
+    *flag = SysAllocString(Js::Configuration::Global.flags.Eml);
+    return (*flag == NULL ? E_OUTOFMEMORY : S_OK);
+}
+
+int32_t SetEmlFlag(BSTR flag)
+{
+    Js::Configuration::Global.flags.Eml = flag;
+    return S_OK;
+}
 FLAG_Boolean(EnforceExecutionModeLimits)
 FLAG_Boolean(Eeml)
 
@@ -1065,8 +1260,38 @@ FLAG_Boolean(NormalizeStats)
 FLAG_Phases(Off)
 FLAG_Phases(OffProfiledByteCode)
 FLAG_Phases(On)
-FLAG_String(OutputFile)
-FLAG_String(OutputFileOpenMode)
+bool IsEnabledOutputFileFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::OutputFileFlag);
+}
+
+int32_t GetOutputFileFlag(BSTR *flag)
+{
+    *flag = SysAllocString(Js::Configuration::Global.flags.OutputFile);
+    return (*flag == NULL ? E_OUTOFMEMORY : S_OK);
+}
+
+int32_t SetOutputFileFlag(BSTR flag)
+{
+    Js::Configuration::Global.flags.OutputFile = flag;
+    return S_OK;
+}
+bool IsEnabledOutputFileOpenModeFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::OutputFileOpenModeFlag);
+}
+
+int32_t GetOutputFileOpenModeFlag(BSTR *flag)
+{
+    *flag = SysAllocString(Js::Configuration::Global.flags.OutputFileOpenMode);
+    return (*flag == NULL ? E_OUTOFMEMORY : S_OK);
+}
+
+int32_t SetOutputFileOpenModeFlag(BSTR flag)
+{
+    Js::Configuration::Global.flags.OutputFileOpenMode = flag;
+    return S_OK;
+}
 #ifdef ENABLE_TRACE
 FLAG_Boolean(InMemoryTrace)
 FLAG_Number(InMemoryTraceBufferSize)
@@ -1090,7 +1315,22 @@ FLAG_Number(ProfileThreshold)
 FLAG_Boolean(ProfileObjectLiteral)
 #endif
 #ifdef PROFILE_MEM
-FLAG_String(ProfileMemory)
+bool IsEnabledProfileMemoryFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ProfileMemoryFlag);
+}
+
+int32_t GetProfileMemoryFlag(BSTR *flag)
+{
+    *flag = SysAllocString(Js::Configuration::Global.flags.ProfileMemory);
+    return (*flag == NULL ? E_OUTOFMEMORY : S_OK);
+}
+
+int32_t SetProfileMemoryFlag(BSTR flag)
+{
+    Js::Configuration::Global.flags.ProfileMemory = flag;
+    return S_OK;
+}
 #endif
 #ifdef PROFILE_STRINGS
 FLAG_Boolean(ProfileStrings)
@@ -1160,7 +1400,22 @@ FLAG_Number(LowMemoryCap)
 FLAG_Number(NewPagesCapDuringBGSweeping)
 FLAG_Number(AllocPolicyLimit)
 #ifdef RUNTIME_DATA_COLLECTION
-FLAG_String(RuntimeDataOutputFile)
+bool IsEnabledRuntimeDataOutputFileFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::RuntimeDataOutputFileFlag);
+}
+
+int32_t GetRuntimeDataOutputFileFlag(BSTR *flag)
+{
+    *flag = SysAllocString(Js::Configuration::Global.flags.RuntimeDataOutputFile);
+    return (*flag == NULL ? E_OUTOFMEMORY : S_OK);
+}
+
+int32_t SetRuntimeDataOutputFileFlag(BSTR flag)
+{
+    Js::Configuration::Global.flags.RuntimeDataOutputFile = flag;
+    return S_OK;
+}
 #endif
 FLAG_Number(SpeculationCap)
 #if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
@@ -1243,7 +1498,22 @@ FLAG_Boolean(ChangeTypeOnProto)
 FLAG_Boolean(ShareInlineCaches)
 FLAG_Boolean(DisableDebugObject)
 FLAG_Boolean(DumpHeap)
-FLAG_String(autoProxy)
+bool IsEnabledautoProxyFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag);
+}
+
+int32_t GetautoProxyFlag(BSTR *flag)
+{
+    *flag = SysAllocString(Js::Configuration::Global.flags.autoProxy);
+    return (*flag == NULL ? E_OUTOFMEMORY : S_OK);
+}
+
+int32_t SetautoProxyFlag(BSTR flag)
+{
+    Js::Configuration::Global.flags.autoProxy = flag;
+    return S_OK;
+}
 FLAG_Number(PerfHintLevel)
 #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
 FLAG_Boolean(MemProtectHeap)
