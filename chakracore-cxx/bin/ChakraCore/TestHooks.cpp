@@ -111,11 +111,6 @@ void NotifyUnhandledException(PEXCEPTION_POINTERS exceptionInfo)
 }
 
 // skipping other types
-#define FLAG_Phases(name)
-#define FLAG_NumberSet(name)
-#define FLAG_NumberPairSet(name)
-#define FLAG_NumberTrioSet(name)
-#define FLAG_NumberRange(name)
 // TODO (hanhossain): ConfigFlagsList start
 #ifndef DEFAULT_CONFIG_BgJitDelay
 #if _M_ARM
@@ -1120,7 +1115,6 @@ int32_t SetFullMemoryDumpFlag(BSTR flag)
     return S_OK;
 }
 #ifdef BAILOUT_INJECTION
-FLAG_NumberPairSet(BailOut)
 bool IsEnabledBailOutAtEveryLineFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::BailOutAtEveryLineFlag);
@@ -1163,7 +1157,6 @@ int32_t SetBailOutAtEveryImplicitCallFlag(bool flag)
     Js::Configuration::Global.flags.BailOutAtEveryImplicitCall = flag;
     return S_OK;
 }
-FLAG_NumberSet(BailOutByteCode)
 #endif
 bool IsEnabledBenchmarkFlag()
 {
@@ -1520,9 +1513,6 @@ int32_t SetDebugFlag(bool flag)
     Js::Configuration::Global.flags.Debug = flag;
     return S_OK;
 }
-FLAG_NumberSet(DebugBreak)
-FLAG_NumberTrioSet(StatementDebugBreak)
-FLAG_Phases(DebugBreakOnPhaseBegin)
 
 bool IsEnabledDebugWindowFlag()
 {
@@ -1664,7 +1654,6 @@ int32_t SetDisplayMemStatsFlag(bool flag)
     Js::Configuration::Global.flags.DisplayMemStats = flag;
     return S_OK;
 }
-FLAG_Phases(Dump)
 #ifdef DUMP_FRAGMENTATION_STATS
 bool IsEnabledDumpFragmentationStatsFlag()
 {
@@ -2965,8 +2954,6 @@ int32_t SetForceLegacyEngineFlag(bool flag)
     Js::Configuration::Global.flags.ForceLegacyEngine = flag;
     return S_OK;
 }
-FLAG_Phases(Force)
-FLAG_Phases(Stress)
 bool IsEnabledForceArrayBTreeFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::ForceArrayBTreeFlag);
@@ -3842,7 +3829,6 @@ int32_t SetInterpretFlag(BSTR flag)
     Js::Configuration::Global.flags.Interpret = flag;
     return S_OK;
 }
-FLAG_Phases(Instrument)
 bool IsEnabledJitQueueThresholdFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::JitQueueThresholdFlag);
@@ -4071,9 +4057,6 @@ int32_t SetMaxNumberOfInlineesWithLoopFlag(int flag)
     Js::Configuration::Global.flags.MaxNumberOfInlineesWithLoop = flag;
     return S_OK;
 }
-#ifdef MEMSPECT_TRACKING
-FLAG_Phases(Memspect)
-#endif
 bool IsEnabledPolymorphicInlineThresholdFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::PolymorphicInlineThresholdFlag);
@@ -5205,9 +5188,6 @@ int32_t SetNormalizeStatsFlag(bool flag)
     Js::Configuration::Global.flags.NormalizeStats = flag;
     return S_OK;
 }
-FLAG_Phases(Off)
-FLAG_Phases(OffProfiledByteCode)
-FLAG_Phases(On)
 bool IsEnabledOutputFileFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::OutputFileFlag);
@@ -5347,7 +5327,6 @@ int32_t SetProfileDictionaryFlag(int flag)
 }
 #endif
 #ifdef PROFILE_EXEC
-FLAG_Phases(Profile)
 bool IsEnabledProfileThresholdFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::ProfileThresholdFlag);
@@ -5796,7 +5775,6 @@ int32_t SetPageHeapFreeStackFlag(bool flag)
     Js::Configuration::Global.flags.PageHeapFreeStack = flag;
     return S_OK;
 }
-FLAG_NumberRange(PageHeapBucketNumber)
 bool IsEnabledPageHeapBlockTypeFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::PageHeapBlockTypeFlag);
@@ -5843,7 +5821,6 @@ int32_t SetRecyclerNoPageReuseFlag(bool flag)
 }
 #endif
 #ifdef RECYCLER_MEMORY_VERIFY
-FLAG_Phases(RecyclerVerify)
 bool IsEnabledRecyclerVerifyPadSizeFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::RecyclerVerifyPadSizeFlag);
@@ -5977,9 +5954,6 @@ int32_t SetSpeculationCapFlag(int flag)
     Js::Configuration::Global.flags.SpeculationCap = flag;
     return S_OK;
 }
-#if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
-FLAG_Phases(Stats)
-#endif
 #if EXCEPTION_RECOVERY
 bool IsEnabledSwallowExceptionsFlag()
 {
@@ -6052,7 +6026,6 @@ int32_t SetTempMaxFlag(int flag)
     Js::Configuration::Global.flags.TempMax = flag;
     return S_OK;
 }
-FLAG_Phases(Trace)
 
 #if defined(_M_X64)
 bool IsEnabledLoopAlignNopLimitFlag()
@@ -6071,9 +6044,6 @@ int32_t SetLoopAlignNopLimitFlag(int flag)
 }
 #endif
 
-#ifdef PROFILE_MEM
-FLAG_Phases(TraceMemory)
-#endif
 #if DBG_DUMP || defined(RECYCLER_TRACE)
 //TraceMetaDataParsing flag with optional levels:
 //    Level 1 = interfaces only
@@ -6471,7 +6441,6 @@ int32_t SetArrayMutationTestSeedFlag(int flag)
     Js::Configuration::Global.flags.ArrayMutationTestSeed = flag;
     return S_OK;
 }
-FLAG_Phases(TestTrace)
 bool IsEnabledEnableEvalMapCleanupFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::EnableEvalMapCleanupFlag);
@@ -6780,8 +6749,6 @@ int32_t SetFixPropsOnPathTypesFlag(bool flag)
     return S_OK;
 }
 #endif
-FLAG_NumberSet(BailoutTraceFilter)
-FLAG_NumberSet(RejitTraceFilter)
 
 // recycler heuristic flags
 bool IsEnabledMaxBackgroundFinishMarkCountFlag()
@@ -7160,11 +7127,6 @@ int32_t SetMaxSingleAllocSizeInMBFlag(int flag)
 }
 
 // TODO (hanhossain): ConfigFlagsList end
-#undef FLAG_Phases
-#undef FLAG_NumberSet
-#undef FLAG_NumberPairSet
-#undef FLAG_NumberTrioSet
-#undef FLAG_NumberRange
 
 int32_t OnChakraCoreLoaded()
 {
