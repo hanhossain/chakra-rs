@@ -5,6 +5,7 @@
 //-------------------------------------------------------------------------------------------------------
 
 // TODO (hanhossain): ConfigFlagsList start
+// TODO (hanhossain): remove default values start
 #ifndef DEFAULT_CONFIG_BgJitDelay
 #if _M_ARM
 #define DEFAULT_CONFIG_BgJitDelay           (70)
@@ -453,6 +454,8 @@
 #ifdef SUPPORT_INTRUSIVE_TESTTRACES
 #define INTRUSIVE_TESTTRACE_PolymorphicInlineCache (1)
 #endif
+
+// TODO (hanhossain): remove default values end
 
 //
 //FLAG(type, name, description, defaultValue)

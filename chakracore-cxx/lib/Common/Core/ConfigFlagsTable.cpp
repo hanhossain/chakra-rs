@@ -1412,51 +1412,1503 @@ namespace Js
 
         switch (flag)
         {
-#define FLAG(type, name, description, defaultValue, ...) FLAGDEFAULT##type(name, defaultValue)
-            // define an overload for each FlagTypes - type
-            //   * all defaults we don't care about
-#define FLAGDEFAULTPhases(name, defaultValue)
-#define FLAGDEFAULTString(name, defaultValue)
-#define FLAGDEFAULTNumber(name, defaultValue)
-#define FLAGDEFAULTNumberSet(name, defaultValue)
-#define FLAGDEFAULTNumberRange(name, defaultValue)
-#define FLAGDEFAULTNumberPairSet(name, defaultValue)
-#define FLAGDEFAULTNumberTrioSet(name, defaultValue)
-            //   * and those we do care about
-#define FLAGDEFAULTBoolean(name, defaultValue) \
-        case name##Flag: \
-            retValue = (Boolean) defaultValue; \
-            break; \
+        // TODO (hanhossain): ConfigFlagsList start
+        // TODO (hanhossain): remove default values start
+        #ifndef DEFAULT_CONFIG_BgJitDelay
+        #if _M_ARM
+        #define DEFAULT_CONFIG_BgJitDelay           (70)
+        #else
+        #define DEFAULT_CONFIG_BgJitDelay           (30)
+        #endif
+        #endif // DEFAULT_CONFIG_BgJitDelay
+        #define DEFAULT_CONFIG_AsmJs                (true)
+        #define DEFAULT_CONFIG_AsmJsEdge            (false)
+        #define DEFAULT_CONFIG_AsmJsStopOnError     (false)
 
-#include "Interface/ConfigFlagsList.h"
+        #define DEFAULT_CONFIG_Wasm               (true)
+        #define DEFAULT_CONFIG_WasmI64            (false)
+        #if ENABLE_FAST_ARRAYBUFFER
+            #define DEFAULT_CONFIG_WasmFastArray    (true)
+        #else
+            #define DEFAULT_CONFIG_WasmFastArray    (false)
+        #endif
+        #define DEFAULT_CONFIG_WasmSharedArrayVirtualBuffer (true)
+        #define DEFAULT_CONFIG_WasmCheckVersion     (true)
+        #define DEFAULT_CONFIG_WasmAssignModuleID   (false)
+        #define DEFAULT_CONFIG_WasmIgnoreLimits     (false)
+        #define DEFAULT_CONFIG_WasmFold             (true)
+        #define DEFAULT_CONFIG_WasmMathExFilter     (false)
+        #define DEFAULT_CONFIG_WasmIgnoreResponse   (false)
+        #define DEFAULT_CONFIG_WasmMaxTableSize     (10000000)
+        #define DEFAULT_CONFIG_WasmThreads          (false)
+        #define DEFAULT_CONFIG_WasmMultiValue       (false)
+        #define DEFAULT_CONFIG_WasmSignExtends      (true)
+        #define DEFAULT_CONFIG_WasmNontrapping      (true)
+        #define DEFAULT_CONFIG_WasmExperimental     (false)
+        #define DEFAULT_CONFIG_BgParse              (false)
+        #define DEFAULT_CONFIG_BgJitDelayFgBuffer   (0)
+        #define DEFAULT_CONFIG_BgJitPendingFuncCap  (31)
+        #define DEFAULT_CONFIG_CurrentSourceInfo    (true)
+        #define DEFAULT_CONFIG_CreateFunctionProxy  (true)
+        #define DEFAULT_CONFIG_HybridFgJit          (false)
+        #define DEFAULT_CONFIG_HybridFgJitBgQueueLengthThreshold (32)
+        #define DEFAULT_CONFIG_Prejit               (false)
+        #define DEFAULT_CONFIG_ParserStateCache     (true)
+        #define DEFAULT_CONFIG_CompressParserStateCache (false)
+        #define DEFAULT_CONFIG_DeferTopLevelTillFirstCall (true)
+        #define DEFAULT_CONFIG_DirectCallTelemetryStats (false)
+        #define DEFAULT_CONFIG_errorStackTrace      (true)
+        #define DEFAULT_CONFIG_FastLineColumnCalculation (true)
+        #define DEFAULT_CONFIG_PrintLineColumnInfo (false)
+        #define DEFAULT_CONFIG_ForceDecommitOnCollect (false)
+        #define DEFAULT_CONFIG_ForceDeferParse      (false)
+        #define DEFAULT_CONFIG_NoDeferParse         (false)
+        #define DEFAULT_CONFIG_ForceDynamicProfile  (false)
+        #define DEFAULT_CONFIG_ForceExpireOnNonCacheCollect (false)
+        #define DEFAULT_CONFIG_ForceFastPath        (false)
+        #define DEFAULT_CONFIG_ForceJITLoopBody     (false)
+        #define DEFAULT_CONFIG_ForceStaticInterpreterThunk (false)
+        #define DEFAULT_CONFIG_ForceCleanPropertyOnCollect (false)
+        #define DEFAULT_CONFIG_ForceCleanCacheOnCollect (false)
+        #define DEFAULT_CONFIG_ForceGCAfterJSONParse (false)
+        #define DEFAULT_CONFIG_ForceSerialized      (false)
+        #define DEFAULT_CONFIG_ForceES5Array        (false)
+        #define DEFAULT_CONFIG_ForceAsmJsLinkFail   (false)
+        #define DEFAULT_CONFIG_StrongArraySort      (false)
+        #define DEFAULT_CONFIG_DumpCommentsFromReferencedFiles (false)
+        #define DEFAULT_CONFIG_ExtendedErrorStackForTestHost (false)
+        #define DEFAULT_CONFIG_ForceSplitScope      (false)
+        #define DEFAULT_CONFIG_DelayFullJITSmallFunc (0)
+        #define DEFAULT_CONFIG_EnableFatalErrorOnOOM (true)
+        #define DEFAULT_CONFIG_RedeferralCap         (3)
 
-#undef FLAGDEFAULTBoolean
-#undef FLAGDEFAULTNumberRange
-#undef FLAGDEFAULTNumberPairSet
-#undef FLAGDEFAULTNumberTrioSet
-#undef FLAGDEFAULTNumberSet
-#undef FLAGDEFAULTNumber
-#undef FLAGDEFAULTString
-#undef FLAGDEFAULTPhases
-#undef FLAG
+        //Following determines inline thresholds
+        #define DEFAULT_CONFIG_InlineThreshold      (35)            //Default start
+        #define DEFAULT_CONFIG_AggressiveInlineThreshold  (80)      //Limit for aggressive inlining.
+        #define DEFAULT_CONFIG_InlineThresholdAdjustCountInLargeFunction  (20)
+        #define DEFAULT_CONFIG_InlineThresholdAdjustCountInMediumSizedFunction  (6)
+        #define DEFAULT_CONFIG_InlineThresholdAdjustCountInSmallFunction  (10)
+        #define DEFAULT_CONFIG_ConstructorInlineThreshold (21)      //Monomorphic constructor threshold
+        #define DEFAULT_CONFIG_AsmJsInlineAdjust (35)                // wasm functions are cheaper to inline, so worth being more aggressive
+        #define DEFAULT_CONFIG_ConstructorCallsRequiredToFinalizeCachedType (2)
+        #define DEFAULT_CONFIG_OutsideLoopInlineThreshold (16)      //Threshold to inline outside loops
+        #define DEFAULT_CONFIG_LeafInlineThreshold  (60)            //Inlinee threshold for function which is leaf (irrespective of it has loops or not)
+        #define DEFAULT_CONFIG_LoopInlineThreshold  (25)            //Inlinee threshold for function with loops
+        #define DEFAULT_CONFIG_PolymorphicInlineThreshold  (35)     //Polymorphic inline threshold
+        #define DEFAULT_CONFIG_InlineCountMax       (1200)          //Max sum of bytecodes of inlinees inlined into a function (excluding built-ins)
+        #define DEFAULT_CONFIG_InlineCountMaxInLoopBodies (500)     // Max sum of bytecodes of inlinees that can be inlined into a jitted loop body (excluding built-ins)
+        #define DEFAULT_CONFIG_AggressiveInlineCountMax       (8000)          //Max sum of bytecodes of inlinees inlined into a function (excluding built-ins) when inlined aggressively
+        #define DEFAULT_CONFIG_MaxFuncInlineDepth   (2)             //Maximum number of times a function can be inlined within a top function
+        #define DEFAULT_CONFIG_MaxNumberOfInlineesWithLoop   (40) //Inlinee with a loop is controlled by LoopInlineThreshold, though we don't want to inline lot of inlinees with loop, this ensures a limit.
+        #define DEFAULT_CONFIG_ConstantArgumentInlineThreshold   (157)      // Bytecode threshold for functions with constant arguments which are used for branching
+        #define DEFAULT_CONFIG_RecursiveInlineThreshold     (2000)      // Bytecode threshold recursive call at a call site
+        #define DEFAULT_CONFIG_RecursiveInlineDepthMax      (8)      // Maximum inline depth for recursive calls
+        #define DEFAULT_CONFIG_RecursiveInlineDepthMin      (2)      // Minimum inline depth for recursive call
+        #define DEFAULT_CONFIG_InlineInLoopBodyScaleDownFactor    (4)
+        #define DEFAULT_CONFIG_PropertyCacheMissPenalty (10)
+        #define DEFAULT_CONFIG_PropertyCacheMissThreshold (-100)
+        #define DEFAULT_CONFIG_PropertyCacheMissReset (-5000)
 
-#undef FLAGREGOVREXPBoolean
-#undef FLAGREGOVREXPNumberRange
-#undef FLAGREGOVREXPNumberPairSet
-#undef FLAGREGOVREXPNumberTrioSet
-#undef FLAGREGOVREXPNumberSet
-#undef FLAGREGOVREXPNumber
-#undef FLAGREGOVREXPString
-#undef FLAGREGOVREXPPhases
+        #define DEFAULT_CONFIG_CloneInlinedPolymorphicCaches (true)
+        #define DEFAULT_CONFIG_HighPrecisionDate    (false)
+        #define DEFAULT_CONFIG_ForceOldDateAPI      (false)
+        #define DEFAULT_CONFIG_Loop                 (1)
+        #define DEFAULT_CONFIG_ForceDiagnosticsMode (false)
+        #define DEFAULT_CONFIG_UseFullName          (true)
+        #define DEFAULT_CONFIG_EnableContinueAfterExceptionWrappersForHelpers  (true)
+        #define DEFAULT_CONFIG_EnableContinueAfterExceptionWrappersForBuiltIns  (true)
+        #define DEFAULT_CONFIG_EnableFunctionSourceReportForHeapEnum (true)
+        #define DEFAULT_CONFIG_LoopInterpretCount   (150)
+        #define DEFAULT_CONFIG_LoopProfileIterations (25)
+        #define DEFAULT_CONFIG_JitLoopBodyHotLoopThreshold (20000)
+        #define DEFAULT_CONFIG_LoopBodySizeThresholdToDisableOpts (255)
 
-#undef FLAGREGOVRBoolean
-#undef FLAGREGOVRNumberRange
-#undef FLAGREGOVRNumberPairSet
-#undef FLAGREGOVRNumberTrioSet
-#undef FLAGREGOVRNumberSet
-#undef FLAGREGOVRNumber
-#undef FLAGREGOVRString
-#undef FLAGREGOVRPhases
+        #define DEFAULT_CONFIG_MaxJitThreadCount        (2)
+        #define DEFAULT_CONFIG_ForceMaxJitThreadCount   (false)
+
+        #define DEFAULT_CONFIG_MitigateSpectre (true)
+
+        #define DEFAULT_CONFIG_AddMaskingBlocks (true)
+
+        #define DEFAULT_CONFIG_PoisonVarArrayLoad (true)
+        #define DEFAULT_CONFIG_PoisonIntArrayLoad (true)
+        #define DEFAULT_CONFIG_PoisonFloatArrayLoad (true)
+        #define DEFAULT_CONFIG_PoisonTypedArrayLoad (true)
+        #define DEFAULT_CONFIG_PoisonStringLoad (true)
+        #define DEFAULT_CONFIG_PoisonObjectsForLoads (true)
+
+        #define DEFAULT_CONFIG_PoisonVarArrayStore (true)
+        #define DEFAULT_CONFIG_PoisonIntArrayStore (true)
+        #define DEFAULT_CONFIG_PoisonFloatArrayStore (true)
+        #define DEFAULT_CONFIG_PoisonTypedArrayStore (true)
+        #define DEFAULT_CONFIG_PoisonStringStore (true)
+        #define DEFAULT_CONFIG_PoisonObjectsForStores (true)
+
+        #ifdef RECYCLER_PAGE_HEAP
+        #define DEFAULT_CONFIG_PageHeap             ((Js::Number) PageHeapMode::PageHeapModeOff)
+        #define DEFAULT_CONFIG_PageHeapAllocStack   (false)
+        #define DEFAULT_CONFIG_PageHeapFreeStack    (false)
+        #define DEFAULT_CONFIG_PageHeapBlockType    ((Js::Number) PageHeapBlockTypeFilter::PageHeapBlockTypeFilterAll)
+        #endif
+
+        #define DEFAULT_CONFIG_LowMemoryCap         (0xB900000) // 185 MB - based on memory cap for process on low-capacity device
+        #define DEFAULT_CONFIG_NewPagesCapDuringBGSweeping    (15000 * 4)
+        #define DEFAULT_CONFIG_MaxSingleAllocSizeInMB  (2048)
+        #define DEFAULT_CONFIG_AllocationPolicyLimit    (-1)
+
+        #define DEFAULT_CONFIG_MaxCodeFill          (500)
+        #define DEFAULT_CONFIG_MaxLoopsPerFunction  (10)
+        #define DEFAULT_CONFIG_NopFrequency         (8)
+        #define DEFAULT_CONFIG_SpeculationCap       (1)         // Needs to be 1 and not 0 since the compiler complains about a condition being always false
+        #define DEFAULT_CONFIG_ProfileBasedSpeculationCap (1600)
+        #define DEFAULT_CONFIG_Verbose              (false)
+        #define DEFAULT_CONFIG_ForceStrictMode      (false)
+        #define DEFAULT_CONFIG_EnableEvalMapCleanup (true)
+        #define DEFAULT_CONFIG_ExpirableCollectionGCCount (5)  // Number of GCs during which entry point profiling occurs
+        #define DEFAULT_CONFIG_ExpirableCollectionTriggerThreshold (50)  // Threshold at which Entry Point Collection is triggered
+        #define DEFAULT_CONFIG_RegexTracing         (false)
+        #define DEFAULT_CONFIG_RegexProfile         (false)
+        #define DEFAULT_CONFIG_RegexDebug           (false)
+        #define DEFAULT_CONFIG_RegexDebugAST        (true)
+        #define DEFAULT_CONFIG_RegexDebugAnnotatedAST (true)
+        #define DEFAULT_CONFIG_RegexBytecodeDebug   (false)
+        #define DEFAULT_CONFIG_RegexOptimize        (true)
+        #define DEFAULT_CONFIG_DynamicRegexMruListSize (16)
+        #define DEFAULT_CONFIG_GoptCleanupThreshold  (25)
+        #define DEFAULT_CONFIG_AsmGoptCleanupThreshold  (500)
+        #define DEFAULT_CONFIG_OptimizeForManyInstances (false)
+        #define DEFAULT_CONFIG_EnableArrayTypeMutation (false)
+
+        #define DEFAULT_CONFIG_DeferParseThreshold             (4 * 1024) // Unit is number of characters
+        #define DEFAULT_CONFIG_ProfileBasedDeferParseThreshold (100)      // Unit is number of characters
+
+        #define DEFAULT_CONFIG_ProfileBasedSpeculativeJit (true)
+        #define DEFAULT_CONFIG_WininetProfileCache        (true)
+        #define DEFAULT_CONFIG_MinProfileCacheSize        (5)   // Minimum number of functions before profile is saved.
+        #define DEFAULT_CONFIG_ProfileDifferencePercent   (15)  // If 15% of the functions have different profile we will trigger a save.
+
+        #define DEFAULT_CONFIG_Intl                    (true)
+        #define DEFAULT_CONFIG_IntlBuiltIns            (true)
+        #define DEFAULT_CONFIG_IntlPlatform            (false) // Makes the EngineExtension.Intl object visible to user code as Intl.platform, meant for testing
+
+        #ifdef ENABLE_JS_BUILTINS
+            #define DEFAULT_CONFIG_JsBuiltIn             (true)
+        #else
+            #define DEFAULT_CONFIG_JsBuiltIn             (false)
+        #endif
+        #define DEFAULT_CONFIG_JitRepro                (false)
+        #define DEFAULT_CONFIG_LdChakraLib             (false)
+        #define DEFAULT_CONFIG_TestChakraLib           (false)
+        #define DEFAULT_CONFIG_EntryPointInfoRpcData   (false)
+
+        // ES6 DEFAULT BEHAVIOR
+        #define DEFAULT_CONFIG_ES6                     (true)  // master flag to gate all P0-spec-test compliant ES6 features
+
+        //CollectGarbage is legacy IE specific global function disabled in Microsoft Edge.
+        #define DEFAULT_CONFIG_CollectGarbage          (false)
+
+        // ES6 sub-feature gate - to enable-disable ES6 sub-feature when ES6 flag is enabled
+        #define DEFAULT_CONFIG_ES6DateParseFix         (true)
+        #define DEFAULT_CONFIG_ES6FunctionNameFull     (true)
+        #define DEFAULT_CONFIG_ES6Generators           (true)
+        #define DEFAULT_CONFIG_ES6IsConcatSpreadable   (true)
+        #define DEFAULT_CONFIG_ES6Math                 (true)
+        #ifdef COMPILE_DISABLE_ES6Module
+            // If ES6Module needs to be disabled by compile flag, DEFAULT_CONFIG_ES6Module should be false
+            #define DEFAULT_CONFIG_ES6Module               (false)
+        #else
+            #define DEFAULT_CONFIG_ES6Module               (true)
+        #endif
+        #define DEFAULT_CONFIG_ES6Object               (true)
+        #define DEFAULT_CONFIG_ES6Number               (true)
+        #define DEFAULT_CONFIG_ES6ObjectLiterals       (true)
+        #define DEFAULT_CONFIG_ES6Proxy                (true)
+        #define DEFAULT_CONFIG_ES6Rest                 (true)
+        #define DEFAULT_CONFIG_ES6Spread               (true)
+        #define DEFAULT_CONFIG_ES6String               (true)
+        #define DEFAULT_CONFIG_ES6StringPrototypeFixes (true)
+        #define DEFAULT_CONFIG_ES2018ObjectRestSpread  (true)
+
+        #ifndef DEFAULT_CONFIG_ES6PrototypeChain
+        #ifdef COMPILE_DISABLE_ES6PrototypeChain
+            // If ES6PrototypeChain needs to be disabled by compile flag, DEFAULT_CONFIG_ES6PrototypeChain should be false
+            #define DEFAULT_CONFIG_ES6PrototypeChain       (false)
+        #else
+            #define DEFAULT_CONFIG_ES6PrototypeChain       (true)
+        #endif
+        #endif
+
+        #define DEFAULT_CONFIG_ES6ToPrimitive          (true)
+        #define DEFAULT_CONFIG_ES6ToLength             (true)
+        #define DEFAULT_CONFIG_ES6ToStringTag          (true)
+        #define DEFAULT_CONFIG_ES6Unicode              (true)
+        #define DEFAULT_CONFIG_ES6UnicodeVerbose       (true)
+        #define DEFAULT_CONFIG_ES6Unscopables          (true)
+        #define DEFAULT_CONFIG_ES6RegExSticky          (true)
+        #define DEFAULT_CONFIG_ES2018RegExDotAll       (true)
+        #define DEFAULT_CONFIG_ESBigInt                (false)
+        #define DEFAULT_CONFIG_ESNumericSeparator      (true)
+        #define DEFAULT_CONFIG_ESHashbang              (true)
+        #define DEFAULT_CONFIG_ESSymbolDescription     (true)
+        #define DEFAULT_CONFIG_ESArrayFindFromLast     (true)
+        #define DEFAULT_CONFIG_ESPromiseAny            (true)
+        #define DEFAULT_CONFIG_ESNullishCoalescingOperator (true)
+        #define DEFAULT_CONFIG_ESGlobalThis            (true)
+
+        // Jitting generator functions is not functional on ARM
+        // Also still contains significant bugs on x86/x64 hence disabled
+        #ifdef _M_ARM32_OR_ARM64
+            #define DEFAULT_CONFIG_JitES6Generators            (false)
+        #else
+            #define DEFAULT_CONFIG_JitES6Generators            (false)
+        #endif
+
+        #ifdef COMPILE_DISABLE_ES6RegExPrototypeProperties
+            // If ES6RegExPrototypeProperties needs to be disabled by compile flag, DEFAULT_CONFIG_ES6RegExPrototypeProperties should be false
+            #define DEFAULT_CONFIG_ES6RegExPrototypeProperties (false)
+        #else
+            #define DEFAULT_CONFIG_ES6RegExPrototypeProperties (false)
+        #endif
+        #ifdef COMPILE_DISABLE_ES6RegExSymbols
+            // If ES6RegExSymbols needs to be disabled by compile flag, DEFAULT_CONFIG_ES6RegExSymbols should be false
+            #define DEFAULT_CONFIG_ES6RegExSymbols         (false)
+        #else
+            #define DEFAULT_CONFIG_ES6RegExSymbols         (false)
+        #endif
+        #define DEFAULT_CONFIG_ES7AsyncAwait           (true)
+        #define DEFAULT_CONFIG_ES7ExponentionOperator  (true)
+        #define DEFAULT_CONFIG_ES7TrailingComma        (true)
+        #define DEFAULT_CONFIG_ES7ValuesEntries        (true)
+        #define DEFAULT_CONFIG_ESObjectGetOwnPropertyDescriptors (true)
+        #define DEFAULT_CONFIG_ESDynamicImport         (true)
+        #define DEFAULT_CONFIG_ESImportMeta            (true)
+        #define DEFAULT_CONFIG_ESExportNsAs            (true)
+        #define DEFAULT_CONFIG_ES2018AsyncIteration    (true)
+        #define DEFAULT_CONFIG_ESTopLevelAwait         (true)
+
+        #define DEFAULT_CONFIG_ESSharedArrayBuffer     (false)
+
+        #define DEFAULT_CONFIG_ES6Verbose              (false)
+        #define DEFAULT_CONFIG_ES6All                  (false)
+        // ES6 DEFAULT BEHAVIOR
+
+        #define DEFAULT_CONFIG_AsyncDebugging           (true)
+        #define DEFAULT_CONFIG_TraceAsyncDebugCalls     (false)
+        #define DEFAULT_CONFIG_ForcePostLowerGlobOptInstrString (false)
+        #define DEFAULT_CONFIG_EnumerateSpecialPropertiesInDebugger (true)
+
+        #define DEFAULT_CONFIG_MaxJITFunctionBytecodeByteLength (4800000)
+        #define DEFAULT_CONFIG_MaxJITFunctionBytecodeCount (120000)
+
+        #define DEFAULT_CONFIG_JitQueueThreshold      (6)
+
+        #define DEFAULT_CONFIG_FullJitRequeueThreshold (25)     // Minimum number of times a function needs to be executed before it is re-added to the jit queue
+
+        #define DEFAULT_CONFIG_MinTemplatizedJitRunCount      (100)     // Minimum number of times a function needs to be interpreted before it is jitted
+        #define DEFAULT_CONFIG_MinAsmJsInterpreterRunCount      (10)     // Minimum number of times a function needs to be Asm interpreted before it is jitted
+        #define DEFAULT_CONFIG_MinTemplatizedJitLoopRunCount      (500)     // Minimum number of times a function needs to be interpreted before it is jitted
+        #define DEFAULT_CONFIG_MaxTemplatizedJitRunCount      (-1)     // Maximum number of times a function can be TJ before it is jitted
+        #define DEFAULT_CONFIG_MaxAsmJsInterpreterRunCount      (-1)     // Maximum number of times a function can be Asm interpreted before it is jitted
+
+        // Note: The following defaults only apply when the NewSimpleJit is on. The defaults for when it's off are computed in
+        // ConfigFlagsTable::TranslateFlagConfiguration.
+        #define DEFAULT_CONFIG_AutoProfilingInterpreter0Limit (12)
+        #define DEFAULT_CONFIG_ProfilingInterpreter0Limit (4)
+        #define DEFAULT_CONFIG_AutoProfilingInterpreter1Limit (0)
+        #define DEFAULT_CONFIG_SimpleJitLimit (132)
+        #define DEFAULT_CONFIG_ProfilingInterpreter1Limit (12)
+
+        // These are used to compute the above defaults for when NewSimpleJit is off
+        #define DEFAULT_CONFIG_AutoProfilingInterpreterLimit_OldSimpleJit (80)
+        #define DEFAULT_CONFIG_SimpleJitLimit_OldSimpleJit (25)
+
+        #define DEFAULT_CONFIG_MinProfileIterations (16)
+        #define DEFAULT_CONFIG_MinProfileIterations_OldSimpleJit (25)
+        #define DEFAULT_CONFIG_MinSimpleJitIterations (16)
+        #define DEFAULT_CONFIG_NewSimpleJit (false)
+
+        #define DEFAULT_CONFIG_MaxLinearIntCaseCount     (3)       // Maximum number of cases (in switch statement) for which instructions can be generated linearly.
+        #define DEFAULT_CONFIG_MaxSingleCharStrJumpTableRatio  (2)       // Maximum single char string jump table size as multiples of the actual case arm
+        #define DEFAULT_CONFIG_MaxSingleCharStrJumpTableSize  (128)       // Maximum single char string jump table size
+        #define DEFAULT_CONFIG_MinSwitchJumpTableSize   (9)     // Minimum number of case target entries in the jump table(this may also include values that are missing in the consecutive set of integer case arms)
+        #define DEFAULT_CONFIG_SwitchOptHolesThreshold  (50)     // Maximum percentage of holes (missing case values in a switch statement) with which a jump table can be created
+        #define DEFAULT_CONFIG_MaxLinearStringCaseCount (4)     // Maximum number of String cases (in switch statement) for which instructions can be generated linearly.
+
+        #define DEFAULT_CONFIG_MinDeferredFuncTokenCount (20)   // Minimum size in tokens of a defer-parsed function
+
+        #if DBG
+        #define DEFAULT_CONFIG_SkipFuncCountForBailOnNoProfile (0) //Initial Number of functions in a func body to be skipped from forcibly inserting BailOnNoProfile.
+        #endif
+        #define DEFAULT_CONFIG_BailOnNoProfileLimit    200      // The limit of bailout on no profile info before triggering a rejit
+        #define DEFAULT_CONFIG_BailOnNoProfileRejitLimit (50)   // The limit of bailout on no profile info before disable all the no profile bailouts
+        #define DEFAULT_CONFIG_CallsToBailoutsRatioForRejit 10   // Ratio of function calls to bailouts above which a rejit is considered
+        #define DEFAULT_CONFIG_LoopIterationsToBailoutsRatioForRejit 50 // Ratio of loop iteration count to bailouts above which a rejit of the loop body is considered
+        #define DEFAULT_CONFIG_MinBailOutsBeforeRejit 2         // Minimum number of bailouts for a single bailout record after which a rejit is considered
+        #define DEFAULT_CONFIG_MinBailOutsBeforeRejitForLoops 2         // Minimum number of bailouts for a single bailout record after which a rejit is considered
+        #define DEFAULT_CONFIG_RejitMaxBailOutCount 500         // Maximum number of bailouts for a single bailout record after which rejit is forced.
+
+        #if DBG
+        #define DEFAULT_CONFIG_ValidateIntRanges (false)
+        #endif
+
+        #define DEFAULT_CONFIG_Sse                  (-1)
+
+        #define DEFAULT_CONFIG_DeletedPropertyReuseThreshold (32)
+        #define DEFAULT_CONFIG_BigDictionaryTypeHandlerThreshold (0xffff)
+        #define DEFAULT_CONFIG_ForceStringKeyedSimpleDictionaryTypeHandler (false)
+        #define DEFAULT_CONFIG_TypeSnapshotEnumeration (true)
+        #define DEFAULT_CONFIG_ConcurrentRuntime (false)
+        #define DEFAULT_CONFIG_PrimeRecycler     (false)
+        #define DEFAULT_CONFIG_DisableRentalThreading (false)
+        #define DEFAULT_CONFIG_DisableDebugObject (false)
+        #define DEFAULT_CONFIG_DumpHeap (false)
+        #define DEFAULT_CONFIG_PerfHintLevel (1)
+        #define DEFAULT_CONFIG_OOPJITMissingOpts (false)
+        #define DEFAULT_CONFIG_OOPCFGRegistration (true)
+        #define DEFAULT_CONFIG_CrashOnOOPJITFailure (false)
+        #define DEFAULT_CONFIG_ForceJITCFGCheck (false)
+        #define DEFAULT_CONFIG_UseJITTrampoline (true)
+
+        #define DEFAULT_CONFIG_IsolatePrototypes    (true)
+        #define DEFAULT_CONFIG_ChangeTypeOnProto    (true)
+        #define DEFAULT_CONFIG_FixPropsOnPathTypes    (true)
+        #define DEFAULT_CONFIG_BailoutTraceFilter (-1)
+        #define DEFAULT_CONFIG_TempMin    (0)
+        #define DEFAULT_CONFIG_TempMax    (INT_MAX)
+
+        #define DEFAULT_CONFIG_LibraryStackFrame            (true)
+        #define DEFAULT_CONFIG_LibraryStackFrameDebugger    (false)
+
+        #define DEFAULT_CONFIG_FuncObjectInlineCacheThreshold   (2) // Maximum number of inline caches a function body may have to allow for inline caches to be allocated on the function object.
+        #define DEFAULT_CONFIG_ShareInlineCaches (false)
+        #define DEFAULT_CONFIG_InlineCacheInvalidationListCompactionThreshold (4)
+        #define DEFAULT_CONFIG_ConstructorCacheInvalidationThreshold (500)
+
+        #define DEFAULT_CONFIG_InMemoryTrace                (false)
+        #define DEFAULT_CONFIG_InMemoryTraceBufferSize      (1024)
+        #define DEFAULT_CONFIG_RichTraceFormat              (false)
+        #define DEFAULT_CONFIG_TraceWithStack               (false)
+
+        #define DEFAULT_CONFIG_InjectPartiallyInitializedInterpreterFrameError (0)
+        #define DEFAULT_CONFIG_InjectPartiallyInitializedInterpreterFrameErrorType (0)
+
+        #define DEFAULT_CONFIG_DeferLoadingAvailableSource  (false)
+
+        #define DEFAULT_CONFIG_RecyclerForceMarkInterior (false)
+
+        #define DEFAULT_CONFIG_MemProtectHeap (false)
+
+        #define DEFAULT_CONFIG_InduceCodeGenFailure (30) // When -InduceCodeGenFailure is passed in, 30% of JIT allocations will fail
+
+        #define DEFAULT_CONFIG_SkipSplitWhenResultIgnored (false)
+
+        #define DEFAULT_CONFIG_MinMemOpCount (16U)
+
+        #if ENABLE_COPYONACCESS_ARRAY
+        #define DEFAULT_CONFIG_MaxCopyOnAccessArrayLength (32U)
+        #define DEFAULT_CONFIG_MinCopyOnAccessArrayLength (5U)
+        #define DEFAULT_CONFIG_CopyOnAccessArraySegmentCacheSize (16U)
+        #endif
+
+        #if defined(_M_X64)
+        #define DEFAULT_CONFIG_LoopAlignNopLimit (6)
+        #endif
+
+        #if defined(_M_X64)
+        #define DEFAULT_CONFIG_ZeroMemoryWithNonTemporalStore (true)
+        #endif
+
+        #define DEFAULT_CONFIG_StrictWriteBarrierCheck  (false)
+        #define DEFAULT_CONFIG_KeepRecyclerTrackData  (false)
+        #define DEFAULT_CONFIG_EnableBGFreeZero (true)
+
+        #if !GLOBAL_ENABLE_WRITE_BARRIER
+        #define DEFAULT_CONFIG_ForceSoftwareWriteBarrier  (false)
+        #else
+        #define DEFAULT_CONFIG_ForceSoftwareWriteBarrier  (true)
+        #endif
+        #define DEFAULT_CONFIG_WriteBarrierTest (false)
+        #define DEFAULT_CONFIG_VerifyBarrierBit  (false)
+
+        #define TraceLevel_Error        (1)
+        #define TraceLevel_Warning      (2)
+        #define TraceLevel_Info         (3)
+
+        #define TEMP_ENABLE_FLAG_FOR_APPX_BETA_ONLY 1
+
+        #define INMEMORY_CACHE_MAX_URL                    (5)             // This is the max number of URLs that the in-memory profile cache can hold.
+        #define INMEMORY_CACHE_MAX_PROFILE_MANAGER        (50)            // This is the max number of dynamic scripts that the in-memory profile cache can have
+
+        #ifdef SUPPORT_INTRUSIVE_TESTTRACES
+        #define INTRUSIVE_TESTTRACE_PolymorphicInlineCache (1)
+        #endif
+
+        // TODO (hanhossain): remove default values end
+
+        //
+        //  types:
+        //      String
+        //      Phases
+        //      Number
+        //      Boolean
+        //
+        // If the default value is not required it should be left empty
+        // For Phases, there is no default value. it should always be empty
+        // Default values for stings must be prefixed with 'L'. See AsmDumpMode
+        // Scroll till the extreme right to see the default values
+
+        // Please keep this list alphabetically sorted
+
+        #if DBG
+        case ArrayValidateFlag:
+            retValue = (Boolean) false;
+            break;
+        case MemOpMissingValueValidateFlag:
+            retValue = (Boolean) false;
+            break;
+        case OOPJITFixupValidateFlag:
+            retValue = (Boolean) false;
+            break;
+        #endif
+        #ifdef ARENA_MEMORY_VERIFY
+        case ArenaNoFreeListFlag:
+            retValue = (Boolean) false;
+            break;
+        case ArenaNoPageReuseFlag:
+            retValue = (Boolean) false;
+            break;
+        case ArenaUseHeapAllocFlag:
+            retValue = (Boolean) false;
+            break;
+        #endif
+        case ValidateInlineStackFlag:
+            retValue = (Boolean) false;
+            break;
+        case AsmDiffFlag:
+            retValue = (Boolean) false;
+            break;
+        case AsmJsFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_AsmJs;
+            break;
+        case AsmJsStopOnErrorFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_AsmJsStopOnError;
+            break;
+        case AsmJsEdgeFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_AsmJsEdge;
+            break;
+        case WasmFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_Wasm;
+            break;
+        case WasmI64Flag:
+            retValue = (Boolean) DEFAULT_CONFIG_WasmI64;
+            break;
+        case WasmFastArrayFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_WasmFastArray;
+            break;
+        case WasmSharedArrayVirtualBufferFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_WasmSharedArrayVirtualBuffer;
+            break;
+        case WasmMathExFilterFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_WasmMathExFilter;
+            break;
+        case WasmCheckVersionFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_WasmCheckVersion;
+            break;
+        case WasmAssignModuleIDFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_WasmAssignModuleID;
+            break;
+        case WasmIgnoreLimitsFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_WasmIgnoreLimits;
+            break;
+        case WasmFoldFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_WasmFold;
+            break;
+        case WasmIgnoreResponseFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_WasmIgnoreResponse;
+            break;
+        case WasmThreadsFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_WasmThreads;
+            break;
+        case WasmMultiValueFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_WasmMultiValue;
+            break;
+        case WasmSignExtendsFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_WasmSignExtends;
+            break;
+        case WasmNontrappingFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_WasmNontrapping;
+            break;
+
+        // WebAssembly Experimental Features
+        // Master WasmExperimental flag to activate WebAssembly experimental features
+        case WasmExperimentalFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_WasmExperimental;
+            break;
+
+        // The default value of the experimental features will be off because the parent is off
+        // Turning on the parent causes the child flag to take on their default value (aka on)
+        // In Edge, we manually turn on the individual child flags
+        // Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
+        case WasmSimdFlag:
+            retValue = (Boolean) true;
+            break;
+
+        case AssertBreakFlag:
+            retValue = (Boolean) false;
+            break;
+        case AssertPopUpFlag:
+            retValue = (Boolean) false;
+            break;
+        case AssertIgnoreFlag:
+            retValue = (Boolean) false;
+            break;
+        case AsyncDebuggingFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_AsyncDebugging;
+            break;
+        case BaselineModeFlag:
+            retValue = (Boolean) false;
+            break;
+        #ifdef BAILOUT_INJECTION
+        case BailOutAtEveryLineFlag:
+            retValue = (Boolean) false;
+            break;
+        case BailOutAtEveryByteCodeFlag:
+            retValue = (Boolean) false;
+            break;
+        case BailOutAtEveryImplicitCallFlag:
+            retValue = (Boolean) false;
+            break;
+        #endif
+        case BenchmarkFlag:
+            retValue = (Boolean) false;
+            break;
+        case BgJitFlag:
+            retValue = (Boolean) true;
+            break;
+        case BgParseFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_BgParse;
+            break;
+
+        case CreateFunctionProxyFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_CreateFunctionProxy;
+            break;
+        case HybridFgJitFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_HybridFgJit;
+            break;
+        case BytecodeHistFlag:
+            retValue = (Boolean) false;
+            break;
+        case CurrentSourceInfoFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_CurrentSourceInfo;
+            break;
+        case CFGLogFlag:
+            retValue = (Boolean) false;
+            break;
+        case CheckAlignmentFlag:
+            retValue = (Boolean) false;
+            break;
+        case CheckEmitBufferPermissionsFlag:
+            retValue = (Boolean) false;
+            break;
+        #ifdef CHECK_MEMORY_LEAK
+        case CheckMemoryLeakFlag:
+            retValue = (Boolean) false;
+            break;
+        #endif
+        case CheckOpHelpersFlag:
+            retValue = (Boolean) false;
+            break;
+        case CloneInlinedPolymorphicCachesFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_CloneInlinedPolymorphicCaches;
+            break;
+        case ConcurrentRuntimeFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ConcurrentRuntime;
+            break;
+        case DebugFlag:
+            retValue = (Boolean) false;
+            break;
+
+        case DebugWindowFlag:
+            retValue = (Boolean) false;
+            break;
+        case ParserStateCacheFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ParserStateCache;
+            break;
+        case CompressParserStateCacheFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_CompressParserStateCache;
+            break;
+        case DeferTopLevelTillFirstCallFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_DeferTopLevelTillFirstCall;
+            break;
+        case DirectCallTelemetryStatsFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_DirectCallTelemetryStats;
+            break;
+        case DisableArrayBTreeFlag:
+            retValue = (Boolean) false;
+            break;
+        case DisableRentalThreadingFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_DisableRentalThreading;
+            break;
+        case DisableVTuneSourceLineInfoFlag:
+            retValue = (Boolean) false;
+            break;
+        case DisplayMemStatsFlag:
+            retValue = (Boolean) false;
+            break;
+        #ifdef DUMP_FRAGMENTATION_STATS
+        case DumpFragmentationStatsFlag:
+            retValue = (Boolean) false;
+            break;
+        #endif
+        case DumpIRAddressesFlag:
+            retValue = (Boolean) false;
+            break;
+        case DumpLineNoInColorFlag:
+            retValue = (Boolean) false;
+            break;
+        #ifdef RECYCLER_DUMP_OBJECT_GRAPH
+        case DumpObjectGraphOnExitFlag:
+            retValue = (Boolean) false;
+            break;
+        case DumpObjectGraphOnCollectFlag:
+            retValue = (Boolean) false;
+            break;
+        #endif
+        case DumpEvalStringOnRemovalFlag:
+            retValue = (Boolean) false;
+            break;
+        case DumpObjectGraphOnEnumFlag:
+            retValue = (Boolean) false;
+            break;
+        #ifdef EDIT_AND_CONTINUE
+        case EditTestFlag:
+            retValue = (Boolean) false;
+            break;
+        #endif
+        case WininetProfileCacheFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_WininetProfileCache;
+            break;
+        case NoDynamicProfileInMemoryCacheFlag:
+            retValue = (Boolean) false;
+            break;
+        case ProfileBasedSpeculativeJitFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ProfileBasedSpeculativeJit;
+            break;
+        case ExecuteByteCodeBufferReturnsInvalidByteCodeFlag:
+            retValue = (Boolean) false;
+            break;
+        case SkipSplitOnNoResultFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_SkipSplitWhenResultIgnored;
+            break;
+        case Force32BitByteCodeFlag:
+            retValue = (Boolean) false;
+            break;
+
+        case CollectGarbageFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_CollectGarbage;
+            break;
+
+        case IntlFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_Intl;
+            break;
+        case IntlBuiltInsFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_IntlBuiltIns;
+            break;
+        case IntlPlatformFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_IntlPlatform;
+            break;
+
+        case JsBuiltInFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_JsBuiltIn;
+            break;
+        case JitReproFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_JitRepro;
+            break;
+        case EntryPointInfoRpcDataFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_EntryPointInfoRpcData;
+            break;
+
+        case LdChakraLibFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_LdChakraLib;
+            break;
+        case TestChakraLibFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_TestChakraLib;
+            break;
+
+        // ES6 (BLUE+1) features/flags
+
+        // Master ES6 flag to enable STABLE ES6 features/flags
+        case ES6Flag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES6;
+            break;
+
+        // Master ES6 flag to enable ALL sub ES6 features/flags
+        case ES6AllFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES6All;
+            break;
+
+        // Master ES6 flag to enable Threshold ES6 features/flags
+        case ES6ExperimentalFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES6All;
+            break;
+
+        // Per ES6 feature/flag
+
+        case ES7AsyncAwaitFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES7AsyncAwait;
+            break;
+        case ES6DateParseFixFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES6DateParseFix;
+            break;
+        case ES6FunctionNameFullFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES6FunctionNameFull;
+            break;
+        case ES6GeneratorsFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES6Generators;
+            break;
+        case ES7ExponentiationOperatorFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES7ExponentionOperator;
+            break;
+
+        case ES7ValuesEntriesFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES7ValuesEntries;
+            break;
+        case ES7TrailingCommaFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES7TrailingComma;
+            break;
+        case ES6IsConcatSpreadableFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES6IsConcatSpreadable;
+            break;
+        case ES6MathFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES6Math;
+            break;
+
+        #ifndef COMPILE_DISABLE_ESDynamicImport
+        #define COMPILE_DISABLE_ESDynamicImport 0
+        #endif
+        case ESDynamicImportFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ESDynamicImport;
+            break;
+
+        case ES6ModuleFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES6Module;
+            break;
+        case ES6ObjectFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES6Object;
+            break;
+        case ES6NumberFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES6Number;
+            break;
+        case ES6ObjectLiteralsFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES6ObjectLiterals;
+            break;
+        case ES6ProxyFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES6Proxy;
+            break;
+        case ES6RestFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES6Rest;
+            break;
+        case ES6SpreadFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES6Spread;
+            break;
+        case ES6StringFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES6String;
+            break;
+        case ES6StringPrototypeFixesFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES6StringPrototypeFixes;
+            break;
+        case ES2018ObjectRestSpreadFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES2018ObjectRestSpread;
+            break;
+
+        case ES6PrototypeChainFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES6PrototypeChain;
+            break;
+        case ES6ToPrimitiveFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES6ToPrimitive;
+            break;
+        case ES6ToLengthFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES6ToLength;
+            break;
+        case ES6ToStringTagFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES6ToStringTag;
+            break;
+        case ES6UnicodeFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES6Unicode;
+            break;
+        case ES6UnicodeVerboseFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES6UnicodeVerbose;
+            break;
+        case ES6UnscopablesFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES6Unscopables;
+            break;
+        case ES6RegExStickyFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES6RegExSticky;
+            break;
+        case ES2018RegExDotAllFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES2018RegExDotAll;
+            break;
+        case ESExportNsAsFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ESExportNsAs;
+            break;
+        case ES2018AsyncIterationFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES2018AsyncIteration;
+            break;
+        case ESTopLevelAwaitFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ESTopLevelAwait;
+            break;
+
+        #ifndef COMPILE_DISABLE_ES6RegExPrototypeProperties
+            #define COMPILE_DISABLE_ES6RegExPrototypeProperties 0
+        #endif
+        case ES6RegExPrototypePropertiesFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES6RegExPrototypeProperties;
+            break;
+
+        #ifndef COMPILE_DISABLE_ES6RegExSymbols
+            #define COMPILE_DISABLE_ES6RegExSymbols 0
+        #endif
+
+        // When we enable ES6RegExSymbols check all String and Regex built-ins which are inlined in JIT and make sure the helper
+        // sets implicit call flag before calling into script
+        // Also, the corresponding helpers in JnHelperMethodList.h should be marked as being reentrant
+        case ES6RegExSymbolsFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES6RegExSymbols;
+            break;
+
+        case ES6VerboseFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ES6Verbose;
+            break;
+        case ESObjectGetOwnPropertyDescriptorsFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ESObjectGetOwnPropertyDescriptors;
+            break;
+
+        #ifndef COMPILE_DISABLE_ESSharedArrayBuffer
+            #define COMPILE_DISABLE_ESSharedArrayBuffer 0
+        #endif
+
+        case ESSharedArrayBufferFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ESSharedArrayBuffer;
+            break;
+
+        // ES BigInt flag
+        case ESBigIntFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ESBigInt;
+            break;
+
+        // ES Numeric Separator support for numeric constants
+        case ESNumericSeparatorFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ESNumericSeparator;
+            break;
+
+        // ES Nullish coalescing operator support (??)
+        case ESNullishCoalescingOperatorFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ESNullishCoalescingOperator;
+            break;
+
+        // ES Hashbang support for interpreter directive syntax
+        case ESHashbangFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ESHashbang;
+            break;
+
+        // ES Symbol.prototype.description flag
+        case ESSymbolDescriptionFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ESSymbolDescription;
+            break;
+
+        case ESArrayFindFromLastFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ESArrayFindFromLast;
+            break;
+
+        // ES Promise.any and AggregateError flag
+        case ESPromiseAnyFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ESPromiseAny;
+            break;
+
+        // ES import.meta keyword meta-property
+        case ESImportMetaFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ESImportMeta;
+            break;
+
+        //ES globalThis flag
+        case ESGlobalThisFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ESGlobalThis;
+            break;
+
+        // This flag to be removed once JITing generator functions is stable
+        case JitES6GeneratorsFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_JitES6Generators;
+            break;
+
+        case FastLineColumnCalculationFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_FastLineColumnCalculation;
+            break;
+        case FreeRejittedCodeFlag:
+            retValue = (Boolean) true;
+            break;
+        case ForceGuardPagesFlag:
+            retValue = (Boolean) false;
+            break;
+        case PrintGuardPageBoundsFlag:
+            retValue = (Boolean) false;
+            break;
+        case ForceLegacyEngineFlag:
+            retValue = (Boolean) false;
+            break;
+        case ForceArrayBTreeFlag:
+            retValue = (Boolean) false;
+            break;
+        case StrongArraySortFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_StrongArraySort;
+            break;
+        case ForceCleanPropertyOnCollectFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ForceCleanPropertyOnCollect;
+            break;
+        case ForceCleanCacheOnCollectFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ForceCleanCacheOnCollect;
+            break;
+        case ForceGCAfterJSONParseFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ForceGCAfterJSONParse;
+            break;
+        case ForceDecommitOnCollectFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ForceDecommitOnCollect;
+            break;
+        case ForceDeferParseFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ForceDeferParse;
+            break;
+        case ForceDiagnosticsModeFlag:
+            retValue = (Boolean) false;
+            break;
+        case ForceGetWriteWatchOOMFlag:
+            retValue = (Boolean) false;
+            break;
+        case ForcePostLowerGlobOptInstrStringFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ForcePostLowerGlobOptInstrString;
+            break;
+        case ForceSplitScopeFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ForceSplitScope;
+            break;
+        case EnumerateSpecialPropertiesInDebuggerFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_EnumerateSpecialPropertiesInDebugger;
+            break;
+        case EnableContinueAfterExceptionWrappersForHelpersFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_EnableContinueAfterExceptionWrappersForHelpers;
+            break;
+        case EnableContinueAfterExceptionWrappersForBuiltInsFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_EnableContinueAfterExceptionWrappersForBuiltIns;
+            break;
+        case EnableFunctionSourceReportForHeapEnumFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_EnableFunctionSourceReportForHeapEnum;
+            break;
+        case ForceDynamicProfileFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ForceDynamicProfile;
+            break;
+        case ForceES5ArrayFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ForceES5Array;
+            break;
+        case ForceAsmJsLinkFailFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ForceAsmJsLinkFail;
+            break;
+        case ForceExpireOnNonCacheCollectFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ForceExpireOnNonCacheCollect;
+            break;
+        case ForceFastPathFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ForceFastPath;
+            break;
+        case ForceFloatPrefFlag:
+            retValue = (Boolean) false;
+            break;
+        case ForceJITLoopBodyFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ForceJITLoopBody;
+            break;
+        case ForceStaticInterpreterThunkFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ForceStaticInterpreterThunk;
+            break;
+        case DumpCommentsFromReferencedFilesFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_DumpCommentsFromReferencedFiles;
+            break;
+        case EnableFatalErrorOnOOMFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_EnableFatalErrorOnOOM;
+            break;
+
+        #if defined(_M_ARM32_OR_ARM64)
+        case ForceLocalsPtrFlag:
+            retValue = (Boolean) false;
+            break;
+        #endif
+        case DeferLoadingAvailableSourceFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_DeferLoadingAvailableSource;
+            break;
+        case ForceNativeFlag:
+            retValue = (Boolean) false;
+            break;
+        case ForceSerializedFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ForceSerialized;
+            break;
+        case ForceStrictModeFlag:
+            retValue = (Boolean) false;
+            break;
+        case ForceUndoDeferFlag:
+            retValue = (Boolean) false;
+            break;
+        case ForceBlockingConcurrentCollectFlag:
+            retValue = (Boolean) false;
+            break;
+        case FreTestDiagModeFlag:
+            retValue = (Boolean) false;
+            break;
+        #ifdef BYTECODE_TESTING
+        case MediumByteCodeLayoutFlag:
+            retValue = (Boolean) false;
+            break;
+        case LargeByteCodeLayoutFlag:
+            retValue = (Boolean) false;
+            break;
+        #endif
+        case GenerateByteCodeBufferReturnsCantGenerateFlag:
+            retValue = (Boolean) false;
+            break;
+        case HighPrecisionDateFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_HighPrecisionDate;
+            break;
+
+        case PrimeRecyclerFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_PrimeRecycler;
+            break;
+        case TraceEngineRefcountFlag:
+            retValue = (Boolean) false;
+            break;
+        #if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+        case LeakStackTraceFlag:
+            retValue = (Boolean) false;
+            break;
+        case ForceMemoryLeakFlag:
+            retValue = (Boolean) false;
+            break;
+        #endif
+        case DumpAfterFinalGCFlag:
+            retValue = (Boolean) false;
+            break;
+        case ForceOldDateAPIFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ForceOldDateAPI;
+            break;
+
+        case ForceMaxJitThreadCountFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ForceMaxJitThreadCount;
+            break;
+
+        case MitigateSpectreFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_MitigateSpectre;
+            break;
+
+        case AddMaskingBlocksFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_AddMaskingBlocks;
+            break;
+
+        case PoisonVarArrayLoadFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_PoisonVarArrayLoad;
+            break;
+        case PoisonIntArrayLoadFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_PoisonIntArrayLoad;
+            break;
+        case PoisonFloatArrayLoadFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_PoisonFloatArrayLoad;
+            break;
+        case PoisonTypedArrayLoadFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_PoisonTypedArrayLoad;
+            break;
+        case PoisonStringLoadFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_PoisonStringLoad;
+            break;
+        case PoisonObjectsForLoadsFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_PoisonObjectsForLoads;
+            break;
+
+        case PoisonVarArrayStoreFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_PoisonVarArrayStore;
+            break;
+        case PoisonIntArrayStoreFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_PoisonIntArrayStore;
+            break;
+        case PoisonFloatArrayStoreFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_PoisonFloatArrayStore;
+            break;
+        case PoisonTypedArrayStoreFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_PoisonTypedArrayStore;
+            break;
+        case PoisonStringStoreFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_PoisonStringStore;
+            break;
+        case PoisonObjectsForStoresFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_PoisonObjectsForStores;
+            break;
+
+        case EnforceExecutionModeLimitsFlag:
+            retValue = (Boolean) false;
+            break;
+        case EemlFlag:
+            retValue = (Boolean) false;
+            break;
+
+        case NewSimpleJitFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_NewSimpleJit;
+            break;
+
+        case NoDeferParseFlag:
+            retValue = (Boolean) false;
+            break;
+        case NoLogoFlag:
+            retValue = (Boolean) false;
+            break;
+        case OOPJITMissingOptsFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_OOPJITMissingOpts;
+            break;
+        case CrashOnOOPJITFailureFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_CrashOnOOPJITFailure;
+            break;
+        case OOPCFGRegistrationFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_OOPCFGRegistration;
+            break;
+        case ForceJITCFGCheckFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ForceJITCFGCheck;
+            break;
+        case UseJITTrampolineFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_UseJITTrampoline;
+            break;
+        case NoNativeFlag:
+            retValue = (Boolean) false;
+            break;
+        case NoStrictModeFlag:
+            retValue = (Boolean) false;
+            break;
+        case NormalizeStatsFlag:
+            retValue = (Boolean) false;
+            break;
+        #ifdef ENABLE_TRACE
+        case InMemoryTraceFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_InMemoryTrace;
+            break;
+        #ifdef STACK_BACK_TRACE
+        case TraceWithStackFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_TraceWithStack;
+            break;
+        #endif // STACK_BACK_TRACE
+        #endif // ENABLE_TRACE
+        case PrintRunTimeDataCollectionTraceFlag:
+            retValue = (Boolean) false;
+            break;
+        #ifdef ENABLE_PREJIT
+        case PrejitFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_Prejit;
+            break;
+        #endif
+        case PrintSrcInDumpFlag:
+            retValue = (Boolean) true;
+            break;
+        #ifdef PROFILE_OBJECT_LITERALS
+        case ProfileObjectLiteralFlag:
+            retValue = (Boolean) false;
+            break;
+        #endif
+        #ifdef PROFILE_STRINGS
+        case ProfileStringsFlag:
+            retValue = (Boolean) false;
+            break;
+        #endif
+        #ifdef PROFILE_TYPES
+        case ProfileTypesFlag:
+            retValue = (Boolean) false;
+            break;
+        #endif
+        #ifdef PROFILE_EVALMAP
+        case ProfileEvalMapFlag:
+            retValue = (Boolean) false;
+            break;
+        #endif
+
+        #ifdef PROFILE_BAILOUT_RECORD_MEMORY
+        case ProfileBailOutRecordMemoryFlag:
+            retValue = (Boolean) false;
+            break;
+        #endif
+
+        #if DBG
+        case ValidateIntRangesFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ValidateIntRanges;
+            break;
+        #endif
+        case LibraryStackFrameFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_LibraryStackFrame;
+            break;
+        case LibraryStackFrameDebuggerFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_LibraryStackFrameDebugger;
+            break;
+        #ifdef RECYCLER_STRESS
+        case RecyclerStressFlag:
+            retValue = (Boolean) false;
+            break;
+        #if ENABLE_CONCURRENT_GC
+        case RecyclerBackgroundStressFlag:
+            retValue = (Boolean) false;
+            break;
+        case RecyclerConcurrentStressFlag:
+            retValue = (Boolean) false;
+            break;
+        case RecyclerConcurrentRepeatStressFlag:
+            retValue = (Boolean) false;
+            break;
+        #endif
+        #if ENABLE_PARTIAL_GC
+        case RecyclerPartialStressFlag:
+            retValue = (Boolean) false;
+            break;
+        #endif
+        case RecyclerTrackStressFlag:
+            retValue = (Boolean) false;
+            break;
+        case RecyclerInduceFalsePositivesFlag:
+            retValue = (Boolean) false;
+            break;
+        #endif // RECYCLER_STRESS
+        case RecyclerForceMarkInteriorFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_RecyclerForceMarkInterior;
+            break;
+        #if ENABLE_CONCURRENT_GC
+        case EnableConcurrentSweepAllocFlag:
+            retValue = (Boolean) true;
+            break;
+        case ecsaFlag:
+            retValue = (Boolean) true;
+            break;
+        #endif
+        #ifdef RECYCLER_PAGE_HEAP
+        case PageHeapAllocStackFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_PageHeapAllocStack;
+            break;
+        case PageHeapFreeStackFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_PageHeapFreeStack;
+            break;
+        case PageHeapDecommitGuardPageFlag:
+            retValue = (Boolean) true;
+            break;
+        #endif
+        #ifdef RECYCLER_NO_PAGE_REUSE
+        case RecyclerNoPageReuseFlag:
+            retValue = (Boolean) false;
+            break;
+        #endif
+        case RecyclerTestFlag:
+            retValue = (Boolean) false;
+            break;
+        case RecyclerProtectPagesOnRescanFlag:
+            retValue = (Boolean) false;
+            break;
+        #ifdef RECYCLER_VERIFY_MARK
+        case RecyclerVerifyMarkFlag:
+            retValue = (Boolean) false;
+            break;
+        #endif
+        #if EXCEPTION_RECOVERY
+        case SwallowExceptionsFlag:
+            retValue = (Boolean) false;
+            break;
+        #endif
+        case PrintSystemExceptionFlag:
+            retValue = (Boolean) false;
+            break;
+
+
+        #if DBG_DUMP || defined(RECYCLER_TRACE)
+        //TraceMetaDataParsing flag with optional levels:
+        //    Level 1 = interfaces only
+        //    Level 2 = interfaces and methods
+        //    Level 3 = interfaces, methods and parameters
+        //    Level 4 = interfaces and properties
+        //    Level 5 (default) = ALL
+        case TraceWin8AllocationsFlag:
+            retValue = (Boolean) false;
+            break;
+        case TraceWin8DeallocationsImmediateFlag:
+            retValue = (Boolean) false;
+            break;
+        case PrintWin8StatsDetailedFlag:
+            retValue = (Boolean) false;
+            break;
+        case TraceProtectPagesFlag:
+            retValue = (Boolean) false;
+            break;
+        #endif
+        case TraceAsyncDebugCallsFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_TraceAsyncDebugCalls;
+            break;
+        #ifdef TRACK_DISPATCH
+        case TrackDispatchFlag:
+            retValue = (Boolean) false;
+            break;
+        #endif
+        case VerboseFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_Verbose;
+            break;
+        case UseFullNameFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_UseFullName;
+            break;
+        case Utf8Flag:
+            retValue = (Boolean) false;
+            break;
+        case WERExceptionSupportFlag:
+            retValue = (Boolean) false;
+            break;
+        case ExtendedErrorStackForTestHostFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ExtendedErrorStackForTestHost;
+            break;
+        case errorStackTraceFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_errorStackTrace;
+            break;
+        case DoHeapEnumOnEngineShutdownFlag:
+            retValue = (Boolean) false;
+            break;
+        #ifdef HEAP_ENUMERATION_VALIDATION
+        case ValidateHeapEnumFlag:
+            retValue = (Boolean) false;
+            break;
+        #endif
+
+        #if ENABLE_REGEX_CONFIG_OPTIONS
+        //
+        // Regex flags
+        //
+        case RegexTracingFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_RegexTracing;
+            break;
+        case RegexProfileFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_RegexProfile;
+            break;
+        case RegexDebugFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_RegexDebug;
+            break;
+        case RegexDebugASTFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_RegexDebugAST;
+            break;
+        case RegexDebugAnnotatedASTFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_RegexDebugAnnotatedAST;
+            break;
+        case RegexBytecodeDebugFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_RegexBytecodeDebug;
+            break;
+        case RegexOptimizeFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_RegexOptimize;
+            break;
+        #endif
+
+        case OptimizeForManyInstancesFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_OptimizeForManyInstances;
+            break;
+        case EnableArrayTypeMutationFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_EnableArrayTypeMutation;
+            break;
+        case EnableEvalMapCleanupFlag:
+            retValue = (Boolean) true;
+            break;
+        #ifdef PROFILE_MEM
+        case TraceObjectAllocationFlag:
+            retValue = (Boolean) false;
+            break;
+        #endif
+        case ForceStringKeyedSimpleDictionaryTypeHandlerFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ForceStringKeyedSimpleDictionaryTypeHandler;
+            break;
+        case TypeSnapshotEnumerationFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_TypeSnapshotEnumeration;
+            break;
+        case IsolatePrototypesFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_IsolatePrototypes;
+            break;
+        case ChangeTypeOnProtoFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ChangeTypeOnProto;
+            break;
+        case ShareInlineCachesFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ShareInlineCaches;
+            break;
+        case DisableDebugObjectFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_DisableDebugObject;
+            break;
+        case DumpHeapFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_DumpHeap;
+            break;
+        #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
+        case MemProtectHeapFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_MemProtectHeap;
+            break;
+        #endif
+        #ifdef RECYCLER_STRESS
+        case MemProtectHeapStressFlag:
+            retValue = (Boolean) false;
+            break;
+        #if ENABLE_CONCURRENT_GC
+        case MemProtectHeapBackgroundStressFlag:
+            retValue = (Boolean) false;
+            break;
+        case MemProtectHeapConcurrentStressFlag:
+            retValue = (Boolean) false;
+            break;
+        case MemProtectHeapConcurrentRepeatStressFlag:
+            retValue = (Boolean) false;
+            break;
+        #endif
+        #if ENABLE_PARTIAL_GC
+        case MemProtectHeapPartialStressFlag:
+            retValue = (Boolean) false;
+            break;
+        #endif
+        #endif
+        #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
+        case FixPropsOnPathTypesFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_FixPropsOnPathTypes;
+            break;
+        #endif
+
+        #if defined(_M_X64)
+        case ZeroMemoryWithNonTemporalStoreFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ZeroMemoryWithNonTemporalStore;
+            break;
+        #endif
+
+        #if DBG
+        case InitializeInterpreterSlotsWithInvalidStackVarFlag:
+            retValue = (Boolean) false;
+            break;
+        #endif
+
+        case ClearInlineCachesOnCollectFlag:
+            retValue = (Boolean) false;
+            break;
+
+        #ifdef IR_VIEWER
+        case IRViewerFlag:
+            retValue = (Boolean) false;
+            break;
+        #endif /* IR_VIEWER */
+
+        case StrictWriteBarrierCheckFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_StrictWriteBarrierCheck;
+            break;
+        case WriteBarrierTestFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_WriteBarrierTest;
+            break;
+        case ForceSoftwareWriteBarrierFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_ForceSoftwareWriteBarrier;
+            break;
+        case VerifyBarrierBitFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_VerifyBarrierBit;
+            break;
+        case EnableBGFreeZeroFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_EnableBGFreeZero;
+            break;
+        case KeepRecyclerTrackDataFlag:
+            retValue = (Boolean) DEFAULT_CONFIG_KeepRecyclerTrackData;
+            break;
+
+        // TODO (hanhossain): ConfigFlagsList end
 
         default:
             // not found - or not a boolean flag
