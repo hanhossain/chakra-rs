@@ -11,7 +11,6 @@
 #include "DebugWriter.h"
 #include "RegexStats.h"
 
-#include "Interface/ConfigFlagsList.h"
 #include "ByteCode/ByteCodeApi.h"
 #include "Library/ProfileString.h"
 #include <limits>
