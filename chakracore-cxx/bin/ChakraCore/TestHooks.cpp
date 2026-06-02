@@ -110,21 +110,6 @@ void NotifyUnhandledException(PEXCEPTION_POINTERS exceptionInfo)
 {
 }
 
-#define FLAG_Boolean(name) \
-    bool IsEnabled##name##Flag() \
-    { \
-        return Js::Configuration::Global.flags.IsEnabled(Js::##name##Flag); \
-    } \
-    int32_t Get##name##Flag(bool *flag) \
-    { \
-        *flag = Js::Configuration::Global.flags.##name##; \
-        return S_OK; \
-    } \
-    int32_t Set##name##Flag(bool flag) \
-    { \
-        Js::Configuration::Global.flags.##name = flag; \
-        return S_OK; \
-    }
 #define FLAG_Number(name) \
     bool IsEnabled##name##Flag() \
     { \
@@ -599,17 +584,121 @@ void NotifyUnhandledException(PEXCEPTION_POINTERS exceptionInfo)
 // Please keep this list alphabetically sorted
 
 #if DBG
-FLAG_Boolean(ArrayValidate)
-FLAG_Boolean(MemOpMissingValueValidate)
-FLAG_Boolean(OOPJITFixupValidate)
+bool IsEnabledArrayValidateFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ArrayValidateFlag);
+}
+int32_t GetArrayValidateFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ArrayValidate;
+    return S_OK;
+}
+int32_t SetArrayValidateFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ArrayValidate = flag;
+    return S_OK;
+}
+bool IsEnabledMemOpMissingValueValidateFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::MemOpMissingValueValidateFlag);
+}
+int32_t GetMemOpMissingValueValidateFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.MemOpMissingValueValidate;
+    return S_OK;
+}
+int32_t SetMemOpMissingValueValidateFlag(bool flag)
+{
+    Js::Configuration::Global.flags.MemOpMissingValueValidate = flag;
+    return S_OK;
+}
+bool IsEnabledOOPJITFixupValidateFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::OOPJITFixupValidateFlag);
+}
+int32_t GetOOPJITFixupValidateFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.OOPJITFixupValidate;
+    return S_OK;
+}
+int32_t SetOOPJITFixupValidateFlag(bool flag)
+{
+    Js::Configuration::Global.flags.OOPJITFixupValidate = flag;
+    return S_OK;
+}
 #endif
 #ifdef ARENA_MEMORY_VERIFY
-FLAG_Boolean(ArenaNoFreeList)
-FLAG_Boolean(ArenaNoPageReuse)
-FLAG_Boolean(ArenaUseHeapAlloc)
+bool IsEnabledArenaNoFreeListFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ArenaNoFreeListFlag);
+}
+int32_t GetArenaNoFreeListFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ArenaNoFreeList;
+    return S_OK;
+}
+int32_t SetArenaNoFreeListFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ArenaNoFreeList = flag;
+    return S_OK;
+}
+bool IsEnabledArenaNoPageReuseFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ArenaNoPageReuseFlag);
+}
+int32_t GetArenaNoPageReuseFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ArenaNoPageReuse;
+    return S_OK;
+}
+int32_t SetArenaNoPageReuseFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ArenaNoPageReuse = flag;
+    return S_OK;
+}
+bool IsEnabledArenaUseHeapAllocFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ArenaUseHeapAllocFlag);
+}
+int32_t GetArenaUseHeapAllocFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ArenaUseHeapAlloc;
+    return S_OK;
+}
+int32_t SetArenaUseHeapAllocFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ArenaUseHeapAlloc = flag;
+    return S_OK;
+}
 #endif
-FLAG_Boolean(ValidateInlineStack)
-FLAG_Boolean(AsmDiff)
+bool IsEnabledValidateInlineStackFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ValidateInlineStackFlag);
+}
+int32_t GetValidateInlineStackFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ValidateInlineStack;
+    return S_OK;
+}
+int32_t SetValidateInlineStackFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ValidateInlineStack = flag;
+    return S_OK;
+}
+bool IsEnabledAsmDiffFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::AsmDiffFlag);
+}
+int32_t GetAsmDiffFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.AsmDiff;
+    return S_OK;
+}
+int32_t SetAsmDiffFlag(bool flag)
+{
+    Js::Configuration::Global.flags.AsmDiff = flag;
+    return S_OK;
+}
 bool IsEnabledAsmDumpModeFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::AsmDumpModeFlag);
@@ -626,42 +715,354 @@ int32_t SetAsmDumpModeFlag(BSTR flag)
     Js::Configuration::Global.flags.AsmDumpMode = flag;
     return S_OK;
 }
-FLAG_Boolean(AsmJs)
-FLAG_Boolean(AsmJsStopOnError)
-FLAG_Boolean(AsmJsEdge)
-FLAG_Boolean(Wasm)
-FLAG_Boolean(WasmI64)
-FLAG_Boolean(WasmFastArray)
-FLAG_Boolean(WasmSharedArrayVirtualBuffer)
-FLAG_Boolean(WasmMathExFilter)
-FLAG_Boolean(WasmCheckVersion)
-FLAG_Boolean(WasmAssignModuleID)
-FLAG_Boolean(WasmIgnoreLimits)
-FLAG_Boolean(WasmFold)
-FLAG_Boolean(WasmIgnoreResponse)
+bool IsEnabledAsmJsFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::AsmJsFlag);
+}
+int32_t GetAsmJsFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.AsmJs;
+    return S_OK;
+}
+int32_t SetAsmJsFlag(bool flag)
+{
+    Js::Configuration::Global.flags.AsmJs = flag;
+    return S_OK;
+}
+bool IsEnabledAsmJsStopOnErrorFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::AsmJsStopOnErrorFlag);
+}
+int32_t GetAsmJsStopOnErrorFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.AsmJsStopOnError;
+    return S_OK;
+}
+int32_t SetAsmJsStopOnErrorFlag(bool flag)
+{
+    Js::Configuration::Global.flags.AsmJsStopOnError = flag;
+    return S_OK;
+}
+bool IsEnabledAsmJsEdgeFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::AsmJsEdgeFlag);
+}
+int32_t GetAsmJsEdgeFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.AsmJsEdge;
+    return S_OK;
+}
+int32_t SetAsmJsEdgeFlag(bool flag)
+{
+    Js::Configuration::Global.flags.AsmJsEdge = flag;
+    return S_OK;
+}
+bool IsEnabledWasmFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::WasmFlag);
+}
+int32_t GetWasmFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.Wasm;
+    return S_OK;
+}
+int32_t SetWasmFlag(bool flag)
+{
+    Js::Configuration::Global.flags.Wasm = flag;
+    return S_OK;
+}
+bool IsEnabledWasmI64Flag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::WasmI64Flag);
+}
+int32_t GetWasmI64Flag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.WasmI64;
+    return S_OK;
+}
+int32_t SetWasmI64Flag(bool flag)
+{
+    Js::Configuration::Global.flags.WasmI64 = flag;
+    return S_OK;
+}
+bool IsEnabledWasmFastArrayFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::WasmFastArrayFlag);
+}
+int32_t GetWasmFastArrayFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.WasmFastArray;
+    return S_OK;
+}
+int32_t SetWasmFastArrayFlag(bool flag)
+{
+    Js::Configuration::Global.flags.WasmFastArray = flag;
+    return S_OK;
+}
+bool IsEnabledWasmSharedArrayVirtualBufferFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::WasmSharedArrayVirtualBufferFlag);
+}
+int32_t GetWasmSharedArrayVirtualBufferFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.WasmSharedArrayVirtualBuffer;
+    return S_OK;
+}
+int32_t SetWasmSharedArrayVirtualBufferFlag(bool flag)
+{
+    Js::Configuration::Global.flags.WasmSharedArrayVirtualBuffer = flag;
+    return S_OK;
+}
+bool IsEnabledWasmMathExFilterFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::WasmMathExFilterFlag);
+}
+int32_t GetWasmMathExFilterFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.WasmMathExFilter;
+    return S_OK;
+}
+int32_t SetWasmMathExFilterFlag(bool flag)
+{
+    Js::Configuration::Global.flags.WasmMathExFilter = flag;
+    return S_OK;
+}
+bool IsEnabledWasmCheckVersionFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::WasmCheckVersionFlag);
+}
+int32_t GetWasmCheckVersionFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.WasmCheckVersion;
+    return S_OK;
+}
+int32_t SetWasmCheckVersionFlag(bool flag)
+{
+    Js::Configuration::Global.flags.WasmCheckVersion = flag;
+    return S_OK;
+}
+bool IsEnabledWasmAssignModuleIDFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::WasmAssignModuleIDFlag);
+}
+int32_t GetWasmAssignModuleIDFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.WasmAssignModuleID;
+    return S_OK;
+}
+int32_t SetWasmAssignModuleIDFlag(bool flag)
+{
+    Js::Configuration::Global.flags.WasmAssignModuleID = flag;
+    return S_OK;
+}
+bool IsEnabledWasmIgnoreLimitsFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::WasmIgnoreLimitsFlag);
+}
+int32_t GetWasmIgnoreLimitsFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.WasmIgnoreLimits;
+    return S_OK;
+}
+int32_t SetWasmIgnoreLimitsFlag(bool flag)
+{
+    Js::Configuration::Global.flags.WasmIgnoreLimits = flag;
+    return S_OK;
+}
+bool IsEnabledWasmFoldFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::WasmFoldFlag);
+}
+int32_t GetWasmFoldFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.WasmFold;
+    return S_OK;
+}
+int32_t SetWasmFoldFlag(bool flag)
+{
+    Js::Configuration::Global.flags.WasmFold = flag;
+    return S_OK;
+}
+bool IsEnabledWasmIgnoreResponseFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::WasmIgnoreResponseFlag);
+}
+int32_t GetWasmIgnoreResponseFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.WasmIgnoreResponse;
+    return S_OK;
+}
+int32_t SetWasmIgnoreResponseFlag(bool flag)
+{
+    Js::Configuration::Global.flags.WasmIgnoreResponse = flag;
+    return S_OK;
+}
 FLAG_Number(WasmMaxTableSize)
-FLAG_Boolean(WasmThreads)
-FLAG_Boolean(WasmMultiValue)
-FLAG_Boolean(WasmSignExtends)
-FLAG_Boolean(WasmNontrapping)
+bool IsEnabledWasmThreadsFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::WasmThreadsFlag);
+}
+int32_t GetWasmThreadsFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.WasmThreads;
+    return S_OK;
+}
+int32_t SetWasmThreadsFlag(bool flag)
+{
+    Js::Configuration::Global.flags.WasmThreads = flag;
+    return S_OK;
+}
+bool IsEnabledWasmMultiValueFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::WasmMultiValueFlag);
+}
+int32_t GetWasmMultiValueFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.WasmMultiValue;
+    return S_OK;
+}
+int32_t SetWasmMultiValueFlag(bool flag)
+{
+    Js::Configuration::Global.flags.WasmMultiValue = flag;
+    return S_OK;
+}
+bool IsEnabledWasmSignExtendsFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::WasmSignExtendsFlag);
+}
+int32_t GetWasmSignExtendsFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.WasmSignExtends;
+    return S_OK;
+}
+int32_t SetWasmSignExtendsFlag(bool flag)
+{
+    Js::Configuration::Global.flags.WasmSignExtends = flag;
+    return S_OK;
+}
+bool IsEnabledWasmNontrappingFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::WasmNontrappingFlag);
+}
+int32_t GetWasmNontrappingFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.WasmNontrapping;
+    return S_OK;
+}
+int32_t SetWasmNontrappingFlag(bool flag)
+{
+    Js::Configuration::Global.flags.WasmNontrapping = flag;
+    return S_OK;
+}
 
 // WebAssembly Experimental Features
 // Master WasmExperimental flag to activate WebAssembly experimental features
-FLAG_Boolean(WasmExperimental)
+bool IsEnabledWasmExperimentalFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::WasmExperimentalFlag);
+}
+int32_t GetWasmExperimentalFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.WasmExperimental;
+    return S_OK;
+}
+int32_t SetWasmExperimentalFlag(bool flag)
+{
+    Js::Configuration::Global.flags.WasmExperimental = flag;
+    return S_OK;
+}
 
 // The default value of the experimental features will be off because the parent is off
 // Turning on the parent causes the child flag to take on their default value (aka on)
 // In Edge, we manually turn on the individual child flags
 // Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
-FLAG_Boolean(WasmSimd)
+bool IsEnabledWasmSimdFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::WasmSimdFlag);
+}
+int32_t GetWasmSimdFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.WasmSimd;
+    return S_OK;
+}
+int32_t SetWasmSimdFlag(bool flag)
+{
+    Js::Configuration::Global.flags.WasmSimd = flag;
+    return S_OK;
+}
 
-FLAG_Boolean(AssertBreak)
-FLAG_Boolean(AssertPopUp)
-FLAG_Boolean(AssertIgnore)
-FLAG_Boolean(AsyncDebugging)
+bool IsEnabledAssertBreakFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::AssertBreakFlag);
+}
+int32_t GetAssertBreakFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.AssertBreak;
+    return S_OK;
+}
+int32_t SetAssertBreakFlag(bool flag)
+{
+    Js::Configuration::Global.flags.AssertBreak = flag;
+    return S_OK;
+}
+bool IsEnabledAssertPopUpFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::AssertPopUpFlag);
+}
+int32_t GetAssertPopUpFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.AssertPopUp;
+    return S_OK;
+}
+int32_t SetAssertPopUpFlag(bool flag)
+{
+    Js::Configuration::Global.flags.AssertPopUp = flag;
+    return S_OK;
+}
+bool IsEnabledAssertIgnoreFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::AssertIgnoreFlag);
+}
+int32_t GetAssertIgnoreFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.AssertIgnore;
+    return S_OK;
+}
+int32_t SetAssertIgnoreFlag(bool flag)
+{
+    Js::Configuration::Global.flags.AssertIgnore = flag;
+    return S_OK;
+}
+bool IsEnabledAsyncDebuggingFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::AsyncDebuggingFlag);
+}
+int32_t GetAsyncDebuggingFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.AsyncDebugging;
+    return S_OK;
+}
+int32_t SetAsyncDebuggingFlag(bool flag)
+{
+    Js::Configuration::Global.flags.AsyncDebugging = flag;
+    return S_OK;
+}
 FLAG_Number(BailOnNoProfileLimit)
 FLAG_Number(BailOnNoProfileRejitLimit)
-FLAG_Boolean(BaselineMode)
+bool IsEnabledBaselineModeFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::BaselineModeFlag);
+}
+int32_t GetBaselineModeFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.BaselineMode;
+    return S_OK;
+}
+int32_t SetBaselineModeFlag(bool flag)
+{
+    Js::Configuration::Global.flags.BaselineMode = flag;
+    return S_OK;
+}
 bool IsEnabledDumpOnCrashFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::DumpOnCrashFlag);
@@ -696,28 +1097,210 @@ int32_t SetFullMemoryDumpFlag(BSTR flag)
 }
 #ifdef BAILOUT_INJECTION
 FLAG_NumberPairSet(BailOut)
-FLAG_Boolean(BailOutAtEveryLine)
-FLAG_Boolean(BailOutAtEveryByteCode)
-FLAG_Boolean(BailOutAtEveryImplicitCall)
+bool IsEnabledBailOutAtEveryLineFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::BailOutAtEveryLineFlag);
+}
+int32_t GetBailOutAtEveryLineFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.BailOutAtEveryLine;
+    return S_OK;
+}
+int32_t SetBailOutAtEveryLineFlag(bool flag)
+{
+    Js::Configuration::Global.flags.BailOutAtEveryLine = flag;
+    return S_OK;
+}
+bool IsEnabledBailOutAtEveryByteCodeFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::BailOutAtEveryByteCodeFlag);
+}
+int32_t GetBailOutAtEveryByteCodeFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.BailOutAtEveryByteCode;
+    return S_OK;
+}
+int32_t SetBailOutAtEveryByteCodeFlag(bool flag)
+{
+    Js::Configuration::Global.flags.BailOutAtEveryByteCode = flag;
+    return S_OK;
+}
+bool IsEnabledBailOutAtEveryImplicitCallFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::BailOutAtEveryImplicitCallFlag);
+}
+int32_t GetBailOutAtEveryImplicitCallFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.BailOutAtEveryImplicitCall;
+    return S_OK;
+}
+int32_t SetBailOutAtEveryImplicitCallFlag(bool flag)
+{
+    Js::Configuration::Global.flags.BailOutAtEveryImplicitCall = flag;
+    return S_OK;
+}
 FLAG_NumberSet(BailOutByteCode)
 #endif
-FLAG_Boolean(Benchmark)
-FLAG_Boolean(BgJit)
-FLAG_Boolean(BgParse)
+bool IsEnabledBenchmarkFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::BenchmarkFlag);
+}
+int32_t GetBenchmarkFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.Benchmark;
+    return S_OK;
+}
+int32_t SetBenchmarkFlag(bool flag)
+{
+    Js::Configuration::Global.flags.Benchmark = flag;
+    return S_OK;
+}
+bool IsEnabledBgJitFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::BgJitFlag);
+}
+int32_t GetBgJitFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.BgJit;
+    return S_OK;
+}
+int32_t SetBgJitFlag(bool flag)
+{
+    Js::Configuration::Global.flags.BgJit = flag;
+    return S_OK;
+}
+bool IsEnabledBgParseFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::BgParseFlag);
+}
+int32_t GetBgParseFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.BgParse;
+    return S_OK;
+}
+int32_t SetBgParseFlag(bool flag)
+{
+    Js::Configuration::Global.flags.BgParse = flag;
+    return S_OK;
+}
 FLAG_Number(BgJitDelay)
 FLAG_Number(BgJitDelayFgBuffer)
 FLAG_Number(BgJitPendingFuncCap)
 
-FLAG_Boolean(CreateFunctionProxy)
-FLAG_Boolean(HybridFgJit)
+bool IsEnabledCreateFunctionProxyFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::CreateFunctionProxyFlag);
+}
+int32_t GetCreateFunctionProxyFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.CreateFunctionProxy;
+    return S_OK;
+}
+int32_t SetCreateFunctionProxyFlag(bool flag)
+{
+    Js::Configuration::Global.flags.CreateFunctionProxy = flag;
+    return S_OK;
+}
+bool IsEnabledHybridFgJitFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::HybridFgJitFlag);
+}
+int32_t GetHybridFgJitFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.HybridFgJit;
+    return S_OK;
+}
+int32_t SetHybridFgJitFlag(bool flag)
+{
+    Js::Configuration::Global.flags.HybridFgJit = flag;
+    return S_OK;
+}
 FLAG_Number(HybridFgJitBgQueueLengthThreshold)
-FLAG_Boolean(BytecodeHist)
-FLAG_Boolean(CurrentSourceInfo)
-FLAG_Boolean(CFGLog)
-FLAG_Boolean(CheckAlignment)
-FLAG_Boolean(CheckEmitBufferPermissions)
+bool IsEnabledBytecodeHistFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::BytecodeHistFlag);
+}
+int32_t GetBytecodeHistFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.BytecodeHist;
+    return S_OK;
+}
+int32_t SetBytecodeHistFlag(bool flag)
+{
+    Js::Configuration::Global.flags.BytecodeHist = flag;
+    return S_OK;
+}
+bool IsEnabledCurrentSourceInfoFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::CurrentSourceInfoFlag);
+}
+int32_t GetCurrentSourceInfoFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.CurrentSourceInfo;
+    return S_OK;
+}
+int32_t SetCurrentSourceInfoFlag(bool flag)
+{
+    Js::Configuration::Global.flags.CurrentSourceInfo = flag;
+    return S_OK;
+}
+bool IsEnabledCFGLogFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::CFGLogFlag);
+}
+int32_t GetCFGLogFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.CFGLog;
+    return S_OK;
+}
+int32_t SetCFGLogFlag(bool flag)
+{
+    Js::Configuration::Global.flags.CFGLog = flag;
+    return S_OK;
+}
+bool IsEnabledCheckAlignmentFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::CheckAlignmentFlag);
+}
+int32_t GetCheckAlignmentFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.CheckAlignment;
+    return S_OK;
+}
+int32_t SetCheckAlignmentFlag(bool flag)
+{
+    Js::Configuration::Global.flags.CheckAlignment = flag;
+    return S_OK;
+}
+bool IsEnabledCheckEmitBufferPermissionsFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::CheckEmitBufferPermissionsFlag);
+}
+int32_t GetCheckEmitBufferPermissionsFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.CheckEmitBufferPermissions;
+    return S_OK;
+}
+int32_t SetCheckEmitBufferPermissionsFlag(bool flag)
+{
+    Js::Configuration::Global.flags.CheckEmitBufferPermissions = flag;
+    return S_OK;
+}
 #ifdef CHECK_MEMORY_LEAK
-FLAG_Boolean(CheckMemoryLeak)
+bool IsEnabledCheckMemoryLeakFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::CheckMemoryLeakFlag);
+}
+int32_t GetCheckMemoryLeakFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.CheckMemoryLeak;
+    return S_OK;
+}
+int32_t SetCheckMemoryLeakFlag(bool flag)
+{
+    Js::Configuration::Global.flags.CheckMemoryLeak = flag;
+    return S_OK;
+}
 bool IsEnabledDumpOnLeakFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::DumpOnLeakFlag);
@@ -735,41 +1318,301 @@ int32_t SetDumpOnLeakFlag(BSTR flag)
     return S_OK;
 }
 #endif
-FLAG_Boolean(CheckOpHelpers)
-FLAG_Boolean(CloneInlinedPolymorphicCaches)
-FLAG_Boolean(ConcurrentRuntime)
+bool IsEnabledCheckOpHelpersFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::CheckOpHelpersFlag);
+}
+int32_t GetCheckOpHelpersFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.CheckOpHelpers;
+    return S_OK;
+}
+int32_t SetCheckOpHelpersFlag(bool flag)
+{
+    Js::Configuration::Global.flags.CheckOpHelpers = flag;
+    return S_OK;
+}
+bool IsEnabledCloneInlinedPolymorphicCachesFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::CloneInlinedPolymorphicCachesFlag);
+}
+int32_t GetCloneInlinedPolymorphicCachesFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.CloneInlinedPolymorphicCaches;
+    return S_OK;
+}
+int32_t SetCloneInlinedPolymorphicCachesFlag(bool flag)
+{
+    Js::Configuration::Global.flags.CloneInlinedPolymorphicCaches = flag;
+    return S_OK;
+}
+bool IsEnabledConcurrentRuntimeFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ConcurrentRuntimeFlag);
+}
+int32_t GetConcurrentRuntimeFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ConcurrentRuntime;
+    return S_OK;
+}
+int32_t SetConcurrentRuntimeFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ConcurrentRuntime = flag;
+    return S_OK;
+}
 FLAG_Number(ConstructorInlineThreshold)
 FLAG_Number(ConstructorCallsRequiredToFinalizeCachedType)
 FLAG_Number(PropertyCacheMissPenalty)
 FLAG_Number(PropertyCacheMissThreshold)
 FLAG_Number(PropertyCacheMissReset)
-FLAG_Boolean(Debug)
+bool IsEnabledDebugFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::DebugFlag);
+}
+int32_t GetDebugFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.Debug;
+    return S_OK;
+}
+int32_t SetDebugFlag(bool flag)
+{
+    Js::Configuration::Global.flags.Debug = flag;
+    return S_OK;
+}
 FLAG_NumberSet(DebugBreak)
 FLAG_NumberTrioSet(StatementDebugBreak)
 FLAG_Phases(DebugBreakOnPhaseBegin)
 
-FLAG_Boolean(DebugWindow)
-FLAG_Boolean(ParserStateCache)
-FLAG_Boolean(CompressParserStateCache)
-FLAG_Boolean(DeferTopLevelTillFirstCall)
+bool IsEnabledDebugWindowFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::DebugWindowFlag);
+}
+int32_t GetDebugWindowFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.DebugWindow;
+    return S_OK;
+}
+int32_t SetDebugWindowFlag(bool flag)
+{
+    Js::Configuration::Global.flags.DebugWindow = flag;
+    return S_OK;
+}
+bool IsEnabledParserStateCacheFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ParserStateCacheFlag);
+}
+int32_t GetParserStateCacheFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ParserStateCache;
+    return S_OK;
+}
+int32_t SetParserStateCacheFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ParserStateCache = flag;
+    return S_OK;
+}
+bool IsEnabledCompressParserStateCacheFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::CompressParserStateCacheFlag);
+}
+int32_t GetCompressParserStateCacheFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.CompressParserStateCache;
+    return S_OK;
+}
+int32_t SetCompressParserStateCacheFlag(bool flag)
+{
+    Js::Configuration::Global.flags.CompressParserStateCache = flag;
+    return S_OK;
+}
+bool IsEnabledDeferTopLevelTillFirstCallFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::DeferTopLevelTillFirstCallFlag);
+}
+int32_t GetDeferTopLevelTillFirstCallFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.DeferTopLevelTillFirstCall;
+    return S_OK;
+}
+int32_t SetDeferTopLevelTillFirstCallFlag(bool flag)
+{
+    Js::Configuration::Global.flags.DeferTopLevelTillFirstCall = flag;
+    return S_OK;
+}
 FLAG_Number(DeferParse)
-FLAG_Boolean(DirectCallTelemetryStats)
-FLAG_Boolean(DisableArrayBTree)
-FLAG_Boolean(DisableRentalThreading)
-FLAG_Boolean(DisableVTuneSourceLineInfo)
-FLAG_Boolean(DisplayMemStats)
+bool IsEnabledDirectCallTelemetryStatsFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::DirectCallTelemetryStatsFlag);
+}
+int32_t GetDirectCallTelemetryStatsFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.DirectCallTelemetryStats;
+    return S_OK;
+}
+int32_t SetDirectCallTelemetryStatsFlag(bool flag)
+{
+    Js::Configuration::Global.flags.DirectCallTelemetryStats = flag;
+    return S_OK;
+}
+bool IsEnabledDisableArrayBTreeFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::DisableArrayBTreeFlag);
+}
+int32_t GetDisableArrayBTreeFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.DisableArrayBTree;
+    return S_OK;
+}
+int32_t SetDisableArrayBTreeFlag(bool flag)
+{
+    Js::Configuration::Global.flags.DisableArrayBTree = flag;
+    return S_OK;
+}
+bool IsEnabledDisableRentalThreadingFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::DisableRentalThreadingFlag);
+}
+int32_t GetDisableRentalThreadingFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.DisableRentalThreading;
+    return S_OK;
+}
+int32_t SetDisableRentalThreadingFlag(bool flag)
+{
+    Js::Configuration::Global.flags.DisableRentalThreading = flag;
+    return S_OK;
+}
+bool IsEnabledDisableVTuneSourceLineInfoFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::DisableVTuneSourceLineInfoFlag);
+}
+int32_t GetDisableVTuneSourceLineInfoFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.DisableVTuneSourceLineInfo;
+    return S_OK;
+}
+int32_t SetDisableVTuneSourceLineInfoFlag(bool flag)
+{
+    Js::Configuration::Global.flags.DisableVTuneSourceLineInfo = flag;
+    return S_OK;
+}
+bool IsEnabledDisplayMemStatsFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::DisplayMemStatsFlag);
+}
+int32_t GetDisplayMemStatsFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.DisplayMemStats;
+    return S_OK;
+}
+int32_t SetDisplayMemStatsFlag(bool flag)
+{
+    Js::Configuration::Global.flags.DisplayMemStats = flag;
+    return S_OK;
+}
 FLAG_Phases(Dump)
 #ifdef DUMP_FRAGMENTATION_STATS
-FLAG_Boolean(DumpFragmentationStats)
+bool IsEnabledDumpFragmentationStatsFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::DumpFragmentationStatsFlag);
+}
+int32_t GetDumpFragmentationStatsFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.DumpFragmentationStats;
+    return S_OK;
+}
+int32_t SetDumpFragmentationStatsFlag(bool flag)
+{
+    Js::Configuration::Global.flags.DumpFragmentationStats = flag;
+    return S_OK;
+}
 #endif
-FLAG_Boolean(DumpIRAddresses)
-FLAG_Boolean(DumpLineNoInColor)
+bool IsEnabledDumpIRAddressesFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::DumpIRAddressesFlag);
+}
+int32_t GetDumpIRAddressesFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.DumpIRAddresses;
+    return S_OK;
+}
+int32_t SetDumpIRAddressesFlag(bool flag)
+{
+    Js::Configuration::Global.flags.DumpIRAddresses = flag;
+    return S_OK;
+}
+bool IsEnabledDumpLineNoInColorFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::DumpLineNoInColorFlag);
+}
+int32_t GetDumpLineNoInColorFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.DumpLineNoInColor;
+    return S_OK;
+}
+int32_t SetDumpLineNoInColorFlag(bool flag)
+{
+    Js::Configuration::Global.flags.DumpLineNoInColor = flag;
+    return S_OK;
+}
 #ifdef RECYCLER_DUMP_OBJECT_GRAPH
-FLAG_Boolean(DumpObjectGraphOnExit)
-FLAG_Boolean(DumpObjectGraphOnCollect)
+bool IsEnabledDumpObjectGraphOnExitFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::DumpObjectGraphOnExitFlag);
+}
+int32_t GetDumpObjectGraphOnExitFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.DumpObjectGraphOnExit;
+    return S_OK;
+}
+int32_t SetDumpObjectGraphOnExitFlag(bool flag)
+{
+    Js::Configuration::Global.flags.DumpObjectGraphOnExit = flag;
+    return S_OK;
+}
+bool IsEnabledDumpObjectGraphOnCollectFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::DumpObjectGraphOnCollectFlag);
+}
+int32_t GetDumpObjectGraphOnCollectFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.DumpObjectGraphOnCollect;
+    return S_OK;
+}
+int32_t SetDumpObjectGraphOnCollectFlag(bool flag)
+{
+    Js::Configuration::Global.flags.DumpObjectGraphOnCollect = flag;
+    return S_OK;
+}
 #endif
-FLAG_Boolean(DumpEvalStringOnRemoval)
-FLAG_Boolean(DumpObjectGraphOnEnum)
+bool IsEnabledDumpEvalStringOnRemovalFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::DumpEvalStringOnRemovalFlag);
+}
+int32_t GetDumpEvalStringOnRemovalFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.DumpEvalStringOnRemoval;
+    return S_OK;
+}
+int32_t SetDumpEvalStringOnRemovalFlag(bool flag)
+{
+    Js::Configuration::Global.flags.DumpEvalStringOnRemoval = flag;
+    return S_OK;
+}
+bool IsEnabledDumpObjectGraphOnEnumFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::DumpObjectGraphOnEnumFlag);
+}
+int32_t GetDumpObjectGraphOnEnumFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.DumpObjectGraphOnEnum;
+    return S_OK;
+}
+int32_t SetDumpObjectGraphOnEnumFlag(bool flag)
+{
+    Js::Configuration::Global.flags.DumpObjectGraphOnEnum = flag;
+    return S_OK;
+}
 #ifdef DYNAMIC_PROFILE_STORAGE
 bool IsEnabledDynamicProfileCacheFlag()
 {
@@ -853,88 +1696,764 @@ int32_t SetDpiFlag(BSTR flag)
 }
 #endif
 #ifdef EDIT_AND_CONTINUE
-FLAG_Boolean(EditTest)
+bool IsEnabledEditTestFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::EditTestFlag);
+}
+int32_t GetEditTestFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.EditTest;
+    return S_OK;
+}
+int32_t SetEditTestFlag(bool flag)
+{
+    Js::Configuration::Global.flags.EditTest = flag;
+    return S_OK;
+}
 #endif
-FLAG_Boolean(WininetProfileCache)
-FLAG_Boolean(NoDynamicProfileInMemoryCache)
-FLAG_Boolean(ProfileBasedSpeculativeJit)
+bool IsEnabledWininetProfileCacheFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::WininetProfileCacheFlag);
+}
+int32_t GetWininetProfileCacheFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.WininetProfileCache;
+    return S_OK;
+}
+int32_t SetWininetProfileCacheFlag(bool flag)
+{
+    Js::Configuration::Global.flags.WininetProfileCache = flag;
+    return S_OK;
+}
+bool IsEnabledNoDynamicProfileInMemoryCacheFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::NoDynamicProfileInMemoryCacheFlag);
+}
+int32_t GetNoDynamicProfileInMemoryCacheFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.NoDynamicProfileInMemoryCache;
+    return S_OK;
+}
+int32_t SetNoDynamicProfileInMemoryCacheFlag(bool flag)
+{
+    Js::Configuration::Global.flags.NoDynamicProfileInMemoryCache = flag;
+    return S_OK;
+}
+bool IsEnabledProfileBasedSpeculativeJitFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ProfileBasedSpeculativeJitFlag);
+}
+int32_t GetProfileBasedSpeculativeJitFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ProfileBasedSpeculativeJit;
+    return S_OK;
+}
+int32_t SetProfileBasedSpeculativeJitFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ProfileBasedSpeculativeJit = flag;
+    return S_OK;
+}
 FLAG_Number(ProfileBasedSpeculationCap)
-FLAG_Boolean(ExecuteByteCodeBufferReturnsInvalidByteCode)
+bool IsEnabledExecuteByteCodeBufferReturnsInvalidByteCodeFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ExecuteByteCodeBufferReturnsInvalidByteCodeFlag);
+}
+int32_t GetExecuteByteCodeBufferReturnsInvalidByteCodeFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ExecuteByteCodeBufferReturnsInvalidByteCode;
+    return S_OK;
+}
+int32_t SetExecuteByteCodeBufferReturnsInvalidByteCodeFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ExecuteByteCodeBufferReturnsInvalidByteCode = flag;
+    return S_OK;
+}
 FLAG_Number(ExpirableCollectionGCCount)
 FLAG_Number(ExpirableCollectionTriggerThreshold)
-FLAG_Boolean(SkipSplitOnNoResult)
-FLAG_Boolean(Force32BitByteCode)
+bool IsEnabledSkipSplitOnNoResultFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::SkipSplitOnNoResultFlag);
+}
+int32_t GetSkipSplitOnNoResultFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.SkipSplitOnNoResult;
+    return S_OK;
+}
+int32_t SetSkipSplitOnNoResultFlag(bool flag)
+{
+    Js::Configuration::Global.flags.SkipSplitOnNoResult = flag;
+    return S_OK;
+}
+bool IsEnabledForce32BitByteCodeFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::Force32BitByteCodeFlag);
+}
+int32_t GetForce32BitByteCodeFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.Force32BitByteCode;
+    return S_OK;
+}
+int32_t SetForce32BitByteCodeFlag(bool flag)
+{
+    Js::Configuration::Global.flags.Force32BitByteCode = flag;
+    return S_OK;
+}
 
-FLAG_Boolean(CollectGarbage)
+bool IsEnabledCollectGarbageFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::CollectGarbageFlag);
+}
+int32_t GetCollectGarbageFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.CollectGarbage;
+    return S_OK;
+}
+int32_t SetCollectGarbageFlag(bool flag)
+{
+    Js::Configuration::Global.flags.CollectGarbage = flag;
+    return S_OK;
+}
 
-FLAG_Boolean(Intl)
-FLAG_Boolean(IntlBuiltIns)
-FLAG_Boolean(IntlPlatform)
+bool IsEnabledIntlFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::IntlFlag);
+}
+int32_t GetIntlFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.Intl;
+    return S_OK;
+}
+int32_t SetIntlFlag(bool flag)
+{
+    Js::Configuration::Global.flags.Intl = flag;
+    return S_OK;
+}
+bool IsEnabledIntlBuiltInsFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::IntlBuiltInsFlag);
+}
+int32_t GetIntlBuiltInsFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.IntlBuiltIns;
+    return S_OK;
+}
+int32_t SetIntlBuiltInsFlag(bool flag)
+{
+    Js::Configuration::Global.flags.IntlBuiltIns = flag;
+    return S_OK;
+}
+bool IsEnabledIntlPlatformFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::IntlPlatformFlag);
+}
+int32_t GetIntlPlatformFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.IntlPlatform;
+    return S_OK;
+}
+int32_t SetIntlPlatformFlag(bool flag)
+{
+    Js::Configuration::Global.flags.IntlPlatform = flag;
+    return S_OK;
+}
 
-FLAG_Boolean(JsBuiltIn)
-FLAG_Boolean(JitRepro)
-FLAG_Boolean(EntryPointInfoRpcData)
+bool IsEnabledJsBuiltInFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::JsBuiltInFlag);
+}
+int32_t GetJsBuiltInFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.JsBuiltIn;
+    return S_OK;
+}
+int32_t SetJsBuiltInFlag(bool flag)
+{
+    Js::Configuration::Global.flags.JsBuiltIn = flag;
+    return S_OK;
+}
+bool IsEnabledJitReproFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::JitReproFlag);
+}
+int32_t GetJitReproFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.JitRepro;
+    return S_OK;
+}
+int32_t SetJitReproFlag(bool flag)
+{
+    Js::Configuration::Global.flags.JitRepro = flag;
+    return S_OK;
+}
+bool IsEnabledEntryPointInfoRpcDataFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::EntryPointInfoRpcDataFlag);
+}
+int32_t GetEntryPointInfoRpcDataFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.EntryPointInfoRpcData;
+    return S_OK;
+}
+int32_t SetEntryPointInfoRpcDataFlag(bool flag)
+{
+    Js::Configuration::Global.flags.EntryPointInfoRpcData = flag;
+    return S_OK;
+}
 
-FLAG_Boolean(LdChakraLib)
-FLAG_Boolean(TestChakraLib)
+bool IsEnabledLdChakraLibFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::LdChakraLibFlag);
+}
+int32_t GetLdChakraLibFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.LdChakraLib;
+    return S_OK;
+}
+int32_t SetLdChakraLibFlag(bool flag)
+{
+    Js::Configuration::Global.flags.LdChakraLib = flag;
+    return S_OK;
+}
+bool IsEnabledTestChakraLibFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::TestChakraLibFlag);
+}
+int32_t GetTestChakraLibFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.TestChakraLib;
+    return S_OK;
+}
+int32_t SetTestChakraLibFlag(bool flag)
+{
+    Js::Configuration::Global.flags.TestChakraLib = flag;
+    return S_OK;
+}
 
 // ES6 (BLUE+1) features/flags
 
 // Master ES6 flag to enable STABLE ES6 features/flags
-FLAG_Boolean(ES6)
+bool IsEnabledES6Flag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES6Flag);
+}
+int32_t GetES6Flag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES6;
+    return S_OK;
+}
+int32_t SetES6Flag(bool flag)
+{
+    Js::Configuration::Global.flags.ES6 = flag;
+    return S_OK;
+}
 
 // Master ES6 flag to enable ALL sub ES6 features/flags
-FLAG_Boolean(ES6All)
+bool IsEnabledES6AllFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES6AllFlag);
+}
+int32_t GetES6AllFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES6All;
+    return S_OK;
+}
+int32_t SetES6AllFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES6All = flag;
+    return S_OK;
+}
 
 // Master ES6 flag to enable Threshold ES6 features/flags
-FLAG_Boolean(ES6Experimental)
+bool IsEnabledES6ExperimentalFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES6ExperimentalFlag);
+}
+int32_t GetES6ExperimentalFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES6Experimental;
+    return S_OK;
+}
+int32_t SetES6ExperimentalFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES6Experimental = flag;
+    return S_OK;
+}
 
 // Per ES6 feature/flag
 
-FLAG_Boolean(ES7AsyncAwait)
-FLAG_Boolean(ES6DateParseFix)
-FLAG_Boolean(ES6FunctionNameFull)
-FLAG_Boolean(ES6Generators)
-FLAG_Boolean(ES7ExponentiationOperator)
+bool IsEnabledES7AsyncAwaitFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES7AsyncAwaitFlag);
+}
+int32_t GetES7AsyncAwaitFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES7AsyncAwait;
+    return S_OK;
+}
+int32_t SetES7AsyncAwaitFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES7AsyncAwait = flag;
+    return S_OK;
+}
+bool IsEnabledES6DateParseFixFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES6DateParseFixFlag);
+}
+int32_t GetES6DateParseFixFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES6DateParseFix;
+    return S_OK;
+}
+int32_t SetES6DateParseFixFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES6DateParseFix = flag;
+    return S_OK;
+}
+bool IsEnabledES6FunctionNameFullFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES6FunctionNameFullFlag);
+}
+int32_t GetES6FunctionNameFullFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES6FunctionNameFull;
+    return S_OK;
+}
+int32_t SetES6FunctionNameFullFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES6FunctionNameFull = flag;
+    return S_OK;
+}
+bool IsEnabledES6GeneratorsFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES6GeneratorsFlag);
+}
+int32_t GetES6GeneratorsFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES6Generators;
+    return S_OK;
+}
+int32_t SetES6GeneratorsFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES6Generators = flag;
+    return S_OK;
+}
+bool IsEnabledES7ExponentiationOperatorFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES7ExponentiationOperatorFlag);
+}
+int32_t GetES7ExponentiationOperatorFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES7ExponentiationOperator;
+    return S_OK;
+}
+int32_t SetES7ExponentiationOperatorFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES7ExponentiationOperator = flag;
+    return S_OK;
+}
 
-FLAG_Boolean(ES7ValuesEntries)
-FLAG_Boolean(ES7TrailingComma)
-FLAG_Boolean(ES6IsConcatSpreadable)
-FLAG_Boolean(ES6Math)
+bool IsEnabledES7ValuesEntriesFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES7ValuesEntriesFlag);
+}
+int32_t GetES7ValuesEntriesFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES7ValuesEntries;
+    return S_OK;
+}
+int32_t SetES7ValuesEntriesFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES7ValuesEntries = flag;
+    return S_OK;
+}
+bool IsEnabledES7TrailingCommaFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES7TrailingCommaFlag);
+}
+int32_t GetES7TrailingCommaFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES7TrailingComma;
+    return S_OK;
+}
+int32_t SetES7TrailingCommaFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES7TrailingComma = flag;
+    return S_OK;
+}
+bool IsEnabledES6IsConcatSpreadableFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES6IsConcatSpreadableFlag);
+}
+int32_t GetES6IsConcatSpreadableFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES6IsConcatSpreadable;
+    return S_OK;
+}
+int32_t SetES6IsConcatSpreadableFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES6IsConcatSpreadable = flag;
+    return S_OK;
+}
+bool IsEnabledES6MathFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES6MathFlag);
+}
+int32_t GetES6MathFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES6Math;
+    return S_OK;
+}
+int32_t SetES6MathFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES6Math = flag;
+    return S_OK;
+}
 
 #ifndef COMPILE_DISABLE_ESDynamicImport
 #define COMPILE_DISABLE_ESDynamicImport 0
 #endif
-FLAG_Boolean(ESDynamicImport)
+bool IsEnabledESDynamicImportFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ESDynamicImportFlag);
+}
+int32_t GetESDynamicImportFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ESDynamicImport;
+    return S_OK;
+}
+int32_t SetESDynamicImportFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ESDynamicImport = flag;
+    return S_OK;
+}
 
-FLAG_Boolean(ES6Module)
-FLAG_Boolean(ES6Object)
-FLAG_Boolean(ES6Number)
-FLAG_Boolean(ES6ObjectLiterals)
-FLAG_Boolean(ES6Proxy)
-FLAG_Boolean(ES6Rest)
-FLAG_Boolean(ES6Spread)
-FLAG_Boolean(ES6String)
-FLAG_Boolean(ES6StringPrototypeFixes)
-FLAG_Boolean(ES2018ObjectRestSpread)
+bool IsEnabledES6ModuleFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES6ModuleFlag);
+}
+int32_t GetES6ModuleFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES6Module;
+    return S_OK;
+}
+int32_t SetES6ModuleFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES6Module = flag;
+    return S_OK;
+}
+bool IsEnabledES6ObjectFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES6ObjectFlag);
+}
+int32_t GetES6ObjectFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES6Object;
+    return S_OK;
+}
+int32_t SetES6ObjectFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES6Object = flag;
+    return S_OK;
+}
+bool IsEnabledES6NumberFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES6NumberFlag);
+}
+int32_t GetES6NumberFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES6Number;
+    return S_OK;
+}
+int32_t SetES6NumberFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES6Number = flag;
+    return S_OK;
+}
+bool IsEnabledES6ObjectLiteralsFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES6ObjectLiteralsFlag);
+}
+int32_t GetES6ObjectLiteralsFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES6ObjectLiterals;
+    return S_OK;
+}
+int32_t SetES6ObjectLiteralsFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES6ObjectLiterals = flag;
+    return S_OK;
+}
+bool IsEnabledES6ProxyFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES6ProxyFlag);
+}
+int32_t GetES6ProxyFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES6Proxy;
+    return S_OK;
+}
+int32_t SetES6ProxyFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES6Proxy = flag;
+    return S_OK;
+}
+bool IsEnabledES6RestFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES6RestFlag);
+}
+int32_t GetES6RestFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES6Rest;
+    return S_OK;
+}
+int32_t SetES6RestFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES6Rest = flag;
+    return S_OK;
+}
+bool IsEnabledES6SpreadFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES6SpreadFlag);
+}
+int32_t GetES6SpreadFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES6Spread;
+    return S_OK;
+}
+int32_t SetES6SpreadFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES6Spread = flag;
+    return S_OK;
+}
+bool IsEnabledES6StringFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES6StringFlag);
+}
+int32_t GetES6StringFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES6String;
+    return S_OK;
+}
+int32_t SetES6StringFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES6String = flag;
+    return S_OK;
+}
+bool IsEnabledES6StringPrototypeFixesFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES6StringPrototypeFixesFlag);
+}
+int32_t GetES6StringPrototypeFixesFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES6StringPrototypeFixes;
+    return S_OK;
+}
+int32_t SetES6StringPrototypeFixesFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES6StringPrototypeFixes = flag;
+    return S_OK;
+}
+bool IsEnabledES2018ObjectRestSpreadFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES2018ObjectRestSpreadFlag);
+}
+int32_t GetES2018ObjectRestSpreadFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES2018ObjectRestSpread;
+    return S_OK;
+}
+int32_t SetES2018ObjectRestSpreadFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES2018ObjectRestSpread = flag;
+    return S_OK;
+}
 
-FLAG_Boolean(ES6PrototypeChain)
-FLAG_Boolean(ES6ToPrimitive)
-FLAG_Boolean(ES6ToLength)
-FLAG_Boolean(ES6ToStringTag)
-FLAG_Boolean(ES6Unicode)
-FLAG_Boolean(ES6UnicodeVerbose)
-FLAG_Boolean(ES6Unscopables)
-FLAG_Boolean(ES6RegExSticky)
-FLAG_Boolean(ES2018RegExDotAll)
-FLAG_Boolean(ESExportNsAs)
-FLAG_Boolean(ES2018AsyncIteration)
-FLAG_Boolean(ESTopLevelAwait)
+bool IsEnabledES6PrototypeChainFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES6PrototypeChainFlag);
+}
+int32_t GetES6PrototypeChainFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES6PrototypeChain;
+    return S_OK;
+}
+int32_t SetES6PrototypeChainFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES6PrototypeChain = flag;
+    return S_OK;
+}
+bool IsEnabledES6ToPrimitiveFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES6ToPrimitiveFlag);
+}
+int32_t GetES6ToPrimitiveFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES6ToPrimitive;
+    return S_OK;
+}
+int32_t SetES6ToPrimitiveFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES6ToPrimitive = flag;
+    return S_OK;
+}
+bool IsEnabledES6ToLengthFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES6ToLengthFlag);
+}
+int32_t GetES6ToLengthFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES6ToLength;
+    return S_OK;
+}
+int32_t SetES6ToLengthFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES6ToLength = flag;
+    return S_OK;
+}
+bool IsEnabledES6ToStringTagFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES6ToStringTagFlag);
+}
+int32_t GetES6ToStringTagFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES6ToStringTag;
+    return S_OK;
+}
+int32_t SetES6ToStringTagFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES6ToStringTag = flag;
+    return S_OK;
+}
+bool IsEnabledES6UnicodeFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES6UnicodeFlag);
+}
+int32_t GetES6UnicodeFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES6Unicode;
+    return S_OK;
+}
+int32_t SetES6UnicodeFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES6Unicode = flag;
+    return S_OK;
+}
+bool IsEnabledES6UnicodeVerboseFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES6UnicodeVerboseFlag);
+}
+int32_t GetES6UnicodeVerboseFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES6UnicodeVerbose;
+    return S_OK;
+}
+int32_t SetES6UnicodeVerboseFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES6UnicodeVerbose = flag;
+    return S_OK;
+}
+bool IsEnabledES6UnscopablesFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES6UnscopablesFlag);
+}
+int32_t GetES6UnscopablesFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES6Unscopables;
+    return S_OK;
+}
+int32_t SetES6UnscopablesFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES6Unscopables = flag;
+    return S_OK;
+}
+bool IsEnabledES6RegExStickyFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES6RegExStickyFlag);
+}
+int32_t GetES6RegExStickyFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES6RegExSticky;
+    return S_OK;
+}
+int32_t SetES6RegExStickyFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES6RegExSticky = flag;
+    return S_OK;
+}
+bool IsEnabledES2018RegExDotAllFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES2018RegExDotAllFlag);
+}
+int32_t GetES2018RegExDotAllFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES2018RegExDotAll;
+    return S_OK;
+}
+int32_t SetES2018RegExDotAllFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES2018RegExDotAll = flag;
+    return S_OK;
+}
+bool IsEnabledESExportNsAsFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ESExportNsAsFlag);
+}
+int32_t GetESExportNsAsFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ESExportNsAs;
+    return S_OK;
+}
+int32_t SetESExportNsAsFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ESExportNsAs = flag;
+    return S_OK;
+}
+bool IsEnabledES2018AsyncIterationFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES2018AsyncIterationFlag);
+}
+int32_t GetES2018AsyncIterationFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES2018AsyncIteration;
+    return S_OK;
+}
+int32_t SetES2018AsyncIterationFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES2018AsyncIteration = flag;
+    return S_OK;
+}
+bool IsEnabledESTopLevelAwaitFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ESTopLevelAwaitFlag);
+}
+int32_t GetESTopLevelAwaitFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ESTopLevelAwait;
+    return S_OK;
+}
+int32_t SetESTopLevelAwaitFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ESTopLevelAwait = flag;
+    return S_OK;
+}
 
 #ifndef COMPILE_DISABLE_ES6RegExPrototypeProperties
     #define COMPILE_DISABLE_ES6RegExPrototypeProperties 0
 #endif
-FLAG_Boolean(ES6RegExPrototypeProperties)
+bool IsEnabledES6RegExPrototypePropertiesFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES6RegExPrototypePropertiesFlag);
+}
+int32_t GetES6RegExPrototypePropertiesFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES6RegExPrototypeProperties;
+    return S_OK;
+}
+int32_t SetES6RegExPrototypePropertiesFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES6RegExPrototypeProperties = flag;
+    return S_OK;
+}
 
 #ifndef COMPILE_DISABLE_ES6RegExSymbols
     #define COMPILE_DISABLE_ES6RegExSymbols 0
@@ -943,49 +2462,244 @@ FLAG_Boolean(ES6RegExPrototypeProperties)
 // When we enable ES6RegExSymbols check all String and Regex built-ins which are inlined in JIT and make sure the helper
 // sets implicit call flag before calling into script
 // Also, the corresponding helpers in JnHelperMethodList.h should be marked as being reentrant
-FLAG_Boolean(ES6RegExSymbols)
+bool IsEnabledES6RegExSymbolsFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES6RegExSymbolsFlag);
+}
+int32_t GetES6RegExSymbolsFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES6RegExSymbols;
+    return S_OK;
+}
+int32_t SetES6RegExSymbolsFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES6RegExSymbols = flag;
+    return S_OK;
+}
 
-FLAG_Boolean(ES6Verbose)
-FLAG_Boolean(ESObjectGetOwnPropertyDescriptors)
+bool IsEnabledES6VerboseFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ES6VerboseFlag);
+}
+int32_t GetES6VerboseFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ES6Verbose;
+    return S_OK;
+}
+int32_t SetES6VerboseFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ES6Verbose = flag;
+    return S_OK;
+}
+bool IsEnabledESObjectGetOwnPropertyDescriptorsFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ESObjectGetOwnPropertyDescriptorsFlag);
+}
+int32_t GetESObjectGetOwnPropertyDescriptorsFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ESObjectGetOwnPropertyDescriptors;
+    return S_OK;
+}
+int32_t SetESObjectGetOwnPropertyDescriptorsFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ESObjectGetOwnPropertyDescriptors = flag;
+    return S_OK;
+}
 
 #ifndef COMPILE_DISABLE_ESSharedArrayBuffer
     #define COMPILE_DISABLE_ESSharedArrayBuffer 0
 #endif
 
-FLAG_Boolean(ESSharedArrayBuffer)
+bool IsEnabledESSharedArrayBufferFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ESSharedArrayBufferFlag);
+}
+int32_t GetESSharedArrayBufferFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ESSharedArrayBuffer;
+    return S_OK;
+}
+int32_t SetESSharedArrayBufferFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ESSharedArrayBuffer = flag;
+    return S_OK;
+}
 
 // Newer language feature flags
 
 // ES BigInt flag
-FLAG_Boolean(ESBigInt)
+bool IsEnabledESBigIntFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ESBigIntFlag);
+}
+int32_t GetESBigIntFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ESBigInt;
+    return S_OK;
+}
+int32_t SetESBigIntFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ESBigInt = flag;
+    return S_OK;
+}
 
 // ES Numeric Separator support for numeric constants
-FLAG_Boolean(ESNumericSeparator)
+bool IsEnabledESNumericSeparatorFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ESNumericSeparatorFlag);
+}
+int32_t GetESNumericSeparatorFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ESNumericSeparator;
+    return S_OK;
+}
+int32_t SetESNumericSeparatorFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ESNumericSeparator = flag;
+    return S_OK;
+}
 
 // ES Nullish coalescing operator support (??)
-FLAG_Boolean(ESNullishCoalescingOperator)
+bool IsEnabledESNullishCoalescingOperatorFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ESNullishCoalescingOperatorFlag);
+}
+int32_t GetESNullishCoalescingOperatorFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ESNullishCoalescingOperator;
+    return S_OK;
+}
+int32_t SetESNullishCoalescingOperatorFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ESNullishCoalescingOperator = flag;
+    return S_OK;
+}
 
 // ES Hashbang support for interpreter directive syntax
-FLAG_Boolean(ESHashbang)
+bool IsEnabledESHashbangFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ESHashbangFlag);
+}
+int32_t GetESHashbangFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ESHashbang;
+    return S_OK;
+}
+int32_t SetESHashbangFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ESHashbang = flag;
+    return S_OK;
+}
 
 // ES Symbol.prototype.description flag
-FLAG_Boolean(ESSymbolDescription)
+bool IsEnabledESSymbolDescriptionFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ESSymbolDescriptionFlag);
+}
+int32_t GetESSymbolDescriptionFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ESSymbolDescription;
+    return S_OK;
+}
+int32_t SetESSymbolDescriptionFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ESSymbolDescription = flag;
+    return S_OK;
+}
 
-FLAG_Boolean(ESArrayFindFromLast)
+bool IsEnabledESArrayFindFromLastFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ESArrayFindFromLastFlag);
+}
+int32_t GetESArrayFindFromLastFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ESArrayFindFromLast;
+    return S_OK;
+}
+int32_t SetESArrayFindFromLastFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ESArrayFindFromLast = flag;
+    return S_OK;
+}
 
 // ES Promise.any and AggregateError flag
-FLAG_Boolean(ESPromiseAny)
+bool IsEnabledESPromiseAnyFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ESPromiseAnyFlag);
+}
+int32_t GetESPromiseAnyFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ESPromiseAny;
+    return S_OK;
+}
+int32_t SetESPromiseAnyFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ESPromiseAny = flag;
+    return S_OK;
+}
 
 // ES import.meta keyword meta-property
-FLAG_Boolean(ESImportMeta)
+bool IsEnabledESImportMetaFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ESImportMetaFlag);
+}
+int32_t GetESImportMetaFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ESImportMeta;
+    return S_OK;
+}
+int32_t SetESImportMetaFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ESImportMeta = flag;
+    return S_OK;
+}
 
 //ES globalThis flag
-FLAG_Boolean(ESGlobalThis)
+bool IsEnabledESGlobalThisFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ESGlobalThisFlag);
+}
+int32_t GetESGlobalThisFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ESGlobalThis;
+    return S_OK;
+}
+int32_t SetESGlobalThisFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ESGlobalThis = flag;
+    return S_OK;
+}
 
 // This flag to be removed once JITing generator functions is stable
-FLAG_Boolean(JitES6Generators)
+bool IsEnabledJitES6GeneratorsFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::JitES6GeneratorsFlag);
+}
+int32_t GetJitES6GeneratorsFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.JitES6Generators;
+    return S_OK;
+}
+int32_t SetJitES6GeneratorsFlag(bool flag)
+{
+    Js::Configuration::Global.flags.JitES6Generators = flag;
+    return S_OK;
+}
 
-FLAG_Boolean(FastLineColumnCalculation)
+bool IsEnabledFastLineColumnCalculationFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::FastLineColumnCalculationFlag);
+}
+int32_t GetFastLineColumnCalculationFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.FastLineColumnCalculation;
+    return S_OK;
+}
+int32_t SetFastLineColumnCalculationFlag(bool flag)
+{
+    Js::Configuration::Global.flags.FastLineColumnCalculation = flag;
+    return S_OK;
+}
 bool IsEnabledFilenameFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::FilenameFlag);
@@ -1002,66 +2716,599 @@ int32_t SetFilenameFlag(BSTR flag)
     Js::Configuration::Global.flags.Filename = flag;
     return S_OK;
 }
-FLAG_Boolean(FreeRejittedCode)
-FLAG_Boolean(ForceGuardPages)
-FLAG_Boolean(PrintGuardPageBounds)
-FLAG_Boolean(ForceLegacyEngine)
+bool IsEnabledFreeRejittedCodeFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::FreeRejittedCodeFlag);
+}
+int32_t GetFreeRejittedCodeFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.FreeRejittedCode;
+    return S_OK;
+}
+int32_t SetFreeRejittedCodeFlag(bool flag)
+{
+    Js::Configuration::Global.flags.FreeRejittedCode = flag;
+    return S_OK;
+}
+bool IsEnabledForceGuardPagesFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceGuardPagesFlag);
+}
+int32_t GetForceGuardPagesFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceGuardPages;
+    return S_OK;
+}
+int32_t SetForceGuardPagesFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceGuardPages = flag;
+    return S_OK;
+}
+bool IsEnabledPrintGuardPageBoundsFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::PrintGuardPageBoundsFlag);
+}
+int32_t GetPrintGuardPageBoundsFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.PrintGuardPageBounds;
+    return S_OK;
+}
+int32_t SetPrintGuardPageBoundsFlag(bool flag)
+{
+    Js::Configuration::Global.flags.PrintGuardPageBounds = flag;
+    return S_OK;
+}
+bool IsEnabledForceLegacyEngineFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceLegacyEngineFlag);
+}
+int32_t GetForceLegacyEngineFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceLegacyEngine;
+    return S_OK;
+}
+int32_t SetForceLegacyEngineFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceLegacyEngine = flag;
+    return S_OK;
+}
 FLAG_Phases(Force)
 FLAG_Phases(Stress)
-FLAG_Boolean(ForceArrayBTree)
-FLAG_Boolean(StrongArraySort)
-FLAG_Boolean(ForceCleanPropertyOnCollect)
-FLAG_Boolean(ForceCleanCacheOnCollect)
-FLAG_Boolean(ForceGCAfterJSONParse)
-FLAG_Boolean(ForceDecommitOnCollect)
-FLAG_Boolean(ForceDeferParse)
-FLAG_Boolean(ForceDiagnosticsMode)
-FLAG_Boolean(ForceGetWriteWatchOOM)
-FLAG_Boolean(ForcePostLowerGlobOptInstrString)
-FLAG_Boolean(ForceSplitScope)
-FLAG_Boolean(EnumerateSpecialPropertiesInDebugger)
-FLAG_Boolean(EnableContinueAfterExceptionWrappersForHelpers)
-FLAG_Boolean(EnableContinueAfterExceptionWrappersForBuiltIns)
-FLAG_Boolean(EnableFunctionSourceReportForHeapEnum)
+bool IsEnabledForceArrayBTreeFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceArrayBTreeFlag);
+}
+int32_t GetForceArrayBTreeFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceArrayBTree;
+    return S_OK;
+}
+int32_t SetForceArrayBTreeFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceArrayBTree = flag;
+    return S_OK;
+}
+bool IsEnabledStrongArraySortFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::StrongArraySortFlag);
+}
+int32_t GetStrongArraySortFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.StrongArraySort;
+    return S_OK;
+}
+int32_t SetStrongArraySortFlag(bool flag)
+{
+    Js::Configuration::Global.flags.StrongArraySort = flag;
+    return S_OK;
+}
+bool IsEnabledForceCleanPropertyOnCollectFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceCleanPropertyOnCollectFlag);
+}
+int32_t GetForceCleanPropertyOnCollectFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceCleanPropertyOnCollect;
+    return S_OK;
+}
+int32_t SetForceCleanPropertyOnCollectFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceCleanPropertyOnCollect = flag;
+    return S_OK;
+}
+bool IsEnabledForceCleanCacheOnCollectFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceCleanCacheOnCollectFlag);
+}
+int32_t GetForceCleanCacheOnCollectFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceCleanCacheOnCollect;
+    return S_OK;
+}
+int32_t SetForceCleanCacheOnCollectFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceCleanCacheOnCollect = flag;
+    return S_OK;
+}
+bool IsEnabledForceGCAfterJSONParseFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceGCAfterJSONParseFlag);
+}
+int32_t GetForceGCAfterJSONParseFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceGCAfterJSONParse;
+    return S_OK;
+}
+int32_t SetForceGCAfterJSONParseFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceGCAfterJSONParse = flag;
+    return S_OK;
+}
+bool IsEnabledForceDecommitOnCollectFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceDecommitOnCollectFlag);
+}
+int32_t GetForceDecommitOnCollectFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceDecommitOnCollect;
+    return S_OK;
+}
+int32_t SetForceDecommitOnCollectFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceDecommitOnCollect = flag;
+    return S_OK;
+}
+bool IsEnabledForceDeferParseFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceDeferParseFlag);
+}
+int32_t GetForceDeferParseFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceDeferParse;
+    return S_OK;
+}
+int32_t SetForceDeferParseFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceDeferParse = flag;
+    return S_OK;
+}
+bool IsEnabledForceDiagnosticsModeFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceDiagnosticsModeFlag);
+}
+int32_t GetForceDiagnosticsModeFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceDiagnosticsMode;
+    return S_OK;
+}
+int32_t SetForceDiagnosticsModeFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceDiagnosticsMode = flag;
+    return S_OK;
+}
+bool IsEnabledForceGetWriteWatchOOMFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceGetWriteWatchOOMFlag);
+}
+int32_t GetForceGetWriteWatchOOMFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceGetWriteWatchOOM;
+    return S_OK;
+}
+int32_t SetForceGetWriteWatchOOMFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceGetWriteWatchOOM = flag;
+    return S_OK;
+}
+bool IsEnabledForcePostLowerGlobOptInstrStringFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForcePostLowerGlobOptInstrStringFlag);
+}
+int32_t GetForcePostLowerGlobOptInstrStringFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForcePostLowerGlobOptInstrString;
+    return S_OK;
+}
+int32_t SetForcePostLowerGlobOptInstrStringFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForcePostLowerGlobOptInstrString = flag;
+    return S_OK;
+}
+bool IsEnabledForceSplitScopeFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceSplitScopeFlag);
+}
+int32_t GetForceSplitScopeFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceSplitScope;
+    return S_OK;
+}
+int32_t SetForceSplitScopeFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceSplitScope = flag;
+    return S_OK;
+}
+bool IsEnabledEnumerateSpecialPropertiesInDebuggerFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::EnumerateSpecialPropertiesInDebuggerFlag);
+}
+int32_t GetEnumerateSpecialPropertiesInDebuggerFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.EnumerateSpecialPropertiesInDebugger;
+    return S_OK;
+}
+int32_t SetEnumerateSpecialPropertiesInDebuggerFlag(bool flag)
+{
+    Js::Configuration::Global.flags.EnumerateSpecialPropertiesInDebugger = flag;
+    return S_OK;
+}
+bool IsEnabledEnableContinueAfterExceptionWrappersForHelpersFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::EnableContinueAfterExceptionWrappersForHelpersFlag);
+}
+int32_t GetEnableContinueAfterExceptionWrappersForHelpersFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.EnableContinueAfterExceptionWrappersForHelpers;
+    return S_OK;
+}
+int32_t SetEnableContinueAfterExceptionWrappersForHelpersFlag(bool flag)
+{
+    Js::Configuration::Global.flags.EnableContinueAfterExceptionWrappersForHelpers = flag;
+    return S_OK;
+}
+bool IsEnabledEnableContinueAfterExceptionWrappersForBuiltInsFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::EnableContinueAfterExceptionWrappersForBuiltInsFlag);
+}
+int32_t GetEnableContinueAfterExceptionWrappersForBuiltInsFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.EnableContinueAfterExceptionWrappersForBuiltIns;
+    return S_OK;
+}
+int32_t SetEnableContinueAfterExceptionWrappersForBuiltInsFlag(bool flag)
+{
+    Js::Configuration::Global.flags.EnableContinueAfterExceptionWrappersForBuiltIns = flag;
+    return S_OK;
+}
+bool IsEnabledEnableFunctionSourceReportForHeapEnumFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::EnableFunctionSourceReportForHeapEnumFlag);
+}
+int32_t GetEnableFunctionSourceReportForHeapEnumFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.EnableFunctionSourceReportForHeapEnum;
+    return S_OK;
+}
+int32_t SetEnableFunctionSourceReportForHeapEnumFlag(bool flag)
+{
+    Js::Configuration::Global.flags.EnableFunctionSourceReportForHeapEnum = flag;
+    return S_OK;
+}
 FLAG_Number(ForceFragmentAddressSpace)
 FLAG_Number(ForceOOMOnEBCommit)
-FLAG_Boolean(ForceDynamicProfile)
-FLAG_Boolean(ForceES5Array)
-FLAG_Boolean(ForceAsmJsLinkFail)
-FLAG_Boolean(ForceExpireOnNonCacheCollect)
-FLAG_Boolean(ForceFastPath)
-FLAG_Boolean(ForceFloatPref)
-FLAG_Boolean(ForceJITLoopBody)
-FLAG_Boolean(ForceStaticInterpreterThunk)
-FLAG_Boolean(DumpCommentsFromReferencedFiles)
+bool IsEnabledForceDynamicProfileFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceDynamicProfileFlag);
+}
+int32_t GetForceDynamicProfileFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceDynamicProfile;
+    return S_OK;
+}
+int32_t SetForceDynamicProfileFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceDynamicProfile = flag;
+    return S_OK;
+}
+bool IsEnabledForceES5ArrayFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceES5ArrayFlag);
+}
+int32_t GetForceES5ArrayFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceES5Array;
+    return S_OK;
+}
+int32_t SetForceES5ArrayFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceES5Array = flag;
+    return S_OK;
+}
+bool IsEnabledForceAsmJsLinkFailFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceAsmJsLinkFailFlag);
+}
+int32_t GetForceAsmJsLinkFailFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceAsmJsLinkFail;
+    return S_OK;
+}
+int32_t SetForceAsmJsLinkFailFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceAsmJsLinkFail = flag;
+    return S_OK;
+}
+bool IsEnabledForceExpireOnNonCacheCollectFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceExpireOnNonCacheCollectFlag);
+}
+int32_t GetForceExpireOnNonCacheCollectFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceExpireOnNonCacheCollect;
+    return S_OK;
+}
+int32_t SetForceExpireOnNonCacheCollectFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceExpireOnNonCacheCollect = flag;
+    return S_OK;
+}
+bool IsEnabledForceFastPathFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceFastPathFlag);
+}
+int32_t GetForceFastPathFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceFastPath;
+    return S_OK;
+}
+int32_t SetForceFastPathFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceFastPath = flag;
+    return S_OK;
+}
+bool IsEnabledForceFloatPrefFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceFloatPrefFlag);
+}
+int32_t GetForceFloatPrefFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceFloatPref;
+    return S_OK;
+}
+int32_t SetForceFloatPrefFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceFloatPref = flag;
+    return S_OK;
+}
+bool IsEnabledForceJITLoopBodyFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceJITLoopBodyFlag);
+}
+int32_t GetForceJITLoopBodyFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceJITLoopBody;
+    return S_OK;
+}
+int32_t SetForceJITLoopBodyFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceJITLoopBody = flag;
+    return S_OK;
+}
+bool IsEnabledForceStaticInterpreterThunkFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceStaticInterpreterThunkFlag);
+}
+int32_t GetForceStaticInterpreterThunkFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceStaticInterpreterThunk;
+    return S_OK;
+}
+int32_t SetForceStaticInterpreterThunkFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceStaticInterpreterThunk = flag;
+    return S_OK;
+}
+bool IsEnabledDumpCommentsFromReferencedFilesFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::DumpCommentsFromReferencedFilesFlag);
+}
+int32_t GetDumpCommentsFromReferencedFilesFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.DumpCommentsFromReferencedFiles;
+    return S_OK;
+}
+int32_t SetDumpCommentsFromReferencedFilesFlag(bool flag)
+{
+    Js::Configuration::Global.flags.DumpCommentsFromReferencedFiles = flag;
+    return S_OK;
+}
 FLAG_Number(DelayFullJITSmallFunc)
-FLAG_Boolean(EnableFatalErrorOnOOM)
+bool IsEnabledEnableFatalErrorOnOOMFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::EnableFatalErrorOnOOMFlag);
+}
+int32_t GetEnableFatalErrorOnOOMFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.EnableFatalErrorOnOOM;
+    return S_OK;
+}
+int32_t SetEnableFatalErrorOnOOMFlag(bool flag)
+{
+    Js::Configuration::Global.flags.EnableFatalErrorOnOOM = flag;
+    return S_OK;
+}
 
 #if defined(_M_ARM32_OR_ARM64)
-FLAG_Boolean(ForceLocalsPtr)
+bool IsEnabledForceLocalsPtrFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceLocalsPtrFlag);
+}
+int32_t GetForceLocalsPtrFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceLocalsPtr;
+    return S_OK;
+}
+int32_t SetForceLocalsPtrFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceLocalsPtr = flag;
+    return S_OK;
+}
 #endif
-FLAG_Boolean(DeferLoadingAvailableSource)
-FLAG_Boolean(ForceNative)
-FLAG_Boolean(ForceSerialized)
+bool IsEnabledDeferLoadingAvailableSourceFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::DeferLoadingAvailableSourceFlag);
+}
+int32_t GetDeferLoadingAvailableSourceFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.DeferLoadingAvailableSource;
+    return S_OK;
+}
+int32_t SetDeferLoadingAvailableSourceFlag(bool flag)
+{
+    Js::Configuration::Global.flags.DeferLoadingAvailableSource = flag;
+    return S_OK;
+}
+bool IsEnabledForceNativeFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceNativeFlag);
+}
+int32_t GetForceNativeFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceNative;
+    return S_OK;
+}
+int32_t SetForceNativeFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceNative = flag;
+    return S_OK;
+}
+bool IsEnabledForceSerializedFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceSerializedFlag);
+}
+int32_t GetForceSerializedFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceSerialized;
+    return S_OK;
+}
+int32_t SetForceSerializedFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceSerialized = flag;
+    return S_OK;
+}
 FLAG_Number(ForceSerializedBytecodeMajorVersion)
 FLAG_Number(ForceSerializedBytecodeVersionSchema)
-FLAG_Boolean(ForceStrictMode)
-FLAG_Boolean(ForceUndoDefer)
-FLAG_Boolean(ForceBlockingConcurrentCollect)
-FLAG_Boolean(FreTestDiagMode)
+bool IsEnabledForceStrictModeFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceStrictModeFlag);
+}
+int32_t GetForceStrictModeFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceStrictMode;
+    return S_OK;
+}
+int32_t SetForceStrictModeFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceStrictMode = flag;
+    return S_OK;
+}
+bool IsEnabledForceUndoDeferFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceUndoDeferFlag);
+}
+int32_t GetForceUndoDeferFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceUndoDefer;
+    return S_OK;
+}
+int32_t SetForceUndoDeferFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceUndoDefer = flag;
+    return S_OK;
+}
+bool IsEnabledForceBlockingConcurrentCollectFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceBlockingConcurrentCollectFlag);
+}
+int32_t GetForceBlockingConcurrentCollectFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceBlockingConcurrentCollect;
+    return S_OK;
+}
+int32_t SetForceBlockingConcurrentCollectFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceBlockingConcurrentCollect = flag;
+    return S_OK;
+}
+bool IsEnabledFreTestDiagModeFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::FreTestDiagModeFlag);
+}
+int32_t GetFreTestDiagModeFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.FreTestDiagMode;
+    return S_OK;
+}
+int32_t SetFreTestDiagModeFlag(bool flag)
+{
+    Js::Configuration::Global.flags.FreTestDiagMode = flag;
+    return S_OK;
+}
 #ifdef BYTECODE_TESTING
 FLAG_Number(ByteCodeBranchLimit)
-FLAG_Boolean(MediumByteCodeLayout)
-FLAG_Boolean(LargeByteCodeLayout)
+bool IsEnabledMediumByteCodeLayoutFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::MediumByteCodeLayoutFlag);
+}
+int32_t GetMediumByteCodeLayoutFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.MediumByteCodeLayout;
+    return S_OK;
+}
+int32_t SetMediumByteCodeLayoutFlag(bool flag)
+{
+    Js::Configuration::Global.flags.MediumByteCodeLayout = flag;
+    return S_OK;
+}
+bool IsEnabledLargeByteCodeLayoutFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::LargeByteCodeLayoutFlag);
+}
+int32_t GetLargeByteCodeLayoutFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.LargeByteCodeLayout;
+    return S_OK;
+}
+int32_t SetLargeByteCodeLayoutFlag(bool flag)
+{
+    Js::Configuration::Global.flags.LargeByteCodeLayout = flag;
+    return S_OK;
+}
 #endif
 FLAG_Number(InduceCodeGenFailure)
 FLAG_Number(InduceCodeGenFailureSeed)
 FLAG_Number(InjectPartiallyInitializedInterpreterFrameError)
 FLAG_Number(InjectPartiallyInitializedInterpreterFrameErrorType)
-FLAG_Boolean(GenerateByteCodeBufferReturnsCantGenerate)
+bool IsEnabledGenerateByteCodeBufferReturnsCantGenerateFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::GenerateByteCodeBufferReturnsCantGenerateFlag);
+}
+int32_t GetGenerateByteCodeBufferReturnsCantGenerateFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.GenerateByteCodeBufferReturnsCantGenerate;
+    return S_OK;
+}
+int32_t SetGenerateByteCodeBufferReturnsCantGenerateFlag(bool flag)
+{
+    Js::Configuration::Global.flags.GenerateByteCodeBufferReturnsCantGenerate = flag;
+    return S_OK;
+}
 FLAG_Number(GoptCleanupThreshold)
 FLAG_Number(AsmGoptCleanupThreshold)
-FLAG_Boolean(HighPrecisionDate)
+bool IsEnabledHighPrecisionDateFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::HighPrecisionDateFlag);
+}
+int32_t GetHighPrecisionDateFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.HighPrecisionDate;
+    return S_OK;
+}
+int32_t SetHighPrecisionDateFlag(bool flag)
+{
+    Js::Configuration::Global.flags.HighPrecisionDate = flag;
+    return S_OK;
+}
 FLAG_Number(InlineCountMax)
 FLAG_Number(InlineCountMaxInLoopBodies)
 FLAG_Number(icminlb)
@@ -1128,38 +3375,311 @@ FLAG_Number(MaxNumberOfInlineesWithLoop)
 FLAG_Phases(Memspect)
 #endif
 FLAG_Number(PolymorphicInlineThreshold)
-FLAG_Boolean(PrimeRecycler)
-FLAG_Boolean(TraceEngineRefcount)
+bool IsEnabledPrimeRecyclerFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::PrimeRecyclerFlag);
+}
+int32_t GetPrimeRecyclerFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.PrimeRecycler;
+    return S_OK;
+}
+int32_t SetPrimeRecyclerFlag(bool flag)
+{
+    Js::Configuration::Global.flags.PrimeRecycler = flag;
+    return S_OK;
+}
+bool IsEnabledTraceEngineRefcountFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::TraceEngineRefcountFlag);
+}
+int32_t GetTraceEngineRefcountFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.TraceEngineRefcount;
+    return S_OK;
+}
+int32_t SetTraceEngineRefcountFlag(bool flag)
+{
+    Js::Configuration::Global.flags.TraceEngineRefcount = flag;
+    return S_OK;
+}
 #if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
-FLAG_Boolean(LeakStackTrace)
-FLAG_Boolean(ForceMemoryLeak)
+bool IsEnabledLeakStackTraceFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::LeakStackTraceFlag);
+}
+int32_t GetLeakStackTraceFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.LeakStackTrace;
+    return S_OK;
+}
+int32_t SetLeakStackTraceFlag(bool flag)
+{
+    Js::Configuration::Global.flags.LeakStackTrace = flag;
+    return S_OK;
+}
+bool IsEnabledForceMemoryLeakFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceMemoryLeakFlag);
+}
+int32_t GetForceMemoryLeakFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceMemoryLeak;
+    return S_OK;
+}
+int32_t SetForceMemoryLeakFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceMemoryLeak = flag;
+    return S_OK;
+}
 #endif
-FLAG_Boolean(DumpAfterFinalGC)
-FLAG_Boolean(ForceOldDateAPI)
+bool IsEnabledDumpAfterFinalGCFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::DumpAfterFinalGCFlag);
+}
+int32_t GetDumpAfterFinalGCFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.DumpAfterFinalGC;
+    return S_OK;
+}
+int32_t SetDumpAfterFinalGCFlag(bool flag)
+{
+    Js::Configuration::Global.flags.DumpAfterFinalGC = flag;
+    return S_OK;
+}
+bool IsEnabledForceOldDateAPIFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceOldDateAPIFlag);
+}
+int32_t GetForceOldDateAPIFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceOldDateAPI;
+    return S_OK;
+}
+int32_t SetForceOldDateAPIFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceOldDateAPI = flag;
+    return S_OK;
+}
 
 FLAG_Number(JitLoopBodyHotLoopThreshold)
 FLAG_Number(LoopBodySizeThresholdToDisableOpts)
 
 FLAG_Number(MaxJitThreadCount)
-FLAG_Boolean(ForceMaxJitThreadCount)
+bool IsEnabledForceMaxJitThreadCountFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceMaxJitThreadCountFlag);
+}
+int32_t GetForceMaxJitThreadCountFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceMaxJitThreadCount;
+    return S_OK;
+}
+int32_t SetForceMaxJitThreadCountFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceMaxJitThreadCount = flag;
+    return S_OK;
+}
 
-FLAG_Boolean(MitigateSpectre)
+bool IsEnabledMitigateSpectreFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::MitigateSpectreFlag);
+}
+int32_t GetMitigateSpectreFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.MitigateSpectre;
+    return S_OK;
+}
+int32_t SetMitigateSpectreFlag(bool flag)
+{
+    Js::Configuration::Global.flags.MitigateSpectre = flag;
+    return S_OK;
+}
 
-FLAG_Boolean(AddMaskingBlocks)
+bool IsEnabledAddMaskingBlocksFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::AddMaskingBlocksFlag);
+}
+int32_t GetAddMaskingBlocksFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.AddMaskingBlocks;
+    return S_OK;
+}
+int32_t SetAddMaskingBlocksFlag(bool flag)
+{
+    Js::Configuration::Global.flags.AddMaskingBlocks = flag;
+    return S_OK;
+}
 
-FLAG_Boolean(PoisonVarArrayLoad)
-FLAG_Boolean(PoisonIntArrayLoad)
-FLAG_Boolean(PoisonFloatArrayLoad)
-FLAG_Boolean(PoisonTypedArrayLoad)
-FLAG_Boolean(PoisonStringLoad)
-FLAG_Boolean(PoisonObjectsForLoads)
+bool IsEnabledPoisonVarArrayLoadFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::PoisonVarArrayLoadFlag);
+}
+int32_t GetPoisonVarArrayLoadFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.PoisonVarArrayLoad;
+    return S_OK;
+}
+int32_t SetPoisonVarArrayLoadFlag(bool flag)
+{
+    Js::Configuration::Global.flags.PoisonVarArrayLoad = flag;
+    return S_OK;
+}
+bool IsEnabledPoisonIntArrayLoadFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::PoisonIntArrayLoadFlag);
+}
+int32_t GetPoisonIntArrayLoadFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.PoisonIntArrayLoad;
+    return S_OK;
+}
+int32_t SetPoisonIntArrayLoadFlag(bool flag)
+{
+    Js::Configuration::Global.flags.PoisonIntArrayLoad = flag;
+    return S_OK;
+}
+bool IsEnabledPoisonFloatArrayLoadFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::PoisonFloatArrayLoadFlag);
+}
+int32_t GetPoisonFloatArrayLoadFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.PoisonFloatArrayLoad;
+    return S_OK;
+}
+int32_t SetPoisonFloatArrayLoadFlag(bool flag)
+{
+    Js::Configuration::Global.flags.PoisonFloatArrayLoad = flag;
+    return S_OK;
+}
+bool IsEnabledPoisonTypedArrayLoadFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::PoisonTypedArrayLoadFlag);
+}
+int32_t GetPoisonTypedArrayLoadFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.PoisonTypedArrayLoad;
+    return S_OK;
+}
+int32_t SetPoisonTypedArrayLoadFlag(bool flag)
+{
+    Js::Configuration::Global.flags.PoisonTypedArrayLoad = flag;
+    return S_OK;
+}
+bool IsEnabledPoisonStringLoadFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::PoisonStringLoadFlag);
+}
+int32_t GetPoisonStringLoadFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.PoisonStringLoad;
+    return S_OK;
+}
+int32_t SetPoisonStringLoadFlag(bool flag)
+{
+    Js::Configuration::Global.flags.PoisonStringLoad = flag;
+    return S_OK;
+}
+bool IsEnabledPoisonObjectsForLoadsFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::PoisonObjectsForLoadsFlag);
+}
+int32_t GetPoisonObjectsForLoadsFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.PoisonObjectsForLoads;
+    return S_OK;
+}
+int32_t SetPoisonObjectsForLoadsFlag(bool flag)
+{
+    Js::Configuration::Global.flags.PoisonObjectsForLoads = flag;
+    return S_OK;
+}
 
-FLAG_Boolean(PoisonVarArrayStore)
-FLAG_Boolean(PoisonIntArrayStore)
-FLAG_Boolean(PoisonFloatArrayStore)
-FLAG_Boolean(PoisonTypedArrayStore)
-FLAG_Boolean(PoisonStringStore)
-FLAG_Boolean(PoisonObjectsForStores)
+bool IsEnabledPoisonVarArrayStoreFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::PoisonVarArrayStoreFlag);
+}
+int32_t GetPoisonVarArrayStoreFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.PoisonVarArrayStore;
+    return S_OK;
+}
+int32_t SetPoisonVarArrayStoreFlag(bool flag)
+{
+    Js::Configuration::Global.flags.PoisonVarArrayStore = flag;
+    return S_OK;
+}
+bool IsEnabledPoisonIntArrayStoreFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::PoisonIntArrayStoreFlag);
+}
+int32_t GetPoisonIntArrayStoreFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.PoisonIntArrayStore;
+    return S_OK;
+}
+int32_t SetPoisonIntArrayStoreFlag(bool flag)
+{
+    Js::Configuration::Global.flags.PoisonIntArrayStore = flag;
+    return S_OK;
+}
+bool IsEnabledPoisonFloatArrayStoreFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::PoisonFloatArrayStoreFlag);
+}
+int32_t GetPoisonFloatArrayStoreFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.PoisonFloatArrayStore;
+    return S_OK;
+}
+int32_t SetPoisonFloatArrayStoreFlag(bool flag)
+{
+    Js::Configuration::Global.flags.PoisonFloatArrayStore = flag;
+    return S_OK;
+}
+bool IsEnabledPoisonTypedArrayStoreFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::PoisonTypedArrayStoreFlag);
+}
+int32_t GetPoisonTypedArrayStoreFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.PoisonTypedArrayStore;
+    return S_OK;
+}
+int32_t SetPoisonTypedArrayStoreFlag(bool flag)
+{
+    Js::Configuration::Global.flags.PoisonTypedArrayStore = flag;
+    return S_OK;
+}
+bool IsEnabledPoisonStringStoreFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::PoisonStringStoreFlag);
+}
+int32_t GetPoisonStringStoreFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.PoisonStringStore;
+    return S_OK;
+}
+int32_t SetPoisonStringStoreFlag(bool flag)
+{
+    Js::Configuration::Global.flags.PoisonStringStore = flag;
+    return S_OK;
+}
+bool IsEnabledPoisonObjectsForStoresFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::PoisonObjectsForStoresFlag);
+}
+int32_t GetPoisonObjectsForStoresFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.PoisonObjectsForStores;
+    return S_OK;
+}
+int32_t SetPoisonObjectsForStoresFlag(bool flag)
+{
+    Js::Configuration::Global.flags.PoisonObjectsForStores = flag;
+    return S_OK;
+}
 
 FLAG_Number(MinInterpretCount)
 FLAG_Number(MinSimpleJitRunCount)
@@ -1223,15 +3743,54 @@ int32_t SetEmlFlag(BSTR flag)
     Js::Configuration::Global.flags.Eml = flag;
     return S_OK;
 }
-FLAG_Boolean(EnforceExecutionModeLimits)
-FLAG_Boolean(Eeml)
+bool IsEnabledEnforceExecutionModeLimitsFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::EnforceExecutionModeLimitsFlag);
+}
+int32_t GetEnforceExecutionModeLimitsFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.EnforceExecutionModeLimits;
+    return S_OK;
+}
+int32_t SetEnforceExecutionModeLimitsFlag(bool flag)
+{
+    Js::Configuration::Global.flags.EnforceExecutionModeLimits = flag;
+    return S_OK;
+}
+bool IsEnabledEemlFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::EemlFlag);
+}
+int32_t GetEemlFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.Eeml;
+    return S_OK;
+}
+int32_t SetEemlFlag(bool flag)
+{
+    Js::Configuration::Global.flags.Eeml = flag;
+    return S_OK;
+}
 
 FLAG_Number(SimpleJitAfter)
 FLAG_Number(Sja)
 FLAG_Number(FullJitAfter)
 FLAG_Number(Fja)
 
-FLAG_Boolean(NewSimpleJit)
+bool IsEnabledNewSimpleJitFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::NewSimpleJitFlag);
+}
+int32_t GetNewSimpleJitFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.NewSimpleJit;
+    return S_OK;
+}
+int32_t SetNewSimpleJitFlag(bool flag)
+{
+    Js::Configuration::Global.flags.NewSimpleJit = flag;
+    return S_OK;
+}
 
 FLAG_Number(MaxLinearIntCaseCount)
 FLAG_Number(MaxSingleCharStrJumpTableSize)
@@ -1246,17 +3805,147 @@ FLAG_Number(MaxJITFunctionBytecodeByteLength)
 FLAG_Number(MaxJITFunctionBytecodeCount)
 FLAG_Number(MaxLoopsPerFunction)
 FLAG_Number(FuncObjectInlineCacheThreshold)
-FLAG_Boolean(NoDeferParse)
-FLAG_Boolean(NoLogo)
-FLAG_Boolean(OOPJITMissingOpts)
-FLAG_Boolean(CrashOnOOPJITFailure)
-FLAG_Boolean(OOPCFGRegistration)
-FLAG_Boolean(ForceJITCFGCheck)
-FLAG_Boolean(UseJITTrampoline)
-FLAG_Boolean(NoNative)
+bool IsEnabledNoDeferParseFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::NoDeferParseFlag);
+}
+int32_t GetNoDeferParseFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.NoDeferParse;
+    return S_OK;
+}
+int32_t SetNoDeferParseFlag(bool flag)
+{
+    Js::Configuration::Global.flags.NoDeferParse = flag;
+    return S_OK;
+}
+bool IsEnabledNoLogoFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::NoLogoFlag);
+}
+int32_t GetNoLogoFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.NoLogo;
+    return S_OK;
+}
+int32_t SetNoLogoFlag(bool flag)
+{
+    Js::Configuration::Global.flags.NoLogo = flag;
+    return S_OK;
+}
+bool IsEnabledOOPJITMissingOptsFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::OOPJITMissingOptsFlag);
+}
+int32_t GetOOPJITMissingOptsFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.OOPJITMissingOpts;
+    return S_OK;
+}
+int32_t SetOOPJITMissingOptsFlag(bool flag)
+{
+    Js::Configuration::Global.flags.OOPJITMissingOpts = flag;
+    return S_OK;
+}
+bool IsEnabledCrashOnOOPJITFailureFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::CrashOnOOPJITFailureFlag);
+}
+int32_t GetCrashOnOOPJITFailureFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.CrashOnOOPJITFailure;
+    return S_OK;
+}
+int32_t SetCrashOnOOPJITFailureFlag(bool flag)
+{
+    Js::Configuration::Global.flags.CrashOnOOPJITFailure = flag;
+    return S_OK;
+}
+bool IsEnabledOOPCFGRegistrationFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::OOPCFGRegistrationFlag);
+}
+int32_t GetOOPCFGRegistrationFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.OOPCFGRegistration;
+    return S_OK;
+}
+int32_t SetOOPCFGRegistrationFlag(bool flag)
+{
+    Js::Configuration::Global.flags.OOPCFGRegistration = flag;
+    return S_OK;
+}
+bool IsEnabledForceJITCFGCheckFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceJITCFGCheckFlag);
+}
+int32_t GetForceJITCFGCheckFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceJITCFGCheck;
+    return S_OK;
+}
+int32_t SetForceJITCFGCheckFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceJITCFGCheck = flag;
+    return S_OK;
+}
+bool IsEnabledUseJITTrampolineFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::UseJITTrampolineFlag);
+}
+int32_t GetUseJITTrampolineFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.UseJITTrampoline;
+    return S_OK;
+}
+int32_t SetUseJITTrampolineFlag(bool flag)
+{
+    Js::Configuration::Global.flags.UseJITTrampoline = flag;
+    return S_OK;
+}
+bool IsEnabledNoNativeFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::NoNativeFlag);
+}
+int32_t GetNoNativeFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.NoNative;
+    return S_OK;
+}
+int32_t SetNoNativeFlag(bool flag)
+{
+    Js::Configuration::Global.flags.NoNative = flag;
+    return S_OK;
+}
 FLAG_Number(NopFrequency)
-FLAG_Boolean(NoStrictMode)
-FLAG_Boolean(NormalizeStats)
+bool IsEnabledNoStrictModeFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::NoStrictModeFlag);
+}
+int32_t GetNoStrictModeFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.NoStrictMode;
+    return S_OK;
+}
+int32_t SetNoStrictModeFlag(bool flag)
+{
+    Js::Configuration::Global.flags.NoStrictMode = flag;
+    return S_OK;
+}
+bool IsEnabledNormalizeStatsFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::NormalizeStatsFlag);
+}
+int32_t GetNormalizeStatsFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.NormalizeStats;
+    return S_OK;
+}
+int32_t SetNormalizeStatsFlag(bool flag)
+{
+    Js::Configuration::Global.flags.NormalizeStats = flag;
+    return S_OK;
+}
 FLAG_Phases(Off)
 FLAG_Phases(OffProfiledByteCode)
 FLAG_Phases(On)
@@ -1293,17 +3982,82 @@ int32_t SetOutputFileOpenModeFlag(BSTR flag)
     return S_OK;
 }
 #ifdef ENABLE_TRACE
-FLAG_Boolean(InMemoryTrace)
+bool IsEnabledInMemoryTraceFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::InMemoryTraceFlag);
+}
+int32_t GetInMemoryTraceFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.InMemoryTrace;
+    return S_OK;
+}
+int32_t SetInMemoryTraceFlag(bool flag)
+{
+    Js::Configuration::Global.flags.InMemoryTrace = flag;
+    return S_OK;
+}
 FLAG_Number(InMemoryTraceBufferSize)
 #ifdef STACK_BACK_TRACE
-FLAG_Boolean(TraceWithStack)
+bool IsEnabledTraceWithStackFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::TraceWithStackFlag);
+}
+int32_t GetTraceWithStackFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.TraceWithStack;
+    return S_OK;
+}
+int32_t SetTraceWithStackFlag(bool flag)
+{
+    Js::Configuration::Global.flags.TraceWithStack = flag;
+    return S_OK;
+}
 #endif // STACK_BACK_TRACE
 #endif // ENABLE_TRACE
-FLAG_Boolean(PrintRunTimeDataCollectionTrace)
+bool IsEnabledPrintRunTimeDataCollectionTraceFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::PrintRunTimeDataCollectionTraceFlag);
+}
+int32_t GetPrintRunTimeDataCollectionTraceFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.PrintRunTimeDataCollectionTrace;
+    return S_OK;
+}
+int32_t SetPrintRunTimeDataCollectionTraceFlag(bool flag)
+{
+    Js::Configuration::Global.flags.PrintRunTimeDataCollectionTrace = flag;
+    return S_OK;
+}
 #ifdef ENABLE_PREJIT
-FLAG_Boolean(Prejit)
+bool IsEnabledPrejitFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::PrejitFlag);
+}
+int32_t GetPrejitFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.Prejit;
+    return S_OK;
+}
+int32_t SetPrejitFlag(bool flag)
+{
+    Js::Configuration::Global.flags.Prejit = flag;
+    return S_OK;
+}
 #endif
-FLAG_Boolean(PrintSrcInDump)
+bool IsEnabledPrintSrcInDumpFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::PrintSrcInDumpFlag);
+}
+int32_t GetPrintSrcInDumpFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.PrintSrcInDump;
+    return S_OK;
+}
+int32_t SetPrintSrcInDumpFlag(bool flag)
+{
+    Js::Configuration::Global.flags.PrintSrcInDump = flag;
+    return S_OK;
+}
 #if PROFILE_DICTIONARY
 FLAG_Number(ProfileDictionary)
 #endif
@@ -1312,7 +4066,20 @@ FLAG_Phases(Profile)
 FLAG_Number(ProfileThreshold)
 #endif
 #ifdef PROFILE_OBJECT_LITERALS
-FLAG_Boolean(ProfileObjectLiteral)
+bool IsEnabledProfileObjectLiteralFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ProfileObjectLiteralFlag);
+}
+int32_t GetProfileObjectLiteralFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ProfileObjectLiteral;
+    return S_OK;
+}
+int32_t SetProfileObjectLiteralFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ProfileObjectLiteral = flag;
+    return S_OK;
+}
 #endif
 #ifdef PROFILE_MEM
 bool IsEnabledProfileMemoryFlag()
@@ -1333,68 +4100,380 @@ int32_t SetProfileMemoryFlag(BSTR flag)
 }
 #endif
 #ifdef PROFILE_STRINGS
-FLAG_Boolean(ProfileStrings)
+bool IsEnabledProfileStringsFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ProfileStringsFlag);
+}
+int32_t GetProfileStringsFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ProfileStrings;
+    return S_OK;
+}
+int32_t SetProfileStringsFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ProfileStrings = flag;
+    return S_OK;
+}
 #endif
 #ifdef PROFILE_TYPES
-FLAG_Boolean(ProfileTypes)
+bool IsEnabledProfileTypesFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ProfileTypesFlag);
+}
+int32_t GetProfileTypesFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ProfileTypes;
+    return S_OK;
+}
+int32_t SetProfileTypesFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ProfileTypes = flag;
+    return S_OK;
+}
 #endif
 #ifdef PROFILE_EVALMAP
-FLAG_Boolean(ProfileEvalMap)
+bool IsEnabledProfileEvalMapFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ProfileEvalMapFlag);
+}
+int32_t GetProfileEvalMapFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ProfileEvalMap;
+    return S_OK;
+}
+int32_t SetProfileEvalMapFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ProfileEvalMap = flag;
+    return S_OK;
+}
 #endif
 
 #ifdef PROFILE_BAILOUT_RECORD_MEMORY
-FLAG_Boolean(ProfileBailOutRecordMemory)
+bool IsEnabledProfileBailOutRecordMemoryFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ProfileBailOutRecordMemoryFlag);
+}
+int32_t GetProfileBailOutRecordMemoryFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ProfileBailOutRecordMemory;
+    return S_OK;
+}
+int32_t SetProfileBailOutRecordMemoryFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ProfileBailOutRecordMemory = flag;
+    return S_OK;
+}
 #endif
 
 #if DBG
-FLAG_Boolean(ValidateIntRanges)
+bool IsEnabledValidateIntRangesFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ValidateIntRangesFlag);
+}
+int32_t GetValidateIntRangesFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ValidateIntRanges;
+    return S_OK;
+}
+int32_t SetValidateIntRangesFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ValidateIntRanges = flag;
+    return S_OK;
+}
 #endif
 FLAG_Number(RejitMaxBailOutCount)
 FLAG_Number(CallsToBailoutsRatioForRejit)
 FLAG_Number(LoopIterationsToBailoutsRatioForRejit)
 FLAG_Number(MinBailOutsBeforeRejit)
 FLAG_Number(MinBailOutsBeforeRejitForLoops)
-FLAG_Boolean(LibraryStackFrame)
-FLAG_Boolean(LibraryStackFrameDebugger)
+bool IsEnabledLibraryStackFrameFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::LibraryStackFrameFlag);
+}
+int32_t GetLibraryStackFrameFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.LibraryStackFrame;
+    return S_OK;
+}
+int32_t SetLibraryStackFrameFlag(bool flag)
+{
+    Js::Configuration::Global.flags.LibraryStackFrame = flag;
+    return S_OK;
+}
+bool IsEnabledLibraryStackFrameDebuggerFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::LibraryStackFrameDebuggerFlag);
+}
+int32_t GetLibraryStackFrameDebuggerFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.LibraryStackFrameDebugger;
+    return S_OK;
+}
+int32_t SetLibraryStackFrameDebuggerFlag(bool flag)
+{
+    Js::Configuration::Global.flags.LibraryStackFrameDebugger = flag;
+    return S_OK;
+}
 #ifdef RECYCLER_STRESS
-FLAG_Boolean(RecyclerStress)
+bool IsEnabledRecyclerStressFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::RecyclerStressFlag);
+}
+int32_t GetRecyclerStressFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.RecyclerStress;
+    return S_OK;
+}
+int32_t SetRecyclerStressFlag(bool flag)
+{
+    Js::Configuration::Global.flags.RecyclerStress = flag;
+    return S_OK;
+}
 #if ENABLE_CONCURRENT_GC
-FLAG_Boolean(RecyclerBackgroundStress)
-FLAG_Boolean(RecyclerConcurrentStress)
-FLAG_Boolean(RecyclerConcurrentRepeatStress)
+bool IsEnabledRecyclerBackgroundStressFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::RecyclerBackgroundStressFlag);
+}
+int32_t GetRecyclerBackgroundStressFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.RecyclerBackgroundStress;
+    return S_OK;
+}
+int32_t SetRecyclerBackgroundStressFlag(bool flag)
+{
+    Js::Configuration::Global.flags.RecyclerBackgroundStress = flag;
+    return S_OK;
+}
+bool IsEnabledRecyclerConcurrentStressFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::RecyclerConcurrentStressFlag);
+}
+int32_t GetRecyclerConcurrentStressFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.RecyclerConcurrentStress;
+    return S_OK;
+}
+int32_t SetRecyclerConcurrentStressFlag(bool flag)
+{
+    Js::Configuration::Global.flags.RecyclerConcurrentStress = flag;
+    return S_OK;
+}
+bool IsEnabledRecyclerConcurrentRepeatStressFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::RecyclerConcurrentRepeatStressFlag);
+}
+int32_t GetRecyclerConcurrentRepeatStressFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.RecyclerConcurrentRepeatStress;
+    return S_OK;
+}
+int32_t SetRecyclerConcurrentRepeatStressFlag(bool flag)
+{
+    Js::Configuration::Global.flags.RecyclerConcurrentRepeatStress = flag;
+    return S_OK;
+}
 #endif
 #if ENABLE_PARTIAL_GC
-FLAG_Boolean(RecyclerPartialStress)
+bool IsEnabledRecyclerPartialStressFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::RecyclerPartialStressFlag);
+}
+int32_t GetRecyclerPartialStressFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.RecyclerPartialStress;
+    return S_OK;
+}
+int32_t SetRecyclerPartialStressFlag(bool flag)
+{
+    Js::Configuration::Global.flags.RecyclerPartialStress = flag;
+    return S_OK;
+}
 #endif
-FLAG_Boolean(RecyclerTrackStress)
-FLAG_Boolean(RecyclerInduceFalsePositives)
+bool IsEnabledRecyclerTrackStressFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::RecyclerTrackStressFlag);
+}
+int32_t GetRecyclerTrackStressFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.RecyclerTrackStress;
+    return S_OK;
+}
+int32_t SetRecyclerTrackStressFlag(bool flag)
+{
+    Js::Configuration::Global.flags.RecyclerTrackStress = flag;
+    return S_OK;
+}
+bool IsEnabledRecyclerInduceFalsePositivesFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::RecyclerInduceFalsePositivesFlag);
+}
+int32_t GetRecyclerInduceFalsePositivesFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.RecyclerInduceFalsePositives;
+    return S_OK;
+}
+int32_t SetRecyclerInduceFalsePositivesFlag(bool flag)
+{
+    Js::Configuration::Global.flags.RecyclerInduceFalsePositives = flag;
+    return S_OK;
+}
 #endif // RECYCLER_STRESS
-FLAG_Boolean(RecyclerForceMarkInterior)
+bool IsEnabledRecyclerForceMarkInteriorFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::RecyclerForceMarkInteriorFlag);
+}
+int32_t GetRecyclerForceMarkInteriorFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.RecyclerForceMarkInterior;
+    return S_OK;
+}
+int32_t SetRecyclerForceMarkInteriorFlag(bool flag)
+{
+    Js::Configuration::Global.flags.RecyclerForceMarkInterior = flag;
+    return S_OK;
+}
 #if ENABLE_CONCURRENT_GC
 FLAG_Number(RecyclerPriorityBoostTimeout)
 FLAG_Number(RecyclerThreadCollectTimeout)
-FLAG_Boolean(EnableConcurrentSweepAlloc)
-FLAG_Boolean(ecsa)
+bool IsEnabledEnableConcurrentSweepAllocFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::EnableConcurrentSweepAllocFlag);
+}
+int32_t GetEnableConcurrentSweepAllocFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.EnableConcurrentSweepAlloc;
+    return S_OK;
+}
+int32_t SetEnableConcurrentSweepAllocFlag(bool flag)
+{
+    Js::Configuration::Global.flags.EnableConcurrentSweepAlloc = flag;
+    return S_OK;
+}
+bool IsEnabledecsaFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ecsaFlag);
+}
+int32_t GetecsaFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ecsa;
+    return S_OK;
+}
+int32_t SetecsaFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ecsa = flag;
+    return S_OK;
+}
 #endif
 #ifdef RECYCLER_PAGE_HEAP
 FLAG_Number(PageHeap)
-FLAG_Boolean(PageHeapAllocStack)
-FLAG_Boolean(PageHeapFreeStack)
+bool IsEnabledPageHeapAllocStackFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::PageHeapAllocStackFlag);
+}
+int32_t GetPageHeapAllocStackFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.PageHeapAllocStack;
+    return S_OK;
+}
+int32_t SetPageHeapAllocStackFlag(bool flag)
+{
+    Js::Configuration::Global.flags.PageHeapAllocStack = flag;
+    return S_OK;
+}
+bool IsEnabledPageHeapFreeStackFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::PageHeapFreeStackFlag);
+}
+int32_t GetPageHeapFreeStackFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.PageHeapFreeStack;
+    return S_OK;
+}
+int32_t SetPageHeapFreeStackFlag(bool flag)
+{
+    Js::Configuration::Global.flags.PageHeapFreeStack = flag;
+    return S_OK;
+}
 FLAG_NumberRange(PageHeapBucketNumber)
 FLAG_Number(PageHeapBlockType)
-FLAG_Boolean(PageHeapDecommitGuardPage)
+bool IsEnabledPageHeapDecommitGuardPageFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::PageHeapDecommitGuardPageFlag);
+}
+int32_t GetPageHeapDecommitGuardPageFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.PageHeapDecommitGuardPage;
+    return S_OK;
+}
+int32_t SetPageHeapDecommitGuardPageFlag(bool flag)
+{
+    Js::Configuration::Global.flags.PageHeapDecommitGuardPage = flag;
+    return S_OK;
+}
 #endif
 #ifdef RECYCLER_NO_PAGE_REUSE
-FLAG_Boolean(RecyclerNoPageReuse)
+bool IsEnabledRecyclerNoPageReuseFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::RecyclerNoPageReuseFlag);
+}
+int32_t GetRecyclerNoPageReuseFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.RecyclerNoPageReuse;
+    return S_OK;
+}
+int32_t SetRecyclerNoPageReuseFlag(bool flag)
+{
+    Js::Configuration::Global.flags.RecyclerNoPageReuse = flag;
+    return S_OK;
+}
 #endif
 #ifdef RECYCLER_MEMORY_VERIFY
 FLAG_Phases(RecyclerVerify)
 FLAG_Number(RecyclerVerifyPadSize)
 #endif
-FLAG_Boolean(RecyclerTest)
-FLAG_Boolean(RecyclerProtectPagesOnRescan)
+bool IsEnabledRecyclerTestFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::RecyclerTestFlag);
+}
+int32_t GetRecyclerTestFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.RecyclerTest;
+    return S_OK;
+}
+int32_t SetRecyclerTestFlag(bool flag)
+{
+    Js::Configuration::Global.flags.RecyclerTest = flag;
+    return S_OK;
+}
+bool IsEnabledRecyclerProtectPagesOnRescanFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::RecyclerProtectPagesOnRescanFlag);
+}
+int32_t GetRecyclerProtectPagesOnRescanFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.RecyclerProtectPagesOnRescan;
+    return S_OK;
+}
+int32_t SetRecyclerProtectPagesOnRescanFlag(bool flag)
+{
+    Js::Configuration::Global.flags.RecyclerProtectPagesOnRescan = flag;
+    return S_OK;
+}
 #ifdef RECYCLER_VERIFY_MARK
-FLAG_Boolean(RecyclerVerifyMark)
+bool IsEnabledRecyclerVerifyMarkFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::RecyclerVerifyMarkFlag);
+}
+int32_t GetRecyclerVerifyMarkFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.RecyclerVerifyMark;
+    return S_OK;
+}
+int32_t SetRecyclerVerifyMarkFlag(bool flag)
+{
+    Js::Configuration::Global.flags.RecyclerVerifyMark = flag;
+    return S_OK;
+}
 #endif
 FLAG_Number(LowMemoryCap)
 FLAG_Number(NewPagesCapDuringBGSweeping)
@@ -1422,9 +4501,35 @@ FLAG_Number(SpeculationCap)
 FLAG_Phases(Stats)
 #endif
 #if EXCEPTION_RECOVERY
-FLAG_Boolean(SwallowExceptions)
+bool IsEnabledSwallowExceptionsFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::SwallowExceptionsFlag);
+}
+int32_t GetSwallowExceptionsFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.SwallowExceptions;
+    return S_OK;
+}
+int32_t SetSwallowExceptionsFlag(bool flag)
+{
+    Js::Configuration::Global.flags.SwallowExceptions = flag;
+    return S_OK;
+}
 #endif
-FLAG_Boolean(PrintSystemException)
+bool IsEnabledPrintSystemExceptionFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::PrintSystemExceptionFlag);
+}
+int32_t GetPrintSystemExceptionFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.PrintSystemException;
+    return S_OK;
+}
+int32_t SetPrintSystemExceptionFlag(bool flag)
+{
+    Js::Configuration::Global.flags.PrintSystemException = flag;
+    return S_OK;
+}
 FLAG_Number(SwitchOptHolesThreshold)
 FLAG_Number(TempMin)
 FLAG_Number(TempMax)
@@ -1445,59 +4550,475 @@ FLAG_Phases(TraceMemory)
 //    Level 4 = interfaces and properties
 //    Level 5 (default) = ALL
 FLAG_Number(TraceMetaDataParsing)
-FLAG_Boolean(TraceWin8Allocations)
-FLAG_Boolean(TraceWin8DeallocationsImmediate)
-FLAG_Boolean(PrintWin8StatsDetailed)
-FLAG_Boolean(TraceProtectPages)
+bool IsEnabledTraceWin8AllocationsFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::TraceWin8AllocationsFlag);
+}
+int32_t GetTraceWin8AllocationsFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.TraceWin8Allocations;
+    return S_OK;
+}
+int32_t SetTraceWin8AllocationsFlag(bool flag)
+{
+    Js::Configuration::Global.flags.TraceWin8Allocations = flag;
+    return S_OK;
+}
+bool IsEnabledTraceWin8DeallocationsImmediateFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::TraceWin8DeallocationsImmediateFlag);
+}
+int32_t GetTraceWin8DeallocationsImmediateFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.TraceWin8DeallocationsImmediate;
+    return S_OK;
+}
+int32_t SetTraceWin8DeallocationsImmediateFlag(bool flag)
+{
+    Js::Configuration::Global.flags.TraceWin8DeallocationsImmediate = flag;
+    return S_OK;
+}
+bool IsEnabledPrintWin8StatsDetailedFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::PrintWin8StatsDetailedFlag);
+}
+int32_t GetPrintWin8StatsDetailedFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.PrintWin8StatsDetailed;
+    return S_OK;
+}
+int32_t SetPrintWin8StatsDetailedFlag(bool flag)
+{
+    Js::Configuration::Global.flags.PrintWin8StatsDetailed = flag;
+    return S_OK;
+}
+bool IsEnabledTraceProtectPagesFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::TraceProtectPagesFlag);
+}
+int32_t GetTraceProtectPagesFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.TraceProtectPages;
+    return S_OK;
+}
+int32_t SetTraceProtectPagesFlag(bool flag)
+{
+    Js::Configuration::Global.flags.TraceProtectPages = flag;
+    return S_OK;
+}
 #endif
-FLAG_Boolean(TraceAsyncDebugCalls)
+bool IsEnabledTraceAsyncDebugCallsFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::TraceAsyncDebugCallsFlag);
+}
+int32_t GetTraceAsyncDebugCallsFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.TraceAsyncDebugCalls;
+    return S_OK;
+}
+int32_t SetTraceAsyncDebugCallsFlag(bool flag)
+{
+    Js::Configuration::Global.flags.TraceAsyncDebugCalls = flag;
+    return S_OK;
+}
 #ifdef TRACK_DISPATCH
-FLAG_Boolean(TrackDispatch)
+bool IsEnabledTrackDispatchFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::TrackDispatchFlag);
+}
+int32_t GetTrackDispatchFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.TrackDispatch;
+    return S_OK;
+}
+int32_t SetTrackDispatchFlag(bool flag)
+{
+    Js::Configuration::Global.flags.TrackDispatch = flag;
+    return S_OK;
+}
 #endif
-FLAG_Boolean(Verbose)
-FLAG_Boolean(UseFullName)
-FLAG_Boolean(Utf8)
+bool IsEnabledVerboseFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::VerboseFlag);
+}
+int32_t GetVerboseFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.Verbose;
+    return S_OK;
+}
+int32_t SetVerboseFlag(bool flag)
+{
+    Js::Configuration::Global.flags.Verbose = flag;
+    return S_OK;
+}
+bool IsEnabledUseFullNameFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::UseFullNameFlag);
+}
+int32_t GetUseFullNameFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.UseFullName;
+    return S_OK;
+}
+int32_t SetUseFullNameFlag(bool flag)
+{
+    Js::Configuration::Global.flags.UseFullName = flag;
+    return S_OK;
+}
+bool IsEnabledUtf8Flag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::Utf8Flag);
+}
+int32_t GetUtf8Flag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.Utf8;
+    return S_OK;
+}
+int32_t SetUtf8Flag(bool flag)
+{
+    Js::Configuration::Global.flags.Utf8 = flag;
+    return S_OK;
+}
 FLAG_Number(Version)
-FLAG_Boolean(WERExceptionSupport)
-FLAG_Boolean(ExtendedErrorStackForTestHost)
-FLAG_Boolean(errorStackTrace)
-FLAG_Boolean(DoHeapEnumOnEngineShutdown)
+bool IsEnabledWERExceptionSupportFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::WERExceptionSupportFlag);
+}
+int32_t GetWERExceptionSupportFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.WERExceptionSupport;
+    return S_OK;
+}
+int32_t SetWERExceptionSupportFlag(bool flag)
+{
+    Js::Configuration::Global.flags.WERExceptionSupport = flag;
+    return S_OK;
+}
+bool IsEnabledExtendedErrorStackForTestHostFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ExtendedErrorStackForTestHostFlag);
+}
+int32_t GetExtendedErrorStackForTestHostFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ExtendedErrorStackForTestHost;
+    return S_OK;
+}
+int32_t SetExtendedErrorStackForTestHostFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ExtendedErrorStackForTestHost = flag;
+    return S_OK;
+}
+bool IsEnablederrorStackTraceFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::errorStackTraceFlag);
+}
+int32_t GeterrorStackTraceFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.errorStackTrace;
+    return S_OK;
+}
+int32_t SeterrorStackTraceFlag(bool flag)
+{
+    Js::Configuration::Global.flags.errorStackTrace = flag;
+    return S_OK;
+}
+bool IsEnabledDoHeapEnumOnEngineShutdownFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::DoHeapEnumOnEngineShutdownFlag);
+}
+int32_t GetDoHeapEnumOnEngineShutdownFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.DoHeapEnumOnEngineShutdown;
+    return S_OK;
+}
+int32_t SetDoHeapEnumOnEngineShutdownFlag(bool flag)
+{
+    Js::Configuration::Global.flags.DoHeapEnumOnEngineShutdown = flag;
+    return S_OK;
+}
 #ifdef HEAP_ENUMERATION_VALIDATION
-FLAG_Boolean(ValidateHeapEnum)
+bool IsEnabledValidateHeapEnumFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ValidateHeapEnumFlag);
+}
+int32_t GetValidateHeapEnumFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ValidateHeapEnum;
+    return S_OK;
+}
+int32_t SetValidateHeapEnumFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ValidateHeapEnum = flag;
+    return S_OK;
+}
 #endif
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
 //
 // Regex flags
 //
-FLAG_Boolean(RegexTracing)
-FLAG_Boolean(RegexProfile)
-FLAG_Boolean(RegexDebug)
-FLAG_Boolean(RegexDebugAST)
-FLAG_Boolean(RegexDebugAnnotatedAST)
-FLAG_Boolean(RegexBytecodeDebug)
-FLAG_Boolean(RegexOptimize)
+bool IsEnabledRegexTracingFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::RegexTracingFlag);
+}
+int32_t GetRegexTracingFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.RegexTracing;
+    return S_OK;
+}
+int32_t SetRegexTracingFlag(bool flag)
+{
+    Js::Configuration::Global.flags.RegexTracing = flag;
+    return S_OK;
+}
+bool IsEnabledRegexProfileFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::RegexProfileFlag);
+}
+int32_t GetRegexProfileFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.RegexProfile;
+    return S_OK;
+}
+int32_t SetRegexProfileFlag(bool flag)
+{
+    Js::Configuration::Global.flags.RegexProfile = flag;
+    return S_OK;
+}
+bool IsEnabledRegexDebugFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::RegexDebugFlag);
+}
+int32_t GetRegexDebugFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.RegexDebug;
+    return S_OK;
+}
+int32_t SetRegexDebugFlag(bool flag)
+{
+    Js::Configuration::Global.flags.RegexDebug = flag;
+    return S_OK;
+}
+bool IsEnabledRegexDebugASTFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::RegexDebugASTFlag);
+}
+int32_t GetRegexDebugASTFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.RegexDebugAST;
+    return S_OK;
+}
+int32_t SetRegexDebugASTFlag(bool flag)
+{
+    Js::Configuration::Global.flags.RegexDebugAST = flag;
+    return S_OK;
+}
+bool IsEnabledRegexDebugAnnotatedASTFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::RegexDebugAnnotatedASTFlag);
+}
+int32_t GetRegexDebugAnnotatedASTFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.RegexDebugAnnotatedAST;
+    return S_OK;
+}
+int32_t SetRegexDebugAnnotatedASTFlag(bool flag)
+{
+    Js::Configuration::Global.flags.RegexDebugAnnotatedAST = flag;
+    return S_OK;
+}
+bool IsEnabledRegexBytecodeDebugFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::RegexBytecodeDebugFlag);
+}
+int32_t GetRegexBytecodeDebugFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.RegexBytecodeDebug;
+    return S_OK;
+}
+int32_t SetRegexBytecodeDebugFlag(bool flag)
+{
+    Js::Configuration::Global.flags.RegexBytecodeDebug = flag;
+    return S_OK;
+}
+bool IsEnabledRegexOptimizeFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::RegexOptimizeFlag);
+}
+int32_t GetRegexOptimizeFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.RegexOptimize;
+    return S_OK;
+}
+int32_t SetRegexOptimizeFlag(bool flag)
+{
+    Js::Configuration::Global.flags.RegexOptimize = flag;
+    return S_OK;
+}
 FLAG_Number(DynamicRegexMruListSize)
 #endif
 
-FLAG_Boolean(OptimizeForManyInstances)
-FLAG_Boolean(EnableArrayTypeMutation)
+bool IsEnabledOptimizeForManyInstancesFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::OptimizeForManyInstancesFlag);
+}
+int32_t GetOptimizeForManyInstancesFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.OptimizeForManyInstances;
+    return S_OK;
+}
+int32_t SetOptimizeForManyInstancesFlag(bool flag)
+{
+    Js::Configuration::Global.flags.OptimizeForManyInstances = flag;
+    return S_OK;
+}
+bool IsEnabledEnableArrayTypeMutationFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::EnableArrayTypeMutationFlag);
+}
+int32_t GetEnableArrayTypeMutationFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.EnableArrayTypeMutation;
+    return S_OK;
+}
+int32_t SetEnableArrayTypeMutationFlag(bool flag)
+{
+    Js::Configuration::Global.flags.EnableArrayTypeMutation = flag;
+    return S_OK;
+}
 FLAG_Number(ArrayMutationTestSeed)
 FLAG_Phases(TestTrace)
-FLAG_Boolean(EnableEvalMapCleanup)
+bool IsEnabledEnableEvalMapCleanupFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::EnableEvalMapCleanupFlag);
+}
+int32_t GetEnableEvalMapCleanupFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.EnableEvalMapCleanup;
+    return S_OK;
+}
+int32_t SetEnableEvalMapCleanupFlag(bool flag)
+{
+    Js::Configuration::Global.flags.EnableEvalMapCleanup = flag;
+    return S_OK;
+}
 #ifdef PROFILE_MEM
-FLAG_Boolean(TraceObjectAllocation)
+bool IsEnabledTraceObjectAllocationFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::TraceObjectAllocationFlag);
+}
+int32_t GetTraceObjectAllocationFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.TraceObjectAllocation;
+    return S_OK;
+}
+int32_t SetTraceObjectAllocationFlag(bool flag)
+{
+    Js::Configuration::Global.flags.TraceObjectAllocation = flag;
+    return S_OK;
+}
 #endif
 FLAG_Number(Sse)
 FLAG_Number(DeletedPropertyReuseThreshold)
-FLAG_Boolean(ForceStringKeyedSimpleDictionaryTypeHandler)
+bool IsEnabledForceStringKeyedSimpleDictionaryTypeHandlerFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceStringKeyedSimpleDictionaryTypeHandlerFlag);
+}
+int32_t GetForceStringKeyedSimpleDictionaryTypeHandlerFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceStringKeyedSimpleDictionaryTypeHandler;
+    return S_OK;
+}
+int32_t SetForceStringKeyedSimpleDictionaryTypeHandlerFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceStringKeyedSimpleDictionaryTypeHandler = flag;
+    return S_OK;
+}
 FLAG_Number(BigDictionaryTypeHandlerThreshold)
-FLAG_Boolean(TypeSnapshotEnumeration)
-FLAG_Boolean(IsolatePrototypes)
-FLAG_Boolean(ChangeTypeOnProto)
-FLAG_Boolean(ShareInlineCaches)
-FLAG_Boolean(DisableDebugObject)
-FLAG_Boolean(DumpHeap)
+bool IsEnabledTypeSnapshotEnumerationFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::TypeSnapshotEnumerationFlag);
+}
+int32_t GetTypeSnapshotEnumerationFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.TypeSnapshotEnumeration;
+    return S_OK;
+}
+int32_t SetTypeSnapshotEnumerationFlag(bool flag)
+{
+    Js::Configuration::Global.flags.TypeSnapshotEnumeration = flag;
+    return S_OK;
+}
+bool IsEnabledIsolatePrototypesFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::IsolatePrototypesFlag);
+}
+int32_t GetIsolatePrototypesFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.IsolatePrototypes;
+    return S_OK;
+}
+int32_t SetIsolatePrototypesFlag(bool flag)
+{
+    Js::Configuration::Global.flags.IsolatePrototypes = flag;
+    return S_OK;
+}
+bool IsEnabledChangeTypeOnProtoFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ChangeTypeOnProtoFlag);
+}
+int32_t GetChangeTypeOnProtoFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ChangeTypeOnProto;
+    return S_OK;
+}
+int32_t SetChangeTypeOnProtoFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ChangeTypeOnProto = flag;
+    return S_OK;
+}
+bool IsEnabledShareInlineCachesFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ShareInlineCachesFlag);
+}
+int32_t GetShareInlineCachesFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ShareInlineCaches;
+    return S_OK;
+}
+int32_t SetShareInlineCachesFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ShareInlineCaches = flag;
+    return S_OK;
+}
+bool IsEnabledDisableDebugObjectFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::DisableDebugObjectFlag);
+}
+int32_t GetDisableDebugObjectFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.DisableDebugObject;
+    return S_OK;
+}
+int32_t SetDisableDebugObjectFlag(bool flag)
+{
+    Js::Configuration::Global.flags.DisableDebugObject = flag;
+    return S_OK;
+}
+bool IsEnabledDumpHeapFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::DumpHeapFlag);
+}
+int32_t GetDumpHeapFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.DumpHeap;
+    return S_OK;
+}
+int32_t SetDumpHeapFlag(bool flag)
+{
+    Js::Configuration::Global.flags.DumpHeap = flag;
+    return S_OK;
+}
 bool IsEnabledautoProxyFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag);
@@ -1516,21 +5037,112 @@ int32_t SetautoProxyFlag(BSTR flag)
 }
 FLAG_Number(PerfHintLevel)
 #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-FLAG_Boolean(MemProtectHeap)
+bool IsEnabledMemProtectHeapFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::MemProtectHeapFlag);
+}
+int32_t GetMemProtectHeapFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.MemProtectHeap;
+    return S_OK;
+}
+int32_t SetMemProtectHeapFlag(bool flag)
+{
+    Js::Configuration::Global.flags.MemProtectHeap = flag;
+    return S_OK;
+}
 #endif
 #ifdef RECYCLER_STRESS
-FLAG_Boolean(MemProtectHeapStress)
+bool IsEnabledMemProtectHeapStressFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::MemProtectHeapStressFlag);
+}
+int32_t GetMemProtectHeapStressFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.MemProtectHeapStress;
+    return S_OK;
+}
+int32_t SetMemProtectHeapStressFlag(bool flag)
+{
+    Js::Configuration::Global.flags.MemProtectHeapStress = flag;
+    return S_OK;
+}
 #if ENABLE_CONCURRENT_GC
-FLAG_Boolean(MemProtectHeapBackgroundStress)
-FLAG_Boolean(MemProtectHeapConcurrentStress)
-FLAG_Boolean(MemProtectHeapConcurrentRepeatStress)
+bool IsEnabledMemProtectHeapBackgroundStressFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::MemProtectHeapBackgroundStressFlag);
+}
+int32_t GetMemProtectHeapBackgroundStressFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.MemProtectHeapBackgroundStress;
+    return S_OK;
+}
+int32_t SetMemProtectHeapBackgroundStressFlag(bool flag)
+{
+    Js::Configuration::Global.flags.MemProtectHeapBackgroundStress = flag;
+    return S_OK;
+}
+bool IsEnabledMemProtectHeapConcurrentStressFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::MemProtectHeapConcurrentStressFlag);
+}
+int32_t GetMemProtectHeapConcurrentStressFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.MemProtectHeapConcurrentStress;
+    return S_OK;
+}
+int32_t SetMemProtectHeapConcurrentStressFlag(bool flag)
+{
+    Js::Configuration::Global.flags.MemProtectHeapConcurrentStress = flag;
+    return S_OK;
+}
+bool IsEnabledMemProtectHeapConcurrentRepeatStressFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::MemProtectHeapConcurrentRepeatStressFlag);
+}
+int32_t GetMemProtectHeapConcurrentRepeatStressFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.MemProtectHeapConcurrentRepeatStress;
+    return S_OK;
+}
+int32_t SetMemProtectHeapConcurrentRepeatStressFlag(bool flag)
+{
+    Js::Configuration::Global.flags.MemProtectHeapConcurrentRepeatStress = flag;
+    return S_OK;
+}
 #endif
 #if ENABLE_PARTIAL_GC
-FLAG_Boolean(MemProtectHeapPartialStress)
+bool IsEnabledMemProtectHeapPartialStressFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::MemProtectHeapPartialStressFlag);
+}
+int32_t GetMemProtectHeapPartialStressFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.MemProtectHeapPartialStress;
+    return S_OK;
+}
+int32_t SetMemProtectHeapPartialStressFlag(bool flag)
+{
+    Js::Configuration::Global.flags.MemProtectHeapPartialStress = flag;
+    return S_OK;
+}
 #endif
 #endif
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-FLAG_Boolean(FixPropsOnPathTypes)
+bool IsEnabledFixPropsOnPathTypesFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::FixPropsOnPathTypesFlag);
+}
+int32_t GetFixPropsOnPathTypesFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.FixPropsOnPathTypes;
+    return S_OK;
+}
+int32_t SetFixPropsOnPathTypesFlag(bool flag)
+{
+    Js::Configuration::Global.flags.FixPropsOnPathTypes = flag;
+    return S_OK;
+}
 #endif
 FLAG_NumberSet(BailoutTraceFilter)
 FLAG_NumberSet(RejitTraceFilter)
@@ -1541,7 +5153,20 @@ FLAG_Number(BackgroundFinishMarkWaitTime)
 FLAG_Number(MinBackgroundRepeatMarkRescanBytes)
 
 #if defined(_M_X64)
-FLAG_Boolean(ZeroMemoryWithNonTemporalStore)
+bool IsEnabledZeroMemoryWithNonTemporalStoreFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ZeroMemoryWithNonTemporalStoreFlag);
+}
+int32_t GetZeroMemoryWithNonTemporalStoreFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ZeroMemoryWithNonTemporalStore;
+    return S_OK;
+}
+int32_t SetZeroMemoryWithNonTemporalStoreFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ZeroMemoryWithNonTemporalStore = flag;
+    return S_OK;
+}
 #endif
 
 // recycler memory restrict test flags
@@ -1552,7 +5177,20 @@ FLAG_Number(MaxTrackedObjectListCount)
 FLAG_Number(NumberAllocPlusSize)
 
 #if DBG
-FLAG_Boolean(InitializeInterpreterSlotsWithInvalidStackVar)
+bool IsEnabledInitializeInterpreterSlotsWithInvalidStackVarFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::InitializeInterpreterSlotsWithInvalidStackVarFlag);
+}
+int32_t GetInitializeInterpreterSlotsWithInvalidStackVarFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.InitializeInterpreterSlotsWithInvalidStackVar;
+    return S_OK;
+}
+int32_t SetInitializeInterpreterSlotsWithInvalidStackVarFlag(bool flag)
+{
+    Js::Configuration::Global.flags.InitializeInterpreterSlotsWithInvalidStackVar = flag;
+    return S_OK;
+}
 #endif
 
 #if DBG
@@ -1560,12 +5198,38 @@ FLAG_Number(PRNGSeed0)
 FLAG_Number(PRNGSeed1)
 #endif
 
-FLAG_Boolean(ClearInlineCachesOnCollect)
+bool IsEnabledClearInlineCachesOnCollectFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ClearInlineCachesOnCollectFlag);
+}
+int32_t GetClearInlineCachesOnCollectFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ClearInlineCachesOnCollect;
+    return S_OK;
+}
+int32_t SetClearInlineCachesOnCollectFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ClearInlineCachesOnCollect = flag;
+    return S_OK;
+}
 FLAG_Number(InlineCacheInvalidationListCompactionThreshold)
 FLAG_Number(ConstructorCacheInvalidationThreshold)
 
 #ifdef IR_VIEWER
-FLAG_Boolean(IRViewer)
+bool IsEnabledIRViewerFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::IRViewerFlag);
+}
+int32_t GetIRViewerFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.IRViewer;
+    return S_OK;
+}
+int32_t SetIRViewerFlag(bool flag)
+{
+    Js::Configuration::Global.flags.IRViewer = flag;
+    return S_OK;
+}
 #endif /* IR_VIEWER */
 
 FLAG_Number(GCMemoryThreshold)
@@ -1577,12 +5241,90 @@ FLAG_Number(GCMemoryThreshold)
 FLAG_Number(JITServerIdleTimeout)
 FLAG_Number(JITServerMaxInactivePageAllocatorCount)
 
-FLAG_Boolean(StrictWriteBarrierCheck)
-FLAG_Boolean(WriteBarrierTest)
-FLAG_Boolean(ForceSoftwareWriteBarrier)
-FLAG_Boolean(VerifyBarrierBit)
-FLAG_Boolean(EnableBGFreeZero)
-FLAG_Boolean(KeepRecyclerTrackData)
+bool IsEnabledStrictWriteBarrierCheckFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::StrictWriteBarrierCheckFlag);
+}
+int32_t GetStrictWriteBarrierCheckFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.StrictWriteBarrierCheck;
+    return S_OK;
+}
+int32_t SetStrictWriteBarrierCheckFlag(bool flag)
+{
+    Js::Configuration::Global.flags.StrictWriteBarrierCheck = flag;
+    return S_OK;
+}
+bool IsEnabledWriteBarrierTestFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::WriteBarrierTestFlag);
+}
+int32_t GetWriteBarrierTestFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.WriteBarrierTest;
+    return S_OK;
+}
+int32_t SetWriteBarrierTestFlag(bool flag)
+{
+    Js::Configuration::Global.flags.WriteBarrierTest = flag;
+    return S_OK;
+}
+bool IsEnabledForceSoftwareWriteBarrierFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::ForceSoftwareWriteBarrierFlag);
+}
+int32_t GetForceSoftwareWriteBarrierFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.ForceSoftwareWriteBarrier;
+    return S_OK;
+}
+int32_t SetForceSoftwareWriteBarrierFlag(bool flag)
+{
+    Js::Configuration::Global.flags.ForceSoftwareWriteBarrier = flag;
+    return S_OK;
+}
+bool IsEnabledVerifyBarrierBitFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::VerifyBarrierBitFlag);
+}
+int32_t GetVerifyBarrierBitFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.VerifyBarrierBit;
+    return S_OK;
+}
+int32_t SetVerifyBarrierBitFlag(bool flag)
+{
+    Js::Configuration::Global.flags.VerifyBarrierBit = flag;
+    return S_OK;
+}
+bool IsEnabledEnableBGFreeZeroFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::EnableBGFreeZeroFlag);
+}
+int32_t GetEnableBGFreeZeroFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.EnableBGFreeZero;
+    return S_OK;
+}
+int32_t SetEnableBGFreeZeroFlag(bool flag)
+{
+    Js::Configuration::Global.flags.EnableBGFreeZero = flag;
+    return S_OK;
+}
+bool IsEnabledKeepRecyclerTrackDataFlag()
+{
+    return Js::Configuration::Global.flags.IsEnabled(Js::KeepRecyclerTrackDataFlag);
+}
+int32_t GetKeepRecyclerTrackDataFlag(bool *flag)
+{
+    *flag = Js::Configuration::Global.flags.KeepRecyclerTrackData;
+    return S_OK;
+}
+int32_t SetKeepRecyclerTrackDataFlag(bool flag)
+{
+    Js::Configuration::Global.flags.KeepRecyclerTrackData = flag;
+    return S_OK;
+}
 
 FLAG_Number(MaxSingleAllocSizeInMB)
 
