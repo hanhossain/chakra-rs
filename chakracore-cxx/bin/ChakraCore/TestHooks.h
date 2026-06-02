@@ -47,12 +47,6 @@ struct TestHooks
     bool (*pfIsEnabled##name##Flag)(); \
     int32_t (*pfGet##name##Flag)(int *flag); \
     int32_t (*pfSet##name##Flag)(int flag);
-    // skipping other types
-#define FLAG_Phases(name)
-#define FLAG_NumberSet(name)
-#define FLAG_NumberPairSet(name)
-#define FLAG_NumberTrioSet(name)
-#define FLAG_NumberRange(name)
 // TODO (hanhossain): ConfigFlagsList start
 #ifndef DEFAULT_CONFIG_BgJitDelay
 #if _M_ARM
@@ -555,11 +549,9 @@ FLAG_Boolean(BaselineMode)
 FLAG_String(DumpOnCrash)
 FLAG_String(FullMemoryDump)
 #ifdef BAILOUT_INJECTION
-FLAG_NumberPairSet(BailOut)
 FLAG_Boolean(BailOutAtEveryLine)
 FLAG_Boolean(BailOutAtEveryByteCode)
 FLAG_Boolean(BailOutAtEveryImplicitCall)
-FLAG_NumberSet(BailOutByteCode)
 #endif
 FLAG_Boolean(Benchmark)
 FLAG_Boolean(BgJit)
@@ -589,9 +581,6 @@ FLAG_Number(PropertyCacheMissPenalty)
 FLAG_Number(PropertyCacheMissThreshold)
 FLAG_Number(PropertyCacheMissReset)
 FLAG_Boolean(Debug)
-FLAG_NumberSet(DebugBreak)
-FLAG_NumberTrioSet(StatementDebugBreak)
-FLAG_Phases(DebugBreakOnPhaseBegin)
 
 FLAG_Boolean(DebugWindow)
 FLAG_Boolean(ParserStateCache)
@@ -603,7 +592,6 @@ FLAG_Boolean(DisableArrayBTree)
 FLAG_Boolean(DisableRentalThreading)
 FLAG_Boolean(DisableVTuneSourceLineInfo)
 FLAG_Boolean(DisplayMemStats)
-FLAG_Phases(Dump)
 #ifdef DUMP_FRAGMENTATION_STATS
 FLAG_Boolean(DumpFragmentationStats)
 #endif
@@ -761,8 +749,6 @@ FLAG_Boolean(FreeRejittedCode)
 FLAG_Boolean(ForceGuardPages)
 FLAG_Boolean(PrintGuardPageBounds)
 FLAG_Boolean(ForceLegacyEngine)
-FLAG_Phases(Force)
-FLAG_Phases(Stress)
 FLAG_Boolean(ForceArrayBTree)
 FLAG_Boolean(StrongArraySort)
 FLAG_Boolean(ForceCleanPropertyOnCollect)
@@ -830,7 +816,6 @@ FLAG_Number(InlineThresholdAdjustCountInMediumSizedFunction)
 FLAG_Number(InlineThresholdAdjustCountInSmallFunction)
 FLAG_Number(AsmJsInlineAdjust)
 FLAG_String(Interpret)
-FLAG_Phases(Instrument)
 FLAG_Number(JitQueueThreshold)
 #ifdef LEAK_REPORT
 FLAG_String(LeakReport)
@@ -850,7 +835,6 @@ FLAG_Number(OutsideLoopInlineThreshold)
 FLAG_Number(MaxFuncInlineDepth)
 FLAG_Number(MaxNumberOfInlineesWithLoop)
 #ifdef MEMSPECT_TRACKING
-FLAG_Phases(Memspect)
 #endif
 FLAG_Number(PolymorphicInlineThreshold)
 FLAG_Boolean(PrimeRecycler)
@@ -952,9 +936,6 @@ FLAG_Boolean(NoNative)
 FLAG_Number(NopFrequency)
 FLAG_Boolean(NoStrictMode)
 FLAG_Boolean(NormalizeStats)
-FLAG_Phases(Off)
-FLAG_Phases(OffProfiledByteCode)
-FLAG_Phases(On)
 FLAG_String(OutputFile)
 FLAG_String(OutputFileOpenMode)
 #ifdef ENABLE_TRACE
@@ -973,7 +954,6 @@ FLAG_Boolean(PrintSrcInDump)
 FLAG_Number(ProfileDictionary)
 #endif
 #ifdef PROFILE_EXEC
-FLAG_Phases(Profile)
 FLAG_Number(ProfileThreshold)
 #endif
 #ifdef PROFILE_OBJECT_LITERALS
@@ -1030,7 +1010,6 @@ FLAG_Boolean(ecsa)
 FLAG_Number(PageHeap)
 FLAG_Boolean(PageHeapAllocStack)
 FLAG_Boolean(PageHeapFreeStack)
-FLAG_NumberRange(PageHeapBucketNumber)
 FLAG_Number(PageHeapBlockType)
 FLAG_Boolean(PageHeapDecommitGuardPage)
 #endif
@@ -1038,7 +1017,6 @@ FLAG_Boolean(PageHeapDecommitGuardPage)
 FLAG_Boolean(RecyclerNoPageReuse)
 #endif
 #ifdef RECYCLER_MEMORY_VERIFY
-FLAG_Phases(RecyclerVerify)
 FLAG_Number(RecyclerVerifyPadSize)
 #endif
 FLAG_Boolean(RecyclerTest)
@@ -1054,7 +1032,6 @@ FLAG_String(RuntimeDataOutputFile)
 #endif
 FLAG_Number(SpeculationCap)
 #if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
-FLAG_Phases(Stats)
 #endif
 #if EXCEPTION_RECOVERY
 FLAG_Boolean(SwallowExceptions)
@@ -1063,14 +1040,12 @@ FLAG_Boolean(PrintSystemException)
 FLAG_Number(SwitchOptHolesThreshold)
 FLAG_Number(TempMin)
 FLAG_Number(TempMax)
-FLAG_Phases(Trace)
 
 #if defined(_M_X64)
 FLAG_Number(LoopAlignNopLimit)
 #endif
 
 #ifdef PROFILE_MEM
-FLAG_Phases(TraceMemory)
 #endif
 #if DBG_DUMP || defined(RECYCLER_TRACE)
 //TraceMetaDataParsing flag with optional levels:
@@ -1118,7 +1093,6 @@ FLAG_Number(DynamicRegexMruListSize)
 FLAG_Boolean(OptimizeForManyInstances)
 FLAG_Boolean(EnableArrayTypeMutation)
 FLAG_Number(ArrayMutationTestSeed)
-FLAG_Phases(TestTrace)
 FLAG_Boolean(EnableEvalMapCleanup)
 #ifdef PROFILE_MEM
 FLAG_Boolean(TraceObjectAllocation)
@@ -1152,8 +1126,6 @@ FLAG_Boolean(MemProtectHeapPartialStress)
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
 FLAG_Boolean(FixPropsOnPathTypes)
 #endif
-FLAG_NumberSet(BailoutTraceFilter)
-FLAG_NumberSet(RejitTraceFilter)
 
 // recycler heuristic flags
 FLAG_Number(MaxBackgroundFinishMarkCount)
@@ -1210,11 +1182,6 @@ FLAG_Number(MaxSingleAllocSizeInMB)
 #undef FLAG_String
 #undef FLAG_Boolean
 #undef FLAG_Number
-#undef FLAG_Phases
-#undef FLAG_NumberSet
-#undef FLAG_NumberPairSet
-#undef FLAG_NumberTrioSet
-#undef FLAG_NumberRange
 
     NotifyUnhandledExceptionPtr pfnNotifyUnhandledException;
 };
