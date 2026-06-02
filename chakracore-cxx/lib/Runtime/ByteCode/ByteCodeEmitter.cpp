@@ -6,7 +6,6 @@
 #include "RuntimeByteCodePch.h"
 #include "FormalsUtil.h"
 #include "Language/AsmJs.h"
-#include "Interface/ConfigFlagsList.h"
 
 void EmitReference(ParseNode *pnode, ByteCodeGenerator *byteCodeGenerator, FuncInfo *funcInfo);
 void EmitAssignment(ParseNode *asgnNode, ParseNode *lhs, Js::RegSlot rhsLocation, ByteCodeGenerator *byteCodeGenerator, FuncInfo *funcInfo);
