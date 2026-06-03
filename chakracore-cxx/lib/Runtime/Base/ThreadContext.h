@@ -290,9 +290,22 @@ private:
     void ResetExperimentalFeaturesFromConfig()
     {
         // If a flag was overridden using config/command line it should take precedence
-#define FLAG_REGOVR_EXP(type, name, ...) if(CONFIG_ISENABLED(Js::Flag::##name##Flag)) { m_##name## = CONFIG_FLAG_RELEASE(##name##); }
-#include "Interface/ConfigFlagsList.h"
-#undef FLAG_REGOVR_EXP
+        if (Js::Configuration::Global.flags.IsEnabled(Js::Flag::ESDynamicImportFlag))
+        {
+            m_ESDynamicImport = (Js::Configuration::Global.flags.ESDynamicImport);
+        }
+        if (Js::Configuration::Global.flags.IsEnabled(Js::Flag::ES6RegExPrototypePropertiesFlag))
+        {
+            m_ES6RegExPrototypeProperties = (Js::Configuration::Global.flags.ES6RegExPrototypeProperties);
+        }
+        if (Js::Configuration::Global.flags.IsEnabled(Js::Flag::ES6RegExSymbolsFlag))
+        {
+            m_ES6RegExSymbols = (Js::Configuration::Global.flags.ES6RegExSymbols);
+        }
+        if (Js::Configuration::Global.flags.IsEnabled(Js::Flag::ESSharedArrayBufferFlag))
+        {
+            m_ESSharedArrayBuffer = (Js::Configuration::Global.flags.ESSharedArrayBuffer);
+        }
     }
 };
 
