@@ -723,10 +723,10 @@ namespace Js
 
         // set mark for parent flags
         memset((this->flagIsParent),0,(sizeof(this->flagIsParent)));
-#define FLAG(type, name, description, defaultValue, parentName, ...) \
-        if ((int)parentName##Flag < FlagCount) this->flagIsParent[(int) parentName##Flag] = true;
-#include "Interface/ConfigFlagsList.h"
-#undef FLAG
+        if ((int)NoParentFlag < FlagCount) this->flagIsParent[(int)NoParentFlag] = true;
+        if ((int)WasmExperimentalFlag < FlagCount) this->flagIsParent[(int) WasmExperimentalFlag] = true;
+        if ((int)ES6Flag < FlagCount) this->flagIsParent[(int)ES6Flag] = true;
+        if ((int)MitigateSpectreFlag < FlagCount) this->flagIsParent[(int)MitigateSpectreFlag] = true;
 
         // set all parent flags to their default (setting all child flags to their right values)
         this->SetAllParentFlagsAsDefaultValue();
