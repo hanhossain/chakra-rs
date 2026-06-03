@@ -710,13 +710,709 @@ namespace Js
     ///
     ///----------------------------------------------------------------------------
 
-#define FLAG(type, name, description, defaultValue, ...) \
-        \
-        name ## ( ## defaultValue ##), \
-
     ConfigFlagsTable::ConfigFlagsTable():
-        #include "Interface/ConfigFlagsList.h"
-#undef FLAG
+#if DBG
+        ArrayValidate(false),
+        MemOpMissingValueValidate(false),
+        OOPJITFixupValidate(false),
+#endif
+#ifdef ARENA_MEMORY_VERIFY
+        ArenaNoFreeList(false),
+        ArenaNoPageReuse(false),
+        ArenaUseHeapAlloc(false),
+#endif
+        ValidateInlineStack(false),
+        AsmDiff(false),
+        AsmDumpMode(nullptr),
+        AsmJs(DEFAULT_CONFIG_AsmJs),
+        AsmJsStopOnError(DEFAULT_CONFIG_AsmJsStopOnError),
+        AsmJsEdge(DEFAULT_CONFIG_AsmJsEdge),
+        Wasm(DEFAULT_CONFIG_Wasm),
+        WasmI64(DEFAULT_CONFIG_WasmI64),
+        WasmFastArray(DEFAULT_CONFIG_WasmFastArray),
+        WasmSharedArrayVirtualBuffer(DEFAULT_CONFIG_WasmSharedArrayVirtualBuffer),
+        WasmMathExFilter(DEFAULT_CONFIG_WasmMathExFilter),
+        WasmCheckVersion(DEFAULT_CONFIG_WasmCheckVersion),
+        WasmAssignModuleID(DEFAULT_CONFIG_WasmAssignModuleID),
+        WasmIgnoreLimits(DEFAULT_CONFIG_WasmIgnoreLimits),
+        WasmFold(DEFAULT_CONFIG_WasmFold),
+        WasmIgnoreResponse(DEFAULT_CONFIG_WasmIgnoreResponse),
+        WasmMaxTableSize(DEFAULT_CONFIG_WasmMaxTableSize),
+        WasmThreads(DEFAULT_CONFIG_WasmThreads),
+        WasmMultiValue(DEFAULT_CONFIG_WasmMultiValue),
+        WasmSignExtends(DEFAULT_CONFIG_WasmSignExtends),
+        WasmNontrapping(DEFAULT_CONFIG_WasmNontrapping),
+
+// WebAssembly Experimental Features
+// Master WasmExperimental flag to activate WebAssembly experimental features
+        WasmExperimental(DEFAULT_CONFIG_WasmExperimental),
+
+// The default value of the experimental features will be off because the parent is off
+// Turning on the parent causes the child flag to take on their default value (aka on)
+// In Edge, we manually turn on the individual child flags
+// Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
+        WasmSimd(true),
+
+        AssertBreak(false),
+        AssertPopUp(false),
+        AssertIgnore(false),
+        AsyncDebugging(DEFAULT_CONFIG_AsyncDebugging),
+        BailOnNoProfileLimit(DEFAULT_CONFIG_BailOnNoProfileLimit),
+        BailOnNoProfileRejitLimit(DEFAULT_CONFIG_BailOnNoProfileRejitLimit),
+        BaselineMode(false),
+        DumpOnCrash(nullptr),
+        FullMemoryDump(nullptr),
+#ifdef BAILOUT_INJECTION
+        BailOut(),
+        BailOutAtEveryLine(false),
+        BailOutAtEveryByteCode(false),
+        BailOutAtEveryImplicitCall(false),
+        BailOutByteCode(),
+#endif
+        Benchmark(false),
+        BgJit(true),
+        BgParse(DEFAULT_CONFIG_BgParse),
+        BgJitDelay(DEFAULT_CONFIG_BgJitDelay),
+        BgJitDelayFgBuffer(DEFAULT_CONFIG_BgJitDelayFgBuffer),
+        BgJitPendingFuncCap(DEFAULT_CONFIG_BgJitPendingFuncCap),
+
+        CreateFunctionProxy(DEFAULT_CONFIG_CreateFunctionProxy),
+        HybridFgJit(DEFAULT_CONFIG_HybridFgJit),
+        HybridFgJitBgQueueLengthThreshold(DEFAULT_CONFIG_HybridFgJitBgQueueLengthThreshold),
+        BytecodeHist(false),
+        CurrentSourceInfo(DEFAULT_CONFIG_CurrentSourceInfo),
+        CFGLog(false),
+        CheckAlignment(false),
+        CheckEmitBufferPermissions(false),
+#ifdef CHECK_MEMORY_LEAK
+        CheckMemoryLeak(false),
+        DumpOnLeak(nullptr),
+#endif
+        CheckOpHelpers(false),
+        CloneInlinedPolymorphicCaches(DEFAULT_CONFIG_CloneInlinedPolymorphicCaches),
+        ConcurrentRuntime(DEFAULT_CONFIG_ConcurrentRuntime),
+        ConstructorInlineThreshold(DEFAULT_CONFIG_ConstructorInlineThreshold),
+        ConstructorCallsRequiredToFinalizeCachedType(DEFAULT_CONFIG_ConstructorCallsRequiredToFinalizeCachedType),
+        PropertyCacheMissPenalty(DEFAULT_CONFIG_PropertyCacheMissPenalty),
+        PropertyCacheMissThreshold(DEFAULT_CONFIG_PropertyCacheMissThreshold),
+        PropertyCacheMissReset(DEFAULT_CONFIG_PropertyCacheMissReset),
+        Debug(false),
+        DebugBreak(),
+        StatementDebugBreak(),
+        DebugBreakOnPhaseBegin(),
+
+        DebugWindow(false),
+        ParserStateCache(DEFAULT_CONFIG_ParserStateCache),
+        CompressParserStateCache(DEFAULT_CONFIG_CompressParserStateCache),
+        DeferTopLevelTillFirstCall(DEFAULT_CONFIG_DeferTopLevelTillFirstCall),
+        DeferParse(0),
+        DirectCallTelemetryStats(DEFAULT_CONFIG_DirectCallTelemetryStats),
+        DisableArrayBTree(false),
+        DisableRentalThreading(DEFAULT_CONFIG_DisableRentalThreading),
+        DisableVTuneSourceLineInfo(false),
+        DisplayMemStats(false),
+        Dump(),
+#ifdef DUMP_FRAGMENTATION_STATS
+        DumpFragmentationStats(false),
+#endif
+        DumpIRAddresses(false),
+        DumpLineNoInColor(false),
+#ifdef RECYCLER_DUMP_OBJECT_GRAPH
+        DumpObjectGraphOnExit(false),
+        DumpObjectGraphOnCollect(false),
+#endif
+        DumpEvalStringOnRemoval(false),
+        DumpObjectGraphOnEnum(false),
+#ifdef DYNAMIC_PROFILE_STORAGE
+        DynamicProfileCache(nullptr),
+        Dpc(nullptr),
+        DynamicProfileCacheDir(nullptr),
+        DynamicProfileInput(nullptr),
+        Dpi(nullptr),
+#endif
+#ifdef EDIT_AND_CONTINUE
+        EditTest(false),
+#endif
+        WininetProfileCache(DEFAULT_CONFIG_WininetProfileCache),
+        NoDynamicProfileInMemoryCache(false),
+        ProfileBasedSpeculativeJit(DEFAULT_CONFIG_ProfileBasedSpeculativeJit),
+        ProfileBasedSpeculationCap(DEFAULT_CONFIG_ProfileBasedSpeculationCap),
+        ExecuteByteCodeBufferReturnsInvalidByteCode(false),
+        ExpirableCollectionGCCount(DEFAULT_CONFIG_ExpirableCollectionGCCount),
+        ExpirableCollectionTriggerThreshold(DEFAULT_CONFIG_ExpirableCollectionTriggerThreshold),
+        SkipSplitOnNoResult(DEFAULT_CONFIG_SkipSplitWhenResultIgnored),
+        Force32BitByteCode(false),
+
+        CollectGarbage(DEFAULT_CONFIG_CollectGarbage),
+
+        Intl(DEFAULT_CONFIG_Intl),
+        IntlBuiltIns(DEFAULT_CONFIG_IntlBuiltIns),
+        IntlPlatform(DEFAULT_CONFIG_IntlPlatform),
+
+        JsBuiltIn(DEFAULT_CONFIG_JsBuiltIn),
+        JitRepro(DEFAULT_CONFIG_JitRepro),
+        EntryPointInfoRpcData(DEFAULT_CONFIG_EntryPointInfoRpcData),
+
+        LdChakraLib(DEFAULT_CONFIG_LdChakraLib),
+        TestChakraLib(DEFAULT_CONFIG_TestChakraLib),
+
+// ES6 (BLUE+1) features/flags
+
+// Master ES6 flag to enable STABLE ES6 features/flags
+        ES6(DEFAULT_CONFIG_ES6),
+
+// Master ES6 flag to enable ALL sub ES6 features/flags
+        ES6All(DEFAULT_CONFIG_ES6All),
+
+// Master ES6 flag to enable Threshold ES6 features/flags
+        ES6Experimental(DEFAULT_CONFIG_ES6All),
+
+// Per ES6 feature/flag
+
+        ES7AsyncAwait(DEFAULT_CONFIG_ES7AsyncAwait),
+        ES6DateParseFix(DEFAULT_CONFIG_ES6DateParseFix),
+        ES6FunctionNameFull(DEFAULT_CONFIG_ES6FunctionNameFull),
+        ES6Generators(DEFAULT_CONFIG_ES6Generators),
+        ES7ExponentiationOperator(DEFAULT_CONFIG_ES7ExponentionOperator),
+
+        ES7ValuesEntries(DEFAULT_CONFIG_ES7ValuesEntries),
+        ES7TrailingComma(DEFAULT_CONFIG_ES7TrailingComma),
+        ES6IsConcatSpreadable(DEFAULT_CONFIG_ES6IsConcatSpreadable),
+        ES6Math(DEFAULT_CONFIG_ES6Math),
+
+#ifndef COMPILE_DISABLE_ESDynamicImport
+#define COMPILE_DISABLE_ESDynamicImport 0
+#endif
+        ESDynamicImport((true)),
+
+        ES6Module(DEFAULT_CONFIG_ES6Module),
+        ES6Object(DEFAULT_CONFIG_ES6Object),
+        ES6Number(DEFAULT_CONFIG_ES6Number),
+        ES6ObjectLiterals(DEFAULT_CONFIG_ES6ObjectLiterals),
+        ES6Proxy(DEFAULT_CONFIG_ES6Proxy),
+        ES6Rest(DEFAULT_CONFIG_ES6Rest),
+        ES6Spread(DEFAULT_CONFIG_ES6Spread),
+        ES6String(DEFAULT_CONFIG_ES6String),
+        ES6StringPrototypeFixes(DEFAULT_CONFIG_ES6StringPrototypeFixes),
+        ES2018ObjectRestSpread(DEFAULT_CONFIG_ES2018ObjectRestSpread),
+
+        ES6PrototypeChain(DEFAULT_CONFIG_ES6PrototypeChain),
+        ES6ToPrimitive(DEFAULT_CONFIG_ES6ToPrimitive),
+        ES6ToLength(DEFAULT_CONFIG_ES6ToLength),
+        ES6ToStringTag(DEFAULT_CONFIG_ES6ToStringTag),
+        ES6Unicode(DEFAULT_CONFIG_ES6Unicode),
+        ES6UnicodeVerbose(DEFAULT_CONFIG_ES6UnicodeVerbose),
+        ES6Unscopables(DEFAULT_CONFIG_ES6Unscopables),
+        ES6RegExSticky(DEFAULT_CONFIG_ES6RegExSticky),
+        ES2018RegExDotAll(DEFAULT_CONFIG_ES2018RegExDotAll),
+        ESExportNsAs(DEFAULT_CONFIG_ESExportNsAs),
+        ES2018AsyncIteration(DEFAULT_CONFIG_ES2018AsyncIteration),
+        ESTopLevelAwait(DEFAULT_CONFIG_ESTopLevelAwait),
+
+#ifndef COMPILE_DISABLE_ES6RegExPrototypeProperties
+    #define COMPILE_DISABLE_ES6RegExPrototypeProperties 0
+#endif
+        ES6RegExPrototypeProperties((false)),
+
+#ifndef COMPILE_DISABLE_ES6RegExSymbols
+    #define COMPILE_DISABLE_ES6RegExSymbols 0
+#endif
+
+// When we enable ES6RegExSymbols check all String and Regex built-ins which are inlined in JIT and make sure the helper
+// sets implicit call flag before calling into script
+// Also, the corresponding helpers in JnHelperMethodList.h should be marked as being reentrant
+        ES6RegExSymbols((false)),
+
+        ES6Verbose(DEFAULT_CONFIG_ES6Verbose),
+        ESObjectGetOwnPropertyDescriptors(DEFAULT_CONFIG_ESObjectGetOwnPropertyDescriptors),
+
+#ifndef COMPILE_DISABLE_ESSharedArrayBuffer
+    #define COMPILE_DISABLE_ESSharedArrayBuffer 0
+#endif
+
+        ESSharedArrayBuffer((false)),
+
+// Newer language feature flags
+
+// ES BigInt flag
+        ESBigInt(DEFAULT_CONFIG_ESBigInt),
+
+// ES Numeric Separator support for numeric constants
+        ESNumericSeparator(DEFAULT_CONFIG_ESNumericSeparator),
+
+// ES Nullish coalescing operator support (??)
+        ESNullishCoalescingOperator(DEFAULT_CONFIG_ESNullishCoalescingOperator),
+
+// ES Hashbang support for interpreter directive syntax
+        ESHashbang(DEFAULT_CONFIG_ESHashbang),
+
+// ES Symbol.prototype.description flag
+        ESSymbolDescription(DEFAULT_CONFIG_ESSymbolDescription),
+
+        ESArrayFindFromLast(DEFAULT_CONFIG_ESArrayFindFromLast),
+
+// ES Promise.any and AggregateError flag
+        ESPromiseAny(DEFAULT_CONFIG_ESPromiseAny),
+
+// ES import.meta keyword meta-property
+        ESImportMeta(DEFAULT_CONFIG_ESImportMeta),
+
+//ES globalThis flag
+        ESGlobalThis(DEFAULT_CONFIG_ESGlobalThis),
+
+// This flag to be removed once JITing generator functions is stable
+        JitES6Generators(DEFAULT_CONFIG_JitES6Generators),
+
+        FastLineColumnCalculation(DEFAULT_CONFIG_FastLineColumnCalculation),
+        Filename(nullptr),
+        FreeRejittedCode(true),
+        ForceGuardPages(false),
+        PrintGuardPageBounds(false),
+        ForceLegacyEngine(false),
+        Force(),
+        Stress(),
+        ForceArrayBTree(false),
+        StrongArraySort(DEFAULT_CONFIG_StrongArraySort),
+        ForceCleanPropertyOnCollect(DEFAULT_CONFIG_ForceCleanPropertyOnCollect),
+        ForceCleanCacheOnCollect(DEFAULT_CONFIG_ForceCleanCacheOnCollect),
+        ForceGCAfterJSONParse(DEFAULT_CONFIG_ForceGCAfterJSONParse),
+        ForceDecommitOnCollect(DEFAULT_CONFIG_ForceDecommitOnCollect),
+        ForceDeferParse(DEFAULT_CONFIG_ForceDeferParse),
+        ForceDiagnosticsMode(false),
+        ForceGetWriteWatchOOM(false),
+        ForcePostLowerGlobOptInstrString(DEFAULT_CONFIG_ForcePostLowerGlobOptInstrString),
+        ForceSplitScope(DEFAULT_CONFIG_ForceSplitScope),
+        EnumerateSpecialPropertiesInDebugger(DEFAULT_CONFIG_EnumerateSpecialPropertiesInDebugger),
+        EnableContinueAfterExceptionWrappersForHelpers(DEFAULT_CONFIG_EnableContinueAfterExceptionWrappersForHelpers),
+        EnableContinueAfterExceptionWrappersForBuiltIns(DEFAULT_CONFIG_EnableContinueAfterExceptionWrappersForBuiltIns),
+        EnableFunctionSourceReportForHeapEnum(DEFAULT_CONFIG_EnableFunctionSourceReportForHeapEnum),
+        ForceFragmentAddressSpace(128 * 1024 * 1024),
+        ForceOOMOnEBCommit(0),
+        ForceDynamicProfile(DEFAULT_CONFIG_ForceDynamicProfile),
+        ForceES5Array(DEFAULT_CONFIG_ForceES5Array),
+        ForceAsmJsLinkFail(DEFAULT_CONFIG_ForceAsmJsLinkFail),
+        ForceExpireOnNonCacheCollect(DEFAULT_CONFIG_ForceExpireOnNonCacheCollect),
+        ForceFastPath(DEFAULT_CONFIG_ForceFastPath),
+        ForceFloatPref(false),
+        ForceJITLoopBody(DEFAULT_CONFIG_ForceJITLoopBody),
+        ForceStaticInterpreterThunk(DEFAULT_CONFIG_ForceStaticInterpreterThunk),
+        DumpCommentsFromReferencedFiles(DEFAULT_CONFIG_DumpCommentsFromReferencedFiles),
+        DelayFullJITSmallFunc(DEFAULT_CONFIG_DelayFullJITSmallFunc),
+        EnableFatalErrorOnOOM(DEFAULT_CONFIG_EnableFatalErrorOnOOM),
+
+#if defined(_M_ARM32_OR_ARM64)
+        ForceLocalsPtr(false),
+#endif
+        DeferLoadingAvailableSource(DEFAULT_CONFIG_DeferLoadingAvailableSource),
+        ForceNative(false),
+        ForceSerialized(DEFAULT_CONFIG_ForceSerialized),
+        ForceSerializedBytecodeMajorVersion(0),
+        ForceSerializedBytecodeVersionSchema(0),
+        ForceStrictMode(false),
+        ForceUndoDefer(false),
+        ForceBlockingConcurrentCollect(false),
+        FreTestDiagMode(false),
+#ifdef BYTECODE_TESTING
+        ByteCodeBranchLimit(128),
+        MediumByteCodeLayout(false),
+        LargeByteCodeLayout(false),
+#endif
+        InduceCodeGenFailure(DEFAULT_CONFIG_InduceCodeGenFailure),
+        InduceCodeGenFailureSeed(0),
+        InjectPartiallyInitializedInterpreterFrameError(DEFAULT_CONFIG_InjectPartiallyInitializedInterpreterFrameError),
+        InjectPartiallyInitializedInterpreterFrameErrorType(DEFAULT_CONFIG_InjectPartiallyInitializedInterpreterFrameErrorType),
+        GenerateByteCodeBufferReturnsCantGenerate(false),
+        GoptCleanupThreshold(DEFAULT_CONFIG_GoptCleanupThreshold),
+        AsmGoptCleanupThreshold(DEFAULT_CONFIG_AsmGoptCleanupThreshold),
+        HighPrecisionDate(DEFAULT_CONFIG_HighPrecisionDate),
+        InlineCountMax(DEFAULT_CONFIG_InlineCountMax),
+        InlineCountMaxInLoopBodies(DEFAULT_CONFIG_InlineCountMaxInLoopBodies),
+        icminlb(DEFAULT_CONFIG_InlineCountMaxInLoopBodies),
+        InlineInLoopBodyScaleDownFactor(DEFAULT_CONFIG_InlineInLoopBodyScaleDownFactor),
+        iilbsdf(DEFAULT_CONFIG_InlineInLoopBodyScaleDownFactor),
+        InlineThreshold(DEFAULT_CONFIG_InlineThreshold),
+        AggressiveInlineCountMax(DEFAULT_CONFIG_AggressiveInlineCountMax),
+        AggressiveInlineThreshold(DEFAULT_CONFIG_AggressiveInlineThreshold),
+        InlineThresholdAdjustCountInLargeFunction(DEFAULT_CONFIG_InlineThresholdAdjustCountInLargeFunction),
+        InlineThresholdAdjustCountInMediumSizedFunction(DEFAULT_CONFIG_InlineThresholdAdjustCountInMediumSizedFunction),
+        InlineThresholdAdjustCountInSmallFunction(DEFAULT_CONFIG_InlineThresholdAdjustCountInSmallFunction),
+        AsmJsInlineAdjust(DEFAULT_CONFIG_AsmJsInlineAdjust),
+        Interpret(nullptr),
+        Instrument(),
+        JitQueueThreshold(DEFAULT_CONFIG_JitQueueThreshold),
+#ifdef LEAK_REPORT
+        LeakReport(nullptr),
+#endif
+        LoopInlineThreshold(DEFAULT_CONFIG_LoopInlineThreshold),
+        LeafInlineThreshold(DEFAULT_CONFIG_LeafInlineThreshold),
+        ConstantArgumentInlineThreshold(DEFAULT_CONFIG_ConstantArgumentInlineThreshold),
+        RecursiveInlineThreshold(DEFAULT_CONFIG_RecursiveInlineThreshold),
+        RecursiveInlineDepthMax(DEFAULT_CONFIG_RecursiveInlineDepthMax),
+        RecursiveInlineDepthMin(DEFAULT_CONFIG_RecursiveInlineDepthMin),
+        RedeferralCap(DEFAULT_CONFIG_RedeferralCap),
+        Loop(DEFAULT_CONFIG_Loop),
+        LoopInterpretCount(DEFAULT_CONFIG_LoopInterpretCount),
+        lic(DEFAULT_CONFIG_LoopInterpretCount),
+        LoopProfileIterations(DEFAULT_CONFIG_LoopProfileIterations),
+        OutsideLoopInlineThreshold(DEFAULT_CONFIG_OutsideLoopInlineThreshold),
+        MaxFuncInlineDepth(DEFAULT_CONFIG_MaxFuncInlineDepth),
+        MaxNumberOfInlineesWithLoop(DEFAULT_CONFIG_MaxNumberOfInlineesWithLoop),
+#ifdef MEMSPECT_TRACKING
+        Memspect(),
+#endif
+        PolymorphicInlineThreshold(DEFAULT_CONFIG_PolymorphicInlineThreshold),
+        PrimeRecycler(DEFAULT_CONFIG_PrimeRecycler),
+        TraceEngineRefcount(false),
+#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+        LeakStackTrace(false),
+        ForceMemoryLeak(false),
+#endif
+        DumpAfterFinalGC(false),
+        ForceOldDateAPI(DEFAULT_CONFIG_ForceOldDateAPI),
+
+        JitLoopBodyHotLoopThreshold(DEFAULT_CONFIG_JitLoopBodyHotLoopThreshold),
+        LoopBodySizeThresholdToDisableOpts(DEFAULT_CONFIG_LoopBodySizeThresholdToDisableOpts),
+
+        MaxJitThreadCount(DEFAULT_CONFIG_MaxJitThreadCount),
+        ForceMaxJitThreadCount(DEFAULT_CONFIG_ForceMaxJitThreadCount),
+
+        MitigateSpectre(DEFAULT_CONFIG_MitigateSpectre),
+
+        AddMaskingBlocks(DEFAULT_CONFIG_AddMaskingBlocks),
+
+        PoisonVarArrayLoad(DEFAULT_CONFIG_PoisonVarArrayLoad),
+        PoisonIntArrayLoad(DEFAULT_CONFIG_PoisonIntArrayLoad),
+        PoisonFloatArrayLoad(DEFAULT_CONFIG_PoisonFloatArrayLoad),
+        PoisonTypedArrayLoad(DEFAULT_CONFIG_PoisonTypedArrayLoad),
+        PoisonStringLoad(DEFAULT_CONFIG_PoisonStringLoad),
+        PoisonObjectsForLoads(DEFAULT_CONFIG_PoisonObjectsForLoads),
+
+        PoisonVarArrayStore(DEFAULT_CONFIG_PoisonVarArrayStore),
+        PoisonIntArrayStore(DEFAULT_CONFIG_PoisonIntArrayStore),
+        PoisonFloatArrayStore(DEFAULT_CONFIG_PoisonFloatArrayStore),
+        PoisonTypedArrayStore(DEFAULT_CONFIG_PoisonTypedArrayStore),
+        PoisonStringStore(DEFAULT_CONFIG_PoisonStringStore),
+        PoisonObjectsForStores(DEFAULT_CONFIG_PoisonObjectsForStores),
+
+        MinInterpretCount(0),
+        MinSimpleJitRunCount(0),
+        MaxInterpretCount(0),
+        Mic(0),
+        MaxSimpleJitRunCount(0),
+        Msjrc(0),
+        MinMemOpCount(DEFAULT_CONFIG_MinMemOpCount),
+        Mmoc(DEFAULT_CONFIG_MinMemOpCount),
+
+#if ENABLE_COPYONACCESS_ARRAY
+        MaxCopyOnAccessArrayLength(DEFAULT_CONFIG_MaxCopyOnAccessArrayLength),
+        MinCopyOnAccessArrayLength(DEFAULT_CONFIG_MinCopyOnAccessArrayLength),
+        CopyOnAccessArraySegmentCacheSize(DEFAULT_CONFIG_CopyOnAccessArraySegmentCacheSize),
+#endif
+
+        MinTemplatizedJitRunCount(DEFAULT_CONFIG_MinTemplatizedJitRunCount),
+        MinAsmJsInterpreterRunCount(DEFAULT_CONFIG_MinAsmJsInterpreterRunCount),
+
+        MinTemplatizedJitLoopRunCount(DEFAULT_CONFIG_MinTemplatizedJitLoopRunCount),
+        MaxTemplatizedJitRunCount(DEFAULT_CONFIG_MaxTemplatizedJitRunCount),
+        Mtjrc(DEFAULT_CONFIG_MaxTemplatizedJitRunCount),
+        MaxAsmJsInterpreterRunCount(DEFAULT_CONFIG_MaxAsmJsInterpreterRunCount),
+        Maic(DEFAULT_CONFIG_MaxAsmJsInterpreterRunCount),
+
+        AutoProfilingInterpreter0Limit(DEFAULT_CONFIG_AutoProfilingInterpreter0Limit),
+        ProfilingInterpreter0Limit(DEFAULT_CONFIG_ProfilingInterpreter0Limit),
+        AutoProfilingInterpreter1Limit(DEFAULT_CONFIG_AutoProfilingInterpreter1Limit),
+        SimpleJitLimit(DEFAULT_CONFIG_SimpleJitLimit),
+        ProfilingInterpreter1Limit(DEFAULT_CONFIG_ProfilingInterpreter1Limit),
+
+        ExecutionModeLimits(u""),
+        Eml(u""),
+        EnforceExecutionModeLimits(false),
+        Eeml(false),
+
+        SimpleJitAfter(0),
+        Sja(0),
+        FullJitAfter(0),
+        Fja(0),
+
+        NewSimpleJit(DEFAULT_CONFIG_NewSimpleJit),
+
+        MaxLinearIntCaseCount(DEFAULT_CONFIG_MaxLinearIntCaseCount),
+        MaxSingleCharStrJumpTableSize(DEFAULT_CONFIG_MaxSingleCharStrJumpTableSize),
+        MaxSingleCharStrJumpTableRatio(DEFAULT_CONFIG_MaxSingleCharStrJumpTableRatio),
+        MinSwitchJumpTableSize(DEFAULT_CONFIG_MinSwitchJumpTableSize),
+        MaxLinearStringCaseCount(DEFAULT_CONFIG_MaxLinearStringCaseCount),
+        MinDeferredFuncTokenCount(DEFAULT_CONFIG_MinDeferredFuncTokenCount),
+#if DBG
+        SkipFuncCountForBailOnNoProfile(DEFAULT_CONFIG_SkipFuncCountForBailOnNoProfile),
+#endif
+        MaxJITFunctionBytecodeByteLength(DEFAULT_CONFIG_MaxJITFunctionBytecodeByteLength),
+        MaxJITFunctionBytecodeCount(DEFAULT_CONFIG_MaxJITFunctionBytecodeCount),
+        MaxLoopsPerFunction(DEFAULT_CONFIG_MaxLoopsPerFunction),
+        FuncObjectInlineCacheThreshold(DEFAULT_CONFIG_FuncObjectInlineCacheThreshold),
+        NoDeferParse(false),
+        NoLogo(false),
+        OOPJITMissingOpts(DEFAULT_CONFIG_OOPJITMissingOpts),
+        CrashOnOOPJITFailure(DEFAULT_CONFIG_CrashOnOOPJITFailure),
+        OOPCFGRegistration(DEFAULT_CONFIG_OOPCFGRegistration),
+        ForceJITCFGCheck(DEFAULT_CONFIG_ForceJITCFGCheck),
+        UseJITTrampoline(DEFAULT_CONFIG_UseJITTrampoline),
+        NoNative(false),
+        NopFrequency(DEFAULT_CONFIG_NopFrequency),
+        NoStrictMode(false),
+        NormalizeStats(false),
+        Off(),
+        OffProfiledByteCode(),
+        On(),
+        OutputFile(u"output.log"),
+        OutputFileOpenMode(u"wt"),
+#ifdef ENABLE_TRACE
+        InMemoryTrace(DEFAULT_CONFIG_InMemoryTrace),
+        InMemoryTraceBufferSize(DEFAULT_CONFIG_InMemoryTraceBufferSize),
+#ifdef STACK_BACK_TRACE
+        TraceWithStack(DEFAULT_CONFIG_TraceWithStack),
+#endif // STACK_BACK_TRACE
+#endif // ENABLE_TRACE
+        PrintRunTimeDataCollectionTrace(false),
+#ifdef ENABLE_PREJIT
+        Prejit(DEFAULT_CONFIG_Prejit),
+#endif
+        PrintSrcInDump(true),
+#if PROFILE_DICTIONARY
+        ProfileDictionary(-1),
+#endif
+#ifdef PROFILE_EXEC
+        Profile(),
+        ProfileThreshold(0),
+#endif
+#ifdef PROFILE_OBJECT_LITERALS
+        ProfileObjectLiteral(false),
+#endif
+#ifdef PROFILE_MEM
+        ProfileMemory(),
+#endif
+#ifdef PROFILE_STRINGS
+        ProfileStrings(false),
+#endif
+#ifdef PROFILE_TYPES
+        ProfileTypes(false),
+#endif
+#ifdef PROFILE_EVALMAP
+        ProfileEvalMap(false),
+#endif
+
+#ifdef PROFILE_BAILOUT_RECORD_MEMORY
+        ProfileBailOutRecordMemory(false),
+#endif
+
+#if DBG
+        ValidateIntRanges(DEFAULT_CONFIG_ValidateIntRanges),
+#endif
+        RejitMaxBailOutCount(DEFAULT_CONFIG_RejitMaxBailOutCount),
+        CallsToBailoutsRatioForRejit(DEFAULT_CONFIG_CallsToBailoutsRatioForRejit),
+        LoopIterationsToBailoutsRatioForRejit(DEFAULT_CONFIG_LoopIterationsToBailoutsRatioForRejit),
+        MinBailOutsBeforeRejit(DEFAULT_CONFIG_MinBailOutsBeforeRejit),
+        MinBailOutsBeforeRejitForLoops(DEFAULT_CONFIG_MinBailOutsBeforeRejitForLoops),
+        LibraryStackFrame(DEFAULT_CONFIG_LibraryStackFrame),
+        LibraryStackFrameDebugger(DEFAULT_CONFIG_LibraryStackFrameDebugger),
+#ifdef RECYCLER_STRESS
+        RecyclerStress(false),
+#if ENABLE_CONCURRENT_GC
+        RecyclerBackgroundStress(false),
+        RecyclerConcurrentStress(false),
+        RecyclerConcurrentRepeatStress(false),
+#endif
+#if ENABLE_PARTIAL_GC
+        RecyclerPartialStress(false),
+#endif
+        RecyclerTrackStress(false),
+        RecyclerInduceFalsePositives(false),
+#endif // RECYCLER_STRESS
+        RecyclerForceMarkInterior(DEFAULT_CONFIG_RecyclerForceMarkInterior),
+#if ENABLE_CONCURRENT_GC
+        RecyclerPriorityBoostTimeout(5000),
+        RecyclerThreadCollectTimeout(1000),
+        EnableConcurrentSweepAlloc(true),
+        ecsa(true),
+#endif
+#ifdef RECYCLER_PAGE_HEAP
+        PageHeap(DEFAULT_CONFIG_PageHeap),
+        PageHeapAllocStack(DEFAULT_CONFIG_PageHeapAllocStack),
+        PageHeapFreeStack(DEFAULT_CONFIG_PageHeapFreeStack),
+        PageHeapBucketNumber(),
+        PageHeapBlockType(DEFAULT_CONFIG_PageHeapBlockType),
+        PageHeapDecommitGuardPage(true),
+#endif
+#ifdef RECYCLER_NO_PAGE_REUSE
+        RecyclerNoPageReuse(false),
+#endif
+#ifdef RECYCLER_MEMORY_VERIFY
+        RecyclerVerify(),
+        RecyclerVerifyPadSize(12),
+#endif
+        RecyclerTest(false),
+        RecyclerProtectPagesOnRescan(false),
+#ifdef RECYCLER_VERIFY_MARK
+        RecyclerVerifyMark(false),
+#endif
+        LowMemoryCap(DEFAULT_CONFIG_LowMemoryCap),
+        NewPagesCapDuringBGSweeping(DEFAULT_CONFIG_NewPagesCapDuringBGSweeping),
+        AllocPolicyLimit(DEFAULT_CONFIG_AllocationPolicyLimit),
+#ifdef RUNTIME_DATA_COLLECTION
+        RuntimeDataOutputFile(nullptr),
+#endif
+        SpeculationCap(DEFAULT_CONFIG_SpeculationCap),
+#if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
+        Stats(),
+#endif
+#if EXCEPTION_RECOVERY
+        SwallowExceptions(false),
+#endif
+        PrintSystemException(false),
+        SwitchOptHolesThreshold(DEFAULT_CONFIG_SwitchOptHolesThreshold),
+        TempMin(DEFAULT_CONFIG_TempMin),
+        TempMax(DEFAULT_CONFIG_TempMax),
+        Trace(),
+
+#if defined(_M_X64)
+        LoopAlignNopLimit(DEFAULT_CONFIG_LoopAlignNopLimit),
+#endif
+
+#ifdef PROFILE_MEM
+        TraceMemory(),
+#endif
+#if DBG_DUMP || defined(RECYCLER_TRACE)
+//TraceMetaDataParsing flag with optional levels:
+//    Level 1 = interfaces only
+//    Level 2 = interfaces and methods
+//    Level 3 = interfaces, methods and parameters
+//    Level 4 = interfaces and properties
+//    Level 5 (default) = ALL
+        TraceMetaDataParsing(5),
+        TraceWin8Allocations(false),
+        TraceWin8DeallocationsImmediate(false),
+        PrintWin8StatsDetailed(false),
+        TraceProtectPages(false),
+#endif
+        TraceAsyncDebugCalls(DEFAULT_CONFIG_TraceAsyncDebugCalls),
+#ifdef TRACK_DISPATCH
+        TrackDispatch(false),
+#endif
+        Verbose(DEFAULT_CONFIG_Verbose),
+        UseFullName(DEFAULT_CONFIG_UseFullName),
+        Utf8(false),
+        Version(6 ),
+        WERExceptionSupport(false),
+        ExtendedErrorStackForTestHost(DEFAULT_CONFIG_ExtendedErrorStackForTestHost),
+        errorStackTrace(DEFAULT_CONFIG_errorStackTrace),
+        DoHeapEnumOnEngineShutdown(false),
+#ifdef HEAP_ENUMERATION_VALIDATION
+        ValidateHeapEnum(false),
+#endif
+
+#if ENABLE_REGEX_CONFIG_OPTIONS
+//
+// Regex flags
+//
+        RegexTracing(DEFAULT_CONFIG_RegexTracing),
+        RegexProfile(DEFAULT_CONFIG_RegexProfile),
+        RegexDebug(DEFAULT_CONFIG_RegexDebug),
+        RegexDebugAST(DEFAULT_CONFIG_RegexDebugAST),
+        RegexDebugAnnotatedAST(DEFAULT_CONFIG_RegexDebugAnnotatedAST),
+        RegexBytecodeDebug(DEFAULT_CONFIG_RegexBytecodeDebug),
+        RegexOptimize(DEFAULT_CONFIG_RegexOptimize),
+        DynamicRegexMruListSize(DEFAULT_CONFIG_DynamicRegexMruListSize),
+#endif
+
+        OptimizeForManyInstances(DEFAULT_CONFIG_OptimizeForManyInstances),
+        EnableArrayTypeMutation(DEFAULT_CONFIG_EnableArrayTypeMutation),
+        ArrayMutationTestSeed(0),
+        TestTrace(),
+        EnableEvalMapCleanup(true),
+#ifdef PROFILE_MEM
+        TraceObjectAllocation(false),
+#endif
+        Sse(DEFAULT_CONFIG_Sse),
+        DeletedPropertyReuseThreshold(DEFAULT_CONFIG_DeletedPropertyReuseThreshold),
+        ForceStringKeyedSimpleDictionaryTypeHandler(DEFAULT_CONFIG_ForceStringKeyedSimpleDictionaryTypeHandler),
+        BigDictionaryTypeHandlerThreshold(DEFAULT_CONFIG_BigDictionaryTypeHandlerThreshold),
+        TypeSnapshotEnumeration(DEFAULT_CONFIG_TypeSnapshotEnumeration),
+        IsolatePrototypes(DEFAULT_CONFIG_IsolatePrototypes),
+        ChangeTypeOnProto(DEFAULT_CONFIG_ChangeTypeOnProto),
+        ShareInlineCaches(DEFAULT_CONFIG_ShareInlineCaches),
+        DisableDebugObject(DEFAULT_CONFIG_DisableDebugObject),
+        DumpHeap(DEFAULT_CONFIG_DumpHeap),
+        autoProxy(u"__msTestHandler"),
+        PerfHintLevel(DEFAULT_CONFIG_PerfHintLevel),
+#ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
+        MemProtectHeap(DEFAULT_CONFIG_MemProtectHeap),
+#endif
+#ifdef RECYCLER_STRESS
+        MemProtectHeapStress(false),
+#if ENABLE_CONCURRENT_GC
+        MemProtectHeapBackgroundStress(false),
+        MemProtectHeapConcurrentStress(false),
+        MemProtectHeapConcurrentRepeatStress(false),
+#endif
+#if ENABLE_PARTIAL_GC
+        MemProtectHeapPartialStress(false),
+#endif
+#endif
+#ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
+        FixPropsOnPathTypes(DEFAULT_CONFIG_FixPropsOnPathTypes),
+#endif
+        BailoutTraceFilter(),
+        RejitTraceFilter(),
+
+// recycler heuristic flags
+        MaxBackgroundFinishMarkCount(1),
+        BackgroundFinishMarkWaitTime(15),
+        MinBackgroundRepeatMarkRescanBytes(-1),
+
+#if defined(_M_X64)
+        ZeroMemoryWithNonTemporalStore(DEFAULT_CONFIG_ZeroMemoryWithNonTemporalStore),
+#endif
+
+// recycler memory restrict test flags
+        MaxMarkStackPageCount(-1),
+        MaxTrackedObjectListCount(-1),
+
+// make the recycler page integration path easier to hit
+        NumberAllocPlusSize(0),
+
+#if DBG
+        InitializeInterpreterSlotsWithInvalidStackVar(false),
+#endif
+
+#if DBG
+        PRNGSeed0(0),
+        PRNGSeed1(0),
+#endif
+
+        ClearInlineCachesOnCollect(false),
+        InlineCacheInvalidationListCompactionThreshold(DEFAULT_CONFIG_InlineCacheInvalidationListCompactionThreshold),
+        ConstructorCacheInvalidationThreshold(DEFAULT_CONFIG_ConstructorCacheInvalidationThreshold),
+
+#ifdef IR_VIEWER
+        IRViewer(false),
+#endif /* IR_VIEWER */
+
+        GCMemoryThreshold(0),
+
+#if DBG
+            SimulatePolyCacheWithOneTypeForInlineCacheIndex(-1),
+#endif
+
+        JITServerIdleTimeout(500),
+        JITServerMaxInactivePageAllocatorCount(10),
+
+        StrictWriteBarrierCheck(DEFAULT_CONFIG_StrictWriteBarrierCheck),
+        WriteBarrierTest(DEFAULT_CONFIG_WriteBarrierTest),
+        ForceSoftwareWriteBarrier(DEFAULT_CONFIG_ForceSoftwareWriteBarrier),
+        VerifyBarrierBit(DEFAULT_CONFIG_VerifyBarrierBit),
+        EnableBGFreeZero(DEFAULT_CONFIG_EnableBGFreeZero),
+        KeepRecyclerTrackData(DEFAULT_CONFIG_KeepRecyclerTrackData),
+
+        MaxSingleAllocSizeInMB(DEFAULT_CONFIG_MaxSingleAllocSizeInMB),
         nDummy(0)
     {
         for(int i=0; i < FlagCount; flagPresent[i++] = false);
