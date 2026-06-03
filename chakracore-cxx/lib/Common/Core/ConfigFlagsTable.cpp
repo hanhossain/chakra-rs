@@ -1350,15 +1350,1182 @@ namespace Js
     {
         switch(flag)
         {
-        #define FLAG(type, name, ...) \
-            \
-            case name##Flag : \
-                return reinterpret_cast<void*>(const_cast<type*>(&##name)); \
+        #if DBG
+        case ArrayValidateFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ArrayValidate));
+        case MemOpMissingValueValidateFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&MemOpMissingValueValidate));
+        case OOPJITFixupValidateFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&OOPJITFixupValidate));
+        #endif
+        #ifdef ARENA_MEMORY_VERIFY
+        case ArenaNoFreeListFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ArenaNoFreeList));
+        case ArenaNoPageReuseFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ArenaNoPageReuse));
+        case ArenaUseHeapAllocFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ArenaUseHeapAlloc));
+        #endif
+        case ValidateInlineStackFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ValidateInlineStack));
+        case AsmDiffFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&AsmDiff));
+        case AsmDumpModeFlag:
+            return reinterpret_cast<void*>(const_cast<String*>(&AsmDumpMode));
+        case AsmJsFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&AsmJs));
+        case AsmJsStopOnErrorFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&AsmJsStopOnError));
+        case AsmJsEdgeFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&AsmJsEdge));
+        case WasmFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&Wasm));
+        case WasmI64Flag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&WasmI64));
+        case WasmFastArrayFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&WasmFastArray));
+        case WasmSharedArrayVirtualBufferFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&WasmSharedArrayVirtualBuffer));
+        case WasmMathExFilterFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&WasmMathExFilter));
+        case WasmCheckVersionFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&WasmCheckVersion));
+        case WasmAssignModuleIDFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&WasmAssignModuleID));
+        case WasmIgnoreLimitsFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&WasmIgnoreLimits));
+        case WasmFoldFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&WasmFold));
+        case WasmIgnoreResponseFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&WasmIgnoreResponse));
+        case WasmMaxTableSizeFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&WasmMaxTableSize));
+        case WasmThreadsFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&WasmThreads));
+        case WasmMultiValueFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&WasmMultiValue));
+        case WasmSignExtendsFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&WasmSignExtends));
+        case WasmNontrappingFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&WasmNontrapping));
 
-        #include "Interface/ConfigFlagsList.h"
+        // WebAssembly Experimental Features
+        // Master WasmExperimental flag to activate WebAssembly experimental features
+        case WasmExperimentalFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&WasmExperimental));
 
-            default:
-                return NULL;
+        // The default value of the experimental features will be off because the parent is off
+        // Turning on the parent causes the child flag to take on their default value (aka on)
+        // In Edge, we manually turn on the individual child flags
+        // Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
+        case WasmSimdFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&WasmSimd));
+
+        case AssertBreakFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&AssertBreak));
+        case AssertPopUpFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&AssertPopUp));
+        case AssertIgnoreFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&AssertIgnore));
+        case AsyncDebuggingFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&AsyncDebugging));
+        case BailOnNoProfileLimitFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&BailOnNoProfileLimit));
+        case BailOnNoProfileRejitLimitFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&BailOnNoProfileRejitLimit));
+        case BaselineModeFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&BaselineMode));
+        case DumpOnCrashFlag:
+            return reinterpret_cast<void*>(const_cast<String*>(&DumpOnCrash));
+        case FullMemoryDumpFlag:
+            return reinterpret_cast<void*>(const_cast<String*>(&FullMemoryDump));
+        #ifdef BAILOUT_INJECTION
+        case BailOutFlag:
+            return reinterpret_cast<void*>(const_cast<NumberPairSet*>(&BailOut));
+        case BailOutAtEveryLineFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&BailOutAtEveryLine));
+        case BailOutAtEveryByteCodeFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&BailOutAtEveryByteCode));
+        case BailOutAtEveryImplicitCallFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&BailOutAtEveryImplicitCall));
+        case BailOutByteCodeFlag:
+            return reinterpret_cast<void*>(const_cast<NumberSet*>(&BailOutByteCode));
+        #endif
+        case BenchmarkFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&Benchmark));
+        case BgJitFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&BgJit));
+        case BgParseFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&BgParse));
+        case BgJitDelayFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&BgJitDelay));
+        case BgJitDelayFgBufferFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&BgJitDelayFgBuffer));
+        case BgJitPendingFuncCapFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&BgJitPendingFuncCap));
+
+        case CreateFunctionProxyFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&CreateFunctionProxy));
+        case HybridFgJitFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&HybridFgJit));
+        case HybridFgJitBgQueueLengthThresholdFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&HybridFgJitBgQueueLengthThreshold));
+        case BytecodeHistFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&BytecodeHist));
+        case CurrentSourceInfoFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&CurrentSourceInfo));
+        case CFGLogFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&CFGLog));
+        case CheckAlignmentFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&CheckAlignment));
+        case CheckEmitBufferPermissionsFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&CheckEmitBufferPermissions));
+        #ifdef CHECK_MEMORY_LEAK
+        case CheckMemoryLeakFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&CheckMemoryLeak));
+        case DumpOnLeakFlag:
+            return reinterpret_cast<void*>(const_cast<String*>(&DumpOnLeak));
+        #endif
+        case CheckOpHelpersFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&CheckOpHelpers));
+        case CloneInlinedPolymorphicCachesFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&CloneInlinedPolymorphicCaches));
+        case ConcurrentRuntimeFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ConcurrentRuntime));
+        case ConstructorInlineThresholdFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&ConstructorInlineThreshold));
+        case ConstructorCallsRequiredToFinalizeCachedTypeFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&ConstructorCallsRequiredToFinalizeCachedType));
+        case PropertyCacheMissPenaltyFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&PropertyCacheMissPenalty));
+        case PropertyCacheMissThresholdFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&PropertyCacheMissThreshold));
+        case PropertyCacheMissResetFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&PropertyCacheMissReset));
+        case DebugFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&Debug));
+        case DebugBreakFlag:
+            return reinterpret_cast<void*>(const_cast<NumberSet*>(&DebugBreak));
+        case StatementDebugBreakFlag:
+            return reinterpret_cast<void*>(const_cast<NumberTrioSet*>(&StatementDebugBreak));
+        case DebugBreakOnPhaseBeginFlag:
+            return reinterpret_cast<void*>(const_cast<Phases*>(&DebugBreakOnPhaseBegin));
+
+        case DebugWindowFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&DebugWindow));
+        case ParserStateCacheFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ParserStateCache));
+        case CompressParserStateCacheFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&CompressParserStateCache));
+        case DeferTopLevelTillFirstCallFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&DeferTopLevelTillFirstCall));
+        case DeferParseFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&DeferParse));
+        case DirectCallTelemetryStatsFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&DirectCallTelemetryStats));
+        case DisableArrayBTreeFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&DisableArrayBTree));
+        case DisableRentalThreadingFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&DisableRentalThreading));
+        case DisableVTuneSourceLineInfoFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&DisableVTuneSourceLineInfo));
+        case DisplayMemStatsFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&DisplayMemStats));
+        case DumpFlag:
+            return reinterpret_cast<void*>(const_cast<Phases*>(&Dump));
+        #ifdef DUMP_FRAGMENTATION_STATS
+        case DumpFragmentationStatsFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&DumpFragmentationStats));
+        #endif
+        case DumpIRAddressesFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&DumpIRAddresses));
+        case DumpLineNoInColorFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&DumpLineNoInColor));
+        #ifdef RECYCLER_DUMP_OBJECT_GRAPH
+        case DumpObjectGraphOnExitFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&DumpObjectGraphOnExit));
+        case DumpObjectGraphOnCollectFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&DumpObjectGraphOnCollect));
+        #endif
+        case DumpEvalStringOnRemovalFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&DumpEvalStringOnRemoval));
+        case DumpObjectGraphOnEnumFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&DumpObjectGraphOnEnum));
+        #ifdef DYNAMIC_PROFILE_STORAGE
+        case DynamicProfileCacheFlag:
+            return reinterpret_cast<void*>(const_cast<String*>(&DynamicProfileCache));
+        case DpcFlag:
+            return reinterpret_cast<void*>(const_cast<String*>(&Dpc));
+        case DynamicProfileCacheDirFlag:
+            return reinterpret_cast<void*>(const_cast<String*>(&DynamicProfileCacheDir));
+        case DynamicProfileInputFlag:
+            return reinterpret_cast<void*>(const_cast<String*>(&DynamicProfileInput));
+        case DpiFlag:
+            return reinterpret_cast<void*>(const_cast<String*>(&Dpi));
+        #endif
+        #ifdef EDIT_AND_CONTINUE
+        case EditTestFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&EditTest));
+        #endif
+        case WininetProfileCacheFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&WininetProfileCache));
+        case NoDynamicProfileInMemoryCacheFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&NoDynamicProfileInMemoryCache));
+        case ProfileBasedSpeculativeJitFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ProfileBasedSpeculativeJit));
+        case ProfileBasedSpeculationCapFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&ProfileBasedSpeculationCap));
+        case ExecuteByteCodeBufferReturnsInvalidByteCodeFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ExecuteByteCodeBufferReturnsInvalidByteCode));
+        case ExpirableCollectionGCCountFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&ExpirableCollectionGCCount));
+        case ExpirableCollectionTriggerThresholdFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&ExpirableCollectionTriggerThreshold));
+        case SkipSplitOnNoResultFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&SkipSplitOnNoResult));
+        case Force32BitByteCodeFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&Force32BitByteCode));
+
+        case CollectGarbageFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&CollectGarbage));
+
+        case IntlFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&Intl));
+        case IntlBuiltInsFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&IntlBuiltIns));
+        case IntlPlatformFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&IntlPlatform));
+
+        case JsBuiltInFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&JsBuiltIn));
+        case JitReproFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&JitRepro));
+        case EntryPointInfoRpcDataFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&EntryPointInfoRpcData));
+
+        case LdChakraLibFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&LdChakraLib));
+        case TestChakraLibFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&TestChakraLib));
+
+        // ES6 (BLUE+1) features/flags
+
+        // Master ES6 flag to enable STABLE ES6 features/flags
+        case ES6Flag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES6));
+
+        // Master ES6 flag to enable ALL sub ES6 features/flags
+        case ES6AllFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES6All));
+
+        // Master ES6 flag to enable Threshold ES6 features/flags
+        case ES6ExperimentalFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES6Experimental));
+
+        // Per ES6 feature/flag
+
+        case ES7AsyncAwaitFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES7AsyncAwait));
+        case ES6DateParseFixFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES6DateParseFix));
+        case ES6FunctionNameFullFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES6FunctionNameFull));
+        case ES6GeneratorsFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES6Generators));
+        case ES7ExponentiationOperatorFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES7ExponentiationOperator));
+
+        case ES7ValuesEntriesFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES7ValuesEntries));
+        case ES7TrailingCommaFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES7TrailingComma));
+        case ES6IsConcatSpreadableFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES6IsConcatSpreadable));
+        case ES6MathFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES6Math));
+
+        #ifndef COMPILE_DISABLE_ESDynamicImport
+        #define COMPILE_DISABLE_ESDynamicImport 0
+        #endif
+        case ESDynamicImportFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ESDynamicImport));
+
+        case ES6ModuleFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES6Module));
+        case ES6ObjectFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES6Object));
+        case ES6NumberFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES6Number));
+        case ES6ObjectLiteralsFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES6ObjectLiterals));
+        case ES6ProxyFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES6Proxy));
+        case ES6RestFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES6Rest));
+        case ES6SpreadFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES6Spread));
+        case ES6StringFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES6String));
+        case ES6StringPrototypeFixesFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES6StringPrototypeFixes));
+        case ES2018ObjectRestSpreadFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES2018ObjectRestSpread));
+
+        case ES6PrototypeChainFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES6PrototypeChain));
+        case ES6ToPrimitiveFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES6ToPrimitive));
+        case ES6ToLengthFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES6ToLength));
+        case ES6ToStringTagFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES6ToStringTag));
+        case ES6UnicodeFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES6Unicode));
+        case ES6UnicodeVerboseFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES6UnicodeVerbose));
+        case ES6UnscopablesFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES6Unscopables));
+        case ES6RegExStickyFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES6RegExSticky));
+        case ES2018RegExDotAllFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES2018RegExDotAll));
+        case ESExportNsAsFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ESExportNsAs));
+        case ES2018AsyncIterationFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES2018AsyncIteration));
+        case ESTopLevelAwaitFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ESTopLevelAwait));
+
+        #ifndef COMPILE_DISABLE_ES6RegExPrototypeProperties
+            #define COMPILE_DISABLE_ES6RegExPrototypeProperties 0
+        #endif
+        case ES6RegExPrototypePropertiesFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES6RegExPrototypeProperties));
+
+        #ifndef COMPILE_DISABLE_ES6RegExSymbols
+            #define COMPILE_DISABLE_ES6RegExSymbols 0
+        #endif
+
+        // When we enable ES6RegExSymbols check all String and Regex built-ins which are inlined in JIT and make sure the helper
+        // sets implicit call flag before calling into script
+        // Also, the corresponding helpers in JnHelperMethodList.h should be marked as being reentrant
+        case ES6RegExSymbolsFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES6RegExSymbols));
+
+        case ES6VerboseFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ES6Verbose));
+        case ESObjectGetOwnPropertyDescriptorsFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ESObjectGetOwnPropertyDescriptors));
+
+        #ifndef COMPILE_DISABLE_ESSharedArrayBuffer
+            #define COMPILE_DISABLE_ESSharedArrayBuffer 0
+        #endif
+
+        case ESSharedArrayBufferFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ESSharedArrayBuffer));
+
+        // Newer language feature flags
+
+        // ES BigInt flag
+        case ESBigIntFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ESBigInt));
+
+        // ES Numeric Separator support for numeric constants
+        case ESNumericSeparatorFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ESNumericSeparator));
+
+        // ES Nullish coalescing operator support (??)
+        case ESNullishCoalescingOperatorFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ESNullishCoalescingOperator));
+
+        // ES Hashbang support for interpreter directive syntax
+        case ESHashbangFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ESHashbang));
+
+        // ES Symbol.prototype.description flag
+        case ESSymbolDescriptionFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ESSymbolDescription));
+
+        case ESArrayFindFromLastFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ESArrayFindFromLast));
+
+        // ES Promise.any and AggregateError flag
+        case ESPromiseAnyFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ESPromiseAny));
+
+        // ES import.meta keyword meta-property
+        case ESImportMetaFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ESImportMeta));
+
+        //ES globalThis flag
+        case ESGlobalThisFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ESGlobalThis));
+
+        // This flag to be removed once JITing generator functions is stable
+        case JitES6GeneratorsFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&JitES6Generators));
+
+        case FastLineColumnCalculationFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&FastLineColumnCalculation));
+        case FilenameFlag:
+            return reinterpret_cast<void*>(const_cast<String*>(&Filename));
+        case FreeRejittedCodeFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&FreeRejittedCode));
+        case ForceGuardPagesFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceGuardPages));
+        case PrintGuardPageBoundsFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&PrintGuardPageBounds));
+        case ForceLegacyEngineFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceLegacyEngine));
+        case ForceFlag:
+            return reinterpret_cast<void*>(const_cast<Phases*>(&Force));
+        case StressFlag:
+            return reinterpret_cast<void*>(const_cast<Phases*>(&Stress));
+        case ForceArrayBTreeFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceArrayBTree));
+        case StrongArraySortFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&StrongArraySort));
+        case ForceCleanPropertyOnCollectFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceCleanPropertyOnCollect));
+        case ForceCleanCacheOnCollectFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceCleanCacheOnCollect));
+        case ForceGCAfterJSONParseFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceGCAfterJSONParse));
+        case ForceDecommitOnCollectFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceDecommitOnCollect));
+        case ForceDeferParseFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceDeferParse));
+        case ForceDiagnosticsModeFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceDiagnosticsMode));
+        case ForceGetWriteWatchOOMFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceGetWriteWatchOOM));
+        case ForcePostLowerGlobOptInstrStringFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForcePostLowerGlobOptInstrString));
+        case ForceSplitScopeFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceSplitScope));
+        case EnumerateSpecialPropertiesInDebuggerFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&EnumerateSpecialPropertiesInDebugger));
+        case EnableContinueAfterExceptionWrappersForHelpersFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&EnableContinueAfterExceptionWrappersForHelpers));
+        case EnableContinueAfterExceptionWrappersForBuiltInsFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&EnableContinueAfterExceptionWrappersForBuiltIns));
+        case EnableFunctionSourceReportForHeapEnumFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&EnableFunctionSourceReportForHeapEnum));
+        case ForceFragmentAddressSpaceFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&ForceFragmentAddressSpace));
+        case ForceOOMOnEBCommitFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&ForceOOMOnEBCommit));
+        case ForceDynamicProfileFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceDynamicProfile));
+        case ForceES5ArrayFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceES5Array));
+        case ForceAsmJsLinkFailFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceAsmJsLinkFail));
+        case ForceExpireOnNonCacheCollectFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceExpireOnNonCacheCollect));
+        case ForceFastPathFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceFastPath));
+        case ForceFloatPrefFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceFloatPref));
+        case ForceJITLoopBodyFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceJITLoopBody));
+        case ForceStaticInterpreterThunkFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceStaticInterpreterThunk));
+        case DumpCommentsFromReferencedFilesFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&DumpCommentsFromReferencedFiles));
+        case DelayFullJITSmallFuncFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&DelayFullJITSmallFunc));
+        case EnableFatalErrorOnOOMFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&EnableFatalErrorOnOOM));
+
+        #if defined(_M_ARM32_OR_ARM64)
+        case ForceLocalsPtrFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceLocalsPtr));
+        #endif
+        case DeferLoadingAvailableSourceFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&DeferLoadingAvailableSource));
+        case ForceNativeFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceNative));
+        case ForceSerializedFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceSerialized));
+        case ForceSerializedBytecodeMajorVersionFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&ForceSerializedBytecodeMajorVersion));
+        case ForceSerializedBytecodeVersionSchemaFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&ForceSerializedBytecodeVersionSchema));
+        case ForceStrictModeFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceStrictMode));
+        case ForceUndoDeferFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceUndoDefer));
+        case ForceBlockingConcurrentCollectFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceBlockingConcurrentCollect));
+        case FreTestDiagModeFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&FreTestDiagMode));
+        #ifdef BYTECODE_TESTING
+        case ByteCodeBranchLimitFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&ByteCodeBranchLimit));
+        case MediumByteCodeLayoutFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&MediumByteCodeLayout));
+        case LargeByteCodeLayoutFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&LargeByteCodeLayout));
+        #endif
+        case InduceCodeGenFailureFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&InduceCodeGenFailure));
+        case InduceCodeGenFailureSeedFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&InduceCodeGenFailureSeed));
+        case InjectPartiallyInitializedInterpreterFrameErrorFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&InjectPartiallyInitializedInterpreterFrameError));
+        case InjectPartiallyInitializedInterpreterFrameErrorTypeFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&InjectPartiallyInitializedInterpreterFrameErrorType));
+        case GenerateByteCodeBufferReturnsCantGenerateFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&GenerateByteCodeBufferReturnsCantGenerate));
+        case GoptCleanupThresholdFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&GoptCleanupThreshold));
+        case AsmGoptCleanupThresholdFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&AsmGoptCleanupThreshold));
+        case HighPrecisionDateFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&HighPrecisionDate));
+        case InlineCountMaxFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&InlineCountMax));
+        case InlineCountMaxInLoopBodiesFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&InlineCountMaxInLoopBodies));
+        case icminlbFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&icminlb));
+        case InlineInLoopBodyScaleDownFactorFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&InlineInLoopBodyScaleDownFactor));
+        case iilbsdfFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&iilbsdf));
+        case InlineThresholdFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&InlineThreshold));
+        case AggressiveInlineCountMaxFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&AggressiveInlineCountMax));
+        case AggressiveInlineThresholdFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&AggressiveInlineThreshold));
+        case InlineThresholdAdjustCountInLargeFunctionFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&InlineThresholdAdjustCountInLargeFunction));
+        case InlineThresholdAdjustCountInMediumSizedFunctionFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&InlineThresholdAdjustCountInMediumSizedFunction));
+        case InlineThresholdAdjustCountInSmallFunctionFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&InlineThresholdAdjustCountInSmallFunction));
+        case AsmJsInlineAdjustFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&AsmJsInlineAdjust));
+        case InterpretFlag:
+            return reinterpret_cast<void*>(const_cast<String*>(&Interpret));
+        case InstrumentFlag:
+            return reinterpret_cast<void*>(const_cast<Phases*>(&Instrument));
+        case JitQueueThresholdFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&JitQueueThreshold));
+        #ifdef LEAK_REPORT
+        case LeakReportFlag:
+            return reinterpret_cast<void*>(const_cast<String*>(&LeakReport));
+        #endif
+        case LoopInlineThresholdFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&LoopInlineThreshold));
+        case LeafInlineThresholdFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&LeafInlineThreshold));
+        case ConstantArgumentInlineThresholdFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&ConstantArgumentInlineThreshold));
+        case RecursiveInlineThresholdFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&RecursiveInlineThreshold));
+        case RecursiveInlineDepthMaxFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&RecursiveInlineDepthMax));
+        case RecursiveInlineDepthMinFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&RecursiveInlineDepthMin));
+        case RedeferralCapFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&RedeferralCap));
+        case LoopFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&Loop));
+        case LoopInterpretCountFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&LoopInterpretCount));
+        case licFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&lic));
+        case LoopProfileIterationsFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&LoopProfileIterations));
+        case OutsideLoopInlineThresholdFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&OutsideLoopInlineThreshold));
+        case MaxFuncInlineDepthFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MaxFuncInlineDepth));
+        case MaxNumberOfInlineesWithLoopFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MaxNumberOfInlineesWithLoop));
+        #ifdef MEMSPECT_TRACKING
+        case MemspectFlag:
+            return reinterpret_cast<void*>(const_cast<Phases*>(&Memspect));
+        #endif
+        case PolymorphicInlineThresholdFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&PolymorphicInlineThreshold));
+        case PrimeRecyclerFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&PrimeRecycler));
+        case TraceEngineRefcountFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&TraceEngineRefcount));
+        #if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+        case LeakStackTraceFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&LeakStackTrace));
+        case ForceMemoryLeakFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceMemoryLeak));
+        #endif
+        case DumpAfterFinalGCFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&DumpAfterFinalGC));
+        case ForceOldDateAPIFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceOldDateAPI));
+
+        case JitLoopBodyHotLoopThresholdFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&JitLoopBodyHotLoopThreshold));
+        case LoopBodySizeThresholdToDisableOptsFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&LoopBodySizeThresholdToDisableOpts));
+
+        case MaxJitThreadCountFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MaxJitThreadCount));
+        case ForceMaxJitThreadCountFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceMaxJitThreadCount));
+
+        case MitigateSpectreFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&MitigateSpectre));
+
+        case AddMaskingBlocksFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&AddMaskingBlocks));
+
+        case PoisonVarArrayLoadFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&PoisonVarArrayLoad));
+        case PoisonIntArrayLoadFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&PoisonIntArrayLoad));
+        case PoisonFloatArrayLoadFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&PoisonFloatArrayLoad));
+        case PoisonTypedArrayLoadFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&PoisonTypedArrayLoad));
+        case PoisonStringLoadFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&PoisonStringLoad));
+        case PoisonObjectsForLoadsFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&PoisonObjectsForLoads));
+
+        case PoisonVarArrayStoreFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&PoisonVarArrayStore));
+        case PoisonIntArrayStoreFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&PoisonIntArrayStore));
+        case PoisonFloatArrayStoreFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&PoisonFloatArrayStore));
+        case PoisonTypedArrayStoreFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&PoisonTypedArrayStore));
+        case PoisonStringStoreFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&PoisonStringStore));
+        case PoisonObjectsForStoresFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&PoisonObjectsForStores));
+
+        case MinInterpretCountFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MinInterpretCount));
+        case MinSimpleJitRunCountFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MinSimpleJitRunCount));
+        case MaxInterpretCountFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MaxInterpretCount));
+        case MicFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&Mic));
+        case MaxSimpleJitRunCountFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MaxSimpleJitRunCount));
+        case MsjrcFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&Msjrc));
+        case MinMemOpCountFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MinMemOpCount));
+        case MmocFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&Mmoc));
+
+        #if ENABLE_COPYONACCESS_ARRAY
+        case MaxCopyOnAccessArrayLengthFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MaxCopyOnAccessArrayLength));
+        case MinCopyOnAccessArrayLengthFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MinCopyOnAccessArrayLength));
+        case CopyOnAccessArraySegmentCacheSizeFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&CopyOnAccessArraySegmentCacheSize));
+        #endif
+
+        case MinTemplatizedJitRunCountFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MinTemplatizedJitRunCount));
+        case MinAsmJsInterpreterRunCountFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MinAsmJsInterpreterRunCount));
+
+        case MinTemplatizedJitLoopRunCountFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MinTemplatizedJitLoopRunCount));
+        case MaxTemplatizedJitRunCountFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MaxTemplatizedJitRunCount));
+        case MtjrcFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&Mtjrc));
+        case MaxAsmJsInterpreterRunCountFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MaxAsmJsInterpreterRunCount));
+        case MaicFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&Maic));
+
+        case AutoProfilingInterpreter0LimitFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&AutoProfilingInterpreter0Limit));
+        case ProfilingInterpreter0LimitFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&ProfilingInterpreter0Limit));
+        case AutoProfilingInterpreter1LimitFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&AutoProfilingInterpreter1Limit));
+        case SimpleJitLimitFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&SimpleJitLimit));
+        case ProfilingInterpreter1LimitFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&ProfilingInterpreter1Limit));
+
+        case ExecutionModeLimitsFlag:
+            return reinterpret_cast<void*>(const_cast<String*>(&ExecutionModeLimits));
+        case EmlFlag:
+            return reinterpret_cast<void*>(const_cast<String*>(&Eml));
+        case EnforceExecutionModeLimitsFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&EnforceExecutionModeLimits));
+        case EemlFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&Eeml));
+
+        case SimpleJitAfterFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&SimpleJitAfter));
+        case SjaFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&Sja));
+        case FullJitAfterFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&FullJitAfter));
+        case FjaFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&Fja));
+
+        case NewSimpleJitFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&NewSimpleJit));
+
+        case MaxLinearIntCaseCountFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MaxLinearIntCaseCount));
+        case MaxSingleCharStrJumpTableSizeFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MaxSingleCharStrJumpTableSize));
+        case MaxSingleCharStrJumpTableRatioFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MaxSingleCharStrJumpTableRatio));
+        case MinSwitchJumpTableSizeFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MinSwitchJumpTableSize));
+        case MaxLinearStringCaseCountFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MaxLinearStringCaseCount));
+        case MinDeferredFuncTokenCountFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MinDeferredFuncTokenCount));
+        #if DBG
+        case SkipFuncCountForBailOnNoProfileFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&SkipFuncCountForBailOnNoProfile));
+        #endif
+        case MaxJITFunctionBytecodeByteLengthFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MaxJITFunctionBytecodeByteLength));
+        case MaxJITFunctionBytecodeCountFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MaxJITFunctionBytecodeCount));
+        case MaxLoopsPerFunctionFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MaxLoopsPerFunction));
+        case FuncObjectInlineCacheThresholdFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&FuncObjectInlineCacheThreshold));
+        case NoDeferParseFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&NoDeferParse));
+        case NoLogoFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&NoLogo));
+        case OOPJITMissingOptsFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&OOPJITMissingOpts));
+        case CrashOnOOPJITFailureFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&CrashOnOOPJITFailure));
+        case OOPCFGRegistrationFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&OOPCFGRegistration));
+        case ForceJITCFGCheckFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceJITCFGCheck));
+        case UseJITTrampolineFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&UseJITTrampoline));
+        case NoNativeFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&NoNative));
+        case NopFrequencyFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&NopFrequency));
+        case NoStrictModeFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&NoStrictMode));
+        case NormalizeStatsFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&NormalizeStats));
+        case OffFlag:
+            return reinterpret_cast<void*>(const_cast<Phases*>(&Off));
+        case OffProfiledByteCodeFlag:
+            return reinterpret_cast<void*>(const_cast<Phases*>(&OffProfiledByteCode));
+        case OnFlag:
+            return reinterpret_cast<void*>(const_cast<Phases*>(&On));
+        case OutputFileFlag:
+            return reinterpret_cast<void*>(const_cast<String*>(&OutputFile));
+        case OutputFileOpenModeFlag:
+            return reinterpret_cast<void*>(const_cast<String*>(&OutputFileOpenMode));
+        #ifdef ENABLE_TRACE
+        case InMemoryTraceFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&InMemoryTrace));
+        case InMemoryTraceBufferSizeFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&InMemoryTraceBufferSize));
+        #ifdef STACK_BACK_TRACE
+        case TraceWithStackFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&TraceWithStack));
+        #endif // STACK_BACK_TRACE
+        #endif // ENABLE_TRACE
+        case PrintRunTimeDataCollectionTraceFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&PrintRunTimeDataCollectionTrace));
+        #ifdef ENABLE_PREJIT
+        case PrejitFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&Prejit));
+        #endif
+        case PrintSrcInDumpFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&PrintSrcInDump));
+        #if PROFILE_DICTIONARY
+        case ProfileDictionaryFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&ProfileDictionary));
+        #endif
+        #ifdef PROFILE_EXEC
+        case ProfileFlag:
+            return reinterpret_cast<void*>(const_cast<Phases*>(&Profile));
+        case ProfileThresholdFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&ProfileThreshold));
+        #endif
+        #ifdef PROFILE_OBJECT_LITERALS
+        case ProfileObjectLiteralFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ProfileObjectLiteral));
+        #endif
+        #ifdef PROFILE_MEM
+        case ProfileMemoryFlag:
+            return reinterpret_cast<void*>(const_cast<String*>(&ProfileMemory));
+        #endif
+        #ifdef PROFILE_STRINGS
+        case ProfileStringsFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ProfileStrings));
+        #endif
+        #ifdef PROFILE_TYPES
+        case ProfileTypesFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ProfileTypes));
+        #endif
+        #ifdef PROFILE_EVALMAP
+        case ProfileEvalMapFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ProfileEvalMap));
+        #endif
+
+        #ifdef PROFILE_BAILOUT_RECORD_MEMORY
+        case ProfileBailOutRecordMemoryFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ProfileBailOutRecordMemory));
+        #endif
+
+        #if DBG
+        case ValidateIntRangesFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ValidateIntRanges));
+        #endif
+        case RejitMaxBailOutCountFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&RejitMaxBailOutCount));
+        case CallsToBailoutsRatioForRejitFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&CallsToBailoutsRatioForRejit));
+        case LoopIterationsToBailoutsRatioForRejitFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&LoopIterationsToBailoutsRatioForRejit));
+        case MinBailOutsBeforeRejitFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MinBailOutsBeforeRejit));
+        case MinBailOutsBeforeRejitForLoopsFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MinBailOutsBeforeRejitForLoops));
+        case LibraryStackFrameFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&LibraryStackFrame));
+        case LibraryStackFrameDebuggerFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&LibraryStackFrameDebugger));
+        #ifdef RECYCLER_STRESS
+        case RecyclerStressFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerStress));
+        #if ENABLE_CONCURRENT_GC
+        case RecyclerBackgroundStressFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerBackgroundStress));
+        case RecyclerConcurrentStressFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerConcurrentStress));
+        case RecyclerConcurrentRepeatStressFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerConcurrentRepeatStress));
+        #endif
+        #if ENABLE_PARTIAL_GC
+        case RecyclerPartialStressFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerPartialStress));
+        #endif
+        case RecyclerTrackStressFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerTrackStress));
+        case RecyclerInduceFalsePositivesFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerInduceFalsePositives));
+        #endif // RECYCLER_STRESS
+        case RecyclerForceMarkInteriorFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerForceMarkInterior));
+        #if ENABLE_CONCURRENT_GC
+        case RecyclerPriorityBoostTimeoutFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&RecyclerPriorityBoostTimeout));
+        case RecyclerThreadCollectTimeoutFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&RecyclerThreadCollectTimeout));
+        case EnableConcurrentSweepAllocFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&EnableConcurrentSweepAlloc));
+        case ecsaFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ecsa));
+        #endif
+        #ifdef RECYCLER_PAGE_HEAP
+        case PageHeapFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&PageHeap));
+        case PageHeapAllocStackFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&PageHeapAllocStack));
+        case PageHeapFreeStackFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&PageHeapFreeStack));
+        case PageHeapBucketNumberFlag:
+            return reinterpret_cast<void*>(const_cast<NumberRange*>(&PageHeapBucketNumber));
+        case PageHeapBlockTypeFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&PageHeapBlockType));
+        case PageHeapDecommitGuardPageFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&PageHeapDecommitGuardPage));
+        #endif
+        #ifdef RECYCLER_NO_PAGE_REUSE
+        case RecyclerNoPageReuseFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerNoPageReuse));
+        #endif
+        #ifdef RECYCLER_MEMORY_VERIFY
+        case RecyclerVerifyFlag:
+            return reinterpret_cast<void*>(const_cast<Phases*>(&RecyclerVerify));
+        case RecyclerVerifyPadSizeFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&RecyclerVerifyPadSize));
+        #endif
+        case RecyclerTestFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerTest));
+        case RecyclerProtectPagesOnRescanFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerProtectPagesOnRescan));
+        #ifdef RECYCLER_VERIFY_MARK
+        case RecyclerVerifyMarkFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerVerifyMark));
+        #endif
+        case LowMemoryCapFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&LowMemoryCap));
+        case NewPagesCapDuringBGSweepingFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&NewPagesCapDuringBGSweeping));
+        case AllocPolicyLimitFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&AllocPolicyLimit));
+        #ifdef RUNTIME_DATA_COLLECTION
+        case RuntimeDataOutputFileFlag:
+            return reinterpret_cast<void*>(const_cast<String*>(&RuntimeDataOutputFile));
+        #endif
+        case SpeculationCapFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&SpeculationCap));
+        #if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
+        case StatsFlag:
+            return reinterpret_cast<void*>(const_cast<Phases*>(&Stats));
+        #endif
+        #if EXCEPTION_RECOVERY
+        case SwallowExceptionsFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&SwallowExceptions));
+        #endif
+        case PrintSystemExceptionFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&PrintSystemException));
+        case SwitchOptHolesThresholdFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&SwitchOptHolesThreshold));
+        case TempMinFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&TempMin));
+        case TempMaxFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&TempMax));
+        case TraceFlag:
+            return reinterpret_cast<void*>(const_cast<Phases*>(&Trace));
+
+        #if defined(_M_X64)
+        case LoopAlignNopLimitFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&LoopAlignNopLimit));
+        #endif
+
+        #ifdef PROFILE_MEM
+        case TraceMemoryFlag:
+            return reinterpret_cast<void*>(const_cast<Phases*>(&TraceMemory));
+        #endif
+        #if DBG_DUMP || defined(RECYCLER_TRACE)
+        //TraceMetaDataParsing flag with optional levels:
+        //    Level 1 = interfaces only
+        //    Level 2 = interfaces and methods
+        //    Level 3 = interfaces, methods and parameters
+        //    Level 4 = interfaces and properties
+        //    Level 5 (default) = ALL
+        case TraceMetaDataParsingFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&TraceMetaDataParsing));
+        case TraceWin8AllocationsFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&TraceWin8Allocations));
+        case TraceWin8DeallocationsImmediateFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&TraceWin8DeallocationsImmediate));
+        case PrintWin8StatsDetailedFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&PrintWin8StatsDetailed));
+        case TraceProtectPagesFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&TraceProtectPages));
+        #endif
+        case TraceAsyncDebugCallsFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&TraceAsyncDebugCalls));
+        #ifdef TRACK_DISPATCH
+        case TrackDispatchFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&TrackDispatch));
+        #endif
+        case VerboseFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&Verbose));
+        case UseFullNameFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&UseFullName));
+        case Utf8Flag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&Utf8));
+        case VersionFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&Version));
+        case WERExceptionSupportFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&WERExceptionSupport));
+        case ExtendedErrorStackForTestHostFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ExtendedErrorStackForTestHost));
+        case errorStackTraceFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&errorStackTrace));
+        case DoHeapEnumOnEngineShutdownFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&DoHeapEnumOnEngineShutdown));
+        #ifdef HEAP_ENUMERATION_VALIDATION
+        case ValidateHeapEnumFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ValidateHeapEnum));
+        #endif
+
+        #if ENABLE_REGEX_CONFIG_OPTIONS
+        //
+        // Regex flags
+        //
+        case RegexTracingFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&RegexTracing));
+        case RegexProfileFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&RegexProfile));
+        case RegexDebugFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&RegexDebug));
+        case RegexDebugASTFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&RegexDebugAST));
+        case RegexDebugAnnotatedASTFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&RegexDebugAnnotatedAST));
+        case RegexBytecodeDebugFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&RegexBytecodeDebug));
+        case RegexOptimizeFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&RegexOptimize));
+        case DynamicRegexMruListSizeFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&DynamicRegexMruListSize));
+        #endif
+
+        case OptimizeForManyInstancesFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&OptimizeForManyInstances));
+        case EnableArrayTypeMutationFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&EnableArrayTypeMutation));
+        case ArrayMutationTestSeedFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&ArrayMutationTestSeed));
+        case TestTraceFlag:
+            return reinterpret_cast<void*>(const_cast<Phases*>(&TestTrace));
+        case EnableEvalMapCleanupFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&EnableEvalMapCleanup));
+        #ifdef PROFILE_MEM
+        case TraceObjectAllocationFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&TraceObjectAllocation));
+        #endif
+        case SseFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&Sse));
+        case DeletedPropertyReuseThresholdFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&DeletedPropertyReuseThreshold));
+        case ForceStringKeyedSimpleDictionaryTypeHandlerFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceStringKeyedSimpleDictionaryTypeHandler));
+        case BigDictionaryTypeHandlerThresholdFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&BigDictionaryTypeHandlerThreshold));
+        case TypeSnapshotEnumerationFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&TypeSnapshotEnumeration));
+        case IsolatePrototypesFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&IsolatePrototypes));
+        case ChangeTypeOnProtoFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ChangeTypeOnProto));
+        case ShareInlineCachesFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ShareInlineCaches));
+        case DisableDebugObjectFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&DisableDebugObject));
+        case DumpHeapFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&DumpHeap));
+        case autoProxyFlag:
+            return reinterpret_cast<void*>(const_cast<String*>(&autoProxy));
+        case PerfHintLevelFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&PerfHintLevel));
+        #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
+        case MemProtectHeapFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&MemProtectHeap));
+        #endif
+        #ifdef RECYCLER_STRESS
+        case MemProtectHeapStressFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&MemProtectHeapStress));
+        #if ENABLE_CONCURRENT_GC
+        case MemProtectHeapBackgroundStressFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&MemProtectHeapBackgroundStress));
+        case MemProtectHeapConcurrentStressFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&MemProtectHeapConcurrentStress));
+        case MemProtectHeapConcurrentRepeatStressFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&MemProtectHeapConcurrentRepeatStress));
+        #endif
+        #if ENABLE_PARTIAL_GC
+        case MemProtectHeapPartialStressFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&MemProtectHeapPartialStress));
+        #endif
+        #endif
+        #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
+        case FixPropsOnPathTypesFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&FixPropsOnPathTypes));
+        #endif
+        case BailoutTraceFilterFlag:
+            return reinterpret_cast<void*>(const_cast<NumberSet*>(&BailoutTraceFilter));
+        case RejitTraceFilterFlag:
+            return reinterpret_cast<void*>(const_cast<NumberSet*>(&RejitTraceFilter));
+
+        // recycler heuristic flags
+        case MaxBackgroundFinishMarkCountFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MaxBackgroundFinishMarkCount));
+        case BackgroundFinishMarkWaitTimeFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&BackgroundFinishMarkWaitTime));
+        case MinBackgroundRepeatMarkRescanBytesFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MinBackgroundRepeatMarkRescanBytes));
+
+        #if defined(_M_X64)
+        case ZeroMemoryWithNonTemporalStoreFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ZeroMemoryWithNonTemporalStore));
+        #endif
+
+        // recycler memory restrict test flags
+        case MaxMarkStackPageCountFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MaxMarkStackPageCount));
+        case MaxTrackedObjectListCountFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MaxTrackedObjectListCount));
+
+        // make the recycler page integration path easier to hit
+        case NumberAllocPlusSizeFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&NumberAllocPlusSize));
+
+        #if DBG
+        case InitializeInterpreterSlotsWithInvalidStackVarFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&InitializeInterpreterSlotsWithInvalidStackVar));
+        #endif
+
+        #if DBG
+        case PRNGSeed0Flag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&PRNGSeed0));
+        case PRNGSeed1Flag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&PRNGSeed1));
+        #endif
+
+        case ClearInlineCachesOnCollectFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ClearInlineCachesOnCollect));
+        case InlineCacheInvalidationListCompactionThresholdFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&InlineCacheInvalidationListCompactionThreshold));
+        case ConstructorCacheInvalidationThresholdFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&ConstructorCacheInvalidationThreshold));
+
+        #ifdef IR_VIEWER
+        case IRViewerFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&IRViewer));
+        #endif /* IR_VIEWER */
+
+        case GCMemoryThresholdFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&GCMemoryThreshold));
+
+        #if DBG
+            case SimulatePolyCacheWithOneTypeForInlineCacheIndexFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&SimulatePolyCacheWithOneTypeForInlineCacheIndex));
+        #endif
+
+        case JITServerIdleTimeoutFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&JITServerIdleTimeout));
+        case JITServerMaxInactivePageAllocatorCountFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&JITServerMaxInactivePageAllocatorCount));
+
+        case StrictWriteBarrierCheckFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&StrictWriteBarrierCheck));
+        case WriteBarrierTestFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&WriteBarrierTest));
+        case ForceSoftwareWriteBarrierFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceSoftwareWriteBarrier));
+        case VerifyBarrierBitFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&VerifyBarrierBit));
+        case EnableBGFreeZeroFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&EnableBGFreeZero));
+        case KeepRecyclerTrackDataFlag:
+            return reinterpret_cast<void*>(const_cast<Boolean*>(&KeepRecyclerTrackData));
+
+        case MaxSingleAllocSizeInMBFlag:
+            return reinterpret_cast<void*>(const_cast<Number*>(&MaxSingleAllocSizeInMB));
+        default:
+            return NULL;
         }
     }
 
