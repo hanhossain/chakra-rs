@@ -673,10 +673,710 @@ namespace Js
     //
     const char16_t* const FlagDescriptions[FlagCount + 1] =
     {
-    #define FLAG(type, name, description, ...) _u(description),
-    #include "Interface/ConfigFlagsList.h"
+#if DBG
+        u"Validate each array for valid elements (default: false)",
+        u"Validate Missing Value Tracking on memset/memcopy",
+        u"Validate that all entries in fixup list are allocated as NativeCodeData and that all NativeCodeData gets fixed up",
+#endif
+#ifdef ARENA_MEMORY_VERIFY
+        u"Do not free list in arena",
+        u"Do not reuse page in arena",
+        u"Arena use heap to allocate memory instead of page allocator",
+#endif
+        u"Does a stack walk on helper calls to validate inline stack is correctly restored",
+        u"Dump the IR without memory locations and varying parameters.",
+        u"Dump the final assembly to a file without memory locations and varying parameters\n\t\t\t\t\tThe 'filename' is the file where the assembly will be dumped. Dump to console if no file is specified",
+        u"Enable Asmjs",
+        u"Stop execution on any AsmJs validation errors",
+        u"Enable asm.js features which may have backward incompatible changes or not validate on old demos",
+        u"Enable WebAssembly",
+        u"Enable Int64 testing for WebAssembly. ArgIns can be [number,string,{low:number,high:number}]. Return values will be {low:number,high:number}",
+        u"Enable fast array implementation for WebAssembly",
+        u"Use Virtual allocation for WebAssemblySharedArrayBuffer (Windows only)",
+        u"Enable Math exception filter for WebAssembly",
+        u"Check the binary version for WebAssembly",
+        u"Assign an individual ID for WebAssembly module",
+        u"Ignore the WebAssembly binary limits ",
+        u"Enable i32/i64 const folding",
+        u"Ignore the type of the Response object",
+        u"Maximum size allowed to the WebAssembly.Table",
+        u"Enable WebAssembly threads feature",
+        u"Use new WebAssembly multi-value",
+        u"Use new WebAssembly sign extension operators",
+        u"Enable non-trapping float-to-int conversions in WebAssembly",
+
+// WebAssembly Experimental Features
+// Master WasmExperimental flag to activate WebAssembly experimental features
+        u"Enable WebAssembly experimental features",
+
+// The default value of the experimental features will be off because the parent is off
+// Turning on the parent causes the child flag to take on their default value (aka on)
+// In Edge, we manually turn on the individual child flags
+// Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
+        u"Enable SIMD in WebAssembly",
+
+        u"Debug break on assert",
+        u"Pop up asserts (default: false)",
+        u"Ignores asserts if set",
+        u"Enable async debugging feature (default: false)",
+        u"The limit of bailout on no profile info before triggering a rejit",
+        u"The limit of bailout on no profile info before we disable the bailouts",
+        u"Dump only stable content that can be used for baseline comparison",
+        u"generate heap dump on asserts or unhandled exception if set",
+        u"Will perform a full memory dump when -DumpOnCrash is supplied.",
+#ifdef BAILOUT_INJECTION
+        u"Source location to insert BailOut",
+        u"Inserts BailOut at every line of source (default: false)",
+        u"Inserts BailOut at every Byte code (default: false)",
+        u"Force generating implicit call bailout even when we don't need it",
+        u"Byte code location to insert BailOut. Use with -prejit only",
+#endif
+        u"Disable security code which introduce variability in benchmarks",
+        u"Background JIT. Disable to force heuristic-based foreground JITting. (default: true)",
+        u"Background Parse. Disable to force all parsing to occur on UI thread. (default: true)",
+        u"Delay to wait for speculative jitting before starting script execution",
+        u"When speculatively jitting in the foreground thread, do so for (BgJitDelay - BgJitDelayBuffer) milliseconds",
+        u"Disable delay if pending function count larger then cap",
+
+        u"Create function proxies instead of full function bodies",
+        u"When background JIT is enabled, enable jitting in the foreground based on heuristics. This flag is only effective when OptimizeForManyInstances is disabled (UI threads).",
+        u"The background job queue length must exceed this threshold to consider jitting in the foreground",
+        u"Provide a histogram of the bytecodes run by the script. (NoNative required).",
+        u"Enable IASD get current script source info",
+        u"Log CFG checks",
+        u"Insert checks in the native code to verify 8-byte alignment of stack",
+        u"Check JIT code buffers at commit and decommit time to ensure no PAGE_EXECUTE_READWRITE pages.",
+#ifdef CHECK_MEMORY_LEAK
+        u"Check for heap memory leak",
+        u"Create a dump on failed memory leak check",
+#endif
+        u"Verify opHelper labels in the JIT are set properly",
+        u"Clones polymorphic inline caches in inlined functions",
+        u"Enable Concurrent GC and background JIT when creating runtime",
+        u"Maximum size in bytecodes of a constructor inline candidate with monomorphic field access",
+        u"Number of calls to a constructor required before the type cached in the constructor cache is finalized",
+        u"Number of string or symbol cache hits per miss needed to be worth using cache",
+        u"Point at which we disable string or symbol property cache",
+        u"Point at which we try to start using string or symbol cache after giving up",
+        u"Disable phases (layout, security code, etc) which makes JIT output harder to debug",
+        u"Index of the function where you want to break",
+        u"Index of the statement where you want to break",
+        u"Break into debugger at the beginning of given phase for listed function",
+
+        u"Send console output to debugger window",
+        u"Enable creation of parser state cache",
+        u"Enable compression of the parser state cache",
+        u"Enable tracking of deferred top level functions in a script file, until the first function of the script context is parsed.",
+        u"Minimum size of defer-parsed script (non-zero only: use /nodeferparse do disable",
+        u"Enables logging stats for direct call telemetry",
+        u"Disable creation of BTree for Arrays",
+        u"Disable rental threading when creating runtime",
+        u"Disable VTune Source line info for Dynamic JITted code",
+        u"Display memory usage statistics",
+        u"What All to dump",
+#ifdef DUMP_FRAGMENTATION_STATS
+        u"Dump bucket state after every GC",
+#endif
+        u"Print addresses in IR dumps",
+        u"Print the source code in high intensity color for better readability",
+#ifdef RECYCLER_DUMP_OBJECT_GRAPH
+        u"Dump object graph on recycler destructor",
+        u"Dump object graph on recycler destructor",
+#endif
+        u"Dumps an eval string when its being removed from the eval map",
+        u"Dump object graph on recycler heap enumeration",
+#ifdef DYNAMIC_PROFILE_STORAGE
+        u"File to cache dynamic profile information",
+        u"File to cache dynamic profile information",
+        u"Directory to cache dynamic profile information",
+        u"Read only file containing dynamic profile information",
+        u"Read only file containing dynamic profile information",
+#endif
+#ifdef EDIT_AND_CONTINUE
+        u"Enable edit and continue test tools",
+#endif
+        u"Use the WININET cache to save the profile information",
+        u"Enable in-memory cache for dynamic sources",
+        u"Enable dynamic profile based speculative JIT",
+        u"In the presence of dynamic profile speculative JIT is capped to this many bytecode instructions",
+        u"Serialized byte code execution always returns SCRIPT_E_INVALID_BYTECODE",
+        u"Number of GCs during which Expirable object profiling occurs",
+        u"Threshold at which Expirable Object Collection is triggered (In Percentage)",
+        u"If the result of Regex split isn't used, skip executing the regex. (Perf optimization)",
+        u"Force CC to generate 32bit bytecode intended only for regenerating bytecode headers.",
+
+        u"Enable CollectGarbage API",
+
+        u"Intl object support",
+        u"Intl built-in function support",
+        u"Make the internal Intl native helper object visible to user code",
+
+        u"JS Built-in function support",
+        u"Add Function.invokeJit to execute codegen on an encoded rpc buffer",
+        u"Keep encoded rpc buffer for jitted function on EntryPointInfo until cleanup",
+
+        u"Access to the Chakra internal library with the __chakraLibrary keyword",
+        u"Access to the Chakra internal library with the __chakraLibrary keyword without global access restriction",
+
+// ES6 (BLUE+1) features/flags
+
+// Master ES6 flag to enable STABLE ES6 features/flags
+        u"Enable ES6 stable features",
+
+// Master ES6 flag to enable ALL sub ES6 features/flags
+        u"Enable all ES6 features, both stable and unstable",
+
+// Master ES6 flag to enable Threshold ES6 features/flags
+        u"Enable all experimental features",
+
+// Per ES6 feature/flag
+
+        u"Enable ES7 'async' and 'await' keywords",
+        u"Enable ES6 Date.parse fixes",
+        u"Enable ES6 Full function.name",
+        u"Enable ES6 generators",
+        u"Enable ES7 exponentiation operator (**)",
+
+        u"Enable ES7 Object.values and Object.entries",
+        u"Enable ES7 trailing comma in function",
+        u"Enable ES6 isConcatSpreadable Symbol",
+        u"Enable ES6 Math extensions",
+
+#ifndef COMPILE_DISABLE_ESDynamicImport
+#define COMPILE_DISABLE_ESDynamicImport 0
+#endif
+        u"Enable dynamic import",
+
+        u"Enable ES6 Modules",
+        u"Enable ES6 Object extensions",
+        u"Enable ES6 Number extensions",
+        u"Enable ES6 Object literal extensions",
+        u"Enable ES6 Proxy feature",
+        u"Enable ES6 Rest parameters",
+        u"Enable ES6 Spread support",
+        u"Enable ES6 String extensions",
+        u"Enable ES6 String.prototype fixes",
+        u"Enable ES2018 Object Rest/Spread",
+
+        u"Enable ES6 prototypes (Example: Date prototype is object)",
+        u"Enable ES6 ToPrimitive symbol",
+        u"Enable ES6 ToLength fixes",
+        u"Enable ES6 ToStringTag symbol",
+        u"Enable ES6 Unicode 6.0 extensions",
+        u"Enable ES6 Unicode 6.0 verbose failure output",
+        u"Enable ES6 With Statement Unscopables",
+        u"Enable ES6 RegEx sticky flag",
+        u"Enable ES2018 RegEx dotAll flag",
+        u"Enable ES experimental export * as name",
+        u"Enable ES2018 Async Iteration",
+        u"Enable Top Level Await in modules",
+
+#ifndef COMPILE_DISABLE_ES6RegExPrototypeProperties
+    #define COMPILE_DISABLE_ES6RegExPrototypeProperties 0
+#endif
+        u"Enable ES6 properties on the RegEx prototype",
+
+#ifndef COMPILE_DISABLE_ES6RegExSymbols
+    #define COMPILE_DISABLE_ES6RegExSymbols 0
+#endif
+
+// When we enable ES6RegExSymbols check all String and Regex built-ins which are inlined in JIT and make sure the helper
+// sets implicit call flag before calling into script
+// Also, the corresponding helpers in JnHelperMethodList.h should be marked as being reentrant
+        u"Enable ES6 RegExp symbols",
+
+        u"Enable ES6 verbose trace",
+        u"Enable Object.getOwnPropertyDescriptors",
+
+#ifndef COMPILE_DISABLE_ESSharedArrayBuffer
+    #define COMPILE_DISABLE_ESSharedArrayBuffer 0
+#endif
+
+        u"Enable SharedArrayBuffer",
+
+// Newer language feature flags
+
+// ES BigInt flag
+        u"Enable ESBigInt flag",
+
+// ES Numeric Separator support for numeric constants
+        u"Enable Numeric Separator flag",
+
+// ES Nullish coalescing operator support (??)
+        u"Enable nullish coalescing operator",
+
+// ES Hashbang support for interpreter directive syntax
+        u"Enable Hashbang syntax",
+
+// ES Symbol.prototype.description flag
+        u"Enable Symbol.prototype.description",
+
+        u"Enable findLast, findLastIndex for Array.prototype and TypedArray.prorotype",
+
+// ES Promise.any and AggregateError flag
+        u"Enable Promise.any and AggregateError",
+
+// ES import.meta keyword meta-property
+        u"Enable import.meta keyword",
+
+//ES globalThis flag
+        u"Enable globalThis",
+
+// This flag to be removed once JITing generator functions is stable
+        u"Enable JITing of ES6 generators",
+
+        u"Enable fast calculation of line/column numbers from the source.",
+        u"Jscript source file",
+        u"Free rejitted code",
+        u"Force the addition of guard pages",
+        u"Prints the bounds of a guard page",
+        u"Force a jscript9 dll load",
+        u"Force certain phase to run ignoring heuristics",
+        u"Stress certain phases by making them kick in even if they normally would not.",
+        u"Force enable creation of BTree for Arrays",
+        u"Add secondary comparisons to the default array sort comparator to disambiguate sorts of equal-toString'd objects.",
+        u"Force cleaning of property on collection",
+        u"Force cleaning of dynamic caches on collection",
+        u"Force GC to happen after JSON parsing",
+        u"Force decommit collect",
+        u"Defer parsing of all function bodies",
+        u"Enable diagnostics mode and debug interpreter loop",
+        u"Force GetWriteWatch to go into OOM codepath in HeapBlockMap rescan",
+        u"Force tracking of globopt instr string post lower",
+        u"All functions will have unmerged body and param scopes",
+        u"Enable enumeration of special debug properties",
+        u"Enable wrapper over helper methods in debugger, Fast F12 only",
+        u"Enable wrapper over library calls in debugger, Fast F12 only",
+        u"During HeapEnum, whether to report function source info (url/row/col)",
+        u"Fragment the address space",
+        u"Force CommitBuffer to return OOM",
+        u"Force to always generate profiling byte code",
+        u"Force using ES5Array",
+        u"Force asm.js link time validation to fail",
+        u"Allow expiration collect outside of cache collection cleanups",
+        u"Force fast-paths in native codegen",
+        u"Force float preferencing (JIT only)",
+        u"Force jit loop body only",
+        u"Force using static interpreter thunk",
+        u"Allow printing comments of comment-table of the referenced file as well (use with -trace:CommentTable)",
+        u"Scale Full JIT threshold for small functions which are going to be inlined soon. To provide fraction scale, the final scale is scale following this option divided by 10",
+        u"Enabling failfast fatal error on OOM",
+
+#if defined(_M_ARM32_OR_ARM64)
+        u"Force use of alternative locals pointer (JIT only)",
+#endif
+        u"Treat available source code as a dummy defer-mappable object to go through that code path.",
+        u"Force JIT everything that is called before running it, ignoring limits",
+        u"Always serialize and deserialize byte codes before execution",
+        u"Force the byte code serializer to write this major version number",
+        u"Force the byte code serializer to write this kind of version. Decimal 10 is engineering, 20 is release mode, and 0 means use the default setting.",
+        u"Force strict mode checks on all functions",
+        u"Defer parsing of all function bodies, but undo deferral",
+        u"Force doing in-thread GC on concurrent thread- this will skip doing concurrent collect",
+        u"Enabled collection of diagnostic information on fretest builds",
+#ifdef BYTECODE_TESTING
+        u"Short branch limit before we use the branch island",
+        u"Always use medium layout for bytecodes",
+        u"Always use large layout for bytecodes",
+#endif
+        u"Probability of a codegen job failing.",
+        u"Seed used while calculating codegen failure probability",
+        u"The number of interpreter stack frame (with 1 being bottom-most) to inject error before the frame is initialized.",
+        u"Type of error to inject: 0 - debug break, 1 - exception.",
+        u"Serialized byte code generation always returns SCRIPT_E_CANT_GENERATE",
+        u"Number of instructions seen before we cleanup the value table",
+        u"Number of instructions seen before we cleanup the value table",
+        u"Enable sub-millisecond resolution in Javascript Date for benchmark timing",
+        u"Maximum count in bytecodes to inline in a given function",
+        u"Maximum count in bytecodes to inline in a given function",
+        u"Maximum count in bytecodes to inline in a given function",
+        u"Maximum depth of a recursive inline call",
+        u"Maximum depth of a recursive inline call",
+        u"Maximum size in bytecodes of an inline candidate",
+        u"Maximum count in bytecodes to inline in a given function",
+        u"Maximum size in bytecodes of an inline candidate for aggressive inlining",
+        u"Adjustment in the maximum size in bytecodes of an inline candidate in a large function",
+        u"Adjustment in the maximum size in bytecodes of an inline candidate in a medium sized function",
+        u"Adjustment in the maximum size in bytecodes of an inline candidate in a small function",
+        u"Adjustment in the maximum size in bytecodes of an inline candidate for wasm function",
+        u"List of functions to interpret",
+        u"Instrument the generated code from the given phase",
+        u"Max number of work items/script context in the jit queue",
+#ifdef LEAK_REPORT
+        u"File name for the leak report",
+#endif
+        u"Maximum size in bytecodes of an inline candidate with loops or not enough profile data",
+        u"Maximum size in bytecodes of an inline candidate with loops or not enough profile data",
+        u"Maximum size in bytecodes of an inline candidate with constant argument and the argument being used for a branch",
+        u"Maximum size in bytecodes of an inline candidate to inline recursively",
+        u"Maximum depth of a recursive inline call",
+        u"Maximum depth of a recursive inline call",
+        u"Number of compilations beyond which we stop redeferring a function",
+        u"Number of times to execute the script (useful for profiling short benchmarks and finding leaks)",
+        u"Number of times loop has to be interpreted before JIT Loop body",
+        u"Number of times loop has to be interpreted before JIT Loop body",
+        u"Number of iterations of a loop that must be profiled before jitting the loop body",
+        u"Maximum size in bytecodes of an inline candidate outside a loop in inliner",
+        u"Number of times to allow inlining a function recursively, plus one (min: 1, max: 255)",
+        u"Number of times to allow inlinees with a loop in a top function",
+#ifdef MEMSPECT_TRACKING
+        u"Enables memspect tracking to perform memory investigations.",
+#endif
+        u"Maximum size in bytecodes of a polymorphic inline candidate",
+        u"Prime the recycler first",
+        u"Output traces for ScriptEngine AddRef/Release to debug lifetime management",
+#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+        u"Include stack trace on leaked pinned object and heap objects",
+        u"Fake leak some memory to test leak report and check memory leak",
+#endif
+        u"Collect a process dump after calling finalgc",
+        u"Force Chakra to use old dates API regardless of availability of a new one",
+
+        u"Number of times loop has to be iterated in jitloopbody before it is determined as hot",
+        u"Minimum bytecode size of a loop body, above which we might consider switching off optimizations in jit loop body to avoid rejits",
+
+        u"Number of maximum allowed parallel jit threads (actual number is factor of number of processors and other heuristics)",
+        u"Force the number of parallel jit threads as specified by MaxJitThreadCount flag (creation guaranteed)",
+
+        u"Use mitigations for Spectre",
+
+        u"Optimize Spectre mitigations by masking on loop out edges",
+
+        u"Poison loads from Var arrays",
+        u"Poison loads from Int arrays",
+        u"Poison loads from Float arrays",
+        u"Poison loads from TypedArrays",
+        u"Poison indexed loads from strings",
+        u"Poison objects after type checks for loads",
+
+        u"Poison stores to Var arrays",
+        u"Poison stores to Int arrays",
+        u"Poison stores to Float arrays",
+        u"Poison stores to TypedArrays",
+        u"Poison indexed stores to strings",
+        u"Poison objects after type checks for stores",
+
+        u"Minimum number of times a function must be interpreted",
+        u"Minimum number of times a function must be run in simple jit",
+        u"Maximum number of times a function can be interpreted",
+        u"Maximum number of times a function can be interpreted",
+        u"Maximum number of times a function will be run in SimpleJitted code",
+        u"Maximum number of times a function will be run in SimpleJitted code",
+        u"Minimum count of a loop to activate MemOp",
+        u"Minimum count of a loop to activate MemOp",
+
+#if ENABLE_COPYONACCESS_ARRAY
+        u"Maximum length of copy-on-access array",
+        u"Minimum length of copy-on-access array",
+        u"Size of copy-on-access array segment cache (1-32)",
+#endif
+
+        u"Minimum number of times a function must be Templatized Jitted",
+        u"Minimum number of times a function must be Asm Interpreted",
+
+        u"Minimum LoopCount run of the Templatized Jit function to run FullJited",
+        u"Maximum number of times a function must be templatized jit",
+        u"Maximum number of times a function must be templatized jit",
+        u"Maximum number of times a function must be interpreted in asmjs",
+        u"Maximum number of times a function must be interpreted in asmjs",
+
+        u"Limit after which to transition to the next execution mode",
+        u"Limit after which to transition to the next execution mode",
+        u"Limit after which to transition to the next execution mode",
+        u"Limit after which to transition to the next execution mode",
+        u"Limit after which to transition to the next execution mode",
+
+        u"",
+        u"",
+        u"Enforces the execution mode limits such that they are never exceeded.",
+        u"Enforces the execution mode limits such that they are never exceeded.",
+
+        u"Number of calls to a function after which to simple-JIT the function",
+        u"Number of calls to a function after which to simple-JIT the function",
+        u"Number of calls to a function after which to full-JIT the function. The function will be profiled for every iteration.",
+        u"Number of calls to a function after which to full-JIT the function. The function will be profiled for every iteration.",
+
+        u"Uses the new simple JIT",
+
+        u"Maximum number of cases(in switch statement) for which instructions can be generated linearly",
+        u"Maximum single char string jump table size",
+        u"Maximum single char string jump table size as multiples of the actual case arm",
+        u"Minimum size of the jump table, that is created for consecutive integer case arms in a Switch Statement",
+        u"Maximum number of string cases(in switch statement) for which instructions can be generated linearly",
+        u"Minimum length in tokens of defer-parsed function",
+#if DBG
+        u"Initial Number of functions in a func body to be skipped from forcibly inserting BailOnNoProfile.",
+#endif
+        u"The biggest function we'll JIT (bytecode bytelength)",
+        u"The biggest function we'll JIT (bytecode count)",
+        u"Maximum number of loops in any function in the script",
+        u"Maximum number of inline caches a function body may have to allow for inline caches to be allocated on the function object",
+        u"Disable deferred parsing",
+        u"No logo, which we don't display anyways",
+        u"Use optimizations that are missing from OOP JIT",
+        u"Crash runtime process if JIT process crashes",
+        u"Do CFG registration OOP (under OOP JIT)",
+        u"Have JIT code always do CFG check even if range check succeeded",
+        u"Use trampoline for JIT entry points and emit range checks for it",
+        u"Disable native codegen",
+        u"Frequency of NOPs inserted by NOP insertion phase.  A NOP is guaranteed to be inserted within a range of (1<<n) instrs (default=8)",
+        u"Disable strict mode checks on all functions",
+        u"When dumping stats, do some normalization (used with -instrument:linearscan)",
+        u"Turn off specific phases or feature.(Might not work for all phases)",
+        u"Turn off specific byte code for phases or feature.(Might not work for all phases)",
+        u"Turn on specific phases or feature.(Might not work for all phases)",
+        u"output.log",
+        u"wt",
+#ifdef ENABLE_TRACE
+        u"Enable in-memory trace (investigate crash using trace in dump file). Use !jd.dumptrace to print it.",
+        u"The size of circular buffer for in-memory trace (the units used is: number of trace calls). ",
+#ifdef STACK_BACK_TRACE
+        u"Whether the trace need to include stack trace (for each trace entry).",
+#endif // STACK_BACK_TRACE
+#endif // ENABLE_TRACE
+        u"Print traces needed for runtime data collection",
+#ifdef ENABLE_PREJIT
+        u"Prejit everything, including things that are not called, ignoring limits (default: false)",
+#endif
+        u"Print the lineno and the source code in the intermediate dumps",
+#if PROFILE_DICTIONARY
+        u"Profile dictionary usage. Only dictionaries with max depth of <number> or above are displayed (0=no filter).",
+#endif
+#ifdef PROFILE_EXEC
+        u"Profile the given phase",
+        u"A phase is displayed in the profiler report only if its contribution is more than this threshold",
+#endif
+#ifdef PROFILE_OBJECT_LITERALS
+        u"Profile Object literal usage",
+#endif
+#ifdef PROFILE_MEM
+        u"Profile memory usage",
+#endif
+#ifdef PROFILE_STRINGS
+        u"Profile string statistics",
+#endif
+#ifdef PROFILE_TYPES
+        u"Profile type statistics",
+#endif
+#ifdef PROFILE_EVALMAP
+        u"Profile eval map statistics",
+#endif
+
+#ifdef PROFILE_BAILOUT_RECORD_MEMORY
+        u"Profile bailout record memory statistics",
+#endif
+
+#if DBG
+        u"Validate at runtime int ranges/bounds determined by the globopt",
+#endif
+        u"Maximum number of bailouts for a bailout record after which rejit is forced",
+        u"Ratio of function calls to bailouts above which a rejit is considered",
+        u"Ratio of loop iteration count to bailouts above which a rejit of the loop body is considered",
+        u"Minimum number of bailouts for a single bailout record after which a rejit is considered",
+        u"Minimum number of bailouts for a single bailout record after which a rejit is considered",
+        u"Display library stack frame",
+        u"Assume debugger support for library stack frame",
+#ifdef RECYCLER_STRESS
+        u"Stress the recycler by collect on every allocation call",
+#if ENABLE_CONCURRENT_GC
+        u"Stress the recycler by collect in the background thread on every allocation call",
+        u"Stress the concurrent recycler by concurrent collect on every allocation call",
+        u"Stress the concurrent recycler by concurrent collect on every allocation call and repeat mark and rescan in the background thread",
+#endif
+#if ENABLE_PARTIAL_GC
+        u"Stress the partial recycler by partial collect on every allocation call",
+#endif
+        u"Stress tracked object handling by simulating tracked objects for regular allocations",
+        u"Stress recycler by forcing false positive object marks",
+#endif // RECYCLER_STRESS
+        u"Force all the mark as interior",
+#if ENABLE_CONCURRENT_GC
+        u"Adjust priority boost timeout",
+        u"Adjust thread collect timeout",
+        u"Turns off the feature to allow allocations during concurrent sweep.",
+        u"Turns off the feature to allow allocations during concurrent sweep.",
+#endif
+#ifdef RECYCLER_PAGE_HEAP
+        u"Use full page for heap allocations",
+        u"Capture alloc stack under page heap mode",
+        u"Capture free stack under page heap mode",
+        u"Bucket numbers to be used for page heap allocations",
+        u"Type of blocks to use page heap for",
+        u"Decommit page heap guard page",
+#endif
+#ifdef RECYCLER_NO_PAGE_REUSE
+        u"Do not reuse page in recycler",
+#endif
+#ifdef RECYCLER_MEMORY_VERIFY
+        u"Verify recycler memory",
+        u"Padding size to verify recycler memory",
+#endif
+        u"Run recycler tests instead of executing script",
+        u"Temporarily switch all pages to read only during rescan",
+#ifdef RECYCLER_VERIFY_MARK
+        u"verify concurrent gc",
+#endif
+        u"Memory cap indicating a low-memory process",
+        u"New pages count allowed to be allocated during background sweeping",
+        u"Memory allocation policy limit in MB (default: -1, which means no allocation policy limit).",
+#ifdef RUNTIME_DATA_COLLECTION
+        u"Filename to write the dynamic profile info",
+#endif
+        u"How much bytecode we'll speculatively JIT",
+#if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
+        u"Stats the given phase",
+#endif
+#if EXCEPTION_RECOVERY
+        u"Force a try/catch around every statement",
+#endif
+        u"Always print a message when there's OOM or OOS",
+        u"Maximum percentage of holes (missing case values in a switch statement) with which a jump table can be created",
+        u"Temp number switch which code can temporarily use for debugging",
+        u"Temp number switch which code can temporarily use for debugging",
+        u"Trace the given phase",
+
+#if defined(_M_X64)
+        u"Max number of nops for loop alignment",
+#endif
+
+#ifdef PROFILE_MEM
+        u"Trace memory usage",
+#endif
+#if DBG_DUMP || defined(RECYCLER_TRACE)
+//TraceMetaDataParsing flag with optional levels:
+//    Level 1 = interfaces only
+//    Level 2 = interfaces and methods
+//    Level 3 = interfaces, methods and parameters
+//    Level 4 = interfaces and properties
+//    Level 5 (default) = ALL
+        u"Trace metadata parsing for generating JS projections. [Levels 1-5, with 5 corresponding to most detailed]",
+        u"Trace the win8 memory allocations",
+        u"Trace the win8 memory deallocations immediately",
+        u"Print the detailed memory trace report",
+        u"Trace calls to protecting pages of custom heap allocated pages",
+#endif
+        u"Trace calls to async debugging API (default: false)",
+#ifdef TRACK_DISPATCH
+        u"Save stack traces of where JavascriptDispatch/HostVariant are created",
+#endif
+        u"Dump details",
+        u"Enable fully qualified name",
+        u"Use UTF8 for file output",
+        u"Version in which to run the jscript engine. [one of 1,2,3,4,5,6]. Default is latest for jc/jshost, 1 for IE",
+        u"WER feature for extended exception support. Enabled when WinRT is enabled",
+        u"Enable passing extended error stack string to test host.",
+        u"error.StackTrace feature. Remove when feature complete",
+        u"Perform a heap enumeration whenever shut a script engine down",
+#ifdef HEAP_ENUMERATION_VALIDATION
+        u"Validate that heap enumeration is reporting all Js::RecyclableObjects in the heap",
+#endif
+
+#if ENABLE_REGEX_CONFIG_OPTIONS
+//
+// Regex flags
+//
+        u"Trace all Regex invocations to the output.",
+        u"Collect usage statistics on all Regex invocations.",
+        u"Trace compilation of UnifiedRegex expressions.",
+        u"Display Regex AST (requires -RegexDebug to view). [default on]",
+        u"Display Regex Annotated AST (requires -RegexDebug and -RegexDebugAST to view). [default on]",
+        u"Display layout of UnifiedRegex bytecode (requires -RegexDebug to view).",
+        u"Optimize regular expressions in the unified Regex system (default: true)",
+        u"Size of the MRU list for dynamic regexes",
+#endif
+
+        u"Optimize script engine for many instances (low memory footprint per engine, assume low spare CPU cycles) (default: false)",
+        u"Enable force array type mutation on re-entrant region",
+        u"Seed used for the array mutation",
+        u"Test trace for the given phase",
+        u"Enable cleaning up the eval map",
+#ifdef PROFILE_MEM
+        u"Enable cleaning up the eval map",
+#endif
+        u"Virtually disables SSE-based optimizations above the specified SSE level in the Chakra JIT (does not affect CRT SSE usage)",
+        u"Start reusing deleted property indexes after this many properties are deleted. Zero to disable reuse.",
+        u"Force switch to string keyed version of SimpleDictionaryTypeHandler on first new property added to a SimpleDictionaryTypeHandler",
+        u"Min Slot Capacity required to convert DictionaryTypeHandler to BigDictionaryTypeHandler.(Advisable to give more than 15 - to avoid false positive cases)",
+        u"Create a true snapshot of the type of an object before enumeration and enumerate only those properties.",
+        u"Should prototypes get unique types not shared with other objects (default: true)?",
+        u"When becoming a prototype should the object switch to a new type (default: true)?",
+        u"Determines whether inline caches are shared between all loads (or all stores) of the same property ID",
+        u"Disable test only Debug object properties",
+        u"enable Debug.dumpHeap even when DisableDebugObject is set",
+        u"__msTestHandler",
+        u"Specifies the perf-hint level (1,2) 1 == critical, 2 == only noisy",
+#ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
+        u"Use the mem protect heap as the default heap",
+#endif
+#ifdef RECYCLER_STRESS
+        u"Stress the recycler by collect on every allocation call",
+#if ENABLE_CONCURRENT_GC
+        u"Stress the recycler by collect in the background thread on every allocation call",
+        u"Stress the concurrent recycler by concurrent collect on every allocation call",
+        u"Stress the concurrent recycler by concurrent collect on every allocation call and repeat mark and rescan in the background thread",
+#endif
+#if ENABLE_PARTIAL_GC
+        u"Stress the partial recycler by partial collect on every allocation call",
+#endif
+#endif
+#ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
+        u"Mark properties as fixed on path types (default: false).",
+#endif
+        u"Filter the bailout trace messages to specific bailout kinds.",
+        u"Filter the rejit trace messages to specific bailout kinds.",
+
+// recycler heuristic flags
+        u"Maximum number of background finish mark",
+        u"Millisecond to wait for background finish mark",
+        u"Minimum number of bytes rescan to trigger background finish mark",
+
+#if defined(_M_X64)
+        u"Zero free memory with non-temporal stores to avoid evicting other content from processor cache",
+#endif
+
+// recycler memory restrict test flags
+        u"Restrict recycler mark stack size (in pages)",
+        u"Restrict recycler tracked object count during GC",
+
+// make the recycler page integration path easier to hit
+        u"Additional bytes to allocate with JavascriptNumber from number allocator (0~496)",
+
+#if DBG
+        u"Enable the initialization of the interpreter local slots with invalid stack vars",
+#endif
+
+#if DBG
+        u"Override seed0 for Math.Random()",
+        u"Override seed1 for Math.Random()",
+#endif
+
+        u"Clear all inline caches on every garbage collection",
+        u"Compact inline cache invalidation lists if their utilization falls below this threshold",
+        u"Clear uniquePropertyGuard entries from recyclableData if number of invalidations of constructor caches happened are more than the threshold.",
+
+#ifdef IR_VIEWER
+        u"Enable IRViewer functionality (improved UI for various stages of IR generation)",
+#endif /* IR_VIEWER */
+
+        u"Threshold for allocation-based GC initiation (in MB)",
+
+#if DBG
+            u"Use with SimulatePolyCacheWithOneTypeForFunction to simulate creating a polymorphic inline cache containing only one type due to a collision, for testing ObjTypeSpec",
+#endif
+
+        u"Idle timeout in milliseconds to do the cleanup in JIT server",
+        u"Max inactive page allocators to keep before schedule a cleanup",
+
+        u"Check write barrier setting on none write barrier pages",
+        u"Always return true while checking barrier to test recycler regardless of annotation",
+        u"Use to turn off write watch to test software write barrier on windows",
+        u"Verify software write barrier bit is set while marking",
+        u"Use to turn off background freeing and zeroing to simulate linux",
+        u"Keep recycler track data after sweep until reuse",
+
+        u"Max size(in MB) in single allocation",
+
         NULL
-    #undef FLAG
     };
 
     //
