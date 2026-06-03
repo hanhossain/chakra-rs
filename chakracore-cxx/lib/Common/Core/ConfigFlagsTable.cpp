@@ -1323,14 +1323,1174 @@ namespace Js
     {
         switch(flag)
         {
-    #define FLAG(type, name, ...) \
-            case name##Flag : \
-                return Flag##type; \
+        #if DBG
+        case ArrayValidateFlag:
+            return FlagBoolean;
+        case MemOpMissingValueValidateFlag:
+            return FlagBoolean;
+        case OOPJITFixupValidateFlag:
+            return FlagBoolean;
+        #endif
+        #ifdef ARENA_MEMORY_VERIFY
+        case ArenaNoFreeListFlag:
+            return FlagBoolean;
+        case ArenaNoPageReuseFlag:
+            return FlagBoolean;
+        case ArenaUseHeapAllocFlag:
+            return FlagBoolean;
+        #endif
+        case ValidateInlineStackFlag:
+            return FlagBoolean;
+        case AsmDiffFlag:
+            return FlagBoolean;
+        case AsmDumpModeFlag:
+            return FlagString;
+        case AsmJsFlag:
+            return FlagBoolean;
+        case AsmJsStopOnErrorFlag:
+            return FlagBoolean;
+        case AsmJsEdgeFlag:
+            return FlagBoolean;
+        case WasmFlag:
+            return FlagBoolean;
+        case WasmI64Flag:
+            return FlagBoolean;
+        case WasmFastArrayFlag:
+            return FlagBoolean;
+        case WasmSharedArrayVirtualBufferFlag:
+            return FlagBoolean;
+        case WasmMathExFilterFlag:
+            return FlagBoolean;
+        case WasmCheckVersionFlag:
+            return FlagBoolean;
+        case WasmAssignModuleIDFlag:
+            return FlagBoolean;
+        case WasmIgnoreLimitsFlag:
+            return FlagBoolean;
+        case WasmFoldFlag:
+            return FlagBoolean;
+        case WasmIgnoreResponseFlag:
+            return FlagBoolean;
+        case WasmMaxTableSizeFlag:
+            return FlagNumber;
+        case WasmThreadsFlag:
+            return FlagBoolean;
+        case WasmMultiValueFlag:
+            return FlagBoolean;
+        case WasmSignExtendsFlag:
+            return FlagBoolean;
+        case WasmNontrappingFlag:
+            return FlagBoolean;
 
-    #include "Interface/ConfigFlagsList.h"
+        // WebAssembly Experimental Features
+        // Master WasmExperimental flag to activate WebAssembly experimental features
+        case WasmExperimentalFlag:
+            return FlagBoolean;
 
-            default:
-                return InvalidFlagType;
+        // The default value of the experimental features will be off because the parent is off
+        // Turning on the parent causes the child flag to take on their default value (aka on)
+        // In Edge, we manually turn on the individual child flags
+        // Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
+        case WasmSimdFlag:
+            return FlagBoolean;
+
+        case AssertBreakFlag:
+            return FlagBoolean;
+        case AssertPopUpFlag:
+            return FlagBoolean;
+        case AssertIgnoreFlag:
+            return FlagBoolean;
+        case AsyncDebuggingFlag:
+            return FlagBoolean;
+        case BailOnNoProfileLimitFlag:
+            return FlagNumber;
+        case BailOnNoProfileRejitLimitFlag:
+            return FlagNumber;
+        case BaselineModeFlag:
+            return FlagBoolean;
+        case DumpOnCrashFlag:
+            return FlagString;
+        case FullMemoryDumpFlag:
+            return FlagString;
+        #ifdef BAILOUT_INJECTION
+        case BailOutFlag:
+            return FlagNumberPairSet;
+        case BailOutAtEveryLineFlag:
+            return FlagBoolean;
+        case BailOutAtEveryByteCodeFlag:
+            return FlagBoolean;
+        case BailOutAtEveryImplicitCallFlag:
+            return FlagBoolean;
+        case BailOutByteCodeFlag:
+            return FlagNumberSet;
+        #endif
+        case BenchmarkFlag:
+            return FlagBoolean;
+        case BgJitFlag:
+            return FlagBoolean;
+        case BgParseFlag:
+            return FlagBoolean;
+        case BgJitDelayFlag:
+            return FlagNumber;
+        case BgJitDelayFgBufferFlag:
+            return FlagNumber;
+        case BgJitPendingFuncCapFlag:
+            return FlagNumber;
+
+        case CreateFunctionProxyFlag:
+            return FlagBoolean;
+        case HybridFgJitFlag:
+            return FlagBoolean;
+        case HybridFgJitBgQueueLengthThresholdFlag:
+            return FlagNumber;
+        case BytecodeHistFlag:
+            return FlagBoolean;
+        case CurrentSourceInfoFlag:
+            return FlagBoolean;
+        case CFGLogFlag:
+            return FlagBoolean;
+        case CheckAlignmentFlag:
+            return FlagBoolean;
+        case CheckEmitBufferPermissionsFlag:
+            return FlagBoolean;
+        #ifdef CHECK_MEMORY_LEAK
+        case CheckMemoryLeakFlag:
+            return FlagBoolean;
+        case DumpOnLeakFlag:
+            return FlagString;
+        #endif
+        case CheckOpHelpersFlag:
+            return FlagBoolean;
+        case CloneInlinedPolymorphicCachesFlag:
+            return FlagBoolean;
+        case ConcurrentRuntimeFlag:
+            return FlagBoolean;
+        case ConstructorInlineThresholdFlag:
+            return FlagNumber;
+        case ConstructorCallsRequiredToFinalizeCachedTypeFlag:
+            return FlagNumber;
+        case PropertyCacheMissPenaltyFlag:
+            return FlagNumber;
+        case PropertyCacheMissThresholdFlag:
+            return FlagNumber;
+        case PropertyCacheMissResetFlag:
+            return FlagNumber;
+        case DebugFlag:
+            return FlagBoolean;
+        case DebugBreakFlag:
+            return FlagNumberSet;
+        case StatementDebugBreakFlag:
+            return FlagNumberTrioSet;
+        case DebugBreakOnPhaseBeginFlag:
+            return FlagPhases;
+
+        case DebugWindowFlag:
+            return FlagBoolean;
+        case ParserStateCacheFlag:
+            return FlagBoolean;
+        case CompressParserStateCacheFlag:
+            return FlagBoolean;
+        case DeferTopLevelTillFirstCallFlag:
+            return FlagBoolean;
+        case DeferParseFlag:
+            return FlagNumber;
+        case DirectCallTelemetryStatsFlag:
+            return FlagBoolean;
+        case DisableArrayBTreeFlag:
+            return FlagBoolean;
+        case DisableRentalThreadingFlag:
+            return FlagBoolean;
+        case DisableVTuneSourceLineInfoFlag:
+            return FlagBoolean;
+        case DisplayMemStatsFlag:
+            return FlagBoolean;
+        case DumpFlag:
+            return FlagPhases;
+        #ifdef DUMP_FRAGMENTATION_STATS
+        case DumpFragmentationStatsFlag:
+            return FlagBoolean;
+        #endif
+        case DumpIRAddressesFlag:
+            return FlagBoolean;
+        case DumpLineNoInColorFlag:
+            return FlagBoolean;
+        #ifdef RECYCLER_DUMP_OBJECT_GRAPH
+        case DumpObjectGraphOnExitFlag:
+            return FlagBoolean;
+        case DumpObjectGraphOnCollectFlag:
+            return FlagBoolean;
+        #endif
+        case DumpEvalStringOnRemovalFlag:
+            return FlagBoolean;
+        case DumpObjectGraphOnEnumFlag:
+            return FlagBoolean;
+        #ifdef DYNAMIC_PROFILE_STORAGE
+        case DynamicProfileCacheFlag:
+            return FlagString;
+        case DpcFlag:
+            return FlagString;
+        case DynamicProfileCacheDirFlag:
+            return FlagString;
+        case DynamicProfileInputFlag:
+            return FlagString;
+        case DpiFlag:
+            return FlagString;
+        #endif
+        #ifdef EDIT_AND_CONTINUE
+        case EditTestFlag:
+            return FlagBoolean;
+        #endif
+        case WininetProfileCacheFlag:
+            return FlagBoolean;
+        case NoDynamicProfileInMemoryCacheFlag:
+            return FlagBoolean;
+        case ProfileBasedSpeculativeJitFlag:
+            return FlagBoolean;
+        case ProfileBasedSpeculationCapFlag:
+            return FlagNumber;
+        case ExecuteByteCodeBufferReturnsInvalidByteCodeFlag:
+            return FlagBoolean;
+        case ExpirableCollectionGCCountFlag:
+            return FlagNumber;
+        case ExpirableCollectionTriggerThresholdFlag:
+            return FlagNumber;
+        case SkipSplitOnNoResultFlag:
+            return FlagBoolean;
+        case Force32BitByteCodeFlag:
+            return FlagBoolean;
+
+        case CollectGarbageFlag:
+            return FlagBoolean;
+
+        case IntlFlag:
+            return FlagBoolean;
+        case IntlBuiltInsFlag:
+            return FlagBoolean;
+        case IntlPlatformFlag:
+            return FlagBoolean;
+
+        case JsBuiltInFlag:
+            return FlagBoolean;
+        case JitReproFlag:
+            return FlagBoolean;
+        case EntryPointInfoRpcDataFlag:
+            return FlagBoolean;
+
+        case LdChakraLibFlag:
+            return FlagBoolean;
+        case TestChakraLibFlag:
+            return FlagBoolean;
+
+        case ES6Flag:
+            return FlagBoolean;
+
+        case ES6AllFlag:
+            return FlagBoolean;
+
+        case ES6ExperimentalFlag:
+            return FlagBoolean;
+        case ES7AsyncAwaitFlag:
+            return FlagBoolean;
+        case ES6DateParseFixFlag:
+            return FlagBoolean;
+        case ES6FunctionNameFullFlag:
+            return FlagBoolean;
+        case ES6GeneratorsFlag:
+            return FlagBoolean;
+        case ES7ExponentiationOperatorFlag:
+            return FlagBoolean;
+        case ES7ValuesEntriesFlag:
+            return FlagBoolean;
+        case ES7TrailingCommaFlag:
+            return FlagBoolean;
+        case ES6IsConcatSpreadableFlag:
+            return FlagBoolean;
+        case ES6MathFlag:
+            return FlagBoolean;
+
+        #ifndef COMPILE_DISABLE_ESDynamicImport
+        #define COMPILE_DISABLE_ESDynamicImport 0
+        #endif
+        case ESDynamicImportFlag:
+            return FlagBoolean;
+
+        case ES6ModuleFlag:
+            return FlagBoolean;
+        case ES6ObjectFlag:
+            return FlagBoolean;
+        case ES6NumberFlag:
+            return FlagBoolean;
+        case ES6ObjectLiteralsFlag:
+            return FlagBoolean;
+        case ES6ProxyFlag:
+            return FlagBoolean;
+        case ES6RestFlag:
+            return FlagBoolean;
+        case ES6SpreadFlag:
+            return FlagBoolean;
+        case ES6StringFlag:
+            return FlagBoolean;
+        case ES6StringPrototypeFixesFlag:
+            return FlagBoolean;
+        case ES2018ObjectRestSpreadFlag:
+            return FlagBoolean;
+
+        case ES6PrototypeChainFlag:
+            return FlagBoolean;
+        case ES6ToPrimitiveFlag:
+            return FlagBoolean;
+        case ES6ToLengthFlag:
+            return FlagBoolean;
+        case ES6ToStringTagFlag:
+            return FlagBoolean;
+        case ES6UnicodeFlag:
+            return FlagBoolean;
+        case ES6UnicodeVerboseFlag:
+            return FlagBoolean;
+        case ES6UnscopablesFlag:
+            return FlagBoolean;
+        case ES6RegExStickyFlag:
+            return FlagBoolean;
+        case ES2018RegExDotAllFlag:
+            return FlagBoolean;
+        case ESExportNsAsFlag:
+            return FlagBoolean;
+        case ES2018AsyncIterationFlag:
+            return FlagBoolean;
+        case ESTopLevelAwaitFlag:
+            return FlagBoolean;
+
+        #ifndef COMPILE_DISABLE_ES6RegExPrototypeProperties
+            #define COMPILE_DISABLE_ES6RegExPrototypeProperties 0
+        #endif
+        case ES6RegExPrototypePropertiesFlag:
+            return FlagBoolean;
+
+        #ifndef COMPILE_DISABLE_ES6RegExSymbols
+            #define COMPILE_DISABLE_ES6RegExSymbols 0
+        #endif
+
+        // When we enable ES6RegExSymbols check all String and Regex built-ins which are inlined in JIT and make sure the helper
+        // sets implicit call flag before calling into script
+        // Also, the corresponding helpers in JnHelperMethodList.h should be marked as being reentrant
+        case ES6RegExSymbolsFlag:
+            return FlagBoolean;
+
+        case ES6VerboseFlag:
+            return FlagBoolean;
+        case ESObjectGetOwnPropertyDescriptorsFlag:
+            return FlagBoolean;
+
+        #ifndef COMPILE_DISABLE_ESSharedArrayBuffer
+            #define COMPILE_DISABLE_ESSharedArrayBuffer 0
+        #endif
+
+        case ESSharedArrayBufferFlag:
+            return FlagBoolean;
+
+        // Newer language feature flags
+
+        // ES BigInt flag
+        case ESBigIntFlag:
+            return FlagBoolean;
+
+        // ES Numeric Separator support for numeric constants
+        case ESNumericSeparatorFlag:
+            return FlagBoolean;
+
+        // ES Nullish coalescing operator support (??)
+        case ESNullishCoalescingOperatorFlag:
+            return FlagBoolean;
+
+        // ES Hashbang support for interpreter directive syntax
+        case ESHashbangFlag:
+            return FlagBoolean;
+
+        // ES Symbol.prototype.description flag
+        case ESSymbolDescriptionFlag:
+            return FlagBoolean;
+
+        case ESArrayFindFromLastFlag:
+            return FlagBoolean;
+
+        // ES Promise.any and AggregateError flag
+        case ESPromiseAnyFlag:
+            return FlagBoolean;
+
+        // ES import.meta keyword meta-property
+        case ESImportMetaFlag:
+            return FlagBoolean;
+
+        //ES globalThis flag
+        case ESGlobalThisFlag:
+            return FlagBoolean;
+
+        // This flag to be removed once JITing generator functions is stable
+        case JitES6GeneratorsFlag:
+            return FlagBoolean;
+
+        case FastLineColumnCalculationFlag:
+            return FlagBoolean;
+        case FilenameFlag:
+            return FlagString;
+        case FreeRejittedCodeFlag:
+            return FlagBoolean;
+        case ForceGuardPagesFlag:
+            return FlagBoolean;
+        case PrintGuardPageBoundsFlag:
+            return FlagBoolean;
+        case ForceLegacyEngineFlag:
+            return FlagBoolean;
+        case ForceFlag:
+            return FlagPhases;
+        case StressFlag:
+            return FlagPhases;
+        case ForceArrayBTreeFlag:
+            return FlagBoolean;
+        case StrongArraySortFlag:
+            return FlagBoolean;
+        case ForceCleanPropertyOnCollectFlag:
+            return FlagBoolean;
+        case ForceCleanCacheOnCollectFlag:
+            return FlagBoolean;
+        case ForceGCAfterJSONParseFlag:
+            return FlagBoolean;
+        case ForceDecommitOnCollectFlag:
+            return FlagBoolean;
+        case ForceDeferParseFlag:
+            return FlagBoolean;
+        case ForceDiagnosticsModeFlag:
+            return FlagBoolean;
+        case ForceGetWriteWatchOOMFlag:
+            return FlagBoolean;
+        case ForcePostLowerGlobOptInstrStringFlag:
+            return FlagBoolean;
+        case ForceSplitScopeFlag:
+            return FlagBoolean;
+        case EnumerateSpecialPropertiesInDebuggerFlag:
+            return FlagBoolean;
+        case EnableContinueAfterExceptionWrappersForHelpersFlag:
+            return FlagBoolean;
+        case EnableContinueAfterExceptionWrappersForBuiltInsFlag:
+            return FlagBoolean;
+        case EnableFunctionSourceReportForHeapEnumFlag:
+            return FlagBoolean;
+        case ForceFragmentAddressSpaceFlag:
+            return FlagNumber;
+        case ForceOOMOnEBCommitFlag:
+            return FlagNumber;
+        case ForceDynamicProfileFlag:
+            return FlagBoolean;
+        case ForceES5ArrayFlag:
+            return FlagBoolean;
+        case ForceAsmJsLinkFailFlag:
+            return FlagBoolean;
+        case ForceExpireOnNonCacheCollectFlag:
+            return FlagBoolean;
+        case ForceFastPathFlag:
+            return FlagBoolean;
+        case ForceFloatPrefFlag:
+            return FlagBoolean;
+        case ForceJITLoopBodyFlag:
+            return FlagBoolean;
+        case ForceStaticInterpreterThunkFlag:
+            return FlagBoolean;
+        case DumpCommentsFromReferencedFilesFlag:
+            return FlagBoolean;
+        case DelayFullJITSmallFuncFlag:
+            return FlagNumber;
+        case EnableFatalErrorOnOOMFlag:
+            return FlagBoolean;
+
+        #if defined(_M_ARM32_OR_ARM64)
+        case ForceLocalsPtrFlag:
+            return FlagBoolean;
+        #endif
+        case DeferLoadingAvailableSourceFlag:
+            return FlagBoolean;
+        case ForceNativeFlag:
+            return FlagBoolean;
+        case ForceSerializedFlag:
+            return FlagBoolean;
+        case ForceSerializedBytecodeMajorVersionFlag:
+            return FlagNumber;
+        case ForceSerializedBytecodeVersionSchemaFlag:
+            return FlagNumber;
+        case ForceStrictModeFlag:
+            return FlagBoolean;
+        case ForceUndoDeferFlag:
+            return FlagBoolean;
+        case ForceBlockingConcurrentCollectFlag:
+            return FlagBoolean;
+        case FreTestDiagModeFlag:
+            return FlagBoolean;
+        #ifdef BYTECODE_TESTING
+        case ByteCodeBranchLimitFlag:
+            return FlagNumber;
+        case MediumByteCodeLayoutFlag:
+            return FlagBoolean;
+        case LargeByteCodeLayoutFlag:
+            return FlagBoolean;
+        #endif
+        case InduceCodeGenFailureFlag:
+            return FlagNumber;
+        case InduceCodeGenFailureSeedFlag:
+            return FlagNumber;
+        case InjectPartiallyInitializedInterpreterFrameErrorFlag:
+            return FlagNumber;
+        case InjectPartiallyInitializedInterpreterFrameErrorTypeFlag:
+            return FlagNumber;
+        case GenerateByteCodeBufferReturnsCantGenerateFlag:
+            return FlagBoolean;
+        case GoptCleanupThresholdFlag:
+            return FlagNumber;
+        case AsmGoptCleanupThresholdFlag:
+            return FlagNumber;
+        case HighPrecisionDateFlag:
+            return FlagBoolean;
+        case InlineCountMaxFlag:
+            return FlagNumber;
+        case InlineCountMaxInLoopBodiesFlag:
+            return FlagNumber;
+        case icminlbFlag:
+            return FlagNumber;
+        case InlineInLoopBodyScaleDownFactorFlag:
+            return FlagNumber;
+        case iilbsdfFlag:
+            return FlagNumber;
+        case InlineThresholdFlag:
+            return FlagNumber;
+        case AggressiveInlineCountMaxFlag:
+            return FlagNumber;
+        case AggressiveInlineThresholdFlag:
+            return FlagNumber;
+        case InlineThresholdAdjustCountInLargeFunctionFlag:
+            return FlagNumber;
+        case InlineThresholdAdjustCountInMediumSizedFunctionFlag:
+            return FlagNumber;
+        case InlineThresholdAdjustCountInSmallFunctionFlag:
+            return FlagNumber;
+        case AsmJsInlineAdjustFlag:
+            return FlagNumber;
+        case InterpretFlag:
+            return FlagString;
+        case InstrumentFlag:
+            return FlagPhases;
+        case JitQueueThresholdFlag:
+            return FlagNumber;
+        #ifdef LEAK_REPORT
+        case LeakReportFlag:
+            return FlagString;
+        #endif
+        case LoopInlineThresholdFlag:
+            return FlagNumber;
+        case LeafInlineThresholdFlag:
+            return FlagNumber;
+        case ConstantArgumentInlineThresholdFlag:
+            return FlagNumber;
+        case RecursiveInlineThresholdFlag:
+            return FlagNumber;
+        case RecursiveInlineDepthMaxFlag:
+            return FlagNumber;
+        case RecursiveInlineDepthMinFlag:
+            return FlagNumber;
+        case RedeferralCapFlag:
+            return FlagNumber;
+        case LoopFlag:
+            return FlagNumber;
+        case LoopInterpretCountFlag:
+            return FlagNumber;
+        case licFlag:
+            return FlagNumber;
+        case LoopProfileIterationsFlag:
+            return FlagNumber;
+        case OutsideLoopInlineThresholdFlag:
+            return FlagNumber;
+        case MaxFuncInlineDepthFlag:
+            return FlagNumber;
+        case MaxNumberOfInlineesWithLoopFlag:
+            return FlagNumber;
+        #ifdef MEMSPECT_TRACKING
+        case MemspectFlag:
+            return FlagPhases;
+        #endif
+        case PolymorphicInlineThresholdFlag:
+            return FlagNumber;
+        case PrimeRecyclerFlag:
+            return FlagBoolean;
+        case TraceEngineRefcountFlag:
+            return FlagBoolean;
+        #if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+        case LeakStackTraceFlag:
+            return FlagBoolean;
+        case ForceMemoryLeakFlag:
+            return FlagBoolean;
+        #endif
+        case DumpAfterFinalGCFlag:
+            return FlagBoolean;
+        case ForceOldDateAPIFlag:
+            return FlagBoolean;
+
+        case JitLoopBodyHotLoopThresholdFlag:
+            return FlagNumber;
+        case LoopBodySizeThresholdToDisableOptsFlag:
+            return FlagNumber;
+
+        case MaxJitThreadCountFlag:
+            return FlagNumber;
+        case ForceMaxJitThreadCountFlag:
+            return FlagBoolean;
+
+        case MitigateSpectreFlag:
+            return FlagBoolean;
+
+        case AddMaskingBlocksFlag:
+            return FlagBoolean;
+
+        case PoisonVarArrayLoadFlag:
+            return FlagBoolean;
+        case PoisonIntArrayLoadFlag:
+            return FlagBoolean;
+        case PoisonFloatArrayLoadFlag:
+            return FlagBoolean;
+        case PoisonTypedArrayLoadFlag:
+            return FlagBoolean;
+        case PoisonStringLoadFlag:
+            return FlagBoolean;
+        case PoisonObjectsForLoadsFlag:
+            return FlagBoolean;
+
+        case PoisonVarArrayStoreFlag:
+            return FlagBoolean;
+        case PoisonIntArrayStoreFlag:
+            return FlagBoolean;
+        case PoisonFloatArrayStoreFlag:
+            return FlagBoolean;
+        case PoisonTypedArrayStoreFlag:
+            return FlagBoolean;
+        case PoisonStringStoreFlag:
+            return FlagBoolean;
+        case PoisonObjectsForStoresFlag:
+            return FlagBoolean;
+
+        case MinInterpretCountFlag:
+            return FlagNumber;
+        case MinSimpleJitRunCountFlag:
+            return FlagNumber;
+        case MaxInterpretCountFlag:
+            return FlagNumber;
+        case MicFlag:
+            return FlagNumber;
+        case MaxSimpleJitRunCountFlag:
+            return FlagNumber;
+        case MsjrcFlag:
+            return FlagNumber;
+        case MinMemOpCountFlag:
+            return FlagNumber;
+        case MmocFlag:
+            return FlagNumber;
+
+        #if ENABLE_COPYONACCESS_ARRAY
+        case MaxCopyOnAccessArrayLengthFlag:
+            return FlagNumber;
+        case MinCopyOnAccessArrayLengthFlag:
+            return FlagNumber;
+        case CopyOnAccessArraySegmentCacheSizeFlag:
+            return FlagNumber;
+        #endif
+
+        case MinTemplatizedJitRunCountFlag:
+            return FlagNumber;
+        case MinAsmJsInterpreterRunCountFlag:
+            return FlagNumber;
+
+        case MinTemplatizedJitLoopRunCountFlag:
+            return FlagNumber;
+        case MaxTemplatizedJitRunCountFlag:
+            return FlagNumber;
+        case MtjrcFlag:
+            return FlagNumber;
+        case MaxAsmJsInterpreterRunCountFlag:
+            return FlagNumber;
+        case MaicFlag:
+            return FlagNumber;
+
+        case AutoProfilingInterpreter0LimitFlag:
+            return FlagNumber;
+        case ProfilingInterpreter0LimitFlag:
+            return FlagNumber;
+        case AutoProfilingInterpreter1LimitFlag:
+            return FlagNumber;
+        case SimpleJitLimitFlag:
+            return FlagNumber;
+        case ProfilingInterpreter1LimitFlag:
+            return FlagNumber;
+
+        case ExecutionModeLimitsFlag:
+            return FlagString;
+        case EmlFlag:
+            return FlagString;
+        case EnforceExecutionModeLimitsFlag:
+            return FlagBoolean;
+        case EemlFlag:
+            return FlagBoolean;
+
+        case SimpleJitAfterFlag:
+            return FlagNumber;
+        case SjaFlag:
+            return FlagNumber;
+        case FullJitAfterFlag:
+            return FlagNumber;
+        case FjaFlag:
+            return FlagNumber;
+
+        case NewSimpleJitFlag:
+            return FlagBoolean;
+
+        case MaxLinearIntCaseCountFlag:
+            return FlagNumber;
+        case MaxSingleCharStrJumpTableSizeFlag:
+            return FlagNumber;
+        case MaxSingleCharStrJumpTableRatioFlag:
+            return FlagNumber;
+        case MinSwitchJumpTableSizeFlag:
+            return FlagNumber;
+        case MaxLinearStringCaseCountFlag:
+            return FlagNumber;
+        case MinDeferredFuncTokenCountFlag:
+            return FlagNumber;
+        #if DBG
+        case SkipFuncCountForBailOnNoProfileFlag:
+            return FlagNumber;
+        #endif
+        case MaxJITFunctionBytecodeByteLengthFlag:
+            return FlagNumber;
+        case MaxJITFunctionBytecodeCountFlag:
+            return FlagNumber;
+        case MaxLoopsPerFunctionFlag:
+            return FlagNumber;
+        case FuncObjectInlineCacheThresholdFlag:
+            return FlagNumber;
+        case NoDeferParseFlag:
+            return FlagBoolean;
+        case NoLogoFlag:
+            return FlagBoolean;
+        case OOPJITMissingOptsFlag:
+            return FlagBoolean;
+        case CrashOnOOPJITFailureFlag:
+            return FlagBoolean;
+        case OOPCFGRegistrationFlag:
+            return FlagBoolean;
+        case ForceJITCFGCheckFlag:
+            return FlagBoolean;
+        case UseJITTrampolineFlag:
+            return FlagBoolean;
+        case NoNativeFlag:
+            return FlagBoolean;
+        case NopFrequencyFlag:
+            return FlagNumber;
+        case NoStrictModeFlag:
+            return FlagBoolean;
+        case NormalizeStatsFlag:
+            return FlagBoolean;
+        case OffFlag:
+            return FlagPhases;
+        case OffProfiledByteCodeFlag:
+            return FlagPhases;
+        case OnFlag:
+            return FlagPhases;
+        case OutputFileFlag:
+            return FlagString;
+        case OutputFileOpenModeFlag:
+            return FlagString;
+        #ifdef ENABLE_TRACE
+        case InMemoryTraceFlag:
+            return FlagBoolean;
+        case InMemoryTraceBufferSizeFlag:
+            return FlagNumber;
+        #ifdef STACK_BACK_TRACE
+        case TraceWithStackFlag:
+            return FlagBoolean;
+        #endif // STACK_BACK_TRACE
+        #endif // ENABLE_TRACE
+        case PrintRunTimeDataCollectionTraceFlag:
+            return FlagBoolean;
+        #ifdef ENABLE_PREJIT
+        case PrejitFlag:
+            return FlagBoolean;
+        #endif
+        case PrintSrcInDumpFlag:
+            return FlagBoolean;
+        #if PROFILE_DICTIONARY
+        case ProfileDictionaryFlag:
+            return FlagNumber;
+        #endif
+        #ifdef PROFILE_EXEC
+        case ProfileFlag:
+            return FlagPhases;
+        case ProfileThresholdFlag:
+            return FlagNumber;
+        #endif
+        #ifdef PROFILE_OBJECT_LITERALS
+        case ProfileObjectLiteralFlag:
+            return FlagBoolean;
+        #endif
+        #ifdef PROFILE_MEM
+        case ProfileMemoryFlag:
+            return FlagString;
+        #endif
+        #ifdef PROFILE_STRINGS
+        case ProfileStringsFlag:
+            return FlagBoolean;
+        #endif
+        #ifdef PROFILE_TYPES
+        case ProfileTypesFlag:
+            return FlagBoolean;
+        #endif
+        #ifdef PROFILE_EVALMAP
+        case ProfileEvalMapFlag:
+            return FlagBoolean;
+        #endif
+
+        #ifdef PROFILE_BAILOUT_RECORD_MEMORY
+        case ProfileBailOutRecordMemoryFlag:
+            return FlagBoolean;
+        #endif
+
+        #if DBG
+        case ValidateIntRangesFlag:
+            return FlagBoolean;
+        #endif
+        case RejitMaxBailOutCountFlag:
+            return FlagNumber;
+        case CallsToBailoutsRatioForRejitFlag:
+            return FlagNumber;
+        case LoopIterationsToBailoutsRatioForRejitFlag:
+            return FlagNumber;
+        case MinBailOutsBeforeRejitFlag:
+            return FlagNumber;
+        case MinBailOutsBeforeRejitForLoopsFlag:
+            return FlagNumber;
+        case LibraryStackFrameFlag:
+            return FlagBoolean;
+        case LibraryStackFrameDebuggerFlag:
+            return FlagBoolean;
+        #ifdef RECYCLER_STRESS
+        case RecyclerStressFlag:
+            return FlagBoolean;
+        #if ENABLE_CONCURRENT_GC
+        case RecyclerBackgroundStressFlag:
+            return FlagBoolean;
+        case RecyclerConcurrentStressFlag:
+            return FlagBoolean;
+        case RecyclerConcurrentRepeatStressFlag:
+            return FlagBoolean;
+        #endif
+        #if ENABLE_PARTIAL_GC
+        case RecyclerPartialStressFlag:
+            return FlagBoolean;
+        #endif
+        case RecyclerTrackStressFlag:
+            return FlagBoolean;
+        case RecyclerInduceFalsePositivesFlag:
+            return FlagBoolean;
+        #endif // RECYCLER_STRESS
+        case RecyclerForceMarkInteriorFlag:
+            return FlagBoolean;
+        #if ENABLE_CONCURRENT_GC
+        case RecyclerPriorityBoostTimeoutFlag:
+            return FlagNumber;
+        case RecyclerThreadCollectTimeoutFlag:
+            return FlagNumber;
+        case EnableConcurrentSweepAllocFlag:
+            return FlagBoolean;
+        case ecsaFlag:
+            return FlagBoolean;
+        #endif
+        #ifdef RECYCLER_PAGE_HEAP
+        case PageHeapFlag:
+            return FlagNumber;
+        case PageHeapAllocStackFlag:
+            return FlagBoolean;
+        case PageHeapFreeStackFlag:
+            return FlagBoolean;
+        case PageHeapBucketNumberFlag:
+            return FlagNumberRange;
+        case PageHeapBlockTypeFlag:
+            return FlagNumber;
+        case PageHeapDecommitGuardPageFlag:
+            return FlagBoolean;
+        #endif
+        #ifdef RECYCLER_NO_PAGE_REUSE
+        case RecyclerNoPageReuseFlag:
+            return FlagBoolean;
+        #endif
+        #ifdef RECYCLER_MEMORY_VERIFY
+        case RecyclerVerifyFlag:
+            return FlagPhases;
+        case RecyclerVerifyPadSizeFlag:
+            return FlagNumber;
+        #endif
+        case RecyclerTestFlag:
+            return FlagBoolean;
+        case RecyclerProtectPagesOnRescanFlag:
+            return FlagBoolean;
+        #ifdef RECYCLER_VERIFY_MARK
+        case RecyclerVerifyMarkFlag:
+            return FlagBoolean;
+        #endif
+        case LowMemoryCapFlag:
+            return FlagNumber;
+        case NewPagesCapDuringBGSweepingFlag:
+            return FlagNumber;
+        case AllocPolicyLimitFlag:
+            return FlagNumber;
+        #ifdef RUNTIME_DATA_COLLECTION
+        case RuntimeDataOutputFileFlag:
+            return FlagString;
+        #endif
+        case SpeculationCapFlag:
+            return FlagNumber;
+        #if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
+        case StatsFlag:
+            return FlagPhases;
+        #endif
+        #if EXCEPTION_RECOVERY
+        case SwallowExceptionsFlag:
+            return FlagBoolean;
+        #endif
+        case PrintSystemExceptionFlag:
+            return FlagBoolean;
+        case SwitchOptHolesThresholdFlag:
+            return FlagNumber;
+        case TempMinFlag:
+            return FlagNumber;
+        case TempMaxFlag:
+            return FlagNumber;
+        case TraceFlag:
+            return FlagPhases;
+
+        #if defined(_M_X64)
+        case LoopAlignNopLimitFlag:
+            return FlagNumber;
+        #endif
+
+        #ifdef PROFILE_MEM
+        case TraceMemoryFlag:
+            return FlagPhases;
+        #endif
+        #if DBG_DUMP || defined(RECYCLER_TRACE)
+        //TraceMetaDataParsing flag with optional levels:
+        //    Level 1 = interfaces only
+        //    Level 2 = interfaces and methods
+        //    Level 3 = interfaces, methods and parameters
+        //    Level 4 = interfaces and properties
+        //    Level 5 (default) = ALL
+        case TraceMetaDataParsingFlag:
+            return FlagNumber;
+        case TraceWin8AllocationsFlag:
+            return FlagBoolean;
+        case TraceWin8DeallocationsImmediateFlag:
+            return FlagBoolean;
+        case PrintWin8StatsDetailedFlag:
+            return FlagBoolean;
+        case TraceProtectPagesFlag:
+            return FlagBoolean;
+        #endif
+        case TraceAsyncDebugCallsFlag:
+            return FlagBoolean;
+        #ifdef TRACK_DISPATCH
+        case TrackDispatchFlag:
+            return FlagBoolean;
+        #endif
+        case VerboseFlag:
+            return FlagBoolean;
+        case UseFullNameFlag:
+            return FlagBoolean;
+        case Utf8Flag:
+            return FlagBoolean;
+        case VersionFlag:
+            return FlagNumber;
+        case WERExceptionSupportFlag:
+            return FlagBoolean;
+        case ExtendedErrorStackForTestHostFlag:
+            return FlagBoolean;
+        case errorStackTraceFlag:
+            return FlagBoolean;
+        case DoHeapEnumOnEngineShutdownFlag:
+            return FlagBoolean;
+        #ifdef HEAP_ENUMERATION_VALIDATION
+        case ValidateHeapEnumFlag:
+            return FlagBoolean;
+        #endif
+
+        #if ENABLE_REGEX_CONFIG_OPTIONS
+        //
+        // Regex flags
+        //
+        case RegexTracingFlag:
+            return FlagBoolean;
+        case RegexProfileFlag:
+            return FlagBoolean;
+        case RegexDebugFlag:
+            return FlagBoolean;
+        case RegexDebugASTFlag:
+            return FlagBoolean;
+        case RegexDebugAnnotatedASTFlag:
+            return FlagBoolean;
+        case RegexBytecodeDebugFlag:
+            return FlagBoolean;
+        case RegexOptimizeFlag:
+            return FlagBoolean;
+        case DynamicRegexMruListSizeFlag:
+            return FlagNumber;
+        #endif
+
+        case OptimizeForManyInstancesFlag:
+            return FlagBoolean;
+        case EnableArrayTypeMutationFlag:
+            return FlagBoolean;
+        case ArrayMutationTestSeedFlag:
+            return FlagNumber;
+        case TestTraceFlag:
+            return FlagPhases;
+        case EnableEvalMapCleanupFlag:
+            return FlagBoolean;
+        #ifdef PROFILE_MEM
+        case TraceObjectAllocationFlag:
+            return FlagBoolean;
+        #endif
+        case SseFlag:
+            return FlagNumber;
+        case DeletedPropertyReuseThresholdFlag:
+            return FlagNumber;
+        case ForceStringKeyedSimpleDictionaryTypeHandlerFlag:
+            return FlagBoolean;
+        case BigDictionaryTypeHandlerThresholdFlag:
+            return FlagNumber;
+        case TypeSnapshotEnumerationFlag:
+            return FlagBoolean;
+        case IsolatePrototypesFlag:
+            return FlagBoolean;
+        case ChangeTypeOnProtoFlag:
+            return FlagBoolean;
+        case ShareInlineCachesFlag:
+            return FlagBoolean;
+        case DisableDebugObjectFlag:
+            return FlagBoolean;
+        case DumpHeapFlag:
+            return FlagBoolean;
+        case autoProxyFlag:
+            return FlagString;
+        case PerfHintLevelFlag:
+            return FlagNumber;
+        #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
+        case MemProtectHeapFlag:
+            return FlagBoolean;
+        #endif
+        #ifdef RECYCLER_STRESS
+        case MemProtectHeapStressFlag:
+            return FlagBoolean;
+        #if ENABLE_CONCURRENT_GC
+        case MemProtectHeapBackgroundStressFlag:
+            return FlagBoolean;
+        case MemProtectHeapConcurrentStressFlag:
+            return FlagBoolean;
+        case MemProtectHeapConcurrentRepeatStressFlag:
+            return FlagBoolean;
+        #endif
+        #if ENABLE_PARTIAL_GC
+        case MemProtectHeapPartialStressFlag:
+            return FlagBoolean;
+        #endif
+        #endif
+        #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
+        case FixPropsOnPathTypesFlag:
+            return FlagBoolean;
+        #endif
+        case BailoutTraceFilterFlag:
+            return FlagNumberSet;
+        case RejitTraceFilterFlag:
+            return FlagNumberSet;
+
+        // recycler heuristic flags
+        case MaxBackgroundFinishMarkCountFlag:
+            return FlagNumber;
+        case BackgroundFinishMarkWaitTimeFlag:
+            return FlagNumber;
+        case MinBackgroundRepeatMarkRescanBytesFlag:
+            return FlagNumber;
+
+        #if defined(_M_X64)
+        case ZeroMemoryWithNonTemporalStoreFlag:
+            return FlagBoolean;
+        #endif
+
+        // recycler memory restrict test flags
+        case MaxMarkStackPageCountFlag:
+            return FlagNumber;
+        case MaxTrackedObjectListCountFlag:
+            return FlagNumber;
+
+        // make the recycler page integration path easier to hit
+        case NumberAllocPlusSizeFlag:
+            return FlagNumber;
+
+        #if DBG
+        case InitializeInterpreterSlotsWithInvalidStackVarFlag:
+            return FlagBoolean;
+        #endif
+
+        #if DBG
+        case PRNGSeed0Flag:
+            return FlagNumber;
+        case PRNGSeed1Flag:
+            return FlagNumber;
+        #endif
+
+        case ClearInlineCachesOnCollectFlag:
+            return FlagBoolean;
+        case InlineCacheInvalidationListCompactionThresholdFlag:
+            return FlagNumber;
+        case ConstructorCacheInvalidationThresholdFlag:
+            return FlagNumber;
+
+        #ifdef IR_VIEWER
+        case IRViewerFlag:
+            return FlagBoolean;
+        #endif /* IR_VIEWER */
+
+        case GCMemoryThresholdFlag:
+            return FlagNumber;
+
+        #if DBG
+            case SimulatePolyCacheWithOneTypeForInlineCacheIndexFlag:
+            return FlagNumber;
+        #endif
+
+        case JITServerIdleTimeoutFlag:
+            return FlagNumber;
+        case JITServerMaxInactivePageAllocatorCountFlag:
+            return FlagNumber;
+
+        case StrictWriteBarrierCheckFlag:
+            return FlagBoolean;
+        case WriteBarrierTestFlag:
+            return FlagBoolean;
+        case ForceSoftwareWriteBarrierFlag:
+            return FlagBoolean;
+        case VerifyBarrierBitFlag:
+            return FlagBoolean;
+        case EnableBGFreeZeroFlag:
+            return FlagBoolean;
+        case KeepRecyclerTrackDataFlag:
+            return FlagBoolean;
+
+        case MaxSingleAllocSizeInMBFlag:
+            return FlagNumber;
+
+        default:
+            return InvalidFlagType;
         }
     }
 
