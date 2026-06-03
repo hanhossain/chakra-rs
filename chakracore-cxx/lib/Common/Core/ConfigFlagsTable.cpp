@@ -855,22 +855,91 @@ namespace Js
 
     void ConfigFlagsTable::TransferAcronymFlagConfiguration()
     {
-        // Transfer acronym flag configuration into the corresponding actual flag
-    #define FLAG(...)
-    #define FLAGNRA(Type, Name, Acronym, ...) \
-        if(!IsEnabled(Name##Flag) && IsEnabled(Acronym##Flag)) \
-        { \
-            Enable(Name##Flag); \
-            Name = Acronym; \
+#ifdef DYNAMIC_PROFILE_STORAGE
+        if(!IsEnabled(DynamicProfileCacheFlag) && IsEnabled(DpcFlag))
+        {
+            Enable(DynamicProfileCacheFlag);
+            DynamicProfileCache = Dpc;
         }
-    #define FLAGPRA(Type, ParentName, Name, Acronym, ...) \
-        if(!IsEnabled(Name##Flag) && IsEnabled(Acronym##Flag)) \
-        { \
-            Enable(Name##Flag); \
-            Name = Acronym; \
+        if(!IsEnabled(DynamicProfileInputFlag) && IsEnabled(DpiFlag))
+        {
+            Enable(DynamicProfileInputFlag);
+            DynamicProfileInput = Dpi;
         }
-        #define FLAGRA(Type, Name, Acronym, ...) FLAGNRA(Type, Name, Acronym, __VA_ARGS__)
-    #include "Interface/ConfigFlagsList.h"
+#endif
+
+        if(!IsEnabled(InlineCountMaxInLoopBodiesFlag) && IsEnabled(icminlbFlag))
+        {
+            Enable(InlineCountMaxInLoopBodiesFlag);
+            InlineCountMaxInLoopBodies = icminlb;
+        }
+        if(!IsEnabled(InlineInLoopBodyScaleDownFactorFlag) && IsEnabled(iilbsdfFlag))
+        {
+            Enable(InlineInLoopBodyScaleDownFactorFlag);
+            InlineInLoopBodyScaleDownFactor = iilbsdf;
+        }
+        if(!IsEnabled(LoopInterpretCountFlag) && IsEnabled(licFlag))
+        {
+            Enable(LoopInterpretCountFlag);
+            LoopInterpretCount = lic;
+        }
+
+        if(!IsEnabled(MaxInterpretCountFlag) && IsEnabled(MicFlag))
+        {
+            Enable(MaxInterpretCountFlag);
+            MaxInterpretCount = Mic;
+        }
+        if(!IsEnabled(MaxSimpleJitRunCountFlag) && IsEnabled(MsjrcFlag))
+        {
+            Enable(MaxSimpleJitRunCountFlag);
+            MaxSimpleJitRunCount = Msjrc;
+        }
+        if(!IsEnabled(MinMemOpCountFlag) && IsEnabled(MmocFlag))
+        {
+            Enable(MinMemOpCountFlag);
+            MinMemOpCount = Mmoc;
+        }
+
+        if(!IsEnabled(MaxTemplatizedJitRunCountFlag) && IsEnabled(MtjrcFlag))
+        {
+            Enable(MaxTemplatizedJitRunCountFlag);
+            MaxTemplatizedJitRunCount = Mtjrc;
+        }
+        if(!IsEnabled(MaxAsmJsInterpreterRunCountFlag) && IsEnabled(MaicFlag))
+        {
+            Enable(MaxAsmJsInterpreterRunCountFlag);
+            MaxAsmJsInterpreterRunCount = Maic;
+        }
+
+        if(!IsEnabled(ExecutionModeLimitsFlag) && IsEnabled(EmlFlag))
+        {
+            Enable(ExecutionModeLimitsFlag);
+            ExecutionModeLimits = Eml;
+        }
+        if(!IsEnabled(EnforceExecutionModeLimitsFlag) && IsEnabled(EemlFlag))
+        {
+            Enable(EnforceExecutionModeLimitsFlag);
+            EnforceExecutionModeLimits = Eeml;
+        }
+
+        if(!IsEnabled(SimpleJitAfterFlag) && IsEnabled(SjaFlag))
+        {
+            Enable(SimpleJitAfterFlag);
+            SimpleJitAfter = Sja;
+        }
+        if(!IsEnabled(FullJitAfterFlag) && IsEnabled(FjaFlag))
+        {
+            Enable(FullJitAfterFlag);
+            FullJitAfter = Fja;
+        }
+
+#if ENABLE_CONCURRENT_GC
+        if(!IsEnabled(EnableConcurrentSweepAllocFlag) && IsEnabled(ecsaFlag))
+        {
+            Enable(EnableConcurrentSweepAllocFlag);
+            EnableConcurrentSweepAlloc = ecsa;
+        }
+#endif
     }
 
     void ConfigFlagsTable::TranslateFlagConfiguration()
