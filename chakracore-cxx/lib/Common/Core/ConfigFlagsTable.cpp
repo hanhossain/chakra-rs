@@ -684,10 +684,710 @@ namespace Js
     //
     const Flag FlagParents[FlagCount + 1] =
     {
-    #define FLAG(type, name, description, defaultValue, parentName, ...) parentName##Flag,
-    #include "Interface/ConfigFlagsList.h"
+#if DBG
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+#endif
+#ifdef ARENA_MEMORY_VERIFY
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+#endif
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+
+// WebAssembly Experimental Features
+// Master WasmExperimental flag to activate WebAssembly experimental features
+        NoParentFlag,
+
+// The default value of the experimental features will be off because the parent is off
+// Turning on the parent causes the child flag to take on their default value (aka on)
+// In Edge, we manually turn on the individual child flags
+// Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
+        WasmExperimentalFlag,
+
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+#ifdef BAILOUT_INJECTION
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+#endif
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+#ifdef CHECK_MEMORY_LEAK
+        NoParentFlag,
+        NoParentFlag,
+#endif
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+#ifdef DUMP_FRAGMENTATION_STATS
+        NoParentFlag,
+#endif
+        NoParentFlag,
+        NoParentFlag,
+#ifdef RECYCLER_DUMP_OBJECT_GRAPH
+        NoParentFlag,
+        NoParentFlag,
+#endif
+        NoParentFlag,
+        NoParentFlag,
+#ifdef DYNAMIC_PROFILE_STORAGE
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+#endif
+#ifdef EDIT_AND_CONTINUE
+        NoParentFlag,
+#endif
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+
+        NoParentFlag,
+
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+
+        NoParentFlag,
+        NoParentFlag,
+
+// ES6 (BLUE+1) features/flags
+
+// Master ES6 flag to enable STABLE ES6 features/flags
+        NoParentFlag,
+
+// Master ES6 flag to enable ALL sub ES6 features/flags
+        NoParentFlag,
+
+// Master ES6 flag to enable Threshold ES6 features/flags
+        NoParentFlag,
+
+// Per ES6 feature/flag
+
+        ES6Flag,
+        ES6Flag,
+        ES6Flag,
+        ES6Flag,
+        ES6Flag,
+
+        ES6Flag,
+        ES6Flag,
+        ES6Flag,
+        ES6Flag,
+
+#ifndef COMPILE_DISABLE_ESDynamicImport
+#define COMPILE_DISABLE_ESDynamicImport 0
+#endif
+        ES6Flag,
+
+        ES6Flag,
+        ES6Flag,
+        ES6Flag,
+        ES6Flag,
+        ES6Flag,
+        ES6Flag,
+        ES6Flag,
+        ES6Flag,
+        ES6Flag,
+        ES6Flag,
+
+        ES6Flag,
+        ES6Flag,
+        ES6Flag,
+        ES6Flag,
+        ES6Flag,
+        ES6Flag,
+        ES6Flag,
+        ES6Flag,
+        ES6Flag,
+        ES6Flag,
+        ES6Flag,
+        ES6Flag,
+
+#ifndef COMPILE_DISABLE_ES6RegExPrototypeProperties
+    #define COMPILE_DISABLE_ES6RegExPrototypeProperties 0
+#endif
+        ES6Flag,
+
+#ifndef COMPILE_DISABLE_ES6RegExSymbols
+    #define COMPILE_DISABLE_ES6RegExSymbols 0
+#endif
+
+// When we enable ES6RegExSymbols check all String and Regex built-ins which are inlined in JIT and make sure the helper
+// sets implicit call flag before calling into script
+// Also, the corresponding helpers in JnHelperMethodList.h should be marked as being reentrant
+        ES6Flag,
+
+        ES6Flag,
+        ES6Flag,
+
+#ifndef COMPILE_DISABLE_ESSharedArrayBuffer
+    #define COMPILE_DISABLE_ESSharedArrayBuffer 0
+#endif
+
+        ES6Flag,
+
+// Newer language feature flags
+
+// ES BigInt flag
+        NoParentFlag,
+
+// ES Numeric Separator support for numeric constants
+        NoParentFlag,
+
+// ES Nullish coalescing operator support (??)
+        NoParentFlag,
+
+// ES Hashbang support for interpreter directive syntax
+        NoParentFlag,
+
+// ES Symbol.prototype.description flag
+        NoParentFlag,
+
+        NoParentFlag,
+
+// ES Promise.any and AggregateError flag
+        NoParentFlag,
+
+// ES import.meta keyword meta-property
+        NoParentFlag,
+
+//ES globalThis flag
+        NoParentFlag,
+
+// This flag to be removed once JITing generator functions is stable
+        NoParentFlag,
+
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+
+#if defined(_M_ARM32_OR_ARM64)
+        NoParentFlag,
+#endif
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+#ifdef BYTECODE_TESTING
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+#endif
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+#ifdef LEAK_REPORT
+        NoParentFlag,
+#endif
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+#ifdef MEMSPECT_TRACKING
+        NoParentFlag,
+#endif
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+        NoParentFlag,
+        NoParentFlag,
+#endif
+        NoParentFlag,
+        NoParentFlag,
+
+        NoParentFlag,
+        NoParentFlag,
+
+        NoParentFlag,
+        NoParentFlag,
+
+        NoParentFlag,
+
+        MitigateSpectreFlag,
+
+        MitigateSpectreFlag,
+        MitigateSpectreFlag,
+        MitigateSpectreFlag,
+        MitigateSpectreFlag,
+        MitigateSpectreFlag,
+        MitigateSpectreFlag,
+
+        MitigateSpectreFlag,
+        MitigateSpectreFlag,
+        MitigateSpectreFlag,
+        MitigateSpectreFlag,
+        MitigateSpectreFlag,
+        MitigateSpectreFlag,
+
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+
+#if ENABLE_COPYONACCESS_ARRAY
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+#endif
+
+        NoParentFlag,
+        NoParentFlag,
+
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+
+        NoParentFlag,
+
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+#if DBG
+        NoParentFlag,
+#endif
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+#ifdef ENABLE_TRACE
+        NoParentFlag,
+        NoParentFlag,
+#ifdef STACK_BACK_TRACE
+        NoParentFlag,
+#endif // STACK_BACK_TRACE
+#endif // ENABLE_TRACE
+        NoParentFlag,
+#ifdef ENABLE_PREJIT
+        NoParentFlag,
+#endif
+        NoParentFlag,
+#if PROFILE_DICTIONARY
+        NoParentFlag,
+#endif
+#ifdef PROFILE_EXEC
+        NoParentFlag,
+        NoParentFlag,
+#endif
+#ifdef PROFILE_OBJECT_LITERALS
+        NoParentFlag,
+#endif
+#ifdef PROFILE_MEM
+        NoParentFlag,
+#endif
+#ifdef PROFILE_STRINGS
+        NoParentFlag,
+#endif
+#ifdef PROFILE_TYPES
+        NoParentFlag,
+#endif
+#ifdef PROFILE_EVALMAP
+        NoParentFlag,
+#endif
+
+#ifdef PROFILE_BAILOUT_RECORD_MEMORY
+        NoParentFlag,
+#endif
+
+#if DBG
+        NoParentFlag,
+#endif
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+#ifdef RECYCLER_STRESS
+        NoParentFlag,
+#if ENABLE_CONCURRENT_GC
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+#endif
+#if ENABLE_PARTIAL_GC
+        NoParentFlag,
+#endif
+        NoParentFlag,
+        NoParentFlag,
+#endif // RECYCLER_STRESS
+        NoParentFlag,
+#if ENABLE_CONCURRENT_GC
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+#endif
+#ifdef RECYCLER_PAGE_HEAP
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+#endif
+#ifdef RECYCLER_NO_PAGE_REUSE
+        NoParentFlag,
+#endif
+#ifdef RECYCLER_MEMORY_VERIFY
+        NoParentFlag,
+        NoParentFlag,
+#endif
+        NoParentFlag,
+        NoParentFlag,
+#ifdef RECYCLER_VERIFY_MARK
+        NoParentFlag,
+#endif
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+#ifdef RUNTIME_DATA_COLLECTION
+        NoParentFlag,
+#endif
+        NoParentFlag,
+#if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
+        NoParentFlag,
+#endif
+#if EXCEPTION_RECOVERY
+        NoParentFlag,
+#endif
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+
+#if defined(_M_X64)
+        NoParentFlag,
+#endif
+
+#ifdef PROFILE_MEM
+        NoParentFlag,
+#endif
+#if DBG_DUMP || defined(RECYCLER_TRACE)
+//TraceMetaDataParsing flag with optional levels:
+//    Level 1 = interfaces only
+//    Level 2 = interfaces and methods
+//    Level 3 = interfaces, methods and parameters
+//    Level 4 = interfaces and properties
+//    Level 5 (default) = ALL
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+#endif
+        NoParentFlag,
+#ifdef TRACK_DISPATCH
+        NoParentFlag,
+#endif
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+#ifdef HEAP_ENUMERATION_VALIDATION
+        NoParentFlag,
+#endif
+
+#if ENABLE_REGEX_CONFIG_OPTIONS
+//
+// Regex flags
+//
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+#endif
+
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+#ifdef PROFILE_MEM
+        NoParentFlag,
+#endif
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+#ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
+        NoParentFlag,
+#endif
+#ifdef RECYCLER_STRESS
+        NoParentFlag,
+#if ENABLE_CONCURRENT_GC
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+#endif
+#if ENABLE_PARTIAL_GC
+        NoParentFlag,
+#endif
+#endif
+#ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
+        NoParentFlag,
+#endif
+        NoParentFlag,
+        NoParentFlag,
+
+// recycler heuristic flags
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+
+#if defined(_M_X64)
+        NoParentFlag,
+#endif
+
+// recycler memory restrict test flags
+        NoParentFlag,
+        NoParentFlag,
+
+// make the recycler page integration path easier to hit
+        NoParentFlag,
+
+#if DBG
+        NoParentFlag,
+#endif
+
+#if DBG
+        NoParentFlag,
+        NoParentFlag,
+#endif
+
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+
+#ifdef IR_VIEWER
+        NoParentFlag,
+#endif /* IR_VIEWER */
+
+        NoParentFlag,
+
+#if DBG
+            NoParentFlag,
+#endif
+
+        NoParentFlag,
+        NoParentFlag,
+
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+
+        NoParentFlag,
+
         InvalidFlag
-    #undef FLAG
     };
 
     ///
