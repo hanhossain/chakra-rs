@@ -259,10 +259,1164 @@ namespace Js
 
     const char16_t* const FlagNames[FlagCount + 1] =
     {
-    #define FLAG(type, name, ...) _u(#name),
-    #include "Interface/ConfigFlagsList.h"
+    // TODO (hanhossain): ConfigFlagsList start
+// TODO (hanhossain): remove default values start
+#ifndef DEFAULT_CONFIG_BgJitDelay
+#if _M_ARM
+#define DEFAULT_CONFIG_BgJitDelay           (70)
+#else
+#define DEFAULT_CONFIG_BgJitDelay           (30)
+#endif
+#endif // DEFAULT_CONFIG_BgJitDelay
+#define DEFAULT_CONFIG_AsmJs                (true)
+#define DEFAULT_CONFIG_AsmJsEdge            (false)
+#define DEFAULT_CONFIG_AsmJsStopOnError     (false)
+
+#define DEFAULT_CONFIG_Wasm               (true)
+#define DEFAULT_CONFIG_WasmI64            (false)
+#if ENABLE_FAST_ARRAYBUFFER
+    #define DEFAULT_CONFIG_WasmFastArray    (true)
+#else
+    #define DEFAULT_CONFIG_WasmFastArray    (false)
+#endif
+#define DEFAULT_CONFIG_WasmSharedArrayVirtualBuffer (true)
+#define DEFAULT_CONFIG_WasmCheckVersion     (true)
+#define DEFAULT_CONFIG_WasmAssignModuleID   (false)
+#define DEFAULT_CONFIG_WasmIgnoreLimits     (false)
+#define DEFAULT_CONFIG_WasmFold             (true)
+#define DEFAULT_CONFIG_WasmMathExFilter     (false)
+#define DEFAULT_CONFIG_WasmIgnoreResponse   (false)
+#define DEFAULT_CONFIG_WasmMaxTableSize     (10000000)
+#define DEFAULT_CONFIG_WasmThreads          (false)
+#define DEFAULT_CONFIG_WasmMultiValue       (false)
+#define DEFAULT_CONFIG_WasmSignExtends      (true)
+#define DEFAULT_CONFIG_WasmNontrapping      (true)
+#define DEFAULT_CONFIG_WasmExperimental     (false)
+#define DEFAULT_CONFIG_BgParse              (false)
+#define DEFAULT_CONFIG_BgJitDelayFgBuffer   (0)
+#define DEFAULT_CONFIG_BgJitPendingFuncCap  (31)
+#define DEFAULT_CONFIG_CurrentSourceInfo    (true)
+#define DEFAULT_CONFIG_CreateFunctionProxy  (true)
+#define DEFAULT_CONFIG_HybridFgJit          (false)
+#define DEFAULT_CONFIG_HybridFgJitBgQueueLengthThreshold (32)
+#define DEFAULT_CONFIG_Prejit               (false)
+#define DEFAULT_CONFIG_ParserStateCache     (true)
+#define DEFAULT_CONFIG_CompressParserStateCache (false)
+#define DEFAULT_CONFIG_DeferTopLevelTillFirstCall (true)
+#define DEFAULT_CONFIG_DirectCallTelemetryStats (false)
+#define DEFAULT_CONFIG_errorStackTrace      (true)
+#define DEFAULT_CONFIG_FastLineColumnCalculation (true)
+#define DEFAULT_CONFIG_PrintLineColumnInfo (false)
+#define DEFAULT_CONFIG_ForceDecommitOnCollect (false)
+#define DEFAULT_CONFIG_ForceDeferParse      (false)
+#define DEFAULT_CONFIG_NoDeferParse         (false)
+#define DEFAULT_CONFIG_ForceDynamicProfile  (false)
+#define DEFAULT_CONFIG_ForceExpireOnNonCacheCollect (false)
+#define DEFAULT_CONFIG_ForceFastPath        (false)
+#define DEFAULT_CONFIG_ForceJITLoopBody     (false)
+#define DEFAULT_CONFIG_ForceStaticInterpreterThunk (false)
+#define DEFAULT_CONFIG_ForceCleanPropertyOnCollect (false)
+#define DEFAULT_CONFIG_ForceCleanCacheOnCollect (false)
+#define DEFAULT_CONFIG_ForceGCAfterJSONParse (false)
+#define DEFAULT_CONFIG_ForceSerialized      (false)
+#define DEFAULT_CONFIG_ForceES5Array        (false)
+#define DEFAULT_CONFIG_ForceAsmJsLinkFail   (false)
+#define DEFAULT_CONFIG_StrongArraySort      (false)
+#define DEFAULT_CONFIG_DumpCommentsFromReferencedFiles (false)
+#define DEFAULT_CONFIG_ExtendedErrorStackForTestHost (false)
+#define DEFAULT_CONFIG_ForceSplitScope      (false)
+#define DEFAULT_CONFIG_DelayFullJITSmallFunc (0)
+#define DEFAULT_CONFIG_EnableFatalErrorOnOOM (true)
+#define DEFAULT_CONFIG_RedeferralCap         (3)
+
+//Following determines inline thresholds
+#define DEFAULT_CONFIG_InlineThreshold      (35)            //Default start
+#define DEFAULT_CONFIG_AggressiveInlineThreshold  (80)      //Limit for aggressive inlining.
+#define DEFAULT_CONFIG_InlineThresholdAdjustCountInLargeFunction  (20)
+#define DEFAULT_CONFIG_InlineThresholdAdjustCountInMediumSizedFunction  (6)
+#define DEFAULT_CONFIG_InlineThresholdAdjustCountInSmallFunction  (10)
+#define DEFAULT_CONFIG_ConstructorInlineThreshold (21)      //Monomorphic constructor threshold
+#define DEFAULT_CONFIG_AsmJsInlineAdjust (35)                // wasm functions are cheaper to inline, so worth being more aggressive
+#define DEFAULT_CONFIG_ConstructorCallsRequiredToFinalizeCachedType (2)
+#define DEFAULT_CONFIG_OutsideLoopInlineThreshold (16)      //Threshold to inline outside loops
+#define DEFAULT_CONFIG_LeafInlineThreshold  (60)            //Inlinee threshold for function which is leaf (irrespective of it has loops or not)
+#define DEFAULT_CONFIG_LoopInlineThreshold  (25)            //Inlinee threshold for function with loops
+#define DEFAULT_CONFIG_PolymorphicInlineThreshold  (35)     //Polymorphic inline threshold
+#define DEFAULT_CONFIG_InlineCountMax       (1200)          //Max sum of bytecodes of inlinees inlined into a function (excluding built-ins)
+#define DEFAULT_CONFIG_InlineCountMaxInLoopBodies (500)     // Max sum of bytecodes of inlinees that can be inlined into a jitted loop body (excluding built-ins)
+#define DEFAULT_CONFIG_AggressiveInlineCountMax       (8000)          //Max sum of bytecodes of inlinees inlined into a function (excluding built-ins) when inlined aggressively
+#define DEFAULT_CONFIG_MaxFuncInlineDepth   (2)             //Maximum number of times a function can be inlined within a top function
+#define DEFAULT_CONFIG_MaxNumberOfInlineesWithLoop   (40) //Inlinee with a loop is controlled by LoopInlineThreshold, though we don't want to inline lot of inlinees with loop, this ensures a limit.
+#define DEFAULT_CONFIG_ConstantArgumentInlineThreshold   (157)      // Bytecode threshold for functions with constant arguments which are used for branching
+#define DEFAULT_CONFIG_RecursiveInlineThreshold     (2000)      // Bytecode threshold recursive call at a call site
+#define DEFAULT_CONFIG_RecursiveInlineDepthMax      (8)      // Maximum inline depth for recursive calls
+#define DEFAULT_CONFIG_RecursiveInlineDepthMin      (2)      // Minimum inline depth for recursive call
+#define DEFAULT_CONFIG_InlineInLoopBodyScaleDownFactor    (4)
+#define DEFAULT_CONFIG_PropertyCacheMissPenalty (10)
+#define DEFAULT_CONFIG_PropertyCacheMissThreshold (-100)
+#define DEFAULT_CONFIG_PropertyCacheMissReset (-5000)
+
+#define DEFAULT_CONFIG_CloneInlinedPolymorphicCaches (true)
+#define DEFAULT_CONFIG_HighPrecisionDate    (false)
+#define DEFAULT_CONFIG_ForceOldDateAPI      (false)
+#define DEFAULT_CONFIG_Loop                 (1)
+#define DEFAULT_CONFIG_ForceDiagnosticsMode (false)
+#define DEFAULT_CONFIG_UseFullName          (true)
+#define DEFAULT_CONFIG_EnableContinueAfterExceptionWrappersForHelpers  (true)
+#define DEFAULT_CONFIG_EnableContinueAfterExceptionWrappersForBuiltIns  (true)
+#define DEFAULT_CONFIG_EnableFunctionSourceReportForHeapEnum (true)
+#define DEFAULT_CONFIG_LoopInterpretCount   (150)
+#define DEFAULT_CONFIG_LoopProfileIterations (25)
+#define DEFAULT_CONFIG_JitLoopBodyHotLoopThreshold (20000)
+#define DEFAULT_CONFIG_LoopBodySizeThresholdToDisableOpts (255)
+
+#define DEFAULT_CONFIG_MaxJitThreadCount        (2)
+#define DEFAULT_CONFIG_ForceMaxJitThreadCount   (false)
+
+#ifdef ENABLE_SPECTRE_RUNTIME_MITIGATIONS
+#define DEFAULT_CONFIG_MitigateSpectre (true)
+
+#define DEFAULT_CONFIG_AddMaskingBlocks (true)
+
+#define DEFAULT_CONFIG_PoisonVarArrayLoad (true)
+#define DEFAULT_CONFIG_PoisonIntArrayLoad (true)
+#define DEFAULT_CONFIG_PoisonFloatArrayLoad (true)
+#define DEFAULT_CONFIG_PoisonTypedArrayLoad (true)
+#define DEFAULT_CONFIG_PoisonStringLoad (true)
+#define DEFAULT_CONFIG_PoisonObjectsForLoads (true)
+
+#define DEFAULT_CONFIG_PoisonVarArrayStore (true)
+#define DEFAULT_CONFIG_PoisonIntArrayStore (true)
+#define DEFAULT_CONFIG_PoisonFloatArrayStore (true)
+#define DEFAULT_CONFIG_PoisonTypedArrayStore (true)
+#define DEFAULT_CONFIG_PoisonStringStore (true)
+#define DEFAULT_CONFIG_PoisonObjectsForStores (true)
+#else
+#define DEFAULT_CONFIG_MitigateSpectre (false)
+
+#define DEFAULT_CONFIG_AddMaskingBlocks (false)
+
+#define DEFAULT_CONFIG_PoisonVarArrayLoad (false)
+#define DEFAULT_CONFIG_PoisonIntArrayLoad (false)
+#define DEFAULT_CONFIG_PoisonFloatArrayLoad (false)
+#define DEFAULT_CONFIG_PoisonTypedArrayLoad (false)
+#define DEFAULT_CONFIG_PoisonStringLoad (false)
+#define DEFAULT_CONFIG_PoisonObjectsForLoads (false)
+
+#define DEFAULT_CONFIG_PoisonVarArrayStore (false)
+#define DEFAULT_CONFIG_PoisonIntArrayStore (false)
+#define DEFAULT_CONFIG_PoisonFloatArrayStore (false)
+#define DEFAULT_CONFIG_PoisonTypedArrayStore (false)
+#define DEFAULT_CONFIG_PoisonStringStore (false)
+#define DEFAULT_CONFIG_PoisonObjectsForStores (false)
+#endif
+
+#ifdef RECYCLER_PAGE_HEAP
+#define DEFAULT_CONFIG_PageHeap             ((Js::Number) PageHeapMode::PageHeapModeOff)
+#define DEFAULT_CONFIG_PageHeapAllocStack   (false)
+#define DEFAULT_CONFIG_PageHeapFreeStack    (false)
+#define DEFAULT_CONFIG_PageHeapBlockType    ((Js::Number) PageHeapBlockTypeFilter::PageHeapBlockTypeFilterAll)
+#endif
+
+#define DEFAULT_CONFIG_LowMemoryCap         (0xB900000) // 185 MB - based on memory cap for process on low-capacity device
+#define DEFAULT_CONFIG_NewPagesCapDuringBGSweeping    (15000 * 4)
+#define DEFAULT_CONFIG_MaxSingleAllocSizeInMB  (2048)
+#define DEFAULT_CONFIG_AllocationPolicyLimit    (-1)
+
+#define DEFAULT_CONFIG_MaxCodeFill          (500)
+#define DEFAULT_CONFIG_MaxLoopsPerFunction  (10)
+#define DEFAULT_CONFIG_NopFrequency         (8)
+#define DEFAULT_CONFIG_SpeculationCap       (1)         // Needs to be 1 and not 0 since the compiler complains about a condition being always false
+#define DEFAULT_CONFIG_ProfileBasedSpeculationCap (1600)
+#define DEFAULT_CONFIG_Verbose              (false)
+#define DEFAULT_CONFIG_ForceStrictMode      (false)
+#define DEFAULT_CONFIG_EnableEvalMapCleanup (true)
+#define DEFAULT_CONFIG_ExpirableCollectionGCCount (5)  // Number of GCs during which entry point profiling occurs
+#define DEFAULT_CONFIG_ExpirableCollectionTriggerThreshold (50)  // Threshold at which Entry Point Collection is triggered
+#define DEFAULT_CONFIG_RegexTracing         (false)
+#define DEFAULT_CONFIG_RegexProfile         (false)
+#define DEFAULT_CONFIG_RegexDebug           (false)
+#define DEFAULT_CONFIG_RegexDebugAST        (true)
+#define DEFAULT_CONFIG_RegexDebugAnnotatedAST (true)
+#define DEFAULT_CONFIG_RegexBytecodeDebug   (false)
+#define DEFAULT_CONFIG_RegexOptimize        (true)
+#define DEFAULT_CONFIG_DynamicRegexMruListSize (16)
+#define DEFAULT_CONFIG_GoptCleanupThreshold  (25)
+#define DEFAULT_CONFIG_AsmGoptCleanupThreshold  (500)
+#define DEFAULT_CONFIG_OptimizeForManyInstances (false)
+#define DEFAULT_CONFIG_EnableArrayTypeMutation (false)
+
+#define DEFAULT_CONFIG_DeferParseThreshold             (4 * 1024) // Unit is number of characters
+#define DEFAULT_CONFIG_ProfileBasedDeferParseThreshold (100)      // Unit is number of characters
+
+#define DEFAULT_CONFIG_ProfileBasedSpeculativeJit (true)
+#define DEFAULT_CONFIG_WininetProfileCache        (true)
+#define DEFAULT_CONFIG_MinProfileCacheSize        (5)   // Minimum number of functions before profile is saved.
+#define DEFAULT_CONFIG_ProfileDifferencePercent   (15)  // If 15% of the functions have different profile we will trigger a save.
+
+#define DEFAULT_CONFIG_Intl                    (true)
+#define DEFAULT_CONFIG_IntlBuiltIns            (true)
+#define DEFAULT_CONFIG_IntlPlatform            (false) // Makes the EngineExtension.Intl object visible to user code as Intl.platform, meant for testing
+
+#ifdef ENABLE_JS_BUILTINS
+    #define DEFAULT_CONFIG_JsBuiltIn             (true)
+#else
+    #define DEFAULT_CONFIG_JsBuiltIn             (false)
+#endif
+#define DEFAULT_CONFIG_JitRepro                (false)
+#define DEFAULT_CONFIG_LdChakraLib             (false)
+#define DEFAULT_CONFIG_TestChakraLib           (false)
+#define DEFAULT_CONFIG_EntryPointInfoRpcData   (false)
+
+// ES6 DEFAULT BEHAVIOR
+#define DEFAULT_CONFIG_ES6                     (true)  // master flag to gate all P0-spec-test compliant ES6 features
+
+//CollectGarbage is legacy IE specific global function disabled in Microsoft Edge.
+#define DEFAULT_CONFIG_CollectGarbage          (false)
+
+// ES6 sub-feature gate - to enable-disable ES6 sub-feature when ES6 flag is enabled
+#define DEFAULT_CONFIG_ES6DateParseFix         (true)
+#define DEFAULT_CONFIG_ES6FunctionNameFull     (true)
+#define DEFAULT_CONFIG_ES6Generators           (true)
+#define DEFAULT_CONFIG_ES6IsConcatSpreadable   (true)
+#define DEFAULT_CONFIG_ES6Math                 (true)
+#ifdef COMPILE_DISABLE_ES6Module
+    // If ES6Module needs to be disabled by compile flag, DEFAULT_CONFIG_ES6Module should be false
+    #define DEFAULT_CONFIG_ES6Module               (false)
+#else
+    #define DEFAULT_CONFIG_ES6Module               (true)
+#endif
+#define DEFAULT_CONFIG_ES6Object               (true)
+#define DEFAULT_CONFIG_ES6Number               (true)
+#define DEFAULT_CONFIG_ES6ObjectLiterals       (true)
+#define DEFAULT_CONFIG_ES6Proxy                (true)
+#define DEFAULT_CONFIG_ES6Rest                 (true)
+#define DEFAULT_CONFIG_ES6Spread               (true)
+#define DEFAULT_CONFIG_ES6String               (true)
+#define DEFAULT_CONFIG_ES6StringPrototypeFixes (true)
+#define DEFAULT_CONFIG_ES2018ObjectRestSpread  (true)
+
+#ifndef DEFAULT_CONFIG_ES6PrototypeChain
+#ifdef COMPILE_DISABLE_ES6PrototypeChain
+    // If ES6PrototypeChain needs to be disabled by compile flag, DEFAULT_CONFIG_ES6PrototypeChain should be false
+    #define DEFAULT_CONFIG_ES6PrototypeChain       (false)
+#else
+    #define DEFAULT_CONFIG_ES6PrototypeChain       (true)
+#endif
+#endif
+
+#define DEFAULT_CONFIG_ES6ToPrimitive          (true)
+#define DEFAULT_CONFIG_ES6ToLength             (true)
+#define DEFAULT_CONFIG_ES6ToStringTag          (true)
+#define DEFAULT_CONFIG_ES6Unicode              (true)
+#define DEFAULT_CONFIG_ES6UnicodeVerbose       (true)
+#define DEFAULT_CONFIG_ES6Unscopables          (true)
+#define DEFAULT_CONFIG_ES6RegExSticky          (true)
+#define DEFAULT_CONFIG_ES2018RegExDotAll       (true)
+#define DEFAULT_CONFIG_ESBigInt                (false)
+#define DEFAULT_CONFIG_ESNumericSeparator      (true)
+#define DEFAULT_CONFIG_ESHashbang              (true)
+#define DEFAULT_CONFIG_ESSymbolDescription     (true)
+#define DEFAULT_CONFIG_ESArrayFindFromLast     (true)
+#define DEFAULT_CONFIG_ESPromiseAny            (true)
+#define DEFAULT_CONFIG_ESNullishCoalescingOperator (true)
+#define DEFAULT_CONFIG_ESGlobalThis            (true)
+
+// Jitting generator functions is not functional on ARM
+// Also still contains significant bugs on x86/x64 hence disabled
+#ifdef _M_ARM32_OR_ARM64
+    #define DEFAULT_CONFIG_JitES6Generators            (false)
+#else
+    #define DEFAULT_CONFIG_JitES6Generators            (false)
+#endif
+
+#ifdef COMPILE_DISABLE_ES6RegExPrototypeProperties
+    // If ES6RegExPrototypeProperties needs to be disabled by compile flag, DEFAULT_CONFIG_ES6RegExPrototypeProperties should be false
+    #define DEFAULT_CONFIG_ES6RegExPrototypeProperties (false)
+#else
+    #define DEFAULT_CONFIG_ES6RegExPrototypeProperties (false)
+#endif
+#ifdef COMPILE_DISABLE_ES6RegExSymbols
+    // If ES6RegExSymbols needs to be disabled by compile flag, DEFAULT_CONFIG_ES6RegExSymbols should be false
+    #define DEFAULT_CONFIG_ES6RegExSymbols         (false)
+#else
+    #define DEFAULT_CONFIG_ES6RegExSymbols         (false)
+#endif
+#define DEFAULT_CONFIG_ES7AsyncAwait           (true)
+#define DEFAULT_CONFIG_ES7ExponentionOperator  (true)
+#define DEFAULT_CONFIG_ES7TrailingComma        (true)
+#define DEFAULT_CONFIG_ES7ValuesEntries        (true)
+#define DEFAULT_CONFIG_ESObjectGetOwnPropertyDescriptors (true)
+#define DEFAULT_CONFIG_ESDynamicImport         (true)
+#define DEFAULT_CONFIG_ESImportMeta            (true)
+#define DEFAULT_CONFIG_ESExportNsAs            (true)
+#define DEFAULT_CONFIG_ES2018AsyncIteration    (true)
+#define DEFAULT_CONFIG_ESTopLevelAwait         (true)
+
+#define DEFAULT_CONFIG_ESSharedArrayBuffer     (false)
+
+#define DEFAULT_CONFIG_ES6Verbose              (false)
+#define DEFAULT_CONFIG_ES6All                  (false)
+// ES6 DEFAULT BEHAVIOR
+
+#define DEFAULT_CONFIG_AsyncDebugging           (true)
+#define DEFAULT_CONFIG_TraceAsyncDebugCalls     (false)
+#define DEFAULT_CONFIG_ForcePostLowerGlobOptInstrString (false)
+#define DEFAULT_CONFIG_EnumerateSpecialPropertiesInDebugger (true)
+
+#define DEFAULT_CONFIG_MaxJITFunctionBytecodeByteLength (4800000)
+#define DEFAULT_CONFIG_MaxJITFunctionBytecodeCount (120000)
+
+#define DEFAULT_CONFIG_JitQueueThreshold      (6)
+
+#define DEFAULT_CONFIG_FullJitRequeueThreshold (25)     // Minimum number of times a function needs to be executed before it is re-added to the jit queue
+
+#define DEFAULT_CONFIG_MinTemplatizedJitRunCount      (100)     // Minimum number of times a function needs to be interpreted before it is jitted
+#define DEFAULT_CONFIG_MinAsmJsInterpreterRunCount      (10)     // Minimum number of times a function needs to be Asm interpreted before it is jitted
+#define DEFAULT_CONFIG_MinTemplatizedJitLoopRunCount      (500)     // Minimum number of times a function needs to be interpreted before it is jitted
+#define DEFAULT_CONFIG_MaxTemplatizedJitRunCount      (-1)     // Maximum number of times a function can be TJ before it is jitted
+#define DEFAULT_CONFIG_MaxAsmJsInterpreterRunCount      (-1)     // Maximum number of times a function can be Asm interpreted before it is jitted
+
+// Note: The following defaults only apply when the NewSimpleJit is on. The defaults for when it's off are computed in
+// ConfigFlagsTable::TranslateFlagConfiguration.
+#define DEFAULT_CONFIG_AutoProfilingInterpreter0Limit (12)
+#define DEFAULT_CONFIG_ProfilingInterpreter0Limit (4)
+#define DEFAULT_CONFIG_AutoProfilingInterpreter1Limit (0)
+#define DEFAULT_CONFIG_SimpleJitLimit (132)
+#define DEFAULT_CONFIG_ProfilingInterpreter1Limit (12)
+
+// These are used to compute the above defaults for when NewSimpleJit is off
+#define DEFAULT_CONFIG_AutoProfilingInterpreterLimit_OldSimpleJit (80)
+#define DEFAULT_CONFIG_SimpleJitLimit_OldSimpleJit (25)
+
+#define DEFAULT_CONFIG_MinProfileIterations (16)
+#define DEFAULT_CONFIG_MinProfileIterations_OldSimpleJit (25)
+#define DEFAULT_CONFIG_MinSimpleJitIterations (16)
+#define DEFAULT_CONFIG_NewSimpleJit (false)
+
+#define DEFAULT_CONFIG_MaxLinearIntCaseCount     (3)       // Maximum number of cases (in switch statement) for which instructions can be generated linearly.
+#define DEFAULT_CONFIG_MaxSingleCharStrJumpTableRatio  (2)       // Maximum single char string jump table size as multiples of the actual case arm
+#define DEFAULT_CONFIG_MaxSingleCharStrJumpTableSize  (128)       // Maximum single char string jump table size
+#define DEFAULT_CONFIG_MinSwitchJumpTableSize   (9)     // Minimum number of case target entries in the jump table(this may also include values that are missing in the consecutive set of integer case arms)
+#define DEFAULT_CONFIG_SwitchOptHolesThreshold  (50)     // Maximum percentage of holes (missing case values in a switch statement) with which a jump table can be created
+#define DEFAULT_CONFIG_MaxLinearStringCaseCount (4)     // Maximum number of String cases (in switch statement) for which instructions can be generated linearly.
+
+#define DEFAULT_CONFIG_MinDeferredFuncTokenCount (20)   // Minimum size in tokens of a defer-parsed function
+
+#if DBG
+#define DEFAULT_CONFIG_SkipFuncCountForBailOnNoProfile (0) //Initial Number of functions in a func body to be skipped from forcibly inserting BailOnNoProfile.
+#endif
+#define DEFAULT_CONFIG_BailOnNoProfileLimit    200      // The limit of bailout on no profile info before triggering a rejit
+#define DEFAULT_CONFIG_BailOnNoProfileRejitLimit (50)   // The limit of bailout on no profile info before disable all the no profile bailouts
+#define DEFAULT_CONFIG_CallsToBailoutsRatioForRejit 10   // Ratio of function calls to bailouts above which a rejit is considered
+#define DEFAULT_CONFIG_LoopIterationsToBailoutsRatioForRejit 50 // Ratio of loop iteration count to bailouts above which a rejit of the loop body is considered
+#define DEFAULT_CONFIG_MinBailOutsBeforeRejit 2         // Minimum number of bailouts for a single bailout record after which a rejit is considered
+#define DEFAULT_CONFIG_MinBailOutsBeforeRejitForLoops 2         // Minimum number of bailouts for a single bailout record after which a rejit is considered
+#define DEFAULT_CONFIG_RejitMaxBailOutCount 500         // Maximum number of bailouts for a single bailout record after which rejit is forced.
+
+#if DBG
+#define DEFAULT_CONFIG_ValidateIntRanges (false)
+#endif
+
+#define DEFAULT_CONFIG_Sse                  (-1)
+
+#define DEFAULT_CONFIG_DeletedPropertyReuseThreshold (32)
+#define DEFAULT_CONFIG_BigDictionaryTypeHandlerThreshold (0xffff)
+#define DEFAULT_CONFIG_ForceStringKeyedSimpleDictionaryTypeHandler (false)
+#define DEFAULT_CONFIG_TypeSnapshotEnumeration (true)
+#define DEFAULT_CONFIG_ConcurrentRuntime (false)
+#define DEFAULT_CONFIG_PrimeRecycler     (false)
+#define DEFAULT_CONFIG_DisableRentalThreading (false)
+#define DEFAULT_CONFIG_DisableDebugObject (false)
+#define DEFAULT_CONFIG_DumpHeap (false)
+#define DEFAULT_CONFIG_PerfHintLevel (1)
+#define DEFAULT_CONFIG_OOPJITMissingOpts (false)
+#define DEFAULT_CONFIG_OOPCFGRegistration (true)
+#define DEFAULT_CONFIG_CrashOnOOPJITFailure (false)
+#define DEFAULT_CONFIG_ForceJITCFGCheck (false)
+#define DEFAULT_CONFIG_UseJITTrampoline (true)
+
+#define DEFAULT_CONFIG_IsolatePrototypes    (true)
+#define DEFAULT_CONFIG_ChangeTypeOnProto    (true)
+#define DEFAULT_CONFIG_FixPropsOnPathTypes    (true)
+#define DEFAULT_CONFIG_BailoutTraceFilter (-1)
+#define DEFAULT_CONFIG_TempMin    (0)
+#define DEFAULT_CONFIG_TempMax    (INT_MAX)
+
+#define DEFAULT_CONFIG_LibraryStackFrame            (true)
+#define DEFAULT_CONFIG_LibraryStackFrameDebugger    (false)
+
+#define DEFAULT_CONFIG_FuncObjectInlineCacheThreshold   (2) // Maximum number of inline caches a function body may have to allow for inline caches to be allocated on the function object.
+#define DEFAULT_CONFIG_ShareInlineCaches (false)
+#define DEFAULT_CONFIG_InlineCacheInvalidationListCompactionThreshold (4)
+#define DEFAULT_CONFIG_ConstructorCacheInvalidationThreshold (500)
+
+#define DEFAULT_CONFIG_InMemoryTrace                (false)
+#define DEFAULT_CONFIG_InMemoryTraceBufferSize      (1024)
+#define DEFAULT_CONFIG_RichTraceFormat              (false)
+#define DEFAULT_CONFIG_TraceWithStack               (false)
+
+#define DEFAULT_CONFIG_InjectPartiallyInitializedInterpreterFrameError (0)
+#define DEFAULT_CONFIG_InjectPartiallyInitializedInterpreterFrameErrorType (0)
+
+#define DEFAULT_CONFIG_DeferLoadingAvailableSource  (false)
+
+#define DEFAULT_CONFIG_RecyclerForceMarkInterior (false)
+
+#define DEFAULT_CONFIG_MemProtectHeap (false)
+
+#define DEFAULT_CONFIG_InduceCodeGenFailure (30) // When -InduceCodeGenFailure is passed in, 30% of JIT allocations will fail
+
+#define DEFAULT_CONFIG_SkipSplitWhenResultIgnored (false)
+
+#define DEFAULT_CONFIG_MinMemOpCount (16U)
+
+#if ENABLE_COPYONACCESS_ARRAY
+#define DEFAULT_CONFIG_MaxCopyOnAccessArrayLength (32U)
+#define DEFAULT_CONFIG_MinCopyOnAccessArrayLength (5U)
+#define DEFAULT_CONFIG_CopyOnAccessArraySegmentCacheSize (16U)
+#endif
+
+#if defined(_M_X64)
+#define DEFAULT_CONFIG_LoopAlignNopLimit (6)
+#endif
+
+#if defined(_M_X64)
+#define DEFAULT_CONFIG_ZeroMemoryWithNonTemporalStore (true)
+#endif
+
+#define DEFAULT_CONFIG_StrictWriteBarrierCheck  (false)
+#define DEFAULT_CONFIG_KeepRecyclerTrackData  (false)
+#define DEFAULT_CONFIG_EnableBGFreeZero (true)
+
+#if !GLOBAL_ENABLE_WRITE_BARRIER
+#define DEFAULT_CONFIG_ForceSoftwareWriteBarrier  (false)
+#else
+#define DEFAULT_CONFIG_ForceSoftwareWriteBarrier  (true)
+#endif
+#define DEFAULT_CONFIG_WriteBarrierTest (false)
+#define DEFAULT_CONFIG_VerifyBarrierBit  (false)
+
+#define TraceLevel_Error        (1)
+#define TraceLevel_Warning      (2)
+#define TraceLevel_Info         (3)
+
+#define TEMP_ENABLE_FLAG_FOR_APPX_BETA_ONLY 1
+
+#define INMEMORY_CACHE_MAX_URL                    (5)             // This is the max number of URLs that the in-memory profile cache can hold.
+#define INMEMORY_CACHE_MAX_PROFILE_MANAGER        (50)            // This is the max number of dynamic scripts that the in-memory profile cache can have
+
+#ifdef SUPPORT_INTRUSIVE_TESTTRACES
+#define INTRUSIVE_TESTTRACE_PolymorphicInlineCache (1)
+#endif
+
+// TODO (hanhossain): remove default values end
+
+#if DBG
+        u"ArrayValidate",
+        u"MemOpMissingValueValidate",
+        u"OOPJITFixupValidate",
+#endif
+#ifdef ARENA_MEMORY_VERIFY
+        u"ArenaNoFreeList",
+        u"ArenaNoPageReuse",
+        u"ArenaUseHeapAlloc",
+#endif
+        u"ValidateInlineStack",
+        u"AsmDiff",
+        u"AsmDumpMode",
+        u"AsmJs",
+        u"AsmJsStopOnError",
+        u"AsmJsEdge",
+        u"Wasm",
+        u"WasmI64",
+        u"WasmFastArray",
+        u"WasmSharedArrayVirtualBuffer",
+        u"WasmMathExFilter",
+        u"WasmCheckVersion",
+        u"WasmAssignModuleID",
+        u"WasmIgnoreLimits",
+        u"WasmFold",
+        u"WasmIgnoreResponse",
+        u"WasmMaxTableSize",
+        u"WasmThreads",
+        u"WasmMultiValue",
+        u"WasmSignExtends",
+        u"WasmNontrapping",
+
+// WebAssembly Experimental Features
+// Master WasmExperimental flag to activate WebAssembly experimental features
+        u"WasmExperimental",
+
+// The default value of the experimental features will be off because the parent is off
+// Turning on the parent causes the child flag to take on their default value (aka on)
+// In Edge, we manually turn on the individual child flags
+// Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
+        u"WasmSimd",
+
+        u"AssertBreak",
+        u"AssertPopUp",
+        u"AssertIgnore",
+        u"AsyncDebugging",
+        u"BailOnNoProfileLimit",
+        u"BailOnNoProfileRejitLimit",
+        u"BaselineMode",
+        u"DumpOnCrash",
+        u"FullMemoryDump",
+#ifdef BAILOUT_INJECTION
+        u"BailOut",
+        u"BailOutAtEveryLine",
+        u"BailOutAtEveryByteCode",
+        u"BailOutAtEveryImplicitCall",
+        u"BailOutByteCode",
+#endif
+        u"Benchmark",
+        u"BgJit",
+        u"BgParse",
+        u"BgJitDelay",
+        u"BgJitDelayFgBuffer",
+        u"BgJitPendingFuncCap",
+
+        u"CreateFunctionProxy",
+        u"HybridFgJit",
+        u"HybridFgJitBgQueueLengthThreshold",
+        u"BytecodeHist",
+        u"CurrentSourceInfo",
+        u"CFGLog",
+        u"CheckAlignment",
+        u"CheckEmitBufferPermissions",
+#ifdef CHECK_MEMORY_LEAK
+        u"CheckMemoryLeak",
+        u"DumpOnLeak",
+#endif
+        u"CheckOpHelpers",
+        u"CloneInlinedPolymorphicCaches",
+        u"ConcurrentRuntime",
+        u"ConstructorInlineThreshold",
+        u"ConstructorCallsRequiredToFinalizeCachedType",
+        u"PropertyCacheMissPenalty",
+        u"PropertyCacheMissThreshold",
+        u"PropertyCacheMissReset",
+        u"Debug",
+        u"DebugBreak",
+        u"StatementDebugBreak",
+        u"DebugBreakOnPhaseBegin",
+
+        u"DebugWindow",
+        u"ParserStateCache",
+        u"CompressParserStateCache",
+        u"DeferTopLevelTillFirstCall",
+        u"DeferParse",
+        u"DirectCallTelemetryStats",
+        u"DisableArrayBTree",
+        u"DisableRentalThreading",
+        u"DisableVTuneSourceLineInfo",
+        u"DisplayMemStats",
+        u"Dump",
+#ifdef DUMP_FRAGMENTATION_STATS
+        u"DumpFragmentationStats",
+#endif
+        u"DumpIRAddresses",
+        u"DumpLineNoInColor",
+#ifdef RECYCLER_DUMP_OBJECT_GRAPH
+        u"DumpObjectGraphOnExit",
+        u"DumpObjectGraphOnCollect",
+#endif
+        u"DumpEvalStringOnRemoval",
+        u"DumpObjectGraphOnEnum",
+#ifdef DYNAMIC_PROFILE_STORAGE
+        u"DynamicProfileCache",
+        u"Dpc",
+        u"DynamicProfileCacheDir",
+        u"DynamicProfileInput",
+        u"Dpi",
+#endif
+#ifdef EDIT_AND_CONTINUE
+        u"EditTest",
+#endif
+        u"WininetProfileCache",
+        u"NoDynamicProfileInMemoryCache",
+        u"ProfileBasedSpeculativeJit",
+        u"ProfileBasedSpeculationCap",
+        u"ExecuteByteCodeBufferReturnsInvalidByteCode",
+        u"ExpirableCollectionGCCount",
+        u"ExpirableCollectionTriggerThreshold",
+        u"SkipSplitOnNoResult",
+        u"Force32BitByteCode",
+
+        u"CollectGarbage",
+
+        u"Intl",
+        u"IntlBuiltIns",
+        u"IntlPlatform",
+
+        u"JsBuiltIn",
+        u"JitRepro",
+        u"EntryPointInfoRpcData",
+
+        u"LdChakraLib",
+        u"TestChakraLib",
+
+// ES6 (BLUE+1) features/flags
+
+// Master ES6 flag to enable STABLE ES6 features/flags
+        u"ES6",
+
+// Master ES6 flag to enable ALL sub ES6 features/flags
+        u"ES6All",
+
+// Master ES6 flag to enable Threshold ES6 features/flags
+        u"ES6Experimental",
+
+// Per ES6 feature/flag
+
+        u"ES7AsyncAwait",
+        u"ES6DateParseFix",
+        u"ES6FunctionNameFull",
+        u"ES6Generators",
+        u"ES7ExponentiationOperator",
+
+        u"ES7ValuesEntries",
+        u"ES7TrailingComma",
+        u"ES6IsConcatSpreadable",
+        u"ES6Math",
+
+#ifndef COMPILE_DISABLE_ESDynamicImport
+#define COMPILE_DISABLE_ESDynamicImport 0
+#endif
+        u"ESDynamicImport",
+
+        u"ES6Module",
+        u"ES6Object",
+        u"ES6Number",
+        u"ES6ObjectLiterals",
+        u"ES6Proxy",
+        u"ES6Rest",
+        u"ES6Spread",
+        u"ES6String",
+        u"ES6StringPrototypeFixes",
+        u"ES2018ObjectRestSpread",
+
+        u"ES6PrototypeChain",
+        u"ES6ToPrimitive",
+        u"ES6ToLength",
+        u"ES6ToStringTag",
+        u"ES6Unicode",
+        u"ES6UnicodeVerbose",
+        u"ES6Unscopables",
+        u"ES6RegExSticky",
+        u"ES2018RegExDotAll",
+        u"ESExportNsAs",
+        u"ES2018AsyncIteration",
+        u"ESTopLevelAwait",
+
+#ifndef COMPILE_DISABLE_ES6RegExPrototypeProperties
+    #define COMPILE_DISABLE_ES6RegExPrototypeProperties 0
+#endif
+        u"ES6RegExPrototypeProperties",
+
+#ifndef COMPILE_DISABLE_ES6RegExSymbols
+    #define COMPILE_DISABLE_ES6RegExSymbols 0
+#endif
+
+// When we enable ES6RegExSymbols check all String and Regex built-ins which are inlined in JIT and make sure the helper
+// sets implicit call flag before calling into script
+// Also, the corresponding helpers in JnHelperMethodList.h should be marked as being reentrant
+        u"ES6RegExSymbols",
+
+        u"ES6Verbose",
+        u"ESObjectGetOwnPropertyDescriptors",
+
+#ifndef COMPILE_DISABLE_ESSharedArrayBuffer
+    #define COMPILE_DISABLE_ESSharedArrayBuffer 0
+#endif
+
+        u"ESSharedArrayBuffer",
+
+// Newer language feature flags
+
+// ES BigInt flag
+        u"ESBigInt",
+
+// ES Numeric Separator support for numeric constants
+        u"ESNumericSeparator",
+
+// ES Nullish coalescing operator support (??)
+        u"ESNullishCoalescingOperator",
+
+// ES Hashbang support for interpreter directive syntax
+        u"ESHashbang",
+
+// ES Symbol.prototype.description flag
+        u"ESSymbolDescription",
+
+        u"ESArrayFindFromLast",
+
+// ES Promise.any and AggregateError flag
+        u"ESPromiseAny",
+
+// ES import.meta keyword meta-property
+        u"ESImportMeta",
+
+//ES globalThis flag
+        u"ESGlobalThis",
+
+// This flag to be removed once JITing generator functions is stable
+        u"JitES6Generators",
+
+        u"FastLineColumnCalculation",
+        u"Filename",
+        u"FreeRejittedCode",
+        u"ForceGuardPages",
+        u"PrintGuardPageBounds",
+        u"ForceLegacyEngine",
+        u"Force",
+        u"Stress",
+        u"ForceArrayBTree",
+        u"StrongArraySort",
+        u"ForceCleanPropertyOnCollect",
+        u"ForceCleanCacheOnCollect",
+        u"ForceGCAfterJSONParse",
+        u"ForceDecommitOnCollect",
+        u"ForceDeferParse",
+        u"ForceDiagnosticsMode",
+        u"ForceGetWriteWatchOOM",
+        u"ForcePostLowerGlobOptInstrString",
+        u"ForceSplitScope",
+        u"EnumerateSpecialPropertiesInDebugger",
+        u"EnableContinueAfterExceptionWrappersForHelpers",
+        u"EnableContinueAfterExceptionWrappersForBuiltIns",
+        u"EnableFunctionSourceReportForHeapEnum",
+        u"ForceFragmentAddressSpace",
+        u"ForceOOMOnEBCommit",
+        u"ForceDynamicProfile",
+        u"ForceES5Array",
+        u"ForceAsmJsLinkFail",
+        u"ForceExpireOnNonCacheCollect",
+        u"ForceFastPath",
+        u"ForceFloatPref",
+        u"ForceJITLoopBody",
+        u"ForceStaticInterpreterThunk",
+        u"DumpCommentsFromReferencedFiles",
+        u"DelayFullJITSmallFunc",
+        u"EnableFatalErrorOnOOM",
+
+#if defined(_M_ARM32_OR_ARM64)
+        u"ForceLocalsPtr",
+#endif
+        u"DeferLoadingAvailableSource",
+        u"ForceNative",
+        u"ForceSerialized",
+        u"ForceSerializedBytecodeMajorVersion",
+        u"ForceSerializedBytecodeVersionSchema",
+        u"ForceStrictMode",
+        u"ForceUndoDefer",
+        u"ForceBlockingConcurrentCollect",
+        u"FreTestDiagMode",
+#ifdef BYTECODE_TESTING
+        u"ByteCodeBranchLimit",
+        u"MediumByteCodeLayout",
+        u"LargeByteCodeLayout",
+#endif
+        u"InduceCodeGenFailure",
+        u"InduceCodeGenFailureSeed",
+        u"InjectPartiallyInitializedInterpreterFrameError",
+        u"InjectPartiallyInitializedInterpreterFrameErrorType",
+        u"GenerateByteCodeBufferReturnsCantGenerate",
+        u"GoptCleanupThreshold",
+        u"AsmGoptCleanupThreshold",
+        u"HighPrecisionDate",
+        u"InlineCountMax",
+        u"InlineCountMaxInLoopBodies",
+        u"icminlb",
+        u"InlineInLoopBodyScaleDownFactor",
+        u"iilbsdf",
+        u"InlineThreshold",
+        u"AggressiveInlineCountMax",
+        u"AggressiveInlineThreshold",
+        u"InlineThresholdAdjustCountInLargeFunction",
+        u"InlineThresholdAdjustCountInMediumSizedFunction",
+        u"InlineThresholdAdjustCountInSmallFunction",
+        u"AsmJsInlineAdjust",
+        u"Interpret",
+        u"Instrument",
+        u"JitQueueThreshold",
+#ifdef LEAK_REPORT
+        u"LeakReport",
+#endif
+        u"LoopInlineThreshold",
+        u"LeafInlineThreshold",
+        u"ConstantArgumentInlineThreshold",
+        u"RecursiveInlineThreshold",
+        u"RecursiveInlineDepthMax",
+        u"RecursiveInlineDepthMin",
+        u"RedeferralCap",
+        u"Loop",
+        u"LoopInterpretCount",
+        u"lic",
+        u"LoopProfileIterations",
+        u"OutsideLoopInlineThreshold",
+        u"MaxFuncInlineDepth",
+        u"MaxNumberOfInlineesWithLoop",
+#ifdef MEMSPECT_TRACKING
+        u"Memspect",
+#endif
+        u"PolymorphicInlineThreshold",
+        u"PrimeRecycler",
+        u"TraceEngineRefcount",
+#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+        u"LeakStackTrace",
+        u"ForceMemoryLeak",
+#endif
+        u"DumpAfterFinalGC",
+        u"ForceOldDateAPI",
+
+        u"JitLoopBodyHotLoopThreshold",
+        u"LoopBodySizeThresholdToDisableOpts",
+
+        u"MaxJitThreadCount",
+        u"ForceMaxJitThreadCount",
+
+        u"MitigateSpectre",
+
+        u"AddMaskingBlocks",
+
+        u"PoisonVarArrayLoad",
+        u"PoisonIntArrayLoad",
+        u"PoisonFloatArrayLoad",
+        u"PoisonTypedArrayLoad",
+        u"PoisonStringLoad",
+        u"PoisonObjectsForLoads",
+
+        u"PoisonVarArrayStore",
+        u"PoisonIntArrayStore",
+        u"PoisonFloatArrayStore",
+        u"PoisonTypedArrayStore",
+        u"PoisonStringStore",
+        u"PoisonObjectsForStores",
+
+        u"MinInterpretCount",
+        u"MinSimpleJitRunCount",
+        u"MaxInterpretCount",
+        u"Mic",
+        u"MaxSimpleJitRunCount",
+        u"Msjrc",
+        u"MinMemOpCount",
+        u"Mmoc",
+
+#if ENABLE_COPYONACCESS_ARRAY
+        u"MaxCopyOnAccessArrayLength",
+        u"MinCopyOnAccessArrayLength",
+        u"CopyOnAccessArraySegmentCacheSize",
+#endif
+
+        u"MinTemplatizedJitRunCount",
+        u"MinAsmJsInterpreterRunCount",
+
+        u"MinTemplatizedJitLoopRunCount",
+        u"MaxTemplatizedJitRunCount",
+        u"Mtjrc",
+        u"MaxAsmJsInterpreterRunCount",
+        u"Maic",
+
+        u"AutoProfilingInterpreter0Limit",
+        u"ProfilingInterpreter0Limit",
+        u"AutoProfilingInterpreter1Limit",
+        u"SimpleJitLimit",
+        u"ProfilingInterpreter1Limit",
+
+        u"ExecutionModeLimits",
+        u"Eml",
+        u"EnforceExecutionModeLimits",
+        u"Eeml",
+
+        u"SimpleJitAfter",
+        u"Sja",
+        u"FullJitAfter",
+        u"Fja",
+
+        u"NewSimpleJit",
+
+        u"MaxLinearIntCaseCount",
+        u"MaxSingleCharStrJumpTableSize",
+        u"MaxSingleCharStrJumpTableRatio",
+        u"MinSwitchJumpTableSize",
+        u"MaxLinearStringCaseCount",
+        u"MinDeferredFuncTokenCount",
+#if DBG
+        u"SkipFuncCountForBailOnNoProfile",
+#endif
+        u"MaxJITFunctionBytecodeByteLength",
+        u"MaxJITFunctionBytecodeCount",
+        u"MaxLoopsPerFunction",
+        u"FuncObjectInlineCacheThreshold",
+        u"NoDeferParse",
+        u"NoLogo",
+        u"OOPJITMissingOpts",
+        u"CrashOnOOPJITFailure",
+        u"OOPCFGRegistration",
+        u"ForceJITCFGCheck",
+        u"UseJITTrampoline",
+        u"NoNative",
+        u"NopFrequency",
+        u"NoStrictMode",
+        u"NormalizeStats",
+        u"Off",
+        u"OffProfiledByteCode",
+        u"On",
+        u"OutputFile",
+        u"OutputFileOpenMode",
+#ifdef ENABLE_TRACE
+        u"InMemoryTrace",
+        u"InMemoryTraceBufferSize",
+#ifdef STACK_BACK_TRACE
+        u"TraceWithStack",
+#endif // STACK_BACK_TRACE
+#endif // ENABLE_TRACE
+        u"PrintRunTimeDataCollectionTrace",
+#ifdef ENABLE_PREJIT
+        u"Prejit",
+#endif
+        u"PrintSrcInDump",
+#if PROFILE_DICTIONARY
+        u"ProfileDictionary",
+#endif
+#ifdef PROFILE_EXEC
+        u"Profile",
+        u"ProfileThreshold",
+#endif
+#ifdef PROFILE_OBJECT_LITERALS
+        u"ProfileObjectLiteral",
+#endif
+#ifdef PROFILE_MEM
+        u"ProfileMemory",
+#endif
+#ifdef PROFILE_STRINGS
+        u"ProfileStrings",
+#endif
+#ifdef PROFILE_TYPES
+        u"ProfileTypes",
+#endif
+#ifdef PROFILE_EVALMAP
+        u"ProfileEvalMap",
+#endif
+
+#ifdef PROFILE_BAILOUT_RECORD_MEMORY
+        u"ProfileBailOutRecordMemory",
+#endif
+
+#if DBG
+        u"ValidateIntRanges",
+#endif
+        u"RejitMaxBailOutCount",
+        u"CallsToBailoutsRatioForRejit",
+        u"LoopIterationsToBailoutsRatioForRejit",
+        u"MinBailOutsBeforeRejit",
+        u"MinBailOutsBeforeRejitForLoops",
+        u"LibraryStackFrame",
+        u"LibraryStackFrameDebugger",
+#ifdef RECYCLER_STRESS
+        u"RecyclerStress",
+#if ENABLE_CONCURRENT_GC
+        u"RecyclerBackgroundStress",
+        u"RecyclerConcurrentStress",
+        u"RecyclerConcurrentRepeatStress",
+#endif
+#if ENABLE_PARTIAL_GC
+        u"RecyclerPartialStress",
+#endif
+        u"RecyclerTrackStress",
+        u"RecyclerInduceFalsePositives",
+#endif // RECYCLER_STRESS
+        u"RecyclerForceMarkInterior",
+#if ENABLE_CONCURRENT_GC
+        u"RecyclerPriorityBoostTimeout",
+        u"RecyclerThreadCollectTimeout",
+        u"EnableConcurrentSweepAlloc",
+        u"ecsa",
+#endif
+#ifdef RECYCLER_PAGE_HEAP
+        u"PageHeap",
+        u"PageHeapAllocStack",
+        u"PageHeapFreeStack",
+        u"PageHeapBucketNumber",
+        u"PageHeapBlockType",
+        u"PageHeapDecommitGuardPage",
+#endif
+#ifdef RECYCLER_NO_PAGE_REUSE
+        u"RecyclerNoPageReuse",
+#endif
+#ifdef RECYCLER_MEMORY_VERIFY
+        u"RecyclerVerify",
+        u"RecyclerVerifyPadSize",
+#endif
+        u"RecyclerTest",
+        u"RecyclerProtectPagesOnRescan",
+#ifdef RECYCLER_VERIFY_MARK
+        u"RecyclerVerifyMark",
+#endif
+        u"LowMemoryCap",
+        u"NewPagesCapDuringBGSweeping",
+        u"AllocPolicyLimit",
+#ifdef RUNTIME_DATA_COLLECTION
+        u"RuntimeDataOutputFile",
+#endif
+        u"SpeculationCap",
+#if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
+        u"Stats",
+#endif
+#if EXCEPTION_RECOVERY
+        u"SwallowExceptions",
+#endif
+        u"PrintSystemException",
+        u"SwitchOptHolesThreshold",
+        u"TempMin",
+        u"TempMax",
+        u"Trace",
+
+#if defined(_M_X64)
+        u"LoopAlignNopLimit",
+#endif
+
+#ifdef PROFILE_MEM
+        u"TraceMemory",
+#endif
+#if DBG_DUMP || defined(RECYCLER_TRACE)
+//TraceMetaDataParsing flag with optional levels:
+//    Level 1 = interfaces only
+//    Level 2 = interfaces and methods
+//    Level 3 = interfaces, methods and parameters
+//    Level 4 = interfaces and properties
+//    Level 5 (default) = ALL
+        u"TraceMetaDataParsing",
+        u"TraceWin8Allocations",
+        u"TraceWin8DeallocationsImmediate",
+        u"PrintWin8StatsDetailed",
+        u"TraceProtectPages",
+#endif
+        u"TraceAsyncDebugCalls",
+#ifdef TRACK_DISPATCH
+        u"TrackDispatch",
+#endif
+        u"Verbose",
+        u"UseFullName",
+        u"Utf8",
+        u"Version",
+        u"WERExceptionSupport",
+        u"ExtendedErrorStackForTestHost",
+        u"errorStackTrace",
+        u"DoHeapEnumOnEngineShutdown",
+#ifdef HEAP_ENUMERATION_VALIDATION
+        u"ValidateHeapEnum",
+#endif
+
+#if ENABLE_REGEX_CONFIG_OPTIONS
+//
+// Regex flags
+//
+        u"RegexTracing",
+        u"RegexProfile",
+        u"RegexDebug",
+        u"RegexDebugAST",
+        u"RegexDebugAnnotatedAST",
+        u"RegexBytecodeDebug",
+        u"RegexOptimize",
+        u"DynamicRegexMruListSize",
+#endif
+
+        u"OptimizeForManyInstances",
+        u"EnableArrayTypeMutation",
+        u"ArrayMutationTestSeed",
+        u"TestTrace",
+        u"EnableEvalMapCleanup",
+#ifdef PROFILE_MEM
+        u"TraceObjectAllocation",
+#endif
+        u"Sse",
+        u"DeletedPropertyReuseThreshold",
+        u"ForceStringKeyedSimpleDictionaryTypeHandler",
+        u"BigDictionaryTypeHandlerThreshold",
+        u"TypeSnapshotEnumeration",
+        u"IsolatePrototypes",
+        u"ChangeTypeOnProto",
+        u"ShareInlineCaches",
+        u"DisableDebugObject",
+        u"DumpHeap",
+        u"autoProxy",
+        u"PerfHintLevel",
+#ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
+        u"MemProtectHeap",
+#endif
+#ifdef RECYCLER_STRESS
+        u"MemProtectHeapStress",
+#if ENABLE_CONCURRENT_GC
+        u"MemProtectHeapBackgroundStress",
+        u"MemProtectHeapConcurrentStress",
+        u"MemProtectHeapConcurrentRepeatStress",
+#endif
+#if ENABLE_PARTIAL_GC
+        u"MemProtectHeapPartialStress",
+#endif
+#endif
+#ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
+        u"FixPropsOnPathTypes",
+#endif
+        u"BailoutTraceFilter",
+        u"RejitTraceFilter",
+
+// recycler heuristic flags
+        u"MaxBackgroundFinishMarkCount",
+        u"BackgroundFinishMarkWaitTime",
+        u"MinBackgroundRepeatMarkRescanBytes",
+
+#if defined(_M_X64)
+        u"ZeroMemoryWithNonTemporalStore",
+#endif
+
+// recycler memory restrict test flags
+        u"MaxMarkStackPageCount",
+        u"MaxTrackedObjectListCount",
+
+// make the recycler page integration path easier to hit
+        u"NumberAllocPlusSize",
+
+#if DBG
+        u"InitializeInterpreterSlotsWithInvalidStackVar",
+#endif
+
+#if DBG
+        u"PRNGSeed0",
+        u"PRNGSeed1",
+#endif
+
+        u"ClearInlineCachesOnCollect",
+        u"InlineCacheInvalidationListCompactionThreshold",
+        u"ConstructorCacheInvalidationThreshold",
+
+#ifdef IR_VIEWER
+        u"IRViewer",
+#endif /* IR_VIEWER */
+
+        u"GCMemoryThreshold",
+
+#if DBG
+            u"SimulatePolyCacheWithOneTypeForInlineCacheIndex",
+#endif
+
+        u"JITServerIdleTimeout",
+        u"JITServerMaxInactivePageAllocatorCount",
+
+        u"StrictWriteBarrierCheck",
+        u"WriteBarrierTest",
+        u"ForceSoftwareWriteBarrier",
+        u"VerifyBarrierBit",
+        u"EnableBGFreeZero",
+        u"KeepRecyclerTrackData",
+
+        u"MaxSingleAllocSizeInMB",
+
+// TODO (hanhossain): ConfigFlagsList end
         NULL
-    #undef FLAG
     };
 
 
