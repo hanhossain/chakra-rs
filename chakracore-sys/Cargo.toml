@@ -5,7 +5,6 @@ edition = "2024"
 links = "chakracore-sys"
 
 [dependencies]
-chakra = { path = "../chakra" }
 cxx = "1.0.194"
 
 [build-dependencies]
