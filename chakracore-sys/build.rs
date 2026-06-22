@@ -57,6 +57,12 @@ fn main() {
                 .define("CMAKE_C_COMPILER", "clang")
                 .profile(build_type);
 
+            if let Ok(warnings_as_errors) = std::env::var("CHAKRA_WARNINGS_AS_ERRORS")
+                && warnings_as_errors.parse().unwrap_or_default()
+            {
+                config.define("CMAKE_COMPILE_WARNING_AS_ERROR", "ON");
+            }
+
             if cfg!(target_os = "macos") {
                 config
                     .define("DISABLE_JIT", "ON")
