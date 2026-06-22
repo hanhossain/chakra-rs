@@ -1257,49 +1257,6 @@ static BOOL SHMAddSegment(void)
 }
 
 /*++
-SHMStrDup
-
-Duplicates the string in shared memory.
-
-Returns the new address as SHMPTR on success.
-Returns (SHMPTR)NULL on failure.
---*/
-SHMPTR SHMStrDup( const char * string )
-{
-    uint32_t length = 0;
-    SHMPTR retVal = 0;
-
-    if ( string )
-    {
-        length = strlen( string );
-
-        retVal = SHMalloc( ++length );
-
-        if ( retVal != 0 )
-        {
-            void * ptr = SHMPTR_TO_PTR( retVal );
-            _ASSERT_MSG(ptr != NULL, "SHMPTR_TO_PTR returned NULL.\n");
-            if (ptr != NULL)
-            {
-                memcpy( ptr, string, length );
-            }
-            else
-            {
-                // This code should never be reached. If a valid pointer
-                // is passed to SHMPTR_TO_PTR and NULL is returned, then
-                // there's a problem in either the macro, or the underlying
-                // call to SHMPtrToPtr. In case the impossible happens,
-                // though, free the memory and return NULL rather than
-                // returning uninitialized memory.
-                SHMfree( retVal );
-                retVal = NULL;
-            }
-        }
-    }
-    return retVal;
-}
-
-/*++
 SHMWStrDup
 
 Duplicates the wide string in shared memory.
