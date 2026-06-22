@@ -62,7 +62,7 @@ namespace CorUnix
         SHMPTR shmNextObj;
         BOOL fAddedToList;
         
-        SHMPTR shmObjName;
+        std::u16string shmObjName_;
         SHMPTR shmObjImmutableData;
         SHMPTR shmObjSharedData;
 

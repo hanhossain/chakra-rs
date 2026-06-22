@@ -482,7 +482,6 @@ CSharedMemoryObjectManager::LocateObject(
     SHMPTR shmSharedObjectData = SHMNULL;
     SHMPTR shmObjectListEntry = SHMNULL;
     SHMObjData *psmod = NULL;
-    char16_t* pwsz = NULL;
 
     _ASSERTE(NULL != pthr);
     _ASSERTE(NULL != psObjectToLocate);
@@ -569,24 +568,15 @@ CSharedMemoryObjectManager::LocateObject(
         {
             if (psmod->dwNameLength == psObjectToLocate->GetStringLength())
             {
-                pwsz = SHMPTR_TO_TYPED_PTR(char16_t, psmod->shmObjName);
-                if (NULL != pwsz)
+                if (0 == PAL_wcscmp(psmod->shmObjName_.c_str(), psObjectToLocate->GetString()))
                 {
-                    if (0 == PAL_wcscmp(pwsz, psObjectToLocate->GetString()))
-                    {
-                        //
-                        // This is the object we were looking for.
-                        //
+                    //
+                    // This is the object we were looking for.
+                    //
 
-                        shmSharedObjectData = shmObjectListEntry;
-                        break;
-                    }
-                }
-                else
-                {
-                    ASSERT("Unable to map psmod->shmObjName\n");
+                    shmSharedObjectData = shmObjectListEntry;
                     break;
-                }                
+                }
             }
 
             shmObjectListEntry = psmod->shmNextObj;
@@ -601,7 +591,7 @@ CSharedMemoryObjectManager::LocateObject(
     if (SHMNULL != shmSharedObjectData)
     {
         CSharedMemoryObject *pshmobj = NULL;
-        CObjectAttributes oa(pwsz, NULL);
+        CObjectAttributes oa(psmod->shmObjName_.c_str(), NULL);
 
         //
         // Check if the type is allowed

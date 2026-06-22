@@ -188,32 +188,16 @@ CSharedMemoryObject::InitializeFromExistingSharedData(
     if (0 == poa->sObjectName.GetStringLength()
         && 0 != psmod->dwNameLength)
     {
-        char16_t *wsz;
-
-        wsz = SHMPTR_TO_TYPED_PTR(char16_t, psmod->shmObjName);
-        if (NULL != wsz)
-        {
-            poa->sObjectName.SetStringWithLength(wsz, psmod->dwNameLength);
-        }
-        else
-        {
-            ASSERT("Unable to map object name\n");
-            palError = ERROR_INTERNAL_ERROR;
-            goto InitializeFromExistingSharedDataExit;
-        }
+        poa->sObjectName.SetStringWithLength(psmod->shmObjName_.c_str(), psmod->dwNameLength);
     }
 #if _DEBUG
     else if (0 != psmod->dwNameLength)
     {
-        char16_t *wsz;
-
         //
         // Verify that the names are consistent
         //
 
-        wsz = SHMPTR_TO_TYPED_PTR(char16_t, psmod->shmObjName);
-        _ASSERTE(NULL != wsz);
-        _ASSERTE(0 == PAL_wcscmp(wsz, poa->sObjectName.GetString()));
+        _ASSERTE(0 == PAL_wcscmp(psmod->shmObjName_.c_str(), poa->sObjectName.GetString()));
     }
 #endif // debug
 
@@ -320,13 +304,7 @@ CSharedMemoryObject::AllocateSharedDataItems(
     if (0 != m_oa.sObjectName.GetStringLength())
     {
         psmod->dwNameLength = m_oa.sObjectName.GetStringLength();
-        psmod->shmObjName = SHMWStrDup(m_oa.sObjectName.GetString());
-        if (SHMNULL == psmod->shmObjName)
-        {
-            ERROR("Unable to allocate psmod->shmObjName for new object\n");
-            palError = ERROR_OUTOFMEMORY;
-            goto AllocateSharedDataItemsExit;
-        }
+        psmod->shmObjName_ = m_oa.sObjectName.GetString();
     }
 
     if (0 != m_pot->GetImmutableDataSize())
@@ -409,11 +387,6 @@ CSharedMemoryObject::FreeSharedDataAreas(
         SHMfree(psmod->shmObjSharedData);
     }
 
-    if (SHMNULL != psmod->shmObjName)
-    {
-        SHMfree(psmod->shmObjName);
-    }
-    
     SHMfree(shmObjData);
 
     SHMRelease();
