@@ -253,9 +253,6 @@ if (IN_DOCKER)
     include_directories(${CMAKE_SOURCE_DIR}/target/docker)
 endif ()
 
-# detect features
-include_directories(SYSTEM /usr/local/include)
-
 add_subdirectory(pal)
 
 add_subdirectory(lib)
