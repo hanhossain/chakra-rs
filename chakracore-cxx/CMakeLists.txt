@@ -140,7 +140,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
     -Wno-pragmas\
     -Wno-invalid-token-paste\
     -Wno-format\
-    -Wno-invalid-noreturn\
     -Wno-null-arithmetic\
     -Wno-tautological-constant-out-of-range-compare\
     -Wno-tautological-undefined-compare\
