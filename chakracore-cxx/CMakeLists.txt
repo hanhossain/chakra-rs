@@ -162,7 +162,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
     -Wno-unused-private-field\
     -Wno-unused-but-set-variable\
     -Wno-unused-lambda-capture\
-    -Wno-sometimes-uninitialized\
+    -Werror=sometimes-uninitialized\
     -Wno-tautological-overlap-compare")
 
 # this keeps causing issues with the docker build even if paths are correct

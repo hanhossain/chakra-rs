@@ -31,7 +31,7 @@ namespace Js
 
         // 1. Let O be ToObject(this value).
         // 2. ReturnIfAbrupt(O).
-        RecyclableObject* object;
+        RecyclableObject* object = nullptr;
         if (args.Info.Count < 1 || !JavascriptConversion::ToObject(arg0, scriptContext, &object))
         {
             JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedObject, u"Object.prototype.__proto__");

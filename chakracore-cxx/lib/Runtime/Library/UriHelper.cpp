@@ -140,13 +140,13 @@ namespace Js
         for( uint32_t k = 0; k < len; k++ )
         {
             char16_t c = input[k];
-            uint32_t uVal;
             if( InURISet(c, unescapedFlags) )
             {
                 outputLen = UInt32Math::Add(outputLen, 1);
             }
             else
             {
+                uint32_t uVal = 0;
                 needsChanges = true;
 
                 if( c >= 0xDC00 && c <= 0xDFFF )

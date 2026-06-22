@@ -3,6 +3,8 @@
 // Copyright (c) ChakraCore Project Contributors. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
+#include <stdexcept>
+
 #include "Backend.h"
 
 #include "Library/ForInObjectEnumerator.h"
@@ -2693,8 +2695,7 @@ IRBuilder::BuildReg5(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot dstRegSl
         helperOpnd=IR::HelperCallOpnd::New(IR::HelperOp_OP_ApplyArgs, this->m_func);
         break;
     default:
-        AssertMsg(UNREACHED, "Unknown Reg5 opcode");
-        Fatal();
+        throw std::invalid_argument("Unknown Reg5 opcode");
     }
     instr = IR::Instr::New(Js::OpCode::CallHelper, dstOpnd, helperOpnd, instr->GetDst(), m_func);
     this->AddInstr(instr, Js::Constants::NoByteCodeOffset);
@@ -3285,8 +3286,7 @@ IRBuilder::BuildElementScopedC(Js::OpCode newOpcode, uint32_t offset, Js::RegSlo
     }
 
     default:
-        AssertMsg(UNREACHED, "Unknown ElementScopedC opcode");
-        Fatal();
+        throw std::invalid_argument("Unknown ElementScopedC opcode");
     }
 
     this->AddInstr(instr, offset);
@@ -3346,8 +3346,7 @@ IRBuilder::BuildElementC(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot fiel
         break;
 
     default:
-        AssertMsg(UNREACHED, "Unknown ElementC opcode");
-        Fatal();
+        throw std::invalid_argument("Unknown ElementC opcode");
     }
 
     this->AddInstr(instr, offset);
@@ -3593,8 +3592,7 @@ StSlotCommon:
     }
 
     default:
-        AssertMsg(UNREACHED, "Unknown ElementSlot opcode");
-        Fatal();
+        throw std::invalid_argument("Unknown ElementSlot opcode");
     }
 
     this->AddInstr(instr, offset);
@@ -4564,8 +4562,7 @@ stCommon:
     }
 
     default:
-        AssertMsg(UNREACHED, "Unknown ElementP opcode");
-        Fatal();
+        throw std::invalid_argument("Unknown ElementP opcode");
     }
 
     this->AddInstr(instr, offset);
@@ -5338,9 +5335,7 @@ IRBuilder::BuildAuxiliary(Js::OpCode newOpcode, uint32_t offset)
 
     default:
         {
-            AssertMsg(UNREACHED, "Unknown Auxiliary opcode");
-            Fatal();
-            break;
+            throw std::invalid_argument("Unknown Auxiliary opcode");
         }
     }
 

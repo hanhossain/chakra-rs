@@ -3,6 +3,8 @@
 // Copyright (c) 2021 ChakraCore Project Contributors. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
+#include <stdexcept>
+
 #include "Backend.h"
 
 void
@@ -3087,8 +3089,7 @@ Inline::InlineCallApplyTarget_Shared(
     }
 
     default:
-        Assert(UNREACHED);
-        break;
+        throw std::invalid_argument("invalid targetType");
     }
 
     JITTimePolymorphicInlineCacheInfo * entryPointPolymorphicInlineCacheInfo = inlineeData->HasBody() ? this->topFunc->GetWorkItem()->GetInlineePolymorphicInlineCacheInfo(inlineeData->GetBody()->GetAddr()) : nullptr;

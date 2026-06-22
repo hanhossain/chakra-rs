@@ -2,7 +2,7 @@
 // Copyright (C) Microsoft Corporation and contributors. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-
+#include <stdexcept>
 #include "Backend.h"
 #ifdef ASMJS_PLAT
 #include "ByteCode/OpCodeUtilAsmJs.h"
@@ -3398,8 +3398,7 @@ IRBuilderAsmJs::BuildLong1Double1(Js::OpCodeAsmJs newOpcode, uint32_t offset, Js
         dstType = TyInt64;
         break;
     default:
-        Assume(UNREACHED);
-        Js::Throw::FatalInternalError();
+        throw std::invalid_argument("invalid newOpcode");
     }
 
     IR::RegOpnd * dstOpnd = BuildDstOpnd(dstRegSlot, dstType);
