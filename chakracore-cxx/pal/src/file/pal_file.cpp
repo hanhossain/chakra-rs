@@ -84,8 +84,6 @@ CObjectType CorUnix::otFile __attribute__((init_priority(200))) (
                 );
 
 CAllowedObjectTypes CorUnix::aotFile __attribute__((init_priority(200))) (otiFile);
-static CSharedMemoryFileLockMgr _FileLockManager __attribute__((init_priority(200)));
-IFileLockManager *CorUnix::g_pFileLockManager = &_FileLockManager;
 
 void
 FileCleanupRoutine(

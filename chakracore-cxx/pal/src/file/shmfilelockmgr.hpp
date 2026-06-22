@@ -61,11 +61,6 @@ namespace CorUnix
         SHMPTR next;
     } SHMFILELOCKRGNS;
     
-    class CSharedMemoryFileLockMgr : public IFileLockManager
-    {
-    public:
-    };
-
     class CSharedMemoryFileLockController : public IFileLockController
     {
     private:

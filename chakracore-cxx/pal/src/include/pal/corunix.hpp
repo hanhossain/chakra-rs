@@ -1315,13 +1315,6 @@ namespace CorUnix
         void
         ReleaseController() = 0;
     };
-
-    class IFileLockManager
-    {
-    public:
-    };
-
-    extern IFileLockManager *g_pFileLockManager;
 }
 
 #endif // _CORUNIX_H
