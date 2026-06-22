@@ -1319,16 +1319,6 @@ namespace CorUnix
     class IFileLockManager
     {
     public:
-        //
-        // Gets the share mode for the file
-        // (returns SHARE_MODE_NOT_INITIALIZED if file lock controller
-        // not found)
-        //
-        virtual
-        PAL_ERROR
-        GetFileShareModeForFile(
-            const char * szFileName,
-            uint32_t* pdwShareMode) = 0;
     };
 
     extern IFileLockManager *g_pFileLockManager;

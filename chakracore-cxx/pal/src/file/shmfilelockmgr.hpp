@@ -64,11 +64,6 @@ namespace CorUnix
     class CSharedMemoryFileLockMgr : public IFileLockManager
     {
     public:
-        virtual
-        PAL_ERROR
-        GetFileShareModeForFile(
-            const char * szFileName,
-            uint32_t* pdwShareMode);
     };
 
     class CSharedMemoryFileLockController : public IFileLockController
