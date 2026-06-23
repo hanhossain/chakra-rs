@@ -132,49 +132,53 @@ add_definitions(
 # CXX WARNING FLAGS
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
     -Wall\
-    -Wno-unused-value\
-    -Wno-int-to-void-pointer-cast\
-    -Wno-invalid-offsetof\
-    -Wno-undefined-inline\
-    -Wno-inconsistent-missing-override\
-    -Wno-macro-redefined\
-    -Wno-pragmas\
-    -Wno-invalid-token-paste\
-    -Wno-format\
-    -Wno-invalid-noreturn\
-    -Wno-null-arithmetic\
-    -Wno-tautological-constant-out-of-range-compare\
-    -Wno-tautological-undefined-compare\
-    -Wno-address-of-temporary\
-    -Wno-null-conversion\
-    -Wno-return-type\
-    -Wno-switch\
-    -Wno-int-to-pointer-cast\
-    -Wno-tautological-constant-compare\
-    -Wno-enum-compare-switch\
-    -Wno-delayed-template-parsing-in-cxx20\
-    -Wno-unknown-warning-option\
-    -Wno-nontrivial-memcall"
-)
+    -Wextra\
+")
 
+# ignore in general
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-    -Wno-reorder-ctor\
+    -Wno-delayed-template-parsing-in-cxx20\
+    -Wno-macro-redefined\
+    -Wno-null-conversion\
+    -Wno-tautological-undefined-compare\
+    -Wno-invalid-token-paste\
+    -Wno-pragmas\
+    -Wno-inconsistent-missing-override\
+    -Wno-int-to-void-pointer-cast\
+    -Wno-undefined-inline\
+    -Wno-switch\
+    -Wno-return-type\
+    -Wno-unused-value\
+    -Wno-invalid-offsetof\
+    -Wno-format\
+    -Wno-tautological-constant-out-of-range-compare\
+    -Wno-address-of-temporary\
+    -Wno-null-arithmetic\
+    -Wno-int-to-pointer-cast\
+    -Wno-enum-compare-switch\
+")
+
+# ignore for -Wall
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
     -Wno-unused-variable\
-    -Wno-overloaded-virtual\
     -Wno-unused-private-field\
+    -Wno-reorder-ctor\
     -Wno-unused-but-set-variable\
     -Wno-unused-lambda-capture\
+    -Wno-overloaded-virtual\
+    -Wno-tautological-overlap-compare\
     -Wno-sometimes-uninitialized\
-    -Wno-tautological-overlap-compare")
+")
 
+# ignore for -Wextra
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-    -Wextra\
     -Wno-unused-parameter\
     -Wno-sign-compare\
     -Wno-missing-field-initializers\
     -Wno-ignored-qualifiers\
     -Wno-cast-function-type-mismatch\
-    -Wno-deprecated-copy-with-user-provided-copy")
+    -Wno-deprecated-copy-with-user-provided-copy\
+")
 
 # this keeps causing issues with the docker build even if paths are correct
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-nonportable-include-path")
