@@ -315,11 +315,6 @@ CPalObjectBase::~CPalObjectBase()
         free(m_pvLocalData);
     }
 
-    if (NULL != m_oa.sObjectName.GetString())
-    {
-        m_oa.sObjectName.FreeBuffer();
-    }
-
     LOGEXIT("CPalObjectBase::~CPalObjectBase\n");
 }
 

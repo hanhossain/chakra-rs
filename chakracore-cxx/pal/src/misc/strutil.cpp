@@ -44,54 +44,11 @@ CPalString::CopyString(
     )
 {
     PAL_ERROR palError = NO_ERROR;
-        
-    _ASSERTE(NULL != psSource);
-    _ASSERTE(NULL == m_pwsz);
-    _ASSERTE(0 == m_dwStringLength);
-    _ASSERTE(0 == m_dwMaxLength);
 
     if (0 != psSource->GetStringLength())
     {
-        _ASSERTE(psSource->GetMaxLength() > psSource->GetStringLength());
-        
-        char16_t *pwsz = reinterpret_cast<char16_t*>(
-            malloc(psSource->GetMaxLength() * sizeof(char16_t))
-            );
-
-        if (NULL != pwsz)
-        {
-            _ASSERTE(NULL != psSource->GetString());
-
-            memcpy(
-                pwsz,
-                psSource->GetString(),
-                psSource->GetMaxLength() * sizeof(char16_t)
-                );
-
-            m_pwsz = pwsz;
-            m_dwStringLength = psSource->GetStringLength();
-            m_dwMaxLength = psSource->GetMaxLength();
-        }
-        else
-        {
-            palError = ERROR_OUTOFMEMORY;
-        }
+        pwsz_ = std::u16string(psSource->pwsz_);
     }
 
     return palError;
-}
-
-/*++
-Function:
-  CPalString::FreeBuffer
-
-  Frees the contained string buffer
-
---*/
-
-void
-CPalString::FreeBuffer()
-{
-    _ASSERTE(NULL != m_pwsz);
-    free(const_cast<char16_t*>(m_pwsz));
 }

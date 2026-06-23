@@ -486,8 +486,7 @@ CSharedMemoryObjectManager::LocateObject(
 
     _ASSERTE(NULL != pthr);
     _ASSERTE(NULL != psObjectToLocate);
-    _ASSERTE(NULL != psObjectToLocate->GetString());
-    _ASSERTE(std::u16string(psObjectToLocate->GetString()).length() == psObjectToLocate->GetStringLength());
+    _ASSERTE(psObjectToLocate->GetString().length() == psObjectToLocate->GetStringLength());
     _ASSERTE(NULL != ppobj);
 
     TRACE("Searching for object name %S\n", psObjectToLocate->GetString());
@@ -514,7 +513,7 @@ CSharedMemoryObjectManager::LocateObject(
             continue;
         }
 
-        if (0 != PAL_wcscmp(poa->sObjectName.GetString(), psObjectToLocate->GetString()))
+        if (poa->sObjectName.GetString() != psObjectToLocate->GetString())
         {
             continue;
         }
@@ -572,7 +571,7 @@ CSharedMemoryObjectManager::LocateObject(
                 pwsz = SHMPTR_TO_TYPED_PTR(char16_t, psmod->shmObjName);
                 if (NULL != pwsz)
                 {
-                    if (0 == PAL_wcscmp(pwsz, psObjectToLocate->GetString()))
+                    if (pwsz == psObjectToLocate->GetString())
                     {
                         //
                         // This is the object we were looking for.
