@@ -167,6 +167,15 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
     -Wno-sometimes-uninitialized\
     -Wno-tautological-overlap-compare")
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
+    -Wextra\
+    -Wno-unused-parameter\
+    -Wno-sign-compare\
+    -Wno-missing-field-initializers\
+    -Wno-ignored-qualifiers\
+    -Wno-cast-function-type-mismatch\
+    -Wno-deprecated-copy-with-user-provided-copy")
+
 # this keeps causing issues with the docker build even if paths are correct
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-nonportable-include-path")
 
