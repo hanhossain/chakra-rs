@@ -2174,14 +2174,14 @@ JsErrorCode chakracore::jsrt::JsCreateDataView(_In_ JsValueRef arrayBuffer, _In_
 }
 
 
-C_ASSERT(static_cast<uint8_t>(JsArrayTypeUint8)         - Js::TypeIds_Uint8Array        == static_cast<uint8_t>(JsArrayTypeInt8) - Js::TypeIds_Int8Array);
-C_ASSERT(static_cast<uint8_t>(JsArrayTypeUint8Clamped)  - Js::TypeIds_Uint8ClampedArray == static_cast<uint8_t>(JsArrayTypeInt8) - Js::TypeIds_Int8Array);
-C_ASSERT(static_cast<uint8_t>(JsArrayTypeInt16)         - Js::TypeIds_Int16Array        == static_cast<uint8_t>(JsArrayTypeInt8) - Js::TypeIds_Int8Array);
-C_ASSERT(static_cast<uint8_t>(JsArrayTypeUint16)        - Js::TypeIds_Uint16Array       == static_cast<uint8_t>(JsArrayTypeInt8) - Js::TypeIds_Int8Array);
-C_ASSERT(static_cast<uint8_t>(JsArrayTypeInt32)         - Js::TypeIds_Int32Array        == static_cast<uint8_t>(JsArrayTypeInt8) - Js::TypeIds_Int8Array);
-C_ASSERT(static_cast<uint8_t>(JsArrayTypeUint32)        - Js::TypeIds_Uint32Array       == static_cast<uint8_t>(JsArrayTypeInt8) - Js::TypeIds_Int8Array);
-C_ASSERT(static_cast<uint8_t>(JsArrayTypeFloat32)       - Js::TypeIds_Float32Array      == static_cast<uint8_t>(JsArrayTypeInt8) - Js::TypeIds_Int8Array);
-C_ASSERT(static_cast<uint8_t>(JsArrayTypeFloat64)       - Js::TypeIds_Float64Array      == static_cast<uint8_t>(JsArrayTypeInt8) - Js::TypeIds_Int8Array);
+static_assert(static_cast<uint8_t>(JsArrayTypeUint8)         - Js::TypeIds_Uint8Array        == static_cast<uint8_t>(JsArrayTypeInt8) - Js::TypeIds_Int8Array);
+static_assert(static_cast<uint8_t>(JsArrayTypeUint8Clamped)  - Js::TypeIds_Uint8ClampedArray == static_cast<uint8_t>(JsArrayTypeInt8) - Js::TypeIds_Int8Array);
+static_assert(static_cast<uint8_t>(JsArrayTypeInt16)         - Js::TypeIds_Int16Array        == static_cast<uint8_t>(JsArrayTypeInt8) - Js::TypeIds_Int8Array);
+static_assert(static_cast<uint8_t>(JsArrayTypeUint16)        - Js::TypeIds_Uint16Array       == static_cast<uint8_t>(JsArrayTypeInt8) - Js::TypeIds_Int8Array);
+static_assert(static_cast<uint8_t>(JsArrayTypeInt32)         - Js::TypeIds_Int32Array        == static_cast<uint8_t>(JsArrayTypeInt8) - Js::TypeIds_Int8Array);
+static_assert(static_cast<uint8_t>(JsArrayTypeUint32)        - Js::TypeIds_Uint32Array       == static_cast<uint8_t>(JsArrayTypeInt8) - Js::TypeIds_Int8Array);
+static_assert(static_cast<uint8_t>(JsArrayTypeFloat32)       - Js::TypeIds_Float32Array      == static_cast<uint8_t>(JsArrayTypeInt8) - Js::TypeIds_Int8Array);
+static_assert(static_cast<uint8_t>(JsArrayTypeFloat64)       - Js::TypeIds_Float64Array      == static_cast<uint8_t>(JsArrayTypeInt8) - Js::TypeIds_Int8Array);
 
 inline JsTypedArrayType GetTypedArrayType(Js::TypeId typeId)
 {
@@ -3232,10 +3232,10 @@ JsErrorCode chakracore::jsrt::JsGetRuntimeMemoryLimit(_In_ JsRuntimeHandle runti
     return JsNoError;
 }
 
-C_ASSERT(JsMemoryAllocate == (_JsMemoryEventType) AllocationPolicyManager::MemoryAllocateEvent::MemoryAllocate);
-C_ASSERT(JsMemoryFree == (_JsMemoryEventType) AllocationPolicyManager::MemoryAllocateEvent::MemoryFree);
-C_ASSERT(JsMemoryFailure == (_JsMemoryEventType) AllocationPolicyManager::MemoryAllocateEvent::MemoryFailure);
-C_ASSERT(JsMemoryFailure == (_JsMemoryEventType) AllocationPolicyManager::MemoryAllocateEvent::MemoryMax);
+static_assert(JsMemoryAllocate == (_JsMemoryEventType) AllocationPolicyManager::MemoryAllocateEvent::MemoryAllocate);
+static_assert(JsMemoryFree == (_JsMemoryEventType) AllocationPolicyManager::MemoryAllocateEvent::MemoryFree);
+static_assert(JsMemoryFailure == (_JsMemoryEventType) AllocationPolicyManager::MemoryAllocateEvent::MemoryFailure);
+static_assert(JsMemoryFailure == (_JsMemoryEventType) AllocationPolicyManager::MemoryAllocateEvent::MemoryMax);
 
 JsErrorCode chakracore::jsrt::JsSetRuntimeMemoryAllocationCallback(_In_ JsRuntimeHandle runtime, _In_opt_ void *callbackState, _In_ JsMemoryAllocationCallback allocationCallback)
 {

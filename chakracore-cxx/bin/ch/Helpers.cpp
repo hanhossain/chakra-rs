@@ -130,7 +130,7 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
         // suppressing prefast warning that "readable size is bufferLength
         // bytes but 2 may be read" as bufferLength is clearly > 2 in the code that follows
 #pragma warning(disable:6385)
-        C_ASSERT(sizeof(char16_t) == 2);
+        static_assert(sizeof(char16_t) == 2);
         if (bufferLength > 2)
         {
 #pragma prefast(push)
