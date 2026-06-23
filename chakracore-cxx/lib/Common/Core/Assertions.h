@@ -15,13 +15,8 @@ extern int AssertsToConsole;
 
 extern thread_local int IsInAssert;
 
-#if !defined(USED_IN_STATIC_LIB)
-#define REPORT_ASSERT(f, comment) Js::Throw::ReportAssert(__FILE__, __LINE__, STRINGIZE((f)), comment)
-#define LOG_ASSERT() Js::Throw::LogAssert()
-#else
 #define REPORT_ASSERT(f, comment) FALSE
 #define LOG_ASSERT()
-#endif
 
 #include <assert.h>
 #define RAISE_ASSERTION(comment) DbgRaiseAssertionFailure()
