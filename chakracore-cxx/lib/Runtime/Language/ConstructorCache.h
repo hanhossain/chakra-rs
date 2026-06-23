@@ -59,7 +59,7 @@ namespace Js
 
         Field(ContentStruct) content;
 
-        CompileAssert(static_cast<intptr_t>(CtorCacheGuardValues::Invalid) == static_cast<intptr_t>(NULL));
+        static_assert(static_cast<intptr_t>(CtorCacheGuardValues::Invalid) == static_cast<intptr_t>(NULL));
 
         static ConstructorCache DefaultInstance;
 

@@ -300,15 +300,15 @@ namespace Js
     template< size_t N >
     Var JavascriptString::StringBracketHelper(Arguments args, ScriptContext *scriptContext, const char16_t(&tag)[N])
     {
-        CompileAssert(0 < N && N <= JavascriptString::MaxCharLength);
+        static_assert(0 < N && N <= JavascriptString::MaxCharLength);
         return StringBracketHelper(args, scriptContext, tag, static_cast<charcount_t>(N - 1), nullptr, 0);
     }
 
     template< size_t N1, size_t N2 >
     Var JavascriptString::StringBracketHelper(Arguments args, ScriptContext *scriptContext, const char16_t(&tag)[N1], const char16_t(&prop)[N2])
     {
-        CompileAssert(0 < N1 && N1 <= JavascriptString::MaxCharLength);
-        CompileAssert(0 < N2 && N2 <= JavascriptString::MaxCharLength);
+        static_assert(0 < N1 && N1 <= JavascriptString::MaxCharLength);
+        static_assert(0 < N2 && N2 <= JavascriptString::MaxCharLength);
         return StringBracketHelper(args, scriptContext, tag, static_cast<charcount_t>(N1 - 1), prop, static_cast<charcount_t>(N2 - 1));
     }
 

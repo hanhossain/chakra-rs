@@ -151,7 +151,7 @@ public:
     template <typename T>
     static bool IncImpl(T val, T *pResult)
     {
-        CompileAssert(false);  // must implement template specialization on type T
+        static_assert(false);  // must implement template specialization on type T
     }
 
     template <typename T, class Func>
@@ -174,6 +174,6 @@ public:
     template <typename T>
     static bool AddImpl(T left, T right, T *pResult)
     {
-        CompileAssert(false);  // must implement template specialization on type T
+        static_assert(false);  // must implement template specialization on type T
     }
 };

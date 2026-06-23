@@ -94,17 +94,17 @@ namespace Js
         const uint16 nPrefixes = (uint16)Js::OpCode::Nop / LayoutCount;
 
         // Make sure the assumption made for the order of the prefix are right
-        CompileAssert((uint16)Js::OpCode::ExtendedOpcodePrefix / nPrefixes == SmallLayout);
-        CompileAssert((uint16)Js::OpCode::MediumLayoutPrefix / nPrefixes == MediumLayout);
-        CompileAssert((uint16)Js::OpCode::ExtendedMediumLayoutPrefix / nPrefixes == MediumLayout);
-        CompileAssert((uint16)Js::OpCode::LargeLayoutPrefix / nPrefixes == LargeLayout);
-        CompileAssert((uint16)Js::OpCode::ExtendedLargeLayoutPrefix / nPrefixes == LargeLayout);
+        static_assert((uint16)Js::OpCode::ExtendedOpcodePrefix / nPrefixes == SmallLayout);
+        static_assert((uint16)Js::OpCode::MediumLayoutPrefix / nPrefixes == MediumLayout);
+        static_assert((uint16)Js::OpCode::ExtendedMediumLayoutPrefix / nPrefixes == MediumLayout);
+        static_assert((uint16)Js::OpCode::LargeLayoutPrefix / nPrefixes == LargeLayout);
+        static_assert((uint16)Js::OpCode::ExtendedLargeLayoutPrefix / nPrefixes == LargeLayout);
 
-        CompileAssert((uint16)Js::OpCode::MediumLayoutPrefix % nPrefixes == 0);
-        CompileAssert((uint16)Js::OpCode::LargeLayoutPrefix % nPrefixes == 0);
-        CompileAssert((uint16)Js::OpCode::ExtendedOpcodePrefix % nPrefixes == 1);
-        CompileAssert((uint16)Js::OpCode::ExtendedMediumLayoutPrefix % nPrefixes == 1);
-        CompileAssert((uint16)Js::OpCode::ExtendedLargeLayoutPrefix % nPrefixes == 1);
+        static_assert((uint16)Js::OpCode::MediumLayoutPrefix % nPrefixes == 0);
+        static_assert((uint16)Js::OpCode::LargeLayoutPrefix % nPrefixes == 0);
+        static_assert((uint16)Js::OpCode::ExtendedOpcodePrefix % nPrefixes == 1);
+        static_assert((uint16)Js::OpCode::ExtendedMediumLayoutPrefix % nPrefixes == 1);
+        static_assert((uint16)Js::OpCode::ExtendedLargeLayoutPrefix % nPrefixes == 1);
 
         uint16 shortPrefix = (uint16)prefix;
         layoutSize = (LayoutSize)(shortPrefix / nPrefixes);

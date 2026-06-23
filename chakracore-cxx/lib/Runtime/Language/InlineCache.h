@@ -123,8 +123,8 @@ namespace Js
                 Type * type;
             } accessor;
 
-            CompileAssert(sizeof(s_local) == sizeof(s_proto));
-            CompileAssert(sizeof(s_local) == sizeof(s_accessor));
+            static_assert(sizeof(s_local) == sizeof(s_proto));
+            static_assert(sizeof(s_local) == sizeof(s_accessor));
         } u;
 
         InlineCache** invalidationListSlotPtr;
@@ -473,13 +473,13 @@ namespace Js
     };
 
 #if defined(TARGET_32)
-    CompileAssert(sizeof(InlineCache) == 0x10);
+    static_assert(sizeof(InlineCache) == 0x10);
 #else
-    CompileAssert(sizeof(InlineCache) == 0x20);
+    static_assert(sizeof(InlineCache) == 0x20);
 #endif
 
-    CompileAssert(sizeof(InlineCache) == sizeof(InlineCacheAllocator::CacheLayout));
-    CompileAssert(offsetof(InlineCache, invalidationListSlotPtr) == offsetof(InlineCacheAllocator::CacheLayout, strongRef));
+    static_assert(sizeof(InlineCache) == sizeof(InlineCacheAllocator::CacheLayout));
+    static_assert(offsetof(InlineCache, invalidationListSlotPtr) == offsetof(InlineCacheAllocator::CacheLayout, strongRef));
 
     class PolymorphicInlineCache : public FinalizableObject
     {
@@ -515,7 +515,7 @@ namespace Js
             }
             else if (currentSize == MinPropertyStringInlineCacheSize)
             {
-                CompileAssert(MinPropertyStringInlineCacheSize < MinPolymorphicInlineCacheSize);
+                static_assert(MinPropertyStringInlineCacheSize < MinPolymorphicInlineCacheSize);
                 return MinPolymorphicInlineCacheSize;
             }
             else
@@ -804,8 +804,8 @@ namespace Js
     };
 
 #if defined(TARGET_32)
-    CompileAssert(sizeof(IsInstInlineCache) == 0x10);
+    static_assert(sizeof(IsInstInlineCache) == 0x10);
 #else
-    CompileAssert(sizeof(IsInstInlineCache) == 0x20);
+    static_assert(sizeof(IsInstInlineCache) == 0x20);
 #endif
 }

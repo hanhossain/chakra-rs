@@ -53,7 +53,7 @@ static PropertyId propertyMap[] = {
 
 bool SetProperty(Js::Var obj, PropertyId id, Js::Var value, void* user_data)
 {
-    CompileAssert((sizeof(propertyMap)/sizeof(PropertyId)) == ChakraWabt::PropertyIds::COUNT);
+    static_assert((sizeof(propertyMap)/sizeof(PropertyId)) == ChakraWabt::PropertyIds::COUNT);
     Context* ctx = (Context*)user_data;
     Assert(id < ChakraWabt::PropertyIds::COUNT);
     return !!JavascriptOperators::OP_SetProperty(obj, propertyMap[id], value, ctx->scriptContext);

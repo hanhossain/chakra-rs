@@ -150,12 +150,12 @@ public:
 #ifdef RECYCLER_MEMORY_VERIFY
         if (verifyEnabled)
         {
-            CompileAssert(sizeof(T) <= (size_t)-1 - sizeof(size_t));
+            static_assert(sizeof(T) <= (size_t)-1 - sizeof(size_t));
             return HeapInfo::GetAlignedSize(AllocSizeMath::Add(sizeof(T) + sizeof(size_t), verifyPad));
         }
 #endif
         // We should have structures large enough that would cause this to overflow
-        CompileAssert(((sizeof(T) + (HeapConstants::ObjectGranularity - 1)) & ~(HeapConstants::ObjectGranularity - 1)) != 0);
+        static_assert(((sizeof(T) + (HeapConstants::ObjectGranularity - 1)) & ~(HeapConstants::ObjectGranularity - 1)) != 0);
         return HeapInfo::GetAlignedSizeNoCheck(sizeof(T));
     }
 
@@ -163,7 +163,7 @@ private:
     SmallHeapBlockAllocator<BlockType> allocator;
     Recycler * recycler;
 
-    CompileAssert(sizeof(T) <= HeapConstants::MaxSmallObjectSize);
+    static_assert(sizeof(T) <= HeapConstants::MaxSmallObjectSize);
 };
 }
 

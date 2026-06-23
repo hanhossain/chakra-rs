@@ -13162,7 +13162,7 @@ void Lowerer::LowerBailOnMissingValue(IR::Instr *const instr, IR::RegOpnd *const
     // test [array + offsetOf(objectArrayOrFlags)], Js::DynamicObjectFlags::HasNoMissingValues
     // jnz  $skipBailOut
     const IR::AutoReuseOpnd autoReuseArrayOpnd(arrayOpnd, func);
-    CompileAssert(
+    static_assert(
         static_cast<Js::DynamicObjectFlags>(static_cast<uint8_t>(Js::DynamicObjectFlags::HasNoMissingValues)) ==
         Js::DynamicObjectFlags::HasNoMissingValues);
     InsertTestBranch(
@@ -16621,7 +16621,7 @@ Lowerer::GenerateLookUpInIndexCacheHelper(
     _Outptr_ IR::BranchInstr** branchToPatch,
     _Inout_ IR::RegOpnd** taggedTypeOpnd)
 {
-    CompileAssert(!DoAdd || CheckLocal);
+    static_assert(!DoAdd || CheckLocal);
     AnalysisAssert(!opndSlotArray || opndSlotIndex);
 
     *nextLabel = IR::LabelInstr::New(Js::OpCode::Label, m_func);
@@ -17198,7 +17198,7 @@ Lowerer::GenerateFastElemIIntIndexCommon(
                         labelHelper,
                         indexLessThanSizeLabel);
 
-                    CompileAssert(
+                    static_assert(
                         static_cast<Js::DynamicObjectFlags>(static_cast<uint8_t>(Js::DynamicObjectFlags::HasNoMissingValues)) ==
                         Js::DynamicObjectFlags::HasNoMissingValues);
                     InsertAnd(
@@ -17283,7 +17283,7 @@ Lowerer::GenerateFastElemIIntIndexCommon(
                 Js::OpCode::BrEq_A,
                 updateLengthLabel,
                 updateLengthLabel);
-            CompileAssert(
+            static_assert(
                 static_cast<Js::DynamicObjectFlags>(static_cast<uint8_t>(Js::DynamicObjectFlags::HasNoMissingValues)) ==
                 Js::DynamicObjectFlags::HasNoMissingValues);
             InsertAnd(
@@ -20050,7 +20050,7 @@ Lowerer::GenerateFastInlineIsArray(IR::Instr * instr)
         Js::OpCode::BrEq_A,
         helperLabel,
         insertInstr);
-    CompileAssert(Js::TypeIds_Proxy < Js::TypeIds_ArrayFirst);
+    static_assert(Js::TypeIds_Proxy < Js::TypeIds_ArrayFirst);
 
     //  CMP typeIdOpnd, TypeIds_HostDispatch
     //  JEQ $helperLabel
@@ -20060,7 +20060,7 @@ Lowerer::GenerateFastInlineIsArray(IR::Instr * instr)
         Js::OpCode::BrEq_A,
         helperLabel,
         insertInstr);
-    CompileAssert(Js::TypeIds_HostDispatch < Js::TypeIds_ArrayFirst);
+    static_assert(Js::TypeIds_HostDispatch < Js::TypeIds_ArrayFirst);
 
     // $notObjectLabel:
     insertInstr->InsertBefore(notArrayLabel);
@@ -28774,7 +28774,7 @@ Lowerer::InsertFunctionTypeIdCheck(IR::RegOpnd * funcOpnd, IR::Instr* insertBefo
     }
     insertBeforeInstr->InsertBefore(instr);
 
-    CompileAssert(sizeof(Js::TypeId) == sizeof(int32_t));
+    static_assert(sizeof(Js::TypeId) == sizeof(int32_t));
     // if (functionTypeRegOpnd->typeId != TypeIds_Function) goto $noInlineLabel
     // BrNeq_I4 $noInlineLabel, functionTypeRegOpnd->typeId, TypeIds_Function
     IR::IndirOpnd *functionTypeIdIndirOpnd = IR::IndirOpnd::New(functionTypeRegOpnd, Js::Type::GetOffsetOfTypeId(), TyInt32, insertBeforeInstr->m_func);

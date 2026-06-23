@@ -1971,7 +1971,7 @@ public:
             case WAsmJs::FLOAT64: clue = u"Float64TypedSlots"; break;
             case WAsmJs::SIMD:    clue = u"SimdTypedSlots"; break;
             default:
-                CompileAssert(WAsmJs::SIMD == WAsmJs::LastType);
+                static_assert(WAsmJs::SIMD == WAsmJs::LastType);
                 Assert(false);
                 break;
             }
@@ -4372,7 +4372,7 @@ public:
                 const auto source = GetString16ById(sourceId);
 
                 UnifiedRegex::RegexFlags flags;
-                CompileAssert(sizeof(flags) == sizeof(byte));
+                static_assert(sizeof(flags) == sizeof(byte));
                 current = ReadByte(current, reinterpret_cast<byte *>(&flags));
                 (*functionBody)->SetLiteralRegex(i, RegexHelper::CompileDynamic(scriptContext, source, length, flags, true));
             }

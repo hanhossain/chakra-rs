@@ -971,7 +971,7 @@ namespace UnifiedRegex
         }
     }
 
-    CompileAssert(CaseInsensitive::EquivClassSize == 4);
+    static_assert(CaseInsensitive::EquivClassSize == 4);
     CharCount MatchLiteralNode::EmitScan(Compiler& compiler, bool isHeadSyncronizingNode)
     {
         //
@@ -1308,7 +1308,7 @@ namespace UnifiedRegex
     {
     }
 
-    CompileAssert(CaseInsensitive::EquivClassSize == 4);
+    static_assert(CaseInsensitive::EquivClassSize == 4);
     void MatchCharNode::Emit(Compiler& compiler, __in_ecount(4) Char * cs, bool isEquivClass)
     {
         if (isEquivClass)

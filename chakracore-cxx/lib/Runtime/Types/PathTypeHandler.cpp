@@ -7,10 +7,10 @@
 namespace Js
 {
     // These attributes should match up for ease of translation
-    CompileAssert(ObjectSlotAttr_Enumerable == PropertyEnumerable);
-    CompileAssert(ObjectSlotAttr_Configurable == PropertyConfigurable);
-    CompileAssert(ObjectSlotAttr_Writable == PropertyWritable);
-    CompileAssert(ObjectSlotAttr_Deleted == PropertyDeleted);
+    static_assert(ObjectSlotAttr_Enumerable == PropertyEnumerable);
+    static_assert(ObjectSlotAttr_Configurable == PropertyConfigurable);
+    static_assert(ObjectSlotAttr_Writable == PropertyWritable);
+    static_assert(ObjectSlotAttr_Deleted == PropertyDeleted);
 
     PathTypeSuccessorKey::PathTypeSuccessorKey() : propertyId(Constants::NoProperty), attributes(ObjectSlotAttr_Default)
     {

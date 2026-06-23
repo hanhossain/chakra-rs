@@ -8,7 +8,7 @@
 
 // This one works only for ARM64
 #if !defined(_M_ARM64)
-CompileAssert(false)
+static_assert(false)
 #endif
 
 #include "XDataAllocator.h"

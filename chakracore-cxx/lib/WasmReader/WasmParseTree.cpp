@@ -101,7 +101,7 @@ uint32_t GetTypeByteSize(WasmType type)
 #ifdef ENABLE_WASM_SIMD
     case V128:
         Simd::EnsureSimdIsEnabled();
-        CompileAssert(sizeof(Simd::simdvec) == 16);
+        static_assert(sizeof(Simd::simdvec) == 16);
         return sizeof(Simd::simdvec);
 #endif
     case Ptr: return sizeof(void*);

@@ -225,7 +225,7 @@ template <class T, class PolicyType = WriteBarrierPtr<T>, class Allocator = Recy
 void CopyArray(WriteBarrierPtr<T>* dst, size_t dstCount,
                T* const * src, size_t srcCount)
 {
-    CompileAssert(sizeof(WriteBarrierPtr<T>) == sizeof(T*));
+    static_assert(sizeof(WriteBarrierPtr<T>) == sizeof(T*));
     return CopyArray<T*, PolicyType, Allocator>(
         reinterpret_cast<T**>(dst), dstCount, src, srcCount);
 }
@@ -569,13 +569,13 @@ template<class T, class Comparer>
 void qsort_s(WriteBarrierPtr<T>* _Base, size_t _NumOfElements, size_t _SizeOfElements,
              const Comparer& comparer, void* _Context)
 {
-    CompileAssert(false); // Disallow this. Use an overload above.
+    static_assert(false); // Disallow this. Use an overload above.
 }
 
 template <typename T>
 void* memcpy(WriteBarrierPtr<T> *dst, const void *src, size_t count)
 {
-    CompileAssert(false);
+    static_assert(false);
 }
 
 template <typename T>
@@ -587,7 +587,7 @@ void js_memcpy_s(__bcount(sizeInBytes) WriteBarrierPtr<T> *dst, size_t sizeInByt
 template <typename T>
 void *  memset(_Out_writes_bytes_all_(_Size) WriteBarrierPtr<T> * _Dst, _In_ int _Val, _In_ size_t _Size)
 {
-    CompileAssert(false);
+    static_assert(false);
 }
 
 // This class abstract a pointer value with its last 2 bits set to avoid conservative GC tracking.

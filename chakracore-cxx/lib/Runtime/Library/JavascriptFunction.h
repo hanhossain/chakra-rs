@@ -152,7 +152,7 @@ namespace Js
 
         static uint8_t GetOffsetOfFunctionInfo()
         {
-            CompileAssert(offsetof(JavascriptFunction, functionInfo) <= UCHAR_MAX);
+            static_assert(offsetof(JavascriptFunction, functionInfo) <= UCHAR_MAX);
             return offsetof(JavascriptFunction, functionInfo);
         }
         static uint32_t GetOffsetOfConstructorCache() { return offsetof(JavascriptFunction, constructorCache); };

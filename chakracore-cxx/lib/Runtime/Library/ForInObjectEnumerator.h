@@ -58,7 +58,7 @@ namespace Js
         static uint32_t GetOffsetOfShadowData() { return offsetof(ForInObjectEnumerator, shadowData); }
         static uint32_t GetOffsetOfStates()
         {
-            CompileAssert(offsetof(ForInObjectEnumerator, enumeratingPrototype) == offsetof(ForInObjectEnumerator, canUseJitFastPath) + 1);
+            static_assert(offsetof(ForInObjectEnumerator, enumeratingPrototype) == offsetof(ForInObjectEnumerator, canUseJitFastPath) + 1);
             return offsetof(ForInObjectEnumerator, canUseJitFastPath);
         }
     };

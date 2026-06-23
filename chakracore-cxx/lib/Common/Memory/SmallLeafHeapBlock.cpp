@@ -10,7 +10,7 @@ template <class TBlockAttributes>
 SmallLeafHeapBlockT<TBlockAttributes> *
 SmallLeafHeapBlockT<TBlockAttributes>::New(HeapBucketT<SmallLeafHeapBlockT<TBlockAttributes>> * bucket)
 {
-    CompileAssert(TBlockAttributes::MaxObjectSize <= USHRT_MAX);
+    static_assert(TBlockAttributes::MaxObjectSize <= USHRT_MAX);
     Assert(bucket->sizeCat <= TBlockAttributes::MaxObjectSize);
     Assert((TBlockAttributes::PageCount * AutoSystemInfo::PageSize) / bucket->sizeCat <= USHRT_MAX);
 

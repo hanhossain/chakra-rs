@@ -12,7 +12,7 @@ bool
 Recycler::IntegrateBlock(char * blockAddress, PageSegment * segment, size_t allocSize, size_t objectSize)
 {
     // We only support no bit and leaf bit right now, where we don't need to set the object info in either case
-    CompileAssert(attributes == NoBit || attributes == LeafBit);
+    static_assert(attributes == NoBit || attributes == LeafBit);
 
     // Currently only small object is supported
     Assert(HeapInfo::IsSmallObject(allocSize));
@@ -51,9 +51,9 @@ Recycler::AllocWithAttributesInlined(size_t size)
 {
     // All tracked objects are client tracked or recycler host visited objects
 #ifndef RECYCLER_VISITED_HOST
-    CompileAssert((attributes & TrackBit) == 0 || (attributes & ClientTrackedBit) != 0);
+    static_assert((attributes & TrackBit) == 0 || (attributes & ClientTrackedBit) != 0);
 #else
-    CompileAssert((attributes & TrackBit) == 0 || (attributes & ClientTrackedBit) != 0 || (attributes & RecyclerVisitedHostBit) != 0);
+    static_assert((attributes & TrackBit) == 0 || (attributes & ClientTrackedBit) != 0 || (attributes & RecyclerVisitedHostBit) != 0);
 #endif
     Assert(this->enableScanImplicitRoots || (attributes & ImplicitRootBit) == 0);
     AssertMsg(this->disableThreadAccessCheck || this->mainThreadId == GetCurrentThreadContextId(),

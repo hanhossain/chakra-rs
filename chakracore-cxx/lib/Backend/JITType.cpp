@@ -12,7 +12,7 @@ JITType::JITType()
 JITType::JITType(TypeIDL * data) :
     m_data(*data)
 {
-    CompileAssert(sizeof(JITType) == sizeof(TypeIDL));
+    static_assert(sizeof(JITType) == sizeof(TypeIDL));
 }
 
 /* static */

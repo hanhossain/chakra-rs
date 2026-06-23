@@ -77,7 +77,7 @@ using namespace Js;
     JavascriptString* CharStringCache::GetStringForCharSP(codepoint_t c)
     {
         Assert(c >= 0x10000);
-        CompileAssert(sizeof(char16_t) * 2 == sizeof(codepoint_t));
+        static_assert(sizeof(char16_t) * 2 == sizeof(codepoint_t));
 
         ScriptContext* scriptContext = JavascriptLibrary::FromCharStringCache(this)->GetScriptContext();
 

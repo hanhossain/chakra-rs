@@ -697,7 +697,7 @@ public:
 
 #if TARGET_64
 // Ensure that the size of the union doesn't exceed the size of a 64 bit pointer.
-CompileAssert(sizeof(ProfiledInstr::u) <= sizeof(void*));
+static_assert(sizeof(ProfiledInstr::u) <= sizeof(void*));
 #endif
 
 ///---------------------------------------------------------------------------

@@ -5,7 +5,7 @@
 
 #include "Backend.h"
 
-CompileAssert(sizeof(FixedFieldIDL) == sizeof(FixedFieldInfo));
+static_assert(sizeof(FixedFieldIDL) == sizeof(FixedFieldInfo));
 
 /* static */
 void
@@ -59,7 +59,7 @@ FixedFieldInfo::GetLocalFuncId() const
 ValueType
 FixedFieldInfo::GetValueType() const
 {
-    CompileAssert(sizeof(ValueType) == sizeof(uint16));
+    static_assert(sizeof(ValueType) == sizeof(uint16));
     return *(ValueType*)&m_data.valueType;
 }
 

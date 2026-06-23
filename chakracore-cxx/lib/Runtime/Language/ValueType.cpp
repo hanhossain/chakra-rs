@@ -22,7 +22,7 @@ void ValueType::Initialize()
 
 inline ValueType::Bits ValueType::BitPattern(const TSize onCount)
 {
-    CompileAssert(sizeof(TSize) <= sizeof(size_t));
+    static_assert(sizeof(TSize) <= sizeof(size_t));
     Assert(onCount && onCount <= sizeof(TSize) * 8);
 
 #pragma prefast(suppress:6235, "Non-Zero Constant TSize and size_t in Condition. This is By Design to allow for TSize to be increased in size to uint32_t without breaking anything")
@@ -87,8 +87,8 @@ inline ValueType ValueType::GetArray(const ObjectType objectType)
 
 ValueType::ValueType() : bits(Uninitialized.bits)
 {
-    CompileAssert(sizeof(ValueType) == sizeof(TSize));
-    CompileAssert(sizeof(ObjectType) == sizeof(TSize));
+    static_assert(sizeof(ValueType) == sizeof(TSize));
+    static_assert(sizeof(ObjectType) == sizeof(TSize));
 }
 
 ValueType::ValueType(const Bits bits) : bits(bits)

@@ -7,9 +7,9 @@
 typedef uint8_t ubyte;
 typedef uint16 uhalf;
 typedef uint32_t uword;
-CompileAssert(sizeof(ubyte) == 1);
-CompileAssert(sizeof(uhalf) == 2);
-CompileAssert(sizeof(uword) == 4);
+static_assert(sizeof(ubyte) == 1);
+static_assert(sizeof(uhalf) == 2);
+static_assert(sizeof(uword) == 4);
 
 uint8_t* EmitLEB128(uint8_t* pc, unsigned value);
 uint8_t* EmitLEB128(uint8_t* pc, int value);

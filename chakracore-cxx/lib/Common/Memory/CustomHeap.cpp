@@ -1078,7 +1078,7 @@ void FillDebugBreak(_Out_writes_bytes_all_(byteCount) uint8_t* buffer, _In_ size
     // While it could be easier to put 0xBE (same way as 0xCC on x86), BKPT is not recommended -- it may cause unexpected side effects.
     // So, use same sequence are C++ compiler uses (0xDEFE), this is recognized by debugger as __debugbreak.
     // This is 2 bytes, and in case there is a gap of 1 byte in the end, fill it with 0 (there is no 1 byte long THUMB instruction).
-    CompileAssert(sizeof(char16_t) == 2);
+    static_assert(sizeof(char16_t) == 2);
     char16_t pattern = 0xDEFE;
 
     uint8_t * writeBuffer = buffer;
@@ -1090,7 +1090,7 @@ void FillDebugBreak(_Out_writes_bytes_all_(byteCount) uint8_t* buffer, _In_ size
     }
 
 #elif defined(_M_ARM64)
-    CompileAssert(sizeof(uint32_t) == 4);
+    static_assert(sizeof(uint32_t) == 4);
     uint32_t pattern = 0xd4200000 | (0xf000 << 5);
     for (size_t i = 0; i < byteCount / 4; i++)
     {

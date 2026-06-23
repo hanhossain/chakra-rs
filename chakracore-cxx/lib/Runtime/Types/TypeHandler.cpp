@@ -39,7 +39,7 @@ using namespace Js;
 
     int DynamicTypeHandler::RoundUpAuxSlotCapacity(const int slotCapacity)
     {
-        CompileAssert(4 * sizeof(Var) % HeapConstants::ObjectGranularity == 0);
+        static_assert(4 * sizeof(Var) % HeapConstants::ObjectGranularity == 0);
         return ::Math::Align<int>(slotCapacity, 4);
     }
 

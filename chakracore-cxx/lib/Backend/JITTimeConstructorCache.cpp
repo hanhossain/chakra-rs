@@ -5,7 +5,7 @@
 
 #include "Backend.h"
 
-CompileAssert(sizeof(JITTimeConstructorCache) == sizeof(JITTimeConstructorCacheIDL));
+static_assert(sizeof(JITTimeConstructorCache) == sizeof(JITTimeConstructorCacheIDL));
 
 JITTimeConstructorCache::JITTimeConstructorCache(const Js::JavascriptFunction* constructor, Js::ConstructorCache* runtimeCache)
 {

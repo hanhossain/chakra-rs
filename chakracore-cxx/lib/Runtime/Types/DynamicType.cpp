@@ -403,7 +403,7 @@ namespace Js
     template <PropertyId propertyId>
     BOOL DynamicObject::ToPrimitiveImpl(Var* result, ScriptContext * requestContext)
     {
-        CompileAssert(propertyId == PropertyIds::valueOf || propertyId == PropertyIds::toString);
+        static_assert(propertyId == PropertyIds::valueOf || propertyId == PropertyIds::toString);
         Var aValue = nullptr;
         if (JavascriptOperators::CheckIfObjectAndProtoChainHasNoSpecialProperties(this))
         {

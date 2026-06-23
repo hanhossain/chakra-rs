@@ -133,7 +133,7 @@ private:
     };
 
     // We want HeapBlockInfo to be as small as possible to get the best cache locality for this info.
-    CompileAssert(sizeof(HeapBlockInfo) == sizeof(ushort));
+    static_assert(sizeof(HeapBlockInfo) == sizeof(ushort));
 
     class L2MapChunk
     {

@@ -10,7 +10,7 @@
     case OpCodeAsmJs::name:
 
 #define PROCESS_READ_LAYOUT_ASMJS(name, layout, suffix) \
-    CompileAssert(OpCodeInfoAsmJs<OpCodeAsmJs::name>::Layout == OpLayoutTypeAsmJs::layout); \
+    static_assert(OpCodeInfoAsmJs<OpCodeAsmJs::name>::Layout == OpLayoutTypeAsmJs::layout); \
     const unaligned OpLayout##layout##suffix * playout = m_reader.layout##suffix(ip); \
     Assert((playout != nullptr) == (Js::OpLayoutTypeAsmJs::##layout != Js::OpLayoutTypeAsmJs::Empty)); // Make sure playout is used
 

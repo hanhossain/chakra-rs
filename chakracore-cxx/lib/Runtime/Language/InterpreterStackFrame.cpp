@@ -47,7 +47,7 @@
     case OpCode::name:
 
 #define PROCESS_READ_LAYOUT(name, layout, suffix) \
-    CompileAssert(OpCodeInfo<OpCode::name>::Layout == OpLayoutType::layout); \
+    static_assert(OpCodeInfo<OpCode::name>::Layout == OpLayoutType::layout); \
     const unaligned OpLayout##layout##suffix * playout = m_reader.layout##suffix(ip); \
     Assert((playout != nullptr) == (Js::OpLayoutType::##layout != Js::OpLayoutType::Empty)); // Make sure playout is used
 
@@ -2182,7 +2182,7 @@ namespace Js
     void InterpreterStackFrame::OP_InvalidWasmTypeConversion(...)
     {
 #ifdef ENABLE_WASM
-        CompileAssert(type < Wasm::WasmTypes::Limit);
+        static_assert(type < Wasm::WasmTypes::Limit);
         const char16_t* fromType = toJs ? Wasm::WasmTypes::GetTypeName(static_cast<Wasm::WasmTypes::WasmType>(type)) : u"Javascript Variable";
         const char16_t* toType = toJs ? u"Javascript Variable" : Wasm::WasmTypes::GetTypeName(static_cast<Wasm::WasmTypes::WasmType>(type));
         JavascriptError::ThrowTypeErrorVar(scriptContext, WASMERR_InvalidTypeConversion, fromType, toType);
@@ -2798,7 +2798,7 @@ namespace Js
             case WAsmJs::FLOAT64: m_localDoubleSlots = (double*)destination; break;
             case WAsmJs::SIMD:    m_localSimdSlots = (AsmJsSIMDValue*)destination; break;
             default:
-                CompileAssert(WAsmJs::SIMD == WAsmJs::LastType);
+                static_assert(WAsmJs::SIMD == WAsmJs::LastType);
                 Assert(false);
                 break;
             }
@@ -8666,7 +8666,7 @@ namespace Js
 #include "AsmJsArrayBufferViews.h"
         default:Assert(UNREACHED);
         }
-        CompileAssert(ArrayBufferView::ViewType::TYPE_COUNT == 15);
+        static_assert(ArrayBufferView::ViewType::TYPE_COUNT == 15);
 #if DBG
         if (PHASE_TRACE(WasmMemWritesPhase, m_functionBody))
         {
@@ -9145,42 +9145,42 @@ namespace Js
 
 // Make sure the macro and the layout for the op is consistent
 #define DEF2(x, op, ...) \
-    CompileAssert(!Js::OpCodeInfo<Js::OpCode::op>::HasMultiSizeLayout);  \
-    CompileAssert(!Js::OpCodeInfo<Js::OpCode::op>::IsExtendedOpcode);
+    static_assert(!Js::OpCodeInfo<Js::OpCode::op>::HasMultiSizeLayout);  \
+    static_assert(!Js::OpCodeInfo<Js::OpCode::op>::IsExtendedOpcode);
 #define DEF3(x, op, ...) DEF2(x, op)
 #define EXDEF2(x, op, ...) \
-    CompileAssert(!Js::OpCodeInfo<Js::OpCode::op>::HasMultiSizeLayout);  \
-    CompileAssert(Js::OpCodeInfo<Js::OpCode::op>::IsExtendedOpcode);
+    static_assert(!Js::OpCodeInfo<Js::OpCode::op>::HasMultiSizeLayout);  \
+    static_assert(Js::OpCodeInfo<Js::OpCode::op>::IsExtendedOpcode);
 #define EXDEF3(x, op, ...) EXDEF2(x, op)
 #define DEF2_WMS(x, op, ...) \
-    CompileAssert(Js::OpCodeInfo<Js::OpCode::op>::HasMultiSizeLayout);  \
-    CompileAssert(!Js::OpCodeInfo<Js::OpCode::op>::IsExtendedOpcode);
+    static_assert(Js::OpCodeInfo<Js::OpCode::op>::HasMultiSizeLayout);  \
+    static_assert(!Js::OpCodeInfo<Js::OpCode::op>::IsExtendedOpcode);
 #define DEF3_WMS(x, op, ...) DEF2_WMS(x, op)
 #define EXDEF2_WMS(x, op, ...) \
-    CompileAssert(Js::OpCodeInfo<Js::OpCode::op>::HasMultiSizeLayout);  \
-    CompileAssert(Js::OpCodeInfo<Js::OpCode::op>::IsExtendedOpcode);
+    static_assert(Js::OpCodeInfo<Js::OpCode::op>::HasMultiSizeLayout);  \
+    static_assert(Js::OpCodeInfo<Js::OpCode::op>::IsExtendedOpcode);
 #define EXDEF3_WMS(x, op, ...) EXDEF2_WMS(x, op)
 #include "InterpreterHandler.inl"
 
 // Make sure the macro and the layout for the op is consistent
 #define DEF2(x, op, ...) \
-    CompileAssert(!Js::OpCodeInfoAsmJs<Js::OpCodeAsmJs::op>::HasMultiSizeLayout);  \
-    CompileAssert(!Js::OpCodeInfoAsmJs<Js::OpCodeAsmJs::op>::IsExtendedOpcode);
+    static_assert(!Js::OpCodeInfoAsmJs<Js::OpCodeAsmJs::op>::HasMultiSizeLayout);  \
+    static_assert(!Js::OpCodeInfoAsmJs<Js::OpCodeAsmJs::op>::IsExtendedOpcode);
 #define DEF3(x, op, ...) DEF2(x, op)
 #define DEF4(x, op, ...) DEF2(x, op)
 #define EXDEF2(x, op, ...) \
-    CompileAssert(!Js::OpCodeInfoAsmJs<Js::OpCodeAsmJs::op>::HasMultiSizeLayout);  \
-    CompileAssert(Js::OpCodeInfoAsmJs<Js::OpCodeAsmJs::op>::IsExtendedOpcode);
+    static_assert(!Js::OpCodeInfoAsmJs<Js::OpCodeAsmJs::op>::HasMultiSizeLayout);  \
+    static_assert(Js::OpCodeInfoAsmJs<Js::OpCodeAsmJs::op>::IsExtendedOpcode);
 #define EXDEF3(x, op, ...) EXDEF2(x, op)
 #define EXDEF4(x, op, ...) EXDEF2(x, op)
 #define DEF2_WMS(x, op, ...) \
-    CompileAssert(Js::OpCodeInfoAsmJs<Js::OpCodeAsmJs::op>::HasMultiSizeLayout);  \
-    CompileAssert(!Js::OpCodeInfoAsmJs<Js::OpCodeAsmJs::op>::IsExtendedOpcode);
+    static_assert(Js::OpCodeInfoAsmJs<Js::OpCodeAsmJs::op>::HasMultiSizeLayout);  \
+    static_assert(!Js::OpCodeInfoAsmJs<Js::OpCodeAsmJs::op>::IsExtendedOpcode);
 #define DEF3_WMS(x, op, ...) DEF2_WMS(x, op)
 #define DEF4_WMS(x, op, ...) DEF2_WMS(x, op)
 #define EXDEF2_WMS(x, op, ...) \
-    CompileAssert(Js::OpCodeInfoAsmJs<Js::OpCodeAsmJs::op>::HasMultiSizeLayout);  \
-    CompileAssert(Js::OpCodeInfoAsmJs<Js::OpCodeAsmJs::op>::IsExtendedOpcode);
+    static_assert(Js::OpCodeInfoAsmJs<Js::OpCodeAsmJs::op>::HasMultiSizeLayout);  \
+    static_assert(Js::OpCodeInfoAsmJs<Js::OpCodeAsmJs::op>::IsExtendedOpcode);
 #define EXDEF3_WMS(x, op, ...) EXDEF2_WMS(x, op)
 #define EXDEF4_WMS(x, op, ...) EXDEF2_WMS(x, op)
 #include "InterpreterHandlerAsmJs.inl"

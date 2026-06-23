@@ -25,5 +25,5 @@ namespace Js
         };
     };
 
-    CompileAssert(sizeof(SimplePropertyDescriptor) == 2 * sizeof(Var));
+    static_assert(sizeof(SimplePropertyDescriptor) == 2 * sizeof(Var));
 }

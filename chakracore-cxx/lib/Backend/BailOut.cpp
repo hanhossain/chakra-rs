@@ -340,8 +340,8 @@ BailOutRecord::BailOutRecord(uint32_t bailOutOffset, uint bailOutCacheIndex, IR:
     , inlineDepth(0)
 #endif
 {
-    CompileAssert(offsetof(BailOutRecord, globalBailOutRecordTable) == 0); // the offset is hard-coded in LinearScanMD::SaveAllRegisters
-    CompileAssert(offsetof(GlobalBailOutRecordDataTable, registerSaveSpace) == 0); // the offset is hard-coded in LinearScanMD::SaveAllRegisters}
+    static_assert(offsetof(BailOutRecord, globalBailOutRecordTable) == 0); // the offset is hard-coded in LinearScanMD::SaveAllRegisters
+    static_assert(offsetof(GlobalBailOutRecordDataTable, registerSaveSpace) == 0); // the offset is hard-coded in LinearScanMD::SaveAllRegisters}
     Assert(bailOutOffset != Js::Constants::NoByteCodeOffset);
 
 #if DBG

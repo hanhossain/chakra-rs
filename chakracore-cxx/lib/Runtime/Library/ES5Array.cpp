@@ -6,7 +6,7 @@
 
 namespace Js
 {
-    CompileAssert(sizeof(ES5Array) == sizeof(JavascriptArray));
+    static_assert(sizeof(ES5Array) == sizeof(JavascriptArray));
 
     ES5ArrayType::ES5ArrayType(DynamicType* type)
         : DynamicType(type->GetScriptContext(), TypeIds_ES5Array, type->GetPrototype(), type->GetEntryPoint(), type->GetTypeHandler(), false, false)

@@ -14,7 +14,7 @@ DebuggingFlags::DebuggingFlags() :
     m_isBuiltInWrapperPresent(false)
 {
     // In Lowerer::LowerBailForDebugger we rely on the following:
-    CompileAssert(offsetof(DebuggingFlags, m_isIgnoringException) == offsetof(DebuggingFlags, m_forceInterpreter) + 1);
+    static_assert(offsetof(DebuggingFlags, m_isIgnoringException) == offsetof(DebuggingFlags, m_forceInterpreter) + 1);
 }
 
 bool DebuggingFlags::GetForceInterpreter() const

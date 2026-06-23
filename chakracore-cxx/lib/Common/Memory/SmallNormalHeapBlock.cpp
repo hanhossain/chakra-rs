@@ -10,7 +10,7 @@ template <class TBlockAttributes>
 SmallNormalHeapBlockT<TBlockAttributes> *
 SmallNormalHeapBlockT<TBlockAttributes>::New(HeapBucketT<SmallNormalHeapBlockT<TBlockAttributes>> * bucket)
 {
-    CompileAssert(TBlockAttributes::MaxObjectSize <= USHRT_MAX);
+    static_assert(TBlockAttributes::MaxObjectSize <= USHRT_MAX);
     Assert(bucket->sizeCat <= TBlockAttributes::MaxObjectSize);
     Assert((TBlockAttributes::PageCount * AutoSystemInfo::PageSize) / bucket->sizeCat <= USHRT_MAX);
 
@@ -26,7 +26,7 @@ template <class TBlockAttributes>
 SmallNormalWithBarrierHeapBlockT<TBlockAttributes> *
 SmallNormalWithBarrierHeapBlockT<TBlockAttributes>::New(HeapBucketT<SmallNormalWithBarrierHeapBlockT<TBlockAttributes>> * bucket)
 {
-    CompileAssert(TBlockAttributes::MaxObjectSize <= USHRT_MAX);
+    static_assert(TBlockAttributes::MaxObjectSize <= USHRT_MAX);
     Assert(bucket->sizeCat <= TBlockAttributes::MaxObjectSize);
     Assert((TBlockAttributes::PageCount * AutoSystemInfo::PageSize) / bucket->sizeCat <= USHRT_MAX);
 

@@ -7,7 +7,7 @@
 
 JITTimePolymorphicInlineCacheInfo::JITTimePolymorphicInlineCacheInfo()
 {
-    CompileAssert(sizeof(JITTimePolymorphicInlineCacheInfo) == sizeof(PolymorphicInlineCacheInfoIDL));
+    static_assert(sizeof(JITTimePolymorphicInlineCacheInfo) == sizeof(PolymorphicInlineCacheInfoIDL));
 }
 
 /* static */

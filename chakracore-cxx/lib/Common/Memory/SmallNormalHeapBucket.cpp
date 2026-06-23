@@ -222,7 +222,7 @@ SmallNormalHeapBucketBase<TBlockType>::SweepPendingObjects(RecyclerSweep& recycl
 {
     RECYCLER_SLOW_CHECK(this->VerifyHeapBlockCount(recyclerSweep.IsBackground()));
 
-    CompileAssert(!BaseT::IsLeafBucket);
+    static_assert(!BaseT::IsLeafBucket);
     TBlockType *& pendingSweepList = recyclerSweep.GetPendingSweepBlockList(this);
     TBlockType * const list = pendingSweepList;
     Recycler * const recycler = recyclerSweep.GetRecycler();

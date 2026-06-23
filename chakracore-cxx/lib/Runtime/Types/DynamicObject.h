@@ -121,8 +121,8 @@ namespace Js
             };
         };
 
-        CompileAssert(sizeof(ProfileId) == 2);
-        CompileAssert(static_cast<intptr_t>(DynamicObjectFlags::ObjectArrayFlagsTag) != 0);
+        static_assert(sizeof(ProfileId) == 2);
+        static_assert(static_cast<intptr_t>(DynamicObjectFlags::ObjectArrayFlagsTag) != 0);
 
         void InitSlots(DynamicObject * instance, ScriptContext * scriptContext);
         void SetTypeHandler(DynamicTypeHandler * typeHandler, bool hasChanged);

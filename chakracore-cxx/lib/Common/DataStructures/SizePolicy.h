@@ -74,8 +74,8 @@ struct PowerOf2Policy
 template <class SizePolicy, uint averageChainLength = 2, uint growthRateNumerator = 2, uint growthRateDenominator = 1, uint minBucket = 4>
 struct DictionarySizePolicy
 {
-    CompileAssert(growthRateNumerator > growthRateDenominator);
-    CompileAssert(growthRateDenominator != 0);
+    static_assert(growthRateNumerator > growthRateDenominator);
+    static_assert(growthRateDenominator != 0);
     inline static hash_t GetBucket(hash_t hashCode, uint bucketCount, int modFunctionIndex)
     {
         return SizePolicy::GetBucket(hashCode, bucketCount, modFunctionIndex);

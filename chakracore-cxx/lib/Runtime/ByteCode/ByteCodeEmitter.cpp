@@ -3293,7 +3293,7 @@ void ByteCodeGenerator::MapCacheIdsToPropertyIds(FuncInfo *funcInfo)
             {
                 inlineCacheList->Iterate([functionBody, propertyId](InlineCacheUnit cacheUnit)
                 {
-                    CompileAssert(offsetof(InlineCacheUnit, cacheId) == offsetof(InlineCacheUnit, loadCacheId));
+                    static_assert(offsetof(InlineCacheUnit, cacheId) == offsetof(InlineCacheUnit, loadCacheId));
                     if (cacheUnit.loadCacheId != -1)
                     {
                         functionBody->SetPropertyIdForCacheId(cacheUnit.loadCacheId, propertyId);

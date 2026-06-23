@@ -87,8 +87,8 @@ public:
 class PropertyGuardValidator
 {
     // Required by EquivalentTypeGuard::SetType.
-    CompileAssert(offsetof(PropertyGuard, value) == 0);
-    // CompileAssert(offsetof(ConstructorCache, guard.value) == offsetof(PropertyGuard, value));
+    static_assert(offsetof(PropertyGuard, value) == 0);
+    // static_assert(offsetof(ConstructorCache, guard.value) == offsetof(PropertyGuard, value));
 };
 
 

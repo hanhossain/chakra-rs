@@ -385,11 +385,11 @@ namespace UnifiedRegex
         void AppendLiteral(CharCount& litbufNext, CharCount litbufLen, __inout_ecount(litbufLen) Char* litbuf) const override;
 
 
-        CompileAssert(CaseInsensitive::EquivClassSize == 4);
+        static_assert(CaseInsensitive::EquivClassSize == 4);
         static void Emit(Compiler& compiler, __in_ecount(4) Char * cs, bool isEquivClass);
 
     private:
-        CompileAssert(CaseInsensitive::EquivClassSize == 4);
+        static_assert(CaseInsensitive::EquivClassSize == 4);
         static CharCount FindUniqueEquivs(
             const Char equivs[CaseInsensitive::EquivClassSize],
             __out_ecount(4) Char uniqueEquivs[CaseInsensitive::EquivClassSize]);

@@ -686,7 +686,7 @@ bool
 HeapInfo::IntegrateBlock(char * blockAddress, PageSegment * segment, Recycler * recycler, size_t sizeCat)
 {
     // We only support no bit and leaf bit right now, where we don't need to set the object info in either case
-    CompileAssert(attributes == NoBit || attributes == LeafBit);
+    static_assert(attributes == NoBit || attributes == LeafBit);
     Assert(HeapInfo::IsAlignedSmallObjectSize(sizeCat));
 
     return this->GetBucket<(ObjectInfoBits)(attributes & GetBlockTypeBitMask)>(sizeCat).IntegrateBlock(blockAddress, segment, recycler);
@@ -713,7 +713,7 @@ char *
 HeapInfo::SmallAllocatorAlloc(Recycler * recycler, SmallHeapBlockAllocatorType * allocator, size_t sizeCat, size_t size)
 {
     Assert(HeapInfo::IsAlignedSmallObjectSize(sizeCat));
-    CompileAssert((attributes & SmallHeapBlockAllocatorType::BlockType::RequiredAttributes) == SmallHeapBlockAllocatorType::BlockType::RequiredAttributes);
+    static_assert((attributes & SmallHeapBlockAllocatorType::BlockType::RequiredAttributes) == SmallHeapBlockAllocatorType::BlockType::RequiredAttributes);
 
     auto& bucket = this->GetBucket<SmallHeapBlockAllocatorType::BlockType::RequiredAttributes>(sizeCat);
 

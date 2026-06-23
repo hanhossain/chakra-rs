@@ -14,7 +14,7 @@ namespace Js
     template <typename StringType>
     inline LiteralStringWithPropertyStringPtr * LiteralStringWithPropertyStringPtr::ConvertString(StringType * originalString)
     {
-        CompileAssert(sizeof(StringType) >= sizeof(LiteralStringWithPropertyStringPtr));
+        static_assert(sizeof(StringType) >= sizeof(LiteralStringWithPropertyStringPtr));
         VirtualTableInfo<LiteralStringWithPropertyStringPtr>::SetVirtualTable(originalString);
         LiteralStringWithPropertyStringPtr * convertedString = (LiteralStringWithPropertyStringPtr *)originalString;
         convertedString->SetPropertyString(nullptr);

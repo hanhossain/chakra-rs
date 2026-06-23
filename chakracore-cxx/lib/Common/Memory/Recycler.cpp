@@ -3339,7 +3339,7 @@ BOOL
 Recycler::CollectNow()
 {
     // Force-in-thread cannot be concurrent or partial
-    CompileAssert((flags & CollectOverride_ForceInThread) == 0 || (flags & (CollectMode_Concurrent | CollectMode_Partial)) == 0);
+    static_assert((flags & CollectOverride_ForceInThread) == 0 || (flags & (CollectMode_Concurrent | CollectMode_Partial)) == 0);
 
     // Collections not allowed when the recycler is currently executing the PostCollectionCallback
     if (this->IsAllocatableCallbackState())
@@ -4247,7 +4247,7 @@ template <CollectionFlags flags>
 BOOL
 Recycler::FinishConcurrent()
 {
-    CompileAssert((flags & ~(CollectOverride_AllowDispose | CollectOverride_ForceFinish | CollectOverride_ForceInThread
+    static_assert((flags & ~(CollectOverride_AllowDispose | CollectOverride_ForceFinish | CollectOverride_ForceInThread
         | CollectMode_Concurrent | CollectOverride_DisableIdleFinish | CollectOverride_BackgroundFinishMark
         | CollectOverride_SkipStack | CollectOverride_FinishConcurrentTimeout)) == 0);
 

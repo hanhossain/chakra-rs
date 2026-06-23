@@ -455,7 +455,7 @@ namespace Js
         , isFinalized(false)
     #endif
     {
-        CompileAssert(MinimumCharCapacity != 0);
+        static_assert(MinimumCharCapacity != 0);
         Assert(LastBlockCharCapacity() >= MinimumCharCapacity);
     }
 
@@ -1137,7 +1137,7 @@ namespace Js
         String *const toString,
         const bool appendChars)
     {
-        CompileAssert(AppendCharLengthPlusOne != 0);
+        static_assert(AppendCharLengthPlusOne != 0);
         Assert(s);
         Assert(s[AppendCharLengthPlusOne - 1] == u'\0');
         Assert(toString);

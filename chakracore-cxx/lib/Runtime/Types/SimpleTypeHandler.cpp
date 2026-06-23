@@ -105,7 +105,7 @@ namespace Js
         Recycler* recycler = scriptContext->GetRecycler();
 
 
-        CompileAssert(_countof(descriptors) == size);
+        static_assert(_countof(descriptors) == size);
 
         SimpleTypeHandler * newTypeHandler = RecyclerNew(recycler, SimpleTypeHandler, this, true /*unused*/);
 
@@ -684,7 +684,7 @@ namespace Js
             instance->ChangeType();
 
 
-            CompileAssert(_countof(descriptors) == size);
+            static_assert(_countof(descriptors) == size);
             if (size > 1)
             {
                 if (GetIsLocked())

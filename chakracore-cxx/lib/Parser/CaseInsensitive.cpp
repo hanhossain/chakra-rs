@@ -42,7 +42,7 @@ namespace UnifiedRegex
 
                 outEquiv[0] = Chars<Char>::UTC((lo + 1) % skipCountOfRange == c % skipCountOfRange ? (int)c + delta0 : c);
 
-                CompileAssert(CaseInsensitive::EquivClassSize == 4);
+                static_assert(CaseInsensitive::EquivClassSize == 4);
                 if (lo  % skipCountOfRange == c % skipCountOfRange)
                 {
                     outEquiv[1] = Chars<Char>::ITC((int)c + delta1);

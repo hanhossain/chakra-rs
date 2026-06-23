@@ -589,14 +589,14 @@ public:
         FreeObject * next;
     };
 
-    CompileAssert(sizeof(CacheLayout) == sizeof(FreeObject));
-    CompileAssert(offsetof(CacheLayout, strongRef) == offsetof(FreeObject, next));
+    static_assert(sizeof(CacheLayout) == sizeof(FreeObject));
+    static_assert(offsetof(CacheLayout, strongRef) == offsetof(FreeObject, next));
 
 #if defined(TARGET_64)
-    CompileAssert(sizeof(CacheLayout) == 32);
+    static_assert(sizeof(CacheLayout) == 32);
     static const size_t ObjectAlignmentBitShift = 5;
 #else
-    CompileAssert(sizeof(CacheLayout) == 16);
+    static_assert(sizeof(CacheLayout) == 16);
     static const size_t ObjectAlignmentBitShift = 4;
 #endif
 
@@ -670,7 +670,7 @@ private:
 
 public:
     // Zeroing and freeing w/o leaking is not implemented for large objects
-    CompileAssert(MaxObjectSize <= MaxSmallObjectSize);
+    static_assert(MaxObjectSize <= MaxSmallObjectSize);
 
     InlineCacheAllocator(const char16_t* name, PageAllocator * pageAllocator, void(*outOfMemoryFunc)(), void(*recoverMemoryFunc)() = JsUtil::ExternalApi::RecoverUnusedMemory) :
         ArenaAllocatorBase<InlineCacheAllocatorTraits>(name, pageAllocator, outOfMemoryFunc, recoverMemoryFunc), hasUsedInlineCache(false), hasProtoOrStoreFieldInlineCache(false)

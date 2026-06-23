@@ -25,7 +25,7 @@ namespace Js
         {
             writer->m_byteCodeWithoutLDACount++;
         }
-        CompileAssert((int)Js::OpCodeAsmJs::Ld_Db - (int)Js::OpCodeAsmJs::Ld_IntConst == 7);
+        static_assert((int)Js::OpCodeAsmJs::Ld_Db - (int)Js::OpCodeAsmJs::Ld_IntConst == 7);
 
         if (!isPatching)
         {

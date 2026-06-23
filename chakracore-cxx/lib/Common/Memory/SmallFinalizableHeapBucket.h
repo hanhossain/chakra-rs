@@ -93,10 +93,10 @@ class SmallHeapBlockType
 {
 public:
    
-    CompileAssert((attributes & FinalizeBit) != 0);
+    static_assert((attributes & FinalizeBit) != 0);
 #ifdef RECYCLER_VISITED_HOST
     // attributes with RecyclerVisitedHostBit must use SmallRecyclerVisitedHostHeap{Bucket|Block}T
-    CompileAssert((attributes & RecyclerVisitedHostBit) == 0);
+    static_assert((attributes & RecyclerVisitedHostBit) == 0);
 #endif
     typedef SmallFinalizableHeapBlockT<TBlockAttributes> BlockType;
     typedef SmallFinalizableHeapBucketT<TBlockAttributes> BucketType;
@@ -258,7 +258,7 @@ class HeapBucketGroup
         typedef typename SmallHeapBlockType<objectAttributes, TBlockAttributes>::BucketType BucketType;
         static BucketType& GetBucket(HeapBucketGroup<TBlockAttributes> * heapBucketGroup)
         {
-            CompileAssert(objectAttributes & FinalizeBit);
+            static_assert(objectAttributes & FinalizeBit);
             return heapBucketGroup->finalizableHeapBucket;
         }
     };

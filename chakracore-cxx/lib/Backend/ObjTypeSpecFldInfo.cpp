@@ -7,7 +7,7 @@
 #include "NativeEntryPointData.h"
 #include "JitTransferData.h"
 
-CompileAssert(sizeof(ObjTypeSpecFldIDL) == sizeof(ObjTypeSpecFldInfo));
+static_assert(sizeof(ObjTypeSpecFldIDL) == sizeof(ObjTypeSpecFldInfo));
 
 void
 ObjTypeSpecPolymorphicInfo::SetSlotIndex(uint16 slotIndex)

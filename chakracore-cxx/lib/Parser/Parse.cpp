@@ -840,7 +840,7 @@ typename OpCodeTrait<nop>::ParseNodeType * Parser::CreateNodeForOpT(charcount_t 
 template <OpCode nop>
 typename OpCodeTrait<nop>::ParseNodeType * Parser::CreateAllowDeferNodeForOpT(charcount_t ichMin, charcount_t ichLim)
 {
-    CompileAssert(OpCodeTrait<nop>::AllowDefer);
+    static_assert(OpCodeTrait<nop>::AllowDefer);
     typename OpCodeTrait<nop>::ParseNodeType * pnode = StaticCreateNodeT<nop>(&m_nodeAllocator, ichMin, ichLim);
     AddAstSizeAllowDefer(sizeof(typename OpCodeTrait<nop>::ParseNodeType));
     return pnode;
