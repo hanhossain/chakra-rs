@@ -21,9 +21,9 @@ namespace Js
         ScriptContext *const requestContext,
         PropertyCacheOperationInfo *const operationInfo)
     {
-        CompileAssert(CheckLocal || CheckProto || CheckAccessor || CheckMissing);
+        static_assert(CheckLocal || CheckProto || CheckAccessor || CheckMissing);
         Assert(!ReturnOperationInfo || operationInfo);
-        CompileAssert(!ReturnOperationInfo || (CheckLocal && CheckProto && CheckAccessor));
+        static_assert(!ReturnOperationInfo || (CheckLocal && CheckProto && CheckAccessor));
         Assert(instance);
         Assert(propertyObject);
         Assert(propertyId != Constants::NoProperty);
@@ -170,9 +170,9 @@ namespace Js
         PropertyCacheOperationInfo *const operationInfo,
         const PropertyOperationFlags propertyOperationFlags)
     {
-        CompileAssert(CheckLocal || CheckLocalTypeWithoutProperty || CheckAccessor);
+        static_assert(CheckLocal || CheckLocalTypeWithoutProperty || CheckAccessor);
         Assert(!ReturnOperationInfo || operationInfo);
-        CompileAssert(!ReturnOperationInfo || (CheckLocal && CheckLocalTypeWithoutProperty && CheckAccessor));
+        static_assert(!ReturnOperationInfo || (CheckLocal && CheckLocalTypeWithoutProperty && CheckAccessor));
         Assert(object);
         Assert(propertyId != Constants::NoProperty);
         Assert(requestContext);

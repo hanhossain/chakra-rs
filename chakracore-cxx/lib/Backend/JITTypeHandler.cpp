@@ -7,7 +7,7 @@
 
 JITTypeHandler::JITTypeHandler(TypeHandlerIDL * data)
 {
-    CompileAssert(sizeof(JITTypeHandler) == sizeof(TypeHandlerIDL));
+    static_assert(sizeof(JITTypeHandler) == sizeof(TypeHandlerIDL));
 }
 
 bool

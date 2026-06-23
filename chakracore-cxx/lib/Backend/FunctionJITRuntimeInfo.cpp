@@ -7,7 +7,7 @@
 
 FunctionJITRuntimeInfo::FunctionJITRuntimeInfo(FunctionJITRuntimeIDL * data) : m_data(*data)
 {
-    CompileAssert(sizeof(FunctionJITRuntimeInfo) == sizeof(FunctionJITRuntimeIDL));
+    static_assert(sizeof(FunctionJITRuntimeInfo) == sizeof(FunctionJITRuntimeIDL));
 }
 
 intptr_t

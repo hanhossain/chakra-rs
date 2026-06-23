@@ -8,7 +8,7 @@
 JITTimeFunctionBody::JITTimeFunctionBody(FunctionBodyDataIDL * bodyData) :
     m_bodyData(*bodyData)
 {
-    CompileAssert(sizeof(JITTimeFunctionBody) == sizeof(FunctionBodyDataIDL));
+    static_assert(sizeof(JITTimeFunctionBody) == sizeof(FunctionBodyDataIDL));
 }
 
 /* static */
@@ -206,7 +206,7 @@ JITTimeFunctionBody::InitializeJITFunctionData(
     jitBody->usesArgumentsObject = functionBody->GetUsesArgumentsObject();
     jitBody->doScopeObjectCreation = functionBody->GetDoScopeObjectCreation();
     
-    //CompileAssert(sizeof(PropertyIdArrayIDL) == sizeof(Js::PropertyIdArray));
+    //static_assert(sizeof(PropertyIdArrayIDL) == sizeof(Js::PropertyIdArray));
     jitBody->formalsPropIdArray = (PropertyIdArrayIDL*)functionBody->GetFormalsPropIdArray(false);
     jitBody->formalsPropIdArrayAddr = (intptr_t)functionBody->GetFormalsPropIdArray(false);
     jitBody->forInCacheArrayAddr = (intptr_t)functionBody->GetForInCacheArray();
@@ -265,7 +265,7 @@ JITTimeFunctionBody::InitializeJITFunctionData(
         jitBody->asmJsData = Anew(arena, AsmJsDataIDL);
         Js::AsmJsFunctionInfo * asmFuncInfo = functionBody->GetAsmJsFunctionInfoWithLock();
         // 5 is hard coded in JITTypes.h
-        CompileAssert(WAsmJs::LIMIT == 5);
+        static_assert(WAsmJs::LIMIT == 5);
         for (int i = 0; i < WAsmJs::LIMIT; ++i)
         {
             WAsmJs::Types type = (WAsmJs::Types)i;

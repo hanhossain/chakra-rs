@@ -144,7 +144,7 @@ template <
     DstType MaxResult>
 DstType WasmMath::ConvertFloatToInt(SrcType srcVal, _In_ Js::ScriptContext * scriptContext)
 {
-    CompileAssert(sizeof(SrcType) == sizeof(ReinterpretType));
+    static_assert(sizeof(SrcType) == sizeof(ReinterpretType));
 
     if (IsNaN(srcVal))
     {

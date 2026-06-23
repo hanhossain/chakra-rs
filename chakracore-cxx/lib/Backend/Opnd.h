@@ -154,7 +154,7 @@ protected:
         // because BVSparseNode* are used to maintain freelist of memory of BVSparseNode size
 #if DBG
         typedef BVSparseNode<JitArenaAllocator> BVSparseNode;
-        CompileAssert(
+        static_assert(
             offsetof(Opnd, isDeleted) > offsetof(BVSparseNode, next) + sizeof(BVSparseNode*) ||
             offsetof(Opnd, isDeleted) < offsetof(BVSparseNode, next) + sizeof(BVSparseNode*));
 #endif

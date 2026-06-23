@@ -150,11 +150,11 @@ extern _x86_SIMDValue X86_TEMP_SIMD[];
 #endif
 
 typedef _x86_SIMDValue X86SIMDValue;
-CompileAssert(sizeof(X86SIMDValue) == 16);
+static_assert(sizeof(X86SIMDValue) == 16);
 #endif
 
 typedef SIMDValue     AsmJsSIMDValue; // alias for asmjs
-CompileAssert(sizeof(SIMDValue) == 16);
+static_assert(sizeof(SIMDValue) == 16);
 
 class ValueType;
 
@@ -268,8 +268,8 @@ namespace Js {
         {
 #ifdef ENABLE_WASM_SIMD
 
-            CompileAssert(sizeof(T) <= sizeof(SIMDValue));
-            CompileAssert(sizeof(SIMDValue) % sizeof(T) == 0);
+            static_assert(sizeof(T) <= sizeof(SIMDValue));
+            static_assert(sizeof(SIMDValue) % sizeof(T) == 0);
             T* cursor = (T*)val.i8;
             const uint maxBytes = 16;
             uint size = maxBytes / sizeof(T);

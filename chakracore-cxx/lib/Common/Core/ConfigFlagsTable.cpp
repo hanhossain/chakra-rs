@@ -4348,11 +4348,11 @@ namespace Js
                 // based on other flags, only the defaults values are adjusted here.
                 AutoProfilingInterpreter0Limit = DEFAULT_CONFIG_AutoProfilingInterpreter0Limit;
                 ProfilingInterpreter0Limit = DEFAULT_CONFIG_ProfilingInterpreter0Limit;
-                CompileAssert(
+                static_assert(
                     DEFAULT_CONFIG_AutoProfilingInterpreter0Limit <= DEFAULT_CONFIG_AutoProfilingInterpreterLimit_OldSimpleJit);
                 AutoProfilingInterpreter1Limit =
                     DEFAULT_CONFIG_AutoProfilingInterpreterLimit_OldSimpleJit - DEFAULT_CONFIG_AutoProfilingInterpreter0Limit;
-                CompileAssert(DEFAULT_CONFIG_ProfilingInterpreter0Limit <= DEFAULT_CONFIG_SimpleJitLimit_OldSimpleJit);
+                static_assert(DEFAULT_CONFIG_ProfilingInterpreter0Limit <= DEFAULT_CONFIG_SimpleJitLimit_OldSimpleJit);
                 SimpleJitLimit = DEFAULT_CONFIG_SimpleJitLimit_OldSimpleJit - DEFAULT_CONFIG_ProfilingInterpreter0Limit;
                 ProfilingInterpreter1Limit = 0;
                 VerifyExecutionModeLimits();

@@ -132,7 +132,7 @@ Js::ArgSlot WasmSignature::GetParamSize(Js::ArgSlot index) const
     {
     case WasmTypes::F32:
     case WasmTypes::I32:
-        CompileAssert(sizeof(float) == sizeof(int32_t));
+        static_assert(sizeof(float) == sizeof(int32_t));
 #ifdef _M_X64
         // on x64, we always alloc (at least) 8 bytes per arguments
         return sizeof(void*);
@@ -142,13 +142,13 @@ Js::ArgSlot WasmSignature::GetParamSize(Js::ArgSlot index) const
         break;
     case WasmTypes::F64:
     case WasmTypes::I64:
-        CompileAssert(sizeof(double) == sizeof(long));
+        static_assert(sizeof(double) == sizeof(long));
         return sizeof(long);
         break;
 #ifdef ENABLE_WASM_SIMD
     case WasmTypes::V128:
         Wasm::Simd::EnsureSimdIsEnabled();
-        CompileAssert(sizeof(Simd::simdvec) == 16);
+        static_assert(sizeof(Simd::simdvec) == 16);
         return sizeof(Simd::simdvec);
         break;
 #endif
@@ -186,11 +186,11 @@ void WasmSignature::FinalizeSignature()
     // We can drop 1 bit by excluding void
     const uint32_t nBitsForArgs = 2;
 #endif
-    CompileAssert(Local::Void == 0);
+    static_assert(Local::Void == 0);
     // Make sure we can encode all types (including void) with the number of bits reserved
-    CompileAssert(Local::Limit <= (1 << nBitsForResult));
+    static_assert(Local::Limit <= (1 << nBitsForResult));
     // Make sure we can encode all types (excluding void) with the number of bits reserved
-    CompileAssert(Local::Limit - 1 <= (1 << nBitsForArgs));
+    static_assert(Local::Limit - 1 <= (1 << nBitsForArgs));
 
     ::Math::RecordOverflowPolicy sigOverflow;
     const uint32_t bitsRequiredForSig = UInt32Math::MulAdd<nBitsForArgs, nBitsForResult>((uint32_t)paramCount, sigOverflow);
@@ -200,7 +200,7 @@ void WasmSignature::FinalizeSignature()
     }
 
     // we don't need to reserve a sentinel bit because there is no result type with value of 7
-    CompileAssert(Local::Limit <= 0b111);
+    static_assert(Local::Limit <= 0b111);
     const uint32_t nAvailableBits = sizeof(m_shortSig) * 8;
     if (bitsRequiredForSig <= nAvailableBits)
     {
@@ -222,15 +222,15 @@ Js::ArgSlot WasmSignature::GetParamsSize() const
 WasmSignature* WasmSignature::FromIDL(WasmSignatureIDL* sig)
 {
     // must update WasmSignatureIDL when changing WasmSignature
-    CompileAssert(sizeof(Wasm::WasmSignature) == sizeof(WasmSignatureIDL));
-    CompileAssert(offsetof(Wasm::WasmSignature, m_id) == offsetof(WasmSignatureIDL, id));
-    CompileAssert(offsetof(Wasm::WasmSignature, m_resultsCount) == offsetof(WasmSignatureIDL, resultsCount));
-    CompileAssert(offsetof(Wasm::WasmSignature, m_paramSize) == offsetof(WasmSignatureIDL, paramSize));
-    CompileAssert(offsetof(Wasm::WasmSignature, m_paramsCount) == offsetof(WasmSignatureIDL, paramsCount));
-    CompileAssert(offsetof(Wasm::WasmSignature, m_shortSig) == offsetof(WasmSignatureIDL, shortSig));
-    CompileAssert(offsetof(Wasm::WasmSignature, m_params) == offsetof(WasmSignatureIDL, params));
-    CompileAssert(offsetof(Wasm::WasmSignature, m_results) == offsetof(WasmSignatureIDL, results));
-    CompileAssert(sizeof(Local) == sizeof(int));
+    static_assert(sizeof(Wasm::WasmSignature) == sizeof(WasmSignatureIDL));
+    static_assert(offsetof(Wasm::WasmSignature, m_id) == offsetof(WasmSignatureIDL, id));
+    static_assert(offsetof(Wasm::WasmSignature, m_resultsCount) == offsetof(WasmSignatureIDL, resultsCount));
+    static_assert(offsetof(Wasm::WasmSignature, m_paramSize) == offsetof(WasmSignatureIDL, paramSize));
+    static_assert(offsetof(Wasm::WasmSignature, m_paramsCount) == offsetof(WasmSignatureIDL, paramsCount));
+    static_assert(offsetof(Wasm::WasmSignature, m_shortSig) == offsetof(WasmSignatureIDL, shortSig));
+    static_assert(offsetof(Wasm::WasmSignature, m_params) == offsetof(WasmSignatureIDL, params));
+    static_assert(offsetof(Wasm::WasmSignature, m_results) == offsetof(WasmSignatureIDL, results));
+    static_assert(sizeof(Local) == sizeof(int));
 
     return reinterpret_cast<WasmSignature*>(sig);
 }

@@ -133,7 +133,7 @@ SectionHeader WasmBinaryReader::ReadSectionHeader()
     header.code = bSectLimit;
 
     uint32_t len = 0;
-    CompileAssert(sizeof(SectionCode) == sizeof(uint8_t));
+    static_assert(sizeof(SectionCode) == sizeof(uint8_t));
     SectionCode sectionId = (SectionCode)LEB128<uint8_t, 7>(len);
 
     if (sectionId > bsectLastKnownSection)
@@ -332,7 +332,7 @@ uint32_t WasmBinaryReader::EstimateCurrentFunctionBytecodeSize() const
 
 WasmOp WasmBinaryReader::ReadPrefixedOpCode(WasmOp prefix, bool isSupported, const char16_t* notSupportedMsg)
 {
-    CompileAssert(sizeof(WasmOp) >= 2);
+    static_assert(sizeof(WasmOp) >= 2);
     if (!isSupported)
     {
         ThrowDecodingError(notSupportedMsg);
@@ -664,13 +664,13 @@ void WasmBinaryReader::ConstNode()
     case WasmTypes::F32:
     {
         m_currentNode.cnst.i32 = ReadConst<int32_t>();
-        CompileAssert(sizeof(int32_t) == sizeof(float));
+        static_assert(sizeof(int32_t) == sizeof(float));
         m_funcState.count += sizeof(float);
         break;
     }
     case WasmTypes::F64:
         m_currentNode.cnst.i64 = ReadConst<long>();
-        CompileAssert(sizeof(long) == sizeof(double));
+        static_assert(sizeof(long) == sizeof(double));
         m_funcState.count += sizeof(double);
         break;
 #ifdef ENABLE_WASM_SIMD
@@ -1232,14 +1232,14 @@ void WasmBinaryReader::ReadStartFunction()
 template<typename LEBType, uint32_t bits>
 LEBType WasmBinaryReader::LEB128(uint32_t &length)
 {
-    CompileAssert((sizeof(LEBType) * 8) >= bits);
+    static_assert((sizeof(LEBType) * 8) >= bits);
     constexpr bool sign = LEBType(-1) < LEBType(0);
     LEBType result = 0;
     uint32_t shift = 0;
     byte b = 0x80;
     length = 0;
     constexpr uint32_t maxBytes = (uint32_t)((bits + 6) / 7);
-    CompileAssert(maxBytes > 0);
+    static_assert(maxBytes > 0);
 
     uint32_t iByte = 0;
     for (; iByte < maxBytes && (b & 0x80) == 0x80; ++iByte)

@@ -1851,7 +1851,7 @@ NativeCodeGenerator::UpdateJITState()
         if (scriptContext->GetThreadContext()->JITNeedsPropUpdate())
         {
             typedef BVSparseNode<JitArenaAllocator> BVSparseNode;
-            CompileAssert(sizeof(BVSparseNode) == sizeof(BVSparseNodeIDL));
+            static_assert(sizeof(BVSparseNode) == sizeof(BVSparseNodeIDL));
             BVSparseNodeIDL * bvHead = (BVSparseNodeIDL*)scriptContext->GetThreadContext()->GetJITNumericProperties()->head;
             int32_t hr = JITManager::GetJITManager()->UpdatePropertyRecordMap(scriptContext->GetThreadContext()->GetRemoteThreadContextAddr(), bvHead);
 

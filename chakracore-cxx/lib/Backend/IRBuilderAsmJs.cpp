@@ -86,7 +86,7 @@ IRBuilderAsmJs::Build()
     m_functionStartOffset = m_jnReader.GetCurrentOffset();
     m_lastInstr = m_func->m_headInstr;
 
-    CompileAssert(sizeof(SymID) == sizeof(Js::RegSlot));
+    static_assert(sizeof(SymID) == sizeof(Js::RegSlot));
 
     offset = m_functionStartOffset;
 

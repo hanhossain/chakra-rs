@@ -971,7 +971,7 @@ namespace Js
         {
             ParseableFunctionInfo * funcInfo = scriptFunction->GetFunctionProxy()->EnsureDeserialized();
 
-            CompileAssert(!addLength || useLengthType);
+            static_assert(!addLength || useLengthType);
             if (addLength)
             {
                 function->SetPropertyWithAttributes(PropertyIds::length, TaggedInt::ToVarUnchecked(funcInfo->GetReportedInParamsCount() - 1), PropertyConfigurable, nullptr, PropertyOperation_None, SideEffects_None);
@@ -6900,7 +6900,7 @@ namespace Js
     template<uint cacheSlotCount> EnumeratorCache* JavascriptLibrary::GetEnumeratorCache(Type* type, Field(EnumeratorCache*)* cacheSlots)
     {
         // Size must be power of 2 for cache indexing to work
-        CompileAssert((cacheSlotCount & (cacheSlotCount - 1)) == 0);
+        static_assert((cacheSlotCount & (cacheSlotCount - 1)) == 0);
 
         if (*cacheSlots == nullptr)
         {

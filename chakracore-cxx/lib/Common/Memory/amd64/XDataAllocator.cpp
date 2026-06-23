@@ -6,7 +6,7 @@
 
 // This one works only for x64
 #if !defined(_M_X64)
-CompileAssert(false)
+static_assert(false)
 #endif
 
 #include "XDataAllocator.h"

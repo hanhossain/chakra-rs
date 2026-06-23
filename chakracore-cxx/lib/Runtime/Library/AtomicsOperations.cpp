@@ -117,7 +117,7 @@ namespace Js
 template<typename T> T AtomicsOperations::Load(T* buffer)
 {
     // MemoryBarrier only works when the memory size is not greater than the register size
-    CompileAssert(sizeof(T) <= sizeof(size_t));
+    static_assert(sizeof(T) <= sizeof(size_t));
     MemoryBarrier();
     T result = (T)*buffer;
     return result;
@@ -126,7 +126,7 @@ template<typename T> T AtomicsOperations::Load(T* buffer)
 #if TARGET_32
 template<> long AtomicsOperations::Load(long* buffer)
 {
-    CompileAssert(sizeof(size_t) == 4);
+    static_assert(sizeof(size_t) == 4);
     // Implement 64bits atomic load on 32bits platform with a CompareExchange
     // It is slower, but at least it is garantied to be an atomic operation
     return CompareExchange<long>(buffer, 0, 0);

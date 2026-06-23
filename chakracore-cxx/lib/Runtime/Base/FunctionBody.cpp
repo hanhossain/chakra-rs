@@ -9413,6 +9413,6 @@ namespace Js
 
 #if !DBG
 // Don't grow these data structure unless absolutely necessary
-CompileAssert(sizeof(Js::EntryPointInfo) <= 56);
-CompileAssert(sizeof(Js::FunctionEntryPointInfo) <= 96);
+static_assert(sizeof(Js::EntryPointInfo) <= 56);
+static_assert(sizeof(Js::FunctionEntryPointInfo) <= 96);
 #endif

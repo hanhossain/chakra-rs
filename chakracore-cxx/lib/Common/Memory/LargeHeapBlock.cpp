@@ -5,7 +5,7 @@
 #include "CommonMemoryPch.h"
 #include "LargeHeapBlock.h"
 
-CompileAssert(
+static_assert(
     sizeof(LargeObjectHeader) == HeapConstants::ObjectGranularity ||
     sizeof(LargeObjectHeader) == HeapConstants::ObjectGranularity * 2);
 

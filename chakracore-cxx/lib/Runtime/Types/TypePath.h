@@ -18,8 +18,8 @@ namespace Js
 public:
         TinyDictionary()
         {
-            CompileAssert(BUCKETS_DWORDS * sizeof(uint32_t) == PowerOf2_BUCKETS);
-            CompileAssert(BUCKETS_DWORDS == 4);
+            static_assert(BUCKETS_DWORDS * sizeof(uint32_t) == PowerOf2_BUCKETS);
+            static_assert(BUCKETS_DWORDS == 4);
             uint32_t* init = bucketsData;
             init[0] = init[1] = init[2] = init[3] =0xffffffff;
         }
@@ -464,4 +464,4 @@ public:
     };
 }
 
-CompileAssert((sizeof(Js::TypePath) % HeapConstants::ObjectGranularity) == (HeapConstants::ObjectGranularity - TYPE_PATH_ALLOC_GRANULARITY_GAP * sizeof(void *)) % HeapConstants::ObjectGranularity);
+static_assert((sizeof(Js::TypePath) % HeapConstants::ObjectGranularity) == (HeapConstants::ObjectGranularity - TYPE_PATH_ALLOC_GRANULARITY_GAP * sizeof(void *)) % HeapConstants::ObjectGranularity);

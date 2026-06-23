@@ -122,8 +122,8 @@ namespace UnifiedRegex
             toEquivs((unsigned long) -1),
             fallbackMapper(fallbackMapper)
         {
-            CompileAssert(sizeof(char16_t) == 2);
-            CompileAssert(sizeof(uint) > sizeof(char16_t));
+            static_assert(sizeof(char16_t) == 2);
+            static_assert(sizeof(uint) > sizeof(char16_t));
 
             const uint maxUChar = Chars<char16_t>::MaxUChar;
             uint l = 0;
@@ -138,7 +138,7 @@ namespace UnifiedRegex
                     do
                     {
                         unsigned long r = 0;
-                        CompileAssert(sizeof(r) >= sizeof(char16_t) * CaseInsensitive::EquivClassSize);
+                        static_assert(sizeof(r) >= sizeof(char16_t) * CaseInsensitive::EquivClassSize);
 
                         for (int i = CaseInsensitive::EquivClassSize - 1; i >= 0; i--)
                         {
@@ -163,7 +163,7 @@ namespace UnifiedRegex
             return r == EQUIV_MISSING ? fallbackMapper->ToCanonical(c) : Chars<char16_t>::UTC(r & 0xffff);
         }
 
-        CompileAssert(CaseInsensitive::EquivClassSize == 4);
+        static_assert(CaseInsensitive::EquivClassSize == 4);
         inline bool ToEquivs(char16_t c, __out_ecount(4) char16_t* equivs) const
         {
             unsigned long r = toEquivs.Get(c);
@@ -210,7 +210,7 @@ namespace UnifiedRegex
             return c;
         }
 
-        CompileAssert(CaseInsensitive::EquivClassSize == 4);
+        static_assert(CaseInsensitive::EquivClassSize == 4);
         inline bool ToEquivs(char16_t c, __out_ecount(4) char16_t* equivs) const
         {
             for (int i = 0; i < CaseInsensitive::EquivClassSize; i++)
@@ -344,7 +344,7 @@ namespace UnifiedRegex
             }
         }
 
-        CompileAssert(CaseInsensitive::EquivClassSize == 4);
+        static_assert(CaseInsensitive::EquivClassSize == 4);
         inline bool ToEquivs(CaseInsensitive::MappingSource mappingSource, Char c, __out_ecount(4) Char* equivs) const
         {
             if (mappingSource == CaseInsensitive::MappingSource::UnicodeData)

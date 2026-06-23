@@ -51,7 +51,7 @@ public:
     template<uint32_t mul, class Func >
     static uint32_t Mul(uint32_t left, __inout Func& overflowFn)
     {
-        CompileAssert(mul != 0);
+        static_assert(mul != 0);
 
         if (left > (UINT_MAX / mul))
         {
@@ -73,7 +73,7 @@ public:
         // If mul and add are compile-time constants then LTCG will collapse
         // this to a simple constant comparison.
         //
-        CompileAssert(UINT_MAX/mul >= add);
+        static_assert(UINT_MAX/mul >= add);
 
         if( left > ((UINT_MAX / mul) - add) )
         {

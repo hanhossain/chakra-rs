@@ -977,7 +977,7 @@ namespace Js
         JavascriptArrayBuffer(length, type, allocator)
     {
 #ifndef ENABLE_FAST_ARRAYBUFFER
-        CompileAssert(UNREACHED);
+        static_assert(UNREACHED);
 #endif
         Assert(allocator == WasmVirtualAllocator);
         // Make sure we always have a buffer even if the length is 0

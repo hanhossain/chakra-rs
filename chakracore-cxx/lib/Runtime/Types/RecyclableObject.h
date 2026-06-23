@@ -513,7 +513,7 @@ namespace Js {
         return VarIsImpl<T>(obj);
     }
 
-    CompileAssertMsg(AtomTag_Object == 0, "Ensure GC objects do not need to be marked");
+    static_assert(AtomTag_Object == 0, "Ensure GC objects do not need to be marked");
 
     // Cast the input parameter to another type, or crash if the cast is invalid.
     template <typename T, typename U> T* VarTo(U* obj)

@@ -44,7 +44,7 @@ Opnd::IsTaggedInt() const
 bool
 Opnd::IsTaggedValue() const
 {
-    CompileAssert(INT32VAR);
+    static_assert(INT32VAR);
     return GetValueType().IsNumber();
 }
 
@@ -630,13 +630,13 @@ IntConstOpnd *Opnd::CreateUint32Opnd(const uint i, Func *const func)
 
 IntConstOpnd *Opnd::CreateProfileIdOpnd(const Js::ProfileId profileId, Func *const func)
 {
-    CompileAssert(sizeof(profileId) == sizeof(uint16));
+    static_assert(sizeof(profileId) == sizeof(uint16));
     return IntConstOpnd::New(profileId, TyUint16, func, true);
 }
 
 IntConstOpnd *Opnd::CreateInlineCacheIndexOpnd(const Js::InlineCacheIndex inlineCacheIndex, Func *const func)
 {
-    CompileAssert(sizeof(inlineCacheIndex) == sizeof(uint));
+    static_assert(sizeof(inlineCacheIndex) == sizeof(uint));
     return CreateUint32Opnd(inlineCacheIndex, func);
 }
 

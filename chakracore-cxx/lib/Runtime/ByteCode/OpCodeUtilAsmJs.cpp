@@ -66,17 +66,17 @@ namespace Js
     bool OpCodeUtilAsmJs::IsValidByteCodeOpcode(OpCodeAsmJs op)
     {
         // These OpCodes must have the same value for asm.js and normal javascript.
-        // This CompileAssert will make sure to update both lists if any changes are made
-        CompileAssert((uint)OpCodeAsmJs::EndOfBlock                 == (uint)OpCode::EndOfBlock);
-        CompileAssert((uint)OpCodeAsmJs::ExtendedOpcodePrefix       == (uint)OpCode::ExtendedOpcodePrefix);
-        CompileAssert((uint)OpCodeAsmJs::MediumLayoutPrefix         == (uint)OpCode::MediumLayoutPrefix);
-        CompileAssert((uint)OpCodeAsmJs::ExtendedMediumLayoutPrefix == (uint)OpCode::ExtendedMediumLayoutPrefix);
-        CompileAssert((uint)OpCodeAsmJs::LargeLayoutPrefix          == (uint)OpCode::LargeLayoutPrefix);
-        CompileAssert((uint)OpCodeAsmJs::ExtendedLargeLayoutPrefix  == (uint)OpCode::ExtendedLargeLayoutPrefix);
-        CompileAssert((uint)OpCodeAsmJs::Nop                        == (uint)OpCode::Nop);
-        CompileAssert((uint)OpCodeAsmJs::InvalidOpCode              == (uint)OpCode::InvalidOpCode);
+        // This static_assert will make sure to update both lists if any changes are made
+        static_assert((uint)OpCodeAsmJs::EndOfBlock                 == (uint)OpCode::EndOfBlock);
+        static_assert((uint)OpCodeAsmJs::ExtendedOpcodePrefix       == (uint)OpCode::ExtendedOpcodePrefix);
+        static_assert((uint)OpCodeAsmJs::MediumLayoutPrefix         == (uint)OpCode::MediumLayoutPrefix);
+        static_assert((uint)OpCodeAsmJs::ExtendedMediumLayoutPrefix == (uint)OpCode::ExtendedMediumLayoutPrefix);
+        static_assert((uint)OpCodeAsmJs::LargeLayoutPrefix          == (uint)OpCode::LargeLayoutPrefix);
+        static_assert((uint)OpCodeAsmJs::ExtendedLargeLayoutPrefix  == (uint)OpCode::ExtendedLargeLayoutPrefix);
+        static_assert((uint)OpCodeAsmJs::Nop                        == (uint)OpCode::Nop);
+        static_assert((uint)OpCodeAsmJs::InvalidOpCode              == (uint)OpCode::InvalidOpCode);
 
-        CompileAssert((int)Js::OpCodeAsmJs::MaxByteSizedOpcodes + 1 + _countof(OpCodeUtilAsmJs::ExtendedOpCodeAsmJsLayouts) == (int)Js::OpCodeAsmJs::ByteCodeLast);
+        static_assert((int)Js::OpCodeAsmJs::MaxByteSizedOpcodes + 1 + _countof(OpCodeUtilAsmJs::ExtendedOpCodeAsmJsLayouts) == (int)Js::OpCodeAsmJs::ByteCodeLast);
         return op < _countof(OpCodeAsmJsLayouts)
             || (op > Js::OpCodeAsmJs::MaxByteSizedOpcodes && op < Js::OpCodeAsmJs::ByteCodeLast);
     }

@@ -7,8 +7,8 @@
 
 namespace Js
 {
-    CompileAssert(!OpCodeInfo<Js::OpCode::Br>::HasMultiSizeLayout);
-    CompileAssert(!OpCodeInfo<Js::OpCode::BrLong>::HasMultiSizeLayout);
+    static_assert(!OpCodeInfo<Js::OpCode::Br>::HasMultiSizeLayout);
+    static_assert(!OpCodeInfo<Js::OpCode::BrLong>::HasMultiSizeLayout);
     const uint ByteCodeWriter::JumpAroundSize = OpCodeUtil::EncodedSize(Js::OpCode::Br, SmallLayout) + sizeof(OpLayoutBr);
     const uint ByteCodeWriter::LongBranchSize = OpCodeUtil::EncodedSize(Js::OpCode::BrLong, SmallLayout) + sizeof(OpLayoutBrLong);
 
@@ -3375,7 +3375,7 @@ StoreCommon:
     template <LayoutSize layoutSize>
     void ByteCodeWriter::Data::EncodeOpCode(uint16 op, ByteCodeWriter* writer)
     {
-        CompileAssert(layoutSize != SmallLayout);
+        static_assert(layoutSize != SmallLayout);
         DebugOnly(const uint offset = currentOffset);
 
         if (op <= (uint16)Js::OpCode::MaxByteSizedOpcodes)

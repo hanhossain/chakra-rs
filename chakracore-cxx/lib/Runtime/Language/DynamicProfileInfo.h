@@ -26,7 +26,7 @@ namespace IR
     };
     ENUM_CLASS_HELPERS(BailOutKind, uint);
 
-    CompileAssert(BailOutKind::BailOutKindEnd < BailOutKind::BailOutKindBitsStart);
+    static_assert(BailOutKind::BailOutKindEnd < BailOutKind::BailOutKindBitsStart);
 
     bool IsTypeCheckBailOutKind(BailOutKind kind);
     bool IsEquivalentTypeCheckBailOutKind(BailOutKind kind);
@@ -141,7 +141,7 @@ namespace Js
             isInterpreted(false),
             memopMinCountReached(false)
         {
-            CompileAssert((sizeof(LoopFlags) * 8) >= LoopFlags::COUNT);
+            static_assert((sizeof(LoopFlags) * 8) >= LoopFlags::COUNT);
         }
         // Right now supports up to 8 bits.
         typedef byte LoopFlags_t;
@@ -149,7 +149,7 @@ namespace Js
         {
             Assert(flags >> LoopFlags::COUNT == 0);
             LoopFlags_t* thisFlags = (LoopFlags_t *)this;
-            CompileAssert(sizeof(LoopFlags_t) == sizeof(LoopFlags));
+            static_assert(sizeof(LoopFlags_t) == sizeof(LoopFlags));
             *thisFlags = (LoopFlags_t)flags;
         }
     };
@@ -193,7 +193,7 @@ namespace Js
 
         static uint32_t GetOffsetOfFlags() { return offsetof(FldInfo, flags); }
     };
-    CompileAssert(sizeof(FldInfo::TSize) == sizeof(FldInfo));
+    static_assert(sizeof(FldInfo::TSize) == sizeof(FldInfo));
 
     struct LdLenInfo
     {
@@ -230,7 +230,7 @@ namespace Js
             return disableAggressiveSpecialization;
         }
     };
-    CompileAssert(sizeof(LdLenInfo::TSize) == sizeof(LdLenInfo));
+    static_assert(sizeof(LdLenInfo::TSize) == sizeof(LdLenInfo));
 
     struct LdElemInfo
     {

@@ -10,7 +10,7 @@ namespace Js
     // Note: The template arg is the string length in characters, including the NUL terminator.
     template< size_t N > JavascriptString* JavascriptLibrary::CreateStringFromCppLiteral(const char16_t(&value)[N]) const
     {
-        CompileAssert(N>2); // Other values are handled by the specializations below
+        static_assert(N>2); // Other values are handled by the specializations below
         return LiteralString::New(GetStringTypeStatic(), value, N - 1 /*don't include terminating NUL*/, this->GetRecycler());
     }
 

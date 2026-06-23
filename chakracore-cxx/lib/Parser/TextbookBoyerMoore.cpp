@@ -154,7 +154,7 @@ namespace UnifiedRegex
     template <>
     bool MatchPatternAt<CaseInsensitive::EquivClassSize, CaseInsensitive::EquivClassSize>(uint inputChar, char16_t const * pat, CharCount index)
     {
-        CompileAssert(CaseInsensitive::EquivClassSize == 4);
+        static_assert(CaseInsensitive::EquivClassSize == 4);
         return inputChar == pat[index * CaseInsensitive::EquivClassSize]
             || inputChar == pat[index * CaseInsensitive::EquivClassSize + 1]
             || inputChar == pat[index * CaseInsensitive::EquivClassSize + 2]
@@ -164,7 +164,7 @@ namespace UnifiedRegex
     template <>
     bool MatchPatternAt<CaseInsensitive::EquivClassSize, 1>(uint inputChar, char16_t const * pat, CharCount index)
     {
-        CompileAssert(CaseInsensitive::EquivClassSize == 4);
+        static_assert(CaseInsensitive::EquivClassSize == 4);
         return inputChar == pat[index * 4];
     }
 
@@ -306,7 +306,7 @@ namespace UnifiedRegex
 #endif
         ) const
     {
-        CompileAssert(equivClassSize == 1);
+        static_assert(equivClassSize == 1);
         Assert(input != 0);
         Assert(inputOffset <= inputLength);
 

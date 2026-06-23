@@ -119,11 +119,11 @@ public:
 
 // For Prefast where it doesn't like symbolic constants
 #if defined(__APPLE__) && defined(_M_ARM64)
-CompileAssert(AutoSystemInfo::PageSize == 16384);
+static_assert(AutoSystemInfo::PageSize == 16384);
 #define __in_ecount_pagesize __in_ecount(16384)
 #define __in_ecount_twopagesize __in_ecount(32768)
 #else
-CompileAssert(AutoSystemInfo::PageSize == 4096);
+static_assert(AutoSystemInfo::PageSize == 4096);
 #define __in_ecount_pagesize __in_ecount(4096)
 #define __in_ecount_twopagesize __in_ecount(8192)
 #endif

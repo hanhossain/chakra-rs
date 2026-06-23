@@ -8,7 +8,7 @@
 FunctionJITTimeInfo::FunctionJITTimeInfo(FunctionJITTimeDataIDL * data) : m_data(*data)
 {
     // we will cast the data (i.e. midl struct) pointers into info pointers so we can extend with methods
-    CompileAssert(sizeof(FunctionJITTimeDataIDL) == sizeof(FunctionJITTimeInfo));
+    static_assert(sizeof(FunctionJITTimeDataIDL) == sizeof(FunctionJITTimeInfo));
 }
 
 /* static */

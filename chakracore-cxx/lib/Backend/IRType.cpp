@@ -64,10 +64,10 @@ bool IRType_IsSimd128(IRType type)
 
 IRType IRType_EnsureSigned(IRType type)
 {
-    CompileAssert(TyUint8 > TyInt8);
-    CompileAssert((TyUint8 - TyInt8) == (TyUint16 - TyInt16));
-    CompileAssert((TyUint8 - TyInt8) == (TyUint32 - TyInt32));
-    CompileAssert((TyUint8 - TyInt8) == (TyUint64 - TyInt64));
+    static_assert(TyUint8 > TyInt8);
+    static_assert((TyUint8 - TyInt8) == (TyUint16 - TyInt16));
+    static_assert((TyUint8 - TyInt8) == (TyUint32 - TyInt32));
+    static_assert((TyUint8 - TyInt8) == (TyUint64 - TyInt64));
     if (IRType_IsUnsignedInt(type))
     {
         IRType signedType = (IRType)(type - (TyUint8 - TyInt8));
@@ -79,10 +79,10 @@ IRType IRType_EnsureSigned(IRType type)
 
 IRType IRType_EnsureUnsigned(IRType type)
 {
-    CompileAssert(TyUint8 > TyInt8);
-    CompileAssert((TyUint8 - TyInt8) == (TyUint16 - TyInt16));
-    CompileAssert((TyUint8 - TyInt8) == (TyUint32 - TyInt32));
-    CompileAssert((TyUint8 - TyInt8) == (TyUint64 - TyInt64));
+    static_assert(TyUint8 > TyInt8);
+    static_assert((TyUint8 - TyInt8) == (TyUint16 - TyInt16));
+    static_assert((TyUint8 - TyInt8) == (TyUint32 - TyInt32));
+    static_assert((TyUint8 - TyInt8) == (TyUint64 - TyInt64));
     if (IRType_IsSignedInt(type))
     {
         IRType unsignedType = (IRType)(type + (TyUint8 - TyInt8));

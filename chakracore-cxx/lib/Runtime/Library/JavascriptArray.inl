@@ -190,7 +190,7 @@ namespace Js
     template<typename unitType, typename className, uint inlineSlots>
     className* JavascriptArray::New(uint32_t length, DynamicType* arrayType, Recycler* recycler)
     {
-        CompileAssert(static_cast<PropertyIndex>(inlineSlots) == inlineSlots);
+        static_assert(static_cast<PropertyIndex>(inlineSlots) == inlineSlots);
         Assert(DynamicTypeHandler::RoundUpInlineSlotCapacity(static_cast<PropertyIndex>(inlineSlots)) == inlineSlots);
 
         if(length > SparseArraySegmentBase::HEAD_CHUNK_SIZE)
@@ -221,7 +221,7 @@ namespace Js
     template<typename unitType, typename className, uint inlineSlots>
     className* JavascriptArray::NewLiteral(uint32_t length, DynamicType* arrayType, Recycler* recycler)
     {
-        CompileAssert(static_cast<PropertyIndex>(inlineSlots) == inlineSlots);
+        static_assert(static_cast<PropertyIndex>(inlineSlots) == inlineSlots);
         Assert(DynamicTypeHandler::RoundUpInlineSlotCapacity(static_cast<PropertyIndex>(inlineSlots)) == inlineSlots);
 
         className* array;
@@ -300,7 +300,7 @@ namespace Js
     template<typename unitType, typename className, uint inlineSlots>
     className* JavascriptArray::NewCopyOnAccessLiteral(DynamicType* arrayType, ArrayCallSiteInfo *arrayInfo, FunctionBody *functionBody, const Js::AuxArray<int32_t> *ints, Recycler* recycler)
     {
-        CompileAssert(static_cast<PropertyIndex>(inlineSlots) == inlineSlots);
+        static_assert(static_cast<PropertyIndex>(inlineSlots) == inlineSlots);
         Assert(DynamicTypeHandler::RoundUpInlineSlotCapacity(static_cast<PropertyIndex>(inlineSlots)) == inlineSlots);
         Assert(arrayInfo->IsNativeIntArray());
 
@@ -1778,12 +1778,12 @@ SECOND_PASS:
         size_t *const allocationPlusSizeRef,
         uint *const alignedInlineElementSlotsRef)
     {
-        CompileAssert(static_cast<PropertyIndex>(InlinePropertySlots) == InlinePropertySlots);
+        static_assert(static_cast<PropertyIndex>(InlinePropertySlots) == InlinePropertySlots);
         Assert(
             DynamicTypeHandler::RoundUpInlineSlotCapacity(static_cast<PropertyIndex>(InlinePropertySlots)) ==
             InlinePropertySlots);
 
-        CompileAssert(
+        static_assert(
             InlinePropertySlots <=
             (UINT_MAX - (sizeof(T) + sizeof(SparseArraySegment<typename T::TElement>))) / sizeof(Var));
         const uint objectSize =
@@ -1867,13 +1867,13 @@ SECOND_PASS:
         const size_t allocationSize,
         bool *const isSufficientSpaceForInlinePropertySlotsRef)
     {
-        CompileAssert(static_cast<PropertyIndex>(InlinePropertySlots) == InlinePropertySlots);
+        static_assert(static_cast<PropertyIndex>(InlinePropertySlots) == InlinePropertySlots);
         Assert(
             DynamicTypeHandler::RoundUpInlineSlotCapacity(static_cast<PropertyIndex>(InlinePropertySlots)) ==
             InlinePropertySlots);
         Assert(isSufficientSpaceForInlinePropertySlotsRef);
 
-        CompileAssert(
+        static_assert(
             InlinePropertySlots <=
             (UINT_MAX - (sizeof(T) + sizeof(SparseArraySegment<typename T::TElement>))) / sizeof(Var));
         *isSufficientSpaceForInlinePropertySlotsRef =

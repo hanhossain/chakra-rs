@@ -567,14 +567,14 @@ namespace Js
     template <OpLayoutTypeAsmJs::_E layout> struct OpLayoutInfoAsmJs;
 
 #define LAYOUT_TYPE(layout) \
-    CompileAssert(sizeof(OpLayout##layout) <= MaxLayoutSize); \
+    static_assert(sizeof(OpLayout##layout) <= MaxLayoutSize); \
     template <> struct OpLayoutInfoAsmJs<OpLayoutTypeAsmJs::layout> \
         {  \
         static const bool HasMultiSizeLayout = false; \
         };
 
 #define LAYOUT_TYPE_WMS(layout) \
-    CompileAssert(sizeof(OpLayout##layout##_Large) <= MaxLayoutSize); \
+    static_assert(sizeof(OpLayout##layout##_Large) <= MaxLayoutSize); \
     template <> struct OpLayoutInfoAsmJs<OpLayoutTypeAsmJs::layout> \
         {  \
         static const bool HasMultiSizeLayout = true; \
@@ -586,7 +586,7 @@ namespace Js
     template <OpCodeAsmJs opcode> struct OpCodeInfoAsmJs;
 
 #define DEFINE_OPCODEINFO(op, layout, extended) \
-    CompileAssert(!OpLayoutInfoAsmJs<OpLayoutTypeAsmJs::layout>::HasMultiSizeLayout); \
+    static_assert(!OpLayoutInfoAsmJs<OpLayoutTypeAsmJs::layout>::HasMultiSizeLayout); \
     template <> struct OpCodeInfoAsmJs<OpCodeAsmJs::op> \
         { \
         static const OpLayoutTypeAsmJs::_E Layout = OpLayoutTypeAsmJs::layout; \
@@ -595,7 +595,7 @@ namespace Js
         typedef OpLayout##layout LayoutType; \
         };
 #define DEFINE_OPCODEINFO_WMS(op, layout, extended) \
-    CompileAssert(OpLayoutInfoAsmJs<OpLayoutTypeAsmJs::layout>::HasMultiSizeLayout); \
+    static_assert(OpLayoutInfoAsmJs<OpLayoutTypeAsmJs::layout>::HasMultiSizeLayout); \
     template <> struct OpCodeInfoAsmJs<OpCodeAsmJs::op> \
         { \
         static const OpLayoutTypeAsmJs::_E Layout = OpLayoutTypeAsmJs::layout; \

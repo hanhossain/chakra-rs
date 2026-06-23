@@ -124,7 +124,7 @@ namespace WAsmJs
     uint32_t GetTypeByteSize(Types type)
     {
         // Since this needs to be done manually for each type, this assert will make sure to not forget to update this if a new type is added
-        CompileAssert(WAsmJs::LIMIT == 5);
+        static_assert(WAsmJs::LIMIT == 5);
         switch (type)
         {
         case INT32  : return sizeof(int32_t);
@@ -181,7 +181,7 @@ namespace WAsmJs
     void RegisterSpace::GetTypeDebugName(Types type, char16_t* buf, uint bufsize, bool shortName)
     {
         // Since this needs to be done manually for each type, this assert will make sure to not forget to update this if a new type is added
-        CompileAssert(LIMIT == 5);
+        static_assert(LIMIT == 5);
 
         switch (type)
         {

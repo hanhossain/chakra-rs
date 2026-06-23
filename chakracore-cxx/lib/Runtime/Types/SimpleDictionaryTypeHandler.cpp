@@ -561,7 +561,7 @@ namespace Js
     template <typename NewTPropertyIndex, typename NewTMapKey, bool NewIsNotExtensibleSupported>
     SimpleDictionaryUnorderedTypeHandler<NewTPropertyIndex, NewTMapKey, NewIsNotExtensibleSupported>* SimpleDictionaryTypeHandlerBase<TPropertyIndex, TMapKey, IsNotExtensibleSupported>::ConvertToSimpleDictionaryUnorderedTypeHandler(DynamicObject* instance)
     {
-        CompileAssert(sizeof(NewTPropertyIndex) >= sizeof(TPropertyIndex));
+        static_assert(sizeof(NewTPropertyIndex) >= sizeof(TPropertyIndex));
         Assert(instance);
 
         SimpleDictionaryUnorderedTypeHandler<NewTPropertyIndex, NewTMapKey, NewIsNotExtensibleSupported> *const newTypeHandler =

@@ -6,7 +6,7 @@
 #pragma once
 
 #define PROCESS_ENCODE_READ_LAYOUT_ASMJS(name, layout, suffix) \
-    CompileAssert(OpCodeInfoAsmJs<OpCodeAsmJs::name>::Layout == OpLayoutTypeAsmJs::layout); \
+    static_assert(OpCodeInfoAsmJs<OpCodeAsmJs::name>::Layout == OpLayoutTypeAsmJs::layout); \
     const unaligned OpLayout##layout##suffix * playout = mReader.layout##suffix(ip);
 
 #define PROCESS_ENCODE_CUSTOM_COMMON(name, func, layout, suffix) \

@@ -165,7 +165,7 @@ WebAssemblyMemory::GrowInternal(uint32_t deltaPages)
     {
         return -1;
     }
-    CompileAssert(ArrayBuffer::MaxArrayBufferLength <= UINT32_MAX);
+    static_assert(ArrayBuffer::MaxArrayBufferLength <= UINT32_MAX);
     const uint32_t newBytes = (uint32_t)newBytesLong;
 
     const uint32_t oldPageCount = oldBytes / WebAssembly::PageSize;
@@ -208,7 +208,7 @@ WebAssemblyMemory::GrowInternal(uint32_t deltaPages)
         }
     }
 
-    CompileAssert(ArrayBuffer::MaxArrayBufferLength / WebAssembly::PageSize <= INT32_MAX);
+    static_assert(ArrayBuffer::MaxArrayBufferLength / WebAssembly::PageSize <= INT32_MAX);
     return (int32_t)oldPageCount;
 }
 
@@ -259,7 +259,7 @@ void WebAssemblyMemory::TraceMemWrite(WebAssemblyMemory* mem, uint32_t index, ui
     case ArrayBufferView::ViewType::TYPE_FLOAT64: Output::Print(u".f64 = %.8f\n", *(double*)(buffer + bigIndex)); break;
     case ArrayBufferView::ViewType::TYPE_INT64: Output::Print(u".long = %lld\n", *(long*)(buffer + bigIndex)); break;
     default:
-        CompileAssert(ArrayBufferView::ViewType::TYPE_COUNT == 15);
+        static_assert(ArrayBufferView::ViewType::TYPE_COUNT == 15);
         Assert(UNREACHED);
     }
     return;

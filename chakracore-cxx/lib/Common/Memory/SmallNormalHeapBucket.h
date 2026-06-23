@@ -16,7 +16,7 @@ public:
 
     SmallNormalHeapBucketBase();
 
-    CompileAssert(!BaseT::IsLeafBucket);
+    static_assert(!BaseT::IsLeafBucket);
     friend class ::ScriptMemoryDumper;
 
 #if ENABLE_MEM_STATS
@@ -92,7 +92,7 @@ class SmallNormalWithBarrierHeapBucketT : public SmallNormalHeapBucketBase<Small
 public:
     void Initialize(HeapInfo * heapInfo, uint sizeCat)
     {
-        CompileAssert(SmallNormalWithBarrierHeapBucketT::IsLeafBucket == false);
+        static_assert(SmallNormalWithBarrierHeapBucketT::IsLeafBucket == false);
         __super::Initialize(heapInfo, sizeCat);
     }
 };

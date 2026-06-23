@@ -37,6 +37,6 @@ namespace Js
     class CharStringCacheValidator
     {
         // Lower assert that charStringCacheA is at the 0 offset
-        CompileAssert(offsetof(CharStringCache, charStringCacheA) == 0);
+        static_assert(offsetof(CharStringCache, charStringCacheA) == 0);
     };
 };

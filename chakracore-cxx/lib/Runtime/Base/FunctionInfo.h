@@ -53,7 +53,7 @@ namespace Js
         static uint32_t GetFunctionBodyImplOffset() { return offsetof(FunctionInfo, functionBodyImpl); }
         static uint8_t GetOffsetOfFunctionProxy()
         {
-            CompileAssert(offsetof(FunctionInfo, functionBodyImpl) <= UCHAR_MAX);
+            static_assert(offsetof(FunctionInfo, functionBodyImpl) <= UCHAR_MAX);
             return offsetof(FunctionInfo, functionBodyImpl);
         }
         static uint32_t GetAttributesOffset() { return offsetof(FunctionInfo, attributes); }

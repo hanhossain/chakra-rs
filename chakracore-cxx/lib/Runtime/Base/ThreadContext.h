@@ -1466,7 +1466,7 @@ public:
     template<WellKnownHostType wellKnownType>
     bool IsWellKnownHostType(Js::TypeId typeId)
     {
-        CompileAssert(wellKnownType <= WellKnownHostType_Last);
+        static_assert(wellKnownType <= WellKnownHostType_Last);
         return wellKnownHostTypeIds[wellKnownType] == typeId;
     }
 

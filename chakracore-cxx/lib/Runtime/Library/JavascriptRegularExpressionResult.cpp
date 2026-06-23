@@ -71,5 +71,5 @@ namespace Js
         Create(nullptr, 0, nullptr, nullptr);
     }
 
-    CompileAssert(JavascriptRegularExpressionResult::InlineSlotCount >= 2);
+    static_assert(JavascriptRegularExpressionResult::InlineSlotCount >= 2);
 }

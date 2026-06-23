@@ -105,7 +105,7 @@ namespace Wasm
         template<typename LEBType = int32_t, uint32_t bits = sizeof(LEBType) * 8>
         LEBType SLEB128(uint32_t &length)
         {
-            CompileAssert(LEBType(-1) < LEBType(0));
+            static_assert(LEBType(-1) < LEBType(0));
             return LEB128<LEBType, bits>(length);
         }
         WasmNode ReadInitExpr(bool isOffset = false);

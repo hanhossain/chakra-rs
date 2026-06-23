@@ -4428,7 +4428,7 @@ ScriptContext::GetJitFuncRangeCache()
         contextData.chakraLibAddr = (intptr_t)GetLibrary()->GetChakraLib();
 #endif
         contextData.numberAllocatorAddr = (intptr_t)GetNumberAllocator();
-        CompileAssert(VTableValue::Count == VTABLE_COUNT); // need to update idl when this changes
+        static_assert(VTableValue::Count == VTABLE_COUNT); // need to update idl when this changes
 
         auto vtblAddresses = GetLibrary()->GetVTableAddresses();
         for (unsigned int i = 0; i < VTableValue::Count; i++)

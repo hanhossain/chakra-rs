@@ -684,7 +684,7 @@ namespace UnifiedRegex
     inline bool EquivScannerMixinT<lastPatCharEquivClassSize>::Match(Matcher& matcher, const char16_t* const input, const CharCount inputLength, CharCount& inputOffset) const
     {
         Assert(length * CaseInsensitive::EquivClassSize <= matcher.program->rep.insts.litbufLen - offset);
-        CompileAssert(lastPatCharEquivClassSize >= 1 && lastPatCharEquivClassSize <= CaseInsensitive::EquivClassSize);
+        static_assert(lastPatCharEquivClassSize >= 1 && lastPatCharEquivClassSize <= CaseInsensitive::EquivClassSize);
         return scanner.Match<CaseInsensitive::EquivClassSize, lastPatCharEquivClassSize>(
             input
             , inputLength
@@ -1677,7 +1677,7 @@ namespace UnifiedRegex
         const CharCount literalEndOffset = offset + length * CaseInsensitive::EquivClassSize;
 
         Assert(literalEndOffset <= matcher.program->rep.insts.litbufLen);
-        CompileAssert(CaseInsensitive::EquivClassSize == 4);
+        static_assert(CaseInsensitive::EquivClassSize == 4);
 
         do
         {
@@ -2701,7 +2701,7 @@ namespace UnifiedRegex
                         uint tblidx = 0;
                         uint acth = 0;
                         CaseInsensitive::RangeToEquivClass(tblidx, groupCodePoint, groupCodePoint, acth, equivs);
-                        CompileAssert(CaseInsensitive::EquivClassSize == 4);
+                        static_assert(CaseInsensitive::EquivClassSize == 4);
                         doesMatch =
                             inputCodePoint == equivs[0]
                             || inputCodePoint == equivs[1]
@@ -5437,7 +5437,7 @@ namespace UnifiedRegex
     {
         if (offset == 0 && inputLength >= 2)
         {
-            CompileAssert(sizeof(Char) == 2);
+            static_assert(sizeof(Char) == 2);
             const Program * program = this->program;
             if (program->rep.boiLiteral2.literal == *(uint32_t *)input)
             {

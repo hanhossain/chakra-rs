@@ -47,7 +47,7 @@ namespace Js
         void CopyUnorderedStateFrom(const SimpleDictionaryUnorderedTypeHandler<OtherTPropertyIndex, OtherTMapKey, OtherIsNotExtensibleSupported> &other,
             DynamicObject *const object)
         {
-            CompileAssert(sizeof(TPropertyIndex) >= sizeof(OtherTPropertyIndex));
+            static_assert(sizeof(TPropertyIndex) >= sizeof(OtherTPropertyIndex));
             if (other.deletedPropertyIndex != PropertyIndexRanges<OtherTPropertyIndex>::NoSlots)
             {
                 deletedPropertyIndex = other.deletedPropertyIndex;

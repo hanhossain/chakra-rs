@@ -231,9 +231,9 @@ namespace Js
 
     // Make sure the padding doesn't add tot he size of ConcatStringWrapping
 #if defined(TARGET_64)
-    CompileAssert(sizeof(ConcatStringWrapping<u'"', u'"'>) == 64);
+    static_assert(sizeof(ConcatStringWrapping<u'"', u'"'>) == 64);
 #else
-    CompileAssert(sizeof(ConcatStringWrapping<u'"', u'"'>) == 32);
+    static_assert(sizeof(ConcatStringWrapping<u'"', u'"'>) == 32);
 #endif
 
     // Concat string with N child nodes. Use it when you don't know the number of children at compile time.

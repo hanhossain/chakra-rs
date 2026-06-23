@@ -14,7 +14,7 @@
 #define MaxPreInitializedObjectHeaderInlinedTypeInlineSlotCount \
     (Js::DynamicTypeHandler::GetObjectHeaderInlinableSlotCapacity() + MaxPreInitializedObjectTypeInlineSlotCount)
 #define PreInitializedObjectTypeCount ((MaxPreInitializedObjectTypeInlineSlotCount / InlineSlotCountIncrement) + 1)
-CompileAssert(MaxPreInitializedObjectTypeInlineSlotCount <= USHRT_MAX);
+static_assert(MaxPreInitializedObjectTypeInlineSlotCount <= USHRT_MAX);
 
 #include "StringCache.h"
 #include "Library/JavascriptGenerator.h"

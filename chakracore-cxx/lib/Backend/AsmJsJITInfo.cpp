@@ -11,7 +11,7 @@
 AsmJsJITInfo::AsmJsJITInfo(AsmJsDataIDL * data) :
     m_data(*data)
 {
-    CompileAssert(sizeof(AsmJsJITInfo) == sizeof(AsmJsDataIDL));
+    static_assert(sizeof(AsmJsJITInfo) == sizeof(AsmJsDataIDL));
 }
 
 WAsmJs::TypedSlotInfo

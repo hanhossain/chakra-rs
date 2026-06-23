@@ -20,18 +20,18 @@ enum HelperMethodAttribute : uint8_t
 
 #define JIT_HELPER_REENTRANT_HEADER(Name) \
     void Name##Declared_in_Header(); \
-    CompileAssert((HelperMethodAttributes::JitHelperUtils::helper##Name##_attributes & HelperMethodAttributes::AttrCanNotBeReentrant) == 0);
+    static_assert((HelperMethodAttributes::JitHelperUtils::helper##Name##_attributes & HelperMethodAttributes::AttrCanNotBeReentrant) == 0);
 
 #define JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Name) \
     void Name##Declared_in_Header(); \
-    CompileAssert((HelperMethodAttributes::JitHelperUtils::helper##Name##_attributes & HelperMethodAttributes::AttrCanNotBeReentrant) != 0);
+    static_assert((HelperMethodAttributes::JitHelperUtils::helper##Name##_attributes & HelperMethodAttributes::AttrCanNotBeReentrant) != 0);
 
 #define JIT_HELPER_NOT_REENTRANT_HEADER(Name, reentrancyLock, threadContext) \
     JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Name)\
     JS_REENTRANCY_LOCK(reentrancyLock, threadContext);
 
 #define JIT_HELPER_SAME_ATTRIBUTES(T1, T2) \
-    CompileAssert(HelperMethodAttributes::JitHelperUtils::helper##T1##_attributes == HelperMethodAttributes::JitHelperUtils::helper##T2##_attributes);
+    static_assert(HelperMethodAttributes::JitHelperUtils::helper##T1##_attributes == HelperMethodAttributes::JitHelperUtils::helper##T2##_attributes);
 
 // Private macro, do not use directly
 #define __JIT_HELPER_INSTANTIATE(Name) const bool HelperMethodAttributes::JitHelperUtils::helper##Name##_implemented = true;

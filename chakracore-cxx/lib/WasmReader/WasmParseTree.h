@@ -92,14 +92,14 @@ namespace Wasm
         template<WasmType... T>
         void CompileAssertCases()
         {
-            CompileAssertMsg(SwitchCaseChecks::bv<T...>::value == AllLocalTypes, "WasmTypes missing in switch-case");
+            static_assert(SwitchCaseChecks::bv<T...>::value == AllLocalTypes, "WasmTypes missing in switch-case");
             AssertOrFailFastMsg(UNREACHED, "The WasmType case should have been handled");
         }
 
         template<WasmType... T>
         void CompileAssertCasesNoFailFast()
         {
-            CompileAssertMsg(SwitchCaseChecks::bv<T...>::value == AllLocalTypes, "WasmTypes missing in switch-case");
+            static_assert(SwitchCaseChecks::bv<T...>::value == AllLocalTypes, "WasmTypes missing in switch-case");
             AssertMsg(UNREACHED, "The WasmType case should have been handled");
         }
 

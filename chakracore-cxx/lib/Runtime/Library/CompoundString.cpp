@@ -719,7 +719,7 @@ using namespace Js;
                 1);
         *packedSubstringInfo2Ref = nullptr;
     #else
-        CompileAssert(sizeof(void *) == sizeof(int32_t));
+        static_assert(sizeof(void *) == sizeof(int32_t));
 
         // On 32-bit architectures, it will be attempted to fit both pieces of into one pointer by using 16 bits for the
         // start index, 15 for the length, and 1 for the tag. If it does not fit, an additional pointer will be used.
@@ -775,7 +775,7 @@ using namespace Js;
         *startIndexRef = static_cast<CharCount>(packedSubstringInfo >> 32);
         *lengthRef = static_cast<CharCount>(static_cast<uint32_t>(packedSubstringInfo) >> 1);
     #else
-        CompileAssert(sizeof(void *) == sizeof(int32_t));
+        static_assert(sizeof(void *) == sizeof(int32_t));
 
         // On 32-bit architectures, it will be attempted to fit both pieces of into one pointer by using 16 bits for the
         // start index, 15 for the length, and 1 for the tag. If it does not fit, an additional pointer will be used.
@@ -1224,7 +1224,7 @@ using namespace Js;
 
     DEFINE_RECYCLER_TRACKER_PERF_COUNTER(CompoundString);
 
-    CompileAssert(static_cast<CharCount>(-1) > static_cast<CharCount>(0)); // CharCount is assumed to be unsigned
+    static_assert(static_cast<CharCount>(-1) > static_cast<CharCount>(0)); // CharCount is assumed to be unsigned
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     #endif

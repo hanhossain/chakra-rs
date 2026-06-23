@@ -60,7 +60,7 @@ namespace JsUtil
         template<class TList>
         bool Equals(TList list)
         {
-            CompileAssert(sizeof(T) == sizeof(*list->GetBuffer()));
+            static_assert(sizeof(T) == sizeof(*list->GetBuffer()));
             return list->Count() == this->Count()
                 && memcmp(this->buffer, list->GetBuffer(), sizeof(T)* this->Count()) == 0;
         }
@@ -289,7 +289,7 @@ namespace JsUtil
         template<class U>
         void Copy(const U* list)
         {
-            CompileAssert(sizeof(TElementType) == sizeof(typename U::TElementType));
+            static_assert(sizeof(TElementType) == sizeof(typename U::TElementType));
             if (list->Count() > 0)
             {
                 this->EnsureArray(list->Count());
@@ -501,7 +501,7 @@ namespace JsUtil
         void Sort(int(* _PtFuncCompare)(void *, const void *, const void *), void *_Context)
         {
             // We can call QSort only if the remove policy for this list is CopyRemovePolicy
-            CompileAssert((IsSame<TRemovePolicyType, Js::CopyRemovePolicy<TListType, false> >::IsTrue) ||
+            static_assert((IsSame<TRemovePolicyType, Js::CopyRemovePolicy<TListType, false> >::IsTrue) ||
                 (IsSame<TRemovePolicyType, Js::CopyRemovePolicy<TListType, true> >::IsTrue));
             if (this->count)
             {
@@ -786,7 +786,7 @@ namespace Js
         FreeListedRemovePolicy(TListType * list):
           freeItemIndex(-1)
         {
-            CompileAssert(IsPointer<TElementType>::IsTrue);
+            static_assert(IsPointer<TElementType>::IsTrue);
         }
 
         static bool IsItemValid(const TElementType& item)

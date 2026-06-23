@@ -27,7 +27,7 @@ namespace Js
         PropertyCacheOperationInfo * operationInfo,
         PropertyValueInfo *const propertyValueInfo)
     {
-        CompileAssert(IsInlineCacheAvailable || IsPolymorphicInlineCacheAvailable);
+        static_assert(IsInlineCacheAvailable || IsPolymorphicInlineCacheAvailable);
         Assert(!CheckTypePropertyCache || !isRoot);
         Assert(propertyValueInfo);
         Assert(IsInlineCacheAvailable == !!propertyValueInfo->GetInlineCache());
@@ -142,7 +142,7 @@ namespace Js
         PropertyCacheOperationInfo * operationInfo,
         PropertyValueInfo *const propertyValueInfo)
     {
-        CompileAssert(IsInlineCacheAvailable || IsPolymorphicInlineCacheAvailable);
+        static_assert(IsInlineCacheAvailable || IsPolymorphicInlineCacheAvailable);
         Assert(!CheckTypePropertyCache || !isRoot);
         Assert(propertyValueInfo);
         Assert(IsInlineCacheAvailable == !!propertyValueInfo->GetInlineCache());
@@ -244,7 +244,7 @@ namespace Js
         PropertyCacheOperationInfo *operationInfo,
         PropertyValueInfo *const propertyValueInfo)
     {
-        CompileAssert(IsInlineCacheAvailable || IsPolymorphicInlineCacheAvailable);
+        static_assert(IsInlineCacheAvailable || IsPolymorphicInlineCacheAvailable);
         Assert(propertyValueInfo);
         Assert(IsInlineCacheAvailable == !!propertyValueInfo->GetInlineCache());
         Assert(!IsPolymorphicInlineCacheAvailable || propertyValueInfo->GetPolymorphicInlineCache());
@@ -275,7 +275,7 @@ namespace Js
         PropertyCacheOperationInfo * operationInfo,
         PropertyValueInfo *const propertyValueInfo)
     {
-        CompileAssert(IsInlineCacheAvailable || IsPolymorphicInlineCacheAvailable);
+        static_assert(IsInlineCacheAvailable || IsPolymorphicInlineCacheAvailable);
         Assert(propertyValueInfo);
         Assert(IsInlineCacheAvailable == !!propertyValueInfo->GetInlineCache());
         Assert(!IsPolymorphicInlineCacheAvailable || propertyValueInfo->GetPolymorphicInlineCache());
@@ -315,7 +315,7 @@ namespace Js
         const PropertyValueInfo *const info,
         ScriptContext *const requestContext)
     {
-        CompileAssert(!IsAccessor || !IncludeTypePropertyCache);
+        static_assert(!IsAccessor || !IncludeTypePropertyCache);
         Assert(info);
         Assert(objectWithProperty);
 

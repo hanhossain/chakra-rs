@@ -49,7 +49,7 @@ namespace Js
 
         Data *NewChainedChunk(charcount_t bufLengthRequested)
         {
-            CompileAssert(sizeof(charcount_t) == sizeof(uint32_t));
+            static_assert(sizeof(charcount_t) == sizeof(uint32_t));
 
             // allocation = (bufLengthRequested * sizeof(char16_t) + sizeof(Data)
             charcount_t alloc32 = UInt32Math::MulAdd<sizeof(char16_t), sizeof(Data)>(bufLengthRequested);
@@ -78,7 +78,7 @@ namespace Js
 
             // Let's just grow the current chunk in place
 
-            CompileAssert(sizeof(charcount_t) == sizeof(uint32_t));
+            static_assert(sizeof(charcount_t) == sizeof(uint32_t));
 
             //// allocation = (bufLengthRequested+1) * sizeof(char16_t)
             charcount_t alloc32 = UInt32Math::AddMul< 1, sizeof(char16_t) >(*pBufLengthRequested);

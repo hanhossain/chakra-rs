@@ -839,10 +839,10 @@ EmitInfo WasmBytecodeGenerator::EmitGetGlobal()
 
     Js::RegSlot slot = m_module->GetOffsetForGlobal(global);
 
-    CompileAssert(WasmTypes::I32 == 1);
-    CompileAssert(WasmTypes::I64 == 2);
-    CompileAssert(WasmTypes::F32 == 3);
-    CompileAssert(WasmTypes::F64 == 4);
+    static_assert(WasmTypes::I32 == 1);
+    static_assert(WasmTypes::I64 == 2);
+    static_assert(WasmTypes::F32 == 3);
+    static_assert(WasmTypes::F64 == 4);
     static const Js::OpCodeAsmJs globalOpcodes[] = {
         Js::OpCodeAsmJs::LdSlot_Int,
         Js::OpCodeAsmJs::LdSlot_Long,
@@ -868,10 +868,10 @@ EmitInfo WasmBytecodeGenerator::EmitSetGlobal()
     WasmTypes::WasmType type = global->GetType();
     EmitInfo info = PopEvalStack(type);
 
-    CompileAssert(WasmTypes::I32 == 1);
-    CompileAssert(WasmTypes::I64 == 2);
-    CompileAssert(WasmTypes::F32 == 3);
-    CompileAssert(WasmTypes::F64 == 4);
+    static_assert(WasmTypes::I32 == 1);
+    static_assert(WasmTypes::I64 == 2);
+    static_assert(WasmTypes::F32 == 3);
+    static_assert(WasmTypes::F64 == 4);
     static const Js::OpCodeAsmJs globalOpcodes[] = {
         Js::OpCodeAsmJs::StSlot_Int,
         Js::OpCodeAsmJs::StSlot_Long,
@@ -1051,7 +1051,7 @@ PolymorphicEmitInfo WasmBytecodeGenerator::EmitLoop()
         uint32_t minYield = 0;
         if (!mTypedRegisterAllocator.IsTypeExcluded(type))
         {
-            CompileAssert(sizeof(minYield) == sizeof(Js::RegSlot));
+            static_assert(sizeof(minYield) == sizeof(Js::RegSlot));
             minYield = static_cast<uint32_t>(mTypedRegisterAllocator.GetRegisterSpace(type)->PeekNextTmpRegister());
         }
         curRegs[type] = minYield;
