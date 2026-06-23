@@ -213,7 +213,7 @@ CSharedMemoryObject::InitializeFromExistingSharedData(
 
         wsz = SHMPTR_TO_TYPED_PTR(char16_t, psmod->shmObjName);
         _ASSERTE(NULL != wsz);
-        _ASSERTE(0 == PAL_wcscmp(wsz, poa->sObjectName.GetString()));
+        _ASSERTE(wsz == poa->sObjectName.GetString());
     }
 #endif // debug
 

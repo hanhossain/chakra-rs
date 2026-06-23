@@ -49,85 +49,37 @@ namespace CorUnix
 
     class CPalString
     {
-    protected:
-
-        const char16_t *m_pwsz;    // NULL terminated
-
-        //
-        // Length of string, not including terminating NULL
-        //
-
-        uint32_t m_dwStringLength;
-
-        //
-        // Length of buffer backing string; must be at least 1+dwStringLength
-        //
-
-        uint32_t m_dwMaxLength;
-
+    private:
+        std::u16string pwsz_;
     public:
+        CPalString() = default;
 
-        CPalString()
-            :
-            m_pwsz(NULL),
-            m_dwStringLength(0),
-            m_dwMaxLength(0)
+        CPalString(const char16_t *pwsz)
+            : pwsz_(pwsz)
         {
-        };
+        }
 
-        CPalString(
-            const char16_t *pwsz
-            )
+        void SetString(const char16_t *pwsz)
         {
-            SetString(pwsz);
-        };
+            pwsz_ = pwsz;
+        }
 
-        void
-        SetString(
-            const char16_t *pwsz
-            )
+        void SetStringWithLength(const char16_t *pwsz, const uint32_t dwStringLength)
         {
-            SetStringWithLength(pwsz, std::u16string(pwsz).length());
-        };
+            pwsz_ = std::u16string(pwsz, dwStringLength);
+        }
 
-        void
-        SetStringWithLength(
-            const char16_t *pwsz,
-            uint32_t dwStringLength
-            )
+        PAL_ERROR CopyString(CPalString *psSource);
+
+        [[nodiscard]] const std::u16string& GetString() const
         {
-            m_pwsz = pwsz;
-            m_dwStringLength = dwStringLength;
-            m_dwMaxLength = m_dwStringLength + 1;
+            return pwsz_;
+        }
 
-        };
-
-        PAL_ERROR
-        CopyString(
-            CPalString *psSource
-            );
-
-        void
-        FreeBuffer();
-
-        const char16_t *
-        GetString()
+        [[nodiscard]] uint32_t GetStringLength() const
         {
-            return m_pwsz;
-        };
-
-        uint32_t
-        GetStringLength()
-        {
-            return m_dwStringLength;
-        };
-
-        uint32_t
-        GetMaxLength()
-        {
-            return m_dwMaxLength;
-        };
-
+            return pwsz_.size();
+        }
     };
 
     //
