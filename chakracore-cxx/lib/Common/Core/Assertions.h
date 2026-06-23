@@ -18,7 +18,6 @@ extern thread_local int IsInAssert;
 #define REPORT_ASSERT(f, comment) FALSE
 #define LOG_ASSERT()
 
-#include <assert.h>
 #define RAISE_ASSERTION(comment) DbgRaiseAssertionFailure()
 
 #define AssertMsg(f, comment) \
