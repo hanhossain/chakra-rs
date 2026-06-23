@@ -146,7 +146,7 @@
 //Time Travel flags
 //Include TTD code in the build when building for Chakra (except NT/Edge) or for debug/test builds
 #if defined(ENABLE_SCRIPT_DEBUGGING)
-#define ENABLE_TTD 1
+#define ENABLE_TTD 0
 #else
 #define ENABLE_TTD 0
 #endif
