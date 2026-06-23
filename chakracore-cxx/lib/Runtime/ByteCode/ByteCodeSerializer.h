@@ -187,7 +187,7 @@ namespace Js
         // Note: Returns the count of characters (not bytes) of the string via the stringLength argument.
         static const char16_t* DeserializeString(const DeferredFunctionStub* deferredStub, uint stringId, uint32_t& stringLength);
 
-        // This lib doesn't directly depend on the generated interfaces. Ensure the same codes with a C_ASSERT
+        // This lib doesn't directly depend on the generated interfaces. Ensure the same codes with a static_assert
         static const int32_t CantGenerate = 0x80020201L;
         static const int32_t InvalidByteCode = 0x80020202L;
 

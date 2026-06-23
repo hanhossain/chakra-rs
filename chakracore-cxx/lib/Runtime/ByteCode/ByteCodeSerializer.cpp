@@ -143,7 +143,7 @@ struct SerializedFieldList {
     bool has_printOffsets : 1;
 };
 
-C_ASSERT(sizeof(GUID)==sizeof(uint32_t)*4);
+static_assert(sizeof(GUID)==sizeof(uint32_t)*4);
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Holds a buffer and size for use by the serializer
@@ -335,7 +335,7 @@ static const byte * ReadVariableInt(const byte * buffer, size_t remainingBytes, 
 #endif
 
 // Compile-time-check some invariants that the file format depends on
-C_ASSERT(sizeof(PropertyId)==sizeof(int32_t));
+static_assert(sizeof(PropertyId)==sizeof(int32_t));
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

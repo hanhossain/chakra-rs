@@ -12,9 +12,9 @@
         sizeof(#name) - 1, \
         _u(#name) \
     }; \
-    C_ASSERT(offsetof(StaticSymLen<sizeof(#name)>, luHash) == offsetof(StaticSym, luHash)); \
-    C_ASSERT(offsetof(StaticSymLen<sizeof(#name)>, cch) == offsetof(StaticSym, cch)); \
-    C_ASSERT(offsetof(StaticSymLen<sizeof(#name)>, sz) == offsetof(StaticSym, sz)); \
+    static_assert(offsetof(StaticSymLen<sizeof(#name)>, luHash) == offsetof(StaticSym, luHash)); \
+    static_assert(offsetof(StaticSymLen<sizeof(#name)>, cch) == offsetof(StaticSym, cch)); \
+    static_assert(offsetof(StaticSymLen<sizeof(#name)>, sz) == offsetof(StaticSym, sz)); \
 
 #include "objnames.h"
 #undef HASH_NAME

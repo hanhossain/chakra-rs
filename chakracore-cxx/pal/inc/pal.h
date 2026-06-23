@@ -51,10 +51,6 @@ Abstract:
 #include <stdint.h>
 #include <limits.h>
 
-#if !defined(static_assert)
-#define static_assert _Static_assert
-#endif
-
 #if defined(__APPLE__)
 #include "TargetConditionals.h"
 #endif // __APPLE__ ?

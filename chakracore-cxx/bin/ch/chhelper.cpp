@@ -24,6 +24,8 @@ const size_t ttUriBufferLength = MAX_PATH * 3;
 
 int32_t RunBgParseSync(const char * fileContents, uint32_t lengthBytes, const char* fileName);
 
+static_assert(sizeof(ssize_t) == sizeof(long));
+
 // On success the param byteCodeBuffer will be allocated in the function.
 int32_t GetSerializedBuffer(const char * fileContents, JsFinalizeCallback fileContentFinalizeCallback, JsValueRef *byteCodeBuffer)
 {

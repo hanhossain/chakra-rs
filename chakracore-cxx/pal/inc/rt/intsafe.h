@@ -22,9 +22,9 @@
 // We make some assumptions about the sizes of various types. Let's be
 // explicit about those assumptions and check them.
 //
-C_ASSERT(sizeof(unsigned short) == 2);
-C_ASSERT(sizeof(unsigned int) == 4);
-C_ASSERT(sizeof(uint32_t) == 4);
+static_assert(sizeof(unsigned short) == 2);
+static_assert(sizeof(unsigned int) == 4);
+static_assert(sizeof(uint32_t) == 4);
 
 //
 // uint32_t -> INT conversion
