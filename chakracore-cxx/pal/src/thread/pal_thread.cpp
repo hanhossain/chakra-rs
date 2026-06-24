@@ -1315,20 +1315,14 @@ GetThreadTimesInternalExit:
     return retval;
 }
 
-void *
-CPalThread::ThreadEntry(
-    void *pvParam
-    )
+void *CPalThread::ThreadEntry(CPalThread *pThread)
 {
     PAL_ERROR palError;
-    CPalThread *pThread;
     PTHREAD_START_ROUTINE pfnStartRoutine;
     void * pvPar;
     uint32_t retValue;
 
-    pThread = reinterpret_cast<CPalThread*>(pvParam);
-
-    if (NULL == pThread)
+    if (nullptr == pThread)
     {
         ASSERT("THREAD pointer is NULL!\n");
         goto fail;
