@@ -357,10 +357,6 @@ namespace CorUnix
         //
 
     private:
-        // This is set whenever this thread is currently executing within
-        // a region of code that depends on this instance of the PAL
-        // in the process.
-        bool m_fInPal;
 
 #if defined(__APPLE__)
         // Record of Mach exception handlers that were already registered when we register our own CoreCLR
@@ -405,11 +401,8 @@ namespace CorUnix
             m_fStartItemsInitialized(FALSE),
             m_fStartStatus(FALSE),
             m_fStartStatusSet(FALSE)
-#ifdef FEATURE_PAL_SXS
-          , m_fInPal(TRUE)
-#endif // FEATURE_PAL_SXS
         {
-        };
+        }
 
         virtual ~CPalThread();
 
@@ -667,13 +660,6 @@ namespace CorUnix
         //
         // Functions for PAL side-by-side support
         //
-
-        // Returns TRUE whenever this thread is executing in a region
-        // of code that depends on this instance of the PAL in the process.
-        BOOL IsInPal()
-        {
-            return m_fInPal;
-        };
 
 #if defined(__APPLE__)
         // Hook Mach exceptions, i.e., call thread_swap_exception_ports
