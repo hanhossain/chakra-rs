@@ -24,6 +24,7 @@ Abstract:
 
 #include <algorithm>
 #include <mutex>
+#include <thread>
 
 #include "pal/dbgmsg.h"
 SET_DEFAULT_DEBUG_CHANNEL(THREAD); // some headers have code with asserts, so do this first
@@ -432,7 +433,7 @@ CorUnix::InternalCreateThread(
     bool fThreadDataAddedToProcessList = FALSE;
     HANDLE hNewThread = NULL;
 
-    pthread_t pthread;
+    std::thread thread;
     pthread_attr_t pthreadAttr;
     BOOL fHoldingProcessLock = FALSE;
     int iError = 0;
@@ -586,16 +587,8 @@ CorUnix::InternalCreateThread(
     //
     // Spawn the new pthread
     //
-
-
-    iError = pthread_create(&pthread, &pthreadAttr, CPalThread::ThreadEntry, pNewThread);
-
-    if (0 != iError)
-    {
-        ERROR("pthread_create failed, error is %d (%s)\n", iError, strerror(iError));
-        palError = ERROR_NOT_ENOUGH_MEMORY;
-        goto EXIT;
-    }
+    thread = std::thread(CPalThread::ThreadEntry, pNewThread);
+    thread.detach();
 
     //
     // Wait for the new thread to finish its initial startup tasks
