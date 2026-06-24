@@ -356,12 +356,6 @@ void PAL_DispatchException(PCONTEXT pContext, PEXCEPTION_RECORD pExRecord, MachE
 {
     CPalThread *pThread = InternalGetCurrentThread();
 
-#if FEATURE_PAL_SXS
-    if (!pThread->IsInPal())
-    {
-    }
-#endif // FEATURE_PAL_SXS
-
     raise(SIGINT);
     abort();
 }
