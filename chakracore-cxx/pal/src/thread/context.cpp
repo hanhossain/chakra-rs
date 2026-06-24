@@ -309,30 +309,11 @@ Parameter
 Return
  returns TRUE if it succeeds, FALSE otherwise
 --*/
-BOOL CONTEXT_GetRegisters(uint32_t processId, LPCONTEXT lpContext)
+BOOL CONTEXT_GetRegisters(LPCONTEXT lpContext)
 {
     BOOL bRet = FALSE;
 
-    if (processId == getpid())
-    {
-        CONTEXT_CaptureContext(lpContext);
-    }
-    else
-    {
-        ucontext_t registers;
-        struct pt_regs ptrace_registers;
-        if (ptrace((__ptrace_request)PTRACE_GETREGS, processId, (caddr_t) &ptrace_registers, 0) == -1)
-        {
-            ASSERT("Failed ptrace(PT_GETREGS, processId:%d) errno:%d (%s)\n",
-                   processId, errno, strerror(errno));
-        }
-
-#define ASSIGN_REG(reg) MCREG_##reg(registers.uc_mcontext) = PTREG_##reg(ptrace_registers);
-        ASSIGN_ALL_REGS
-#undef ASSIGN_REG
-
-        CONTEXTFromNativeContext(&registers, lpContext, lpContext->ContextFlags);
-    }
+    CONTEXT_CaptureContext(lpContext);
 
     bRet = TRUE;
     return bRet;
@@ -344,11 +325,7 @@ Function:
 
 See MSDN doc.
 --*/
-BOOL
-CONTEXT_GetThreadContext(
-         uint32_t dwProcessId,
-         pthread_t self,
-         LPCONTEXT lpContext)
+BOOL CONTEXT_GetThreadContext(pthread_t self, LPCONTEXT lpContext)
 {
     BOOL ret = FALSE;
 
@@ -365,34 +342,30 @@ CONTEXT_GetThreadContext(
        Unfortunately, these two methods only depend on process ID, not on
        thread ID. */
 
-    if (dwProcessId == getpid())
+    if (self != pthread_self())
     {
-        if (self != pthread_self())
-        {
-            uint32_t flags;
-            // There aren't any APIs for this. We can potentially get the
-            // context of another thread by using per-thread signals, but
-            // on FreeBSD signal handlers that are called as a result
-            // of signals raised via pthread_kill don't get a valid
-            // sigcontext or ucontext_t. But we need this to return TRUE
-            // to avoid an assertion in the CLR in code that manages to
-            // cope reasonably well without a valid thread context.
-            // Given that, we'll zero out our structure and return TRUE.
-            ERROR("GetThreadContext on a thread other than the current "
-                  "thread is returning TRUE\n");
-            flags = lpContext->ContextFlags;
-            memset(lpContext, 0, sizeof(*lpContext));
-            lpContext->ContextFlags = flags;
-            ret = TRUE;
-            goto EXIT;
-        }
-
+        uint32_t flags;
+        // There aren't any APIs for this. We can potentially get the
+        // context of another thread by using per-thread signals, but
+        // on FreeBSD signal handlers that are called as a result
+        // of signals raised via pthread_kill don't get a valid
+        // sigcontext or ucontext_t. But we need this to return TRUE
+        // to avoid an assertion in the CLR in code that manages to
+        // cope reasonably well without a valid thread context.
+        // Given that, we'll zero out our structure and return TRUE.
+        ERROR("GetThreadContext on a thread other than the current "
+              "thread is returning TRUE\n");
+        flags = lpContext->ContextFlags;
+        memset(lpContext, 0, sizeof(*lpContext));
+        lpContext->ContextFlags = flags;
+        ret = TRUE;
+        goto EXIT;
     }
 
     if (lpContext->ContextFlags &
         (CONTEXT_CONTROL | CONTEXT_INTEGER) & CONTEXT_AREA_MASK)
     {
-        if (CONTEXT_GetRegisters(dwProcessId, lpContext) == FALSE)
+        if (CONTEXT_GetRegisters(lpContext) == FALSE)
         {
             SetLastError(ERROR_INTERNAL_ERROR);
             goto EXIT;
@@ -411,11 +384,7 @@ Function:
 
 See MSDN doc.
 --*/
-BOOL
-CONTEXT_SetThreadContext(
-           uint32_t dwProcessId,
-           pthread_t self,
-           const CONTEXT *lpContext)
+BOOL CONTEXT_SetThreadContext(pthread_t self, const CONTEXT *lpContext)
 {
     BOOL ret = FALSE;
 
@@ -434,48 +403,11 @@ CONTEXT_SetThreadContext(
        Unfortunately, these two methods only depend on process ID, not on
        thread ID. */
 
-    if (dwProcessId == getpid())
-    {
-        // Need to implement SetThreadContext(current thread) for the IX architecture; look at common_signal_handler.
-        _ASSERT(FALSE);
+    // Need to implement SetThreadContext(current thread) for the IX architecture; look at common_signal_handler.
+    _ASSERT(FALSE);
 
-        ASSERT("SetThreadContext should be called for cross-process only.\n");
-        SetLastError(ERROR_INVALID_PARAMETER);
-        goto EXIT;
-    }
-
-    if (lpContext->ContextFlags  &
-        (CONTEXT_CONTROL | CONTEXT_INTEGER) & CONTEXT_AREA_MASK)
-    {
-        if (ptrace((__ptrace_request)PTRACE_GETREGS, dwProcessId, (caddr_t)&ptrace_registers, 0) == -1)
-        {
-            ASSERT("Failed ptrace(PT_GETREGS, processId:%d) errno:%d (%s)\n",
-                   dwProcessId, errno, strerror(errno));
-             SetLastError(ERROR_INTERNAL_ERROR);
-             goto EXIT;
-        }
-
-#define ASSIGN_REG(reg) PTREG_##reg(ptrace_registers) = lpContext->reg;
-        if (lpContext->ContextFlags & CONTEXT_CONTROL & CONTEXT_AREA_MASK)
-        {
-            ASSIGN_CONTROL_REGS
-        }
-        if (lpContext->ContextFlags & CONTEXT_INTEGER & CONTEXT_AREA_MASK)
-        {
-            ASSIGN_INTEGER_REGS
-        }
-#undef ASSIGN_REG
-
-        if (ptrace((__ptrace_request)PTRACE_SETREGS, dwProcessId, (caddr_t)&ptrace_registers, 0) == -1)
-        {
-            ASSERT("Failed ptrace(PT_SETREGS, processId:%d) errno:%d (%s)\n",
-                   dwProcessId, errno, strerror(errno));
-            SetLastError(ERROR_INTERNAL_ERROR);
-            goto EXIT;
-        }
-    }
-
-    ret = TRUE;
+    ASSERT("SetThreadContext should be called for cross-process only.\n");
+    SetLastError(ERROR_INVALID_PARAMETER);
    EXIT:
      return ret;
 }
@@ -1281,11 +1213,7 @@ Function:
 
 See MSDN doc.
 --*/
-BOOL
-CONTEXT_GetThreadContext(
-         uint32_t dwProcessId,
-         pthread_t self,
-         LPCONTEXT lpContext)
+BOOL CONTEXT_GetThreadContext(pthread_t self, LPCONTEXT lpContext)
 {
     BOOL ret = FALSE;
 
@@ -1296,27 +1224,19 @@ CONTEXT_GetThreadContext(
         goto EXIT;
     }
 
-    if (getpid() == dwProcessId)
+    if (self != pthread_self())
     {
-        if (self != pthread_self())
-        {
-            // the target thread is in the current process, but isn't
-            // the current one: extract the CONTEXT from the Mach thread.
-            mach_port_t mptPort;
-            mptPort = pthread_mach_thread_np(self);
+        // the target thread is in the current process, but isn't
+        // the current one: extract the CONTEXT from the Mach thread.
+        mach_port_t mptPort;
+        mptPort = pthread_mach_thread_np(self);
 
-            ret = (CONTEXT_GetThreadContextFromPort(mptPort, lpContext) == KERN_SUCCESS);
-        }
-        else
-        {
-            CONTEXT_CaptureContext(lpContext);
-            ret = TRUE;
-        }
+        ret = (CONTEXT_GetThreadContextFromPort(mptPort, lpContext) == KERN_SUCCESS);
     }
     else
     {
-        ASSERT("Cross-process GetThreadContext() is not supported on this platform\n");
-        SetLastError(ERROR_NOACCESS);
+        CONTEXT_CaptureContext(lpContext);
+        ret = TRUE;
     }
 
 EXIT:
@@ -1496,25 +1416,13 @@ Function:
 
 See MSDN doc.
 --*/
-BOOL
-CONTEXT_SetThreadContext(
-           uint32_t dwProcessId,
-           pthread_t self,
-           const CONTEXT *lpContext)
+BOOL CONTEXT_SetThreadContext(pthread_t self, const CONTEXT *lpContext)
 {
     BOOL ret = FALSE;
 
     if (lpContext == NULL)
     {
         ERROR("Invalid lpContext parameter value\n");
-        SetLastError(ERROR_NOACCESS);
-        goto EXIT;
-    }
-
-    if (dwProcessId != getpid())
-    {
-        // GetThreadContext() of a thread in another process
-        ASSERT("Cross-process GetThreadContext() is not supported\n");
         SetLastError(ERROR_NOACCESS);
         goto EXIT;
     }

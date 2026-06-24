@@ -402,7 +402,6 @@ GetThreadContext(
         if (!pTargetThread->IsDummy())
         {
             ret = CONTEXT_GetThreadContext(
-                getpid(),
                 pTargetThread->GetPThreadSelf(),
                 lpContext
                 );
@@ -459,7 +458,6 @@ SetThreadContext(
         if (!pTargetThread->IsDummy())
         {
             ret = CONTEXT_SetThreadContext(
-                getpid(),
                 pTargetThread->GetPThreadSelf(),
                 lpContext
                 );
