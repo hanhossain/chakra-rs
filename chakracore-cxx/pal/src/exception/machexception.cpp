@@ -987,72 +987,6 @@ SEHExceptionThread(void *args)
             // This is a notification of an exception occurring on another thread.
             exception_type_t exceptionType = sMessage.GetException();
             thread = sMessage.GetThread();
-
-#ifdef _DEBUG
-            if (NONPAL_TRACE_ENABLED)
-            {
-                NONPAL_TRACE("ExceptionNotification %s (%u) thread %08x flavor %u\n",
-                    GetExceptionString(exceptionType),
-                    exceptionType,
-                    thread,
-                    sMessage.GetThreadStateFlavor());
-
-                int subcode_count = sMessage.GetExceptionCodeCount();
-                for (int i = 0; i < subcode_count; i++)
-                    NONPAL_TRACE("ExceptionNotification subcode[%d] = %llx\n", i, (uint64_t) sMessage.GetExceptionCode(i));
-
-#if defined(__amd64__)
-                x86_thread_state64_t threadStateActual;
-                unsigned int count = sizeof(threadStateActual) / sizeof(unsigned);
-                machret = thread_get_state(thread, x86_THREAD_STATE64, (thread_state_t)&threadStateActual, &count);
-                CHECK_MACH("thread_get_state", machret);
-
-                NONPAL_TRACE("ExceptionNotification actual  rip %016llx rsp %016llx rbp %016llx rax %016llx r15 %016llx eflags %08llx\n",
-                    threadStateActual.__rip,
-                    threadStateActual.__rsp,
-                    threadStateActual.__rbp,
-                    threadStateActual.__rax,
-                    threadStateActual.__r15,
-                    threadStateActual.__rflags);
-
-                x86_exception_state64_t threadExceptionState;
-                unsigned int ehStateCount = sizeof(threadExceptionState) / sizeof(unsigned);
-                machret = thread_get_state(thread, x86_EXCEPTION_STATE64, (thread_state_t)&threadExceptionState, &ehStateCount);
-                CHECK_MACH("thread_get_state", machret);
-
-                NONPAL_TRACE("ExceptionNotification trapno %04x cpu %04x err %08x faultAddr %016llx\n",
-                    threadExceptionState.__trapno,
-                    threadExceptionState.__cpu,
-                    threadExceptionState.__err,
-                    threadExceptionState.__faultvaddr);
-#elif defined(_ARM64_)
-                arm_thread_state64_t threadStateActual;
-                unsigned int count = sizeof(threadStateActual) / sizeof(unsigned);
-                machret = thread_get_state(thread, ARM_THREAD_STATE64, (thread_state_t)&threadStateActual, &count);
-                CHECK_MACH("thread_get_state", machret);
-
-                NONPAL_TRACE("ExceptionNotification actual  lr %p sp %016llx fp %016llx pc %p cpsr %08x\n",
-                    arm_thread_state64_get_lr_fptr(threadStateActual),
-                    arm_thread_state64_get_sp(threadStateActual),
-                    arm_thread_state64_get_fp(threadStateActual),
-                    arm_thread_state64_get_pc_fptr(threadStateActual),
-                    threadStateActual.__cpsr);
-
-                arm_exception_state64_t threadExceptionState;
-                unsigned int ehStateCount = sizeof(threadExceptionState) / sizeof(unsigned);
-                machret = thread_get_state(thread, ARM_EXCEPTION_STATE64, (thread_state_t)&threadExceptionState, &ehStateCount);
-                CHECK_MACH("thread_get_state", machret);
-
-                NONPAL_TRACE("ExceptionNotification far %016llx esr %08x exception %08x\n",
-                    threadExceptionState.__far,
-                    threadExceptionState.__esr,
-                    threadExceptionState.__exception);
-#else
-#error Unexpected architecture
-#endif
-            }
-#endif // _DEBUG
-
             bool feFound = false;
             feList.MoveFirst();
 
@@ -1288,8 +1222,7 @@ Return value :
     TRUE  if SEH support initialization succeeded
     FALSE otherwise
 --*/
-BOOL
-SEHInitializeMachExceptions()
+bool SEHInitializeMachExceptions()
 {
     pthread_t exception_thread;
     kern_return_t machret;
@@ -1320,37 +1253,6 @@ SEHInitializeMachExceptions()
         SetLastError(ERROR_NOT_ENOUGH_MEMORY);
         return FALSE;
     }
-
-#ifdef _DEBUG
-    if (NONPAL_TRACE_ENABLED)
-    {
-        CThreadMachExceptionHandlers taskHandlers;
-        machret = task_get_exception_ports(mach_task_self(),
-            PAL_EXC_ALL_MASK,
-            taskHandlers.m_masks,
-            &taskHandlers.m_nPorts,
-            taskHandlers.m_handlers,
-            taskHandlers.m_behaviors,
-            taskHandlers.m_flavors);
-
-        if (machret == KERN_SUCCESS)
-        {
-            NONPAL_TRACE("SEHInitializeMachExceptions: TASK PORT count %d\n", taskHandlers.m_nPorts);
-            for (mach_msg_type_number_t i = 0; i < taskHandlers.m_nPorts; i++)
-            {
-                NONPAL_TRACE("SEHInitializeMachExceptions: TASK PORT mask %08x handler: %08x behavior %08x flavor %u\n",
-                    taskHandlers.m_masks[i],
-                    taskHandlers.m_handlers[i],
-                    taskHandlers.m_behaviors[i],
-                    taskHandlers.m_flavors[i]);
-            }
-        }
-        else
-        {
-            NONPAL_TRACE("SEHInitializeMachExceptions: task_get_exception_ports FAILED %d %s\n", machret, mach_error_string(machret));
-        }
-    }
-#endif // _DEBUG
 
     // We're done
     return TRUE;

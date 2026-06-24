@@ -64,11 +64,9 @@ using namespace CorUnix;
 
 // Debug-only output with printf-style formatting.
 #define NONPAL_TRACE(_format, ...) 
-#define NONPAL_TRACE_ENABLED false
 
 #else // _DEBUG
 
-#define NONPAL_TRACE_ENABLED false
 #define NONPAL_ASSERT(_msg, ...)
 #define NONPAL_ASSERTE(_expr)
 #define NONPAL_TRACE(_format, ...)
