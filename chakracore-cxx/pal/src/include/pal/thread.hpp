@@ -349,7 +349,7 @@ namespace CorUnix
         // The thread entry routine (called from InternalCreateThread)
         //
 
-        static void* ThreadEntry(void * pvParam);
+        static void* ThreadEntry(CPalThread *pThread);
 
 #ifdef FEATURE_PAL_SXS
         //
