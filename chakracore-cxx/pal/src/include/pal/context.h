@@ -228,12 +228,7 @@ Parameters :
 Return value :
     TRUE on success, FALSE on failure
 --*/
-BOOL
-CONTEXT_SetThreadContext(
-    uint32_t dwProcessId,
-    pthread_t self,
-    const CONTEXT *lpContext
-    );
+BOOL CONTEXT_SetThreadContext(pthread_t self, const CONTEXT *lpContext);
 
 /*++
 Function :
@@ -245,11 +240,7 @@ Parameters :
 Return value :
     TRUE on success, FALSE on failure
 --*/
-BOOL
-CONTEXT_GetThreadContext(
-         uint32_t dwProcessId,
-         pthread_t self,
-         LPCONTEXT lpContext);
+BOOL CONTEXT_GetThreadContext(pthread_t self, LPCONTEXT lpContext);
 
 #if defined(__APPLE__)
 /*++
