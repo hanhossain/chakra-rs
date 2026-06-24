@@ -17,6 +17,7 @@ Abstract:
     Implementation of MACH exception API functions.
 
 --*/
+#include <thread>
 
 #include "pal/dbgmsg.h"
 SET_DEFAULT_DEBUG_CHANNEL(EXCEPT); // some headers have code with asserts, so do this first
@@ -40,7 +41,6 @@ SET_DEFAULT_DEBUG_CHANNEL(EXCEPT); // some headers have code with asserts, so do
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
-#include <pthread.h>
 #include <dlfcn.h>
 #include <mach-o/loader.h>
 #include <sys/mman.h>
@@ -946,7 +946,7 @@ Return value :
    Never returns
 --*/
 void *
-SEHExceptionThread(void *args)
+SEHExceptionThread()
 {
     ForwardedExceptionList feList;
     MachMessage sReplyOrForward;
@@ -1224,7 +1224,6 @@ Return value :
 --*/
 bool SEHInitializeMachExceptions()
 {
-    pthread_t exception_thread;
     kern_return_t machret;
 
     // Allocate a mach port that will listen in on exceptions
@@ -1233,7 +1232,7 @@ bool SEHInitializeMachExceptions()
     {
         ASSERT("mach_port_allocate failed: %d\n", machret);
         UTIL_SetLastErrorFromMach(machret);
-        return FALSE;
+        return true;
     }
 
     // Insert the send right into the task
@@ -1242,20 +1241,15 @@ bool SEHInitializeMachExceptions()
     {
         ASSERT("mach_port_insert_right failed: %d\n", machret);
         UTIL_SetLastErrorFromMach(machret);
-        return FALSE;
+        return false;
     }
 
     // Create the thread that will listen to the exception for all threads
-    int createret = pthread_create(&exception_thread, NULL, SEHExceptionThread, NULL);
-    if (createret != 0)
-    {
-        ERROR("pthread_create failed, error is %d (%s)\n", createret, strerror(createret));
-        SetLastError(ERROR_NOT_ENOUGH_MEMORY);
-        return FALSE;
-    }
+    std::thread exception_thread(SEHExceptionThread);
+    exception_thread.detach();
 
     // We're done
-    return TRUE;
+    return true;
 }
 
 #endif // defined(__APPLE__)
