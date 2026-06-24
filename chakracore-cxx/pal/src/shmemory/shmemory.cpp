@@ -188,10 +188,6 @@ SET_DEFAULT_DEBUG_CHANNEL(SHMEM);
 
 #define SEGMENT_NAME_SUFFIX_LENGTH 10
 
-#if defined(_DEBUG) && defined(_HPUX_)
-#define TRACK_SHMLOCK_OWNERSHIP
-#endif // _DEBUG && _HPUX_
-
 /*
 SHMPTR structure :
 High byte is SHM segment number
@@ -294,40 +290,10 @@ The first_* members will contain the location of the first element in the
 various linked lists of shared information
  */
 
-#ifdef TRACK_SHMLOCK_OWNERSHIP
-
-#define SHMLOCK_OWNERSHIP_HISTORY_ARRAY_SIZE 5
-
-#define CHECK_CANARIES(header) \
-    _ASSERTE(HeadSignature == header->dwHeadCanaries[0]); \
-    _ASSERTE(HeadSignature == header->dwHeadCanaries[1]); \
-    _ASSERTE(TailSignature == header->dwTailCanaries[0]);   \
-    _ASSERTE(TailSignature == header->dwTailCanaries[1])
-
-typedef struct _pid_and_tid
-{
-    Volatile<pid_t> pid;
-    Volatile<pthread_t> tid;
-} pid_and_tid;
-
-const uint32_t HeadSignature  __attribute__((init_priority(200))) = 0x48454144;
-const uint32_t TailSignature  __attribute__((init_priority(200))) = 0x5441494C;
-
-#endif // TRACK_SHMLOCK_OWNERSHIP
-
 typedef struct
 {
     SHM_SEGMENT_HEADER header;
-#ifdef TRACK_SHMLOCK_OWNERSHIP
-    Volatile<uint32_t> dwHeadCanaries[2];
-#endif // TRACK_SHMLOCK_OWNERSHIP
     Volatile<pid_t> spinlock;
-#ifdef TRACK_SHMLOCK_OWNERSHIP
-    Volatile<uint32_t> dwTailCanaries[2];
-    pid_and_tid pidtidCurrentOwner;
-    pid_and_tid pidtidOwners[SHMLOCK_OWNERSHIP_HISTORY_ARRAY_SIZE];
-    Volatile<uint32_t> ulOwnersIdx;
-#endif // TRACK_SHMLOCK_OWNERSHIP
     SHM_POOL_INFO pools[SPS_LAST]; /* information about each memory pool */
     Volatile<SHMPTR> shm_info[SIID_LAST]; /* basic blocks of shared information.*/
 } SHM_FIRST_HEADER;
@@ -415,25 +381,6 @@ BOOL SHMInitialize(void)
         header = (SHM_FIRST_HEADER *)shm_segment_bases[0].Load();
 
         InterlockedExchange((int32_t *)&header->spinlock, 0);
-
-#ifdef TRACK_SHMLOCK_OWNERSHIP
-        header->dwHeadCanaries[0] = HeadSignature;
-        header->dwHeadCanaries[1] = HeadSignature;
-        header->dwTailCanaries[0] = TailSignature;
-        header->dwTailCanaries[1] = TailSignature;
-
-        // Check spinlock size
-        _ASSERTE(sizeof(uint32_t) == sizeof(header->spinlock));
-        // Check spinlock alignment
-        _ASSERTE(0 == ((unsigned long)&header->spinlock % (unsigned long)sizeof(void *)));
-#endif // TRACK_SHMLOCK_OWNERSHIP
-
-#ifdef TRACK_SHMLOCK_OWNERSHIP
-        header->pidtidCurrentOwner.pid = 0;
-        header->pidtidCurrentOwner.tid = 0;
-        memset((void *)header->pidtidOwners, 0, sizeof(header->pidtidOwners));
-        header->ulOwnersIdx = 0;
-#endif // TRACK_SHMLOCK_OWNERSHIP
 
         /* SHM information array starts with NULLs */
         memset((void *)header->shm_info, 0, SIID_LAST*sizeof(SHMPTR));
