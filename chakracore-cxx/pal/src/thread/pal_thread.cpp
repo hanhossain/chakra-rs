@@ -429,41 +429,19 @@ CorUnix::InternalCreateThread(
     PAL_ERROR palError;
     CPalThread *pNewThread = NULL;
     CObjectAttributes oa;
-    bool fAttributesInitialized = FALSE;
-    bool fThreadDataAddedToProcessList = FALSE;
+    bool fThreadDataAddedToProcessList = false;
     HANDLE hNewThread = NULL;
 
     std::thread thread;
-    pthread_attr_t pthreadAttr;
-    BOOL fHoldingProcessLock = FALSE;
-    int iError = 0;
-    size_t alignedStackSize;
+    bool fHoldingProcessLock = false;
 
     /* Validate parameters */
-
     if (lpThreadAttributes != NULL)
     {
         ASSERT("lpThreadAttributes parameter must be NULL (%p)\n",
                lpThreadAttributes);
         palError = ERROR_INVALID_PARAMETER;
         goto EXIT;
-    }
-
-    alignedStackSize = dwStackSize;
-    if (alignedStackSize != 0)
-    {
-        // Some systems require the stack size to be aligned to the page size
-        if (sizeof(alignedStackSize) <= sizeof(dwStackSize) && alignedStackSize + (VIRTUAL_PAGE_SIZE - 1) < alignedStackSize)
-        {
-            // When coming here from the public API surface, the incoming value is originally a nonnegative signed int32_t, so
-            // this shouldn't happen
-            ASSERT(
-                "Couldn't align the requested stack size (%zu) to the page size because the stack size was too large\n",
-                alignedStackSize);
-            palError = ERROR_INVALID_PARAMETER;
-            goto EXIT;
-        }
-        alignedStackSize = ALIGN_UP(alignedStackSize, VIRTUAL_PAGE_SIZE);
     }
 
     // Ignore the STACK_SIZE_PARAM_IS_A_RESERVATION flag
@@ -481,7 +459,7 @@ CorUnix::InternalCreateThread(
     //
 
     pNewThread = AllocTHREAD();
-    if (NULL == pNewThread)
+    if (nullptr == pNewThread)
     {
         palError = ERROR_OUTOFMEMORY;
         goto EXIT;
@@ -497,60 +475,6 @@ CorUnix::InternalCreateThread(
     pNewThread->m_lpStartParameter = lpParameter;
     pNewThread->m_bCreateSuspended = (dwCreationFlags & CREATE_SUSPENDED) == CREATE_SUSPENDED;
     pNewThread->m_eThreadType = eThreadType;
-
-    if (0 != pthread_attr_init(&pthreadAttr))
-    {
-        ERROR("couldn't initialize pthread attributes\n");
-        palError = ERROR_INTERNAL_ERROR;
-        goto EXIT;
-    }
-
-    fAttributesInitialized = TRUE;
-
-    /* adjust the stack size if necessary */
-    if (0 != pthread_attr_getstacksize(&pthreadAttr, &alignedStackSize))
-    {
-        ERROR("couldn't set thread stack size\n");
-        palError = ERROR_INTERNAL_ERROR;
-        goto EXIT;
-    }
-
-    /* adjust the stack size if necessary */
-    if (alignedStackSize != 0)
-    {
-#ifdef PTHREAD_STACK_MIN
-        size_t MinStackSize = ALIGN_UP(PTHREAD_STACK_MIN, VIRTUAL_PAGE_SIZE);
-#else // !PTHREAD_STACK_MIN
-        size_t MinStackSize = 64 * 1024; // this value is typically accepted by pthread_attr_setstacksize()
-#endif // PTHREAD_STACK_MIN
-        if (alignedStackSize < MinStackSize)
-        {
-            // Adjust the stack size to a minimum value that is likely to be accepted by pthread_attr_setstacksize(). If this
-            // function fails, typically the caller will end up throwing OutOfMemoryException under the assumption that the
-            // requested stack size is too large or the system does not have sufficient memory to create a thread. Try to
-            // prevent failing just just because the stack size value is too low.
-            alignedStackSize = MinStackSize;
-        }
-
-        TRACE("setting thread stack size to %zu\n", alignedStackSize);
-        if (0 != pthread_attr_setstacksize(&pthreadAttr, alignedStackSize))
-        {
-            ERROR("couldn't set pthread stack size to %zu\n", alignedStackSize);
-            palError = ERROR_INTERNAL_ERROR;
-            goto EXIT;
-        }
-    }
-    else
-    {
-        TRACE("using the system default thread stack size\n");
-    }
-
-    //
-    // We never call pthread_join, so create the new thread as detached
-    //
-
-    iError = pthread_attr_setdetachstate(&pthreadAttr, PTHREAD_CREATE_DETACHED);
-    _ASSERTE(0 == iError);
 
     //
     // Create the IPalObject for the thread and store it in the object
@@ -579,10 +503,10 @@ CorUnix::InternalCreateThread(
     //
 
     PROCProcessLock();
-    fHoldingProcessLock = TRUE;
+    fHoldingProcessLock = true;
 
     PROCAddThread(pThread, pNewThread);
-    fThreadDataAddedToProcessList = TRUE;
+    fThreadDataAddedToProcessList = true;
 
     //
     // Spawn the new pthread
@@ -602,7 +526,7 @@ CorUnix::InternalCreateThread(
         //
         *phThread = hNewThread;
 
-        if (NULL != pThreadId)
+        if (nullptr != pThreadId)
         {
             *pThreadId = pNewThread->GetThreadId();
         }
@@ -620,17 +544,9 @@ CorUnix::InternalCreateThread(
     // Since palError == NO_ERROR, we won't call this again in the exit block.
     //
     PROCProcessUnlock();
-    fHoldingProcessLock = FALSE;
+    fHoldingProcessLock = false;
 
 EXIT:
-
-    if (fAttributesInitialized)
-    {
-        if (0 != pthread_attr_destroy(&pthreadAttr))
-        {
-            WARN("pthread_attr_destroy() failed\n");
-        }
-    }
 
     if (NO_ERROR != palError)
     {
@@ -652,7 +568,7 @@ EXIT:
         {
             PROCProcessUnlock();
         }
-        fHoldingProcessLock = FALSE;
+        fHoldingProcessLock = false;
     }
 
     _ASSERT_MSG(!fHoldingProcessLock, "Exiting InternalCreateThread while still holding the process critical section.\n");
