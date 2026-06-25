@@ -354,8 +354,6 @@ extern "C"
 void PAL_DispatchException(PCONTEXT pContext, PEXCEPTION_RECORD pExRecord, MachExceptionInfo *pMachExceptionInfo)
 #endif
 {
-    CPalThread *pThread = InternalGetCurrentThread();
-
     raise(SIGINT);
     abort();
 }

@@ -388,8 +388,6 @@ BOOL CONTEXT_SetThreadContext(pthread_t self, const CONTEXT *lpContext)
 {
     BOOL ret = FALSE;
 
-    struct pt_regs ptrace_registers;
-
     if (lpContext == NULL)
     {
         ERROR("Invalid lpContext parameter value\n");
