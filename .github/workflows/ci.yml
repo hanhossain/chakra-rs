@@ -47,6 +47,10 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - name: Install dependencies
         run: ${{ matrix.deps }}
+      - run: |
+          sudo ln -sf /usr/bin/clang++ /usr/bin/clang++-19
+          sudo ln -sf /usr/bin/clang /usr/bin/clang-19
+        if: ${{ runner.os == 'Linux' }}
       - name: Install cargo-nextest
         uses: taiki-e/install-action@v2
         with:
@@ -89,6 +93,11 @@ jobs:
       - uses: actions/checkout@v6
       - name: Install dependencies
         run: ${{ matrix.deps }}
+      - name: Use clang-19
+        run: |
+          sudo ln -sf /usr/bin/clang++ /usr/bin/clang++-19
+          sudo ln -sf /usr/bin/clang /usr/bin/clang-19
+        if: ${{ runner.os == 'Linux' }}
       - run: cargo check
       - run: cmake --preset ${{ matrix.os-prefix}}-${{ matrix.build-type }} -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
       - run: cmake --build build-${{ matrix.os-prefix}}-${{ matrix.build-type }}
