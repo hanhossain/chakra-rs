@@ -1233,26 +1233,6 @@ HeapInfo::PrepareSweep()
 #endif
 
 #if ENABLE_PARTIAL_GC || ENABLE_CONCURRENT_GC
-#ifdef RECYCLER_WRITE_WATCH 
-void HeapInfo::EnableWriteWatch()
-{
-    recyclerPageAllocator.EnableWriteWatch(); 
-    recyclerLargeBlockPageAllocator.EnableWriteWatch();
-}
-
-bool HeapInfo::ResetWriteWatch()
-{
-    return recyclerPageAllocator.ResetWriteWatch() && recyclerLargeBlockPageAllocator.ResetWriteWatch();
-}
-
-#if DBG
-size_t HeapInfo::GetWriteWatchPageCount()
-{
-    return this->recyclerPageAllocator.GetWriteWatchPageCount() + this->recyclerLargeBlockPageAllocator.GetWriteWatchPageCount();
-}
-#endif
-#endif
-
 void
 HeapInfo::SweepPendingObjects(RecyclerSweep& recyclerSweep)
 {
@@ -2168,7 +2148,7 @@ HeapInfo::GetRecyclerPageAllocator()
     else
 #endif
     {
-#if defined(RECYCLER_WRITE_WATCH) || !defined(RECYCLER_WRITE_BARRIER_ALLOC_SEPARATE_PAGE)
+#if !defined(RECYCLER_WRITE_BARRIER_ALLOC_SEPARATE_PAGE)
         return &this->recyclerPageAllocator;
 #else
         return &this->recyclerWithBarrierPageAllocator;

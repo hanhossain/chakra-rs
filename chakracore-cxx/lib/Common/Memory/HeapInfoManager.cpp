@@ -158,35 +158,6 @@ HeapInfoManager::SweepSmallNonFinalizable(RecyclerSweepManager& recyclerSweepMan
 }
 
 #if ENABLE_PARTIAL_GC || ENABLE_CONCURRENT_GC
-#ifdef RECYCLER_WRITE_WATCH 
-void HeapInfoManager::EnableWriteWatch()
-{
-    ForEachHeapInfo([](HeapInfo& heapInfo)
-    {
-        heapInfo.EnableWriteWatch();
-    });
-}
-
-bool HeapInfoManager::ResetWriteWatch()
-{
-    return AreAllHeapInfo([](HeapInfo& heapInfo)
-    {
-        return heapInfo.ResetWriteWatch();
-    });
-}
-
-#if DBG
-size_t HeapInfoManager::GetWriteWatchPageCount()
-{
-    size_t writeWatchPageCount = 0;
-    ForEachHeapInfo([&](HeapInfo& heapInfo)
-    {
-        writeWatchPageCount += heapInfo.GetWriteWatchPageCount();
-    });
-    return writeWatchPageCount;
-}
-#endif
-#endif
 void
 HeapInfoManager::SweepPendingObjects(RecyclerSweepManager& recyclerSweepManager)
 {
