@@ -67,17 +67,6 @@ namespace Js
         {
             int32_t hr = E_FAIL;
             IFFAILRET(EnsureWriteStream());
-#ifdef ENABLE_WININET_PROFILE_DATA_CACHE
-            uint32_t bytesWritten = 0;
-            hr = this->outStream->Write(&data, sizeof(T), &bytesWritten);
-            Assert(bytesWritten == sizeof(T) || FAILED(hr) || hr == S_FALSE);
-            bytesWrittenInBlock += bytesWritten;
-            // hr is S_FALSE if bytesWritten < sizeOf(T)
-            if (hr == S_FALSE)
-            {
-                hr = E_FAIL;
-            }
-#endif
             return hr;
         }
 
@@ -86,18 +75,6 @@ namespace Js
         {
             int32_t hr = E_FAIL;
             IFFAILRET(EnsureWriteStream());
-#ifdef ENABLE_WININET_PROFILE_DATA_CACHE
-            uint32_t bytesSize = sizeof(T) * len;
-            uint32_t bytesWritten = 0;
-            hr = this->outStream->Write(data, bytesSize, &bytesWritten);
-            Assert(bytesWritten == bytesSize || FAILED(hr) || hr == S_FALSE);
-            bytesWrittenInBlock += bytesWritten;
-            // hr is S_FALSE if bytesWritten < bytesSize
-            if (hr == S_FALSE)
-            {
-                hr = E_FAIL;
-            }
-#endif
             return hr;
         }
 
@@ -106,17 +83,6 @@ namespace Js
         {
             int32_t hr = E_FAIL;
             IFFAILRET(EnsureReadStream());
-#ifdef ENABLE_WININET_PROFILE_DATA_CACHE
-            uint32_t bytesRead = 0;
-            hr = this->inStream->Read(data, sizeof(T), &bytesRead);
-            // hr should be S_FALSE if bytesRead < sizeof(T) but this is not always the case
-            // Just assert we didn't overflow data and convert S_FALSE into a failing hr.
-            Assert(bytesRead <= sizeof(T));
-            if (hr == S_FALSE)
-            {
-                hr = E_FAIL;
-            }
-#endif
             return hr;
         }
 
@@ -125,18 +91,6 @@ namespace Js
         {
             int32_t hr = E_FAIL;
             IFFAILRET(EnsureReadStream());
-#ifdef ENABLE_WININET_PROFILE_DATA_CACHE
-            uint32_t bytesSize = sizeof(T) * len;
-            uint32_t bytesRead = 0;
-            hr = this->inStream->Read(data, bytesSize, &bytesRead);
-            // hr should be S_FALSE if bytesRead < bytesSize but this is not always the case
-            // Just assert we didn't overflow data and convert S_FALSE into a failing hr.
-            Assert(bytesRead <= bytesSize);
-            if (hr == S_FALSE)
-            {
-                hr = E_FAIL;
-            }
-#endif
             return hr;
         }
 
