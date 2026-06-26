@@ -22,9 +22,6 @@ Js::JavascriptMethod checkCodeGenThunk;
 #define ASSERT_THREAD() AssertMsg(mainThreadId == GetCurrentThreadContextId(), \
     "Cannot use this member of native code generator from thread other than the creating context's current thread")
 
-constexpr int IMAGE_REL_BASED_ABSOLUTE = 0;
-constexpr int IMAGE_REL_BASED_DIR64 = 10;
-
 NativeCodeGenerator::NativeCodeGenerator(Js::ScriptContext * scriptContext)
 :   JsUtil::WaitableJobManager(scriptContext->GetThreadContext()->GetJobProcessor()),
     scriptContext(scriptContext),
