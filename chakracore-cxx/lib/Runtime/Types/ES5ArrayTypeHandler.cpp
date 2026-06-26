@@ -85,7 +85,7 @@ namespace Js
             uint32_t key = indexList[i];
 
             IndexPropertyDescriptor* descriptor;
-            bool b = TryGetReference(key, &descriptor);
+            [[maybe_unused]] bool b = TryGetReference(key, &descriptor);
             Assert(b && descriptor);
 
             if (!(descriptor->Attributes & PropertyDeleted))
@@ -153,7 +153,7 @@ namespace Js
         {
             uint32_t index = indexList[low];
             IndexPropertyDescriptor* descriptor;
-            bool b = TryGetReference(index, &descriptor);
+            [[maybe_unused]] bool b = TryGetReference(index, &descriptor);
             Assert(b && descriptor);
 
             if (!(descriptor->Attributes & PropertyDeleted))
@@ -186,7 +186,7 @@ namespace Js
             }
 
             IndexPropertyDescriptor* descriptor;
-            bool b = TryGetReference(key, &descriptor);
+            [[maybe_unused]] bool b = TryGetReference(key, &descriptor);
             Assert(b && descriptor);
 
             if (descriptor->Attributes & PropertyDeleted)

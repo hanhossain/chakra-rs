@@ -552,7 +552,7 @@ uint32_t Scanner<EncodingPolicy>::UnescapeToTempBuf(EncodedCharPtr p, EncodedCha
     {
         codepoint_t codePoint;
         bool hasEscape, isMultiChar;
-        bool gotCodePoint = TryReadCodePoint<false>(p, last, &codePoint, &hasEscape, &isMultiChar);
+        [[maybe_unused]] bool gotCodePoint = TryReadCodePoint<false>(p, last, &codePoint, &hasEscape, &isMultiChar);
         Assert(gotCodePoint);
         Assert(codePoint < 0x110000);
         if (codePoint < 0x10000)
@@ -939,7 +939,7 @@ tokens Scanner<EncodingPolicy>::ScanRegExpConstantNoAST(ArenaAllocator* alloc)
         // never reached
     }
 
-    UnifiedRegex::RegexPattern* pattern = parser.template CompileProgram<false>(nullptr, m_currentCharacter, totalLen, bodyChars, bodyLen, totalChars, UnifiedRegex::NoRegexFlags);
+    [[maybe_unused]] UnifiedRegex::RegexPattern* pattern = parser.template CompileProgram<false>(nullptr, m_currentCharacter, totalLen, bodyChars, bodyLen, totalChars, UnifiedRegex::NoRegexFlags);
     Assert(pattern == nullptr);  // BuildAST == false, CompileProgram should return nullptr
     this->RestoreMultiUnits(this->m_cMultiUnits + parser.GetMultiUnits()); // m_currentCharacter changed, sync MultiUnits
 
@@ -1658,7 +1658,7 @@ LDefault:
                     if (Js::NumberUtilities::IsSurrogateUpperPart(upper))
                     {
                         // Consume the rest of the utf8 bytes for the codepoint
-                        OLECHAR decodedUpper = this->ReadSurrogatePairUpper(p, last);
+                        [[maybe_unused]] OLECHAR decodedUpper = this->ReadSurrogatePairUpper(p, last);
                         Assert(decodedUpper == (OLECHAR) upper);
                         ch = Js::NumberUtilities::SurrogatePairAsCodePoint(ch, upper);
                     }

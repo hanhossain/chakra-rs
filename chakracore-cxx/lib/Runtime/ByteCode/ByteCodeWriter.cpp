@@ -337,7 +337,7 @@ namespace Js
 #define MULTISIZE_LAYOUT_WRITE(layout, ...) \
     if (!TryWrite##layout<SmallLayoutSizePolicy>(__VA_ARGS__) && !TryWrite##layout<MediumLayoutSizePolicy>(__VA_ARGS__)) \
     { \
-        bool success = TryWrite##layout<LargeLayoutSizePolicy>(__VA_ARGS__); \
+        [[maybe_unused]] bool success = TryWrite##layout<LargeLayoutSizePolicy>(__VA_ARGS__); \
         Assert(success); \
     }
 

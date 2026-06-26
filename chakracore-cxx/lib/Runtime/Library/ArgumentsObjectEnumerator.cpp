@@ -81,7 +81,7 @@ namespace Js
                 if (argumentsObject->HasObjectArrayItem(formalArgIndex))
                 {
                     PropertyId tempPropertyId;
-                    JavascriptString * tempIndex = objectEnumerator.MoveAndGetNext(tempPropertyId, attributes);
+                    [[maybe_unused]] JavascriptString * tempIndex = objectEnumerator.MoveAndGetNext(tempPropertyId, attributes);
                     AssertMsg(tempIndex, "We advanced objectEnumerator->MoveNext() too many times.");
                 }
 

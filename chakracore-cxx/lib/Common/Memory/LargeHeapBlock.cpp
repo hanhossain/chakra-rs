@@ -378,7 +378,7 @@ LargeHeapBlock::ReleasePages(Recycler * recycler)
         else
         {
             uint32_t oldProtect;
-            BOOL ret = ::VirtualProtect(pageHeapData->guardPageAddress, AutoSystemInfo::PageSize * guardPageCount, PAGE_READWRITE, &oldProtect);
+            [[maybe_unused]] BOOL ret = ::VirtualProtect(pageHeapData->guardPageAddress, AutoSystemInfo::PageSize * guardPageCount, PAGE_READWRITE, &oldProtect);
             Assert(ret && oldProtect == PAGE_NOACCESS);
         }
 
@@ -2177,10 +2177,12 @@ LargeHeapBlock::Check(bool expectFull, bool expectPending)
 
 void LargeHeapBlock::FillFreeMemory(Recycler * recycler, __in_bcount(size) void * address, size_t size)
 {
+#ifdef DBG
     // For now, we don't do anything in release build because we don't reuse this memory until we return
     // the pages to the allocator which will zero out the whole page
     byte memFill = 0;
     bool doMemFill = false;
+#endif
 
 #ifdef RECYCLER_FREE_MEM_FILL
     memFill = DbgMemFill;

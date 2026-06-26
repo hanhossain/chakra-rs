@@ -1199,7 +1199,7 @@ namespace Js
         pResolvedObject->propId = Js::PropertyIds::arguments;
         pResolvedObject->typeId = TypeIds_Arguments;
 
-        Js::FunctionBody *pFBody = pFrame->GetJavascriptFunction()->GetFunctionBody();
+        [[maybe_unused]] Js::FunctionBody *pFBody = pFrame->GetJavascriptFunction()->GetFunctionBody();
         Assert(pFBody);
 
         pResolvedObject->obj = pFrame->GetArgumentsObject();

@@ -278,7 +278,7 @@ namespace Js {
                 10,
                 [](const int value, char16_t *const buffer, const CharCount charCapacity)
                 {
-                    errno_t err = _itow_s(value, buffer, charCapacity, 10);
+                    [[maybe_unused]] errno_t err = _itow_s(value, buffer, charCapacity, 10);
                     Assert(err == 0);
                 });
         }
@@ -339,7 +339,7 @@ namespace Js {
 
         const auto ConvertUInt16ToString_ZeroPad_2 = [](const uint16 value, char16_t *const buffer, const CharCount charCapacity)
         {
-            const charcount_t cchWritten = NumberUtilities::UInt16ToString(value, buffer, charCapacity, 2);
+            [[maybe_unused]] const charcount_t cchWritten = NumberUtilities::UInt16ToString(value, buffer, charCapacity, 2);
             Assert(cchWritten != 0);
         };
 

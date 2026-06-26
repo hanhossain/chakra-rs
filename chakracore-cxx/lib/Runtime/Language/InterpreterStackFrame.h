@@ -860,7 +860,7 @@ namespace Js
             {
                 if (!m_isHiddenFrame)
                 {
-                    Js::InterpreterStackFrame *interpreterFrame = m_threadContext->PopInterpreterFrame();
+                    [[maybe_unused]] Js::InterpreterStackFrame *interpreterFrame = m_threadContext->PopInterpreterFrame();
                     AssertMsg(interpreterFrame == m_interpreterFrame,
                         "Interpreter frame chain corrupted?");
                 }

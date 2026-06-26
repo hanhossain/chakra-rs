@@ -225,7 +225,7 @@ namespace Js
                         // Some of them will not be captured in slots, so we just need to box them and record it with the
                         // stack func so that when we can just use the boxed value when we need it.
                         StackScriptFunction * stackFunction = interpreterFrame->GetStackNestedFunction(i);
-                        ScriptFunction * boxedFunction = this->BoxStackFunction(stackFunction);
+                        [[maybe_unused]] ScriptFunction * boxedFunction = this->BoxStackFunction(stackFunction);
                         Assert(stackFunction->boxedScriptFunction == boxedFunction);
                         this->UpdateFrameDisplay(stackFunction);
                     }

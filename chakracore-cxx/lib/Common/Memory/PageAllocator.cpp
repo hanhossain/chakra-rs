@@ -518,7 +518,7 @@ PageSegmentBase<T>::ChangeSegmentProtection(uint32_t protectFlags, uint32_t expe
             Assert(info.Protect == expectedOldProtectFlags);
 #endif
 
-            BOOL fSuccess = VirtualProtect(address, regionSize, protectFlags, &oldProtect);
+            [[maybe_unused]] BOOL fSuccess = VirtualProtect(address, regionSize, protectFlags, &oldProtect);
             Assert(fSuccess == TRUE);
             Assert(oldProtect == expectedOldProtectFlags);
 
@@ -1011,7 +1011,9 @@ template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
 void
 PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::FillAllocPages(void * address, uint pageCount)
 {
+#if DBG || defined(RECYCLER_MEMORY_VERIFY)
     const size_t bufferSize = AutoSystemInfo::PageSize * pageCount;
+#endif
 
 #if DBG
 #ifdef RECYCLER_ZERO_MEM_CHECK
@@ -1096,7 +1098,7 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::TryAllocDecommittedPag
     {
         TPageSegment * freeSegment = &i.Data();
         uint oldFreePageCount = freeSegment->GetFreePageCount();
-        uint oldDecommitPageCount = freeSegment->GetDecommitPageCount();
+        [[maybe_unused]] uint oldDecommitPageCount = freeSegment->GetDecommitPageCount();
 
         char * pages = freeSegment->template DoAllocDecommitPages<notPageAligned>(pageCount);
         if (pages != nullptr)

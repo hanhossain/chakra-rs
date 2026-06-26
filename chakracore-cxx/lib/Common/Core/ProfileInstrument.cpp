@@ -378,7 +378,7 @@ namespace Js
 
             if(parentTag != InvalidPhase)
             {
-                TypeNode *const parentNode = baseNode->GetParent();
+                [[maybe_unused]] TypeNode *const parentNode = baseNode->GetParent();
                 Assert(parentNode);
 
                 Output::Print(u"%-*s\n", (Profiler::PhaseNameWidth-0), PhaseNames[parentTag]);

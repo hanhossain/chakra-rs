@@ -180,12 +180,12 @@ X64WriteBarrierCardTableManager::OnSegmentAlloc(_In_ char* segmentAddress, size_
         // Since setting sectionIndex threw the exception, we don't clear it, we clear until the index before it
         for (BVIndex i = sectionStartIndex; i < sectionIndex; i++)
         {
-            BOOLEAN wasSet = committedSections.TestAndClear(i);
+            [[maybe_unused]] BOOLEAN wasSet = committedSections.TestAndClear(i);
             Assert(wasSet == TRUE);
         }
 
 #pragma prefast(suppress:6250, "This method decommits memory")
-        BOOL result = ::VirtualFree((void *)sectionStart, commitSize, MEM_DECOMMIT);
+        [[maybe_unused]] BOOL result = ::VirtualFree((void *)sectionStart, commitSize, MEM_DECOMMIT);
         Assert(result != 0);
         return false;
     }
@@ -204,7 +204,7 @@ X64WriteBarrierCardTableManager::~X64WriteBarrierCardTableManager()
 {
     if (_cardTable != nullptr)
     {
-        BOOL fSuccess = ::VirtualFree(_cardTable, 0, MEM_RELEASE);
+        [[maybe_unused]] BOOL fSuccess = ::VirtualFree(_cardTable, 0, MEM_RELEASE);
         Assert(fSuccess == TRUE);
     }
 }

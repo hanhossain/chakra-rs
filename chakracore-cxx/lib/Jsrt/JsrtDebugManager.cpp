@@ -148,7 +148,7 @@ int32_t JsrtDebugManager::DbgRegisterFunction(Js::ScriptContext* scriptContext, 
 
     if (!utf8SourceInfo->GetIsLibraryCode() && !utf8SourceInfo->HasDebugDocument())
     {
-        JsrtDebugDocumentManager* debugDocumentManager = this->GetDebugDocumentManager();
+        [[maybe_unused]] JsrtDebugDocumentManager* debugDocumentManager = this->GetDebugDocumentManager();
         Assert(debugDocumentManager != nullptr);
 
         Js::DebugDocument* debugDocument = HeapNewNoThrow(Js::DebugDocument, utf8SourceInfo, functionBody);
@@ -189,7 +189,7 @@ void JsrtDebugManager::ReportScriptCompile_TTD(Js::FunctionBody* body, Js::Utf8S
     JsrtDebugEventObject debugEventObject(scriptContext);
     Js::DynamicObject* eventDataObject = debugEventObject.GetEventDataObject();
 
-    JsrtDebugDocumentManager* debugDocumentManager = this->GetDebugDocumentManager();
+    [[maybe_unused]] JsrtDebugDocumentManager* debugDocumentManager = this->GetDebugDocumentManager();
     Assert(debugDocumentManager != nullptr);
 
     // Create DebugDocument and then report JsDiagDebugEventSourceCompile event
@@ -229,7 +229,7 @@ void JsrtDebugManager::ReportScriptCompile(Js::JavascriptFunction* scriptFunctio
         }
         else
         {
-            JsrtDebugDocumentManager* debugDocumentManager = this->GetDebugDocumentManager();
+            [[maybe_unused]] JsrtDebugDocumentManager* debugDocumentManager = this->GetDebugDocumentManager();
             Assert(debugDocumentManager != nullptr);
 
             // Create DebugDocument and then report JsDiagDebugEventSourceCompile event

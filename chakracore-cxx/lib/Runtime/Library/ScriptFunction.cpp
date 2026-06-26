@@ -156,7 +156,7 @@ using namespace Js;
         if (!scriptFunction->IsAnonymousFunction() && !scriptFunction->GetFunctionInfo()->HasComputedName())
         {
             JavascriptString * functionName = nullptr;
-            bool result = scriptFunction->GetFunctionName(&functionName);
+            [[maybe_unused]] bool result = scriptFunction->GetFunctionName(&functionName);
             Assert(result);
             scriptFunction->SetSlot(SetSlotArguments(Constants::NoProperty, 2, functionName));
         }
@@ -938,7 +938,7 @@ using namespace Js;
         {
             // For class with computed name, we wait until now to set the name property.
             JavascriptString * functionName = nullptr;
-            bool result = GetFunctionName(&functionName);
+            [[maybe_unused]] bool result = GetFunctionName(&functionName);
             Assert(result);
             SetSlot(SetSlotArguments(Constants::NoProperty, 2, functionName));
         }
@@ -952,7 +952,7 @@ using namespace Js;
         {
             // For class with computed name, we wait until now to set the name property.
             JavascriptString * functionName = nullptr;
-            bool result = GetFunctionName(&functionName);
+            [[maybe_unused]] bool result = GetFunctionName(&functionName);
             Assert(result);
             SetSlot(SetSlotArguments(Constants::NoProperty, 2, functionName));
         }

@@ -1206,7 +1206,7 @@ bool WScriptJsrt::Uninitialize()
             SetEvent(child->hevntShutdown);
         }
 
-        uint32_t waitRet = WaitForMultipleObjects(count, &childrenHandles[0], TRUE, INFINITE);
+        [[maybe_unused]] uint32_t waitRet = WaitForMultipleObjects(count, &childrenHandles[0], TRUE, INFINITE);
         Assert(waitRet == WAIT_OBJECT_0);
 
         for (auto i = threadData->children.begin(); i != threadData->children.end(); i++)
@@ -1884,7 +1884,7 @@ WScriptJsrt::CallbackMessage::~CallbackMessage()
     {
         WScriptJsrt::PrintException("", JsErrorScriptException);
     }
-    JsErrorCode errorCode = ChakraRTInterface::JsRelease(m_function, nullptr);
+    [[maybe_unused]] JsErrorCode errorCode = ChakraRTInterface::JsRelease(m_function, nullptr);
     Assert(errorCode == JsNoError);
     m_function = JS_INVALID_REFERENCE;
 }

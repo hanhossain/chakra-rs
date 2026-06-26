@@ -342,7 +342,7 @@ namespace JSON
 
                             // Cache all values from currentCache as there is a chance that ParseObject might change the cache
                             DynamicType* typeWithProperty = currentCache->typeWithProperty;
-                            PropertyId propertyId = currentCache->propertyRecord->GetPropertyId();
+                            [[maybe_unused]] PropertyId propertyId = currentCache->propertyRecord->GetPropertyId();
                             PropertyIndex propertyIndex = currentCache->propertyIndex;
                             previousCache = currentCache;
                             currentCache = currentCache->next;

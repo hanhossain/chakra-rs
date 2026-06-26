@@ -540,7 +540,7 @@ void ByteCodeGenerator::LoadUncachedHeapArguments(FuncInfo *funcInfo)
 {
     Assert(funcInfo->GetHasHeapArguments());
 
-    Scope *scope = funcInfo->GetBodyScope();
+    [[maybe_unused]] Scope *scope = funcInfo->GetBodyScope();
     Assert(scope);
     Symbol *argSym = funcInfo->GetArgumentsSymbol();
     Assert(argSym && argSym->IsArguments());
@@ -576,7 +576,7 @@ void ByteCodeGenerator::LoadCachedHeapArguments(FuncInfo *funcInfo)
 {
     Assert(funcInfo->GetHasHeapArguments());
 
-    Scope *scope = funcInfo->GetBodyScope();
+    [[maybe_unused]] Scope *scope = funcInfo->GetBodyScope();
     Assert(scope);
     Symbol *argSym = funcInfo->GetArgumentsSymbol();
     Assert(argSym && argSym->IsArguments());
@@ -877,7 +877,7 @@ void EndEmitBlock(ParseNodeBlock *pnodeBlock, ByteCodeGenerator *byteCodeGenerat
 {
     if (BlockHasOwnScope(pnodeBlock, byteCodeGenerator))
     {
-        Scope *scope = pnodeBlock->scope;
+        [[maybe_unused]] Scope *scope = pnodeBlock->scope;
         Assert(scope);
         Assert(scope == byteCodeGenerator->GetCurrentScope());
         byteCodeGenerator->PopScope();
@@ -1810,7 +1810,7 @@ void ByteCodeGenerator::InitScopeSlotArray(FuncInfo * funcInfo)
 {
     // Record slots info for ScopeSlots/ScopeObject.
     uint scopeSlotCount = funcInfo->bodyScope->GetScopeSlotCount();
-    bool isSplitScope = !funcInfo->IsBodyAndParamScopeMerged();
+    [[maybe_unused]] bool isSplitScope = !funcInfo->IsBodyAndParamScopeMerged();
     Assert(funcInfo->paramScope == nullptr || funcInfo->paramScope->GetScopeSlotCount() == 0 || isSplitScope);
     uint scopeSlotCountForParamScope = funcInfo->paramScope != nullptr ? funcInfo->paramScope->GetScopeSlotCount() : 0;
 
@@ -3971,7 +3971,7 @@ void ByteCodeGenerator::EndEmitFunction(ParseNodeFnc *pnodeFnc)
 
     FuncInfo *funcInfo = pnodeFnc->funcInfo;
 
-    Scope* paramScope = funcInfo->paramScope;
+    [[maybe_unused]] Scope* paramScope = funcInfo->paramScope;
     if (!funcInfo->IsBodyAndParamScopeMerged())
     {
         Assert(this->GetCurrentScope() == paramScope);

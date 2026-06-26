@@ -1380,7 +1380,7 @@ namespace Js
         const CharCount maxULongStringLength = 10; // excluding null terminator
         const auto ConvertULongToString = [](const uint32_t value, char16_t *const buffer, const CharCount charCapacity)
         {
-            const errno_t err = _ultow_s(value, buffer, charCapacity, 10);
+            [[maybe_unused]] const errno_t err = _ultow_s(value, buffer, charCapacity, 10);
             Assert(err == 0);
         };
         if (CONFIG_FLAG(ExtendedErrorStackForTestHost))

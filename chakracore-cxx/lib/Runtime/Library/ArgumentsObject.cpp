@@ -804,7 +804,7 @@ namespace Js
             if (!this->IsFormalDisconnectedFromNamedArgument(index))
             {
                 // Update the (connected with named param) value, as above call could cause change of the value.
-                BOOL tempResult = this->SetItemAt(index, value);  // Update the value in frameObject.
+                [[maybe_unused]] BOOL tempResult = this->SetItemAt(index, value);  // Update the value in frameObject.
                 AssertMsg(tempResult, "this->SetItem(index, value)");
             }
         }

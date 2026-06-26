@@ -7364,7 +7364,7 @@ void Parser::CheckStrictFormalParameters()
             {
                 this->GetScanner()->Scan();
                 // We can avoid building the AST since we are just checking the default expression.
-                ParseNodePtr pnodeInit = ParseExpr<false>(koplCma);
+                [[maybe_unused]] ParseNodePtr pnodeInit = ParseExpr<false>(koplCma);
                 Assert(pnodeInit == nullptr);
             }
 

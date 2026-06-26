@@ -1229,6 +1229,7 @@ ParseNode* VisitBlock(ParseNode *pnode, ByteCodeGenerator* byteCodeGenerator, Pr
     return pnodeLastVal;
 }
 
+#ifdef DBG
 // Attributes that should be consistent between defer parse and full parse.
 static const Js::FunctionInfo::Attributes StableFunctionInfoAttributesMask = (Js::FunctionInfo::Attributes)
 (
@@ -1246,6 +1247,7 @@ static const Js::FunctionInfo::Attributes StableFunctionInfoAttributesMask = (Js
     Js::FunctionInfo::Attributes::HomeObj |
     Js::FunctionInfo::Attributes::GeneratorWithComplexParams
 );
+#endif
 
 static Js::FunctionInfo::Attributes GetFunctionInfoAttributes(ParseNodeFnc * pnodeFnc)
 {

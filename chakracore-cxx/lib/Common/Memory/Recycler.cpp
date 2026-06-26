@@ -1034,7 +1034,7 @@ void Recycler::SetExplicitFreeBitOnSmallBlock(HeapBlock* heapBlock, size_t sizeC
 {
     Assert(!heapBlock->IsLargeHeapBlock());
     Assert(heapBlock->GetObjectSize(buffer) == sizeCat);
-    SmallHeapBlockT<TBlockAttributes>* smallBlock = (SmallHeapBlockT<TBlockAttributes>*)heapBlock;
+    [[maybe_unused]] SmallHeapBlockT<TBlockAttributes>* smallBlock = (SmallHeapBlockT<TBlockAttributes>*)heapBlock;
     if ((attributes & ObjectInfoBits::LeafBit) == LeafBit)
     {
         Assert(smallBlock->IsLeafBlock());
@@ -3032,11 +3032,6 @@ Recycler::SweepHeap(bool concurrent, RecyclerSweepManager& recyclerSweepManager)
             Assert(!autoHeap.HasZeroQueuedPages());
         }
 #endif
-
-        uint sweptBytes = 0;
-#ifdef RECYCLER_STATS
-        sweptBytes = (uint)collectionStats.objectSweptBytes;
-#endif
     }
 #endif
 }
@@ -3102,11 +3097,6 @@ Recycler::DisposeObjects()
     this->inDispose = false;
 
     ASYNC_HOST_OPERATION_END(collectionWrapper);
-
-    uint sweptBytes = 0;
-#ifdef RECYCLER_STATS
-    sweptBytes = (uint)collectionStats.objectSweptBytes;
-#endif
 }
 
 bool
@@ -4237,7 +4227,7 @@ Recycler::TryFinishConcurrentCollect()
 
     SetupPostCollectionFlags<flags>();
     const BOOL concurrent = flags & CollectMode_Concurrent;
-    const BOOL forceInThread = flags & CollectOverride_ForceInThread;
+    [[maybe_unused]] const BOOL forceInThread = flags & CollectOverride_ForceInThread;
 
     Assert(this->IsConcurrentEnabled());
     Assert(IsConcurrentState() || IsCollectionDisabled());
@@ -5738,10 +5728,6 @@ Recycler::DoBackgroundWork(bool forceForeground)
             (!CONFIG_FLAG_RELEASE(EnableConcurrentSweepAlloc) || !this->AllowAllocationsDuringConcurrentSweep()))
 #endif
         {
-            uint sweptBytes = 0;
-#ifdef RECYCLER_STATS
-            sweptBytes = (uint)collectionStats.objectSweptBytes;
-#endif
 
 #if ENABLE_BACKGROUND_PAGE_ZEROING
             if (CONFIG_FLAG(EnableBGFreeZero))
@@ -6312,7 +6298,7 @@ RecyclerParallelThread::WaitForConcurrent()
     Assert(this->concurrentThread != NULL || this->recycler->threadService->HasCallback());
     Assert(this->concurrentWorkDoneEvent != NULL);
 
-    uint32_t ret = WaitForSingleObject(concurrentWorkDoneEvent, INFINITE);
+    [[maybe_unused]] uint32_t ret = WaitForSingleObject(concurrentWorkDoneEvent, INFINITE);
     Assert(ret == WAIT_OBJECT_0);
 }
 
@@ -6341,7 +6327,7 @@ RecyclerParallelThread::Shutdown()
             // When we are performing shutdown of main (recycler) thread here, if we wait on concurrentWorkDoneEvent, WaitForObject() will never return.
             // Hence wait for concurrentWorkDoneEvent + concurrentThread so if concurrentThread got killed, WaitForObject() will return and we will
             // proceed further.
-            uint32_t fRet = WaitForMultipleObjectsEx(2, handles, FALSE, INFINITE, FALSE);
+            [[maybe_unused]] uint32_t fRet = WaitForMultipleObjectsEx(2, handles, FALSE, INFINITE, FALSE);
             AssertMsg(fRet != WAIT_FAILED, "Check handles passed to WaitForMultipleObjectsEx.");
 
             CloseHandle(this->concurrentWorkDoneEvent);
@@ -6382,7 +6368,7 @@ RecyclerParallelThread::StaticThreadProc(void * lpParameter)
             {
                 // Signal completion and wait for next work
                 SetEvent(parallelThread->concurrentWorkDoneEvent);
-                uint32_t result = WaitForSingleObject(parallelThread->concurrentWorkReadyEvent, INFINITE);
+                [[maybe_unused]] uint32_t result = WaitForSingleObject(parallelThread->concurrentWorkReadyEvent, INFINITE);
                 Assert(result == WAIT_OBJECT_0);
             }
 

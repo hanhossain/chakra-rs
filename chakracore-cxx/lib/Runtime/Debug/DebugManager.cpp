@@ -178,12 +178,12 @@ namespace Js
             if (propertyId != Js::Constants::NoProperty)
             {
                 PropertyDescriptor propertyDescriptor;
-                BOOL gotPropertyValue = JavascriptOperators::GetOwnPropertyDescriptor(copyFromScope, propertyId, scriptContext, &propertyDescriptor);
+                [[maybe_unused]] BOOL gotPropertyValue = JavascriptOperators::GetOwnPropertyDescriptor(copyFromScope, propertyId, scriptContext, &propertyDescriptor);
                 AssertMsg(gotPropertyValue, "DebugManager::UpdateConsoleScope Should have got valid value?");
 
                 OUTPUT_TRACE(Js::ConsoleScopePhase, u"Adding property '%s'\n", scriptContext->GetPropertyName(propertyId)->GetBuffer());
 
-                BOOL updateSuccess = JavascriptOperators::SetPropertyDescriptor(consoleScope, propertyId, propertyDescriptor);
+                [[maybe_unused]] BOOL updateSuccess = JavascriptOperators::SetPropertyDescriptor(consoleScope, propertyId, propertyDescriptor);
                 AssertMsg(updateSuccess, "DebugManager::UpdateConsoleScope Unable to update property value. Am I missing a scenario?");
             }
         }

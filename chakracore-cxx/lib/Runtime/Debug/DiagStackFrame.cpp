@@ -296,7 +296,7 @@ namespace Js
     {
         Js::Var varResult = nullptr;
 
-        Js::JavascriptFunction* scopeFunction = this->GetJavascriptFunction();
+        [[maybe_unused]] Js::JavascriptFunction* scopeFunction = this->GetJavascriptFunction();
         Js::ScriptContext* scriptContext = this->GetScriptContext();
 
         ArenaAllocator *arena = scriptContext->GetThreadContext()->GetDebugManager()->GetDiagnosticArena()->Arena();

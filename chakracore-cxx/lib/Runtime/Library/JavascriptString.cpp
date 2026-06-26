@@ -2980,7 +2980,7 @@ case_2:
                 {
                     break;
                 }
-                uint32_t beforeValue = value;
+                [[maybe_unused]] uint32_t beforeValue = value;
                 value = value * radix + ch;
                 AssertMsg(value >= beforeValue, "uint overflow");
             }

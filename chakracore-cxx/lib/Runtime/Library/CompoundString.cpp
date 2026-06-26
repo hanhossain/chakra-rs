@@ -799,7 +799,7 @@ using namespace Js;
     void CompoundString::AppendSlow(const char16_t c)
     {
         Grow();
-        const bool appended =
+        [[maybe_unused]] const bool appended =
             HasOnlyDirectChars()
                 ? TryAppendGeneric(c, this)
                 : TryAppendGeneric(GetLibrary()->GetCharStringCache().GetStringForChar(c), 1, this);
@@ -809,7 +809,7 @@ using namespace Js;
     void CompoundString::AppendSlow(JavascriptString *const s)
     {
         Grow();
-        const bool appended = TryAppendGeneric(s, s->GetLength(), this);
+        [[maybe_unused]] const bool appended = TryAppendGeneric(s, s->GetLength(), this);
         Assert(appended);
     }
 
@@ -865,7 +865,7 @@ using namespace Js;
         const CharCount appendCharLength)
     {
         Grow();
-        const bool appended = TryAppendGeneric(s, packedSubstringInfo, packedSubstringInfo2, appendCharLength, this);
+        [[maybe_unused]] const bool appended = TryAppendGeneric(s, packedSubstringInfo, packedSubstringInfo2, appendCharLength, this);
         Assert(appended);
     }
 

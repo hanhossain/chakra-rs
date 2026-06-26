@@ -379,7 +379,7 @@ namespace Js {
         }
         else
         {
-            const errno_t err = _ultow_s(value, buffer, charCapacity, 10);
+            [[maybe_unused]] const errno_t err = _ultow_s(value, buffer, charCapacity, 10);
             Assert(err == 0);
         }
     };

@@ -527,7 +527,7 @@ using namespace Js;
             }
             else
             {
-                BOOL res = UnsafeVarTo<RecyclableObject>(aRight)->Equals(aLeft, &result, requestContext);
+                [[maybe_unused]] BOOL res = UnsafeVarTo<RecyclableObject>(aRight)->Equals(aLeft, &result, requestContext);
                 AssertMsg(res, "Should have handled this");
                 return result;
             }
@@ -544,7 +544,7 @@ using namespace Js;
             }
             else
             {
-                BOOL res = UnsafeVarTo<RecyclableObject>(aRight)->Equals(aLeft, &result, requestContext);
+                [[maybe_unused]] BOOL res = UnsafeVarTo<RecyclableObject>(aRight)->Equals(aLeft, &result, requestContext);
                 AssertMsg(res, "Should have handled this");
                 return result;
             }
@@ -8922,7 +8922,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 
                         // Note: HostDispath'es implementation of DeleteProperty currently throws E_NOTIMPL.
                         obj->DeleteProperty(propId, PropertyOperation_None);
-                        BOOL tempResult = obj->SetPropertyWithAttributes(propId, descriptorValue, tempDescriptor.GetAttributes(), NULL, PropertyOperation_Force);
+                        [[maybe_unused]] BOOL tempResult = obj->SetPropertyWithAttributes(propId, descriptorValue, tempDescriptor.GetAttributes(), NULL, PropertyOperation_Force);
                         Assert(tempResult);
 
                         // At this time we already set value and attributes to desired values,
@@ -8982,7 +8982,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
                     // If the property's attributes are also changing (perhaps becoming non-writable),
                     // this will be taken care of in the call to JavascriptOperators::SetAttributes below.
                     // Built-in Function.prototype properties 'length', 'arguments', and 'caller' are special cases.
-                    BOOL tempResult = obj->SetPropertyWithAttributes(propId, descriptor.GetValue(), currentDescriptor->GetAttributes(), nullptr);
+                    [[maybe_unused]] BOOL tempResult = obj->SetPropertyWithAttributes(propId, descriptor.GetValue(), currentDescriptor->GetAttributes(), nullptr);
                     AssertMsg(tempResult || JavascriptFunction::IsBuiltinProperty(obj, propId), "If you hit this assert, most likely there is something wrong with the object/type.");
                 }
             }
@@ -9713,7 +9713,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
                 marshalledFunction = UnsafeVarTo<RecyclableObject>(CrossSite::MarshalVar(requestContext, function, function->GetScriptContext()));
             }
 
-            Var result = CALL_ENTRYPOINT(threadContext, marshalledFunction->GetEntryPoint(), function, CallInfo(flags, 2), thisVar, putValue);
+            [[maybe_unused]] Var result = CALL_ENTRYPOINT(threadContext, marshalledFunction->GetEntryPoint(), function, CallInfo(flags, 2), thisVar, putValue);
             Assert(result);
 
             // Set implicit call flags so we bail out if we're trying to propagate the stored value forward. We can't count on the getter/setter
@@ -10111,7 +10111,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         Js::ScriptContext* scriptContext)
     {
         Var element;
-        unsigned long allocSize = UInt32Math::Mul(length, elementSize);
+        [[maybe_unused]] unsigned long allocSize = UInt32Math::Mul(length, elementSize);
 
         // TODO:further fast path the call for things like IntArray convert to int, floatarray convert to float etc.
         // such that we don't need boxing.

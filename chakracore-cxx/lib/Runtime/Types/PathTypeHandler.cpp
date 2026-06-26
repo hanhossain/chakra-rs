@@ -1511,7 +1511,7 @@ namespace Js
                 // Adding a setter. Don't add another descriptor. Find the getter and convert its descriptor, which will cause
                 // the setter to get the next free slot.
                 DictionaryPropertyDescriptor<PropertyIndex> *descriptor;
-                bool result = newTypeHandler->propertyMap->TryGetReference(propertyRecord, &descriptor);
+                [[maybe_unused]] bool result = newTypeHandler->propertyMap->TryGetReference(propertyRecord, &descriptor);
                 Assert(result);
                 if (!(attributes[descriptor->GetDataPropertyIndex<false>()] & ObjectSlotAttr_Accessor))
                 {

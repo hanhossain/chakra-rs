@@ -304,7 +304,7 @@ namespace Js
         Assert(false);
 
         bool isForce = (flags & PropertyOperation_Force) != 0;
-        bool throwIfNotExtensible = (flags & PropertyOperation_ThrowIfNotExtensible) != 0;
+        [[maybe_unused]] bool throwIfNotExtensible = (flags & PropertyOperation_ThrowIfNotExtensible) != 0;
         if (!isForce)
         {
             // throwIfNotExtensible is only relevant to DynamicObjects

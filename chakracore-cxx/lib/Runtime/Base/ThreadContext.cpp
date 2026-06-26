@@ -725,7 +725,7 @@ ThreadContext::GetPropertyNameImpl(Js::PropertyId propertyId)
 
     const Js::PropertyRecord * propertyRecord = nullptr;
     if (locked) { propertyMap->LockResize(); }
-    bool found = propertyMap->TryGetValueAt(propertyIndex, &propertyRecord);
+    [[maybe_unused]] bool found = propertyMap->TryGetValueAt(propertyIndex, &propertyRecord);
     if (locked) { propertyMap->UnlockResize(); }
 
     AssertMsg(found && propertyRecord != nullptr, "using invalid propertyid");
@@ -943,7 +943,7 @@ ThreadContext::AddPropertyRecordInternal(const Js::PropertyRecord * propertyReco
 
     const char16_t * propertyName = propertyRecord->GetBuffer();
     int propertyNameLength = propertyRecord->GetLength();
-    Js::PropertyId propertyId = propertyRecord->GetPropertyId();
+    [[maybe_unused]] Js::PropertyId propertyId = propertyRecord->GetPropertyId();
 
     Assert(propertyId == GetNextPropertyId());
     Assert(!IsActivePropertyId(propertyId));
@@ -2397,7 +2397,7 @@ ThreadContext::DoExpirableCollectModeStackWalk()
                 });
 
                 // Make sure we marked the current one when iterating all entry points
-                Js::ProxyEntryPointInfo* entryPointInfo = scriptFunction->GetEntryPointInfo();
+                [[maybe_unused]] Js::ProxyEntryPointInfo* entryPointInfo = scriptFunction->GetEntryPointInfo();
                 Assert(entryPointInfo == nullptr
                     || !entryPointInfo->IsFunctionEntryPointInfo()
                     || ((Js::FunctionEntryPointInfo*)entryPointInfo)->IsObjectUsed());

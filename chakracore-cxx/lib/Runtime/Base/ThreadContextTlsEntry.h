@@ -58,19 +58,16 @@ public:
     {
         if (doCleanup)
         {
-            bool cleared = true;
-
 #if DBG
-            cleared =
+            bool cleared =
 #endif
                 ThreadContextTLSEntry::ClearThreadContext(this->isValid);
             Assert(cleared);
 
             if (originalContext)
             {
-                bool canSetback = true;
 #if DBG
-                canSetback =
+                bool canSetback =
 #endif
                     ThreadContextTLSEntry::TrySetThreadContext(originalContext);
                 Assert(canSetback);

@@ -2297,7 +2297,7 @@ namespace Js
         int32_t hr;
 
         // Get the source code to keep it alive during the bytecode generation process
-        LPCUTF8 source = this->GetSource(sourceIndex)->GetSource(u"ScriptContext::GenerateRootFunction");
+        [[maybe_unused]] LPCUTF8 source = this->GetSource(sourceIndex)->GetSource(u"ScriptContext::GenerateRootFunction");
         Assert(source != nullptr); // Source should not have been reclaimed by now
 
         // Generate bytecode and native code

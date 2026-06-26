@@ -389,7 +389,7 @@ namespace Js
         */
         const bool doSimpleJit = owner->DoSimpleJit();
         const bool doInterpreterProfile = owner->DoInterpreterProfile();
-        const bool fullyScaled =
+        [[maybe_unused]] const bool fullyScaled =
             (CONFIG_FLAG(NewSimpleJit) && doSimpleJit && ScaleLimit(simpleJitLimit)) ||
             (
                 doInterpreterProfile

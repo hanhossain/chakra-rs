@@ -1541,7 +1541,7 @@ namespace UnifiedRegex
         }
         else
         {
-            const EncodedChar *current = next;
+            [[maybe_unused]] const EncodedChar *current = next;
             // An escaped '/' is ok
             Char c = NextChar();
             switch (c)

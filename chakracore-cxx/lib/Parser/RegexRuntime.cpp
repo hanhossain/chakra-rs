@@ -5471,7 +5471,7 @@ namespace UnifiedRegex
         bool res;
         bool loopMatchHere = true;
         Program const *prog = this->program;
-        bool isStickyPresent = this->pattern->IsSticky();
+        [[maybe_unused]] bool isStickyPresent = this->pattern->IsSticky();
         switch (prog->tag)
         {
         case Program::ProgramTag::BOIInstructionsTag:

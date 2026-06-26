@@ -2570,7 +2570,7 @@ using namespace Js;
     Var JavascriptNativeArray::FindMinOrMax(Js::ScriptContext * scriptContext, bool findMax)
     {
         AssertMsg(this->HasNoMissingValues(), "Fastpath is only for arrays with one segment and no missing values");
-        uint len = this->GetLength();
+        [[maybe_unused]] uint len = this->GetLength();
 
         Js::SparseArraySegment<T>* headSegment = ((Js::SparseArraySegment<T>*)this->GetHead());
         uint headSegLen = headSegment->length;
@@ -4597,7 +4597,7 @@ using namespace Js;
         },
         [&](bool/*hasException*/)
         {
-            Var top = scriptContext->PopObject();
+            [[maybe_unused]] Var top = scriptContext->PopObject();
             if (isProxy)
             {
                 AssertMsg(top == target, "Unmatched operation stack");
@@ -8356,7 +8356,7 @@ Case0:
         {
             if (pushedObject)
             {
-                Var top = scriptContext->PopObject();
+                [[maybe_unused]] Var top = scriptContext->PopObject();
                 AssertMsg(top == arr, "Unmatched operation stack");
             }
         });

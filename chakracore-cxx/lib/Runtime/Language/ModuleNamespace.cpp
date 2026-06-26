@@ -134,7 +134,7 @@ namespace Js
         uint unambiguousNonLocalCount = (this->GetUnambiguousNonLocalExports() != nullptr) ? this->GetUnambiguousNonLocalExports()->Count() : 0;
         Assert(totalExportCount == localExportCount + unambiguousNonLocalCount + unresolvableExportsCount);
 #endif
-        BOOL result = this->PreventExtensions();
+        [[maybe_unused]] BOOL result = this->PreventExtensions();
         Assert(result);
     }
 
