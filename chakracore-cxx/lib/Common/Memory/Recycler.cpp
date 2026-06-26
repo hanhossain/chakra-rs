@@ -781,33 +781,11 @@ Recycler::Initialize(const bool forceInThread, JsUtil::ThreadService *threadServ
 
         if (deferThreadStartup || EnableConcurrent(threadService, false))
         {
-#ifdef RECYCLER_WRITE_WATCH
-            needWriteWatch = true;
-#endif
         }
     }
 #endif // ENABLE_CONCURRENT_GC
 
-#if ENABLE_PARTIAL_GC
-    if (this->enablePartialCollect)
-    {
-#ifdef RECYCLER_WRITE_WATCH
-        needWriteWatch = true;
-#endif
-    }
-#endif
-
 #if ENABLE_PARTIAL_GC || ENABLE_CONCURRENT_GC
-#ifdef RECYCLER_WRITE_WATCH
-    if (!CONFIG_FLAG(ForceSoftwareWriteBarrier))
-    {
-        if (needWriteWatch)
-        {
-            // need write watch to support concurrent and/or partial collection
-            autoHeap.EnableWriteWatch();
-        }
-    }
-#endif
 #else
     Assert(!needWriteWatch);
 #endif
@@ -2265,12 +2243,6 @@ Recycler::RescanMark(uint32_t waitTime)
             }
             Assert(collectionState == CollectionStateRescanWait);
             this->SetCollectionState(CollectionStateRescanFindRoots);
-#ifdef RECYCLER_WRITE_WATCH
-            if (!CONFIG_FLAG(ForceSoftwareWriteBarrier))
-            {
-                Assert(autoHeap.GetWriteWatchPageCount() == 0);
-            }
-#endif
             return this->backgroundRescanRootBytes;
         }
         this->RevertPrepareBackgroundFindRoots();
@@ -2307,12 +2279,6 @@ Recycler::FinishMark(uint32_t waitTime)
             RecyclerVerboseTrace(GetRecyclerFlagsTable(), u"Processing regular tracked objects\n");
 
             ProcessTrackedObjects();
-#ifdef RECYCLER_WRITE_WATCH
-            if (!CONFIG_FLAG(ForceSoftwareWriteBarrier))
-            {
-                Assert(this->backgroundFinishMarkCount == 0 || autoHeap.GetWriteWatchPageCount() == 0);
-            }
-#endif
         }
 #endif
 
@@ -2874,33 +2840,6 @@ Recycler::Sweep(bool concurrent)
 #if ENABLE_CONCURRENT_GC
     if (concurrent)
     {
-        // If we finished mark in the background, all the relevant write watches should already be reset
-        // Only reset write watch if we didn't finish mark in the background
-        if (this->backgroundFinishMarkCount == 0)
-        {
-#if ENABLE_PARTIAL_GC
-            if (this->inPartialCollectMode)
-            {
-#ifdef RECYCLER_WRITE_WATCH
-                if (!CONFIG_FLAG(ForceSoftwareWriteBarrier))
-                {
-                    RECYCLER_PROFILE_EXEC_BEGIN(this, Js::ResetWriteWatchPhase);
-                    if (!autoHeap.ResetWriteWatch())
-                    {
-                        // Shouldn't happen
-                        Assert(false);
-                        // Disable partial collect
-                        this->enablePartialCollect = false;
-
-                        // We haven't done any partial collection yet, just get out of partial collect mode
-                        this->inPartialCollectMode = false;
-                    }
-                    RECYCLER_PROFILE_EXEC_END(this, Js::ResetWriteWatchPhase);
-                }
-#endif
-            }
-#endif
-        }
     }
     else
 #endif
@@ -4924,23 +4863,6 @@ Recycler::StartBackgroundMark(bool foregroundResetMark, bool foregroundFindRoots
     bool doBackgroundFindRoots = true;
     if (foregroundResetMark || foregroundFindRoots)
     {
-        // REVIEW: SWB, if there's only write barrier page change, we don't scan and mark?
-#ifdef RECYCLER_WRITE_WATCH
-        if (!CONFIG_FLAG(ForceSoftwareWriteBarrier))
-        {
-            RECYCLER_PROFILE_EXEC_BEGIN(this, Js::ResetWriteWatchPhase);
-            bool hasWriteWatch = autoHeap.ResetWriteWatch();
-            RECYCLER_PROFILE_EXEC_END(this, Js::ResetWriteWatchPhase);
-
-            if (!hasWriteWatch)
-            {
-                // Disable concurrent mark
-                this->enableConcurrentMark = false;
-                return false;
-            }
-        }
-#endif
-
         // In-thread synchronized GC on the concurrent thread
         ResetMarks(this->enableScanImplicitRoots ? ResetMarkFlags_SynchronizedImplicitRoots : ResetMarkFlags_Synchronized);
 

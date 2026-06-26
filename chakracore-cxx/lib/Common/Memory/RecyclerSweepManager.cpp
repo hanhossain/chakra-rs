@@ -151,24 +151,6 @@ RecyclerSweepManager::FinishSweep()
 #endif
 
             recycler->autoHeap.SweepPartialReusePages(*this);
-
-#ifdef RECYCLER_WRITE_WATCH
-            if (!CONFIG_FLAG(ForceSoftwareWriteBarrier))
-            {
-                if (!this->IsBackground())
-                {
-                    RECYCLER_PROFILE_EXEC_BEGIN(recycler, Js::ResetWriteWatchPhase);
-                    if (!recycler->autoHeap.ResetWriteWatch())
-                    {
-                        // Shouldn't happen
-                        Assert(false);
-                        recycler->enablePartialCollect = false;
-                        recycler->FinishPartialCollect(this);
-                    }
-                    RECYCLER_PROFILE_EXEC_END(recycler, Js::ResetWriteWatchPhase);
-                }
-            }
-#endif
         }
         else
         {

@@ -1199,24 +1199,7 @@ bool LargeHeapBlock::IsPageDirty(char* page, RescanFlags flags, bool isWriteBarr
     }
 #endif
 
-#ifdef RECYCLER_WRITE_WATCH
-    if (!CONFIG_FLAG(ForceSoftwareWriteBarrier))
-    {
-        size_t count = 1;
-        uint32_t pageSize = AutoSystemInfo::PageSize;
-        uint32_t const writeWatchFlags = (flags & RescanFlags_ResetWriteWatch ? WRITE_WATCH_FLAG_RESET : 0);
-        void * written = nullptr;
-        uint32_t ret = GetWriteWatch(writeWatchFlags, page, AutoSystemInfo::PageSize, &written, &count, &pageSize);
-        bool isDirty = (ret != 0) || (count == 1);
-        return isDirty;
-    }
-    else
-    {
-        Js::Throw::FatalInternalError();
-    }
-#else
     Js::Throw::FatalInternalError();
-#endif
 }
 #endif
 

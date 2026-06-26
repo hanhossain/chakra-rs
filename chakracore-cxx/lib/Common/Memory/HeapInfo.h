@@ -534,16 +534,6 @@ public:
 #endif
 #endif
 
-#if ENABLE_PARTIAL_GC || ENABLE_CONCURRENT_GC
-#ifdef RECYCLER_WRITE_WATCH 
-     void EnableWriteWatch();
-     bool ResetWriteWatch();
-#if DBG
-     size_t GetWriteWatchPageCount();
-#endif
-#endif
-#endif
-
 #ifdef RECYCLER_MEMORY_VERIFY
      void EnableVerify();
 #endif
