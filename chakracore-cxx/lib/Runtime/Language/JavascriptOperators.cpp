@@ -4912,7 +4912,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         {
             if (start < 0)
             {
-                for (start; start < 0 && length > 0; ++start, --length)
+                for (; start < 0 && length > 0; ++start, --length)
                 {
                     if (!OP_SetElementI(instance, JavascriptNumber::ToVar(start, scriptContext), value, scriptContext))
                     {

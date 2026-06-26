@@ -181,7 +181,6 @@ protected:
 
     static void ConvertToUnicode(__out_ecount_full(cch) LPOLESTR pch, charcount_t cch, EncodedCharPtr start, EncodedCharPtr end)
     {
-        Unused(end);
         js_memcpy_s(pch, cch * sizeof(OLECHAR), start, cch * sizeof(OLECHAR));
     }
 

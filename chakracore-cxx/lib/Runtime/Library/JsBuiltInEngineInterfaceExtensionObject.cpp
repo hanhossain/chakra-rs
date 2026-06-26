@@ -471,7 +471,6 @@ namespace Js
 
         bool isBuiltinArrayCtor = true;
         RecyclableObject * newObj = JavascriptArray::ArraySpeciesCreate(args.Values[1], length, scriptContext, nullptr, nullptr, &isBuiltinArrayCtor);
-        nullptr;
 
         if (newObj == nullptr)
         {

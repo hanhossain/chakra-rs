@@ -3614,8 +3614,7 @@ namespace Js
         JavascriptMethod directEntryPoint = this->GetDefaultEntryPointInfo()->jsMethod;
         JavascriptMethod originalEntryPoint = this->GetOriginalEntryPoint_Unchecked();
 
-        FunctionBody* body = this->GetFunctionBody();
-        Unused(body); // in some configuration
+        [[maybe_unused]] FunctionBody* body = this->GetFunctionBody();
 #ifdef ASMJS_PLAT
         if (body->GetIsAsmJsFunction())
         {

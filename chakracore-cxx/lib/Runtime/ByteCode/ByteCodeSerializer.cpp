@@ -1003,7 +1003,6 @@ public:
         while(!cantGenerate)
         {
             opStart = reader.GetIP();
-            opStart; // For prefast. It can't figure out that opStart is captured in saveBlock above.
             LayoutSize layoutSize;
             OpCode op = reader.ReadOp(layoutSize);
             if (op == OpCode::EndOfBlock)

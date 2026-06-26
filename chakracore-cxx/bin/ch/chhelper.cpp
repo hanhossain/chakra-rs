@@ -625,10 +625,7 @@ int32_t ExecuteTest(const std::string &fileName, const bool doTTRecord, const bo
     }
     else
     {
-        LPCOLESTR contentsRaw = nullptr;
-
         hr = Helpers::LoadScriptFromFile(fileName.c_str(), fileContents, &lengthBytes);
-        contentsRaw; lengthBytes; // Unused for now.
 
         IfFailGo(hr);
         if (HostConfigFlags::flags.GenerateLibraryByteCodeHeaderIsEnabled)

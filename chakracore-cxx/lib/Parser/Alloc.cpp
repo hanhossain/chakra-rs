@@ -108,7 +108,7 @@ void * NoReleaseAllocator::Alloc(int32_t cb)
             cbBlock = m_cbMaxBlock;
         if (cb > cbBlock)             // guarantee it's big enough
         {
-            Assert(("Request too large", FALSE));
+            AssertMsg(false, "Request too large");
             return NULL;
         }
 
