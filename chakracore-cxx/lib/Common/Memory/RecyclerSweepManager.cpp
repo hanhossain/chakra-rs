@@ -12,7 +12,6 @@
 
 const uint RecyclerSweepManager::MinPartialUncollectedNewPageCount = 4 MEGABYTES_OF_PAGES;
 const uint RecyclerSweepManager::MaxPartialCollectRescanRootBytes = 5 MEGABYTES;
-static const uint MinPartialCollectRescanRootBytes = 128 KILOBYTES;
 
 // Maximum unused partial collect free bytes before we get out of partial GC mode
 static const uint MaxUnusedPartialCollectFreeBytes = 16 MEGABYTES;

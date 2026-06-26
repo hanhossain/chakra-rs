@@ -18,15 +18,13 @@ namespace TemplateParameter
     private:
         static void Constrain(T *const t)
         {
-#pragma warning(suppress: 4189) // C4189: local variable is initialized but not referenced
-            Base *const b = t;
+            [[maybe_unused]] Base *const b = t;
         }
 
     public:
         SameOrDerivedFrom()
         {
-#pragma warning(suppress: 4189) // C4189: local variable is initialized but not referenced
-            void (*const p)(T *const t) = Constrain;
+            [[maybe_unused]] void (*const p)(T *const t) = Constrain;
         }
     };
 
