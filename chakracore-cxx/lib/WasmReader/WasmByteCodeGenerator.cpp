@@ -253,7 +253,6 @@ WasmModuleGenerator::WasmModuleGenerator(Js::ScriptContext* scriptContext, Js::W
 Js::WebAssemblyModule* WasmModuleGenerator::GenerateModule()
 {
     Js::AutoProfilingPhase wasmPhase(m_scriptContext, Js::WasmReaderPhase);
-    Unused(wasmPhase);
 
     m_module->GetReader()->InitializeReader();
 
@@ -523,7 +522,6 @@ void WasmBytecodeGenerator::GenerateFunction()
         throw WasmCompilationException(u"Compilation skipped");
     }
     Js::AutoProfilingPhase functionProfiler(m_scriptContext, Js::WasmBytecodePhase);
-    Unused(functionProfiler);
 
     m_maxArgOutDepth = 0;
 

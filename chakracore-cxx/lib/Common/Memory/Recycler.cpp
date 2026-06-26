@@ -5354,9 +5354,7 @@ Recycler::FinishConcurrentCollect(CollectionFlags flags)
     }
 
 #ifdef PROFILE_EXEC
-    Js::Phase concurrentPhase = Js::ConcurrentCollectPhase;
-    // TODO: Remove this workaround for unreferenced local after enabled -profile for GC
-    static_cast<Js::Phase>(concurrentPhase);
+    [[maybe_unused]] Js::Phase concurrentPhase = Js::ConcurrentCollectPhase;
 #endif
 #if ENABLE_PARTIAL_GC
     RECYCLER_PROFILE_EXEC_BEGIN2(this, Js::RecyclerPhase,

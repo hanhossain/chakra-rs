@@ -225,7 +225,6 @@ public:
 
     int32_t ThrowIfFailed(int32_t hr) override
     {
-        hr;
         // No support yet
         return S_OK;
     }

@@ -7,7 +7,7 @@
 #if DEBUG
 #define DEBUG_TRASHMEM(pv, cb) memset(pv, 0xbc, cb)
 #else
-#define DEBUG_TRASHMEM
+#define DEBUG_TRASHMEM(...)
 #endif //DEBUG
 
 #if TARGET_64
@@ -108,7 +108,7 @@ void * NoReleaseAllocator::Alloc(int32_t cb)
             cbBlock = m_cbMaxBlock;
         if (cb > cbBlock)             // guarantee it's big enough
         {
-            Assert(("Request too large", FALSE));
+            AssertMsg(false, "Request too large");
             return NULL;
         }
 

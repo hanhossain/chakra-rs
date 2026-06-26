@@ -154,7 +154,7 @@ void EquivalentTypeSet::SortAndRemoveDuplicates()
         }
     }
     this->count = ++i;
-    for (i; i < oldCount; i++)
+    for (; i < oldCount; i++)
     {
         this->types[i] = JITTypeHolder(nullptr);
     }

@@ -228,7 +228,6 @@ namespace Js
 
     uint8_t* SharedArrayBuffer::AllocBuffer(uint32_t length, uint32_t maxLength)
     {
-        Unused(maxLength); // WebAssembly only
 #if ENABLE_FAST_ARRAYBUFFER
         if (this->IsValidVirtualBufferLength(length))
         {
@@ -243,7 +242,6 @@ namespace Js
 
     void SharedArrayBuffer::FreeBuffer(uint8_t* buffer, uint32_t length, uint32_t maxLength)
     {
-        Unused(maxLength); // WebAssembly only
 #if ENABLE_FAST_ARRAYBUFFER
         //AsmJS Virtual Free
         if (this->IsValidVirtualBufferLength(length))

@@ -323,8 +323,6 @@ bool InterpreterThunkEmitter::NewThunkBlock()
     void* pdataTable;
     PDataManager::RegisterPdata((PRUNTIME_FUNCTION)pdataStart, (size_t)buffer, (size_t)epilogEnd, &pdataTable);
     block->SetPdata(pdataTable);
-#else
-    Unused(block);
 #endif
     this->thunkBuffer = buffer;
     this->thunkCount = count;

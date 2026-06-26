@@ -2149,7 +2149,7 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::AddUsedBytes(size_t by
 {
     usedBytes += bytes;
 #if defined(TARGET_64)
-    size_t lastTotalUsedBytes = ::InterlockedExchangeAdd64((volatile long *)&totalUsedBytes, bytes);
+    ::InterlockedExchangeAdd64((volatile long *)&totalUsedBytes, bytes);
 #else
     uint32_t lastTotalUsedBytes = ::InterlockedExchangeAdd(&totalUsedBytes, bytes);
 #endif
@@ -2158,11 +2158,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::AddUsedBytes(size_t by
     {
         maxUsedBytes = totalUsedBytes;
     }
-
-    // ETW events from different threads may be reported out of order, producing an
-    // incorrect representation of current used bytes in the process. We've determined that this is an
-    // acceptable issue, which will be mitigated at the level of the application consuming the event.
-    Unused(lastTotalUsedBytes);
 
 #ifdef PERF_COUNTERS
     GetUsedSizeCounter() += bytes;
@@ -2180,15 +2175,10 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::SubUsedBytes(size_t by
     usedBytes -= bytes;
 
 #if defined(TARGET_64)
-    size_t lastTotalUsedBytes = ::InterlockedExchangeAdd64((volatile long *)&totalUsedBytes, -(long)bytes);
+    ::InterlockedExchangeAdd64((volatile long *)&totalUsedBytes, -(long)bytes);
 #else
     uint32_t lastTotalUsedBytes = ::InterlockedExchangeSubtract(&totalUsedBytes, bytes);
 #endif
-
-    // ETW events from different threads may be reported out of order, producing an
-    // incorrect representation of current used bytes in the process. We've determined that this is an
-    // acceptable issue, which will be mitigated at the level of the application consuming the event.
-    Unused(lastTotalUsedBytes);
 
 #ifdef PERF_COUNTERS
     GetUsedSizeCounter() -= bytes;

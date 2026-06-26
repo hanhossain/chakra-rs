@@ -341,7 +341,7 @@ SWAP_BP_FOR_OPCODE:
 #ifndef INTERPRETER_ASMJS
 #define CHECK_YIELD_VALUE() if (yieldValue != nullptr) return yieldValue;
 #else
-#define CHECK_YIELD_VALUE() Unused(yieldValue);
+#define CHECK_YIELD_VALUE()
 #endif
 
 #define ExtendedCase(opcode) \

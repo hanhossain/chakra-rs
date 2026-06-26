@@ -43,7 +43,7 @@ extern thread_local int IsInAssert;
 
 #define AssertMsg(f, comment) ((void) 0)
 #define Assert(exp)           ((void) 0)
-#define AssertVerify(exp)     (exp)
+#define AssertVerify(exp)     { [[maybe_unused]] auto discard = (exp); }
 #define Assume(x)
 #define DebugOnly(x)
 #endif // DBG
@@ -66,8 +66,6 @@ extern thread_local int IsInAssert;
 #define AnalysisAssertOrFailFast(x)         AssertOrFailFast(x)
 #define AnalysisAssertOrFailFastMsg(x, msg) AssertOrFailFast(x)
 #endif
-
-#define Unused(var) var;
 
 #define UNREACHED   (0)
 

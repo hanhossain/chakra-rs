@@ -125,7 +125,7 @@ protected:
         { \
             BEGIN_ENTER_SCRIPT(scriptContext, doCleanup, isCallRoot, hasCaller); \
             block \
-            END_ENTER_SCRIPT(scriptContext, doCleanup, isCallRoot, hasCaller); \
+            END_ENTER_SCRIPT \
         } \
         else \
         { \

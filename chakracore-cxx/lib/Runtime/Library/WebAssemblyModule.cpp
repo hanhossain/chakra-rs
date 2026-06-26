@@ -247,7 +247,6 @@ WebAssemblyModule::ValidateModule(
 {
     Assert(src);
     AutoProfilingPhase wasmPhase(scriptContext, Js::WasmBytecodePhase);
-    Unused(wasmPhase);
 
     try
     {
