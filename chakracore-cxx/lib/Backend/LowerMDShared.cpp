@@ -24,8 +24,6 @@ const Js::OpCode LowererMD::MDLea = Js::OpCode::LEA;
 const Js::OpCode LowererMD::MDSpecBlockNEOpcode = Js::OpCode::CMOVNE;
 const Js::OpCode LowererMD::MDSpecBlockFNEOpcode = Js::OpCode::CMOVNE;
 
-static const int TWO_31_FLOAT = 0x4f000000;
-static const int FLOAT_INT_MIN = 0xcf000000;
 //
 // Static utility fn()
 //
