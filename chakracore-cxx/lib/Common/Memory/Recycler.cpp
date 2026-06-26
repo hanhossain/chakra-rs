@@ -751,8 +751,6 @@ Recycler::Initialize(const bool forceInThread, JsUtil::ThreadService *threadServ
 #endif
 #endif
 
-    bool needWriteWatch = false;
-
 #if ENABLE_CONCURRENT_GC
     // Default to non-concurrent
     uint numProcs = (uint)AutoSystemInfo::Data.GetNumberOfPhysicalProcessors();
@@ -785,10 +783,6 @@ Recycler::Initialize(const bool forceInThread, JsUtil::ThreadService *threadServ
     }
 #endif // ENABLE_CONCURRENT_GC
 
-#if ENABLE_PARTIAL_GC || ENABLE_CONCURRENT_GC
-#else
-    Assert(!needWriteWatch);
-#endif
 #if DBG && GLOBAL_ENABLE_WRITE_BARRIER
     recyclerListLock.lock();
     this->next = recyclerList;

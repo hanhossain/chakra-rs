@@ -27,8 +27,6 @@ namespace Js {
         return dbl;
     }
 
-    static const double kdblHalfSecond = 0.5 / 86400.0;
-
     struct SZS
     {
         const char16_t *psz;      // string
@@ -343,11 +341,6 @@ namespace Js {
         {
             const charcount_t cchWritten = NumberUtilities::UInt16ToString(value, buffer, charCapacity, 2);
             Assert(cchWritten != 0);
-        };
-        const auto ConvertLongToString = [](const int32_t value, char16_t *const buffer, const CharCount charCapacity)
-        {
-            const errno_t err = _ltow_s(value, buffer, charCapacity, 10);
-            Assert(err == 0);
         };
 
         bs->AppendChars(g_rgpszDay[pymd->wday]);

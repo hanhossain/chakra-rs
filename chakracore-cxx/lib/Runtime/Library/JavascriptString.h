@@ -365,16 +365,6 @@ namespace Js
     {
         inline static bool Equals(JavascriptString * str1, JavascriptString * str2)
         {
-            // We want to pin the strings str1 and str2 because flattening of any of these strings could cause a GC and result in the other string getting collected if it was optimized
-            // away by the compiler. We would normally have called the EnterPinnedScope/LeavePinnedScope methods here but it adds extra call instructions to the assembly code. As Equals
-            // methods could get called a lot of times this can show up as regressions in benchmarks.
-            volatile Js::JavascriptString** keepAliveString1 = (volatile Js::JavascriptString**)& str1;
-            volatile Js::JavascriptString** keepAliveString2 = (volatile Js::JavascriptString**)& str2;
-            auto keepAliveLambda = [&]() {
-                UNREFERENCED_PARAMETER(keepAliveString1);
-                UNREFERENCED_PARAMETER(keepAliveString2);
-            };
-
             return (str1->GetLength() == str2->GetLength() &&
                 JsUtil::CharacterBuffer<char16_t>::StaticEquals(str1->GetString(), str2->GetString(), str1->GetLength()));
         }

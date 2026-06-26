@@ -71,7 +71,7 @@ namespace Js
         RUNTIME_ARGUMENTS(args, callInfo); \
         Assert(!(callInfo.Flags & CallFlags_New)); \
         unsigned argCount = args.Info.Count; \
-        ScriptContext* scriptContext = function->GetScriptContext(); \
+        [[maybe_unused]] ScriptContext* scriptContext = function->GetScriptContext(); \
         AssertMsg(argCount > 0, "Should always have implicit 'this'"); \
 
     class EngineInterfaceObject : public DynamicObject

@@ -1016,7 +1016,6 @@ using namespace Js;
         Assert(args.Values != nullptr);
         Assert(destArgs.Values != nullptr);
 
-        CallInfo callInfo = args.Info;
         uint argCount = args.GetArgCountWithExtraArgs();
         unsigned destArgCount = destArgs.GetLargeArgCountWithExtraArgs(); // Result can be bigger than Constants::MaxAllowedArgs
         size_t destArgsByteSize = destArgCount * sizeof(Var);

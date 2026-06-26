@@ -12,10 +12,6 @@
 
 using namespace Js;
 
-    static const double k_2to16 = 65536.0;
-    static const double k_2to31 = 2147483648.0;
-    static const double k_2to32 = 4294967296.0;
-
     // ES5 9.10 indicates that this method should throw a TypeError if the supplied value is Undefined or Null.
     // Our implementation returns FALSE in this scenario, expecting the caller to throw the TypeError.
     // This allows the caller to provide more context in the error message without having to unnecessarily

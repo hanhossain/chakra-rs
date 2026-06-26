@@ -25,8 +25,6 @@ void ChakraBinaryBuildDateTimeHash(uint32_t * buildDateHash, uint32_t * buildTim
 namespace Js
 {
     const int magicConstant = *(int*)"ChBc";
-    const int majorVersionConstant = 1;
-    const int minorVersionConstant = 1;
 
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
     // These magic constants can be enabled to bracket and check different sections of the serialization

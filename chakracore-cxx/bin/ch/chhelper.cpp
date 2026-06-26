@@ -20,8 +20,6 @@
 
 unsigned int MessageBase::s_messageCount = 0;
 
-const size_t ttUriBufferLength = MAX_PATH * 3;
-
 int32_t RunBgParseSync(const char * fileContents, uint32_t lengthBytes, const char* fileName);
 
 static_assert(sizeof(ssize_t) == sizeof(long));
@@ -628,8 +626,6 @@ int32_t ExecuteTest(const std::string &fileName, const bool doTTRecord, const bo
     else
     {
         LPCOLESTR contentsRaw = nullptr;
-
-        size_t len = 0;
 
         hr = Helpers::LoadScriptFromFile(fileName.c_str(), fileContents, &lengthBytes);
         contentsRaw; lengthBytes; // Unused for now.
