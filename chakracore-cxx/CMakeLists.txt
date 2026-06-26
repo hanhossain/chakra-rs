@@ -153,7 +153,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
     -Wno-undefined-inline\
     -Wno-switch\
     -Wno-return-type\
-    -Wno-unused-value\
     -Wno-invalid-offsetof\
     -Wno-format\
     -Wno-tautological-constant-out-of-range-compare\
