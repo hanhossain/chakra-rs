@@ -1762,7 +1762,7 @@ namespace Js
         for (uint i = 0; i < slotsCount; ++i)
         {
             AsmJsSlot * asmSlot = nullptr;
-            bool found = asmSlotMap->TryGetValue(propertyIdArray[i], &asmSlot);
+            [[maybe_unused]] bool found = asmSlotMap->TryGetValue(propertyIdArray[i], &asmSlot);
             // we should have everything we need in the map
             Assert(found);
             Var value = nullptr;

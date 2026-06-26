@@ -366,7 +366,7 @@ using namespace Js;
         if (!isTypedArray && JavascriptOperators::GetPropertyRecordUsageCache(varIndex, scriptContext, &propertyRecordUsageCache, &cacheOwner))
         {
             RecyclableObject* object = nullptr;
-            bool result = JavascriptOperators::GetPropertyObjectForSetElementI(base, cacheOwner, scriptContext, &object);
+            [[maybe_unused]] bool result = JavascriptOperators::GetPropertyObjectForSetElementI(base, cacheOwner, scriptContext, &object);
             Assert(result);
 
             PropertyCacheOperationInfo operationInfo;

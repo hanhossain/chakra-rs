@@ -919,7 +919,7 @@ namespace Js
     bool DynamicProfileInfo::GetPolymorphicCallSiteInfo(FunctionBody* functionBody, ProfileId callSiteId, bool *isConstructorCall, __inout_ecount(functionBodyArrayLength) FunctionBody** functionBodyArray, uint functionBodyArrayLength)
     {
         Assert(functionBody);
-        const auto callSiteCount = functionBody->GetProfiledCallSiteCount();
+        [[maybe_unused]] const auto callSiteCount = functionBody->GetProfiledCallSiteCount();
         Assert(callSiteId < callSiteCount);
         Assert(functionBody->IsJsBuiltInCode() || functionBody->IsPublicLibraryCode() || HasCallSiteInfo(functionBody));
         Assert(functionBodyArray);
@@ -996,7 +996,7 @@ namespace Js
     bool DynamicProfileInfo::HasCallSiteInfo(FunctionBody* functionBody, ProfileId callSiteId)
     {
         Assert(functionBody);
-        const auto callSiteCount = functionBody->GetProfiledCallSiteCount();
+        [[maybe_unused]] const auto callSiteCount = functionBody->GetProfiledCallSiteCount();
         Assert(callSiteId < callSiteCount);
         Assert(HasCallSiteInfo(functionBody));
 
@@ -1092,7 +1092,7 @@ namespace Js
     {
         Assert(ThreadContext::GetContextForCurrentThread());
         Assert(functionBody);
-        const auto callSiteCount = functionBody->GetProfiledCallSiteCount();
+        [[maybe_unused]] const auto callSiteCount = functionBody->GetProfiledCallSiteCount();
         Assert(callSiteId < callSiteCount);
         Assert(functionBody->IsJsBuiltInCode() || functionBody->IsPublicLibraryCode() || HasCallSiteInfo(functionBody));
 
@@ -1118,7 +1118,7 @@ namespace Js
     FunctionInfo * DynamicProfileInfo::GetCallbackInfo(FunctionBody* functionBody, ProfileId callSiteId)
     {
         Assert(functionBody != nullptr);
-        Js::ProfileId callSiteCount = functionBody->GetProfiledCallSiteCount();
+        [[maybe_unused]] Js::ProfileId callSiteCount = functionBody->GetProfiledCallSiteCount();
         Assert(callSiteId < callSiteCount);
         Assert(functionBody->IsJsBuiltInCode() || functionBody->IsPublicLibraryCode() || HasCallSiteInfo(functionBody));
 
@@ -1134,7 +1134,7 @@ namespace Js
     FunctionInfo * DynamicProfileInfo::GetCallApplyTargetInfo(FunctionBody * functionBody, ProfileId callSiteId)
     {
         Assert(functionBody != nullptr);
-        Js::ProfileId callSiteCount = functionBody->GetProfiledCallSiteCount();
+        [[maybe_unused]] Js::ProfileId callSiteCount = functionBody->GetProfiledCallSiteCount();
         Assert(callSiteId < callSiteCount);
         Assert(functionBody->IsJsBuiltInCode() || functionBody->IsPublicLibraryCode() || HasCallSiteInfo(functionBody));
 
@@ -1162,7 +1162,7 @@ namespace Js
     uint DynamicProfileInfo::GetLdFldCacheIndexFromCallSiteInfo(FunctionBody* functionBody, ProfileId callSiteId)
     {
         Assert(functionBody);
-        const auto callSiteCount = functionBody->GetProfiledCallSiteCount();
+        [[maybe_unused]] const auto callSiteCount = functionBody->GetProfiledCallSiteCount();
         Assert(callSiteId < callSiteCount);
         Assert(functionBody->IsJsBuiltInCode() || functionBody->IsPublicLibraryCode() || HasCallSiteInfo(functionBody));
 

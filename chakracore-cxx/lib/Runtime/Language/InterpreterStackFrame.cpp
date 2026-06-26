@@ -5423,7 +5423,7 @@ namespace Js
             ip += Js::OpCodeUtil::EncodedSize(peekOp, layoutSize);
             // We are doing JIT loop body. Process the first ProfiledLoopBodyStart to avoid recording
             // the implicit call before the first iteration
-            uint32_t C2 = m_reader.GetLayout<OpLayoutT_Unsigned1<LayoutSizePolicy<layoutSize>>>(ip)->C1;
+            [[maybe_unused]] uint32_t C2 = m_reader.GetLayout<OpLayoutT_Unsigned1<LayoutSizePolicy<layoutSize>>>(ip)->C1;
             Assert(C1 == C2);
             (this->*opProfiledLoopBodyStart)(C1, layoutSize, true /* isFirstIteration */);
             return m_reader.GetIP();
@@ -8607,7 +8607,7 @@ namespace Js
         case ArrayBufferView::ViewType::TYPE_##name: {\
             MemType* readBuffer = WasmAtomicsArrayBoundsCheck<MemType>(buffer, index, byteLength); \
             MemType value = (MemType)GetRegRaw<RegType>(playout->Value); \
-            MemType storedValue = AtomicsOperations::Store<MemType>(readBuffer, value); \
+            [[maybe_unused]] MemType storedValue = AtomicsOperations::Store<MemType>(readBuffer, value); \
             Assert(storedValue == value); \
             return; \
         }
