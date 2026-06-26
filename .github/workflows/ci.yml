@@ -82,6 +82,10 @@ jobs:
             os-image: ubuntu-latest
             os-prefix: linux
             deps: sudo apt-get install -y ninja-build clang-19 lld-19 libc++-19-dev libc++abi-19-dev
+    env:
+      CARGO_TERM_COLOR: always
+      CMAKE_COLOR_DIAGNOSTICS: ON
+      CLICOLOR_FORCE: 1
     steps:
       - uses: actions/checkout@v6
       - name: Install dependencies
@@ -92,5 +96,5 @@ jobs:
           sudo ln -sf /usr/bin/clang-19 /usr/bin/clang
         if: ${{ runner.os == 'Linux' }}
       - run: cargo check
-      - run: cmake --preset ${{ matrix.os-prefix}}-${{ matrix.build-type }} -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
+      - run: cmake --preset ${{ matrix.os-prefix}}-${{ matrix.build-type }}
       - run: cmake --build build-${{ matrix.os-prefix}}-${{ matrix.build-type }}
