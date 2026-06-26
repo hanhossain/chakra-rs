@@ -4319,7 +4319,7 @@ namespace Js
                 uint autoProfilingInterpreter1Limit;
                 uint simpleJitLimit;
                 uint profilingInterpreter1Limit;
-                const int scannedCount =
+                [[maybe_unused]] const int scannedCount =
                     PAL_swscanf(
                         static_cast<const char16_t*>(ExecutionModeLimits),
                         u"%u.%u.%u.%u.%u",

@@ -1527,7 +1527,7 @@ IR::Instr* LowererMD::Simd128LowerSwizzle_4(IR::Instr* instr)
 
 IR::Instr* LowererMD::Simd128LowerShuffle_4(IR::Instr* instr)
 {
-    Js::OpCode irOpcode = instr->m_opcode;
+    [[maybe_unused]] Js::OpCode irOpcode = instr->m_opcode;
     SList<IR::Opnd*> *args = Simd128GetExtendedArgs(instr);
     IR::Opnd *dst = args->Pop();
     IR::Opnd *srcs[6] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };

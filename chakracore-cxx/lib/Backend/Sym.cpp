@@ -581,7 +581,7 @@ StackSym::GetIntConstValue() const
     if (src1->IsAddrOpnd())
     {
         Assert(defInstr->m_opcode == Js::OpCode::Ld_A || LowererMD::IsAssign(defInstr) || defInstr->m_opcode == Js::OpCode::ArgOut_A || defInstr->m_opcode == Js::OpCode::ArgOut_A_InlineBuiltIn);
-        IR::AddrOpnd *addr = src1->AsAddrOpnd();
+        [[maybe_unused]] IR::AddrOpnd *addr = src1->AsAddrOpnd();
         Assert(addr->IsVar());
         Js::Var var = src1->AsAddrOpnd()->m_address;
         if (Js::TaggedInt::Is(var))
@@ -589,7 +589,7 @@ StackSym::GetIntConstValue() const
             return Js::TaggedInt::ToInt32(var);
         }
         int32_t value = 0xCCCCCCCC;
-        const bool isInt32 = Js::JavascriptNumber::TryGetInt32Value(Js::JavascriptNumber::GetValue(var), &value);
+        [[maybe_unused]] const bool isInt32 = Js::JavascriptNumber::TryGetInt32Value(Js::JavascriptNumber::GetValue(var), &value);
         Assert(isInt32);
         return value;
     }

@@ -1476,7 +1476,7 @@ LowererMD::Legalize(IR::Instr *const instr, bool fPostRegAlloc)
     LegalForms src2Forms = legalInstrForms.src[1];
 
     bool hasSwitchCase = true;
-    bool isCustomForm = (dstForms & LF_Custom) != 0;;
+    [[maybe_unused]] bool isCustomForm = (dstForms & LF_Custom) != 0;;
     switch(instr->m_opcode)
     {
         case Js::OpCode::JA:
@@ -1721,7 +1721,7 @@ LowererMD::Legalize(IR::Instr *const instr, bool fPostRegAlloc)
         case Js::OpCode::NOP:
         {
             Assert(!instr->GetSrc2());
-            RegNum edx = RegRDX;
+            [[maybe_unused]] RegNum edx = RegRDX;
             // Special case handled by peeps
             Assert(!instr->GetDst() || (instr->GetDst()->IsRegOpnd() && instr->GetDst()->AsRegOpnd()->GetReg() == edx));
             break;
@@ -1736,7 +1736,7 @@ LowererMD::Legalize(IR::Instr *const instr, bool fPostRegAlloc)
         case Js::OpCode::LOCKCMPXCHG8B:
         case Js::OpCode::CMPXCHG8B:
         {
-            const auto getRegMask = [](IR::Opnd* opnd)
+            [[maybe_unused]] const auto getRegMask = [](IR::Opnd* opnd)
             {
                 Assert(opnd->IsListOpnd());
                 return opnd->AsListOpnd()->Reduce(
@@ -1750,8 +1750,8 @@ LowererMD::Legalize(IR::Instr *const instr, bool fPostRegAlloc)
                     return allReg | regmask;
                 }, 0);
             };
-            const uint32_t dstMask = (1 << RegRAX | 1 << RegRDX);
-            const uint32_t srcMask = (1 << RegRAX | 1 << RegRBX | 1 << RegRCX | 1 << RegRDX);
+            [[maybe_unused]] const uint32_t dstMask = (1 << RegRAX | 1 << RegRDX);
+            [[maybe_unused]] const uint32_t srcMask = (1 << RegRAX | 1 << RegRBX | 1 << RegRCX | 1 << RegRDX);
 
             AssertMsg(!instr->m_func->isPostFinalLower || !instr->GetDst(), "After FinalLower, there should not be a dst");
             AssertMsg(instr->m_func->isPostFinalLower || getRegMask(instr->GetDst()) == dstMask,
@@ -2728,7 +2728,7 @@ void LowererMD::GenerateFastCmXx(IR::Instr *instr)
     IR::Opnd * tmp = dst;
     bool isIntDst = dst->AsRegOpnd()->m_sym->IsInt32();
     bool isFloatSrc = src1->IsFloat();
-    bool isInt64Src = src1->IsInt64();
+    [[maybe_unused]] bool isInt64Src = src1->IsInt64();
     Assert(!isFloatSrc || src2->IsFloat());
     Assert(!isInt64Src || src2->IsInt64());
     Assert(!isFloatSrc || AutoSystemInfo::Data.SSE2Available());
@@ -5969,7 +5969,7 @@ LowererMD::LowerInt4MulWithBailOut(
         //     jns  $skipBailOutLabel
         //   (fall through to bail out)
 
-        const auto dst = instr->GetDst(), src1 = instr->GetSrc1(), src2 = instr->GetSrc2();
+        [[maybe_unused]] const auto dst = instr->GetDst(), src1 = instr->GetSrc1(), src2 = instr->GetSrc2();
         Assert(dst->IsRegOpnd());
         Assert(!src1->IsEqual(src2)); // cannot result in -0 if both operands are the same; GlobOpt should have figured that out
 

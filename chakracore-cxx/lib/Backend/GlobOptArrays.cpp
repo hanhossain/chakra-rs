@@ -971,14 +971,14 @@ void GlobOpt::ArraySrcOpt::DoLowerBoundCheck()
                     boundCheck,
                     landingPad);
                 {
-                    const bool added = globOpt->CurrentBlockData()->availableIntBoundChecks->AddNew(boundCheckInfo) >= 0;
+                    [[maybe_unused]] const bool added = globOpt->CurrentBlockData()->availableIntBoundChecks->AddNew(boundCheckInfo) >= 0;
                     Assert(added || failedToUpdateCompatibleLowerBoundCheck);
                 }
                 for (InvariantBlockBackwardIterator it(globOpt, globOpt->currentBlock, landingPad, nullptr);
                     it.IsValid();
                     it.MoveNext())
                 {
-                    const bool added = it.Block()->globOptData.availableIntBoundChecks->AddNew(boundCheckInfo) >= 0;
+                    [[maybe_unused]] const bool added = it.Block()->globOptData.availableIntBoundChecks->AddNew(boundCheckInfo) >= 0;
                     Assert(added || failedToUpdateCompatibleLowerBoundCheck);
                 }
             }
@@ -1072,7 +1072,7 @@ void GlobOpt::ArraySrcOpt::DoLowerBoundCheck()
         if (globOpt->DoBoundCheckHoist())
         {
             // Record the bound check instruction as available
-            const bool added =
+            [[maybe_unused]] const bool added =
                 globOpt->CurrentBlockData()->availableIntBoundChecks->AddNew(
                     IntBoundCheck(ZeroValueNumber, indexValue->GetValueNumber(), boundCheck, globOpt->currentBlock)) >= 0;
             Assert(added || failedToUpdateCompatibleLowerBoundCheck);
@@ -1248,14 +1248,14 @@ void GlobOpt::ArraySrcOpt::DoUpperBoundCheck()
                 boundCheck,
                 landingPad);
             {
-                const bool added = globOpt->CurrentBlockData()->availableIntBoundChecks->AddNew(boundCheckInfo) >= 0;
+                [[maybe_unused]] const bool added = globOpt->CurrentBlockData()->availableIntBoundChecks->AddNew(boundCheckInfo) >= 0;
                 Assert(added || failedToUpdateCompatibleUpperBoundCheck);
             }
             for (InvariantBlockBackwardIterator it(globOpt, globOpt->currentBlock, landingPad, nullptr);
                 it.IsValid();
                 it.MoveNext())
             {
-                const bool added = it.Block()->globOptData.availableIntBoundChecks->AddNew(boundCheckInfo) >= 0;
+                [[maybe_unused]] const bool added = it.Block()->globOptData.availableIntBoundChecks->AddNew(boundCheckInfo) >= 0;
                 Assert(added || failedToUpdateCompatibleUpperBoundCheck);
             }
         }
@@ -1408,7 +1408,7 @@ void GlobOpt::ArraySrcOpt::DoUpperBoundCheck()
         if (globOpt->DoBoundCheckHoist())
         {
             // Record the bound check instruction as available
-            const bool added =
+            [[maybe_unused]] const bool added =
                 globOpt->CurrentBlockData()->availableIntBoundChecks->AddNew(
                     IntBoundCheck(
                         indexValue ? indexValue->GetValueNumber() : ZeroValueNumber,

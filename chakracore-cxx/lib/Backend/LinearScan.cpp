@@ -1878,7 +1878,7 @@ LinearScan::FillBailOutRecord(IR::Instr * instr)
 
     // generate the constant table
     Js::Var * constants = NativeCodeDataNewArrayNoFixup(allocator, Js::Var, state.constantList.Count());
-    uint constantCount = state.constantList.Count();
+    [[maybe_unused]] uint constantCount = state.constantList.Count();
     while (!state.constantList.Empty())
     {
         Js::Var value = state.constantList.Head();
@@ -3399,13 +3399,13 @@ void LinearScan::TrackInlineeArgLifetimes(IR::Instr* instr)
             }
             else
             {
-                Func* func = this->currentBlock->inlineeStack.RemoveAtEnd();
+                [[maybe_unused]] Func* func = this->currentBlock->inlineeStack.RemoveAtEnd();
                 Assert(func == instr->m_func);
 
                 if (instr->m_func->m_hasInlineArgsOpt)
                 {
                     instr->m_func->frameInfo->IterateSyms([=, this](StackSym* sym) {
-                        Lifetime* lifetime = this->currentBlock->inlineeFrameLifetimes.RemoveAtEnd();
+                        [[maybe_unused]] Lifetime* lifetime = this->currentBlock->inlineeFrameLifetimes.RemoveAtEnd();
 
                         uint* value;
                         if (this->currentBlock->inlineeFrameSyms.TryGetReference(sym->m_id, &value))
@@ -3413,7 +3413,7 @@ void LinearScan::TrackInlineeArgLifetimes(IR::Instr* instr)
                             *value = *value - 1;
                             if (*value == 0)
                             {
-                                bool removed = this->currentBlock->inlineeFrameSyms.Remove(sym->m_id);
+                                [[maybe_unused]] bool removed = this->currentBlock->inlineeFrameSyms.Remove(sym->m_id);
                                 Assert(removed);
                             }
                         }
@@ -4410,7 +4410,7 @@ LinearScan::InsertAirlock(IR::BranchInstr *branchInstr, IR::LabelInstr *labelIns
         }
     }
 #endif
-    bool replaced = branchInstr->ReplaceTarget(labelInstr, airlockLabel);
+    [[maybe_unused]] bool replaced = branchInstr->ReplaceTarget(labelInstr, airlockLabel);
     Assert(replaced);
 
     IR::Instr * prevInstr = labelInstr->GetPrevRealInstrOrLabel();

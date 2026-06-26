@@ -608,7 +608,7 @@ namespace Js
         , mOverload( nullptr )
         , mOpCode(op)
     {
-        bool ret = CheckAndSetReturnType(retType);
+        [[maybe_unused]] bool ret = CheckAndSetReturnType(retType);
         Assert(ret);
         va_list arguments;
 

@@ -28,11 +28,13 @@ int const TyBaseType[] = {
 #undef IRTYPE
 };
 
+#ifdef DBG
 const char16_t * const TyDumpName[] = {
 #define IRTYPE(ucname, baseType, size, bitSize, enRegOk, dname) _u(#dname),
 #include "IRTypeList.h"
 #undef IRTYPE
 };
+#endif
 
 bool IRType_IsSignedInt(IRType type) { return TyBaseType[type] == IRBaseType_Int; }
 bool IRType_IsUnsignedInt(IRType type) { return TyBaseType[type] == IRBaseType_Uint; }

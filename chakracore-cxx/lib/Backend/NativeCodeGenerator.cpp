@@ -343,7 +343,7 @@ void NativeCodeGenerator::TransitionFromSimpleJit(Js::ScriptFunction *const func
         if (functionEntryPointUpdated)
         {
             // Transition to the next execution mode after scheduling a full JIT, in case of OOM before the entry point is changed
-            const bool transitioned = functionBody->TryTransitionToNextExecutionMode();
+            [[maybe_unused]] const bool transitioned = functionBody->TryTransitionToNextExecutionMode();
             Assert(transitioned);
 
             if (PHASE_TRACE(Js::SimpleJitPhase, functionBody))
@@ -483,7 +483,7 @@ NativeCodeGenerator::GenerateFunction(Js::FunctionBody *fn, Js::ScriptFunction *
     if (fn->GetIsAsmjsMode())
     {
         AnalysisAssert(function != nullptr);
-        Js::FunctionEntryPointInfo* oldFuncObjEntryPointInfo = (Js::FunctionEntryPointInfo*)function->GetEntryPointInfo();
+        [[maybe_unused]] Js::FunctionEntryPointInfo* oldFuncObjEntryPointInfo = (Js::FunctionEntryPointInfo*)function->GetEntryPointInfo();
         Assert(oldFuncObjEntryPointInfo->GetIsAsmJSFunction()); // should be asmjs entrypoint info
 
         // Set asmjs to be true in entrypoint
@@ -839,7 +839,7 @@ NativeCodeGenerator::CodeGen(PageAllocator * pageAllocator, CodeGenWorkItem* wor
         }
     }
 
-    bool irviewerInstance = false;
+    [[maybe_unused]] bool irviewerInstance = false;
 #ifdef IR_VIEWER
     irviewerInstance = true;
 #endif
@@ -851,7 +851,7 @@ NativeCodeGenerator::CodeGen(PageAllocator * pageAllocator, CodeGenWorkItem* wor
 
     InterlockedExchangeAdd(&this->byteCodeSizeGenerated, workItem->GetByteCodeCount()); // must be interlocked because this data may be modified in the foreground and background thread concurrently
     Js::FunctionBody* body = workItem->GetFunctionBody();
-    int nRegs = body->GetLocalsCount();
+    [[maybe_unused]] int nRegs = body->GetLocalsCount();
     AssertMsg((nRegs + 1) == (int)(SymID)(nRegs + 1), "SymID too small...");
 
     if (body->GetScriptContext()->IsClosed())

@@ -1125,7 +1125,7 @@ FlowGraph::MoveBlocksBefore(BasicBlock *blockStart, BasicBlock *blockEnd, BasicB
             FlowEdge *srcEdge  = this->FindEdge(srcPredBlock, srcBranchTarget->GetBasicBlock());
             Assert(srcEdge);
 
-            BasicBlock *compensationBlock = this->InsertCompensationCodeForBlockMove(srcEdge, true /*insert compensation block to loop list*/, false /*At source*/);
+            [[maybe_unused]] BasicBlock *compensationBlock = this->InsertCompensationCodeForBlockMove(srcEdge, true /*insert compensation block to loop list*/, false /*At source*/);
             Assert(compensationBlock);
         }
     }
@@ -1142,7 +1142,7 @@ FlowGraph::MoveBlocksBefore(BasicBlock *blockStart, BasicBlock *blockEnd, BasicB
         FlowEdge *dstEdge = this->FindEdge(dstPredBlock, blockEnd->GetNext());
         Assert(dstEdge);
 
-        BasicBlock *compensationBlock = this->InsertCompensationCodeForBlockMove(dstEdge, true /*insert compensation block to loop list*/, true /*At sink*/);
+        [[maybe_unused]] BasicBlock *compensationBlock = this->InsertCompensationCodeForBlockMove(dstEdge, true /*insert compensation block to loop list*/, true /*At sink*/);
         Assert(compensationBlock);
     }
 
@@ -2246,7 +2246,7 @@ FlowGraph::InsertAirlockBlock(FlowEdge * edge, bool afterForward /*= false*/)
     IR::BranchInstr *sourceBr = sourceLastInstr->AsBranchInstr();
     if (sourceBr->IsMultiBranch())
     {
-        const bool replaced = sourceBr->AsMultiBrInstr()->ReplaceTarget(sinkLabel, airlockLabel);
+        [[maybe_unused]] const bool replaced = sourceBr->AsMultiBrInstr()->ReplaceTarget(sinkLabel, airlockLabel);
         Assert(replaced);
     }
     else if (sourceBr->GetTarget() == sinkLabel)
@@ -2370,7 +2370,7 @@ FlowGraph::InsertCompensationCodeForBlockMove(FlowEdge * edge,  bool insertToLoo
         Assert(sourceBr->IsMultiBranch() || sourceBr->IsConditional());
         if (sourceBr->IsMultiBranch())
         {
-            const bool replaced = sourceBr->AsMultiBrInstr()->ReplaceTarget(sinkLabel, compLabel);
+            [[maybe_unused]] const bool replaced = sourceBr->AsMultiBrInstr()->ReplaceTarget(sinkLabel, compLabel);
             Assert(replaced);
         }
     }
@@ -3106,7 +3106,7 @@ FlowGraph::InsertInlineeOnFLowEdge(IR::BranchInstr *instrBr, IR::Instr *inlineeE
     useOrigBranchSrcInstr->SetRemovedOpndSymbol(origBranchSrcOpndIsJITOpt, origBranchSrcSymId);
     newBr->InsertBefore(useOrigBranchSrcInstr);
 
-    uint newBrFnNumber = newBr->m_func->GetFunctionNumber();
+    [[maybe_unused]] uint newBrFnNumber = newBr->m_func->GetFunctionNumber();
     Assert(newBrFnNumber == origBrFunc->GetFunctionNumber());
 
     // The function numbers of the new branch and the inlineeEnd instruction should be different (ensuring that the new branch is not added in the inlinee but in the inliner).

@@ -188,7 +188,7 @@ namespace Js
         AsmJsFunctionCompilation autoCleanup( this );
         try
         {
-            ParseNode* pnode = mFunction->GetFncNode();
+            [[maybe_unused]] ParseNode* pnode = mFunction->GetFncNode();
             Assert( pnode && pnode->nop == knopFncDecl );
             Assert( mInfo != nullptr );
 

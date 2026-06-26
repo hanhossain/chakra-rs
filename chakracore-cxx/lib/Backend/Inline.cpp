@@ -4102,7 +4102,7 @@ Inline::InlineScriptFunction(IR::Instr *callInstr, const FunctionJITTimeInfo *co
         isCtor = true;
         isFixed = TryOptimizeCallInstrWithFixedMethod(callInstr, inlineeData,
             false /*isPolymorphic*/, false /*isBuiltIn*/, isCtor /*isCtor*/, true /*isInlined*/, safeThis /*&safeThis*/);
-        bool split = SplitConstructorCall(callInstr, true, isFixed, &inlineBailoutChecksBeforeInstr);
+        [[maybe_unused]] bool split = SplitConstructorCall(callInstr, true, isFixed, &inlineBailoutChecksBeforeInstr);
         Assert(split && inlineBailoutChecksBeforeInstr != nullptr);
     }
     else
@@ -4812,7 +4812,7 @@ Inline::MapActuals(IR::Instr *callInstr, __out_ecount(maxParamCount) IR::Instr *
 
     Assert(linkOpnd->IsRegOpnd());
     Assert(linkOpnd->AsRegOpnd()->m_sym->m_isSingleDef);
-    Js::OpCode startCallOpCode = linkOpnd->AsRegOpnd()->m_sym->m_instrDef->m_opcode;
+    [[maybe_unused]] Js::OpCode startCallOpCode = linkOpnd->AsRegOpnd()->m_sym->m_instrDef->m_opcode;
     Assert(startCallOpCode == Js::OpCode::StartCall);
 
     // Update the count in StartCall to reflect
@@ -5049,7 +5049,7 @@ Inline::MapFormals(Func *inlinee,
                 }
 
                 Assert(linkOpnd->IsRegOpnd());
-                Js::OpCode startCallOpCode = linkOpnd->AsRegOpnd()->m_sym->AsStackSym()->GetInstrDef()->m_opcode;
+                [[maybe_unused]] Js::OpCode startCallOpCode = linkOpnd->AsRegOpnd()->m_sym->AsStackSym()->GetInstrDef()->m_opcode;
                 Assert(startCallOpCode == Js::OpCode::StartCall);
                 IR::Instr* startCallForInlinee = linkOpnd->AsRegOpnd()->m_sym->AsStackSym()->GetInstrDef();
                 formalCountForInlinee = startCallForInlinee->GetArgOutCount(false); // As of now, StartCall has the formal count
@@ -5710,7 +5710,7 @@ Inline::InlineSpread(IR::Instr *spreadCall)
     IR::Opnd *spreadIndicesOpnd = spreadIndicesInstr->GetSrc1();
     Assert(spreadIndicesOpnd->AsAddrOpnd()->GetAddrOpndKind() == IR::AddrOpndKindDynamicAuxBufferRef);
 
-    Js::AuxArray<uint32_t>* spreadIndices = static_cast<Js::AuxArray<uint32_t>*>(spreadIndicesOpnd->AsAddrOpnd()->m_metadata);
+    [[maybe_unused]] Js::AuxArray<uint32_t>* spreadIndices = static_cast<Js::AuxArray<uint32_t>*>(spreadIndicesOpnd->AsAddrOpnd()->m_metadata);
     Assert(spreadIndices->count > 0);
 
     IR::Instr *argInstr = spreadIndicesInstr;
@@ -5806,7 +5806,7 @@ void Inline::TraceInlining(const FunctionJITTimeInfo *const inliner, const char1
     if (inlineeName == nullptr)
     {
 
-        int len = swprintf_s(debugStringBuffer3, MAX_FUNCTION_BODY_DEBUG_STRING_SIZE, u"built In Id: %u", builtIn);
+        [[maybe_unused]] int len = swprintf_s(debugStringBuffer3, MAX_FUNCTION_BODY_DEBUG_STRING_SIZE, u"built In Id: %u", builtIn);
         Assert(len > 14);
         inlineeName = debugStringBuffer3;
     }

@@ -1668,7 +1668,7 @@ GlobOpt::ValueNumberObjectType(IR::Opnd *dstOpnd, IR::Instr *instr)
             Assert(instr->IsProfiledInstr());
             Assert(instr->GetBailOutKind() == IR::BailOutFailedCtorGuardCheck);
 
-            bool isCtorInlined = instr->m_opcode == Js::OpCode::NewScObjectNoCtor;
+            [[maybe_unused]] bool isCtorInlined = instr->m_opcode == Js::OpCode::NewScObjectNoCtor;
             JITTimeConstructorCache * ctorCache = instr->m_func->GetConstructorCache(static_cast<Js::ProfileId>(instr->AsProfiledInstr()->u.profileId));
             Assert(ctorCache != nullptr && (isCtorInlined || ctorCache->IsTypeFinal()));
 
@@ -1891,7 +1891,7 @@ GlobOpt::SetObjectTypeFromTypeSym(StackSym *typeSym, const JITTypeHolder type, J
         // If we're trying to update an existing value, the value better exist. We only do this when updating a generic
         // value created during loop pre-pass for field hoisting, so we expect the value info to still be blank.
         Assert(value != nullptr && value->GetValueInfo() != nullptr && value->GetValueInfo()->IsJsType());
-        JsTypeValueInfo* valueInfo = value->GetValueInfo()->AsJsType();
+        [[maybe_unused]] JsTypeValueInfo* valueInfo = value->GetValueInfo()->AsJsType();
         Assert(valueInfo->GetJsType() == nullptr && valueInfo->GetJsTypeSet() == nullptr);
         UpdateObjectTypeValue(value, type, true, typeSet, true);
     }

@@ -450,7 +450,7 @@ Lowerer::LowerRange(IR::Instr *instrStart, IR::Instr *instrEnd, bool defaultDoFa
         case Js::OpCode::LdMethodFromFlags:
         {
             Assert(instr->HasBailOutInfo());
-            bool success = GenerateFastLdMethodFromFlags(instr);
+            [[maybe_unused]] bool success = GenerateFastLdMethodFromFlags(instr);
             AssertMsg(success, "Not expected to generate helper block here");
             break;
         }
@@ -1109,7 +1109,7 @@ Lowerer::LowerRange(IR::Instr *instrStart, IR::Instr *instrEnd, bool defaultDoFa
                 else if (bailOutKind == IR::BailOnModByPowerOf2)
                 {
                     Assert(instr->m_opcode == Js::OpCode::Rem_I4);
-                    bool fastPath = GenerateSimplifiedInt4Rem(instr);
+                    [[maybe_unused]] bool fastPath = GenerateSimplifiedInt4Rem(instr);
                     Assert(fastPath);
                     instr->FreeSrc1();
                     instr->FreeSrc2();
@@ -3969,7 +3969,7 @@ Lowerer::GenerateArrayAlloc(IR::Instr *instr, IR::Opnd * arrayLenOpnd, Js::Array
     GenerateMemInit(dstOpnd, ArrayType::GetOffsetOfType(), this->LoadLibraryValueOpnd(instr, ArrayType::InitialTypeHelper()), instr, true);
     GenerateMemInitNull(dstOpnd, ArrayType::GetOffsetOfAuxSlots(), instr, true);
 
-    Js::ProfileId arrayCallSiteIndex = (Js::ProfileId)instr->AsProfiledInstr()->u.profileId;
+    [[maybe_unused]] Js::ProfileId arrayCallSiteIndex = (Js::ProfileId)instr->AsProfiledInstr()->u.profileId;
 #if DBG
     if (instr->AsProfiledInstr()->u.profileId < Js::Constants::NoProfileId)
     {
@@ -4128,7 +4128,7 @@ Lowerer::GenerateProfiledNewScObjArrayFastPath(IR::Instr *instr, Js::ArrayCallSi
     uint missingItemCount = 0;
     uint missingItemInitializedSoFar = 0;
     uint missingItemIndex = 0;
-    uint maxAllocationSize = allocationBuckets[allocationBucketsCount - 1][Js::JavascriptArray::AllocationSizeIndex];
+    [[maybe_unused]] uint maxAllocationSize = allocationBuckets[allocationBucketsCount - 1][Js::JavascriptArray::AllocationSizeIndex];
 
     for (uint8_t i = 0;i < allocationBucketsCount;i++)
     {
@@ -6466,7 +6466,7 @@ Lowerer::LowerAdjustObjType(IR::Instr * instrAdjustObjType)
     IR::AddrOpnd *initialTypeOpnd = instrAdjustObjType->UnlinkSrc2()->AsAddrOpnd();
     IR::RegOpnd  *baseOpnd = instrAdjustObjType->UnlinkSrc1()->AsRegOpnd();
 
-    bool adjusted = this->GenerateAdjustBaseSlots(
+    [[maybe_unused]] bool adjusted = this->GenerateAdjustBaseSlots(
         instrAdjustObjType, baseOpnd, JITTypeHolder((JITType*)initialTypeOpnd->m_metadata), JITTypeHolder((JITType*)finalTypeOpnd->m_metadata));
 
     if (instrAdjustObjType->m_opcode == Js::OpCode::AdjustObjTypeReloadAuxSlotPtr)
@@ -7262,7 +7262,7 @@ IR::Instr* Lowerer::GenerateCompleteStFld(IR::Instr* instr, bool emitFastPath, I
 {
     if(instr->CallsAccessor() && instr->HasBailOutInfo())
     {
-        IR::BailOutKind kindMinusBits = instr->GetBailOutKind() & ~IR::BailOutKindBits;
+        [[maybe_unused]] IR::BailOutKind kindMinusBits = instr->GetBailOutKind() & ~IR::BailOutKindBits;
         Assert(kindMinusBits != IR::BailOutOnImplicitCalls && kindMinusBits != IR::BailOutOnImplicitCallsPreOp);
     }
 
@@ -8014,7 +8014,7 @@ Lowerer::CreateEquivalentTypeGuardAndLinkToGuardedProperties(IR::PropertySymOpnd
     auto propOps = propertySymOpnd->GetGuardedPropOps();
     uint propOpCount = propOps->Count();
 
-    bool isTypeStatic = Js::StaticType::Is(propertySymOpnd->GetFirstEquivalentType()->GetTypeId());
+    [[maybe_unused]] bool isTypeStatic = Js::StaticType::Is(propertySymOpnd->GetFirstEquivalentType()->GetTypeId());
     JsUtil::BaseDictionary<Js::PropertyId, Js::EquivalentPropertyEntry*, JitArenaAllocator> propIds(this->m_alloc, propOpCount);
     Js::EquivalentPropertyEntry* properties = AnewArray(this->m_alloc, Js::EquivalentPropertyEntry, propOpCount);
     uint propIdCount = 0;
@@ -13354,7 +13354,7 @@ void Lowerer::LowerBailOnInvalidatedArrayLength(IR::Instr *const instr, const bo
     Func *const func = instr->m_func;
 
     IR::RegOpnd *const baseOpnd = instr->GetDst()->AsIndirOpnd()->GetBaseOpnd();
-    const ValueType baseValueType(baseOpnd->GetValueType());
+    [[maybe_unused]] const ValueType baseValueType(baseOpnd->GetValueType());
     Assert(!baseValueType.IsNotArray());
     IR::ArrayRegOpnd *const arrayOpnd = baseOpnd->IsArrayRegOpnd() ? baseOpnd->AsArrayRegOpnd() : nullptr;
 
@@ -19985,7 +19985,7 @@ Lowerer::GenerateFastInlineIsArray(IR::Instr * instr)
     IR::Instr * tmpInstr = linkOpnd->AsSymOpnd()->m_sym->AsStackSym()->m_instrDef;
 
     IR::Opnd * argsOpnd[2] = { 0 };
-    bool result = instr->FetchOperands(argsOpnd, 2);
+    [[maybe_unused]] bool result = instr->FetchOperands(argsOpnd, 2);
     Assert(result);
     AnalysisAssert(argsOpnd[1]);
 
@@ -20084,7 +20084,7 @@ Lowerer::GenerateFastInlineHasOwnProperty(IR::Instr * instr)
     IR::Instr * tmpInstr = linkOpnd->AsSymOpnd()->m_sym->AsStackSym()->m_instrDef;
 
     IR::Opnd * argsOpnd[2] = { 0 };
-    bool result = instr->FetchOperands(argsOpnd, 2);
+    [[maybe_unused]] bool result = instr->FetchOperands(argsOpnd, 2);
     Assert(result);
     AnalysisAssert(argsOpnd[0] && argsOpnd[1]);
 
@@ -20904,7 +20904,7 @@ Lowerer::GenerateFastInlineStringCharCodeAt(IR::Instr * instr, Js::BuiltinFuncti
     IR::Instr * tmpInstr = linkOpnd->AsSymOpnd()->m_sym->AsStackSym()->m_instrDef;
 
     IR::Opnd * argsOpnd[2] = {0};
-    bool result  = instr->FetchOperands(argsOpnd, 2);
+    [[maybe_unused]] bool result  = instr->FetchOperands(argsOpnd, 2);
     Assert(result);
 
     IR::LabelInstr *doneLabel = IR::LabelInstr::New(Js::OpCode::Label, this->m_func);
@@ -21030,7 +21030,7 @@ Lowerer::GenerateFastInlineStringReplace(IR::Instr * instr)
     IR::Instr * tmpInstr = linkOpnd->AsSymOpnd()->m_sym->AsStackSym()->m_instrDef;
 
     IR::Opnd * argsOpnd[3] = {0};
-    bool result  = instr->FetchOperands(argsOpnd, 3);
+    [[maybe_unused]] bool result  = instr->FetchOperands(argsOpnd, 3);
     Assert(result);
     AnalysisAssert(argsOpnd[0] && argsOpnd[1] && argsOpnd[2]);
 
@@ -21171,7 +21171,7 @@ bool Lowerer::GenerateFastPop(IR::Opnd *baseOpndParam, IR::Instr *callInstr, IR:
 
     //Array length is going to overflow, hence don't check for Array.length and Segment.length overflow.
     bool isTypedArrayElement, isStringIndex;
-    IR::IndirOpnd *const indirOpnd =
+    [[maybe_unused]] IR::IndirOpnd *const indirOpnd =
         GenerateFastElemICommon(
             callInstr,
             false,

@@ -550,7 +550,7 @@ Encoder::Encode()
     m_func->GetJITOutput()->SetCodeAddress(m_func->GetJITOutput()->GetCodeAddress() | 0x1); // Set thumb mode
 #endif
 
-    const bool isSimpleJit = m_func->IsSimpleJit();
+    [[maybe_unused]] const bool isSimpleJit = m_func->IsSimpleJit();
 
     if (this->m_inlineeFrameMap->Count() > 0 &&
         !(this->m_inlineeFrameMap->Count() == 1 && this->m_inlineeFrameMap->Item(0).record == nullptr))
@@ -1387,7 +1387,7 @@ Encoder::ShortenBranchesAndLabelAlign(uint8_t **codeStart, ptrdiff_t *codeSize, 
         // insert NOPs for aligned labels
         else if ((!PHASE_OFF(Js::LoopAlignPhase, m_func) && reloc.isAlignedLabel()) && reloc.getLabelNopCount() > 0)
         {
-            IR::LabelInstr *label = reloc.getLabel();
+            [[maybe_unused]] IR::LabelInstr *label = reloc.getLabel();
             uint8_t nop_count = reloc.getLabelNopCount();
 
             AssertMsg((uint8_t*)label < buffStart || (uint8_t*)label >= buffEnd, "Invalid label pointer.");

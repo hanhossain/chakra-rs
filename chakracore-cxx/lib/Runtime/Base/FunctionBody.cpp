@@ -1359,7 +1359,7 @@ namespace Js
     FunctionBody::SetNativeThrowSpanSequence(SmallSpanSequence *seq, uint loopNum, LoopEntryPointInfo* entryPoint)
     {
         Assert(loopNum != LoopHeader::NoLoop);
-        LoopHeader *loopHeader = this->GetLoopHeaderWithLock(loopNum);
+        [[maybe_unused]] LoopHeader *loopHeader = this->GetLoopHeaderWithLock(loopNum);
         Assert(loopHeader);
         Assert(entryPoint->loopHeader == loopHeader);
 
@@ -3856,7 +3856,7 @@ namespace Js
         {
             return;
         }
-        bool isAsmJs = this->GetIsAsmjsMode();
+        [[maybe_unused]] bool isAsmJs = this->GetIsAsmjsMode();
         Assert(IsIntermediateCodeGenThunk(entryPointInfo->jsMethod) || CONFIG_FLAG(Prejit) || this->m_isFromNativeCodeModule || isAsmJs);
         entryPointInfo->EnsureIsReadyToCall();
 
@@ -8404,7 +8404,7 @@ namespace Js
         uint8_t* instructionPointer = *addressOfInstructionPointer;
         NativeEntryPointData * nativeEntryPointData = this->GetNativeEntryPointData();
         Js::JavascriptMethod nativeAddress = nativeEntryPointData->GetNativeAddress();
-        ptrdiff_t codeSize = nativeEntryPointData->GetCodeSize();
+        [[maybe_unused]] ptrdiff_t codeSize = nativeEntryPointData->GetCodeSize();
         Assert(instructionPointer > (uint8_t*)nativeAddress && instructionPointer < ((uint8_t*)nativeAddress + codeSize));
         size_t offset = instructionPointer - (uint8_t*)nativeAddress;
         NativeLazyBailOutRecordList * bailOutRecordList = this->GetInProcNativeEntryPointData()->GetSortedLazyBailOutRecordList();

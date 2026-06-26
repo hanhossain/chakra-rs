@@ -703,7 +703,7 @@ BailOutRecord::AdjustOffsetsForDiagMode(Js::JavascriptCallStackLayout * layout, 
             // Get the corresponding offset on the stack related to the frame.
 
             globalBailOutRecordTable->IterateGlobalBailOutRecordTableRows(m_bailOutRecordId, [=](GlobalBailOutRecordDataRow *row) {
-                int32_t offset = row->offset;
+                [[maybe_unused]] int32_t offset = row->offset;
                 // offset is zero, is it possible that a locals is not living in the debug mode?
                 Assert(offset != 0);
                 int32_t slotOffset;

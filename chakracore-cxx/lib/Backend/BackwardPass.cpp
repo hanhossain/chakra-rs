@@ -2074,7 +2074,7 @@ BackwardPass::ProcessByteCodeUsesInstr(IR::Instr * instr)
         {
             // Just collect the byte code uses, and remove the instruction
             // We are going backward, process the dst first and then the src
-            StackSym *dstStackSym = ProcessByteCodeUsesDst(byteCodeUsesInstr);
+            [[maybe_unused]] StackSym *dstStackSym = ProcessByteCodeUsesDst(byteCodeUsesInstr);
 #if DBG
             // We can only track first level function stack syms right now
             if (dstStackSym && dstStackSym->GetByteCodeFunc() == this->func)
@@ -2083,7 +2083,7 @@ BackwardPass::ProcessByteCodeUsesInstr(IR::Instr * instr)
             }
 #endif
 
-            const BVSparse<JitArenaAllocator>* byteCodeUpwardExposedUsed = ProcessByteCodeUsesSrcs(byteCodeUsesInstr);
+            [[maybe_unused]] const BVSparse<JitArenaAllocator>* byteCodeUpwardExposedUsed = ProcessByteCodeUsesSrcs(byteCodeUsesInstr);
 #if DBG
             if (byteCodeUpwardExposedUsed)
             {

@@ -21,7 +21,7 @@ namespace Js
 
     void AsmJsCodeGenerator::CodeGen( FunctionBody* functionBody )
     {
-        AsmJsFunctionInfo* asmInfo = functionBody->GetAsmJsFunctionInfo();
+        [[maybe_unused]] AsmJsFunctionInfo* asmInfo = functionBody->GetAsmJsFunctionInfo();
         Assert( asmInfo );
 
         void* address = mEncoder.Encode( functionBody );
