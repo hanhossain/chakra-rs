@@ -160,6 +160,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
     -Wno-null-arithmetic\
     -Wno-int-to-pointer-cast\
     -Wno-enum-compare-switch\
+    -Wno-implicit-const-int-float-conversion\
+    -Wno-nontrivial-memaccess\
 ")
 
 # ignore for -Wall
