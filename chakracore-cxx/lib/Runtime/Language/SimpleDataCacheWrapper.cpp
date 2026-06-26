@@ -5,9 +5,6 @@
 #include "RuntimeLanguagePch.h"
 
 #if ENABLE_PROFILE_INFO
-#ifdef ENABLE_WININET_PROFILE_DATA_CACHE
-#include "activscp_private.h"
-#endif
 namespace Js
 {
     SimpleDataCacheWrapper::SimpleDataCacheWrapper(IActiveScriptDataCache* dataCache) :
@@ -17,91 +14,22 @@ namespace Js
         bytesWrittenInBlock(0),
         blocksWritten(0)
     {
-#ifdef ENABLE_WININET_PROFILE_DATA_CACHE
-        this->dataCache->AddRef();
-#endif
     }
 
     int32_t SimpleDataCacheWrapper::Close()
     {
         int32_t hr = E_FAIL;
-
-#ifdef ENABLE_WININET_PROFILE_DATA_CACHE
-        hr = this->SaveWriteStream();
-
-        if (IsReadStreamOpen())
-        {
-            this->inStream->Release();
-            this->inStream = nullptr;
-        }
-
-        if (this->dataCache != nullptr)
-        {
-            this->dataCache->Release();
-            this->dataCache = nullptr;
-        }
-#endif
-
         return hr;
     }
 
     int32_t SimpleDataCacheWrapper::SaveWriteStream()
     {
         int32_t hr = E_FAIL;
-
-#ifdef ENABLE_WININET_PROFILE_DATA_CACHE
-        if (IsWriteStreamOpen())
-        {
-#if DBG
-            STATSTG statstg = { 0 };
-            hr = this->outStream->Stat(&statstg, STATFLAG_DEFAULT);
-            if (FAILED(hr))
-            {
-                OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Failed to call IStream::Stat on write stream (hr = 0x%08lx)\n", hr);
-            }
-#endif
-            OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Attempting to save write stream with %u bytes...\n", statstg.cbSize.LowPart);
-
-            Assert(this->dataCache != nullptr);
-            hr = this->dataCache->SaveWriteDataStream(this->outStream);
-
-            this->outStream->Release();
-            this->outStream = nullptr;
-
-            if (FAILED(hr))
-            {
-                OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Failed to save write stream (hr = 0x%08lx)\n", hr);
-            }
-            else
-            {
-                OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, u" Successfully saved write stream\n", hr);
-            }
-        }
-#endif
-
         return hr;
     }
 
     int32_t SimpleDataCacheWrapper::OpenWriteStream()
     {
-#ifdef ENABLE_WININET_PROFILE_DATA_CACHE
-        int32_t hr = E_FAIL;
-        Assert(!IsWriteStreamOpen());
-        Assert(this->dataCache != nullptr);
-        Assert(this->outStream == nullptr);
-        hr = this->dataCache->GetWriteDataStream(&this->outStream);
-
-        if (FAILED(hr))
-        {
-            if (this->outStream != nullptr)
-            {
-                this->outStream->Release();
-                this->outStream = nullptr;
-            }
-            return hr;
-        }
-#endif
-
         return WriteHeader();
     }
 
@@ -188,13 +116,6 @@ namespace Js
 
     int32_t SimpleDataCacheWrapper::OpenReadStream()
     {
-#ifdef ENABLE_WININET_PROFILE_DATA_CACHE
-        int32_t hr = E_FAIL;
-        Assert(this->dataCache != nullptr);
-        Assert(this->inStream == nullptr);
-        IFFAILRET(this->dataCache->GetReadDataStream(&this->inStream));
-#endif
-
         return ReadHeader();
     }
 
@@ -204,12 +125,6 @@ namespace Js
 
         if (IsReadStreamOpen())
         {
-#ifdef ENABLE_WININET_PROFILE_DATA_CACHE
-            // Reset the read stream to beginning of the stream - after the header
-            LARGE_INTEGER dlibMove;
-            dlibMove.QuadPart = sizeof(uint32_t) * 2;
-            IFFAILRET(this->inStream->Seek(dlibMove, STREAM_SEEK_SET, nullptr));
-#endif
         }
         else
         {
@@ -241,14 +156,6 @@ namespace Js
         {
             return E_FAIL;
         }
-
-#ifdef ENABLE_WININET_PROFILE_DATA_CACHE
-        // The block we're pointing at is not the requested one, seek forward to the next block
-        LARGE_INTEGER dlibMove;
-        dlibMove.QuadPart = byteCount;
-        IFFAILRET(this->inStream->Seek(dlibMove, STREAM_SEEK_CUR, nullptr));
-#endif
-
         return SeekReadStreamToBlockHelper(blockType, bytesInBlock);
     }
 

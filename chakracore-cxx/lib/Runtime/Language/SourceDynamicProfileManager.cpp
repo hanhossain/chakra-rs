@@ -93,47 +93,6 @@ namespace Js
     //
     bool SourceDynamicProfileManager::LoadFromProfileCache(SimpleDataCacheWrapper* dataCacheWrapper, const char16_t* url)
     {
-#ifdef ENABLE_WININET_PROFILE_DATA_CACHE
-        AssertMsg(CONFIG_FLAG(WininetProfileCache), "Profile caching should be enabled for us to get here");
-        Assert(dataCacheWrapper);
-        AssertMsg(!IsProfileLoadedFromWinInet(), "Duplicate profile cache loading?");
-
-        // Keep a copy of this
-        this->dataCacheWrapper = dataCacheWrapper;
-        int32_t hr = dataCacheWrapper->SeekReadStreamToBlock(SimpleDataCacheWrapper::BlockType_ProfileData);
-        if(SUCCEEDED(hr))
-        {
-            uint numberOfFunctions = 0;
-            if (FAILED(dataCacheWrapper->Read(&numberOfFunctions)) || numberOfFunctions > MAX_FUNCTION_COUNT)
-            {
-                return false;
-            }
-            BVFixed* functions = BVFixed::New(numberOfFunctions, this->recycler);
-            if (FAILED(dataCacheWrapper->ReadArray(functions->GetData(), functions->WordCount())))
-            {
-                return false;
-            }
-            this->cachedStartupFunctions = functions;
-            OUTPUT_TRACE(Js::DynamicProfilePhase, u"Profile load succeeded. Function count: %d  %s\n", numberOfFunctions, url);
-#if DBG_DUMP
-            if(PHASE_TRACE1(Js::DynamicProfilePhase) && Js::Configuration::Global.flags.Verbose)
-            {
-                OUTPUT_VERBOSE_TRACE(Js::DynamicProfilePhase, u"Profile loaded:\n");
-                functions->Dump();
-            }
-#endif
-            return true;
-        }
-        else if (hr == HRESULT_FROM_WIN32(ERROR_WRITE_PROTECT))
-        {
-            this->isNonCachableScript = true;
-            OUTPUT_VERBOSE_TRACE(Js::DynamicProfilePhase, u"Profile load failed. Non-cacheable resource. %s\n", url);
-        }
-        else
-        {
-            OUTPUT_TRACE(Js::DynamicProfilePhase, u"Profile load failed. No read stream. %s\n", url);
-        }
-#endif
         return false;
     }
 
@@ -143,35 +102,6 @@ namespace Js
     uint SourceDynamicProfileManager::SaveToProfileCacheAndRelease(SourceContextInfo* info)
     {
         uint bytesWritten = 0;
-#ifdef ENABLE_WININET_PROFILE_DATA_CACHE
-        if(dataCacheWrapper)
-        {
-            if(ShouldSaveToProfileCache(info))
-            {
-                OUTPUT_TRACE(Js::DynamicProfilePhase, u"Saving profile. Number of functions: %d Url: %s...\n", startupFunctions->Length(), info->url);
-
-                bytesWritten = SaveToProfileCache();
-
-                if (bytesWritten == 0)
-                {
-                    OUTPUT_TRACE(Js::DynamicProfilePhase, u"Profile saving FAILED\n");
-                }
-                else
-                {
-                    OUTPUT_TRACE(Js::DynamicProfilePhase, u"Profile saving succeeded. Bytes written: %d\n", bytesWritten);
-                }
-            }
-
-            if (!isNonCachableScript)
-            {
-                if (FAILED(dataCacheWrapper->SaveWriteStream()))
-                {
-                    return 0;
-                }
-            }
-            dataCacheWrapper = nullptr;
-        }
-#endif
         return bytesWritten;
     }
 
@@ -184,32 +114,6 @@ namespace Js
         Assert(startupFunctions);
 
         uint bytesWritten = 0;
-#ifdef ENABLE_WININET_PROFILE_DATA_CACHE
-        //TODO: Add some diffing logic to not write unless necessary
-        uint32_t byteCount = startupFunctions->WordCount() * sizeof(BVUnit) + sizeof(BVIndex);
-        if (FAILED(dataCacheWrapper->StartBlock(SimpleDataCacheWrapper::BlockType::BlockType_ProfileData, byteCount)))
-        {
-            return 0;
-        }
-
-        if (FAILED(dataCacheWrapper->Write(startupFunctions->Length())))
-        {
-            return 0;
-        }
-
-        if (SUCCEEDED(dataCacheWrapper->WriteArray(startupFunctions->GetData(), startupFunctions->WordCount())))
-        {
-            bytesWritten = dataCacheWrapper->BytesWrittenInBlock();
-
-#if DBG_DUMP
-            if (PHASE_TRACE1(Js::DynamicProfilePhase) && Js::Configuration::Global.flags.Verbose)
-            {
-                OUTPUT_VERBOSE_TRACE(Js::DynamicProfilePhase, u"Saved profile:\n");
-                startupFunctions->Dump();
-            }
-#endif
-        }
-#endif
         return bytesWritten;
     }
 
