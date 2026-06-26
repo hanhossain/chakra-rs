@@ -917,7 +917,7 @@ HeapInfo::AddLargeHeapBlock(size_t size)
 void
 HeapInfo::Finalize(RecyclerSweep& recyclerSweep)
 {
-    Recycler * recycler = recyclerSweep.GetRecycler();
+    [[maybe_unused]] Recycler * recycler = recyclerSweep.GetRecycler();
 #ifdef RECYCLER_STATS
     memset(&recycler->collectionStats.numEmptySmallBlocks, 0, sizeof(recycler->collectionStats.numEmptySmallBlocks));
     recycler->collectionStats.numZeroedOutSmallBlocks = 0;

@@ -192,7 +192,7 @@ SmallHeapBlockT<MediumAllocationBlockAttributes>::ProtectUnusablePages()
     {
         char* startPage = this->address + (MediumAllocationBlockAttributes::PageCount - count) * AutoSystemInfo::PageSize;
         uint32_t oldProtect;
-        BOOL ret = ::VirtualProtect(startPage, count * AutoSystemInfo::PageSize, PAGE_READONLY, &oldProtect);
+        [[maybe_unused]] BOOL ret = ::VirtualProtect(startPage, count * AutoSystemInfo::PageSize, PAGE_READONLY, &oldProtect);
         Assert(ret && oldProtect == PAGE_READWRITE);
     }
 }
@@ -206,7 +206,7 @@ SmallHeapBlockT<MediumAllocationBlockAttributes>::RestoreUnusablePages()
     {
         char* startPage = (char*)this->address + (MediumAllocationBlockAttributes::PageCount - count) * AutoSystemInfo::PageSize;
         uint32_t oldProtect;
-        BOOL ret = ::VirtualProtect(startPage, count * AutoSystemInfo::PageSize, PAGE_READWRITE, &oldProtect);
+        [[maybe_unused]] BOOL ret = ::VirtualProtect(startPage, count * AutoSystemInfo::PageSize, PAGE_READWRITE, &oldProtect);
 
 #if DBG
         HeapBlock* block = this->heapBucket->heapInfo->recycler->heapBlockMap.GetHeapBlock(this->address);

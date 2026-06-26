@@ -428,7 +428,7 @@ int32_t CreateParserState(const char * fileContents, size_t fileLength, JsFinali
         uint32_t written = 0;
         char scratch[3];
         auto scratchLen = sizeof(scratch);
-        int num = snprintf(scratch, scratchLen, "%02X", buffer[i]);
+        [[maybe_unused]] int num = snprintf(scratch, scratchLen, "%02X", buffer[i]);
         Assert(num == 2);
         IfFalseGo(WriteFile(fileHandle, scratch, (uint32_t)(scratchLen - 1), &written, nullptr));
 

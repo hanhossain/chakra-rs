@@ -370,8 +370,8 @@ namespace Js
 
         Assert(this->GetType()->GetPrototype() == predecessorType->GetPrototype());
 
-        PathTypeHandlerBase* currentPathTypeHandler = (PathTypeHandlerBase*)this->GetTypeHandler();
-        PathTypeHandlerBase* predecessorPathTypeHandler = (PathTypeHandlerBase*)predecessorType->GetTypeHandler();
+        [[maybe_unused]] PathTypeHandlerBase* currentPathTypeHandler = (PathTypeHandlerBase*)this->GetTypeHandler();
+        [[maybe_unused]] PathTypeHandlerBase* predecessorPathTypeHandler = (PathTypeHandlerBase*)predecessorType->GetTypeHandler();
 
         Assert(predecessorPathTypeHandler->GetInlineSlotCapacity() >= currentPathTypeHandler->GetInlineSlotCapacity());
 

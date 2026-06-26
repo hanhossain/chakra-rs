@@ -136,7 +136,7 @@ using namespace Js;
         Assert(ThreadContext::IsOnStack(instance) || !ThreadContext::IsOnStack(value) || TaggedNumber::Is(value));
         uint16 inlineSlotCapacity = instance->GetTypeHandler()->GetInlineSlotCapacity();
         uint16 offsetOfInlineSlots = instance->GetTypeHandler()->GetOffsetOfInlineSlots();
-        int slotCapacity = instance->GetTypeHandler()->GetSlotCapacity();
+        [[maybe_unused]] int slotCapacity = instance->GetTypeHandler()->GetSlotCapacity();
 
         if (index < inlineSlotCapacity)
         {

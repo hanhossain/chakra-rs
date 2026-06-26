@@ -138,7 +138,7 @@ namespace Js
     char16_t* FunctionProxy::GetDebugNumberSet(char16_t(&bufferToWriteTo)[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE]) const
     {
         // (#%u.%u), #%u --> (source file Id . function Id) , function Number
-        int len = swprintf_s(bufferToWriteTo, MAX_FUNCTION_BODY_DEBUG_STRING_SIZE, u" (#%d.%u), #%u",
+        [[maybe_unused]] int len = swprintf_s(bufferToWriteTo, MAX_FUNCTION_BODY_DEBUG_STRING_SIZE, u" (#%d.%u), #%u",
             (int)this->GetSourceContextId(), this->GetLocalFunctionId(), this->GetFunctionNumber());
         Assert(len > 8);
         return bufferToWriteTo;
@@ -4101,7 +4101,7 @@ namespace Js
 
     void FunctionBody::SetStackNestedFuncParent(FunctionInfo * parentFunctionInfo)
     {
-        FunctionBody * parentFunctionBody = parentFunctionInfo->GetFunctionBody();
+        [[maybe_unused]] FunctionBody * parentFunctionBody = parentFunctionInfo->GetFunctionBody();
         RecyclerWeakReference<FunctionInfo>* parent = this->GetStackNestedFuncParent();
         if (parent != nullptr)
         {
@@ -5492,7 +5492,7 @@ namespace Js
     DebuggerScope * DebuggerScope::GetSiblingScope(RegSlot location, FunctionBody *functionBody)
     {
         bool isBlockSlotOrObject = scopeType == Js::DiagExtraScopesType::DiagBlockScopeInSlot || scopeType == Js::DiagExtraScopesType::DiagBlockScopeInObject;
-        bool isCatchSlotOrObject = scopeType == Js::DiagExtraScopesType::DiagCatchScopeInSlot || scopeType == Js::DiagExtraScopesType::DiagCatchScopeInObject;
+        [[maybe_unused]] bool isCatchSlotOrObject = scopeType == Js::DiagExtraScopesType::DiagCatchScopeInSlot || scopeType == Js::DiagExtraScopesType::DiagCatchScopeInObject;
 
         // This is expected to be called only when the current scope is either slot or activation object.
         Assert(isBlockSlotOrObject || isCatchSlotOrObject);

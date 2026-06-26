@@ -511,7 +511,7 @@ namespace Js
     BOOL DictionaryTypeHandlerBase<T>::GetPropertyFromDescriptor(DynamicObject* instance, Var originalInstance,
         DictionaryPropertyDescriptor<T>* descriptor, Var* value, PropertyValueInfo* info, PropertyType propertyT, ScriptContext* requestContext)
     {
-        bool const isLetConstGlobal = (descriptor->Attributes & PropertyLetConstGlobal) != 0;
+        [[maybe_unused]] bool const isLetConstGlobal = (descriptor->Attributes & PropertyLetConstGlobal) != 0;
         AssertMsg(!isLetConstGlobal || VarIs<RootObjectBase>(instance), "object must be a global object if letconstglobal is set");
         if (allowLetConstGlobal)
         {

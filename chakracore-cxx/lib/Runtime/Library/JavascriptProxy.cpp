@@ -1857,7 +1857,7 @@ namespace Js
             case SetPropertyTrapKind::SetItemOnTaggedNumberKind:
             {
                 uint32_t indexVal;
-                BOOL isNumericPropertyId = requestContext->IsNumericPropertyId(propertyId, &indexVal);
+                [[maybe_unused]] BOOL isNumericPropertyId = requestContext->IsNumericPropertyId(propertyId, &indexVal);
                 Assert(isNumericPropertyId);
                 return JavascriptOperators::SetItemOnTaggedNumber(receiver, targetObj, indexVal, newValue, requestContext, propertyOperationFlags);
             }
@@ -1868,7 +1868,7 @@ namespace Js
             case SetPropertyTrapKind::SetItemKind:
             {
                 uint32_t indexVal;
-                BOOL isNumericPropertyId = requestContext->IsNumericPropertyId(propertyId, &indexVal);
+                [[maybe_unused]] BOOL isNumericPropertyId = requestContext->IsNumericPropertyId(propertyId, &indexVal);
                 Assert(isNumericPropertyId);
                 return  JavascriptOperators::SetItem(receiver, targetObj, indexVal, newValue, requestContext, propertyOperationFlags, skipPrototypeCheck);
             }

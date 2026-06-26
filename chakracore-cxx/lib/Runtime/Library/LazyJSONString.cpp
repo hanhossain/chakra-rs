@@ -121,7 +121,7 @@ LazyJSONString::ReconstructArray(_In_ JSONArray* jsonArray) const
     for (uint i = 0; i < length; ++i)
     {
         Var element = ReconstructVar(&prop[i]);
-        BOOL result = arr->SetItem(i, element, PropertyOperation_None);
+        [[maybe_unused]] BOOL result = arr->SetItem(i, element, PropertyOperation_None);
         Assert(result); // Setting item in an array we just allocated should always succeed
     }
     return arr;

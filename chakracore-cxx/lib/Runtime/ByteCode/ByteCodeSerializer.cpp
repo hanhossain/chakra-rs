@@ -2716,7 +2716,7 @@ public:
 
     const byte* ReadBool(const byte * buffer, _Out_ bool * value)
     {
-        auto remainingBytes = (raw + totalSize) - buffer;
+        [[maybe_unused]] auto remainingBytes = (raw + totalSize) - buffer;
         Assert(remainingBytes >= sizeof(bool));
         *value = *buffer ? true : false;
         return buffer + sizeof(bool);

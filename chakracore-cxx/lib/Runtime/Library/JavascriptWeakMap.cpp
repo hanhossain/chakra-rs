@@ -41,7 +41,7 @@ namespace Js
         Assert(!key->GetInternalProperty(key, InternalPropertyIds::WeakMapKeyMap, &unused, nullptr, key->GetScriptContext()) || unused == nullptr);
 
         WeakMapKeyMap* weakMapKeyData = RecyclerNew(GetScriptContext()->GetRecycler(), WeakMapKeyMap, GetScriptContext()->GetRecycler());
-        BOOL success = key->SetInternalProperty(InternalPropertyIds::WeakMapKeyMap, weakMapKeyData, PropertyOperation_Force, nullptr);
+        [[maybe_unused]] BOOL success = key->SetInternalProperty(InternalPropertyIds::WeakMapKeyMap, weakMapKeyData, PropertyOperation_Force, nullptr);
         Assert(success);
 
         return weakMapKeyData;
@@ -324,7 +324,7 @@ namespace Js
         if (keyMap != nullptr)
         {
             bool unused = false;
-            bool inSet = keySet.TryGetValueAndRemove(key, &unused);
+            [[maybe_unused]] bool inSet = keySet.TryGetValueAndRemove(key, &unused);
             bool inData = keyMap->Remove(GetWeakMapId());
             Assert(inSet == inData);
 

@@ -195,7 +195,7 @@ void JsrtDebuggerObjectsManager::AddToDebuggerObjectsDictionary(JsrtDebuggerObje
 
     Assert(!this->handleToDebuggerObjectsDictionary->ContainsKey(handle));
 
-    int index = this->handleToDebuggerObjectsDictionary->Add(handle, debuggerObject);
+    [[maybe_unused]] int index = this->handleToDebuggerObjectsDictionary->Add(handle, debuggerObject);
 
     Assert(index != -1);
 }
@@ -212,7 +212,7 @@ void JsrtDebuggerObjectsManager::AddToDataToDebuggerObjectsDictionary(void * dat
 
     Assert(!this->dataToDebuggerObjectsDictionary->ContainsKey(data));
 
-    int index = this->dataToDebuggerObjectsDictionary->Add(data, debuggerObject);
+    [[maybe_unused]] int index = this->dataToDebuggerObjectsDictionary->Add(data, debuggerObject);
 
     Assert(index != -1);
 

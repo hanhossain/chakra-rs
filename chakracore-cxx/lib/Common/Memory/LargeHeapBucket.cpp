@@ -972,7 +972,7 @@ LargeHeapBucket::DisposeObjects()
 void
 LargeHeapBucket::TransferDisposedObjects()
 {
-#if ENABLE_CONCURRENT_GC
+#if ENABLE_CONCURRENT_GC && defined(DBG)
     Recycler * recycler = this->heapInfo->recycler;
 #if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
     Assert(!recycler->IsConcurrentExecutingState() && !recycler->IsConcurrentSweepState());

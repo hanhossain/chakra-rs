@@ -145,7 +145,7 @@ namespace Js
 
         for (int i = 0; i < propertyCount; i++)
         {
-            Var value = instance->GetSlot(i);
+            [[maybe_unused]] Var value = instance->GetSlot(i);
             Assert(value != nullptr || IsInternalPropertyId(descriptors[i].Id->GetPropertyId()));
 #if ENABLE_FIXED_FIELDS
             bool markAsFixed = allowFixedFields && !IsInternalPropertyId(descriptors[i].Id->GetPropertyId()) &&

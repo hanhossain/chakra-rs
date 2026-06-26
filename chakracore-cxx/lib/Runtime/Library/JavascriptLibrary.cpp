@@ -1890,7 +1890,7 @@ namespace Js
         // so that the update is in sync with profiler
         ScriptContext* scriptContext = arrayConstructor->GetScriptContext();
         JavascriptLibrary* library = arrayConstructor->GetLibrary();
-        Field(JavascriptFunction*)* builtinFuncs = library->GetBuiltinFunctions();
+        [[maybe_unused]] Field(JavascriptFunction*)* builtinFuncs = library->GetBuiltinFunctions();
 
         library->AddMember(arrayConstructor, PropertyIds::length, TaggedInt::ToVarUnchecked(1), PropertyConfigurable);
         library->AddMember(arrayConstructor, PropertyIds::prototype, scriptContext->GetLibrary()->arrayPrototype, PropertyNone);
