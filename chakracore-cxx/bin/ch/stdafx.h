@@ -11,8 +11,6 @@
 #pragma warning(disable: 4189)  // initialized but unused variable (e.g. variable that may only used by assert)
 #endif
 
-#define Unused(var) var;
-
 #define IfFailedReturn(EXPR) do { hr = (EXPR); if (FAILED(hr)) { return hr; }} while(FALSE)
 #define IfFailedGoLabel(expr, label) do { hr = (expr); if (FAILED(hr)) { goto label; } } while (FALSE)
 #define IfFailGo(expr) IfFailedGoLabel(hr = (expr), Error)

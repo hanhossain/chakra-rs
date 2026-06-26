@@ -67,8 +67,6 @@ extern thread_local int IsInAssert;
 #define AnalysisAssertOrFailFastMsg(x, msg) AssertOrFailFast(x)
 #endif
 
-#define Unused(var) var;
-
 #define UNREACHED   (0)
 
 // We set IsPointer<T>::IsTrue to true if T is a pointer type
