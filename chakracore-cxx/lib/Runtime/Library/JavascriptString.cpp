@@ -3610,15 +3610,6 @@ case_2:
         uint string1Len = string1->GetLength();
         uint string2Len = string2->GetLength();
 
-        // We want to pin the strings string1 and string2 because flattening of any of these strings could cause a GC and result in the other string getting collected if it was optimized
-        // away by the compiler. We would normally have called the EnterPinnedScope/LeavePinnedScope methods here but it adds extra call instructions to the assembly code. As Equals
-        // methods could get called a lot of times this can show up as regressions in benchmarks.
-        volatile Js::JavascriptString** keepAliveString1 = (volatile Js::JavascriptString**)& string1;
-        volatile Js::JavascriptString** keepAliveString2 = (volatile Js::JavascriptString**)& string2;
-        auto keepAliveLambda = [&]() {
-            UNREFERENCED_PARAMETER(keepAliveString1);
-            UNREFERENCED_PARAMETER(keepAliveString2);
-        };
         int result = PAL_wmemcmp(string1->GetString(), string2->GetString(), min(string1Len, string2Len));
 
         return (result == 0) ? (int)(string1Len - string2Len) : result;
@@ -3957,14 +3948,6 @@ case_2:
     bool JavascriptStringHelpers<T>::Equals(T* aLeft, T* aRight)
     {
         if (aLeft == aRight) return true;
-
-        // methods could get called a lot of times this can show up as regressions in benchmarks.
-        volatile T** keepAliveLeftString = (volatile T**)& aLeft;
-        volatile T** keepAliveRightString = (volatile T**)& aRight;
-        auto keepAliveLambda = [&]() {
-            UNREFERENCED_PARAMETER(keepAliveLeftString);
-            UNREFERENCED_PARAMETER(keepAliveRightString);
-        };
 
         if (aLeft->GetLength() != aRight->GetLength())
         {

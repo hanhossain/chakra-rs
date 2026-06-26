@@ -362,7 +362,6 @@ namespace Js
         return JavascriptFunction::ApplyHelper(VarTo<RecyclableObject>(target), thisArgument, argArray, scriptContext);
     }
 
-    static const int STACK_ARGS_ALLOCA_THRESHOLD = 8;
     Var JavascriptReflect::EntryConstruct(RecyclableObject* function, CallInfo callInfo, ...)
     {
         PROBE_STACK(function->GetScriptContext(), Js::Constants::MinStackDefault);

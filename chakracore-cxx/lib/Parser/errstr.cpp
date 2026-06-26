@@ -8,25 +8,12 @@
 // scaffolding - get a g_hInstance from scrbgase.cpp
 HANDLE g_hInstance;
 
-// Used as a prefix to generate the resource dll name.
-const char16_t g_wszPrefix[] = u"js";
-
 static BOOL FGetStringFromLibrary(HMODULE hlib, int istring, __out_ecount(cchMax) char16_t * psz, int cchMax)
 {
     // NOTE - istring is expected to be int32_t
 
     Assert(0 < cchMax);
     Assert(psz);
-
-    HGLOBAL hgl = NULL;
-    char16_t * pchRes = NULL;
-    HRSRC hrsrc;
-    char16_t * pchCur;
-    int cch;
-    int cstring;
-    uint32_t cbRes;
-    int itable = ((uint16_t)istring >> 4) + 1;
-    istring &= 0x0F;
     BOOL fRet = FALSE;
 
     return fRet;

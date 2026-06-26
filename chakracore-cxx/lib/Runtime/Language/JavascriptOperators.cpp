@@ -2282,9 +2282,6 @@ using namespace Js;
                 {
                     Assert(VarIs<JavascriptProxy>(setterValueOrProxy));
                     JavascriptProxy* proxy = VarTo<JavascriptProxy>(setterValueOrProxy);
-                    auto fn = [&](RecyclableObject* target) -> BOOL {
-                        return JavascriptOperators::SetPropertyWPCache(receiver, target, propertyKey, newValue, requestContext, propertyOperationFlags, info);
-                    };
                     if (info->GetPropertyRecordUsageCache())
                     {
                         PropertyValueInfo::SetNoCache(info, proxy);
