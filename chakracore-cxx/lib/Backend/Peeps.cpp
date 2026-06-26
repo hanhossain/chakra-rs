@@ -1011,7 +1011,7 @@ Peeps::CleanupLabel(IR::LabelInstr * instr, IR::LabelInstr * instrNext)
     }
     while (!labelToRemove->labelRefs.Empty())
     {
-        bool replaced = labelToRemove->labelRefs.Head()->ReplaceTarget(labelToRemove, labelToKeep);
+        [[maybe_unused]] bool replaced = labelToRemove->labelRefs.Head()->ReplaceTarget(labelToRemove, labelToKeep);
         Assert(replaced);
     }
 

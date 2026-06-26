@@ -1781,7 +1781,7 @@ Func::GetStackSymForFormal(Js::ArgSlot formalsIndex)
         return nullptr;
     }
 
-    Js::ArgSlot formalsCount = GetJITFunctionBody()->GetInParamsCount() - 1;
+    [[maybe_unused]] Js::ArgSlot formalsCount = GetJITFunctionBody()->GetInParamsCount() - 1;
     StackSym ** formalsIndexToStackSymMap = stackArgWithFormalsTracker->GetFormalsIndexToStackSymMap();
     AssertMsg(formalsIndex < formalsCount, "OutOfRange ? ");
     return formalsIndexToStackSymMap[formalsIndex];

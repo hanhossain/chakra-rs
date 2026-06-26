@@ -7226,7 +7226,7 @@ IRBuilder::ConsumeBranchIsland()
     {
         uint32_t offset = m_jnReader.GetCurrentOffset();
         Js::LayoutSize layoutSize;
-        Js::OpCode opcode = m_jnReader.ReadOp(layoutSize);
+        [[maybe_unused]] Js::OpCode opcode = m_jnReader.ReadOp(layoutSize);
         Assert(opcode == Js::OpCode::BrLong);
         Assert(layoutSize == Js::SmallLayout);
         BuildBrLong(Js::OpCode::BrLong, offset);
@@ -7281,7 +7281,7 @@ IRBuilder::ResolveVirtualLongBranch(IR::BranchInstr * branchInstr, uint offset)
         IR::Instr * returnIPInstr = CreateLoopBodyReturnIPInstr(targetOffset, branchInstr->GetByteCodeOffset());
 
         // Any jump to this branch to jump to the return IP load instr first
-        uint32_t branchInstrByteCodeOffset = branchInstr->GetByteCodeOffset();
+        [[maybe_unused]] uint32_t branchInstrByteCodeOffset = branchInstr->GetByteCodeOffset();
         Assert(this->m_offsetToInstruction[branchInstrByteCodeOffset] == branchInstr ||
             (this->m_offsetToInstruction[branchInstrByteCodeOffset]->HasBailOutInfo() &&
             this->m_offsetToInstruction[branchInstrByteCodeOffset]->GetBailOutKind() == IR::BailOutInjected));
@@ -7732,7 +7732,7 @@ IRBuilder::InsertInitLoopBodyLoopCounter(uint loopNum)
 {
     Assert(this->IsLoopBody());
 
-    intptr_t loopHeader = m_func->GetJITFunctionBody()->GetLoopHeaderAddr(loopNum);
+    [[maybe_unused]] intptr_t loopHeader = m_func->GetJITFunctionBody()->GetLoopHeaderAddr(loopNum);
     Assert(m_func->GetWorkItem()->GetLoopHeaderAddr() == loopHeader);  //Init only once
 
     m_loopCounterSym = StackSym::New(TyVar, this->m_func);

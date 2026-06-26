@@ -420,7 +420,7 @@ EncoderMD::EmitModRM(IR::Instr * instr, IR::Opnd *opnd, uint8_t reg1)
 
     AssertMsg(dispSize != -1, "Uninitialized dispSize");
 
-    uint8_t retval = this->EmitImmed(opnd, dispSize, 0);
+    [[maybe_unused]] uint8_t retval = this->EmitImmed(opnd, dispSize, 0);
 
     AssertMsg(retval == 0, "Not possible.");
     return rexEncoding;

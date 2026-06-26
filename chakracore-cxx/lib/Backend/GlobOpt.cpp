@@ -1520,7 +1520,7 @@ GlobOpt::OptArguments(IR::Instr *instr)
         {
             if (instr->GetSrc1()->IsRegOpnd() && instr->m_func->GetJITFunctionBody()->GetInParamsCount() > 1)
             {
-                StackSym * scopeObjSym = instr->GetSrc1()->GetStackSym();
+                [[maybe_unused]] StackSym * scopeObjSym = instr->GetSrc1()->GetStackSym();
                 Assert(scopeObjSym);
                 Assert(scopeObjSym->GetInstrDef()->m_opcode == Js::OpCode::InitCachedScope || scopeObjSym->GetInstrDef()->m_opcode == Js::OpCode::NewScopeObject);
                 Assert(instr->m_func->GetScopeObjSym() == scopeObjSym);
@@ -3686,7 +3686,7 @@ GlobOpt::TryOptimizeInstrWithFixedDataProperty(IR::Instr ** const pInstr)
 {
     Assert(pInstr);
     IR::Instr * &instr = *pInstr;
-    IR::Opnd * src1 = instr->GetSrc1();
+    [[maybe_unused]] IR::Opnd * src1 = instr->GetSrc1();
     Assert(src1 && src1->IsSymOpnd() && src1->AsSymOpnd()->IsPropertySymOpnd());
 
     if(PHASE_OFF(Js::UseFixedDataPropsPhase, instr->m_func))
@@ -7642,7 +7642,7 @@ GlobOpt::TypeSpecializeInlineBuiltInUnary(IR::Instr **pInstr, Value **pSrc1Val, 
 
         // Type-spec the src.
         src1Val = src1OriginalVal;
-        bool retVal = this->TypeSpecializeFloatUnary(pInstr, src1Val, pDstVal, /* skipDst = */ true);
+        [[maybe_unused]] bool retVal = this->TypeSpecializeFloatUnary(pInstr, src1Val, pDstVal, /* skipDst = */ true);
         AssertMsg(retVal, "For inline built-ins the args have to be type-specialized to float, but something failed during the process.");
 
         // Type-spec the dst.
@@ -7657,7 +7657,7 @@ GlobOpt::TypeSpecializeInlineBuiltInUnary(IR::Instr **pInstr, Value **pSrc1Val, 
         if (shouldTypeSpecToInt)
         {
             Assert(this->DoAggressiveIntTypeSpec());
-            bool retVal = this->TypeSpecializeIntUnary(pInstr, &src1Val, pDstVal, minVal, maxVal, src1OriginalVal, redoTypeSpecRef, true);
+            [[maybe_unused]] bool retVal = this->TypeSpecializeIntUnary(pInstr, &src1Val, pDstVal, minVal, maxVal, src1OriginalVal, redoTypeSpecRef, true);
             AssertMsg(retVal, "For inline built-ins the args have to be type-specialized (int), but something failed during the process.");
 
             if (!this->IsLoopPrePass())
@@ -7682,7 +7682,7 @@ GlobOpt::TypeSpecializeInlineBuiltInUnary(IR::Instr **pInstr, Value **pSrc1Val, 
             // If we couldn't do int, do float.
             Assert(this->DoFloatTypeSpec());
             src1Val = src1OriginalVal;
-            bool retVal = this->TypeSpecializeFloatUnary(pInstr, src1Val, pDstVal, true);
+            [[maybe_unused]] bool retVal = this->TypeSpecializeFloatUnary(pInstr, src1Val, pDstVal, true);
             AssertMsg(retVal, "For inline built-ins the args have to be type-specialized (float), but something failed during the process.");
 
             this->TypeSpecializeFloatDst(instr, nullptr, src1Val, nullptr, pDstVal);
@@ -7692,7 +7692,7 @@ GlobOpt::TypeSpecializeInlineBuiltInUnary(IR::Instr **pInstr, Value **pSrc1Val, 
     {
         // Type specialize src to float
         src1Val = src1OriginalVal;
-        bool retVal = this->TypeSpecializeFloatUnary(pInstr, src1Val, pDstVal, /* skipDst = */ true);
+        [[maybe_unused]] bool retVal = this->TypeSpecializeFloatUnary(pInstr, src1Val, pDstVal, /* skipDst = */ true);
         AssertMsg(retVal, "For inline Math.floor and Math.ceil the src has to be type-specialized to float, but something failed during the process.");
 
         // Type specialize dst to int
@@ -7750,7 +7750,7 @@ GlobOpt::TypeSpecializeInlineBuiltInUnary(IR::Instr **pInstr, Value **pSrc1Val, 
         Assert(this->DoAggressiveIntTypeSpec());
         Assert(this->DoLossyIntTypeSpec());
         //Type specialize to int
-        bool retVal = this->TypeSpecializeIntUnary(pInstr, &src1Val, pDstVal, INT32_MIN, INT32_MAX, src1OriginalVal, redoTypeSpecRef);
+        [[maybe_unused]] bool retVal = this->TypeSpecializeIntUnary(pInstr, &src1Val, pDstVal, INT32_MIN, INT32_MAX, src1OriginalVal, redoTypeSpecRef);
         AssertMsg(retVal, "For clz32, the arg has to be type-specialized to int.");
     }
     else
@@ -7772,14 +7772,14 @@ GlobOpt::TypeSpecializeInlineBuiltInBinary(IR::Instr **pInstr, Value *src1Val, V
             Js::BuiltinFunction builtInId = Js::JavascriptLibrary::GetBuiltInInlineCandidateId(instr->m_opcode);   // From actual instr, not profile based.
             Js::BuiltInFlags builtInFlags = Js::JavascriptLibrary::GetFlagsForBuiltIn(builtInId);
 
-            bool areAllArgsAlwaysFloat = (builtInFlags & Js::BuiltInFlags::BIF_TypeSpecAllToFloat) != 0;
+            [[maybe_unused]] bool areAllArgsAlwaysFloat = (builtInFlags & Js::BuiltInFlags::BIF_TypeSpecAllToFloat) != 0;
             Assert(areAllArgsAlwaysFloat);
             Assert(this->DoFloatTypeSpec());
 
             // Type-spec the src1, src2 and dst.
             src1Val = src1OriginalVal;
             src2Val = src2OriginalVal;
-            bool retVal = this->TypeSpecializeFloatBinary(instr, src1Val, src2Val, pDstVal);
+            [[maybe_unused]] bool retVal = this->TypeSpecializeFloatBinary(instr, src1Val, src2Val, pDstVal);
             AssertMsg(retVal, "For pow and atnan2 the args have to be type-specialized to float, but something failed during the process.");
 
             break;
@@ -7832,7 +7832,7 @@ GlobOpt::TypeSpecializeInlineBuiltInBinary(IR::Instr **pInstr, Value *src1Val, V
             Assert(this->DoLossyIntTypeSpec());
 
             //Type specialize to int
-            bool retVal = this->TypeSpecializeIntBinary(pInstr, src1Val, src2Val, pDstVal, INT32_MIN, INT32_MAX, false /* skipDst */);
+            [[maybe_unused]] bool retVal = this->TypeSpecializeIntBinary(pInstr, src1Val, src2Val, pDstVal, INT32_MIN, INT32_MAX, false /* skipDst */);
 
             AssertMsg(retVal, "For imul, the args have to be type-specialized to int but something failed during the process.");
             break;
@@ -7865,7 +7865,7 @@ GlobOpt::TypeSpecializeInlineBuiltInBinary(IR::Instr **pInstr, Value *src1Val, V
                     newMax = max(max1, max2);
                 }
                 // Type specialize to int
-                bool retVal = this->TypeSpecializeIntBinary(pInstr, src1Val, src2Val, pDstVal, newMin, newMax, false /* skipDst */);
+                [[maybe_unused]] bool retVal = this->TypeSpecializeIntBinary(pInstr, src1Val, src2Val, pDstVal, newMin, newMax, false /* skipDst */);
                 AssertMsg(retVal, "For min and max, the args have to be type-specialized to int if any one of the sources is an int, but something failed during the process.");
             }
 
@@ -7875,7 +7875,7 @@ GlobOpt::TypeSpecializeInlineBuiltInBinary(IR::Instr **pInstr, Value *src1Val, V
                 Assert(this->DoFloatTypeSpec());
                 src1Val = src1OriginalVal;
                 src2Val = src2OriginalVal;
-                bool retVal = this->TypeSpecializeFloatBinary(instr, src1Val, src2Val, pDstVal);
+                [[maybe_unused]] bool retVal = this->TypeSpecializeFloatBinary(instr, src1Val, src2Val, pDstVal);
                 AssertMsg(retVal, "For min and max, the args have to be type-specialized to float if any one of the sources is a float, but something failed during the process.");
             }
             break;
@@ -11835,7 +11835,7 @@ GlobOpt::ToTypeSpecUse(IR::Instr *instr, IR::Opnd *opnd, BasicBlock *block, Valu
 
         if (isInLandingPad)
         {
-            Loop *loop = block->next->loop;
+            [[maybe_unused]] Loop *loop = block->next->loop;
             Assert(loop && loop->landingPad == block);
             Assert(loop->bailOutInfo);
         }
@@ -15069,7 +15069,7 @@ GlobOpt::OptHoistInvariant(
 
             if (instr->HasBailOutInfo())
             {
-                IR::BailOutKind instrBailoutKind = instr->GetBailOutKind();
+                [[maybe_unused]] IR::BailOutKind instrBailoutKind = instr->GetBailOutKind();
                 Assert(instrBailoutKind == IR::BailOutIntOnly ||
                     instrBailoutKind == IR::BailOutExpectingInteger ||
                     instrBailoutKind == IR::BailOutOnNotPrimitive ||
@@ -17906,7 +17906,7 @@ void GlobOpt::PRE::RemoveOverlyOptimisticInitialValues(Loop * loop)
         StackSym * objPtrSym = propertySym->m_stackSym;
         if (!landingPad->globOptData.IsLive(objPtrSym))
         {
-            Value * landingPadPropSymValue = landingPad->globOptData.FindValue(propertySym);
+            [[maybe_unused]] Value * landingPadPropSymValue = landingPad->globOptData.FindValue(propertySym);
             Assert(landingPadPropSymValue);
             Assert(landingPadPropSymValue->GetValueNumber() == it.CurrentValue()->GetValueNumber());
             Assert(landingPadPropSymValue->GetValueInfo()->GetSymStore() == propertySym);

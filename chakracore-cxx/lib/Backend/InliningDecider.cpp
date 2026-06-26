@@ -907,7 +907,7 @@ void InliningDecider::TraceInlining(Js::FunctionBody *const inliner, const char1
     char16_t debugStringBuffer3[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
     if (inlineeName == nullptr)
     {
-        int len = swprintf_s(debugStringBuffer3, MAX_FUNCTION_BODY_DEBUG_STRING_SIZE, u"built In Id: %u", builtIn);
+        [[maybe_unused]] int len = swprintf_s(debugStringBuffer3, MAX_FUNCTION_BODY_DEBUG_STRING_SIZE, u"built In Id: %u", builtIn);
         Assert(len > 14);
         inlineeName = debugStringBuffer3;
     }

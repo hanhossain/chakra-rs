@@ -166,7 +166,7 @@ void
 NativeCodeData::VerifyExistFixupEntry(void* targetAddr, void* addrToFixup, void* startAddress)
 {
     DataChunk* chunk = NativeCodeData::GetDataChunk(startAddress);
-    DataChunk* targetChunk = NativeCodeData::GetDataChunk(targetAddr);
+    [[maybe_unused]] DataChunk* targetChunk = NativeCodeData::GetDataChunk(targetAddr);
     if (chunk->len == 0)
     {
         return;

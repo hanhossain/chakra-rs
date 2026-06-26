@@ -268,7 +268,7 @@ SCCLiveness::Build()
         else if (instr->IsBranchInstr() && !instr->AsBranchInstr()->IsMultiBranch())
         {
             IR::LabelInstr * branchTarget = instr->AsBranchInstr()->GetTarget();
-            Js::OpCode brOpcode = instr->m_opcode;
+            [[maybe_unused]] Js::OpCode brOpcode = instr->m_opcode;
             if (branchTarget->GetRegion() == nullptr && this->func->HasTry())
             {
                 Assert(brOpcode != Js::OpCode::Leave && brOpcode != Js::OpCode::TryCatch && brOpcode != Js::OpCode::TryFinally);

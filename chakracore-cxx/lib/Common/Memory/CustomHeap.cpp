@@ -916,7 +916,7 @@ void Heap<TAlloc, TPreReservedAlloc>::FreePage(Page* page)
 {
     // CodePageAllocators is locked in FreeAll
     Assert(inDtor);
-    uint32_t pageSize = AutoSystemInfo::PageSize;
+    [[maybe_unused]] uint32_t pageSize = AutoSystemInfo::PageSize;
     EnsurePageWriteable(page);
     size_t freeSpace = page->freeBitVector.Count() * Page::Alignment;
 

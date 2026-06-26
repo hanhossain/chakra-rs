@@ -5465,14 +5465,14 @@ ScriptContext::GetJitFuncRangeCache()
 
             void * pageAddr = GetPageAddr(address);
             RangeMap * rangeMap = nullptr;
-            bool isPageAddrFound = jitPageAddrToFuncRangeMap->TryGetValue(pageAddr, &rangeMap);
+            [[maybe_unused]] bool isPageAddrFound = jitPageAddrToFuncRangeMap->TryGetValue(pageAddr, &rangeMap);
             if (rangeMap == nullptr)
             {
                 Assert(!isPageAddrFound);
                 rangeMap = HeapNew(RangeMap, &HeapAllocator::Instance);
                 jitPageAddrToFuncRangeMap->Add(pageAddr, rangeMap);
             }
-            uint byteCount = 0;
+            [[maybe_unused]] uint byteCount = 0;
             Assert(!rangeMap->TryGetValue(address, &byteCount));
             rangeMap->Add(address, bytes);
         }
@@ -5483,7 +5483,7 @@ ScriptContext::GetJitFuncRangeCache()
                 largeJitFuncToSizeMap = HeapNew(LargeJITFuncAddrToSizeMap, &HeapAllocator::Instance, 1027);
             }
 
-            uint byteCount = 0;
+            [[maybe_unused]] uint byteCount = 0;
             Assert(!largeJitFuncToSizeMap->TryGetValue(address, &byteCount));
             largeJitFuncToSizeMap->Add(address, bytes);
         }

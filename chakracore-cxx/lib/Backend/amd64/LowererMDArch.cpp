@@ -755,7 +755,7 @@ LowererMDArch::LowerCallI(IR::Instr * callInstr, ushort callFlags, bool isHelper
     }
     else if (insertBeforeInstrForCFG != nullptr)
     {
-        RegNum dstReg = insertBeforeInstrForCFG->GetDst()->AsRegOpnd()->GetReg();
+        [[maybe_unused]] RegNum dstReg = insertBeforeInstrForCFG->GetDst()->AsRegOpnd()->GetReg();
         AssertMsg(dstReg == RegArg2 || dstReg == RegArg3, "NewScObject should insert the first Argument in RegArg2/RegArg3 only based on Spread call or not.");
         insertBeforeInstrForCFGCheck = insertBeforeInstrForCFG;
     }

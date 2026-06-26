@@ -547,7 +547,7 @@ ObjTypeSpecFldInfo* ObjTypeSpecFldInfo::CreateFrom(uint id, Js::InlineCache* cac
                 Js::ConstructorCache* runtimeConstructorCache = functionObject->GetConstructorCache();
                 if (runtimeConstructorCache->IsSetUpForJit() && runtimeConstructorCache->GetScriptContext() == scriptContext)
                 {
-                    Js::FunctionInfo* functionInfo = functionObject->GetFunctionInfo();
+                    [[maybe_unused]] Js::FunctionInfo* functionInfo = functionObject->GetFunctionInfo();
                     Assert(functionInfo != nullptr);
                     Assert((functionInfo->GetAttributes() & Js::FunctionInfo::ErrorOnNew) == 0);
 

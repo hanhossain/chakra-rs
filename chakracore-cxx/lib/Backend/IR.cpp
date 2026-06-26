@@ -3600,7 +3600,7 @@ uint Instr::GetArgOutCount(bool getInterpreterArgOutCount)
 
     // If the src2 is not set, that means that the interpreter and the JIT versions of the argout count are the same.
 
-    Js::OpCode opcode = this->m_opcode;
+    [[maybe_unused]] Js::OpCode opcode = this->m_opcode;
     Assert(opcode == Js::OpCode::StartCall ||
            opcode == Js::OpCode::InlineeEnd || opcode == Js::OpCode::InlineBuiltInEnd|| opcode == Js::OpCode::InlineNonTrackingBuiltInEnd ||
            opcode == Js::OpCode::EndCallForPolymorphicInlinee || opcode == Js::OpCode::LoweredStartCall);
@@ -3641,7 +3641,7 @@ uint Instr::GetAsmJsArgOutSize()
 
 uint Instr::GetArgOutSize(bool getInterpreterArgOutCount)
 {
-    Js::OpCode opcode = this->m_opcode;
+    [[maybe_unused]] Js::OpCode opcode = this->m_opcode;
     Assert(opcode == Js::OpCode::StartCall ||
         opcode == Js::OpCode::InlineeEnd || opcode == Js::OpCode::InlineBuiltInEnd || opcode == Js::OpCode::InlineNonTrackingBuiltInEnd ||
         opcode == Js::OpCode::EndCallForPolymorphicInlinee || opcode == Js::OpCode::LoweredStartCall);

@@ -430,7 +430,7 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBuffer(TEmitBuff
 
         // Buffer and the bytes that are marked RWX - these will eventually be marked as 'EXCEUTE' only.
         uint8_t* readWriteBuffer = currentDestBuffer;
-        size_t readWriteBytes = bytesToChange;
+        [[maybe_unused]] size_t readWriteBytes = bytesToChange;
 
         if (CheckCommitFaultInjection())
         {
@@ -463,7 +463,7 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBuffer(TEmitBuff
         {
             AssertMsg(alignPad == 0, "If we are copying right now - we should be done with setting alignment.");
 
-            const uint32_t bufferBytesFree(allocation->BytesFree());
+            [[maybe_unused]] const uint32_t bufferBytesFree(allocation->BytesFree());
             // Use <= here instead of < to allow this memcopy to fill up the rest of destBuffer.  If we do, then FinalizeAllocation,
             // called below, determines that no additional padding is necessary based on the values in `allocation'.
             AnalysisAssert(currentDestBuffer + bufferBytesFree <= destBuffer + destBufferBytes);

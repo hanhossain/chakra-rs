@@ -163,7 +163,7 @@ namespace Js
         FunctionInfo *const inlinee)
     {
         Assert(recycler);
-        const auto functionBody = GetFunctionBody();
+        [[maybe_unused]] const auto functionBody = GetFunctionBody();
         Assert(functionBody);
         Assert(inlineCacheIndex < GetFunctionBody()->GetInlineCacheCount());
         Assert(inlinee);

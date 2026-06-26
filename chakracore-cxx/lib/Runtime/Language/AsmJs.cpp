@@ -758,7 +758,7 @@ varDeclEnd:
                 return m.FailName(varStmt, u"Unable to create new function table %s", varStmt->name());
             }
 
-            AsmJsFunctionTable* ftable = (AsmJsFunctionTable*)m.LookupIdentifier(varStmt->name());
+            [[maybe_unused]] AsmJsFunctionTable* ftable = (AsmJsFunctionTable*)m.LookupIdentifier(varStmt->name());
             Assert(ftable);
             ParseNode* pnode = varStmt->AsParseNodeVar()->pnodeInit->AsParseNodeArrLit()->pnode1;
             if (pnode->nop == knopList)

@@ -897,7 +897,7 @@ public:
     void RemoveDeadYieldOffsetResumeLabel(IR::LabelInstr* label)
     {
         uint32_t offset;
-        bool found = m_yieldOffsetResumeLabelList->MapUntil([&offset, &label](int i, YieldOffsetResumeLabel& yorl)
+        [[maybe_unused]] bool found = m_yieldOffsetResumeLabelList->MapUntil([&offset, &label](int i, YieldOffsetResumeLabel& yorl)
         {
             if (yorl.Second() == label)
             {
