@@ -504,7 +504,7 @@ namespace Js
 
     bool AsmJsFunctionDeclaration::CheckAndSetReturnType(Js::AsmJsRetType val)
     {
-        const auto IsValid = [this](Js::AsmJsRetType val) {
+        [[maybe_unused]] const auto IsValid = [this](Js::AsmJsRetType val) {
             return AsmJsMathFunction::Is(this) || (
                 val != AsmJsRetType::Fixnum && val != AsmJsRetType::Unsigned && val != AsmJsRetType::Floatish
             );
