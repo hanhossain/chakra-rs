@@ -2754,15 +2754,6 @@ namespace Js
         SourceContextInfo * sourceContextInfo = nullptr;
         if (this->Cache()->sourceContextInfoMap->TryGetValue(sourceContext, &sourceContextInfo))
         {
-#if ENABLE_PROFILE_INFO
-            if (dataCacheWrapper &&
-                sourceContextInfo->sourceDynamicProfileManager != nullptr &&
-                !sourceContextInfo->sourceDynamicProfileManager->IsProfileLoadedFromWinInet() &&
-                !this->startupComplete)
-            {
-                bool profileLoaded = sourceContextInfo->sourceDynamicProfileManager->LoadFromProfileCache(dataCacheWrapper, sourceContextInfo->url);
-            }
-#endif
             return sourceContextInfo;
         }
         return nullptr;
