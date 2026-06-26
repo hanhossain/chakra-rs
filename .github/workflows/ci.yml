@@ -26,7 +26,8 @@ jobs:
           - test
         include:
           - os: macos
-            os-image: macos-latest
+            # TODO (hanhossain) use macos-latest again
+            os-image: macos-15
             deps: brew install ninja --quiet
           - os: ubuntu
             os-image: ubuntu-latest
@@ -75,7 +76,8 @@ jobs:
           - test
         include:
           - os: macos
-            os-image: macos-latest
+            # TODO (hanhossain) use macos-latest again
+            os-image: macos-15
             os-prefix: macos
             deps: brew install ninja --quiet
           - os: ubuntu
