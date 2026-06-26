@@ -7,7 +7,7 @@
 #if DEBUG
 #define DEBUG_TRASHMEM(pv, cb) memset(pv, 0xbc, cb)
 #else
-#define DEBUG_TRASHMEM
+#define DEBUG_TRASHMEM(...)
 #endif //DEBUG
 
 #if TARGET_64
