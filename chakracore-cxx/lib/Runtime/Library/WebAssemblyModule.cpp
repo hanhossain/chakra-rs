@@ -842,7 +842,6 @@ WebAssemblyModule::SetSignatureCount(uint32_t count)
 uint32_t
 WebAssemblyModule::GetModuleEnvironmentSize() const
 {
-    static const uint DOUBLE_SIZE_IN_INTS = sizeof(double) / sizeof(int);
     // 1 each for memory, table, and signatures
     uint32_t size = 3;
     size = UInt32Math::Add(size, GetWasmFunctionCount());

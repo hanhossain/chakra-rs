@@ -89,14 +89,6 @@ namespace Js
     }
 
     //
-    // Loads the profile from the WININET cache
-    //
-    bool SourceDynamicProfileManager::LoadFromProfileCache(SimpleDataCacheWrapper* dataCacheWrapper, const char16_t* url)
-    {
-        return false;
-    }
-
-    //
     // Saves the profile to the WININET cache and returns the bytes written
     //
     uint SourceDynamicProfileManager::SaveToProfileCacheAndRelease(SourceContextInfo* info)
@@ -180,10 +172,6 @@ namespace Js
         if(manager == nullptr)
         {
             manager = RecyclerNew(recycler, SourceDynamicProfileManager, recycler);
-        }
-        if(dataCacheWrapper != nullptr)
-        {
-            bool profileLoaded = manager->LoadFromProfileCache(dataCacheWrapper, info->url);
         }
         return manager;
     }
