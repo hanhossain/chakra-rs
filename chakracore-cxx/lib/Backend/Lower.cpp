@@ -16148,7 +16148,7 @@ void Lowerer::InsertFloatCheckForZeroOrNanBranch(
 
     Func *const func = insertBeforeInstr->m_func;
 
-    IR::BranchInstr *const branchOnEqualOrNotEqual =
+    [[maybe_unused]] IR::BranchInstr *const branchOnEqualOrNotEqual =
         InsertCompareBranch(
             src,
             IR::MemRefOpnd::New(func->GetThreadContextInfo()->GetDoubleZeroAddr(), TyFloat64, func),
@@ -16157,15 +16157,6 @@ void Lowerer::InsertFloatCheckForZeroOrNanBranch(
             insertBeforeInstr,
             true /* ignoreNaN */);
 
-    // x86/x64
-    //     When NaN is ignored, on x86 and x64, JE branches when equal or unordered since an unordered result sets the zero
-    //     flag, and JNE branches when not equal and not unordered. By comparing with zero, JE will branch when src is zero or
-    //     NaN, and JNE will branch when src is not zero and not NaN.
-    //
-    // ARM
-    //     When NaN is ignored, BEQ branches when equal and not unordered, and BNE branches when not equal or unordered. So,
-    //     when comparing src with zero, an unordered check needs to be added before the BEQ/BNE.
-    branchOnEqualOrNotEqual; // satisfy the compiler
 #ifdef _M_ARM32_OR_ARM64
     InsertBranch(
         Js::OpCode::BVS,
@@ -22152,7 +22143,6 @@ Lowerer::GenerateFunctionTypeFromFixedFunctionObject(IR::Instr *insertInstrPt, I
     {
         IR::AddrOpnd* functionObjAddrOpnd = functionObjOpnd->AsAddrOpnd();
         // functionTypeRegOpnd = MOV [fixed function address + type offset]
-        functionObjAddrOpnd->m_address;
         functionTypeOpnd = IR::MemRefOpnd::New((void *)((intptr_t)functionObjAddrOpnd->m_address + Js::RecyclableObject::GetOffsetOfType()), TyMachPtr, this->m_func,
             IR::AddrOpndKindDynamicObjectTypeRef);
     }
