@@ -678,45 +678,10 @@ using namespace Js;
     {
         Var ret = nullptr;
 
-#ifdef DISABLE_SEH
         // xplat: JavascriptArrayBuffer::AllocWrapper is disabled on cross-platform
         // (IsValidVirtualBufferLength always returns false).
         // SEH and ResumeForOutOfBoundsArrayRefs are not needed.
         ret = JavascriptFunction::CallRootFunctionInternal(obj, args, scriptContext, inScript);
-#else
-        if (scriptContext->GetThreadContext()->GetAbnormalExceptionCode() != 0)
-        {
-            // ensure that hosts are not doing SEH across Chakra frames, as that can lead to bad state (e.g. destructors not being called)
-            UnexpectedExceptionHandling_fatal_error();
-        }
-
-        // mark volatile, because otherwise VC will incorrectly optimize away load in the finally block
-        volatile uint32_t exceptionCode = 0;
-        EXCEPTION_POINTERS exceptionInfo = { 0 };
-        __try
-        {
-            __try
-            {
-                ret = JavascriptFunction::CallRootFunctionInternal(obj, args, scriptContext, inScript);
-            }
-            __except (
-                exceptionInfo = *GetExceptionInformation(),
-                exceptionCode = GetExceptionCode(),
-                CallRootEventFilter(exceptionCode, GetExceptionInformation()))
-            {
-                Assert(UNREACHED);
-            }
-        }
-        __finally
-        {
-            // 0xE06D7363 is C++ exception code
-            if (exceptionCode != 0 && exceptionCode != 0xE06D7363 && AbnormalTermination() && !Abstractions::IsDebuggerPresent())
-            {
-                scriptContext->GetThreadContext()->SetAbnormalExceptionCode(exceptionCode);
-                scriptContext->GetThreadContext()->SetAbnormalExceptionRecord(&exceptionInfo);
-            }
-        }
-#endif
         //ret should never be null here
         Assert(ret);
         return ret;

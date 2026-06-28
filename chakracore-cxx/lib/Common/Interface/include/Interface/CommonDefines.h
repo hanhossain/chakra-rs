@@ -497,8 +497,6 @@
 #endif
 #endif
 
-#define DISABLE_SEH 1
-
 //----------------------------------------------------------------------------------------------------
 // Dependent flags
 //  - flags values that are dependent on other flags

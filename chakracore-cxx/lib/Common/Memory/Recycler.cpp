@@ -5529,46 +5529,16 @@ Recycler::FinishTransferSwept(CollectionFlags flags)
 
 }
 
-#if !DISABLE_SEH
-int
-Recycler::ExceptFilter(LPEXCEPTION_POINTERS pEP)
-{
-#if DBG
-    // Assert exception code
-    if (pEP->ExceptionRecord->ExceptionCode == STATUS_ASSERTION_FAILURE)
-    {
-        return EXCEPTION_CONTINUE_SEARCH;
-    }
-#endif
-
-    Output::Flush();
-    return EXCEPTION_CONTINUE_SEARCH;
-
-}
-#endif
-
 unsigned int
 Recycler::StaticThreadProc(void * lpParameter)
 {
     uint32_t ret = (uint32_t)-1;
-#if !DISABLE_SEH
-    __try
-    {
-#endif
         Recycler * recycler = (Recycler *)lpParameter;
 
 #if DBG
         recycler->concurrentThreadExited = false;
 #endif
         ret = recycler->ThreadProc();
-#if !DISABLE_SEH
-    }
-    __except(Recycler::ExceptFilter(GetExceptionInformation()))
-    {
-        Assert(false);
-    }
-#endif
-
     return ret;
 }
 
@@ -6347,10 +6317,6 @@ unsigned int
 RecyclerParallelThread::StaticThreadProc(void * lpParameter)
 {
     uint32_t ret = (uint32_t)-1;
-#if !DISABLE_SEH
-    __try
-    {
-#endif
         RecyclerParallelThread * parallelThread = (RecyclerParallelThread *)lpParameter;
         Recycler * recycler = parallelThread->recycler;
         RecyclerParallelThread::WorkFunc workFunc = parallelThread->workFunc;
@@ -6390,14 +6356,6 @@ RecyclerParallelThread::StaticThreadProc(void * lpParameter)
         SetEvent(parallelThread->concurrentWorkDoneEvent);
 
         ret = 0;
-#if !DISABLE_SEH
-    }
-    __except(Recycler::ExceptFilter(GetExceptionInformation()))
-    {
-        Assert(false);
-    }
-#endif
-
     return ret;
 }
 

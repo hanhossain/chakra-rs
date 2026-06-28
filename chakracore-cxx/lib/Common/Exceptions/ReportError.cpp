@@ -21,21 +21,7 @@ void ReportFatalException(
         DebugBreak();
     }
 
-#ifdef DISABLE_SEH
     TerminateProcess(GetCurrentProcess(), (uint32_t)DBG_TERMINATE_PROCESS);
-#else
-    void * addressToBlame = __builtin_return_address(0);
-    __try
-    {
-        size_t ExceptionInformation[2];
-        ExceptionInformation[0] = (size_t)reasonCode;
-        ExceptionInformation[1] = (size_t)context;
-        RaiseException(exceptionCode, EXCEPTION_NONCONTINUABLE, 2, (size_t*)ExceptionInformation);
-    }
-    __except(FatalExceptionFilter(GetExceptionInformation(), addressToBlame))
-    {
-    }
-#endif // DISABLE_SEH
 }
 
 // Disable optimization make sure all the frames are still available in Dr. Watson bug reports.
