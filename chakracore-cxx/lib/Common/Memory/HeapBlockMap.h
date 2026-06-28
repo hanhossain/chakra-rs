@@ -66,10 +66,8 @@ public:
 
     void ResetMarks();
 
-#if ENABLE_CONCURRENT_GC || ENABLE_PARTIAL_GC
     void ResetDirtyPages(Recycler * recycler);
     uint Rescan(Recycler * recycler, bool resetWriteWatch);
-#endif
     void MakeAllPagesReadOnly(Recycler* recycler);
     void MakeAllPagesReadWrite(Recycler* recycler);
 
@@ -251,10 +249,8 @@ public:
 
     void ResetMarks();
 
-#if ENABLE_CONCURRENT_GC || ENABLE_PARTIAL_GC
     void ResetDirtyPages(Recycler * recycler);
     uint Rescan(Recycler * recycler, bool resetWriteWatch);
-#endif
     void MakeAllPagesReadOnly(Recycler* recycler);
     void MakeAllPagesReadWrite(Recycler* recycler);
     bool OOMRescan(Recycler * recycler);

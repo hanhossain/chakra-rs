@@ -604,7 +604,6 @@ HeapBlockMap32::ForEachSegment(Recycler * recycler, Fn func)
     }
 }
 
-#if ENABLE_CONCURRENT_GC
 void
 HeapBlockMap32::ResetDirtyPages(Recycler * recycler)
 {
@@ -621,7 +620,6 @@ HeapBlockMap32::ResetDirtyPages(Recycler * recycler)
         }
     });
 }
-#endif
 
 bool
 HeapBlockMap32::RescanPage(void * dirtyPage, bool* anyObjectsMarkedOnPage, Recycler * recycler)
@@ -776,7 +774,6 @@ HeapBlockMap32::ChangeProtectionLevel(Recycler* recycler, uint32_t protectFlags,
     });
 }
 
-#if ENABLE_CONCURRENT_GC
 uint
 HeapBlockMap32::Rescan(Recycler * recycler, bool resetWriteWatch)
 {
@@ -824,7 +821,6 @@ HeapBlockMap32::Rescan(Recycler * recycler, bool resetWriteWatch)
 
     return scannedPageCount;
 }
-#endif
 
 bool
 HeapBlockMap32::OOMRescan(Recycler * recycler)
@@ -1281,7 +1277,6 @@ HeapBlockMap64::OOMRescan(Recycler * recycler)
     return true;
 }
 
-#if ENABLE_CONCURRENT_GC
 void
 HeapBlockMap64::ResetDirtyPages(Recycler * recycler)
 {
@@ -1292,7 +1287,6 @@ HeapBlockMap64::ResetDirtyPages(Recycler * recycler)
         node = node->next;
     }
 }
-#endif
 
 void
 HeapBlockMap64::MakeAllPagesReadOnly(Recycler* recycler)
@@ -1316,7 +1310,6 @@ HeapBlockMap64::MakeAllPagesReadWrite(Recycler* recycler)
     }
 }
 
-#if ENABLE_CONCURRENT_GC
 uint
 HeapBlockMap64::Rescan(Recycler * recycler, bool resetWriteWatch)
 {
@@ -1331,7 +1324,6 @@ HeapBlockMap64::Rescan(Recycler * recycler, bool resetWriteWatch)
 
     return scannedPageCount;
 }
-#endif
 
 void
 HeapBlockMap64::Cleanup(bool concurrentFindImplicitRoot)

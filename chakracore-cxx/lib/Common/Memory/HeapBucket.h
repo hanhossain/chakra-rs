@@ -181,11 +181,9 @@ public:
 #endif
 
     uint Rescan(Recycler * recycler, RescanFlags flags);
-#if ENABLE_CONCURRENT_GC
     void MergeNewHeapBlock(TBlockType * heapBlock);
     void PrepareSweep();
     void SetupBackgroundSweep(RecyclerSweep& recyclerSweep);
-#endif
     friend class ::ScriptMemoryDumper;
 
     static bool IsAnyFinalizableBucket()

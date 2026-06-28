@@ -176,7 +176,6 @@ HeapBlock::UpdateAttributesOfMarkedObjects(MarkContext * markContext, void * obj
         if (!markContext->GetRecycler()->inPartialCollectMode)
 #endif
         {
-#if ENABLE_CONCURRENT_GC
             if (markContext->GetRecycler()->DoQueueTrackedObject())
             {
                 if (!markContext->AddTrackedObject(trackedObject))
@@ -185,7 +184,6 @@ HeapBlock::UpdateAttributesOfMarkedObjects(MarkContext * markContext, void * obj
                 }
             }
             else
-#endif
             {
                 // Process the tracked object right now
                 markContext->MarkTrackedObject(trackedObject);
