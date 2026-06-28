@@ -575,12 +575,10 @@ public:
     AutoRecyclerPtr(Recycler * ptr) : AutoPtr<Recycler>(ptr) {}
     ~AutoRecyclerPtr()
     {
-#if ENABLE_CONCURRENT_GC
         if (ptr != nullptr)
         {
             ptr->ShutdownThread();
         }
-#endif
     }
 };
 
@@ -1310,9 +1308,7 @@ ThreadContext::EnterScriptStart(Js::ScriptEntryExitRecord * record, bool doClean
         if (doCleanup)
         {
             recycler->EnterIdleDecommit();
-#if ENABLE_CONCURRENT_GC
             recycler->FinishConcurrent<FinishConcurrentOnEnterScript>();
-#endif
             if (threadServiceWrapper == NULL)
             {
                 // Reschedule the next collection at the start of the script.

@@ -373,18 +373,14 @@ public:
 
     void Sweep(RecyclerSweep& recyclerSweep);
     uint Rescan(Recycler * recycler, RescanFlags flags);
-#if ENABLE_CONCURRENT_GC
     void SweepPendingObjects(RecyclerSweep& recyclerSweep);
-#endif
 #if ENABLE_PARTIAL_GC
     void SweepPartialReusePages(RecyclerSweep& recyclerSweep);
     void FinishPartialCollect(RecyclerSweep * recyclerSweep);
 #endif
-#if ENABLE_CONCURRENT_GC
     void PrepareSweep();
     void SetupBackgroundSweep(RecyclerSweep& recyclerSweep);
     void TransferPendingEmptyHeapBlocks(RecyclerSweep& recyclerSweep);
-#endif
     void SweepFinalizableObjects(RecyclerSweep& recyclerSweep);
     void DisposeObjects();
     void TransferDisposedObjects();

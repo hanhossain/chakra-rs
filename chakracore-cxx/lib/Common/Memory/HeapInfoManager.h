@@ -48,21 +48,17 @@ public:
 
     void SweepSmallNonFinalizable(RecyclerSweepManager& recyclerSweepManager);
 
-#if ENABLE_PARTIAL_GC || ENABLE_CONCURRENT_GC
     void SweepPendingObjects(RecyclerSweepManager& recyclerSweepManager);
-#endif
-    
+
 #if ENABLE_PARTIAL_GC
     void SweepPartialReusePages(RecyclerSweepManager& recyclerSweepManager);
     void FinishPartialCollect(RecyclerSweepManager * recyclerSweepManager);
 #endif
-#if ENABLE_CONCURRENT_GC
     void PrepareSweep();
     void ConcurrentTransferSweptObjects(RecyclerSweepManager& recyclerSweepManager);
 
 #if ENABLE_PARTIAL_GC
     void ConcurrentPartialTransferSweptObjects(RecyclerSweepManager& recyclerSweepManager);
-#endif
 #endif
 
     void DisposeObjects();

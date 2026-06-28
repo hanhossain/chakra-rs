@@ -35,21 +35,17 @@ inline bool MarkContext::AddPreciselyTracedObject(IRecyclerVisitedObject* obj)
 }
 #endif
 
-#if ENABLE_CONCURRENT_GC
 inline
 bool MarkContext::AddTrackedObject(FinalizableObject * obj)
 {
     Assert(obj != nullptr);
-#if ENABLE_CONCURRENT_GC
     Assert(recycler->DoQueueTrackedObject());
-#endif
 #if ENABLE_PARTIAL_GC
     Assert(!recycler->inPartialCollectMode);
 #endif
 
     return trackStack.Push(obj);
 }
-#endif
 
 template <bool parallel, bool interior, bool doSpecialMark>
 NO_SANITIZE_ADDRESS
@@ -180,10 +176,8 @@ void MarkContext::Mark(void * candidate, void * parentReference)
 inline
 void MarkContext::MarkTrackedObject(FinalizableObject * trackedObject)
 {
-#if ENABLE_CONCURRENT_GC
     Assert(!recycler->queueTrackedObject);
     Assert(!recycler->IsConcurrentExecutingState());
-#endif
 #if ENABLE_PARTIAL_GC
     Assert(!recycler->inPartialCollectMode);
 #endif

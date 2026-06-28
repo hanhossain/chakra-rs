@@ -398,7 +398,6 @@ HeapInfo::HeapInfo(AllocationPolicyManager * policyManager, Js::ConfigFlagsTable
 #ifdef RECYCLER_WRITE_BARRIER_ALLOC_SEPARATE_PAGE
     recyclerWithBarrierPageAllocator(this, policyManager, configFlagsTable, RecyclerHeuristic::Instance.DefaultMaxFreePageCount, PageAllocator::DefaultMaxAllocPageCount, true),
 #endif
-#if ENABLE_CONCURRENT_GC
     newLeafHeapBlockList(nullptr),
     newNormalHeapBlockList(nullptr),
     newNormalWithBarrierHeapBlockList(nullptr),
@@ -415,7 +414,6 @@ HeapInfo::HeapInfo(AllocationPolicyManager * policyManager, Js::ConfigFlagsTable
     newMediumRecyclerVisitedHostHeapBlockList(nullptr),
 #endif
     newMediumFinalizableHeapBlockList(nullptr),
-#endif
 #ifdef RECYCLER_FINALIZE_CHECK
     liveFinalizableObjectCount(0),
     pendingDisposableObjectCount(0),
@@ -458,7 +456,6 @@ HeapInfo::~HeapInfo()
 
     largeObjectBucket.FinalizeAllObjects();
 
-#if ENABLE_CONCURRENT_GC
     SmallFinalizableHeapBucket::FinalizeHeapBlockList(this->newFinalizableHeapBlockList);
     MediumFinalizableHeapBucket::FinalizeHeapBlockList(this->newMediumFinalizableHeapBlockList);
 #ifdef RECYCLER_VISITED_HOST
@@ -467,7 +464,6 @@ HeapInfo::~HeapInfo()
 #endif
     SmallFinalizableWithBarrierHeapBucket::FinalizeHeapBlockList(this->newFinalizableWithBarrierHeapBlockList);
     MediumFinalizableWithBarrierHeapBucket::FinalizeHeapBlockList(this->newMediumFinalizableWithBarrierHeapBlockList);
-#endif
 
 #ifdef RECYCLER_FINALIZE_CHECK
     Assert(liveFinalizableObjectCount == 0);
@@ -490,7 +486,6 @@ HeapInfo::~HeapInfo()
 
     RECYCLER_SLOW_CHECK(Assert(this->heapBlockCount[HeapBlock::HeapBlockType::LargeBlockType] - largeBlockCount - mediumBlockCount == 0));
 
-#if ENABLE_CONCURRENT_GC
     SmallLeafHeapBucket::DeleteHeapBlockList(this->newLeafHeapBlockList, recycler);
     SmallNormalHeapBucket::DeleteHeapBlockList(this->newNormalHeapBlockList, recycler);
     SmallNormalWithBarrierHeapBucket::DeleteHeapBlockList(this->newNormalWithBarrierHeapBlockList, recycler);
@@ -508,7 +503,6 @@ HeapInfo::~HeapInfo()
     MediumFinalizableHeapBucket::DeleteHeapBlockList(this->newMediumRecyclerVisitedHostHeapBlockList, recycler);
 #endif
 
-#endif
 
     // We do this here, instead of in the Recycler destructor, because the above stuff may
     // generate additional tracking events, particularly ReportUnallocated.
@@ -688,7 +682,6 @@ HeapInfo::ResetMarks(ResetMarkFlags flags)
 
     largeObjectBucket.ResetMarks(flags);
 
-#if ENABLE_CONCURRENT_GC
     if ((flags & ResetMarkFlags_ScanImplicitRoot) != 0)
     {
         HeapBlockList::ForEach(newLeafHeapBlockList, [flags](SmallLeafHeapBlock * heapBlock)
@@ -740,7 +733,6 @@ HeapInfo::ResetMarks(ResetMarkFlags flags)
             heapBlock->MarkImplicitRoots();
         });
     }
-#endif
 }
 
 void
@@ -759,7 +751,6 @@ HeapInfo::ScanInitialImplicitRoots()
 
     largeObjectBucket.ScanInitialImplicitRoots(recycler);
 
-#if ENABLE_CONCURRENT_GC
     // NOTE: Don't need to do newLeafHeapBlockList
 
     HeapBlockList::ForEach(newNormalHeapBlockList, [this](SmallNormalHeapBlock * heapBlock)
@@ -782,9 +773,6 @@ HeapInfo::ScanInitialImplicitRoots()
         heapBlock->ScanInitialImplicitRoots(recycler);
     });
 
-#endif
-
-#if ENABLE_CONCURRENT_GC
     // NOTE: Don't need to do newLeafHeapBlockList
 
     HeapBlockList::ForEach(newMediumNormalHeapBlockList, [this](MediumNormalHeapBlock * heapBlock)
@@ -807,7 +795,6 @@ HeapInfo::ScanInitialImplicitRoots()
         heapBlock->ScanInitialImplicitRoots(recycler);
     });
 
-#endif
 
 }
 
@@ -827,8 +814,6 @@ HeapInfo::ScanNewImplicitRoots()
 #endif
 
     largeObjectBucket.ScanNewImplicitRoots(recycler);
-
-#if ENABLE_CONCURRENT_GC
 
     // NOTE: need to do newLeafHeapBlockList to find new memory
     HeapBlockList::ForEach(newLeafHeapBlockList, [this](SmallLeafHeapBlock * heapBlock)
@@ -882,7 +867,6 @@ HeapInfo::ScanNewImplicitRoots()
         heapBlock->ScanNewImplicitRoots(recycler);
     });
 
-#endif
 }
 
 LargeHeapBlock *
@@ -905,7 +889,6 @@ HeapInfo::Finalize(RecyclerSweep& recyclerSweep)
 #endif
     RECYCLER_SLOW_CHECK(VerifySmallHeapBlockCount());
 
-#if ENABLE_CONCURRENT_GC
     // Merge the new blocks before we sweep the finalizable object in thread
     recyclerSweep.MergePendingNewHeapBlockList<SmallFinalizableHeapBlock>();
     recyclerSweep.MergePendingNewMediumHeapBlockList<MediumFinalizableHeapBlock>();
@@ -915,7 +898,6 @@ HeapInfo::Finalize(RecyclerSweep& recyclerSweep)
 #ifdef RECYCLER_VISITED_HOST
     recyclerSweep.MergePendingNewHeapBlockList<SmallRecyclerVisitedHostHeapBlock>();
     recyclerSweep.MergePendingNewMediumHeapBlockList<MediumRecyclerVisitedHostHeapBlock>();
-#endif
 #endif
 
     RECYCLER_PROFILE_EXEC_BEGIN(recycler, Js::FinalizePhase);    
@@ -950,7 +932,6 @@ HeapInfo::Sweep(RecyclerSweep& recyclerSweep, bool concurrent)
 {
     RECYCLER_PROFILE_EXEC_BEGIN(recyclerSweep.GetRecycler(), Js::SweepSmallPhase);
 
-#if ENABLE_CONCURRENT_GC
     if (concurrent)
     {
         RECYCLER_SLOW_CHECK(VerifySmallHeapBlockCount());
@@ -962,7 +943,6 @@ HeapInfo::Sweep(RecyclerSweep& recyclerSweep, bool concurrent)
         this->SetupBackgroundSweep(recyclerSweep);
     }
     else
-#endif
     {
         this->SweepSmallNonFinalizable(recyclerSweep);
     }
@@ -984,7 +964,6 @@ HeapInfo::Sweep(RecyclerSweep& recyclerSweep, bool concurrent)
     RECYCLER_SLOW_CHECK(Assert(this->newFinalizableObjectCount == 0));
 }
 
-#if ENABLE_CONCURRENT_GC
 void
 HeapInfo::SetupBackgroundSweep(RecyclerSweep& recyclerSweep)
 {
@@ -1000,12 +979,10 @@ HeapInfo::SetupBackgroundSweep(RecyclerSweep& recyclerSweep)
     }
 #endif
 }
-#endif
 
 void
 HeapInfo::SweepSmallNonFinalizable(RecyclerSweep& recyclerSweep)
 {
-#if ENABLE_CONCURRENT_GC
     recyclerSweep.MergePendingNewHeapBlockList<SmallLeafHeapBlock>();
     recyclerSweep.MergePendingNewHeapBlockList<SmallNormalHeapBlock>();
     recyclerSweep.MergePendingNewMediumHeapBlockList<MediumLeafHeapBlock>();
@@ -1015,7 +992,6 @@ HeapInfo::SweepSmallNonFinalizable(RecyclerSweep& recyclerSweep)
 
     // Finalizable are already merge before in SweepHeap
     Assert(!recyclerSweep.HasPendingNewHeapBlocks());
-#endif
     if (!recyclerSweep.IsBackground())
     {
         // finalizer may trigger arena allocations, do don't suspend the leaf (thread) page allocator
@@ -1076,7 +1052,6 @@ HeapInfo::Rescan(RescanFlags flags)
 void
 HeapInfo::GetBucketStats(BucketStatsReporter& report)
 {
-#if ENABLE_CONCURRENT_GC
     // Pre aggregate pass on all the heap blocks that are not merged into bucket's lists yet
     report.PreAggregateBucketStats(this->newNormalHeapBlockList);
     report.PreAggregateBucketStats(this->newLeafHeapBlockList);
@@ -1097,7 +1072,6 @@ HeapInfo::GetBucketStats(BucketStatsReporter& report)
     report.PreAggregateBucketStats(this->newMediumRecyclerVisitedHostHeapBlockList);
 #endif
 #endif
-#endif  // ENABLE_CONCURRENT_GC
 
     for (uint i = 0; i < HeapConstants::BucketCount; i++)
     {
@@ -1180,7 +1154,6 @@ void HeapInfo::FinishPartialCollect(RecyclerSweep * recyclerSweep)
 }
 #endif
 
-#if ENABLE_CONCURRENT_GC
 void
 HeapInfo::PrepareSweep()
 {
@@ -1196,9 +1169,7 @@ HeapInfo::PrepareSweep()
     }
 #endif
 }
-#endif
 
-#if ENABLE_PARTIAL_GC || ENABLE_CONCURRENT_GC
 void
 HeapInfo::SweepPendingObjects(RecyclerSweep& recyclerSweep)
 {
@@ -1226,9 +1197,7 @@ HeapInfo::SweepPendingObjects(RecyclerSweep& recyclerSweep)
 
     largeObjectBucket.SweepPendingObjects(recyclerSweep);
 }
-#endif
 
-#if ENABLE_CONCURRENT_GC
 void
 HeapInfo::TransferPendingHeapBlocks(RecyclerSweep& recyclerSweep)
 {
@@ -1298,7 +1267,6 @@ HeapInfo::ConcurrentPartialTransferSweptObjects(RecyclerSweep& recyclerSweep)
     RECYCLER_SLOW_CHECK(this->VerifyLargeHeapBlockCount());
 }
 #endif
-#endif
 
 void
 HeapInfo::DisposeObjects()
@@ -1327,9 +1295,7 @@ HeapInfo::DisposeObjects()
     while (recycler->hasDisposableObject);
 
     this->hasPendingTransferDisposedObjects = true;
-#if ENABLE_CONCURRENT_GC
     if (!recycler->IsConcurrentExecutingState())
-#endif
     {
         // Can't transfer disposed object when the background thread is walking the heap block list
         // That includes reset mark, background rescan and concurrent sweep. Delay the transfer later.
@@ -1348,9 +1314,7 @@ void
 HeapInfo::TransferDisposedObjects()
 {
     Assert(this->hasPendingTransferDisposedObjects);
-#if ENABLE_CONCURRENT_GC
     Assert(!this->recycler->IsConcurrentExecutingState());
-#endif
     this->hasPendingTransferDisposedObjects = false;
 
     // move the disposed object back to the free lists
@@ -1385,7 +1349,6 @@ HeapInfo::EnumerateObjects(ObjectInfoBits infoBits, void (*CallBackFunction)(voi
 
     largeObjectBucket.EnumerateObjects(infoBits, CallBackFunction);
 
-#if ENABLE_CONCURRENT_GC
     HeapBucket::EnumerateObjects(newLeafHeapBlockList, infoBits, CallBackFunction);
     HeapBucket::EnumerateObjects(newNormalHeapBlockList, infoBits, CallBackFunction);
     HeapBucket::EnumerateObjects(newNormalWithBarrierHeapBlockList, infoBits, CallBackFunction);
@@ -1405,7 +1368,6 @@ HeapInfo::EnumerateObjects(ObjectInfoBits infoBits, void (*CallBackFunction)(voi
     HeapBucket::EnumerateObjects(newMediumRecyclerVisitedHostHeapBlockList, infoBits, CallBackFunction);
 #endif
     HeapBucket::EnumerateObjects(newMediumFinalizableHeapBlockList, infoBits, CallBackFunction);
-#endif
 }
 
 #if DBG || defined(RECYCLER_SLOW_CHECK_ENABLED)
@@ -1427,7 +1389,6 @@ HeapInfo::GetSmallHeapBlockCount(bool checkCount) const
     }
 #endif
 
-#if ENABLE_CONCURRENT_GC
     currentSmallHeapBlockCount += HeapBlockList::Count(this->newLeafHeapBlockList);
     currentSmallHeapBlockCount += HeapBlockList::Count(this->newNormalHeapBlockList);
     currentSmallHeapBlockCount += HeapBlockList::Count(this->newFinalizableHeapBlockList);
@@ -1454,7 +1415,6 @@ HeapInfo::GetSmallHeapBlockCount(bool checkCount) const
         Assert(!this->recycler->recyclerSweepManager->IsBackground());
         currentSmallHeapBlockCount += this->recycler->recyclerSweepManager->GetPendingMergeNewHeapBlockCount(this);
     }
-#endif
 #ifdef RECYCLER_SLOW_CHECK_ENABLED
     size_t expectedHeapBlockCount =
         this->heapBlockCount[HeapBlock::HeapBlockType::SmallNormalBlockType]
@@ -1527,7 +1487,6 @@ HeapInfo::Check()
     }
 #endif
 
-#if ENABLE_CONCURRENT_GC
     currentSmallHeapBlockCount += Check(true, false, this->newLeafHeapBlockList);
     currentSmallHeapBlockCount += Check(true, false, this->newNormalHeapBlockList);
     currentSmallHeapBlockCount += Check(true, false, this->newNormalWithBarrierHeapBlockList);
@@ -1537,15 +1496,12 @@ HeapInfo::Check()
     currentSmallHeapBlockCount += Check(true, false, this->newRecyclerVisitedHostHeapBlockList);
     currentSmallHeapBlockCount += Check(true, false, this->newMediumRecyclerVisitedHostHeapBlockList);
 #endif
-#endif
 
-#if ENABLE_CONCURRENT_GC
     currentSmallHeapBlockCount += Check(true, false, this->newMediumLeafHeapBlockList);
     currentSmallHeapBlockCount += Check(true, false, this->newMediumNormalHeapBlockList);
     currentSmallHeapBlockCount += Check(true, false, this->newMediumNormalWithBarrierHeapBlockList);
     currentSmallHeapBlockCount += Check(true, false, this->newMediumFinalizableWithBarrierHeapBlockList);
     currentSmallHeapBlockCount += Check(true, false, this->newMediumFinalizableHeapBlockList);
-#endif
 
     size_t expectedHeapBlockCount =
         this->heapBlockCount[HeapBlock::HeapBlockType::SmallNormalBlockType]
@@ -1635,7 +1591,6 @@ HeapInfo::Verify()
 
     largeObjectBucket.Verify();
 
-#if ENABLE_CONCURRENT_GC
     HeapBlockList::ForEach(newLeafHeapBlockList, [](SmallLeafHeapBlock * heapBlock)
     {
         heapBlock->Verify();
@@ -1662,9 +1617,7 @@ HeapInfo::Verify()
     {
         heapBlock->Verify();
     });
-#endif
 
-#if ENABLE_CONCURRENT_GC
     HeapBlockList::ForEach(newMediumLeafHeapBlockList, [](MediumLeafHeapBlock * heapBlock)
     {
         heapBlock->Verify();
@@ -1691,7 +1644,6 @@ HeapInfo::Verify()
     {
         heapBlock->Verify();
     });
-#endif
 }
 #endif
 
@@ -1713,7 +1665,6 @@ HeapInfo::VerifyMark()
 
     largeObjectBucket.VerifyMark();
 
-#if ENABLE_CONCURRENT_GC
     HeapBlockList::ForEach(newLeafHeapBlockList, [](SmallLeafHeapBlock * heapBlock)
     {
         heapBlock->VerifyMark();
@@ -1740,9 +1691,7 @@ HeapInfo::VerifyMark()
     {
         heapBlock->VerifyMark();
     });
-#endif
 
-#if ENABLE_CONCURRENT_GC
     HeapBlockList::ForEach(newMediumLeafHeapBlockList, [](MediumLeafHeapBlock * heapBlock)
     {
         heapBlock->VerifyMark();
@@ -1769,7 +1718,6 @@ HeapInfo::VerifyMark()
     {
         heapBlock->VerifyMark();
     });
-#endif
 }
 #endif
 

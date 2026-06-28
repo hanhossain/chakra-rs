@@ -24,7 +24,6 @@ public:
     bool IsBackground() const;
     void FlushPendingTransferDisposedObjects();
 
-#if ENABLE_CONCURRENT_GC
     bool HasPendingSweepSmallHeapBlocks() const;
     void SetHasPendingSweepSmallHeapBlocks();
     template <typename TBlockType>
@@ -46,7 +45,6 @@ public:
     template <typename TBlockType> size_t GetHeapBlockCount(HeapBucketT<TBlockType> const * heapBucket);
     size_t GetPendingMergeNewHeapBlockCount(HeapInfo const * heapInfo);
 #endif
-#endif
 
 #if ENABLE_PARTIAL_GC
     bool InPartialCollectMode() const;
@@ -57,17 +55,13 @@ private:
     template <typename TBlockType>
     struct BucketData
     {
-#if ENABLE_PARTIAL_GC || ENABLE_CONCURRENT_GC
         TBlockType * pendingSweepList;
         TBlockType * pendingFinalizableSweptList;
-#endif
-#if ENABLE_CONCURRENT_GC
         TBlockType * pendingEmptyBlockList;
         TBlockType * pendingEmptyBlockListTail;
 #if DBG
 
         TBlockType * savedNextAllocableBlockHead;
-#endif
 #endif
     };
 
@@ -89,9 +83,7 @@ private:
     struct Data
     {
         BucketData<TBlockType> bucketData[TBlockType::HeapBlockAttributes::BucketCount];
-#if ENABLE_CONCURRENT_GC
         TBlockType * pendingMergeNewHeapBlockList;
-#endif
     };
 
     template <typename TBlockType> Data<TBlockType>& GetData();
@@ -140,16 +132,12 @@ private:
 
 };
 
-#if ENABLE_CONCURRENT_GC
 template <typename TBlockType>
 TBlockType *&
 RecyclerSweep::GetPendingSweepBlockList(HeapBucketT<TBlockType> const * heapBucket)
 {
     return this->GetBucketData<TBlockType>(heapBucket).pendingSweepList;
 }
-#endif
-
-#if ENABLE_CONCURRENT_GC
 
 template <typename TBlockType>
 void
@@ -254,6 +242,5 @@ RecyclerSweep::GetHeapBlockCount(HeapBucketT<TBlockType> const * heapBucket)
     return HeapBlockList::Count(bucketData.pendingSweepList)
         + HeapBlockList::Count(bucketData.pendingEmptyBlockList);
 }
-#endif
 #endif
 }

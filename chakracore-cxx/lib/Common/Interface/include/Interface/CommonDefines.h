@@ -108,8 +108,6 @@
 
 #define USE_FEWER_PAGES_PER_BLOCK 1
 
-#define ENABLE_CONCURRENT_GC 1
-
 #define USE_VPM_TABLE 1
 
 

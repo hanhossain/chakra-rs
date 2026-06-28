@@ -101,7 +101,6 @@ bool ThreadServiceWrapperBase::IdleCollect()
 
     AutoBooleanToggle autoInIdleCollect(&inIdleCollect);
     Recycler* recycler = threadContext->GetRecycler();
-#if ENABLE_CONCURRENT_GC
     // Finish concurrent on timer heart beat if needed
     // We wouldn't try to finish if we need to schedule
     // an idle task to finish the collection
@@ -109,7 +108,6 @@ bool ThreadServiceWrapperBase::IdleCollect()
     {
         IDLE_COLLECT_TRACE(u"Idle callback: finish concurrent\n");
     }
-#endif
 
     while (true)
     {
@@ -186,9 +184,7 @@ bool ThreadServiceWrapperBase::ScheduleNextCollectOnExit()
     Assert(!needIdleCollect || hasScheduledIdleCollect);
 
     Recycler* recycler = threadContext->GetRecycler();
-#if ENABLE_CONCURRENT_GC
     recycler->FinishConcurrent<FinishConcurrentOnExitScript>();
-#endif
 
 #ifdef RECYCLER_TRACE
     bool oldNeedIdleCollect = needIdleCollect;

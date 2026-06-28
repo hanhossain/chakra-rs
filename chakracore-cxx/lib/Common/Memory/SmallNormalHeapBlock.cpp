@@ -168,7 +168,6 @@ SmallNormalHeapBlockT<TBlockAttributes>::CalculateMarkCountForPage(SmallHeapBloc
 }
 
 
-#if ENABLE_PARTIAL_GC || ENABLE_CONCURRENT_GC
 template <class TBlockAttributes>
 void
 SmallNormalHeapBlockT<TBlockAttributes>::FinishPartialCollect()
@@ -178,7 +177,6 @@ SmallNormalHeapBlockT<TBlockAttributes>::FinishPartialCollect()
 
     RECYCLER_SLOW_CHECK(this->CheckFreeBitVector(true));
 }
-#endif
 
 #ifdef RECYCLER_SLOW_CHECK_ENABLED
 template <class TBlockAttributes>

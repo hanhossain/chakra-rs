@@ -48,7 +48,6 @@ template bool SmallHeapBlockT<TBlockTypeAttributes>::GetFreeObjectListOnAllocato
 
 // Explicit instantiate all the sweep mode
 template void SmallHeapBlockT<TBlockTypeAttributes>::SweepObjects<SweepMode_InThread>(Recycler * recycler);
-#if ENABLE_CONCURRENT_GC
 template <>
 template <>
 void
@@ -80,7 +79,6 @@ SmallHeapBlockT<TBlockTypeAttributes>::SweepObject<SweepMode_ConcurrentPartial>(
 // Explicit instantiate all the sweep mode
 template void SmallHeapBlockT<TBlockTypeAttributes>::SweepObjects<SweepMode_ConcurrentPartial>(Recycler * recycler);
 #endif
-#endif
 
 template <>
 template <>
@@ -91,9 +89,7 @@ SmallHeapBlockT<TBlockTypeAttributes>::SweepObject<SweepMode_InThread>(Recycler 
     {
         Assert(this->IsAnyFinalizableBlock());
 
-#if ENABLE_CONCURRENT_GC
         Assert(!recycler->IsConcurrentExecutingState());
-#endif
 
         // Call prepare finalize to do clean up that needs to be done immediately
         // (e.g. Clear the ITrackable alias reference, so it can't be revived during

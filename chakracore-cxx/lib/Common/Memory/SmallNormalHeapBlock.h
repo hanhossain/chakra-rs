@@ -37,9 +37,7 @@ public:
 
     static bool CanRescanFullBlock();
     static bool RescanObject(SmallNormalHeapBlockT<TBlockAttributes> * block, __in_ecount(localObjectSize) char * objectAddress, uint localObjectSize, uint objectIndex, Recycler * recycler);
-#if ENABLE_PARTIAL_GC || ENABLE_CONCURRENT_GC
     void FinishPartialCollect();
-#endif
 
 #ifdef RECYCLER_SLOW_CHECK_ENABLED
     virtual bool GetFreeObjectListOnAllocator(FreeObject ** freeObjectList) override;

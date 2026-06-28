@@ -45,11 +45,9 @@ public:
 
     void SetAttributes(void * address, unsigned char attributes);
 
-#if ENABLE_PARTIAL_GC || ENABLE_CONCURRENT_GC
     static bool CanRescanFullBlock();
     static bool RescanObject(SmallFinalizableHeapBlockT<TBlockAttributes> * block, __in_ecount(localObjectSize) char * objectAddress, uint localObjectSize, uint objectIndex, Recycler * recycler);
     bool RescanTrackedObject(FinalizableObject * object, uint objectIndex,  Recycler * recycler);
-#endif
     SweepState Sweep(RecyclerSweep& sweepeData, bool queuePendingSweep, bool allocable);
     void DisposeObjects();
     void TransferDisposedObjects();

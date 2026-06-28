@@ -1505,12 +1505,10 @@ public:
             m_remoteThreadContextInfo = nullptr;
         }
 #endif
-#if ENABLE_CONCURRENT_GC
         if (this->recycler != nullptr)
         {
             this->recycler->ShutdownThread();
         }
-#endif
     }
 
     DateTime::HiResTimer * GetHiResTimer() { return &hTimer; }

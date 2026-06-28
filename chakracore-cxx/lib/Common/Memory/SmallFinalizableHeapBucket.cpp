@@ -38,7 +38,7 @@ SmallFinalizableHeapBucketBaseT<TBlockType>::FinalizeAllObjects()
     FinalizeHeapBlockList(this->heapBlockList);
     FinalizeHeapBlockList(this->fullBlockList);
 
-#if ENABLE_PARTIAL_GC && ENABLE_CONCURRENT_GC
+#if ENABLE_PARTIAL_GC
     FinalizeHeapBlockList(this->partialSweptHeapBlockList);
 #endif
 }

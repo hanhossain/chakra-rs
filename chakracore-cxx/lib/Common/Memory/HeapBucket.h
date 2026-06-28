@@ -314,11 +314,8 @@ HeapBucketT<TBlockType>::SweepBucket(RecyclerSweep& recyclerSweep, Fn sweepFn)
     if (!this->DoPartialReuseSweep(recyclerSweep.GetRecycler()))
 #endif
     {
-#if ENABLE_CONCURRENT_GC
         // We should only queue up pending sweep if we are doing partial collect
         Assert(recyclerSweep.GetPendingSweepBlockList(this) == nullptr);
-
-#endif
         {
             // Every thing is swept immediately in non partial collect, so we can allocate
             // from the heap block list now

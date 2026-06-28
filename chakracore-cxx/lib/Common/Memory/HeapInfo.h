@@ -101,9 +101,7 @@ public:
     void ScanNewImplicitRoots();
 
     size_t Rescan(RescanFlags flags);
-#if ENABLE_PARTIAL_GC || ENABLE_CONCURRENT_GC
     void SweepPendingObjects(RecyclerSweep& recyclerSweep);
-#endif
     void Finalize(RecyclerSweep& recyclerSweep);
     void Sweep(RecyclerSweep& recyclerSweep, bool concurrent);
 
@@ -117,14 +115,12 @@ public:
     void SweepPartialReusePages(RecyclerSweep& recyclerSweep);
     void FinishPartialCollect(RecyclerSweep * recyclerSweep);
 #endif
-#if ENABLE_CONCURRENT_GC
     void PrepareSweep();
     void TransferPendingHeapBlocks(RecyclerSweep& recyclerSweep);
     void ConcurrentTransferSweptObjects(RecyclerSweep& recyclerSweep);
 
 #if ENABLE_PARTIAL_GC
     void ConcurrentPartialTransferSweptObjects(RecyclerSweep& recyclerSweep);
-#endif
 #endif
     void DisposeObjects();
     void TransferDisposedObjects();
@@ -219,7 +215,6 @@ private:
         heapBlock->SetNextBlock(list);
         list = heapBlock;
     }
-#if ENABLE_CONCURRENT_GC
     template <typename TBlockType> TBlockType *& GetNewHeapBlockList(HeapBucketT<TBlockType> * heapBucket);
     template <>
     SmallLeafHeapBlock *& GetNewHeapBlockList<SmallLeafHeapBlock>(HeapBucketT<SmallLeafHeapBlock> * heapBucket)
@@ -299,12 +294,6 @@ private:
     }
 
     void SetupBackgroundSweep(RecyclerSweep& recyclerSweep);
-#else
-    template <typename TBlockType> TBlockType *& GetNewHeapBlockList(HeapBucketT<TBlockType> * heapBucket)
-    {
-        return heapBucket->heapBlockList;
-    }
-#endif
 
     void SweepSmallNonFinalizable(RecyclerSweep& recyclerSweep);
 
@@ -416,7 +405,6 @@ public:
     static typename SmallHeapBlockT<TBlockAttributes>::BlockInfo const * GetBlockInfo(uint objectSize);
 
     Recycler * recycler;
-#if ENABLE_CONCURRENT_GC
     SmallLeafHeapBlock * newLeafHeapBlockList;
     SmallNormalHeapBlock * newNormalHeapBlockList;
     SmallFinalizableHeapBlock * newFinalizableHeapBlockList;
@@ -426,9 +414,7 @@ public:
 
     SmallNormalWithBarrierHeapBlock * newNormalWithBarrierHeapBlockList;
     SmallFinalizableWithBarrierHeapBlock * newFinalizableWithBarrierHeapBlockList;
-#endif
 
-#if ENABLE_CONCURRENT_GC
     MediumLeafHeapBlock * newMediumLeafHeapBlockList;
     MediumNormalHeapBlock * newMediumNormalHeapBlockList;
     MediumFinalizableHeapBlock * newMediumFinalizableHeapBlockList;
@@ -438,7 +424,6 @@ public:
 
     MediumNormalWithBarrierHeapBlock * newMediumNormalWithBarrierHeapBlockList;
     MediumFinalizableWithBarrierHeapBlock * newMediumFinalizableWithBarrierHeapBlockList;
-#endif
 
 #ifdef RECYCLER_PAGE_HEAP
     PageHeapMode pageHeapMode;

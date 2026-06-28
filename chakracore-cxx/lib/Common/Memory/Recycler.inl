@@ -61,13 +61,8 @@ Recycler::AllocWithAttributesInlined(size_t size)
     Assert(size != 0);
     AssertMsg(collectionState != Collection_PreCollection, "we cannot have allocation in precollection callback");
 
-#if ENABLE_CONCURRENT_GC
     // We shouldn't be allocating memory when we are running GC in thread, including finalizers
     Assert(this->IsConcurrentState() || !this->CollectionInProgress() || this->IsAllocatableCallbackState());
-#else
-    // We shouldn't be allocating memory when we are running GC in thread, including finalizers
-    Assert(!this->CollectionInProgress() || this->IsAllocatableCallbackState());
-#endif
 
     // There are some cases where we allow allocation during heap enum that doesn't affect the enumeration
     // Those should be really rare and not rely upon.
@@ -207,11 +202,7 @@ Recycler::AllocWithAttributesInlined(size_t size)
         }
         else
         {
-#if ENABLE_CONCURRENT_GC
             Assert(this->hasBackgroundFinishPartial || this->clientTrackedObjectList.Empty());
-#else
-            Assert(this->clientTrackedObjectList.Empty());
-#endif
         }
     }
 #endif

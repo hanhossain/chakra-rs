@@ -81,11 +81,9 @@ LargeHeapBucket::ForEachLargeHeapBlock(Fn fn)
     HeapBlockList::ForEach(largePageHeapBlockList, fn);
 #endif
     HeapBlockList::ForEach(pendingDisposeLargeBlockList, fn);
-#if ENABLE_CONCURRENT_GC
     HeapBlockList::ForEach(pendingSweepLargeBlockList, fn);
 #if ENABLE_PARTIAL_GC
     HeapBlockList::ForEach(partialSweptLargeBlockList, fn);
-#endif
 #endif
 }
 
@@ -99,10 +97,8 @@ LargeHeapBucket::ForEachEditingLargeHeapBlock(Fn fn)
     HeapBlockList::ForEachEditing(largePageHeapBlockList, fn);
 #endif
     HeapBlockList::ForEachEditing(pendingDisposeLargeBlockList, fn);
-#if ENABLE_CONCURRENT_GC
     HeapBlockList::ForEachEditing(pendingSweepLargeBlockList, fn);
 #if ENABLE_PARTIAL_GC
     HeapBlockList::ForEachEditing(partialSweptLargeBlockList, fn);
-#endif
 #endif
 }

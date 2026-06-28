@@ -161,13 +161,11 @@ RecyclerSweepManager::FinishSweep()
             }
 #endif
 
-#if ENABLE_CONCURRENT_GC
             if (this->IsBackground())
             {
                 recycler->BackgroundFinishPartialCollect(this);
             }
             else
-#endif
             {
                 recycler->FinishPartialCollect(this);
             }
@@ -181,9 +179,7 @@ RecyclerSweepManager::FinishSweep()
         Assert(recycler->partialUncollectedAllocBytes == 0);
     }
 
-#if ENABLE_CONCURRENT_GC
     recycler->SweepPendingObjects(*this);
-#endif
 #endif
 }
 
@@ -221,7 +217,6 @@ RecyclerSweepManager::ShutdownCleanup()
     this->defaultHeapRecyclerSweep.ShutdownCleanup();
 }
 
-#if ENABLE_CONCURRENT_GC
 void
 RecyclerSweepManager::BackgroundSweep()
 {
@@ -252,7 +247,6 @@ RecyclerSweepManager::EndBackground()
     this->background = false;
 }
 
-#endif
 
 
 // Called by prepare sweep to track the new allocated bytes on block that is not fully allocated yet.
@@ -477,9 +471,7 @@ RecyclerSweepManager::AdjustPartialHeuristics()
         return false;
     }
 
-#if ENABLE_CONCURRENT_GC
     recycler->partialConcurrentNextCollection = RecyclerHeuristic::PartialConcurrentNextCollection(ratio, recycler->GetRecyclerFlagsTable());
-#endif
     return true;
 }
 

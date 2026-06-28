@@ -33,11 +33,9 @@ protected:
 
     static bool RescanObjectsOnPage(TBlockType * block, char * address, char * blockStartAddress, BVStatic<TBlockAttributes::BitVectorCount>* markBits, const uint localObjectSize, uint bucketIndex, __out_opt bool* anyObjectRescanned, Recycler* recycler);
 
-#if ENABLE_CONCURRENT_GC
     void SweepPendingObjects(RecyclerSweep& recyclerSweep);
     template <SweepMode mode>
     TBlockType * SweepPendingObjects(Recycler * recycler, TBlockType * list);
-#endif
     void Sweep(RecyclerSweep& recyclerSweep);
 #if ENABLE_PARTIAL_GC
     ~SmallNormalHeapBucketBase();
@@ -73,9 +71,7 @@ protected:
                                             // are not full but don't have a large amount of free space
                                             // where allocating from it causing a write watch to be triggered
                                             // is not worth the effort
-#if ENABLE_CONCURRENT_GC
     TBlockType * partialSweptHeapBlockList; // list of blocks that is partially swept
-#endif
 #endif
 };
 

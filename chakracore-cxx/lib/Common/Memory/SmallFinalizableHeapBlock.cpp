@@ -326,7 +326,6 @@ SmallFinalizableHeapBlockT<TBlockAttributes>::ProcessMarkedObject(void* objectAd
     }
 }
 
-#if ENABLE_PARTIAL_GC || ENABLE_CONCURRENT_GC
 // static
 template <class TBlockAttributes>
 bool
@@ -397,7 +396,6 @@ bool
 SmallFinalizableHeapBlockT<TBlockAttributes>::RescanTrackedObject(FinalizableObject * object, uint objectIndex, Recycler * recycler)
 {
     RecyclerVerboseTrace(recycler->GetRecyclerFlagsTable(), u"Marking 0x%08x during rescan\n", object);
-#if ENABLE_CONCURRENT_GC
 #if ENABLE_PARTIAL_GC
     if (recycler->inPartialCollectMode)
     {
@@ -422,12 +420,7 @@ SmallFinalizableHeapBlockT<TBlockAttributes>::RescanTrackedObject(FinalizableObj
     this->ObjectInfo(objectIndex) &= ~NewTrackBit;
 
     return true;
-#else
-    // REVIEW: Is this correct? Or should we remove the track bit always?
-    return false;
-#endif
 }
-#endif
 
 template <class TBlockAttributes>
 SweepState

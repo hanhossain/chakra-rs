@@ -485,10 +485,8 @@ struct RecyclerCollectionStats
         size_t markBytes;           // size of all objects marked.
     } markData;
 
-#if ENABLE_CONCURRENT_GC
     MarkData backgroundMarkData[RecyclerHeuristic::MaxBackgroundRepeatMarkCount];
     size_t trackedObjectCount;
-#endif
 
 #if ENABLE_PARTIAL_GC
     size_t clientTrackedObjectCount;
@@ -564,7 +562,6 @@ struct CollectionParam
 
 #include "RecyclerObjectGraphDumper.h"
 
-#if ENABLE_CONCURRENT_GC
 class RecyclerParallelThread
 {
     friend class ThreadContext;
@@ -608,7 +605,6 @@ private:
     HANDLE concurrentThread;
     bool synchronizeOnStartup;
 };
-#endif
 
 class AutoProtectPages
 {
@@ -630,9 +626,7 @@ class Recycler
     friend class MarkContext;
     friend class HeapBlock;
     friend class HeapBlockMap32;
-#if ENABLE_CONCURRENT_GC
     friend class RecyclerParallelThread;
-#endif
     friend class AutoProtectPages;
 
     template <typename T> friend class RecyclerWeakReference;
@@ -919,19 +913,15 @@ private:
 #if ENABLE_PARTIAL_GC
     bool enablePartialCollect;
     bool inPartialCollectMode;
-#if ENABLE_CONCURRENT_GC
     bool hasBackgroundFinishPartial;
     bool partialConcurrentNextCollection;
-#endif
 #endif
 #ifdef RECYCLER_STRESS
     bool forcePartialScanStack;
     bool recyclerStress;
-#if ENABLE_CONCURRENT_GC
     bool recyclerBackgroundStress;
     bool recyclerConcurrentStress;
     bool recyclerConcurrentRepeatStress;
-#endif
 #if ENABLE_PARTIAL_GC
     bool recyclerPartialStress;
 #endif
@@ -940,7 +930,6 @@ private:
     bool isExternalStackSkippingGC;
 #endif
     bool skipStack;
-#if ENABLE_CONCURRENT_GC
 #if DBG
     bool isConcurrentGCOnIdle;
     bool isFinishGCOnIdle;
@@ -982,7 +971,6 @@ private:
     uint tickCountStartConcurrent;
 
     bool isAborting;
-#endif
 
 #if DBG
     bool hasIncompleteDoCollect;
@@ -1147,7 +1135,6 @@ public:
     void ScheduleNextCollection();
 
     BOOL IsShuttingDown() const { return this->isShuttingDown; }
-#if ENABLE_CONCURRENT_GC
 #if DBG
     BOOL IsConcurrentMarkEnabled() const { return enableConcurrentMark; }
     BOOL IsConcurrentSweepEnabled() const { return enableConcurrentSweep; }
@@ -1162,15 +1149,12 @@ public:
     void StartQueueTrackedObject();
     bool DoQueueTrackedObject() const;
     void PrepareSweep();
-#endif
 
     template <CollectionFlags flags>
     void SetupPostCollectionFlags();
     void EnsureNotCollecting();
 
-#if ENABLE_CONCURRENT_GC
     bool QueueTrackedObject(FinalizableObject * trackableObject);
-#endif
 
     // FindRoots
     void TryExternalMarkNonInterior(void * candidate);
@@ -1549,10 +1533,8 @@ private:
     size_t FindRoots();
     size_t TryMarkArenaMemoryBlockList(ArenaMemoryBlock * memoryBlocks);
     size_t TryMarkBigBlockList(BigBlock * memoryBlocks);
-#if ENABLE_CONCURRENT_GC
 #if FALSE // REVIEW: remove this code since not using
     size_t TryMarkBigBlockListWithWriteWatch(BigBlock * memoryBlocks);
-#endif
 #endif
 
     // Mark
@@ -1561,10 +1543,8 @@ private:
     bool EndMark();
     bool EndMarkCheckOOMRescan();
     void EndMarkOnLowMemory();
-#if ENABLE_CONCURRENT_GC
     void DoParallelMark();
     void DoBackgroundParallelMark();
-#endif
     void FinishWrapperObjectTracing();
 
     size_t RootMark(CollectionState markState);
@@ -1645,24 +1625,19 @@ private:
     bool PartialCollect(bool concurrent);
     void FinishPartialCollect(RecyclerSweepManager * recyclerSweep = nullptr);
     void ClearPartialCollect();
-#if ENABLE_CONCURRENT_GC
     void BackgroundFinishPartialCollect(RecyclerSweepManager * recyclerSweep);
-#endif
 
 #endif
 
     size_t RescanMark(uint32_t waitTime);
     size_t FinishMark(uint32_t waitTime);
     size_t FinishMarkRescan(bool background);
-#if ENABLE_CONCURRENT_GC
     void ProcessTrackedObjects();
-#endif
 
     BOOL IsAllocatableCallbackState()
     {
         return (collectionState & (Collection_PostSweepRedeferralCallback | Collection_PostCollectionCallback));
     }
-#if ENABLE_CONCURRENT_GC
     // Concurrent GC
     BOOL IsConcurrentEnabled() const { return this->enableConcurrentMark || this->enableParallelMark || this->enableConcurrentSweep; }
     BOOL IsConcurrentMarkState() const;
@@ -1730,7 +1705,6 @@ private:
 #if ENABLE_PARTIAL_GC
     void ConcurrentPartialTransferSweptObjects(RecyclerSweepManager& recyclerSweepManager);
 #endif // ENABLE_PARTIAL_GC
-#endif // ENABLE_CONCURRENT_GC
 
     bool ForceSweepObject();
     void NotifyFree(char * address, size_t size);
@@ -2227,9 +2201,7 @@ private:
 
     CollectedRecyclerWeakRefHeapBlock() : HeapBlock(BlockTypeCount)
     {
-#if ENABLE_CONCURRENT_GC
         isPendingConcurrentSweep = false;
-#endif
     }
 };
 

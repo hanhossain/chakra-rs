@@ -43,7 +43,6 @@ RecyclerSweep::BeginSweep(Recycler * recycler, RecyclerSweepManager * recyclerSw
     // finish dispose before sweep.
     this->FlushPendingTransferDisposedObjects();
 
-#if ENABLE_CONCURRENT_GC
     // Take the small heap block new heap block list and store in RecyclerSweep temporary
     // We get merge later before we start sweeping the bucket.
 
@@ -84,14 +83,12 @@ RecyclerSweep::BeginSweep(Recycler * recycler, RecyclerSweepManager * recyclerSw
     heapInfo->newMediumNormalWithBarrierHeapBlockList = nullptr;
     heapInfo->newMediumFinalizableWithBarrierHeapBlockList = nullptr;
 
-#endif
 }
 
 void
 RecyclerSweep::ShutdownCleanup()
 {
     // REVIEW: Does this need to be controlled more granularly, say with ENABLE_PARTIAL_GC?
-#if ENABLE_CONCURRENT_GC
     SmallLeafHeapBucketT<SmallAllocationBlockAttributes>::DeleteHeapBlockList(this->leafData.pendingMergeNewHeapBlockList, recycler);
     SmallNormalHeapBucket::DeleteHeapBlockList(this->normalData.pendingMergeNewHeapBlockList, recycler);
     SmallNormalWithBarrierHeapBucket::DeleteHeapBlockList(this->withBarrierData.pendingMergeNewHeapBlockList, recycler);
@@ -133,7 +130,6 @@ RecyclerSweep::ShutdownCleanup()
         Assert(this->mediumFinalizableWithBarrierData.bucketData[i].pendingEmptyBlockList == nullptr);
         Assert(this->mediumFinalizableData.bucketData[i].pendingEmptyBlockList == nullptr);
     }
-#endif
 }
 
 void
@@ -147,7 +143,6 @@ RecyclerSweep::FlushPendingTransferDisposedObjects()
     }
 }
 
-#if ENABLE_CONCURRENT_GC
 template <typename TBlockType>
 void
 RecyclerSweep::MergePendingNewHeapBlockList()
@@ -254,7 +249,6 @@ RecyclerSweep::GetPendingMergeNewHeapBlockCount(HeapInfo const * heapInfo)
         + HeapBlockList::Count(mediumFinalizableWithBarrierData.pendingMergeNewHeapBlockList)
         ;
 }
-#endif
 #endif
 
 #if ENABLE_PARTIAL_GC

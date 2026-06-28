@@ -79,7 +79,6 @@ RecyclerHeuristic::UncollectedAllocBytesCollection()
     return DefaultUncollectedAllocBytesCollection;
 }
 
-#if ENABLE_CONCURRENT_GC
 uint
 RecyclerHeuristic::MaxBackgroundFinishMarkCount(Js::ConfigFlagsTable& flags)
 {
@@ -146,9 +145,8 @@ RecyclerHeuristic::PriorityBoostTimeout(Js::ConfigFlagsTable& flags)
     }
     return TickCountConcurrentPriorityBoost;
 }
-#endif
 
-#if ENABLE_PARTIAL_GC && ENABLE_CONCURRENT_GC
+#if ENABLE_PARTIAL_GC
 bool
 RecyclerHeuristic::PartialConcurrentNextCollection(double ratio, Js::ConfigFlagsTable& flags)
 {

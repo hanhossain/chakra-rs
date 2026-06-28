@@ -157,7 +157,6 @@ HeapInfoManager::SweepSmallNonFinalizable(RecyclerSweepManager& recyclerSweepMan
     });
 }
 
-#if ENABLE_PARTIAL_GC || ENABLE_CONCURRENT_GC
 void
 HeapInfoManager::SweepPendingObjects(RecyclerSweepManager& recyclerSweepManager)
 {
@@ -166,7 +165,6 @@ HeapInfoManager::SweepPendingObjects(RecyclerSweepManager& recyclerSweepManager)
         heapInfo.SweepPendingObjects(recyclerSweep);
     });
 }
-#endif
 
 #if ENABLE_PARTIAL_GC
 void
@@ -188,7 +186,6 @@ HeapInfoManager::FinishPartialCollect(RecyclerSweepManager * recyclerSweepManage
 }
 #endif
 
-#if ENABLE_CONCURRENT_GC
 void
 HeapInfoManager::PrepareSweep()
 {
@@ -216,7 +213,6 @@ HeapInfoManager::ConcurrentPartialTransferSweptObjects(RecyclerSweepManager& rec
         heapInfo.ConcurrentPartialTransferSweptObjects(recyclerSweep);
     });
 }
-#endif
 #endif
 
 void
