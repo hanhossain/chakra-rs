@@ -405,13 +405,6 @@ public:
 #ifdef RECYCLER_VERIFY_MARK
     void VerifyMark();
 #endif
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    void StartAllocationDuringConcurrentSweep();
-    bool DoTwoPassConcurrentSweepPreCheck();
-    void FinishSweepPrep(RecyclerSweep& recyclerSweep);
-    void FinishConcurrentSweepPass1(RecyclerSweep& recyclerSweep);
-    void FinishConcurrentSweep();
-#endif
 #if DBG
     bool AllocatorsAreEmpty();
 #endif

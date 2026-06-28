@@ -58,14 +58,6 @@ public:
 #endif
 #if ENABLE_CONCURRENT_GC
     void PrepareSweep();
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    void StartAllocationsDuringConcurrentSweep();
-    bool DoTwoPassConcurrentSweepPreCheck();
-    void FinishSweepPrep(RecyclerSweepManager& recyclerSweep);
-    void FinishConcurrentSweepPass1(RecyclerSweepManager& recyclerSweep);
-    void FinishConcurrentSweep();
-#endif
-
     void ConcurrentTransferSweptObjects(RecyclerSweepManager& recyclerSweepManager);
 
 #if ENABLE_PARTIAL_GC

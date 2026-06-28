@@ -109,7 +109,6 @@
 #define USE_FEWER_PAGES_PER_BLOCK 1
 
 #define ENABLE_CONCURRENT_GC 1
-#define ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP 0 // Needs ENABLE_CONCURRENT_GC to be enabled for this to be enabled.
 
 #define USE_VPM_TABLE 1
 

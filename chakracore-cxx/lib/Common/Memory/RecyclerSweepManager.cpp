@@ -229,10 +229,6 @@ RecyclerSweepManager::BackgroundSweep()
 
     // Finish the concurrent part of the first pass
     this->recycler->autoHeap.SweepSmallNonFinalizable(*this);
-
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    if (!CONFIG_FLAG_RELEASE(EnableConcurrentSweepAlloc) || !this->recycler->AllowAllocationsDuringConcurrentSweep())
-#endif
     {
         // Finish the rest of the sweep
         this->FinishSweep();

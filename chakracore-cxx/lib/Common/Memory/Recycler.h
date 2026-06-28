@@ -736,9 +736,6 @@ private:
     }
 
     JsUtil::ThreadService *threadService;
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    bool allowAllocationsDuringConcurrentSweepForCollection;
-#endif
 
     HeapBlockMap heapBlockMap;
 
@@ -1621,13 +1618,6 @@ private:
     void SweepHeap(bool concurrent, RecyclerSweepManager& recyclerSweepManager);
     void FinishSweep(RecyclerSweepManager& recyclerSweepManager);
 
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    void DoTwoPassConcurrentSweepPreCheck();
-    void FinishSweepPrep();
-    void FinishConcurrentSweepPass1();
-    void FinishConcurrentSweep();
-#endif
-
     bool FinishDisposeObjects();
     template <CollectionFlags flags>
     bool FinishDisposeObjectsWrapped();
@@ -1688,13 +1678,6 @@ private:
     {
         return ((collectionState & Collection_ConcurrentSweep) == Collection_ConcurrentSweep);
     }
-
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    bool AllowAllocationsDuringConcurrentSweep()
-    {
-        return this->allowAllocationsDuringConcurrentSweepForCollection;
-    }
-#endif
 
 #if DBG
     BOOL IsConcurrentFinishedState() const;

@@ -327,20 +327,6 @@ protected:
     HeapBlockType const heapBlockType;
     bool needOOMRescan;                             // Set if we OOMed while marking a particular object
     bool isPendingConcurrentSweep;
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    // This flag is to identify whether this block was made available for allocations during the concurrent sweep and 
-    // still needs to be swept.
-    bool isPendingConcurrentSweepPrep;
-#if DBG || defined(RECYCLER_SLOW_CHECK_ENABLED)
-    // This flag ensures a block doesn't get swept more than once during a given sweep.
-    bool hasFinishedSweepObjects;
-
-    // When allocate from a block during concurrent sweep some checks need to be delayed until
-    // the free and mark bits are rebuilt. This flag helps skip those validations until then.
-    bool wasAllocatedFromDuringSweep;
-#endif
-#endif
-
 public:
     template <bool doSpecialMark, typename Fn>
     bool UpdateAttributesOfMarkedObjects(MarkContext * markContext, void * objectAddress, size_t objectSize, unsigned char attributes, Fn fn);
@@ -358,13 +344,6 @@ public:
     {
         return (heapBlockType);
     }
-
-#if (DBG || defined(RECYCLER_SLOW_CHECK_ENABLED)) && ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    bool WasAllocatedFromDuringSweep()
-    {
-        return this->wasAllocatedFromDuringSweep;
-    }
-#endif
 
     IdleDecommitPageAllocator* GetPageAllocator(HeapInfo * heapInfo);
 
@@ -499,19 +478,6 @@ public:
     ushort freeCount;
     ushort lastFreeCount;
     ushort markCount;
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-#if DBG || defined(RECYCLER_SLOW_CHECK_ENABLED)
-    // We need to keep track of the number of objects allocated during concurrent sweep, to be
-    // able to make the correct determination about whether a block is EMPTY or FULL when the actual
-    // sweep of this block happens.
-    ushort objectsAllocatedDuringConcurrentSweepCount;
-    ushort objectsMarkedDuringSweep;
-    ushort lastObjectsAllocatedDuringConcurrentSweepCount;
-    bool blockNotReusedInPartialHeapBlockList;
-    bool blockNotReusedInPendingList;
-#endif
-#endif
-
 #if ENABLE_PARTIAL_GC
     ushort oldFreeCount;
 #endif
@@ -692,11 +658,6 @@ public:
     virtual size_t GetObjectSize(void* object) const override { return objectSize; }
 
     uint GetMarkCountForSweep();
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-#if DBG || defined(RECYCLER_SLOW_CHECK_ENABLED)
-    void ResetConcurrentSweepAllocationCounts();
-#endif
-#endif
     SweepState Sweep(RecyclerSweep& recyclerSweep, bool queuePendingSweep, bool allocable, ushort finalizeCount = 0, bool hasPendingDispose = false);
     template <SweepMode mode>
     void SweepObjects(Recycler * recycler);

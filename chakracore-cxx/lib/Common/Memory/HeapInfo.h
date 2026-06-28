@@ -119,14 +119,6 @@ public:
 #endif
 #if ENABLE_CONCURRENT_GC
     void PrepareSweep();
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    void StartAllocationsDuringConcurrentSweep();
-    bool DoTwoPassConcurrentSweepPreCheck();
-    void FinishSweepPrep(RecyclerSweep& recyclerSweep);
-    void FinishConcurrentSweepPass1(RecyclerSweep& recyclerSweep);
-    void FinishConcurrentSweep();
-#endif
-
     void TransferPendingHeapBlocks(RecyclerSweep& recyclerSweep);
     void ConcurrentTransferSweptObjects(RecyclerSweep& recyclerSweep);
 

@@ -43,16 +43,6 @@ SmallNormalHeapBucketBase<TBlockType>::ScanInitialImplicitRoots(Recycler * recyc
         heapBlock->ScanInitialImplicitRoots(recycler);
     });
 
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    if (CONFIG_FLAG_RELEASE(EnableConcurrentSweepAlloc) && !this->IsAnyFinalizableBucket())
-    {
-        HeapBlockList::ForEach(this->sweepableHeapBlockList, [recycler](TBlockType * heapBlock)
-        {
-            heapBlock->ScanInitialImplicitRoots(recycler);
-        });
-    }
-#endif
-
     HeapBlockList::ForEach(this->heapBlockList, [recycler](TBlockType * heapBlock)
     {
         heapBlock->ScanInitialImplicitRoots(recycler);
@@ -396,9 +386,6 @@ SmallNormalHeapBucketBase<TBlockType>::SweepPartialReusePages(RecyclerSweep& rec
         {
             if (isReused)
             {
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-                DebugOnly(heapBlock->blockNotReusedInPendingList = false);
-#endif
                 // Finalizable blocks are always swept in thread, so shouldn't be here
                 Assert(!heapBlock->IsAnyFinalizableBlock());
 
@@ -414,9 +401,6 @@ SmallNormalHeapBucketBase<TBlockType>::SweepPartialReusePages(RecyclerSweep& rec
             }
             else
             {
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-                DebugOnly(heapBlock->blockNotReusedInPendingList = true);
-#endif
 #ifdef RECYCLER_TRACE
                 this->GetRecycler()->PrintBlockStatus(this, heapBlock, u"[**15**] finished SweepPartialReusePages, heapblock NOT REUSED added to pendingSweepList.");
 #endif
@@ -443,11 +427,7 @@ SmallNormalHeapBucketBase<TBlockType>::FinishPartialCollect(RecyclerSweep * recy
 
     Assert(this->GetRecycler()->inPartialCollectMode);
 
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    Assert(recyclerSweep == nullptr || this->IsAllocationStopped() || this->AllocationsStartedDuringConcurrentSweep());
-#else
     Assert(recyclerSweep == nullptr || this->IsAllocationStopped());
-#endif
 
 #if ENABLE_CONCURRENT_GC
     // Process the partial Swept block and move it to the partial heap block list
@@ -495,11 +475,7 @@ SmallNormalHeapBucketBase<TBlockType>::FinishPartialCollect(RecyclerSweep * recy
             }
         }
 #if ENABLE_CONCURRENT_GC
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-        if (recyclerSweep->GetPendingSweepBlockList(this) == nullptr && !this->AllocationsStartedDuringConcurrentSweep())
-#else
         if (recyclerSweep->GetPendingSweepBlockList(this) == nullptr)
-#endif
 #endif
         {
             // nothing else to sweep now,  we can start allocating now.
@@ -559,11 +535,6 @@ SmallNormalHeapBucketBase<TBlockType>::GetNonEmptyHeapBlockCount(bool checkCount
     currentHeapBlockCount += HeapBlockList::Count(partialSweptHeapBlockList);
 #endif
     bool allocatingDuringConcurrentSweep = false;
-
-#if ENABLE_CONCURRENT_GC
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-#endif
-#endif
     RECYCLER_SLOW_CHECK(Assert(!checkCount || this->heapBlockCount == currentHeapBlockCount || (this->heapBlockCount >= 65535 && allocatingDuringConcurrentSweep)));
     return currentHeapBlockCount;
 }

@@ -198,53 +198,6 @@ HeapInfoManager::PrepareSweep()
     });
 }
 
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-void
-HeapInfoManager::StartAllocationsDuringConcurrentSweep()
-{
-    ForEachHeapInfo([](HeapInfo& heapInfo)
-    {
-        heapInfo.StartAllocationsDuringConcurrentSweep();
-    });
-}
-
-bool
-HeapInfoManager::DoTwoPassConcurrentSweepPreCheck()
-{
-    return IsAnyHeapInfo([](HeapInfo& heapInfo)
-    {
-        return heapInfo.DoTwoPassConcurrentSweepPreCheck();
-    });
-}
-
-void
-HeapInfoManager::FinishSweepPrep(RecyclerSweepManager& recyclerSweepManager)
-{
-    ForEachHeapInfo(recyclerSweepManager, [=](HeapInfo& heapInfo, RecyclerSweep& recyclerSweep)
-    {
-        heapInfo.FinishSweepPrep(recyclerSweep);
-    });
-}
-
-void
-HeapInfoManager::FinishConcurrentSweepPass1(RecyclerSweepManager& recyclerSweepManager)
-{
-    ForEachHeapInfo(recyclerSweepManager, [=](HeapInfo& heapInfo, RecyclerSweep& recyclerSweep)
-    {
-        heapInfo.FinishConcurrentSweepPass1(recyclerSweep);
-    });
-}
-
-void
-HeapInfoManager::FinishConcurrentSweep()
-{
-    ForEachHeapInfo([](HeapInfo& heapInfo)
-    {
-        heapInfo.FinishConcurrentSweep();
-    });
-}
-#endif
-
 void
 HeapInfoManager::ConcurrentTransferSweptObjects(RecyclerSweepManager& recyclerSweepManager)
 {
