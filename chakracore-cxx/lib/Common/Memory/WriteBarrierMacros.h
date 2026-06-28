@@ -15,10 +15,6 @@
 //
 //
 
-// TODO (hanhossain): remove Field
-#define FieldNoBarrier(type) \
-    typename WriteBarrierFieldTypeTraits<type, _no_write_barrier_policy, _no_write_barrier_policy>::Type
-
 #define NO_WRITE_BARRIER_TAG_TYPE(arg) arg, _no_write_barrier_tag
 #define NO_WRITE_BARRIER_TAG(arg) arg, _no_write_barrier_tag()
 

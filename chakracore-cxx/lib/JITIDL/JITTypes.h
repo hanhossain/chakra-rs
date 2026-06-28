@@ -57,12 +57,6 @@ import "wtypes.idl";
 typedef unsigned char boolean;
 #endif
 
-#ifdef __midl
-#define IDL_FieldNoBarrier(type)    type
-#else
-#define IDL_FieldNoBarrier(type)    FieldNoBarrier(type)
-#endif
-
 #ifndef __JITTypes_h__
 #define __JITTypes_h__
 
