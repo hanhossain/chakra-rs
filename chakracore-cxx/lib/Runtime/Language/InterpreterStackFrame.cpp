@@ -1307,7 +1307,7 @@ namespace Js
                 {
                     uint32_t scopeSlots = this->executeFunction->scopeSlotArraySize;
                     Assert(scopeSlots != 0);
-                    ScopeSlots((Field(Var)*)stackAllocBytes).SetCount(0); // Start with count as 0. It will get set in NewScopeSlots
+                    ScopeSlots((typename WriteBarrierFieldTypeTraits<Var>::Type*)stackAllocBytes).SetCount(0); // Start with count as 0. It will get set in NewScopeSlots
                     newInstance->localClosure = stackAllocBytes;
                     stackAllocBytes += (scopeSlots + ScopeSlots::FirstSlotIndex) * sizeof(Var);
                 }
@@ -1484,7 +1484,7 @@ namespace Js
             int excess = this->inSlotsCount - executeFunction->GetInParamsCount();
             *dest = JavascriptArray::OP_NewScArray(excess, executeFunction->GetScriptContext());
             JavascriptArray *array = static_cast<JavascriptArray *>(*dest);
-            Field(Var)* elements = SparseArraySegment<Var>::From(array->GetHead())->elements;
+            typename WriteBarrierFieldTypeTraits<Var>::Type* elements = SparseArraySegment<Var>::From(array->GetHead())->elements;
             CopyArray(elements, excess, src, excess);
         }
         else
@@ -2419,7 +2419,7 @@ namespace Js
         }
 
         const AsmJsModuleMemory& moduleMemory = info->GetModuleMemory();
-        Field(Var)* moduleMemoryPtr = RecyclerNewArray(scriptContext->GetRecycler(), Field(Var), moduleMemory.mMemorySize);
+        typename WriteBarrierFieldTypeTraits<Var>::Type* moduleMemoryPtr = RecyclerNewArray(scriptContext->GetRecycler(), typename WriteBarrierFieldTypeTraits<Var>::Type, moduleMemory.mMemorySize);
         Field(Var)* arrayBufferPtr = moduleMemoryPtr + moduleMemory.mArrayBufferOffset;
         Assert(moduleMemory.mArrayBufferOffset == AsmJsModuleMemory::MemoryTableBeginOffset);
         Field(Var)* stdLibPtr = moduleMemoryPtr + moduleMemory.mStdLibOffset;
@@ -2428,7 +2428,7 @@ namespace Js
         double* localDoubleSlots = (double*)(moduleMemoryPtr + moduleMemory.mDoubleOffset);
         Field(Var)* localFunctionImports = moduleMemoryPtr + moduleMemory.mFFIOffset;
         Field(Var)* localModuleFunctions = moduleMemoryPtr + moduleMemory.mFuncOffset;
-        Field(Field(Var)*)* localFunctionTables = (Field(Field(Var)*)*)(moduleMemoryPtr + moduleMemory.mFuncPtrOffset);
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<Var>::Type*>::Type *localFunctionTables = (typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<Var>::Type*>::Type*)(moduleMemoryPtr + moduleMemory.mFuncPtrOffset);
 
         ThreadContext* threadContext = this->scriptContext->GetThreadContext();
         *stdLibPtr = (m_inSlotsCount > 1) ? m_inParams[1] : nullptr;
@@ -2588,7 +2588,7 @@ namespace Js
         for (int i = 0; i < info->GetFunctionTableCount(); i++)
         {
             const auto& modFuncTable = info->GetFunctionTable(i);
-            Field(Var)* funcTableArray = RecyclerNewArray(scriptContext->GetRecycler(), Field(Var), modFuncTable.size);
+            typename WriteBarrierFieldTypeTraits<Var>::Type* funcTableArray = RecyclerNewArray(scriptContext->GetRecycler(), typename WriteBarrierFieldTypeTraits<Var>::Type, modFuncTable.size);
             for (uint j = 0; j < modFuncTable.size; j++)
             {
                 // get the module function index
@@ -7090,7 +7090,7 @@ namespace Js
         uint innerScopeIndex = playout->C1;
         Field(Var) * slotArray;
 
-        slotArray = (Field(Var)*)this->InnerScopeFromIndex(innerScopeIndex);
+        slotArray = (typename WriteBarrierFieldTypeTraits<Var>::Type*)this->InnerScopeFromIndex(innerScopeIndex);
         slotArray = JavascriptOperators::OP_CloneScopeSlots(slotArray, scriptContext);
         this->SetInnerScopeFromIndex(innerScopeIndex, slotArray);
     }
@@ -7109,7 +7109,7 @@ namespace Js
     Field(Var)*
         InterpreterStackFrame::NewScopeSlots(unsigned int size, ScriptContext *scriptContext, Var scope)
     {
-        Field(Var)* slotArray = JavascriptOperators::OP_NewScopeSlots(size, scriptContext, scope);
+        typename WriteBarrierFieldTypeTraits<Var>::Type* slotArray = JavascriptOperators::OP_NewScopeSlots(size, scriptContext, scope);
         this->SetLocalClosure(slotArray);
         return slotArray;
     }
@@ -7128,7 +7128,7 @@ namespace Js
                 scopeSlotCount + ScopeSlots::FirstSlotIndex, this->GetScriptContext(), (Var)functionBody->GetFunctionInfo());
         }
 
-        slotArray = (Field(Var)*)this->GetLocalClosure();
+        slotArray = (typename WriteBarrierFieldTypeTraits<Var>::Type*)this->GetLocalClosure();
         Assert(slotArray != nullptr);
 
         ScopeSlots scopeSlots(slotArray);
@@ -8848,7 +8848,7 @@ namespace Js
                 Js::Throw::FatalInternalError();
             }
         }
-        ((Field(Var)*)(instance))[slotIndex] = value;
+        ((typename WriteBarrierFieldTypeTraits<Var>::Type*)(instance))[slotIndex] = value;
     }
 
     void InterpreterStackFrame::OP_StEnvSlot(Var instance, int32_t slotIndex1, int32_t slotIndex2, Var value)
@@ -8867,8 +8867,8 @@ namespace Js
                 Js::Throw::FatalInternalError();
             }
         }
-        OP_ChkUndecl(((Field(Var)*)instance)[slotIndex]);
-        ((Field(Var)*)(instance))[slotIndex] = value;
+        OP_ChkUndecl(((typename WriteBarrierFieldTypeTraits<Var>::Type*)instance)[slotIndex]);
+        ((typename WriteBarrierFieldTypeTraits<Var>::Type*)(instance))[slotIndex] = value;
     }
 
     void InterpreterStackFrame::OP_StEnvSlotChkUndecl(Var instance, int32_t slotIndex1, int32_t slotIndex2, Var value)
@@ -8880,14 +8880,14 @@ namespace Js
     void InterpreterStackFrame::OP_StObjSlot(Var instance, int32_t slotIndex, Var value)
     {
         // It would be nice to assert that it's ok to store directly to slot, but we don't have the propertyId.
-        Field(Var) *slotArray = *(Field(Var)**)((char*)instance + DynamicObject::GetOffsetOfAuxSlots());
+        typename WriteBarrierFieldTypeTraits<Var>::Type *slotArray = *(typename WriteBarrierFieldTypeTraits<Var>::Type**)((char*)instance + DynamicObject::GetOffsetOfAuxSlots());
         slotArray[slotIndex] = value;
     }
 
     void InterpreterStackFrame::OP_StObjSlotChkUndecl(Var instance, int32_t slotIndex, Var value)
     {
         // It would be nice to assert that it's ok to store directly to slot, but we don't have the propertyId.
-        Field(Var) *slotArray = *(Field(Var)**)((char*)instance + DynamicObject::GetOffsetOfAuxSlots());
+        typename WriteBarrierFieldTypeTraits<Var>::Type *slotArray = *(typename WriteBarrierFieldTypeTraits<Var>::Type**)((char*)instance + DynamicObject::GetOffsetOfAuxSlots());
         OP_ChkUndecl(slotArray[slotIndex]);
         slotArray[slotIndex] = value;
     }

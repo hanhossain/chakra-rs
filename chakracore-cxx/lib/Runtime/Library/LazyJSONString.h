@@ -52,7 +52,7 @@ struct JSONProperty
     {
         // Copy the full struct and use "Field(Var)" to identify write barrier
         // policy as the struct contains Vars
-        CopyArray<JSONProperty, Field(Var)>(this, 1, &other, 1);
+        CopyArray<JSONProperty, typename WriteBarrierFieldTypeTraits<Var>::Type>(this, 1, &other, 1);
     }
 };
 

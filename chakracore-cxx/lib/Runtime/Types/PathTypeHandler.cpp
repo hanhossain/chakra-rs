@@ -877,7 +877,7 @@ namespace Js
 #endif
         // Move all current inline slots up to object header inline offset
         Var *const oldInlineSlots = reinterpret_cast<Var *>(reinterpret_cast<uintptr_t>(object) + this->GetOffsetOfInlineSlots());
-        Field(Var) *const newInlineSlots = reinterpret_cast<Field(Var) *>(reinterpret_cast<uintptr_t>(object) + this->GetOffsetOfObjectHeaderInlineSlots());
+        typename WriteBarrierFieldTypeTraits<Var>::Type *const newInlineSlots = reinterpret_cast<typename WriteBarrierFieldTypeTraits<Var>::Type *>(reinterpret_cast<uintptr_t>(object) + this->GetOffsetOfObjectHeaderInlineSlots());
 
         PHASE_PRINT_TRACE1(ObjectHeaderInliningPhase, u"ObjectHeaderInlining: Re-optimizing the object. Moving auxSlots properties to ObjectHeader.\n");
 

@@ -16,7 +16,7 @@ WebAssemblyEnvironment::WebAssemblyEnvironment(WebAssemblyModule* module):
     this->module = module;
     ScriptContext* scriptContext = module->GetScriptContext();
     uint32_t size = module->GetModuleEnvironmentSize();
-    this->start = RecyclerNewArrayZ(scriptContext->GetRecycler(), Field(Var), size);
+    this->start = RecyclerNewArrayZ(scriptContext->GetRecycler(), typename WriteBarrierFieldTypeTraits<Var>::Type, size);
     this->end = start + size;
     Assert(start < end);
     this->memory = this->start + module->GetMemoryOffset();
@@ -50,7 +50,7 @@ void WebAssemblyEnvironment::CheckPtrIsValid(intptr_t ptr) const
 }
 
 template<typename T>
-T* WebAssemblyEnvironment::GetVarElement(Field(Var)* ptr, uint32_t index, uint32_t maxCount) const
+T* WebAssemblyEnvironment::GetVarElement(typename WriteBarrierFieldTypeTraits<Var>::Type* ptr, uint32_t index, uint32_t maxCount) const
 {
     if (index >= maxCount)
     {
@@ -72,7 +72,7 @@ T* WebAssemblyEnvironment::GetVarElement(Field(Var)* ptr, uint32_t index, uint32
 }
 
 template<typename T>
-void WebAssemblyEnvironment::SetVarElement(Field(Var)* ptr, T* val, uint32_t index, uint32_t maxCount)
+void WebAssemblyEnvironment::SetVarElement(typename WriteBarrierFieldTypeTraits<Var>::Type* ptr, T* val, uint32_t index, uint32_t maxCount)
 {
     if (index >= maxCount ||
         !VarIsCorrectType(val))
@@ -134,7 +134,7 @@ void WebAssemblyEnvironment::SetMemory(uint32_t index, WebAssemblyMemory* mem)
 template<typename T>
 T WebAssemblyEnvironment::GetGlobalInternal(uint32_t offset) const
 {
-    Field(T)* ptr = (Field(T)*)PointerValue(start) + offset;
+    typename WriteBarrierFieldTypeTraits<T>::Type* ptr = (typename WriteBarrierFieldTypeTraits<T>::Type*)PointerValue(start) + offset;
     CheckPtrIsValid<T>((intptr_t)ptr);
     return *ptr;
 }
@@ -142,7 +142,7 @@ T WebAssemblyEnvironment::GetGlobalInternal(uint32_t offset) const
 template<typename T>
 void WebAssemblyEnvironment::SetGlobalInternal(uint32_t offset, T val)
 {
-    Field(T)* ptr = (Field(T)*)PointerValue(start) + offset;
+    typename WriteBarrierFieldTypeTraits<T>::Type* ptr = (typename WriteBarrierFieldTypeTraits<T>::Type*)PointerValue(start) + offset;
     CheckPtrIsValid<T>((intptr_t)PointerValue(ptr));
     AssertMsg(*ptr == 0, "We shouldn't overwrite anything on the environment once it is set");
     *ptr = val;

@@ -4315,7 +4315,7 @@ using namespace Js;
     }
 
     template<>
-    void JavascriptArray::CopyValueToSegmentBuferNoCheck(Field(double)* buffer, uint32_t length, double value)
+    void JavascriptArray::CopyValueToSegmentBuferNoCheck(typename WriteBarrierFieldTypeTraits<double>::Type* buffer, uint32_t length, double value)
     {
         if (JavascriptNumber::IsZero(value) && !JavascriptNumber::IsNegZero(value))
         {
@@ -4331,7 +4331,7 @@ using namespace Js;
     }
 
     template<>
-    void JavascriptArray::CopyValueToSegmentBuferNoCheck(Field(int32_t)* buffer, uint32_t length, int32_t value)
+    void JavascriptArray::CopyValueToSegmentBuferNoCheck(typename WriteBarrierFieldTypeTraits<int32_t>::Type* buffer, uint32_t length, int32_t value)
     {
         if (value == 0 || AreAllBytesEqual(value))
         {
@@ -4347,7 +4347,7 @@ using namespace Js;
     }
 
     template<>
-    void JavascriptArray::CopyValueToSegmentBuferNoCheck(Field(Js::Var)* buffer, uint32_t length, Js::Var value)
+    void JavascriptArray::CopyValueToSegmentBuferNoCheck(typename WriteBarrierFieldTypeTraits<Js::Var>::Type* buffer, uint32_t length, Js::Var value)
     {
         for (uint32_t i = 0; i < length; i++)
         {
@@ -6878,7 +6878,7 @@ Case0:
 
     // Set and Get helpers used in JavascriptArray::SortHelper below
     // These allow the SortHelper to handle either a row of Var OR a row of StringItem
-    inline void SortSetHelper(Field(Var)* list, Var item, uint32_t index, JsReentLock* jsReentLock, ScriptContext* scriptContext)
+    inline void SortSetHelper(typename WriteBarrierFieldTypeTraits<Var>::Type* list, Var item, uint32_t index, JsReentLock* jsReentLock, ScriptContext* scriptContext)
     {
         list[index] = item;
     }
@@ -6892,7 +6892,7 @@ Case0:
         list[index] = current;
     }
 
-    inline Var SortGetHelper(Field(Var)* list, uint32_t index)
+    inline Var SortGetHelper(typename WriteBarrierFieldTypeTraits<Var>::Type* list, uint32_t index)
     {
         return list[index];
     }
@@ -7059,7 +7059,7 @@ Case0:
         {
             cvInfo.compFn = compFn;
             cvInfo.compareType = scriptContext == compFn->GetScriptContext() ? &compareVars : &compareVarsCrossContext;
-            return JavascriptArray::SortHelper<Field(Var)>(args[0], &cvInfo);
+            return JavascriptArray::SortHelper<typename WriteBarrierFieldTypeTraits<Var>::Type>(args[0], &cvInfo);
         }
         else
         {

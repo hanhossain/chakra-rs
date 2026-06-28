@@ -85,7 +85,7 @@ namespace Js
         Field(DynamicSourceContextInfoMap*) dynamicSourceContextInfoMap;
         Field(SourceContextInfo*) noContextSourceContextInfo;
         Field(SRCINFO*) noContextGlobalSourceInfo;
-        Field(Field(SRCINFO const *)*) moduleSrcInfo;
+        typename WriteBarrierFieldTypeTraits<Field(SRCINFO const *>::Type*) moduleSrcInfo;
         Field(BuiltInLibraryFunctionMap*) builtInLibraryFunctions;
         Field(ScriptContextPolymorphicInlineCache*) toStringTagCache;
         Field(ScriptContextPolymorphicInlineCache*) toJSONCache;
@@ -456,8 +456,8 @@ namespace Js
         typedef JsUtil::WeakReferenceDictionary<JsrtExternalCallbacks, DynamicType, DictionarySizePolicy<PowerOf2Policy, 1>> JsrtExternalTypesCache;
 
         Field(void *) bindRefChunkBegin;
-        Field(Field(void*)*) bindRefChunkCurrent;
-        Field(Field(void*)*) bindRefChunkEnd;
+        typename WriteBarrierFieldTypeTraits<Field(void*>::Type*) bindRefChunkCurrent;
+        typename WriteBarrierFieldTypeTraits<Field(void*>::Type*) bindRefChunkEnd;
         Field(TypePath*) rootPath;         // this should be in library instead of ScriptContext::Cache
         Field(Js::Cache) cache;
         Field(FunctionReferenceList*) dynamicFunctionReference;
@@ -647,7 +647,7 @@ namespace Js
 
         Js::RecyclableObject* CreateExternalFunction_TTD(Js::Var fname);
         Js::RecyclableObject* CreateBoundFunction_TTD(
-                RecyclableObject* function, Var bThis, uint32_t ct, Field(Var)* args);
+                RecyclableObject* function, Var bThis, uint32_t ct, typename WriteBarrierFieldTypeTraits<Var>::Type* args);
 
         Js::RecyclableObject* CreateProxy_TTD(RecyclableObject* handler, RecyclableObject* target);
         Js::RecyclableObject* CreateRevokeFunction_TTD(RecyclableObject* proxy);
@@ -1105,12 +1105,12 @@ namespace Js
         static const char16_t* GetStringTemplateCallsiteObjectKey(Var callsite);
 #endif
 
-        Field(JavascriptFunction*)* GetBuiltinFunctions();
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type* GetBuiltinFunctions();
         long* GetVTableAddresses();
         static BuiltinFunction GetBuiltinFunctionForPropId(PropertyId id);
         static BuiltinFunction GetBuiltInForFuncInfo(LocalFunctionId localFuncId);
 #if DBG
-        static void CheckRegisteredBuiltIns(Field(JavascriptFunction*)* builtInFuncs, ScriptContext *scriptContext);
+        static void CheckRegisteredBuiltIns(typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type* builtInFuncs, ScriptContext *scriptContext);
 #endif
         static BOOL CanFloatPreferenceFunc(BuiltinFunction index);
         static BOOL IsFltFunc(BuiltinFunction index);
@@ -1145,8 +1145,8 @@ namespace Js
         template <> PropertyStringCacheMap* GetPropertyMap<PropertyString>() { return this->propertyStringMap; }
         template <> SymbolCacheMap* GetPropertyMap<JavascriptSymbol>() { return this->symbolMap; }
 
-        Field(OnlyWritablePropertyProtoChainCache*) GetTypesWithOnlyWritablePropertyProtoChainCache() { return &this->typesWithOnlyWritablePropertyProtoChain; }
-        Field(NoSpecialPropertyProtoChainCache*) GetTypesWithNoSpecialPropertyProtoChainCache() { return &this->typesWithNoSpecialPropertyProtoChain; }
+        typename WriteBarrierFieldTypeTraits<OnlyWritablePropertyProtoChainCache*>::Type GetTypesWithOnlyWritablePropertyProtoChainCache() { return &this->typesWithOnlyWritablePropertyProtoChain; }
+        typename WriteBarrierFieldTypeTraits<NoSpecialPropertyProtoChainCache*>::Type GetTypesWithNoSpecialPropertyProtoChainCache() { return &this->typesWithNoSpecialPropertyProtoChain; }
 
         static bool IsDefaultArrayValuesFunction(RecyclableObject * function, ScriptContext *scriptContext);
         static bool ArrayIteratorPrototypeHasUserDefinedNext(ScriptContext *scriptContext);
@@ -1281,7 +1281,7 @@ namespace Js
         void AddMember(DynamicObject* object, PropertyId propertyId, Var value, PropertyAttributes attributes);
         JavascriptString* CreateEmptyString();
 
-        template<uint cacheSlotCount> EnumeratorCache* GetEnumeratorCache(Type* type, Field(EnumeratorCache*)* cacheSlots);
+        template<uint cacheSlotCount> EnumeratorCache* GetEnumeratorCache(Type* type, typename WriteBarrierFieldTypeTraits<EnumeratorCache*>::Type* cacheSlots);
 
         static bool InitializeAsyncGeneratorFunction(DynamicObject* function, DeferredTypeHandlerBase * typeHandler, DeferredInitializeMode mode);
         static bool InitializeGeneratorFunction(DynamicObject* function, DeferredTypeHandlerBase * typeHandler, DeferredInitializeMode mode);

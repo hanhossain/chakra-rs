@@ -550,10 +550,10 @@ namespace TTD
 
         //////////////////
 
-        Field(Js::Var)* InflateSlotArrayInfo(const SlotArrayInfo* slotInfo, InflateMap* inflator)
+        typename WriteBarrierFieldTypeTraits<Js::Var>::Type* InflateSlotArrayInfo(const SlotArrayInfo* slotInfo, InflateMap* inflator)
         {
             Js::ScriptContext* ctx = inflator->LookupScriptContext(slotInfo->ScriptContextLogId);
-            Field(Js::Var)* slotArray = RecyclerNewArray(ctx->GetRecycler(), Field(Js::Var), slotInfo->SlotCount + Js::ScopeSlots::FirstSlotIndex);
+            typename WriteBarrierFieldTypeTraits<Js::Var>::Type* slotArray = RecyclerNewArray(ctx->GetRecycler(), typename WriteBarrierFieldTypeTraits<Js::Var>::Type, slotInfo->SlotCount + Js::ScopeSlots::FirstSlotIndex);
 
             Js::ScopeSlots scopeSlots(slotArray);
             scopeSlots.SetCount(slotInfo->SlotCount);
@@ -776,7 +776,7 @@ namespace TTD
                 }
                 case Js::ScopeType::ScopeType_SlotArray:
                 {
-                    Field(Js::Var)* saval = inflator->LookupSlotArray(scp.IDValue);
+                    typename WriteBarrierFieldTypeTraits<Js::Var>::Type* saval = inflator->LookupSlotArray(scp.IDValue);
                     environment->SetItem(i, saval);
                     break;
                 }

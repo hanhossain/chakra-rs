@@ -1202,7 +1202,7 @@ SECOND_PASS:
             return false;
         }
         Assert(current->left + current->length >= startIndex + length);
-        Field(T)* segmentCopyStart = current->elements + (startIndex - current->left);
+        typename WriteBarrierFieldTypeTraits<T>::Type* segmentCopyStart = current->elements + (startIndex - current->left);
         CopyValueToSegmentBuferNoCheck(segmentCopyStart, length, newValue);
         this->SetLastUsedSegment(current);
 #if DBG

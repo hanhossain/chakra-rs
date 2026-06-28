@@ -134,7 +134,7 @@ namespace Js
 
         if (!inlinees)
         {
-            inlinees = RecyclerNewArrayZ(recycler, Field(FunctionCodeGenJitTimeData *), functionBody->GetProfiledCallSiteCount());
+            inlinees = RecyclerNewArrayZ(recycler, typename WriteBarrierFieldTypeTraits<FunctionCodeGenJitTimeData *>::Type, functionBody->GetProfiledCallSiteCount());
         }
 
         FunctionCodeGenJitTimeData *inlineeData = nullptr;
@@ -170,7 +170,7 @@ namespace Js
 
         if (!ldFldInlinees)
         {
-            ldFldInlinees = RecyclerNewArrayZ(recycler, Field(FunctionCodeGenJitTimeData*), GetFunctionBody()->GetInlineCacheCount());
+            ldFldInlinees = RecyclerNewArrayZ(recycler, typename WriteBarrierFieldTypeTraits<FunctionCodeGenJitTimeData*>::Type, GetFunctionBody()->GetInlineCacheCount());
         }
 
         const auto inlineeData = FunctionCodeGenJitTimeData::New(recycler, inlinee, nullptr);
@@ -196,7 +196,7 @@ namespace Js
 
         if (!callbackInlinees)
         {
-            callbackInlinees = RecyclerNewArrayZ(recycler, Field(FunctionCodeGenJitTimeData *), functionBody->GetProfiledCallSiteCount());
+            callbackInlinees = RecyclerNewArrayZ(recycler, typename WriteBarrierFieldTypeTraits<FunctionCodeGenJitTimeData *>::Type, functionBody->GetProfiledCallSiteCount());
         }
 
         // Polymorphic arguments are not inlined.
@@ -222,7 +222,7 @@ namespace Js
 
         if (!callApplyTargetInlinees)
         {
-            callApplyTargetInlinees = RecyclerNewArrayZ(recycler, Field(FunctionCodeGenJitTimeData *), functionBody->GetProfiledCallApplyCallSiteCount());
+            callApplyTargetInlinees = RecyclerNewArrayZ(recycler, typename WriteBarrierFieldTypeTraits<FunctionCodeGenJitTimeData *>::Type, functionBody->GetProfiledCallApplyCallSiteCount());
         }
 
         // Polymorphic call/apply targets are not inlined.

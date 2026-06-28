@@ -95,37 +95,37 @@ namespace UnifiedRegex
             // These scanner infos are used by ScannersMixin, which is used by only SyncToLiteralsAndBackupInst. There will only
             // ever be only one of those instructions per program. Since scanners are large (> 1 KB), for that instruction they
             // are allocated on the recycler with pointers stored here to reference them.
-            Field(Field(ScannerInfo *)*) scannersForSyncToLiterals;
+            typename WriteBarrierFieldTypeTraits<Field(ScannerInfo *>::Type*) scannersForSyncToLiterals;
         };
 
         struct SingleChar
         {
             Field(Char) c;
-            Field(uint8_t) padding[sizeof(Instructions) - sizeof(Char)];
+            typename WriteBarrierFieldTypeTraits<uint8_t>::Type padding[sizeof(Instructions) - sizeof(Char)];
         };
 
         struct Octoquad
         {
             Field(OctoquadMatcher*) matcher;
-            Field(uint8_t) padding[sizeof(Instructions) - sizeof(void*)];
+            typename WriteBarrierFieldTypeTraits<uint8_t>::Type padding[sizeof(Instructions) - sizeof(void*)];
         };
 
         struct BOILiteral2
         {
             Field(uint32_t) literal;
-            Field(uint8_t) padding[sizeof(Instructions) - sizeof(uint32_t)];
+            typename WriteBarrierFieldTypeTraits<uint8_t>::Type padding[sizeof(Instructions) - sizeof(uint32_t)];
         };
 
         struct LeadingTrailingSpaces
         {
             Field(CharCount) beginMinMatch;
             Field(CharCount) endMinMatch;
-            Field(uint8_t) padding[sizeof(Instructions) - (sizeof(CharCount) * 2)];
+            typename WriteBarrierFieldTypeTraits<uint8_t>::Type padding[sizeof(Instructions) - (sizeof(CharCount) * 2)];
         };
 
         struct Other
         {
-            Field(uint8_t) padding[sizeof(Instructions)];
+            typename WriteBarrierFieldTypeTraits<uint8_t>::Type padding[sizeof(Instructions)];
         };
 
         union RepType
@@ -150,7 +150,7 @@ namespace UnifiedRegex
         static size_t GetOffsetOfBOILiteral2Literal() { return offsetof(BOILiteral2, literal); }
         static ProgramTag GetBOILiteral2Tag() { return ProgramTag::BOILiteral2Tag; }
 
-        Field(ScannerInfo *)*CreateScannerArrayForSyncToLiterals(Recycler *const recycler);
+        typename WriteBarrierFieldTypeTraits<ScannerInfo *>::Type*CreateScannerArrayForSyncToLiterals(Recycler *const recycler);
         ScannerInfo *AddScannerForSyncToLiterals(
             Recycler *const recycler,
             const int scannerIndex,

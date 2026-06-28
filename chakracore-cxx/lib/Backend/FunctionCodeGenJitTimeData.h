@@ -26,13 +26,13 @@ namespace Js
 
         // Globally ordered list of all object type specialized property access information (monomorphic and polymorphic caches combined).
         Field(uint) globalObjTypeSpecFldInfoCount;
-        Field(Field(ObjTypeSpecFldInfo*)*) globalObjTypeSpecFldInfoArray;
+        typename WriteBarrierFieldTypeTraits<Field(ObjTypeSpecFldInfo*>::Type*) globalObjTypeSpecFldInfoArray;
 
         // There will be a non-null entry for each profiled call site where a function is to be inlined
-        Field(Field(FunctionCodeGenJitTimeData*)*) inlinees;
-        Field(Field(FunctionCodeGenJitTimeData*)*) ldFldInlinees;
-        Field(Field(FunctionCodeGenJitTimeData*)*) callbackInlinees;
-        Field(Field(FunctionCodeGenJitTimeData*)*) callApplyTargetInlinees;
+        typename WriteBarrierFieldTypeTraits<Field(FunctionCodeGenJitTimeData*>::Type*) inlinees;
+        typename WriteBarrierFieldTypeTraits<Field(FunctionCodeGenJitTimeData*>::Type*) ldFldInlinees;
+        typename WriteBarrierFieldTypeTraits<Field(FunctionCodeGenJitTimeData*>::Type*) callbackInlinees;
+        typename WriteBarrierFieldTypeTraits<Field(FunctionCodeGenJitTimeData*>::Type*) callApplyTargetInlinees;
         
         Field(RecyclerWeakReference<FunctionBody>*) weakFuncRef;
 
@@ -140,7 +140,7 @@ namespace Js
         const FunctionCodeGenJitTimeData *GetJitTimeDataFromFunctionInfo(FunctionInfo *polyFunctioInfoy) const;
 
         uint GetGlobalObjTypeSpecFldInfoCount() const { return this->globalObjTypeSpecFldInfoCount; }
-        Field(ObjTypeSpecFldInfo*)* GetGlobalObjTypeSpecFldInfoArray() const {return this->globalObjTypeSpecFldInfoArray; }
+        typename WriteBarrierFieldTypeTraits<ObjTypeSpecFldInfo*>::Type* GetGlobalObjTypeSpecFldInfoArray() const {return this->globalObjTypeSpecFldInfoArray; }
 
         ObjTypeSpecFldInfo* GetGlobalObjTypeSpecFldInfo(uint propertyInfoId) const
         {
@@ -154,7 +154,7 @@ namespace Js
             this->globalObjTypeSpecFldInfoArray[propertyInfoId] = info;
         }
 
-        void SetGlobalObjTypeSpecFldInfoArray(Field(ObjTypeSpecFldInfo*)* array, uint count)
+        void SetGlobalObjTypeSpecFldInfoArray(typename WriteBarrierFieldTypeTraits<ObjTypeSpecFldInfo*>::Type* array, uint count)
         {
             Assert(array != nullptr);
             this->globalObjTypeSpecFldInfoArray = array;
@@ -180,7 +180,7 @@ namespace Js
         {
             if (!inlinees)
             {
-                inlinees = RecyclerNewArrayZ(recycler, Field(FunctionCodeGenJitTimeData *), GetFunctionBody()->GetProfiledCallSiteCount());
+                inlinees = RecyclerNewArrayZ(recycler, typename WriteBarrierFieldTypeTraits<FunctionCodeGenJitTimeData *>::Type, GetFunctionBody()->GetProfiledCallSiteCount());
             }
             inlinees[profiledCallSiteId] = this;
             inlineeCount++;

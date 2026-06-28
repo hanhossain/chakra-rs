@@ -1415,7 +1415,7 @@ namespace Js
                 });
             }
             // Namespace object will be added to the end of the array though invisible through namespace object itself.
-            localExportSlots = RecyclerNewArray(recycler, Field(Var), currentSlotCount + 1);
+            localExportSlots = RecyclerNewArray(recycler, typename WriteBarrierFieldTypeTraits<Var>::Type, currentSlotCount + 1);
             for (uint i = 0; i < currentSlotCount; i++)
             {
                 localExportSlots[i] = undefineValue;

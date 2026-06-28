@@ -17,8 +17,8 @@ namespace Js {
             Field(FunctionBody*) functionBody;
             union
             {
-                Field(uint32_t) byteCodeOffset;  // used for script functions        (functionBody != nullptr)
-                Field(const char16_t *) name;            // used for native/virtual frames   (functionBody == nullptr)
+                typename WriteBarrierFieldTypeTraits<uint32_t>::Type byteCodeOffset;  // used for script functions        (functionBody != nullptr)
+                typename WriteBarrierFieldTypeTraits<const char16_t *>::Type name;            // used for native/virtual frames   (functionBody == nullptr)
             };
             Field(StackTraceArguments) argumentTypes;
 

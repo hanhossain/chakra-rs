@@ -482,7 +482,7 @@ using namespace Js;
             }
             case Js::ScopeType::ScopeType_SlotArray:
             {
-                Js::ScopeSlots slotArray = (Field(Js::Var)*)scope;
+                Js::ScopeSlots slotArray = (typename WriteBarrierFieldTypeTraits<Js::Var>::Type*)scope;
                 uint slotArrayCount = static_cast<uint>(slotArray.GetCount());
 
                 //get the function body associated with the scope

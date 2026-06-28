@@ -153,7 +153,7 @@ namespace TTD
             TTD_WELLKNOWN_TOKEN OptWellKnownDbgScope;
         };
 
-        Field(Js::Var)* InflateSlotArrayInfo(const SlotArrayInfo* slotInfo, InflateMap* inflator);
+        typename WriteBarrierFieldTypeTraits<Js::Var>::Type* InflateSlotArrayInfo(const SlotArrayInfo* slotInfo, InflateMap* inflator);
 
         void EmitSlotArrayInfo(const SlotArrayInfo* slotInfo, FileWriter* writer, NSTokens::Separator separator);
         void ParseSlotArrayInfo(SlotArrayInfo* slotInfo, bool readSeparator, FileReader* reader, SlabAllocator& alloc);

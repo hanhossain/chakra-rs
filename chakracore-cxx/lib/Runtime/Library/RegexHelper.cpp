@@ -582,7 +582,7 @@ namespace Js
             {
                 // Overall match already captured in index 0 by above, so just grab the groups
                 Var nonMatchValue = NonMatchValue(scriptContext, false);
-                Field(Var) *elements = ((SparseArraySegment<Var>*)arrayResult->GetHead())->elements;
+                typename WriteBarrierFieldTypeTraits<Var>::Type *elements = ((SparseArraySegment<Var>*)arrayResult->GetHead())->elements;
                 for (uint groupId = 1; groupId < (uint)numGroups; groupId++)
                 {
                     Assert(groupId < arrayResult->GetHead()->left + arrayResult->GetHead()->length);
@@ -636,7 +636,7 @@ namespace Js
         Assert(numGroups >= 0);
         JavascriptArray* result = CreateExecResult(stackAllocationPointer, scriptContext, numGroups, input, match);
         Var nonMatchValue = NonMatchValue(scriptContext, false);
-        Field(Var) *elements = ((SparseArraySegment<Var>*)result->GetHead())->elements;
+        typename WriteBarrierFieldTypeTraits<Var>::Type *elements = ((SparseArraySegment<Var>*)result->GetHead())->elements;
         for (uint groupId = 0; groupId < (uint)numGroups; groupId++)
         {
             Assert(groupId < result->GetHead()->left + result->GetHead()->length);
@@ -1072,13 +1072,13 @@ namespace Js
                 size_t numberOfCapturesToKeep = (size_t) min(numberOfCaptures, maxNumberOfCaptures);
                 if (captures == nullptr)
                 {
-                    captures = RecyclerNewArray(recycler, Field(Var), numberOfCapturesToKeep + 1);
+                    captures = RecyclerNewArray(recycler, typename WriteBarrierFieldTypeTraits<Var>::Type, numberOfCapturesToKeep + 1);
                 }
                 else if (numberOfCapturesToKeep != previousNumberOfCapturesToKeep)
                 {
                     size_t existingBytes = (previousNumberOfCapturesToKeep + 1) * sizeof(Var*);
                     size_t requestedBytes = (numberOfCapturesToKeep + 1) * sizeof(Var*);
-                    captures = (Field(Var)*) recycler->Realloc(captures, existingBytes, requestedBytes);
+                    captures = (typename WriteBarrierFieldTypeTraits<Var>::Type*) recycler->Realloc(captures, existingBytes, requestedBytes);
                 }
                 previousNumberOfCapturesToKeep = numberOfCapturesToKeep;
 

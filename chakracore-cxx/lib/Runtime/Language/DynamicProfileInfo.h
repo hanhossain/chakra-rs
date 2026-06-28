@@ -577,7 +577,7 @@ namespace Js
             Field(bool) disableLoopCountBasedBoundCheckHoist : 1;
             Field(bool) disableLoopCountBasedBoundCheckHoist_jitLoopBody : 1;
             Field(bool) hasPolymorphicFldAccess : 1;
-            Field(bool) hasLdFldCallSite : 1; // getters, setters, .apply (possibly .call too in future)
+            typename WriteBarrierFieldTypeTraits<bool>::Type hasLdFldCallSite : 1; // getters, setters, .apply (possibly .call too in future)
             Field(bool) disableFloorInlining : 1;
             Field(bool) disableNoProfileBailouts : 1;
             Field(bool) disableSwitchOpt : 1;

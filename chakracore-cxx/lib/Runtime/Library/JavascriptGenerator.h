@@ -103,7 +103,7 @@ public:
 
     void SetScriptFunction(ScriptFunction* sf) { this->scriptFunction = sf; }
     void SetFrame(InterpreterStackFrame* frame, size_t bytes);
-    void SetFrameSlots(uint slotCount, Field(Var)* frameSlotArray);
+    void SetFrameSlots(uint slotCount, typename WriteBarrierFieldTypeTraits<Var>::Type* frameSlotArray);
 
     virtual void Finalize(bool isShutdown) override;
 

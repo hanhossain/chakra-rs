@@ -26,7 +26,7 @@ namespace Js
             return;
         }
 
-        inlineCaches = RecyclerNewArrayZ(recycler, Field(T*), functionBody->GetInlineCacheCount());
+        inlineCaches = RecyclerNewArrayZ(recycler, typename WriteBarrierFieldTypeTraits<T*>::Type, functionBody->GetInlineCacheCount());
 #if DBG
         inlineCacheCount = functionBody->GetInlineCacheCount();
 #endif

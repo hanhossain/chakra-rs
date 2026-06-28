@@ -24,7 +24,7 @@ namespace Js
             static FunctionInfo Set;
         };
         WebAssemblyTable(
-            Field(Var) * values, uint32_t currentLength, uint32_t initialLength, uint32_t maxLength, DynamicType * type);
+            typename WriteBarrierFieldTypeTraits<Var>::Type * values, uint32_t currentLength, uint32_t initialLength, uint32_t maxLength, DynamicType * type);
         static Var NewInstance(RecyclableObject* function, CallInfo callInfo, ...);
         static Var EntryGetterLength(RecyclableObject* function, CallInfo callInfo, ...);
         static Var EntryGrow(RecyclableObject* function, CallInfo callInfo, ...);
@@ -47,7 +47,7 @@ namespace Js
         Field(uint32_t) m_maxLength;
 
         Field(uint32_t) m_currentLength;
-        Field(Field(Var)*) m_values;
+        typename WriteBarrierFieldTypeTraits<Field(Var>::Type*) m_values;
 #endif
     };
 

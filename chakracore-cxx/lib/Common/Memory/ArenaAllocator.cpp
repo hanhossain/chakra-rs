@@ -13,7 +13,7 @@
 const uint Memory::StandAloneFreeListPolicy::MaxEntriesGrowth;
 
 // We need this function to be inlined for perf
-template BVSparseNode<JitArenaAllocator> * BVSparse<JitArenaAllocator>::NodeFromIndex(BVIndex i, Field(BVSparseNode*, JitArenaAllocator)** prevNextFieldOut, bool create);
+template BVSparseNode<JitArenaAllocator> * BVSparse<JitArenaAllocator>::NodeFromIndex(BVIndex i, typename WriteBarrierFieldTypeTraits<BVSparseNode*, JitArenaAllocator>::Type** prevNextFieldOut, bool create);
 
 ArenaData::ArenaData(PageAllocator * pageAllocator) :
     pageAllocator(pageAllocator),

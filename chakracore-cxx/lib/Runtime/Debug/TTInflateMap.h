@@ -72,7 +72,7 @@ namespace TTD
 
         Js::FunctionBody* LookupFunctionBody(TTD_PTR_ID functionId) const;
         Js::FrameDisplay* LookupEnvironment(TTD_PTR_ID envid) const;
-        Field(Js::Var)* LookupSlotArray(TTD_PTR_ID slotid) const;
+        typename WriteBarrierFieldTypeTraits<Js::Var>::Type* LookupSlotArray(TTD_PTR_ID slotid) const;
 
         void LookupInfoForDebugScope(TTD_PTR_ID dbgScopeId, Js::FunctionBody** homeBody, int32_t* chainIndex) const;
 
@@ -86,7 +86,7 @@ namespace TTD
 
         void AddInflationFunctionBody(TTD_PTR_ID functionId, Js::FunctionBody* value);
         void AddEnvironment(TTD_PTR_ID envId, Js::FrameDisplay* value);
-        void AddSlotArray(TTD_PTR_ID slotId, Field(Js::Var)* value);
+        void AddSlotArray(TTD_PTR_ID slotId, typename WriteBarrierFieldTypeTraits<Js::Var>::Type* value);
 
         void UpdateFBScopes(const NSSnapValues::SnapFunctionBodyScopeChain& scopeChainInfo, Js::FunctionBody* fb);
 

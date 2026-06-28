@@ -20,7 +20,7 @@ JavascriptAsyncGenerator* JavascriptAsyncGenerator::New(
 
     if (args.Info.Count > 0)
     {
-        argValuesCopy = RecyclerNewArray(recycler, Field(Var), args.Info.Count);
+        argValuesCopy = RecyclerNewArray(recycler, typename WriteBarrierFieldTypeTraits<Var>::Type, args.Info.Count);
         CopyArray(argValuesCopy, args.Info.Count, args.Values, args.Info.Count);
     }
 

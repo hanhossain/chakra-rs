@@ -79,7 +79,7 @@ private:
         struct
         {
             Field(ObjectBits) _objectBits : VALUE_TYPE_COMMON_BIT_COUNT + VALUE_TYPE_OBJECT_BIT_COUNT;
-            Field(ObjectType) _objectType : sizeof(TSize) * 8 - (VALUE_TYPE_COMMON_BIT_COUNT + VALUE_TYPE_OBJECT_BIT_COUNT); // use remaining bits
+            typename WriteBarrierFieldTypeTraits<ObjectType>::Type _objectType : sizeof(TSize) * 8 - (VALUE_TYPE_COMMON_BIT_COUNT + VALUE_TYPE_OBJECT_BIT_COUNT); // use remaining bits
         };
 
         Field(Bits) bits;

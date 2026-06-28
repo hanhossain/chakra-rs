@@ -298,8 +298,8 @@ namespace Js
 
         Var LdEnv() const;
         void SetEnv(FrameDisplay *frameDisplay);
-        Field(Var)* NewScopeSlots(unsigned int size, ScriptContext *scriptContext, Var scope);
-        Field(Var)* NewScopeSlots();
+        typename WriteBarrierFieldTypeTraits<Var>::Type* NewScopeSlots(unsigned int size, ScriptContext *scriptContext, Var scope);
+        typename WriteBarrierFieldTypeTraits<Var>::Type* NewScopeSlots();
         Var NewScopeObject();
         FrameDisplay * NewFrameDisplay(void *argHead, void *argEnv);
 

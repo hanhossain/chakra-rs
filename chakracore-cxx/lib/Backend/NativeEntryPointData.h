@@ -54,7 +54,7 @@ public:
     Js::EquivalentTypeCache * EnsureEquivalentTypeCache(int guardCount, Js::ScriptContext * scriptContext, Js::EntryPointInfo * entryPointInfo);
     bool ClearEquivalentTypeCaches(Recycler * recycler);
 
-    Field(Js::FakePropertyGuardWeakReference*) * EnsurePropertyGuardWeakRefs(int guardCount, Recycler * recycler);
+    typename WriteBarrierFieldTypeTraits<Js::FakePropertyGuardWeakReference*>::Type * EnsurePropertyGuardWeakRefs(int guardCount, Recycler * recycler);
 
     Js::SmallSpanSequence * GetNativeThrowSpanSequence() { return this->nativeThrowSpanSequence; }
     void SetNativeThrowSpanSequence(Js::SmallSpanSequence * seq) { this->nativeThrowSpanSequence = seq; }
@@ -105,14 +105,14 @@ private:
     Field(Js::EntryPointPolymorphicInlineCacheInfo *) polymorphicInlineCacheInfo;
 
     // If we pin types this array contains strong references to types, otherwise it holds weak references.
-    Field(Field(void*)*) runtimeTypeRefs;
+    typename WriteBarrierFieldTypeTraits<Field(void*>::Type*) runtimeTypeRefs;
 
     // This array holds fake weak references to type property guards. We need it to zero out the weak references when the
     // entry point is finalized and the guards are about to be freed. Otherwise, if one of the guards was to be invalidated
     // from the thread context, we would AV trying to access freed memory. Note that the guards themselves are allocated by
     // NativeCodeData::Allocator and are kept alive by the data field. The weak references are recycler allocated, and so
     // the array must be recycler allocated also, so that the recycler doesn't collect the weak references.
-    Field(Field(Js::FakePropertyGuardWeakReference*)*) propertyGuardWeakRefs;
+    typename WriteBarrierFieldTypeTraits<Field(Js::FakePropertyGuardWeakReference*>::Type*) propertyGuardWeakRefs;
     Field(Js::EquivalentTypeCache*) equivalentTypeCaches;
     Field(Js::EntryPointInfo **) registeredEquivalentTypeCacheRef;
 

@@ -12,7 +12,7 @@ namespace Js
 {
 
 WebAssemblyTable::WebAssemblyTable(
-        Field(Var) * values, uint32_t currentLength, uint32_t initialLength, uint32_t maxLength, DynamicType * type) :
+        typename WriteBarrierFieldTypeTraits<Var>::Type * values, uint32_t currentLength, uint32_t initialLength, uint32_t maxLength, DynamicType * type) :
     DynamicObject(type),
     m_values(values),
     m_currentLength(currentLength),
@@ -109,7 +109,7 @@ WebAssemblyTable::EntryGrow(RecyclableObject* function, CallInfo callInfo, ...)
             JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgumentOutOfRange);
         }
 
-        Field(Var) * newValues = RecyclerNewArrayZ(scriptContext->GetRecycler(), Field(Var), newLength);
+        typename WriteBarrierFieldTypeTraits<Var>::Type * newValues = RecyclerNewArrayZ(scriptContext->GetRecycler(), typename WriteBarrierFieldTypeTraits<Var>::Type, newLength);
         CopyArray(newValues, newLength, table->m_values, table->m_currentLength);
 
         table->m_values = newValues;
@@ -206,7 +206,7 @@ WebAssemblyTable::Create(uint32_t initial, uint32_t maximum, ScriptContext * scr
     Field(Var) * values = nullptr;
     if (initial > 0)
     {
-        values = RecyclerNewArrayZ(scriptContext->GetRecycler(), Field(Var), initial);
+        values = RecyclerNewArrayZ(scriptContext->GetRecycler(), typename WriteBarrierFieldTypeTraits<Var>::Type, initial);
     }
     return RecyclerNew(scriptContext->GetRecycler(), WebAssemblyTable, values, initial, initial, maximum, scriptContext->GetLibrary()->GetWebAssemblyTableType());
 }

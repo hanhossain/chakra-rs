@@ -75,7 +75,7 @@ JavascriptGenerator* JavascriptGenerator::New(
 
     if (args.Info.Count > 0)
     {
-        argValuesCopy = RecyclerNewArray(recycler, Field(Var), args.Info.Count);
+        argValuesCopy = RecyclerNewArray(recycler, typename WriteBarrierFieldTypeTraits<Var>::Type, args.Info.Count);
         CopyArray(argValuesCopy, args.Info.Count, args.Values, args.Info.Count);
     }
 
@@ -124,7 +124,7 @@ void JavascriptGenerator::SetFrame(InterpreterStackFrame* frame, size_t bytes)
     }
 }
 
-void JavascriptGenerator::SetFrameSlots(Js::RegSlot slotCount, Field(Var)* frameSlotArray)
+void JavascriptGenerator::SetFrameSlots(Js::RegSlot slotCount, typename WriteBarrierFieldTypeTraits<Var>::Type* frameSlotArray)
 {
     AssertMsg(this->frame->GetFunctionBody()->GetLocalsCount() == slotCount, 
         "Unexpected mismatch in frame slot count for generated.");

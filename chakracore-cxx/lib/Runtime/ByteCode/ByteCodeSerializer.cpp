@@ -4526,7 +4526,7 @@ public:
         return current;
     }
 
-    const byte* ReadDeferredStubs(const byte* current, ByteCodeCache* cache, uint nestedCount, Field(DeferredFunctionStub*)* deferredStubs, bool recurse)
+    const byte* ReadDeferredStubs(const byte* current, ByteCodeCache* cache, uint nestedCount, typename WriteBarrierFieldTypeTraits<DeferredFunctionStub*>::Type* deferredStubs, bool recurse)
     {
         if (nestedCount == 0)
         {
@@ -4567,7 +4567,7 @@ public:
     }
 
     // Read the top function body.
-    int32_t ReadTopFunctionBody(Field(FunctionBody*)* function, Utf8SourceInfo* sourceInfo, ByteCodeCache * cache, bool allowDefer, NativeModule *nativeModule)
+    int32_t ReadTopFunctionBody(typename WriteBarrierFieldTypeTraits<FunctionBody*>::Type* function, Utf8SourceInfo* sourceInfo, ByteCodeCache * cache, bool allowDefer, NativeModule *nativeModule)
     {
         auto topFunction = ReadInt32(functions, &functionCount);
         firstFunctionId = sourceInfo->GetSrcInfo()->sourceContextInfo->nextLocalFunctionId;
@@ -4974,17 +4974,17 @@ int32_t ByteCodeSerializer::SerializeToBuffer(ScriptContext * scriptContext, Are
     return hr;
 }
 
-int32_t ByteCodeSerializer::DeserializeFromBuffer(ScriptContext * scriptContext, uint32_t scriptFlags, LPCUTF8 utf8Source, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, Field(FunctionBody*)* function, uint sourceIndex)
+int32_t ByteCodeSerializer::DeserializeFromBuffer(ScriptContext * scriptContext, uint32_t scriptFlags, LPCUTF8 utf8Source, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, typename WriteBarrierFieldTypeTraits<FunctionBody*>::Type* function, uint sourceIndex)
 {
     return ByteCodeSerializer::DeserializeFromBufferInternal(scriptContext, scriptFlags, utf8Source, /* sourceHolder */ nullptr, srcInfo, buffer, nativeModule, function, sourceIndex);
 }
 // Deserialize function body from supplied buffer
-int32_t ByteCodeSerializer::DeserializeFromBuffer(ScriptContext * scriptContext, uint32_t scriptFlags, ISourceHolder* sourceHolder, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, Field(FunctionBody*)* function, uint sourceIndex)
+int32_t ByteCodeSerializer::DeserializeFromBuffer(ScriptContext * scriptContext, uint32_t scriptFlags, ISourceHolder* sourceHolder, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, typename WriteBarrierFieldTypeTraits<FunctionBody*>::Type* function, uint sourceIndex)
 {
     AssertMsg(sourceHolder != nullptr || sourceIndex != Js::Constants::InvalidSourceIndex, "SourceHolder can't be null, if you have an empty source then pass ISourceHolder::GetEmptySourceHolder()");
     return ByteCodeSerializer::DeserializeFromBufferInternal(scriptContext, scriptFlags, /* utf8Source */ nullptr, sourceHolder, srcInfo, buffer, nativeModule, function, sourceIndex);
 }
-int32_t ByteCodeSerializer::DeserializeFromBufferInternal(ScriptContext * scriptContext, uint32_t scriptFlags, LPCUTF8 utf8Source, ISourceHolder* sourceHolder, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, Field(FunctionBody*)* function, uint sourceIndex)
+int32_t ByteCodeSerializer::DeserializeFromBufferInternal(ScriptContext * scriptContext, uint32_t scriptFlags, LPCUTF8 utf8Source, ISourceHolder* sourceHolder, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, typename WriteBarrierFieldTypeTraits<FunctionBody*>::Type* function, uint sourceIndex)
 {
     auto alloc = scriptContext->SourceCodeAllocator();
     bool isLibraryCode = ((scriptFlags & fscrIsLibraryCode) == fscrIsLibraryCode);

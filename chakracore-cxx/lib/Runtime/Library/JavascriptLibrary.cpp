@@ -1467,7 +1467,7 @@ namespace Js
 
         // Note: Any global function added/removed/changed here should also be updated in JavascriptLibrary::ProfilerRegisterBuiltinFunctions
         // so that the new functions show up in the profiler too.
-        Field(JavascriptFunction*)* builtinFuncs = this->GetBuiltinFunctions();
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type* builtinFuncs = this->GetBuiltinFunctions();
 
         evalFunctionObject = AddFunctionToLibraryObject(globalObject, PropertyIds::eval, &GlobalObject::EntryInfo::Eval, 1);
         parseIntFunctionObject = AddFunctionToLibraryObject(globalObject, PropertyIds::parseInt, &GlobalObject::EntryInfo::ParseInt, 2);
@@ -1890,7 +1890,7 @@ namespace Js
         // so that the update is in sync with profiler
         ScriptContext* scriptContext = arrayConstructor->GetScriptContext();
         JavascriptLibrary* library = arrayConstructor->GetLibrary();
-        [[maybe_unused]] Field(JavascriptFunction*)* builtinFuncs = library->GetBuiltinFunctions();
+        [[maybe_unused]] typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type* builtinFuncs = library->GetBuiltinFunctions();
 
         library->AddMember(arrayConstructor, PropertyIds::length, TaggedInt::ToVarUnchecked(1), PropertyConfigurable);
         library->AddMember(arrayConstructor, PropertyIds::prototype, scriptContext->GetLibrary()->arrayPrototype, PropertyNone);
@@ -2038,7 +2038,7 @@ namespace Js
 
         library->AddMember(arrayPrototype, PropertyIds::constructor, library->arrayConstructor);
 
-        Field(JavascriptFunction*)* builtinFuncs = library->GetBuiltinFunctions();
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type* builtinFuncs = library->GetBuiltinFunctions();
 
         builtinFuncs[BuiltinFunction::JavascriptArray_At]                 = library->AddFunctionToLibraryObject(arrayPrototype, PropertyIds::at,              &JavascriptArray::EntryInfo::At,                1);
         builtinFuncs[BuiltinFunction::JavascriptArray_Push]               = library->AddFunctionToLibraryObject(arrayPrototype, PropertyIds::push,            &JavascriptArray::EntryInfo::Push,              1);
@@ -3173,7 +3173,7 @@ namespace Js
         // so that the update is in sync with profiler
         ScriptContext* scriptContext = functionPrototype->GetScriptContext();
         JavascriptLibrary* library = functionPrototype->GetLibrary();
-        Field(JavascriptFunction*)* builtinFuncs = library->GetBuiltinFunctions();
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type* builtinFuncs = library->GetBuiltinFunctions();
 
         library->AddMember(functionPrototype, PropertyIds::constructor, library->functionConstructor);
         library->AddMember(functionPrototype, PropertyIds::length, TaggedInt::ToVarUnchecked(0), PropertyConfigurable);
@@ -3254,7 +3254,7 @@ namespace Js
         library->AddMember(mathObject, PropertyIds::SQRT1_2, JavascriptNumber::New(Math::SQRT1_2, scriptContext), PropertyNone);
         library->AddMember(mathObject, PropertyIds::SQRT2,   JavascriptNumber::New(Math::SQRT2,   scriptContext), PropertyNone);
 
-        Field(JavascriptFunction*)* builtinFuncs = library->GetBuiltinFunctions();
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type* builtinFuncs = library->GetBuiltinFunctions();
 
 #ifdef ENABLE_JS_BUILTINS
         if (scriptContext->IsJsBuiltInEnabled())
@@ -3875,7 +3875,7 @@ namespace Js
 #if DBG
     /*static*/
     void JavascriptLibrary::CheckRegisteredBuiltIns(
-        Field(JavascriptFunction*)* builtInFuncs, ScriptContext *scriptContext)
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type* builtInFuncs, ScriptContext *scriptContext)
     {
         byte count = BuiltinFunction::Count;
         for (byte index = 0; index < count; index++)
@@ -4225,7 +4225,7 @@ namespace Js
     {
         JavascriptLibrary* library = objectPrototype->GetLibrary();
         ScriptContext* scriptContext = objectPrototype->GetScriptContext();
-        Field(JavascriptFunction*)* builtinFuncs = library->GetBuiltinFunctions();
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type* builtinFuncs = library->GetBuiltinFunctions();
 
         typeHandler->Convert(objectPrototype, mode, 11, true);
         // Note: Any new function addition/deletion/modification should also be updated in JavascriptLibrary::ProfilerRegisterObject
@@ -4284,7 +4284,7 @@ namespace Js
         // so that the update is in sync with profiler
         JavascriptFunction * func;
         JavascriptLibrary* library = regexPrototype->GetLibrary();
-        Field(JavascriptFunction*)* builtinFuncs = library->GetBuiltinFunctions();
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type* builtinFuncs = library->GetBuiltinFunctions();
 
         library->AddMember(regexPrototype, PropertyIds::constructor, library->regexConstructor);
         library->regexConstructorSlotIndex = 0;
@@ -4391,7 +4391,7 @@ namespace Js
         JavascriptLibrary* library = stringConstructor->GetLibrary();
         ScriptContext* scriptContext = stringConstructor->GetScriptContext();
 
-        Field(JavascriptFunction*)* builtinFuncs = library->GetBuiltinFunctions();
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type* builtinFuncs = library->GetBuiltinFunctions();
         library->AddMember(stringConstructor, PropertyIds::length, TaggedInt::ToVarUnchecked(1), PropertyConfigurable);
         library->AddMember(stringConstructor, PropertyIds::prototype, library->stringPrototype, PropertyNone);
         library->AddMember(stringConstructor, PropertyIds::name, scriptContext->GetPropertyString(PropertyIds::String), PropertyConfigurable);
@@ -4418,7 +4418,7 @@ namespace Js
         // so that the update is in sync with profiler
         ScriptContext* scriptContext = stringPrototype->GetScriptContext();
         JavascriptLibrary* library = stringPrototype->GetLibrary();
-        Field(JavascriptFunction*)* builtinFuncs = library->GetBuiltinFunctions();
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type* builtinFuncs = library->GetBuiltinFunctions();
 
         library->AddMember(stringPrototype, PropertyIds::constructor, library->stringConstructor);
 
@@ -5227,7 +5227,7 @@ namespace Js
         JavascriptLibrary* library = chakraLibraryObject->GetLibrary();
         typeHandler->Convert(chakraLibraryObject, mode, 8);
 
-        Field(JavascriptFunction*)* builtinFuncs = library->GetBuiltinFunctions();
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type* builtinFuncs = library->GetBuiltinFunctions();
         JavascriptFunction * func = nullptr;
 
         library->AddFunctionToLibraryObject(chakraLibraryObject, PropertyIds::toLength, &JsBuiltInEngineInterfaceExtensionObject::EntryInfo::JsBuiltIn_Internal_ToLengthFunction, 1);
@@ -5531,7 +5531,7 @@ namespace Js
     }
 
     Js::RecyclableObject* JavascriptLibrary::CreateBoundFunction_TTD(
-        RecyclableObject* function, Var bThis, uint32_t ct, Field(Var)* args)
+        RecyclableObject* function, Var bThis, uint32_t ct, typename WriteBarrierFieldTypeTraits<Var>::Type* args)
     {
         return BoundFunction::InflateBoundFunction(this->scriptContext, function, bThis, ct, args);
     }
@@ -6897,7 +6897,7 @@ namespace Js
         return GetEnumeratorCache<Cache::StringifyCacheSize>(type, &this->cache.stringifyCache);
     }
 
-    template<uint cacheSlotCount> EnumeratorCache* JavascriptLibrary::GetEnumeratorCache(Type* type, Field(EnumeratorCache*)* cacheSlots)
+    template<uint cacheSlotCount> EnumeratorCache* JavascriptLibrary::GetEnumeratorCache(Type* type, typename WriteBarrierFieldTypeTraits<EnumeratorCache*>::Type* cacheSlots)
     {
         // Size must be power of 2 for cache indexing to work
         static_assert((cacheSlotCount & (cacheSlotCount - 1)) == 0);
@@ -7107,7 +7107,7 @@ namespace Js
             || constructor == library->GetFloat64ArrayConstructor();
     }
 
-    Field(JavascriptFunction*)* JavascriptLibrary::GetBuiltinFunctions()
+    typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type* JavascriptLibrary::GetBuiltinFunctions()
     {
         AssertMsg(this->builtinFunctions, "builtinFunctions table must've been initialized as part of library initialization!");
         return this->builtinFunctions;
@@ -7270,7 +7270,7 @@ namespace Js
         if (bindRefChunkCurrent == bindRefChunkEnd)
         {
             Field(void*)* tmpBindRefChunk = RecyclerNewArrayZ(recycler,
-                Field(void*), HeapConstants::ObjectGranularity / sizeof(void *));
+                typename WriteBarrierFieldTypeTraits<void*>::Type, HeapConstants::ObjectGranularity / sizeof(void *));
             // reserve the last void* as the linklist node.
             bindRefChunkEnd = tmpBindRefChunk + (HeapConstants::ObjectGranularity / sizeof(void *) -1 );
             if (bindRefChunkBegin == nullptr)

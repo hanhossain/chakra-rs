@@ -72,7 +72,7 @@ namespace UnifiedRegex
         Js::InternalString GetSource() const;
         RegexFlags GetFlags() const;
 
-        Field(RegExpTestCache*) EnsureTestCache();
+        typename WriteBarrierFieldTypeTraits<RegExpTestCache*>::Type EnsureTestCache();
         static uint GetTestCacheIndex(Js::JavascriptString* str);
 
 #if ENABLE_REGEX_CONFIG_OPTIONS

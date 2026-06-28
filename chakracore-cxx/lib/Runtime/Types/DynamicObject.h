@@ -94,7 +94,7 @@ namespace Js
         // object. The offset of the inline slots is managed by DynamicTypeHandler.
         // More details for the layout scenarios below.
 
-        Field(Field(Var)*) auxSlots;
+        typename WriteBarrierFieldTypeTraits<Field(Var>::Type*) auxSlots;
 
         // The objectArrayOrFlags field can store one of three things:
         //   a) a pointer to the object array holding numeric properties of this object (#1, #2), or
@@ -127,7 +127,7 @@ namespace Js
         void InitSlots(DynamicObject * instance, ScriptContext * scriptContext);
         void SetTypeHandler(DynamicTypeHandler * typeHandler, bool hasChanged);
 
-        Field(Var)* GetInlineSlots() const;
+        typename WriteBarrierFieldTypeTraits<Var>::Type* GetInlineSlots() const;
 
     protected:
         DEFINE_VTABLE_CTOR(DynamicObject, RecyclableObject);
@@ -376,7 +376,7 @@ namespace Js
         virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
         virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
 
-        Field(Js::Var) const* GetInlineSlots_TTD() const;
+        typename WriteBarrierFieldTypeTraits<Js::Var>::Type const* GetInlineSlots_TTD() const;
         Js::Var const* GetAuxSlots_TTD() const;
 
 #if ENABLE_OBJECT_SOURCE_TRACKING

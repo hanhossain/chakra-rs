@@ -142,7 +142,7 @@ namespace Js
     protected:
         FieldNoBarrier(JavascriptMethod) originalEntryPoint;
         WriteBarrierFieldTypeTraits<FunctionProxy *>::Type functionBodyImpl;     // Implementation of the function- null if the function doesn't have a body
-        Field(LocalFunctionId) functionId;        // Per host source context (source file) function Id
+        typename WriteBarrierFieldTypeTraits<LocalFunctionId>::Type functionId;        // Per host source context (source file) function Id
         Field(uint) compileCount;
         Field(Attributes) attributes;
     };

@@ -87,9 +87,9 @@ namespace Js
         Field(UnambiguousExportMap*) unambiguousNonLocalExports;
         Field(SimplePropertyDescriptorMap*) propertyMap;   // local exports.
         Field(ListForListIterator*) sortedExportedNames;   // sorted exported names for both local and indirect exports; excludes symbols.
-        Field(Field(Var)*) nsSlots;
+        typename WriteBarrierFieldTypeTraits<Field(Var>::Type*) nsSlots;
 
-        void SetNSSlotsForModuleNS(Field(Var)* nsSlot) { this->nsSlots = nsSlot; }
+        void SetNSSlotsForModuleNS(typename WriteBarrierFieldTypeTraits<Var>::Type* nsSlot) { this->nsSlots = nsSlot; }
         Var GetNSSlot(BigPropertyIndex propertyIndex);
         void AddUnambiguousNonLocalExport(PropertyId exportId, ModuleNameRecord* nonLocalExportNameRecord);
         UnambiguousExportMap* GetUnambiguousNonLocalExports() const { return unambiguousNonLocalExports; }

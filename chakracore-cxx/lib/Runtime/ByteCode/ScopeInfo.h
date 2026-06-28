@@ -44,7 +44,7 @@ namespace Js {
         };
 
     private:
-        Field(ScopeInfo *) parent;               // link to parent scope info (if any)
+        typename WriteBarrierFieldTypeTraits<ScopeInfo *>::Type parent;               // link to parent scope info (if any)
         Field(FunctionInfo * const) functionInfo;// link to function owning this scope
 
         Field(uint8_t) isDynamic : 1;             // isDynamic bit affects how deferredChild access global ref

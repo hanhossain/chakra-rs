@@ -529,7 +529,7 @@ public:
     }
 
     template <void (*CopyElement)(
-        typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type const& from, Field(TData, TAllocator)& to)>
+        typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type const& from, typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type& to)>
     bool CopyTo(TAllocator * allocator, SListBase& to) const
     {
         to.Clear(allocator);
@@ -573,7 +573,7 @@ public:
 
 private:
     static void DefaultCopyElement(
-        typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type const& from, Field(TData, TAllocator)& to)
+        typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type const& from, typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type& to)
     {
         to = from;
     }

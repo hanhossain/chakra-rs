@@ -360,8 +360,8 @@ namespace Js
         static void OP_InitClassMemberSet(Var object, PropertyId propertyId, Var setter);
         static void OP_InitClassMemberSetComputedName(Var object, Var elementName, Var getter, ScriptContext* scriptContext, PropertyOperationFlags flags = PropertyOperation_None);
 
-        static Field(Var)* OP_GetModuleExportSlotArrayAddress(uint moduleIndex, uint slotIndex, ScriptContextInfo* scriptContext);
-        static Field(Var)* OP_GetModuleExportSlotAddress(uint moduleIndex, uint slotIndex, ScriptContext* scriptContext);
+        static typename WriteBarrierFieldTypeTraits<Var>::Type* OP_GetModuleExportSlotArrayAddress(uint moduleIndex, uint slotIndex, ScriptContextInfo* scriptContext);
+        static typename WriteBarrierFieldTypeTraits<Var>::Type* OP_GetModuleExportSlotAddress(uint moduleIndex, uint slotIndex, ScriptContext* scriptContext);
         static Var OP_LdModuleSlot(uint moduleIndex, uint slotIndex, ScriptContext* scriptContext);
         static void OP_StModuleSlot(uint moduleIndex, uint slotIndex, Var value, ScriptContext* scriptContext);
         static Var OP_LdImportMeta(uint moduleIndex, ScriptContext* scriptContext);
@@ -458,8 +458,8 @@ namespace Js
         static bool IsObjectDetached(Var var);
         // This will return a new object from the state returned by the above operation
         static Var NewVarFromDetachedState(DetachedStateBase* state, JavascriptLibrary *library);
-        static Var NewScObjectLiteral(ScriptContext* scriptContext, const Js::PropertyIdArray *propIds, Field(DynamicType*)* literalType);
-        static DynamicType * EnsureObjectLiteralType(ScriptContext* scriptContext, const Js::PropertyIdArray *propIds, Field(DynamicType*)* literalType);
+        static Var NewScObjectLiteral(ScriptContext* scriptContext, const Js::PropertyIdArray *propIds, typename WriteBarrierFieldTypeTraits<DynamicType*>::Type* literalType);
+        static DynamicType * EnsureObjectLiteralType(ScriptContext* scriptContext, const Js::PropertyIdArray *propIds, typename WriteBarrierFieldTypeTraits<DynamicType*>::Type* literalType);
         static uint GetLiteralSlotCapacity(Js::PropertyIdArray const * propIds);
         static uint GetLiteralInlineSlotCapacity(Js::PropertyIdArray const * propIds);
         static Var NewJavascriptObjectNoArg(ScriptContext* requestContext);
@@ -521,14 +521,14 @@ namespace Js
         static Var LoadHeapArgsCached(JavascriptFunction *funcCallee, uint32_t actualsCount, uint32_t formalsCount, Var *pParams, Var frameObj, ScriptContext* scriptContext, bool nonSimpleParamList);
         static Var FillScopeObject(JavascriptFunction *funcCallee, uint32_t actualsCount, uint32_t formalsCount, Var frameObj, Var * paramAddr, Js::PropertyIdArray *propIds, HeapArgumentsObject * argsObj, ScriptContext * scriptContext, bool nonSimpleParamList, bool useCachedScope);
         static HeapArgumentsObject *CreateHeapArguments(JavascriptFunction *funcCallee, uint32_t actualsCount, uint32_t formalsCount, Var frameObj, ScriptContext* scriptContext);
-        static Var OP_InitCachedScope(Var varFunc, const PropertyIdArray *propIds, Field(DynamicType*)* literalType, bool formalsAreLetDecls, ScriptContext *scriptContext);
+        static Var OP_InitCachedScope(Var varFunc, const PropertyIdArray *propIds, typename WriteBarrierFieldTypeTraits<DynamicType*>::Type* literalType, bool formalsAreLetDecls, ScriptContext *scriptContext);
         static void OP_InvalidateCachedScope(Var varEnv, int32_t envIndex);
         static void OP_InitCachedFuncs(Var varScope, FrameDisplay *pDisplay, const FuncInfoArray *info, ScriptContext *scriptContext);
         static Var OP_NewScopeObject(ScriptContext* scriptContext);
         static Var OP_NewScopeObjectWithFormals(ScriptContext* scriptContext, FunctionBody * calleeBody, bool nonSimpleParamList);
-        static Field(Var)* OP_NewScopeSlots(unsigned int count, ScriptContext *scriptContext, Var scope);
-        static Field(Var)* OP_NewScopeSlotsWithoutPropIds(unsigned int count, int index, ScriptContext *scriptContext, FunctionBody *functionBody);
-        static Field(Var)* OP_CloneScopeSlots(Field(Var) *scopeSlots, ScriptContext *scriptContext);
+        static typename WriteBarrierFieldTypeTraits<Var>::Type* OP_NewScopeSlots(unsigned int count, ScriptContext *scriptContext, Var scope);
+        static typename WriteBarrierFieldTypeTraits<Var>::Type* OP_NewScopeSlotsWithoutPropIds(unsigned int count, int index, ScriptContext *scriptContext, FunctionBody *functionBody);
+        static typename WriteBarrierFieldTypeTraits<Var>::Type* OP_CloneScopeSlots(typename WriteBarrierFieldTypeTraits<Var>::Type *scopeSlots, ScriptContext *scriptContext);
         static Var OP_NewPseudoScope(ScriptContext *scriptContext);
         static Var OP_NewBlockScope(ScriptContext *scriptContext);
         static Var OP_CloneBlockScope(BlockActivationObject *blockScope, ScriptContext *scriptContext);

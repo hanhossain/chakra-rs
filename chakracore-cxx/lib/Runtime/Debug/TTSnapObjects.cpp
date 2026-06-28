@@ -88,7 +88,7 @@ namespace TTD
                 TTDVar* cpyBase = snpObject->VarArray;
                 if(sHandler->InlineSlotCapacity != 0)
                 {
-                    Field(Js::Var) const* inlineSlots = dynObj->GetInlineSlots_TTD();
+                    typename WriteBarrierFieldTypeTraits<Js::Var>::Type const* inlineSlots = dynObj->GetInlineSlots_TTD();
 
                     //copy all the properties (if they all fit into the inline slots) otherwise just copy all the inline slot values
                     uint32_t inlineSlotCount = min(sHandler->MaxPropertyIndex, sHandler->InlineSlotCapacity);
@@ -939,7 +939,7 @@ namespace TTD
             Field(Js::Var)* bArgs = nullptr;
             if(snapBoundInfo->ArgCount != 0)
             {
-                bArgs = RecyclerNewArray(ctx->GetRecycler(), Field(Js::Var), snapBoundInfo->ArgCount);
+                bArgs = RecyclerNewArray(ctx->GetRecycler(), typename WriteBarrierFieldTypeTraits<Js::Var>::Type, snapBoundInfo->ArgCount);
 
                 for(uint i = 0; i < snapBoundInfo->ArgCount; i++)
                 {
@@ -2260,7 +2260,7 @@ namespace TTD
             Field(Js::Var)* argVals = nullptr;
             if(generatorInfo->arguments_count > 0)
             {
-                argVals = RecyclerNewArray(ctx->GetRecycler(), Field(Js::Var), generatorInfo->arguments_count);
+                argVals = RecyclerNewArray(ctx->GetRecycler(), typename WriteBarrierFieldTypeTraits<Js::Var>::Type, generatorInfo->arguments_count);
                 for(Js::RegSlot i = 0; i < generatorInfo->arguments_count; i++)
                 {
                     argVals[i] = inflator->InflateTTDVar(generatorInfo->arguments_values[i]);
@@ -2312,7 +2312,7 @@ namespace TTD
                 Field(Js::Var)* frameSlotArray = nullptr;
                 if (generatorInfo->frame_slotCount != 0)
                 {
-                    frameSlotArray = RecyclerNewArray(ctx->GetRecycler(), Field(Js::Var), generatorInfo->frame_slotCount);
+                    frameSlotArray = RecyclerNewArray(ctx->GetRecycler(), typename WriteBarrierFieldTypeTraits<Js::Var>::Type, generatorInfo->frame_slotCount);
 
                     for (Js::RegSlot i = 0; i < generatorInfo->frame_slotCount; i++)
                     {

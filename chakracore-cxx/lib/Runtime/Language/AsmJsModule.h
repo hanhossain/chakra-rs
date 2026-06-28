@@ -326,7 +326,7 @@ namespace Js {
                 Field(float) floatInit;
                 Field(double) doubleInit;
             };
-            Field(InitialiserType) initialiser; // (leish)(swb) false positive found here
+            typename WriteBarrierFieldTypeTraits<InitialiserType>::Type initialiser; // (leish)(swb) false positive found here
             Field(bool) isMutable;
         };
         struct ModuleVarImport

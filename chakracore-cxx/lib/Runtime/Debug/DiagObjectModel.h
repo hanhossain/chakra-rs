@@ -253,7 +253,7 @@ namespace Js
 
         ScopeSlots GetSlotArray()
         {
-            Field(Var) *slotArray = (Field(Var) *) instance;
+            typename WriteBarrierFieldTypeTraits<Var>::Type *slotArray = (typename WriteBarrierFieldTypeTraits<Var>::Type *) instance;
             Assert(slotArray != nullptr);
             return ScopeSlots(slotArray);
         }

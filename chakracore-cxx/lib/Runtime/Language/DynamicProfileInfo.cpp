@@ -116,7 +116,7 @@ namespace Js
         {
             if (batch[i].size > 0)
             {
-                Field(uint8_t*)* field = (Field(uint8_t*)*)(((uint8_t*)info + batch[i].offset));
+                typename WriteBarrierFieldTypeTraits<uint8_t*>::Type* field = (typename WriteBarrierFieldTypeTraits<uint8_t*>::Type*)(((uint8_t*)info + batch[i].offset));
                 *field = current;
                 current += batch[i].size;
             }

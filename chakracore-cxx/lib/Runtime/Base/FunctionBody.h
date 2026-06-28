@@ -930,10 +930,10 @@ namespace Js
         AuxPointerTypeEntry(AuxPointerType::StackNestedFuncParent, RecyclerWeakReference<FunctionInfo>*);
         AuxPointerTypeEntry(AuxPointerType::SimpleJitEntryPointInfo, FunctionEntryPointInfo*);
         AuxPointerTypeEntry(AuxPointerType::FunctionObjectTypeList, FunctionTypeWeakRefList*);
-        AuxPointerTypeEntry(AuxPointerType::CodeGenGetSetRuntimeData, Field(Js::FunctionCodeGenRuntimeData*)*);
+        AuxPointerTypeEntry(AuxPointerType::CodeGenGetSetRuntimeData, typename WriteBarrierFieldTypeTraits<Js::FunctionCodeGenRuntimeData*>::Type*);
         AuxPointerTypeEntry(AuxPointerType::PropertyIdOnRegSlotsContainer, Js::PropertyIdOnRegSlotsContainer*);
         AuxPointerTypeEntry(AuxPointerType::LoopHeaderArray, Js::LoopHeader*);
-        AuxPointerTypeEntry(AuxPointerType::CodeGenRuntimeData, Field(FunctionCodeGenRuntimeData*)*);
+        AuxPointerTypeEntry(AuxPointerType::CodeGenRuntimeData, typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData*>::Type*);
         AuxPointerTypeEntry(AuxPointerType::PolymorphicInlineCachesHead, FunctionBodyPolymorphicInlineCache*);
         AuxPointerTypeEntry(AuxPointerType::PropertyIdsForScopeSlotArray, Js::PropertyId*);
 #if ENABLE_PROFILE_INFO
@@ -942,18 +942,18 @@ namespace Js
         AuxPointerTypeEntry(AuxPointerType::AuxBlock, ByteBlock*);
         AuxPointerTypeEntry(AuxPointerType::AuxContextBlock, ByteBlock*);
         AuxPointerTypeEntry(AuxPointerType::ReferencedPropertyIdMap, PropertyId*);
-        AuxPointerTypeEntry(AuxPointerType::LiteralRegexes, Field(UnifiedRegex::RegexPattern*)*);
-        AuxPointerTypeEntry(AuxPointerType::ObjLiteralTypes, Field(DynamicType*)*);
+        AuxPointerTypeEntry(AuxPointerType::LiteralRegexes, typename WriteBarrierFieldTypeTraits<UnifiedRegex::RegexPattern*>::Type*);
+        AuxPointerTypeEntry(AuxPointerType::ObjLiteralTypes, typename WriteBarrierFieldTypeTraits<DynamicType*>::Type*);
         AuxPointerTypeEntry(AuxPointerType::ScopeInfo, ScopeInfo*);
         AuxPointerTypeEntry(AuxPointerType::FormalsPropIdArray, PropertyIdArray*);
         AuxPointerTypeEntry(AuxPointerType::ForInCacheArray, EnumeratorCache*);
         AuxPointerTypeEntry(AuxPointerType::SlotIdInCachedScopeToNestedIndexArray, Js::AuxArray<uint32_t>*);
-        AuxPointerTypeEntry(AuxPointerType::CodeGenCallbackRuntimeData, Field(FunctionCodeGenRuntimeData*)*);
+        AuxPointerTypeEntry(AuxPointerType::CodeGenCallbackRuntimeData, typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData*>::Type*);
 #if ENABLE_PROFILE_INFO
         AuxPointerTypeEntry(AuxPointerType::CallbackArgOutInfoList, CallbackInfoList*);
 #endif
 #if ENABLE_NATIVE_CODEGEN
-        AuxPointerTypeEntry(AuxPointerType::CodeGenCallApplyTargetRuntimeData, Field(FunctionCodeGenRuntimeData*)*);
+        AuxPointerTypeEntry(AuxPointerType::CodeGenCallApplyTargetRuntimeData, typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData*>::Type*);
         AuxPointerTypeEntry(AuxPointerType::CallSiteToCallApplyCallSiteArray, ProfileId*);
 #endif
         AuxPointerTypeEntry(AuxPointerType::PrintOffsets, PrintOffsets*);
@@ -2297,7 +2297,7 @@ namespace Js
         bool IsActiveFunction(ActiveFunctionSet * pActiveFuncs) const;
         bool TestAndUpdateActiveFunctions(ActiveFunctionSet * pActiveFuncs) const;
         void UpdateActiveFunctionSet(ActiveFunctionSet * pActiveFuncs, FunctionCodeGenRuntimeData *callSiteData) const;
-        void UpdateActiveFunctionsForOneDataSet(ActiveFunctionSet *pActiveFuncs, FunctionCodeGenRuntimeData *parentData, Field(FunctionCodeGenRuntimeData*)* dataSet, uint count) const;
+        void UpdateActiveFunctionsForOneDataSet(ActiveFunctionSet *pActiveFuncs, FunctionCodeGenRuntimeData *parentData, typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData*>::Type* dataSet, uint count) const;
         uint GetInactiveCount() const { return inactiveCount; }
         void SetInactiveCount(uint count) { inactiveCount = count; }
         void IncrInactiveCount(uint increment);
@@ -2593,21 +2593,21 @@ namespace Js
         StatementMapList * GetStatementMaps() const { return static_cast<StatementMapList *>(this->GetAuxPtrWithLock<AuxPointerType::StatementMaps>()); }
         void SetStatementMaps(StatementMapList *pStatementMaps) { this->SetAuxPtr<AuxPointerType::StatementMaps>(pStatementMaps); }
 
-        Field(FunctionCodeGenRuntimeData*)* GetCodeGenGetSetRuntimeData() const { return this->GetAuxPtr<AuxPointerType::CodeGenGetSetRuntimeData>(); }
-        Field(FunctionCodeGenRuntimeData*)* GetCodeGenGetSetRuntimeDataWithLock() const { return this->GetAuxPtrWithLock<AuxPointerType::CodeGenGetSetRuntimeData>(); }
+        typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData*>::Type* GetCodeGenGetSetRuntimeData() const { return this->GetAuxPtr<AuxPointerType::CodeGenGetSetRuntimeData>(); }
+        typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData*>::Type* GetCodeGenGetSetRuntimeDataWithLock() const { return this->GetAuxPtrWithLock<AuxPointerType::CodeGenGetSetRuntimeData>(); }
         void SetCodeGenGetSetRuntimeData(FunctionCodeGenRuntimeData** codeGenGetSetRuntimeData) { this->SetAuxPtr<AuxPointerType::CodeGenGetSetRuntimeData>(codeGenGetSetRuntimeData); }
 
-        Field(FunctionCodeGenRuntimeData*)* GetCodeGenRuntimeData() const { return this->GetAuxPtr<AuxPointerType::CodeGenRuntimeData>(); }
-        Field(FunctionCodeGenRuntimeData*)* GetCodeGenRuntimeDataWithLock() const { return this->GetAuxPtrWithLock<AuxPointerType::CodeGenRuntimeData>(); }
+        typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData*>::Type* GetCodeGenRuntimeData() const { return this->GetAuxPtr<AuxPointerType::CodeGenRuntimeData>(); }
+        typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData*>::Type* GetCodeGenRuntimeDataWithLock() const { return this->GetAuxPtrWithLock<AuxPointerType::CodeGenRuntimeData>(); }
         void SetCodeGenRuntimeData(FunctionCodeGenRuntimeData** codeGenRuntimeData) { this->SetAuxPtr<AuxPointerType::CodeGenRuntimeData>(codeGenRuntimeData); }
 
-        Field(FunctionCodeGenRuntimeData*)* GetCodeGenCallbackRuntimeData() const { return this->GetAuxPtr<AuxPointerType::CodeGenCallbackRuntimeData>(); }
-        Field(FunctionCodeGenRuntimeData*)* GetCodeGenCallbackRuntimeDataWithLock() const { return this->GetAuxPtrWithLock<AuxPointerType::CodeGenCallbackRuntimeData>(); }
+        typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData*>::Type* GetCodeGenCallbackRuntimeData() const { return this->GetAuxPtr<AuxPointerType::CodeGenCallbackRuntimeData>(); }
+        typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData*>::Type* GetCodeGenCallbackRuntimeDataWithLock() const { return this->GetAuxPtrWithLock<AuxPointerType::CodeGenCallbackRuntimeData>(); }
         void SetCodeGenCallbackRuntimeData(FunctionCodeGenRuntimeData** codeGenArgumentRuntimeData) { this->SetAuxPtr<AuxPointerType::CodeGenCallbackRuntimeData>(codeGenArgumentRuntimeData); }
 
 #if ENABLE_NATIVE_CODEGEN
-        Field(FunctionCodeGenRuntimeData*)* GetCodeGenCallApplyTargetRuntimeData() const { return this->GetAuxPtr<AuxPointerType::CodeGenCallApplyTargetRuntimeData>(); }
-        Field(FunctionCodeGenRuntimeData*)* GetCodeGenCallApplyTargetRuntimeDataWithLock() const { return this->GetAuxPtrWithLock<AuxPointerType::CodeGenCallApplyTargetRuntimeData>(); }
+        typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData*>::Type* GetCodeGenCallApplyTargetRuntimeData() const { return this->GetAuxPtr<AuxPointerType::CodeGenCallApplyTargetRuntimeData>(); }
+        typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData*>::Type* GetCodeGenCallApplyTargetRuntimeDataWithLock() const { return this->GetAuxPtrWithLock<AuxPointerType::CodeGenCallApplyTargetRuntimeData>(); }
 #endif
 
         template <typename TStatementMapList>
@@ -3010,8 +3010,8 @@ namespace Js
         void RecordStrictNullDisplayConstant(RegSlot location);
         void InitConstantSlots(Var *dstSlots);
         Var GetConstantVar(RegSlot location);
-        Field(Js::Var)* GetConstTable() const { return this->m_constTable; }
-        void SetConstTable(Field(Js::Var)* constTable) { this->m_constTable = constTable; }
+        typename WriteBarrierFieldTypeTraits<Js::Var>::Type* GetConstTable() const { return this->m_constTable; }
+        void SetConstTable(typename WriteBarrierFieldTypeTraits<Js::Var>::Type* constTable) { this->m_constTable = constTable; }
 
         void MarkScript(ByteBlock * pblkByteCode, ByteBlock * pblkAuxiliaryData, ByteBlock* auxContextBlock,
             uint byteCodeCount, uint byteCodeInLoopCount, uint byteCodeWithoutLDACount);
@@ -3110,12 +3110,12 @@ namespace Js
     public:
         uint NewObjectLiteral();
         void AllocateObjectLiteralTypeArray();
-        Field(DynamicType*)* GetObjectLiteralTypeRef(uint index);
-        Field(DynamicType*)* GetObjectLiteralTypeRefWithLock(uint index);
+        typename WriteBarrierFieldTypeTraits<DynamicType*>::Type* GetObjectLiteralTypeRef(uint index);
+        typename WriteBarrierFieldTypeTraits<DynamicType*>::Type* GetObjectLiteralTypeRefWithLock(uint index);
         uint NewLiteralRegex();
         void AllocateLiteralRegexArray();
-        Field(UnifiedRegex::RegexPattern*)* GetLiteralRegexes() const { return this->GetAuxPtr<AuxPointerType::LiteralRegexes>(); }
-        Field(UnifiedRegex::RegexPattern*)* GetLiteralRegexesWithLock() const { return this->GetAuxPtrWithLock<AuxPointerType::LiteralRegexes>(); }
+        typename WriteBarrierFieldTypeTraits<UnifiedRegex::RegexPattern*>::Type* GetLiteralRegexes() const { return this->GetAuxPtr<AuxPointerType::LiteralRegexes>(); }
+        typename WriteBarrierFieldTypeTraits<UnifiedRegex::RegexPattern*>::Type* GetLiteralRegexesWithLock() const { return this->GetAuxPtrWithLock<AuxPointerType::LiteralRegexes>(); }
         void SetLiteralRegexs(UnifiedRegex::RegexPattern ** literalRegexes) { this->SetAuxPtr<AuxPointerType::LiteralRegexes>(literalRegexes); }
         UnifiedRegex::RegexPattern *GetLiteralRegex(const uint index);
         UnifiedRegex::RegexPattern *GetLiteralRegexWithLock(const uint index);
@@ -3134,8 +3134,8 @@ namespace Js
         AsmJsModuleInfo* AllocateAsmJsModuleInfo();
 #endif
         void SetLiteralRegex(const uint index, UnifiedRegex::RegexPattern *const pattern);
-        Field(DynamicType*)* GetObjectLiteralTypes() const { return this->GetAuxPtr<AuxPointerType::ObjLiteralTypes>(); }
-        Field(DynamicType*)* GetObjectLiteralTypesWithLock() const { return this->GetAuxPtrWithLock<AuxPointerType::ObjLiteralTypes>(); }
+        typename WriteBarrierFieldTypeTraits<DynamicType*>::Type* GetObjectLiteralTypes() const { return this->GetAuxPtr<AuxPointerType::ObjLiteralTypes>(); }
+        typename WriteBarrierFieldTypeTraits<DynamicType*>::Type* GetObjectLiteralTypesWithLock() const { return this->GetAuxPtrWithLock<AuxPointerType::ObjLiteralTypes>(); }
 
         Js::AuxArray<uint32_t> * GetSlotIdInCachedScopeToNestedIndexArray() const { return this->GetAuxPtr<AuxPointerType::SlotIdInCachedScopeToNestedIndexArray>(); }
         Js::AuxArray<uint32_t> * GetSlotIdInCachedScopeToNestedIndexArrayWithLock() const { return this->GetAuxPtrWithLock<AuxPointerType::SlotIdInCachedScopeToNestedIndexArray>(); }
@@ -3457,7 +3457,7 @@ namespace Js
         static uint const FirstSlotIndex = 2;
 
     public:
-        ScopeSlots(Field(Var)* slotArray) : slotArray(slotArray)
+        ScopeSlots(typename WriteBarrierFieldTypeTraits<Var>::Type* slotArray) : slotArray(slotArray)
         {
         }
 
@@ -3539,7 +3539,7 @@ namespace Js
         }
 
     private:
-        Field(Field(Var)*) slotArray;
+        typename WriteBarrierFieldTypeTraits<Field(Var>::Type*) slotArray;
     };
 
 
@@ -3574,7 +3574,7 @@ namespace Js
         bool   GetStrictMode() const { return strictMode; }
         void   SetStrictMode(bool flag) { this->strictMode = flag; }
 
-        Field(void*)* GetDataAddress() { return this->scopes; }
+        typename WriteBarrierFieldTypeTraits<void*>::Type* GetDataAddress() { return this->scopes; }
         static uint32_t GetOffsetOfStrictMode() { return offsetof(FrameDisplay, strictMode); }
         static uint32_t GetOffsetOfLength() { return offsetof(FrameDisplay, length); }
         static uint32_t GetOffsetOfScopes() { return offsetof(FrameDisplay, scopes); }
@@ -3876,7 +3876,7 @@ namespace Js
         // For catch scope: Has 1 property that represents the exception object.
         // For block scope: Has 0-n properties that represent let/const variables in that scope.
         Field(DebuggerScopePropertyList*) scopeProperties;
-        Field(DiagExtraScopesType) scopeType; // The type of scope being represented (With, Catch, or Block scope).
+        typename WriteBarrierFieldTypeTraits<DiagExtraScopesType>::Type scopeType; // The type of scope being represented (With, Catch, or Block scope).
         Field(DebuggerScope*) siblingScope;  // Valid only when current scope is slot/activationobject and symbols are on direct regslot
         static const int InvalidScopeIndex = -1;
     private:
@@ -3887,7 +3887,7 @@ namespace Js
     private:
         FieldNoBarrier(Recycler*) recycler;
         Field(DebuggerScope*) parentScope;
-        Field(regex::Interval) range; // The start and end byte code writer offsets used when comparing where the debugger is currently stopped at (breakpoint location).
+        typename WriteBarrierFieldTypeTraits<regex::Interval>::Type range; // The start and end byte code writer offsets used when comparing where the debugger is currently stopped at (breakpoint location).
         Field(RegSlot) scopeLocation;
     };
 

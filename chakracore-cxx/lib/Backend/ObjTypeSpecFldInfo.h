@@ -249,7 +249,7 @@ private:
 class ObjTypeSpecFldInfoArray
 {
 private:
-    Field(Field(ObjTypeSpecFldInfo*)*) infoArray;
+    typename WriteBarrierFieldTypeTraits<Field(ObjTypeSpecFldInfo*>::Type*) infoArray;
 #if DBG
     Field(uint) infoCount;
 #endif
@@ -262,7 +262,7 @@ private:
 public:
     ObjTypeSpecFldInfo* GetInfo(Js::FunctionBody *const functionBody, const uint index) const;
     ObjTypeSpecFldInfo* GetInfo(const uint index) const;
-    Field(ObjTypeSpecFldInfo*)* GetInfoArray() const { return infoArray; }
+    typename WriteBarrierFieldTypeTraits<ObjTypeSpecFldInfo*>::Type* GetInfoArray() const { return infoArray; }
 
     void SetInfo(Recycler *const recycler, Js::FunctionBody *const functionBody,
         const uint index, ObjTypeSpecFldInfo* info);

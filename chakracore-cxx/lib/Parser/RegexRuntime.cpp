@@ -5671,7 +5671,7 @@ namespace UnifiedRegex
         return RecyclerNew(recycler, Program, flags);
     }
 
-    Field(ScannerInfo *)*Program::CreateScannerArrayForSyncToLiterals(Recycler *const recycler)
+    typename WriteBarrierFieldTypeTraits<ScannerInfo *>::Type*Program::CreateScannerArrayForSyncToLiterals(Recycler *const recycler)
     {
         Assert(tag == ProgramTag::InstructionsTag);
         Assert(!rep.insts.scannersForSyncToLiterals);
@@ -5679,7 +5679,7 @@ namespace UnifiedRegex
 
         return
             rep.insts.scannersForSyncToLiterals =
-                RecyclerNewArrayZ(recycler, Field(ScannerInfo *), ScannersMixin::MaxNumSyncLiterals);
+                RecyclerNewArrayZ(recycler, typename WriteBarrierFieldTypeTraits<ScannerInfo *>::Type, ScannersMixin::MaxNumSyncLiterals);
     }
 
     ScannerInfo *Program::AddScannerForSyncToLiterals(

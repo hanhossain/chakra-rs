@@ -146,7 +146,7 @@ NativeEntryPointData::RegisterConstructorCache(Js::ConstructorCache* constructor
 void
 NativeEntryPointData::PinTypeRefs(Recycler * recycler, size_t jitPinnedTypeRefCount, void ** jitPinnedTypeRefs)
 {
-    this->runtimeTypeRefs = RecyclerNewArray(recycler, Field(void*), jitPinnedTypeRefCount + 1);
+    this->runtimeTypeRefs = RecyclerNewArray(recycler, typename WriteBarrierFieldTypeTraits<void*>::Type, jitPinnedTypeRefCount + 1);
     // Can't use memcpy here because we need write barrier triggers.
     // TODO: optimize this by using Memory::CopyArray instead.
     for (size_t i = 0; i < jitPinnedTypeRefCount; i++)
@@ -259,7 +259,7 @@ NativeEntryPointData::EnsurePropertyGuardWeakRefs(int guardCount, Recycler * rec
 {
     Assert(this->propertyGuardCount == 0);
     Assert(this->propertyGuardWeakRefs == nullptr);
-    this->propertyGuardWeakRefs = RecyclerNewArrayZ(recycler, Field(FakePropertyGuardWeakReference*), guardCount);
+    this->propertyGuardWeakRefs = RecyclerNewArrayZ(recycler, typename WriteBarrierFieldTypeTraits<FakePropertyGuardWeakReference*>::Type, guardCount);
     this->propertyGuardCount = guardCount;
 
     return this->propertyGuardWeakRefs;

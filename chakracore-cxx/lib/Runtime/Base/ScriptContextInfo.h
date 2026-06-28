@@ -50,7 +50,7 @@ public:
 
     virtual bool IsClosed() const = 0;
 
-    virtual Field(Js::Var)* GetModuleExportSlotArrayAddress(uint moduleIndex, uint slotIndex) = 0;
+    virtual typename WriteBarrierFieldTypeTraits<Js::Var>::Type* GetModuleExportSlotArrayAddress(uint moduleIndex, uint slotIndex) = 0;
 
 #ifdef ENABLE_SCRIPT_DEBUGGING
     virtual intptr_t GetDebuggingFlagsAddr() const = 0;

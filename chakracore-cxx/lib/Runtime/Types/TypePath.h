@@ -149,7 +149,7 @@ public:
             Field(TinyDictionary) map;
 
             template<bool addNewId>
-            int Add(const PropertyRecord* propId, Field(const PropertyRecord *)* assignments)
+            int Add(const PropertyRecord* propId, typename WriteBarrierFieldTypeTraits<const PropertyRecord *>::Type* assignments)
             {
                 uint currentPathLength = this->pathLength;
                 Assert(currentPathLength < this->pathSize);

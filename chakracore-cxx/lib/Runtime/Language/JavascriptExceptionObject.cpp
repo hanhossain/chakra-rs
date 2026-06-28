@@ -230,7 +230,7 @@ namespace Js
 #endif
 
     void JavascriptExceptionObject::Insert(
-        Field(JavascriptExceptionObject*)* head, JavascriptExceptionObject* item)
+        typename WriteBarrierFieldTypeTraits<JavascriptExceptionObject*>::Type* head, JavascriptExceptionObject* item)
     {
         Assert(!item->next);
         item->next = *head;
@@ -238,7 +238,7 @@ namespace Js
     }
 
     void JavascriptExceptionObject::Remove(
-        Field(JavascriptExceptionObject*)* head, JavascriptExceptionObject* item)
+        typename WriteBarrierFieldTypeTraits<JavascriptExceptionObject*>::Type* head, JavascriptExceptionObject* item)
     {
         // Typically Insert/Remove happens in reversed order and item should be
         // the front one. Loop the whole list to prevent unexpected order messup.

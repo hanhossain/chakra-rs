@@ -172,8 +172,8 @@ namespace Js
 
         virtual bool IsAsmJsFunction() const override { return true; }
 
-        void SetModuleEnvironment(Field(Var)* mem) { m_moduleEnvironment = mem; }
-        Field(Var)* GetModuleEnvironment() const { return m_moduleEnvironment; }
+        void SetModuleEnvironment(typename WriteBarrierFieldTypeTraits<Var>::Type* mem) { m_moduleEnvironment = mem; }
+        typename WriteBarrierFieldTypeTraits<Var>::Type* GetModuleEnvironment() const { return m_moduleEnvironment; }
         static uint32_t GetOffsetOfModuleMemory() { return offsetof(AsmJsScriptFunction, m_moduleEnvironment); }
 
         class JavascriptArrayBuffer* GetAsmJsArrayBuffer() const;
@@ -182,7 +182,7 @@ namespace Js
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(AsmJsScriptFunction);
 
     private:
-        Field(Field(Var)*) m_moduleEnvironment;
+        typename WriteBarrierFieldTypeTraits<Field(Var>::Type*) m_moduleEnvironment;
     };
 
     template <> inline bool VarIsImpl<AsmJsScriptFunction>(RecyclableObject* obj)
@@ -253,7 +253,7 @@ namespace Js
         void ClearInlineCacheOnFunctionObject();
         InlineCache * GetInlineCache(uint index);
         uint GetInlineCacheCount() { return inlineCacheCount; }
-        Field(void**) GetInlineCaches() const { return m_inlineCaches; }
+        typename WriteBarrierFieldTypeTraits<void**>::Type GetInlineCaches() const { return m_inlineCaches; }
         static uint32_t GetOffsetOfInlineCaches() { return offsetof(ScriptFunctionWithInlineCache, m_inlineCaches); };
         template<bool isShutdown>
         void FreeOwnInlineCaches();

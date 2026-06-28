@@ -146,7 +146,7 @@ FunctionJITTimeInfo::BuildJITTimeData(
         jitData->ldFldInlineeCount = jitData->bodyData->inlineCacheCount;
         jitData->ldFldInlinees = AnewArrayZ(alloc, FunctionJITTimeDataIDL*, jitData->bodyData->inlineCacheCount);
 
-        Field(ObjTypeSpecFldInfo*)* objTypeSpecInfo = codeGenData->GetObjTypeSpecFldInfoArray()->GetInfoArray();
+        typename WriteBarrierFieldTypeTraits<ObjTypeSpecFldInfo*>::Type* objTypeSpecInfo = codeGenData->GetObjTypeSpecFldInfoArray()->GetInfoArray();
         if(objTypeSpecInfo)
         {
             jitData->objTypeSpecFldInfoCount = jitData->bodyData->inlineCacheCount;
@@ -165,7 +165,7 @@ FunctionJITTimeInfo::BuildJITTimeData(
     }
     if (!isInlinee && codeGenData->GetGlobalObjTypeSpecFldInfoCount() > 0)
     {
-        Field(ObjTypeSpecFldInfo*)* globObjTypeSpecInfo = codeGenData->GetGlobalObjTypeSpecFldInfoArray();
+        typename WriteBarrierFieldTypeTraits<ObjTypeSpecFldInfo*>::Type* globObjTypeSpecInfo = codeGenData->GetGlobalObjTypeSpecFldInfoArray();
         Assert(globObjTypeSpecInfo != nullptr);
 
         jitData->globalObjTypeSpecFldInfoCount = codeGenData->GetGlobalObjTypeSpecFldInfoCount();

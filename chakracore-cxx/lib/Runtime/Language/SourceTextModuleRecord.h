@@ -120,7 +120,7 @@ namespace Js
 
         uint GetLocalExportSlotIndexByExportName(PropertyId exportNameId);
         uint GetLocalExportSlotIndexByLocalName(PropertyId localNameId);
-        Field(Var)* GetLocalExportSlots() const { return localExportSlots; }
+        typename WriteBarrierFieldTypeTraits<Var>::Type* GetLocalExportSlots() const { return localExportSlots; }
         uint GetLocalExportSlotCount() const { return localSlotCount; }
         uint GetModuleId() const { return moduleId; }
         uint GetLocalExportCount() const { return localExportCount; }
@@ -171,7 +171,7 @@ namespace Js
         Field(void*) hostDefined;
         Field(Var) normalizedSpecifier;
         Field(Var) errorObject;
-        Field(Field(Var)*) localExportSlots;
+        typename WriteBarrierFieldTypeTraits<Field(Var>::Type*) localExportSlots;
         Field(uint) localSlotCount;
 
         // module export allows aliasing, like export {foo as foo1, foo2, foo3}.

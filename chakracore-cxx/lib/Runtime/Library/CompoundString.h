@@ -133,8 +133,8 @@ namespace Js
         public:
             static const char16_t *Chars(const void *const buffer);
             static char16_t *Chars(void *const buffer);
-            static const Field(void*) *Pointers(const void *const buffer);
-            static Field(void*) *Pointers(void *const buffer);
+            static const typename WriteBarrierFieldTypeTraits<void*>::Type *Pointers(const void *const buffer);
+            static typename WriteBarrierFieldTypeTraits<void*>::Type *Pointers(void *const buffer);
             static CharCount PointerCapacityFromCharCapacity(const CharCount charCapacity);
             static CharCount CharCapacityFromPointerCapacity(const CharCount pointerCapacity);
             static CharCount PointerLengthFromCharLength(const CharCount charLength);
@@ -157,8 +157,8 @@ namespace Js
             CharCount CharCapacity() const;
 
         public:
-            const Field(void*) *Pointers() const;
-            Field(void*) *Pointers();
+            const typename WriteBarrierFieldTypeTraits<void*>::Type *Pointers() const;
+            typename WriteBarrierFieldTypeTraits<void*>::Type *Pointers();
             CharCount PointerLength() const;
             CharCount PointerCapacity() const;
 
@@ -197,7 +197,7 @@ namespace Js
             CharCount CharCapacity() const;
 
         public:
-            Field(void*) *Pointers() const;
+            typename WriteBarrierFieldTypeTraits<void*>::Type *Pointers() const;
             CharCount PointerLength() const;
             void SetPointerLength(const CharCount pointerLength);
             CharCount PointerCapacity() const;
@@ -268,7 +268,7 @@ namespace Js
             CharCount LastBlockCharCapacity() const;
 
         private:
-            Field(void*) *LastBlockPointers();
+            typename WriteBarrierFieldTypeTraits<void*>::Type *LastBlockPointers();
             CharCount LastBlockPointerLength() const;
             void SetLastBlockPointerLength(const CharCount pointerLength);
             CharCount LastBlockPointerCapacity() const;
@@ -362,7 +362,7 @@ namespace Js
         CharCount LastBlockCharCapacity() const;
 
     private:
-        Field(void*) *LastBlockPointers() const;
+        typename WriteBarrierFieldTypeTraits<void*>::Type *LastBlockPointers() const;
         CharCount LastBlockPointerLength() const;
         void SetLastBlockPointerLength(const CharCount pointerLength);
         CharCount LastBlockPointerCapacity() const;
@@ -541,7 +541,7 @@ namespace Js
     }
 
     template<CharCount MinimumCharCapacity>
-    Field(void*) *CompoundString::Builder<MinimumCharCapacity>::LastBlockPointers()
+    typename WriteBarrierFieldTypeTraits<void*>::Type *CompoundString::Builder<MinimumCharCapacity>::LastBlockPointers()
     {
         return Block::Pointers(buffer);
     }
@@ -960,7 +960,7 @@ namespace Js
         const CharCount appendPointerLength = 2 + !!packedSubstringInfo2;
         if(blockPointerLength < toString->LastBlockPointerCapacity() - (appendPointerLength - 1))
         {
-            Field(void*)* pointers = toString->LastBlockPointers();
+            typename WriteBarrierFieldTypeTraits<void*>::Type* pointers = toString->LastBlockPointers();
             pointers[blockPointerLength] = GetImmutableOrScriptUnreferencedString(s);
             if(packedSubstringInfo2)
                 pointers[blockPointerLength + 1] = packedSubstringInfo2;

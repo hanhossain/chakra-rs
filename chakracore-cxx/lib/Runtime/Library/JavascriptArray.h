@@ -192,7 +192,7 @@ namespace Js
 #if ENABLE_PROFILE_INFO
         template<typename T> inline void DirectProfiledSetItemInHeadSegmentAt(const uint32_t offset, const T newValue, StElemInfo *const stElemInfo);
 #endif
-        template<typename T> static void CopyValueToSegmentBuferNoCheck(Field(T)* buffer, uint32_t length, T value);
+        template<typename T> static void CopyValueToSegmentBuferNoCheck(typename WriteBarrierFieldTypeTraits<T>::Type* buffer, uint32_t length, T value);
         template<typename T> void DirectSetItem_Full(uint32_t itemIndex, T newValue);
         template<typename T> SparseArraySegment<T>* PrepareSegmentForMemOp(uint32_t startIndex, uint32_t length);
         template<typename T> bool DirectSetItemAtRange(uint32_t startIndex, uint32_t length, T newValue);

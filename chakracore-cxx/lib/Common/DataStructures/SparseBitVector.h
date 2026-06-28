@@ -82,7 +82,7 @@ public:
 
 private:
     FieldNoBarrier(TAllocator*)         alloc;
-    Field(Field(BVSparseNode*, TAllocator)*, TAllocator) lastUsedNodePrevNextField;
+    typename WriteBarrierFieldTypeTraits<Field(BVSparseNode*, TAllocator>::Type*, TAllocator) lastUsedNodePrevNextField;
 
     static const SparseBVUnit s_EmptyUnit;
 
@@ -100,7 +100,7 @@ protected:
     const SparseBVUnit * BitsFromIndex(BVIndex i) const;
     BVSparseNode*   NodeFromIndex(BVIndex i, Field(BVSparseNode*, TAllocator)** prevNextFieldOut,
                                   bool create = true);
-    const BVSparseNode* NodeFromIndex(BVIndex i, Field(BVSparseNode*, TAllocator) const** prevNextFieldOut) const;
+    const BVSparseNode* NodeFromIndex(BVIndex i, typename WriteBarrierFieldTypeTraits<BVSparseNode*, TAllocator>::Type const** prevNextFieldOut) const;
     BVSparseNode *  DeleteNode(BVSparseNode *node, bool bResetLastUsed = true);
     void            QueueInFreeList(BVSparseNode* node);
     BVSparseNode *  Allocate(const BVIndex searchIndex, BVSparseNode *prevNode);
@@ -264,7 +264,7 @@ BVSparse<TAllocator>::~BVSparse()
 //
 template <class TAllocator>
 BVSparseNode<TAllocator> *
-BVSparse<TAllocator>::NodeFromIndex(BVIndex i, Field(BVSparseNode*, TAllocator)** prevNextFieldOut, bool create)
+BVSparse<TAllocator>::NodeFromIndex(BVIndex i, typename WriteBarrierFieldTypeTraits<BVSparseNode*, TAllocator>::Type** prevNextFieldOut, bool create)
 {
     const BVIndex searchIndex = SparseBVUnit::Floor(i);
 
@@ -316,7 +316,7 @@ BVSparse<TAllocator>::NodeFromIndex(BVIndex i, Field(BVSparseNode*, TAllocator)*
 
 template <class TAllocator>
 const BVSparseNode<TAllocator> *
-BVSparse<TAllocator>::NodeFromIndex(BVIndex i, Field(BVSparseNode*, TAllocator) const** prevNextFieldOut) const
+BVSparse<TAllocator>::NodeFromIndex(BVIndex i, typename WriteBarrierFieldTypeTraits<BVSparseNode*, TAllocator>::Type const** prevNextFieldOut) const
 {
     const BVIndex searchIndex = SparseBVUnit::Floor(i);
 

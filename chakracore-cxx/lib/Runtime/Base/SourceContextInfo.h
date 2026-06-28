@@ -24,7 +24,7 @@ public:
 #endif
 
     Field(unsigned long) dwHostSourceContext;      // Context passed in to ParseScriptText
-    Field(bool) isHostDynamicDocument;         // will be set to true when current doc is treated dynamic from the host side. (IActiveScriptContext::IsDynamicDocument)
+    typename WriteBarrierFieldTypeTraits<bool>::Type isHostDynamicDocument;         // will be set to true when current doc is treated dynamic from the host side. (IActiveScriptContext::IsDynamicDocument)
 
     union
     {

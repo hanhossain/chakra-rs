@@ -51,7 +51,7 @@ public:
     Field(uint32_t) lnMinHost;           // Line offset of first host-supplied line
     Field(uint32_t) ichMinHost;          // Range of host supplied characters
     Field(uint32_t) ichLimHost;
-    Field(uint32_t) ulCharOffset;        // Char offset of the source text relative to the document. (Populated using IActiveScriptContext)
+    typename WriteBarrierFieldTypeTraits<uint32_t>::Type ulCharOffset;        // Char offset of the source text relative to the document. (Populated using IActiveScriptContext)
     Field(Js::ModuleID) moduleID;
     Field(uint32_t) grfsi;
 
@@ -1662,7 +1662,7 @@ private:
         virtual bool IsRecyclerVerifyEnabled() const override;
         virtual uint GetRecyclerVerifyPad() const override;
 
-        virtual Field(Js::Var)* GetModuleExportSlotArrayAddress(uint moduleIndex, uint slotIndex) override;
+        virtual typename WriteBarrierFieldTypeTraits<Js::Var>::Type* GetModuleExportSlotArrayAddress(uint moduleIndex, uint slotIndex) override;
 
         Js::SourceTextModuleRecord* GetModuleRecord(uint moduleId) const
         {

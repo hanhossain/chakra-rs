@@ -52,7 +52,7 @@ namespace Js
             ScriptContext * scriptContext;
             void * returnAddress;
 
-            Field(Var) * BoxScopeSlots(Field(Var) * scopeSlots, uint count);
+            typename WriteBarrierFieldTypeTraits<Var>::Type * BoxScopeSlots(typename WriteBarrierFieldTypeTraits<Var>::Type * scopeSlots, uint count);
             bool NeedBoxFrame(FunctionBody * functionBody);
             bool NeedBoxScriptFunction(ScriptFunction * scriptFunction);
             ScriptFunction * BoxStackFunction(ScriptFunction * scriptFunction);

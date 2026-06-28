@@ -126,7 +126,7 @@ namespace Js
         void SetItem(_In_range_(0, N - 1) int index, JavascriptString* value);
 
     protected:
-        Field(JavascriptString*) m_slots[N];   // These contain the child nodes. 1 slot is per 1 item (JavascriptString*).
+        typename WriteBarrierFieldTypeTraits<JavascriptString*>::Type m_slots[N];   // These contain the child nodes. 1 slot is per 1 item (JavascriptString*).
     };
 
     // Concat string that uses binary tree, each node has 2 children.
@@ -180,8 +180,8 @@ namespace Js
         static const int c_maxChunkSlotCount = 1024;
         int GetItemCount() const;
 
-        Field(Field(JavascriptString*)*) m_slots; // Array of child nodes.
-        Field(int) m_slotCount;   // Number of allocated slots (1 slot holds 1 item) in this chunk.
+        typename WriteBarrierFieldTypeTraits<Field(JavascriptString*>::Type*) m_slots; // Array of child nodes.
+        typename WriteBarrierFieldTypeTraits<int>::Type m_slotCount;   // Number of allocated slots (1 slot holds 1 item) in this chunk.
         Field(int) m_count;       // Actual number of items in this chunk.
         Field(ConcatStringBuilder*) m_prevChunk;
     };

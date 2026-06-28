@@ -140,7 +140,7 @@ using namespace Js;
 
         if (index < inlineSlotCapacity)
         {
-            Field(Var) * slots = reinterpret_cast<Field(Var)*>(reinterpret_cast<size_t>(instance) + offsetOfInlineSlots);
+            typename WriteBarrierFieldTypeTraits<Var>::Type * slots = reinterpret_cast<typename WriteBarrierFieldTypeTraits<Var>::Type*>(reinterpret_cast<size_t>(instance) + offsetOfInlineSlots);
             slots[index] = value;
         }
         else
@@ -162,7 +162,7 @@ using namespace Js;
         Assert(index - (int)(offsetOfInlineSlots / sizeof(Var)) < this->GetInlineSlotCapacity());
         Assert(propertyId == Constants::NoProperty || CanStorePropertyValueDirectly(instance, propertyId, allowLetConst));
 
-        Field(Var) * slots = reinterpret_cast<Field(Var)*>(instance);
+        typename WriteBarrierFieldTypeTraits<Var>::Type * slots = reinterpret_cast<typename WriteBarrierFieldTypeTraits<Var>::Type*>(instance);
         slots[index] = value;
     }
 
@@ -683,8 +683,8 @@ using namespace Js;
         // Allocate new aux slot array
         Recycler *const recycler = object->GetRecycler();
         TRACK_ALLOC_INFO(recycler, Var, Recycler, 0, newAuxSlotCapacity);
-        Field(Var) *const newAuxSlots = reinterpret_cast<Field(Var) *>(
-            recycler->AllocZero(newAuxSlotCapacity * sizeof(Field(Var))));
+        typename WriteBarrierFieldTypeTraits<Var>::Type *const newAuxSlots = reinterpret_cast<Field(Var) *>(
+            recycler->AllocZero(newAuxSlotCapacity * sizeof(typename WriteBarrierFieldTypeTraits<Var>::Type)));
 
         DynamicTypeHandler *const oldTypeHandler = object->GetTypeHandler();
         const PropertyIndex oldInlineSlotCapacity = oldTypeHandler->GetInlineSlotCapacity();
@@ -741,7 +741,7 @@ using namespace Js;
                 Output::Print(u"ObjectHeaderInlining: Moving inlined properties out of the object header.\n");
                 Output::Flush();
             }
-            Field(Var) *const newInlineSlots = reinterpret_cast<Field(Var) *>(object + 1);
+            typename WriteBarrierFieldTypeTraits<Var>::Type *const newInlineSlots = reinterpret_cast<typename WriteBarrierFieldTypeTraits<Var>::Type *>(object + 1);
             PropertyIndex i = newInlineSlotCapacity;
             do
             {

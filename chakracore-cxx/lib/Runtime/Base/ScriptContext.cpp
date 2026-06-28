@@ -2766,7 +2766,7 @@ namespace Js
             {
                 uint newCount = moduleID + 4;  // Preallocate 4 more slots, moduleID don't usually grow much
 
-                Field(SRCINFO const *)* newModuleSrcInfo = RecyclerNewArrayZ(this->GetRecycler(), Field(SRCINFO const*), newCount);
+                typename WriteBarrierFieldTypeTraits<SRCINFO const *>::Type* newModuleSrcInfo = RecyclerNewArrayZ(this->GetRecycler(), typename WriteBarrierFieldTypeTraits<SRCINFO const*>::Type, newCount);
                 CopyArray(newModuleSrcInfo, newCount, Cache()->moduleSrcInfo, moduleSrcInfoCount);
                 Cache()->moduleSrcInfo = newModuleSrcInfo;
                 moduleSrcInfoCount = newCount;
@@ -5417,7 +5417,7 @@ ScriptContext::GetJitFuncRangeCache()
         }
     }
 
-    Field(Js::Var)* ScriptContext::GetModuleExportSlotArrayAddress(uint moduleIndex, uint slotIndex)
+    typename WriteBarrierFieldTypeTraits<Js::Var>::Type* ScriptContext::GetModuleExportSlotArrayAddress(uint moduleIndex, uint slotIndex)
     {
         Js::SourceTextModuleRecord* moduleRecord = this->GetModuleRecord(moduleIndex);
         Assert(moduleRecord != nullptr);

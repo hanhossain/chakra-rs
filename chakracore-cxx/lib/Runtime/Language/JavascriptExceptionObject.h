@@ -161,8 +161,8 @@ namespace Js
 
     private:
         friend class ::ThreadContext;
-        static void Insert(Field(JavascriptExceptionObject*)* head, JavascriptExceptionObject* item);
-        static void Remove(Field(JavascriptExceptionObject*)* head, JavascriptExceptionObject* item);
+        static void Insert(typename WriteBarrierFieldTypeTraits<JavascriptExceptionObject*>::Type* head, JavascriptExceptionObject* item);
+        static void Remove(typename WriteBarrierFieldTypeTraits<JavascriptExceptionObject*>::Type* head, JavascriptExceptionObject* item);
 
     private:
         Field(Var)      thrownObject;

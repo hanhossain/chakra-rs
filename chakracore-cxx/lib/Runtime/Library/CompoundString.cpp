@@ -123,14 +123,14 @@ using namespace Js;
         return static_cast<char16_t *>(buffer);
     }
 
-    const Field(void*) *CompoundString::Block::Pointers(const void *const buffer)
+    const typename WriteBarrierFieldTypeTraits<void*>::Type *CompoundString::Block::Pointers(const void *const buffer)
     {
-        return (const Field(void*)*)(buffer);
+        return (const typename WriteBarrierFieldTypeTraits<void*>::Type*)(buffer);
     }
 
-    Field(void*) *CompoundString::Block::Pointers(void *const buffer)
+    typename WriteBarrierFieldTypeTraits<void*>::Type *CompoundString::Block::Pointers(void *const buffer)
     {
-        return static_cast<Field(void*)*>(buffer);
+        return static_cast<typename WriteBarrierFieldTypeTraits<void*>::Type*>(buffer);
     }
 
     CharCount CompoundString::Block::PointerCapacityFromCharCapacity(const CharCount charCapacity)
@@ -225,12 +225,12 @@ using namespace Js;
         return charCapacity;
     }
 
-    const Field(void*) *CompoundString::Block::Pointers() const
+    const typename WriteBarrierFieldTypeTraits<void*>::Type *CompoundString::Block::Pointers() const
     {
         return Pointers(Buffer());
     }
 
-    Field(void*) *CompoundString::Block::Pointers()
+    typename WriteBarrierFieldTypeTraits<void*>::Type *CompoundString::Block::Pointers()
     {
         return Pointers(Buffer());
     }
@@ -305,7 +305,7 @@ using namespace Js;
         return charCapacity;
     }
 
-    Field(void*) *CompoundString::BlockInfo::Pointers() const
+    typename WriteBarrierFieldTypeTraits<void*>::Type *CompoundString::BlockInfo::Pointers() const
     {
         return Block::Pointers(buffer);
     }
@@ -679,7 +679,7 @@ using namespace Js;
         return lastBlockInfo.CharCapacity();
     }
 
-    Field(void*) *CompoundString::LastBlockPointers() const
+    typename WriteBarrierFieldTypeTraits<void*>::Type *CompoundString::LastBlockPointers() const
     {
         return lastBlockInfo.Pointers();
     }
@@ -1074,7 +1074,7 @@ using namespace Js;
         CharCount remainingCharLengthToCopy = totalCharLength;
         const Block *const lastBlock = this->lastBlock;
         const Block *block = lastBlock;
-        Field(void*) const *blockPointers = LastBlockPointers();
+        typename WriteBarrierFieldTypeTraits<void*>::Type const *blockPointers = LastBlockPointers();
         CharCount pointerIndex = LastBlockPointerLength();
         while(remainingCharLengthToCopy > directCharLength)
         {
@@ -1083,7 +1083,7 @@ using namespace Js;
                 Assert(block);
                 block = block->Previous();
                 Assert(block);
-                blockPointers = (Field(void*) const *)block->Pointers();
+                blockPointers = (typename WriteBarrierFieldTypeTraits<void*>::Type const *)block->Pointers();
                 pointerIndex = block->PointerLength();
             }
 

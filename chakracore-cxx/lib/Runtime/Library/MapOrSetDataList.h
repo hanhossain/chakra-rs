@@ -126,7 +126,7 @@ namespace Js
                 return current->data;
             }
 
-            Field(MapOrSetDataNode<TData>*) CurrentNode() const
+            typename WriteBarrierFieldTypeTraits<MapOrSetDataNode<TData>*>::Type CurrentNode() const
             {
                 return current;
             }

@@ -5523,7 +5523,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     }
 
     DynamicType *
-    JavascriptOperators::EnsureObjectLiteralType(ScriptContext* scriptContext, const Js::PropertyIdArray *propIds, Field(DynamicType*)* literalType)
+    JavascriptOperators::EnsureObjectLiteralType(ScriptContext* scriptContext, const Js::PropertyIdArray *propIds, typename WriteBarrierFieldTypeTraits<DynamicType*>::Type* literalType)
     {
         JIT_HELPER_NOT_REENTRANT_HEADER(EnsureObjectLiteralType, reentrancylock, scriptContext->GetThreadContext());
         DynamicType * newType = *literalType;
@@ -5554,7 +5554,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         JIT_HELPER_END(EnsureObjectLiteralType);
     }
 
-    Var JavascriptOperators::NewScObjectLiteral(ScriptContext* scriptContext, const Js::PropertyIdArray *propIds, Field(DynamicType*)* literalType)
+    Var JavascriptOperators::NewScObjectLiteral(ScriptContext* scriptContext, const Js::PropertyIdArray *propIds, typename WriteBarrierFieldTypeTraits<DynamicType*>::Type* literalType)
     {
         Assert(propIds->count != 0);
         Assert(!propIds->hadDuplicates);        // duplicates are removed by parser
@@ -5609,7 +5609,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
                             min(propIds->count, static_cast<uint32_t>(MaxPreInitializedObjectTypeInlineSlotCount))));
     }
 
-    Var JavascriptOperators::OP_InitCachedScope(Var varFunc, const Js::PropertyIdArray *propIds, Field(DynamicType*)* literalType, bool formalsAreLetDecls, ScriptContext *scriptContext)
+    Var JavascriptOperators::OP_InitCachedScope(Var varFunc, const Js::PropertyIdArray *propIds, typename WriteBarrierFieldTypeTraits<DynamicType*>::Type* literalType, bool formalsAreLetDecls, ScriptContext *scriptContext)
     {
         JIT_HELPER_NOT_REENTRANT_HEADER(OP_InitCachedScope, reentrancylock, scriptContext->GetThreadContext());
         bool isGAFunction = VarIs<JavascriptFunction>(varFunc);
@@ -6866,14 +6866,14 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         JIT_HELPER_END(OP_InitElemSetter);
     }
 
-    Field(Var)* JavascriptOperators::OP_GetModuleExportSlotArrayAddress(uint moduleIndex, uint slotIndex, ScriptContextInfo* scriptContext)
+    typename WriteBarrierFieldTypeTraits<Var>::Type* JavascriptOperators::OP_GetModuleExportSlotArrayAddress(uint moduleIndex, uint slotIndex, ScriptContextInfo* scriptContext)
     {
         return scriptContext->GetModuleExportSlotArrayAddress(moduleIndex, slotIndex);
     }
 
-    Field(Var)* JavascriptOperators::OP_GetModuleExportSlotAddress(uint moduleIndex, uint slotIndex, ScriptContext* scriptContext)
+    typename WriteBarrierFieldTypeTraits<Var>::Type* JavascriptOperators::OP_GetModuleExportSlotAddress(uint moduleIndex, uint slotIndex, ScriptContext* scriptContext)
     {
-        Field(Var)* moduleRecordSlots = OP_GetModuleExportSlotArrayAddress(moduleIndex, slotIndex, scriptContext);
+        typename WriteBarrierFieldTypeTraits<Var>::Type* moduleRecordSlots = OP_GetModuleExportSlotArrayAddress(moduleIndex, slotIndex, scriptContext);
         Assert(moduleRecordSlots != nullptr);
 
         return &moduleRecordSlots[slotIndex];
@@ -6881,7 +6881,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 
     Var JavascriptOperators::OP_LdModuleSlot(uint moduleIndex, uint slotIndex, ScriptContext* scriptContext)
     {
-        Field(Var)* addr = OP_GetModuleExportSlotAddress(moduleIndex, slotIndex, scriptContext);
+        typename WriteBarrierFieldTypeTraits<Var>::Type* addr = OP_GetModuleExportSlotAddress(moduleIndex, slotIndex, scriptContext);
 
         Assert(addr != nullptr);
 
@@ -6892,7 +6892,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     {
         Assert(value != nullptr);
 
-        Field(Var)* addr = OP_GetModuleExportSlotAddress(moduleIndex, slotIndex, scriptContext);
+        typename WriteBarrierFieldTypeTraits<Var>::Type* addr = OP_GetModuleExportSlotAddress(moduleIndex, slotIndex, scriptContext);
 
         Assert(addr != nullptr);
 
@@ -7275,11 +7275,11 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         JIT_HELPER_END(OP_NewScopeObjectWithFormals);
     }
 
-    Field(Var)* JavascriptOperators::OP_NewScopeSlots(unsigned int size, ScriptContext *scriptContext, Var scope)
+    typename WriteBarrierFieldTypeTraits<Var>::Type* JavascriptOperators::OP_NewScopeSlots(unsigned int size, ScriptContext *scriptContext, Var scope)
     {
         JIT_HELPER_NOT_REENTRANT_HEADER(OP_NewScopeSlots, reentrancylock, scriptContext->GetThreadContext());
         Assert(size > ScopeSlots::FirstSlotIndex); // Should never see empty slot array
-        Field(Var)* slotArray = RecyclerNewArray(scriptContext->GetRecycler(), Field(Var), size); // last initialized slot contains reference to array of propertyIds, correspondent to objects in previous slots
+        typename WriteBarrierFieldTypeTraits<Var>::Type* slotArray = RecyclerNewArray(scriptContext->GetRecycler(), typename WriteBarrierFieldTypeTraits<Var>::Type, size); // last initialized slot contains reference to array of propertyIds, correspondent to objects in previous slots
         uint count = size - ScopeSlots::FirstSlotIndex;
         ScopeSlots slots(slotArray);
         slots.SetCount(count);
@@ -7296,7 +7296,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         JIT_HELPER_END(OP_NewScopeSlots);
     }
 
-    Field(Var)* JavascriptOperators::OP_NewScopeSlotsWithoutPropIds(unsigned int count, int scopeIndex, ScriptContext *scriptContext, FunctionBody *functionBody)
+    typename WriteBarrierFieldTypeTraits<Var>::Type* JavascriptOperators::OP_NewScopeSlotsWithoutPropIds(unsigned int count, int scopeIndex, ScriptContext *scriptContext, FunctionBody *functionBody)
     {
         JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(OP_NewScopeSlotsWithoutPropIds);
         DebuggerScope* scope = reinterpret_cast<DebuggerScope*>(Constants::FunctionBodyUnavailable);
@@ -7309,13 +7309,13 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         JIT_HELPER_END(OP_NewScopeSlotsWithoutPropIds);
     }
 
-    Field(Var)* JavascriptOperators::OP_CloneScopeSlots(Field(Var) *slotArray, ScriptContext *scriptContext)
+    typename WriteBarrierFieldTypeTraits<Var>::Type* JavascriptOperators::OP_CloneScopeSlots(typename WriteBarrierFieldTypeTraits<Var>::Type *slotArray, ScriptContext *scriptContext)
     {
         JIT_HELPER_NOT_REENTRANT_HEADER(OP_CloneInnerScopeSlots, reentrancylock, scriptContext->GetThreadContext());
         ScopeSlots slots(slotArray);
         uint size = ScopeSlots::FirstSlotIndex + static_cast<uint>(slots.GetCount());
 
-        Field(Var)* slotArrayClone = RecyclerNewArray(scriptContext->GetRecycler(), Field(Var), size);
+        typename WriteBarrierFieldTypeTraits<Var>::Type* slotArrayClone = RecyclerNewArray(scriptContext->GetRecycler(), typename WriteBarrierFieldTypeTraits<Var>::Type, size);
         CopyArray(slotArrayClone, size, slotArray, size);
 
         return slotArrayClone;
