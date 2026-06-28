@@ -20,33 +20,33 @@ namespace UnifiedRegex
 
     struct RegExpTestCache
     {
-        Field(BVStatic<TestCacheSize>) resultBV;
-        Field(RecyclerWeakReference<Js::JavascriptString>*) inputArray[];
+        typename WriteBarrierFieldTypeTraits<BVStatic<TestCacheSize>>::Type resultBV;
+        typename WriteBarrierFieldTypeTraits<RecyclerWeakReference<Js::JavascriptString>*>::Type inputArray[];
     };
 
     struct RegexPattern : FinalizableObject
     {
-        Field(RegExpTestCache*) testCache;
+        typename WriteBarrierFieldTypeTraits<RegExpTestCache*>::Type testCache;
 
         struct UnifiedRep
         {
-            Field(Program*) program;
-            Field(Matcher*) matcher;
-            Field(TrigramInfo*) trigramInfo;
+            typename WriteBarrierFieldTypeTraits<Program*>::Type program;
+            typename WriteBarrierFieldTypeTraits<Matcher*>::Type matcher;
+            typename WriteBarrierFieldTypeTraits<TrigramInfo*>::Type trigramInfo;
         };
 
-        Field(Js::JavascriptLibrary *) const library;
+        typename WriteBarrierFieldTypeTraits<Js::JavascriptLibrary *>::Type const library;
 
-        Field(bool) isLiteral : 1;
-        Field(bool) isShallowClone : 1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isLiteral : 1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isShallowClone : 1;
 
         union Rep
         {
-            Field(UnifiedRep) unified;
+            typename WriteBarrierFieldTypeTraits<UnifiedRep>::Type unified;
 
             Rep() : unified() {}
         };
-        Field(Rep) rep;
+        typename WriteBarrierFieldTypeTraits<Rep>::Type rep;
 
         RegexPattern(Js::JavascriptLibrary *const library, Program* program, bool isLiteral);
 

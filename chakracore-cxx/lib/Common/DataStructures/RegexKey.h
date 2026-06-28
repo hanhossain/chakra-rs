@@ -12,9 +12,9 @@ namespace UnifiedRegex
     class RegexKey
     {
     private:
-        Field(const char16_t *) source;
-        Field(int) length;
-        Field(RegexFlags) flags;
+        typename WriteBarrierFieldTypeTraits<const char16_t *>::Type source;
+        typename WriteBarrierFieldTypeTraits<int>::Type length;
+        typename WriteBarrierFieldTypeTraits<RegexFlags>::Type flags;
 
     public:
         RegexKey() : source(nullptr), length(0), flags(static_cast<RegexFlags>(0))

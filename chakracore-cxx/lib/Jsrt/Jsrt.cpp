@@ -3919,7 +3919,7 @@ JsErrorCode RunSerializedScriptCore(
 
         int32_t hr;
 
-        Field(Js::FunctionBody*) functionBody = nullptr;
+        typename WriteBarrierFieldTypeTraits<Js::FunctionBody*>::Type functionBody = nullptr;
 
         if (bgParseCookie == 0)
         {

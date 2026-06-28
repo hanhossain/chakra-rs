@@ -125,10 +125,10 @@ namespace Js
         //  - scriptdirect.idl
         //  - LowererMDArch::LoadInputParamCount
         //
-        Field(unsigned)  Count : 24;
-        Field(CallFlags) Flags : 8;
+        typename WriteBarrierFieldTypeTraits<unsigned>::Type  Count : 24;
+        typename WriteBarrierFieldTypeTraits<CallFlags>::Type Flags : 8;
 #ifdef TARGET_64
-        Field(unsigned) unused : 32;
+        typename WriteBarrierFieldTypeTraits<unsigned>::Type unused : 32;
 #endif
 
 #if DBG

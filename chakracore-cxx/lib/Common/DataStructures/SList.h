@@ -39,7 +39,7 @@ protected:
 public:
     uint Count() const { return count; }
 private:
-    Field(uint) count;
+    typename WriteBarrierFieldTypeTraits<uint>::Type count;
 };
 
 #if DBG
@@ -61,7 +61,7 @@ public:
 
 protected:
     // The next node can be a real node with data, or it point back to the start of the list
-    Field(SListNodeBase*, TAllocator) next;
+    typename WriteBarrierFieldTypeTraits<SListNodeBase*, TAllocator>::Type next;
 };
 
 template <typename TData, typename TAllocator>
@@ -85,7 +85,7 @@ private:
     template <typename TParam1, typename TParam2>
     SListNode(const TParam1& param1, const TParam2& param2) : data(param1, param2) {}
 
-    Field(TData, TAllocator) data;
+    typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type data;
 };
 
 template<typename TData, typename TAllocator, typename TCount>

@@ -85,7 +85,7 @@ class BVUnitT
 {
 // Data
 private:
-    Field(T) word;
+    typename WriteBarrierFieldTypeTraits<T>::Type word;
 
 // Constructor
 public:

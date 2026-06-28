@@ -35,11 +35,11 @@ protected:
     void Unlink();
     void SetJavascriptLibrary(Js::JavascriptLibrary * library);
 private:
-    Field(Js::JavascriptLibrary *) javascriptLibrary;
+    typename WriteBarrierFieldTypeTraits<Js::JavascriptLibrary *>::Type javascriptLibrary;
 
-    Field(JsrtRuntime *) runtime;
-    Field(void*) externalData = nullptr;
-    Field(TaggedPointer<JsrtContext>) previous;
-    Field(TaggedPointer<JsrtContext>) next;
+    typename WriteBarrierFieldTypeTraits<JsrtRuntime *>::Type runtime;
+    typename WriteBarrierFieldTypeTraits<void*>::Type externalData = nullptr;
+    typename WriteBarrierFieldTypeTraits<TaggedPointer<JsrtContext>>::Type previous;
+    typename WriteBarrierFieldTypeTraits<TaggedPointer<JsrtContext>>::Type next;
 };
 

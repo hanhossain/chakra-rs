@@ -346,17 +346,17 @@ typedef int32_t (*CommentCallback)(void *data, OLECHAR firstChar, OLECHAR second
 // Restore point defined using a relative offset rather than a pointer.
 struct RestorePoint
 {
-    Field(charcount_t) m_ichMinTok;
-    Field(charcount_t) m_ichMinLine;
-    Field(size_t) m_cMinTokMultiUnits;
-    Field(size_t) m_cMinLineMultiUnits;
-    Field(charcount_t) m_line;
-    Field(uint) functionIdIncrement;
-    Field(size_t) lengthDecr;
-    Field(BOOL) m_fHadEol;
+    typename WriteBarrierFieldTypeTraits<charcount_t>::Type m_ichMinTok;
+    typename WriteBarrierFieldTypeTraits<charcount_t>::Type m_ichMinLine;
+    typename WriteBarrierFieldTypeTraits<size_t>::Type m_cMinTokMultiUnits;
+    typename WriteBarrierFieldTypeTraits<size_t>::Type m_cMinLineMultiUnits;
+    typename WriteBarrierFieldTypeTraits<charcount_t>::Type m_line;
+    typename WriteBarrierFieldTypeTraits<uint>::Type functionIdIncrement;
+    typename WriteBarrierFieldTypeTraits<size_t>::Type lengthDecr;
+    typename WriteBarrierFieldTypeTraits<BOOL>::Type m_fHadEol;
 
 #ifdef DEBUG
-    Field(size_t) m_cMultiUnits;
+    typename WriteBarrierFieldTypeTraits<size_t>::Type m_cMultiUnits;
 #endif
 
     RestorePoint()

@@ -163,22 +163,22 @@ struct ParseContext
 //    ...
 struct DeferredFunctionStub
 {
-    Field(RestorePoint) restorePoint;
-    Field(FncFlags) fncFlags;
-    Field(uint) nestedCount;
-    Field(charcount_t) ichMin;
+    typename WriteBarrierFieldTypeTraits<RestorePoint>::Type restorePoint;
+    typename WriteBarrierFieldTypeTraits<FncFlags>::Type fncFlags;
+    typename WriteBarrierFieldTypeTraits<uint>::Type nestedCount;
+    typename WriteBarrierFieldTypeTraits<charcount_t>::Type ichMin;
 
     // Number of names captured by this function.
     // This is used as length for capturedNameSerializedIds but should
     // also be equal to the length of capturedNamePointers when
     // capturedNamePointers is not nullptr.
-    Field(uint) capturedNameCount;
+    typename WriteBarrierFieldTypeTraits<uint>::Type capturedNameCount;
 
     // After the parser memory is cleaned-up, we no longer have access to
     // the IdentPtrs allocated from the Parser arena. We keep a list of
     // ids into the string table deserialized from the parser state cache.
     // This list is Recycler-allocated.
-    Field(int *) capturedNameSerializedIds;
+    typename WriteBarrierFieldTypeTraits<int *>::Type capturedNameSerializedIds;
 
     // The set of names which are captured by this function.
     // A function captures a name when it references a name not defined within
@@ -186,13 +186,13 @@ struct DeferredFunctionStub
     // A function also captures all names captured by nested functions.
     // The IdentPtrs in this set and the set itself are allocated from Parser
     // arena memory.
-    Field(IdentPtrSet *) capturedNamePointers;
+    typename WriteBarrierFieldTypeTraits<IdentPtrSet *>::Type capturedNamePointers;
 
     // List of deferred stubs for further nested functions.
     // Length of this list is equal to nestedCount.
-    Field(DeferredFunctionStub *) deferredStubs;
+    typename WriteBarrierFieldTypeTraits<DeferredFunctionStub *>::Type deferredStubs;
 
-    Field(Js::ByteCodeCache *) byteCodeCache;
+    typename WriteBarrierFieldTypeTraits<Js::ByteCodeCache *>::Type byteCodeCache;
 };
 
 template <bool nullTerminated> class UTF8EncodingPolicyBase;

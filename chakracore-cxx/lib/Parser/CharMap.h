@@ -227,9 +227,9 @@ namespace UnifiedRegex
             }
         };
 
-        Field(BVStatic<directSize>) isInMap;
-        Field(V) defv;
-        Field(V) directMap[directSize];
+        typename WriteBarrierFieldTypeTraits<BVStatic<directSize>>::Type isInMap;
+        typename WriteBarrierFieldTypeTraits<V>::Type defv;
+        typename WriteBarrierFieldTypeTraits<V>::Type directMap[directSize];
         FieldNoBarrier(Node*) root;
 
     public:

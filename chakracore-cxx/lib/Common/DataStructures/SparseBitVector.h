@@ -61,9 +61,9 @@ typedef  BVUnit64 SparseBVUnit;
 template <class TAllocator>
 struct BVSparseNode
 {
-    Field(BVSparseNode*, TAllocator)    next;
-    Field(BVIndex)                      startIndex;
-    Field(SparseBVUnit)                 data;
+    typename WriteBarrierFieldTypeTraits<BVSparseNode*, TAllocator>::Type    next;
+    typename WriteBarrierFieldTypeTraits<BVIndex>::Type                      startIndex;
+    typename WriteBarrierFieldTypeTraits<SparseBVUnit>::Type                 data;
 
     BVSparseNode(BVIndex beginIndex, BVSparseNode * nextNode);
 
@@ -77,12 +77,12 @@ class BVSparse
 
 // Data
 public:
-    Field(BVSparseNode*, TAllocator)    head;
-    Field(BVSparseNode*, TAllocator)    lastFoundIndex;
+    typename WriteBarrierFieldTypeTraits<BVSparseNode*, TAllocator>::Type    head;
+    typename WriteBarrierFieldTypeTraits<BVSparseNode*, TAllocator>::Type    lastFoundIndex;
 
 private:
     FieldNoBarrier(TAllocator*)         alloc;
-    typename WriteBarrierFieldTypeTraits<Field(BVSparseNode*, TAllocator>::Type*, TAllocator) lastUsedNodePrevNextField;
+    typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<BVSparseNode*, TAllocator>::Type*, TAllocator>::Type lastUsedNodePrevNextField;
 
     static const SparseBVUnit s_EmptyUnit;
 
@@ -98,7 +98,7 @@ protected:
 
     SparseBVUnit *  BitsFromIndex(BVIndex i, bool create = true);
     const SparseBVUnit * BitsFromIndex(BVIndex i) const;
-    BVSparseNode*   NodeFromIndex(BVIndex i, Field(BVSparseNode*, TAllocator)** prevNextFieldOut,
+    BVSparseNode*   NodeFromIndex(BVIndex i, typename WriteBarrierFieldTypeTraits<BVSparseNode*, TAllocator>::Type** prevNextFieldOut,
                                   bool create = true);
     const BVSparseNode* NodeFromIndex(BVIndex i, typename WriteBarrierFieldTypeTraits<BVSparseNode*, TAllocator>::Type const** prevNextFieldOut) const;
     BVSparseNode *  DeleteNode(BVSparseNode *node, bool bResetLastUsed = true);
@@ -268,7 +268,7 @@ BVSparse<TAllocator>::NodeFromIndex(BVIndex i, typename WriteBarrierFieldTypeTra
 {
     const BVIndex searchIndex = SparseBVUnit::Floor(i);
 
-    Field(BVSparseNode*, TAllocator)* prevNextField = this->lastUsedNodePrevNextField;
+    typename WriteBarrierFieldTypeTraits<BVSparseNode*, TAllocator>::Type* prevNextField = this->lastUsedNodePrevNextField;
     BVSparseNode* curNode = *prevNextField;
     if (curNode != nullptr)
     {
@@ -320,8 +320,8 @@ BVSparse<TAllocator>::NodeFromIndex(BVIndex i, typename WriteBarrierFieldTypeTra
 {
     const BVIndex searchIndex = SparseBVUnit::Floor(i);
 
-    Field(BVSparseNode*, TAllocator) const* prevNextField = &this->head;
-    Field(BVSparseNode*, TAllocator) const* prevLastField = &this->lastFoundIndex;
+    typename WriteBarrierFieldTypeTraits<BVSparseNode*, TAllocator>::Type const* prevNextField = &this->head;
+    typename WriteBarrierFieldTypeTraits<BVSparseNode*, TAllocator>::Type const* prevLastField = &this->lastFoundIndex;
 
     const BVSparseNode * curNode  = *prevNextField,
                        * lastNode = *prevLastField;
@@ -381,7 +381,7 @@ template <class TAllocator>
 SparseBVUnit *
 BVSparse<TAllocator>::BitsFromIndex(BVIndex i, bool create)
 {
-    Field(BVSparseNode*, TAllocator)* prevNextField = nullptr;
+    typename WriteBarrierFieldTypeTraits<BVSparseNode*, TAllocator>::Type* prevNextField = nullptr;
     BVSparseNode * node = NodeFromIndex(i, &prevNextField, create);
     if (node)
     {
@@ -397,7 +397,7 @@ template <class TAllocator>
 const SparseBVUnit *
 BVSparse<TAllocator>::BitsFromIndex(BVIndex i) const
 {
-    Field(BVSparseNode*, TAllocator) const* prevNextField = nullptr;
+    typename WriteBarrierFieldTypeTraits<BVSparseNode*, TAllocator>::Type const* prevNextField = nullptr;
     const BVSparseNode * node = NodeFromIndex(i, &prevNextField);
     if (node)
     {
@@ -506,7 +506,7 @@ template <class TAllocator>
 void
 BVSparse<TAllocator>::Clear(BVIndex i)
 {
-    Field(BVSparseNode*, TAllocator)* prevNextField = nullptr;
+    typename WriteBarrierFieldTypeTraits<BVSparseNode*, TAllocator>::Type* prevNextField = nullptr;
     BVSparseNode * current = this->NodeFromIndex(i, &prevNextField, false /* create */);
     if(current)
     {
@@ -554,7 +554,7 @@ template <class TAllocator>
 BOOLEAN
 BVSparse<TAllocator>::TestAndClear(BVIndex i)
 {
-    Field(BVSparseNode*, TAllocator)* prevNextField = nullptr;
+    typename WriteBarrierFieldTypeTraits<BVSparseNode*, TAllocator>::Type* prevNextField = nullptr;
     BVSparseNode * current = this->NodeFromIndex(i, &prevNextField, false /* create */);
     if (current == nullptr)
     {
@@ -586,7 +586,7 @@ void BVSparse<TAllocator>::for_each(const BVSparse *bv2)
 
           BVSparseNode * node1      = this->head;
     const BVSparseNode * node2      = bv2->head;
-          Field(BVSparseNode*, TAllocator)* prevNodeNextField = &this->head;
+          typename WriteBarrierFieldTypeTraits<BVSparseNode*, TAllocator>::Type* prevNodeNextField = &this->head;
 
     while(node1 != nullptr && node2 != nullptr)
     {
@@ -660,7 +660,7 @@ void BVSparse<TAllocator>::for_each(const BVSparse *bv1, const BVSparse *bv2)
           BVSparseNode * node1      = bv1->head;
     const BVSparseNode * node2      = bv2->head;
           BVSparseNode * lastNode   = nullptr;
-          Field(BVSparseNode*, TAllocator)* prevNextField = &this->head;
+          typename WriteBarrierFieldTypeTraits<BVSparseNode*, TAllocator>::Type* prevNextField = &this->head;
 
     while(node1 != nullptr && node2 != nullptr)
     {
@@ -830,7 +830,7 @@ void
 BVSparse<TAllocator>::CopyFromNode(const ::BVSparseNode<TSrcAllocator> * node2)
 {
     BVSparseNode * node1 = this->head;
-    Field(BVSparseNode*, TAllocator)* prevNextField = &this->head;
+    typename WriteBarrierFieldTypeTraits<BVSparseNode*, TAllocator>::Type* prevNextField = &this->head;
     this->lastFoundIndex = nullptr;
 
     while (node1 != nullptr && node2 != nullptr)

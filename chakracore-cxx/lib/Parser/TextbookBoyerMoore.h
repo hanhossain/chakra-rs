@@ -106,8 +106,8 @@ namespace UnifiedRegex
         // NOTE: We don't store the actual pattern here since it may be moved between
         //       constructing the scanner and running it.
 
-        Field(LastOccMap) lastOccurrence;
-        Field(int32_t *) goodSuffix;
+        typename WriteBarrierFieldTypeTraits<LastOccMap>::Type lastOccurrence;
+        typename WriteBarrierFieldTypeTraits<int32_t *>::Type goodSuffix;
 
     public:
 

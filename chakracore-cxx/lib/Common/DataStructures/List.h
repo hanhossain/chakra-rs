@@ -31,7 +31,7 @@ namespace JsUtil
 
     protected:
         typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<T,TAllocator>::Type *,TAllocator>::Type buffer;
-        Field(int) count;
+        typename WriteBarrierFieldTypeTraits<int>::Type count;
         FieldNoBarrier(TAllocator*) alloc;
 
         ReadOnlyList(TAllocator* alloc)
@@ -213,13 +213,13 @@ namespace JsUtil
         typedef ListTypeAllocatorFunc<TAllocator, isLeaf> AllocatorInfo;
         typedef typename AllocatorInfo::EffectiveAllocatorType EffectiveAllocatorType;
 
-        Field(int) length;
-        Field(int) increment;
-        Field(TRemovePolicyType) removePolicy;
+        typename WriteBarrierFieldTypeTraits<int>::Type length;
+        typename WriteBarrierFieldTypeTraits<int>::Type increment;
+        typename WriteBarrierFieldTypeTraits<TRemovePolicyType>::Type removePolicy;
 
         typename WriteBarrierFieldTypeTraits<T, TAllocator>::Type * AllocArray(int size)
         {
-            typedef Field(T, TAllocator) TField;
+            typedef typename WriteBarrierFieldTypeTraits<T, TAllocator>::Type TField;
             return AllocatorNewArrayBaseFuncPtr(TAllocator, this->alloc, AllocatorInfo::GetAllocFunc(), TField, size);
         }
 
@@ -275,8 +275,8 @@ namespace JsUtil
                 }
 
                 typename WriteBarrierFieldTypeTraits<T, TAllocator>::Type* newbuffer = AllocArray(newLength);
-                Field(T, TAllocator)* oldbuffer = this->buffer;
-                CopyArray<typename WriteBarrierFieldTypeTraits<T, TAllocator>::Type, Field(T, TAllocator), EffectiveAllocatorType>(
+                typename WriteBarrierFieldTypeTraits<T, TAllocator>::Type* oldbuffer = this->buffer;
+                CopyArray<typename WriteBarrierFieldTypeTraits<T, TAllocator>::Type, typename WriteBarrierFieldTypeTraits<T, TAllocator>::Type, EffectiveAllocatorType>(
                     newbuffer, newLength, oldbuffer, length);
 
                 FreeArray(oldbuffer, oldBufferSize);
@@ -505,7 +505,7 @@ namespace JsUtil
                 (IsSame<TRemovePolicyType, Js::CopyRemovePolicy<TListType, true> >::IsTrue));
             if (this->count)
             {
-                qsort_s<typename WriteBarrierFieldTypeTraits<T, TAllocator>::Type, Field(T, TAllocator), EffectiveAllocatorType>(
+                qsort_s<typename WriteBarrierFieldTypeTraits<T, TAllocator>::Type, typename WriteBarrierFieldTypeTraits<T, TAllocator>::Type, EffectiveAllocatorType>(
                     this->buffer, this->count, _PtFuncCompare, _Context);
             }
         }
@@ -780,7 +780,7 @@ namespace Js
         typedef typename TListType::TElementType TElementType;
         typedef typename TListType::TComparerType TComparerType;
 
-        Field(int) freeItemIndex;
+        typename WriteBarrierFieldTypeTraits<int>::Type freeItemIndex;
 
     public:
         FreeListedRemovePolicy(TListType * list):
@@ -865,7 +865,7 @@ namespace Js
         typedef FreeListedRemovePolicy<TListType, clearOldEntries> Base;
         typedef typename Base::TElementType TElementType;
     private:
-        Field(uint) lastWeakReferenceCleanupId;
+        typename WriteBarrierFieldTypeTraits<uint>::Type lastWeakReferenceCleanupId;
 
         void CleanupWeakReference(TListType * list)
         {

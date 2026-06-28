@@ -76,24 +76,24 @@ public:
     int GetInlineSlotSize() const;
     void* GetInlineSlots() const;
 
-    Field(bool) initialized = true;
+    typename WriteBarrierFieldTypeTraits<bool>::Type initialized = true;
 private:
     enum class SlotType {
         Inline,
         External
     };
 
-    Field(SlotType) slotType;
+    typename WriteBarrierFieldTypeTraits<SlotType>::Type slotType;
     union SlotInfo
     {
-        Field(void *) slot;
-        Field(uint) inlineSlotSize;
+        typename WriteBarrierFieldTypeTraits<void *>::Type slot;
+        typename WriteBarrierFieldTypeTraits<uint>::Type inlineSlotSize;
         SlotInfo()
         {
             memset(this, 0, sizeof(SlotInfo));
         }
     };
-    Field(SlotInfo) u;
+    typename WriteBarrierFieldTypeTraits<SlotInfo>::Type u;
 
 #if ENABLE_TTD
 public:

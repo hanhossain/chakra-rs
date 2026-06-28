@@ -15,13 +15,13 @@ namespace Js
 
         FieldNoBarrier(TLoadCallback) scriptLoadCallback;
         FieldNoBarrier(TUnloadCallback) scriptUnloadCallback;
-        Field(JsSourceContext) sourceContext;
+        typename WriteBarrierFieldTypeTraits<JsSourceContext>::Type sourceContext;
 
-        Field(JsValueRef) mappedScriptValue;
-        Field(DetachedStateBase*) mappedSerializedScriptValue;
-        Field(utf8char_t const *) mappedSource;
-        Field(size_t) mappedSourceByteLength;
-        Field(size_t) mappedAllocLength;
+        typename WriteBarrierFieldTypeTraits<JsValueRef>::Type mappedScriptValue;
+        typename WriteBarrierFieldTypeTraits<DetachedStateBase*>::Type mappedSerializedScriptValue;
+        typename WriteBarrierFieldTypeTraits<utf8char_t const *>::Type mappedSource;
+        typename WriteBarrierFieldTypeTraits<size_t>::Type mappedSourceByteLength;
+        typename WriteBarrierFieldTypeTraits<size_t>::Type mappedAllocLength;
 
         // Wrapper methods with Asserts to ensure that we aren't trying to access unmapped source
         utf8char_t const * GetMappedSource()

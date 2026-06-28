@@ -8,8 +8,8 @@ namespace regex
 {
     struct Interval
     {
-        Field(int) begin;
-        Field(int) end;
+        typename WriteBarrierFieldTypeTraits<int>::Type begin;
+        typename WriteBarrierFieldTypeTraits<int>::Type end;
 
     public:
         Interval(): begin(0), end(0)
