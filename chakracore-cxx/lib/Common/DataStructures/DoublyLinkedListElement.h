@@ -10,8 +10,8 @@ namespace JsUtil
     class DoublyLinkedListElement
     {
     private:
-        Field(T*, TAllocator) previous;
-        Field(T*, TAllocator) next;
+        typename WriteBarrierFieldTypeTraits<T*, TAllocator>::Type previous;
+        typename WriteBarrierFieldTypeTraits<T*, TAllocator>::Type next;
 
     public:
         DoublyLinkedListElement();
@@ -21,35 +21,35 @@ namespace JsUtil
         T *Next() const;
 
         template<class D> static bool Contains(D *const element,
-            Field(D *, TAllocator) const head);
+            typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type const head);
         template<class D> static bool ContainsSubsequence(D *const first, D *const last,
-            Field(D *, TAllocator) const head);
+            typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type const head);
 
         template<class D> static void LinkToBeginning(D *const element,
-            Field(D *, TAllocator) *const head, Field(D *, TAllocator) *const tail);
+            typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const head, typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const tail);
         template<class D> static void LinkToEnd(D *const element,
-            Field(D *, TAllocator) *const head, Field(D *, TAllocator) *const tail);
+            typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const head, typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const tail);
         template<class D> static void LinkBefore(D *const element, D *const nextElement,
-            Field(D *, TAllocator) *const head, Field(D *, TAllocator) *const tail);
+            typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const head, typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const tail);
         template<class D> static void LinkAfter(D *const element, D *const previousElement,
-            Field(D *, TAllocator) *const head, Field(D *, TAllocator) *const tail);
+            typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const head, typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const tail);
         template<class D> static void UnlinkFromBeginning(D *const element,
-            Field(D *, TAllocator) *const head, Field(D *, TAllocator) *const tail);
+            typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const head, typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const tail);
         template<class D> static void UnlinkFromEnd(D *const element,
-            Field(D *, TAllocator) *const head, Field(D *, TAllocator) *const tail);
+            typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const head, typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const tail);
         template<class D> static void UnlinkPartial(D *const element,
-            Field(D *, TAllocator) *const head, Field(D *, TAllocator) *const tail);
+            typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const head, typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const tail);
         template<class D> static void Unlink(D *const element,
-            Field(D *, TAllocator) *const head, Field(D *, TAllocator) *const tail);
+            typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const head, typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const tail);
         template<class D> static void MoveToBeginning(D *const element,
-            Field(D *, TAllocator) *const head, Field(D *, TAllocator) *const tail);
+            typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const head, typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const tail);
 
         template<class D> static void UnlinkSubsequenceFromEnd(D *const first,
-            Field(D *, TAllocator) *const head, Field(D *, TAllocator) *const tail);
+            typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const head, typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const tail);
         template<class D> static void UnlinkSubsequence(D *const first, D *const last,
-            Field(D *, TAllocator) *const head, Field(D *, TAllocator) *const tail);
+            typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const head, typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const tail);
         template<class D> static void MoveSubsequenceToBeginning(D *const first, D *const last,
-            Field(D *, TAllocator) *const head, Field(D *, TAllocator) *const tail);
+            typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const head, typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const tail);
 
         // JScriptDiag doesn't seem to like the PREVENT_COPY macro
     private:

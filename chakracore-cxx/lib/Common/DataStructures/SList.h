@@ -56,8 +56,8 @@ template <typename TAllocator>
 class SListNodeBase
 {
 public:
-    Field(SListNodeBase*, TAllocator) Next() const { return next; }
-    Field(SListNodeBase*, TAllocator)& Next() { return next; }
+    typename WriteBarrierFieldTypeTraits<SListNodeBase*, TAllocator>::Type Next() const { return next; }
+    typename WriteBarrierFieldTypeTraits<SListNodeBase*, TAllocator>::Type& Next() { return next; }
 
 protected:
     // The next node can be a real node with data, or it point back to the start of the list
@@ -128,12 +128,12 @@ public:
             current = current->Next();
             return true;
         }
-        Field(TData, TAllocator) const& Data() const
+        typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type const& Data() const
         {
             Assert(this->IsValid());
             return ((Node *)current)->data;
         }
-        Field(TData, TAllocator)& Data()
+        typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type& Data()
         {
             Assert(this->IsValid());
             return ((Node *)current)->data;
@@ -177,7 +177,7 @@ public:
             AllocatorFree(allocator, freeFunc, (Node *) dead, sizeof(Node));
         }
 
-        Field(TData, TAllocator) * InsertNodeBefore(TAllocator * allocator)
+        typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type * InsertNodeBefore(TAllocator * allocator)
         {
             Assert(last != nullptr);
             Node * newNode = AllocatorNew(TAllocator, allocator, Node);
@@ -192,7 +192,7 @@ public:
             return nullptr;
         }
 
-        Field(TData, TAllocator) * InsertNodeBeforeNoThrow(TAllocator * allocator)
+        typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type * InsertNodeBeforeNoThrow(TAllocator * allocator)
         {
             Assert(last != nullptr);
             Node * newNode = AllocatorNewNoThrow(TAllocator, allocator, Node);
@@ -208,7 +208,7 @@ public:
         }
 
         template <typename TParam1, typename TParam2>
-        Field(TData, TAllocator) * InsertNodeBefore(TAllocator * allocator, TParam1 param1, TParam2 param2)
+        typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type * InsertNodeBefore(TAllocator * allocator, TParam1 param1, TParam2 param2)
         {
             Assert(last != nullptr);
             Node * newNode = AllocatorNew(TAllocator, allocator, Node, param1, param2);
@@ -308,9 +308,9 @@ public:
     bool Empty() const { return this->IsHead(this->Next()); }
     bool HasOne() const { return !Empty() && this->IsHead(this->Next()->Next()); }
     bool HasTwo() const { return !Empty() && this->IsHead(this->Next()->Next()->Next()); }
-    Field(TData, TAllocator) const& Head() const
+    typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type const& Head() const
         { Assert(!Empty()); return ((Node *)this->Next())->data; }
-    Field(TData, TAllocator)& Head()
+    typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type& Head()
         { Assert(!Empty()); return ((Node *)this->Next())->data; }
 
     bool Prepend(TAllocator * allocator, TData const& data)
@@ -339,7 +339,7 @@ public:
         return false;
     }
 
-    Field(TData, TAllocator) * PrependNode(TAllocator * allocator)
+    typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type * PrependNode(TAllocator * allocator)
     {
         Node * newNode = AllocatorNew(TAllocator, allocator, Node);
         if (newNode)
@@ -352,7 +352,7 @@ public:
         return nullptr;
     }
 
-    Field(TData, TAllocator) * PrependNodeNoThrow(TAllocator * allocator)
+    typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type * PrependNodeNoThrow(TAllocator * allocator)
     {
         Node * newNode = AllocatorNewNoThrow(TAllocator, allocator, Node);
         if (newNode)
@@ -366,7 +366,7 @@ public:
     }
 
     template <typename TParam>
-    Field(TData, TAllocator) * PrependNode(TAllocator * allocator, TParam param)
+    typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type * PrependNode(TAllocator * allocator, TParam param)
     {
         Node * newNode = AllocatorNew(TAllocator, allocator, Node, param);
         if (newNode)
@@ -380,7 +380,7 @@ public:
     }
 
     template <typename TParam1, typename TParam2>
-    Field(TData, TAllocator) * PrependNode(TAllocator * allocator, TParam1 param1, TParam2 param2)
+    typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type * PrependNode(TAllocator * allocator, TParam1 param1, TParam2 param2)
     {
         Node * newNode = AllocatorNew(TAllocator, allocator, Node, param1, param2);
         if (newNode)
@@ -454,7 +454,7 @@ public:
 
     // Moves the first element that satisfies the predicate to the toList
     template<class Fn>
-    Field(TData, TAllocator)* MoveTo(SListBase* toList, Fn predicate)
+    typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type* MoveTo(SListBase* toList, Fn predicate)
     {
         Assert(this != toList);
 
@@ -463,7 +463,7 @@ public:
         {
             if (predicate(iter.Data()))
             {
-                Field(TData, TAllocator)* data = &iter.Data();
+                typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type* data = &iter.Data();
                 iter.MoveCurrentTo(toList);
                 return data;
             }
@@ -472,7 +472,7 @@ public:
     }
 
     template<class Fn>
-    Field(TData, TAllocator)* Find(Fn predicate)
+    typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type* Find(Fn predicate)
     {
         Iterator iter(this);
         while(iter.Next())
@@ -529,7 +529,7 @@ public:
     }
 
     template <void (*CopyElement)(
-        Field(TData, TAllocator) const& from, Field(TData, TAllocator)& to)>
+        typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type const& from, Field(TData, TAllocator)& to)>
     bool CopyTo(TAllocator * allocator, SListBase& to) const
     {
         to.Clear(allocator);
@@ -554,7 +554,7 @@ public:
     template <class Fn>
     void Map(Fn fn) const
     {
-        MapUntil([fn](Field(TData, TAllocator)& data) { fn(data); return false; });
+        MapUntil([fn](typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type& data) { fn(data); return false; });
     }
 
     template <class Fn>
@@ -573,7 +573,7 @@ public:
 
 private:
     static void DefaultCopyElement(
-        Field(TData, TAllocator) const& from, Field(TData, TAllocator)& to)
+        typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type const& from, Field(TData, TAllocator)& to)
     {
         to = from;
     }
@@ -601,7 +601,7 @@ public:
         {
             __super::RemoveCurrent(Allocator());
         }
-        Field(TData, TAllocator) * InsertNodeBefore()
+        typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type * InsertNodeBefore()
         {
             return __super::InsertNodeBefore(Allocator());
         }
@@ -631,17 +631,17 @@ public:
     {
         return __super::Prepend(allocator, data);
     }
-    Field(TData, TAllocator) * PrependNode()
+    typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type * PrependNode()
     {
         return __super::PrependNode(allocator);
     }
     template <typename TParam>
-    Field(TData, TAllocator) * PrependNode(TParam param)
+    typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type * PrependNode(TParam param)
     {
         return __super::PrependNode(allocator, param);
     }
     template <typename TParam1, typename TParam2>
-    Field(TData, TAllocator) * PrependNode(TParam1 param1, TParam2 param2)
+    typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type * PrependNode(TParam1 param1, TParam2 param2)
     {
         return __super::PrependNode(allocator, param1, param2);
     }
@@ -667,11 +667,11 @@ public:
         return data;
     }
 
-    Field(TData, TAllocator) const& Top() const
+    typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type const& Top() const
     {
         return this->Head();
     }
-    Field(TData, TAllocator)& Top()
+    typename WriteBarrierFieldTypeTraits<TData, TAllocator>::Type& Top()
     {
         return this->Head();
     }

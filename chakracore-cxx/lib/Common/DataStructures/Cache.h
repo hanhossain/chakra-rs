@@ -87,9 +87,9 @@ namespace JsUtil
         }
 
     private:
-        Field(uint) writeIndex;
-        Field(bool) filled;
-        Field(T, TAllocator) entries[size];
+        typename WriteBarrierFieldTypeTraits<uint>::Type writeIndex;
+        typename WriteBarrierFieldTypeTraits<bool>::Type filled;
+        typename WriteBarrierFieldTypeTraits<T, TAllocator>::Type entries[size];
     };
 
     template <class TKey, int MRUSize, class TAllocator = Recycler>
@@ -118,7 +118,7 @@ namespace JsUtil
         }
 
     private:
-        Field(TMRUStoreType*, TAllocator) store;
+        typename WriteBarrierFieldTypeTraits<TMRUStoreType*, TAllocator>::Type store;
     };
 
     template <
@@ -243,8 +243,8 @@ namespace JsUtil
         }
 
     private:
-        Field(CacheStore*) cacheStore;
-        Field(CacheRetentionPolicy) cachePolicyType;
+        typename WriteBarrierFieldTypeTraits<CacheStore*>::Type cacheStore;
+        typename WriteBarrierFieldTypeTraits<CacheRetentionPolicy>::Type cachePolicyType;
     };
 
 }

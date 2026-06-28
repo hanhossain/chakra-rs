@@ -30,7 +30,7 @@ namespace JsUtil
         typedef TComparer<T> TComparerType;
 
     protected:
-        Field(Field(T, TAllocator) *, TAllocator) buffer;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<T,TAllocator>::Type *,TAllocator>::Type buffer;
         Field(int) count;
         FieldNoBarrier(TAllocator*) alloc;
 
@@ -217,13 +217,13 @@ namespace JsUtil
         Field(int) increment;
         Field(TRemovePolicyType) removePolicy;
 
-        Field(T, TAllocator) * AllocArray(int size)
+        typename WriteBarrierFieldTypeTraits<T, TAllocator>::Type * AllocArray(int size)
         {
             typedef Field(T, TAllocator) TField;
             return AllocatorNewArrayBaseFuncPtr(TAllocator, this->alloc, AllocatorInfo::GetAllocFunc(), TField, size);
         }
 
-        void FreeArray(Field(T, TAllocator) * oldBuffer, int oldBufferSize)
+        void FreeArray(typename WriteBarrierFieldTypeTraits<T, TAllocator>::Type * oldBuffer, int oldBufferSize)
         {
             AllocatorFree(this->alloc, AllocatorInfo::GetFreeFunc(), oldBuffer, oldBufferSize);
         }
@@ -274,9 +274,9 @@ namespace JsUtil
                     JsUtil::ExternalApi::RaiseOnIntOverflow();
                 }
 
-                Field(T, TAllocator)* newbuffer = AllocArray(newLength);
+                typename WriteBarrierFieldTypeTraits<T, TAllocator>::Type* newbuffer = AllocArray(newLength);
                 Field(T, TAllocator)* oldbuffer = this->buffer;
-                CopyArray<Field(T, TAllocator), Field(T, TAllocator), EffectiveAllocatorType>(
+                CopyArray<typename WriteBarrierFieldTypeTraits<T, TAllocator>::Type, Field(T, TAllocator), EffectiveAllocatorType>(
                     newbuffer, newLength, oldbuffer, length);
 
                 FreeArray(oldbuffer, oldBufferSize);
@@ -326,7 +326,7 @@ namespace JsUtil
             return ParentType::Item(index);
         }
 
-        Field(T, TAllocator)& Item(int index)
+        typename WriteBarrierFieldTypeTraits<T, TAllocator>::Type& Item(int index)
         {
             Assert(index >= 0 && index < this->count);
             return this->buffer[index];
@@ -505,7 +505,7 @@ namespace JsUtil
                 (IsSame<TRemovePolicyType, Js::CopyRemovePolicy<TListType, true> >::IsTrue));
             if (this->count)
             {
-                qsort_s<Field(T, TAllocator), Field(T, TAllocator), EffectiveAllocatorType>(
+                qsort_s<typename WriteBarrierFieldTypeTraits<T, TAllocator>::Type, Field(T, TAllocator), EffectiveAllocatorType>(
                     this->buffer, this->count, _PtFuncCompare, _Context);
             }
         }
