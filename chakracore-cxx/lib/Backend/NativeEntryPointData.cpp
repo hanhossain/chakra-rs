@@ -254,7 +254,7 @@ NativeEntryPointData::ClearEquivalentTypeCaches(Recycler * recycler)
     return isAnyCacheLive;
 }
 
-Field(FakePropertyGuardWeakReference*) *
+typename WriteBarrierFieldTypeTraits<FakePropertyGuardWeakReference*>::Type *
 NativeEntryPointData::EnsurePropertyGuardWeakRefs(int guardCount, Recycler * recycler)
 {
     Assert(this->propertyGuardCount == 0);

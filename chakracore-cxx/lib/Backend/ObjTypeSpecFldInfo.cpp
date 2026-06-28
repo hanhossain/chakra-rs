@@ -1033,7 +1033,7 @@ ObjTypeSpecFldInfo* ObjTypeSpecFldInfo::CreateFrom(uint id, Js::PolymorphicInlin
     if (gatherDataForInlining)
     {
         fixedFieldInfoArray = RecyclerNewArrayZ(recycler, FixedFieldInfo, fixedFunctionCount);
-        CopyArray<FixedFieldInfo, Field(Js::Var)>(
+        CopyArray<FixedFieldInfo, typename WriteBarrierFieldTypeTraits<Js::Var>::Type>(
             fixedFieldInfoArray, fixedFunctionCount, localFixedFieldInfoArray, fixedFunctionCount);
     }
     else

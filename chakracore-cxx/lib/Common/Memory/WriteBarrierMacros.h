@@ -27,7 +27,7 @@
 // use with FieldWithBarrier structs
 #define FORCE_NO_WRITE_BARRIER_TAG(arg) arg, _no_write_barrier_tag()
 
-// Unsafely cast a typical "Field() *" type. Only use in rare cases where we
+// Unsafely cast a typical "typename WriteBarrierFieldTypeTraits<>::Type *" type. Only use in rare cases where we
 // understand the underlying memory usage.
 template <class T, class U>
 inline T unsafe_write_barrier_cast(U p)
