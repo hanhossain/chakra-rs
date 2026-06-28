@@ -16,8 +16,6 @@
 //
 
 // TODO (hanhossain): remove Field
-#define Field(type, ...) \
-    typename WriteBarrierFieldTypeTraits<type, ##__VA_ARGS__>::Type
 #define FieldNoBarrier(type) \
     typename WriteBarrierFieldTypeTraits<type, _no_write_barrier_policy, _no_write_barrier_policy>::Type
 
