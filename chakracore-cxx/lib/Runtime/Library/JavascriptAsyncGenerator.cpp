@@ -24,7 +24,7 @@ JavascriptAsyncGenerator* JavascriptAsyncGenerator::New(
         CopyArray(argValuesCopy, args.Info.Count, args.Values, args.Info.Count);
     }
 
-    Arguments heapArgs(args.Info, unsafe_write_barrier_cast<Var*>(argValuesCopy));
+    Arguments heapArgs(args.Info, (Var*)argValuesCopy);
 
     auto* requestQueue = RecyclerNew(recycler, JavascriptAsyncGenerator::RequestQueue, recycler);
 

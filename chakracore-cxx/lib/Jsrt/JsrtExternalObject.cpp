@@ -189,7 +189,7 @@ void JsrtExternalObject::Dispose(bool isShutdown)
 void * JsrtExternalObject::GetSlotData() const
 {
     return this->slotType == SlotType::External
-        ? unsafe_write_barrier_cast<void *>(this->u.slot)
+        ? (void *)this->u.slot
         : GetInlineSlots();
 }
 

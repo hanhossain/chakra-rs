@@ -17,8 +17,3 @@
 
 // Unsafely cast a typical "typename WriteBarrierFieldTypeTraits<>::Type *" type. Only use in rare cases where we
 // understand the underlying memory usage.
-template <class T, class U>
-inline T unsafe_write_barrier_cast(U p)
-{
-    return (T)p;
-}

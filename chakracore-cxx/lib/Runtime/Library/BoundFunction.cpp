@@ -205,7 +205,7 @@ namespace Js
                 newValues[index++] = args.Values[argCount];
             }
 
-            actualArgs = Arguments(args.Info, unsafe_write_barrier_cast<Var*>(newValues));
+            actualArgs = Arguments(args.Info, (Var*)newValues);
             actualArgs.Info.Count = boundFunction->count + argCount;
 
             Assert(index == actualArgs.GetLargeArgCountWithExtraArgs());

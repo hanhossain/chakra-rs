@@ -150,7 +150,7 @@ FunctionJITTimeInfo::BuildJITTimeData(
         if(objTypeSpecInfo)
         {
             jitData->objTypeSpecFldInfoCount = jitData->bodyData->inlineCacheCount;
-            jitData->objTypeSpecFldInfoArray = unsafe_write_barrier_cast<ObjTypeSpecFldIDL**>(objTypeSpecInfo);
+            jitData->objTypeSpecFldInfoArray = (ObjTypeSpecFldIDL**)objTypeSpecInfo;
         }
         for (Js::InlineCacheIndex i = 0; i < jitData->bodyData->inlineCacheCount; ++i)
         {
@@ -169,7 +169,7 @@ FunctionJITTimeInfo::BuildJITTimeData(
         Assert(globObjTypeSpecInfo != nullptr);
 
         jitData->globalObjTypeSpecFldInfoCount = codeGenData->GetGlobalObjTypeSpecFldInfoCount();
-        jitData->globalObjTypeSpecFldInfoArray = unsafe_write_barrier_cast<ObjTypeSpecFldIDL**>(globObjTypeSpecInfo);
+        jitData->globalObjTypeSpecFldInfoArray = (ObjTypeSpecFldIDL**)globObjTypeSpecInfo;
     }
     const Js::FunctionCodeGenJitTimeData * nextJITData = codeGenData->GetNext();
     if (nextJITData != nullptr)
