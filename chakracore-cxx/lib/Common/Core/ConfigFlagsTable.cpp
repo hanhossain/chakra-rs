@@ -1217,11 +1217,9 @@ namespace Js
         u"LibraryStackFrameDebugger",
 #ifdef RECYCLER_STRESS
         u"RecyclerStress",
-#if ENABLE_CONCURRENT_GC
         u"RecyclerBackgroundStress",
         u"RecyclerConcurrentStress",
         u"RecyclerConcurrentRepeatStress",
-#endif
 #if ENABLE_PARTIAL_GC
         u"RecyclerPartialStress",
 #endif
@@ -1229,12 +1227,10 @@ namespace Js
         u"RecyclerInduceFalsePositives",
 #endif // RECYCLER_STRESS
         u"RecyclerForceMarkInterior",
-#if ENABLE_CONCURRENT_GC
         u"RecyclerPriorityBoostTimeout",
         u"RecyclerThreadCollectTimeout",
         u"EnableConcurrentSweepAlloc",
         u"ecsa",
-#endif
 #ifdef RECYCLER_PAGE_HEAP
         u"PageHeap",
         u"PageHeapAllocStack",
@@ -1349,11 +1345,9 @@ namespace Js
 #endif
 #ifdef RECYCLER_STRESS
         u"MemProtectHeapStress",
-#if ENABLE_CONCURRENT_GC
         u"MemProtectHeapBackgroundStress",
         u"MemProtectHeapConcurrentStress",
         u"MemProtectHeapConcurrentRepeatStress",
-#endif
 #if ENABLE_PARTIAL_GC
         u"MemProtectHeapPartialStress",
 #endif
@@ -2330,11 +2324,9 @@ namespace Js
         u"Assume debugger support for library stack frame",
 #ifdef RECYCLER_STRESS
         u"Stress the recycler by collect on every allocation call",
-#if ENABLE_CONCURRENT_GC
         u"Stress the recycler by collect in the background thread on every allocation call",
         u"Stress the concurrent recycler by concurrent collect on every allocation call",
         u"Stress the concurrent recycler by concurrent collect on every allocation call and repeat mark and rescan in the background thread",
-#endif
 #if ENABLE_PARTIAL_GC
         u"Stress the partial recycler by partial collect on every allocation call",
 #endif
@@ -2342,12 +2334,10 @@ namespace Js
         u"Stress recycler by forcing false positive object marks",
 #endif // RECYCLER_STRESS
         u"Force all the mark as interior",
-#if ENABLE_CONCURRENT_GC
         u"Adjust priority boost timeout",
         u"Adjust thread collect timeout",
         u"Turns off the feature to allow allocations during concurrent sweep.",
         u"Turns off the feature to allow allocations during concurrent sweep.",
-#endif
 #ifdef RECYCLER_PAGE_HEAP
         u"Use full page for heap allocations",
         u"Capture alloc stack under page heap mode",
@@ -2462,11 +2452,9 @@ namespace Js
 #endif
 #ifdef RECYCLER_STRESS
         u"Stress the recycler by collect on every allocation call",
-#if ENABLE_CONCURRENT_GC
         u"Stress the recycler by collect in the background thread on every allocation call",
         u"Stress the concurrent recycler by concurrent collect on every allocation call",
         u"Stress the concurrent recycler by concurrent collect on every allocation call and repeat mark and rescan in the background thread",
-#endif
 #if ENABLE_PARTIAL_GC
         u"Stress the partial recycler by partial collect on every allocation call",
 #endif
@@ -3041,11 +3029,9 @@ namespace Js
         NoParentFlag,
 #ifdef RECYCLER_STRESS
         NoParentFlag,
-#if ENABLE_CONCURRENT_GC
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-#endif
 #if ENABLE_PARTIAL_GC
         NoParentFlag,
 #endif
@@ -3053,12 +3039,10 @@ namespace Js
         NoParentFlag,
 #endif // RECYCLER_STRESS
         NoParentFlag,
-#if ENABLE_CONCURRENT_GC
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-#endif
 #ifdef RECYCLER_PAGE_HEAP
         NoParentFlag,
         NoParentFlag,
@@ -3173,11 +3157,9 @@ namespace Js
 #endif
 #ifdef RECYCLER_STRESS
         NoParentFlag,
-#if ENABLE_CONCURRENT_GC
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-#endif
 #if ENABLE_PARTIAL_GC
         NoParentFlag,
 #endif
@@ -3768,11 +3750,9 @@ namespace Js
         LibraryStackFrameDebugger(DEFAULT_CONFIG_LibraryStackFrameDebugger),
 #ifdef RECYCLER_STRESS
         RecyclerStress(false),
-#if ENABLE_CONCURRENT_GC
         RecyclerBackgroundStress(false),
         RecyclerConcurrentStress(false),
         RecyclerConcurrentRepeatStress(false),
-#endif
 #if ENABLE_PARTIAL_GC
         RecyclerPartialStress(false),
 #endif
@@ -3780,12 +3760,10 @@ namespace Js
         RecyclerInduceFalsePositives(false),
 #endif // RECYCLER_STRESS
         RecyclerForceMarkInterior(DEFAULT_CONFIG_RecyclerForceMarkInterior),
-#if ENABLE_CONCURRENT_GC
         RecyclerPriorityBoostTimeout(5000),
         RecyclerThreadCollectTimeout(1000),
         EnableConcurrentSweepAlloc(true),
         ecsa(true),
-#endif
 #ifdef RECYCLER_PAGE_HEAP
         PageHeap(DEFAULT_CONFIG_PageHeap),
         PageHeapAllocStack(DEFAULT_CONFIG_PageHeapAllocStack),
@@ -3900,11 +3878,9 @@ namespace Js
 #endif
 #ifdef RECYCLER_STRESS
         MemProtectHeapStress(false),
-#if ENABLE_CONCURRENT_GC
         MemProtectHeapBackgroundStress(false),
         MemProtectHeapConcurrentStress(false),
         MemProtectHeapConcurrentRepeatStress(false),
-#endif
 #if ENABLE_PARTIAL_GC
         MemProtectHeapPartialStress(false),
 #endif
@@ -4181,13 +4157,11 @@ namespace Js
             FullJitAfter = Fja;
         }
 
-#if ENABLE_CONCURRENT_GC
         if(!IsEnabled(EnableConcurrentSweepAllocFlag) && IsEnabled(ecsaFlag))
         {
             Enable(EnableConcurrentSweepAllocFlag);
             EnableConcurrentSweepAlloc = ecsa;
         }
-#endif
     }
 
     void ConfigFlagsTable::TranslateFlagConfiguration()
@@ -5497,14 +5471,12 @@ namespace Js
         #ifdef RECYCLER_STRESS
         case RecyclerStressFlag:
             return FlagBoolean;
-        #if ENABLE_CONCURRENT_GC
         case RecyclerBackgroundStressFlag:
             return FlagBoolean;
         case RecyclerConcurrentStressFlag:
             return FlagBoolean;
         case RecyclerConcurrentRepeatStressFlag:
             return FlagBoolean;
-        #endif
         #if ENABLE_PARTIAL_GC
         case RecyclerPartialStressFlag:
             return FlagBoolean;
@@ -5516,7 +5488,6 @@ namespace Js
         #endif // RECYCLER_STRESS
         case RecyclerForceMarkInteriorFlag:
             return FlagBoolean;
-        #if ENABLE_CONCURRENT_GC
         case RecyclerPriorityBoostTimeoutFlag:
             return FlagNumber;
         case RecyclerThreadCollectTimeoutFlag:
@@ -5525,7 +5496,6 @@ namespace Js
             return FlagBoolean;
         case ecsaFlag:
             return FlagBoolean;
-        #endif
         #ifdef RECYCLER_PAGE_HEAP
         case PageHeapFlag:
             return FlagNumber;
@@ -5710,14 +5680,12 @@ namespace Js
         #ifdef RECYCLER_STRESS
         case MemProtectHeapStressFlag:
             return FlagBoolean;
-        #if ENABLE_CONCURRENT_GC
         case MemProtectHeapBackgroundStressFlag:
             return FlagBoolean;
         case MemProtectHeapConcurrentStressFlag:
             return FlagBoolean;
         case MemProtectHeapConcurrentRepeatStressFlag:
             return FlagBoolean;
-        #endif
         #if ENABLE_PARTIAL_GC
         case MemProtectHeapPartialStressFlag:
             return FlagBoolean;
@@ -6693,14 +6661,12 @@ namespace Js
         #ifdef RECYCLER_STRESS
         case RecyclerStressFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerStress));
-        #if ENABLE_CONCURRENT_GC
         case RecyclerBackgroundStressFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerBackgroundStress));
         case RecyclerConcurrentStressFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerConcurrentStress));
         case RecyclerConcurrentRepeatStressFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerConcurrentRepeatStress));
-        #endif
         #if ENABLE_PARTIAL_GC
         case RecyclerPartialStressFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerPartialStress));
@@ -6712,7 +6678,6 @@ namespace Js
         #endif // RECYCLER_STRESS
         case RecyclerForceMarkInteriorFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerForceMarkInterior));
-        #if ENABLE_CONCURRENT_GC
         case RecyclerPriorityBoostTimeoutFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&RecyclerPriorityBoostTimeout));
         case RecyclerThreadCollectTimeoutFlag:
@@ -6721,7 +6686,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&EnableConcurrentSweepAlloc));
         case ecsaFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ecsa));
-        #endif
         #ifdef RECYCLER_PAGE_HEAP
         case PageHeapFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&PageHeap));
@@ -6906,14 +6870,12 @@ namespace Js
         #ifdef RECYCLER_STRESS
         case MemProtectHeapStressFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&MemProtectHeapStress));
-        #if ENABLE_CONCURRENT_GC
         case MemProtectHeapBackgroundStressFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&MemProtectHeapBackgroundStress));
         case MemProtectHeapConcurrentStressFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&MemProtectHeapConcurrentStress));
         case MemProtectHeapConcurrentRepeatStressFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&MemProtectHeapConcurrentRepeatStress));
-        #endif
         #if ENABLE_PARTIAL_GC
         case MemProtectHeapPartialStressFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&MemProtectHeapPartialStress));
@@ -16145,7 +16107,6 @@ if (IsEnabled(RecyclerStressFlag))
     };
     Output::Print(u"\n");
 }
-#if ENABLE_CONCURRENT_GC
 if (IsEnabled(RecyclerBackgroundStressFlag))
 {
     Output::Print(u"-%s", u"RecyclerBackgroundStress");
@@ -16221,7 +16182,6 @@ if (IsEnabled(RecyclerConcurrentRepeatStressFlag))
     };
     Output::Print(u"\n");
 }
-#endif
 #if ENABLE_PARTIAL_GC
 if (IsEnabled(RecyclerPartialStressFlag))
 {
@@ -16325,7 +16285,6 @@ if (IsEnabled(RecyclerForceMarkInteriorFlag))
     };
     Output::Print(u"\n");
 }
-#if ENABLE_CONCURRENT_GC
 if (IsEnabled(RecyclerPriorityBoostTimeoutFlag))
 {
     Output::Print(u"-%s", u"RecyclerPriorityBoostTimeout");
@@ -16426,7 +16385,6 @@ if (IsEnabled(ecsaFlag))
     };
     Output::Print(u"\n");
 }
-#endif
 #ifdef RECYCLER_PAGE_HEAP
 if (IsEnabled(PageHeapFlag))
 {
@@ -18221,7 +18179,6 @@ if (IsEnabled(MemProtectHeapStressFlag))
     };
     Output::Print(u"\n");
 }
-#if ENABLE_CONCURRENT_GC
 if (IsEnabled(MemProtectHeapBackgroundStressFlag))
 {
     Output::Print(u"-%s", u"MemProtectHeapBackgroundStress");
@@ -18297,7 +18254,6 @@ if (IsEnabled(MemProtectHeapConcurrentRepeatStressFlag))
     };
     Output::Print(u"\n");
 }
-#endif
 #if ENABLE_PARTIAL_GC
 if (IsEnabled(MemProtectHeapPartialStressFlag))
 {
@@ -19859,7 +19815,6 @@ if (IsEnabled(MaxSingleAllocSizeInMBFlag))
         case RecyclerStressFlag:
             retValue = (Boolean) false;
             break;
-        #if ENABLE_CONCURRENT_GC
         case RecyclerBackgroundStressFlag:
             retValue = (Boolean) false;
             break;
@@ -19869,7 +19824,6 @@ if (IsEnabled(MaxSingleAllocSizeInMBFlag))
         case RecyclerConcurrentRepeatStressFlag:
             retValue = (Boolean) false;
             break;
-        #endif
         #if ENABLE_PARTIAL_GC
         case RecyclerPartialStressFlag:
             retValue = (Boolean) false;
@@ -19885,14 +19839,12 @@ if (IsEnabled(MaxSingleAllocSizeInMBFlag))
         case RecyclerForceMarkInteriorFlag:
             retValue = (Boolean) DEFAULT_CONFIG_RecyclerForceMarkInterior;
             break;
-        #if ENABLE_CONCURRENT_GC
         case EnableConcurrentSweepAllocFlag:
             retValue = (Boolean) true;
             break;
         case ecsaFlag:
             retValue = (Boolean) true;
             break;
-        #endif
         #ifdef RECYCLER_PAGE_HEAP
         case PageHeapAllocStackFlag:
             retValue = (Boolean) DEFAULT_CONFIG_PageHeapAllocStack;
@@ -20056,7 +20008,6 @@ if (IsEnabled(MaxSingleAllocSizeInMBFlag))
         case MemProtectHeapStressFlag:
             retValue = (Boolean) false;
             break;
-        #if ENABLE_CONCURRENT_GC
         case MemProtectHeapBackgroundStressFlag:
             retValue = (Boolean) false;
             break;
@@ -20066,7 +20017,6 @@ if (IsEnabled(MaxSingleAllocSizeInMBFlag))
         case MemProtectHeapConcurrentRepeatStressFlag:
             retValue = (Boolean) false;
             break;
-        #endif
         #if ENABLE_PARTIAL_GC
         case MemProtectHeapPartialStressFlag:
             retValue = (Boolean) false;

@@ -326,7 +326,6 @@ protected:
     Segment * segment;
     HeapBlockType const heapBlockType;
     bool needOOMRescan;                             // Set if we OOMed while marking a particular object
-#if ENABLE_CONCURRENT_GC
     bool isPendingConcurrentSweep;
 #if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
     // This flag is to identify whether this block was made available for allocations during the concurrent sweep and 
@@ -339,7 +338,6 @@ protected:
     // When allocate from a block during concurrent sweep some checks need to be delayed until
     // the free and mark bits are rebuilt. This flag helps skip those validations until then.
     bool wasAllocatedFromDuringSweep;
-#endif
 #endif
 #endif
 
@@ -422,11 +420,9 @@ public:
 enum SweepMode
 {
     SweepMode_InThread,
-#if ENABLE_CONCURRENT_GC
     SweepMode_Concurrent,
 #if ENABLE_PARTIAL_GC
     SweepMode_ConcurrentPartial
-#endif
 #endif
 };
 
@@ -437,9 +433,7 @@ enum SweepState
     SweepStateSwept,                // the block is partially allocated, no object needs to be swept or finalized
     SweepStateFull,                 // the block is full, no object needs to be swept or finalized
     SweepStatePendingDispose,       // the block has object that needs to be finalized
-#if ENABLE_CONCURRENT_GC
     SweepStatePendingSweep,         // the block has object that needs to be swept
-#endif
 };
 
 template <class TBlockAttributes>

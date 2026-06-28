@@ -279,7 +279,6 @@ SmallHeapBlockT<TBlockAttributes>::Init(ushort objectSize, ushort objectCount)
 #else
     this->lastFreeCount = this->objectCount;
 #endif
-#if ENABLE_CONCURRENT_GC
     this->isPendingConcurrentSweep = false;
 #if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
     if (CONFIG_FLAG_RELEASE(EnableConcurrentSweepAlloc))
@@ -293,7 +292,6 @@ SmallHeapBlockT<TBlockAttributes>::Init(ushort objectSize, ushort objectCount)
         this->lastObjectsAllocatedDuringConcurrentSweepCount = 0;
 #endif
     }
-#endif
 #endif
 
     Assert(!this->isInAllocator);
@@ -366,11 +364,7 @@ SmallHeapBlockT<TBlockAttributes>::SetPage(__in_ecount_pagesize char * baseAddre
 
     Assert(this->explicitFreeBits.Count() == 0);
 
-#if ENABLE_CONCURRENT_GC
     Assert(recycler->IsConcurrentMarkState() || !recycler->IsMarkState() || recycler->IsCollectionDisabled());
-#else
-    Assert(!recycler->IsMarkState() || recycler->IsCollectionDisabled());
-#endif
 
     Assert(this->bucketIndex <= 0xFF);
 
@@ -631,14 +625,12 @@ SmallHeapBlockT<TBlockAttributes>::FindHeapObjectImpl(void* objectAddress, Recyc
         // REVIEW: Checking if an object if free is strictly not necessary
         // In all case, we should have a valid object, For memory protect heap, this is just to make sure we don't
         // free pointers that are invalid.
-#if ENABLE_CONCURRENT_GC
         if (recycler->IsConcurrentSweepExecutingState())
         {
             // TODO: unless we know the state of the heap block, we don't know.
             // skip the check for now.
         }
         else
-#endif
         {
             if (flags & FindHeapObjectFlags_ClearedAllocators)
             {
@@ -1172,7 +1164,6 @@ SmallHeapBlockT<TBlockAttributes>::AdjustPartialUncollectedAllocBytes(RecyclerSw
     this->oldFreeCount = currentFreeCount;
 
     uint newObjectExpectSweepCount = expectSweepCount;
-#if ENABLE_CONCURRENT_GC
     if (expectSweepCount != 0 && !recyclerSweep.InPartialCollect())
     {
         // We don't know which objects that we are going sweep are old and which object are new
@@ -1194,7 +1185,6 @@ SmallHeapBlockT<TBlockAttributes>::AdjustPartialUncollectedAllocBytes(RecyclerSw
             newObjectExpectSweepCount = 0;
         }
     }
-#endif
 
     // The page can be old, or it is full (where we set lastFreeCount to 0)
     // Otherwise, the newly allocated count must be bigger then the expect sweep count
@@ -1233,9 +1223,7 @@ SmallHeapBlockT<TBlockAttributes>::Sweep(RecyclerSweep& recyclerSweep, bool queu
 {
     Assert(this->address != nullptr);
     Assert(this->segment != nullptr);
-#if ENABLE_CONCURRENT_GC
     Assert(!this->isPendingConcurrentSweep);
-#endif
 
 #if DBG && ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
     // In concurrent sweep pass1, we mark the object directly in the mark bit vector for objects allocated during the sweep to prevent them from getting swept during the ongoing sweep itself.
@@ -1372,7 +1360,6 @@ SmallHeapBlockT<TBlockAttributes>::Sweep(RecyclerSweep& recyclerSweep, bool queu
     // object needs to be clear so that the reference will not be given out again
     // in other script during concurrent sweep or finalizer called before.
 
-#if ENABLE_CONCURRENT_GC
     if (queuePendingSweep)
     {
         Assert(finalizeCount == 0);
@@ -1390,9 +1377,7 @@ SmallHeapBlockT<TBlockAttributes>::Sweep(RecyclerSweep& recyclerSweep, bool queu
 #endif
         return SweepStatePendingSweep;
     }
-#else
     Assert(!recyclerSweep.IsBackground());
-#endif
 
 #ifdef RECYCLER_TRACE
     recycler->PrintBlockStatus(this->heapBucket, this, u"[**16**] calling SweepObjects.");
@@ -1455,12 +1440,8 @@ template <SweepMode mode>
 void
 SmallHeapBlockT<TBlockAttributes>::SweepObjects(Recycler * recycler)
 {
-#if ENABLE_CONCURRENT_GC
     Assert(mode == SweepMode_InThread || this->isPendingConcurrentSweep);
     Assert(mode == SweepMode_InThread || !this->IsAnyFinalizableBlock());
-#else
-    Assert(mode == SweepMode_InThread);
-#endif
     Assert(this->IsFreeBitsValid());
 #if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
     AssertMsg(!hasFinishedSweepObjects, "Block in SweepObjects more than once during the ongoing sweep.");
@@ -1519,7 +1500,7 @@ SmallHeapBlockT<TBlockAttributes>::SweepObjects(Recycler * recycler)
                 Assert((this->ObjectInfo(objectIndex) & ImplicitRootBit) == 0);
                 FreeObject* addr = (FreeObject*)objectAddress;
 
-#if ENABLE_PARTIAL_GC && ENABLE_CONCURRENT_GC
+#if ENABLE_PARTIAL_GC
                 if (mode != SweepMode_ConcurrentPartial)
 #endif
                 {
@@ -1547,11 +1528,9 @@ SmallHeapBlockT<TBlockAttributes>::SweepObjects(Recycler * recycler)
 
     Assert(sweepCount == expectedSweepCount);
 
-#if ENABLE_CONCURRENT_GC
     this->isPendingConcurrentSweep = false;
-#endif
 
-#if ENABLE_PARTIAL_GC && ENABLE_CONCURRENT_GC
+#if ENABLE_PARTIAL_GC
     if (mode == SweepMode_ConcurrentPartial)
     {
         Assert(recycler->inPartialCollectMode);

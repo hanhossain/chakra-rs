@@ -524,11 +524,9 @@ namespace Js
         LibraryStackFrameDebuggerFlag,
         #ifdef RECYCLER_STRESS
         RecyclerStressFlag,
-        #if ENABLE_CONCURRENT_GC
         RecyclerBackgroundStressFlag,
         RecyclerConcurrentStressFlag,
         RecyclerConcurrentRepeatStressFlag,
-        #endif
         #if ENABLE_PARTIAL_GC
         RecyclerPartialStressFlag,
         #endif
@@ -536,11 +534,9 @@ namespace Js
         RecyclerInduceFalsePositivesFlag,
         #endif // RECYCLER_STRESS
         RecyclerForceMarkInteriorFlag,
-        #if ENABLE_CONCURRENT_GC
         RecyclerPriorityBoostTimeoutFlag,
         RecyclerThreadCollectTimeoutFlag,
         EnableConcurrentSweepAllocFlag, ecsaFlag,
-        #endif
         #ifdef RECYCLER_PAGE_HEAP
         PageHeapFlag,
         PageHeapAllocStackFlag,
@@ -655,11 +651,9 @@ namespace Js
         #endif
         #ifdef RECYCLER_STRESS
         MemProtectHeapStressFlag,
-        #if ENABLE_CONCURRENT_GC
         MemProtectHeapBackgroundStressFlag,
         MemProtectHeapConcurrentStressFlag,
         MemProtectHeapConcurrentRepeatStressFlag,
-        #endif
         #if ENABLE_PARTIAL_GC
         MemProtectHeapPartialStressFlag,
         #endif
@@ -2021,11 +2015,9 @@ namespace Js
         Boolean LibraryStackFrameDebugger;
         #ifdef RECYCLER_STRESS
             Boolean RecyclerStress;
-            #if ENABLE_CONCURRENT_GC
                 Boolean RecyclerBackgroundStress;
                 Boolean RecyclerConcurrentStress;
                 Boolean RecyclerConcurrentRepeatStress;
-            #endif
             #if ENABLE_PARTIAL_GC
                 Boolean RecyclerPartialStress;
             #endif
@@ -2033,11 +2025,9 @@ namespace Js
             Boolean RecyclerInduceFalsePositives;
         #endif // RECYCLER_STRESS
         Boolean RecyclerForceMarkInterior;
-        #if ENABLE_CONCURRENT_GC
             Number RecyclerPriorityBoostTimeout;
             Number RecyclerThreadCollectTimeout;
             Boolean EnableConcurrentSweepAlloc; Boolean ecsa;
-        #endif
         #ifdef RECYCLER_PAGE_HEAP
             Number PageHeap;
             Boolean PageHeapAllocStack;
@@ -2152,11 +2142,9 @@ namespace Js
         #endif
         #ifdef RECYCLER_STRESS
             Boolean MemProtectHeapStress;
-            #if ENABLE_CONCURRENT_GC
                 Boolean MemProtectHeapBackgroundStress;
                 Boolean MemProtectHeapConcurrentStress;
                 Boolean MemProtectHeapConcurrentRepeatStress;
-            #endif
             #if ENABLE_PARTIAL_GC
                 Boolean MemProtectHeapPartialStress;
             #endif

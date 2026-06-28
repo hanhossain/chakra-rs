@@ -1202,7 +1202,6 @@ int32_t (*pfSetLibraryStackFrameDebuggerFlag)(bool flag);
 bool (*pfIsEnabledRecyclerStressFlag)();
 int32_t (*pfGetRecyclerStressFlag)(bool *flag);
 int32_t (*pfSetRecyclerStressFlag)(bool flag);
-#if ENABLE_CONCURRENT_GC
 bool (*pfIsEnabledRecyclerBackgroundStressFlag)();
 int32_t (*pfGetRecyclerBackgroundStressFlag)(bool *flag);
 int32_t (*pfSetRecyclerBackgroundStressFlag)(bool flag);
@@ -1212,7 +1211,6 @@ int32_t (*pfSetRecyclerConcurrentStressFlag)(bool flag);
 bool (*pfIsEnabledRecyclerConcurrentRepeatStressFlag)();
 int32_t (*pfGetRecyclerConcurrentRepeatStressFlag)(bool *flag);
 int32_t (*pfSetRecyclerConcurrentRepeatStressFlag)(bool flag);
-#endif
 #if ENABLE_PARTIAL_GC
 bool (*pfIsEnabledRecyclerPartialStressFlag)();
 int32_t (*pfGetRecyclerPartialStressFlag)(bool *flag);
@@ -1228,7 +1226,6 @@ int32_t (*pfSetRecyclerInduceFalsePositivesFlag)(bool flag);
 bool (*pfIsEnabledRecyclerForceMarkInteriorFlag)();
 int32_t (*pfGetRecyclerForceMarkInteriorFlag)(bool *flag);
 int32_t (*pfSetRecyclerForceMarkInteriorFlag)(bool flag);
-#if ENABLE_CONCURRENT_GC
 bool (*pfIsEnabledRecyclerPriorityBoostTimeoutFlag)();
 int32_t (*pfGetRecyclerPriorityBoostTimeoutFlag)(int *flag);
 int32_t (*pfSetRecyclerPriorityBoostTimeoutFlag)(int flag);
@@ -1241,7 +1238,6 @@ int32_t (*pfSetEnableConcurrentSweepAllocFlag)(bool flag);
 bool (*pfIsEnabledecsaFlag)();
 int32_t (*pfGetecsaFlag)(bool *flag);
 int32_t (*pfSetecsaFlag)(bool flag);
-#endif
 #ifdef RECYCLER_PAGE_HEAP
 bool (*pfIsEnabledPageHeapFlag)();
 int32_t (*pfGetPageHeapFlag)(int *flag);
@@ -1478,7 +1474,6 @@ int32_t (*pfSetMemProtectHeapFlag)(bool flag);
 bool (*pfIsEnabledMemProtectHeapStressFlag)();
 int32_t (*pfGetMemProtectHeapStressFlag)(bool *flag);
 int32_t (*pfSetMemProtectHeapStressFlag)(bool flag);
-#if ENABLE_CONCURRENT_GC
 bool (*pfIsEnabledMemProtectHeapBackgroundStressFlag)();
 int32_t (*pfGetMemProtectHeapBackgroundStressFlag)(bool *flag);
 int32_t (*pfSetMemProtectHeapBackgroundStressFlag)(bool flag);
@@ -1488,7 +1483,6 @@ int32_t (*pfSetMemProtectHeapConcurrentStressFlag)(bool flag);
 bool (*pfIsEnabledMemProtectHeapConcurrentRepeatStressFlag)();
 int32_t (*pfGetMemProtectHeapConcurrentRepeatStressFlag)(bool *flag);
 int32_t (*pfSetMemProtectHeapConcurrentRepeatStressFlag)(bool flag);
-#endif
 #if ENABLE_PARTIAL_GC
 bool (*pfIsEnabledMemProtectHeapPartialStressFlag)();
 int32_t (*pfGetMemProtectHeapPartialStressFlag)(bool *flag);

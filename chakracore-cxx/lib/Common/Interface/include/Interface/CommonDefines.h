@@ -118,7 +118,6 @@
 #define USE_STATIC_VPM 0
 
 
-#if ENABLE_CONCURRENT_GC
 // Write-barrier refers to a software write barrier implementation using a card table.
 // Write watch refers to a hardware backed write-watch feature supported by the Windows memory manager.
 // Both are used for detecting changes to memory for concurrent and partial GC.
@@ -135,12 +134,6 @@
 #define ENABLE_BACKGROUND_PAGE_ZEROING 1
 #define ENABLE_BACKGROUND_PAGE_FREEING 1
 #define ENABLE_RECYCLER_TYPE_TRACKING 1
-#else
-#define ENABLE_PARTIAL_GC 0
-#define ENABLE_BACKGROUND_PAGE_ZEROING 0
-#define ENABLE_BACKGROUND_PAGE_FREEING 0
-#define ENABLE_RECYCLER_TYPE_TRACKING 0
-#endif
 
 #if ENABLE_BACKGROUND_PAGE_ZEROING && !ENABLE_BACKGROUND_PAGE_FREEING
 #error "Background page zeroing can't be turned on if freeing pages in the background is disabled"
@@ -501,10 +494,6 @@
 // Dependent flags
 //  - flags values that are dependent on other flags
 //----------------------------------------------------------------------------------------------------
-
-#if !ENABLE_CONCURRENT_GC
-#undef IDLE_DECOMMIT_ENABLED   // Currently idle decommit can only be enabled if concurrent gc is enabled
-#endif
 
 #ifdef BAILOUT_INJECTION
 #define ENABLE_PREJIT
