@@ -712,11 +712,7 @@ private:
 #define DEFAULT_CONFIG_KeepRecyclerTrackData  (false)
 #define DEFAULT_CONFIG_EnableBGFreeZero (true)
 
-#if !GLOBAL_ENABLE_WRITE_BARRIER
-#define DEFAULT_CONFIG_ForceSoftwareWriteBarrier  (false)
-#else
 #define DEFAULT_CONFIG_ForceSoftwareWriteBarrier  (true)
-#endif
 #define DEFAULT_CONFIG_WriteBarrierTest (false)
 #define DEFAULT_CONFIG_VerifyBarrierBit  (false)
 

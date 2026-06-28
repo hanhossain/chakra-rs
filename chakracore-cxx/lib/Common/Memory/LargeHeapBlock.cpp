@@ -175,7 +175,7 @@ LargeHeapBlock::Delete(LargeHeapBlock * heapBlock)
 
 LargeHeapBlock::LargeHeapBlock(char * address, size_t pageCount, Segment * segment, uint objectCount, LargeHeapBucket* bucket)
     : HeapBlock(LargeBlockType), pageCount(pageCount), allocAddressEnd(address), objectCount(objectCount), bucket(bucket), freeList(this)
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
     ,wbVerifyBits(&HeapAllocator::Instance)
 #endif
 {
@@ -1004,7 +1004,7 @@ LargeHeapBlock::VerifyMark()
 
             if (recycler->VerifyMark(objectAddress, target))
             {
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
                 if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && CONFIG_FLAG(VerifyBarrierBit))
                 {
                     this->WBVerifyBitIsSet(objectAddress);
@@ -2379,7 +2379,7 @@ LargeHeapBlock::CapturePageHeapFreeStack()
 }
 #endif
 
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
 std::recursive_mutex LargeHeapBlock::wbVerifyBitsLock;
 void LargeHeapBlock::WBSetBit(char* addr)
 {

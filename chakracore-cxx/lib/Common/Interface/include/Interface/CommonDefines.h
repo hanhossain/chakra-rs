@@ -114,19 +114,6 @@
 // templatized code
 #define USE_STATIC_VPM 0
 
-
-// Write-barrier refers to a software write barrier implementation using a card table.
-// Write watch refers to a hardware backed write-watch feature supported by the Windows memory manager.
-// Both are used for detecting changes to memory for concurrent and partial GC.
-// RECYCLER_WRITE_BARRIER controls the former, RECYCLER_WRITE_WATCH controls the latter.
-// GLOBAL_ENABLE_WRITE_BARRIER controls the smart pointer wrapper at compile time, every Field annotation on the
-// recycler allocated class will take effect if GLOBAL_ENABLE_WRITE_BARRIER is 1, otherwise only the class declared
-// with FieldWithBarrier annotations use the WriteBarrierPtr<>, see WriteBarrierMacros.h and RecyclerPointers.h for detail
-
-#if !GLOBAL_ENABLE_WRITE_BARRIER
-#define GLOBAL_ENABLE_WRITE_BARRIER 1
-#endif
-
 #define ENABLE_PARTIAL_GC 1
 #define ENABLE_BACKGROUND_PAGE_ZEROING 1
 #define ENABLE_BACKGROUND_PAGE_FREEING 1

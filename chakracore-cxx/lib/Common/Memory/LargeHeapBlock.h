@@ -320,7 +320,7 @@ public:
     void ** GetTrackerDataArray();
 #endif
 
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
 private:
     static std::recursive_mutex wbVerifyBitsLock;
     BVSparse<HeapAllocator> wbVerifyBits;

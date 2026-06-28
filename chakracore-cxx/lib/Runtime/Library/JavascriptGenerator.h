@@ -105,9 +105,7 @@ public:
     void SetFrame(InterpreterStackFrame* frame, size_t bytes);
     void SetFrameSlots(uint slotCount, Field(Var)* frameSlotArray);
 
-#if GLOBAL_ENABLE_WRITE_BARRIER
     virtual void Finalize(bool isShutdown) override;
-#endif
 
     class EntryInfo
     {

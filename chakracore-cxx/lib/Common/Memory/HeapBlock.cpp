@@ -988,7 +988,7 @@ SmallHeapBlockT<TBlockAttributes>::VerifyMark()
                         void* target = *(void**) objectAddress;
                         if (recycler->VerifyMark(objectAddress, target))
                         {
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
                             if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && CONFIG_FLAG(VerifyBarrierBit))
                             {
                                 this->WBVerifyBitIsSet(objectAddress);
@@ -1472,7 +1472,7 @@ SmallHeapBlockT<TBlockAttributes>::EnqueueProcessedObject(FreeObject ** list, vo
     freeObject->SetNext(*list);
     *list = freeObject;
 
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
     if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && CONFIG_FLAG(RecyclerVerifyMark))
     {
         this->WBClearObject((char*)objectAddress);

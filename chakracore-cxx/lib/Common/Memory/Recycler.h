@@ -1254,19 +1254,11 @@ public:
 #define DEFINE_RECYCLER_NOTHROW_ALLOC(AllocFunc, attributes) DEFINE_RECYCLER_NOTHROW_ALLOC_BASE(AllocFunc, AllocWithAttributes, attributes)
 #define DEFINE_RECYCLER_NOTHROW_ALLOC_ZERO(AllocFunc, attributes) DEFINE_RECYCLER_NOTHROW_ALLOC_BASE(AllocFunc, AllocZeroWithAttributes, attributes)
 
-#if GLOBAL_ENABLE_WRITE_BARRIER
     DEFINE_RECYCLER_ALLOC(Alloc, WithBarrierBit);
     DEFINE_RECYCLER_ALLOC_ZERO(AllocZero, WithBarrierBit);
     DEFINE_RECYCLER_ALLOC(AllocFinalized, FinalizableWithBarrierObjectBits);
     DEFINE_RECYCLER_ALLOC(AllocTracked, ClientTrackableObjectWithBarrierBits);
     DEFINE_RECYCLER_ALLOC(AllocFinalizedClientTracked, ClientTrackableObjectWithBarrierBits);
-#else
-    DEFINE_RECYCLER_ALLOC(Alloc, NoBit);
-    DEFINE_RECYCLER_ALLOC_ZERO(AllocZero, NoBit);
-    DEFINE_RECYCLER_ALLOC(AllocFinalized, FinalizableObjectBits);
-    DEFINE_RECYCLER_ALLOC(AllocTracked, ClientTrackableObjectBits);
-    DEFINE_RECYCLER_ALLOC(AllocFinalizedClientTracked, ClientFinalizableObjectBits);
-#endif
 
 #ifdef RECYCLER_WRITE_BARRIER_ALLOC
     DEFINE_RECYCLER_ALLOC(AllocWithBarrier, WithBarrierBit);
@@ -1966,7 +1958,6 @@ private:
 
     bool ProcessObjectBeforeCollectCallbacks(bool atShutdown = false);
 
-#if GLOBAL_ENABLE_WRITE_BARRIER
 private:
     typedef JsUtil::BaseDictionary<void *, size_t, HeapAllocator, PrimeSizePolicy, RecyclerPointerComparer, JsUtil::SimpleDictionaryEntry, JsUtil::AsymetricResizeLock> PendingWriteBarrierBlockMap;
 
@@ -1974,9 +1965,8 @@ private:
 public:
     void RegisterPendingWriteBarrierBlock(void* address, size_t bytes);
     void UnRegisterPendingWriteBarrierBlock(void* address);
-#endif
 
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
 private:
     static Recycler* recyclerList;
     static std::recursive_mutex recyclerListLock;
@@ -2168,7 +2158,7 @@ public:
 class CollectedRecyclerWeakRefHeapBlock : public HeapBlock
 {
 public:
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
     virtual void WBVerifyBitIsSet(char* addr) override { Assert(false); }
     virtual void WBSetBit(char* addr) override { Assert(false); }
     virtual void WBSetBitRange(char* addr, uint count) override { Assert(false); }
@@ -2320,18 +2310,10 @@ class TypeAllocatorFunc<Recycler, T> : public _RecyclerAllocatorFunc<_RecyclerLe
 {
 };
 
-#if GLOBAL_ENABLE_WRITE_BARRIER
 template <typename T>
 class TypeAllocatorFunc<Recycler, T *> : public _RecyclerAllocatorFunc<_RecyclerWriteBarrierPolicy>
 {
 };
-#else
-// Partial template specialization; applies to T when it is a pointer
-template <typename T>
-class TypeAllocatorFunc<Recycler, T *> : public _RecyclerAllocatorFunc<_RecyclerNonLeafPolicy>
-{
-};
-#endif
 
 // Dummy class to choose the allocation function
 class RecyclerLeafAllocator
@@ -2388,11 +2370,7 @@ public:
 // Partial template specialization to allocate as non leaf
 template <typename T>
 class TypeAllocatorFunc<RecyclerNonLeafAllocator, T> :
-#if GLOBAL_ENABLE_WRITE_BARRIER
     public _RecyclerAllocatorFunc<_RecyclerWriteBarrierPolicy>
-#else
-    public _RecyclerAllocatorFunc<_RecyclerNonLeafPolicy>
-#endif
 {
 };
 

@@ -134,7 +134,7 @@ struct _ArrayWriteBarrier<_write_barrier_policy>
     template <class T>
     static void WriteBarrierSetVerifyBits(T * address, size_t count)
     {
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
         Recycler::WBSetBitRange((char*)address, (uint)(sizeof(T) * count / sizeof(void*)));
 #endif
     }
@@ -387,7 +387,7 @@ public:
     }
     void WriteBarrierSet(T * ptr)
     {
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
         // set the verification bits before updating the reference so it's ready to verify while background marking hit the reference
         Recycler::WBSetBit((char*)this);
 #endif
@@ -406,7 +406,7 @@ public:
 
     WriteBarrierPtr& operator++()  // prefix ++
     {
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
         Recycler::WBSetBit((char*)this);
 #endif
 
@@ -425,7 +425,7 @@ public:
 
     WriteBarrierPtr& operator--()  // prefix --
     {
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
         Recycler::WBSetBit((char*)this);
 #endif
 

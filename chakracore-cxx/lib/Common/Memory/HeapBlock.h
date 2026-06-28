@@ -358,13 +358,11 @@ public:
         return false;
     }
 #if DBG
-#if GLOBAL_ENABLE_WRITE_BARRIER
     virtual void WBSetBit(char* addr) = 0;
     virtual void WBSetBitRange(char* addr, uint count) = 0;
     virtual void WBClearBit(char* addr) = 0;
     virtual void WBVerifyBitIsSet(char* addr) = 0;
     virtual void WBClearObject(char* addr) = 0;
-#endif
     static void PrintVerifyMarkFailure(Recycler* recycler, char* objectAddress, char* target);
 #endif
 
@@ -515,7 +513,7 @@ public:
     void ProtectUnusablePages() {}
     void RestoreUnusablePages() {}
 
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
     virtual void WBVerifyBitIsSet(char* addr) override
     {
         uint index = (uint)(addr - this->address) / sizeof(void*);

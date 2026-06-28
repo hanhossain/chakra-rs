@@ -15,8 +15,7 @@
 //
 //
 
-#if GLOBAL_ENABLE_WRITE_BARRIER
-
+// TODO (hanhossain): remove Field
 #define Field(type, ...) \
     typename WriteBarrierFieldTypeTraits<type, ##__VA_ARGS__>::Type
 #define FieldNoBarrier(type) \
@@ -24,17 +23,6 @@
 
 #define NO_WRITE_BARRIER_TAG_TYPE(arg) arg, _no_write_barrier_tag
 #define NO_WRITE_BARRIER_TAG(arg) arg, _no_write_barrier_tag()
-
-#else
-
-#define Field(type, ...) type
-#define FieldNoBarrier(type) type
-
-#define NO_WRITE_BARRIER_TAG_TYPE(arg) arg
-#define NO_WRITE_BARRIER_TAG(arg) arg
-
-#endif
-
 
 // use with FieldWithBarrier structs
 #define FORCE_NO_WRITE_BARRIER_TAG(arg) arg, _no_write_barrier_tag()

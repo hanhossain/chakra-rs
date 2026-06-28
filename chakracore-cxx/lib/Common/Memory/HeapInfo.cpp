@@ -1872,12 +1872,10 @@ HeapInfo::DecommitNow(bool all)
 size_t
 HeapInfo::GetUsedBytes()
 {
-#if GLOBAL_ENABLE_WRITE_BARRIER
     if (CONFIG_FLAG(ForceSoftwareWriteBarrier))
     {
         Assert(recyclerPageAllocator.usedBytes == 0);
     }
-#endif
 
     size_t usedBytes = 0;
     ForEachPageAllocator([&](IdleDecommitPageAllocator * pageAlloc)
@@ -1925,13 +1923,11 @@ HeapInfo::GetRecyclerPageAllocator()
 {
     // TODO: SWB this is for Finalizable leaf allocation, which we didn't implement leaf bucket for it
     // remove this after the finalizable leaf bucket is implemented
-#if GLOBAL_ENABLE_WRITE_BARRIER
     if (CONFIG_FLAG(ForceSoftwareWriteBarrier))
     {
         return &this->recyclerWithBarrierPageAllocator;
     }
     else
-#endif
     {
 #if !defined(RECYCLER_WRITE_BARRIER_ALLOC_SEPARATE_PAGE)
         return &this->recyclerPageAllocator;

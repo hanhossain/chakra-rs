@@ -226,9 +226,7 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
     , objectBeforeCollectCallbackList(nullptr)
     , objectBeforeCollectCallbackState(ObjectBeforeCollectCallback_None)
     , objectBeforeCollectCallbackArena(u"BeforeCollect-List", pageAllocator, Js::Throw::OutOfMemory)
-#if GLOBAL_ENABLE_WRITE_BARRIER
     , pendingWriteBarrierBlockMap(&HeapAllocator::Instance)
-#endif
 {
 
 #ifdef RECYCLER_MEMORY_VERIFY
@@ -359,7 +357,7 @@ Recycler::ResetThreadId()
 Recycler::~Recycler()
 {
     Assert(!this->isAborting);
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
     recyclerListLock.lock();
     if (recyclerList == this)
     {
@@ -609,7 +607,7 @@ Recycler::RootRelease(void* obj, uint *count)
     // candidate GC to indicate this fact
     this->CollectNow<CollectExhaustiveCandidate>();
 }
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
 Recycler* Recycler::recyclerList = nullptr;
 std::recursive_mutex Recycler::recyclerListLock;
 #endif
@@ -752,7 +750,7 @@ Recycler::Initialize(const bool forceInThread, JsUtil::ThreadService *threadServ
         }
     }
 
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
     recyclerListLock.lock();
     this->next = recyclerList;
     recyclerList = this;
@@ -3826,7 +3824,6 @@ Recycler::BackgroundRescan(RescanFlags rescanFlags)
 
     RECYCLER_PROFILE_EXEC_BACKGROUND_BEGIN(this, Js::BackgroundRescanPhase);
 
-#if GLOBAL_ENABLE_WRITE_BARRIER
     if (CONFIG_FLAG(ForceSoftwareWriteBarrier))
     {
         pendingWriteBarrierBlockMap.LockResize();
@@ -3836,7 +3833,6 @@ Recycler::BackgroundRescan(RescanFlags rescanFlags)
         });
         pendingWriteBarrierBlockMap.UnlockResize();
     }
-#endif
 
     size_t rescannedPageCount = heapBlockMap.Rescan(this, ((rescanFlags & RescanFlags_ResetWriteWatch) != 0));
 
@@ -7928,7 +7924,6 @@ Recycler::NotifyFree(char *address, size_t size)
 #endif
 }
 
-#if GLOBAL_ENABLE_WRITE_BARRIER
 void
 Recycler::RegisterPendingWriteBarrierBlock(void* address, size_t bytes)
 {
@@ -7949,9 +7944,8 @@ Recycler::UnRegisterPendingWriteBarrierBlock(void* address)
         pendingWriteBarrierBlockMap.Remove(address);
     }
 }
-#endif
 
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
 void
 Recycler::WBVerifyBitIsSet(char* addr, char* target)
 {

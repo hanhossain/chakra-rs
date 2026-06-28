@@ -75,7 +75,7 @@ HeapBlockMap32::Mark(void * candidate, MarkContext * markContext)
         return;
     }
 
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
     if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && CONFIG_FLAG(VerifyBarrierBit))
     {
         Recycler::WBVerifyBitIsSet((char*)markContext->parentRef, (char*)candidate);

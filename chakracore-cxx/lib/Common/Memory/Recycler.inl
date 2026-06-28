@@ -95,7 +95,6 @@ Recycler::AllocWithAttributesInlined(size_t size)
 
     char* memBlock = nullptr;
     HeapInfo * heapInfo = this->GetHeapInfoForAllocation<attributes>();
-#if GLOBAL_ENABLE_WRITE_BARRIER
     if (CONFIG_FLAG(ForceSoftwareWriteBarrier))
     {
         if ((attributes & InternalObjectInfoBitMask) != LeafBit)
@@ -110,7 +109,6 @@ Recycler::AllocWithAttributesInlined(size_t size)
         }
     }
     else
-#endif
     {
         memBlock = RealAlloc<(ObjectInfoBits)(attributes & InternalObjectInfoBitMask), nothrow>(heapInfo, allocSize);
     }
@@ -174,7 +172,7 @@ Recycler::AllocWithAttributesInlined(size_t size)
 
 #pragma prefast(suppress:6313, "attributes is a template parameter and can be 0")
     if ((attributes & NewTrackBit) &&
-#if GLOBAL_ENABLE_WRITE_BARRIER && defined(RECYCLER_STATS)
+#if defined(RECYCLER_STATS)
         true  // Trigger WB to force re-mark, to work around old mark false positive
 #else
         (attributes & WithBarrierBit)
@@ -264,7 +262,7 @@ Recycler::AllocZeroWithAttributesInlined(size_t size)
     VerifyPageHeapFillAfterAlloc(obj, size, attributes);
 #endif
 
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
     if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && CONFIG_FLAG(RecyclerVerifyMark))
     {
         this->FindHeapBlock(obj)->WBClearObject(obj);
