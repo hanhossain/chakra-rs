@@ -780,7 +780,7 @@ namespace Js
         return !!pActiveFuncs->TestAndSet(this->GetFunctionNumber());
     }
 
-    void FunctionBody::UpdateActiveFunctionsForOneDataSet(ActiveFunctionSet *pActiveFuncs, FunctionCodeGenRuntimeData *parentData, Field(FunctionCodeGenRuntimeData*)* dataSet, uint count) const
+    void FunctionBody::UpdateActiveFunctionsForOneDataSet(ActiveFunctionSet *pActiveFuncs, FunctionCodeGenRuntimeData *parentData, typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData*>::Type* dataSet, uint count) const
     {
         FunctionCodeGenRuntimeData *inlineeData;
         for (uint i = 0; i < count; i++)
@@ -826,21 +826,21 @@ namespace Js
             return;
         }
         {
-            Field(FunctionCodeGenRuntimeData*)* data = this->GetCodeGenRuntimeData();
+            typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData*>::Type* data = this->GetCodeGenRuntimeData();
             if (data != nullptr)
             {
                 this->UpdateActiveFunctionsForOneDataSet(pActiveFuncs, nullptr, data, this->GetProfiledCallSiteCount());
             }
         }
         {
-            Field(FunctionCodeGenRuntimeData*)* data = this->GetCodeGenGetSetRuntimeData();
+            typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData*>::Type* data = this->GetCodeGenGetSetRuntimeData();
             if (data != nullptr)
             {
                 this->UpdateActiveFunctionsForOneDataSet(pActiveFuncs, nullptr, data, this->GetInlineCacheCount());
             }
         }
         {
-            Field(FunctionCodeGenRuntimeData*)* data = this->GetCodeGenCallbackRuntimeData();
+            typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData*>::Type* data = this->GetCodeGenCallbackRuntimeData();
             if (data != nullptr)
             {
                 this->UpdateActiveFunctionsForOneDataSet(pActiveFuncs, nullptr, data, this->GetProfiledCallSiteCount());
@@ -848,7 +848,7 @@ namespace Js
         }
         {
 #if ENABLE_NATIVE_CODEGEN
-            Field(FunctionCodeGenRuntimeData*)* data = this->GetCodeGenCallApplyTargetRuntimeData();
+            typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData*>::Type* data = this->GetCodeGenCallApplyTargetRuntimeData();
             if (data != nullptr)
             {
                 this->UpdateActiveFunctionsForOneDataSet(pActiveFuncs, nullptr, data, this->GetProfiledCallApplyCallSiteCount());
@@ -4282,7 +4282,7 @@ namespace Js
         Assert(this->GetConstTable() == nullptr);
         Assert(GetConstantCount() > FirstRegSlot);
 
-        this->SetConstTable(RecyclerNewArrayZ(this->m_scriptContext->GetRecycler(), Field(Var), GetConstantCount()));
+        this->SetConstTable(RecyclerNewArrayZ(this->m_scriptContext->GetRecycler(), typename WriteBarrierFieldTypeTraits<Var>::Type, GetConstantCount()));
 
         // Initialize with the root object, which will always be recorded here.
         Js::RootObjectBase * rootObject = this->LoadRootObject();
@@ -4975,7 +4975,7 @@ namespace Js
             DynamicProfileInfoList * profileInfoList = GetScriptContext()->GetProfileInfoList();
             if (profileInfoList)
             {
-                FOREACH_SLISTBASE_ENTRY_EDITING(Field(DynamicProfileInfo*), info, profileInfoList, iter)
+                FOREACH_SLISTBASE_ENTRY_EDITING(typename WriteBarrierFieldTypeTraits<DynamicProfileInfo*>::Type, info, profileInfoList, iter)
                 {
                     if (info->HasFunctionBody() && info->GetFunctionBody() == this)
                     {
@@ -6253,14 +6253,14 @@ namespace Js
         return IncObjLiteralCount();
     }
 
-    Field(DynamicType*)* FunctionBody::GetObjectLiteralTypeRef(uint index)
+    typename WriteBarrierFieldTypeTraits<DynamicType*>::Type* FunctionBody::GetObjectLiteralTypeRef(uint index)
     {
         Assert(index < GetObjLiteralCount());
         auto literalTypes = this->GetObjectLiteralTypes();
         Assert(literalTypes != nullptr);
         return literalTypes + index;
     }
-    Field(DynamicType*)* FunctionBody::GetObjectLiteralTypeRefWithLock(uint index)
+    typename WriteBarrierFieldTypeTraits<DynamicType*>::Type* FunctionBody::GetObjectLiteralTypeRefWithLock(uint index)
     {
         Assert(index < GetObjLiteralCount());
         auto literalTypes = this->GetObjectLiteralTypesWithLock();
@@ -6509,8 +6509,8 @@ namespace Js
             this->SetAuxPtr(auxType, codeGenRuntimeData);
         }
 
-        Field(FunctionCodeGenRuntimeData *)* codeGenRuntimeData = this->GetAuxPtr<auxType>();
-        Field(FunctionCodeGenRuntimeData *) const inlineeData = codeGenRuntimeData[profiledCallSiteId];
+        typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData *>::Type* codeGenRuntimeData = this->GetAuxPtr<auxType>();
+        typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData *>::Type const inlineeData = codeGenRuntimeData[profiledCallSiteId];
         if (inlineeData == nullptr)
         {
             FunctionCodeGenRuntimeData * runtimeData = RecyclerNew(recycler, FunctionCodeGenRuntimeData, inlinee);
@@ -6557,7 +6557,7 @@ namespace Js
     {
         Assert(callApplyCallSiteId < GetProfiledCallApplyCallSiteCount());
 
-        Field(FunctionCodeGenRuntimeData*)* codeGenRuntimeData = this->GetCodeGenCallApplyTargetRuntimeDataWithLock();
+        typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData*>::Type* codeGenRuntimeData = this->GetCodeGenCallApplyTargetRuntimeDataWithLock();
         return codeGenRuntimeData ? codeGenRuntimeData[callApplyCallSiteId] : nullptr;
     }
 
@@ -6607,7 +6607,7 @@ namespace Js
     {
         Assert(profiledCallSiteId < profiledCallSiteCount);
 
-        Field(FunctionCodeGenRuntimeData*)* codeGenRuntimeData = this->GetCodeGenCallbackRuntimeDataWithLock();
+        typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData*>::Type* codeGenRuntimeData = this->GetCodeGenCallbackRuntimeDataWithLock();
         return codeGenRuntimeData ? codeGenRuntimeData[profiledCallSiteId] : nullptr;
     }
 #endif
@@ -8219,7 +8219,7 @@ namespace Js
         if (jitTransferData->propertyGuardsByPropertyId != nullptr)
         {
             int propertyGuardCount = jitTransferData->propertyGuardCount;
-            Field(FakePropertyGuardWeakReference*) * propertyGuardWeakRefs = nativeEntryPointData->EnsurePropertyGuardWeakRefs(propertyGuardCount, scriptContext->GetRecycler());
+            typename WriteBarrierFieldTypeTraits<FakePropertyGuardWeakReference*>::Type * propertyGuardWeakRefs = nativeEntryPointData->EnsurePropertyGuardWeakRefs(propertyGuardCount, scriptContext->GetRecycler());
 
             ThreadContext* threadContext = scriptContext->GetThreadContext();
 

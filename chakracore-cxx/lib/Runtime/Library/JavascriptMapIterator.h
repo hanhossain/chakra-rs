@@ -16,9 +16,9 @@ namespace Js
     class JavascriptMapIterator : public DynamicObject
     {
     private:
-        Field(JavascriptMap*)                          m_map;
-        Field(JavascriptMap::MapDataList::Iterator)    m_mapIterator;
-        Field(JavascriptMapIteratorKind)               m_kind;
+        typename WriteBarrierFieldTypeTraits<JavascriptMap*>::Type                          m_map;
+        typename WriteBarrierFieldTypeTraits<JavascriptMap::MapDataList::Iterator>::Type    m_mapIterator;
+        typename WriteBarrierFieldTypeTraits<JavascriptMapIteratorKind>::Type               m_kind;
 
     protected:
         DEFINE_VTABLE_CTOR(JavascriptMapIterator, DynamicObject);

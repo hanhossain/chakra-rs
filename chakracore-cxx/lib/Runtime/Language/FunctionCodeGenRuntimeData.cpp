@@ -72,7 +72,7 @@ namespace Js
         Assert(inlinee == functionBody);
         if (!inlinees)
         {
-            inlinees = RecyclerNewArrayZ(recycler, Field(FunctionCodeGenRuntimeData*), functionBody->GetProfiledCallSiteCount());
+            inlinees = RecyclerNewArrayZ(recycler, typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData*>::Type, functionBody->GetProfiledCallSiteCount());
         }
         inlinees[profiledCallSiteId] = this;
     }
@@ -81,7 +81,7 @@ namespace Js
         Recycler *const recycler,
         const ProfileId profiledCallSiteId,
         FunctionBody *const inlinee,
-        Field(Field(FunctionCodeGenRuntimeData *)*) & codeGenRuntimeData)
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData *>::Type*>::Type & codeGenRuntimeData)
     {
         Assert(recycler);
         Assert(profiledCallSiteId < functionBody->GetProfiledCallSiteCount());
@@ -89,10 +89,10 @@ namespace Js
 
         if (codeGenRuntimeData == nullptr)
         {
-            codeGenRuntimeData = RecyclerNewArrayZ(recycler, Field(FunctionCodeGenRuntimeData *), functionBody->GetProfiledCallSiteCount());
+            codeGenRuntimeData = RecyclerNewArrayZ(recycler, typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData *>::Type, functionBody->GetProfiledCallSiteCount());
         }
 
-        Field(FunctionCodeGenRuntimeData *) const inlineeData = codeGenRuntimeData[profiledCallSiteId];
+        typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData *>::Type const inlineeData = codeGenRuntimeData[profiledCallSiteId];
 
         if (inlineeData == nullptr)
         {
@@ -175,7 +175,7 @@ namespace Js
 
         if (!ldFldInlinees)
         {
-            ldFldInlinees = RecyclerNewArrayZ(recycler, Field(FunctionCodeGenRuntimeData *), functionBody->GetInlineCacheCount());
+            ldFldInlinees = RecyclerNewArrayZ(recycler, typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData *>::Type, functionBody->GetInlineCacheCount());
         }
         const auto inlineeData = ldFldInlinees[inlineCacheIndex];
         if (!inlineeData)

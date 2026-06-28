@@ -25,7 +25,7 @@ JITTimeFunctionBody::InitializeJITFunctionData(
     jitBody->constCount = numConstants;
     if (numConstants > 0)
     {
-        jitBody->constTable = unsafe_write_barrier_cast<intptr_t *>(functionBody->GetConstTable());
+        jitBody->constTable = (intptr_t *)functionBody->GetConstTable();
         if (!functionBody->GetIsAsmJsFunction())
         {
             jitBody->constTableContent = AnewStructZ(arena, ConstTableContentIDL);
@@ -245,7 +245,7 @@ JITTimeFunctionBody::InitializeJITFunctionData(
     jitBody->displayName = (char16_t *)functionBody->GetDisplayName();
     jitBody->objectLiteralTypesAddr = (intptr_t)functionBody->GetObjectLiteralTypesWithLock();
     jitBody->literalRegexCount = functionBody->GetLiteralRegexCount();
-    jitBody->literalRegexes = unsafe_write_barrier_cast<intptr_t*>(functionBody->GetLiteralRegexesWithLock());
+    jitBody->literalRegexes = (intptr_t*)functionBody->GetLiteralRegexesWithLock();
 
     Js::AuxArray<uint32_t> * slotIdInCachedScopeToNestedIndexArray = functionBody->GetSlotIdInCachedScopeToNestedIndexArrayWithLock();
     if (slotIdInCachedScopeToNestedIndexArray)

@@ -18,7 +18,7 @@ namespace Js
         static PropertyId const specialPropertyIdsWithoutDotAllOrUnicode[];
         static const uint defaultSpecialPropertyIdsCount = 6;
 
-        Field(UnifiedRegex::RegexPattern*) pattern;
+        typename WriteBarrierFieldTypeTraits<UnifiedRegex::RegexPattern*>::Type pattern;
 
         // The pattern used by String.prototype.split could be different than the normal pattern. Even
         // when the sticky flag is present in the normal pattern, split() should look for the pattern
@@ -26,8 +26,8 @@ namespace Js
         //
         // Initialization of this pattern is deferred until split() is called, or it's copied from another
         // RegExp object.
-        Field(UnifiedRegex::RegexPattern*) splitPattern;
-        Field(Var) lastIndexVar;  // null => must build lastIndexVar from current lastIndex
+        typename WriteBarrierFieldTypeTraits<UnifiedRegex::RegexPattern*>::Type splitPattern;
+        typename WriteBarrierFieldTypeTraits<Var>::Type lastIndexVar;  // null => must build lastIndexVar from current lastIndex
 
     public:
         // Three states for lastIndex value:
@@ -38,7 +38,7 @@ namespace Js
         //  2. ToNumber(lastIndexVar) yields +inf or -inf or an integer not in range [0, MaxCharCount]
         static const CharCount InvalidValue = CharCountFlag;
         //  3. ToNumber(lastIndexVar) yields NaN, +0, -0 or an integer in range [0, MaxCharCount]
-        Field(CharCount) lastIndexOrFlag;
+        typename WriteBarrierFieldTypeTraits<CharCount>::Type lastIndexOrFlag;
 
         static JavascriptRegExp * GetJavascriptRegExp(Arguments& args, const char16_t * varName, ScriptContext* scriptContext);
         static JavascriptRegExp * ToRegExp(Var var, const char16_t * varName, ScriptContext* scriptContext);

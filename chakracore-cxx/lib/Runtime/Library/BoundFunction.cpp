@@ -6,7 +6,7 @@
 
 namespace Js
 {
-    FunctionInfo BoundFunction::functionInfo(FORCE_NO_WRITE_BARRIER_TAG(BoundFunction::NewInstance), FunctionInfo::DoNotProfile);
+    FunctionInfo BoundFunction::functionInfo(BoundFunction::NewInstance, _no_write_barrier_tag(), FunctionInfo::DoNotProfile);
 
     BoundFunction::BoundFunction(DynamicType * type)
         : JavascriptFunction(type, &functionInfo),
@@ -68,7 +68,7 @@ namespace Js
             // Store the args excluding function obj and "this" arg
             if (args.Info.Count > 2)
             {
-                boundArgs = RecyclerNewArray(scriptContext->GetRecycler(), Field(Var), count);
+                boundArgs = RecyclerNewArray(scriptContext->GetRecycler(), typename WriteBarrierFieldTypeTraits<Var>::Type, count);
 
                 for (uint i=0; i<count; i++)
                 {
@@ -173,7 +173,7 @@ namespace Js
                 JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgListTooLarge);
             }
 
-            Field(Var) *newValues = RecyclerNewArray(scriptContext->GetRecycler(), Field(Var), newArgCount);
+            typename WriteBarrierFieldTypeTraits<Var>::Type *newValues = RecyclerNewArray(scriptContext->GetRecycler(), typename WriteBarrierFieldTypeTraits<Var>::Type, newArgCount);
             uint index = 0;
 
             //
@@ -205,7 +205,7 @@ namespace Js
                 newValues[index++] = args.Values[argCount];
             }
 
-            actualArgs = Arguments(args.Info, unsafe_write_barrier_cast<Var*>(newValues));
+            actualArgs = Arguments(args.Info, (Var*)newValues);
             actualArgs.Info.Count = boundFunction->count + argCount;
 
             Assert(index == actualArgs.GetLargeArgCountWithExtraArgs());
@@ -398,7 +398,7 @@ namespace Js
     }
 
     BoundFunction* BoundFunction::InflateBoundFunction(
-        ScriptContext* ctx, RecyclableObject* function, Var bThis, uint32_t ct, Field(Var)* args)
+        ScriptContext* ctx, RecyclableObject* function, Var bThis, uint32_t ct, typename WriteBarrierFieldTypeTraits<Var>::Type* args)
     {
         BoundFunction* res = RecyclerNew(ctx->GetRecycler(), BoundFunction, ctx->GetLibrary()->GetBoundFunctionType());
 

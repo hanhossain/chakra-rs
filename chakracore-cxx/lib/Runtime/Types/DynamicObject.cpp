@@ -66,8 +66,8 @@ namespace Js
         int propertyCount = typeHandler->GetPropertyCount();
         int inlineSlotCapacity = GetTypeHandler()->GetInlineSlotCapacity();
         int inlineSlotCount = min(inlineSlotCapacity, propertyCount);
-        Field(Var)* srcSlots = instance->GetInlineSlots();
-        Field(Var)* dstSlots = this->GetInlineSlots();
+        typename WriteBarrierFieldTypeTraits<Var>::Type* srcSlots = instance->GetInlineSlots();
+        typename WriteBarrierFieldTypeTraits<Var>::Type* dstSlots = this->GetInlineSlots();
         // Copy the inline slot data from the source instance. Deep copy is implicit because
         // the inline slot allocation is already accounted for with the allocation of the object.
         for (int i = 0; i < inlineSlotCount; i++)
@@ -836,9 +836,9 @@ namespace Js
         }
     }
 
-    Field(Var)* DynamicObject::GetInlineSlots() const
+    typename WriteBarrierFieldTypeTraits<Var>::Type* DynamicObject::GetInlineSlots() const
     {
-        return reinterpret_cast<Field(Var)*>(reinterpret_cast<size_t>(this) + this->GetOffsetOfInlineSlots());
+        return reinterpret_cast<typename WriteBarrierFieldTypeTraits<Var>::Type*>(reinterpret_cast<size_t>(this) + this->GetOffsetOfInlineSlots());
     }
 
     bool DynamicObject::IsCompatibleForCopy(DynamicObject* from) const
@@ -947,8 +947,8 @@ namespace Js
         }
         if (inlineSlotCapacity != 0)
         {
-            Field(Var)* thisInlineSlots = this->GetInlineSlots();
-            Field(Var)* fromInlineSlots = from->GetInlineSlots();
+            typename WriteBarrierFieldTypeTraits<Var>::Type* thisInlineSlots = this->GetInlineSlots();
+            typename WriteBarrierFieldTypeTraits<Var>::Type* fromInlineSlots = from->GetInlineSlots();
 
             CopyArray(thisInlineSlots, inlineSlotCapacity, fromInlineSlots, inlineSlotCapacity);
         }
@@ -1109,7 +1109,7 @@ namespace Js
         TTD::NSSnapObjects::StdExtractSetKindSpecificInfo<void*, TTD::NSSnapObjects::SnapObjectType::SnapDynamicObject>(objData, nullptr);
     }
 
-    Field(Js::Var) const* DynamicObject::GetInlineSlots_TTD() const
+    typename WriteBarrierFieldTypeTraits<Js::Var>::Type const* DynamicObject::GetInlineSlots_TTD() const
     {
         return this->GetInlineSlots();
     }

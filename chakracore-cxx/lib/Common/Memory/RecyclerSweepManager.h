@@ -23,7 +23,6 @@ public:
     bool IsBackground() const;
     bool HasSetupBackgroundSweep() const;
 
-#if ENABLE_CONCURRENT_GC
     void BackgroundSweep();
     void BeginBackground(bool forceForeground);
     void EndBackground();
@@ -31,7 +30,6 @@ public:
 #if DBG || defined(RECYCLER_SLOW_CHECK_ENABLED)
     template <typename TBlockType> size_t GetHeapBlockCount(HeapBucketT<TBlockType> const * heapBucket);
     size_t GetPendingMergeNewHeapBlockCount(HeapInfo const * heapInfo);
-#endif
 #endif
 
     template <typename TBlockAttributes>

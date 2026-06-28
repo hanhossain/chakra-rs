@@ -55,11 +55,11 @@ public:
     Var CallGenerator(Var data, ResumeYieldKind resumeKind);
 
 private:
-    Field(InterpreterStackFrame*) frame;
-    Field(GeneratorState) state;
-    Field(Arguments) args;
-    Field(ScriptFunction*) scriptFunction;
-    Field(DynamicObject*) resumeYieldObject;
+    typename WriteBarrierFieldTypeTraits<InterpreterStackFrame*>::Type frame;
+    typename WriteBarrierFieldTypeTraits<GeneratorState>::Type state;
+    typename WriteBarrierFieldTypeTraits<Arguments>::Type args;
+    typename WriteBarrierFieldTypeTraits<ScriptFunction*>::Type scriptFunction;
+    typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type resumeYieldObject;
 
     void SetResumeYieldProperties(Var value, ResumeYieldKind kind);
 
@@ -103,11 +103,9 @@ public:
 
     void SetScriptFunction(ScriptFunction* sf) { this->scriptFunction = sf; }
     void SetFrame(InterpreterStackFrame* frame, size_t bytes);
-    void SetFrameSlots(uint slotCount, Field(Var)* frameSlotArray);
+    void SetFrameSlots(uint slotCount, typename WriteBarrierFieldTypeTraits<Var>::Type* frameSlotArray);
 
-#if GLOBAL_ENABLE_WRITE_BARRIER
     virtual void Finalize(bool isShutdown) override;
-#endif
 
     class EntryInfo
     {
@@ -142,8 +140,8 @@ public:
         static uint32_t GetBailInSymbolValueOffset() { return offsetof(BailInSymbol, value); }
     };
 
-    Field(BailInSymbol*) bailInSymbolsTraceArray = nullptr;
-    Field(int) bailInSymbolsTraceArrayCount = 0;
+    typename WriteBarrierFieldTypeTraits<BailInSymbol*>::Type bailInSymbolsTraceArray = nullptr;
+    typename WriteBarrierFieldTypeTraits<int>::Type bailInSymbolsTraceArrayCount = 0;
 
     static uint32_t GetBailInSymbolsTraceArrayOffset()
     {

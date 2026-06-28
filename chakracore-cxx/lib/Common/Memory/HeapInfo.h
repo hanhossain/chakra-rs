@@ -101,9 +101,7 @@ public:
     void ScanNewImplicitRoots();
 
     size_t Rescan(RescanFlags flags);
-#if ENABLE_PARTIAL_GC || ENABLE_CONCURRENT_GC
     void SweepPendingObjects(RecyclerSweep& recyclerSweep);
-#endif
     void Finalize(RecyclerSweep& recyclerSweep);
     void Sweep(RecyclerSweep& recyclerSweep, bool concurrent);
 
@@ -117,22 +115,12 @@ public:
     void SweepPartialReusePages(RecyclerSweep& recyclerSweep);
     void FinishPartialCollect(RecyclerSweep * recyclerSweep);
 #endif
-#if ENABLE_CONCURRENT_GC
     void PrepareSweep();
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    void StartAllocationsDuringConcurrentSweep();
-    bool DoTwoPassConcurrentSweepPreCheck();
-    void FinishSweepPrep(RecyclerSweep& recyclerSweep);
-    void FinishConcurrentSweepPass1(RecyclerSweep& recyclerSweep);
-    void FinishConcurrentSweep();
-#endif
-
     void TransferPendingHeapBlocks(RecyclerSweep& recyclerSweep);
     void ConcurrentTransferSweptObjects(RecyclerSweep& recyclerSweep);
 
 #if ENABLE_PARTIAL_GC
     void ConcurrentPartialTransferSweptObjects(RecyclerSweep& recyclerSweep);
-#endif
 #endif
     void DisposeObjects();
     void TransferDisposedObjects();
@@ -227,7 +215,6 @@ private:
         heapBlock->SetNextBlock(list);
         list = heapBlock;
     }
-#if ENABLE_CONCURRENT_GC
     template <typename TBlockType> TBlockType *& GetNewHeapBlockList(HeapBucketT<TBlockType> * heapBucket);
     template <>
     SmallLeafHeapBlock *& GetNewHeapBlockList<SmallLeafHeapBlock>(HeapBucketT<SmallLeafHeapBlock> * heapBucket)
@@ -255,7 +242,6 @@ private:
     }
 #endif
 
-#ifdef RECYCLER_WRITE_BARRIER
     template <>
     SmallNormalWithBarrierHeapBlock *& GetNewHeapBlockList<SmallNormalWithBarrierHeapBlock>(HeapBucketT<SmallNormalWithBarrierHeapBlock> * heapBucket)
     {
@@ -267,7 +253,6 @@ private:
     {
         return this->newFinalizableWithBarrierHeapBlockList;
     }
-#endif
 
     template <>
     MediumLeafHeapBlock *& GetNewHeapBlockList<MediumLeafHeapBlock>(HeapBucketT<MediumLeafHeapBlock> * heapBucket)
@@ -296,7 +281,6 @@ private:
     }
 #endif
 
-#ifdef RECYCLER_WRITE_BARRIER
     template <>
     MediumNormalWithBarrierHeapBlock *& GetNewHeapBlockList<MediumNormalWithBarrierHeapBlock>(HeapBucketT<MediumNormalWithBarrierHeapBlock> * heapBucket)
     {
@@ -308,15 +292,8 @@ private:
     {
         return this->newMediumFinalizableWithBarrierHeapBlockList;
     }
-#endif
 
     void SetupBackgroundSweep(RecyclerSweep& recyclerSweep);
-#else
-    template <typename TBlockType> TBlockType *& GetNewHeapBlockList(HeapBucketT<TBlockType> * heapBucket)
-    {
-        return heapBucket->heapBlockList;
-    }
-#endif
 
     void SweepSmallNonFinalizable(RecyclerSweep& recyclerSweep);
 
@@ -428,7 +405,6 @@ public:
     static typename SmallHeapBlockT<TBlockAttributes>::BlockInfo const * GetBlockInfo(uint objectSize);
 
     Recycler * recycler;
-#if ENABLE_CONCURRENT_GC
     SmallLeafHeapBlock * newLeafHeapBlockList;
     SmallNormalHeapBlock * newNormalHeapBlockList;
     SmallFinalizableHeapBlock * newFinalizableHeapBlockList;
@@ -436,13 +412,9 @@ public:
     SmallRecyclerVisitedHostHeapBlock * newRecyclerVisitedHostHeapBlockList;
 #endif
 
-#ifdef RECYCLER_WRITE_BARRIER
     SmallNormalWithBarrierHeapBlock * newNormalWithBarrierHeapBlockList;
     SmallFinalizableWithBarrierHeapBlock * newFinalizableWithBarrierHeapBlockList;
-#endif
-#endif
 
-#if ENABLE_CONCURRENT_GC
     MediumLeafHeapBlock * newMediumLeafHeapBlockList;
     MediumNormalHeapBlock * newMediumNormalHeapBlockList;
     MediumFinalizableHeapBlock * newMediumFinalizableHeapBlockList;
@@ -450,11 +422,8 @@ public:
     MediumRecyclerVisitedHostHeapBlock* newMediumRecyclerVisitedHostHeapBlockList;
 #endif
 
-#ifdef RECYCLER_WRITE_BARRIER
     MediumNormalWithBarrierHeapBlock * newMediumNormalWithBarrierHeapBlockList;
     MediumFinalizableWithBarrierHeapBlock * newMediumFinalizableWithBarrierHeapBlockList;
-#endif
-#endif
 
 #ifdef RECYCLER_PAGE_HEAP
     PageHeapMode pageHeapMode;

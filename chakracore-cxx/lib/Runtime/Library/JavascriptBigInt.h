@@ -10,10 +10,10 @@ namespace Js
     class JavascriptBigInt : public RecyclableObject
     {
     private:
-        Field(digit_t*) m_digits;         // digits
-        Field(digit_t) m_length;          // length
-        Field(digit_t) m_maxLength;          // max length without resize
-        Field(bool) m_isNegative;
+        typename WriteBarrierFieldTypeTraits<digit_t*>::Type m_digits;         // digits
+        typename WriteBarrierFieldTypeTraits<digit_t>::Type m_length;          // length
+        typename WriteBarrierFieldTypeTraits<digit_t>::Type m_maxLength;          // max length without resize
+        typename WriteBarrierFieldTypeTraits<bool>::Type m_isNegative;
 
         static const digit_t InitDigitLength = 2;  // Max Digit length 
 

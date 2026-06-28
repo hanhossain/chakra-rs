@@ -151,8 +151,8 @@ public:
 private:
     RecyclerWeakReferenceRegionItem(RecyclerWeakReferenceRegionItem<T>&) = delete;
 
-    FieldNoBarrier(T) ptr;
-    FieldNoBarrier(HeapBlock*) heapBlock; // Note: the low bit of the heapBlock is used for background marking
+    typename WriteBarrierFieldTypeTraits<T, _no_write_barrier_policy, _no_write_barrier_policy>::Type ptr;
+    typename WriteBarrierFieldTypeTraits<HeapBlock*, _no_write_barrier_policy, _no_write_barrier_policy>::Type heapBlock; // Note: the low bit of the heapBlock is used for background marking
 };
 
 class RecyclerWeakReferenceRegion {
@@ -162,9 +162,9 @@ public:
     size_t GetCount() const { return count; }
     HeapBlock* GetHeapBlock() const { return arrayHeapBlock; }
 private:
-    FieldNoBarrier(RecyclerWeakReferenceRegionItem<void*>*) ptr;
-    FieldNoBarrier(size_t) count;
-    FieldNoBarrier(HeapBlock*) arrayHeapBlock;
+    typename WriteBarrierFieldTypeTraits<RecyclerWeakReferenceRegionItem<void*>*, _no_write_barrier_policy, _no_write_barrier_policy>::Type ptr;
+    typename WriteBarrierFieldTypeTraits<size_t, _no_write_barrier_policy, _no_write_barrier_policy>::Type count;
+    typename WriteBarrierFieldTypeTraits<HeapBlock*, _no_write_barrier_policy, _no_write_barrier_policy>::Type arrayHeapBlock;
 };
 
 #endif
@@ -205,24 +205,6 @@ private:
 #define RecyclerNewWithBarrierEnumClass(recycler, enumClass, T, ...) new (TRACK_ALLOC_INFO(static_cast<Recycler *>(recycler), T, Recycler, 0, (size_t)-1), InfoBitsWrapper<(ObjectInfoBits)(enumClass | WithBarrierBit)>()) T(__VA_ARGS__)
 #define RecyclerNewWithBarrierWithInfoBits(recycler, infoBits, T, ...) new (TRACK_ALLOC_INFO(static_cast<Recycler *>(recycler), T, Recycler, 0, (size_t)-1), InfoBitsWrapper<(ObjectInfoBits)(infoBits | WithBarrierBit)>()) T(__VA_ARGS__)
 #define RecyclerNewWithBarrierFinalizedClientTracked(recycler,T,...) static_cast<T *>(static_cast<FinalizableObject *>(AllocatorNewBase(Recycler, recycler, AllocFinalizedClientTrackedWithBarrierInlined, T, __VA_ARGS__)))
-#endif
-
-#ifndef RECYCLER_WRITE_BARRIER
-#define RecyclerNewWithBarrier                          RecyclerNew
-#define RecyclerNewWithBarrierPlus                      RecyclerNewPlus
-#define RecyclerNewWithBarrierPlusZ                     RecyclerNewPlusZ
-#define RecyclerNewWithBarrierZ                         RecyclerNewZ
-#define RecyclerNewWithBarrierStruct                    RecyclerNewStruct
-#define RecyclerNewWithBarrierStructZ                   RecyclerNewStructZ
-#define RecyclerNewWithBarrierStructPlus                RecyclerNewStructPlus
-#define RecyclerNewWithBarrierArray                     RecyclerNewArray
-#define RecyclerNewWithBarrierArrayZ                    RecyclerNewArrayZ
-#define RecyclerNewWithBarrierFinalized                 RecyclerNewFinalized
-#define RecyclerNewWithBarrierFinalizedPlus             RecyclerNewFinalizedPlus
-#define RecyclerNewWithBarrierTracked                   RecyclerNewTracked
-#define RecyclerNewWithBarrierEnumClass                 RecyclerNewEnumClass
-#define RecyclerNewWithBarrierWithInfoBits              RecyclerNewWithInfoBits
-#define RecyclerNewWithBarrierFinalizedClientTracked    RecyclerNewFinalizedClientTracked
 #endif
 
 // Leaf allocators
@@ -503,10 +485,8 @@ struct RecyclerCollectionStats
         size_t markBytes;           // size of all objects marked.
     } markData;
 
-#if ENABLE_CONCURRENT_GC
     MarkData backgroundMarkData[RecyclerHeuristic::MaxBackgroundRepeatMarkCount];
     size_t trackedObjectCount;
-#endif
 
 #if ENABLE_PARTIAL_GC
     size_t clientTrackedObjectCount;
@@ -582,7 +562,6 @@ struct CollectionParam
 
 #include "RecyclerObjectGraphDumper.h"
 
-#if ENABLE_CONCURRENT_GC
 class RecyclerParallelThread
 {
     friend class ThreadContext;
@@ -626,7 +605,6 @@ private:
     HANDLE concurrentThread;
     bool synchronizeOnStartup;
 };
-#endif
 
 class AutoProtectPages
 {
@@ -648,9 +626,7 @@ class Recycler
     friend class MarkContext;
     friend class HeapBlock;
     friend class HeapBlockMap32;
-#if ENABLE_CONCURRENT_GC
     friend class RecyclerParallelThread;
-#endif
     friend class AutoProtectPages;
 
     template <typename T> friend class RecyclerWeakReference;
@@ -754,9 +730,6 @@ private:
     }
 
     JsUtil::ThreadService *threadService;
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    bool allowAllocationsDuringConcurrentSweepForCollection;
-#endif
 
     HeapBlockMap heapBlockMap;
 
@@ -940,19 +913,15 @@ private:
 #if ENABLE_PARTIAL_GC
     bool enablePartialCollect;
     bool inPartialCollectMode;
-#if ENABLE_CONCURRENT_GC
     bool hasBackgroundFinishPartial;
     bool partialConcurrentNextCollection;
-#endif
 #endif
 #ifdef RECYCLER_STRESS
     bool forcePartialScanStack;
     bool recyclerStress;
-#if ENABLE_CONCURRENT_GC
     bool recyclerBackgroundStress;
     bool recyclerConcurrentStress;
     bool recyclerConcurrentRepeatStress;
-#endif
 #if ENABLE_PARTIAL_GC
     bool recyclerPartialStress;
 #endif
@@ -961,7 +930,6 @@ private:
     bool isExternalStackSkippingGC;
 #endif
     bool skipStack;
-#if ENABLE_CONCURRENT_GC
 #if DBG
     bool isConcurrentGCOnIdle;
     bool isFinishGCOnIdle;
@@ -1003,7 +971,6 @@ private:
     uint tickCountStartConcurrent;
 
     bool isAborting;
-#endif
 
 #if DBG
     bool hasIncompleteDoCollect;
@@ -1168,7 +1135,6 @@ public:
     void ScheduleNextCollection();
 
     BOOL IsShuttingDown() const { return this->isShuttingDown; }
-#if ENABLE_CONCURRENT_GC
 #if DBG
     BOOL IsConcurrentMarkEnabled() const { return enableConcurrentMark; }
     BOOL IsConcurrentSweepEnabled() const { return enableConcurrentSweep; }
@@ -1183,15 +1149,12 @@ public:
     void StartQueueTrackedObject();
     bool DoQueueTrackedObject() const;
     void PrepareSweep();
-#endif
 
     template <CollectionFlags flags>
     void SetupPostCollectionFlags();
     void EnsureNotCollecting();
 
-#if ENABLE_CONCURRENT_GC
     bool QueueTrackedObject(FinalizableObject * trackableObject);
-#endif
 
     // FindRoots
     void TryExternalMarkNonInterior(void * candidate);
@@ -1291,19 +1254,11 @@ public:
 #define DEFINE_RECYCLER_NOTHROW_ALLOC(AllocFunc, attributes) DEFINE_RECYCLER_NOTHROW_ALLOC_BASE(AllocFunc, AllocWithAttributes, attributes)
 #define DEFINE_RECYCLER_NOTHROW_ALLOC_ZERO(AllocFunc, attributes) DEFINE_RECYCLER_NOTHROW_ALLOC_BASE(AllocFunc, AllocZeroWithAttributes, attributes)
 
-#if GLOBAL_ENABLE_WRITE_BARRIER
     DEFINE_RECYCLER_ALLOC(Alloc, WithBarrierBit);
     DEFINE_RECYCLER_ALLOC_ZERO(AllocZero, WithBarrierBit);
     DEFINE_RECYCLER_ALLOC(AllocFinalized, FinalizableWithBarrierObjectBits);
     DEFINE_RECYCLER_ALLOC(AllocTracked, ClientTrackableObjectWithBarrierBits);
     DEFINE_RECYCLER_ALLOC(AllocFinalizedClientTracked, ClientTrackableObjectWithBarrierBits);
-#else
-    DEFINE_RECYCLER_ALLOC(Alloc, NoBit);
-    DEFINE_RECYCLER_ALLOC_ZERO(AllocZero, NoBit);
-    DEFINE_RECYCLER_ALLOC(AllocFinalized, FinalizableObjectBits);
-    DEFINE_RECYCLER_ALLOC(AllocTracked, ClientTrackableObjectBits);
-    DEFINE_RECYCLER_ALLOC(AllocFinalizedClientTracked, ClientFinalizableObjectBits);
-#endif
 
 #ifdef RECYCLER_WRITE_BARRIER_ALLOC
     DEFINE_RECYCLER_ALLOC(AllocWithBarrier, WithBarrierBit);
@@ -1570,10 +1525,8 @@ private:
     size_t FindRoots();
     size_t TryMarkArenaMemoryBlockList(ArenaMemoryBlock * memoryBlocks);
     size_t TryMarkBigBlockList(BigBlock * memoryBlocks);
-#if ENABLE_CONCURRENT_GC
 #if FALSE // REVIEW: remove this code since not using
     size_t TryMarkBigBlockListWithWriteWatch(BigBlock * memoryBlocks);
-#endif
 #endif
 
     // Mark
@@ -1582,10 +1535,8 @@ private:
     bool EndMark();
     bool EndMarkCheckOOMRescan();
     void EndMarkOnLowMemory();
-#if ENABLE_CONCURRENT_GC
     void DoParallelMark();
     void DoBackgroundParallelMark();
-#endif
     void FinishWrapperObjectTracing();
 
     size_t RootMark(CollectionState markState);
@@ -1639,13 +1590,6 @@ private:
     void SweepHeap(bool concurrent, RecyclerSweepManager& recyclerSweepManager);
     void FinishSweep(RecyclerSweepManager& recyclerSweepManager);
 
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    void DoTwoPassConcurrentSweepPreCheck();
-    void FinishSweepPrep();
-    void FinishConcurrentSweepPass1();
-    void FinishConcurrentSweep();
-#endif
-
     bool FinishDisposeObjects();
     template <CollectionFlags flags>
     bool FinishDisposeObjectsWrapped();
@@ -1673,24 +1617,19 @@ private:
     bool PartialCollect(bool concurrent);
     void FinishPartialCollect(RecyclerSweepManager * recyclerSweep = nullptr);
     void ClearPartialCollect();
-#if ENABLE_CONCURRENT_GC
     void BackgroundFinishPartialCollect(RecyclerSweepManager * recyclerSweep);
-#endif
 
 #endif
 
     size_t RescanMark(uint32_t waitTime);
     size_t FinishMark(uint32_t waitTime);
     size_t FinishMarkRescan(bool background);
-#if ENABLE_CONCURRENT_GC
     void ProcessTrackedObjects();
-#endif
 
     BOOL IsAllocatableCallbackState()
     {
         return (collectionState & (Collection_PostSweepRedeferralCallback | Collection_PostCollectionCallback));
     }
-#if ENABLE_CONCURRENT_GC
     // Concurrent GC
     BOOL IsConcurrentEnabled() const { return this->enableConcurrentMark || this->enableParallelMark || this->enableConcurrentSweep; }
     BOOL IsConcurrentMarkState() const;
@@ -1706,13 +1645,6 @@ private:
     {
         return ((collectionState & Collection_ConcurrentSweep) == Collection_ConcurrentSweep);
     }
-
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    bool AllowAllocationsDuringConcurrentSweep()
-    {
-        return this->allowAllocationsDuringConcurrentSweepForCollection;
-    }
-#endif
 
 #if DBG
     BOOL IsConcurrentFinishedState() const;
@@ -1765,7 +1697,6 @@ private:
 #if ENABLE_PARTIAL_GC
     void ConcurrentPartialTransferSweptObjects(RecyclerSweepManager& recyclerSweepManager);
 #endif // ENABLE_PARTIAL_GC
-#endif // ENABLE_CONCURRENT_GC
 
     bool ForceSweepObject();
     void NotifyFree(char * address, size_t size);
@@ -2027,7 +1958,6 @@ private:
 
     bool ProcessObjectBeforeCollectCallbacks(bool atShutdown = false);
 
-#if GLOBAL_ENABLE_WRITE_BARRIER
 private:
     typedef JsUtil::BaseDictionary<void *, size_t, HeapAllocator, PrimeSizePolicy, RecyclerPointerComparer, JsUtil::SimpleDictionaryEntry, JsUtil::AsymetricResizeLock> PendingWriteBarrierBlockMap;
 
@@ -2035,9 +1965,8 @@ private:
 public:
     void RegisterPendingWriteBarrierBlock(void* address, size_t bytes);
     void UnRegisterPendingWriteBarrierBlock(void* address);
-#endif
 
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
 private:
     static Recycler* recyclerList;
     static std::recursive_mutex recyclerListLock;
@@ -2229,7 +2158,7 @@ public:
 class CollectedRecyclerWeakRefHeapBlock : public HeapBlock
 {
 public:
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
     virtual void WBVerifyBitIsSet(char* addr) override { Assert(false); }
     virtual void WBSetBit(char* addr) override { Assert(false); }
     virtual void WBSetBitRange(char* addr, uint count) override { Assert(false); }
@@ -2262,9 +2191,7 @@ private:
 
     CollectedRecyclerWeakRefHeapBlock() : HeapBlock(BlockTypeCount)
     {
-#if ENABLE_CONCURRENT_GC
         isPendingConcurrentSweep = false;
-#endif
     }
 };
 
@@ -2302,9 +2229,7 @@ Recycler::SmallAllocatorAlloc(SmallHeapBlockAllocatorType * allocator, size_t si
 class _RecyclerLeafPolicy;
 class _RecyclerNonLeafPolicy;
 
-#ifdef RECYCLER_WRITE_BARRIER
 class _RecyclerWriteBarrierPolicy;
-#endif
 
 template <typename Policy>
 class _RecyclerAllocatorFunc
@@ -2356,7 +2281,6 @@ public:
     }
 };
 
-#ifdef RECYCLER_WRITE_BARRIER
 template <>
 class _RecyclerAllocatorFunc<_RecyclerWriteBarrierPolicy>
 {
@@ -2379,7 +2303,6 @@ public:
         return &Recycler::ExplicitFreeNonLeaf;
     }
 };
-#endif
 
 // This is used by the compiler; when T is NOT a pointer i.e. a value type - it causes leaf allocation
 template <typename T>
@@ -2387,18 +2310,10 @@ class TypeAllocatorFunc<Recycler, T> : public _RecyclerAllocatorFunc<_RecyclerLe
 {
 };
 
-#if GLOBAL_ENABLE_WRITE_BARRIER
 template <typename T>
 class TypeAllocatorFunc<Recycler, T *> : public _RecyclerAllocatorFunc<_RecyclerWriteBarrierPolicy>
 {
 };
-#else
-// Partial template specialization; applies to T when it is a pointer
-template <typename T>
-class TypeAllocatorFunc<Recycler, T *> : public _RecyclerAllocatorFunc<_RecyclerNonLeafPolicy>
-{
-};
-#endif
 
 // Dummy class to choose the allocation function
 class RecyclerLeafAllocator
@@ -2455,20 +2370,14 @@ public:
 // Partial template specialization to allocate as non leaf
 template <typename T>
 class TypeAllocatorFunc<RecyclerNonLeafAllocator, T> :
-#if GLOBAL_ENABLE_WRITE_BARRIER
     public _RecyclerAllocatorFunc<_RecyclerWriteBarrierPolicy>
-#else
-    public _RecyclerAllocatorFunc<_RecyclerNonLeafPolicy>
-#endif
 {
 };
 
-#ifdef RECYCLER_WRITE_BARRIER
 template <typename T>
 class TypeAllocatorFunc<RecyclerWriteBarrierAllocator, T> : public _RecyclerAllocatorFunc<_RecyclerWriteBarrierPolicy>
 {
 };
-#endif
 
 template <typename T>
 class TypeAllocatorFunc<RecyclerLeafAllocator, T> : public _RecyclerAllocatorFunc<_RecyclerLeafPolicy>

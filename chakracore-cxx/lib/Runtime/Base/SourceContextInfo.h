@@ -16,28 +16,28 @@ class SourceDynamicProfileManager;
 class SourceContextInfo
 {
 public:
-    Field(uint) sourceContextId;
-    Field(Js::LocalFunctionId) nextLocalFunctionId;           // Count of functions seen so far
+    typename WriteBarrierFieldTypeTraits<uint>::Type sourceContextId;
+    typename WriteBarrierFieldTypeTraits<Js::LocalFunctionId>::Type nextLocalFunctionId;           // Count of functions seen so far
 
 #if DBG
-    Field(bool) closed;
+    typename WriteBarrierFieldTypeTraits<bool>::Type closed;
 #endif
 
-    Field(unsigned long) dwHostSourceContext;      // Context passed in to ParseScriptText
-    Field(bool) isHostDynamicDocument;         // will be set to true when current doc is treated dynamic from the host side. (IActiveScriptContext::IsDynamicDocument)
+    typename WriteBarrierFieldTypeTraits<unsigned long>::Type dwHostSourceContext;      // Context passed in to ParseScriptText
+    typename WriteBarrierFieldTypeTraits<bool>::Type isHostDynamicDocument;         // will be set to true when current doc is treated dynamic from the host side. (IActiveScriptContext::IsDynamicDocument)
 
     union
     {
         struct
         {
-            FieldNoBarrier(char16_t const *) url;            // The url of the file
-            FieldNoBarrier(char16_t const *) sourceMapUrl;   // The url of the source map, such as actual non-minified source of JS on the server.
+            typename WriteBarrierFieldTypeTraits<char16_t const *, _no_write_barrier_policy, _no_write_barrier_policy>::Type url;            // The url of the file
+            typename WriteBarrierFieldTypeTraits<char16_t const *, _no_write_barrier_policy, _no_write_barrier_policy>::Type sourceMapUrl;   // The url of the source map, such as actual non-minified source of JS on the server.
         };
-        Field(uint)      hash;                 // hash for dynamic scripts
+        typename WriteBarrierFieldTypeTraits<uint>::Type      hash;                 // hash for dynamic scripts
     };
 
 #if ENABLE_PROFILE_INFO
-    Field(Js::SourceDynamicProfileManager *) sourceDynamicProfileManager;
+    typename WriteBarrierFieldTypeTraits<Js::SourceDynamicProfileManager *>::Type sourceDynamicProfileManager;
 #endif
 
     void EnsureInitialized();

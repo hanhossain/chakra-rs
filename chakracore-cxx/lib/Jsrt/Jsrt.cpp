@@ -2855,8 +2855,8 @@ JsErrorCode chakracore::jsrt::JsConstructObject(_In_ JsValueRef function, _In_re
 
 typedef struct JsNativeFunctionWrapperHolder
 {
-    FieldNoBarrier(void *) callbackState;
-    FieldNoBarrier(JsNativeFunction) nativeFunction;
+    typename WriteBarrierFieldTypeTraits<void *, _no_write_barrier_policy, _no_write_barrier_policy>::Type callbackState;
+    typename WriteBarrierFieldTypeTraits<JsNativeFunction, _no_write_barrier_policy, _no_write_barrier_policy>::Type nativeFunction;
 }JsNativeFunctionWrapperHolder;
 
 JsValueRef CALLBACK JsNativeFunctionWrapper(JsValueRef callee, JsValueRef *arguments, unsigned short argumentCount, JsNativeFunctionInfo *info, void *wrapperData)
@@ -3919,7 +3919,7 @@ JsErrorCode RunSerializedScriptCore(
 
         int32_t hr;
 
-        Field(Js::FunctionBody*) functionBody = nullptr;
+        typename WriteBarrierFieldTypeTraits<Js::FunctionBody*>::Type functionBody = nullptr;
 
         if (bgParseCookie == 0)
         {

@@ -139,7 +139,7 @@ namespace Js
     class FinalizableICUObject : public FinalizableObject
     {
     private:
-        FieldNoBarrier(TResource) resource;
+        typename WriteBarrierFieldTypeTraits<TResource, _no_write_barrier_policy, _no_write_barrier_policy>::Type resource;
     public:
         FinalizableICUObject(TResource resource) : resource(resource)
         {
@@ -336,7 +336,7 @@ namespace Js
 #undef INTL_ENTRY
 #endif
 #define INTL_ENTRY(id, func) \
-    NoProfileFunctionInfo IntlEngineInterfaceExtensionObject::EntryInfo::Intl_##func##(FORCE_NO_WRITE_BARRIER_TAG(IntlEngineInterfaceExtensionObject::EntryIntl_##func##));
+    NoProfileFunctionInfo IntlEngineInterfaceExtensionObject::EntryInfo::Intl_##func##(IntlEngineInterfaceExtensionObject::EntryIntl_##func##, _no_write_barrier_tag());
 #include "IntlExtensionObjectBuiltIns.h"
 #undef INTL_ENTRY
 
@@ -1414,10 +1414,10 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
     {
     private:
         double num;
-        Field(const char16_t *) formatted;
+        typename WriteBarrierFieldTypeTraits<const char16_t *>::Type formatted;
         const charcount_t formattedLength;
-        Field(ScriptContext *) sc;
-        Field(UNumberFormatFields *) fields;
+        typename WriteBarrierFieldTypeTraits<ScriptContext *>::Type sc;
+        typename WriteBarrierFieldTypeTraits<UNumberFormatFields *>::Type fields;
 
         static const UNumberFormatFields UnsetField = static_cast<UNumberFormatFields>(0xFFFFFFFF);
 

@@ -94,8 +94,8 @@ namespace JsUtil
         typedef typename AllocatorInfo<TAllocator, TValue>::AllocatorType AllocatorType;
         typedef SizePolicy CurrentSizePolicy;
         typedef Entry<
-                    Field(TKey, TAllocator),
-                    Field(TValue, TAllocator)> EntryType;
+                    typename WriteBarrierFieldTypeTraits<TKey, TAllocator>::Type,
+                    typename WriteBarrierFieldTypeTraits<TValue, TAllocator>::Type> EntryType;
 
         template<class TDictionary> class EntryIterator;
         template<class TDictionary> class BucketEntryIterator;
@@ -105,20 +105,20 @@ namespace JsUtil
         friend class Js::RemoteDictionary<BaseDictionary>;
         template <typename ValueOrKey> struct ComparerType { typedef Comparer<ValueOrKey> Type; }; // Used by diagnostics to access Comparer type
 
-        Field(int*, TAllocator) buckets;
-        Field(EntryType*, TAllocator) entries;
-        FieldNoBarrier(AllocatorType*) alloc;
-        Field(int) size;
-        Field(uint) bucketCount;
-        Field(int) count;
-        Field(int) freeList;
-        Field(int) freeCount;
-        Field(int) modFunctionIndex;
+        typename WriteBarrierFieldTypeTraits<int*, TAllocator>::Type buckets;
+        typename WriteBarrierFieldTypeTraits<EntryType*, TAllocator>::Type entries;
+        typename WriteBarrierFieldTypeTraits<AllocatorType*, _no_write_barrier_policy, _no_write_barrier_policy>::Type alloc;
+        typename WriteBarrierFieldTypeTraits<int>::Type size;
+        typename WriteBarrierFieldTypeTraits<uint>::Type bucketCount;
+        typename WriteBarrierFieldTypeTraits<int>::Type count;
+        typename WriteBarrierFieldTypeTraits<int>::Type freeList;
+        typename WriteBarrierFieldTypeTraits<int>::Type freeCount;
+        typename WriteBarrierFieldTypeTraits<int>::Type modFunctionIndex;
 
         static const int FreeListSentinel = -2;
 
 #if PROFILE_DICTIONARY
-        FieldNoBarrier(DictionaryStats*) stats;
+        typename WriteBarrierFieldTypeTraits<DictionaryStats*, _no_write_barrier_policy, _no_write_barrier_policy>::Type stats;
 #endif
         enum InsertOperations
         {
@@ -202,7 +202,7 @@ namespace JsUtil
             modFunctionIndex = other.modFunctionIndex;
 
             CopyArray(buckets, bucketCount, other.buckets, bucketCount);
-            CopyArray<EntryType, Field(ValueType, TAllocator), TAllocator>(
+            CopyArray<EntryType, typename WriteBarrierFieldTypeTraits<ValueType, TAllocator>::Type, TAllocator>(
                 entries, size, other.entries, size);
 
 #if PROFILE_DICTIONARY
@@ -739,7 +739,7 @@ namespace JsUtil
             modFunctionIndex = other->modFunctionIndex;
 
             CopyArray(buckets, bucketCount, other->buckets, bucketCount);
-            CopyArray<EntryType, Field(ValueType, TAllocator), TAllocator>(
+            CopyArray<EntryType, typename WriteBarrierFieldTypeTraits<ValueType, TAllocator>::Type, TAllocator>(
                 entries, size, other->entries, size);
 
 #if PROFILE_DICTIONARY
@@ -1048,7 +1048,7 @@ namespace JsUtil
             {
                 // no need to rehash
                 newEntries = AllocateEntries(newSize);
-                CopyArray<EntryType, Field(ValueType, TAllocator), TAllocator>(
+                CopyArray<EntryType, typename WriteBarrierFieldTypeTraits<ValueType, TAllocator>::Type, TAllocator>(
                     newEntries, newSize, entries, count);
 
                 DeleteEntries(entries, size);
@@ -1060,7 +1060,7 @@ namespace JsUtil
             }
 
             Allocate(&newBuckets, &newEntries, newBucketCount, newSize);
-            CopyArray<EntryType, Field(ValueType, TAllocator), TAllocator>(
+            CopyArray<EntryType, typename WriteBarrierFieldTypeTraits<ValueType, TAllocator>::Type, TAllocator>(
                 newEntries, newSize, entries, count);
 
             // When TAllocator is of type Recycler, it is possible that the Allocate above causes a collection, which
@@ -1611,7 +1611,7 @@ namespace JsUtil
     class SynchronizedDictionary: protected BaseDictionary<TKey, TValue, TAllocator, SizePolicy, Comparer, Entry>
     {
     private:
-        FieldNoBarrier(SyncObject)& syncObj;
+        typename WriteBarrierFieldTypeTraits<SyncObject, _no_write_barrier_policy, _no_write_barrier_policy>::Type& syncObj;
 
         typedef BaseDictionary<TKey, TValue, TAllocator, SizePolicy, Comparer, Entry> Base;
     public:

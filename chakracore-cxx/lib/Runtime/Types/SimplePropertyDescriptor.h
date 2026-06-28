@@ -14,14 +14,14 @@ namespace Js
         SimplePropertyDescriptor(const PropertyRecord* id, PropertyAttributes attributes) : Id(id), preventFalseReference(NULL) { Attributes = attributes; }
 
         SimplePropertyDescriptor(const PropertyRecord* id, _no_write_barrier_tag, PropertyAttributes attributes)
-            : Id(NO_WRITE_BARRIER_TAG(id)), preventFalseReference(NULL)
+            : Id(id, _no_write_barrier_tag()), preventFalseReference(NULL)
         { Attributes = attributes; }
 
-        Field(const PropertyRecord*) Id;
+        typename WriteBarrierFieldTypeTraits<const PropertyRecord*>::Type Id;
         union
         {
-            Field(PropertyAttributes) Attributes;
-            FieldNoBarrier(void*) preventFalseReference; // SimplePropertyDescriptor can be declared on stack. Always zero out to avoid this becoming a memory address reference.
+            typename WriteBarrierFieldTypeTraits<PropertyAttributes>::Type Attributes;
+            typename WriteBarrierFieldTypeTraits<void*, _no_write_barrier_policy, _no_write_barrier_policy>::Type preventFalseReference; // SimplePropertyDescriptor can be declared on stack. Always zero out to avoid this becoming a memory address reference.
         };
     };
 

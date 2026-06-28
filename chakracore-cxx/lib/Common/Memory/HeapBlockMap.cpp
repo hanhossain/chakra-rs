@@ -323,12 +323,7 @@ HeapBlockMap32::SetPageMarkCount(void * address, ushort markCount)
     // Callers should already have updated the mark bits by the time they call this,
     // so check that the new count is correct for the current mark bits.
     // Not true right now, will be true...
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    DebugOnly(HeapBlock * heapBlock = this->GetHeapBlock(address));
-    Assert(l2map->GetPageMarkBitVector(id2)->Count() == markCount || heapBlock->WasAllocatedFromDuringSweep());
-#else
     Assert(l2map->GetPageMarkBitVector(id2)->Count() == markCount);
-#endif
 
     l2map->pageMarkCount[id2] = markCount;
 }
@@ -351,12 +346,7 @@ HeapBlockMap32::VerifyMarkCountForPages(void * address, uint pageCount)
     for (uint i = id2; i < pageCount + id2; i++)
     {
         uint markCountForPage = l2map->GetPageMarkBitVector(i)->Count();
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-        DebugOnly(HeapBlock * heapBlock = this->GetHeapBlock(address));
-        Assert(markCountForPage == l2map->pageMarkCount[i] || heapBlock->WasAllocatedFromDuringSweep());
-#else
         Assert(markCountForPage == l2map->pageMarkCount[i]);
-#endif
     }
 }
 #endif
@@ -604,7 +594,6 @@ HeapBlockMap32::ForEachSegment(Recycler * recycler, Fn func)
     }
 }
 
-#if ENABLE_CONCURRENT_GC
 void
 HeapBlockMap32::ResetDirtyPages(Recycler * recycler)
 {
@@ -612,7 +601,6 @@ HeapBlockMap32::ResetDirtyPages(Recycler * recycler)
 
         Assert(segmentLength % AutoSystemInfo::PageSize == 0);
 
-#ifdef RECYCLER_WRITE_BARRIER
 #if defined(TARGET_64)
         if (segment->IsWriteBarrierEnabled())
 #endif
@@ -620,10 +608,8 @@ HeapBlockMap32::ResetDirtyPages(Recycler * recycler)
             // Reset software write barrier for barrier segments.
             RecyclerWriteBarrierManager::ResetWriteBarrier(segmentStart, segmentLength / AutoSystemInfo::PageSize);
         }
-#endif
     });
 }
-#endif
 
 bool
 HeapBlockMap32::RescanPage(void * dirtyPage, bool* anyObjectsMarkedOnPage, Recycler * recycler)
@@ -642,28 +628,20 @@ HeapBlockMap32::RescanPage(void * dirtyPage, bool* anyObjectsMarkedOnPage, Recyc
             break;
 
         case HeapBlock::HeapBlockType::SmallNormalBlockType:
-#ifdef RECYCLER_WRITE_BARRIER
         case HeapBlock::HeapBlockType::SmallNormalBlockWithBarrierType:
-#endif
             return RescanHeapBlock<SmallNormalHeapBlock>(dirtyPage, blockType, chunk, id2, anyObjectsMarkedOnPage, recycler);
         case HeapBlock::HeapBlockType::SmallFinalizableBlockType:
-#ifdef RECYCLER_WRITE_BARRIER
         case HeapBlock::HeapBlockType::SmallFinalizableBlockWithBarrierType:
-#endif
             return RescanHeapBlock<SmallFinalizableHeapBlock>(dirtyPage, blockType, chunk, id2, anyObjectsMarkedOnPage, recycler);
 #ifdef RECYCLER_VISITED_HOST
         case HeapBlock::HeapBlockType::SmallRecyclerVisitedHostBlockType:
             return RescanHeapBlock<SmallRecyclerVisitedHostHeapBlock>(dirtyPage, blockType, chunk, id2, anyObjectsMarkedOnPage, recycler);
 #endif
         case HeapBlock::HeapBlockType::MediumNormalBlockType:
-#ifdef RECYCLER_WRITE_BARRIER
         case HeapBlock::HeapBlockType::MediumNormalBlockWithBarrierType:
-#endif
             return RescanHeapBlock<MediumNormalHeapBlock>(dirtyPage, blockType, chunk, id2, anyObjectsMarkedOnPage, recycler);
         case HeapBlock::HeapBlockType::MediumFinalizableBlockType:
-#ifdef RECYCLER_WRITE_BARRIER
         case HeapBlock::HeapBlockType::MediumFinalizableBlockWithBarrierType:
-#endif
             return RescanHeapBlock<MediumFinalizableHeapBlock>(dirtyPage, blockType, chunk, id2, anyObjectsMarkedOnPage, recycler);
 #ifdef RECYCLER_VISITED_HOST
         case HeapBlock::HeapBlockType::MediumRecyclerVisitedHostBlockType:
@@ -786,7 +764,6 @@ HeapBlockMap32::ChangeProtectionLevel(Recycler* recycler, uint32_t protectFlags,
     });
 }
 
-#if ENABLE_CONCURRENT_GC
 uint
 HeapBlockMap32::Rescan(Recycler * recycler, bool resetWriteWatch)
 {
@@ -798,7 +775,6 @@ HeapBlockMap32::Rescan(Recycler * recycler, bool resetWriteWatch)
     {
         Assert(segmentLength % AutoSystemInfo::PageSize == 0);
 
-#ifdef RECYCLER_WRITE_BARRIER
         if (recycler->autoHeap.IsRecyclerWithBarrierPageAllocator(segmentPageAllocator))
         {
             // Loop through pages for this segment and check write barrier.
@@ -829,14 +805,12 @@ HeapBlockMap32::Rescan(Recycler * recycler, bool resetWriteWatch)
             }
             return;
         }
-#endif
         Assert(recycler->autoHeap.IsRecyclerLeafPageAllocator(segmentPageAllocator) ||
             recycler->autoHeap.IsRecyclerLargeBlockPageAllocator(segmentPageAllocator));
     });
 
     return scannedPageCount;
 }
-#endif
 
 bool
 HeapBlockMap32::OOMRescan(Recycler * recycler)
@@ -852,9 +826,7 @@ HeapBlockMap32::OOMRescan(Recycler * recycler)
         // Process Small non-leaf segments (including write barrier blocks).
         // Large blocks have their own separate write watch handling.
         if (recycler->autoHeap.IsRecyclerPageAllocator(segmentPageAllocator)
-#ifdef RECYCLER_WRITE_BARRIER
             || recycler->autoHeap.IsRecyclerWithBarrierPageAllocator(segmentPageAllocator)
-#endif
             )
         {
             if (recycler->NeedOOMRescan())
@@ -897,9 +869,7 @@ HeapBlockMap32::OOMRescan(Recycler * recycler)
                                 break;
 
                             case HeapBlock::HeapBlockType::SmallNormalBlockType:
-#ifdef RECYCLER_WRITE_BARRIER
                             case HeapBlock::HeapBlockType::SmallNormalBlockWithBarrierType:
-#endif
                                 if (!RescanHeapBlockOnOOM<SmallNormalHeapBlock>((SmallNormalHeapBlock*)heapBlock, pageAddress, blockType, chunk->blockInfo[id2].bucketIndex, chunk, recycler))
                                 {
                                     return;
@@ -907,9 +877,7 @@ HeapBlockMap32::OOMRescan(Recycler * recycler)
                                 break;
 
                             case HeapBlock::HeapBlockType::SmallFinalizableBlockType:
-#ifdef RECYCLER_WRITE_BARRIER
                             case HeapBlock::HeapBlockType::SmallFinalizableBlockWithBarrierType:
-#endif
                                 if (!RescanHeapBlockOnOOM<SmallFinalizableHeapBlock>((SmallFinalizableHeapBlock*) heapBlock, pageAddress, blockType, chunk->blockInfo[id2].bucketIndex, chunk, recycler))
                                 {
                                     return;
@@ -925,9 +893,7 @@ HeapBlockMap32::OOMRescan(Recycler * recycler)
 #endif
 
                             case HeapBlock::HeapBlockType::MediumNormalBlockType:
-#ifdef RECYCLER_WRITE_BARRIER
                             case HeapBlock::HeapBlockType::MediumNormalBlockWithBarrierType:
-#endif
                                 if (!RescanHeapBlockOnOOM<MediumNormalHeapBlock>((MediumNormalHeapBlock*)heapBlock, pageAddress, blockType, chunk->blockInfo[id2].bucketIndex, chunk, recycler))
                                 {
                                     return;
@@ -935,9 +901,7 @@ HeapBlockMap32::OOMRescan(Recycler * recycler)
                                 break;
 
                             case HeapBlock::HeapBlockType::MediumFinalizableBlockType:
-#ifdef RECYCLER_WRITE_BARRIER
                             case HeapBlock::HeapBlockType::MediumFinalizableBlockWithBarrierType:
-#endif
                                 if (!RescanHeapBlockOnOOM<MediumFinalizableHeapBlock>((MediumFinalizableHeapBlock*) heapBlock, pageAddress, blockType, chunk->blockInfo[id2].bucketIndex, chunk, recycler))
                                 {
                                     return;
@@ -1303,7 +1267,6 @@ HeapBlockMap64::OOMRescan(Recycler * recycler)
     return true;
 }
 
-#if ENABLE_CONCURRENT_GC
 void
 HeapBlockMap64::ResetDirtyPages(Recycler * recycler)
 {
@@ -1314,7 +1277,6 @@ HeapBlockMap64::ResetDirtyPages(Recycler * recycler)
         node = node->next;
     }
 }
-#endif
 
 void
 HeapBlockMap64::MakeAllPagesReadOnly(Recycler* recycler)
@@ -1338,7 +1300,6 @@ HeapBlockMap64::MakeAllPagesReadWrite(Recycler* recycler)
     }
 }
 
-#if ENABLE_CONCURRENT_GC
 uint
 HeapBlockMap64::Rescan(Recycler * recycler, bool resetWriteWatch)
 {
@@ -1353,7 +1314,6 @@ HeapBlockMap64::Rescan(Recycler * recycler, bool resetWriteWatch)
 
     return scannedPageCount;
 }
-#endif
 
 void
 HeapBlockMap64::Cleanup(bool concurrentFindImplicitRoot)

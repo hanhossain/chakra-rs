@@ -40,7 +40,7 @@ namespace Js
         JavascriptFunction * GetTargetFunction() const;
         // Below functions are used by heap enumerator
         uint GetArgsCountForHeapEnum() { return count;}
-        Field(Var)* GetArgsForHeapEnum() { return boundArgs;}
+        typename WriteBarrierFieldTypeTraits<Var>::Type* GetArgsForHeapEnum() { return boundArgs;}
         RecyclableObject* GetBoundThis();
 
 #if ENABLE_TTD
@@ -52,15 +52,15 @@ namespace Js
         virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
 
         static BoundFunction* InflateBoundFunction(
-            ScriptContext* ctx, RecyclableObject* function, Var bThis, uint32_t ct, Field(Var)* args);
+            ScriptContext* ctx, RecyclableObject* function, Var bThis, uint32_t ct, typename WriteBarrierFieldTypeTraits<Var>::Type* args);
 #endif
 
     private:
         static FunctionInfo        functionInfo;
-        Field(RecyclableObject*)   targetFunction;
-        Field(Var)                 boundThis;
-        Field(uint)                count;
-        Field(Field(Var)*)         boundArgs;
+        typename WriteBarrierFieldTypeTraits<RecyclableObject*>::Type   targetFunction;
+        typename WriteBarrierFieldTypeTraits<Var>::Type                 boundThis;
+        typename WriteBarrierFieldTypeTraits<uint>::Type                count;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<Var>::Type*>::Type         boundArgs;
     };
 
     template <> inline bool VarIsImpl<BoundFunction>(RecyclableObject* obj)

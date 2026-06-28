@@ -8,8 +8,8 @@ namespace Js
 {
     struct FuncCacheEntry
     {
-        Field(ScriptFunction *) func;
-        Field(DynamicType *) type;
+        typename WriteBarrierFieldTypeTraits<ScriptFunction *>::Type func;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type type;
     };
 
     class ActivationObject : public DynamicObject
@@ -197,12 +197,12 @@ namespace Js
         static byte ExtraSlotCount() { return 4; }
 
     private:
-        Field(ScriptFunction *) parentFunc;
-        Field(uint) cachedFuncCount;
-        Field(uint) firstFuncSlot;
-        Field(uint) lastFuncSlot;
-        Field(bool) committed;
-        Field(FuncCacheEntry) cache[1];
+        typename WriteBarrierFieldTypeTraits<ScriptFunction *>::Type parentFunc;
+        typename WriteBarrierFieldTypeTraits<uint>::Type cachedFuncCount;
+        typename WriteBarrierFieldTypeTraits<uint>::Type firstFuncSlot;
+        typename WriteBarrierFieldTypeTraits<uint>::Type lastFuncSlot;
+        typename WriteBarrierFieldTypeTraits<bool>::Type committed;
+        typename WriteBarrierFieldTypeTraits<FuncCacheEntry>::Type cache[1];
 
 #if ENABLE_TTD
     public:

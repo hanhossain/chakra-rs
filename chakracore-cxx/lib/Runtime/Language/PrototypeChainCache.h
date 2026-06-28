@@ -63,8 +63,8 @@ public:
 private:
     bool CheckProtoChainInternal(_In_ RecyclableObject* prototype);
 
-    Field(JsUtil::List<Type*>) types;
-    Field(ScriptCacheRegistry<PrototypeChainCache<T>>*) scriptRegistry;
+    typename WriteBarrierFieldTypeTraits<JsUtil::List<Type*>>::Type types;
+    typename WriteBarrierFieldTypeTraits<ScriptCacheRegistry<PrototypeChainCache<T>>*>::Type scriptRegistry;
 };
 
 // This cache contains types ensured to have no @@toPrimitive, @@toStringTag, toString, or valueOf properties in it

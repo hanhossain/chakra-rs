@@ -89,9 +89,7 @@ enum ObjectInfoBits : unsigned short
     // GC-TODO: FinalizeBit doesn't need to be stored since we have separate bucket for them.
     // We can move it the upper byte.
 
-#ifdef RECYCLER_WRITE_BARRIER
     WithBarrierBit              = 0x0100,
-#endif
 
 #ifdef RECYCLER_VISITED_HOST
     RecyclerVisitedHostBit      = 0x0200,
@@ -113,25 +111,19 @@ enum ObjectInfoBits : unsigned short
     NewFinalizeBit              = 0x00,
 #endif
 
-#ifdef RECYCLER_WRITE_BARRIER
     FinalizableWithBarrierBit   = WithBarrierBit | FinalizeBit,
-#endif
 
     // Allocation bits
     FinalizableLeafBits         = NewFinalizeBit | FinalizeBit | LeafBit,
     FinalizableObjectBits       = NewFinalizeBit | FinalizeBit,
-#ifdef RECYCLER_WRITE_BARRIER
     FinalizableWithBarrierObjectBits = NewFinalizeBit | FinalizableWithBarrierBit,
-#endif
     ClientFinalizableObjectBits = NewFinalizeBit | ClientTrackedBit | FinalizeBit,
 
     ClientTrackableLeafBits     = NewTrackBit | ClientTrackedBit | TrackBit | FinalizeBit | LeafBit,
     ClientTrackableObjectBits   = NewTrackBit | ClientTrackedBit | TrackBit | FinalizeBit,
 
-#ifdef RECYCLER_WRITE_BARRIER
     ClientTrackableObjectWithBarrierBits = ClientTrackableObjectBits | WithBarrierBit,
     ClientFinalizableObjectWithBarrierBits = ClientFinalizableObjectBits | WithBarrierBit,
-#endif
 
     WeakReferenceEntryBits      = LeafBit,
 
@@ -161,9 +153,7 @@ enum ObjectInfoBits : unsigned short
 #endif
 
     GetBlockTypeBitMask = FinalizeBit | LeafBit 
-#ifdef RECYCLER_WRITE_BARRIER
     | WithBarrierBit
-#endif
 #ifdef RECYCLER_VISITED_HOST
     | RecyclerVisitedHostBit
 #endif
@@ -217,7 +207,6 @@ template <class TBlockAttributes> class SmallNormalHeapBlockT;
 template <class TBlockAttributes> class SmallLeafHeapBlockT;
 template <class TBlockAttributes> class SmallFinalizableHeapBlockT;
 
-#ifdef RECYCLER_WRITE_BARRIER
 template <class TBlockAttributes> class SmallNormalWithBarrierHeapBlockT;
 template <class TBlockAttributes> class SmallFinalizableWithBarrierHeapBlockT;
 
@@ -226,11 +215,6 @@ template <class TBlockAttributes> class SmallFinalizableWithBarrierHeapBlockT;
     template class TemplateType<Memory::SmallFinalizableWithBarrierHeapBlock>; \
     template class TemplateType<Memory::MediumNormalWithBarrierHeapBlock>; \
     template class TemplateType<Memory::MediumFinalizableWithBarrierHeapBlock>; \
-
-
-#else
-#define INSTANTIATE_SWB_BLOCKTYPES(TemplateType)
-#endif
 
 #ifdef RECYCLER_VISITED_HOST
 template <class TBlockAttributes> class SmallRecyclerVisitedHostHeapBlockT;
@@ -262,20 +246,16 @@ public:
         SmallNormalBlockType,
         SmallLeafBlockType,
         SmallFinalizableBlockType,
-#ifdef RECYCLER_WRITE_BARRIER
         SmallNormalBlockWithBarrierType,
         SmallFinalizableBlockWithBarrierType,
-#endif
 #ifdef RECYCLER_VISITED_HOST
         SmallRecyclerVisitedHostBlockType,
 #endif
         MediumNormalBlockType,
         MediumLeafBlockType,
         MediumFinalizableBlockType,
-#ifdef RECYCLER_WRITE_BARRIER
         MediumNormalBlockWithBarrierType,
         MediumFinalizableBlockWithBarrierType,
-#endif
 #ifdef RECYCLER_VISITED_HOST
         MediumRecyclerVisitedHostBlockType,
 #endif
@@ -312,15 +292,10 @@ public:
     bool IsRecyclerVisitedHostBlock() const { return this->GetHeapBlockType() == SmallRecyclerVisitedHostBlockType || this->GetHeapBlockType() == MediumRecyclerVisitedHostBlockType; }
 #endif
 
-#ifdef RECYCLER_WRITE_BARRIER
     bool IsAnyNormalBlock() const { return IsNormalBlock() || IsNormalWriteBarrierBlock(); }
     bool IsAnyFinalizableBlock() const { return IsFinalizableBlock() || IsFinalizableWriteBarrierBlock(); }
     bool IsNormalWriteBarrierBlock() const { return this->GetHeapBlockType() == SmallNormalBlockWithBarrierType || this->GetHeapBlockType() == MediumNormalBlockWithBarrierType; }
     bool IsFinalizableWriteBarrierBlock() const { return this->GetHeapBlockType() == SmallFinalizableBlockWithBarrierType || this->GetHeapBlockType() == MediumFinalizableBlockWithBarrierType; }
-#else
-    bool IsAnyFinalizableBlock() const { return IsFinalizableBlock(); }
-    bool IsAnyNormalBlock() const { return IsNormalBlock(); }
-#endif
 
     bool IsLargeHeapBlock() const { return this->GetHeapBlockType() == LargeBlockType; }
     char * GetAddress() const { return address; }
@@ -340,36 +315,18 @@ public:
     SmallRecyclerVisitedHostHeapBlockT<TBlockAttributes> * AsRecyclerVisitedHostBlock();
 #endif
 
-#ifdef RECYCLER_WRITE_BARRIER
     template <typename TBlockAttributes>
     SmallNormalWithBarrierHeapBlockT<TBlockAttributes> * AsNormalWriteBarrierBlock();
 
     template <typename TBlockAttributes>
     SmallFinalizableWithBarrierHeapBlockT<TBlockAttributes> * AsFinalizableWriteBarrierBlock();
-#endif
 
 protected:
     char * address;
     Segment * segment;
     HeapBlockType const heapBlockType;
     bool needOOMRescan;                             // Set if we OOMed while marking a particular object
-#if ENABLE_CONCURRENT_GC
     bool isPendingConcurrentSweep;
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    // This flag is to identify whether this block was made available for allocations during the concurrent sweep and 
-    // still needs to be swept.
-    bool isPendingConcurrentSweepPrep;
-#if DBG || defined(RECYCLER_SLOW_CHECK_ENABLED)
-    // This flag ensures a block doesn't get swept more than once during a given sweep.
-    bool hasFinishedSweepObjects;
-
-    // When allocate from a block during concurrent sweep some checks need to be delayed until
-    // the free and mark bits are rebuilt. This flag helps skip those validations until then.
-    bool wasAllocatedFromDuringSweep;
-#endif
-#endif
-#endif
-
 public:
     template <bool doSpecialMark, typename Fn>
     bool UpdateAttributesOfMarkedObjects(MarkContext * markContext, void * objectAddress, size_t objectSize, unsigned char attributes, Fn fn);
@@ -388,13 +345,6 @@ public:
         return (heapBlockType);
     }
 
-#if (DBG || defined(RECYCLER_SLOW_CHECK_ENABLED)) && ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    bool WasAllocatedFromDuringSweep()
-    {
-        return this->wasAllocatedFromDuringSweep;
-    }
-#endif
-
     IdleDecommitPageAllocator* GetPageAllocator(HeapInfo * heapInfo);
 
     bool GetAndClearNeedOOMRescan()
@@ -408,13 +358,11 @@ public:
         return false;
     }
 #if DBG
-#if GLOBAL_ENABLE_WRITE_BARRIER
     virtual void WBSetBit(char* addr) = 0;
     virtual void WBSetBitRange(char* addr, uint count) = 0;
     virtual void WBClearBit(char* addr) = 0;
     virtual void WBVerifyBitIsSet(char* addr) = 0;
     virtual void WBClearObject(char* addr) = 0;
-#endif
     static void PrintVerifyMarkFailure(Recycler* recycler, char* objectAddress, char* target);
 #endif
 
@@ -449,11 +397,9 @@ public:
 enum SweepMode
 {
     SweepMode_InThread,
-#if ENABLE_CONCURRENT_GC
     SweepMode_Concurrent,
 #if ENABLE_PARTIAL_GC
     SweepMode_ConcurrentPartial
-#endif
 #endif
 };
 
@@ -464,9 +410,7 @@ enum SweepState
     SweepStateSwept,                // the block is partially allocated, no object needs to be swept or finalized
     SweepStateFull,                 // the block is full, no object needs to be swept or finalized
     SweepStatePendingDispose,       // the block has object that needs to be finalized
-#if ENABLE_CONCURRENT_GC
     SweepStatePendingSweep,         // the block has object that needs to be swept
-#endif
 };
 
 template <class TBlockAttributes>
@@ -532,19 +476,6 @@ public:
     ushort freeCount;
     ushort lastFreeCount;
     ushort markCount;
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-#if DBG || defined(RECYCLER_SLOW_CHECK_ENABLED)
-    // We need to keep track of the number of objects allocated during concurrent sweep, to be
-    // able to make the correct determination about whether a block is EMPTY or FULL when the actual
-    // sweep of this block happens.
-    ushort objectsAllocatedDuringConcurrentSweepCount;
-    ushort objectsMarkedDuringSweep;
-    ushort lastObjectsAllocatedDuringConcurrentSweepCount;
-    bool blockNotReusedInPartialHeapBlockList;
-    bool blockNotReusedInPendingList;
-#endif
-#endif
-
 #if ENABLE_PARTIAL_GC
     ushort oldFreeCount;
 #endif
@@ -582,7 +513,7 @@ public:
     void ProtectUnusablePages() {}
     void RestoreUnusablePages() {}
 
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
     virtual void WBVerifyBitIsSet(char* addr) override
     {
         uint index = (uint)(addr - this->address) / sizeof(void*);
@@ -626,9 +557,7 @@ public:
         return 0;
     }
 
-#ifdef RECYCLER_WRITE_BARRIER
     bool IsWithBarrier() const;
-#endif
     void RemoveFromHeapBlockMap(Recycler* recycler);
     char* GetAddress() const { return address; }
     char * GetEndAddress() const { return address + (this->GetPageCount() * AutoSystemInfo::PageSize);  }
@@ -727,11 +656,6 @@ public:
     virtual size_t GetObjectSize(void* object) const override { return objectSize; }
 
     uint GetMarkCountForSweep();
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-#if DBG || defined(RECYCLER_SLOW_CHECK_ENABLED)
-    void ResetConcurrentSweepAllocationCounts();
-#endif
-#endif
     SweepState Sweep(RecyclerSweep& recyclerSweep, bool queuePendingSweep, bool allocable, ushort finalizeCount = 0, bool hasPendingDispose = false);
     template <SweepMode mode>
     void SweepObjects(Recycler * recycler);

@@ -85,35 +85,35 @@ namespace Js
         void VerifyExecutionModeLimits() const;
         
         // This state machine should be a member of this owner FunctionBody
-        FieldWithBarrier(FunctionBody*) owner;
+        WriteBarrierFieldTypeTraits<FunctionBody*>::Type owner;
 
         // Tracks the current execution state. See ExecutionModes.h for more info.
-        FieldWithBarrier(ExecutionState) executionState;
+        WriteBarrierFieldTypeTraits<ExecutionState>::Type executionState;
 
         // Each of the following limits below is decremented when transitioning from its related mode:
         // Number of times to run interpreter (no profiling) before advancing to next mode
-        FieldWithBarrier(uint16) interpreterLimit;
+        WriteBarrierFieldTypeTraits<uint16>::Type interpreterLimit;
         // Number of times to run interpreter (min profiling) before advancing to next mode
-        FieldWithBarrier(uint16) autoProfilingInterpreter0Limit;
+        WriteBarrierFieldTypeTraits<uint16>::Type autoProfilingInterpreter0Limit;
         // Number of times to run interpreter (full profiling) before advancing to next mode
-        FieldWithBarrier(uint16) profilingInterpreter0Limit;
+        WriteBarrierFieldTypeTraits<uint16>::Type profilingInterpreter0Limit;
         // Number of times to run interpreter (min profiling) after already running min and full profiling
-        FieldWithBarrier(uint16) autoProfilingInterpreter1Limit;
+        WriteBarrierFieldTypeTraits<uint16>::Type autoProfilingInterpreter1Limit;
         // Number of times to run simple JIT before advancing to next mode
-        FieldWithBarrier(uint16) simpleJitLimit;
+        WriteBarrierFieldTypeTraits<uint16>::Type simpleJitLimit;
         // Number of times to run interpreter (full profiling) before advancing to next mode
-        FieldWithBarrier(uint16) profilingInterpreter1Limit;
+        WriteBarrierFieldTypeTraits<uint16>::Type profilingInterpreter1Limit;
 
         // Total limit to run in non-full JIT execution mode. Typically the sum of the other limits
-        FieldWithBarrier(uint16) fullJitThreshold;
+        WriteBarrierFieldTypeTraits<uint16>::Type fullJitThreshold;
         // Number of attempts to schedule FullJIT until it becomes forced
-        FieldWithBarrier(uint16) fullJitRequeueThreshold;
+        WriteBarrierFieldTypeTraits<uint16>::Type fullJitRequeueThreshold;
         // Total number of times this function has run under the interpreter with full profiling
-        FieldWithBarrier(uint16) committedProfiledIterations;
+        WriteBarrierFieldTypeTraits<uint16>::Type committedProfiledIterations;
         // Number of times this function has run under the interpreter in the current execution mode
-        FieldWithBarrier(uint32_t) interpretedCount;
+        WriteBarrierFieldTypeTraits<uint32_t>::Type interpretedCount;
         // Used to detect when interpretedCount changed from a particular call
-        FieldWithBarrier(uint32_t) lastInterpretedCount;
+        WriteBarrierFieldTypeTraits<uint32_t>::Type lastInterpretedCount;
 
         inline uint16 GetDefaultAutoProfilingInterpreter0Limit(bool isCoroutine) const;
         inline uint16 GetDefaultProfilingInterpreter0Limit(bool isCoroutine) const;
@@ -124,12 +124,12 @@ namespace Js
         inline uint16 GetDefaultFullJitThreshold(bool isCoroutine) const;
 
 #if DBG
-        FieldWithBarrier(bool) initializedExecutionModeAndLimits;
+        WriteBarrierFieldTypeTraits<bool>::Type initializedExecutionModeAndLimits;
         // Temporary debug flags for automation
-        FieldWithBarrier(bool) hasBeenReinitialized;
+        WriteBarrierFieldTypeTraits<bool>::Type hasBeenReinitialized;
 #ifdef ENABLE_SCRIPT_DEBUGGING
-        FieldWithBarrier(Js::DebuggerMode) initDebuggerMode;
-        FieldWithBarrier(Js::DebuggerMode) reinitDebuggerMode;
+        WriteBarrierFieldTypeTraits<Js::DebuggerMode>::Type initDebuggerMode;
+        WriteBarrierFieldTypeTraits<Js::DebuggerMode>::Type reinitDebuggerMode;
 #endif
 #endif
     };

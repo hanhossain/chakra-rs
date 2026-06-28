@@ -26,14 +26,14 @@ public:
     static void BuildFromJsType(Js::Type * jsType, JITType * jitType);
 
 private:
-    Field(TypeIDL) m_data;
+    typename WriteBarrierFieldTypeTraits<TypeIDL>::Type m_data;
 };
 
 template <class TAllocator>
 class JITTypeHolderBase
 {
 public:
-    Field(JITType *, TAllocator) t;
+    typename WriteBarrierFieldTypeTraits<JITType *, TAllocator>::Type t;
 
     JITTypeHolderBase();
     JITTypeHolderBase(JITType * t);

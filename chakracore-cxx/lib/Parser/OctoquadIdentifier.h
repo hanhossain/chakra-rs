@@ -22,13 +22,13 @@ namespace UnifiedRegex
     struct TrigramInfo {
         static const int PatternLength=8;
         static const int MaxResults=32;
-        Field(bool) isTrigramPattern;
-        Field(bool) hasCachedResultString;
-        Field(int) triPat1;
-        Field(int) triPat2;
-        Field(int) resultCount;
-        Field(int) offsets[MaxResults];
-        Field(Js::JavascriptString *) cachedResult[MaxResults];
+        typename WriteBarrierFieldTypeTraits<bool>::Type isTrigramPattern;
+        typename WriteBarrierFieldTypeTraits<bool>::Type hasCachedResultString;
+        typename WriteBarrierFieldTypeTraits<int>::Type triPat1;
+        typename WriteBarrierFieldTypeTraits<int>::Type triPat2;
+        typename WriteBarrierFieldTypeTraits<int>::Type resultCount;
+        typename WriteBarrierFieldTypeTraits<int>::Type offsets[MaxResults];
+        typename WriteBarrierFieldTypeTraits<Js::JavascriptString *>::Type cachedResult[MaxResults];
 
         TrigramInfo(__in_ecount(PatternLength) char* pat1,__in_ecount(PatternLength) char* pat2, Recycler* recycler);
     };
@@ -133,13 +133,13 @@ namespace UnifiedRegex
     private:
         OctoquadMatcher(const StandardChars<Char>* standardChars, CaseInsensitive::MappingSource mappingSource, OctoquadIdentifier* identifier);
 
-        Field(Char) codeToChar[TrigramAlphabet::AlphaCount];
+        typename WriteBarrierFieldTypeTraits<Char>::Type codeToChar[TrigramAlphabet::AlphaCount];
 
         // Maps characters (0..AsciTableSize-1) to 0 if not in alphabet, or 0x1, 0x2, 0x4 or 0x8.
         // Allocated and filled only if invoke Match below.
-        Field(uint8_t) charToBits[TrigramAlphabet::AsciiTableSize];
+        typename WriteBarrierFieldTypeTraits<uint8_t>::Type charToBits[TrigramAlphabet::AsciiTableSize];
 
-        Field(uint32_t) patterns[OctoquadIdentifier::NumPatterns];
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type patterns[OctoquadIdentifier::NumPatterns];
 
     public:
         static OctoquadMatcher *New(Recycler* recycler, const StandardChars<Char>* standardChars, CaseInsensitive::MappingSource mappingSource, OctoquadIdentifier* identifier);

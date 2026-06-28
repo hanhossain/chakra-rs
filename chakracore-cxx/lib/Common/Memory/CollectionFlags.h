@@ -72,12 +72,10 @@ namespace Memory
 #if ENABLE_PARTIAL_GC
         CollectPartialStress            = CollectMode_Partial,
 #endif
-#if ENABLE_CONCURRENT_GC
         CollectBackgroundStress         = CollectNowDefault,
         CollectConcurrentStress         = CollectNowConcurrent,
 #if ENABLE_PARTIAL_GC
         CollectConcurrentPartialStress  = CollectConcurrentStress | CollectPartialStress,
-#endif
 #endif
 #endif
 

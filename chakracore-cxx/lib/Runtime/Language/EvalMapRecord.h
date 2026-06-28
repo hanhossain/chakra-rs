@@ -91,11 +91,11 @@ namespace Js
         bool IsDictionaryEntry() const { return !singleValue; }
 
     private:
-        Field(bool) singleValue;
+        typename WriteBarrierFieldTypeTraits<bool>::Type singleValue;
         union
         {
-            Field(TValue) value;
-            Field(SecondaryDictionary*) nestedMap;
+            typename WriteBarrierFieldTypeTraits<TValue>::Type value;
+            typename WriteBarrierFieldTypeTraits<SecondaryDictionary*>::Type nestedMap;
         };
     };
 
@@ -196,7 +196,7 @@ namespace Js
         }
 
     private:
-        Field(TopLevelDictionary*) dictionary;
-        FieldNoBarrier(Recycler*) recycler;
+        typename WriteBarrierFieldTypeTraits<TopLevelDictionary*>::Type dictionary;
+        typename WriteBarrierFieldTypeTraits<Recycler*, _no_write_barrier_policy, _no_write_barrier_policy>::Type recycler;
     };
 }

@@ -53,16 +53,16 @@ namespace Js
 #undef INTL_ENTRY
 
     private:
-        Field(JavascriptFunction*) dateToLocaleTimeString;
-        Field(JavascriptFunction*) dateToLocaleDateString;
-        Field(JavascriptFunction*) numberToLocaleString;
-        Field(JavascriptFunction*) stringLocaleCompare;
-        Field(JavascriptFunction*) dateToLocaleString;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type dateToLocaleTimeString;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type dateToLocaleDateString;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type numberToLocaleString;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type stringLocaleCompare;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type dateToLocaleString;
 
-        Field(DynamicObject*) intlNativeInterfaces;
-        Field(FunctionBody*) intlByteCode;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type intlNativeInterfaces;
+        typename WriteBarrierFieldTypeTraits<FunctionBody*>::Type intlByteCode;
 
-        Field(bool) wasInitialized;
+        typename WriteBarrierFieldTypeTraits<bool>::Type wasInitialized;
         void EnsureIntlByteCode(_In_ ScriptContext * scriptContext);
         static void deletePrototypePropertyHelper(ScriptContext* scriptContext, DynamicObject* intlObject, Js::PropertyId objectPropertyId, Js::PropertyId getterFunctionId);
 

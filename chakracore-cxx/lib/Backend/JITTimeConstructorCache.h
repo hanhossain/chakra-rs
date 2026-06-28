@@ -30,7 +30,7 @@ public:
     JITTimeConstructorCacheIDL * GetData();
 
 private:
-    Field(JITTimeConstructorCacheIDL) m_data;
+    typename WriteBarrierFieldTypeTraits<JITTimeConstructorCacheIDL>::Type m_data;
 };
 
 #pragma once

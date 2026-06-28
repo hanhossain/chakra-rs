@@ -1033,13 +1033,13 @@ ObjTypeSpecFldInfo* ObjTypeSpecFldInfo::CreateFrom(uint id, Js::PolymorphicInlin
     if (gatherDataForInlining)
     {
         fixedFieldInfoArray = RecyclerNewArrayZ(recycler, FixedFieldInfo, fixedFunctionCount);
-        CopyArray<FixedFieldInfo, Field(Js::Var)>(
+        CopyArray<FixedFieldInfo, typename WriteBarrierFieldTypeTraits<Js::Var>::Type>(
             fixedFieldInfoArray, fixedFunctionCount, localFixedFieldInfoArray, fixedFunctionCount);
     }
     else
     {
         fixedFieldInfoArray = RecyclerNewArrayZ(recycler, FixedFieldInfo, 1);
-        CopyArray<FixedFieldInfo, Field(Js::Var)>(fixedFieldInfoArray, 1, localFixedFieldInfoArray, 1);
+        CopyArray<FixedFieldInfo, typename WriteBarrierFieldTypeTraits<Js::Var>::Type>(fixedFieldInfoArray, 1, localFixedFieldInfoArray, 1);
     }
 
     Js::PropertyId propertyId = functionBody->GetPropertyIdFromCacheId(cacheId);
@@ -1208,7 +1208,7 @@ void ObjTypeSpecFldInfoArray::EnsureArray(Recycler *const recycler, Js::Function
         return;
     }
 
-    this->infoArray = RecyclerNewArrayZ(recycler, Field(ObjTypeSpecFldInfo*), functionBody->GetInlineCacheCount());
+    this->infoArray = RecyclerNewArrayZ(recycler, typename WriteBarrierFieldTypeTraits<ObjTypeSpecFldInfo*>::Type, functionBody->GetInlineCacheCount());
 #if DBG
     this->infoCount = functionBody->GetInlineCacheCount();
 #endif

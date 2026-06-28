@@ -9,9 +9,7 @@ template <typename TBlockType>
 SmallNormalHeapBucketBase<TBlockType>::SmallNormalHeapBucketBase()
 #if ENABLE_PARTIAL_GC
     : partialHeapBlockList(nullptr)
-#if ENABLE_CONCURRENT_GC
     , partialSweptHeapBlockList(nullptr)
-#endif
 #endif
 {
 }
@@ -43,16 +41,6 @@ SmallNormalHeapBucketBase<TBlockType>::ScanInitialImplicitRoots(Recycler * recyc
         heapBlock->ScanInitialImplicitRoots(recycler);
     });
 
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    if (CONFIG_FLAG_RELEASE(EnableConcurrentSweepAlloc) && !this->IsAnyFinalizableBucket())
-    {
-        HeapBlockList::ForEach(this->sweepableHeapBlockList, [recycler](TBlockType * heapBlock)
-        {
-            heapBlock->ScanInitialImplicitRoots(recycler);
-        });
-    }
-#endif
-
     HeapBlockList::ForEach(this->heapBlockList, [recycler](TBlockType * heapBlock)
     {
         heapBlock->ScanInitialImplicitRoots(recycler);
@@ -66,12 +54,10 @@ SmallNormalHeapBucketBase<TBlockType>::ScanInitialImplicitRoots(Recycler * recyc
         {
             heapBlock->ScanInitialImplicitRoots(recycler);
         });
-#if ENABLE_CONCURRENT_GC
         HeapBlockList::ForEach(partialSweptHeapBlockList, [recycler](TBlockType * heapBlock)
         {
             heapBlock->ScanInitialImplicitRoots(recycler);
         });
-#endif
     }
 #endif
 }
@@ -215,7 +201,6 @@ SmallNormalHeapBucketBase<TBlockType>::RescanObjectsOnPage(TBlockType * block, c
     return true;
 }
 
-#if ENABLE_CONCURRENT_GC
 template <typename TBlockType>
 void
 SmallNormalHeapBucketBase<TBlockType>::SweepPendingObjects(RecyclerSweep& recyclerSweep)
@@ -313,16 +298,13 @@ SmallNormalHeapBucketBase<TBlockType>::SweepPendingObjects(Recycler * recycler, 
     });
     return tail;
 }
-#endif
 
 #if ENABLE_PARTIAL_GC
 template <typename TBlockType>
 SmallNormalHeapBucketBase<TBlockType>::~SmallNormalHeapBucketBase()
 {
     this->DeleteHeapBlockList(this->partialHeapBlockList);
-#if ENABLE_CONCURRENT_GC
     this->DeleteHeapBlockList(this->partialSweptHeapBlockList);
-#endif
 }
 
 template <typename TBlockType>
@@ -382,7 +364,6 @@ SmallNormalHeapBucketBase<TBlockType>::SweepPartialReusePages(RecyclerSweep& rec
     {
     });
 
-#if ENABLE_CONCURRENT_GC
     // only collect data for pending sweep list but don't sweep yet
     // until we have adjusted the heuristics, and SweepPartialReusePages will
     // sweep the page that we are going to reuse in thread.
@@ -396,9 +377,6 @@ SmallNormalHeapBucketBase<TBlockType>::SweepPartialReusePages(RecyclerSweep& rec
         {
             if (isReused)
             {
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-                DebugOnly(heapBlock->blockNotReusedInPendingList = false);
-#endif
                 // Finalizable blocks are always swept in thread, so shouldn't be here
                 Assert(!heapBlock->IsAnyFinalizableBlock());
 
@@ -414,16 +392,12 @@ SmallNormalHeapBucketBase<TBlockType>::SweepPartialReusePages(RecyclerSweep& rec
             }
             else
             {
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-                DebugOnly(heapBlock->blockNotReusedInPendingList = true);
-#endif
 #ifdef RECYCLER_TRACE
                 this->GetRecycler()->PrintBlockStatus(this, heapBlock, u"[**15**] finished SweepPartialReusePages, heapblock NOT REUSED added to pendingSweepList.");
 #endif
             }
         }
     );
-#endif
 
     RECYCLER_SLOW_CHECK(this->VerifyHeapBlockCount(recyclerSweep.IsBackground()));
 
@@ -443,13 +417,8 @@ SmallNormalHeapBucketBase<TBlockType>::FinishPartialCollect(RecyclerSweep * recy
 
     Assert(this->GetRecycler()->inPartialCollectMode);
 
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    Assert(recyclerSweep == nullptr || this->IsAllocationStopped() || this->AllocationsStartedDuringConcurrentSweep());
-#else
     Assert(recyclerSweep == nullptr || this->IsAllocationStopped());
-#endif
 
-#if ENABLE_CONCURRENT_GC
     // Process the partial Swept block and move it to the partial heap block list
     TBlockType * partialSweptList = this->partialSweptHeapBlockList;
     if (partialSweptList)
@@ -466,7 +435,6 @@ SmallNormalHeapBucketBase<TBlockType>::FinishPartialCollect(RecyclerSweep * recy
         tail->SetNextBlock(this->partialHeapBlockList);
         this->partialHeapBlockList = partialSweptList;
     }
-#endif
 
     TBlockType * currentPartialHeapBlockList = this->partialHeapBlockList;
     if (recyclerSweep == nullptr)
@@ -494,13 +462,7 @@ SmallNormalHeapBucketBase<TBlockType>::FinishPartialCollect(RecyclerSweep * recy
                 tail->SetNextBlock(currentPartialHeapBlockList);
             }
         }
-#if ENABLE_CONCURRENT_GC
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-        if (recyclerSweep->GetPendingSweepBlockList(this) == nullptr && !this->AllocationsStartedDuringConcurrentSweep())
-#else
         if (recyclerSweep->GetPendingSweepBlockList(this) == nullptr)
-#endif
-#endif
         {
             // nothing else to sweep now,  we can start allocating now.
             this->StartAllocationAfterSweep();
@@ -516,9 +478,7 @@ SmallNormalHeapBucketBase<TBlockType>::EnumerateObjects(ObjectInfoBits infoBits,
 {
     __super::EnumerateObjects(infoBits, CallBackFunction);
     HeapBucket::EnumerateObjects(partialHeapBlockList, infoBits, CallBackFunction);
-#if ENABLE_CONCURRENT_GC
     HeapBucket::EnumerateObjects(partialSweptHeapBlockList, infoBits, CallBackFunction);
-#endif
 }
 
 //------------------------------------------------------------------------------
@@ -530,9 +490,7 @@ void
 SmallNormalHeapBucketBase<TBlockType>::ResetMarks(ResetMarkFlags flags)
 {
     Assert(this->partialHeapBlockList == nullptr);
-#if ENABLE_CONCURRENT_GC
     Assert(this->partialSweptHeapBlockList == nullptr);
-#endif
     __super::ResetMarks(flags);
 }
 
@@ -555,15 +513,8 @@ SmallNormalHeapBucketBase<TBlockType>::GetNonEmptyHeapBlockCount(bool checkCount
 {
     size_t currentHeapBlockCount = __super::GetNonEmptyHeapBlockCount(false);
     currentHeapBlockCount += HeapBlockList::Count(partialHeapBlockList);
-#if ENABLE_CONCURRENT_GC
     currentHeapBlockCount += HeapBlockList::Count(partialSweptHeapBlockList);
-#endif
     bool allocatingDuringConcurrentSweep = false;
-
-#if ENABLE_CONCURRENT_GC
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-#endif
-#endif
     RECYCLER_SLOW_CHECK(Assert(!checkCount || this->heapBlockCount == currentHeapBlockCount || (this->heapBlockCount >= 65535 && allocatingDuringConcurrentSweep)));
     return currentHeapBlockCount;
 }
@@ -577,10 +528,8 @@ SmallNormalHeapBucketBase<TBlockType>::Check(bool checkCount)
     Assert(partialHeapBlockList == nullptr || this->GetRecycler()->inPartialCollectMode);
     smallHeapBlockCount += HeapInfo::Check(false, false, this->partialHeapBlockList);
 
-#if ENABLE_CONCURRENT_GC
     Assert(partialSweptHeapBlockList == nullptr || this->GetRecycler()->inPartialCollectMode);
     smallHeapBlockCount += HeapInfo::Check(false, false, this->partialSweptHeapBlockList);
-#endif
 
     Assert(!checkCount || this->heapBlockCount == smallHeapBlockCount);
     return smallHeapBlockCount;
@@ -600,13 +549,11 @@ SmallNormalHeapBucketBase<TBlockType>::Verify()
         Assert(heapBlock->HasFreeObject());
         heapBlock->Verify();
     });
-#if ENABLE_CONCURRENT_GC
     Assert(this->partialSweptHeapBlockList == nullptr || this->GetRecycler()->inPartialCollectMode);
     HeapBlockList::ForEach(this->partialSweptHeapBlockList, [](TBlockType * heapBlock)
     {
         heapBlock->Verify();
     });
-#endif
 }
 #endif // RECYCLER_MEMORY_VERIFY
 #ifdef RECYCLER_VERIFY_MARK
@@ -620,12 +567,10 @@ SmallNormalHeapBucketBase<TBlockType>::VerifyMark()
         heapBlock->VerifyMark();
     });
 
-#if ENABLE_CONCURRENT_GC
     HeapBlockList::ForEach(this->partialSweptHeapBlockList, [](TBlockType * heapBlock)
     {
         heapBlock->VerifyMark();
     });
-#endif
 }
 #endif // RECYCLER_VERIFY_MARK
 #endif // ENABLE_PARTIAL_GC
@@ -641,9 +586,7 @@ SmallNormalHeapBucketBase<TBlockType>::Sweep(RecyclerSweep& recyclerSweep)
     // There should be nothing there that is free-able since the last time we swept
 
     Assert(recyclerSweep.InPartialCollect() || partialHeapBlockList == nullptr);
-#if ENABLE_CONCURRENT_GC
     Assert(recyclerSweep.InPartialCollect() || partialSweptHeapBlockList == nullptr);
-#endif
     this->SweepVerifyPartialBlocks(recycler, this->partialHeapBlockList);
 #endif
 #endif
@@ -656,10 +599,8 @@ namespace Memory
     template class SmallNormalHeapBucketBase<SmallNormalHeapBlock>;
     template class SmallNormalHeapBucketBase<MediumNormalHeapBlock>;
 
-#ifdef RECYCLER_WRITE_BARRIER
     template class SmallNormalHeapBucketBase<SmallNormalWithBarrierHeapBlock>;
     template class SmallNormalHeapBucketBase<MediumNormalWithBarrierHeapBlock>;
-#endif
 
     template class SmallNormalHeapBucketBase<SmallFinalizableHeapBlock>;
     template class SmallNormalHeapBucketBase<MediumFinalizableHeapBlock>;
@@ -669,17 +610,13 @@ namespace Memory
     template class SmallNormalHeapBucketBase<MediumRecyclerVisitedHostHeapBlock>;
 #endif
 
-#ifdef RECYCLER_WRITE_BARRIER
     template class SmallNormalHeapBucketBase<SmallFinalizableWithBarrierHeapBlock>;
     template class SmallNormalHeapBucketBase<MediumFinalizableWithBarrierHeapBlock>;
-#endif
 
     template void SmallNormalHeapBucketBase<SmallNormalHeapBlock>::Sweep(RecyclerSweep& recyclerSweep);
     template void SmallNormalHeapBucketBase<MediumNormalHeapBlock>::Sweep(RecyclerSweep& recyclerSweep);
 
-#ifdef RECYCLER_WRITE_BARRIER
     template void SmallNormalHeapBucketBase<SmallNormalWithBarrierHeapBlock>::Sweep(RecyclerSweep& recyclerSweep);
     template void SmallNormalHeapBucketBase<MediumNormalWithBarrierHeapBlock>::Sweep(RecyclerSweep& recyclerSweep);
-#endif
 }
 

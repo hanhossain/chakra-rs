@@ -602,7 +602,7 @@ int32_t BGParseWorkItem::DeserializeParseResults(
         sourceIndex = scriptContextUI->SaveSourceNoCopy(utf8SourceInfo, (int)srcLength, false /*isCesu8*/);
         Assert(sourceIndex != Js::Constants::InvalidSourceIndex);
 
-        Field(Js::FunctionBody*) functionBody = nullptr;
+        typename WriteBarrierFieldTypeTraits<Js::FunctionBody*>::Type functionBody = nullptr;
         hr = Js::ByteCodeSerializer::DeserializeFromBuffer(
             scriptContextUI,
             BGPARSE_FLAGS,

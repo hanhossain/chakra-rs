@@ -8,8 +8,8 @@ namespace Js
 {
     class SubString : public JavascriptString
     {
-        Field(void const *) originalFullStringReference;          // Only here to prevent recycler to free this buffer.
-        Field(void const *) unused; // Recycler would allocate this space anyway due to bucket sizing, so make it explicit
+        typename WriteBarrierFieldTypeTraits<void const *>::Type originalFullStringReference;          // Only here to prevent recycler to free this buffer.
+        typename WriteBarrierFieldTypeTraits<void const *>::Type unused; // Recycler would allocate this space anyway due to bucket sizing, so make it explicit
 
         SubString(void const * originalFullStringReference, const char16_t* subString, charcount_t length, ScriptContext *scriptContext);
 

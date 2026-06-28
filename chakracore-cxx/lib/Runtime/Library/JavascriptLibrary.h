@@ -49,15 +49,15 @@ namespace Js
     struct EnumeratedObjectCache
     {
         static const int kMaxCachedPropStrings = 16;
-        Field(DynamicObject*) object;
-        Field(DynamicType*) type;
-        Field(PropertyString*) propertyStrings[kMaxCachedPropStrings];
-        Field(int) validPropStrings;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type object;
+        typename WriteBarrierFieldTypeTraits<DynamicType*>::Type type;
+        typename WriteBarrierFieldTypeTraits<PropertyString*>::Type propertyStrings[kMaxCachedPropStrings];
+        typename WriteBarrierFieldTypeTraits<int>::Type validPropStrings;
     };
 
     struct PropertyStringMap
     {
-        Field(PropertyString*) strLen2[80];
+        typename WriteBarrierFieldTypeTraits<PropertyString*>::Type strLen2[80];
 
         inline static uint PStrMapIndex(char16_t ch)
         {
@@ -72,29 +72,29 @@ namespace Js
         static const uint StringifyCacheSize = 16;
         static const uint CreateKeysCacheSize = 16;
 
-        Field(PropertyStringMap*) propertyStrings[80];
-        Field(JavascriptString *) lastNumberToStringRadix10String;
-        Field(EnumeratedObjectCache) enumObjCache;
-        Field(JavascriptString *) lastUtcTimeFromStrString;
-        Field(EvalCacheDictionary*) evalCacheDictionary;
-        Field(EvalCacheDictionary*) indirectEvalCacheDictionary;
-        Field(NewFunctionCache*) newFunctionCache;
-        Field(StringMap *) integerStringMap;
-        Field(RegexPatternMruMap *) dynamicRegexMap;
-        Field(SourceContextInfoMap*) sourceContextInfoMap;   // maps host provided context cookie to the URL of the script buffer passed.
-        Field(DynamicSourceContextInfoMap*) dynamicSourceContextInfoMap;
-        Field(SourceContextInfo*) noContextSourceContextInfo;
-        Field(SRCINFO*) noContextGlobalSourceInfo;
-        Field(Field(SRCINFO const *)*) moduleSrcInfo;
-        Field(BuiltInLibraryFunctionMap*) builtInLibraryFunctions;
-        Field(ScriptContextPolymorphicInlineCache*) toStringTagCache;
-        Field(ScriptContextPolymorphicInlineCache*) toJSONCache;
-        Field(EnumeratorCache*) assignCache;
-        Field(EnumeratorCache*) stringifyCache;
-        Field(EnumeratorCache*) createKeysCache;
+        typename WriteBarrierFieldTypeTraits<PropertyStringMap*>::Type propertyStrings[80];
+        typename WriteBarrierFieldTypeTraits<JavascriptString *>::Type lastNumberToStringRadix10String;
+        typename WriteBarrierFieldTypeTraits<EnumeratedObjectCache>::Type enumObjCache;
+        typename WriteBarrierFieldTypeTraits<JavascriptString *>::Type lastUtcTimeFromStrString;
+        typename WriteBarrierFieldTypeTraits<EvalCacheDictionary*>::Type evalCacheDictionary;
+        typename WriteBarrierFieldTypeTraits<EvalCacheDictionary*>::Type indirectEvalCacheDictionary;
+        typename WriteBarrierFieldTypeTraits<NewFunctionCache*>::Type newFunctionCache;
+        typename WriteBarrierFieldTypeTraits<StringMap *>::Type integerStringMap;
+        typename WriteBarrierFieldTypeTraits<RegexPatternMruMap *>::Type dynamicRegexMap;
+        typename WriteBarrierFieldTypeTraits<SourceContextInfoMap*>::Type sourceContextInfoMap;   // maps host provided context cookie to the URL of the script buffer passed.
+        typename WriteBarrierFieldTypeTraits<DynamicSourceContextInfoMap*>::Type dynamicSourceContextInfoMap;
+        typename WriteBarrierFieldTypeTraits<SourceContextInfo*>::Type noContextSourceContextInfo;
+        typename WriteBarrierFieldTypeTraits<SRCINFO*>::Type noContextGlobalSourceInfo;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<SRCINFO const *>::Type*>::Type moduleSrcInfo;
+        typename WriteBarrierFieldTypeTraits<BuiltInLibraryFunctionMap*>::Type builtInLibraryFunctions;
+        typename WriteBarrierFieldTypeTraits<ScriptContextPolymorphicInlineCache*>::Type toStringTagCache;
+        typename WriteBarrierFieldTypeTraits<ScriptContextPolymorphicInlineCache*>::Type toJSONCache;
+        typename WriteBarrierFieldTypeTraits<EnumeratorCache*>::Type assignCache;
+        typename WriteBarrierFieldTypeTraits<EnumeratorCache*>::Type stringifyCache;
+        typename WriteBarrierFieldTypeTraits<EnumeratorCache*>::Type createKeysCache;
 #if ENABLE_PROFILE_INFO
 #if DBG_DUMP || defined(DYNAMIC_PROFILE_STORAGE) || defined(RUNTIME_DATA_COLLECTION)
-        Field(DynamicProfileInfoList*) profileInfoList;
+        typename WriteBarrierFieldTypeTraits<DynamicProfileInfoList*>::Type profileInfoList;
 #endif
 #endif
         Cache() : toStringTagCache(nullptr), toJSONCache(nullptr), assignCache(nullptr), stringifyCache(nullptr) { }
@@ -120,8 +120,8 @@ namespace Js
     struct CacheForCopyOnAccessArraySegments
     {
         static const uint32_t MAX_SIZE = 31;
-        Field(SparseArraySegment<int32_t> *) cache[MAX_SIZE];
-        Field(uint32_t) count;
+        typename WriteBarrierFieldTypeTraits<SparseArraySegment<int32_t> *>::Type cache[MAX_SIZE];
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type count;
 
         uint32_t AddSegment(SparseArraySegment<int32_t> *segment)
         {
@@ -175,7 +175,7 @@ namespace Js
 
     public:
 #if ENABLE_COPYONACCESS_ARRAY
-        Field(CacheForCopyOnAccessArraySegments *) cacheForCopyOnAccessArraySegments;
+        typename WriteBarrierFieldTypeTraits<CacheForCopyOnAccessArraySegments *>::Type cacheForCopyOnAccessArraySegments;
 #endif
 
         static uint32_t GetScriptContextOffset() { return offsetof(JavascriptLibrary, scriptContext); }
@@ -220,226 +220,226 @@ namespace Js
         static bool IsTypedArrayConstructor(Var constructor, ScriptContext* scriptContext);
 
     private:
-        FieldNoBarrier(Recycler *) recycler;
-        Field(ExternalLibraryBase*) externalLibraryList;
+        typename WriteBarrierFieldTypeTraits<Recycler *, _no_write_barrier_policy, _no_write_barrier_policy>::Type recycler;
+        typename WriteBarrierFieldTypeTraits<ExternalLibraryBase*>::Type externalLibraryList;
 
-        Field(UndeclaredBlockVariable*) undeclBlockVarSentinel;
+        typename WriteBarrierFieldTypeTraits<UndeclaredBlockVariable*>::Type undeclBlockVarSentinel;
 
-        Field(DynamicType *) generatorConstructorPrototypeObjectType;
-        Field(DynamicType *) asyncGeneratorConstructorPrototypeObjectType;
-        Field(DynamicType *) constructorPrototypeObjectType;
-        Field(DynamicType *) heapArgumentsType;
-        Field(DynamicType *) strictHeapArgumentsType;
-        Field(DynamicType *) activationObjectType;
-        Field(DynamicType *) arrayType;
-        Field(DynamicType *) nativeIntArrayType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type generatorConstructorPrototypeObjectType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type asyncGeneratorConstructorPrototypeObjectType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type constructorPrototypeObjectType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type heapArgumentsType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type strictHeapArgumentsType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type activationObjectType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type arrayType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type nativeIntArrayType;
 #if ENABLE_COPYONACCESS_ARRAY
-        Field(DynamicType *) copyOnAccessNativeIntArrayType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type copyOnAccessNativeIntArrayType;
 #endif
-        Field(DynamicType *) nativeFloatArrayType;
-        Field(DynamicType *) arrayBufferType;
-        Field(DynamicType *) sharedArrayBufferType;
-        Field(DynamicType *) dataViewType;
-        Field(DynamicType *) int8ArrayType;
-        Field(DynamicType *) uint8ArrayType;
-        Field(DynamicType *) uint8ClampedArrayType;
-        Field(DynamicType *) int16ArrayType;
-        Field(DynamicType *) uint16ArrayType;
-        Field(DynamicType *) int32ArrayType;
-        Field(DynamicType *) uint32ArrayType;
-        Field(DynamicType *) float32ArrayType;
-        Field(DynamicType *) float64ArrayType;
-        Field(DynamicType *) int64ArrayType;
-        Field(DynamicType *) uint64ArrayType;
-        Field(DynamicType *) boolArrayType;
-        Field(DynamicType *) charArrayType;
-        Field(StaticType *) booleanTypeStatic;
-        Field(DynamicType *) booleanTypeDynamic;
-        Field(DynamicType *) bigintTypeDynamic;
-        Field(StaticType *) bigintTypeStatic;
-        Field(DynamicType *) dateType;
-        Field(DynamicType *) symbolTypeDynamic;
-        Field(StaticType *) symbolTypeStatic;
-        Field(DynamicType *) iteratorResultType;
-        Field(DynamicType *) awaitObjectType;
-        Field(DynamicType *) resumeYieldObjectType;
-        Field(DynamicType *) arrayIteratorType;
-        Field(DynamicType *) mapIteratorType;
-        Field(DynamicType *) setIteratorType;
-        Field(DynamicType *) stringIteratorType;
-        Field(DynamicType *) promiseType;
-        Field(DynamicType *) listIteratorType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type nativeFloatArrayType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type arrayBufferType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type sharedArrayBufferType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type dataViewType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type int8ArrayType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type uint8ArrayType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type uint8ClampedArrayType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type int16ArrayType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type uint16ArrayType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type int32ArrayType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type uint32ArrayType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type float32ArrayType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type float64ArrayType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type int64ArrayType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type uint64ArrayType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type boolArrayType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type charArrayType;
+        typename WriteBarrierFieldTypeTraits<StaticType *>::Type booleanTypeStatic;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type booleanTypeDynamic;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type bigintTypeDynamic;
+        typename WriteBarrierFieldTypeTraits<StaticType *>::Type bigintTypeStatic;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type dateType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type symbolTypeDynamic;
+        typename WriteBarrierFieldTypeTraits<StaticType *>::Type symbolTypeStatic;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type iteratorResultType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type awaitObjectType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type resumeYieldObjectType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type arrayIteratorType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type mapIteratorType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type setIteratorType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type stringIteratorType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type promiseType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type listIteratorType;
 
-        Field(JavascriptFunction*) builtinFunctions[BuiltinFunction::Count];
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type builtinFunctions[BuiltinFunction::Count];
 
-        Field(long) vtableAddresses[VTableValue::Count];
-        Field(JavascriptString*) typeDisplayStrings[TypeIds_Limit];
-        Field(ConstructorCache *) constructorCacheDefaultInstance;
-        Field(const uint8_t *) absDoubleCst;
-        Field(double const *) uintConvertConst;
+        typename WriteBarrierFieldTypeTraits<long>::Type vtableAddresses[VTableValue::Count];
+        typename WriteBarrierFieldTypeTraits<JavascriptString*>::Type typeDisplayStrings[TypeIds_Limit];
+        typename WriteBarrierFieldTypeTraits<ConstructorCache *>::Type constructorCacheDefaultInstance;
+        typename WriteBarrierFieldTypeTraits<const uint8_t *>::Type absDoubleCst;
+        typename WriteBarrierFieldTypeTraits<double const *>::Type uintConvertConst;
 
         // Function Types
-        Field(DynamicTypeHandler *) anonymousFunctionTypeHandler;
-        Field(DynamicTypeHandler *) anonymousFunctionWithPrototypeTypeHandler;
-        Field(DynamicTypeHandler *) functionTypeHandler;
-        Field(DynamicTypeHandler *) functionTypeHandlerWithLength;
-        Field(DynamicTypeHandler *) functionWithPrototypeAndLengthTypeHandler;
-        Field(DynamicTypeHandler *) functionWithPrototypeTypeHandler;
-        Field(DynamicTypeHandler *) classPrototypeTypeHandler;
+        typename WriteBarrierFieldTypeTraits<DynamicTypeHandler *>::Type anonymousFunctionTypeHandler;
+        typename WriteBarrierFieldTypeTraits<DynamicTypeHandler *>::Type anonymousFunctionWithPrototypeTypeHandler;
+        typename WriteBarrierFieldTypeTraits<DynamicTypeHandler *>::Type functionTypeHandler;
+        typename WriteBarrierFieldTypeTraits<DynamicTypeHandler *>::Type functionTypeHandlerWithLength;
+        typename WriteBarrierFieldTypeTraits<DynamicTypeHandler *>::Type functionWithPrototypeAndLengthTypeHandler;
+        typename WriteBarrierFieldTypeTraits<DynamicTypeHandler *>::Type functionWithPrototypeTypeHandler;
+        typename WriteBarrierFieldTypeTraits<DynamicTypeHandler *>::Type classPrototypeTypeHandler;
 
-        Field(DynamicType *) externalFunctionWithDeferredPrototypeType;
-        Field(DynamicType *) externalFunctionWithLengthAndDeferredPrototypeType;
-        Field(DynamicType *) wrappedFunctionWithDeferredPrototypeType;
-        Field(DynamicType *) stdCallFunctionWithDeferredPrototypeType;
-        Field(DynamicType *) idMappedFunctionWithPrototypeType;
-        Field(DynamicType *) externalConstructorFunctionWithDeferredPrototypeType;
-        Field(DynamicType *) defaultExternalConstructorFunctionWithDeferredPrototypeType;
-        Field(DynamicType *) boundFunctionType;
-        Field(DynamicType *) regexConstructorType;
-        Field(DynamicType *) crossSiteDeferredFunctionType;
-        Field(DynamicType *) crossSiteDeferredPrototypeFunctionType;
-        Field(DynamicType *) crossSiteIdMappedFunctionWithPrototypeType;
-        Field(DynamicType *) crossSiteExternalConstructFunctionWithPrototypeType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type externalFunctionWithDeferredPrototypeType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type externalFunctionWithLengthAndDeferredPrototypeType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type wrappedFunctionWithDeferredPrototypeType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type stdCallFunctionWithDeferredPrototypeType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type idMappedFunctionWithPrototypeType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type externalConstructorFunctionWithDeferredPrototypeType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type defaultExternalConstructorFunctionWithDeferredPrototypeType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type boundFunctionType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type regexConstructorType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type crossSiteDeferredFunctionType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type crossSiteDeferredPrototypeFunctionType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type crossSiteIdMappedFunctionWithPrototypeType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type crossSiteExternalConstructFunctionWithPrototypeType;
 
-        Field(StaticType  *) enumeratorType;
-        Field(DynamicType *) errorType;
-        Field(DynamicType *) evalErrorType;
-        Field(DynamicType *) rangeErrorType;
-        Field(DynamicType *) referenceErrorType;
-        Field(DynamicType *) syntaxErrorType;
-        Field(DynamicType *) typeErrorType;
-        Field(DynamicType *) uriErrorType;
-        Field(DynamicType *) aggregateErrorType;
-        Field(DynamicType *) webAssemblyCompileErrorType;
-        Field(DynamicType *) webAssemblyRuntimeErrorType;
-        Field(DynamicType *) webAssemblyLinkErrorType;
-        Field(StaticType  *) numberTypeStatic;
-        Field(StaticType  *) int64NumberTypeStatic;
-        Field(StaticType  *) uint64NumberTypeStatic;
+        typename WriteBarrierFieldTypeTraits<StaticType  *>::Type enumeratorType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type errorType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type evalErrorType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type rangeErrorType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type referenceErrorType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type syntaxErrorType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type typeErrorType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type uriErrorType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type aggregateErrorType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type webAssemblyCompileErrorType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type webAssemblyRuntimeErrorType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type webAssemblyLinkErrorType;
+        typename WriteBarrierFieldTypeTraits<StaticType  *>::Type numberTypeStatic;
+        typename WriteBarrierFieldTypeTraits<StaticType  *>::Type int64NumberTypeStatic;
+        typename WriteBarrierFieldTypeTraits<StaticType  *>::Type uint64NumberTypeStatic;
 
-        Field(DynamicType *) webAssemblyModuleType;
-        Field(DynamicType *) webAssemblyInstanceType;
-        Field(DynamicType *) webAssemblyMemoryType;
-        Field(DynamicType *) webAssemblyTableType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type webAssemblyModuleType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type webAssemblyInstanceType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type webAssemblyMemoryType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type webAssemblyTableType;
 
-        Field(DynamicType *) numberTypeDynamic;
-        Field(DynamicType *) objectTypes[PreInitializedObjectTypeCount];
-        Field(DynamicType *) objectHeaderInlinedTypes[PreInitializedObjectTypeCount];
-        Field(DynamicType *) nullPrototypeObjectType;
-        Field(DynamicType *) regexPrototypeType;
-        Field(DynamicType *) regexType;
-        Field(DynamicType *) regexResultType;
-        Field(DynamicType *) stringTypeDynamic;
-        Field(DynamicType *) mapType;
-        Field(DynamicType *) setType;
-        Field(DynamicType *) weakMapType;
-        Field(DynamicType *) weakSetType;
-        Field(DynamicType *) proxyType;
-        Field(StaticType  *) withType;
-        Field(DynamicType *) SpreadArgumentType;
-        Field(DynamicType *) moduleNamespaceType;
-        Field(PropertyDescriptor) defaultPropertyDescriptor;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type numberTypeDynamic;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type objectTypes[PreInitializedObjectTypeCount];
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type objectHeaderInlinedTypes[PreInitializedObjectTypeCount];
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type nullPrototypeObjectType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type regexPrototypeType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type regexType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type regexResultType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type stringTypeDynamic;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type mapType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type setType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type weakMapType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type weakSetType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type proxyType;
+        typename WriteBarrierFieldTypeTraits<StaticType  *>::Type withType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type SpreadArgumentType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type moduleNamespaceType;
+        typename WriteBarrierFieldTypeTraits<PropertyDescriptor>::Type defaultPropertyDescriptor;
 
-        Field(StringCache) stringCache; // cache string variables once they are used
+        typename WriteBarrierFieldTypeTraits<StringCache>::Type stringCache; // cache string variables once they are used
 
         // no late caching is needed
-        Field(JavascriptString*) nullString;
-        Field(JavascriptString*) emptyString;
+        typename WriteBarrierFieldTypeTraits<JavascriptString*>::Type nullString;
+        typename WriteBarrierFieldTypeTraits<JavascriptString*>::Type emptyString;
 
         // used implicitly by ChakraFull - don't late cache
-        Field(JavascriptString*) symbolTypeDisplayString;
-        Field(JavascriptString*) debuggerDeadZoneBlockVariableString;
+        typename WriteBarrierFieldTypeTraits<JavascriptString*>::Type symbolTypeDisplayString;
+        typename WriteBarrierFieldTypeTraits<JavascriptString*>::Type debuggerDeadZoneBlockVariableString;
 
-        Field(DynamicObject*) missingPropertyHolder;
-        Field(StaticType*) throwErrorObjectType;
-        Field(PropertyStringCacheMap*) propertyStringMap;
-        Field(SymbolCacheMap*) symbolMap;
-        Field(ConstructorCache*) builtInConstructorCache;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type missingPropertyHolder;
+        typename WriteBarrierFieldTypeTraits<StaticType*>::Type throwErrorObjectType;
+        typename WriteBarrierFieldTypeTraits<PropertyStringCacheMap*>::Type propertyStringMap;
+        typename WriteBarrierFieldTypeTraits<SymbolCacheMap*>::Type symbolMap;
+        typename WriteBarrierFieldTypeTraits<ConstructorCache*>::Type builtInConstructorCache;
 
-        Field(DynamicObject*) chakraLibraryObject;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type chakraLibraryObject;
 
-        Field(JavascriptFunction*) debugObjectFaultInjectionCookieGetterFunction;
-        Field(JavascriptFunction*) debugObjectFaultInjectionCookieSetterFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type debugObjectFaultInjectionCookieGetterFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type debugObjectFaultInjectionCookieSetterFunction;
 
-        Field(JavascriptFunction*) evalFunctionObject;
-        Field(JavascriptFunction*) arrayPrototypeValuesFunction;
-        Field(JavascriptFunction*) parseIntFunctionObject;
-        Field(JavascriptFunction*) parseFloatFunctionObject;
-        Field(JavascriptFunction*) arrayPrototypeToStringFunction;
-        Field(JavascriptFunction*) arrayPrototypeToLocaleStringFunction;
-        Field(JavascriptFunction*) identityFunction;
-        Field(JavascriptFunction*) throwerFunction;
-        Field(JavascriptFunction*) generatorReturnFunction;
-        Field(JavascriptFunction*) generatorNextFunction;
-        Field(JavascriptFunction*) generatorThrowFunction;
-        Field(JavascriptFunction*) asyncGeneratorNextFunction;
-        Field(JavascriptFunction*) asyncGeneratorReturnFunction;
-        Field(JavascriptFunction*) asyncGeneratorThrowFunction;
-        Field(JavascriptFunction*) asyncFromSyncIteratorNextFunction;
-        Field(JavascriptFunction*) asyncFromSyncIteratorReturnFunction;
-        Field(JavascriptFunction*) asyncFromSyncIteratorThrowFunction;
-        Field(RuntimeFunction*) asyncFromSyncIteratorValueUnwrapFalseFunction;
-        Field(RuntimeFunction*) asyncFromSyncIteratorValueUnwrapTrueFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type evalFunctionObject;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type arrayPrototypeValuesFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type parseIntFunctionObject;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type parseFloatFunctionObject;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type arrayPrototypeToStringFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type arrayPrototypeToLocaleStringFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type identityFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type throwerFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type generatorReturnFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type generatorNextFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type generatorThrowFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type asyncGeneratorNextFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type asyncGeneratorReturnFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type asyncGeneratorThrowFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type asyncFromSyncIteratorNextFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type asyncFromSyncIteratorReturnFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type asyncFromSyncIteratorThrowFunction;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type asyncFromSyncIteratorValueUnwrapFalseFunction;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type asyncFromSyncIteratorValueUnwrapTrueFunction;
 
-        Field(JavascriptFunction*) objectValueOfFunction;
-        Field(JavascriptFunction*) objectToStringFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type objectValueOfFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type objectToStringFunction;
 
 #ifdef ENABLE_JS_BUILTINS
-        Field(JavascriptFunction*) isArrayFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type isArrayFunction;
 #endif
 
 #ifdef ENABLE_WASM
-        Field(DynamicObject*) webAssemblyObject;
-        Field(JavascriptFunction*) webAssemblyQueryResponseFunction;
-        Field(JavascriptFunction*) webAssemblyCompileFunction;
-        Field(JavascriptFunction*) webAssemblyInstantiateBoundFunction;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type webAssemblyObject;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type webAssemblyQueryResponseFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type webAssemblyCompileFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type webAssemblyInstantiateBoundFunction;
 #endif
 
-        Field(JavascriptSymbol*) symbolMatch;
-        Field(JavascriptSymbol*) symbolReplace;
-        Field(JavascriptSymbol*) symbolSearch;
-        Field(JavascriptSymbol*) symbolSplit;
+        typename WriteBarrierFieldTypeTraits<JavascriptSymbol*>::Type symbolMatch;
+        typename WriteBarrierFieldTypeTraits<JavascriptSymbol*>::Type symbolReplace;
+        typename WriteBarrierFieldTypeTraits<JavascriptSymbol*>::Type symbolSearch;
+        typename WriteBarrierFieldTypeTraits<JavascriptSymbol*>::Type symbolSplit;
 
-        Field(UnifiedRegex::RegexPattern *) emptyRegexPattern;
-        Field(JavascriptFunction*) regexExecFunction;
-        Field(JavascriptFunction*) regexFlagsGetterFunction;
-        Field(JavascriptFunction*) regexGlobalGetterFunction;
-        Field(JavascriptFunction*) regexStickyGetterFunction;
-        Field(JavascriptFunction*) regexDotAllGetterFunction;
-        Field(JavascriptFunction*) regexUnicodeGetterFunction;
+        typename WriteBarrierFieldTypeTraits<UnifiedRegex::RegexPattern *>::Type emptyRegexPattern;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type regexExecFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type regexFlagsGetterFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type regexGlobalGetterFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type regexStickyGetterFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type regexDotAllGetterFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type regexUnicodeGetterFunction;
 
-        Field(RuntimeFunction*) sharedArrayBufferConstructor;
-        Field(DynamicObject*) sharedArrayBufferPrototype;
-        Field(DynamicObject*) atomicsObject;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type sharedArrayBufferConstructor;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type sharedArrayBufferPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type atomicsObject;
 
-        Field(DynamicObject*) webAssemblyCompileErrorPrototype;
-        Field(RuntimeFunction*) webAssemblyCompileErrorConstructor;
-        Field(DynamicObject*) webAssemblyRuntimeErrorPrototype;
-        Field(RuntimeFunction*) webAssemblyRuntimeErrorConstructor;
-        Field(DynamicObject*) webAssemblyLinkErrorPrototype;
-        Field(RuntimeFunction*) webAssemblyLinkErrorConstructor;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type webAssemblyCompileErrorPrototype;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type webAssemblyCompileErrorConstructor;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type webAssemblyRuntimeErrorPrototype;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type webAssemblyRuntimeErrorConstructor;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type webAssemblyLinkErrorPrototype;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type webAssemblyLinkErrorConstructor;
 
-        Field(DynamicObject*) webAssemblyMemoryPrototype;
-        Field(RuntimeFunction*) webAssemblyMemoryConstructor;
-        Field(DynamicObject*) webAssemblyModulePrototype;
-        Field(RuntimeFunction*) webAssemblyModuleConstructor;
-        Field(DynamicObject*) webAssemblyInstancePrototype;
-        Field(RuntimeFunction*) webAssemblyInstanceConstructor;
-        Field(DynamicObject*) webAssemblyTablePrototype;
-        Field(RuntimeFunction*) webAssemblyTableConstructor;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type webAssemblyMemoryPrototype;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type webAssemblyMemoryConstructor;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type webAssemblyModulePrototype;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type webAssemblyModuleConstructor;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type webAssemblyInstancePrototype;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type webAssemblyInstanceConstructor;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type webAssemblyTablePrototype;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type webAssemblyTableConstructor;
 
-        Field(int) regexConstructorSlotIndex;
-        Field(int) regexExecSlotIndex;
-        Field(int) regexFlagsGetterSlotIndex;
-        Field(int) regexGlobalGetterSlotIndex;
-        Field(int) regexStickyGetterSlotIndex;
-        Field(int) regexDotAllGetterSlotIndex;
-        Field(int) regexUnicodeGetterSlotIndex;
+        typename WriteBarrierFieldTypeTraits<int>::Type regexConstructorSlotIndex;
+        typename WriteBarrierFieldTypeTraits<int>::Type regexExecSlotIndex;
+        typename WriteBarrierFieldTypeTraits<int>::Type regexFlagsGetterSlotIndex;
+        typename WriteBarrierFieldTypeTraits<int>::Type regexGlobalGetterSlotIndex;
+        typename WriteBarrierFieldTypeTraits<int>::Type regexStickyGetterSlotIndex;
+        typename WriteBarrierFieldTypeTraits<int>::Type regexDotAllGetterSlotIndex;
+        typename WriteBarrierFieldTypeTraits<int>::Type regexUnicodeGetterSlotIndex;
 
-        mutable Field(CharStringCache) charStringCache;
+        mutable typename WriteBarrierFieldTypeTraits<CharStringCache>::Type charStringCache;
 
-        FieldNoBarrier(PromiseContinuationCallback) nativeHostPromiseContinuationFunction;
-        Field(void *) nativeHostPromiseContinuationFunctionState;
+        typename WriteBarrierFieldTypeTraits<PromiseContinuationCallback, _no_write_barrier_policy, _no_write_barrier_policy>::Type nativeHostPromiseContinuationFunction;
+        typename WriteBarrierFieldTypeTraits<void *>::Type nativeHostPromiseContinuationFunctionState;
 
         typedef SList<Js::FunctionProxy*, Recycler> FunctionReferenceList;
         struct JsrtExternalCallbacks
@@ -455,16 +455,16 @@ namespace Js
         };
         typedef JsUtil::WeakReferenceDictionary<JsrtExternalCallbacks, DynamicType, DictionarySizePolicy<PowerOf2Policy, 1>> JsrtExternalTypesCache;
 
-        Field(void *) bindRefChunkBegin;
-        Field(Field(void*)*) bindRefChunkCurrent;
-        Field(Field(void*)*) bindRefChunkEnd;
-        Field(TypePath*) rootPath;         // this should be in library instead of ScriptContext::Cache
-        Field(Js::Cache) cache;
-        Field(FunctionReferenceList*) dynamicFunctionReference;
-        Field(uint) dynamicFunctionReferenceDepth;
-        Field(FinalizableObject*) jsrtContextObject;
-        Field(JsrtExternalTypesCache*) jsrtExternalTypesCache;
-        Field(FunctionBody*) fakeGlobalFuncForUndefer;
+        typename WriteBarrierFieldTypeTraits<void *>::Type bindRefChunkBegin;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<void*>::Type*>::Type bindRefChunkCurrent;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<void*>::Type*>::Type bindRefChunkEnd;
+        typename WriteBarrierFieldTypeTraits<TypePath*>::Type rootPath;         // this should be in library instead of ScriptContext::Cache
+        typename WriteBarrierFieldTypeTraits<Js::Cache>::Type cache;
+        typename WriteBarrierFieldTypeTraits<FunctionReferenceList*>::Type dynamicFunctionReference;
+        typename WriteBarrierFieldTypeTraits<uint>::Type dynamicFunctionReferenceDepth;
+        typename WriteBarrierFieldTypeTraits<FinalizableObject*>::Type jsrtContextObject;
+        typename WriteBarrierFieldTypeTraits<JsrtExternalTypesCache*>::Type jsrtExternalTypesCache;
+        typename WriteBarrierFieldTypeTraits<FunctionBody*>::Type fakeGlobalFuncForUndefer;
 
         struct CustomExternalWrapperCallbacks
         {
@@ -479,18 +479,18 @@ namespace Js
         };
         typedef JsUtil::WeakReferenceDictionary<CustomExternalWrapperCallbacks, DynamicType, DictionarySizePolicy<PowerOf2Policy, 1>> CustomExternalWrapperTypesCache;
 
-        Field(CustomExternalWrapperTypesCache*) customExternalWrapperTypesCache;
+        typename WriteBarrierFieldTypeTraits<CustomExternalWrapperTypesCache*>::Type customExternalWrapperTypesCache;
 
-        Field(ModuleRecordList*) moduleRecordList;
+        typename WriteBarrierFieldTypeTraits<ModuleRecordList*>::Type moduleRecordList;
 
-        Field(OnlyWritablePropertyProtoChainCache) typesWithOnlyWritablePropertyProtoChain;
-        Field(NoSpecialPropertyProtoChainCache) typesWithNoSpecialPropertyProtoChain;
+        typename WriteBarrierFieldTypeTraits<OnlyWritablePropertyProtoChainCache>::Type typesWithOnlyWritablePropertyProtoChain;
+        typename WriteBarrierFieldTypeTraits<NoSpecialPropertyProtoChainCache>::Type typesWithNoSpecialPropertyProtoChain;
 
-        Field(unsigned long) randSeed0, randSeed1;
-        Field(bool) isPRNGSeeded;
-        Field(bool) inProfileMode;
-        Field(bool) inDispatchProfileMode;
-        Field(bool) arrayObjectHasUserDefinedSpecies;
+        typename WriteBarrierFieldTypeTraits<unsigned long>::Type randSeed0, randSeed1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isPRNGSeeded;
+        typename WriteBarrierFieldTypeTraits<bool>::Type inProfileMode;
+        typename WriteBarrierFieldTypeTraits<bool>::Type inDispatchProfileMode;
+        typename WriteBarrierFieldTypeTraits<bool>::Type arrayObjectHasUserDefinedSpecies;
 
         JavascriptFunction * AddFunctionToLibraryObjectWithPrototype(DynamicObject * object, PropertyId propertyId, FunctionInfo * functionInfo, int length, DynamicObject * prototype = nullptr, DynamicType * functionType = nullptr);
         JavascriptFunction * AddFunctionToLibraryObject(DynamicObject* object, PropertyId propertyId, FunctionInfo * functionInfo, int length, PropertyAttributes attributes = PropertyBuiltInMethodDefaults);
@@ -647,7 +647,7 @@ namespace Js
 
         Js::RecyclableObject* CreateExternalFunction_TTD(Js::Var fname);
         Js::RecyclableObject* CreateBoundFunction_TTD(
-                RecyclableObject* function, Var bThis, uint32_t ct, Field(Var)* args);
+                RecyclableObject* function, Var bThis, uint32_t ct, typename WriteBarrierFieldTypeTraits<Var>::Type* args);
 
         Js::RecyclableObject* CreateProxy_TTD(RecyclableObject* handler, RecyclableObject* target);
         Js::RecyclableObject* CreateRevokeFunction_TTD(RecyclableObject* proxy);
@@ -1105,12 +1105,12 @@ namespace Js
         static const char16_t* GetStringTemplateCallsiteObjectKey(Var callsite);
 #endif
 
-        Field(JavascriptFunction*)* GetBuiltinFunctions();
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type* GetBuiltinFunctions();
         long* GetVTableAddresses();
         static BuiltinFunction GetBuiltinFunctionForPropId(PropertyId id);
         static BuiltinFunction GetBuiltInForFuncInfo(LocalFunctionId localFuncId);
 #if DBG
-        static void CheckRegisteredBuiltIns(Field(JavascriptFunction*)* builtInFuncs, ScriptContext *scriptContext);
+        static void CheckRegisteredBuiltIns(typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type* builtInFuncs, ScriptContext *scriptContext);
 #endif
         static BOOL CanFloatPreferenceFunc(BuiltinFunction index);
         static BOOL IsFltFunc(BuiltinFunction index);
@@ -1145,8 +1145,8 @@ namespace Js
         template <> PropertyStringCacheMap* GetPropertyMap<PropertyString>() { return this->propertyStringMap; }
         template <> SymbolCacheMap* GetPropertyMap<JavascriptSymbol>() { return this->symbolMap; }
 
-        Field(OnlyWritablePropertyProtoChainCache*) GetTypesWithOnlyWritablePropertyProtoChainCache() { return &this->typesWithOnlyWritablePropertyProtoChain; }
-        Field(NoSpecialPropertyProtoChainCache*) GetTypesWithNoSpecialPropertyProtoChainCache() { return &this->typesWithNoSpecialPropertyProtoChain; }
+        typename WriteBarrierFieldTypeTraits<OnlyWritablePropertyProtoChainCache*>::Type GetTypesWithOnlyWritablePropertyProtoChainCache() { return &this->typesWithOnlyWritablePropertyProtoChain; }
+        typename WriteBarrierFieldTypeTraits<NoSpecialPropertyProtoChainCache*>::Type GetTypesWithNoSpecialPropertyProtoChainCache() { return &this->typesWithNoSpecialPropertyProtoChain; }
 
         static bool IsDefaultArrayValuesFunction(RecyclableObject * function, ScriptContext *scriptContext);
         static bool ArrayIteratorPrototypeHasUserDefinedNext(ScriptContext *scriptContext);
@@ -1175,8 +1175,8 @@ namespace Js
         // Declare fretest/debug properties here since otherwise it can cause
         // a mismatch between fre mshtml and fretest jscript9 causing undefined behavior
 
-        Field(DynamicType *) debugDisposableObjectType;
-        Field(DynamicType *) debugFuncExecutorInDisposeObjectType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type debugDisposableObjectType;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type debugFuncExecutorInDisposeObjectType;
 
         void InitializePrototypes();
         void InitializeTypes();
@@ -1281,7 +1281,7 @@ namespace Js
         void AddMember(DynamicObject* object, PropertyId propertyId, Var value, PropertyAttributes attributes);
         JavascriptString* CreateEmptyString();
 
-        template<uint cacheSlotCount> EnumeratorCache* GetEnumeratorCache(Type* type, Field(EnumeratorCache*)* cacheSlots);
+        template<uint cacheSlotCount> EnumeratorCache* GetEnumeratorCache(Type* type, typename WriteBarrierFieldTypeTraits<EnumeratorCache*>::Type* cacheSlots);
 
         static bool InitializeAsyncGeneratorFunction(DynamicObject* function, DeferredTypeHandlerBase * typeHandler, DeferredInitializeMode mode);
         static bool InitializeGeneratorFunction(DynamicObject* function, DeferredTypeHandlerBase * typeHandler, DeferredInitializeMode mode);
@@ -1300,7 +1300,7 @@ namespace Js
 #endif
     private:
         typedef JsUtil::BaseHashSet<Js::PropertyRecord const *, Recycler, PowerOf2SizePolicy> ReferencedPropertyRecordHashSet;
-        Field(ReferencedPropertyRecordHashSet*) referencedPropertyRecords;
+        typename WriteBarrierFieldTypeTraits<ReferencedPropertyRecordHashSet*>::Type referencedPropertyRecords;
 
         ReferencedPropertyRecordHashSet * EnsureReferencedPropertyRecordList()
         {

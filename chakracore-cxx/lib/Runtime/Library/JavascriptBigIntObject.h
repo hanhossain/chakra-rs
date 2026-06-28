@@ -9,7 +9,7 @@ namespace Js
     class JavascriptBigIntObject : public DynamicObject
     {
     private:
-        Field(JavascriptBigInt*) value;
+        typename WriteBarrierFieldTypeTraits<JavascriptBigInt*>::Type value;
 
         DEFINE_VTABLE_CTOR(JavascriptBigIntObject, DynamicObject);
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptBigIntObject);

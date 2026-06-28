@@ -1881,9 +1881,9 @@ Var JavascriptObject::DefinePropertiesHelperForGenericObjects(RecyclableObject *
     size_t descCount = 0;
     struct DescriptorMap
     {
-        Field(PropertyRecord const *) propRecord;
-        Field(PropertyDescriptor) descriptor;
-        Field(Var) originalVar;
+        typename WriteBarrierFieldTypeTraits<PropertyRecord const *>::Type propRecord;
+        typename WriteBarrierFieldTypeTraits<PropertyDescriptor>::Type descriptor;
+        typename WriteBarrierFieldTypeTraits<Var>::Type originalVar;
     };
 
     JavascriptStaticEnumerator enumerator;
@@ -1967,8 +1967,8 @@ Var JavascriptObject::DefinePropertiesHelperForProxyObjects(RecyclableObject *ob
     size_t descCount = 0;
     struct DescriptorMap
     {
-        Field(PropertyRecord const *) propRecord;
-        Field(PropertyDescriptor) descriptor;
+        typename WriteBarrierFieldTypeTraits<PropertyRecord const *>::Type propRecord;
+        typename WriteBarrierFieldTypeTraits<PropertyDescriptor>::Type descriptor;
     };
 
     //3.  Let keys be props.[[OwnPropertyKeys]]().

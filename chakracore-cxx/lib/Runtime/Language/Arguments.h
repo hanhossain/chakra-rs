@@ -253,8 +253,8 @@ namespace Js
 
         // swb: Arguments is mostly used on stack and does not need write barrier.
         // It is recycler allocated with ES6 generators. We handle that specially.
-        FieldNoBarrier(CallInfo) Info;
-        FieldNoBarrier(Var*) Values;
+        typename WriteBarrierFieldTypeTraits<CallInfo, _no_write_barrier_policy, _no_write_barrier_policy>::Type Info;
+        typename WriteBarrierFieldTypeTraits<Var*, _no_write_barrier_policy, _no_write_barrier_policy>::Type Values;
 
         static uint32_t GetCallInfoOffset() { return offsetof(Arguments, Info); }
         static uint32_t GetValuesOffset() { return offsetof(Arguments, Values); }

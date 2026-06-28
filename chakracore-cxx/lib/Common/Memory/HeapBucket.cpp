@@ -9,18 +9,13 @@ HeapBucket::HeapBucket() :
     heapInfo(nullptr),
     sizeCat(0)
 {
-#if defined(RECYCLER_SLOW_CHECK_ENABLED) || ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
+#if defined(RECYCLER_SLOW_CHECK_ENABLED)
     heapBlockCount = 0;
     newHeapBlockCount = 0;
 #endif
 
 #if defined(RECYCLER_SLOW_CHECK_ENABLED)
     emptyHeapBlockCount = 0;
-#endif
-
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    this->allocationsStartedDuringConcurrentSweep = false;
-    this->concurrentSweepAllocationsThresholdExceeded = false;
 #endif
 
 #ifdef RECYCLER_PAGE_HEAP
@@ -61,8 +56,6 @@ HeapBucketT<TBlockType>::HeapBucketT() :
     emptyBlockList(nullptr),
     fullBlockList(nullptr),
     heapBlockList(nullptr),
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-#endif
     explicitFreeList(nullptr),
     lastExplicitFreeListAllocator(nullptr)
 {
@@ -80,10 +73,7 @@ HeapBucketT<TBlockType>::~HeapBucketT()
     DeleteHeapBlockList(this->heapBlockList);
     DeleteHeapBlockList(this->fullBlockList);
 
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-#endif
-
-#if defined(RECYCLER_SLOW_CHECK_ENABLED) || ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
+#if defined(RECYCLER_SLOW_CHECK_ENABLED)
     Assert(this->heapBlockCount + this->newHeapBlockCount == 0);
 #endif
     RECYCLER_SLOW_CHECK(Assert(this->emptyHeapBlockCount == HeapBlockList::Count(this->emptyBlockList)));
@@ -189,7 +179,6 @@ HeapBucketT<TBlockType>::ClearAllocators()
     this->explicitFreeList = nullptr;
 }
 
-#if ENABLE_CONCURRENT_GC
 template <typename TBlockType>
 void
 HeapBucketT<TBlockType>::PrepareSweep()
@@ -201,7 +190,6 @@ HeapBucketT<TBlockType>::PrepareSweep()
     // (And remove rescan from leaf bucket, so this function doesn't need to exist)
     ClearAllocators();
 }
-#endif
 
 template <typename TBlockType>
 void
@@ -262,7 +250,7 @@ HeapBucketT<TBlockType>::IntegrateBlock(char * blockAddress, PageSegment * segme
     heapBlock->SetNextBlock(this->fullBlockList);
     this->fullBlockList = heapBlock;
 
-#if defined(RECYCLER_SLOW_CHECK_ENABLED) || ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
+#if defined(RECYCLER_SLOW_CHECK_ENABLED)
     this->heapBlockCount++;
 #endif
 
@@ -311,12 +299,8 @@ template <typename TBlockType>
 bool
 HeapBucketT<TBlockType>::HasPendingDisposeHeapBlocks() const
 {
-#ifdef RECYCLER_WRITE_BARRIER
     return (IsFinalizableBucket || IsFinalizableWriteBarrierBucket) &&
     ((SmallFinalizableHeapBucketT<typename TBlockType::HeapBlockAttributes> *)this)->pendingDisposeList != nullptr;
-#else
-    return IsFinalizableBucket && ((SmallFinalizableHeapBucketT<typename TBlockType::HeapBlockAttributes> *)this)->pendingDisposeList != nullptr;
-#endif
 }
 
 #endif
@@ -329,9 +313,6 @@ HeapBucketT<TBlockType>::AssertCheckHeapBlockNotInAnyList(TBlockType * heapBlock
     AssertMsg(!HeapBlockList::Contains(heapBlock, heapBlockList), "The heap block already exists in the heapBlockList.");
     AssertMsg(!HeapBlockList::Contains(heapBlock, fullBlockList), "The heap block already exists in the fullBlockList.");
     AssertMsg(!HeapBlockList::Contains(heapBlock, emptyBlockList), "The heap block already exists in the emptyBlockList.");
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    AssertMsg(!HeapBlockList::Contains(heapBlock, sweepableHeapBlockList), "The heap block already exists in the sweepableHeapBlockList.");
-#endif
 #endif
 }
 
@@ -344,16 +325,11 @@ HeapBucketT<TBlockType>::GetNonEmptyHeapBlockCount(bool checkCount) const
     currentHeapBlockCount += HeapBlockList::Count(heapBlockList);
     bool allocatingDuringConcurrentSweep = false;
 
-#if ENABLE_CONCURRENT_GC
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-#endif
-
     // Recycler can be null if we have OOM in the ctor
     if (this->GetRecycler() && this->GetRecycler()->recyclerSweepManager != nullptr)
     {
         currentHeapBlockCount += this->GetRecycler()->recyclerSweepManager->GetHeapBlockCount(this);
     }
-#endif
 
     // There is no way to determine the number of item in an SLIST if there are >= 65535 items in the list.
     RECYCLER_SLOW_CHECK(Assert(!checkCount || heapBlockCount == currentHeapBlockCount || (heapBlockCount >= 65535 && allocatingDuringConcurrentSweep)));
@@ -447,38 +423,8 @@ HeapBucket::GetRecycler() const
 bool
 HeapBucket::AllocationsStartedDuringConcurrentSweep() const
 {
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    return this->allocationsStartedDuringConcurrentSweep;
-#else
     return false;
-#endif
 }
-
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-bool
-HeapBucket::ConcurrentSweepAllocationsThresholdExceeded() const
-{
-    return this->concurrentSweepAllocationsThresholdExceeded;
-}
-
-bool
-HeapBucket::DoTwoPassConcurrentSweepPreCheck()
-{
-    this->concurrentSweepAllocationsThresholdExceeded = ((this->heapBlockCount + this->newHeapBlockCount) > RecyclerHeuristic::AllocDuringConcurrentSweepHeapBlockThreshold);
-
-#ifdef RECYCLER_TRACE
-    if (this->GetRecycler()->GetRecyclerFlagsTable().Trace.IsEnabled(Js::ConcurrentSweepPhase) && CONFIG_FLAG_RELEASE(Verbose))
-    {
-        if (this->concurrentSweepAllocationsThresholdExceeded)
-        {
-            Output::Print(u"[HeapBucket 0x%p] exceeded concurrent sweep allocations threshold (%d). Total heap block count: %d \n", this, RecyclerHeuristic::AllocDuringConcurrentSweepHeapBlockThreshold, this->heapBlockCount + this->newHeapBlockCount);
-        }
-    }
-#endif
-
-    return this->concurrentSweepAllocationsThresholdExceeded;
-}
-#endif
 
 #ifdef RECYCLER_PAGE_HEAP
 template <typename TBlockType>
@@ -512,19 +458,14 @@ HeapBucketT<TBlockType>::SnailAlloc(Recycler * recycler, TBlockAllocatorType * a
         return memBlock;
     }
 
-#if ENABLE_CONCURRENT_GC
     // No free memory, try to collect with allocated bytes and time heuristic, and concurrently
     BOOL collected = recycler->disableCollectOnAllocationHeuristics ? recycler->FinishConcurrent<FinishConcurrentOnAllocation>() :
         recycler->CollectNow<CollectOnAllocation>();
-#else
-    BOOL collected = recycler->disableCollectOnAllocationHeuristics ? FALSE : recycler->CollectNow<CollectOnAllocation>();
-#endif
 
     AllocationVerboseTrace(recycler->GetRecyclerFlagsTable(), u"TryAlloc failed, forced collection on allocation [Collected: %d]\n", collected);
 
     if (!collected)
     {
-#if ENABLE_CONCURRENT_GC
 #if ENABLE_PARTIAL_GC
         // wait for background sweeping finish if there are too many pages allocated during background sweeping
         if (recycler->IsConcurrentSweepExecutingState() && recycler->autoHeap.uncollectedNewPageCount > (uint)CONFIG_FLAG(NewPagesCapDuringBGSweeping))
@@ -539,7 +480,6 @@ HeapBucketT<TBlockType>::SnailAlloc(Recycler * recycler, TBlockAllocatorType * a
                 return memBlock;
             }
         }
-#endif
 
         // We didn't collect, try to add a new heap block
         memBlock = TryAllocFromNewHeapBlock(recycler, allocator, sizeCat, size, attributes);
@@ -634,12 +574,8 @@ HeapBucketT<TBlockType>::CreateHeapBlock(Recycler * recycler)
 
     // Add it to head of heap block list so we will keep track of the block
     this->heapInfo->AppendNewHeapBlock(heapBlock, this);
-#if defined(RECYCLER_SLOW_CHECK_ENABLED) || ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-#if ENABLE_CONCURRENT_GC
+#if defined(RECYCLER_SLOW_CHECK_ENABLED)
     ::InterlockedIncrement(&this->newHeapBlockCount);
-#else
-    this->heapBlockCount++;
-#endif
 #endif
     return heapBlock;
 }
@@ -661,10 +597,6 @@ void
 HeapBucketT<TBlockType>::ResetMarks(ResetMarkFlags flags)
 {
     RECYCLER_SLOW_CHECK(this->VerifyHeapBlockCount((flags & ResetMarkFlags_Background) != 0));
-
-#if !ENABLE_CONCURRENT_GC
-    Assert((flags & ResetMarkFlags_Background) == 0);
-#endif
 
     if ((flags & ResetMarkFlags_Background) == 0)
     {
@@ -694,9 +626,6 @@ HeapBucketT<TBlockType>::ResetMarks(ResetMarkFlags flags)
     {
         // When allocations are enabled for buckets during oncurrent sweep we don't keep track of the nextAllocableBlockHead as it directly
         // comes out of the SLIST. As a result, the below validations can't be performed reliably on a heap block.
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-        if (!CONFIG_FLAG_RELEASE(EnableConcurrentSweepAlloc) || this->IsAnyFinalizableBucket())
-#endif
         {
             // Verify that if you are in the heapBlockList, before the nextAllocableBlockHead, we have fully allocated from
             // the block already, except if we have cleared from the allocator, or it is still in the allocator
@@ -764,11 +693,6 @@ HeapBucketT<TBlockType>::VerifyBlockConsistencyInList(TBlockType * heapBlock, Re
     }
     if (heapBlock->IsClearedFromAllocator())
     {
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-        // As the blocks are added to a SLIST and used from there during concurrent sweep, the expectFull assertion doesn't hold anymore.
-        // We could do some work to make this work again but there may be perf hit and it may be fragile.
-        if (!CONFIG_FLAG_RELEASE(EnableConcurrentSweepAlloc))
-#endif
         {
             Assert(*expectFull && !*expectDispose);
             Assert(heapBlock->HasFreeObject());
@@ -789,10 +713,6 @@ HeapBucketT<TBlockType>::VerifyBlockConsistencyInList(TBlockType * heapBlock, Re
         // blocks before nextAllocableBlockHead that are not being bump allocated from must be considered "full".
         // However, the exception is if this is the only heap block in this bucket, in which case nextAllocableBlockHead
         // would be null
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-        // As the blocks are added to the SLIST and used from there during concurrent sweep, the expectFull assertion doesn't hold anymore.
-        if (!CONFIG_FLAG_RELEASE(EnableConcurrentSweepAlloc))
-#endif
         {
             Assert(*expectFull == (!heapBlock->HasFreeObject() || heapBlock->IsInAllocator()) || nextAllocableBlockHead == nullptr);
         }
@@ -892,12 +812,7 @@ HeapBucketT<TBlockType>::SweepHeapBlockList(RecyclerSweep& recyclerSweep, TBlock
     bool const queuePendingSweep = false;
 #endif
 
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    Assert(this->IsAllocationStopped() || this->AllocationsStartedDuringConcurrentSweep());
-#else
     Assert(this->IsAllocationStopped());
-#endif
-
     HeapBlockList::ForEachEditing(heapBlockList, [=, this, &recyclerSweep](TBlockType * heapBlock)
     {
         // The whole list need to be consistent
@@ -912,7 +827,6 @@ HeapBucketT<TBlockType>::SweepHeapBlockList(RecyclerSweep& recyclerSweep, TBlock
 
         switch (state)
         {
-#if ENABLE_CONCURRENT_GC
         case SweepStatePendingSweep:
         {
             Assert(IsNormalBucket);
@@ -932,21 +846,10 @@ HeapBucketT<TBlockType>::SweepHeapBlockList(RecyclerSweep& recyclerSweep, TBlock
 #endif
             break;
         }
-#endif
         case SweepStatePendingDispose:
         {
             Assert(!recyclerSweep.IsBackground());
-#ifdef RECYCLER_WRITE_BARRIER
             Assert(IsFinalizableBucket || IsFinalizableWriteBarrierBucket);
-#else
-            Assert(IsFinalizableBucket);
-#endif
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-            if (CONFIG_FLAG_RELEASE(EnableConcurrentSweepAlloc))
-            {
-                AssertMsg(!heapBlock->isPendingConcurrentSweepPrep, "Finalizable blocks don't support allocations during concurrent sweep.");
-            }
-#endif
 
             DebugOnly(heapBlock->template AsFinalizableBlock<typename TBlockType::HeapBlockAttributes>()->SetIsPendingDispose());
 
@@ -975,9 +878,6 @@ HeapBucketT<TBlockType>::SweepHeapBlockList(RecyclerSweep& recyclerSweep, TBlock
             DebugOnly(this->AssertCheckHeapBlockNotInAnyList(heapBlock));
 
             {
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-                AssertMsg(!this->AllowAllocationsDuringConcurrentSweep(), "Why are allocations not started during concurrent sweep?");
-#endif
                 heapBlock->SetNextBlock(this->heapBlockList);
                 this->heapBlockList = heapBlock;
             }
@@ -1014,24 +914,12 @@ HeapBucketT<TBlockType>::SweepHeapBlockList(RecyclerSweep& recyclerSweep, TBlock
 
             RECYCLER_STATS_INC(recycler, numEmptySmallBlocks[heapBlock->GetHeapBlockType()]);
 
-#if ENABLE_CONCURRENT_GC
             // CONCURRENT-TODO: Finalizable block never have background == true and always be processed
             // in thread, so it will not queue up the pages even if we are doing concurrent GC
             DebugOnly(this->AssertCheckHeapBlockNotInAnyList(heapBlock));
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-            if (CONFIG_FLAG_RELEASE(EnableConcurrentSweepAlloc))
-            {
-                AssertMsg(heapBlock->objectsAllocatedDuringConcurrentSweepCount == 0, "We allocated to this block during concurrent sweep; it's not EMPTY anymore, it should NOT be freed or queued as EMPTY.");
-            }
-#endif
-
             if (recyclerSweep.IsBackground())
             {
-#ifdef RECYCLER_WRITE_BARRIER
                 Assert(!(IsFinalizableBucket || IsFinalizableWriteBarrierBucket));
-#else
-                Assert(!IsFinalizableBucket);
-#endif
                 // CONCURRENT-TODO: We will zero heap block even if the number free page pool exceed
                 // the maximum and will get decommitted anyway
                 recyclerSweep.template QueueEmptyHeapBlock<TBlockType>(this, heapBlock);
@@ -1041,12 +929,11 @@ HeapBucketT<TBlockType>::SweepHeapBlockList(RecyclerSweep& recyclerSweep, TBlock
 #endif
             }
             else
-#endif
             {
                 // Just free the page in thread (and zero the page)
                 heapBlock->ReleasePagesSweep(recycler);
                 FreeHeapBlock(heapBlock);
-#if defined(RECYCLER_SLOW_CHECK_ENABLED) || ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
+#if defined(RECYCLER_SLOW_CHECK_ENABLED)
                 this->heapBlockCount--;
 #endif
 #ifdef RECYCLER_TRACE
@@ -1066,7 +953,6 @@ HeapBucketT<TBlockType>::SweepBucket(RecyclerSweep& recyclerSweep)
 {
     DebugOnly(TBlockType * savedNextAllocableBlockHead);
     RECYCLER_SLOW_CHECK(this->VerifyHeapBlockCount(recyclerSweep.IsBackground()));
-#if ENABLE_CONCURRENT_GC
     if (recyclerSweep.GetManager()->HasSetupBackgroundSweep())
     {
         // SetupBackgroundSweep set nextAllocableBlockHead to null already
@@ -1074,7 +960,6 @@ HeapBucketT<TBlockType>::SweepBucket(RecyclerSweep& recyclerSweep)
         DebugOnly(savedNextAllocableBlockHead = recyclerSweep.GetSavedNextAllocableBlockHead(this));
     }
     else
-#endif
     {
         Assert(AllocatorsAreEmpty());
         DebugOnly(savedNextAllocableBlockHead = this->nextAllocableBlockHead);
@@ -1082,11 +967,7 @@ HeapBucketT<TBlockType>::SweepBucket(RecyclerSweep& recyclerSweep)
     }
 
     // We just started sweeping.  These pending lists should be empty
-#if ENABLE_CONCURRENT_GC
     Assert(recyclerSweep.GetPendingSweepBlockList(this) == nullptr);
-#else
-    Assert(!recyclerSweep.IsBackground());
-#endif
 
 #if DBG
     if (TBlockType::HeapBlockAttributes::IsSmallBlock)
@@ -1108,13 +989,6 @@ HeapBucketT<TBlockType>::SweepBucket(RecyclerSweep& recyclerSweep)
     TBlockType * currentHeapBlockList = heapBlockList;
     this->heapBlockList = nullptr;
     this->fullBlockList = nullptr;
-
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    // In order to allow allocations during sweep (Pass-1) we will set aside blocks after nextAllocableBlockHead (excluding) and allow
-    // allocations to these blocks as we know that these blocks are not full yet. These will need to be swept later though before starting Pass-2
-    // of the sweep.
-    this->PrepareForAllocationsDuringConcurrentSweep(currentHeapBlockList);
-#endif
 
     this->SweepHeapBlockList(recyclerSweep, currentHeapBlockList, true);
 
@@ -1143,34 +1017,13 @@ template <typename TBlockType>
 bool
 HeapBucketT<TBlockType>::AllowAllocationsDuringConcurrentSweep()
 {
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    Recycler * recycler = this->GetRecycler();
-    if (!CONFIG_FLAG_RELEASE(EnableConcurrentSweepAlloc) || !recycler->AllowAllocationsDuringConcurrentSweep() || !this->concurrentSweepAllocationsThresholdExceeded)
-    {
-        return false;
-    }
-
-#if ENABLE_PARTIAL_GC
-    bool isPartialGC = (recycler->recyclerSweepManager != nullptr) && recycler->recyclerSweepManager->InPartialCollect();
-#else
-    bool isPartialGC = false;
-#endif
-
-    // Allocations are allowed during concurrent sweep for small non-finalizable buckets while not doing a Partial GC.
-    return (recycler->IsConcurrentSweepSetupState() || recycler->InConcurrentSweep()) && !this->IsAnyFinalizableBucket() && !isPartialGC;
-#else
     return false;
-#endif
 }
 
 template <typename TBlockType>
 void
 HeapBucketT<TBlockType>::StopAllocationBeforeSweep()
 {
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    this->allocationsStartedDuringConcurrentSweep = false;
-#endif
-
     Assert(!this->IsAllocationStopped());
     this->isAllocationStopped = true;
     this->nextAllocableBlockHead = nullptr;
@@ -1184,71 +1037,6 @@ HeapBucketT<TBlockType>::StartAllocationAfterSweep()
     this->isAllocationStopped = false;
     this->nextAllocableBlockHead = this->heapBlockList;
 }
-
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-template <typename TBlockType>
-void
-HeapBucketT<TBlockType>::StartAllocationDuringConcurrentSweep()
-{
-    Recycler * recycler = this->GetRecycler();
-    Assert(!recycler->recyclerSweepManager->InPartialCollect());
-    Assert(!this->IsAnyFinalizableBucket());
-
-    Assert(this->IsAllocationStopped());
-    this->isAllocationStopped = false;
-    Assert(!this->allocationsStartedDuringConcurrentSweep);
-    this->allocationsStartedDuringConcurrentSweep = true;
-
-}
-
-template <typename TBlockType>
-void
-HeapBucketT<TBlockType>::ResumeNormalAllocationAfterConcurrentSweep(TBlockType * newNextAllocableBlockHead)
-{
-    this->allocationsStartedDuringConcurrentSweep = false;
-    this->isAllocationStopped = false;
-    // If the newNextAllocableBlockHead is NULL at this point that means we have exhausted usable blocks and will have to allocate a new block the next time.
-    this->nextAllocableBlockHead = newNextAllocableBlockHead;
-}
-
-/*//////////////////////////////////////////////////////////////////////////////////////////////////////
-If allocations are to be allowed to existing heap blocks during concurrent sweep, we set aside a few
-heap blocks from the heapBlockList prior to beginning sweep. However, we eed to then go back and make
-sure these blocks also swept before this sweep finishes. In order to do this we clearly define concurrent
-sweep having 2 passes now. These passes existed before but were not distiguished as they would always start
-and finish in one go on the background thread. However, whenever allocations are allowed during concurrent
-sweep; the concurrent sweep will start Pass1 on the background thread, wait to finish Pass1 of the blocks
-we set aside to allocate from on the main thread and then go back to finish Pass2 for all heap blocks on
-the background thread. Note that, due to this need to finish Pass1 on the foreground thread the overall
-background sweep will now appear to take longer whenever we chose to do such a two-pass sweep.
-
-The sequence of things we do to allow allocations during concurrent sweep is described below:
-1. At the beginning of concurrrent sweep we decide if we will benefit from allowing allocations during concurrent
-sweep for any of the buckets. If there is at-least one bucket for which we think we will benefit we will turn on
-allocations during concurrent sweep. Once turned on we will attempt to enable allocations during concurrent sweep
-for all supported buckets (i.e. small/medium, normal/leaf, non-finalizable buckets.write barrier buckets are supported
-as well.).
-2. If allocations are turned on during concurrent sweep, we will see if there are any allocable blocks in the
-heapBlockList after the nextAllocableBlockHead. If we find any such blocks, we move them to a SLIST that the
-allocator can pick these blocks from during sweep.
-3. CollectionStateConcurrentSweepPass1: We will finish Pass1 of the sweep for all the remaining blocks (other than the
-ones we put in the SLIST in step 2 above) This will generally happen on the background thread unless we are forcing
-in-thread sweep. This state is now specifically identified as CollectionStateConcurrentSweepPass1.
-4. CollectionStateConcurrentSweepPass1Wait: At this point we need to wait for all the blocks that we put in the SLIST
-to also finish the Pass1 of the sweep. This needs to happen on the foreground thread so we prevent the allocator from
-picking up the blocks from SLIST while we do this. This state is now identified as CollectionStateConcurrentSweepPass1Wait.
-5. CollectionStateConcurrentSweepPass2: At this point we will do the actual sweeping of all the blocks that are not yet swept,
-for eaxample, any blocks that were put onto the pendingSweepList. As these blocks get swept we keep adding them to the
-SLIST again to allow allocators to allocate from them as soon as they are swept.
-6. Before the Pass2 can finish we can call this concurrent sweep done we need to move all the blocks off of the SLIST so
-that normal allocations can begin after the sweep. This is the last step of the concurrent sweep.
-//////////////////////////////////////////////////////////////////////////////////////////////////////*/
-template<typename TBlockType>
-void
-HeapBucketT<TBlockType>::PrepareForAllocationsDuringConcurrentSweep(TBlockType * &currentHeapBlockList)
-{
-}
-#endif
 
 template <typename TBlockType>
 bool
@@ -1266,13 +1054,8 @@ template <typename TBlockType>
 uint
 HeapBucketT<TBlockType>::Rescan(Recycler * recycler, RescanFlags flags)
 {
-#if ENABLE_CONCURRENT_GC
     RECYCLER_SLOW_CHECK(this->VerifyHeapBlockCount(!!recycler->IsConcurrentMarkState()));
-#else
-    RECYCLER_SLOW_CHECK(this->VerifyHeapBlockCount(false /* background */));
-#endif
 
-#if ENABLE_CONCURRENT_GC
     // If we do the final rescan concurrently, the main thread will prepare for sweep concurrently
     // If we do rescan in thread, we will need to prepare sweep here.
     // However, if we are in the rescan for OOM, we have already done it, so no need to do it again
@@ -1280,13 +1063,11 @@ HeapBucketT<TBlockType>::Rescan(Recycler * recycler, RescanFlags flags)
     {
         this->PrepareSweep();
     }
-#endif
 
     // By default heap bucket doesn't rescan anything
     return 0;
 }
 
-#if ENABLE_CONCURRENT_GC
 template <typename TBlockType>
 void
 HeapBucketT<TBlockType>::MergeNewHeapBlock(TBlockType * heapBlock)
@@ -1294,7 +1075,7 @@ HeapBucketT<TBlockType>::MergeNewHeapBlock(TBlockType * heapBlock)
     Assert(heapBlock->GetObjectSize() == this->sizeCat);
     heapBlock->SetNextBlock(this->heapBlockList);
     this->heapBlockList = heapBlock;
-#if defined(RECYCLER_SLOW_CHECK_ENABLED) || ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
+#if defined(RECYCLER_SLOW_CHECK_ENABLED)
     ::InterlockedDecrement(&this->newHeapBlockCount);
     this->heapBlockCount++;
 #endif
@@ -1315,150 +1096,6 @@ HeapBucketT<TBlockType>::SetupBackgroundSweep(RecyclerSweep& recyclerSweep)
 
     this->StopAllocationBeforeSweep();
 }
-#endif
-
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-template <typename TBlockType>
-void 
-HeapBucketT<TBlockType>::FinishConcurrentSweepPass1(RecyclerSweep& recyclerSweep)
-{
-    if (this->concurrentSweepAllocationsThresholdExceeded)
-    {
-        AssertMsg(this->AllowAllocationsDuringConcurrentSweep(), "Why are we in two pass concurrent sweep?");
-        Assert(!this->IsAnyFinalizableBucket());
-
-        // Rebuild the free bit vectors for the blocks we allocated from during concurrent sweep.
-        TBlockType * currentPendingSweepPrepHeapBlockList = nullptr;
-        TBlockType * currentSweepableHeapBlockList = this->sweepableHeapBlockList;
-        this->sweepableHeapBlockList = nullptr;
-
-        HeapBlockList::ForEachEditing(currentSweepableHeapBlockList, [this, &currentPendingSweepPrepHeapBlockList](TBlockType * heapBlock)
-        {
-            if (heapBlock->isPendingConcurrentSweepPrep)
-            {
-                ushort previousFreeCount = heapBlock->freeCount;
-                heapBlock->BuildFreeBitVector();
-
-#if ENABLE_PARTIAL_GC
-                heapBlock->oldFreeCount = heapBlock->lastFreeCount = heapBlock->freeCount;
-#else
-                heapBlock->lastFreeCount = heapBlock->freeCount;
-#endif
-                ushort newAllocatedObjects = previousFreeCount - heapBlock->freeCount;
-                AssertMsg(newAllocatedObjects == heapBlock->objectsMarkedDuringSweep, "The counts of objects allocated during sweep should match the objects marked during sweep.");
-#if DBG || defined(RECYCLER_SLOW_CHECK_ENABLED)
-                heapBlock->objectsAllocatedDuringConcurrentSweepCount = newAllocatedObjects;
-#endif
-
-                ushort currentMarkCount = (ushort)heapBlock->GetMarkCountForSweep();
-                heapBlock->markCount = currentMarkCount;
-#if DBG
-                heapBlock->GetRecycler()->heapBlockMap.SetPageMarkCount(heapBlock->GetAddress(), currentMarkCount);
-#endif
-#ifdef RECYCLER_TRACE
-                heapBlock->GetRecycler()->PrintBlockStatus(this, heapBlock, u"[**13**] ending sweep Pass1, rebuilt free bit vector and set page mark count to match.");
-#endif
-
-                heapBlock->SetNextBlock(currentPendingSweepPrepHeapBlockList);
-                currentPendingSweepPrepHeapBlockList = heapBlock;
-            }
-            else
-            {
-                heapBlock->SetNextBlock(this->sweepableHeapBlockList);
-                this->sweepableHeapBlockList = heapBlock;
-            }
-        });
-
-#if DBG || defined(RECYCLER_SLOW_CHECK_ENABLED)
-        // This lock is needed only in the debug mode while we verify block counts. Not needed otherwise, as this list is never accessed concurrently.
-        // Items are added to it by the allocator when allocations are allowed during concurrent sweep. The list is drained during the next sweep while
-        // allocation are stopped.
-        debugSweepableHeapBlockListLock.Enter();
-#endif
-
-        // Pull the blocks from the allocable SLIST that we didn't use. We need to finish the Pass-1 sweep of these blocks too.
-        TBlockType * heapBlock = PopHeapBlockFromSList(this->allocableHeapBlockListHead);
-        while (heapBlock != nullptr)
-        {
-            DebugOnly(this->AssertCheckHeapBlockNotInAnyList(heapBlock));
-            if (heapBlock->isPendingConcurrentSweepPrep)
-            {
-#ifdef RECYCLER_TRACE
-                heapBlock->GetRecycler()->PrintBlockStatus(this, heapBlock, u"[**19**] ending sweep Pass1, removed from SLIST.");
-#endif
-                heapBlock->SetNextBlock(currentPendingSweepPrepHeapBlockList);
-                currentPendingSweepPrepHeapBlockList = heapBlock;
-            }
-            else
-            {
-#ifdef RECYCLER_TRACE
-                heapBlock->GetRecycler()->PrintBlockStatus(this, heapBlock, u"[**23**] ending sweep Pass1, removed from SLIST and added to sweepableHeapBlockList.");
-#endif
-                // Already swept, put it back to the sweepableHeapBlockList list; so it can be processed later.
-                heapBlock->SetNextBlock(this->sweepableHeapBlockList);
-                this->sweepableHeapBlockList = heapBlock;
-            }
-
-            heapBlock = PopHeapBlockFromSList(this->allocableHeapBlockListHead);
-        }
-        Assert(QueryDepthInterlockedSList(this->allocableHeapBlockListHead) == 0);
-
-#if DBG || defined(RECYCLER_SLOW_CHECK_ENABLED)
-        debugSweepableHeapBlockListLock.Leave();
-#endif
-
-#if DBG
-        if (TBlockType::HeapBlockAttributes::IsSmallBlock)
-        {
-            recyclerSweep.SetupVerifyListConsistencyDataForSmallBlock(nullptr, true, false);
-        }
-        else if (TBlockType::HeapBlockAttributes::IsMediumBlock)
-        {
-            recyclerSweep.SetupVerifyListConsistencyDataForMediumBlock(nullptr, true, false);
-        }
-        else
-        {
-            Assert(false);
-        }
-#endif
-
-        // Start allocations now as we may start adding blocks to the SLIST during Pass1 sweep below.
-        this->StartAllocationDuringConcurrentSweep();
-        this->SweepHeapBlockList(recyclerSweep, currentPendingSweepPrepHeapBlockList, true /*allocable*/);
-    }
-}
-
-template <typename TBlockType>
-void
-HeapBucketT<TBlockType>::EnsureAllocableHeapBlockList()
-{
-}
-
-template <typename TBlockType>
-void
-HeapBucketT<TBlockType>::FinishSweepPrep(RecyclerSweep& recyclerSweep)
-{
-    if (this->AllocationsStartedDuringConcurrentSweep())
-    {
-        AssertMsg(this->AllowAllocationsDuringConcurrentSweep(), "Why are allocations started during concurrent sweep, if not allowed?");
-        Assert(!this->IsAnyFinalizableBucket());
-
-        this->StopAllocationBeforeSweep();
-        this->ClearAllocators();
-    }
-}
-
-template <typename TBlockType>
-void
-HeapBucketT<TBlockType>::FinishConcurrentSweep()
-{
-    if (this->AllocationsStartedDuringConcurrentSweep())
-    {
-
-        Assert(!this->IsAllocationStopped());
-    }
-}
-#endif
 
 template <typename TBlockType>
 void
@@ -1653,10 +1290,8 @@ HeapBucketGroup<TBlockAttributes>::Initialize(HeapInfo * heapInfo, uint sizeCat)
 {
     heapBucket.Initialize(heapInfo, sizeCat);
     leafHeapBucket.Initialize(heapInfo, sizeCat);
-#ifdef RECYCLER_WRITE_BARRIER
     smallNormalWithBarrierHeapBucket.Initialize(heapInfo, sizeCat);
     smallFinalizableWithBarrierHeapBucket.Initialize(heapInfo, sizeCat);
-#endif
     finalizableHeapBucket.Initialize(heapInfo, sizeCat);
 #ifdef RECYCLER_VISITED_HOST
     recyclerVisitedHostHeapBucket.Initialize(heapInfo, sizeCat);
@@ -1669,10 +1304,8 @@ HeapBucketGroup<TBlockAttributes>::ResetMarks(ResetMarkFlags flags)
 {
     heapBucket.ResetMarks(flags);
     leafHeapBucket.ResetMarks(flags);
-#ifdef RECYCLER_WRITE_BARRIER
     smallNormalWithBarrierHeapBucket.ResetMarks(flags);
     smallFinalizableWithBarrierHeapBucket.ResetMarks(flags);
-#endif
 
     // Although we pass in premarkFreeObjects, the finalizable heap bucket ignores
     // this parameter and never pre-marks free objects
@@ -1688,10 +1321,8 @@ HeapBucketGroup<TBlockAttributes>::ScanInitialImplicitRoots(Recycler * recycler)
 {
     heapBucket.ScanInitialImplicitRoots(recycler);
     // Don't need to scan implicit roots on leaf heap bucket
-#ifdef RECYCLER_WRITE_BARRIER
     smallNormalWithBarrierHeapBucket.ScanInitialImplicitRoots(recycler);
     smallFinalizableWithBarrierHeapBucket.ScanInitialImplicitRoots(recycler);
-#endif
     finalizableHeapBucket.ScanInitialImplicitRoots(recycler);
 }
 
@@ -1702,10 +1333,8 @@ HeapBucketGroup<TBlockAttributes>::ScanNewImplicitRoots(Recycler * recycler)
     heapBucket.ScanNewImplicitRoots(recycler);
     // Need to scan new implicit roots on leaf heap bucket
     leafHeapBucket.ScanNewImplicitRoots(recycler);
-#ifdef RECYCLER_WRITE_BARRIER
     smallNormalWithBarrierHeapBucket.ScanNewImplicitRoots(recycler);
     smallFinalizableWithBarrierHeapBucket.ScanNewImplicitRoots(recycler);
-#endif
     finalizableHeapBucket.ScanNewImplicitRoots(recycler);
 }
 
@@ -1715,9 +1344,7 @@ HeapBucketGroup<TBlockAttributes>::Sweep(RecyclerSweep& recyclerSweep)
 {
     heapBucket.Sweep(recyclerSweep);
     leafHeapBucket.Sweep(recyclerSweep);
-#ifdef RECYCLER_WRITE_BARRIER
     smallNormalWithBarrierHeapBucket.Sweep(recyclerSweep);
-#endif
 }
 
 // Sweep finalizable objects first to ensure that if they reference any other
@@ -1730,9 +1357,7 @@ HeapBucketGroup<TBlockAttributes>::SweepFinalizableObjects(RecyclerSweep& recycl
 #ifdef RECYCLER_VISITED_HOST
     recyclerVisitedHostHeapBucket.Sweep(recyclerSweep);
 #endif
-#ifdef RECYCLER_WRITE_BARRIER
     smallFinalizableWithBarrierHeapBucket.Sweep(recyclerSweep);
-#endif
 }
 
 template <class TBlockAttributes>
@@ -1743,9 +1368,7 @@ HeapBucketGroup<TBlockAttributes>::DisposeObjects()
 #ifdef RECYCLER_VISITED_HOST
     recyclerVisitedHostHeapBucket.DisposeObjects();
 #endif
-#ifdef RECYCLER_WRITE_BARRIER
     smallFinalizableWithBarrierHeapBucket.DisposeObjects();
-#endif
 }
 
 template <class TBlockAttributes>
@@ -1756,9 +1379,7 @@ HeapBucketGroup<TBlockAttributes>::TransferDisposedObjects()
 #ifdef RECYCLER_VISITED_HOST
     recyclerVisitedHostHeapBucket.TransferDisposedObjects();
 #endif
-#ifdef RECYCLER_WRITE_BARRIER
     smallFinalizableWithBarrierHeapBucket.TransferDisposedObjects();
-#endif
 }
 
 template <class TBlockAttributes>
@@ -1767,10 +1388,8 @@ HeapBucketGroup<TBlockAttributes>::EnumerateObjects(ObjectInfoBits infoBits, voi
 {
     heapBucket.EnumerateObjects(infoBits, CallBackFunction);
     leafHeapBucket.EnumerateObjects(infoBits, CallBackFunction);
-#ifdef RECYCLER_WRITE_BARRIER
     smallNormalWithBarrierHeapBucket.EnumerateObjects(infoBits, CallBackFunction);
     smallFinalizableWithBarrierHeapBucket.EnumerateObjects(infoBits, CallBackFunction);
-#endif
     finalizableHeapBucket.EnumerateObjects(infoBits, CallBackFunction);
 #ifdef RECYCLER_VISITED_HOST
     recyclerVisitedHostHeapBucket.EnumerateObjects(infoBits, CallBackFunction);
@@ -1785,9 +1404,7 @@ HeapBucketGroup<TBlockAttributes>::FinalizeAllObjects()
 #ifdef RECYCLER_VISITED_HOST
     recyclerVisitedHostHeapBucket.FinalizeAllObjects();
 #endif
-#ifdef RECYCLER_WRITE_BARRIER
     smallFinalizableWithBarrierHeapBucket.FinalizeAllObjects();
-#endif
 }
 
 template <class TBlockAttributes>
@@ -1796,27 +1413,22 @@ HeapBucketGroup<TBlockAttributes>::Rescan(Recycler * recycler, RescanFlags flags
 {
     return heapBucket.Rescan(recycler, flags) +
         leafHeapBucket.Rescan(recycler, flags) +
-#ifdef RECYCLER_WRITE_BARRIER
         smallNormalWithBarrierHeapBucket.Rescan(recycler, flags) +
         smallFinalizableWithBarrierHeapBucket.Rescan(recycler, flags) +
-#endif
 #ifdef RECYCLER_VISITED_HOST
         recyclerVisitedHostHeapBucket.Rescan(recycler, flags) +
 #endif
         finalizableHeapBucket.Rescan(recycler, flags);
 }
 
-#if ENABLE_CONCURRENT_GC
 template <class TBlockAttributes>
 void
 HeapBucketGroup<TBlockAttributes>::PrepareSweep()
 {
     heapBucket.PrepareSweep();
     leafHeapBucket.PrepareSweep();
-#ifdef RECYCLER_WRITE_BARRIER
     smallNormalWithBarrierHeapBucket.PrepareSweep();
     smallFinalizableWithBarrierHeapBucket.PrepareSweep();
-#endif
     finalizableHeapBucket.PrepareSweep();
 #ifdef RECYCLER_VISITED_HOST
     recyclerVisitedHostHeapBucket.PrepareSweep();
@@ -1829,11 +1441,8 @@ HeapBucketGroup<TBlockAttributes>::SetupBackgroundSweep(RecyclerSweep& recyclerS
 {
     heapBucket.SetupBackgroundSweep(recyclerSweep);
     leafHeapBucket.SetupBackgroundSweep(recyclerSweep);
-#ifdef RECYCLER_WRITE_BARRIER
     smallNormalWithBarrierHeapBucket.SetupBackgroundSweep(recyclerSweep);
-#endif
 }
-#endif
 #if ENABLE_PARTIAL_GC
 template <class TBlockAttributes>
 void
@@ -1843,10 +1452,8 @@ HeapBucketGroup<TBlockAttributes>::SweepPartialReusePages(RecyclerSweep& recycle
     // WriteBarrier-TODO: Do the same for write barrier buckets
     heapBucket.SweepPartialReusePages(recyclerSweep);
 
-#ifdef RECYCLER_WRITE_BARRIER
     smallNormalWithBarrierHeapBucket.SweepPartialReusePages(recyclerSweep);
     smallFinalizableWithBarrierHeapBucket.SweepPartialReusePages(recyclerSweep);
-#endif
 
     finalizableHeapBucket.SweepPartialReusePages(recyclerSweep);
 #ifdef RECYCLER_VISITED_HOST
@@ -1859,10 +1466,8 @@ void
 HeapBucketGroup<TBlockAttributes>::FinishPartialCollect(RecyclerSweep * recyclerSweep)
 {
     heapBucket.FinishPartialCollect(recyclerSweep);
-#ifdef RECYCLER_WRITE_BARRIER
     smallNormalWithBarrierHeapBucket.FinishPartialCollect(recyclerSweep);
     smallFinalizableWithBarrierHeapBucket.FinishPartialCollect(recyclerSweep);
-#endif
     finalizableHeapBucket.FinishPartialCollect(recyclerSweep);
 #ifdef RECYCLER_VISITED_HOST
     recyclerVisitedHostHeapBucket.FinishPartialCollect(recyclerSweep);
@@ -1876,7 +1481,6 @@ HeapBucketGroup<TBlockAttributes>::FinishPartialCollect(RecyclerSweep * recycler
 }
 #endif
 
-#if ENABLE_CONCURRENT_GC
 template <class TBlockAttributes>
 void
 HeapBucketGroup<TBlockAttributes>::SweepPendingObjects(RecyclerSweep& recyclerSweep)
@@ -1887,10 +1491,8 @@ HeapBucketGroup<TBlockAttributes>::SweepPendingObjects(RecyclerSweep& recyclerSw
     Assert(recyclerSweep.GetPendingSweepBlockList(&leafHeapBucket) == nullptr);
 
     heapBucket.SweepPendingObjects(recyclerSweep);
-#ifdef RECYCLER_WRITE_BARRIER
     smallNormalWithBarrierHeapBucket.SweepPendingObjects(recyclerSweep);
     smallFinalizableWithBarrierHeapBucket.SweepPendingObjects(recyclerSweep);
-#endif
 
     finalizableHeapBucket.SweepPendingObjects(recyclerSweep);
 #ifdef RECYCLER_VISITED_HOST
@@ -1904,16 +1506,13 @@ HeapBucketGroup<TBlockAttributes>::TransferPendingEmptyHeapBlocks(RecyclerSweep&
 {
     recyclerSweep.TransferPendingEmptyHeapBlocks(&heapBucket);
     recyclerSweep.TransferPendingEmptyHeapBlocks(&leafHeapBucket);
-#ifdef RECYCLER_WRITE_BARRIER
     recyclerSweep.TransferPendingEmptyHeapBlocks(&smallNormalWithBarrierHeapBucket);
     recyclerSweep.TransferPendingEmptyHeapBlocks(&smallFinalizableWithBarrierHeapBucket);
-#endif
     recyclerSweep.TransferPendingEmptyHeapBlocks(&finalizableHeapBucket);
 #ifdef RECYCLER_VISITED_HOST
     recyclerSweep.TransferPendingEmptyHeapBlocks(&recyclerVisitedHostHeapBucket);
 #endif
 }
-#endif
 
 #if DBG || defined(RECYCLER_SLOW_CHECK_ENABLED)
 template <class TBlockAttributes>
@@ -1925,10 +1524,8 @@ HeapBucketGroup<TBlockAttributes>::GetNonEmptyHeapBlockCount(bool checkCount) co
 #ifdef RECYCLER_VISITED_HOST
         recyclerVisitedHostHeapBucket.GetNonEmptyHeapBlockCount(checkCount) +
 #endif
-#ifdef RECYCLER_WRITE_BARRIER
         smallNormalWithBarrierHeapBucket.GetNonEmptyHeapBlockCount(checkCount) +
         smallFinalizableWithBarrierHeapBucket.GetNonEmptyHeapBlockCount(checkCount) +
-#endif
         leafHeapBucket.GetNonEmptyHeapBlockCount(checkCount);
 }
 
@@ -1941,10 +1538,8 @@ HeapBucketGroup<TBlockAttributes>::GetEmptyHeapBlockCount() const
 #ifdef RECYCLER_VISITED_HOST
         recyclerVisitedHostHeapBucket.GetEmptyHeapBlockCount() +
 #endif
-#ifdef RECYCLER_WRITE_BARRIER
         smallNormalWithBarrierHeapBucket.GetEmptyHeapBlockCount() +
         smallFinalizableWithBarrierHeapBucket.GetEmptyHeapBlockCount() +
-#endif
         leafHeapBucket.GetEmptyHeapBlockCount();
 }
 #endif
@@ -1958,9 +1553,7 @@ HeapBucketGroup<TBlockAttributes>::Check()
 #ifdef RECYCLER_VISITED_HOST
         + recyclerVisitedHostHeapBucket.Check()
 #endif
-#ifdef RECYCLER_WRITE_BARRIER
         + smallNormalWithBarrierHeapBucket.Check() + smallFinalizableWithBarrierHeapBucket.Check()
-#endif
         ;
 }
 #endif
@@ -1975,10 +1568,8 @@ HeapBucketGroup<TBlockAttributes>::Verify()
     recyclerVisitedHostHeapBucket.Verify();
 #endif
     leafHeapBucket.Verify();
-#ifdef RECYCLER_WRITE_BARRIER
     smallNormalWithBarrierHeapBucket.Verify();
     smallFinalizableWithBarrierHeapBucket.Verify();
-#endif
 }
 #endif
 #ifdef RECYCLER_VERIFY_MARK
@@ -1992,82 +1583,8 @@ HeapBucketGroup<TBlockAttributes>::VerifyMark()
     recyclerVisitedHostHeapBucket.VerifyMark();
 #endif
     leafHeapBucket.VerifyMark();
-#ifdef RECYCLER_WRITE_BARRIER
     smallNormalWithBarrierHeapBucket.VerifyMark();
     smallFinalizableWithBarrierHeapBucket.VerifyMark();
-#endif
-}
-#endif
-
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-template <class TBlockAttributes>
-void
-HeapBucketGroup<TBlockAttributes>::StartAllocationDuringConcurrentSweep()
-{
-    // If there were no allocable heap blocks we would not have started allocations. Stop allocations, only if we started allocations for each of these buckets.
-    if (heapBucket.IsAllocationStopped())
-    {
-        heapBucket.StartAllocationDuringConcurrentSweep();
-    }
-
-    if (leafHeapBucket.IsAllocationStopped())
-    {
-        leafHeapBucket.StartAllocationDuringConcurrentSweep();
-    }
-#ifdef RECYCLER_WRITE_BARRIER
-    if (smallNormalWithBarrierHeapBucket.IsAllocationStopped())
-    {
-        smallNormalWithBarrierHeapBucket.StartAllocationDuringConcurrentSweep();
-    }
-#endif
-}
-
-template <class TBlockAttributes>
-bool
-HeapBucketGroup<TBlockAttributes>::DoTwoPassConcurrentSweepPreCheck()
-{
-    return heapBucket.DoTwoPassConcurrentSweepPreCheck() || 
-    leafHeapBucket.DoTwoPassConcurrentSweepPreCheck()
-
-#ifdef RECYCLER_WRITE_BARRIER
-    || smallNormalWithBarrierHeapBucket.DoTwoPassConcurrentSweepPreCheck();
-#endif
-}
-
-template <class TBlockAttributes>
-void
-HeapBucketGroup<TBlockAttributes>::FinishConcurrentSweepPass1(RecyclerSweep& recyclerSweep)
-{
-    heapBucket.FinishConcurrentSweepPass1(recyclerSweep);
-    leafHeapBucket.FinishConcurrentSweepPass1(recyclerSweep);
-
-#ifdef RECYCLER_WRITE_BARRIER
-    smallNormalWithBarrierHeapBucket.FinishConcurrentSweepPass1(recyclerSweep);
-#endif
-}
-
-template <class TBlockAttributes>
-void
-HeapBucketGroup<TBlockAttributes>::FinishSweepPrep(RecyclerSweep& recyclerSweep)
-{
-    heapBucket.FinishSweepPrep(recyclerSweep);
-    leafHeapBucket.FinishSweepPrep(recyclerSweep);
-
-#ifdef RECYCLER_WRITE_BARRIER
-    smallNormalWithBarrierHeapBucket.FinishSweepPrep(recyclerSweep);
-#endif
-}
-
-template <class TBlockAttributes>
-void
-HeapBucketGroup<TBlockAttributes>::FinishConcurrentSweep()
-{
-    heapBucket.FinishConcurrentSweep();
-    leafHeapBucket.FinishConcurrentSweep();
-
-#ifdef RECYCLER_WRITE_BARRIER
-    smallNormalWithBarrierHeapBucket.FinishConcurrentSweep();
-#endif
 }
 #endif
 
@@ -2082,11 +1599,8 @@ HeapBucketGroup<TBlockAttributes>::AllocatorsAreEmpty()
         && recyclerVisitedHostHeapBucket.AllocatorsAreEmpty()
 #endif
         && leafHeapBucket.AllocatorsAreEmpty()
-#ifdef RECYCLER_WRITE_BARRIER
         && smallNormalWithBarrierHeapBucket.AllocatorsAreEmpty()
-        && smallFinalizableWithBarrierHeapBucket.AllocatorsAreEmpty()
-#endif
-        ;
+        && smallFinalizableWithBarrierHeapBucket.AllocatorsAreEmpty();
 }
 #endif
 

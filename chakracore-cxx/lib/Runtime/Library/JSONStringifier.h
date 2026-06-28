@@ -37,8 +37,8 @@ private:
 
     struct PropertyListElement
     {
-        Field(PropertyRecord const*) propertyRecord;
-        Field(JavascriptString*) propertyName;
+        typename WriteBarrierFieldTypeTraits<PropertyRecord const*>::Type propertyRecord;
+        typename WriteBarrierFieldTypeTraits<JavascriptString*>::Type propertyName;
 
         PropertyListElement() {}
         PropertyListElement(const PropertyListElement& other)

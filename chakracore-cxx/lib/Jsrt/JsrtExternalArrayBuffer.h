@@ -22,13 +22,13 @@ namespace Js {
         void Finalize(bool isShutdown) override;
 
     private:
-        FieldNoBarrier(JsFinalizeCallback) finalizeCallback;
-        FieldNoBarrier(void *) callbackState;
+        typename WriteBarrierFieldTypeTraits<JsFinalizeCallback, _no_write_barrier_policy, _no_write_barrier_policy>::Type finalizeCallback;
+        typename WriteBarrierFieldTypeTraits<void *, _no_write_barrier_policy, _no_write_barrier_policy>::Type callbackState;
 
         class JsrtExternalArrayBufferDetachedState : public ExternalArrayBufferDetachedState
         {
-            FieldNoBarrier(JsFinalizeCallback) finalizeCallback;
-            FieldNoBarrier(void *) callbackState;
+            typename WriteBarrierFieldTypeTraits<JsFinalizeCallback, _no_write_barrier_policy, _no_write_barrier_policy>::Type finalizeCallback;
+            typename WriteBarrierFieldTypeTraits<void *, _no_write_barrier_policy, _no_write_barrier_policy>::Type callbackState;
         public:
             JsrtExternalArrayBufferDetachedState(RefCountedBuffer* buffer, uint32_t bufferLength, JsFinalizeCallback finalizeCallback, void *callbackState);
             virtual void ClearSelfOnly() override;

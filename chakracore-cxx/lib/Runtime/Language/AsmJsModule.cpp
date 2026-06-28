@@ -1740,9 +1740,9 @@ namespace Js
         float * asmFloatVars = reinterpret_cast<float*>(asmJsEnvironment + asmModuleInfo->GetModuleMemory().mFloatOffset);
 
 #if DEBUG
-        Field(Var) * slotArray = RecyclerNewArrayZ(scriptContext->GetRecycler(), Field(Var), moduleBody->scopeSlotArraySize + ScopeSlots::FirstSlotIndex);
+        typename WriteBarrierFieldTypeTraits<Var>::Type * slotArray = RecyclerNewArrayZ(scriptContext->GetRecycler(), typename WriteBarrierFieldTypeTraits<Var>::Type, moduleBody->scopeSlotArraySize + ScopeSlots::FirstSlotIndex);
 #else
-        Field(Var) * slotArray = RecyclerNewArray(scriptContext->GetRecycler(), Field(Var), moduleBody->scopeSlotArraySize + ScopeSlots::FirstSlotIndex);
+        typename WriteBarrierFieldTypeTraits<Var>::Type * slotArray = RecyclerNewArray(scriptContext->GetRecycler(), typename WriteBarrierFieldTypeTraits<Var>::Type, moduleBody->scopeSlotArraySize + ScopeSlots::FirstSlotIndex);
 #endif
         ScopeSlots scopeSlots(slotArray);
         scopeSlots.SetCount(moduleBody->scopeSlotArraySize);

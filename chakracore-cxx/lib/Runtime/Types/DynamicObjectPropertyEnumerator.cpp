@@ -109,12 +109,12 @@ namespace Js
 
         uint propertyCount = this->object->GetPropertyCountForEnum();
         data = RecyclerNewStructPlus(requestContext->GetRecycler(),
-            propertyCount * sizeof(Field(PropertyString*)) + propertyCount * sizeof(BigPropertyIndex) + propertyCount * sizeof(PropertyAttributes), CachedData);
+            propertyCount * sizeof(typename WriteBarrierFieldTypeTraits<PropertyString*>::Type) + propertyCount * sizeof(BigPropertyIndex) + propertyCount * sizeof(PropertyAttributes), CachedData);
         data->scriptContext = requestContext;
         data->cachedCount = 0;
         data->propertyCount = propertyCount;
-        data->strings = reinterpret_cast<Field(PropertyString*)*>(data + 1);
-        data->indexes = unsafe_write_barrier_cast<BigPropertyIndex *>(data->strings + propertyCount);
+        data->strings = reinterpret_cast<typename WriteBarrierFieldTypeTraits<PropertyString*>::Type*>(data + 1);
+        data->indexes = (BigPropertyIndex *)(data->strings + propertyCount);
         data->attributes = (PropertyAttributes*)(data->indexes + propertyCount);
         data->completed = false;
         data->enumNonEnumerable = GetEnumNonEnumerable();

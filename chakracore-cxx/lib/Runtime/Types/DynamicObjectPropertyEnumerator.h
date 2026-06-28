@@ -9,28 +9,28 @@ namespace Js
     class DynamicObjectPropertyEnumerator
     {
     private:
-        Field(ScriptContext *) scriptContext;
-        Field(DynamicObject *) object;
-        Field(DynamicType *) initialType;              // for snapshot enumeration
-        Field(BigPropertyIndex) objectIndex;
-        Field(BigPropertyIndex) initialPropertyCount;
-        Field(int) enumeratedCount;
+        typename WriteBarrierFieldTypeTraits<ScriptContext *>::Type scriptContext;
+        typename WriteBarrierFieldTypeTraits<DynamicObject *>::Type object;
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type initialType;              // for snapshot enumeration
+        typename WriteBarrierFieldTypeTraits<BigPropertyIndex>::Type objectIndex;
+        typename WriteBarrierFieldTypeTraits<BigPropertyIndex>::Type initialPropertyCount;
+        typename WriteBarrierFieldTypeTraits<int>::Type enumeratedCount;
 
-        Field(EnumeratorFlags) flags;
+        typename WriteBarrierFieldTypeTraits<EnumeratorFlags>::Type flags;
 
         struct CachedData
         {
-            Field(ScriptContext *) scriptContext;
-            Field(Field(PropertyString*)*) strings;
-            Field(BigPropertyIndex *) indexes;
-            Field(PropertyAttributes *) attributes;
-            Field(int) cachedCount;
-            Field(int) propertyCount;
-            Field(bool) completed;
-            Field(bool) enumNonEnumerable;
-            Field(bool) enumSymbols;
+            typename WriteBarrierFieldTypeTraits<ScriptContext *>::Type scriptContext;
+            typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<PropertyString*>::Type*>::Type strings;
+            typename WriteBarrierFieldTypeTraits<BigPropertyIndex *>::Type indexes;
+            typename WriteBarrierFieldTypeTraits<PropertyAttributes *>::Type attributes;
+            typename WriteBarrierFieldTypeTraits<int>::Type cachedCount;
+            typename WriteBarrierFieldTypeTraits<int>::Type propertyCount;
+            typename WriteBarrierFieldTypeTraits<bool>::Type completed;
+            typename WriteBarrierFieldTypeTraits<bool>::Type enumNonEnumerable;
+            typename WriteBarrierFieldTypeTraits<bool>::Type enumSymbols;
         };
-        Field(CachedData *) cachedData;
+        typename WriteBarrierFieldTypeTraits<CachedData *>::Type cachedData;
 
         DynamicType * GetTypeToEnumerate() const;
         JavascriptString * MoveAndGetNextWithCache(PropertyId& propertyId, PropertyAttributes* attributes);

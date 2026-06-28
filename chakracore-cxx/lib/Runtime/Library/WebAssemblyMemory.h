@@ -53,10 +53,10 @@ namespace Js
         static void CheckLimits(ScriptContext * scriptContext, uint32_t initial, uint32_t maximum);
         static void CheckLimits(ScriptContext * scriptContext, uint32_t initial, uint32_t maximum, uint32_t bufferLength);
 
-        Field(ArrayBufferBase*) m_buffer;
+        typename WriteBarrierFieldTypeTraits<ArrayBufferBase*>::Type m_buffer;
 
-        Field(uint) m_initial;
-        Field(uint) m_maximum;
+        typename WriteBarrierFieldTypeTraits<uint>::Type m_initial;
+        typename WriteBarrierFieldTypeTraits<uint>::Type m_maximum;
 #endif
     };
 

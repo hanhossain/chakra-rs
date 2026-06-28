@@ -140,11 +140,11 @@ namespace Js
         void SetIsActiveScript() { attributes = (Attributes)(attributes | Attributes::ActiveScript); }
         bool GetGeneratorWithComplexParams() {return (attributes & Attributes::GeneratorWithComplexParams) != 0; }
     protected:
-        FieldNoBarrier(JavascriptMethod) originalEntryPoint;
-        FieldWithBarrier(FunctionProxy *) functionBodyImpl;     // Implementation of the function- null if the function doesn't have a body
-        Field(LocalFunctionId) functionId;        // Per host source context (source file) function Id
-        Field(uint) compileCount;
-        Field(Attributes) attributes;
+        typename WriteBarrierFieldTypeTraits<JavascriptMethod, _no_write_barrier_policy, _no_write_barrier_policy>::Type originalEntryPoint;
+        WriteBarrierFieldTypeTraits<FunctionProxy *>::Type functionBodyImpl;     // Implementation of the function- null if the function doesn't have a body
+        typename WriteBarrierFieldTypeTraits<LocalFunctionId>::Type functionId;        // Per host source context (source file) function Id
+        typename WriteBarrierFieldTypeTraits<uint>::Type compileCount;
+        typename WriteBarrierFieldTypeTraits<Attributes>::Type attributes;
     };
 
     // Helper FunctionInfo for builtins that we don't want to profile (script profiler).
@@ -156,7 +156,7 @@ namespace Js
         {}
 
         NoProfileFunctionInfo(JavascriptMethod entryPoint, _no_write_barrier_tag)
-            : FunctionInfo(FORCE_NO_WRITE_BARRIER_TAG(entryPoint), Attributes::DoNotProfile)
+            : FunctionInfo(entryPoint, _no_write_barrier_tag(), Attributes::DoNotProfile)
         {}
     };
 

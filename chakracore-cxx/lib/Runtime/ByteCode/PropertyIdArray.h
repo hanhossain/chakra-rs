@@ -8,12 +8,12 @@ namespace Js
 {
     struct PropertyIdArray
     {
-        Field(uint32_t) count;
-        Field(byte) extraSlots;
-        Field(bool)   hadDuplicates;
-        Field(bool)   has__proto__; // Only used for object literal
-        Field(bool)   hasNonSimpleParams;
-        Field(PropertyId) elements[];
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type count;
+        typename WriteBarrierFieldTypeTraits<byte>::Type extraSlots;
+        typename WriteBarrierFieldTypeTraits<bool>::Type   hadDuplicates;
+        typename WriteBarrierFieldTypeTraits<bool>::Type   has__proto__; // Only used for object literal
+        typename WriteBarrierFieldTypeTraits<bool>::Type   hasNonSimpleParams;
+        typename WriteBarrierFieldTypeTraits<PropertyId>::Type elements[];
 
         PropertyIdArray(uint32_t count, byte extraSlots, bool hadDuplicates = false, bool has__proto__ = false, bool hasNonSimpleParams = false) :
             count(count),

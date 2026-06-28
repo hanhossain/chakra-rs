@@ -14,14 +14,14 @@ namespace Js
 
 struct TypeGuardTransferData
 {
-    Field(unsigned int) propertyGuardCount;
-    FieldNoBarrier(TypeGuardTransferEntryIDL*) entries;
+    typename WriteBarrierFieldTypeTraits<unsigned int>::Type propertyGuardCount;
+    typename WriteBarrierFieldTypeTraits<TypeGuardTransferEntryIDL*, _no_write_barrier_policy, _no_write_barrier_policy>::Type entries;
 };
 
 struct CtorCacheTransferData
 {
-    Field(unsigned int) ctorCachesCount;
-    FieldNoBarrier(CtorCacheTransferEntryIDL **) entries;
+    typename WriteBarrierFieldTypeTraits<unsigned int>::Type ctorCachesCount;
+    typename WriteBarrierFieldTypeTraits<CtorCacheTransferEntryIDL **, _no_write_barrier_policy, _no_write_barrier_policy>::Type entries;
 };
 
 class JitTransferData
@@ -30,35 +30,35 @@ class JitTransferData
 
 private:
     typedef JsUtil::BaseHashSet<void*, Recycler, PowerOf2SizePolicy> TypeRefSet;
-    Field(TypeRefSet*) jitTimeTypeRefs;
+    typename WriteBarrierFieldTypeTraits<TypeRefSet*>::Type jitTimeTypeRefs;
 
-    Field(PinnedTypeRefsIDL*) runtimeTypeRefs;
+    typename WriteBarrierFieldTypeTraits<PinnedTypeRefsIDL*>::Type runtimeTypeRefs;
 
-    Field(int) propertyGuardCount;
+    typename WriteBarrierFieldTypeTraits<int>::Type propertyGuardCount;
     // This is a dynamically sized array of dynamically sized TypeGuardTransferEntries.  It's heap allocated by the JIT
     // thread and lives until entry point is installed, at which point it is explicitly freed.
-    FieldNoBarrier(Js::TypeGuardTransferEntry*) propertyGuardsByPropertyId;
-    Field(size_t) propertyGuardsByPropertyIdPlusSize;
+    typename WriteBarrierFieldTypeTraits<Js::TypeGuardTransferEntry*, _no_write_barrier_policy, _no_write_barrier_policy>::Type propertyGuardsByPropertyId;
+    typename WriteBarrierFieldTypeTraits<size_t>::Type propertyGuardsByPropertyIdPlusSize;
 
     // This is a dynamically sized array of dynamically sized CtorCacheGuardTransferEntry.  It's heap allocated by the JIT
     // thread and lives until entry point is installed, at which point it is explicitly freed.
-    FieldNoBarrier(Js::CtorCacheGuardTransferEntry*) ctorCacheGuardsByPropertyId;
-    Field(size_t) ctorCacheGuardsByPropertyIdPlusSize;
+    typename WriteBarrierFieldTypeTraits<Js::CtorCacheGuardTransferEntry*, _no_write_barrier_policy, _no_write_barrier_policy>::Type ctorCacheGuardsByPropertyId;
+    typename WriteBarrierFieldTypeTraits<size_t>::Type ctorCacheGuardsByPropertyIdPlusSize;
 
-    Field(int) equivalentTypeGuardCount;
-    Field(int) lazyBailoutPropertyCount;
+    typename WriteBarrierFieldTypeTraits<int>::Type equivalentTypeGuardCount;
+    typename WriteBarrierFieldTypeTraits<int>::Type lazyBailoutPropertyCount;
     // This is a dynamically sized array of JitEquivalentTypeGuards. It's heap allocated by the JIT thread and lives
     // until entry point is installed, at which point it is explicitly freed. We need it during installation so as to
     // swap the cache associated with each guard from the heap to the recycler (so the types in the cache are kept alive).
-    FieldNoBarrier(Js::JitEquivalentTypeGuard**) equivalentTypeGuards;
-    FieldNoBarrier(Js::PropertyId*) lazyBailoutProperties;
-    FieldNoBarrier(NativeCodeData*) jitTransferRawData;
-    FieldNoBarrier(EquivalentTypeGuardOffsets*) equivalentTypeGuardOffsets;
-    Field(TypeGuardTransferData) typeGuardTransferData;
-    Field(CtorCacheTransferData) ctorCacheTransferData;
+    typename WriteBarrierFieldTypeTraits<Js::JitEquivalentTypeGuard**, _no_write_barrier_policy, _no_write_barrier_policy>::Type equivalentTypeGuards;
+    typename WriteBarrierFieldTypeTraits<Js::PropertyId*, _no_write_barrier_policy, _no_write_barrier_policy>::Type lazyBailoutProperties;
+    typename WriteBarrierFieldTypeTraits<NativeCodeData*, _no_write_barrier_policy, _no_write_barrier_policy>::Type jitTransferRawData;
+    typename WriteBarrierFieldTypeTraits<EquivalentTypeGuardOffsets*, _no_write_barrier_policy, _no_write_barrier_policy>::Type equivalentTypeGuardOffsets;
+    typename WriteBarrierFieldTypeTraits<TypeGuardTransferData>::Type typeGuardTransferData;
+    typename WriteBarrierFieldTypeTraits<CtorCacheTransferData>::Type ctorCacheTransferData;
 
-    Field(bool) falseReferencePreventionBit;
-    Field(bool) isReady;
+    typename WriteBarrierFieldTypeTraits<bool>::Type falseReferencePreventionBit;
+    typename WriteBarrierFieldTypeTraits<bool>::Type isReady;
 
 public:
     JitTransferData() :

@@ -28,20 +28,20 @@ typedef SListCounted<JSONObjectProperty, Recycler> JSONObject;
 
 struct JSONNumberData
 {
-    Field(Var) value;
-    Field(JavascriptString*) string;
+    typename WriteBarrierFieldTypeTraits<Var>::Type value;
+    typename WriteBarrierFieldTypeTraits<JavascriptString*>::Type string;
 };
 
 
 struct JSONProperty
 {
-    Field(JSONContentType) type;
+    typename WriteBarrierFieldTypeTraits<JSONContentType>::Type type;
     union
     {
-        Field(JSONNumberData) numericValue;
-        Field(JavascriptString*) stringValue;
-        Field(JSONObject*) obj;
-        Field(JSONArray*) arr;
+        typename WriteBarrierFieldTypeTraits<JSONNumberData>::Type numericValue;
+        typename WriteBarrierFieldTypeTraits<JavascriptString*>::Type stringValue;
+        typename WriteBarrierFieldTypeTraits<JSONObject*>::Type obj;
+        typename WriteBarrierFieldTypeTraits<JSONArray*>::Type arr;
     };
 
     JSONProperty()
@@ -50,16 +50,16 @@ struct JSONProperty
     }
     JSONProperty(const JSONProperty& other)
     {
-        // Copy the full struct and use "Field(Var)" to identify write barrier
+        // Copy the full struct and use "typename WriteBarrierFieldTypeTraits<Var>::Type" to identify write barrier
         // policy as the struct contains Vars
-        CopyArray<JSONProperty, Field(Var)>(this, 1, &other, 1);
+        CopyArray<JSONProperty, typename WriteBarrierFieldTypeTraits<Var>::Type>(this, 1, &other, 1);
     }
 };
 
 struct JSONObjectProperty
 {
-    Field(JavascriptString*) propertyName;
-    Field(JSONProperty) propertyValue;
+    typename WriteBarrierFieldTypeTraits<JavascriptString*>::Type propertyName;
+    typename WriteBarrierFieldTypeTraits<JSONProperty>::Type propertyValue;
 
     JSONObjectProperty() : propertyName(nullptr), propertyValue()
     {
@@ -73,16 +73,16 @@ struct JSONObjectProperty
 
 struct JSONArray
 {
-    Field(uint32_t) length;
-    Field(JSONProperty) arr[];
+    typename WriteBarrierFieldTypeTraits<uint32_t>::Type length;
+    typename WriteBarrierFieldTypeTraits<JSONProperty>::Type arr[];
 };
 
 class LazyJSONString : public JavascriptString
 {
 private:
-    Field(charcount_t) gapLength;
-    Field(JSONProperty*) jsonContent;
-    Field(const char16_t*) gap;
+    typename WriteBarrierFieldTypeTraits<charcount_t>::Type gapLength;
+    typename WriteBarrierFieldTypeTraits<JSONProperty*>::Type jsonContent;
+    typename WriteBarrierFieldTypeTraits<const char16_t*>::Type gap;
 
     DynamicObject* ReconstructObject(_In_ JSONObject* valueList) const;
     JavascriptArray* ReconstructArray(_In_ JSONArray* valueArray) const;

@@ -105,16 +105,16 @@ namespace JsUtil
         typedef ValueEntry<TEntry> EntryType;
         typedef RecyclerWeakReferenceRegionItem<TWeak> WeakType;
 
-        Field(int*) buckets;
-        Field(EntryType*) entries;
-        Field(WeakType*) weakRefs;
-        FieldNoBarrier(Recycler*) alloc;
-        Field(int) size;
-        Field(uint) bucketCount;
-        Field(int) count;
-        Field(int) freeList;
-        Field(int) freeCount;
-        Field(int) modFunctionIndex;
+        typename WriteBarrierFieldTypeTraits<int*>::Type buckets;
+        typename WriteBarrierFieldTypeTraits<EntryType*>::Type entries;
+        typename WriteBarrierFieldTypeTraits<WeakType*>::Type weakRefs;
+        typename WriteBarrierFieldTypeTraits<Recycler*, _no_write_barrier_policy, _no_write_barrier_policy>::Type alloc;
+        typename WriteBarrierFieldTypeTraits<int>::Type size;
+        typename WriteBarrierFieldTypeTraits<uint>::Type bucketCount;
+        typename WriteBarrierFieldTypeTraits<int>::Type count;
+        typename WriteBarrierFieldTypeTraits<int>::Type freeList;
+        typename WriteBarrierFieldTypeTraits<int>::Type freeCount;
+        typename WriteBarrierFieldTypeTraits<int>::Type modFunctionIndex;
 
     private:
         static const int FreeListSentinel = -2;

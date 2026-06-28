@@ -8,7 +8,7 @@
 using namespace Js;
 
     FunctionInfo JavascriptGeneratorFunction::functionInfo(
-        FORCE_NO_WRITE_BARRIER_TAG(JavascriptGeneratorFunction::EntryGeneratorFunctionImplementation),
+        JavascriptGeneratorFunction::EntryGeneratorFunctionImplementation, _no_write_barrier_tag(),
         (FunctionInfo::Attributes)(FunctionInfo::DoNotProfile | FunctionInfo::ErrorOnNew));
 
     JavascriptGeneratorFunction::JavascriptGeneratorFunction(DynamicType* type)

@@ -11,9 +11,9 @@ namespace Js
         DECLARE_OBJECT(ByteBlock)
 
     private:
-        Field(uint) m_contentSize = 0;     // Length of block, in bytes
+        typename WriteBarrierFieldTypeTraits<uint>::Type m_contentSize = 0;     // Length of block, in bytes
 
-        Field(byte*) m_content = nullptr;    // The block's content
+        typename WriteBarrierFieldTypeTraits<byte*>::Type m_content = nullptr;    // The block's content
 
         static ByteBlock* New(Recycler* alloc, const byte * initialContent, int initialContentSize, ScriptContext * requestContext);
 

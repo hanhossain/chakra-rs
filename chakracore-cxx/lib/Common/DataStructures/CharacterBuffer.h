@@ -73,8 +73,8 @@ namespace JsUtil
         T const * GetBuffer() const { return string; }
         charcount_t GetLength() const { return len; }
     private:
-        Field(T const *) string;
-        Field(charcount_t) len;
+        typename WriteBarrierFieldTypeTraits<T const *>::Type string;
+        typename WriteBarrierFieldTypeTraits<charcount_t>::Type len;
     };
 
     template<>

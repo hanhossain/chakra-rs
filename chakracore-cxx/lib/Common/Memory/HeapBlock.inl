@@ -28,7 +28,6 @@ HeapBlock::GetPageAllocator(HeapInfo * heapInfo)
         return heapInfo->GetRecyclerLeafPageAllocator();
     case LargeBlockType:
         return heapInfo->GetRecyclerLargeBlockPageAllocator();
-#ifdef RECYCLER_WRITE_BARRIER
     case SmallNormalBlockWithBarrierType:
     case SmallFinalizableBlockWithBarrierType:
     case MediumNormalBlockWithBarrierType:
@@ -37,7 +36,6 @@ HeapBlock::GetPageAllocator(HeapInfo * heapInfo)
         return heapInfo->GetRecyclerLeafPageAllocator();
 #elif defined(RECYCLER_WRITE_BARRIER_ALLOC_SEPARATE_PAGE)
         return heapInfo->GetRecyclerWithBarrierPageAllocator();
-#endif
 #endif
 
     default:
@@ -178,7 +176,6 @@ HeapBlock::UpdateAttributesOfMarkedObjects(MarkContext * markContext, void * obj
         if (!markContext->GetRecycler()->inPartialCollectMode)
 #endif
         {
-#if ENABLE_CONCURRENT_GC
             if (markContext->GetRecycler()->DoQueueTrackedObject())
             {
                 if (!markContext->AddTrackedObject(trackedObject))
@@ -187,7 +184,6 @@ HeapBlock::UpdateAttributesOfMarkedObjects(MarkContext * markContext, void * obj
                 }
             }
             else
-#endif
             {
                 // Process the tracked object right now
                 markContext->MarkTrackedObject(trackedObject);

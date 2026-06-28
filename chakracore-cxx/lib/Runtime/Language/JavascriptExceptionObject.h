@@ -161,39 +161,39 @@ namespace Js
 
     private:
         friend class ::ThreadContext;
-        static void Insert(Field(JavascriptExceptionObject*)* head, JavascriptExceptionObject* item);
-        static void Remove(Field(JavascriptExceptionObject*)* head, JavascriptExceptionObject* item);
+        static void Insert(typename WriteBarrierFieldTypeTraits<JavascriptExceptionObject*>::Type* head, JavascriptExceptionObject* item);
+        static void Remove(typename WriteBarrierFieldTypeTraits<JavascriptExceptionObject*>::Type* head, JavascriptExceptionObject* item);
 
     private:
-        Field(Var)      thrownObject;
-        Field(ScriptContext *) scriptContext;
+        typename WriteBarrierFieldTypeTraits<Var>::Type      thrownObject;
+        typename WriteBarrierFieldTypeTraits<ScriptContext *>::Type scriptContext;
 
 #ifdef ENABLE_SCRIPT_DEBUGGING
-        Field(int)        byteCodeOffsetAfterDebuggerSkip;
+        typename WriteBarrierFieldTypeTraits<int>::Type        byteCodeOffsetAfterDebuggerSkip;
 #endif
 
-        Field(const bool) tag : 1;               // Tag the low bit to prevent possible GC false references
-        Field(bool)       isPendingExceptionObject : 1;
+        typename WriteBarrierFieldTypeTraits<const bool>::Type tag : 1;               // Tag the low bit to prevent possible GC false references
+        typename WriteBarrierFieldTypeTraits<bool>::Type       isPendingExceptionObject : 1;
 
 #ifdef ENABLE_SCRIPT_DEBUGGING
-        Field(bool)       isDebuggerSkip : 1;
-        Field(bool)       hasDebuggerLogged : 1;
-        Field(bool)       isFirstChance : 1;      // Mentions whether the current exception is a handled exception or not
-        Field(bool)       isExceptionCaughtInNonUserCode : 1; // Mentions if in the caller chain the exception will be handled by the non-user code.
-        Field(bool)       ignoreAdvanceToNextStatement : 1;  // This will be set when user had setnext while sitting on the exception
+        typename WriteBarrierFieldTypeTraits<bool>::Type       isDebuggerSkip : 1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type       hasDebuggerLogged : 1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type       isFirstChance : 1;      // Mentions whether the current exception is a handled exception or not
+        typename WriteBarrierFieldTypeTraits<bool>::Type       isExceptionCaughtInNonUserCode : 1; // Mentions if in the caller chain the exception will be handled by the non-user code.
+        typename WriteBarrierFieldTypeTraits<bool>::Type       ignoreAdvanceToNextStatement : 1;  // This will be set when user had setnext while sitting on the exception
                                                 // So the exception eating logic shouldn't try and advance to next statement again.
 #endif
 
-        FieldNoBarrier(HostWrapperCreateFuncType) hostWrapperCreateFunc;
+        typename WriteBarrierFieldTypeTraits<HostWrapperCreateFuncType, _no_write_barrier_policy, _no_write_barrier_policy>::Type hostWrapperCreateFunc;
 
-        Field(JavascriptExceptionContext) exceptionContext;
+        typename WriteBarrierFieldTypeTraits<JavascriptExceptionContext>::Type exceptionContext;
 #if ENABLE_DEBUG_STACK_BACK_TRACE
-        Field(StackBackTrace*) stackBackTrace;
+        typename WriteBarrierFieldTypeTraits<StackBackTrace*>::Type stackBackTrace;
         static const int StackToSkip = 2;
         static const int StackTraceDepth = 30;
 #endif
 
-        Field(JavascriptExceptionObject*) next;  // to temporarily store list of throwing exceptions
+        typename WriteBarrierFieldTypeTraits<JavascriptExceptionObject*>::Type next;  // to temporarily store list of throwing exceptions
 
         PREVENT_COPY(JavascriptExceptionObject)
     };

@@ -157,7 +157,6 @@ HeapInfoManager::SweepSmallNonFinalizable(RecyclerSweepManager& recyclerSweepMan
     });
 }
 
-#if ENABLE_PARTIAL_GC || ENABLE_CONCURRENT_GC
 void
 HeapInfoManager::SweepPendingObjects(RecyclerSweepManager& recyclerSweepManager)
 {
@@ -166,7 +165,6 @@ HeapInfoManager::SweepPendingObjects(RecyclerSweepManager& recyclerSweepManager)
         heapInfo.SweepPendingObjects(recyclerSweep);
     });
 }
-#endif
 
 #if ENABLE_PARTIAL_GC
 void
@@ -188,7 +186,6 @@ HeapInfoManager::FinishPartialCollect(RecyclerSweepManager * recyclerSweepManage
 }
 #endif
 
-#if ENABLE_CONCURRENT_GC
 void
 HeapInfoManager::PrepareSweep()
 {
@@ -197,53 +194,6 @@ HeapInfoManager::PrepareSweep()
         heapInfo.PrepareSweep();
     });
 }
-
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-void
-HeapInfoManager::StartAllocationsDuringConcurrentSweep()
-{
-    ForEachHeapInfo([](HeapInfo& heapInfo)
-    {
-        heapInfo.StartAllocationsDuringConcurrentSweep();
-    });
-}
-
-bool
-HeapInfoManager::DoTwoPassConcurrentSweepPreCheck()
-{
-    return IsAnyHeapInfo([](HeapInfo& heapInfo)
-    {
-        return heapInfo.DoTwoPassConcurrentSweepPreCheck();
-    });
-}
-
-void
-HeapInfoManager::FinishSweepPrep(RecyclerSweepManager& recyclerSweepManager)
-{
-    ForEachHeapInfo(recyclerSweepManager, [=](HeapInfo& heapInfo, RecyclerSweep& recyclerSweep)
-    {
-        heapInfo.FinishSweepPrep(recyclerSweep);
-    });
-}
-
-void
-HeapInfoManager::FinishConcurrentSweepPass1(RecyclerSweepManager& recyclerSweepManager)
-{
-    ForEachHeapInfo(recyclerSweepManager, [=](HeapInfo& heapInfo, RecyclerSweep& recyclerSweep)
-    {
-        heapInfo.FinishConcurrentSweepPass1(recyclerSweep);
-    });
-}
-
-void
-HeapInfoManager::FinishConcurrentSweep()
-{
-    ForEachHeapInfo([](HeapInfo& heapInfo)
-    {
-        heapInfo.FinishConcurrentSweep();
-    });
-}
-#endif
 
 void
 HeapInfoManager::ConcurrentTransferSweptObjects(RecyclerSweepManager& recyclerSweepManager)
@@ -263,7 +213,6 @@ HeapInfoManager::ConcurrentPartialTransferSweptObjects(RecyclerSweepManager& rec
         heapInfo.ConcurrentPartialTransferSweptObjects(recyclerSweep);
     });
 }
-#endif
 #endif
 
 void
@@ -646,7 +595,6 @@ HeapInfoManager::IsRecyclerLargeBlockPageAllocator(PageAllocator * pageAllocator
     });
 }
 
-#ifdef RECYCLER_WRITE_BARRIER
 bool
 HeapInfoManager::IsRecyclerWithBarrierPageAllocator(PageAllocator * pageAllocator)
 {
@@ -655,7 +603,6 @@ HeapInfoManager::IsRecyclerWithBarrierPageAllocator(PageAllocator * pageAllocato
         return (heapInfo.GetRecyclerWithBarrierPageAllocator() == pageAllocator);
     });
 }
-#endif
 
 #ifdef RECYCLER_PAGE_HEAP
 bool

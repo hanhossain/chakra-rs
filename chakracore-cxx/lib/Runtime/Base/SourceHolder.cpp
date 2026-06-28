@@ -7,7 +7,7 @@
 namespace Js
 {
     LPCUTF8 const ISourceHolder::emptyString = (LPCUTF8)"\0";
-    SimpleSourceHolder const ISourceHolder::emptySourceHolder(NO_WRITE_BARRIER_TAG(emptyString), 0, true);
+    SimpleSourceHolder const ISourceHolder::emptySourceHolder(emptyString, _no_write_barrier_tag(), 0, true);
 
     void HeapSourceHolder::Dispose(bool fShutdown)
     {

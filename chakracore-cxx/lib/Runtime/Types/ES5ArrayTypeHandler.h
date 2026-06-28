@@ -10,9 +10,9 @@ namespace Js
     class IndexPropertyDescriptor
     {
     public:
-        Field(PropertyAttributes) Attributes;
-        Field(Var) Getter;
-        Field(Var) Setter;
+        typename WriteBarrierFieldTypeTraits<PropertyAttributes>::Type Attributes;
+        typename WriteBarrierFieldTypeTraits<Var>::Type Getter;
+        typename WriteBarrierFieldTypeTraits<Var>::Type Setter;
 
         IndexPropertyDescriptor(PropertyAttributes attributes = PropertyDynamicTypeDefaults,
             Var getter = NULL, Var setter = NULL)
@@ -37,10 +37,10 @@ namespace Js
         typedef JsUtil::BaseDictionary<uint32_t, IndexPropertyDescriptor, ForceNonLeafAllocator<Recycler>::AllocatorType, PowerOf2SizePolicy>
             InnerMap;
 
-        FieldNoBarrier(Recycler*) recycler;
-        Field(InnerMap*) indexPropertyMap; // The internal real index property map
-        Field(uint32_t*) indexList;          // The index list that's created on demand
-        Field(int) lastIndexAt;            // Last used index list entry
+        typename WriteBarrierFieldTypeTraits<Recycler*, _no_write_barrier_policy, _no_write_barrier_policy>::Type recycler;
+        typename WriteBarrierFieldTypeTraits<InnerMap*>::Type indexPropertyMap; // The internal real index property map
+        typename WriteBarrierFieldTypeTraits<uint32_t*>::Type indexList;          // The index list that's created on demand
+        typename WriteBarrierFieldTypeTraits<int>::Type lastIndexAt;            // Last used index list entry
 
     private:
         void EnsureIndexList();
@@ -103,9 +103,9 @@ namespace Js
         template <typename U> friend class ES5ArrayTypeHandlerBase;
 
     private:
-        Field(IndexPropertyDescriptorMap*) indexPropertyMap;
-        Field(PropertyAttributes) dataItemAttributes; // attributes for data item not in map
-        Field(bool) lengthWritable;
+        typename WriteBarrierFieldTypeTraits<IndexPropertyDescriptorMap*>::Type indexPropertyMap;
+        typename WriteBarrierFieldTypeTraits<PropertyAttributes>::Type dataItemAttributes; // attributes for data item not in map
+        typename WriteBarrierFieldTypeTraits<bool>::Type lengthWritable;
 
     public:
         DEFINE_GETCPPNAME();

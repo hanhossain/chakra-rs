@@ -26,10 +26,10 @@ namespace Js
         }
 
     private:
-        Field(PropertyString *) charStringCacheA[CharStringCacheSize];
+        typename WriteBarrierFieldTypeTraits<PropertyString *>::Type charStringCacheA[CharStringCacheSize];
 
         typedef JsUtil::BaseDictionary<char16_t, JavascriptString *, Recycler, PowerOf2SizePolicy> CharStringCacheMap;
-        Field(CharStringCacheMap *) charStringCache;
+        typename WriteBarrierFieldTypeTraits<CharStringCacheMap *>::Type charStringCache;
 
         friend class CharStringCacheValidator;
     };

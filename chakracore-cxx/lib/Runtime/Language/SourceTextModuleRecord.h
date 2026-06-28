@@ -120,7 +120,7 @@ namespace Js
 
         uint GetLocalExportSlotIndexByExportName(PropertyId exportNameId);
         uint GetLocalExportSlotIndexByLocalName(PropertyId localNameId);
-        Field(Var)* GetLocalExportSlots() const { return localExportSlots; }
+        typename WriteBarrierFieldTypeTraits<Var>::Type* GetLocalExportSlots() const { return localExportSlots; }
         uint GetLocalExportSlotCount() const { return localSlotCount; }
         uint GetModuleId() const { return moduleId; }
         uint GetLocalExportCount() const { return localExportCount; }
@@ -139,52 +139,52 @@ namespace Js
         const static uint InvalidSlotCount = 0xffffffff;
         const static uint InvalidSlotIndex = 0xffffffff;
         // TODO: move non-GC fields out to avoid false reference?
-        Field(bool) confirmedReady = false;
-        Field(bool) notifying = false;
-        Field(bool) wasPrepassed = false;
-        Field(bool) wasParsed = false;
-        Field(bool) wasDeclarationInitialized = false;
-        Field(bool) parentsNotified = false;
-        Field(bool) isRootModule = false;
-        Field(bool) hadNotifyHostReady = false;
-        Field(bool) evaluating = false;
-        Field(JavascriptGenerator*) generator;
-        Field(ParseNodeProg *) parseTree; // This is the parsed tree resulted from compilation.
-        Field(Utf8SourceInfo*) pSourceInfo;
-        Field(uint) sourceIndex;
-        FieldNoBarrier(Parser*) parser;  // we'll need to keep the parser around till we are done with bytecode gen.
-        Field(ScriptContext*) scriptContext;
-        Field(IdentPtrList*) requestedModuleList;
-        Field(ModuleImportOrExportEntryList*) importRecordList;
-        Field(ModuleImportOrExportEntryList*) localExportRecordList;
-        Field(ModuleImportOrExportEntryList*) indirectExportRecordList;
-        Field(ModuleImportOrExportEntryList*) starExportRecordList;
-        Field(ChildModuleRecordSet*) childrenModuleSet;
-        Field(ModuleRecordList*) parentModuleList;
-        Field(LocalExportMap*) localExportMapByExportName;  // from propertyId to index map: for bytecode gen.
-        Field(LocalExportMap*) localExportMapByLocalName;  // from propertyId to index map: for bytecode gen.
-        Field(LocalExportIndexList*) localExportIndexList; // from index to propertyId: for typehandler.
-        Field(ExportedNames*) exportedNames;
-        Field(ResolvedExportMap*) resolvedExportMap;
+        typename WriteBarrierFieldTypeTraits<bool>::Type confirmedReady = false;
+        typename WriteBarrierFieldTypeTraits<bool>::Type notifying = false;
+        typename WriteBarrierFieldTypeTraits<bool>::Type wasPrepassed = false;
+        typename WriteBarrierFieldTypeTraits<bool>::Type wasParsed = false;
+        typename WriteBarrierFieldTypeTraits<bool>::Type wasDeclarationInitialized = false;
+        typename WriteBarrierFieldTypeTraits<bool>::Type parentsNotified = false;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isRootModule = false;
+        typename WriteBarrierFieldTypeTraits<bool>::Type hadNotifyHostReady = false;
+        typename WriteBarrierFieldTypeTraits<bool>::Type evaluating = false;
+        typename WriteBarrierFieldTypeTraits<JavascriptGenerator*>::Type generator;
+        typename WriteBarrierFieldTypeTraits<ParseNodeProg *>::Type parseTree; // This is the parsed tree resulted from compilation.
+        typename WriteBarrierFieldTypeTraits<Utf8SourceInfo*>::Type pSourceInfo;
+        typename WriteBarrierFieldTypeTraits<uint>::Type sourceIndex;
+        typename WriteBarrierFieldTypeTraits<Parser*, _no_write_barrier_policy, _no_write_barrier_policy>::Type parser;  // we'll need to keep the parser around till we are done with bytecode gen.
+        typename WriteBarrierFieldTypeTraits<ScriptContext*>::Type scriptContext;
+        typename WriteBarrierFieldTypeTraits<IdentPtrList*>::Type requestedModuleList;
+        typename WriteBarrierFieldTypeTraits<ModuleImportOrExportEntryList*>::Type importRecordList;
+        typename WriteBarrierFieldTypeTraits<ModuleImportOrExportEntryList*>::Type localExportRecordList;
+        typename WriteBarrierFieldTypeTraits<ModuleImportOrExportEntryList*>::Type indirectExportRecordList;
+        typename WriteBarrierFieldTypeTraits<ModuleImportOrExportEntryList*>::Type starExportRecordList;
+        typename WriteBarrierFieldTypeTraits<ChildModuleRecordSet*>::Type childrenModuleSet;
+        typename WriteBarrierFieldTypeTraits<ModuleRecordList*>::Type parentModuleList;
+        typename WriteBarrierFieldTypeTraits<LocalExportMap*>::Type localExportMapByExportName;  // from propertyId to index map: for bytecode gen.
+        typename WriteBarrierFieldTypeTraits<LocalExportMap*>::Type localExportMapByLocalName;  // from propertyId to index map: for bytecode gen.
+        typename WriteBarrierFieldTypeTraits<LocalExportIndexList*>::Type localExportIndexList; // from index to propertyId: for typehandler.
+        typename WriteBarrierFieldTypeTraits<ExportedNames*>::Type exportedNames;
+        typename WriteBarrierFieldTypeTraits<ResolvedExportMap*>::Type resolvedExportMap;
 
-        Field(Js::JavascriptFunction*) rootFunction;
-        Field(void*) hostDefined;
-        Field(Var) normalizedSpecifier;
-        Field(Var) errorObject;
-        Field(Field(Var)*) localExportSlots;
-        Field(uint) localSlotCount;
+        typename WriteBarrierFieldTypeTraits<Js::JavascriptFunction*>::Type rootFunction;
+        typename WriteBarrierFieldTypeTraits<void*>::Type hostDefined;
+        typename WriteBarrierFieldTypeTraits<Var>::Type normalizedSpecifier;
+        typename WriteBarrierFieldTypeTraits<Var>::Type errorObject;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<Var>::Type*>::Type localExportSlots;
+        typename WriteBarrierFieldTypeTraits<uint>::Type localSlotCount;
 
         // module export allows aliasing, like export {foo as foo1, foo2, foo3}.
-        Field(uint) localExportCount;
-        Field(uint) moduleId;
+        typename WriteBarrierFieldTypeTraits<uint>::Type localExportCount;
+        typename WriteBarrierFieldTypeTraits<uint>::Type moduleId;
 
         // for Top level Await
-        Field(uint) awaitedModules;
+        typename WriteBarrierFieldTypeTraits<uint>::Type awaitedModules;
 
-        Field(ModuleNameRecord) namespaceRecord;
-        Field(JavascriptPromise*) promise;
+        typename WriteBarrierFieldTypeTraits<ModuleNameRecord>::Type namespaceRecord;
+        typename WriteBarrierFieldTypeTraits<JavascriptPromise*>::Type promise;
 
-        Field(Var) importMetaObject;
+        typename WriteBarrierFieldTypeTraits<Var>::Type importMetaObject;
 
         int32_t PostParseProcess();
         int32_t PrepareForModuleDeclarationInitialization();
@@ -208,7 +208,7 @@ namespace Js
     struct ServerSourceTextModuleRecord
     {
         uint moduleId;
-        Field(Var)* localExportSlotsAddr;
+        typename WriteBarrierFieldTypeTraits<Var>::Type* localExportSlotsAddr;
     };
 
     class AsyncModuleCallbackFunction : public RuntimeFunction
@@ -225,7 +225,7 @@ namespace Js
                 RuntimeFunction(type, functionInfo),
                 module(module) {}
 
-        Field(SourceTextModuleRecord*) module;
+        typename WriteBarrierFieldTypeTraits<SourceTextModuleRecord*>::Type module;
     };
 
     template<>

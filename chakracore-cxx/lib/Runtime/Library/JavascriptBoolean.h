@@ -9,7 +9,7 @@ namespace Js
     class JavascriptBoolean : public RecyclableObject
     {
     private:
-        Field(BOOL) value;
+        typename WriteBarrierFieldTypeTraits<BOOL>::Type value;
 
         DEFINE_VTABLE_CTOR(JavascriptBoolean, RecyclableObject);
     public:

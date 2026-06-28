@@ -19,7 +19,7 @@ namespace Js
     }
 
     InternalString::InternalString(const char16_t* content, _no_write_barrier_tag, charcount_t length, unsigned char offset) :
-        m_content(NO_WRITE_BARRIER_TAG(content)),
+        m_content(content, _no_write_barrier_tag()),
         m_charLength(length),
         m_offset(offset)
     {

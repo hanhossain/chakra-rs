@@ -182,7 +182,6 @@ namespace JsUtil
         }
     };
 
-#ifdef RECYCLER_WRITE_BARRIER
     template <class T>
     class QuickSortSwap<_write_barrier_policy, T>
     {
@@ -195,7 +194,6 @@ namespace JsUtil
             *b = temp;
         }
     };
-#endif
 
     template <class Policy, class T, class Comparer>
     class QuickSort

@@ -54,7 +54,7 @@ public:
     Js::EquivalentTypeCache * EnsureEquivalentTypeCache(int guardCount, Js::ScriptContext * scriptContext, Js::EntryPointInfo * entryPointInfo);
     bool ClearEquivalentTypeCaches(Recycler * recycler);
 
-    Field(Js::FakePropertyGuardWeakReference*) * EnsurePropertyGuardWeakRefs(int guardCount, Recycler * recycler);
+    typename WriteBarrierFieldTypeTraits<Js::FakePropertyGuardWeakReference*>::Type * EnsurePropertyGuardWeakRefs(int guardCount, Recycler * recycler);
 
     Js::SmallSpanSequence * GetNativeThrowSpanSequence() { return this->nativeThrowSpanSequence; }
     void SetNativeThrowSpanSequence(Js::SmallSpanSequence * seq) { this->nativeThrowSpanSequence = seq; }
@@ -82,55 +82,55 @@ private:
 
     void FreeNativeCode(Js::ScriptContext * scriptContext, bool isShutdown);
 
-    FieldNoBarrier(Js::JavascriptMethod) nativeAddress;
-    FieldNoBarrier(Js::JavascriptMethod) thunkAddress;
-    Field(ptrdiff_t) codeSize;
-    Field(void*) validationCookie;
+    typename WriteBarrierFieldTypeTraits<Js::JavascriptMethod, _no_write_barrier_policy, _no_write_barrier_policy>::Type nativeAddress;
+    typename WriteBarrierFieldTypeTraits<Js::JavascriptMethod, _no_write_barrier_policy, _no_write_barrier_policy>::Type thunkAddress;
+    typename WriteBarrierFieldTypeTraits<ptrdiff_t>::Type codeSize;
+    typename WriteBarrierFieldTypeTraits<void*>::Type validationCookie;
 
     // This field holds any recycler allocated references that must be kept alive until
     // we install the entry point.  It is freed at that point, so anything that must survive
     // until the EntryPointInfo itself goes away, must be copied somewhere else.
-    Field(JitTransferData*) jitTransferData;
+    typename WriteBarrierFieldTypeTraits<JitTransferData*>::Type jitTransferData;
 
     typedef JsUtil::BaseHashSet<RecyclerWeakReference<Js::FunctionBody>*, Recycler, PowerOf2SizePolicy> WeakFuncRefSet;
-    Field(WeakFuncRefSet *) weakFuncRefSet;
+    typename WriteBarrierFieldTypeTraits<WeakFuncRefSet *>::Type weakFuncRefSet;
 
     // Need to keep strong references to the guards here so they don't get collected while the entry point is alive.
     typedef JsUtil::BaseDictionary<Js::PropertyId, Js::PropertyGuard*, Recycler, PowerOf2SizePolicy> SharedPropertyGuardDictionary;
-    Field(SharedPropertyGuardDictionary*) sharedPropertyGuards;
+    typename WriteBarrierFieldTypeTraits<SharedPropertyGuardDictionary*>::Type sharedPropertyGuards;
 
     typedef SListCounted<Js::ConstructorCache*, Recycler> ConstructorCacheList;
-    Field(ConstructorCacheList*) constructorCaches;
+    typename WriteBarrierFieldTypeTraits<ConstructorCacheList*>::Type constructorCaches;
 
-    Field(Js::EntryPointPolymorphicInlineCacheInfo *) polymorphicInlineCacheInfo;
+    typename WriteBarrierFieldTypeTraits<Js::EntryPointPolymorphicInlineCacheInfo *>::Type polymorphicInlineCacheInfo;
 
     // If we pin types this array contains strong references to types, otherwise it holds weak references.
-    Field(Field(void*)*) runtimeTypeRefs;
+    typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<void*>::Type*>::Type runtimeTypeRefs;
 
     // This array holds fake weak references to type property guards. We need it to zero out the weak references when the
     // entry point is finalized and the guards are about to be freed. Otherwise, if one of the guards was to be invalidated
     // from the thread context, we would AV trying to access freed memory. Note that the guards themselves are allocated by
     // NativeCodeData::Allocator and are kept alive by the data field. The weak references are recycler allocated, and so
     // the array must be recycler allocated also, so that the recycler doesn't collect the weak references.
-    Field(Field(Js::FakePropertyGuardWeakReference*)*) propertyGuardWeakRefs;
-    Field(Js::EquivalentTypeCache*) equivalentTypeCaches;
-    Field(Js::EntryPointInfo **) registeredEquivalentTypeCacheRef;
+    typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<Js::FakePropertyGuardWeakReference*>::Type*>::Type propertyGuardWeakRefs;
+    typename WriteBarrierFieldTypeTraits<Js::EquivalentTypeCache*>::Type equivalentTypeCaches;
+    typename WriteBarrierFieldTypeTraits<Js::EntryPointInfo **>::Type registeredEquivalentTypeCacheRef;
 
-    FieldNoBarrier(Js::SmallSpanSequence *) nativeThrowSpanSequence;
+    typename WriteBarrierFieldTypeTraits<Js::SmallSpanSequence *, _no_write_barrier_policy, _no_write_barrier_policy>::Type nativeThrowSpanSequence;
 
 #if PDATA_ENABLED
-    Field(XDataAllocation *) xdataInfo;
+    typename WriteBarrierFieldTypeTraits<XDataAllocation *>::Type xdataInfo;
 #endif
 
-    Field(int) propertyGuardCount;
-    Field(int) equivalentTypeCacheCount;
+    typename WriteBarrierFieldTypeTraits<int>::Type propertyGuardCount;
+    typename WriteBarrierFieldTypeTraits<int>::Type equivalentTypeCacheCount;
 
-    Field(uint) frameHeight;
+    typename WriteBarrierFieldTypeTraits<uint>::Type frameHeight;
 
     // TODO: these only applies to FunctionEntryPointInfo
-    Field(uint8_t)                pendingInlinerVersion;
-    Field(Js::ImplicitCallFlags) pendingImplicitCallFlags;
-    Field(uint32_t)              pendingPolymorphicCacheState;
+    typename WriteBarrierFieldTypeTraits<uint8_t>::Type                pendingInlinerVersion;
+    typename WriteBarrierFieldTypeTraits<Js::ImplicitCallFlags>::Type pendingImplicitCallFlags;
+    typename WriteBarrierFieldTypeTraits<uint32_t>::Type              pendingPolymorphicCacheState;
 
 #if DBG_DUMP || defined(VTUNE_PROFILING)    
 public:
@@ -143,7 +143,7 @@ public:
     typedef JsUtil::List<NativeOffsetMap, HeapAllocator> NativeOffsetMapListType;
     NativeOffsetMapListType& GetNativeOffsetMaps() { return nativeOffsetMaps; }
 private:    
-    Field(NativeOffsetMapListType) nativeOffsetMaps;
+    typename WriteBarrierFieldTypeTraits<NativeOffsetMapListType>::Type nativeOffsetMaps;
 #endif
 };
 
@@ -168,11 +168,11 @@ public:
 
     void OnCleanup();
 private:
-    FieldNoBarrier(NativeCodeData *) nativeCodeData;
-    FieldNoBarrier(InlineeFrameMap *) inlineeFrameMap;
-    FieldNoBarrier(NativeLazyBailOutRecordList *) sortedLazyBailoutRecordList;
-    FieldNoBarrier(int32_t) lazyBailOutRecordSlotOffset;
-    FieldNoBarrier(uint32_t) lazyBailOutThunkOffset;
+    typename WriteBarrierFieldTypeTraits<NativeCodeData *, _no_write_barrier_policy, _no_write_barrier_policy>::Type nativeCodeData;
+    typename WriteBarrierFieldTypeTraits<InlineeFrameMap *, _no_write_barrier_policy, _no_write_barrier_policy>::Type inlineeFrameMap;
+    typename WriteBarrierFieldTypeTraits<NativeLazyBailOutRecordList *, _no_write_barrier_policy, _no_write_barrier_policy>::Type sortedLazyBailoutRecordList;
+    typename WriteBarrierFieldTypeTraits<int32_t, _no_write_barrier_policy, _no_write_barrier_policy>::Type lazyBailOutRecordSlotOffset;
+    typename WriteBarrierFieldTypeTraits<uint32_t, _no_write_barrier_policy, _no_write_barrier_policy>::Type lazyBailOutThunkOffset;
 };
 
 class OOPNativeEntryPointData : public NativeEntryPointData
@@ -194,9 +194,9 @@ public:
 
     void OnCleanup();
 private:
-    Field(uint) inlineeFrameOffsetArrayOffset;
-    Field(uint) inlineeFrameOffsetArrayCount;
-    FieldNoBarrier(char *) nativeDataBuffer;
+    typename WriteBarrierFieldTypeTraits<uint>::Type inlineeFrameOffsetArrayOffset;
+    typename WriteBarrierFieldTypeTraits<uint>::Type inlineeFrameOffsetArrayCount;
+    typename WriteBarrierFieldTypeTraits<char *, _no_write_barrier_policy, _no_write_barrier_policy>::Type nativeDataBuffer;
 
 };
 

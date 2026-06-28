@@ -12,27 +12,27 @@ namespace Js
     class FunctionCodeGenRuntimeData
     {
     private:
-        Field(FunctionBody *const) functionBody;
+        typename WriteBarrierFieldTypeTraits<FunctionBody *const>::Type functionBody;
 
         // These cloned inline caches are guaranteed to be kept alive for the life of the function body. They may be shared
         // by different versions of the same function body that have been or will be jitted. Cached data is not guaranteed to be
         // stable while jitting.
-        Field(InlineCachePointerArray<InlineCache>) clonedInlineCaches;
+        typename WriteBarrierFieldTypeTraits<InlineCachePointerArray<InlineCache>>::Type clonedInlineCaches;
 
         // There will be a non-null entry for each profiled call site where a function is to be inlined or has previously been
         // inlined
-        Field(Field(FunctionCodeGenRuntimeData *)*) inlinees;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData *>::Type*>::Type inlinees;
 
         // There will be a non-null entry for each  call site where a getter setter is to be inlined or has previously been
         // inlined
-        Field(Field(FunctionCodeGenRuntimeData *)*) ldFldInlinees;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData *>::Type*>::Type ldFldInlinees;
 
         // There will be a non-null entry for each call site where a function is passed in as an argument
-        Field(Field(FunctionCodeGenRuntimeData *)*) callbackInlinees;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData *>::Type*>::Type callbackInlinees;
 
-        Field(Field(FunctionCodeGenRuntimeData *)*) callApplyTargetInlinees;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData *>::Type*>::Type callApplyTargetInlinees;
 
-        Field(FunctionCodeGenRuntimeData *) next;
+        typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData *>::Type next;
 
     public:
         FunctionCodeGenRuntimeData(FunctionBody *const functionBody);
@@ -41,10 +41,10 @@ namespace Js
     public:
         FunctionBody *GetFunctionBody() const;
         FunctionCodeGenRuntimeData *GetNext() const { return next; };
-        Field(FunctionCodeGenRuntimeData*)* GetInlinees() const { return inlinees; }
-        Field(FunctionCodeGenRuntimeData*)* GetLdFldInlinees() const { return ldFldInlinees; }
-        Field(FunctionCodeGenRuntimeData*)* GetCallbackInlinees() const { return callbackInlinees; }
-        Field(FunctionCodeGenRuntimeData*)* GetCallApplyTargetInlinees() const { return callApplyTargetInlinees; }
+        typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData*>::Type* GetInlinees() const { return inlinees; }
+        typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData*>::Type* GetLdFldInlinees() const { return ldFldInlinees; }
+        typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData*>::Type* GetCallbackInlinees() const { return callbackInlinees; }
+        typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData*>::Type* GetCallApplyTargetInlinees() const { return callApplyTargetInlinees; }
         const FunctionCodeGenRuntimeData *GetForTarget(FunctionBody *targetFuncBody) const;
         const InlineCachePointerArray<InlineCache> *ClonedInlineCaches() const;
         InlineCachePointerArray<InlineCache> *ClonedInlineCaches();
@@ -56,7 +56,7 @@ namespace Js
             Recycler *const recycler,
             const ProfileId profiledCallSiteId,
             FunctionBody *const inlinee,
-            Field(Field(FunctionCodeGenRuntimeData *)*) & codeGenRuntimeData);
+            typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData *>::Type*>::Type & codeGenRuntimeData);
 
         FunctionCodeGenRuntimeData *EnsureInlinee(
             Recycler *const recycler,

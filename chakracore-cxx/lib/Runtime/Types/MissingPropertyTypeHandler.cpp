@@ -8,7 +8,7 @@ namespace Js
 {
     void MissingPropertyTypeHandler::SetUndefinedPropertySlot(DynamicObject* instance)
     {
-        Field(Var)* slots = reinterpret_cast<Field(Var)*>(reinterpret_cast<size_t>(instance) + sizeof(DynamicObject));
+        typename WriteBarrierFieldTypeTraits<Var>::Type* slots = reinterpret_cast<typename WriteBarrierFieldTypeTraits<Var>::Type*>(reinterpret_cast<size_t>(instance) + sizeof(DynamicObject));
         slots[0] = instance->GetLibrary()->GetUndefined();
     }
 

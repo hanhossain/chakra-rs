@@ -2860,7 +2860,7 @@ NativeCodeGenerator::GatherCodeGenData(Js::FunctionBody *const topFunctionBody, 
 #endif
 
         uint objTypeSpecFldInfoCount = objTypeSpecFldInfoList->Count();
-        jitTimeData->SetGlobalObjTypeSpecFldInfoArray(RecyclerNewArray(recycler, Field(ObjTypeSpecFldInfo*), objTypeSpecFldInfoCount), objTypeSpecFldInfoCount);
+        jitTimeData->SetGlobalObjTypeSpecFldInfoArray(RecyclerNewArray(recycler, typename WriteBarrierFieldTypeTraits<ObjTypeSpecFldInfo*>::Type, objTypeSpecFldInfoCount), objTypeSpecFldInfoCount);
         uint propertyInfoId = objTypeSpecFldInfoCount - 1;
         FOREACH_SLISTCOUNTED_ENTRY(ObjTypeSpecFldInfo*, info, objTypeSpecFldInfoList)
         {

@@ -209,7 +209,7 @@ namespace Js
         int inlineSlotCapacity = GetTypeHandler()->GetInlineSlotCapacity();
         if (slotCapacity > inlineSlotCapacity)
         {
-            instance->auxSlots = RecyclerNewArrayZ(recycler, Field(Var), slotCapacity - inlineSlotCapacity);
+            instance->auxSlots = RecyclerNewArrayZ(recycler, typename WriteBarrierFieldTypeTraits<Var>::Type, slotCapacity - inlineSlotCapacity);
         }
     }
 

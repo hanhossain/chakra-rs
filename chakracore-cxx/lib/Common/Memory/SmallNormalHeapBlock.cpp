@@ -21,7 +21,6 @@ SmallNormalHeapBlockT<TBlockAttributes>::New(HeapBucketT<SmallNormalHeapBlockT<T
     return NoMemProtectHeapNewNoThrowPlusPrefixZ(Base::GetAllocPlusSize(objectCount), SmallNormalHeapBlockT<TBlockAttributes>, bucket, objectSize, objectCount, blockType);
 }
 
-#ifdef RECYCLER_WRITE_BARRIER
 template <class TBlockAttributes>
 SmallNormalWithBarrierHeapBlockT<TBlockAttributes> *
 SmallNormalWithBarrierHeapBlockT<TBlockAttributes>::New(HeapBucketT<SmallNormalWithBarrierHeapBlockT<TBlockAttributes>> * bucket)
@@ -36,7 +35,6 @@ SmallNormalWithBarrierHeapBlockT<TBlockAttributes>::New(HeapBucketT<SmallNormalW
     HeapBlockType blockType = (TBlockAttributes::IsSmallBlock ? HeapBlock::SmallNormalBlockWithBarrierType : HeapBlock::MediumNormalBlockWithBarrierType);
     return NoMemProtectHeapNewNoThrowPlusPrefixZ(Base::GetAllocPlusSize(objectCount), SmallNormalWithBarrierHeapBlockT<TBlockAttributes>, bucket, objectSize, objectCount, blockType);
 }
-#endif
 
 template <class TBlockAttributes>
 void
@@ -46,7 +44,6 @@ SmallNormalHeapBlockT<TBlockAttributes>::Delete(SmallNormalHeapBlockT<TBlockAttr
     NoMemProtectHeapDeletePlusPrefix(Base::GetAllocPlusSize(heapBlock->objectCount), heapBlock);
 }
 
-#ifdef RECYCLER_WRITE_BARRIER
 template <class TBlockAttributes>
 void
 SmallNormalWithBarrierHeapBlockT<TBlockAttributes>::Delete(SmallNormalWithBarrierHeapBlockT<TBlockAttributes> * heapBlock)
@@ -54,7 +51,6 @@ SmallNormalWithBarrierHeapBlockT<TBlockAttributes>::Delete(SmallNormalWithBarrie
     Assert(heapBlock->IsNormalWriteBarrierBlock());
     NoMemProtectHeapDeletePlusPrefix(Base::GetAllocPlusSize(heapBlock->objectCount), heapBlock);
 }
-#endif
 
 template <class TBlockAttributes>
 SmallNormalHeapBlockT<TBlockAttributes>::SmallNormalHeapBlockT(HeapBucket * bucket, ushort objectSize, ushort objectCount, HeapBlockType heapBlockType)
@@ -172,7 +168,6 @@ SmallNormalHeapBlockT<TBlockAttributes>::CalculateMarkCountForPage(SmallHeapBloc
 }
 
 
-#if ENABLE_PARTIAL_GC || ENABLE_CONCURRENT_GC
 template <class TBlockAttributes>
 void
 SmallNormalHeapBlockT<TBlockAttributes>::FinishPartialCollect()
@@ -182,7 +177,6 @@ SmallNormalHeapBlockT<TBlockAttributes>::FinishPartialCollect()
 
     RECYCLER_SLOW_CHECK(this->CheckFreeBitVector(true));
 }
-#endif
 
 #ifdef RECYCLER_SLOW_CHECK_ENABLED
 template <class TBlockAttributes>
@@ -197,8 +191,6 @@ namespace Memory
 {
     template class SmallNormalHeapBlockT<SmallAllocationBlockAttributes>;
     template class SmallNormalHeapBlockT<MediumAllocationBlockAttributes>;
-#ifdef RECYCLER_WRITE_BARRIER
     template class SmallNormalWithBarrierHeapBlockT<SmallAllocationBlockAttributes>;
     template class SmallNormalWithBarrierHeapBlockT<MediumAllocationBlockAttributes>;
-#endif
 }

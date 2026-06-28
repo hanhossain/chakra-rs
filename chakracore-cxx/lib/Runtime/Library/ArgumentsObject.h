@@ -56,15 +56,15 @@ namespace Js
 
     private:
         // We currently support only 2^24 arguments
-        Field(uint32_t)              numOfArguments:31;
-        Field(uint32_t)              callerDeleted:1;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type              numOfArguments:31;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type              callerDeleted:1;
 
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(HeapArgumentsObject);
 
     protected:
-        Field(uint32_t)              formalCount;
-        Field(ActivationObject*)   frameObject;
-        Field(BVSparse<Recycler>*) deletedArgs;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type              formalCount;
+        typename WriteBarrierFieldTypeTraits<ActivationObject*>::Type   frameObject;
+        typename WriteBarrierFieldTypeTraits<BVSparse<Recycler>*>::Type deletedArgs;
 
     public:
         HeapArgumentsObject(DynamicType * type);

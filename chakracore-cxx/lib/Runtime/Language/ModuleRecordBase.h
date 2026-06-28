@@ -19,8 +19,8 @@ namespace Js
             :module(module), bindingName(bindingName)
         {}
         ModuleNameRecord() {}
-        Field(ModuleRecordBase*) module;
-        Field(PropertyId) bindingName;
+        typename WriteBarrierFieldTypeTraits<ModuleRecordBase*>::Type module;
+        typename WriteBarrierFieldTypeTraits<PropertyId>::Type bindingName;
     };
     typedef SList<ModuleNameRecord> ResolveSet;
 
@@ -48,9 +48,9 @@ namespace Js
         virtual bool IsSourceTextModuleRecord() { return false; }
 
     protected:
-        Field(uint32_t) magicNumber;
-        Field(ModuleNamespace*) namespaceObject;
-        Field(bool) wasEvaluated;
-        Field(JavascriptLibrary*) javascriptLibrary;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type magicNumber;
+        typename WriteBarrierFieldTypeTraits<ModuleNamespace*>::Type namespaceObject;
+        typename WriteBarrierFieldTypeTraits<bool>::Type wasEvaluated;
+        typename WriteBarrierFieldTypeTraits<JavascriptLibrary*>::Type javascriptLibrary;
     };
 }

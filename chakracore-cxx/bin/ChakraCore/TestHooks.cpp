@@ -5104,7 +5104,6 @@ int32_t SetRecyclerStressFlag(bool flag)
     Js::Configuration::Global.flags.RecyclerStress = flag;
     return S_OK;
 }
-#if ENABLE_CONCURRENT_GC
 bool IsEnabledRecyclerBackgroundStressFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::RecyclerBackgroundStressFlag);
@@ -5147,7 +5146,6 @@ int32_t SetRecyclerConcurrentRepeatStressFlag(bool flag)
     Js::Configuration::Global.flags.RecyclerConcurrentRepeatStress = flag;
     return S_OK;
 }
-#endif
 #if ENABLE_PARTIAL_GC
 bool IsEnabledRecyclerPartialStressFlag()
 {
@@ -5207,7 +5205,6 @@ int32_t SetRecyclerForceMarkInteriorFlag(bool flag)
     Js::Configuration::Global.flags.RecyclerForceMarkInterior = flag;
     return S_OK;
 }
-#if ENABLE_CONCURRENT_GC
 bool IsEnabledRecyclerPriorityBoostTimeoutFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::RecyclerPriorityBoostTimeoutFlag);
@@ -5264,7 +5261,6 @@ int32_t SetecsaFlag(bool flag)
     Js::Configuration::Global.flags.ecsa = flag;
     return S_OK;
 }
-#endif
 #ifdef RECYCLER_PAGE_HEAP
 bool IsEnabledPageHeapFlag()
 {
@@ -6205,7 +6201,6 @@ int32_t SetMemProtectHeapStressFlag(bool flag)
     Js::Configuration::Global.flags.MemProtectHeapStress = flag;
     return S_OK;
 }
-#if ENABLE_CONCURRENT_GC
 bool IsEnabledMemProtectHeapBackgroundStressFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::MemProtectHeapBackgroundStressFlag);
@@ -6248,7 +6243,6 @@ int32_t SetMemProtectHeapConcurrentRepeatStressFlag(bool flag)
     Js::Configuration::Global.flags.MemProtectHeapConcurrentRepeatStress = flag;
     return S_OK;
 }
-#endif
 #if ENABLE_PARTIAL_GC
 bool IsEnabledMemProtectHeapPartialStressFlag()
 {
@@ -7139,11 +7133,9 @@ IsEnabledLibraryStackFrameFlag, GetLibraryStackFrameFlag, SetLibraryStackFrameFl
 IsEnabledLibraryStackFrameDebuggerFlag, GetLibraryStackFrameDebuggerFlag, SetLibraryStackFrameDebuggerFlag,
 #ifdef RECYCLER_STRESS
 IsEnabledRecyclerStressFlag, GetRecyclerStressFlag, SetRecyclerStressFlag,
-#if ENABLE_CONCURRENT_GC
 IsEnabledRecyclerBackgroundStressFlag, GetRecyclerBackgroundStressFlag, SetRecyclerBackgroundStressFlag,
 IsEnabledRecyclerConcurrentStressFlag, GetRecyclerConcurrentStressFlag, SetRecyclerConcurrentStressFlag,
 IsEnabledRecyclerConcurrentRepeatStressFlag, GetRecyclerConcurrentRepeatStressFlag, SetRecyclerConcurrentRepeatStressFlag,
-#endif
 #if ENABLE_PARTIAL_GC
 IsEnabledRecyclerPartialStressFlag, GetRecyclerPartialStressFlag, SetRecyclerPartialStressFlag,
 #endif
@@ -7151,11 +7143,9 @@ IsEnabledRecyclerTrackStressFlag, GetRecyclerTrackStressFlag, SetRecyclerTrackSt
 IsEnabledRecyclerInduceFalsePositivesFlag, GetRecyclerInduceFalsePositivesFlag, SetRecyclerInduceFalsePositivesFlag,
 #endif // RECYCLER_STRESS
 IsEnabledRecyclerForceMarkInteriorFlag, GetRecyclerForceMarkInteriorFlag, SetRecyclerForceMarkInteriorFlag,
-#if ENABLE_CONCURRENT_GC
 IsEnabledRecyclerPriorityBoostTimeoutFlag, GetRecyclerPriorityBoostTimeoutFlag, SetRecyclerPriorityBoostTimeoutFlag,
 IsEnabledRecyclerThreadCollectTimeoutFlag, GetRecyclerThreadCollectTimeoutFlag, SetRecyclerThreadCollectTimeoutFlag,
 IsEnabledEnableConcurrentSweepAllocFlag, GetEnableConcurrentSweepAllocFlag, SetEnableConcurrentSweepAllocFlag, IsEnabledecsaFlag, GetecsaFlag, SetecsaFlag,
-#endif
 #ifdef RECYCLER_PAGE_HEAP
 IsEnabledPageHeapFlag, GetPageHeapFlag, SetPageHeapFlag,
 IsEnabledPageHeapAllocStackFlag, GetPageHeapAllocStackFlag, SetPageHeapAllocStackFlag,
@@ -7261,11 +7251,9 @@ IsEnabledMemProtectHeapFlag, GetMemProtectHeapFlag, SetMemProtectHeapFlag,
 #endif
 #ifdef RECYCLER_STRESS
 IsEnabledMemProtectHeapStressFlag, GetMemProtectHeapStressFlag, SetMemProtectHeapStressFlag,
-#if ENABLE_CONCURRENT_GC
 IsEnabledMemProtectHeapBackgroundStressFlag, GetMemProtectHeapBackgroundStressFlag, SetMemProtectHeapBackgroundStressFlag,
 IsEnabledMemProtectHeapConcurrentStressFlag, GetMemProtectHeapConcurrentStressFlag, SetMemProtectHeapConcurrentStressFlag,
 IsEnabledMemProtectHeapConcurrentRepeatStressFlag, GetMemProtectHeapConcurrentRepeatStressFlag, SetMemProtectHeapConcurrentRepeatStressFlag,
-#endif
 #if ENABLE_PARTIAL_GC
 IsEnabledMemProtectHeapPartialStressFlag, GetMemProtectHeapPartialStressFlag, SetMemProtectHeapPartialStressFlag,
 #endif

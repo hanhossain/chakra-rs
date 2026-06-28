@@ -12,8 +12,8 @@ using namespace Js;
 // TODO: make JSON a class and use the normal EntryInfo code
 namespace JSON
 {
-    Js::FunctionInfo EntryInfo::Stringify(FORCE_NO_WRITE_BARRIER_TAG(JSON::Stringify), Js::FunctionInfo::ErrorOnNew);
-    Js::FunctionInfo EntryInfo::Parse(FORCE_NO_WRITE_BARRIER_TAG(JSON::Parse), Js::FunctionInfo::ErrorOnNew);
+    Js::FunctionInfo EntryInfo::Stringify(JSON::Stringify, _no_write_barrier_tag(), Js::FunctionInfo::ErrorOnNew);
+    Js::FunctionInfo EntryInfo::Parse(JSON::Parse, _no_write_barrier_tag(), Js::FunctionInfo::ErrorOnNew);
 
     Js::Var Parse(Js::JavascriptString* input, Js::RecyclableObject* reviver, Js::ScriptContext* scriptContext);
 

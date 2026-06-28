@@ -361,54 +361,54 @@ namespace Js
         BoundedPropertyRecordHashSet * GetBoundedPropertyRecordHashSet() { return &this->boundedPropertyRecordHashSet; }
     private:
 
-        Field(charcount_t) m_cchLength;               // The number of characters encoded in m_utf8Source.
-        Field(ISourceHolder*) sourceHolder;
+        typename WriteBarrierFieldTypeTraits<charcount_t>::Type m_cchLength;               // The number of characters encoded in m_utf8Source.
+        typename WriteBarrierFieldTypeTraits<ISourceHolder*>::Type sourceHolder;
 
-        Field(FunctionBodyDictionary*) functionBodyDictionary;
-        Field(DeferredFunctionsDictionary*) m_deferredFunctionsDictionary;
-        Field(FunctionInfoList*) topLevelFunctionInfoList;
-        Field(BoundedPropertyRecordHashSet) boundedPropertyRecordHashSet;
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        Field(DebugDocument*) m_debugDocument;
-#endif
-
-        Field(const SRCINFO*) m_srcInfo;
-        Field(unsigned long) m_secondaryHostSourceContext;
+        typename WriteBarrierFieldTypeTraits<FunctionBodyDictionary*>::Type functionBodyDictionary;
+        typename WriteBarrierFieldTypeTraits<DeferredFunctionsDictionary*>::Type m_deferredFunctionsDictionary;
+        typename WriteBarrierFieldTypeTraits<FunctionInfoList*>::Type topLevelFunctionInfoList;
+        typename WriteBarrierFieldTypeTraits<BoundedPropertyRecordHashSet>::Type boundedPropertyRecordHashSet;
 
 #ifdef ENABLE_SCRIPT_DEBUGGING
-        Field(LPCUTF8) debugModeSource;
-        Field(size_t) debugModeSourceLength;
+        typename WriteBarrierFieldTypeTraits<DebugDocument*>::Type m_debugDocument;
 #endif
-        Field(ScriptContext* const) m_scriptContext;   // Pointer to ScriptContext under which this source info was created
+
+        typename WriteBarrierFieldTypeTraits<const SRCINFO*>::Type m_srcInfo;
+        typename WriteBarrierFieldTypeTraits<unsigned long>::Type m_secondaryHostSourceContext;
+
+#ifdef ENABLE_SCRIPT_DEBUGGING
+        typename WriteBarrierFieldTypeTraits<LPCUTF8>::Type debugModeSource;
+        typename WriteBarrierFieldTypeTraits<size_t>::Type debugModeSourceLength;
+#endif
+        typename WriteBarrierFieldTypeTraits<ScriptContext* const>::Type m_scriptContext;   // Pointer to ScriptContext under which this source info was created
 
         // Line offset cache used for quickly finding line/column offsets.
-        Field(LineOffsetCache*) m_lineOffsetCache;
+        typename WriteBarrierFieldTypeTraits<LineOffsetCache*>::Type m_lineOffsetCache;
 
         // Utf8SourceInfo of the caller, used for mapping eval/new Function node to its caller node for debugger
-        Field(Utf8SourceInfo*) callerUtf8SourceInfo;
+        typename WriteBarrierFieldTypeTraits<Utf8SourceInfo*>::Type callerUtf8SourceInfo;
 
-        Field(bool) m_deferredFunctionsInitialized : 1;
-        Field(bool) m_isCesu8 : 1;
-        Field(bool) m_isLibraryCode : 1;           // true, the current source belongs to the internal library code. Used for debug purpose to not show in debugger
-        Field(bool) m_isXDomain : 1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type m_deferredFunctionsInitialized : 1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type m_isCesu8 : 1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type m_isLibraryCode : 1;           // true, the current source belongs to the internal library code. Used for debug purpose to not show in debugger
+        typename WriteBarrierFieldTypeTraits<bool>::Type m_isXDomain : 1;
         // we found that m_isXDomain could cause regression without CORS, so the new flag is just for callee.caller in window.onerror
-        Field(bool) m_isXDomainString : 1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type m_isXDomainString : 1;
 #ifdef ENABLE_SCRIPT_DEBUGGING
-        Field(bool) debugModeSourceIsEmpty : 1;
-        Field(bool) m_isInDebugMode : 1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type debugModeSourceIsEmpty : 1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type m_isInDebugMode : 1;
 #endif
-        Field(uint) m_sourceInfoId;
+        typename WriteBarrierFieldTypeTraits<uint>::Type m_sourceInfoId;
 
         // Various flags preserved for Edit-and-Continue re-compile purpose
-        Field(uint32_t) parseFlags;
-        Field(uint32_t) byteCodeGenerationFlags;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type parseFlags;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type byteCodeGenerationFlags;
 
         Utf8SourceInfo(ISourceHolder *sourceHolder, int32_t cchLength, SRCINFO const* srcInfo,
             unsigned long secondaryHostSourceContext, ScriptContext* scriptContext,
             bool isLibraryCode, Js::Var scriptSource = nullptr);
 
-        Field(Js::Var) sourceRef; // keep source string reference to prevent GC
+        typename WriteBarrierFieldTypeTraits<Js::Var>::Type sourceRef; // keep source string reference to prevent GC
     };
 }
 

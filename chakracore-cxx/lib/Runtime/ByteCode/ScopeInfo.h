@@ -30,38 +30,38 @@ namespace Js {
         {
             union
             {
-                Field(PropertyId) propertyId;
-                Field(PropertyRecord const*) name;
+                typename WriteBarrierFieldTypeTraits<PropertyId>::Type propertyId;
+                typename WriteBarrierFieldTypeTraits<PropertyRecord const*>::Type name;
             };
-            Field(SymbolType) symbolType;
-            Field(bool) hasFuncAssignment : 1;
-            Field(bool) isBlockVariable : 1;
-            Field(bool) isConst : 1;
-            Field(bool) isFuncExpr : 1;
-            Field(bool) isModuleExportStorage : 1;
-            Field(bool) isModuleImport : 1;
-            Field(bool) needDeclaration : 1;
+            typename WriteBarrierFieldTypeTraits<SymbolType>::Type symbolType;
+            typename WriteBarrierFieldTypeTraits<bool>::Type hasFuncAssignment : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type isBlockVariable : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type isConst : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type isFuncExpr : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type isModuleExportStorage : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type isModuleImport : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type needDeclaration : 1;
         };
 
     private:
-        Field(ScopeInfo *) parent;               // link to parent scope info (if any)
-        Field(FunctionInfo * const) functionInfo;// link to function owning this scope
+        typename WriteBarrierFieldTypeTraits<ScopeInfo *>::Type parent;               // link to parent scope info (if any)
+        typename WriteBarrierFieldTypeTraits<FunctionInfo * const>::Type functionInfo;// link to function owning this scope
 
-        Field(uint8_t) isDynamic : 1;             // isDynamic bit affects how deferredChild access global ref
-        Field(uint8_t) isObject : 1;              // isObject bit affects how deferredChild access closure symbols
-        Field(uint8_t) mustInstantiate : 1;       // the scope must be instantiated as an object/array
-        Field(uint8_t) isCached : 1;              // indicates that local vars and functions are cached across invocations
-        Field(uint8_t) areNamesCached : 1;
-        Field(uint8_t) hasLocalInClosure : 1;
-        Field(uint8_t) isGeneratorFunctionBody : 1;
-        Field(uint8_t) isAsyncFunctionBody : 1;
-        Field(uint8_t) isClassConstructor : 1;
+        typename WriteBarrierFieldTypeTraits<uint8_t>::Type isDynamic : 1;             // isDynamic bit affects how deferredChild access global ref
+        typename WriteBarrierFieldTypeTraits<uint8_t>::Type isObject : 1;              // isObject bit affects how deferredChild access closure symbols
+        typename WriteBarrierFieldTypeTraits<uint8_t>::Type mustInstantiate : 1;       // the scope must be instantiated as an object/array
+        typename WriteBarrierFieldTypeTraits<uint8_t>::Type isCached : 1;              // indicates that local vars and functions are cached across invocations
+        typename WriteBarrierFieldTypeTraits<uint8_t>::Type areNamesCached : 1;
+        typename WriteBarrierFieldTypeTraits<uint8_t>::Type hasLocalInClosure : 1;
+        typename WriteBarrierFieldTypeTraits<uint8_t>::Type isGeneratorFunctionBody : 1;
+        typename WriteBarrierFieldTypeTraits<uint8_t>::Type isAsyncFunctionBody : 1;
+        typename WriteBarrierFieldTypeTraits<uint8_t>::Type isClassConstructor : 1;
 
-        FieldNoBarrier(Scope *) scope;
-        Field(::ScopeType) scopeType;
-        Field(int) scopeId;
-        Field(int) symbolCount;                // symbol count in this scope
-        Field(SymbolInfo) symbols[];           // symbol PropertyIDs, index == sym.scopeSlot
+        typename WriteBarrierFieldTypeTraits<Scope *, _no_write_barrier_policy, _no_write_barrier_policy>::Type scope;
+        typename WriteBarrierFieldTypeTraits<::ScopeType>::Type scopeType;
+        typename WriteBarrierFieldTypeTraits<int>::Type scopeId;
+        typename WriteBarrierFieldTypeTraits<int>::Type symbolCount;                // symbol count in this scope
+        typename WriteBarrierFieldTypeTraits<SymbolInfo>::Type symbols[];           // symbol PropertyIDs, index == sym.scopeSlot
 
     private:
         ScopeInfo(FunctionInfo * function, int symbolCount)

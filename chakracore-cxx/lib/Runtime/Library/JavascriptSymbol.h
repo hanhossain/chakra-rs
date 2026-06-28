@@ -9,7 +9,7 @@ namespace Js
     class JavascriptSymbol : public RecyclableObject
     {
     private:
-        Field(PropertyRecordUsageCache) propertyRecordUsageCache;
+        typename WriteBarrierFieldTypeTraits<PropertyRecordUsageCache>::Type propertyRecordUsageCache;
 
         DEFINE_VTABLE_CTOR(JavascriptSymbol, RecyclableObject);
 

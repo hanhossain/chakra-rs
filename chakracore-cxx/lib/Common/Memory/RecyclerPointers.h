@@ -4,7 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#include "WriteBarrierMacros.h"
 #include "DataStructures/QuickSort.h"
 #include "Memory/Allocator.h"
 
@@ -109,7 +108,6 @@ struct _ArrayWriteBarrier
     template <class T>
     static void WriteBarrier(T * address, size_t count)
     {
-#if defined(RECYCLER_WRITE_BARRIER)
         if (Js::Configuration::Global.flags.StrictWriteBarrierCheck)
         {
             if (g_verifyIsNotBarrierAddress)
@@ -117,14 +115,12 @@ struct _ArrayWriteBarrier
                 g_verifyIsNotBarrierAddress(address, count);
             }
         }
-#endif
     }
 
     template <class T>
     static void WriteBarrierSetVerifyBits(T * address, size_t count) {   }
 };
 
-#ifdef RECYCLER_WRITE_BARRIER
 template <>
 struct _ArrayWriteBarrier<_write_barrier_policy>
 {
@@ -137,12 +133,11 @@ struct _ArrayWriteBarrier<_write_barrier_policy>
     template <class T>
     static void WriteBarrierSetVerifyBits(T * address, size_t count)
     {
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
         Recycler::WBSetBitRange((char*)address, (uint)(sizeof(T) * count / sizeof(void*)));
 #endif
     }
 };
-#endif
 
 // Determines array write barrier policy based on array item type.
 //
@@ -391,17 +386,15 @@ public:
     }
     void WriteBarrierSet(T * ptr)
     {
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
         // set the verification bits before updating the reference so it's ready to verify while background marking hit the reference
         Recycler::WBSetBit((char*)this);
 #endif
 
         NoWriteBarrierSet(ptr);
 
-#ifdef RECYCLER_WRITE_BARRIER
         // set the barrier bit after updating the reference to prevent a race issue that background thread is resetting all the dirty pages
         RecyclerWriteBarrierManager::WriteBarrier(this);
-#endif
     }
 
     WriteBarrierPtr& operator=(WriteBarrierPtr const& other)
@@ -412,15 +405,13 @@ public:
 
     WriteBarrierPtr& operator++()  // prefix ++
     {
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
         Recycler::WBSetBit((char*)this);
 #endif
 
         ++ptr;
 
-#ifdef RECYCLER_WRITE_BARRIER
         RecyclerWriteBarrierManager::WriteBarrier(this);
-#endif
         return *this;
     }
 
@@ -433,15 +424,13 @@ public:
 
     WriteBarrierPtr& operator--()  // prefix --
     {
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
         Recycler::WBSetBit((char*)this);
 #endif
 
         --ptr;
 
-#ifdef RECYCLER_WRITE_BARRIER
         RecyclerWriteBarrierManager::WriteBarrier(this);
-#endif
         return *this;
     }
 
@@ -534,7 +523,6 @@ struct _QuickSortImpl
         JsUtil::QuickSort<Policy, char, Comparer>::Sort((char*)arr, count, elementSize, comparer, context);
     }
 };
-#ifdef RECYCLER_WRITE_BARRIER
 template <>
 struct _QuickSortImpl<_write_barrier_policy>
 {
@@ -546,7 +534,6 @@ struct _QuickSortImpl<_write_barrier_policy>
         JsUtil::QuickSort<_write_barrier_policy, T, Comparer>::Sort(arr, count, 1, comparer, context);
     }
 };
-#endif
 
 template<class T, class PolicyType = T, class Allocator = Recycler, class Comparer>
 void qsort_s(T* arr, size_t count, const Comparer& comparer, void* context)
@@ -619,5 +606,5 @@ private:
         return ptr;
     }
 
-    FieldNoBarrier(T*) ptr;
+    typename WriteBarrierFieldTypeTraits<T*, _no_write_barrier_policy, _no_write_barrier_policy>::Type ptr;
 };

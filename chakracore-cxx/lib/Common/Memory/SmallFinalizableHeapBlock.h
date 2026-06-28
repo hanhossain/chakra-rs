@@ -13,9 +13,7 @@ template <class TBlockAttributes> class SmallFinalizableHeapBucketT;
 #ifdef RECYCLER_VISITED_HOST
 template <class TBlockAttributes> class SmallRecyclerVisitedHostHeapBlockT;
 #endif
-#ifdef RECYCLER_WRITE_BARRIER
 template <class TBlockAttributes> class SmallFinalizableWithBarrierHeapBlockT;
-#endif
 
 template <class TBlockAttributes>
 class SmallFinalizableHeapBlockT : public SmallNormalHeapBlockT<TBlockAttributes>
@@ -47,11 +45,9 @@ public:
 
     void SetAttributes(void * address, unsigned char attributes);
 
-#if ENABLE_PARTIAL_GC || ENABLE_CONCURRENT_GC
     static bool CanRescanFullBlock();
     static bool RescanObject(SmallFinalizableHeapBlockT<TBlockAttributes> * block, __in_ecount(localObjectSize) char * objectAddress, uint localObjectSize, uint objectIndex, Recycler * recycler);
     bool RescanTrackedObject(FinalizableObject * object, uint objectIndex,  Recycler * recycler);
-#endif
     SweepState Sweep(RecyclerSweep& sweepeData, bool queuePendingSweep, bool allocable);
     void DisposeObjects();
     void TransferDisposedObjects();
@@ -63,13 +59,6 @@ public:
 
     void AddPendingDisposeObject()
     {
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-        if (CONFIG_FLAG_RELEASE(EnableConcurrentSweepAlloc))
-        {
-            AssertMsg(!this->isPendingConcurrentSweepPrep, "Finalizable blocks don't support allocations during concurrent sweep.");
-        }
-#endif
-
         this->pendingDisposeCount++;
         Assert(this->pendingDisposeCount <= this->objectCount);
     }
@@ -133,9 +122,7 @@ protected:
 #ifdef RECYCLER_VISITED_HOST
     SmallFinalizableHeapBlockT(HeapBucketT<SmallRecyclerVisitedHostHeapBlockT<TBlockAttributes>> * bucket, ushort objectSize, ushort objectCount, HeapBlockType blockType);
 #endif
-#ifdef RECYCLER_WRITE_BARRIER
     SmallFinalizableHeapBlockT(HeapBucketT<SmallFinalizableWithBarrierHeapBlockT<TBlockAttributes>> * bucket, ushort objectSize, ushort objectCount, HeapBlockType blockType);
-#endif
 
 #if DBG
     void Init(ushort objectSize, ushort objectCount);
@@ -194,7 +181,6 @@ protected:
 };
 #endif
 
-#ifdef RECYCLER_WRITE_BARRIER
 template <class TBlockAttributes>
 class SmallFinalizableWithBarrierHeapBlockT : public SmallFinalizableHeapBlockT<TBlockAttributes>
 {
@@ -224,7 +210,6 @@ protected:
     {
     }
 };
-#endif
 
 typedef SmallFinalizableHeapBlockT<SmallAllocationBlockAttributes>  SmallFinalizableHeapBlock;
 typedef SmallFinalizableHeapBlockT<MediumAllocationBlockAttributes>    MediumFinalizableHeapBlock;
@@ -234,8 +219,6 @@ typedef SmallRecyclerVisitedHostHeapBlockT<SmallAllocationBlockAttributes> Small
 typedef SmallRecyclerVisitedHostHeapBlockT<MediumAllocationBlockAttributes> MediumRecyclerVisitedHostHeapBlock;
 #endif
 
-#ifdef RECYCLER_WRITE_BARRIER
 typedef SmallFinalizableWithBarrierHeapBlockT<SmallAllocationBlockAttributes>   SmallFinalizableWithBarrierHeapBlock;
 typedef SmallFinalizableWithBarrierHeapBlockT<MediumAllocationBlockAttributes>     MediumFinalizableWithBarrierHeapBlock;
-#endif
 }

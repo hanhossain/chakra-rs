@@ -12,7 +12,7 @@ namespace JsUtil
         static const int INVALID_HASH_VALUE = 0;
         hash_t hash;    // Lower 31 bits of hash code << 1 | 1, 0 if unused
         int next;        // Index of next entry, -1 if last
-        Field(const RecyclerWeakReference<TKey>*) key;  // Key of entry- this entry holds a weak reference to the key
+        typename WriteBarrierFieldTypeTraits<const RecyclerWeakReference<TKey>*>::Type key;  // Key of entry- this entry holds a weak reference to the key
         TValue value;    // Value of entry
     };
 
@@ -21,31 +21,31 @@ namespace JsUtil
     template <class TKey, class TValue, class KeyComparer = DefaultComparer<const TKey*>, bool cleanOnInsert = true> class WeaklyReferencedKeyDictionary
     {
     public:
-        typedef WeakRefDictionaryEntry<TKey, Field(TValue)> EntryType;
+        typedef WeakRefDictionaryEntry<TKey, typename WriteBarrierFieldTypeTraits<TValue>::Type> EntryType;
         typedef TKey KeyType;
         typedef TValue ValueType;
         typedef void (*EntryRemovalCallbackMethodType)(const EntryType& e, void* cookie);
 
         struct EntryRemovalCallback
         {
-            FieldNoBarrier(EntryRemovalCallbackMethodType) fnCallback;
-            Field(void*) cookie;
+            typename WriteBarrierFieldTypeTraits<EntryRemovalCallbackMethodType, _no_write_barrier_policy, _no_write_barrier_policy>::Type fnCallback;
+            typename WriteBarrierFieldTypeTraits<void*>::Type cookie;
         };
 
 
     private:
-        Field(int) size;
-        Field(int*) buckets;
-        Field(EntryType *) entries;
-        Field(int) count;
-        Field(int) version;
-        Field(int) freeList;
-        Field(int) freeCount;
-        FieldNoBarrier(Recycler*) recycler;
-        FieldNoBarrier(EntryRemovalCallback) entryRemovalCallback;
-        Field(uint) lastWeakReferenceCleanupId;
-        Field(bool) disableCleanup;
-        Field(int)  modFunctionIndex;
+        typename WriteBarrierFieldTypeTraits<int>::Type size;
+        typename WriteBarrierFieldTypeTraits<int*>::Type buckets;
+        typename WriteBarrierFieldTypeTraits<EntryType *>::Type entries;
+        typename WriteBarrierFieldTypeTraits<int>::Type count;
+        typename WriteBarrierFieldTypeTraits<int>::Type version;
+        typename WriteBarrierFieldTypeTraits<int>::Type freeList;
+        typename WriteBarrierFieldTypeTraits<int>::Type freeCount;
+        typename WriteBarrierFieldTypeTraits<Recycler*, _no_write_barrier_policy, _no_write_barrier_policy>::Type recycler;
+        typename WriteBarrierFieldTypeTraits<EntryRemovalCallback, _no_write_barrier_policy, _no_write_barrier_policy>::Type entryRemovalCallback;
+        typename WriteBarrierFieldTypeTraits<uint>::Type lastWeakReferenceCleanupId;
+        typename WriteBarrierFieldTypeTraits<bool>::Type disableCleanup;
+        typename WriteBarrierFieldTypeTraits<int>::Type  modFunctionIndex;
 
     public:
         // Allow WeaklyReferencedKeyDictionary field to be inlined in classes with DEFINE_VTABLE_CTOR_MEMBER_INIT
@@ -357,7 +357,7 @@ namespace JsUtil
             int* newBuckets = RecyclerNewArrayLeaf(recycler, int, newSize);
             for (int i = 0; i < newSize; i++) newBuckets[i] = -1;
             EntryType* newEntries = RecyclerNewArray(recycler, EntryType, newSize);
-            CopyArray<EntryType, Field(const RecyclerWeakReference<TKey>*)>(newEntries, newSize, entries, count);
+            CopyArray<EntryType, typename WriteBarrierFieldTypeTraits<const RecyclerWeakReference<TKey>*>::Type>(newEntries, newSize, entries, count);
             AnalysisAssert(count < newSize);
             modFunctionIndex = modIndex;
             for (int i = 0; i < count; i++)

@@ -71,17 +71,16 @@ JavascriptGenerator* JavascriptGenerator::New(
 {
     // InterpreterStackFrame takes a pointer to the args, so copy them to the recycler
     // heap and use that buffer for the generator's InterpreterStackFrame
-    Field(Var)* argValuesCopy = nullptr;
+    typename WriteBarrierFieldTypeTraits<Var>::Type* argValuesCopy = nullptr;
 
     if (args.Info.Count > 0)
     {
-        argValuesCopy = RecyclerNewArray(recycler, Field(Var), args.Info.Count);
+        argValuesCopy = RecyclerNewArray(recycler, typename WriteBarrierFieldTypeTraits<Var>::Type, args.Info.Count);
         CopyArray(argValuesCopy, args.Info.Count, args.Values, args.Info.Count);
     }
 
-    Arguments heapArgs(args.Info, unsafe_write_barrier_cast<Var*>(argValuesCopy));
+    Arguments heapArgs(args.Info, (Var*)argValuesCopy);
 
-#if GLOBAL_ENABLE_WRITE_BARRIER
     if (CONFIG_FLAG(ForceSoftwareWriteBarrier))
     {
         JavascriptGenerator* obj = RecyclerNewFinalized(
@@ -104,7 +103,6 @@ JavascriptGenerator* JavascriptGenerator::New(
 
         return obj;
     }
-#endif
 
     return RecyclerNew(recycler, JavascriptGenerator, generatorType, heapArgs, scriptFunction);
 }
@@ -120,15 +118,13 @@ void JavascriptGenerator::SetFrame(InterpreterStackFrame* frame, size_t bytes)
 {
     Assert(this->frame == nullptr);
     this->frame = frame;
-#if GLOBAL_ENABLE_WRITE_BARRIER
     if (CONFIG_FLAG(ForceSoftwareWriteBarrier))
     {
         GetScriptContext()->GetRecycler()->RegisterPendingWriteBarrierBlock(frame, bytes);
     }
-#endif
 }
 
-void JavascriptGenerator::SetFrameSlots(Js::RegSlot slotCount, Field(Var)* frameSlotArray)
+void JavascriptGenerator::SetFrameSlots(Js::RegSlot slotCount, typename WriteBarrierFieldTypeTraits<Var>::Type* frameSlotArray)
 {
     AssertMsg(this->frame->GetFunctionBody()->GetLocalsCount() == slotCount, 
         "Unexpected mismatch in frame slot count for generated.");
@@ -137,7 +133,6 @@ void JavascriptGenerator::SetFrameSlots(Js::RegSlot slotCount, Field(Var)* frame
         GetFrame()->m_localSlots[i] = frameSlotArray[i];
 }
 
-#if GLOBAL_ENABLE_WRITE_BARRIER
 void JavascriptGenerator::Finalize(bool isShutdown)
 {
     if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && !isShutdown)
@@ -151,7 +146,6 @@ void JavascriptGenerator::Finalize(bool isShutdown)
             recycler->UnRegisterPendingWriteBarrierBlock(this->args.Values);
     }
 }
-#endif
 
 void JavascriptGenerator::ThrowIfExecuting(const char16_t* apiName)
 {

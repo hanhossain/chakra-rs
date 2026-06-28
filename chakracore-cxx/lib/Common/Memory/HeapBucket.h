@@ -77,12 +77,7 @@ public:
 protected:
     HeapInfo * heapInfo;
     uint sizeCat;
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    bool allocationsStartedDuringConcurrentSweep;
-    bool concurrentSweepAllocationsThresholdExceeded;
-#endif
-
-#if defined(RECYCLER_SLOW_CHECK_ENABLED) || ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
+#if defined(RECYCLER_SLOW_CHECK_ENABLED)
     uint32_t heapBlockCount;
     uint32_t newHeapBlockCount;       // count of heap bock that is in the heap info and not in the heap bucket yet
 #endif
@@ -124,11 +119,6 @@ public:
 
     Recycler * GetRecycler() const;
     bool AllocationsStartedDuringConcurrentSweep() const;
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    bool ConcurrentSweepAllocationsThresholdExceeded() const;
-    bool DoTwoPassConcurrentSweepPreCheck();
-#endif
-
     template <typename TBlockType>
     friend class SmallHeapBlockAllocator;
 
@@ -144,13 +134,11 @@ public:
 #endif
 
     friend class LargeHeapBlock;
-#ifdef RECYCLER_WRITE_BARRIER
     template <typename TBlockAttributes>
     friend class SmallFinalizableWithBarrierHeapBlockT;
 
     template <typename TBlockAttributes>
     friend class SmallNormalWithBarrierHeapBlockT;
-#endif
 };
 
 template <typename TBlockType>
@@ -183,20 +171,15 @@ public:
 #endif
 
     uint Rescan(Recycler * recycler, RescanFlags flags);
-#if ENABLE_CONCURRENT_GC
     void MergeNewHeapBlock(TBlockType * heapBlock);
     void PrepareSweep();
     void SetupBackgroundSweep(RecyclerSweep& recyclerSweep);
-#endif
     friend class ::ScriptMemoryDumper;
 
     static bool IsAnyFinalizableBucket()
     {
         return IsFinalizableBucket
-#ifdef RECYCLER_WRITE_BARRIER
-            || IsFinalizableWriteBarrierBucket
-#endif
-            ;
+            || IsFinalizableWriteBarrierBucket;
     }
 
     TBlockAllocatorType * GetAllocator() { return &allocatorHead;}
@@ -212,19 +195,11 @@ protected:
 #endif
     ;
     static bool const IsNormalBucket = TBlockType::RequiredAttributes == NoBit;
-#ifdef RECYCLER_WRITE_BARRIER
     static bool const IsWriteBarrierBucket = TBlockType::RequiredAttributes == WithBarrierBit;
     static bool const IsFinalizableWriteBarrierBucket = TBlockType::RequiredAttributes == FinalizableWithBarrierBit;
-#endif
 
     void Initialize(HeapInfo * heapInfo, uint sizeCat);
     void AppendAllocableHeapBlockList(TBlockType * list);
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    void EnsureAllocableHeapBlockList();
-    void FinishSweepPrep(RecyclerSweep& recyclerSweep);
-    void FinishConcurrentSweepPass1(RecyclerSweep& recyclerSweep);
-    void FinishConcurrentSweep();
-#endif
     void DeleteHeapBlockList(TBlockType * list);
     static void DeleteEmptyHeapBlockList(TBlockType * list);
     static void DeleteHeapBlockList(TBlockType * list, Recycler * recycler);
@@ -249,12 +224,6 @@ protected:
     void SweepBucket(RecyclerSweep& recyclerSweep);
     template <typename Fn>
     void SweepBucket(RecyclerSweep& recyclerSweep, Fn sweepFn);
-
-#if ENABLE_CONCURRENT_GC  && ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    void PrepareForAllocationsDuringConcurrentSweep(TBlockType * &currentHeapBlockList);
-    void StartAllocationDuringConcurrentSweep();
-    void ResumeNormalAllocationAfterConcurrentSweep(TBlockType * newNextAllocableBlockHead = nullptr);
-#endif
 
     bool AllowAllocationsDuringConcurrentSweep();
     void StopAllocationBeforeSweep();
@@ -345,11 +314,8 @@ HeapBucketT<TBlockType>::SweepBucket(RecyclerSweep& recyclerSweep, Fn sweepFn)
     if (!this->DoPartialReuseSweep(recyclerSweep.GetRecycler()))
 #endif
     {
-#if ENABLE_CONCURRENT_GC
         // We should only queue up pending sweep if we are doing partial collect
         Assert(recyclerSweep.GetPendingSweepBlockList(this) == nullptr);
-
-#endif
         {
             // Every thing is swept immediately in non partial collect, so we can allocate
             // from the heap block list now

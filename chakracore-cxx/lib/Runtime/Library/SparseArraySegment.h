@@ -11,11 +11,11 @@ namespace Js
     public:
         static const uint32_t MaxLength;
 
-        Field(uint32_t) left; // TODO: (leish)(swb) this can easily be recycler false positive on x86, or on x64 if combine with length field
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type left; // TODO: (leish)(swb) this can easily be recycler false positive on x86, or on x64 if combine with length field
                             // find a way to either tag this or find a better solution
-        Field(uint32_t) length; //we use length instead of right so that we can denote a segment is empty
-        Field(uint32_t) size;
-        Field(SparseArraySegmentBase*) next;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type length; //we use length instead of right so that we can denote a segment is empty
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type size;
+        typename WriteBarrierFieldTypeTraits<SparseArraySegmentBase*>::Type next;
 
         static const uint32_t CHUNK_SIZE = 16;
         static const uint32_t HEAD_CHUNK_SIZE = 16;
@@ -50,7 +50,7 @@ namespace Js
         SparseArraySegment(uint32_t left, uint32_t length, uint32_t size) :
             SparseArraySegmentBase(left, length, size) {}
 
-        Field(T) elements[]; // actual elements will follow this determined by size
+        typename WriteBarrierFieldTypeTraits<T>::Type elements[]; // actual elements will follow this determined by size
 
         void FillSegmentBuffer(uint start, uint size);
         T GetElement(uint32_t index);
@@ -85,7 +85,7 @@ namespace Js
         template<bool isLeaf>
         static SparseArraySegment<T> *AllocateLiteralHeadSegmentImpl(Recycler *const recycler, const uint32_t length);
 
-        static void ClearElements(__out_ecount(len) Field(T)* elements, uint32_t len);
+        static void ClearElements(__out_ecount(len) typename WriteBarrierFieldTypeTraits<T>::Type* elements, uint32_t len);
         static SparseArraySegment<T>* CopySegment(Recycler *recycler, SparseArraySegment<T>* dst, uint32_t dstIndex, SparseArraySegment<T>* src, uint32_t srcIndex, uint32_t inputLen);
 
         static T GetMissingItem();
@@ -105,9 +105,9 @@ namespace Js
             return static_cast<SparseArraySegment*>(seg);
         }
 
-        static inline Field(SparseArraySegment*)* AddressFrom(Field(SparseArraySegmentBase*) *addr)
+        static inline typename WriteBarrierFieldTypeTraits<SparseArraySegment*>::Type* AddressFrom(typename WriteBarrierFieldTypeTraits<SparseArraySegmentBase*>::Type *addr)
         {
-            return reinterpret_cast<Field(SparseArraySegment*)*>(addr);
+            return reinterpret_cast<typename WriteBarrierFieldTypeTraits<SparseArraySegment*>::Type*>(addr);
         }
 
     private:

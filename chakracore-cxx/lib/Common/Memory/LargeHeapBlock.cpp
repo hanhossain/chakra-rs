@@ -175,7 +175,7 @@ LargeHeapBlock::Delete(LargeHeapBlock * heapBlock)
 
 LargeHeapBlock::LargeHeapBlock(char * address, size_t pageCount, Segment * segment, uint objectCount, LargeHeapBucket* bucket)
     : HeapBlock(LargeBlockType), pageCount(pageCount), allocAddressEnd(address), objectCount(objectCount), bucket(bucket), freeList(this)
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
     ,wbVerifyBits(&HeapAllocator::Instance)
 #endif
 {
@@ -189,16 +189,7 @@ LargeHeapBlock::LargeHeapBlock(char * address, size_t pageCount, Segment * segme
 
     this->address = address;
     this->segment = segment;
-#if ENABLE_CONCURRENT_GC
     this->isPendingConcurrentSweep = false;
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    // This flag is to identify whether this block was made available for allocations during the concurrent sweep and still needs to be swept.
-    this->isPendingConcurrentSweepPrep = false;
-#if DBG || defined(RECYCLER_SLOW_CHECK_ENABLED)
-    this->wasAllocatedFromDuringSweep = false;
-#endif
-#endif
-#endif
     this->addressEnd = this->address + this->pageCount * AutoSystemInfo::PageSize;
 
     RECYCLER_PERF_COUNTER_INC(LargeHeapBlockCount);
@@ -563,9 +554,7 @@ LargeHeapBlock::AllocFreeListEntry(size_t size, ObjectInfoBits attributes, Large
 
     header->objectIndex = headerIndex;
     header->objectSize = originalSize;
-#ifdef RECYCLER_WRITE_BARRIER
     header->hasWriteBarrier = (attributes & WithBarrierBit) == WithBarrierBit;
-#endif
 
     if ((attributes & (FinalizeBit | TrackBit)) != 0)
     {
@@ -607,7 +596,7 @@ LargeHeapBlock::Alloc(size_t size, ObjectInfoBits attributes)
 #endif
 
     LargeObjectHeader * header = (LargeObjectHeader *)allocAddressEnd;
-#if ENABLE_PARTIAL_GC && ENABLE_CONCURRENT_GC
+#if ENABLE_PARTIAL_GC
     Assert(!IsPartialSweptHeader(header));
 #endif
     char * allocObject = allocAddressEnd + sizeof(LargeObjectHeader);       // shouldn't overflow
@@ -636,9 +625,7 @@ LargeHeapBlock::Alloc(size_t size, ObjectInfoBits attributes)
 
     header->objectIndex = allocCount;
     header->objectSize = size;
-#ifdef RECYCLER_WRITE_BARRIER
     header->hasWriteBarrier = (attributes&WithBarrierBit) == WithBarrierBit;
-#endif
     if ((attributes & (FinalizeBit | TrackBit)) != 0)
     {
         // Make sure a valid vtable is installed as once the attributes have been set this allocation may be traced by background marking
@@ -900,9 +887,7 @@ LargeHeapBlock::ResetMarks(ResetMarkFlags flags, Recycler* recycler)
 
     Assert(this->GetMarkCount() == 0);
 
-#if ENABLE_CONCURRENT_GC
     Assert(!this->isPendingConcurrentSweep);
-#endif
 
     if (flags & ResetMarkFlags_ScanImplicitRoot)
     {
@@ -960,7 +945,7 @@ LargeHeapBlock::GetRealAddressFromInterior(void * interiorAddress)
     {
         LargeObjectHeader * header = this->HeaderList()[i];
 
-#if ENABLE_PARTIAL_GC && ENABLE_CONCURRENT_GC
+#if ENABLE_PARTIAL_GC
         if (header != nullptr && !IsPartialSweptHeader(header))
 #else
         if (header != nullptr)
@@ -1019,7 +1004,7 @@ LargeHeapBlock::VerifyMark()
 
             if (recycler->VerifyMark(objectAddress, target))
             {
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
                 if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && CONFIG_FLAG(VerifyBarrierBit))
                 {
                     this->WBVerifyBitIsSet(objectAddress);
@@ -1184,10 +1169,8 @@ LargeHeapBlock::ScanNewImplicitRoots(Recycler * recycler)
     }
 }
 
-#if ENABLE_CONCURRENT_GC
 bool LargeHeapBlock::IsPageDirty(char* page, RescanFlags flags, bool isWriteBarrier)
 {
-#ifdef RECYCLER_WRITE_BARRIER
     // TODO: SWB, use special page allocator for large block with write barrier?
     if (CONFIG_FLAG(WriteBarrierTest))
     {
@@ -1197,19 +1180,12 @@ bool LargeHeapBlock::IsPageDirty(char* page, RescanFlags flags, bool isWriteBarr
     {
         return (RecyclerWriteBarrierManager::GetWriteBarrier(page) & DIRTYBIT) == DIRTYBIT;
     }
-#endif
 
     Js::Throw::FatalInternalError();
 }
-#endif
 
-#if ENABLE_CONCURRENT_GC
 bool
 LargeHeapBlock::RescanOnePage(Recycler * recycler, RescanFlags flags)
-#else
-bool
-LargeHeapBlock::RescanOnePage(Recycler * recycler)
-#endif
 {
     Assert(this->GetPageCount() == 1);
     bool const oldNeedOOMRescan = this->needOOMRescan;
@@ -1217,7 +1193,6 @@ LargeHeapBlock::RescanOnePage(Recycler * recycler)
     // Reset this, we'll increment this if we OOM again
     this->needOOMRescan = false;
 
-#if ENABLE_CONCURRENT_GC
     // don't need to get the write watch bit if we already need to oom rescan
     if (!oldNeedOOMRescan)
     {
@@ -1239,19 +1214,12 @@ LargeHeapBlock::RescanOnePage(Recycler * recycler)
             return false;
         }
         bool hasWriteBarrier = false;
-#ifdef RECYCLER_WRITE_BARRIER
         hasWriteBarrier = header->hasWriteBarrier;
-#endif
         if (!IsPageDirty(this->GetBeginAddress(), flags, hasWriteBarrier))
         {
             return false;
         }
     }
-#else
-    // Shouldn't be rescanning in cases other than OOM if GetWriteWatch
-    Assert(oldNeedOOMRescan);
-#endif
-
     RECYCLER_STATS_INC(recycler, markData.rescanLargePageCount);
 
     for (uint objectIndex = 0; objectIndex < allocCount; objectIndex++)
@@ -1339,7 +1307,6 @@ LargeHeapBlock::Rescan(Recycler * recycler, bool isPartialSwept, RescanFlags fla
     // Update the lastCollectAllocCount for sweep
     this->lastCollectAllocCount = this->allocCount;
 
-#if ENABLE_CONCURRENT_GC
     Assert(recycler->collectionState != CollectionStateConcurrentFinishMark || (flags & RescanFlags_ResetWriteWatch));
     if (this->GetPageCount() == 1)
     {
@@ -1354,18 +1321,10 @@ LargeHeapBlock::Rescan(Recycler * recycler, bool isPartialSwept, RescanFlags fla
         return 0;
     }
     return RescanMultiPage(recycler, flags);
-#else
-    return this->GetPageCount() == 1 ? RescanOnePage(recycler) : RescanMultiPage(recycler);
-#endif
 }
 
-#if ENABLE_CONCURRENT_GC
 size_t
 LargeHeapBlock::RescanMultiPage(Recycler * recycler, RescanFlags flags)
-#else
-size_t
-LargeHeapBlock::RescanMultiPage(Recycler * recycler)
-#endif
 {
     Assert(this->GetPageCount() != 1);
     DebugOnly(bool oldNeedOOMRescan = this->needOOMRescan);
@@ -1375,10 +1334,8 @@ LargeHeapBlock::RescanMultiPage(Recycler * recycler)
 
     size_t rescanCount = 0;
     uint objectIndex = 0;
-#if ENABLE_CONCURRENT_GC
     char * lastPageCheckedForWriteWatch = nullptr;
     bool isLastPageCheckedForWriteWatchDirty = false;
-#endif
 
     const HeapBlockMap& heapBlockMap = recycler->heapBlockMap;
 
@@ -1494,7 +1451,6 @@ LargeHeapBlock::RescanMultiPage(Recycler * recycler)
             objectScanned = true;
 #endif
         }
-#if ENABLE_CONCURRENT_GC
         else if (!recycler->inEndMarkOnLowMemory)
         {
             char * objectAddressEnd = objectAddress + objectSize;
@@ -1526,9 +1482,7 @@ LargeHeapBlock::RescanMultiPage(Recycler * recycler)
                     lastPageCheckedForWriteWatch = pageStart;
                     isLastPageCheckedForWriteWatchDirty = true;
                     bool hasWriteBarrier = false;
-#ifdef RECYCLER_WRITE_BARRIER
                     hasWriteBarrier = header->hasWriteBarrier;
-#endif
                     if (!IsPageDirty(pageStart, flags, hasWriteBarrier))
                     {
                         // Fall through to the case below where we'll update objectAddress and continue
@@ -1604,12 +1558,6 @@ LargeHeapBlock::RescanMultiPage(Recycler * recycler)
             }
             while (objectAddress < objectAddressEnd);
         }
-#else
-        else
-        {
-            Assert(recycler->inEndMarkOnLowMemory);
-        }
-#endif
         RECYCLER_STATS_ADD(recycler, markData.rescanLargeObjectCount, objectScanned);
     }
 
@@ -1650,9 +1598,7 @@ LargeHeapBlock::Sweep(RecyclerSweep& recyclerSweep, bool queuePendingSweep)
     this->expectedSweepCount = allocCount - markCount;
 #endif
 
-#if ENABLE_CONCURRENT_GC
     Assert(!this->isPendingConcurrentSweep);
-#endif
 
     bool isAllFreed = (finalizeCount == 0 && markCount == 0);
     if (isAllFreed)
@@ -1684,15 +1630,11 @@ LargeHeapBlock::Sweep(RecyclerSweep& recyclerSweep, bool queuePendingSweep)
         // in other script during concurrent sweep or finalizer called before.
 
         Assert(!recyclerSweep.IsBackground());
-#if ENABLE_CONCURRENT_GC
         if (queuePendingSweep && finalizeCount == 0)
         {
             this->isPendingConcurrentSweep = true;
             return SweepStatePendingSweep;
         }
-#else
-        Assert(!queuePendingSweep);
-#endif
 
         SweepObjects<SweepMode_InThread>(recycler);
         if (TransferSweptObjects())
@@ -1872,7 +1814,6 @@ LargeHeapBlock::FinalizeObject(Recycler* recycler, LargeObjectHeader* header)
 
 // Explicitly instantiate all the sweep modes
 template void LargeHeapBlock::SweepObjects<SweepMode_InThread>(Recycler * recycler);
-#if ENABLE_CONCURRENT_GC
 template <>
 void
 LargeHeapBlock::SweepObject<SweepMode_Concurrent>(Recycler * recycler, LargeObjectHeader * header)
@@ -1898,7 +1839,6 @@ LargeHeapBlock::SweepObject<SweepMode_ConcurrentPartial>(Recycler * recycler, La
 
 // Explicitly instantiate all the sweep modes
 template void LargeHeapBlock::SweepObjects<SweepMode_ConcurrentPartial>(Recycler * recycler);
-#endif
 #endif
 
 //
@@ -1942,22 +1882,14 @@ template <SweepMode mode>
 void
 LargeHeapBlock::SweepObjects(Recycler * recycler)
 {
-#if ENABLE_CONCURRENT_GC
     Assert(mode == SweepMode_InThread || this->isPendingConcurrentSweep);
-#else
-    Assert(mode == SweepMode_InThread);
-#endif
 
     const HeapBlockMap& heapBlockMap = recycler->heapBlockMap;
 #if DBG
     uint markCount = GetMarkCount();
 
     // mark count included newly allocated objects
-#if ENABLE_CONCURRENT_GC
     Assert(expectedSweepCount == allocCount - markCount || recycler->IsConcurrentSweepState());
-#else
-    Assert(expectedSweepCount == allocCount - markCount);
-#endif
     Assert(expectedSweepCount != 0 || isForceSweeping);
     uint sweepCount = 0;
 #endif
@@ -2018,9 +1950,7 @@ LargeHeapBlock::SweepObjects(Recycler * recycler)
     }
 
     Assert(sweepCount == expectedSweepCount);
-#if ENABLE_CONCURRENT_GC
     this->isPendingConcurrentSweep = false;
-#endif
 }
 
 bool
@@ -2075,7 +2005,7 @@ LargeHeapBlock::DisposeObjects(Recycler * recycler)
     }
 }
 
-#if ENABLE_PARTIAL_GC && ENABLE_CONCURRENT_GC
+#if ENABLE_PARTIAL_GC
 void
 LargeHeapBlock::PartialTransferSweptObjects()
 {
@@ -2166,7 +2096,7 @@ LargeHeapBlock::Check(bool expectFull, bool expectPending)
         {
             continue;
         }
-#if ENABLE_PARTIAL_GC && ENABLE_CONCURRENT_GC
+#if ENABLE_PARTIAL_GC
         header = (LargeObjectHeader *)((size_t)header & ~PartialFreeBit);
         Assert(this->hasPartialFreeObjects || header == this->HeaderList()[i]);
 #endif
@@ -2449,7 +2379,7 @@ LargeHeapBlock::CapturePageHeapFreeStack()
 }
 #endif
 
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
 std::recursive_mutex LargeHeapBlock::wbVerifyBitsLock;
 void LargeHeapBlock::WBSetBit(char* addr)
 {

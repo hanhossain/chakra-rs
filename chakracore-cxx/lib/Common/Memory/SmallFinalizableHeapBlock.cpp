@@ -6,7 +6,6 @@
 #include "CommonMemoryPch.h"
 #include "SmallFinalizableHeapBlock.h"
 
-#ifdef RECYCLER_WRITE_BARRIER
 template <class TBlockAttributes>
 SmallFinalizableWithBarrierHeapBlockT<TBlockAttributes>*
 SmallFinalizableWithBarrierHeapBlockT<TBlockAttributes>::New(HeapBucketT<SmallFinalizableWithBarrierHeapBlockT<TBlockAttributes>> * bucket)
@@ -29,7 +28,6 @@ SmallFinalizableWithBarrierHeapBlockT<TBlockAttributes>::Delete(SmallFinalizable
 
     NoMemProtectHeapDeletePlusPrefix(Base::GetAllocPlusSize(heapBlock->objectCount), heapBlock);
 }
-#endif
 
 #ifdef RECYCLER_VISITED_HOST
 template <class TBlockAttributes>
@@ -114,7 +112,6 @@ SmallFinalizableHeapBlockT<TBlockAttributes>::SmallFinalizableHeapBlockT(HeapBuc
 }
 #endif
 
-#ifdef RECYCLER_WRITE_BARRIER
 template <class TBlockAttributes>
 SmallFinalizableHeapBlockT<TBlockAttributes>::SmallFinalizableHeapBlockT(HeapBucketT<SmallFinalizableWithBarrierHeapBlockT<TBlockAttributes>> * bucket, ushort objectSize, ushort objectCount, HeapBlockType blockType)
     : SmallNormalHeapBlockT<TBlockAttributes>(bucket, objectSize, objectCount, blockType)
@@ -126,7 +123,6 @@ SmallFinalizableHeapBlockT<TBlockAttributes>::SmallFinalizableHeapBlockT(HeapBuc
     Assert(this->disposedObjectListTail == nullptr);
     Assert(!this->isPendingDispose);
 }
-#endif
 
 template <class TBlockAttributes>
 void
@@ -135,13 +131,6 @@ SmallFinalizableHeapBlockT<TBlockAttributes>::SetAttributes(void * address, unsi
     Assert((attributes & FinalizeBit) != 0);
     __super::SetAttributes(address, attributes);
     finalizeCount++;
-
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    if (CONFIG_FLAG_RELEASE(EnableConcurrentSweepAlloc))
-    {
-        AssertMsg(!this->isPendingConcurrentSweepPrep, "Finalizable blocks don't support allocations during concurrent sweep.");
-    }
-#endif
 
 #ifdef RECYCLER_FINALIZE_CHECK
     HeapInfo * heapInfo = this->heapBucket->heapInfo;
@@ -337,7 +326,6 @@ SmallFinalizableHeapBlockT<TBlockAttributes>::ProcessMarkedObject(void* objectAd
     }
 }
 
-#if ENABLE_PARTIAL_GC || ENABLE_CONCURRENT_GC
 // static
 template <class TBlockAttributes>
 bool
@@ -408,7 +396,6 @@ bool
 SmallFinalizableHeapBlockT<TBlockAttributes>::RescanTrackedObject(FinalizableObject * object, uint objectIndex, Recycler * recycler)
 {
     RecyclerVerboseTrace(recycler->GetRecyclerFlagsTable(), u"Marking 0x%08x during rescan\n", object);
-#if ENABLE_CONCURRENT_GC
 #if ENABLE_PARTIAL_GC
     if (recycler->inPartialCollectMode)
     {
@@ -433,12 +420,7 @@ SmallFinalizableHeapBlockT<TBlockAttributes>::RescanTrackedObject(FinalizableObj
     this->ObjectInfo(objectIndex) &= ~NewTrackBit;
 
     return true;
-#else
-    // REVIEW: Is this correct? Or should we remove the track bit always?
-    return false;
-#endif
 }
-#endif
 
 template <class TBlockAttributes>
 SweepState
@@ -670,8 +652,6 @@ namespace Memory
     template void SmallRecyclerVisitedHostHeapBlockT<MediumAllocationBlockAttributes>::ProcessMarkedObject<false>(void* objectAddress, MarkContext * markContext);;
 #endif
 
-#ifdef RECYCLER_WRITE_BARRIER
     template class SmallFinalizableWithBarrierHeapBlockT<SmallAllocationBlockAttributes>;
     template class SmallFinalizableWithBarrierHeapBlockT<MediumAllocationBlockAttributes>;
-#endif
 }

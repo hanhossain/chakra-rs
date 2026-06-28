@@ -18,7 +18,7 @@ namespace Js
     class UnscopablesWrapperObject : public RecyclableObject
     {
         private:
-            Field(RecyclableObject *) wrappedObject;
+            typename WriteBarrierFieldTypeTraits<RecyclableObject *>::Type wrappedObject;
 
         protected:
             DEFINE_VTABLE_CTOR(UnscopablesWrapperObject, RecyclableObject);

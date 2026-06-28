@@ -371,7 +371,7 @@ HELPERCALLCHK(OP_CmGe_A, Js::JavascriptOperators::OP_CmGe_A, AttrCanThrow)
 HELPERCALLCHK(Conv_ToUInt32_Full, Js::JavascriptConversion::ToUInt32_Full, AttrCanThrow)
 HELPERCALLCHK(Conv_ToUInt32, (uint32_t (*)(Js::Var, Js::ScriptContext *))Js::JavascriptConversion::ToUInt32, AttrCanThrow)
 
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
 HELPERCALL(WriteBarrierSetVerifyBit, Memory::Recycler::WBSetBitJIT, AttrCanNotBeReentrant)
 #endif
 

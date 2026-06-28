@@ -989,11 +989,11 @@ namespace Js
         struct ProxyOwnkeysEnumerator : public JavascriptEnumerator
         {
             typedef JsUtil::BaseHashSet<JsUtil::CharacterBuffer<char16_t>, Recycler> VisitedNamesHashSet;
-            Field(VisitedNamesHashSet*) visited;
-            Field(JavascriptArray*) trapResult;
-            Field(JavascriptProxy*) proxy;
-            FieldNoBarrier(ScriptContext*) scriptContext;
-            Field(uint32_t) index;
+            typename WriteBarrierFieldTypeTraits<VisitedNamesHashSet*>::Type visited;
+            typename WriteBarrierFieldTypeTraits<JavascriptArray*>::Type trapResult;
+            typename WriteBarrierFieldTypeTraits<JavascriptProxy*>::Type proxy;
+            typename WriteBarrierFieldTypeTraits<ScriptContext*, _no_write_barrier_policy, _no_write_barrier_policy>::Type scriptContext;
+            typename WriteBarrierFieldTypeTraits<uint32_t>::Type index;
 
             DEFINE_VTABLE_CTOR_ABSTRACT(ProxyOwnkeysEnumerator, JavascriptEnumerator)
 

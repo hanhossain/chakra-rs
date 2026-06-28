@@ -2858,7 +2858,7 @@ using namespace Js;
             // 5 <=
 
             SparseArraySegmentBase* next = GetBeginLookupSegment(newLength - 1); // head, or next.left < newLength
-            Field(SparseArraySegmentBase*)* prev = &head;
+            typename WriteBarrierFieldTypeTraits<SparseArraySegmentBase*>::Type* prev = &head;
 
             while(next != nullptr)
             {
@@ -4315,7 +4315,7 @@ using namespace Js;
     }
 
     template<>
-    void JavascriptArray::CopyValueToSegmentBuferNoCheck(Field(double)* buffer, uint32_t length, double value)
+    void JavascriptArray::CopyValueToSegmentBuferNoCheck(typename WriteBarrierFieldTypeTraits<double>::Type* buffer, uint32_t length, double value)
     {
         if (JavascriptNumber::IsZero(value) && !JavascriptNumber::IsNegZero(value))
         {
@@ -4331,7 +4331,7 @@ using namespace Js;
     }
 
     template<>
-    void JavascriptArray::CopyValueToSegmentBuferNoCheck(Field(int32_t)* buffer, uint32_t length, int32_t value)
+    void JavascriptArray::CopyValueToSegmentBuferNoCheck(typename WriteBarrierFieldTypeTraits<int32_t>::Type* buffer, uint32_t length, int32_t value)
     {
         if (value == 0 || AreAllBytesEqual(value))
         {
@@ -4347,7 +4347,7 @@ using namespace Js;
     }
 
     template<>
-    void JavascriptArray::CopyValueToSegmentBuferNoCheck(Field(Js::Var)* buffer, uint32_t length, Js::Var value)
+    void JavascriptArray::CopyValueToSegmentBuferNoCheck(typename WriteBarrierFieldTypeTraits<Js::Var>::Type* buffer, uint32_t length, Js::Var value)
     {
         for (uint32_t i = 0; i < length; i++)
         {
@@ -6675,8 +6675,8 @@ Case0:
     // This reduces the total number of conversions needed
     struct StringItem
     {
-        Field(Var) Value;
-        Field(JavascriptString*) StringValue;
+        typename WriteBarrierFieldTypeTraits<Var>::Type Value;
+        typename WriteBarrierFieldTypeTraits<JavascriptString*>::Type StringValue;
     };
 
     // Comparison method used in Array.prototype.sort when no comparison function was provided
@@ -6878,7 +6878,7 @@ Case0:
 
     // Set and Get helpers used in JavascriptArray::SortHelper below
     // These allow the SortHelper to handle either a row of Var OR a row of StringItem
-    inline void SortSetHelper(Field(Var)* list, Var item, uint32_t index, JsReentLock* jsReentLock, ScriptContext* scriptContext)
+    inline void SortSetHelper(typename WriteBarrierFieldTypeTraits<Var>::Type* list, Var item, uint32_t index, JsReentLock* jsReentLock, ScriptContext* scriptContext)
     {
         list[index] = item;
     }
@@ -6892,7 +6892,7 @@ Case0:
         list[index] = current;
     }
 
-    inline Var SortGetHelper(Field(Var)* list, uint32_t index)
+    inline Var SortGetHelper(typename WriteBarrierFieldTypeTraits<Var>::Type* list, uint32_t index)
     {
         return list[index];
     }
@@ -7059,7 +7059,7 @@ Case0:
         {
             cvInfo.compFn = compFn;
             cvInfo.compareType = scriptContext == compFn->GetScriptContext() ? &compareVars : &compareVarsCrossContext;
-            return JavascriptArray::SortHelper<Field(Var)>(args[0], &cvInfo);
+            return JavascriptArray::SortHelper<typename WriteBarrierFieldTypeTraits<Var>::Type>(args[0], &cvInfo);
         }
         else
         {
@@ -7166,7 +7166,7 @@ Case0:
 
     template<typename T>
     void JavascriptArray::ArraySegmentSpliceHelper(
-        JavascriptArray *pnewArr, SparseArraySegment<T> *seg, Field(SparseArraySegment<T>*) *prev,
+        JavascriptArray *pnewArr, SparseArraySegment<T> *seg, typename WriteBarrierFieldTypeTraits<SparseArraySegment<T>*>::Type *prev,
         uint32_t start, uint32_t deleteLen, Var* insertArgs, uint32_t insertLen, Recycler *recycler)
     {
         // book keeping variables
@@ -7247,8 +7247,8 @@ Case0:
         // Skip pnewArr->EnsureHead(): we don't use existing segment at all.
         Recycler *recycler  = scriptContext->GetRecycler();
 
-        Field(SparseArraySegmentBase*)* prevSeg  = &pArr->head;        // holds the next pointer of previous
-        Field(SparseArraySegmentBase*)* prevPrevSeg  = &pArr->head;    // this holds the previous pointer to prevSeg dirty trick.
+        typename WriteBarrierFieldTypeTraits<SparseArraySegmentBase*>::Type* prevSeg  = &pArr->head;        // holds the next pointer of previous
+        typename WriteBarrierFieldTypeTraits<SparseArraySegmentBase*>::Type* prevPrevSeg  = &pArr->head;    // this holds the previous pointer to prevSeg dirty trick.
         SparseArraySegmentBase* savePrev = nullptr;
 
         Assert(pArr->head); // We should never have a null head.
@@ -7310,7 +7310,7 @@ Case0:
             else
             {
                 SparseArraySegment<T>* newHeadSeg = nullptr; // pnewArr->head is null
-                Field(SparseArraySegmentBase*)* prevNewHeadSeg = &pnewArr->head;
+                typename WriteBarrierFieldTypeTraits<SparseArraySegmentBase*>::Type* prevNewHeadSeg = &pnewArr->head;
 
                 // delete till deleteLen and reuse segments for new array if it is possible.
                 // 3 steps -

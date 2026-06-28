@@ -24,7 +24,7 @@ namespace Js
             static FunctionInfo Set;
         };
         WebAssemblyTable(
-            Field(Var) * values, uint32_t currentLength, uint32_t initialLength, uint32_t maxLength, DynamicType * type);
+            typename WriteBarrierFieldTypeTraits<Var>::Type * values, uint32_t currentLength, uint32_t initialLength, uint32_t maxLength, DynamicType * type);
         static Var NewInstance(RecyclableObject* function, CallInfo callInfo, ...);
         static Var EntryGetterLength(RecyclableObject* function, CallInfo callInfo, ...);
         static Var EntryGrow(RecyclableObject* function, CallInfo callInfo, ...);
@@ -43,11 +43,11 @@ namespace Js
         static uint32_t GetOffsetOfValues() { return offsetof(WebAssemblyTable, m_values); }
         static uint32_t GetOffsetOfCurrentLength() { return offsetof(WebAssemblyTable, m_currentLength); }
     private:
-        Field(uint32_t) m_initialLength;
-        Field(uint32_t) m_maxLength;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type m_initialLength;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type m_maxLength;
 
-        Field(uint32_t) m_currentLength;
-        Field(Field(Var)*) m_values;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type m_currentLength;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<Var>::Type*>::Type m_values;
 #endif
     };
 

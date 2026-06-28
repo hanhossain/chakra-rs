@@ -31,9 +31,7 @@ private:
 
 public:
     bool markOnOOMRescan : 1;
-#ifdef RECYCLER_WRITE_BARRIER
     bool hasWriteBarrier : 1;
-#endif
 #ifdef RECYCLER_PAGE_HEAP
     bool isObjectPageLocked : 1;
 #endif
@@ -162,7 +160,7 @@ public:
     ~LargeHeapBlock();
 
     size_t Rescan(Recycler* recycler, bool isPartialSwept, RescanFlags flags);
-#if ENABLE_PARTIAL_GC && ENABLE_CONCURRENT_GC
+#if ENABLE_PARTIAL_GC
     void PartialTransferSweptObjects();
     void FinishPartialCollect(Recycler * recycler);
 #endif
@@ -229,7 +227,7 @@ private:
     {
         Assert(index < this->allocCount);
         LargeObjectHeader * header = this->HeaderList()[index];
-#if ENABLE_PARTIAL_GC && ENABLE_CONCURRENT_GC
+#if ENABLE_PARTIAL_GC
         if (IsPartialSweptHeader(header))
         {
             return nullptr;
@@ -244,14 +242,9 @@ private:
     static size_t GetAllocPlusSize(uint objectCount);
     char * AllocFreeListEntry(size_t size, ObjectInfoBits attributes, LargeHeapBlockFreeListEntry* entry);
 
-#if ENABLE_CONCURRENT_GC
     bool IsPageDirty(char* page, RescanFlags flags, bool isWriteBarrier);
     bool RescanOnePage(Recycler * recycler, RescanFlags flags);
     size_t RescanMultiPage(Recycler * recycler, RescanFlags flags);
-#else
-    bool RescanOnePage(Recycler * recycler);
-    size_t RescanMultiPage(Recycler * recycler);
-#endif
 
     template <SweepMode>
     void SweepObject(Recycler * recycler, LargeObjectHeader * header);
@@ -261,7 +254,7 @@ private:
     void FinalizeObject(Recycler* recycler, LargeObjectHeader* header);
 
     void FillFreeMemory(Recycler * recycler, __in_bcount(size) void * address, size_t size);
-#if ENABLE_PARTIAL_GC && ENABLE_CONCURRENT_GC
+#if ENABLE_PARTIAL_GC
     bool IsPartialSweptHeader(LargeObjectHeader * header) const
     {
         Assert(this->hasPartialFreeObjects || (((size_t)header & PartialFreeBit) != PartialFreeBit));
@@ -327,7 +320,7 @@ public:
     void ** GetTrackerDataArray();
 #endif
 
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
 private:
     static std::recursive_mutex wbVerifyBitsLock;
     BVSparse<HeapAllocator> wbVerifyBits;

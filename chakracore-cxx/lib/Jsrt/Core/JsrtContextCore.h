@@ -31,7 +31,7 @@ private:
     JsrtContextCore(JsrtRuntime * runtime);
     Js::ScriptContext* EnsureScriptContext();
 
-    FieldNoBarrier(ChakraCoreHostScriptContext*) hostContext;
+    typename WriteBarrierFieldTypeTraits<ChakraCoreHostScriptContext*, _no_write_barrier_policy, _no_write_barrier_policy>::Type hostContext;
 };
 
 class ChakraCoreStreamWriter : public HostStream

@@ -1247,9 +1247,7 @@ namespace JsUtil
         Assert(lpParam);
 
 #ifdef TARGET_64
-#ifdef RECYCLER_WRITE_BARRIER
         Memory::RecyclerWriteBarrierManager::OnThreadInit();
-#endif
 #endif
 
         ParallelThreadData * threadData = static_cast<ParallelThreadData *>(lpParam);
@@ -1262,18 +1260,7 @@ namespace JsUtil
         threadData->backgroundPageAllocator.SetConcurrentThreadId(GetCurrentThreadId());
 #endif
 
-#ifdef DISABLE_SEH
         processor->Run(threadData);
-#else
-        __try
-        {
-            processor->Run(threadData);
-        }
-        __except(ExceptFilter(GetExceptionInformation()))
-        {
-            Assert(false);
-        }
-#endif
 
         // Indicate to Close that the thread is about to exit. This has to be done before CoUninitialize because CoUninitialize
         // may require the loader lock and if Close was called while holding the loader lock during DLL_THREAD_DETACH, it could
@@ -1281,14 +1268,6 @@ namespace JsUtil
         threadData->threadStartedOrClosing.Set();
         return 0;
     }
-
-#ifndef DISABLE_SEH
-    int BackgroundJobProcessor::ExceptFilter(LPEXCEPTION_POINTERS pEP)
-    {
-        Output::Flush();
-        return EXCEPTION_CONTINUE_SEARCH;
-    }
-#endif
 
     void BackgroundJobProcessor::ThreadServiceCallback(void * callbackData)
     {

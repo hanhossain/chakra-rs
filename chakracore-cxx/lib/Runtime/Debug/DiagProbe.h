@@ -31,9 +31,9 @@ namespace Js
             }
         }
 
-        Field(Js::Var) returnedValue;
-        Field(Js::JavascriptFunction *) calledFunction;
-        Field(bool) isValueOfReturnStatement;
+        typename WriteBarrierFieldTypeTraits<Js::Var>::Type returnedValue;
+        typename WriteBarrierFieldTypeTraits<Js::JavascriptFunction *>::Type calledFunction;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isValueOfReturnStatement;
     };
 
     typedef JsUtil::List<ReturnedValue*> ReturnedValueList;

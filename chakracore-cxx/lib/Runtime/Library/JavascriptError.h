@@ -19,7 +19,7 @@ namespace Js
     private:
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptError);
 
-        Field(ErrorTypeEnum) m_errorType;
+        typename WriteBarrierFieldTypeTraits<ErrorTypeEnum>::Type m_errorType;
 
     protected:
         DEFINE_VTABLE_CTOR(JavascriptError, DynamicObject);
@@ -154,11 +154,11 @@ namespace Js
 
     private:
 
-        Field(BOOL) isExternalError;
-        Field(BOOL) isPrototype;
-        Field(bool) isStackPropertyRedefined;
-        Field(char16_t const *) originalRuntimeErrorMessage;
-        Field(JavascriptExceptionObject *) exceptionObject;
+        typename WriteBarrierFieldTypeTraits<BOOL>::Type isExternalError;
+        typename WriteBarrierFieldTypeTraits<BOOL>::Type isPrototype;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isStackPropertyRedefined;
+        typename WriteBarrierFieldTypeTraits<char16_t const *>::Type originalRuntimeErrorMessage;
+        typename WriteBarrierFieldTypeTraits<JavascriptExceptionObject *>::Type exceptionObject;
 
 #ifdef ERROR_TRACE
         static void Trace(const char16_t *form, ...) // const

@@ -45,15 +45,15 @@ class SRCINFO
     // In future, when we do make it freeable and will be able to allocate more than one per Module,
     // we can move variables m_isGlobalFunc and m_isEval from FunctionBody.cpp here.
 public:
-    Field(SourceContextInfo *) sourceContextInfo;
-    Field(uint32_t) dlnHost;             // Line number passed to ParseScriptText
-    Field(uint32_t) ulColumnHost;        // Column number on the line where the parse script text started
-    Field(uint32_t) lnMinHost;           // Line offset of first host-supplied line
-    Field(uint32_t) ichMinHost;          // Range of host supplied characters
-    Field(uint32_t) ichLimHost;
-    Field(uint32_t) ulCharOffset;        // Char offset of the source text relative to the document. (Populated using IActiveScriptContext)
-    Field(Js::ModuleID) moduleID;
-    Field(uint32_t) grfsi;
+    typename WriteBarrierFieldTypeTraits<SourceContextInfo *>::Type sourceContextInfo;
+    typename WriteBarrierFieldTypeTraits<uint32_t>::Type dlnHost;             // Line number passed to ParseScriptText
+    typename WriteBarrierFieldTypeTraits<uint32_t>::Type ulColumnHost;        // Column number on the line where the parse script text started
+    typename WriteBarrierFieldTypeTraits<uint32_t>::Type lnMinHost;           // Line offset of first host-supplied line
+    typename WriteBarrierFieldTypeTraits<uint32_t>::Type ichMinHost;          // Range of host supplied characters
+    typename WriteBarrierFieldTypeTraits<uint32_t>::Type ichLimHost;
+    typename WriteBarrierFieldTypeTraits<uint32_t>::Type ulCharOffset;        // Char offset of the source text relative to the document. (Populated using IActiveScriptContext)
+    typename WriteBarrierFieldTypeTraits<Js::ModuleID>::Type moduleID;
+    typename WriteBarrierFieldTypeTraits<uint32_t>::Type grfsi;
 
     static SRCINFO* Copy(Recycler* recycler, const SRCINFO* srcInfo)
     {
@@ -693,8 +693,8 @@ public:
 
         struct FieldAccessStatsEntry
         {
-            Field(RecyclerWeakReference<FunctionBody>*) functionBodyWeakRef;
-            Field(FieldAccessStatsList) stats;
+            typename WriteBarrierFieldTypeTraits<RecyclerWeakReference<FunctionBody>*>::Type functionBodyWeakRef;
+            typename WriteBarrierFieldTypeTraits<FieldAccessStatsList>::Type stats;
 
             FieldAccessStatsEntry(RecyclerWeakReference<FunctionBody>* functionBodyWeakRef, Recycler* recycler)
                 : functionBodyWeakRef(functionBodyWeakRef), stats(recycler) {}
@@ -1662,7 +1662,7 @@ private:
         virtual bool IsRecyclerVerifyEnabled() const override;
         virtual uint GetRecyclerVerifyPad() const override;
 
-        virtual Field(Js::Var)* GetModuleExportSlotArrayAddress(uint moduleIndex, uint slotIndex) override;
+        virtual typename WriteBarrierFieldTypeTraits<Js::Var>::Type* GetModuleExportSlotArrayAddress(uint moduleIndex, uint slotIndex) override;
 
         Js::SourceTextModuleRecord* GetModuleRecord(uint moduleId) const
         {

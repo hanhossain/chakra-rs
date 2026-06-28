@@ -14,15 +14,15 @@ namespace Js
     class TypePropertyCacheElement
     {
     private:
-        Field(DynamicObject *) prototypeObjectWithProperty;
+        typename WriteBarrierFieldTypeTraits<DynamicObject *>::Type prototypeObjectWithProperty;
 
         // tag the bit fields to avoid false positive
-        Field(bool) tag : 1;
-        Field(bool) isInlineSlot : 1;
-        Field(bool) isSetPropertyAllowed : 1;
-        Field(bool) isMissing : 1;
-        Field(PropertyIndex) index;
-        Field(PropertyId) id;
+        typename WriteBarrierFieldTypeTraits<bool>::Type tag : 1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isInlineSlot : 1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isSetPropertyAllowed : 1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isMissing : 1;
+        typename WriteBarrierFieldTypeTraits<PropertyIndex>::Type index;
+        typename WriteBarrierFieldTypeTraits<PropertyId>::Type id;
 
     public:
         TypePropertyCacheElement();
@@ -50,7 +50,7 @@ namespace Js
     class TypePropertyCache
     {
     private:
-        Field(TypePropertyCacheElement) elements[TypePropertyCache_NumElements];
+        typename WriteBarrierFieldTypeTraits<TypePropertyCacheElement>::Type elements[TypePropertyCache_NumElements];
 
     private:
         static size_t ElementIndex(const PropertyId id);

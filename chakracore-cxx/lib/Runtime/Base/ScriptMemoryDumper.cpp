@@ -149,11 +149,9 @@ void ScriptMemoryDumper::DumpLargeBucket(LargeHeapBucket* heapBucket)
     DumpLargeHeapBlockList(heapBucket->largePageHeapBlockList);
 #endif
     DumpLargeHeapBlockList(heapBucket->pendingDisposeLargeBlockList);
-#if ENABLE_CONCURRENT_GC
     DumpLargeHeapBlockList(heapBucket->pendingSweepLargeBlockList);
 #if ENABLE_PARTIAL_GC
     DumpLargeHeapBlockList(heapBucket->partialSweptLargeBlockList);
-#endif
 #endif
 }
 

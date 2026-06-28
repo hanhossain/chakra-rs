@@ -29,11 +29,11 @@ namespace Js
         typedef PropertyDescriptorMap PropertyDescriptorMapType; // alias used by diagnostics
 
     private:
-        Field(PropertyDescriptorMap*) propertyMap;
-        Field(T) nextPropertyIndex;
+        typename WriteBarrierFieldTypeTraits<PropertyDescriptorMap*>::Type propertyMap;
+        typename WriteBarrierFieldTypeTraits<T>::Type nextPropertyIndex;
 
 #if ENABLE_FIXED_FIELDS
-        Field(RecyclerWeakReference<DynamicObject>*) singletonInstance;
+        typename WriteBarrierFieldTypeTraits<RecyclerWeakReference<DynamicObject>*>::Type singletonInstance;
 #endif
 
         typedef PropertyIndexRanges<T> PropertyIndexRangesType;

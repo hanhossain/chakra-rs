@@ -60,12 +60,12 @@ namespace UnifiedRegex
     public:
         // Copy of original text of regex (without delimiting '/'s or trailing flags), null terminated.
         // In run-time allocator, owned by program
-        Field(Char*) source;
-        Field(CharCount) sourceLen; // length in char16_t's, NOT including terminating null
+        typename WriteBarrierFieldTypeTraits<Char*>::Type source;
+        typename WriteBarrierFieldTypeTraits<CharCount>::Type sourceLen; // length in char16_t's, NOT including terminating null
         // Number of capturing groups (including implicit overall group at index 0)
-        Field(uint16) numGroups;
-        Field(int) numLoops;
-        Field(RegexFlags) flags;
+        typename WriteBarrierFieldTypeTraits<uint16>::Type numGroups;
+        typename WriteBarrierFieldTypeTraits<int>::Type numLoops;
+        typename WriteBarrierFieldTypeTraits<RegexFlags>::Type flags;
 
     private:
         enum class ProgramTag : uint8_t
@@ -80,66 +80,66 @@ namespace UnifiedRegex
             BOILiteral2Tag
         };
 
-        Field(ProgramTag) tag;
+        typename WriteBarrierFieldTypeTraits<ProgramTag>::Type tag;
 
         struct Instructions
         {
             // Instruction array, in run-time allocator, owned by program, never null
-            Field(uint8_t*) insts;
-            Field(CharCount) instsLen; // in bytes
+            typename WriteBarrierFieldTypeTraits<uint8_t*>::Type insts;
+            typename WriteBarrierFieldTypeTraits<CharCount>::Type instsLen; // in bytes
             // Literals
             // In run-time allocator, owned by program, may be 0
-            Field(CharCount) litbufLen; // length of litbuf in char16_t's, no terminating null
-            Field(Char*) litbuf;
+            typename WriteBarrierFieldTypeTraits<CharCount>::Type litbufLen; // length of litbuf in char16_t's, no terminating null
+            typename WriteBarrierFieldTypeTraits<Char*>::Type litbuf;
 
             // These scanner infos are used by ScannersMixin, which is used by only SyncToLiteralsAndBackupInst. There will only
             // ever be only one of those instructions per program. Since scanners are large (> 1 KB), for that instruction they
             // are allocated on the recycler with pointers stored here to reference them.
-            Field(Field(ScannerInfo *)*) scannersForSyncToLiterals;
+            typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<ScannerInfo *>::Type*>::Type scannersForSyncToLiterals;
         };
 
         struct SingleChar
         {
-            Field(Char) c;
-            Field(uint8_t) padding[sizeof(Instructions) - sizeof(Char)];
+            typename WriteBarrierFieldTypeTraits<Char>::Type c;
+            typename WriteBarrierFieldTypeTraits<uint8_t>::Type padding[sizeof(Instructions) - sizeof(Char)];
         };
 
         struct Octoquad
         {
-            Field(OctoquadMatcher*) matcher;
-            Field(uint8_t) padding[sizeof(Instructions) - sizeof(void*)];
+            typename WriteBarrierFieldTypeTraits<OctoquadMatcher*>::Type matcher;
+            typename WriteBarrierFieldTypeTraits<uint8_t>::Type padding[sizeof(Instructions) - sizeof(void*)];
         };
 
         struct BOILiteral2
         {
-            Field(uint32_t) literal;
-            Field(uint8_t) padding[sizeof(Instructions) - sizeof(uint32_t)];
+            typename WriteBarrierFieldTypeTraits<uint32_t>::Type literal;
+            typename WriteBarrierFieldTypeTraits<uint8_t>::Type padding[sizeof(Instructions) - sizeof(uint32_t)];
         };
 
         struct LeadingTrailingSpaces
         {
-            Field(CharCount) beginMinMatch;
-            Field(CharCount) endMinMatch;
-            Field(uint8_t) padding[sizeof(Instructions) - (sizeof(CharCount) * 2)];
+            typename WriteBarrierFieldTypeTraits<CharCount>::Type beginMinMatch;
+            typename WriteBarrierFieldTypeTraits<CharCount>::Type endMinMatch;
+            typename WriteBarrierFieldTypeTraits<uint8_t>::Type padding[sizeof(Instructions) - (sizeof(CharCount) * 2)];
         };
 
         struct Other
         {
-            Field(uint8_t) padding[sizeof(Instructions)];
+            typename WriteBarrierFieldTypeTraits<uint8_t>::Type padding[sizeof(Instructions)];
         };
 
         union RepType
         {
-            Field(Instructions) insts;
-            Field(SingleChar) singleChar;
-            Field(Octoquad) octoquad;
-            Field(BOILiteral2) boiLiteral2;
-            Field(LeadingTrailingSpaces) leadingTrailingSpaces;
-            Field(Other) other;
+            typename WriteBarrierFieldTypeTraits<Instructions>::Type insts;
+            typename WriteBarrierFieldTypeTraits<SingleChar>::Type singleChar;
+            typename WriteBarrierFieldTypeTraits<Octoquad>::Type octoquad;
+            typename WriteBarrierFieldTypeTraits<BOILiteral2>::Type boiLiteral2;
+            typename WriteBarrierFieldTypeTraits<LeadingTrailingSpaces>::Type leadingTrailingSpaces;
+            typename WriteBarrierFieldTypeTraits<Other>::Type other;
 
             RepType() {}
         };
-        Field(RepType) rep;
+        typename WriteBarrierFieldTypeTraits<RepType>::Type rep;
 
     public:
         Program(RegexFlags flags);
@@ -150,7 +150,7 @@ namespace UnifiedRegex
         static size_t GetOffsetOfBOILiteral2Literal() { return offsetof(BOILiteral2, literal); }
         static ProgramTag GetBOILiteral2Tag() { return ProgramTag::BOILiteral2Tag; }
 
-        Field(ScannerInfo *)*CreateScannerArrayForSyncToLiterals(Recycler *const recycler);
+        typename WriteBarrierFieldTypeTraits<ScannerInfo *>::Type*CreateScannerArrayForSyncToLiterals(Recycler *const recycler);
         ScannerInfo *AddScannerForSyncToLiterals(
             Recycler *const recycler,
             const int scannerIndex,
@@ -343,8 +343,8 @@ namespace UnifiedRegex
 
     struct LiteralMixin
     {
-        Field(CharCount) offset;  // into program's literal buffer
-        Field(CharCount) length;  // in char16_t's
+        typename WriteBarrierFieldTypeTraits<CharCount>::Type offset;  // into program's literal buffer
+        typename WriteBarrierFieldTypeTraits<CharCount>::Type length;  // in char16_t's
 
         inline LiteralMixin(CharCount offset, CharCount length) : offset(offset), length(length) {}
 
@@ -393,7 +393,7 @@ namespace UnifiedRegex
     template <typename ScannerT>
     struct ScannerMixinT : LiteralMixin
     {
-        Field(ScannerT) scanner;
+        typename WriteBarrierFieldTypeTraits<ScannerT>::Type scanner;
 
         // scanner must be setup
         ScannerMixinT(CharCount offset, CharCount length) : LiteralMixin(offset, length) {}
@@ -427,7 +427,7 @@ namespace UnifiedRegex
 
     struct ScannerInfo : ScannerMixin
     {
-        Field(bool) isEquivClass;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isEquivClass;
 
         // scanner must be setup
         inline ScannerInfo(CharCount offset, CharCount length, bool isEquivClass) : ScannerMixin(offset, length), isEquivClass(isEquivClass) {}
@@ -442,7 +442,7 @@ namespace UnifiedRegex
         static const int MaxNumSyncLiterals = 4;
 
         int numLiterals;
-        Field(ScannerInfo*)* infos;
+        typename WriteBarrierFieldTypeTraits<ScannerInfo*>::Type* infos;
 
         // scanner mixins must be added
         inline ScannersMixin(Recycler *const recycler, Program *const program)
@@ -711,7 +711,7 @@ namespace UnifiedRegex
 #undef MTemplate
         };
 
-        Field(InstTag) tag;
+        typename WriteBarrierFieldTypeTraits<InstTag>::Type tag;
 
         inline Inst(InstTag tag) : tag(tag) {}
         void FreeBody(ArenaAllocator* rtAllocator) {}
@@ -1537,8 +1537,8 @@ namespace UnifiedRegex
 
     struct GroupInfo : protected Chars<char16_t>
     {
-        Field(CharCount) offset;
-        Field(CharCountOrFlag) length;  // CharCountFlag => group is undefined
+        typename WriteBarrierFieldTypeTraits<CharCount>::Type offset;
+        typename WriteBarrierFieldTypeTraits<CharCountOrFlag>::Type length;  // CharCountFlag => group is undefined
 
         inline GroupInfo() : offset(0), length(CharCountFlag) {}
 
@@ -1800,12 +1800,12 @@ namespace UnifiedRegex
         static const uint TimePerQc; // milliseconds
 
     private:
-        Field(RegexPattern *) const pattern;
-        Field(StandardChars<Char>*) standardChars;
-        Field(const Program*) program;
+        typename WriteBarrierFieldTypeTraits<RegexPattern *>::Type const pattern;
+        typename WriteBarrierFieldTypeTraits<StandardChars<Char>*>::Type standardChars;
+        typename WriteBarrierFieldTypeTraits<const Program*>::Type program;
 
-        Field(GroupInfo*) groupInfos;
-        Field(LoopInfo*) loopInfos;
+        typename WriteBarrierFieldTypeTraits<GroupInfo*>::Type groupInfos;
+        typename WriteBarrierFieldTypeTraits<LoopInfo*>::Type loopInfos;
 
         // Furthest offsets in the input string that we tried to match during a scan.
         // This is used to prevent unnecessary retraversal of the input string.
@@ -1819,15 +1819,15 @@ namespace UnifiedRegex
         //
         // However, if we cache the furthest offsets we tried, we can skip the searches
         // for "foo" after the first time.
-        Field(CharCount*) literalNextSyncInputOffsets;
+        typename WriteBarrierFieldTypeTraits<CharCount*>::Type literalNextSyncInputOffsets;
 
-        FieldNoBarrier(Recycler*) recycler;
+        typename WriteBarrierFieldTypeTraits<Recycler*, _no_write_barrier_policy, _no_write_barrier_policy>::Type recycler;
 
-        Field(uint) previousQcTime;
+        typename WriteBarrierFieldTypeTraits<uint>::Type previousQcTime;
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
-        FieldNoBarrier(RegexStats*) stats;
-        FieldNoBarrier(DebugWriter*) w;
+        typename WriteBarrierFieldTypeTraits<RegexStats*, _no_write_barrier_policy, _no_write_barrier_policy>::Type stats;
+        typename WriteBarrierFieldTypeTraits<DebugWriter*, _no_write_barrier_policy, _no_write_barrier_policy>::Type w;
 #endif
 
     public:
@@ -1930,7 +1930,7 @@ namespace UnifiedRegex
     private:
 
         typedef bool (UnifiedRegex::Matcher::*ComparerForSingleChar)(const Char left, const Char right);
-        Field(ComparerForSingleChar) comparerForSingleChar;
+        typename WriteBarrierFieldTypeTraits<ComparerForSingleChar>::Type comparerForSingleChar;
 
         // Specialized matcher for regex c - case insensitive
         inline bool MatchSingleCharCaseInsensitive(const Char* const input, const CharCount inputLength, CharCount offset, const Char c);

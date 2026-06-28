@@ -575,12 +575,10 @@ public:
     AutoRecyclerPtr(Recycler * ptr) : AutoPtr<Recycler>(ptr) {}
     ~AutoRecyclerPtr()
     {
-#if ENABLE_CONCURRENT_GC
         if (ptr != nullptr)
         {
             ptr->ShutdownThread();
         }
-#endif
     }
 };
 
@@ -647,13 +645,11 @@ Recycler* ThreadContext::EnsureRecycler()
 
         try
         {
-#ifdef RECYCLER_WRITE_BARRIER
 #ifdef TARGET_64
             if (!RecyclerWriteBarrierManager::OnThreadInit())
             {
                 Js::Throw::OutOfMemory();
             }
-#endif
 #endif
 
             this->expirableObjectList = Anew(&this->threadAlloc, ExpirableObjectList, &this->threadAlloc);
@@ -1312,9 +1308,7 @@ ThreadContext::EnterScriptStart(Js::ScriptEntryExitRecord * record, bool doClean
         if (doCleanup)
         {
             recycler->EnterIdleDecommit();
-#if ENABLE_CONCURRENT_GC
             recycler->FinishConcurrent<FinishConcurrentOnEnterScript>();
-#endif
             if (threadServiceWrapper == NULL)
             {
                 // Reschedule the next collection at the start of the script.

@@ -178,8 +178,8 @@ namespace Js
         static int32_t SerializeToBuffer(ScriptContext * scriptContext, ArenaAllocator * alloc, uint32_t sourceByteLength, LPCUTF8 utf8Source, FunctionBody * function, SRCINFO const* srcInfo, byte ** buffer, uint32_t * bufferBytes, uint32_t dwFlags = 0);
 
         // Deserialize a function body. The content of utf8Source must be the same as was originally passed to SerializeToBuffer
-        static int32_t DeserializeFromBuffer(ScriptContext * scriptContext, uint32_t scriptFlags, LPCUTF8 utf8Source, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, Field(FunctionBody*)* function, uint sourceIndex = Js::Constants::InvalidSourceIndex);
-        static int32_t DeserializeFromBuffer(ScriptContext * scriptContext, uint32_t scriptFlags, ISourceHolder* sourceHolder, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, Field(FunctionBody*)* function, uint sourceIndex = Js::Constants::InvalidSourceIndex);
+        static int32_t DeserializeFromBuffer(ScriptContext * scriptContext, uint32_t scriptFlags, LPCUTF8 utf8Source, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, typename WriteBarrierFieldTypeTraits<FunctionBody*>::Type* function, uint sourceIndex = Js::Constants::InvalidSourceIndex);
+        static int32_t DeserializeFromBuffer(ScriptContext * scriptContext, uint32_t scriptFlags, ISourceHolder* sourceHolder, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, typename WriteBarrierFieldTypeTraits<FunctionBody*>::Type* function, uint sourceIndex = Js::Constants::InvalidSourceIndex);
 
         static FunctionBody* DeserializeFunction(ScriptContext* scriptContext, DeferDeserializeFunctionInfo* deferredFunction);
 
@@ -194,6 +194,6 @@ namespace Js
         static void ReadSourceInfo(const DeferDeserializeFunctionInfo* deferredFunction, int& lineNumber, int& columnNumber, bool& m_isEval, bool& m_isDynamicFunction);
 
     private:
-        static int32_t DeserializeFromBufferInternal(ScriptContext * scriptContext, uint32_t scriptFlags, LPCUTF8 utf8Source, ISourceHolder* sourceHolder, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, Field(FunctionBody*)* function, uint sourceIndex = Js::Constants::InvalidSourceIndex);
+        static int32_t DeserializeFromBufferInternal(ScriptContext * scriptContext, uint32_t scriptFlags, LPCUTF8 utf8Source, ISourceHolder* sourceHolder, SRCINFO const * srcInfo, byte * buffer, NativeModule *nativeModule, typename WriteBarrierFieldTypeTraits<FunctionBody*>::Type* function, uint sourceIndex = Js::Constants::InvalidSourceIndex);
     };
 }

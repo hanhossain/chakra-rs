@@ -12,24 +12,24 @@ union ObjTypeSpecFldInfoFlags
 {
     struct
     {
-        Field(bool) falseReferencePreventionBit : 1;
-        Field(bool) isPolymorphic : 1;
-        Field(bool) isRootObjectNonConfigurableField : 1;
-        Field(bool) isRootObjectNonConfigurableFieldLoad : 1;
-        Field(bool) usesAuxSlot : 1;
-        Field(bool) isLocal : 1;
-        Field(bool) isLoadedFromProto : 1;
-        Field(bool) usesAccessor : 1;
-        Field(bool) hasFixedValue : 1;
-        Field(bool) keepFieldValue : 1;
-        Field(bool) isBeingStored : 1;
-        Field(bool) isBeingAdded : 1;
-        Field(bool) doesntHaveEquivalence : 1;
-        Field(bool) isBuiltIn : 1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type falseReferencePreventionBit : 1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isPolymorphic : 1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isRootObjectNonConfigurableField : 1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isRootObjectNonConfigurableFieldLoad : 1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type usesAuxSlot : 1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isLocal : 1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isLoadedFromProto : 1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type usesAccessor : 1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type hasFixedValue : 1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type keepFieldValue : 1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isBeingStored : 1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isBeingAdded : 1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type doesntHaveEquivalence : 1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isBuiltIn : 1;
     };
     struct
     {
-        Field(uint16) flags;
+        typename WriteBarrierFieldTypeTraits<uint16>::Type flags;
     };
     ObjTypeSpecFldInfoFlags(uint16 flags) : flags(flags) { }
 };
@@ -44,7 +44,7 @@ public:
     bool GetUsesAuxSlot() const;
     ObjTypeSpecPolymorphicInfoIDL * GetRaw();
 private:
-    Field(ObjTypeSpecPolymorphicInfoIDL) m_data;
+    typename WriteBarrierFieldTypeTraits<ObjTypeSpecPolymorphicInfoIDL>::Type m_data;
 };
 
 class ObjTypeSpecFldInfo
@@ -243,15 +243,15 @@ private:
     ObjTypeSpecFldInfoFlags GetFlags() const;
     ObjTypeSpecFldInfoFlags * GetFlagsPtr();
 
-    Field(ObjTypeSpecFldIDL) m_data;
+    typename WriteBarrierFieldTypeTraits<ObjTypeSpecFldIDL>::Type m_data;
 };
 
 class ObjTypeSpecFldInfoArray
 {
 private:
-    Field(Field(ObjTypeSpecFldInfo*)*) infoArray;
+    typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<ObjTypeSpecFldInfo*>::Type*>::Type infoArray;
 #if DBG
-    Field(uint) infoCount;
+    typename WriteBarrierFieldTypeTraits<uint>::Type infoCount;
 #endif
 public:
     ObjTypeSpecFldInfoArray();
@@ -262,7 +262,7 @@ private:
 public:
     ObjTypeSpecFldInfo* GetInfo(Js::FunctionBody *const functionBody, const uint index) const;
     ObjTypeSpecFldInfo* GetInfo(const uint index) const;
-    Field(ObjTypeSpecFldInfo*)* GetInfoArray() const { return infoArray; }
+    typename WriteBarrierFieldTypeTraits<ObjTypeSpecFldInfo*>::Type* GetInfoArray() const { return infoArray; }
 
     void SetInfo(Recycler *const recycler, Js::FunctionBody *const functionBody,
         const uint index, ObjTypeSpecFldInfo* info);

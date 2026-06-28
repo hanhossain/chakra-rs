@@ -25,11 +25,9 @@ public:
         largePageHeapBlockList(nullptr),
 #endif
         pendingDisposeLargeBlockList(nullptr)
-#if ENABLE_CONCURRENT_GC
         , pendingSweepLargeBlockList(nullptr)
 #if ENABLE_PARTIAL_GC
         , partialSweptLargeBlockList(nullptr)
-#endif
 #endif
     {
     }
@@ -71,18 +69,14 @@ public:
     void VerifyLargeHeapBlockCount();
 
     size_t Rescan(RescanFlags flags);
-#if ENABLE_PARTIAL_GC || ENABLE_CONCURRENT_GC
     void SweepPendingObjects(RecyclerSweep& recyclerSweep);
 #if ENABLE_PARTIAL_GC
     void FinishPartialCollect(RecyclerSweep * recyclerSweep);
 #endif
 
-#if ENABLE_CONCURRENT_GC
     void ConcurrentTransferSweptObjects(RecyclerSweep& recyclerSweep);
 #if ENABLE_PARTIAL_GC
     void ConcurrentPartialTransferSweptObjects(RecyclerSweep& recyclerSweep);
-#endif
-#endif
 #endif
 
 #if DBG || defined(RECYCLER_SLOW_CHECK_ENABLED)
@@ -120,12 +114,10 @@ private:
     LargeHeapBlock * largePageHeapBlockList;
 #endif
     LargeHeapBlock * pendingDisposeLargeBlockList;
-#if ENABLE_CONCURRENT_GC
     LargeHeapBlock * pendingSweepLargeBlockList;
 #if ENABLE_PARTIAL_GC
     // Used for concurrent-partial GC
     LargeHeapBlock * partialSweptLargeBlockList;
-#endif
 #endif
     bool supportFreeList;
     LargeHeapBlockFreeList* freeList;

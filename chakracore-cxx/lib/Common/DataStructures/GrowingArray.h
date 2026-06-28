@@ -19,7 +19,7 @@ namespace JsUtil
     class GrowingArray
     {
     public:
-        typedef Field(ValueType, TAllocator) TValue;
+        typedef typename WriteBarrierFieldTypeTraits<ValueType, TAllocator>::Type TValue;
         typedef typename AllocatorInfo<TAllocator, TValue>::AllocatorType AllocatorType;
         static GrowingArray* Create(uint32_t _length);
 
@@ -86,10 +86,10 @@ namespace JsUtil
         }
 
     private:
-        Field(TValue*, TAllocator) buffer;
-        Field(uint32_t) count;
-        Field(uint32_t) length;
-        FieldNoBarrier(AllocatorType*) alloc;
+        typename WriteBarrierFieldTypeTraits<TValue*, TAllocator>::Type buffer;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type count;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type length;
+        typename WriteBarrierFieldTypeTraits<AllocatorType*, _no_write_barrier_policy, _no_write_barrier_policy>::Type alloc;
 
         void EnsureArray()
         {

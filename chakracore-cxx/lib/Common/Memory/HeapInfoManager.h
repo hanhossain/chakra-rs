@@ -48,29 +48,17 @@ public:
 
     void SweepSmallNonFinalizable(RecyclerSweepManager& recyclerSweepManager);
 
-#if ENABLE_PARTIAL_GC || ENABLE_CONCURRENT_GC
     void SweepPendingObjects(RecyclerSweepManager& recyclerSweepManager);
-#endif
-    
+
 #if ENABLE_PARTIAL_GC
     void SweepPartialReusePages(RecyclerSweepManager& recyclerSweepManager);
     void FinishPartialCollect(RecyclerSweepManager * recyclerSweepManager);
 #endif
-#if ENABLE_CONCURRENT_GC
     void PrepareSweep();
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    void StartAllocationsDuringConcurrentSweep();
-    bool DoTwoPassConcurrentSweepPreCheck();
-    void FinishSweepPrep(RecyclerSweepManager& recyclerSweep);
-    void FinishConcurrentSweepPass1(RecyclerSweepManager& recyclerSweep);
-    void FinishConcurrentSweep();
-#endif
-
     void ConcurrentTransferSweptObjects(RecyclerSweepManager& recyclerSweepManager);
 
 #if ENABLE_PARTIAL_GC
     void ConcurrentPartialTransferSweptObjects(RecyclerSweepManager& recyclerSweepManager);
-#endif
 #endif
 
     void DisposeObjects();
@@ -120,9 +108,7 @@ public:
     bool IsRecyclerPageAllocator(PageAllocator * pageAllocator);
     bool IsRecyclerLeafPageAllocator(PageAllocator * pageAllocator);
     bool IsRecyclerLargeBlockPageAllocator(PageAllocator * pageAllocator);
-#ifdef RECYCLER_WRITE_BARRIER
     bool IsRecyclerWithBarrierPageAllocator(PageAllocator * pageAllocator);
-#endif
     size_t GetUsedBytes();
     size_t GetReservedBytes();
     size_t GetCommittedBytes();

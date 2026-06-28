@@ -31,5 +31,5 @@ public:
     void SetRegistrationHandle(void * registrationHandle);
     void ClearRegistrationHandle();
 private:
-    Field(intptr_t) registrationHandle;
+    typename WriteBarrierFieldTypeTraits<intptr_t>::Type registrationHandle;
 };

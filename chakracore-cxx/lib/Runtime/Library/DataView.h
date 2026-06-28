@@ -198,8 +198,8 @@ namespace Js
         template<> void SetValue<double>(Var offset, double value, const char16_t *funcName, BOOL isLittleEndian /* = FALSE */);
 #endif
 
-        Field(uint32_t) byteOffset;
-        Field(uint8_t*) buffer;   // beginning of buffer
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type byteOffset;
+        typename WriteBarrierFieldTypeTraits<uint8_t*>::Type buffer;   // beginning of buffer
 
     };
 

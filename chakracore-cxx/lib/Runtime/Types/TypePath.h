@@ -12,8 +12,8 @@ namespace Js
         static const int BUCKETS_DWORDS = PowerOf2_BUCKETS / sizeof(uint32_t);
         static const byte NIL = 0xff;
 
-        Field(uint32_t) bucketsData[BUCKETS_DWORDS];  // use DWORDs to enforce alignment
-        Field(byte) next[0];
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type bucketsData[BUCKETS_DWORDS];  // use DWORDs to enforce alignment
+        typename WriteBarrierFieldTypeTraits<byte>::Type next[0];
 
 public:
         TinyDictionary()
@@ -133,23 +133,23 @@ public:
             {}
 
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-            Field(BVStatic<MaxPathTypeHandlerLength>) fixedFields;
-            Field(BVStatic<MaxPathTypeHandlerLength>) usedFixedFields;
+            typename WriteBarrierFieldTypeTraits<BVStatic<MaxPathTypeHandlerLength>>::Type fixedFields;
+            typename WriteBarrierFieldTypeTraits<BVStatic<MaxPathTypeHandlerLength>>::Type usedFixedFields;
 
             // We sometimes set up PathTypeHandlers and associate TypePaths before we create any instances
             // that populate the corresponding slots, e.g. for object literals or constructors with only
             // this statements.  This field keeps track of the longest instance associated with the given
             // TypePath.
-            Field(uint8_t) maxInitializedLength;
+            typename WriteBarrierFieldTypeTraits<uint8_t>::Type maxInitializedLength;
 #endif
-            Field(uint8_t) pathLength;      // Entries in use
-            Field(uint8_t) pathSize;        // Allocated entries
+            typename WriteBarrierFieldTypeTraits<uint8_t>::Type pathLength;      // Entries in use
+            typename WriteBarrierFieldTypeTraits<uint8_t>::Type pathSize;        // Allocated entries
 
             // This map has to be at the end, because TinyDictionary has a zero size array
-            Field(TinyDictionary) map;
+            typename WriteBarrierFieldTypeTraits<TinyDictionary>::Type map;
 
             template<bool addNewId>
-            int Add(const PropertyRecord* propId, Field(const PropertyRecord *)* assignments)
+            int Add(const PropertyRecord* propId, typename WriteBarrierFieldTypeTraits<const PropertyRecord *>::Type* assignments)
             {
                 uint currentPathLength = this->pathLength;
                 Assert(currentPathLength < this->pathSize);
@@ -174,14 +174,14 @@ public:
                 return currentPathLength;
             }
         };
-        Field(Data*) data;
+        typename WriteBarrierFieldTypeTraits<Data*>::Type data;
 
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-        Field(RecyclerWeakReference<DynamicObject>*) singletonInstance;
+        typename WriteBarrierFieldTypeTraits<RecyclerWeakReference<DynamicObject>*>::Type singletonInstance;
 #endif
 
         // PropertyRecord assignments are allocated off the end of the structure
-        Field(const PropertyRecord *) assignments[];
+        typename WriteBarrierFieldTypeTraits<const PropertyRecord *>::Type assignments[];
 
 
         TypePath() :

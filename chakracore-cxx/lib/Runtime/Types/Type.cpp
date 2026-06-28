@@ -8,12 +8,12 @@ namespace Js
 {
     DEFINE_RECYCLER_TRACKER_WEAKREF_PERF_COUNTER(Type);
 
-    InternalString Type::ObjectTypeNameString    = InternalString(NO_WRITE_BARRIER_TAG(u"object"), 6);
-    InternalString Type::UndefinedTypeNameString = InternalString(NO_WRITE_BARRIER_TAG(u"undefined"), 9);
-    InternalString Type::BooleanTypeNameString   = InternalString(NO_WRITE_BARRIER_TAG(u"boolean"), 7);
-    InternalString Type::StringTypeNameString    = InternalString(NO_WRITE_BARRIER_TAG(u"string"), 6);
-    InternalString Type::NumberTypeNameString    = InternalString(NO_WRITE_BARRIER_TAG(u"number"), 6);
-    InternalString Type::FunctionTypeNameString  = InternalString(NO_WRITE_BARRIER_TAG(u"function"), 8);
+    InternalString Type::ObjectTypeNameString    = InternalString(u"object", _no_write_barrier_tag(), 6);
+    InternalString Type::UndefinedTypeNameString = InternalString(u"undefined", _no_write_barrier_tag(), 9);
+    InternalString Type::BooleanTypeNameString   = InternalString(u"boolean", _no_write_barrier_tag(), 7);
+    InternalString Type::StringTypeNameString    = InternalString(u"string", _no_write_barrier_tag(), 6);
+    InternalString Type::NumberTypeNameString    = InternalString(u"number", _no_write_barrier_tag(), 6);
+    InternalString Type::FunctionTypeNameString  = InternalString(u"function", _no_write_barrier_tag(), 8);
 
     Type::Type(ScriptContext* scriptContext, TypeId typeId, RecyclableObject* prototype, JavascriptMethod entryPoint) :
         javascriptLibrary(scriptContext->GetLibrary()),

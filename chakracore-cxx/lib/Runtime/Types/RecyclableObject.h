@@ -244,7 +244,7 @@ namespace Js {
         void RecordAllocation(ScriptContext * scriptContext);
 #endif
     protected:
-        Field(Type *) type;
+        typename WriteBarrierFieldTypeTraits<Type *>::Type type;
         DEFINE_VTABLE_CTOR_NOBASE(RecyclableObject);
 
         virtual RecyclableObject* GetPrototypeSpecial();

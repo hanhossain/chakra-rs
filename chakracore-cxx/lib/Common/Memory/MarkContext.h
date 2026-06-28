@@ -41,9 +41,7 @@ public:
 #ifdef RECYCLER_VISITED_HOST
     bool AddPreciselyTracedObject(IRecyclerVisitedObject *obj);
 #endif
-#if ENABLE_CONCURRENT_GC
     bool AddTrackedObject(FinalizableObject * obj);
-#endif
 
     template <bool parallel, bool interior, bool doSpecialMark>
     void Mark(void * candidate, void * parentReference);

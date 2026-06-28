@@ -20,7 +20,7 @@ namespace Js
     public:
         WebAssemblyEnvironment(WebAssemblyModule* module);
 
-        Field(Var)* GetStartPtr() const { return start; }
+        typename WriteBarrierFieldTypeTraits<Var>::Type* GetStartPtr() const { return start; }
 
         WasmScriptFunction* GetWasmFunction(uint32_t index) const;
         void SetWasmFunction(uint32_t index, WasmScriptFunction* func);
@@ -37,15 +37,15 @@ namespace Js
         uint32_t GetDataSegmentOffset(uint32_t index) const;
 
     private:
-        Field(WebAssemblyModule*) module;
-        Field(Field(Var)*) start;
-        Field(Field(Var)*) end;
+        typename WriteBarrierFieldTypeTraits<WebAssemblyModule*>::Type module;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<Var>::Type*>::Type start;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<Var>::Type*>::Type end;
         // Precalculated pointer from ptr using the offsets
-        Field(Field(Var)*) memory;
-        Field(Field(Var)*) imports;
-        Field(Field(Var)*) functions;
-        Field(Field(Var)*) table;
-        Field(Field(Var)*) globals;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<Var>::Type*>::Type memory;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<Var>::Type*>::Type imports;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<Var>::Type*>::Type functions;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<Var>::Type*>::Type table;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<Var>::Type*>::Type globals;
 
         uint32_t* elementSegmentOffsets;
         uint32_t* dataSegmentOffsets;
@@ -54,8 +54,8 @@ namespace Js
         ArenaAllocator m_alloc;
     private:
         template<typename T> void CheckPtrIsValid(intptr_t ptr) const;
-        template<typename T> T* GetVarElement(Field(Var)* ptr, uint32_t index, uint32_t maxCount) const;
-        template<typename T> void SetVarElement(Field(Var)* ptr, T* val, uint32_t index, uint32_t maxCount);
+        template<typename T> T* GetVarElement(typename WriteBarrierFieldTypeTraits<Var>::Type* ptr, uint32_t index, uint32_t maxCount) const;
+        template<typename T> void SetVarElement(typename WriteBarrierFieldTypeTraits<Var>::Type* ptr, T* val, uint32_t index, uint32_t maxCount);
         template<typename T> T GetGlobalInternal(uint32_t offset) const;
         template<typename T> void SetGlobalInternal(uint32_t offset, T val);
     };

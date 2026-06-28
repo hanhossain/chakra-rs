@@ -12,7 +12,7 @@ namespace Js
     class ThrowErrorObject : public RecyclableObject
     {
     private:
-        Field(JavascriptError*) m_error;
+        typename WriteBarrierFieldTypeTraits<JavascriptError*>::Type m_error;
 
     protected:
         ThrowErrorObject(StaticType* type, JavascriptError* error);

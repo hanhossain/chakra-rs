@@ -9,7 +9,7 @@ namespace Js
 class PropertyString : public JavascriptString
 {
 protected:
-    Field(PropertyRecordUsageCache) propertyRecordUsageCache;
+    typename WriteBarrierFieldTypeTraits<PropertyRecordUsageCache>::Type propertyRecordUsageCache;
 
     DEFINE_VTABLE_CTOR(PropertyString, JavascriptString);
 

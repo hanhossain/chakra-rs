@@ -511,7 +511,7 @@ namespace Js
     }
 
     template<typename T>
-    void SparseArraySegment<T>::ClearElements(__out_ecount(len) Field(T)* elements, uint32_t len)
+    void SparseArraySegment<T>::ClearElements(__out_ecount(len) typename WriteBarrierFieldTypeTraits<T>::Type* elements, uint32_t len)
     {
         T fill = SparseArraySegment<T>::GetMissingItem();
         for (uint i = 0; i < len; i++)

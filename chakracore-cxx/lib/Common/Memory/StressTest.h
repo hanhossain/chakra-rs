@@ -21,13 +21,13 @@ template<class T> T AlignPtr(T ptr, size_t align)
 struct TestObject
 {
     // Full object size
-    Field(size_t) size;
+    typename WriteBarrierFieldTypeTraits<size_t>::Type size;
 
     // Number of pointers to other objects this object potentially has
-    Field(int) pointerCount;
+    typename WriteBarrierFieldTypeTraits<int>::Type pointerCount;
 
     // Hash of part of the object's contents, used for corruption detection
-    Field(size_t) cookie;
+    typename WriteBarrierFieldTypeTraits<size_t>::Type cookie;
 
     TestObject(size_t _size, int _pointerCount);
     size_t CalculateCookie();

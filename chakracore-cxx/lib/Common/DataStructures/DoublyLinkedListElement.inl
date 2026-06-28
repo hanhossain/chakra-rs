@@ -28,7 +28,7 @@ namespace JsUtil
     template<class T, class TAllocator>
     template<class D>
     bool DoublyLinkedListElement<T, TAllocator>::Contains(
-        D *const element, Field(D *, TAllocator) const head)
+        D *const element, typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type const head)
     {
         TemplateParameter::SameOrDerivedFrom<D, T>();
         Assert(element);
@@ -48,7 +48,7 @@ namespace JsUtil
     template<class T, class TAllocator>
     template<class D>
     bool DoublyLinkedListElement<T, TAllocator>::ContainsSubsequence(
-        D *const first, D *const last, Field(D *, TAllocator) const head)
+        D *const first, D *const last, typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type const head)
     {
         TemplateParameter::SameOrDerivedFrom<D, T>();
         Assert(first);
@@ -73,7 +73,7 @@ namespace JsUtil
     template<class D>
     void DoublyLinkedListElement<T, TAllocator>::LinkToBeginning(
         D *const element,
-        Field(D *, TAllocator) *const head, Field(D *, TAllocator) *const tail)
+        typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const head, typename WriteBarrierFieldTypeTraits<D *, TAllocator>::Type *const tail)
     {
         TemplateParameter::SameOrDerivedFrom<D, T>();
         Assert(element);
@@ -101,7 +101,7 @@ namespace JsUtil
     template<class D>
     void DoublyLinkedListElement<T, TAllocator>::LinkToEnd(
         D *const element,
-        Field(D *, TAllocator) *const head, Field(D *, TAllocator) *const tail)
+        typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const head, typename WriteBarrierFieldTypeTraits<D *, TAllocator>::Type *const tail)
     {
         TemplateParameter::SameOrDerivedFrom<D, T>();
         Assert(element);
@@ -129,7 +129,7 @@ namespace JsUtil
     template<class D>
     void DoublyLinkedListElement<T, TAllocator>::LinkBefore(
         D *const element, D *const nextElement,
-        Field(D *, TAllocator) *const head, Field(D *, TAllocator) *const tail)
+        typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const head, typename WriteBarrierFieldTypeTraits<D *, TAllocator>::Type *const tail)
     {
         TemplateParameter::SameOrDerivedFrom<D, T>();
         Assert(element);
@@ -162,7 +162,7 @@ namespace JsUtil
     template<class D>
     void DoublyLinkedListElement<T, TAllocator>::LinkAfter(
         D *const element, D *const previousElement,
-        Field(D *, TAllocator) *const head, Field(D *, TAllocator) *const tail)
+        typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const head, typename WriteBarrierFieldTypeTraits<D *, TAllocator>::Type *const tail)
     {
         TemplateParameter::SameOrDerivedFrom<D, T>();
         Assert(element);
@@ -195,7 +195,7 @@ namespace JsUtil
     template<class D>
     void DoublyLinkedListElement<T, TAllocator>::UnlinkFromBeginning(
         D *const element,
-        Field(D *, TAllocator) *const head, Field(D *, TAllocator) *const tail)
+        typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const head, typename WriteBarrierFieldTypeTraits<D *, TAllocator>::Type *const tail)
     {
         TemplateParameter::SameOrDerivedFrom<D, T>();
         Assert(element);
@@ -226,7 +226,7 @@ namespace JsUtil
     template<class D>
     void DoublyLinkedListElement<T, TAllocator>::UnlinkFromEnd(
         D *const element,
-        Field(D *, TAllocator) *const head, Field(D *, TAllocator) *const tail)
+        typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const head, typename WriteBarrierFieldTypeTraits<D *, TAllocator>::Type *const tail)
     {
         TemplateParameter::SameOrDerivedFrom<D, T>();
         Assert(element);
@@ -257,7 +257,7 @@ namespace JsUtil
     template<class D>
     void DoublyLinkedListElement<T, TAllocator>::UnlinkPartial(
         D *const element,
-        Field(D *, TAllocator) *const head, Field(D *, TAllocator) *const tail)
+        typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const head, typename WriteBarrierFieldTypeTraits<D *, TAllocator>::Type *const tail)
     {
         TemplateParameter::SameOrDerivedFrom<D, T>();
         Assert(element);
@@ -294,7 +294,7 @@ namespace JsUtil
     template<class D>
     void DoublyLinkedListElement<T, TAllocator>::Unlink(
         D *const element,
-        Field(D *, TAllocator) *const head, Field(D *, TAllocator) *const tail)
+        typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const head, typename WriteBarrierFieldTypeTraits<D *, TAllocator>::Type *const tail)
     {
         UnlinkPartial(element, head, tail);
         element->previous = nullptr;
@@ -305,7 +305,7 @@ namespace JsUtil
     template<class D>
     void DoublyLinkedListElement<T, TAllocator>::MoveToBeginning(
         D *const element,
-        Field(D *, TAllocator) *const head, Field(D *, TAllocator) *const tail)
+        typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const head, typename WriteBarrierFieldTypeTraits<D *, TAllocator>::Type *const tail)
     {
         TemplateParameter::SameOrDerivedFrom<D, T>();
         Assert(element);
@@ -342,7 +342,7 @@ namespace JsUtil
     template<class D>
     void DoublyLinkedListElement<T, TAllocator>::UnlinkSubsequenceFromEnd(
         D *const first,
-        Field(D *, TAllocator) *const head, Field(D *, TAllocator) *const tail)
+        typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const head, typename WriteBarrierFieldTypeTraits<D *, TAllocator>::Type *const tail)
     {
         TemplateParameter::SameOrDerivedFrom<D, T>();
         Assert(first);
@@ -370,7 +370,7 @@ namespace JsUtil
     template<class D>
     void DoublyLinkedListElement<T, TAllocator>::UnlinkSubsequence(
         D *const first, D *const last,
-        Field(D *, TAllocator) *const head, Field(D *, TAllocator) *const tail)
+        typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const head, typename WriteBarrierFieldTypeTraits<D *, TAllocator>::Type *const tail)
     {
         TemplateParameter::SameOrDerivedFrom<D, T>();
         Assert(first);
@@ -407,7 +407,7 @@ namespace JsUtil
     template<class D>
     void DoublyLinkedListElement<T, TAllocator>::MoveSubsequenceToBeginning(
         D *const first, D *const last,
-        Field(D *, TAllocator) *const head, Field(D *, TAllocator) *const tail)
+        typename WriteBarrierFieldTypeTraits<D *,TAllocator>::Type *const head, typename WriteBarrierFieldTypeTraits<D *, TAllocator>::Type *const tail)
     {
         TemplateParameter::SameOrDerivedFrom<D, T>();
         Assert(first);

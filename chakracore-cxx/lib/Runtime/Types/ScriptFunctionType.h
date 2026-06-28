@@ -21,7 +21,7 @@ namespace Js
             JavascriptMethod entryPoint, ProxyEntryPointInfo * entryPointInfo, DynamicTypeHandler * typeHandler,
             bool isLocked, bool isShared);
 
-        Field(ProxyEntryPointInfo *) entryPointInfo;
+        typename WriteBarrierFieldTypeTraits<ProxyEntryPointInfo *>::Type entryPointInfo;
 
         friend class ScriptFunction;
         friend class JavascriptLibrary;

@@ -21,21 +21,7 @@ void ReportFatalException(
         DebugBreak();
     }
 
-#ifdef DISABLE_SEH
     TerminateProcess(GetCurrentProcess(), (uint32_t)DBG_TERMINATE_PROCESS);
-#else
-    void * addressToBlame = __builtin_return_address(0);
-    __try
-    {
-        size_t ExceptionInformation[2];
-        ExceptionInformation[0] = (size_t)reasonCode;
-        ExceptionInformation[1] = (size_t)context;
-        RaiseException(exceptionCode, EXCEPTION_NONCONTINUABLE, 2, (size_t*)ExceptionInformation);
-    }
-    __except(FatalExceptionFilter(GetExceptionInformation(), addressToBlame))
-    {
-    }
-#endif // DISABLE_SEH
 }
 
 // Disable optimization make sure all the frames are still available in Dr. Watson bug reports.
@@ -74,7 +60,7 @@ void FailedToBox_OOM_unrecoverable_error(
     ReportFatalException(context, E_UNEXPECTED, Fatal_FailedToBox_OUTOFMEMORY, scenario);
 }
 
-#if defined(RECYCLER_WRITE_BARRIER) && defined(TARGET_64)
+#if defined(TARGET_64)
 void X64WriteBarrier_OOM_unrecoverable_error()
 {
     int scenario = 3;

@@ -37,32 +37,24 @@ import "wtypes.idl";
 #define IDL_DEF(def)
 #endif
 
-#define IDL_PAD1(num) IDL_Field(byte) struct_pad_##num;
-#define IDL_PAD2(num) IDL_Field(short) struct_pad_##num;
-#define IDL_PAD4(num) IDL_Field(int) struct_pad_##num;
+#define IDL_PAD1(num) typename WriteBarrierFieldTypeTraits<byte>::Type struct_pad_##num;
+#define IDL_PAD2(num) typename WriteBarrierFieldTypeTraits<short>::Type struct_pad_##num;
+#define IDL_PAD4(num) typename WriteBarrierFieldTypeTraits<int>::Type struct_pad_##num;
 
 #if defined(TARGET_64)
-#define X64_PAD4(num) IDL_Field(int) struct_pad_##num;
+#define X64_PAD4(num) typename WriteBarrierFieldTypeTraits<int>::Type struct_pad_##num;
 #else
 #define X64_PAD4(num)
 #endif
 
 #if defined(TARGET_32)
-#define X86_PAD4(num) IDL_Field(int) struct_pad_##num;
+#define X86_PAD4(num) typename WriteBarrierFieldTypeTraits<int>::Type struct_pad_##num;
 #else
 #define X86_PAD4(num)
 #endif
 
 #ifndef __midl
 typedef unsigned char boolean;
-#endif
-
-#ifdef __midl
-#define IDL_Field(type)             type
-#define IDL_FieldNoBarrier(type)    type
-#else
-#define IDL_Field(type)             Field(type)
-#define IDL_FieldNoBarrier(type)    FieldNoBarrier(type)
 #endif
 
 #ifndef __JITTypes_h__
@@ -80,99 +72,99 @@ typedef IDL_DEF([ref]) PSCRIPTCONTEXT_HANDLE * PPSCRIPTCONTEXT_HANDLE;
 
 typedef struct TypeHandlerIDL
 {
-    IDL_Field(boolean) isObjectHeaderInlinedTypeHandler;
-    IDL_Field(unsigned char) flags;
+    typename WriteBarrierFieldTypeTraits<boolean>::Type isObjectHeaderInlinedTypeHandler;
+    typename WriteBarrierFieldTypeTraits<unsigned char>::Type flags;
 
-    IDL_Field(unsigned short) inlineSlotCapacity;
-    IDL_Field(unsigned short) offsetOfInlineSlots;
+    typename WriteBarrierFieldTypeTraits<unsigned short>::Type inlineSlotCapacity;
+    typename WriteBarrierFieldTypeTraits<unsigned short>::Type offsetOfInlineSlots;
     IDL_PAD2(0)
     X64_PAD4(1)
-    IDL_Field(int) slotCapacity;
+    typename WriteBarrierFieldTypeTraits<int>::Type slotCapacity;
 } TypeHandlerIDL;
 
 typedef struct TypeIDL
 {
-    IDL_Field(boolean) exists;
-    IDL_Field(unsigned char) flags;
-    IDL_Field(boolean) isShared;
+    typename WriteBarrierFieldTypeTraits<boolean>::Type exists;
+    typename WriteBarrierFieldTypeTraits<unsigned char>::Type flags;
+    typename WriteBarrierFieldTypeTraits<boolean>::Type isShared;
     IDL_PAD1(0)
-    IDL_Field(int) typeId;
+    typename WriteBarrierFieldTypeTraits<int>::Type typeId;
 
-    IDL_Field(CHAKRA_WB_PTR) libAddr;
-    IDL_Field(CHAKRA_WB_PTR) protoAddr;
-    IDL_Field(CHAKRA_PTR) entrypointAddr;
-    IDL_Field(CHAKRA_WB_PTR) propertyCacheAddr;
-    IDL_Field(CHAKRA_WB_PTR) addr;
+    typename WriteBarrierFieldTypeTraits<CHAKRA_WB_PTR>::Type libAddr;
+    typename WriteBarrierFieldTypeTraits<CHAKRA_WB_PTR>::Type protoAddr;
+    typename WriteBarrierFieldTypeTraits<CHAKRA_PTR>::Type entrypointAddr;
+    typename WriteBarrierFieldTypeTraits<CHAKRA_WB_PTR>::Type propertyCacheAddr;
+    typename WriteBarrierFieldTypeTraits<CHAKRA_WB_PTR>::Type addr;
 
-    IDL_Field(TypeHandlerIDL) handler;
+    typename WriteBarrierFieldTypeTraits<TypeHandlerIDL>::Type handler;
 } TypeIDL;
 
 typedef struct EquivalentTypeSetIDL
 {
-    IDL_Field(boolean) sortedAndDuplicatesRemoved;
+    typename WriteBarrierFieldTypeTraits<boolean>::Type sortedAndDuplicatesRemoved;
     IDL_PAD1(0)
-    IDL_Field(unsigned short) count;
+    typename WriteBarrierFieldTypeTraits<unsigned short>::Type count;
     X64_PAD4(1)
-    IDL_DEF([size_is(count)]) IDL_Field(TypeIDL *)* types;
+    IDL_DEF([size_is(count)]) typename WriteBarrierFieldTypeTraits<TypeIDL *>::Type* types;
 } EquivalentTypeSetIDL;
 
 typedef struct FixedFieldIDL
 {
-    IDL_Field(unsigned short) valueType;
-    IDL_Field(boolean) nextHasSameFixedField;
-    IDL_Field(boolean) isClassCtor;
-    IDL_Field(unsigned int) localFuncId;
-    IDL_Field(TypeIDL) type;
-    IDL_Field(CHAKRA_WB_PTR) fieldValue;
-    IDL_Field(CHAKRA_WB_PTR) funcInfoAddr;
-    IDL_Field(CHAKRA_WB_PTR) environmentAddr;
+    typename WriteBarrierFieldTypeTraits<unsigned short>::Type valueType;
+    typename WriteBarrierFieldTypeTraits<boolean>::Type nextHasSameFixedField;
+    typename WriteBarrierFieldTypeTraits<boolean>::Type isClassCtor;
+    typename WriteBarrierFieldTypeTraits<unsigned int>::Type localFuncId;
+    typename WriteBarrierFieldTypeTraits<TypeIDL>::Type type;
+    typename WriteBarrierFieldTypeTraits<CHAKRA_WB_PTR>::Type fieldValue;
+    typename WriteBarrierFieldTypeTraits<CHAKRA_WB_PTR>::Type funcInfoAddr;
+    typename WriteBarrierFieldTypeTraits<CHAKRA_WB_PTR>::Type environmentAddr;
 } FixedFieldIDL;
 
 typedef struct ObjTypeSpecPolymorphicInfoIDL
 {
-    IDL_Field(unsigned short) slotIndex;
-    IDL_Field(boolean) usesAuxSlot;
+    typename WriteBarrierFieldTypeTraits<unsigned short>::Type slotIndex;
+    typename WriteBarrierFieldTypeTraits<boolean>::Type usesAuxSlot;
     IDL_PAD1(0)
 } ObjTypeSpecPolymorphicInfoIDL;
 
 typedef struct JITTimeConstructorCacheIDL
 {
-    IDL_Field(boolean) skipNewScObject;
-    IDL_Field(boolean) ctorHasNoExplicitReturnValue;
-    IDL_Field(boolean) typeIsFinal;
-    IDL_Field(boolean) isUsed;
+    typename WriteBarrierFieldTypeTraits<boolean>::Type skipNewScObject;
+    typename WriteBarrierFieldTypeTraits<boolean>::Type ctorHasNoExplicitReturnValue;
+    typename WriteBarrierFieldTypeTraits<boolean>::Type typeIsFinal;
+    typename WriteBarrierFieldTypeTraits<boolean>::Type isUsed;
 
-    IDL_Field(short) inlineSlotCount;
+    typename WriteBarrierFieldTypeTraits<short>::Type inlineSlotCount;
 
     IDL_PAD2(0)
-    IDL_Field(int) slotCount;
+    typename WriteBarrierFieldTypeTraits<int>::Type slotCount;
 
     X64_PAD4(1)
-    IDL_Field(TypeIDL) type;
+    typename WriteBarrierFieldTypeTraits<TypeIDL>::Type type;
 
-    IDL_Field(CHAKRA_WB_PTR) runtimeCacheAddr;
-    IDL_Field(CHAKRA_WB_PTR) runtimeCacheGuardAddr;
-    IDL_Field(CHAKRA_PTR) guardedPropOps;
+    typename WriteBarrierFieldTypeTraits<CHAKRA_WB_PTR>::Type runtimeCacheAddr;
+    typename WriteBarrierFieldTypeTraits<CHAKRA_WB_PTR>::Type runtimeCacheGuardAddr;
+    typename WriteBarrierFieldTypeTraits<CHAKRA_PTR>::Type guardedPropOps;
 } JITTimeConstructorCacheIDL;
 
 typedef struct ObjTypeSpecFldIDL
 {
-    IDL_Field(unsigned short) flags;
-    IDL_Field(unsigned short) slotIndex;
-    IDL_Field(unsigned short) polymorphicInfoCount;
-    IDL_Field(unsigned short) fixedFieldCount;
-    IDL_Field(unsigned short) fixedFieldInfoArraySize; // 1 (when fixedFieldCount is 0) or fixedFieldCount
+    typename WriteBarrierFieldTypeTraits<unsigned short>::Type flags;
+    typename WriteBarrierFieldTypeTraits<unsigned short>::Type slotIndex;
+    typename WriteBarrierFieldTypeTraits<unsigned short>::Type polymorphicInfoCount;
+    typename WriteBarrierFieldTypeTraits<unsigned short>::Type fixedFieldCount;
+    typename WriteBarrierFieldTypeTraits<unsigned short>::Type fixedFieldInfoArraySize; // 1 (when fixedFieldCount is 0) or fixedFieldCount
     IDL_PAD2(0)
-    IDL_Field(int) propertyId;
-    IDL_Field(int) typeId;
-    IDL_Field(unsigned int) id;
-    IDL_Field(CHAKRA_WB_PTR) protoObjectAddr;
-    IDL_Field(CHAKRA_WB_PTR) propertyGuardValueAddr;
-    IDL_Field(EquivalentTypeSetIDL *) typeSet;
-    IDL_Field(TypeIDL *) initialType;
-    IDL_Field(JITTimeConstructorCacheIDL *) ctorCache;
-    IDL_DEF([size_is(fixedFieldInfoArraySize)]) IDL_Field(FixedFieldIDL *) fixedFieldInfoArray;
-    IDL_DEF([size_is(polymorphicInfoCount)]) IDL_Field(ObjTypeSpecPolymorphicInfoIDL *) polymorphicInfoArray;
+    typename WriteBarrierFieldTypeTraits<int>::Type propertyId;
+    typename WriteBarrierFieldTypeTraits<int>::Type typeId;
+    typename WriteBarrierFieldTypeTraits<unsigned int>::Type id;
+    typename WriteBarrierFieldTypeTraits<CHAKRA_WB_PTR>::Type protoObjectAddr;
+    typename WriteBarrierFieldTypeTraits<CHAKRA_WB_PTR>::Type propertyGuardValueAddr;
+    typename WriteBarrierFieldTypeTraits<EquivalentTypeSetIDL *>::Type typeSet;
+    typename WriteBarrierFieldTypeTraits<TypeIDL *>::Type initialType;
+    typename WriteBarrierFieldTypeTraits<JITTimeConstructorCacheIDL *>::Type ctorCache;
+    IDL_DEF([size_is(fixedFieldInfoArraySize)]) typename WriteBarrierFieldTypeTraits<FixedFieldIDL *>::Type fixedFieldInfoArray;
+    IDL_DEF([size_is(polymorphicInfoCount)]) typename WriteBarrierFieldTypeTraits<ObjTypeSpecPolymorphicInfoIDL *>::Type polymorphicInfoArray;
 } ObjTypeSpecFldIDL;
 
 typedef struct PinnedTypeRefsIDL
@@ -695,21 +687,21 @@ typedef struct FunctionJITTimeDataIDL
 
 typedef struct PolymorphicInlineCacheIDL
 {
-    IDL_Field(unsigned short) size;
+    typename WriteBarrierFieldTypeTraits<unsigned short>::Type size;
     IDL_PAD2(0)
     X64_PAD4(1)
-    IDL_Field(CHAKRA_WB_PTR) addr;
-    IDL_Field(CHAKRA_PTR) inlineCachesAddr;
+    typename WriteBarrierFieldTypeTraits<CHAKRA_WB_PTR>::Type addr;
+    typename WriteBarrierFieldTypeTraits<CHAKRA_PTR>::Type inlineCachesAddr;
 } PolymorphicInlineCacheIDL;
 
 typedef struct PolymorphicInlineCacheInfoIDL
 {
-    IDL_Field(unsigned int) polymorphicInlineCacheCount;
-    IDL_Field(unsigned int) bogus1;
-    IDL_DEF([size_is(polymorphicInlineCacheCount)]) IDL_Field(byte *) polymorphicCacheUtilizationArray;
-    IDL_DEF([size_is(polymorphicInlineCacheCount)]) IDL_Field(PolymorphicInlineCacheIDL *) polymorphicInlineCaches;
+    typename WriteBarrierFieldTypeTraits<unsigned int>::Type polymorphicInlineCacheCount;
+    typename WriteBarrierFieldTypeTraits<unsigned int>::Type bogus1;
+    IDL_DEF([size_is(polymorphicInlineCacheCount)]) typename WriteBarrierFieldTypeTraits<byte *>::Type polymorphicCacheUtilizationArray;
+    IDL_DEF([size_is(polymorphicInlineCacheCount)]) typename WriteBarrierFieldTypeTraits<PolymorphicInlineCacheIDL *>::Type polymorphicInlineCaches;
 
-    IDL_Field(CHAKRA_WB_PTR) functionBodyAddr;
+    typename WriteBarrierFieldTypeTraits<CHAKRA_WB_PTR>::Type functionBodyAddr;
 } PolymorphicInlineCacheInfoIDL;
 
 // CodeGenWorkItem fields, read only in JIT

@@ -10,7 +10,7 @@ namespace Js
     class GlobalObject : public RootObjectBase
     {
     public:
-        Field(JavascriptLibrary*) library;
+        typename WriteBarrierFieldTypeTraits<JavascriptLibrary*>::Type library;
     private:
         DEFINE_VTABLE_CTOR(GlobalObject, RootObjectBase);
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(GlobalObject);
@@ -115,7 +115,7 @@ namespace Js
 #endif /* IR_VIEWER */
 
         typedef ScriptFunction* (*EvalHelperType)(ScriptContext* scriptContext, const char16_t *source, int sourceLength, ModuleID moduleID, uint32_t grfscr, LPCOLESTR pszTitle, BOOL registerDocument, BOOL isIndirect, BOOL strictMode);
-        FieldNoBarrier(EvalHelperType) EvalHelper;
+        typename WriteBarrierFieldTypeTraits<EvalHelperType, _no_write_barrier_policy, _no_write_barrier_policy>::Type EvalHelper;
 
         static Var EntryEvalHelper(ScriptContext* scriptContext, RecyclableObject* function, Arguments& args);
         static Var VEval(JavascriptLibrary* library, FrameDisplay* environment, ModuleID moduleID, bool isStrictMode, bool isIndirect,
@@ -166,11 +166,11 @@ namespace Js
         static BOOL MatchPatternHelper(JavascriptString *propertyName, JavascriptString *pattern, ScriptContext *scriptContext);
 
     private:
-        Field(RecyclableObject*) directHostObject;
-        Field(RecyclableObject*) secureDirectHostObject;
+        typename WriteBarrierFieldTypeTraits<RecyclableObject*>::Type directHostObject;
+        typename WriteBarrierFieldTypeTraits<RecyclableObject*>::Type secureDirectHostObject;
 
         typedef JsUtil::BaseHashSet<PropertyId, Recycler, PowerOf2SizePolicy> ReservedPropertiesHashSet;
-        Field(ReservedPropertiesHashSet *) reservedProperties;
+        typename WriteBarrierFieldTypeTraits<ReservedPropertiesHashSet *>::Type reservedProperties;
 
 #if ENABLE_TTD
     public:

@@ -9,9 +9,9 @@ namespace Js
     class JavascriptListIterator : public DynamicObject
     {
     private:
-        Field(ListForListIterator*) listForIterator;
-        Field(uint) index;
-        Field(uint) count;
+        typename WriteBarrierFieldTypeTraits<ListForListIterator*>::Type listForIterator;
+        typename WriteBarrierFieldTypeTraits<uint>::Type index;
+        typename WriteBarrierFieldTypeTraits<uint>::Type count;
 
     protected:
         DEFINE_VTABLE_CTOR(JavascriptListIterator, DynamicObject);

@@ -75,7 +75,7 @@ HeapBlockMap32::Mark(void * candidate, MarkContext * markContext)
         return;
     }
 
-#if DBG && GLOBAL_ENABLE_WRITE_BARRIER
+#if DBG
     if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && CONFIG_FLAG(VerifyBarrierBit))
     {
         Recycler::WBVerifyBitIsSet((char*)markContext->parentRef, (char*)candidate);
@@ -100,9 +100,7 @@ HeapBlockMap32::Mark(void * candidate, MarkContext * markContext)
         break;
 
     case HeapBlock::HeapBlockType::SmallNormalBlockType:
-#ifdef RECYCLER_WRITE_BARRIER
     case HeapBlock::HeapBlockType::SmallNormalBlockWithBarrierType:
-#endif
         {
             byte bucketIndex = chunk->blockInfo[id2].bucketIndex;
 
@@ -119,9 +117,7 @@ HeapBlockMap32::Mark(void * candidate, MarkContext * markContext)
         }
         break;
     case HeapBlock::HeapBlockType::MediumNormalBlockType:
-#ifdef RECYCLER_WRITE_BARRIER
     case HeapBlock::HeapBlockType::MediumNormalBlockWithBarrierType:
-#endif
         {
             byte bucketIndex = chunk->blockInfo[id2].bucketIndex;
             // See if it's an invalid offset using the invalid bit vector and if so, do nothing.
@@ -137,9 +133,7 @@ HeapBlockMap32::Mark(void * candidate, MarkContext * markContext)
         }
         break;
     case HeapBlock::HeapBlockType::SmallFinalizableBlockType:
-#ifdef RECYCLER_WRITE_BARRIER
     case HeapBlock::HeapBlockType::SmallFinalizableBlockWithBarrierType:
-#endif
         ((SmallFinalizableHeapBlock*)chunk->map[id2])->ProcessMarkedObject<doSpecialMark>(candidate, markContext);
         break;
 #ifdef RECYCLER_VISITED_HOST
@@ -156,9 +150,7 @@ HeapBlockMap32::Mark(void * candidate, MarkContext * markContext)
         break;
 #endif
     case HeapBlock::HeapBlockType::MediumFinalizableBlockType:
-#ifdef RECYCLER_WRITE_BARRIER
     case HeapBlock::HeapBlockType::MediumFinalizableBlockWithBarrierType:
-#endif
         ((MediumFinalizableHeapBlock*)chunk->map[id2])->ProcessMarkedObject<doSpecialMark>(candidate, markContext);
         break;
 #ifdef RECYCLER_VISITED_HOST
@@ -205,9 +197,7 @@ HeapBlockMap32::OnSpecialMark(L2MapChunk * chunk, void * candidate)
     switch (blockType)
     {
     case HeapBlock::HeapBlockType::SmallFinalizableBlockType:
-#ifdef RECYCLER_WRITE_BARRIER
     case HeapBlock::HeapBlockType::SmallFinalizableBlockWithBarrierType:
-#endif
     {
         SmallFinalizableHeapBlock *smallBlock = (SmallFinalizableHeapBlock*)chunk->map[id2];
         success = smallBlock->TryGetAttributes(candidate, &attributes);
@@ -215,9 +205,7 @@ HeapBlockMap32::OnSpecialMark(L2MapChunk * chunk, void * candidate)
     }
 
     case HeapBlock::HeapBlockType::MediumFinalizableBlockType:
-#ifdef RECYCLER_WRITE_BARRIER
     case HeapBlock::HeapBlockType::MediumFinalizableBlockWithBarrierType:
-#endif
     {
         MediumFinalizableHeapBlock *mediumBlock = (MediumFinalizableHeapBlock*)chunk->map[id2];
         success = mediumBlock->TryGetAttributes(candidate, &attributes);
@@ -336,9 +324,7 @@ HeapBlockMap32::MarkInterior(void * candidate, MarkContext * markContext)
         }
         break;
     case HeapBlock::HeapBlockType::SmallNormalBlockType:
-#ifdef RECYCLER_WRITE_BARRIER
     case HeapBlock::HeapBlockType::SmallNormalBlockWithBarrierType:
-#endif
         {
             byte bucketIndex = chunk->blockInfo[id2].bucketIndex;
             uint objectSize = HeapInfo::GetObjectSizeForBucketIndex<SmallAllocationBlockAttributes>(bucketIndex);
@@ -367,9 +353,7 @@ HeapBlockMap32::MarkInterior(void * candidate, MarkContext * markContext)
         }
         break;
     case HeapBlock::HeapBlockType::MediumNormalBlockType:
-#ifdef RECYCLER_WRITE_BARRIER
     case HeapBlock::HeapBlockType::MediumNormalBlockWithBarrierType:
-#endif
         {
             byte bucketIndex = chunk->blockInfo[id2].bucketIndex;
             uint objectSize = HeapInfo::GetObjectSizeForBucketIndex<MediumAllocationBlockAttributes>(bucketIndex);
@@ -387,9 +371,7 @@ HeapBlockMap32::MarkInterior(void * candidate, MarkContext * markContext)
         }
         break;
     case HeapBlock::HeapBlockType::SmallFinalizableBlockType:
-#ifdef RECYCLER_WRITE_BARRIER
     case HeapBlock::HeapBlockType::SmallFinalizableBlockWithBarrierType:
-#endif
         {
             void * realCandidate = ((SmallFinalizableHeapBlock*)chunk->map[id2])->GetRealAddressFromInterior(candidate);
             if (MarkInteriorInternal<interlocked, false>(markContext, chunk, candidate, realCandidate))
@@ -401,9 +383,7 @@ HeapBlockMap32::MarkInterior(void * candidate, MarkContext * markContext)
         }
         break;
     case HeapBlock::HeapBlockType::MediumFinalizableBlockType:
-#ifdef RECYCLER_WRITE_BARRIER
     case HeapBlock::HeapBlockType::MediumFinalizableBlockWithBarrierType:
-#endif
         {
             void * realCandidate = ((MediumFinalizableHeapBlock*)chunk->map[id2])->GetRealAddressFromInterior(candidate);
             if (MarkInteriorInternal<interlocked, false>(markContext, chunk, candidate, realCandidate))

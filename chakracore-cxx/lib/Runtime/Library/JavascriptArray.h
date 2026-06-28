@@ -24,10 +24,10 @@ namespace Js
         // Introduction to Algorithms by Corman, Leiserson, and Rivest.
 
     protected:
-        Field(uint32_t*)              keys;           // keys[i] == segments[i]->left
-        Field(SparseArraySegmentBase**) segments;   // Length of segmentCount. Allocated with Leaf, no need to annotate inner pointer
-        Field(SegmentBTree*)        children;       // Length of segmentCount+1.
-        Field(uint32_t)               segmentCount;   // number of sparseArray segments in the Node
+        typename WriteBarrierFieldTypeTraits<uint32_t*>::Type              keys;           // keys[i] == segments[i]->left
+        typename WriteBarrierFieldTypeTraits<SparseArraySegmentBase**>::Type segments;   // Length of segmentCount. Allocated with Leaf, no need to annotate inner pointer
+        typename WriteBarrierFieldTypeTraits<SegmentBTree*>::Type        children;       // Length of segmentCount+1.
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type               segmentCount;   // number of sparseArray segments in the Node
 
     public:
         static const uint MinDegree = 20; // Degree is the minimum branching factor. (If non-root, and non-leaf.)
@@ -84,7 +84,7 @@ namespace Js
         void Add(Recycler* recycler, SparseArraySegmentBase* newSeg);
         void Find(uint itemIndex, SparseArraySegmentBase*& prevOrMatch, SparseArraySegmentBase*& matchOrNext);
 
-        Field(SparseArraySegmentBase *) lastUsedSegment;
+        typename WriteBarrierFieldTypeTraits<SparseArraySegmentBase *>::Type lastUsedSegment;
     };
 
     enum ConcatSpreadableState
@@ -109,15 +109,15 @@ namespace Js
         DEFINE_VTABLE_CTOR(JavascriptArray, ArrayObject);
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptArray);
     protected:
-        Field(SparseArraySegmentBase*) head;
+        typename WriteBarrierFieldTypeTraits<SparseArraySegmentBase*>::Type head;
         union SegmentUnionType
         {
-            Field(SparseArraySegmentBase*) lastUsedSegment;
-            Field(SegmentBTreeRoot*) segmentBTreeRoot;
+            typename WriteBarrierFieldTypeTraits<SparseArraySegmentBase*>::Type lastUsedSegment;
+            typename WriteBarrierFieldTypeTraits<SegmentBTreeRoot*>::Type segmentBTreeRoot;
 
             SegmentUnionType() {}
         };
-        Field(SegmentUnionType) segmentUnion;
+        typename WriteBarrierFieldTypeTraits<SegmentUnionType>::Type segmentUnion;
     public:
         typedef Var TElement;
 
@@ -192,7 +192,7 @@ namespace Js
 #if ENABLE_PROFILE_INFO
         template<typename T> inline void DirectProfiledSetItemInHeadSegmentAt(const uint32_t offset, const T newValue, StElemInfo *const stElemInfo);
 #endif
-        template<typename T> static void CopyValueToSegmentBuferNoCheck(Field(T)* buffer, uint32_t length, T value);
+        template<typename T> static void CopyValueToSegmentBuferNoCheck(typename WriteBarrierFieldTypeTraits<T>::Type* buffer, uint32_t length, T value);
         template<typename T> void DirectSetItem_Full(uint32_t itemIndex, T newValue);
         template<typename T> SparseArraySegment<T>* PrepareSegmentForMemOp(uint32_t startIndex, uint32_t length);
         template<typename T> bool DirectSetItemAtRange(uint32_t startIndex, uint32_t length, T newValue);
@@ -558,7 +558,7 @@ namespace Js
         struct CompareVarsInfo
         {
             ScriptContext* scriptContext;
-            Field(RecyclableObject*) compFn; // User provided JS comparison method
+            typename WriteBarrierFieldTypeTraits<RecyclableObject*>::Type compFn; // User provided JS comparison method
             bool (*compareType)(JavascriptArray::CompareVarsInfo*, const void*, const void*); // C++ comparison method to wrap user provided method
         };
 
@@ -620,7 +620,7 @@ namespace Js
                                                     Var* insertArgs, uint32_t insertLen, ScriptContext *scriptContext);
         template<typename T>
         static void ArraySegmentSpliceHelper(
-            JavascriptArray *pnewArr, SparseArraySegment<T> *seg, Field(SparseArraySegment<T>*) *prev,
+            JavascriptArray *pnewArr, SparseArraySegment<T> *seg, typename WriteBarrierFieldTypeTraits<SparseArraySegment<T>*>::Type *prev,
             uint32_t start, uint32_t deleteLen, Var* insertArgs, uint32_t insertLen, Recycler *recycler);
         template<typename T>
         static RecyclableObject* ObjectSpliceHelper(RecyclableObject* pObj, T len, T start, T deleteLen,
@@ -1002,7 +1002,7 @@ namespace Js
         // For BoxStackInstance
         JavascriptNativeArray(JavascriptNativeArray * instance, bool deepCopy);
 
-        Field(RecyclerWeakReference<FunctionBody> *) weakRefToFuncBody;
+        typename WriteBarrierFieldTypeTraits<RecyclerWeakReference<FunctionBody> *>::Type weakRefToFuncBody;
 
     public:
         static bool Is(TypeId typeId);

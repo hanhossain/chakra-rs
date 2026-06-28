@@ -144,7 +144,7 @@ namespace UnifiedRegex
         return result;
     }
 
-    Field(RegExpTestCache*) RegexPattern::EnsureTestCache()
+    typename WriteBarrierFieldTypeTraits<RegExpTestCache*>::Type RegexPattern::EnsureTestCache()
     {
         if (this->testCache == nullptr)
         {

@@ -12,7 +12,7 @@ namespace Js
         DECLARE_RECYCLER_VERIFY_MARK_FRIEND()
 
     protected:
-        Field(DateImplementation) m_date;
+        typename WriteBarrierFieldTypeTraits<DateImplementation>::Type m_date;
 
         DEFINE_VTABLE_CTOR_MEMBER_INIT(JavascriptDate, DynamicObject, m_date);
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptDate);

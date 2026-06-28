@@ -24,9 +24,9 @@ namespace JsUtil
     private:
         struct MruListEntry : public DoublyLinkedListElement<MruListEntry, TAllocator>
         {
-            Field(TValue, TAllocator) value;
-            Field(TKey, TAllocator) key;
-            Field(int) dictionaryDataIndex;
+            typename WriteBarrierFieldTypeTraits<TValue, TAllocator>::Type value;
+            typename WriteBarrierFieldTypeTraits<TKey, TAllocator>::Type key;
+            typename WriteBarrierFieldTypeTraits<int>::Type dictionaryDataIndex;
 
             MruListEntry(const TKey &key, const TValue &value) : key(key), value(value), dictionaryDataIndex(0)
             {
@@ -39,8 +39,8 @@ namespace JsUtil
         class MruDictionaryData
         {
         private:
-            Field(MruListEntry *, TAllocator) entry;
-            Field(TValue, TAllocator) value;
+            typename WriteBarrierFieldTypeTraits<MruListEntry *, TAllocator>::Type entry;
+            typename WriteBarrierFieldTypeTraits<TValue, TAllocator>::Type value;
 
         public:
             MruDictionaryData() : entry(nullptr)
@@ -86,10 +86,10 @@ namespace JsUtil
         };
 
     private:
-        Field(const int) mruListCapacity;
-        Field(int) mruListCount;
+        typename WriteBarrierFieldTypeTraits<const int>::Type mruListCapacity;
+        typename WriteBarrierFieldTypeTraits<int>::Type mruListCount;
         typedef DoublyLinkedList<MruListEntry, TAllocator> EntriesType;
-        Field(EntriesType) entries;
+        typename WriteBarrierFieldTypeTraits<EntriesType>::Type entries;
 
         typedef
             BaseDictionary<

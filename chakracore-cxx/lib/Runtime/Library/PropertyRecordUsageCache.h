@@ -11,10 +11,10 @@ namespace Js
     class PropertyRecordUsageCache
     {
     private:
-        Field(const PropertyRecord*) propertyRecord;
-        Field(PolymorphicInlineCache*) ldElemInlineCache;
-        Field(PolymorphicInlineCache*) stElemInlineCache;
-        Field(int) hitRate;
+        typename WriteBarrierFieldTypeTraits<const PropertyRecord*>::Type propertyRecord;
+        typename WriteBarrierFieldTypeTraits<PolymorphicInlineCache*>::Type ldElemInlineCache;
+        typename WriteBarrierFieldTypeTraits<PolymorphicInlineCache*>::Type stElemInlineCache;
+        typename WriteBarrierFieldTypeTraits<int>::Type hitRate;
 
     public:
         PropertyRecordUsageCache();

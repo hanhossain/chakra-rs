@@ -39,13 +39,13 @@ public:
     uint32_t WriteSignatureToString(_Out_writes_(maxlen) char16_t *out, uint32_t maxlen);
     void Dump(uint32_t maxlen = 512);
 private:
-    Field(uint32_t) m_id;
-    Field(uint32_t) m_resultsCount = 0;
-    Field(Js::ArgSlot) m_paramSize;
-    Field(Js::ArgSlot) m_paramsCount;
-    Field(size_t) m_shortSig;
-    Field(Local*) m_params;
-    Field(Local*) m_results = nullptr;
+    typename WriteBarrierFieldTypeTraits<uint32_t>::Type m_id;
+    typename WriteBarrierFieldTypeTraits<uint32_t>::Type m_resultsCount = 0;
+    typename WriteBarrierFieldTypeTraits<Js::ArgSlot>::Type m_paramSize;
+    typename WriteBarrierFieldTypeTraits<Js::ArgSlot>::Type m_paramsCount;
+    typename WriteBarrierFieldTypeTraits<size_t>::Type m_shortSig;
+    typename WriteBarrierFieldTypeTraits<Local*>::Type m_params;
+    typename WriteBarrierFieldTypeTraits<Local*>::Type m_results = nullptr;
 };
 
 } // namespace Wasm

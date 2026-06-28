@@ -37,8 +37,8 @@ namespace Js
         static void InitializeFunctionTable(WebAssemblyModule * wasmModule, ScriptContext* ctx, WebAssemblyEnvironment* env);
         static void ValidateTableAndMemory(WebAssemblyModule * wasmModule, ScriptContext* ctx, WebAssemblyEnvironment* env);
 
-        Field(WebAssemblyModule *) m_module;
-        Field(Js::Var) m_exports;
+        typename WriteBarrierFieldTypeTraits<WebAssemblyModule *>::Type m_module;
+        typename WriteBarrierFieldTypeTraits<Js::Var>::Type m_exports;
     };
 
     template <> inline bool VarIsImpl<WebAssemblyInstance>(RecyclableObject* obj)

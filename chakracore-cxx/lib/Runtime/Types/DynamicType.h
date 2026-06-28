@@ -25,12 +25,12 @@ namespace Js
         friend class SimpleDictionaryTypeHandlerBase;
 
     private:
-        Field(DynamicTypeHandler *) typeHandler;
-        Field(bool) isLocked;
-        Field(bool) isShared;
-        Field(bool) hasNoEnumerableProperties;
+        typename WriteBarrierFieldTypeTraits<DynamicTypeHandler *>::Type typeHandler;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isLocked;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isShared;
+        typename WriteBarrierFieldTypeTraits<bool>::Type hasNoEnumerableProperties;
 #if DBG
-        Field(bool) isCachedForChangePrototype;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isCachedForChangePrototype;
 #endif
 
     protected:

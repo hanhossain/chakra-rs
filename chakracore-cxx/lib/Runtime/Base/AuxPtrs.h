@@ -19,9 +19,9 @@ namespace Js
     struct AuxPtrsFix
     {
         static const uint8_t MaxCount;
-        FieldWithBarrier(uint8_t) count;                 // always saving maxCount
-        typename FieldWithBarrier(FieldsEnum) type[_MaxCount];  // save instantiated pointer enum
-        FieldWithBarrier(void*) ptr[_MaxCount];        // save instantiated pointer address
+        WriteBarrierFieldTypeTraits<uint8_t>::Type count;                 // always saving maxCount
+        typename WriteBarrierFieldTypeTraits<FieldsEnum>::Type type[_MaxCount];  // save instantiated pointer enum
+        WriteBarrierFieldTypeTraits<void*>::Type ptr[_MaxCount];        // save instantiated pointer address
         AuxPtrsFix();
         AuxPtrsFix(AuxPtrsFix<FieldsEnum, 16>* ptr16); // called when promoting from AuxPtrs16 to AuxPtrs32
         void* Get(FieldsEnum e);
@@ -43,10 +43,10 @@ namespace Js
         typedef AuxPtrsFix<FieldsEnum, 16> AuxPtrs16;
         typedef AuxPtrsFix<FieldsEnum, 32> AuxPtrs32;
         typedef AuxPtrs<T, FieldsEnum> AuxPtrsT;
-        FieldWithBarrier(uint8_t) count;                                      // save instantiated pointers count
-        FieldWithBarrier(uint8_t) capacity;                                   // save number of pointers can be hold in current instance of AuxPtrs
-        FieldWithBarrier(uint8_t) offsets[static_cast<int>(FieldsEnum::Max)]; // save position of each instantiated pointers, if not instantiate, it's invalid
-        FieldWithBarrier(void*) ptrs[1];                                    // instantiated pointer addresses
+        WriteBarrierFieldTypeTraits<uint8_t>::Type count;                                      // save instantiated pointers count
+        WriteBarrierFieldTypeTraits<uint8_t>::Type capacity;                                   // save number of pointers can be hold in current instance of AuxPtrs
+        WriteBarrierFieldTypeTraits<uint8_t>::Type offsets[static_cast<int>(FieldsEnum::Max)]; // save position of each instantiated pointers, if not instantiate, it's invalid
+        WriteBarrierFieldTypeTraits<void*>::Type ptrs[1];                                    // instantiated pointer addresses
         AuxPtrs(uint8_t capacity, AuxPtrs32* ptr32);               // called when promoting from AuxPtrs32 to AuxPtrs
         AuxPtrs(uint8_t capacity, AuxPtrs* ptr);                   // called when expanding (i.e. promoting from AuxPtrs to bigger AuxPtrs)
         void* Get(FieldsEnum e);

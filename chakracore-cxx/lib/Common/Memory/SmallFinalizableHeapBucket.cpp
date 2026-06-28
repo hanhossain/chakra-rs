@@ -38,7 +38,7 @@ SmallFinalizableHeapBucketBaseT<TBlockType>::FinalizeAllObjects()
     FinalizeHeapBlockList(this->heapBlockList);
     FinalizeHeapBlockList(this->fullBlockList);
 
-#if ENABLE_PARTIAL_GC && ENABLE_CONCURRENT_GC
+#if ENABLE_PARTIAL_GC
     FinalizeHeapBlockList(this->partialSweptHeapBlockList);
 #endif
 }
@@ -244,12 +244,8 @@ namespace Memory
     template class SmallFinalizableHeapBucketBaseT<SmallRecyclerVisitedHostHeapBlock>;
     template class SmallFinalizableHeapBucketBaseT<MediumRecyclerVisitedHostHeapBlock>;
 #endif
-#ifdef RECYCLER_WRITE_BARRIER
     template class SmallFinalizableHeapBucketBaseT<SmallFinalizableWithBarrierHeapBlock>;
-#endif
 
     template class SmallFinalizableHeapBucketBaseT<MediumFinalizableHeapBlock>;
-#ifdef RECYCLER_WRITE_BARRIER
     template class SmallFinalizableHeapBucketBaseT<MediumFinalizableWithBarrierHeapBlock>;
-#endif
 }

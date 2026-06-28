@@ -10,8 +10,8 @@ namespace JsUtil
     class DoublyLinkedList
     {
     private:
-        Field(T *, TAllocator) head;
-        Field(T *, TAllocator) tail;
+        typename WriteBarrierFieldTypeTraits<T *, TAllocator>::Type head;
+        typename WriteBarrierFieldTypeTraits<T *, TAllocator>::Type tail;
 
     public:
         DoublyLinkedList();

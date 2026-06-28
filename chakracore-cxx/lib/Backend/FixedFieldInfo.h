@@ -23,5 +23,5 @@ public:
     JITType * GetType() const;
     FixedFieldIDL * GetRaw();
 private:
-    Field(FixedFieldIDL) m_data;
+    typename WriteBarrierFieldTypeTraits<FixedFieldIDL>::Type m_data;
 };

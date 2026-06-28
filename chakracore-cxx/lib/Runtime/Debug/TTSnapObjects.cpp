@@ -88,7 +88,7 @@ namespace TTD
                 TTDVar* cpyBase = snpObject->VarArray;
                 if(sHandler->InlineSlotCapacity != 0)
                 {
-                    Field(Js::Var) const* inlineSlots = dynObj->GetInlineSlots_TTD();
+                    typename WriteBarrierFieldTypeTraits<Js::Var>::Type const* inlineSlots = dynObj->GetInlineSlots_TTD();
 
                     //copy all the properties (if they all fit into the inline slots) otherwise just copy all the inline slot values
                     uint32_t inlineSlotCount = min(sHandler->MaxPropertyIndex, sHandler->InlineSlotCapacity);
@@ -936,10 +936,10 @@ namespace TTD
             Js::RecyclableObject* bFunction = inflator->LookupObject(snapBoundInfo->TargetFunction);
             Js::RecyclableObject* bThis = (snapBoundInfo->BoundThis != TTD_INVALID_PTR_ID) ? inflator->LookupObject(snapBoundInfo->BoundThis) : nullptr;
 
-            Field(Js::Var)* bArgs = nullptr;
+            typename WriteBarrierFieldTypeTraits<Js::Var>::Type* bArgs = nullptr;
             if(snapBoundInfo->ArgCount != 0)
             {
-                bArgs = RecyclerNewArray(ctx->GetRecycler(), Field(Js::Var), snapBoundInfo->ArgCount);
+                bArgs = RecyclerNewArray(ctx->GetRecycler(), typename WriteBarrierFieldTypeTraits<Js::Var>::Type, snapBoundInfo->ArgCount);
 
                 for(uint i = 0; i < snapBoundInfo->ArgCount; i++)
                 {
@@ -2257,10 +2257,10 @@ namespace TTD
 
             SnapGeneratorInfo* generatorInfo = SnapObjectGetAddtlInfoAs<SnapGeneratorInfo*, SnapObjectType::SnapGenerator>(snpObject);
 
-            Field(Js::Var)* argVals = nullptr;
+            typename WriteBarrierFieldTypeTraits<Js::Var>::Type* argVals = nullptr;
             if(generatorInfo->arguments_count > 0)
             {
-                argVals = RecyclerNewArray(ctx->GetRecycler(), Field(Js::Var), generatorInfo->arguments_count);
+                argVals = RecyclerNewArray(ctx->GetRecycler(), typename WriteBarrierFieldTypeTraits<Js::Var>::Type, generatorInfo->arguments_count);
                 for(Js::RegSlot i = 0; i < generatorInfo->arguments_count; i++)
                 {
                     argVals[i] = inflator->InflateTTDVar(generatorInfo->arguments_values[i]);
@@ -2269,7 +2269,7 @@ namespace TTD
 
             Js::CallInfo callInfo(static_cast<Js::CallFlags>(generatorInfo->arguments_callInfo_flags), generatorInfo->arguments_callInfo_count);
 
-            Js::Arguments arguments(callInfo, unsafe_write_barrier_cast<Js::Var*>(argVals));
+            Js::Arguments arguments(callInfo, (Js::Var*)argVals);
 
             // TODO: BUGBUG - figure out how to determine what the prototype was.  Just use GetNull() for now
             Js::RecyclableObject* prototype = ctx->GetLibrary()->GetNull();
@@ -2309,10 +2309,10 @@ namespace TTD
                 Js::InterpreterStackFrame* frame = Js::InterpreterStackFrame::CreateInterpreterStackFrameForGenerator(scriptFunction, executeFunction, generator, doProfile);
                 TTDAssert(generator->GetFrame() == frame, "unexpected frame mis-match");
 
-                Field(Js::Var)* frameSlotArray = nullptr;
+                typename WriteBarrierFieldTypeTraits<Js::Var>::Type* frameSlotArray = nullptr;
                 if (generatorInfo->frame_slotCount != 0)
                 {
-                    frameSlotArray = RecyclerNewArray(ctx->GetRecycler(), Field(Js::Var), generatorInfo->frame_slotCount);
+                    frameSlotArray = RecyclerNewArray(ctx->GetRecycler(), typename WriteBarrierFieldTypeTraits<Js::Var>::Type, generatorInfo->frame_slotCount);
 
                     for (Js::RegSlot i = 0; i < generatorInfo->frame_slotCount; i++)
                     {

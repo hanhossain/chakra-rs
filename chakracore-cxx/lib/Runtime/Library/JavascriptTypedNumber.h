@@ -10,7 +10,7 @@ namespace Js
     class JavascriptTypedNumber : public RecyclableObject
     {
     private:
-        Field(T) m_value;
+        typename WriteBarrierFieldTypeTraits<T>::Type m_value;
         inline JavascriptTypedNumber(T value, StaticType * type) : RecyclableObject(type), m_value(value)
         {
 #if DBG

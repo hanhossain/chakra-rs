@@ -9,9 +9,9 @@ namespace Js
 {
     class InternalString
     {
-        Field(charcount_t) m_charLength;
-        Field(unsigned char) m_offset;
-        Field(const char16_t*) m_content;
+        typename WriteBarrierFieldTypeTraits<charcount_t>::Type m_charLength;
+        typename WriteBarrierFieldTypeTraits<unsigned char>::Type m_offset;
+        typename WriteBarrierFieldTypeTraits<const char16_t*>::Type m_content;
 
     public:
         InternalString() : m_charLength(0), m_content(nullptr), m_offset(0) { };

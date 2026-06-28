@@ -42,13 +42,13 @@ namespace Js
 
         // PropertyTypesReserved (0x1) is always on so that the uint32_t formed with the following boolean doesn't look like
         // a pointer.
-        Field(PropertyTypes) propertyTypes;
-        Field(uint8_t) flags;
-        Field(uint16) offsetOfInlineSlots;
-        Field(int) slotCapacity;
-        Field(uint16) unusedBytes;             // This always has it's lowest bit set to avoid false references
-        Field(uint16) inlineSlotCapacity;
-        Field(bool) protoCachesWereInvalidated;
+        typename WriteBarrierFieldTypeTraits<PropertyTypes>::Type propertyTypes;
+        typename WriteBarrierFieldTypeTraits<uint8_t>::Type flags;
+        typename WriteBarrierFieldTypeTraits<uint16>::Type offsetOfInlineSlots;
+        typename WriteBarrierFieldTypeTraits<int>::Type slotCapacity;
+        typename WriteBarrierFieldTypeTraits<uint16>::Type unusedBytes;             // This always has it's lowest bit set to avoid false references
+        typename WriteBarrierFieldTypeTraits<uint16>::Type inlineSlotCapacity;
+        typename WriteBarrierFieldTypeTraits<bool>::Type protoCachesWereInvalidated;
 
     public:
         DEFINE_GETCPPNAME_ABSTRACT();

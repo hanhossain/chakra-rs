@@ -55,7 +55,7 @@ void Amd64StackWalkerOutOfContexts_unrecoverable_error(
 void FailedToBox_OOM_unrecoverable_error(
     size_t context);
 
-#if defined(RECYCLER_WRITE_BARRIER) && defined(TARGET_64)
+#if defined(TARGET_64)
 void X64WriteBarrier_OOM_unrecoverable_error();
 #endif
 
@@ -141,43 +141,6 @@ inline void OutOfMemoryAllocationPolicy_unrecoverable_error(uint8_t visibility)
         break;
     }
 }
-
-#ifndef DISABLE_SEH
-// RtlReportException is available on Vista and up, but we cannot use it for OOB release.
-// Use UnhandleExceptionFilter to let the default handler handles it.
-inline int32_t FatalExceptionFilter(
-    LPEXCEPTION_POINTERS lpep,
-    void * addressToBlame = nullptr)
-{
-    if (addressToBlame != nullptr)
-    {
-        lpep->ExceptionRecord->ExceptionAddress = addressToBlame;
-    }
-
-    int32_t rc = UnhandledExceptionFilter(lpep);
-
-    // re == EXCEPTION_EXECUTE_HANDLER means there is no debugger attached, let's terminate
-    // the process. Otherwise give control to the debugger.
-    // Note: in case when postmortem debugger is registered but no actual debugger attached,
-    //       rc will be 0 (and EXCEPTION_EXECUTE_HANDLER is 1), so it acts as if there is debugger attached.
-    if (rc == EXCEPTION_EXECUTE_HANDLER)
-    {
-        TerminateProcess(GetCurrentProcess(), (uint32_t)DBG_TERMINATE_PROCESS);
-    }
-    else
-    {
-        // However, if debugger was not attached for some reason, terminate the process.
-        if (!Abstractions::IsDebuggerPresent())
-        {
-            TerminateProcess(GetCurrentProcess(), (uint32_t)DBG_TERMINATE_PROCESS);
-        }
-        DebugBreak();
-    }
-
-    return EXCEPTION_CONTINUE_SEARCH;
-}
-#endif // DISABLE_SEH
-
 
 template<class Fn>
 static int32_t DebugApiWrapper(Fn fn)

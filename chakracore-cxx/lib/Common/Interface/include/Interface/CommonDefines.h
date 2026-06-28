@@ -108,42 +108,16 @@
 
 #define USE_FEWER_PAGES_PER_BLOCK 1
 
-#define ENABLE_CONCURRENT_GC 1
-#define ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP 0 // Needs ENABLE_CONCURRENT_GC to be enabled for this to be enabled.
-
 #define USE_VPM_TABLE 1
 
 
 // templatized code
 #define USE_STATIC_VPM 0
 
-
-#if ENABLE_CONCURRENT_GC
-// Write-barrier refers to a software write barrier implementation using a card table.
-// Write watch refers to a hardware backed write-watch feature supported by the Windows memory manager.
-// Both are used for detecting changes to memory for concurrent and partial GC.
-// RECYCLER_WRITE_BARRIER controls the former, RECYCLER_WRITE_WATCH controls the latter.
-// GLOBAL_ENABLE_WRITE_BARRIER controls the smart pointer wrapper at compile time, every Field annotation on the
-// recycler allocated class will take effect if GLOBAL_ENABLE_WRITE_BARRIER is 1, otherwise only the class declared
-// with FieldWithBarrier annotations use the WriteBarrierPtr<>, see WriteBarrierMacros.h and RecyclerPointers.h for detail
-#define RECYCLER_WRITE_BARRIER                      // Write Barrier support
-
-#ifdef RECYCLER_WRITE_BARRIER
-#if !GLOBAL_ENABLE_WRITE_BARRIER
-#define GLOBAL_ENABLE_WRITE_BARRIER 1
-#endif
-#endif
-
 #define ENABLE_PARTIAL_GC 1
 #define ENABLE_BACKGROUND_PAGE_ZEROING 1
 #define ENABLE_BACKGROUND_PAGE_FREEING 1
 #define ENABLE_RECYCLER_TYPE_TRACKING 1
-#else
-#define ENABLE_PARTIAL_GC 0
-#define ENABLE_BACKGROUND_PAGE_ZEROING 0
-#define ENABLE_BACKGROUND_PAGE_FREEING 0
-#define ENABLE_RECYCLER_TYPE_TRACKING 0
-#endif
 
 #if ENABLE_BACKGROUND_PAGE_ZEROING && !ENABLE_BACKGROUND_PAGE_FREEING
 #error "Background page zeroing can't be turned on if freeing pages in the background is disabled"
@@ -500,16 +474,10 @@
 #endif
 #endif
 
-#define DISABLE_SEH 1
-
 //----------------------------------------------------------------------------------------------------
 // Dependent flags
 //  - flags values that are dependent on other flags
 //----------------------------------------------------------------------------------------------------
-
-#if !ENABLE_CONCURRENT_GC
-#undef IDLE_DECOMMIT_ENABLED   // Currently idle decommit can only be enabled if concurrent gc is enabled
-#endif
 
 #ifdef BAILOUT_INJECTION
 #define ENABLE_PREJIT

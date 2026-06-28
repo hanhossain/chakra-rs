@@ -227,7 +227,7 @@ void CustomExternalWrapperObject::Dispose(bool isShutdown)
 void * CustomExternalWrapperObject::GetSlotData() const
 {
     return this->slotType == SlotType::External
-        ? unsafe_write_barrier_cast<void *>(this->u.slot)
+        ? (void *)this->u.slot
         : GetInlineSlots();
 }
 
@@ -910,11 +910,11 @@ BOOL CustomExternalWrapperObject::GetEnumerator(Js::JavascriptStaticEnumerator *
     struct WrapperOwnKeysEnumerator : public JavascriptEnumerator
     {
         typedef JsUtil::BaseHashSet<JsUtil::CharacterBuffer<char16_t>, Recycler> VisitedNamesHashSet;
-        Field(VisitedNamesHashSet*) visited;
-        Field(JavascriptArray*) trapResult;
-        Field(CustomExternalWrapperObject*) wrapper;
-        FieldNoBarrier(ScriptContext*) scriptContext;
-        Field(uint32_t) index;
+        typename WriteBarrierFieldTypeTraits<VisitedNamesHashSet*>::Type visited;
+        typename WriteBarrierFieldTypeTraits<JavascriptArray*>::Type trapResult;
+        typename WriteBarrierFieldTypeTraits<CustomExternalWrapperObject*>::Type wrapper;
+        typename WriteBarrierFieldTypeTraits<ScriptContext*, _no_write_barrier_policy, _no_write_barrier_policy>::Type scriptContext;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type index;
 
         DEFINE_VTABLE_CTOR_ABSTRACT(WrapperOwnKeysEnumerator, JavascriptEnumerator)
 

@@ -209,11 +209,11 @@ namespace Js
                     }
                     if (callerFunctionBody->DoStackScopeSlots() && interpreterFrame->IsClosureInitDone())
                     {
-                        Field(Var)* stackScopeSlots = (Field(Var)*)interpreterFrame->GetLocalClosure();
+                        typename WriteBarrierFieldTypeTraits<Var>::Type* stackScopeSlots = (typename WriteBarrierFieldTypeTraits<Var>::Type*)interpreterFrame->GetLocalClosure();
                         if (stackScopeSlots)
                         {
                             // Scope slot pointer may be null if bailout didn't restore it, which means we don't need it.
-                            Field(Var)* boxedScopeSlots = this->BoxScopeSlots(stackScopeSlots, static_cast<uint>(ScopeSlots(stackScopeSlots).GetCount()));
+                            typename WriteBarrierFieldTypeTraits<Var>::Type* boxedScopeSlots = this->BoxScopeSlots(stackScopeSlots, static_cast<uint>(ScopeSlots(stackScopeSlots).GetCount()));
                             interpreterFrame->SetLocalClosure(boxedScopeSlots);
                         }
                     }
@@ -284,7 +284,7 @@ namespace Js
                         }
                         if (callerFunctionBody->DoStackScopeSlots())
                         {
-                            Field(Var)* stackScopeSlots = (Field(Var)*)this->GetScopeSlotsFromNativeFrame(walker, callerFunctionBody);
+                            typename WriteBarrierFieldTypeTraits<Var>::Type* stackScopeSlots = (typename WriteBarrierFieldTypeTraits<Var>::Type*)this->GetScopeSlotsFromNativeFrame(walker, callerFunctionBody);
                             if (stackScopeSlots)
                             {
                                 // Scope slot pointer may be null if bailout didn't restore it, which means we don't need it.
@@ -336,7 +336,7 @@ namespace Js
                     int i;
                     for (i = 0; i < frameDisplay->GetLength(); i++)
                     {
-                        Field(Var) *slotArray = (Field(Var)*)frameDisplay->GetItem(i);
+                        typename WriteBarrierFieldTypeTraits<Var>::Type *slotArray = (typename WriteBarrierFieldTypeTraits<Var>::Type*)frameDisplay->GetItem(i);
 
                         if (ScopeSlots::Is(slotArray))
                         {
@@ -353,10 +353,10 @@ namespace Js
                     }
                     for (; i < frameDisplay->GetLength(); i++)
                     {
-                        Field(Var) *pScope = (Field(Var)*)frameDisplay->GetItem(i);
+                        typename WriteBarrierFieldTypeTraits<Var>::Type *pScope = (typename WriteBarrierFieldTypeTraits<Var>::Type*)frameDisplay->GetItem(i);
                         if (ScopeSlots::Is(pScope))
                         {
-                            Field(Var) *boxedSlots = this->BoxScopeSlots(pScope, static_cast<uint>(ScopeSlots(pScope).GetCount()));
+                            typename WriteBarrierFieldTypeTraits<Var>::Type *boxedSlots = this->BoxScopeSlots(pScope, static_cast<uint>(ScopeSlots(pScope).GetCount()));
                             frameDisplay->SetItem(i, boxedSlots);
                         }
                     }
@@ -632,7 +632,7 @@ namespace Js
         for (uint16 i = 0; i < length; i++)
         {
             // TODO: Once we allocate the slots on the stack, we can only look those slots
-            Field(Var) * pScope = (Field(Var) *)frameDisplay->GetItem(i);
+            typename WriteBarrierFieldTypeTraits<Var>::Type * pScope = (typename WriteBarrierFieldTypeTraits<Var>::Type *)frameDisplay->GetItem(i);
             // We don't do stack slots if we exceed max encoded slot count
             if (ScopeSlots::Is(pScope))
             {
@@ -644,7 +644,7 @@ namespace Js
         return boxedFrameDisplay;
     }
 
-    Field(Var) * StackScriptFunction::BoxState::BoxScopeSlots(Field(Var) * slotArray, uint count)
+    typename WriteBarrierFieldTypeTraits<Var>::Type * StackScriptFunction::BoxState::BoxScopeSlots(typename WriteBarrierFieldTypeTraits<Var>::Type * slotArray, uint count)
     {
         Assert(slotArray != nullptr);
         Assert(count != 0);
@@ -652,10 +652,10 @@ namespace Js
         void * tmp = nullptr;
         if (boxedValues.TryGetValue(slotArray, &tmp))
         {
-            return (Field(Var) *)tmp;
+            return (typename WriteBarrierFieldTypeTraits<Var>::Type *)tmp;
         }
 
-        Field(Var) * boxedSlotArray = nullptr;
+        typename WriteBarrierFieldTypeTraits<Var>::Type * boxedSlotArray = nullptr;
         if (!ThreadContext::IsOnStack(slotArray))
         {
             boxedSlotArray = slotArray;
@@ -663,7 +663,7 @@ namespace Js
         else
         {
             // Create new scope slots when we allocate them on the stack
-            boxedSlotArray = RecyclerNewArray(scriptContext->GetRecycler(), Field(Var), count + ScopeSlots::FirstSlotIndex);
+            boxedSlotArray = RecyclerNewArray(scriptContext->GetRecycler(), typename WriteBarrierFieldTypeTraits<Var>::Type, count + ScopeSlots::FirstSlotIndex);
         }
         boxedValues.Add(slotArray, boxedSlotArray);
 

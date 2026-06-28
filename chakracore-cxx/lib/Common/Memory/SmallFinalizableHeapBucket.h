@@ -68,12 +68,10 @@ class SmallRecyclerVisitedHostHeapBucketT : public SmallFinalizableHeapBucketBas
 {
 };
 #endif
-#ifdef RECYCLER_WRITE_BARRIER
-template <class TBlockAttributes> 
+template <class TBlockAttributes>
 class SmallFinalizableWithBarrierHeapBucketT : public SmallFinalizableHeapBucketBaseT<SmallFinalizableWithBarrierHeapBlockT<TBlockAttributes> >
 {
 };
-#endif
 
 typedef SmallFinalizableHeapBucketT<MediumAllocationBlockAttributes> MediumFinalizableHeapBucket;
 typedef SmallFinalizableHeapBucketT<SmallAllocationBlockAttributes> SmallFinalizableHeapBucket;
@@ -81,10 +79,8 @@ typedef SmallFinalizableHeapBucketT<SmallAllocationBlockAttributes> SmallFinaliz
 typedef SmallRecyclerVisitedHostHeapBucketT<MediumAllocationBlockAttributes> MediumRecyclerVisitedHostHeapBucket;
 typedef SmallRecyclerVisitedHostHeapBucketT<SmallAllocationBlockAttributes> SmallRecyclerVisitedHostHeapBucket;
 #endif
-#ifdef RECYCLER_WRITE_BARRIER
 typedef SmallFinalizableWithBarrierHeapBucketT<MediumAllocationBlockAttributes> MediumFinalizableWithBarrierHeapBucket;
 typedef SmallFinalizableWithBarrierHeapBucketT<SmallAllocationBlockAttributes> SmallFinalizableWithBarrierHeapBucket;
-#endif
 
 // GC-TODO: Move this away
 
@@ -144,7 +140,6 @@ public:
     typedef SmallNormalHeapBucket BucketType;
 };
 
-#ifdef RECYCLER_WRITE_BARRIER
 template <>
 class SmallHeapBlockType<WithBarrierBit, SmallAllocationBlockAttributes>
 {
@@ -168,7 +163,6 @@ public:
     typedef SmallFinalizableWithBarrierHeapBlock BlockType;
     typedef SmallFinalizableWithBarrierHeapBucket BucketType;
 };
-#endif
 
 #if SMALLBLOCK_MEDIUM_ALLOC
 template <>
@@ -221,7 +215,6 @@ public:
     typedef MediumNormalHeapBucket BucketType;
 };
 
-#ifdef RECYCLER_WRITE_BARRIER
 template <>
 class SmallHeapBlockType<WithBarrierBit, MediumAllocationBlockAttributes>
 {
@@ -245,7 +238,6 @@ public:
     typedef MediumFinalizableWithBarrierHeapBlock BlockType;
     typedef MediumFinalizableWithBarrierHeapBucket BucketType;
 };
-#endif
 #endif
 
 template <class TBlockAttributes>
@@ -332,7 +324,6 @@ class HeapBucketGroup
     };
 #endif
 
-#ifdef RECYCLER_WRITE_BARRIER
     template <>
     class BucketGetter<WithBarrierBit>
     {
@@ -367,7 +358,6 @@ class HeapBucketGroup
             return heapBucketGroup->smallFinalizableWithBarrierHeapBucket;
         }
     };
-#endif
 public:
 
     template <ObjectInfoBits objectAttributes>
@@ -383,18 +373,14 @@ public:
 
     void Sweep(RecyclerSweep& recyclerSweep);
     uint Rescan(Recycler * recycler, RescanFlags flags);
-#if ENABLE_CONCURRENT_GC
     void SweepPendingObjects(RecyclerSweep& recyclerSweep);
-#endif
 #if ENABLE_PARTIAL_GC
     void SweepPartialReusePages(RecyclerSweep& recyclerSweep);
     void FinishPartialCollect(RecyclerSweep * recyclerSweep);
 #endif
-#if ENABLE_CONCURRENT_GC
     void PrepareSweep();
     void SetupBackgroundSweep(RecyclerSweep& recyclerSweep);
     void TransferPendingEmptyHeapBlocks(RecyclerSweep& recyclerSweep);
-#endif
     void SweepFinalizableObjects(RecyclerSweep& recyclerSweep);
     void DisposeObjects();
     void TransferDisposedObjects();
@@ -415,13 +401,6 @@ public:
 #ifdef RECYCLER_VERIFY_MARK
     void VerifyMark();
 #endif
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    void StartAllocationDuringConcurrentSweep();
-    bool DoTwoPassConcurrentSweepPreCheck();
-    void FinishSweepPrep(RecyclerSweep& recyclerSweep);
-    void FinishConcurrentSweepPass1(RecyclerSweep& recyclerSweep);
-    void FinishConcurrentSweep();
-#endif
 #if DBG
     bool AllocatorsAreEmpty();
 #endif
@@ -432,10 +411,8 @@ private:
 #ifdef RECYCLER_VISITED_HOST
     SmallRecyclerVisitedHostHeapBucketT<TBlockAttributes>  recyclerVisitedHostHeapBucket;
 #endif
-#ifdef RECYCLER_WRITE_BARRIER
     SmallNormalWithBarrierHeapBucketT<TBlockAttributes> smallNormalWithBarrierHeapBucket;
     SmallFinalizableWithBarrierHeapBucketT<TBlockAttributes> smallFinalizableWithBarrierHeapBucket;
-#endif
 };
 
 extern template class HeapBucketGroup<SmallAllocationBlockAttributes>;

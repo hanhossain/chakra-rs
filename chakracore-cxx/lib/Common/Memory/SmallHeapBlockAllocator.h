@@ -68,12 +68,6 @@ public:
     {
         return !IsBumpAllocMode() && !IsExplicitFreeObjectListAllocMode();
     }
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-    bool IsAllocatingDuringConcurrentSweepMode(Recycler * recycler) const
-    {
-        return IsFreeListAllocMode() && recycler->IsConcurrentSweepState();
-    }
-#endif
 private:
     static bool NeedSetAttributes(ObjectInfoBits attributes)
     {
@@ -83,12 +77,6 @@ private:
     char * endAddress;
     FreeObject * freeObjectList;
     TBlockType * heapBlock;
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP 
-#if DBG
-    bool isAllocatingFromNewBlock;
-#endif
-#endif
-
     SmallHeapBlockAllocator * prev;
     SmallHeapBlockAllocator * next;
 
@@ -116,9 +104,7 @@ inline char*
 SmallHeapBlockAllocator<TBlockType>::InlinedAllocImpl(Recycler * recycler, size_t sizeCat, ObjectInfoBits attributes)
 {
     Assert((attributes & InternalObjectInfoBitMask) == attributes);
-#ifdef RECYCLER_WRITE_BARRIER
     Assert(!CONFIG_FLAG(ForceSoftwareWriteBarrier) || (attributes & WithBarrierBit) || (attributes & LeafBit));
-#endif
 
     AUTO_NO_EXCEPTION_REGION;
     char * memBlock = (char *)freeObjectList;
@@ -200,31 +186,6 @@ SmallHeapBlockAllocator<TBlockType>::InlinedAllocImpl(Recycler * recycler, size_
         {
             BOOL isSet = heapBlock->GetDebugFreeBitVector()->TestAndClear(heapBlock->GetAddressBitIndex(memBlock));
             Assert(isSet);
-        }
-#endif
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-        // If we are allocating during concurrent sweep we must mark the object to prevent it from being swept
-        // in the ongoing sweep.
-        if (heapBlock != nullptr && heapBlock->isPendingConcurrentSweepPrep)
-        {
-            AssertMsg(!this->isAllocatingFromNewBlock, "We shouldn't be tracking allocation to a new block; i.e. bump allocation; during concurrent sweep.");
-            AssertMsg(!heapBlock->IsAnyFinalizableBlock(), "Allocations are not allowed to finalizable blocks during concurrent sweep.");
-            AssertMsg(heapBlock->heapBucket->AllocationsStartedDuringConcurrentSweep(), "We shouldn't be allocating from this block while allocations are disabled.");
-
-            // Explcitly mark this object and also clear the free bit.
-            heapBlock->SetObjectMarkedBit(memBlock);
-#if DBG || defined(RECYCLER_SLOW_CHECK_ENABLED)
-            uint bitIndex = heapBlock->GetAddressBitIndex(memBlock);
-            heapBlock->GetDebugFreeBitVector()->Clear(bitIndex);
-            heapBlock->objectsMarkedDuringSweep++;
-#endif
-
-#ifdef RECYCLER_TRACE
-            if (recycler->GetRecyclerFlagsTable().Trace.IsEnabled(Js::ConcurrentSweepPhase) && recycler->GetRecyclerFlagsTable().Trace.IsEnabled(Js::MemoryAllocationPhase) && CONFIG_FLAG_RELEASE(Verbose))
-            {
-                Output::Print(u"[**33**]FreeListAlloc: Object 0x%p from HeapBlock 0x%p used for allocation during ConcurrentSweep [CollectionState: %d] \n", memBlock, heapBlock, static_cast<CollectionState>(recycler->collectionState));
-            }
-#endif
         }
 #endif
         return memBlock;

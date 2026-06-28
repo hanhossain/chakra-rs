@@ -54,7 +54,7 @@ namespace Js
         
     private:
         // Line offset cache list used for quickly finding line/column offsets.
-        Field(LineOffsetCacheReadOnlyList*) lineCharacterOffsetCacheList;
-        Field(LineOffsetCacheReadOnlyList*) lineByteOffsetCacheList;
+        typename WriteBarrierFieldTypeTraits<LineOffsetCacheReadOnlyList*>::Type lineCharacterOffsetCacheList;
+        typename WriteBarrierFieldTypeTraits<LineOffsetCacheReadOnlyList*>::Type lineByteOffsetCacheList;
     };
 }
