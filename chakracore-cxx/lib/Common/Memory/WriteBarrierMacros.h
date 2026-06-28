@@ -16,7 +16,6 @@
 //
 
 #define NO_WRITE_BARRIER_TAG_TYPE(arg) arg, _no_write_barrier_tag
-#define NO_WRITE_BARRIER_TAG(arg) arg, _no_write_barrier_tag()
 
 // Unsafely cast a typical "typename WriteBarrierFieldTypeTraits<>::Type *" type. Only use in rare cases where we
 // understand the underlying memory usage.

@@ -14,7 +14,7 @@ namespace Js
         SimplePropertyDescriptor(const PropertyRecord* id, PropertyAttributes attributes) : Id(id), preventFalseReference(NULL) { Attributes = attributes; }
 
         SimplePropertyDescriptor(const PropertyRecord* id, _no_write_barrier_tag, PropertyAttributes attributes)
-            : Id(NO_WRITE_BARRIER_TAG(id)), preventFalseReference(NULL)
+            : Id(id, _no_write_barrier_tag()), preventFalseReference(NULL)
         { Attributes = attributes; }
 
         typename WriteBarrierFieldTypeTraits<const PropertyRecord*>::Type Id;

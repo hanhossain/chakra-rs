@@ -30,84 +30,84 @@ namespace Js
 {
     SimplePropertyDescriptor const JavascriptLibrary::SharedFunctionPropertyDescriptors[2] =
     {
-        SimplePropertyDescriptor(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::prototype), PropertyWritable),
-        SimplePropertyDescriptor(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::name), PropertyConfigurable)
+        SimplePropertyDescriptor(BuiltInPropertyRecords::prototype, _no_write_barrier_tag(), PropertyWritable),
+        SimplePropertyDescriptor(BuiltInPropertyRecords::name, _no_write_barrier_tag(), PropertyConfigurable)
     };
 
     SimplePropertyDescriptor const JavascriptLibrary::SharedIdMappedFunctionPropertyDescriptors[2] =
     {
-        SimplePropertyDescriptor(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::prototype), PropertyNone),
-        SimplePropertyDescriptor(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::name), PropertyConfigurable)
+        SimplePropertyDescriptor(BuiltInPropertyRecords::prototype, _no_write_barrier_tag(), PropertyNone),
+        SimplePropertyDescriptor(BuiltInPropertyRecords::name, _no_write_barrier_tag(), PropertyConfigurable)
     };
 
     SimplePropertyDescriptor const JavascriptLibrary::FunctionWithLengthAndNameTypeDescriptors[2] =
     {
-        SimplePropertyDescriptor(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::length), PropertyConfigurable),
-        SimplePropertyDescriptor(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::name), PropertyConfigurable)
+        SimplePropertyDescriptor(BuiltInPropertyRecords::length, _no_write_barrier_tag(), PropertyConfigurable),
+        SimplePropertyDescriptor(BuiltInPropertyRecords::name, _no_write_barrier_tag(), PropertyConfigurable)
     };
 
     SimplePropertyDescriptor const JavascriptLibrary::FunctionWithPrototypeLengthAndNameTypeDescriptors[3] =
     {
-        SimplePropertyDescriptor(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::prototype), PropertyWritable),
-        SimplePropertyDescriptor(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::length), PropertyConfigurable),
-        SimplePropertyDescriptor(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::name), PropertyConfigurable)
+        SimplePropertyDescriptor(BuiltInPropertyRecords::prototype, _no_write_barrier_tag(), PropertyWritable),
+        SimplePropertyDescriptor(BuiltInPropertyRecords::length, _no_write_barrier_tag(), PropertyConfigurable),
+        SimplePropertyDescriptor(BuiltInPropertyRecords::name, _no_write_barrier_tag(), PropertyConfigurable)
     };
 
     SimplePropertyDescriptor const JavascriptLibrary::FunctionWithPrototypeAndLengthTypeDescriptors[2] =
     {
-        SimplePropertyDescriptor(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::prototype), PropertyWritable),
-        SimplePropertyDescriptor(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::length), PropertyConfigurable)
+        SimplePropertyDescriptor(BuiltInPropertyRecords::prototype, _no_write_barrier_tag(), PropertyWritable),
+        SimplePropertyDescriptor(BuiltInPropertyRecords::length, _no_write_barrier_tag(), PropertyConfigurable)
     };
 
     SimplePropertyDescriptor const JavascriptLibrary::FunctionWithNonWritablePrototypeAndLengthTypeDescriptors[2] =
     {
-        SimplePropertyDescriptor(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::prototype), PropertyNone),
-        SimplePropertyDescriptor(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::length), PropertyConfigurable),
+        SimplePropertyDescriptor(BuiltInPropertyRecords::prototype, _no_write_barrier_tag(), PropertyNone),
+        SimplePropertyDescriptor(BuiltInPropertyRecords::length, _no_write_barrier_tag(), PropertyConfigurable),
     };
 
     SimplePropertyDescriptor const JavascriptLibrary::FunctionWithNonWritablePrototypeLengthAndNameTypeDescriptors[3] =
     {
-        SimplePropertyDescriptor(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::prototype), PropertyNone),
-        SimplePropertyDescriptor(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::length), PropertyConfigurable),
-        SimplePropertyDescriptor(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::name), PropertyConfigurable)
+        SimplePropertyDescriptor(BuiltInPropertyRecords::prototype, _no_write_barrier_tag(), PropertyNone),
+        SimplePropertyDescriptor(BuiltInPropertyRecords::length, _no_write_barrier_tag(), PropertyConfigurable),
+        SimplePropertyDescriptor(BuiltInPropertyRecords::name, _no_write_barrier_tag(), PropertyConfigurable)
     };
 
     SimplePropertyDescriptor const JavascriptLibrary::ModuleNamespaceTypeDescriptors[1] =
     {
-        SimplePropertyDescriptor(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::_symbolToStringTag), PropertyNone)
+        SimplePropertyDescriptor(BuiltInPropertyRecords::_symbolToStringTag, _no_write_barrier_tag(), PropertyNone)
     };
 
-    SimpleTypeHandler<1> JavascriptLibrary::SharedPrototypeTypeHandler(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::constructor), PropertyWritable | PropertyConfigurable, PropertyTypesWritableDataOnly, 4, sizeof(DynamicObject));
-    SimpleTypeHandler<1> JavascriptLibrary::SharedFunctionWithoutPrototypeTypeHandler(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::name), PropertyConfigurable);
-    SimpleTypeHandler<1> JavascriptLibrary::SharedFunctionWithPrototypeTypeHandlerV11(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::prototype), PropertyWritable);
-    SimpleTypeHandler<2> JavascriptLibrary::SharedFunctionWithPrototypeTypeHandler(NO_WRITE_BARRIER_TAG(SharedFunctionPropertyDescriptors));
-    SimpleTypeHandler<2> JavascriptLibrary::SharedIdMappedFunctionWithPrototypeTypeHandler(NO_WRITE_BARRIER_TAG(SharedIdMappedFunctionPropertyDescriptors));
-    SimpleTypeHandler<1> JavascriptLibrary::SharedFunctionWithConfigurableLengthTypeHandler(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::length), PropertyConfigurable);
-    SimpleTypeHandler<1> JavascriptLibrary::SharedFunctionWithLengthTypeHandler(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::length));
-    SimpleTypeHandler<2> JavascriptLibrary::SharedFunctionWithLengthAndNameTypeHandler(NO_WRITE_BARRIER_TAG(FunctionWithLengthAndNameTypeDescriptors));
-    SimpleTypeHandler<3> JavascriptLibrary::SharedFunctionWithPrototypeLengthAndNameTypeHandler(NO_WRITE_BARRIER_TAG(FunctionWithPrototypeLengthAndNameTypeDescriptors));
-    SimpleTypeHandler<2> JavascriptLibrary::SharedFunctionWithPrototypeAndLengthTypeHandler(NO_WRITE_BARRIER_TAG(FunctionWithPrototypeAndLengthTypeDescriptors));
-    SimpleTypeHandler<1> JavascriptLibrary::SharedNamespaceSymbolTypeHandler(NO_WRITE_BARRIER_TAG(ModuleNamespaceTypeDescriptors), PropertyTypesHasSpecialProperties);
-    SimpleTypeHandler<2> JavascriptLibrary::SharedFunctionWithNonWritablePrototypeAndLengthTypeHandler(NO_WRITE_BARRIER_TAG(FunctionWithNonWritablePrototypeAndLengthTypeDescriptors));
-    SimpleTypeHandler<3> JavascriptLibrary::SharedFunctionWithNonWritablePrototypeLengthAndNameTypeHandler(NO_WRITE_BARRIER_TAG(FunctionWithNonWritablePrototypeLengthAndNameTypeDescriptors));
+    SimpleTypeHandler<1> JavascriptLibrary::SharedPrototypeTypeHandler(BuiltInPropertyRecords::constructor, _no_write_barrier_tag(), PropertyWritable | PropertyConfigurable, PropertyTypesWritableDataOnly, 4, sizeof(DynamicObject));
+    SimpleTypeHandler<1> JavascriptLibrary::SharedFunctionWithoutPrototypeTypeHandler(BuiltInPropertyRecords::name, _no_write_barrier_tag(), PropertyConfigurable);
+    SimpleTypeHandler<1> JavascriptLibrary::SharedFunctionWithPrototypeTypeHandlerV11(BuiltInPropertyRecords::prototype, _no_write_barrier_tag(), PropertyWritable);
+    SimpleTypeHandler<2> JavascriptLibrary::SharedFunctionWithPrototypeTypeHandler(SharedFunctionPropertyDescriptors, _no_write_barrier_tag());
+    SimpleTypeHandler<2> JavascriptLibrary::SharedIdMappedFunctionWithPrototypeTypeHandler(SharedIdMappedFunctionPropertyDescriptors, _no_write_barrier_tag());
+    SimpleTypeHandler<1> JavascriptLibrary::SharedFunctionWithConfigurableLengthTypeHandler(BuiltInPropertyRecords::length, _no_write_barrier_tag(), PropertyConfigurable);
+    SimpleTypeHandler<1> JavascriptLibrary::SharedFunctionWithLengthTypeHandler(BuiltInPropertyRecords::length, _no_write_barrier_tag());
+    SimpleTypeHandler<2> JavascriptLibrary::SharedFunctionWithLengthAndNameTypeHandler(FunctionWithLengthAndNameTypeDescriptors, _no_write_barrier_tag());
+    SimpleTypeHandler<3> JavascriptLibrary::SharedFunctionWithPrototypeLengthAndNameTypeHandler(FunctionWithPrototypeLengthAndNameTypeDescriptors, _no_write_barrier_tag());
+    SimpleTypeHandler<2> JavascriptLibrary::SharedFunctionWithPrototypeAndLengthTypeHandler(FunctionWithPrototypeAndLengthTypeDescriptors, _no_write_barrier_tag());
+    SimpleTypeHandler<1> JavascriptLibrary::SharedNamespaceSymbolTypeHandler(ModuleNamespaceTypeDescriptors, _no_write_barrier_tag(), PropertyTypesHasSpecialProperties);
+    SimpleTypeHandler<2> JavascriptLibrary::SharedFunctionWithNonWritablePrototypeAndLengthTypeHandler(FunctionWithNonWritablePrototypeAndLengthTypeDescriptors, _no_write_barrier_tag());
+    SimpleTypeHandler<3> JavascriptLibrary::SharedFunctionWithNonWritablePrototypeLengthAndNameTypeHandler(FunctionWithNonWritablePrototypeLengthAndNameTypeDescriptors, _no_write_barrier_tag());
     MissingPropertyTypeHandler JavascriptLibrary::MissingPropertyHolderTypeHandler;
 
     SimplePropertyDescriptor const JavascriptLibrary::HeapArgumentsPropertyDescriptors[3] =
     {
-        SimplePropertyDescriptor(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::length), PropertyConfigurable | PropertyWritable),
-        SimplePropertyDescriptor(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::callee), PropertyConfigurable | PropertyWritable),
-        SimplePropertyDescriptor(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::_symbolIterator), PropertyConfigurable | PropertyWritable)
+        SimplePropertyDescriptor(BuiltInPropertyRecords::length, _no_write_barrier_tag(), PropertyConfigurable | PropertyWritable),
+        SimplePropertyDescriptor(BuiltInPropertyRecords::callee, _no_write_barrier_tag(), PropertyConfigurable | PropertyWritable),
+        SimplePropertyDescriptor(BuiltInPropertyRecords::_symbolIterator, _no_write_barrier_tag(), PropertyConfigurable | PropertyWritable)
     };
 
     SimplePropertyDescriptor const JavascriptLibrary::FunctionWithLengthAndPrototypeTypeDescriptors[2] =
     {
-        SimplePropertyDescriptor(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::prototype), PropertyNone),
-        SimplePropertyDescriptor(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::length), PropertyConfigurable)
+        SimplePropertyDescriptor(BuiltInPropertyRecords::prototype, _no_write_barrier_tag(), PropertyNone),
+        SimplePropertyDescriptor(BuiltInPropertyRecords::length, _no_write_barrier_tag(), PropertyConfigurable)
     };
 
     SimplePropertyDescriptor const JavascriptLibrary::ClassPrototypePropertyDescriptors[1] =
     {
-        SimplePropertyDescriptor(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::constructor), PropertyConfigurable | PropertyWritable)
+        SimplePropertyDescriptor(BuiltInPropertyRecords::constructor, _no_write_barrier_tag(), PropertyConfigurable | PropertyWritable)
     };
 
     void JavascriptLibrary::Initialize(ScriptContext* scriptContext, GlobalObject * globalObject)

@@ -9,16 +9,16 @@
 namespace Js {
     SimplePropertyDescriptor const ExceptionMetadataPropertyDescriptors[6] =
     {
-        SimplePropertyDescriptor(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::exception), PropertyWritable),
-        SimplePropertyDescriptor(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::source), PropertyWritable),
-        SimplePropertyDescriptor(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::line), PropertyWritable),
-        SimplePropertyDescriptor(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::column), PropertyWritable),
-        SimplePropertyDescriptor(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::length), PropertyWritable),
-        SimplePropertyDescriptor(NO_WRITE_BARRIER_TAG(BuiltInPropertyRecords::url), PropertyWritable)
+        SimplePropertyDescriptor(BuiltInPropertyRecords::exception, _no_write_barrier_tag(), PropertyWritable),
+        SimplePropertyDescriptor(BuiltInPropertyRecords::source, _no_write_barrier_tag(), PropertyWritable),
+        SimplePropertyDescriptor(BuiltInPropertyRecords::line, _no_write_barrier_tag(), PropertyWritable),
+        SimplePropertyDescriptor(BuiltInPropertyRecords::column, _no_write_barrier_tag(), PropertyWritable),
+        SimplePropertyDescriptor(BuiltInPropertyRecords::length, _no_write_barrier_tag(), PropertyWritable),
+        SimplePropertyDescriptor(BuiltInPropertyRecords::url, _no_write_barrier_tag(), PropertyWritable)
     };
 
 
-    SimpleTypeHandler<6> JavascriptExceptionMetadata::ExceptionMetadataTypeHandler(NO_WRITE_BARRIER_TAG(ExceptionMetadataPropertyDescriptors));
+    SimpleTypeHandler<6> JavascriptExceptionMetadata::ExceptionMetadataTypeHandler(ExceptionMetadataPropertyDescriptors, _no_write_barrier_tag());
 
     Var JavascriptExceptionMetadata::CreateMetadataVar(ScriptContext * scriptContext) {
         DynamicType* exceptionMetadataType = DynamicType::New(scriptContext, TypeIds_Object,
