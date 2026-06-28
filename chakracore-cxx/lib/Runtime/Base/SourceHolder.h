@@ -37,7 +37,7 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<size_t>::Type byteLength;
         typename WriteBarrierFieldTypeTraits<bool>::Type isEmpty;
 
-        SimpleSourceHolder(NO_WRITE_BARRIER_TAG_TYPE(LPCUTF8 source), size_t byteLength, bool isEmpty)
+        SimpleSourceHolder(LPCUTF8 source, _no_write_barrier_tag, size_t byteLength, bool isEmpty)
             : source(source, _no_write_barrier_tag()),
             byteLength(byteLength),
             isEmpty(isEmpty)
