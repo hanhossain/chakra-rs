@@ -336,7 +336,7 @@ namespace Js
 #undef INTL_ENTRY
 #endif
 #define INTL_ENTRY(id, func) \
-    NoProfileFunctionInfo IntlEngineInterfaceExtensionObject::EntryInfo::Intl_##func##(FORCE_NO_WRITE_BARRIER_TAG(IntlEngineInterfaceExtensionObject::EntryIntl_##func##));
+    NoProfileFunctionInfo IntlEngineInterfaceExtensionObject::EntryInfo::Intl_##func##(IntlEngineInterfaceExtensionObject::EntryIntl_##func##, _no_write_barrier_tag());
 #include "IntlExtensionObjectBuiltIns.h"
 #undef INTL_ENTRY
 

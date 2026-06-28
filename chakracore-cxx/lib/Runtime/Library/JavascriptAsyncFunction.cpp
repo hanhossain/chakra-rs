@@ -7,7 +7,7 @@
 using namespace Js;
 
 FunctionInfo JavascriptAsyncFunction::functionInfo(
-    FORCE_NO_WRITE_BARRIER_TAG(JavascriptAsyncFunction::EntryAsyncFunctionImplementation),
+    JavascriptAsyncFunction::EntryAsyncFunctionImplementation, _no_write_barrier_tag(),
     (FunctionInfo::Attributes)(FunctionInfo::DoNotProfile | FunctionInfo::ErrorOnNew));
 
 JavascriptAsyncFunction::JavascriptAsyncFunction(

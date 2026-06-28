@@ -8,8 +8,7 @@
 using namespace Js;
 
 FunctionInfo JavascriptAsyncGeneratorFunction::functionInfo(
-    FORCE_NO_WRITE_BARRIER_TAG(
-        JavascriptAsyncGeneratorFunction::EntryAsyncGeneratorFunctionImplementation),
+    JavascriptAsyncGeneratorFunction::EntryAsyncGeneratorFunctionImplementation, _no_write_barrier_tag(),
     (FunctionInfo::Attributes)(FunctionInfo::DoNotProfile | FunctionInfo::ErrorOnNew));
 
 JavascriptAsyncGeneratorFunction::JavascriptAsyncGeneratorFunction(

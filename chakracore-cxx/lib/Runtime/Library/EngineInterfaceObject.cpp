@@ -102,8 +102,8 @@ namespace Js
     }
 
 // initialize EngineInterfaceObject::EntryInfo
-#define EngineInterfaceBuiltIn2(propId, nativeMethod) NoProfileFunctionInfo EngineInterfaceObject::EntryInfo::nativeMethod(FORCE_NO_WRITE_BARRIER_TAG(EngineInterfaceObject::Entry_##nativeMethod));
-#define BuiltInRaiseException(exceptionType, exceptionID) NoProfileFunctionInfo EngineInterfaceObject::EntryInfo::BuiltIn_raise##exceptionID(FORCE_NO_WRITE_BARRIER_TAG(EngineInterfaceObject::Entry_BuiltIn_raise##exceptionID));
+#define EngineInterfaceBuiltIn2(propId, nativeMethod) NoProfileFunctionInfo EngineInterfaceObject::EntryInfo::nativeMethod(EngineInterfaceObject::Entry_##nativeMethod, _no_write_barrier_tag());
+#define BuiltInRaiseException(exceptionType, exceptionID) NoProfileFunctionInfo EngineInterfaceObject::EntryInfo::BuiltIn_raise##exceptionID(EngineInterfaceObject::Entry_BuiltIn_raise##exceptionID, _no_write_barrier_tag());
 #include "EngineInterfaceObjectBuiltIns.h"
 
     EngineInterfaceObject * EngineInterfaceObject::New(Recycler * recycler, DynamicType * type)

@@ -6,7 +6,7 @@
 
 namespace Js
 {
-    FunctionInfo BoundFunction::functionInfo(FORCE_NO_WRITE_BARRIER_TAG(BoundFunction::NewInstance), FunctionInfo::DoNotProfile);
+    FunctionInfo BoundFunction::functionInfo(BoundFunction::NewInstance, _no_write_barrier_tag(), FunctionInfo::DoNotProfile);
 
     BoundFunction::BoundFunction(DynamicType * type)
         : JavascriptFunction(type, &functionInfo),

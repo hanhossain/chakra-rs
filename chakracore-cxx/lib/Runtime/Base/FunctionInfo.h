@@ -156,7 +156,7 @@ namespace Js
         {}
 
         NoProfileFunctionInfo(JavascriptMethod entryPoint, _no_write_barrier_tag)
-            : FunctionInfo(FORCE_NO_WRITE_BARRIER_TAG(entryPoint), Attributes::DoNotProfile)
+            : FunctionInfo(entryPoint, _no_write_barrier_tag(), Attributes::DoNotProfile)
         {}
     };
 

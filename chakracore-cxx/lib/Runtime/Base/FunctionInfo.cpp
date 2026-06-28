@@ -15,7 +15,7 @@ namespace Js
     }
 
     FunctionInfo::FunctionInfo(JavascriptMethod entryPoint, _no_write_barrier_tag, Attributes attributes, LocalFunctionId functionId, FunctionProxy* functionBodyImpl)
-        : originalEntryPoint(entryPoint), attributes(attributes), functionBodyImpl(FORCE_NO_WRITE_BARRIER_TAG(functionBodyImpl)), functionId(functionId), compileCount(0)
+        : originalEntryPoint(entryPoint), attributes(attributes), functionBodyImpl(functionBodyImpl, _no_write_barrier_tag()), functionId(functionId), compileCount(0)
     {
 #if !DYNAMIC_INTERPRETER_THUNK
         Assert(entryPoint != nullptr);
@@ -24,7 +24,7 @@ namespace Js
 
     FunctionInfo::FunctionInfo(FunctionInfo& that)
         : originalEntryPoint(that.originalEntryPoint), attributes(that.attributes),
-        functionBodyImpl(FORCE_NO_WRITE_BARRIER_TAG(that.functionBodyImpl)), functionId(that.functionId), compileCount(that.compileCount)
+        functionBodyImpl(that.functionBodyImpl, _no_write_barrier_tag()), functionId(that.functionId), compileCount(that.compileCount)
     {
 
     }
