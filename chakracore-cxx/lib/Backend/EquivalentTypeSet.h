@@ -8,9 +8,9 @@ namespace Js
     class EquivalentTypeSet
     {
     private:
-        Field(bool) sortedAndDuplicatesRemoved;
-        Field(uint16) count;
-        Field(RecyclerJITTypeHolder *) types;
+        typename WriteBarrierFieldTypeTraits<bool>::Type sortedAndDuplicatesRemoved;
+        typename WriteBarrierFieldTypeTraits<uint16>::Type count;
+        typename WriteBarrierFieldTypeTraits<RecyclerJITTypeHolder *>::Type types;
 
     public:
         EquivalentTypeSet(RecyclerJITTypeHolder * types, uint16 count);

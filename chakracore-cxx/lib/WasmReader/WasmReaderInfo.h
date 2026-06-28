@@ -15,7 +15,7 @@ namespace Wasm
 class WasmFunctionInfo;
 struct WasmReaderInfo
 {
-    Field(WasmFunctionInfo*) m_funcInfo;
-    Field(Js::WebAssemblyModule*) m_module;
+    typename WriteBarrierFieldTypeTraits<WasmFunctionInfo*>::Type m_funcInfo;
+    typename WriteBarrierFieldTypeTraits<Js::WebAssemblyModule*>::Type m_module;
 };
 }

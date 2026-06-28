@@ -16,8 +16,8 @@ namespace Wasm
         friend class WasmBinaryReader;
         FunctionBodyReaderInfo(uint32_t size = 0, size_t startOffset = 0): size(size), startOffset(startOffset) {}
     private:
-        Field(uint32_t) size = 0;
-        Field(size_t) startOffset = 0;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type size = 0;
+        typename WriteBarrierFieldTypeTraits<size_t>::Type startOffset = 0;
     };
 
     class WasmFunctionInfo
@@ -65,14 +65,14 @@ namespace Wasm
 
         FieldNoBarrier(ArenaAllocator*) m_alloc;
         typedef JsUtil::GrowingArray<Local, ArenaAllocator> WasmTypeArray;
-        Field(WasmTypeArray) m_locals;
-        Field(Js::FunctionBody*) m_body;
-        Field(WasmSignature*) m_signature;
-        Field(Js::ByteCodeLabel) m_ExitLabel;
-        Field(WasmReaderBase*) m_customReader;
-        Field(const char16_t*) m_name;
-        Field(uint32_t) m_nameLength;
-        Field(uint32_t) m_number;
-        Field(FunctionBodyReaderInfo) m_readerInfo;
+        typename WriteBarrierFieldTypeTraits<WasmTypeArray>::Type m_locals;
+        typename WriteBarrierFieldTypeTraits<Js::FunctionBody*>::Type m_body;
+        typename WriteBarrierFieldTypeTraits<WasmSignature*>::Type m_signature;
+        typename WriteBarrierFieldTypeTraits<Js::ByteCodeLabel>::Type m_ExitLabel;
+        typename WriteBarrierFieldTypeTraits<WasmReaderBase*>::Type m_customReader;
+        typename WriteBarrierFieldTypeTraits<const char16_t*>::Type m_name;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type m_nameLength;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type m_number;
+        typename WriteBarrierFieldTypeTraits<FunctionBodyReaderInfo>::Type m_readerInfo;
     };
 } // namespace Wasm
