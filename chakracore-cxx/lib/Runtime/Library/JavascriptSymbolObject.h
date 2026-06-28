@@ -9,7 +9,7 @@ namespace Js
     class JavascriptSymbolObject : public DynamicObject
     {
     private:
-        Field(JavascriptSymbol*) value;
+        typename WriteBarrierFieldTypeTraits<JavascriptSymbol*>::Type value;
 
         DEFINE_VTABLE_CTOR(JavascriptSymbolObject, DynamicObject);
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptSymbolObject);

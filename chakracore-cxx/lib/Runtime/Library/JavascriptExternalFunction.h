@@ -63,28 +63,28 @@ namespace Js
         void UndeferLength(ScriptContext *scriptContext);
 
     private:
-        Field(unsigned long) flags;
-        Field(Var) signature;
-        Field(void *) callbackState;
+        typename WriteBarrierFieldTypeTraits<unsigned long>::Type flags;
+        typename WriteBarrierFieldTypeTraits<Var>::Type signature;
+        typename WriteBarrierFieldTypeTraits<void *>::Type callbackState;
         union
         {
             FieldNoBarrier(ExternalMethod) nativeMethod;
-            Field(JavascriptExternalFunction*) wrappedMethod;
+            typename WriteBarrierFieldTypeTraits<JavascriptExternalFunction*>::Type wrappedMethod;
             FieldNoBarrier(StdCallJavascriptMethod) stdCallNativeMethod;
         };
-        Field(InitializeMethod) initMethod;
+        typename WriteBarrierFieldTypeTraits<InitializeMethod>::Type initMethod;
 
         // Ensure GC doesn't pin
-        Field(unsigned int) oneBit:1;
+        typename WriteBarrierFieldTypeTraits<unsigned int>::Type oneBit:1;
         // Count of type slots for
-        Field(unsigned int) typeSlots:15;
+        typename WriteBarrierFieldTypeTraits<unsigned int>::Type typeSlots:15;
         // Determines if we need are a dictionary type
-        Field(unsigned int) hasAccessors:1;
-        Field(unsigned int) unused:7;
+        typename WriteBarrierFieldTypeTraits<unsigned int>::Type hasAccessors:1;
+        typename WriteBarrierFieldTypeTraits<unsigned int>::Type unused:7;
 
         // DOM Direct functions need to be able to set the length at construction time without undeferring the function.
         // We can store the length here so it can be set at the time of undeferral.
-        Field(unsigned int) deferredLength:8;
+        typename WriteBarrierFieldTypeTraits<unsigned int>::Type deferredLength:8;
 
         static Var ExternalFunctionThunk(RecyclableObject* function, CallInfo callInfo, ...);
         static Var WrappedFunctionThunk(RecyclableObject* function, CallInfo callInfo, ...);

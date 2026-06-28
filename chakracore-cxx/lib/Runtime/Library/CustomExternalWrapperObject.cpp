@@ -910,11 +910,11 @@ BOOL CustomExternalWrapperObject::GetEnumerator(Js::JavascriptStaticEnumerator *
     struct WrapperOwnKeysEnumerator : public JavascriptEnumerator
     {
         typedef JsUtil::BaseHashSet<JsUtil::CharacterBuffer<char16_t>, Recycler> VisitedNamesHashSet;
-        Field(VisitedNamesHashSet*) visited;
-        Field(JavascriptArray*) trapResult;
-        Field(CustomExternalWrapperObject*) wrapper;
+        typename WriteBarrierFieldTypeTraits<VisitedNamesHashSet*>::Type visited;
+        typename WriteBarrierFieldTypeTraits<JavascriptArray*>::Type trapResult;
+        typename WriteBarrierFieldTypeTraits<CustomExternalWrapperObject*>::Type wrapper;
         FieldNoBarrier(ScriptContext*) scriptContext;
-        Field(uint32_t) index;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type index;
 
         DEFINE_VTABLE_CTOR_ABSTRACT(WrapperOwnKeysEnumerator, JavascriptEnumerator)
 

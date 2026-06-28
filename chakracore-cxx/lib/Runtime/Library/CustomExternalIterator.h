@@ -44,11 +44,11 @@ namespace Js
             Var prototypeForIterator, InitIteratorFunction initFunction, NextFunction nextFunction);
 
     public:
-        Field(JavascriptTypeId) m_externalTypeId;
-        Field(uint) m_extraByteCount;
-        Field(InitIteratorFunction) m_initFunction;
-        Field(NextFunction) m_nextFunction;
-        Field(Var) m_prototypeForIterator;
+        typename WriteBarrierFieldTypeTraits<JavascriptTypeId>::Type m_externalTypeId;
+        typename WriteBarrierFieldTypeTraits<uint>::Type m_extraByteCount;
+        typename WriteBarrierFieldTypeTraits<InitIteratorFunction>::Type m_initFunction;
+        typename WriteBarrierFieldTypeTraits<NextFunction>::Type m_nextFunction;
+        typename WriteBarrierFieldTypeTraits<Var>::Type m_prototypeForIterator;
 
         friend class JavascriptLibrary;
 #if ENABLE_TTD
@@ -68,7 +68,7 @@ namespace Js
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptExternalIteratorNextFunction);
         DEFINE_VTABLE_CTOR(JavascriptExternalIteratorNextFunction, RuntimeFunction);
 
-        Field(JavascriptTypeId) m_externalTypeId;
+        typename WriteBarrierFieldTypeTraits<JavascriptTypeId>::Type m_externalTypeId;
 
         JavascriptExternalIteratorNextFunction(DynamicType* type, FunctionInfo* functionInfo, JavascriptTypeId typeId);
     public:
@@ -93,9 +93,9 @@ namespace Js
     class CustomExternalIterator : public DynamicObject
     {
     private:
-        Field(ExternalIteratorKind) m_kind;
-        Field(JavascriptTypeId) m_externalTypeId;
-        Field(NextFunction) m_nextFunction;
+        typename WriteBarrierFieldTypeTraits<ExternalIteratorKind>::Type m_kind;
+        typename WriteBarrierFieldTypeTraits<JavascriptTypeId>::Type m_externalTypeId;
+        typename WriteBarrierFieldTypeTraits<NextFunction>::Type m_nextFunction;
 
     protected:
         DEFINE_VTABLE_CTOR(CustomExternalIterator, DynamicObject);

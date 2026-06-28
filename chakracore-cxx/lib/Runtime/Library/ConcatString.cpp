@@ -393,7 +393,7 @@ namespace Js
             if (newSlotCount <= c_maxChunkSlotCount)
             {
                 // While we fit into MAX chunk size, realloc/grow current chunk.
-                Field(JavascriptString*)* newSlots = RecyclerNewArray(
+                typename WriteBarrierFieldTypeTraits<JavascriptString*>::Type* newSlots = RecyclerNewArray(
                     this->GetScriptContext()->GetRecycler(), typename WriteBarrierFieldTypeTraits<JavascriptString*>::Type, newSlotCount);
                 CopyArray(newSlots, newSlotCount, m_slots, m_slotCount);
                 m_slots = newSlots;

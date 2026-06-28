@@ -29,7 +29,7 @@ namespace Js
     class FunctionWithComputedName : public BaseClass
     {
     private:
-        Field(Var) computedNameVar;
+        typename WriteBarrierFieldTypeTraits<Var>::Type computedNameVar;
 
     protected:
         DEFINE_VTABLE_CTOR(FunctionWithComputedName<BaseClass>, BaseClass);
@@ -49,7 +49,7 @@ namespace Js
     class FunctionWithHomeObj : public BaseClass
     {
     private:
-        Field(Var) homeObj;
+        typename WriteBarrierFieldTypeTraits<Var>::Type homeObj;
     protected:
         DEFINE_VTABLE_CTOR(FunctionWithHomeObj<BaseClass>, BaseClass);
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(FunctionWithHomeObj<BaseClass>);
@@ -68,9 +68,9 @@ namespace Js
     class ScriptFunction : public ScriptFunctionBase
     {
     private:
-        Field(FrameDisplay*) environment;  // Optional environment, for closures
-        Field(ActivationObjectEx *) cachedScopeObj;
-        Field(bool) hasInlineCaches;
+        typename WriteBarrierFieldTypeTraits<FrameDisplay*>::Type environment;  // Optional environment, for closures
+        typename WriteBarrierFieldTypeTraits<ActivationObjectEx *>::Type cachedScopeObj;
+        typename WriteBarrierFieldTypeTraits<bool>::Type hasInlineCaches;
 
         static JavascriptString* GetComputedName(Var computedNameVar, ScriptContext * scriptContext);
         static bool GetSymbolName(Var computedNameVar, const char16_t** symbolName, charcount_t *length);
@@ -182,7 +182,7 @@ namespace Js
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(AsmJsScriptFunction);
 
     private:
-        typename WriteBarrierFieldTypeTraits<Field(Var>::Type*) m_moduleEnvironment;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<Var>::Type*>::Type m_moduleEnvironment;
     };
 
     template <> inline bool VarIsImpl<AsmJsScriptFunction>(RecyclableObject* obj)
@@ -209,7 +209,7 @@ namespace Js
         DEFINE_VTABLE_CTOR(WasmScriptFunction, AsmJsScriptFunction);
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(WasmScriptFunction);
     private:
-        Field(Wasm::WasmSignature *) m_signature;
+        typename WriteBarrierFieldTypeTraits<Wasm::WasmSignature *>::Type m_signature;
     };
 
     template <> inline bool VarIsImpl<WasmScriptFunction>(RecyclableObject* obj)
@@ -226,19 +226,19 @@ namespace Js
     class ScriptFunctionWithInlineCache : public ScriptFunction
     {
     private:
-        Field(void**) m_inlineCaches;
+        typename WriteBarrierFieldTypeTraits<void**>::Type m_inlineCaches;
 
 #if DBG
 #define InlineCacheTypeNone         0x00
 #define InlineCacheTypeInlineCache  0x01
 #define InlineCacheTypeIsInst       0x02
-        Field(byte *) m_inlineCacheTypes;
+        typename WriteBarrierFieldTypeTraits<byte *>::Type m_inlineCacheTypes;
 #endif
-        Field(uint) inlineCacheCount;
-        Field(uint) rootObjectLoadInlineCacheStart;
-        Field(uint) rootObjectLoadMethodInlineCacheStart;
-        Field(uint) rootObjectStoreInlineCacheStart;
-        Field(uint) isInstInlineCacheCount;
+        typename WriteBarrierFieldTypeTraits<uint>::Type inlineCacheCount;
+        typename WriteBarrierFieldTypeTraits<uint>::Type rootObjectLoadInlineCacheStart;
+        typename WriteBarrierFieldTypeTraits<uint>::Type rootObjectLoadMethodInlineCacheStart;
+        typename WriteBarrierFieldTypeTraits<uint>::Type rootObjectStoreInlineCacheStart;
+        typename WriteBarrierFieldTypeTraits<uint>::Type isInstInlineCacheCount;
 
     protected:
         ScriptFunctionWithInlineCache(DynamicType * type);

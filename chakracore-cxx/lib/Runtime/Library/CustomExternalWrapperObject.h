@@ -11,15 +11,15 @@ namespace Js
     typedef void (*JsFinalizeCallback)(void * data);
 
     typedef struct _JsGetterSetterInterceptor {
-        Field(void *) getTrap;
-        Field(void *) setTrap;
-        Field(void *) deletePropertyTrap;
-        Field(void *) enumerateTrap;
-        Field(void *) ownKeysTrap;
-        Field(void *) hasTrap;
-        Field(void *) getOwnPropertyDescriptorTrap;
-        Field(void *) definePropertyTrap;
-        Field(void *) initializeTrap;
+        typename WriteBarrierFieldTypeTraits<void *>::Type getTrap;
+        typename WriteBarrierFieldTypeTraits<void *>::Type setTrap;
+        typename WriteBarrierFieldTypeTraits<void *>::Type deletePropertyTrap;
+        typename WriteBarrierFieldTypeTraits<void *>::Type enumerateTrap;
+        typename WriteBarrierFieldTypeTraits<void *>::Type ownKeysTrap;
+        typename WriteBarrierFieldTypeTraits<void *>::Type hasTrap;
+        typename WriteBarrierFieldTypeTraits<void *>::Type getOwnPropertyDescriptorTrap;
+        typename WriteBarrierFieldTypeTraits<void *>::Type definePropertyTrap;
+        typename WriteBarrierFieldTypeTraits<void *>::Type initializeTrap;
     } JsGetterSetterInterceptor;
 
     class CustomExternalWrapperType : public DynamicType
@@ -155,18 +155,18 @@ namespace Js
             External
         };
 
-        Field(bool) initialized = false;
-        Field(SlotType) slotType;
+        typename WriteBarrierFieldTypeTraits<bool>::Type initialized = false;
+        typename WriteBarrierFieldTypeTraits<SlotType>::Type slotType;
         union SlotInfo
         {
-            Field(void *) slot;
-            Field(uint) inlineSlotSize;
+            typename WriteBarrierFieldTypeTraits<void *>::Type slot;
+            typename WriteBarrierFieldTypeTraits<uint>::Type inlineSlotSize;
             SlotInfo()
             {
                 memset(this, 0, sizeof(SlotInfo));
             }
         };
-        Field(SlotInfo) u;
+        typename WriteBarrierFieldTypeTraits<SlotInfo>::Type u;
 
         Var GetValueFromDescriptor(Var instance, PropertyDescriptor propertyDescriptor, ScriptContext * requestContext);
         Var GetName(ScriptContext* requestContext, PropertyId propertyId, Var * isPropertyNameNumeric, Var * propertyNameNumericValue);

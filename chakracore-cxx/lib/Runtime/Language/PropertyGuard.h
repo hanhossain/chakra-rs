@@ -19,12 +19,12 @@ class PropertyGuard
 #endif
 
 private:
-    Field(intptr_t) value; // value is address of Js::Type
+    typename WriteBarrierFieldTypeTraits<intptr_t>::Type value; // value is address of Js::Type
 #if ENABLE_NATIVE_CODEGEN
-    Field(bool) isPoly;
+    typename WriteBarrierFieldTypeTraits<bool>::Type isPoly;
 #endif
 #if DBG
-    Field(bool) wasReincarnated = false;
+    typename WriteBarrierFieldTypeTraits<bool>::Type wasReincarnated = false;
 #endif
 public:
     static PropertyGuard* New(Recycler* recycler) { return RecyclerNewLeaf(recycler, Js::PropertyGuard); }

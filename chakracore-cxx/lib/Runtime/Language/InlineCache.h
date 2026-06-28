@@ -493,11 +493,11 @@ namespace Js
 
     protected:
         FieldNoBarrier(InlineCache *) inlineCaches;
-        Field(uint16) size;
-        Field(bool) ignoreForEquivalentObjTypeSpec;
-        Field(bool) cloneForJitTimeUse;
+        typename WriteBarrierFieldTypeTraits<uint16>::Type size;
+        typename WriteBarrierFieldTypeTraits<bool>::Type ignoreForEquivalentObjTypeSpec;
+        typename WriteBarrierFieldTypeTraits<bool>::Type cloneForJitTimeUse;
 
-        Field(int32_t) inlineCachesFillInfo;
+        typename WriteBarrierFieldTypeTraits<int32_t>::Type inlineCachesFillInfo;
 
         PolymorphicInlineCache(InlineCache * inlineCaches, uint16 size)
             : inlineCaches(inlineCaches), size(size), ignoreForEquivalentObjTypeSpec(false), cloneForJitTimeUse(true), inlineCachesFillInfo(0)
@@ -694,7 +694,7 @@ namespace Js
     class ScriptContextPolymorphicInlineCache : public PolymorphicInlineCache
     {
     private:
-        Field(JavascriptLibrary*) javascriptLibrary;
+        typename WriteBarrierFieldTypeTraits<JavascriptLibrary*>::Type javascriptLibrary;
 
         ScriptContextPolymorphicInlineCache(InlineCache * inlineCaches, uint16 size, JavascriptLibrary * javascriptLibrary)
             : PolymorphicInlineCache(inlineCaches, size), javascriptLibrary(javascriptLibrary)

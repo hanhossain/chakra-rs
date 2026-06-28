@@ -57,7 +57,7 @@ T* WebAssemblyEnvironment::GetVarElement(typename WriteBarrierFieldTypeTraits<Va
         Js::Throw::InternalError();
     }
 
-    Field(Var)* functionPtr = ptr + index;
+    typename WriteBarrierFieldTypeTraits<Var>::Type* functionPtr = ptr + index;
     CheckPtrIsValid<T*>((intptr_t)functionPtr);
     Var varFunc = *functionPtr;
     if (varFunc)
@@ -80,7 +80,7 @@ void WebAssemblyEnvironment::SetVarElement(typename WriteBarrierFieldTypeTraits<
         Js::Throw::InternalError();
     }
 
-    Field(Var)* dst = ptr + index;
+    typename WriteBarrierFieldTypeTraits<Var>::Type* dst = ptr + index;
     CheckPtrIsValid<Var>((intptr_t)dst);
     AssertMsg(*dst == nullptr, "We shouldn't overwrite anything on the environment once it is set");
     *dst = val;

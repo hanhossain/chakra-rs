@@ -109,10 +109,10 @@ namespace Js
             static const uint MaxChainedBlockSize;
 
         private:
-            Field(Block *const) bufferOwner;
-            Field(CharCount) charLength;
-            Field(CharCount) charCapacity;
-            Field(const Block *const) previous;
+            typename WriteBarrierFieldTypeTraits<Block *const>::Type bufferOwner;
+            typename WriteBarrierFieldTypeTraits<CharCount>::Type charLength;
+            typename WriteBarrierFieldTypeTraits<CharCount>::Type charCapacity;
+            typename WriteBarrierFieldTypeTraits<const Block *const>::Type previous;
 
         private:
             Block(const CharCount charCapacity, const Block *const previous);
@@ -182,9 +182,9 @@ namespace Js
         class BlockInfo
         {
         private:
-            Field(void *) buffer;
-            Field(CharCount) charLength;
-            Field(CharCount) charCapacity;
+            typename WriteBarrierFieldTypeTraits<void *>::Type buffer;
+            typename WriteBarrierFieldTypeTraits<CharCount>::Type charLength;
+            typename WriteBarrierFieldTypeTraits<CharCount>::Type charCapacity;
 
         public:
             BlockInfo();
@@ -315,10 +315,10 @@ namespace Js
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private:
-        Field(BlockInfo) lastBlockInfo;
-        Field(CharCount) directCharLength;
-        Field(bool) ownsLastBlock;
-        Field(Block *) lastBlock;
+        typename WriteBarrierFieldTypeTraits<BlockInfo>::Type lastBlockInfo;
+        typename WriteBarrierFieldTypeTraits<CharCount>::Type directCharLength;
+        typename WriteBarrierFieldTypeTraits<bool>::Type ownsLastBlock;
+        typename WriteBarrierFieldTypeTraits<Block *>::Type lastBlock;
 
     private:
         CompoundString(const CharCount initialCharCapacity, JavascriptLibrary *const library);

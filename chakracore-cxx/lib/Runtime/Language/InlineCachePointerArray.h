@@ -13,7 +13,7 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<T*>::Type*>::Type inlineCaches;
     private:
 #if DBG
-        Field(uint) inlineCacheCount;
+        typename WriteBarrierFieldTypeTraits<uint>::Type inlineCacheCount;
 #endif
 
     public:

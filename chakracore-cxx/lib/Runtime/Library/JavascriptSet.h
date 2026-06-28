@@ -38,18 +38,18 @@ namespace Js
             ComplexVarSet
         };
 
-        Field(SetDataList) list;
+        typename WriteBarrierFieldTypeTraits<SetDataList>::Type list;
         union SetUnion
         {
-            Field(SimpleVarDataSet*) simpleVarSet;
-            Field(ComplexVarDataSet*) complexVarSet;
-            Field(BVSparse<Recycler>*) intSet;
+            typename WriteBarrierFieldTypeTraits<SimpleVarDataSet*>::Type simpleVarSet;
+            typename WriteBarrierFieldTypeTraits<ComplexVarDataSet*>::Type complexVarSet;
+            typename WriteBarrierFieldTypeTraits<BVSparse<Recycler>*>::Type intSet;
             SetUnion() {}
         };
 
-        Field(SetUnion) u;
+        typename WriteBarrierFieldTypeTraits<SetUnion>::Type u;
 
-        Field(SetKind) kind = SetKind::EmptySet;
+        typename WriteBarrierFieldTypeTraits<SetKind>::Type kind = SetKind::EmptySet;
 
         DEFINE_VTABLE_CTOR_MEMBER_INIT(JavascriptSet, DynamicObject, list);
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptSet);

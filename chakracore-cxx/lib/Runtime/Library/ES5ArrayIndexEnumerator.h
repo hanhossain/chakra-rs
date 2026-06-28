@@ -9,11 +9,11 @@ namespace Js
     class ES5ArrayIndexEnumerator : public JavascriptArrayIndexEnumeratorBase
     {
     private:
-        Field(uint32_t) initialLength;                   // The initial array length when this enumerator is created
-        Field(uint32_t) dataIndex;                       // Current data index
-        Field(uint32_t) descriptorIndex;                 // Current descriptor index
-        Field(IndexPropertyDescriptor*) descriptor;    // Current descriptor
-        Field(void *) descriptorValidationToken;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type initialLength;                   // The initial array length when this enumerator is created
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type dataIndex;                       // Current data index
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type descriptorIndex;                 // Current descriptor index
+        typename WriteBarrierFieldTypeTraits<IndexPropertyDescriptor*>::Type descriptor;    // Current descriptor
+        typename WriteBarrierFieldTypeTraits<void *>::Type descriptorValidationToken;
     protected:
         DEFINE_VTABLE_CTOR(ES5ArrayIndexEnumerator, JavascriptArrayIndexEnumeratorBase);
 

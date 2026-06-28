@@ -13,7 +13,7 @@ namespace Js
     {
     private:
         static FunctionInfo functionInfo;
-        Field(GeneratorVirtualScriptFunction*) scriptFunction;
+        typename WriteBarrierFieldTypeTraits<GeneratorVirtualScriptFunction*>::Type scriptFunction;
 
     protected:
         DEFINE_VTABLE_CTOR(JavascriptGeneratorFunction, ScriptFunctionBase);
@@ -105,7 +105,7 @@ namespace Js
         friend class JavascriptGeneratorFunction;
         friend Var Js::JavascriptFunction::NewInstanceHelper(ScriptContext*, RecyclableObject*, CallInfo, ArgumentReader&, Js::JavascriptFunction::FunctionKind);
 
-        Field(JavascriptGeneratorFunction*) realFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptGeneratorFunction*>::Type realFunction;
 
     protected:
         DEFINE_VTABLE_CTOR(GeneratorVirtualScriptFunction, ScriptFunction);

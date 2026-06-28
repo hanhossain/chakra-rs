@@ -22,7 +22,7 @@ namespace TTD
         //The maps for inflated function bodies
         TTDIdentifierDictionary<TTD_PTR_ID, Js::FunctionBody*> m_functionBodyMap;
         TTDIdentifierDictionary<TTD_PTR_ID, Js::FrameDisplay*> m_environmentMap;
-        TTDIdentifierDictionary<TTD_PTR_ID, Field(Js::Var)*> m_slotArrayMap;
+        TTDIdentifierDictionary<TTD_PTR_ID, typename WriteBarrierFieldTypeTraits<Js::Var>::Type*> m_slotArrayMap;
 
         //The maps for resolving debug scopes
         TTDIdentifierDictionary<TTD_PTR_ID, Js::FunctionBody*> m_debuggerScopeHomeBodyMap;

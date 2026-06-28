@@ -7269,7 +7269,7 @@ namespace Js
         // The last void* is the linklist connecting to next block.
         if (bindRefChunkCurrent == bindRefChunkEnd)
         {
-            Field(void*)* tmpBindRefChunk = RecyclerNewArrayZ(recycler,
+            typename WriteBarrierFieldTypeTraits<void*>::Type* tmpBindRefChunk = RecyclerNewArrayZ(recycler,
                 typename WriteBarrierFieldTypeTraits<void*>::Type, HeapConstants::ObjectGranularity / sizeof(void *));
             // reserve the last void* as the linklist node.
             bindRefChunkEnd = tmpBindRefChunk + (HeapConstants::ObjectGranularity / sizeof(void *) -1 );

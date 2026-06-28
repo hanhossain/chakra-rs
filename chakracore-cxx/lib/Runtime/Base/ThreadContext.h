@@ -926,9 +926,9 @@ private:
         // (the code) is responsible for keeping it alive.
         // Each unique guard, is weakly referenced, such that it can be reclaimed if not referenced elsewhere even without being
         // invalidated.  The entry of a unique guard is removed from the table once the corresponding cache is invalidated.
-        Field(Js::PropertyGuard*) sharedGuard;
-        Field(PropertyGuardHashSet) uniqueGuards;
-        Field(EntryPointDictionary*) entryPoints;
+        typename WriteBarrierFieldTypeTraits<Js::PropertyGuard*>::Type sharedGuard;
+        typename WriteBarrierFieldTypeTraits<PropertyGuardHashSet>::Type uniqueGuards;
+        typename WriteBarrierFieldTypeTraits<EntryPointDictionary*>::Type entryPoints;
 
         PropertyGuardEntry(Recycler* recycler) : sharedGuard(nullptr), uniqueGuards(recycler), entryPoints(nullptr) {}
     };
@@ -993,11 +993,11 @@ private:
     public:
         SourceDynamicProfileManagerCache() : refCount(0), sourceProfileManagerMap(nullptr) {}
 
-        Field(SourceDynamicProfileManagerMap*) sourceProfileManagerMap;
+        typename WriteBarrierFieldTypeTraits<SourceDynamicProfileManagerMap*>::Type sourceProfileManagerMap;
         void AddRef() { refCount++; }
         uint Release() { Assert(refCount > 0); return --refCount; }
     private:
-        Field(uint) refCount;              // For every script context using this cache, there is a ref count added.
+        typename WriteBarrierFieldTypeTraits<uint>::Type refCount;              // For every script context using this cache, there is a ref count added.
     };
 
     typedef JsUtil::BaseDictionary<const char16_t*, SourceDynamicProfileManagerCache*, Recycler, PowerOf2SizePolicy> SourceProfileManagersByUrlMap;
@@ -1005,31 +1005,31 @@ private:
     struct RecyclableData
     {
         RecyclableData(Recycler *const recycler);
-        Field(Js::TempArenaAllocatorObject *) temporaryArenaAllocators[MaxTemporaryArenaAllocators];
-        Field(Js::TempGuestArenaAllocatorObject *) temporaryGuestArenaAllocators[MaxTemporaryArenaAllocators];
+        typename WriteBarrierFieldTypeTraits<Js::TempArenaAllocatorObject *>::Type temporaryArenaAllocators[MaxTemporaryArenaAllocators];
+        typename WriteBarrierFieldTypeTraits<Js::TempGuestArenaAllocatorObject *>::Type temporaryGuestArenaAllocators[MaxTemporaryArenaAllocators];
 
-        Field(Js::JavascriptExceptionObject *) pendingFinallyException;
+        typename WriteBarrierFieldTypeTraits<Js::JavascriptExceptionObject *>::Type pendingFinallyException;
 
-        Field(Js::JavascriptExceptionObject *) exceptionObject;
-        Field(bool) propagateException;
+        typename WriteBarrierFieldTypeTraits<Js::JavascriptExceptionObject *>::Type exceptionObject;
+        typename WriteBarrierFieldTypeTraits<bool>::Type propagateException;
 
         // We throw a JS catchable SO exception if we detect we might overflow the stack. Allocating this (JS)
         // object though might really overflow the stack. So use this thread global to identify them from the throw point
         // to where they are caught; where the stack has been unwound and it is safer to allocate the real exception
         // object and throw.
-        Field(Js::JavascriptExceptionObject) soErrorObject;
+        typename WriteBarrierFieldTypeTraits<Js::JavascriptExceptionObject>::Type soErrorObject;
 
         // We can't allocate an out of memory object...  So use this static as a way to identify
         // them from the throw point to where they are caught.
-        Field(Js::JavascriptExceptionObject) oomErrorObject;
+        typename WriteBarrierFieldTypeTraits<Js::JavascriptExceptionObject>::Type oomErrorObject;
 
         // This is for JsRT scenario where a runtime is not usable after a suspend request, before a resume runtime call is made
-        Field(Js::JavascriptExceptionObject) terminatedErrorObject;
+        typename WriteBarrierFieldTypeTraits<Js::JavascriptExceptionObject>::Type terminatedErrorObject;
 
-        Field(Js::JavascriptExceptionObject*) unhandledExceptionObject;
+        typename WriteBarrierFieldTypeTraits<Js::JavascriptExceptionObject*>::Type unhandledExceptionObject;
 
         // Used to temporarily keep throwing exception object alive (thrown but not yet caught)
-        Field(Js::JavascriptExceptionObject*) tempUncaughtException;
+        typename WriteBarrierFieldTypeTraits<Js::JavascriptExceptionObject*>::Type tempUncaughtException;
 
         // Contains types that have property caches that need to be tracked, as the caches may need to be cleared. Types that
         // contain a property cache for a property that is on a prototype object will be tracked in this map since those caches
@@ -1039,7 +1039,7 @@ private:
         // they're searching through a bucket while registering a type or enumerating types to invalidate, or when a property ID
         // is reclaimed. If none of those happen, then this collection may contain weak reference handles to deleted objects
         // that would not get removed, but it would also not get any bigger.
-        Field(PropertyIdToTypeHashSetDictionary) typesWithProtoPropertyCache;
+        typename WriteBarrierFieldTypeTraits<PropertyIdToTypeHashSetDictionary>::Type typesWithProtoPropertyCache;
 
 #if ENABLE_NATIVE_CODEGEN
         // The property guard dictionary contains property guards which need to be invalidated in response to properties changing
@@ -1048,35 +1048,35 @@ private:
         // When a guard is no longer needed it is garbage collected, but the weak references and dictionary entries remain, until
         // the guards for a given property get invalidated.
         // TODO: Create and use a self-cleaning weak reference dictionary, which would periodically remove any unused weak references.
-        Field(PropertyGuardDictionary) propertyGuards;
+        typename WriteBarrierFieldTypeTraits<PropertyGuardDictionary>::Type propertyGuards;
 #endif
 
-        Field(PropertyNoCaseSetType *) caseInvariantPropertySet;
+        typename WriteBarrierFieldTypeTraits<PropertyNoCaseSetType *>::Type caseInvariantPropertySet;
 
-        Field(JsUtil::List<Js::PropertyRecord const*>*) boundPropertyStrings; // Recycler allocated list of property strings that we need to strongly reference so that they're not reclaimed
+        typename WriteBarrierFieldTypeTraits<JsUtil::List<Js::PropertyRecord const*>*>::Type boundPropertyStrings; // Recycler allocated list of property strings that we need to strongly reference so that they're not reclaimed
 
-        Field(SourceProfileManagersByUrlMap*) sourceProfileManagersByUrl;
+        typename WriteBarrierFieldTypeTraits<SourceProfileManagersByUrlMap*>::Type sourceProfileManagersByUrl;
 
         // Used to register recyclable data that needs to be kept alive while jitting
         typedef JsUtil::DoublyLinkedList<Js::CodeGenRecyclableData, Recycler> CodeGenRecyclableDataList;
-        Field(CodeGenRecyclableDataList) codeGenRecyclableDatas;
+        typename WriteBarrierFieldTypeTraits<CodeGenRecyclableDataList>::Type codeGenRecyclableDatas;
 
         // Used to root old entry points so that they're not prematurely collected
-        Field(Js::FunctionEntryPointInfo*) oldEntryPointInfo;
+        typename WriteBarrierFieldTypeTraits<Js::FunctionEntryPointInfo*>::Type oldEntryPointInfo;
 
         // Used to store a mapping of string to Symbol for cross-realm Symbol registration
         // See ES6 (draft 22) 19.4.2.2
-        Field(SymbolRegistrationMap*) symbolRegistrationMap;
+        typename WriteBarrierFieldTypeTraits<SymbolRegistrationMap*>::Type symbolRegistrationMap;
 
 #ifdef ENABLE_SCRIPT_DEBUGGING
         // Just holding the reference to the returnedValueList of the stepController. This way that list will not get recycled prematurely.
-        Field(Js::ReturnedValueList *) returnedValueList;
+        typename WriteBarrierFieldTypeTraits<Js::ReturnedValueList *>::Type returnedValueList;
 #endif
 
-        Field(uint) constructorCacheInvalidationCount;
+        typename WriteBarrierFieldTypeTraits<uint>::Type constructorCacheInvalidationCount;
 
         // use for autoProxy called from Debug.setAutoProxyName. we need to keep the buffer from GetSz() alive.
-        Field(const char16_t*) autoProxyName;
+        typename WriteBarrierFieldTypeTraits<const char16_t*>::Type autoProxyName;
     };
 
     static ThreadContext * globalListLast;

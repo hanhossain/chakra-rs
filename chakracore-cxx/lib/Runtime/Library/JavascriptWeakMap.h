@@ -51,7 +51,7 @@ namespace Js
         typedef const RecyclerWeakReference<RecyclableObject>* WeakType;
 #endif
 
-        Field(KeySet) keySet;
+        typename WriteBarrierFieldTypeTraits<KeySet>::Type keySet;
 
         WeakMapKeyMap* GetWeakMapKeyMapFromKey(RecyclableObject* key) const;
         WeakMapKeyMap* AddWeakMapKeyMapToKey(RecyclableObject* key);

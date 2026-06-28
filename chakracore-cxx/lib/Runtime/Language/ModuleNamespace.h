@@ -83,11 +83,11 @@ namespace Js
         virtual void SetPrototype(RecyclableObject* newPrototype) override { Assert(false); return; }
 
     private:
-        Field(ModuleRecordBase*) moduleRecord;
-        Field(UnambiguousExportMap*) unambiguousNonLocalExports;
-        Field(SimplePropertyDescriptorMap*) propertyMap;   // local exports.
-        Field(ListForListIterator*) sortedExportedNames;   // sorted exported names for both local and indirect exports; excludes symbols.
-        typename WriteBarrierFieldTypeTraits<Field(Var>::Type*) nsSlots;
+        typename WriteBarrierFieldTypeTraits<ModuleRecordBase*>::Type moduleRecord;
+        typename WriteBarrierFieldTypeTraits<UnambiguousExportMap*>::Type unambiguousNonLocalExports;
+        typename WriteBarrierFieldTypeTraits<SimplePropertyDescriptorMap*>::Type propertyMap;   // local exports.
+        typename WriteBarrierFieldTypeTraits<ListForListIterator*>::Type sortedExportedNames;   // sorted exported names for both local and indirect exports; excludes symbols.
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<Var>::Type*>::Type nsSlots;
 
         void SetNSSlotsForModuleNS(typename WriteBarrierFieldTypeTraits<Var>::Type* nsSlot) { this->nsSlots = nsSlot; }
         Var GetNSSlot(BigPropertyIndex propertyIndex);

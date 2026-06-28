@@ -36,15 +36,15 @@ namespace Js
 #endif
 
     private:
-        Field(PropertyId) pid;
+        typename WriteBarrierFieldTypeTraits<PropertyId>::Type pid;
         //Made this mutable so that we can set it for Built-In js property records when we are adding it.
         //If we try to set it when initializing; we get extra code added for each built in; and thus increasing the size of chakracore
-        mutable Field(hash_t) hash;
-        Field(bool) isNumeric;
-        Field(bool) isBound;
-        Field(bool) isSymbol;
+        mutable typename WriteBarrierFieldTypeTraits<hash_t>::Type hash;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isNumeric;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isBound;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isSymbol;
         // Have the length before the buffer so that the buffer would have a BSTR format
-        Field(uint32_t) byteCount;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type byteCount;
 
         PropertyRecord(uint32_t bytelength, bool isNumeric, uint hash, bool isSymbol);
         PropertyRecord(PropertyId pid, uint hash, bool isNumeric, uint32_t byteCount, bool isSymbol);
@@ -188,7 +188,7 @@ namespace Js
     class HashedCharacterBuffer : public JsUtil::CharacterBuffer<TChar>
     {
     private:
-        Field(hash_t) hashCode;
+        typename WriteBarrierFieldTypeTraits<hash_t>::Type hashCode;
 
     public:
         HashedCharacterBuffer(TChar const * string, charcount_t len) :
@@ -322,7 +322,7 @@ namespace Js
           {
           }
 
-        Field(uint) caseInvariantHashCode;
+        typename WriteBarrierFieldTypeTraits<uint>::Type caseInvariantHashCode;
     };
 }
 

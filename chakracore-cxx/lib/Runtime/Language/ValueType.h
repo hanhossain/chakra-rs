@@ -69,20 +69,20 @@ private:
         // Don't use the following directly because they only apply to specific types. They're mostly for debugger-friendliness.
         struct
         {
-            Field(TSize) : VALUE_TYPE_OBJECT_BIT_INDEX;
-            Field(TSize) _objectBit : 1;
+            typename WriteBarrierFieldTypeTraits<TSize>::Type : VALUE_TYPE_OBJECT_BIT_INDEX;
+            typename WriteBarrierFieldTypeTraits<TSize>::Type _objectBit : 1;
         };
         struct
         {
-            Field(Bits) _nonObjectBits : VALUE_TYPE_COMMON_BIT_COUNT + VALUE_TYPE_NONOBJECT_BIT_COUNT;
+            typename WriteBarrierFieldTypeTraits<Bits>::Type _nonObjectBits : VALUE_TYPE_COMMON_BIT_COUNT + VALUE_TYPE_NONOBJECT_BIT_COUNT;
         };
         struct
         {
-            Field(ObjectBits) _objectBits : VALUE_TYPE_COMMON_BIT_COUNT + VALUE_TYPE_OBJECT_BIT_COUNT;
+            typename WriteBarrierFieldTypeTraits<ObjectBits>::Type _objectBits : VALUE_TYPE_COMMON_BIT_COUNT + VALUE_TYPE_OBJECT_BIT_COUNT;
             typename WriteBarrierFieldTypeTraits<ObjectType>::Type _objectType : sizeof(TSize) * 8 - (VALUE_TYPE_COMMON_BIT_COUNT + VALUE_TYPE_OBJECT_BIT_COUNT); // use remaining bits
         };
 
-        Field(Bits) bits;
+        typename WriteBarrierFieldTypeTraits<Bits>::Type bits;
     };
 
 public:

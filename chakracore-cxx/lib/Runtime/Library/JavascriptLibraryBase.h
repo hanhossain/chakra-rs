@@ -163,166 +163,166 @@ namespace Js
         bool IsChakraEngine() const { return chakraEngine != nullptr; }
 
     protected:
-        Field(GlobalObject*) globalObject;
-        Field(RuntimeFunction*) mapConstructor;
-        Field(RuntimeFunction*) setConstructor;
-        Field(RuntimeFunction*) weakMapConstructor;
-        Field(RuntimeFunction*) weakSetConstructor;
-        Field(RuntimeFunction*) arrayConstructor;
-        Field(RuntimeFunction*) typedArrayConstructor;
-        Field(RuntimeFunction*) Int8ArrayConstructor;
-        Field(RuntimeFunction*) Uint8ArrayConstructor;
-        Field(RuntimeFunction*) Uint8ClampedArrayConstructor;
-        Field(RuntimeFunction*) Int16ArrayConstructor;
-        Field(RuntimeFunction*) Uint16ArrayConstructor;
-        Field(RuntimeFunction*) Int32ArrayConstructor;
-        Field(RuntimeFunction*) Uint32ArrayConstructor;
-        Field(RuntimeFunction*) Float32ArrayConstructor;
-        Field(RuntimeFunction*) Float64ArrayConstructor;
-        Field(RuntimeFunction*) arrayBufferConstructor;
-        Field(RuntimeFunction*) dataViewConstructor;
-        Field(RuntimeFunction*) booleanConstructor;
-        Field(RuntimeFunction*) dateConstructor;
-        Field(RuntimeFunction*) functionConstructor;
-        Field(RuntimeFunction*) numberConstructor;
-        Field(RuntimeFunction*) bigIntConstructor;
-        Field(RuntimeFunction*) objectConstructor;
-        Field(RuntimeFunction*) symbolConstructor;
-        Field(JavascriptRegExpConstructor*) regexConstructor;
-        Field(RuntimeFunction*) stringConstructor;
-        Field(RuntimeFunction*) pixelArrayConstructor;
+        typename WriteBarrierFieldTypeTraits<GlobalObject*>::Type globalObject;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type mapConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type setConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type weakMapConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type weakSetConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type arrayConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type typedArrayConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type Int8ArrayConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type Uint8ArrayConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type Uint8ClampedArrayConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type Int16ArrayConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type Uint16ArrayConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type Int32ArrayConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type Uint32ArrayConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type Float32ArrayConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type Float64ArrayConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type arrayBufferConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type dataViewConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type booleanConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type dateConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type functionConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type numberConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type bigIntConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type objectConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type symbolConstructor;
+        typename WriteBarrierFieldTypeTraits<JavascriptRegExpConstructor*>::Type regexConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type stringConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type pixelArrayConstructor;
 
-        Field(RuntimeFunction*) errorConstructor;
-        Field(RuntimeFunction*) evalErrorConstructor;
-        Field(RuntimeFunction*) rangeErrorConstructor;
-        Field(RuntimeFunction*) referenceErrorConstructor;
-        Field(RuntimeFunction*) syntaxErrorConstructor;
-        Field(RuntimeFunction*) typeErrorConstructor;
-        Field(RuntimeFunction*) uriErrorConstructor;
-        Field(RuntimeFunction*) aggregateErrorConstructor;
-        Field(RuntimeFunction*) proxyConstructor;
-        Field(RuntimeFunction*) promiseConstructor;
-        Field(RuntimeFunction*) generatorFunctionConstructor;
-        Field(RuntimeFunction*) asyncFunctionConstructor;
-        Field(RuntimeFunction*) asyncGeneratorFunctionConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type errorConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type evalErrorConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type rangeErrorConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type referenceErrorConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type syntaxErrorConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type typeErrorConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type uriErrorConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type aggregateErrorConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type proxyConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type promiseConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type generatorFunctionConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type asyncFunctionConstructor;
+        typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type asyncGeneratorFunctionConstructor;
 
-        Field(JavascriptFunction*) defaultAccessorFunction;
-        Field(JavascriptFunction*) stackTraceAccessorFunction;
-        Field(JavascriptFunction*) throwTypeErrorRestrictedPropertyAccessorFunction;
-        Field(JavascriptFunction*) debugObjectNonUserGetterFunction;
-        Field(JavascriptFunction*) debugObjectNonUserSetterFunction;
-        Field(JavascriptFunction*) debugObjectDebugModeGetterFunction;
-        Field(JavascriptFunction*) __proto__getterFunction;
-        Field(JavascriptFunction*) __proto__setterFunction;
-        Field(JavascriptFunction*) arrayIteratorPrototypeBuiltinNextFunction;
-        Field(JavascriptFunction*) promiseResolveFunction;
-        Field(JavascriptFunction*) promiseThenFunction;
-        Field(JavascriptFunction*) jsonStringifyFunction;
-        Field(JavascriptFunction*) objectFreezeFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type defaultAccessorFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type stackTraceAccessorFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type throwTypeErrorRestrictedPropertyAccessorFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type debugObjectNonUserGetterFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type debugObjectNonUserSetterFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type debugObjectDebugModeGetterFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type __proto__getterFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type __proto__setterFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type arrayIteratorPrototypeBuiltinNextFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type promiseResolveFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type promiseThenFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type jsonStringifyFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type objectFreezeFunction;
 
-        Field(DynamicObject*) mathObject;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type mathObject;
         // SIMD_JS
-        Field(DynamicObject*) simdObject;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type simdObject;
 
-        Field(DynamicObject*) debugObject;
-        Field(DynamicObject*) JSONObject;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type debugObject;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type JSONObject;
 #ifdef ENABLE_INTL_OBJECT
-        Field(DynamicObject*) IntlObject;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type IntlObject;
 #endif
 #if defined(ENABLE_INTL_OBJECT) || defined(ENABLE_JS_BUILTINS)
-        Field(EngineInterfaceObject*) engineInterfaceObject;
+        typename WriteBarrierFieldTypeTraits<EngineInterfaceObject*>::Type engineInterfaceObject;
 #endif
-        Field(DynamicObject*) reflectObject;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type reflectObject;
 
-        Field(DynamicObject*) arrayPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type arrayPrototype;
 
-        Field(DynamicObject*) typedArrayPrototype;
-        Field(DynamicObject*) Int8ArrayPrototype;
-        Field(DynamicObject*) Uint8ArrayPrototype;
-        Field(DynamicObject*) Uint8ClampedArrayPrototype;
-        Field(DynamicObject*) Int16ArrayPrototype;
-        Field(DynamicObject*) Uint16ArrayPrototype;
-        Field(DynamicObject*) Int32ArrayPrototype;
-        Field(DynamicObject*) Uint32ArrayPrototype;
-        Field(DynamicObject*) Float32ArrayPrototype;
-        Field(DynamicObject*) Float64ArrayPrototype;
-        Field(DynamicObject*) Int64ArrayPrototype;
-        Field(DynamicObject*) Uint64ArrayPrototype;
-        Field(DynamicObject*) BoolArrayPrototype;
-        Field(DynamicObject*) CharArrayPrototype;
-        Field(DynamicObject*) arrayBufferPrototype;
-        Field(DynamicObject*) dataViewPrototype;
-        Field(DynamicObject*) pixelArrayPrototype;
-        Field(DynamicObject*) booleanPrototype;
-        Field(DynamicObject*) datePrototype;
-        Field(DynamicObject*) functionPrototype;
-        Field(DynamicObject*) numberPrototype;
-        Field(DynamicObject*) bigintPrototype;
-        Field(ObjectPrototypeObject*) objectPrototype;
-        Field(DynamicObject*) regexPrototype;
-        Field(DynamicObject*) stringPrototype;
-        Field(DynamicObject*) mapPrototype;
-        Field(DynamicObject*) setPrototype;
-        Field(DynamicObject*) weakMapPrototype;
-        Field(DynamicObject*) weakSetPrototype;
-        Field(DynamicObject*) symbolPrototype;
-        Field(DynamicObject*) asyncIteratorPrototype;           // aka %AsyncIteratorPrototype%
-        Field(DynamicObject*) iteratorPrototype;           // aka %IteratorPrototype%
-        Field(DynamicObject*) arrayIteratorPrototype;
-        Field(DynamicObject*) mapIteratorPrototype;
-        Field(DynamicObject*) setIteratorPrototype;
-        Field(DynamicObject*) stringIteratorPrototype;
-        Field(DynamicObject*) promisePrototype;
-        Field(DynamicObject*) generatorFunctionPrototype;      // aka %Generator%
-        Field(DynamicObject*) generatorPrototype;              // aka %GeneratorPrototype%
-        Field(DynamicObject*) asyncFunctionPrototype;          // aka %AsyncFunctionPrototype%
-        Field(DynamicObject*) asyncGeneratorPrototype;         // aka %AsyncGeneratorPrototype%
-        Field(DynamicObject*) asyncGeneratorFunctionPrototype; // aka %AsyncGeneratorFunctionPrototype%
-        Field(DynamicObject*) asyncFromSyncIteratorProtototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type typedArrayPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type Int8ArrayPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type Uint8ArrayPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type Uint8ClampedArrayPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type Int16ArrayPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type Uint16ArrayPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type Int32ArrayPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type Uint32ArrayPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type Float32ArrayPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type Float64ArrayPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type Int64ArrayPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type Uint64ArrayPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type BoolArrayPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type CharArrayPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type arrayBufferPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type dataViewPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type pixelArrayPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type booleanPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type datePrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type functionPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type numberPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type bigintPrototype;
+        typename WriteBarrierFieldTypeTraits<ObjectPrototypeObject*>::Type objectPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type regexPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type stringPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type mapPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type setPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type weakMapPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type weakSetPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type symbolPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type asyncIteratorPrototype;           // aka %AsyncIteratorPrototype%
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type iteratorPrototype;           // aka %IteratorPrototype%
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type arrayIteratorPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type mapIteratorPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type setIteratorPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type stringIteratorPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type promisePrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type generatorFunctionPrototype;      // aka %Generator%
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type generatorPrototype;              // aka %GeneratorPrototype%
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type asyncFunctionPrototype;          // aka %AsyncFunctionPrototype%
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type asyncGeneratorPrototype;         // aka %AsyncGeneratorPrototype%
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type asyncGeneratorFunctionPrototype; // aka %AsyncGeneratorFunctionPrototype%
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type asyncFromSyncIteratorProtototype;
 
-        Field(DynamicObject*) errorPrototype;
-        Field(DynamicObject*) evalErrorPrototype;
-        Field(DynamicObject*) rangeErrorPrototype;
-        Field(DynamicObject*) referenceErrorPrototype;
-        Field(DynamicObject*) syntaxErrorPrototype;
-        Field(DynamicObject*) typeErrorPrototype;
-        Field(DynamicObject*) uriErrorPrototype;
-        Field(DynamicObject*) aggregateErrorPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type errorPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type evalErrorPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type rangeErrorPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type referenceErrorPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type syntaxErrorPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type typeErrorPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type uriErrorPrototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type aggregateErrorPrototype;
 
         //SIMD Prototypes
-        Field(DynamicObject*) simdBool8x16Prototype;
-        Field(DynamicObject*) simdBool16x8Prototype;
-        Field(DynamicObject*) simdBool32x4Prototype;
-        Field(DynamicObject*) simdInt8x16Prototype;
-        Field(DynamicObject*) simdInt16x8Prototype;
-        Field(DynamicObject*) simdInt32x4Prototype;
-        Field(DynamicObject*) simdUint8x16Prototype;
-        Field(DynamicObject*) simdUint16x8Prototype;
-        Field(DynamicObject*) simdUint32x4Prototype;
-        Field(DynamicObject*) simdFloat32x4Prototype;
-        Field(DynamicObject*) simdFloat64x2Prototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type simdBool8x16Prototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type simdBool16x8Prototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type simdBool32x4Prototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type simdInt8x16Prototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type simdInt16x8Prototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type simdInt32x4Prototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type simdUint8x16Prototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type simdUint16x8Prototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type simdUint32x4Prototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type simdFloat32x4Prototype;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type simdFloat64x2Prototype;
 
-        Field(JavascriptBoolean*) booleanTrue;
-        Field(JavascriptBoolean*) booleanFalse;
+        typename WriteBarrierFieldTypeTraits<JavascriptBoolean*>::Type booleanTrue;
+        typename WriteBarrierFieldTypeTraits<JavascriptBoolean*>::Type booleanFalse;
 
-        Field(Var) nan;
-        Field(Var) negativeInfinite;
-        Field(Var) positiveInfinite;
-        Field(Var) pi;
-        Field(Var) minValue;
-        Field(Var) maxValue;
-        Field(Var) negativeZero;
-        Field(RecyclableObject*) undefinedValue;
-        Field(RecyclableObject*) nullValue;
+        typename WriteBarrierFieldTypeTraits<Var>::Type nan;
+        typename WriteBarrierFieldTypeTraits<Var>::Type negativeInfinite;
+        typename WriteBarrierFieldTypeTraits<Var>::Type positiveInfinite;
+        typename WriteBarrierFieldTypeTraits<Var>::Type pi;
+        typename WriteBarrierFieldTypeTraits<Var>::Type minValue;
+        typename WriteBarrierFieldTypeTraits<Var>::Type maxValue;
+        typename WriteBarrierFieldTypeTraits<Var>::Type negativeZero;
+        typename WriteBarrierFieldTypeTraits<RecyclableObject*>::Type undefinedValue;
+        typename WriteBarrierFieldTypeTraits<RecyclableObject*>::Type nullValue;
 
-        Field(JavascriptSymbol*) symbolAsyncIterator;
-        Field(JavascriptSymbol*) symbolHasInstance;
-        Field(JavascriptSymbol*) symbolIsConcatSpreadable;
-        Field(JavascriptSymbol*) symbolIterator;
-        Field(JavascriptSymbol*) symbolSpecies;
-        Field(JavascriptSymbol*) symbolToPrimitive;
-        Field(JavascriptSymbol*) symbolToStringTag;
-        Field(JavascriptSymbol*) symbolUnscopables;
+        typename WriteBarrierFieldTypeTraits<JavascriptSymbol*>::Type symbolAsyncIterator;
+        typename WriteBarrierFieldTypeTraits<JavascriptSymbol*>::Type symbolHasInstance;
+        typename WriteBarrierFieldTypeTraits<JavascriptSymbol*>::Type symbolIsConcatSpreadable;
+        typename WriteBarrierFieldTypeTraits<JavascriptSymbol*>::Type symbolIterator;
+        typename WriteBarrierFieldTypeTraits<JavascriptSymbol*>::Type symbolSpecies;
+        typename WriteBarrierFieldTypeTraits<JavascriptSymbol*>::Type symbolToPrimitive;
+        typename WriteBarrierFieldTypeTraits<JavascriptSymbol*>::Type symbolToStringTag;
+        typename WriteBarrierFieldTypeTraits<JavascriptSymbol*>::Type symbolUnscopables;
 
     public:
         typedef void (CALLBACK *HostPromiseRejectionTrackerCallback)(Var promise, Var reason, bool handled, void *callbackState);
@@ -335,11 +335,11 @@ namespace Js
 
     private:
         FieldNoBarrier(HostPromiseRejectionTrackerCallback) nativeHostPromiseRejectionTracker = nullptr;
-        Field(void *) nativeHostPromiseRejectionTrackerState = nullptr;
+        typename WriteBarrierFieldTypeTraits<void *>::Type nativeHostPromiseRejectionTrackerState = nullptr;
 
     public:
-        Field(ScriptContext*) scriptContext;
-        Field(ChakraEngine*) chakraEngine;
+        typename WriteBarrierFieldTypeTraits<ScriptContext*>::Type scriptContext;
+        typename WriteBarrierFieldTypeTraits<ChakraEngine*>::Type chakraEngine;
 
     private:
         virtual void Dispose(bool isShutdown) override;
@@ -347,17 +347,17 @@ namespace Js
         virtual void Mark(Recycler *recycler) override { AssertMsg(false, "Mark called on object that isn't TrackableObject"); }
 
     protected:
-        Field(JavascriptFunction*) arrayPrototypeForEachFunction;
-        Field(JavascriptFunction*) arrayPrototypeKeysFunction;
-        Field(JavascriptFunction*) arrayPrototypeValuesFunction;
-        Field(JavascriptFunction*) arrayPrototypeEntriesFunction;
-        Field(JavascriptFunction*) debugEval;
-        Field(JavascriptFunction*) getStackTrace;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type arrayPrototypeForEachFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type arrayPrototypeKeysFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type arrayPrototypeValuesFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type arrayPrototypeEntriesFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type debugEval;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type getStackTrace;
 #ifdef EDIT_AND_CONTINUE
-        Field(JavascriptFunction*) editSource;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type editSource;
 #endif
-        Field(JavascriptFunction*) mathMin;
-        Field(JavascriptFunction*) mathMax;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type mathMin;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type mathMax;
 
 #ifdef ENABLE_JS_BUILTINS
     public:

@@ -14,8 +14,8 @@ namespace Js
     class LiteralStringWithPropertyStringPtr : public LiteralString
     {
     private:
-        Field(PropertyString*) propertyString;
-        Field(const Js::PropertyRecord*) propertyRecord;
+        typename WriteBarrierFieldTypeTraits<PropertyString*>::Type propertyString;
+        typename WriteBarrierFieldTypeTraits<const Js::PropertyRecord*>::Type propertyRecord;
 
     public:
         virtual void GetPropertyRecord(_Out_ PropertyRecord const** propRecord, bool dontLookupFromDictionary = false) override;
@@ -180,10 +180,10 @@ namespace Js
         static const int c_maxChunkSlotCount = 1024;
         int GetItemCount() const;
 
-        typename WriteBarrierFieldTypeTraits<Field(JavascriptString*>::Type*) m_slots; // Array of child nodes.
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<JavascriptString*>::Type*>::Type m_slots; // Array of child nodes.
         typename WriteBarrierFieldTypeTraits<int>::Type m_slotCount;   // Number of allocated slots (1 slot holds 1 item) in this chunk.
-        Field(int) m_count;       // Actual number of items in this chunk.
-        Field(ConcatStringBuilder*) m_prevChunk;
+        typename WriteBarrierFieldTypeTraits<int>::Type m_count;       // Actual number of items in this chunk.
+        typename WriteBarrierFieldTypeTraits<ConcatStringBuilder*>::Type m_prevChunk;
     };
 
     // Concat string that wraps another string.
@@ -223,10 +223,10 @@ namespace Js
             m_slots[2] = this->GetLastItem();
         }
 
-        Field(JavascriptString *) m_inner;
+        typename WriteBarrierFieldTypeTraits<JavascriptString *>::Type m_inner;
 
         // Use the padding space for the concat
-        Field(JavascriptString *) m_slots[3];
+        typename WriteBarrierFieldTypeTraits<JavascriptString *>::Type m_slots[3];
     };
 
     // Make sure the padding doesn't add tot he size of ConcatStringWrapping
@@ -272,10 +272,10 @@ namespace Js
         static uint32_t GetOffsetOfSlotCount() { return offsetof(ConcatStringMulti, slotCount); }
         static uint32_t GetOffsetOfSlots() { return offsetof(ConcatStringMulti, m_slots); }
     protected:
-        Field(uint) slotCount;
-        Field(uint)   __alignment;
-        Field(size_t) __alignmentPTR;
-        Field(JavascriptString*) m_slots[];   // These contain the child nodes.
+        typename WriteBarrierFieldTypeTraits<uint>::Type slotCount;
+        typename WriteBarrierFieldTypeTraits<uint>::Type   __alignment;
+        typename WriteBarrierFieldTypeTraits<size_t>::Type __alignmentPTR;
+        typename WriteBarrierFieldTypeTraits<JavascriptString*>::Type m_slots[];   // These contain the child nodes.
 
 #if DBG
         bool IsFilled() const;

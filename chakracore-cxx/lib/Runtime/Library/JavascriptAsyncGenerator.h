@@ -11,9 +11,9 @@ class JavascriptAsyncGenerator : public JavascriptGenerator
 {
     struct AsyncGeneratorRequest
     {
-        Field(Var) data;
-        Field(ResumeYieldKind) kind;
-        Field(JavascriptPromise*) promise;
+        typename WriteBarrierFieldTypeTraits<Var>::Type data;
+        typename WriteBarrierFieldTypeTraits<ResumeYieldKind>::Type kind;
+        typename WriteBarrierFieldTypeTraits<JavascriptPromise*>::Type promise;
 
         AsyncGeneratorRequest(Var data, ResumeYieldKind kind, JavascriptPromise* promise) :
             data(data),
@@ -35,10 +35,10 @@ private:
     DEFINE_VTABLE_CTOR(JavascriptAsyncGenerator, JavascriptGenerator);
     DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptAsyncGenerator);
 
-    Field(RequestQueue*) requestQueue;
-    Field(PendingState) pendingState = PendingState::None;
-    Field(RuntimeFunction*) onFulfilled;
-    Field(RuntimeFunction*) onRejected; 
+    typename WriteBarrierFieldTypeTraits<RequestQueue*>::Type requestQueue;
+    typename WriteBarrierFieldTypeTraits<PendingState>::Type pendingState = PendingState::None;
+    typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type onFulfilled;
+    typename WriteBarrierFieldTypeTraits<RuntimeFunction*>::Type onRejected;
 
     JavascriptAsyncGenerator(
         DynamicType* type,
@@ -125,7 +125,7 @@ public:
             RuntimeFunction(type, functionInfo),
             generator(generator) {}
 
-    Field(JavascriptAsyncGenerator*) generator;
+    typename WriteBarrierFieldTypeTraits<JavascriptAsyncGenerator*>::Type generator;
 };
 
 template<>

@@ -14,13 +14,13 @@ namespace Js {
         private:
             // Real script frames: functionBody, byteCodeOffset
             // Native library builtin (or potentially virtual) frames: name
-            Field(FunctionBody*) functionBody;
+            typename WriteBarrierFieldTypeTraits<FunctionBody*>::Type functionBody;
             union
             {
                 typename WriteBarrierFieldTypeTraits<uint32_t>::Type byteCodeOffset;  // used for script functions        (functionBody != nullptr)
                 typename WriteBarrierFieldTypeTraits<const char16_t *>::Type name;            // used for native/virtual frames   (functionBody == nullptr)
             };
-            Field(StackTraceArguments) argumentTypes;
+            typename WriteBarrierFieldTypeTraits<StackTraceArguments>::Type argumentTypes;
 
         public:
             StackFrame() {}
@@ -65,9 +65,9 @@ namespace Js {
         StackTrace* GetOriginalStackTrace() const { return m_originalStackTrace; }
 
     private:
-        Field(JavascriptFunction*) m_throwingFunction;
-        Field(uint32_t) m_throwingFunctionByteCodeOffset;
-        Field(StackTrace *) m_stackTrace;
-        Field(StackTrace *) m_originalStackTrace;
+        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type m_throwingFunction;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type m_throwingFunctionByteCodeOffset;
+        typename WriteBarrierFieldTypeTraits<StackTrace *>::Type m_stackTrace;
+        typename WriteBarrierFieldTypeTraits<StackTrace *>::Type m_originalStackTrace;
     };
 }

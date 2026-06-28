@@ -117,11 +117,11 @@ namespace Js
         int32_t SeekReadStreamToBlockHelper(_In_ BlockType blockType, _Out_opt_ uint32_t* bytesInBlock);
         int32_t Close();
 
-        Field(IActiveScriptDataCache*) dataCache;
-        Field(IStream*) outStream;
-        Field(IStream*) inStream;
-        Field(uint32_t) bytesWrittenInBlock;
-        Field(uint) blocksWritten;
+        typename WriteBarrierFieldTypeTraits<IActiveScriptDataCache*>::Type dataCache;
+        typename WriteBarrierFieldTypeTraits<IStream*>::Type outStream;
+        typename WriteBarrierFieldTypeTraits<IStream*>::Type inStream;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type bytesWrittenInBlock;
+        typename WriteBarrierFieldTypeTraits<uint>::Type blocksWritten;
     };
 }
 #endif

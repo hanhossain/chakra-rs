@@ -1414,10 +1414,10 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
     {
     private:
         double num;
-        Field(const char16_t *) formatted;
+        typename WriteBarrierFieldTypeTraits<const char16_t *>::Type formatted;
         const charcount_t formattedLength;
-        Field(ScriptContext *) sc;
-        Field(UNumberFormatFields *) fields;
+        typename WriteBarrierFieldTypeTraits<ScriptContext *>::Type sc;
+        typename WriteBarrierFieldTypeTraits<UNumberFormatFields *>::Type fields;
 
         static const UNumberFormatFields UnsetField = static_cast<UNumberFormatFields>(0xFFFFFFFF);
 

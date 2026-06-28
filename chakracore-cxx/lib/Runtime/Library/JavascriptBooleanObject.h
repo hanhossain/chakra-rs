@@ -9,7 +9,7 @@ namespace Js
     class JavascriptBooleanObject : public DynamicObject
     {
     private:
-        Field(JavascriptBoolean*) value;
+        typename WriteBarrierFieldTypeTraits<JavascriptBoolean*>::Type value;
 
         DEFINE_VTABLE_CTOR(JavascriptBooleanObject, DynamicObject);
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptBooleanObject);

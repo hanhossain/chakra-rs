@@ -143,8 +143,8 @@ namespace Js
         FieldNoBarrier(JavascriptMethod) originalEntryPoint;
         WriteBarrierFieldTypeTraits<FunctionProxy *>::Type functionBodyImpl;     // Implementation of the function- null if the function doesn't have a body
         typename WriteBarrierFieldTypeTraits<LocalFunctionId>::Type functionId;        // Per host source context (source file) function Id
-        Field(uint) compileCount;
-        Field(Attributes) attributes;
+        typename WriteBarrierFieldTypeTraits<uint>::Type compileCount;
+        typename WriteBarrierFieldTypeTraits<Attributes>::Type attributes;
     };
 
     // Helper FunctionInfo for builtins that we don't want to profile (script profiler).

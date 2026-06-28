@@ -57,17 +57,17 @@ namespace Js
 
         void EnsureValues();
 
-        Field(UnifiedRegex::RegexPattern*) lastPattern;
-        Field(JavascriptString*) lastInput;
-        Field(UnifiedRegex::GroupInfo) lastMatch;
-        Field(bool) invalidatedLastMatch; // true if last match must be recalculated before use
-        Field(bool) reset; // true if following fields must be recalculated from above before first use
-        Field(Var) lastParen;
-        Field(Var) lastIndex;
-        Field(Var) index;
-        Field(Var) leftContext;
-        Field(Var) rightContext;
-        Field(Var) captures[NumCtorCaptures];
+        typename WriteBarrierFieldTypeTraits<UnifiedRegex::RegexPattern*>::Type lastPattern;
+        typename WriteBarrierFieldTypeTraits<JavascriptString*>::Type lastInput;
+        typename WriteBarrierFieldTypeTraits<UnifiedRegex::GroupInfo>::Type lastMatch;
+        typename WriteBarrierFieldTypeTraits<bool>::Type invalidatedLastMatch; // true if last match must be recalculated before use
+        typename WriteBarrierFieldTypeTraits<bool>::Type reset; // true if following fields must be recalculated from above before first use
+        typename WriteBarrierFieldTypeTraits<Var>::Type lastParen;
+        typename WriteBarrierFieldTypeTraits<Var>::Type lastIndex;
+        typename WriteBarrierFieldTypeTraits<Var>::Type index;
+        typename WriteBarrierFieldTypeTraits<Var>::Type leftContext;
+        typename WriteBarrierFieldTypeTraits<Var>::Type rightContext;
+        typename WriteBarrierFieldTypeTraits<Var>::Type captures[NumCtorCaptures];
     };
 
     class JavascriptRegExpConstructorProperties

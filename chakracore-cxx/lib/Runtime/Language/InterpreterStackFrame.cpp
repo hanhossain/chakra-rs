@@ -2420,14 +2420,14 @@ namespace Js
 
         const AsmJsModuleMemory& moduleMemory = info->GetModuleMemory();
         typename WriteBarrierFieldTypeTraits<Var>::Type* moduleMemoryPtr = RecyclerNewArray(scriptContext->GetRecycler(), typename WriteBarrierFieldTypeTraits<Var>::Type, moduleMemory.mMemorySize);
-        Field(Var)* arrayBufferPtr = moduleMemoryPtr + moduleMemory.mArrayBufferOffset;
+        typename WriteBarrierFieldTypeTraits<Var>::Type* arrayBufferPtr = moduleMemoryPtr + moduleMemory.mArrayBufferOffset;
         Assert(moduleMemory.mArrayBufferOffset == AsmJsModuleMemory::MemoryTableBeginOffset);
-        Field(Var)* stdLibPtr = moduleMemoryPtr + moduleMemory.mStdLibOffset;
+        typename WriteBarrierFieldTypeTraits<Var>::Type* stdLibPtr = moduleMemoryPtr + moduleMemory.mStdLibOffset;
         int* localIntSlots = (int*)(moduleMemoryPtr + moduleMemory.mIntOffset);
         float* localFloatSlots = (float*)(moduleMemoryPtr + moduleMemory.mFloatOffset);
         double* localDoubleSlots = (double*)(moduleMemoryPtr + moduleMemory.mDoubleOffset);
-        Field(Var)* localFunctionImports = moduleMemoryPtr + moduleMemory.mFFIOffset;
-        Field(Var)* localModuleFunctions = moduleMemoryPtr + moduleMemory.mFuncOffset;
+        typename WriteBarrierFieldTypeTraits<Var>::Type* localFunctionImports = moduleMemoryPtr + moduleMemory.mFFIOffset;
+        typename WriteBarrierFieldTypeTraits<Var>::Type* localModuleFunctions = moduleMemoryPtr + moduleMemory.mFuncOffset;
         typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<Var>::Type*>::Type *localFunctionTables = (typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<Var>::Type*>::Type*)(moduleMemoryPtr + moduleMemory.mFuncPtrOffset);
 
         ThreadContext* threadContext = this->scriptContext->GetThreadContext();
@@ -7079,7 +7079,7 @@ namespace Js
     void
         InterpreterStackFrame::OP_NewInnerScopeSlots(uint innerScopeIndex, uint count, int scopeIndex, ScriptContext *scriptContext, FunctionBody *functionBody)
     {
-        Field(Var)* slotArray =
+        typename WriteBarrierFieldTypeTraits<Var>::Type* slotArray =
             JavascriptOperators::OP_NewScopeSlotsWithoutPropIds(count, scopeIndex, scriptContext, functionBody);
         this->SetInnerScopeFromIndex(innerScopeIndex, slotArray);
     }
@@ -7088,7 +7088,7 @@ namespace Js
     void InterpreterStackFrame::OP_CloneInnerScopeSlots(const unaligned OpLayoutT_Unsigned1<T> *playout)
     {
         uint innerScopeIndex = playout->C1;
-        Field(Var) * slotArray;
+        typename WriteBarrierFieldTypeTraits<Var>::Type * slotArray;
 
         slotArray = (typename WriteBarrierFieldTypeTraits<Var>::Type*)this->InnerScopeFromIndex(innerScopeIndex);
         slotArray = JavascriptOperators::OP_CloneScopeSlots(slotArray, scriptContext);
@@ -7106,7 +7106,7 @@ namespace Js
         this->SetInnerScopeFromIndex(innerScopeIndex, scope);
     }
 
-    Field(Var)*
+    typename WriteBarrierFieldTypeTraits<Var>::Type*
         InterpreterStackFrame::NewScopeSlots(unsigned int size, ScriptContext *scriptContext, Var scope)
     {
         typename WriteBarrierFieldTypeTraits<Var>::Type* slotArray = JavascriptOperators::OP_NewScopeSlots(size, scriptContext, scope);
@@ -7114,10 +7114,10 @@ namespace Js
         return slotArray;
     }
 
-    Field(Var)*
+    typename WriteBarrierFieldTypeTraits<Var>::Type*
         InterpreterStackFrame::NewScopeSlots()
     {
-        Field(Var)* slotArray;
+        typename WriteBarrierFieldTypeTraits<Var>::Type* slotArray;
         FunctionBody * functionBody = this->m_functionBody;
         uint scopeSlotCount = this->IsParamScopeDone() ? functionBody->scopeSlotArraySize : functionBody->paramScopeSlotArraySize;
         Assert(scopeSlotCount != 0);
@@ -9026,7 +9026,7 @@ namespace Js
             {
                 if (isCachedScope)
                 {
-                    Field(DynamicType*) literalType = nullptr;
+                    typename WriteBarrierFieldTypeTraits<DynamicType*>::Type literalType = nullptr;
                     Assert(!propIds->hasNonSimpleParams && !hasNonSimpleParams);
                     frameObject = JavascriptOperators::OP_InitCachedScope(this->GetJavascriptFunction(), propIds, &literalType, hasNonSimpleParams, scriptContext);
                 }

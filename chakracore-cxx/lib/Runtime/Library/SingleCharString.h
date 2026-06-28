@@ -23,7 +23,7 @@ namespace Js
 
     private:
         SingleCharString(char16_t ch, StaticType * type);
-        Field(char16_t) m_buff[2] = { 0 }; // the 2nd is always NULL so that GetSz works
+        typename WriteBarrierFieldTypeTraits<char16_t>::Type m_buff[2] = { 0 }; // the 2nd is always NULL so that GetSz works
     };
 
 } // namespace Js

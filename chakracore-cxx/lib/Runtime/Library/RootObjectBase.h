@@ -15,8 +15,8 @@ namespace Js
         Js::InlineCache * GetInlineCache() const { return inlineCache; }
         uint GetRefCount() { return refCount; }
     private:
-        Field(uint) refCount;
-        Field(Js::InlineCache *) inlineCache;
+        typename WriteBarrierFieldTypeTraits<uint>::Type refCount;
+        typename WriteBarrierFieldTypeTraits<Js::InlineCache *>::Type inlineCache;
     };
 
     class RootObjectBase: public DynamicObject
@@ -62,12 +62,12 @@ namespace Js
         RootObjectBase(DynamicType * type);
         RootObjectBase(DynamicType * type, ScriptContext* scriptContext);
 
-        Field(HostObjectBase *) hostObject;
+        typename WriteBarrierFieldTypeTraits<HostObjectBase *>::Type hostObject;
 
         typedef JsUtil::BaseDictionary<PropertyRecord const *, RootObjectInlineCache *, Recycler> RootObjectInlineCacheMap;
-        Field(RootObjectInlineCacheMap *) loadInlineCacheMap;
-        Field(RootObjectInlineCacheMap *) loadMethodInlineCacheMap;
-        Field(RootObjectInlineCacheMap *) storeInlineCacheMap;
+        typename WriteBarrierFieldTypeTraits<RootObjectInlineCacheMap *>::Type loadInlineCacheMap;
+        typename WriteBarrierFieldTypeTraits<RootObjectInlineCacheMap *>::Type loadMethodInlineCacheMap;
+        typename WriteBarrierFieldTypeTraits<RootObjectInlineCacheMap *>::Type storeInlineCacheMap;
     };
 
     template <> inline bool VarIsImpl<RootObjectBase>(RecyclableObject* obj)

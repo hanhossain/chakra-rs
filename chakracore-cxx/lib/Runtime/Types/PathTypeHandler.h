@@ -12,8 +12,8 @@ namespace Js
     class PathTypeSuccessorKey
     {
     private:
-        Field(PropertyId) propertyId;
-        Field(ObjectSlotAttributes) attributes;
+        typename WriteBarrierFieldTypeTraits<PropertyId>::Type propertyId;
+        typename WriteBarrierFieldTypeTraits<ObjectSlotAttributes>::Type attributes;
 
     public:
         PathTypeSuccessorKey();
@@ -50,7 +50,7 @@ namespace Js
             PathTypeSuccessorKindSingle,
             PathTypeSuccessorKindMulti
         };
-        Field(PathTypeSuccessorKind) kind;
+        typename WriteBarrierFieldTypeTraits<PathTypeSuccessorKind>::Type kind;
     };
 
     class PathTypeSingleSuccessorInfo : public PathTypeSuccessorInfo
@@ -67,8 +67,8 @@ namespace Js
         template<class Fn> void MapSingleSuccessor(Fn fn);
 
     private:
-        Field(PathTypeSuccessorKey) successorKey;
-        Field(RecyclerWeakReference<DynamicType> *) successorTypeWeakRef;
+        typename WriteBarrierFieldTypeTraits<PathTypeSuccessorKey>::Type successorKey;
+        typename WriteBarrierFieldTypeTraits<RecyclerWeakReference<DynamicType> *>::Type successorTypeWeakRef;
     };
 
     class PathTypeMultiSuccessorInfo : public PathTypeSuccessorInfo
@@ -87,7 +87,7 @@ namespace Js
 
     private:
         typedef JsUtil::WeakReferenceDictionary<PathTypeSuccessorKey, DynamicType, DictionarySizePolicy<PowerOf2Policy, 1>> PropertySuccessorsMap;
-        Field(PropertySuccessorsMap *) propertySuccessors;
+        typename WriteBarrierFieldTypeTraits<PropertySuccessorsMap *>::Type propertySuccessors;
     };
 
     class PathTypeHandlerBase : public DynamicTypeHandler
@@ -99,11 +99,11 @@ namespace Js
         friend class DynamicObject;
 
     protected:
-        Field(DynamicType*) predecessorType; // Strong reference to predecessor type so that predecessor types remain in the cache even though they might not be used
-        Field(TypePath*) typePath;
-        Field(PathTypeSuccessorInfo*) successorInfo;
-        Field(bool) hasUserDefinedCtor;
-        Field(bool) hasInternalProperty;
+        typename WriteBarrierFieldTypeTraits<DynamicType*>::Type predecessorType; // Strong reference to predecessor type so that predecessor types remain in the cache even though they might not be used
+        typename WriteBarrierFieldTypeTraits<TypePath*>::Type typePath;
+        typename WriteBarrierFieldTypeTraits<PathTypeSuccessorInfo*>::Type successorInfo;
+        typename WriteBarrierFieldTypeTraits<bool>::Type hasUserDefinedCtor;
+        typename WriteBarrierFieldTypeTraits<bool>::Type hasInternalProperty;
 
     public:
         DEFINE_GETCPPNAME();
@@ -474,9 +474,9 @@ namespace Js
         friend class PathTypeHandlerBase;
 
     private:
-        Field(ObjectSlotAttributes *) attributes;
-        Field(PathTypeSetterSlotIndex *) setters;
-        Field(PathTypeSetterSlotIndex) setterCount;
+        typename WriteBarrierFieldTypeTraits<ObjectSlotAttributes *>::Type attributes;
+        typename WriteBarrierFieldTypeTraits<PathTypeSetterSlotIndex *>::Type setters;
+        typename WriteBarrierFieldTypeTraits<PathTypeSetterSlotIndex>::Type setterCount;
 
     public:
         DEFINE_GETCPPNAME();

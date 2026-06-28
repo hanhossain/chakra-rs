@@ -4066,7 +4066,7 @@ public:
         }
 
         bool isDeferredFunction = (attributes & FunctionInfo::Attributes::DeferredParse) != 0;
-        Field(DeferredFunctionStub*) deferredStubs = nullptr;
+        typename WriteBarrierFieldTypeTraits<DeferredFunctionStub*>::Type deferredStubs = nullptr;
         if (definedFields->has_deferredStubs)
         {
             Assert(isDeferredFunction);

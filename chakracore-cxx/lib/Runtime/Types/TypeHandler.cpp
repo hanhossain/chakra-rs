@@ -683,7 +683,7 @@ using namespace Js;
         // Allocate new aux slot array
         Recycler *const recycler = object->GetRecycler();
         TRACK_ALLOC_INFO(recycler, Var, Recycler, 0, newAuxSlotCapacity);
-        typename WriteBarrierFieldTypeTraits<Var>::Type *const newAuxSlots = reinterpret_cast<Field(Var) *>(
+        typename WriteBarrierFieldTypeTraits<Var>::Type *const newAuxSlots = reinterpret_cast<typename WriteBarrierFieldTypeTraits<Var>::Type *>(
             recycler->AllocZero(newAuxSlotCapacity * sizeof(typename WriteBarrierFieldTypeTraits<Var>::Type)));
 
         DynamicTypeHandler *const oldTypeHandler = object->GetTypeHandler();
@@ -695,7 +695,7 @@ using namespace Js;
             if(oldAuxSlotCapacity > 0)
             {
                 // Copy aux slots to the new array
-                Field(Var) *const oldAuxSlots = object->auxSlots;
+                typename WriteBarrierFieldTypeTraits<Var>::Type *const oldAuxSlots = object->auxSlots;
                 Assert(oldAuxSlots);
                 int i = 0;
                 do

@@ -30,15 +30,15 @@ namespace Js
         friend class ScriptEngineBase;
 
     protected:
-        Field(TypeId) typeId;
-        Field(TypeFlagMask) flags;
+        typename WriteBarrierFieldTypeTraits<TypeId>::Type typeId;
+        typename WriteBarrierFieldTypeTraits<TypeFlagMask>::Type flags;
 
-        Field(JavascriptLibrary*) javascriptLibrary;
+        typename WriteBarrierFieldTypeTraits<JavascriptLibrary*>::Type javascriptLibrary;
 
-        Field(RecyclableObject*) prototype;
+        typename WriteBarrierFieldTypeTraits<RecyclableObject*>::Type prototype;
         FieldNoBarrier(JavascriptMethod) entryPoint;
     private:
-        Field(TypePropertyCache *) propertyCache;
+        typename WriteBarrierFieldTypeTraits<TypePropertyCache *>::Type propertyCache;
     protected:
         Type(Type * type);
         Type(ScriptContext* scriptContext, TypeId typeId, RecyclableObject* prototype, JavascriptMethod entryPoint);

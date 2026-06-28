@@ -158,43 +158,43 @@ public:
 private:
     static JavascriptString * GetExternalKindString(ScriptContext * scriptContext, Wasm::ExternalKinds kind);
 
-    Field(bool) m_hasTable : 1;
-    Field(bool) m_hasMemory : 1;
-    Field(bool) m_memoryIsShared : 1;
+    typename WriteBarrierFieldTypeTraits<bool>::Type m_hasTable : 1;
+    typename WriteBarrierFieldTypeTraits<bool>::Type m_hasMemory : 1;
+    typename WriteBarrierFieldTypeTraits<bool>::Type m_memoryIsShared : 1;
     // The binary buffer is recycler allocated, tied the lifetime of the buffer to the module
-    Field(const byte*) m_binaryBuffer;
-    Field(uint) m_binaryBufferLength;
-    Field(uint32_t) m_memoryInitSize;
-    Field(uint32_t) m_memoryMaxSize;
-    Field(uint32_t) m_tableInitSize;
-    Field(uint32_t) m_tableMaxSize;
-    Field(Wasm::WasmSignature*) m_signatures;
-    Field(uint32_t*) m_indirectfuncs;
-    Field(Wasm::WasmElementSegment**) m_elementsegs;
+    typename WriteBarrierFieldTypeTraits<const byte*>::Type m_binaryBuffer;
+    typename WriteBarrierFieldTypeTraits<uint>::Type m_binaryBufferLength;
+    typename WriteBarrierFieldTypeTraits<uint32_t>::Type m_memoryInitSize;
+    typename WriteBarrierFieldTypeTraits<uint32_t>::Type m_memoryMaxSize;
+    typename WriteBarrierFieldTypeTraits<uint32_t>::Type m_tableInitSize;
+    typename WriteBarrierFieldTypeTraits<uint32_t>::Type m_tableMaxSize;
+    typename WriteBarrierFieldTypeTraits<Wasm::WasmSignature*>::Type m_signatures;
+    typename WriteBarrierFieldTypeTraits<uint32_t*>::Type m_indirectfuncs;
+    typename WriteBarrierFieldTypeTraits<Wasm::WasmElementSegment**>::Type m_elementsegs;
     typedef JsUtil::List<Wasm::WasmFunctionInfo*, Recycler> WasmFunctionInfosList;
-    Field(WasmFunctionInfosList*) m_functionsInfo;
-    Field(Wasm::WasmExport*) m_exports;
+    typename WriteBarrierFieldTypeTraits<WasmFunctionInfosList*>::Type m_functionsInfo;
+    typename WriteBarrierFieldTypeTraits<Wasm::WasmExport*>::Type m_exports;
     typedef JsUtil::List<Wasm::WasmImport*, ArenaAllocator> WasmImportsList;
-    Field(WasmImportsList*) m_imports;
-    Field(Wasm::WasmImport*) m_memImport;
-    Field(Wasm::WasmImport*) m_tableImport;
-    Field(uint32_t) m_importedFunctionCount;
-    Field(Wasm::WasmDataSegment**) m_datasegs;
-    Field(Wasm::WasmBinaryReader*) m_reader;
-    Field(uint32_t*) m_equivalentSignatureMap;
+    typename WriteBarrierFieldTypeTraits<WasmImportsList*>::Type m_imports;
+    typename WriteBarrierFieldTypeTraits<Wasm::WasmImport*>::Type m_memImport;
+    typename WriteBarrierFieldTypeTraits<Wasm::WasmImport*>::Type m_tableImport;
+    typename WriteBarrierFieldTypeTraits<uint32_t>::Type m_importedFunctionCount;
+    typename WriteBarrierFieldTypeTraits<Wasm::WasmDataSegment**>::Type m_datasegs;
+    typename WriteBarrierFieldTypeTraits<Wasm::WasmBinaryReader*>::Type m_reader;
+    typename WriteBarrierFieldTypeTraits<uint32_t*>::Type m_equivalentSignatureMap;
     typedef JsUtil::List<Wasm::CustomSection, ArenaAllocator> CustomSectionsList;
-    Field(CustomSectionsList*) m_customSections;
+    typename WriteBarrierFieldTypeTraits<CustomSectionsList*>::Type m_customSections;
 
-    Field(uint) m_globalCounts[Wasm::WasmTypes::Limit];
+    typename WriteBarrierFieldTypeTraits<uint>::Type m_globalCounts[Wasm::WasmTypes::Limit];
     typedef JsUtil::List<Wasm::WasmGlobal*, ArenaAllocator> WasmGlobalsList;
-    Field(WasmGlobalsList *) m_globals;
+    typename WriteBarrierFieldTypeTraits<WasmGlobalsList *>::Type m_globals;
 
-    Field(uint) m_signaturesCount;
-    Field(uint) m_exportCount;
-    Field(uint32_t) m_datasegCount;
-    Field(uint32_t) m_elementsegCount;
+    typename WriteBarrierFieldTypeTraits<uint>::Type m_signaturesCount;
+    typename WriteBarrierFieldTypeTraits<uint>::Type m_exportCount;
+    typename WriteBarrierFieldTypeTraits<uint32_t>::Type m_datasegCount;
+    typename WriteBarrierFieldTypeTraits<uint32_t>::Type m_elementsegCount;
 
-    Field(uint32_t) m_startFuncIndex;
+    typename WriteBarrierFieldTypeTraits<uint32_t>::Type m_startFuncIndex;
 
     FieldNoBarrier(ArenaAllocator*) m_alloc;
 };

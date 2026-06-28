@@ -43,11 +43,11 @@ namespace Js
         static uint32_t GetOffsetOfValues() { return offsetof(WebAssemblyTable, m_values); }
         static uint32_t GetOffsetOfCurrentLength() { return offsetof(WebAssemblyTable, m_currentLength); }
     private:
-        Field(uint32_t) m_initialLength;
-        Field(uint32_t) m_maxLength;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type m_initialLength;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type m_maxLength;
 
-        Field(uint32_t) m_currentLength;
-        typename WriteBarrierFieldTypeTraits<Field(Var>::Type*) m_values;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type m_currentLength;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<Var>::Type*>::Type m_values;
 #endif
     };
 

@@ -9,7 +9,7 @@ namespace Js
     class JavascriptMap : public DynamicObject
     {
     public:
-        typedef JsUtil::KeyValuePair<typename WriteBarrierFieldTypeTraits<Var>::Type, Field(Var)> MapDataKeyValuePair;
+        typedef JsUtil::KeyValuePair<typename WriteBarrierFieldTypeTraits<Var>::Type, typename WriteBarrierFieldTypeTraits<Var>::Type> MapDataKeyValuePair;
         typedef MapOrSetDataNode<MapDataKeyValuePair> MapDataNode;
         typedef MapOrSetDataList<MapDataKeyValuePair> MapDataList;
         typedef JsUtil::BaseDictionary<Var, MapDataNode*, Recycler> SimpleVarDataMap;
@@ -30,18 +30,18 @@ namespace Js
             ComplexVarMap
         };
 
-        Field(MapDataList) list;
+        typename WriteBarrierFieldTypeTraits<MapDataList>::Type list;
 
         union MapUnion
         {
-            Field(SimpleVarDataMap*) simpleVarMap;
-            Field(ComplexVarDataMap*) complexVarMap;
+            typename WriteBarrierFieldTypeTraits<SimpleVarDataMap*>::Type simpleVarMap;
+            typename WriteBarrierFieldTypeTraits<ComplexVarDataMap*>::Type complexVarMap;
             MapUnion() {}
         };
 
-        Field(MapUnion) u;
+        typename WriteBarrierFieldTypeTraits<MapUnion>::Type u;
 
-        Field(MapKind) kind = MapKind::EmptyMap;
+        typename WriteBarrierFieldTypeTraits<MapKind>::Type kind = MapKind::EmptyMap;
 
         DEFINE_VTABLE_CTOR_MEMBER_INIT(JavascriptMap, DynamicObject, list);
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptMap);

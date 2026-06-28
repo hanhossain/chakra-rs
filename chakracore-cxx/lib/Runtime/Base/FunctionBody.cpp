@@ -6510,7 +6510,7 @@ namespace Js
         }
 
         typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData *>::Type* codeGenRuntimeData = this->GetAuxPtr<auxType>();
-        Field(FunctionCodeGenRuntimeData *) const inlineeData = codeGenRuntimeData[profiledCallSiteId];
+        typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData *>::Type const inlineeData = codeGenRuntimeData[profiledCallSiteId];
         if (inlineeData == nullptr)
         {
             FunctionCodeGenRuntimeData * runtimeData = RecyclerNew(recycler, FunctionCodeGenRuntimeData, inlinee);

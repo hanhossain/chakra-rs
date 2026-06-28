@@ -57,10 +57,10 @@ namespace Js
 
     private:
         static FunctionInfo        functionInfo;
-        Field(RecyclableObject*)   targetFunction;
-        Field(Var)                 boundThis;
-        Field(uint)                count;
-        typename WriteBarrierFieldTypeTraits<Field(Var>::Type*)         boundArgs;
+        typename WriteBarrierFieldTypeTraits<RecyclableObject*>::Type   targetFunction;
+        typename WriteBarrierFieldTypeTraits<Var>::Type                 boundThis;
+        typename WriteBarrierFieldTypeTraits<uint>::Type                count;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<Var>::Type*>::Type         boundArgs;
     };
 
     template <> inline bool VarIsImpl<BoundFunction>(RecyclableObject* obj)

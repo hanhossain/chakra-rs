@@ -70,13 +70,13 @@ namespace Js
 
     //------ Private data members -------- /
     private:
-        Field(bool) isNonCachableScript;                    // Indicates if this script can be cached in WININET
-        Field(SimpleDataCacheWrapper*) dataCacheWrapper;    // WININET based cache to store profile info
-        Field(BVFixed*) startupFunctions;                   // Bit vector representing functions that are executed at startup
-        Field(BVFixed const *) cachedStartupFunctions;      // Bit vector representing functions executed at startup that are loaded from a persistent or in-memory cache
+        typename WriteBarrierFieldTypeTraits<bool>::Type isNonCachableScript;                    // Indicates if this script can be cached in WININET
+        typename WriteBarrierFieldTypeTraits<SimpleDataCacheWrapper*>::Type dataCacheWrapper;    // WININET based cache to store profile info
+        typename WriteBarrierFieldTypeTraits<BVFixed*>::Type startupFunctions;                   // Bit vector representing functions that are executed at startup
+        typename WriteBarrierFieldTypeTraits<BVFixed const *>::Type cachedStartupFunctions;      // Bit vector representing functions executed at startup that are loaded from a persistent or in-memory cache
                                                             // It's not modified but used as an input for deferred parsing/bytecodegen
         typedef JsUtil::BaseDictionary<LocalFunctionId, DynamicProfileInfo *, Recycler, PowerOf2SizePolicy>  DynamicProfileInfoMapType;
-        Field(DynamicProfileInfoMapType) dynamicProfileInfoMap;
+        typename WriteBarrierFieldTypeTraits<DynamicProfileInfoMapType>::Type dynamicProfileInfoMap;
 
         static const uint MAX_FUNCTION_COUNT = 10000;  // Consider data corrupt if there are more functions than this
     };

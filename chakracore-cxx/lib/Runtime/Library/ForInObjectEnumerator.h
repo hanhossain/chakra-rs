@@ -13,11 +13,11 @@ namespace Js
         struct ShadowData
         {
             ShadowData(RecyclableObject * initObject, RecyclableObject * firstPrototype, Recycler * recycler);
-            Field(RecyclableObject *) currentObject;
-            Field(RecyclableObject *) firstPrototype;
-            Field(BVSparse<Recycler>) propertyIds;
+            typename WriteBarrierFieldTypeTraits<RecyclableObject *>::Type currentObject;
+            typename WriteBarrierFieldTypeTraits<RecyclableObject *>::Type firstPrototype;
+            typename WriteBarrierFieldTypeTraits<BVSparse<Recycler>>::Type propertyIds;
             typedef SListBase<Js::PropertyRecord const *, Recycler> _PropertyStringsListType;
-            Field(_PropertyStringsListType) newPropertyStrings;
+            typename WriteBarrierFieldTypeTraits<_PropertyStringsListType>::Type newPropertyStrings;
         } *shadowData;
 
         // States

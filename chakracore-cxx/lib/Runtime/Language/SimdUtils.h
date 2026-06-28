@@ -18,15 +18,15 @@
 #define SIMD_INDEX_VALUE_MAX     5
 #define SIMD_STRING_BUFFER_MAX   1024
 #define SIMD_DATA     \
-    Field(int32_t)   i32[4];\
-    Field(int16)   i16[8];\
-    Field(int8_t)    i8[16];\
-    Field(uint32_t)  u32[4];\
-    Field(uint16)  u16[8];\
-    Field(uint8_t)   u8[16];\
-    Field(float)   f32[4];\
-    Field(double)  f64[2]; \
-    Field(long)   i64[2];
+    typename WriteBarrierFieldTypeTraits<int32_t>::Type   i32[4];\
+    typename WriteBarrierFieldTypeTraits<int16>::Type   i16[8];\
+    typename WriteBarrierFieldTypeTraits<int8_t>::Type    i8[16];\
+    typename WriteBarrierFieldTypeTraits<uint32_t>::Type  u32[4];\
+    typename WriteBarrierFieldTypeTraits<uint16>::Type  u16[8];\
+    typename WriteBarrierFieldTypeTraits<uint8_t>::Type   u8[16];\
+    typename WriteBarrierFieldTypeTraits<float>::Type   f32[4];\
+    typename WriteBarrierFieldTypeTraits<double>::Type  f64[2]; \
+    typename WriteBarrierFieldTypeTraits<long>::Type   i64[2];
 #define SIMD_TEMP_SIZE 3
 struct _SIMDValue
 {

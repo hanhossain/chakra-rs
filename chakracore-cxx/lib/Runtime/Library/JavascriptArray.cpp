@@ -2858,7 +2858,7 @@ using namespace Js;
             // 5 <=
 
             SparseArraySegmentBase* next = GetBeginLookupSegment(newLength - 1); // head, or next.left < newLength
-            Field(SparseArraySegmentBase*)* prev = &head;
+            typename WriteBarrierFieldTypeTraits<SparseArraySegmentBase*>::Type* prev = &head;
 
             while(next != nullptr)
             {
@@ -6675,8 +6675,8 @@ Case0:
     // This reduces the total number of conversions needed
     struct StringItem
     {
-        Field(Var) Value;
-        Field(JavascriptString*) StringValue;
+        typename WriteBarrierFieldTypeTraits<Var>::Type Value;
+        typename WriteBarrierFieldTypeTraits<JavascriptString*>::Type StringValue;
     };
 
     // Comparison method used in Array.prototype.sort when no comparison function was provided
@@ -7166,7 +7166,7 @@ Case0:
 
     template<typename T>
     void JavascriptArray::ArraySegmentSpliceHelper(
-        JavascriptArray *pnewArr, SparseArraySegment<T> *seg, Field(SparseArraySegment<T>*) *prev,
+        JavascriptArray *pnewArr, SparseArraySegment<T> *seg, typename WriteBarrierFieldTypeTraits<SparseArraySegment<T>*>::Type *prev,
         uint32_t start, uint32_t deleteLen, Var* insertArgs, uint32_t insertLen, Recycler *recycler)
     {
         // book keeping variables
@@ -7247,8 +7247,8 @@ Case0:
         // Skip pnewArr->EnsureHead(): we don't use existing segment at all.
         Recycler *recycler  = scriptContext->GetRecycler();
 
-        Field(SparseArraySegmentBase*)* prevSeg  = &pArr->head;        // holds the next pointer of previous
-        Field(SparseArraySegmentBase*)* prevPrevSeg  = &pArr->head;    // this holds the previous pointer to prevSeg dirty trick.
+        typename WriteBarrierFieldTypeTraits<SparseArraySegmentBase*>::Type* prevSeg  = &pArr->head;        // holds the next pointer of previous
+        typename WriteBarrierFieldTypeTraits<SparseArraySegmentBase*>::Type* prevPrevSeg  = &pArr->head;    // this holds the previous pointer to prevSeg dirty trick.
         SparseArraySegmentBase* savePrev = nullptr;
 
         Assert(pArr->head); // We should never have a null head.
@@ -7310,7 +7310,7 @@ Case0:
             else
             {
                 SparseArraySegment<T>* newHeadSeg = nullptr; // pnewArr->head is null
-                Field(SparseArraySegmentBase*)* prevNewHeadSeg = &pnewArr->head;
+                typename WriteBarrierFieldTypeTraits<SparseArraySegmentBase*>::Type* prevNewHeadSeg = &pnewArr->head;
 
                 // delete till deleteLen and reuse segments for new array if it is possible.
                 // 3 steps -

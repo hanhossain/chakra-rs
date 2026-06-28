@@ -15,9 +15,9 @@ namespace Js
     class JavascriptSetIterator : public DynamicObject
     {
     private:
-        Field(JavascriptSet*)                          m_set;
-        Field(JavascriptSet::SetDataList::Iterator)    m_setIterator;
-        Field(JavascriptSetIteratorKind)               m_kind;
+        typename WriteBarrierFieldTypeTraits<JavascriptSet*>::Type                          m_set;
+        typename WriteBarrierFieldTypeTraits<JavascriptSet::SetDataList::Iterator>::Type    m_setIterator;
+        typename WriteBarrierFieldTypeTraits<JavascriptSetIteratorKind>::Type               m_kind;
 
     protected:
         DEFINE_VTABLE_CTOR(JavascriptSetIterator, DynamicObject);

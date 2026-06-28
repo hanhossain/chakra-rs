@@ -926,7 +926,7 @@ namespace Js
             ArenaAllocator* tempAlloc,
             JavascriptString* matchStr,
             int numberOfCaptures,
-            Field(Var)* captures,
+            typename WriteBarrierFieldTypeTraits<Var>::Type* captures,
             CharCount position)
         {
             CharCount* substitutionOffsets = nullptr;
@@ -962,7 +962,7 @@ namespace Js
             ArenaAllocator* tempAlloc,
             JavascriptString* matchStr,
             int numberOfCaptures,
-            Field(Var)* captures,
+            typename WriteBarrierFieldTypeTraits<Var>::Type* captures,
             CharCount position)
         {
             // replaceFn Arguments:
@@ -1048,7 +1048,7 @@ namespace Js
         CharCount nextSourcePosition = 0;
 
         size_t previousNumberOfCapturesToKeep = 0;
-        Field(Var)* captures = nullptr;
+        typename WriteBarrierFieldTypeTraits<Var>::Type* captures = nullptr;
 
         BEGIN_TEMP_ALLOCATOR(tempAlloc, scriptContext, u"RegexHelper")
         {

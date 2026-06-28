@@ -75,11 +75,11 @@ namespace Js {
         // Time zone descriptor.
         struct TZD
         {
-            Field(int) minutes;
-            Field(int) offset;
+            typename WriteBarrierFieldTypeTraits<int>::Type minutes;
+            typename WriteBarrierFieldTypeTraits<int>::Type offset;
 
             // Indicates whether Daylight savings
-            Field(bool) fDst;
+            typename WriteBarrierFieldTypeTraits<bool>::Type fDst;
         };
 
         template <class ScriptContext>
@@ -260,13 +260,13 @@ namespace Js {
         static StringBuilder* GetDateDefaultString(DateTime::YMD *pymd, TZD *ptzd, DateTimeFlag noDateTime, ScriptContext* scriptContext, NewStringBuilderFunc newStringBuilder);
 
     private:
-        Field(double)                   m_tvUtc;
-        Field(double)                   m_tvLcl;
+        typename WriteBarrierFieldTypeTraits<double>::Type                   m_tvUtc;
+        typename WriteBarrierFieldTypeTraits<double>::Type                   m_tvLcl;
         FieldNoBarrier(DateTime::YMD)   m_ymdUtc;
         FieldNoBarrier(DateTime::YMD)   m_ymdLcl;
-        Field(TZD)                      m_tzd;
-        Field(uint32_t)                   m_grfval; // Which fields are valid. m_tvUtc is always valid.
-        Field(bool)                     m_modified : 1; // Whether SetDateData was called on this class
+        typename WriteBarrierFieldTypeTraits<TZD>::Type                      m_tzd;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type                   m_grfval; // Which fields are valid. m_tvUtc is always valid.
+        typename WriteBarrierFieldTypeTraits<bool>::Type                     m_modified : 1; // Whether SetDateData was called on this class
 
         friend JavascriptDate;
     };

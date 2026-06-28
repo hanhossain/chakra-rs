@@ -61,9 +61,9 @@ namespace Js
 #endif
 
     protected:
-        Field(EngineInterfaceExtensionKind) extensionKind;
-        Field(ScriptContext*) scriptContext;
-        Field(bool) hasBytecode;
+        typename WriteBarrierFieldTypeTraits<EngineInterfaceExtensionKind>::Type extensionKind;
+        typename WriteBarrierFieldTypeTraits<ScriptContext*>::Type scriptContext;
+        typename WriteBarrierFieldTypeTraits<bool>::Type hasBytecode;
     };
 
 #define EngineInterfaceObject_CommonFunctionProlog(function, callInfo) \
@@ -80,9 +80,9 @@ namespace Js
         DEFINE_VTABLE_CTOR(EngineInterfaceObject, DynamicObject);
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(EngineInterfaceObject);
 
-        Field(DynamicObject*) commonNativeInterfaces;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type commonNativeInterfaces;
 
-        Field(EngineExtensionObjectBase*) engineExtensions[MaxEngineInterfaceExtensionKind + 1];
+        typename WriteBarrierFieldTypeTraits<EngineExtensionObjectBase*>::Type engineExtensions[MaxEngineInterfaceExtensionKind + 1];
 
     public:
         EngineInterfaceObject(DynamicType * type)

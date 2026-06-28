@@ -99,11 +99,11 @@ public:
             reject(reject),
             isReject(isReject) {}
 
-    Field(JavascriptGenerator*) generator;
-    Field(Var) reject;
-    Field(Var) resolve;
-    Field(bool) isReject;
-    Field(Var) argument;
+    typename WriteBarrierFieldTypeTraits<JavascriptGenerator*>::Type generator;
+    typename WriteBarrierFieldTypeTraits<Var>::Type reject;
+    typename WriteBarrierFieldTypeTraits<Var>::Type resolve;
+    typename WriteBarrierFieldTypeTraits<bool>::Type isReject;
+    typename WriteBarrierFieldTypeTraits<Var>::Type argument;
 
 #if ENABLE_TTD
     virtual void MarkVisitKindSpecificPtrs(TTD::SnapshotExtractor* extractor) override;

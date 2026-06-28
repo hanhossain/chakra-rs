@@ -37,15 +37,15 @@ namespace Js
         uint32_t GetDataSegmentOffset(uint32_t index) const;
 
     private:
-        Field(WebAssemblyModule*) module;
-        typename WriteBarrierFieldTypeTraits<Field(Var>::Type*) start;
-        typename WriteBarrierFieldTypeTraits<Field(Var>::Type*) end;
+        typename WriteBarrierFieldTypeTraits<WebAssemblyModule*>::Type module;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<Var>::Type*>::Type start;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<Var>::Type*>::Type end;
         // Precalculated pointer from ptr using the offsets
-        typename WriteBarrierFieldTypeTraits<Field(Var>::Type*) memory;
-        typename WriteBarrierFieldTypeTraits<Field(Var>::Type*) imports;
-        typename WriteBarrierFieldTypeTraits<Field(Var>::Type*) functions;
-        typename WriteBarrierFieldTypeTraits<Field(Var>::Type*) table;
-        typename WriteBarrierFieldTypeTraits<Field(Var>::Type*) globals;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<Var>::Type*>::Type memory;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<Var>::Type*>::Type imports;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<Var>::Type*>::Type functions;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<Var>::Type*>::Type table;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<Var>::Type*>::Type globals;
 
         uint32_t* elementSegmentOffsets;
         uint32_t* dataSegmentOffsets;

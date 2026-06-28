@@ -10,7 +10,7 @@ namespace Js
     class GlobalObject : public RootObjectBase
     {
     public:
-        Field(JavascriptLibrary*) library;
+        typename WriteBarrierFieldTypeTraits<JavascriptLibrary*>::Type library;
     private:
         DEFINE_VTABLE_CTOR(GlobalObject, RootObjectBase);
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(GlobalObject);
@@ -166,11 +166,11 @@ namespace Js
         static BOOL MatchPatternHelper(JavascriptString *propertyName, JavascriptString *pattern, ScriptContext *scriptContext);
 
     private:
-        Field(RecyclableObject*) directHostObject;
-        Field(RecyclableObject*) secureDirectHostObject;
+        typename WriteBarrierFieldTypeTraits<RecyclableObject*>::Type directHostObject;
+        typename WriteBarrierFieldTypeTraits<RecyclableObject*>::Type secureDirectHostObject;
 
         typedef JsUtil::BaseHashSet<PropertyId, Recycler, PowerOf2SizePolicy> ReservedPropertiesHashSet;
-        Field(ReservedPropertiesHashSet *) reservedProperties;
+        typename WriteBarrierFieldTypeTraits<ReservedPropertiesHashSet *>::Type reservedProperties;
 
 #if ENABLE_TTD
     public:

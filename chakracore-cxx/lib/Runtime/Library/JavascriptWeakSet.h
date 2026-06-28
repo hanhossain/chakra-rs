@@ -17,7 +17,7 @@ namespace Js
         typedef const RecyclerWeakReference<RecyclableObject>* WeakType;
 #endif
 
-        Field(KeySet) keySet;
+        typename WriteBarrierFieldTypeTraits<KeySet>::Type keySet;
 
         DEFINE_VTABLE_CTOR_MEMBER_INIT(JavascriptWeakSet, DynamicObject, keySet);
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptWeakSet);

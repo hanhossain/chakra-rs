@@ -92,7 +92,7 @@ namespace Js
             codeGenRuntimeData = RecyclerNewArrayZ(recycler, typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData *>::Type, functionBody->GetProfiledCallSiteCount());
         }
 
-        Field(FunctionCodeGenRuntimeData *) const inlineeData = codeGenRuntimeData[profiledCallSiteId];
+        typename WriteBarrierFieldTypeTraits<FunctionCodeGenRuntimeData *>::Type const inlineeData = codeGenRuntimeData[profiledCallSiteId];
 
         if (inlineeData == nullptr)
         {

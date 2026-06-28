@@ -13,9 +13,9 @@ namespace Js
 
         typename WriteBarrierFieldTypeTraits<uint32_t>::Type left; // TODO: (leish)(swb) this can easily be recycler false positive on x86, or on x64 if combine with length field
                             // find a way to either tag this or find a better solution
-        Field(uint32_t) length; //we use length instead of right so that we can denote a segment is empty
-        Field(uint32_t) size;
-        Field(SparseArraySegmentBase*) next;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type length; //we use length instead of right so that we can denote a segment is empty
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type size;
+        typename WriteBarrierFieldTypeTraits<SparseArraySegmentBase*>::Type next;
 
         static const uint32_t CHUNK_SIZE = 16;
         static const uint32_t HEAD_CHUNK_SIZE = 16;
@@ -50,7 +50,7 @@ namespace Js
         SparseArraySegment(uint32_t left, uint32_t length, uint32_t size) :
             SparseArraySegmentBase(left, length, size) {}
 
-        Field(T) elements[]; // actual elements will follow this determined by size
+        typename WriteBarrierFieldTypeTraits<T>::Type elements[]; // actual elements will follow this determined by size
 
         void FillSegmentBuffer(uint start, uint size);
         T GetElement(uint32_t index);

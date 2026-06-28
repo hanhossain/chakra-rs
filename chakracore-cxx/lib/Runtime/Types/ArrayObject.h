@@ -18,7 +18,7 @@ namespace Js
     class ArrayObject : public DynamicObject
     {
     protected:
-        Field(uint32_t) length;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type length;
 
     protected:
         DEFINE_VTABLE_CTOR_ABSTRACT(ArrayObject, DynamicObject);

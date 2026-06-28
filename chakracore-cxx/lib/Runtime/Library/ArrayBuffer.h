@@ -70,9 +70,9 @@ namespace Js
 
         void Externalize() { this->externalized = true; }
     protected:
-        Field(bool) isDetached;
-        Field(bool) externalized;
-        Field(char) infoBits;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isDetached;
+        typename WriteBarrierFieldTypeTraits<bool>::Type externalized;
+        typename WriteBarrierFieldTypeTraits<char>::Type infoBits;
     };
 
     template <> bool VarIsImpl<ArrayBufferBase>(RecyclableObject* obj);
@@ -84,7 +84,7 @@ namespace Js
         FieldNoBarrier(uint8_t*) buffer; // Points to a heap allocated RGBA buffer, can be null
 
         // Addref/release counter for current buffer, this is needed hold the current buffer alive
-        Field(long) refCount;
+        typename WriteBarrierFieldTypeTraits<long>::Type refCount;
     public:
         long AddRef();
         long Release();
@@ -206,7 +206,7 @@ namespace Js
         virtual void ReleaseBufferContent();
 
         //In most cases, the ArrayBuffer will only have one parent
-        Field(RecyclerWeakReference<ArrayBufferParent>*) primaryParent;
+        typename WriteBarrierFieldTypeTraits<RecyclerWeakReference<ArrayBufferParent>*>::Type primaryParent;
 
         struct OtherParents :public SList<RecyclerWeakReference<ArrayBufferParent>*, Recycler>
         {
@@ -214,12 +214,12 @@ namespace Js
                 :SList<RecyclerWeakReference<ArrayBufferParent>*, Recycler>(recycler), increasedCount(0)
             {
             }
-            Field(uint) increasedCount;
+            typename WriteBarrierFieldTypeTraits<uint>::Type increasedCount;
         };
 
-        Field(OtherParents*) otherParents;
+        typename WriteBarrierFieldTypeTraits<OtherParents*>::Type otherParents;
         FieldNoBarrier(RefCountedBuffer *) bufferContent;
-        Field(uint32_t) bufferLength;       // Number of bytes allocated
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type bufferLength;       // Number of bytes allocated
     };
 
     template <> inline bool VarIsImpl<ArrayBuffer>(RecyclableObject* obj)
@@ -233,7 +233,7 @@ namespace Js
         friend ArrayBufferBase;
 
     private:
-        Field(ArrayBufferBase*) arrayBuffer;
+        typename WriteBarrierFieldTypeTraits<ArrayBufferBase*>::Type arrayBuffer;
 
     protected:
         DEFINE_VTABLE_CTOR_ABSTRACT(ArrayBufferParent, ArrayObject);

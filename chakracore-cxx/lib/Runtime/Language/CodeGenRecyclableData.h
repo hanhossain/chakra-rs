@@ -12,7 +12,7 @@ namespace Js
     class CodeGenRecyclableData : public JsUtil::DoublyLinkedListElement<CodeGenRecyclableData, Recycler>
     {
     private:
-        Field(const FunctionCodeGenJitTimeData *) const jitTimeData;
+        typename WriteBarrierFieldTypeTraits<const FunctionCodeGenJitTimeData *>::Type const jitTimeData;
 
     public:
         CodeGenRecyclableData(const FunctionCodeGenJitTimeData *const jitTimeData);

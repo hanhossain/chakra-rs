@@ -9,7 +9,7 @@ namespace Js
 {
     struct JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper
     {
-        Field(bool) alreadyResolved;
+        typename WriteBarrierFieldTypeTraits<bool>::Type alreadyResolved;
     };
 
     class JavascriptPromiseResolveOrRejectFunction : public RuntimeFunction
@@ -28,9 +28,9 @@ namespace Js
         void SetAlreadyResolved(bool is);
 
     private:
-        Field(JavascriptPromise*) promise;
-        Field(bool) isReject;
-        Field(JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper*) alreadyResolvedWrapper;
+        typename WriteBarrierFieldTypeTraits<JavascriptPromise*>::Type promise;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isReject;
+        typename WriteBarrierFieldTypeTraits<JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper*>::Type alreadyResolvedWrapper;
 
 #if ENABLE_TTD
     public:
@@ -55,7 +55,7 @@ namespace Js
         JavascriptPromiseCapability* GetCapability();
 
     private:
-        Field(JavascriptPromiseCapability*) capability;
+        typename WriteBarrierFieldTypeTraits<JavascriptPromiseCapability*>::Type capability;
 
 #if ENABLE_TTD
     public:
@@ -85,9 +85,9 @@ namespace Js
 
 
     private:
-        Field(JavascriptPromise*) promise;
-        Field(RecyclableObject*) thenable;
-        Field(RecyclableObject*) thenFunction;
+        typename WriteBarrierFieldTypeTraits<JavascriptPromise*>::Type promise;
+        typename WriteBarrierFieldTypeTraits<RecyclableObject*>::Type thenable;
+        typename WriteBarrierFieldTypeTraits<RecyclableObject*>::Type thenFunction;
 
 #if ENABLE_TTD
     public:
@@ -115,8 +115,8 @@ namespace Js
         Var GetArgument();
 
     private:
-        Field(JavascriptPromiseReaction*) reaction;
-        Field(Var) argument;
+        typename WriteBarrierFieldTypeTraits<JavascriptPromiseReaction*>::Type reaction;
+        typename WriteBarrierFieldTypeTraits<Var>::Type argument;
 
 #if ENABLE_TTD
     public:
@@ -145,9 +145,9 @@ namespace Js
         inline RecyclableObject* GetConstructor() { return this->Constructor; }
 
     private:
-        Field(RecyclableObject*) OnFinally;
-        Field(RecyclableObject*) Constructor;
-        Field(bool) shouldThrow;
+        typename WriteBarrierFieldTypeTraits<RecyclableObject*>::Type OnFinally;
+        typename WriteBarrierFieldTypeTraits<RecyclableObject*>::Type Constructor;
+        typename WriteBarrierFieldTypeTraits<bool>::Type shouldThrow;
     };
 
     template <> bool VarIsImpl<JavascriptPromiseThenFinallyFunction>(RecyclableObject* obj);
@@ -167,15 +167,15 @@ namespace Js
         inline Var GetValue() { return this->value; }
 
     private:
-        Field(Var) value;
-        Field(bool) shouldThrow;
+        typename WriteBarrierFieldTypeTraits<Var>::Type value;
+        typename WriteBarrierFieldTypeTraits<bool>::Type shouldThrow;
     };
 
     template <> bool VarIsImpl<JavascriptPromiseThunkFinallyFunction>(RecyclableObject* obj);
 
     struct JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper
     {
-        Field(uint32_t) remainingElements;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type remainingElements;
     };
 
     class JavascriptPromiseAllResolveElementFunction : public RuntimeFunction
@@ -198,11 +198,11 @@ namespace Js
         uint32_t DecrementRemainingElements();
 
     protected:
-        Field(JavascriptPromiseCapability*) capabilities;
-        Field(uint32_t) index;
-        Field(JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper*) remainingElementsWrapper;
-        Field(JavascriptArray*) values;
-        Field(bool) alreadyCalled;
+        typename WriteBarrierFieldTypeTraits<JavascriptPromiseCapability*>::Type capabilities;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type index;
+        typename WriteBarrierFieldTypeTraits<JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper*>::Type remainingElementsWrapper;
+        typename WriteBarrierFieldTypeTraits<JavascriptArray*>::Type values;
+        typename WriteBarrierFieldTypeTraits<bool>::Type alreadyCalled;
 
 #if ENABLE_TTD
     public:
@@ -231,8 +231,8 @@ namespace Js
         bool IsRejectFunction();
 
     private:
-        Field(JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper*) alreadyCalledWrapper;
-        Field(bool) isRejecting;
+        typename WriteBarrierFieldTypeTraits<JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper*>::Type alreadyCalledWrapper;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isRejecting;
 
 #if ENABLE_TTD
     public:
@@ -279,9 +279,9 @@ namespace Js
         }
 
     private:
-        Field(Var) promise;
-        Field(Var) resolve;
-        Field(Var) reject;
+        typename WriteBarrierFieldTypeTraits<Var>::Type promise;
+        typename WriteBarrierFieldTypeTraits<Var>::Type resolve;
+        typename WriteBarrierFieldTypeTraits<Var>::Type reject;
 
 #if ENABLE_TTD
     public:
@@ -322,8 +322,8 @@ namespace Js
         }
 
     private:
-        Field(JavascriptPromiseCapability*) capabilities;
-        Field(RecyclableObject*) handler;
+        typename WriteBarrierFieldTypeTraits<JavascriptPromiseCapability*>::Type capabilities;
+        typename WriteBarrierFieldTypeTraits<RecyclableObject*>::Type handler;
 
 #if ENABLE_TTD
     public:
@@ -464,13 +464,13 @@ namespace Js
         Var ResolveHelper(Var resolution, bool isRejecting, ScriptContext* scriptContext);
 
     protected:
-        Field(Var) result;
-        Field(JavascriptPromiseReactionList*) reactions;
+        typename WriteBarrierFieldTypeTraits<Var>::Type result;
+        typename WriteBarrierFieldTypeTraits<JavascriptPromiseReactionList*>::Type reactions;
 
         // we could pack status & isHandled into a single byte, but the compiler is aligning this on address-size
         // boundaries, so we don't save anything.  Leaving these separate fields for clarity
-        Field(PromiseStatus) status;
-        Field(bool) isHandled;
+        typename WriteBarrierFieldTypeTraits<PromiseStatus>::Type status;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isHandled;
 
     private :
         bool WillRejectionBeUnhandled();
@@ -501,7 +501,7 @@ namespace Js
         JavascriptPromiseAnyRejectElementFunction(DynamicType* type, FunctionInfo* functionInfo, uint32_t index, JavascriptArray* values, JavascriptPromiseCapability* capabilities, JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* remainingElementsWrapper, JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* alreadyCalledWrapper);
 
     private:
-        Field(JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper*) alreadyCalledWrapper;
+        typename WriteBarrierFieldTypeTraits<JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper*>::Type alreadyCalledWrapper;
 
 #if ENABLE_TTD
     public:

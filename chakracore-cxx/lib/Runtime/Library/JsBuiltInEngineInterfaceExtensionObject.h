@@ -43,15 +43,15 @@ namespace Js
         };
 
     private:
-        Field(DynamicObject*) builtInNativeInterfaces;
+        typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type builtInNativeInterfaces;
 
-        #define BuiltInFunctionBody(class, type, obj) Field(FunctionBody*) jsBuiltIn##class##_##type##Bytecode = nullptr;
+        #define BuiltInFunctionBody(class, type, obj) typename WriteBarrierFieldTypeTraits<FunctionBody*>::Type jsBuiltIn##class##_##type##Bytecode = nullptr;
         JsBuiltIns(BuiltInFunctionBody)
         #undef BuiltInFunctionBody
 
-        Field(JsBuiltInFile) current;
-        Field(bool) wasInitialized = false;
-        Field(SRCINFO*) sourceInfo = nullptr;
+        typename WriteBarrierFieldTypeTraits<JsBuiltInFile>::Type current;
+        typename WriteBarrierFieldTypeTraits<bool>::Type wasInitialized = false;
+        typename WriteBarrierFieldTypeTraits<SRCINFO*>::Type sourceInfo = nullptr;
 
         void EnsureSourceInfo();
         void DumpByteCode(JsBuiltInFile file);

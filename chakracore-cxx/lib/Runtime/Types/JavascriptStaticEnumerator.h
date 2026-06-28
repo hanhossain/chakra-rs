@@ -21,10 +21,10 @@ namespace Js
     {
     protected:
         friend class ForInObjectEnumerator;
-        Field(DynamicObjectPropertyEnumerator) propertyEnumerator;
-        Field(JavascriptEnumerator*) currentEnumerator;
-        Field(JavascriptEnumerator*) prefixEnumerator;
-        Field(JavascriptEnumerator*) arrayEnumerator;
+        typename WriteBarrierFieldTypeTraits<DynamicObjectPropertyEnumerator>::Type propertyEnumerator;
+        typename WriteBarrierFieldTypeTraits<JavascriptEnumerator*>::Type currentEnumerator;
+        typename WriteBarrierFieldTypeTraits<JavascriptEnumerator*>::Type prefixEnumerator;
+        typename WriteBarrierFieldTypeTraits<JavascriptEnumerator*>::Type arrayEnumerator;
 
         JavascriptString * MoveAndGetNextFromEnumerator(PropertyId& propertyId, PropertyAttributes* attributes);
     public:

@@ -17,10 +17,10 @@ namespace Js
             : Id(NO_WRITE_BARRIER_TAG(id)), preventFalseReference(NULL)
         { Attributes = attributes; }
 
-        Field(const PropertyRecord*) Id;
+        typename WriteBarrierFieldTypeTraits<const PropertyRecord*>::Type Id;
         union
         {
-            Field(PropertyAttributes) Attributes;
+            typename WriteBarrierFieldTypeTraits<PropertyAttributes>::Type Attributes;
             FieldNoBarrier(void*) preventFalseReference; // SimplePropertyDescriptor can be declared on stack. Always zero out to avoid this becoming a memory address reference.
         };
     };

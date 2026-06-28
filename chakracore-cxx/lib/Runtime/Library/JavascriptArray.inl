@@ -1582,7 +1582,7 @@ SECOND_PASS:
 
         SparseArraySegment<T> *const segment = SparseArraySegment<T>::From(head);
         const uint segmentLength = segment->length;
-        const Field(T) * const segmentElements = segment->elements;
+        const typename WriteBarrierFieldTypeTraits<T>::Type * const segmentElements = segment->elements;
         for(uint i = startIndex; i < segmentLength; ++i)
         {
             if(SparseArraySegment<T>::IsMissingItem(&segmentElements[i]))
@@ -1601,7 +1601,7 @@ SECOND_PASS:
         //Assert(!HasNoMissingValues());
 
         SparseArraySegment<T> *const segment = SparseArraySegment<T>::From(head);
-        const Field(T) *const segmentElements = segment->elements;
+        const typename WriteBarrierFieldTypeTraits<T>::Type *const segmentElements = segment->elements;
         for (uint i = startIndex; i < endIndex; ++i)
         {
             if (SparseArraySegment<T>::IsMissingItem(&segmentElements[i]))

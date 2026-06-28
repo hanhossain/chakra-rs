@@ -936,7 +936,7 @@ namespace TTD
             Js::RecyclableObject* bFunction = inflator->LookupObject(snapBoundInfo->TargetFunction);
             Js::RecyclableObject* bThis = (snapBoundInfo->BoundThis != TTD_INVALID_PTR_ID) ? inflator->LookupObject(snapBoundInfo->BoundThis) : nullptr;
 
-            Field(Js::Var)* bArgs = nullptr;
+            typename WriteBarrierFieldTypeTraits<Js::Var>::Type* bArgs = nullptr;
             if(snapBoundInfo->ArgCount != 0)
             {
                 bArgs = RecyclerNewArray(ctx->GetRecycler(), typename WriteBarrierFieldTypeTraits<Js::Var>::Type, snapBoundInfo->ArgCount);
@@ -2257,7 +2257,7 @@ namespace TTD
 
             SnapGeneratorInfo* generatorInfo = SnapObjectGetAddtlInfoAs<SnapGeneratorInfo*, SnapObjectType::SnapGenerator>(snpObject);
 
-            Field(Js::Var)* argVals = nullptr;
+            typename WriteBarrierFieldTypeTraits<Js::Var>::Type* argVals = nullptr;
             if(generatorInfo->arguments_count > 0)
             {
                 argVals = RecyclerNewArray(ctx->GetRecycler(), typename WriteBarrierFieldTypeTraits<Js::Var>::Type, generatorInfo->arguments_count);
@@ -2309,7 +2309,7 @@ namespace TTD
                 Js::InterpreterStackFrame* frame = Js::InterpreterStackFrame::CreateInterpreterStackFrameForGenerator(scriptFunction, executeFunction, generator, doProfile);
                 TTDAssert(generator->GetFrame() == frame, "unexpected frame mis-match");
 
-                Field(Js::Var)* frameSlotArray = nullptr;
+                typename WriteBarrierFieldTypeTraits<Js::Var>::Type* frameSlotArray = nullptr;
                 if (generatorInfo->frame_slotCount != 0)
                 {
                     frameSlotArray = RecyclerNewArray(ctx->GetRecycler(), typename WriteBarrierFieldTypeTraits<Js::Var>::Type, generatorInfo->frame_slotCount);

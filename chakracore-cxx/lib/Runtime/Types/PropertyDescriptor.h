@@ -29,22 +29,22 @@ namespace Js
         }
 
     private:
-        Field(Var)  Value;
-        Field(Var)  Getter;
-        Field(Var)  Setter;
-        Field(Var)  originalVar;
+        typename WriteBarrierFieldTypeTraits<Var>::Type  Value;
+        typename WriteBarrierFieldTypeTraits<Var>::Type  Getter;
+        typename WriteBarrierFieldTypeTraits<Var>::Type  Setter;
+        typename WriteBarrierFieldTypeTraits<Var>::Type  originalVar;
 
-        Field(bool) writableSpecified;
-        Field(bool) enumerableSpecified;
-        Field(bool) configurableSpecified;
-        Field(bool) valueSpecified;
-        Field(bool) getterSpecified;
-        Field(bool) setterSpecified;
+        typename WriteBarrierFieldTypeTraits<bool>::Type writableSpecified;
+        typename WriteBarrierFieldTypeTraits<bool>::Type enumerableSpecified;
+        typename WriteBarrierFieldTypeTraits<bool>::Type configurableSpecified;
+        typename WriteBarrierFieldTypeTraits<bool>::Type valueSpecified;
+        typename WriteBarrierFieldTypeTraits<bool>::Type getterSpecified;
+        typename WriteBarrierFieldTypeTraits<bool>::Type setterSpecified;
 
-        Field(bool) Writable;
-        Field(bool) Enumerable;
-        Field(bool) Configurable;
-        Field(bool) fromProxy;
+        typename WriteBarrierFieldTypeTraits<bool>::Type Writable;
+        typename WriteBarrierFieldTypeTraits<bool>::Type Enumerable;
+        typename WriteBarrierFieldTypeTraits<bool>::Type Configurable;
+        typename WriteBarrierFieldTypeTraits<bool>::Type fromProxy;
 
     public:
         bool IsDataDescriptor() const { return writableSpecified | valueSpecified;}

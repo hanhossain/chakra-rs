@@ -9,8 +9,8 @@ namespace Js
     class JavascriptStringIterator : public DynamicObject
     {
     private:
-        Field(JavascriptString*)   m_string;
-        Field(charcount_t)         m_nextIndex;
+        typename WriteBarrierFieldTypeTraits<JavascriptString*>::Type   m_string;
+        typename WriteBarrierFieldTypeTraits<charcount_t>::Type         m_nextIndex;
 
     protected:
         DEFINE_VTABLE_CTOR(JavascriptStringIterator, DynamicObject);

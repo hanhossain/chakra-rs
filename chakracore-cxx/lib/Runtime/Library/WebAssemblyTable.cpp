@@ -203,7 +203,7 @@ WebAssemblyTable::Create(uint32_t initial, uint32_t maximum, ScriptContext * scr
     {
         JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgumentOutOfRange);
     }
-    Field(Var) * values = nullptr;
+    typename WriteBarrierFieldTypeTraits<Var>::Type * values = nullptr;
     if (initial > 0)
     {
         values = RecyclerNewArrayZ(scriptContext->GetRecycler(), typename WriteBarrierFieldTypeTraits<Var>::Type, initial);

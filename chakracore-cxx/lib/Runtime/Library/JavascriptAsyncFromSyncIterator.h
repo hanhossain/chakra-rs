@@ -32,8 +32,8 @@ namespace Js
         };
 
     private:
-        Field(RecyclableObject*) syncIterator;
-        Field(RecyclableObject*) syncNextFunction;
+        typename WriteBarrierFieldTypeTraits<RecyclableObject*>::Type syncIterator;
+        typename WriteBarrierFieldTypeTraits<RecyclableObject*>::Type syncNextFunction;
     protected:
         DEFINE_VTABLE_CTOR(JavascriptAsyncFromSyncIterator, DynamicObject);
     };

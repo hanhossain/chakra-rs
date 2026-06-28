@@ -65,21 +65,21 @@ namespace Js
         typedef SimplePropertyDescriptorMap PropertyDescriptorMapType; // alias used by diagnostics
 
     protected:
-        Field(SimplePropertyDescriptorMap*) propertyMap;
+        typename WriteBarrierFieldTypeTraits<SimplePropertyDescriptorMap*>::Type propertyMap;
 
     private:
-        Field(RecyclerWeakReference<DynamicObject>*) singletonInstance;
+        typename WriteBarrierFieldTypeTraits<RecyclerWeakReference<DynamicObject>*>::Type singletonInstance;
 
     protected:
-        Field(bool) _gc_tag : 1;  // Tag the low bit to prevent possible GC false references
+        typename WriteBarrierFieldTypeTraits<bool>::Type _gc_tag : 1;  // Tag the low bit to prevent possible GC false references
         // Determines whether this instance is actually a SimpleDictionaryUnorderedTypeHandler
-        Field(bool) isUnordered : 1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isUnordered : 1;
         // Tracks if an InternalPropertyRecord or symbol has been added to this type; will prevent conversion to string-keyed type handler
-        Field(bool) hasNamelessPropertyId : 1;
+        typename WriteBarrierFieldTypeTraits<bool>::Type hasNamelessPropertyId : 1;
     private:
         // Number of deleted properties in the property map
-        Field(byte) numDeletedProperties;
-        Field(TPropertyIndex) nextPropertyIndex;
+        typename WriteBarrierFieldTypeTraits<byte>::Type numDeletedProperties;
+        typename WriteBarrierFieldTypeTraits<TPropertyIndex>::Type nextPropertyIndex;
 
     public:
         DEFINE_GETCPPNAME();

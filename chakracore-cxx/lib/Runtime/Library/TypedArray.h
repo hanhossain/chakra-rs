@@ -205,8 +205,8 @@ namespace Js
         virtual void SortHelper(byte* listBuffer, uint32_t length, RecyclableObject* compareFn, ScriptContext* scriptContext, ArenaAllocator* allocator) = 0;
 
         virtual Var Subarray(uint32_t begin, uint32_t end) = 0;
-        Field(int32_t) BYTES_PER_ELEMENT;
-        Field(uint32_t) byteOffset;
+        typename WriteBarrierFieldTypeTraits<int32_t>::Type BYTES_PER_ELEMENT;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type byteOffset;
         FieldNoBarrier(uint8_t*) buffer;   // beginning of mapped array.
 
     public:

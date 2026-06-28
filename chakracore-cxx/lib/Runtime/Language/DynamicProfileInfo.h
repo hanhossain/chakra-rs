@@ -47,19 +47,19 @@ namespace Js
     class DynamicProfileFunctionInfo
     {
     public:
-        Field(Js::ArgSlot) paramInfoCount;
-        Field(ProfileId) ldLenInfoCount;
-        Field(ProfileId) ldElemInfoCount;
-        Field(ProfileId) stElemInfoCount;
-        Field(ProfileId) arrayCallSiteCount;
-        Field(ProfileId) slotInfoCount;
-        Field(ProfileId) callSiteInfoCount;
-        Field(ProfileId) callApplyTargetInfoCount;
-        Field(ProfileId) returnTypeInfoCount;
-        Field(ProfileId) divCount;
-        Field(ProfileId) switchCount;
-        Field(uint) loopCount;
-        Field(uint) fldInfoCount;
+        typename WriteBarrierFieldTypeTraits<Js::ArgSlot>::Type paramInfoCount;
+        typename WriteBarrierFieldTypeTraits<ProfileId>::Type ldLenInfoCount;
+        typename WriteBarrierFieldTypeTraits<ProfileId>::Type ldElemInfoCount;
+        typename WriteBarrierFieldTypeTraits<ProfileId>::Type stElemInfoCount;
+        typename WriteBarrierFieldTypeTraits<ProfileId>::Type arrayCallSiteCount;
+        typename WriteBarrierFieldTypeTraits<ProfileId>::Type slotInfoCount;
+        typename WriteBarrierFieldTypeTraits<ProfileId>::Type callSiteInfoCount;
+        typename WriteBarrierFieldTypeTraits<ProfileId>::Type callApplyTargetInfoCount;
+        typename WriteBarrierFieldTypeTraits<ProfileId>::Type returnTypeInfoCount;
+        typename WriteBarrierFieldTypeTraits<ProfileId>::Type divCount;
+        typename WriteBarrierFieldTypeTraits<ProfileId>::Type switchCount;
+        typename WriteBarrierFieldTypeTraits<uint>::Type loopCount;
+        typename WriteBarrierFieldTypeTraits<uint>::Type fldInfoCount;
     };
 
     enum ThisType : uint8_t
@@ -71,8 +71,8 @@ namespace Js
 
     struct ThisInfo
     {
-        Field(ValueType) valueType;
-        Field(ThisType) thisType;
+        typename WriteBarrierFieldTypeTraits<ValueType>::Type valueType;
+        typename WriteBarrierFieldTypeTraits<ThisType>::Type thisType;
 
         ThisInfo() : thisType(ThisType_Unknown)
         {
@@ -87,39 +87,39 @@ namespace Js
         }
 
         // False if there is more than one ArgIn that is a function object or a function object with arg number greater than MaxInlineeArgoutCount
-        Field(uint8_t) canInlineCallback : 1;
+        typename WriteBarrierFieldTypeTraits<uint8_t>::Type canInlineCallback : 1;
 
-        Field(uint8_t) isPolymorphic : 1;
+        typename WriteBarrierFieldTypeTraits<uint8_t>::Type isPolymorphic : 1;
 
         // Used to correlate from callee's ArgIn to this ArgOut
-        Field(uint8_t) argNumber : 5;
+        typename WriteBarrierFieldTypeTraits<uint8_t>::Type argNumber : 5;
         static_assert(Js::InlineeCallInfo::MaxInlineeArgoutCount < (1 << 5), "Ensure CallbackInfo::argNumber is large enough to hold all inline arguments");
 
-        Field(uint16) callSiteId;
+        typename WriteBarrierFieldTypeTraits<uint16>::Type callSiteId;
 
-        Field(Js::SourceId) sourceId;
-        Field(Js::LocalFunctionId) functionId;
+        typename WriteBarrierFieldTypeTraits<Js::SourceId>::Type sourceId;
+        typename WriteBarrierFieldTypeTraits<Js::LocalFunctionId>::Type functionId;
     };
 
     using CallbackInfoList = SList<CallbackInfo*, Recycler, RealCount>;
 
     struct CallSiteInfo
     {
-        Field(ValueType) returnType;
-        Field(uint16) isArgConstant : 13;
-        Field(uint16) isConstructorCall : 1;
-        Field(uint16) dontInline : 1;
-        Field(uint16) isPolymorphic : 1;
-        Field(InlineCacheIndex) ldFldInlineCacheId;
+        typename WriteBarrierFieldTypeTraits<ValueType>::Type returnType;
+        typename WriteBarrierFieldTypeTraits<uint16>::Type isArgConstant : 13;
+        typename WriteBarrierFieldTypeTraits<uint16>::Type isConstructorCall : 1;
+        typename WriteBarrierFieldTypeTraits<uint16>::Type dontInline : 1;
+        typename WriteBarrierFieldTypeTraits<uint16>::Type isPolymorphic : 1;
+        typename WriteBarrierFieldTypeTraits<InlineCacheIndex>::Type ldFldInlineCacheId;
         union _u_type
         {
             struct
             {
-                Field(Js::SourceId) sourceId;
-                Field(Js::LocalFunctionId) functionId;
+                typename WriteBarrierFieldTypeTraits<Js::SourceId>::Type sourceId;
+                typename WriteBarrierFieldTypeTraits<Js::LocalFunctionId>::Type functionId;
             } functionData;
             // As of now polymorphic info is allocated only if the source Id is current
-            Field(PolymorphicCallSiteInfo*) polymorphicCallSiteInfo;
+            typename WriteBarrierFieldTypeTraits<PolymorphicCallSiteInfo*>::Type polymorphicCallSiteInfo;
             _u_type() {}
         } u;
     };
@@ -524,23 +524,23 @@ namespace Js
     private:
         // Have the dynamicProfileFunctionInfo after loaded from cache.
         // Replaced with the function body it is verified and matched (See DynamicProfileInfo::MatchFunctionBody)
-        Field(DynamicProfileFunctionInfo *) dynamicProfileFunctionInfo;
-        Field(CallSiteInfo *) callSiteInfo;
-        Field(CallSiteInfo *) callApplyTargetInfo;
-        Field(ValueType *) returnTypeInfo; // return type of calls for non inline call sites
-        Field(ValueType *) divideTypeInfo;
-        Field(ValueType *) switchTypeInfo;
-        Field(LdLenInfo *) ldLenInfo;
-        Field(LdElemInfo *) ldElemInfo;
-        Field(StElemInfo *) stElemInfo;
-        Field(ArrayCallSiteInfo *) arrayCallSiteInfo;
-        Field(ValueType *) parameterInfo;
-        Field(FldInfo *) fldInfo;
-        Field(ValueType *) slotInfo;
-        Field(ImplicitCallFlags *) loopImplicitCallFlags;
-        Field(ImplicitCallFlags) implicitCallFlags;
-        Field(BVFixed*) loopFlags;
-        Field(ThisInfo) thisInfo;
+        typename WriteBarrierFieldTypeTraits<DynamicProfileFunctionInfo *>::Type dynamicProfileFunctionInfo;
+        typename WriteBarrierFieldTypeTraits<CallSiteInfo *>::Type callSiteInfo;
+        typename WriteBarrierFieldTypeTraits<CallSiteInfo *>::Type callApplyTargetInfo;
+        typename WriteBarrierFieldTypeTraits<ValueType *>::Type returnTypeInfo; // return type of calls for non inline call sites
+        typename WriteBarrierFieldTypeTraits<ValueType *>::Type divideTypeInfo;
+        typename WriteBarrierFieldTypeTraits<ValueType *>::Type switchTypeInfo;
+        typename WriteBarrierFieldTypeTraits<LdLenInfo *>::Type ldLenInfo;
+        typename WriteBarrierFieldTypeTraits<LdElemInfo *>::Type ldElemInfo;
+        typename WriteBarrierFieldTypeTraits<StElemInfo *>::Type stElemInfo;
+        typename WriteBarrierFieldTypeTraits<ArrayCallSiteInfo *>::Type arrayCallSiteInfo;
+        typename WriteBarrierFieldTypeTraits<ValueType *>::Type parameterInfo;
+        typename WriteBarrierFieldTypeTraits<FldInfo *>::Type fldInfo;
+        typename WriteBarrierFieldTypeTraits<ValueType *>::Type slotInfo;
+        typename WriteBarrierFieldTypeTraits<ImplicitCallFlags *>::Type loopImplicitCallFlags;
+        typename WriteBarrierFieldTypeTraits<ImplicitCallFlags>::Type implicitCallFlags;
+        typename WriteBarrierFieldTypeTraits<BVFixed*>::Type loopFlags;
+        typename WriteBarrierFieldTypeTraits<ThisInfo>::Type thisInfo;
 
         // TODO (jedmiad): Consider storing a pair of property ID bit vectors indicating which properties are
         // known to be non-fixed or non-equivalent. We could turn these on if we bailed out of fixed field type
@@ -549,57 +549,57 @@ namespace Js
 
         struct Bits
         {
-            Field(bool) disableAggressiveIntTypeSpec : 1;
-            Field(bool) disableAggressiveIntTypeSpec_jitLoopBody : 1;
-            Field(bool) disableAggressiveMulIntTypeSpec : 1;
-            Field(bool) disableAggressiveMulIntTypeSpec_jitLoopBody : 1;
-            Field(bool) disableDivIntTypeSpec : 1;
-            Field(bool) disableDivIntTypeSpec_jitLoopBody : 1;
-            Field(bool) disableLossyIntTypeSpec : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableAggressiveIntTypeSpec : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableAggressiveIntTypeSpec_jitLoopBody : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableAggressiveMulIntTypeSpec : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableAggressiveMulIntTypeSpec_jitLoopBody : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableDivIntTypeSpec : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableDivIntTypeSpec_jitLoopBody : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableLossyIntTypeSpec : 1;
             // TODO: put this flag in LoopFlags if we can find a reliable way to determine the loopNumber in bailout for a hoisted instr
-            Field(bool) disableMemOp : 1;
-            Field(bool) disableTrackCompoundedIntOverflow : 1;
-            Field(bool) disableFloatTypeSpec : 1;
-            Field(bool) disableCheckThis : 1;
-            Field(bool) disableArrayCheckHoist : 1;
-            Field(bool) disableArrayCheckHoist_jitLoopBody : 1;
-            Field(bool) disableArrayMissingValueCheckHoist : 1;
-            Field(bool) disableArrayMissingValueCheckHoist_jitLoopBody : 1;
-            Field(bool) disableJsArraySegmentHoist : 1;
-            Field(bool) disableJsArraySegmentHoist_jitLoopBody : 1;
-            Field(bool) disableArrayLengthHoist : 1;
-            Field(bool) disableArrayLengthHoist_jitLoopBody : 1;
-            Field(bool) disableTypedArrayTypeSpec : 1;
-            Field(bool) disableTypedArrayTypeSpec_jitLoopBody : 1;
-            Field(bool) disableLdLenIntSpec : 1;
-            Field(bool) disableBoundCheckHoist : 1;
-            Field(bool) disableBoundCheckHoist_jitLoopBody : 1;
-            Field(bool) disableLoopCountBasedBoundCheckHoist : 1;
-            Field(bool) disableLoopCountBasedBoundCheckHoist_jitLoopBody : 1;
-            Field(bool) hasPolymorphicFldAccess : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableMemOp : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableTrackCompoundedIntOverflow : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableFloatTypeSpec : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableCheckThis : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableArrayCheckHoist : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableArrayCheckHoist_jitLoopBody : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableArrayMissingValueCheckHoist : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableArrayMissingValueCheckHoist_jitLoopBody : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableJsArraySegmentHoist : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableJsArraySegmentHoist_jitLoopBody : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableArrayLengthHoist : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableArrayLengthHoist_jitLoopBody : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableTypedArrayTypeSpec : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableTypedArrayTypeSpec_jitLoopBody : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableLdLenIntSpec : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableBoundCheckHoist : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableBoundCheckHoist_jitLoopBody : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableLoopCountBasedBoundCheckHoist : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableLoopCountBasedBoundCheckHoist_jitLoopBody : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type hasPolymorphicFldAccess : 1;
             typename WriteBarrierFieldTypeTraits<bool>::Type hasLdFldCallSite : 1; // getters, setters, .apply (possibly .call too in future)
-            Field(bool) disableFloorInlining : 1;
-            Field(bool) disableNoProfileBailouts : 1;
-            Field(bool) disableSwitchOpt : 1;
-            Field(bool) disableEquivalentObjTypeSpec : 1;
-            Field(bool) disableObjTypeSpec_jitLoopBody : 1;
-            Field(bool) disablePowIntIntTypeSpec : 1;
-            Field(bool) disableLoopImplicitCallInfo : 1;
-            Field(bool) disableStackArgOpt : 1;
-            Field(bool) disableTagCheck : 1;
-            Field(bool) disableOptimizeTryFinally : 1;
-            Field(bool) disableFieldPRE : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableFloorInlining : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableNoProfileBailouts : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableSwitchOpt : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableEquivalentObjTypeSpec : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableObjTypeSpec_jitLoopBody : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disablePowIntIntTypeSpec : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableLoopImplicitCallInfo : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableStackArgOpt : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableTagCheck : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableOptimizeTryFinally : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type disableFieldPRE : 1;
         };
-        Field(Bits) bits;
+        typename WriteBarrierFieldTypeTraits<Bits>::Type bits;
 
-        Field(uint32_t) m_recursiveInlineInfo; // Bit is set for each callsites where the function is called recursively
-        Field(uint32_t) polymorphicCacheState;
-        Field(uint32_t) bailOutOffsetForLastRejit;
-        Field(bool) hasFunctionBody;  // this is likely 1, try avoid 4-byte GC force reference
-        Field(uint8_t) currentInlinerVersion; // Used to detect when inlining profile changes
-        Field(uint16) rejitCount;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type m_recursiveInlineInfo; // Bit is set for each callsites where the function is called recursively
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type polymorphicCacheState;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type bailOutOffsetForLastRejit;
+        typename WriteBarrierFieldTypeTraits<bool>::Type hasFunctionBody;  // this is likely 1, try avoid 4-byte GC force reference
+        typename WriteBarrierFieldTypeTraits<uint8_t>::Type currentInlinerVersion; // Used to detect when inlining profile changes
+        typename WriteBarrierFieldTypeTraits<uint16>::Type rejitCount;
 #if DBG
-        Field(bool) persistsAcrossScriptContexts;
+        typename WriteBarrierFieldTypeTraits<bool>::Type persistsAcrossScriptContexts;
 #endif
 
         static std::recursive_mutex callSiteInfoCS;
@@ -639,7 +639,7 @@ namespace Js
         static void WriteArray(uint count, WriteBarrierPtr<T> arr, FILE * file);
 #endif
 #if DBG_DUMP || defined(DYNAMIC_PROFILE_STORAGE) || defined(RUNTIME_DATA_COLLECTION)
-        Field(FunctionBody *) functionBody; // This will only be populated if NeedProfileInfoList is true
+        typename WriteBarrierFieldTypeTraits<FunctionBody *>::Type functionBody; // This will only be populated if NeedProfileInfoList is true
 #endif
 #ifdef DYNAMIC_PROFILE_STORAGE
         // Used by de-serialize
@@ -909,9 +909,9 @@ namespace Js
 
     struct PolymorphicCallSiteInfo
     {
-        Field(Js::LocalFunctionId) functionIds[DynamicProfileInfo::maxPolymorphicInliningSize];
-        Field(Js::SourceId) sourceIds[DynamicProfileInfo::maxPolymorphicInliningSize];
-        Field(PolymorphicCallSiteInfo *) next;
+        typename WriteBarrierFieldTypeTraits<Js::LocalFunctionId>::Type functionIds[DynamicProfileInfo::maxPolymorphicInliningSize];
+        typename WriteBarrierFieldTypeTraits<Js::SourceId>::Type sourceIds[DynamicProfileInfo::maxPolymorphicInliningSize];
+        typename WriteBarrierFieldTypeTraits<PolymorphicCallSiteInfo *>::Type next;
         bool GetFunction(uint index, Js::LocalFunctionId *functionId, Js::SourceId *sourceId)
         {
             Assert(index < DynamicProfileInfo::maxPolymorphicInliningSize);

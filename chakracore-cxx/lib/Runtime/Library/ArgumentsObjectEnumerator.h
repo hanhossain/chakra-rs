@@ -9,10 +9,10 @@ namespace Js
     class ArgumentsObjectPrefixEnumerator : public JavascriptEnumerator
     {
     protected:
-        Field(ArgumentsObject*) argumentsObject;
-        Field(uint32_t) formalArgIndex;
-        Field(bool) doneFormalArgs;
-        Field(EnumeratorFlags) flags;
+        typename WriteBarrierFieldTypeTraits<ArgumentsObject*>::Type argumentsObject;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type formalArgIndex;
+        typename WriteBarrierFieldTypeTraits<bool>::Type doneFormalArgs;
+        typename WriteBarrierFieldTypeTraits<EnumeratorFlags>::Type flags;
 
     protected:
         DEFINE_VTABLE_CTOR(ArgumentsObjectPrefixEnumerator, JavascriptEnumerator);
@@ -35,7 +35,7 @@ namespace Js
         virtual void Reset() override;
         virtual JavascriptString * MoveAndGetNext(PropertyId& propertyId, PropertyAttributes* attributes = nullptr) override;
     private:
-        Field(JavascriptStaticEnumerator) objectEnumerator;
-        Field(uint) enumeratedFormalsInObjectArrayCount;  // The number of enumerated formals for far.
+        typename WriteBarrierFieldTypeTraits<JavascriptStaticEnumerator>::Type objectEnumerator;
+        typename WriteBarrierFieldTypeTraits<uint>::Type enumeratedFormalsInObjectArrayCount;  // The number of enumerated formals for far.
     };
 }

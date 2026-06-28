@@ -23,41 +23,41 @@ namespace Js
 
         struct ContentStruct
         {
-            Field(ScriptContext*) scriptContext;
+            typename WriteBarrierFieldTypeTraits<ScriptContext*>::Type scriptContext;
             // In a pinch we could eliminate this and store type pending sharing in the type field as long
             // as the guard value flags fit below the object alignment boundary.  However, this wouldn't
             // keep the type alive, so it would only work if we zeroed constructor caches before GC.
-            Field(DynamicType*) pendingType;
+            typename WriteBarrierFieldTypeTraits<DynamicType*>::Type pendingType;
 
             // We cache only types whose slotCount < 64K to ensure the slotCount field doesn't look like a pointer to the recycler.
-            Field(int) slotCount;
+            typename WriteBarrierFieldTypeTraits<int>::Type slotCount;
 
             // This layout (i.e. one-byte bit fields first, then the one-byte updateAfterCtor, and then the two byte inlineSlotCount) is
             // chosen intentionally to make sure the whole four bytes never look like a pointer and create a false reference pinning something
             // in recycler heap.  The isPopulated bit is always set when the cache holds any data - even if it got invalidated.
-            Field(bool) isPopulated : 1;
-            Field(bool) isPolymorphic : 1;
-            Field(bool) typeUpdatePending : 1;
-            Field(bool) ctorHasNoExplicitReturnValue : 1;
-            Field(bool) skipDefaultNewObject : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type isPopulated : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type isPolymorphic : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type typeUpdatePending : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type ctorHasNoExplicitReturnValue : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type skipDefaultNewObject : 1;
             // This field indicates that the type stored in this cache is the final type after constructor.
-            Field(bool) typeIsFinal : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type typeIsFinal : 1;
             // This field indicates that the constructor cache has been invalidated due to a constructor's prototype property change.
             // We use this flag to determine if we should mark the cache as polymorphic and not attempt subsequent optimizations.
             // The cache may also be invalidated due to a guard invalidation resulting from some property change (e.g. in proto chain),
             // in which case we won't deem the cache polymorphic.
-            Field(bool) hasPrototypeChanged : 1;
+            typename WriteBarrierFieldTypeTraits<bool>::Type hasPrototypeChanged : 1;
 
-            Field(uint8_t) callCount;
+            typename WriteBarrierFieldTypeTraits<uint8_t>::Type callCount;
 
             // Separate from the bit field below for convenient compare from the JIT-ed code. Doesn't currently increase the size.
             // If size becomes an issue, we could merge back into the bit field and use a TEST instead of CMP.
-            Field(bool) updateAfterCtor;
+            typename WriteBarrierFieldTypeTraits<bool>::Type updateAfterCtor;
 
-            Field(int16) inlineSlotCount;
+            typename WriteBarrierFieldTypeTraits<int16>::Type inlineSlotCount;
         };
 
-        Field(ContentStruct) content;
+        typename WriteBarrierFieldTypeTraits<ContentStruct>::Type content;
 
         static_assert(static_cast<intptr_t>(CtorCacheGuardValues::Invalid) == static_cast<intptr_t>(NULL));
 

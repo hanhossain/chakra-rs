@@ -11,8 +11,8 @@ class StaticType;
 
 class StringCache
 {
-    Field(ScriptContext*) scriptContext;
-    Field(StaticType*) stringTypeStatic;
+    typename WriteBarrierFieldTypeTraits<ScriptContext*>::Type scriptContext;
+    typename WriteBarrierFieldTypeTraits<StaticType*>::Type stringTypeStatic;
 public:
     StringCache() :
 // NOTE: the trailing comma is important!
@@ -40,7 +40,7 @@ public:
 
 #define INITIALIZE(name, str, withPropertyString)         \
 private:                                                  \
-    Field(JavascriptString*) __##name;                    \
+    typename WriteBarrierFieldTypeTraits<JavascriptString*>::Type __##name;                    \
 public:                                                   \
     JavascriptString* Get##name() {                       \
         if (__##name == nullptr)                          \

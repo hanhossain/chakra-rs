@@ -83,7 +83,7 @@ namespace Js {
     {
         static const int32_t   MemoryTableBeginOffset = 0;
         // Memory is allocated in this order
-        Field(int32_t) mArrayBufferOffset
+        typename WriteBarrierFieldTypeTraits<int32_t>::Type mArrayBufferOffset
             , mStdLibOffset
             , mDoubleOffset
             , mFuncOffset
@@ -92,7 +92,7 @@ namespace Js {
             , mIntOffset
             , mFloatOffset
             ;
-        Field(int32_t)   mMemorySize;
+        typename WriteBarrierFieldTypeTraits<int32_t>::Type   mMemorySize;
     };
 
     struct AsmJsFunctionMemory
@@ -297,19 +297,19 @@ namespace Js {
 
     struct AsmJsSlot
     {
-        Field(RegSlot) location;
-        Field(AsmJsSymbol::SymbolType) symType;
+        typename WriteBarrierFieldTypeTraits<RegSlot>::Type location;
+        typename WriteBarrierFieldTypeTraits<AsmJsSymbol::SymbolType>::Type symType;
         union
         {
-            Field(AsmJsVarType::Which) varType;
-            Field(ArrayBufferView::ViewType) viewType;
-            Field(double) mathConstVal;
-            Field(uint) funcTableSize;
-            Field(AsmJsModuleArg::ArgType) argType;
-            Field(AsmJSMathBuiltinFunction) builtinMathFunc;
-            Field(AsmJSTypedArrayBuiltinFunction) builtinArrayFunc;
+            typename WriteBarrierFieldTypeTraits<AsmJsVarType::Which>::Type varType;
+            typename WriteBarrierFieldTypeTraits<ArrayBufferView::ViewType>::Type viewType;
+            typename WriteBarrierFieldTypeTraits<double>::Type mathConstVal;
+            typename WriteBarrierFieldTypeTraits<uint>::Type funcTableSize;
+            typename WriteBarrierFieldTypeTraits<AsmJsModuleArg::ArgType>::Type argType;
+            typename WriteBarrierFieldTypeTraits<AsmJSMathBuiltinFunction>::Type builtinMathFunc;
+            typename WriteBarrierFieldTypeTraits<AsmJSTypedArrayBuiltinFunction>::Type builtinArrayFunc;
         };
-        Field(bool) isConstVar = false;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isConstVar = false;
     };
 
     class AsmJsModuleInfo
@@ -318,31 +318,31 @@ namespace Js {
         /// proxy of asmjs module
         struct ModuleVar
         {
-            Field(RegSlot) location;
-            Field(AsmJsVarType::Which) type;
+            typename WriteBarrierFieldTypeTraits<RegSlot>::Type location;
+            typename WriteBarrierFieldTypeTraits<AsmJsVarType::Which>::Type type;
             union InitialiserType
             {
-                Field(int) intInit;
-                Field(float) floatInit;
-                Field(double) doubleInit;
+                typename WriteBarrierFieldTypeTraits<int>::Type intInit;
+                typename WriteBarrierFieldTypeTraits<float>::Type floatInit;
+                typename WriteBarrierFieldTypeTraits<double>::Type doubleInit;
             };
             typename WriteBarrierFieldTypeTraits<InitialiserType>::Type initialiser; // (leish)(swb) false positive found here
-            Field(bool) isMutable;
+            typename WriteBarrierFieldTypeTraits<bool>::Type isMutable;
         };
         struct ModuleVarImport
         {
-            Field(RegSlot) location;
-            Field(AsmJsVarType::Which) type;
-            Field(PropertyId) field;
+            typename WriteBarrierFieldTypeTraits<RegSlot>::Type location;
+            typename WriteBarrierFieldTypeTraits<AsmJsVarType::Which>::Type type;
+            typename WriteBarrierFieldTypeTraits<PropertyId>::Type field;
         };
         struct ModuleFunctionImport
         {
-            Field(RegSlot) location;
-            Field(PropertyId) field;
+            typename WriteBarrierFieldTypeTraits<RegSlot>::Type location;
+            typename WriteBarrierFieldTypeTraits<PropertyId>::Type field;
         };
         struct ModuleFunction
         {
-            Field(RegSlot) location;
+            typename WriteBarrierFieldTypeTraits<RegSlot>::Type location;
         };
         struct ModuleExport
         {
@@ -351,32 +351,32 @@ namespace Js {
         };
         struct ModuleFunctionTable
         {
-            Field(uint) size;
-            Field(RegSlot*) moduleFunctionIndex;
+            typename WriteBarrierFieldTypeTraits<uint>::Type size;
+            typename WriteBarrierFieldTypeTraits<RegSlot*>::Type moduleFunctionIndex;
         };
 
         typedef JsUtil::BaseDictionary<PropertyId, AsmJsSlot*, Memory::Recycler> AsmJsSlotMap;
 
     private:
         FieldNoBarrier(Recycler*) mRecycler;
-        Field(int) mArgInCount; // for runtime validation of arguments in
-        Field(int) mVarCount, mVarImportCount, mFunctionImportCount, mFunctionCount, mFunctionTableCount, mExportsCount, mSlotsCount;
+        typename WriteBarrierFieldTypeTraits<int>::Type mArgInCount; // for runtime validation of arguments in
+        typename WriteBarrierFieldTypeTraits<int>::Type mVarCount, mVarImportCount, mFunctionImportCount, mFunctionCount, mFunctionTableCount, mExportsCount, mSlotsCount;
 
-        Field(PropertyIdArray*)             mExports;
-        Field(RegSlot*)                     mExportsFunctionLocation;
-        Field(RegSlot)                      mExportFunctionIndex; // valid only if export object is empty
-        Field(ModuleVar*)                   mVars;
-        Field(ModuleVarImport*)             mVarImports;
-        Field(ModuleFunctionImport*)        mFunctionImports;
-        Field(ModuleFunction*)              mFunctions;
-        Field(ModuleFunctionTable*)         mFunctionTables;
-        Field(AsmJsModuleMemory)            mModuleMemory;
-        Field(AsmJsSlotMap*)                mSlotMap;
-        Field(BVStatic<ASMMATH_BUILTIN_SIZE>)  mAsmMathBuiltinUsed;
-        Field(BVStatic<ASMARRAY_BUILTIN_SIZE>) mAsmArrayBuiltinUsed;
+        typename WriteBarrierFieldTypeTraits<PropertyIdArray*>::Type             mExports;
+        typename WriteBarrierFieldTypeTraits<RegSlot*>::Type                     mExportsFunctionLocation;
+        typename WriteBarrierFieldTypeTraits<RegSlot>::Type                      mExportFunctionIndex; // valid only if export object is empty
+        typename WriteBarrierFieldTypeTraits<ModuleVar*>::Type                   mVars;
+        typename WriteBarrierFieldTypeTraits<ModuleVarImport*>::Type             mVarImports;
+        typename WriteBarrierFieldTypeTraits<ModuleFunctionImport*>::Type        mFunctionImports;
+        typename WriteBarrierFieldTypeTraits<ModuleFunction*>::Type              mFunctions;
+        typename WriteBarrierFieldTypeTraits<ModuleFunctionTable*>::Type         mFunctionTables;
+        typename WriteBarrierFieldTypeTraits<AsmJsModuleMemory>::Type            mModuleMemory;
+        typename WriteBarrierFieldTypeTraits<AsmJsSlotMap*>::Type                mSlotMap;
+        typename WriteBarrierFieldTypeTraits<BVStatic<ASMMATH_BUILTIN_SIZE>>::Type  mAsmMathBuiltinUsed;
+        typename WriteBarrierFieldTypeTraits<BVStatic<ASMARRAY_BUILTIN_SIZE>>::Type mAsmArrayBuiltinUsed;
 
-        Field(uint)                         mMaxHeapAccess;
-        Field(bool)                         mIsProcessed;
+        typename WriteBarrierFieldTypeTraits<uint>::Type                         mMaxHeapAccess;
+        typename WriteBarrierFieldTypeTraits<bool>::Type                         mIsProcessed;
     public:
         AsmJsModuleInfo( Recycler* recycler ) :
             mRecycler( recycler )

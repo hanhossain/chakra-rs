@@ -16,9 +16,9 @@ namespace Js
     class JavascriptArrayIterator : public DynamicObject
     {
     private:
-        Field(Var)                         m_iterableObject;
-        Field(long)                       m_nextIndex;
-        Field(JavascriptArrayIteratorKind) m_kind;
+        typename WriteBarrierFieldTypeTraits<Var>::Type                         m_iterableObject;
+        typename WriteBarrierFieldTypeTraits<long>::Type                       m_nextIndex;
+        typename WriteBarrierFieldTypeTraits<JavascriptArrayIteratorKind>::Type m_kind;
 
     protected:
         DEFINE_VTABLE_CTOR(JavascriptArrayIterator, DynamicObject);

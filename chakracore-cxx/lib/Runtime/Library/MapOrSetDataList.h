@@ -29,21 +29,21 @@ namespace Js
         template <typename T>
         friend class MapOrSetDataList;
 
-        Field(MapOrSetDataNode<TData>*) next;
-        Field(MapOrSetDataNode<TData>*) prev;
+        typename WriteBarrierFieldTypeTraits<MapOrSetDataNode<TData>*>::Type next;
+        typename WriteBarrierFieldTypeTraits<MapOrSetDataNode<TData>*>::Type prev;
 
         MapOrSetDataNode(TData& data) : data(data), next(nullptr), prev(nullptr) { }
 
     public:
-        Field(TData) data;
+        typename WriteBarrierFieldTypeTraits<TData>::Type data;
     };
 
     template <typename TData>
     class MapOrSetDataList
     {
     private:
-        Field(MapOrSetDataNode<TData>*) first;
-        Field(MapOrSetDataNode<TData>*) last;
+        typename WriteBarrierFieldTypeTraits<MapOrSetDataNode<TData>*>::Type first;
+        typename WriteBarrierFieldTypeTraits<MapOrSetDataNode<TData>*>::Type last;
 
     public:
         MapOrSetDataList(VirtualTableInfoCtorEnum) {};
@@ -51,8 +51,8 @@ namespace Js
 
         class Iterator
         {
-            Field(MapOrSetDataList<TData>*) list;
-            Field(MapOrSetDataNode<TData>*) current;
+            typename WriteBarrierFieldTypeTraits<MapOrSetDataList<TData>*>::Type list;
+            typename WriteBarrierFieldTypeTraits<MapOrSetDataNode<TData>*>::Type current;
         public:
             Iterator() : list(nullptr), current(nullptr) { }
             Iterator(MapOrSetDataList<TData>* list) : list(list), current(nullptr) { }
@@ -200,7 +200,7 @@ namespace Js
     template <typename TData>
     class DelayedDeleteMapOrSetDataList : MapOrSetDataList<TData>
     {
-        Field(SList<TData>*) deletedList;
+        typename WriteBarrierFieldTypeTraits<SList<TData>*>::Type deletedList;
 
     };
 }

@@ -33,9 +33,9 @@ namespace Js
     {
         friend class ISourceHolder;
     protected:
-        Field(LPCUTF8) source;
-        Field(size_t) byteLength;
-        Field(bool) isEmpty;
+        typename WriteBarrierFieldTypeTraits<LPCUTF8>::Type source;
+        typename WriteBarrierFieldTypeTraits<size_t>::Type byteLength;
+        typename WriteBarrierFieldTypeTraits<bool>::Type isEmpty;
 
         SimpleSourceHolder(NO_WRITE_BARRIER_TAG_TYPE(LPCUTF8 source), size_t byteLength, bool isEmpty)
             : source(NO_WRITE_BARRIER_TAG(source)),

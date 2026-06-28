@@ -203,7 +203,7 @@ namespace Js
         };
 
     private:
-        Field(Which) which_;
+        typename WriteBarrierFieldTypeTraits<Which>::Type which_;
 
     public:
         AsmJsRetType();
@@ -877,23 +877,23 @@ namespace Js
 
     class AsmJsFunctionInfo
     {
-        Field(WAsmJs::TypedSlotInfo) mTypedSlotInfos[WAsmJs::LIMIT];
-        Field(ArgSlot) mArgCount;
-        Field(AsmJsVarType::Which *) mArgType;
-        Field(ArgSlot) mArgSizesLength;
-        Field(uint *) mArgSizes;
-        Field(ArgSlot) mArgByteSize;
-        Field(AsmJsRetType) mReturnType;
+        typename WriteBarrierFieldTypeTraits<WAsmJs::TypedSlotInfo>::Type mTypedSlotInfos[WAsmJs::LIMIT];
+        typename WriteBarrierFieldTypeTraits<ArgSlot>::Type mArgCount;
+        typename WriteBarrierFieldTypeTraits<AsmJsVarType::Which *>::Type mArgType;
+        typename WriteBarrierFieldTypeTraits<ArgSlot>::Type mArgSizesLength;
+        typename WriteBarrierFieldTypeTraits<uint *>::Type mArgSizes;
+        typename WriteBarrierFieldTypeTraits<ArgSlot>::Type mArgByteSize;
+        typename WriteBarrierFieldTypeTraits<AsmJsRetType>::Type mReturnType;
 #ifdef ENABLE_WASM
-        Field(Wasm::WasmSignature *) mSignature;
-        Field(Wasm::WasmReaderInfo*) mWasmReaderInfo;
-        Field(WebAssemblyModule*) mWasmModule;
+        typename WriteBarrierFieldTypeTraits<Wasm::WasmSignature *>::Type mSignature;
+        typename WriteBarrierFieldTypeTraits<Wasm::WasmReaderInfo*>::Type mWasmReaderInfo;
+        typename WriteBarrierFieldTypeTraits<WebAssemblyModule*>::Type mWasmModule;
 #endif
-        Field(bool) mUsesHeapBuffer;
+        typename WriteBarrierFieldTypeTraits<bool>::Type mUsesHeapBuffer;
 
-        Field(FunctionBody*) asmJsModuleFunctionBody;
-        Field(Js::JavascriptError *) mLazyError;
-        Field(uint32_t) mTotalSizeBytes = 0;
+        typename WriteBarrierFieldTypeTraits<FunctionBody*>::Type asmJsModuleFunctionBody;
+        typename WriteBarrierFieldTypeTraits<Js::JavascriptError *>::Type mLazyError;
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type mTotalSizeBytes = 0;
 
     public:
         AsmJsFunctionInfo() : mArgCount(0),
@@ -912,8 +912,8 @@ namespace Js
                               mArgSizes(nullptr) {}
         // the key is the bytecode address
         typedef JsUtil::BaseDictionary<int, ptrdiff_t, Recycler> ByteCodeToTJMap;
-        Field(ByteCodeToTJMap*) mbyteCodeTJMap;
-        Field(uint8_t*) mTJBeginAddress;
+        typename WriteBarrierFieldTypeTraits<ByteCodeToTJMap*>::Type mbyteCodeTJMap;
+        typename WriteBarrierFieldTypeTraits<uint8_t*>::Type mTJBeginAddress;
         WAsmJs::TypedSlotInfo* GetTypedSlotInfo(WAsmJs::Types type);
 
 #define TYPED_SLOT_INFO_GETTER(name, type) \

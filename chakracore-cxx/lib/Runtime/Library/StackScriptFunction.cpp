@@ -655,7 +655,7 @@ namespace Js
             return (typename WriteBarrierFieldTypeTraits<Var>::Type *)tmp;
         }
 
-        Field(Var) * boxedSlotArray = nullptr;
+        typename WriteBarrierFieldTypeTraits<Var>::Type * boxedSlotArray = nullptr;
         if (!ThreadContext::IsOnStack(slotArray))
         {
             boxedSlotArray = slotArray;

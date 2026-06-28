@@ -16,7 +16,7 @@ JavascriptAsyncGenerator* JavascriptAsyncGenerator::New(
 {
     // InterpreterStackFrame takes a pointer to the args, so copy them to the recycler
     // heap and use that buffer for the asyncgenerator's InterpreterStackFrame
-    Field(Var)* argValuesCopy = nullptr;
+    typename WriteBarrierFieldTypeTraits<Var>::Type* argValuesCopy = nullptr;
 
     if (args.Info.Count > 0)
     {

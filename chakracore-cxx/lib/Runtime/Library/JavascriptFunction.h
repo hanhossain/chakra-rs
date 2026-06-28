@@ -42,9 +42,9 @@ namespace Js
         static PropertyId const specialPropertyIds[];
 
         // Need a constructor cache on every function (script and native) to avoid extra checks on the fast path, if the function isn't fixed.
-        Field(ConstructorCache*) constructorCache;
+        typename WriteBarrierFieldTypeTraits<ConstructorCache*>::Type constructorCache;
     protected:
-        Field(FunctionInfo *) functionInfo;  // Underlying function
+        typename WriteBarrierFieldTypeTraits<FunctionInfo *>::Type functionInfo;  // Underlying function
 
         DEFINE_VTABLE_CTOR(JavascriptFunction, DynamicObject);
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptFunction);

@@ -10,7 +10,7 @@ namespace Js
     {
     private:
         typedef JsUtil::List<Var, Recycler> VarList;
-        Field(VarList*) iteratorIndices;
+        typename WriteBarrierFieldTypeTraits<VarList*>::Type iteratorIndices;
 
         void AssertAndFailFast() { AssertMsg(false, "This function should not be invoked"); Js::Throw::InternalError();}
     protected:

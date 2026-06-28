@@ -94,7 +94,7 @@ namespace Js
         // object. The offset of the inline slots is managed by DynamicTypeHandler.
         // More details for the layout scenarios below.
 
-        typename WriteBarrierFieldTypeTraits<Field(Var>::Type*) auxSlots;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<Var>::Type*>::Type auxSlots;
 
         // The objectArrayOrFlags field can store one of three things:
         //   a) a pointer to the object array holding numeric properties of this object (#1, #2), or
@@ -113,11 +113,11 @@ namespace Js
 
         union
         {
-            Field(ArrayObject *) objectArray;       // Only if !IsAnyArray
+            typename WriteBarrierFieldTypeTraits<ArrayObject *>::Type objectArray;       // Only if !IsAnyArray
             struct                                  // Only if IsAnyArray
             {
-                Field(DynamicObjectFlags) arrayFlags;
-                Field(ProfileId) arrayCallSiteIndex;
+                typename WriteBarrierFieldTypeTraits<DynamicObjectFlags>::Type arrayFlags;
+                typename WriteBarrierFieldTypeTraits<ProfileId>::Type arrayCallSiteIndex;
             };
         };
 
