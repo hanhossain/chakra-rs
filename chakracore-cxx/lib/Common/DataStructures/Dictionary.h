@@ -28,7 +28,7 @@ namespace JsUtil
 
         struct EntryRemovalCallback
         {
-            FieldNoBarrier(EntryRemovalCallbackMethodType) fnCallback;
+            typename WriteBarrierFieldTypeTraits<EntryRemovalCallbackMethodType, _no_write_barrier_policy, _no_write_barrier_policy>::Type fnCallback;
             typename WriteBarrierFieldTypeTraits<void*>::Type cookie;
         };
 
@@ -41,8 +41,8 @@ namespace JsUtil
         typename WriteBarrierFieldTypeTraits<int>::Type version;
         typename WriteBarrierFieldTypeTraits<int>::Type freeList;
         typename WriteBarrierFieldTypeTraits<int>::Type freeCount;
-        FieldNoBarrier(Recycler*) recycler;
-        FieldNoBarrier(EntryRemovalCallback) entryRemovalCallback;
+        typename WriteBarrierFieldTypeTraits<Recycler*, _no_write_barrier_policy, _no_write_barrier_policy>::Type recycler;
+        typename WriteBarrierFieldTypeTraits<EntryRemovalCallback, _no_write_barrier_policy, _no_write_barrier_policy>::Type entryRemovalCallback;
         typename WriteBarrierFieldTypeTraits<uint>::Type lastWeakReferenceCleanupId;
         typename WriteBarrierFieldTypeTraits<bool>::Type disableCleanup;
         typename WriteBarrierFieldTypeTraits<int>::Type  modFunctionIndex;

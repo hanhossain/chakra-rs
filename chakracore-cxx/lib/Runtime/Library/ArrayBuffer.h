@@ -81,7 +81,7 @@ namespace Js
     class RefCountedBuffer
     {
     private:
-        FieldNoBarrier(uint8_t*) buffer; // Points to a heap allocated RGBA buffer, can be null
+        typename WriteBarrierFieldTypeTraits<uint8_t*, _no_write_barrier_policy, _no_write_barrier_policy>::Type buffer; // Points to a heap allocated RGBA buffer, can be null
 
         // Addref/release counter for current buffer, this is needed hold the current buffer alive
         typename WriteBarrierFieldTypeTraits<long>::Type refCount;
@@ -218,7 +218,7 @@ namespace Js
         };
 
         typename WriteBarrierFieldTypeTraits<OtherParents*>::Type otherParents;
-        FieldNoBarrier(RefCountedBuffer *) bufferContent;
+        typename WriteBarrierFieldTypeTraits<RefCountedBuffer *, _no_write_barrier_policy, _no_write_barrier_policy>::Type bufferContent;
         typename WriteBarrierFieldTypeTraits<uint32_t>::Type bufferLength;       // Number of bytes allocated
     };
 

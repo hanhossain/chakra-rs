@@ -57,7 +57,7 @@ namespace Js {
         typename WriteBarrierFieldTypeTraits<uint8_t>::Type isAsyncFunctionBody : 1;
         typename WriteBarrierFieldTypeTraits<uint8_t>::Type isClassConstructor : 1;
 
-        FieldNoBarrier(Scope *) scope;
+        typename WriteBarrierFieldTypeTraits<Scope *, _no_write_barrier_policy, _no_write_barrier_policy>::Type scope;
         typename WriteBarrierFieldTypeTraits<::ScopeType>::Type scopeType;
         typename WriteBarrierFieldTypeTraits<int>::Type scopeId;
         typename WriteBarrierFieldTypeTraits<int>::Type symbolCount;                // symbol count in this scope

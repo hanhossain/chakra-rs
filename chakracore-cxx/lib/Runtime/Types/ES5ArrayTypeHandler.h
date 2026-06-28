@@ -37,7 +37,7 @@ namespace Js
         typedef JsUtil::BaseDictionary<uint32_t, IndexPropertyDescriptor, ForceNonLeafAllocator<Recycler>::AllocatorType, PowerOf2SizePolicy>
             InnerMap;
 
-        FieldNoBarrier(Recycler*) recycler;
+        typename WriteBarrierFieldTypeTraits<Recycler*, _no_write_barrier_policy, _no_write_barrier_policy>::Type recycler;
         typename WriteBarrierFieldTypeTraits<InnerMap*>::Type indexPropertyMap; // The internal real index property map
         typename WriteBarrierFieldTypeTraits<uint32_t*>::Type indexList;          // The index list that's created on demand
         typename WriteBarrierFieldTypeTraits<int>::Type lastIndexAt;            // Last used index list entry

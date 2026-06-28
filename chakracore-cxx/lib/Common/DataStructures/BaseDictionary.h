@@ -107,7 +107,7 @@ namespace JsUtil
 
         typename WriteBarrierFieldTypeTraits<int*, TAllocator>::Type buckets;
         typename WriteBarrierFieldTypeTraits<EntryType*, TAllocator>::Type entries;
-        FieldNoBarrier(AllocatorType*) alloc;
+        typename WriteBarrierFieldTypeTraits<AllocatorType*, _no_write_barrier_policy, _no_write_barrier_policy>::Type alloc;
         typename WriteBarrierFieldTypeTraits<int>::Type size;
         typename WriteBarrierFieldTypeTraits<uint>::Type bucketCount;
         typename WriteBarrierFieldTypeTraits<int>::Type count;
@@ -118,7 +118,7 @@ namespace JsUtil
         static const int FreeListSentinel = -2;
 
 #if PROFILE_DICTIONARY
-        FieldNoBarrier(DictionaryStats*) stats;
+        typename WriteBarrierFieldTypeTraits<DictionaryStats*, _no_write_barrier_policy, _no_write_barrier_policy>::Type stats;
 #endif
         enum InsertOperations
         {
@@ -1611,7 +1611,7 @@ namespace JsUtil
     class SynchronizedDictionary: protected BaseDictionary<TKey, TValue, TAllocator, SizePolicy, Comparer, Entry>
     {
     private:
-        FieldNoBarrier(SyncObject)& syncObj;
+        typename WriteBarrierFieldTypeTraits<SyncObject, _no_write_barrier_policy, _no_write_barrier_policy>::Type& syncObj;
 
         typedef BaseDictionary<TKey, TValue, TAllocator, SizePolicy, Comparer, Entry> Base;
     public:

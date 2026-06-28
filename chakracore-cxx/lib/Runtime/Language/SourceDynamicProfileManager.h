@@ -49,13 +49,13 @@ namespace Js
 
     private:
         friend class DynamicProfileInfo;
-        FieldNoBarrier(Recycler*) recycler;
+        typename WriteBarrierFieldTypeTraits<Recycler*, _no_write_barrier_policy, _no_write_barrier_policy>::Type recycler;
 
 #ifdef DYNAMIC_PROFILE_STORAGE
         // while Finalizing Javascript library we can't allocate memory from recycler, 
         // dynamicProfileInfoMapSaving is heap allocated and used for serializing dynamic profile cache
         typedef JsUtil::BaseDictionary<LocalFunctionId, DynamicProfileInfo *, HeapAllocator> DynamicProfileInfoMapSavingType;
-        FieldNoBarrier(DynamicProfileInfoMapSavingType) dynamicProfileInfoMapSaving;
+        typename WriteBarrierFieldTypeTraits<DynamicProfileInfoMapSavingType, _no_write_barrier_policy, _no_write_barrier_policy>::Type dynamicProfileInfoMapSaving;
         
         void SaveDynamicProfileInfo(LocalFunctionId functionId, DynamicProfileInfo * dynamicProfileInfo);
         void SaveToDynamicProfileStorage(char16_t const * url);

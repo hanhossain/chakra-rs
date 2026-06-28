@@ -913,7 +913,7 @@ BOOL CustomExternalWrapperObject::GetEnumerator(Js::JavascriptStaticEnumerator *
         typename WriteBarrierFieldTypeTraits<VisitedNamesHashSet*>::Type visited;
         typename WriteBarrierFieldTypeTraits<JavascriptArray*>::Type trapResult;
         typename WriteBarrierFieldTypeTraits<CustomExternalWrapperObject*>::Type wrapper;
-        FieldNoBarrier(ScriptContext*) scriptContext;
+        typename WriteBarrierFieldTypeTraits<ScriptContext*, _no_write_barrier_policy, _no_write_barrier_policy>::Type scriptContext;
         typename WriteBarrierFieldTypeTraits<uint32_t>::Type index;
 
         DEFINE_VTABLE_CTOR_ABSTRACT(WrapperOwnKeysEnumerator, JavascriptEnumerator)

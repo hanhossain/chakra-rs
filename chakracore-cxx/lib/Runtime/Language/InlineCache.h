@@ -492,7 +492,7 @@ namespace Js
         static const bool IsPolymorphic = true;
 
     protected:
-        FieldNoBarrier(InlineCache *) inlineCaches;
+        typename WriteBarrierFieldTypeTraits<InlineCache *, _no_write_barrier_policy, _no_write_barrier_policy>::Type inlineCaches;
         typename WriteBarrierFieldTypeTraits<uint16>::Type size;
         typename WriteBarrierFieldTypeTraits<bool>::Type ignoreForEquivalentObjTypeSpec;
         typename WriteBarrierFieldTypeTraits<bool>::Type cloneForJitTimeUse;

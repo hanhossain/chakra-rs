@@ -32,7 +32,7 @@ namespace JsUtil
     protected:
         typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<T,TAllocator>::Type *,TAllocator>::Type buffer;
         typename WriteBarrierFieldTypeTraits<int>::Type count;
-        FieldNoBarrier(TAllocator*) alloc;
+        typename WriteBarrierFieldTypeTraits<TAllocator*, _no_write_barrier_policy, _no_write_barrier_policy>::Type alloc;
 
         ReadOnlyList(TAllocator* alloc)
             : buffer(nullptr),
@@ -612,7 +612,7 @@ namespace Js
     class SynchronizableList : private ListType // Make base class private to lock down exposed methods
     {
     private:
-        FieldNoBarrier(SyncObject)& syncObj;
+        typename WriteBarrierFieldTypeTraits<SyncObject, _no_write_barrier_policy, _no_write_barrier_policy>::Type& syncObj;
 
     public:
         template <class Arg1>

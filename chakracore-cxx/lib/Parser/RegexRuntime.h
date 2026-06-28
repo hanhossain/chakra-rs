@@ -1821,13 +1821,13 @@ namespace UnifiedRegex
         // for "foo" after the first time.
         typename WriteBarrierFieldTypeTraits<CharCount*>::Type literalNextSyncInputOffsets;
 
-        FieldNoBarrier(Recycler*) recycler;
+        typename WriteBarrierFieldTypeTraits<Recycler*, _no_write_barrier_policy, _no_write_barrier_policy>::Type recycler;
 
         typename WriteBarrierFieldTypeTraits<uint>::Type previousQcTime;
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
-        FieldNoBarrier(RegexStats*) stats;
-        FieldNoBarrier(DebugWriter*) w;
+        typename WriteBarrierFieldTypeTraits<RegexStats*, _no_write_barrier_policy, _no_write_barrier_policy>::Type stats;
+        typename WriteBarrierFieldTypeTraits<DebugWriter*, _no_write_barrier_policy, _no_write_barrier_policy>::Type w;
 #endif
 
     public:

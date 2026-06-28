@@ -334,7 +334,7 @@ namespace Js
         }
 
     private:
-        FieldNoBarrier(HostPromiseRejectionTrackerCallback) nativeHostPromiseRejectionTracker = nullptr;
+        typename WriteBarrierFieldTypeTraits<HostPromiseRejectionTrackerCallback, _no_write_barrier_policy, _no_write_barrier_policy>::Type nativeHostPromiseRejectionTracker = nullptr;
         typename WriteBarrierFieldTypeTraits<void *>::Type nativeHostPromiseRejectionTrackerState = nullptr;
 
     public:

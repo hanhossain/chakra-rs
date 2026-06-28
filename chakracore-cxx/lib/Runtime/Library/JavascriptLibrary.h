@@ -220,7 +220,7 @@ namespace Js
         static bool IsTypedArrayConstructor(Var constructor, ScriptContext* scriptContext);
 
     private:
-        FieldNoBarrier(Recycler *) recycler;
+        typename WriteBarrierFieldTypeTraits<Recycler *, _no_write_barrier_policy, _no_write_barrier_policy>::Type recycler;
         typename WriteBarrierFieldTypeTraits<ExternalLibraryBase*>::Type externalLibraryList;
 
         typename WriteBarrierFieldTypeTraits<UndeclaredBlockVariable*>::Type undeclBlockVarSentinel;
@@ -438,7 +438,7 @@ namespace Js
 
         mutable typename WriteBarrierFieldTypeTraits<CharStringCache>::Type charStringCache;
 
-        FieldNoBarrier(PromiseContinuationCallback) nativeHostPromiseContinuationFunction;
+        typename WriteBarrierFieldTypeTraits<PromiseContinuationCallback, _no_write_barrier_policy, _no_write_barrier_policy>::Type nativeHostPromiseContinuationFunction;
         typename WriteBarrierFieldTypeTraits<void *>::Type nativeHostPromiseContinuationFunctionState;
 
         typedef SList<Js::FunctionProxy*, Recycler> FunctionReferenceList;

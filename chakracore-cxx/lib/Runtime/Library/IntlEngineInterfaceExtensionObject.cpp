@@ -139,7 +139,7 @@ namespace Js
     class FinalizableICUObject : public FinalizableObject
     {
     private:
-        FieldNoBarrier(TResource) resource;
+        typename WriteBarrierFieldTypeTraits<TResource, _no_write_barrier_policy, _no_write_barrier_policy>::Type resource;
     public:
         FinalizableICUObject(TResource resource) : resource(resource)
         {

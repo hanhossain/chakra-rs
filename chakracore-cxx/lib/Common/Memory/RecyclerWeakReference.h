@@ -36,17 +36,17 @@ public:
 
 protected:
 
-    FieldNoBarrier(char*) strongRef;
-    FieldNoBarrier(HeapBlock *) strongRefHeapBlock;
-    FieldNoBarrier(HeapBlock *) weakRefHeapBlock;
-    FieldNoBarrier(RecyclerWeakReferenceBase*) next;
+    typename WriteBarrierFieldTypeTraits<char*, _no_write_barrier_policy, _no_write_barrier_policy>::Type strongRef;
+    typename WriteBarrierFieldTypeTraits<HeapBlock *, _no_write_barrier_policy, _no_write_barrier_policy>::Type strongRefHeapBlock;
+    typename WriteBarrierFieldTypeTraits<HeapBlock *, _no_write_barrier_policy, _no_write_barrier_policy>::Type weakRefHeapBlock;
+    typename WriteBarrierFieldTypeTraits<RecyclerWeakReferenceBase*, _no_write_barrier_policy, _no_write_barrier_policy>::Type next;
 #if DBG
 #if ENABLE_RECYCLER_TYPE_TRACKING
-    FieldNoBarrier(type_info const *) typeInfo;
+    typename WriteBarrierFieldTypeTraits<type_info const *, _no_write_barrier_policy, _no_write_barrier_policy>::Type typeInfo;
 #endif
 
 #if defined TRACK_ALLOC && defined(PERF_COUNTERS)
-    FieldNoBarrier(PerfCounter::Counter *) counter;
+    typename WriteBarrierFieldTypeTraits<PerfCounter::Counter *, _no_write_barrier_policy, _no_write_barrier_policy>::Type counter;
 #endif
 #endif
 };

@@ -33,9 +33,9 @@ namespace Js
         JsGetterSetterInterceptor * GetJsGetterSetterInterceptor() const { return this->jsGetterSetterInterceptor; }
 
     private:
-        FieldNoBarrier(JsTraceCallback const) jsTraceCallback;
-        FieldNoBarrier(JsFinalizeCallback const) jsFinalizeCallback;
-        FieldNoBarrier(JsGetterSetterInterceptor *) jsGetterSetterInterceptor;
+        typename WriteBarrierFieldTypeTraits<JsTraceCallback const, _no_write_barrier_policy, _no_write_barrier_policy>::Type jsTraceCallback;
+        typename WriteBarrierFieldTypeTraits<JsFinalizeCallback const, _no_write_barrier_policy, _no_write_barrier_policy>::Type jsFinalizeCallback;
+        typename WriteBarrierFieldTypeTraits<JsGetterSetterInterceptor *, _no_write_barrier_policy, _no_write_barrier_policy>::Type jsGetterSetterInterceptor;
     };
 
     class CustomExternalWrapperObject : public DynamicObject

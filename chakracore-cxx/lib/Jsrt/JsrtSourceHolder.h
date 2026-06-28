@@ -13,8 +13,8 @@ namespace Js
     private:
         enum MapRequestFor { Source = 1, Length = 2 };
 
-        FieldNoBarrier(TLoadCallback) scriptLoadCallback;
-        FieldNoBarrier(TUnloadCallback) scriptUnloadCallback;
+        typename WriteBarrierFieldTypeTraits<TLoadCallback, _no_write_barrier_policy, _no_write_barrier_policy>::Type scriptLoadCallback;
+        typename WriteBarrierFieldTypeTraits<TUnloadCallback, _no_write_barrier_policy, _no_write_barrier_policy>::Type scriptUnloadCallback;
         typename WriteBarrierFieldTypeTraits<JsSourceContext>::Type sourceContext;
 
         typename WriteBarrierFieldTypeTraits<JsValueRef>::Type mappedScriptValue;

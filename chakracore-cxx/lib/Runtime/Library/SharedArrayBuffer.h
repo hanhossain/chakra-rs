@@ -108,7 +108,7 @@ namespace Js
         virtual uint8_t* AllocBuffer(uint32_t length, uint32_t maxLength);
         virtual void FreeBuffer(uint8_t* buffer, uint32_t length, uint32_t maxLength);
 
-        FieldNoBarrier(SharedContents *) sharedContents;
+        typename WriteBarrierFieldTypeTraits<SharedContents *, _no_write_barrier_policy, _no_write_barrier_policy>::Type sharedContents;
 
         static std::recursive_mutex mutexSharedArrayBuffer;
     };

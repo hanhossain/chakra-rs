@@ -81,7 +81,7 @@ public:
     typename WriteBarrierFieldTypeTraits<BVSparseNode*, TAllocator>::Type    lastFoundIndex;
 
 private:
-    FieldNoBarrier(TAllocator*)         alloc;
+    typename WriteBarrierFieldTypeTraits<TAllocator*, _no_write_barrier_policy, _no_write_barrier_policy>::Type         alloc;
     typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<BVSparseNode*, TAllocator>::Type*, TAllocator>::Type lastUsedNodePrevNextField;
 
     static const SparseBVUnit s_EmptyUnit;

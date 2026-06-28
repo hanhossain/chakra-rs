@@ -48,7 +48,7 @@ namespace Wasm
         WasmReaderBase* GetCustomReader() const { return m_customReader; }
         void SetCustomReader(WasmReaderBase* customReader) { m_customReader = customReader; }
 #if DBG_DUMP
-        FieldNoBarrier(WasmImport*) importedFunctionReference;
+        typename WriteBarrierFieldTypeTraits<WasmImport*, _no_write_barrier_policy, _no_write_barrier_policy>::Type importedFunctionReference;
 #endif
 
         FunctionBodyReaderInfo GetReaderInfo() const
@@ -63,7 +63,7 @@ namespace Wasm
         }
     private:
 
-        FieldNoBarrier(ArenaAllocator*) m_alloc;
+        typename WriteBarrierFieldTypeTraits<ArenaAllocator*, _no_write_barrier_policy, _no_write_barrier_policy>::Type m_alloc;
         typedef JsUtil::GrowingArray<Local, ArenaAllocator> WasmTypeArray;
         typename WriteBarrierFieldTypeTraits<WasmTypeArray>::Type m_locals;
         typename WriteBarrierFieldTypeTraits<Js::FunctionBody*>::Type m_body;

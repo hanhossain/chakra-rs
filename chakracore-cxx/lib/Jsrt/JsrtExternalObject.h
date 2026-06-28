@@ -41,8 +41,8 @@ public:
     JsFinalizeCallback GetJsFinalizeCallback() const { return this->jsFinalizeCallback; }
 
 private:
-    FieldNoBarrier(JsFinalizeCallback const) jsFinalizeCallback;
-    FieldNoBarrier(JsTraceCallback const) jsTraceCallback;
+    typename WriteBarrierFieldTypeTraits<JsFinalizeCallback const, _no_write_barrier_policy, _no_write_barrier_policy>::Type jsFinalizeCallback;
+    typename WriteBarrierFieldTypeTraits<JsTraceCallback const, _no_write_barrier_policy, _no_write_barrier_policy>::Type jsTraceCallback;
 };
 AUTO_REGISTER_RECYCLER_OBJECT_DUMPER(JsrtExternalType, &Js::Type::DumpObjectFunction);
 

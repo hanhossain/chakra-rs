@@ -10,9 +10,9 @@ namespace Js
     class TempArenaAllocatorWrapper : public FinalizableObject
     {
     private:
-        FieldNoBarrier(ArenaAllocator) allocator;
-        FieldNoBarrier(ArenaData **) externalGuestArenaRef;
-        FieldNoBarrier(Recycler *) recycler;
+        typename WriteBarrierFieldTypeTraits<ArenaAllocator, _no_write_barrier_policy, _no_write_barrier_policy>::Type allocator;
+        typename WriteBarrierFieldTypeTraits<ArenaData **, _no_write_barrier_policy, _no_write_barrier_policy>::Type externalGuestArenaRef;
+        typename WriteBarrierFieldTypeTraits<Recycler *, _no_write_barrier_policy, _no_write_barrier_policy>::Type recycler;
 
         TempArenaAllocatorWrapper(const char16_t* name, PageAllocator * pageAllocator, void (*outOfMemoryFunc)());
 

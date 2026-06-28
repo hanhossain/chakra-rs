@@ -677,7 +677,7 @@ public:
     }
 
 private:
-    FieldNoBarrier(TAllocator *) allocator;
+    typename WriteBarrierFieldTypeTraits<TAllocator *, _no_write_barrier_policy, _no_write_barrier_policy>::Type allocator;
 };
 
 template <typename TData, typename TAllocator = ArenaAllocator>

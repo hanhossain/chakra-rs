@@ -30,8 +30,8 @@ public:
     {
         struct
         {
-            FieldNoBarrier(char16_t const *) url;            // The url of the file
-            FieldNoBarrier(char16_t const *) sourceMapUrl;   // The url of the source map, such as actual non-minified source of JS on the server.
+            typename WriteBarrierFieldTypeTraits<char16_t const *, _no_write_barrier_policy, _no_write_barrier_policy>::Type url;            // The url of the file
+            typename WriteBarrierFieldTypeTraits<char16_t const *, _no_write_barrier_policy, _no_write_barrier_policy>::Type sourceMapUrl;   // The url of the source map, such as actual non-minified source of JS on the server.
         };
         typename WriteBarrierFieldTypeTraits<uint>::Type      hash;                 // hash for dynamic scripts
     };

@@ -197,6 +197,6 @@ namespace Js
 
     private:
         typename WriteBarrierFieldTypeTraits<TopLevelDictionary*>::Type dictionary;
-        FieldNoBarrier(Recycler*) recycler;
+        typename WriteBarrierFieldTypeTraits<Recycler*, _no_write_barrier_policy, _no_write_barrier_policy>::Type recycler;
     };
 }

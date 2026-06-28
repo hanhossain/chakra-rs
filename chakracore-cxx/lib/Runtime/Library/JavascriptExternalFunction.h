@@ -68,9 +68,9 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<void *>::Type callbackState;
         union
         {
-            FieldNoBarrier(ExternalMethod) nativeMethod;
+            typename WriteBarrierFieldTypeTraits<ExternalMethod, _no_write_barrier_policy, _no_write_barrier_policy>::Type nativeMethod;
             typename WriteBarrierFieldTypeTraits<JavascriptExternalFunction*>::Type wrappedMethod;
-            FieldNoBarrier(StdCallJavascriptMethod) stdCallNativeMethod;
+            typename WriteBarrierFieldTypeTraits<StdCallJavascriptMethod, _no_write_barrier_policy, _no_write_barrier_policy>::Type stdCallNativeMethod;
         };
         typename WriteBarrierFieldTypeTraits<InitializeMethod>::Type initMethod;
 

@@ -230,7 +230,7 @@ namespace UnifiedRegex
         typename WriteBarrierFieldTypeTraits<BVStatic<directSize>>::Type isInMap;
         typename WriteBarrierFieldTypeTraits<V>::Type defv;
         typename WriteBarrierFieldTypeTraits<V>::Type directMap[directSize];
-        FieldNoBarrier(Node*) root;
+        typename WriteBarrierFieldTypeTraits<Node*, _no_write_barrier_policy, _no_write_barrier_policy>::Type root;
 
     public:
         CharMap(V defv)

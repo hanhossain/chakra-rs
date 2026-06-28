@@ -207,7 +207,7 @@ namespace Js
         virtual Var Subarray(uint32_t begin, uint32_t end) = 0;
         typename WriteBarrierFieldTypeTraits<int32_t>::Type BYTES_PER_ELEMENT;
         typename WriteBarrierFieldTypeTraits<uint32_t>::Type byteOffset;
-        FieldNoBarrier(uint8_t*) buffer;   // beginning of mapped array.
+        typename WriteBarrierFieldTypeTraits<uint8_t*, _no_write_barrier_policy, _no_write_barrier_policy>::Type buffer;   // beginning of mapped array.
 
     public:
         static uint32_t GetOffsetOfBuffer()  { return offsetof(TypedArrayBase, buffer); }

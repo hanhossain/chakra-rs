@@ -607,5 +607,5 @@ private:
         return ptr;
     }
 
-    FieldNoBarrier(T*) ptr;
+    typename WriteBarrierFieldTypeTraits<T*, _no_write_barrier_policy, _no_write_barrier_policy>::Type ptr;
 };

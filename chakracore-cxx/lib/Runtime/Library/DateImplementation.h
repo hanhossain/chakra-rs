@@ -262,8 +262,8 @@ namespace Js {
     private:
         typename WriteBarrierFieldTypeTraits<double>::Type                   m_tvUtc;
         typename WriteBarrierFieldTypeTraits<double>::Type                   m_tvLcl;
-        FieldNoBarrier(DateTime::YMD)   m_ymdUtc;
-        FieldNoBarrier(DateTime::YMD)   m_ymdLcl;
+        typename WriteBarrierFieldTypeTraits<DateTime::YMD, _no_write_barrier_policy, _no_write_barrier_policy>::Type   m_ymdUtc;
+        typename WriteBarrierFieldTypeTraits<DateTime::YMD, _no_write_barrier_policy, _no_write_barrier_policy>::Type   m_ymdLcl;
         typename WriteBarrierFieldTypeTraits<TZD>::Type                      m_tzd;
         typename WriteBarrierFieldTypeTraits<uint32_t>::Type                   m_grfval; // Which fields are valid. m_tvUtc is always valid.
         typename WriteBarrierFieldTypeTraits<bool>::Type                     m_modified : 1; // Whether SetDateData was called on this class

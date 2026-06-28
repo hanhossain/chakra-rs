@@ -196,7 +196,7 @@ private:
 
     typename WriteBarrierFieldTypeTraits<uint32_t>::Type m_startFuncIndex;
 
-    FieldNoBarrier(ArenaAllocator*) m_alloc;
+    typename WriteBarrierFieldTypeTraits<ArenaAllocator*, _no_write_barrier_policy, _no_write_barrier_policy>::Type m_alloc;
 };
 
 template <> inline bool VarIsImpl<WebAssemblyModule>(RecyclableObject* obj)

@@ -19,7 +19,7 @@ namespace Js
 
         DEFINE_VTABLE_CTOR_NO_REGISTER(NullTypeHandlerBase, DynamicTypeHandler);
 
-        FieldNoBarrier(bool) isPrototype;
+        typename WriteBarrierFieldTypeTraits<bool, _no_write_barrier_policy, _no_write_barrier_policy>::Type isPrototype;
 
     public:
         DEFINE_GETCPPNAME();

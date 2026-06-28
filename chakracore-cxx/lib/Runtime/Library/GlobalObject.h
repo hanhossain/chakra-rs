@@ -115,7 +115,7 @@ namespace Js
 #endif /* IR_VIEWER */
 
         typedef ScriptFunction* (*EvalHelperType)(ScriptContext* scriptContext, const char16_t *source, int sourceLength, ModuleID moduleID, uint32_t grfscr, LPCOLESTR pszTitle, BOOL registerDocument, BOOL isIndirect, BOOL strictMode);
-        FieldNoBarrier(EvalHelperType) EvalHelper;
+        typename WriteBarrierFieldTypeTraits<EvalHelperType, _no_write_barrier_policy, _no_write_barrier_policy>::Type EvalHelper;
 
         static Var EntryEvalHelper(ScriptContext* scriptContext, RecyclableObject* function, Arguments& args);
         static Var VEval(JavascriptLibrary* library, FrameDisplay* environment, ModuleID moduleID, bool isStrictMode, bool isIndirect,

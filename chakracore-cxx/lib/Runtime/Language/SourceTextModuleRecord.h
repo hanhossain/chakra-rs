@@ -152,7 +152,7 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<ParseNodeProg *>::Type parseTree; // This is the parsed tree resulted from compilation.
         typename WriteBarrierFieldTypeTraits<Utf8SourceInfo*>::Type pSourceInfo;
         typename WriteBarrierFieldTypeTraits<uint>::Type sourceIndex;
-        FieldNoBarrier(Parser*) parser;  // we'll need to keep the parser around till we are done with bytecode gen.
+        typename WriteBarrierFieldTypeTraits<Parser*, _no_write_barrier_policy, _no_write_barrier_policy>::Type parser;  // we'll need to keep the parser around till we are done with bytecode gen.
         typename WriteBarrierFieldTypeTraits<ScriptContext*>::Type scriptContext;
         typename WriteBarrierFieldTypeTraits<IdentPtrList*>::Type requestedModuleList;
         typename WriteBarrierFieldTypeTraits<ModuleImportOrExportEntryList*>::Type importRecordList;

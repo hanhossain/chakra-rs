@@ -108,7 +108,7 @@ namespace JsUtil
         typename WriteBarrierFieldTypeTraits<int*>::Type buckets;
         typename WriteBarrierFieldTypeTraits<EntryType*>::Type entries;
         typename WriteBarrierFieldTypeTraits<WeakType*>::Type weakRefs;
-        FieldNoBarrier(Recycler*) alloc;
+        typename WriteBarrierFieldTypeTraits<Recycler*, _no_write_barrier_policy, _no_write_barrier_policy>::Type alloc;
         typename WriteBarrierFieldTypeTraits<int>::Type size;
         typename WriteBarrierFieldTypeTraits<uint>::Type bucketCount;
         typename WriteBarrierFieldTypeTraits<int>::Type count;

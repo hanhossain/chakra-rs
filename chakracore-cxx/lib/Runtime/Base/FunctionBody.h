@@ -194,7 +194,7 @@ namespace Js
     public:
         // These are public because we don't manage them nor their consistency;
         // the user of this class does.
-        FieldNoBarrier(Js::JavascriptMethod) jsMethod;
+        typename WriteBarrierFieldTypeTraits<Js::JavascriptMethod, _no_write_barrier_policy, _no_write_barrier_policy>::Type jsMethod;
 
         ProxyEntryPointInfo(Js::JavascriptMethod jsMethod, ThreadContext* context = nullptr):
             ExpirableObject(context),
@@ -251,7 +251,7 @@ namespace Js
 
 #if ENABLE_ENTRYPOINT_CLEANUP_TRACE
 #if ENABLE_DEBUG_STACK_BACK_TRACE
-        FieldNoBarrier(StackBackTrace*) cleanupStack;  // NoCheckHeapAllocator
+        typename WriteBarrierFieldTypeTraits<StackBackTrace*, _no_write_barrier_policy, _no_write_barrier_policy>::Type cleanupStack;  // NoCheckHeapAllocator
 #endif
     public:
         enum CleanupReason
@@ -1178,7 +1178,7 @@ namespace Js
         static bool IsConstantFunctionName(const char16_t* srcName);
 
     protected:
-        FieldNoBarrier(ScriptContext*) m_scriptContext;   // Memory context for this function body
+        typename WriteBarrierFieldTypeTraits<ScriptContext*, _no_write_barrier_policy, _no_write_barrier_policy>::Type m_scriptContext;   // Memory context for this function body
         WriteBarrierFieldTypeTraits<Utf8SourceInfo*>::Type m_utf8SourceInfo;
         WriteBarrierFieldTypeTraits<ScriptFunctionType*>::Type deferredPrototypeType;
         WriteBarrierFieldTypeTraits<ScriptFunctionType*>::Type undeferredFunctionType;
@@ -1840,7 +1840,7 @@ namespace Js
 
         WriteBarrierFieldTypeTraits<uint>::Type m_sourceIndex;             // index into the scriptContext's list of saved sources
 #if DYNAMIC_INTERPRETER_THUNK
-        FieldNoBarrier(void*) m_dynamicInterpreterThunk;  // Unique 'thunk' for every interpreted function - used for ETW symbol decoding.
+        typename WriteBarrierFieldTypeTraits<void*, _no_write_barrier_policy, _no_write_barrier_policy>::Type m_dynamicInterpreterThunk;  // Unique 'thunk' for every interpreted function - used for ETW symbol decoding.
 #endif
         WriteBarrierFieldTypeTraits<ScriptFunctionType*>::Type crossSiteDeferredFunctionType;
         WriteBarrierFieldTypeTraits<ScriptFunctionType*>::Type crossSiteUndeferredFunctionType;
@@ -2049,7 +2049,7 @@ namespace Js
                 friend class ByteCodeBufferBuilder;
 
             public:
-                FieldNoBarrier(SmallSpanSequence*) pSpanSequence;
+                typename WriteBarrierFieldTypeTraits<SmallSpanSequence*, _no_write_barrier_policy, _no_write_barrier_policy>::Type pSpanSequence;
 
                 WriteBarrierFieldTypeTraits<RegSlot>::Type         frameDisplayRegister;   // this register slot cannot be 0 so we use that sentinel value to indicate invalid
                 WriteBarrierFieldTypeTraits<RegSlot>::Type         objectRegister;         // this register slot cannot be 0 so we use that sentinel value to indicate invalid
@@ -2228,7 +2228,7 @@ namespace Js
         // copied in FunctionBody::Clone
         //
 
-        FieldNoBarrier(Js::ByteCodeCache*) byteCodeCache;   // Not GC allocated so naked pointer
+        typename WriteBarrierFieldTypeTraits<Js::ByteCodeCache*, _no_write_barrier_policy, _no_write_barrier_policy>::Type byteCodeCache;   // Not GC allocated so naked pointer
         static bool shareInlineCaches;
         WriteBarrierFieldTypeTraits<FunctionEntryPointInfo*>::Type defaultFunctionEntryPointInfo;
 
@@ -3885,7 +3885,7 @@ namespace Js
         void EnsurePropertyListIsAllocated();
 
     private:
-        FieldNoBarrier(Recycler*) recycler;
+        typename WriteBarrierFieldTypeTraits<Recycler*, _no_write_barrier_policy, _no_write_barrier_policy>::Type recycler;
         typename WriteBarrierFieldTypeTraits<DebuggerScope*>::Type parentScope;
         typename WriteBarrierFieldTypeTraits<regex::Interval>::Type range; // The start and end byte code writer offsets used when comparing where the debugger is currently stopped at (breakpoint location).
         typename WriteBarrierFieldTypeTraits<RegSlot>::Type scopeLocation;

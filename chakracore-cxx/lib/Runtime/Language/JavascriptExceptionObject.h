@@ -184,7 +184,7 @@ namespace Js
                                                 // So the exception eating logic shouldn't try and advance to next statement again.
 #endif
 
-        FieldNoBarrier(HostWrapperCreateFuncType) hostWrapperCreateFunc;
+        typename WriteBarrierFieldTypeTraits<HostWrapperCreateFuncType, _no_write_barrier_policy, _no_write_barrier_policy>::Type hostWrapperCreateFunc;
 
         typename WriteBarrierFieldTypeTraits<JavascriptExceptionContext>::Type exceptionContext;
 #if ENABLE_DEBUG_STACK_BACK_TRACE

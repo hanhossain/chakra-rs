@@ -21,7 +21,7 @@ namespace Js
         union
         {
             typename WriteBarrierFieldTypeTraits<PropertyAttributes>::Type Attributes;
-            FieldNoBarrier(void*) preventFalseReference; // SimplePropertyDescriptor can be declared on stack. Always zero out to avoid this becoming a memory address reference.
+            typename WriteBarrierFieldTypeTraits<void*, _no_write_barrier_policy, _no_write_barrier_policy>::Type preventFalseReference; // SimplePropertyDescriptor can be declared on stack. Always zero out to avoid this becoming a memory address reference.
         };
     };
 

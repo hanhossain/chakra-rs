@@ -36,7 +36,7 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<JavascriptLibrary*>::Type javascriptLibrary;
 
         typename WriteBarrierFieldTypeTraits<RecyclableObject*>::Type prototype;
-        FieldNoBarrier(JavascriptMethod) entryPoint;
+        typename WriteBarrierFieldTypeTraits<JavascriptMethod, _no_write_barrier_policy, _no_write_barrier_policy>::Type entryPoint;
     private:
         typename WriteBarrierFieldTypeTraits<TypePropertyCache *>::Type propertyCache;
     protected:

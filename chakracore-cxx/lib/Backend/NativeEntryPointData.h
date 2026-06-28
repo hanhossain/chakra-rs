@@ -82,8 +82,8 @@ private:
 
     void FreeNativeCode(Js::ScriptContext * scriptContext, bool isShutdown);
 
-    FieldNoBarrier(Js::JavascriptMethod) nativeAddress;
-    FieldNoBarrier(Js::JavascriptMethod) thunkAddress;
+    typename WriteBarrierFieldTypeTraits<Js::JavascriptMethod, _no_write_barrier_policy, _no_write_barrier_policy>::Type nativeAddress;
+    typename WriteBarrierFieldTypeTraits<Js::JavascriptMethod, _no_write_barrier_policy, _no_write_barrier_policy>::Type thunkAddress;
     typename WriteBarrierFieldTypeTraits<ptrdiff_t>::Type codeSize;
     typename WriteBarrierFieldTypeTraits<void*>::Type validationCookie;
 
@@ -116,7 +116,7 @@ private:
     typename WriteBarrierFieldTypeTraits<Js::EquivalentTypeCache*>::Type equivalentTypeCaches;
     typename WriteBarrierFieldTypeTraits<Js::EntryPointInfo **>::Type registeredEquivalentTypeCacheRef;
 
-    FieldNoBarrier(Js::SmallSpanSequence *) nativeThrowSpanSequence;
+    typename WriteBarrierFieldTypeTraits<Js::SmallSpanSequence *, _no_write_barrier_policy, _no_write_barrier_policy>::Type nativeThrowSpanSequence;
 
 #if PDATA_ENABLED
     typename WriteBarrierFieldTypeTraits<XDataAllocation *>::Type xdataInfo;
@@ -168,11 +168,11 @@ public:
 
     void OnCleanup();
 private:
-    FieldNoBarrier(NativeCodeData *) nativeCodeData;
-    FieldNoBarrier(InlineeFrameMap *) inlineeFrameMap;
-    FieldNoBarrier(NativeLazyBailOutRecordList *) sortedLazyBailoutRecordList;
-    FieldNoBarrier(int32_t) lazyBailOutRecordSlotOffset;
-    FieldNoBarrier(uint32_t) lazyBailOutThunkOffset;
+    typename WriteBarrierFieldTypeTraits<NativeCodeData *, _no_write_barrier_policy, _no_write_barrier_policy>::Type nativeCodeData;
+    typename WriteBarrierFieldTypeTraits<InlineeFrameMap *, _no_write_barrier_policy, _no_write_barrier_policy>::Type inlineeFrameMap;
+    typename WriteBarrierFieldTypeTraits<NativeLazyBailOutRecordList *, _no_write_barrier_policy, _no_write_barrier_policy>::Type sortedLazyBailoutRecordList;
+    typename WriteBarrierFieldTypeTraits<int32_t, _no_write_barrier_policy, _no_write_barrier_policy>::Type lazyBailOutRecordSlotOffset;
+    typename WriteBarrierFieldTypeTraits<uint32_t, _no_write_barrier_policy, _no_write_barrier_policy>::Type lazyBailOutThunkOffset;
 };
 
 class OOPNativeEntryPointData : public NativeEntryPointData
@@ -196,7 +196,7 @@ public:
 private:
     typename WriteBarrierFieldTypeTraits<uint>::Type inlineeFrameOffsetArrayOffset;
     typename WriteBarrierFieldTypeTraits<uint>::Type inlineeFrameOffsetArrayCount;
-    FieldNoBarrier(char *) nativeDataBuffer;
+    typename WriteBarrierFieldTypeTraits<char *, _no_write_barrier_policy, _no_write_barrier_policy>::Type nativeDataBuffer;
 
 };
 

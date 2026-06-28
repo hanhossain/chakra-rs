@@ -358,7 +358,7 @@ namespace Js {
         typedef JsUtil::BaseDictionary<PropertyId, AsmJsSlot*, Memory::Recycler> AsmJsSlotMap;
 
     private:
-        FieldNoBarrier(Recycler*) mRecycler;
+        typename WriteBarrierFieldTypeTraits<Recycler*, _no_write_barrier_policy, _no_write_barrier_policy>::Type mRecycler;
         typename WriteBarrierFieldTypeTraits<int>::Type mArgInCount; // for runtime validation of arguments in
         typename WriteBarrierFieldTypeTraits<int>::Type mVarCount, mVarImportCount, mFunctionImportCount, mFunctionCount, mFunctionTableCount, mExportsCount, mSlotsCount;
 

@@ -89,7 +89,7 @@ namespace JsUtil
         typename WriteBarrierFieldTypeTraits<TValue*, TAllocator>::Type buffer;
         typename WriteBarrierFieldTypeTraits<uint32_t>::Type count;
         typename WriteBarrierFieldTypeTraits<uint32_t>::Type length;
-        FieldNoBarrier(AllocatorType*) alloc;
+        typename WriteBarrierFieldTypeTraits<AllocatorType*, _no_write_barrier_policy, _no_write_barrier_policy>::Type alloc;
 
         void EnsureArray()
         {

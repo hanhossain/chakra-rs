@@ -151,8 +151,8 @@ public:
 private:
     RecyclerWeakReferenceRegionItem(RecyclerWeakReferenceRegionItem<T>&) = delete;
 
-    FieldNoBarrier(T) ptr;
-    FieldNoBarrier(HeapBlock*) heapBlock; // Note: the low bit of the heapBlock is used for background marking
+    typename WriteBarrierFieldTypeTraits<T, _no_write_barrier_policy, _no_write_barrier_policy>::Type ptr;
+    typename WriteBarrierFieldTypeTraits<HeapBlock*, _no_write_barrier_policy, _no_write_barrier_policy>::Type heapBlock; // Note: the low bit of the heapBlock is used for background marking
 };
 
 class RecyclerWeakReferenceRegion {
@@ -162,9 +162,9 @@ public:
     size_t GetCount() const { return count; }
     HeapBlock* GetHeapBlock() const { return arrayHeapBlock; }
 private:
-    FieldNoBarrier(RecyclerWeakReferenceRegionItem<void*>*) ptr;
-    FieldNoBarrier(size_t) count;
-    FieldNoBarrier(HeapBlock*) arrayHeapBlock;
+    typename WriteBarrierFieldTypeTraits<RecyclerWeakReferenceRegionItem<void*>*, _no_write_barrier_policy, _no_write_barrier_policy>::Type ptr;
+    typename WriteBarrierFieldTypeTraits<size_t, _no_write_barrier_policy, _no_write_barrier_policy>::Type count;
+    typename WriteBarrierFieldTypeTraits<HeapBlock*, _no_write_barrier_policy, _no_write_barrier_policy>::Type arrayHeapBlock;
 };
 
 #endif
