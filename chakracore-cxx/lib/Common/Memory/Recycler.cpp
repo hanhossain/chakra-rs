@@ -7507,7 +7507,7 @@ Recycler::ReportLeaks()
         if (GetRecyclerFlagsTable().ForceMemoryLeak)
         {
             AUTO_HANDLED_EXCEPTION_TYPE(ExceptionType_DisableCheck);
-            struct FakeMemory { Field(int) f; };
+            struct FakeMemory { typename WriteBarrierFieldTypeTraits<int>::Type f; };
             FakeMemory * f = RecyclerNewStruct(this, FakeMemory);
             this->RootAddRef(f);
         }
@@ -7569,7 +7569,7 @@ Recycler::CheckLeaks(char16_t const * header)
         if (GetRecyclerFlagsTable().ForceMemoryLeak)
         {
             AUTO_HANDLED_EXCEPTION_TYPE(ExceptionType_DisableCheck);
-            struct FakeMemory { Field(int) f; };
+            struct FakeMemory { typename WriteBarrierFieldTypeTraits<int>::Type f; };
             FakeMemory * f = RecyclerNewStruct(this, FakeMemory);
             this->RootAddRef(f);
         }

@@ -339,7 +339,7 @@ public:
 
 // Data
 private:
-    Field(BVUnit) data[wordCount];
+    typename WriteBarrierFieldTypeTraits<BVUnit>::Type data[wordCount];
 
 public:
     // Break on member changes. We rely on the layout of this class being static so we can
