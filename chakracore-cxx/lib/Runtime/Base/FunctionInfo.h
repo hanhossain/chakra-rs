@@ -141,7 +141,7 @@ namespace Js
         bool GetGeneratorWithComplexParams() {return (attributes & Attributes::GeneratorWithComplexParams) != 0; }
     protected:
         FieldNoBarrier(JavascriptMethod) originalEntryPoint;
-        FieldWithBarrier(FunctionProxy *) functionBodyImpl;     // Implementation of the function- null if the function doesn't have a body
+        WriteBarrierFieldTypeTraits<FunctionProxy *>::Type functionBodyImpl;     // Implementation of the function- null if the function doesn't have a body
         Field(LocalFunctionId) functionId;        // Per host source context (source file) function Id
         Field(uint) compileCount;
         Field(Attributes) attributes;

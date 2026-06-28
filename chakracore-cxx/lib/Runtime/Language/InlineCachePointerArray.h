@@ -10,7 +10,7 @@ namespace Js
     class InlineCachePointerArray
     {
     public:
-        typename FieldWithBarrier(Field(T*)*) inlineCaches;
+        typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<T*>::Type*>::Type inlineCaches;
     private:
 #if DBG
         Field(uint) inlineCacheCount;

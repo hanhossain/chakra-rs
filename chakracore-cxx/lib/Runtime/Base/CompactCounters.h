@@ -30,12 +30,12 @@ namespace Js
         Fields* GetFields() const { return fields; }
 
     private:
-        FieldWithBarrier(uint8_t) fieldSize;
+        WriteBarrierFieldTypeTraits<uint8_t>::Type fieldSize;
 #if DBG
-        mutable FieldWithBarrier(bool) isLockedDown:1;
-        mutable FieldWithBarrier(bool) isClosing:1;
+        mutable WriteBarrierFieldTypeTraits<bool>::Type isLockedDown:1;
+        mutable WriteBarrierFieldTypeTraits<bool>::Type isClosing:1;
 #endif
-        typename FieldWithBarrier(Fields*) fields;
+        typename WriteBarrierFieldTypeTraits<Fields*>::Type fields;
 
         CompactCounters() { }
         CompactCounters(T* host)
