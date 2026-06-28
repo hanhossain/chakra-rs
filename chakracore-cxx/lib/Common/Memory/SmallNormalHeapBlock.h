@@ -57,7 +57,6 @@ private:
 
 };
 
-#ifdef RECYCLER_WRITE_BARRIER
 template <class TBlockAttributes>
 class SmallNormalWithBarrierHeapBlockT : public SmallNormalHeapBlockT<TBlockAttributes>
 {
@@ -87,13 +86,10 @@ protected:
     {}
 
 };
-#endif
 
 typedef SmallNormalHeapBlockT<SmallAllocationBlockAttributes> SmallNormalHeapBlock;
 typedef SmallNormalHeapBlockT<MediumAllocationBlockAttributes> MediumNormalHeapBlock;
 
-#ifdef RECYCLER_WRITE_BARRIER
 typedef SmallNormalWithBarrierHeapBlockT<SmallAllocationBlockAttributes> SmallNormalWithBarrierHeapBlock;
 typedef SmallNormalWithBarrierHeapBlockT<MediumAllocationBlockAttributes> MediumNormalWithBarrierHeapBlock;
-#endif
 }

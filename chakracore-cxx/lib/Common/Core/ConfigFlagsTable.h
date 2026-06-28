@@ -1000,10 +1000,8 @@ namespace Js
                     LoopAlignPhase,
     #endif
 
-    #ifdef RECYCLER_WRITE_BARRIER
     #if DBG_DUMP
         SWBPhase,
-    #endif
     #endif
         RunPhase,
             InterpreterPhase,

@@ -362,9 +362,7 @@ private:
     IR::Instr * NegZeroBranching(IR::Opnd* opnd, IR::Instr* instr, IR::LabelInstr* isNeg0Label, IR::LabelInstr* isNotNeg0Label);
 
     IR::LabelInstr*   EmitLoadFloatCommon(IR::Opnd *dst, IR::Opnd *src, IR::Instr *insertInstr, bool needLabelHelper);
-#ifdef RECYCLER_WRITE_BARRIER
     static IR::Instr* GenerateWriteBarrier(IR::Instr * assignInstr);
-#endif
 
     // Data
 protected:

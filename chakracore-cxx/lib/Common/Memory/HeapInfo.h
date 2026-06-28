@@ -255,7 +255,6 @@ private:
     }
 #endif
 
-#ifdef RECYCLER_WRITE_BARRIER
     template <>
     SmallNormalWithBarrierHeapBlock *& GetNewHeapBlockList<SmallNormalWithBarrierHeapBlock>(HeapBucketT<SmallNormalWithBarrierHeapBlock> * heapBucket)
     {
@@ -267,7 +266,6 @@ private:
     {
         return this->newFinalizableWithBarrierHeapBlockList;
     }
-#endif
 
     template <>
     MediumLeafHeapBlock *& GetNewHeapBlockList<MediumLeafHeapBlock>(HeapBucketT<MediumLeafHeapBlock> * heapBucket)
@@ -296,7 +294,6 @@ private:
     }
 #endif
 
-#ifdef RECYCLER_WRITE_BARRIER
     template <>
     MediumNormalWithBarrierHeapBlock *& GetNewHeapBlockList<MediumNormalWithBarrierHeapBlock>(HeapBucketT<MediumNormalWithBarrierHeapBlock> * heapBucket)
     {
@@ -308,7 +305,6 @@ private:
     {
         return this->newMediumFinalizableWithBarrierHeapBlockList;
     }
-#endif
 
     void SetupBackgroundSweep(RecyclerSweep& recyclerSweep);
 #else
@@ -436,10 +432,8 @@ public:
     SmallRecyclerVisitedHostHeapBlock * newRecyclerVisitedHostHeapBlockList;
 #endif
 
-#ifdef RECYCLER_WRITE_BARRIER
     SmallNormalWithBarrierHeapBlock * newNormalWithBarrierHeapBlockList;
     SmallFinalizableWithBarrierHeapBlock * newFinalizableWithBarrierHeapBlockList;
-#endif
 #endif
 
 #if ENABLE_CONCURRENT_GC
@@ -450,10 +444,8 @@ public:
     MediumRecyclerVisitedHostHeapBlock* newMediumRecyclerVisitedHostHeapBlockList;
 #endif
 
-#ifdef RECYCLER_WRITE_BARRIER
     MediumNormalWithBarrierHeapBlock * newMediumNormalWithBarrierHeapBlockList;
     MediumFinalizableWithBarrierHeapBlock * newMediumFinalizableWithBarrierHeapBlockList;
-#endif
 #endif
 
 #ifdef RECYCLER_PAGE_HEAP

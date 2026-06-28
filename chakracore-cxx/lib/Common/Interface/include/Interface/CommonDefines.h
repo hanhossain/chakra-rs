@@ -126,12 +126,9 @@
 // GLOBAL_ENABLE_WRITE_BARRIER controls the smart pointer wrapper at compile time, every Field annotation on the
 // recycler allocated class will take effect if GLOBAL_ENABLE_WRITE_BARRIER is 1, otherwise only the class declared
 // with FieldWithBarrier annotations use the WriteBarrierPtr<>, see WriteBarrierMacros.h and RecyclerPointers.h for detail
-#define RECYCLER_WRITE_BARRIER                      // Write Barrier support
 
-#ifdef RECYCLER_WRITE_BARRIER
 #if !GLOBAL_ENABLE_WRITE_BARRIER
 #define GLOBAL_ENABLE_WRITE_BARRIER 1
-#endif
 #endif
 
 #define ENABLE_PARTIAL_GC 1

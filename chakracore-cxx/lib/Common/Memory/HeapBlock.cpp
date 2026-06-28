@@ -45,7 +45,6 @@ HeapBlock::AsRecyclerVisitedHostBlock()
 }
 #endif
 
-#ifdef RECYCLER_WRITE_BARRIER
 template <typename TBlockAttributes>
 SmallNormalWithBarrierHeapBlockT<TBlockAttributes> *
 HeapBlock::AsNormalWriteBarrierBlock()
@@ -61,7 +60,6 @@ HeapBlock::AsFinalizableWriteBarrierBlock()
     Assert(IsFinalizableWriteBarrierBlock());
     return static_cast<SmallFinalizableWithBarrierHeapBlockT<TBlockAttributes> *>(this);
 }
-#endif
 
 void
 HeapBlock::SetNeedOOMRescan(Recycler * recycler)
@@ -1014,9 +1012,7 @@ SmallHeapBlockT<TBlockAttributes>::VerifyMark()
             // We could fix this if we had object layout info.
 
             if (!this->IsLeafBlock()
-#ifdef RECYCLER_WRITE_BARRIER
                 && (!this->IsWithBarrier() || CONFIG_FLAG(ForceSoftwareWriteBarrier))
-#endif
                 )
             {
                 if ((ObjectInfo(objectIndex) & LeafBit) == 0)
@@ -2250,14 +2246,12 @@ SmallHeapBlockT<TBlockAttributes>::GetTrackerDataArray()
 }
 #endif
 
-#ifdef RECYCLER_WRITE_BARRIER
 template <class TBlockAttributes>
 bool
 SmallHeapBlockT<TBlockAttributes>::IsWithBarrier() const
 {
     return IsNormalWriteBarrierBlock() || IsFinalizableWriteBarrierBlock();
 }
-#endif
 
 namespace Memory
 {

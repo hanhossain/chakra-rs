@@ -207,24 +207,6 @@ private:
 #define RecyclerNewWithBarrierFinalizedClientTracked(recycler,T,...) static_cast<T *>(static_cast<FinalizableObject *>(AllocatorNewBase(Recycler, recycler, AllocFinalizedClientTrackedWithBarrierInlined, T, __VA_ARGS__)))
 #endif
 
-#ifndef RECYCLER_WRITE_BARRIER
-#define RecyclerNewWithBarrier                          RecyclerNew
-#define RecyclerNewWithBarrierPlus                      RecyclerNewPlus
-#define RecyclerNewWithBarrierPlusZ                     RecyclerNewPlusZ
-#define RecyclerNewWithBarrierZ                         RecyclerNewZ
-#define RecyclerNewWithBarrierStruct                    RecyclerNewStruct
-#define RecyclerNewWithBarrierStructZ                   RecyclerNewStructZ
-#define RecyclerNewWithBarrierStructPlus                RecyclerNewStructPlus
-#define RecyclerNewWithBarrierArray                     RecyclerNewArray
-#define RecyclerNewWithBarrierArrayZ                    RecyclerNewArrayZ
-#define RecyclerNewWithBarrierFinalized                 RecyclerNewFinalized
-#define RecyclerNewWithBarrierFinalizedPlus             RecyclerNewFinalizedPlus
-#define RecyclerNewWithBarrierTracked                   RecyclerNewTracked
-#define RecyclerNewWithBarrierEnumClass                 RecyclerNewEnumClass
-#define RecyclerNewWithBarrierWithInfoBits              RecyclerNewWithInfoBits
-#define RecyclerNewWithBarrierFinalizedClientTracked    RecyclerNewFinalizedClientTracked
-#endif
-
 // Leaf allocators
 #define RecyclerNewLeaf(recycler,T,...) AllocatorNewBase(Recycler, recycler, AllocLeafInlined, T, __VA_ARGS__)
 #define RecyclerNewLeafZ(recycler,T,...) AllocatorNewBase(Recycler, recycler, AllocLeafZeroInlined, T, __VA_ARGS__)
@@ -2302,9 +2284,7 @@ Recycler::SmallAllocatorAlloc(SmallHeapBlockAllocatorType * allocator, size_t si
 class _RecyclerLeafPolicy;
 class _RecyclerNonLeafPolicy;
 
-#ifdef RECYCLER_WRITE_BARRIER
 class _RecyclerWriteBarrierPolicy;
-#endif
 
 template <typename Policy>
 class _RecyclerAllocatorFunc
@@ -2356,7 +2336,6 @@ public:
     }
 };
 
-#ifdef RECYCLER_WRITE_BARRIER
 template <>
 class _RecyclerAllocatorFunc<_RecyclerWriteBarrierPolicy>
 {
@@ -2379,7 +2358,6 @@ public:
         return &Recycler::ExplicitFreeNonLeaf;
     }
 };
-#endif
 
 // This is used by the compiler; when T is NOT a pointer i.e. a value type - it causes leaf allocation
 template <typename T>
@@ -2463,12 +2441,10 @@ class TypeAllocatorFunc<RecyclerNonLeafAllocator, T> :
 {
 };
 
-#ifdef RECYCLER_WRITE_BARRIER
 template <typename T>
 class TypeAllocatorFunc<RecyclerWriteBarrierAllocator, T> : public _RecyclerAllocatorFunc<_RecyclerWriteBarrierPolicy>
 {
 };
-#endif
 
 template <typename T>
 class TypeAllocatorFunc<RecyclerLeafAllocator, T> : public _RecyclerAllocatorFunc<_RecyclerLeafPolicy>

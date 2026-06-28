@@ -6627,16 +6627,12 @@ Recycler::PrintHeapBlockMemoryStats(char16_t const * name, HeapBlock::HeapBlockT
     if (this->enablePartialCollect &&
         (type == HeapBlock::HeapBlockType::SmallNormalBlockType
       || type == HeapBlock::HeapBlockType::SmallFinalizableBlockType
-#ifdef RECYCLER_WRITE_BARRIER
       || type == HeapBlock::HeapBlockType::SmallNormalBlockWithBarrierType
       || type == HeapBlock::HeapBlockType::SmallFinalizableBlockWithBarrierType
-#endif
       || type == HeapBlock::HeapBlockType::MediumNormalBlockType
       || type == HeapBlock::HeapBlockType::MediumFinalizableBlockType
-#ifdef RECYCLER_WRITE_BARRIER
       || type == HeapBlock::HeapBlockType::MediumNormalBlockWithBarrierType
       || type == HeapBlock::HeapBlockType::MediumFinalizableBlockWithBarrierType
-#endif
       ))
     {
         Output::Print(u" %10d", partialUnusedBytes);
@@ -6654,16 +6650,12 @@ Recycler::PrintHeapBlockMemoryStats(char16_t const * name, HeapBlock::HeapBlockT
     if (this->enablePartialCollect &&
         (type == HeapBlock::HeapBlockType::SmallNormalBlockType
         || type == HeapBlock::HeapBlockType::SmallFinalizableBlockType
-#ifdef RECYCLER_WRITE_BARRIER
         || type == HeapBlock::HeapBlockType::SmallNormalBlockWithBarrierType
         || type == HeapBlock::HeapBlockType::SmallFinalizableBlockWithBarrierType
-#endif
         || type == HeapBlock::HeapBlockType::MediumNormalBlockType
         || type == HeapBlock::HeapBlockType::MediumFinalizableBlockType
-#ifdef RECYCLER_WRITE_BARRIER
         || type == HeapBlock::HeapBlockType::MediumNormalBlockWithBarrierType
         || type == HeapBlock::HeapBlockType::MediumFinalizableBlockWithBarrierType
-#endif
         ))
     {
         Output::Print(u" %6.1f", (double)partialUnusedBytes / (double)totalByteCount * 100);
@@ -6817,24 +6809,20 @@ Recycler::PrintMemoryStats()
     Output::Print(u"\n");
     PrintHeapBlockMemoryStats(u"SmFin", HeapBlock::SmallFinalizableBlockType);
     Output::Print(u"\n");
-#ifdef RECYCLER_WRITE_BARRIER
     PrintHeapBlockMemoryStats(u"SmSWB", HeapBlock::SmallNormalBlockWithBarrierType);
     Output::Print(u"\n");
     PrintHeapBlockMemoryStats(u"SmFinSWB", HeapBlock::SmallFinalizableBlockWithBarrierType);
     Output::Print(u"\n");
-#endif
     PrintHeapBlockMemoryStats(u"SmLeaf", HeapBlock::SmallLeafBlockType);
     Output::Print(u"\n");
     PrintHeapBlockMemoryStats(u"Medium", HeapBlock::MediumNormalBlockType);
     Output::Print(u"\n");
     PrintHeapBlockMemoryStats(u"MdFin", HeapBlock::MediumFinalizableBlockType);
     Output::Print(u"\n");
-#ifdef RECYCLER_WRITE_BARRIER
     PrintHeapBlockMemoryStats(u"MdSWB", HeapBlock::MediumNormalBlockWithBarrierType);
     Output::Print(u"\n");
     PrintHeapBlockMemoryStats(u"MdFinSWB", HeapBlock::MediumFinalizableBlockWithBarrierType);
     Output::Print(u"\n");
-#endif
     PrintHeapBlockMemoryStats(u"MdLeaf", HeapBlock::MediumLeafBlockType);
     Output::Print(u"\n");
 
@@ -6851,21 +6839,13 @@ Recycler::PrintMemoryStats()
     Output::Print(u"\nSmall heap block zeroing stats since last GC\n");
     Output::Print(u"Number of blocks with sweep state empty: normal=%d finalizable=%d leaf=%d\nNumber of blocks zeroed: %d\n",
         collectionStats.numEmptySmallBlocks[HeapBlock::SmallNormalBlockType]
-#ifdef RECYCLER_WRITE_BARRIER
         + collectionStats.numEmptySmallBlocks[HeapBlock::SmallNormalBlockWithBarrierType]
-#endif
         , collectionStats.numEmptySmallBlocks[HeapBlock::SmallFinalizableBlockType]
-#ifdef RECYCLER_WRITE_BARRIER
         + collectionStats.numEmptySmallBlocks[HeapBlock::SmallFinalizableBlockWithBarrierType]
-#endif
         + collectionStats.numEmptySmallBlocks[HeapBlock::MediumNormalBlockType]
-#ifdef RECYCLER_WRITE_BARRIER
         + collectionStats.numEmptySmallBlocks[HeapBlock::MediumNormalBlockWithBarrierType]
-#endif
         , collectionStats.numEmptySmallBlocks[HeapBlock::MediumFinalizableBlockType]
-#ifdef RECYCLER_WRITE_BARRIER
         + collectionStats.numEmptySmallBlocks[HeapBlock::MediumFinalizableBlockWithBarrierType]
-#endif
         , collectionStats.numEmptySmallBlocks[HeapBlock::SmallLeafBlockType]
         + collectionStats.numEmptySmallBlocks[HeapBlock::MediumLeafBlockType],
         collectionStats.numZeroedOutSmallBlocks);
@@ -6952,7 +6932,6 @@ Recycler::PrintCollectStats()
 #endif
     Output::Print(u"\n");
 
-#ifdef RECYCLER_WRITE_BARRIER
     PrintHeapBlockStats(u"SmSWB", HeapBlock::SmallNormalBlockWithBarrierType);
 #if ENABLE_PARTIAL_GC
     if (this->enablePartialCollect)
@@ -6977,7 +6956,6 @@ Recycler::PrintCollectStats()
     }
 #endif
     Output::Print(u"\n");
-#endif
 
     // TODO: This seems suspicious- why are we looking at smallNonLeaf while print out leaf...
     PrintHeapBlockStats(u"SmLeaf", HeapBlock::SmallLeafBlockType);
@@ -7018,7 +6996,6 @@ Recycler::PrintCollectStats()
 #endif
     Output::Print(u"\n");
 
-#ifdef RECYCLER_WRITE_BARRIER
     PrintHeapBlockStats(u"MdSWB", HeapBlock::MediumNormalBlockWithBarrierType);
 #if ENABLE_PARTIAL_GC
     if (this->enablePartialCollect)
@@ -7043,7 +7020,6 @@ Recycler::PrintCollectStats()
     }
 #endif
     Output::Print(u"\n");
-#endif
 
     // TODO: This seems suspicious- why are we looking at smallNonLeaf while print out leaf...
     PrintHeapBlockStats(u"MdLeaf", HeapBlock::MediumNormalBlockType);

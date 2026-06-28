@@ -563,9 +563,7 @@ LargeHeapBlock::AllocFreeListEntry(size_t size, ObjectInfoBits attributes, Large
 
     header->objectIndex = headerIndex;
     header->objectSize = originalSize;
-#ifdef RECYCLER_WRITE_BARRIER
     header->hasWriteBarrier = (attributes & WithBarrierBit) == WithBarrierBit;
-#endif
 
     if ((attributes & (FinalizeBit | TrackBit)) != 0)
     {
@@ -636,9 +634,7 @@ LargeHeapBlock::Alloc(size_t size, ObjectInfoBits attributes)
 
     header->objectIndex = allocCount;
     header->objectSize = size;
-#ifdef RECYCLER_WRITE_BARRIER
     header->hasWriteBarrier = (attributes&WithBarrierBit) == WithBarrierBit;
-#endif
     if ((attributes & (FinalizeBit | TrackBit)) != 0)
     {
         // Make sure a valid vtable is installed as once the attributes have been set this allocation may be traced by background marking
@@ -1187,7 +1183,6 @@ LargeHeapBlock::ScanNewImplicitRoots(Recycler * recycler)
 #if ENABLE_CONCURRENT_GC
 bool LargeHeapBlock::IsPageDirty(char* page, RescanFlags flags, bool isWriteBarrier)
 {
-#ifdef RECYCLER_WRITE_BARRIER
     // TODO: SWB, use special page allocator for large block with write barrier?
     if (CONFIG_FLAG(WriteBarrierTest))
     {
@@ -1197,7 +1192,6 @@ bool LargeHeapBlock::IsPageDirty(char* page, RescanFlags flags, bool isWriteBarr
     {
         return (RecyclerWriteBarrierManager::GetWriteBarrier(page) & DIRTYBIT) == DIRTYBIT;
     }
-#endif
 
     Js::Throw::FatalInternalError();
 }
@@ -1239,9 +1233,7 @@ LargeHeapBlock::RescanOnePage(Recycler * recycler)
             return false;
         }
         bool hasWriteBarrier = false;
-#ifdef RECYCLER_WRITE_BARRIER
         hasWriteBarrier = header->hasWriteBarrier;
-#endif
         if (!IsPageDirty(this->GetBeginAddress(), flags, hasWriteBarrier))
         {
             return false;
@@ -1526,9 +1518,7 @@ LargeHeapBlock::RescanMultiPage(Recycler * recycler)
                     lastPageCheckedForWriteWatch = pageStart;
                     isLastPageCheckedForWriteWatchDirty = true;
                     bool hasWriteBarrier = false;
-#ifdef RECYCLER_WRITE_BARRIER
                     hasWriteBarrier = header->hasWriteBarrier;
-#endif
                     if (!IsPageDirty(pageStart, flags, hasWriteBarrier))
                     {
                         // Fall through to the case below where we'll update objectAddress and continue

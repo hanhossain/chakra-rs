@@ -244,12 +244,8 @@ namespace Memory
     template class SmallFinalizableHeapBucketBaseT<SmallRecyclerVisitedHostHeapBlock>;
     template class SmallFinalizableHeapBucketBaseT<MediumRecyclerVisitedHostHeapBlock>;
 #endif
-#ifdef RECYCLER_WRITE_BARRIER
     template class SmallFinalizableHeapBucketBaseT<SmallFinalizableWithBarrierHeapBlock>;
-#endif
 
     template class SmallFinalizableHeapBucketBaseT<MediumFinalizableHeapBlock>;
-#ifdef RECYCLER_WRITE_BARRIER
     template class SmallFinalizableHeapBucketBaseT<MediumFinalizableWithBarrierHeapBlock>;
-#endif
 }

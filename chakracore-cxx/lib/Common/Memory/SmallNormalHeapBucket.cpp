@@ -656,10 +656,8 @@ namespace Memory
     template class SmallNormalHeapBucketBase<SmallNormalHeapBlock>;
     template class SmallNormalHeapBucketBase<MediumNormalHeapBlock>;
 
-#ifdef RECYCLER_WRITE_BARRIER
     template class SmallNormalHeapBucketBase<SmallNormalWithBarrierHeapBlock>;
     template class SmallNormalHeapBucketBase<MediumNormalWithBarrierHeapBlock>;
-#endif
 
     template class SmallNormalHeapBucketBase<SmallFinalizableHeapBlock>;
     template class SmallNormalHeapBucketBase<MediumFinalizableHeapBlock>;
@@ -669,17 +667,13 @@ namespace Memory
     template class SmallNormalHeapBucketBase<MediumRecyclerVisitedHostHeapBlock>;
 #endif
 
-#ifdef RECYCLER_WRITE_BARRIER
     template class SmallNormalHeapBucketBase<SmallFinalizableWithBarrierHeapBlock>;
     template class SmallNormalHeapBucketBase<MediumFinalizableWithBarrierHeapBlock>;
-#endif
 
     template void SmallNormalHeapBucketBase<SmallNormalHeapBlock>::Sweep(RecyclerSweep& recyclerSweep);
     template void SmallNormalHeapBucketBase<MediumNormalHeapBlock>::Sweep(RecyclerSweep& recyclerSweep);
 
-#ifdef RECYCLER_WRITE_BARRIER
     template void SmallNormalHeapBucketBase<SmallNormalWithBarrierHeapBlock>::Sweep(RecyclerSweep& recyclerSweep);
     template void SmallNormalHeapBucketBase<MediumNormalWithBarrierHeapBlock>::Sweep(RecyclerSweep& recyclerSweep);
-#endif
 }
 

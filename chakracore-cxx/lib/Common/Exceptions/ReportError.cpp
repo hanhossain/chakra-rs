@@ -74,7 +74,7 @@ void FailedToBox_OOM_unrecoverable_error(
     ReportFatalException(context, E_UNEXPECTED, Fatal_FailedToBox_OUTOFMEMORY, scenario);
 }
 
-#if defined(RECYCLER_WRITE_BARRIER) && defined(TARGET_64)
+#if defined(TARGET_64)
 void X64WriteBarrier_OOM_unrecoverable_error()
 {
     int scenario = 3;

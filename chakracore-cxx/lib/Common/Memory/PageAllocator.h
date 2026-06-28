@@ -189,7 +189,7 @@ public:
 
     SecondaryAllocator* GetSecondaryAllocator() { return secondaryAllocator; }
 
-#if defined(TARGET_64) && defined(RECYCLER_WRITE_BARRIER)
+#if defined(TARGET_64)
     bool IsWriteBarrierAllowed()
     {
         return isWriteBarrierAllowed;

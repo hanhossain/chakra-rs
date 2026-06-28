@@ -20,7 +20,6 @@
 #pragma warning(disable:4075)       // initializers put in unrecognized initialization area on purpose
 #pragma init_seg(".CRT$XCAU")
 
-#ifdef RECYCLER_WRITE_BARRIER
 namespace Memory
 {
     FN_VerifyIsNotBarrierAddress* g_verifyIsNotBarrierAddress = nullptr;
@@ -526,4 +525,3 @@ RecyclerWriteBarrierManager::GetWriteBarrier(void * address)
     }
 }
 
-#endif

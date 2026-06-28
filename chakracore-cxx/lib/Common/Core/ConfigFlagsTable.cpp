@@ -1684,10 +1684,8 @@ namespace Js
                     u"LoopAlign",
     #endif
 
-    #ifdef RECYCLER_WRITE_BARRIER
     #if DBG_DUMP
         u"SWB",
-    #endif
     #endif
         u"Run",
             u"Interpreter",

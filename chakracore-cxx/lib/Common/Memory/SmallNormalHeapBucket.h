@@ -85,7 +85,6 @@ class SmallNormalHeapBucketT : public SmallNormalHeapBucketBase<SmallNormalHeapB
 typedef SmallNormalHeapBucketT<SmallAllocationBlockAttributes> SmallNormalHeapBucket;
 typedef SmallNormalHeapBucketT<MediumAllocationBlockAttributes> MediumNormalHeapBucket;
 
-#ifdef RECYCLER_WRITE_BARRIER
 template <typename TBlockAttributes>
 class SmallNormalWithBarrierHeapBucketT : public SmallNormalHeapBucketBase<SmallNormalWithBarrierHeapBlockT<TBlockAttributes>>
 {
@@ -100,13 +99,10 @@ public:
 typedef SmallNormalWithBarrierHeapBucketT<SmallAllocationBlockAttributes> SmallNormalWithBarrierHeapBucket;
 typedef SmallNormalWithBarrierHeapBucketT<MediumAllocationBlockAttributes> MediumNormalWithBarrierHeapBucket;
 
-#endif
 
 extern template class SmallNormalHeapBucketBase<SmallNormalHeapBlock>;
 extern template class SmallNormalHeapBucketBase<MediumNormalHeapBlock>;
 
-#ifdef RECYCLER_WRITE_BARRIER
 extern template class SmallNormalHeapBucketBase<SmallNormalWithBarrierHeapBlock>;
 extern template class SmallNormalHeapBucketBase<MediumNormalWithBarrierHeapBlock>;
-#endif
 }

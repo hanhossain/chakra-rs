@@ -646,7 +646,6 @@ HeapInfoManager::IsRecyclerLargeBlockPageAllocator(PageAllocator * pageAllocator
     });
 }
 
-#ifdef RECYCLER_WRITE_BARRIER
 bool
 HeapInfoManager::IsRecyclerWithBarrierPageAllocator(PageAllocator * pageAllocator)
 {
@@ -655,7 +654,6 @@ HeapInfoManager::IsRecyclerWithBarrierPageAllocator(PageAllocator * pageAllocato
         return (heapInfo.GetRecyclerWithBarrierPageAllocator() == pageAllocator);
     });
 }
-#endif
 
 #ifdef RECYCLER_PAGE_HEAP
 bool

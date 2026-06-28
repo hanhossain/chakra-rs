@@ -1247,9 +1247,7 @@ namespace JsUtil
         Assert(lpParam);
 
 #ifdef TARGET_64
-#ifdef RECYCLER_WRITE_BARRIER
         Memory::RecyclerWriteBarrierManager::OnThreadInit();
-#endif
 #endif
 
         ParallelThreadData * threadData = static_cast<ParallelThreadData *>(lpParam);

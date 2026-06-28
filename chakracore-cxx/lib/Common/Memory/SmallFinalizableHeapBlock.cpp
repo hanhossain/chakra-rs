@@ -6,7 +6,6 @@
 #include "CommonMemoryPch.h"
 #include "SmallFinalizableHeapBlock.h"
 
-#ifdef RECYCLER_WRITE_BARRIER
 template <class TBlockAttributes>
 SmallFinalizableWithBarrierHeapBlockT<TBlockAttributes>*
 SmallFinalizableWithBarrierHeapBlockT<TBlockAttributes>::New(HeapBucketT<SmallFinalizableWithBarrierHeapBlockT<TBlockAttributes>> * bucket)
@@ -29,7 +28,6 @@ SmallFinalizableWithBarrierHeapBlockT<TBlockAttributes>::Delete(SmallFinalizable
 
     NoMemProtectHeapDeletePlusPrefix(Base::GetAllocPlusSize(heapBlock->objectCount), heapBlock);
 }
-#endif
 
 #ifdef RECYCLER_VISITED_HOST
 template <class TBlockAttributes>
@@ -114,7 +112,6 @@ SmallFinalizableHeapBlockT<TBlockAttributes>::SmallFinalizableHeapBlockT(HeapBuc
 }
 #endif
 
-#ifdef RECYCLER_WRITE_BARRIER
 template <class TBlockAttributes>
 SmallFinalizableHeapBlockT<TBlockAttributes>::SmallFinalizableHeapBlockT(HeapBucketT<SmallFinalizableWithBarrierHeapBlockT<TBlockAttributes>> * bucket, ushort objectSize, ushort objectCount, HeapBlockType blockType)
     : SmallNormalHeapBlockT<TBlockAttributes>(bucket, objectSize, objectCount, blockType)
@@ -126,7 +123,6 @@ SmallFinalizableHeapBlockT<TBlockAttributes>::SmallFinalizableHeapBlockT(HeapBuc
     Assert(this->disposedObjectListTail == nullptr);
     Assert(!this->isPendingDispose);
 }
-#endif
 
 template <class TBlockAttributes>
 void
@@ -670,8 +666,6 @@ namespace Memory
     template void SmallRecyclerVisitedHostHeapBlockT<MediumAllocationBlockAttributes>::ProcessMarkedObject<false>(void* objectAddress, MarkContext * markContext);;
 #endif
 
-#ifdef RECYCLER_WRITE_BARRIER
     template class SmallFinalizableWithBarrierHeapBlockT<SmallAllocationBlockAttributes>;
     template class SmallFinalizableWithBarrierHeapBlockT<MediumAllocationBlockAttributes>;
-#endif
 }

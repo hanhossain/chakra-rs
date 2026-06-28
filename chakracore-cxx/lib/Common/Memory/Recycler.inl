@@ -175,7 +175,6 @@ Recycler::AllocWithAttributesInlined(size_t size)
 #endif
 
 
-#ifdef RECYCLER_WRITE_BARRIER
     SwbVerboseTrace(this->GetRecyclerFlagsTable(), u"Allocated SWB memory: 0x%p\n", memBlock);
 
 #pragma prefast(suppress:6313, "attributes is a template parameter and can be 0")
@@ -194,7 +193,6 @@ Recycler::AllocWithAttributesInlined(size_t size)
 
         RecyclerWriteBarrierManager::WriteBarrier(memBlock, size);
     }
-#endif
 
 #if ENABLE_PARTIAL_GC
 #pragma prefast(suppress:6313, "attributes is a template parameter and can be 0")

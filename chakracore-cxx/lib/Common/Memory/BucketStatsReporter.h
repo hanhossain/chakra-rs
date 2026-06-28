@@ -16,10 +16,8 @@ struct DumpBucketTypeName { static char16_t name[]; };
 template<> char16_t DumpBucketTypeName<NoBit>::name[] = u"Normal ";
 template<> char16_t DumpBucketTypeName<LeafBit>::name[] = u"Leaf   ";
 template<> char16_t DumpBucketTypeName<FinalizeBit>::name[] = u"Fin    ";
-#ifdef RECYCLER_WRITE_BARRIER
 template<> char16_t DumpBucketTypeName<WithBarrierBit>::name[] = u"NormWB ";
 template<> char16_t DumpBucketTypeName<FinalizableWithBarrierBit>::name[] = u"FinWB  ";
-#endif
 #ifdef RECYCLER_VISITED_HOST
 template<> char16_t DumpBucketTypeName<RecyclerVisitedHostBit>::name[] = u"Visited";
 #endif
@@ -34,10 +32,8 @@ struct EtwBucketTypeEnum { static uint16 code; };
 template<> uint16 EtwBucketTypeEnum<NoBit>::code = 0;
 template<> uint16 EtwBucketTypeEnum<LeafBit>::code = 1;
 template<> uint16 EtwBucketTypeEnum<FinalizeBit>::code = 2;
-#ifdef RECYCLER_WRITE_BARRIER
 template<> uint16 EtwBucketTypeEnum<WithBarrierBit>::code = 3;
 template<> uint16 EtwBucketTypeEnum<FinalizableWithBarrierBit>::code = 4;
-#endif
 #ifdef RECYCLER_VISITED_HOST
 template<> uint16 EtwBucketTypeEnum<RecyclerVisitedHostBit>::code = 5;
 #endif

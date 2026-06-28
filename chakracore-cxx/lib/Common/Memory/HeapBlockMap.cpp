@@ -612,7 +612,6 @@ HeapBlockMap32::ResetDirtyPages(Recycler * recycler)
 
         Assert(segmentLength % AutoSystemInfo::PageSize == 0);
 
-#ifdef RECYCLER_WRITE_BARRIER
 #if defined(TARGET_64)
         if (segment->IsWriteBarrierEnabled())
 #endif
@@ -620,7 +619,6 @@ HeapBlockMap32::ResetDirtyPages(Recycler * recycler)
             // Reset software write barrier for barrier segments.
             RecyclerWriteBarrierManager::ResetWriteBarrier(segmentStart, segmentLength / AutoSystemInfo::PageSize);
         }
-#endif
     });
 }
 #endif
@@ -642,28 +640,20 @@ HeapBlockMap32::RescanPage(void * dirtyPage, bool* anyObjectsMarkedOnPage, Recyc
             break;
 
         case HeapBlock::HeapBlockType::SmallNormalBlockType:
-#ifdef RECYCLER_WRITE_BARRIER
         case HeapBlock::HeapBlockType::SmallNormalBlockWithBarrierType:
-#endif
             return RescanHeapBlock<SmallNormalHeapBlock>(dirtyPage, blockType, chunk, id2, anyObjectsMarkedOnPage, recycler);
         case HeapBlock::HeapBlockType::SmallFinalizableBlockType:
-#ifdef RECYCLER_WRITE_BARRIER
         case HeapBlock::HeapBlockType::SmallFinalizableBlockWithBarrierType:
-#endif
             return RescanHeapBlock<SmallFinalizableHeapBlock>(dirtyPage, blockType, chunk, id2, anyObjectsMarkedOnPage, recycler);
 #ifdef RECYCLER_VISITED_HOST
         case HeapBlock::HeapBlockType::SmallRecyclerVisitedHostBlockType:
             return RescanHeapBlock<SmallRecyclerVisitedHostHeapBlock>(dirtyPage, blockType, chunk, id2, anyObjectsMarkedOnPage, recycler);
 #endif
         case HeapBlock::HeapBlockType::MediumNormalBlockType:
-#ifdef RECYCLER_WRITE_BARRIER
         case HeapBlock::HeapBlockType::MediumNormalBlockWithBarrierType:
-#endif
             return RescanHeapBlock<MediumNormalHeapBlock>(dirtyPage, blockType, chunk, id2, anyObjectsMarkedOnPage, recycler);
         case HeapBlock::HeapBlockType::MediumFinalizableBlockType:
-#ifdef RECYCLER_WRITE_BARRIER
         case HeapBlock::HeapBlockType::MediumFinalizableBlockWithBarrierType:
-#endif
             return RescanHeapBlock<MediumFinalizableHeapBlock>(dirtyPage, blockType, chunk, id2, anyObjectsMarkedOnPage, recycler);
 #ifdef RECYCLER_VISITED_HOST
         case HeapBlock::HeapBlockType::MediumRecyclerVisitedHostBlockType:
@@ -798,7 +788,6 @@ HeapBlockMap32::Rescan(Recycler * recycler, bool resetWriteWatch)
     {
         Assert(segmentLength % AutoSystemInfo::PageSize == 0);
 
-#ifdef RECYCLER_WRITE_BARRIER
         if (recycler->autoHeap.IsRecyclerWithBarrierPageAllocator(segmentPageAllocator))
         {
             // Loop through pages for this segment and check write barrier.
@@ -829,7 +818,6 @@ HeapBlockMap32::Rescan(Recycler * recycler, bool resetWriteWatch)
             }
             return;
         }
-#endif
         Assert(recycler->autoHeap.IsRecyclerLeafPageAllocator(segmentPageAllocator) ||
             recycler->autoHeap.IsRecyclerLargeBlockPageAllocator(segmentPageAllocator));
     });
@@ -852,9 +840,7 @@ HeapBlockMap32::OOMRescan(Recycler * recycler)
         // Process Small non-leaf segments (including write barrier blocks).
         // Large blocks have their own separate write watch handling.
         if (recycler->autoHeap.IsRecyclerPageAllocator(segmentPageAllocator)
-#ifdef RECYCLER_WRITE_BARRIER
             || recycler->autoHeap.IsRecyclerWithBarrierPageAllocator(segmentPageAllocator)
-#endif
             )
         {
             if (recycler->NeedOOMRescan())
@@ -897,9 +883,7 @@ HeapBlockMap32::OOMRescan(Recycler * recycler)
                                 break;
 
                             case HeapBlock::HeapBlockType::SmallNormalBlockType:
-#ifdef RECYCLER_WRITE_BARRIER
                             case HeapBlock::HeapBlockType::SmallNormalBlockWithBarrierType:
-#endif
                                 if (!RescanHeapBlockOnOOM<SmallNormalHeapBlock>((SmallNormalHeapBlock*)heapBlock, pageAddress, blockType, chunk->blockInfo[id2].bucketIndex, chunk, recycler))
                                 {
                                     return;
@@ -907,9 +891,7 @@ HeapBlockMap32::OOMRescan(Recycler * recycler)
                                 break;
 
                             case HeapBlock::HeapBlockType::SmallFinalizableBlockType:
-#ifdef RECYCLER_WRITE_BARRIER
                             case HeapBlock::HeapBlockType::SmallFinalizableBlockWithBarrierType:
-#endif
                                 if (!RescanHeapBlockOnOOM<SmallFinalizableHeapBlock>((SmallFinalizableHeapBlock*) heapBlock, pageAddress, blockType, chunk->blockInfo[id2].bucketIndex, chunk, recycler))
                                 {
                                     return;
@@ -925,9 +907,7 @@ HeapBlockMap32::OOMRescan(Recycler * recycler)
 #endif
 
                             case HeapBlock::HeapBlockType::MediumNormalBlockType:
-#ifdef RECYCLER_WRITE_BARRIER
                             case HeapBlock::HeapBlockType::MediumNormalBlockWithBarrierType:
-#endif
                                 if (!RescanHeapBlockOnOOM<MediumNormalHeapBlock>((MediumNormalHeapBlock*)heapBlock, pageAddress, blockType, chunk->blockInfo[id2].bucketIndex, chunk, recycler))
                                 {
                                     return;
@@ -935,9 +915,7 @@ HeapBlockMap32::OOMRescan(Recycler * recycler)
                                 break;
 
                             case HeapBlock::HeapBlockType::MediumFinalizableBlockType:
-#ifdef RECYCLER_WRITE_BARRIER
                             case HeapBlock::HeapBlockType::MediumFinalizableBlockWithBarrierType:
-#endif
                                 if (!RescanHeapBlockOnOOM<MediumFinalizableHeapBlock>((MediumFinalizableHeapBlock*) heapBlock, pageAddress, blockType, chunk->blockInfo[id2].bucketIndex, chunk, recycler))
                                 {
                                     return;

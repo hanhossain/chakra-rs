@@ -89,9 +89,7 @@ enum ObjectInfoBits : unsigned short
     // GC-TODO: FinalizeBit doesn't need to be stored since we have separate bucket for them.
     // We can move it the upper byte.
 
-#ifdef RECYCLER_WRITE_BARRIER
     WithBarrierBit              = 0x0100,
-#endif
 
 #ifdef RECYCLER_VISITED_HOST
     RecyclerVisitedHostBit      = 0x0200,
@@ -113,25 +111,19 @@ enum ObjectInfoBits : unsigned short
     NewFinalizeBit              = 0x00,
 #endif
 
-#ifdef RECYCLER_WRITE_BARRIER
     FinalizableWithBarrierBit   = WithBarrierBit | FinalizeBit,
-#endif
 
     // Allocation bits
     FinalizableLeafBits         = NewFinalizeBit | FinalizeBit | LeafBit,
     FinalizableObjectBits       = NewFinalizeBit | FinalizeBit,
-#ifdef RECYCLER_WRITE_BARRIER
     FinalizableWithBarrierObjectBits = NewFinalizeBit | FinalizableWithBarrierBit,
-#endif
     ClientFinalizableObjectBits = NewFinalizeBit | ClientTrackedBit | FinalizeBit,
 
     ClientTrackableLeafBits     = NewTrackBit | ClientTrackedBit | TrackBit | FinalizeBit | LeafBit,
     ClientTrackableObjectBits   = NewTrackBit | ClientTrackedBit | TrackBit | FinalizeBit,
 
-#ifdef RECYCLER_WRITE_BARRIER
     ClientTrackableObjectWithBarrierBits = ClientTrackableObjectBits | WithBarrierBit,
     ClientFinalizableObjectWithBarrierBits = ClientFinalizableObjectBits | WithBarrierBit,
-#endif
 
     WeakReferenceEntryBits      = LeafBit,
 
@@ -161,9 +153,7 @@ enum ObjectInfoBits : unsigned short
 #endif
 
     GetBlockTypeBitMask = FinalizeBit | LeafBit 
-#ifdef RECYCLER_WRITE_BARRIER
     | WithBarrierBit
-#endif
 #ifdef RECYCLER_VISITED_HOST
     | RecyclerVisitedHostBit
 #endif
@@ -217,7 +207,6 @@ template <class TBlockAttributes> class SmallNormalHeapBlockT;
 template <class TBlockAttributes> class SmallLeafHeapBlockT;
 template <class TBlockAttributes> class SmallFinalizableHeapBlockT;
 
-#ifdef RECYCLER_WRITE_BARRIER
 template <class TBlockAttributes> class SmallNormalWithBarrierHeapBlockT;
 template <class TBlockAttributes> class SmallFinalizableWithBarrierHeapBlockT;
 
@@ -226,11 +215,6 @@ template <class TBlockAttributes> class SmallFinalizableWithBarrierHeapBlockT;
     template class TemplateType<Memory::SmallFinalizableWithBarrierHeapBlock>; \
     template class TemplateType<Memory::MediumNormalWithBarrierHeapBlock>; \
     template class TemplateType<Memory::MediumFinalizableWithBarrierHeapBlock>; \
-
-
-#else
-#define INSTANTIATE_SWB_BLOCKTYPES(TemplateType)
-#endif
 
 #ifdef RECYCLER_VISITED_HOST
 template <class TBlockAttributes> class SmallRecyclerVisitedHostHeapBlockT;
@@ -262,20 +246,16 @@ public:
         SmallNormalBlockType,
         SmallLeafBlockType,
         SmallFinalizableBlockType,
-#ifdef RECYCLER_WRITE_BARRIER
         SmallNormalBlockWithBarrierType,
         SmallFinalizableBlockWithBarrierType,
-#endif
 #ifdef RECYCLER_VISITED_HOST
         SmallRecyclerVisitedHostBlockType,
 #endif
         MediumNormalBlockType,
         MediumLeafBlockType,
         MediumFinalizableBlockType,
-#ifdef RECYCLER_WRITE_BARRIER
         MediumNormalBlockWithBarrierType,
         MediumFinalizableBlockWithBarrierType,
-#endif
 #ifdef RECYCLER_VISITED_HOST
         MediumRecyclerVisitedHostBlockType,
 #endif
@@ -312,15 +292,10 @@ public:
     bool IsRecyclerVisitedHostBlock() const { return this->GetHeapBlockType() == SmallRecyclerVisitedHostBlockType || this->GetHeapBlockType() == MediumRecyclerVisitedHostBlockType; }
 #endif
 
-#ifdef RECYCLER_WRITE_BARRIER
     bool IsAnyNormalBlock() const { return IsNormalBlock() || IsNormalWriteBarrierBlock(); }
     bool IsAnyFinalizableBlock() const { return IsFinalizableBlock() || IsFinalizableWriteBarrierBlock(); }
     bool IsNormalWriteBarrierBlock() const { return this->GetHeapBlockType() == SmallNormalBlockWithBarrierType || this->GetHeapBlockType() == MediumNormalBlockWithBarrierType; }
     bool IsFinalizableWriteBarrierBlock() const { return this->GetHeapBlockType() == SmallFinalizableBlockWithBarrierType || this->GetHeapBlockType() == MediumFinalizableBlockWithBarrierType; }
-#else
-    bool IsAnyFinalizableBlock() const { return IsFinalizableBlock(); }
-    bool IsAnyNormalBlock() const { return IsNormalBlock(); }
-#endif
 
     bool IsLargeHeapBlock() const { return this->GetHeapBlockType() == LargeBlockType; }
     char * GetAddress() const { return address; }
@@ -340,13 +315,11 @@ public:
     SmallRecyclerVisitedHostHeapBlockT<TBlockAttributes> * AsRecyclerVisitedHostBlock();
 #endif
 
-#ifdef RECYCLER_WRITE_BARRIER
     template <typename TBlockAttributes>
     SmallNormalWithBarrierHeapBlockT<TBlockAttributes> * AsNormalWriteBarrierBlock();
 
     template <typename TBlockAttributes>
     SmallFinalizableWithBarrierHeapBlockT<TBlockAttributes> * AsFinalizableWriteBarrierBlock();
-#endif
 
 protected:
     char * address;
@@ -626,9 +599,7 @@ public:
         return 0;
     }
 
-#ifdef RECYCLER_WRITE_BARRIER
     bool IsWithBarrier() const;
-#endif
     void RemoveFromHeapBlockMap(Recycler* recycler);
     char* GetAddress() const { return address; }
     char * GetEndAddress() const { return address + (this->GetPageCount() * AutoSystemInfo::PageSize);  }

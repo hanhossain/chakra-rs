@@ -34,7 +34,7 @@ SegmentBase<T>::SegmentBase(PageAllocatorBase<T> * allocator, size_t pageCount, 
     leadingGuardPageCount(0),
     secondaryAllocPageCount(allocator->secondaryAllocPageCount),
     secondaryAllocator(nullptr)
-#if defined(TARGET_64) && defined(RECYCLER_WRITE_BARRIER)
+#if defined(TARGET_64)
     , isWriteBarrierAllowed(false)
     , isWriteBarrierEnabled(enableWriteBarrier)
 #endif
@@ -150,7 +150,6 @@ SegmentBase<T>::Initialize(uint32_t allocFlags, bool excludeGuardPages)
         return false;
     }
 
-#ifdef RECYCLER_WRITE_BARRIER
 #if defined(TARGET_64) && defined(RECYCLER_WRITE_BARRIER_BYTE)
     bool registerBarrierResult = true;
     if (CONFIG_FLAG(StrictWriteBarrierCheck))
@@ -186,7 +185,6 @@ SegmentBase<T>::Initialize(uint32_t allocFlags, bool excludeGuardPages)
         RecyclerWriteBarrierManager::ToggleBarrier(this->address,
           this->segmentPageCount * AutoSystemInfo::PageSize, true);
     }
-#endif
 #endif
 
     return true;

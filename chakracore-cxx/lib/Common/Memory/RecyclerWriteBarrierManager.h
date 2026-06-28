@@ -9,8 +9,6 @@ namespace Memory
 {
 //#define RECYCLER_WRITE_BARRIER_INLINE_RECYCLER
 
-#ifdef RECYCLER_WRITE_BARRIER
-
 // Controls whether we're using a 128 byte granularity card table or a 4K granularity byte array to indicate that a range of memory is dirty
 #define RECYCLER_WRITE_BARRIER_BYTE
 
@@ -258,5 +256,4 @@ if (flags.Verbose && \
 #define GlobalSwbVerboseTrace(...)
 #endif
 
-#endif
 }

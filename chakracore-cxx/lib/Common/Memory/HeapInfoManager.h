@@ -120,9 +120,7 @@ public:
     bool IsRecyclerPageAllocator(PageAllocator * pageAllocator);
     bool IsRecyclerLeafPageAllocator(PageAllocator * pageAllocator);
     bool IsRecyclerLargeBlockPageAllocator(PageAllocator * pageAllocator);
-#ifdef RECYCLER_WRITE_BARRIER
     bool IsRecyclerWithBarrierPageAllocator(PageAllocator * pageAllocator);
-#endif
     size_t GetUsedBytes();
     size_t GetReservedBytes();
     size_t GetCommittedBytes();

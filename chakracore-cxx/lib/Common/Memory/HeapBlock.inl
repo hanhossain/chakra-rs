@@ -28,7 +28,6 @@ HeapBlock::GetPageAllocator(HeapInfo * heapInfo)
         return heapInfo->GetRecyclerLeafPageAllocator();
     case LargeBlockType:
         return heapInfo->GetRecyclerLargeBlockPageAllocator();
-#ifdef RECYCLER_WRITE_BARRIER
     case SmallNormalBlockWithBarrierType:
     case SmallFinalizableBlockWithBarrierType:
     case MediumNormalBlockWithBarrierType:
@@ -37,7 +36,6 @@ HeapBlock::GetPageAllocator(HeapInfo * heapInfo)
         return heapInfo->GetRecyclerLeafPageAllocator();
 #elif defined(RECYCLER_WRITE_BARRIER_ALLOC_SEPARATE_PAGE)
         return heapInfo->GetRecyclerWithBarrierPageAllocator();
-#endif
 #endif
 
     default:

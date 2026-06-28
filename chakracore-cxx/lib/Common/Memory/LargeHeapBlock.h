@@ -31,9 +31,7 @@ private:
 
 public:
     bool markOnOOMRescan : 1;
-#ifdef RECYCLER_WRITE_BARRIER
     bool hasWriteBarrier : 1;
-#endif
 #ifdef RECYCLER_PAGE_HEAP
     bool isObjectPageLocked : 1;
 #endif

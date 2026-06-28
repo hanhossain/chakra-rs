@@ -144,13 +144,11 @@ public:
 #endif
 
     friend class LargeHeapBlock;
-#ifdef RECYCLER_WRITE_BARRIER
     template <typename TBlockAttributes>
     friend class SmallFinalizableWithBarrierHeapBlockT;
 
     template <typename TBlockAttributes>
     friend class SmallNormalWithBarrierHeapBlockT;
-#endif
 };
 
 template <typename TBlockType>
@@ -193,10 +191,7 @@ public:
     static bool IsAnyFinalizableBucket()
     {
         return IsFinalizableBucket
-#ifdef RECYCLER_WRITE_BARRIER
-            || IsFinalizableWriteBarrierBucket
-#endif
-            ;
+            || IsFinalizableWriteBarrierBucket;
     }
 
     TBlockAllocatorType * GetAllocator() { return &allocatorHead;}
@@ -212,10 +207,8 @@ protected:
 #endif
     ;
     static bool const IsNormalBucket = TBlockType::RequiredAttributes == NoBit;
-#ifdef RECYCLER_WRITE_BARRIER
     static bool const IsWriteBarrierBucket = TBlockType::RequiredAttributes == WithBarrierBit;
     static bool const IsFinalizableWriteBarrierBucket = TBlockType::RequiredAttributes == FinalizableWithBarrierBit;
-#endif
 
     void Initialize(HeapInfo * heapInfo, uint sizeCat);
     void AppendAllocableHeapBlockList(TBlockType * list);

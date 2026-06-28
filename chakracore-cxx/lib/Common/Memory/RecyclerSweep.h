@@ -101,10 +101,8 @@ private:
 #ifdef RECYCLER_VISITED_HOST
     template <> Data<SmallRecyclerVisitedHostHeapBlock>& GetData<SmallRecyclerVisitedHostHeapBlock>() { return recyclerVisitedHostData; }
 #endif
-#ifdef RECYCLER_WRITE_BARRIER
     template <> Data<SmallNormalWithBarrierHeapBlock>& GetData<SmallNormalWithBarrierHeapBlock>() { return withBarrierData; }
     template <> Data<SmallFinalizableWithBarrierHeapBlock>& GetData<SmallFinalizableWithBarrierHeapBlock>() { return finalizableWithBarrierData; }
-#endif
 
     template <> Data<MediumLeafHeapBlock>& GetData<MediumLeafHeapBlock>() { return mediumLeafData; }
     template <> Data<MediumNormalHeapBlock>& GetData<MediumNormalHeapBlock>() { return mediumNormalData; }
@@ -112,10 +110,8 @@ private:
 #ifdef RECYCLER_VISITED_HOST
     template <> Data<MediumRecyclerVisitedHostHeapBlock>& GetData<MediumRecyclerVisitedHostHeapBlock>() { return mediumRecyclerVisitedHostData; }
 #endif
-#ifdef RECYCLER_WRITE_BARRIER
     template <> Data<MediumNormalWithBarrierHeapBlock>& GetData<MediumNormalWithBarrierHeapBlock>() { return mediumWithBarrierData; }
     template <> Data<MediumFinalizableWithBarrierHeapBlock>& GetData<MediumFinalizableWithBarrierHeapBlock>() { return mediumFinalizableWithBarrierData; }
-#endif
 
 private:
     Recycler * recycler;
@@ -128,20 +124,16 @@ private:
 #ifdef RECYCLER_VISITED_HOST
     Data<SmallRecyclerVisitedHostHeapBlock> recyclerVisitedHostData;
 #endif
-#ifdef RECYCLER_WRITE_BARRIER
     Data<SmallNormalWithBarrierHeapBlock> withBarrierData;
     Data<SmallFinalizableWithBarrierHeapBlock> finalizableWithBarrierData;
-#endif
     Data<MediumLeafHeapBlock> mediumLeafData;
     Data<MediumNormalHeapBlock> mediumNormalData;
     Data<MediumFinalizableHeapBlock> mediumFinalizableData;
 #ifdef RECYCLER_VISITED_HOST
     Data<MediumRecyclerVisitedHostHeapBlock> mediumRecyclerVisitedHostData;
 #endif
-#ifdef RECYCLER_WRITE_BARRIER
     Data<MediumNormalWithBarrierHeapBlock> mediumWithBarrierData;
     Data<MediumFinalizableWithBarrierHeapBlock> mediumFinalizableWithBarrierData;
-#endif
 
     bool hasPendingSweepSmallHeapBlocks;
     bool hasPendingEmptyBlocks;
