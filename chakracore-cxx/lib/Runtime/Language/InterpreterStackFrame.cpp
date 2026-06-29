@@ -637,7 +637,6 @@
         break; \
     }
 
-#ifdef BYTECODE_BRANCH_ISLAND
 #define PROCESS_BRLONG(name, func) \
     case OpCode::name: \
     { \
@@ -645,7 +644,6 @@
         ip = func(playout); \
         break; \
     }
-#endif
 
 #define PROCESS_BRS(name,func)  \
     case OpCode::name: \
@@ -6302,7 +6300,6 @@ namespace Js
 
             LayoutSize layoutSize;
             OpCode catchOp = m_reader.ReadOp(layoutSize);
-#ifdef BYTECODE_BRANCH_ISLAND
             if (catchOp == Js::OpCode::BrLong)
             {
                 Assert(layoutSize == SmallLayout);
@@ -6310,7 +6307,6 @@ namespace Js
                 m_reader.SetCurrentRelativeOffset((const byte *)(playoutBrLong + 1), playoutBrLong->RelativeJumpOffset);
                 catchOp = m_reader.ReadOp(layoutSize);
             }
-#endif
             AssertMsg(catchOp == OpCode::Catch, "Catch op not found at catch offset");
             RegSlot reg = layoutSize == SmallLayout ? m_reader.Reg1_Small()->R0 :
                 layoutSize == MediumLayout ? m_reader.Reg1_Medium()->R0 : m_reader.Reg1_Large()->R0;
@@ -6514,7 +6510,6 @@ namespace Js
 
                 LayoutSize layoutSize;
                 OpCode catchOp = m_reader.ReadOp(layoutSize);
-#ifdef BYTECODE_BRANCH_ISLAND
                 if (catchOp == Js::OpCode::BrLong)
                 {
                     Assert(layoutSize == SmallLayout);
@@ -6522,7 +6517,6 @@ namespace Js
                     m_reader.SetCurrentRelativeOffset((const byte *)(playoutBrLong + 1), playoutBrLong->RelativeJumpOffset);
                     catchOp = m_reader.ReadOp(layoutSize);
                 }
-#endif
                 AssertMsg(catchOp == OpCode::Catch, "Catch op not found at catch offset");
                 RegSlot reg = layoutSize == SmallLayout ? m_reader.Reg1_Small()->R0 :
                     layoutSize == MediumLayout ? m_reader.Reg1_Medium()->R0 : m_reader.Reg1_Large()->R0;
@@ -6557,7 +6551,6 @@ namespace Js
 
                 LayoutSize layoutSize;
                 OpCode finallyOp = m_reader.ReadOp(layoutSize);
-#ifdef BYTECODE_BRANCH_ISLAND
                 if (finallyOp == Js::OpCode::BrLong)
                 {
                     Assert(layoutSize == SmallLayout);
@@ -6565,7 +6558,6 @@ namespace Js
                     m_reader.SetCurrentRelativeOffset((const byte *)(playoutBrLong + 1), playoutBrLong->RelativeJumpOffset);
                     finallyOp = m_reader.ReadOp(layoutSize);
                 }
-#endif
                 Assert(finallyOp == Js::OpCode::Finally);
 
                 int finallyEndOffset = this->ProcessFinally();
@@ -6597,7 +6589,6 @@ namespace Js
 
                 LayoutSize layoutSize;
                 OpCode finallyOp = m_reader.ReadOp(layoutSize);
-#ifdef BYTECODE_BRANCH_ISLAND
                 if (finallyOp == Js::OpCode::BrLong)
                 {
                     Assert(layoutSize == SmallLayout);
@@ -6605,7 +6596,6 @@ namespace Js
                     m_reader.SetCurrentRelativeOffset((const byte *)(playoutBrLong + 1), playoutBrLong->RelativeJumpOffset);
                     finallyOp = m_reader.ReadOp(layoutSize);
                 }
-#endif
                 Assert(finallyOp == Js::OpCode::Finally);
 
                 int finallyEndOffset = this->ProcessFinally();
@@ -6789,7 +6779,6 @@ namespace Js
 
         LayoutSize layoutSize;
         OpCode finallyOp = m_reader.ReadOp(layoutSize);
-#ifdef BYTECODE_BRANCH_ISLAND
         if (finallyOp == Js::OpCode::BrLong)
         {
             Assert(layoutSize == SmallLayout);
@@ -6797,7 +6786,6 @@ namespace Js
             m_reader.SetCurrentRelativeOffset((const byte *)(playoutBrLong + 1), playoutBrLong->RelativeJumpOffset);
             finallyOp = m_reader.ReadOp(layoutSize);
         }
-#endif
         AssertMsg(finallyOp == OpCode::Finally, "Finally op not found at catch offset");
 
         newOffset = this->ProcessFinally();

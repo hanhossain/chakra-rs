@@ -58,9 +58,7 @@ LAYOUT_TYPE_WMS             (Reg3B1)
 LAYOUT_TYPE_WMS             (Reg3C)
 LAYOUT_TYPE_PROFILED_WMS    (Arg)
 LAYOUT_TYPE_WMS             (ArgNoSrc)
-#ifdef BYTECODE_BRANCH_ISLAND
 LAYOUT_TYPE                 (BrLong)
-#endif
 LAYOUT_TYPE                 (Br)
 LAYOUT_TYPE_WMS             (BrReg1)
 LAYOUT_TYPE_WMS             (BrReg2)

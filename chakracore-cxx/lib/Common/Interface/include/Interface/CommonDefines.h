@@ -46,9 +46,6 @@
 #define _M_ARM32_OR_ARM64 1
 #endif
 
-// Memory Protections
-#define PAGE_EXECUTE_RO_TARGETS_INVALID   (PAGE_EXECUTE_READ)
-
 //----------------------------------------------------------------------------------------------------
 // Enabled features
 //----------------------------------------------------------------------------------------------------
@@ -57,7 +54,6 @@
 // Even if it builds, it may not work properly. Disable at your own risk
 
 // ByteCode
-#define BYTECODE_BRANCH_ISLAND                      // Byte code short branch and branch island
 #if defined(HAS_REAL_ICU)
 #define ENABLE_UNICODE_API 1                        // Enable use of Unicode-related APIs
 #endif

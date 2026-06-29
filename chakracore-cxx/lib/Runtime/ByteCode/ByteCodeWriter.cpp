@@ -44,13 +44,11 @@ namespace Js
         callRegToLdFldCacheIndexMap = Anew(alloc, CallRegToLdFldCacheIndexMap,
             alloc,
             17);
-#ifdef BYTECODE_BRANCH_ISLAND
         useBranchIsland = true;
         inEnsureLongBranch = false;
         lastOpcode = Js::OpCode::FunctionEntry;
         this->UpdateNextBranchIslandOffset(0, 0);
         m_longJumpOffsets = JsUtil::List<JumpInfo, ArenaAllocator>::New(alloc);
-#endif
     }
 
     ///----------------------------------------------------------------------------
@@ -112,9 +110,7 @@ namespace Js
             AssertMsg(labelByteOffset != UINT_MAX, "ERROR: Destination labels must be marked before closing");
 
             int relativeJumpOffset = labelByteOffset - jumpByteOffset - offsetToEndOfLayoutByteSize;
-#ifdef BYTECODE_BRANCH_ISLAND
             Assert(!useBranchIsland || (jumpOffset != m_jumpOffsets || (relativeJumpOffset < GetBranchLimit() && relativeJumpOffset >= -GetBranchLimit())));
-#endif
             Assert((T)relativeJumpOffset == relativeJumpOffset);
             *pnBackPatch = (T)relativeJumpOffset;
         });
@@ -148,7 +144,6 @@ namespace Js
         //
         // Update all branch targets with their actual label destinations.
         //
-#ifdef BYTECODE_BRANCH_ISLAND
         if (useBranchIsland)
         {
             PatchJumpOffset<JumpOffset>(m_jumpOffsets, byteBuffer, byteCount);
@@ -158,9 +153,6 @@ namespace Js
         {
             PatchJumpOffset<LongJumpOffset>(m_jumpOffsets, byteBuffer, byteCount);
         }
-#else
-        PatchJumpOffset<JumpOffset>(m_jumpOffsets, byteBuffer, byteCount);
-#endif
 
         // Patch up the root object load inline cache with the start index
         uint rootObjectLoadInlineCacheStart = this->m_functionWrite->GetRootObjectLoadInlineCacheStart();
@@ -268,11 +260,9 @@ namespace Js
         m_byteCodeData.Reset();
         m_auxiliaryData.Reset();
         m_auxContextData.Reset();
-#ifdef BYTECODE_BRANCH_ISLAND
         lastOpcode = Js::OpCode::FunctionEntry;
         this->UpdateNextBranchIslandOffset(0, 0);
         m_longJumpOffsets->Clear();
-#endif
         m_labelOffsets->Clear();
         m_jumpOffsets->Clear();
         m_loopHeaders->Clear();
@@ -2675,13 +2665,11 @@ StoreCommon:
         CheckOpen();
         CheckLabel(labelID);
 
-#ifdef BYTECODE_BRANCH_ISLAND
         if (useBranchIsland)
         {
             // If we are going to emit a branch island, it should be before the label.
             EnsureLongBranch(Js::OpCode::Label);
         }
-#endif
         //
         // Define the label as the current offset within the byte-code.
         //
@@ -2697,7 +2685,6 @@ StoreCommon:
         CheckLabel(labelId);
 
         uint jumpByteOffset = m_byteCodeData.GetCurrentOffset() - fieldByteOffsetFromEnd;
-#ifdef BYTECODE_BRANCH_ISLAND
         if (useBranchIsland)
         {
             // Any Jump might need a long jump, account for that emit the branch island earlier.
@@ -2739,7 +2726,6 @@ StoreCommon:
                 }
             }
         }
-#endif
         //
         // Branch targets are created in two passes:
         // - In the instruction stream, write "labelID" into "OpLayoutBrC.Offset".  Record this
@@ -2752,7 +2738,6 @@ StoreCommon:
         m_jumpOffsets->Add(jumpInfo);
     }
 
-#ifdef BYTECODE_BRANCH_ISLAND
     int32_t ByteCodeWriter::GetBranchLimit()
     {
 #ifdef BYTECODE_TESTING
@@ -2929,7 +2914,6 @@ StoreCommon:
             this->MarkLabel(branchAroundLabel);
         }
     }
-#endif
 
     void ByteCodeWriter::StartStatement(ParseNode* node, uint32_t tmpRegCount)
     {
@@ -2941,13 +2925,11 @@ StoreCommon:
             }
             return;
         }
-#ifdef BYTECODE_BRANCH_ISLAND
         if (useBranchIsland)
         {
             // If we are going to emit a branch island, it should be before the statement start
             this->EnsureLongBranch(Js::OpCode::StatementBoundary);
         }
-#endif
         m_pMatchingNode = node;
         m_beginCodeSpan = m_byteCodeData.GetCurrentOffset();
 
@@ -3007,10 +2989,8 @@ StoreCommon:
         {
             return;
         }
-#ifdef BYTECODE_BRANCH_ISLAND
         // If we are going to emit a branch island, it should be before the statement start
         this->EnsureLongBranch(Js::OpCode::StatementBoundary);
-#endif
         m_subexpressionNodesStack->Push(SubexpressionNode(node, m_byteCodeData.GetCurrentOffset()));
     }
 
@@ -3207,13 +3187,11 @@ StoreCommon:
 
     uint ByteCodeWriter::EnterLoop(Js::ByteCodeLabel loopEntrance)
     {
-#ifdef BYTECODE_BRANCH_ISLAND
         if (useBranchIsland)
         {
             // If we are going to emit a branch island, it should be before the loop header
             this->EnsureLongBranch(Js::OpCode::StatementBoundary);
         }
-#endif
 
         uint loopId = m_functionWrite->IncrLoopCount();
         Assert((uint)m_loopHeaders->Count() == loopId);
@@ -3392,12 +3370,10 @@ StoreCommon:
     template <LayoutSize layoutSize>
     uint ByteCodeWriter::Data::EncodeT(OpCode op, ByteCodeWriter* writer)
     {
-#ifdef BYTECODE_BRANCH_ISLAND
         if (writer->useBranchIsland)
         {
             writer->EnsureLongBranch(op);
         }
-#endif
 
         Assert(op < Js::OpCode::ByteCodeLast);
         Assert(!OpCodeAttr::BackEndOnly(op));

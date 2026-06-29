@@ -125,7 +125,6 @@ namespace Js
             ByteCodeLabel labelId;
             uint patchOffset;
         };
-#ifdef BYTECODE_BRANCH_ISLAND
         bool useBranchIsland;
         JsUtil::List<JumpInfo, ArenaAllocator> * m_longJumpOffsets;
         Js::OpCode lastOpcode;
@@ -136,7 +135,6 @@ namespace Js
         static const uint JumpAroundSize;
         // Size of emitting a long jump byte code instruction
         static const uint LongBranchSize;
-#endif
         JsUtil::List<JumpInfo, ArenaAllocator> * m_jumpOffsets;             // Offsets to replace "ByteCodeLabel" with actual destination
         JsUtil::List<LoopHeaderData, ArenaAllocator> * m_loopHeaders;       // Start/End offsets for loops
         SListBase<size_t>  rootObjectLoadInlineCacheOffsets;                // load inline cache offsets
@@ -207,12 +205,10 @@ namespace Js
         template <typename T>
         void PatchJumpOffset(JsUtil::List<JumpInfo, ArenaAllocator> * jumpOffsets, byte * byteBuffer, uint byteCount);
 
-#ifdef BYTECODE_BRANCH_ISLAND
         static int32_t GetBranchLimit();
         void AddLongJumpOffset(ByteCodeLabel labelId, uint fieldByteOffset);
         void EnsureLongBranch(Js::OpCode op);
         void UpdateNextBranchIslandOffset(uint firstUnknownJumpInfo, uint firstUnknownJumpOffset);
-#endif
 
         // Debugger methods.
         void PushDebuggerScope(Js::DebuggerScope* debuggerScope);
@@ -259,9 +255,7 @@ namespace Js
         template <bool isVar>
         void ArgOut(ArgSlot arg, RegSlot reg, ProfileId callSiteId, bool emitProfiledArgout);
         void ArgOutEnv(ArgSlot arg);
-#ifdef BYTECODE_BRANCH_ISLAND
         void BrLong(OpCode op, ByteCodeLabel labelID);
-#endif
         void Br(ByteCodeLabel labelID);
         void Br(OpCode op, ByteCodeLabel labelID);
         void BrReg1(OpCode op, ByteCodeLabel labelID, RegSlot R1);

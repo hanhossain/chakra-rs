@@ -91,9 +91,7 @@ public:
         , expectApplyArg(false)
         , seenProfiledBeginSwitch(false)
 #endif
-#ifdef BYTECODE_BRANCH_ISLAND
         , longBranchMap(nullptr)
-#endif
         , m_generatorJumpTable(GeneratorJumpTable(func, this))
     {
         auto loopCount = func->GetJITFunctionBody()->GetLoopCount();
@@ -126,11 +124,9 @@ private:
     void                InsertInstr(IR::Instr *instr, IR::Instr* insertBeforeInstr);
     void                AddInstr(IR::Instr *instr, uint32_t offset);
     BranchReloc *       AddBranchInstr(IR::BranchInstr *instr, uint32_t offset, uint32_t targetOffset);
-#ifdef BYTECODE_BRANCH_ISLAND
     void                ConsumeBranchIsland();
     void                EnsureConsumeBranchIsland();
     uint                ResolveVirtualLongBranch(IR::BranchInstr * branchInstr, uint offset);
-#endif
     BranchReloc *       CreateRelocRecord(IR::BranchInstr * branchInstr, uint32_t offset, uint32_t targetOffset);
     void                LoadNativeCodeData();
     void                BuildConstantLoads();
@@ -365,11 +361,9 @@ private:
     Js::PropertyId      m_loopBodyLocalsStartSlot;
     IR::Opnd**          m_saveLoopImplicitCallFlags;
     IR::RegOpnd *       m_loopBodyForInEnumeratorArrayOpnd;
-#ifdef BYTECODE_BRANCH_ISLAND
     typedef JsUtil::BaseDictionary<uint32_t, uint32_t, JitArenaAllocator> LongBranchMap;
     LongBranchMap * longBranchMap;
     static IR::Instr * const VirtualLongBranchInstr;
-#endif
 
     class GeneratorJumpTable {
         Func* const m_func;

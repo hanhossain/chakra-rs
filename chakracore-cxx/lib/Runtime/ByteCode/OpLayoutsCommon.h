@@ -14,12 +14,8 @@ namespace Js {
     typedef uint32_t RootCacheId;
     typedef uint16 PropertyIdIndexType_TwoByte;
     typedef uint32_t PropertyIdIndexType;
-#ifdef BYTECODE_BRANCH_ISLAND
     typedef int16 JumpOffset;
     typedef int32_t LongJumpOffset;
-#else
-    typedef int32_t JumpOffset;
-#endif
     // This is used to estimate when we need to emit long branches
     uint const MaxLayoutSize = 76; // Increase this when we see larger layout
 

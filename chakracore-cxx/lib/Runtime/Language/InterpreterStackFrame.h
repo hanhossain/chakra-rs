@@ -328,12 +328,8 @@ namespace Js
 
         static bool IsBrLong(OpCode op, const byte * ip)
         {
-#ifdef BYTECODE_BRANCH_ISLAND
             static_assert(Js::OpCodeInfo<Js::OpCode::BrLong>::IsExtendedOpcode);
             return (op == OpCode::ExtendedOpcodePrefix) && ((OpCode)(ByteCodeReader::PeekExtOp(ip)) == OpCode::BrLong);
-#else
-            return false;
-#endif
         }
 
         unsigned long GetStackAddress() const;
